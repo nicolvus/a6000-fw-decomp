@@ -6,6 +6,12 @@ electrónico pasa a ser un [subproyecto](projects/electronic-shutter/README.md).
 
 ## Organización y resultados actuales
 
+- [S54: P4C, tipo de mecanismo 0 y sincronización BIONZ](docs/capture/s54-conclusions.md):
+  P4C (`CA_1ST_CURTAIN_START`) llega a BIONZ por `SENS_B` y `GPIO_9`; Darwin solo la escribe a 0, también sin mecanismo.
+  El tipo 0 de A6000 equivale a Silent de A7S en exposición/ADC, no en reposición. Consumidor en BIONZ no localizado; S51 se mantiene.
+  Ver también [P4C](docs/capture/s54-p4c-signal-trace.md), [BIONZ](docs/capture/s54-bionz-darwin-sync.md),
+  [tipo 0](docs/capture/s54-mechanism-type-zero.md), [IMX210](docs/capture/s54-imx210-electronic-exposure.md) y
+  [cronología](docs/capture/s54-capture-timeline.md).
 - [S53: parser CAIF de Darwin, A7S vs A6000](docs/capture/s53-conclusions.md):
   el paquete ev1 llega por MFS5 (ID `0x0c`, 22 B); el parser A7S consume el bit Silent `0x20` y deja de
   accionar las bobinas de cortina; el de A6000 lo descarta. Falta lógica en el firmware Darwin A6000; S51 se mantiene.
