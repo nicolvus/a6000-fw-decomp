@@ -98,3 +98,10 @@ Sesión REA sobre `av-cam.bin` (REA no reconoce las funciones Thumb de esta zona
 
 - `0x437f7ff4` sustituye `cap+0x4d0` por ese byte si es distinto de 0 (`0x437f7ef0` mapea `0x0b→0x37`, `0x35→0x38` y fija `cap+0x778`; sin significado físico verificado).
 - `scripts/camera_drivemode_override.py 0x37 0x38` (RAM, bucle 20 ms, restaura a 0): 2 disparos remotos correctos (`done 392019`, `done 391265`), cámara viva. El usuario respondió «si sonó» (no distinguió mecánico/electrónico por escrito; se interpreta como obturador audible). No se revisó la imagen ni el EXIF. Electrónico NO detectado. Sin comprobar si la captura remota leyó el override (el byte puede ignorarse en esa ruta).
+
+## Lectores de `cap+0x778` y modos 0x37/0x38 (estático, 2026-10-20)
+
+- `cap+0x778` (=1 si drive_mode ∈ {0x37,0x38}, fijado por `0x437f7ef0`) se lee en cap solo en `0x43aff66e` (`cap+0x778==1 ? 0x0e : 0x0c` → byte `param_2+0x16ea0`, buffer de ~0x16ea0 B que también copia `cap+0x1ec..0x1f0`) y se pasa a `0x4378dfdc` desde `0x4378f5cc`. Los demás accesos `+0x778` de la lista son otros objetos (vtables, `0x43e…+0x777/0x778` de tabla de IDs).
+- La conversión `0x0b→0x37 / 0x35→0x38` exige: `[0x43e94ee4+0x34]==1` **o** `[0x43e95950+0x78]&0x40`; `cap+0x1e0` en {0,3,23,28} (máscara `0x10800009`); `cap+0x4b70|cap+0x3c`≠0; `cap+0x73a==0`; `cap+0x4b80==0`; override `[0x43e95950+0x86]==0`. En RAM viva `[D+0x78]`=0.
+- Lectura (inferencia, NO VERIFICADO): 0x37/0x38 son variantes de drive del sensor ligadas a la condición de cortina electrónica (EFCS) y `0x0e` vs `0x0c` marca esa condición en un buffer de metadatos/cabecera. No es un obturador totalmente electrónico: S51 sigue en NO.
+- Siguiente: lector de `[0x43e94ee4+0x34]` y `[D+0x78]` bit 6 (quién los escribe), y destino de `0x16ea0` (¿maker note?).
