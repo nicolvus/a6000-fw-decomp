@@ -110,3 +110,7 @@ Sesión REA sobre `av-cam.bin` (REA no reconoce las funciones Thumb de esta zona
 
 - `0x43aff66e` (único llamador `0x43783d80` = `0x43783d18`) rellena un bloque de **unidad DMM tipo `0x1c3`** (`0x437873a4(…,0x1c3,…)`; `0x43aff72c/0x43aff618` lo completan con `cap+0x1ec*cap+0x1f0` = tamaño de imagen). Es un bloque de parámetros de procesado de imagen, **no una maker note**: el EXIF no servirá de detector de obturador. `cap+0x778==1` solo cambia un byte de modo de ese bloque (`0x0e` en vez de `0x0c`). NO VERIFICADO su significado.
 - `[0x43e94ee4+0x34]` y `[0x43e95950+0x78]` se acceden solo vía GOT (`0x44020e90`, `0x4402546c`; `0x43e95950` también en `0x43ff3238`). Lectores: `0x437f7ef0`; `D+0x78` bits 0/1 en `0x43782da0` (llamador `0x437e3ea6`, otra rama). **No se encontró ningún escritor** de `+0x34`/`+0x78` con el patrón GOT (el candidato `0x437f8bd8` era un literal de pool, no una instrucción). Probable origen: carga desde backup/NVRAM o escritura por memcpy; NO VERIFICADO.
+
+### Condiciones de EFCS forzadas en RAM (2026-10-20)
+
+- `scripts/camera_efcs_conditions.py [d78|e34|ambos]`: fuerza `[0x43e95950+0x78]=0x40` y/o `[0x43e94ee4+0x34]=1` (originales 0; bucle 20 ms; restaura) y dispara en remoto. Disparos: ambos, d78, e34 → el usuario creyó que el tercero (e34) **no sonó**; repetido 2 veces con e34 → «sonó dos veces». El silencio no se reprodujo ⇒ se atribuye a una percepción aislada, sin efecto demostrado. Cámara viva siempre; electrónico NO detectado.
