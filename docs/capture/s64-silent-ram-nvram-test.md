@@ -66,3 +66,8 @@ Barrido lineal de `av-cam`: 882 sitios `+0x238/+0x280` (872 Thumb, 10 ARM); solo
 
 - `scripts/camera_shutter_matrix.py HOST vecinos`: caso 1 (base) disparó bien (`done 410745`); en el caso 2 se escribieron **10 palabras `0x230..0x254` del espejo `0x83edf684` a 1** (bucle cada 20 ms, solo RAM) y la cámara **se reinició** (la conexión cayó durante el disparo; el usuario confirmó «se reinició»). Hay `exception.reboot=1` en la línea de comandos del kernel.
 - No se sabe qué palabra (o la combinación con el disparo) provoca el reinicio: NO VERIFICADO. Siguiente: bisecar una palabra por vez (valor 1) y sin disparar, y luego disparando.
+
+## Bisección de campos vecinos (2026-10-20)
+
+- `scripts/camera_bisect_fields.py` (`SHOOT=1`): cada palabra del espejo `+0x234…+0x254` (9 campos) forzada a 1 durante un disparo remoto: 9/9 disparos correctos; **el usuario oyó el obturador igual en todos**. Sin escritura (8 disparos) y con `+0x230` reescrito a su valor (3 veces): sin reinicio, por lo que los dos reinicios previos no se reproducen y no se atribuyen a un campo (NO VERIFICADO la causa).
+- Valor 2 y copia de trabajo para estos campos: no probados.
