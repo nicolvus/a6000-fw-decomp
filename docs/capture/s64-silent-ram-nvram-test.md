@@ -105,3 +105,8 @@ Sesión REA sobre `av-cam.bin` (REA no reconoce las funciones Thumb de esta zona
 - La conversión `0x0b→0x37 / 0x35→0x38` exige: `[0x43e94ee4+0x34]==1` **o** `[0x43e95950+0x78]&0x40`; `cap+0x1e0` en {0,3,23,28} (máscara `0x10800009`); `cap+0x4b70|cap+0x3c`≠0; `cap+0x73a==0`; `cap+0x4b80==0`; override `[0x43e95950+0x86]==0`. En RAM viva `[D+0x78]`=0.
 - Lectura (inferencia, NO VERIFICADO): 0x37/0x38 son variantes de drive del sensor ligadas a la condición de cortina electrónica (EFCS) y `0x0e` vs `0x0c` marca esa condición en un buffer de metadatos/cabecera. No es un obturador totalmente electrónico: S51 sigue en NO.
 - Siguiente: lector de `[0x43e94ee4+0x34]` y `[D+0x78]` bit 6 (quién los escribe), y destino de `0x16ea0` (¿maker note?).
+
+### Seguimiento: destino del byte `0x0e/0x0c` y escritores de las condiciones (estático, 2026-10-20)
+
+- `0x43aff66e` (único llamador `0x43783d80` = `0x43783d18`) rellena un bloque de **unidad DMM tipo `0x1c3`** (`0x437873a4(…,0x1c3,…)`; `0x43aff72c/0x43aff618` lo completan con `cap+0x1ec*cap+0x1f0` = tamaño de imagen). Es un bloque de parámetros de procesado de imagen, **no una maker note**: el EXIF no servirá de detector de obturador. `cap+0x778==1` solo cambia un byte de modo de ese bloque (`0x0e` en vez de `0x0c`). NO VERIFICADO su significado.
+- `[0x43e94ee4+0x34]` y `[0x43e95950+0x78]` se acceden solo vía GOT (`0x44020e90`, `0x4402546c`; `0x43e95950` también en `0x43ff3238`). Lectores: `0x437f7ef0`; `D+0x78` bits 0/1 en `0x43782da0` (llamador `0x437e3ea6`, otra rama). **No se encontró ningún escritor** de `+0x34`/`+0x78` con el patrón GOT (el candidato `0x437f8bd8` era un literal de pool, no una instrucción). Probable origen: carga desde backup/NVRAM o escritura por memcpy; NO VERIFICADO.
