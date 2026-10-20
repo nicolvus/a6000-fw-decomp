@@ -25,3 +25,9 @@
 ## Límites
 
 Barrido lineal de `av-cam`: 882 sitios `+0x238/+0x280` (872 Thumb, 10 ARM); solo se trataron los de la zona del bloque. Slots de backup sin wrapper (`write_vsize`, `setting_attr_async`, `sync_subsystem`) no cubiertos. Lecturas indirectas (copias en bloque a otras estructuras) no vistas. Solo 4 MB de RAM comparados.
+
+## Ampliación: cuándo se reinicializa y tabla de comandos «de estado»
+
+- `0x43804610` se llama desde la secuencia de arranque de `av-cam` (`0x437881a8`, entre `0x437e18b4` y `0x4378f9b4`, junto a otras inicializaciones de módulo). Es una inicialización de arranque, no una reposición periódica. Que ocurra también al cambiar de sesión de service mode: NO VERIFICADO.
+- Tabla de entradas `{ID, handler|1, 0}` en `0x43fffbb8…` (IDs `0x40d7…0x40f3`, VERIFICADO por bytes). Cada handler guarda un único campo del bloque `0x43edf684`: `0x40e2→+0x234`, **`0x40e3→+0x238`**, `0x40ed→+0x23c`, `0x40ee→+0x240`, `0x40ef→+0x242`, `0x40f0→+0x244/248/24c`, `0x40f1→+0x250`, `0x40e4→+0x35c`, `0x40e6→+0x360`, etc. El bloque es un espejo de ajustes enviados por UIPC; ningún handler hace más que almacenar.
+- `+0x280` lo escribe otro handler (`0x4380260c`), fuera de esa tabla (tabla no localizada).
