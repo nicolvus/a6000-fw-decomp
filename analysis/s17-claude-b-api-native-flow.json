@@ -1,0 +1,123 @@
+{
+  "session": "s17",
+  "agent": "claude-b",
+  "mission": "CameraSequence/CameraEx/OpenMemories vs arquitectura E (ObjCamera/ObjEffect/PbCap)",
+  "process_confirmation": {
+    "no_subagents_delegated": true,
+    "model": "claude-sonnet-5",
+    "effort": "low",
+    "web_fetch_method": "ctx_fetch_and_index (real network fetch, equivalent to WebFetch, content indexed and retrieved via ctx_search, not cited from memory)"
+  },
+  "sources_fetched_real": [
+    {"url": "https://github.com/ma1co/OpenMemories-Framework/issues/35", "label": "omf-issue-35", "status": "fetched_ok"},
+    {"url": "https://github.com/ma1co/OpenMemories-Framework", "label": "omf-repo-root", "status": "fetched_ok"},
+    {"url": "https://github.com/ma1co/PMCADemo/blob/master/app/src/main/java/com/github/ma1co/pmcademo/app/CameraActivity.java", "label": "pmcademo-cameraactivity", "status": "fetched_ok"}
+  ],
+  "local_evidence_files": [
+    "analysis/symbols/libcameraex_client.so.symbols.txt",
+    "analysis/symbols/libcameraex_client.so.layout.txt",
+    "analysis/symbols/libcameraex_jni.so.symbols.txt",
+    "analysis/symbols/libcameraex_jni.so.layout.txt",
+    "analysis/symbols/libScalarDaemon.so.symbols.txt",
+    "analysis/symbols/libcamera.so.demangled.txt",
+    "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha16_unpacked_unpacked/lib/libcameraex_client.so",
+    "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha16_unpacked_unpacked/lib/libcameraex_jni.so"
+  ],
+  "findings": [
+    {
+      "id": "P1",
+      "topic": "existence of CameraSequence/CameraEx/DeviceMemory classes",
+      "classification": "VERIFICADO",
+      "evidence": "Real dynamic symbols in libcameraex_jni.so and libcameraex_client.so, found inside the actual A6000 fw3.21 firmware tree (also present in a7s-fw320, a6300-fw201 trees extracted in this project): register_com_sony_scalar_hardware_CameraSequence, register_com_sony_scalar_hardware_DeviceMemory, register_com_sony_scalar_hardware_CaemraEx (sic typo), JNICamSeqContext class, android::CameraEx class with Binder ICameraExClient/ICameraExService.",
+      "notes": "Independent of the GitHub issue; confirmed purely from local binaries."
+    },
+    {
+      "id": "P2",
+      "topic": "public API usage example (open/startPreviewSequence/getPreviewSequenceFrames/release)",
+      "classification": "consultado directamente en fuente publica (declaracion de usuario de GitHub, NO reproducido localmente)",
+      "evidence": "github.com/ma1co/OpenMemories-Framework/issues/35 code sample quoted verbatim in docs/capture/s17-claude-b-camerasequence.md section 1.",
+      "notes": "No Android runtime or camera hardware available this session to reproduce."
+    },
+    {
+      "id": "P3",
+      "topic": "JNI native libraries and symbols",
+      "classification": "VERIFICADO",
+      "evidence": "libcameraex_jni.so registers JNI for CameraSequence/CameraEx/DeviceMemory/DSP/MemoryMapConfig/MediaRecorder/AudioManager/ImageFilter. libcameraex_client.so implements android::CameraEx with Binder methods (connect, sendCommand, getInitialParameters, getCameraExService, remote).",
+      "symbols": [
+        "_Z48register_com_sony_scalar_hardware_CameraSequenceP7_JNIEnv",
+        "_Z46register_com_sony_scalar_hardware_DeviceMemoryP7_JNIEnv",
+        "_Z42register_com_sony_scalar_hardware_CaemraExP7_JNIEnv",
+        "JNICamSeqContext::postData(int, scalar::DeviceMemoryIF*, int, int)",
+        "JNICamSeqContext::notify(int,int,int)",
+        "JNICamSeqContext::release()",
+        "scalar::CameraSequenceIF_open() [UND/imported, implementation not located this session]",
+        "scalar::DeviceMemoryIF_createImage(int,int) [UND/imported]",
+        "scalar::DeviceMemoryIF_createBuffer(unsigned int) [UND/imported]",
+        "android::CameraEx::connect(int, scalar::OpenOptions*)",
+        "android::CameraEx::getCameraExService()",
+        "android::ICameraExService::asInterface(android::sp<android::IBinder> const&)"
+      ]
+    },
+    {
+      "id": "P4",
+      "topic": "Binder/RPC transport",
+      "classification": "VERIFICADO (CameraEx binder transport); INFERENCIA (CameraSequence reuses same channel)",
+      "evidence": "android::CameraEx::getCameraExService() calls android::defaultServiceManager(); BnInterface<ICameraExClient> and ICameraExService descriptor present. No separate Binder channel symbols found for CameraSequence itself; it appears to ride on CameraEx's dataCallback/notifyCallback.",
+      "notes": "Not a raw socket; standard Android Binder system service pattern (parallel to ICameraService)."
+    },
+    {
+      "id": "P5",
+      "topic": "relation to ScalarDaemon / SFRA / DMM",
+      "classification": "VERIFICADO (link to ScalarDaemon); INFERENCIA fuerte (shared DMM/SFRA backend, no call-graph traced)",
+      "evidence": "libScalarDaemon.so contains real demangled symbols: SCALARDAEMON::SystemEventIssuerCameraSequence::{setPreviewPath,getPreviewInfo,setPreviewBuffering,getPreviewBufferingFrame,setRawCapture,createStream,setChangeReleaseLockStatus,setPreviewSaAnalizedNotify,getPreviewSaAnalizedData}, SCALARDAEMON::CommandProcessorFactoryCameraEx::createProcessor, SCALARDAEMON::CommandProcessorFactoryCameraSequence::createProcessor, SCALARDAEMON::CameraSequenceEventRawCaptureEventCb, ...PreviewSaNotifyEventCb, ...PreviewErrorEventCb.",
+      "notes": "Confirms CameraSequence Android API is backed by the same ScalarDaemon process that architecture B/F (SFRA/DMM) branches are investigating. setRawCapture/createStream suggest raw stream capability beyond JPEG preview. NOT verified: shared ring buffer / DMM memory with SFRA's documented path (sfra-mpr-buffer-bridge.md, sfra-electronic-frame-source.md) — no call-graph traced this session."
+    },
+    {
+      "id": "P6",
+      "topic": "DeviceBuffer ownership and .release()",
+      "classification": "HIPOTESIS/INFERENCIA fuerte (declaracion de usuario de GitHub para comportamiento API; patron Android RefBase para mecanismo interno, no decompilado)",
+      "evidence": "GitHub issue: deviceBuffer.read(previewBuffer, size, 0) then deviceBuffer.release(); .read() does not update destination ByteBuffer position/limit (caller must adjust manually). Local: scalar::DeviceMemoryIF_createBuffer is a native allocator imported into libcameraex_jni.so, consistent with android::RefBase/sp<> refcounting pattern seen throughout this firmware's C++ symbols (incStrong/decStrong in libcameraex_client.so).",
+      "notes": "Buffer appears owned by native runtime (ScalarDaemon or whichever lib implements DeviceMemoryIF); .release() likely decrements a native refcount / returns buffer to a pool. Not confirmed by decompiling .release()'s actual body."
+    },
+    {
+      "id": "P7",
+      "topic": "PREVIEW_FRAME_FORMAT=256 vs android.graphics.ImageFormat.JPEG=256",
+      "classification": "NO VERIFICADO / DESCARTADO afirmar identidad deliberada",
+      "evidence": "GitHub issue author explicitly states he does not know the unit/meaning of 256 and has not tested other values. CameraSequence.Options is a Sony-internal class under com.sony.scalar.hardware, a different namespace from android.graphics.ImageFormat. No code (public or local) shown importing or redefining android.graphics.ImageFormat for this constant. No Java/Dalvik bytecode available locally to inspect the real constant definition inside CameraSequence.Options.",
+      "notes": "Numeric coincidence (256) is NOT proven to be the same constant by import or code reference. Treated as unverified hypothesis, not fact."
+    },
+    {
+      "id": "P8",
+      "topic": "single-frame request conditions / background operation",
+      "classification": "HIPOTESIS (razonable, NO VERIFICADO)",
+      "evidence": "getPreviewSequenceFrames(1) is a synchronous/pull call per the GitHub issue ('not event driven'). Requires startPreviewSequence() already called, which per the documented usage pattern requires an open CameraEx + Android Camera bound to a SurfaceHolder with preview started (as in PMCADemo). No evidence (public or local) of headless/background operation without a visible preview surface.",
+      "notes": "CameraHardwareDiadem::release() (verified in libcamera.so) ties HAL release to preview/surface lifecycle, supporting (but not proving) the hypothesis that a live preview session is required."
+    },
+    {
+      "id": "P9",
+      "topic": "CameraSequence preview JPEG vs conventional takePicture(); S2/onShutterKeyDown separation",
+      "classification": "VERIFICADO (lectura directa de codigo fuente real de PMCADemo)",
+      "evidence": "PMCADemo/CameraActivity.java: onShutterKeyDown() calls camera.getNormalCamera().takePicture(null, null, null) -- conventional android.hardware.Camera capture, NOT CameraSequence.getPreviewSequenceFrames(). onFocusKeyDown()/onFocusKeyUp() call autoFocus()/cancelAutoFocus(). These are BaseActivity-level Android KeyEvent callbacks.",
+      "notes": "No public or local evidence exists of anyone wiring onShutterKeyDown to CameraSequence instead of takePicture(). Architecture P (S2 -> CameraSequence frame grab) would be new integration work, not an existing path."
+    },
+    {
+      "id": "P10",
+      "topic": "local DEX/ODEX/JAR/APK cross-check",
+      "classification": "VERIFICADO (busqueda negativa)",
+      "evidence": "find . -iname '*.dex' -o -iname '*.odex' -o -iname '*.jar' -o -iname '*.apk' across entire project tree (excluding tool caches) returned zero results. Only native .so files present for cameraex (no Java/Dalvik bytecode extracted in this project).",
+      "notes": "Explicitly stating absence rather than inventing paths, per task instructions."
+    },
+    {
+      "id": "P11",
+      "topic": "arquitectura P vs arquitectura E — soporte relativo",
+      "classification": "INFERENCIA / conclusion razonada, no afirmacion de funcionamiento",
+      "evidence": "P has stronger external/local verification for 'an accessible electronic JPEG source exists' (real binary symbols + independent third-party functional report) than E's longer internal inference chains (open blockers in RESEARCH_TASKS.md sessions 13-16: topology 0x2a creator, YC format, CBID_ENCODE_STILL release timing). P has weaker support for the mission-specific question 'S2 triggers electronic capture': no evidence ties the physical button to CameraSequence in Sony's stock firmware or in any known third-party app; the only real code (PMCADemo) wires the button to conventional takePicture(). No code-level link found between CameraSequence/ScalarDaemon and ObjCamera/ObjEffect/PbCap (architecture E's object family); a shared-backend relationship with architecture B/F (SFRA/DMM, also served by ScalarDaemon) is more plausible but unverified (same daemon class family, no traced call graph).",
+      "notes": "EXPLICIT: does not declare that electronic capture via S2 works. CameraSequence is real and verified; its connection to the physical shutter button is unverified and would require new application-level integration work."
+    }
+  ],
+  "message_for_principal_claude": {
+    "topic": "Android-side physical shutter event delivery vs native LIRO/RelMgr",
+    "finding": "On the Android side, the physical shutter key event reaches the app as a high-level Android framework callback (onShutterKeyDown/onFocusKeyDown in BaseActivity, based on standard Android KeyEvent dispatch), verified by direct reading of real PMCADemo source code. This is a separate, independently-documented software path from the native LIRO RelMgr queue (0x40193, handler 0x4379d838) that the main investigation tracks for S1/S2 bit masks. No evidence was found this session connecting the two paths (shared hardware interrupt dispatched twice vs. RelMgr bypassed for Android apps) -- flagged as an open question for the LIRO/RelMgr branch.",
+    "classification": "VERIFICADO (Android-side callback existence and conventional takePicture wiring); NO VERIFICADO (relationship to native RelMgr queue)"
+  }
+}

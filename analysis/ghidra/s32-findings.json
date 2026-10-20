@@ -1,0 +1,120 @@
+{
+  "session": "S32",
+  "firmware": "ILCE-6000 3.21",
+  "source_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "logical_base": "0x43541000",
+  "evidence_kind": "static analysis only",
+  "camera_connected": false,
+  "firmware_executed": false,
+  "project": "analysis/ghidra/silent-liro.gpr",
+  "mode": "-readOnly -noanalysis; temporary annotations rolled back; no binary patches",
+  "primary_export": "s32-final-verified.json",
+  "findings": [
+    {
+      "status": "VERIFICADO",
+      "finding": "0x43ad6034 is executable callback-dispatch code, not a jump table or writable callback slot",
+      "addresses": ["0x43ad6034", "0x43ad604e", "0x43ad6052"],
+      "evidence": "q[1] is tested at 43ad6038; target loaded from q[0] or virtual table, adjusted this=q+(signed(q[1])>>1); BLX r3 at 43ad604e. 43ad6052 is B.W 43ad6034.",
+      "direct_references": ["0x43ad6052", "0x437b6668", "0x437d0c18"],
+      "scope": "All direct B.W/BL encodings and raw absolute pointers in this blob scanned; 26 direct references to the thunk; arbitrary computed pointers are not enumerable by this scan."
+    },
+    {
+      "status": "INFERENCIA",
+      "finding": "The two-word callable encoding matches an ARM C++ member-function pointer with adjustment and virtual flag",
+      "addresses": ["0x43ad6034"],
+      "evidence": "Verified dispatch algorithm; original C++ type and Sony symbol names are absent."
+    },
+    {
+      "status": "VERIFICADO",
+      "finding": "Callback construction and list writers resolved",
+      "addresses": ["0x43b03a74", "0x4380f5b4", "0x43acabf4", "0x4379704c", "0x43797090", "0x43ae98d0", "0x43ae9888", "0x43ae984c"],
+      "evidence": "4380f5b4 zeroes payload through 43acabf4, writes q[0]=original[44023940]=43b03a49, q[1]=0, q[2]=requested function. Registrars copy five words, append argument at +14 and owner at +18. 43ae9888 copies seven words into node+8..+20; 43ae984c links node."
+    },
+    {
+      "status": "VERIFICADO",
+      "finding": "VD_Drive list and reachable callback targets resolved for all 12 recovered direct registrar callsites",
+      "addresses": ["0x4378f410", "0x437968b0", "0x43e9d7a8", "0x4379704c", "0x43b03a48", "0x43811324", "0x43b03abe"],
+      "evidence": "4378f620 calls 437968b0; 437968ce calls 43ad6052. Wrapper loads q+8 at 43b03a4a, moves r1 to r0 and BLX at 43b03a4e.",
+      "scope": "Conditional reachability from original pointer-slot values; runtime scheduling/order and additional external or computed producers are not proven."
+    },
+    {
+      "status": "VERIFICADO",
+      "finding": "VD_Post list and reachable callback targets resolved for all 14 recovered direct registrar callsites",
+      "addresses": ["0x4379210c", "0x437967e8", "0x43e9d7e4", "0x43797090", "0x43b03a48", "0x438106ec", "0x43810e7c", "0x4381061c", "0x4354a678"],
+      "evidence": "437924f0 calls 437967e8; 43796806 calls 43ad6052. Same wrapper and node contract as VD_Drive.",
+      "scope": "Conditional reachability from original pointer-slot values; no camera behavior inferred."
+    },
+    {
+      "status": "VERIFICADO",
+      "finding": "Full decompilation of both requested SyncYCout-chain functions and all four send wrappers",
+      "addresses": ["0x43796954", "0x4379bb90", "0x43797afc", "0x43797b10", "0x43797b24", "0x43797b38", "0x435a9928"],
+      "evidence": "43796954: 372 pseudocode lines; 4379bb90: 671 lines; decompiler errors empty. Callsite 43796c96 reaches 4379bb90. Four wrappers forward message identifier from input+4, short identifier from input+0, and an extra argument to 435a9928 using four different pin objects."
+    },
+    {
+      "status": "VERIFICADO",
+      "finding": "YC out window overflow is an elapsed-time guard, and its log is in 4379bb90 rather than 435a9928",
+      "addresses": ["0x4379caee", "0x4379cafa", "0x4379cb2e", "0x43ca519f", "0x43ca51ac"],
+      "evidence": "After send return == 0, timer_now - *(context[1]+8) > (*(context[1]+24)>>1), with context[2]+1d4 not in {4,5} and context[2]+1c !=4. Log argument is elapsed>>1 and channel; no DMA-done bit tested. String starts 43ca519f; phrase at 43ca51ac, file offset 7641ac."
+    },
+    {
+      "status": "VERIFICADO",
+      "finding": "New producer 4379b44c prepares YC payloads with shared-memory handles and geometry/configuration; chain is not only counters/timing",
+      "addresses": ["0x4379b44c", "0x4379b494", "0x4379b4c6", "0x4390366c", "0x43e9f0d8", "0x43e9f2e8", "0x43e9f388", "0x43a4941e"],
+      "evidence": "4379b44c takes source handle pointer at input+10 (and conditional second at +d4); AllocShare 4390366c copies short ID, word at +4, and up to four pairs at handle+8. YC record stride 38: +4 from shared handle+4, +8 from handle+0; halfword geometry at +14..+2a; enum remap at +2e. 43a4941e copies all 38 bytes into a message record."
+    },
+    {
+      "status": "PARCIAL",
+      "finding": "YC memory reference found, but no complete pixel-buffer/DMA descriptor resolved",
+      "addresses": ["0x4379b44c", "0x4390366c", "0x43e9f388", "0x435a9928"],
+      "missing": "Concrete runtime source MemoryHandle at producer input+10/+d4; backing DMM allocation/mapping and meaning of block pairs; original width/height/pitch/format field semantics. No proved pixel-plane address or DMA completion/ownership/cache contract.",
+      "scope": "No direct CPU pixel write or DMA-done condition identified in the requested decompiled chain. This is not proof that downstream drivers or unresolved virtual calls never access image memory."
+    },
+    {
+      "status": "PARCIAL",
+      "finding": "PIN message route is identified, final image consumer is runtime-dependent",
+      "addresses": ["0x435a9928", "0x435a9460", "0x435aa20c", "0x4379744c", "0x435a9b30"],
+      "evidence": "435a9928 builds a 34-byte message record; 435aa20c allocates/copies/sends message bytes. 4379744c handles 50004 control messages and 435a9b30 configures peer tuple/state. It is not demonstrated to receive the YC pixel payload itself.",
+      "missing": "Runtime peer tuple in each output pin object +8/+c/+10/+14 and DMM source allocation; no invented fixed consumer edge."
+    },
+    {
+      "status": "NO_VERIFICADO",
+      "finding": "Physical exposure end, image DMA completion and fully electronic silent capture",
+      "addresses": [],
+      "evidence": "No camera connected, no firmware execution or flashing; static logs and names do not prove physical behavior."
+    }
+  ],
+  "original_pointer_slots": {
+    "0x44023940": "0x43b03a49",
+    "0x440259b4": "0x43811325",
+    "0x44020ee4": "0x43b03abf",
+    "0x44026238": "0x438106ed",
+    "0x44023820": "0x43810e7d",
+    "0x440204b4": "0x4381061d",
+    "0x44021e0c": "0x4354a679"
+  },
+  "registrar_callsites_by_real_target": {
+    "VD_Drive": {
+      "0x43811324": ["0x4354991e", "0x4354a2e4", "0x4354dff4", "0x4354feb6", "0x43550af8", "0x43552c08", "0x43554b10", "0x4380fb54"],
+      "0x43b03abe": ["0x43549d42", "0x43552412", "0x435543c2", "0x435562dc"]
+    },
+    "VD_Post": {
+      "0x438106ec": ["0x43550a40", "0x43552b48", "0x43554a7c"],
+      "0x43810e7c": ["0x435498ca", "0x43550a56", "0x43552b62", "0x43554a8e"],
+      "0x4381061c": ["0x43550a7e", "0x43552b86", "0x43554aae"],
+      "0x4354a678": ["0x435498e4", "0x43550a94", "0x43552ba0", "0x43554ac0"]
+    }
+  },
+  "pin_objects_by_channel": {
+    "0": {"wrapper": "0x43797afc", "object": "0x43e9de9c"},
+    "1": {"wrapper": "0x43797b10", "object": "0x43e9de64"},
+    "2": {"wrapper": "0x43797b24", "object": "0x43e9dee0"},
+    "3": {"wrapper": "0x43797b38", "object": "0x43e9df18"}
+  },
+  "evidence_limitations": [
+    "Function names and signatures are decompiler inferences, not original Sony symbols; calls can preserve r1 even when a displayed prototype omits it.",
+    "PIC literal/code region 43541000..43bc0000 is treated as constant only in the temporary analysis view; data RAM remains writable; bytes never changed.",
+    "Exploratory queries 43796522, 435498ca and 43549d42 are interior fragments, superseded by full 43796518 and 43549380 exports; do not treat fragments as function entries.",
+    "4379cdb0 is a literal-pool query with no function; its failed exploratory decompilation is recorded, not hidden.",
+    "Generic virtual dispatch and owner-release callback at payload+18 -> vtable+c remain runtime-dependent; no targets invented."
+  ]
+}

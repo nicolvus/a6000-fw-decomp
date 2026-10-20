@@ -1,0 +1,22 @@
+{
+  "task_id": "S19-13",
+  "firmware": "Sony A6000 FW 3.21 / av-cam.bin",
+  "scope": "Static local LIRO analysis; no hardware",
+  "method": ["llvm-objdump -d --triple=thumbv7-none-eabi", "prior local Ghidra evidence only where explicitly noted"],
+  "status": "PARTIAL",
+  "findings": [
+    {"classification":"VERIFICADO","address":"0x4379ea38..0x4379ea64","file":"av-cam.bin","method":"LLVM Thumb","finding":"RelMgr constructs and sends type-0 ObjMsg 0x3015 through 0x43aeaee2."},
+    {"classification":"NO_VERIFICADO","address":"0x3015 -> 0x43807f4c","file":"av-cam.bin","method":"static bridge review","finding":"No receiver/adaptor proves that 0x3015 reaches the local dispatcher or cancels an installed capture."},
+    {"classification":"VERIFICADO","address":"0x43807d80..0x43807f40","file":"av-cam.bin","method":"LLVM control-flow","finding":"Non-install branches invoke state helpers, including 0x43b01a20 with 0/1 and tail calls to 0x43b01f36/40/7c; their semantic effect is unresolved."},
+    {"classification":"VERIFICADO","address":"0x438082ce","file":"av-cam.bin","method":"LLVM Thumb","finding":"Only local message 0x100 directly calls 0x43807d80; adjacent local message cases use other handlers."},
+    {"classification":"VERIFICADO","address":"0x437f22d4..0x437f245c","file":"av-cam.bin","method":"LLVM plus prior local pseudocode cross-check","finding":"LIRO stage returns 0/1/2/5 and conditionally calls 0x437fbad8 on ctx+0x754 before zeroing that field; normal path repeats this cleanup and calls 0x43787180."},
+    {"classification":"INFERENCIA","address":"ctx+0x754 / 0x437fbad8","file":"av-cam.bin","method":"static dataflow","finding":"The helper-plus-zeroing pattern likely detaches a request/stage slot, but field type, ownership and idle semantics are unknown."},
+    {"classification":"VERIFICADO","address":"0x43b1bf04, 0x43b1bfc8, 0x43b1c034","file":"av-cam.bin","method":"LLVM Thumb, entries normalized from Thumb pointers","finding":"LIRO state dispatches route to stage functions and return 5 for out-of-range state; this is not proof of capture completion."},
+    {"classification":"NO_VERIFICADO","address":"RelMgr/CaptureManager/LIRO chain","file":"av-cam.bin","method":"static review","finding":"No proven idle transition, DMM allocation release, or mapping of stage returns to cancellation/success was recovered."},
+    {"classification":"DESCARTADO","address":"dmm.ko:0xa430..0xa458","file":"dmm.ko","method":"prior kernel evidence","finding":"DmmClose is not allocation release; it decrements unit+0x2a1 and cannot establish buffer release here."},
+    {"classification":"HIPOTESIS","address":"before 0x43b04730(Image)","file":"av-cam.bin","method":"call ordering","finding":"A pre-descriptor abort is a candidate safe window, but no release event is linked to it and no pre-curtain guarantee is proven."}
+  ],
+  "next_task_id": "S19-14",
+  "next_task": "(f) Stage_RawPlayInit y reutilizacion de etapas",
+  "safety": "Static read-only analysis only; no original binary or Ghidra project modified, no camera interaction or flashing; SilentShutter is not declared functional."
+}

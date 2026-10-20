@@ -1,0 +1,225 @@
+{
+  "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "functions": [
+    {
+      "query": "43ae8e2c",
+      "raw64": "00f5f250036903f526624b63083203f5fb638a658b67704700f5f250436903f59c720a668b6303f59a73c1f88430704700f5f250836903f571628a66cb6303f5",
+      "references": [
+        "From: 43ae8ebc To: 43ae8e2c Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 4379227a To: 43ae8e2c Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 4378f8dc To: 43ae8e2c Type: UNCONDITIONAL_CALL Op: 0 DEFAULT"
+      ],
+      "entry": "43ae8e2c",
+      "completed": true,
+      "pseudo_code": "\nvoid FUN_43ae8e2c(int param_1,int param_2)\n\n{\n  int iVar1;\n  \n  iVar1 \u003d *(int *)(param_1 + 0x1e50);\n  *(int *)(param_2 + 0x34) \u003d iVar1;\n  *(int *)(param_2 + 0x58) \u003d iVar1 + 0xa68;\n  *(int *)(param_2 + 0x78) \u003d iVar1 + 0x7d8;\n  return;\n}\n\n",
+      "listing": [
+        "43ae8e2c add.w r0,r0,#0x1e40",
+        "43ae8e30 ldr r3,[r0,#0x10]",
+        "43ae8e32 add.w r2,r3,#0xa60",
+        "43ae8e36 str r3,[r1,#0x34]",
+        "43ae8e38 adds r2,#0x8",
+        "43ae8e3a add.w r3,r3,#0x7d8",
+        "43ae8e3e str r2,[r1,#0x58]",
+        "43ae8e40 str r3,[r1,#0x78]",
+        "43ae8e42 bx lr"
+      ]
+    },
+    {
+      "query": "43ae8e44",
+      "raw64": "00f5f250436903f59c720a668b6303f59a73c1f88430704700f5f250836903f571628a66cb6303f5fa73c1f89030704700f5f250c3690b640233c1f8a0307047",
+      "references": [
+        "From: 43ae8ec4 To: 43ae8e44 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 43790088 To: 43ae8e44 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT"
+      ],
+      "entry": "43ae8e44",
+      "completed": true,
+      "pseudo_code": "\nvoid FUN_43ae8e44(int param_1,int param_2)\n\n{\n  int iVar1;\n  \n  iVar1 \u003d *(int *)(param_1 + 0x1e54);\n  *(int *)(param_2 + 0x60) \u003d iVar1 + 0x138;\n  *(int *)(param_2 + 0x38) \u003d iVar1;\n  *(int *)(param_2 + 0x84) \u003d iVar1 + 0x134;\n  return;\n}\n\n",
+      "listing": [
+        "43ae8e44 add.w r0,r0,#0x1e40",
+        "43ae8e48 ldr r3,[r0,#0x14]",
+        "43ae8e4a add.w r2,r3,#0x138",
+        "43ae8e4e str r2,[r1,#0x60]",
+        "43ae8e50 str r3,[r1,#0x38]",
+        "43ae8e52 add.w r3,r3,#0x134",
+        "43ae8e56 str.w r3,[r1,#0x84]",
+        "43ae8e5a bx lr"
+      ]
+    },
+    {
+      "query": "43ae8e5c",
+      "raw64": "00f5f250836903f571628a66cb6303f5fa73c1f89030704700f5f250c3690b640233c1f8a030704700f5f350036803f588620a674b640833c1f8a830704700f5",
+      "references": [
+        "From: 43ae8ecc To: 43ae8e5c Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 437922ba To: 43ae8e5c Type: UNCONDITIONAL_CALL Op: 0 DEFAULT"
+      ],
+      "entry": "43ae8e5c",
+      "completed": true,
+      "pseudo_code": "\nvoid FUN_43ae8e5c(int param_1,int param_2)\n\n{\n  int iVar1;\n  \n  iVar1 \u003d *(int *)(param_1 + 0x1e58);\n  *(int *)(param_2 + 0x68) \u003d iVar1 + 0xf10;\n  *(int *)(param_2 + 0x3c) \u003d iVar1;\n  *(int *)(param_2 + 0x90) \u003d iVar1 + 500;\n  return;\n}\n\n",
+      "listing": [
+        "43ae8e5c add.w r0,r0,#0x1e40",
+        "43ae8e60 ldr r3,[r0,#0x18]",
+        "43ae8e62 add.w r2,r3,#0xf10",
+        "43ae8e66 str r2,[r1,#0x68]",
+        "43ae8e68 str r3,[r1,#0x3c]",
+        "43ae8e6a add.w r3,r3,#0x1f4",
+        "43ae8e6e str.w r3,[r1,#0x90]",
+        "43ae8e72 bx lr"
+      ]
+    },
+    {
+      "query": "43ae8e74",
+      "raw64": "00f5f250c3690b640233c1f8a030704700f5f350036803f588620a674b640833c1f8a830704700f5f250436a8b64704700f5f250836acb64704770b505460c46",
+      "references": [
+        "From: 43ae8ed4 To: 43ae8e74 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 437922fa To: 43ae8e74 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT"
+      ],
+      "entry": "43ae8e74",
+      "completed": true,
+      "pseudo_code": "\nvoid FUN_43ae8e74(int param_1,int param_2)\n\n{\n  int iVar1;\n  \n  iVar1 \u003d *(int *)(param_1 + 0x1e5c);\n  *(int *)(param_2 + 0x40) \u003d iVar1;\n  *(int *)(param_2 + 0xa0) \u003d iVar1 + 2;\n  return;\n}\n\n",
+      "listing": [
+        "43ae8e74 add.w r0,r0,#0x1e40",
+        "43ae8e78 ldr r3,[r0,#0x1c]",
+        "43ae8e7a str r3,[r1,#0x40]",
+        "43ae8e7c adds r3,#0x2",
+        "43ae8e7e str.w r3,[r1,#0xa0]",
+        "43ae8e82 bx lr"
+      ]
+    },
+    {
+      "query": "43ae8e84",
+      "raw64": "00f5f350036803f588620a674b640833c1f8a830704700f5f250436a8b64704700f5f250836acb64704770b505460c46fff74fff28462146fff7b6ff28462146",
+      "references": [
+        "From: 43ae8edc To: 43ae8e84 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 4379233a To: 43ae8e84 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT"
+      ],
+      "entry": "43ae8e84",
+      "completed": true,
+      "pseudo_code": "\nvoid FUN_43ae8e84(int param_1,int param_2)\n\n{\n  int iVar1;\n  \n  iVar1 \u003d *(int *)(param_1 + 0x1e60);\n  *(int *)(param_2 + 0x70) \u003d iVar1 + 0x440;\n  *(int *)(param_2 + 0x44) \u003d iVar1;\n  *(int *)(param_2 + 0xa8) \u003d iVar1 + 8;\n  return;\n}\n\n",
+      "listing": [
+        "43ae8e84 add.w r0,r0,#0x1e60",
+        "43ae8e88 ldr r3,[r0,#0x0]",
+        "43ae8e8a add.w r2,r3,#0x440",
+        "43ae8e8e str r2,[r1,#0x70]",
+        "43ae8e90 str r3,[r1,#0x44]",
+        "43ae8e92 adds r3,#0x8",
+        "43ae8e94 str.w r3,[r1,#0xa8]",
+        "43ae8e98 bx lr"
+      ]
+    },
+    {
+      "query": "43ae8e9a",
+      "raw64": "00f5f250436a8b64704700f5f250836acb64704770b505460c46fff74fff28462146fff7b6ff28462146fff7beff28462146fff7c6ff28462146fff7ceff2846",
+      "references": [
+        "From: 43ae8ee4 To: 43ae8e9a Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 4379237a To: 43ae8e9a Type: UNCONDITIONAL_CALL Op: 0 DEFAULT"
+      ],
+      "entry": "43ae8e9a",
+      "completed": true,
+      "pseudo_code": "\nvoid FUN_43ae8e9a(int param_1,int param_2)\n\n{\n  *(undefined4 *)(param_2 + 0x48) \u003d *(undefined4 *)(param_1 + 0x1e64);\n  return;\n}\n\n",
+      "listing": [
+        "43ae8e9a add.w r0,r0,#0x1e40",
+        "43ae8e9e ldr r3,[r0,#0x24]",
+        "43ae8ea0 str r3,[r1,#0x48]",
+        "43ae8ea2 bx lr"
+      ]
+    },
+    {
+      "query": "43ae8ea4",
+      "raw64": "00f5f250836acb64704770b505460c46fff74fff28462146fff7b6ff28462146fff7beff28462146fff7c6ff28462146fff7ceff28462146fff7d2ff28462146",
+      "references": [
+        "From: 437923ba To: 43ae8ea4 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 43ae8ef0 To: 43ae8ea4 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT"
+      ],
+      "entry": "43ae8ea4",
+      "completed": true,
+      "pseudo_code": "\nvoid FUN_43ae8ea4(int param_1,int param_2)\n\n{\n  *(undefined4 *)(param_2 + 0x4c) \u003d *(undefined4 *)(param_1 + 0x1e68);\n  return;\n}\n\n",
+      "listing": [
+        "43ae8ea4 add.w r0,r0,#0x1e40",
+        "43ae8ea8 ldr r3,[r0,#0x28]",
+        "43ae8eaa str r3,[r1,#0x4c]",
+        "43ae8eac bx lr"
+      ]
+    },
+    {
+      "query": "43ad3b92",
+      "raw64": "10b5144692f97c2088b00593009294f87d200a9b019294f87e2006930b9b029294f896200793a36a039222690492626af3f781f408b010bd70b50c46051d2846",
+      "references": [
+        "From: 43795e48 To: 43ad3b92 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 438c85e2 To: 43ad3b92 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 43795f84 To: 43ad3b92 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT"
+      ],
+      "entry": "43ad3b92",
+      "completed": true,
+      "pseudo_code": "\nvoid FUN_43ad3b92(undefined4 param_1,undefined4 param_2,int param_3,undefined4 param_4,\n                 undefined4 param_5,undefined4 param_6)\n\n{\n  FUN_436c74c8(param_1,param_2,*(undefined4 *)(param_3 + 0x24),*(undefined4 *)(param_3 + 0x28),\n               (int)*(char *)(param_3 + 0x7c),*(undefined1 *)(param_3 + 0x7d),\n               *(undefined1 *)(param_3 + 0x7e),*(undefined1 *)(param_3 + 0x96),\n               *(undefined4 *)(param_3 + 0x10),param_4,param_5,param_6);\n  return;\n}\n\n",
+      "listing": [
+        "43ad3b92 push {r4,lr}",
+        "43ad3b94 mov r4,r2",
+        "43ad3b96 ldrsb.w r2,[r2,#0x7c]",
+        "43ad3b9a sub sp,#0x20",
+        "43ad3b9c str r3,[sp,#0x14]",
+        "43ad3b9e str r2,[sp,#0x0]",
+        "43ad3ba0 ldrb.w r2,[r4,#0x7d]",
+        "43ad3ba4 ldr r3,[sp,#0x28]",
+        "43ad3ba6 str r2,[sp,#0x4]",
+        "43ad3ba8 ldrb.w r2,[r4,#0x7e]",
+        "43ad3bac str r3,[sp,#0x18]",
+        "43ad3bae ldr r3,[sp,#0x2c]",
+        "43ad3bb0 str r2,[sp,#0x8]",
+        "43ad3bb2 ldrb.w r2,[r4,#0x96]",
+        "43ad3bb6 str r3,[sp,#0x1c]",
+        "43ad3bb8 ldr r3,[r4,#0x28]",
+        "43ad3bba str r2,[sp,#0xc]",
+        "43ad3bbc ldr r2,[r4,#0x10]",
+        "43ad3bbe str r2,[sp,#0x10]",
+        "43ad3bc0 ldr r2,[r4,#0x24]",
+        "43ad3bc2 bl 0x436c74c8",
+        "43ad3bc6 add sp,#0x20",
+        "43ad3bc8 pop {r4,pc}"
+      ]
+    },
+    {
+      "query": "43b04604",
+      "raw64": "70b58ab00c4606460021154601a82422c1f6f6e991f4cef90190206816f5d8fe4ff48153049323790793029016f536ffe38801a92a46adf82230a36809938df8",
+      "references": [
+        "From: 43795e16 To: 43b04604 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 43795eec To: 43b04604 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT"
+      ],
+      "entry": "43b04604",
+      "completed": true,
+      "pseudo_code": "\nvoid FUN_43b04604(undefined4 param_1,undefined4 *param_2,undefined4 param_3)\n\n{\n  undefined4 uStack_34;\n  undefined4 uStack_30;\n  undefined4 uStack_28;\n  uint uStack_1c;\n  undefined1 uStack_18;\n  undefined2 uStack_16;\n  undefined4 uStack_14;\n  \n  FUN_439c5a04(\u0026uStack_34,0,0x24);\n  uStack_34 \u003d FUN_437959b8();\n  uStack_30 \u003d FUN_4381b3d4(*param_2);\n  uStack_28 \u003d 0x1020;\n  uStack_1c \u003d (uint)*(byte *)(param_2 + 1);\n  uStack_18 \u003d FUN_4381b4a0();\n  uStack_16 \u003d *(undefined2 *)((int)param_2 + 6);\n  uStack_14 \u003d param_2[2];\n  FUN_436d04c0(param_1,\u0026uStack_34,param_3);\n  FUN_43b0453c();\n  return;\n}\n\n",
+      "listing": [
+        "43b04604 push {r4,r5,r6,lr}",
+        "43b04606 sub sp,#0x28",
+        "43b04608 mov r4,r1",
+        "43b0460a mov r6,r0",
+        "43b0460c movs r1,#0x0",
+        "43b0460e mov r5,r2",
+        "43b04610 add r0,sp,#0x4",
+        "43b04612 movs r2,#0x24",
+        "43b04614 blx 0x439c5a04",
+        "43b04618 bl 0x437959b8",
+        "43b0461c str r0,[sp,#0x4]",
+        "43b0461e ldr r0,[r4,#0x0]",
+        "43b04620 bl 0x4381b3d4",
+        "43b04624 mov.w r3,#0x1020",
+        "43b04628 str r3,[sp,#0x10]",
+        "43b0462a ldrb r3,[r4,#0x4]",
+        "43b0462c str r3,[sp,#0x1c]",
+        "43b0462e str r0,[sp,#0x8]",
+        "43b04630 bl 0x4381b4a0",
+        "43b04634 ldrh r3,[r4,#0x6]",
+        "43b04636 add r1,sp,#0x4",
+        "43b04638 mov r2,r5",
+        "43b0463a strh.w r3,[sp,#0x22]",
+        "43b0463e ldr r3,[r4,#0x8]",
+        "43b04640 str r3,[sp,#0x24]",
+        "43b04642 strb.w r0,[sp,#0x20]",
+        "43b04646 mov r0,r6",
+        "43b04648 bl 0x436d04c0",
+        "43b0464c bl 0x43b0453c",
+        "43b04650 add sp,#0x28",
+        "43b04652 pop {r4,r5,r6,pc}"
+      ]
+    }
+  ]
+}

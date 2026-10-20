@@ -1,0 +1,224 @@
+{
+  "library": "libmpr.so",
+  "sha256_before": "9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30",
+  "windows": {
+    "0x3bd3bc:0x3bd450": {
+      "existing_listing": null,
+      "binary_verification": "\n/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so:\tfile format elf32-littlearm\n\nDisassembly of section .text:\n\n003b8d38 <_ZN8FlashLib11CloseSectorEPv>:\n  3bd3bc: e92d 43f0    \tpush.w\t{r4, r5, r6, r7, r8, r9, lr}\n  3bd3c0: b083         \tsub\tsp, #0xc\n  3bd3c2: af02         \tadd\tr7, sp, #0x8\n  3bd3c4: 4604         \tmov\tr4, r0\n  3bd3c6: 460e         \tmov\tr6, r1\n  3bd3c8: 6840         \tldr\tr0, [r0, #0x4]\n  3bd3ca: 214d         \tmovs\tr1, #0x4d\n  3bd3cc: 4615         \tmov\tr5, r2\n  3bd3ce: 4699         \tmov\tr9, r3\n  3bd3d0: f8d7 8020    \tldr.w\tr8, [r7, #0x20]\n  3bd3d4: f7f5 fcc0    \tbl\t0x3b2d58 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x8ca5c> @ imm = #-0xa680\n  3bd3d8: 4602         \tmov\tr2, r0\n  3bd3da: b950         \tcbnz\tr0, 0x3bd3f2 <_ZN8FlashLib11CloseSectorEPv+0x46ba> @ imm = #0x14\n  3bd3dc: 4611         \tmov\tr1, r2\n  3bd3de: 4620         \tmov\tr0, r4\n  3bd3e0: 4632         \tmov\tr2, r6\n  3bd3e2: 462b         \tmov\tr3, r5\n  3bd3e4: f8cd 9000    \tstr.w\tr9, [sp]\n  3bd3e8: f8cd 8004    \tstr.w\tr8, [sp, #0x4]\n  3bd3ec: f7ff fde6    \tbl\t0x3bcfbc <_ZN8FlashLib11CloseSectorEPv+0x4284> @ imm = #-0x434\n  3bd3f0: 4602         \tmov\tr2, r0\n  3bd3f2: 6860         \tldr\tr0, [r4, #0x4]\n  3bd3f4: 214d         \tmovs\tr1, #0x4d\n  3bd3f6: f107 0704    \tadd.w\tr7, r7, #0x4\n  3bd3fa: 46bd         \tmov\tsp, r7\n  3bd3fc: e8bd 43f0    \tpop.w\t{r4, r5, r6, r7, r8, r9, lr}\n  3bd400: f7f5 b9fc    \tb.w\t0x3b27fc <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x8c500> @ imm = #-0xac08\n  3bd404: b580         \tpush\t{r7, lr}\n  3bd406: 2100         \tmovs\tr1, #0x0\n  3bd408: af00         \tadd\tr7, sp, #0x0\n  3bd40a: 4803         \tldr\tr0, [pc, #0xc]          @ 0x3bd418 <_ZN8FlashLib11CloseSectorEPv+0x46e0>\n  3bd40c: f04f 32ff    \tmov.w\tr2, #0xffffffff\n  3bd410: e8bd 4080    \tpop.w\t{r7, lr}\n  3bd414: f240 ba10    \tb.w\t0x5fd838 <_ZN5FeaIf21GetIndexFilteringInfoEmN3MPR14EntryConditionENS0_7EntryIdEmPN5MprIf25GetIndexFilteringInfoListEm+0x1a96d6> @ imm = #0x240420\n  3bd418: c778         \tstm\tr7!, {r3, r4, r5, r6}\n  3bd41a: 00a4         \tlsls\tr4, r4, #0x2\n  3bd41c: b580         \tpush\t{r7, lr}\n  3bd41e: 2101         \tmovs\tr1, #0x1\n  3bd420: af00         \tadd\tr7, sp, #0x0\n  3bd422: 4803         \tldr\tr0, [pc, #0xc]          @ 0x3bd430 <_ZN8FlashLib11CloseSectorEPv+0x46f8>\n  3bd424: f04f 32ff    \tmov.w\tr2, #0xffffffff\n  3bd428: e8bd 4080    \tpop.w\t{r7, lr}\n  3bd42c: f240 ba04    \tb.w\t0x5fd838 <_ZN5FeaIf21GetIndexFilteringInfoEmN3MPR14EntryConditionENS0_7EntryIdEmPN5MprIf25GetIndexFilteringInfoListEm+0x1a96d6> @ imm = #0x240408\n  3bd430: c778         \tstm\tr7!, {r3, r4, r5, r6}\n  3bd432: 00a4         \tlsls\tr4, r4, #0x2\n  3bd434: b580         \tpush\t{r7, lr}\n  3bd436: af00         \tadd\tr7, sp, #0x0\n  3bd438: 4802         \tldr\tr0, [pc, #0x8]          @ 0x3bd444 <_ZN8FlashLib11CloseSectorEPv+0x470c>\n  3bd43a: e8bd 4080    \tpop.w\t{r7, lr}\n  3bd43e: f240 bacb    \tb.w\t0x5fd9d8 <_ZN5FeaIf21GetIndexFilteringInfoEmN3MPR14EntryConditionENS0_7EntryIdEmPN5MprIf25GetIndexFilteringInfoListEm+0x1a9876> @ imm = #0x240596\n  3bd442: bf00         \tnop\n  3bd444: c778         \tstm\tr7!, {r3, r4, r5, r6}\n  3bd446: 00a4         \tlsls\tr4, r4, #0x2\n  3bd448: b5f8         \tpush\t{r3, r4, r5, r6, r7, lr}\n  3bd44a: 4604         \tmov\tr4, r0\n  3bd44c: 6905         \tldr\tr5, [r0, #0x10]\n  3bd44e: af00         \tadd\tr7, sp, #0x0\n",
+      "bytes_sha256": "2a5fd34207d320ef370ec08049cd02aadc1fafb2edc5e2e5a1690b95392c9bf5",
+      "literal_strings": []
+    }
+  },
+  "reused": [],
+  "rtti": {
+    "Recorder": {
+      "bases": [
+        "BaseCc"
+      ],
+      "vtables": [
+        {
+          "addr_point": "0x811a38",
+          "methods": [
+            {
+              "entry": "0x32d600",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x32d640",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x32d5b2",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": null,
+              "sym": "__cxa_pure_virtual"
+            }
+          ]
+        }
+      ]
+    },
+    "StillRecorder": {
+      "bases": [
+        "Recorder"
+      ],
+      "vtables": [
+        {
+          "addr_point": "0x81b9c0",
+          "methods": [
+            {
+              "entry": "0x34a880",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x34a8a8",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x32d5b2",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x34a878",
+              "thumb": true,
+              "sym": null
+            }
+          ]
+        }
+      ]
+    },
+    "dcf_AVISequence": {
+      "bases": [
+        "dcf_CommonSequence"
+      ],
+      "vtables": [
+        {
+          "addr_point": "0x82df28",
+          "methods": [
+            {
+              "entry": "0x3938fc",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x393914",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x3a13d4",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x3a13b4",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39c63a",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39ca56",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39c674",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39ca48",
+              "thumb": true,
+              "sym": null
+            }
+          ]
+        }
+      ]
+    },
+    "dcf_Sequence": {
+      "bases": [
+        "dcf_CommonSequence"
+      ],
+      "vtables": [
+        {
+          "addr_point": "0x832050",
+          "methods": [
+            {
+              "entry": "0x3a89b0",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x3a89c8",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x3a13d4",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x3a13b4",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39c63a",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39ca56",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39c674",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39ca48",
+              "thumb": true,
+              "sym": null
+            }
+          ]
+        }
+      ]
+    },
+    "StillWriterFilter": {
+      "bases": [
+        "BaseThreadFilter"
+      ],
+      "vtables": [
+        {
+          "addr_point": "0x882e28",
+          "methods": [
+            {
+              "entry": "0x513204",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x513254",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x512ca0",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x5144e4",
+              "thumb": true,
+              "sym": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "target_virtuals": {
+    "0x3b4f70": [],
+    "0x3b515c": []
+  },
+  "target_relocations": {
+    "0x3b4f70": [],
+    "0x3b515c": []
+  },
+  "branch_candidates": [],
+  "sha256_after": "9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30"
+}

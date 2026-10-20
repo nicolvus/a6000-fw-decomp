@@ -1,0 +1,27 @@
+{
+  "source_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "base": "0x43541000",
+  "scope": "S34 virtual object frontier and DFE cause 0x00200000; static only",
+  "objects": [
+    {"slot":"0x44023400","object":"0x43e7ef80","type":"Camera::DFECore::Ofmt","vtable":"0x43fcbf80","virtual_plus_8":"0x43ad828c","unit":0},
+    {"slot":"0x44024d10","object":"0x43e7ee00","type":"Camera::DFECore::Ofmt","vtable":"0x43fcbf80","virtual_plus_8":"0x43ad828c","unit":1},
+    {"slot":"0x44021914","object":"0x43e7ee44","type":"Camera::DFECore::Ifmt","vtable":"0x43fcbe70","virtual_plus_8":"0x43ad79ae","unit":0},
+    {"slot":"0x4402603c","object":"0x43e7eed4","type":"Camera::DFECore::Ifmt","vtable":"0x43fcbe70","virtual_plus_8":"0x43ad79ae","unit":1}
+  ],
+  "children": [
+    {"type":"Camera::DFECore::Ofmt_OfSgc","vtable":"0x43fcbfc0","method":"0x436d30e8","offset":"0xa1610","registers":["0xfc0a1610","0xfc0a2610"]},
+    {"type":"Camera::DFECore::Ofmt_OutSgc","vtable":"0x43fcbff0","method":"0x436d32a4","offset":"0xa1710","registers":["0xfc0a1710","0xfc0a2710"]},
+    {"type":"Camera::DFECore::Ifmt_RcvSgc","vtable":"0x43fcbee8","method":"0x436d26e4","offset":"0xa1210","registers":["0xfc0a1210","0xfc0a2210"],"guard":"object+0xc == 0"},
+    {"type":"Camera::DFECore::Ifmt_LnkSgc","vtable":"0x43fcbd78","method":"0x436d23e0","offset":"0xa1310","registers":["0xfc0a1310","0xfc0a2310"]}
+  ],
+  "operation": "read bit 0; diagnostic if set; read-modify-write bit 0 to 1. Hardware ACK semantics not established.",
+  "ifmt_pre_helper": {"method":"0x43ad7ea6","setters":["0x436d2528","0x436d2518"],"operation":"RMW two 13-bit fields","registers":["0xfc0a3310","0xfc0a4310"]},
+  "apl_access_in_resolved_activation_path": false,
+  "cause_00200000": {"status":"NO_VERIFICADO","reason":"No mapping to APL state recovered. Same literal in 43ad6980/43ad6a96 enables/disables controller bit at fc01f010/fc01f014, with vector selector fc01f154=2/0; distinct register domain from handler fact."},
+  "scan": {"scope":"all bytes for raw literals, all existing Ghidra instructions for scalar operands","immediate_hits":49,"raw_hits_unaligned":479,"full_mask_immediate":"0x436cf958","raw_full_mask_hits":["0x439885ba","0x43988826","0x43fe91f2"],"raw_full_mask_xrefs":0},
+  "excluded_speculative_functions":["0x439885ba","0x43988826"],
+  "conclusion":"FRONTERA ESTATICA AGOTADA for the proposed four-object path and literal-based cause identification; no proof of universal static impossibility",
+  "physical_cycle":"NO_VERIFICADO",
+  "missing":"Hardware routing/register semantics, passive correlated APL status/IRQ/VD and unit-handle-frame observations without flashing",
+  "next_exact_step":"Resolve imported DMM provider of 0x43561524, table+0x2e4, then producer satisfying Rendezvous P+0x18c/+0x194 and secondary P+0xbc; retain handle identity to real YC reader"
+}

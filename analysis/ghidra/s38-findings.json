@@ -1,0 +1,18 @@
+{
+  "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "base": "0x43541000",
+  "physical_yc": "NO_VERIFICADO",
+  "receiver": "NO_VERIFICADO: ninguno recuperado; referencias incompletas no prueban ausencia",
+  "frontier": "FRONTERA ESTATICA AGOTADA: resolución ELF y valor del slot importado +0x2e4 en este blob; no cierre universal del receptor",
+  "next_exact": "Seguir input+0x38 <- P+0x1b4 <- context[2]+0x28 y conversor 0x43814d24 hasta campos APL de formato, stride y tamaño; asignar nombres solo con consumidores o tablas inequívocas.",
+  "summary": [
+    ["ACEPTO: integridad y consulta readOnly/noanalysis", "VERIFICADO", "SHA original/proyecto y manifiestos .gpr/.rep intactos"],
+    ["ACEPTO: 0x61003c usado como pool compartido", "VERIFICADO", "85 literales; clientes de varios servicios y wrappers importados"],
+    ["RECHAZO: receptor 0x61003c cerrado en av-cam", "NO_VERIFICADO", "Sin alta ni callback servidor recuperados; 16 literales sin xrefs"],
+    ["ACEPTO: compatibilidad de transporte DMM", "PARCIAL", "Pool y estructura compatibles; no equivalencia de proveedor"],
+    ["RECHAZO: DT_NEEDED/relocaciones ELF de av-cam", "VERIFICADO", "Blob ORIL, no ELF; readelf y nm retornan error"],
+    ["ACEPTO: frontera del slot +0x2e4 en este blob", "VERIFICADO", "Tabla 0x435410b4, slot 0x43541398=0; destino externo no contenido"],
+    ["ACEPTO: carga externa como explicación", "INFERENCIA", "Coherente con S20; proveedor exacto del slot no auditado aquí"],
+    ["RECHAZO: extents físicos unidos a P/APL", "NO_VERIFICADO", "Sin escritor reply+0x10/+0x14 ni misma clave/handle demostrado"]
+  ]
+}

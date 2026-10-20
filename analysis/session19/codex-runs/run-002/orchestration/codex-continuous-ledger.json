@@ -1,0 +1,21 @@
+{
+  "session": 19,
+  "runs": [
+    {
+      "run_number": 1,
+      "task_id": "S19-01",
+      "verdict": "PARTIAL",
+      "verified": ["0x43fcd5d0 contains Thumb callback 0x43807f4d", "local message 0x100 reaches 0x43807d80 and may install CaptureStart via 0x43809ed8", "RelMgr emits 0x3011/0x3013/0x3015 toward CamUser queue 0x40193"],
+      "unverified": ["queue 0x40193 receiver registration", "ObjMsg-to-local-domain translation", "S1/S2 exact event mapping", "cross-domain cancellation and release"],
+      "safety": "No firmware binaries modified; no camera connected or flashed; no claim of functional SilentShutter."
+    },
+    {
+      "run_number": 2,
+      "task_id": "S19-02",
+      "verdict": "PARTIAL",
+      "verified": ["UObjPin::Connect at libBizFw2 0x2bf1c calls MWF ObjPin::Connect through PLT 0x20588", "three ConnectPinWrapper implementations call the same MWF API unless their local defer flag is set", "TM::createLifeCycles constructs at 0x41b6c0 and registers the object", "the LifeCycle vtable address point 0xcc6698 has three Thumb slots"],
+      "unverified": ["runtime execution of the LifeCycle vtable/dispatch", "LifeCycle-to-Connect data-flow edge", "identity of the runtime object/pins at the activation-like dispatcher"],
+      "safety": "Static read-only analysis only; no binary changed, no camera interaction, no claim that SilentShutter is functional."
+    }
+  ]
+}

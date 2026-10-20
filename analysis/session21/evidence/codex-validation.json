@@ -1,0 +1,35 @@
+{
+  "audit": {
+    "result": "PASS",
+    "checks": 194,
+    "stage_notify_instructions": 138
+  },
+  "own_scripts": {
+    "ruff": "PASS",
+    "mypy": "PASS"
+  },
+  "requested_checks": {
+    "ruff_src_tests": {
+      "exit_code": 1,
+      "existing_findings": 9,
+      "files": [
+        "tests/test_elf_xrefs.py",
+        "tests/test_fm3_gpio_literals.py",
+        "tests/test_imx210_modes.py",
+        "tests/test_sfra_outcalls.py"
+      ],
+      "modified": false
+    },
+    "mypy_src": {
+      "result": "PASS",
+      "files": 5
+    }
+  },
+  "evidence_json_valid": 43,
+  "report_links_valid": true,
+  "git_repository": false,
+  "production_calls": false,
+  "subagents": false,
+  "architecture": "A > E > P ≈ E2",
+  "status": "PARCIAL"
+}

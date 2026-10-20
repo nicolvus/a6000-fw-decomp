@@ -1,0 +1,5 @@
+# LÍNEA C — Disparador, CaptureManager y sincronía mecánica (CRÍTICA)
+Objetivo: punto donde decidir normal vs electrónico sin tocar el estado mecánico.
+Tareas: C-01 identificar S2 (y S1) en RelMgr 0x4379d83a (eventos 0xb..0x1f, bits 1/0x10 inferidos) y su primer consumidor. C-02 enlace RelMgr -> CaptureManager_FunctionIF 0x437df338 y coordinador/clase de exposición 0x43841070 (mensajes, colas, tablas de secuencias 0x43b1xxxx). C-03 dónde empieza la secuencia mecánica (Stage_SACC 0x43782464, CAIF a Darwin) y qué estados quedan consistentes si se salta. C-04 punto de divergencia candidato y requisitos de una rama Silent; transición segura Silent->convencional. C-05 ¿Live View/SFRA exige movimientos mecánicos? (usa docs/capture/darwin-*.md, fm3-gpio-shutter-mapping.md, efcs-capture-selector.md; no repitas).
+Salidas: docs/capture/shutter-trigger-state-machine.md (grafo disparador->gestor->Darwin, puntos de divergencia).
+Aceptación: localizar el punto de decisión Normal/Silent y los estados que deben mantenerse. Prohibido proponer solo desactivar GPIO P4D/P4E.

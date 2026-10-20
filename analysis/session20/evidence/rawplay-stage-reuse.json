@@ -1,0 +1,74 @@
+{
+  "task_id": "S20-RAWPLAY",
+  "status": "PARTIAL",
+  "tool": "Ghidra 12.1.4 headless (scripts/ghidra_dec.sh, QuerySilentReferences.java), proyecto analysis/ghidra/silent-liro, solo lectura",
+  "firmware": "A6000 FW 3.21, av-cam.bin, base LIRO 0x43541000",
+  "strings_checked": [
+    {"string": "Stage_RawPlayInit", "va": "0x43cad51b", "ghidra_refs": 0},
+    {"string": "ycc_rawplay: %x", "va": "0x43cad4dc", "ghidra_refs": 0},
+    {"string": "sds_ycc_handle: %x", "va": "0x43cad508", "ghidra_refs": 0},
+    {"string": "Stage_DevLater.cpp", "va": "0x43cac51b", "ghidra_refs": 2, "caller_function": "0x437edaf8"},
+    {"string": "Stage_Notify.cpp", "va": "0x43caccd6", "ghidra_refs": 8, "caller_functions": ["0x437ef8cc", "0x43b1ad32", "0x43b1bb4c"]},
+    {"string": "Stage_SACC / Stage_SACC.cpp", "va": ["0x43c9ee6c", "0x43c9f18a"], "ghidra_refs": 34, "caller_function": "0x43b196c8"},
+    {"string": "Stage_NotifyLongExpNRCapturing", "va": "0x43caccb7", "ghidra_refs": 4, "caller_function": "0x43b1ae2a"},
+    {"string": "Stage_Apollo.cpp", "va": "0x43cc6e0f", "ghidra_refs": "no consultado directamente; identificado dentro de 0x43b1bb4c", "caller_function": "0x43b1bb4c"},
+    {"string": "Stage_Orientation.cpp", "va": "0x43cc97b4", "ghidra_refs": "no consultado directamente; identificado dentro de 0x43b1ad32 caso 1", "caller_function": "0x43b1ad32"}
+  ],
+  "verified_functions": {
+    "0x437edaf8": {
+      "name_hint": "Stage_DevLater",
+      "classification": "VERIFICADO",
+      "finding": "con param_3==0 copia ctx2+0x27e4..0x28e4 hacia ctx+0x4b70..0x4fe0, mismos offsets de contexto de captura convencional ya documentados en S19-07/S19-12"
+    },
+    "0x437ef8cc": {
+      "name_hint": "Stage_Notify helper (store/retrieve)",
+      "classification": "VERIFICADO",
+      "finding": "guarda o recupera un descriptor de 3 palabras (ctx+0x4b54/4b58/4b5c) hacia/desde objeto secundario ctx+0x4ad0 (+0x16cc/0x16e0/0x16e4), condicionado a ctx+0x4b60 (0/1=guardar, 2=recuperar)",
+      "callers": ["0x43afe9f4", "0x43afe11a"]
+    },
+    "0x43b1ad32": {
+      "name_hint": "Stage_Notify (familia FUN_43afdf16)",
+      "classification": "VERIFICADO/INFERENCIA",
+      "finding": "caso 0: anillo circular ctx+0x4ad4 (tam +0x20, cursor +0x28), extrae triple y envia mensaje 0x1003 via FUN_437feef8; caso 2: usa unidad SDS 0xe0b00 (ya confirmada S19-05) dentro de ruta SPICA/TAP (Stage_ExpandSpicaParam); caso 4: unidades 0x50b0b/0x50b2e (familia raster distinta de 0x50b3f)",
+      "ghidra_recorded_callers": 0
+    },
+    "0x43b1bb4c": {
+      "name_hint": "Stage_Apollo",
+      "classification": "VERIFICADO",
+      "finding": "opera sobre ctx+0x4ad0 en +0x1bfc/0x1c00/0x16bc/0x16be/0x170c, condicionado a ctx+0x534c en {2,4}",
+      "ghidra_recorded_callers": 0
+    },
+    "0x43afe9f4": {
+      "classification": "VERIFICADO",
+      "finding": "trivial: si FUN_43ae7648()!=1, llama FUN_437ef8cc(ctx). Primera decompilacion de esta funcion, antes solo citada por nombre en S19-07."
+    },
+    "0x43afe192": {
+      "classification": "VERIFICADO",
+      "finding": "caso 0: si ctx+0x3c==0, llama FUN_437edd44/437edd1c/437edd04/43561604 y luego FUN_437edaf8(ctx,uVar4,0) (Stage_DevLater); rama else emite diagnostico 'Change_StillRecMode_to_JPEG'"
+    },
+    "0x437edd44": {
+      "classification": "VERIFICADO",
+      "finding": "abre y parsea un archivo .ARW real desde la tarjeta SD (ruta DCIM/100MSDCF/DSC%05d.ARW), busca tags TIFF 0x111 (StripOffsets) y 0x117 (StripByteCounts) via FUN_437edaa4, valida tamano contra ctx+0x4e64 y copia el strip crudo a ctx+0x4e60+0x4e58. Pone DAT_4401eabf=1 si tiene exito, 0 si falla en cualquier paso."
+    },
+    "0x437edd1c": {
+      "classification": "VERIFICADO",
+      "finding": "gate: devuelve 1 solo si DAT_4401eabf!=0 (exito de carga ARW) Y *(DAT_4402546c+0x73)!=0 (flag global independiente)"
+    },
+    "0x437edd04": {
+      "classification": "VERIFICADO",
+      "finding": "copia 0x70 bytes desde DAT_43ede284 (buffer de configuracion/ruta llenado en 437edd44) a param_1 -- este es uVar4, el segundo parametro de Stage_DevLater. NO es un descriptor de pixeles."
+    },
+    "0x43561604": {
+      "classification": "VERIFICADO",
+      "finding": "stub de llamada virtual: invoca el slot +0x308 de la vtable de *(DAT_440205c0+0x14); no se resolvio el objeto/clase concreta"
+    },
+    "0x43ae7648": {
+      "classification": "VERIFICADO",
+      "finding": "lee ctx+0x4fd0: bit0 set -> devuelve 1 (omite 437ef8cc); bits1-4 (mascara 0x1e) -> devuelve 2; si no, 0"
+    }
+  },
+  "central_question_answer": "VERIFICADO (negativo para esta ruta concreta): la cadena FUN_43afe192 -> FUN_437edd44 -> FUN_437edd1c -> FUN_437edd04 -> FUN_43561604 -> FUN_437edaf8 (Stage_DevLater) desarrolla ('develop') un archivo .ARW YA EXISTENTE en la tarjeta SD (leido por nombre de archivo DCIM/100MSDCF/DSC%05d.ARW y parseado como TIFF), NO datos YC de un buffer en memoria ni de Live View. El .ARW tuvo que haber sido escrito por una captura RAW previa. Por tanto Stage_RawPlayInit/DevLater NO es un camino para generar una fotografia sin haber ejecutado antes una adquisicion de sensor. Queda abierto, sin relacion directa con esta cadena, el mecanismo general de guardar/recuperar metadatos de FUN_437ef8cc (no se determino si en algun otro caso puede apuntar a un buffer YC de Live View).",
+  "no_binaries_modified": true,
+  "no_codex_no_subagents": true,
+  "silentshutter_functional": false
+}

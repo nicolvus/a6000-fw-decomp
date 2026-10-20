@@ -1,0 +1,22 @@
+{
+  "source_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "base": "0x43541000",
+  "findings": [
+    {"status": "VERIFICADO", "claim": "AllocShare returns status and copies DMM ID, source allocation key and up to four extent pairs; SyncYCout passes open=0", "addresses": ["0x4390366c", "0x43902df8", "0x4379b494", "0x4379b4c6"], "evidence": "s33-initial.json"},
+    {"status": "VERIFICADO", "claim": "26 direct callers in 12 functions build 13 local inputs of 0x104 bytes; primary points to work-object handles", "evidence": "s33-audit.json"},
+    {"status": "VERIFICADO", "claim": "Helper writes input+c8=1 and input+d4=P+bc conditionally; whole-input copy propagates secondary fields in 435525c0", "addresses": ["0x43814ea0", "0x43815192", "0x4381519c", "0x4355164a", "0x435536be", "0x435557de"], "evidence": "s33-input-helper.json"},
+    {"status": "VERIFICADO", "claim": "Secondary enable derives from software byte 43f922ef+unit via 43b122fe/43acb888/436bd404; it is not an observed DMA-completion condition", "evidence": ["s33-secondary-flag.json", "s33-dma.json", "s33-mmio.json"]},
+    {"status": "VERIFICADO", "claim": "APL address preparation reaches MMIO: P+c4 -> request+38 -> 43e77ba0+unit*38 -> 436c041c -> bank+34; writes 0 then 1 to bank+100", "banks": ["0xf3850400", "0xf3950400", "0xf3a50400"], "evidence": ["s33-input-helper.json", "s33-apl.json", "s33-dma.json", "s33-mmio.json"]},
+    {"status": "VERIFICADO", "claim": "Image callbacks selected through 4380e358/4380e43c and dispatched through 43afb3ba; publication from VD_Sequence and HS_Sequence", "addresses": ["0x437916d4", "0x43796c7a", "0x43796c96", "0x4379123a", "0x43790b68"], "evidence": ["s33-workobjects.json", "s33-execution.json", "s33-adapters.json", "s33-frontier.json", "s33-final.json"]},
+    {"status": "PARCIAL", "claim": "Pixel format remains unlabelled: two enum converters do not prove YUV422, planar order or pitch", "addresses": ["0x4379b44c", "0x43814d24"]},
+    {"status": "PARCIAL", "claim": "DMM backend import slot 43541398 initially zero; address-prefix translation is known, effective runtime allocation and full raster layout remain unresolved", "addresses": ["0x43561524", "0x43560934", "0x43560978", "0x43b90850"]},
+    {"status": "INFERENCIA", "claim": "Compatible DMM contract family with S30; no identity with EncodeStill buffers proved; MMIO 0/1 sequence is consistent with APL kick"},
+    {"status": "NO_VERIFICADO", "claim": "Physical DMA completion for the published YC, new sensor raster, cache ownership, and fully electronic capture"}
+  ],
+  "address_prefix_table": {
+    "slot": "0x44023cd0", "table": "0x43b90850",
+    "pairs": [["0x80000000", "0x00000000"], ["0x90000000", "0x10000000"], ["0xa0000000", "0x20000000"], ["0xb0000000", "0x30000000"], ["0xc0000000", "0x40000000"], ["0xd0000000", "0x50000000"]],
+    "terminator": ["0xffffffff", "0xffffffff"]
+  },
+  "limits": ["43791000 is an exploratory interior query; use full 43790b68", "No universal completeness for calculated calls", "No firmware or hardware execution", "Original S32 exporter reused without changes; S32 labels are not S33 provenance errors"]
+}

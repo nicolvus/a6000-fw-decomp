@@ -1,0 +1,127 @@
+{
+  "sesion": 17,
+  "alcance": "Análisis estático exclusivo. No se afirma que SilentShutter funcione. No hay cámara conectada ni flasheo.",
+  "metodo": "4 agentes en paralelo (2 Claude Sonnet 5 + 2 Codex gpt-5.6-terra) + Claude principal, verificación cruzada posterior por el principal mediante desensamblado/nm directos",
+  "fuentes": [
+    "docs/capture/s17-main-s2-integration.md",
+    "docs/capture/s17-claude-a-topology.md",
+    "analysis/s17-claude-a-topology.json",
+    "docs/capture/s17-claude-b-camerasequence.md",
+    "analysis/s17-claude-b-api-native-flow.json",
+    "docs/capture/s17-codex-c-sdf-yc.md",
+    "analysis/s17-codex-c-yc-contract.json",
+    "docs/capture/s17-codex-d-fea-lifetime.md",
+    "analysis/s17-codex-d-fea-callback.json",
+    "docs/capture/s17-codex-d-dcf-crosscheck.md"
+  ],
+  "configuracion_real": {
+    "claude_principal": {"modelo": "claude-sonnet-5", "esfuerzo": "sesion en curso, sin cambio"},
+    "claude_a": {"modelo_solicitado": "sonnet", "esfuerzo_solicitado": "medium", "esfuerzo_reportado": "no declarado explícitamente por el agente"},
+    "claude_b": {"modelo_solicitado": "sonnet", "esfuerzo_solicitado": "medium", "esfuerzo_reportado": "bajo (discrepancia declarada, no corregida en silencio)"},
+    "codex_c": {"modelo_solicitado": "gpt-5.6-terra", "esfuerzo_solicitado": "medium", "verificado_por_llamada_de_prueba": true},
+    "codex_d": {"modelo_solicitado": "gpt-5.6-terra", "esfuerzo_solicitado": "medium", "verificado_por_llamada_de_prueba": true},
+    "limite_agentes_respetado": true,
+    "delegacion_anidada_detectada": false
+  },
+  "verificacion_cruzada_critica": [
+    {
+      "hallazgo": "MWF::ObjPin::Connect (ELF libMWF.so 0x29588) no comprueba ocupación previa del pin de destino",
+      "rama": "Claude A",
+      "metodo_verificacion": "llvm-objdump -d directo sobre 0x29588..0x296b4",
+      "resultado": "CONFIRMADO sin discrepancias"
+    },
+    {
+      "hallazgo": "libcameraex_jni.so/libcameraex_client.so existen en fw321; libScalarDaemon.so contiene SystemEventIssuerCameraSequence/CommandProcessorFactoryCameraEx",
+      "rama": "Claude B",
+      "metodo_verificacion": "find + nm -D directos sobre los binarios reales del firmware",
+      "resultado": "CONFIRMADO sin discrepancias"
+    },
+    {
+      "hallazgo": "Factoría 0x17b004 construye Sequence 0x6013 llamando al constructor en ELF 0x1761a8 (no 0x1861a8)",
+      "rama": "Codex C",
+      "metodo_verificacion": "llvm-objdump -d directo sobre 0x17b004..0x17b094",
+      "resultado": "CONFIRMADO sin discrepancias"
+    },
+    {
+      "hallazgo": "MprIf::SetCallbackFunc (libmpr.so 0x71f7b8) y FeaIf::MprIfCallbackPoint (0x4502e8) son símbolos reales",
+      "rama": "Codex D",
+      "metodo_verificacion": "nm -D directo sobre libmpr.so",
+      "resultado": "CONFIRMADO sin discrepancias"
+    }
+  ],
+  "contradicciones": [],
+  "nota_contradicciones": "No se encontraron contradicciones de hallazgos entre las 5 fuentes. La única discrepancia es de proceso (esfuerzo de Claude B reportado como bajo en vez de medium), no de evidencia técnica.",
+  "hallazgos_nuevos_cruzados": [
+    {
+      "hallazgo": "ConnectPin/ObjPin::Connect/ObjStatusViewer están en libMWF.so, no en libObj.so",
+      "quien": "Claude A",
+      "antes": "sesion 16 asumía que el gestor de pines de ObjEffect en libObj.so contenía la lógica",
+      "ahora": "la lógica real vive en una librería del framework distinta, importada por PLT",
+      "clasificacion": "VERIFICADO",
+      "consecuencia": "el StsViewer compartido (sts_id=6) es un agregador de notificación, no un cerrojo de arbitraje; la única exclusión real es estructural (puntero escalar de pin conectado)"
+    },
+    {
+      "hallazgo": "Selector 0x437eabfc decompilado por completo: árbol de decisión de 4 niveles sobre campos de la petición de captura",
+      "quien": "Principal",
+      "antes": "sesion 16 solo sabía que copiaba 5 palabras de una fila",
+      "ahora": "se conoce la lógica completa de selección de fila, sin marca de modo Silent/EFCS",
+      "clasificacion": "VERIFICADO",
+      "consecuencia": "descarta que la selección de fila dependa de un flag Silent explícito; el contenido de las filas sigue sin ser recuperable (BSS/cero en la imagen estática)"
+    },
+    {
+      "hallazgo": "CameraSequence/CameraEx/DeviceBuffer son reales en el firmware local A6000 con backend ScalarDaemon",
+      "quien": "Claude B",
+      "antes": "solo se citaba un issue de GitHub de terceros",
+      "ahora": "verificado con símbolos reales del firmware del propio proyecto",
+      "clasificacion": "VERIFICADO",
+      "consecuencia": "arquitectura P tiene mejor sustento binario local que antes, pero sigue sin enlace a S2"
+    },
+    {
+      "hallazgo": "BeginExecCommand candidato de Sequence 0x6013 (0x15fd50) no compara unitType en sus guardas de entrada",
+      "quien": "Codex C",
+      "antes": "desconocido si había un guard de tipo",
+      "ahora": "las tres guardas son de disponibilidad de holder/infraestructura, no de tipo de dato",
+      "clasificacion": "VERIFICADO (ausencia) / NO VERIFICADO (en capas internas del holder)",
+      "consecuencia": "no hay bloqueo explícito contra un YC de Camera en ese nivel, pero tampoco prueba de aceptación"
+    },
+    {
+      "hallazgo": "API real de registro de callback FEA (MprIf::SetCallbackFunc, FeaIf::MprIfCallbackPoint) y rango de IDs 0xc0000001..0xc0000091",
+      "quien": "Codex D",
+      "antes": "solo se sabía que FeaIf::EncodeStill encola sin esperar",
+      "ahora": "se conoce el mecanismo de notificación completo, con un candidato no confirmado a CBID_ENCODE_STILL (0xc0000004)",
+      "clasificacion": "VERIFICADO (API) / INFERENCIA fuerte (valor del ID)",
+      "consecuencia": "acerca el bloqueo de sesión 16 sin cerrarlo; sigue sin localizarse el liberador real de los buffers"
+    },
+    {
+      "hallazgo": "Dos callers reales de 0x43809ed8 (instalador de CaptureStart) localizados por desensamblado directo, ninguno referencia 0x3011/0x40193",
+      "quien": "Principal",
+      "antes": "sesion 16 no encontró ningún caller (búsqueda de Ghidra sin analysis incompleta)",
+      "ahora": "se conocen 2 callers reales, lo que reduce el espacio de búsqueda del consumidor de 0x40193 sin cerrarlo",
+      "clasificacion": "VERIFICADO (callers) / NO VERIFICADO (enlace a 0x3011)",
+      "consecuencia": "el bloqueo persiste en una capa adicional, ahora mejor acotada"
+    }
+  ],
+  "respuestas_informe_final": {
+    "1_investigacion_principal": "Decompiló por completo el selector 0x437eabfc (árbol de 4 niveles), confirmó que la tabla 0x43edccf8 es BSS/cero en la imagen estática, y localizó por desensamblado directo (no por referencias de Ghidra) los dos callers reales de 0x43809ed8, descartando que referencien literalmente 0x3011/0x40193.",
+    "2_hallazgo_claude_a": "ConnectPin/ObjPin::Connect/ObjStatusViewer viven en libMWF.so, no en libObj.so; ObjPin::Connect no arbitra por ocupación de pin; GetStsViewer es un get-or-create por sts_id sin lógica de exclusión activa.",
+    "3_hallazgo_claude_b": "CameraSequence/CameraEx/DeviceBuffer son reales y verificados localmente en el firmware A6000, con backend Binder estándar y enlace concreto a ScalarDaemon; onShutterKeyDown en PMCADemo usa takePicture() convencional, no CameraSequence.",
+    "4_hallazgo_codex_c": "Corrige la dirección del constructor de la Sequence 0x6013 (ELF 0x1761a8); identifica el BeginExecCommand candidato (0x15fd50) con sus 3 guardas reales (sin chequeo de unitType); reconstruye la geometría y el contrato de PlayData (0x15ebfc).",
+    "5_hallazgo_codex_d": "Localiza la API real de registro de callback FEA y el rango de IDs 0xc0000001..0xc0000091, con 0xc0000004 como candidato no confirmado a CBID_ENCODE_STILL; confirma que no se localizó liberador real de los buffers DMM tras EncodeStill.",
+    "6_modelos_y_esfuerzos": "Codex C y Codex D: gpt-5.6-terra/medium, verificado por llamada de prueba. Claude A: sonnet, esfuerzo no declarado explícitamente por el agente. Claude B: sonnet, reportó explícitamente esfuerzo bajo (discrepancia frente al medium solicitado, declarada aquí sin corregirla en silencio).",
+    "7_limite_de_agentes": "Respetado: exactamente 2 Claude subordinados y 2 Codex, ninguno delegó a un tercero (las 4 ramas confirmaron explícitamente no usar Agent ni lanzar procesos adicionales).",
+    "8_enlaces_publicos_consultados": "Consultados directamente (fetch real): issue #35 de OpenMemories-Framework, raíz del repo OpenMemories-Framework, CameraActivity.java de PMCADemo (todos por Claude B). Consultados como contexto delimitado (Codex D): portal Sony OSS ILCE-6000, estándar CIPA DC-009. No consultados explícitamente esta sesión: Sony-PMCA-RE, fwtool.py, sony-a6000-firmware-research, Android ImageFormat (citado por referencia, no fetcheado).",
+    "9_vinculo_camerasequence_servicios_nativos": "CameraSequence (Java) se apoya en libcameraex_jni.so (JNI) y libcameraex_client.so (cliente Binder de CameraEx vía ICameraExService/android::defaultServiceManager); el backend de eventos (SystemEventIssuerCameraSequence, CommandProcessorFactoryCameraEx/CameraSequence) vive en libScalarDaemon.so, verificado por símbolos reales.",
+    "10_modelo_que_conecte_0x2a_durante_ee": "No localizado esta sesión; sin cambios respecto a sesión 16 (único creador literal confirmado: ModelPbCap).",
+    "11_arbitraje_stsviewer": "No arbitra: GetStsViewer es un caché get-or-create por sts_id; el ObjStatusViewer resultante es un agregador de notificación de estado (GetStatus/GetTargetStatus/callback), no interviene en ninguna decisión de aceptar/rechazar una conexión de pin.",
+    "12_objeto_53": "NO VERIFICADO, sin cambios. Evidencia circunstancial previa (no nueva esta sesión): perfil compatible con un objeto puente/escalador YC, hipótesis ObjScalar sin confirmar.",
+    "13_funcion_real_sequence_6013": "BeginExecCommand candidato en ELF 0x15fd50 (SequencePinDeliverExecWriteStillCmd, INFERENCIA fuerte por layout/cadenas, sin slot de vtabla confirmado); impone 3 guardas de disponibilidad de holder, ninguna de tipo de dato; delega la geometría al selector virtual 3 del holder.",
+    "14_formato_yc_de_camera": "NO VERIFICADO. No se siguió el productor real de Camera hasta un descriptor concreto; no se puede atribuir unitType ni geometría sin esa evidencia.",
+    "15_funcion_que_recibe_cbid_encode_still": "NO VERIFICADO el receptor directo. StillConverter sigue como candidato de INFERENCIA fuerte (cadenas locales), sin xref de código que una el registro del callback con ese método.",
+    "16_cuando_liberar_el_buffer": "NO VERIFICADO el instante exacto. El retorno 0 de FeaIf::EncodeStill certifica solo encolado; no se localizó liberador real de las unidades DMM originales ni de la copia SDF. Regla segura provisional (INFERENCIA, no contrato recuperado): retener hasta notificación de callback FEA.",
+    "17_resolucion_electronica_mejor_respaldada": "Arquitectura P (CameraSequence): 640x480 JPEG de preview, con mejor sustento documental y binario local para la pregunta estrecha de 'API accesible', aunque no demostrada como fotografía DCF. Arquitectura E: sin resolución verificada end-to-end; PbCap/SDF soporta clases de tamaño 640x360/640x480/1920x1080 pero sin camino completo demostrado desde Camera.",
+    "18_punto_de_interceptor_s2_independiente": "Sí existe un punto de intercepción software independiente del lado Android (onShutterKeyDown, callback de KeyEvent de Activity), pero usa captura convencional (takePicture()), no una ruta electrónica; del lado LIRO nativo, el punto de selección 0x437eabfc sigue siendo el único candidato identificado, sin marca de modo Silent.",
+    "19_llegada_a_dcf_sin_fabricar_metadatos": "No. Ninguna ruta (E ni P) demuestra estáticamente una cadena completa hasta WriteStill/confirmación MPR y catálogo DCF; Codex D confirma que el requisito arquitectónico (CIPA DC-009, DCF 2.0) está documentado pero la implementación concreta de Sony no está unida por evidencia estática.",
+    "20_arquitectura_mejor_respaldada": "Sin cambio de orden: A > E > P ≈ E2. A sigue siendo la única arquitectura con precedente operativo real (LIRO estándar); E tiene ahora un bloqueo de control debilitado (no hay arbitraje activo de StsViewer) pero sigue sin disparador fotográfico conocido; P tiene mejor sustento de API pero cero enlace al botón físico.",
+    "21_trabajo_siguiente_sesion": "(a) Decompilar LifeCycle::ctor/Activate para encontrar el sitio real que invoca ObjPin::Connect; (b) resolver el llamador indirecto vía vtabla de 0x43809ed8 más allá de los dos callers directos ya identificados; (c) seguir el productor real del YC de Camera hasta un descriptor concreto; (d) localizar el registro real del callback CBID_ENCODE_STILL y su receptor; (e) si se dispone de acceso, buscar bytecode Java/DEX del sistema Android completo para verificar PREVIEW_FRAME_FORMAT."
+  }
+}

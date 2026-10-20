@@ -1,0 +1,54 @@
+
+firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libScalarDaemon.so:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+000e36de <SCALARDAEMON::SystemEventIssuerCamera::captureStart()>:
+   e36de: b5b0         	push	{r4, r5, r7, lr}
+   e36e0: 2010         	movs	r0, #0x10
+   e36e2: af00         	add	r7, sp, #0x0
+   e36e4: f7e6 e88e    	blx	0xc9804 <_Znwj@plt>     @ imm = #-0x19ee4
+   e36e8: 4604         	mov	r4, r0
+   e36ea: f7e8 ed82    	blx	0xcc1f0 <_ZN12SCALARDAEMON12SysParamListC1Ev@plt> @ imm = #-0x174fc
+   e36ee: 2010         	movs	r0, #0x10
+   e36f0: f7e6 e888    	blx	0xc9804 <_Znwj@plt>     @ imm = #-0x19ef0
+   e36f4: 2100         	movs	r1, #0x0
+   e36f6: 4605         	mov	r5, r0
+   e36f8: f7ed eeaa    	blx	0xd1450 <_ZN9PrmNumberC1Ei@plt> @ imm = #-0x122ac
+   e36fc: 462a         	mov	r2, r5
+   e36fe: f240 1109    	movw	r1, #0x109
+   e3702: 4620         	mov	r0, r4
+   e3704: f7ee ec30    	blx	0xd1f68 <_ZN12SCALARDAEMON12SysParamList3addEmP9ParamBase@plt> @ imm = #-0x117a0
+   e3708: f7ef ed98    	blx	0xd323c <_ZN12SCALARDAEMON12ScalarDaemon11getInstanceEv@plt> @ imm = #-0x104d0
+   e370c: f7ed ecc2    	blx	0xd1094 <_ZNK12SCALARDAEMON12ScalarDaemon19getParameterStorageEv@plt> @ imm = #-0x1267c
+   e3710: f241 21ed    	movw	r1, #0x12ed
+   e3714: f7ec ee28    	blx	0xd0368 <_ZN12SCALARDAEMON16ParameterStorage17getParameterEntryENS_12PARAMETER_IDE@plt> @ imm = #-0x133b0
+   e3718: 4605         	mov	r5, r0
+   e371a: b1c0         	cbz	r0, 0xe374e <SCALARDAEMON::SystemEventIssuerCamera::captureStart()+0x70> @ imm = #0x30
+   e371c: 6803         	ldr	r3, [r0]
+   e371e: 68db         	ldr	r3, [r3, #0xc]
+   e3720: 4798         	blx	r3
+   e3722: 4628         	mov	r0, r5
+   e3724: f7ea eda2    	blx	0xce26c <_ZNK12SCALARDAEMON14ParameterEntry7isValidEv@plt> @ imm = #-0x154bc
+   e3728: b188         	cbz	r0, 0xe374e <SCALARDAEMON::SystemEventIssuerCamera::captureStart()+0x70> @ imm = #0x22
+   e372a: 4628         	mov	r0, r5
+   e372c: f7e6 e9d0    	blx	0xc9ad0 <_ZNK12SCALARDAEMON14ParameterEntry9getNumberEv@plt> @ imm = #-0x19c60
+   e3730: 2801         	cmp	r0, #0x1
+   e3732: d10c         	bne	0xe374e <SCALARDAEMON::SystemEventIssuerCamera::captureStart()+0x70> @ imm = #0x18
+   e3734: 300f         	adds	r0, #0xf
+   e3736: f7e6 e866    	blx	0xc9804 <_Znwj@plt>     @ imm = #-0x19f34
+   e373a: 2100         	movs	r1, #0x0
+   e373c: 4605         	mov	r5, r0
+   e373e: f7ed ee88    	blx	0xd1450 <_ZN9PrmNumberC1Ei@plt> @ imm = #-0x122f0
+   e3742: 4620         	mov	r0, r4
+   e3744: f240 2165    	movw	r1, #0x265
+   e3748: 462a         	mov	r2, r5
+   e374a: f7ee ec0e    	blx	0xd1f68 <_ZN12SCALARDAEMON12SysParamList3addEmP9ParamBase@plt> @ imm = #-0x117e4
+   e374e: 2003         	movs	r0, #0x3
+   e3750: 2107         	movs	r1, #0x7
+   e3752: 4622         	mov	r2, r4
+   e3754: e8bd 40b0    	pop.w	{r4, r5, r7, lr}
+   e3758: f7ea bec0    	b.w	0xce4dc <_ZNSt12_Vector_baseIjSaIjEE13_M_deallocateEPjj@plt+0xc> @ imm = #-0x15280
+   e375c: 4620         	mov	r0, r4
+   e375e: f7ea ec7c    	blx	0xce058 <_ZdlPv@plt>    @ imm = #-0x15708
+   e3762: f7eb eaae    	blx	0xcecc0 <__cxa_end_cleanup@plt> @ imm = #-0x14aa4

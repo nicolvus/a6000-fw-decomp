@@ -1,0 +1,441 @@
+{
+  "source_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "base": "43541000",
+  "method": "persistent project -readOnly -noanalysis; temporary function definitions rolled back; no firmware execution",
+  "functions": [
+    {
+      "query": "436c041c",
+      "references_before": [
+        {
+          "from": "436bde20",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436bdbfc"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "436c041c",
+      "body": "[[436c041c, 436c0437]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\n/* WARNING: Globals starting with \u0027_\u0027 overlap smaller symbols at the same address */\n\nvoid FUN_436c041c(undefined4 param_1,int param_2)\n\n{\n  undefined1 *puVar1;\n  \n  if (param_2 \u003d\u003d 1) {\n    puVar1 \u003d \u0026DAT_f3950400;\n  }\n  else {\n    if (param_2 !\u003d 0) {\n      if (param_2 \u003d\u003d 2) {\n        _DAT_f3a50434 \u003d param_1;\n      }\n      return;\n    }\n    puVar1 \u003d \u0026DAT_f3850400;\n  }\n  *(undefined4 *)(puVar1 + 0x34) \u003d param_1;\n  return;\n}\n\n",
+      "listing": [
+        "436c041c cmp r1,#0x1",
+        "436c041e beq 0x436c042c",
+        "436c0420 bcc 0x436c0428",
+        "436c0422 cmp r1,#0x2",
+        "436c0424 bne 0x436c0436",
+        "436c0426 b 0x436c0432",
+        "436c0428 ldr r3,[0x436c0438]",
+        "436c042a b 0x436c042e",
+        "436c042c ldr r3,[0x436c043c]",
+        "436c042e str r0,[r3,#0x34]",
+        "436c0430 bx lr",
+        "436c0432 ldr r3,[0x436c0440]",
+        "436c0434 str r0,[r3,#0x34]",
+        "436c0436 bx lr"
+      ],
+      "calls_and_jumps": [
+        {
+          "site": "436c041e",
+          "target": "436c042c",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c0420",
+          "target": "436c0428",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c0424",
+          "target": "436c0436",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c0426",
+          "target": "436c0432",
+          "type": "UNCONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c042a",
+          "target": "436c042e",
+          "type": "UNCONDITIONAL_JUMP"
+        }
+      ],
+      "references_after": [
+        {
+          "from": "436bde20",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436bdbfc"
+        }
+      ]
+    },
+    {
+      "query": "436c06fc",
+      "references_before": [
+        {
+          "from": "43acb7a4",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43acb70a"
+        },
+        {
+          "from": "436bde60",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436bdbfc"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "436c06fc",
+      "body": "[[436c06fc, 436c071b]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\n/* WARNING: Globals starting with \u0027_\u0027 overlap smaller symbols at the same address */\n\nvoid FUN_436c06fc(undefined4 param_1,int param_2)\n\n{\n  undefined1 *puVar1;\n  \n  if (param_2 \u003d\u003d 1) {\n    puVar1 \u003d \u0026DAT_f3950400;\n  }\n  else {\n    if (param_2 !\u003d 0) {\n      if (param_2 \u003d\u003d 2) {\n        _DAT_f3a504a4 \u003d param_1;\n      }\n      return;\n    }\n    puVar1 \u003d \u0026DAT_f3850400;\n  }\n  *(undefined4 *)(puVar1 + 0xa4) \u003d param_1;\n  return;\n}\n\n",
+      "listing": [
+        "436c06fc cmp r1,#0x1",
+        "436c06fe beq 0x436c070c",
+        "436c0700 bcc 0x436c0708",
+        "436c0702 cmp r1,#0x2",
+        "436c0704 bne 0x436c071a",
+        "436c0706 b 0x436c0714",
+        "436c0708 ldr r3,[0x436c071c]",
+        "436c070a b 0x436c070e",
+        "436c070c ldr r3,[0x436c0720]",
+        "436c070e str.w r0,[r3,#0xa4]",
+        "436c0712 bx lr",
+        "436c0714 ldr r3,[0x436c0724]",
+        "436c0716 str.w r0,[r3,#0xa4]",
+        "436c071a bx lr"
+      ],
+      "calls_and_jumps": [
+        {
+          "site": "436c06fe",
+          "target": "436c070c",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c0700",
+          "target": "436c0708",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c0704",
+          "target": "436c071a",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c0706",
+          "target": "436c0714",
+          "type": "UNCONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c070a",
+          "target": "436c070e",
+          "type": "UNCONDITIONAL_JUMP"
+        }
+      ],
+      "references_after": [
+        {
+          "from": "43acb7a4",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43acb70a"
+        },
+        {
+          "from": "436bde60",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436bdbfc"
+        }
+      ]
+    },
+    {
+      "query": "436c019c",
+      "references_before": [
+        {
+          "from": "43acb2f0",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43acb2e8"
+        },
+        {
+          "from": "43acb2fc",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43acb2e8"
+        },
+        {
+          "from": "436bdaaa",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436bda34"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "436c019c",
+      "body": "[[436c019c, 436c01b7]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\n/* WARNING: Globals starting with \u0027_\u0027 overlap smaller symbols at the same address */\n\nvoid FUN_436c019c(undefined4 param_1,int param_2)\n\n{\n  undefined4 *puVar1;\n  \n  if (param_2 \u003d\u003d 1) {\n    puVar1 \u003d (undefined4 *)\u0026DAT_f3950500;\n  }\n  else {\n    if (param_2 !\u003d 0) {\n      if (param_2 \u003d\u003d 2) {\n        _DAT_f3a50500 \u003d param_1;\n      }\n      return;\n    }\n    puVar1 \u003d (undefined4 *)\u0026DAT_f3850500;\n  }\n  *puVar1 \u003d param_1;\n  return;\n}\n\n",
+      "listing": [
+        "436c019c cmp r1,#0x1",
+        "436c019e beq 0x436c01ac",
+        "436c01a0 bcc 0x436c01a8",
+        "436c01a2 cmp r1,#0x2",
+        "436c01a4 bne 0x436c01b6",
+        "436c01a6 b 0x436c01b2",
+        "436c01a8 ldr r3,[0x436c01b8]",
+        "436c01aa b 0x436c01ae",
+        "436c01ac ldr r3,[0x436c01bc]",
+        "436c01ae str r0,[r3,#0x0]",
+        "436c01b0 bx lr",
+        "436c01b2 ldr r3,[0x436c01c0]",
+        "436c01b4 str r0,[r3,#0x0]",
+        "436c01b6 bx lr"
+      ],
+      "calls_and_jumps": [
+        {
+          "site": "436c019e",
+          "target": "436c01ac",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c01a0",
+          "target": "436c01a8",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c01a4",
+          "target": "436c01b6",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c01a6",
+          "target": "436c01b2",
+          "type": "UNCONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c01aa",
+          "target": "436c01ae",
+          "type": "UNCONDITIONAL_JUMP"
+        }
+      ],
+      "references_after": [
+        {
+          "from": "43acb2f0",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43acb2e8"
+        },
+        {
+          "from": "43acb2fc",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43acb2e8"
+        },
+        {
+          "from": "436bdaaa",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436bda34"
+        }
+      ]
+    },
+    {
+      "query": "436bd404",
+      "references_before": [
+        {
+          "from": "43acb88e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43acb888"
+        },
+        {
+          "from": "43acb8a0",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43acb89a"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "436bd404",
+      "body": "[[436bd404, 436bd40b]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\nundefined1 FUN_436bd404(int param_1)\n\n{\n  return (\u0026DAT_43f922ef)[param_1];\n}\n\n",
+      "listing": [
+        "436bd404 ldr r3,[0x436bd40c]",
+        "436bd406 add r3,pc",
+        "436bd408 ldrb r0,[r3,r0]",
+        "436bd40a bx lr"
+      ],
+      "calls_and_jumps": [],
+      "references_after": [
+        {
+          "from": "43acb88e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43acb888"
+        },
+        {
+          "from": "43acb8a0",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43acb89a"
+        }
+      ]
+    },
+    {
+      "query": "43560934",
+      "references_before": [
+        {
+          "from": "43a3a9d4",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43a3a9b4"
+        },
+        {
+          "from": "43a3aa14",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43a3a9b4"
+        },
+        {
+          "from": "43a3a9f6",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43a3a9b4"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "43560934",
+      "body": "[[43560934, 4356096f]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\nuint FUN_43560934(uint param_1,int param_2)\n\n{\n  int iVar1;\n  uint uVar2;\n  uint uVar3;\n  uint uVar4;\n  \n  iVar1 \u003d 0;\n  do {\n    uVar2 \u003d *(uint *)(iVar1 + DAT_44023cd0);\n    if (uVar2 \u003d\u003d 0xffffffff) {\n      return 0;\n    }\n    uVar3 \u003d *(uint *)(iVar1 + DAT_44023cd0 + 4);\n    uVar4 \u003d uVar2;\n    if (param_2 \u003d\u003d 0) {\n      uVar4 \u003d uVar3;\n      uVar3 \u003d uVar2;\n    }\n    iVar1 \u003d iVar1 + 8;\n  } while (uVar3 !\u003d (param_1 \u0026 0xf0000000));\n  return uVar4 | param_1 \u0026 0xfffffff;\n}\n\n",
+      "listing": [
+        "43560934 ldr r3,[0x43560970]",
+        "43560936 movs r2,#0x0",
+        "43560938 push {r4,r5,r6,lr}",
+        "4356093a add r3,pc",
+        "4356093c b 0x4356095e",
+        "4356093e ldr r5,[r5,#0x4]",
+        "43560940 cbnz r1,0x43560946",
+        "43560942 mov r6,r4",
+        "43560944 b 0x4356094a",
+        "43560946 mov r6,r5",
+        "43560948 mov r5,r4",
+        "4356094a and r4,r0,#0xf0000000",
+        "4356094e adds r2,#0x8",
+        "43560950 cmp r6,r4",
+        "43560952 bne 0x4356095e",
+        "43560954 bic r0,r0,#0xf0000000",
+        "43560958 orr.w r0,r5,r0",
+        "4356095c pop {r4,r5,r6,pc}",
+        "4356095e ldr r4,[0x43560974]",
+        "43560960 ldr r4,[r3,r4]",
+        "43560962 adds r5,r2,r4",
+        "43560964 ldr r4,[r2,r4]",
+        "43560966 cmp.w r4,#0xffffffff",
+        "4356096a bne 0x4356093e",
+        "4356096c movs r0,#0x0",
+        "4356096e pop {r4,r5,r6,pc}"
+      ],
+      "calls_and_jumps": [
+        {
+          "site": "4356093c",
+          "target": "4356095e",
+          "type": "UNCONDITIONAL_JUMP"
+        },
+        {
+          "site": "43560940",
+          "target": "43560946",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "43560944",
+          "target": "4356094a",
+          "type": "UNCONDITIONAL_JUMP"
+        },
+        {
+          "site": "43560952",
+          "target": "4356095e",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "4356096a",
+          "target": "4356093e",
+          "type": "CONDITIONAL_JUMP"
+        }
+      ],
+      "references_after": [
+        {
+          "from": "43a3a9d4",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43a3a9b4"
+        },
+        {
+          "from": "43a3aa14",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43a3a9b4"
+        },
+        {
+          "from": "43a3a9f6",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43a3a9b4"
+        }
+      ]
+    },
+    {
+      "query": "43560978",
+      "references_before": [
+        {
+          "from": "43a3aa28",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43a3a9b4"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "43560978",
+      "body": "[[43560978, 435609a5]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\nundefined4 FUN_43560978(uint param_1,int param_2)\n\n{\n  int iVar1;\n  uint uVar2;\n  \n  iVar1 \u003d 0;\n  do {\n    uVar2 \u003d *(uint *)(iVar1 + DAT_44023cd0);\n    if (uVar2 \u003d\u003d 0xffffffff) {\n      return 0;\n    }\n    if (param_2 !\u003d 0) {\n      uVar2 \u003d *(uint *)(iVar1 + DAT_44023cd0 + 4);\n    }\n    iVar1 \u003d iVar1 + 8;\n  } while (uVar2 !\u003d (param_1 \u0026 0xf0000000));\n  return 1;\n}\n\n",
+      "listing": [
+        "43560978 ldr r3,[0x435609a8]",
+        "4356097a movs r2,#0x0",
+        "4356097c push {r4,r5,lr}",
+        "4356097e add r3,pc",
+        "43560980 b 0x43560990",
+        "43560982 cbz r1,0x43560986",
+        "43560984 ldr r4,[r5,#0x4]",
+        "43560986 and r5,r0,#0xf0000000",
+        "4356098a adds r2,#0x8",
+        "4356098c cmp r4,r5",
+        "4356098e beq 0x435609a2",
+        "43560990 ldr r4,[0x435609ac]",
+        "43560992 ldr r4,[r3,r4]",
+        "43560994 adds r5,r2,r4",
+        "43560996 ldr r4,[r2,r4]",
+        "43560998 cmp.w r4,#0xffffffff",
+        "4356099c bne 0x43560982",
+        "4356099e movs r0,#0x0",
+        "435609a0 pop {r4,r5,pc}",
+        "435609a2 movs r0,#0x1",
+        "435609a4 pop {r4,r5,pc}"
+      ],
+      "calls_and_jumps": [
+        {
+          "site": "43560980",
+          "target": "43560990",
+          "type": "UNCONDITIONAL_JUMP"
+        },
+        {
+          "site": "43560982",
+          "target": "43560986",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "4356098e",
+          "target": "435609a2",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "4356099c",
+          "target": "43560982",
+          "type": "CONDITIONAL_JUMP"
+        }
+      ],
+      "references_after": [
+        {
+          "from": "43a3aa28",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43a3a9b4"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "functions": [
+    {
+      "query": "43ad9438",
+      "raw64": "10b5002006e052f8044ba14201d1c0b210bd01309842f6d3ff2010bd0b2910b507d10846b7f6befda420bde81040fff722bc10bd032a02d80f2084f045bf7047",
+      "references": [
+        "From: 436d750a To: 43ad9438 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 436d7e5e To: 43ad9438 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 43ad95f0 To: 43ad9438 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 436d6ba0 To: 43ad9438 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 436d6bb8 To: 43ad9438 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT"
+      ],
+      "entry": "43ad9438",
+      "completed": true,
+      "pseudo_code": "\nuint FUN_43ad9438(undefined4 param_1,int param_2,int *param_3,uint param_4)\n\n{\n  uint uVar1;\n  \n  uVar1 \u003d 0;\n  while( true ) {\n    if (param_4 \u003c\u003d uVar1) {\n      return 0xff;\n    }\n    if (param_2 \u003d\u003d *param_3) break;\n    uVar1 \u003d uVar1 + 1;\n    param_3 \u003d param_3 + 1;\n  }\n  return uVar1 \u0026 0xff;\n}\n\n",
+      "listing": [
+        "43ad9438 push {r4,lr}",
+        "43ad943a movs r0,#0x0",
+        "43ad943c b 0x43ad944c",
+        "43ad943e ldr.w r4,[r2],#0x4",
+        "43ad9442 cmp r1,r4",
+        "43ad9444 bne 0x43ad944a",
+        "43ad9446 uxtb r0,r0",
+        "43ad9448 pop {r4,pc}",
+        "43ad944a adds r0,#0x1",
+        "43ad944c cmp r0,r3",
+        "43ad944e bcc 0x43ad943e",
+        "43ad9450 movs r0,#0xff",
+        "43ad9452 pop {r4,pc}"
+      ]
+    },
+    {
+      "query": "43ad95ca",
+      "raw64": "80687047f8b50446d0f894620f463046fff7f6ff05463046fff7f0ff39462a46034604f11800fff722ffff3818bf0120f8bd08b50368db68984708bd012380f8",
+      "references": [
+        "From: 43ad95da To: 43ad95ca Type: UNCONDITIONAL_CALL Op: 0 DEFAULT"
+      ],
+      "entry": "43ad95ca",
+      "completed": true,
+      "pseudo_code": "\nundefined4 FUN_43ad95ca(int param_1)\n\n{\n  return *(undefined4 *)(param_1 + 8);\n}\n\n",
+      "listing": [
+        "43ad95ca ldr r0,[r0,#0x8]",
+        "43ad95cc bx lr"
+      ]
+    },
+    {
+      "query": "43ad95c6",
+      "raw64": "4068704780687047f8b50446d0f894620f463046fff7f6ff05463046fff7f0ff39462a46034604f11800fff722ffff3818bf0120f8bd08b50368db68984708bd",
+      "references": [
+        "From: 436d989a To: 43ad95c6 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 43ad95e2 To: 43ad95c6 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT"
+      ],
+      "entry": "43ad95c6",
+      "completed": true,
+      "pseudo_code": "\nundefined4 FUN_43ad95c6(int param_1)\n\n{\n  return *(undefined4 *)(param_1 + 4);\n}\n\n",
+      "listing": [
+        "43ad95c6 ldr r0,[r0,#0x4]",
+        "43ad95c8 bx lr"
+      ]
+    }
+  ]
+}

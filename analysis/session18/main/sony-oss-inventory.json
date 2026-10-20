@@ -1,0 +1,112 @@
+{
+  "sesion": 18,
+  "fecha_inventario": "2026-10-17",
+  "ubicacion_originales": "raiz del proyecto (sin modificar)",
+  "ubicacion_extraccion": "analysis/session18/main/sony-oss-extracted/",
+  "archivos": [
+    {
+      "nombre": "linux-kernel.tar.gz",
+      "tamano_bytes": 52843927,
+      "sha256": "b1c74cc1a0160a7fceced6f88fa35521adc431205ad1ebc8a413d20b653785b1",
+      "formato": "gzip",
+      "mtime_interno": "2014-02-19T03:57:26",
+      "contenido_top_level": "linux/ (kernel completo, 20623 entradas)",
+      "version_identificada": "Linux 3.0.27 (Makefile VERSION/PATCHLEVEL/SUBLEVEL)",
+      "licencia": "GPLv2",
+      "modelo_camara": "NO_VERIFICADO",
+      "clasificacion": "VERIFICADO (version y arquitectura), NO_VERIFICADO (modelo exacto ILCE-6000 vs ILCE-6300)"
+    },
+    {
+      "nombre": "webkit.tar.gz",
+      "tamano_bytes": 27744494,
+      "sha256": "04bbdf421be8e1de5c7b250d9631d11fde873d3214f6b962e3a254a81bc8571b",
+      "formato": "gzip",
+      "mtime_interno": "2014-02-19T04:05:30",
+      "contenido_top_level": "webkit/ (JavaScriptCore + WebCore, Android.mk presente)",
+      "licencia": "NO_VERIFICADO en esta sesion (tipicamente LGPL/BSD mixto)",
+      "relevancia_8_ramas": "ninguna identificada",
+      "clasificacion": "VERIFICADO (identidad del paquete), DESCARTADO (relevancia para SilentShutter)"
+    },
+    {
+      "nombre": "iproute2.tar.gz",
+      "tamano_bytes": 464217,
+      "sha256": "6f82fd70f8e130827f4f3114b670083075323cb2e753babea9f1de4959d754b7",
+      "formato": "gzip",
+      "mtime_interno": "2014-02-19T04:05:02",
+      "contenido_top_level": "iproute2/ (Android.mk presente, 311 entradas)",
+      "licencia": "GPLv2",
+      "relevancia_8_ramas": "ninguna (utilidad de red)",
+      "clasificacion": "VERIFICADO"
+    },
+    {
+      "nombre": "iptables.tar.gz",
+      "tamano_bytes": 242158,
+      "sha256": "1b864a78a8a17c36984d58045aa1c4370b340c43538fe709fb83e2fbe77a13b0",
+      "formato": "gzip",
+      "mtime_interno": "2014-02-19T04:05:10",
+      "contenido_top_level": "iptables/ (Android.mk presente, 333 entradas)",
+      "licencia": "GPLv2",
+      "relevancia_8_ramas": "ninguna (utilidad de red)",
+      "clasificacion": "VERIFICADO"
+    },
+    {
+      "nombre": "libpng.tar.gz",
+      "tamano_bytes": 875241,
+      "sha256": "347b6a5714dd87c54ef888631ac41a7a54987ad0022123ce09e1e043dc83f3b4",
+      "formato": "gzip",
+      "mtime_interno": "2014-02-19T04:05:20",
+      "contenido_top_level": "libpng/ (241 entradas)",
+      "licencia": "BSD-like (LICENSE, MODULE_LICENSE_BSD_LIKE)",
+      "relevancia_8_ramas": "ninguna directa (codec PNG, no JPEG/EncodeStill)",
+      "clasificacion": "VERIFICADO"
+    },
+    {
+      "nombre": "wpa_supplicant.tar.gz",
+      "tamano_bytes": 673655,
+      "sha256": "b02342b79b9fc6696310be5d91f730656c1e4e2aebafaa5634858c72da579d67",
+      "formato": "gzip",
+      "mtime_interno": "2014-02-19T04:07:48",
+      "contenido_top_level": "wpa_supplicant/ (Android.mk presente, 244 entradas)",
+      "licencia": "GPLv2",
+      "relevancia_8_ramas": "ninguna (WiFi userspace)",
+      "clasificacion": "VERIFICADO"
+    }
+  ],
+  "hallazgos_kernel_relevantes": [
+    {
+      "ruta": "linux/arch/arm/mach-cxd90014/",
+      "descripcion": "SoC principal especifico de Sony (CXD90014), no mainline Linux: boot/clock/gic/pcie/hwtimer/dap/fiq/pmon",
+      "clasificacion": "VERIFICADO",
+      "relevancia": "contexto de plataforma SoC, sin logica de imagen/camara"
+    },
+    {
+      "ruta": "linux/arch/arm/mach-cxd4132/",
+      "descripcion": "SoC secundario especifico de Sony (CXD4132). CORREGIDO en sesion 18 por Codex G/H: sdc.c/sdc-zqcal*.c es calibracion de impedancia ZQ de memoria LPDDR (RAM), NO controlador de tarjeta SD como se infirio inicialmente por el nombre. fcs.c sigue sin funcion confirmada.",
+      "clasificacion": "VERIFICADO (existencia y funcion real tras correccion), NO_VERIFICADO (funcion exacta de fcs.c), DESCARTADO (hipotesis inicial de que sdc.c es controlador SD)",
+      "relevancia": "ninguna para DCF/SD; el controlador SD real del SoC no se ha identificado en el arbol liberado"
+    },
+    {
+      "ruta": "linux/arch/arm/configs/cxd90014_android_*",
+      "descripcion": "defconfigs que arrancan userspace Android sobre el SoC CXD90014",
+      "clasificacion": "VERIFICADO",
+      "relevancia": "confirma arquitectura Android+Linux ya conocida por desensamblado"
+    },
+    {
+      "ruta": "linux/drivers/{mmc,mtd,video,media}",
+      "descripcion": "busqueda de modulos DMM/FEA/MPR: sin resultado real; los 2 matches iniciales (via-sdmmc.c, dss_features.c) son falsos positivos de subcadena",
+      "clasificacion": "DESCARTADO",
+      "relevancia": "confirma que DMM/FEA/MPR son capas propietarias de Sony no liberadas bajo GPL"
+    }
+  ],
+  "comparacion_a6000_vs_a6300": {
+    "estado": "pendiente",
+    "motivo": "solo existe un paquete de kernel en la raiz; no hay un segundo paquete etiquetado A6300 para comparar",
+    "clasificacion": "NO_VERIFICADO"
+  },
+  "advertencia": "Ninguno de los 6 paquetes contiene libObj.so, libMWF.so, libmpr.so, RelMgr, CaptureManager, ObjCamera/ObjEffect/ObjStillRecorder, EncodeStill, DMM, FEA ni CameraSequence/CameraEx. Son base GPL/BSD de plataforma, no las piezas propietarias ya analizadas por desensamblado.",
+  "limitaciones_declaradas": [
+    "no se realizo busqueda exhaustiva de archivos .patch/.diff en las 20623 entradas del kernel",
+    "no se inventario todo drivers/media (cientos de archivos) de forma exhaustiva",
+    "no se extrajo la licencia completa de webkit.tar.gz"
+  ]
+}

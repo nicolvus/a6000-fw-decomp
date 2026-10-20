@@ -1,0 +1,64 @@
+{
+  "sesion": 14,
+  "alcance": "Traza estática YcPinReqDeliver -> productor -> PlayData -> manejador de pin -> Execute -> FEA, fw 3.21. Direcciones ELF (Ghidra = ELF + 0x10000) salvo que se indique. Evidencia: analysis/ghidra/libobj-effect-*.json, libobj-tm-*.json, topology-table-libobj.json, dmm-unit-types.json.",
+  "veredicto": "En PbCap el productor es ObjEffect (ObjId 9 de la tabla de topologías, pin YC de salida nº 1, topología 0x2a). El PlayData NO describe un YC que el productor ya tenga: ObjEffect reserva dos unidades DMM nuevas (tipos 0x50b3f y 0xe0b00), ejecuta SDF resize/rotate o super-resolución y entrega esos handles. Origen del frame = Player (reproducción de película); para un frame de Live View NO está demostrado.",
+  "identidad_objetos": {
+    "estado": "INFERENCIA fuerte salvo ObjId 11 (VERIFICADO por constructor 0x9178f0: ObjPin(0,0,0),(9,0,0),(0xd,0,1))",
+    "9": "ObjEffect (6 YC in / 5 YC out)",
+    "11": "ObjStillRecorder",
+    "12": "ObjPlayer",
+    "8": "ObjCamera",
+    "5": "ObjRenderer"
+  },
+  "trazado": [
+    {"paso": 0, "actor": "ModelPbCap (acción de topología)", "dir_elf": "0x6135dc (0x2a escrito en 0x613680; createTopology wrapper 0x420630 en 0x613694, evento 6)", "accion": "createTopology({topología CntMgr del medio, 0x2a, 0}) -> TopologyManager -> LT::connectPin (0x41c0fc, ObjIf::ConnectPin en 0x41c25e): Effect out#1 <-> Recorder YC in#0", "estado": "VERIFICADO"},
+    {"paso": 1, "actor": "ModelPbCap", "dir_elf": "0x6137b0", "accion": "ObjMsg(0x3500,0x3001){0x1005=0 Pbcap} -> IssueCommandAsync al recorder", "estado": "VERIFICADO"},
+    {"paso": 2, "actor": "ObjStillRecorder::YcPinReqDeliver", "dir_elf": "0x90a668 (envío por 0x91b6cc(this,this+0x60,0x2002,msg))", "accion": "ObjMsg(0x2000,0x1011){0x1022=true,0x1024=false,0x1025=struct 4B,0x1026=clase de tamaño (tabla[this+0x12c], 4 si >4),0x131a=bool}", "estado": "VERIFICADO"},
+    {"paso": 3, "actor": "ObjEffect parser de comandos de pin YC", "dir_elf": "0x1e9880 (Ghidra 0x1f9880)", "accion": "Registra 'YcPinCommand[%d]: MSGID_REQ_DELIVER'. Campos de la orden: this+0x4c tipo, +0x50 nº de pin, +0x54 dirección (debe ser 1 = salida; si no, devuelve 0x111). Obtiene el pin de entrada 0 (0x1e8244) y el pin del comando (0x1e82b6). Lee el submensaje 0x1003 (tipo 0x29) y el parámetro 0x100a. Si 0x100a==0 y pin 0: respuesta inmediata sin imagen (0x1e96f8: ObjMsg(0x2001,0x1003){0x1318 ticket,0x1301 vacío,0x1300=1}). Si 0x100a==10 (0xa): reenvía el mensaje al pin de entrada (id 0x2002) = traspaso aguas arriba. En otro caso conmuta por el modo interno (EffectInternalMode: byte en el bloque 1 de this+0x14, +4): modo 1 y msg 0x1011 -> ObjMsg(0x3900,0x600d) encolado en 0xbc3208 (Ghidra 0xbd3208) por el gestor de pines (bloque 0x16); modos 2..5 -> ObjMsg(0x3900,0x6013) por 0x1e96c0 (SequencePinReqestDeliverSaveStillEditCmd, factoría 0x17b004); modos 0, 6 y otros: solo registro.", "estado": "VERIFICADO (estructura); NO VERIFICADO qué modo (0..6) y qué valor de 0x100a corresponden a PbCap/EE"},
+    {"paso": 4, "actor": "ObjEffect secuencia de escritura de still (PbCap de película)", "dir_elf": "0x15fa74 'AllocMem And Resize'; 0x15f37c 'AllocMem And SuperResolution'; 0x15f290 'Pin Connect' (SDF->VDF); 0x15f634 espera SDF; clase SequencePinDeliverExecWriteStillCmd (BeginExecCommand 0x15fd50)", "accion": "DmmAccess::DmmAllocate/AllocateAndOpen: unidad A tipo 0x50b3f (STL_YCC_1920P) en this+0x60 y unidad B tipo 0xe0b00 (SDS_YCC) en this+0x78 (variante super-resolución: 0x243 + 0xe0b00). Crea YcSdsAcsr (cabecera SDS de 0x800 B) y la escribe. Envía ObjMsg(0x3900,0x3000) = SDF_RESIZE_ROTATE (o SUPER_RESOLUTION) con tamaño origen 'movieSrcSize' y destino 'movieDstSize'. Tamaño destino por clase (0x15e1f8): 0->640x360, 1->640x480, 2->1920x1080. Cierra los handles (DmmClose) al terminar el SDF; la unidad queda asignada.", "estado": "VERIFICADO (código) / INFERENCIA (nombres STL_YCC_1920P/SDS_YCC por orden de las cadenas de error)"},
+    {"paso": 5, "actor": "ObjEffect constructor del PlayData", "dir_elf": "0x15ebfc (Ghidra 0x16ebfc)", "accion": "Construye ObjMsg(0x2001,0x1003) y lo envía por el pin nº 7 de su tabla (vtable+0x10, id 0x1002). Contenido en 'playdata_producido'.", "estado": "VERIFICADO"},
+    {"paso": 6, "actor": "ObjStillRecorder manejador de pin", "dir_elf": "0x919ca0, rama 0x919f1a", "accion": "En mensaje 0x1002 con sub-mensaje 0x1003 (tipo 0x29): ObjMsg(0x3500,0x10000005){0x10000006=PlayData,0x1000=u32 reserva,0x1012=8B} -> this+0x18. La rama 0x1027 (ObjScalar) NO ejecuta: eco a this+0x18 con 0x131f/0x1320.", "estado": "VERIFICADO"},
+    {"paso": 7, "actor": "ObjStillRecorder::Execute", "dir_elf": "0x90b248 (prep 0x90ad20; reservas de salida 0x90a810)", "accion": "DmmOpen+DmmClose del YC y del dec solo para sumar extents (GetExtSizeFromDmmAlloc); NO hace DmmShare ni DmmFree de la entrada. MprCtrl 0x8fe6f8 -> MprIf::EncodeStill 0x71cf58 -> FeaIf::EncodeStill 0x44f834.", "estado": "VERIFICADO"},
+    {"paso": 8, "actor": "FeaIf::EncodeStill", "dir_elf": "libmpr 0x44f834", "accion": "Copia RegionInfo (16 palabras)+fecha+tamaños+meta+JpgInfo a un mensaje, lo encola en el objeto this+4 (vtable +0x18/+0x20, id _UNK_0045f8e4) y devuelve 0 sin esperar. Finalización: callback CBID_ENCODE_STILL (MprAcsr/StillConverter).", "estado": "VERIFICADO (retorno inmediato, evento CBID); NO VERIFICADO dónde corre el codificador"}
+  ],
+  "playdata_producido": {
+    "mensaje": "ObjMsg(0x2001,0x1003)",
+    "0x100a": "u32 = 2 (tipo de entrega)",
+    "0x1031 (->ObjMsg 0x2001/0x1007)": {
+      "0x1032": "12 B {u16 handle, u32 unitType, u32 physTop} = decBufferInfo. flag(this+0xc4)==0: handle this+0x64, unitType 0x50b3f, phys this+0x70. flag!=0: handle this+0x94, unitType 0x243, phys this+0xa0",
+      "0x1033": "u32 = 0 (NUEVO, no documentado antes)",
+      "0x1034": "3 B = {0,0,0} color de fondo",
+      "0x1035": "bool = true (layout activo)",
+      "0x1036": "canvas {align_up(w,64), align_up(h,16)}",
+      "0x1037": "layout {0,0}",
+      "0x1038": "región {w,h} reales"
+    },
+    "0x1017 (->ObjMsg 0x2001/0x1008)": {
+      "0x1018": "12 B = ycBufferInfo {u16 handle this+0x7c, u32 unitType 0xe0b00 (alt: this+0xac / 0xb8), u32 phys this+0x88}",
+      "0x1019": "4 B {w,h} (NUEVO)",
+      "0x101a": "4 B {w,h} (NUEVO)",
+      "0x1072": "colorimetría = byte *(YcSdsAcsr+0x14c), leído de la cabecera SDS de 0x800 B de la unidad YC",
+      "0x1073": "yRange = byte *(YcSdsAcsr+0x14d), idem"
+    },
+    "0x1041 (->ObjMsg 0x2001/0x1009)": "metadatos rellenados por 0x14f0e8(this+0xc0) desde el mensaje de entrada (Exif/GPS/CamInfo/fecha)",
+    "estado": "VERIFICADO"
+  },
+  "respuesta_pregunta_decisiva": {
+    "pregunta": "¿El pin entrega un YC que el productor ya conserva o crea una copia estable específicamente para EncodeStill?",
+    "respuesta": "Crea unidades nuevas (DmmAllocate de 0x50b3f y 0xe0b00) y las rellena con SDF resize/rotate o super-resolución a partir del frame de origen. Es una copia dedicada. VERIFICADO el código; el origen del frame (this+0x14 -> mensaje de entrada, accesor 0x16e1f8) es el Player en PbCap.",
+    "implicacion_silentshutter": "Un YC de Live View NO se entrega tal cual: habría que pasar por el mismo procedimiento (Effect con entrada de Camera) o crear unidades equivalentes con cabecera SDS válida."
+  },
+  "propiedad_y_liberacion": {
+    "VERIFICADO": "El recorder no libera ni comparte las unidades de entrada (0x90ad20 solo Open/Close; DmmShare/DmmFree aparecen en 0x90c088/0x911f68/0x912c04 sobre las áreas de salida/Pool).",
+    "NO_VERIFICADO": "Qué objeto y cuándo libera 0x50b3f/0xe0b00 tras CBID_ENCODE_STILL (candidato: ObjEffect al salir del modo o en la siguiente petición; FreeRecMem de SequencePinRequestDeliverStillEditBase existe para el camino StillEdit)."
+  },
+  "errores_y_timeout": {
+    "VERIFICADO": ["Parser de Effect: tipo de pin != 1 devuelve 0x111; pin nulo -> 0x111", "Alloc fallido: 'Cant Alloc STL_YCC_1920P' / 'Cant Alloc SDS_YCC' y error de secuencia"],
+    "NO_VERIFICADO": "timeout de la petición ReqDeliver en el recorder (no se encontró temporizador asociado)"
+  },
+  "NO_VERIFICADO": [
+    "Modo interno de ObjEffect durante PbCap (1..6) y durante EE",
+    "Si SequencePinDeliverExecWriteStillCmd pertenece solo a la factoría de reproducción de película (cadena adyacente 'SequenceFactoryComponentMoviePlay')",
+    "Quién es el objeto 53 (otro productor YC con salida nº 2 -> recorder, topología 0xb4)"
+  ]
+}

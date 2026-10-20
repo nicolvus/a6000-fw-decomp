@@ -1,0 +1,13 @@
+$ /tmp/claude-1000/-home-nicolas-Documents-a6000/41e07ba0-de32-4d87-ba70-e2642fb5a9e3/scratchpad/tools/venv/bin/python -I /tmp/claude-1000/-home-nicolas-Documents-a6000/41e07ba0-de32-4d87-ba70-e2642fb5a9e3/scratchpad/tools/../eval/angr_cfg.py /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/analysis/a6000-darwin-rom-analysis-view.elf
+--- stdout
+arch ARMEL entry 0x400000 obj ELF min/max 0x400000 0x707fff
+cfgfast_s 10.7 functions 2843 nodes 16920 edges 24966
+0x41aea1 sub_41aea1 664 blocks 171
+0x4009cb sub_4009cb 662 blocks 91
+0x404709 sub_404709 610 blocks 105
+0x41da99 sub_41da99 554 blocks 80
+0x415afd sub_415afd 544 blocks 51
+
+--- stderr
+ERROR    | 2026-10-19 13:10:40,103 | angr.state_plugins.unicorn_engine | failed loading "unicornlib.so", unicorn support disabled ('NoneType' object has no attribute 'unicorn_py3')
+

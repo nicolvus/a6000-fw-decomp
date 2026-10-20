@@ -1,0 +1,149 @@
+{
+  "scope": "Sony ILCE-6000 fw 3.21; static-only. No camera connection, flashing, firmware execution, package installation, or modification of original binaries.",
+  "addressing": {
+    "convention": "ELF addresses; Ghidra VA = ELF + 0x10000",
+    "libraries": {
+      "libObj.so": {
+        "sha256": "8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a"
+      },
+      "libmpr.so": {
+        "sha256": "9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30"
+      }
+    }
+  },
+  "findings": [
+    {
+      "id": "pbcap-sdf-pair",
+      "state": "VERIFICADO",
+      "claim": "The PbCap path allocates a new raster DMM unit plus an SDS DMM unit, processes them through SDF resize/rotate or the super-resolution alternative, and only then emits PlayData.",
+      "evidence": [
+        "libObj ELF 0x15fa74",
+        "libObj ELF 0x15f37c",
+        "libObj ELF 0x16ebfc",
+        "analysis/ghidra/libobj-effect-writestill-16ebfc.json"
+      ],
+      "values": {
+        "normal_raster_unit_type": "0x50b3f",
+        "normal_raster_bytes": "0x3fc000",
+        "sds_unit_type": "0xe0b00",
+        "sds_bytes": "0x800",
+        "super_resolution_raster_unit_type": "0x243"
+      }
+    },
+    {
+      "id": "sds-metadata-abi",
+      "state": "VERIFICADO",
+      "claim": "The SDS accessor maps a 0x800-byte physical SDS block and obtains ImageSizeInfo, YcStateInfo, and ImageOutTimInfo; RightImageSizeInfo and DisplayInfo are optional entries.",
+      "evidence": [
+        "libObj ELF 0x151b84",
+        "libObj ELF 0x151860",
+        "libObj ELF 0x16ebfc",
+        "analysis/ghidra/libobj-effect-ycinfo-151b84.json",
+        "analysis/ghidra/libobj-effect-ycinfo-151860.json"
+      ],
+      "known_metadata_interfaces": {
+        "ImageSizeInfo": [
+          "unitType",
+          "unitHandle",
+          "unitDataOffset",
+          "canvasSize",
+          "validOffset",
+          "validSize",
+          "targetOffset",
+          "targetSize",
+          "recordSize",
+          "dataSite",
+          "aspect",
+          "ycCompress",
+          "imageAttach",
+          "iibNumber",
+          "dataTransfer",
+          "dataPlacement",
+          "dataContent",
+          "dataScan",
+          "stripWidth"
+        ],
+        "YcStateInfo": [
+          "yRange",
+          "colorimetry",
+          "chromaPhase",
+          "scanline",
+          "copyProtection",
+          "author"
+        ]
+      },
+      "limit": "Symbol names prove exposed ABI fields, not their serialized offsets or values in this PbCap SDS."
+    },
+    {
+      "id": "playdata-transfer",
+      "state": "VERIFICADO",
+      "claim": "The PlayData builder sends separate raster and SDS descriptors, copies unaligned geometry to 0x1019/0x101a, aligns the raster canvas to 64x16, and forwards only SDS colorimetry and Y range to 0x1072/0x1073.",
+      "evidence": [
+        "libObj ELF 0x16ebfc",
+        "libObj ELF 0x16ebe8",
+        "libObj ELF 0x16ebf2",
+        "analysis/ghidra/libobj-effect-writestill-16ebfc.json"
+      ]
+    },
+    {
+      "id": "mpr-async-boundary",
+      "state": "VERIFICADO",
+      "claim": "ObjStillRecorder computes input extent totals and passes RegionInfo to MprIf; FeaIf copies RegionInfo into an asynchronous message and returns without waiting for encoding completion.",
+      "evidence": [
+        "libObj ELF 0x90ad20",
+        "libObj ELF 0x90b248",
+        "libmpr ELF 0x44f834",
+        "analysis/encodestill-yc-contract.json",
+        "analysis/yc-pin-delivery-flow.json"
+      ]
+    },
+    {
+      "id": "oss-cmpr",
+      "state": "VERIFICADO",
+      "claim": "The released mach-cxd90014 CMPR driver is a physical-buffer LZPART compressor with DMA synchronization, not a JPEG or YC driver.",
+      "evidence": [
+        "analysis/session18/main/sony-oss-extracted/linux/arch/arm/mach-cxd90014/cmpr.c:107-158",
+        "analysis/session18/main/sony-oss-extracted/linux/arch/arm/mach-cxd90014/cmpr.c:192-356",
+        "analysis/session18/main/sony-oss-extracted/linux/arch/arm/mach-cxd90014/include/mach/cmpr.h:50",
+        "analysis/session18/main/sony-oss-extracted/linux/arch/arm/mach-cxd90014/include/mach/cmpr.h:111-112"
+      ],
+      "properties": {
+        "magic": "LZPT",
+        "alignment": 128,
+        "dma_sync": "dma_sync_single_for_device(..., DMA_TO_DEVICE)"
+      }
+    },
+    {
+      "id": "oss-to-pipeline-link",
+      "state": "NO_VERIFICADO",
+      "claim": "CMPR, PL310 cache configuration, or OSS DMA code are used by SDF, ObjCamera, FEA, or this YC pipeline.",
+      "reason": "No static call, dependency, or shared proprietary DMM/SDS implementation links the kernel driver to libObj.so or libmpr.so."
+    },
+    {
+      "id": "yc-format",
+      "state": "NO_VERIFICADO",
+      "claim": "The real raster YC component order, plane count, planar/interleaved layout, subsampling, pitch/stride, and plane offsets.",
+      "reason": "Neither RegionInfo nor the recovered PbCap builder supplies these values; SDS field names do not establish their contents."
+    },
+    {
+      "id": "camera-compatibility",
+      "state": "NO_VERIFICADO",
+      "claim": "A native ObjCamera/Live View YC descriptor is compatible with the PbCap raster+SDS pair or reaches Sequence 0x6013.",
+      "reason": "The recovered end-to-end producer is PbCap/Player through ObjEffect; no Camera descriptor chain to SDF/EncodeStill was recovered."
+    },
+    {
+      "id": "rejected-cmpr-format-inference",
+      "state": "DESCARTADO",
+      "claim": "The generic CMPR driver identifies the YC format or implements the JPEG/ISP stage of the recovered pipeline.",
+      "reason": "The driver implements LZPART compression and lacks a demonstrated static edge to the proprietary pipeline."
+    }
+  ],
+  "conclusion": {
+    "state": "VERIFICADO",
+    "claim": "PbCap has a verified SDF-produced raster+SDS handoff before the asynchronous FEA encode submission. This strengthens the requirement for an SDS metadata block but does not establish a pixel format or any Live View path."
+  },
+  "safety_conclusion": {
+    "state": "NO_VERIFICADO",
+    "claim": "SilentShutter functionality is not demonstrated by this analysis."
+  }
+}

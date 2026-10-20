@@ -1,0 +1,57 @@
+{
+  "sesion": 13,
+  "alcance": "analisis estatico de libObj.so / libmpr.so / libSysDef.so fw 3.21; direcciones ELF salvo que se indique (Ghidra = ELF + 0x10000)",
+  "veredicto": "La orden 0x10000005 (MSGID_RECORD_IMAGE_CALL, Execute) NO la envia ningun objeto externo: la crea ObjStillRecorder al recibir por su pin YC un PlayData (msgId 0x1003). Lo que dispara la cadena es MSGID_RECORD_IMAGE_CMD (cat 0x3500, id 0x3001, param 0x1005 = RecordImageMode) emitido por modelos de UI de reproduccion/edicion (ModelPbCap, ModelPaint) o por la consola Mcmd. Es la ruta de PbCap/edicion, NO la de captura normal.",
+  "clasificacion": {
+    "VERIFICADO": [
+      "ModelPbCap 0x6137b0 construye ObjMsg(0x3500,0x3001){0x1005=0} y llama MWF::ObjIf::IssueCommandAsync(*(this+0x9c),msg) en 0x6137ec",
+      "ModelPaint 0x611074 construye ObjMsg(0x3500,0x3001){0x1005=4} y lo pasa al ayudante 0x6104f6(this,msg,0xb)",
+      "ObjStillRecorderMcmd 0x901504 ('RecordImage <Pbcap/Trim/RedEye/Focus/Paint/Art/Beauty>') construye el mismo mensaje con indice 0..6",
+      "CATEID_STILL_RECORDER = 0x3500 (libSysDef MwfTbl m_cateTbl: valor precede al nombre; CATEID_ALL=0xffff, CATEID_CAMERA=0x3100, CATEID_RENDERER=0x3200, CATEID_PLAYER=0x3600, CATEID_CNT_MGR=0x3700, CATEID_EFFECT=0x3900)",
+      "Callback ExecFuncPoint 0x90d7e8: caso 0x3001 (0x90dd6c, imprime MSGID_RECORD_IMAGE_CMD) -> comprobacion 0x91939c -> YcPinReqDeliver 0x90a668",
+      "YcPinReqDeliver 0x90a668 arma ObjMsg(0x2000,0x1011){0x1022=true,0x1024=false,0x1025=struct4B,0x1026=u32 tabla[this+0x12c] (4 si >4),0x131a=bool this+0x134} y lo envia por 0x91b6cc(this,this+0x60,0x2002,msg)",
+      "Pin YC del recorder: constructor 0x9178f0 crea ObjPin(tipo 0,0,dir 0) en this+0x60 (PIN_YC entrada) y ObjPin(tipo 9 CAMERA_STATUS, dir 0) en this+0x70",
+      "Manejador de pin 0x919ca0, rama GetMessageId==0x1003 (0x919f1a): ObjMsg(0x3500,0x10000005){0x10000006 = mensaje recibido, 0x1000 = u32, 0x1012 = struct 8B} y lo publica en this+0x18 (vtable+0xc)",
+      "Fila de la tabla de estados 0x101f118/0x101f128: id 0x10000005 -> exec 0x90d7e9, check 0x907c95; ExecFuncPoint caso 0x90de1e llama Execute 0x90b248; DispatchCommand 0x9162d0 tambien nombra MSGID_RECORD_IMAGE_CALL",
+      "RecordImageMode (this+0x128): 0 Pbcap, 1 Trim, 2 RedEye, 3 Focus, 4 Paint, 5 Art, 6 Beauty (orden de la ayuda de consola; PbCap envia 0, Paint envia 4)",
+      "No hay literal movw/ldr de 0x10000005 como id de ObjMsg de salida en ningun otro objeto de pantalla/camara; ObjScalar no usa 0x10000005/0x10000006",
+      "ObjScalar SequenceRecordStillImageCmd::Begin (0x3d2ef8) envia ObjMsg(0x2001,0x1027){0x131f=ticket,0x1320=PlayData anidado} por pin 6 (this+0x14 vtable+0x10(6) -> Send 0x1002); el recorder lo trata en 0x919ca0 y responde 0x3500/0x1000000f con 0x1000000b y 0x10000006",
+      "MakePlayDataMsg 0x3ee314 (ObjScalar): ObjMsg(0x2001,0x1003) con subobjetos 0x1007->clave 0x1031 (canvas), 0x1008->clave 0x1017 (presentacion), 0x1009->clave 0x1041 (meta)"
+    ],
+    "INFERENCIA": [
+      "0x2001 / 0x2003 hacia la categoria 0x3500 (ModelPbCap 0x613246, 0x613ab8; ModelPaint 0x610ee6; ModelStillIntervalRec 0x68351a) = activar/desactivar el recorder (EnterRec/ExitRec)",
+      "El YC lo entrega el par conectado al pin YC (topologia ObjHandover id 0x2a en PbCap); en PbCap el candidato es la captura YUV de ObjRenderer (MSGID_YUV_CAPTURE_START: devuelve direccion, canvas, colorimetria, rango Y, offset y tamano destino)",
+      "0x1000 y 0x1012 de la rama 0x1003 provienen del asignador/reserva this+0x9c (0x813a78): captureId y reserva de numero de fichero DCF"
+    ],
+    "NO_VERIFICADO": [
+      "Objeto concreto que entrega el PlayData al pin YC en PbCap/Paint (tabla de topologia 0x2a no localizada; no esta en libSysDef .data)",
+      "Quien invoca el accionador de ModelPbCap (0x6137b0) y en que estado de UI",
+      "Si Execute lo ejecuta ExecFuncPoint (0x90d7e8) o el hilo DispatchCommand (0x9162d0)",
+      "Si la captura YUV de ObjRenderer admite el modo de disparo (EE)"
+    ],
+    "DESCARTADO": [
+      "Que LIRO o la secuencia de captura (SeqStillCap) envien 0x10000005",
+      "Que 0x10000005 viaje como comando externo entre objetos: lo genera el propio recorder"
+    ]
+  },
+  "cadena": [
+    {"paso": 1, "actor": "ModelPbCap / ModelPaint / Mcmd", "dir_elf": "0x6137b0 / 0x611074 / 0x901504", "accion": "ObjMsg(0x3500,0x3001){0x1005=modo} -> IssueCommandAsync/Sync"},
+    {"paso": 2, "actor": "MWF (libMWF.so) enruta por categoria 0x3500", "dir_elf": null, "accion": "entrega al callback registrado de ObjStillRecorder (filas 0x101f000..0x101f160)"},
+    {"paso": 3, "actor": "ObjStillRecorder ExecFuncPoint", "dir_elf": "0x90d7e8 (caso 0x3001 en 0x90dd6c)", "accion": "check 0x91939c; YcPinReqDeliver"},
+    {"paso": 4, "actor": "ObjStillRecorder YcPinReqDeliver", "dir_elf": "0x90a668", "accion": "ObjMsg(0x2000,0x1011) por el pin YC (this+0x60): solicita al productor que entregue un YC"},
+    {"paso": 5, "actor": "Productor conectado al pin YC (NO VERIFICADO)", "dir_elf": null, "accion": "entrega ObjMsg(0x2001,0x1003) = PlayData (0x1017/0x1031/0x1041)"},
+    {"paso": 6, "actor": "ObjStillRecorder pin handler", "dir_elf": "0x919ca0 (rama 0x919f1a)", "accion": "envuelve en ObjMsg(0x3500,0x10000005){0x10000006,0x1000,0x1012} y lo publica en this+0x18"},
+    {"paso": 7, "actor": "ObjStillRecorder tabla de estados", "dir_elf": "0x101f118 fila id 0x10000005", "accion": "ExecFuncPoint caso 0x90de1e -> Execute"},
+    {"paso": 8, "actor": "ObjStillRecorder::Execute", "dir_elf": "0x90b248", "accion": "0x90a810 reserva salidas; 0x90ad20 prepara; MprCtrl 0x8fe6f8 -> MprIf::EncodeStill; Pool 0x912b4c; RecordStill 0x908afc -> WriteStill"}
+  ],
+  "modos_record_image": {"0": "Pbcap", "1": "Trim", "2": "RedEye", "3": "Focus", "4": "Paint", "5": "Art", "6": "Beauty"},
+  "correcciones_sesiones_previas": [
+    "Sesion 10/11 'modo 4' de this+0x128 es RecordImageMode=Paint (lo fija 0x1027 de ObjScalar::SequenceRecordStillImageCmd), distinto de MediaMgr+0x2C=4 (None)",
+    "Sesion 12 listaba el remitente como 'no encontrado': no existe remitente externo del 0x10000005; existe del 0x3001"
+  ],
+  "evidencias": [
+    "analysis/ghidra/libobj-100b-prod.json (decompilado 0x91ad20)",
+    "analysis/ghidra/libmpr-feaif-encodestill.json (FeaIf::EncodeStill)",
+    "/tmp/claude-1000/libObj_all.txt (desensamblado completo llvm-objdump, usado con regex sobre movw/ObjMsgC1Ejj)"
+  ]
+}

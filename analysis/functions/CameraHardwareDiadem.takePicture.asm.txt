@@ -1,0 +1,19 @@
+
+firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha16_unpacked_unpacked/lib/libcamera.so:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+000170c0 <android::CameraHardwareDiadem::takePicture()>:
+   170c0: e5d03021     	ldrb	r3, [r0, #0x21]
+   170c4: e92d4010     	push	{r4, lr}
+   170c8: e3530000     	cmp	r3, #0
+   170cc: e1a04000     	mov	r4, r0
+   170d0: 1a000002     	bne	0x170e0 <android::CameraHardwareDiadem::takePicture()+0x20> @ imm = #0x8
+   170d4: e5901000     	ldr	r1, [r0]
+   170d8: e1a0e00f     	mov	lr, pc
+   170dc: e591f02c     	ldr	pc, [r1, #0x2c]
+   170e0: e1a00004     	mov	r0, r4
+   170e4: e3011008     	movw	r1, #0x1008
+   170e8: e3a02000     	mov	r2, #0
+   170ec: e8bd4010     	pop	{r4, lr}
+   170f0: eaffff29     	b	0x16d9c <android::CameraHardwareDiadem::SDComMsg_Basic(ScalarDaemonMsg::MESSAGE_ID, android::Vector<SDComMsgParam*> const*)> @ imm = #-0x35c

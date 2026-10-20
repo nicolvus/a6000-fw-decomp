@@ -1,0 +1,80 @@
+{
+  "scope": "Static comparison only; no camera execution or firmware modification",
+  "emulation": {
+    "script": "EmulateDarwinCaptureBits.java",
+    "a6000": "a6000-darwin-capture-bit-emulation.json: 512/512 passed, start17fc0 stop-before18056",
+    "a6300": "a6300-darwin-capture-bit-emulation.json: 512/512 passed, start194c8 stop-before1956e",
+    "coverage": "All 256 input byte12 values with initial state+d0=84 and a4. Checks bit0/bit5, independent bit3 copy into state+42, and adjacent bytes13..15. Pure CPU segments; no calls, MMIO or hardware.",
+    "result": "A6300 replaces state+d0 bits0 and5 from the input. A6000 replaces only bit0 and preserves prior bit5; a packet bit5 toggle alone has no effect on that state bit in its parser."
+  },
+  "a6300_source_sha256": "6249d4b7f70d31c50048c85ca39e61c1872b547a26fd4b4ad0343ca9811433ac",
+  "a6000_source_sha256": "5f2be06d9885d154e8e0df46a611d6830d29754b4353f6e82cecfe66dd6a0bf4",
+  "verified_a6300": {
+    "state": "0x200034e4",
+    "selector": "0x1b146 returns (state[0xd0] & 0x20) == 0; literal 0x1b18c is 0x200034e4",
+    "producer": "0x1943e calls 0x17f5c to copy 31 bytes into stack; input byte 0x12 bit 0x20 is copied to state[0xd0] bit 0x20 at 0x1955e..0x1956a using base state+0x30 and offset 0xa0",
+    "additional_effect": "If this bit is set, 0x195b8..0x195cc forces state[0x31] low two bits to 2; later hardware-type logic may overwrite those bits",
+    "copy_source": "0x17f5c -> 0x219fa(6,out): copies 0x1f bytes from 0x20003940; literal 0x21b90=0x200039b0",
+    "ingress": "0x184ce -> 0x21aac(6) -> 0x127ac(0x0c), copies 31 bytes from async receive buffer 0x2000324c to 0x20003940",
+    "request": "0x1849e calls 0x21aea(6); table 0x2f2a4 index 6 is 0x0c",
+    "async_descriptor": "Table 0x2d6f4 entry 0x0c: tx=0, rx=0x2000324c, length=31, tail bytes 03 01 02 00; 0x12660 emits f0 then tail first three bytes, length16, two zero bytes on Darwin SIO3",
+    "mechanical_control": "0x1a6a6 passes selector to 0x1b598 -> 0x23556 -> 0x248ee/0x24a4e/0x24b1e; controls branches containing output writes +0x234 and +0x238 in bank 0x42668000",
+    "other_consumers": "0x1aabe passes selector to 0x21052 and 0x1b60e; 0x18da6 suppresses a timing return when bit is set",
+    "initialization": "0x18cd0 clears state[0xd0..0xd3]; the direct STRB.W +0xd0 at 0x18d30 is initialization, not the runtime producer",
+    "helper_limits": "0x24dd4 saves a counter; 0x23394 may write output +0x30=0; 0x182b8 calls empty 0x217cc; 0x22f4e schedules another sequence, so disabled selector is not proof of zero physical actuation",
+    "post_output_sequence": "0x22f4e sets descriptor 0x2f93c starting step0 when field 0x20003b04 is2 or step1 when it is3/4, then 0x24666(4) dispatches it. Do not yet equate this field with getter24700 hardware type. Six callbacks at 24564/24578/2459c/245ce/24602/24636 call 24caa, which writes GPIO+2c. The byte pointers passed to 20a3c supply only their first byte, not entire arrays: 20a3c clears descriptor.current and copies *param2 into descriptor.step.",
+    "remaining_enable_paths": "1b506/1b366 ->231f2; 1b972 ->230f0;1b984 ->231d4. Type4 branches230f0/231d4 explicitly require24730(enable), otherwise return after updating software flags. In 1aabe, selector1b146 is passed as param2 to1b60e; type4 with enable=0 only records flags and skips its24666(3) dispatch, while enable=1 records timing then schedules descriptor via20a3c/24666(3). The physical role of that descriptor is not identified. Exports a6300-darwin-enable-sequence-dispatch.json, post-output-sequence-seeded.json, and a6300-darwin-silent-secondary-consumers.json.",
+    "secondary_sequence_detail": "1b60e type4 enable=1 chooses descriptor 2f920 and initial step *2f898=6, then dispatches 24666(3). Descriptor 2f920 points to 10-entry 8-byte callback table 2fb48; index6 is 2464a (sets timer or completion flag), index7 is 244f8 (tests 23282, otherwise marks completion after calling 20dae), index8 is 24524 (calls 2317a then delay), and index9 is 2454e (d19e). 2317a updates state+154 bit200 and calls 2309e and 230f0. Under Silent, selector1b146=0 suppresses this type4 dispatch, but 1a7ac still invokes 1b54a(0), which schedules descriptor0; 1a812 invokes 1b494(selector, other argument), and that function invokes 22f4e. This proves that the Silent selector does not suppress every software sequence. GPIO net identities and actual motion remain unknown. Evidence: a6300-darwin-type4-sequence-callbacks.json, a6300-darwin-type4-sequence-helpers.json, a6300-darwin-sequence-2317a.json and independent LLVM callsites 1a79a..1a812.",
+    "primary_sequence_detail": "With Silent selector0, 1b54a(0) clears state+154 bit80 but still sets descriptor0 2f8cc to step *2f8a1=3 and dispatches24666(0). Descriptor0 table2f958 maps sparse step keys (not positional indices): key3->23af4, key4->23bb0, key5->23bf6, key6->23c52, key7->23c82. 20c2a matches the current key; 20b20 advances it. At key3, 23af4 calls22ebe(state+154 bit80), then24730; for Silent this gate is false and its type4 28244 branch is skipped. Key4 callback23bb0 still invokes248be(1); for type4, 248be writes output+238=0 and+38=0. Key5 callback23bf6 invokes248be(22ebe()) (therefore skipped with bit80 clear) but type4 also calls28304 and236a4. Key6 callback23c52 calls24730(1), which is independent of Silent, and may update software state. Key7 callback23c82 starts from22ebe()->24730, so its main branch is gated off when bit80 is clear. This is a partial control-flow trace, not proof of physical stillness or movement. Evidence: a6300-darwin-primary-sequence.json, a6300-darwin-primary-sequence-seeded.json, a6300-darwin-primary-sequence-helpers.json, a6300-darwin-primary-output-helpers.json and independent LLVM 23af4..23b26.",
+    "variant_setter": "23652, via thunk1b8f6, sets 20003b04 to1..4 or0 for other values. Dispatcher21b94 operations62/63/64/65 select1/2/3/4 respectively. The wrapper21ea4 accepts operations40..9f and routes these through21b94; adapter1df10 invokes21ea4 after uxtb. Its only static appearances are an indirect handler table, so its external origin and role remain unverified; do not call the field physical hardware type or a diagnostic-only field.",
+    "hardware_type_getter": "24700 reads1cf34(0), masks7 and accepts1..4. 1cf34 returns byte20000050 only if byte200002c0 is nonzero. Source/initialization of those bytes is not verified here."
+  },
+  "verified_a6000": {
+    "copy": "0x1ef06(6,out) copies 22 bytes; 0x1efb8(6) imports the corresponding receive buffer",
+    "wrapper": "0x16c9c -> 0x1ef06(6,out), called by capture parser at 0x17fb8",
+    "parser": "0x17f8c copies input byte 0x12 bit0 to state+0xd0 bit0, byte 0x12 bit3 to state+0x42 bit3, and bytes 0x13..0x15 to state+0xd1..0xd3; unlike A6300 0x1943e it does not copy byte 0x12 bit5 to state+0xd0 bit5 or force low mode bits to 2 based on that bit",
+    "output_equivalent": "A6000 0x20544(time,mode) -> 0x20d26/0x20e0e/0x20e98 lacks the extra enable argument of A6300 0x23556(time,mode,enable). A6000 patterns test only 0x20c74 hardware type; A6300 equivalents test 0x24730(enable), combining hardware type with enable.",
+    "limit": "Absence of that assignment and extra argument is verified for these routines only; this does not prove physical sensor incapability. ROM literals DAT1661c, DAT19bbc and DAT205a0 all equal RAM200036d8; DAT55a0=MMIO42668000, so 51c0(0x238,v) writes port address42668238 (P4E), whose board net is still unknown.",
+    "descriptor_comparison": "Raw ROM 28-byte descriptor structures cross-checked at base4200. A6000 29d90/29dac each have 17 callback records (tables29e00/29e70, RAM2000381c/1d/18); A6300 2f8cc/2f8e8 each have 30 records (tables2f958/2fa28, RAM20003628/29/24). A6000 29dc8 has 7 records (table29ee0, RAM2000381e/1f/20); A6300 2f920 has 10 (table2fb48, RAM2000362a/2b/2c). Both have six-record tables at A6000 29de4 and A6300 2f93c. A6300 also has 30-record descriptor2f904 in this cluster; no one-to-one extra descriptor is established in A6000. These are structurally corresponding candidate sequences, not proof of identical physical nets. The A6000 first 17-record table maps keys1/2/3 to callbacks20724/20734/207be; the A6300 first 30-record table maps keys1/3/4 to23ae4/23af4/23bb0. The tables contain repeated and nonmonotonic keys, so record position must not be treated as sequence step.",
+    "primary_callback_trace": "The first A6000 17-record sequence has key1 20724 (timed completion), key2 20734 (state reset and gated setup), key3 207be (20cd4 writes output+238=0 when physical type20c74 is 1..3), key4 207e8 (same output reset and optional 16ff4 no-op), key5 2081c (software state transition), key6 2083c (conditional state/timing), key7 209a2 (wait for 1ffbe). The alternate A6000 seven-record sequence has key4 20aa4, which calls20d00; 20d00 writes output+238=1 with the same type gate. The direct GPIO writer51c0 stores into an MMIO base+offset, but no circuit/curtain assignment is proven. 2089c selects subpaths by state+153 values0..3 through TBB at208e0: type0 returns, type1 stores interval at+156 then calls21014(mode0), type2 stores+15a then calls20fde, type3 stores+158 then calls21014(mode1). LLVM verified TBB bytes and direct branches; Ghidra did not recover this jump table. These paths show the A6000 software already sequences a physical output but do not demonstrate an electronic rear curtain. Evidence a6000-darwin-primary-sequence-seeded.json, a6000-darwin-sequence-remaining-callbacks.json, a6000-darwin-primary-output-followup.json, a6000-darwin-output-gates.json, a6000-darwin-step8-type-dispatch.json and LLVM disassembly.",
+    "secondary_dispatch_origin": "A6000 2041e(param) selects descriptor0 when param=0 and descriptor2 (29dc8, seven callbacks) when nonzero. For param=0 it calls20d00, setting output+238=1 under physical type gate; for nonzero it sets state+152=9 and dispatches20c06(2). Wrappers19932 and19948 call2041e after19b9e; 19932 forces0, whereas19948 preserves its input. 19b9e requires state+170 bit0 clear and165c8(0x10) nonzero; 165c8 returns 1 only when state+444 bit0x10 is clear. Neither reads a Silent selector. Exposure control18d6e invokes19932 or19948 according to exposure-compensation/timing branches; LLVM at18ec8 confirms the computed R0 is passed to19948. Routine18fa0 also calls19932. No Silent state test was found in these examined A6000 dispatches; this is narrower than proving every possible path lacks one. REA xrefs to descriptor29dc8 and to2041e, Ghidra exports a6000-darwin-secondary-dispatch-callers.json, a6000-darwin-secondary-dispatch-entry.json, a6000-darwin-secondary-command-origin.json, a6000-darwin-secondary-dispatch-gate.json, a6000-darwin-secondary-interlock.json, LLVM 18ec8/19932..1995a."
+  },
+  "verified_liro_peer_handshake": {
+    "receive_header": "0x436fba6c registers one full-duplex 8-byte descriptor: TX 0x44105548, RX 0x44105540, channel 3",
+    "darwin_direction": "0x436faae0 tests incoming header byte 3 at 0x44105543 against 2; when equal and length nonzero, switches to outgoing state 2, substate 2",
+    "outgoing_body": "State 2 substate 2 handlers 0x436fb860 and 0x436fab68 coordinate completion/ready flags, then 0x436fb860 -> 0x436fa9f8(0,ring.pointer,ring.length) creates the outgoing descriptor; Silent record pointer 0x44147b18 and length31",
+    "interpretation": "The difference between LIRO normalized queued header byte3=0 and Darwin request header byte3=2 has an explicit counterpart in LIRO protocol logic; it is not evidence of incompatible opcodes",
+    "evidence": "a6300-caif-peer-request-handshake.json plus previous header-completion and payload-descriptor exports"
+  },
+  "verified_efcs_packet_bridge": {
+    "source": "Existing efcs-algorithm-arguments.json and a6300-exposure-class-writers.json, independently checked LLVM windows43841342..43841398 and4391aa66..4391aabe",
+    "a6000": "With bank+4bc bit20 clear, exposure class1 produces packet[1] low2bits0; class3 produces low2bits2. Flag43f9b503 changes bit40 only. Additional +14 and OR80 preserve those low2bits.",
+    "a6300": "With bank+50c bit20 clear, class1 produces low2bits0; class3 or class0 produces low2bits2. Flag4415af79 changes bit40 only. Additional +14 and OR80 preserve those low2bits.",
+    "darwin": "Both capture parsers copy packet[1] to state+31. Output policy uses (state[31]&3)==0 separately from the A6300 Silent enable bit at state+d0. This connects EFCS-related class selection to a distinct mechanical policy field; it does not identify individual GPIO nets as curtains.",
+    "limit": "Diagnostic modes, bank bit20 and later Darwin variant overrides must be evaluated separately; class0 in A6000 falls through to lowbits0 and is not equivalent to the A6300 class0 branch."
+  },
+  "inference": "A6300 Darwin record length, field offset, bit mask, category/operation and request direction match the LIRO CAIF Silent payload and outgoing-body state machine. Static evidence strongly supports a paired protocol and Silent-to-mechanical-control bridge; physical bus connectivity and actual camera behavior are not verified.",
+  "not_verified": [
+    "Physical connection between LIRO SIO3 and Darwin SIO3",
+    "Physical curtain assignment of GPIO P4D and P4E",
+    "Complete absence of mechanical motion when bit is set",
+    "A6000 electronic rear curtain or full electronic still capture"
+  ],
+  "evidence": [
+    "a6300-darwin-mechanical-enable-selector.json",
+    "a6300-darwin-capture-output-policy.json",
+    "a6300-darwin-output-enable-source.json",
+    "a6300-darwin-output-command-callers.json",
+    "a6300-darwin-shutter-output-patterns.json",
+    "a6300-darwin-mechanical-bit-producers.json",
+    "a6300-darwin-capture-input-fields.json",
+    "a6300-darwin-capture-packet-source.json",
+    "a6300-darwin-capture-buffer-routing.json",
+    "a6300-darwin-capture-ingress-entry.json",
+    "a6300-darwin-capture-receive-sequence.json",
+    "a6000-darwin-capture-buffer-comparison.json",
+    "a6000-darwin-capture-request-parser.json",
+    "a6000-darwin-output-enable-path.json",
+    "a6000-darwin-output-command-policy.json"
+  ]
+}

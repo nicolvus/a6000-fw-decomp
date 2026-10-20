@@ -1,0 +1,45 @@
+{
+  "scope": "Sony ILCE-6000 firmware 3.21 static analysis; no hardware",
+  "binaries": {
+    "libmpr.so_sha256": "9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30",
+    "libObj.so_sha256": "8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a",
+    "dmm.ko_sha256": "e91787bef95a64613888948f6615229c54dae826a16eeec0154549d8849b23fc"
+  },
+  "encodestill": {
+    "mpr_if_elf": "0x71cf58",
+    "fea_if_elf": "0x44f834",
+    "status": "VERIFICADO",
+    "result": "success returns 0 after queue send; slot exhaustion logs AsyncApiDone and returns 9",
+    "raster_read_completion": "NO VERIFICADO"
+  },
+  "callback": {
+    "dispatch_elf": "0x4502e8",
+    "registration_api_elf": "0x71f7b8",
+    "registration_fea_target_elf": "0x450418",
+    "registration_site_for_encode_still": "NO VERIFICADO",
+    "dispatch_order": "callback function at 0x450308, then event notifier for 0xc0000001..0xc0000091",
+    "event_id_candidate": "0xc0000004",
+    "event_id_status": "INFERENCIA fuerte: literal 0x759748, no symbolic xref CBID_ENCODE_STILL",
+    "receiver": "StillConverter",
+    "receiver_status": "INFERENCIA fuerte: local strings Receive CBID_ENCODE_STILL and PARAMID_CB_ENCODE_STILL; no registration xref"
+  },
+  "memory": {
+    "dmm_share_elf": "dmm.ko:0x9c68",
+    "dmm_share_effect": "VERIFICADO: validates then increments unit+0x2a0 at 0x9d1c..0x9d44",
+    "dmm_close_elf": "dmm.ko:0xa34c",
+    "dmm_close_effect": "VERIFICADO: decrements unit+0x2a1 at 0xa430..0xa458; not a free",
+    "obj_effect_original_release": "NO VERIFICADO",
+    "sdf_copy_release": "NO VERIFICADO",
+    "safe_recycle": "INFERENCIA: only after CBID_ENCODE_STILL; callback is not proven DMA/cache/free barrier"
+  },
+  "completion_to_dcf": {
+    "write_still_fea_if_elf": "0x44f784",
+    "write_still_fea_core_elf": "0x440794",
+    "encode_completion_to_write_still": "NO VERIFICADO",
+    "catalog_requirement": "INFERENCIA fuerte: completed WriteStill/MMgr entry and DCF catalogue update, not merely JPEG bytes"
+  },
+  "external_context": {
+    "sony_gpl": "VERIFICADO available; not treated as source for proprietary FEA/DMM",
+    "cipa_dcf": "VERIFICADO CIPA lists DC-009-2010 DCF Version 2.0; does not prove Sony flow"
+  }
+}

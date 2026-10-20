@@ -1,0 +1,378 @@
+{
+  "library": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libObj.so",
+  "sha256": "8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a",
+  "rtti": {},
+  "symbols": {},
+  "virtuals": {
+    "0x8fd2fc": []
+  },
+  "plt": {
+    "0xdb978": {
+      "got": "0x102cda0",
+      "symbol": "_ZN5MprIf37GetEntryIdFromDirectoryFileNumberSyncEmttN3MPR11ContentTypeENS0_14EntryConditionEPbPNS0_7EntryIdE"
+    },
+    "0xdd1f0": {
+      "got": "0x102d568",
+      "symbol": "_ZN5MprIf25PreRegisterDcfContentSyncEmN3MPR5T_LTMENS0_10DcfObjInfoEttPb"
+    },
+    "0xdda64": {
+      "got": "0x102d810",
+      "symbol": "_ZN5MprIf15FlushWriteStillEPNS_20FlushWriteStillParamEm"
+    },
+    "0xe0f70": {
+      "got": "0x102e8d0",
+      "symbol": "_ZN5MprIf10WriteStillEPNS_15WriteStillParamEPN3MPR9StillInfoEm"
+    },
+    "0xe14e8": {
+      "got": "0x102ea88",
+      "symbol": "_ZN5MprIf19MakeWriteStillImageEPNS_20WriteStillImageParamEPN3MPR9StillInfoE"
+    },
+    "0xe17e0": {
+      "got": "0x102eb7c",
+      "symbol": "_ZN5MprIf32GetLastPreRegisterDCFContentSyncEmN3MPR14EntryConditionENS0_7EntryIdEPbS3_PS2_"
+    }
+  },
+  "callers": [
+    {
+      "addr": "0xdccce",
+      "func": "0xdb3b8",
+      "gap": 6422,
+      "export": "_init",
+      "virtual_of": [],
+      "target": "0xdd1f0",
+      "symbol": "_ZN5MprIf25PreRegisterDcfContentSyncEmN3MPR5T_LTMENS0_10DcfObjInfoEttPb",
+      "opcode": "b"
+    },
+    {
+      "addr": "0xdd542",
+      "func": "0xdb3b8",
+      "gap": 8586,
+      "export": "_init",
+      "virtual_of": [],
+      "target": "0xdda64",
+      "symbol": "_ZN5MprIf15FlushWriteStillEPNS_20FlushWriteStillParamEm",
+      "opcode": "b"
+    },
+    {
+      "addr": "0xe0a4e",
+      "func": "0xdb3b8",
+      "gap": 22166,
+      "export": "_init",
+      "virtual_of": [],
+      "target": "0xe0f70",
+      "symbol": "_ZN5MprIf10WriteStillEPNS_15WriteStillParamEPN3MPR9StillInfoEm",
+      "opcode": "b"
+    },
+    {
+      "addr": "0xe0fc6",
+      "func": "0xdb3b8",
+      "gap": 23566,
+      "export": "_init",
+      "virtual_of": [],
+      "target": "0xe14e8",
+      "symbol": "_ZN5MprIf19MakeWriteStillImageEPNS_20WriteStillImageParamEPN3MPR9StillInfoE",
+      "opcode": "b"
+    },
+    {
+      "addr": "0x722288",
+      "func": "0x722200",
+      "gap": 136,
+      "export": null,
+      "virtual_of": [],
+      "target": "0xe17e0",
+      "symbol": "_ZN5MprIf32GetLastPreRegisterDCFContentSyncEmN3MPR14EntryConditionENS0_7EntryIdEPbS3_PS2_",
+      "opcode": "blx"
+    },
+    {
+      "addr": "0x8fe0f0",
+      "func": "0x8fe0a0",
+      "gap": 80,
+      "export": null,
+      "virtual_of": [],
+      "target": "0xe0f70",
+      "symbol": "_ZN5MprIf10WriteStillEPNS_15WriteStillParamEPN3MPR9StillInfoEm",
+      "opcode": "blx"
+    },
+    {
+      "addr": "0x8fe234",
+      "func": "0x8fe1e4",
+      "gap": 80,
+      "export": null,
+      "virtual_of": [],
+      "target": "0xdda64",
+      "symbol": "_ZN5MprIf15FlushWriteStillEPNS_20FlushWriteStillParamEm",
+      "opcode": "blx"
+    },
+    {
+      "addr": "0x900180",
+      "func": "0x900124",
+      "gap": 92,
+      "export": null,
+      "virtual_of": [],
+      "target": "0xdd1f0",
+      "symbol": "_ZN5MprIf25PreRegisterDcfContentSyncEmN3MPR5T_LTMENS0_10DcfObjInfoEttPb",
+      "opcode": "blx"
+    },
+    {
+      "addr": "0x91bbdc",
+      "func": "0x91bbd0",
+      "gap": 12,
+      "export": null,
+      "virtual_of": [],
+      "target": "0x8fd2fc",
+      "symbol": "",
+      "opcode": "b.w"
+    },
+    {
+      "addr": "0x91c0ca",
+      "func": "0x91c09c",
+      "gap": 46,
+      "export": null,
+      "virtual_of": [],
+      "target": "0xe14e8",
+      "symbol": "_ZN5MprIf19MakeWriteStillImageEPNS_20WriteStillImageParamEPN3MPR9StillInfoE",
+      "opcode": "blx"
+    },
+    {
+      "addr": "0x93b8e8",
+      "func": "0x93b8e0",
+      "gap": 8,
+      "export": null,
+      "virtual_of": [],
+      "target": "0xe14e8",
+      "symbol": "_ZN5MprIf19MakeWriteStillImageEPNS_20WriteStillImageParamEPN3MPR9StillInfoE",
+      "opcode": "blx"
+    },
+    {
+      "addr": "0x93be94",
+      "func": "0x93bd60",
+      "gap": 308,
+      "export": null,
+      "virtual_of": [],
+      "target": "0xdb978",
+      "symbol": "_ZN5MprIf37GetEntryIdFromDirectoryFileNumberSyncEmttN3MPR11ContentTypeENS0_14EntryConditionEPbPNS0_7EntryIdE",
+      "opcode": "blx"
+    }
+  ],
+  "references": {
+    "0x8fd2fc": []
+  },
+  "windows": {
+    "0x900788:0x9007d2": "  900788: 68aa         \tldr\tr2, [r5, #0x8]\n  90078a: 69e3         \tldr\tr3, [r4, #0x1c]\n  90078c: 429a         \tcmp\tr2, r3\n  90078e: f040 8319    \tbne.w\t0x900dc4 <ObjSalvage_UnregisterCommand+0x58c4> @ imm = #0x632\n  900792: f04f 33ff    \tmov.w\tr3, #0xffffffff\n  900796: f44f 5154    \tmov.w\tr1, #0x3500\n  90079a: 61e3         \tstr\tr3, [r4, #0x1c]\n  90079c: 2200         \tmovs\tr2, #0x0\n  90079e: f107 0018    \tadd.w\tr0, r7, #0x18\n  9007a2: f7dd cece    \tblx\t0xde540 <_ZN3MWF6ObjMsgC1Ejj@plt> @ imm = #-0x822264\n  9007a6: 4638         \tmov\tr0, r7\n  9007a8: 4629         \tmov\tr1, r5\n  9007aa: 2214         \tmovs\tr2, #0x14\n  9007ac: 2301         \tmovs\tr3, #0x1\n  9007ae: f7e0 c812    \tblx\t0xe07d4 <_ZN3MWF6StructC1EPKvii@plt> @ imm = #-0x81ffdc\n  9007b2: f107 0018    \tadd.w\tr0, r7, #0x18\n  9007b6: 2100         \tmovs\tr1, #0x0\n  9007b8: 463a         \tmov\tr2, r7\n  9007ba: f7e0 cdd4    \tblx\t0xe1364 <_ZN3MWF6ObjMsg8AddParamEjPKNS_5ParamE@plt> @ imm = #-0x81f458\n  9007be: 68a0         \tldr\tr0, [r4, #0x8]\n  9007c0: f107 0118    \tadd.w\tr1, r7, #0x18\n  9007c4: 6803         \tldr\tr3, [r0]\n  9007c6: 68db         \tldr\tr3, [r3, #0xc]\n  9007c8: 4798         \tblx\tr3\n  9007ca: 4638         \tmov\tr0, r7\n  9007cc: f7de ca5a    \tblx\t0xdec84 <_ZN3MWF6StructD1Ev@plt> @ imm = #-0x821b4c\n  9007d0: e234         \tb\t0x900c3c <ObjSalvage_UnregisterCommand+0x573c> @ imm = #0x468",
+    "0x900940:0x900974": "  900940: 007c         \tlsls\tr4, r7, #0x1\n  900942: 4000         \tands\tr0, r0\n  900944: 0012         \tmovs\tr2, r2\n  900946: 4000         \tands\tr0, r0\n  900948: 0076         \tlsls\tr6, r6, #0x1\n  90094a: 4000         \tands\tr0, r0\n  90094c: 0077         \tlsls\tr7, r6, #0x1\n  90094e: 4000         \tands\tr0, r0\n  900950: 0009         \tmovs\tr1, r1\n  900952: 4100         \tasrs\tr0, r0\n  900954: 0084         \tlsls\tr4, r0, #0x2\n  900956: 4000         \tands\tr0, r0\n  900958: 8027         \tstrh\tr7, [r4]\n  90095a: 4000         \tands\tr0, r0\n  90095c: 0008         \tmovs\tr0, r1\n  90095e: 4100         \tasrs\tr0, r0\n  900960: 005e         \tlsls\tr6, r3, #0x1\n  900962: 4100         \tasrs\tr0, r0\n  900964: 0080         \tlsls\tr0, r0, #0x2\n  900966: 4100         \tasrs\tr0, r0\n  900968: 9508         \tstr\tr5, [sp, #0x20]\n  90096a: 004d         \tlsls\tr5, r1, #0x1\n  90096c: 2a1e         \tcmp\tr2, #0x1e\n  90096e: 004e         \tlsls\tr6, r1, #0x1\n  900970: 7fd3         \tldrb\tr3, [r2, #0x1f]\n  900972: 004d         \tlsls\tr5, r1, #0x1",
+    "0x9001dc:0x900290": "  9001dc: e92d 41f0    \tpush.w\t{r4, r5, r6, r7, r8, lr}\n  9001e0: 4604         \tmov\tr4, r0\n  9001e2: af00         \tadd\tr7, sp, #0x0\n  9001e4: 6a40         \tldr\tr0, [r0, #0x24]\n  9001e6: 461e         \tmov\tr6, r3\n  9001e8: 460d         \tmov\tr5, r1\n  9001ea: 4690         \tmov\tr8, r2\n  9001ec: f7de c9c0    \tblx\t0xde570 <_ZN7MonCtrl10GetFlagPtrEv@plt> @ imm = #-0x821c80\n  9001f0: 7803         \tldrb\tr3, [r0]\n  9001f2: 2b00         \tcmp\tr3, #0x0\n  9001f4: f000 81ff    \tbeq.w\t0x9005f6 <ObjSalvage_UnregisterCommand+0x50f6> @ imm = #0x3fe\n  9001f8: 4b9c         \tldr\tr3, [pc, #0x270]        @ 0x90046c <ObjSalvage_UnregisterCommand+0x4f6c>\n  9001fa: 4598         \tcmp\tr8, r3\n  9001fc: f000 8188    \tbeq.w\t0x900510 <ObjSalvage_UnregisterCommand+0x5010> @ imm = #0x310\n  900200: d814         \tbhi\t0x90022c <ObjSalvage_UnregisterCommand+0x4d2c> @ imm = #0x28\n  900202: 3b64         \tsubs\tr3, #0x64\n  900204: 4598         \tcmp\tr8, r3\n  900206: d07a         \tbeq\t0x9002fe <ObjSalvage_UnregisterCommand+0x4dfe> @ imm = #0xf4\n  900208: d807         \tbhi\t0x90021a <ObjSalvage_UnregisterCommand+0x4d1a> @ imm = #0xe\n  90020a: 3b06         \tsubs\tr3, #0x6\n  90020c: 4598         \tcmp\tr8, r3\n  90020e: d024         \tbeq\t0x90025a <ObjSalvage_UnregisterCommand+0x4d5a> @ imm = #0x48\n  900210: 3301         \tadds\tr3, #0x1\n  900212: 4598         \tcmp\tr8, r3\n  900214: f040 81ef    \tbne.w\t0x9005f6 <ObjSalvage_UnregisterCommand+0x50f6> @ imm = #0x3de\n  900218: e048         \tb\t0x9002ac <ObjSalvage_UnregisterCommand+0x4dac> @ imm = #0x90\n  90021a: 4b95         \tldr\tr3, [pc, #0x254]        @ 0x900470 <ObjSalvage_UnregisterCommand+0x4f70>\n  90021c: 4598         \tcmp\tr8, r3\n  90021e: f000 81b9    \tbeq.w\t0x900594 <ObjSalvage_UnregisterCommand+0x5094> @ imm = #0x372\n  900222: 3306         \tadds\tr3, #0x6\n  900224: 4598         \tcmp\tr8, r3\n  900226: f040 81e6    \tbne.w\t0x9005f6 <ObjSalvage_UnregisterCommand+0x50f6> @ imm = #0x3cc\n  90022a: e101         \tb\t0x900430 <ObjSalvage_UnregisterCommand+0x4f30> @ imm = #0x202\n  90022c: 4b91         \tldr\tr3, [pc, #0x244]        @ 0x900474 <ObjSalvage_UnregisterCommand+0x4f74>\n  90022e: 4598         \tcmp\tr8, r3\n  900230: f000 817d    \tbeq.w\t0x90052e <ObjSalvage_UnregisterCommand+0x502e> @ imm = #0x2fa\n  900234: d808         \tbhi\t0x900248 <ObjSalvage_UnregisterCommand+0x4d48> @ imm = #0x10\n  900236: 3b05         \tsubs\tr3, #0x5\n  900238: 4598         \tcmp\tr8, r3\n  90023a: f000 80c5    \tbeq.w\t0x9003c8 <ObjSalvage_UnregisterCommand+0x4ec8> @ imm = #0x18a\n  90023e: 3301         \tadds\tr3, #0x1\n  900240: 4598         \tcmp\tr8, r3\n  900242: f040 81d8    \tbne.w\t0x9005f6 <ObjSalvage_UnregisterCommand+0x50f6> @ imm = #0x3b0\n  900246: e102         \tb\t0x90044e <ObjSalvage_UnregisterCommand+0x4f4e> @ imm = #0x204\n  900248: 4b8b         \tldr\tr3, [pc, #0x22c]        @ 0x900478 <ObjSalvage_UnregisterCommand+0x4f78>\n  90024a: 4598         \tcmp\tr8, r3\n  90024c: f000 81c0    \tbeq.w\t0x9005d0 <ObjSalvage_UnregisterCommand+0x50d0> @ imm = #0x380\n  900250: 4b8a         \tldr\tr3, [pc, #0x228]        @ 0x90047c <ObjSalvage_UnregisterCommand+0x4f7c>\n  900252: 4598         \tcmp\tr8, r3\n  900254: f040 81cf    \tbne.w\t0x9005f6 <ObjSalvage_UnregisterCommand+0x50f6> @ imm = #0x39e\n  900258: e1ab         \tb\t0x9005b2 <ObjSalvage_UnregisterCommand+0x50b2> @ imm = #0x356\n  90025a: 4989         \tldr\tr1, [pc, #0x224]        @ 0x900480 <ObjSalvage_UnregisterCommand+0x4f80>\n  90025c: 46b0         \tmov\tr8, r6\n  90025e: 6a60         \tldr\tr0, [r4, #0x24]\n  900260: 4479         \tadd\tr1, pc\n  900262: f7e1 cbaa    \tblx\t0xe19b8 <_ZNK7MonCtrl16ConPrintfMessageEPKcz@plt> @ imm = #-0x81e8ac\n  900266: 4987         \tldr\tr1, [pc, #0x21c]        @ 0x900484 <ObjSalvage_UnregisterCommand+0x4f84>\n  900268: 462a         \tmov\tr2, r5\n  90026a: 6a60         \tldr\tr0, [r4, #0x24]\n  90026c: 4479         \tadd\tr1, pc\n  90026e: 2500         \tmovs\tr5, #0x0\n  900270: f7e1 cba2    \tblx\t0xe19b8 <_ZNK7MonCtrl16ConPrintfMessageEPKcz@plt> @ imm = #-0x81e8bc\n  900274: 4984         \tldr\tr1, [pc, #0x210]        @ 0x900488 <ObjSalvage_UnregisterCommand+0x4f88>\n  900276: 6a60         \tldr\tr0, [r4, #0x24]\n  900278: 4479         \tadd\tr1, pc\n  90027a: 6832         \tldr\tr2, [r6]\n  90027c: f7e1 cb9c    \tblx\t0xe19b8 <_ZNK7MonCtrl16ConPrintfMessageEPKcz@plt> @ imm = #-0x81e8c8\n  900280: 4982         \tldr\tr1, [pc, #0x208]        @ 0x90048c <ObjSalvage_UnregisterCommand+0x4f8c>\n  900282: 6a60         \tldr\tr0, [r4, #0x24]\n  900284: 4479         \tadd\tr1, pc\n  900286: 6872         \tldr\tr2, [r6, #0x4]\n  900288: f7e1 cb96    \tblx\t0xe19b8 <_ZNK7MonCtrl16ConPrintfMessageEPKcz@plt> @ imm = #-0x81e8d4\n  90028c: e007         \tb\t0x90029e <ObjSalvage_UnregisterCommand+0x4d9e> @ imm = #0xe\n  90028e: 4980         \tldr\tr1, [pc, #0x200]        @ 0x900490 <ObjSalvage_UnregisterCommand+0x4f90>",
+    "0x8fc538:0x8fc570": "  8fc538: e92d 41f0    \tpush.w\t{r4, r5, r6, r7, r8, lr}\n  8fc53c: b08a         \tsub\tsp, #0x28\n  8fc53e: af00         \tadd\tr7, sp, #0x0\n  8fc540: 460e         \tmov\tr6, r1\n  8fc542: 4605         \tmov\tr5, r0\n  8fc544: f246 1108    \tmovw\tr1, #0x6108\n  8fc548: 4614         \tmov\tr4, r2\n  8fc54a: f107 0020    \tadd.w\tr0, r7, #0x20\n  8fc54e: f241 0209    \tmovw\tr2, #0x1009\n  8fc552: 4698         \tmov\tr8, r3\n  8fc554: f7e1 cff4    \tblx\t0xde540 <_ZN3MWF6ObjMsgC1Ejj@plt> @ imm = #-0x81e018\n  8fc558: f107 0018    \tadd.w\tr0, r7, #0x18\n  8fc55c: 4631         \tmov\tr1, r6\n  8fc55e: f7e5 c8aa    \tblx\t0xe16b4 <_ZN3MWF17ParamStd_TemplateIjLNS_5Param4TypeE8EEC1Ej@plt> @ imm = #-0x81aeac\n  8fc562: f107 0020    \tadd.w\tr0, r7, #0x20\n  8fc566: f241 0102    \tmovw\tr1, #0x1002\n  8fc56a: f107 0218    \tadd.w\tr2, r7, #0x18\n  8fc56e: f7e3 ce1c    \tblx\t0xe01a8 <_ZN3MWF6ObjMsg8AddParamEjRKNS_5ParamE@plt> @ imm = #-0x81c3c8"
+  },
+  "outgoing": {
+    "0x900788:0x9007d2": [
+      {
+        "va": "0x9007a2",
+        "target": "0xde540",
+        "symbol": "_ZN3MWF6ObjMsgC1Ejj",
+        "opcode": "blx"
+      },
+      {
+        "va": "0x9007ae",
+        "target": "0xe07d4",
+        "symbol": "_ZN3MWF6StructC1EPKvii",
+        "opcode": "blx"
+      },
+      {
+        "va": "0x9007ba",
+        "target": "0xe1364",
+        "symbol": "_ZN3MWF6ObjMsg8AddParamEjPKNS_5ParamE",
+        "opcode": "blx"
+      },
+      {
+        "va": "0x9007cc",
+        "target": "0xdec84",
+        "symbol": "_ZN3MWF6StructD1Ev",
+        "opcode": "blx"
+      },
+      {
+        "va": "0x9007d0",
+        "target": "0x900c3c",
+        "symbol": "",
+        "opcode": "b"
+      }
+    ],
+    "0x900940:0x900974": [],
+    "0x9001dc:0x900290": [
+      {
+        "va": "0x9001ec",
+        "target": "0xde570",
+        "symbol": "_ZN7MonCtrl10GetFlagPtrEv",
+        "opcode": "blx"
+      },
+      {
+        "va": "0x900218",
+        "target": "0x9002ac",
+        "symbol": "",
+        "opcode": "b"
+      },
+      {
+        "va": "0x90022a",
+        "target": "0x900430",
+        "symbol": "",
+        "opcode": "b"
+      },
+      {
+        "va": "0x900246",
+        "target": "0x90044e",
+        "symbol": "",
+        "opcode": "b"
+      },
+      {
+        "va": "0x900258",
+        "target": "0x9005b2",
+        "symbol": "",
+        "opcode": "b"
+      },
+      {
+        "va": "0x900262",
+        "target": "0xe19b8",
+        "symbol": "_ZNK7MonCtrl16ConPrintfMessageEPKcz",
+        "opcode": "blx"
+      },
+      {
+        "va": "0x900270",
+        "target": "0xe19b8",
+        "symbol": "_ZNK7MonCtrl16ConPrintfMessageEPKcz",
+        "opcode": "blx"
+      },
+      {
+        "va": "0x90027c",
+        "target": "0xe19b8",
+        "symbol": "_ZNK7MonCtrl16ConPrintfMessageEPKcz",
+        "opcode": "blx"
+      },
+      {
+        "va": "0x900288",
+        "target": "0xe19b8",
+        "symbol": "_ZNK7MonCtrl16ConPrintfMessageEPKcz",
+        "opcode": "blx"
+      },
+      {
+        "va": "0x90028c",
+        "target": "0x90029e",
+        "symbol": "",
+        "opcode": "b"
+      }
+    ],
+    "0x8fc538:0x8fc570": [
+      {
+        "va": "0x8fc554",
+        "target": "0xde540",
+        "symbol": "_ZN3MWF6ObjMsgC1Ejj",
+        "opcode": "blx"
+      },
+      {
+        "va": "0x8fc55e",
+        "target": "0xe16b4",
+        "symbol": "_ZN3MWF17ParamStd_TemplateIjLNS_5Param4TypeE8EEC1Ej",
+        "opcode": "blx"
+      },
+      {
+        "va": "0x8fc56e",
+        "target": "0xe01a8",
+        "symbol": "_ZN3MWF6ObjMsg8AddParamEjRKNS_5ParamE",
+        "opcode": "blx"
+      }
+    ]
+  },
+  "literals": {
+    "0x900788:0x9007d2": [],
+    "0x900940:0x900974": [],
+    "0x9001dc:0x900290": [
+      {
+        "va": "0x9001f8",
+        "pool": "0x90046c",
+        "value": "0x40000076"
+      },
+      {
+        "va": "0x90021a",
+        "pool": "0x900470",
+        "value": "0x4000006f"
+      },
+      {
+        "va": "0x90022c",
+        "pool": "0x900474",
+        "value": "0x4000007c"
+      },
+      {
+        "va": "0x900248",
+        "pool": "0x900478",
+        "value": "0x40000084"
+      },
+      {
+        "va": "0x900250",
+        "pool": "0x90047c",
+        "value": "0x41000080"
+      },
+      {
+        "va": "0x90025a",
+        "pool": "0x900480",
+        "value": "0x4d931b",
+        "string": "[MprAcsr] eventId  : [CBID_ENTER_REC]",
+        "string_va": "0xdd957f"
+      },
+      {
+        "va": "0x900266",
+        "pool": "0x900484",
+        "value": "0x4d9335",
+        "string": "[MprAcsr] targetId : [%x]",
+        "string_va": "0xdd95a5"
+      },
+      {
+        "va": "0x900274",
+        "pool": "0x900488",
+        "value": "0x4d9343",
+        "string": "[MprAcsr] errCd    : [%x]",
+        "string_va": "0xdd95bf"
+      },
+      {
+        "va": "0x900280",
+        "pool": "0x90048c",
+        "value": "0x4d9351",
+        "string": "[MprAcsr] num      : [%x]",
+        "string_va": "0xdd95d9"
+      },
+      {
+        "va": "0x90028e",
+        "pool": "0x900490",
+        "value": "0x4d935b"
+      }
+    ],
+    "0x8fc538:0x8fc570": []
+  },
+  "window_owners": {
+    "0x900788:0x9007d2": {
+      "addr": "0x900788",
+      "func": "0x9001dc",
+      "gap": 1452,
+      "export": null,
+      "virtual_of": []
+    },
+    "0x900940:0x900974": {
+      "addr": "0x900940",
+      "func": "0x9001dc",
+      "gap": 1892,
+      "export": null,
+      "virtual_of": []
+    },
+    "0x9001dc:0x900290": {
+      "addr": "0x9001dc",
+      "func": "0x9001dc",
+      "gap": 0,
+      "export": null,
+      "virtual_of": []
+    },
+    "0x8fc538:0x8fc570": {
+      "addr": "0x8fc538",
+      "func": "0x8fc538",
+      "gap": 0,
+      "export": null,
+      "virtual_of": []
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "scope": "A7S 3.20 versus A6000 3.21 DFE/sensor static evidence; TASK2 crosscheck",
+  "artifacts": {
+    "a7s_av_cam": {"path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin", "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e", "base": "0x43541000"},
+    "a6000_dfe": {"path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/dfe/dfe.bin", "sha256": "fc4e314db24a72d584bd8795bd8f1144b003c97c390cb143d09b840b38bf9fcd", "size": 65536}
+  },
+  "findings": [
+    {"id":"E01","classification":"VERIFICADO","location":"A6000 dfe.bin+0x0","evidence":"LDR PC vector entries; target literals at +0x20","reproduce":"xxd -g4 -l128 dfe.bin"},
+    {"id":"E02","classification":"VERIFICADO","location":"A6000 av-cam.bin+0x790b98","evidence":"literal /usr/dfe/dfe.bin","reproduce":"rg -aob '/dfe/' av-cam.bin"},
+    {"id":"E03","classification":"VERIFICADO","location":"A7S av-cam.bin+7716309","evidence":"RTTI string C_ImagerCtrl_IMX235","reproduce":"strings -a -td av-cam.bin | rg IMX235"},
+    {"id":"E04","classification":"INFERENCIA","location":"A7S av-cam strings +7717043/+7717487/+7718933","evidence":"GCS2RxLink, MPHYRx4ch, SubLVDS diagnostics","interpretation":"receiver/PHY path"},
+    {"id":"E05","classification":"NO VERIFICADO","claim":"A7S DFE executable location and IMX235 register table","reason":"A7S tree lacks dfe.bin; REA A7S autoanalysis timed out at 330 seconds; timeout is not absence evidence"},
+    {"id":"E06","classification":"DESCARTADO","claim":"432 Mb/s per channel is documented by reviewed manuals","reason":"not present in comparison source"},
+    {"id":"T2-01","classification":"VERIFICADO","location":"A7S 0x437a9cb0; A6000 0x438032d4","evidence":"ldrb r2,[r0,#8]; PC-relative base; str.w r2,[base,#0x250/#0x238]","reproduce":"llvm-objdump --triple=thumbv7-none-eabi -d --start-address=... work/claude/input/*-view.elf"},
+    {"id":"T2-02","classification":"VERIFICADO","location":"A7S 0x4379ec04, 0x43826d58, 0x438649bc","evidence":"guardas +0x4b84/+0x785/+0x1e0; tipo 2 retorna 0x4e/0x4f; banco+0x404==2 evita rama EFCS +0x424","reproduce":"scripts/task2_probe.py y llvm-objdump"},
+    {"id":"T2-03","classification":"VERIFICADO","location":"A7S 0x43862f18..1c","evidence":"ldr.w r3,[r6,#0x76c]; str.w r3,[r7,#0x404]","interpretation":"la asignación se confirma; identidad con tipo Silent no","reproduce":"llvm-objdump --triple=thumbv7-none-eabi -d --start-address=0x43862e80 --stop-address=0x43863020 work/claude/input/a7s-av-cam-view.elf"},
+    {"id":"T2-04","classification":"NO VERIFICADO","location":"A6000 dfe.bin","evidence":"REA observa 83 procedimientos, vectores a 0x01005870 y arranque; no vincula IDs de comandos con lectura/disparo/VD","reproduce":"REA raw ARM base 0x01000000; binary_overview/analyze_function 0x01005870"},
+    {"id":"T2-05","classification":"NO VERIFICADO","location":"A6000 0x43cd1b98","evidence":"cadena /dfe/dfe.bin presente; escaneo PC-relativo Thumb no recupera xref directa y no prueba cargador","reproduce":"rg -aob '/dfe/dfe.bin' work/claude/input/a6000-av-cam.bin"}
+  ]
+}

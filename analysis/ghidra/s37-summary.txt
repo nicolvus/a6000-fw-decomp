@@ -1,0 +1,12 @@
+| Validación | Clasificación | Resultado |
+|---|---|---|
+| ACEPTO: definidor DmmAccess | VERIFICADO | libmprctrl.so; SHA y copia 0444 comprobados |
+| ACEPTO: getter dirección/tamaño | VERIFICADO | DmmAccessPLA; R+0x10+8*i / R+0x14+8*i |
+| RECHAZO: dirección física/lógica efectiva recuperada | NO_VERIFICADO | Palabras de respuesta externa; sin dominio ni valor numérico |
+| RECHAZO: protocolo idéntico byte a byte a S33 | VERIFICADO | OSAL 0x61003c, payload 0x18; envoltura/correlación distintas |
+| ACEPTO: contrato de campos compatible con S33 | PARCIAL | cmd/ID/clave/open alinean; slot av-cam sin identidad probada |
+| ACEPTO: DmmCloseAndFree S30 | VERIFICADO | PLT libObj 0xdc180 importa símbolo definido en libmprctrl |
+| RECHAZO: productor físico YC/APL cerrado | NO_VERIFICADO | Sin enlace de extents a P/clave/ID, pitch o fin DMA |
+| ACEPTO: validación e integridad | VERIFICADO | Auditor PASS, 67 tests PASS; av-cam intacto; 9 avisos Ruff previos |
+
+VEREDICTO: CAMBIOS

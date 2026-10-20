@@ -1,0 +1,38 @@
+{
+  "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "functions": [
+    {
+      "query": "43b0394a",
+      "raw64": "036d9b681a685b684a658b657047002831d00b2926d00cdc05291dd004dc012928d0032927d111e0072917d00a2922d11ae037291ad004dc102911d012291ad1",
+      "references": [
+        "From: 4380dc74 To: 43b0394a Type: UNCONDITIONAL_CALL Op: 0 DEFAULT"
+      ],
+      "entry": "43b0394a",
+      "completed": true,
+      "pseudo_code": "\nvoid FUN_43b0394a(int param_1,int param_2)\n\n{\n  undefined4 *puVar1;\n  undefined4 uVar2;\n  \n  puVar1 \u003d *(undefined4 **)(*(int *)(param_1 + 0x50) + 8);\n  uVar2 \u003d puVar1[1];\n  *(undefined4 *)(param_2 + 0x54) \u003d *puVar1;\n  *(undefined4 *)(param_2 + 0x58) \u003d uVar2;\n  return;\n}\n\n",
+      "listing": [
+        "43b0394a ldr r3,[r0,#0x50]",
+        "43b0394c ldr r3,[r3,#0x8]",
+        "43b0394e ldr r2,[r3,#0x0]",
+        "43b03950 ldr r3,[r3,#0x4]",
+        "43b03952 str r2,[r1,#0x54]",
+        "43b03954 str r3,[r1,#0x58]",
+        "43b03956 bx lr"
+      ]
+    },
+    {
+      "query": "437daa44",
+      "raw64": "014b7b4418607047369e6f00074810b578440468944204d903f180430220cb6010bd01340460012010bd00bf289e6f0038b50822036d0c460d4d7d4499682846",
+      "references": [],
+      "status": "listing_only_no_function",
+      "listing": []
+    },
+    {
+      "query": "437daa50",
+      "raw64": "074810b578440468944204d903f180430220cb6010bd01340460012010bd00bf289e6f0038b50822036d0c460d4d7d4499682846eaf14cec2a884ff00003012a",
+      "references": [],
+      "status": "listing_only_no_function",
+      "listing": []
+    }
+  ]
+}

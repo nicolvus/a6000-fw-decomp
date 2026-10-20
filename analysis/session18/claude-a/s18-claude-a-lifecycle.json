@@ -1,0 +1,150 @@
+{
+  "session": 18,
+  "thread": "claude-a",
+  "scope": "static_analysis_only",
+  "no_device_connection": true,
+  "no_binary_modification": true,
+  "context_md_not_edited": true,
+  "no_subagents_used": true,
+  "model_used": "claude-sonnet-5",
+  "model_requested": "sonnet",
+  "model_match": true,
+  "effort_requested": "medium",
+  "effort_note": "No se puede leer desde la conversación el valor numerico de esfuerzo con el que el orquestador configuro este hilo; no hay discrepancia identificable mas alla de esto. No se usaron subagentes, tal como exige la tarea.",
+  "claims_silentshutter_works": false,
+  "findings": [
+    {
+      "question": 1,
+      "topic": "caller real de MWF::ObjPin::Connect",
+      "classification": "INFERENCIA_FUERTE_PARCIAL",
+      "verified_facts": [
+        "MWF::ObjPin::Connect = _ZN3MWF6ObjPin7ConnectEPS0_PNS_15ObjStatusViewerE, libMWF.so offset 0x29588, tamano 0x150, simbolo dinamico global exportado",
+        "5 bibliotecas importan este simbolo via R_ARM_JUMP_SLOT: libBizFw.so (plt 0x29244), libBizFw2.so (plt 0x20588), libInfraCacheMgr.so (plt 0xca40), libInfraScalarMpr.so (plt 0x1540c), libmprctrl.so (plt 0xef3c)",
+        "libObj.so NO importa MWF::ObjPin::Connect directamente; importa solo los wrappers AVBIZ::UNIVERSE::UObjPin::Connect (got 0x102d420) y ConnectPinWrapper::Connect (got 0x102d780), ademas de MWF::ObjPin::Connect (got 0x102dfc4)",
+        "libBizFw2.so tiene una relocacion R_ARM_ABS32 (dato estatico, no JUMP_SLOT) hacia AVBIZ::UNIVERSE::UObjPin::Connect en offset 0x43728, sugiriendo tabla de punteros a funcion"
+      ],
+      "not_verified": [
+        "ningun bl/blx directo encontrado via grep sobre llvm-objdump -d hacia los PLT stubs de MWF::ObjPin::Connect en ninguna de las 6 bibliotecas examinadas",
+        "ninguna relocacion R_ARM_ABS32 hacia MWF::ObjPin::Connect (solo hacia el wrapper AVBIZ::UNIVERSE::UObjPin::Connect en libBizFw2.so)",
+        "sitio exacto de la llamada indirecta (probable blx r3 con direccion GOT-relativa calculada en runtime, no resoluble con objdump+grep estatico)"
+      ],
+      "method": "llvm-objdump -T/-R/-d --triple=thumbv7-none-eabi sobre los .so extraidos de firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/",
+      "blocker_status": "reducido_no_cerrado"
+    },
+    {
+      "question": 2,
+      "topic": "comparacion vptr LIRO (0x437ebed8/DAT_44020894) vs LifeCycle real de libObj.so",
+      "classification": "VERIFICADO_son_mecanismos_distintos",
+      "liro_pattern": {
+        "DAT_44020894_value": "0x43afb3bb",
+        "resolved_function": "0x43afb3ba",
+        "pseudocode": "void candidate_43afb3ba(int param_1, undefined4 param_2) { (**(code **)(param_1 + 8))(param_2); return; }",
+        "interpretation": "trampolin unico compartido (no vtabla array), reenvia la llamada al puntero guardado en el propio offset +8 del objeto; idioma C manual, no polimorfismo C++"
+      },
+      "libobj_lifecycle_pattern": {
+        "constructor_address": "0x41b6c0",
+        "called_from_near": "0x4195c0 (= TM::createLifeCycles, ELF offset citado en sesion 17 y CONTEXT.md linea 899)",
+        "allocation": "operator new(unsigned int) via _Znwj@plt, heap real, no fila estatica",
+        "vptr_literal": "0xcc6698",
+        "vptr_location_section": ".rodata (0xbc9598-0xd91fb2)",
+        "vtable_entries": [
+          {"slot": 0, "address": "0x41b605", "role": "complete-object destructor"},
+          {"slot": 1, "address": "0x41b649", "role": "deleting destructor"},
+          {"slot": 2, "address": "0x41b65d", "role": "metodo virtual real: handler de Event (Event::getId + testmode_debugPrint + setBlogData), NO llama a Connect"},
+          {"slot": 3, "address": "0x00000000", "role": "terminador, solo 3 slots"}
+        ],
+        "interpretation": "vtabla C++ real estilo Itanium ABI, clase polimorfica genuina con RTTI, 3 slots"
+      },
+      "verdict": "DESCARTADO que compartan vptr o mecanismo; son jerarquias de ciclo de vida independientes en lo examinado. El unico metodo virtual no-destructor de LifeCycle no llama a Connect."
+    },
+    {
+      "question": 3,
+      "topic": "IPC en fuentes kernel Sony (mach-cxd90014, mach-cxd4132)",
+      "classification": "VERIFICADO_nada_relevante",
+      "detail": "grep sobre mailbox|ipc|rpmsg|shared.?memory.*queue|message.?queue en 108+75 archivos: solo coincidencias de nombre de archivo sin relacion (cmpr.c=compresion RAM generica, qemu.c, clock.c, pcie_setup.c). Sin rastro de IPC propietario entre LIRO/libObj.so/libMWF.so, como se esperaba (ese stack es de espacio de usuario propietario, no vive en el BSP GPL)."
+    },
+    {
+      "question": 4,
+      "topic": "filas dinamicamente seleccionables 0xa0/0xc8/0xdc/0x104 del selector de captura LIRO",
+      "classification": "INFERENCIA_FUERTE_mayoria_NO_VERIFICADO_una",
+      "rows": [
+        {
+          "offset": "0xa0",
+          "function": "0x43b1be37",
+          "status": "NO_VERIFICADO",
+          "reason": "Ghidra -noanalysis lanza ContextChangeException al fijar modo Thumb (normal y forzado); probable solape con fin de funcion vecina 0x43b1be01. No se forzo re-analisis destructivo del proyecto compartido silent-liro."
+        },
+        {
+          "offset": "0xc8",
+          "function": "0x43b1bf04",
+          "status": "decompilado_completo",
+          "summary": "switch de 7 casos (0-6) sobre FUN_43afdf16(); caso 0 = retry/cancel de captura (strings Capture_Req_Retry, Capture_Cancel, Panorama_DEBUG_CAPTURE_START); caso 5 = init RAW (Stage_Raw.cpp); rama final = escritura de metadatos tipo EXIF/lente en +0x23..+0x27 tras FUN_43ae9226(...,0x9400,...), igual que fila 0xb4 ya conocida. Sin marca Silent/EFCS."
+        },
+        {
+          "offset": "0xdc",
+          "function": "0x43b1bf66",
+          "status": "decompilado_completo",
+          "summary": "estructuralmente casi identico a 0xc8 (mismo switch, mismas cadenas, mismo patron EXIF final). Sin marca Silent/EFCS."
+        },
+        {
+          "offset": "0x104",
+          "function": "0x43b1c034",
+          "status": "decompilado_parcial",
+          "summary": "cabecera (caso 0) identica en patron a 0xc8/0xdc; casos 2-6 no revisados por limite de tiempo. Sin marca Silent/EFCS en lo revisado."
+        }
+      ],
+      "verdict": "Las 3 filas examinadas completas son variantes casi identicas de un manejador generico de etapas de captura (retry, cancel, RAW init, EXIF), consistente con modos de captura mecanica convencional, no con un modo electronico diferenciado."
+    },
+    {
+      "question": 5,
+      "topic": "relacion de las ~9 tablas de 0x437ebed8 con ObjCamera/ObjEffect/ObjStillRecorder",
+      "classification": "NO_VERIFICADO",
+      "detail": "No se decompilaron ni clasificaron las ~8 tablas restantes (solo la del selector de captura, ya conocida). Blocker abierto, no hallazgo negativo."
+    },
+    {
+      "question": 6,
+      "topic": "DAT_44020894 como clase/vtabla",
+      "classification": "VERIFICADO",
+      "detail": "No es una vtabla ni una clase con RTTI; es la direccion de una unica funcion trampolin compartida por las ~9 tablas. Ver pregunta 2 para el detalle."
+    },
+    {
+      "question": 7,
+      "topic": "puente entre arquitectura E (Camera-Effect-Recorder) y patron LIRO 0x437ebed8",
+      "classification": "DESCARTADO_parcial_NO_VERIFICADO_exhaustivo",
+      "detail": "Ningun puente directo (llamada cruzada, vptr compartido, dato comun) encontrado entre el patron LIRO examinado y el LifeCycle de libObj.so examinado. No es exhaustivo: solo se exploro una instancia de LifeCycle de libObj.so; puede haber otras clases LifeCycle con vptrs distintos sin revisar."
+    },
+    {
+      "question": 8,
+      "topic": "licencias de paquetes OSS Sony",
+      "classification": "VERIFICADO_parcial",
+      "licenses": {
+        "linux_kernel_3.0.27": "GPLv2 (COPYING confirmado en raiz)",
+        "iproute2": "GPLv2 (COPYING presente, no releido integro)",
+        "iptables": "GPLv2 (COPYING presente, no releido integro)",
+        "wpa_supplicant": "COPYING presente, variante BSD/GPLv2 no diferenciada - NO_VERIFICADO el detalle exacto",
+        "libpng": "licencia libpng (BSD-like), LICENSE + MODULE_LICENSE_BSD_LIKE listados por tar -tzf, archivo no extraido ni leido completo",
+        "webkit": "NO_VERIFICADO - tarball no extraido (27MB), no se encontraron LICENSE/COPYING en listado tar -tzf de nivel superior"
+      },
+      "legal_relevance": "ninguna de estas licencias GPL/BSD restringe el analisis estatico de este proyecto; el riesgo legal real sigue siendo el de la parte propietaria (libObj.so, libMWF.so, LIRO), no estos paquetes de plataforma base"
+    },
+    {
+      "question": 9,
+      "topic": "que no se pudo verificar por tiempo/herramientas",
+      "classification": "DECLARACION_HONESTA",
+      "items": [
+        "sitio exacto de la llamada a Connect dentro de las 5 bibliotecas identificadas",
+        "contenido completo de la fila 0xa0 del selector (bloqueado por Ghidra, no forzado)",
+        "casos 2-6 completos de la fila 0x104",
+        "clasificacion de ~8 tablas restantes de 0x437ebed8",
+        "si libObj.so tiene mas de una clase LifeCycle con vptrs distintos",
+        "texto integro de licencias iproute2/iptables/wpa_supplicant y licencia real de webkit.tar.gz"
+      ]
+    },
+    {
+      "question": 10,
+      "topic": "riesgo/limitacion para el usuario",
+      "classification": "ADVERTENCIA",
+      "detail": "Todo hallazgo nuevo de esta tanda (filas dinamicas del selector, vtabla real de LifeCycle) refuerza el patron de capturas mecanicas convencionales sin marca Silent. La reduccion del blocker de Connect() a 5 bibliotecas es un avance de alcance de busqueda, no prueba de que esas bibliotecas activen algo relevante para S2. Ningun hallazgo de este documento debe interpretarse como evidencia a favor de que SilentShutter o un mecanismo equivalente funcione en este hardware."
+    }
+  ]
+}

@@ -1,0 +1,160 @@
+sandbox_mode = "danger-full-access"
+approval_policy = "on-request"
+model = "gpt-6.1-sol"
+model_reasoning_effort = "low"
+service_tier = "default"
+[desktop]
+followUpQueueMode = "steer"
+external-agent-import-sync-item-types = "all"
+external-agent-import-sync-enabled = true
+conversationDetailMode = "STEPS_PROSE"
+sansFontSize = 14
+codeFontSize = 13
+ambient-suggestions-enabled = false
+keepRemoteControlAwakeWhilePluggedIn = false
+
+[marketplaces.openai-bundled]
+source_type = "local"
+source = "/home/nicolas/.codex/.tmp/bundled-marketplaces/openai-bundled"
+
+[marketplaces.openai-primary-runtime]
+source_type = "local"
+source = "/home/nicolas/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
+
+[marketplaces.claude-plugins-official]
+source_type = "git"
+source = "https://github.com/anthropics/claude-plugins-official.git"
+
+[marketplaces.context-mode]
+source_type = "git"
+source = "https://github.com/mksglu/context-mode.git"
+
+[plugins."codex-app-tools@openai-bundled"]
+enabled = true
+
+[plugins."browser@openai-bundled"]
+enabled = true
+
+[plugins."unified-computer-use@openai-bundled"]
+enabled = true
+
+[plugins."code-review@openai-bundled"]
+enabled = true
+
+[plugins."visualize@openai-bundled"]
+enabled = true
+
+[plugins."documents@openai-primary-runtime"]
+enabled = true
+
+[plugins."pdf@openai-primary-runtime"]
+enabled = true
+
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = true
+
+[plugins."presentations@openai-primary-runtime"]
+enabled = true
+
+[plugins."template-creator@openai-primary-runtime"]
+enabled = true
+
+[plugins."project-artifact@claude-plugins-official"]
+enabled = true
+
+[plugins."chrome@openai-bundled"]
+enabled = true
+
+[plugins."context-mode@context-mode"]
+enabled = true
+
+[mcp_servers.node_repl]
+args = []
+command = "/usr/lib/chatgpt/resources/cua_node/bin/node_repl"
+startup_timeout_sec = 120
+
+[mcp_servers.node_repl.env]
+NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
+NODE_REPL_NODE_MODULE_DIRS = "/usr/lib/chatgpt/resources/cua_node/lib/node_modules"
+NODE_REPL_NODE_PATH = "/usr/lib/chatgpt/resources/cua_node/bin/node"
+NODE_REPL_TRUSTED_CODE_PATHS = "/home/nicolas/.codex:/usr/lib/chatgpt/resources/cua_node/lib/node_modules"
+CODEX_HOME = "/home/nicolas/.codex"
+BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab,mcpapps"
+BROWSER_USE_TINYSKY_ENABLED = "1"
+NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = ""
+NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = ""
+BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
+BROWSER_USE_CODEX_APP_VERSION = "26.930.41038"
+NODE_REPL_TRUSTED_SERVICES = '{"browser":"/home/nicolas/.codex/plugins/cache/openai-bundled/browser/26.930.41038/scripts/browser-service.mjs"}'
+CODEX_CLI_PATH = "/usr/lib/chatgpt/resources/codex"
+
+[projects."/home/nicolas/Documents/GPREMIUM"]
+trust_level = "trusted"
+
+[projects."/home/nicolas/Documents/GPREMIUM/watchdog-derivados-gp"]
+trust_level = "trusted"
+
+[projects."/home/nicolas/Documents/GPREMIUM/resolver-agentes-portales-gp"]
+trust_level = "trusted"
+
+[projects."/home/nicolas/Documents/GPREMIUM/solicitudes-manuales-gp"]
+trust_level = "trusted"
+
+[projects."/home/nicolas/Documents/GPREMIUM/reporte-propiedades-error-gp"]
+trust_level = "trusted"
+
+[projects."/home/nicolas/Documents/GPREMIUM/reasignar-bajas-gp"]
+trust_level = "trusted"
+
+[projects."/home/nicolas/Documents/GPREMIUM/alerta-conexiones-gp"]
+trust_level = "trusted"
+
+[projects."/home/nicolas/Documents/GPREMIUM/filtro-duplicados-campana-gp"]
+trust_level = "trusted"
+
+[projects."/home/nicolas/Documents/GPREMIUM/panel-flujos-gp"]
+trust_level = "trusted"
+
+[projects."/home/nicolas/manejo-dineros"]
+trust_level = "trusted"
+
+[projects."/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter"]
+trust_level = "trusted"
+
+[mcp_servers.sony-a6000-knowledge]
+command = "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/.venv/bin/python3"
+args = ["/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/scripts/knowledge/mcp_server.py"]
+startup_timeout_sec = 30
+
+[tui]
+screen_reader_detection_done = true
+
+[hooks.state."/home/nicolas/.codex/hooks.json:session_start:0:0"]
+trusted_hash = "sha256:cc45478bb49d24e3b7b94b99233b88c767647867981b6e408271b9ebc0c7a8ca"
+
+[hooks.state."context-mode@context-mode:.codex-plugin/hooks.json:pre_tool_use:0:0"]
+trusted_hash = "sha256:56da0c4249dc7af048f42ae458fb83931926a8af41ec6fab5ae819ff3a8c83ae"
+
+[hooks.state."context-mode@context-mode:.codex-plugin/hooks.json:post_tool_use:0:0"]
+trusted_hash = "sha256:0d237345f8d46110d36cd0ef08e79b55fa151a07691dee36d492aa6f64bc0efd"
+
+[hooks.state."context-mode@context-mode:.codex-plugin/hooks.json:pre_compact:0:0"]
+trusted_hash = "sha256:ac1f9e5eb71ca262492150381d8f078b897056fc691f9973fc56d7b1b402e648"
+
+[hooks.state."context-mode@context-mode:.codex-plugin/hooks.json:session_start:0:0"]
+trusted_hash = "sha256:a6cc6a322d0931bdd68a5969e523cd71e6eedccab4850e8996c8948311173618"
+
+[hooks.state."context-mode@context-mode:.codex-plugin/hooks.json:user_prompt_submit:0:0"]
+trusted_hash = "sha256:114549c484c131b94782d3424527dd1042d48bc3a8616a11299acdf60b112572"
+
+[hooks.state."context-mode@context-mode:.codex-plugin/hooks.json:stop:0:0"]
+trusted_hash = "sha256:9205c1763e40c0256ab334e2e96c037c1cdf5b8bfaddba31ed19d93d3388586a"
+
+[mcp_servers.rea]
+command = "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tools/rea/node_modules/.bin/rea"
+args = [ "mcp" ]
+startup_timeout_sec = 30
+
+[mcp_servers.rea.env]
+GHIDRA_INSTALL_DIR = "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tools/providers/ghidra_12.1.4_PUBLIC"
+JAVA_HOME = "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tools/providers/jdk-21.0.12.1+1"

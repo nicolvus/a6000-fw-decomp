@@ -1,0 +1,215 @@
+{
+  "library": "libmpr.so",
+  "sha256_before": "9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30",
+  "windows": {
+    "0x3bcfbc:0x3bd1e0": {
+      "existing_listing": null,
+      "binary_verification": "\n/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so:\tfile format elf32-littlearm\n\nDisassembly of section .text:\n\n003b8d38 <_ZN8FlashLib11CloseSectorEPv>:\n  3bcfbc: e92d 4ff0    \tpush.w\t{r4, r5, r6, r7, r8, r9, r10, r11, lr}\n  3bcfc0: b099         \tsub\tsp, #0x64\n  3bcfc2: af06         \tadd\tr7, sp, #0x18\n  3bcfc4: 4605         \tmov\tr5, r0\n  3bcfc6: 4691         \tmov\tr9, r2\n  3bcfc8: 617b         \tstr\tr3, [r7, #0x14]\n  3bcfca: 6843         \tldr\tr3, [r0, #0x4]\n  3bcfcc: f04f 30ff    \tmov.w\tr0, #0xffffffff\n  3bcfd0: 61b9         \tstr\tr1, [r7, #0x18]\n  3bcfd2: f04f 31ff    \tmov.w\tr1, #0xffffffff\n  3bcfd6: e9c7 010c    \tstrd\tr0, r1, [r7, #48]\n  3bcfda: 6f79         \tldr\tr1, [r7, #0x74]\n  3bcfdc: f8d3 b034    \tldr.w\tr11, [r3, #0x34]\n  3bcfe0: b109         \tcbz\tr1, 0x3bcfe6 <_ZN8FlashLib11CloseSectorEPv+0x42ae> @ imm = #0x2\n  3bcfe2: 2200         \tmovs\tr2, #0x0\n  3bcfe4: 600a         \tstr\tr2, [r1]\n  3bcfe6: f8d3 8108    \tldr.w\tr8, [r3, #0x108]\n  3bcfea: f8d3 a10c    \tldr.w\tr10, [r3, #0x10c]\n  3bcfee: f009 fa9d    \tbl\t0x3c652c <_ZN8FlashLib11CloseSectorEPv+0xd7f4> @ imm = #0x953a\n  3bcff2: 686b         \tldr\tr3, [r5, #0x4]\n  3bcff4: 68db         \tldr\tr3, [r3, #0xc]\n  3bcff6: 795a         \tldrb\tr2, [r3, #0x5]\n  3bcff8: 791e         \tldrb\tr6, [r3, #0x4]\n  3bcffa: 613a         \tstr\tr2, [r7, #0x10]\n  3bcffc: 6238         \tstr\tr0, [r7, #0x20]\n  3bcffe: b14a         \tcbz\tr2, 0x3bd014 <_ZN8FlashLib11CloseSectorEPv+0x42dc> @ imm = #0x12\n  3bd000: 4628         \tmov\tr0, r5\n  3bd002: 4649         \tmov\tr1, r9\n  3bd004: f107 0230    \tadd.w\tr2, r7, #0x30\n  3bd008: f7fc fdfc    \tbl\t0x3b9c04 <_ZN8FlashLib11CloseSectorEPv+0xecc> @ imm = #-0x3408\n  3bd00c: 4604         \tmov\tr4, r0\n  3bd00e: 2800         \tcmp\tr0, #0x0\n  3bd010: f040 8142    \tbne.w\t0x3bd298 <_ZN8FlashLib11CloseSectorEPv+0x4560> @ imm = #0x284\n  3bd014: 686b         \tldr\tr3, [r5, #0x4]\n  3bd016: 4658         \tmov\tr0, r11\n  3bd018: 4649         \tmov\tr1, r9\n  3bd01a: f107 0240    \tadd.w\tr2, r7, #0x40\n  3bd01e: 68db         \tldr\tr3, [r3, #0xc]\n  3bd020: f8d3 30ac    \tldr.w\tr3, [r3, #0xac]\n  3bd024: 4798         \tblx\tr3\n  3bd026: 4604         \tmov\tr4, r0\n  3bd028: 2800         \tcmp\tr0, #0x0\n  3bd02a: f040 8135    \tbne.w\t0x3bd298 <_ZN8FlashLib11CloseSectorEPv+0x4560> @ imm = #0x26a\n  3bd02e: 686b         \tldr\tr3, [r5, #0x4]\n  3bd030: 4658         \tmov\tr0, r11\n  3bd032: 4649         \tmov\tr1, r9\n  3bd034: f107 0228    \tadd.w\tr2, r7, #0x28\n  3bd038: 68db         \tldr\tr3, [r3, #0xc]\n  3bd03a: f8d3 30c0    \tldr.w\tr3, [r3, #0xc0]\n  3bd03e: 4798         \tblx\tr3\n  3bd040: 4604         \tmov\tr4, r0\n  3bd042: 2800         \tcmp\tr0, #0x0\n  3bd044: f040 8128    \tbne.w\t0x3bd298 <_ZN8FlashLib11CloseSectorEPv+0x4560> @ imm = #0x250\n  3bd048: 2e00         \tcmp\tr6, #0x0\n  3bd04a: f000 8121    \tbeq.w\t0x3bd290 <_ZN8FlashLib11CloseSectorEPv+0x4558> @ imm = #0x242\n  3bd04e: 6c3b         \tldr\tr3, [r7, #0x40]\n  3bd050: f413 7f00    \ttst.w\tr3, #0x200\n  3bd054: d006         \tbeq\t0x3bd064 <_ZN8FlashLib11CloseSectorEPv+0x432c> @ imm = #0xc\n  3bd056: fb08 f80a    \tmul\tr8, r8, r10\n  3bd05a: 6f3b         \tldr\tr3, [r7, #0x70]\n  3bd05c: 4543         \tcmp\tr3, r8\n  3bd05e: bf38         \tit\tlo\n  3bd060: 4698         \tmovlo\tr8, r3\n  3bd062: e001         \tb\t0x3bd068 <_ZN8FlashLib11CloseSectorEPv+0x4330> @ imm = #0x2\n  3bd064: f8d7 8070    \tldr.w\tr8, [r7, #0x70]\n  3bd068: 6a38         \tldr\tr0, [r7, #0x20]\n  3bd06a: b338         \tcbz\tr0, 0x3bd0bc <_ZN8FlashLib11CloseSectorEPv+0x4384> @ imm = #0x4e\n  3bd06c: e9d7 230c    \tldrd\tr2, r3, [r7, #48]\n  3bd070: 43d2         \tmvns\tr2, r2\n  3bd072: 43db         \tmvns\tr3, r3\n  3bd074: ea52 0103    \torrs.w\tr1, r2, r3\n  3bd078: d020         \tbeq\t0x3bd0bc <_ZN8FlashLib11CloseSectorEPv+0x4384> @ imm = #0x40\n  3bd07a: 686b         \tldr\tr3, [r5, #0x4]\n  3bd07c: 4658         \tmov\tr0, r11\n  3bd07e: f107 013c    \tadd.w\tr1, r7, #0x3c\n  3bd082: 68db         \tldr\tr3, [r3, #0xc]\n  3bd084: 6edb         \tldr\tr3, [r3, #0x6c]\n  3bd086: 4798         \tblx\tr3\n  3bd088: 2800         \tcmp\tr0, #0x0\n  3bd08a: f040 8104    \tbne.w\t0x3bd296 <_ZN8FlashLib11CloseSectorEPv+0x455e> @ imm = #0x208\n  3bd08e: 686b         \tldr\tr3, [r5, #0x4]\n  3bd090: 6f3a         \tldr\tr2, [r7, #0x70]\n  3bd092: 9001         \tstr\tr0, [sp, #0x4]\n  3bd094: e9d7 010a    \tldrd\tr0, r1, [r7, #40]\n  3bd098: 9200         \tstr\tr2, [sp]\n  3bd09a: e9cd 0102    \tstrd\tr0, r1, [sp, #8]\n  3bd09e: f8d3 2108    \tldr.w\tr2, [r3, #0x108]\n  3bd0a2: 6bf8         \tldr\tr0, [r7, #0x3c]\n  3bd0a4: 6c39         \tldr\tr1, [r7, #0x40]\n  3bd0a6: 9204         \tstr\tr2, [sp, #0x10]\n  3bd0a8: f8d3 310c    \tldr.w\tr3, [r3, #0x10c]\n  3bd0ac: 9305         \tstr\tr3, [sp, #0x14]\n  3bd0ae: e9d7 230c    \tldrd\tr2, r3, [r7, #48]\n  3bd0b2: f7f5 f9ab    \tbl\t0x3b240c <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x8c110> @ imm = #-0xacaa\n  3bd0b6: 2800         \tcmp\tr0, #0x0\n  3bd0b8: f040 80f5    \tbne.w\t0x3bd2a6 <_ZN8FlashLib11CloseSectorEPv+0x456e> @ imm = #0x1ea\n  3bd0bc: 2100         \tmovs\tr1, #0x0\n  3bd0be: f8d7 a070    \tldr.w\tr10, [r7, #0x70]\n  3bd0c2: 61f9         \tstr\tr1, [r7, #0x1c]\n  3bd0c4: 4626         \tmov\tr6, r4\n  3bd0c6: e0ac         \tb\t0x3bd222 <_ZN8FlashLib11CloseSectorEPv+0x44ea> @ imm = #0x158\n  3bd0c8: e9d7 230a    \tldrd\tr2, r3, [r7, #40]\n  3bd0cc: e9d7 010c    \tldrd\tr0, r1, [r7, #48]\n  3bd0d0: e9c7 2300    \tstrd\tr2, r3, [r7]\n  3bd0d4: eb12 0208    \tadds.w\tr2, r2, r8\n  3bd0d8: f143 0300    \tadc\tr3, r3, #0x0\n  3bd0dc: e9c7 0102    \tstrd\tr0, r1, [r7, #8]\n  3bd0e0: 4290         \tcmp\tr0, r2\n  3bd0e2: 4199         \tsbcs\tr1, r3\n  3bd0e4: e9c7 2308    \tstrd\tr2, r3, [r7, #32]\n  3bd0e8: d24d         \tbhs\t0x3bd186 <_ZN8FlashLib11CloseSectorEPv+0x444e> @ imm = #0x9a\n  3bd0ea: 6c3c         \tldr\tr4, [r7, #0x40]\n  3bd0ec: f414 4f00    \ttst.w\tr4, #0x8000\n  3bd0f0: d011         \tbeq\t0x3bd116 <_ZN8FlashLib11CloseSectorEPv+0x43de> @ imm = #0x22\n  3bd0f2: e9d7 0100    \tldrd\tr0, r1, [r7]\n  3bd0f6: e9d7 2302    \tldrd\tr2, r3, [r7, #8]\n  3bd0fa: 4042         \teors\tr2, r0\n  3bd0fc: 404b         \teors\tr3, r1\n  3bd0fe: ea52 0103    \torrs.w\tr1, r2, r3\n  3bd102: d108         \tbne\t0x3bd116 <_ZN8FlashLib11CloseSectorEPv+0x43de> @ imm = #0x10\n  3bd104: e9d7 2300    \tldrd\tr2, r3, [r7]\n  3bd108: 46d0         \tmov\tr8, r10\n  3bd10a: eb12 020a    \tadds.w\tr2, r2, r10\n  3bd10e: f143 0300    \tadc\tr3, r3, #0x0\n  3bd112: e9c7 2308    \tstrd\tr2, r3, [r7, #32]\n  3bd116: 686b         \tldr\tr3, [r5, #0x4]\n  3bd118: 2200         \tmovs\tr2, #0x0\n  3bd11a: e9d7 0108    \tldrd\tr0, r1, [r7, #32]\n  3bd11e: 68db         \tldr\tr3, [r3, #0xc]\n  3bd120: e9cd 0100    \tstrd\tr0, r1, [sp]\n  3bd124: 4658         \tmov\tr0, r11\n  3bd126: 9202         \tstr\tr2, [sp, #0x8]\n  3bd128: 4649         \tmov\tr1, r9\n  3bd12a: f8d3 4150    \tldr.w\tr4, [r3, #0x150]\n  3bd12e: e9d7 2308    \tldrd\tr2, r3, [r7, #32]\n  3bd132: 47a0         \tblx\tr4\n  3bd134: 2800         \tcmp\tr0, #0x0\n  3bd136: f040 80b9    \tbne.w\t0x3bd2ac <_ZN8FlashLib11CloseSectorEPv+0x4574> @ imm = #0x172\n  3bd13a: 6c3b         \tldr\tr3, [r7, #0x40]\n  3bd13c: f413 4f00    \ttst.w\tr3, #0x8000\n  3bd140: d01d         \tbeq\t0x3bd17e <_ZN8FlashLib11CloseSectorEPv+0x4446> @ imm = #0x3a\n  3bd142: e9d7 010c    \tldrd\tr0, r1, [r7, #48]\n  3bd146: e9d7 230a    \tldrd\tr2, r3, [r7, #40]\n  3bd14a: 4042         \teors\tr2, r0\n  3bd14c: 404b         \teors\tr3, r1\n  3bd14e: ea52 0103    \torrs.w\tr1, r2, r3\n  3bd152: d114         \tbne\t0x3bd17e <_ZN8FlashLib11CloseSectorEPv+0x4446> @ imm = #0x28\n  3bd154: 4628         \tmov\tr0, r5\n  3bd156: 4649         \tmov\tr1, r9\n  3bd158: f107 0230    \tadd.w\tr2, r7, #0x30\n  3bd15c: f7fc fd52    \tbl\t0x3b9c04 <_ZN8FlashLib11CloseSectorEPv+0xecc> @ imm = #-0x355c\n  3bd160: 2800         \tcmp\tr0, #0x0\n  3bd162: f040 80a3    \tbne.w\t0x3bd2ac <_ZN8FlashLib11CloseSectorEPv+0x4574> @ imm = #0x146\n  3bd166: e9d7 230c    \tldrd\tr2, r3, [r7, #48]\n  3bd16a: e9d7 0108    \tldrd\tr0, r1, [r7, #32]\n  3bd16e: 4282         \tcmp\tr2, r0\n  3bd170: eb73 0101    \tsbcs.w\tr1, r3, r1\n  3bd174: d207         \tbhs\t0x3bd186 <_ZN8FlashLib11CloseSectorEPv+0x444e> @ imm = #0xe\n  3bd176: 6ab9         \tldr\tr1, [r7, #0x28]\n  3bd178: ebc1 0802    \trsb\tr8, r1, r2\n  3bd17c: e003         \tb\t0x3bd186 <_ZN8FlashLib11CloseSectorEPv+0x444e> @ imm = #0x6\n  3bd17e: e9d7 2308    \tldrd\tr2, r3, [r7, #32]\n  3bd182: e9c7 230c    \tstrd\tr2, r3, [r7, #48]\n  3bd186: 69bb         \tldr\tr3, [r7, #0x18]\n  3bd188: b11b         \tcbz\tr3, 0x3bd192 <_ZN8FlashLib11CloseSectorEPv+0x445a> @ imm = #0x6\n  3bd18a: 2b01         \tcmp\tr3, #0x1\n  3bd18c: f040 808d    \tbne.w\t0x3bd2aa <_ZN8FlashLib11CloseSectorEPv+0x4572> @ imm = #0x11a\n  3bd190: e00c         \tb\t0x3bd1ac <_ZN8FlashLib11CloseSectorEPv+0x4474> @ imm = #0x18\n  3bd192: 686b         \tldr\tr3, [r5, #0x4]\n  3bd194: 69fc         \tldr\tr4, [r7, #0x1c]\n  3bd196: 6978         \tldr\tr0, [r7, #0x14]\n  3bd198: 68db         \tldr\tr3, [r3, #0xc]\n  3bd19a: 1902         \tadds\tr2, r0, r4\n  3bd19c: e88d 0104    \tstm.w\tsp, {r2, r8}\n  3bd1a0: f107 0244    \tadd.w\tr2, r7, #0x44\n  3bd1a4: 9202         \tstr\tr2, [sp, #0x8]\n  3bd1a6: f8d3 417c    \tldr.w\tr4, [r3, #0x17c]\n  3bd1aa: e00b         \tb\t0x3bd1c4 <_ZN8FlashLib11CloseSectorEPv+0x448c> @ imm = #0x16\n  3bd1ac: 686b         \tldr\tr3, [r5, #0x4]\n  3bd1ae: 697c         \tldr\tr4, [r7, #0x14]\n  3bd1b0: 69f9         \tldr\tr1, [r7, #0x1c]\n  3bd1b2: 68db         \tldr\tr3, [r3, #0xc]\n  3bd1b4: 1862         \tadds\tr2, r4, r1\n  3bd1b6: e88d 0104    \tstm.w\tsp, {r2, r8}\n  3bd1ba: f107 0244    \tadd.w\tr2, r7, #0x44\n  3bd1be: 9202         \tstr\tr2, [sp, #0x8]\n  3bd1c0: f8d3 4180    \tldr.w\tr4, [r3, #0x180]\n  3bd1c4: 4658         \tmov\tr0, r11\n  3bd1c6: 4649         \tmov\tr1, r9\n  3bd1c8: e9d7 230a    \tldrd\tr2, r3, [r7, #40]\n  3bd1cc: 47a0         \tblx\tr4\n  3bd1ce: 2800         \tcmp\tr0, #0x0\n  3bd1d0: d16c         \tbne\t0x3bd2ac <_ZN8FlashLib11CloseSectorEPv+0x4574> @ imm = #0xd8\n  3bd1d2: e9d7 230a    \tldrd\tr2, r3, [r7, #40]\n  3bd1d6: 4658         \tmov\tr0, r11\n  3bd1d8: 6c79         \tldr\tr1, [r7, #0x44]\n  3bd1da: 1852         \tadds\tr2, r2, r1\n  3bd1dc: 6869         \tldr\tr1, [r5, #0x4]\n  3bd1de: f143 0300    \tadc\tr3, r3, #0x0\n",
+      "bytes_sha256": "4ddb858c90b5047dc0aef9d7c916b40d77a9b8b7cb44c1d25e39f5cbc6106bd9",
+      "literal_strings": []
+    }
+  },
+  "reused": [],
+  "rtti": {
+    "Recorder": {
+      "bases": [
+        "BaseCc"
+      ],
+      "vtables": [
+        {
+          "addr_point": "0x811a38",
+          "methods": [
+            {
+              "entry": "0x32d600",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x32d640",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x32d5b2",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": null,
+              "sym": "__cxa_pure_virtual"
+            }
+          ]
+        }
+      ]
+    },
+    "StillRecorder": {
+      "bases": [
+        "Recorder"
+      ],
+      "vtables": [
+        {
+          "addr_point": "0x81b9c0",
+          "methods": [
+            {
+              "entry": "0x34a880",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x34a8a8",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x32d5b2",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x34a878",
+              "thumb": true,
+              "sym": null
+            }
+          ]
+        }
+      ]
+    },
+    "dcf_AVISequence": {
+      "bases": [
+        "dcf_CommonSequence"
+      ],
+      "vtables": [
+        {
+          "addr_point": "0x82df28",
+          "methods": [
+            {
+              "entry": "0x3938fc",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x393914",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x3a13d4",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x3a13b4",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39c63a",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39ca56",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39c674",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39ca48",
+              "thumb": true,
+              "sym": null
+            }
+          ]
+        }
+      ]
+    },
+    "dcf_Sequence": {
+      "bases": [
+        "dcf_CommonSequence"
+      ],
+      "vtables": [
+        {
+          "addr_point": "0x832050",
+          "methods": [
+            {
+              "entry": "0x3a89b0",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x3a89c8",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x3a13d4",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x3a13b4",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39c63a",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39ca56",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39c674",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39ca48",
+              "thumb": true,
+              "sym": null
+            }
+          ]
+        }
+      ]
+    },
+    "StillWriterFilter": {
+      "bases": [
+        "BaseThreadFilter"
+      ],
+      "vtables": [
+        {
+          "addr_point": "0x882e28",
+          "methods": [
+            {
+              "entry": "0x513204",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x513254",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x512ca0",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x5144e4",
+              "thumb": true,
+              "sym": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "sha256_after": "9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30"
+}

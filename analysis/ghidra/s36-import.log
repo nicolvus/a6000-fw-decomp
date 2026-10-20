@@ -1,0 +1,309 @@
+2026-10-18 15:26:29 INFO  (LoggingInitialization) Using log config file: jar:file:/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tools/providers/ghidra_12.1.4_PUBLIC/Ghidra/Framework/Generic/lib/Generic.jar!/generic.log4j.xml  
+2026-10-18 15:26:29 INFO  (LoggingInitialization) Using log file: analysis/ghidra/s36-import.log  
+2026-10-18 15:26:29 DEBUG (GhidraObjectInputFilter) Including serial input filter: FileSystem/data/client.rmi.serial.filter  
+2026-10-18 15:26:29 INFO  (Preferences) Loading user preferences: /home/nicolas/.config/ghidra/ghidra_12.1.4_PUBLIC/preferences  
+2026-10-18 15:26:29 INFO  (ClassSearcher) Searching for classes...  
+2026-10-18 15:26:30 INFO  (ClassSearcher) Class search complete (1167 ms)  
+2026-10-18 15:26:30 INFO  (DefaultSSLContextInitializer) Initializing SSL Context  
+2026-10-18 15:26:30 INFO  (SecureRandomFactory) Initializing Random Number Generator...  
+2026-10-18 15:26:30 INFO  (SecureRandomFactory) Random Number Generator initialization complete: NativePRNGNonBlocking  
+2026-10-18 15:26:30 INFO  (DefaultTrustManagerFactory) Trust manager disabled, cacerts have not been set  
+2026-10-18 15:26:31 INFO  (AnalyzeHeadless) Headless startup complete (2361 ms)  
+2026-10-18 15:26:31 INFO  (ClassSearcher) Class searcher loaded 59 extension points (20 false positives)  
+2026-10-18 15:26:31 INFO  (HeadlessAnalyzer) HEADLESS Script Paths:
+    /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tools/providers/ghidra_12.1.4_PUBLIC/Ghidra/Features/FunctionID/ghidra_scripts
+    /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tools/providers/ghidra_12.1.4_PUBLIC/Ghidra/Features/VersionTracking/ghidra_scripts
+    /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tools/providers/ghidra_12.1.4_PUBLIC/Ghidra/Features/MicrosoftCodeAnalyzer/ghidra_scripts
+    /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tools/providers/ghidra_12.1.4_PUBLIC/Ghidra/Features/GnuDemangler/ghidra_scripts
+    /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tools/providers/ghidra_12.1.4_PUBLIC/Ghidra/Processors/JVM/ghidra_scripts
+    /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tools/providers/ghidra_12.1.4_PUBLIC/Ghidra/Features/Base/ghidra_scripts
+    /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tools/providers/ghidra_12.1.4_PUBLIC/Ghidra/Features/FileFormats/ghidra_scripts
+    /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tools/providers/ghidra_12.1.4_PUBLIC/Ghidra/Debug/Debugger/ghidra_scripts
+    /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tools/providers/ghidra_12.1.4_PUBLIC/Ghidra/Features/DecompilerDependent/ghidra_scripts
+    /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tools/providers/ghidra_12.1.4_PUBLIC/Ghidra/Features/PDB/ghidra_scripts
+    /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/analysis/ghidra
+    /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tools/providers/ghidra_12.1.4_PUBLIC/Ghidra/Debug/Debugger-rmi-trace/ghidra_scripts
+    /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tools/providers/ghidra_12.1.4_PUBLIC/Ghidra/Features/BytePatterns/ghidra_scripts
+    /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tools/providers/ghidra_12.1.4_PUBLIC/Ghidra/Processors/Atmel/ghidra_scripts
+    /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tools/providers/ghidra_12.1.4_PUBLIC/Ghidra/Features/SwiftDemangler/ghidra_scripts
+    /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tools/providers/ghidra_12.1.4_PUBLIC/Ghidra/Features/SystemEmulation/ghidra_scripts
+    /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tools/providers/ghidra_12.1.4_PUBLIC/Ghidra/Processors/8051/ghidra_scripts
+    /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tools/providers/ghidra_12.1.4_PUBLIC/Ghidra/Features/BSim/ghidra_scripts
+    /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tools/providers/ghidra_12.1.4_PUBLIC/Ghidra/Features/Decompiler/ghidra_scripts
+    /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tools/providers/ghidra_12.1.4_PUBLIC/Ghidra/Features/WildcardAssembler/ghidra_scripts
+    /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tools/providers/ghidra_12.1.4_PUBLIC/Ghidra/Features/PyGhidra/ghidra_scripts
+    /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tools/providers/ghidra_12.1.4_PUBLIC/Ghidra/Processors/DATA/ghidra_scripts
+    /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tools/providers/ghidra_12.1.4_PUBLIC/Ghidra/Processors/PIC/ghidra_scripts  
+2026-10-18 15:26:31 INFO  (HeadlessAnalyzer) HEADLESS: execution starts  
+2026-10-18 15:26:31 INFO  (HeadlessAnalyzer) Creating project: /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/analysis/ghidra/s36-project/libinfra-scalar-mpr  
+2026-10-18 15:26:31 INFO  (DefaultProject) Creating project: /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/analysis/ghidra/s36-project/libinfra-scalar-mpr  
+2026-10-18 15:26:31 INFO  (HeadlessAnalyzer) REPORT: Processing input files:   
+2026-10-18 15:26:31 INFO  (HeadlessAnalyzer)      project: /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/analysis/ghidra/s36-project/libinfra-scalar-mpr  
+2026-10-18 15:26:31 INFO  (HeadlessAnalyzer) IMPORTING: file:///tmp/s36-input/libInfraScalarMpr.so  
+2026-10-18 15:26:32 DEBUG (ElfHeader) Elf symbol table section .dynsym linked to string table section .dynstr  
+2026-10-18 15:26:32 DEBUG (ElfHeader) Elf relocation table section .rel.dyn linked to symbol table section .dynsym affecting PT_LOAD  
+2026-10-18 15:26:32 DEBUG (ElfHeader) Elf relocation table section .rel.plt linked to symbol table section .dynsym affecting .plt  
+2026-10-18 15:26:32 INFO  (ProgramLoader) Using Loader: Executable and Linking Format (ELF)  
+2026-10-18 15:26:32 INFO  (ProgramLoader) Using Language/Compiler: ARM:LE:32:v8:default  
+2026-10-18 15:26:32 INFO  (ProgramLoader) Using Library Search Path: [., /bin, /lib, /lib64, /lib/x86_64-linux-gnu, /lib/aarch64-linux-gnu, /usr/bin, /usr/lib, /usr/X11R6/bin, /usr/X11R6/lib, /usr/java/packages/lib, /usr/lib64]  
+2026-10-18 15:26:33 DEBUG (ElfHeader) Elf symbol table section .dynsym linked to string table section .dynstr  
+2026-10-18 15:26:33 DEBUG (ElfHeader) Elf relocation table section .rel.dyn linked to symbol table section .dynsym affecting PT_LOAD  
+2026-10-18 15:26:33 DEBUG (ElfHeader) Elf relocation table section .rel.plt linked to symbol table section .dynsym affecting .plt  
+2026-10-18 15:26:33 DEBUG (ElfProgramBuilder) Discarding 2-byte alignment/filler segment_1.6 at 0002253e  
+2026-10-18 15:26:33 DEBUG (ElfProgramBuilder) Discarding 2-byte alignment/filler segment_1.11 at 00024b3a  
+2026-10-18 15:26:33 DEBUG (ElfProgramBuilder) Discarding 2-byte alignment/filler segment_1.15 at 0003b70e  
+2026-10-18 15:26:33 WARN  (ElfRelocationHandler) EXTERNAL Data ELF Relocation with offset: at 0004cf88 (External Location = _ZTVN10__cxxabiv117__class_type_infoE+0x8)  
+2026-10-18 15:26:33 WARN  (ElfRelocationHandler) EXTERNAL Data ELF Relocation with offset: at 0004cfac (External Location = _ZTVN10__cxxabiv117__class_type_infoE+0x8)  
+2026-10-18 15:26:33 WARN  (ElfRelocationHandler) EXTERNAL Data ELF Relocation with offset: at 0004d024 (External Location = _ZTVN10__cxxabiv117__class_type_infoE+0x8)  
+2026-10-18 15:26:33 WARN  (ElfRelocationHandler) EXTERNAL Data ELF Relocation with offset: at 0004d040 (External Location = _ZTVN10__cxxabiv117__class_type_infoE+0x8)  
+2026-10-18 15:26:33 WARN  (ElfRelocationHandler) EXTERNAL Data ELF Relocation with offset: at 0004d088 (External Location = _ZTVN10__cxxabiv117__class_type_infoE+0x8)  
+2026-10-18 15:26:33 WARN  (ElfRelocationHandler) EXTERNAL Data ELF Relocation with offset: at 0004d090 (External Location = _ZTVN10__cxxabiv117__class_type_infoE+0x8)  
+2026-10-18 15:26:33 WARN  (ElfRelocationHandler) EXTERNAL Data ELF Relocation with offset: at 0004d0a8 (External Location = _ZTVN10__cxxabiv117__class_type_infoE+0x8)  
+2026-10-18 15:26:33 WARN  (ElfRelocationHandler) EXTERNAL Data ELF Relocation with offset: at 0004d0b0 (External Location = _ZTVN10__cxxabiv117__class_type_infoE+0x8)  
+2026-10-18 15:26:33 WARN  (ElfRelocationHandler) EXTERNAL Data ELF Relocation with offset: at 0004d0c8 (External Location = _ZTVN10__cxxabiv117__class_type_infoE+0x8)  
+2026-10-18 15:26:33 WARN  (ElfRelocationHandler) EXTERNAL Data ELF Relocation with offset: at 0004d118 (External Location = _ZTVN10__cxxabiv117__class_type_infoE+0x8)  
+2026-10-18 15:26:33 WARN  (ElfRelocationHandler) EXTERNAL Data ELF Relocation with offset: at 0004cfa0 (External Location = _ZTVN10__cxxabiv120__si_class_type_infoE+0x8)  
+2026-10-18 15:26:33 WARN  (ElfRelocationHandler) EXTERNAL Data ELF Relocation with offset: at 0004cfd8 (External Location = _ZTVN10__cxxabiv120__si_class_type_infoE+0x8)  
+2026-10-18 15:26:33 WARN  (ElfRelocationHandler) EXTERNAL Data ELF Relocation with offset: at 0004cff8 (External Location = _ZTVN10__cxxabiv120__si_class_type_infoE+0x8)  
+2026-10-18 15:26:33 WARN  (ElfRelocationHandler) EXTERNAL Data ELF Relocation with offset: at 0004d018 (External Location = _ZTVN10__cxxabiv120__si_class_type_infoE+0x8)  
+2026-10-18 15:26:33 WARN  (ElfRelocationHandler) EXTERNAL Data ELF Relocation with offset: at 0004d058 (External Location = _ZTVN10__cxxabiv120__si_class_type_infoE+0x8)  
+2026-10-18 15:26:33 WARN  (ElfRelocationHandler) EXTERNAL Data ELF Relocation with offset: at 0004d0f8 (External Location = _ZTVN10__cxxabiv120__si_class_type_infoE+0x8)  
+2026-10-18 15:26:34 INFO  (ProgramLoader) Additional info:
+Loading file:///tmp/s36-input/libInfraScalarMpr.so?MD5=a4492b14fa68fe0c9f55d888655b0f4c...
+------------------------------------------------
+
+Linking the External Programs of 'libInfraScalarMpr.so' to imported libraries...
+  [libMWF.so] -> not found in project
+  [libpthread.so.0] -> not found in project
+  [libstdc++.so.6] -> not found in project
+  [libm.so.6] -> not found in project
+  [libdl.so.2] -> not found in project
+  [libgcc_s.so.1] -> not found in project
+  [libc.so.6] -> not found in project
+  [librt.so.1] -> not found in project
+------------------------------------------------
+
+Resolving External Symbols of [/libInfraScalarMpr.so] - 169 unresolved symbols, no external libraries configured - skipping
+  
+2026-10-18 15:26:34 INFO  (HeadlessAnalyzer) IMPORTING: Loaded 0 additional files  
+2026-10-18 15:26:34 INFO  (HeadlessAnalyzer) ANALYZING all memory and code: file:///tmp/s36-input/libInfraScalarMpr.so  
+2026-10-18 15:26:42 DEBUG (FidAnalyzer) No FID Libraries apply for language ARM:LE:32:v8  
+2026-10-18 15:26:42 INFO  (PackedDatabaseCache) Packed database cache: /var/tmp/nicolas-ghidra/packed-db-cache  
+2026-10-18 15:26:42 DEBUG (PackedDatabaseCache) Using cached packed database: /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tools/providers/ghidra_12.1.4_PUBLIC/Ghidra/Features/Base/data/typeinfo/generic/generic_clib.gdt  
+2026-10-18 15:26:42 INFO  (ApplyDataArchiveAnalyzer) Applied data type archive: generic_clib  
+2026-10-18 15:26:43 WARN  (DemangledAddressTable) Unable to fully apply external demangled Address Table at 0004e034: MonCtrl::typeinfo  
+2026-10-18 15:26:43 WARN  (DemangledAddressTable) Unable to fully apply external demangled Address Table at 0004e118: __cxxabiv1::__class_type_info::vtable  
+2026-10-18 15:26:43 WARN  (DemangledAddressTable) Unable to fully apply external demangled Address Table at 0004e1b4: __cxxabiv1::__si_class_type_info::vtable  
+2026-10-18 15:26:43 WARN  (DemangledAddressTable) Unable to fully apply external demangled Address Table at 0004e268: MWF::EventHandler::typeinfo  
+2026-10-18 15:26:50 INFO  (AutoAnalysisManager) -----------------------------------------------------
+    ARM Constant Reference Analyzer            1.564 secs
+    ARM Symbol                                 0.008 secs
+    ASCII Strings                              0.629 secs
+    Apply Data Archives                        0.570 secs
+    Call Convention ID                         4.275 secs
+    Call-Fixup Installer                       0.033 secs
+    Create Address Tables                      0.044 secs
+    Create Address Tables - One Time           0.023 secs
+    Create Function                            0.521 secs
+    Data Reference                             0.164 secs
+    Decompiler Switch Analysis                 2.586 secs
+    Demangler GNU                              0.815 secs
+    Disassemble                                0.004 secs
+    Disassemble Entry Points                   2.236 secs
+    Embedded Media                             0.007 secs
+    External Entry References                  0.010 secs
+    Function ID                                0.020 secs
+    Function Start Pre Search                  0.011 secs
+    Function Start Search                      0.210 secs
+    Function Start Search After Code           0.147 secs
+    Function Start Search After Data           0.145 secs
+    Non-Returning Functions - Discovered       0.107 secs
+    Non-Returning Functions - Known            0.016 secs
+    Reference                                  0.183 secs
+    Shared Return Calls                        0.080 secs
+    Stack                                      1.007 secs
+    Subroutine References                      0.099 secs
+    Subroutine References - One Time           0.000 secs
+-----------------------------------------------------
+     Total Time   15 secs
+-----------------------------------------------------
+  
+2026-10-18 15:26:50 INFO  (HeadlessAnalyzer) REPORT: Analysis succeeded for file: file:///tmp/s36-input/libInfraScalarMpr.so  
+2026-10-18 15:26:50 INFO  (HeadlessAnalyzer) REPORT: Execute script: S36Export.java 'analysis/ghidra/s36-library.json'   
+2026-10-18 15:26:50 INFO  (HeadlessAnalyzer) SCRIPT: /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/analysis/ghidra/S36Export.java  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e000, pcode error at 0004e000: Unable to disassemble EXTERNAL block location: 0004e000  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e004, pcode error at 0004e004: Unable to disassemble EXTERNAL block location: 0004e004  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e008, pcode error at 0004e008: Unable to disassemble EXTERNAL block location: 0004e008  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e00c, pcode error at 0004e00c: Unable to disassemble EXTERNAL block location: 0004e00c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e010, pcode error at 0004e010: Unable to disassemble EXTERNAL block location: 0004e010  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e014, pcode error at 0004e014: Unable to disassemble EXTERNAL block location: 0004e014  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e018, pcode error at 0004e018: Unable to disassemble EXTERNAL block location: 0004e018  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e01c, pcode error at 0004e01c: Unable to disassemble EXTERNAL block location: 0004e01c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e020, pcode error at 0004e020: Unable to disassemble EXTERNAL block location: 0004e020  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e024, pcode error at 0004e024: Unable to disassemble EXTERNAL block location: 0004e024  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e028, pcode error at 0004e028: Unable to disassemble EXTERNAL block location: 0004e028  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e02c, pcode error at 0004e02c: Unable to disassemble EXTERNAL block location: 0004e02c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e030, pcode error at 0004e030: Unable to disassemble EXTERNAL block location: 0004e030  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e038, pcode error at 0004e038: Unable to disassemble EXTERNAL block location: 0004e038  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e03c, pcode error at 0004e03c: Unable to disassemble EXTERNAL block location: 0004e03c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e040, pcode error at 0004e040: Unable to disassemble EXTERNAL block location: 0004e040  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e044, pcode error at 0004e044: Unable to disassemble EXTERNAL block location: 0004e044  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e048, pcode error at 0004e048: Unable to disassemble EXTERNAL block location: 0004e048  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e04c, pcode error at 0004e04c: Unable to disassemble EXTERNAL block location: 0004e04c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e050, pcode error at 0004e050: Unable to disassemble EXTERNAL block location: 0004e050  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e054, pcode error at 0004e054: Unable to disassemble EXTERNAL block location: 0004e054  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e058, pcode error at 0004e058: Unable to disassemble EXTERNAL block location: 0004e058  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e05c, pcode error at 0004e05c: Unable to disassemble EXTERNAL block location: 0004e05c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e060, pcode error at 0004e060: Unable to disassemble EXTERNAL block location: 0004e060  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e064, pcode error at 0004e064: Unable to disassemble EXTERNAL block location: 0004e064  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e068, pcode error at 0004e068: Unable to disassemble EXTERNAL block location: 0004e068  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e06c, pcode error at 0004e06c: Unable to disassemble EXTERNAL block location: 0004e06c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e070, pcode error at 0004e070: Unable to disassemble EXTERNAL block location: 0004e070  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e074, pcode error at 0004e074: Unable to disassemble EXTERNAL block location: 0004e074  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e078, pcode error at 0004e078: Unable to disassemble EXTERNAL block location: 0004e078  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e07c, pcode error at 0004e07c: Unable to disassemble EXTERNAL block location: 0004e07c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e080, pcode error at 0004e080: Unable to disassemble EXTERNAL block location: 0004e080  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e084, pcode error at 0004e084: Unable to disassemble EXTERNAL block location: 0004e084  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e088, pcode error at 0004e088: Unable to disassemble EXTERNAL block location: 0004e088  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e08c, pcode error at 0004e08c: Unable to disassemble EXTERNAL block location: 0004e08c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e090, pcode error at 0004e090: Unable to disassemble EXTERNAL block location: 0004e090  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e094, pcode error at 0004e094: Unable to disassemble EXTERNAL block location: 0004e094  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e098, pcode error at 0004e098: Unable to disassemble EXTERNAL block location: 0004e098  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e09c, pcode error at 0004e09c: Unable to disassemble EXTERNAL block location: 0004e09c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e0a0, pcode error at 0004e0a0: Unable to disassemble EXTERNAL block location: 0004e0a0  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e0a4, pcode error at 0004e0a4: Unable to disassemble EXTERNAL block location: 0004e0a4  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e0a8, pcode error at 0004e0a8: Unable to disassemble EXTERNAL block location: 0004e0a8  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e0ac, pcode error at 0004e0ac: Unable to disassemble EXTERNAL block location: 0004e0ac  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e0b0, pcode error at 0004e0b0: Unable to disassemble EXTERNAL block location: 0004e0b0  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e0b4, pcode error at 0004e0b4: Unable to disassemble EXTERNAL block location: 0004e0b4  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e0b8, pcode error at 0004e0b8: Unable to disassemble EXTERNAL block location: 0004e0b8  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e0bc, pcode error at 0004e0bc: Unable to disassemble EXTERNAL block location: 0004e0bc  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e0c0, pcode error at 0004e0c0: Unable to disassemble EXTERNAL block location: 0004e0c0  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e0c4, pcode error at 0004e0c4: Unable to disassemble EXTERNAL block location: 0004e0c4  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e0c8, pcode error at 0004e0c8: Unable to disassemble EXTERNAL block location: 0004e0c8  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e0cc, pcode error at 0004e0cc: Unable to disassemble EXTERNAL block location: 0004e0cc  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e0d0, pcode error at 0004e0d0: Unable to disassemble EXTERNAL block location: 0004e0d0  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e0d4, pcode error at 0004e0d4: Unable to disassemble EXTERNAL block location: 0004e0d4  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e0d8, pcode error at 0004e0d8: Unable to disassemble EXTERNAL block location: 0004e0d8  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e0dc, pcode error at 0004e0dc: Unable to disassemble EXTERNAL block location: 0004e0dc  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e0e0, pcode error at 0004e0e0: Unable to disassemble EXTERNAL block location: 0004e0e0  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e0e4, pcode error at 0004e0e4: Unable to disassemble EXTERNAL block location: 0004e0e4  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e0e8, pcode error at 0004e0e8: Unable to disassemble EXTERNAL block location: 0004e0e8  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e0ec, pcode error at 0004e0ec: Unable to disassemble EXTERNAL block location: 0004e0ec  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e0f0, pcode error at 0004e0f0: Unable to disassemble EXTERNAL block location: 0004e0f0  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e0f4, pcode error at 0004e0f4: Unable to disassemble EXTERNAL block location: 0004e0f4  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e0f8, pcode error at 0004e0f8: Unable to disassemble EXTERNAL block location: 0004e0f8  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e0fc, pcode error at 0004e0fc: Unable to disassemble EXTERNAL block location: 0004e0fc  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e100, pcode error at 0004e100: Unable to disassemble EXTERNAL block location: 0004e100  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e104, pcode error at 0004e104: Unable to disassemble EXTERNAL block location: 0004e104  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e108, pcode error at 0004e108: Unable to disassemble EXTERNAL block location: 0004e108  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e10c, pcode error at 0004e10c: Unable to disassemble EXTERNAL block location: 0004e10c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e110, pcode error at 0004e110: Unable to disassemble EXTERNAL block location: 0004e110  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e114, pcode error at 0004e114: Unable to disassemble EXTERNAL block location: 0004e114  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e11c, pcode error at 0004e11c: Unable to disassemble EXTERNAL block location: 0004e11c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e120, pcode error at 0004e120: Unable to disassemble EXTERNAL block location: 0004e120  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e124, pcode error at 0004e124: Unable to disassemble EXTERNAL block location: 0004e124  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e128, pcode error at 0004e128: Unable to disassemble EXTERNAL block location: 0004e128  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e12c, pcode error at 0004e12c: Unable to disassemble EXTERNAL block location: 0004e12c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e130, pcode error at 0004e130: Unable to disassemble EXTERNAL block location: 0004e130  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e134, pcode error at 0004e134: Unable to disassemble EXTERNAL block location: 0004e134  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e138, pcode error at 0004e138: Unable to disassemble EXTERNAL block location: 0004e138  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e13c, pcode error at 0004e13c: Unable to disassemble EXTERNAL block location: 0004e13c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e140, pcode error at 0004e140: Unable to disassemble EXTERNAL block location: 0004e140  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e144, pcode error at 0004e144: Unable to disassemble EXTERNAL block location: 0004e144  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e148, pcode error at 0004e148: Unable to disassemble EXTERNAL block location: 0004e148  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e14c, pcode error at 0004e14c: Unable to disassemble EXTERNAL block location: 0004e14c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e150, pcode error at 0004e150: Unable to disassemble EXTERNAL block location: 0004e150  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e154, pcode error at 0004e154: Unable to disassemble EXTERNAL block location: 0004e154  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e158, pcode error at 0004e158: Unable to disassemble EXTERNAL block location: 0004e158  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e15c, pcode error at 0004e15c: Unable to disassemble EXTERNAL block location: 0004e15c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e160, pcode error at 0004e160: Unable to disassemble EXTERNAL block location: 0004e160  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e164, pcode error at 0004e164: Unable to disassemble EXTERNAL block location: 0004e164  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e168, pcode error at 0004e168: Unable to disassemble EXTERNAL block location: 0004e168  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e16c, pcode error at 0004e16c: Unable to disassemble EXTERNAL block location: 0004e16c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e170, pcode error at 0004e170: Unable to disassemble EXTERNAL block location: 0004e170  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e174, pcode error at 0004e174: Unable to disassemble EXTERNAL block location: 0004e174  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e178, pcode error at 0004e178: Unable to disassemble EXTERNAL block location: 0004e178  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e17c, pcode error at 0004e17c: Unable to disassemble EXTERNAL block location: 0004e17c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e180, pcode error at 0004e180: Unable to disassemble EXTERNAL block location: 0004e180  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e184, pcode error at 0004e184: Unable to disassemble EXTERNAL block location: 0004e184  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e188, pcode error at 0004e188: Unable to disassemble EXTERNAL block location: 0004e188  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e18c, pcode error at 0004e18c: Unable to disassemble EXTERNAL block location: 0004e18c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e190, pcode error at 0004e190: Unable to disassemble EXTERNAL block location: 0004e190  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e194, pcode error at 0004e194: Unable to disassemble EXTERNAL block location: 0004e194  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e198, pcode error at 0004e198: Unable to disassemble EXTERNAL block location: 0004e198  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e19c, pcode error at 0004e19c: Unable to disassemble EXTERNAL block location: 0004e19c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e1a0, pcode error at 0004e1a0: Unable to disassemble EXTERNAL block location: 0004e1a0  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e1a4, pcode error at 0004e1a4: Unable to disassemble EXTERNAL block location: 0004e1a4  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e1a8, pcode error at 0004e1a8: Unable to disassemble EXTERNAL block location: 0004e1a8  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e1ac, pcode error at 0004e1ac: Unable to disassemble EXTERNAL block location: 0004e1ac  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e1b0, pcode error at 0004e1b0: Unable to disassemble EXTERNAL block location: 0004e1b0  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e1b8, pcode error at 0004e1b8: Unable to disassemble EXTERNAL block location: 0004e1b8  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e1bc, pcode error at 0004e1bc: Unable to disassemble EXTERNAL block location: 0004e1bc  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e1c0, pcode error at 0004e1c0: Unable to disassemble EXTERNAL block location: 0004e1c0  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e1c4, pcode error at 0004e1c4: Unable to disassemble EXTERNAL block location: 0004e1c4  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e1c8, pcode error at 0004e1c8: Unable to disassemble EXTERNAL block location: 0004e1c8  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e1cc, pcode error at 0004e1cc: Unable to disassemble EXTERNAL block location: 0004e1cc  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e1d0, pcode error at 0004e1d0: Unable to disassemble EXTERNAL block location: 0004e1d0  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e1d4, pcode error at 0004e1d4: Unable to disassemble EXTERNAL block location: 0004e1d4  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e1d8, pcode error at 0004e1d8: Unable to disassemble EXTERNAL block location: 0004e1d8  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e1dc, pcode error at 0004e1dc: Unable to disassemble EXTERNAL block location: 0004e1dc  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e1e0, pcode error at 0004e1e0: Unable to disassemble EXTERNAL block location: 0004e1e0  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e1e4, pcode error at 0004e1e4: Unable to disassemble EXTERNAL block location: 0004e1e4  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e1e8, pcode error at 0004e1e8: Unable to disassemble EXTERNAL block location: 0004e1e8  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e1ec, pcode error at 0004e1ec: Unable to disassemble EXTERNAL block location: 0004e1ec  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e1f0, pcode error at 0004e1f0: Unable to disassemble EXTERNAL block location: 0004e1f0  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e1f4, pcode error at 0004e1f4: Unable to disassemble EXTERNAL block location: 0004e1f4  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e1f8, pcode error at 0004e1f8: Unable to disassemble EXTERNAL block location: 0004e1f8  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e1fc, pcode error at 0004e1fc: Unable to disassemble EXTERNAL block location: 0004e1fc  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e200, pcode error at 0004e200: Unable to disassemble EXTERNAL block location: 0004e200  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e204, pcode error at 0004e204: Unable to disassemble EXTERNAL block location: 0004e204  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e208, pcode error at 0004e208: Unable to disassemble EXTERNAL block location: 0004e208  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e20c, pcode error at 0004e20c: Unable to disassemble EXTERNAL block location: 0004e20c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e210, pcode error at 0004e210: Unable to disassemble EXTERNAL block location: 0004e210  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e214, pcode error at 0004e214: Unable to disassemble EXTERNAL block location: 0004e214  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e218, pcode error at 0004e218: Unable to disassemble EXTERNAL block location: 0004e218  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e21c, pcode error at 0004e21c: Unable to disassemble EXTERNAL block location: 0004e21c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e220, pcode error at 0004e220: Unable to disassemble EXTERNAL block location: 0004e220  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e224, pcode error at 0004e224: Unable to disassemble EXTERNAL block location: 0004e224  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e228, pcode error at 0004e228: Unable to disassemble EXTERNAL block location: 0004e228  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e22c, pcode error at 0004e22c: Unable to disassemble EXTERNAL block location: 0004e22c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e230, pcode error at 0004e230: Unable to disassemble EXTERNAL block location: 0004e230  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e234, pcode error at 0004e234: Unable to disassemble EXTERNAL block location: 0004e234  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e238, pcode error at 0004e238: Unable to disassemble EXTERNAL block location: 0004e238  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e23c, pcode error at 0004e23c: Unable to disassemble EXTERNAL block location: 0004e23c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e240, pcode error at 0004e240: Unable to disassemble EXTERNAL block location: 0004e240  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e244, pcode error at 0004e244: Unable to disassemble EXTERNAL block location: 0004e244  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e248, pcode error at 0004e248: Unable to disassemble EXTERNAL block location: 0004e248  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e24c, pcode error at 0004e24c: Unable to disassemble EXTERNAL block location: 0004e24c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e250, pcode error at 0004e250: Unable to disassemble EXTERNAL block location: 0004e250  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e254, pcode error at 0004e254: Unable to disassemble EXTERNAL block location: 0004e254  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e258, pcode error at 0004e258: Unable to disassemble EXTERNAL block location: 0004e258  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e260, pcode error at 0004e260: Unable to disassemble EXTERNAL block location: 0004e260  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e264, pcode error at 0004e264: Unable to disassemble EXTERNAL block location: 0004e264  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e26c, pcode error at 0004e26c: Unable to disassemble EXTERNAL block location: 0004e26c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e270, pcode error at 0004e270: Unable to disassemble EXTERNAL block location: 0004e270  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e274, pcode error at 0004e274: Unable to disassemble EXTERNAL block location: 0004e274  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e278, pcode error at 0004e278: Unable to disassemble EXTERNAL block location: 0004e278  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e27c, pcode error at 0004e27c: Unable to disassemble EXTERNAL block location: 0004e27c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e280, pcode error at 0004e280: Unable to disassemble EXTERNAL block location: 0004e280  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e284, pcode error at 0004e284: Unable to disassemble EXTERNAL block location: 0004e284  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e288, pcode error at 0004e288: Unable to disassemble EXTERNAL block location: 0004e288  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e28c, pcode error at 0004e28c: Unable to disassemble EXTERNAL block location: 0004e28c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e290, pcode error at 0004e290: Unable to disassemble EXTERNAL block location: 0004e290  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e294, pcode error at 0004e294: Unable to disassemble EXTERNAL block location: 0004e294  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e298, pcode error at 0004e298: Unable to disassemble EXTERNAL block location: 0004e298  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e29c, pcode error at 0004e29c: Unable to disassemble EXTERNAL block location: 0004e29c  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e2a0, pcode error at 0004e2a0: Unable to disassemble EXTERNAL block location: 0004e2a0  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e2a4, pcode error at 0004e2a4: Unable to disassemble EXTERNAL block location: 0004e2a4  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e2ac, pcode error at 0004e2ac: Unable to disassemble EXTERNAL block location: 0004e2ac  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e2b0, pcode error at 0004e2b0: Unable to disassemble EXTERNAL block location: 0004e2b0  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e2b4, pcode error at 0004e2b4: Unable to disassemble EXTERNAL block location: 0004e2b4  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e2b8, pcode error at 0004e2b8: Unable to disassemble EXTERNAL block location: 0004e2b8  
+2026-10-18 15:27:04 WARN  (DecompileCallback) Decompiling 0004e2bc, pcode error at 0004e2bc: Unable to disassemble EXTERNAL block location: 0004e2bc  
+2026-10-18 15:27:04 INFO  (GhidraScript) S36Export.java> S36 exported 1439 functions  
+2026-10-18 15:27:04 INFO  (HeadlessAnalyzer) ANALYZING changes made by post scripts: file:///tmp/s36-input/libInfraScalarMpr.so  
+2026-10-18 15:27:04 INFO  (HeadlessAnalyzer) REPORT: Post-analysis succeeded for file: file:///tmp/s36-input/libInfraScalarMpr.so  
+2026-10-18 15:27:04 INFO  (LocalFileSystem) /libInfraScalarMpr.so: file created (nicolas)  
+2026-10-18 15:27:04 INFO  (HeadlessAnalyzer) REPORT: Save succeeded for: /libInfraScalarMpr.so (libinfra-scalar-mpr:/libInfraScalarMpr.so)  
+2026-10-18 15:27:04 INFO  (HeadlessAnalyzer) REPORT: Import succeeded  

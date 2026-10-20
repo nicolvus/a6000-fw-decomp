@@ -1,0 +1,31 @@
+{
+  "scope": "A6000 FW 3.21; static-only; no hardware or firmware execution.",
+  "addressing": {"elf": true, "ghidra_va_offset": "0x10000"},
+  "sequence_6013": {
+    "factory": {"elf": "0x17b004", "evidence": ["0x17b01e cmp #0x6013", "0x17b086 movs r0,#0xd4", "0x17b08e bl 0x1761a8"], "state": "VERIFICADO"},
+    "constructor": {"elf": "0x1761a8", "ghidra_va": "0x1861a8", "vptr": "0x0db3cc", "evidence": ["0x1761b0 SequenceBase::C2", "0x1761c8 str r3,[r4]", "0x176206..0x176250 initialise descriptor fields"], "state": "VERIFICADO"},
+    "begin_exec": {"elf": "0x15fd50", "identity": "SequencePinDeliverExecWriteStillCmd", "relation_to_6013": "same 0xd4 layout and diagnostic strings, no recovered direct vtable slot", "state": "INFERENCIA fuerte"},
+    "input_guards": [
+      {"condition": "this+0x14 non-null", "evidence": "0x15fd96..0x15fd98", "state": "VERIFICADO"},
+      {"condition": "this+0x08 non-null", "evidence": "0x15fdd2..0x15fdd4", "state": "VERIFICADO"},
+      {"condition": "holder virtual selector 12 returns non-zero", "evidence": "0x15fe18..0x15fe28", "state": "VERIFICADO"}
+    ],
+    "unit_type_check": {"visible_in_begin_exec": false, "state": "VERIFICADO", "limit": "does not exclude checks inside holder virtual method or SDF"}
+  },
+  "sdf": {
+    "normal": {"elf": "0x15fa74", "output_units": ["0x50b3f raster", "0xe0b00 SDS"], "message": "ObjMsg(0x3900,0x3000)", "state": "VERIFICADO"},
+    "super_resolution": {"elf": "0x15f37c", "output_units": ["0x243 raster", "0xe0b00 SDS"], "state": "VERIFICADO"},
+    "pin_connect": {"elf": "0x15f290", "state": "VERIFICADO"},
+    "completion": {"event": "CMD_ID_SDF_RESIZE_ROTATE_CMP / stateSdfResizeRotateComp", "state": "INFERENCIA fuerte", "limit": "no direct dispatcher-to-0x15ebfc edge recovered"}
+  },
+  "geometry": {"source": "holder virtual selector 3", "canvas": "align(width,64), align(height,16)", "region": "unaligned width,height", "size_classes": {"0": "640x360", "1": "640x480", "2": "1920x1080"}, "state": "VERIFICADO"},
+  "playdata": {"elf": "0x15ebfc", "condition": "result 0x111", "message": "ObjMsg(0x2001,0x1003)", "params": ["0x1032 raster descriptor", "0x1018 SDS descriptor", "0x1019/0x101a geometry", "0x1072/0x1073 colour/range"], "state": "VERIFICADO"},
+  "memory_contract": {
+    "raster_dmm": {"normal": "0x50b3f / 0x3fc000 B", "auxiliary": "0x220b2e / 0x96000 B", "state": "VERIFICADO"},
+    "sds_header": {"unit_type": "0xe0b00", "size": "0x800 B", "pixels": false, "state": "VERIFICADO"},
+    "descriptor": "unitType + DMM handle + physical address, distinct from raster bytes",
+    "recycling": {"camera_producer_policy": "unknown", "safe_until_encode_callback": "INFERENCIA"}
+  },
+  "camera": {"yc_unit_type": null, "descriptor_chain_followed": false, "camera_to_sdf_native_conversion": "not demonstrated", "state": "NO VERIFICADO"},
+  "verdict": "PbCap has a verified native SDF conversion to a new PlayData pair; applicability to Camera YC is not verified and does not demonstrate SilentShutter."
+}

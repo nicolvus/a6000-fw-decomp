@@ -1,0 +1,19 @@
+{
+  "session": "S42",
+  "binary": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+  "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "coverage": "PARCIAL",
+  "physical_capture": "NO_VERIFICADO",
+  "static_frontier_exhausted": false,
+  "findings": [
+    {"status": "VERIFICADO", "claim": "436d6320 y 436d6f6c son cuerpos distintos; 436d634a despacha al slot virtual +28. Vtable 43fcc090+28 contiene 436d6f6d; constructor 436d72e8 instala esa vtable"},
+    {"status": "VERIFICADO", "claim": "Factoría 436d6504 construye objeto 43e7f4a8 y lo publica en contenedor 43e7f858 mediante 43ad9054; 436d6118 devuelve el contenedor"},
+    {"status": "VERIFICADO", "claim": "Clase2: 436d7136 y 436d7142 cargan bytes parámetro+08/+14; escriben buffers 4401c6d2/4401c7ce. Resultado temporal se guarda en objeto+3a0"},
+    {"status": "PARCIAL", "claim": "4382e3a8/b2 copia common+94/+95 a bloque43eae270+36/+37; 437b0480 copia c14B a43ea6ad4; 438412d0 pasa43ea6ad4 al selector. Escritor original de valor2 y realizabilidad pendientes"},
+    {"status": "VERIFICADO", "claim": "R=43e9b548: R+5cc=43e9bb14=ImgState43e9baec+28. Lectores byte+5cc de438553a0/4385553c pertenecen a43e18c60, otro objeto"},
+    {"status": "PARCIAL", "claim": "4380f440 copia0x44=68B desde43eea2e4 a43e994d0; 4378ea78 copia a43e99320 y llama4378e334. Dependencia deR+5cc no recuperada"},
+    {"status": "INFERENCIA", "claim": "Datos3023 compatibles con descripciones compactas; parser y semántica de sus palabras no recuperados"},
+    {"status": "NO_VERIFICADO", "claim": "Sincronía clase2 con cortinas, VD_Drive/VD_Post, fin electrónico o productor YC; consumidor tipado de descriptores3023"}
+  ],
+  "line_e": "No activada: no se declara agotamiento estático; existe firmware/extracted/a6300-fw201, pero quedan productores common+94/+95 y alias de R por resolver"
+}

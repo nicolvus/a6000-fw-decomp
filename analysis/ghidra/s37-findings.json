@@ -1,0 +1,62 @@
+{
+  "session": "S37",
+  "program": "libmprctrl.so",
+  "sha256": "514e14116caa1d15d75bd56641dabfe815f620b6208008929c44d8d70386011d",
+  "ghidra_base": "0x10000",
+  "physical_yc": "NO_VERIFICADO",
+  "byte_identical_s33": false,
+  "extent_semantics": {
+    "status": "PARCIAL",
+    "symbol_owner": "DmmAccessPLA",
+    "address_elf": "0x1c620",
+    "size_elf": "0x1c638",
+    "address_expression": "u32(response + 0x10 + 8 * index)",
+    "size_expression": "u32(response + 0x14 + 8 * index)",
+    "count_expression": "u16(response + 8)",
+    "handle_expression": "u16(response + 4)",
+    "source": "OSAL response copied to malloc; no local address translation or raster dereference",
+    "numeric_address_size": null,
+    "physical_or_logical": "NO_VERIFICADO",
+    "byte_unit": "INFERENCIA"
+  },
+  "allocation": {
+    "entry_elf": "0x1bc9c",
+    "mode12_table_elf": "0x3da5c",
+    "mode12_type": "0x8125b",
+    "mode12_subarea": 3,
+    "return": "malloc header: u16 first_handle, u16 pack_count, pointer packs[]",
+    "warning": "Raw DmmAlloc getters must not be applied directly to AllocDmmMemory header or repacked per-type metadata"
+  },
+  "transport": {
+    "status": "VERIFICADO",
+    "common_body_elf": "0x1b028",
+    "destination_osal": "0x61003c",
+    "request_payload_size": "0x18",
+    "reply_queue": "osal_dynamic_id(0x2a,199,&id); payload[-4]=id",
+    "allocate": {"command": 1, "open": 0},
+    "open": {"command": 5, "open": 0},
+    "share": {"command": 2, "open": 0},
+    "payload_offsets": {"command": 0, "source_id": 2, "source_key": 4, "correlation": 20, "open": 22},
+    "accepted_response_commands": ["0x8001", "0x8005", "0x8003", "0x8002"],
+    "s33_difference": "S33 uses 0x78 outer request, unit prefix, correlation 0x55, trailing 0x70 length and stricter response checks; corresponding command/id/key/open payload offsets agree",
+    "avcam_slot_identity": "NO_VERIFICADO"
+  },
+  "close_free": {
+    "status": "VERIFICADO",
+    "symbol": "_ZN9DmmAccess15DmmCloseAndFreeEt",
+    "implementation_elf": "0x1afe8",
+    "libObj_plt": "0xdc180",
+    "libObj_jump_slot": "0x102d024",
+    "libObj_sha256": "8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a",
+    "libObj_needed": "libmprctrl.so",
+    "arguments_to_body": ["handle", 4, 2],
+    "binding": "Matching imported/exported C++ symbol and direct DT_NEEDED; actual runtime interposition not observed"
+  },
+  "yc_and_apl": {
+    "status": "NO_VERIFICADO",
+    "keys": ["P+0x18c", "P+0x194"],
+    "secondary_handle": "P+0xbc",
+    "mmio_banks": ["0xf3850400", "0xf3950400", "0xf3a50400"],
+    "reason": "No shared runtime response/handle/key or direct data flow recovered from this ELF to those av-cam objects or MMIO writes"
+  }
+}

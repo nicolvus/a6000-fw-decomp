@@ -1,0 +1,66 @@
+import com.android.build.gradle.tasks.ExternalNativeBuildTask
+
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 10
+
+    defaultConfig {
+        applicationId 'com.github.ma1co.openmemories.tweak'
+        minSdkVersion 10
+        targetSdkVersion 10
+        versionCode "git -C ${projectDir} rev-list --first-parent --count HEAD".execute().text.trim().toInteger()
+        versionName "git -C ${projectDir} describe --always --tags --dirty".execute().text.trim().replaceAll("^v", "")
+        externalNativeBuild {
+            ndkBuild {
+                abiFilters 'armeabi'
+                targets 'tweak', 'adbd'
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    externalNativeBuild {
+        ndkBuild {
+            path 'src/main/jni/Android.mk'
+        }
+    }
+
+    packagingOptions {
+        // Whitelist for libraries
+        pickFirst 'lib/armeabi/libtweak.so'
+        pickFirst 'lib/armeabi/libprotectiontweak.so'
+        pickFirst 'lib/armeabi/libadbd.so'
+        exclude 'lib/armeabi/*.so'
+    }
+
+    sourceSets.main {
+        jniLibs.srcDir "$buildDir/libs"
+    }
+}
+
+task runMake(type: Exec) {
+    // This will compile the backupsetid1 executable that can be run outside the chrooted android
+    // environment
+    executable = 'make'
+    args = ["-C", "$projectDir/src/main/jni", "BUILDDIR=$buildDir/platform"]
+}
+
+tasks.withType(ExternalNativeBuildTask) {
+    dependsOn runMake
+    doLast {
+        copy {
+            // Rename executables to lib*.so, so android will unpack them for us during installation
+            from files(
+                    "$buildDir/platform/protectiontweak",
+                    new File(objFolder, "armeabi/adbd"),
+            )
+            into "$buildDir/libs/armeabi"
+            rename { fn -> "lib${fn}.so" }
+        }
+    }
+}

@@ -1,0 +1,66 @@
+{
+  "library": "libObj.so",
+  "sha256_before": "8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a",
+  "windows": {
+    "0x939dd8:0x939e50": {
+      "existing_listing": null,
+      "binary_verification": "\n/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libObj.so:\tfile format elf32-littlearm\n\nDisassembly of section .text:\n\n00939744 <InfraStillPool_Exit>:\n  939dd8: b5f8         \tpush\t{r3, r4, r5, r6, r7, lr}\n  939dda: af00         \tadd\tr7, sp, #0x0\n  939ddc: 460d         \tmov\tr5, r1\n  939dde: 4616         \tmov\tr6, r2\n  939de0: f7ff fd64    \tbl\t0x9398ac <InfraStillPool_Exit+0x168> @ imm = #-0x538\n  939de4: 4604         \tmov\tr4, r0\n  939de6: b158         \tcbz\tr0, 0x939e00 <InfraStillPool_Exit+0x6bc> @ imm = #0x16\n  939de8: f7f8 fca4    \tbl\t0x932734 <ObjConverter_UnregisterCommand+0x10982> @ imm = #-0x76b8\n  939dec: 4629         \tmov\tr1, r5\n  939dee: 4620         \tmov\tr0, r4\n  939df0: 4632         \tmov\tr2, r6\n  939df2: f7f8 fe27    \tbl\t0x932a44 <ObjConverter_UnregisterCommand+0x10c92> @ imm = #-0x73b2\n  939df6: 4605         \tmov\tr5, r0\n  939df8: 4620         \tmov\tr0, r4\n  939dfa: f7f8 fca2    \tbl\t0x932742 <ObjConverter_UnregisterCommand+0x10990> @ imm = #-0x76bc\n  939dfe: e001         \tb\t0x939e04 <InfraStillPool_Exit+0x6c0> @ imm = #0x2\n  939e00: f44f 3590    \tmov.w\tr5, #0x12000\n  939e04: 4628         \tmov\tr0, r5\n  939e06: bdf8         \tpop\t{r3, r4, r5, r6, r7, pc}\n  939e08: b5f8         \tpush\t{r3, r4, r5, r6, r7, lr}\n  939e0a: af00         \tadd\tr7, sp, #0x0\n  939e0c: 460d         \tmov\tr5, r1\n  939e0e: 4616         \tmov\tr6, r2\n  939e10: f7ff fd4c    \tbl\t0x9398ac <InfraStillPool_Exit+0x168> @ imm = #-0x568\n  939e14: 4604         \tmov\tr4, r0\n  939e16: b158         \tcbz\tr0, 0x939e30 <InfraStillPool_Exit+0x6ec> @ imm = #0x16\n  939e18: f7f8 fc8c    \tbl\t0x932734 <ObjConverter_UnregisterCommand+0x10982> @ imm = #-0x76e8\n  939e1c: 4629         \tmov\tr1, r5\n  939e1e: 4620         \tmov\tr0, r4\n  939e20: 4632         \tmov\tr2, r6\n  939e22: f7f8 fd47    \tbl\t0x9328b4 <ObjConverter_UnregisterCommand+0x10b02> @ imm = #-0x7572\n  939e26: 4605         \tmov\tr5, r0\n  939e28: 4620         \tmov\tr0, r4\n  939e2a: f7f8 fc8a    \tbl\t0x932742 <ObjConverter_UnregisterCommand+0x10990> @ imm = #-0x76ec\n  939e2e: e001         \tb\t0x939e34 <InfraStillPool_Exit+0x6f0> @ imm = #0x2\n  939e30: f44f 3590    \tmov.w\tr5, #0x12000\n  939e34: 4628         \tmov\tr0, r5\n  939e36: bdf8         \tpop\t{r3, r4, r5, r6, r7, pc}\n  939e38: b5f8         \tpush\t{r3, r4, r5, r6, r7, lr}\n  939e3a: af00         \tadd\tr7, sp, #0x0\n  939e3c: 460d         \tmov\tr5, r1\n  939e3e: 4616         \tmov\tr6, r2\n  939e40: f7ff fd34    \tbl\t0x9398ac <InfraStillPool_Exit+0x168> @ imm = #-0x598\n  939e44: 4604         \tmov\tr4, r0\n  939e46: b158         \tcbz\tr0, 0x939e60 <InfraStillPool_Exit+0x71c> @ imm = #0x16\n  939e48: f7f8 fc74    \tbl\t0x932734 <ObjConverter_UnregisterCommand+0x10982> @ imm = #-0x7718\n  939e4c: 4629         \tmov\tr1, r5\n  939e4e: 4620         \tmov\tr0, r4\n",
+      "bytes_sha256": "a9206520bafdc836b2400856dae4c5025de75d60632fdace5e55df7f534edee7"
+    }
+  },
+  "reused": [],
+  "rtti": {},
+  "target_virtuals": {
+    "0x91bb58": [],
+    "0x939dd8": [],
+    "0x91bb68": [],
+    "0x91bbd0": []
+  },
+  "target_relocations": {
+    "0x91bb58": [],
+    "0x939dd8": [
+      "0x101f844"
+    ],
+    "0x91bb68": [],
+    "0x91bbd0": []
+  },
+  "branch_candidates": [
+    {
+      "va": "0x90f702",
+      "target": "0x91bb58"
+    },
+    {
+      "va": "0x90f780",
+      "target": "0x91bb58"
+    },
+    {
+      "va": "0x90f7b2",
+      "target": "0x91bb58"
+    },
+    {
+      "va": "0x90f856",
+      "target": "0x91bb68"
+    },
+    {
+      "va": "0x90f85e",
+      "target": "0x91bb68"
+    },
+    {
+      "va": "0x90f88e",
+      "target": "0x91bb68"
+    },
+    {
+      "va": "0x90f8a8",
+      "target": "0x91bb68"
+    },
+    {
+      "va": "0x90fd60",
+      "target": "0x91bbd0"
+    },
+    {
+      "va": "0x90fdc8",
+      "target": "0x91bbd0"
+    }
+  ],
+  "sha256_after": "8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a"
+}

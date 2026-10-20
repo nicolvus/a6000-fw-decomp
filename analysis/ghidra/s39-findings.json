@@ -1,0 +1,49 @@
+{
+  "session": "S39",
+  "binary": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+  "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "base": "0x43541000",
+  "exports": ["s39-initial.json", "s39-consumers.json", "s39-format.json", "s39-origin.json", "s39-registers.json", "s39-final.json", "s39-closure.json", "s39-context.json"],
+  "enum_status": "PARCIAL",
+  "software_domain": "P+0x1b4; not the separately remapped input+0x38",
+  "input_remap_by_p_value": [2, 0, 1, 5, 3, 4],
+  "physical_capture": "NO_VERIFICADO",
+  "mapping": [
+    {"software": [0, 3, 5], "apl_group": 0, "cached_value": 0, "pixel_format": "NO_VERIFICADO", "pitch": "NO_VERIFICADO"},
+    {"software": [1], "apl_group": 1, "cached_value": 1, "pixel_format": "NO_VERIFICADO", "pitch": "NO_VERIFICADO"},
+    {"software": [2], "apl_group": 2, "cached_value": 2, "pixel_format": "NO_VERIFICADO", "pitch": "NO_VERIFICADO"},
+    {"software": [4], "apl_group": 3, "cached_value": 4, "pixel_format": "NO_VERIFICADO", "pitch": "NO_VERIFICADO"}
+  ],
+  "direct_consumers": [
+    {"function": "43814ea0", "callsite": "43814ec8", "effect": "result at config+0xc"},
+    {"function": "43815210", "callsite": "438153b8", "effect": "result at config+0xc"},
+    {"function": "43815560", "callsite": "43815738", "effect": "result at config+0xc"},
+    {"function": "4387a758", "sites": ["4387a776", "4387a77a", "4387a7a2", "4387a7a8"], "effect": "previous/current globals 43ef71a0/43ef71a4"},
+    {"function": "4387a6c4", "sites": ["4387a6ca", "4387a6d0", "4387a6ee"], "effect": "map group to cached value, call 436bec28"},
+    {"function": "436bec28", "sites": ["436bec54", "436bec5c"], "effect": "compare/update 43e77ccc+unit*4; return change status"},
+    {"function": "43acb7be", "callsite": "4387a244", "effect": "conditional invalidation and reference/profile reset via 436bd3f4/436bd7d8; enum itself is not passed"}
+  ],
+  "origin": {
+    "initializer": "43ae8d56",
+    "root": "43e9b548",
+    "context": "43e99208",
+    "context_2": "43e9baec",
+    "field": "43e9bb14",
+    "writer_container": "43792a0c",
+    "scalar_write_sites": ["437934b4", "4379357c", "437935aa", "437935ea"],
+    "sources": ["context[0]+0x24", "context[0]+0x48", "context[0]+0x458", "constant zero"],
+    "remap": {"0": 0, "1": 1, "2": 2, "3": 4},
+    "user_option_or_fps_link": "NO_VERIFICADO"
+  },
+  "coverage_limit": "Existing xrefs, literal+PC candidates and nearby cache bases; arbitrary aliases, bulk copies, undefined code and indirect calls are not exhaustively resolved. No universal static exhaustion claimed.",
+  "next_step": "Trace context[0]+24/+48/+458 including bulk copies to typed request/table; identify actual pitch configuration independently from the APL change discriminator.",
+  "summary": [
+    ["SHA/proyecto", "VERIFICADO", "SHA y memoria coinciden; readOnly/noanalysis; manifiestos intactos"],
+    ["Grupos APL 0/1/2/3", "VERIFICADO", "Config+0xc → global → caché 0/1/2/4 → detección de cambio"],
+    ["Campo hardware/stride", "NO_VERIFICADO", "No hay enlace recuperado del discriminador a bits de formato o pitch"],
+    ["Nombres de píxel", "NO_VERIFICADO", "Strings vecinas sin tabla nombre↔índice demostrada"],
+    ["Origen context[2]+28", "VERIFICADO", "43ae8d56; VD_Pre tiene cuatro escrituras condicionales"],
+    ["Dependencia de opción/FPS", "PARCIAL", "Depende de estado software; falta fuente tipada del usuario"],
+    ["Captura electrónica física", "NO_VERIFICADO", "Falta productor/handle/VD y cierre de integración; rama no agotada universalmente"]
+  ]
+}

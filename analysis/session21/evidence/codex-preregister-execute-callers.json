@@ -1,0 +1,37 @@
+{
+  "library": "libObj.so",
+  "sha256_before": "8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a",
+  "windows": {
+    "0x908084:0x9080cc": {
+      "existing_listing": null,
+      "binary_verification": "\n/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libObj.so:\tfile format elf32-littlearm\n\nDisassembly of section .text:\n\n00902384 <_ZN13UtilStillSize18GetStillTargetSizeEbNS_8RectSizeEPiS1_S1_b>:\n  908084: e92d 47f0    \tpush.w\t{r4, r5, r6, r7, r8, r9, r10, lr}\n  908088: b098         \tsub\tsp, #0x60\n  90808a: af04         \tadd\tr7, sp, #0x10\n  90808c: 4688         \tmov\tr8, r1\n  90808e: 4947         \tldr\tr1, [pc, #0x11c]        @ 0x9081ac <_ZN13UtilStillSize18GetStillTargetSizeEbNS_8RectSizeEPiS1_S1_b+0x5e28>\n  908090: f897 9070    \tldrb.w\tr9, [r7, #0x70]\n  908094: 4604         \tmov\tr4, r0\n  908096: 4479         \tadd\tr1, pc\n  908098: f8d0 00d0    \tldr.w\tr0, [r0, #0xd0]\n  90809c: 4616         \tmov\tr6, r2\n  90809e: 461d         \tmov\tr5, r3\n  9080a0: f8d7 a074    \tldr.w\tr10, [r7, #0x74]\n  9080a4: f7d9 cc88    \tblx\t0xe19b8 <_ZNK7MonCtrl16ConPrintfMessageEPKcz@plt> @ imm = #-0x8266f0\n  9080a8: f1b9 0f00    \tcmp.w\tr9, #0x0\n  9080ac: d10d         \tbne\t0x9080ca <_ZN13UtilStillSize18GetStillTargetSizeEbNS_8RectSizeEPiS1_S1_b+0x5d46> @ imm = #0x1a\n  9080ae: f8d4 00dc    \tldr.w\tr0, [r4, #0xdc]\n  9080b2: 4631         \tmov\tr1, r6\n  9080b4: 463a         \tmov\tr2, r7\n  9080b6: 464b         \tmov\tr3, r9\n  9080b8: f008 fd84    \tbl\t0x910bc4 <_ZN13UtilStillSize18GetStillTargetSizeEbNS_8RectSizeEPiS1_S1_b+0xe840> @ imm = #0x8b08\n  9080bc: b195         \tcbz\tr5, 0x9080e4 <_ZN13UtilStillSize18GetStillTargetSizeEbNS_8RectSizeEPiS1_S1_b+0x5d60> @ imm = #0x24\n  9080be: 4628         \tmov\tr0, r5\n  9080c0: 4639         \tmov\tr1, r7\n  9080c2: 2228         \tmovs\tr2, #0x28\n  9080c4: f684 f56a    \tbl\t0x38cb9c <ObjNetMediaServer_UnregisterCommand+0xfbea> @ imm = #-0x57b52c\n  9080c8: e00c         \tb\t0x9080e4 <_ZN13UtilStillSize18GetStillTargetSizeEbNS_8RectSizeEPiS1_S1_b+0x5d60> @ imm = #0x18\n  9080ca: 4629         \tmov\tr1, r5\n",
+      "bytes_sha256": "65703e205a63f6317773b5e4ced5f38b5762dc528bfce87552ecbcbe3331de99"
+    },
+    "0x90b248:0x90b2a0": {
+      "existing_listing": null,
+      "binary_verification": "\n/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libObj.so:\tfile format elf32-littlearm\n\nDisassembly of section .text:\n\n00902384 <_ZN13UtilStillSize18GetStillTargetSizeEbNS_8RectSizeEPiS1_S1_b>:\n  90b248: e92d 4ff0    \tpush.w\t{r4, r5, r6, r7, r8, r9, r10, r11, lr}\n  90b24c: f5ad 6d30    \tsub.w\tsp, sp, #0xb00\n  90b250: b081         \tsub\tsp, #0x4\n  90b252: 4688         \tmov\tr8, r1\n  90b254: f8df 14d8    \tldr.w\tr1, [pc, #0x4d8]        @ 0x90b730 <_ZN13UtilStillSize18GetStillTargetSizeEbNS_8RectSizeEPiS1_S1_b+0x93ac>\n  90b258: af04         \tadd\tr7, sp, #0x10\n  90b25a: 4604         \tmov\tr4, r0\n  90b25c: 4479         \tadd\tr1, pc\n  90b25e: f8d0 00d0    \tldr.w\tr0, [r0, #0xd0]\n  90b262: f7d6 cbaa    \tblx\t0xe19b8 <_ZNK7MonCtrl16ConPrintfMessageEPKcz@plt> @ imm = #-0x8298ac\n  90b266: f507 6216    \tadd.w\tr2, r7, #0x960\n  90b26a: 2300         \tmovs\tr3, #0x0\n  90b26c: 4641         \tmov\tr1, r8\n  90b26e: 9300         \tstr\tr3, [sp]\n  90b270: 3204         \tadds\tr2, #0x4\n  90b272: f8d4 00dc    \tldr.w\tr0, [r4, #0xdc]\n  90b276: f005 fdd1    \tbl\t0x910e1c <_ZN13UtilStillSize18GetStillTargetSizeEbNS_8RectSizeEPiS1_S1_b+0xea98> @ imm = #0x5ba2\n  90b27a: b9f8         \tcbnz\tr0, 0x90b2bc <_ZN13UtilStillSize18GetStillTargetSizeEbNS_8RectSizeEPiS1_S1_b+0x8f38> @ imm = #0x3e\n  90b27c: f507 6116    \tadd.w\tr1, r7, #0x960\n  90b280: f8d4 00dc    \tldr.w\tr0, [r4, #0xdc]\n  90b284: 3104         \tadds\tr1, #0x4\n  90b286: f005 fe09    \tbl\t0x910e9c <_ZN13UtilStillSize18GetStillTargetSizeEbNS_8RectSizeEPiS1_S1_b+0xeb18> @ imm = #0x5c12\n  90b28a: f507 6024    \tadd.w\tr0, r7, #0xa40\n  90b28e: f507 6116    \tadd.w\tr1, r7, #0x960\n  90b292: 2228         \tmovs\tr2, #0x28\n  90b294: 3104         \tadds\tr1, #0x4\n  90b296: 3018         \tadds\tr0, #0x18\n  90b298: 2301         \tmovs\tr3, #0x1\n  90b29a: f7d5 ca9c    \tblx\t0xe07d4 <_ZN3MWF6StructC1EPKvii@plt> @ imm = #-0x82aac8\n  90b29e: f507 6224    \tadd.w\tr2, r7, #0xa40\n",
+      "bytes_sha256": "094c4d0ea4c75f5af42e0268fc0503ad437de7b2b73320833335d3601c6f841e"
+    }
+  },
+  "reused": [],
+  "rtti": {},
+  "target_virtuals": {
+    "0x908084": [],
+    "0x90f81c": []
+  },
+  "target_relocations": {
+    "0x908084": [],
+    "0x90f81c": []
+  },
+  "branch_candidates": [
+    {
+      "va": "0x90ba24",
+      "target": "0x908084"
+    },
+    {
+      "va": "0x91a542",
+      "target": "0x908084"
+    }
+  ],
+  "sha256_after": "8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a"
+}

@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "id": "2026-10-18T14-42-10-211854Z-7bdf2f9c",
+  "created_at": "2026-10-18T14-42-10-211854Z",
+  "goal": "Fase 12.6-12.8: validar grafo ampliado, rediseñar benchmark con verdad de referencia estructurada, crear CURRENT.md, re-verificar MCP/skills",
+  "done": [
+    "Validación estratificada del grafo real (2604 CALLS): evidencia localizada, mismo binario src/dst, OSAL 0x50004 y Darwin 0x4200 confirmados como NO-funciones",
+    "Bug real encontrado y corregido: 840 relaciones CALLS duplicadas sin deduplicar (misma llamada reanalizada en varios JSON de sesión creaba una fila por archivo)",
+    "Nueva tabla relation_sources + helper _upsert_call_relation: una relación por (src,dst,type), procedencia múltiple preservada, idempotente",
+    "Distinción llamada directa vs. via_thunk (trampolín Ghidra) añadida a extraction_method",
+    "Benchmark v2 (scripts/knowledge/benchmark_v2.py + reference_queries_v2.json): 16 consultas, 8 categorías, verdad de referencia estructurada, scoring real (afirmación+fuente, arista exacta, abstención, cobertura ambigua), línea base pre-12.6 conservada sin tocar",
+    "knowledge/CURRENT.md creado (2678 bytes vs 43962 de PROGRESS.md); CLAUDE.md/AGENTS.md actualizados para leerlo primero",
+    "12.7 re-verificado: MCP arranca desde fuera del repo, 11 tools descubribles, skills con frontmatter correcto; Codex sigue sin registrar el servidor MCP (hallazgo ya conocido desde Fase 6, no nuevo)"
+  ],
+  "files": [
+    "scripts/knowledge/build_graph.py",
+    "scripts/knowledge/benchmark_v2.py",
+    "knowledge/benchmarks/reference_queries_v2.json",
+    "knowledge/CURRENT.md",
+    "CLAUDE.md",
+    "AGENTS.md",
+    "tests/knowledge/test_build_graph.py"
+  ],
+  "findings": [
+    "616 grupos de relaciones CALLS duplicadas (840 filas sobrantes) en la DB real antes de la corrección; 0 después, idempotente",
+    "0x50004 (OSAL) y 0x4200 (Darwin) confirmados por consulta SQL directa como NO existentes entre las direcciones de ninguna entidad Function",
+    "La cadena EncodeStill de CONTEXT.md:26 no tiene cobertura en el grafo (direcciones fuera del corpus Ghidra/REA decompilado); trace devuelve correctamente 'sin relaciones', no se fabricó",
+    "graph precision@1 = 5/6 exactamente en las consultas relacionales/multietapa que rg/fts5 no pueden resolver en absoluto; fts5/ask dominan en conceptual/histórico donde el grafo no aplica"
+  ],
+  "evidence": [
+    "Reconstrucción doble del grafo real: segunda vez 0 entidades/0 relaciones nuevas (idempotente)",
+    "knowledge/benchmarks/report-v2.md y .json generados con métricas reales (latencia, chars, bytes, RSS, tokens estimados etiquetados como tales)"
+  ],
+  "corrections": [],
+  "tests": [
+    "67/67 tests (eran 65; +2 por los bugs de 12.6)",
+    "ruff check: limpio",
+    "mypy: limpio"
+  ],
+  "blockers": [
+    "Confirmación de descubrimiento MCP/skills desde sesión Claude Code/Codex nueva: requiere al usuario fuera de esta sesión",
+    "Registro de sony-a6000-knowledge en ~/.codex/config.toml: requiere autorización del usuario para editar config global"
+  ],
+  "next_actions": [
+    "Si el usuario autoriza: añadir snippet de Fase 6 a ~/.codex/config.toml",
+    "Mapeo de lenguaje natural a nodo de trace (12.5, pendiente)"
+  ],
+  "permissions_state": "Sin instalaciones nuevas; firmware/Ghidra/REA/evidencias sin tocar; no se editó ningún archivo global sin autorización"
+}

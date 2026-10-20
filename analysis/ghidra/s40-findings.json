@@ -1,0 +1,41 @@
+{
+  "session": "S40",
+  "binary": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+  "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "project": "analysis/ghidra/silent-liro.gpr",
+  "flags": ["-readOnly", "-noanalysis", "-process av-cam.bin"],
+  "coverage": "PARCIAL",
+  "static_frontier_exhausted": false,
+  "root": "43e9b548",
+  "context": "43e99208",
+  "context2": "43e9baec",
+  "staging": "43edf684",
+  "snapshot_size": 1376,
+  "snapshot_sources": [
+    {"callsite": "43804cc8", "source": "43edf684", "status": "VERIFICADO"},
+    {"callsite": "43806a80", "source": "438069f0 argument2 +4, case1", "status": "VERIFICADO", "original_message_producer": "PARCIAL"},
+    {"callsite": "43806d50", "source": "438069f0 argument2 +8, case10, object+568==2", "status": "VERIFICADO", "original_message_producer": "PARCIAL"}
+  ],
+  "exports": ["s40-origin.json", "s40-writers.json", "s40-source.json", "s40-api.json", "s40-dispatch.json", "s40-snapshots.json", "s40-aliases.json", "s40-derived.json"],
+  "additional_exports": ["s40-tables.json", "s40-offset-xrefs.json", "s40-offset-all-xrefs.json"],
+  "writers": [
+    {"site": "438040bc", "target": "staging+24", "source": "u8(request+0a)", "request": "4000", "status": "VERIFICADO", "origin": "API"},
+    {"site": "438040e8", "target": "staging+24", "source": "0, conditional override", "status": "VERIFICADO", "origin": "firmware constant"},
+    {"site": "43803958", "target": "staging+48", "source": "u8(request+09)", "request": "4036", "status": "VERIFICADO", "origin": "API"},
+    {"site": "43809378", "target": "staging+458", "source": "u8(request+0e), if request+08 != 0", "request": "3023", "status": "VERIFICADO", "origin": "API"},
+    {"site": "43804cdc", "target": "root+[0,560)", "source": "staging+[0,560)", "status": "VERIFICADO", "origin": "snapshot copy"},
+    {"site": "43804c82", "target": "root+[0,560), via 43b00d06", "source": "snapshot_object+8", "status": "VERIFICADO", "origin": "snapshot copy"},
+    {"site": "43804d12", "target": "root+[0,560), via 43b00d06", "source": "snapshot_object+8", "status": "VERIFICADO", "origin": "snapshot copy"},
+    {"site": "437935ae", "target": "root+48", "source": "0, conditional", "status": "VERIFICADO", "origin": "firmware constant"},
+    {"site": "43b00cd0", "target": "snapshot_object+8+[0,560)", "source": "argument2+[0,560)", "status": "VERIFICADO", "origin": "snapshot copy"},
+    {"site": "43b00bba", "target": "snapshot_object+[4,568)", "source": "0", "status": "VERIFICADO", "origin": "initialization constant"}
+  ],
+  "dispatch_table": {"address": "43fff30c", "count": 220, "stride": 12, "layout": {"0": "u16 command", "2": "2 bytes not interpreted", "4": "u32 Thumb handler pointer", "8": "u8 skip post-processing flag", "9": "3 bytes not interpreted"}},
+  "alternative_selector_table": {"address": "43ca3c21", "stride": 1, "index": "root+450 minus 1, valid 1..4", "values": [1, 1, 0, 1], "gate": "bit7(context2+269)", "status": "VERIFICADO"},
+  "user_menu_fps_pixel_names": "NO_VERIFICADO",
+  "exposure_configuration_link": "NO_VERIFICADO",
+  "read_enable_link": "NO_VERIFICADO",
+  "data_generation_link": "NO_VERIFICADO",
+  "physical_capture": "NO_VERIFICADO",
+  "limitations": ["Existing Ghidra xrefs plus PIC scans and immediate-offset scan are not a proof against every alias, arithmetic base, bulk store, undefined instruction or indirect call.", "Other structures also use offset 458; numerical equality is not pointer identity.", "API provenance does not prove an end-user menu choice or IMX210 integration register semantics."]
+}

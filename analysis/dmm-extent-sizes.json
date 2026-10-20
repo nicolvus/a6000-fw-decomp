@@ -1,0 +1,43 @@
+{
+  "scope": "Sony A6000 fw 3.21; static parse of kmod/dmm.ko ConfigData only. ELF addresses in this file are kernel-module ELF offsets.",
+  "config_data": {
+    "symbol": "ConfigData",
+    "elf_rodata_offset": "0x184",
+    "file_offset": "0xff0c",
+    "size_bytes": 63976,
+    "extent_record_observation": "dmm_ext_tbl_Init (0xec90) consumes 20-byte records; its copies at 0xedb4..0xedcc and 0xd5bc..0xd5d8 establish extentId at +0x08, byte extent at +0x0c, attributes at +0x10. The leading fields are not named here."
+  },
+  "extents": {
+    "0xe4": {
+      "size_bytes": 2048,
+      "size_hex": "0x800",
+      "records_file_offsets": ["0x127e8", "0x127fc", "0x12810", "0x12824", "0x12838", "0x1284c", "0x12860", "0x12874", "0x12888", "0x1289c", "0x128b0", "0x128c4", "0x128d8", "0x128ec", "0x12900", "0x12914", "0x12928", "0x1293c", "0x12950", "0x12964", "0x12978", "0x1298c", "0x129a0", "0x129b4", "0x129c8", "0x129dc", "0x129f0", "0x12a04", "0x12a18", "0x12a2c", "0x12a40", "0x12a54"],
+      "record_fields_hex": {"field_00": "0x0", "field_04": "0x5", "extent_id_at_08": "0xe4", "size_at_0c": "0x800", "attributes_at_10": "0x10f"},
+      "state": "VERIFICADO"
+    },
+    "0xed": {
+      "size_bytes": 4177920,
+      "size_hex": "0x3fc000",
+      "records_file_offsets": ["0x109e8", "0x10b50"],
+      "record_fields_hex": {"field_00": "0x0", "field_04": "0x13", "extent_id_at_08": "0xed", "size_at_0c": "0x3fc000", "attributes_at_10": "0x10f"},
+      "state": "VERIFICADO"
+    },
+    "0x13d": {
+      "size_bytes": 614400,
+      "size_hex": "0x96000",
+      "records_file_offsets": ["0x14228", "0x142f0"],
+      "record_fields_hex": {"field_00": "0x0", "field_04": "0x13", "extent_id_at_08": "0x13d", "size_at_0c": "0x96000", "attributes_at_10": "0x10f"},
+      "state": "VERIFICADO"
+    }
+  },
+  "unit_type_mapping": {
+    "0xe0b00": {"extents": ["0xe4"], "total_bytes": 2048, "state": "VERIFICADO", "meaning": "SDS descriptor/header allocation; it cannot itself contain a full raster."},
+    "0x50b3f": {"extents": ["0xed"], "total_bytes": 4177920, "state": "VERIFICADO", "meaning": "PbCap decBufferInfo raster allocation (1920x1080 from ObjEffect size helper)."},
+    "0x220b2e": {"extents": ["0x13d"], "total_bytes": 614400, "state": "VERIFICADO", "meaning": "640x480 raster allocation from ObjEffect size helper."}
+  },
+  "format_inference": {
+    "0x220b2e": "614400 / (640*480) = 2 bytes/pixel. This is consistent with packed 4:2:2 but does not prove pixel order, stride, or planar layout.",
+    "0x50b3f": "0x3fc000 exceeds 1920*1080*2 by 30720 bytes. It does not prove a stride, plane arrangement, or usable image extent.",
+    "state": "INFERENCIA"
+  }
+}

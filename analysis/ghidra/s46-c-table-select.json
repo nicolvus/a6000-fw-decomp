@@ -1,0 +1,42 @@
+{
+  "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "functions": [
+    {
+      "query": "43af6870",
+      "raw64": "70b500252c4605e00e8801359e4208bf0c460c319542f7db14b9c0f8284103e063683bb9c0f8283100f59470bde8704093f4d2bbc0f85c32a368c0f8603270bd",
+      "references": [
+        "From: 437da260 To: 43af6870 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT"
+      ],
+      "entry": "43af6870",
+      "completed": true,
+      "pseudo_code": "\nvoid FUN_43af6870(int param_1,ushort *param_2,int param_3,uint param_4)\n\n{\n  ushort *puVar1;\n  int iVar2;\n  \n  iVar2 \u003d 0;\n  puVar1 \u003d (ushort *)0x0;\n  while (iVar2 \u003c param_3) {\n    iVar2 \u003d iVar2 + 1;\n    if (*param_2 \u003d\u003d param_4) {\n      puVar1 \u003d param_2;\n    }\n    param_2 \u003d param_2 + 6;\n  }\n  if (puVar1 \u003d\u003d (ushort *)0x0) {\n    *(undefined4 *)(param_1 + 0x128) \u003d 0;\n  }\n  else {\n    if (*(int *)(puVar1 + 2) !\u003d 0) {\n      *(int *)(param_1 + 0x25c) \u003d *(int *)(puVar1 + 2);\n      *(undefined4 *)(param_1 + 0x260) \u003d *(undefined4 *)(puVar1 + 4);\n      return;\n    }\n    *(undefined4 *)(param_1 + 0x128) \u003d 0;\n  }\n  FUN_4378a048(param_1 + 0x128);\n  return;\n}\n\n",
+      "listing": [
+        "43af6870 push {r4,r5,r6,lr}",
+        "43af6872 movs r5,#0x0",
+        "43af6874 mov r4,r5",
+        "43af6876 b 0x43af6884",
+        "43af6878 ldrh r6,[r1,#0x0]",
+        "43af687a adds r5,#0x1",
+        "43af687c cmp r6,r3",
+        "43af687e it eq",
+        "43af6880 mov.eq r4,r1",
+        "43af6882 adds r1,#0xc",
+        "43af6884 cmp r5,r2",
+        "43af6886 blt 0x43af6878",
+        "43af6888 cbnz r4,0x43af6890",
+        "43af688a str.w r4,[r0,#0x128]",
+        "43af688e b 0x43af6898",
+        "43af6890 ldr r3,[r4,#0x4]",
+        "43af6892 cbnz r3,0x43af68a4",
+        "43af6894 str.w r3,[r0,#0x128]",
+        "43af6898 add.w r0,r0,#0x128",
+        "43af689c pop.w {r4,r5,r6,lr}",
+        "43af68a0 b.w 0x4378a048",
+        "43af68a4 str.w r3,[r0,#0x25c]",
+        "43af68a8 ldr r3,[r4,#0x8]",
+        "43af68aa str.w r3,[r0,#0x260]",
+        "43af68ae pop {r4,r5,r6,pc}"
+      ]
+    }
+  ]
+}

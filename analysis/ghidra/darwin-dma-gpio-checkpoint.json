@@ -1,0 +1,53 @@
+{
+  "status": "VERIFICADO salvo inferencias explícitas",
+  "date": "2026-10-16",
+  "method": "Original bytes, directed native Ghidra queries, independent LLVM, manufacturer header comparison; no hardware execution",
+  "source_sha256": {
+    "a6000_darwin": "5f2be06d9885d154e8e0df46a611d6830d29754b4353f6e82cecfe66dd6a0bf4",
+    "a6300_darwin": "6249d4b7f70d31c50048c85ca39e61c1872b547a26fd4b4ad0343ca9811433ac"
+  },
+  "rom_base": "0x4200",
+  "interrupt_dispatch": {
+    "a6000_generic_handler": "0x6808",
+    "a6300_generic_handler": "0x6b92",
+    "selector": "SCB ICSR at 0xe000ed04, VECTACTIVE bits 0..8",
+    "secondary_table": "0x4300 + exception_number*4 - 4",
+    "exception_number": 60,
+    "irq_number": 44,
+    "entry_address": "0x43ec",
+    "a6000_thumb_pointer": "0xff8f",
+    "a6300_thumb_pointer": "0x5f9f",
+    "a6000_chain": ["0xff8e: R0=6", "0xfea8", "0x1b44c", "0x20220(1)", "0x20c06(1)", "0x1e33e(0x29dac)", "0x2089c when outer ID is 2/4/6"],
+    "a6300_chain": ["0x5f9e: R0=6", "0x5f36", "0x1d3a8", "0x22e3e(1)", "0x24666(1)", "0x20c2a(0x2f8e8)", "0x23e16 when outer ID is 3/5/7"],
+    "conditions": "Both notification helpers dispatch only when the hardware-variant predicate is nonzero; an active sequence and matching outer ID are required",
+    "a6300_channel6_table_record": "ROM 0x2c6e0: 0x40060070,0x40060074,0x40060078,0x4006007c,0x42c00e7c,0x42c00e78",
+    "status_handling": "Dispatcher reads bits16..18 of channel configuration B and clears them. Special channel6 calls the phase notification without branching on the extracted status. Notification alone is not successful motion or capture proof",
+    "vector_limit": "0x4300 is a software dispatch table, NOT a second VTOR base and NOT an extension of the initial 64-entry vector table"
+  },
+  "gpio_map": {
+    "interpretation": "INFERENCIA de compatibilidad con mapa Fujitsu FM3; exact MCU model unverified. Original manufacturer header matches exact bit-band aliases",
+    "0x42668230": "PDOR4 bit12, P4C",
+    "0x42668234": "PDOR4 bit13, P4D",
+    "0x42668238": "PDOR4 bit14, P4E",
+    "0x4266811c": "PDOR2 bit7, P27",
+    "0x42668038": "PDOR0 bit14, P0E",
+    "physical_curtain_assignment": "NO VERIFICADO",
+    "header_source": "https://nest-open-source.googlesource.com/nest-yale-lock/1.2/freertos/+/b9a7305351d35e2d3076d0b4ab3ec121f0aa8d52/FreeRTOS/Demo/CORTEX_MB9B500_IAR_Keil/Fujitu_source/mb9bf506n.h",
+    "header_git_blob": "fa2a724f1bee39eae6a70c1f893d3028cf960208",
+    "manual_source": "https://www.infineon.com/assets/row/public/documents/30/44/infineon-32-bit-microcontroller-fm3-family-peripheral-manual-main-part-usermanual-en.pdf",
+    "manual_identifier": "002-05586 Rev.*C, DMAC appendix pages741-742, GPIO chapter10"
+  },
+  "inhibit_error_mask": {
+    "writer_a6300": "0x1781c(category,detail,code,value)",
+    "formula": "u16(0x200034e4+0x444) |= 1<<(category-2), with register shift semantics",
+    "category6": "sets bit0x10, which blocks the predicate 0x1788c(0x10) used by 0x1b988",
+    "first_error": "If mask was zero, category/detail/code/value saved at +0x440..+0x443; also appends an error record",
+    "conclusion": "VERIFICADO: tracking-close error 0x1781c(6,1,0x20,phase) can set this inhibit bit. NO VERIFICADO: direct Silent selector relationship"
+  },
+  "dma_source": {
+    "a6300_chain": "0x24d1a -> 0x1d48a -> 0x90fc -> literal0x93c0+4 = 0x40023004",
+    "destination": "buffer0x20003640, one word (4 bytes) in the inspected rearm path",
+    "interpretation": "Source is peripheral register0x40023004, not proven ADC sample data. Counter/timestamp inferred from surrounding arithmetic; exact block and timing units unverified"
+  },
+  "next": ["Follow P4C/P4D/P4E output patterns 0x248ee,0x24a4e,0x24b1e and equivalent A6000 functions", "Resolve CAIF remote endpoint using actual wire header, not logical opcode constant", "Resolve source register0x40023004 without assuming exact FM3 silicon model"]
+}

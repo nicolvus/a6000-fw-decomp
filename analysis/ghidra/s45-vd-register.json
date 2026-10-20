@@ -1,0 +1,75 @@
+{
+  "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "functions": [
+    {
+      "query": "43ad2bd6",
+      "raw64": "12045218c0f820227047c0f82412704712045218c0f834227047c0f838127047c0f844127047c0f858127047c0f800137047c0f810137047d0f83003c0f30d40",
+      "references": [
+        "From: 436c7750 To: 43ad2bd6 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT"
+      ],
+      "entry": "43ad2bd6",
+      "completed": true,
+      "pseudo_code": "\nvoid FUN_43ad2bd6(int param_1,int param_2,int param_3)\n\n{\n  *(int *)(param_1 + 0x220) \u003d param_3 * 0x10000 + param_2;\n  return;\n}\n\n",
+      "listing": [
+        "43ad2bd6 lsls r2,r2,#0x10",
+        "43ad2bd8 adds r2,r2,r1",
+        "43ad2bda str.w r2,[r0,#0x220]",
+        "43ad2bde bx lr"
+      ]
+    },
+    {
+      "query": "436c2270",
+      "raw64": "0148784400687047c66c7b00f0b587b0064603a814460d461f4609f030f703a88df81440039604958df815700af01afd044648b190f8f230bbb990f8f300d0f1",
+      "references": [
+        "From: 4383c59a To: 436c2270 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 4383c5a6 To: 436c2270 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 43ae9624 To: 436c2270 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 43ae962e To: 436c2270 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 43795e38 To: 436c2270 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 43ae964e To: 436c2270 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 43ae9426 To: 436c2270 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 43ae943c To: 436c2270 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 43ae9418 To: 436c2270 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 43aef252 To: 436c2270 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 438c8364 To: 436c2270 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 437f23f8 To: 436c2270 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 437b3c8c To: 436c2270 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 438c85b4 To: 436c2270 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 437b3916 To: 436c2270 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 43795f58 To: 436c2270 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 43795f64 To: 436c2270 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT"
+      ],
+      "entry": "436c2270",
+      "completed": true,
+      "pseudo_code": "\nundefined4 FUN_436c2270(void)\n\n{\n  return *(undefined4 *)(DAT_436c2278 + 0x436c2276);\n}\n\n",
+      "listing": [
+        "436c2270 ldr r0,[0x436c2278]",
+        "436c2272 add r0,pc",
+        "436c2274 ldr r0,[r0,#0x0]",
+        "436c2276 bx lr"
+      ]
+    },
+    {
+      "query": "436c28d0",
+      "raw64": "024b034a7b449b58186870470cc6950048020000826ea2f10e030a2b05d8044b7b449b1813f80e0c70470020704700bfd1de5c00204a10b57a44204c1259c0f8",
+      "references": [
+        "From: 436c5588 To: 436c28d0 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 436c609a To: 436c28d0 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 436c77a4 To: 436c28d0 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 43acd15c To: 436c28d0 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT",
+        "From: 438c8368 To: 436c28d0 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT"
+      ],
+      "entry": "436c28d0",
+      "completed": true,
+      "pseudo_code": "\nundefined4 FUN_436c28d0(void)\n\n{\n  return **(undefined4 **)(DAT_436c28dc + 0x436c28d8 + DAT_436c28e0);\n}\n\n",
+      "listing": [
+        "436c28d0 ldr r3,[0x436c28dc]",
+        "436c28d2 ldr r2,[0x436c28e0]",
+        "436c28d4 add r3,pc",
+        "436c28d6 ldr r3,[r3,r2]",
+        "436c28d8 ldr r0,[r3,#0x0]",
+        "436c28da bx lr"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+// S52 A7S 3.20: tipo Silent / captura+0x748 / clase de obturación -> CAIF, sensor. Aristas verificadas por LLVM salvo style=dashed (INFERENCIA/NO VERIFICADO).
+digraph s52_a7s_shutter_class {
+  rankdir=LR; node [shape=box, fontname="monospace", fontsize=9];
+  setting [label="ajuste Silent\n[*0x43ea70a0]+0x250"];
+  conv [label="conversor 0x4379ec04\n{0,2}"];
+  w [label="0x43813d90\ncap+0x78c=tipo\ntipo==2 -> cap+0x748=1\n(0x43813ea2)"];
+  vdpre [label="VD_Pre 0x437b65a0\n-> 0x43eaaac0"];
+  sel [label="selector drive_mode 0x43826d58\n0x4e/0x4f"];
+  pkt [label="constructor paquete ev1 0x43862e24\n+0x12|=0x20, +0xd=2<<6 (tipo 2)\n+1 = 2 si clase 0/3"];
+  pol [label="política 0x438649bc\nG=0x43f06bc8\nG+0x5c clase=0, G+0x60=0"];
+  get [label="getter 0x43864c74\n-> 0x43f04c8c (0x43861bfc)"];
+  ev3a [label="0x438627d2\nclase 1/3 -> 0x43aed4ba\n-> 0x437c3114 msg 3/0x22"];
+  rec [label="registro +0x69 (0x43863478)\ncopia 0x43862158 -> param+9\n= cap+0x651"];
+  setexp [label="0x438b7728 -> SetExposure 0x436f2938\n-> IMX235 0x436f4168 ShutMode"];
+  sensor [label="IMX235 (registros logicos)", shape=ellipse];
+  send [label="emisor CAIF 0x4379b590\nev1 22B / ev3 tag 0x12"];
+  wait [label="receptor CAIF 0x4379b6ac"];
+  c8 [label="etapa 0xc8 0x438b1cac\nif 748==0: wait ev3 (0x438be5f8)"];
+  c9 [label="etapa 0xc9 0x43b1c920\nif 748==1: wait ev3; send ev5"];
+  rex [label="ReadExecuteBase 0x438b6d70\nif 748==0: wait 0x800000 (0x438be76c)"];
+  tail [label="cola 0x108 0x438b8054\nif 748==0: post(2,1), 0x43b1d5de"];
+  catask [label="tarea CA (A7S no trazada)\nA6000 0x436bc140->0x436b93b0"];
+  gpio [label="GPIO 0x43b585b6 -> 0x4397d4c0\n1<<bit @0xf2910048+banco*0x100"];
+  darwin [label="MCU obturador darwin_core.bin\n(parser no localizado)", shape=ellipse];
+  coils [label="P4D/P4E bobinas cortina", shape=ellipse];
+
+  setting -> conv -> w; setting -> vdpre [label="0x437b6f74"]; vdpre -> conv [style=dotted];
+  w -> sel [label="cap+0x78c"]; w -> pkt [label="cap+0x78c (r6+0x76c)"];
+  w -> pol [label="banco+0x404=cap+0x78c\n(0x43862f1c)"];
+  pkt -> pol [label="bl 0x438630a8"]; pol -> get -> ev3a; get -> pkt [label="0x43863146"]; get -> rec -> setexp -> sensor;
+  pkt -> send [label="ev1 (paquete +0x40)"];
+  w -> c8 [label="cap+0x748"]; w -> c9; w -> rex; w -> tail;
+  c8 -> wait; c9 -> wait; c9 -> send [label="ev5"]; rex -> wait [label="flag via cb 0x43b1e3e4"];
+  send -> catask [label="tag 0x12 (ev3)"]; catask -> gpio [style=dashed, label="A6000 verificado"];
+  send -> darwin [style=dashed, label="serie CA (INFERENCIA)"]; gpio -> darwin [style=dashed];
+  darwin -> coils [style=dashed, label="NO VERIFICADO A7S"];
+}

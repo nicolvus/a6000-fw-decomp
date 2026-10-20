@@ -1,0 +1,61 @@
+{
+  "result": "PASS",
+  "source_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "project_unchanged": true,
+  "direct_helper_calls": [
+    {
+      "site": "4355164a",
+      "target": "43814ea0",
+      "kind": "BL"
+    },
+    {
+      "site": "435536be",
+      "target": "43814ea0",
+      "kind": "BL"
+    },
+    {
+      "site": "435557de",
+      "target": "43814ea0",
+      "kind": "BL"
+    }
+  ],
+  "exported_queries": 116,
+  "findings": [
+    {
+      "status": "VERIFICADO",
+      "finding": "Tres BL al helper: 4355164a / 435536be / 435557de; ninguno directo desde VD_Post o VD_Drive."
+    },
+    {
+      "status": "VERIFICADO",
+      "finding": "Programaci\u00f3n MMIO seguida de kick 0/1 s\u00edncrono en el productor Image; kick en banco ...0400 +0x100."
+    },
+    {
+      "status": "PARCIAL",
+      "finding": "Ruta VD_Sequence demostrada; selector tambi\u00e9n permite categor\u00eda HS para dos productores. No exclusividad universal de fase."
+    },
+    {
+      "status": "VERIFICADO",
+      "finding": "Evento Drive 0x80 inmediato precede Sequence en varias ramas; en modo diferido procede del temporizador 4, no de DMA demostrado."
+    },
+    {
+      "status": "VERIFICADO",
+      "finding": "Registrador de cuatro callbacks DFE y cuatro conversiones de causa resueltos; Handler1 solo cuenta/loguea."
+    },
+    {
+      "status": "INFERENCIA",
+      "finding": "Kick 0/1 compatible con lanzamiento/rearme APL; efecto f\u00edsico y latch por VD sin especificaci\u00f3n recuperada."
+    },
+    {
+      "status": "NO_VERIFICADO",
+      "finding": "Cuadro f\u00edsico propio/siguiente, APL->IRQ de fin->EC/LM y cierre inicio-exposici\u00f3n/DMA/fin-exposici\u00f3n."
+    }
+  ],
+  "unresolved_or_exploratory": [
+    "436cfafa and 436cfb46 are interiors of 436cfae0; 43796690 belongs to 437965ec; use complete entries.",
+    "436d47e0 is shared tail of 43ad6d74; pseudocode has unaff registers. Relevant condition-building instructions must be used, not speculative prototypes.",
+    "43659fce was a string-xref interior interpreted as temporary function, not a valid complete CallbackApl entry; excluded from conclusions.",
+    "436cf7d0 and 43814e00 returned no_function (literal pools); no evidence of executable functions there.",
+    "Apl End string 43cb3b0c has no recovered xref in this project; neighboring enum-converter queries do not prove completion. SDF ExecCallBackApl is a separate path without proven bank identity."
+  ],
+  "scope": "Static Thumb BL/B.W scan, absolute pointer scan, T1 literal-LDR plus ADD-PC candidates, Ghidra xrefs and conditional callback routing. Does not prove universal computed-call completeness or physical frame timing."
+}

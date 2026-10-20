@@ -1,0 +1,5 @@
+model,artifact_sha256,source,address_or_offset,register_or_field,value_or_sequence,interpretation,classification,reproduce
+A7S IMX235,b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e,av-cam string,0x43c9c87a,SHR,SetExposure:SHR = %d,exposure argument logged by firmware; register address and bit meaning unknown,VERIFICADO,strings -a -td av-cam.bin
+A7S IMX235,b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e,av-cam string,0x43c9cdd5,controller,C_ImagerCtrl_IMX235,controller-specific register programming is present but table address not recovered,VERIFICADO,strings -a -td av-cam.bin
+A6000 IMX210,b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9,docs/capture/imx210-video-readout.md,0x43fe9b74,mode table,59 rows x 20 bytes; u16 register IDs 0x000..0x155 plus 13 mode bytes,configuration table; electrical semantics not public,VERIFICADO,python3 -I scripts/imx210_modes.py
+A6000 IMX210,b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9,docs/capture/imx210-video-readout.md,0x436d6f6c,SetExposure,vtable +0x28,exposure method,VERIFICADO,python3 -I scripts/imx210_modes.py

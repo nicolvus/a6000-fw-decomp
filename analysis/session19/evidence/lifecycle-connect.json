@@ -1,0 +1,31 @@
+{
+  "session": 19,
+  "run_number": 2,
+  "task_id": "S19-02",
+  "firmware": "A6000 FW 3.21",
+  "method": "llvm-objdump -d --triple=thumbv7-linux-gnueabi; readelf relocations; raw little-endian vtable words",
+  "findings": [
+    {"status": "VERIFICADO", "file": "libBizFw2.so", "address": "0x2bf1c", "claim": "UObjPin::Connect passes this+8, destination and viewer to MWF ObjPin::Connect PLT 0x20588."},
+    {"status": "VERIFICADO", "file": "libBizFw2.so", "address": "0x43ee4", "claim": "R_ARM_JUMP_SLOT resolves the MWF ObjPin::Connect PLT entry."},
+    {"status": "VERIFICADO", "file": "libMWF.so", "address": "0x29588", "claim": "Generic Connect validates non-null/non-self, matching pin type and compatible direction, then assigns destination; no pre-existing-destination rejection was observed."},
+    {"status": "VERIFICADO", "file": "libInfraCacheMgr.so", "address": "0x1c0d0", "claim": "Wrapper invokes MWF Connect through 0xca40 when byte this+0x15 is clear; otherwise it defers."},
+    {"status": "VERIFICADO", "file": "libInfraScalarMpr.so", "address": "0x2a174", "claim": "Equivalent wrapper invokes MWF Connect through 0x1540c when not deferred."},
+    {"status": "VERIFICADO", "file": "libmprctrl.so", "address": "0x1f580", "claim": "Equivalent wrapper invokes MWF Connect through 0xef3c when not deferred."},
+    {"status": "VERIFICADO", "file": "libBizFw.so", "address": "0x42b5e", "claim": "BizObjPin::Connect adjusts this by four bytes and tail-branches through the imported MWF Connect PLT."},
+    {"status": "VERIFICADO", "file": "libObj.so", "address": "0x419652", "claim": "TM::createLifeCycles allocates, constructs LifeCycle at 0x41b6c0 and registers the result via 0x419028."},
+    {"status": "VERIFICADO", "file": "libObj.so", "address": "0xcc6698", "claim": "Itanium vtable address point has Thumb slots 0x41b605, 0x41b649 and 0x41b65d."},
+    {"status": "INFERENCIA", "file": "libObj.so", "address": "0x416faa", "claim": "Direct caller into 0x41b728 is activation/dispatch-like, but the function name Activate is not retained."},
+    {"status": "NO_VERIFICADO", "file": "libObj.so", "address": "0x4195c0..0x4196f0", "claim": "No proven data-flow edge from the created LifeCycle or its observed vtable slots to either Connect PLT exists."},
+    {"status": "DESCARTADO", "file": "libObj.so", "address": "0xcc6694", "claim": "A vtable/static callback is not proof that a callback executes or that it connects pins."}
+  ],
+  "binary_sha256": {
+    "libBizFw.so": "5065aa52ac05d3a7de24945a2c7be65c18394b7c9e02ab605476a0afa8fb8a8e",
+    "libBizFw2.so": "e2fb58e42d1e471e0066e18281f9557bc0a6503ecac7c705633e211c5d00738e",
+    "libInfraCacheMgr.so": "0ec2044d5fabfb594b5cebacce141cbb3f4f39dd7fe6cb9980eac69c10d6456e",
+    "libInfraScalarMpr.so": "b56b4c6172a60b879ebf405bc64e19e7456d230ff6125a21bbd4469e35c0d2c9",
+    "libmprctrl.so": "514e14116caa1d15d75bd56641dabfe815f620b6208008929c44d8d70386011d",
+    "libObj.so": "8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a",
+    "libMWF.so": "2a7f469ac7aa49c1f04f666ede0c26604b78bd31608ee22650ac0d2bd26a0934"
+  },
+  "safety": "Static read-only analysis only. No original binary altered, no camera connected/flashed, and no SilentShutter functionality claim."
+}

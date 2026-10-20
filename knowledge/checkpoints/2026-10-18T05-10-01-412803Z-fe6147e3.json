@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "id": "2026-10-18T05-10-01-412803Z-fe6147e3",
+  "created_at": "2026-10-18T05-10-01-412803Z",
+  "goal": "Implementar sistema de conocimiento/memoria/recuperación para Sony A6000 (fases 1-8 del plan del usuario)",
+  "done": [
+    "Fase 1: indexador FTS5 incremental validado",
+    "Fase 2: índice jerárquico documents/nodes",
+    "Fase 3: grafo CALLS/CORRECTS/SUPERSEDES con procedencia",
+    "Fase 4: CONTEXT.md reducido con respaldo SHA-256 verificado + CORRECTIONS/OPEN-QUESTIONS/STATE.md",
+    "Fase 5: enrutador de recuperación adaptativa (ask)",
+    "Fase 6: servidor MCP de solo lectura (9 tools) + .mcp.json",
+    "Fase 7: 4 skills canónicas Claude + symlinks Codex",
+    "Fase 8: checkpoints estructurados (este mismo)"
+  ],
+  "files": [
+    "scripts/knowledge/index_docs.py",
+    "scripts/knowledge/search.py",
+    "scripts/knowledge/build_graph.py",
+    "scripts/knowledge/export_corrections.py",
+    "scripts/knowledge/mcp_server.py",
+    "scripts/knowledge/checkpoint.py",
+    "CONTEXT.md",
+    "docs/STATE.md",
+    "docs/CORRECTIONS.md",
+    "docs/OPEN-QUESTIONS.md",
+    ".claude/skills/* (4)",
+    ".agents/skills/* (4 symlinks)",
+    ".mcp.json",
+    "CLAUDE.md",
+    "AGENTS.md"
+  ],
+  "findings": [
+    "Bug de proximidad: ventana de sección completa generaba 410 relaciones falsas; corregido a nivel de línea (31-39 reales)",
+    "Bug de autocontaminación: docs/CORRECTIONS.md generaba relaciones circulares consigo mismo; corregido con GENERATED_DOCS",
+    "Bug de orden: dos checkpoints en el mismo segundo se ordenaban por UUID aleatorio, no por creación; corregido con microsegundos"
+  ],
+  "evidence": [
+    "knowledge/PROGRESS.md fases 3-8"
+  ],
+  "corrections": [
+    "CONTEXT.md histórico íntegro preservado en docs/history/, hash SHA-256 verificado idéntico"
+  ],
+  "tests": [
+    "pytest tests/knowledge -q -> 22 passed",
+    "ruff check scripts/knowledge tests/knowledge -> sin avisos",
+    "mypy scripts/knowledge --ignore-missing-imports -> sin avisos"
+  ],
+  "blockers": [
+    "Fase 7: descubrimiento en caliente de skills no verificable desde esta sesión (listado cargado antes de crear los archivos; Codex no disponible aquí)",
+    "Sin extractores de grafo para esquemas JSON distintos a dossiers.json (GPIO/IMX210/REA)"
+  ],
+  "next_actions": [
+    "Fase 9: benchmarks reales (ripgrep/FTS5/grafo/ask) con consultas de referencia IMX210/EFCS/Darwin/GPIO/S19-S30",
+    "Fase 10: validación final integral"
+  ],
+  "permissions_state": "venv aislado con mcp/ruff/mypy/pytest instalado, autorizado por el usuario; sin git push; sin firmware ejecutado"
+}

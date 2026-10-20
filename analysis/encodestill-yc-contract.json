@@ -1,0 +1,250 @@
+{
+  "sesion": 13,
+  "alcance": "Contrato de entrada que Execute (ObjStillRecorder, ELF 0x90b248) exige y que pasa a MprIf::EncodeStill. Solo analisis estatico. ELF salvo que se indique (Ghidra = ELF + 0x10000).",
+  "resumen": "EncodeStill NO recibe formato de pixel, stride ni submuestreo. Recibe un RegionInfo de 0x40 B con: buffer 'dec' y buffer 'yc' (cada uno {unitType u32, handle DMM u16, phys u32, offset 0, size = suma de extents}), color de fondo, lienzo (w,h u16), region/layout, rango Y y colorimetria. El formato esta implicito en el tipo de unidad DMM/SDS y en el lienzo.",
+  "mensaje_entrada_execute": {
+    "contenedor": "0x10000006 (tipo 0x29) dentro del mensaje 0x10000005",
+    "grupos": {
+      "0x1017": {
+        "0x1018": "struct 12 B {u16 handle, u32 unitType, u32 physTop} = ycBufferInfo",
+        "0x1072": "colorimetria u32, valida {0,1,2,3}, si no error 0xae8",
+        "0x1073": "rango Y u32, valido {0,1}, si no error 0xb02"
+      },
+      "0x1031": {
+        "0x1032": "struct 12 B decBufferInfo (mismo formato que 0x1018)",
+        "0x1034": "3 B color de fondo Y,Cb,Cr",
+        "0x1035": "1 B flag layout",
+        "0x1036": "4 B canvas {w u16,h u16}",
+        "0x1038": "4 B region {w,h} (solo si flag)",
+        "0x1037": "4 B layout {left,top} (solo si flag)"
+      },
+      "0x1041": {
+        "0x1042": "ExifMemInfo 0x18 B",
+        "0x1043": "GPS 0x90 B (se reenvia como 0x1007)",
+        "0x1044": "CamInfo 0x88 B (se reenvia como 0x1006)",
+        "0x1045": "0x40 B (uso NO VERIFICADO)",
+        "0x1046": "fecha 10 B"
+      }
+    },
+    "fuente": "decompilado FUN_0091ad20 (analysis/ghidra/libobj-100b-prod.json) y volcador PrintPlayDataParam ELF 0x906984"
+  },
+  "validaciones_en_execute_prep_0x90ad20": [
+    {
+      "que": "GetParam(0x1018) presente",
+      "error": "0xacc (sev 2)",
+      "estado": "VERIFICADO"
+    },
+    {
+      "que": "abrir el handle de ycBufferInfo (llamada Ghidra func_0x000ebe2c = PLT ELF 0xdbe2c, nombre 'DmmOpen' por contexto) devuelve != NULL",
+      "error": "0xab2 (sev 4)",
+      "estado": "VERIFICADO (la comprobacion); nombre de la funcion INFERENCIA"
+    },
+    {
+      "que": "colorimetria in {0,1,2,3}",
+      "error": "0xae8",
+      "estado": "VERIFICADO"
+    },
+    {
+      "que": "yRange in {0,1}",
+      "error": "0xb02",
+      "estado": "VERIFICADO"
+    },
+    {
+      "que": "GetParam(0x1032) presente y DmmOpen(handle decBufferInfo) != NULL",
+      "error": "0xb34 / 0xb1a",
+      "estado": "VERIFICADO"
+    },
+    {
+      "que": "0x1034 (3 B), 0x1035 (1 B), 0x1036 (4 B) presentes; si flag!=0 tambien 0x1038 y 0x1037",
+      "error": "0xb44, 0xb50, 0xb5e, 0xb70, 0xb7f",
+      "estado": "VERIFICADO"
+    },
+    {
+      "que": "UtilStillSize::GetStillTargetSize(modo==Pbcap, region w/h, this+0x130, &main,&b,&c, flag) devuelve true",
+      "error": "7 (0xbbe)",
+      "estado": "VERIFICADO (la funcion; sus tablas NO decodificadas)"
+    },
+    {
+      "que": "ranura de grabacion slot +0x34/+0x40 != 0 salvo MediaMgr+0x2C==4",
+      "error": "ver pool-write-completion.md",
+      "estado": "VERIFICADO (sesion 12)"
+    }
+  ],
+  "no_hay_validacion_de": [
+    "formato de pixel",
+    "stride/pitch",
+    "alineacion de ancho/alto",
+    "submuestreo",
+    "orientacion (viene aparte en la ruta de escritura)",
+    "tamano minimo del buffer frente a canvas*bpp"
+  ],
+  "region_info_0x40": {
+    "fuente": "pila de FUN_0091ad20 (e8..ac) + volcado MprIfLog::EncodeStill (ELF 0x727718) + copia de 16 palabras en FeaIf::EncodeStill (ELF 0x44f834)",
+    "campos": [
+      {
+        "off": "0x00",
+        "tam": 4,
+        "campo": "dec.unitType",
+        "estado": "VERIFICADO"
+      },
+      {
+        "off": "0x04",
+        "tam": 2,
+        "campo": "dec.unitHandle (u16 DMM)",
+        "estado": "VERIFICADO"
+      },
+      {
+        "off": "0x08",
+        "tam": 4,
+        "campo": "dec.unitPhyAddr",
+        "estado": "VERIFICADO"
+      },
+      {
+        "off": "0x0c",
+        "tam": 4,
+        "campo": "dec.offset (siempre 0 en Execute)",
+        "estado": "VERIFICADO"
+      },
+      {
+        "off": "0x10",
+        "tam": 4,
+        "campo": "dec.size = suma de tamanos de extents del DMM",
+        "estado": "VERIFICADO"
+      },
+      {
+        "off": "0x14",
+        "tam": 3,
+        "campo": "outBgColor Y,Cb,Cr (de 0x1034)",
+        "estado": "VERIFICADO"
+      },
+      {
+        "off": "0x17",
+        "tam": 1,
+        "campo": "b_isEnableLayout (de 0x1035)",
+        "estado": "VERIFICADO"
+      },
+      {
+        "off": "0x18",
+        "tam": 4,
+        "campo": "canvasRectSize {w,h} u16 (de 0x1036)",
+        "estado": "VERIFICADO"
+      },
+      {
+        "off": "0x1c",
+        "tam": 4,
+        "campo": "regionLayout {left,top} (de 0x1037, 0 si flag=0)",
+        "estado": "VERIFICADO"
+      },
+      {
+        "off": "0x20",
+        "tam": 4,
+        "campo": "regionLayout {width,height} (de 0x1038, 0 si flag=0)",
+        "estado": "VERIFICADO"
+      },
+      {
+        "off": "0x24",
+        "tam": 4,
+        "campo": "yc.unitType",
+        "estado": "VERIFICADO"
+      },
+      {
+        "off": "0x28",
+        "tam": 2,
+        "campo": "yc.unitHandle (u16 DMM)",
+        "estado": "VERIFICADO"
+      },
+      {
+        "off": "0x2c",
+        "tam": 4,
+        "campo": "yc.unitPhyAddr",
+        "estado": "VERIFICADO"
+      },
+      {
+        "off": "0x30",
+        "tam": 4,
+        "campo": "yc.offset (0)",
+        "estado": "VERIFICADO"
+      },
+      {
+        "off": "0x34",
+        "tam": 4,
+        "campo": "yc.size = suma de extents",
+        "estado": "VERIFICADO"
+      },
+      {
+        "off": "0x38",
+        "tam": 4,
+        "campo": "outputYRange (0/1)",
+        "estado": "VERIFICADO (orden de pila)"
+      },
+      {
+        "off": "0x3c",
+        "tam": 4,
+        "campo": "colorimetry (0..3)",
+        "estado": "VERIFICADO (orden de pila)"
+      }
+    ]
+  },
+  "encode_still_param_8_palabras": [
+    {
+      "idx": 0,
+      "campo": "RegionInfo* (0x40 B)"
+    },
+    {
+      "idx": 1,
+      "campo": "T_LTM* recDate (10 B)"
+    },
+    {
+      "idx": 2,
+      "campo": "SQuality / ImageSize+Quality (copia de this+0x130)"
+    },
+    {
+      "idx": 3,
+      "campo": "targetSize #1 (de UtilStillSize, orden exacto Main/Thumb/Scn NO VERIFICADO)"
+    },
+    {
+      "idx": 4,
+      "campo": "targetSize #2"
+    },
+    {
+      "idx": 5,
+      "campo": "targetSize #3"
+    },
+    {
+      "idx": 6,
+      "campo": "StillMetaAreaInfo* (0x18 B: {const,u16 handle,u32 map,u32 off,u32 size,u32})"
+    },
+    {
+      "idx": 7,
+      "campo": "JpgInfo* (tabla 0x100b convertida a 12 B/entrada por 0x8175e0)"
+    }
+  ],
+  "transporte_a_libmpr": "MprCtrl 0x8fe6f8 -> MprIf::EncodeStill(EncodeStillParam*) ELF 0x71cf58 -> MprIfLog::EncodeStill (volcado) -> FeaIf::EncodeStill ELF 0x44f834: copia los 16+10B+4+6+... palabras a un mensaje y lo envia por this+4 (vtable+0x18/+0x20) a un servicio FEA; el codificador real NO esta en libObj/libmpr (NO VERIFICADO donde)",
+  "semantica_unitType": {
+    "estado": "INFERENCIA",
+    "evidencia": "InfStillEncoder/InfDecoder/InfBase de libObj registran 'inputYcSdsUnitType / Handle / DataOffset' y envian MSG_ID_SDF_ENCODE_JPEG al SDF; ObjEffect usa 'Input YC.unitType / Sds.unitType'; ObjRenderer reserva 'L_PRM_MMGR_UNIT_MEM_HANDLE_YCC_CAP'. El YC es una unidad SDS gestionada por el MMGR (DmmOpen/unit handle).",
+    "pendiente": "valores numericos de unitType y disposicion de planos Y/C dentro de la unidad"
+  },
+  "propiedad_y_vida_util": {
+    "VERIFICADO": "Execute abre el handle con DmmOpen, suma extents y lo cierra al preparar; al final solo libera la correspondencia de salida (0x91acf8). No se observa liberacion del YC de entrada en 0x90ad20.",
+    "INFERENCIA": "el productor conserva la propiedad (ObjRenderer libera YCC_CAP en su orden Stop: 'L_PRM_MMGR_UNIT_MEM_HANDLE_YCC_CAP Free Err')",
+    "NO_VERIFICADO": "si FEA lee el YC de forma asincrona tras volver MprCtrl; coherencia de cache"
+  },
+  "tamanos_salida": {
+    "reservas_0x90a810_bytes": [
+      "0x173762",
+      "0x84d6d",
+      "0x50d17",
+      "0x170d0c",
+      "0x170d0b"
+    ],
+    "relacion_con_los_6_descriptores_activos": "NO VERIFICADO (indices 0,1,4 comparten el buffer #0/#1; 8 mainJpg usa #2; 9 thumJpg #3; 10 screenNail #4 segun orden de volcado)",
+    "tamanos_Pbcap_en_cadenas": [
+      "1920x1080",
+      "640x360",
+      "640x480"
+    ],
+    "nota": "DefStruct::PBCAP_SIZE_1920_1080/640_360/640_480 existen como cadenas; su relacion con el canvas que Execute recibe NO esta verificada"
+  },
+  "correccion_sesion_14": "Las reservas de salida 0x173762/0x84d6d/0x50d17/0x170d0c/0x170d0b son tipos de unidad DMM (no bytes); ver docs/capture/yc-unit-types-and-layout.md. ObjHandover no es la topologia: ver objhandover-2a-topology.md."
+}

@@ -1,0 +1,394 @@
+ELF firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so
+SHA256 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30
+LLVM (http://llvm.org/):
+COMMAND llvm-objdump -d --triple=thumbv7-linux-gnueabi --no-show-raw-insn --start-address=0x13dbb0 --stop-address=0x13dbbc /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so
+
+/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+00120228 <.text>:
+  13dbb0:      	push	{r7, lr}
+  13dbb2:      	add	r7, sp, #0x0
+  13dbb4:      	pop.w	{r7, lr}
+  13dbb8:      	b.w	0x11e3f8 <_ZN5MprIf24CancelPlayHighlightMovieEv@plt+0xc> @ imm = #-0x1f7c4
+
+COMMAND llvm-objdump -d --triple=thumbv7-linux-gnueabi --no-show-raw-insn --start-address=0x13de98 --stop-address=0x13df58 /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so
+
+/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+00120228 <.text>:
+  13de98:      	push	{r4, r5, r7, lr}
+  13de9a:      	sub	sp, #0x40
+  13de9c:      	mov	r4, r2
+  13de9e:      	add	r7, sp, #0x40
+  13dea0:      	mov	r3, r0
+  13dea2:      	cmp	r0, #0x0
+  13dea4:      	bne	0x13df00 <.text+0x1dcd8> @ imm = #0x58
+  13dea6:      	b	0x13df10 <.text+0x1dce8> @ imm = #0x66
+  13dea8:      	ldr	r5, [pc, #0x68]         @ 0x13df14 <.text+0x1dcec>
+  13deaa:      	ldrh.w	r0, [r5, r0, lsl #1]
+  13deae:      	str	r2, [sp]
+  13deb0:      	ldr	r2, [pc, #0x64]         @ 0x13df18 <.text+0x1dcf0>
+  13deb2:      	ldr	r2, [r2]
+  13deb4:      	str	r3, [sp, #0x8]
+  13deb6:      	movs	r3, #0x4
+  13deb8:      	str	r1, [sp, #0xc]
+  13deba:      	movs	r1, #0xc8
+  13debc:      	str	r2, [sp, #0x4]
+  13debe:      	movs	r2, #0x0
+  13dec0:      	str	r2, [sp, #0x10]
+  13dec2:      	str	r2, [sp, #0x14]
+  13dec4:      	str	r2, [sp, #0x18]
+  13dec6:      	str	r2, [sp, #0x1c]
+  13dec8:      	str	r2, [sp, #0x20]
+  13deca:      	str	r2, [sp, #0x24]
+  13decc:      	str	r2, [sp, #0x28]
+  13dece:      	str	r2, [sp, #0x2c]
+  13ded0:      	str	r2, [sp, #0x30]
+  13ded2:      	str	r2, [sp, #0x34]
+  13ded4:      	str	r2, [sp, #0x38]
+  13ded6:      	bl	0x13f0cc <.text+0x1eea4> @ imm = #0x11f2
+  13deda:      	cbz	r4, 0x13df10 <.text+0x1dce8> @ imm = #0x32
+  13dedc:      	mov	r0, r4
+  13dede:      	blx	0x11eef4 <strlen@plt>   @ imm = #-0x1efec
+  13dee2:      	mov	r3, r4
+  13dee4:      	b	0x13deea <.text+0x1dcc2> @ imm = #0x2
+  13dee6:      	adds	r3, #0x1
+  13dee8:      	subs	r0, #0x1
+  13deea:      	cmp	r0, #0x14
+  13deec:      	bgt	0x13dee6 <.text+0x1dcbe> @ imm = #-0xa
+  13deee:      	movw	r0, #0x105d
+  13def2:      	movs	r1, #0xc8
+  13def4:      	movs	r2, #0x0
+  13def6:      	mov	sp, r7
+  13def8:      	pop.w	{r4, r5, r7, lr}
+  13defc:      	b.w	0x13f08c <.text+0x1ee64> @ imm = #0x118c
+  13df00:      	ldr	r2, [pc, #0x18]         @ 0x13df1c <.text+0x1dcf4>
+  13df02:      	ldr	r2, [r2]
+  13df04:      	subs	r0, r2, #0x1
+  13df06:      	cmp	r0, #0x11
+  13df08:      	bls	0x13dea8 <.text+0x1dc80> @ imm = #-0x64
+  13df0a:      	movw	r0, #0x105c
+  13df0e:      	b	0x13deae <.text+0x1dc86> @ imm = #-0x64
+  13df10:      	mov	sp, r7
+  13df12:      	pop	{r4, r5, r7, pc}
+  13df14:      	ldr	r6, [r7, #0x4c]
+  13df16:      	lsls	r2, r7, #0x1
+  13df18:      	lsls	r4, r0, #0x8
+  13df1a:      	lsls	r6, r3, #0x2
+  13df1c:      	lsrs	r0, r7, #0xd
+  13df1e:      	lsls	r6, r3, #0x2
+  13df20:      	push	{r4, r5, r7, lr}
+  13df22:      	movs	r5, #0x11
+  13df24:      	ldr	r4, [pc, #0x28]         @ 0x13df50 <.text+0x1dd28>
+  13df26:      	add	r7, sp, #0x0
+  13df28:      	str	r5, [r4]
+  13df2a:      	movw	r5, #0x1010
+  13df2e:      	ldr	r4, [pc, #0x24]         @ 0x13df54 <.text+0x1dd2c>
+  13df30:      	str	r5, [r4]
+  13df32:      	blx	0x11f9f8 <_ZN9MprFileIf13WriteAndFlushEPvPKvmPm@plt> @ imm = #-0x1e53c
+  13df36:      	movw	r1, #0x789
+  13df3a:      	movs	r2, #0x0
+  13df3c:      	mov	r5, r0
+  13df3e:      	bl	0x13de98 <.text+0x1dc70> @ imm = #-0xaa
+  13df42:      	movs	r3, #0x0
+  13df44:      	mov	r0, r5
+  13df46:      	str	r3, [r4]
+  13df48:      	pop.w	{r4, r5, r7, lr}
+  13df4c:      	b.w	0x13dbb0 <.text+0x1d988> @ imm = #-0x3a0
+  13df50:      	lsrs	r0, r7, #0xd
+  13df52:      	lsls	r6, r3, #0x2
+  13df54:      	lsls	r4, r0, #0x8
+  13df56:      	lsls	r6, r3, #0x2
+
+COMMAND llvm-objdump -d --triple=thumbv7-linux-gnueabi --no-show-raw-insn --start-address=0x13ef58 --stop-address=0x13f088 /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so
+
+/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+00120228 <.text>:
+  13ef58:      	push	{r7, lr}
+  13ef5a:      	movs	r3, #0x0
+  13ef5c:      	add	r7, sp, #0x0
+  13ef5e:      	str	r3, [r2]
+  13ef60:      	pop	{r7, pc}
+  13ef62:      	movs	r0, r0
+  13ef64:      	push.w	{r4, r5, r6, r7, r8, r9, r10, r11, lr}
+  13ef68:      	sub	sp, #0x2c
+  13ef6a:      	add	r7, sp, #0x0
+  13ef6c:      	str	r2, [r7, #0x20]
+  13ef6e:      	str	r3, [r7, #0x1c]
+  13ef70:      	ldr	r2, [r7, #0x6c]
+  13ef72:      	ldr	r3, [r7, #0x70]
+  13ef74:      	ldr.w	r11, [r7, #0x50]
+  13ef78:      	str	r2, [r7, #0x18]
+  13ef7a:      	str	r3, [r7, #0x14]
+  13ef7c:      	ldr	r2, [r7, #0x74]
+  13ef7e:      	ldr	r3, [r7, #0x78]
+  13ef80:      	ldr.w	r10, [r7, #0x54]
+  13ef84:      	str	r2, [r7, #0x10]
+  13ef86:      	str	r3, [r7, #0xc]
+  13ef88:      	ldr	r2, [r7, #0x7c]
+  13ef8a:      	ldr.w	r3, [r7, #0x80]
+  13ef8e:      	ldr.w	r9, [r7, #0x58]
+  13ef92:      	ldr.w	r8, [r7, #0x5c]
+  13ef96:      	ldr	r6, [r7, #0x60]
+  13ef98:      	ldr	r5, [r7, #0x64]
+  13ef9a:      	ldr	r4, [r7, #0x68]
+  13ef9c:      	str	r2, [r7, #0x8]
+  13ef9e:      	str	r3, [r7, #0x4]
+  13efa0:      	str	r1, [r7, #0x24]
+  13efa2:      	cmp	r1, #0x0
+  13efa4:      	beq	0x13f07e <.text+0x1ee56> @ imm = #0xd6
+  13efa6:      	ldr	r3, [pc, #0xe0]         @ 0x13f088 <.text+0x1ee60>
+  13efa8:      	ldr	r3, [r3]
+  13efaa:      	cmp	r3, r0
+  13efac:      	blt	0x13f07e <.text+0x1ee56> @ imm = #0xce
+  13efae:      	subs	r3, r0, #0x1
+  13efb0:      	cmp	r3, #0x6
+  13efb2:      	bhi	0x13efc0 <.text+0x1ed98> @ imm = #0xa
+  13efb4:      	tbb	[pc, r3]
+  13efb8:      	adds	r1, #0x2c
+  13efba:      	subs	r3, #0x36
+  13efbc:      	subs	r3, #0x3b
+  13efbe:      	movs	r3, r7
+  13efc0:      	bl	0x128678 <.text+0x8450> @ imm = #-0x1694c
+  13efc4:      	tst.w	r0, #0x1
+  13efc8:      	beq	0x13f07e <.text+0x1ee56> @ imm = #0xb2
+  13efca:      	ldr	r3, [r7, #0x18]
+  13efcc:      	movs	r0, #0xd
+  13efce:      	ldr	r2, [r7, #0x14]
+  13efd0:      	str.w	r11, [r7, #0x50]
+  13efd4:      	str	r3, [r7, #0x6c]
+  13efd6:      	str	r2, [r7, #0x70]
+  13efd8:      	ldr	r3, [r7, #0x10]
+  13efda:      	ldr	r2, [r7, #0xc]
+  13efdc:      	str.w	r10, [r7, #0x54]
+  13efe0:      	str	r3, [r7, #0x74]
+  13efe2:      	str	r2, [r7, #0x78]
+  13efe4:      	ldr	r3, [r7, #0x8]
+  13efe6:      	ldr	r2, [r7, #0x4]
+  13efe8:      	str.w	r9, [r7, #0x58]
+  13efec:      	str	r3, [r7, #0x7c]
+  13efee:      	str.w	r2, [r7, #0x80]
+  13eff2:      	str.w	r8, [r7, #0x5c]
+  13eff6:      	str	r6, [r7, #0x60]
+  13eff8:      	str	r5, [r7, #0x64]
+  13effa:      	str	r4, [r7, #0x68]
+  13effc:      	ldr	r1, [r7, #0x24]
+  13effe:      	ldr	r2, [r7, #0x20]
+  13f000:      	ldr	r3, [r7, #0x1c]
+  13f002:      	add.w	r7, r7, #0x2c
+  13f006:      	mov	sp, r7
+  13f008:      	pop.w	{r4, r5, r6, r7, r8, r9, r10, r11, lr}
+  13f00c:      	b.w	0x1dc7c8 <_Z32FileAccCache_SetLogMprFileIfInfommmm+0xc380> @ imm = #0x9d7b8
+  13f010:      	bl	0x128678 <.text+0x8450> @ imm = #-0x1699c
+  13f014:      	tst.w	r0, #0x2
+  13f018:      	b	0x13f036 <.text+0x1ee0e> @ imm = #0x1a
+  13f01a:      	bl	0x128678 <.text+0x8450> @ imm = #-0x169a6
+  13f01e:      	tst.w	r0, #0x4
+  13f022:      	b	0x13f036 <.text+0x1ee0e> @ imm = #0x10
+  13f024:      	bl	0x128678 <.text+0x8450> @ imm = #-0x169b0
+  13f028:      	tst.w	r0, #0x8
+  13f02c:      	b	0x13f036 <.text+0x1ee0e> @ imm = #0x6
+  13f02e:      	bl	0x128678 <.text+0x8450> @ imm = #-0x169ba
+  13f032:      	tst.w	r0, #0x10
+  13f036:      	beq	0x13f07e <.text+0x1ee56> @ imm = #0x44
+  13f038:      	ldr	r3, [r7, #0x18]
+  13f03a:      	movs	r0, #0xd
+  13f03c:      	ldr	r2, [r7, #0x14]
+  13f03e:      	str.w	r11, [r7, #0x50]
+  13f042:      	str	r3, [r7, #0x6c]
+  13f044:      	str	r2, [r7, #0x70]
+  13f046:      	ldr	r3, [r7, #0x10]
+  13f048:      	ldr	r2, [r7, #0xc]
+  13f04a:      	str.w	r10, [r7, #0x54]
+  13f04e:      	str	r3, [r7, #0x74]
+  13f050:      	str	r2, [r7, #0x78]
+  13f052:      	ldr	r3, [r7, #0x8]
+  13f054:      	ldr	r2, [r7, #0x4]
+  13f056:      	str.w	r9, [r7, #0x58]
+  13f05a:      	str	r3, [r7, #0x7c]
+  13f05c:      	str.w	r2, [r7, #0x80]
+  13f060:      	str.w	r8, [r7, #0x5c]
+  13f064:      	str	r6, [r7, #0x60]
+  13f066:      	str	r5, [r7, #0x64]
+  13f068:      	str	r4, [r7, #0x68]
+  13f06a:      	ldr	r1, [r7, #0x24]
+  13f06c:      	ldr	r2, [r7, #0x20]
+  13f06e:      	ldr	r3, [r7, #0x1c]
+  13f070:      	add.w	r7, r7, #0x2c
+  13f074:      	mov	sp, r7
+  13f076:      	pop.w	{r4, r5, r6, r7, r8, r9, r10, r11, lr}
+  13f07a:      	b.w	0x1dc888 <_Z32FileAccCache_SetLogMprFileIfInfommmm+0xc440> @ imm = #0x9d80a
+  13f07e:      	add.w	r7, r7, #0x2c
+  13f082:      	mov	sp, r7
+  13f084:      	pop.w	{r4, r5, r6, r7, r8, r9, r10, r11, pc}
+
+COMMAND llvm-objdump -d --triple=thumbv7-linux-gnueabi --no-show-raw-insn --start-address=0x13f08c --stop-address=0x13f170 /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so
+
+/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+00120228 <.text>:
+  13f08c:      	push	{r4, r5, r7, lr}
+  13f08e:      	sub	sp, #0x40
+  13f090:      	add	r7, sp, #0x38
+  13f092:      	mov	r5, r3
+  13f094:      	mov	r4, r2
+  13f096:      	adds	r2, r7, #0x4
+  13f098:      	bl	0x13ef58 <.text+0x1ed30> @ imm = #-0x144
+  13f09c:      	movs	r3, #0x0
+  13f09e:      	mov	r0, r4
+  13f0a0:      	ldr	r1, [r7, #0x4]
+  13f0a2:      	mov	r2, r5
+  13f0a4:      	str	r3, [sp]
+  13f0a6:      	str	r3, [sp, #0x4]
+  13f0a8:      	str	r3, [sp, #0x8]
+  13f0aa:      	str	r3, [sp, #0xc]
+  13f0ac:      	str	r3, [sp, #0x10]
+  13f0ae:      	str	r3, [sp, #0x14]
+  13f0b0:      	str	r3, [sp, #0x18]
+  13f0b2:      	str	r3, [sp, #0x1c]
+  13f0b4:      	str	r3, [sp, #0x20]
+  13f0b6:      	str	r3, [sp, #0x24]
+  13f0b8:      	str	r3, [sp, #0x28]
+  13f0ba:      	str	r3, [sp, #0x2c]
+  13f0bc:      	str	r3, [sp, #0x30]
+  13f0be:      	bl	0x13ef64 <.text+0x1ed3c> @ imm = #-0x15e
+  13f0c2:      	add.w	r7, r7, #0x8
+  13f0c6:      	mov	sp, r7
+  13f0c8:      	pop	{r4, r5, r7, pc}
+  13f0ca:      	movs	r0, r0
+  13f0cc:      	push.w	{r4, r5, r6, r7, r8, r9, r10, r11, lr}
+  13f0d0:      	sub	sp, #0x5c
+  13f0d2:      	add	r7, sp, #0x38
+  13f0d4:      	add.w	r10, r7, #0x5c
+  13f0d8:      	add.w	r4, r7, #0x4c
+  13f0dc:      	str	r2, [r7, #0x10]
+  13f0de:      	add.w	r2, r7, #0x1c
+  13f0e2:      	ldm.w	r10, {r10, r11, r12}
+  13f0e6:      	ldm.w	r4, {r4, r6, r8, r9}
+  13f0ea:      	str	r0, [r7, #0x14]
+  13f0ec:      	str	r1, [r7, #0xc]
+  13f0ee:      	str	r3, [r7, #0x8]
+  13f0f0:      	ldr	r5, [r7, #0x48]
+  13f0f2:      	str.w	r12, [r7, #0x4]
+  13f0f6:      	bl	0x13ef58 <.text+0x1ed30> @ imm = #-0x1a2
+  13f0fa:      	ldr	r2, [r7, #0x68]
+  13f0fc:      	ldr	r3, [r7, #0x6c]
+  13f0fe:      	ldr.w	r12, [r7, #0x4]
+  13f102:      	str	r2, [sp, #0x18]
+  13f104:      	ldr	r2, [r7, #0x70]
+  13f106:      	str	r3, [sp, #0x1c]
+  13f108:      	ldr	r3, [r7, #0x74]
+  13f10a:      	str	r2, [sp, #0x20]
+  13f10c:      	ldr	r2, [r7, #0x78]
+  13f10e:      	str	r3, [sp, #0x24]
+  13f110:      	ldr	r3, [r7, #0x7c]
+  13f112:      	str	r2, [sp, #0x28]
+  13f114:      	ldr.w	r2, [r7, #0x80]
+  13f118:      	str	r3, [sp, #0x2c]
+  13f11a:      	mov	r3, r4
+  13f11c:      	ldr	r0, [r7, #0x10]
+  13f11e:      	str	r2, [sp, #0x30]
+  13f120:      	mov	r2, r5
+  13f122:      	ldr	r1, [r7, #0x1c]
+  13f124:      	str.w	r12, [sp, #0x14]
+  13f128:      	stm.w	sp, {r6, r8, r9, r10}
+  13f12c:      	str.w	r11, [sp, #0x10]
+  13f130:      	bl	0x13ef64 <.text+0x1ed3c> @ imm = #-0x1d0
+  13f134:      	ldr	r3, [r7, #0xc]
+  13f136:      	ldr.w	r12, [r7, #0x4]
+  13f13a:      	cmp	r3, #0xcd
+  13f13c:      	bne.w	0x13f34a <.text+0x1f122> @ imm = #0x20a
+  13f140:      	ldr	r2, [r7, #0x10]
+  13f142:      	cmp	r2, #0x0
+  13f144:      	bne.w	0x13f34a <.text+0x1f122> @ imm = #0x202
+  13f148:      	ldr	r3, [r7, #0x8]
+  13f14a:      	cmp	r3, #0x2
+  13f14c:      	bne.w	0x13f34a <.text+0x1f122> @ imm = #0x1fa
+  13f150:      	ldr	r2, [r7, #0x14]
+  13f152:      	and	r3, r2, #0xf000
+  13f156:      	cmp.w	r3, #0x5000
+  13f15a:      	bne.w	0x13f34a <.text+0x1f122> @ imm = #0x1ec
+  13f15e:      	sub.w	r3, r2, #0x5200
+  13f162:      	subs	r3, #0x8c
+  13f164:      	cmp	r3, #0x7
+  13f166:      	bhi.w	0x13f2fe <.text+0x1f0d6> @ imm = #0x194
+  13f16a:      	tbh	[pc, r3, lsl #1]
+  13f16e:      	movs	r0, r1
+
+COMMAND llvm-objdump -d --triple=thumbv7-linux-gnueabi --no-show-raw-insn --start-address=0x13f34a --stop-address=0x13f354 /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so
+
+/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+00120228 <.text>:
+  13f34a:      	add.w	r7, r7, #0x24
+  13f34e:      	mov	sp, r7
+  13f350:      	pop.w	{r4, r5, r6, r7, r8, r9, r10, r11, pc}
+
+COMMAND llvm-objdump -d --triple=thumbv7-linux-gnueabi --no-show-raw-insn --start-address=0x143fb0 --stop-address=0x143fd8 /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so
+
+/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+00143fb0 <_ZN11CS_AviMprIf10MPR2AVIErrEN3MPR5ErrCdE>:
+  143fb0:      	push	{r4, r7, lr}
+  143fb2:      	movs	r3, #0x0
+  143fb4:      	add	r7, sp, #0x0
+  143fb6:      	ldr	r2, [pc, #0x1c]         @ 0x143fd4 <_ZN11CS_AviMprIf10MPR2AVIErrEN3MPR5ErrCdE+0x24>
+  143fb8:      	lsls	r1, r3, #0x3
+  143fba:      	ldr.w	r4, [r2, r3, lsl #3]
+  143fbe:      	cmp	r4, r0
+  143fc0:      	bne	0x143fc8 <_ZN11CS_AviMprIf10MPR2AVIErrEN3MPR5ErrCdE+0x18> @ imm = #0x4
+  143fc2:      	adds	r2, r2, r1
+  143fc4:      	ldr	r0, [r2, #0x4]
+  143fc6:      	pop	{r4, r7, pc}
+  143fc8:      	adds	r3, #0x1
+  143fca:      	cmp	r3, #0x3f
+  143fcc:      	bne	0x143fb6 <_ZN11CS_AviMprIf10MPR2AVIErrEN3MPR5ErrCdE+0x6> @ imm = #-0x1a
+  143fce:      	movw	r0, #0x2116
+  143fd2:      	pop	{r4, r7, pc}
+  143fd4:      	strh	r4, [r6, #0x3a]
+  143fd6:      	lsls	r2, r7, #0x1
+
+COMMAND llvm-objdump -d --triple=thumbv7-linux-gnueabi --no-show-raw-insn --start-address=0x11e3f8 --stop-address=0x11e3fc /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so
+
+/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so:	file format elf32-littlearm
+
+Disassembly of section .plt:
+
+0011e3ec <_ZN5MprIf24CancelPlayHighlightMovieEv@plt>:
+  11e3f8:      	bx	pc
+  11e3fa:      	mov	r8, r8
+
+COMMAND llvm-objdump -d --triple=armv7-linux-gnueabi --no-show-raw-insn --start-address=0x11e3fc --stop-address=0x11e408 /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so
+
+/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so:	file format elf32-littlearm
+
+Disassembly of section .plt:
+
+0011e3fc <_ZN11CS_AviMprIf10MPR2AVIErrEN3MPR5ErrCdE@plt>:
+  11e3fc:      	add	r12, pc, #8, #12
+  11e400:      	add	r12, r12, #675840
+  11e404:      	ldr	pc, [r12, #0x530]!
+
+LITERALS (VA -> u32; no tablas completas reextraídas)
+0x13df14 0x7a6cfe
+0x13df18 0x9e0204
+0x13df1c 0x9e0b78
+0x13df50 0x9e0b78
+0x13df54 0x9e0204
+0x143fd4 0x7a8774
+PLT_VERIFICADA 0x9c3934 [('_ZN11CS_AviMprIf10MPR2AVIErrEN3MPR5ErrCdE', 1327025)]
+PASS: hash antes/después, interworking PLT/relocación, stub cero y guardas diagnósticas
+

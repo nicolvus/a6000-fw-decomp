@@ -1,0 +1,27 @@
+{
+  "session": "S41",
+  "binary": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+  "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "coverage": "PARCIAL",
+  "physical_capture": "NO_VERIFICADO",
+  "static_frontier_exhausted": false,
+  "exports": [
+    "s41-producers.json", "s41-snapshot-worker.json", "s41-queue.json",
+    "s41-send.json", "s41-entry.json", "s41-snapshot-producers.json",
+    "s41-api-producers.json", "s41-snapshot-builders.json", "s41-routing.json",
+    "s41-mode-values.json", "s41-value-tables.json", "s41-enums.json",
+    "s41-command-maps.json", "s41-3023.json", "s41-3023-thumb.json",
+    "s41-map-targets.json", "s41-osal-slots.json", "s41-shutter-conditions.json"
+  ],
+  "findings": [
+    {"status": "VERIFICADO", "claim": "Cola principal 0x30001; recepción 0x437fee12 y liberación 0x437feed4"},
+    {"status": "VERIFICADO", "claim": "4000/4036 construidos por 0x43816448/0x43818c1c/0x43817e20; envío 0x4381a138 a 0x30001"},
+    {"status": "VERIFICADO", "claim": "Tablas 0x43bc59e0={1,0,5} y 0x43bc5a50={1,2,0,3}"},
+    {"status": "VERIFICADO", "claim": "Constructores snapshot case1 0x43b01026; case10 largo 0x43b00f62; case10 corto 0x43b00f22"},
+    {"status": "PARCIAL", "claim": "Receptor snapshot 0x3030f frente a envíos 0x8003030f: resolución bit31 pendiente"},
+    {"status": "VERIFICADO", "claim": "VD_Pre remapea 0,1,2,3 a 0,2,1,4; no prueba semántica hardware"},
+    {"status": "INFERENCIA", "claim": "Intercambio de snapshots entre roles del gestor y lectura de almacén de configuración"},
+    {"status": "NO_VERIFICADO", "claim": "Origen UI/PTP y constructor original 3023; enlace de R+450..458 a SetMode/SetExposure/integración"},
+    {"status": "PARCIAL", "claim": "Línea C activada por slots OSAL externos cero; selector EFCS de clase separado de R+450..458"}
+  ]
+}

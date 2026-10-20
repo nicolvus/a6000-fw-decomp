@@ -1,0 +1,141 @@
+{
+  "evidence_id": "ev_0883f51c18e11b4cbaa838a9f16d96a1ae91b41e7f3f08b914d0d320c8f9584b",
+  "subject": {
+    "name": "nfc.ko",
+    "digest": {
+      "sha256": "5c7942c9839e9bb24f05eb7480da80c08b391a82baa7ed3f2ff6dd0516142684"
+    },
+    "local_path": "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/kmod/nfc.ko",
+    "format": "elf",
+    "architecture": "arm"
+  },
+  "provider": {
+    "id": "rea-workflow",
+    "name": "REA composed investigation workflow",
+    "version": "1"
+  },
+  "analysis_profile": {
+    "provider": {
+      "id": "rea-workflow",
+      "name": "REA composed investigation workflow",
+      "version": "1"
+    },
+    "parameters": {
+      "upstream_analysis_profile": {
+        "provider": {
+          "id": "ghidra",
+          "name": "Ghidra",
+          "version": "12.1.4"
+        },
+        "parameters": {
+          "target_kind": "executable",
+          "target_format": "elf",
+          "architecture": "arm",
+          "available_architectures": [
+            "arm"
+          ],
+          "import_mode": "ephemeral-source-immutable",
+          "annotation_policy": "atomic-function-entry-metadata-v1",
+          "load_image_observations": "source-mappings-entry-context-v2",
+          "function_body_evidence": "complete-inclusive-ranges-v1",
+          "function_references": "complete-body-and-entry-reference-manager-v2",
+          "call_relationship_coverage": "function-body-call-coverage-v5",
+          "function_dossier_coverage": "observed-facets-and-call-relationships-v1",
+          "string_inventory_evidence": "defined-data-coverage-v1",
+          "location_resolution": "explicit-address-exact-entry-symbol-first-v3",
+          "procedure_file_offset_resolution": "address-first-unique-target-source-mapping-v2",
+          "instruction_flow_evidence": "decoded-return-pcode-v1",
+          "instruction_references": "exact-address-incoming-v1",
+          "function_boundary_observations": "ghidra-function-boundary-limitations-v3",
+          "no_return_repair": "returning-imports-decoded-return-v2",
+          "process_launch": "inspected-jvm-launch-support-v1",
+          "jump_table_evidence": "typed-case-default-blocks-v1",
+          "decompiler_jump_loads": true,
+          "loader": "auto-from-header",
+          "language_id": "auto-from-header",
+          "compiler_spec_id": "auto-default",
+          "analyzer_preset": "ghidra-default"
+        },
+        "digest": "7e46711069eea041af1b9b99e34115c13332795e5cda76e584a722f529ec70de"
+      },
+      "workflow_revision": 2
+    },
+    "digest": "c98f436fb58be9fcc8b2081af924339e6b238c6a673b99820d32ef8e160541e6"
+  },
+  "predicate_type": "rea.analysis",
+  "operation": "batch_decompile",
+  "parameters": {
+    "addresses": [
+      "nfc_rsrc_sio_init",
+      "nfc_rsrc_dev_send_data",
+      "nfc_rsrc_dev_recv_data"
+    ]
+  },
+  "raw_result": null,
+  "normalized_result": {
+    "items": [
+      {
+        "address": "nfc_rsrc_sio_init",
+        "procedure": {
+          "status": "resolved",
+          "address": "0x1048c",
+          "name": "nfc_rsrc_sio_init"
+        },
+        "status": "ok",
+        "pseudocode": "\nvoid nfc_rsrc_sio_init(void)\n\n{\n  int iVar1;\n  byte local_19 [5];\n  \n  local_19[0] = 0;\n  iVar1 = Backup_nread(0x1820000,local_19,1);\n  if (iVar1 == 1) {\n    if ((local_19[0] & 0x10) != 0) {\n      DAT_00011fa0 = 1;\n    }\n  }\n  else {\n    nfc_rsrc_log(0xe,0x65,iVar1);\n  }\n  DAT_00011fa4 = 0;\n  DAT_00011fa8 = 0;\n  DAT_00011fac = 0;\n  return;\n}\n\n"
+      },
+      {
+        "address": "nfc_rsrc_dev_send_data",
+        "procedure": {
+          "status": "resolved",
+          "address": "0x10500",
+          "name": "nfc_rsrc_dev_send_data"
+        },
+        "status": "ok",
+        "pseudocode": "\nundefined4 nfc_rsrc_dev_send_data(uint param_1,int param_2)\n\n{\n  undefined4 uVar1;\n  undefined4 uVar2;\n  undefined4 uVar3;\n  undefined4 local_60 [6];\n  undefined4 local_48;\n  undefined4 uStack_44;\n  int local_38 [3];\n  uint local_2c;\n  int local_28;\n  int local_1c;\n  \n  __memzero(local_38,0x20);\n  if (param_1 < 0x81) {\n    uVar1 = 1;\n    local_2c = param_1;\n  }\n  else {\n    local_2c = 0x80;\n    uVar1 = 2;\n    local_1c = param_1 - 0x80;\n    local_28 = param_2 + 0x80;\n  }\n  local_38[0] = param_2;\n  uVar1 = FUN_0001002c(uVar1,6,local_38);\n  memset(local_60,0,0x28);\n  local_60[0] = 0x28;\n  local_48 = 1;\n  uStack_44 = 0;\n  osal_snd_sync_direct(0x910041,local_60);\n  uVar2 = Backup_read_4Byte(0xf904d6);\n  uVar3 = Backup_read_4Byte(0xf904d7);\n  FUN_000103c0(uVar2,uVar3,1);\n  return uVar1;\n}\n\n"
+      },
+      {
+        "address": "nfc_rsrc_dev_recv_data",
+        "procedure": {
+          "status": "resolved",
+          "address": "0x105cc",
+          "name": "nfc_rsrc_dev_recv_data"
+        },
+        "status": "ok",
+        "pseudocode": "\nundefined4 nfc_rsrc_dev_recv_data(int param_1)\n\n{\n  undefined4 uVar1;\n  undefined4 uVar2;\n  undefined4 uVar3;\n  undefined4 local_68 [6];\n  undefined4 local_50;\n  undefined4 uStack_4c;\n  undefined1 auStack_40 [4];\n  int local_3c;\n  undefined4 local_34;\n  int local_2c;\n  undefined4 local_24;\n  \n  __memzero(auStack_40,0x20);\n  local_34 = 0x80;\n  local_2c = param_1 + 0x80;\n  local_24 = 0x66;\n  local_3c = param_1;\n  uVar1 = FUN_0001002c(2,5,auStack_40);\n  memset(local_68,0,0x28);\n  local_50 = 2;\n  uStack_4c = 0;\n  local_68[0] = 0x28;\n  osal_snd_sync_direct(0x910041,local_68);\n  uVar2 = Backup_read_4Byte(0xf904d6);\n  uVar3 = Backup_read_4Byte(0xf904d7);\n  FUN_000103c0(uVar2,uVar3,0);\n  memset(local_68,0,0x28);\n  local_68[0] = 0x28;\n  local_50 = 1;\n  uStack_4c = 0;\n  osal_snd_sync_direct(0x910041,local_68);\n  return uVar1;\n}\n\n"
+      }
+    ],
+    "total": 3,
+    "succeeded": 3,
+    "failed": 0
+  },
+  "confidence": "derived",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "Derived by an REA composed workflow.",
+    "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+    "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+    "External functions and functions without an analyzable body return null; other decompiler failures remain explicit.",
+    "External functions and local thunks are distinct; procedure metadata identifies both and preserves a thunk target when Ghidra resolves one.",
+    "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+    "The imported Program and temporary project are ephemeral and deleted on close. Annotation operations edit session database metadata; original executable bytes are never written.",
+    "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results."
+  ],
+  "relationship_coverage": null,
+  "locations": [
+    {
+      "kind": "address",
+      "address": "0x1048c"
+    },
+    {
+      "kind": "address",
+      "address": "0x10500"
+    },
+    {
+      "kind": "address",
+      "address": "0x105cc"
+    }
+  ],
+  "evidence_links": []
+}

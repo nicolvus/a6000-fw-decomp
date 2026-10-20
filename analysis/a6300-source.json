@@ -1,0 +1,37 @@
+{
+  "model": "ILCE-6300",
+  "firmware_version": "2.01",
+  "retrieved_date": "2026-10-16",
+  "purpose": "Static comparison with ILCE-6000 3.21 for SilentShutter; no execution or flashing",
+  "support_page": "https://support.d-imaging.sony.co.jp/www/cscs/firm/?area=jp&lang=jp&mdl=ILCE-6300",
+  "download_url": "https://support.d-imaging.sony.co.jp/download/IMT/Update_ILCE6300V201.exe?fm=jp?fm=jp&upid=&s_tc=",
+  "silent_shooting_manual": "https://helpguide.sony.net/ilc/1540/v1/es/contents/TP0000825735.html",
+  "announcement": "https://www.sony.jp/CorporateCruise/Press/201602/16-0219B/",
+  "installer": {
+    "path": "firmware/original/Update_ILCE6300V201.exe",
+    "size": 274960552,
+    "sha256": "0677b93f7ba550bd33c9c8732b20fb3d3302c14e943436f22b60ae8264188942"
+  },
+  "embedded_dat": {
+    "path": "firmware/extracted/a6300-fw201/FirmwareData_ILCE6300.dat",
+    "installer_offset": "0x6ed72",
+    "size": 266168472,
+    "sha256": "5098d80c1085dfb6f7b39b600bd7776b92ef448ffa8aef8e7061207f25f4c1ca",
+    "integrity": "fwtool.sony.dat.readDat CRC verified before extraction"
+  },
+  "av_cam": {
+    "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+    "size": 13382836,
+    "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16",
+    "logical_base": "0x43541000",
+    "base_evidence": "LIRO header pointers begin 0x43541044, 0x43541058, 0x435410b4; independently agrees with file-relative header offsets",
+    "ghidra_project": "analysis/ghidra/a6300-liro.gpr",
+    "analysis": "No broad autoanalysis; explicit caller-selected and vtable-proven Thumb entries"
+  },
+  "libObj": {
+    "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libObj.so",
+    "size": 17352524,
+    "sha256": "c70b635bcbd386b4b34b6a5c37ef941a1463253aebb43d83fada7fe4e9fe9073"
+  },
+  "excluded_comparison": "ILCE-7S excluded by user instruction; downloaded files not used for comparison conclusions"
+}

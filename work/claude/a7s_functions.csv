@@ -1,0 +1,18 @@
+binario,direccion,nombre_propuesto,funcion,xrefs_llamadores,evidencia,estado
+a7s-av-cam,0x437a9cb0,Recv_40e3_SilentSetting,guarda payload[8] en 0x43ea1d84+0x250,tabla msg 0x43ff79e4,bytes+LLVM,VERIFICADO
+a7s-av-cam,0x4379ec04,SilentType_Convert,ajuste 0/1 -> tipo {0;2} con guardas y override diag,0x437b65a0;0x43813d90 (REA),LLVM+REA,VERIFICADO
+a7s-av-cam,0x43813d90,Capture_Setup,cap+0x78c=tipo; tipo==2 -> cap+0x748=1,call 0x43813e94,LLVM+REA,VERIFICADO
+a7s-av-cam,0x437b65a0,Silent_Global_Update,[g+0x7e8]=tipo,call 0x437b6f74,LLVM+REA,VERIFICADO
+a7s-av-cam,0x43826d58,DriveMode_Select,(modo;sub;tipo)->0x0c/0x1b/0x4e/0x4f/0x0b/0x35/0x17,0x43826dc0;0x43548c70 (REA),LLVM+REA,VERIFICADO
+a7s-av-cam,0x43826dc0,DriveMode_Store,escribe cap+0x4d0,0x43b1ab56 (REA),LLVM+REA,VERIFICADO
+a7s-av-cam,0x43826c90,DriveMode_Remap,0b->37 35->38 4e->50 4f->51 si tipo!=2,--,LLVM,VERIFICADO (instr.)
+a7s-av-cam,0x4382822c,Capture_ExpPrep,ModeRsvParam 0x437b8948 + banco 0x43862e24(cap+0x20),--,LLVM+REA,VERIFICADO
+a7s-av-cam,0x43862e24,ExpBank_Build,banco+0x404=cap+0x78c; llama politica,0x4382822c (REA),LLVM+REA,VERIFICADO
+a7s-av-cam,0x438649bc,ShutterClass_Policy,tipo==2 -> clase 0; EFCS +0x424,0x43862e24 (REA),LLVM+REA,VERIFICADO
+a7s-av-cam,0x436f3b44,IMX235_SetMode,lista 34 modos 0x43fee370; virtual +0xa0,vtable 0x43fce050+0x20,LLVM+bytes,VERIFICADO
+a7s-av-cam,0x436f3928,IMX235_ApplyModeIndex,remap 0x43c9c5b5; filas 20B 0x43fee598,vtable +0xa0,LLVM+bytes,VERIFICADO
+a7s-av-cam,0x436f4168,IMX235_SetExposure,ShutMode 0/1/3/4; 2 no soportado,vtable 0x43fce050+0x28,LLVM+REA,VERIFICADO
+a6000-av-cam,0x438032d4,Recv_40e3_SilentSetting,guarda payload[8] en 0x43edf684+0x238,tabla msg 0x43fffc60,bytes+LLVM,VERIFICADO
+a6000-av-cam,0x437f7f98,DriveMode_Select,(modo;sub) sin rama Silent,0x437f7ff4,LLVM,VERIFICADO
+a6000-av-cam,0x43842158,ShutterClass_Policy,sin rama Silent; EFCS +0x41c,--,LLVM,VERIFICADO
+a6000-av-cam,0x436d6f6c,IMX210_SetExposure,ShutMode 0..4,vtable 0x43fcc090+0x28,LLVM,VERIFICADO

@@ -1,0 +1,156 @@
+{
+  "session": "18",
+  "scope": "static-only",
+  "source_archive": {
+    "path": "linux-kernel.tar.gz",
+    "sha256": "b1c74cc1a0160a7fceced6f88fa35521adc431205ad1ebc8a413d20b653785b1",
+    "kernel_version": "3.0.27",
+    "classification": "VERIFICADO"
+  },
+  "safety": {
+    "camera_connected_or_flashed": false,
+    "packages_installed": false,
+    "original_binaries_modified": false,
+    "context_md_modified": false
+  },
+  "findings": [
+    {
+      "id": "shared-memory-ashmem",
+      "classification": "VERIFICADO",
+      "evidence_kind": "codigo_fuente_real",
+      "evidence": [
+        "mm/ashmem.c:39-50,198-210,284-335,691-724",
+        "include/linux/ashmem.h",
+        "mm/Makefile:35",
+        "arch/arm/configs/cxd90014_android_set_defconfig:137"
+      ],
+      "conclusion": "Ashmem es el mecanismo Android de memoria compartida presente; usa un archivo shmem de respaldo y referencias de archivo."
+    },
+    {
+      "id": "ion-dma-buf-absence",
+      "classification": "DESCARTADO",
+      "evidence_kind": "codigo_fuente_real",
+      "evidence": [
+        "Sin rutas/tokens ion, CONFIG_ION, dma_buf o DMA_SHARED_BUFFER en el tar y árbol revisados"
+      ],
+      "conclusion": "ION y DMA-BUF no están presentes en este OSS Linux 3.0.27.",
+      "limit": "No excluye un mecanismo propietario fuera del OSS."
+    },
+    {
+      "id": "vfs-mm-retention",
+      "classification": "VERIFICADO",
+      "evidence_kind": "codigo_fuente_real",
+      "evidence": [
+        "include/linux/fs.h:949-1001",
+        "include/linux/mm_types.h:39",
+        "mm/memory.c:1625-1660,1934-1979"
+      ],
+      "conclusion": "El kernel retiene archivos y páginas mediante contadores/referencias; get_user_pages requiere put_page al finalizar."
+    },
+    {
+      "id": "dmm-retention-analogy",
+      "classification": "INFERENCIA",
+      "evidence_kind": "comparacion_conceptual",
+      "evidence": [
+        "Patrones VFS/MM de referencias del mismo kernel"
+      ],
+      "conclusion": "Una referencia adquirida antes de IO/DMA y liberada al completar es una estrategia genérica posible.",
+      "not_proven": [
+        "DmmShare",
+        "DmmClose",
+        "FEA",
+        "callback de EncodeStill"
+      ]
+    },
+    {
+      "id": "arm-cache-coherency",
+      "classification": "VERIFICADO",
+      "evidence_kind": "codigo_fuente_real",
+      "evidence": [
+        "arch/arm/mm/dma-mapping.c:113-114,520-570,650-690",
+        "arch/arm/include/asm/cacheflush.h:140,163",
+        "arch/arm/include/asm/outercache.h:45-114"
+      ],
+      "conclusion": "dmac_* y outer_* son mecanismos ARM genéricos usados por el mapeo DMA."
+    },
+    {
+      "id": "cxd-pl310",
+      "classification": "VERIFICADO",
+      "evidence_kind": "codigo_fuente_real",
+      "evidence": [
+        "arch/arm/mach-cxd4132/cache-pl310.c:308-324",
+        "arch/arm/mach-cxd90014/cmpr.c:153"
+      ],
+      "conclusion": "CXD4132 integra callbacks PL310; CXD90014 llama la API DMA genérica.",
+      "limit": "No demuestra una transferencia DMM/FEA."
+    },
+    {
+      "id": "async-patterns",
+      "classification": "VERIFICADO",
+      "evidence_kind": "codigo_fuente_real",
+      "evidence": [
+        "arch/arm/mach-cxd4132/hotplug.c:19,96,121",
+        "drivers/dma/imx-sdma.c:252,374,378,492"
+      ],
+      "conclusion": "El árbol contiene completion/timeout tanto en hotplug CXD como en un controlador DMA genérico."
+    },
+    {
+      "id": "async-dmm-analogy",
+      "classification": "INFERENCIA",
+      "evidence_kind": "comparacion_conceptual",
+      "evidence": [
+        "completion y callbacks DMA genéricos"
+      ],
+      "conclusion": "La secuencia retener-lanzar-completar-liberar es solo una analogía conceptual con el problema de vida de buffer DMM."
+    },
+    {
+      "id": "cxd-image-drivers",
+      "classification": "NO_VERIFICADO",
+      "evidence_kind": "codigo_fuente_real",
+      "evidence": [
+        "arch/arm/mach-cxd4132/udif/platform.c:444-459,506-526,625-646",
+        "Makefiles CXD y búsqueda de nombres de controlador"
+      ],
+      "conclusion": "ldec y mia solo están descritos como dispositivos UDIF con IRQ/DMAC; su función no está definida por el OSS y no hay driver CXD de sensor/ISP/JPEG localizado."
+    },
+    {
+      "id": "literal-dmm-module",
+      "classification": "DESCARTADO",
+      "evidence_kind": "codigo_fuente_real",
+      "evidence": [
+        "Sin dmm.ko, fuente/cabecera dmm ni CONFIG Sony DMM",
+        "Coincidencias ajenas en OMAP4 y drivers/staging/tidspbridge/Makefile"
+      ],
+      "conclusion": "No hay módulo ni interfaz Sony DMM en el OSS."
+    },
+    {
+      "id": "proprietary-fea-prior",
+      "classification": "VERIFICADO",
+      "evidence_kind": "binario_propietario_previo",
+      "evidence": [
+        "MprIf::SetCallbackFunc libmpr.so:0x71f7b8",
+        "FeaIf::MprIfCallbackPoint:0x4502e8"
+      ],
+      "conclusion": "La API real de callback FEA fue localizada previamente; este OSS no la implementa ni la confirma."
+    },
+    {
+      "id": "encodestill-callback-id",
+      "classification": "INFERENCIA",
+      "evidence_kind": "binario_propietario_previo",
+      "evidence": [
+        "Rango 0xc0000001..0xc0000091; 0xc0000004 candidato"
+      ],
+      "conclusion": "0xc0000004 sigue sin confirmar como CBID_ENCODE_STILL."
+    },
+    {
+      "id": "a6000-a6300-comparison",
+      "classification": "NO_VERIFICADO",
+      "evidence_kind": "inventario_fuentes",
+      "evidence": [
+        "Solo existe un linux-kernel.tar.gz; no hay segundo paquete A6300"
+      ],
+      "conclusion": "Comparación A6000 frente a A6300 pendiente por ausencia de segunda fuente."
+    }
+  ],
+  "final_boundary": "El código OSS aporta contexto de kernel, no prueba de DMM/FEA propietario ni de SilentShutter."
+}

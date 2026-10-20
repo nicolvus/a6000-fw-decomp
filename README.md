@@ -1,0 +1,285 @@
+# Sony A6000 Hardware & Firmware Reverse Engineering Project
+
+Investigación de hardware, firmware, arquitectura, arranque, recuperación y
+pipeline de captura. Se conservan los resultados anteriores. El obturador
+electrónico pasa a ser un [subproyecto](projects/electronic-shutter/README.md).
+
+## Organización y resultados actuales
+
+- [S47: entrada del payload y orden de C](docs/capture/s47-payload-producer-and-order.md):
+  solicitud recibida en `0x43e95420` → payload `0x43ed4620`;
+  callback antes de copia C, con `+94/+95` dentro del rango `0x1a4`.
+  S48: productor anterior a `0x43789cc0`, registro `0x301d7`; hito abierto.
+
+- [S46: base VD y escritor del contexto](docs/capture/s46-vd-base-and-context-identity.md):
+  inicialización `0x43e16d2c=0xf3120000`, destino `0xf3120220`;
+  callback `0x437dad78`, clave `0xce`, produce C+94/+95 desde dos u16.
+  Antecedente; S47 resuelve entrada y orden. Productor original y efecto físico pendientes.
+
+- [S45: contexto y consumidor real del timing IMX210](docs/capture/s45-context-identity-and-physical-closure.md):
+  antecedente: contexto C localizado; virtual+74 consume IMX210+3a0 hasta
+  escritura del controlador base+220. La base se resuelve en S46; alias P/C pendiente.
+
+- [S44: consumidor de registros y tabla de modos](docs/capture/s44-register-consumer-mode-table.md):
+  119 pares ID/valor llegan al backend de comandos y a MMIO; virtual+a8
+  compara clases de modo. Productor local de byte+95=2 recuperado;
+  alias con C y cierre físico pendientes.
+
+- [S43: tabla PIC y códigos de modo IMX210](docs/capture/s43-exposure-mmio-and-lock-codes.md):
+  registros preparados en memoria software, sin MMIO directo; las llamadas
+  posteriores guardan estado. Cadenas refutan códigos de bloqueo AF y confirman
+  selección de modos. Transporte físico y origen de clase2 siguen pendientes.
+
+- [S42: identidad de la llamada de exposición](docs/capture/s42-exposure-call-identity.md):
+  wrapper `436d6320` → slot virtual +28 → backend `436d6f6c`;
+  productor de controles por copia y usos byte de clase2 contrastados.
+  Origen del valor2, parser3023 y dependencia R+5cc todavía pendientes.
+
+- [S41: productores de mensajes y snapshots](docs/capture/s41-message-origin-imx210.md):
+  productores internos de `4000/4036`, tablas de valores y constructores de
+  snapshots recuperados; frontera OSAL activa Línea C: selector EFCS y
+  clase2 contrastados, sin fin electrónico demostrado. Origen `3023` PARCIAL.
+
+- [S40: origen del contexto de modo](docs/capture/s40-context-origin-imx210.md):
+  comandos API `4000/4036/3023` alimentan `+24/+48/+458`; copias de `0x560`
+  bytes y tabla de despacho recuperadas. Semántica IMX210 y alias PARCIAL.
+
+- [S39: enum de imagen y discriminador APL](docs/capture/s39-image-format-apl.md):
+  tres consumidores convergen en detección de cambio y reinicialización;
+  origen del enum con cuatro escrituras condicionales en VD_Pre.
+  Formato de píxel/pitch y vínculo con opción de usuario/FPS sin cerrar.
+
+- [S38: frontera DMM/OSAL en av-cam](docs/capture/s38-dmm-osal-static-frontier.md):
+  blob LIRO sin resolución ELF; slot importado +0x2e4 cero en archivo.
+  Pool 0x61003c compartido, servidor/escritor de extents sin recuperar.
+  Próximo: enum de formato S33 hasta campos APL, stride y tamaño.
+
+- [S37: definidor DMM en libmprctrl](docs/capture/s37-libmprctrl-dmm-extents.md):
+  getters de extents DmmAccessPLA y paquete AllocDmmMemory resueltos;
+  cliente OSAL 0x61003c y enlace exacto al PLT S30. Dominio físico/lógico,
+  identidad del slot av-cam y productor físico YC todavía sin demostrar.
+
+- [S36: memoria de libInfraScalarMpr](docs/capture/s36-libinfra-scalar-mpr-memory.md):
+  `void**` devuelve un mapeo SysV usado para copiar datos still. Las dos APIs
+  DMM son importaciones UND; backend av-cam y productor físico YC siguen abiertos.
+
+- [S35: objetos DFE y frontera estática APL/IRQ](docs/capture/s35-dfe-objects-static-frontier.md):
+  Ofmt/Ifmt y métodos virtuales resueltos; leen/activan SGC `0xfc0a…`, sin
+  vínculo APL→IRQ→EC/LM demostrado. Frontera de esta vía agotada; siguiente:
+  proveedor DMM importado `0x43561524` y consumidor real del handle YC.
+
+- [S34: APL/DMA frente a VD e interrupciones](docs/capture/s34-apl-dma-vd-interrupts.md):
+  programación y kick síncronos; evento Drive no acredita fin DMA. Registrador
+  DFE y causas software resueltos; vínculo banco APL→IRQ→EC/LM y cuadro físico
+  propio/siguiente aún sin demostrar.
+
+- [S33: origen de los handles YC](docs/capture/s33-yc-rendezvous-producer.md):
+  26 llamadas y 13 parámetros locales rastreados hasta handles Rendezvous;
+  escritor secundario `0x43814ea0→input+0xd4=P+0xbc` identificado.
+  Rama APL seguida hasta configuración MMIO; backend DMM, layout/pitch/formato
+  y fin DMA físico pendientes.
+
+- [S32: callbacks VD y SyncYCout](docs/capture/s32-vd-callbacks-sync-ycout.md):
+  destinos de las listas Drive/Post resueltos; productor YC con handle DMM
+  compartido. Dirección de píxeles, pitch/formato y fin DMA siguen sin cerrar.
+
+- [S30: receptor y retorno de EncodeStill](docs/capture/s30-pipelines-capture-encode.md):
+  InfraAvbbc→InfraStillEncoder→SDF, espera hasta completion y continuación a Pool.
+  CaptureId no es un descriptor YC; captura nueva sin cortinas y contrato DMA/caché
+  del YC siguen abiertos. Auditoría estática: 12 comprobaciones.
+
+- [Avance Darwin y control del obturador](docs/capture/darwin-state-machine.md):
+  tablas de fases reconstruidas, notificación y escrituras comparadas;
+  viabilidad de obturación totalmente electrónica A6000 aún sin demostrar.
+
+- [Alcance general y dos líneas de trabajo](docs/project-scope.md).
+- [Línea A: arquitectura general](docs/architecture/README.md).
+- [Línea B: pipeline de captura](docs/capture/README.md).
+- [Inventario físico documental](docs/hardware-inventory.md): 16 bloques y preguntas,
+  con identificación de chips pendiente.
+- [Atlas ELF](docs/elf-classification.md): 679 rutas ARM, 641 contenidos únicos;
+  147 ejecutables, 469 bibliotecas candidatas y 63 módulos. 391 asociaciones
+  funcionales todavía desconocidas.
+- [Mapa de dependencias](docs/subsystem-dependencies.md): 3890 DT_NEEDED,
+  incluidas 8 resoluciones ambiguas. Datos completos: reports/elf-atlas.json.
+- [Arranque y recuperación](docs/boot-and-recovery.md): evidencia inicial y
+  preguntas; recuperación de hardware no demostrada.
+
+La carpeta conserva el nombre histórico para mantener válidas las rutas de
+REA y las evidencias. No se movió ni eliminó firmware o investigación anterior.
+
+## Estado del subproyecto de obturador
+
+Comparación activa: [A6300 2.01 frente a A6000 3.21](docs/capture/a6300-silent-comparison.md).
+Referencia comparativa vigente desde 19-10-2026: **A7S 3.20** (instrucción del usuario; sustituye a A6300 2.01, que queda como histórico). Ver [manuales de servicio](docs/references/a7s-vs-a6000-service-manuals.md).
+Se identificaron modos y callbacks específicos de Silent en A6300; el modo
+`0x4e` de IMX284 es rechazado por el controlador IMX210 de A6000.
+Los selectores se comprobaron con 14 casos de emulación de instrucciones.
+El [ajuste y sus respuestas de software](docs/capture/a6300-silent-software.md)
+se han seguido separadamente de la captura física.
+Se reconstruyó además la [selección Silent del paquete CAIF](docs/capture/silent-caif-transport.md)
+hasta el transporte de sus 31 bytes; falta identificar su interpretación física.
+Una ruta omitida por Silent quedó identificada como
+[contabilidad de eventos KikiLog](docs/capture/silent-kikilog.md), con
+receptor comprobado por REA; se descarta como prueba de control de cortinas.
+Esto impide trasladar directamente esa opción y no demuestra una limitación
+del silicio. La investigación continúa; no hay parche funcional validado.
+
+**EFCS reconstruido: [selector de captura e IMX210](docs/capture/efcs-capture-selector.md).**
+Se identificó la copia entre bancos que transporta EFCS, su selección de clase
+y la copia al byte +9 recibido por SetExposure, con sus condiciones de backend.
+La clase 2 sigue sin interpretación física suficiente para activar SilentShutter.
+Base anterior: [exposición IMX210 y transferencia P2S](docs/capture/imager-exposure-p2s.md).
+Se siguieron el coordinador de exposición, la selección por bancos, los métodos
+SetExposure/SetRead y las escrituras del transporte P2S. Se corrigieron entradas
+de función y se descartó un falso lector de Silent por identidad de estructura.
+[Consumidores y correcciones E018](docs/capture/silent-imager-consumers.md).
+El proyecto Ghidra conserva más de 37000 funciones registradas; el análisis amplio
+terminó por tiempo, por lo que ese número no acredita cobertura completa.
+Las exportaciones de funciones conservan el hash del firmware original.
+
+[Ruta de configuración y receptor LIRO](docs/capture/silent-shutter-status.md):
+Se verificaron factory, CamMgr, Off/On y cola 0x30001; av-cam.bin recibe tipo5,
+despacha 0x40e3 y guarda el modo. Tabla de 220 comandos reproducible. El blob
+contiene un controlador IMX210 candidato; funciones conservadas en un
+proyecto Ghidra persistente. Todavía no hay vínculo probado entre ese estado
+y el fin electrónico de exposición: no hay parche funcional ni viabilidad cerrada.
+
+Prioridad actual del usuario: **EFCS y posible cortina trasera electrónica**.
+Se localizaron acciones, secuencias, despacho a conversores y envío OSAL
+separados para EFCS y SilentShutter. El éxito de envío no demuestra final de
+exposición. [Informe principal y comparación de métodos](docs/capture/shutter-investigation.md).
+También se verificó el caso 0x1008 del coordinador y se documentaron eventos
+de captura/AutoReview en el [pipeline parcial](docs/capture-pipeline.md).
+La lectura electrónica completa y el receptor físico permanecen abiertos.
+El transporte se acotó hasta /dev/uipc y el encolado del núcleo; hay una cola
+0x30001 cuya correspondencia estática con el receptor quedó resuelta en E016.
+
+Al 15-10-2026: **categoría E, evidencia insuficiente**. Extracción oficial 3.21
+e inventario realizados; no hay parche ni viabilidad demostrada. Esta categoría
+solo corresponde al subproyecto, no limita la investigación general.
+
+Avance con REA tras el reinicio: constructor y dos opciones On/Off de SilentShutter
+identificados en CautionConfig.so; rama de conversión de mensajes localizada en
+libObj.so. El diagnóstico NON SUPPORTED rechaza ciertos mensajes; no demuestra
+imposibilidad por hardware. Tampoco se demuestra soporte funcional en A6000.
+Evidencias y limitaciones: [traza SilentShutter](docs/silent-shutter-trace.md).
+
+Último avance de captura: [S29, WriteStill de entrada a cierre](docs/capture/s29-writestill-end-to-end.md): orden `0x10000003`, escritura, retorno RecStill→FEA→Obj, cierre del Pool y respuesta `0x10000004`. SetImageWrited corresponde a `0x6108/0x1007`, no `0x1009`. El cierre de software no acredita durabilidad física ni SilentShutter.
+
+[S28, contrato de pines YC](docs/capture/s28-osal-pin-contract-closure.md): InfraImaging sirve `0x50004`; VEF y ScalarInfra identificados. Las cuatro propiedades del pin no son una imagen para WriteStill.
+
+Resultados: `docs/findings.md`, `docs/feasibility-report.md`; continuidad: `CONTEXT.md`.
+Original Sony conservado en `firmware/original/`; fuentes públicas fijadas en `reports/source-revisions.json`. No publicar `firmware/` ni las copias locales de fuentes sin revisar sus licencias. No se accedió a una cámara.
+
+## Reproducción local sin instalar paquetes
+
+Desde este directorio:
+
+```sh
+python3 -m src.inventory firmware/extracted/fw321 reports/inventory.json
+python3 -m src.inventory firmware reports/firmware-inventory.json
+python3 -m src.atlas
+python3 -m src.liro firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin reports/silent-liro-dispatch.json --base 0x43541000 --table 0xabe30c --count 220
+python3 -m unittest discover -s tests -v
+/home/nicolas/Documents/GPREMIUM/ingreso-agentes/.venv/bin/ruff check src tests
+/home/nicolas/Documents/GPREMIUM/ingreso-agentes/.venv/bin/mypy --ignore-missing-imports src
+```
+
+Extracción: `7z x firmware/original/Update_ILCE6000V321.dmg -ofirmware/extracted/updater` y `/home/nicolas/.local/share/pmca-venv/bin/python references/fwtool/fwtool.py unpack -f firmware/extracted/updater/Update_ILCE6000V321/Resources/FirmwareUpdater.app/Contents/Resources/FirmwareData_ILCE6000V321.dat -o firmware/extracted/fw321`.
+
+La CLI real necesita `-f` y `-o`: el ejemplo posicional del proyecto base no corresponde a esta versión.
+La extracción WBI por CLI falla al intentar interpretar recursivamente una sección como ext2. La alternativa ejecutada fue iterar `fwtool.sony.wbi.readWbi`, guardar `chunk.contents.read()` y registrar `physicalAddr`, `virtualAddr`, tamaño y SHA-256 en `reports/wbi-sections.json`. Véase el procedimiento completo en `docs/firmware-analysis.md`.
+
+679 ELF ARM confirmados por readelf; 45 archivos con coincidencias de palabras
+clave en la búsqueda inicial. El inventario total incluye contenedores,
+derivados y duplicados: sus tamaños no deben sumarse como memoria del dispositivo.
+El atlas reutiliza metadatos por hash y productor; se comprobaron 679 aciertos
+en la segunda pasada. Los snapshots REA conservan evidencia, pero no sustituyen
+un proyecto persistente de Ghidra ni garantizan evitar una nueva importación.
+
+## Validación
+
+Veintiséis pruebas correctas; ruff y mypy sin avisos en `src tests`. TDD aplicado
+a inventario, atlas, símbolos versionados, roles ELF y agregación de
+dependencias, referencias Thumb y extracción LIRO. Registro actual:
+reports/shutter-validation.md; registro previo: reports/atlas-validation.md. Dos archivos
+auxiliares del DMG no legibles se registran como errores; el payload y el
+firmware están inventariados y los 679 ELF se analizaron sin errores.
+
+No hay repositorio Git inicializado utilizable y `.git` es de solo lectura: cambios sin commit. Inicialmente no se instalaron paquetes. Después, el usuario autorizó hacer funcionar REA: se instaló REA localmente y se extrajeron Ghidra/JDK portables. No se hizo push ni se ejecutaron programas del firmware.
+
+## REA operativo
+
+REA 6.5.0 instalado en `tools/rea` con versión y dependencias fijadas en package-lock.json. Ghidra 12.1.4 y Temurin JDK 21 portables, sin modificar paquetes del sistema. Descargas y hashes verificados: `reports/rea-provider-downloads.json`. Registro MCP aplicado a `/home/nicolas/.codex/config.toml`, con respaldo `.rea.backup`; reiniciar Codex para cargarlo.
+
+```sh
+./scripts/rea doctor --client codex --provider ghidra --json
+./scripts/rea analyze "$PWD/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha16_unpacked_unpacked/lib/libcamera.so" --provider ghidra --json
+```
+
+Comprobado: protocolo MCP initialize, 207 herramientas, binary_session, diagnóstico Ghidra/Codex y análisis ARM real. En este sandbox, la comprobación Java desde Node requiere ejecución autorizada fuera de la restricción EPERM; no confundir ese fallo con ausencia del JDK. Binwalk, Unblob y JADX siguen pendientes; no son necesarios para el ELF ya extraído.
+
+## Sesión 19 — seguimiento de conectividad
+
+S19-02 verificó el salto efectivo `UObjPin::Connect`/`ConnectPinWrapper` hacia
+`MWF::ObjPin::Connect`, incluido el comportamiento de validación genérico. La
+instancia LifeCycle creada por `TM::createLifeCycles` sigue sin una arista de
+ejecución demostrada hasta ese salto; esto no acredita SilentShutter funcional.
+Detalle reproducible: [S19-02 LifeCycle/Connect](docs/capture/s19-lifecycle-connect.md).
+
+S19-03 corroboró que el extremo ObjId 53 de la topología `0xb4` corresponde a
+la clase `ObjStillRecorder` por su constructor exportado y sus pines, pero no
+recuperó su auto-registro dinámico. No hay evidencia de SilentShutter funcional.
+Detalle: [S19-03 ObjId 53](docs/capture/s19-objid53-registration.md).
+
+S19-04 verificó que `ObjCamera` construye nueve pines de salida y que la fila
+`0x0a` enlaza Camera.out0 con Effect.in0, pero no encontró un descriptor DMM o
+`AvbbcPhycMem` atribuible a ese YC. El par DMM conocido es de Effect/PbCap y la
+SDS de `0x800` B no es raster. El contrato real de Live View continúa pendiente;
+no hay evidencia de SilentShutter funcional. Detalle:
+[S19-04 contrato YC](docs/capture/s19-camera-yc-real-contract.md).
+
+S19-11 verificó que ObjEffect acepta los valores de modo efectivos 2–5, pero
+sólo 3 intenta `0x3900/0x0002`; 2/4/5 retornan por error. No es la ruta PbCap
+ni demuestra una condición de obturación electrónica. Detalle:
+[S19-11 modos ObjEffect](docs/capture/s19-objeffect-modes-2-5.md).
+
+S19-05 confirmó el ciclo interno PbCap de ObjEffect/SDF (precondiciones,
+conexión de infraestructura, buffers de salida, entrega y cleanup), pero no
+una ruta Camera→SDF ni compatibilidad del YC real de Camera. La SDS no es
+raster y la ausencia de un único guard de tipo no prueba aceptación. No hay
+evidencia de SilentShutter funcional. Detalle:
+[S19-05 ObjEffect/SDF](docs/capture/s19-camera-effect-sdf.md).
+
+La tabla LIRO de captura quedó inventariada hasta sus diez variantes no
+seleccionables; son secuencias convencionales con estados/retry, sin prueba de
+adquisición electrónica o Silent. Véase
+[S19-07](docs/capture/s19-liro-remaining-sequences.md).
+
+S19-09 reconstruyó la frontera `CameraSequence → SDCom → ScalarDaemon` y el
+ciclo ticket/memoria compartida/`release` del cliente, sin demostrar JPEG,
+640×480, YC, S2, MPR ni SilentShutter. Véase
+[S19-09 CameraSequence/SDCom](docs/capture/s19-camerasequence-sdcom.md).
+
+S19-13 separó la emisión RelMgr de `0x3015`, la limpieza local del dispatcher
+y la limpieza LIRO de `ctx+0x754`; no vinculó esos hechos a idle, liberación
+DMM, CAIF/Darwin ni una ventana segura antes de cortinas. Véase
+[S19-13 cancelación posterior a S2](docs/capture/s19-post-s2-cancellation-states.md).
+
+S20 — **VERIFICADO:** recuperados llamadores DCF, registro JPEG/contenido en
+la variante AVI y callback `0x40000012`; **NO_VERIFICADO:** cadena completa de
+una solicitud, rollback y persistencia SD/reproducción. Véase
+[cadena MPR/DCF posterior a WriteStill](docs/capture/s20-codex-mpr-dcf-chain.md).
+Se mantiene **A > E > P ≈ E2**; SilentShutter no se declara funcional.
+
+S21 Codex — **VERIFICADO:** pre-registro condicional anterior a WriteStill,
+unión Recorder/RecStill → StillWriterFilter y ramas JPEG/RAW. **NO_VERIFICADO:**
+completion FEA completa, rollback DCF y primera visibilidad en reproducción.
+Véase [exposición → biblioteca](docs/capture/s21-codex-exposure-to-library.md).
+
+S22 separa la serialización LIRO del productor físico de un YC nuevo: el
+primero está comprobado, el segundo no. Informe:
+[sensor → YC para StillRecorder](docs/capture/s22-sensor-to-yc.md).
+Auditor estático: 194 PASS; **A > E > P ≈ E2** sin cambios.
+SilentShutter no se declara funcional.

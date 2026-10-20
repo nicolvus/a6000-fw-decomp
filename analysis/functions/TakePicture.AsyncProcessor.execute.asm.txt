@@ -1,0 +1,205 @@
+
+firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libScalarDaemon.so:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+001080b4 <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()>:
+  1080b4: 4b7a         	ldr	r3, [pc, #0x1e8]        @ 0x1082a0 <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0x1ec>
+  1080b6: 2100         	movs	r1, #0x0
+  1080b8: e92d 43f0    	push.w	{r4, r5, r6, r7, r8, r9, lr}
+  1080bc: 4604         	mov	r4, r0
+  1080be: b087         	sub	sp, #0x1c
+  1080c0: f44f 70aa    	mov.w	r0, #0x154
+  1080c4: 2204         	movs	r2, #0x4
+  1080c6: af02         	add	r7, sp, #0x8
+  1080c8: 447b         	add	r3, pc
+  1080ca: f7ff fd49    	bl	0x107b60 <SCALARDAEMON::CommandProcessorCameraTakePicture::~CommandProcessorCameraTakePicture()+0x14> @ imm = #-0x56e
+  1080ce: 6860         	ldr	r0, [r4, #0x4]
+  1080d0: f7c2 e900    	blx	0xca2d4 <_ZNK12SCALARDAEMON20CommandProcessorBase6getJobEv@plt> @ imm = #-0x3de00
+  1080d4: 4605         	mov	r5, r0
+  1080d6: b960         	cbnz	r0, 0x1080f2 <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0x3e> @ imm = #0x18
+  1080d8: 4b72         	ldr	r3, [pc, #0x1c8]        @ 0x1082a4 <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0x1f0>
+  1080da: 4629         	mov	r1, r5
+  1080dc: f44f 70aa    	mov.w	r0, #0x154
+  1080e0: 2201         	movs	r2, #0x1
+  1080e2: 447b         	add	r3, pc
+  1080e4: f7ff fd3c    	bl	0x107b60 <SCALARDAEMON::CommandProcessorCameraTakePicture::~CommandProcessorCameraTakePicture()+0x14> @ imm = #-0x588
+  1080e8: 6860         	ldr	r0, [r4, #0x4]
+  1080ea: 2101         	movs	r1, #0x1
+  1080ec: f7c3 ed16    	blx	0xcbb1c <_ZN12SCALARDAEMON20CommandProcessorBase10setRetCodeENS_10SD_RETCODEE@plt> @ imm = #-0x3c5d4
+  1080f0: e0d0         	b	0x108294 <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0x1e0> @ imm = #0x1a0
+  1080f2: 68e6         	ldr	r6, [r4, #0xc]
+  1080f4: 2e23         	cmp	r6, #0x23
+  1080f6: f000 809c    	beq.w	0x108232 <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0x17e> @ imm = #0x138
+  1080fa: f241 4904    	movw	r9, #0x1404
+  1080fe: 454e         	cmp	r6, r9
+  108100: f000 809b    	beq.w	0x10823a <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0x186> @ imm = #0x136
+  108104: 2e01         	cmp	r6, #0x1
+  108106: f040 80b3    	bne.w	0x108270 <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0x1bc> @ imm = #0x166
+  10810a: f107 0110    	add.w	r1, r7, #0x10
+  10810e: 204c         	movs	r0, #0x4c
+  108110: f801 6d01    	strb	r6, [r1, #-1]!
+  108114: f7c6 ed9c    	blx	0xcec50 <_ZN12SCALARDAEMON23SystemEventIssuerCommon7isInhOnEjPb@plt> @ imm = #-0x394c8
+  108118: b158         	cbz	r0, 0x108132 <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0x7e> @ imm = #0x16
+  10811a: f7c6 ee0c    	blx	0xced34 <_ZN12SCALARDAEMON9getStringENS_10SD_RETCODEE@plt> @ imm = #-0x393e8
+  10811e: 4b62         	ldr	r3, [pc, #0x188]        @ 0x1082a8 <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0x1f4>
+  108120: 2100         	movs	r1, #0x0
+  108122: 4632         	mov	r2, r6
+  108124: 447b         	add	r3, pc
+  108126: 9000         	str	r0, [sp]
+  108128: f44f 70aa    	mov.w	r0, #0x154
+  10812c: f7ff fd18    	bl	0x107b60 <SCALARDAEMON::CommandProcessorCameraTakePicture::~CommandProcessorCameraTakePicture()+0x14> @ imm = #-0x5d0
+  108130: e088         	b	0x108244 <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0x190> @ imm = #0x110
+  108132: f897 800f    	ldrb.w	r8, [r7, #0xf]
+  108136: f1b8 0f00    	cmp.w	r8, #0x0
+  10813a: d11a         	bne	0x108172 <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0xbe> @ imm = #0x34
+  10813c: 4628         	mov	r0, r5
+  10813e: 4649         	mov	r1, r9
+  108140: f7c3 ee18    	blx	0xcbd74 <_ZN12SCALARDAEMON5SDJob15addWaitingEventENS_11SD_EVENT_IDE@plt> @ imm = #-0x3c3d0
+  108144: f7c4 eaaa    	blx	0xcc69c <_ZN12SCALARDAEMON23SystemEventIssuerCamera12captureStartEv@plt> @ imm = #-0x3baac
+  108148: b938         	cbnz	r0, 0x10815a <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0xa6> @ imm = #0xe
+  10814a: 4628         	mov	r0, r5
+  10814c: 2123         	movs	r1, #0x23
+  10814e: f7c3 ee12    	blx	0xcbd74 <_ZN12SCALARDAEMON5SDJob15addWaitingEventENS_11SD_EVENT_IDE@plt> @ imm = #-0x3c3dc
+  108152: 4620         	mov	r0, r4
+  108154: f7c3 ec36    	blx	0xcb9c4 <_ZN12SCALARDAEMON33CommandProcessorCameraTakePicture14AsyncProcessor14checkCapturingEv@plt> @ imm = #-0x3c794
+  108158: e00b         	b	0x108172 <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0xbe> @ imm = #0x16
+  10815a: f7c6 edec    	blx	0xced34 <_ZN12SCALARDAEMON9getStringENS_10SD_RETCODEE@plt> @ imm = #-0x39428
+  10815e: 4b53         	ldr	r3, [pc, #0x14c]        @ 0x1082ac <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0x1f8>
+  108160: 4641         	mov	r1, r8
+  108162: 4632         	mov	r2, r6
+  108164: 447b         	add	r3, pc
+  108166: 9000         	str	r0, [sp]
+  108168: f44f 70aa    	mov.w	r0, #0x154
+  10816c: f7ff fcf8    	bl	0x107b60 <SCALARDAEMON::CommandProcessorCameraTakePicture::~CommandProcessorCameraTakePicture()+0x14> @ imm = #-0x610
+  108170: 73fe         	strb	r6, [r7, #0xf]
+  108172: 7bfb         	ldrb	r3, [r7, #0xf]
+  108174: 2b00         	cmp	r3, #0x0
+  108176: d057         	beq	0x108228 <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0x174> @ imm = #0xae
+  108178: f7cb e860    	blx	0xd323c <_ZN12SCALARDAEMON12ScalarDaemon11getInstanceEv@plt> @ imm = #-0x34f40
+  10817c: f7c8 eeae    	blx	0xd0edc <_ZNK12SCALARDAEMON12ScalarDaemon18getEventDispatcherEv@plt> @ imm = #-0x372a4
+  108180: 4606         	mov	r6, r0
+  108182: 2800         	cmp	r0, #0x0
+  108184: d040         	beq	0x108208 <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0x154> @ imm = #0x80
+  108186: 1d38         	adds	r0, r7, #0x4
+  108188: f7c2 ebfa    	blx	0xca980 <_ZN9ParamListC1Ev@plt> @ imm = #-0x3d80c
+  10818c: 2010         	movs	r0, #0x10
+  10818e: f7c1 eb3a    	blx	0xc9804 <_Znwj@plt>     @ imm = #-0x3e98c
+  108192: 4680         	mov	r8, r0
+  108194: 2106         	movs	r1, #0x6
+  108196: f7c9 e95c    	blx	0xd1450 <_ZN9PrmNumberC1Ei@plt> @ imm = #-0x36d48
+  10819a: 1d38         	adds	r0, r7, #0x4
+  10819c: f44f 7180    	mov.w	r1, #0x100
+  1081a0: 4642         	mov	r2, r8
+  1081a2: f7ca e850    	blx	0xd2244 <_ZN9ParamList3addEmP9ParamBase@plt> @ imm = #-0x35f60
+  1081a6: 4630         	mov	r0, r6
+  1081a8: f24f 0103    	movw	r1, #0xf003
+  1081ac: 1d3a         	adds	r2, r7, #0x4
+  1081ae: f7c4 efd0    	blx	0xcd150 <_ZN12SCALARDAEMON15EventDispatcher15dispatchSDEventENS_11SD_EVENT_IDEPK9ParamList@plt> @ imm = #-0x3b060
+  1081b2: b190         	cbz	r0, 0x1081da <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0x126> @ imm = #0x24
+  1081b4: f7c6 edbe    	blx	0xced34 <_ZN12SCALARDAEMON9getStringENS_10SD_RETCODEE@plt> @ imm = #-0x39484
+  1081b8: 4b3d         	ldr	r3, [pc, #0xf4]         @ 0x1082b0 <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0x1fc>
+  1081ba: 2100         	movs	r1, #0x0
+  1081bc: 2201         	movs	r2, #0x1
+  1081be: 447b         	add	r3, pc
+  1081c0: 9000         	str	r0, [sp]
+  1081c2: f44f 70aa    	mov.w	r0, #0x154
+  1081c6: f7ff fccb    	bl	0x107b60 <SCALARDAEMON::CommandProcessorCameraTakePicture::~CommandProcessorCameraTakePicture()+0x14> @ imm = #-0x66a
+  1081ca: 6860         	ldr	r0, [r4, #0x4]
+  1081cc: 2101         	movs	r1, #0x1
+  1081ce: f7c3 eca6    	blx	0xcbb1c <_ZN12SCALARDAEMON20CommandProcessorBase10setRetCodeENS_10SD_RETCODEE@plt> @ imm = #-0x3c6b4
+  1081d2: 4628         	mov	r0, r5
+  1081d4: 2102         	movs	r1, #0x2
+  1081d6: f7c9 ec12    	blx	0xd19fc <_ZN12SCALARDAEMON5SDJob11setJobStateENS0_8JobStateE@plt> @ imm = #-0x367dc
+  1081da: 4b36         	ldr	r3, [pc, #0xd8]         @ 0x1082b4 <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0x200>
+  1081dc: f44f 70aa    	mov.w	r0, #0x154
+  1081e0: 2100         	movs	r1, #0x0
+  1081e2: 2203         	movs	r2, #0x3
+  1081e4: 447b         	add	r3, pc
+  1081e6: f7ff fcbb    	bl	0x107b60 <SCALARDAEMON::CommandProcessorCameraTakePicture::~CommandProcessorCameraTakePicture()+0x14> @ imm = #-0x68a
+  1081ea: 4620         	mov	r0, r4
+  1081ec: f7c4 e924    	blx	0xcc438 <_ZN12SCALARDAEMON33CommandProcessorCameraTakePicture14AsyncProcessor14onCaptureStartEv@plt> @ imm = #-0x3bdb8
+  1081f0: 4601         	mov	r1, r0
+  1081f2: 6860         	ldr	r0, [r4, #0x4]
+  1081f4: f7c3 ec92    	blx	0xcbb1c <_ZN12SCALARDAEMON20CommandProcessorBase10setRetCodeENS_10SD_RETCODEE@plt> @ imm = #-0x3c6dc
+  1081f8: 4628         	mov	r0, r5
+  1081fa: 2102         	movs	r1, #0x2
+  1081fc: f7c9 ebfe    	blx	0xd19fc <_ZN12SCALARDAEMON5SDJob11setJobStateENS0_8JobStateE@plt> @ imm = #-0x36804
+  108200: 1d38         	adds	r0, r7, #0x4
+  108202: f7c5 eb0c    	blx	0xcd81c <_ZN9ParamListD1Ev@plt> @ imm = #-0x3a9e8
+  108206: e00f         	b	0x108228 <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0x174> @ imm = #0x1e
+  108208: 4b2b         	ldr	r3, [pc, #0xac]         @ 0x1082b8 <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0x204>
+  10820a: f44f 70aa    	mov.w	r0, #0x154
+  10820e: 4631         	mov	r1, r6
+  108210: 2201         	movs	r2, #0x1
+  108212: 447b         	add	r3, pc
+  108214: f7ff fca4    	bl	0x107b60 <SCALARDAEMON::CommandProcessorCameraTakePicture::~CommandProcessorCameraTakePicture()+0x14> @ imm = #-0x6b8
+  108218: 6860         	ldr	r0, [r4, #0x4]
+  10821a: 2101         	movs	r1, #0x1
+  10821c: f7c3 ec7e    	blx	0xcbb1c <_ZN12SCALARDAEMON20CommandProcessorBase10setRetCodeENS_10SD_RETCODEE@plt> @ imm = #-0x3c704
+  108220: 4628         	mov	r0, r5
+  108222: 2102         	movs	r1, #0x2
+  108224: f7c9 ebea    	blx	0xd19fc <_ZN12SCALARDAEMON5SDJob11setJobStateENS0_8JobStateE@plt> @ imm = #-0x3682c
+  108228: 4628         	mov	r0, r5
+  10822a: 2101         	movs	r1, #0x1
+  10822c: f7c1 eeb8    	blx	0xc9fa0 <_ZN12SCALARDAEMON5SDJob18removeWaitingEventENS_11SD_EVENT_IDE@plt> @ imm = #-0x3e290
+  108230: e030         	b	0x108294 <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0x1e0> @ imm = #0x60
+  108232: 4620         	mov	r0, r4
+  108234: f7c3 ebc6    	blx	0xcb9c4 <_ZN12SCALARDAEMON33CommandProcessorCameraTakePicture14AsyncProcessor14checkCapturingEv@plt> @ imm = #-0x3c874
+  108238: e02c         	b	0x108294 <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0x1e0> @ imm = #0x58
+  10823a: 4620         	mov	r0, r4
+  10823c: f7c4 e8fc    	blx	0xcc438 <_ZN12SCALARDAEMON33CommandProcessorCameraTakePicture14AsyncProcessor14onCaptureStartEv@plt> @ imm = #-0x3be08
+  108240: 4606         	mov	r6, r0
+  108242: b140         	cbz	r0, 0x108256 <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0x1a2> @ imm = #0x10
+  108244: 6860         	ldr	r0, [r4, #0x4]
+  108246: 4631         	mov	r1, r6
+  108248: f7c3 ec68    	blx	0xcbb1c <_ZN12SCALARDAEMON20CommandProcessorBase10setRetCodeENS_10SD_RETCODEE@plt> @ imm = #-0x3c730
+  10824c: 4628         	mov	r0, r5
+  10824e: 2102         	movs	r1, #0x2
+  108250: f7c9 ebd4    	blx	0xd19fc <_ZN12SCALARDAEMON5SDJob11setJobStateENS0_8JobStateE@plt> @ imm = #-0x36858
+  108254: e01e         	b	0x108294 <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0x1e0> @ imm = #0x3c
+  108256: 4628         	mov	r0, r5
+  108258: 2102         	movs	r1, #0x2
+  10825a: f7c9 ebd0    	blx	0xd19fc <_ZN12SCALARDAEMON5SDJob11setJobStateENS0_8JobStateE@plt> @ imm = #-0x36860
+  10825e: 4b17         	ldr	r3, [pc, #0x5c]         @ 0x1082bc <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0x208>
+  108260: f44f 70aa    	mov.w	r0, #0x154
+  108264: 4631         	mov	r1, r6
+  108266: 2204         	movs	r2, #0x4
+  108268: 447b         	add	r3, pc
+  10826a: f7ff fc79    	bl	0x107b60 <SCALARDAEMON::CommandProcessorCameraTakePicture::~CommandProcessorCameraTakePicture()+0x14> @ imm = #-0x70e
+  10826e: e011         	b	0x108294 <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0x1e0> @ imm = #0x22
+  108270: 4630         	mov	r0, r6
+  108272: f7c7 ece2    	blx	0xcfc38 <_ZN12SCALARDAEMON9getStringENS_11SD_EVENT_IDE@plt> @ imm = #-0x3863c
+  108276: 4b12         	ldr	r3, [pc, #0x48]         @ 0x1082c0 <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0x20c>
+  108278: 2100         	movs	r1, #0x0
+  10827a: 2201         	movs	r2, #0x1
+  10827c: 447b         	add	r3, pc
+  10827e: 9000         	str	r0, [sp]
+  108280: f44f 70aa    	mov.w	r0, #0x154
+  108284: f7ff fc6c    	bl	0x107b60 <SCALARDAEMON::CommandProcessorCameraTakePicture::~CommandProcessorCameraTakePicture()+0x14> @ imm = #-0x728
+  108288: e004         	b	0x108294 <SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()+0x1e0> @ imm = #0x8
+  10828a: 1d38         	adds	r0, r7, #0x4
+  10828c: f7c5 eac6    	blx	0xcd81c <_ZN9ParamListD1Ev@plt> @ imm = #-0x3aa74
+  108290: f7c6 ed16    	blx	0xcecc0 <__cxa_end_cleanup@plt> @ imm = #-0x395d4
+  108294: f107 0714    	add.w	r7, r7, #0x14
+  108298: 46bd         	mov	sp, r7
+  10829a: e8bd 83f0    	pop.w	{r4, r5, r6, r7, r8, r9, pc}
+  10829e: bf00         	nop
+  1082a0: 864a         	strh	r2, [r1, #0x32]
+  1082a2: 0006         	movs	r6, r0
+  1082a4: 866e         	strh	r6, [r5, #0x32]
+  1082a6: 0006         	movs	r6, r0
+  1082a8: 8665         	strh	r5, [r4, #0x32]
+  1082aa: 0006         	movs	r6, r0
+  1082ac: 8673         	strh	r3, [r6, #0x32]
+  1082ae: 0006         	movs	r6, r0
+  1082b0: 866c         	strh	r4, [r5, #0x32]
+  1082b2: 0006         	movs	r6, r0
+  1082b4: 869b         	strh	r3, [r3, #0x34]
+  1082b6: 0006         	movs	r6, r0
+  1082b8: 86d0         	strh	r0, [r2, #0x36]
+  1082ba: 0006         	movs	r6, r0
+  1082bc: 86c5         	strh	r5, [r0, #0x36]
+  1082be: 0006         	movs	r6, r0
+  1082c0: 86ec         	strh	r4, [r5, #0x36]
+  1082c2: 0006         	movs	r6, r0

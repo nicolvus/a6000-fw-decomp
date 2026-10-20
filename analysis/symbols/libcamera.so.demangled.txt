@@ -1,0 +1,1007 @@
+
+Symbol table '.dynsym' contains 1003 entries:
+   Num:    Value  Size Type    Bind   Vis      Ndx Name
+     0: 00000000     0 NOTYPE  LOCAL  DEFAULT  UND 
+     1: 00000000     0 FUNC    GLOBAL DEFAULT  UND __aeabi_unwind_cpp_pr0
+     2: 00016208    12 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::getPreviewHeap() const
+     3: 00016214    12 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::getRawHeap() const
+     4: 00016220     8 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::msgTypeEnabled(int)
+     5: 00016228     8 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::useOverlay()
+     6: 00016230     8 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::setOverlay(android::sp<android::Overlay> const&)
+     7: 00016238     8 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::previewEnabled()
+     8: 00016240     8 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::startRecording()
+     9: 00016248     4 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::stopRecording()
+    10: 0001624c     8 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::recordingEnabled()
+    11: 00016254     4 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::releaseRecordingFrame(android::sp<android::IMemory> const&)
+    12: 00016258    24 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::getDiademEventId(int)
+    13: 00016270    20 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::checkKnownExtraEvent(int)
+    14: 00016284    16 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::setKnownExtraEventId(int, int)
+    15: 00016294     8 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::dump(int, android::Vector<android::String16> const&) const
+    16: 0001629c     8 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::msgTypeEnabledEx(int)
+    17: 000162a4     4 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::releaseEx()
+    18: 000162a8    32 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::beginSpinelShutterStoppedEvent(void*)
+    19: 000162c8    32 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::beginCustomWBCaptureEventThread(void*)
+    20: 000162e8     8 FUNC    GLOBAL DEFAULT    7 HAL_getNumberOfCameras
+    21: 000162f0    32 FUNC    GLOBAL DEFAULT    7 HAL_getCameraInfo
+    22: 00016310     4 FUNC    WEAK   DEFAULT    7 android::Vector<SDComMsgParam*>::do_construct(void*, unsigned int) const
+    23: 00016314     4 FUNC    WEAK   DEFAULT    7 android::Vector<SDComMsgParam*>::do_destroy(void*, unsigned int) const
+    24: 00016318    36 FUNC    WEAK   DEFAULT    7 android::Vector<SDComMsgParam*>::do_splat(void*, void const*, unsigned int) const
+    25: 00000000     0 FUNC    GLOBAL DEFAULT  UND operator delete(void*)
+    26: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::RefBase::~RefBase()
+    27: 0002a028   168 OBJECT  WEAK   DEFAULT   13 vtable for android::CameraHardwareInterface
+    28: 0002a1b8    16 OBJECT  WEAK   DEFAULT   13 VTT for android::CameraExHardwareInterface
+    29: 0002a0d8   224 OBJECT  WEAK   DEFAULT   13 vtable for android::CameraExHardwareInterface
+    30: 0001647c    52 FUNC    WEAK   DEFAULT    7 android::sp<android::MemoryHeapBase>::sp(android::MemoryHeapBase*)
+    31: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::RefBase::incStrong(void const*) const
+    32: 000164b0    76 FUNC    WEAK   DEFAULT    7 android::sp<android::IMemoryHeap>::sp<android::MemoryHeapBase>(android::sp<android::MemoryHeapBase> const&)
+    33: 000164fc    52 FUNC    WEAK   DEFAULT    7 android::sp<android::MemoryBase>::sp(android::MemoryBase*)
+    34: 00016530    52 FUNC    WEAK   DEFAULT    7 android::sp<android::IMemory>::sp<android::MemoryBase>(android::sp<android::MemoryBase> const&)
+    35: 00016564    48 FUNC    WEAK   DEFAULT    7 android::sp<android::IMemoryHeap>::~sp()
+    36: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::RefBase::decStrong(void const*) const
+    37: 00016594    48 FUNC    WEAK   DEFAULT    7 android::sp<android::IMemory>::~sp()
+    38: 000165c4    48 FUNC    WEAK   DEFAULT    7 android::sp<android::MemoryBase>::~sp()
+    39: 000165f4    48 FUNC    WEAK   DEFAULT    7 android::sp<android::MemoryHeapBase>::~sp()
+    40: 00016624    44 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::munmapData(unsigned char*, unsigned int)
+    41: 00000000     0 FUNC    GLOBAL DEFAULT  UND munmap
+    42: 00016650    68 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::convertRecordingMode(int) const
+    43: 00000000     0 FUNC    GLOBAL DEFAULT  UND __android_log_print
+    44: 00016694   536 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::mmapData(unsigned char**, unsigned int*, unsigned int*, unsigned int*, std::vector<int, std::allocator<int> >*, std::vector<int, std::allocator<int> >*)
+    45: 00000000     0 FUNC    GLOBAL DEFAULT  UND open
+    46: 00000000     0 FUNC    GLOBAL DEFAULT  UND malloc
+    47: 00000000     0 FUNC    GLOBAL DEFAULT  UND ioctl
+    48: 00000000     0 FUNC    GLOBAL DEFAULT  UND mmap
+    49: 00000000     0 FUNC    GLOBAL DEFAULT  UND free
+    50: 00000000     0 FUNC    GLOBAL DEFAULT  UND close
+    51: 000168ac   832 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::convertParamEventEx(int, SDComMsgIntArrayParam*)
+    52: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComMsgIntArrayParam::addData(int)
+    53: 00016bec   104 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::convertParamEvent(int, SDComMsgIntArrayParam*)
+    54: 00016c54   164 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleSTDFocusEvent(SDComMsg*)
+    55: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComMsgUtil::getFirstParam(SDComMsg*, bool)
+    56: 00016cf8   164 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleErrorEvent(SDComMsg*)
+    57: 00016d9c   744 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::SDComMsg_Basic(ScalarDaemonMsg::MESSAGE_ID, android::Vector<SDComMsgParam*> const*)
+    58: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComIPC::createNewTransactionId(unsigned int*)
+    59: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComMsgUtil::createNewMessage(unsigned int, unsigned char, unsigned int)
+    60: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComMsgUtil::setMessageId(SDComMsg*, unsigned short)
+    61: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComMsgUtil::addParam(SDComMsg*, SDComMsgParam const*)
+    62: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComIPC::sendSync(SDComMsg*, SDComMsg**, int)
+    63: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComMsgUtil::freeMessage(SDComMsg*, bool)
+    64: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComMsgUtil::getNumOfParams(SDComMsg*)
+    65: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComMsgUtil::getNextParam(SDComMsg*, bool)
+    66: 00017084    12 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::stopPreviewMagnification()
+    67: 00017090    12 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::resetDigitalZoom()
+    68: 0001709c    12 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::stopZoom()
+    69: 000170a8    12 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::captureCustomWB()
+    70: 000170b4    12 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::cancelPicture()
+    71: 000170c0    52 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::takePicture()
+    72: 000170f4    12 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::cancelAutoFocus()
+    73: 00017100    12 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::autoFocus()
+    74: 0001710c    32 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::stopPreview()
+    75: 0001712c    36 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::startPreview()
+    76: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::VectorImpl::VectorImpl(unsigned int, unsigned int)
+    77: 0002a270    72 OBJECT  WEAK   DEFAULT   13 vtable for android::Vector<SDComMsgParam*>
+    78: 0001718c    16 FUNC    WEAK   DEFAULT    7 android::Vector<SDComMsgParam*>::do_move_backward(void*, void const*, unsigned int) const
+    79: 00000000     0 FUNC    GLOBAL DEFAULT  UND memmove
+    80: 0001719c    16 FUNC    WEAK   DEFAULT    7 android::Vector<SDComMsgParam*>::do_move_forward(void*, void const*, unsigned int) const
+    81: 000171ac    16 FUNC    WEAK   DEFAULT    7 android::Vector<SDComMsgParam*>::do_copy(void*, void const*, unsigned int) const
+    82: 00000000     0 FUNC    GLOBAL DEFAULT  UND memcpy
+    83: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::VectorImpl::finish_vector()
+    84: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::VectorImpl::~VectorImpl()
+    85: 0002a300    72 OBJECT  WEAK   DEFAULT   13 vtable for android::Vector<com_sony_scalar::FocusAreaInfosList::FocusAreaInfos::FocusAreaRectInfo>
+    86: 0002a2b8    72 OBJECT  WEAK   DEFAULT   13 vtable for android::Vector<com_sony_scalar::FocusAreaInfosList::FocusAreaInfos>
+    87: 000172ec   276 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::setReplyMsg(android::Vector<SDComMsgParam*>*, SDComMsgParam*)
+    88: 00000000     0 FUNC    GLOBAL DEFAULT  UND operator new(unsigned int)
+    89: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComMsgIntArrayParam::SDComMsgIntArrayParam(SDComMsgIntArrayParam const&)
+    90: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::VectorImpl::push(void const*)
+    91: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComMsgStringParam::SDComMsgStringParam(SDComMsgStringParam const&)
+    92: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComMsgBinaryParam::SDComMsgBinaryParam(SDComMsgBinaryParam const&)
+    93: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComMsgIntParam::SDComMsgIntParam(SDComMsgIntParam const&)
+    94: 00017400   996 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::SDComMsg_SendReply(ScalarDaemonMsg::MESSAGE_ID, android::Vector<SDComMsgParam*> const*)
+    95: 000177e4   572 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::getFlashInfo()
+    96: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::String8::~String8()
+    97: 0002a3a8    28 OBJECT  WEAK   DEFAULT   13 vtable for com_sony_scalar::GenerationStatus
+    98: 00017a54    40 FUNC    WEAK   DEFAULT    7 android::Vector<com_sony_scalar::FocusAreaInfosList::FocusAreaInfos::FocusAreaRectInfo>::do_construct(void*, unsigned int) const
+    99: 00025a94    80 FUNC    GLOBAL DEFAULT    7 com_sony_scalar::JSONObject::JSONObject()
+   100: 00017a7c    72 FUNC    WEAK   DEFAULT    7 android::SortedVector<android::key_value_pair_t<android::String8, android::String8> >::do_copy(void*, void const*, unsigned int) const
+   101: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::String8::String8(android::String8 const&)
+   102: 00017ac4   140 FUNC    WEAK   DEFAULT    7 android::Vector<com_sony_scalar::FocusAreaInfosList::FocusAreaInfos>::do_copy(void*, void const*, unsigned int) const
+   103: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::VectorImpl::VectorImpl(android::VectorImpl const&)
+   104: 0002ba78    16 OBJECT  GLOBAL DEFAULT   13 vtable for com_sony_scalar::JSONObject
+   105: 00017b50    52 FUNC    WEAK   DEFAULT    7 android::SortedVector<android::key_value_pair_t<android::String8, android::String8> >::do_compare(void const*, void const*) const
+   106: 00000000     0 FUNC    GLOBAL DEFAULT  UND strcmp
+   107: 00017b84    52 FUNC    WEAK   DEFAULT    7 android::SortedVector<android::key_value_pair_t<android::String8, android::String8> >::do_construct(void*, unsigned int) const
+   108: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::String8::String8()
+   109: 00017bb8    40 FUNC    WEAK   DEFAULT    7 android::Vector<com_sony_scalar::FocusAreaInfosList::FocusAreaInfos::FocusAreaRectInfo>::do_destroy(void*, unsigned int) const
+   110: 00025c44    60 FUNC    GLOBAL DEFAULT    7 com_sony_scalar::JSONObject::~JSONObject()
+   111: 00017be0   152 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleProperExposureLevelEvent(SDComMsg*)
+   112: 00000000     0 FUNC    GLOBAL DEFAULT  UND pthread_mutex_lock
+   113: 00000000     0 FUNC    GLOBAL DEFAULT  UND pthread_mutex_unlock
+   114: 00017c78   156 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleCameraGainChangeEvent(SDComMsg*)
+   115: 00017d14   168 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleProgramLineEvent(SDComMsg*)
+   116: 00017dbc   212 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handlePowerZoomEvent(SDComMsg*)
+   117: 00017e90    84 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleRecordingMediaChange(SDComMsg*)
+   118: 00017ee4   156 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleFlashEmittionEvent(SDComMsg*)
+   119: 00017f80   156 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleProgramLineOverEvent_EVRange(SDComMsg*)
+   120: 0001801c   156 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleProgramLineOverEvent_MeteringRange(SDComMsg*)
+   121: 000180b8   300 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleProgramLineOverEvent_AERange(SDComMsg*)
+   122: 000181e4   228 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleFocusLightEvent(SDComMsg*)
+   123: 000182c8   196 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleFlashChargingEvent(SDComMsg*)
+   124: 0001838c   400 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleStartCameraSequenceEvent(SDComMsg*)
+   125: 0001851c   412 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleEquipmentEvent(SDComMsg*)
+   126: 000186b8   176 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleFocalLengthChangeEvent(SDComMsg*)
+   127: 00018768    84 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handlePreviewStartEvent(SDComMsg*)
+   128: 000187bc   192 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleAutoReviewStartEvent(SDComMsg*)
+   129: 0001887c    84 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleFocusStartEvent(SDComMsg*)
+   130: 000188d0   180 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleISOSensitivityChangeEvent(SDComMsg*)
+   131: 00018984    72 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleShutterEvent_Thread()
+   132: 000189cc     4 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::beginShutterEventThread(void*)
+   133: 000189d0    48 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::setExCallbacks(void (*)(int, int, int, void*), void (*)(int, android::sp<android::IMemory> const&, void*))
+   134: 00018a00    68 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::setCallbacks(void (*)(int, int, int, void*), void (*)(int, android::sp<android::IMemory> const&, void*), void (*)(long long, int, android::sp<android::IMemory> const&, void*), void*)
+   135: 00018a44   584 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleFocusPositionEvent(SDComMsg*)
+   136: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::MemoryHeapBase::MemoryHeapBase(unsigned int, unsigned int, char const*)
+   137: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::MemoryBase::MemoryBase(android::sp<android::IMemoryHeap> const&, long, unsigned int)
+   138: 00018c8c   564 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handlePreviewMagInfoEvent(SDComMsg*)
+   139: 00018ec0   608 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handlePreviewMagChangedEvent(SDComMsg*)
+   140: 00019120  1056 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handlePreviewDetectedEvent(SDComMsg*)
+   141: 00000000     0 FUNC    GLOBAL DEFAULT  UND __aeabi_unwind_cpp_pr1
+   142: 00019540  1284 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleAutoReviewInfoEvent(SDComMsg*)
+   143: 00019a44   584 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleApertureChangeEvent(SDComMsg*)
+   144: 00019c8c   384 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleAutoApscModeEvent(SDComMsg*)
+   145: 00023e24    44 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::getApscModeTableValue(int)
+   146: 00000000     0 FUNC    GLOBAL DEFAULT  UND strlen
+   147: 00019e0c   852 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleZoomPositionEvent(SDComMsg*)
+   148: 00023e50    44 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::getDigitalZoomTypeTableValue(int)
+   149: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::String8::setTo(char const*)
+   150: 0001a1b0  1168 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::getLensInfo()
+   151: 0001a640   652 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleCustomWBCaptureEvent(SDComMsg*)
+   152: 00000000     0 FUNC    GLOBAL DEFAULT  UND androidCreateThread
+   153: 0001a8cc   116 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleSpinelShutterStoppedEvent(SDComMsg*)
+   154: 0001a940   368 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleShutterEvent(SDComMsg*)
+   155: 0001aab0  2136 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleFaceDetectedEvent(SDComMsg*)
+   156: 00000000     0 FUNC    GLOBAL DEFAULT  UND operator delete[](void*)
+   157: 00000000     0 FUNC    GLOBAL DEFAULT  UND operator new[](unsigned int)
+   158: 0002a428    28 OBJECT  WEAK   DEFAULT   13 vtable for com_sony_scalar::Point
+   159: 0002a348    28 OBJECT  WEAK   DEFAULT   13 vtable for com_sony_scalar::FaceInfo
+   160: 0002a3e8    28 OBJECT  WEAK   DEFAULT   13 vtable for com_sony_scalar::FaceAngle
+   161: 0002a408    28 OBJECT  WEAK   DEFAULT   13 vtable for com_sony_scalar::Rect
+   162: 0002a388    28 OBJECT  WEAK   DEFAULT   13 vtable for com_sony_scalar::GenderStatus
+   163: 0002a3c8    28 OBJECT  WEAK   DEFAULT   13 vtable for com_sony_scalar::SmileStatus
+   164: 0002a368    28 OBJECT  WEAK   DEFAULT   13 vtable for com_sony_scalar::EyeBlinkStatus
+   165: 0001b308   388 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleSceneModeChangeEvent(SDComMsg*)
+   166: 00023df8    44 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::getSceneModeTableValue(int)
+   167: 0001b48c  1176 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleShutterSpeedChangeEvent(SDComMsg*)
+   168: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComMsgIntArrayParam::getDataAt(int, int*) const
+   169: 0001b924    44 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::getInitialParameters() const
+   170: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::CameraParameters::CameraParameters()
+   171: 00025374   988 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::SDComMsg_GetParameters(ScalarDaemonMsg::MESSAGE_ID, android::CameraParameters*, android::Vector<SDComMsgParam*> const*) const
+   172: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::SortedVectorImpl::~SortedVectorImpl()
+   173: 0002a468   108 OBJECT  WEAK   DEFAULT   13 vtable for android::SortedVector<android::key_value_pair_t<android::String8, android::String8> >
+   174: 0001b98c   292 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::getParameters() const
+   175: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::SortedVectorImpl::operator=(android::SortedVectorImpl const&)
+   176: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::String8::setTo(android::String8 const&)
+   177: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComMsgIntParam::SDComMsgIntParam(unsigned short, int)
+   178: 00000000     0 OBJECT  GLOBAL DEFAULT  UND vtable for SDComMsgParam
+   179: 0002a448    28 OBJECT  WEAK   DEFAULT   13 vtable for com_sony_scalar::Flattenable
+   180: 0001bbcc    48 FUNC    WEAK   DEFAULT    7 android::SortedVector<android::key_value_pair_t<android::String8, android::String8> >::do_destroy(void*, unsigned int) const
+   181: 0001bc6c   140 FUNC    WEAK   DEFAULT    7 android::Vector<com_sony_scalar::FocusAreaInfosList::FocusAreaInfos::FocusAreaRectInfo>::do_splat(void*, void const*, unsigned int) const
+   182: 0001bcf8   144 FUNC    WEAK   DEFAULT    7 android::Vector<com_sony_scalar::FocusAreaInfosList::FocusAreaInfos::FocusAreaRectInfo>::do_copy(void*, void const*, unsigned int) const
+   183: 0001bd88   152 FUNC    WEAK   DEFAULT    7 android::Vector<com_sony_scalar::FocusAreaInfosList::FocusAreaInfos::FocusAreaRectInfo>::do_move_backward(void*, void const*, unsigned int) const
+   184: 0001be20   152 FUNC    WEAK   DEFAULT    7 android::Vector<com_sony_scalar::FocusAreaInfosList::FocusAreaInfos::FocusAreaRectInfo>::do_move_forward(void*, void const*, unsigned int) const
+   185: 00000000     0 FUNC    GLOBAL DEFAULT  UND std::__node_alloc::_M_deallocate(void*, unsigned int)
+   186: 00000000     0 FUNC    GLOBAL DEFAULT  UND std::__node_alloc::_M_allocate(unsigned int&)
+   187: 0001c118    92 FUNC    WEAK   DEFAULT    7 android::SortedVector<android::key_value_pair_t<android::String8, android::String8> >::do_move_backward(void*, void const*, unsigned int) const
+   188: 0001c174    88 FUNC    WEAK   DEFAULT    7 android::SortedVector<android::key_value_pair_t<android::String8, android::String8> >::do_move_forward(void*, void const*, unsigned int) const
+   189: 0001c1cc    64 FUNC    WEAK   DEFAULT    7 android::SortedVector<android::key_value_pair_t<android::String8, android::String8> >::do_splat(void*, void const*, unsigned int) const
+   190: 0001c20c   100 FUNC    WEAK   DEFAULT    7 android::Vector<com_sony_scalar::FocusAreaInfosList::FocusAreaInfos>::do_construct(void*, unsigned int) const
+   191: 0001c3d0   100 FUNC    WEAK   DEFAULT    7 android::Vector<com_sony_scalar::FocusAreaInfosList::FocusAreaInfos>::do_destroy(void*, unsigned int) const
+   192: 0001c434   180 FUNC    WEAK   DEFAULT    7 android::Vector<com_sony_scalar::FocusAreaInfosList::FocusAreaInfos>::do_move_backward(void*, void const*, unsigned int) const
+   193: 0001c4e8   188 FUNC    WEAK   DEFAULT    7 android::Vector<com_sony_scalar::FocusAreaInfosList::FocusAreaInfos>::do_move_forward(void*, void const*, unsigned int) const
+   194: 0001c5a4   160 FUNC    WEAK   DEFAULT    7 android::Vector<com_sony_scalar::FocusAreaInfosList::FocusAreaInfos>::do_splat(void*, void const*, unsigned int) const
+   195: 00000000     0 FUNC    GLOBAL DEFAULT  UND android_atomic_dec
+   196: 0002a018    16 OBJECT  WEAK   DEFAULT   13 vtable for android::List<android::sp<com_sony_scalar::SDComEventMessage> >
+   197: 0001c7f0   180 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::EventThread::StopAndClear()
+   198: 00000000     0 FUNC    GLOBAL DEFAULT  UND pthread_cond_signal
+   199: 0001c8a4     8 FUNC    GLOBAL DEFAULT    7 non-virtual thunk to android::CameraHardwareDiadem::~CameraHardwareDiadem()
+   200: 0001c8ac   300 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::~CameraHardwareDiadem()
+   201: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComIPC::disconnect()
+   202: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComIPC::~SDComIPC()
+   203: 00000000     0 FUNC    GLOBAL DEFAULT  UND pthread_mutex_destroy
+   204: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::CameraParameters::~CameraParameters()
+   205: 0002a4d8   268 OBJECT  GLOBAL DEFAULT   13 vtable for android::CameraHardwareDiadem
+   206: 0002c2a0     4 OBJECT  GLOBAL DEFAULT   17 android::CameraHardwareDiadem::s_pCameraHardwareDiadem
+   207: 0002a5e8    24 OBJECT  GLOBAL DEFAULT   13 VTT for android::CameraHardwareDiadem
+   208: 00000000     0 OBJECT  GLOBAL DEFAULT  UND vtable for SDComIPCListener
+   209: 0001c9d8     8 FUNC    GLOBAL DEFAULT    7 non-virtual thunk to android::CameraHardwareDiadem::~CameraHardwareDiadem()
+   210: 0001c9e0    28 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::~CameraHardwareDiadem()
+   211: 0001c9fc   224 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::~CameraHardwareDiadem()
+   212: 00000000     0 FUNC    GLOBAL DEFAULT  UND pthread_cond_destroy
+   213: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::Thread::~Thread()
+   214: 0002a788    88 OBJECT  GLOBAL DEFAULT   13 vtable for android::CameraHardwareDiadem::EventThread
+   215: 0002a7e0    16 OBJECT  GLOBAL DEFAULT   13 VTT for android::CameraHardwareDiadem::EventThread
+   216: 0001d074     8 FUNC    GLOBAL DEFAULT    7 non-virtual thunk to android::CameraHardwareDiadem::onEventReceived(SDComMsg*)
+   217: 0001d07c   164 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::onEventReceived(SDComMsg*)
+   218: 00000000     0 FUNC    GLOBAL DEFAULT  UND android_atomic_inc
+   219: 00000000     0 OBJECT  GLOBAL DEFAULT  UND vtable for SDComMsgIntArrayParam
+   220: 0001d184  1456 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleFocusAreaInfoEvent(SDComMsg*)
+   221: 00023dcc    44 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::getFocusAreaTypeTableValue(int)
+   222: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::String8::String8(char const*)
+   223: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::String8::append(char const*)
+   224: 0001da10   516 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::getPictureReviewSupportedTimes(int**, int*)
+   225: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComMsgIntArrayParam::getData() const
+   226: 00000000     0 FUNC    GLOBAL DEFAULT  UND puts
+   227: 00000000     0 FUNC    GLOBAL DEFAULT  UND exit
+   228: 0001dc14  1152 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleJpegEvent(SDComMsg*)
+   229: 00020104    44 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::beginJpegEventThread(void*)
+   230: 0001e094   416 FUNC    WEAK   DEFAULT    7 std::vector<int, std::allocator<int> >::operator=(std::vector<int, std::allocator<int> > const&)
+   231: 0001e234   940 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleFocusDoneEvent(SDComMsg*)
+   232: 0001e624   272 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::setExtendedGammaTable(int, int)
+   233: 0001e734   152 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::setForceExposureLevel(int)
+   234: 0001e7cc   152 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::setForceExposureControlMode(bool)
+   235: 0001e864   220 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::setPreviewMagnification(int, int)
+   236: 0001e940   184 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::resetQuickFocus(int)
+   237: 0001e9f8   184 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::setQuickFocus(int)
+   238: 0001eab0   152 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::setToggleFocusMode(int)
+   239: 0001eb48   152 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::setRecordingMedia(int)
+   240: 0001ebe0   152 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::unsetCompressedImageEvent()
+   241: 0001ec78   152 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::setCompressedImageEvent()
+   242: 0001ed10   284 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleOpenCameraEvent(SDComMsg*)
+   243: 0001ee2c   152 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::stopCustomWBCapture()
+   244: 0001eec4   152 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::startCustomWBCapture()
+   245: 0001ef5c   152 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::shiftProgramLine(int)
+   246: 0001eff4   152 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::shiftShutterSpeed(int)
+   247: 0001f08c   152 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::shiftAperture(int)
+   248: 0001f124   496 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::getChannelColorSelect(int)
+   249: 0001f314   196 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::HistogramEventCtl(bool, bool)
+   250: 0001f3d8    20 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::executeSpecialProcessWithUnsetCB(int)
+   251: 0001f3ec    20 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::executeSpecialProcessWithSetCB(int)
+   252: 0001f400   892 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::settingChangeTypesControl(int*, int, int)
+   253: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComMsgIntArrayParam::SDComMsgIntArrayParam(unsigned short, int const*, int)
+   254: 0001f77c   572 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::getPreviewDisplayColor(int, int)
+   255: 0001f9b8  1868 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleJpegEvent_Thread(std::vector<int, std::allocator<int> >*, std::vector<int, std::allocator<int> >*, unsigned int)
+   256: 00020130   304 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::setColorSelectedToChannel(int, com_sony_scalar::SelectedColor*)
+   257: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComMsgBinaryParam::SDComMsgBinaryParam(unsigned short, char const*, int, bool)
+   258: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComMsgBinaryParam::~SDComMsgBinaryParam()
+   259: 00020260  1212 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::getFocusAreaInfos(int)
+   260: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::VectorImpl::editItemLocation(unsigned int)
+   261: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::VectorImpl::clear()
+   262: 0002071c  2652 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::handleSettingChangedEvent(SDComMsg*)
+   263: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::CameraParameters::CameraParameters()
+   264: 00024328  4172 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::convertToCamParams(android::CameraParameters*, android::Vector<SDComMsgParam*> const*, android::CameraHardwareDiadem::ParamConvertTable const*, short) const
+   265: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::CameraParameters::~CameraParameters()
+   266: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::CameraParameters::flatten() const
+   267: 00021178  1136 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::onEventReceived_thread(SDComMsg*)
+   268: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComMsgUtil::getMessageId(SDComMsg*, unsigned short*)
+   269: 000215e8   272 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::EventThread::threadLoop()
+   270: 00000000     0 FUNC    GLOBAL DEFAULT  UND pthread_cond_wait
+   271: 000216f8  1060 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::CameraHardwareDiadem(com_sony_scalar::OpenOptions*)
+   272: 00000000     0 FUNC    GLOBAL DEFAULT  UND pthread_mutex_init
+   273: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::RefBase::RefBase()
+   274: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::Thread::Thread(bool)
+   275: 00000000     0 FUNC    GLOBAL DEFAULT  UND pthread_cond_init
+   276: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComIPC::SDComIPC(SDComIPCListener*)
+   277: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComIPC::connect(unsigned int, unsigned char)
+   278: 00021b1c  1076 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::CameraHardwareDiadem(com_sony_scalar::OpenOptions*)
+   279: 00021f50   128 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::createInstance(com_sony_scalar::OpenOptions*)
+   280: 00021fd0    24 FUNC    GLOBAL DEFAULT    7 HAL_openCameraExHardware
+   281: 00021fe8   108 FUNC    GLOBAL DEFAULT    7 HAL_openCameraHardware
+   282: 00022054   232 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::startZoom(int, int)
+   283: 0002213c   232 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::startOneShotFocusDrive(int, int)
+   284: 00022224   796 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::setParameters(android::CameraParameters const&)
+   285: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::CameraParameters::get(char const*) const
+   286: 00023e7c  1196 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::convertFromCamParams(android::Vector<SDComMsgParam*>*, android::CameraParameters const*)
+   287: 00027274    14 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_ATOGACHI_MODE
+   288: 00022540   188 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::saveCustomWB(int)
+   289: 000225fc   344 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::enableMsgType(int)
+   290: 00022754   188 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::setDigitalZoom(int)
+   291: 00000000     0 FUNC    GLOBAL DEFAULT  UND __aeabi_llsl
+   292: 00022810  2440 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::sendCommand(int, int, int)
+   293: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComMsgIntParam::setData(int)
+   294: 00023198   500 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::disableMsgType(int)
+   295: 0002338c   380 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::getSupportedParameters(int) const
+   296: 00023508   312 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::release()
+   297: 00023640   776 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::reopen(int, com_sony_scalar::OpenOptions*)
+   298: 00023948  1124 FUNC    GLOBAL DEFAULT    7 android::CameraHardwareDiadem::sendCommandREx(int, int, int, int*)
+   299: 0001d064    16 FUNC    WEAK   DEFAULT    7 virtual thunk to android::CameraHardwareDiadem::EventThread::~EventThread()
+   300: 0001cf5c    16 FUNC    WEAK   DEFAULT    7 virtual thunk to android::CameraHardwareDiadem::EventThread::~EventThread()
+   301: 00023dac    16 FUNC    GLOBAL DEFAULT    7 virtual thunk to android::CameraHardwareDiadem::~CameraHardwareDiadem()
+   302: 00023dbc    16 FUNC    GLOBAL DEFAULT    7 virtual thunk to android::CameraHardwareDiadem::~CameraHardwareDiadem()
+   303: 0001bc5c    16 FUNC    WEAK   DEFAULT    7 virtual thunk to android::CameraExHardwareInterface::~CameraExHardwareInterface()
+   304: 0001bbbc    16 FUNC    WEAK   DEFAULT    7 virtual thunk to android::CameraHardwareInterface::~CameraHardwareInterface()
+   305: 0001646c    16 FUNC    WEAK   DEFAULT    7 virtual thunk to android::CameraExHardwareInterface::~CameraExHardwareInterface()
+   306: 00016404    16 FUNC    WEAK   DEFAULT    7 virtual thunk to android::CameraHardwareInterface::~CameraHardwareInterface()
+   307: 0002a600   224 OBJECT  GLOBAL DEFAULT   13 construction vtable for android::CameraExHardwareInterface-in-android::CameraHardwareDiadem
+   308: 0002a6e0   168 OBJECT  GLOBAL DEFAULT   13 construction vtable for android::CameraHardwareInterface-in-android::CameraHardwareDiadem
+   309: 0002a7f0    88 OBJECT  GLOBAL DEFAULT   13 construction vtable for android::Thread-in-android::CameraHardwareDiadem::EventThread
+   310: 00000000     0 FUNC    GLOBAL DEFAULT  UND __cxa_pure_virtual
+   311: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::RefBase::onFirstRef()
+   312: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::RefBase::onLastStrongRef(void const*)
+   313: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::RefBase::onIncStrongAttempted(unsigned int, void const*)
+   314: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::RefBase::onLastWeakRef(void const*)
+   315: 0002a0d0     8 OBJECT  WEAK   DEFAULT   13 VTT for android::CameraHardwareInterface
+   316: 0002a1c8   168 OBJECT  WEAK   DEFAULT   13 construction vtable for android::CameraHardwareInterface-in-android::CameraExHardwareInterface
+   317: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::VectorImpl::reservedVectorImpl1()
+   318: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::VectorImpl::reservedVectorImpl2()
+   319: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::VectorImpl::reservedVectorImpl3()
+   320: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::VectorImpl::reservedVectorImpl4()
+   321: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::VectorImpl::reservedVectorImpl5()
+   322: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::VectorImpl::reservedVectorImpl6()
+   323: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::VectorImpl::reservedVectorImpl7()
+   324: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::VectorImpl::reservedVectorImpl8()
+   325: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::SortedVectorImpl::reservedSortedVectorImpl1()
+   326: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::SortedVectorImpl::reservedSortedVectorImpl2()
+   327: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::SortedVectorImpl::reservedSortedVectorImpl3()
+   328: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::SortedVectorImpl::reservedSortedVectorImpl4()
+   329: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::SortedVectorImpl::reservedSortedVectorImpl5()
+   330: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::SortedVectorImpl::reservedSortedVectorImpl6()
+   331: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::SortedVectorImpl::reservedSortedVectorImpl7()
+   332: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::SortedVectorImpl::reservedSortedVectorImpl8()
+   333: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComIPCListener::onConnectionRequested(unsigned int, unsigned char)
+   334: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComIPCListener::onDisconnectionRequested(unsigned int)
+   335: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComIPCListener::onConnected()
+   336: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComIPCListener::onDisconnected()
+   337: 00000000     0 FUNC    GLOBAL DEFAULT  UND SDComIPCListener::onCommandRequested(SDComMsg*)
+   338: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::Thread::run(char const*, int, unsigned int)
+   339: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::Thread::requestExit()
+   340: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::Thread::readyToRun()
+   341: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::Thread::~Thread()
+   342: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::Thread::~Thread()
+   343: 00000000     0 FUNC    GLOBAL DEFAULT  UND virtual thunk to android::Thread::~Thread()
+   344: 00000000     0 FUNC    GLOBAL DEFAULT  UND virtual thunk to android::Thread::~Thread()
+   345: 00026234     9 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_APERTURE
+   346: 00026240    19 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SHUTTER_SPEED_NUME
+   347: 00026254    19 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SHUTTER_SPEED_DENO
+   348: 00026268    16 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_ISO_SENSITIVITY
+   349: 00026278    23 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_ISO_SENSITIVITIES
+   350: 00026290    14 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_METERING_MODE
+   351: 000262a0    21 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_METERING_MODES
+   352: 000262b8    16 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_FOCUS_AREA_TYPE
+   353: 000262c8    23 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_FOCUS_AREA_TYPES
+   354: 000262e0    14 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_FOCUS_POINT_X
+   355: 000262f0    14 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_FOCUS_POINT_Y
+   356: 00026300    18 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_FOCUS_POINT_INDEX
+   357: 00026314     9 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_DRO_MODE
+   358: 00026320    16 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_DRO_MODES
+   359: 00026330    10 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_DRO_LEVEL
+   360: 0002633c    14 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_DRO_LEVEL
+   361: 0002634c     9 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_HDR_MODE
+   362: 00026358    16 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_HDR_MODES
+   363: 00026368    30 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_HDR_EXPOSURE_DIFFERENCE_LEVEL
+   364: 00026388    35 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_HDR_EXPOSURE_DIFFERENCE_LEVEL_STEP
+   365: 000263ac    30 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_HDR_EXPOSURE_DIFFERENCE_LEVEL
+   366: 000263cc    30 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_HDR_EXPOSURE_DIFFERENCE_LEVEL
+   367: 000263ec    11 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_FLASH_TYPE
+   368: 000263f8    18 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_FLASH_TYPES
+   369: 0002640c    23 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_RED_EYE_REDUCTION_MODE
+   370: 00026424    30 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_RED_EYE_REDUCTION_MODES
+   371: 00026444    19 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_FLASH_COMPENSATION
+   372: 00026458    23 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_FLASH_COMPENSATION
+   373: 00026470    23 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_FLASH_COMPENSATION
+   374: 00026488    24 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_FLASH_COMPENSATION_STEP
+   375: 000264a0    21 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_CUSTOM_WHITE_BALANCE
+   376: 000264b8    28 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_NUM_OF_CUSTOM_WHITE_BALANCE
+   377: 000264d4    31 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_COLOR_TEMPERTURE_WHITE_BALANCE
+   378: 000264f4    35 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_COLOR_TEMPERTURE_WHITE_BALANCE
+   379: 00026518    35 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_COLOR_TEMPERTURE_WHITE_BALANCE
+   380: 0002653c    37 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_COLOR_COMPENSATION_FOR_WHITE_BALANCE
+   381: 00026564    41 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_COLOR_COMPENSATION_FOR_WHITE_BALANCE
+   382: 00026590    41 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_COLOR_COMPENSATION_FOR_WHITE_BALANCE
+   383: 000265bc    32 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_LIGHT_BALANCE_FOR_WHITE_BALANCE
+   384: 000265dc    36 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_LIGHT_BALANCE_FOR_WHITE_BALANCE
+   385: 00026600    36 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_LIGHT_BALANCE_FOR_WHITE_BALANCE
+   386: 00026624    11 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_COLOR_MODE
+   387: 00026630    18 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_COLOR_MODES
+   388: 00026644     9 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_CONTRAST
+   389: 00026650    13 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_CONTRAST
+   390: 00026660    13 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_CONTRAST
+   391: 00026670    11 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SATURATION
+   392: 0002667c    15 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_SATURATION
+   393: 0002668c    15 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_SATURATION
+   394: 0002669c    10 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SHARPNESS
+   395: 000266a8    14 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_SHARPNESS
+   396: 000266b8    14 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_SHARPNESS
+   397: 000266c8    15 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_PICTURE_EFFECT
+   398: 000266d8    22 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_PICTURE_EFFECTS
+   399: 000266f0    21 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_PE_TOY_CAMERA_EFFECT
+   400: 00026708    28 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_PE_TOY_CAMERA_EFFECTS
+   401: 00026724    25 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_DIRECT_SHUTTER_SUPPORTED
+   402: 00026740    17 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_AUTO_REVIEW_TIME
+   403: 00026754    24 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_AUTO_REVIEW_TIMES
+   404: 0002676c    20 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_PICTURE_DESTINATION
+   405: 00026780    27 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_PICTURE_DESTINATIONS
+   406: 0002679c    32 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_FACE_DETECION_FRAME_ON_OVERLAY
+   407: 000267bc    24 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_PE_HDR_ART_EFFECT_LEVEL
+   408: 000267d4    28 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_PE_HDR_ART_EFFECT_LEVEL
+   409: 000267f0    28 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_PE_HDR_ART_EFFECT_LEVEL
+   410: 0002680c    24 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_PE_POSTERIZATION_EFFECT
+   411: 00026824    31 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_PE_POSTERIZATION_EFFECTS
+   412: 00026844    21 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_PE_PART_COLOR_EFFECT
+   413: 0002685c    28 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_PE_PART_COLOR_EFFECTS
+   414: 00026878    27 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_PE_ROUGH_MONO_EFFECT_LEVEL
+   415: 00026894    31 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_PE_ROUGH_MONO_EFFECT_LEVEL
+   416: 000268b4    30 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_PE_ROUGH_MONO_EFFECT_LEVEL
+   417: 000268d4    27 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_PE_SOFT_FOCUS_EFFECT_LEVEL
+   418: 000268f0    31 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_PE_SOFT_FOCUS_EFFECT_LEVEL
+   419: 00026910    31 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_PE_SOFT_FOCUS_EFFECT_LEVEL
+   420: 00026930    24 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_PE_MINIATURE_EFFECT_AREA
+   421: 00026948    31 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_PE_MINIATURE_EFFECT_AREAS
+   422: 00026968    27 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_PE_WATERCOLOR_EFFECT_LEVEL
+   423: 00026984    31 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_PE_WATERCOLOR_EFFECT_LEVEL
+   424: 000269a4    31 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_PE_WATERCOLOR_EFFECT_LEVEL
+   425: 000269c4    23 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_PE_ILLUST_EFFECT_LEVEL
+   426: 000269dc    33 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_PE_ILLUST_EFFECT_LEVEL
+   427: 00026a00    33 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_PE_ILLUST_EFFECT_LEVEL
+   428: 00026a24    24 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_PE_SOFT_HIGH_KEY_EFFECT
+   429: 00026a3c    31 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_PE_SOFT_HIGH_KEY_EFFECTS
+   430: 00026a5c    16 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_FOCUS_SHIFT
+   431: 00026a6c    16 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_FOCUS_SHIFT
+   432: 00026a7c    21 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_PE_TOY_CAMERA_TUNING
+   433: 00026a94    25 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_PE_TOY_CAMERA_TUNING
+   434: 00026ab0    25 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_PE_TOY_CAMERA_TUNING
+   435: 00026acc    18 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_COLOR_SELECT_MODE
+   436: 00026ae0    25 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_COLOR_SELECT_MODES
+   437: 00026afc    22 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_COLOR_SELECT_CHANNELS
+   438: 00026b14    28 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_NUM_OF_COLOR_SELECT_CHANNEL
+   439: 00026b30    22 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_FOCUS_SHIFT_SUPPORTED
+   440: 00026b48    22 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_NUM_OF_DETECTED_FACES
+   441: 00026b60    21 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_FACE_FRAME_RENDERING
+   442: 00026b78    20 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_FACE_DETECTION_MODE
+   443: 00026b8c    27 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_FACE_DETECTION_MODES
+   444: 00026ba8    26 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_PREVIEW_ANALIZE_SUPPORTED
+   445: 00026bc4    23 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_AUTO_WHITE_BALANCE_LOCK_SUPPORTED
+   446: 00026bdc    13 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_AUTO_WHITE_BALANCE_LOCK
+   447: 00026bec    23 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_LENS_CORRECTIONS
+   448: 00026c04    16 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_LENS_CORRECTION
+   449: 00026c14    34 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_LENS_CORRECTION_SHADING_WHOLE
+   450: 00026c38    34 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_LENS_CORRECTION_SHADING_WHOLE
+   451: 00026c5c    41 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_LENS_CORRECTION_SHADING_WHOLE_MIDDLE
+   452: 00026c88    41 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_LENS_CORRECTION_SHADING_WHOLE_MIDDLE
+   453: 00026cb4    38 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_LENS_CORRECTION_SHADING_COLOR_RED
+   454: 00026cdc    38 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_LENS_CORRECTION_SHADING_COLOR_RED
+   455: 00026d04    39 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_LENS_CORRECTION_SHADING_COLOR_BLUE
+   456: 00026d2c    39 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_LENS_CORRECTION_SHADING_COLOR_BLUE
+   457: 00026d54    41 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_LENS_CORRECTION_SHADING_COLOR_MIDDLE
+   458: 00026d80    41 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_LENS_CORRECTION_SHADING_COLOR_MIDDLE
+   459: 00026dac    31 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_LENS_CORRECTION_CHROMA_RED
+   460: 00026dcc    31 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_LENS_CORRECTION_CHROMA_RED
+   461: 00026dec    32 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_LENS_CORRECTION_CHROMA_BLUE
+   462: 00026e0c    32 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_LENS_CORRECTION_CHROMA_BLUE
+   463: 00026e2c    30 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_LENS_CORRECTION_DISTOTION
+   464: 00026e4c    30 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_LENS_CORRECTION_DISTOTION
+   465: 00026e6c    37 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_LENS_CORRECTION_DISTOTION_MIDDLE
+   466: 00026e94    37 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_LENS_CORRECTION_DISTOTION_MIDDLE
+   467: 00026ebc    30 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_LENS_CORRECTION_SHADING_WHOLE
+   468: 00026edc    37 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_LENS_CORRECTION_SHADING_WHOLE_MIDDLE
+   469: 00026f04    34 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_LENS_CORRECTION_SHADING_COLOR_RED
+   470: 00026f28    35 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_LENS_CORRECTION_SHADING_COLOR_BLUE
+   471: 00026f4c    37 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_LENS_CORRECTION_SHADING_COLOR_MIDDLE
+   472: 00026f74    27 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_LENS_CORRECTION_CHROMA_RED
+   473: 00026f90    28 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_LENS_CORRECTION_CHROMA_BLUE
+   474: 00026fac    26 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_LENS_CORRECTION_DISTOTION
+   475: 00026fc8    33 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_LENS_CORRECTION_DISTOTION_MIDDLE
+   476: 00026fec    20 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_LENS_INFO_SUPPORTED
+   477: 00027000    33 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_AUTO_SHUTTER_SPEED_LOW_LIMIT_SUPPORTED
+   478: 00027024    23 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_AUTO_SHUTTER_SPEED_LOW_LIMIT
+   479: 0002703c    30 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_FOCAL_LENGTH_NOTIFY_SUPPORTED
+   480: 0002705c    11 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_DRIVE_MODE
+   481: 00027068    18 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_DRIVE_MODES
+   482: 0002707c    21 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_NUM_OF_BURST_PICTURE
+   483: 00027094    25 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_NUM_OF_BURST_PICTURE
+   484: 000270b0    18 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_BURST_DRIVE_SPEED
+   485: 000270c4    25 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_BURST_DRIVE_SPEEDS
+   486: 000270e0    34 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_BURST_DRIVE_BUTTON_RELEASE_BEHAVE
+   487: 00027104    41 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_BURST_DRIVE_BUTTON_RELEASE_BEHAVES
+   488: 00027130    13 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_BRACKET_MODE
+   489: 00027140    20 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_BRACKET_MODES
+   490: 00027154    22 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_EXPOSURE_BRACKET_MODE
+   491: 0002716c    29 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_EXPOSURE_BRACKET_MODES
+   492: 0002718c    23 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_NUM_OF_BRACKET_PICTURE
+   493: 000271a4    30 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_NUMS_OF_BRACKET_PICTURE
+   494: 000271c4    24 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_EXPOSURE_BRACKET_PERIOD
+   495: 000271dc    31 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_EXPOSURE_BRACKET_PERIODS
+   496: 000271fc    20 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_BRACKET_STEP_PERIOD
+   497: 00027210    27 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_BRACKET_STEP_PERIODS
+   498: 0002722c    14 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_BRACKET_ORDER
+   499: 0002723c    21 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_BRACKET_ORDERS
+   500: 00027254    11 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SELF_TIMER
+   501: 00027260    18 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_SELF_TIMERS
+   502: 00027284     8 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_AE_LOCK
+   503: 0002728c    12 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_PICTURE_STORAGE_FMT
+   504: 00027298    10 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_ANTI_BLUR
+   505: 000272a4     8 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_REMOTE_CONTROL
+   506: 000272ac     8 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_AUTO_FOCUS_MODE
+   507: 000272b4    15 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_AE_LOCK
+   508: 000272c4    19 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_PICTURE_STORAGE_FMT
+   509: 000272d8    17 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_ANTI_BLUR
+   510: 000272ec    15 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_REMOTE_CONTROL
+   511: 000272fc    15 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_AUTO_FOCUS_MODE
+   512: 0002730c    23 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_TOGGLE_FOCUS_MODE_SUPPORTED
+   513: 00027324    15 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MULTI_SHOOT_NR_MODE
+   514: 00027334    26 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_ISO_SENSITIVITIES_FOR_MULTI_SHOOT_NR
+   515: 00027350    17 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SHOOTING_PREVIEW_MODE
+   516: 00027364    12 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_OVF_PREVIEW_MODE
+   517: 00027370    16 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_QUICK_AUTO_FOCUS_MODE
+   518: 00027380    24 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_SHOOTING_PREVIEW_MODE
+   519: 00027398    19 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_OVF_PREVIEW_MODE
+   520: 000273ac    16 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_ZOOM_DRIVE_TYPE
+   521: 000273bc    23 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_ZOOM_DRIVE_TYPES
+   522: 000273d4    25 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_DIGITAL_ZOOM_TYPES
+   523: 000273f0    11 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SMART_ZOOM
+   524: 000273fc    22 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPER_RESOLUTION_ZOOM
+   525: 00027414    15 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_PRECISION_ZOOM
+   526: 00027424    19 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_MAG_SMART_ZOOM
+   527: 00027438    30 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_MAG_SUPER_RESOLUTION_ZOOM
+   528: 00027458    23 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_MAG_PRECISION_ZOOM
+   529: 00027470    15 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_ZOOM_SPEED
+   530: 00027480    10 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_APSC_MODE
+   531: 0002748c    20 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_APSC_MODE_SUPPORTED
+   532: 000274a0    11 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_IMAGE_SIZE
+   533: 000274ac    18 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_IMAGE_SIZES
+   534: 000274c0    13 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_IMAGE_ASPECT_RATIO
+   535: 000274d0    20 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_IMAGE_ASPECT_RATIOS
+   536: 000274e4    13 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_PREVIEW_MAGNIFICATION_MODE
+   537: 000274f4    13 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_PREVIEW_MAGNIFICATION_TIME
+   538: 00027504    15 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_PREVIEW_MAGNIFICATION
+   539: 00027514    17 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SOFT_SKIN_EFFECT
+   540: 00027528    24 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_SOFT_SKIN_EFFECTS
+   541: 00027540    12 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_COLOR_SPACE
+   542: 0002754c    19 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_COLOR_SPACES
+   543: 00027560    20 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_JPEG_QUALITIES
+   544: 00027574    23 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_IMAGE_PIXEL_SIZE_S_4_3
+   545: 0002758c    23 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_IMAGE_PIXEL_SIZE_S_3_2
+   546: 000275a4    24 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_IMAGE_PIXEL_SIZE_S_16_9
+   547: 000275bc    23 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_IMAGE_PIXEL_SIZE_S_1_1
+   548: 000275d4    23 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_IMAGE_PIXEL_SIZE_M_4_3
+   549: 000275ec    23 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_IMAGE_PIXEL_SIZE_M_3_2
+   550: 00027604    24 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_IMAGE_PIXEL_SIZE_M_16_9
+   551: 0002761c    23 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_IMAGE_PIXEL_SIZE_M_1_1
+   552: 00027634    23 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_IMAGE_PIXEL_SIZE_L_4_3
+   553: 0002764c    23 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_IMAGE_PIXEL_SIZE_L_3_2
+   554: 00027664    24 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_IMAGE_PIXEL_SIZE_L_16_9
+   555: 0002767c    23 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_IMAGE_PIXEL_SIZE_L_1_1
+   556: 00027694    21 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_IMAGE_PIXEL_SIZE_VGA
+   557: 000276ac    30 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_FOCUS_AREA_FLEXIBLE_SPOT_SIZE
+   558: 000276cc    37 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_FOCUS_AREA_FLEXIBLE_SPOT_SIZES
+   559: 000276f4    12 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_CAMERA_GAIN
+   560: 00027700    19 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_CAMERA_GAINS
+   561: 00027714    26 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MOVIE_ANTI_HAND_BLUR_MODE
+   562: 00027730    33 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_MOVIE_ANTI_HAND_BLUR_MODES
+   563: 00027754    12 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_CINEMA_TONE
+   564: 00027760    19 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_CINEMA_TONES
+   565: 00027774    34 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_EXPANDED_ISO_SENSITIVITIES
+   566: 00027798    38 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_FORCE_EXPOSURE_CONTROL_MODE_SUPPORTED
+   567: 000277c0    25 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_WHITE_BALANCE_SHIFT_MODE
+   568: 000277dc    35 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_WHITE_BALANCE_SHIFT_MODE_SUPPORTED
+   569: 00027800    23 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_WHITE_BALANCE_SHIFT_LB
+   570: 00027818    27 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_WHITE_BALANCE_SHIFT_LB
+   571: 00027834    27 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_WHITE_BALANCE_SHIFT_LB
+   572: 00027850    23 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_WHITE_BALANCE_SHIFT_CC
+   573: 00027868    27 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_WHITE_BALANCE_SHIFT_CC
+   574: 00027884    27 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_WHITE_BALANCE_SHIFT_CC
+   575: 000278a0    16 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_RGB_MATRIX_MODE
+   576: 000278b0    11 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_RGB_MATRIX
+   577: 000278bc    21 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_RGB_MATRIX_SUPPORTED
+   578: 000278d4    24 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SUPPORTED_COLOR_DEPTH_TYPES
+   579: 000278ec    16 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_COLOR_DEPTH_RED
+   580: 000278fc    20 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_COLOR_DEPTH_RED
+   581: 00027910    20 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_COLOR_DEPTH_RED
+   582: 00027924    18 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_COLOR_DEPTH_GREEN
+   583: 00027938    22 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_COLOR_DEPTH_GREEN
+   584: 00027950    22 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_COLOR_DEPTH_GREEN
+   585: 00027968    17 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_COLOR_DEPTH_BLUE
+   586: 0002797c    21 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_COLOR_DEPTH_BLUE
+   587: 00027994    21 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_COLOR_DEPTH_BLUE
+   588: 000279ac    17 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_COLOR_DEPTH_CYAN
+   589: 000279c0    21 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_COLOR_DEPTH_CYAN
+   590: 000279d8    21 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_COLOR_DEPTH_CYAN
+   591: 000279f0    20 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_COLOR_DEPTH_MAGENTA
+   592: 00027a04    24 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_COLOR_DEPTH_MAGENTA
+   593: 00027a1c    24 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_COLOR_DEPTH_MAGENTA
+   594: 00027a34    19 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_COLOR_DEPTH_YELLOW
+   595: 00027a48    23 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_COLOR_DEPTH_YELLOW
+   596: 00027a60    23 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_COLOR_DEPTH_YELLOW
+   597: 00027a78    31 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_PICTURE_CONTROL_EXPOSURE_SHIFT
+   598: 00027a98    41 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_PICTURE_CONTROL_EXPOSURE_SHIFT_SUPPORTED
+   599: 00027ac4    20 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SHARPNESS_GAIN_MODE
+   600: 00027ad8    30 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SHARPNESS_GAIN_MODE_SUPPORTED
+   601: 00027af8    15 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_SHARPNESS_GAIN
+   602: 00027b08    19 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_SHARPNESS_GAIN
+   603: 00027b1c    19 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MIN_SHARPNESS_GAIN
+   604: 00027b30    31 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_EXTENDED_GAMMA_TABLE_SUPPORTED
+   605: 00027b50    17 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_LONG_EXPOSURE_NR
+   606: 00027b64    27 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_LONG_EXPOSURE_NR_SUPPORTED
+   607: 00027b80    22 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_FOCUS_DRIVE_SUPPORTED
+   608: 00027b98    22 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::KEY_MAX_FOCUS_DRIVE_SPEED
+   609: 00027bb0     7 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::AE_LOCK_ON
+   610: 00027bb8     9 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::AE_LOCK_OFF
+   611: 00027bc4     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::AE_LOCK_SPOT
+   612: 00027bcc     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_STORATE_FMT_JPEG
+   613: 00027bd4     4 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_STORATE_FMT_RAW
+   614: 00027bd8     8 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_STORATE_FMT_RAWJPEG
+   615: 00027be0     4 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::ANTI_HAND_BLUR_MODE_OFF
+   616: 00027be4     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::ANTI_HAND_BLUR_MODE_CONTINUOUS
+   617: 00027bec     8 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::ANTI_HAND_BLUR_MODE_SHOOT
+   618: 00027bf4     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::AUTO_FOCUS_MODE_AF_A
+   619: 00027bfc     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::AUTO_FOCUS_MODE_AF_S
+   620: 00027c04     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::AUTO_FOCUS_MODE_AF_C
+   621: 00027c0c     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::AUTO_FOCUS_MODE_MOVIE
+   622: 00027c14     8 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::QUICK_AF_WI_AEL
+   623: 00027c1c     8 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::QUICK_AF_WO_AEL
+   624: 00027c24     9 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::QUICK_AF_C_WO_AEL
+   625: 00027c30     4 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SHOOTING_PREVIEW_MODE_OFF
+   626: 00027c34     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SHOOTING_PREVIEW_MODE_IRIS
+   627: 00027c3c    12 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SHOOTING_PREVIEW_MODE_IRIS_SS_ISO
+   628: 00027c48    21 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SHOOTING_PREVIEW_MODE_IRIS_SS_ISO_AEUNLOCK
+   629: 00027c60     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FALSE
+   630: 00027c68    22 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::WHITE_BALANCE_FLUORESCENT_COOLWHITE
+   631: 00027c80    21 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::WHITE_BALANCE_FLUORESCENT_DAYWHITE
+   632: 00027c98    21 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::WHITE_BALANCE_FLUORESCENT_DAYLIGHT
+   633: 00027cb0     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::WHITE_BALANCE_FLASH
+   634: 00027cb8    16 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::WHITE_BALANCE_UNDERWATER_BLUE
+   635: 00027cc8    17 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::WHITE_BALANCE_UNDERWATER_GREEN
+   636: 00027cdc     7 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::WHITE_BALANCE_CUSTOM
+   637: 00027ce4    11 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::WHITE_BALANCE_COLOR_TEMP
+   638: 00027cf0    16 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::WHITE_BALANCE_UNDERWATER_AUTO
+   639: 00027d00    13 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SCENE_MODE_PROGRAM_AUTO
+   640: 00027d10    14 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SCENE_MODE_SHUTTER_PRIORITY
+   641: 00027d20    18 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SCENE_MODE_APERTURE_PRIORITY
+   642: 00027d34    16 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SCENE_MODE_MANUAL_EXPOSURE
+   643: 00027d44    15 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SCENE_MODE_SUNRISE_SUNSET
+   644: 00027d54    19 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SCENE_MODE_HIGH_SPEED_SHUTTER
+   645: 00027d68    15 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SCENE_MODE_ADVANCE_SPORTS
+   646: 00027d78    19 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SCENE_MODE_HAND_HELD_TWILIGHT
+   647: 00027d8c    17 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SCENE_MODE_ANTI_MOTION_BLUR
+   648: 00027da0    17 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SCENE_MODE_HIGH_SENSITIVITY
+   649: 00027db4    18 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SCENE_MODE_ULTRA_SENSITIVITY
+   650: 00027dc8    10 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SCENE_MODE_SPOTLIGHT
+   651: 00027dd4    11 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SCENE_MODE_UNDERWATER
+   652: 00027de0     8 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SCENE_MODE_GOURMET
+   653: 00027de8     4 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SCENE_MODE_PET
+   654: 00027dec     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SCENE_MODE_MACRO
+   655: 00027df4    11 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SCENE_MODE_NIGHT_SHOT
+   656: 00027e00    10 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SCENE_MODE_SOFT_SKIN
+   657: 00027e0c    19 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SCENE_MODE_BACKGROUND_DEFOCUS
+   658: 00027e20    15 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SCENE_MODE_MY_PHOTO_STYLE
+   659: 00027e30    26 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SCENE_MODE_MY_PHOTO_STYLE_IN_PREMIER
+   660: 00027e4c    15 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SCENE_MODE_PICTURE_EFFECT
+   661: 00027e5c    17 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SCENE_MODE_CONT_PRIORITY_AE
+   662: 00027e70    22 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SCENE_MODE_CONT_PRIORITY_AE_CROP
+   663: 00027e88     7 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FOCUS_MODE_MANUAL
+   664: 00027e90     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FOCUS_MODE_AF_A
+   665: 00027e98     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FOCUS_MODE_AF_S
+   666: 00027ea0     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FOCUS_MODE_AF_C
+   667: 00027ea8     4 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FOCUS_MODE_DMF
+   668: 00027eac     9 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FOCUS_MODE_NEIGHBOR
+   669: 00027eb8     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::METERING_MODE_MULTI
+   670: 00027ec0    24 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::METERING_MODE_CENTER_WEIGHTED_AVERAGE
+   671: 00027ed8    16 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::METERING_MODE_CENTER_WEIGHTED
+   672: 00027ee8    12 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::METERING_MODE_CENTER_SPOT
+   673: 00027ef4     7 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FOCUS_AREA_TYPE_CENTER
+   674: 00027efc    12 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FOCUS_AREA_TYPE_CENTER_SPOT
+   675: 00027f08    10 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FOCUS_AREA_TYPE_FLEX_SPOT
+   676: 00027f14     9 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FOCUS_AREA_TYPE_SEMIWIDE
+   677: 00027f20     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FOCUS_AREA_TYPE_SPOT
+   678: 00027f28     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FOCUS_AREA_TYPE_LOCAL
+   679: 00027f30     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FOCUS_AREA_TYPE_TOUCH
+   680: 00027f38     9 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FOCUS_AREA_TYPE_TRACKING
+   681: 00027f44    10 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FOCUS_AREA_TYPE_MINIATURE
+   682: 00027f50    11 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FOCUS_AREA_TYPE_SEMI_MULTI
+   683: 00027f5c     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FOCUS_AREA_TYPE_MULTI
+   684: 00027f64     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FOCUS_AREA_TYPE_WIDE
+   685: 00027f6c     4 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::DRO_MODE_OFF
+   686: 00027f70     3 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::DRO_MODE_ON
+   687: 00027f74     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::DRO_MODE_AUTO
+   688: 00027f7c     4 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::HDR_MODE_OFF
+   689: 00027f80     3 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::HDR_MODE_ON
+   690: 00027f84     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::HDR_MODE_AUTO
+   691: 00027f8c     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FLASH_TYPE_AUTO
+   692: 00027f94    11 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FLASH_TYPE_FRONT_SYNC
+   693: 00027fa0     4 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FLASH_TYPE_OFF
+   694: 00027fa4    10 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FLASH_TYPE_SLOW_SYNC
+   695: 00027fb0    15 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FLASH_TYPE_SLOW_REAR_SYNC
+   696: 00027fc0    10 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FLASH_TYPE_REAR_SYNC
+   697: 00027fcc     9 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FLASH_TYPE_WIRELESS
+   698: 00027fd8     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::RED_EYE_REDUCTION_MODE_AUTO
+   699: 00027fe0     3 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::RED_EYE_REDUCTION_MODE_ON
+   700: 00027fe4     4 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::RED_EYE_REDUCTION_MODE_OFF
+   701: 00027fe8     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::COLOR_MODE_MONO
+   702: 00027ff0     9 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::COLOR_MODE_STANDARD
+   703: 00027ffc     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::COLOR_MODE_SEPIA
+   704: 00028004     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::COLOR_MODE_VIVID
+   705: 0002800c     8 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::COLOR_MODE_NEUTRAL
+   706: 00028014     9 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::COLOR_MODE_PORTRAIT
+   707: 00028020    10 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::COLOR_MODE_LANDSCAPE
+   708: 0002802c     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::COLOR_MODE_CLEAR
+   709: 00028034     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::COLOR_MODE_DEEP
+   710: 0002803c     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::COLOR_MODE_LIGHT
+   711: 00028044     7 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::COLOR_MODE_SUNSET
+   712: 0002804c     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::COLOR_MODE_NIGHT
+   713: 00028054    11 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::COLOR_MODE_RED_LEAVES
+   714: 00028060     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::COLOR_MODE_REAL
+   715: 00028068     4 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_OFF
+   716: 0002806c    11 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_TOY_CAMERA
+   717: 00028078    10 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_POP_COLOR
+   718: 00028084    14 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_POSTERIZATION
+   719: 00028094    12 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_RETRO_PHOTO
+   720: 000280a0    14 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_SOFT_HIGH_KEY
+   721: 000280b0    11 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_PART_COLOR
+   722: 000280bc    11 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_ROUGH_MONO
+   723: 000280c8    11 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_SOFT_FOCUS
+   724: 000280d4     8 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_HDR_ART
+   725: 000280dc    14 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_RICHTONE_MONO
+   726: 000280ec    10 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_MINIATURE
+   727: 000280f8    11 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_WATERCOLOR
+   728: 00028104     7 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_ILLUST
+   729: 0002810c     7 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_TOY_CAMERA_EFFECT_NORMAL
+   730: 00028114     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_TOY_CAMERA_EFFECT_COOL
+   731: 0002811c     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_TOY_CAMERA_EFFECT_WARM
+   732: 00028124     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_TOY_CAMERA_EFFECT_GREEN
+   733: 0002812c     8 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_TOY_CAMERA_EFFECT_MAGENTA
+   734: 00028134    20 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_POSTERIZATION_EFFECT_COLOR
+   735: 00028148    19 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_POSTERIZATION_EFFECT_MONO
+   736: 0002815c     4 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_PART_COLOR_EFFECT_RED
+   737: 00028160     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_PART_COLOR_EFFECT_GREEN
+   738: 00028168     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_PART_COLOR_EFFECT_BLUE
+   739: 00028170     7 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_PART_COLOR_EFFECT_YELLOW
+   740: 00028178     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_MINIATURE_EFFECT_AREA_AUTO
+   741: 00028180     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_MINIATURE_EFFECT_AREA_LEFT
+   742: 00028188     8 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_MINIATURE_EFFECT_AREA_VCENTER
+   743: 00028190     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_MINIATURE_EFFECT_AREA_RIGHT
+   744: 00028198     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_MINIATURE_EFFECT_AREA_UPPER
+   745: 000281a0     8 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_MINIATURE_EFFECT_AREA_HCENTER
+   746: 000281a8     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_MINIATURE_EFFECT_AREA_LOWER
+   747: 000281b0     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_SOFT_HIGH_KEY_EFFECT_BLUE
+   748: 000281b8     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_SOFT_HIGH_KEY_EFFECT_PINK
+   749: 000281c0     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_EFFECT_SOFT_HIGH_KEY_EFFECT_GREEN
+   750: 000281c8     4 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::COLOR_SELECT_MODE_OFF
+   751: 000281cc     9 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::COLOR_SELECT_MODE_REVISION
+   752: 000281d8     8 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::COLOR_SELECT_MODE_EXTRACT
+   753: 000281e0     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_STORAGE_DESTINATION_MEDIA
+   754: 000281e8     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PICTURE_STORAGE_DESTINATION_NONE
+   755: 000281f0    10 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::LENS_CORRECTION_SHADING_WHOLE
+   756: 000281fc    11 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::LENS_CORRECTION_SHADING_WHOLE_MIDDLE
+   757: 00028208    11 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::LENS_CORRECTION_SHADING_COLOR_RED
+   758: 00028214    11 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::LENS_CORRECTION_SHADING_COLOR_BLUE
+   759: 00028220    11 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::LENS_CORRECTION_SHADING_COLOR_MIDDLE
+   760: 0002822c     9 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::LENS_CORRECTION_CHROMA_RED
+   761: 00028238     9 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::LENS_CORRECTION_CHROMA_BLUE
+   762: 00028244    10 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::LENS_CORRECTION_DISTOTION
+   763: 00028250    12 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::LENS_CORRECTION_DISTOTION_MIDDLE
+   764: 0002825c     7 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::DRIVE_MODE_SINGLE
+   765: 00028264     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::DRIVE_MODE_BURST
+   766: 0002826c     8 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::DRIVE_MODE_BRACKET
+   767: 00028274    18 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::DRIVE_MODE_SPEED_PRIOR_BURST
+   768: 00028288     4 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::BURST_DRIVE_SPEED_LOW
+   769: 0002828c     7 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::BURST_DRIVE_SPEED_MIDDLE
+   770: 00028294     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::BURST_DRIVE_SPEED_HIGH
+   771: 0002829c     9 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::BURST_DRIVE_BUTTON_RELEASE_BEHAVE_CONTINUE
+   772: 000282a8     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::BURST_DRIVE_BUTTON_RELEASE_BEHAVE_STOP
+   773: 000282b0     4 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::BRACKET_MODE_OFF
+   774: 000282b4     9 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::BRACKET_MODE_EXPOSURE
+   775: 000282c0    14 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::BRACKET_MODE_WHITE_BALANCE
+   776: 000282d0     4 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::BRACKET_MODE_DRO
+   777: 000282d4     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::BRACKET_MODE_COLOR
+   778: 000282dc     7 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::EXPOSURE_BRACKET_MODE_SINGLE
+   779: 000282e4     9 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::EXPOSURE_BRACKET_MODE_CONTINUE
+   780: 000282f0     4 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::BRACKET_STEP_PERIOD_LOW
+   781: 000282f4     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::BRACKET_STEP_PERIOD_HIGH
+   782: 000282fc    11 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::BRACKET_ORDER_START_ZERO
+   783: 00028308    12 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::BRACKET_ORDER_START_MINUS
+   784: 00028314     4 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FACE_DETECTION_MODE_OFF
+   785: 00028318     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FACE_DETECTION_MODE_AUTO
+   786: 00028320     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FACE_DETECTION_MODE_ADULT
+   787: 00028328     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FACE_DETECTION_MODE_CHILD
+   788: 00028330     8 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::ZOOM_DRIVE_TYPE_OPTICAL
+   789: 00028338     8 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::ZOOM_DRIVE_TYPE_DIGITAL
+   790: 00028340     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::ZOOM_DRIVE_TYPE_AUTO
+   791: 00028348     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::DIGITAL_ZOOM_TYPE_SMART
+   792: 00028350    17 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::DIGITAL_ZOOM_TYPE_SUPER_RESOLUTION
+   793: 00028364    10 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::DIGITAL_ZOOM_TYPE_PRECISION
+   794: 00028370     4 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::APSC_MODE_OFF
+   795: 00028374     3 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::APSC_MODE_ON
+   796: 00028378     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::APSC_MODE_AUTO
+   797: 00028380     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::IMAGE_SIZE_S
+   798: 00028388     7 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::IMAGE_SIZE_M
+   799: 00028390     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::IMAGE_SIZE_L
+   800: 00028398     4 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::IMAGE_SIZE_VGA
+   801: 0002839c     4 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::IMAGE_ASPECT_RATIO_4_3
+   802: 000283a0     4 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::IMAGE_ASPECT_RATIO_3_2
+   803: 000283a4     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::IMAGE_ASPECT_RATIO_16_9
+   804: 000283ac     4 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::IMAGE_ASPECT_RATIO_1_1
+   805: 000283b0     3 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PREVIEW_MAGNIFICATION_ON
+   806: 000283b4     4 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::PREVIEW_MAGNIFICATION_OFF
+   807: 000283b8     4 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SOFT_SKIN_EFFECT_OFF
+   808: 000283bc     4 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SOFT_SKIN_EFFECT_LOW
+   809: 000283c0     7 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SOFT_SKIN_EFFECT_MIDDLE
+   810: 000283c8     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::SOFT_SKIN_EFFECT_HIGH
+   811: 000283d0     9 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::COLOR_SPACE_STANDARD
+   812: 000283dc     9 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::COLOR_SPACE_EXPANDED
+   813: 000283e8     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FLEXIBLE_SPOT_SIZE_S
+   814: 000283f0     7 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FLEXIBLE_SPOT_SIZE_M
+   815: 000283f8     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::FLEXIBLE_SPOT_SIZE_L
+   816: 00028400     4 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::MOVIE_ANTI_HAND_BLUR_MODE_OFF
+   817: 00028404     7 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::MOVIE_ANTI_HAND_BLUR_MODE_ACTIVE
+   818: 0002840c     9 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::MOVIE_ANTI_HAND_BLUR_MODE_STANDARD
+   819: 00028418     4 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::CINEMA_TONE_OFF
+   820: 0002841c     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::CINEMA_TONE_1
+   821: 00028424     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::CINEMA_TONE_2
+   822: 0002842c     4 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::COLOR_DEPTH_TYPE_RED
+   823: 00028430     6 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::COLOR_DEPTH_TYPE_GREEN
+   824: 00028438     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::COLOR_DEPTH_TYPE_BLUE
+   825: 00028440     5 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::COLOR_DEPTH_TYPE_CYAN
+   826: 00028448     8 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::COLOR_DEPTH_TYPE_MAGENTA
+   827: 00028450     7 OBJECT  GLOBAL DEFAULT    8 android::CameraExParameters::COLOR_DEPTH_TYPE_YELLOW
+   828: 0002bfe0    48 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_focusAreaType
+   829: 0002bed8   160 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_sceneMode
+   830: 0002c214    12 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_apscMode
+   831: 0002c208    12 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_digitalZoomType
+   832: 00000000     0 FUNC    GLOBAL DEFAULT  UND strtol
+   833: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::CameraParameters::getInt(char const*) const
+   834: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::CameraParameters::getPictureSize(int*, int*) const
+   835: 0002a848  2128 OBJECT  GLOBAL DEFAULT   13 android::CameraHardwareDiadem::s_paramTable
+   836: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::TRUE
+   837: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::CameraParameters::set(char const*, char const*)
+   838: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::CameraParameters::set(char const*, int)
+   839: 00000000     0 FUNC    GLOBAL DEFAULT  UND snprintf
+   840: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::CameraParameters::setPictureSize(int, int)
+   841: 00000000     0 FUNC    GLOBAL DEFAULT  UND __stack_chk_fail
+   842: 00000000     0 OBJECT  GLOBAL DEFAULT  UND __stack_chk_guard
+   843: 0002b098  2528 OBJECT  GLOBAL DEFAULT   13 android::CameraHardwareDiadem::s_supportedParamsTable
+   844: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_JPEG_THUMBNAIL_WIDTH
+   845: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_JPEG_THUMBNAIL_HEIGHT
+   846: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_HORIZONTAL_VIEW_ANGLE
+   847: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_VERTICAL_VIEW_ANGLE
+   848: 0002be60    68 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_whiteBalance
+   849: 0002bea4    36 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_effect
+   850: 0002bec8    16 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_antibanding
+   851: 0002bf78    20 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_flashMode
+   852: 0002bf8c    48 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_focusMode
+   853: 0002bfbc    20 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_pixelFormat
+   854: 0002bfd0    16 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_meteringMode
+   855: 0002c010    12 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_droMode
+   856: 0002c01c    12 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_hdrMode
+   857: 0002c028    28 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_flashType
+   858: 0002c044    12 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_redEyeReductionMode
+   859: 0002c050    56 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_colorMode
+   860: 0002c088    56 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_pictureEffect
+   861: 0002c0c0    20 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_toyCameraEffect
+   862: 0002c0d4     8 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_pictureStorageDestination
+   863: 0002c0dc    16 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_faceDetectionMode
+   864: 0002c0ec     8 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_posterizationEffect
+   865: 0002c0f4    16 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_partColorEffect
+   866: 0002c104    28 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_miniatureEffectArea
+   867: 0002c120    12 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_softHighKeyEffect
+   868: 0002c12c    12 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_colorSelectMode
+   869: 0002c138    16 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_driveMode
+   870: 0002c148    12 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_bursetDriveSpeed
+   871: 0002c154     8 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_bursetDriveButtonReleaseBehave
+   872: 0002c15c    20 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_bracketMode
+   873: 0002c170     8 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_exposureBracketMode
+   874: 0002c178     8 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_bracketStepPeriod
+   875: 0002c180     8 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_bracketOrder
+   876: 0002c188    36 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_lensCorrectionType
+   877: 0002c1ac    12 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_aeLockMode
+   878: 0002c1b8    12 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_pictureStorageFormat
+   879: 0002c1c4    12 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_antiHandBlurMode
+   880: 0002c1d0    16 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_autoFocusMode
+   881: 0002c1e0    16 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_shootingPreviewMode
+   882: 0002c1f0    12 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_quickAutoFocus
+   883: 0002c1fc    12 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_zoomDriveType
+   884: 0002c220    16 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_imageSize
+   885: 0002c230    16 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_imageAspectRatio
+   886: 0002c240     8 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_prvwMagMode
+   887: 0002c248    16 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_softSkinEffect
+   888: 0002c258     8 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_colorSpace
+   889: 0002c260    12 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_flexibleSpotSize
+   890: 0002c26c    12 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_movieAntiHandBlurMode
+   891: 0002c278    12 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_cinemaTone
+   892: 0002c284    24 OBJECT  GLOBAL DEFAULT   16 android::CameraHardwareDiadem::s_colorDepthType
+   893: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_PICTURE_SIZE
+   894: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_PICTURE_FORMAT
+   895: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_JPEG_THUMBNAIL_QUALITY
+   896: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_JPEG_QUALITY
+   897: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_WHITE_BALANCE
+   898: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_EFFECT
+   899: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_ANTIBANDING
+   900: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_SCENE_MODE
+   901: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_FLASH_MODE
+   902: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_FOCUS_MODE
+   903: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_EXPOSURE_COMPENSATION
+   904: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_SUPPORTED_PICTURE_SIZES
+   905: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_SUPPORTED_PICTURE_FORMATS
+   906: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_SUPPORTED_JPEG_THUMBNAIL_SIZES
+   907: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_SUPPORTED_WHITE_BALANCE
+   908: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_SUPPORTED_EFFECTS
+   909: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_SUPPORTED_ANTIBANDING
+   910: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_SUPPORTED_SCENE_MODES
+   911: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_SUPPORTED_FLASH_MODES
+   912: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_SUPPORTED_FOCUS_MODES
+   913: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_MAX_EXPOSURE_COMPENSATION
+   914: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_MIN_EXPOSURE_COMPENSATION
+   915: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_EXPOSURE_COMPENSATION_STEP
+   916: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_ZOOM_SUPPORTED
+   917: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::KEY_SMOOTH_ZOOM_SUPPORTED
+   918: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::WHITE_BALANCE_AUTO
+   919: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::WHITE_BALANCE_INCANDESCENT
+   920: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::WHITE_BALANCE_FLUORESCENT
+   921: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::WHITE_BALANCE_WARM_FLUORESCENT
+   922: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::WHITE_BALANCE_DAYLIGHT
+   923: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::WHITE_BALANCE_CLOUDY_DAYLIGHT
+   924: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::WHITE_BALANCE_TWILIGHT
+   925: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::WHITE_BALANCE_SHADE
+   926: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::EFFECT_NONE
+   927: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::EFFECT_MONO
+   928: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::EFFECT_NEGATIVE
+   929: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::EFFECT_SOLARIZE
+   930: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::EFFECT_SEPIA
+   931: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::EFFECT_POSTERIZE
+   932: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::EFFECT_WHITEBOARD
+   933: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::EFFECT_BLACKBOARD
+   934: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::EFFECT_AQUA
+   935: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::ANTIBANDING_AUTO
+   936: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::ANTIBANDING_50HZ
+   937: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::ANTIBANDING_60HZ
+   938: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::ANTIBANDING_OFF
+   939: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::SCENE_MODE_AUTO
+   940: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::SCENE_MODE_ACTION
+   941: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::SCENE_MODE_PORTRAIT
+   942: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::SCENE_MODE_LANDSCAPE
+   943: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::SCENE_MODE_NIGHT
+   944: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::SCENE_MODE_NIGHT_PORTRAIT
+   945: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::SCENE_MODE_THEATRE
+   946: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::SCENE_MODE_BEACH
+   947: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::SCENE_MODE_SNOW
+   948: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::SCENE_MODE_SUNSET
+   949: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::SCENE_MODE_STEADYPHOTO
+   950: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::SCENE_MODE_FIREWORKS
+   951: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::SCENE_MODE_SPORTS
+   952: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::SCENE_MODE_PARTY
+   953: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::SCENE_MODE_CANDLELIGHT
+   954: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::SCENE_MODE_BARCODE
+   955: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::FLASH_MODE_OFF
+   956: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::FLASH_MODE_AUTO
+   957: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::FLASH_MODE_ON
+   958: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::FLASH_MODE_RED_EYE
+   959: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::FLASH_MODE_TORCH
+   960: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::FOCUS_MODE_AUTO
+   961: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::FOCUS_MODE_INFINITY
+   962: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::FOCUS_MODE_MACRO
+   963: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::FOCUS_MODE_FIXED
+   964: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::FOCUS_MODE_EDOF
+   965: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::FOCUS_MODE_CONTINUOUS_VIDEO
+   966: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::PIXEL_FORMAT_YUV422SP
+   967: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::PIXEL_FORMAT_YUV420SP
+   968: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::PIXEL_FORMAT_YUV422I
+   969: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::PIXEL_FORMAT_RGB565
+   970: 00000000     0 OBJECT  GLOBAL DEFAULT  UND android::CameraParameters::PIXEL_FORMAT_JPEG
+   971: 00025750     8 FUNC    GLOBAL DEFAULT    7 com_sony_scalar::JSONObject::get() const
+   972: 00025758    48 FUNC    GLOBAL DEFAULT    7 com_sony_scalar::JSONObject::clear()
+   973: 00025788    68 FUNC    GLOBAL DEFAULT    7 com_sony_scalar::JSONObject::updateJSON()
+   974: 00000000     0 FUNC    GLOBAL DEFAULT  UND android::String8::append(android::String8 const&)
+   975: 000257cc   144 FUNC    GLOBAL DEFAULT    7 com_sony_scalar::JSONObject::putObject(char const*, com_sony_scalar::JSONObject const*)
+   976: 0002585c   152 FUNC    GLOBAL DEFAULT    7 com_sony_scalar::JSONObject::putStr(char const*, char const*)
+   977: 000258f4   104 FUNC    GLOBAL DEFAULT    7 com_sony_scalar::JSONObject::JSONObject(char const*, com_sony_scalar::JSONObject const*)
+   978: 0002595c   104 FUNC    GLOBAL DEFAULT    7 com_sony_scalar::JSONObject::JSONObject(char const*, com_sony_scalar::JSONObject const*)
+   979: 000259c4   104 FUNC    GLOBAL DEFAULT    7 com_sony_scalar::JSONObject::JSONObject(char const*, char const*)
+   980: 00025a2c   104 FUNC    GLOBAL DEFAULT    7 com_sony_scalar::JSONObject::JSONObject(char const*, char const*)
+   981: 00025ae4    80 FUNC    GLOBAL DEFAULT    7 com_sony_scalar::JSONObject::JSONObject()
+   982: 00025b34   272 FUNC    GLOBAL DEFAULT    7 com_sony_scalar::JSONObject::putObjectArray(char const*, android::Vector<com_sony_scalar::JSONObject const*> const*)
+   983: 00025c80    60 FUNC    GLOBAL DEFAULT    7 com_sony_scalar::JSONObject::~JSONObject()
+   984: 00025cbc   232 FUNC    GLOBAL DEFAULT    7 com_sony_scalar::JSONObject::putInt(char const*, int)
+   985: 00025da4    28 FUNC    GLOBAL DEFAULT    7 com_sony_scalar::JSONObject::~JSONObject()
+   986: 00025dc0    84 FUNC    GLOBAL DEFAULT    7 com_sony_scalar::JSONObject::JSONObject(char const*, android::Vector<com_sony_scalar::JSONObject const*> const*)
+   987: 00025e14    84 FUNC    GLOBAL DEFAULT    7 com_sony_scalar::JSONObject::JSONObject(char const*, android::Vector<com_sony_scalar::JSONObject const*> const*)
+   988: 00000000     0 FUNC    GLOBAL DEFAULT  UND __cxa_finalize
+   989: 0002c2b0     0 NOTYPE  GLOBAL DEFAULT   17 __dso_handle
+   990: 0002a000     0 NOTYPE  GLOBAL DEFAULT   11 __INIT_ARRAY__
+   991: 0002a008     0 NOTYPE  GLOBAL DEFAULT   12 __FINI_ARRAY__
+   992: 00029668     0 NOTYPE  GLOBAL DEFAULT  ABS __exidx_end
+   993: 0002c2c0     0 NOTYPE  GLOBAL DEFAULT  ABS _bss_end__
+   994: 0002c29c     0 NOTYPE  GLOBAL DEFAULT  ABS __bss_start__
+   995: 00029170     0 NOTYPE  GLOBAL DEFAULT  ABS __exidx_start
+   996: 0002c2c0     0 NOTYPE  GLOBAL DEFAULT  ABS __bss_end__
+   997: 0002c29c     0 NOTYPE  GLOBAL DEFAULT  ABS __bss_start
+   998: 0002c2c0     0 NOTYPE  GLOBAL DEFAULT  ABS __end__
+   999: 0002c29c     0 NOTYPE  GLOBAL DEFAULT  ABS _edata
+  1000: 0002c2c0     0 NOTYPE  GLOBAL DEFAULT  ABS _end
+  1001: 00080000     0 NOTYPE  GLOBAL DEFAULT  ABS _stack
+  1002: 0002be60     0 NOTYPE  GLOBAL DEFAULT   16 __data_start
+readelf: Warning: local symbol 0 found at index >= .dynsym's sh_info value of 0

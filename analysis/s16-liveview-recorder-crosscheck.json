@@ -1,0 +1,94 @@
+{
+  "sesion": 16,
+  "metodo": "Investigación paralela: Claude principal (hilo propio, sin delegar) + un subagente Claude Sonnet 5 esfuerzo medio (Rama A, control/topología) + un agente Codex gpt-5.6-terra esfuerzo medio (Rama B, YC/DMM/FEA). Verificado por ejecución real: llamada de prueba a Codex confirmó modelo y esfuerzo antes de lanzar el trabajo (respuesta 'OK', ver log). Ningún agente delegó a un tercero esta vez (a diferencia del incidente de sesión 15).",
+  "fuentes": [
+    "docs/capture/s16-main-delivery-sequences.md",
+    "docs/capture/s16-claude-effect-control.md",
+    "analysis/s16-claude-topology-audit.json",
+    "analysis/s16-claude-effect-mode1.json",
+    "docs/capture/s16-codex-camera-yc.md",
+    "analysis/s16-codex-camera-yc.json",
+    "docs/capture/s16-codex-fea-completion.md"
+  ],
+  "verificacion_cruzada_critica": [
+    {
+      "hallazgo": "Rama A: dos escritores dinámicos de EffectInternalMode=1 (ExecCmdAppFaderEfctEndEvt ELF 0x154990, SequencePinDeliverBase ELF 0x1e069c), identificados por RTTI mangled-name",
+      "verificado_por": "Claude principal, independientemente",
+      "metodo_verificacion": "Lectura directa de bytes crudos: cadena RTTI 'N9OBJEFFECT25ExecCmdAppFaderEfctEndEvtE' en file-offset 0xbd69fa y 'N9OBJEFFECT22SequencePinDeliverBaseE' en 0xc0c1e8 confirmadas byte a byte; word de vtabla en file-offset 0xfe6050 = 0x154991 (ELF 0x154990 + bit Thumb) y en 0xfeabd4 = 0x1e069d (ELF 0x1e069c + bit Thumb), ambos coinciden exactamente con lo reportado.",
+      "resultado": "CONFIRMADO sin discrepancias"
+    },
+    {
+      "hallazgo": "Rama B: FeaIf::EncodeStill (libmpr.so ELF 0x44f834) solo encola la solicitud (copia RegionInfo, llama vtable+0x20) y no espera finalización; retorno 0 no certifica que FEA ya leyó el YC",
+      "verificado_por": "Claude principal, independientemente",
+      "metodo_verificacion": "Desensamblado propio de libmpr.so (SHA-256 9a74a3bb...e4c30, coincide con el citado por Rama B) en el rango 0x44f834-0x44f8e8: símbolo real '_ZN5FeaIf11EncodeStillEPN5MprIf16EncodeStillParamE', estructura de reserva de slot (ldr+blx r3, cbnz éxito), rama de error con 'movs r1,#9' + 'MprIfLog::AsyncApiDone@plt', y rama de éxito con copias ldm/stm + memcpy del RegionInfo — coincide instrucción por instrucción con lo reportado por Rama B.",
+      "resultado": "CONFIRMADO sin discrepancias"
+    }
+  ],
+  "contradicciones": [],
+  "nota_contradicciones": "No se detectaron contradicciones entre Rama A, Rama B y el hilo principal. Rama A corrige (no contradice) una conclusión de sesión 15 ('no se localizó escritor de modo 1') con evidencia nueva y de mejor calidad (RTTI real en vez de descarte por rango de dirección) — se declara explícitamente como corrección, no como hallazgo en conflicto.",
+  "hallazgos_nuevos_cruzados": [
+    {
+      "hallazgo": "Dos escritores dinámicos de EffectInternalMode=1 (corrige el bloqueo de sesión 15 'sin escritor localizado')",
+      "quien": "Rama A",
+      "antes": "sesión 15: NO VERIFICADO (no localizado), basado en descarte de 19/20 sitios por rango de dirección sin decompilar",
+      "ahora": "VERIFICADO: dos funciones virtuales (ExecCmdAppFaderEfctEndEvt, SequencePinDeliverBase) escriben el modo bajo condiciones concretas; ninguna disparada desde Live View en la evidencia revisada",
+      "clasificacion": "VERIFICADO (existencia); NO VERIFICADO (alcanzabilidad desde EE/disparo fotográfico)",
+      "consecuencia": "El bloqueo de sesión 15 'no hay escritor de modo 1' queda obsoleto; el bloqueo real es 'hay escritor, pero solo se ve disparado desde fundidos de efecto (fader) y desde submensaje 0x1017 en pin 0, ninguno conectado a EE'"
+    },
+    {
+      "hallazgo": "Segunda fila con StsId=6 en la tabla de topología (fila 0xb4: objeto 53 salida#2 → StillRecorder entrada#0, mismo destino que la fila 0x2a de Effect)",
+      "quien": "Rama A",
+      "antes": "sesión 15: solo se conocía una fila con StsId=6 (0x2a), 'único miembro del grupo'",
+      "ahora": "Existen DOS filas con StsId=6, ambas convergiendo en el mismo pin de entrada de StillRecorder; abre la hipótesis no verificada de que el arbitraje real entre Effect y el objeto 53 ocurra en el StsViewer compartido, no en ObjEffect ni en TopologyManager",
+      "clasificacion": "VERIFICADO (existencia de la segunda fila); HIPÓTESIS (arbitraje vía StsViewer)",
+      "consecuencia": "Nuevo candidato de investigación (GetStsViewer ELF 0x4294cc, ConnectPin ELF 0x41c25e) para la siguiente sesión; no cambia el veredicto de esta"
+    },
+    {
+      "hallazgo": "213 sitios reales de createTopology/destroyTopology (93 create + 120 destroy), no 318 como citaba sesión 15; discrepancia no resuelta",
+      "quien": "Rama A",
+      "antes": "sesión 15: '318 sitios de llamada... revisados solo parcialmente'",
+      "ahora": "Conteo propio reproducible: 213 bl directos a los dos wrappers reales (0x420630/0x420656). Único creador literal de la fila 0x2a sigue siendo ModelPbCap; el 82% de los sitios de create construyen el id dinámicamente (no literal), por lo que no se puede confirmar ni descartar otro creador de 0x2a",
+      "clasificacion": "VERIFICADO (conteo propio); discrepancia de cifra con sesión 15 NO RESUELTA",
+      "consecuencia": "El bloqueo 'ningún modelo de disparo conocido crea 0x2a' se mantiene sin cambios, con cobertura ahora cuantificada (18%/3% resuelto a literal) en vez de declarada vagamente 'parcial'"
+    },
+    {
+      "hallazgo": "Segundo handler gemelo que construye 0x3900/0x600d (ELF 0x1f25d8), confirma de forma independiente modo1+submensaje 0x1011 → 0x600d, y revela familia de mensajes hermanos 0x6051/0x6052/0x6053 no catalogada antes",
+      "quien": "Claude principal",
+      "antes": "sesión 15: solo se conocía un sitio (0x1e9880) para esta regla",
+      "ahora": "Doble verificación independiente (dos funciones distintas, misma regla); además la factoría de secuencias (0x17b004) muestra que SOLO 0x6013 instancia un objeto de secuencia con estado (0xd4 B, ctor 0x1861a8) — 0x600d nunca aparece en esa factoría, lo que sugiere que el camino de modo 1 no transporta imagen (ausencia de DMM/SDF en su propio despacho)",
+      "clasificacion": "VERIFICADO (estructura, doble fuente); INFERENCIA (0x600d no transporta imagen, por ausencia de evidencia)",
+      "consecuencia": "Si se confirmara que el modo 1 no mueve datos, deja de ser un candidato razonable para portar un frame de Camera; el foco debe seguir en los modos 2-5 (los mismos que usa PbCap), sin escritor conocido desde EE"
+    },
+    {
+      "hallazgo": "FeaIf::EncodeStill solo encola (copia descriptor RegionInfo, no el raster) y retorna antes de la finalización real; StillConverter es el candidato (INFERENCIA fuerte, por cadenas reales) a receptor de CBID_ENCODE_STILL, sin xref directa confirmada",
+      "quien": "Rama B",
+      "antes": "sesión 14/15: vida útil del buffer tras EncodeStill 'asíncrona, instante de liberación NO VERIFICADO'",
+      "ahora": "Se precisa el mecanismo exacto: copia de 0x40 B de RegionInfo (handles+tamaños, no píxeles), error inmediato (código 9) si no hay slot FEA libre, sin ruta de cancelación ni liberación posterior localizada",
+      "clasificacion": "VERIFICADO (mecanismo de encolado); NO VERIFICADO (consumidor exacto, instante de liberación)",
+      "consecuencia": "El riesgo de 'reciclaje del buffer antes de terminar la codificación' (documentado desde sesión 13) sigue abierto; ahora con más detalle de por qué (FEA no confirma lectura, solo encolado)"
+    },
+    {
+      "hallazgo": "Ningún guard de exclusión Camera/Recorder dentro del gestor de pines de ObjEffect ni en las 7 funciones hermanas de 0x173158 (revisadas por primera vez)",
+      "quien": "Rama A",
+      "antes": "sesión 15: 'TopologyManager no tiene guard; ObjEffect no se revisó a este nivel'",
+      "ahora": "Tampoco hay guard dentro de ObjEffect en las piezas revisadas (0xbc3208, 0xbc31fc, 7 hermanas de 0x173158); el candidato de arbitraje se traslada al StsViewer compartido (ver hallazgo de la fila 0xb4)",
+      "clasificacion": "NO VERIFICADO (ampliado, no descartado)",
+      "consecuencia": "Refuerza, no resuelve, la pregunta de coexistencia de topologías"
+    }
+  ],
+  "respuestas_informe_final": {
+    "1_evidencia_nueva_principal": "Segundo handler gemelo (ELF 0x1f25d8) que confirma independientemente la regla modo1+0x1011→0x600d; decompilado de la factoría de secuencias 0x17b004 que muestra que solo 0x6013 crea un objeto de secuencia con estado (0xd4 B); ausencia de construcción de PlayData o llamada SDF/DMM en ambos despachadores inspeccionados.",
+    "2_evidencia_nueva_sonnet5": "Dos escritores dinámicos reales de EffectInternalMode=1 (ExecCmdAppFaderEfctEndEvt, SequencePinDeliverBase), identificados por RTTI; tres resets 1→0; recuento de 213 sitios reales de create/destroyTopology; segunda fila con StsId=6 (0xb4) hacia el mismo pin de StillRecorder.",
+    "3_evidencia_nueva_codex": "SHA-256 de los binarios usados; cadena completa MprIf::EncodeStill→FeaIf::EncodeStill con desensamblado real (éxito/error, copia de RegionInfo de 0x40 B); identificación de StillConverter como candidato a consumidor de CBID_ENCODE_STILL por cadenas reales; confirmación de que DmmClose no libera (solo decrementa contador open).",
+    "4_confirmacion_modelos": "Claude principal: Sonnet 5, hilo propio, sin cambio de modelo/esfuerzo. Subagente Rama A: Claude, model=sonnet, effort=medium (vía Agent tool) — confirmó no haber delegado a ningún otro agente. Agente Rama B: Codex codex-cli 0.162.1, model=gpt-5.6-terra, model_reasoning_effort=medium, confirmado por llamada de prueba previa ('OK', 831 tokens) antes del trabajo real; confirmó no haber delegado. Máximo de agentes respetado: un Claude + un Codex, cero subagentes anidados (a diferencia del incidente de sesión 15).",
+    "5_resultado_barrido_topologymanager": "213 sitios reales enumerados al 100% (93 create + 120 destroy), pero solo 17/93 create y 4/120 destroy resueltos a un id de fila literal (18%/3%). Único creador literal confirmado de la fila 0x2a: ModelPbCap. No se pudo confirmar ni descartar otro creador por construcción dinámica de ids (82%/97% de los sitios). Discrepancia de cifra con los '318 sitios' citados en sesión 15 no resuelta.",
+    "6_origen_alcance_modo_interno_1": "Tiene dos escritores dinámicos reales: (a) ExecCmdAppFaderEfctEndEvt, al terminar un efecto de fundido de la app si un contador no alcanza umbral; (b) SequencePinDeliverBase, al recibir submensaje 0x1017 en pin 0 con modo previo 0. Ninguno de los dos se disparó, en la evidencia revisada, desde ModelBootEE ni desde ningún flujo de Live View — ambos parecen pertenecer a UI/edición/fundidos, no a disparo fotográfico. NO VERIFICADO el llamador real (vtabla indirecta) de ambas funciones.",
+    "7_diferencias_600d_6013": "0x6013 pasa por la factoría de secuencias (0x17b004) e instancia un objeto de secuencia con estado propio de 0xd4 B (ctor 0x1861a8); 0x600d (y sus hermanos recién hallados 0x6051/0x6052/0x6053) se postean como ObjMsg plano sin ningún objeto de secuencia. Ninguno de los dos despachadores inspeccionados llama directamente a DMM/SDF ni construye PlayData.",
+    "8_unittype_geometria_yc_camera": "Sigue sin recuperarse: ObjCamera no tiene en su constructor ninguna asignación DMM, handle, dirección física, geometría ni formato atribuible al YC real. Explícitamente DESCARTADO atribuirle las dimensiones de los registros IMX210 o considerar la SDS de 0x800 B como el raster.",
+    "9_compatibilidad_pbcap": "NO DEMOSTRADA. Las unidades reales de PbCap (0x50b3f=0x3fc000B raster, 0xe0b00=0x800B solo cabecera SDS, 0x220b2e=0x96000B raster auxiliar) están verificadas en tamaño, pero su formato de píxel/stride/submuestreo no se ha interpretado desde código; la compatibilidad del YC de Camera con esa infraestructura SDF es HIPÓTESIS condicionada, no prueba.",
+    "10_resultado_cbid_encode_still": "FeaIf::EncodeStill solo reserva un slot y copia un descriptor RegionInfo de 0x40 B (handles+tamaños, no el raster); retorna antes de que exista evidencia de que FEA haya leído el YC. StillConverter es INFERENCIA fuerte (por cadenas reales de callback) como receptor de la finalización, sin xref directa que lo confirme. Instante de liberación de las unidades de ObjEffect: NO VERIFICADO.",
+    "11_posibilidad_camera_effect_recorder": "Sin cambios de fondo: la topología lo permite estructuralmente (sin guard hallado en TopologyManager ni, ahora, en el gestor de pines de ObjEffect), pero no se encontró ningún modelo de disparo fotográfico que cree la conexión Effect.out1→Recorder (fila 0x2a) ni ningún camino que active un modo de Effect compatible con ello desde Live View.",
+    "12_veredicto_a_vs_e": "Sin cambio de orden: A > E > E2. La arquitectura E recibe esta sesión dos piezas nuevas (escritor real de modo 1; segunda fila StsId=6) y una corrección de cobertura (213 vs 318 sitios), pero ninguna conecta con disparo fotográfico/EE. Ni viable ni descartada.",
+    "13_siguiente_bloqueo": "Decompilar GetStsViewer (ELF 0x4294cc) y ConnectPin (ELF 0x41c25e) para determinar si el StsViewer compartido por StsId=6 arbitra entre las filas 0x2a y 0xb4 (nuevo candidato de exclusión, reemplaza la búsqueda dentro de ObjEffect); y trazar el llamador indirecto (vtabla) de ExecCmdAppFaderEfctEndEvt y SequencePinDeliverBase para saber si son alcanzables fuera de UI/fundidos/edición."
+  }
+}

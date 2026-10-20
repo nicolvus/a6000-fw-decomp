@@ -1,0 +1,12 @@
+{
+ "session": 10,
+ "message_0x3a48": {"status":"VERIFICADO","meaning":"respuesta generica MWF::ObjMsg del modulo, no especifica de GetFileImage","sender":"MWF::EventSender this+0x4c creado en ELF 0x920c8c","reply_sink":"this+0x58 (ObjConverter parent+0x18)","consumer":"solicitante del comando (ObjConverter <- NetUpMain/UPLDR)"},
+ "record_offsets_0x30_0x3c": {"status":"VERIFICADO","layout":"{u16 handle; u32 offset; u32 size; u32 extra}; grupos +0x30,+0x60,+0x70","consumers":{"ELF 0x921788":"empaqueta y responde al solicitante","ELF 0x921658":"solo si IsNetworkWriteTestMode: genera nombre %c%c%c%c%04d.JPG","ELF 0x9214d0":"escribe /dev/ms/<nombre> con E/S cruda (sin MPR/DCF)","ELF 0x920274 (Ghidra 0x930274)":"libera handles"}},
+ "getfileimage_class": "TRANSFERENCIA (export/subida); DESCARTADO como ruta de grabacion DCF",
+ "recordStillImage_0x1027": {"status":"VERIFICADO","receiver":"ObjStillRecorder ELF 0x919ca0","action":"this+0x128=4; init anillo +0xdc; responde 0x3500 con 0x131f/0x1320","execute":"RecordStill::Execute ELF 0x90b248 ramifica por +0x128 (0 normal, 4 externo)","link_to_GetFileImage":"DESCARTADO (distintos modulos y IDs)"},
+ "thumbnail_screennail_producer": {"status":"NO VERIFICADO"},
+ "minimum_contract_for_mpr": {"status":"NO VERIFICADO","known":"WriteStillImageParam 0xbc B igual en Execute modo 0/4 y en 0x930464; StillInfo 0x6b0"},
+ "recommended_architecture": {"status":"INFERENCIA","choice":"A/C: inyectar mediante 0x1027 (modo 4) en ObjStillRecorder; B (MakeWriteStillImage como constructor) rebajada","reason":"0x1027 es camino nativo hasta RecordStill::Execute; GetFileImage no persiste"},
+ "new_functions": {"ELF 0x920c8c":"ctor del helper de ObjConverter (EventSender/Receiver)","ELF 0x921788":"respuesta con descriptores","ELF 0x921658":"nombre+volcado en modo test","ELF 0x9214d0":"escritura cruda a /dev/ms","ELF 0x919ca0":"callback de ObjStillRecorder que atiende 0x1027","ELF 0x90efb0":"init anillo buffers +0xdc","ELF 0x93b8e0":"envoltorio InfraStillPool de MakeWriteStillImage"},
+ "blocked_pending": ["fuente de imagen en modo 4 de Execute","si modo 4 llega a MprCtrl::WriteStill","productor de miniatura/screennail","receptor de 0x3011/cola 0x40193","llamadores del envoltorio 0x93b8e0"]
+}

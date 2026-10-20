@@ -1,0 +1,37 @@
+{
+  "status": "VERIFICADO",
+  "model": "A6300 2.01",
+  "source_sha256": "6249d4b7f70d31c50048c85ca39e61c1872b547a26fd4b4ad0343ca9811433ac",
+  "rom_base": "0x4200",
+  "function": "0x23e16",
+  "tbb_instruction": "0x23e58",
+  "table": "0x23e5c",
+  "table_hex": "4c022351",
+  "phase_destinations": {
+    "0": "0x23ef4",
+    "1": "0x23e60",
+    "2": "0x23ea2",
+    "3": "0x23efe"
+  },
+  "callback_pointer_occurrences": [
+    {
+      "rom_address": "0x2f964",
+      "value": "0x23af5"
+    },
+    {
+      "rom_address": "0x2fa34",
+      "value": "0x23e17"
+    },
+    {
+      "rom_address": "0x2fa44",
+      "value": "0x23e17"
+    },
+    {
+      "rom_address": "0x2fa54",
+      "value": "0x23e17"
+    }
+  ],
+  "instruction_window_hex": "2de9f041074600f027fd314c052630b900f035ff0546e5f701f9281a04e000f02effd4f85c11081ab0fbf6f0b0f5803f01d34ff6ff7094f85311244d264e04294dd2dfe801f04c022351a4f8560100f003fd60b100f097ff48b1e2f702f9b4f8540140f01000a4f85401e2f7eff805f1340568782a784ff0010342ea002132464ff0000000f03eff02201ee0a4f8580100f0e2fc60b100f076ff48b1e2f7e1f8b4f8540140f02000a4f85401e2f7cef805f1360568782a784ff0010342ea00213246184600f01eff032006e0000000030020e43400204036002084f853013846bde8f041fcf758bfa4f85a0100f0b4fc60b100f048ff48b1e2f7b3f8b4f8540140f04000a4f85401e2f7a0f800f0dffe0420dae7",
+  "method": "Original ROM bytes; TBB PC+2*unsigned-byte; no hardware execution",
+  "limitations": "Pointer occurrences alone do not prove callback execution or curtain semantics"
+}

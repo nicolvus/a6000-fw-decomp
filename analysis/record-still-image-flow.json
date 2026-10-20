@@ -1,0 +1,56 @@
+{
+ "session": 9,
+ "addr_note": "Ghidra=ELF+0x10000",
+ "functions": {
+  "0x930464": {
+   "name": "ObjStillRecorderImage::GetFileImage",
+   "writes_sd": false,
+   "calls": [
+    "0x93677c",
+    "0x92ffa8",
+    "0x92c09c",
+    "0x930174"
+   ],
+   "notify_msg": "0x3a48",
+   "state": {
+    "ok": 2,
+    "err": 3
+   },
+   "label": "VERIFICADO"
+  },
+  "0x93677c": {
+   "role": "list lookup by type (node+0xc == ctx[0x11])",
+   "label": "VERIFICADO"
+  },
+  "0x930174": {
+   "role": "unmap + free handle",
+   "label": "VERIFICADO"
+  },
+  "0x92ffa8": {
+   "role": "DMM handle -> mapped addr,size",
+   "label": "VERIFICADO"
+  },
+  "0x92c09c": {
+   "role": "MprIf::MakeWriteStillImage wrapper",
+   "only_caller_elf": "0x920838",
+   "label": "VERIFICADO"
+  }
+ },
+ "record_offsets": {
+  "0x10": "exif handle",
+  "0x30": "out handle",
+  "0x34": "out offset",
+  "0x38": "out size",
+  "0x40": "thumb handle",
+  "0x44": "thumb off",
+  "0x80/0x84": "160x120",
+  "0x9c/0xa0": "w/h",
+  "0xa4": "orientation",
+  "0x1dc": "screennail handle"
+ },
+ "conclusion": "in-memory JPEG file builder; no DCF write",
+ "unverified": [
+  "consumer of 0x3a48 and record +0x30..0x3c",
+  "link recordStillImage->0x1027->0x920a79"
+ ]
+}

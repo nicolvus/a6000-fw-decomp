@@ -1,0 +1,89 @@
+{
+  "source_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "base": "43541000",
+  "method": "persistent project -readOnly -noanalysis; temporary function definitions rolled back; no firmware execution",
+  "functions": [
+    {
+      "query": "436d2528",
+      "references_before": [
+        {
+          "from": "43ad7de8",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7ed4",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7ea6"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "436d2528",
+      "body": "[[436d2528, 436d2533]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\nvoid FUN_436d2528(int param_1,uint param_2)\n\n{\n  *(uint *)(param_1 + 0xa3310) \u003d\n       *(uint *)(param_1 + 0xa3310) \u0026 0xe000ffff | (param_2 \u0026 0x1fff) \u003c\u003c 0x10;\n  return;\n}\n\n",
+      "listing": [
+        "436d2528 ldr r3,[0x436d2534]",
+        "436d252a ldr r2,[r0,r3]",
+        "436d252c bfi r2,r1,#0x10,#0xd",
+        "436d2530 str r2,[r0,r3]",
+        "436d2532 bx lr"
+      ],
+      "calls_and_jumps": [],
+      "references_after": [
+        {
+          "from": "43ad7de8",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7ed4",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7ea6"
+        }
+      ]
+    },
+    {
+      "query": "436d2518",
+      "references_before": [
+        {
+          "from": "43ad7e0c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7ee4",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7ea6"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "436d2518",
+      "body": "[[436d2518, 436d2523]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\nvoid FUN_436d2518(int param_1,uint param_2)\n\n{\n  *(uint *)(param_1 + 0xa3310) \u003d *(uint *)(param_1 + 0xa3310) \u0026 0xffffe000 | param_2 \u0026 0x1fff;\n  return;\n}\n\n",
+      "listing": [
+        "436d2518 ldr r3,[0x436d2524]",
+        "436d251a ldr r2,[r0,r3]",
+        "436d251c bfi r2,r1,#0x0,#0xd",
+        "436d2520 str r2,[r0,r3]",
+        "436d2522 bx lr"
+      ],
+      "calls_and_jumps": [],
+      "references_after": [
+        {
+          "from": "43ad7e0c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7ee4",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7ea6"
+        }
+      ]
+    }
+  ]
+}

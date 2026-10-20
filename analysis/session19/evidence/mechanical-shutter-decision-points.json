@@ -1,0 +1,74 @@
+{
+  "task_id": "S19-12",
+  "scope": "Sony A6000 FW 3.21; static local LIRO analysis; av-cam.bin base 0x43541000",
+  "status": "PARTIAL",
+  "method": "llvm-objdump -d --triple=thumbv7-none-eabi on analysis/av-cam-analysis-view.elf",
+  "findings": [
+    {
+      "classification": "VERIFICADO",
+      "address": "0x4379e6a8 -> 0x4379eba0",
+      "file": "av-cam.bin",
+      "finding": "RelMgr gates capture request through block-object virtual checks for factors 1, 0xf, 0x11 and 0x15; rejection emits type 5/0x4045 and admission emits type 2/0x3011 to 0x40193.",
+      "method": "LLVM control-flow inspection and prior static evidence"
+    },
+    {
+      "classification": "VERIFICADO",
+      "address": "0x43807d90..0x43807f40",
+      "file": "av-cam.bin",
+      "finding": "Local dispatcher admission reaches 0x43809ed8 only on specific return-value and message-byte guards, including msg+0xc == 4 at 0x43807e4e..0x43807e52; other branches clean up, notify, or return.",
+      "method": "LLVM control-flow inspection"
+    },
+    {
+      "classification": "VERIFICADO",
+      "address": "0x43809ed8..0x43809f18",
+      "file": "av-cam.bin",
+      "finding": "CaptureStart installer creates callback 0x437df640 and invokes 0x43b0172c(object,0); it has no direct Silent/EFCS/mechanical-mode branch.",
+      "method": "LLVM disassembly"
+    },
+    {
+      "classification": "VERIFICADO",
+      "address": "0x437df640 / cfg+0x265 bits 2..3",
+      "file": "av-cam.bin",
+      "finding": "CaptureStart dispatches classes 1, 2 and 3 separately; ordinary values call 0x437df338. Class 2 also reaches it when global+0x14 equals 1.",
+      "method": "LLVM disassembly"
+    },
+    {
+      "classification": "VERIFICADO",
+      "address": "0x437df338 -> 0x437eabfc -> 0x43b04730",
+      "file": "av-cam.bin",
+      "finding": "CaptureManager creates Image, selects a five-word descriptor, installs it, and executes its indirect stage dispatcher.",
+      "method": "LLVM disassembly"
+    },
+    {
+      "classification": "NO_VERIFICADO",
+      "address": "0x437eabfc / table 0x43edccf8",
+      "file": "av-cam.bin",
+      "finding": "No static row-to-CAIF/Darwin mapping or flag selecting mechanical versus fully electronic capture was recovered; table contents are not available in the static image.",
+      "method": "static-table and control-flow review"
+    },
+    {
+      "classification": "VERIFICADO",
+      "address": "0x43842158 / bank+0x41c",
+      "file": "av-cam.bin",
+      "finding": "EFCS contributes to exposure-class selection, with additional mode, mask and threshold conditions.",
+      "method": "prior static route rechecked against selector evidence"
+    },
+    {
+      "classification": "DESCARTADO",
+      "address": "0x43842158, 0x436d6f6c",
+      "file": "av-cam.bin",
+      "finding": "EFCS exposure classes are not evidence of a fully electronic shutter or suppression of both curtains.",
+      "method": "absence of a recovered class-to-curtain bypass plus continued sensor programming"
+    },
+    {
+      "classification": "VERIFICADO",
+      "address": "0x437db858(event=1) -> 0x436b8a50 -> 0x436ba234",
+      "file": "av-cam.bin",
+      "finding": "CAIF event 1 sends a 22-byte transaction; its per-descriptor relation and first mechanical-commit status remain unresolved.",
+      "method": "LLVM and prior Darwin boundary evidence"
+    }
+  ],
+  "next_task_id": "S19-13",
+  "next_task": "(d) cancelaciones y estados posteriores a S2",
+  "safety": "Static local analysis only; no original binary or Ghidra project modified, no camera connected or flashed; SilentShutter is not declared functional."
+}

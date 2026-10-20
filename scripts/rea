@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+project_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+export GHIDRA_INSTALL_DIR="$project_dir/tools/providers/ghidra_12.1.4_PUBLIC"
+export JAVA_HOME="$project_dir/tools/providers/jdk-21.0.12.1+1"
+export PATH="$JAVA_HOME/bin:$PATH"
+exec "$project_dir/tools/rea/node_modules/.bin/rea" "$@"

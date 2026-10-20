@@ -1,0 +1,401 @@
+Independent original-byte disassembly, 2026-10-16. Darwin ROM base0x4200, LIRO base0x43541000. No device execution.
+
+a6000 0x6808..0x6848 exclusive
+
+analysis/a6000-darwin-rom-analysis-view.elf:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+00004200:
+    6808: b570         	push	{r4, r5, r6, lr}
+    680a: 48c9         	ldr	r0, [pc, #0x324]        @ 0x6b30
+    680c: 6800         	ldr	r0, [r0]
+    680e: f04f 0300    	mov.w	r3, #0x0
+    6812: f3c0 0408    	ubfx	r4, r0, #0x0, #0x9
+    6816: b2e1         	uxtb	r1, r4
+    6818: 461a         	mov	r2, r3
+    681a: 460d         	mov	r5, r1
+    681c: f04f 00d0    	mov.w	r0, #0xd0
+    6820: f7ff fbd3    	bl	0x5fca @ imm = #-0x85a
+    6824: f002 fe47    	bl	0x94b6 @ imm = #0x2c8e
+    6828: 4606         	mov	r6, r0
+    682a: 48c2         	ldr	r0, [pc, #0x308]        @ 0x6b34
+    682c: eb00 0084    	add.w	r0, r0, r4, lsl #2
+    6830: f850 0c04    	ldr	r0, [r0, #-4]
+    6834: 4780         	blx	r0
+    6836: f002 fe3e    	bl	0x94b6 @ imm = #0x2c7c
+    683a: 1b83         	subs	r3, r0, r6
+    683c: 2200         	movs	r2, #0x0
+    683e: 4629         	mov	r1, r5
+    6840: 20d1         	movs	r0, #0xd1
+    6842: f7ff fbc2    	bl	0x5fca @ imm = #-0x87c
+    6846: 48bc         	ldr	r0, [pc, #0x2f0]        @ 0x6b38
+
+a6300 0x6b92..0x6bb6 exclusive
+
+analysis/a6300-darwin-rom-analysis-view.elf:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+00004200:
+    6b92: b510         	push	{r4, lr}
+    6b94: 4830         	ldr	r0, [pc, #0xc0]         @ 0x6c58
+    6b96: 6800         	ldr	r0, [r0]
+    6b98: f04f 0300    	mov.w	r3, #0x0
+    6b9c: f3c0 0408    	ubfx	r4, r0, #0x0, #0x9
+    6ba0: 461a         	mov	r2, r3
+    6ba2: b2e1         	uxtb	r1, r4
+    6ba4: f04f 00d0    	mov.w	r0, #0xd0
+    6ba8: f7ff fc30    	bl	0x640c @ imm = #-0x7a0
+    6bac: 482b         	ldr	r0, [pc, #0xac]         @ 0x6c5c
+    6bae: eb00 0084    	add.w	r0, r0, r4, lsl #2
+    6bb2: f850 0c04    	ldr	r0, [r0, #-4]
+
+a6000 0xff8e..0xff96 exclusive
+
+analysis/a6000-darwin-rom-analysis-view.elf:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+00004200:
+    ff8e: 2006         	movs	r0, #0x6
+    ff90: e78a         	b	0xfea8 @ imm = #-0xec
+    ff92: 2007         	movs	r0, #0x7
+    ff94: e788         	b	0xfea8 @ imm = #-0xf0
+
+a6300 0x5f36..0x5fa6 exclusive
+
+analysis/a6300-darwin-rom-analysis-view.elf:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+00004200:
+    5f36: 4602         	mov	r2, r0
+    5f38: eb00 0140    	add.w	r1, r0, r0, lsl #1
+    5f3c: 4822         	ldr	r0, [pc, #0x88]         @ 0x5fc8
+    5f3e: b510         	push	{r4, lr}
+    5f40: eb00 00c1    	add.w	r0, r0, r1, lsl #3
+    5f44: 6841         	ldr	r1, [r0, #0x4]
+    5f46: 6808         	ldr	r0, [r1]
+    5f48: f420 23e0    	bic	r3, r0, #0x70000
+    5f4c: 600b         	str	r3, [r1]
+    5f4e: f3c0 4002    	ubfx	r0, r0, #0x10, #0x3
+    5f52: 2a06         	cmp	r2, #0x6
+    5f54: d102         	bne	0x5f5c @ imm = #0x4
+    5f56: f017 fa27    	bl	0x1d3a8 @ imm = #0x1744e
+    5f5a: bd10         	pop	{r4, pc}
+    5f5c: 2a07         	cmp	r2, #0x7
+    5f5e: d102         	bne	0x5f66 @ imm = #0x4
+    5f60: f7ff ffe7    	bl	0x5f32 @ imm = #-0x32
+    5f64: bd10         	pop	{r4, pc}
+    5f66: 4601         	mov	r1, r0
+    5f68: 4610         	mov	r0, r2
+    5f6a: f003 ff82    	bl	0x9e72 @ imm = #0x3f04
+    5f6e: bd10         	pop	{r4, pc}
+    5f70: b570         	push	{r4, r5, r6, lr}
+    5f72: 4d15         	ldr	r5, [pc, #0x54]         @ 0x5fc8
+    5f74: 2400         	movs	r4, #0x0
+    5f76: eb04 0044    	add.w	r0, r4, r4, lsl #1
+    5f7a: eb05 00c0    	add.w	r0, r5, r0, lsl #3
+    5f7e: 6840         	ldr	r0, [r0, #0x4]
+    5f80: 6800         	ldr	r0, [r0]
+    5f82: f3c0 4002    	ubfx	r0, r0, #0x10, #0x3
+    5f86: b110         	cbz	r0, 0x5f8e @ imm = #0x4
+    5f88: 4620         	mov	r0, r4
+    5f8a: f7ff ffd4    	bl	0x5f36 @ imm = #-0x58
+    5f8e: 1c64         	adds	r4, r4, #0x1
+    5f90: 2c04         	cmp	r4, #0x4
+    5f92: d3f0         	blo	0x5f76 @ imm = #-0x20
+    5f94: bd70         	pop	{r4, r5, r6, pc}
+    5f96: 2004         	movs	r0, #0x4
+    5f98: e7cd         	b	0x5f36 @ imm = #-0x66
+    5f9a: 2005         	movs	r0, #0x5
+    5f9c: e7cb         	b	0x5f36 @ imm = #-0x6a
+    5f9e: 2006         	movs	r0, #0x6
+    5fa0: e7c9         	b	0x5f36 @ imm = #-0x6e
+    5fa2: 2007         	movs	r0, #0x7
+    5fa4: e7c7         	b	0x5f36 @ imm = #-0x72
+
+a6000 0x1b44c..0x1b456 exclusive
+
+analysis/a6000-darwin-rom-analysis-view.elf:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+00004200:
+   1b44c: 4955         	ldr	r1, [pc, #0x154]        @ 0x1b5a4
+   1b44e: 2001         	movs	r0, #0x1
+   1b450: 6048         	str	r0, [r1, #0x4]
+   1b452: f7fe b9b6    	b.w	0x197c2 @ imm = #-0x1c94
+
+a6000 0x20220..0x20248 exclusive
+
+analysis/a6000-darwin-rom-analysis-view.elf:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+00004200:
+   20220: b510         	push	{r4, lr}
+   20222: 0004         	movs	r4, r0
+   20224: 49df         	ldr	r1, [pc, #0x37c]        @ 0x205a4
+   20226: ebc0 00c0    	rsb	r0, r0, r0, lsl #3
+   2022a: eb01 0080    	add.w	r0, r1, r0, lsl #2
+   2022e: d003         	beq	0x20238 @ imm = #0x6
+   20230: 2c01         	cmp	r4, #0x1
+   20232: d004         	beq	0x2023e @ imm = #0x8
+   20234: 2c02         	cmp	r4, #0x2
+   20236: d102         	bne	0x2023e @ imm = #0x4
+   20238: 2100         	movs	r1, #0x0
+   2023a: f7fe f96e    	bl	0x1e51a @ imm = #-0x1d24
+   2023e: 4620         	mov	r0, r4
+   20240: e8bd 4010    	pop.w	{r4, lr}
+   20244: f000 bcdf    	b.w	0x20c06 @ imm = #0x9be
+
+a6000 0x20c06..0x20c2c exclusive
+
+analysis/a6000-darwin-rom-analysis-view.elf:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+00004200:
+   20c06: b510         	push	{r4, lr}
+   20c08: 4918         	ldr	r1, [pc, #0x60]         @ 0x20c6c
+   20c0a: ebc0 00c0    	rsb	r0, r0, r0, lsl #3
+   20c0e: eb01 0480    	add.w	r4, r1, r0, lsl #2
+   20c12: 68e0         	ldr	r0, [r4, #0xc]
+   20c14: 7802         	ldrb	r2, [r0]
+   20c16: 4814         	ldr	r0, [pc, #0x50]         @ 0x20c68
+   20c18: f890 1152    	ldrb.w	r1, [r0, #0x152]
+   20c1c: 2010         	movs	r0, #0x10
+   20c1e: f7ff faf4    	bl	0x2020a @ imm = #-0xa18
+   20c22: 4620         	mov	r0, r4
+   20c24: e8bd 4010    	pop.w	{r4, lr}
+   20c28: f7fd bb89    	b.w	0x1e33e @ imm = #-0x28ee
+
+a6300 0x1781c..0x17850 exclusive
+
+analysis/a6300-darwin-rom-analysis-view.elf:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+00004200:
+   1781c: e92d 41f0    	push.w	{r4, r5, r6, r7, r8, lr}
+   17820: 4604         	mov	r4, r0
+   17822: 460d         	mov	r5, r1
+   17824: 4616         	mov	r6, r2
+   17826: 461f         	mov	r7, r3
+   17828: f7ee fc26    	bl	0x6078 @ imm = #-0x117b4
+   1782c: 492a         	ldr	r1, [pc, #0xa8]         @ 0x178d8
+   1782e: f8b1 0444    	ldrh.w	r0, [r1, #0x444]
+   17832: b938         	cbnz	r0, 0x17844 @ imm = #0xe
+   17834: f881 4440    	strb.w	r4, [r1, #0x440]
+   17838: f881 5441    	strb.w	r5, [r1, #0x441]
+   1783c: f881 6442    	strb.w	r6, [r1, #0x442]
+   17840: f881 7443    	strb.w	r7, [r1, #0x443]
+   17844: 1ea2         	subs	r2, r4, #0x2
+   17846: 2301         	movs	r3, #0x1
+   17848: 4093         	lsls	r3, r2
+   1784a: 4318         	orrs	r0, r3
+   1784c: f8a1 0444    	strh.w	r0, [r1, #0x444]
+
+liro 0x43a24cf4..0x43a24d50 exclusive
+
+analysis/a6300-av-cam-analysis-view.elf:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+43541000:
+43a24cf4: b5f0         	push	{r4, r5, r6, r7, lr}
+43a24cf6: b085         	sub	sp, #0x14
+43a24cf8: 4c12         	ldr	r4, [pc, #0x48]         @ 0x43a24d44
+43a24cfa: 447c         	add	r4, pc
+43a24cfc: f104 0664    	add.w	r6, r4, #0x64
+43a24d00: 4625         	mov	r5, r4
+43a24d02: 68af         	ldr	r7, [r5, #0x8]
+43a24d04: a901         	add	r1, sp, #0x4
+43a24d06: 4638         	mov	r0, r7
+43a24d08: f734 f6ac    	bl	0x43559a64 @ imm = #-0x4cb2a8
+43a24d0c: 9b01         	ldr	r3, [sp, #0x4]
+43a24d0e: 2b01         	cmp	r3, #0x1
+43a24d10: d102         	bne	0x43a24d18 @ imm = #0x4
+43a24d12: 4638         	mov	r0, r7
+43a24d14: f1fc f9be    	bl	0x43c21094 @ imm = #0x1fc37c
+43a24d18: 3514         	adds	r5, #0x14
+43a24d1a: 42b5         	cmp	r5, r6
+43a24d1c: d1f1         	bne	0x43a24d02 @ imm = #-0x1e
+43a24d1e: 68a0         	ldr	r0, [r4, #0x8]
+43a24d20: 3414         	adds	r4, #0x14
+43a24d22: f1fc f991    	bl	0x43c21048 @ imm = #0x1fc322
+43a24d26: 42b4         	cmp	r4, r6
+43a24d28: d1f9         	bne	0x43a24d1e @ imm = #-0xe
+43a24d2a: 4907         	ldr	r1, [pc, #0x1c]         @ 0x43a24d48
+43a24d2c: 2300         	movs	r3, #0x0
+43a24d2e: 4a07         	ldr	r2, [pc, #0x1c]         @ 0x43a24d4c
+43a24d30: 4479         	add	r1, pc
+43a24d32: 4803         	ldr	r0, [pc, #0xc]          @ 0x43a24d40
+43a24d34: 447a         	add	r2, pc
+43a24d36: f734 f721    	bl	0x43559b7c @ imm = #-0x4cb1be
+43a24d3a: b005         	add	sp, #0x14
+43a24d3c: bdf0         	pop	{r4, r5, r6, r7, pc}
+43a24d3e: bf00         	nop
+43a24d40: 0017         	movs	r7, r2
+43a24d42: 0074         	lsls	r4, r6, #0x1
+43a24d44: 6fc2         	ldr	r2, [r0, #0x7c]
+43a24d46: 0028         	movs	r0, r5
+43a24d48: b98c         	cbnz	r4, 0x43a24d6e @ imm = #0x22
+43a24d4a: 006a         	lsls	r2, r5, #0x1
+43a24d4c: fd99 ffff    	ldc2	p15, c15, [r9, #1020]
+
+liro 0x43a252b0..0x43a2534c exclusive
+
+analysis/a6300-av-cam-analysis-view.elf:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+43541000:
+43a252b0: 4b2d         	ldr	r3, [pc, #0xb4]         @ 0x43a25368
+43a252b2: e92d 41f0    	push.w	{r4, r5, r6, r7, r8, lr}
+43a252b6: 447b         	add	r3, pc
+43a252b8: f853 3020    	ldr.w	r3, [r3, r0, lsl #2]
+43a252bc: 429a         	cmp	r2, r3
+43a252be: d84d         	bhi	0x43a2535c @ imm = #0x9a
+43a252c0: f011 0703    	ands	r7, r1, #0x3
+43a252c4: 460b         	mov	r3, r1
+43a252c6: ea4f 2540    	lsl.w	r5, r0, #0x9
+43a252ca: ea4f 0692    	lsr.w	r6, r2, #0x2
+43a252ce: d10c         	bne	0x43a252ea @ imm = #0x18
+43a252d0: 4c24         	ldr	r4, [pc, #0x90]         @ 0x43a25364
+43a252d2: 4638         	mov	r0, r7
+43a252d4: 192c         	adds	r4, r5, r4
+43a252d6: 4625         	mov	r5, r4
+43a252d8: e004         	b	0x43a252e4 @ imm = #0x8
+43a252da: f853 7b04    	ldr	r7, [r3], #4
+43a252de: 3001         	adds	r0, #0x1
+43a252e0: f845 7b04    	str	r7, [r5], #4
+43a252e4: 42b0         	cmp	r0, r6
+43a252e6: d1f8         	bne	0x43a252da @ imm = #-0x10
+43a252e8: e019         	b	0x43a2531e @ imm = #0x32
+43a252ea: 4c1e         	ldr	r4, [pc, #0x78]         @ 0x43a25364
+43a252ec: 2000         	movs	r0, #0x0
+43a252ee: 192c         	adds	r4, r5, r4
+43a252f0: 4625         	mov	r5, r4
+43a252f2: e011         	b	0x43a25318 @ imm = #0x22
+43a252f4: f813 7c02    	ldrb	r7, [r3, #-2]
+43a252f8: 3001         	adds	r0, #0x1
+43a252fa: f813 8c03    	ldrb	r8, [r3, #-3]
+43a252fe: f813 cc04    	ldrb	r12, [r3, #-4]
+43a25302: 043f         	lsls	r7, r7, #0x10
+43a25304: ea47 2708    	orr.w	r7, r7, r8, lsl #8
+43a25308: ea47 070c    	orr.w	r7, r7, r12
+43a2530c: f813 cc01    	ldrb	r12, [r3, #-1]
+43a25310: ea47 670c    	orr.w	r7, r7, r12, lsl #24
+43a25314: f845 7b04    	str	r7, [r5], #4
+43a25318: 3304         	adds	r3, #0x4
+43a2531a: 42b0         	cmp	r0, r6
+43a2531c: d1ea         	bne	0x43a252f4 @ imm = #-0x2c
+43a2531e: 0080         	lsls	r0, r0, #0x2
+43a25320: 1823         	adds	r3, r4, r0
+43a25322: 1809         	adds	r1, r1, r0
+43a25324: f002 0003    	and	r0, r2, #0x3
+43a25328: 2802         	cmp	r0, #0x2
+43a2532a: d005         	beq	0x43a25338 @ imm = #0xa
+43a2532c: 2803         	cmp	r0, #0x3
+43a2532e: d008         	beq	0x43a25342 @ imm = #0x10
+43a25330: 2801         	cmp	r0, #0x1
+43a25332: d110         	bne	0x43a25356 @ imm = #0x20
+43a25334: 7809         	ldrb	r1, [r1]
+43a25336: e00d         	b	0x43a25354 @ imm = #0x1a
+43a25338: 7808         	ldrb	r0, [r1]
+43a2533a: 7849         	ldrb	r1, [r1, #0x1]
+43a2533c: ea40 2101    	orr.w	r1, r0, r1, lsl #8
+43a25340: e008         	b	0x43a25354 @ imm = #0x10
+43a25342: 4608         	mov	r0, r1
+43a25344: 7849         	ldrb	r1, [r1, #0x1]
+43a25346: f810 4b01    	ldrb	r4, [r0], #1
+43a2534a: ea44 2101    	orr.w	r1, r4, r1, lsl #8
+
+liro 0x43a25200..0x43a25228 exclusive
+
+analysis/a6300-av-cam-analysis-view.elf:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+43541000:
+43a25200: 4a06         	ldr	r2, [pc, #0x18]         @ 0x43a2521c
+43a25202: 0240         	lsls	r0, r0, #0x9
+43a25204: 4b06         	ldr	r3, [pc, #0x18]         @ 0x43a25220
+43a25206: 5811         	ldr	r1, [r2, r0]
+43a25208: 447b         	add	r3, pc
+43a2520a: f041 5100    	orr	r1, r1, #0x20000000
+43a2520e: 5011         	str	r1, [r2, r0]
+43a25210: 4904         	ldr	r1, [pc, #0x10]         @ 0x43a25224
+43a25212: 5812         	ldr	r2, [r2, r0]
+43a25214: 585b         	ldr	r3, [r3, r1]
+43a25216: 601a         	str	r2, [r3]
+43a25218: 4770         	bx	lr
+43a2521a: bf00         	nop
+43a2521c: 5000         	str	r0, [r0, r0]
+43a2521e: f240 5008    	movw	r0, #0x508
+43a25222: 007d         	lsls	r5, r7, #0x1
+43a25224: 7f34         	ldrb	r4, [r6, #0x1c]
+43a25226: 0000         	movs	r0, r0
+
+liro 0x436fd538..0x436fd570 exclusive
+
+analysis/a6300-av-cam-analysis-view.elf:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+43541000:
+436fd538: 4b2d         	ldr	r3, [pc, #0xb4]         @ 0x436fd5f0
+436fd53a: 2200         	movs	r2, #0x0
+436fd53c: 58e3         	ldr	r3, [r4, r3]
+436fd53e: 6018         	str	r0, [r3]
+436fd540: 4b2c         	ldr	r3, [pc, #0xb0]         @ 0x436fd5f4
+436fd542: 58e3         	ldr	r3, [r4, r3]
+436fd544: 701a         	strb	r2, [r3]
+436fd546: 3285         	adds	r2, #0x85
+436fd548: 4b2b         	ldr	r3, [pc, #0xac]         @ 0x436fd5f8
+436fd54a: 58e3         	ldr	r3, [r4, r3]
+436fd54c: 701a         	strb	r2, [r3]
+436fd54e: 4b2b         	ldr	r3, [pc, #0xac]         @ 0x436fd5fc
+436fd550: 58e2         	ldr	r2, [r4, r3]
+436fd552: 2380         	movs	r3, #0x80
+436fd554: 7013         	strb	r3, [r2]
+436fd556: 4a2a         	ldr	r2, [pc, #0xa8]         @ 0x436fd600
+436fd558: 58a2         	ldr	r2, [r4, r2]
+436fd55a: 7013         	strb	r3, [r2]
+436fd55c: 2290         	movs	r2, #0x90
+436fd55e: 4b29         	ldr	r3, [pc, #0xa4]         @ 0x436fd604
+436fd560: 58e3         	ldr	r3, [r4, r3]
+436fd562: 701a         	strb	r2, [r3]
+436fd564: 3a8d         	subs	r2, #0x8d
+436fd566: 4b28         	ldr	r3, [pc, #0xa0]         @ 0x436fd608
+436fd568: 58e3         	ldr	r3, [r4, r3]
+436fd56a: 701a         	strb	r2, [r3]
+436fd56c: bd10         	pop	{r4, pc}
+436fd56e: bf00         	nop
+
+liro 0x436fa7cc..0x436fa7f2 exclusive
+
+analysis/a6300-av-cam-analysis-view.elf:	file format elf32-littlearm
+
+Disassembly of section .text:
+
+43541000:
+436fa7cc: 9b03         	ldr	r3, [sp, #0xc]
+436fa7ce: 2202         	movs	r2, #0x2
+436fa7d0: 701a         	strb	r2, [r3]
+436fa7d2: 1d1a         	adds	r2, r3, #0x4
+436fa7d4: e89d 0003    	ldm.w	sp, {r0, r1}
+436fa7d8: 60de         	str	r6, [r3, #0xc]
+436fa7da: e882 0003    	stm.w	r2, {r0, r1}
+436fa7de: 22f0         	movs	r2, #0xf0
+436fa7e0: 71df         	strb	r7, [r3, #0x7]
+436fa7e2: 4619         	mov	r1, r3
+436fa7e4: 711a         	strb	r2, [r3, #0x4]
+436fa7e6: 811d         	strh	r5, [r3, #0x8]
+436fa7e8: 729f         	strb	r7, [r3, #0xa]
+436fa7ea: 72df         	strb	r7, [r3, #0xb]
+436fa7ec: 4809         	ldr	r0, [pc, #0x24]         @ 0x436fa814
+436fa7ee: f65f f971    	bl	0x43559ad4 @ imm = #-0x1a0d1e

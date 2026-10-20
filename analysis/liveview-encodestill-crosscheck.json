@@ -1,0 +1,105 @@
+{
+  "sesion": 15,
+  "metodo": "Investigación en paralelo: investigador principal (Claude Sonnet 5, hilo principal, análisis directo), Rama A (subagente Claude Sonnet 5, razonamiento medio), Rama B (Codex gpt-5.6-terra, razonamiento medio vía codex-cli 0.162.1, sandbox workspace-write). Todo estático. Modelos y ajustes confirmados por ejecución real, no declarados sin verificar.",
+  "incidente": "La Rama A intentó lanzar un segundo subagente (general-purpose) durante su primera ejecución, violando el límite de 'máximo un agente Claude'. Se detuvo con TaskStop antes de que produjera ningún entregable, y se reinstruyó a la Rama A para ejecutar ella misma sin delegar. La segunda ejecución sí cumplió la restricción.",
+  "fuentes": {
+    "principal": "docs/capture/claude-main-bridge-verification.md",
+    "rama_a": "docs/capture/branch-claude-objeffect.md + analysis/branch-claude-effect-states.json",
+    "rama_b": "docs/capture/branch-codex-camera-yc.md + analysis/branch-codex-yc-memory.json + analysis/dmm-extent-sizes.json"
+  },
+  "hallazgos_nuevos_cruzados": [
+    {
+      "hallazgo": "Identidad del objeto 8 de la tabla del TopologyManager = ObjCamera",
+      "quien": "principal",
+      "antes": "INFERENCIA fuerte (sesión 14, solo por firma de pines)",
+      "ahora": "VERIFICADO: constructor real ObjCamera (ELF 0x98c380, wrapper ObjCamera_Create 0x959bdc) construye 9 ObjPin, los 9 con PinDir=1 (salida): YC#0-#3,#4,#5 (6 total), STILL_DATA#0, SOUND#0, CAMERA_STATUS#0. Coincide exactamente con la fila de la tabla.",
+      "contraste": "No contradicho por Rama A ni Rama B; Rama A confirmó de forma independiente las mismas filas 0x0a/0x07/0x2a leyendo la tabla, sin tocar el constructor de Camera.",
+      "clasificacion": "VERIFICADO"
+    },
+    {
+      "hallazgo": "ObjCamera no tiene ningún pin de entrada",
+      "quien": "principal",
+      "clasificacion": "VERIFICADO",
+      "consecuencia": "Ningún mensaje de pin (incluido YcPinReqDeliver) puede llegar a Camera; cualquier ruta debe pasar por un objeto con pin de entrada (Effect)."
+    },
+    {
+      "hallazgo": "EffectInternalMode no es this+0x14+4 directo sino un holder detrás de GetSubState(block,1); holder+4 es el byte real",
+      "quien": "rama_a",
+      "antes": "sesión 14 lo describía como 'byte en el bloque 1 de this+0x14, +4' (aproximado)",
+      "ahora": "VERIFICADO por decompilado (Ghidra) y desensamblado crudo independientes del getter (0x14011c) y el setter (0x140144)",
+      "clasificacion": "VERIFICADO"
+    },
+    {
+      "hallazgo": "Escritor de EffectInternalMode localizado (ELF 0x173158), mapeo 0x1025→modo: 0→2,1→3,2→4,3→5,4→7,5→0xe,6→0xf,otro→0",
+      "quien": "rama_a",
+      "clasificacion": "VERIFICADO",
+      "nota": "Este escritor nunca fija el modo a 1; el escritor del modo 1 sigue sin localizarse."
+    },
+    {
+      "hallazgo": "Solo los modos 1 (si submensaje==0x1011) y 2-5 producen acción real sobre REQ_DELIVER; 0, 6 y cualquier otro valor (incluye 7, 0xe, 0xf) solo registran en log",
+      "quien": "rama_a",
+      "antes": "sesión 14: modos 1 y 2..5 con acción, 0/6 'otros' solo registro (ya correcto, pero no verificado por decompilado)",
+      "ahora": "VERIFICADO por decompilado directo del parser 0x1e9880 re-hecho por la Rama A",
+      "clasificacion": "VERIFICADO"
+    },
+    {
+      "hallazgo": "No se encontró relación entre EffectInternalMode y ModelBootEE (Live View)",
+      "quien": "rama_a",
+      "clasificacion": "NO VERIFICADO",
+      "nota": "Buscó los 20 llamadores del setter genérico; solo uno (0x173158) cae en el rango de ObjEffect y consume el campo 0x1025 del propio mensaje REQ_DELIVER/0x1011 (ruta de PbCap, no de EE)."
+    },
+    {
+      "hallazgo": "Tamaños reales de extents DMM: 0x50b3f(0xed)=0x3fc000 B, 0xe0b00(0xe4)=0x800 B exactos, 0x220b2e(0x13d)=0x96000 B",
+      "quien": "rama_b",
+      "antes": "sesión 14: NO VERIFICADO (tabla de extents no decodificada)",
+      "ahora": "VERIFICADO; confirma que 0xe0b00 es solo la cabecera/descriptor SDS (0x800 B = exactamente el tamaño de YcSdsAcsr), nunca el raster de píxeles",
+      "clasificacion": "VERIFICADO"
+    },
+    {
+      "hallazgo": "Filas de topología 0x0a (Camera out0→Effect in0, StsId 0), 0x07 (Effect out0→Renderer in0, StsId 0), 0x2a (Effect out1→Recorder in0, StsId 6)",
+      "quien": "principal y rama_a (independientemente, mismo resultado)",
+      "clasificacion": "VERIFICADO",
+      "nota": "Doble verificación independiente: coinciden byte a byte."
+    },
+    {
+      "hallazgo": "StsId agrupa topologías (StsViewer compartido vía TM::createLifeCycles, ELF 0x4195c0) pero no se halló ningún guard de exclusión mutua entre grupos distintos",
+      "quien": "principal y rama_a (independientemente, mismo resultado)",
+      "clasificacion": "INFERENCIA fuerte",
+      "nota": "Ambas ramas decompilaron la misma función (0x4195c0/0x4295c0 Ghidra VA) por separado y llegaron a la misma lectura del código."
+    },
+    {
+      "hallazgo": "Camera y Player compiten por el mismo pin de entrada de Effect (in#0): no pueden alimentarlo a la vez",
+      "quien": "principal",
+      "clasificacion": "VERIFICADO (fila 0x4 vs 0x0a)",
+      "consecuencia": "No afecta a la coexistencia con 0x2a (pin de salida distinto)."
+    },
+    {
+      "hallazgo": "Ningún modelo de disparo conocido (ModelStillRec/MovieRec/ContShotsPb) se pudo confirmar ni descartar que combine 0x2a con 0xa/0x7",
+      "quien": "rama_a",
+      "clasificacion": "NO VERIFICADO",
+      "nota": "318 sitios de llamada a createTopology/destroyTopology; búsqueda no exhaustiva por tiempo. Sesión 14 sí descartó esto para BootEE/MovieRec/ScalarCameraPatch/StillIntervalRec (34 listas revisadas); esta sesión no repitió ese barrido completo, así que sigue NO VERIFICADO en sentido estricto, no DESCARTADO."
+    },
+    {
+      "hallazgo": "unitType de Camera/EE sigue sin recuperarse; receptor y momento de lectura de CBID_ENCODE_STILL sin identificar; liberación de 0x50b3f/0xe0b00 tras el callback sin identificar",
+      "quien": "rama_b",
+      "clasificacion": "NO VERIFICADO",
+      "nota": "Confirma y mantiene los bloqueos de sesión 14; no se encontró evidencia nueva que los resuelva."
+    }
+  ],
+  "contradicciones": [],
+  "nota_contradicciones": "No se encontraron contradicciones directas entre las tres fuentes. Rama A y el investigador principal llegaron por separado a los mismos valores de StsId y a la misma lectura de TM::createLifeCycles, lo cual es una verificación cruzada positiva, no una contradicción.",
+  "respuestas_informe_final": {
+    "1_investigo_principal": "Constructor real de ObjCamera (identidad VERIFICADA, antes INFERENCIA); pin signature completa; filas de topología 0x0a/0x07/0x2a y su StsId; agrupación StsId en TM::createLifeCycles; exclusión de pin Camera/Player en Effect.in0.",
+    "2_investigo_rama_a": "Estructura real de EffectInternalMode (holder indirecto); getter/setter genéricos; escritor 0x173158 y su tabla de mapeo; re-decompilado del parser REQ_DELIVER con los modos reales de acción; confirmación independiente de StsId/topología.",
+    "3_investigo_rama_b": "Tamaños reales de los extents DMM (0xed/0xe4/0x13d); confirmación de que 0xe0b00 es solo cabecera SDS; estructura de RegionInfo de 0x40 B en la preparación de EncodeStill; mecanismo DmmShare/allocShare con sus comprobaciones (serial, estado, tipo).",
+    "4_que_descubrio_cada_uno": "Ver bloque hallazgos_nuevos_cruzados arriba, cada entrada con dirección ELF y clasificación.",
+    "5_resultados_comprobados_entre_ramas": "StsId/topología 0x0a-0x07-0x2a (principal vs rama_a, coinciden); tamaños de extent de rama_b son consistentes con los handles/tipos que principal y rama_a usan al describir la topología 0x2a (0x50b3f/0xe0b00); ninguna rama encontró evidencia que resuelva el modo de EE ni el unitType de Camera — ambas lo dejan NO VERIFICADO de forma consistente.",
+    "6_modos_objeffect_ee_pbcap": "PbCap usa los modos 2-5 (vía el escritor 0x173158, que lee 0x1025 del propio mensaje 0x1011) para disparar la secuencia 0x3900/0x6013; el modo 1 (cola directa 0x3900/0x600d) existe pero su escritor no se localizó. Para EE (ModelBootEE) NO se encontró ningún escritor de EffectInternalMode: sigue sin saberse qué modo usa Effect durante Live View, o si directamente nunca pasa por este mecanismo porque su salida nº1 (hacia el Recorder) no está conectada en EE (topología 0x2a ausente de la lista {0xa,7} de BootEE).",
+    "7_que_yc_entrega_objcamera": "NO VERIFICADO el unitType/formato exacto. VERIFICADO que ObjCamera es un productor puro (9 pines, todos de salida) y que su salida #0 alimenta exclusivamente el pin de entrada #0 de Effect (topología 0x0a), en exclusión mutua con Player sobre ese mismo pin.",
+    "8_compatible_sdf_encodestill": "NO DEMOSTRADO. La única ruta con YC verificada hasta EncodeStill (PbCap) usa un par de unidades DMM fabricadas por ObjEffect (0x50b3f + 0xe0b00, tamaños ahora exactos) tras una conversión SDF explícita; no hay evidencia de que el buffer crudo de Camera/EE pueda entrar directamente sin ese paso.",
+    "9_topologias_coexisten": "Estructuralmente sí, hasta donde se revisó: 0x0a, 0x07 y 0x2a usan pines distintos (in0, out0, out1 de Effect) y StsId distintos (0, 0, 6) sin guard de exclusión hallado en TM::createLifeCycles. NO VERIFICADO si ObjEffect mismo (su lógica de pines, fuera de TopologyManager) impone una exclusión adicional al conectar su salida 1 mientras su entrada 0 está en un estado concreto.",
+    "10_frame_valido_hasta_codificar": "NO VERIFICADO el instante exacto (sesión 14 y Rama B coinciden: el recorder no retiene, el productor debe hacerlo; la señal de fin es CBID_ENCODE_STILL, pero no se identificó el consumidor real ni el momento de liberación de las unidades).",
+    "11_arquitectura_e_viable": "Sigue sin declararse viable ni descartada. A (LIRO nativa) permanece la única ruta demostrada de extremo a extremo. E ahora tiene más piezas verificadas (identidad de Camera, estructura real de EffectInternalMode, tamaños de extent) pero los tres bloqueos centrales de sesión 14 persisten: (a) ningún modelo de disparo crea la topología 0x2a, (b) no se localizó qué modo de Effect atendería REQ_DELIVER con entrada de Camera durante EE, (c) el unitType/formato del YC de Camera/EE sigue sin recuperarse.",
+    "12_siguiente_bloqueo": "Localizar el escritor de EffectInternalMode=1 (la única vía de cola directa 0x600d) y determinar si existe algún camino — mensaje, modelo, o configuración dinámica de topología — que conecte la salida nº1 de Effect con el Recorder mientras la entrada nº0 recibe de Camera (no de Player). Sin eso, la arquitectura E sigue sin un punto de entrada demostrado en modo disparo."
+  }
+}

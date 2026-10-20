@@ -1,0 +1,108 @@
+437d9ea8 ldr r3, [pc, #0xbc]
+437d9eaa mov r2, r1
+437d9eac ldr r1, [pc, #0xbc]
+437d9eae add r3, pc
+437d9eb0 push {r4, lr}
+437d9eb2 ldr r3, [r3, r1]
+437d9eb4 ldrb.w r3, [r3, #0x9b]
+437d9eb8 cbnz r3, 0x437d9eda
+437d9eba ldr r1, [pc, #0xb4]
+437d9ebc lsls r0, r3, #0x3
+437d9ebe add r1, pc
+437d9ec0 ldrh.w r4, [r1, r3, lsl #3]
+437d9ec4 cmp r4, r2
+437d9ec6 bne 0x437d9ece
+437d9ec8 adds r1, r1, r0
+437d9eca ldr r0, [r1, #0x4]
+437d9ecc pop {r4, pc}
+437d9ece adds r3, #0x1
+437d9ed0 cmp r3, #0x24
+437d9ed2 bne 0x437d9eba
+437d9ed4 mov.w r0, #0xa000
+437d9ed8 pop {r4, pc}
+437d9eda cmp.w r0, #0x490
+437d9ede beq 0x437d9f3a
+437d9ee0 bhi 0x437d9f00
+437d9ee2 cmp.w r0, #0x460
+437d9ee6 beq 0x437d9f24
+437d9ee8 bhi 0x437d9ef2
+437d9eea cmp.w r0, #0x450
+437d9eee bne 0x437d9f5a
+437d9ef0 b 0x437d9f1e
+437d9ef2 cmp.w r0, #0x470
+437d9ef6 beq 0x437d9f2c
+437d9ef8 cmp.w r0, #0x480
+437d9efc bne 0x437d9f5a
+437d9efe b 0x437d9f32
+437d9f00 cmp.w r0, #0x4b0
+437d9f04 beq 0x437d9f46
+437d9f06 bhi 0x437d9f10
+437d9f08 cmp.w r0, #0x4a0
+437d9f0c bne 0x437d9f5a
+437d9f0e b 0x437d9f40
+437d9f10 cmp.w r0, #0x4c0
+437d9f14 beq 0x437d9f4c
+437d9f16 cmp.w r0, #0x4d0
+437d9f1a bne 0x437d9f5a
+437d9f1c b 0x437d9f54
+437d9f1e ldr r0, [pc, #0x54]
+437d9f20 add r0, pc
+437d9f22 b 0x437d9f28
+437d9f24 ldr r0, [pc, #0x50]
+437d9f26 add r0, pc
+437d9f28 movs r1, #0x1
+437d9f2a b 0x437d9f60
+437d9f2c ldr r0, [pc, #0x4c]
+437d9f2e add r0, pc
+437d9f30 b 0x437d9f28
+437d9f32 ldr r0, [pc, #0x4c]
+437d9f34 movs r1, #0x3
+437d9f36 add r0, pc
+437d9f38 b 0x437d9f60
+437d9f3a ldr r0, [pc, #0x48]
+437d9f3c add r0, pc
+437d9f3e b 0x437d9f28
+437d9f40 ldr r0, [pc, #0x44]
+437d9f42 add r0, pc
+437d9f44 b 0x437d9f28
+437d9f46 ldr r0, [pc, #0x44]
+437d9f48 add r0, pc
+437d9f4a b 0x437d9f28
+437d9f4c ldr r0, [pc, #0x40]
+437d9f4e movs r1, #0x2
+437d9f50 add r0, pc
+437d9f52 b 0x437d9f60
+437d9f54 ldr r0, [pc, #0x3c]
+437d9f56 add r0, pc
+437d9f58 b 0x437d9f28
+437d9f5a ldr r0, [pc, #0x3c]
+437d9f5c movs r1, #0x24
+437d9f5e add r0, pc
+437d9f60 pop.w {r4, lr}
+437d9f64 b.w 0x43af6820
+437d9f68 str r2, [r6, r0]
+437d9f6a lsls r4, r0, #0x2
+437d9f6c str r0, [r1, #0x58]
+437d9f6e movs r0, r0
+437d9f70 add r4, sp, #0x258
+437d9f72 movs r6, r7
+437d9f74 add r3, sp, #0x3d0
+437d9f76 movs r6, r7
+437d9f78 add r4, sp, #0x78
+437d9f7a movs r6, r7
+437d9f7c add r4, sp, #0x18
+437d9f7e movs r6, r7
+437d9f80 add r3, sp, #0x2f8
+437d9f82 movs r6, r7
+437d9f84 add r4, sp, #0x40
+437d9f86 movs r6, r7
+437d9f88 add r3, sp, #0x3a8
+437d9f8a movs r6, r7
+437d9f8c add r3, sp, #0x310
+437d9f8e movs r6, r7
+437d9f90 add r3, sp, #0x330
+437d9f92 movs r6, r7
+437d9f94 add r3, sp, #0x398
+437d9f96 movs r6, r7
+437d9f98 add r3, sp, #0x3d8
+437d9f9a movs r6, r7

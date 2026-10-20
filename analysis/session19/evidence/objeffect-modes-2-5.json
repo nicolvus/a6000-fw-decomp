@@ -1,0 +1,68 @@
+{
+  "task_id": "S19-11",
+  "verdict": "PARTIAL",
+  "scope": "Sony A6000 FW 3.21; static local analysis only; no firmware execution, binary modification, camera interaction or flashing.",
+  "binary": {
+    "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libObj.so",
+    "sha256": "8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a",
+    "addressing": "ELF offsets"
+  },
+  "method": [
+    "llvm-objdump -d --triple=thumbv7-linux-gnueabi",
+    "static contrast against S19-04 and S19-05"
+  ],
+  "findings": [
+    {
+      "state": "VERIFICADO",
+      "address": "0x176ae8..0x176bc0",
+      "file": "libObj.so",
+      "method": "llvm-objdump",
+      "finding": "The mode byte at sequence+0x50 is dynamically obtained through holder virtual selector 1 and helper 0x14011c; enum names are not recovered."
+    },
+    {
+      "state": "VERIFICADO",
+      "address": "0x176cc6..0x176cce",
+      "file": "libObj.so",
+      "method": "llvm-objdump",
+      "finding": "sub mode,2 followed by unsigned compare <=3 accepts exactly effective values 2, 3, 4 and 5."
+    },
+    {
+      "state": "VERIFICADO",
+      "address": "0x176550..0x176562; 0x17676a..0x1767a2",
+      "file": "libObj.so",
+      "method": "llvm-objdump",
+      "finding": "Modes 2, 4 and 5 reach the common mode-not-3 error return; they do not build the 0x3900/0x0002 request."
+    },
+    {
+      "state": "VERIFICADO",
+      "address": "0x1765cc..0x1766c0",
+      "file": "libObj.so",
+      "method": "llvm-objdump",
+      "finding": "Mode 3 alone builds ObjMsg(0x3900,0x0002), adds parameters 0x1000..0x1004, and invokes the interface stored at sequence+0x8."
+    },
+    {
+      "state": "INFERENCIA",
+      "address": "0x1765f2..0x1766c0; 0x15fa74",
+      "file": "libObj.so",
+      "method": "llvm-objdump contrast",
+      "finding": "Mode-3 operation is distinct from the known PbCap SDF path because its command id is 0x0002 rather than 0x3000."
+    },
+    {
+      "state": "DESCARTADO",
+      "address": "0x1764e4..0x1767a2; 0x15ebfc; 0x15fa74",
+      "file": "libObj.so",
+      "method": "llvm-objdump direct-call comparison",
+      "finding": "None of modes 2-5 is established as an EncodeStill/PbCap-capable producer in this path: no call to the 0x15ebfc PlayData publisher, and no PbCap DMM raster/SDS allocation."
+    },
+    {
+      "state": "NO_VERIFICADO",
+      "address": "0x176ae8..0x176ce2",
+      "file": "libObj.so",
+      "method": "static control-flow limit",
+      "finding": "Camera.out0 runtime execution, Camera identity as holder, YC contract, output buffer suitability, and shutter mechanical avoidance are not established."
+    }
+  ],
+  "next_task_id": "S19-12",
+  "next_task": "(h) conditions to avoid mechanical capture; selected because this dispatcher contains no physical shutter decision.",
+  "safety": "Static read-only analysis only; original binaries and Ghidra projects untouched; no camera interaction or flashing; SilentShutter is not declared functional."
+}

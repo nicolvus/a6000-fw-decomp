@@ -1,0 +1,94 @@
+[
+  {
+    "run_number": 1,
+    "task_id": "S19-01",
+    "status": "PARTIAL",
+    "model_requested": "gpt-5.6-terra",
+    "effort_requested": "medium",
+    "files_created": ["docs/capture/s19-s2-domain-bridge.md", "analysis/session19/evidence/s2-domain-bridge.json", "docs/capture/s19-codex-continuous-verdict.md", "analysis/session19/orchestration/codex-continuous-ledger.json"],
+    "files_modified": ["CONTEXT.md", "docs/capture/RESEARCH_TASKS.md"],
+    "next_task_id": "S19-02",
+    "next_task_available": "YES",
+    "errors": ["Directed Ghidra helper emitted no JSON; LLVM disassembly used instead."],
+    "finish_reason": "Static registration of the local dispatcher was verified, but the queue receiver and cross-domain translation remain unverified."
+  },
+  {
+    "run_number": 2,
+    "task_id": "S19-02",
+    "status": "PARTIAL",
+    "model_requested": "gpt-5.6-terra",
+    "effort_requested": "medium",
+    "files_created": ["docs/capture/s19-lifecycle-connect.md", "analysis/session19/evidence/lifecycle-connect.json"],
+    "files_modified": ["README.md", "CONTEXT.md", "docs/capture/RESEARCH_TASKS.md", "docs/capture/s19-codex-continuous-verdict.md", "analysis/session19/orchestration/codex-continuous-ledger.json"],
+    "next_task_id": "S19-03",
+    "next_task_available": "YES",
+    "errors": [],
+    "finish_reason": "The effective UObjPin/wrapper-to-MWF Connect path was verified, but no execution edge from the LifeCycle created by TM::createLifeCycles to Connect was demonstrated."
+  },
+  {
+    "run_number": 3,
+    "task_id": "S19-03",
+    "status": "PARTIAL",
+    "model_requested": "gpt-5.6-terra",
+    "effort_requested": "medium",
+    "files_created": [
+      "docs/capture/s19-objid53-registration.md",
+      "analysis/session19/evidence/objid53-registration.json"
+    ],
+    "files_modified": [
+      "README.md",
+      "CONTEXT.md",
+      "docs/capture/RESEARCH_TASKS.md",
+      "docs/capture/s19-codex-continuous-verdict.md",
+      "analysis/session19/orchestration/codex-continuous-ledger.json"
+    ],
+    "next_task_id": "S19-04",
+    "next_task_available": "YES",
+    "errors": [],
+    "finish_reason": "ObjStillRecorder was corroborated as the class at the ObjId 53 topology endpoint, but no explicit 53-to-constructor auto-registration was identified; indirect or external registration remains unverified."
+    },
+    {
+      "run_number": 4,
+      "task_id": "S19-04",
+      "status": "PARTIAL",
+      "model_requested": "gpt-5.6-terra",
+      "effort_requested": "medium",
+      "files_created": [
+        "docs/capture/s19-camera-yc-real-contract.md",
+        "analysis/session19/evidence/camera-yc-contract.json"
+      ],
+      "files_modified": [
+        "README.md",
+        "CONTEXT.md",
+        "docs/capture/RESEARCH_TASKS.md",
+        "docs/capture/s19-codex-continuous-verdict.md",
+        "analysis/session19/orchestration/codex-continuous-ledger.json"
+      ],
+      "next_task_id": "S19-05",
+      "next_task_available": "YES",
+      "errors": [],
+      "finish_reason": "ObjCamera construction and the Camera-to-Effect topology were verified, but no static edge attributes a DMM/AvbbcPhycMem descriptor to Camera.out0; the real Live View YC contract remains unresolved."
+  },
+  {
+    "run_number": 5,
+    "task_id": "S19-05",
+    "status": "PARTIAL",
+    "model_requested": "gpt-5.6-terra",
+    "effort_requested": "medium",
+    "files_created": [
+      "docs/capture/s19-camera-effect-sdf.md",
+      "analysis/session19/evidence/camera-effect-sdf.json"
+    ],
+    "files_modified": [
+      "README.md",
+      "CONTEXT.md",
+      "docs/capture/RESEARCH_TASKS.md",
+      "docs/capture/s19-codex-continuous-verdict.md",
+      "analysis/session19/orchestration/codex-continuous-ledger.json"
+    ],
+    "next_task_id": "S19-06",
+    "next_task_available": "YES",
+    "errors": [],
+    "finish_reason": "The PbCap SDF sequence, its positive completion gate and its output-resource cleanup were verified, but no static Camera-to-holder/pin/SDF edge or Camera YC contract was recovered."
+  }
+]

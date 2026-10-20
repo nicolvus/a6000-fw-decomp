@@ -1,0 +1,13 @@
+digraph a7s_silent {
+  rankdir=LR; node [shape=box,fontsize=10];
+  ui [label="UI CustomSilentShutter\n(userland)"]; libobj [label="libObj SeqSetSilentShutterMode\ncmd 0x40e3 (INFERENCIA A7S)"];
+  recv [label="0x437a9cb0\nestado+0x250"]; conv [label="0x4379ec04\ntipo {0,2}"];
+  g [label="0x437b65a0\n[g+0x7e8]"]; cap [label="0x43813d90\ncap+0x78c, +0x748"];
+  sel [label="0x43826d58\n0x4e/0x4f"]; st [label="0x43826dc0\ncap+0x4d0"];
+  prep [label="0x4382822c"]; bank [label="0x43862e24\nbanco+0x404"]; pol [label="0x438649bc\nclase 0"];
+  mode [label="0x437b8948 ModeRsv"]; sm [label="IMX235 SetMode 0x436f3b44\nidx 29..32 -> col 12/13"];
+  ap [label="0x436f3928\nfilas 0x43fee598"]; se [label="IMX235 SetExposure 0x436f4168\nShutMode 0"];
+  ui->libobj->recv; recv->conv [style=dashed,label="via *0x43ea70a0+0x250"];
+  conv->g; conv->cap; cap->sel [style=dashed]; st->sel; sel->st [label="ret"];
+  prep->mode; prep->bank->pol; mode->sm [style=dashed]; sm->ap; pol->se [style=dashed,label="param+9 (INFERENCIA)"];
+}

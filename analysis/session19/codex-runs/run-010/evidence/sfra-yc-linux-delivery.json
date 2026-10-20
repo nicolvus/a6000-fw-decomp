@@ -1,0 +1,27 @@
+{
+  "task_id": "S19-10",
+  "status": "PARTIAL",
+  "scope": "A6000 firmware 3.21 static read-only analysis",
+  "term_sfra": {
+    "classification": "VERIFICADO",
+    "file": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+    "method": "strings -a -t x",
+    "evidence": ["ScalarInfraAsyncMain.cpp", "[SFRA][CMD] ***GET_JPEG***", "[SFRA][CMD] ***SET_PATH(OPEN)***", "SfrJpegBuffer.h", "[SFRS]Send EEPin", "[SFRS]Send RecPin"]
+  },
+  "findings": [
+    {"classification":"VERIFICADO","file":"libInfraStreamingServer.so","address":"0xcc58..0xccf0","method":"llvm-objdump -d --triple=thumbv7-linux-gnueabi","claim":"pubSfrGetJpeg emits service 0x2009/cmd 0x100 and receives u16 handle, u16 blocks shifted by 7, and a count."},
+    {"classification":"VERIFICADO","file":"libInfraStreamingServer.so","address":"0xca28..0xcb98","method":"llvm-objdump -d --triple=thumbv7-linux-gnueabi","claim":"pvtScalarInfraIF uses DataflowInfra SendASync/ReceiveASync and copies a 0x170-byte response."},
+    {"classification":"VERIFICADO","file":"libInfraStreamingServer.so","address":"0x1230c..0x12476","method":"llvm-objdump -d --triple=thumbv7-linux-gnueabi plus strings -a -t x","claim":"pubMmap opens /dev/mem, opens DMM extent, page-aligns it, and calls mmap with RW/shared arguments."},
+    {"classification":"VERIFICADO","file":"libInfraStreamingServer.so","address":"0x14568..0x14658","method":"llvm-objdump -d --triple=thumbv7-linux-gnueabi","claim":"MmapLiveViewJpeg maps the u16 handle and releases prior mapping/unit."},
+    {"classification":"VERIFICADO","file":"libInfraStreamingServer.so","address":"0x122f0..0x12308","method":"llvm-objdump -d --triple=thumbv7-linux-gnueabi","claim":"free and close-and-free are distinct DMM release calls."},
+    {"classification":"VERIFICADO","file":"libScalarDaemon.so","address":"0x11a080..0x11a264","method":"llvm-objdump -d --triple=thumbv7-linux-gnueabi","claim":"CameraSequence GetPreviewFrame waits for event 0x1e08 and returns SDCom vectors; no static edge to ISS/SFRA was found."},
+    {"classification":"NO_VERIFICADO","file":"libObj.so, libScalarDaemon.so, libInfraStreamingServer.so","address":"N/A","method":"strings -a and dynamic-symbol/import inspection","claim":"No ashmem reference or ashmem API call was found in the examined user-space libraries."},
+    {"classification":"DESCARTADO","file":"cross-component","address":"N/A","method":"descriptor comparison","claim":"The SFRA JPEG handle proves neither raw/YC delivery nor any unresolved ObjCamera YC field."},
+    {"classification":"INFERENCIA","file":"libInfraStreamingServer.so","address":"0x14568..0x14658","method":"control-flow and cleanup inspection","claim":"The mapped DMM unit is loaned to ISS until explicit release; final ownership/refcount is not recovered."}
+  ],
+  "delivery": {"producer_input":"YC through internal SFRS EE/Rec pins","linux_payload":"DMM unit handle u16 plus size rounded to 128-byte blocks","transfer":"control request/reply followed by /dev/mem mmap; no pixel copy demonstrated in ISS","consumer":"InfraStreamingServerUser ContentHandlerEEImpl (Live View)","timing":"after JPEG READY and on GET_JPEG request"},
+  "unverified": ["raw/YC delivery to Linux", "JPEG exact length, validity, dimensions and metadata", "YC format/stride/planes/colorimetry", "cache synchronization", "CameraSequence/SDCom-to-SFRA edge", "ObjCamera contract completion", "S2/EFCS/MPR/DCF linkage"],
+  "next_task_id": "S19-11",
+  "next_task": "(b) ObjEffect modes 2-5 with Camera input",
+  "safety": "No original binary or Ghidra project modified; no camera connected or flashed; SilentShutter is not declared functional."
+}

@@ -1,0 +1,35 @@
+{
+  "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "functions": [
+    {
+      "query": "437b4e10",
+      "raw64": "00f080fe13200121bde8704086f080bbeca08600784e0000154b0021154a7b4410b504469b5816209a8801329a8086f06ffb73f737fb014640b9402086f068fb",
+      "references": [],
+      "entry": "437b4df0",
+      "completed": true,
+      "pseudo_code": "\nvoid FUN_437b4df0(undefined4 param_1,undefined4 param_2)\n\n{\n  short *psVar1;\n  \n  psVar1 \u003d *(short **)(DAT_437b4e20 + 0x437b4df8 + DAT_437b4e24);\n  *psVar1 \u003d *psVar1 + 1;\n  FUN_4383b520(0x13,0);\n  FUN_437b5b14(param_1,param_2);\n  FUN_4383b520(0x13,1);\n  return;\n}\n\n",
+      "listing": [
+        "437b4df0 ldr r3,[0x437b4e20]",
+        "437b4df2 ldr r2,[0x437b4e24]",
+        "437b4df4 add r3,pc",
+        "437b4df6 push {r4,r5,r6,lr}",
+        "437b4df8 mov r5,r0",
+        "437b4dfa ldr r3,[r3,r2]",
+        "437b4dfc mov r4,r1",
+        "437b4dfe movs r0,#0x13",
+        "437b4e00 movs r1,#0x0",
+        "437b4e02 ldrh r2,[r3,#0x0]",
+        "437b4e04 adds r2,#0x1",
+        "437b4e06 strh r2,[r3,#0x0]",
+        "437b4e08 bl 0x4383b520",
+        "437b4e0c mov r0,r5",
+        "437b4e0e mov r1,r4",
+        "437b4e10 bl 0x437b5b14",
+        "437b4e14 movs r0,#0x13",
+        "437b4e16 movs r1,#0x1",
+        "437b4e18 pop.w {r4,r5,r6,lr}",
+        "437b4e1c b.w 0x4383b520"
+      ]
+    }
+  ]
+}

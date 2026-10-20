@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-17",
+  "scope": "WriteStill software request, writer dispatch, completion and local resource closure",
+  "audit": {
+    "command": "python3 -I analysis/session22/evidence/s29_writestill_audit.py",
+    "initial": "5 binary checks passed; documentation check failed before creating the report",
+    "final": "6/6 PASS"
+  },
+  "ruff": {
+    "command": "/home/nicolas/Documents/GPREMIUM/ingreso-agentes/.venv/bin/ruff check src tests analysis/session22/evidence/s29_writestill_audit.py",
+    "new_findings": 0,
+    "existing_findings": 9,
+    "untouched_files": [
+      "tests/test_elf_xrefs.py",
+      "tests/test_fm3_gpio_literals.py",
+      "tests/test_imx210_modes.py",
+      "tests/test_sfra_outcalls.py"
+    ]
+  },
+  "mypy": {
+    "command": "/home/nicolas/Documents/GPREMIUM/ingreso-agentes/.venv/bin/mypy --ignore-missing-imports src analysis/session22/evidence/s29_writestill_audit.py",
+    "result": "PASS: 6 source files"
+  },
+  "git": "No .git repository; no commit or push",
+  "original_libraries": "SHA-256 verified by the audit and before/after evidence capture",
+  "firmware_execution": false,
+  "packages_installed": false,
+  "hardware_access": false,
+  "limits": [
+    "Active filesystem backend is selected by supplied media objects, not fixed universally",
+    "No physical durability or post-power-loss guarantee established",
+    "Playback UI publication and sensor/DMA acquisition are outside the closed software request"
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "date": "2026-10-16",
+  "status": "VERIFICADO static local service; remote endpoint unknown",
+  "source_sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16",
+  "address_space": "LIRO base0x43541000",
+  "registration": {
+    "initializer": "0x43a24cf4",
+    "callsite": "0x43a24d36",
+    "wrapper": "0x43559b7c",
+    "arguments": ["0x740017", "0x440d06c0", "0x43a24ad1", "0"],
+    "wrapper_abi": "Loads interface table+0x14, calls slot+0x1ec; matches four-argument osal_reg_sync_msg_queue_cb",
+    "handler": "0x43a24ad0"
+  },
+  "handler": {
+    "channel": "u8(message+0), valid0..4",
+    "direct_path": "u32(message+0x10)==0: copies64bytes into0x440d06c4+channel*0x40 and descriptor pointer to0x440d0804+channel*4, then0x43a24a9c",
+    "queued_path": "message+0x10==1 and channel-descriptor flag==1: forwards to per-channel queue from0x43cabccc+channel*0x14",
+    "note": "Header/body CAIF paths inspected use message+0x10=0 and follow direct path"
+  },
+  "backend": {
+    "chain": ["0x43a24a9c", "0x43a246d8", "0x43a24344", "0x43a2439c", "0x43a2550c", "0x43a24878", "0x43a245c4", "0x43a252b0", "0x43a24568", "0x43a2513c", "0x43a25200"],
+    "register_base": "0xf2405000+channel*0x200",
+    "tx_buffer": "0xf2405100+channel*0x200",
+    "tx_copy": "0x43a252b0 copies aligned words or assembles little-endian words from byte pointers, with finalpartialword handling",
+    "start": "0x43a25200 ORs0x20000000 into register base",
+    "channel_actual_value": "VERIFICADO initializer0x436fd478 stores3 via GOT0x441ff578 -> byte0x44147d20; instructions0x436fd55c..0x436fd56a compute0x90-0x8d",
+    "initialized_register_base": "0xf2405600",
+    "initialized_tx_buffer": "0xf2405700",
+    "remote_device": "NO VERIFICADO; no demonstrated Darwin link"
+  },
+  "header_normalization": {
+    "logical_operation": "0x10300",
+    "producer": "0x436fa784",
+    "instructions": "0x436fa7da stores original words;0x436fa7e4 then forces byte(message+4)=0xf0, and+7/+a/+b arezero",
+    "normalized_operation_field": "0x000103f0",
+    "pre_fifo_bytes_for_31byte_capture": "f0 03 01 00 1f 00 00 00",
+    "header_copy": "0x436fb974 copies8bytes from ringrecord+4 to0x44105548",
+    "log_helper": "0x436fa454 is conditional event logging, not header transformation",
+    "preprocessing": "0x436fac60 reads state/ports to return diagnostic value;0x436fd420 tracks an optional diagnostic history; neither inspected function rewrites the capture header",
+    "limits": "Pre-FIFO representation, not proof of bit/byte order at physical pins or external reception; other statehandlers still require checking"
+  },
+  "independent_osal_evidence": {
+    "module": "osal_uipc.ko",
+    "sha256": "9a1372adf3b622cd04fa86fa57e3ab95687b5780342ebbf49d6315c6719b852c",
+    "registration": "ELF.text+0x3108 osal_reg_sync_msg_queue_cb stores callback argument3 and returns handle through argument2",
+    "sync_dispatch": "ELF.text+0x3acc __osal_snd_sync_msg resolves queue low16bits and invokes registered callback through its function block",
+    "rea_exports": ["a6300-osal-queue-routing-rea.json", "a6300-osal-sync-registration-rea.json"]
+  },
+  "board_defaults": {
+    "method": "Existing Sony-PMCA-RE BackupFile, opened rb only; BK4 internal checksum validated. Firmware update defaults, not a dump of the user's camera",
+    "a6000_source": "firmware/extracted/fw321/firmware.tar_unpacked/0110_backup/SYSMUSASHI-DSLR/DM_UUD3/CX77500_UC2.bin",
+    "a6000_sha256": "683ac5b3a01400d6e94936ea99cac88c977b269eebcf7f45a12a37c36bf3fdbb",
+    "a6300_source": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0110_backup/SYSMUSASHI-DSLR/DX/CX79100_UC2.bin",
+    "a6300_sha256": "160b35ba71a8de2f107d6d04d60f0a552bc7f4ce5ccd66409d059ffcaa2d3f01",
+    "shared_pairs": {
+      "f90465/f90466": [0,12],
+      "f9045f/f90460": [0,7],
+      "f904ca/f904cb": [3,17],
+      "f900b1/f9006d": [5,14],
+      "f9045d/f9045e": [7,15],
+      "f90457/f90458": [7,13],
+      "f90200/f90201": [0,16]
+    },
+    "different_pair_f90455_f90456": {"a6000":[10,3],"a6300":[7,16]},
+    "nfc_defaults": {"f904d2":2,"f904d6":7,"f904d7":14},
+    "caif_chip_select_pair": "A6300 SIO message+2/+3 receives backup f900b1/f9006d ->5/14",
+    "limit": "No board-net or physical chip identity follows from GPIO numbers alone"
+  },
+  "limits": "No hardware writes; all MMIO operations described are firmware instructions, not executed commands. Does not demonstrate Silent actuation or IMX210 viability"
+}

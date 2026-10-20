@@ -1,0 +1,164 @@
+{
+  "classification": "VERIFICADO",
+  "result": "PASS",
+  "hashes": {
+    "libmpr.so": "9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30",
+    "libObj.so": "8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a"
+  },
+  "public_api_targets": {
+    "_ZN5MprIf37GetEntryIdFromDirectoryFileNumberSyncEmttN3MPR11ContentTypeENS0_14EntryConditionEPbPNS0_7EntryIdE": "0x71eb70",
+    "_ZN5MprIf25PreRegisterDcfContentSyncEmN3MPR5T_LTMENS0_10DcfObjInfoEttPb": "0x71eafc"
+  },
+  "all_named_relocations": {
+    "libmpr.so": [],
+    "libObj.so": [
+      {
+        "section": ".rel.plt",
+        "va": "0x102cda0",
+        "type": 22,
+        "symbol": "_ZN5MprIf37GetEntryIdFromDirectoryFileNumberSyncEmttN3MPR11ContentTypeENS0_14EntryConditionEPbPNS0_7EntryIdE"
+      },
+      {
+        "section": ".rel.plt",
+        "va": "0x102d568",
+        "type": 22,
+        "symbol": "_ZN5MprIf25PreRegisterDcfContentSyncEmN3MPR5T_LTMENS0_10DcfObjInfoEttPb"
+      }
+    ]
+  },
+  "import_export_scan": {
+    "libObj.so": [
+      "U _ZN5MprIf25PreRegisterDcfContentSyncEmN3MPR5T_LTMENS0_10DcfObjInfoEttPb",
+      "U _ZN5MprIf37GetEntryIdFromDirectoryFileNumberSyncEmttN3MPR11ContentTypeENS0_14EntryConditionEPbPNS0_7EntryIdE"
+    ],
+    "libmpr.so": [
+      "0071eafc T _ZN5MprIf25PreRegisterDcfContentSyncEmN3MPR5T_LTMENS0_10DcfObjInfoEttPb",
+      "0071eb70 T _ZN5MprIf37GetEntryIdFromDirectoryFileNumberSyncEmttN3MPR11ContentTypeENS0_14EntryConditionEPbPNS0_7EntryIdE"
+    ]
+  },
+  "vtable_slots": {
+    "MMgr": [
+      {
+        "vtable": "0x8f5d90",
+        "slots": {
+          "0x34": "0x64b7c4",
+          "0x38": "0x64b7d0",
+          "0x48": "0x64b80c",
+          "0x4c": "0x64c014",
+          "0x290": "0x64befc"
+        }
+      }
+    ],
+    "MMgrIf": [
+      {
+        "vtable": "0x907c50",
+        "slots": {
+          "0x34": "0x66c022",
+          "0x38": "0x66c02a",
+          "0x48": "0x66c06c",
+          "0x4c": "0x66c086",
+          "0x290": "0x66c9aa"
+        }
+      }
+    ],
+    "dcf_Lib": [
+      {
+        "vtable": "0x8287f0",
+        "slots": {
+          "0x34": "0x37acba",
+          "0x38": "0x37acac",
+          "0x48": "0x37ac74",
+          "0x4c": "0x37ac62"
+        }
+      }
+    ],
+    "dcf_AVISequence": [
+      {
+        "vtable": "0x82df28",
+        "slots": {
+          "0x34": "0x39ca20",
+          "0x38": "0x397d6c",
+          "0x48": "0x396dcc",
+          "0x4c": "0x39ca12",
+          "0x290": "0x3949dc"
+        }
+      }
+    ],
+    "dcf_Sequence": [
+      {
+        "vtable": "0x832050",
+        "slots": {
+          "0x34": "0x39ca20",
+          "0x38": "0x3a8fac",
+          "0x48": "0x3a8e24",
+          "0x4c": "0x39ca12",
+          "0x290": "0x3a888e"
+        }
+      }
+    ],
+    "AviMMgr": [
+      {
+        "vtable": "0x8e6e58",
+        "slots": {
+          "0x34": "0x607420",
+          "0x38": "0x603c22",
+          "0x48": "0x604058",
+          "0x4c": "0x64c014",
+          "0x290": "0x649364"
+        }
+      }
+    ],
+    "DiscMMgr": [
+      {
+        "vtable": "0x904698",
+        "slots": {
+          "0x34": "0x64b7c4",
+          "0x38": "0x64b7d0",
+          "0x48": "0x64b80c",
+          "0x4c": "0x64c014",
+          "0x290": "0x64befc"
+        }
+      }
+    ],
+    "AviMMgrIf": [
+      {
+        "vtable": "0x9067a8",
+        "slots": {
+          "0x34": "0x66aa74",
+          "0x38": "0x66aa14",
+          "0x48": "0x66a8bc",
+          "0x4c": "0x66a840",
+          "0x290": "0x667b60"
+        }
+      }
+    ],
+    "BgmMMgrIf": [
+      {
+        "vtable": "0x9078b8",
+        "slots": {
+          "0x34": "0x66c022",
+          "0x38": "0x66c02a",
+          "0x48": "0x66c06c",
+          "0x4c": "0x66c086",
+          "0x290": "0x66c9aa"
+        }
+      }
+    ]
+  },
+  "valid_evidence_json_count": 27,
+  "checks": [
+    "RTTI self_check y controles positivos",
+    "Sin relocaciones ni entradas virtuales hacia las dos APIs en libmpr",
+    "Dos JUMP_SLOT en libObj; inventario de importadores *.so",
+    "ID 0x40000012 y callback GOT 0x10329cc -> 0x900649",
+    "Rango modular del notificador: 0x40000001..0x40000091",
+    "Constructor AVI instala vtable 0x82df28",
+    "SHA256 original antes/despues y contra primera captura"
+  ],
+  "limits": [
+    "Las llamadas indirectas calculadas no son enumerables por este test",
+    "Los limites de func_owner son candidatos y se contrastan manualmente",
+    "VA ELF; las decompilaciones Ghidra antiguas pueden incluir +0x10000",
+    "No hay prueba de ejecucion, fsync ni visibilidad real en reproduccion"
+  ]
+}
