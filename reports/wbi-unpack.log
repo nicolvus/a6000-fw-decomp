@@ -1,0 +1,28 @@
+Extracting warm boot image
+Unpacking firmware/extracted/wbi321/0x8e45c000.dat
+Traceback (most recent call last):
+  File "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/references/fwtool/fwtool.py", line 345, in <module>
+    main()
+    ~~~~^^
+  File "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/references/fwtool/fwtool.py", line 335, in main
+    unpackCommand(args.inFile, args.outDir)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/references/fwtool/fwtool.py", line 234, in unpackCommand
+    unpackWbi(file, outDir, mtime)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/references/fwtool/fwtool.py", line 202, in unpackWbi
+    writeFileTree((toUnixFile('/0x%08x.dat' % c.physicalAddr, c.contents, mtime) for c in wbi.readWbi(file)), outDir)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/references/fwtool/fwtool.py", line 48, in writeFileTree
+    writeFileTree(archive.readArchive(dstFile), fn + '_unpacked')
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/references/fwtool/fwtool.py", line 31, in writeFileTree
+    files = [(path + file.path, file) for file in files]
+                                                  ^^^^^
+  File "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/references/fwtool/fwtool/archive/ext2.py", line 122, in readExt2
+    for f in readInode(2):
+             ~~~~~~~~~^^^
+  File "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/references/fwtool/fwtool/archive/ext2.py", line 73, in readInode
+    def generateChunks(contents=inode.blocks, size=inode.size, mode=inode.mode):
+                                ^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'blocks'

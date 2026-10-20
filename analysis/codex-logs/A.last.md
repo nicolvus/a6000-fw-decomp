@@ -1,0 +1,2 @@
+- [analysis/stillinfo-layout.json](analysis/stillinfo-layout.json): layouts, handles y evidencia reproducible; tres pruebas estructurales OK.
+- [docs/capture/mpr-dcf-recording.md](docs/capture/mpr-dcf-recording.md): diez respuestas, validaciones y bloqueos; **VEREDICTO: CAMBIOS** por EXIF mínimo, referencias y evento de reproducción pendientes. Sin commit: directorio sin Git utilizable.

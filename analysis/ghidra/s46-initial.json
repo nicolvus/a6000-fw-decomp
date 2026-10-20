@@ -1,0 +1,63 @@
+{
+  "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "functions": [
+    {
+      "query": "43e15f18",
+      "raw64": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "references": [
+        "From: 436c4160 To: 43e15f18 Type: DATA Op: 0 ANALYSIS",
+        "From: 436c224e To: 43e15f18 Type: PARAM Op: 0 ANALYSIS",
+        "From: 436c720e To: 43e15f18 Type: PARAM Op: 0 ANALYSIS",
+        "From: 436c7216 To: 43e15f18 Type: PARAM Op: 0 ANALYSIS"
+      ],
+      "status": "listing_only_no_function",
+      "listing": []
+    },
+    {
+      "query": "43e16d2c",
+      "raw64": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "references": [],
+      "status": "listing_only_no_function",
+      "listing": []
+    },
+    {
+      "query": "43e9d448",
+      "raw64": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "references": [],
+      "status": "listing_only_no_function",
+      "listing": []
+    },
+    {
+      "query": "43e9d449",
+      "raw64": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "references": [],
+      "status": "listing_only_no_function",
+      "listing": []
+    },
+    {
+      "query": "43ef2474",
+      "raw64": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "references": [
+        "From: 43859976 To: 43ef2474 Type: PARAM Op: 0 ANALYSIS"
+      ],
+      "status": "listing_only_no_function",
+      "listing": []
+    },
+    {
+      "query": "43ad2bd6",
+      "raw64": "12045218c0f820227047c0f82412704712045218c0f834227047c0f838127047c0f844127047c0f858127047c0f800137047c0f810137047d0f83003c0f30d40",
+      "references": [
+        "From: 436c7750 To: 43ad2bd6 Type: UNCONDITIONAL_CALL Op: 0 DEFAULT"
+      ],
+      "entry": "43ad2bd6",
+      "completed": true,
+      "pseudo_code": "\nvoid FUN_43ad2bd6(int param_1,int param_2,int param_3)\n\n{\n  *(int *)(param_1 + 0x220) \u003d param_3 * 0x10000 + param_2;\n  return;\n}\n\n",
+      "listing": [
+        "43ad2bd6 lsls r2,r2,#0x10",
+        "43ad2bd8 adds r2,r2,r1",
+        "43ad2bda str.w r2,[r0,#0x220]",
+        "43ad2bde bx lr"
+      ]
+    }
+  ]
+}

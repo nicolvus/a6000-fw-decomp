@@ -1,0 +1,22 @@
+{
+  "scope": "Análisis estático A6000 3.21; sin cámara ni modificación de firmware",
+  "s30_pipeline_audit": {"passed": 12, "failed": 0},
+  "s28_dataflow_contract_audit": {"passed": 6, "failed": 0},
+  "s29_writestill_audit": {"passed": 6, "failed": 0},
+  "ruff_new_auditor": "PASS",
+  "mypy_new_auditor": "PASS",
+  "mypy_src": "PASS: 5 source files",
+  "ruff_src_tests": {
+    "status": "BASELINE_UNCHANGED",
+    "findings": 9,
+    "files": ["tests/test_elf_xrefs.py", "tests/test_fm3_gpio_literals.py", "tests/test_imx210_modes.py", "tests/test_sfra_outcalls.py"]
+  },
+  "git": "No repository; no commit or push",
+  "functional_closure": {
+    "capture_without_curtains": false,
+    "sensor_dma_to_valid_yc": false,
+    "encode_to_pool_control_flow": true,
+    "capture_yc_cache_and_recycling_contract": false
+  },
+  "verdict": "CAMBIOS"
+}

@@ -1,0 +1,112 @@
+{
+ "avcam": {
+  "relmgr_3011_dest_queue": "0x30001 (r1); 0x40193 es reply/origen (r2 -> 0x43aeaedc)",
+  "queue_30001_receiver": "0x437fee08: tipo 0/2 -> 0x43809148, tipo 5 -> 0x438052d8",
+  "objmsg_to_local": {
+   "0x3011": "0x43809254",
+   "0x3012": "0x4380927e",
+   "0x3013": "0x43809284",
+   "0x3014": "0x4380928a",
+   "0x3015": "0x438092c4"
+  },
+  "queue_40193_receiver": "0x4381d16c; tabla 0x44000174 (35 filas, id u16 en msg+2)",
+  "table_40193": {
+   "0x4044": "0x43aeaa4a",
+   "0x4042": "0x4379e47c",
+   "0x4049": "0x4379e500",
+   "0x4045": "0x43aea9f0",
+   "0x4043": "0x4379e3fc",
+   "0x404a": "0x43aeaaf4",
+   "0x404b": "0x43aeaaa2",
+   "0x404c": "0x4379e60c",
+   "0x4081": "0x43aeab46",
+   "0x4092": "0x4379d2b4",
+   "0x40d3": "0x43aea754",
+   "0x40d6": "0x43aea73a",
+   "0xd003": "0x43aea90c",
+   "0xd000": "0x43aea9b2",
+   "0xd001": "0x43aea982",
+   "0xd002": "0x43aea938",
+   "0xd004": "0x43aea9ca",
+   "0xd006": "0x43aeab7c",
+   "0xd008": "0x43aea99a",
+   "0xd009": "0x43aea8e0",
+   "0xd00a": "0x43aea8c8",
+   "0xd00b": "0x43aea8a2",
+   "0xd014": "0x4379e354",
+   "0xd007": "0x4379e3a8",
+   "0xd00c": "0x43aea884",
+   "0xd00d": "0x43aea3fa",
+   "0xd00e": "0x43aea964",
+   "0xd00f": "0x43aea85e",
+   "0xd016": "0x43aea81a",
+   "0xd017": "0x43aea720",
+   "0xd011": "0x43aea7dc",
+   "0xd012": "0x43aea7b6",
+   "0xd013": "0x43aea79e",
+   "0xd010": "0x43aea802",
+   "0xd015": "0x43aea838"
+  },
+  "outer_rows_calling_ca_request_0x438c2538": [
+   "+0xa0",
+   "+0xb4",
+   "+0xc8",
+   "+0xdc",
+   "+0xf0",
+   "+0x104",
+   "+0x118"
+  ],
+  "caif_event_targets": {
+   "0": "0x437db8ac",
+   "1": "0x437db8bc",
+   "2": "0x437db90e",
+   "3": "0x437db8b4",
+   "4": "0x437db91e",
+   "5": "0x437db926",
+   "6": "0x437db92e",
+   "7": "0x437db916",
+   "8": "0x437db8b4",
+   "9": "0x437db936",
+   "10": "0x437db95a",
+   "11": "0x437db8e0",
+   "12": "0x437db97e",
+   "13": "0x437db986"
+  },
+  "ca_task_queue": "0x1502c7, receptor 0x436ba0fc -> máquina 0x436bc140"
+ },
+ "input_ko": {
+  "kbd_send_event": "0x7a0020",
+  "front_key_sync": "0x280132",
+  "liro_adc_sync": "0x720018",
+  "vgrip_key_sync": "0x18a04d1",
+  "own_queue": "0x410025"
+ },
+ "libobj": {
+  "infrainput_rx_queue": "0x7a0020",
+  "relmgr_ids_sent_to_0x40193": [
+   "0x4042",
+   "0x4043",
+   "0x4044",
+   "0x4045"
+  ]
+ },
+ "darwin": {
+  "p4d_types": [
+   1,
+   2
+  ],
+  "p4e_types": [
+   1,
+   2,
+   3
+  ],
+  "gate": "0x20c74 = 0x1b080(0)&7 in {1,2,3}"
+ },
+ "schematic_a6000_service_L3": {
+  "S0019 shutter switch": "XS_1 (1st), XS_2 (2nd), S1S2_GND; pág. 48",
+  "IC6000 main SoC": "XS_1 -> GPIO_S_11 (L15, vía D1100); XS_2 -> GPIO_S_13 (L14); pág. 26",
+  "IC5700 Darwin": "XS_1 -> P32/INT10; MSS_S2_REQ_CA -> P29/INT05; DWN_IN_RELEASE -> P06/INT30; pág. 23",
+  "IC6000 <- Darwin": "CA_RELEASE_LOCK_MSS -> GPIO_S_7 (L18); pág. 26",
+  "method": "pdftotext -bbox, misma fila y; sin inspección visual"
+ }
+}

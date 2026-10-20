@@ -1,0 +1,5 @@
+# LÍNEA A — MPR/DCF y layout StillInfo (CRÍTICA)
+Objetivo: cómo meter un JPEG externo en el registro fotográfico nativo.
+Tareas: A-01 reconstruir offsets completos de MPR::StillInfo (0x28c B) y del mensaje 0x1006 (0x2a8 B, StillInfo en +0x14) a partir de Stage_Notify 0x437efe78 (LIRO, productor) y RecordStill ELF 0x908afc / MprCtrl::WriteStill 0x8fe0a0 / FeaCore::WriteStill libmpr 0x440794 (consumidores). A-02 campos obligatorios vs opcionales (¿se omiten/generan thumJpg, screenNail, EXIF? quién valida cada buffer; tamaños/offsets/handles). A-03 sistema de handles (memHandle) que usa MPR para resolver mainJpg: ¿qué función los traduce a puntero, quién retiene/libera? A-04 estructura mínima válida teórica para un JPEG de 1024 px.
+Salidas: analysis/stillinfo-layout.json, docs/capture/mpr-dcf-recording.md (mapa de llamadas y campos, validaciones).
+Aceptación: describir con evidencia qué datos/condiciones recibe el sistema para guardar y reconocer una foto; responder las 10 preguntas del enunciado (layout, obligatorios, omisibles, validación, handles, referencias, construcción DCF, evento a reproducción, ¿MPR sin Stage_SACC?, estructura mínima).

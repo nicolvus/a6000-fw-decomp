@@ -1,0 +1,83 @@
+[
+  {
+    "start": "43af7152",
+    "temporary_listing": [
+      "43af7152 ldr r3,[r0,#0x50]",
+      "43af7154 ldrh r0,[r3,#0x2e]",
+      "43af7156 movw r3,#0xffff",
+      "43af715a cmp r0,r3",
+      "43af715c ite ne",
+      "43af715e mov.ne r0,#0x2",
+      "43af7160 mov.eq r0,#0x1",
+      "43af7162 bx lr",
+      "43af7164 movs r0,#0x2",
+      "43af7166 bx lr",
+      "43af7168 ldr r3,[r0,#0x50]",
+      "43af716a ldrh r0,[r3,#0x2e]",
+      "43af716c movw r3,#0xffff",
+      "43af7170 cmp r0,r3",
+      "43af7172 ite ne",
+      "43af7174 mov.ne r0,#0x2",
+      "43af7176 mov.eq r0,#0x1",
+      "43af7178 bx lr",
+      "43af717a movs r0,#0x2",
+      "43af717c bx lr",
+      "43af717e movs r0,#0x2",
+      "43af7180 bx lr",
+      "43af7182 movs r0,#0x2",
+      "43af7184 bx lr",
+      "43af7186 ldr r3,[r0,#0x50]",
+      "43af7188 ldr r3,[r3,#0x8]",
+      "43af718a ldrb r3,[r3,#0x0]",
+      "43af718c cbz r3,0x43af7190",
+      "43af718e movs r3,#0x1"
+    ]
+  },
+  {
+    "start": "43af6ee8",
+    "temporary_listing": [
+      "43af6ee8 push {r3,lr}",
+      "43af6eea movs r0,#0x0",
+      "43af6eec movs r3,#0xd",
+      "43af6eee str.w r3,[r1,#0xac]",
+      "43af6ef2 bl 0x437daa44",
+      "43af6ef6 movs r0,#0x0",
+      "43af6ef8 pop {r3,pc}",
+      "43af6efa ldr r3,[r0,#0x68]",
+      "43af6efc push {r4,r5,r6,lr}",
+      "43af6efe mov r5,r0",
+      "43af6f00 ldrb r2,[r3,#0x0]",
+      "43af6f02 mov r4,r1",
+      "43af6f04 cbz r2,0x43af6f0e",
+      "43af6f06 ldr r3,[r3,#0x4]",
+      "43af6f08 movs r0,#0x2",
+      "43af6f0a str r3,[r1,#0xc]"
+    ]
+  },
+  {
+    "start": "43af6c9c",
+    "temporary_listing": [
+      "43af6c9c movs r0,#0x0",
+      "43af6c9e push {r3,lr}",
+      "43af6ca0 bl 0x437daa44",
+      "43af6ca4 movs r0,#0x0",
+      "43af6ca6 pop {r3,pc}",
+      "43af6ca8 push {r3,lr}",
+      "43af6caa movs r0,#0x0",
+      "43af6cac movs r3,#0x1",
+      "43af6cae str.w r3,[r1,#0xac]",
+      "43af6cb2 bl 0x437daa44",
+      "43af6cb6 movs r0,#0x0",
+      "43af6cb8 pop {r3,pc}",
+      "43af6cba ldr r3,[r0,#0x68]",
+      "43af6cbc ldrb r3,[r3,#0x1]",
+      "43af6cbe cbnz r3,0x43af6cca",
+      "43af6cc0 mov.w r2,#0x200",
+      "43af6cc4 adds r3,#0x1",
+      "43af6cc6 b.w 0x437daa50",
+      "43af6cca movs r0,#0x0",
+      "43af6ccc bx lr",
+      "43af6cce push {r3,lr}"
+    ]
+  }
+]

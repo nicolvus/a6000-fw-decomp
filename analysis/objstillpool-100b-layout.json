@@ -1,0 +1,87 @@
+{
+  "titulo": "Contrato del ítem 0x100B (JpgInfo de salida) entre ObjStillRecorder::Execute y InfraStillPool::RegisterImage",
+  "sesion": 12,
+  "estado": "análisis estático (libObj.so fw 3.21); sin ejecución",
+  "nota_direcciones": "ELF = VA Ghidra - 0x10000. En enunciados previos 0x940C34/0x940508/0x93E9D0/0x94B8E0 eran VA Ghidra; en ELF son 0x930C34/0x930508/0x92E9D0/0x93B8E0. Execute y RegisterImage ya estaban en ELF (0x90B248, 0x9328B4).",
+  "veredicto": {
+    "que_es": "Tabla de 11 descriptores de 16 B (0xB0 B) que describe las ÁREAS DMM de SALIDA del codificador MPR (MprIf::EncodeStill, 'JpgInfo (Input/Cmp)'). Execute las ASIGNA vacías, MPR las rellena (JPEG principal, miniatura, screennail, maker note) y el Pool las registra tal cual. No son bytes de imagen aportados por el llamador.",
+    "entrada_real_de_imagen": "Un frame YC en DMM descrito por el mensaje de orden 0x10000005: contenedor 0x10000006 -> 0x1017 (YcDataMemInfo + Colorimetry + yRange), 0x1031 (DecodeCanvasInfo), 0x1041 (MetaInfo).",
+    "clasificacion": "VERIFICADO (decompilado + desensamblado + cadenas del volcador MprAcsr)"
+  },
+  "bloque_0xB0": {
+    "tamano_total": 176,
+    "entradas": 11,
+    "tamano_entrada": 16,
+    "campos_por_entrada": [
+      {"off": 0, "ancho": 4, "nombre": "handle", "significado": "memHandle DMM (u16 en los 16 bits bajos; 0 = entrada ausente)", "evidencia": "VERIFICADO: productor 0x90A810 escribe GetUnitHandle() en +0; consumidor 0x93C8D0 usa (*p & 0xffff) y exige !=0", "estado": "VERIFICADO"},
+      {"off": 4, "ancho": 4, "nombre": "offset", "significado": "desplazamiento de los datos dentro del búfer DMM", "evidencia": "entry1 (model) offset 0xBC tras entry0 (0xBC B); consumidor calcula rango [off, off+size)", "estado": "VERIFICADO"},
+      {"off": 8, "ancho": 4, "nombre": "size", "significado": "bytes válidos; 0 = entrada vacía. Productor: suma de GetExtSizeFromDmmAlloc (tamaño asignado) o 0xBC/0x11; tras EncodeStill lo ajusta MPR", "evidencia": "consumidor exige size!=0 (puVar8[2]); productor deja w2=suma de extensiones", "estado": "VERIFICADO (valor tras EncodeStill: INFERENCIA)"},
+      {"off": 12, "ancho": 4, "nombre": "maplen", "significado": "longitud a mapear (mmap) del handle; el productor escribe el tamaño solicitado a DmmAllocate", "evidencia": "consumidor 0x92980c(w3, handle&0xffff, ...) ; productor escribe constantes 0x173762/0x84d6d/0x50d17/0x170d0c/0x170d0b", "estado": "VERIFICADO (semántica exacta de la constante: INFERENCIA)"}
+    ],
+    "roles": [
+      {"idx": 0, "off": "0x00", "rol": "exifSrcArea", "productor": "0x90A810: buffer#0 (DmmAllocate 0x173762), off 0, size 0xBC", "contenido": "bloque de 0xBC B (dimensiones de canvas/región + flags de modo); mismo bloque que Execute devuelve en la respuesta 0x3500 clave 0x10000009; el Pool lo copia con item 0x300C (0xBC) en 0x930C34", "estado": "VERIFICADO (tamaños coinciden y copia 0x300C->sección 4)"},
+      {"idx": 1, "off": "0x10", "rol": "model", "productor": "mismo buffer#0, off 0xBC, size 0x11", "contenido": "nombre del modelo (MprCtrl::GetModelName, 17 B); respuesta 0x3500 clave 0x1000000A; Pool: item 0x300B -> sección 5", "estado": "VERIFICADO (0x11 B = GetModelName(char*) en Execute; INFERENCIA: cadena exacta)"},
+      {"idx": 2, "off": "0x20", "rol": "software", "productor": "cero (no se rellena)", "estado": "VERIFICADO (cero) / rol por orden de volcado"},
+      {"idx": 3, "off": "0x30", "rol": "lensModel", "productor": "cero", "estado": "VERIFICADO (cero) / rol por orden de volcado"},
+      {"idx": 4, "off": "0x40", "rol": "publicMakerNote", "productor": "buffer#1 (DmmAllocateAndOpen 0x84D6D); Execute lo mapea con 0x90AB3C y MPR escribe ahí (StillMetaAreaInfo.PublicMakerNote)", "estado": "VERIFICADO (0x91ab3c mapea esta entrada y la pasa a EncodeStill) / contenido: INFERENCIA"},
+      {"idx": 5, "off": "0x50", "rol": "pimInfo", "productor": "cero", "estado": "VERIFICADO (cero)"},
+      {"idx": 6, "off": "0x60", "rol": "secretMakerNote", "productor": "cero", "estado": "VERIFICADO (cero)"},
+      {"idx": 7, "off": "0x70", "rol": "mpfSrcArea", "productor": "cero", "estado": "VERIFICADO (cero)"},
+      {"idx": 8, "off": "0x80", "rol": "mainJpg", "productor": "buffer#2 (DmmAllocateAndOpen 0x50D17)", "consumidor": "0x92A140 -> sección 2 del objeto +0x28", "estado": "VERIFICADO (orden de volcado EncodeStill + conversión 0x8175E0 offsets 0x80<->0x60); constante de capacidad no encaja con un JPEG de resolución completa -> NO VERIFICADO si mainJpg se amplía"},
+      {"idx": 9, "off": "0x90", "rol": "thumJpg", "productor": "buffer#3 (0x170D0C)", "consumidor": "0x92ABF4 -> sección 0 del objeto +0x14", "estado": "VERIFICADO (rol); capacidad: NO VERIFICADO"},
+      {"idx": 10, "off": "0xA0", "rol": "screenNail", "productor": "buffer#4 (0x170D0B)", "consumidor": "0x92A140 -> sección 3 del objeto +0x28", "estado": "VERIFICADO (rol); capacidad: NO VERIFICADO"}
+    ],
+    "orden_AddHandle_consumidor": [0, 1, 2, 3, 4, 5, 6, 7, 9, 8, 10],
+    "nota_orden": "El consumidor (0x930508) registra los handles en orden 0..7, luego 9 (thum), 8 (main), 10 (scn): coincide con el orden de impresión de EncodeStill (thumJpg, mainJpg, screenNail). En memoria el struct es main(8), thum(9), scn(10)."
+  },
+  "equivalencia_12B": {
+    "descripcion": "Antes de EncodeStill Execute convierte el bloque de 16 B a un array de 11 entradas de 12 B {u16 handle, u32 offset, u32 size} (0x8175E0 copia la entrada 8: +0x60<-+0x80). Tras la llamada restaura los handles originales y reconvierte (0x817614). Así MPR puede cambiar offset/size, no los handles.",
+    "estado": "VERIFICADO para la entrada 8 y el patrón en Execute; resto de entradas por INFERENCIA (0x817518/0x81757C no leídas)"
+  },
+  "productor": {
+    "funcion_orquestadora": "ObjStillRecorder::Execute ELF 0x90B248 (orden 0x10000005)",
+    "paso_1_reserva": {"fn": "ELF 0x90A810 (Ghidra 0x91A810)", "accion": "memset(bloque,0,0xB0); 5 asignaciones DMM (DmmAllocate/DmmAllocateAndOpen) con tamaños 0x173762, 0x84D6D, 0x50D17, 0x170D0C, 0x170D0B; rellena entradas 0,1,4,8,9,10; errores 0xff3/0x1006/0x103f/0x105f/0x107f/0x109f; libera con DmmCloseAndFree en fallo"},
+    "paso_2_codifica": {"fn": "ELF 0x90AD20 (Ghidra 0x91AD20) -> MprCtrl 0x8FE6F8 -> MprIf::EncodeStill", "accion": "lee del mensaje 0x1017(0x1018,0x1072,0x1073) y 0x1031(0x1032,0x1034,0x1035,0x1036,0x1038,0x1037); abre el handle YC con DmmOpen y suma sus extensiones; calcula tamaños objetivo (UtilStillSize 0x826080 con this+0x130 ImageSize/Quality y this+0x128); empaqueta EncodeStillParam y llama a MPR; MPR rellena JpgInfo (Cmp)"},
+    "paso_3_envio": {"fn": "ELF 0x912B4C (Ghidra 0x922B4C)", "accion": "envía ObjMsg(0x2008,0x1000) con items 0x1000(captureId), 0x1001/0x1002 (fechas), 0x1006 (CamInfo), 0x1007 (GPS), 0x100B (bloque 0xB0), 0x100E (8 B), 0x1012 (8 B pasa-through); la respuesta 0x3500 lleva 0x10000008/9/A"}
+  },
+  "consumidor": {
+    "fn_registro": "InfraStillPool::RegisterImage ELF 0x9328B4 (orden de Pool 0x1007, fila de registro 0x101F860..)",
+    "fn_parser": "ELF 0x930C34 (Ghidra 0x940C34) -> ELF 0x930508 (Ghidra 0x940508)",
+    "lectura": "GetParam(msg,0x3002,0x29) anida: 0x1000 (uniqueId), 0x100E (struct: [+4] tipo), 0x100B (0xB0 si tipo 0/2/3), 0x100C (si tipo 3), 0x100D (si tipo 1/2), 0x300A (área, 0x18 B), 0x300B (cadena, copia a sección 5), 0x300C (0xBC B, copia a sección 4)",
+    "AddHandle": "ELF 0x929788 por cada handle u16 de las 11 entradas (lista en param_2+0x14), más el área propia (+0x50/+0x54, DmmAllocate(_DAT_009409EC) en tipo 0/2/3 y 0x27F en tipos 1/2 (área propia del Pool))",
+    "construccion": "ELF 0x92D6D8 (Ghidra 0x93D6D8): objeto de 0x3C B = 3 sub-objetos: +0x00 <- 0x92C8D0 (entradas 0..7 -> secciones 4..0xB), +0x14 <- 0x92ABF4 (entrada 9 -> sección 0), +0x28 <- 0x92A140 (entradas 8 y 10 + área propia -> secciones 1..3). Usa DmmOpen/mmap (0x92980C), SetSection (0x9295CC)",
+    "estado": "VERIFICADO"
+  },
+  "item_0x100E": {
+    "layout": "8 B: [0]=u32 (1 si colorimetría==3 AdobeRGB, 0 si no; fuente item 0x1072), [4]=u32 tipo de registro",
+    "execute_escribe": "tipo = 0 (JPG) siempre",
+    "consumidor": "tipo 0/2/3 -> 0x100B; tipo 3 -> también 0x100C; tipo 1/2 -> 0x100D",
+    "estado": "VERIFICADO (lectura en consumidor y escritura en Execute)"
+  },
+  "items_0x100C_0x100D": {
+    "0x100C": "array con cabecera: [u32 count][u32 ?] y count entradas de 0xB0 (stride 0x2C palabras); NO se emite en la ruta Execute (tipo 0). INFERENCIA: ráfaga/serie",
+    "0x100D": "tabla de 17 handles (palabras 0,4,8,...,0x44 con saltos); tipos 1/2; NO emitido por Execute. INFERENCIA: RAW",
+    "estado": "VERIFICADO (lecturas del consumidor); semántica: INFERENCIA"
+  },
+  "sentinelas_y_errores": [
+    {"valor": "handle==0 || size==0", "efecto": "entrada ignorada (no se abre ni se añade sección real; SetSection(idx,0,0))"},
+    {"valor": "0x12000", "efecto": "RegisterImage: Pool no inicializado (byte param_1+4==0)"},
+    {"valor": "0x10001 / 0x11000", "efecto": "parámetro ausente / fallo de asignación o mapeo en el Pool"},
+    {"valor": "0xff (memset)", "efecto": "bloque 0xBC de Execute se inicializa a 0xFF antes de rellenar dimensiones"}
+  ],
+  "no_verificado": [
+    "Contenido exacto del bloque 0xBC (solo dims + flags conocidos).",
+    "Si MPR ajusta offset/size de TODAS las entradas o solo de algunas.",
+    "Por qué la capacidad de mainJpg (0x50D17) es menor que la de thum/scn (1,5 MB): puede que mainJpg se amplíe, o que los constantes se emparejen de otro modo.",
+    "Quién construye el item 0x3002 anidado a partir del mensaje de Execute (0x912B4C): INFERENCIA, no leído.",
+    "0x817518/0x81757C (resto de la conversión 12<->16 B)."
+  ],
+  "evidencias": [
+    "analysis/ghidra/libobj-recordstill-exec.json (Execute)",
+    "analysis/ghidra/libobj-100b-prod.json (0x91A810, 0x91AD20)",
+    "analysis/ghidra/libobj-100b-cons.json, libobj-100b-cons2.json (0x93D6D8, 0x93C8D0, 0x93ABF4, 0x93A140)",
+    "analysis/ghidra/libobj-mpr-e6f8.json (MprCtrl::EncodeStill wrapper 0x90E6F8)",
+    "analysis/ghidra/libobj-100b-conv.json (0x8275E0/0x827614/0x91AB3C)",
+    "scripts/thumb_pc_strings.py sobre ELF 0x8FE6F8-0x8FEDA0 (volcado '[MprAcsr] EncodeStill', JpgInfo Input/Cmp)"
+  ]
+}

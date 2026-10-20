@@ -1,0 +1,114 @@
+[
+  {
+    "item": "addressing_fix",
+    "direccion_elf": "n/a",
+    "descripcion": "scripts/libobj_dec.sh requiere la direccion Ghidra VA (= ELF + 0x10000) con sufijo 't' para Thumb, no la direccion ELF cruda. Ej: para decompilar ELF 0x1e9880 hay que invocar '0x1f9880t'.",
+    "evidencia": "Con '0x1e9880t' Ghidra devuelve halt_baddata(); con '0x1f9880t' decompila correctamente y coincide con el parser YcPinCommand documentado en sesion 14 (cadena 'YcPinCommand[%d]: MSGID_REQ_DELIVER').",
+    "clasificacion": "VERIFICADO"
+  },
+  {
+    "item": "state_meaning",
+    "direccion_elf": "0x14011c",
+    "descripcion": "Getter generico de un byte de estado con lock: FUN(holder) { lock(); v=*(byte*)(holder+4); unlock(); return v; }",
+    "evidencia": "Decompilado Ghidra (0x15011ct): 'puVar2=*(lockobj); func_0x00150100(*puVar2); uVar1=*(undefined1*)(param_1+4); func_0x0015010e(*puVar2); return uVar1;'. Confirmado en llvm-objdump: 140124 ldr r4,[r3,r2]; 140126 ldr r0,[r4]; bl 140100; 140130 ldrb r5,[r5,#0x4]; bl 14010e; mov r0,r5.",
+    "clasificacion": "VERIFICADO"
+  },
+  {
+    "item": "writer",
+    "direccion_elf": "0x140144",
+    "descripcion": "Setter generico de un byte de estado con lock y callback de transicion: FUN(holder,val) { lock(); old=*(holder+4); notify(old,val,0,0) via 0x142420; *(holder+4)=val; unlock(); return 0; }",
+    "evidencia": "llvm-objdump --triple=thumbv7-linux-gnueabi sobre libObj.so: '140144 push{...}; 140150 mov r6,r1; 140152 mov r5,r0; 15c bl 140100(lock); 164 ldrb r1,[r5,#4]; 170 bl 142420; 174 strb r6,[r5,#4]; 17a bl 14010e(unlock); 17e mov r0,r4(=0)'.",
+    "clasificacion": "VERIFICADO"
+  },
+  {
+    "item": "writer",
+    "direccion_elf": "0x173158",
+    "descripcion": "Funcion virtual de ObjEffect (handler YcPinCommand) que lee el campo de mensaje 0x1025 (this+0xc) y escribe EffectInternalMode (via GetSubState(block,1)+setter 0x140144) segun una tabla de 7 casos + default. Tambien deriva this+0x4c (tipo) y this+0x50 (pin) via GetSubState(block,0x17) y GetSubState(block,0x19). Registrada como puntero Thumb en vtable .data.rel.ro vaddr 0xfef54c.",
+    "evidencia": "Decompilado completo via scripts/libobj_dec.sh libObj.so analysis/ghidra/branch-claude-fn173158.json 0x183158t; corroborado en bruto por el salto tbb en 0x1732ca-0x173364 (llvm-objdump) donde cada caso fija r11 a 2,4,5,7,0xe,0xf,0,3 antes de llamar al setter con (r0=holder,r1=r11). Puntero de vtable verificado leyendo bytes del archivo: file offset 0xfe754c = word 0x173159 (ELF 0x173158 con bit Thumb).",
+    "clasificacion": "VERIFICADO"
+  },
+  {
+    "item": "state_mapping",
+    "direccion_elf": "0x173158",
+    "descripcion": "Tabla de mapeo mensaje(0x1025) -> EffectInternalMode escrito por 0x173158: 0->2, 1->3, 2->4, 3->5, 4->7(+func_0x1402d8(holder,1), sin respuesta), 5->0xe, 6->0xf(+func_0x183a8c(this+0x50)), default->0(error_code=3).",
+    "evidencia": "Decompilado Ghidra (switch(auStack_29[0]) con 7 casos + default, cada uno fijando uVar8 antes de func_0x00150144(uStack_74,uVar8)). Doble verificado con el tbb en asm crudo.",
+    "clasificacion": "VERIFICADO"
+  },
+  {
+    "item": "state_meaning",
+    "direccion_elf": "0x1e9880",
+    "descripcion": "Parser YcPinCommand/REQ_DELIVER re-decompilado: switch(EffectInternalMode) con accion real solo en modo 1 (si submensaje==0x1011: encola ObjMsg(0x3900,0x600d) via 0xbc3208) y modos 2-5 (lanza SequencePinReqestDeliverSaveStillEditCmd 0x1e96c0, ObjMsg 0x3900/0x6013). Modos 0, 6 y default (incluye 7,0xe,0xf) solo registran (BizPrintf), sin tocar el pin.",
+    "evidencia": "Decompilado via scripts/libobj_dec.sh libObj.so analysis/ghidra/branch-claude-effect-parser.json 0x1f9880t. Confirma y amplia el resumen previo de sesion 14 (antes solo se tenia estructura general, ahora el switch completo con los codigos de log 0x9d/0xa1/0xa6/0xb4/0xbe/0xc2 por rama).",
+    "clasificacion": "VERIFICADO"
+  },
+  {
+    "item": "gap",
+    "direccion_elf": "n/a",
+    "descripcion": "No se localizo el escritor que fija EffectInternalMode=1 (el unico modo que usa la cola directa 0x3900/0x600d en vez de la secuencia SaveStillEdit). El escritor 0x173158 nunca escribe 1.",
+    "evidencia": "Revision completa del switch de 0x173158 (7 casos + default): valores posibles {0,2,3,4,5,7,0xe,0xf}, ninguno es 1.",
+    "clasificacion": "NO_VERIFICADO"
+  },
+  {
+    "item": "gap",
+    "direccion_elf": "n/a",
+    "descripcion": "Constructor de ObjEffect / inicializacion del holder de EffectInternalMode no localizado.",
+    "evidencia": "Se repasaron los 20 sitios de llamada al setter generico 0x140144 en todo libObj.so; solo 0x173158 cae claramente en el rango de codigo de ObjEffect (0x15e000-0x1e9900) y es un manejador de mensaje, no un constructor.",
+    "clasificacion": "NO_VERIFICADO"
+  },
+  {
+    "item": "relation_ee",
+    "direccion_elf": "n/a",
+    "descripcion": "No se encontro relacion entre ModelBootEE (Live View, lista {0xa,0x7} en 0xcdb108) y ningun escritor de EffectInternalMode.",
+    "evidencia": "Busqueda de los 20 sitios de llamada al setter generico; ninguno cae en el entorno de ModelBootEE ni referencia esa lista.",
+    "clasificacion": "NO_VERIFICADO"
+  },
+  {
+    "item": "relation_pbcap",
+    "direccion_elf": "n/a",
+    "descripcion": "Es plausible (no verificado) que el mensaje 0x1011 que activa 0x173158 sea el ObjMsg(0x2000,0x1011) que ObjStillRecorder::YcPinReqDeliver (0x90a668, verificado en sesion 14) envia durante PbCap, pero no se trazo la cadena MSGID->vtable que invoca 0x173158.",
+    "evidencia": "Coincidencia estructural: 0x173158 lee el campo 0x1025 del mismo formato de mensaje 0x1011 documentado en sesion 14 para YcPinReqDeliver; no se encontro una llamada directa (bl) a 0x173158 en todo el disassembly, es invocada indirectamente via la vtable 0xfef50c.",
+    "clasificacion": "INFERENCIA"
+  },
+  {
+    "item": "topology_row",
+    "direccion_elf": "0xcc4210+0xa*0x20",
+    "descripcion": "Fila 0x0a: pin_type 0 (YC), sts_id 0, src_obj 8 (Camera) dir 1 (salida) no 0, dst_obj 9 (Effect) dir 0 (entrada) no 0.",
+    "evidencia": "python3 -I: struct.unpack_from('<8I', data, 0xcc4210+0xa*0x20) sobre analysis/topology-table-libobj.json ya generado; resultado {'pin_type':0,'sts_id':0,'src_obj':8,'src_dir':1,'src_no':0,'dst_obj':9,'dst_dir':0,'dst_no':0}",
+    "clasificacion": "VERIFICADO"
+  },
+  {
+    "item": "topology_row",
+    "direccion_elf": "0xcc4210+0x7*0x20",
+    "descripcion": "Fila 0x07: pin_type 0 (YC), sts_id 0, src_obj 9 (Effect) dir 1 (salida) no 0, dst_obj 5 (Renderer) dir 0 (entrada) no 0.",
+    "evidencia": "mismo metodo; resultado {'pin_type':0,'sts_id':0,'src_obj':9,'src_dir':1,'src_no':0,'dst_obj':5,'dst_dir':0,'dst_no':0}",
+    "clasificacion": "VERIFICADO"
+  },
+  {
+    "item": "topology_row",
+    "direccion_elf": "0xcc4210+0x2a*0x20",
+    "descripcion": "Fila 0x2a: pin_type 0 (YC), sts_id 6, src_obj 9 (Effect) dir 1 (salida) no 1, dst_obj 11 (StillRecorder) dir 0 (entrada) no 0.",
+    "evidencia": "mismo metodo; resultado {'pin_type':0,'sts_id':6,'src_obj':9,'src_dir':1,'src_no':1,'dst_obj':11,'dst_dir':0,'dst_no':0}. Coincide con sesion 14.",
+    "clasificacion": "VERIFICADO"
+  },
+  {
+    "item": "otro",
+    "direccion_elf": "0x4195c0",
+    "descripcion": "TM::createLifeCycles itera la lista de topologias de la tabla, obtiene ObjectLifeCycle de src_obj y dst_obj (func 0x42920c) y un StsViewer a partir de sts_id (func 0x4294cc), y construye TopologyLifeCycle::LT(id, srcLife, dstLife, stsViewer) en 0x42b6c0.",
+    "evidencia": "Decompilado via scripts/libobj_dec.sh libObj.so analysis/ghidra/branch-claude-effect-parser.json 0x4295c0t (incluido en el mismo batch que el parser). Firma real: FUN_004295c0(param_1) itera lista en *piVar1+0x60, usa fila*0x20+8 y fila*0x20+0x14 con func_0x0042920c, fila*0x20+4 con func_0x004294cc, y llama func_0x0042b6c0(nuevo,id,srcLife,dstLife,stsViewer).",
+    "clasificacion": "VERIFICADO (estructura) / INFERENCIA (semantica exacta de 0x4294cc como 'StsViewer compartido')"
+  },
+  {
+    "item": "coexistence",
+    "direccion_elf": "n/a",
+    "descripcion": "0x0a (Effect in#0), 0x07 (Effect out#0) y 0x2a (Effect out#1) usan numeros de pin distintos; no se encontro ningun guard en TM::createLifeCycles que impida su coexistencia, pero tampoco se revisaron connectPin/disconnectPin ni el propio ObjEffect lo suficiente para descartar una exclusion en otra capa.",
+    "evidencia": "Analisis de las 3 filas (topology_row arriba) + lectura de createLifeCycles (0x4195c0) sin logica de exclusion visible entre sts_id distintos.",
+    "clasificacion": "INFERENCIA (sin exclusion hallada; no verificado ni descartado)"
+  },
+  {
+    "item": "model_search",
+    "direccion_elf": "0x69d13c / 0x5f6bbc / 0x4fd114",
+    "descripcion": "ModelStillRecToInstance, ModelMovieRecToInstance y ModelContShotsPbToInstance existen como simbolos exportados reales en libObj.so (no solo cadenas). No se logro localizar sus listas de topologias (createTopology) dentro del tiempo disponible; hay 318 sitios de llamada a los wrappers 0x420630/0x420656/0x420688 en todo el binario.",
+    "evidencia": "readelf -sW libObj.so | grep -i ToInstance: '69d13d FUNC GLOBAL ModelStillRecToInstance', '5f6bdd ModelMovieRecToInstance' (direccion con bit thumb; ELF real 0x5f6bbc), '4fd115 ModelContShotsPbToInstance'. Intento de ubicar la lista cerca de ModelStillRecToInstance (sitio 0x69d816) resulto pertenecer a otro modelo vecino (ModelTouchPanel), no a ModelStillRec.",
+    "clasificacion": "NO_VERIFICADO"
+  }
+]

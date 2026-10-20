@@ -1,0 +1,779 @@
+[
+  {
+    "task_id": "S20-CORRECTIONS",
+    "status": "COMPLETED",
+    "findings": "C1: ObjId 53 es objeto origen de la fila 0xb4, no la clase ObjStillRecorder (esa es el destino, ObjId 11). C2: la tabla 0x43edccf8 SI es reconstruible estaticamente via su inicializador 0x437ebed8 + resolucion GOT (ya demostrado en sesion 18); S19-12 lo negaba incorrectamente. C3: los modos 2/4/5 de ObjEffect invalidos solo en el dispatcher 0x176294/filtro 0x176cc6 examinado por S19-11, no en todo ObjEffect.",
+    "evidence": [
+      "analysis/topology-table-libobj.json (id=180)",
+      "docs/capture/s18-main-init-437ebed8.md",
+      "docs/capture/s19-liro-remaining-sequences.md"
+    ],
+    "files_modified": [
+      "docs/capture/s19-objid53-registration.md",
+      "docs/capture/s19-mechanical-shutter-decision-points.md",
+      "docs/capture/RESEARCH_TASKS.md",
+      "CONTEXT.md"
+    ],
+    "files_created": [
+      "docs/capture/s20-s19-corrections.md"
+    ],
+    "checks_performed": "lectura directa de analysis/topology-table-libobj.json fila id=180; grep cruzado de las tres afirmaciones contra s18-main-init-437ebed8.md y s19-liro-remaining-sequences.md",
+    "discarded_hypotheses": [],
+    "blockers": [],
+    "next_task_selected": "S20-RAWPLAY"
+  },
+  {
+    "task_id": "S20-RAWPLAY",
+    "status": "PARTIAL_CLOSED",
+    "findings": "Stage_RawPlayInit/ycc_rawplay/sds_ycc_handle: 0 referencias Ghidra registradas (ni confirma ni descarta uso). Cluster Stage_DevLater/Notify/Apollo/Orientation comparte contexto ctx+0x4ad0/+0x4ad4/+0x4b54-5c con las filas LIRO ya conocidas. CADENA CERRADA: FUN_43afe192 -> FUN_437edd44 (abre y parsea un archivo .ARW real de DCIM/100MSDCF/DSC%05d.ARW, tags TIFF 0x111/0x117) -> FUN_437edd1c (gate doble flag) -> FUN_437edd04 (copia bloque de 0x70B de configuracion, NO pixeles) -> FUN_43561604 (vtable) -> FUN_437edaf8 Stage_DevLater. VERIFICADO: esta ruta desarrolla un .ARW YA EXISTENTE en tarjeta SD, no datos YC de Live View en memoria. Mecanismo independiente de guardar/recuperar descriptor de 3 palabras (437ef8cc) via 43afe9f4/43afe11a sigue abierto (no se determino si puede apuntar a YC de LV en otro caso). Conexion nueva con SDS 0xe0b00 (S19-05) via ruta SPICA/TAP; nueva familia de unit-types raster 0x50b0b/0x50b2e distinta de 0x50b3f.",
+    "evidence": [
+      "analysis/session20/evidence/rawplay-string-refs.json",
+      "analysis/session20/evidence/s20-rawplay-dec1.json",
+      "analysis/session20/evidence/s20-rawplay-dec2.json",
+      "analysis/session20/evidence/s20-rawplay-dec3.json",
+      "analysis/session20/evidence/s20-rawplay-callers.json",
+      "analysis/session20/evidence/rawplay-stage-reuse.json"
+    ],
+    "files_modified": [],
+    "files_created": [
+      "docs/capture/s20-rawplay-stage-reuse.md",
+      "analysis/session20/evidence/rawplay-stage-reuse.json"
+    ],
+    "checks_performed": "busqueda de cadenas en av-cam.bin + calculo de VA; QuerySilentReferences.java contra proyecto Ghidra silent-liro; decompilacion real via scripts/ghidra_dec.sh de 14 funciones; busqueda de llamadores de 4 funciones clave",
+    "discarded_hypotheses": [
+      "que la ausencia de bytes en BSS implique que una tabla no sea reconstruible (ya corregido en C2, reafirmado aqui)",
+      "que procesar datos ya almacenados (anillo circular, descriptor guardado) equivalga a independencia mecanica sin mas evidencia",
+      "que Stage_RawPlayInit/DevLater permita entrar con YC de Live View: VERIFICADO que requiere un .ARW de archivo en tarjeta, no un buffer en memoria"
+    ],
+    "blockers": [
+      "FUN_43ae75dc (getter de contexto) no decompilada: no se sabe que subsistema llena ctx+0x4b54/0x4b58/0x4b5c antes de que 437ef8cc los guarde en el caso general (fuera de la cadena RawPlay ya cerrada)"
+    ],
+    "next_task_selected": "P3 (contrato YC real de ObjCamera.out0) o decompilar FUN_43ae75dc para el mecanismo general de descriptor de 437ef8cc"
+  },
+  {
+    "task_id": "S20-ROW78",
+    "status": "COMPLETED",
+    "findings": "FUN_43ae75dc es un getter trivial (*param_1), no busqueda por ID. Los 6 llamadores reales de FUN_43afe9f4 son las filas LIRO 0x50/0x64/0x78/~0xf0/~0x118 (43b1bd12/43b1bd5e/43b1bdb4/43b1bfc8/43b1bf66/43b1c034), confirmando y extendiendo el mapa de S19-07. La fila 0x78 (FUN_43b1bdb4) en su caso 0, rama no-cancelacion, LLAMA AL SELECTOR REAL DE SENSOR 0x437f7ff0 (ya confirmado en CONTEXT.md:813) -- VERIFICADO que esta fila NO es independiente del sensor. Esa misma rama espera sobre ctx+0x4b70 con log nuevo 'RawDevInit_WAIT_IMG_PARAM'; ctx+0x4b70 es el MISMO campo que Stage_DevLater (437edaf8) escribe desde ctx2+0x27e4 -- enlace real y nuevo entre la cadena RawPlay ya cerrada y la maquina de estados principal de captura. Se confirma (no contradice) que el rango 0x437f22d4..0x437f245c de S19-13 es una etapa compartida a la que tambien despacha la fila 0x78; se documenta por primera vez su rama no-cancelacion. Nueva cadena 'Stage_Raw.cpp' en filas 0x50/0x64/0x78 (FATAL si FUN_437dd400==0xffff).",
+    "evidence": [
+      "analysis/session20/evidence/s20-ctx-getter-dec.json",
+      "analysis/session20/evidence/s20-dispatcher-callers.json",
+      "analysis/session20/evidence/s20-liro-rows-dec.json"
+    ],
+    "files_modified": [],
+    "files_created": [
+      "docs/capture/s20-row78-sensor-selector-link.md"
+    ],
+    "checks_performed": "QuerySilentReferences.java sobre 43afe9f4/43afe11a/43afe192/43b196c8; decompilacion real via scripts/ghidra_dec.sh de 43ae75dc/43ae769a/43ae7c80 y de las filas 43b1bd12/43b1bd5e/43b1bdb4; contraste textual contra s19-post-s2-cancellation-states.md (rango 0x437f22d4..0x437f245c) y CONTEXT.md:813/818 (selector IMX210)",
+    "discarded_hypotheses": [
+      "que la fila 0x78 (o sus gemelas 0x50/0x64) ofrezcan una via de captura sin sensor: VERIFICADO que llaman al selector real 0x437f7ff0"
+    ],
+    "blockers": [
+      "significado de FUN_437286bc/43728614/437284b4/437284c0 (llamadas previas al selector de sensor en la rama no-cancelacion)",
+      "mecanismo general de 437ef8cc fuera de la cadena RawPlay sigue sin resolver quien llena ctx+0x4b54/58/5c en el caso de Live View"
+    ],
+    "next_task_selected": "P3: contrato YC real de ObjCamera.out0 (productor efectivo del pin, descriptores DMM, geometria/formato/SDS)"
+  },
+  {
+    "task_id": "S20-P3-ATTEMPT",
+    "status": "BLOCKED_TOOLING",
+    "findings": "Intento de decompilar ObjCamera (libObj.so, 0x98c380/0x987dc6) via scripts/libobj_dec.sh produjo resultado basura en modo ARM (coprocessor_moveto, halt_baddata -- claramente erroneo). Reintento forzando Thumb (sufijo 't' en DecompAt.java) tambien produjo pseudocodigo inconsistente con el patron de constructor ya verificado por LLVM en S19-04 (unaff_r7, param_1==-0xc sugiere un handler de excepciones C++, no el constructor real). La configuracion Ghidra para libObj.so (proyecto a6000-libs) no esta resuelviendo el modo/alineacion correctamente para esta clase; S19-04 obtuvo sus hallazgos VERIFICADOS via llvm-objdump directo, no via decompilacion Ghidra. No se solucionó en esta sesion: requiere revisar por que DecompAt.java no reproduce el mismo resultado que QuerySilentLiro.java (que si funciona correctamente sobre av-cam.bin).",
+    "evidence": [
+      "analysis/session20/evidence/s20-objcamera-ctor-dec.json (ARM, basura)",
+      "analysis/session20/evidence/s20-objcamera-ctor-dec2.json (Thumb forzado, aun inconsistente)"
+    ],
+    "files_modified": [],
+    "files_created": [],
+    "checks_performed": "comparacion del pseudocodigo obtenido contra los hallazgos VERIFICADOS de S19-04 (llvm-objdump); el patron de excepcion C++ (param_1==-0xc) no coincide con la firma de constructor esperada",
+    "discarded_hypotheses": [],
+    "blockers": [
+      "decompilacion Ghidra de libObj.so (proyecto a6000-libs) no reproduce resultados fiables para clases C++ con RTTI/manejo de excepciones; usar llvm-objdump directo como en S19-04/S19-05 en vez de scripts/libobj_dec.sh para esta clase"
+    ],
+    "next_task_selected": "pivotar a P1/verificacion adicional en av-cam.bin (LIRO) donde la tooling si funciona, o resolver P3 con llvm-objdump directo en vez de Ghidra"
+  },
+  {
+    "task_id": "S20-ROW78-EXT",
+    "status": "COMPLETED",
+    "findings": "FUN_43afe11a (hermano de 43afe9f4) caso 0 rellena ctx+0x4afa/4ec0/4efa/4efc/4efe/4f00 (y derivados 4f02..4f08) desde un puntero de configuracion devuelto por FUN_4379a320(). ESTOS SON LOS MISMOS CAMPOS que Stage_Apollo (43b1bb4c) lee para su estructura de 0x18B -- confirma que 43afe11a caso 0 es la preparacion de dimensiones previa a Stage_Apollo, no una ruta independiente. Cadena nueva no documentada: 'GOLFSHOT_FREE_ERR...SSP_IMAG...' (FUN_43902df8), sin clasificar. 43afe11a casos 3/7 usan el mismo patron guardar/recuperar sobre ctx+0x4ad0+0x16cc/0x16e0 pero aplicado a ctx+0x6e4/0x6e8/0x6ec (distinto de ctx+0x4b54/58/5c de 437ef8cc) -- indica que hay AL MENOS DOS instancias paralelas del mecanismo de descriptor sobre el mismo objeto secundario ctx+0x4ad0.",
+    "evidence": [
+      "analysis/session20/evidence/s20-rawplay-dec2.json (funcion 43afe11a completa)"
+    ],
+    "files_modified": [
+      "docs/capture/s20-row78-sensor-selector-link.md"
+    ],
+    "files_created": [],
+    "checks_performed": "lectura completa del pseudocodigo de 43afe11a ya decompilado; cruce de offsets contra los leidos por Stage_Apollo en s20-rawplay-stage-reuse.md",
+    "discarded_hypotheses": [],
+    "blockers": [
+      "significado de GOLFSHOT/SSP_IMAG no investigado",
+      "no se determino si alguna de las dos instancias paralelas del mecanismo de descriptor (ctx+0x4b54/58/5c vs ctx+0x6e4/8/c) puede originarse en Live View en vez de archivo/sensor"
+    ],
+    "next_task_selected": "P3 con llvm-objdump directo (no Ghidra) o investigar GOLFSHOT/SSP_IMAG"
+  },
+  {
+    "task_id": "S20-P3-RETRY",
+    "status": "PARTIAL_BLOCKED",
+    "findings": "Reintento de P3 con llvm-objdump directo (en vez de Ghidra). VERIFICADO: MWF::ObjPin::Send tiene 464 sitios de llamada en libObj.so; NINGUNO cae dentro del codigo de construccion ya verificado de ObjCamera (ctor 0x98c380 + auxiliares 0x987788/0x987d6c/0x987dc6/0x9880a4) -- hallazgo negativo real, mas fuerte que S19-04. Un sitio en 0x98f974 (atribuido debilmente a ObjCamera_Destroy+0x35d72 por proximidad de simbolo, NO VERIFICADO que sea la clase correcta) muestra un patron real GetCategoryId(msg entrante) -> SetCateIdMsgId(0x100e/0x100f) -> AddParam(0x1011) -> GetPin(ctx,6)->Send(0x1003,...). Si fuera ObjCamera, seria el pin 6, no el pin 0 (out0), por lo que no cerraria el contrato de Camera.out0 ni en el mejor caso.",
+    "evidence": [
+      "docs/capture/s20-p3-objcamera-pin-attempt.md",
+      "/tmp (session) send-callsites.txt, libObj-full.disasm"
+    ],
+    "files_modified": [],
+    "files_created": [
+      "docs/capture/s20-p3-objcamera-pin-attempt.md"
+    ],
+    "checks_performed": "enumeracion completa de 464 llamadas a ObjPin::Send via llvm-objdump+grep; verificacion de que ninguna cae en el rango de construccion de ObjCamera ya verificado por S19-04; decompilacion manual de la funcion en 0x98f830-0x98f974",
+    "discarded_hypotheses": [
+      "usar proximidad a simbolo exportado como prueba de pertenencia de clase en binario stripped sin limites de funcion recuperados"
+    ],
+    "blockers": [
+      "limites de funcion/clase reales de libObj.so no recuperados (RTTI/vtable walking pendiente); Ghidra no decompila correctamente esta libreria con la configuracion actual del proyecto a6000-libs"
+    ],
+    "next_task_selected": "depurar por que DecompAt.java falla en libObj.so (a6000-libs) cuando funciona bien en av-cam.bin, o intentar P1 en av-cam.bin donde la tooling es fiable"
+  },
+  {
+    "task_id": "S20-P1-MAILBOX",
+    "status": "PARTIAL_MAJOR_PROGRESS",
+    "findings": "VERIFICADO: 0x40193 es el buzon de entrada de un SERVICIO RPC SINCRONO (no un simple sumidero): FUN_43b04cd4/FUN_43b04ca2 son helpers cliente genericos que asignan mensaje del pool 0x40193, escriben un reply_to (buzon propio), envian a 0x40193, y esperan la respuesta en su propio buzon. VERIFICADO: identificado un cliente nuevo y real, CapIdTblMgr (FUN_4381cc7c), bucle de tarea completo con buzon propio 0x4015e, que despacha 4 comandos (0xd010 GetTblAddr, 0xd011 StartAccess, 0xd012 StopAccess, 0xd013 Init_End) via tabla 0x43bf3800 -- la MISMA region 0x43bf3xxx que shutter-trigger-chain-0x3011.md ya citaba como destino de punteros constantes de la tabla de despacho 0x3011 (0x43ffdd30), conectando por primera vez ambos hallazgos. NO_VERIFICADO: identidad del servidor real que RECIBE de 0x40193 (CapIdTblMgr es cliente, no servidor); si algun reply_to de otro cliente llega al dominio 0x100/CaptureStart. DESCARTADO: que CapIdTblMgr sea el puente hacia CaptureStart -- es cliente del servicio de tabla de IDs de captura, no su receptor.",
+    "evidence": [
+      "analysis/session20/evidence/s20-scalar-40193.json",
+      "analysis/session20/evidence/s20-mbx40193-callers.json",
+      "analysis/session20/evidence/s20-mbx-multiref-dec.json",
+      "analysis/session20/evidence/s20-mbx-primitives-dec.json"
+    ],
+    "files_modified": [],
+    "files_created": [
+      "docs/capture/s20-p1-mailbox40193-rpc-pattern.md",
+      "analysis/ghidra/FindScalarUses.java"
+    ],
+    "checks_performed": "busqueda de 0x40193 como palabra de 4 bytes en todo av-cam.bin (57 ocurrencias); QuerySilentReferences.java sobre las 57 direcciones (55 funciones); decompilacion real de las 2 funciones con multiples referencias y de las 2 funciones RPC helper que usan 0x40193 como parametro; FindScalarUses.java (herramienta nueva) dio 0 aciertos -- limitacion documentada: el valor se carga via literal pool, no como inmediato de instruccion",
+    "discarded_hypotheses": [
+      "que 0x40193 fuera un simple buzon de recepcion de un unico receptor estatico",
+      "que CapIdTblMgr fuera el puente hacia CaptureStart"
+    ],
+    "blockers": [
+      "identidad del servidor real de 0x40193 (quien ejecuta Recibir(0x40193,...) en su propio bucle) no encontrada entre las 55 funciones referenciadas -- todas son clientes",
+      "los 53 sitios de una sola referencia (de los 55 totales) no se decompilaron individualmente para extraer su reply_to"
+    ],
+    "next_task_selected": "decompilar los 53 sitios restantes de referencia a 0x40193 para extraer su reply_to y buscar si alguno coincide con el dominio 0x100/CaptureStart, o buscar directamente FUN_43561260(0x40193,...) como patron de recepcion directa"
+  },
+  {
+    "task_id": "S20-P1-RELMGR-LINK",
+    "status": "PARTIAL_MAJOR_PROGRESS",
+    "findings": "VERIFICADO: FUN_4379d2ec es una funcion clasificadora que agrupa 0x1502c7 y 0x40193 en la MISMA clase (1). Su unico llamador registrado, FUN_43aeaa4a, es a su vez un LLAMADOR DIRECTO REAL de RelMgr (FUN_4379d838): clasifica el evento, genera un id de correlacion via FUN_4379d328 (contador monotonico por clase, ctx+0xc80/0xc84), empaqueta {1,corr_id,param_3,1} y llama FUN_4379d838(RelMgr) con diagnostico 0x3003. FUN_43aeaa4a no tiene llamadores directos registrados por Ghidra (0 refs) -- alcanzado solo por despacho indirecto, consistente con ser un callback registrado. NO decidido: si este es (a) un callback de retroalimentacion desde la respuesta RPC de 0x40193 hacia RelMgr, o (b) la entrada real de un evento externo (hardware S2) hacia RelMgr cuyo ID coincide con 0x40193/0x1502c7. Es la pista mas fuerte encontrada en 3 sesiones de un camino directo y real hacia RelMgr desde el dominio 0x40193, pero NO se declara cerrado el puente S2->CaptureStart.",
+    "evidence": [
+      "analysis/session20/evidence/s20-mbx-singleref-sample.json",
+      "analysis/session20/evidence/s20-classifier-callers.json",
+      "analysis/session20/evidence/s20-classifier-caller-dec.json",
+      "analysis/session20/evidence/s20-4379d328-dec.json",
+      "analysis/session20/evidence/s20-aeaa4a-callers.json"
+    ],
+    "files_modified": [
+      "docs/capture/s20-p1-mailbox40193-rpc-pattern.md"
+    ],
+    "files_created": [],
+    "checks_performed": "decompilacion de 4 muestras representativas de los clusters de referencia unica; QuerySilentReferences sobre el clasificador y sobre 0x1502c7; decompilacion del llamador del clasificador (FUN_43aeaa4a) que resulto llamar a RelMgr; decompilacion de FUN_4379d328 (generador de correlacion, no tabla de ruteo); busqueda de llamadores de FUN_43aeaa4a (0 registrados)",
+    "discarded_hypotheses": [
+      "que FUN_4379d328 fuera una tabla de ruteo/destino (es un contador de correlacion)"
+    ],
+    "blockers": [
+      "direccion real del enlace FUN_43aeaa4a->RelMgr no determinada (retroalimentacion vs entrada original de S2)",
+      "no se encontro donde se registra 0x43aeaa4a como puntero de funcion/callback",
+      "51 de los 52 sitios de referencia unica a 0x40193 no decompilados individualmente"
+    ],
+    "next_task_selected": "buscar donde se registra 0x43aeaa4a como callback (tablas ya conocidas como 0x43807f4c/0x43fcd5d0), o decompilar los 51 sitios restantes"
+  },
+  {
+    "task_id": "S20-P1-TABLE-0x4044",
+    "status": "PARTIAL_MAJOR_PROGRESS",
+    "findings": [
+      "FUN_43aeaa4a esta registrado declarativamente con ID 0x4044 en una tabla real de 35 filas {id,fn,pad} en 0x43ffff84..0x4400012c (unica ocurrencia del puntero Thumb 0x43aeaa4b en todo el blob)",
+      "Esta tabla NO es la tabla de 220 filas ya conocida (0x43fff30c, dispatcher FUN_438052d8 confirmado hardcoded a esa direccion y a 220 iteraciones) - son dos tablas independientes con el mismo formato de fila",
+      "La tabla nueva tambien contiene las 23 entradas 0xd0xx completas (CapIdTblMgr solo conocia 4 de ellas en su propia tabla 0x43bf3800) - confirma namespace de IDs compartido entre tablas privadas distintas, no tabla global unica",
+      "Hallazgo de herramienta: analysis/av-cam-analysis-view.elf esta desplazado +0x1F0 respecto a la convencion de direcciones BASE,OFF=0x43541000,0x1F0 usada por los scripts del proyecto (el ELF se generó con llvm-objcopy -I binary sin saltar la cabecera) - documentado y corregido",
+      "Busqueda de remitente del comando 0x4044 por literal crudo produjo un falso positivo (coincidencia con un offset GOT no relacionado) - metodo abandonado, consistente con limitacion ya documentada"
+    ],
+    "evidence": [
+      "analysis/session20/evidence/s20-table-0x4044-registration.json",
+      "analysis/session20/evidence/s20-dispatcher-438052d8-dec.json",
+      "analysis/session20/evidence/s20-table43ffff84-refs.json",
+      "analysis/session20/evidence/s20-sender-0x4044-refs.json"
+    ],
+    "files_modified": [
+      "docs/capture/s20-p1-mailbox40193-rpc-pattern.md"
+    ],
+    "files_created": [
+      "analysis/session20/evidence/s20-table-0x4044-registration.json"
+    ],
+    "checks_performed": [
+      "busqueda de bytes crudos del puntero +Thumb bit en todo el blob (1 hit)",
+      "extraccion completa de la tabla de 35 filas validando formato id/fn/pad",
+      "decompilacion de FUN_438052d8 para confirmar que NO es el mismo dispatcher",
+      "verificacion empirica byte a byte del desfase +0x1F0 del ELF de analisis",
+      "desensamblado corregido del sitio literal 0x4044 confirmando que es un offset GOT, no un mensaje"
+    ],
+    "discarded_hypotheses": [
+      "que la tabla nueva fuera continuacion de la tabla de 220 filas ya conocida (hueco intermedio tiene estructura distinta no identificada)",
+      "que el literal 0x4044 encontrado por busqueda cruda fuera un envio de comando (era un offset GOT de una funcion inicializadora no relacionada)"
+    ],
+    "blockers": [
+      "no se identifico el dispatcher real que lee la tabla de 35 filas en 0x43ffff84 (0 referencias Ghidra registradas a esa direccion)",
+      "sigue sin decidirse si FUN_43aeaa4a-RelMgr es retroalimentacion RPC o entrada real de hardware S2"
+    ],
+    "next_task_selected": "buscar el dispatcher de la tabla de 35 filas via forma de codigo (bucle cmp/call) en el cluster 0x43aeaxxx, o decompilar los 51 sitios de referencia unica restantes de 0x40193"
+  },
+  {
+    "task_id": "S20-P1-CLOSE-AMBIGUITY",
+    "status": "PARTIAL_CLOSED_NEGATIVE",
+    "findings": [
+      "Decompilados los 52 sitios restantes de referencia unica a 0x40193: todos son wrappers delgados que envian {tag=5,id_u16,0} a 0x40193 via FUN_43ae12c4/43ae1354/43ae15f4, confirmando familia completa de comandos 0x40xx/0xd0xx",
+      "FUN_4379e6a8 (puerta de admision de RelMgr ya conocida) envia 0x4045 a 0x40193 condicionalmente y registra diagnostico NUEVO 0x3012 (adyacente a 0x3011/0x3013/0x3015); en la rama alterna llama directamente al emisor final ya conocido 0x4379eba0",
+      "El handler de 0x4045 en la tabla (0x43aea9f0) es ESTRUCTURALMENTE IDENTICO al handler de 0x4044 (FUN_43aeaa4a): clasifica, correla, llama a RelMgr con un tag distinto (2 vs 1) - confirma plantilla generica repetida de autoconsultas internas",
+      "Ambiguedad (a)/(b) de la tarea anterior RESUELTA a favor de (a): es retroalimentacion interna de RelMgr, no la entrada de hardware S2",
+      "Los UNICOS llamadores de 0x4379e6a8 (via QuerySilentReferences) son 5 sitios dentro de FUN_4379d838 (RelMgr) mismo - confirma que es un sub-helper interno, no una entrada externa",
+      "Se precisa shutter-trigger-chain-0x3011.md: el mensaje final {tipo=2,id=0x3011,corr,idx} enviado por 0x4379eba0 y la familia de autoconsultas {tag=5,id_u16,0} son DOS formatos de mensaje distintos hacia el mismo buzon 0x40193, no la misma ruta - el bloqueo original (receptor real para el mensaje tipo 0x3011) sigue abierto intacto"
+    ],
+    "evidence": [
+      "analysis/session20/evidence/s20-mbx-remaining51-dec.json",
+      "analysis/session20/evidence/s20-handler-4045-dec.json",
+      "analysis/session20/evidence/s20-4379e6a8-callers.json"
+    ],
+    "files_modified": [
+      "docs/capture/s20-p1-mailbox40193-rpc-pattern.md"
+    ],
+    "files_created": [],
+    "checks_performed": [
+      "decompilacion en lote de 52 funciones",
+      "extraccion de constantes embebidas por funcion",
+      "verificacion de que 0x4379e6a8 solo es llamado desde dentro de 0x4379d838 (5 sitios)",
+      "comparacion estructural de handlers 0x4044 vs 0x4045"
+    ],
+    "discarded_hypotheses": [
+      "que FUN_43aeaa4a (handler 0x4044) fuera la entrada real de S2 hacia RelMgr - es retroalimentacion interna, DESCARTADO para esta familia concreta"
+    ],
+    "blockers": [
+      "receptor real del mensaje tipo (i) {tipo=2,id=0x3011,...} enviado por 0x4379eba0 a 0x40193 sigue NO_VERIFICADO (bloqueo original de sesiones 18-20 intacto)",
+      "dispatcher real de la tabla de 35 filas en 0x43ffff84 sigue sin identificar"
+    ],
+    "next_task_selected": "pivotar a P4 (CBID_ENCODE_STILL / tabla de callbacks de registro de EncodeStill) - P1 tiene progreso sustancial documentado; nueva linea sin tocar esta sesion"
+  },
+  {
+    "task_id": "S20-P4-STILLCONVERTER",
+    "status": "PARTIAL_PROGRESS",
+    "findings": [
+      "Localizado y desensamblado por primera vez el codigo real que usa la cadena Receive CBID_ENCODE_STILL en libObj.so (antes solo se sabia que la cadena existia)",
+      "Es un despachador interno que compara un ID interno traducido (0x40000023/0x4000007c) no necesariamente igual a 0xc0000004 crudo",
+      "Ambas ramas del despachador construyen ObjMsg(0x3a48,...)+Struct+AddParam y llaman al mismo slot de vtable +0xc sobre un objeto en ctx+0x4c - patron generico tipo Send",
+      "Atribucion a StillConverter por densidad de cadenas StillConverter.cpp (8 refs en 1.2KB), no por limites de funcion recuperados - el label de llvm-objdump (ObjStillRecorder_UnregisterCommand+offset) es un artefacto de proximidad, igual que en P3"
+    ],
+    "evidence": [
+      "docs/capture/s20-p4-stillconverter-encodestill-dispatch.md"
+    ],
+    "files_modified": [],
+    "files_created": [
+      "docs/capture/s20-p4-stillconverter-encodestill-dispatch.md"
+    ],
+    "checks_performed": [
+      "busqueda de cadena en binario",
+      "resolucion de xref PC-relativa con thumb_pc_strings.py sobre todo .text",
+      "desensamblado dirigido de dos ramas del despachador",
+      "verificacion de simbolos exportados mas cercanos via llvm-nm"
+    ],
+    "discarded_hypotheses": [
+      "que el ID interno comparado fuera literalmente 0xc0000004 (es 0x4000007c/0x40000023, traduccion interna no verificada numericamente contra el CBID real)"
+    ],
+    "blockers": [
+      "identidad numerica entre ID interno y CBID_ENCODE_STILL real sin verificar",
+      "destino del pin en ctx+0x4c sin identificar (siguiente paso natural hacia P5/DCF)"
+    ],
+    "next_task_selected": "seguir el pin en ctx+0x4c desde StillConverter hacia su destino, o decompilar funciones vecinas 0x91e754/0x91ea86 (helpers ya vistos en las dos ramas) para mas contexto"
+  },
+  {
+    "task_id": "S20-PRIORIDAD1-RECEPTOR-40193",
+    "status": "COMPLETED_NEGATIVE_WELL_EVIDENCED",
+    "findings": [
+      "VERIFICADO: liro.ko ejecuta av-cam.bin como hilo de kernel Linux real (kthread_create_on_node+tsk_entry), no como procesador separado - resuelve ambiguedad arquitectonica citada desde sesion 15",
+      "VERIFICADO: el OSAL real (osal_snd_msg, osal_rcv_msg_tmo, osal_reg_msg_queue_cb) vive en osal_uipc.ko, importado por liro.ko; los wrappers de av-cam.bin son tail-calls puros a un vtable poblado en carga",
+      "VERIFICADO (decisivo): el ID de cola del OSAL real es de 16 bits (instruccion uxth confirmada en osal_snd_msg y osal_reg_msg_queue_cb); 0x40193 se descompone en cola=0x193 + campo extra bits[16:30]=0x4 (ubfx confirmado) - explica por que 4 sesiones de busqueda literal de 0x40193 como ID de cola fracasaron",
+      "DESCARTADO: osal_subsystem_id/osal_thread_id decodifiquen IDs de mensaje - son identidad del hilo llamador (lectura de task_struct), no relacionadas",
+      "DESCARTADO: osal_dynamic_id explique la construccion de 0x193/0x40193 - es un asignador de IDs libres por bitmap para buzones TEMPORALES, no un decodificador de IDs fijos",
+      "Busqueda de 0x193 en 44 receptores decompilados, en 38 creadores decompilados, y en las dos tablas de despacho conocidas (220 y 35 filas): 0 coincidencias en todos los casos",
+      "Bloqueo real identificado: el registro osal_dir (BSS de osal_uipc.ko) se puebla en tiempo de ejecucion, no reconstruible estaticamente - cerrar esto requeriria traza dinamica, prohibida en este proyecto"
+    ],
+    "evidence": [
+      "docs/capture/s20-mailbox40193-osal-architecture.md",
+      "analysis/session20/evidence/s20-43561260-callers.json",
+      "analysis/session20/evidence/s20-recv-callers-dec.json",
+      "analysis/session20/evidence/s20-43561324-callers.json",
+      "analysis/session20/evidence/s20-create-mbx-callers-dec.json",
+      "analysis/session20/evidence/s20-osal-other-primitives-dec.json"
+    ],
+    "files_modified": [],
+    "files_created": [
+      "docs/capture/s20-mailbox40193-osal-architecture.md"
+    ],
+    "checks_performed": [
+      "decompilacion de 44 llamadores reales de la primitiva de recepcion bloqueante",
+      "decompilacion de 38 llamadores reales de la primitiva de creacion de buzon",
+      "busqueda de liro.ko/osal_uipc.ko/osal_utm.ko entre todos los .ko del firmware",
+      "desensamblado directo (llvm-objdump) de liro_init, tsk_entry, osal_snd_msg, osal_reg_msg_queue_cb, osal_subsystem_id, osal_thread_id, osal_dynamic_id, uipc_oom",
+      "busqueda del literal 0x193 en tablas de despacho de 220 y 35 filas"
+    ],
+    "discarded_hypotheses": [
+      "que 0x40193 completo sea un ID de cola OSAL valido (excede 16 bits)",
+      "que osal_subsystem_id/osal_thread_id decodifiquen IDs de mensaje compuestos",
+      "que osal_dynamic_id explique la construccion dinamica de 0x193/0x40193",
+      "que uipc_oom sea la tabla de despacho real de colas (es un contador OOM)"
+    ],
+    "blockers": [
+      "identidad exacta del receptor de la cola 0x193: requiere traza dinamica (prohibida) porque el registro real vive en BSS poblado en runtime"
+    ],
+    "next_task_selected": "Usuario solicito pausar aqui (maxima prioridad completada) antes de pasar a prioridad media (P4: destino del pin ctx+0x4c de StillConverter, o P5: cadena MPR/DCF)"
+  },
+  {
+    "task_id": "S20-P4-CORRECTION-EVENTRECEIVER",
+    "status": "COMPLETED_CORRECTION",
+    "findings": [
+      "Localizado el constructor real de StillConverter (0x916140, libObj.so): ctx+0x44=ObjThread propio (arrancado en construccion), ctx+0x48=EventSender, ctx+0x4c=EventReceiver, ctx+0x50=EventHandlerWrapper",
+      "EventSender::SetEventReceiver conecta ctx+0x48 con ctx+0x4c DEL MISMO OBJETO - es un loopback local, no una conexion a un pin externo",
+      "CORRECCION de s20-p4-stillconverter-encodestill-dispatch.md: el slot vtable+0xc llamado sobre ctx+0x4c es un metodo de MWF::EventReceiver, NO ObjPin::Send como se infirio ayer",
+      "Implicacion: el mecanismo Receive CBID_ENCODE_STILL es auto-notificacion/auto-encolado hacia el ObjThread propio de StillConverter, no un reenvio hacia DCF/MPR o cualquier otra etapa corriente abajo - este camino NO lleva a P5"
+    ],
+    "evidence": [
+      "docs/capture/s20-p4-correction-eventreceiver-not-pin.md"
+    ],
+    "files_modified": [],
+    "files_created": [
+      "docs/capture/s20-p4-correction-eventreceiver-not-pin.md"
+    ],
+    "checks_performed": [
+      "busqueda de todos los escritores de ctx+0x4c en el bloque StillConverter",
+      "desensamblado completo del constructor 0x916140-0x916260"
+    ],
+    "discarded_hypotheses": [
+      "que ctx+0x4c fuera un ObjPin y el slot+0xc fuera ObjPin::Send (hipotesis de ayer, ahora corregida)"
+    ],
+    "blockers": [
+      "identidad exacta del metodo EventReceiver en slot+0xc; que hace el ObjThread propio tras ser notificado"
+    ],
+    "next_task_selected": "P5: cadena MPR/DCF/reproduccion - decompilar funciones ya nombradas (WriteStill, WriteAndFlush, pre-registro DCF, APIs de reproduccion) para encontrar las aristas que las conectan"
+  },
+  {
+    "task_id": "S20-P5-WRITEANDFLUSH",
+    "status": "PARTIAL_PROGRESS",
+    "findings": [
+      "Confirmado (sin cambios): FeaIf::WriteStill (0x44f784) solo encola via vtable+0x20, no espera finalizacion",
+      "Localizado un tercer llamador real de MprFileIf::WriteAndFlush (0x13df32) en una funcion no exportada (0x13df20) con marcas de estado de diagnostico 0x11/0x1010/0",
+      "Esa funcion no tiene ningun llamador directo (bl) en todo libmpr.so - se alcanza solo indirectamente, mismo patron de despacho asincrono que EncodeStill"
+    ],
+    "evidence": [
+      "docs/capture/s20-p5-writeandflush-caller.md"
+    ],
+    "files_modified": [],
+    "files_created": [
+      "docs/capture/s20-p5-writeandflush-caller.md"
+    ],
+    "checks_performed": [
+      "desensamblado de FeaIf::WriteStill completo",
+      "localizacion de 3 sitios de llamada a WriteAndFlush",
+      "desensamblado del bloque 0x13df20-0x13df50"
+    ],
+    "discarded_hypotheses": [],
+    "blockers": [
+      "identidad de la funcion 0x13df20 sin simbolo exportado cercano fiable",
+      "contenido de 0x13de98 (post-procesado) y 0x13dbb0 (limpieza compartida) sin decompilar",
+      "mecanismo de registro de este callback sin localizar"
+    ],
+    "next_task_selected": "decompilar 0x13de98 y 0x13dbb0 para seguir hacia DCF/reproduccion"
+  },
+  {
+    "task_id": "S20-LOWPRIO-RTTI-P3-OBJ53",
+    "status": "PARTIAL_MAJOR_PROGRESS",
+    "findings": [
+      "Herramientas stdlib (sin instalar): rtti_vtables.py, func_owner.py, pin_signatures.py; autocomprobacion superada",
+      "Camera.out0 (fila 0x0a) = PIN_YC#0; 9 clases CamUser::PinParser* = 9 pines de ObjCamera",
+      "0x98f974 no pertenece a ObjCamera (funcion 0x98f770)",
+      "Objeto 53 = ObjScalar (INFERENCIA fuerte, firma de pines unica)",
+      "S14 'Scalar(30)' probablemente erroneo: obj30 coincide con ObjDubbing; conclusion E2 de S14 en revision"
+    ],
+    "evidence": [
+      "docs/capture/s20-rtti-tooling-p3-objid53.md",
+      "analysis/session20/evidence/libobj-rtti-vtables.json",
+      "analysis/session20/evidence/libobj-send-owners.json",
+      "analysis/session20/evidence/libObj-pin-signatures.json",
+      "analysis/session20/evidence/libobj-objactivebase-calls.json"
+    ],
+    "files_created": [
+      "scripts/rtti_vtables.py",
+      "scripts/func_owner.py",
+      "scripts/pin_signatures.py",
+      "docs/capture/s20-rtti-tooling-p3-objid53.md"
+    ],
+    "files_modified": [
+      "CONTEXT.md"
+    ],
+    "discarded_hypotheses": [
+      "0x98f974 en ObjCamera",
+      "entero de ObjActiveBase = ObjId",
+      "array estatico ObjId->categoria"
+    ],
+    "blockers": [
+      "modelo que crea topologias 0xae-0xb4",
+      "objetos con pines data-driven invisibles al extractor"
+    ],
+    "next_task_selected": "creador de topologias 0xae-0xb4; SequenceStillCaptureStart"
+  },
+  {
+    "task_id": "S20-CODEX-MPR-13DE98-13DBB0",
+    "status": "COMPLETE_SCOPED_ANALYSIS",
+    "findings": [
+      "VERIFICADO: 0x13de98 prepara diagnosticos de error; con r1=0xc8 sus auxiliares retornan sin alcanzar sumideros en este ELF",
+      "VERIFICADO: 0x13dbb0 salta via stub Thumb/ARM PLT y GOT 0x9c3934 a CS_AviMprIf::MPR2AVIErr (0x143fb0), conversor de 63 pares con default 0x2116",
+      "DESCARTADO: 0x13dbb0 como limpieza, cierre de archivo o commit DCF",
+      "INFERENCIA: 0x13df20 es un adaptador AVI/MPR, sin atribucion exacta de clase/metodo",
+      "NO_VERIFICADO: registro DCF, escritura SD durable y reproduccion de este still; la escritura permanece en la llamada previa WriteAndFlush"
+    ],
+    "evidence": [
+      "docs/capture/s20-codex-mpr-13de98-13dbb0.md",
+      "analysis/session20/evidence/codex-mpr-13de98-13dbb0-check.py",
+      "analysis/session20/evidence/codex-mpr-13de98-13dbb0-disassembly.txt"
+    ],
+    "checks_performed": [
+      "Lectura previa de los tres documentos obligatorios e inventario analysis/scripts; reutilizacion de Elf y evidencia S19-08",
+      "LLVM Thumb acotado en ambas funciones, wrapper, auxiliares y conversor; PLT ARM y relocacion verificadas con stdlib",
+      "PASS: SHA256 ELF antes/despues 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30; assertions de bytes y destino PLT",
+      "JSON valido, una entrada agregada y registros anteriores conservados"
+    ],
+    "files_created": [
+      "docs/capture/s20-codex-mpr-13de98-13dbb0.md",
+      "analysis/session20/evidence/codex-mpr-13de98-13dbb0-check.py",
+      "analysis/session20/evidence/codex-mpr-13de98-13dbb0-disassembly.txt"
+    ],
+    "files_modified": [
+      "analysis/session20/checkpoints/progress.json"
+    ],
+    "blockers": [
+      "Destino virtual del gestor de medio +0x290 y arista de este still hacia DCF no resueltos",
+      "Registro y atribucion exacta de 0x13df20 pendientes"
+    ],
+    "next_task_selected": "Resolver destino de vtable+0x290 desde MprFileIfCore::WriteAndFlush 0x726138, reutilizando S19-08; rastrear referencias de 0x13df21",
+    "safety": "Solo estatico/local; sin camara, flasheo, instalaciones, subagentes, modificaciones de binarios originales, commit ni push. SilentShutter no se declara funcional."
+  },
+  {
+    "task_id": "S20-CLAUDE-TOPOLOGY-AE-B4-SEQUENCE",
+    "status": "COMPLETED",
+    "findings": [
+      "VERIFICADO: createTopology 0x420630 recibe lista u32 terminada en 0",
+      "VERIFICADO: 0xae/0xaf los crea ModelCamera variante model/SCALAR_CAMERA (sustituye 0x0a); 0xb0/0xb1 ModelStillRec variante model/SCALAR_STILL_REC (sustituye 0x08); 0xae-0xb3 ModelScalar accion 7; 0xb2/0xb3 ModelScalarPb; 0xcb/0xcc y 0xcd ModelMovieRec variante model/SCALAR_MOVIE_REC (sustituye 0x0b)",
+      "VERIFICADO: 0xb4 no esta en ninguna lista estatica; unico creador dinamico ModelScalarPb 0x65a8a4 (lista heap [fila REC_CNT_INFO dinamica, 0xb4], id 0x109)",
+      "Uso en captura de still: si, solo STILL_DATA via ObjScalar (SCALAR_STILL_REC); YC Scalar->StillRecorder (0xb4) solo en ModelScalarPb",
+      "GetPin(6) de S14 = GlobalAccessor::GetPinInfo(6) = PIN_YC out#2 de ObjScalar = origen de fila 0xb4 (INFERENCIA fuerte; orden de registro VERIFICADO)",
+      "SequenceStillCaptureStart: 12 Send sobre pines ObjCamera 4 STILL_DATA (0x2008/0x1000-0x1004), 6 CAMERA_STATUS (0x200a/0x1003,0x100b,0x100c,0x101b) y 0 YC#0 (0x2001/0x1002); semantica NO_VERIFICADA"
+    ],
+    "evidence": [
+      "docs/capture/s20-claude-topology-ae-b4-sequence.md",
+      "analysis/session20/evidence/claude-topology-ae-b4-sequence.json"
+    ],
+    "files_created": [
+      "docs/capture/s20-claude-topology-ae-b4-sequence.md",
+      "analysis/session20/evidence/claude-topology-ae-b4-sequence.json"
+    ],
+    "files_modified": [
+      "CONTEXT.md",
+      "analysis/session20/checkpoints/progress.json"
+    ],
+    "discarded_hypotheses": [
+      "S14: no hay topologia Scalar->StillRecorder en YC (existe 0xb4, creada por ModelScalarPb)"
+    ],
+    "blockers": [
+      "semantica de la fila dinamica REC_CNT_INFO en ModelScalarPb",
+      "semantica de ids STILL_DATA 0x1000-0x1004"
+    ],
+    "verdict": "A > E > P ~ E2 sin cambios; E2 gana coherencia estatica, no uso en disparo",
+    "next_task_selected": "decompilar ModelScalarPb 0x65b0bc/0x65a8a4; relevo STILL_DATA en ObjScalar bajo SCALAR_STILL_REC",
+    "safety": "Solo estatico/local; sin camara, flasheo, instalaciones, subagentes ni Codex; binarios originales intactos. SilentShutter no se declara funcional."
+  },
+  {
+    "task_id": "S20-CODEX-MPR-DCF-CHAIN",
+    "status": "PARTIAL_STATIC_CHAIN",
+    "findings": [
+      "VERIFICADO: APIs publicas DCF 0x71eafc/0x71eb70 sin llamadores directos, relocaciones nombradas ni entradas RTTI en libmpr; libObj importa ambas y las llama en 0x900180/0x93be94",
+      "VERIFICADO: AviMMgrIf slots +0x38/+0x34 delegan pre-registro a AviSeqRec 0x22e1a0 y lookup a AviSeqPlay 0x22338c",
+      "VERIFICADO: frontera Obj 0x908d9c/0x90a172 -> 0x8fe0a0 -> MprIf::WriteStill -> FeaIf::WriteStill; espera EventReceiver y copia resultado 0x48",
+      "VERIFICADO: StillWriterFilter -> dcf_If::WriteDcfFile; variante dcf_AVISequence llama escritor 0x38c220, RegisterJpegContent 0x22c190 y RegisterDcfContent 0x22d648",
+      "VERIFICADO: MprAcsr registra callback 0x900648 para 0x40000012, reenvia Struct 0x48 por loopback local",
+      "VERIFICADO: correccion del rango de notificacion S19-06 a 0x40000001..0x40000091 por aritmetica modular en 0x45030a",
+      "NO_VERIFICADO: puentes asincronos Recorder/filtro/handler FEA, seleccion efectiva de variante, rollback durable, SD y reproduccion; A > E > P ≈ E2 sin cambios"
+    ],
+    "evidence": [
+      "docs/capture/s20-codex-mpr-dcf-chain.md",
+      "analysis/session20/evidence/codex-dcf-audit.json",
+      "analysis/session20/evidence/codex-dcf-audit.py",
+      "analysis/session20/evidence/codex-dcf-probe.py",
+      "analysis/session20/evidence/codex-dcf-avi-register.json",
+      "analysis/session20/evidence/codex-dcf-callback.json"
+    ],
+    "checks_performed": [
+      "PASS audit RTTI/relocaciones completas/imports/callback/constructores/SHA256",
+      "ruff y mypy sin avisos en los dos scripts nuevos",
+      "JSON y enlaces locales validados; checkpoint releido antes del append",
+      "Sin commit: git status devuelve not a git repository"
+    ],
+    "files_created": [
+      "docs/capture/s20-codex-mpr-dcf-chain.md",
+      "analysis/session20/evidence/codex-dcf-*"
+    ],
+    "files_modified": [
+      "CONTEXT.md",
+      "README.md",
+      "analysis/session20/checkpoints/progress.json"
+    ],
+    "blockers": [
+      "Comando 9 StillRecorderIf -> Recorder 0x32d5b2 -> StillWriterFilter no unido",
+      "Seleccion dcf_AVISequence/dcf_Sequence y registro del handler 0x441694 pendientes",
+      "No se demostro rollback ni barrera durable/publicacion al catalogo"
+    ],
+    "next_task_selected": "Seguir comando 9 desde 0x34a92c/0x2d7d20 y el dispatcher Recorder 0x32d5b2 hasta StillWriterFilter; resolver seleccion en 0x3a83bc/0x3a842c y registro del handler FEA posterior",
+    "safety": "Solo estatico/local; sin camara, flasheo, instalaciones, subagentes, originales modificados ni push. No se tocaron topologias/SequenceStillCaptureStart/docs s20-claude-*. SilentShutter no se declara funcional."
+  },
+  {
+    "task_id": "S21-CLAUDE-BUTTON-TO-SHUTTER",
+    "agent": "claude",
+    "status": "PARCIAL",
+    "summary": "Puente S2 cerrado: RelMgr 0x4379eba0 envia {2,0x3011} a cola 0x30001 (no 0x40193); CamMgr 0x437fee08 -> 0x43809148 traduce 0x3011->codigo local 0x100 -> cola 0x302d9 -> 0x43807008 -> estado 0x43807f4c -> CaptureStart. Receptor real de 0x40193 = 0x4381d16c, tabla 35 filas en 0x44000174 (corrige -0x1F0). Orden de cortina: filas +0xa0..+0x118 de 0x437eabfc -> Stage_CaComm 0x438c2538 -> CAIF ev1/ev3 -> tarea CA 0x1502c7 -> Darwin -> P4D/P4E (puerta tipo HW 0x20c74). Hardware: XS_1/XS_2 -> IC6000 GPIO_S_11/13; XS_1 y MSS_S2_REQ_CA a Darwin INT10/INT05.",
+    "evidence": [
+      "analysis/session21/evidence/claude-button-to-shutter.py",
+      "analysis/session21/evidence/claude-button-to-shutter.json"
+    ],
+    "checks_performed": [
+      "script PASS (asserts sobre binarios con SHA256)",
+      "ruff y mypy sin avisos",
+      "sin camara, sin binarios modificados"
+    ],
+    "files_created": [
+      "docs/capture/s21-claude-button-to-shutter-order.md",
+      "analysis/session21/evidence/claude-button-to-shutter.py",
+      "analysis/session21/evidence/claude-button-to-shutter.json"
+    ],
+    "files_modified": [
+      "CONTEXT.md",
+      "analysis/session20/checkpoints/progress.json"
+    ],
+    "blockers": [
+      "libObj InfraInput->0x4042 sin trazar",
+      "tag 0x12/0x13 -> trama CAIF en 0x436bc140 sin decodificar",
+      "trama -> primera escritura P4D/P4E en Darwin sin unir",
+      "funcion firmware de MSS_S2_REQ_CA/INT05 sin verificar"
+    ],
+    "next_task_selected": "Decompilar 0x436bc140 (tags 0x12/0x13 -> opcode CAIF) y seguir ese opcode en Darwin hasta 0x20c90/0x20d00; localizar EXTI ch5 (P29/INT05) en Darwin",
+    "safety": "Solo estatico; veredicto A > E > P ~ E2 sin cambios; SilentShutter no se declara funcional."
+  },
+  {
+    "id": "S21-CODEX-EXPOSURE-TO-LIBRARY",
+    "date": "2026-10-17",
+    "agent": "Codex",
+    "status": "PARCIAL",
+    "summary": [
+      "VERIFICADO: pre-registro DCF condicional desde Execute 0x90ba24 antes de RecordStill 0x90bbdc",
+      "VERIFICADO: comando 9 -> cola Recorder -> RecStill +0x956 -> estado 7 -> StillWriterFilter comando 5 -> WriteDcfFile",
+      "VERIFICADO: selector Linux +0x6ac: JPEG 0/2/3, RAW 1/2; destino 0x39746e es RegisterRawContent aunque el error mencione MPO",
+      "VERIFICADO: cierre/remove en errores de escritura y contratos filtro 4 B -> RecStill evento 0x66/0x84; puente final FEA no recuperado",
+      "NO_VERIFICADO: equivalencia clientes 0x6108/0x1009 con SetImageWrited, rollback DCF completo, SD durable y visibilidad en reproducción"
+    ],
+    "evidence": [
+      "docs/capture/s21-codex-exposure-to-library.md",
+      "analysis/session21/evidence/codex-chain-audit.json",
+      "analysis/session21/evidence/codex-validation.json",
+      "analysis/session21/evidence/codex-inventory.json"
+    ],
+    "checks_performed": [
+      "PASS: 194 comprobaciones; SHA256 originales intactos",
+      "PASS: ruff y mypy dos scripts nuevos",
+      "mypy src PASS; ruff src tests conserva 9 avisos en cuatro tests no modificados"
+    ],
+    "next_task_selected": "Resolver llamador virtual StillRecorderIf vtable 0x81bb50 slot0 -> 0x34b138 y enlazar evento Recorder 0x66/0x84 con handler FEA 0x441694 y callback 0x40000012/0x48",
+    "architecture": "A > E > P ≈ E2",
+    "safety": "Solo estático; sin cámara/flasheo/instalaciones/producción/subagentes/originales modificados. Sin git/commit/push. SilentShutter no se declara funcional."
+  },
+  {
+    "id": "S22-SENSOR-TO-YC",
+    "date": "2026-10-17",
+    "agent": "Codex",
+    "status": "PARCIAL",
+    "summary": [
+      "VERIFICADO: av-cam.bin SHA-256 b60c845c...56bb9 y base plana 0x43541000; la fila LIRO 0x78 (0x43b1bdb4) llama al selector IMX210 0x437f7ff0",
+      "VERIFICADO: Stage_Notify en 0x437efe78 lee ctx+0x4b54/+0x4b58/+0x4b5c/+0x4b64, copia StillInfo de 0x28c B y envía 0x2a8 B con selector 0x20002",
+      "VERIFICADO: EncodeStill exige ycBufferInfo DMM, decBufferInfo, canvas/región y colorimetría; no valida formato, pitch, submuestreo ni tamaño mínimo en la ventana recuperada",
+      "RECHAZADO: SFRA/JPEG, RawPlay/ARW existente o topología Camera/Scalar por sí solos como productor de una captura YC nueva",
+      "NO_VERIFICADO: callback fin de lectura/DMA, productor YC de captura, dirección/caché/propiedad/sincronización/vida útil y ruta electrónica completa sin mecánica"
+    ],
+    "evidence": [
+      "docs/capture/s22-sensor-to-yc.md",
+      "analysis/session22/evidence/s22-liro-producer-probe.json",
+      "analysis/session22/evidence/s22_sensor_yc_audit.py",
+      "analysis/encodestill-yc-contract.json"
+    ],
+    "checks_performed": [
+      "PASS: python3 -I analysis/session22/evidence/s22_sensor_yc_audit.py",
+      "PASS: Ghidra QuerySilentLiro valida el hash antes de decompilar",
+      "VALIDADO: libObj.so ELF32 ARM ET_DYN; VAs ELF y desplazamiento Ghidra +0x10000 distinguidos"
+    ],
+    "blockers": [
+      "no se identificó escritor de ctx+0x4b54..+0x4b64 desde una terminación de DMA",
+      "no se enlazó una salida IMX210 nueva con ycBufferInfo DMM de ObjCamera/ObjScalar",
+      "WriteStill 0x909a84 permanece aguas abajo y no acredita aceptación de YC crudo"
+    ],
+    "next_task_selected": "Decompilar 0x436d6118 y sus referencias/registro de callback para determinar si publica la terminación de lectura y su descriptor antes de Stage_Notify",
+    "verdict": "PARCIAL; SilentShutter permanece NO_VERIFICADO",
+    "safety": "Solo estático/local; sin cámara, flasheo, instalaciones ni modificación de binarios originales. Sin git/commit/push."
+  },
+  {
+    "id": "S23-YC-DATAFLOW-BOUNDARY",
+    "date": "2026-10-17",
+    "agent": "Codex",
+    "status": "PARCIAL",
+    "summary": [
+      "VERIFICADO: CamUser::PinParserYcOut0 0xa279c8 toma la rama 0x1000, valida ParamStd<unsigned int> 0x1000..0x1003 y conserva los cuatro valores en this+0x34/+0x38/+0x3c/+0x40",
+      "VERIFICADO: 0xa14f88 implementa el request/reply Dataflow de 20 B: SetDataflowMsg, srcId=replyId=0x2015d, SendASync(destination=this+0x10), ReceiveASync(0x2015d, timeout UINT32_MAX)",
+      "VERIFICADO: el request inicial de YC0 es {u16 0x1000, u16 0, u16 0x14, u16 2, u32 this+0x10, u32 this+0x14, u32 this+0x18}; la familia la usan YcOut0/1/2/3/5",
+      "RECHAZADO: confundir el relay ObjMsg 0x2001/0x1001 de YC0 con PlayData 0x2001/0x1003 o declararlo productor de raster",
+      "NO_VERIFICADO: destino Dataflow, handler opcode 0x1000, semántica de campos, DMM/YC, caché/propiedad/sincronización/vida útil y ruta electrónica sin mecánica"
+    ],
+    "evidence": [
+      "docs/capture/s23-yc-pin-dataflow-boundary.md",
+      "analysis/session22/evidence/s23_yc_dataflow_audit.py",
+      "analysis/session20/evidence/libobj-rtti-vtables.json",
+      "analysis/session20/evidence/libobj-send-owners.json"
+    ],
+    "checks_performed": [
+      "PASS: python3 -I analysis/session22/evidence/s23_yc_dataflow_audit.py",
+      "PASS: auditor usa llvm-objdump contra rangos ELF exactos y SHA-256 de libObj.so",
+      "VALIDADO: libObj.so es ELF32 ARM ET_DYN; direcciones citadas son VAs ELF, no coordenadas Ghidra +0x10000"
+    ],
+    "blockers": [
+      "el constructor/registro que asigna PinParserYcOut0+0x10 no está recuperado",
+      "el receptor Dataflow de opcode 0x1000 no está enlazado a una adquisición sensor/DMA",
+      "no existe evidencia que convierta la respuesta Dataflow en ycBufferInfo DMM apto para EncodeStill"
+    ],
+    "next_task_selected": "Recuperar el constructor o registro que escribe PinParserYcOut0+0x10 y localizar el receptor Dataflow de opcode 0x1000",
+    "verdict": "PARCIAL; SilentShutter permanece NO_VERIFICADO",
+    "safety": "Solo estático/local; sin cámara, flasheo, instalaciones ni modificación de binarios originales. Sin git/commit/push."
+  },
+  {
+    "id": "S24-CAMERA-YC0-ENDPOINT",
+    "date": "2026-10-17",
+    "agent": "Codex",
+    "status": "PARCIAL",
+    "summary": [
+      "VERIFICADO: ObjCamera crea PinParserYcOut0 en 0x987eb6, asociado a PIN_YC#0 (ObjCamera+0x58), y guarda la instancia en ObjCamera+0xa0",
+      "VERIFICADO: el constructor 0xa281dc fija PinParserYcOut0+0x10=0x00050004, +0x14=0 y +0x18=2; el request Dataflow de S23 tiene destino constante",
+      "VERIFICADO: 0x15d6c0..0x15d7a2 usa DataflowInfraCh para recuperar y conectar dos pines de 0x50004",
+      "INFERENCIA FUERTE: por RTTI y vecindad de código, esa conexión pertenece al dominio OBJEFFECT::State_IntelligentActivePostProcess y concuerda con Camera YC#0→Effect.in0",
+      "NO_VERIFICADO: callback payload 0x1000, receptor final, datos YC/DMM, compatibilidad EncodeStill y lectura electrónica sin mecánica"
+    ],
+    "evidence": [
+      "docs/capture/s24-camera-yc0-effect-endpoint.md",
+      "analysis/session22/evidence/s24_yc_endpoint_audit.py",
+      "analysis/session20/evidence/libobj-rtti-vtables.json"
+    ],
+    "checks_performed": [
+      "PASS: python3 -I analysis/session22/evidence/s24_yc_endpoint_audit.py",
+      "VALIDADO: libObj.so ELF32 ARM ET_DYN; direcciones son VAs ELF",
+      "PASS: auditor desensambla constructor ObjCamera, ctor YC0 y configuración Dataflow exactos"
+    ],
+    "blockers": [
+      "infraGetPin no revela estáticamente el callback final en los rangos examinados",
+      "no se asoció 0x50004 a una terminación sensor/DMA ni a ycBufferInfo DMM",
+      "topología ObjEffect no prueba raster de captura ni contrato Recorder"
+    ],
+    "next_task_selected": "Resolver los dos pines recuperados por infraGetPin para 0x50004 y recuperar el callback que consume su mensaje Dataflow 0x1000",
+    "verdict": "PARCIAL; SilentShutter permanece NO_VERIFICADO",
+    "safety": "Solo estático/local; sin cámara, flasheo, instalaciones ni modificación de binarios originales. Sin git/commit/push."
+  },
+  {
+    "id": "S25-DATAFLOW-REGISTRY-LIMIT",
+    "date": "2026-10-17",
+    "agent": "Codex",
+    "status": "PARCIAL",
+    "summary": [
+      "VERIFICADO: DataflowInfraCh::infraGetPin en libBizFw.so ELF 0x35a74 crea _MSG_PIN_GET con opcode 0x1000 y llama sndRcvAsyncDataflowMsg",
+      "VERIFICADO: tras respuesta exitosa copia los campos del pin al output, incluido reply+0x20 a out+0x1c; 0x50004 no apunta a una tabla callback local en Camera/ObjEffect recuperada",
+      "INFERENCIA: el registro endpoint→pin/callback se materializa durante ciclo de vida Dataflow, aunque su inicializador sigue sin localizarse",
+      "NO_VERIFICADO: alta de 0x50004, receptor final, productor sensor/DMA, descriptor DMM/YC y ruta electrónica sin mecánica"
+    ],
+    "evidence": [
+      "docs/capture/s25-dataflow-pin-registry-limit.md",
+      "analysis/session22/evidence/s25_dataflow_registry_audit.py",
+      "docs/capture/s24-camera-yc0-effect-endpoint.md"
+    ],
+    "checks_performed": [
+      "PASS: python3 -I analysis/session22/evidence/s25_dataflow_registry_audit.py",
+      "VALIDADO: libBizFw.so se analiza como ELF ARM y la función tiene símbolo dinámico exacto"
+    ],
+    "blockers": [
+      "el callback devuelto por infraGetPin depende de la respuesta del registro Dataflow",
+      "no se halló el inicializador que registra 0x50004",
+      "sin callback no se puede acreditar YC/DMM ni compatibilidad EncodeStill"
+    ],
+    "next_task_selected": "Buscar el alta de endpoint 0x50004 o INFRA_GET_PIN_COMP en inicializadores de libObj.so, libBizFw.so y dataflowInfraFramework.so",
+    "verdict": "PARCIAL; SilentShutter permanece NO_VERIFICADO",
+    "safety": "Solo estático/local; sin cámara, flasheo, instalaciones ni modificación de binarios originales. Sin git/commit/push."
+  },
+  {
+    "id": "S26-FIVE-STATIC-MICROPROCESSES",
+    "date": "2026-10-17",
+    "agent": "Codex",
+    "status": "PARTIAL",
+    "summary": [
+      "CERRADO ESTÁTICAMENTE, sólo en sus fronteras: ObjCamera instancia y guarda PinParserYcOut0; la rama 0x1000 admite cuatro parámetros y conserva cuatro u32; el helper serializa request20; el puente realiza SendASync/ReceiveASync; infraGetPin resuelve un pin de la respuesta; y el parser emite su ObjMsg por ObjPin::Send",
+      "VERIFICADO: estos seis microprocesos son reproducibles con intervalos ELF concretos y no requieren ejecución de firmware",
+      "RECHAZADO: que esos cierres prueben productor sensor/DMA, raster YC, DMM, PlayData o compatibilidad con WriteStill",
+      "NO_VERIFICADO: alta y callback del endpoint 0x50004, contrato YC, lectura electrónica sin mecánica y SilentShutter"
+    ],
+    "evidence": [
+      "docs/capture/s26-five-static-microprocesses.md",
+      "analysis/session22/evidence/s26_closed_microprocesses_audit.py",
+      "docs/capture/s23-yc-pin-dataflow-boundary.md",
+      "docs/capture/s25-dataflow-pin-registry-limit.md"
+    ],
+    "checks_performed": [
+      "PASS: python3 -I analysis/session22/evidence/s26_closed_microprocesses_audit.py",
+      "VALIDADO: libObj.so y libBizFw.so ELF32 ARM ET_DYN; direcciones como VAs ELF Thumb",
+      "PASS: auditor verifica seis intervalos sin modificar los binarios"
+    ],
+    "blockers": [
+      "no se localizó el inicializador que registra endpoint 0x50004",
+      "no se recuperó el callback que consume request Dataflow 0x1000",
+      "sin ese callback no se acredita descriptor YC/DMM ni compatibilidad WriteStill"
+    ],
+    "next_task_selected": "Localizar el alta de endpoint 0x50004 y recuperar el callback que procesa su request 0x1000",
+    "verdict": "PARCIAL; seis cierres microprocesales, SilentShutter permanece NO_VERIFICADO",
+    "safety": "Solo estático/local; sin cámara, flasheo, instalaciones ni modificación de binarios originales. Sin git/commit/push."
+  },
+  {
+    "id": "S27-EFFECT-POSTPROCESS-REWIRE",
+    "date": "2026-10-17",
+    "agent": "Codex",
+    "status": "PARTIAL",
+    "summary": [
+      "VERIFICADO: State_IntelligentActivePostProcess slot virtual 4 ejecuta dos ciclos disconnect → infraGetPin → infraConnectPin",
+      "VERIFICADO: cada ciclo conecta el endpoint 0x005a0048 con 0x50004; también desmonta 0x01670464",
+      "NO_VERIFICADO: registro/callback, semántica de endpoints, productor YC y ruta StillRecorder"
+    ],
+    "evidence": [
+      "docs/capture/s27-effect-postprocess-rewire.md",
+      "analysis/session20/evidence/libobj-rtti-vtables.json"
+    ],
+    "checks_performed": [
+      "llvm-objdump Thumb de libObj 0x15d6c0..0x15d7c4",
+      "func_owner.py confirma State_IntelligentActivePostProcess vtable 0xfee988 slot 4",
+      "lectura de libBizFw infraGetPin/infraConnectPin"
+    ],
+    "blockers": [
+      "dispatcher de _MSG_PIN_GET opcode 0x1000 no localizado",
+      "alta de endpoint y callback no recuperados"
+    ],
+    "next_task_selected": "Seguir sndAsyncDataflowMsg hacia el servicio que atiende _MSG_PIN_GET/0x1000",
+    "verdict": "PARCIAL; SilentShutter permanece NO_VERIFICADO",
+    "safety": "Solo análisis estático/local; sin cámara ni cambios de binarios."
+  }
+]

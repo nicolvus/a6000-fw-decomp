@@ -1,0 +1,1347 @@
+ratio=0.348
+-- replace A6000[0x438d0202+1] A7S[0x438bdf02+205]
+   6 438d0202: ldr.w r3, [r5, #0xd8]
+   7 438bdf02: add r2, sp, #0x104
+   7 438bdf04: ldrh.w r1, [sp, #0x12c]
+   7 438bdf08: bl 0x439c2a00 @ imm = #0x104af4
+   7 438bdf0c: mov r2, r0
+   7 438bdf0e: cbz r0, 0x438bdf1c @ imm = #0xa
+   7 438bdf10: ldr r0, [pc, #0x74]         @ 0x438bdf88
+   7 438bdf12: ldr r1, [pc, #0x78]         @ 0x438bdf8c
+   7 438bdf14: add r0, pc
+   7 438bdf16: add r1, pc
+   7 438bdf18: bl 0x438f7114 @ imm = #0x391f8
+   7 438bdf1c: mov r0, r4
+   7 438bdf1e: movs r1, #0x17
+-- replace A6000[0x438d022c+1] A7S[0x438be144+1]
+   6 438d022c: strb.w r6, [sp, #0xc]
+   7 438be144: strb.w r6, [sp, #0x4]
+-- replace A6000[0x438d0234+2] A7S[0x438be14c+2]
+   6 438d0234: add r1, sp, #0xc
+   6 438d0236: ldr.w r3, [r3, #0xd8]
+   7 438be14c: add r1, sp, #0x4
+   7 438be14e: ldr.w r3, [r3, #0xe8]
+-- replace A6000[0x438d023c+1] A7S[0x438be154+1]
+   6 438d023c: str r3, [sp, #0x10]
+   7 438be154: str r3, [sp, #0x8]
+-- replace A6000[0x438d0242+11] A7S[0x438be15a+8]
+   6 438d0242: add sp, #0x1c
+   6 438d0244: pop {r4, r5, r6, r7, pc}
+   6 438d0246: nop 
+   6 438d0248: mcr p0, #0x3, r0, c12, c4, #0x3
+   6 438d024c: cbz r4, 0x438d02b6 @ imm = #0x66
+   6 438d024e: movs r4, r7
+   6 438d0250: adr r4, #8
+   6 438d0252: movs r7, r7
+   6 438d0254: cbz r1, 0x438d02bc @ imm = #0x64
+   6 438d0256: movs r4, r7
+   6 438d0258: lsls r4, r5, #0xb
+   7 438be15a: pop {r0, r1, r2, r3, r4, r5, r6, pc}
+   7 438be15c: str r6, [r3, #0x58]
+   7 438be15e: lsls r6, r6, #0x1
+   7 438be160: subs r7, #0x95
+   7 438be162: movs r6, r7
+   7 438be164: ldr r6, [r4, #0x74]
+   7 438be166: lsls r0, r0, #0x1
+   7 438be168: lsls r0, r7, #0xd
+-- replace A6000[0x438d025c+2] A7S[0x438be16c+2]
+   6 438d025c: ldrb.w r3, [r0, #0x74f]
+   6 438d0260: push {r0, r1, r4, r5, r6, lr}
+   7 438be16c: ldrb.w r3, [r0, #0x757]
+   7 438be170: push {r4, lr}
+-- replace A6000[0x438d026e+1] A7S[0x438be17e+1]
+   6 438d026e: adds r0, #0xd8
+   7 438be17e: adds r0, #0xe8
+-- delete A6000[0x438d0276+11] A7S[0x438be186+0]
+   6 438d0276: ldr r3, [pc, #0xa0]         @ 0x438d0318
+   6 438d0278: movs r0, #0x5
+   6 438d027a: ldr r5, [pc, #0xa0]         @ 0x438d031c
+   6 438d027c: movs r1, #0x0
+   6 438d027e: movs r2, #0x1
+   6 438d0280: add r3, pc
+   6 438d0282: add r5, pc
+   6 438d0284: movs r6, #0x48
+   6 438d0286: str r5, [sp]
+   6 438d0288: str r6, [sp, #0x4]
+   6 438d028a: bl 0x438cffb8 @ imm = #-0x2d6
+-- replace A6000[0x438d0290+2] A7S[0x438be188+2]
+   6 438d0290: mov r1, r5
+   6 438d0292: mov r2, r6
+   7 438be188: movs r2, #0x48
+   7 438be18a: ldr r1, [pc, #0x58]         @ 0x438be1e4
+-- insert A6000[0x438d0296+0] A7S[0x438be18e+1]
+   7 438be18e: add r1, pc
+-- replace A6000[0x438d02a0+1] A7S[0x438be19a+1]
+   6 438d02a0: ldr.w r1, [r3, #0xd8]
+   7 438be19a: ldr.w r1, [r3, #0xe8]
+-- delete A6000[0x438d02aa+11] A7S[0x438be1a4+0]
+   6 438d02aa: ldr r3, [pc, #0x78]         @ 0x438d0324
+   6 438d02ac: movs r1, #0x1
+   6 438d02ae: ldr r5, [pc, #0x78]         @ 0x438d0328
+   6 438d02b0: mov r2, r1
+   6 438d02b2: movs r0, #0x5
+   6 438d02b4: add r3, pc
+   6 438d02b6: add r5, pc
+   6 438d02b8: movs r6, #0x4e
+   6 438d02ba: str r5, [sp]
+   6 438d02bc: str r6, [sp, #0x4]
+   6 438d02be: bl 0x438cffb8 @ imm = #-0x30a
+-- replace A6000[0x438d02c4+2] A7S[0x438be1a6+2]
+   6 438d02c4: mov r1, r5
+   6 438d02c6: mov r2, r6
+   7 438be1a6: movs r2, #0x4e
+   7 438be1a8: ldr r1, [pc, #0x40]         @ 0x438be1ec
+-- insert A6000[0x438d02ca+0] A7S[0x438be1ac+1]
+   7 438be1ac: add r1, pc
+-- replace A6000[0x438d02de+1] A7S[0x438be1c2+1]
+   6 438d02de: ldr.w r1, [r4, #0xd8]
+   7 438be1c2: ldr.w r1, [r4, #0xe8]
+-- delete A6000[0x438d02e8+11] A7S[0x438be1cc+0]
+   6 438d02e8: ldr r3, [pc, #0x44]         @ 0x438d0330
+   6 438d02ea: movs r1, #0x1
+   6 438d02ec: ldr r4, [pc, #0x44]         @ 0x438d0334
+   6 438d02ee: movs r0, #0x5
+   6 438d02f0: mov r2, r1
+   6 438d02f2: add r3, pc
+   6 438d02f4: add r4, pc
+   6 438d02f6: movs r5, #0x56
+   6 438d02f8: str r4, [sp]
+   6 438d02fa: str r5, [sp, #0x4]
+   6 438d02fc: bl 0x438cffb8 @ imm = #-0x348
+-- replace A6000[0x438d0302+2] A7S[0x438be1ce+2]
+   6 438d0302: mov r1, r4
+   6 438d0304: mov r2, r5
+   7 438be1ce: movs r2, #0x56
+   7 438be1d0: ldr r1, [pc, #0x20]         @ 0x438be1f4
+-- replace A6000[0x438d0308+2] A7S[0x438be1d4+2]
+   6 438d0308: add sp, #0x8
+   6 438d030a: pop.w {r4, r5, r6, lr}
+   7 438be1d4: add r1, pc
+   7 438be1d6: pop.w {r4, lr}
+-- replace A6000[0x438d0312+23] A7S[0x438be1de+14]
+   6 438d0312: add sp, #0x8
+   6 438d0314: pop {r4, r5, r6, pc}
+   6 438d0316: nop 
+   6 438d0318: cbz r0, 0x438d035a @ imm = #0x3e
+   6 438d031a: movs r4, r7
+   6 438d031c: adr r2, #376
+   6 438d031e: movs r7, r7
+   6 438d0320: cbz r7, 0x438d035e @ imm = #0x3a
+   6 438d0322: movs r4, r7
+   6 438d0324: adr r2, #268
+   6 438d0326: movs r7, r7
+   6 438d0328: adr r2, #168
+   7 438be1de: pop {r4, pc}
+   7 438be1e0: subs r6, #0xd
+   7 438be1e2: movs r6, r7
+   7 438be1e4: ldr r6, [r3, #0x5c]
+   7 438be1e6: lsls r0, r0, #0x1
+   7 438be1e8: ldr r1, [r3, #0x5c]
+   7 438be1ea: lsls r0, r0, #0x1
+   7 438be1ec: ldr r0, [r0, #0x5c]
+   7 438be1ee: lsls r0, r0, #0x1
+   7 438be1f0: ldr r0, [r3, #0x5c]
+   7 438be1f2: lsls r0, r0, #0x1
+   7 438be1f4: ldr r0, [r3, #0x58]
+-- replace A6000[0x438d0344+3] A7S[0x438be1fc+3]
+   6 438d0344: mov r6, r1
+   6 438d0346: cmp r3, #0x0
+   6 438d0348: beq 0x438d03fa @ imm = #0xae
+   7 438be1fc: ldrb.w r3, [r0, #0x757]
+   7 438be200: mov r5, r1
+   7 438be202: cbz r3, 0x438be272 @ imm = #0x6c
+-- replace A6000[0x438d0354+1] A7S[0x438be20e+1]
+   6 438d0354: ldr.w r1, [r3, #0xd8]
+   7 438be20e: ldr.w r1, [r3, #0xe8]
+-- delete A6000[0x438d035e+11] A7S[0x438be218+0]
+   6 438d035e: ldr r3, [pc, #0x9c]         @ 0x438d03fc
+   6 438d0360: movs r1, #0x1
+   6 438d0362: ldr r5, [pc, #0x9c]         @ 0x438d0400
+   6 438d0364: mov r2, r1
+   6 438d0366: movs r0, #0x5
+   6 438d0368: add r3, pc
+   6 438d036a: add r5, pc
+   6 438d036c: movs r7, #0x6e
+   6 438d036e: str r5, [sp]
+   6 438d0370: str r7, [sp, #0x4]
+   6 438d0372: bl 0x438cffb8 @ imm = #-0x3be
+-- replace A6000[0x438d0378+2] A7S[0x438be21a+2]
+   6 438d0378: mov r1, r5
+   6 438d037a: mov r2, r7
+   7 438be21a: movs r2, #0x6e
+   7 438be21c: ldr r1, [pc, #0x58]         @ 0x438be278
+-- insert A6000[0x438d037e+0] A7S[0x438be220+1]
+   7 438be220: add r1, pc
+-- replace A6000[0x438d0388+1] A7S[0x438be22c+1]
+   6 438d0388: ldr.w r1, [r3, #0xd8]
+   7 438be22c: ldr.w r1, [r3, #0xe8]
+-- delete A6000[0x438d0392+11] A7S[0x438be236+0]
+   6 438d0392: ldr r3, [pc, #0x74]         @ 0x438d0408
+   6 438d0394: movs r1, #0x1
+   6 438d0396: ldr r5, [pc, #0x74]         @ 0x438d040c
+   6 438d0398: mov r2, r1
+   6 438d039a: movs r0, #0x5
+   6 438d039c: add r3, pc
+   6 438d039e: add r5, pc
+   6 438d03a0: movs r7, #0x73
+   6 438d03a2: str r5, [sp]
+   6 438d03a4: str r7, [sp, #0x4]
+   6 438d03a6: bl 0x438cffb8 @ imm = #-0x3f2
+-- replace A6000[0x438d03ac+2] A7S[0x438be238+2]
+   6 438d03ac: mov r1, r5
+   6 438d03ae: mov r2, r7
+   7 438be238: movs r2, #0x73
+   7 438be23a: ldr r1, [pc, #0x44]         @ 0x438be280
+-- insert A6000[0x438d03b2+0] A7S[0x438be23e+1]
+   7 438be23e: add r1, pc
+-- replace A6000[0x438d03bc+1] A7S[0x438be24a+1]
+   6 438d03bc: cbz r6, 0x438d03fa @ imm = #0x3a
+   7 438be24a: cbz r5, 0x438be272 @ imm = #0x24
+-- replace A6000[0x438d03c2+1] A7S[0x438be250+1]
+   6 438d03c2: ldr.w r0, [r3, #0xd8]
+   7 438be250: ldr.w r0, [r3, #0xe8]
+-- delete A6000[0x438d03cc+11] A7S[0x438be25a+0]
+   6 438d03cc: ldr r3, [pc, #0x44]         @ 0x438d0414
+   6 438d03ce: movs r0, #0x5
+   6 438d03d0: ldr r5, [pc, #0x44]         @ 0x438d0418
+   6 438d03d2: movs r1, #0x0
+   6 438d03d4: movs r2, #0x1
+   6 438d03d6: add r3, pc
+   6 438d03d8: add r5, pc
+   6 438d03da: movs r6, #0x7d
+   6 438d03dc: str r5, [sp]
+   6 438d03de: str r6, [sp, #0x4]
+   6 438d03e0: bl 0x438cffb8 @ imm = #-0x42c
+-- replace A6000[0x438d03e6+2] A7S[0x438be25c+2]
+   6 438d03e6: mov r1, r5
+   6 438d03e8: mov r2, r6
+   7 438be25c: movs r2, #0x7d
+   7 438be25e: ldr r1, [pc, #0x28]         @ 0x438be288
+-- insert A6000[0x438d03ec+0] A7S[0x438be262+1]
+   7 438be262: add r1, pc
+-- replace A6000[0x438d03f6+22] A7S[0x438be26e+16]
+   6 438d03f6: str.w r3, [r4, #0xd8]
+   6 438d03fa: pop {r1, r2, r3, r4, r5, r6, r7, pc}
+   6 438d03fc: adr r2, #0
+   6 438d03fe: movs r7, r7
+   6 438d0400: adr r1, #472
+   6 438d0402: movs r7, r7
+   6 438d0404: adr r1, #1004
+   6 438d0406: movs r7, r7
+   6 438d0408: adr r2, #24
+   6 438d040a: movs r7, r7
+   6 438d040c: adr r1, #264
+   6 438d040e: movs r7, r7
+   7 438be26e: str.w r3, [r4, #0xe8]
+   7 438be272: pop {r3, r4, r5, pc}
+   7 438be274: ldr r0, [r7, #0x58]
+   7 438be276: lsls r0, r0, #0x1
+   7 438be278: ldr r4, [r1, #0x54]
+   7 438be27a: lsls r0, r0, #0x1
+   7 438be27c: ldr r5, [r0, #0x5c]
+   7 438be27e: lsls r0, r0, #0x1
+   7 438be280: ldr r6, [r5, #0x50]
+   7 438be282: lsls r0, r0, #0x1
+   7 438be284: subs r5, #0x39
+   7 438be286: movs r6, r7
+-- replace A6000[0x438d0436+1] A7S[0x438be2a2+1]
+   6 438d0436: ldr.w r1, [r3, #0xd8]
+   7 438be2a2: ldr.w r1, [r3, #0xe8]
+-- delete A6000[0x438d0440+11] A7S[0x438be2ac+0]
+   6 438d0440: ldr r3, [pc, #0xa4]         @ 0x438d04e8
+   6 438d0442: movs r1, #0x1
+   6 438d0444: ldr r5, [pc, #0xa4]         @ 0x438d04ec
+   6 438d0446: mov r2, r1
+   6 438d0448: movs r0, #0x5
+   6 438d044a: add r3, pc
+   6 438d044c: add r5, pc
+   6 438d044e: movs r6, #0x9b
+   6 438d0450: str r5, [sp]
+   6 438d0452: str r6, [sp, #0x4]
+   6 438d0454: bl 0x438cffb8 @ imm = #-0x4a0
+-- replace A6000[0x438d045a+2] A7S[0x438be2ae+2]
+   6 438d045a: mov r1, r5
+   6 438d045c: mov r2, r6
+   7 438be2ae: movs r2, #0x9b
+   7 438be2b0: ldr r1, [pc, #0x60]         @ 0x438be314
+-- insert A6000[0x438d0460+0] A7S[0x438be2b4+1]
+   7 438be2b4: add r1, pc
+-- delete A6000[0x438d046c+1] A7S[0x438be2c2+0]
+   6 438d046c: mov r7, r0
+-- replace A6000[0x438d0474+2] A7S[0x438be2c8+2]
+   6 438d0474: movs r0, #0x3
+   6 438d0476: ldr.w r1, [r3, #0xd8]
+   7 438be2c8: adds r0, #0x2
+   7 438be2ca: ldr.w r1, [r3, #0xe8]
+-- delete A6000[0x438d0480+11] A7S[0x438be2d4+0]
+   6 438d0480: ldr r3, [pc, #0x70]         @ 0x438d04f4
+   6 438d0482: movs r0, #0x5
+   6 438d0484: ldr r5, [pc, #0x70]         @ 0x438d04f8
+   6 438d0486: mov r1, r7
+   6 438d0488: mov r2, r7
+   6 438d048a: add r3, pc
+   6 438d048c: add r5, pc
+   6 438d048e: movs r6, #0xa4
+   6 438d0490: str r5, [sp]
+   6 438d0492: str r6, [sp, #0x4]
+   6 438d0494: bl 0x438cffb8 @ imm = #-0x4e0
+-- replace A6000[0x438d049a+2] A7S[0x438be2d6+2]
+   6 438d049a: mov r1, r5
+   6 438d049c: mov r2, r6
+   7 438be2d6: movs r2, #0xa4
+   7 438be2d8: ldr r1, [pc, #0x40]         @ 0x438be31c
+-- insert A6000[0x438d04a0+0] A7S[0x438be2dc+1]
+   7 438be2dc: add r1, pc
+-- replace A6000[0x438d04ae+1] A7S[0x438be2ec+1]
+   6 438d04ae: ldr.w r0, [r3, #0xd8]
+   7 438be2ec: ldr.w r0, [r3, #0xe8]
+-- delete A6000[0x438d04b8+11] A7S[0x438be2f6+0]
+   6 438d04b8: ldr r3, [pc, #0x44]         @ 0x438d0500
+   6 438d04ba: movs r0, #0x5
+   6 438d04bc: ldr r5, [pc, #0x44]         @ 0x438d0504
+   6 438d04be: movs r1, #0x0
+   6 438d04c0: movs r2, #0x1
+   6 438d04c2: add r3, pc
+   6 438d04c4: add r5, pc
+   6 438d04c6: movs r6, #0xac
+   6 438d04c8: str r5, [sp]
+   6 438d04ca: str r6, [sp, #0x4]
+   6 438d04cc: bl 0x438cffb8 @ imm = #-0x518
+-- replace A6000[0x438d04d2+2] A7S[0x438be2f8+2]
+   6 438d04d2: mov r1, r5
+   6 438d04d4: mov r2, r6
+   7 438be2f8: movs r2, #0xac
+   7 438be2fa: ldr r1, [pc, #0x28]         @ 0x438be324
+-- insert A6000[0x438d04d8+0] A7S[0x438be2fe+1]
+   7 438be2fe: add r1, pc
+-- replace A6000[0x438d04e2+24] A7S[0x438be30a+17]
+   6 438d04e2: str.w r3, [r4, #0xd8]
+   6 438d04e6: pop {r1, r2, r3, r4, r5, r6, r7, pc}
+   6 438d04e8: adr r1, #120
+   6 438d04ea: movs r7, r7
+   6 438d04ec: adr r0, #592
+   6 438d04ee: movs r7, r7
+   6 438d04f0: adr r1, #100
+   6 438d04f2: movs r7, r7
+   6 438d04f4: adr r0, #888
+   6 438d04f6: movs r7, r7
+   6 438d04f8: adr r0, #336
+   6 438d04fa: movs r7, r7
+   7 438be30a: str.w r3, [r4, #0xe8]
+   7 438be30e: pop {r4, pc}
+   7 438be310: ldr r4, [r4, #0x50]
+   7 438be312: lsls r0, r0, #0x1
+   7 438be314: ldr r0, [r7, #0x48]
+   7 438be316: lsls r0, r0, #0x1
+   7 438be318: ldr r4, [r7, #0x4c]
+   7 438be31a: lsls r0, r0, #0x1
+   7 438be31c: ldr r0, [r2, #0x48]
+   7 438be31e: lsls r0, r0, #0x1
+   7 438be320: subs r4, #0x9d
+   7 438be322: movs r6, r7
+-- replace A6000[0x438d051a+1] A7S[0x438be334+1]
+   6 438d051a: ldr.w r1, [r0, #0xd8]
+   7 438be334: ldr.w r1, [r0, #0xe8]
+-- replace A6000[0x438d0526+13] A7S[0x438be340+1]
+   6 438d0526: cmp r0, #0x0
+   6 438d0528: beq 0x438d0570 @ imm = #0x44
+   6 438d052a: ldr r3, [pc, #0x48]         @ 0x438d0574
+   6 438d052c: movs r1, #0x1
+   6 438d052e: ldr r4, [pc, #0x48]         @ 0x438d0578
+   6 438d0530: movs r0, #0x5
+   6 438d0532: mov r2, r1
+   6 438d0534: add r3, pc
+   6 438d0536: add r4, pc
+   6 438d0538: movs r5, #0xc1
+   6 438d053a: str r4, [sp]
+   6 438d053c: str r5, [sp, #0x4]
+   7 438be340: cbz r0, 0x438be360 @ imm = #0x1c
+-- insert A6000[0x438d0544+0] A7S[0x438be344+2]
+   7 438be344: movs r2, #0xc1
+   7 438be346: ldr r1, [pc, #0x20]         @ 0x438be368
+-- insert A6000[0x438d0546+0] A7S[0x438be34a+1]
+   7 438be34a: add r1, pc
+-- delete A6000[0x438d0548+10] A7S[0x438be34e+0]
+   6 438d0548: ldr r3, [pc, #0x34]         @ 0x438d0580
+   6 438d054a: movs r0, #0x5
+   6 438d054c: ldr r4, [pc, #0x34]         @ 0x438d0584
+   6 438d054e: movs r2, #0x1
+   6 438d0550: add r3, pc
+   6 438d0552: movs r5, #0xc5
+   6 438d0554: add r4, pc
+   6 438d0556: str r5, [sp, #0x4]
+   6 438d0558: str r4, [sp]
+   6 438d055a: bl 0x438cffb8 @ imm = #-0x5a6
+-- insert A6000[0x438d0560+0] A7S[0x438be350+2]
+   7 438be350: movs r2, #0xc5
+   7 438be352: ldr r1, [pc, #0x1c]         @ 0x438be370
+-- replace A6000[0x438d0562+4] A7S[0x438be356+2]
+   6 438d0562: mov r1, r4
+   6 438d0564: mov r2, r5
+   6 438d0566: add sp, #0xc
+   6 438d0568: pop.w {r4, r5, lr}
+   7 438be356: add r1, pc
+   7 438be358: pop.w {r4, lr}
+-- replace A6000[0x438d0570+18] A7S[0x438be360+13]
+   6 438d0570: add sp, #0xc
+   6 438d0572: pop {r4, r5, pc}
+   6 438d0574: adr r0, #672
+   6 438d0576: movs r7, r7
+   6 438d0578: ldr r7, [sp, #0x2a8]
+   6 438d057a: movs r7, r7
+   6 438d057c: adr r0, #668
+   6 438d057e: movs r7, r7
+   6 438d0580: add r7, sp, #0xa0
+   6 438d0582: movs r4, r7
+   6 438d0584: ldr r7, [sp, #0x230]
+   6 438d0586: movs r7, r7
+   7 438be360: pop {r4, pc}
+   7 438be362: nop 
+   7 438be364: ldr r4, [r4, #0x4c]
+   7 438be366: lsls r0, r0, #0x1
+   7 438be368: ldr r2, [r4, #0x40]
+   7 438be36a: lsls r0, r0, #0x1
+   7 438be36c: subs r4, #0x45
+   7 438be36e: movs r6, r7
+   7 438be370: ldr r6, [r2, #0x40]
+   7 438be372: lsls r0, r0, #0x1
+   7 438be374: ldrb.w r3, [r0, #0x757]
+   7 438be378: push {r4, lr}
+-- replace A6000[0x438d059a+1] A7S[0x438be380+1]
+   6 438d059a: ldr.w r1, [r0, #0xd8]
+   7 438be380: ldr.w r1, [r0, #0xe8]
+-- replace A6000[0x438d05a6+13] A7S[0x438be38c+1]
+   6 438d05a6: cmp r0, #0x0
+   6 438d05a8: beq 0x438d05f0 @ imm = #0x44
+   6 438d05aa: ldr r3, [pc, #0x48]         @ 0x438d05f4
+   6 438d05ac: movs r1, #0x1
+   6 438d05ae: ldr r4, [pc, #0x48]         @ 0x438d05f8
+   6 438d05b0: movs r0, #0x5
+   6 438d05b2: mov r2, r1
+   6 438d05b4: add r3, pc
+   6 438d05b6: add r4, pc
+   6 438d05b8: movs r5, #0xd9
+   6 438d05ba: str r4, [sp]
+   6 438d05bc: str r5, [sp, #0x4]
+   7 438be38c: cbz r0, 0x438be3ac @ imm = #0x1c
+-- insert A6000[0x438d05c4+0] A7S[0x438be390+2]
+   7 438be390: movs r2, #0xd9
+   7 438be392: ldr r1, [pc, #0x20]         @ 0x438be3b4
+-- insert A6000[0x438d05c6+0] A7S[0x438be396+1]
+   7 438be396: add r1, pc
+-- delete A6000[0x438d05c8+10] A7S[0x438be39a+0]
+   6 438d05c8: ldr r3, [pc, #0x34]         @ 0x438d0600
+   6 438d05ca: movs r0, #0x5
+   6 438d05cc: ldr r4, [pc, #0x34]         @ 0x438d0604
+   6 438d05ce: movs r2, #0x1
+   6 438d05d0: add r3, pc
+   6 438d05d2: movs r5, #0xdd
+   6 438d05d4: add r4, pc
+   6 438d05d6: str r5, [sp, #0x4]
+   6 438d05d8: str r4, [sp]
+   6 438d05da: bl 0x438cffb8 @ imm = #-0x626
+-- insert A6000[0x438d05e0+0] A7S[0x438be39c+2]
+   7 438be39c: movs r2, #0xdd
+   7 438be39e: ldr r1, [pc, #0x1c]         @ 0x438be3bc
+-- replace A6000[0x438d05e2+4] A7S[0x438be3a2+2]
+   6 438d05e2: mov r1, r4
+   6 438d05e4: mov r2, r5
+   6 438d05e6: add sp, #0xc
+   6 438d05e8: pop.w {r4, r5, lr}
+   7 438be3a2: add r1, pc
+   7 438be3a4: pop.w {r4, lr}
+-- replace A6000[0x438d05f0+16] A7S[0x438be3ac+12]
+   6 438d05f0: add sp, #0xc
+   6 438d05f2: pop {r4, r5, pc}
+   6 438d05f4: adr r0, #412
+   6 438d05f6: movs r7, r7
+   6 438d05f8: ldr r7, [sp, #0xa8]
+   6 438d05fa: movs r7, r7
+   6 438d05fc: adr r0, #408
+   6 438d05fe: movs r7, r7
+   6 438d0600: add r6, sp, #0x2a0
+   6 438d0602: movs r4, r7
+   6 438d0604: ldr r7, [sp, #0x30]
+   6 438d0606: movs r7, r7
+   7 438be3ac: pop {r4, pc}
+   7 438be3ae: nop 
+   7 438be3b0: ldr r0, [r1, #0x4c]
+   7 438be3b2: lsls r0, r0, #0x1
+   7 438be3b4: ldr r6, [r2, #0x3c]
+   7 438be3b6: lsls r0, r0, #0x1
+   7 438be3b8: subs r3, #0xf9
+   7 438be3ba: movs r6, r7
+   7 438be3bc: ldr r2, [r1, #0x3c]
+   7 438be3be: lsls r0, r0, #0x1
+   7 438be3c0: ldrb.w r3, [r0, #0x757]
+   7 438be3c4: push {r4, lr}
+-- replace A6000[0x438d061a+1] A7S[0x438be3ce+1]
+   6 438d061a: ldr.w r1, [r3, #0xd8]
+   7 438be3ce: ldr.w r1, [r3, #0xe8]
+-- delete A6000[0x438d0624+11] A7S[0x438be3d8+0]
+   6 438d0624: ldr r3, [pc, #0x2c]         @ 0x438d0654
+   6 438d0626: movs r1, #0x1
+   6 438d0628: ldr r4, [pc, #0x2c]         @ 0x438d0658
+   6 438d062a: movs r0, #0x5
+   6 438d062c: mov r2, r1
+   6 438d062e: add r3, pc
+   6 438d0630: add r4, pc
+   6 438d0632: movs r5, #0xef
+   6 438d0634: str r4, [sp]
+   6 438d0636: str r5, [sp, #0x4]
+   6 438d0638: bl 0x438cffb8 @ imm = #-0x684
+-- replace A6000[0x438d063e+2] A7S[0x438be3da+2]
+   6 438d063e: mov r1, r4
+   6 438d0640: mov r2, r5
+   7 438be3da: movs r2, #0xef
+   7 438be3dc: ldr r1, [pc, #0x10]         @ 0x438be3f0
+-- replace A6000[0x438d0644+2] A7S[0x438be3e0+2]
+   6 438d0644: add sp, #0xc
+   6 438d0646: pop.w {r4, r5, lr}
+   7 438be3e0: add r1, pc
+   7 438be3e2: pop.w {r4, lr}
+-- replace A6000[0x438d064e+13] A7S[0x438be3ea+8]
+   6 438d064e: add sp, #0xc
+   6 438d0650: pop {r4, r5, pc}
+   6 438d0652: nop 
+   6 438d0654: adr r0, #168
+   6 438d0656: movs r7, r7
+   6 438d0658: ldr r6, [sp, #0x2c0]
+   6 438d065a: movs r7, r7
+   6 438d065c: adr r0, #148
+   6 438d065e: movs r7, r7
+   6 438d0660: ldrb.w r3, [r0, #0x74f]
+   6 438d0664: push {r0, r1, r2, r4, r5, lr}
+   6 438d0666: cmp r3, #0x0
+   7 438be3ea: pop {r4, pc}
+   7 438be3ec: ldr r4, [r5, #0x48]
+   7 438be3ee: lsls r0, r0, #0x1
+   7 438be3f0: ldr r4, [r1, #0x38]
+   7 438be3f2: lsls r0, r0, #0x1
+   7 438be3f4: ldrb.w r3, [r0, #0x757]
+   7 438be3f8: push {r4, lr}
+   7 438be3fa: cbz r3, 0x438be430 @ imm = #0x32
+-- replace A6000[0x438d066e+1] A7S[0x438be400+1]
+   6 438d066e: ldr.w r1, [r0, #0xd8]
+   7 438be400: ldr.w r1, [r0, #0xe8]
+-- replace A6000[0x438d067a+13] A7S[0x438be40c+1]
+   6 438d067a: cmp r0, #0x0
+   6 438d067c: beq 0x438d06c8 @ imm = #0x48
+   6 438d067e: ldr r3, [pc, #0x4c]         @ 0x438d06cc
+   6 438d0680: movs r1, #0x1
+   6 438d0682: ldr r4, [pc, #0x4c]         @ 0x438d06d0
+   6 438d0684: movs r0, #0x5
+   6 438d0686: mov r2, r1
+   6 438d0688: add r3, pc
+   6 438d068a: add r4, pc
+   6 438d068c: movw r5, #0x103
+   6 438d0690: str r4, [sp]
+   6 438d0692: str r5, [sp, #0x4]
+   7 438be40c: cbz r0, 0x438be430 @ imm = #0x20
+-- insert A6000[0x438d069a+0] A7S[0x438be410+2]
+   7 438be410: movw r2, #0x103
+   7 438be414: ldr r1, [pc, #0x20]         @ 0x438be438
+-- insert A6000[0x438d069c+0] A7S[0x438be418+1]
+   7 438be418: add r1, pc
+-- delete A6000[0x438d069e+10] A7S[0x438be41c+0]
+   6 438d069e: ldr r3, [pc, #0x38]         @ 0x438d06d8
+   6 438d06a0: movs r0, #0x5
+   6 438d06a2: ldr r4, [pc, #0x38]         @ 0x438d06dc
+   6 438d06a4: movs r2, #0x1
+   6 438d06a6: add r3, pc
+   6 438d06a8: movw r5, #0x107
+   6 438d06ac: add r4, pc
+   6 438d06ae: str r5, [sp, #0x4]
+   6 438d06b0: str r4, [sp]
+   6 438d06b2: bl 0x438cffb8 @ imm = #-0x6fe
+-- insert A6000[0x438d06b8+0] A7S[0x438be41e+2]
+   7 438be41e: movw r2, #0x107
+   7 438be422: ldr r1, [pc, #0x1c]         @ 0x438be440
+-- replace A6000[0x438d06ba+4] A7S[0x438be426+2]
+   6 438d06ba: mov r1, r4
+   6 438d06bc: mov r2, r5
+   6 438d06be: add sp, #0xc
+   6 438d06c0: pop.w {r4, r5, lr}
+   7 438be426: add r1, pc
+   7 438be428: pop.w {r4, lr}
+-- replace A6000[0x438d06c8+16] A7S[0x438be430+12]
+   6 438d06c8: add sp, #0xc
+   6 438d06ca: pop {r4, r5, pc}
+   6 438d06cc: adr r0, #48
+   6 438d06ce: movs r7, r7
+   6 438d06d0: ldr r6, [sp, #0x158]
+   6 438d06d2: movs r7, r7
+   6 438d06d4: adr r0, #36
+   6 438d06d6: movs r7, r7
+   6 438d06d8: add r5, sp, #0x348
+   6 438d06da: movs r4, r7
+   6 438d06dc: ldr r6, [sp, #0xd0]
+   6 438d06de: movs r7, r7
+   7 438be430: pop {r4, pc}
+   7 438be432: nop 
+   7 438be434: ldr r1, [r4, #0x48]
+   7 438be436: lsls r0, r0, #0x1
+   7 438be438: ldr r4, [r2, #0x34]
+   7 438be43a: lsls r0, r0, #0x1
+   7 438be43c: subs r3, #0x75
+   7 438be43e: movs r6, r7
+   7 438be440: ldr r6, [r0, #0x34]
+   7 438be442: lsls r0, r0, #0x1
+   7 438be444: ldrb.w r3, [r0, #0x757]
+   7 438be448: push.w {r4, r5, r6, r7, r8, lr}
+-- replace A6000[0x438d06f6+1] A7S[0x438be458+1]
+   6 438d06f6: ldr.w r1, [r3, #0xd8]
+   7 438be458: ldr.w r1, [r3, #0xe8]
+-- delete A6000[0x438d0700+11] A7S[0x438be462+0]
+   6 438d0700: ldr r3, [pc, #0xd0]         @ 0x438d07d4
+   6 438d0702: movs r1, #0x1
+   6 438d0704: ldr r5, [pc, #0xd0]         @ 0x438d07d8
+   6 438d0706: mov r2, r1
+   6 438d0708: movs r0, #0x5
+   6 438d070a: add r3, pc
+   6 438d070c: add r5, pc
+   6 438d070e: mov.w r6, #0x11a
+   6 438d0712: str r5, [sp]
+   6 438d0714: str r6, [sp, #0x4]
+   6 438d0716: bl 0x438cffb8 @ imm = #-0x762
+-- replace A6000[0x438d071c+2] A7S[0x438be464+2]
+   6 438d071c: mov r1, r5
+   6 438d071e: mov r2, r6
+   7 438be464: mov.w r2, #0x11a
+   7 438be468: ldr r1, [pc, #0x88]         @ 0x438be4f4
+-- insert A6000[0x438d0722+0] A7S[0x438be46c+1]
+   7 438be46c: add r1, pc
+-- replace A6000[0x438d072c+1] A7S[0x438be478+1]
+   6 438d072c: ldr.w r1, [r3, #0xd8]
+   7 438be478: ldr.w r1, [r3, #0xe8]
+-- delete A6000[0x438d0736+11] A7S[0x438be482+0]
+   6 438d0736: ldr r3, [pc, #0xa8]         @ 0x438d07e0
+   6 438d0738: movs r1, #0x1
+   6 438d073a: ldr r5, [pc, #0xa8]         @ 0x438d07e4
+   6 438d073c: mov r2, r1
+   6 438d073e: movs r0, #0x5
+   6 438d0740: add r3, pc
+   6 438d0742: add r5, pc
+   6 438d0744: movw r6, #0x11f
+   6 438d0748: str r5, [sp]
+   6 438d074a: str r6, [sp, #0x4]
+   6 438d074c: bl 0x438cffb8 @ imm = #-0x798
+-- replace A6000[0x438d0752+2] A7S[0x438be484+2]
+   6 438d0752: mov r1, r5
+   6 438d0754: mov r2, r6
+   7 438be484: movw r2, #0x11f
+   7 438be488: ldr r1, [pc, #0x70]         @ 0x438be4fc
+-- insert A6000[0x438d0758+0] A7S[0x438be48c+1]
+   7 438be48c: add r1, pc
+-- replace A6000[0x438d0768+1] A7S[0x438be49e+1]
+   6 438d0768: ldr.w r6, [r3, #0xd8]
+   7 438be49e: ldr.w r6, [r3, #0xe8]
+-- replace A6000[0x438d077e+1] A7S[0x438be4b4+1]
+   6 438d077e: adds r5, #0x8
+   7 438be4b4: adds r5, #0x30
+-- replace A6000[0x438d0798+1] A7S[0x438be4ce+1]
+   6 438d0798: ldr.w r1, [r4, #0xd8]
+   7 438be4ce: ldr.w r1, [r4, #0xe8]
+-- delete A6000[0x438d07a2+11] A7S[0x438be4d8+0]
+   6 438d07a2: ldr r3, [pc, #0x48]         @ 0x438d07ec
+   6 438d07a4: movs r1, #0x1
+   6 438d07a6: ldr r4, [pc, #0x48]         @ 0x438d07f0
+   6 438d07a8: movs r0, #0x5
+   6 438d07aa: mov r2, r1
+   6 438d07ac: add r3, pc
+   6 438d07ae: add r4, pc
+   6 438d07b0: mov.w r5, #0x138
+   6 438d07b4: str r4, [sp]
+   6 438d07b6: str r5, [sp, #0x4]
+   6 438d07b8: bl 0x438cffb8 @ imm = #-0x804
+-- replace A6000[0x438d07be+2] A7S[0x438be4da+2]
+   6 438d07be: mov r1, r4
+   6 438d07c0: mov r2, r5
+   7 438be4da: mov.w r2, #0x138
+   7 438be4de: ldr r1, [pc, #0x24]         @ 0x438be504
+-- replace A6000[0x438d07c4+2] A7S[0x438be4e2+2]
+   6 438d07c4: add sp, #0xc
+   6 438d07c6: pop.w {r4, r5, r6, r7, lr}
+   7 438be4e2: add r1, pc
+   7 438be4e4: pop.w {r4, r5, r6, r7, r8, lr}
+-- replace A6000[0x438d07ce+21] A7S[0x438be4ec+13]
+   6 438d07ce: add sp, #0xc
+   6 438d07d0: pop {r4, r5, r6, r7, pc}
+   6 438d07d2: nop 
+   6 438d07d4: ldr r7, [sp, #0x314]
+   6 438d07d6: movs r7, r7
+   6 438d07d8: ldr r5, [sp, #0x350]
+   6 438d07da: movs r7, r7
+   6 438d07dc: ldr r7, [sp, #0x2f8]
+   6 438d07de: movs r7, r7
+   6 438d07e0: ldr r7, [sp, #0x334]
+   6 438d07e2: movs r7, r7
+   6 438d07e4: ldr r5, [sp, #0x278]
+   7 438be4ec: pop.w {r4, r5, r6, r7, r8, pc}
+   7 438be4f0: ldr r1, [r7, #0x44]
+   7 438be4f2: lsls r0, r0, #0x1
+   7 438be4f4: ldr r0, [r0, #0x30]
+   7 438be4f6: lsls r0, r0, #0x1
+   7 438be4f8: ldr r0, [r1, #0x48]
+   7 438be4fa: lsls r0, r0, #0x1
+   7 438be4fc: ldr r0, [r4, #0x2c]
+   7 438be4fe: lsls r0, r0, #0x1
+   7 438be500: ldr r6, [r3, #0x44]
+   7 438be502: lsls r0, r0, #0x1
+   7 438be504: ldr r2, [r1, #0x28]
+-- replace A6000[0x438d0802+1] A7S[0x438be512+1]
+   6 438d0802: ldr.w r1, [r1, #0xd0]
+   7 438be512: ldr.w r1, [r1, #0xe0]
+-- replace A6000[0x438d0812+1] A7S[0x438be522+1]
+   6 438d0812: adds r0, #0x18
+   7 438be522: adds r0, #0x28
+-- replace A6000[0x438d0820+3] A7S[0x438be530+3]
+   6 438d0820: b 0x438d05e4 @ imm = #-0x240
+   6 438d0822: lsls r4, r6, #0x1
+   6 438d0824: subs r4, #0x48
+   7 438be530: str r4, [r5]
+   7 438be532: lsls r6, r6, #0x1
+   7 438be534: blx r12
+-- replace A6000[0x438d0828+1] A7S[0x438be538+2]
+   6 438d0828: push {r0, r1, r2, r3, r4, r5, r6, lr}
+   7 438be538: ldrb.w r3, [r0, #0x757]
+   7 438be53c: push {r4, r5, lr}
+-- replace A6000[0x438d082c+1] A7S[0x438be540+1]
+   6 438d082c: ldrb.w r3, [r0, #0x74f]
+   7 438be540: sub sp, #0x14
+-- insert A6000[0x438d0836+0] A7S[0x438be548+3]
+   7 438be548: bl 0x43ae826e @ imm = #0x229d22
+   7 438be54c: mvn r1, #0x40
+   7 438be550: movs r0, #0x13
+-- replace A6000[0x438d084a+1] A7S[0x438be566+1]
+   6 438d084a: ldr.w r1, [r3, #0xd8]
+   7 438be566: ldr.w r1, [r3, #0xe8]
+-- replace A6000[0x438d0854+10] A7S[0x438be570+5]
+   6 438d0854: ldr r3, [pc, #0x60]         @ 0x438d08b8
+   6 438d0856: movs r1, #0x1
+   6 438d0858: ldr r5, [pc, #0x60]         @ 0x438d08bc
+   6 438d085a: mov r2, r1
+   6 438d085c: movs r0, #0x5
+   6 438d085e: add r3, pc
+   6 438d0860: add r5, pc
+   6 438d0862: movw r6, #0x171
+   6 438d0866: str r5, [sp]
+   6 438d0868: str r6, [sp, #0x4]
+   7 438be570: ldr r0, [pc, #0x58]         @ 0x438be5cc
+   7 438be572: mov.w r2, #0x172
+   7 438be576: ldr r1, [pc, #0x58]         @ 0x438be5d0
+   7 438be578: add r0, pc
+   7 438be57a: add r1, pc
+-- replace A6000[0x438d086e+4] A7S[0x438be580+2]
+   6 438d086e: ldr r0, [pc, #0x50]         @ 0x438d08c0
+   6 438d0870: mov r1, r5
+   6 438d0872: mov r2, r6
+   6 438d0874: add r0, pc
+   7 438be580: mvn r1, #0x800000
+   7 438be584: movs r0, #0x13
+-- replace A6000[0x438d0886+1] A7S[0x438be596+1]
+   6 438d0886: add.w r3, r4, #0x4e00
+   7 438be596: add.w r3, r4, #0x4f00
+-- replace A6000[0x438d088e+1] A7S[0x438be59e+1]
+   6 438d088e: strb.w r5, [r3, #0xf0]
+   7 438be59e: strb.w r5, [r3, #0x28]
+-- replace A6000[0x438d08b2+9] A7S[0x438be5c2+9]
+   6 438d08b2: pop {r0, r1, r2, r3, r4, r5, r6, pc}
+   6 438d08b4: ldm.w r5!, {r2, r5}
+   6 438d08b8: ldr r7, [sp, #0x80]
+   6 438d08ba: movs r7, r7
+   6 438d08bc: ldr r4, [sp, #0x200]
+   6 438d08be: movs r7, r7
+   6 438d08c0: ldr r7, [sp, #0x64]
+   6 438d08c2: movs r7, r7
+   6 438d08c4: strex r0, r0, [pc, #0x90]
+   7 438be5c2: add sp, #0x14
+   7 438be5c4: pop {r4, r5, pc}
+   7 438be5c6: nop 
+   7 438be5c8: cdp2 p0, #0xa, c0, c11, c5, #0x1
+   7 438be5cc: ldr r5, [r5, #0x3c]
+   7 438be5ce: lsls r0, r0, #0x1
+   7 438be5d0: ldr r2, [r6, #0x1c]
+   7 438be5d2: lsls r0, r0, #0x1
+   7 438be5d4: cdp2 p0, #0x5, c0, c1, c5, #0x1
+-- replace A6000[0x438d08e0+3] A7S[0x438be5f0+3]
+   6 438d08e0: b 0x438d0508 @ imm = #-0x3dc
+   6 438d08e2: lsls r4, r6, #0x1
+   6 438d08e4: ldr r3, [pc, #0x210]        @ 0x438d0af8
+   7 438be5f0: ldrsh r6, [r3, r5]
+   7 438be5f2: lsls r6, r6, #0x1
+   7 438be5f4: ldrh r0, [r3, r1]
+-- replace A6000[0x438d08e8+3] A7S[0x438be5f8+2]
+   6 438d08e8: ldrb.w r3, [r0, #0x74f]
+   6 438d08ec: push {r4, r5, lr}
+   6 438d08ee: sub sp, #0x14
+   7 438be5f8: push {r0, r1, r2, r3, r4, lr}
+   7 438be5fa: ldrb.w r3, [r0, #0x757]
+-- replace A6000[0x438d0916+1] A7S[0x438be624+1]
+   6 438d0916: ldr.w r1, [r3, #0xd8]
+   7 438be624: ldr.w r1, [r3, #0xe8]
+-- delete A6000[0x438d0920+11] A7S[0x438be62e+0]
+   6 438d0920: ldr r3, [pc, #0x28]         @ 0x438d094c
+   6 438d0922: movs r1, #0x1
+   6 438d0924: ldr r4, [pc, #0x28]         @ 0x438d0950
+   6 438d0926: mov r2, r1
+   6 438d0928: movs r0, #0x5
+   6 438d092a: add r3, pc
+   6 438d092c: add r4, pc
+   6 438d092e: mov.w r5, #0x1aa
+   6 438d0932: str r4, [sp]
+   6 438d0934: str r5, [sp, #0x4]
+   6 438d0936: bl 0x438cffb8 @ imm = #-0x982
+-- replace A6000[0x438d093c+2] A7S[0x438be630+2]
+   6 438d093c: mov r1, r4
+   6 438d093e: mov r2, r5
+   7 438be630: mov.w r2, #0x1ac
+   7 438be634: ldr r1, [pc, #0x10]         @ 0x438be648
+-- insert A6000[0x438d0942+0] A7S[0x438be638+1]
+   7 438be638: add r1, pc
+-- replace A6000[0x438d0948+1] A7S[0x438be640+1]
+   6 438d0948: pop {r4, r5, pc}
+   7 438be640: pop {pc}
+-- replace A6000[0x438d094c+6] A7S[0x438be644+4]
+   6 438d094c: ldr r6, [sp, #0x230]
+   6 438d094e: movs r7, r7
+   6 438d0950: ldr r3, [sp, #0x2d0]
+   6 438d0952: movs r7, r7
+   6 438d0954: ldr r6, [sp, #0x214]
+   6 438d0956: movs r7, r7
+   7 438be644: ldr r0, [r3, #0x34]
+   7 438be646: lsls r0, r0, #0x1
+   7 438be648: ldr r4, [r6, #0x10]
+   7 438be64a: lsls r0, r0, #0x1
+-- replace A6000[0x438d097c+3] A7S[0x438be670+3]
+   6 438d097c: b 0x438d0464 @ imm = #-0x51c
+   6 438d097e: lsls r4, r6, #0x1
+   6 438d0980: cmp r6, #0x50
+   7 438be670: ldrsh r2, [r3, r3]
+   7 438be672: lsls r6, r6, #0x1
+   7 438be674: adds r7, #0x18
+-- replace A6000[0x438d0984+2] A7S[0x438be678+2]
+   6 438d0984: ldrb.w r3, [r0, #0x74f]
+   6 438d0988: push {r0, r1, r2, r4, r5, lr}
+   7 438be678: ldrb.w r3, [r0, #0x757]
+   7 438be67c: push {r4, lr}
+-- replace A6000[0x438d0992+1] A7S[0x438be686+1]
+   6 438d0992: ldr.w r1, [r3, #0xd8]
+   7 438be686: ldr.w r1, [r3, #0xe8]
+-- delete A6000[0x438d099c+11] A7S[0x438be690+0]
+   6 438d099c: ldr r3, [pc, #0x2c]         @ 0x438d09cc
+   6 438d099e: movs r1, #0x1
+   6 438d09a0: ldr r4, [pc, #0x2c]         @ 0x438d09d0
+   6 438d09a2: movs r0, #0x5
+   6 438d09a4: mov r2, r1
+   6 438d09a6: add r3, pc
+   6 438d09a8: add r4, pc
+   6 438d09aa: mov.w r5, #0x1ce
+   6 438d09ae: str r4, [sp]
+   6 438d09b0: str r5, [sp, #0x4]
+   6 438d09b2: bl 0x438cffb8 @ imm = #-0x9fe
+-- replace A6000[0x438d09b8+2] A7S[0x438be692+2]
+   6 438d09b8: mov r1, r4
+   6 438d09ba: mov r2, r5
+   7 438be692: mov.w r2, #0x1d0
+   7 438be696: ldr r1, [pc, #0x14]         @ 0x438be6ac
+-- replace A6000[0x438d09be+2] A7S[0x438be69a+2]
+   6 438d09be: add sp, #0xc
+   6 438d09c0: pop.w {r4, r5, lr}
+   7 438be69a: add r1, pc
+   7 438be69c: pop.w {r4, lr}
+-- replace A6000[0x438d09c8+10] A7S[0x438be6a4+8]
+   6 438d09c8: add sp, #0xc
+   6 438d09ca: pop {r4, r5, pc}
+   6 438d09cc: ldr r3, [sp, #0x3f0]
+   6 438d09ce: movs r7, r7
+   6 438d09d0: ldr r3, [sp, #0xe0]
+   6 438d09d2: movs r7, r7
+   6 438d09d4: ldr r3, [sp, #0x3d4]
+   6 438d09d6: movs r7, r7
+   6 438d09d8: ldrb.w r3, [r0, #0x74f]
+   6 438d09dc: push {r0, r1, r2, r4, r5, lr}
+   7 438be6a4: pop {r4, pc}
+   7 438be6a6: nop 
+   7 438be6a8: ldr r1, [r5, #0x14]
+   7 438be6aa: lsls r0, r0, #0x1
+   7 438be6ac: ldr r2, [r2, #0xc]
+   7 438be6ae: lsls r0, r0, #0x1
+   7 438be6b0: ldrb.w r3, [r0, #0x757]
+   7 438be6b4: push {r4, lr}
+-- replace A6000[0x438d09e6+1] A7S[0x438be6be+1]
+   6 438d09e6: ldr.w r1, [r3, #0xd8]
+   7 438be6be: ldr.w r1, [r3, #0xe8]
+-- delete A6000[0x438d09f0+11] A7S[0x438be6c8+0]
+   6 438d09f0: ldr r3, [pc, #0x2c]         @ 0x438d0a20
+   6 438d09f2: movs r1, #0x1
+   6 438d09f4: ldr r4, [pc, #0x2c]         @ 0x438d0a24
+   6 438d09f6: movs r0, #0x5
+   6 438d09f8: mov r2, r1
+   6 438d09fa: add r3, pc
+   6 438d09fc: add r4, pc
+   6 438d09fe: movw r5, #0x1e1
+   6 438d0a02: str r4, [sp]
+   6 438d0a04: str r5, [sp, #0x4]
+   6 438d0a06: bl 0x438cffb8 @ imm = #-0xa52
+-- replace A6000[0x438d0a0c+2] A7S[0x438be6ca+2]
+   6 438d0a0c: mov r1, r4
+   6 438d0a0e: mov r2, r5
+   7 438be6ca: movw r2, #0x1e3
+   7 438be6ce: ldr r1, [pc, #0x14]         @ 0x438be6e4
+-- replace A6000[0x438d0a12+2] A7S[0x438be6d2+2]
+   6 438d0a12: add sp, #0xc
+   6 438d0a14: pop.w {r4, r5, lr}
+   7 438be6d2: add r1, pc
+   7 438be6d4: pop.w {r4, lr}
+-- replace A6000[0x438d0a1c+10] A7S[0x438be6dc+8]
+   6 438d0a1c: add sp, #0xc
+   6 438d0a1e: pop {r4, r5, pc}
+   6 438d0a20: ldr r5, [sp, #0x3dc]
+   6 438d0a22: movs r7, r7
+   6 438d0a24: ldr r2, [sp, #0x390]
+   6 438d0a26: movs r7, r7
+   6 438d0a28: ldr r5, [sp, #0x3c0]
+   6 438d0a2a: movs r7, r7
+   6 438d0a2c: ldrb.w r3, [r0, #0x74f]
+   6 438d0a30: push {r0, r1, r2, r4, r5, lr}
+   7 438be6dc: pop {r4, pc}
+   7 438be6de: nop 
+   7 438be6e0: ldr r2, [r5, #0x2c]
+   7 438be6e2: lsls r0, r0, #0x1
+   7 438be6e4: ldr r2, [r3, #0x8]
+   7 438be6e6: lsls r0, r0, #0x1
+   7 438be6e8: ldrb.w r3, [r0, #0x757]
+   7 438be6ec: push {r4, lr}
+-- replace A6000[0x438d0a3a+1] A7S[0x438be6f6+1]
+   6 438d0a3a: ldr.w r1, [r3, #0xd8]
+   7 438be6f6: ldr.w r1, [r3, #0xe8]
+-- delete A6000[0x438d0a44+11] A7S[0x438be700+0]
+   6 438d0a44: ldr r3, [pc, #0x2c]         @ 0x438d0a74
+   6 438d0a46: movs r1, #0x1
+   6 438d0a48: ldr r4, [pc, #0x2c]         @ 0x438d0a78
+   6 438d0a4a: movs r0, #0x5
+   6 438d0a4c: mov r2, r1
+   6 438d0a4e: add r3, pc
+   6 438d0a50: add r4, pc
+   6 438d0a52: mov.w r5, #0x1f4
+   6 438d0a56: str r4, [sp]
+   6 438d0a58: str r5, [sp, #0x4]
+   6 438d0a5a: bl 0x438cffb8 @ imm = #-0xaa6
+-- replace A6000[0x438d0a60+2] A7S[0x438be702+2]
+   6 438d0a60: mov r1, r4
+   6 438d0a62: mov r2, r5
+   7 438be702: mov.w r2, #0x1f6
+   7 438be706: ldr r1, [pc, #0x14]         @ 0x438be71c
+-- replace A6000[0x438d0a66+2] A7S[0x438be70a+2]
+   6 438d0a66: add sp, #0xc
+   6 438d0a68: pop.w {r4, r5, lr}
+   7 438be70a: add r1, pc
+   7 438be70c: pop.w {r4, lr}
+-- replace A6000[0x438d0a70+8] A7S[0x438be714+6]
+   6 438d0a70: add sp, #0xc
+   6 438d0a72: pop {r4, r5, pc}
+   6 438d0a74: ldr r5, [sp, #0x37c]
+   6 438d0a76: movs r7, r7
+   6 438d0a78: ldr r2, [sp, #0x240]
+   6 438d0a7a: movs r7, r7
+   6 438d0a7c: ldr r5, [sp, #0x360]
+   6 438d0a7e: movs r7, r7
+   7 438be714: pop {r4, pc}
+   7 438be716: nop 
+   7 438be718: ldr r7, [r3, #0x2c]
+   7 438be71a: lsls r0, r0, #0x1
+   7 438be71c: ldr r2, [r4, #0x4]
+   7 438be71e: lsls r0, r0, #0x1
+-- replace A6000[0x438d0a9e+1] A7S[0x438be73e+1]
+   6 438d0a9e: adds r0, #0x18
+   7 438be73e: adds r0, #0x28
+-- replace A6000[0x438d0aae+1] A7S[0x438be74e+1]
+   6 438d0aae: adds r0, #0x8
+   7 438be74e: adds r0, #0x30
+-- replace A6000[0x438d0abc+3] A7S[0x438be75c+3]
+   6 438d0abc: b 0x438d0364 @ imm = #-0x75c
+   6 438d0abe: lsls r4, r6, #0x1
+   6 438d0ac0: lsls r0, r7, #0x3
+   7 438be75c: ldrsh r6, [r1, r0]
+   7 438be75e: lsls r6, r6, #0x1
+   7 438be760: lsls r4, r6, #0x4
+-- replace A6000[0x438d0ac4+1] A7S[0x438be764+1]
+   6 438d0ac4: adds r6, #0xc0
+   7 438be764: adcs r4, r2
+-- replace A6000[0x438d0ac8+1] A7S[0x438be768+1]
+   6 438d0ac8: lsls r4, r4, #0x19
+   7 438be768: lsls r0, r4, #0x1e
+-- replace A6000[0x438d0ad2+1] A7S[0x438be772+1]
+   6 438d0ad2: ldrb.w r2, [r0, #0x74f]
+   7 438be772: ldrb.w r2, [r0, #0x757]
+-- replace A6000[0x438d0ada+2] A7S[0x438be77a+2]
+   6 438d0ada: add.w r2, r0, #0x4e00
+   6 438d0ade: ldrb.w r2, [r2, #0xf0]
+   7 438be77a: add.w r2, r0, #0x4f00
+   7 438be77e: ldrb.w r2, [r2, #0x28]
+-- delete A6000[0x438d0af2+6] A7S[0x438be792+0]
+   6 438d0af2: ldr r3, [pc, #0x48]         @ 0x438d0b3c
+   6 438d0af4: movs r1, #0x1
+   6 438d0af6: movs r0, #0x5
+   6 438d0af8: mov r2, r1
+   6 438d0afa: add r3, pc
+   6 438d0afc: bl 0x438cffb8 @ imm = #-0xb48
+-- replace A6000[0x438d0b18+1] A7S[0x438be7aa+1]
+   6 438d0b18: add.w r4, r4, #0x4e00
+   7 438be7aa: add.w r4, r4, #0x4f00
+-- replace A6000[0x438d0b2c+1] A7S[0x438be7be+1]
+   6 438d0b2c: strb.w r3, [r4, #0xf0]
+   7 438be7be: strb.w r3, [r4, #0x28]
+-- replace A6000[0x438d0b32+4] A7S[0x438be7c4+3]
+   6 438d0b32: nop 
+   6 438d0b34: b 0x438d034c @ imm = #-0x7ec
+   6 438d0b36: lsls r4, r6, #0x1
+   6 438d0b38: str r0, [r1, #0x58]
+   7 438be7c4: ldrb r6, [r0, r7]
+   7 438be7c6: lsls r6, r6, #0x1
+   7 438be7c8: ldrb r4, [r0, #0x3]
+-- replace A6000[0x438d0b3c+6] A7S[0x438be7cc+4]
+   6 438d0b3c: ldr r5, [sp, #0x1bc]
+   6 438d0b3e: movs r7, r7
+   6 438d0b40: ldr r5, [sp, #0x1d8]
+   6 438d0b42: movs r7, r7
+   6 438d0b44: ldrb.w r3, [r0, #0x74f]
+   6 438d0b48: push {r0, r1, r2, r4, r5, lr}
+   7 438be7cc: ldr r0, [r0, #0x28]
+   7 438be7ce: lsls r0, r0, #0x1
+   7 438be7d0: ldrb.w r3, [r0, #0x757]
+   7 438be7d4: push {r4, lr}
+-- replace A6000[0x438d0b52+1] A7S[0x438be7de+1]
+   6 438d0b52: ldr.w r1, [r3, #0xd8]
+   7 438be7de: ldr.w r1, [r3, #0xe8]
+-- delete A6000[0x438d0b5c+11] A7S[0x438be7e8+0]
+   6 438d0b5c: ldr r3, [pc, #0x2c]         @ 0x438d0b8c
+   6 438d0b5e: movs r1, #0x1
+   6 438d0b60: ldr r4, [pc, #0x2c]         @ 0x438d0b90
+   6 438d0b62: movs r0, #0x5
+   6 438d0b64: mov r2, r1
+   6 438d0b66: add r3, pc
+   6 438d0b68: add r4, pc
+   6 438d0b6a: movw r5, #0x23f
+   6 438d0b6e: str r4, [sp]
+   6 438d0b70: str r5, [sp, #0x4]
+   6 438d0b72: bl 0x438cffb8 @ imm = #-0xbbe
+-- replace A6000[0x438d0b78+2] A7S[0x438be7ea+2]
+   6 438d0b78: mov r1, r4
+   6 438d0b7a: mov r2, r5
+   7 438be7ea: movw r2, #0x241
+   7 438be7ee: ldr r1, [pc, #0x14]         @ 0x438be804
+-- replace A6000[0x438d0b7e+2] A7S[0x438be7f2+2]
+   6 438d0b7e: add sp, #0xc
+   6 438d0b80: pop.w {r4, r5, lr}
+   7 438be7f2: add r1, pc
+   7 438be7f4: pop.w {r4, lr}
+-- replace A6000[0x438d0b88+8] A7S[0x438be7fc+6]
+   6 438d0b88: add sp, #0xc
+   6 438d0b8a: pop {r4, r5, pc}
+   6 438d0b8c: ldr r5, [sp, #0x7c]
+   6 438d0b8e: movs r7, r7
+   6 438d0b90: ldr r1, [sp, #0x1e0]
+   6 438d0b92: movs r7, r7
+   6 438d0b94: ldr r5, [sp, #0x60]
+   6 438d0b96: movs r7, r7
+   7 438be7fc: pop {r4, pc}
+   7 438be7fe: nop 
+   7 438be800: ldr r1, [r6, #0x20]
+   7 438be802: lsls r0, r0, #0x1
+   7 438be804: str r2, [r7, #0x74]
+   7 438be806: lsls r0, r0, #0x1
+-- replace A6000[0x438d0b9a+1] A7S[0x438be80a+1]
+   6 438d0b9a: ldrb.w r3, [r0, #0x74f]
+   7 438be80a: ldrb.w r3, [r0, #0x757]
+-- delete A6000[0x438d0bc2+6] A7S[0x438be832+0]
+   6 438d0bc2: ldr r3, [pc, #0x18]         @ 0x438d0bdc
+   6 438d0bc4: movs r1, #0x1
+   6 438d0bc6: movs r0, #0x5
+   6 438d0bc8: mov r2, r1
+   6 438d0bca: add r3, pc
+   6 438d0bcc: bl 0x438cffb8 @ imm = #-0xc18
+-- replace A6000[0x438d0bda+7] A7S[0x438be83c+4]
+   6 438d0bda: nop 
+   6 438d0bdc: ldr r4, [sp, #0x3d4]
+   6 438d0bde: movs r7, r7
+   6 438d0be0: ldr r4, [sp, #0x3f0]
+   6 438d0be2: movs r7, r7
+   6 438d0be4: ldrb.w r3, [r0, #0x74f]
+   6 438d0be8: push {r0, r1, r2, r4, r5, lr}
+   7 438be83c: ldr r0, [r3, #0x20]
+   7 438be83e: lsls r0, r0, #0x1
+   7 438be840: ldrb.w r3, [r0, #0x757]
+   7 438be844: push {r4, lr}
+-- replace A6000[0x438d0bf2+1] A7S[0x438be84e+1]
+   6 438d0bf2: ldr.w r1, [r3, #0xd8]
+   7 438be84e: ldr.w r1, [r3, #0xe8]
+-- delete A6000[0x438d0bfc+11] A7S[0x438be858+0]
+   6 438d0bfc: ldr r3, [pc, #0x2c]         @ 0x438d0c2c
+   6 438d0bfe: movs r1, #0x1
+   6 438d0c00: ldr r4, [pc, #0x2c]         @ 0x438d0c30
+   6 438d0c02: movs r0, #0x5
+   6 438d0c04: mov r2, r1
+   6 438d0c06: add r3, pc
+   6 438d0c08: add r4, pc
+   6 438d0c0a: movw r5, #0x279
+   6 438d0c0e: str r4, [sp]
+   6 438d0c10: str r5, [sp, #0x4]
+   6 438d0c12: bl 0x438cffb8 @ imm = #-0xc5e
+-- replace A6000[0x438d0c18+2] A7S[0x438be85a+2]
+   6 438d0c18: mov r1, r4
+   6 438d0c1a: mov r2, r5
+   7 438be85a: movw r2, #0x27b
+   7 438be85e: ldr r1, [pc, #0x14]         @ 0x438be874
+-- replace A6000[0x438d0c1e+2] A7S[0x438be862+2]
+   6 438d0c1e: add sp, #0xc
+   6 438d0c20: pop.w {r4, r5, lr}
+   7 438be862: add r1, pc
+   7 438be864: pop.w {r4, lr}
+-- replace A6000[0x438d0c28+8] A7S[0x438be86c+6]
+   6 438d0c28: add sp, #0xc
+   6 438d0c2a: pop {r4, r5, pc}
+   6 438d0c2c: ldr r4, [sp, #0x3d0]
+   6 438d0c2e: movs r7, r7
+   6 438d0c30: ldr r0, [sp, #0x360]
+   6 438d0c32: movs r7, r7
+   6 438d0c34: ldr r4, [sp, #0x3b4]
+   6 438d0c36: movs r7, r7
+   7 438be86c: pop {r4, pc}
+   7 438be86e: nop 
+   7 438be870: ldr r0, [r3, #0x20]
+   7 438be872: lsls r0, r0, #0x1
+   7 438be874: str r2, [r1, #0x70]
+   7 438be876: lsls r0, r0, #0x1
+-- delete A6000[0x438d0c5c+7] A7S[0x438be89c+0]
+   6 438d0c5c: ldr r3, [pc, #0x1c]         @ 0x438d0c7c
+   6 438d0c5e: movs r1, #0x1
+   6 438d0c60: movs r0, #0x5
+   6 438d0c62: mov r2, r1
+   6 438d0c64: add r3, pc
+   6 438d0c66: str r4, [sp]
+   6 438d0c68: bl 0x438cffb8 @ imm = #-0xcb4
+-- replace A6000[0x438d0c7c+6] A7S[0x438be8ac+4]
+   6 438d0c7c: ldr r4, [sp, #0x32c]
+   6 438d0c7e: movs r7, r7
+   6 438d0c80: ldr r4, [sp, #0x338]
+   6 438d0c82: movs r7, r7
+   6 438d0c84: ldrb.w r3, [r0, #0x74f]
+   6 438d0c88: push {r0, r1, r2, r4, r5, lr}
+   7 438be8ac: ldr r6, [r7, #0x1c]
+   7 438be8ae: lsls r0, r0, #0x1
+   7 438be8b0: ldrb.w r3, [r0, #0x757]
+   7 438be8b4: push {r4, lr}
+-- replace A6000[0x438d0c92+1] A7S[0x438be8be+1]
+   6 438d0c92: ldr.w r1, [r3, #0xd8]
+   7 438be8be: ldr.w r1, [r3, #0xe8]
+-- delete A6000[0x438d0c9c+11] A7S[0x438be8c8+0]
+   6 438d0c9c: ldr r3, [pc, #0x2c]         @ 0x438d0ccc
+   6 438d0c9e: movs r1, #0x1
+   6 438d0ca0: ldr r4, [pc, #0x2c]         @ 0x438d0cd0
+   6 438d0ca2: movs r0, #0x5
+   6 438d0ca4: mov r2, r1
+   6 438d0ca6: add r3, pc
+   6 438d0ca8: add r4, pc
+   6 438d0caa: mov.w r5, #0x2b0
+   6 438d0cae: str r4, [sp]
+   6 438d0cb0: str r5, [sp, #0x4]
+   6 438d0cb2: bl 0x438cffb8 @ imm = #-0xcfe
+-- replace A6000[0x438d0cb8+2] A7S[0x438be8ca+2]
+   6 438d0cb8: mov r1, r4
+   6 438d0cba: mov r2, r5
+   7 438be8ca: movw r2, #0x2b2
+   7 438be8ce: ldr r1, [pc, #0x14]         @ 0x438be8e4
+-- replace A6000[0x438d0cbe+2] A7S[0x438be8d2+2]
+   6 438d0cbe: add sp, #0xc
+   6 438d0cc0: pop.w {r4, r5, lr}
+   7 438be8d2: add r1, pc
+   7 438be8d4: pop.w {r4, lr}
+-- replace A6000[0x438d0cc8+11] A7S[0x438be8dc+9]
+   6 438d0cc8: add sp, #0xc
+   6 438d0cca: pop {r4, r5, pc}
+   6 438d0ccc: ldr r4, [sp, #0x32c]
+   6 438d0cce: movs r7, r7
+   6 438d0cd0: ldr r0, [sp, #0xe0]
+   6 438d0cd2: movs r7, r7
+   6 438d0cd4: ldr r4, [sp, #0x310]
+   6 438d0cd6: movs r7, r7
+   6 438d0cd8: ldrb.w r3, [r0, #0x74f]
+   6 438d0cdc: push {r0, r1, r4, r5, r6, lr}
+   6 438d0cde: mov r5, r0
+   7 438be8dc: pop {r4, pc}
+   7 438be8de: nop 
+   7 438be8e0: ldr r1, [r0, #0x20]
+   7 438be8e2: lsls r0, r0, #0x1
+   7 438be8e4: str r2, [r3, #0x68]
+   7 438be8e6: lsls r0, r0, #0x1
+   7 438be8e8: ldrb.w r3, [r0, #0x757]
+   7 438be8ec: push {r4, lr}
+   7 438be8ee: mov r4, r0
+-- replace A6000[0x438d0ce6+1] A7S[0x438be8f6+1]
+   6 438d0ce6: ldr.w r0, [r3, #0xd8]
+   7 438be8f6: ldr.w r0, [r3, #0xe8]
+-- insert A6000[0x438d0cf0+0] A7S[0x438be900+97]
+   7 438be900: ldr r0, [pc, #0x18]         @ 0x438be91c
+   7 438be902: movw r2, #0x2c5
+   7 438be906: ldr r1, [pc, #0x18]         @ 0x438be920
+   7 438be908: add r0, pc
+   7 438be90a: add r1, pc
+   7 438be90c: bl 0x438f7114 @ imm = #0x38804
+   7 438be910: add.w r4, r4, #0x4a00
+   7 438be914: movs r3, #0x0
+   7 438be916: str.w r3, [r4, #0xe8]
+   7 438be91a: pop {r4, pc}
+   7 438be91c: adds r6, #0x91
+   7 438be91e: movs r6, r7
+-- replace A6000[0x438d0cf2+1] A7S[0x438bea06+27]
+   6 438d0cf2: movs r0, #0x5
+   7 438bea06: ldr r3, [r4, r3]
+   7 438bea08: ldrb.w r1, [r3, #0x62]
+   7 438bea0c: cbnz r1, 0x438bea2a @ imm = #0x1a
+   7 438bea0e: movs r0, #0x3
+   7 438bea10: bl 0x4379b590 @ imm = #-0x123484
+   7 438bea14: cbz r0, 0x438bea2a @ imm = #0x12
+   7 438bea16: ldr r0, [pc, #0x1c]         @ 0x438bea34
+   7 438bea18: mov.w r2, #0x314
+   7 438bea1c: ldr r1, [pc, #0x18]         @ 0x438bea38
+   7 438bea1e: add r0, pc
+   7 438bea20: add r1, pc
+   7 438bea22: pop.w {r4, lr}
+-- replace A6000[0x438d0cf6+3] A7S[0x438bea4c+3]
+   6 438d0cf6: movs r1, #0x0
+   6 438d0cf8: movs r2, #0x1
+   6 438d0cfa: add r3, pc
+   7 438bea4c: bl 0x438f6864 @ imm = #0x37e14
+   7 438bea50: mov.w r1, #0x4000
+   7 438bea54: movs r0, #0x13
+-- delete A6000[0x438d0cfe+3] A7S[0x438bea58+0]
+   6 438d0cfe: movw r6, #0x2c3
+   6 438d0d02: str r4, [sp]
+   6 438d0d04: str r6, [sp, #0x4]
+-- insert A6000[0x438d0d0a+0] A7S[0x438bea5c+7]
+   7 438bea5c: ldr r3, [pc, #0x28]         @ 0x438bea88
+   7 438bea5e: ldr r3, [r4, r3]
+   7 438bea60: ldrb.w r1, [r3, #0x62]
+   7 438bea64: cbnz r1, 0x438bea82 @ imm = #0x1a
+   7 438bea66: movs r0, #0x3
+   7 438bea68: bl 0x4379b590 @ imm = #-0x1234dc
+   7 438bea6c: cbz r0, 0x438bea82 @ imm = #0x12
+-- replace A6000[0x438d0d0c+2] A7S[0x438bea70+73]
+   6 438d0d0c: mov r1, r4
+   6 438d0d0e: mov r2, r6
+   7 438bea70: movw r2, #0x343
+   7 438bea74: ldr r1, [pc, #0x18]         @ 0x438bea90
+   7 438bea76: add r0, pc
+   7 438bea78: add r1, pc
+   7 438bea7a: pop.w {r4, lr}
+   7 438bea7e: b.w 0x438f7114 @ imm = #0x38692
+   7 438bea82: pop {r4, pc}
+   7 438bea84: ldrh r6, [r4, r3]
+   7 438bea86: lsls r6, r6, #0x1
+   7 438bea88: ldrb r4, [r0, #0x3]
+   7 438bea8a: movs r0, r0
+   7 438bea8c: str r3, [r1, #0x58]
+-- replace A6000[0x438d0d16+15] A7S[0x438beb28+4]
+   6 438d0d16: add.w r5, r5, #0x4a00
+   6 438d0d1a: movs r3, #0x0
+   6 438d0d1c: str.w r3, [r5, #0xd8]
+   6 438d0d20: pop {r2, r3, r4, r5, r6, pc}
+   6 438d0d22: nop 
+   6 438d0d24: adr r7, #504
+   6 438d0d26: movs r4, r7
+   6 438d0d28: str r7, [sp, #0x390]
+   6 438d0d2a: movs r7, r7
+   6 438d0d2c: adr r7, #460
+   6 438d0d2e: movs r4, r7
+   6 438d0d30: ldrb.w r3, [r0, #0x74f]
+   7 438beb28: b 0x438bebb8 @ imm = #0x8c
+   7 438beb2a: ldrh r1, [r0]
+   7 438beb2c: movw r3, #0x8001
+   7 438beb30: cmp r1, r3
+-- delete A6000[0x438d0d3c+15] A7S[0x438beb34+0]
+   6 438d0d3c: add.w r0, r0, #0x4a00
+   6 438d0d40: adds r0, #0xd8
+   6 438d0d42: bl 0x437dbc18 @ imm = #-0xf512e
+   6 438d0d46: cbz r0, 0x438d0d6e @ imm = #0x24
+   6 438d0d48: ldr r3, [pc, #0x64]         @ 0x438d0db0
+   6 438d0d4a: movs r0, #0x5
+   6 438d0d4c: ldr r4, [pc, #0x64]         @ 0x438d0db4
+   6 438d0d4e: movs r1, #0x0
+   6 438d0d50: movs r2, #0x1
+   6 438d0d52: add r3, pc
+   6 438d0d54: add r4, pc
+   6 438d0d56: movw r6, #0x2d6
+-- delete A6000[0x438d0d64+2] A7S[0x438beb36+0]
+   6 438d0d64: mov r1, r4
+   6 438d0d66: mov r2, r6
+-- replace A6000[0x438d0d6e+3] A7S[0x438beb3c+7]
+   6 438d0d6e: add.w r5, r5, #0x4a00
+   6 438d0d72: movs r0, #0xc
+   6 438d0d74: ldr.w r1, [r5, #0xd8]
+   7 438beb3c: b 0x438bebbc @ imm = #0x7c
+   7 438beb3e: ldrh r1, [r0, #0x2]
+   7 438beb40: movw r3, #0x101
+   7 438beb44: cmp r1, r3
+   7 438beb46: beq 0x438beb52 @ imm = #0x8
+   7 438beb48: ldr r0, [pc, #0xd0]         @ 0x438bec1c
+   7 438beb4a: add r0, pc
+-- replace A6000[0x438d0d7c+11] A7S[0x438beb50+6]
+   6 438d0d7c: cbz r0, 0x438d0daa @ imm = #0x2a
+   6 438d0d7e: ldr r3, [pc, #0x3c]         @ 0x438d0dbc
+   6 438d0d80: movs r1, #0x1
+   6 438d0d82: ldr r4, [pc, #0x3c]         @ 0x438d0dc0
+   6 438d0d84: movs r0, #0x5
+   6 438d0d86: mov r2, r1
+   6 438d0d88: add r3, pc
+   6 438d0d8a: add r4, pc
+   6 438d0d8c: movw r5, #0x2db
+   6 438d0d90: str r4, [sp]
+   6 438d0d92: str r5, [sp, #0x4]
+   7 438beb50: b 0x438bebc0 @ imm = #0x6c
+   7 438beb52: ldrb r1, [r0, #0x4]
+   7 438beb54: cmp r1, #0x1
+   7 438beb56: beq 0x438beb62 @ imm = #0x8
+   7 438beb58: ldr r0, [pc, #0xc4]         @ 0x438bec20
+   7 438beb5a: add r0, pc
+-- insert A6000[0x438d0d98+0] A7S[0x438beb60+4]
+   7 438beb60: b 0x438bebc4 @ imm = #0x60
+   7 438beb62: ldr r1, [r0, #0x8]
+   7 438beb64: cmp.w r1, #0xffffffff
+   7 438beb68: beq 0x438beb74 @ imm = #0x8
+-- delete A6000[0x438d0d9a+2] A7S[0x438beb6c+0]
+   6 438d0d9a: mov r1, r4
+   6 438d0d9c: mov r2, r5
+-- delete A6000[0x438d0da0+26] A7S[0x438beb6e+0]
+   6 438d0da0: add sp, #0x8
+   6 438d0da2: pop.w {r4, r5, r6, lr}
+   6 438d0da6: b.w 0x43902718 @ imm = #0x3196e
+   6 438d0daa: add sp, #0x8
+   6 438d0dac: pop {r4, r5, r6, pc}
+   6 438d0dae: nop 
+   6 438d0db0: adr r7, #152
+   6 438d0db2: movs r4, r7
+   6 438d0db4: str r7, [sp, #0x230]
+   6 438d0db6: movs r7, r7
+   6 438d0db8: adr r7, #108
+   6 438d0dba: movs r4, r7
+-- replace A6000[0x438d0de2+11] A7S[0x438beb72+5]
+   6 438d0de2: cbz r0, 0x438d0e0a @ imm = #0x24
+   6 438d0de4: ldr r3, [pc, #0x64]         @ 0x438d0e4c
+   6 438d0de6: movs r1, #0x1
+   6 438d0de8: ldr r5, [pc, #0x64]         @ 0x438d0e50
+   6 438d0dea: mov r2, r1
+   6 438d0dec: movs r0, #0x5
+   6 438d0dee: add r3, pc
+   6 438d0df0: add r5, pc
+   6 438d0df2: movw r6, #0x2ed
+   6 438d0df6: str r5, [sp]
+   6 438d0df8: str r6, [sp, #0x4]
+   7 438beb72: b 0x438bebc8 @ imm = #0x52
+   7 438beb74: ldrb r1, [r0, #0x10]
+   7 438beb76: cbz r1, 0x438beb82 @ imm = #0x8
+   7 438beb78: ldr r0, [pc, #0xac]         @ 0x438bec28
+   7 438beb7a: add r0, pc
+-- delete A6000[0x438d0dfe+1] A7S[0x0+0]
+   6 438d0dfe: ldr r0, [pc, #0x54]         @ 0x438d0e54

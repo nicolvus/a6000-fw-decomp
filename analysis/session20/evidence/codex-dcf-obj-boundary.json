@@ -1,0 +1,170 @@
+{
+  "library": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libObj.so",
+  "sha256": "8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a",
+  "symbols": {},
+  "virtuals": {
+    "0x8fe0a0": [],
+    "0x908afc": []
+  },
+  "plt": {
+    "0xdd1f0": {
+      "got": "0x102d568",
+      "symbol": "_ZN5MprIf25PreRegisterDcfContentSyncEmN3MPR5T_LTMENS0_10DcfObjInfoEttPb"
+    },
+    "0xdda64": {
+      "got": "0x102d810",
+      "symbol": "_ZN5MprIf15FlushWriteStillEPNS_20FlushWriteStillParamEm"
+    },
+    "0xe0f70": {
+      "got": "0x102e8d0",
+      "symbol": "_ZN5MprIf10WriteStillEPNS_15WriteStillParamEPN3MPR9StillInfoEm"
+    },
+    "0xe14e8": {
+      "got": "0x102ea88",
+      "symbol": "_ZN5MprIf19MakeWriteStillImageEPNS_20WriteStillImageParamEPN3MPR9StillInfoE"
+    },
+    "0xe17e0": {
+      "got": "0x102eb7c",
+      "symbol": "_ZN5MprIf32GetLastPreRegisterDCFContentSyncEmN3MPR14EntryConditionENS0_7EntryIdEPbS3_PS2_"
+    }
+  },
+  "callers": [
+    {
+      "addr": "0xdccce",
+      "func": "0xdb3b8",
+      "gap": 6422,
+      "export": "_init",
+      "virtual_of": [],
+      "target": "0xdd1f0",
+      "symbol": "_ZN5MprIf25PreRegisterDcfContentSyncEmN3MPR5T_LTMENS0_10DcfObjInfoEttPb",
+      "opcode": "b"
+    },
+    {
+      "addr": "0xdd542",
+      "func": "0xdb3b8",
+      "gap": 8586,
+      "export": "_init",
+      "virtual_of": [],
+      "target": "0xdda64",
+      "symbol": "_ZN5MprIf15FlushWriteStillEPNS_20FlushWriteStillParamEm",
+      "opcode": "b"
+    },
+    {
+      "addr": "0xe0a4e",
+      "func": "0xdb3b8",
+      "gap": 22166,
+      "export": "_init",
+      "virtual_of": [],
+      "target": "0xe0f70",
+      "symbol": "_ZN5MprIf10WriteStillEPNS_15WriteStillParamEPN3MPR9StillInfoEm",
+      "opcode": "b"
+    },
+    {
+      "addr": "0xe0fc6",
+      "func": "0xdb3b8",
+      "gap": 23566,
+      "export": "_init",
+      "virtual_of": [],
+      "target": "0xe14e8",
+      "symbol": "_ZN5MprIf19MakeWriteStillImageEPNS_20WriteStillImageParamEPN3MPR9StillInfoE",
+      "opcode": "b"
+    },
+    {
+      "addr": "0x722288",
+      "func": "0x722200",
+      "gap": 136,
+      "export": null,
+      "virtual_of": [],
+      "target": "0xe17e0",
+      "symbol": "_ZN5MprIf32GetLastPreRegisterDCFContentSyncEmN3MPR14EntryConditionENS0_7EntryIdEPbS3_PS2_",
+      "opcode": "blx"
+    },
+    {
+      "addr": "0x8fe0f0",
+      "func": "0x8fe0a0",
+      "gap": 80,
+      "export": null,
+      "virtual_of": [],
+      "target": "0xe0f70",
+      "symbol": "_ZN5MprIf10WriteStillEPNS_15WriteStillParamEPN3MPR9StillInfoEm",
+      "opcode": "blx"
+    },
+    {
+      "addr": "0x8fe234",
+      "func": "0x8fe1e4",
+      "gap": 80,
+      "export": null,
+      "virtual_of": [],
+      "target": "0xdda64",
+      "symbol": "_ZN5MprIf15FlushWriteStillEPNS_20FlushWriteStillParamEm",
+      "opcode": "blx"
+    },
+    {
+      "addr": "0x900180",
+      "func": "0x900124",
+      "gap": 92,
+      "export": null,
+      "virtual_of": [],
+      "target": "0xdd1f0",
+      "symbol": "_ZN5MprIf25PreRegisterDcfContentSyncEmN3MPR5T_LTMENS0_10DcfObjInfoEttPb",
+      "opcode": "blx"
+    },
+    {
+      "addr": "0x908d9c",
+      "func": "0x908afc",
+      "gap": 672,
+      "export": null,
+      "virtual_of": [],
+      "target": "0x8fe0a0",
+      "symbol": "",
+      "opcode": "bl"
+    },
+    {
+      "addr": "0x90a172",
+      "func": "0x909a84",
+      "gap": 1774,
+      "export": null,
+      "virtual_of": [],
+      "target": "0x8fe0a0",
+      "symbol": "",
+      "opcode": "bl"
+    },
+    {
+      "addr": "0x90bbdc",
+      "func": "0x90b248",
+      "gap": 2452,
+      "export": null,
+      "virtual_of": [],
+      "target": "0x908afc",
+      "symbol": "",
+      "opcode": "bl"
+    },
+    {
+      "addr": "0x91c0ca",
+      "func": "0x91c09c",
+      "gap": 46,
+      "export": null,
+      "virtual_of": [],
+      "target": "0xe14e8",
+      "symbol": "_ZN5MprIf19MakeWriteStillImageEPNS_20WriteStillImageParamEPN3MPR9StillInfoE",
+      "opcode": "blx"
+    },
+    {
+      "addr": "0x93b8e8",
+      "func": "0x93b8e0",
+      "gap": 8,
+      "export": null,
+      "virtual_of": [],
+      "target": "0xe14e8",
+      "symbol": "_ZN5MprIf19MakeWriteStillImageEPNS_20WriteStillImageParamEPN3MPR9StillInfoE",
+      "opcode": "blx"
+    }
+  ],
+  "references": {
+    "0x8fe0a0": [],
+    "0x908afc": []
+  },
+  "windows": {
+    "0x8fe0a0:0x8fe1a0": "  8fe0a0: e92d 41f0    \tpush.w\t{r4, r5, r6, r7, r8, lr}\n  8fe0a4: b086         \tsub\tsp, #0x18\n  8fe0a6: 4604         \tmov\tr4, r0\n  8fe0a8: af02         \tadd\tr7, sp, #0x8\n  8fe0aa: 460d         \tmov\tr5, r1\n  8fe0ac: f107 000c    \tadd.w\tr0, r7, #0xc\n  8fe0b0: 6961         \tldr\tr1, [r4, #0x14]\n  8fe0b2: 4690         \tmov\tr8, r2\n  8fe0b4: 461e         \tmov\tr6, r3\n  8fe0b6: f735 fcdc    \tbl\t0x833a72 <_ZN8UtilList12GetCellCountEPNS_8_utlListE+0x1c152> @ imm = #-0xca648\n  8fe0ba: 4940         \tldr\tr1, [pc, #0x100]        @ 0x8fe1bc <ObjSalvage_UnregisterCommand+0x2cbc>\n  8fe0bc: 6a60         \tldr\tr0, [r4, #0x24]\n  8fe0be: 4479         \tadd\tr1, pc\n  8fe0c0: f7e3 cc7a    \tblx\t0xe19b8 <_ZNK7MonCtrl16ConPrintfMessageEPKcz@plt> @ imm = #-0x81c70c\n  8fe0c4: 2087         \tmovs\tr0, #0x87\n  8fe0c6: f240 313e    \tmovw\tr1, #0x33e\n  8fe0ca: f01b fb3b    \tbl\t0x919744 <ObjStillRecorder_UnregisterCommand+0x5de8> @ imm = #0x1b676\n  8fe0ce: b95d         \tcbnz\tr5, 0x8fe0e8 <ObjSalvage_UnregisterCommand+0x2be8> @ imm = #0x16\n  8fe0d0: f240 3345    \tmovw\tr3, #0x345\n  8fe0d4: 4a3a         \tldr\tr2, [pc, #0xe8]         @ 0x8fe1c0 <ObjSalvage_UnregisterCommand+0x2cc0>\n  8fe0d6: 9300         \tstr\tr3, [sp]\n  8fe0d8: 2087         \tmovs\tr0, #0x87\n  8fe0da: 4b3a         \tldr\tr3, [pc, #0xe8]         @ 0x8fe1c4 <ObjSalvage_UnregisterCommand+0x2cc4>\n  8fe0dc: 2102         \tmovs\tr1, #0x2\n  8fe0de: 447a         \tadd\tr2, pc\n  8fe0e0: 447b         \tadd\tr3, pc\n  8fe0e2: f017 ff0f    \tbl\t0x915f04 <ObjStillRecorder_UnregisterCommand+0x25a8> @ imm = #0x17e1e\n  8fe0e6: e011         \tb\t0x8fe10c <ObjSalvage_UnregisterCommand+0x2c0c> @ imm = #0x22\n  8fe0e8: 69a0         \tldr\tr0, [r4, #0x18]\n  8fe0ea: 4629         \tmov\tr1, r5\n  8fe0ec: 4642         \tmov\tr2, r8\n  8fe0ee: 6abb         \tldr\tr3, [r7, #0x28]\n  8fe0f0: f7e2 cf3e    \tblx\t0xe0f70 <_ZN5MprIf10WriteStillEPNS_15WriteStillParamEPN3MPR9StillInfoEm@plt> @ imm = #-0x81d184\n  8fe0f4: 4601         \tmov\tr1, r0\n  8fe0f6: b158         \tcbz\tr0, 0x8fe110 <ObjSalvage_UnregisterCommand+0x2c10> @ imm = #0x16\n  8fe0f8: f240 334f    \tmovw\tr3, #0x34f\n  8fe0fc: 4a32         \tldr\tr2, [pc, #0xc8]         @ 0x8fe1c8 <ObjSalvage_UnregisterCommand+0x2cc8>\n  8fe0fe: 9300         \tstr\tr3, [sp]\n  8fe100: 2087         \tmovs\tr0, #0x87\n  8fe102: 4b32         \tldr\tr3, [pc, #0xc8]         @ 0x8fe1cc <ObjSalvage_UnregisterCommand+0x2ccc>\n  8fe104: 447a         \tadd\tr2, pc\n  8fe106: 447b         \tadd\tr3, pc\n  8fe108: f017 fe68    \tbl\t0x915ddc <ObjStillRecorder_UnregisterCommand+0x2480> @ imm = #0x17cd0\n  8fe10c: 4604         \tmov\tr4, r0\n  8fe10e: e041         \tb\t0x8fe194 <ObjSalvage_UnregisterCommand+0x2c94> @ imm = #0x82\n  8fe110: 6920         \tldr\tr0, [r4, #0x10]\n  8fe112: f04f 31ff    \tmov.w\tr1, #0xffffffff\n  8fe116: f7df c8d8    \tblx\t0xdd2c8 <_ZN19EventHandlerWrapper9WaitEventEj@plt> @ imm = #-0x820e50\n  8fe11a: 68e0         \tldr\tr0, [r4, #0xc]\n  8fe11c: f7e4 ca5c    \tblx\t0xe25d8 <_ZN3MWF13EventReceiver11GetEvtCountEv@plt> @ imm = #-0x81bb48\n  8fe120: b378         \tcbz\tr0, 0x8fe182 <ObjSalvage_UnregisterCommand+0x2c82> @ imm = #0x5e\n  8fe122: 1d38         \tadds\tr0, r7, #0x4\n  8fe124: f7e0 c9d2    \tblx\t0xde4cc <_ZN3MWF6ObjMsgC1Ev@plt> @ imm = #-0x81fc5c\n  8fe128: 68e0         \tldr\tr0, [r4, #0xc]\n  8fe12a: 1d39         \tadds\tr1, r7, #0x4\n  8fe12c: f7e2 c964    \tblx\t0xe03f8 <_ZN3MWF13EventReceiver9RecvEventEPNS_6ObjMsgE@plt> @ imm = #-0x81dd38\n  8fe130: 1d38         \tadds\tr0, r7, #0x4\n  8fe132: 2100         \tmovs\tr1, #0x0\n  8fe134: 2228         \tmovs\tr2, #0x28\n  8fe136: f7e0 caa8    \tblx\t0xde688 <_ZNK3MWF6ObjMsg8GetParamEjNS_5Param4TypeE@plt> @ imm = #-0x81fab0\n  8fe13a: b958         \tcbnz\tr0, 0x8fe154 <ObjSalvage_UnregisterCommand+0x2c54> @ imm = #0x16\n  8fe13c: f240 3362    \tmovw\tr3, #0x362\n  8fe140: 4a23         \tldr\tr2, [pc, #0x8c]         @ 0x8fe1d0 <ObjSalvage_UnregisterCommand+0x2cd0>\n  8fe142: 9300         \tstr\tr3, [sp]\n  8fe144: 3087         \tadds\tr0, #0x87\n  8fe146: 4b23         \tldr\tr3, [pc, #0x8c]         @ 0x8fe1d4 <ObjSalvage_UnregisterCommand+0x2cd4>\n  8fe148: 2105         \tmovs\tr1, #0x5\n  8fe14a: 447a         \tadd\tr2, pc\n  8fe14c: 447b         \tadd\tr3, pc\n  8fe14e: f017 fed9    \tbl\t0x915f04 <ObjStillRecorder_UnregisterCommand+0x25a8> @ imm = #0x17db2\n  8fe152: e011         \tb\t0x8fe178 <ObjSalvage_UnregisterCommand+0x2c78> @ imm = #0x22\n  8fe154: f7dd cc2a    \tblx\t0xdb9ac <_ZNK3MWF6Struct8GetValueEv@plt> @ imm = #-0x8227ac\n  8fe158: 4601         \tmov\tr1, r0\n  8fe15a: 2248         \tmovs\tr2, #0x48\n  8fe15c: 4630         \tmov\tr0, r6\n  8fe15e: f68e f51d    \tbl\t0x38cb9c <ObjNetMediaServer_UnregisterCommand+0xfbea> @ imm = #-0x5715c6\n  8fe162: f240 3369    \tmovw\tr3, #0x369\n  8fe166: 4a1c         \tldr\tr2, [pc, #0x70]         @ 0x8fe1d8 <ObjSalvage_UnregisterCommand+0x2cd8>\n  8fe168: 2087         \tmovs\tr0, #0x87\n  8fe16a: 9300         \tstr\tr3, [sp]\n  8fe16c: 4b1b         \tldr\tr3, [pc, #0x6c]         @ 0x8fe1dc <ObjSalvage_UnregisterCommand+0x2cdc>\n  8fe16e: 447a         \tadd\tr2, pc\n  8fe170: 6831         \tldr\tr1, [r6]\n  8fe172: 447b         \tadd\tr3, pc\n  8fe174: f017 fe32    \tbl\t0x915ddc <ObjStillRecorder_UnregisterCommand+0x2480> @ imm = #0x17c64\n  8fe178: 4604         \tmov\tr4, r0\n  8fe17a: 1d38         \tadds\tr0, r7, #0x4\n  8fe17c: f7df ce0a    \tblx\t0xddd94 <_ZN3MWF6ObjMsgD1Ev@plt> @ imm = #-0x8203ec\n  8fe180: e000         \tb\t0x8fe184 <ObjSalvage_UnregisterCommand+0x2c84> @ imm = #0x0\n  8fe182: 4604         \tmov\tr4, r0\n  8fe184: 4b16         \tldr\tr3, [pc, #0x58]         @ 0x8fe1e0 <ObjSalvage_UnregisterCommand+0x2ce0>\n  8fe186: 2087         \tmovs\tr0, #0x87\n  8fe188: 4621         \tmov\tr1, r4\n  8fe18a: f44f 725c    \tmov.w\tr2, #0x370\n  8fe18e: 447b         \tadd\tr3, pc\n  8fe190: f01b fb9f    \tbl\t0x9198d2 <ObjStillRecorder_UnregisterCommand+0x5f76> @ imm = #0x1b73e\n  8fe194: f107 000c    \tadd.w\tr0, r7, #0xc\n  8fe198: f735 fc75    \tbl\t0x833a86 <_ZN8UtilList12GetCellCountEPNS_8_utlListE+0x1c166> @ imm = #-0xca716\n  8fe19c: 4620         \tmov\tr0, r4\n  8fe19e: f107 0710    \tadd.w\tr7, r7, #0x10"
+  }
+}

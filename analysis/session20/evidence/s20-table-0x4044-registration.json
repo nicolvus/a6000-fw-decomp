@@ -1,0 +1,199 @@
+{
+  "task": "S20-P1-TABLE-0x4044",
+  "table_start": "0x43ffff84",
+  "table_end": "0x4400012c",
+  "row_count": 35,
+  "row_format": "{id:u32, fn_ptr_thumb:u32, pad:u32}, stride 0xc",
+  "target_entry": {
+    "id": "0x4044",
+    "fn_ptr": "0x43aeaa4a"
+  },
+  "all_rows": [
+    [
+      "0x43ffff84",
+      "0x4044",
+      "0x43aeaa4a"
+    ],
+    [
+      "0x43ffff90",
+      "0x4042",
+      "0x4379e47c"
+    ],
+    [
+      "0x43ffff9c",
+      "0x4049",
+      "0x4379e500"
+    ],
+    [
+      "0x43ffffa8",
+      "0x4045",
+      "0x43aea9f0"
+    ],
+    [
+      "0x43ffffb4",
+      "0x4043",
+      "0x4379e3fc"
+    ],
+    [
+      "0x43ffffc0",
+      "0x404a",
+      "0x43aeaaf4"
+    ],
+    [
+      "0x43ffffcc",
+      "0x404b",
+      "0x43aeaaa2"
+    ],
+    [
+      "0x43ffffd8",
+      "0x404c",
+      "0x4379e60c"
+    ],
+    [
+      "0x43ffffe4",
+      "0x4081",
+      "0x43aeab46"
+    ],
+    [
+      "0x43fffff0",
+      "0x4092",
+      "0x4379d2b4"
+    ],
+    [
+      "0x43fffffc",
+      "0x40d3",
+      "0x43aea754"
+    ],
+    [
+      "0x44000008",
+      "0x40d6",
+      "0x43aea73a"
+    ],
+    [
+      "0x44000014",
+      "0xd003",
+      "0x43aea90c"
+    ],
+    [
+      "0x44000020",
+      "0xd000",
+      "0x43aea9b2"
+    ],
+    [
+      "0x4400002c",
+      "0xd001",
+      "0x43aea982"
+    ],
+    [
+      "0x44000038",
+      "0xd002",
+      "0x43aea938"
+    ],
+    [
+      "0x44000044",
+      "0xd004",
+      "0x43aea9ca"
+    ],
+    [
+      "0x44000050",
+      "0xd006",
+      "0x43aeab7c"
+    ],
+    [
+      "0x4400005c",
+      "0xd008",
+      "0x43aea99a"
+    ],
+    [
+      "0x44000068",
+      "0xd009",
+      "0x43aea8e0"
+    ],
+    [
+      "0x44000074",
+      "0xd00a",
+      "0x43aea8c8"
+    ],
+    [
+      "0x44000080",
+      "0xd00b",
+      "0x43aea8a2"
+    ],
+    [
+      "0x4400008c",
+      "0xd014",
+      "0x4379e354"
+    ],
+    [
+      "0x44000098",
+      "0xd007",
+      "0x4379e3a8"
+    ],
+    [
+      "0x440000a4",
+      "0xd00c",
+      "0x43aea884"
+    ],
+    [
+      "0x440000b0",
+      "0xd00d",
+      "0x43aea3fa"
+    ],
+    [
+      "0x440000bc",
+      "0xd00e",
+      "0x43aea964"
+    ],
+    [
+      "0x440000c8",
+      "0xd00f",
+      "0x43aea85e"
+    ],
+    [
+      "0x440000d4",
+      "0xd016",
+      "0x43aea81a"
+    ],
+    [
+      "0x440000e0",
+      "0xd017",
+      "0x43aea720"
+    ],
+    [
+      "0x440000ec",
+      "0xd011",
+      "0x43aea7dc"
+    ],
+    [
+      "0x440000f8",
+      "0xd012",
+      "0x43aea7b6"
+    ],
+    [
+      "0x44000104",
+      "0xd013",
+      "0x43aea79e"
+    ],
+    [
+      "0x44000110",
+      "0xd010",
+      "0x43aea802"
+    ],
+    [
+      "0x4400011c",
+      "0xd015",
+      "0x43aea838"
+    ]
+  ],
+  "known_dispatcher_438052d8": {
+    "reads_table": "0x43fff30c",
+    "row_count": 220,
+    "hardcoded": true,
+    "conclusion": "NO lee la tabla nueva de 0x43ffff84 \u2014 son tablas independientes"
+  },
+  "literal_0x4044_search_false_positive": {
+    "hit_1": "0x435c1904 (true addr) -> es un offset GOT usado por ldr r1,[r4,r1]; coincidencia numerica, no mensaje",
+    "elf_offset_bug_found": "analysis/av-cam-analysis-view.elf desplazado +0x1f0 respecto a convencion BASE,OFF=0x43541000,0x1F0 del proyecto"
+  },
+  "classification": "VERIFICADO: tabla y entrada; VERIFICADO: dispatcher 438052d8 no la lee; NO_VERIFICADO: dispatcher real de esta tabla; DESCARTADO: busqueda de remitente por literal 0x4044"
+}

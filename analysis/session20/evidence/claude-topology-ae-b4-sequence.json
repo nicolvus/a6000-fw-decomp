@@ -1,0 +1,48 @@
+{
+  "session": 20,
+  "scope": "libObj.so fw3.21 (direcciones ELF). Desensamblado llvm-objdump ya generado (scratchpad libObj.dis), RTTI analysis/session20/evidence/libobj-rtti-vtables.json",
+  "topology_list_format": {
+    "createTopology_wrapper": "0x420630 (r0=modelo, r1=id de peticion, r2=lista, r3=extra) -> 0x41a26c -> 0x4188d0",
+    "destroyTopology_wrapper": "0x420656",
+    "list": "u32[] terminada en 0 (bucle 0x418956-0x41895e: ldr r3,[r5],#4; cmp r3,#0)",
+    "class": "VERIFICADO"
+  },
+  "creators": [
+    {"model": "ModelCamera", "variant": "model/SCALAR_CAMERA", "init": "0x4acc70 (llamado por ModelCamera vslot48 0x4c94cc)", "list_field": "this+0x84", "lists": {"SCALAR FACEREC ON": "0xce765c [9,ae,af,9e]", "SCALAR FACEREC OFF": "0xce762c [9,ae,af]", "FACEREC ON (normal)": "0xcf2000 [9,a,9e]", "FACEREC OFF (normal)": "0xcf2010 [9,a]"}, "create": "0x4ae6d4", "destroy": "0x4ae720", "rows": ["0xae", "0xaf"], "replaces": "0x0a", "class": "VERIFICADO"},
+    {"model": "ModelStillRec", "variant": "model/SCALAR_STILL_REC", "init": "0x6943fc (llamado por ModelStillRec vslot48 0x6945e0)", "list_field": "this+0xdc", "lists": {"SCALAR_STILL_REC": "0xd54480 [b0,b1,10]", "STILL_REC_THMTRANS": "0xd544a0 [8,10,c6,c7]", "normal": "0xd537bc [8,10]"}, "create": "0x699bd4", "destroy": "0x699c32", "rows": ["0xb0", "0xb1"], "replaces": "0x08", "class": "VERIFICADO"},
+    {"model": "ModelScalar", "dispatcher": "vslot68 0x649ef8, accion 7 -> 0x6471d0 create(0x101), accion 8 -> 0x6471f0 destroy(0x102)", "list": "0xd44550 [ae,af,9,10,b0,b1,b2,b3]", "rows": ["0xae", "0xaf", "0xb0", "0xb1", "0xb2", "0xb3"], "class": "VERIFICADO"},
+    {"model": "ModelScalarPb", "sites": "0x65a720 create(0x101) / 0x65a740 destroy(0x102), invocados desde ModelScalarPb (0x65bb9c/0x65bba8)", "list": "0xd46264 [b2,b3,7,5,6]", "rows": ["0xb2", "0xb3"], "class": "VERIFICADO (sitio y lista); propietario por proximidad de vtable"},
+    {"model": "ModelScalarPb", "site": "0x65a8a4 <- 0x65b0bc <- thunk 0x65bc38 <- ModelScalarPb vslot68 (0x65bd0e)", "list": "heap [r6, 0xb4, 0], r6 = fila hallada por plantilla 0xd4627c {pin_type 6 REC_CNT_INFO, src_obj 11, src_dir out, src_no 0, dst_obj dinamico}", "create": "0x65a95e (id 0x109)", "destroy_prev": "0x65a922 (id 0x10a)", "rows": ["0xb4"], "class": "VERIFICADO (literal 0xb4 y create); INFERENCIA (semantica de r6)"},
+    {"model": "ModelMovieRec", "variant": "model/SCALAR_MOVIE_REC", "site": "0x5f76d4 (<- ModelMovieRec vslot68 0x60bf38)", "lists": {"CreSc": "0xd32040 [cb,cc,e,f]", "Cre normal": "0xd31c44 [b,e,f]"}, "rows": ["0xcb", "0xcc"], "replaces": "0x0b", "class": "VERIFICADO"},
+    {"model": "ModelMovieRec", "variant": "model/SCALAR_MOVIE_REC", "site": "0x5f6bb4 create id 0x2f", "lists": {"CreSc": "0xd319d8 [9d,cd,43,1,ad,b5]", "normal": "0xd31994 [9d,1,ad,b5]"}, "rows": ["0xcd"], "class": "VERIFICADO (lista); propietario por proximidad"}
+  ],
+  "no_static_list_contains_0xb4": "VERIFICADO sobre listas u32 terminadas en 0 referenciadas PC-relativo (146414 referencias resueltas)",
+  "objscalar_getpin6": {
+    "registry": "ObjScalar+0x4c = GlobalAccessor (vtable libBizFw: +0xc SetPinInfo(BizObjPin*,int), +0x10 GetPinInfo(int), +0x2c SetObjCategoryID -> 0x3a49)",
+    "slots": ["0 YC in#0", "1 YC in#1", "2 YC in#2", "3 YC in#3", "4 YC out#0", "5 YC out#1", "6 YC out#2", "7 YC out#3", "8 STILL_DATA in#0", "9 STILL_DATA out#0"],
+    "evidence": "pines creados 0x3aca84..0x3accec (+0x68..+0x8c), registro 0x3ace08..0x3ace7e con indice r2=0..9",
+    "getpin6": "YC out#2 -> fila 0xb4 (obj53 out2 -> StillRecorder in0, StsId 6)",
+    "call_site": "0x3d2fae: ldr r0,[r5,#0x14]; movs r1,#6; ldr r3,[r3,#0x10]; blx r3",
+    "class": "VERIFICADO (orden de registro y slot); INFERENCIA fuerte (seq+0x14 es ese GlobalAccessor)"
+  },
+  "sequence_still_capture_start": {
+    "function": "CamUser::SequenceStillCaptureStart vslot1 0xa3b63c -> 0xa3b650",
+    "pin_getter": "0xa15fb4(this, idx) -> 0xad422c: *(holder+0x58+4*idx)",
+    "objcamera_pin_slots": ["0 YC#0", "1 YC#1", "2 YC#2", "3 YC#3", "4 STILL_DATA#0", "5 SOUND#0", "6 CAMERA_STATUS#0", "7 YC#4", "8 YC#5"],
+    "sends": [
+      {"n": 1, "addr": "0xa3b8d0", "pin": 4, "key": "0x1003", "msg": "0x2008/0x1003", "params": ["0x1009"]},
+      {"n": 2, "addr": "0xa3ba9e", "pin": 6, "key": "0x1003", "msg": "0x200a/0x100c", "nested": "0x3100/0x8553 {0x9526,0x9527}"},
+      {"n": 3, "addr": "0xa3bb2c", "pin": 4, "key": "0x1003", "msg": "0x2008/0x1001"},
+      {"n": 4, "addr": "0xa3bc22", "pin": 6, "key": "0x1003", "msg": "0x200a/0x101b", "nested": "0x3100/0x8599 {0x9735,0x9736}"},
+      {"n": 5, "addr": "0xa3bd10", "pin": 4, "key": "0x1003", "msg": "0x2008/0x1002"},
+      {"n": 6, "addr": "0xa3c3ba", "pin": 4, "key": "0x1002", "msg": "0x2008/0x1000"},
+      {"n": 7, "addr": "0xa3c460", "pin": 4, "key": "0x1003", "msg": "0x2008/0x1004"},
+      {"n": 8, "addr": "0xa3c4d8", "pin": 6, "key": "0x1003", "msg": "0x200a/0x1003"},
+      {"n": 9, "addr": "0xa3c662", "pin": 6, "key": "0x1003", "msg": "0x200a/0x1003"},
+      {"n": 10, "addr": "0xa3c9b4", "pin": 0, "key": "0x1002", "msg": "0x2001/0x1002", "params": ["0x1009", "0x1008", "0x130f=true", "0x1322"]},
+      {"n": 11, "addr": "0xa3ca5a", "pin": 0, "key": "0x1002", "msg": "0x2001/0x1002 (mismo mensaje, otra rama)"},
+      {"n": 12, "addr": "0xa3cc56", "pin": 6, "key": "0x1003", "msg": "0x200a/0x100b", "nested": "0x3100/0x85d2, 0x3100/0x8509"}
+    ],
+    "class": "VERIFICADO (pin, categoria/id, claves); NO_VERIFICADO semantica de ids y de la clave de Send 0x1002/0x1003"
+  }
+}

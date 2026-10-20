@@ -1,0 +1,142 @@
+RUF100 [*] Unused `noqa` directive (non-enabled: `E402`)
+ --> tests/test_elf_xrefs.py:4:32
+  |
+3 | sys.path.insert(0, "scripts")
+4 | import elf_string_xrefs as sx  # noqa: E402
+  |                                ^^^^^^^^^^^^
+5 | import elf_thumb_callers as tc  # noqa: E402
+  |
+help: Remove unused `noqa` directive
+  |
+3 | sys.path.insert(0, "scripts")
+  - import elf_string_xrefs as sx  # noqa: E402
+4 + import elf_string_xrefs as sx
+5 | import elf_thumb_callers as tc  # noqa: E402
+  |
+
+RUF100 [*] Unused `noqa` directive (non-enabled: `E402`)
+ --> tests/test_elf_xrefs.py:5:33
+  |
+3 | sys.path.insert(0, "scripts")
+4 | import elf_string_xrefs as sx  # noqa: E402
+5 | import elf_thumb_callers as tc  # noqa: E402
+  |                                 ^^^^^^^^^^^^
+6 |
+7 | L = "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libObj.so"
+  |
+help: Remove unused `noqa` directive
+  |
+4 | import elf_string_xrefs as sx  # noqa: E402
+  - import elf_thumb_callers as tc  # noqa: E402
+5 + import elf_thumb_callers as tc
+6 |
+  |
+
+SIM115 Use a context manager for opening files
+  --> tests/test_elf_xrefs.py:8:5
+   |
+ 7 | L = "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libObj.so"
+ 8 | b = open(L, "rb").read()
+   |     ^^^^
+ 9 | # RecordStill (ObjStillRecorderCore) lo llama una sola vez, desde 0x90bbdc
+10 | assert [a for a, _ in tc.callers(b, {0x908AFC})] == [0x90BBDC]
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> tests/test_fm3_gpio_literals.py:1:1
+  |
+1 | import sys, pathlib
+  | ^^^^^^^^^^^^^^^^^^^
+2 | sys.path.insert(0, str(pathlib.Path(__file__).parents[1] / "scripts"))
+3 | from fm3_gpio_literals import decode_bitband, describe_alias
+  |
+help: Organize imports
+  |
+  - import sys, pathlib
+1 + import pathlib
+2 + import sys
+3 +
+4 | sys.path.insert(0, str(pathlib.Path(__file__).parents[1] / "scripts"))
+  |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> tests/test_fm3_gpio_literals.py:3:1
+  |
+1 | import sys, pathlib
+2 | sys.path.insert(0, str(pathlib.Path(__file__).parents[1] / "scripts"))
+3 | from fm3_gpio_literals import decode_bitband, describe_alias
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+4 |
+5 | def test_aliases_from_task():
+  |
+help: Organize imports
+  |
+4 |
+5 +
+6 | def test_aliases_from_task():
+  |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> tests/test_imx210_modes.py:1:1
+  |
+1 | import sys, pathlib
+  | ^^^^^^^^^^^^^^^^^^^
+2 | root = pathlib.Path(__file__).parents[1]
+3 | sys.path.insert(0, str(root / "scripts"))
+  |
+help: Organize imports
+  |
+  - import sys, pathlib
+1 + import pathlib
+2 + import sys
+3 +
+4 | root = pathlib.Path(__file__).parents[1]
+  |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> tests/test_imx210_modes.py:4:1
+  |
+2 | root = pathlib.Path(__file__).parents[1]
+3 | sys.path.insert(0, str(root / "scripts"))
+4 | from imx210_modes import Img, matrix
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+5 |
+6 | def test_matrix():
+  |
+help: Organize imports
+  |
+5 |
+6 +
+7 | def test_matrix():
+  |
+
+RUF100 [*] Unused `noqa` directive (non-enabled: `E402`)
+ --> tests/test_sfra_outcalls.py:4:28
+  |
+3 | sys.path.insert(0, "scripts")
+4 | import sfra_outcalls as s  # noqa: E402
+  |                            ^^^^^^^^^^^^
+5 |
+6 | d = open("analysis/av-cam-analysis-view.elf", "rb").read()
+  |
+help: Remove unused `noqa` directive
+  |
+3 | sys.path.insert(0, "scripts")
+  - import sfra_outcalls as s  # noqa: E402
+4 + import sfra_outcalls as s
+5 |
+  |
+
+SIM115 Use a context manager for opening files
+ --> tests/test_sfra_outcalls.py:6:5
+  |
+4 | import sfra_outcalls as s  # noqa: E402
+5 |
+6 | d = open("analysis/av-cam-analysis-view.elf", "rb").read()
+  |     ^^^^
+7 | o = s.outcalls(d)
+8 | assert 0x4390B3D0 in o and len(o) >= 10  # control positivo: hay llamadas salientes decodificadas
+  |
+
+Found 9 errors.
+[*] 7 fixable with the `--fix` option.

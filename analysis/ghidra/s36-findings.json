@@ -1,0 +1,16 @@
+{
+  "session": "S36",
+  "source_sha256": "b56b4c6172a60b879ebf405bc64e19e7456d230ff6125a21bbd4469e35c0d2c9",
+  "source": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libInfraScalarMpr.so",
+  "project": "analysis/ghidra/s36-project/libinfra-scalar-mpr.gpr",
+  "address_convention": "Ghidra VA = ELF VA + 0x10000; Thumb symbol values include bit 0, instruction addresses do not",
+  "claims": [
+    {"status": "VERIFICADO", "claim": "DmmAccess methods are undefined imports, not implementations", "symbols": ["_ZN9DmmAccess14AllocDmmMemoryEiPt", "_ZN9DmmAccess13FreeDmmMemoryEi"], "elf_got": ["0x3dbd4", "0x3d908"], "ghidra_plt": ["0x268c0", "0x26020"]},
+    {"status": "VERIFICADO", "claim": "AllocSharedMemory delegates to SysV shmget/shmat, returning shmid and virtual address", "ghidra_entries": ["0x27f64", "0x3076c"], "flags": "0x3b6", "record": {"stride": 12, "fields": ["shmid", "virtual_pointer", "requested_bytes"]}},
+    {"status": "VERIFICADO", "claim": "Shared memory virtual address is a copy destination in MprCb_GetStillData", "ghidra_entry": "0x2a410", "copy": "MemUtil::MemCpy8(local_34, *(void **)(local_24[3]+0x14c), *(int *)(local_24[3]+0x150))"},
+    {"status": "PARCIAL", "claim": "GetMemoryForEdit calls imported AllocDmmMemory with 0xc and ushort output; preserves nonzero return for MPR edit/delete operations", "ghidra_entries": ["0x30cbc", "0x30d04", "0x29288", "0x29468", "0x29e94"], "unknown": "Return is not dereferenced locally; size, unit semantics, mapping and allocation backend are absent"},
+    {"status": "INFERENCIA", "claim": "SysV path is a host exchange/copy buffer, not evidence of sensor DMA allocation"},
+    {"status": "NO_VERIFICADO", "claim": "Equality with av-cam DMM cmd 2/id 0x55/length 0x70, producer for P+0x18c/P+0x194, YC pitch/format and physical completion"}
+  ],
+  "next_step": "Locate defining provider of the two exact mangled DmmAccess imports, then decompile its allocation and message/mapping chain in a separately authorized scope; resolve av-cam runtime table independently"
+}

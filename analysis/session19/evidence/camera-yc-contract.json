@@ -1,0 +1,94 @@
+{
+  "task_id": "S19-04",
+  "verdict": "PARTIAL",
+  "scope": "Sony A6000 FW 3.21; static local analysis only; no camera interaction or binary modification.",
+  "binary": {
+    "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libObj.so",
+    "sha256": "8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a",
+    "addressing": "ELF offsets"
+  },
+  "method": [
+    "llvm-objdump -d --triple=thumbv7-linux-gnueabi",
+    "readelf -Wr",
+    "static topology and extent evidence cross-check"
+  ],
+  "findings": [
+    {
+      "state": "VERIFICADO",
+      "address": "0x959bdc..0x959bf0",
+      "file": "libObj.so",
+      "method": "llvm-objdump",
+      "finding": "ObjCamera_Create allocates 0x20c and calls constructor 0x98c380."
+    },
+    {
+      "state": "VERIFICADO",
+      "address": "0x98c380..0x98c4d8",
+      "file": "libObj.so",
+      "method": "llvm-objdump",
+      "finding": "ObjCamera constructor initializes object state, locks, resources and helpers without calling DmmCh, DmmAccessPLA or AvbbcPhycMem."
+    },
+    {
+      "state": "VERIFICADO",
+      "address": "0x987dc6..0x987fb0",
+      "file": "libObj.so",
+      "method": "llvm-objdump",
+      "finding": "Nine 0x40-byte MWF ObjPin objects are constructed at this+0x58..this+0x78 with output direction."
+    },
+    {
+      "state": "VERIFICADO",
+      "address": "0xcc4210 + 0x0a*0x20",
+      "file": "libObj.so",
+      "method": "static rodata topology decoding",
+      "finding": "Topology 0x0a connects ObjCamera out0 to ObjEffect in0."
+    },
+    {
+      "state": "VERIFICADO",
+      "address": "0x15fa74..0x15fc94",
+      "file": "libObj.so",
+      "method": "llvm-objdump",
+      "finding": "ObjEffect/PbCap constructs DmmCh(0x35), calls allocNew twice, and builds ObjMsg(0x3900,0x3000); no static caller edge from ObjCamera was recovered."
+    },
+    {
+      "state": "VERIFICADO",
+      "address": "0x15fac8; 0x15fb1e",
+      "file": "libObj.so plus analysis/dmm-extent-sizes.json",
+      "method": "llvm-objdump plus prior DMM extent extraction",
+      "finding": "PbCap's known pair is raster unitType 0x50b3f / extent 0xed / 0x3fc000 bytes and SDS unitType 0xe0b00 / extent 0xe4 / 0x800 bytes. SDS is control metadata, not pixels."
+    },
+    {
+      "state": "DESCARTADO",
+      "address": "not applicable",
+      "file": "libObj.so / IMX210 analysis",
+      "method": "absence of a static sensor-register-to-Camera-descriptor chain",
+      "finding": "Sensor register dimensions cannot identify Camera YC size or geometry."
+    },
+    {
+      "state": "NO_VERIFICADO",
+      "address": "Camera path after out0 -> Effect.in0",
+      "file": "libObj.so",
+      "method": "static analysis boundary",
+      "finding": "Camera YC unitType, DMM handle, offset, physical/DMA memory, geometry, pixel format, stride, planes, colorimetry, ownership and recycling policy remain unresolved."
+    },
+    {
+      "state": "INFERENCIA",
+      "address": "Camera.out0 -> Effect.in0; Effect 0x15fa74",
+      "file": "libObj.so",
+      "method": "separate static paths",
+      "finding": "Effect might allocate a later compatible DMM pair if a Live View path reaches its PbCap conversion, but neither reachability nor identity with the source Camera frame is proven."
+    }
+  ],
+  "camera_contract": {
+    "unit_type": "NO_VERIFICADO",
+    "dmm_handle": "NO_VERIFICADO",
+    "offset": "NO_VERIFICADO",
+    "physical_memory": "NO_VERIFICADO",
+    "geometry": "NO_VERIFICADO",
+    "format": "NO_VERIFICADO",
+    "stride": "NO_VERIFICADO",
+    "planes": "NO_VERIFICADO",
+    "colorimetry": "NO_VERIFICADO",
+    "ownership": "NO_VERIFICADO",
+    "recycling": "NO_VERIFICADO"
+  },
+  "safety": "SilentShutter is not declared functional. No original binary was modified, no Ghidra project was deleted, and no camera was connected or flashed."
+}

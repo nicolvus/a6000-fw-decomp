@@ -1,0 +1,101 @@
+{
+  "session": 18,
+  "agent": "Codex H - MPR y DCF",
+  "scope": "Analisis estatico exclusivo; sin camara, flasheo, instalacion ni modificacion de binarios originales.",
+  "artifacts": {
+    "kernel_tarball": {
+      "path": "linux-kernel.tar.gz",
+      "sha256": "b1c74cc1a0160a7fceced6f88fa35521adc431205ad1ebc8e413d20b653785b1"
+    },
+    "mpr_library": {
+      "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so",
+      "sha256": "9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30",
+      "format": "ELF 32-bit LSB shared object, ARM, EABI5, dynamically linked, stripped"
+    }
+  },
+  "findings": [
+    {
+      "classification": "VERIFICADO",
+      "subject": "mach-cxd4132/sdc.c",
+      "claim": "Es controlador DMC/LPDDR, no host SD/MMC.",
+      "evidence": [
+        "sdc.c:126-176 usa SDC_MEMORY, SDC_MODE_DDR, SDC_MODE2RANK y SDC_DDR2_MRW_*.",
+        "include/mach/regs-dmc.h:43-57 etiqueta los registros para LPDDR1/LPDDR2."
+      ]
+    },
+    {
+      "classification": "VERIFICADO",
+      "subject": "sdc-zqcal.c",
+      "claim": "Ejecuta calibracion ZQ de LPDDR2 por rango, con ZQLONG inicial y ZQSHORT periodico; no calibra una tarjeta SD.",
+      "evidence": [
+        "sdc-zqcal.c:47-72,126-145,210-229",
+        "sdc-zqcal.h:58-71 define MR10 y constantes LPDDR2."
+      ]
+    },
+    {
+      "classification": "DESCARTADO",
+      "subject": "sdc como evidencia SD/DCF",
+      "claim": "El nombre del modulo no acredita relacion con SD, filesystem ni catalogo DCF.",
+      "evidence": ["regs-dmc.h:37-65"]
+    },
+    {
+      "classification": "VERIFICADO",
+      "subject": "FAT/VFAT",
+      "claim": "El kernel incluye la implementacion FAT/VFAT; los tres defconfig CXD inspeccionados activan CONFIG_FAT_FS=y y CONFIG_VFAT_FS=y.",
+      "evidence": [
+        "fs/fat/Kconfig:1-88 y fs/fat/Makefile:5-7",
+        "cxd4132a_nfs_defconfig:991-993",
+        "cxd90014_android_set_defconfig:1337-1339",
+        "cxd90014_android_wlan_set_defconfig:1736-1738"
+      ]
+    },
+    {
+      "classification": "INFERENCIA",
+      "subject": "filesystem del medio extraible",
+      "claim": "FAT/VFAT es el candidato respaldado por el paquete OSS para el medio extraible Android/CXD.",
+      "evidence": ["Codigo y configuracion FAT/VFAT presentes y activados."],
+      "limitation": "No se observo el montaje real de una tarjeta ni se verifico que el defconfig corresponda exactamente a ILCE-6000 3.21."
+    },
+    {
+      "classification": "VERIFICADO",
+      "subject": "sincronizacion del kernel",
+      "claim": "El VFS ofrece fsync/fdatasync y FAT implementa fat_file_fsync, sincronizacion de buffers FAT y sync de superblock.",
+      "evidence": [
+        "fs/sync.c:156-228",
+        "fs/fat/file.c:446-500",
+        "fs/fat/inode.c:539-552"
+      ]
+    },
+    {
+      "classification": "INFERENCIA",
+      "subject": "prevencion de corrupcion",
+      "claim": "Estas primitivas permiten a una capa superior solicitar persistencia y propagar errores, pero no prueban una transaccion DCF ni su orden.",
+      "evidence": ["La semantica VFS/FAT esta implementada en las referencias indicadas."],
+      "limitation": "FAT/VFAT no queda demostrado como journal de catalogo DCF."
+    },
+    {
+      "classification": "VERIFICADO",
+      "subject": "libmpr.so y filesystem",
+      "claim": "libmpr.so importa POSIX open/read/write/close/lseek/rename/mkdir/fsync/fdatasync y Fsys_Open/Fsys_Write/Fsys_WriteAndFlush/Fsys_Flush, y exporta MprFileIfCore con Open/Write/WriteAndFlush/Mkdir/Close.",
+      "evidence": [
+        "nm -D libmpr.so",
+        "nm -D --defined-only libmpr.so",
+        "readelf -d libmpr.so muestra dependencia de libInfraFsys.so."
+      ]
+    },
+    {
+      "classification": "VERIFICADO",
+      "subject": "indicadores DCF en MPR",
+      "claim": "Las cadenas contienen DCIM, patrones de rutas JPG/MPO/ARW, RegisterDCFContent, SetBasicThumbnailData y operaciones de catalogo/reproduccion.",
+      "evidence": ["strings -a libmpr.so"]
+    },
+    {
+      "classification": "NO VERIFICADO",
+      "subject": "cadena DCF completa",
+      "claim": "No hay evidencia de codigo fuente para la creacion DCIM/directorios, nombres, miniatura EXIF, alta en catalogo de reproduccion ni su secuencia de flush/recuperacion ante error.",
+      "evidence": ["El kernel GPL no contiene MPR; el binario stripped solo aporta interfaces y cadenas."],
+      "owner": "Logica propietaria de MPR, por encima del kernel GPL."
+    }
+  ],
+  "safety_statement": "No se afirma que SilentShutter funcione."
+}

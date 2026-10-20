@@ -1,0 +1,271 @@
+{
+ "phase": "S52",
+ "date": "2026-10-19",
+ "binaries": {
+  "a7s_av_cam": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+  "a6000_av_cam": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "base": "0x43541000"
+ },
+ "agents": {
+  "A": "Claude Opus 5.5 effort medium",
+  "B": "Codex gpt-5.6-terra reasoning medium (codex-cli 0.162.1)"
+ },
+ "evidence": [
+  {
+   "claim": "captura+0x748 (A7S) = captura+0x740 (A6000), struct shifted +8 from ~0x73b",
+   "addresses": [
+    "0x43b1d99a",
+    "0x43b1e7b0",
+    "0x438b74a4",
+    "0x438c7fc6"
+   ],
+   "status": "VERIFICADO",
+   "sources": [
+    "A"
+   ],
+   "tests": [
+    "work/claude/tests/test_s52_curtain_facts.py"
+   ]
+  },
+  {
+   "claim": "only writer of +0x748 sets 1 when Silent type==2",
+   "addresses": [
+    "0x43813e94",
+    "0x43813ea2"
+   ],
+   "status": "VERIFICADO",
+   "sources": [
+    "A",
+    "B"
+   ],
+   "tests": [
+    "test_s52_curtain_facts.py",
+    "test_s52_shutmode_facts.py"
+   ]
+  },
+  {
+   "claim": "+0x748 gates waits/events: S3 0xc8 skips CAIF3 wait, S4 0xc9 adds it, S5 ReadExecuteBase skips 0x800000, S6 event 0x100/0x102, S7 imager ops/timer",
+   "addresses": [
+    "0x438b1cba",
+    "0x43b1c92e",
+    "0x438b726c",
+    "0x438b7ec2",
+    "0x438b8054"
+   ],
+   "status": "VERIFICADO (A); PARCIAL (B)",
+   "sources": [
+    "A",
+    "B"
+   ],
+   "tests": [
+    "test_s52_curtain_facts.py"
+   ]
+  },
+  {
+   "claim": "CAIF ev1 packet: Silent sets bit 0x20 at +0x12 and mode 2 in bits6-7 of +0xd",
+   "addresses": [
+    "0x4386329a",
+    "0x43863258"
+   ],
+   "status": "VERIFICADO",
+   "sources": [
+    "A",
+    "B"
+   ],
+   "tests": [
+    "test_s52_curtain_facts.py",
+    "test_s52_shutmode_facts.py"
+   ]
+  },
+  {
+   "claim": "class 0 encoded like class 3 in packet byte +1",
+   "addresses": [
+    "0x4386315c"
+   ],
+   "status": "VERIFICADO",
+   "sources": [
+    "A",
+    "B"
+   ],
+   "tests": [
+    "test_s52_shutmode_facts.py"
+   ]
+  },
+  {
+   "claim": "class 0 skips 0x22 message (0x43aed4ba->0x437c3114); receiver unknown",
+   "addresses": [
+    "0x438627d2"
+   ],
+   "status": "VERIFICADO (omission) / NO VERIFICADO (receiver)",
+   "sources": [
+    "A",
+    "B"
+   ],
+   "tests": [
+    "test_s52_shutmode_facts.py"
+   ]
+  },
+  {
+   "claim": "policy stores class at G+0x5c, G=0x43f06bc8",
+   "addresses": [
+    "0x438649f0",
+    "0x43864a48",
+    "0x43864c74"
+   ],
+   "status": "VERIFICADO",
+   "sources": [
+    "A",
+    "B",
+    "coordinator"
+   ],
+   "tests": [
+    "analysis/s52_coordinator_check.py"
+   ]
+  },
+  {
+   "claim": "class -> 0x43f04c8c -> record+0x69 -> param+9=cap+0x651 -> SetExposure vtable+0x28",
+   "addresses": [
+    "0x43861bfc",
+    "0x4386347c",
+    "0x43861f58",
+    "0x43862158",
+    "0x43b1c8e2",
+    "0x438b77ac",
+    "0x436f2938",
+    "0x43fce050"
+   ],
+   "status": "VERIFICADO estático (identidad por coordinador; estabilidad del selector INFERENCIA)",
+   "sources": [
+    "A",
+    "coordinator",
+    "B partial"
+   ],
+   "tests": [
+    "analysis/s52_coordinator_check.py",
+    "test_s52_xcheck.py"
+   ]
+  },
+  {
+   "claim": "override forces cap+0x651=0 if 0x439fb708() in {2,3}",
+   "addresses": [
+    "0x438b775c"
+   ],
+   "status": "VERIFICADO instr.",
+   "sources": [
+    "A"
+   ],
+   "tests": []
+  },
+  {
+   "claim": "ShutMode bit patterns IMX235 field 0x440220ac / IMX210 field 0x4401ca2e; IMX235 mode 2 error",
+   "addresses": [
+    "0x436f4168",
+    "0x436d6f6c",
+    "0x436f423e",
+    "0x436d70be"
+   ],
+   "status": "VERIFICADO (bits); eléctrico NO VERIFICADO",
+   "sources": [
+    "A",
+    "B"
+   ],
+   "tests": [
+    "test_s52_xcheck.py",
+    "test_s52_shutmode_facts.py"
+   ]
+  },
+  {
+   "claim": "IMX235 cfg2+4|=8 in all modes 0/1/3/4 (corrects previous table)",
+   "addresses": [
+    "0x436f4276",
+    "0x436f42aa",
+    "0x436f42de"
+   ],
+   "status": "VERIFICADO",
+   "sources": [
+    "A"
+   ],
+   "tests": [
+    "test_s52_xcheck.py"
+   ]
+  },
+  {
+   "claim": "48 distinct fields among IMX235 matrix cols 0/12/13; none classified",
+   "addresses": [
+    "0x436f3928",
+    "0x43fee598"
+   ],
+   "status": "VERIFICADO valores / NO VERIFICADO semántica",
+   "sources": [
+    "B",
+    "A"
+   ],
+   "tests": []
+  },
+  {
+   "claim": "0xf2910048 is a generic GPIO helper, not a curtain driver",
+   "addresses": [
+    "0x43b585aa",
+    "0x43b585b6",
+    "0x4397d4c0"
+   ],
+   "status": "VERIFICADO (genérico); recuento INFERENCIA",
+   "sources": [
+    "A",
+    "B"
+   ],
+   "tests": []
+  },
+  {
+   "claim": "Darwin A7S mechanism type selector accepts 1/2/3 (same as A6000)",
+   "addresses": [
+    "darwin 0x216e8",
+    "A6000 darwin 0x20c74"
+   ],
+   "status": "VERIFICADO",
+   "sources": [
+    "A",
+    "B"
+   ],
+   "tests": []
+  },
+  {
+   "claim": "Darwin CAIF parser consuming bit 0x20",
+   "addresses": [],
+   "status": "NO VERIFICADO (no localizado)",
+   "sources": [
+    "A"
+   ],
+   "tests": []
+  },
+  {
+   "claim": "VD_Pre A7S stores Silent type at 0x43eaaac0; readers not found",
+   "addresses": [
+    "0x437b6f6c",
+    "0x43eaaac0"
+   ],
+   "status": "VERIFICADO store / NO VERIFICABLE lectores",
+   "sources": [
+    "A",
+    "B"
+   ],
+   "tests": []
+  }
+ ],
+ "hypotheses": {
+  "H52-1": "VERIFICADO (software)",
+  "H52-2": "NO VERIFICADO (desfavorable)",
+  "H52-3": "VERIFICADO (estático)",
+  "H52-4": "INFERENCIA",
+  "H52-5": "NO VERIFICADO",
+  "H52-6": "INFERENCIA fuerte",
+  "H52-7": "HIPÓTESIS; 'código existente activable' DESCARTADO"
+ },
+ "questions": {
+  "P1": "respondida (VERIFICADO software)",
+  "P2": "parcial: marca Silent en paquete + esperas omitidas (VERIFICADO); decisión en MCU (INFERENCIA)",
+  "P3": "sí (VERIFICADO estático)",
+  "P4": "bits/temporización VERIFICADOS; efecto eléctrico NO VERIFICADO",
+  "P5": "NO VERIFICADO; S51 se mantiene"
+ }
+}

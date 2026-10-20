@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "id": "2026-10-18T13-59-26-835973Z-da76aba8",
+  "created_at": "2026-10-18T13-59-26-835973Z",
+  "goal": "Fase 12.1-12.2: corregir defectos reproducidos por segunda auditoría (negación en CORRECTS, duplicados entre dossiers, raíz fuera del proyecto, streaming de rg, límites MCP sin tope)",
+  "done": [
+    "12.1.A: negación detectada en CORRECTS/SUPERSEDES (no corrige -> nunca VERIFICADO)",
+    "12.1.C: UNIQUE constraint failed resuelto via tabla entity_sources (procedencia múltiple, dedup, conflicto de metadatos registrado)",
+    "12.2.A: find_root admite SONY_A6000_KB_ROOT, fallback a ubicación de instalación (bug /tmp verificado manualmente corregido)",
+    "12.2.B: cmd_exact y cmd_ask(identifier) ahora leen rg en streaming (_rg_stream), cortan por RG_MAX_SCAN/RG_TIMEOUT_S",
+    "12.2.D: get_current_state y get_open_questions ahora respetan MCP_MAX_CHARS, con paginacion por offset"
+  ],
+  "files": [
+    "scripts/knowledge/_paths.py",
+    "scripts/knowledge/build_graph.py",
+    "scripts/knowledge/search.py",
+    "scripts/knowledge/mcp_server.py",
+    "tests/knowledge/test_paths.py",
+    "tests/knowledge/test_build_graph.py",
+    "tests/knowledge/test_adaptive_search.py",
+    "tests/knowledge/test_mcp_server.py",
+    "tests/knowledge/test_index_docs.py",
+    "tests/knowledge/test_benchmark.py",
+    "tests/knowledge/test_export_corrections.py",
+    "tests/knowledge/test_checkpoint.py",
+    "tests/knowledge/test_freshness.py",
+    "knowledge/PROGRESS.md"
+  ],
+  "findings": [
+    "find_root() desde /tmp devolvia /tmp como raiz (0 documentos indexados); verificado manualmente antes y despues del fix",
+    "analysis/functions/dossiers.json es el UNICO dossier real de funciones (3 items); no tiene campos de modelo/firmware/hash/arch que la auditoria pide para identidad extendida (12.1.B): no se inventaron"
+  ],
+  "evidence": [
+    "python3 -m pytest tests/knowledge -q => 50 passed (eran 39 al cierre de Fase 11)",
+    "cd /tmp && python3 scripts/knowledge/search.py freshness => Indice al dia (antes: 0 archivos)",
+    "build_graph.py ejecutado dos veces seguidas: idempotente, 3 entidades/1 CALLS/39 CORRECTS-SUPERSEDES ambas veces"
+  ],
+  "corrections": [],
+  "tests": [
+    "pytest tests/knowledge: 50 passed",
+    "ruff check scripts/knowledge tests/knowledge: All checks passed",
+    "mypy scripts/knowledge: Success, no issues found",
+    "rebuild real: index_docs 359 archivos/2727 secciones, export_corrections CORRECTIONS.md 39 filas / OPEN-QUESTIONS.md 39 filas (sin regresion a 384)"
+  ],
+  "blockers": [
+    "12.4 (extractores GPIO/IMX210/OSAL/REA/Ghidra) requiere inspeccion de ~2146 JSON reales, no abordado esta vuelta",
+    "12.6 (rediseno de benchmark con verdad de referencia estructurada) sigue pendiente desde Fase 11",
+    "12.7 (validacion MCP/skills desde sesion nueva de Claude Code/Codex) no ejecutable desde esta misma sesion"
+  ],
+  "next_actions": [
+    "Inspeccionar JSON reales bajo analysis/ antes de disenar extractores de 12.4",
+    "Redisenar benchmark.py con verdad de referencia estructurada (12.6)",
+    "Crear knowledge/CURRENT.md con resumen operativo breve (12.8)"
+  ],
+  "permissions_state": "ninguno pendiente; todo dentro del venv aislado ya autorizado, sin instalar paquetes nuevos, sin tocar firmware/Ghidra/REA/evidencias"
+}

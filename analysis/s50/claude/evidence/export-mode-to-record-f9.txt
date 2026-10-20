@@ -1,0 +1,116 @@
+43842440 push {r4, r5, lr}
+43842442 cmp r0, #0x0
+43842444 beq.w 0x438425b2
+43842448 ldr r3, [pc, #0x168]
+4384244a add r3, pc
+4384244c adds r4, r3, #0x2
+4384244e ldrb r2, [r3]
+43842450 strb.w r2, [r0, #0x75]
+43842454 ldrb r2, [r3, #0x2]
+43842456 strb.w r2, [r0, #0x76]
+4384245a ldrb r2, [r3, #0x3]
+4384245c adds r3, #0x20
+4384245e strb.w r2, [r0, #0x77]
+43842462 movs r2, #0x0
+43842464 add.w r1, r2, #0x38
+43842468 ldrb r5, [r4, #2]!
+4384246c add.w r1, r0, r1, lsl #1
+43842470 strb r5, [r1, #0x8]
+43842472 ldrb r5, [r4, #0x1]
+43842474 strb r5, [r1, #0x9]
+43842476 add.w r1, r2, #0x22
+4384247a ldrb r5, [r3, #4]!
+4384247e adds r2, #0x1
+43842480 add.w r1, r0, r1, lsl #2
+43842484 cmp r2, #0xb
+43842486 strb r5, [r1, #0x6]
+43842488 ldrb r5, [r3, #0x1]
+4384248a strb r5, [r1, #0x7]
+4384248c ldrb r5, [r3, #0x2]
+4384248e strb r5, [r1, #0x8]
+43842490 ldrb r5, [r3, #0x3]
+43842492 strb r5, [r1, #0x9]
+43842494 bne 0x43842464
+43842496 ldr r3, [pc, #0x120]
+43842498 mov r1, r0
+4384249a add r3, pc
+4384249c ldrb.w r2, [r3, #0x64]
+438424a0 strb.w r2, [r0, #0xba]
+438424a4 ldrb.w r2, [r3, #0x65]
+438424a8 strb.w r2, [r0, #0xbb]
+438424ac ldrb.w r2, [r3, #0x66]
+438424b0 strb.w r2, [r0, #0xbc]
+438424b4 ldrb.w r2, [r3, #0x67]
+438424b8 strb.w r2, [r0, #0xbd]
+438424bc ldrb.w r2, [r3, #0x68]
+438424c0 strb.w r2, [r0, #0xbe]
+438424c4 ldrb.w r2, [r3, #0x69]
+438424c8 strb.w r2, [r0, #0xbf]
+438424cc ldrb.w r2, [r3, #0x6c]
+438424d0 strb.w r2, [r0, #0xc0]
+438424d4 ldrb.w r2, [r3, #0x6d]
+438424d8 strb.w r2, [r0, #0xc1]
+438424dc ldrb.w r2, [r3, #0x6e]
+438424e0 strb.w r2, [r0, #0xc2]
+438424e4 ldrb.w r2, [r3, #0x6f]
+438424e8 strb.w r2, [r0, #0xc3]
+438424ec ldrb.w r2, [r3, #0x70]
+438424f0 strb.w r2, [r0, #0xc4]
+438424f4 ldrb.w r2, [r3, #0x71]
+438424f8 strb.w r2, [r0, #0xfc]
+438424fc ldrb.w r2, [r3, #0x72]
+43842500 strb.w r2, [r0, #0xfd]
+43842504 ldrb.w r3, [r3, #0x73]
+43842508 strb.w r3, [r0, #0xfe]
+4384250c ldr r3, [pc, #0xac]
+4384250e add r3, pc
+43842510 ldrb r2, [r3]
+43842512 strb.w r2, [r0, #0xc5]
+43842516 ldrb r2, [r3, #0x1]
+43842518 strb.w r2, [r0, #0xc6]
+4384251c ldrb r2, [r3, #0x2]
+4384251e strb.w r2, [r0, #0xc7]
+43842522 ldrb r2, [r3, #0x3]
+43842524 strb.w r2, [r0, #0xc8]
+43842528 movs r2, #0x0
+4384252a ldrb r3, [r3, #0x4]
+4384252c strb.w r3, [r0, #0xc9]
+43842530 ldr r3, [pc, #0x8c]
+43842532 add r3, pc
+43842534 adds r4, r3, r2
+43842536 adds r2, #0x2
+43842538 ldrh r4, [r4, #0x6]
+4384253a strb.w r4, [r1, #0xca]
+4384253e adds r1, #0x1
+43842540 cmp r2, #0x52
+43842542 bne 0x43842530
+43842544 ldrb.w r2, [r3, #0x58]
+43842548 strb.w r2, [r0, #0xf3]
+4384254c ldrb.w r2, [r3, #0x59]
+43842550 strb.w r2, [r0, #0xf4]
+43842554 ldrb.w r2, [r3, #0x5a]
+43842558 strb.w r2, [r0, #0xf5]
+4384255c ldrb.w r2, [r3, #0x5b]
+43842560 strb.w r2, [r0, #0xf6]
+43842564 ldrb.w r2, [r3, #0x5c]
+43842568 strb.w r2, [r0, #0xf7]
+4384256c ldrb.w r2, [r3, #0x5d]
+43842570 strb.w r2, [r0, #0xf8]
+43842574 ldr r3, [r3, #0x60]
+43842576 cbz r3, 0x43842594
+43842578 cmp r3, #0x1
+4384257a beq 0x43842594
+4384257c cmp r3, #0x2
+4384257e beq 0x43842594
+43842580 cmp r3, #0x3
+43842582 beq 0x43842594
+43842584 cmp r3, #0x4
+43842586 beq 0x43842594
+43842588 cmp r3, #0x5
+4384258a beq 0x43842594
+4384258c cmp r3, #0x6
+4384258e beq 0x43842594
+43842590 cmp r3, #0x7
+43842592 bne 0x43842598
+43842594 adds r3, #0x1
+43842596 b 0x4384259a

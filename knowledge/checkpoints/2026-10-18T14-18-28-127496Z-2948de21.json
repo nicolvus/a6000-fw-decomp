@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "id": "2026-10-18T14-18-28-127496Z-2948de21",
+  "created_at": "2026-10-18T14-18-28-127496Z",
+  "goal": "Fase 12.4-12.5: inventario determinista de JSON, extractores Ghidra y REA sobre datos reales, consultas multietapa (trace)",
+  "done": [
+    "12.4.A: inventory_json.py cataloga 2146 JSON por firma estructural en 0.4s (108 familias)",
+    "12.4.B: extractor Ghidra (build_ghidra_function_graph) sobre ~430 archivos reales con pseudo_code decompilado",
+    "12.4.B: extractor REA (build_rea_evidence_graph) sobre 5 archivos reales, cubre OSAL y NFC/CAIF con datos reales",
+    "12.1.A ampliado: ventana de negacion ahora cubre toda la oracion (ambos lados del marcador), no solo 4 palabras previas",
+    "12.5: search.py trace + tool MCP trace_relations, recorrido BFS multisalto real con evidencia"
+  ],
+  "files": [
+    "scripts/knowledge/inventory_json.py",
+    "scripts/knowledge/build_graph.py",
+    "scripts/knowledge/search.py",
+    "scripts/knowledge/mcp_server.py",
+    "tests/knowledge/test_build_graph.py",
+    "tests/knowledge/test_trace.py",
+    "tests/knowledge/test_mcp_server.py",
+    "knowledge/PROGRESS.md",
+    "knowledge/catalog/JSON-CATALOG.md",
+    "knowledge/catalog/json_inventory.json"
+  ],
+  "findings": [
+    "grafo real paso de 3 entidades/1 CALLS a 1189 entidades/2603 CALLS netas, sin reanalizar ningun binario (solo extraccion de evidencia ya existente en analysis/)",
+    "1282 de 2146 JSON (elf-cache) son solo metadatos ELF sin relaciones verificables; registrados, sin extractor",
+    "familia de 61 archivos con xrefs Ghidra reales (52/61 no vacios) carece de binary_sha256: identidad insuficiente, se descarta construir extractor para evitar colisiones de direccion entre binarios",
+    "Darwin/GPIO e IMX210/IMX284 (prioridades 3-4) ya cubiertos por el MISMO extractor Ghidra: comparten la forma source_sha256+functions"
+  ],
+  "evidence": [
+    "build_graph.py ejecutado dos veces seguidas: idempotente, 1189 entidades/2643 relaciones ambas veces",
+    "search.py trace demostrado contra el grafo real: osal_reg_sync_msg_queue_cb --CALLS--> reg_sync_msg_queue_cb con evidencia"
+  ],
+  "corrections": [],
+  "tests": [
+    "pytest tests/knowledge: 65 passed (eran 50 al cierre de 12.1-12.2)",
+    "ruff check scripts/knowledge tests/knowledge: All checks passed",
+    "mypy scripts/knowledge: Success, no issues found"
+  ],
+  "blockers": [
+    "12.6 (rediseno de benchmark) no abordado esta vuelta, aunque ahora hay datos reales que medir",
+    "12.7 (validacion MCP/skills desde sesion nueva) no ejecutable desde esta misma sesion",
+    "12.8 (knowledge/CURRENT.md) no implementado"
+  ],
+  "next_actions": [
+    "Redisenar benchmark.py (12.6) con el grafo real de 1189 entidades/2643 relaciones",
+    "Crear knowledge/CURRENT.md y actualizar AGENTS.md/CLAUDE.md para leerlo primero (12.8)",
+    "Pedir al usuario verificacion de MCP/skills desde sesion nueva Claude Code/Codex (12.7)"
+  ],
+  "permissions_state": "ninguno pendiente; todo dentro del venv aislado ya autorizado, sin instalar paquetes nuevos, sin tocar firmware/Ghidra/REA/evidencias, sin reanalizar binarios"
+}

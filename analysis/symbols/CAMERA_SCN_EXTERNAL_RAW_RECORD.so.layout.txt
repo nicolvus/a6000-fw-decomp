@@ -1,0 +1,107 @@
+ELF Header:
+  Magic:   7f 45 4c 46 01 01 01 00 00 00 00 00 00 00 00 00 
+  Class:                             ELF32
+  Data:                              2's complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              DYN (Shared object file)
+  Machine:                           ARM
+  Version:                           0x1
+  Entry point address:               0x640
+  Start of program headers:          52 (bytes into file)
+  Start of section headers:          4428 (bytes into file)
+  Flags:                             0x5000002, Version5 EABI, <unknown>
+  Size of this header:               52 (bytes)
+  Size of program headers:           32 (bytes)
+  Number of program headers:         5
+  Size of section headers:           40 (bytes)
+  Number of section headers:         28
+  Section header string table index: 25
+
+Section Headers:
+  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al
+  [ 0]                   NULL            00000000 000000 000000 00      0   0  0
+  [ 1] .gnu.hash         GNU_HASH        000000d4 0000d4 00004c 04   A  2   0  4
+  [ 2] .dynsym           DYNSYM          00000120 000120 0001a0 10   A  3   3  4
+  [ 3] .dynstr           STRTAB          000002c0 0002c0 0001c8 00   A  0   0  1
+  [ 4] .gnu.version      VERSYM          00000488 000488 000034 02   A  2   0  2
+  [ 5] .gnu.version_r    VERNEED         000004bc 0004bc 000040 00   A  3   2  4
+  [ 6] .rel.dyn          REL             000004fc 0004fc 000058 08   A  2   0  4
+  [ 7] .rel.plt          REL             00000554 000554 000050 08   A  2   9  4
+  [ 8] .init             PROGBITS        000005a4 0005a4 00000a 00  AX  0   0  4
+  [ 9] .plt              PROGBITS        000005b0 0005b0 000090 04  AX  0   0  4
+  [10] .text             PROGBITS        00000640 000640 000538 00  AX  0   0  4
+  [11] .fini             PROGBITS        00000b78 000b78 000006 00  AX  0   0  4
+  [12] .rodata           PROGBITS        00000b7e 000b7e 00024a 01 AMS  0   0  1
+  [13] .ARM.extab        PROGBITS        00000dc8 000dc8 00003c 00   A  0   0  4
+  [14] .ARM.exidx        ARM_EXIDX       00000e04 000e04 000060 00  AL 10   0  4
+  [15] .init_array       INIT_ARRAY      00008e64 000e64 000004 00  WA  0   0  4
+  [16] .fini_array       FINI_ARRAY      00008e68 000e68 000004 00  WA  0   0  4
+  [17] .jcr              PROGBITS        00008e6c 000e6c 000004 00  WA  0   0  4
+  [18] .data.rel.ro      PROGBITS        00008e70 000e70 000014 00  WA  0   0  4
+  [19] .dynamic          DYNAMIC         00008e84 000e84 000120 08  WA  3   0  4
+  [20] .got              PROGBITS        00008fa4 000fa4 000040 04  WA  0   0  4
+  [21] .data             PROGBITS        00008fe4 000fe4 000004 00  WA  0   0  4
+  [22] .bss              NOBITS          00008fe8 000fe8 00000c 00  WA  0   0  4
+  [23] .ARM.attributes   ARM_ATTRIBUTES  00000000 000fe8 000033 00      0   0  1
+  [24] .comment          PROGBITS        00000000 00101b 00003f 01  MS  0   0  1
+  [25] .shstrtab         STRTAB          00000000 00105a 0000ef 00      0   0  1
+  [26] .symtab           SYMTAB          00000000 0015ac 0008e0 10     27 119  4
+  [27] .strtab           STRTAB          00000000 001e8c 00046e 00      0   0  1
+Key to Flags:
+  W (write), A (alloc), X (execute), M (merge), S (strings), I (info),
+  L (link order), O (extra OS processing required), G (group), T (TLS),
+  C (compressed), x (unknown), o (OS specific), E (exclude),
+  D (mbind), y (purecode), p (processor specific)
+
+Program Headers:
+  Type           Offset   VirtAddr   PhysAddr   FileSiz MemSiz  Flg Align
+  ARM_EXIDX      0x000e04 0x00000e04 0x00000e04 0x00060 0x00060 R   0x4
+  LOAD           0x000000 0x00000000 0x00000000 0x00e64 0x00e64 R E 0x8000
+  LOAD           0x000e64 0x00008e64 0x00008e64 0x00184 0x00190 RW  0x8000
+  DYNAMIC        0x000e84 0x00008e84 0x00008e84 0x00120 0x00120 RW  0x4
+  GNU_STACK      0x000000 0x00000000 0x00000000 0x00000 0x00000 RW  0x4
+
+ Section to Segment mapping:
+  Segment Sections...
+   00     .ARM.exidx 
+   01     .gnu.hash .dynsym .dynstr .gnu.version .gnu.version_r .rel.dyn .rel.plt .init .plt .text .fini .rodata .ARM.extab .ARM.exidx 
+   02     .init_array .fini_array .jcr .data.rel.ro .dynamic .got .data .bss 
+   03     .dynamic 
+   04     
+
+Dynamic section at offset 0xe84 contains 32 entries:
+  Tag        Type                         Name/Value
+ 0x00000001 (NEEDED)                     Shared library: [libosal_uipc.so]
+ 0x00000001 (NEEDED)                     Shared library: [libpthread.so.0]
+ 0x00000001 (NEEDED)                     Shared library: [libstdc++.so.6]
+ 0x00000001 (NEEDED)                     Shared library: [libm.so.6]
+ 0x00000001 (NEEDED)                     Shared library: [libdl.so.2]
+ 0x00000001 (NEEDED)                     Shared library: [libgcc_s.so.1]
+ 0x00000001 (NEEDED)                     Shared library: [libc.so.6]
+ 0x00000001 (NEEDED)                     Shared library: [librt.so.1]
+ 0x0000000e (SONAME)                     Library soname: [CAMERA_SCN_EXTERNAL_RAW_RECORD.so]
+ 0x0000000c (INIT)                       0x5a5
+ 0x0000000d (FINI)                       0xb79
+ 0x00000019 (INIT_ARRAY)                 0x8e64
+ 0x0000001b (INIT_ARRAYSZ)               4 (bytes)
+ 0x0000001a (FINI_ARRAY)                 0x8e68
+ 0x0000001c (FINI_ARRAYSZ)               4 (bytes)
+ 0x6ffffef5 (GNU_HASH)                   0xd4
+ 0x00000005 (STRTAB)                     0x2c0
+ 0x00000006 (SYMTAB)                     0x120
+ 0x0000000a (STRSZ)                      456 (bytes)
+ 0x0000000b (SYMENT)                     16 (bytes)
+ 0x00000003 (PLTGOT)                     0x8fa4
+ 0x00000002 (PLTRELSZ)                   80 (bytes)
+ 0x00000014 (PLTREL)                     REL
+ 0x00000017 (JMPREL)                     0x554
+ 0x00000011 (REL)                        0x4fc
+ 0x00000012 (RELSZ)                      88 (bytes)
+ 0x00000013 (RELENT)                     8 (bytes)
+ 0x6ffffffe (VERNEED)                    0x4bc
+ 0x6fffffff (VERNEEDNUM)                 2
+ 0x6ffffff0 (VERSYM)                     0x488
+ 0x6ffffffa (RELCOUNT)                   8
+ 0x00000000 (NULL)                       0x0

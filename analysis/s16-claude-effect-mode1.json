@@ -1,0 +1,72 @@
+{
+  "sesion": 16,
+  "alcance": "A1 - localizar el/los escritor(es) de EffectInternalMode=1 en libObj.so fw3.21, analisis estatico. Direcciones ELF salvo indicacion contraria (Ghidra VA = ELF+0x10000). Herramientas: llvm-objdump -d --triple=thumbv7-linux-gnueabi sobre todo .text (0xe2b70-0xbc9598) y scripts/libobj_dec.sh (Ghidra, DecompAt.java, createFunction en la direccion exacta de push).",
+  "metodo": "Se re-desensamblo TODO .text (no solo xrefs ya conocidas) y se localizaron las 20 llamadas directas (bl) al setter generico 0x140144 en todo el binario (mismo numero que sesion 15, confirmado independientemente). Para cada sitio se retrocedio en el flujo para identificar que valor se movia a r1 (el 'nuevo valor') justo antes del 'bl'. A diferencia de sesion 15 (que descarto el resto de los 20 sitios como 'fuera de rango de ObjEffect' sin decompilarlos), esta sesion decompilo TODAS las funciones contenedoras de los sitios con r1 literal de interes (0,1,8,0xa,0xb,0xc,0xd) usando Ghidra createFunction en la direccion del 'push' que precede a cada sitio.",
+  "hallazgo_principal": "Se encontraron DOS escritores reales de EffectInternalMode=1 (no uno, cero como concluyo sesion 15), identificados sin ambiguedad por su RTTI mangled-name real de C++ (leido directamente de .data.rel.ro / .rodata, no inferido por heuristica de rango de direcciones).",
+  "escritores_modo1": [
+    {
+      "funcion": "FUN_00154990 (ELF 0x154990, Ghidra 0x164990)",
+      "clase_rtti": "N9OBJEFFECT25ExecCmdAppFaderEfctEndEvtE  -> OBJEFFECT::ExecCmdAppFaderEfctEndEvt",
+      "vtable_slot": "file-offset 0xfe6050 -> vaddr 0xfee050 (contiene word 0x154991, bit Thumb)",
+      "rtti_header_vaddr": "0xfee014 -> puntero a 0xbd69fa en .rodata, cadena mangled confirmada",
+      "mecanismo": "GetSubState(block,0) se usa para notificar fin (vtbl+8, msg 0x1050); luego GetSubState(block,0xb) y comparacion func_0x00152be4(valor,0xb). Si la comparacion es '<1' (no-match/estado insuficiente), escribe EffectInternalMode=1 de forma DIRECTA: holder=GetSubState(block,1); Setter_0x150144(holder,1); luego func_0x0015034c(holder,0) y func_0x00164898(this). Si la comparacion es '>=1' (match), en vez de escribir el modo, ENCOLA un mensaje via el MISMO gestor de pines 0xbc3208(pinHolder=GetSubState(block,0x16), buffer, this+4) que usa el consumidor de REQ_DELIVER (0x1e9880) para la rama de accion de modo=1.",
+      "trigger_evento": "Clase 'ExecCmdAppFaderEfctEndEvt' = manejador del evento de FIN de un efecto de fundido (fader) de la aplicacion. Es decir: cuando un fundido (fade) de ObjEffect termina, si cierto contador/estado (holder 0xb) NO alcanza un umbral, el objeto se pone en EffectInternalMode=1 (listo para entregar por la cola directa 0x600d); si SI alcanza el umbral, en cambio encola directamente el mensaje de entrega sin cambiar el modo.",
+      "direccion_llamada_setter": "ELF 0x154b24 (bl 0x140144, r1=1 fijado en 0x154b20 'movs r1,#0x1')",
+      "clasificacion": "VERIFICADO (decompilado Ghidra + RTTI mangled-name + desensamblado crudo coincidentes)",
+      "no_verificado": "Semantica exacta de los holders 0, 0xb y de func_0x00152be4 (umbral de que magnitud); que evento/mensaje de alto nivel dispara la invocacion de esta funcion virtual (no se hallo 'bl' directo, es indirecta via vtable, igual que 0x173158)."
+    },
+    {
+      "funcion": "FUN_001e069c (ELF 0x1e069c, Ghidra 0x1f069c)",
+      "clase_rtti": "N9OBJEFFECT22SequencePinDeliverBaseE -> OBJEFFECT::SequencePinDeliverBase",
+      "vtable_slot": "file-offset 0xfeabd4 -> vaddr 0xff2bd4 (word 0x1e069d, bit Thumb)",
+      "rtti_header_vaddr": "0xff2b9c -> puntero a 0xc0c1e8 en .rodata, cadena mangled confirmada",
+      "mecanismo": "Dentro de la rama donde el submensaje entrante vale 0x1017 (campo leido via func_0x000ee688(this+0xc,0x1003,0x29)) y this+0x50==0 (pin 0) y this+0x54==0: holder=GetSubState(block,1); si GetMode()==0 (getter 0x15011c), entonces Setter_0x150144(holder,1). Es decir, solo pasa de 0 a 1 (no fuerza el valor si ya estaba en otro estado).",
+      "trigger_evento": "'SequencePinDeliverBase' es la clase BASE de la familia 'SequencePinDeliver*' (la misma familia textual que 'SequencePinReqestDeliverSaveStillEditCmd', ELF 0x1e96c0, ya documentada en sesion 14/15 como la secuencia disparada para los modos 2-5 de REQ_DELIVER). Esto implica que el modo 1 puede activarse DESDE DENTRO del mismo arbol de clases que procesa REQ_DELIVER, en la variante base/generica, cuando el submensaje es 0x1017 y el pin es el 0.",
+      "direccion_llamada_setter": "ELF 0x1e0b60 (bl 0x140144, r1=1 fijado en 0x1e0b5e 'movs r1,#0x1', condicionado a getter==0 en 0x1e0b54-0x1e0b5a)",
+      "clasificacion": "VERIFICADO (decompilado Ghidra + RTTI mangled-name + desensamblado crudo coincidentes)",
+      "no_verificado": "Que objeto/secuencia concreta invoca el metodo virtual de SequencePinDeliverBase que contiene este codigo (no se hallo 'bl' directo); si las subclases reales usadas en PbCap heredan y ejecutan exactamente esta rama, o la sobre-escriben."
+    }
+  ],
+  "escritores_reset_modo1_a_0": [
+    {
+      "funcion": "FUN_001ef55c (ELF 0x1df55c, Ghidra 0x1ef55c)",
+      "clase_rtti": "N9OBJEFFECT16SequencePinCloseE -> OBJEFFECT::SequencePinClose",
+      "vtable_slot": "vaddr 0xff2ac4 (word 0x1df55d)",
+      "mecanismo": "Si (this+0x4c==0 && this+0x50==0 && this+0x54==0) y GetMode()==1, llama Setter_0x150144(holder,0); si la escritura falla (!=0) registra error.",
+      "direccion_llamada_setter": "ELF 0x1df770",
+      "clasificacion": "VERIFICADO"
+    },
+    {
+      "funcion": "FUN_001f5edc (ELF 0x1e5edc, Ghidra 0x1f5edc)",
+      "clase_rtti": "N9OBJEFFECT21SequencePinDisconnectE -> OBJEFFECT::SequencePinDisconnect",
+      "vtable_slot": "vaddr 0xff3194 (word 0x1e5edd)",
+      "mecanismo": "Dos puntos: (a) si this+0x50==0 && this+0x54==0 y GetMode()==1, Setter_0x150144(holder,0); (b) tras ciertas condiciones adicionales (pin==0,tipo==1,this+0x54==1) consulta y limpia otros holders (5,8,6,7) sin tocar el modo. Es la secuencia de DESCONEXION de pin.",
+      "direccion_llamada_setter": "ELF 0x1e6100",
+      "clasificacion": "VERIFICADO"
+    },
+    {
+      "funcion": "FUN_001be070 (ELF 0x1ae070, Ghidra 0x1be070)",
+      "clase_rtti": "N9OBJEFFECT18SequenceAppZoomCmdE -> OBJEFFECT::SequenceAppZoomCmd (metodo compartido con FUN_001be91c en la misma vtable)",
+      "vtable_slot": "vaddr 0xff1628 (word 0x1ae071)",
+      "mecanismo": "Si holder=GetSubState(block,1) != NULL, SIEMPRE: func_0x001501bc(holder,0); Setter_0x150144(holder,0) (reset incondicional a 0, sin comprobar valor previo), luego continua logica de zoom (func_0x001502b0/0x1502d8, encola 0x3900/0x603b si corresponde).",
+      "direccion_llamada_setter": "ELF 0x1ae510",
+      "clasificacion": "VERIFICADO",
+      "nota": "Confirma que EffectInternalMode es un campo COMPARTIDO/GENERICO de ObjEffect reutilizado por secuencias no relacionadas con REQ_DELIVER (aqui, un comando de zoom de la app). No es exclusivo del flujo de entrega de imagen."
+    }
+  ],
+  "escritor_tabla_1025": {
+    "funcion": "0x173158 (confirmado de nuevo, sin cambios respecto a sesion 15)",
+    "valores_posibles": [0,2,3,4,5,7,14,15],
+    "nunca_escribe_1": true,
+    "clasificacion": "VERIFICADO (re-confirmado)"
+  },
+  "respuesta_a_la_tarea_A1": {
+    "pregunta": "Tiene el modo 1 un escritor accesible desde algun lugar del binario, o es solo un valor de inicializacion sin escritor dinamico?",
+    "respuesta": "TIENE escritor dinamico. Se identificaron DOS funciones virtuales de ObjEffect (ExecCmdAppFaderEfctEndEvt y SequencePinDeliverBase) que escriben EffectInternalMode=1 en tiempo de ejecucion bajo condiciones concretas (fin de un efecto de fundido con contador insuficiente; o recepcion de submensaje 0x1017 en pin 0 con modo previo 0). Esto contradice/corrige la conclusion 'NO_VERIFICADO / no localizado' de sesion 15, que solo habia revisado los 20 sitios de llamada al setter generico de forma superficial (por rango de direccion) sin decompilar las funciones contenedoras.",
+    "clasificacion": "VERIFICADO (existencia de escritor dinamico de modo 1); NO_VERIFICADO (que estos dos caminos sean alcanzables durante disparo fotografico/EE en lugar de PbCap/edicion/app UI; no se trazo el MSGID de alto nivel ni el llamador real de estas dos funciones virtuales, ambas invocadas indirectamente via vtabla sin 'bl' directo en todo el binario)."
+  },
+  "limitaciones": [
+    "No se decompilaron todos los 20 sitios con el mismo detalle (los que ya estaban fuera de rango de ObjEffect en sesion 14/15 -- 0xbbf3f4, 0xbc4556, 0xbc5856 -- se revisaron solo por desensamblado crudo, confirmando valores 0xd/0xc/dinamico ajenos a modo 1, consistente con hallazgo previo de que son genericos de otras clases).",
+    "No se encontro el 'bl' directo (llamador) de ninguna de las 8 funciones de la familia SequencePin*/ExecCmdApp* analizadas; todas se invocan indirectamente via vtabla de mensajes, igual que 0x173158 en sesion 15. Localizar el despachador MSGID->vtable requeriria otra sesion."
+  ]
+}

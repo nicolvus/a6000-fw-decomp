@@ -1,0 +1,41 @@
+{
+  "task_id": "S19-05",
+  "verdict": "PARTIAL",
+  "scope": "Sony A6000 FW 3.21; static local analysis only; no camera interaction, firmware execution or binary modification.",
+  "binary": {
+    "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libObj.so",
+    "sha256": "8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a",
+    "addressing": "ELF offsets"
+  },
+  "method": [
+    "llvm-objdump -d --triple=thumbv7-linux-gnueabi",
+    "readelf dynamic-symbol cross-check",
+    "static comparison with S19-04 Camera contract and prior DMM extent extraction"
+  ],
+  "findings": [
+    {"state": "VERIFICADO", "address": "0x17b004..0x17b096", "file": "libObj.so", "method": "llvm-objdump", "finding": "Factory case 0x6013 allocates 0xd4 bytes and invokes constructor 0x1761a8."},
+    {"state": "VERIFICADO", "address": "0x1761a8..0x176272", "file": "libObj.so", "method": "llvm-objdump", "finding": "Constructor initializes output descriptor fields and stores a 0x2001/0x1003 PlayData message at +0xd0."},
+    {"state": "INFERENCIA", "address": "0x15fd50", "file": "libObj.so", "method": "strings plus layout and llvm-objdump", "finding": "Candidate BeginExecCommand for SequencePinDeliverExecWriteStillCmd; exact virtual-slot name remains unresolved."},
+    {"state": "VERIFICADO", "address": "0x15fd96..0x15fe88", "file": "libObj.so", "method": "llvm-objdump", "finding": "Requires non-null holder +0x14, interface +0x8 and nonzero virtual selector 12, then selector 3 and infrastructure connection; no unitType comparison occurs in this method."},
+    {"state": "VERIFICADO", "address": "0x15f290..0x15f352", "file": "libObj.so", "method": "llvm-objdump", "finding": "Local DataflowInfra endpoints are connected through infraConnectPin; no Camera object or Camera descriptor is identified."},
+    {"state": "VERIFICADO", "address": "0x15fa74..0x15fc94", "file": "libObj.so", "method": "llvm-objdump", "finding": "PbCap path allocates own DMM raster/SDS outputs, prepares descriptors and submits ObjMsg(0x3900,0x3000)."},
+    {"state": "VERIFICADO", "address": "0x15f9a0..0x15fa58", "file": "libObj.so", "method": "llvm-objdump", "finding": "SDF command endpoint is derived from holder CID and command conversion; input YC source remains undecoded."},
+    {"state": "VERIFICADO", "address": "0x15ebfc..0x15f126", "file": "libObj.so", "method": "llvm-objdump", "finding": "Only result 0x111 publishes output PlayData with raster/SDS, geometry, colorimetry and Y-range."},
+    {"state": "VERIFICADO", "address": "0x15f634..0x15f79c", "file": "libObj.so", "method": "llvm-objdump", "finding": "Completion cleanup disconnects DataflowInfra and closes normal-output DMM units; this does not establish Camera source ownership."},
+    {"state": "VERIFICADO", "address": "0x15fac8; 0x15fb1e", "file": "libObj.so plus analysis/dmm-extent-sizes.json", "method": "llvm-objdump plus prior DMM extent extraction", "finding": "Normal outputs are raster 0x50b3f/0xed/0x3fc000 and SDS 0xe0b00/0xe4/0x800; SDS is metadata, not pixels."},
+    {"state": "NO_VERIFICADO", "address": "Camera.out0 -> Effect.in0 -> holder/SDF", "file": "libObj.so", "method": "static analysis boundary", "finding": "No execution edge, holder identity, Dataflow pin identity, Camera DMM contract, source descriptor or end-to-end lifetime was recovered."},
+    {"state": "DESCARTADO", "address": "0x15fd50", "file": "libObj.so", "method": "whole-route comparison", "finding": "No unitType check in one BeginExecCommand is insufficient to prove Camera compatibility."},
+    {"state": "HIPOTESIS", "address": "Camera.out0 -> Effect.in0; 0x15fd50", "file": "libObj.so", "method": "conditional architecture inference", "finding": "A Camera holder implementing the required selectors, pins and SDF input contract could feed the operation, but no positive static evidence establishes it."}
+  ],
+  "compatibility": {
+    "camera_reaches_sequence": "NO_VERIFICADO",
+    "holder_preconditions_for_camera": "NO_VERIFICADO",
+    "sdf_pin_selection_for_camera": "NO_VERIFICADO",
+    "camera_dmm_types_and_descriptors": "NO_VERIFICADO",
+    "camera_geometry_and_format": "NO_VERIFICADO",
+    "pbcap_output_delivery": "VERIFICADO",
+    "camera_source_lifetime": "NO_VERIFICADO",
+    "camera_to_sdf_to_pbcap": "NO_VERIFICADO"
+  },
+  "safety": "SilentShutter is not declared functional. No original binary was modified, no Ghidra project was deleted, and no camera was connected or flashed."
+}

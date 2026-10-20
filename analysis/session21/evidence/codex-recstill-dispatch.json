@@ -1,0 +1,234 @@
+{
+  "library": "libmpr.so",
+  "sha256_before": "9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30",
+  "windows": {
+    "0x34cfa0:0x34d1c0": {
+      "existing_listing": null,
+      "binary_verification": "\n/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so:\tfile format elf32-littlearm\n\nDisassembly of section .text:\n\n003262fc <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE>:\n  34cfa0: 6983         \tldr\tr3, [r0, #0x18]\n  34cfa2: b580         \tpush\t{r7, lr}\n  34cfa4: 3b01         \tsubs\tr3, #0x1\n  34cfa6: af00         \tadd\tr7, sp, #0x0\n  34cfa8: 2b10         \tcmp\tr3, #0x10\n  34cfaa: d826         \tbhi\t0x34cffa <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x26cfe> @ imm = #0x4c\n  34cfac: e8df f003    \ttbb\t[pc, r3]\n  34cfb0: 1109         \tasrs\tr1, r1, #0x4\n  34cfb2: 2525         \tmovs\tr5, #0x25\n  34cfb4: 250d         \tmovs\tr5, #0xd\n  34cfb6: 2515         \tmovs\tr5, #0x15\n  34cfb8: 2525         \tmovs\tr5, #0x25\n  34cfba: 1d19         \tadds\tr1, r3, #0x4\n  34cfbc: 2525         \tmovs\tr5, #0x25\n  34cfbe: 2525         \tmovs\tr5, #0x25\n  34cfc0: 0021         \tmovs\tr1, r4\n  34cfc2: e8bd 4080    \tpop.w\t{r7, lr}\n  34cfc6: f7fe bdd6    \tb.w\t0x34bb76 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x2587a> @ imm = #-0x1454\n  34cfca: e8bd 4080    \tpop.w\t{r7, lr}\n  34cfce: f7fe bdf1    \tb.w\t0x34bbb4 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x258b8> @ imm = #-0x141e\n  34cfd2: e8bd 4080    \tpop.w\t{r7, lr}\n  34cfd6: f7fe be3f    \tb.w\t0x34bc58 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x2595c> @ imm = #-0x1382\n  34cfda: e8bd 4080    \tpop.w\t{r7, lr}\n  34cfde: f7ff be29    \tb.w\t0x34cc34 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x26938> @ imm = #-0x3ae\n  34cfe2: e8bd 4080    \tpop.w\t{r7, lr}\n  34cfe6: f7fe bf7f    \tb.w\t0x34bee8 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x25bec> @ imm = #-0x1102\n  34cfea: e8bd 4080    \tpop.w\t{r7, lr}\n  34cfee: f7ff bb8f    \tb.w\t0x34c710 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x26414> @ imm = #-0x8e2\n  34cff2: e8bd 4080    \tpop.w\t{r7, lr}\n  34cff6: f7ff b949    \tb.w\t0x34c28c <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x25f90> @ imm = #-0xd6e\n  34cffa: bd80         \tpop\t{r7, pc}\n  34cffc: b580         \tpush\t{r7, lr}\n  34cffe: 2008         \tmovs\tr0, #0x8\n  34d000: af00         \tadd\tr7, sp, #0x0\n  34d002: bd80         \tpop\t{r7, pc}\n  34d004: b598         \tpush\t{r3, r4, r7, lr}\n  34d006: af00         \tadd\tr7, sp, #0x0\n  34d008: 4b07         \tldr\tr3, [pc, #0x1c]         @ 0x34d028 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x26d2c>\n  34d00a: 4604         \tmov\tr4, r0\n  34d00c: 6003         \tstr\tr3, [r0]\n  34d00e: f7e0 fb4c    \tbl\t0x32d6aa <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x73ae> @ imm = #-0x1f968\n  34d012: 4620         \tmov\tr0, r4\n  34d014: f7e0 faf4    \tbl\t0x32d600 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x7304> @ imm = #-0x1fa18\n  34d018: 4620         \tmov\tr0, r4\n  34d01a: bd98         \tpop\t{r3, r4, r7, pc}\n  34d01c: 4620         \tmov\tr0, r4\n  34d01e: f7e0 faef    \tbl\t0x32d600 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x7304> @ imm = #-0x1fa22\n  34d022: f5d2 ebd4    \tblx\t0x11f7cc <__cxa_end_cleanup@plt> @ imm = #-0x22d858\n  34d026: bf00         \tnop\n  34d028: c120         \tstm\tr1!, {r5}\n  34d02a: 0081         \tlsls\tr1, r0, #0x2\n  34d02c: b598         \tpush\t{r3, r4, r7, lr}\n  34d02e: 4604         \tmov\tr4, r0\n  34d030: af00         \tadd\tr7, sp, #0x0\n  34d032: f7ff ffe7    \tbl\t0x34d004 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x26d08> @ imm = #-0x32\n  34d036: 4620         \tmov\tr0, r4\n  34d038: f5d1 eabe    \tblx\t0x11e5b8 <_ZdlPv@plt>   @ imm = #-0x22ea84\n  34d03c: 4620         \tmov\tr0, r4\n  34d03e: bd98         \tpop\t{r3, r4, r7, pc}\n  34d040: b598         \tpush\t{r3, r4, r7, lr}\n  34d042: 460a         \tmov\tr2, r1\n  34d044: 2314         \tmovs\tr3, #0x14\n  34d046: af00         \tadd\tr7, sp, #0x0\n  34d048: 2144         \tmovs\tr1, #0x44\n  34d04a: 4604         \tmov\tr4, r0\n  34d04c: f7e0 fb02    \tbl\t0x32d654 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x7358> @ imm = #-0x1f9fc\n  34d050: 4b07         \tldr\tr3, [pc, #0x1c]         @ 0x34d070 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x26d74>\n  34d052: 4620         \tmov\tr0, r4\n  34d054: 6023         \tstr\tr3, [r4]\n  34d056: 2300         \tmovs\tr3, #0x0\n  34d058: f8c4 32f4    \tstr.w\tr3, [r4, #0x2f4]\n  34d05c: f7e0 fb1e    \tbl\t0x32d69c <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x73a0> @ imm = #-0x1f9c4\n  34d060: 4620         \tmov\tr0, r4\n  34d062: bd98         \tpop\t{r3, r4, r7, pc}\n  34d064: 4620         \tmov\tr0, r4\n  34d066: f7e0 facb    \tbl\t0x32d600 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x7304> @ imm = #-0x1fa6a\n  34d06a: f5d2 ebb0    \tblx\t0x11f7cc <__cxa_end_cleanup@plt> @ imm = #-0x22d8a0\n  34d06e: bf00         \tnop\n  34d070: c120         \tstm\tr1!, {r5}\n  34d072: 0081         \tlsls\tr1, r0, #0x2\n  34d074: b580         \tpush\t{r7, lr}\n  34d076: af00         \tadd\tr7, sp, #0x0\n  34d078: b119         \tcbz\tr1, 0x34d082 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x26d86> @ imm = #0x6\n  34d07a: f8c0 12f4    \tstr.w\tr1, [r0, #0x2f4]\n  34d07e: 2000         \tmovs\tr0, #0x0\n  34d080: bd80         \tpop\t{r7, pc}\n  34d082: 4801         \tldr\tr0, [pc, #0x4]          @ 0x34d088 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x26d8c>\n  34d084: bd80         \tpop\t{r7, pc}\n  34d086: bf00         \tnop\n  34d088: 0001         \tmovs\tr1, r0\n  34d08a: 1c00         \tadds\tr0, r0, #0x0\n  34d08c: b580         \tpush\t{r7, lr}\n  34d08e: af00         \tadd\tr7, sp, #0x0\n  34d090: b131         \tcbz\tr1, 0x34d0a0 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x26da4> @ imm = #0xc\n  34d092: f500 702c    \tadd.w\tr0, r0, #0x2b0\n  34d096: 2244         \tmovs\tr2, #0x44\n  34d098: f5d1 eafc    \tblx\t0x11e694 <memcpy@plt>   @ imm = #-0x22ea08\n  34d09c: 2000         \tmovs\tr0, #0x0\n  34d09e: bd80         \tpop\t{r7, pc}\n  34d0a0: 4800         \tldr\tr0, [pc, #0x0]          @ 0x34d0a4 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x26da8>\n  34d0a2: bd80         \tpop\t{r7, pc}\n  34d0a4: 0001         \tmovs\tr1, r0\n  34d0a6: 1c00         \tadds\tr0, r0, #0x0\n  34d0a8: 2908         \tcmp\tr1, #0x8\n  34d0aa: b5b0         \tpush\t{r4, r5, r7, lr}\n  34d0ac: 4605         \tmov\tr5, r0\n  34d0ae: af00         \tadd\tr7, sp, #0x0\n  34d0b0: d10b         \tbne\t0x34d0ca <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x26dce> @ imm = #0x16\n  34d0b2: f44f 704c    \tmov.w\tr0, #0x330\n  34d0b6: f5d1 eb76    \tblx\t0x11e7a4 <_Znwj@plt>    @ imm = #-0x22e914\n  34d0ba: 4629         \tmov\tr1, r5\n  34d0bc: 4a06         \tldr\tr2, [pc, #0x18]         @ 0x34d0d8 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x26ddc>\n  34d0be: 2300         \tmovs\tr3, #0x0\n  34d0c0: 4604         \tmov\tr4, r0\n  34d0c2: f000 f985    \tbl\t0x34d3d0 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x270d4> @ imm = #0x30a\n  34d0c6: 4620         \tmov\tr0, r4\n  34d0c8: bdb0         \tpop\t{r4, r5, r7, pc}\n  34d0ca: 2000         \tmovs\tr0, #0x0\n  34d0cc: bdb0         \tpop\t{r4, r5, r7, pc}\n  34d0ce: 4620         \tmov\tr0, r4\n  34d0d0: f5d1 ea72    \tblx\t0x11e5b8 <_ZdlPv@plt>   @ imm = #-0x22eb1c\n  34d0d4: f5d2 eb7a    \tblx\t0x11f7cc <__cxa_end_cleanup@plt> @ imm = #-0x22d90c\n  34d0d8: 7de9         \tldrb\tr1, [r5, #0x17]\n  34d0da: 002d         \tmovs\tr5, r5\n  34d0dc: b5b0         \tpush\t{r4, r5, r7, lr}\n  34d0de: b082         \tsub\tsp, #0x8\n  34d0e0: af02         \tadd\tr7, sp, #0x8\n  34d0e2: 4604         \tmov\tr4, r0\n  34d0e4: 6803         \tldr\tr3, [r0]\n  34d0e6: 68db         \tldr\tr3, [r3, #0xc]\n  34d0e8: 4798         \tblx\tr3\n  34d0ea: 2808         \tcmp\tr0, #0x8\n  34d0ec: 4601         \tmov\tr1, r0\n  34d0ee: d129         \tbne\t0x34d144 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x26e48> @ imm = #0x52\n  34d0f0: 4620         \tmov\tr0, r4\n  34d0f2: 2201         \tmovs\tr2, #0x1\n  34d0f4: f7ff ffd8    \tbl\t0x34d0a8 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x26dac> @ imm = #-0x50\n  34d0f8: 6360         \tstr\tr0, [r4, #0x34]\n  34d0fa: b318         \tcbz\tr0, 0x34d144 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x26e48> @ imm = #0x46\n  34d0fc: f8d4 22a4    \tldr.w\tr2, [r4, #0x2a4]\n  34d100: f504 7126    \tadd.w\tr1, r4, #0x298\n  34d104: 6803         \tldr\tr3, [r0]\n  34d106: 9200         \tstr\tr2, [sp]\n  34d108: f8d4 22a8    \tldr.w\tr2, [r4, #0x2a8]\n  34d10c: 9201         \tstr\tr2, [sp, #0x4]\n  34d10e: 6a1d         \tldr\tr5, [r3, #0x20]\n  34d110: c90e         \tldm\tr1, {r1, r2, r3}\n  34d112: 47a8         \tblx\tr5\n  34d114: f104 0140    \tadd.w\tr1, r4, #0x40\n  34d118: 6b60         \tldr\tr0, [r4, #0x34]\n  34d11a: 6803         \tldr\tr3, [r0]\n  34d11c: 6a5b         \tldr\tr3, [r3, #0x24]\n  34d11e: 4798         \tblx\tr3\n  34d120: f8d4 12f4    \tldr.w\tr1, [r4, #0x2f4]\n  34d124: 6b60         \tldr\tr0, [r4, #0x34]\n  34d126: f000 f98f    \tbl\t0x34d448 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x2714c> @ imm = #0x31e\n  34d12a: f504 712c    \tadd.w\tr1, r4, #0x2b0\n  34d12e: 6b60         \tldr\tr0, [r4, #0x34]\n  34d130: f000 f990    \tbl\t0x34d454 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x27158> @ imm = #0x320\n  34d134: 2200         \tmovs\tr2, #0x0\n  34d136: 4620         \tmov\tr0, r4\n  34d138: 210b         \tmovs\tr1, #0xb\n  34d13a: 4613         \tmov\tr3, r2\n  34d13c: f78a fdf0    \tbl\t0x2d7d20 <_ZN8FlashLib20SetBackupMgrCallbackEPFvmE+0x1f178> @ imm = #-0x75420\n  34d140: 2000         \tmovs\tr0, #0x0\n  34d142: e000         \tb\t0x34d146 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x26e4a> @ imm = #0x0\n  34d144: 4801         \tldr\tr0, [pc, #0x4]          @ 0x34d14c <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x26e50>\n  34d146: 46bd         \tmov\tsp, r7\n  34d148: bdb0         \tpop\t{r4, r5, r7, pc}\n  34d14a: bf00         \tnop\n  34d14c: 0003         \tmovs\tr3, r0\n  34d14e: 1c00         \tadds\tr0, r0, #0x0\n  34d150: e92d 41f0    \tpush.w\t{r4, r5, r6, r7, r8, lr}\n  34d154: 4615         \tmov\tr5, r2\n  34d156: 2200         \tmovs\tr2, #0x0\n  34d158: 4606         \tmov\tr6, r0\n  34d15a: 4688         \tmov\tr8, r1\n  34d15c: 461c         \tmov\tr4, r3\n  34d15e: af00         \tadd\tr7, sp, #0x0\n  34d160: 6840         \tldr\tr0, [r0, #0x4]\n  34d162: 2103         \tmovs\tr1, #0x3\n  34d164: 4613         \tmov\tr3, r2\n  34d166: f7e2 fbfd    \tbl\t0x32f964 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x9668> @ imm = #-0x1d806\n  34d16a: b145         \tcbz\tr5, 0x34d17e <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x26e82> @ imm = #0x10\n  34d16c: b13c         \tcbz\tr4, 0x34d17e <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x26e82> @ imm = #0xe\n  34d16e: 68b0         \tldr\tr0, [r6, #0x8]\n  34d170: 4641         \tmov\tr1, r8\n  34d172: 462a         \tmov\tr2, r5\n  34d174: 4623         \tmov\tr3, r4\n  34d176: e8bd 41f0    \tpop.w\t{r4, r5, r6, r7, r8, lr}\n  34d17a: f78a be19    \tb.w\t0x2d7db0 <_ZN8FlashLib20SetBackupMgrCallbackEPFvmE+0x1f208> @ imm = #-0x753ce\n  34d17e: 4801         \tldr\tr0, [pc, #0x4]          @ 0x34d184 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x26e88>\n  34d180: e8bd 81f0    \tpop.w\t{r4, r5, r6, r7, r8, pc}\n  34d184: 0001         \tmovs\tr1, r0\n  34d186: 1c00         \tadds\tr0, r0, #0x0\n  34d188: b598         \tpush\t{r3, r4, r7, lr}\n  34d18a: 4604         \tmov\tr4, r0\n  34d18c: 4b0b         \tldr\tr3, [pc, #0x2c]         @ 0x34d1bc <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x26ec0>\n  34d18e: af00         \tadd\tr7, sp, #0x0\n  34d190: 6003         \tstr\tr3, [r0]\n  34d192: 6880         \tldr\tr0, [r0, #0x8]\n  34d194: b120         \tcbz\tr0, 0x34d1a0 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x26ea4> @ imm = #0x8\n  34d196: 6803         \tldr\tr3, [r0]\n  34d198: 685b         \tldr\tr3, [r3, #0x4]\n  34d19a: 4798         \tblx\tr3\n  34d19c: 2300         \tmovs\tr3, #0x0\n  34d19e: 60a3         \tstr\tr3, [r4, #0x8]\n  34d1a0: 6860         \tldr\tr0, [r4, #0x4]\n  34d1a2: f7e3 fb15    \tbl\t0x3307d0 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0xa4d4> @ imm = #-0x1c9d6\n  34d1a6: 4620         \tmov\tr0, r4\n  34d1a8: f7e0 f9c4    \tbl\t0x32d534 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x7238> @ imm = #-0x1fc78\n  34d1ac: 4620         \tmov\tr0, r4\n  34d1ae: bd98         \tpop\t{r3, r4, r7, pc}\n  34d1b0: 4620         \tmov\tr0, r4\n  34d1b2: f7e0 f9bf    \tbl\t0x32d534 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x7238> @ imm = #-0x1fc82\n  34d1b6: f5d2 eb0a    \tblx\t0x11f7cc <__cxa_end_cleanup@plt> @ imm = #-0x22d9ec\n  34d1ba: bf00         \tnop\n  34d1bc: c138         \tstm\tr1!, {r3, r4, r5}\n  34d1be: 0081         \tlsls\tr1, r0, #0x2\n",
+      "bytes_sha256": "049dc8e5d3c7f88892ac3e7db9f47b49e41decfda8fdef3d2bc112df834a8c72"
+    },
+    "0x32fa20:0x32fb18": {
+      "existing_listing": null,
+      "binary_verification": "\n/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so:\tfile format elf32-littlearm\n\nDisassembly of section .text:\n\n003262fc <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE>:\n  32fa20: f1a6 0108    \tsub.w\tr1, r6, #0x8\n  32fa24: 1869         \tadds\tr1, r5, r1\n  32fa26: 2204         \tmovs\tr2, #0x4\n  32fa28: 1d38         \tadds\tr0, r7, #0x4\n  32fa2a: f5f1 ff01    \tbl\t0x121830 <.text+0x1608> @ imm = #-0x20e1fe\n  32fa2e: f107 000c    \tadd.w\tr0, r7, #0xc\n  32fa32: f2d0 fa1c    \tbl\t0x5ffe6e <_ZN5FeaIf21GetIndexFilteringInfoEmN3MPR14EntryConditionENS0_7EntryIdEmPN5MprIf25GetIndexFilteringInfoListEm+0x1abd0c> @ imm = #0x2d0438\n  32fa36: 4605         \tmov\tr5, r0\n  32fa38: 1d38         \tadds\tr0, r7, #0x4\n  32fa3a: f2d0 fa18    \tbl\t0x5ffe6e <_ZN5FeaIf21GetIndexFilteringInfoEmN3MPR14EntryConditionENS0_7EntryIdEmPN5MprIf25GetIndexFilteringInfoListEm+0x1abd0c> @ imm = #0x2d0430\n  32fa3e: 4641         \tmov\tr1, r8\n  32fa40: b2aa         \tuxth\tr2, r5\n  32fa42: 9400         \tstr\tr4, [sp]\n  32fa44: b283         \tuxth\tr3, r0\n  32fa46: 4648         \tmov\tr0, r9\n  32fa48: f7ff ff0b    \tbl\t0x32f862 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x9566> @ imm = #-0x1ea\n  32fa4c: f107 0714    \tadd.w\tr7, r7, #0x14\n  32fa50: 46bd         \tmov\tsp, r7\n  32fa52: e8bd 83f0    \tpop.w\t{r4, r5, r6, r7, r8, r9, pc}\n  32fa56: b580         \tpush\t{r7, lr}\n  32fa58: b084         \tsub\tsp, #0x10\n  32fa5a: af00         \tadd\tr7, sp, #0x0\n  32fa5c: 463a         \tmov\tr2, r7\n  32fa5e: f107 0310    \tadd.w\tr3, r7, #0x10\n  32fa62: f810 1b01    \tldrb\tr1, [r0], #1\n  32fa66: 3930         \tsubs\tr1, #0x30\n  32fa68: f843 1d04    \tstr\tr1, [r3, #-4]!\n  32fa6c: 4293         \tcmp\tr3, r2\n  32fa6e: d1f8         \tbne\t0x32fa62 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x9766> @ imm = #-0x10\n  32fa70: 68f8         \tldr\tr0, [r7, #0xc]\n  32fa72: 683b         \tldr\tr3, [r7]\n  32fa74: f003 030f    \tand\tr3, r3, #0xf\n  32fa78: ea43 3300    \torr.w\tr3, r3, r0, lsl #12\n  32fa7c: 68b8         \tldr\tr0, [r7, #0x8]\n  32fa7e: f000 000f    \tand\tr0, r0, #0xf\n  32fa82: ea43 2000    \torr.w\tr0, r3, r0, lsl #8\n  32fa86: 687b         \tldr\tr3, [r7, #0x4]\n  32fa88: 011b         \tlsls\tr3, r3, #0x4\n  32fa8a: f003 03ff    \tand\tr3, r3, #0xff\n  32fa8e: 4318         \torrs\tr0, r3\n  32fa90: b280         \tuxth\tr0, r0\n  32fa92: f107 0710    \tadd.w\tr7, r7, #0x10\n  32fa96: 46bd         \tmov\tsp, r7\n  32fa98: bd80         \tpop\t{r7, pc}\n  32fa9a: b5f0         \tpush\t{r4, r5, r6, r7, lr}\n  32fa9c: b089         \tsub\tsp, #0x24\n  32fa9e: 4606         \tmov\tr6, r0\n  32faa0: af02         \tadd\tr7, sp, #0x8\n  32faa2: 4608         \tmov\tr0, r1\n  32faa4: 460c         \tmov\tr4, r1\n  32faa6: f6bf fa6b    \tbl\t0x1eef80 <_Z32FileAccCache_SetLogMprFileIfInfommmm+0x1eb38> @ imm = #-0x140b2a\n  32faaa: 2330         \tmovs\tr3, #0x30\n  32faac: 2202         \tmovs\tr2, #0x2\n  32faae: 743b         \tstrb\tr3, [r7, #0x10]\n  32fab0: 747b         \tstrb\tr3, [r7, #0x11]\n  32fab2: 3b30         \tsubs\tr3, #0x30\n  32fab4: 733b         \tstrb\tr3, [r7, #0xc]\n  32fab6: 713b         \tstrb\tr3, [r7, #0x4]\n  32fab8: f1a0 010e    \tsub.w\tr1, r0, #0xe\n  32fabc: 4605         \tmov\tr5, r0\n  32fabe: 1861         \tadds\tr1, r4, r1\n  32fac0: f107 0012    \tadd.w\tr0, r7, #0x12\n  32fac4: f5f1 feb4    \tbl\t0x121830 <.text+0x1608> @ imm = #-0x20e298\n  32fac8: f1a5 010c    \tsub.w\tr1, r5, #0xc\n  32facc: 1861         \tadds\tr1, r4, r1\n  32face: 2204         \tmovs\tr2, #0x4\n  32fad0: f107 0008    \tadd.w\tr0, r7, #0x8\n  32fad4: f5f1 feac    \tbl\t0x121830 <.text+0x1608> @ imm = #-0x20e2a8\n  32fad8: f1a5 0108    \tsub.w\tr1, r5, #0x8\n  32fadc: 1861         \tadds\tr1, r4, r1\n  32fade: 2204         \tmovs\tr2, #0x4\n  32fae0: 4638         \tmov\tr0, r7\n  32fae2: f5f1 fea5    \tbl\t0x121830 <.text+0x1608> @ imm = #-0x20e2b6\n  32fae6: f107 0010    \tadd.w\tr0, r7, #0x10\n  32faea: f7ff ffb4    \tbl\t0x32fa56 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x975a> @ imm = #-0x98\n  32faee: 4605         \tmov\tr5, r0\n  32faf0: f107 0008    \tadd.w\tr0, r7, #0x8\n  32faf4: f7ff ffaf    \tbl\t0x32fa56 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x975a> @ imm = #-0xa2\n  32faf8: 4604         \tmov\tr4, r0\n  32fafa: 4638         \tmov\tr0, r7\n  32fafc: f7ff ffab    \tbl\t0x32fa56 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x975a> @ imm = #-0xaa\n  32fb00: 2140         \tmovs\tr1, #0x40\n  32fb02: 462a         \tmov\tr2, r5\n  32fb04: 4623         \tmov\tr3, r4\n  32fb06: 9000         \tstr\tr0, [sp]\n  32fb08: 4630         \tmov\tr0, r6\n  32fb0a: f7ff feaa    \tbl\t0x32f862 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x9566> @ imm = #-0x2ac\n  32fb0e: f107 071c    \tadd.w\tr7, r7, #0x1c\n  32fb12: 46bd         \tmov\tsp, r7\n  32fb14: bdf0         \tpop\t{r4, r5, r6, r7, pc}\n  32fb16: 0000         \tmovs\tr0, r0\n",
+      "bytes_sha256": "c46605f4d4caa371524dd92b91e435dde0f3fb50fa10a6a653f079d0e0f427c4"
+    }
+  },
+  "reused": [],
+  "rtti": {
+    "Recorder": {
+      "bases": [
+        "BaseCc"
+      ],
+      "vtables": [
+        {
+          "addr_point": "0x811a38",
+          "methods": [
+            {
+              "entry": "0x32d600",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x32d640",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x32d5b2",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": null,
+              "sym": "__cxa_pure_virtual"
+            }
+          ]
+        }
+      ]
+    },
+    "StillRecorder": {
+      "bases": [
+        "Recorder"
+      ],
+      "vtables": [
+        {
+          "addr_point": "0x81b9c0",
+          "methods": [
+            {
+              "entry": "0x34a880",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x34a8a8",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x32d5b2",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x34a878",
+              "thumb": true,
+              "sym": null
+            }
+          ]
+        }
+      ]
+    },
+    "dcf_AVISequence": {
+      "bases": [
+        "dcf_CommonSequence"
+      ],
+      "vtables": [
+        {
+          "addr_point": "0x82df28",
+          "methods": [
+            {
+              "entry": "0x3938fc",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x393914",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x3a13d4",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x3a13b4",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39c63a",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39ca56",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39c674",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39ca48",
+              "thumb": true,
+              "sym": null
+            }
+          ]
+        }
+      ]
+    },
+    "dcf_Sequence": {
+      "bases": [
+        "dcf_CommonSequence"
+      ],
+      "vtables": [
+        {
+          "addr_point": "0x832050",
+          "methods": [
+            {
+              "entry": "0x3a89b0",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x3a89c8",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x3a13d4",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x3a13b4",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39c63a",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39ca56",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39c674",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39ca48",
+              "thumb": true,
+              "sym": null
+            }
+          ]
+        }
+      ]
+    },
+    "StillWriterFilter": {
+      "bases": [
+        "BaseThreadFilter"
+      ],
+      "vtables": [
+        {
+          "addr_point": "0x882e28",
+          "methods": [
+            {
+              "entry": "0x513204",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x513254",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x512ca0",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x5144e4",
+              "thumb": true,
+              "sym": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "target_virtuals": {
+    "0x34cfa0": [
+      {
+        "class": "RecStill",
+        "vtable": "0x81c0b8",
+        "slot": 40
+      }
+    ]
+  },
+  "target_relocations": {
+    "0x34cfa0": [
+      "0x81c0e0"
+    ]
+  },
+  "branch_candidates": [],
+  "sha256_after": "9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30"
+}

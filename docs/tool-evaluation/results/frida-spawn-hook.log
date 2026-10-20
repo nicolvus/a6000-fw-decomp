@@ -1,0 +1,26 @@
+$ /tmp/claude-1000/-home-nicolas-Documents-a6000/41e07ba0-de32-4d87-ba70-e2642fb5a9e3/scratchpad/tools/venv/bin/frida -q -f /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/docs/tool-evaluation/lab/shutter_lab -l docs/tool-evaluation/lab/hook.js --eval setTimeout(()=>{},3000) -t 3 --exit-on-error
+--- stdout
+Spawned `/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/docs/tool-evaluation/lab/shutter_lab`. Resuming main thread!
+capture(0)=8001
+expose(4000, 200) -> 8000
+capture(0) -> 8001
+1
+capture(1)=501
+expose(250, 200) -> 500
+capture(1) -> 501
+capture(0)=8001
+expose(4000, 200) -> 8000
+capture(0) -> 8001
+capture(1)=501
+expose(250, 200) -> 500
+capture(1) -> 501
+capture(0)=8001
+expose(4000, 200) -> 8000
+capture(0) -> 8001
+capture(1)=501
+expose(250, 200) -> 500
+capture(1) -> 501
+Process terminated
+
+--- stderr
+

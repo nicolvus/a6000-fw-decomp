@@ -1,0 +1,28 @@
+{
+  "session": 19,
+  "run_number": 8,
+  "task_id": "S19-08",
+  "firmware": "Sony A6000 fw 3.21",
+  "method": "static read-only llvm-objdump -d --triple=thumbv7-linux-gnueabi; llvm-nm -D; strings -t x; prior static evidence cross-check",
+  "findings": [
+    {"classification": "VERIFICADO", "file": "libmpr.so", "address": "0x44f834", "method": "llvm-objdump", "finding": "FeaIf::EncodeStill copies/enqueues an input descriptor asynchronously; it does not wait for JPEG completion or storage."},
+    {"classification": "VERIFICADO", "file": "libObj.so", "address": "0x908afc; 0x8fe0a0", "method": "prior static disassembly cross-check", "finding": "RecordStill prepares WriteStillParam and reaches MprCtrl::WriteStill; this is request construction, not writer completion."},
+    {"classification": "VERIFICADO", "file": "libmpr.so", "address": "0x44f784", "method": "llvm-objdump", "finding": "FeaIf::WriteStill accepts one or two records, packages 0x90 bytes, and submits them through a virtual asynchronous interface."},
+    {"classification": "VERIFICADO", "file": "libmpr.so", "address": "0x4507b6", "method": "objdump plus prior Ghidra cross-check", "finding": "The internal FeaCore WriteStill path validates state, writer availability, recording identifier, and active recording lines before queueing."},
+    {"classification": "VERIFICADO", "file": "libmpr.so", "address": "0x38b064; 0x37af44", "method": "prior static disassembly cross-check", "finding": "EXIF, thumbnail, JPEG main data, reserve, and screennail are separate areas; construction checks reserve and WriteDcfMemory prefixes EXIF/thumbnail to JPEG."},
+    {"classification": "VERIFICADO", "file": "libmpr.so", "address": "0x726138", "method": "llvm-objdump", "finding": "MprFileIfCore::WriteAndFlush validates handle, buffer and out-count, resets out-count, finds an MMgr, and delegates to its vtable slot +0x290."},
+    {"classification": "VERIFICADO", "file": "libmpr.so", "address": "0x71eafc; 0x71eb70", "method": "llvm-objdump", "finding": "MPR exports synchronous DCF pre-registration and directory/file-number-to-EntryId lookup APIs."},
+    {"classification": "VERIFICADO", "file": "libmpr.so", "address": "symbols and strings", "method": "llvm-nm -D; strings", "finding": "MPR exports DCF directory/content and thumbnail-playback APIs and contains the DCIM naming pattern \\DCIM\\%3ldMSDCF\\DSC0%04ld.JPG."},
+    {"classification": "NO_VERIFICADO", "file": "libmpr.so", "address": "unresolved writer vtable target", "method": "static analysis", "finding": "No static edge proves that a submitted WriteStill record writes to SD, calls WriteAndFlush, invokes fsync/fdatasync, or reports durable completion."},
+    {"classification": "NO_VERIFICADO", "file": "libmpr.so/libObj.so", "address": "unresolved", "method": "static analysis", "finding": "No static edge connects WriteStill completion to DCF registration/commit/rollback, ObjMsg 0x3500/0x3002 consumption, cache invalidation, or playback visibility."},
+    {"classification": "NO_VERIFICADO", "file": "libmpr.so", "address": "unresolved", "method": "symbol and flow review", "finding": "Writer-specific cancellation, partial-file cleanup, DMM release, and error recovery semantics were not recovered."},
+    {"classification": "DESCARTADO", "file": "libmpr.so", "address": "0x44f834; strings", "method": "control-flow distinction", "finding": "EncodeStill success, a valid JPEG, or a DSC filename string is not evidence of SD write, DCF registration, or playback visibility."}
+  ],
+  "state_separation": {
+    "jpeg_valid": "NO_VERIFICADO end-to-end; descriptor and ancillary areas are demonstrated.",
+    "sd_write": "NO_VERIFICADO for this still; file abstraction and delegated WriteAndFlush exist.",
+    "dcf_registration": "NO_VERIFICADO for this still; DCF pre-registration and lookup APIs exist.",
+    "playback_visibility": "NO_VERIFICADO; catalog and thumbnail APIs exist but no write-to-catalog edge was recovered."
+  },
+  "safety": "Read-only static analysis; no original binary modified; no Ghidra project changed; no camera connected or flashed; SilentShutter is not declared functional."
+}

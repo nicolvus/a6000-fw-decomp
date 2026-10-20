@@ -1,0 +1,102 @@
+{
+  "session": 18,
+  "thread": "claude-d",
+  "model_used": "claude-sonnet-5",
+  "effort_used": "medium",
+  "requested": "sonnet/medium",
+  "method": "static_analysis_only_raw_disassembly_plus_direct_rodata_read",
+  "tools": ["llvm-objdump --triple=thumbv7-linux-gnueabi", "python3 -I struct.unpack_from on raw ELF file bytes"],
+  "rules_followed": {
+    "static_only": true,
+    "no_camera_connect_or_flash": true,
+    "no_binary_or_context_md_modification": true,
+    "no_package_install": true,
+    "no_agent_delegation": true
+  },
+  "classification_legend": ["VERIFICADO", "INFERENCIA", "HIPOTESIS", "NO_VERIFICADO", "DESCARTADO"],
+  "silent_shutter_disclaimer": "No se afirma en ningun punto que SilentShutter funcione.",
+  "binaries": {
+    "libObj.so": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libObj.so",
+    "libMWF.so": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libMWF.so"
+  },
+  "findings": [
+    {
+      "id": "q1_common_caller",
+      "question": "Llamador comun entre TM::createLifeCycles (0x4195c0) y MWF::ObjPin::Connect (libMWF 0x29588)",
+      "classification": "DESCARTADO",
+      "detail": "createLifeCycles tiene un unico llamador real en 0x41a1fa, dentro de una funcion cuyo inicio real (por prologo push.w, no por simbolo dinamico cercano) es 0x41a1dc. Esa funcion no contiene ninguna llamada al stub PLT de Connect (0xdf2d0). Se hallaron 17 sitios blx 0xdf2d0 en libObj.so; solo 2 (0x815496, 0x8154f8) tienen identidad de funcion verificable (ConnectPinWrapper::Connect y ::SetStatus, simbolos dynsym pequenos con tamano conocido); los otros 15 caen en regiones sin simbolo local fiable. Ninguno coincide ni esta cerca de 0x41a1dc/0x4195c0.",
+      "evidence": {
+        "createLifeCycles_only_caller": "0x41a1fa",
+        "caller_function_real_start": "0x41a1dc",
+        "connect_plt_stub": "0xdf2d0",
+        "connect_got_slot": "0x102dfc4",
+        "connect_call_sites": ["0x3639c8","0x3720ee","0x3844b6","0x396eae","0x39dcb2","0x3ad484","0x815496","0x8154f8","0x89bd14","0x89bd2e","0x89c134","0x89c148","0x987482","0xafa3a4","0xb0a140"],
+        "connect_sites_with_verified_identity": {
+          "0x815496": "_ZN17ConnectPinWrapper7ConnectEPN3MWF6ObjPinEPNS0_15ObjStatusViewerE (0x815474-0x8154a8)",
+          "0x8154f8": "_ZN17ConnectPinWrapper9SetStatusEb (0x8154ce-0x81550c)"
+        }
+      }
+    },
+    {
+      "id": "q2_initializer_analog",
+      "question": "Analogo en libObj.so al inicializador LIRO 0x437EBED8 (tabla con punteros GOT legibles en vez de BSS puro)",
+      "classification": "DESCARTADO",
+      "detail": "createLifeCycles NO escribe sobre slots BSS preexistentes; asigna cada LifeCycle con operator new(0x14) en runtime y llama a un constructor real (0x41b6c0) con punteros de pines ya resueltos. La tabla fuente de datos (ObjId/StsId/indices) SI es estatica y legible directamente: .rodata 0xcc4210, stride 0x20 bytes (confirma de forma independiente la tabla ya documentada en CONTEXT.md). A diferencia de LIRO, aqui no hay 'problema BSS' que resolver via GOT: la tabla ya es .rodata legible sin inicializador. El problema real (resolver ObjId 53 a su clase concreta) es de otro tipo: GetObjFromId (0x41920c) es un lookup dinamico que, si el ObjId no esta ya registrado en runtime, crea solo un proxy placeholder generico (operator new(0x30) + ctor en 0x446e60), no la clase real -- no hay tabla estatica de punteros a constructores indexada por ObjId que aplicar la tecnica LIRO.",
+      "evidence": {
+        "createLifeCycles_loop": "0x4195c0-0x4196f0, operator new(0x14) via blx 0xdc100, ctor call bl 0x41b6c0",
+        "topology_table_base": "0xcc4210",
+        "topology_table_section": ".rodata (VMA 0xbc9598 size 0x2c8a1a)",
+        "topology_table_stride_bytes": 32,
+        "row_0x2a_addr": "0xcc4750",
+        "row_0x2a_fields_u32x8": ["0x0","0x6","0x9","0x1","0x1","0xb","0x0","0x0"],
+        "row_0x2a_decoded": {"StsId": 6, "src_ObjId": 9, "src_outIdx": 1, "dst_ObjId": 11},
+        "row_0xb4_addr": "0xcc5890",
+        "row_0xb4_fields_u32x8": ["0x0","0x6","0x35","0x1","0x2","0xb","0x0","0x0"],
+        "row_0xb4_decoded": {"StsId": 6, "src_ObjId": 53, "src_outIdx": 2, "dst_ObjId": 11},
+        "cross_check": "coincide exactamente con CONTEXT.md lineas 883, 906, 907 (StsId 6, ObjId9/11, ObjId53/11), re-derivado de forma independiente por lectura cruda de archivo (off==vaddr verificado con llvm-objdump -p)",
+        "get_obj_from_id_function": "0x41920c",
+        "get_obj_from_id_behavior": "lookup en coleccion runtime; si ausente crea proxy generico operator new(0x30) + ctor 0x446e60, no la clase real"
+      }
+    },
+    {
+      "id": "q3_row_0x2a_other_creator",
+      "question": "Otro creador de la fila 0x2a ademas de ModelPbCap",
+      "classification": "NO_VERIFICADO",
+      "detail": "Busqueda por direccion literal de la fila (0xcc4750) y por indice (42/0x2a) via objdump crudo no concluyente: el acceso real es por base+indice*0x20 (no hay literal de direccion fija que grepear) y el literal 0x2a como inmediato es demasiado ambiguo en un binario de este tamano sin reconstruir flujo de datos. Sin avance sobre CONTEXT.md linea 906 (ModelPbCap sigue siendo el unico creador literal confirmado; 82-97% de sitios createTopology construyen el id dinamicamente)."
+    },
+    {
+      "id": "q4_object_53_identity",
+      "question": "Identidad de clase de ObjId 53 (fila 0xb4) via tecnica del inicializador",
+      "classification": "NO_VERIFICADO",
+      "detail": "No existe inicializador estatico GOT-por-ObjId en libObj.so que aplicar (ver q2). Se intento replicar el patron de registro usando el constructor conocido de ObjStillRecorder (ObjId 11, ctor 0x9178f0) como plantilla para buscar el de ObjId 53 por literal 0x35, pero el ctor de referencia llama a MWF::ObjActiveBase::ObjActiveBase(int,const char*,uint) con argumentos (0x8, <string>, 0x2f) -- ninguno es literalmente 11, indicando que el ObjId no se pasa como inmediato directo al constructor base. Grep de inmediatos 0x35 no es metodo fiable sin Ghidra o reconstruccion manual; fuera de presupuesto de este hilo.",
+      "evidence": {
+        "reference_ctor_ObjStillRecorder": "0x9178f0",
+        "reference_ctor_args_observed": {"r1": "0x8", "r3": "0x2f"},
+        "conclusion": "ObjId no es un inmediato trivial en el patron de constructor observado; busqueda por grep de 0x35 descartada como metodo fiable"
+      }
+    },
+    {
+      "id": "q5_vptr_comparison",
+      "question": "Coincidencia de vptr DAT_44020894 (LIRO) con vptr ObjEffect/ObjStillRecorder de libObj.so",
+      "classification": "DESCARTADO_para_comparacion_directa__NO_VERIFICADO_para_parentesco",
+      "detail": "DAT_44020894 es una direccion en el espacio de direcciones de LIRO (av-cam.bin, base 0x43541000, rango 0x44xxxxxx = su propio data/BSS). libObj.so es un ELF .so independiente con su propio mapa de direcciones (.rodata/.data/.got en 0x00xxxxxx/0x01xxxxxx), cargado por un proceso Linux separado. Comparar direcciones crudas entre ambos espacios no tiene sentido numerico. Comparar forma/firma de vtables no se realizo en este hilo por falta de tiempo; parentesco de jerarquia de clases LIRO vs libObj.so queda NO_VERIFICADO. Hipotesis simple no verificada: dos sistemas de objetos paralelos con convencion de diseno compartida (vptr+estado+payload de 0x14B) pero binarios y codigo distintos."
+    },
+    {
+      "id": "q6_architecture_e_blocker_reassessment",
+      "question": "Reevaluacion del bloqueo de arquitectura E tras los hallazgos de esta sesion",
+      "classification": "VERIFICADO_sin_cambios",
+      "detail": "Ningun hallazgo de este hilo (confirmacion independiente de tabla de topologia, descarte de llamador comun createLifeCycles/Connect, descarte de aplicabilidad literal de tecnica LIRO-GOT) modifica el veredicto de CONTEXT.md linea 900 (A > E > E2, E ni viable ni descartada). No se hallo guard de exclusion mutua nuevo ni evidencia de arbitraje en ObjPin::Connect (reconfirma CONTEXT.md linea 919: Connect no comprueba ocupacion previa del pin destino)."
+    },
+    {
+      "id": "q7_10_open_questions",
+      "question": "Preguntas abiertas de sesion 17 (escritor modo 1 de ObjEffect, relacion EffectInternalMode/Live View, unitType de Camera, modelo de disparo alternativo para 0x2a/0xb4)",
+      "classification": "NO_VERIFICADO",
+      "detail": "Sin avance dentro del presupuesto de este hilo. Se documenta honestamente sin forzar conclusion."
+    }
+  ],
+  "incidents": [],
+  "files_touched": [
+    "docs/capture/s18-claude-d-topology.md",
+    "analysis/session18/claude-d/s18-claude-d-topology.json"
+  ]
+}

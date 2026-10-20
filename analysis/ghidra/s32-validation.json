@@ -1,0 +1,32 @@
+{
+  "session": "S32",
+  "source_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "blob_hash": "PASS: checked before every Ghidra export and in raw audit",
+  "persistent_project": "PASS: readOnly/noanalysis; temporary metadata rolled back; 9 persistent file hashes identical across final export; baseline scope documented in s32-integrity.json",
+  "required_decompilations": "PASS: all 7 requested functions/wrappers, error fields empty",
+  "raw_audit": {
+    "status": "PASS",
+    "raw_branches": 55,
+    "ghidra_branches_crosschecked": 34,
+    "export_queries_including_duplicates_and_data": 136,
+    "direct_registrar_callsites": 26,
+    "scope": "includes exploratory fragments and one recorded no_function query; not 136 distinct complete functions"
+  },
+  "ruff_touched_file": "PASS: .venv/bin/ruff check analysis/ghidra/s32-audit.py",
+  "mypy_touched_file": "PASS: .venv/bin/mypy --ignore-missing-imports analysis/ghidra/s32-audit.py",
+  "requested_global_ruff": {
+    "command": "/home/nicolas/Documents/GPREMIUM/ingreso-agentes/.venv/bin/ruff check src tests",
+    "status": "FAIL: 9 warnings in untouched pre-existing tests",
+    "untouched_files": ["tests/test_elf_xrefs.py", "tests/test_fm3_gpio_literals.py", "tests/test_imx210_modes.py", "tests/test_sfra_outcalls.py"],
+    "scope": "No new warnings in the S32 Python file; unrelated files were not changed"
+  },
+  "requested_global_mypy": "PASS: /home/nicolas/Documents/GPREMIUM/ingreso-agentes/.venv/bin/mypy --ignore-missing-imports src; 5 source files",
+  "knowledge_maintenance": "PASS: index_docs -> build_graph -> export_corrections -> index_docs -> build_graph",
+  "knowledge_graph_stability": "PASS: 1302 entities / 2284 relations before and after generated-doc reindex; 43 corrections/supersedes",
+  "knowledge_tests": "PASS: 67 passed in 5.15s (.venv/bin/python -m pytest tests/knowledge -q)",
+  "git": "No .git available in workspace; changes uncommitted; no push",
+  "packages_installed": false,
+  "camera_connected": false,
+  "firmware_executed": false,
+  "physical_capture": "NO_VERIFICADO"
+}

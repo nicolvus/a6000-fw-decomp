@@ -1,0 +1,43 @@
+# Firmware propietario de Sony (no se distribuye) y herramientas de terceros
+firmware/
+tools/downloads/
+tools/providers/
+
+# Entornos y cachés regenerables
+.venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.knowledge-cache/
+__pycache__/
+*.pyc
+
+# Proyectos Ghidra (bases binarias derivadas del firmware) y copias de trabajo del binario
+analysis/ghidra/*.rep/
+**/*.gbf
+**/input/
+work/*/input/
+analysis/rea-independent/input/
+*.bin
+*.elf
+
+# Desensamblados completos regenerables desde el firmware (no se distribuyen)
+*.dis
+
+# Archivos de terceros / instaladores
+*.exe
+*.dmg
+*.tar.gz
+
+# Manuales de servicio con copyright (no propios), en cualquier formato
+references/manuals/*.pdf
+references/manuals/*.txt
+docs/references/sony-ilce-*.txt
+sony_ilce*.pdf
+sony_ilce*.txt
+
+# Dependencias de terceros reinstalables
+node_modules/
+
+# Logs crudos de sesiones de agentes con volcados extensos (regenerables, muy grandes)
+analysis/codex-logs/*.log

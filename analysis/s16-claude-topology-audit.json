@@ -1,0 +1,69 @@
+{
+  "sesion": 16,
+  "alcance": "A2 - auditoria dirigida y reproducible de llamadas a createTopology/destroyTopology en libObj.so fw3.21. Direcciones ELF. Metodo 100% reproducible via script propio (ver 'metodologia'); NO es revision manual exhaustiva de los 318 sitios citados en sesion 15 (ver 'discrepancia_conteo').",
+  "metodologia": {
+    "paso1": "llvm-objdump -d --triple=thumbv7-linux-gnueabi sobre todo .text (0xe2b70-0xbc9598), guardado en archivo plano.",
+    "paso2": "grep de todas las lineas 'bl 0x420630' (wrapper createTopology, confirmado por desensamblado de la propia funcion: reordena argumentos y salta a 0x41a26c) y 'bl 0x420656' (wrapper destroyTopology, salta a 0x41a3b8).",
+    "paso3": "Para cada sitio: se identifico (cuando fue posible) el puntero de struct pasado como 3er argumento (r2), y se busco, en una ventana de 50 instrucciones precedentes, el patron 'movs/mov.w/movw rX,#ID' seguido de 'str rX,[rY,#0x4]' (el campo 'id de fila' del struct de topologia, confirmado contra el sitio ya conocido de ModelPbCap en ELF 0x613680-0x613694, que si fue recuperado correctamente por el script: id=0x2a).",
+    "scripts_usados": "research/s16-claude-effect-control/ (extract_topo_calls4.py conservado como evidencia; no se modifico ningun archivo fuera del entregable)",
+    "limitacion_metodo": "El patron de construccion del struct VARIA entre sitios (stack local, 'new[]' en heap, reutilizacion de un handle ya existente via this+offset). El escaneo de ventana fija (50 instrucciones) y registro variable solo recupera el id cuando es un INMEDIATO ARM visible en ese radio; no sigue punteros a tablas estaticas ni variables de loop. Por eso el id se recupero en solo 17/93 sitios de createTopology y 4/120 de destroyTopology. El resto (76 create + 116 destroy) NO tiene id literal localizado por este metodo -- no significa que no exista, significa 'no localizado con este patron' (ver hallazgo B)."
+  },
+  "discrepancia_conteo": "Este barrido encuentra 93 llamadas 'bl 0x420630' + 120 llamadas 'bl 0x420656' = 213 sitios totales en todo libObj.so, no 318 como se cito en sesion 15 (branch-claude-objeffect.md Rama A, seccion D). No se identifico la causa exacta de la diferencia en el tiempo disponible: posibles explicaciones no verificadas son (a) sesion 15 pudo contar tambien llamadas a los wrappers vecinos 0x41ac24/0x41a7a4 (bypassed por los thunks en 0x420618/0x420624) que no son estrictamente create/destroyTopology; (b) pudo incluir llamadas indirectas (blx via registro) no capturadas por el grep de 'bl' literal. Se declara explicitamente como DISCREPANCIA NO RESUELTA, no como correccion de sesion 15.",
+
+  "A2_1_modelos_que_crean_fila_0x2a": {
+    "resultado": "Se encontro EXACTAMENTE UN sitio en todo el binario con id literal 0x2a escrito en el campo +4 del struct antes de llamar a createTopology: ELF 0x613694, dentro de ModelPbCap (ya conocido y confirmado de nuevo, byte a byte, en esta sesion).",
+    "sitio_unico": {"call_addr": "0x613694", "id": "0x2a", "mov_addr": "0x613680", "store_addr": "0x613684", "struct_reg": "r6", "contexto": "ModelPbCapToInstance (confirmado por simbolo exportado mas cercano y por coincidencia exacta con sesion 15)"},
+    "clasificacion": "VERIFICADO (re-confirmacion exacta de sesion 14/15); el bloqueo de 'ningun otro modelo conocido crea 0x2a' NO SE LEVANTA por este metodo, pero tampoco se prueba exhaustivamente dado que 76/93 sitios de create quedaron sin id literal resuelto (ver limitacion_metodo). Clasificacion global: NO_VERIFICADO (no descartado) que exista otro creador de 0x2a por via dinamica/tabla."
+  },
+
+  "A2_2_construccion_dinamica_de_listas": {
+    "resultado": "VERIFICADO: la mayoria de los sitios (76/93 create, 116/120 destroy) NO usan un id literal visible; construyen el struct desde un registro que a su vez proviene de: (a) un parametro de la funcion (posible loop sobre una tabla externa), (b) una asignacion 'new[]' seguida de escritura desde un registro cuyo valor se fijo FUERA de la ventana de 50 instrucciones, o (c) para destroyTopology, un HANDLE ya almacenado en un campo miembro (ej. '*(r4+0x94)') en vez de un id crudo -- es decir, destroyTopology tipicamente no vuelve a especificar el id, usa el handle devuelto por el create correspondiente.",
+    "ejemplo_dinamico": {"call_addr": "0x42c1b2", "detalle": "Struct creado via '_Znaj@plt' (new[]); el campo +4 se llena con el registro r5 cuyo valor VIENE DE FUERA de la funcion visible (parametro o campo), no de un literal en el sitio de llamada -- indicio de construccion dependiente de contexto/variante de modelo."},
+    "clasificacion": "VERIFICADO (construccion dinamica existe y es mayoritaria); NO_VERIFICADO el mecanismo exacto (tabla estatica vs parametro vs campo de instancia) sin mas tiempo de analisis por sitio."
+  },
+
+  "A2_3_combinacion_0x0a_0x07_0x2a_en_misma_secuencia": {
+    "resultado": "No se encontro, entre los 17 sitios con id literal resuelto, ningun sitio con id 0x0a o 0x07 literal (los valores literales de create encontrados fueron: 0x0(x6), 0x1(x6), 0x2(x1), 0x6(x1), 0x2a(x1)). Por tanto no se puede confirmar ni descartar una secuencia que combine las tres filas por este metodo: los creadores de 0x0a/0x07 (si existen como literales) no fueron localizados dentro de la cobertura de este barrido.",
+    "clasificacion": "NO_VERIFICADO"
+  },
+
+  "A2_4_transiciones_hacia_modelos_de_grabacion": {
+    "resultado": "No se identifico, dentro de los 17 sitios con id resuelto, ningun cluster que mezcle creacion de 0x2a con destruccion/creacion cercana asociada a simbolos ModelMovieRec/ModelStillRec (los simbolos exportados mas cercanos a los clusters grandes fueron ModelScalarCameraPatchToInstance y simbolos genericos de PrmBool/GEN_ButtonDrag que son artefactos de 'simbolo mas cercano' en un binario stripped, no evidencia de pertenencia real de funcion).",
+    "clasificacion": "NO_VERIFICADO (cobertura insuficiente)"
+  },
+
+  "A2_5_otros_usos_de_stsid_6": {
+    "resultado": "VERIFICADO (nuevo, calculo directo sobre analysis/topology-table-libobj.json, 211 filas x 0x20 B en .rodata ELF 0xcc4210): existe UNA SEGUNDA fila con sts_id=6 ademas de 0x2a: la fila 0xb4 (pin_type=0 YC, sts_id=6, src_obj=53/dir=salida/no=2, dst_obj=11 (StillRecorder)/dir=entrada/no=0). Es decir, LAS DOS UNICAS filas con sts_id=6 en toda la tabla comparten el MISMO destino: StillRecorder entrada#0. Esto refuerza la inferencia de sesion 15 de que sts_id agrupa topologias que comparten StsViewer/seguimiento de estado por DESTINO compartido, no por origen.",
+    "fila_0x2a": {"pin_type": 0, "sts_id": 6, "src_obj": 9, "src_dir": 1, "src_no": 1, "dst_obj": 11, "dst_dir": 0, "dst_no": 0},
+    "fila_0xb4": {"pin_type": 0, "sts_id": 6, "src_obj": 53, "src_dir": 1, "src_no": 2, "dst_obj": 11, "dst_dir": 0, "dst_no": 0},
+    "implicacion_no_verificada": "Si StsId=6 arbitra/serializa el acceso al unico pin de entrada de StillRecorder entre ObjEffect (salida#1) y el objeto 53 (identidad NO VERIFICADA, salida#2), esto podria ser precisamente el mecanismo de exclusion mutua que A3 buscaba -- pero a nivel de TopologyManager/StsViewer, NO a nivel interno de ObjEffect. No se decompilo 0x4294cc (GetStsViewer) en esta sesion para confirmarlo; queda como hipotesis fuerte, no verificada.",
+    "clasificacion": "VERIFICADO (dato de tabla) / HIPOTESIS (mecanismo de arbitraje)"
+  },
+
+  "A2_6_conexiones_temporales_crear_destruir_misma_secuencia": {
+    "resultado": "Se agruparon los 213 sitios por proximidad de direccion (<=0x300 bytes) para encontrar funciones candidatas a 'builder de lista de topologia'. Se hallaron 26 clusters con 3 o mas llamadas create/destroy mezcladas; el mayor tiene 10 llamadas en el rango ELF 0x65a732-0x65a9ee, cerca del simbolo exportado ModelScalarCameraPatchToInstance (ya descartado para 0x2a en sesion 14 mediante revision de 34 listas). Ninguno de los clusters grandes contuvo un id literal 0x2a, 0x0a o 0x07.",
+    "clusters_3_o_mas": [
+      "0x42c1b2..0x42c2e0 (n=4)", "0x46f1be..0x46f21a (n=3)", "0x47557c..0x47568e (n=4)",
+      "0x48339c..0x48353e (n=3)", "0x4f875a..0x4f87c0 (n=3)", "0x4fd76e..0x4fd9a0 (n=4)",
+      "0x50b01e..0x50b0d8 (n=4)", "0x51919a..0x519352 (n=3)", "0x51a2c6..0x51a500 (n=4)",
+      "0x527392..0x5274ae (n=3)", "0x55e0a0..0x55e110 (n=3)", "0x5877c6..0x587c0e (n=5)",
+      "0x5997fe..0x59992c (n=3)", "0x5e2880..0x5e2ae0 (n=4)", "0x5e2df6..0x5e3030 (n=3)",
+      "0x5eee34..0x5ef064 (n=4)", "0x5f5052..0x5f5302 (n=6)", "0x60a0ea..0x60a48a (n=4)",
+      "0x611ef6..0x612062 (n=3)", "0x6193fa..0x619458 (n=3)", "0x62495c..0x6249cc (n=3)",
+      "0x63a026..0x63a1f2 (n=3)", "0x6406c6..0x640938 (n=4)", "0x65a732..0x65a9ee (n=10)",
+      "0x68e172..0x68e45c (n=4)", "0x6ae8d4..0x6ae944 (n=3)"
+    ],
+    "clasificacion": "VERIFICADO (existencia de clusters) / NO_VERIFICADO (contenido semantico de cada cluster, no decompilado en esta sesion por falta de tiempo)"
+  },
+
+  "A2_7_otras_creaciones_de_0x2a_fuera_de_pbcap_edicion": {
+    "resultado": "No encontradas (ver A2_1). Unico sitio literal = ModelPbCap.",
+    "clasificacion": "NO_VERIFICADO (no se puede descartar via dinamica/tabla dado que la mayoria de sitios no resolvieron id literal)"
+  },
+
+  "ids_literales_encontrados_create": {"0x0": 6, "0x1": 6, "0x2": 1, "0x6": 1, "0x2a": 1},
+  "ids_literales_encontrados_destroy": {"0x0": 3, "0x6": 1},
+  "nota_id_6_create_destroy": "El id literal 0x6 encontrado en create (ELF 0x5fe2ec) y en destroy (ELF 0x68e224) es el ID DE FILA 6 de la tabla (no confundir con sts_id=6). La fila 6 es: pin_type=3, sts_id=0, src=(5,1,0), dst=(3,0,0) -- no relacionada con Effect/Recorder.",
+
+  "cobertura_real": "213/213 sitios de llamada enumerados (100% de los 'bl' directos a los dos wrappers); 17/93 (18%) create y 4/120 (3%) destroy con id de fila resuelto a literal; 26 clusters de co-ocurrencia identificados pero NO decompilados individualmente. Esto es un barrido dirigido y reproducible, explicitamente NO exhaustivo a nivel semantico por funcion."
+}

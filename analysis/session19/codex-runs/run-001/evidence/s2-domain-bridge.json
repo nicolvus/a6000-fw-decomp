@@ -1,0 +1,20 @@
+{
+  "session": 19,
+  "run_number": 1,
+  "task_id": "S19-01",
+  "status": "PARTIAL",
+  "scope": "static analysis only; av-cam.bin fw 3.21 load base 0x43541000",
+  "conclusion": "The local dispatcher is statically registered, but the CamUser queue receiver and a message-domain translation edge remain unverified.",
+  "findings": [
+    {"classification":"VERIFICADO","address":"0x43807f4c","finding":"Reads message code from [r1] and dispatches local codes 0x100..0x207; case 0x100 calls 0x43807d80.","method":"llvm-objdump Thumb disassembly","source":"analysis/av-cam-analysis-view.elf"},
+    {"classification":"VERIFICADO","address":"0x43fcd5d0","finding":"Contains Thumb pointer 0x43807f4d to the dispatcher; no direct BL caller was found.","method":"raw little-endian pointer search plus table word inspection","source":"analysis/av-cam-analysis-view.elf"},
+    {"classification":"INFERENCIA","address":"0x43fcd5b4","finding":"Contiguous descriptor and callback entries form a handler-registration family; registration is not proof of callback execution.","method":"table layout comparison; GOT pointer 0x44022c04 -> 0x43fcd468","source":"analysis/av-cam-analysis-view.elf"},
+    {"classification":"VERIFICADO","address":"0x43807d80 -> 0x43809ed8","finding":"The local 0x100 branch can invoke CaptureStart installation; 0x43809ed8 builds callback state through 0x439018b0.","method":"llvm-objdump control-flow inspection","source":"analysis/av-cam-analysis-view.elf"},
+    {"classification":"VERIFICADO","address":"0x4379ea40,0x4379eb0c,0x4379eba8","finding":"RelMgr constructs 0x3015, 0x3013 and 0x3011 respectively; 0x3011 is sent through 0x43aeaf18 toward queue 0x40193.","method":"llvm-objdump; corroborated against C2 report","source":"analysis/av-cam-analysis-view.elf; docs/capture/shutter-trigger-chain-0x3011.md"},
+    {"classification":"VERIFICADO","address":"0x43ffdd30","finding":"Known 0x3011/state-2 row is {0x437fd0e1,0x3011,2,0x3010}; it is an arbitration row and is not the local callback table.","method":"prior static reconstruction reviewed","source":"docs/capture/shutter-trigger-chain-0x3011.md"},
+    {"classification":"NO_VERIFICADO","address":"0x40193","finding":"No receiver registration, execution trace, or proven structure conversion from ObjMsg 0x3011/0x3013/0x3015 to local 0x100..0x207 was recovered.","method":"literal xrefs, raw pointer search, callback-table tracing","source":"analysis/av-cam-analysis-view.elf"},
+    {"classification":"DESCARTADO","address":"0x43fcd5d0","finding":"The registered function-pointer slot alone proves neither queue ownership nor runtime execution.","method":"evidence-scope review","source":"analysis/av-cam-analysis-view.elf"}
+  ],
+  "next_task":"S19-02",
+  "silent_shutter_functional":"NOT_CLAIMED"
+}

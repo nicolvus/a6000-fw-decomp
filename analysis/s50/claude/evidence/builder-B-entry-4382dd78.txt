@@ -1,0 +1,21 @@
+4382dd78 push.w {r0, r1, r2, r3, r4, r5, r6, r7, r8, lr}
+4382dd7c mov r7, r2
+4382dd7e ldr.w r5, [pc, #0x94c]
+4382dd82 mov r6, r1
+4382dd84 ldr r2, [r0, #0x50]
+4382dd86 mov r4, r0
+4382dd88 ldr.w r1, [pc, #0x944]
+4382dd8c add r5, pc
+4382dd8e ldr r3, [r2, #0x60]
+4382dd90 ldr r1, [r5, r1]
+4382dd92 cmp r3, #0x55
+4382dd94 str.w r3, [r1, #0x5f0]
+4382dd98 beq.w 0x4382deb8
+4382dd9c bhi 0x4382ddf2
+4382dd9e cmp r3, #0x3f
+4382dda0 beq.w 0x4382e072
+4382dda4 bhi 0x4382ddc8
+4382dda6 cmp r3, #0x3c
+4382dda8 beq.w 0x4382df6c
+4382ddac bhi 0x4382ddba
+4382ddae cmp r3, #0x8

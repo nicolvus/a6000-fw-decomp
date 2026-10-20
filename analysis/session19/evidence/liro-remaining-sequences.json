@@ -1,0 +1,23 @@
+{
+  "task_id": "S19-07",
+  "firmware": "A6000 fw 3.21 av-cam.bin",
+  "load_base": "0x43541000",
+  "method": ["llvm-objdump -d --triple=thumbv7-none-eabi", "Ghidra 12.1.4 read-only export"],
+  "table_initializer": "0x437ebed8",
+  "pending_confirmed": ["0x00", "0x14", "0x28", "0x3c", "0x50", "0x64", "0x78", "0x8c", "0xf0", "0x118"],
+  "already_analyzed": ["0xa0", "0xb4", "0xc8", "0xdc", "0x104"],
+  "findings": [
+    {"row":"0x00","thumb":"0x43b1bc0d","entry":"0x43b1bc0c","function":"FUN_43b1bc0c","classification":"VERIFICADO","states":"FUN_43afdf16()==0 else return 5","acquisition":"NO_VERIFICADO","encoding":"NO_VERIFICADO","completion":"delegates FUN_437ed568","error":"return 5","conventional_relation":"INFERENCIA: family gate"},
+    {"row":"0x14","thumb":"0x43b1bc25","entry":"0x43b1bc24","function":"FUN_43b1bc24","classification":"VERIFICADO","states":"selector 0..6; returns 0/1/2/3/5","acquisition":"NO_VERIFICADO","encoding":"NO_VERIFICADO","completion":"metadata path 43ae9226(...,0x9400)","error":"retry/cancel paths","conventional_relation":"INFERENCIA: common conventional family"},
+    {"row":"0x28","thumb":"0x43b1bc71","entry":"0x43b1bc70","function":"FUN_43b1bc70","classification":"VERIFICADO","states":"selector 0..6; literals 0xf6/0x1017","acquisition":"NO_VERIFICADO","encoding":"NO_VERIFICADO","completion":"common metadata path","error":"retry/cancel paths","conventional_relation":"INFERENCIA: common conventional family"},
+    {"row":"0x3c","thumb":"0x43b1bcc7","entry":"0x43b1bcc6","function":"FUN_43b1bcc6","classification":"VERIFICADO","states":"selector 0..4; pre-stage 437de2fc/43ae9130/439018b0/43549020","acquisition":"NO_VERIFICADO","encoding":"NO_VERIFICADO","completion":"common metadata path","error":"returns 0/1/2/3/5","conventional_relation":"INFERENCIA: pre-stage variant"},
+    {"row":"0x50","thumb":"0x43b1bd13","entry":"0x43b1bd12","function":"FUN_43b1bd12","classification":"VERIFICADO","states":"selector 0..4; delegates 43afe9f4 or 437ed568","acquisition":"NO_VERIFICADO","encoding":"NO_VERIFICADO","completion":"common metadata path","error":"returns 0/1/2/3/5","conventional_relation":"INFERENCIA: common conventional family"},
+    {"row":"0x64","thumb":"0x43b1bd5f","entry":"0x43b1bd5e","function":"FUN_43b1bd5e","classification":"VERIFICADO","states":"selector 0..5; literals 0xf6/0x1024","acquisition":"NO_VERIFICADO","encoding":"NO_VERIFICADO","completion":"common metadata path","error":"retry/cancel paths","conventional_relation":"INFERENCIA: common conventional family"},
+    {"row":"0x78","thumb":"0x43b1bdb5","entry":"0x43b1bdb4","function":"FUN_43b1bdb4","classification":"VERIFICADO","states":"selector 0..4; pre-stage calls","acquisition":"NO_VERIFICADO","encoding":"NO_VERIFICADO","completion":"common metadata path","error":"returns 0/1/2/3/5","conventional_relation":"INFERENCIA: pre-stage variant"},
+    {"row":"0x8c","thumb":"0x43b1be01","entry":"0x43b1be00","function":"unnamed entry at 0x43b1be00","classification":"VERIFICADO","states":"selector uses request fields +0x754/+0x4b70/+0x4d8/+0x4a7c","acquisition":"NO_VERIFICADO","encoding":"NO_VERIFICADO","completion":"metadata path 0x9400","error":"common paths","conventional_relation":"INFERENCIA: common conventional family"},
+    {"row":"0xf0","thumb":"0x43b1bfc9","entry":"0x43b1bfc8","function":"FUN_43b1bfc8","classification":"VERIFICADO","states":"selector 0..7; delegates 43afe9f4/437ed568","acquisition":"NO_VERIFICADO","encoding":"NO_VERIFICADO","completion":"not proven by return 0","error":"retry/cancel paths","conventional_relation":"INFERENCIA: common conventional family"},
+    {"row":"0x118","thumb":"0x43b1c097","entry":"0x43b1c096","function":"FUN_43b1c096","classification":"VERIFICADO","states":"selector 0..6","acquisition":"NO_VERIFICADO","encoding":"NO_VERIFICADO","completion":"not proven","error":"retry/cancel paths","conventional_relation":"INFERENCIA: common conventional family"}
+  ],
+  "discarded": ["return 0 proves JPEG completion", "metadata writes prove pixel acquisition or encode", "these rows prove SilentShutter functional"],
+  "safety": "Static read-only analysis; no original binary or Ghidra project modified, no camera interaction or flashing."
+}

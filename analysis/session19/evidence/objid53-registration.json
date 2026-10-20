@@ -1,0 +1,22 @@
+{
+  "session": 19,
+  "run_number": 3,
+  "task_id": "S19-03",
+  "firmware": "A6000 FW 3.21",
+  "binary": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libObj.so",
+  "binary_sha256": "8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a",
+  "method": "llvm-objdump -d --triple=thumbv7-linux-gnueabi; readelf -SW/-rW/-sW; raw little-endian section scan",
+  "findings": [
+    {"status":"VERIFICADO","file":"libObj.so","address":"0xcc5830..0xcc584f","claim":"Topology row 0xb4 is [0,6,0x35,1,2,0xb,0,0], joining ObjId 53 output 2 to ObjStillRecorder input 0 with StsId 6."},
+    {"status":"VERIFICADO","file":"libObj.so","address":"0x91391c..0x913936","claim":"ObjStillRecorder_Create allocates 0x148 bytes and invokes constructor 0x9178f0."},
+    {"status":"VERIFICADO","file":"libObj.so","address":"0x9178f0..0x917a68","claim":"ObjStillRecorder constructor initializes ObjActiveBase with 0x2f and creates MWF ObjPin plus ConnectPinWrapper objects."},
+    {"status":"INFERENCIA","file":"libObj.so","address":"0xcc5830..0xcc584f;0x91391c;0x9178f0","claim":"The ObjId 53 endpoint is an ObjStillRecorder instance, but its numeric-id-to-constructor association was not recovered."},
+    {"status":"VERIFICADO","file":"libObj.so","address":"0x41920c..0x4192e4","claim":"The dynamic lookup creates a generic 0x30-byte placeholder through 0x446e60 only on lookup miss."},
+    {"status":"DESCARTADO","file":"libObj.so","address":"0x41920c","claim":"This routine is not a static ObjId constructor table or a concrete ObjId 53 constructor."},
+    {"status":"VERIFICADO","file":"libObj.so","address":"0xfd25a4..0xfd29bf","claim":".init_array has 263 R_ARM_RELATIVE entries and no entry in ObjStillRecorder API range; no .ctors section exists."},
+    {"status":"VERIFICADO","file":"libObj.so","address":".dynsym","claim":"No pointer to ObjStillRecorder_Create or the five ObjStillRecorder exported APIs was found in allocatable data outside their dynsym values."},
+    {"status":"NO_VERIFICADO","file":"libObj.so","address":".init_array/.data.rel.ro/.data/.rodata","claim":"No explicit auto-registration of 0x35 to ObjStillRecorder_Create was identified; indirect or external registration remains possible."},
+    {"status":"DESCARTADO","file":"libObj.so","address":"0x4172d6","claim":"The 0x35 immediate is an ObjStatusViewer diagnostic code path, not evidence of ObjId 53 registration."}
+  ],
+  "safety":"Static read-only analysis only. No original binary was altered, no Ghidra project deleted, no camera connected/flashed, and no SilentShutter functionality claim."
+}

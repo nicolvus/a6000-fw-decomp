@@ -1,0 +1,11 @@
+artifact_sha256,address_or_offset,function_or_symbol,instructions_or_xrefs,interpretation,classification,reproduce
+b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e,0x43c9bd9b (file+7712155),C_Imager::SetMode,string xref; signature encoded in literal,host imager mode API,VERIFICADO,strings -a -td av-cam.bin
+b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e,0x43c9bdfe (file+7712254),C_Imager::SetExposure,string xref; signature encoded in literal,host exposure API,VERIFICADO,strings -a -td av-cam.bin
+b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e,0x43c9c068 (file+7712872),C_Imager::SetRead,string xref; signature encoded in literal,host read API,VERIFICADO,strings -a -td av-cam.bin
+b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e,0x43c9c87a (file+7714938),IMX235 SetExposure log,SetExposure:SHR = %d,SHR is a firmware parameter; its electrical register meaning is not established,VERIFICADO,strings -a -td av-cam.bin
+b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e,0x43c9cdd5 (file+7716309),C_ImagerCtrl_IMX235,RTTI/type string,IMX235-specific controller exists in A7S host,VERIFICADO,strings -a -td av-cam.bin
+b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e,0x43c9d0b3 (file+7717043),GCS2RxLink,method diagnostics,receiver/link control path,INFERENCIA,strings -a -td av-cam.bin
+b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e,0x43c9d26f (file+7717487),MPHYRx4ch,PowerOn/PowerSave/CalcMulti diagnostics,four-channel PHY receiver control,INFERENCIA,strings -a -td av-cam.bin
+b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e,0x43c9d815 (file+7718933),SubLVDS,PowerOn/PowerSave/ChangeParam diagnostics,sub-LVDS receiver configuration,INFERENCIA,strings -a -td av-cam.bin
+fc4e314db24a72d584bd8795bd8f1144b003c97c390cb143d09b840b38bf9fcd,0x01000000 (file+0),DFE vector table,8 x ldr pc [pc;#0x18]; literals at +0x20,exception/reset vector dispatch,VERIFICADO,xxd -g4 -l128 dfe.bin
+fc4e314db24a72d584bd8795bd8f1144b003c97c390cb143d09b840b38bf9fcd,0x0100003c (file+0x3c),DFE startup,ldmia/stmia plus loop in raw ARM bytes,startup copy/clear inferred from instructions,INFERENCIA,REA open_binary raw-binary arm entry_point 0x01000000

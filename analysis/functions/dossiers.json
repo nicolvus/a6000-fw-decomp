@@ -1,0 +1,51 @@
+[
+  {
+    "binary": "firmware.tar_unpacked/0700_part_image/dev/nflasha16_unpacked_unpacked/lib/libcamera.so",
+    "sha256": "7bb156b3c68b802fcdeceb83037d770504c128d0b73a6708122d58589f80c013",
+    "address_space": "ELF link-time virtual; runtime unknown",
+    "symbol_value": "0x170c0",
+    "instruction_address": "0x170c0",
+    "original_name": "android::CameraHardwareDiadem::takePicture()",
+    "confidence": "symbol+instructions; hardware effect unknown",
+    "incoming": "not fully resolved",
+    "outgoing": [
+      "SDComMsg_Basic at 0x16d9c",
+      "conditional virtual call unresolved"
+    ],
+    "variables": "not reconstructed",
+    "pending": "receiver, state, physical sensor control"
+  },
+  {
+    "binary": "firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libScalarDaemon.so",
+    "sha256": "ca28cbf4c5c6402160ad80f6ad9f5e99052f42c3fabc382c557fcded18addc29",
+    "address_space": "ELF link-time virtual; runtime unknown",
+    "symbol_value": "0x1080b5",
+    "instruction_address": "0x1080b4",
+    "original_name": "SCALARDAEMON::CommandProcessorCameraTakePicture::AsyncProcessor::execute()",
+    "confidence": "symbol+instructions; hardware effect unknown",
+    "incoming": "not fully resolved",
+    "outgoing": [
+      "captureStart via PLT at callsite 0x108144",
+      "onCaptureStart via PLT at callsite 0x10823c"
+    ],
+    "variables": "not reconstructed",
+    "pending": "receiver, state, physical sensor control"
+  },
+  {
+    "binary": "firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libScalarDaemon.so",
+    "sha256": "ca28cbf4c5c6402160ad80f6ad9f5e99052f42c3fabc382c557fcded18addc29",
+    "address_space": "ELF link-time virtual; runtime unknown",
+    "symbol_value": "0xe36df",
+    "instruction_address": "0xe36de",
+    "original_name": "SCALARDAEMON::SystemEventIssuerCamera::captureStart()",
+    "confidence": "symbol+instructions; hardware effect unknown",
+    "incoming": "not fully resolved",
+    "outgoing": [
+      "SysParamList",
+      "ParameterStorage",
+      "unresolved tail destination"
+    ],
+    "variables": "not reconstructed",
+    "pending": "receiver, state, physical sensor control"
+  }
+]

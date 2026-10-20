@@ -1,0 +1,13 @@
+binario,direccion,funcion,acceso,destino,valor_o_bits,condicion,relacion_cortina,estado,evidencia
+A7S,0x4397d4e4,0x4397d4c0 (via 0x43b585b6 r2=0),STR,0xf2910048+banco*0x100,1<<bit,banco<=0x11,helper GPIO generico; tag 0x12/ev3 en A6000 lo usa,VERIFICADO instr; identidad pin NO VERIFICADO,bytes identicos a A6000 0x4398f9c8
+A7S,0x4397d4d4,0x4397d4c0 (via 0x43b585aa r2=1),STR,[lit]+banco*0x100+4,1<<bit,banco<=0x11,par set/clear del mismo GPIO,VERIFICADO instr,literal 0x4397d4fc
+A7S,0x4397d4f4,0x4397d4c0,LDR,0xf2910040+banco*0x100,lectura copiada a RAM,siempre,estado del puerto,VERIFICADO instr,
+A6000,0x4398f9c8,0x4398f9a4 (via 0x43b5e2b0),STR,0xf2910048+banco*0x100,1<<bit,banco<=0x11,tag 0x12 (CAIF ev3) en 0x436b9416..941a,VERIFICADO (S50/S51 y LLVM),docs/capture/s51-codex-t2-t3.md
+A7S,0x436d82e4,emisor CAIF ev3,cola OSAL,tarea CA,tag 0x12,ev3,peticion asociada a cierre/fin (semantica NO VERIFICADO),VERIFICADO instr,strb #0x12 en 0x436d830c
+A7S,0x436d8354,emisor CAIF ev1,memcpy 0x16 B,buffer CAIF,paquete cap+0x4ae8->+0x40,ev1,lleva bits Silent +0x12/+0xd y byte +1 de clase,VERIFICADO instr,0x43862e24
+A7S,0x4386329a..0x438632b4,constructor paquete,STRB pkt+0x12,paquete CAIF ev1,bit5=(cap+0x78c==2) bit0=(r8[0]==1),tipo Silent,marca Silent hacia MCU obturador,VERIFICADO,A6000 solo 0/1
+A7S,0x43863258..0x43863286,constructor paquete,STRB pkt+0xd,paquete CAIF ev1,bits6-7=2 si tipo 2 o modo 0x19 o [r7]==0x313,tipo Silent,modo hacia MCU,VERIFICADO,A6000 solo modo 0x19
+A7S,0x4386315c..0x43863174,constructor paquete,STRB pkt+1,paquete CAIF ev1,2/0x42 si clase 0 o 3; 0/0x40 si 1,clase,clase 0 = clase 3 hacia MCU,VERIFICADO,A6000 clase 0 -> 0
+A7S,0x436f4168,IMX235 SetExposure,registros logicos,0x440220a8/0x44021fee,ShutMode 0: b2 b4 b6=0; |=8,param+9==0,sensor (no cortina),VERIFICADO instr; electrico NO VERIFICADO,a7s_shutter_modes_comparison.md
+A7S,0x438be79e,0x438be76c,espera bandera,grupo OSAL 0x13,0x800000,cap+0x757 && cap+0x4f28,notificacion CAIF (cb 0x43b1e3e4); omitida en Silent (0x438b726c),VERIFICADO,
+A7S,0x438be606,0x438be5f8,espera bandera / respuesta,grupo 0x13 / receptor CAIF,0x100000 / ev3,cap+0x757,omitida en Silent en etapa 0xc8; anadida en 0xc9,VERIFICADO,

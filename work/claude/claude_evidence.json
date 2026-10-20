@@ -1,0 +1,213 @@
+{
+ "agent": "claude",
+ "model": "claude-opus-5-5",
+ "date": "2026-10-19",
+ "binaries": {
+  "a7s-av-cam": {
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "base": "0x43541000",
+   "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin"
+  },
+  "a6000-av-cam": {
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "base": "0x43541000",
+   "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin"
+  }
+ },
+ "tools": {
+  "llvm-objdump": "thumbv7-none-eabi",
+  "rea": "6.5.0 + Ghidra 12.1.4, cold 624.8 s",
+  "rea_outputs": [
+   "out/rea-batch1.jsonl",
+   "out/rea-batch2.jsonl"
+  ]
+ },
+ "selfcheck": "python3 -I work/claude/tests/test_a7s_silent_facts.py",
+ "functions": [
+  {
+   "binario": "a7s-av-cam",
+   "direccion": "0x437a9cb0",
+   "nombre_propuesto": "Recv_40e3_SilentSetting",
+   "funcion": "guarda payload[8] en 0x43ea1d84+0x250",
+   "xrefs_llamadores": "tabla msg 0x43ff79e4",
+   "evidencia": "bytes+LLVM",
+   "estado": "VERIFICADO"
+  },
+  {
+   "binario": "a7s-av-cam",
+   "direccion": "0x4379ec04",
+   "nombre_propuesto": "SilentType_Convert",
+   "funcion": "ajuste 0/1 -> tipo {0;2} con guardas y override diag",
+   "xrefs_llamadores": "0x437b65a0;0x43813d90 (REA)",
+   "evidencia": "LLVM+REA",
+   "estado": "VERIFICADO"
+  },
+  {
+   "binario": "a7s-av-cam",
+   "direccion": "0x43813d90",
+   "nombre_propuesto": "Capture_Setup",
+   "funcion": "cap+0x78c=tipo; tipo==2 -> cap+0x748=1",
+   "xrefs_llamadores": "call 0x43813e94",
+   "evidencia": "LLVM+REA",
+   "estado": "VERIFICADO"
+  },
+  {
+   "binario": "a7s-av-cam",
+   "direccion": "0x437b65a0",
+   "nombre_propuesto": "Silent_Global_Update",
+   "funcion": "[g+0x7e8]=tipo",
+   "xrefs_llamadores": "call 0x437b6f74",
+   "evidencia": "LLVM+REA",
+   "estado": "VERIFICADO"
+  },
+  {
+   "binario": "a7s-av-cam",
+   "direccion": "0x43826d58",
+   "nombre_propuesto": "DriveMode_Select",
+   "funcion": "(modo;sub;tipo)->0x0c/0x1b/0x4e/0x4f/0x0b/0x35/0x17",
+   "xrefs_llamadores": "0x43826dc0;0x43548c70 (REA)",
+   "evidencia": "LLVM+REA",
+   "estado": "VERIFICADO"
+  },
+  {
+   "binario": "a7s-av-cam",
+   "direccion": "0x43826dc0",
+   "nombre_propuesto": "DriveMode_Store",
+   "funcion": "escribe cap+0x4d0",
+   "xrefs_llamadores": "0x43b1ab56 (REA)",
+   "evidencia": "LLVM+REA",
+   "estado": "VERIFICADO"
+  },
+  {
+   "binario": "a7s-av-cam",
+   "direccion": "0x43826c90",
+   "nombre_propuesto": "DriveMode_Remap",
+   "funcion": "0b->37 35->38 4e->50 4f->51 si tipo!=2",
+   "xrefs_llamadores": "--",
+   "evidencia": "LLVM",
+   "estado": "VERIFICADO (instr.)"
+  },
+  {
+   "binario": "a7s-av-cam",
+   "direccion": "0x4382822c",
+   "nombre_propuesto": "Capture_ExpPrep",
+   "funcion": "ModeRsvParam 0x437b8948 + banco 0x43862e24(cap+0x20)",
+   "xrefs_llamadores": "--",
+   "evidencia": "LLVM+REA",
+   "estado": "VERIFICADO"
+  },
+  {
+   "binario": "a7s-av-cam",
+   "direccion": "0x43862e24",
+   "nombre_propuesto": "ExpBank_Build",
+   "funcion": "banco+0x404=cap+0x78c; llama politica",
+   "xrefs_llamadores": "0x4382822c (REA)",
+   "evidencia": "LLVM+REA",
+   "estado": "VERIFICADO"
+  },
+  {
+   "binario": "a7s-av-cam",
+   "direccion": "0x438649bc",
+   "nombre_propuesto": "ShutterClass_Policy",
+   "funcion": "tipo==2 -> clase 0; EFCS +0x424",
+   "xrefs_llamadores": "0x43862e24 (REA)",
+   "evidencia": "LLVM+REA",
+   "estado": "VERIFICADO"
+  },
+  {
+   "binario": "a7s-av-cam",
+   "direccion": "0x436f3b44",
+   "nombre_propuesto": "IMX235_SetMode",
+   "funcion": "lista 34 modos 0x43fee370; virtual +0xa0",
+   "xrefs_llamadores": "vtable 0x43fce050+0x20",
+   "evidencia": "LLVM+bytes",
+   "estado": "VERIFICADO"
+  },
+  {
+   "binario": "a7s-av-cam",
+   "direccion": "0x436f3928",
+   "nombre_propuesto": "IMX235_ApplyModeIndex",
+   "funcion": "remap 0x43c9c5b5; filas 20B 0x43fee598",
+   "xrefs_llamadores": "vtable +0xa0",
+   "evidencia": "LLVM+bytes",
+   "estado": "VERIFICADO"
+  },
+  {
+   "binario": "a7s-av-cam",
+   "direccion": "0x436f4168",
+   "nombre_propuesto": "IMX235_SetExposure",
+   "funcion": "ShutMode 0/1/3/4; 2 no soportado",
+   "xrefs_llamadores": "vtable 0x43fce050+0x28",
+   "evidencia": "LLVM+REA",
+   "estado": "VERIFICADO"
+  },
+  {
+   "binario": "a6000-av-cam",
+   "direccion": "0x438032d4",
+   "nombre_propuesto": "Recv_40e3_SilentSetting",
+   "funcion": "guarda payload[8] en 0x43edf684+0x238",
+   "xrefs_llamadores": "tabla msg 0x43fffc60",
+   "evidencia": "bytes+LLVM",
+   "estado": "VERIFICADO"
+  },
+  {
+   "binario": "a6000-av-cam",
+   "direccion": "0x437f7f98",
+   "nombre_propuesto": "DriveMode_Select",
+   "funcion": "(modo;sub) sin rama Silent",
+   "xrefs_llamadores": "0x437f7ff4",
+   "evidencia": "LLVM",
+   "estado": "VERIFICADO"
+  },
+  {
+   "binario": "a6000-av-cam",
+   "direccion": "0x43842158",
+   "nombre_propuesto": "ShutterClass_Policy",
+   "funcion": "sin rama Silent; EFCS +0x41c",
+   "xrefs_llamadores": "--",
+   "evidencia": "LLVM",
+   "estado": "VERIFICADO"
+  },
+  {
+   "binario": "a6000-av-cam",
+   "direccion": "0x436d6f6c",
+   "nombre_propuesto": "IMX210_SetExposure",
+   "funcion": "ShutMode 0..4",
+   "xrefs_llamadores": "vtable 0x43fcc090+0x28",
+   "evidencia": "LLVM",
+   "estado": "VERIFICADO"
+  }
+ ],
+ "findings": [
+  {
+   "id": "C1",
+   "claim": "A6000 recibe y guarda el ajuste Silent (0x40e3 -> +0x238) pero su selector de drive_mode y su politica de clase carecen de la rama Silent que si tiene A7S",
+   "status": "VERIFICADO"
+  },
+  {
+   "id": "C2",
+   "claim": "A7S Silent = tipo 2 -> drive_mode 0x4e/0x4f (columnas IMX235 12/13, 45/69 campos distintos de 0x0b) + clase de obturacion 0",
+   "status": "VERIFICADO (cadena), INFERENCIA (clase->param+9, identidad cap)"
+  },
+  {
+   "id": "C3",
+   "claim": "IMX210 no acepta drive_mode 0x4e/0x4f (lista de 13 modos)",
+   "status": "VERIFICADO"
+  },
+  {
+   "id": "C4",
+   "claim": "IMX210 SetExposure tiene rama ShutMode 0 con patron de bits distinto al IMX235",
+   "status": "VERIFICADO instrucciones; semantica NO VERIFICADO"
+  },
+  {
+   "id": "C5",
+   "claim": "A7S 3.20 no contiene dfe.bin separado",
+   "status": "VERIFICADO (busqueda por patron de vectores en todo el arbol)"
+  },
+  {
+   "id": "C6",
+   "claim": "Escritor del puntero 0x43ea70a0 hacia el estado 0x43ea1d84",
+   "status": "NO VERIFICADO"
+  }
+ ]
+}

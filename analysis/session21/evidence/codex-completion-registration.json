@@ -1,0 +1,257 @@
+{
+  "library": "libmpr.so",
+  "sha256_before": "9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30",
+  "windows": {
+    "0x34c7c8:0x34c854": {
+      "existing_listing": null,
+      "binary_verification": "\n/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so:\tfile format elf32-littlearm\n\nDisassembly of section .text:\n\n003262fc <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE>:\n  34c7c8: 4505         \tcmp\tr5, r0\n  34c7ca: 2300         \tmovs\tr3, #0x0\n  34c7cc: f8c5 82d4    \tstr.w\tr8, [r5, #0x2d4]\n  34c7d0: f8c5 32d0    \tstr.w\tr3, [r5, #0x2d0]\n  34c7d4: f8d4 0a2c    \tldr.w\tr0, [r4, #0xa2c]\n  34c7d8: 4622         \tmov\tr2, r4\n  34c7da: 2300         \tmovs\tr3, #0x0\n  34c7dc: e007         \tb\t0x34c7ee <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x264f2> @ imm = #0xe\n  34c7de: f8d2 12d0    \tldr.w\tr1, [r2, #0x2d0]\n  34c7e2: b109         \tcbz\tr1, 0x34c7e8 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x264ec> @ imm = #0x2\n  34c7e4: 2902         \tcmp\tr1, #0x2\n  34c7e6: d13d         \tbne\t0x34c864 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x26568> @ imm = #0x7a\n  34c7e8: 3301         \tadds\tr3, #0x1\n  34c7ea: f502 72b2    \tadd.w\tr2, r2, #0x164\n  34c7ee: 4283         \tcmp\tr3, r0\n  34c7f0: d3f5         \tblo\t0x34c7de <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x264e2> @ imm = #-0x16\n  34c7f2: e030         \tb\t0x34c856 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x2655a> @ imm = #0x60\n  34c7f4: f504 6118    \tadd.w\tr1, r4, #0x980\n  34c7f8: 2500         \tmovs\tr5, #0x0\n  34c7fa: 1d38         \tadds\tr0, r7, #0x4\n  34c7fc: f8c4 5a20    \tstr.w\tr5, [r4, #0xa20]\n  34c800: f8c4 5a28    \tstr.w\tr5, [r4, #0xa28]\n  34c804: 3118         \tadds\tr1, #0x18\n  34c806: 2284         \tmovs\tr2, #0x84\n  34c808: f5d1 ef44    \tblx\t0x11e694 <memcpy@plt>   @ imm = #-0x22e178\n  34c80c: e00c         \tb\t0x34c828 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x2652c> @ imm = #0x18\n  34c80e: eb04 0385    \tadd.w\tr3, r4, r5, lsl #2\n  34c812: 3501         \tadds\tr5, #0x1\n  34c814: f8d3 0970    \tldr.w\tr0, [r3, #0x970]\n  34c818: f7f8 fbab    \tbl\t0x344f72 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x1ec76> @ imm = #-0x78aa\n  34c81c: f8d4 02c0    \tldr.w\tr0, [r4, #0x2c0]\n  34c820: 4917         \tldr\tr1, [pc, #0x5c]         @ 0x34c880 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x26584>\n  34c822: 2201         \tmovs\tr2, #0x1\n  34c824: f7e2 fb80    \tbl\t0x32ef28 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x8c2c> @ imm = #-0x1d900\n  34c828: f8d4 3a2c    \tldr.w\tr3, [r4, #0xa2c]\n  34c82c: 429d         \tcmp\tr5, r3\n  34c82e: d3ee         \tblo\t0x34c80e <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x26512> @ imm = #-0x24\n  34c830: 4620         \tmov\tr0, r4\n  34c832: 2102         \tmovs\tr1, #0x2\n  34c834: f7e2 fafc    \tbl\t0x32ee30 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x8b34> @ imm = #-0x1da08\n  34c838: 6960         \tldr\tr0, [r4, #0x14]\n  34c83a: 2166         \tmovs\tr1, #0x66\n  34c83c: f7fe fe2a    \tbl\t0x34b494 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x25198> @ imm = #-0x13ac\n  34c840: 4650         \tmov\tr0, r10\n  34c842: 2166         \tmovs\tr1, #0x66\n  34c844: 1d3a         \tadds\tr2, r7, #0x4\n  34c846: 2384         \tmovs\tr3, #0x84\n  34c848: f78b fac2    \tbl\t0x2d7dd0 <_ZN8FlashLib20SetBackupMgrCallbackEPFvmE+0x1f228> @ imm = #-0x74a7c\n  34c84c: e00a         \tb\t0x34c864 <_ZN9PlayStill25convertRotateInfoForMprIfEN17StillReaderFilter13T_ROTATE_INFOE+0x26568> @ imm = #0x14\n  34c84e: 3301         \tadds\tr3, #0x1\n  34c850: f8c4 3a20    \tstr.w\tr3, [r4, #0xa20]\n",
+      "bytes_sha256": "40e3d85689e4949b868b54048d338d0f496f7d82146a9f331747f30d485b21b4",
+      "literal_strings": [
+        {
+          "pool": "34c880",
+          "target": "0x81a520",
+          "string": "(Encoder)<-SetReadSize()-(Joint)"
+        }
+      ]
+    },
+    "0x51457c:0x5145b0": {
+      "existing_listing": "  51457c:      \tldr\tr1, [r7, #0x4]\n  51457e:      \tcmp\tr1, #0xb\n  514580:      \tbeq\t0x514590 <_ZN5FeaIf21GetIndexFilteringInfoEmN3MPR14EntryConditionENS0_7EntryIdEmPN5MprIf25GetIndexFilteringInfoListEm+0xc042e> @ imm = #0xc\n  514582:      \tmovs\tr3, #0x0\n  514584:      \tmov\tr0, r4\n  514586:      \tstr\tr3, [sp]\n  514588:      \tmov\tr2, r7\n  51458a:      \tadds\tr3, #0x4\n  51458c:      \tbl\t0x455b08 <_ZN5FeaIf21GetIndexFilteringInfoEmN3MPR14EntryConditionENS0_7EntryIdEmPN5MprIf25GetIndexFilteringInfoListEm+0x19a6> @ imm = #-0xbea88\n  514590:      \tldr\tr2, [r4, #0x4]\n  514592:      \tcmp\tr2, #0x2\n  514594:      \tbne\t0x5144f4 <_ZN5FeaIf21GetIndexFilteringInfoEmN3MPR14EntryConditionENS0_7EntryIdEmPN5MprIf25GetIndexFilteringInfoListEm+0xc0392> @ imm = #-0xa4\n  514596:      \tmov\tr0, r4\n  514598:      \tmovs\tr3, #0x0\n  51459a:      \tmovw\tr1, #0x103\n  51459e:      \tbl\t0x5131e0 <_ZN5FeaIf21GetIndexFilteringInfoEmN3MPR14EntryConditionENS0_7EntryIdEmPN5MprIf25GetIndexFilteringInfoListEm+0xbf07e> @ imm = #-0x13c2\n  5145a2:      \tmovs\tr3, #0x1\n  5145a4:      \tmovs\tr0, #0x0\n  5145a6:      \tstrb.w\tr3, [r4, #0x6c]\n  5145aa:      \tadd.w\tr7, r7, #0xc\n  5145ae:      \tmov\tsp, r7",
+      "binary_verification": "\n/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so:\tfile format elf32-littlearm\n\nDisassembly of section .text:\n\n00454162 <_ZN5FeaIf21GetIndexFilteringInfoEmN3MPR14EntryConditionENS0_7EntryIdEmPN5MprIf25GetIndexFilteringInfoListEm>:\n  51457c: 6879         \tldr\tr1, [r7, #0x4]\n  51457e: 290b         \tcmp\tr1, #0xb\n  514580: d006         \tbeq\t0x514590 <_ZN5FeaIf21GetIndexFilteringInfoEmN3MPR14EntryConditionENS0_7EntryIdEmPN5MprIf25GetIndexFilteringInfoListEm+0xc042e> @ imm = #0xc\n  514582: 2300         \tmovs\tr3, #0x0\n  514584: 4620         \tmov\tr0, r4\n  514586: 9300         \tstr\tr3, [sp]\n  514588: 463a         \tmov\tr2, r7\n  51458a: 3304         \tadds\tr3, #0x4\n  51458c: f741 fabc    \tbl\t0x455b08 <_ZN5FeaIf21GetIndexFilteringInfoEmN3MPR14EntryConditionENS0_7EntryIdEmPN5MprIf25GetIndexFilteringInfoListEm+0x19a6> @ imm = #-0xbea88\n  514590: 6862         \tldr\tr2, [r4, #0x4]\n  514592: 2a02         \tcmp\tr2, #0x2\n  514594: d1ae         \tbne\t0x5144f4 <_ZN5FeaIf21GetIndexFilteringInfoEmN3MPR14EntryConditionENS0_7EntryIdEmPN5MprIf25GetIndexFilteringInfoListEm+0xc0392> @ imm = #-0xa4\n  514596: 4620         \tmov\tr0, r4\n  514598: 2300         \tmovs\tr3, #0x0\n  51459a: f240 1103    \tmovw\tr1, #0x103\n  51459e: f7fe fe1f    \tbl\t0x5131e0 <_ZN5FeaIf21GetIndexFilteringInfoEmN3MPR14EntryConditionENS0_7EntryIdEmPN5MprIf25GetIndexFilteringInfoListEm+0xbf07e> @ imm = #-0x13c2\n  5145a2: 2301         \tmovs\tr3, #0x1\n  5145a4: 2000         \tmovs\tr0, #0x0\n  5145a6: f884 306c    \tstrb.w\tr3, [r4, #0x6c]\n  5145aa: f107 070c    \tadd.w\tr7, r7, #0xc\n  5145ae: 46bd         \tmov\tsp, r7\n",
+      "bytes_sha256": "ccb77f5fe1e5a2fa8f19659137294c33808bf2459e4d20480a3d68758e5cc912",
+      "literal_strings": []
+    },
+    "0x455af0:0x455b44": {
+      "existing_listing": null,
+      "binary_verification": "\n/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so:\tfile format elf32-littlearm\n\nDisassembly of section .text:\n\n00454162 <_ZN5FeaIf21GetIndexFilteringInfoEmN3MPR14EntryConditionENS0_7EntryIdEmPN5MprIf25GetIndexFilteringInfoListEm>:\n  455af0: b580         \tpush\t{r7, lr}\n  455af2: af00         \tadd\tr7, sp, #0x0\n  455af4: b122         \tcbz\tr2, 0x455b00 <_ZN5FeaIf21GetIndexFilteringInfoEmN3MPR14EntryConditionENS0_7EntryIdEmPN5MprIf25GetIndexFilteringInfoListEm+0x199e> @ imm = #0x8\n  455af6: 6082         \tstr\tr2, [r0, #0x8]\n  455af8: 60c1         \tstr\tr1, [r0, #0xc]\n  455afa: 6103         \tstr\tr3, [r0, #0x10]\n  455afc: 2000         \tmovs\tr0, #0x0\n  455afe: bd80         \tpop\t{r7, pc}\n  455b00: 4800         \tldr\tr0, [pc, #0x0]          @ 0x455b04 <_ZN5FeaIf21GetIndexFilteringInfoEmN3MPR14EntryConditionENS0_7EntryIdEmPN5MprIf25GetIndexFilteringInfoListEm+0x19a2>\n  455b02: bd80         \tpop\t{r7, pc}\n  455b04: 0001         \tmovs\tr1, r0\n  455b06: 5000         \tstr\tr0, [r0, r0]\n  455b08: b5b0         \tpush\t{r4, r5, r7, lr}\n  455b0a: b082         \tsub\tsp, #0x8\n  455b0c: af02         \tadd\tr7, sp, #0x8\n  455b0e: 7c3c         \tldrb\tr4, [r7, #0x10]\n  455b10: 9400         \tstr\tr4, [sp]\n  455b12: 6905         \tldr\tr5, [r0, #0x10]\n  455b14: 9501         \tstr\tr5, [sp, #0x4]\n  455b16: 6885         \tldr\tr5, [r0, #0x8]\n  455b18: 68c0         \tldr\tr0, [r0, #0xc]\n  455b1a: 47a8         \tblx\tr5\n  455b1c: b12c         \tcbz\tr4, 0x455b2a <_ZN5FeaIf21GetIndexFilteringInfoEmN3MPR14EntryConditionENS0_7EntryIdEmPN5MprIf25GetIndexFilteringInfoListEm+0x19c8> @ imm = #0xa\n  455b1e: 4b04         \tldr\tr3, [pc, #0x10]         @ 0x455b30 <_ZN5FeaIf21GetIndexFilteringInfoEmN3MPR14EntryConditionENS0_7EntryIdEmPN5MprIf25GetIndexFilteringInfoListEm+0x19ce>\n  455b20: 2800         \tcmp\tr0, #0x0\n  455b22: bf0c         \tite\teq\n  455b24: 4618         \tmoveq\tr0, r3\n  455b26: 2000         \tmovne\tr0, #0x0\n  455b28: e000         \tb\t0x455b2c <_ZN5FeaIf21GetIndexFilteringInfoEmN3MPR14EntryConditionENS0_7EntryIdEmPN5MprIf25GetIndexFilteringInfoListEm+0x19ca> @ imm = #0x0\n  455b2a: 4620         \tmov\tr0, r4\n  455b2c: 46bd         \tmov\tsp, r7\n  455b2e: bdb0         \tpop\t{r4, r5, r7, pc}\n  455b30: 0005         \tmovs\tr5, r0\n  455b32: 5000         \tstr\tr0, [r0, r0]\n  455b34: b580         \tpush\t{r7, lr}\n  455b36: 4608         \tmov\tr0, r1\n  455b38: af00         \tadd\tr7, sp, #0x0\n  455b3a: e8bd 4080    \tpop.w\t{r7, lr}\n  455b3e: f1a7 bdcf    \tb.w\t0x5fd6e0 <_ZN5FeaIf21GetIndexFilteringInfoEmN3MPR14EntryConditionENS0_7EntryIdEmPN5MprIf25GetIndexFilteringInfoListEm+0x1a957e> @ imm = #0x1a7b9e\n  455b42: 0000         \tmovs\tr0, r0\n",
+      "bytes_sha256": "cfa0d7eef83608024ba45fee2f05681c37d6cbd0feb906b9db47a5e19c4dea50",
+      "literal_strings": []
+    }
+  },
+  "reused": [
+    {
+      "requested": "0x51457c:0x5145b0",
+      "source_window": "0x5144e4:0x514800"
+    }
+  ],
+  "rtti": {
+    "Recorder": {
+      "bases": [
+        "BaseCc"
+      ],
+      "vtables": [
+        {
+          "addr_point": "0x811a38",
+          "methods": [
+            {
+              "entry": "0x32d600",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x32d640",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x32d5b2",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": null,
+              "sym": "__cxa_pure_virtual"
+            }
+          ]
+        }
+      ]
+    },
+    "StillRecorder": {
+      "bases": [
+        "Recorder"
+      ],
+      "vtables": [
+        {
+          "addr_point": "0x81b9c0",
+          "methods": [
+            {
+              "entry": "0x34a880",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x34a8a8",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x32d5b2",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x34a878",
+              "thumb": true,
+              "sym": null
+            }
+          ]
+        }
+      ]
+    },
+    "dcf_AVISequence": {
+      "bases": [
+        "dcf_CommonSequence"
+      ],
+      "vtables": [
+        {
+          "addr_point": "0x82df28",
+          "methods": [
+            {
+              "entry": "0x3938fc",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x393914",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x3a13d4",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x3a13b4",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39c63a",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39ca56",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39c674",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39ca48",
+              "thumb": true,
+              "sym": null
+            }
+          ]
+        }
+      ]
+    },
+    "dcf_Sequence": {
+      "bases": [
+        "dcf_CommonSequence"
+      ],
+      "vtables": [
+        {
+          "addr_point": "0x832050",
+          "methods": [
+            {
+              "entry": "0x3a89b0",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x3a89c8",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x3a13d4",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x3a13b4",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39c63a",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39ca56",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39c674",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x39ca48",
+              "thumb": true,
+              "sym": null
+            }
+          ]
+        }
+      ]
+    },
+    "StillWriterFilter": {
+      "bases": [
+        "BaseThreadFilter"
+      ],
+      "vtables": [
+        {
+          "addr_point": "0x882e28",
+          "methods": [
+            {
+              "entry": "0x513204",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x513254",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x512ca0",
+              "thumb": true,
+              "sym": null
+            },
+            {
+              "entry": "0x5144e4",
+              "thumb": true,
+              "sym": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "target_virtuals": {
+    "0x34b138": [
+      {
+        "class": "StillRecorderIf",
+        "vtable": "0x81bb50",
+        "slot": 0
+      }
+    ],
+    "0x441620": [],
+    "0x441696": []
+  },
+  "target_relocations": {
+    "0x34b138": [
+      "0x81bb50"
+    ],
+    "0x441620": [],
+    "0x441696": []
+  },
+  "branch_candidates": [],
+  "sha256_after": "9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30"
+}

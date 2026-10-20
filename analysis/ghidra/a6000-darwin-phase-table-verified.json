@@ -1,0 +1,37 @@
+{
+  "status": "VERIFICADO",
+  "model": "A6000 3.21",
+  "source_sha256": "5f2be06d9885d154e8e0df46a611d6830d29754b4353f6e82cecfe66dd6a0bf4",
+  "rom_base": "0x4200",
+  "function": "0x2089c",
+  "tbb_instruction": "0x208e0",
+  "table": "0x208e4",
+  "table_hex": "44022349",
+  "phase_destinations": {
+    "0": "0x2096c",
+    "1": "0x208e8",
+    "2": "0x2092a",
+    "3": "0x20976"
+  },
+  "callback_pointer_occurrences": [
+    {
+      "rom_address": "0x29e0c",
+      "value": "0x20735"
+    },
+    {
+      "rom_address": "0x29e7c",
+      "value": "0x2089d"
+    },
+    {
+      "rom_address": "0x29e8c",
+      "value": "0x2089d"
+    },
+    {
+      "rom_address": "0x29e9c",
+      "value": "0x2089d"
+    }
+  ],
+  "instruction_window_hex": "2de9f041074600f024fa454c052630b900f06ffb0546e8f798fd281a04e000f068fbd4f85c11081ab0fbf6f0b0f5803f01d34ff6ff703d4e94f853113a4d0836042945d2dfe801f044022349a4f8560100f0fff960b100f0d0fb48b1e5f7d1f9b4f8540140f00200a4f85401e5f7bef905f1340568782a784ff0010342ea002132464ff0000000f077fb02201ee0a4f8580100f0def960b100f0affb48b1e5f7b0f9b4f8540140f00400a4f85401e5f79df905f1360568782a784ff0010342ea00213246184600f057fb032084f853013846bde8f041fdf7a6bda4f85a0100f0b8f960b100f089fb48b1e5f78af9b4f8540140f00800a4f85401e5f777f900f020fb0420e2e7",
+  "method": "Original ROM bytes; TBB PC+2*unsigned-byte; no hardware execution",
+  "limitations": "Pointer occurrences alone do not prove callback execution or curtain semantics"
+}

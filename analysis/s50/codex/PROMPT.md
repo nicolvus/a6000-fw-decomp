@@ -1,0 +1,16 @@
+# S50 — Investigador B (Codex): exposición y cortinas
+Directorio de trabajo: /home/nicolas/Documents/a6000 (proyecto: sony-a6000-electronic-shutter/). Lee AGENTS.md, docs/STATE.md, knowledge/CURRENT.md (no PROGRESS.md salvo necesidad), docs/capture/s49-capture-config-producer.md y los informes S40–S49 pertinentes. Usa el MCP de conocimiento antes de releer docs.
+Hay otro investigador (Claude) trabajando en paralelo sobre CONFIGURACIÓN electrónica (S_IMAGER_CURTAINMODE 0xce, A_LINEAR/NONLINEAR_ELEC_SHUT 0xb6/0xb7, S_SHUT_MIN_MANU 0xed, C+0x94/95, C+0x60, C+0xbc/0x10a/0x114). No lo dupliques; tú investigas EXPOSICIÓN Y CORTINAS:
+clases de captura 1,2,3,6; selección mecánico/EFCS; secuencia disparo→captura; inicio electrónico de exposición; mecanismos de fin electrónico; control de cortinas mecánicas; sincronía VD/sensor/lectura; dependencias de hardware; relación con CURTAINMODE; rutas de captura sin cierre mecánico. Distingue estructuras P y C sin suponer equivalencia. No confundas vídeo, EFCS o supresión de comandos de motor con obturador global/electrónico. Si afirmas que la arquitectura del sensor lo impide, da evidencia técnica concreta.
+Pregunta final: ¿foto de resolución completa con inicio y fin electrónicos de exposición, sin cerrar cortina mecánica?
+## Herramientas
+REA primero (MCP `rea`), Ghidra histórico silent-liro.gpr SOLO LECTURA como respaldo (Thumb sembradas). Tu propia sesión REA (NO uses el socket de Claude):
+  cd analysis/s50/codex && S50_NAME=codex GHIDRA_MAXMEM=4G nohup python3 ../shared/daemon.py ../shared/open-av-cam.json > run/daemon.out 2>&1 &
+Espera run/rea.sock.ready (análisis en frío ~8 min; un flock en shared/cold.lock escalona el arranque respecto al otro investigador). Cliente por lotes: python3 analysis/rea-independent/bin/q.py analysis/s50/codex/run/rea.sock guion.json salida.jsonl (guion = lista de {"tool","args"}). Una sola sesión, consultas por lotes; ciérrala con --shutdown al acabar. El watchdog sube a 8000 MB RSS y avisa por metrics.csv; no toques swap/kernel. Si necesitas más memoria, GHIDRA_MAXMEM=6G y S50_RSS_MAX_MB=10000 justificado. Consulta vacía de REA ≠ ausencia. Frida/ejecutar firmware Sony: prohibido.
+## Reglas
+- Escribe SOLO en analysis/s50/codex/ y docs/capture/s50-codex-exposure-curtains.md. No toques CURRENT.md, PROGRESS.md, grafo, ni nada de analysis/s50/claude/.
+- Prohibido: modificar/flashear/ejecutar firmware, alterar silent-liro.gpr/.rep, borrar S1–S49, git push. Sin commits.
+- Clasifica cada conclusión: VERIFICADO / PARCIAL / INFERENCIA / NO_VERIFICADO, con binario, función, instrucciones y evidencia. REA y Ghidra comparten motor: no es validación independiente de hardware.
+- Hipótesis comprobables, evidencia contradictoria, descartar con evidencia. Autónomo, sin preguntas. Checkpoint recuperable en analysis/s50/codex/CHECKPOINT.md (último punto, evidencias, consultas pendientes, siguiente paso) tras cada hito y si se agota la cuota.
+- Descubrimiento crítico para el otro investigador: añade línea a analysis/s50/shared/inbox-for-claude.md (solo añade). Lee analysis/s50/shared/inbox-for-codex.md de vez en cuando.
+- Al terminar: informe final con tiempo de trabajo y uso de memoria (analysis/s50/codex/run/metrics.csv), fallos y límites.

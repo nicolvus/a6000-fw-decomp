@@ -1,0 +1,90 @@
+There are 26 section headers, starting at offset 0x1cb848:
+
+Section Headers:
+  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al
+  [ 0]                   NULL            00000000 000000 000000 00      0   0  0
+  [ 1] .gnu.hash         GNU_HASH        000000d4 0000d4 00d2d0 04   A  2   0  4
+  [ 2] .dynsym           DYNSYM          0000d3a4 00d3a4 01d5b0 10   A  3   3  4
+  [ 3] .dynstr           STRTAB          0002a954 02a954 08554e 00   A  0   0  1
+  [ 4] .gnu.version      VERSYM          000afea2 0afea2 003ab6 02   A  2   0  2
+  [ 5] .gnu.version_r    VERNEED         000b3958 0b3958 0000b0 00   A  3   4  4
+  [ 6] .rel.dyn          REL             000b3a08 0b3a08 00f620 08   A  2   0  4
+  [ 7] .rel.plt          REL             000c3028 0c3028 006570 08   A  2   9  4
+  [ 8] .init             PROGBITS        000c9598 0c9598 00000a 00  AX  0   0  4
+  [ 9] .plt              PROGBITS        000c95a4 0c95a4 009cc0 04  AX  0   0  4
+  [10] .text             PROGBITS        000d3268 0d3268 06751c 00  AX  0   0  8
+  [11] .fini             PROGBITS        0013a784 13a784 000006 00  AX  0   0  4
+  [12] .rodata           PROGBITS        0013a78c 13a78c 063418 00   A  0   0  4
+  [13] .ARM.extab        PROGBITS        0019dba4 19dba4 00b0b8 00   A  0   0  4
+  [14] .ARM.exidx        ARM_EXIDX       001a8c5c 1a8c5c 0071e8 00  AL 10   0  4
+  [15] .init_array       INIT_ARRAY      001b7e44 1afe44 000020 00  WA  0   0  4
+  [16] .fini_array       FINI_ARRAY      001b7e64 1afe64 000004 00  WA  0   0  4
+  [17] .jcr              PROGBITS        001b7e68 1afe68 000004 00  WA  0   0  4
+  [18] .data.rel.ro      PROGBITS        001b7e70 1afe70 00cf84 00  WA  0   0  8
+  [19] .dynamic          DYNAMIC         001c4df4 1bcdf4 000120 08  WA  3   0  4
+  [20] .got              PROGBITS        001c4f14 1bcf14 003c98 04  WA  0   0  4
+  [21] .data             PROGBITS        001c8bac 1c0bac 00ab48 00  WA  0   0  4
+  [22] .bss              NOBITS          001d36f4 1cb6f4 000858 00  WA  0   0  4
+  [23] .ARM.attributes   ARM_ATTRIBUTES  00000000 1cb6f4 000033 00      0   0  1
+  [24] .comment          PROGBITS        00000000 1cb727 00003f 01  MS  0   0  1
+  [25] .shstrtab         STRTAB          00000000 1cb766 0000df 00      0   0  1
+Key to Flags:
+  W (write), A (alloc), X (execute), M (merge), S (strings), I (info),
+  L (link order), O (extra OS processing required), G (group), T (TLS),
+  C (compressed), x (unknown), o (OS specific), E (exclude),
+  D (mbind), y (purecode), p (processor specific)
+
+Elf file type is DYN (Shared object file)
+Entry point 0xd3268
+There are 5 program headers, starting at offset 52
+
+Program Headers:
+  Type           Offset   VirtAddr   PhysAddr   FileSiz MemSiz  Flg Align
+  ARM_EXIDX      0x1a8c5c 0x001a8c5c 0x001a8c5c 0x071e8 0x071e8 R   0x4
+  LOAD           0x000000 0x00000000 0x00000000 0x1afe44 0x1afe44 R E 0x8000
+  LOAD           0x1afe44 0x001b7e44 0x001b7e44 0x1b8b0 0x1c108 RW  0x8000
+  DYNAMIC        0x1bcdf4 0x001c4df4 0x001c4df4 0x00120 0x00120 RW  0x4
+  GNU_STACK      0x000000 0x00000000 0x00000000 0x00000 0x00000 RW  0x4
+
+ Section to Segment mapping:
+  Segment Sections...
+   00     .ARM.exidx 
+   01     .gnu.hash .dynsym .dynstr .gnu.version .gnu.version_r .rel.dyn .rel.plt .init .plt .text .fini .rodata .ARM.extab .ARM.exidx 
+   02     .init_array .fini_array .jcr .data.rel.ro .dynamic .got .data .bss 
+   03     .dynamic 
+   04     
+
+Dynamic section at offset 0x1bcdf4 contains 32 entries:
+  Tag        Type                         Name/Value
+ 0x00000001 (NEEDED)                     Shared library: [libsdcom.so]
+ 0x00000001 (NEEDED)                     Shared library: [libpthread.so.0]
+ 0x00000001 (NEEDED)                     Shared library: [libstdc++.so.6]
+ 0x00000001 (NEEDED)                     Shared library: [libm.so.6]
+ 0x00000001 (NEEDED)                     Shared library: [libdl.so.2]
+ 0x00000001 (NEEDED)                     Shared library: [libgcc_s.so.1]
+ 0x00000001 (NEEDED)                     Shared library: [libc.so.6]
+ 0x00000001 (NEEDED)                     Shared library: [librt.so.1]
+ 0x0000000e (SONAME)                     Library soname: [libScalarDaemon.so]
+ 0x0000000c (INIT)                       0xc9599
+ 0x0000000d (FINI)                       0x13a785
+ 0x00000019 (INIT_ARRAY)                 0x1b7e44
+ 0x0000001b (INIT_ARRAYSZ)               32 (bytes)
+ 0x0000001a (FINI_ARRAY)                 0x1b7e64
+ 0x0000001c (FINI_ARRAYSZ)               4 (bytes)
+ 0x6ffffef5 (GNU_HASH)                   0xd4
+ 0x00000005 (STRTAB)                     0x2a954
+ 0x00000006 (SYMTAB)                     0xd3a4
+ 0x0000000a (STRSZ)                      546126 (bytes)
+ 0x0000000b (SYMENT)                     16 (bytes)
+ 0x00000003 (PLTGOT)                     0x1c4f14
+ 0x00000002 (PLTRELSZ)                   25968 (bytes)
+ 0x00000014 (PLTREL)                     REL
+ 0x00000017 (JMPREL)                     0xc3028
+ 0x00000011 (REL)                        0xb3a08
+ 0x00000012 (RELSZ)                      63008 (bytes)
+ 0x00000013 (RELENT)                     8 (bytes)
+ 0x6ffffffe (VERNEED)                    0xb3958
+ 0x6fffffff (VERNEEDNUM)                 4
+ 0x6ffffff0 (VERSYM)                     0xafea2
+ 0x6ffffffa (RELCOUNT)                   2988
+ 0x00000000 (NULL)                       0x0

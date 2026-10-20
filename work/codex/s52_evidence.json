@@ -1,0 +1,11 @@
+{
+  "scope": "static-only; original firmware read-only; Unicorn private maps",
+  "rea": {"requested": true, "socket": "work/codex/run/rea.sock", "queries": ["analyze_function 0x438649bc", "analyze_function 0x436f4168", "xrefs 0x43f06bc8", "analyze_function 0x436f2d10", "analyze_function 0x436f2cf4"], "result": "work/codex/s52/rea-results.jsonl; daemon closed with --shutdown"},
+  "facts": [
+    {"id": "S52R2-01", "status": "VERIFICADO", "evidence": "0x438649f8/49fa -> 0x43f06bc8 (PC correcto); 0x43864a48 str [r2,#0x5c], r1=0"},
+    {"id": "S52R2-02", "status": "VERIFICADO", "evidence": "0x436f4198 and 0x436d6fb6 load param+9"},
+    {"id": "S52R2-03", "status": "VERIFICADO", "evidence": "offline Unicorn JSON: mode-specific writes and first outgoing call"},
+    {"id": "S52R2-04", "status": "NO VERIFICADO", "claim": "class reaches param+9", "boundary": "no typed transfer from class destinations"}
+  ],
+  "hypotheses": {"H52-3": "INFERENCIA", "H52-4": "NO VERIFICADO", "H52-5": "NO VERIFICADO", "H52-7": "DESCARTADO como codigo existente"}
+}

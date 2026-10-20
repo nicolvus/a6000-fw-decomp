@@ -1,0 +1,159 @@
+{
+  "sesion": 17,
+  "agente": "Claude A (hilo principal, sin subagentes)",
+  "alcance": "Decompilacion real (Ghidra headless via scripts/libobj_dec.sh) de GetStsViewer y TM::createLifeCycles en libObj.so, y de MWF::ObjIf::ConnectPin, MWF::ObjPin::Connect, MWF::ObjStatusViewer::GetStatus en libMWF.so (misma arbol firmware/extracted/fw321/.../lib/). No se afirma que SilentShutter funcione. Analisis estatico, sin camara ni flasheo.",
+  "proceso": {
+    "sin_subagentes": true,
+    "herramientas": ["llvm-objdump -d --triple=thumbv7-linux-gnueabi", "scripts/libobj_dec.sh (Ghidra headless, DecompAt.java, proyecto analysis/ghidra/a6000-libs)", "llvm-objdump -T (tabla de simbolos dinamicos)"],
+    "modelo_esfuerzo_real": "Claude Sonnet 5, configuracion de sesion en segundo plano (no modificado por mi)"
+  },
+  "correccion_metodologica": {
+    "problema": "El encargo cita GetStsViewer en ELF 0x4294cc. Sumar +0x10000 (convencion Ghidra VA) da 0x4394cc, que decompila a una funcion trivial sin sentido.",
+    "diagnostico": "llvm-objdump confirma que ELF 0x4294cc cae a mitad de una instruccion Thumb de 4 bytes (blx _Znwj@plt en 0x4294ca-0x4294ce) -- no es una direccion de entrada valida en espacio ELF.",
+    "causa": "La cifra '4294cc' citada en el encargo es en realidad la direccion Ghidra VA (=ELF+0x10000) que aparece en el propio pseudocodigo de Ghidra de TM::createLifeCycles como 'func_0x004294cc' -- no una direccion ELF cruda.",
+    "correccion_aplicada": "ELF real de GetStsViewer = 0x4294cc - 0x10000 = 0x4184cc. Decompilado pidiendo Ghidra VA 0x4294cc directamente (sin sumar otra vez 0x10000); resultado coherente y completo.",
+    "ConnectPin_si_era_ELF_literal": "0x41c25e SI es una direccion ELF valida: apunta a un sitio de llamada real 'blx ConnectPin@plt' confirmado por llvm-objdump directo sin offset."
+  },
+  "hallazgo_central": {
+    "descripcion": "ConnectPin/ObjPin::Connect/ObjStatusViewer NO estan definidos en libObj.so (son simbolos @plt importados); estan definidos en libMWF.so, mismo firmware fw321.",
+    "simbolos_definidos_libMWF": [
+      {"simbolo": "MWF::ObjIf::ConnectPin(void*, MWF::ObjMsg*, MWF::ObjMsg*, MWF::ObjStatusViewer*)", "elf_libMWF": "0x2450c", "size": "0xc8"},
+      {"simbolo": "MWF::ObjPin::Connect(MWF::ObjPin*, MWF::ObjStatusViewer*)", "elf_libMWF": "0x29588", "size": "0x150"},
+      {"simbolo": "MWF::ObjPin::Disconnect()", "elf_libMWF": "0x29492", "size": "0xf6"},
+      {"simbolo": "MWF::ObjStatusViewer::GetStatus()", "elf_libMWF": "0x2c798", "size": "0xe"},
+      {"simbolo": "MWF::ObjStatusViewer::GetStatusStore()", "elf_libMWF": "0x2c7c2", "size": "0x8"},
+      {"simbolo": "MWF::ObjStatusViewer::GetTargetStatus()", "elf_libMWF": "0x2c7a6", "size": "0xe"},
+      {"simbolo": "MWF::ObjStatusViewer::SetCallBackFunc(void(*)(int,void*), void*)", "elf_libMWF": "0x2c7b4", "size": "0xe"},
+      {"simbolo": "MWF::ObjStatusViewer(DefObjStatus::Status) ctor", "elf_libMWF": "0x2c758", "size": "0x40"},
+      {"simbolo": "MWF::ObjStatusConfig::Register(MWF::ObjStatusViewer*)", "elf_libMWF": "0x2c264", "size": "0x3c"},
+      {"simbolo": "MWF::ObjIf::DisconnectPin(void*, MWF::ObjMsg*)", "elf_libMWF": "0x245d4", "size": "0xa4"}
+    ],
+    "no_resuelto": "AVBIZ::UNIVERSE::UObjPin::Connect(ObjPin*, ObjStatusViewer*, bool) aparece como UND tambien en libMWF.so; no localizada en esta sesion. Posible logica de arbitraje distinta para pines AVBIZ, no descartada."
+  },
+  "decompilados": {
+    "GetStsViewer": {
+      "elf_libObj": "0x4184cc",
+      "ghidra_va_usada": "0x4294cc",
+      "logica_verificada": "get-or-create sobre un mapa en (*TopologyManagerSingleton)+0x48, indexado por sts_id. Si sts_id==0, devuelve 0 sin crear nada. Si existe entrada, devuelve el ObjStatusViewer* ya cacheado. Si no existe, construye uno nuevo (ObjStatusViewer ctor con DefObjStatus::Status=1) y lo inserta en el mapa bajo esa clave.",
+      "consecuencia_directa": "Las filas 0x2a y 0xb4 (unicas con sts_id=6) devuelven el MISMO puntero ObjStatusViewer* al llamar GetStsViewer(6) para cada una.",
+      "puntero_singleton": "_DAT_00429700 (Ghidra VA) = mismo objeto TopologyManager que contiene la tabla de 211 filas en +0x60, usado tambien por TM::createLifeCycles",
+      "clasificacion": "VERIFICADO"
+    },
+    "TM::createLifeCycles": {
+      "elf_libObj": "0x4195c0",
+      "logica_verificada": "Recorre todas las filas activas de la tabla de topologia (0..n) para un modelo dado (param_1). Para cada fila: resuelve pin origen (tabla+8=src_obj), pin destino (tabla+0x14=dst_obj) y el ObjStatusViewer via GetStsViewer(tabla+4=sts_id). Si ambos pines resuelven, construye un objeto LifeCycle (0x14 B, ctor func_0x0042b6c0) que retiene id de fila, pin origen, pin destino y el viewer, y lo inserta en una lista del manager.",
+      "nota": "createLifeCycles NO invoca ObjPin::Connect directamente en el cuerpo decompilado -- solo construye y encola el LifeCycle. La conexion real (Connect()) probablemente ocurre en un metodo separado de LifeCycle no decompilado esta sesion.",
+      "clasificacion": "VERIFICADO (alcance: construccion de LifeCycle, no activacion)"
+    },
+    "ObjIf_ConnectPin_libMWF": {
+      "elf_libMWF": "0x2450c",
+      "logica_verificada": "Wrapper de trazabilidad generico: si un flag de tracing esta activo, registra los 4 parametros en un buffer de depuracion; luego despacha SIEMPRE por VTABLE (slot +0xc del objeto param_1) a la implementacion real; si tracing activo, registra tambien el resultado. No contiene ninguna logica de pines/tipos/exclusion propia.",
+      "clasificacion": "VERIFICADO"
+    },
+    "ObjPin_Connect_libMWF": {
+      "elf_libMWF": "0x29588",
+      "logica_verificada_paso_a_paso": [
+        "if (other==0 || other==this) return 3  // pin invalido",
+        "if (*(other+4) != *(this+4)) return 0x7000  // kind/pin_type incompatible",
+        "dir = *(other+0xc); comprobacion cruzada de compatibilidad con *(this+0xc) (0=entrada/1=salida/2=ambas); si incompatible, return 0x7003",
+        "SIN MAS COMPROBACIONES: *(this+0x10) = other  (sobrescribe puntero escalar de pin conectado)",
+        "*(this+0x38) = 1  (flag conectado)",
+        "si viewer!=0: aloca objeto de estado de 0x2c B, lo registra via ObjStatusConfig::Register(viewer), lo guarda en *(this+0x18)",
+        "*(other+0x10) = this  (sobrescribe puntero escalar del otro lado, simetrico)",
+        "mismo registro de estado para 'other' si viewer!=0",
+        "emite evento de traza id 0x82 con this/other/resultado",
+        "return codigo de resultado de la notificacion de traza"
+      ],
+      "hallazgo_clave": "NO existe ninguna comprobacion de '*(this+0x10) ya distinto de 0' (pin ya conectado a otro origen) antes de sobrescribirlo. Las UNICAS tres causas de rechazo son pin nulo/igual, kind incompatible, direccion incompatible. El campo 'pin conectado' es un puntero ESCALAR, no una lista -- una segunda conexion sobre el mismo pin de destino sobrescribe, no coexiste con, la anterior.",
+      "rol_del_viewer": "El ObjStatusViewer* NUNCA aparece en una condicion de aceptacion/rechazo; solo se usa, si no es nulo, para registrar un objeto de estado nuevo por cada pin conectado via ObjStatusConfig::Register. Es un agregador/notificador de estado, no un arbitro de aceptacion.",
+      "clasificacion": "VERIFICADO"
+    },
+    "ObjStatusViewer_GetStatus_libMWF": {
+      "elf_libMWF": "0x2c798",
+      "logica_verificada": "Cuerpo trivial de 14 bytes: delega a dos punteros de funcion indirectos (0xffbb432c, 0xff834854) no resueltos en esta sesion.",
+      "clasificacion": "VERIFICADO (trivialidad) / NO_VERIFICADO (contenido exacto de la delegacion)"
+    }
+  },
+  "respuestas_10_preguntas": {
+    "1_que_representa_stsid": {
+      "respuesta": "Clave de un mapa get-or-create (GetStsViewer) propiedad del TopologyManager singleton, que cachea instancias de MWF::ObjStatusViewer. sts_id=0 es un valor especial que nunca produce ni devuelve un viewer.",
+      "clasificacion": "VERIFICADO"
+    },
+    "2_que_mantiene_stsviewer": {
+      "respuesta": "Un agregador de estado/notificacion: por cada pin conectado que le pasa el viewer, ObjPin::Connect registra un objeto de estado de 0x2c B via ObjStatusConfig::Register; el viewer expone GetStatus/GetTargetStatus/SetCallBackFunc (nombres reales del dynsym). No es una primitiva de exclusion mutua por su interfaz expuesta.",
+      "clasificacion": "VERIFICADO (parcial); NO_VERIFICADO el contenido exacto de GetStatus"
+    },
+    "3_existe_arbitraje_de_conexion": {
+      "respuesta": "No en ObjPin::Connect (unicas comprobaciones: pin nulo/igual, kind incompatible, direccion incompatible; ninguna de ocupacion previa). No se puede descartar en una capa superior (quien decide que filas activar) ni en AVBIZ::UNIVERSE::UObjPin::Connect (no resuelta).",
+      "clasificacion": "VERIFICADO que ObjPin::Connect no arbitra por ocupacion; NO_VERIFICADO/NO_DESCARTADO en capas superiores"
+    },
+    "4_0x2a_0xb4_mutuamente_excluyentes": {
+      "respuesta": "A nivel de estructura de datos, si: el campo 'pin conectado' del pin de entrada unico de StillRecorder es un puntero escalar, no una lista, por lo que no pueden ambas ser simultaneamente el origen registrado de ese destino. No se encontro politica explicita de exclusion a nivel de llamador (TopologyManager/modelo).",
+      "clasificacion": "INFERENCIA fuerte (estructura); NO_VERIFICADO (politica explicita de llamador)"
+    },
+    "5_0x2a_simultanea_con_0x0a_0x07": {
+      "respuesta": "Sin obstaculo estructural: son pines distintos de ObjEffect (in0 para 0x0a, out0 para 0x07, out1 para 0x2a), cada uno con su propio campo escalar independiente; 0x0a/0x07 tienen sts_id=0 y ni siquiera pasan por GetStsViewer. La unica incognita pendiente es el modo interno de ObjEffect (bloqueo de sesion 16, sin avance aqui).",
+      "clasificacion": "VERIFICADO (sin colision de pin); NO_VERIFICADO (modo interno de Effect)"
+    },
+    "6_como_se_crea_topologia_id_dinamico": {
+      "respuesta": "TM::createLifeCycles recorre TODAS las filas activas de la tabla de 211 para un modelo dado en una sola pasada, resolviendo pin origen, pin destino y viewer (via sts_id) por fila, y construye un objeto LifeCycle (0x14 B) por cada fila resuelta con exito. El ID dinamico de sesion 16 corresponde a filas cuyo indice en esa lista de 'filas activas del modelo' se decide en tiempo de ejecucion, no a un mecanismo distinto de creacion.",
+      "clasificacion": "VERIFICADO (mecanismo general); NO_VERIFICADO (mapeo concreto de los 76+116 sitios dinamicos a filas especificas)"
+    },
+    "7_otro_creador_de_0x2a": {
+      "respuesta": "Sin cambios respecto a sesion 16: unico creador literal confirmado = ModelPbCap (ELF 0x613694). No se repitio el barrido de 213 sitios esta sesion.",
+      "clasificacion": "NO_VERIFICADO (no descartado)"
+    },
+    "8_identidad_objeto_53": {
+      "respuesta": "No investigada esta sesion (fuera de mi foco StsViewer/ConnectPin). Evidencia circunstancial previa (no generada aqui): objeto 53 tiene salidas YC adicionales hacia Effect mismo (filas 0xaf, 0xcc) y perfil de puente YC/STILL.",
+      "clasificacion": "NO_VERIFICADO"
+    },
+    "9_invocador_vtable_escritores_modo1": {
+      "respuesta": "No investigado esta sesion. Dato colateral: ObjIf::ConnectPin usa el mismo patron generico de 'wrapper de traza + despacho por vtabla' que probablemente usan los manejadores de mensaje de ObjEffect -- sugiere buscar la tabla de vtabla instalada en la instancia activa de ObjEffect, no un bl directo.",
+      "clasificacion": "NO_VERIFICADO"
+    },
+    "10_camino_fotografico_a_modos_2_5": {
+      "respuesta": "No investigado esta sesion. Aporte indirecto: 0x0a/0x07 (sts_id=0) son estructuralmente independientes de 0x2a/0xb4 (sts_id=6) a nivel de ObjPin, por lo que si existiera tal camino no colisionaria con la ruta normal de visor a este nivel.",
+      "clasificacion": "NO_VERIFICADO"
+    }
+  },
+  "clasificacion_global": [
+    {"afirmacion": "ConnectPin/ObjPin::Connect/ObjStatusViewer definidos en libMWF.so, no libObj.so", "clasificacion": "VERIFICADO"},
+    {"afirmacion": "GetStsViewer es get-or-create por sts_id sobre mapa del TopologyManager singleton", "clasificacion": "VERIFICADO"},
+    {"afirmacion": "0x2a y 0xb4 obtienen el mismo puntero ObjStatusViewer*", "clasificacion": "VERIFICADO"},
+    {"afirmacion": "sts_id=0 (filas 0x0a, 0x07) nunca obtiene viewer", "clasificacion": "VERIFICADO"},
+    {"afirmacion": "ObjPin::Connect no comprueba ocupacion previa del pin de destino", "clasificacion": "VERIFICADO"},
+    {"afirmacion": "Campo 'pin conectado' de ObjPin es puntero escalar, no lista", "clasificacion": "VERIFICADO"},
+    {"afirmacion": "0x2a y 0xb4 no pueden ser ambas el pin conectado del mismo destino a la vez", "clasificacion": "INFERENCIA fuerte"},
+    {"afirmacion": "ObjStatusViewer participa en aceptar/rechazar una conexion", "clasificacion": "DESCARTADO"},
+    {"afirmacion": "0x0a/0x07 y 0x2a pueden coexistir sin colision de pin a nivel ObjPin", "clasificacion": "VERIFICADO"},
+    {"afirmacion": "Coexistencia real a nivel de modo interno de ObjEffect", "clasificacion": "NO_VERIFICADO"},
+    {"afirmacion": "Otro creador de 0x2a aparte de ModelPbCap", "clasificacion": "NO_VERIFICADO"},
+    {"afirmacion": "Identidad del objeto 53", "clasificacion": "NO_VERIFICADO"},
+    {"afirmacion": "Invocador vtabla de escritores de modo 1", "clasificacion": "NO_VERIFICADO"},
+    {"afirmacion": "Camino fotografico hacia modos 2-5", "clasificacion": "NO_VERIFICADO"},
+    {"afirmacion": "Arquitectura E viable", "clasificacion": "SIN CAMBIO DE VEREDICTO: ni viable ni descartada"}
+  ],
+  "dato_para_codex_c": {
+    "pregunta_que_responde": "Que entrada y salida de ObjEffect son simultaneamente alcanzables segun el analisis de StsViewer/ConnectPin",
+    "respuesta": "ObjEffect.in0 (recibe YC de ObjCamera.out0, fila 0x0a, sts_id=0, tabla ELF 0xcc4210+0x0a*0x20) y ObjEffect.out1 (hacia ObjStillRecorder.in0, fila 0x2a, sts_id=6, tabla ELF 0xcc4210+0x2a*0x20) pueden estar conectados simultaneamente sin colision estructural detectada: son pines distintos de la misma instancia de ObjEffect, cada uno con su propio campo escalar 'pin conectado' en offset +0x10 de su propio ObjPin; in0 (sts_id=0) ni siquiera comparte ObjStatusViewer con out1 (sts_id=6). La UNICA colision estructural real encontrada es entre out1 de Effect (fila 0x2a) y la salida#2 del objeto 53 (fila 0xb4), que comparten el pin de entrada UNICO de StillRecorder: no pueden ambos ser simultaneamente el origen registrado de ese pin (campo escalar, no lista) -- una segunda fuente que llame Connect() sobre ese mismo pin de entrada de StillRecorder sobrescribe, no suma, la conexion de Effect.",
+    "direcciones_clave": {
+      "GetStsViewer_elf_libObj": "0x4184cc",
+      "TM_createLifeCycles_elf_libObj": "0x4195c0",
+      "ObjPin_Connect_elf_libMWF": "0x29588",
+      "ObjIf_ConnectPin_elf_libMWF": "0x2450c",
+      "fila_0x0a_tabla": "0xcc4210 + 0x0a*0x20",
+      "fila_0x2a_tabla": "0xcc4210 + 0x2a*0x20",
+      "fila_0xb4_tabla": "0xcc4210 + 0xb4*0x20"
+    }
+  },
+  "siguiente_bloqueo": [
+    "Decompilar LifeCycle::ctor (func_0x0042b6c0, ELF libObj ~0x41b6b0) y el metodo que realmente invoca ObjPin::Connect/ObjIf::ConnectPin para un LifeCycle ya construido -- createLifeCycles solo construye y encola, no llama Connect() en el cuerpo visto.",
+    "Decompilar AVBIZ::UNIVERSE::UObjPin::Connect(ObjPin*, ObjStatusViewer*, bool) (UND tambien en libMWF.so, probablemente en otra lib del framework) para descartar logica de arbitraje distinta para pines AVBIZ.",
+    "Resolver los punteros indirectos 0xffbb432c/0xff834854 dentro de ObjStatusViewer::GetStatus."
+  ],
+  "evidencia_cruda": [
+    "analysis/session17/claude-a/control_decomp.json",
+    "analysis/session17/claude-a/getstsviewer_decomp.json",
+    "analysis/session17/claude-a/mwf_decomp.json"
+  ]
+}

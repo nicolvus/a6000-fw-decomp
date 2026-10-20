@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "sony-a6000-knowledge": {
+      "command": "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/.venv/bin/python3",
+      "args": [
+        "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/scripts/knowledge/mcp_server.py"
+      ]
+    },
+    "rea": {
+      "command": "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/scripts/rea",
+      "args": [
+        "mcp"
+      ],
+      "env": {
+        "REA_GHIDRA_STARTUP_TIMEOUT_MS": "900000",
+        "GHIDRA_MAXMEM": "3G"
+      }
+    }
+  }
+}

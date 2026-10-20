@@ -1,0 +1,24 @@
+{
+ "session": 11,
+ "graph": [
+  {"step":"ObjScalar Begin (ELF 0x3e2ef8) -> msg 0x2001/0x1027 {0x131f,0x1320} -> pin 6 cmd 0x1002","status":"VERIFICADO"},
+  {"step":"ObjStillRecorder cb ELF 0x919ca0: inner id 0x1027 -> this+0x128=4, 0x91efb0(media mgr +0xdc), reply 0x3500 echo","status":"VERIFICADO"},
+  {"step":"0x1027 -> carga de imagen / Execute","status":"DESCARTADO (el manejador no llama a Execute ni lee los bytes)"},
+  {"step":"Execute ELF 0x90b248 -> ObjMsg 0x2008/0x1000 -> Pool RegisterImage (ELF 0x9328b4)","status":"VERIFICADO (items iguales a los que parsea 0x940c34)"},
+  {"step":"RegisterImage -> 0x940508 build pool image -> 0x93e9d0 MakeStillInfo -> 0x94b8e0 -> MprIf::MakeWriteStillImage","status":"VERIFICADO"},
+  {"step":"Execute -> 0x91f698 -> 0x92bb58 -> ObjMsg 0x6108/0x1009 (Pool GetItemInfo) -> StillInfo 0x6B0","status":"VERIFICADO"},
+  {"step":"Execute -> 0x918afc RecordStill -> 0x90e0a0 MprCtrl::WriteStill","status":"VERIFICADO (condicion: MediaMgr+0x2c != 4)"},
+  {"step":"WriteStill -> DCFStillWriter -> SD","status":"NO VERIFICADO en esta sesion (verificado en sesiones previas hasta FeaCore)"},
+  {"step":"SetImageWrited (ELF 0x932a44) tras escritura","status":"NO VERIFICADO (invocador)"}
+ ],
+ "objects": {
+  "this+0xdc": "ObjStillRecorderMediaMgr (dos slots de medio, +0x2c modo 0..6, ctor pone 4)",
+  "this+0x128": "modo/RecordImageInfo; 0x1005 lo fija, 0x1027 lo pone a 4; solo cambia banderas del bloque 0xBC de la respuesta",
+  "this+0x12c/0x130": "ImageSize/ImageQuality (parametros 0x1003/0x1004)",
+  "Pool": "categoria ObjMsg 0x6108 (PoolWrap*, ids 0x1007/0x1009/0x101b)"
+ },
+ "wsi_param_layout": "~0x30 B: fechas 2x10, flag+ptr descriptor 0x3009 (0x88), flag+ptr 0x1007 (0x90), area ptr/flags (parser ELF 0x930c34)",
+ "classification_mode4": "D (variante de grabacion convencional, armado)",
+ "architecture": {"A":"referencia, unica demostrada de extremo a extremo","B":"descartada","C_prime":"registrar item en Pool (RegisterImage) + Execute nativo: candidata, contrato 0x100b NO VERIFICADO"},
+ "blocked": ["layout 0x100b","remitente PreRegisterImage","invocadores de Execute fuera de SeqStillCap","origen de MediaMgr+0x2c","DCFStillWriter en esta sesion","SetImageWrited"]
+}

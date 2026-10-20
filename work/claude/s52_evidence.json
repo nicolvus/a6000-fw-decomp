@@ -1,0 +1,45 @@
+{
+  "phase": "S52",
+  "agent": "A (Claude)",
+  "date": "2026-10-19",
+  "inputs": {
+    "a7s_av_cam": {"path": "work/claude/input/a7s-av-cam.bin", "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e", "base": "0x43541000"},
+    "a6000_av_cam": {"path": "work/claude/input/a6000-av-cam.bin", "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9", "base": "0x43541000"},
+    "a7s_darwin": {"path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0640_darwin/darwin_core.bin", "sha256_prefix": "241f5d311991e8b4e024", "base": "0x4200"}
+  },
+  "methods": ["llvm-objdump thumbv7 lineal completo (s52/dis)", "capstone (tests/test_s52_curtain_facts.py)", "REA propia via daemon (s52/rea1-3.jsonl), cerrada con --shutdown", "emparejamiento por ID de traza (s52/traceid.py)", "difflib (s52/fdiff.py)", "escaneres PIC/puntero ajustado (scripts/pcrel_scan.py, s52/adjscan.py)"],
+  "test": {"file": "work/claude/tests/test_s52_curtain_facts.py", "result": "14/14 OK"},
+  "facts": [
+    {"id": "F1", "claim": "Unico STR.W imm 0x748 en A7S: 0x43813ea2, cap+0x748=1 si tipo Silent==2", "addr": ["0x43813e94", "0x43813ea2"], "status": "VERIFICADO"},
+    {"id": "F2", "claim": "A7S cap+0x748 == A6000 cap+0x740 (estructura desplazada +8 desde ~0x73b)", "addr": ["0x43b1d99a", "0x43b1e7b0 (A6000)", "0x438b74a4", "0x438c7fc6 (A6000)"], "status": "VERIFICADO"},
+    {"id": "F3", "claim": "A6000 no escribe +0x740 en captura (solo 0x4373662a/0x43736738, otra estructura); tiene 13 lectores", "status": "VERIFICADO (escritores directos y por puntero ajustado heuristico)"},
+    {"id": "F4", "claim": "Etapa 0xc8: espera respuesta CAIF 3 (0x438be5f8) solo si 748==0; A6000 incondicional (0x438d08e8)", "addr": ["0x438b1cba", "0x438c28ac (A6000)"], "status": "VERIFICADO"},
+    {"id": "F5", "claim": "Etapa 0xc9: con 748==1 anade espera CAIF 3 antes de enviar CAIF 5", "addr": ["0x43b1c92e", "0x43b1d962 (A6000)"], "status": "VERIFICADO"},
+    {"id": "F6", "claim": "ReadExecuteBase omite espera bandera 0x800000 (0x438be76c) si 748!=0", "addr": ["0x438b726c", "0x438c7d56 (A6000)"], "status": "VERIFICADO (LLVM + REA pseudocodigo)"},
+    {"id": "F7", "claim": "Caso 0xfd: evento 0x102 solo si 748==0; cola 0x108 omite post(2,1)+0x43b1d5de si 748!=0", "addr": ["0x438b7ec2", "0x438b8054"], "status": "VERIFICADO"},
+    {"id": "F8", "claim": "Paquete CAIF ev1: +0x12 bit5 = tipo Silent; +0xd bits6-7 = 2 con tipo Silent", "addr": ["0x4386329a..0x438632b4", "0x43863258..0x43863286"], "a6000": ["0x43841496..0x4384149e", "0x43841468"], "status": "VERIFICADO"},
+    {"id": "F9", "claim": "Byte +1 del paquete: clase 0 tratada como clase 3 (2/0x42); A6000 da 0 con clase 0", "addr": ["0x4386315c", "0x4384137c (A6000)"], "status": "VERIFICADO"},
+    {"id": "F10", "claim": "Politica: clase 0 en G+0x5c, G=0x43f06bc8; G+0x60=0 con tipo 2", "addr": ["0x438649f0", "0x43864a48", "0x43864ad0", "0x43864b00"], "status": "VERIFICADO"},
+    {"id": "F11", "claim": "Clase -> 0x43f04c8c (getter 0x43864c74, llamador unico 0x43861bfc); consumidores 0x438627d2, 0x43863146, 0x4386347a", "status": "VERIFICADO (REA xrefs + PIC)"},
+    {"id": "F12", "claim": "Clase -> registro +0x69 -> 0x43862158 copia +0x60..+0x6b a *param -> param+9=cap+0x651 -> SetExposure 0x436f2938", "addr": ["0x43863478", "0x43862190", "0x43b1c8e2", "0x438b77ac"], "status": "VERIFICADO"},
+    {"id": "F13", "claim": "Clase 1/3 (no 0) dispara 0x43aed4ba -> 0x437c3114 (mensaje tipo 3/0x22)", "addr": ["0x438627d2"], "status": "VERIFICADO; receptor NO VERIFICADO"},
+    {"id": "F14", "claim": "CAIF ev3 = tag 0x12 (0x436d82e4); ev1 copia 22 B (0x436d8354); emisor 0x4379b590, receptor 0x4379b6ac", "status": "VERIFICADO"},
+    {"id": "F15", "claim": "Helper GPIO 0x43b585b6->0x4397d4c0 escribe 1<<bit en 0xf2910048+banco*0x100; generico (~150 llamadas)", "status": "VERIFICADO"},
+    {"id": "F16", "claim": "Darwin A7S: selector tipo HW 0x216e8 acepta 1/2/3 (como A6000), no 4 (A6300)", "status": "VERIFICADO"},
+    {"id": "F17", "claim": "VD_Pre A7S 0x437b65a0 llama al conversor Silent y guarda el tipo en 0x43eaaac0", "addr": ["0x437b6f74", "0x437b6f7e"], "status": "VERIFICADO; lectores NO VERIFICADO"},
+    {"id": "F18", "claim": "cap+0x757 (CA activa) no depende de Silent", "addr": ["0x43816544", "0x438b1a0e", "0x43763c9e", "0x4389f03a"], "status": "VERIFICADO (escritores directos)"}
+  ],
+  "answers": {
+    "P1": "cap+0x748 es la bandera de captura A6000 +0x740 (desplazada +8), latente en A6000; A7S la pone a 1 en Silent y cambia sincronizacion CAIF (esperas ev3 y 0x800000), un evento 0x100/0x102 y operaciones del imager. No se copia al paquete ni al secuenciador.",
+    "P2": "LIRO no suprime comandos de cortina: envia el paquete ev1 marcado (bit 0x20 en +0x12, modo 2 en +0xd), deja de esperar respuestas mecanicas y programa el sensor con ShutMode 0 y drive mode 0x4e/0x4f. Que el MCU no mueva la 2a cortina es INFERENCIA (parser Darwin no localizado)."
+  },
+  "hypotheses": {
+    "H52-1": "VERIFICADO (efecto software); efecto mecanico NO VERIFICADO",
+    "H52-2": "DESCARTADO como supresion de la comunicacion; Silent se senaliza en el paquete (VERIFICADO)",
+    "H52-6": "PARCIAL: bandera latente VERIFICADA en A6000; faltan piezas Silent",
+    "H52-3 (Codex)": "VERIFICADO por Claude",
+    "H52-4 (Codex)": "clase 0 sola no inhibe en LIRO; NO VERIFICADO en MCU"
+  },
+  "frontiers": ["parser CAIF en darwin_core.bin (A7S/A6000/A6300)", "tarea CA A7S (tag 0x12) y pin GPIO->Darwin", "inicializacion de cap+0x748", "receptor del mensaje tipo 3/0x22 de 0x437c3114", "lectores de 0x43eaaac0", "semantica electrica ShutMode 0 / modos 0x4e/0x4f"],
+  "integrity": "Sin escritura fuera de work/claude; binarios de entrada sin modificar (hash comprobado por el test)."
+}

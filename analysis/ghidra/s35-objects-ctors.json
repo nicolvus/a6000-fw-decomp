@@ -1,0 +1,684 @@
+{
+  "source_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "base": "43541000",
+  "method": "persistent project -readOnly -noanalysis; temporary function definitions rolled back; no firmware execution",
+  "functions": [
+    {
+      "query": "436d2c70",
+      "references_before": [
+        {
+          "from": "436d083a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d06d8"
+        },
+        {
+          "from": "436d088e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d06d8"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "436d2c70",
+      "body": "[[436d2c70, 436d2c93]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\nint * FUN_436d2c70(int *param_1,undefined4 param_2,int param_3,int param_4)\n\n{\n  int iVar1;\n  \n  FUN_436d1914();\n  iVar1 \u003d DAT_44021c18;\n  param_1[3] \u003d param_3;\n  param_1[4] \u003d param_4;\n  *param_1 \u003d iVar1 + 8;\n  *(undefined1 *)(param_1 + 5) \u003d 1;\n  return param_1;\n}\n\n",
+      "listing": [
+        "436d2c70 push {r3,r4,r5,r6,r7,lr}",
+        "436d2c72 mov r4,r0",
+        "436d2c74 ldr r5,[0x436d2c94]",
+        "436d2c76 mov r7,r3",
+        "436d2c78 mov r6,r2",
+        "436d2c7a bl 0x436d1914",
+        "436d2c7e ldr r3,[0x436d2c98]",
+        "436d2c80 add r5,pc",
+        "436d2c82 mov r0,r4",
+        "436d2c84 ldr r3,[r5,r3]",
+        "436d2c86 str r6,[r4,#0xc]",
+        "436d2c88 adds r3,#0x8",
+        "436d2c8a str r7,[r4,#0x10]",
+        "436d2c8c str r3,[r4,#0x0]",
+        "436d2c8e movs r3,#0x1",
+        "436d2c90 strb r3,[r4,#0x14]",
+        "436d2c92 pop {r3,r4,r5,r6,r7,pc}"
+      ],
+      "calls_and_jumps": [
+        {
+          "site": "436d2c7a",
+          "target": "436d1914",
+          "type": "UNCONDITIONAL_CALL"
+        }
+      ],
+      "references_after": [
+        {
+          "from": "436d083a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d06d8"
+        },
+        {
+          "from": "436d088e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d06d8"
+        }
+      ]
+    },
+    {
+      "query": "436d21fc",
+      "references_before": [
+        {
+          "from": "436d0724",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d06d8"
+        },
+        {
+          "from": "436d0774",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d06d8"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "436d21fc",
+      "body": "[[436d21fc, 436d2233]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\nint * FUN_436d21fc(int *param_1,undefined4 param_2,int param_3,int param_4)\n\n{\n  FUN_436d1914();\n  *param_1 \u003d DAT_44026c8c + 8;\n  FUN_436d2598(param_1 + 5,param_2);\n  *(char *)(param_1 + 2) \u003d (char)param_2;\n  param_1[3] \u003d param_3;\n  param_1[4] \u003d param_4;\n  param_1[9] \u003d 0;\n  return param_1;\n}\n\n",
+      "listing": [
+        "436d21fc push {r4,r5,r6,r7,r8,lr}",
+        "436d2200 mov r4,r0",
+        "436d2202 ldr r5,[0x436d2234]",
+        "436d2204 mov r6,r1",
+        "436d2206 mov r7,r2",
+        "436d2208 mov r8,r3",
+        "436d220a bl 0x436d1914",
+        "436d220e ldr r3,[0x436d2238]",
+        "436d2210 add r5,pc",
+        "436d2212 mov r0,r4",
+        "436d2214 mov r1,r6",
+        "436d2216 ldr r3,[r5,r3]",
+        "436d2218 adds r3,#0x8",
+        "436d221a str.w r3,[r0],#0x14",
+        "436d221e bl 0x436d2598",
+        "436d2222 movs r3,#0x0",
+        "436d2224 strb r6,[r4,#0x8]",
+        "436d2226 mov r0,r4",
+        "436d2228 str r7,[r4,#0xc]",
+        "436d222a str.w r8,[r4,#0x10]",
+        "436d222e str r3,[r4,#0x24]",
+        "436d2230 pop.w {r4,r5,r6,r7,r8,pc}"
+      ],
+      "calls_and_jumps": [
+        {
+          "site": "436d220a",
+          "target": "436d1914",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436d221e",
+          "target": "436d2598",
+          "type": "UNCONDITIONAL_CALL"
+        }
+      ],
+      "references_after": [
+        {
+          "from": "436d0724",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d06d8"
+        },
+        {
+          "from": "436d0774",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d06d8"
+        }
+      ]
+    },
+    {
+      "query": "436d3168",
+      "references_before": [
+        {
+          "from": "436d07f8",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d06d8"
+        },
+        {
+          "from": "436d0858",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d06d8"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "436d3168",
+      "body": "[[436d3168, 436d3199]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\nint * FUN_436d3168(int *param_1,int param_2)\n\n{\n  undefined4 uVar1;\n  \n  FUN_436d1914();\n  *param_1 \u003d DAT_4402430c + 8;\n  if (param_2 \u003d\u003d 0) {\n    uVar1 \u003d 0xfc000000;\n  }\n  else {\n    if (param_2 !\u003d 1) {\n      return param_1;\n    }\n    uVar1 \u003d 0xfc001000;\n  }\n  FUN_43ad6f32(param_1 + 1,uVar1);\n  return param_1;\n}\n\n",
+      "listing": [
+        "436d3168 push {r4,r5,r6,lr}",
+        "436d316a mov r4,r0",
+        "436d316c ldr r5,[0x436d31a0]",
+        "436d316e mov r6,r1",
+        "436d3170 bl 0x436d1914",
+        "436d3174 ldr r3,[0x436d31a4]",
+        "436d3176 add r5,pc",
+        "436d3178 ldr r3,[r5,r3]",
+        "436d317a adds r3,#0x8",
+        "436d317c str r3,[r4,#0x0]",
+        "436d317e cbz r6,0x436d3186",
+        "436d3180 cmp r6,#0x1",
+        "436d3182 bne 0x436d3196",
+        "436d3184 b 0x436d318e",
+        "436d3186 adds r0,r4,#0x4",
+        "436d3188 mov.w r1,#0xfc000000",
+        "436d318c b 0x436d3192",
+        "436d318e ldr r1,[0x436d319c]",
+        "436d3190 adds r0,r4,#0x4",
+        "436d3192 bl 0x43ad6f32",
+        "436d3196 mov r0,r4",
+        "436d3198 pop {r4,r5,r6,pc}"
+      ],
+      "calls_and_jumps": [
+        {
+          "site": "436d3170",
+          "target": "436d1914",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436d317e",
+          "target": "436d3186",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436d3182",
+          "target": "436d3196",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436d3184",
+          "target": "436d318e",
+          "type": "UNCONDITIONAL_JUMP"
+        },
+        {
+          "site": "436d318c",
+          "target": "436d3192",
+          "type": "UNCONDITIONAL_JUMP"
+        },
+        {
+          "site": "436d3192",
+          "target": "43ad6f32",
+          "type": "UNCONDITIONAL_CALL"
+        }
+      ],
+      "references_after": [
+        {
+          "from": "436d07f8",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d06d8"
+        },
+        {
+          "from": "436d0858",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d06d8"
+        }
+      ]
+    },
+    {
+      "query": "436d3328",
+      "references_before": [
+        {
+          "from": "436d0816",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d06d8"
+        },
+        {
+          "from": "436d0870",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d06d8"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "436d3328",
+      "body": "[[436d3328, 436d3359]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\nint * FUN_436d3328(int *param_1,int param_2)\n\n{\n  undefined4 uVar1;\n  \n  FUN_436d1914();\n  *param_1 \u003d DAT_44026090 + 8;\n  if (param_2 \u003d\u003d 0) {\n    uVar1 \u003d 0xfc000000;\n  }\n  else {\n    if (param_2 !\u003d 1) {\n      return param_1;\n    }\n    uVar1 \u003d 0xfc001000;\n  }\n  FUN_43ad6f32(param_1 + 1,uVar1);\n  return param_1;\n}\n\n",
+      "listing": [
+        "436d3328 push {r4,r5,r6,lr}",
+        "436d332a mov r4,r0",
+        "436d332c ldr r5,[0x436d3360]",
+        "436d332e mov r6,r1",
+        "436d3330 bl 0x436d1914",
+        "436d3334 ldr r3,[0x436d3364]",
+        "436d3336 add r5,pc",
+        "436d3338 ldr r3,[r5,r3]",
+        "436d333a adds r3,#0x8",
+        "436d333c str r3,[r4,#0x0]",
+        "436d333e cbz r6,0x436d3346",
+        "436d3340 cmp r6,#0x1",
+        "436d3342 bne 0x436d3356",
+        "436d3344 b 0x436d334e",
+        "436d3346 adds r0,r4,#0x4",
+        "436d3348 mov.w r1,#0xfc000000",
+        "436d334c b 0x436d3352",
+        "436d334e ldr r1,[0x436d335c]",
+        "436d3350 adds r0,r4,#0x4",
+        "436d3352 bl 0x43ad6f32",
+        "436d3356 mov r0,r4",
+        "436d3358 pop {r4,r5,r6,pc}"
+      ],
+      "calls_and_jumps": [
+        {
+          "site": "436d3330",
+          "target": "436d1914",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436d333e",
+          "target": "436d3346",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436d3342",
+          "target": "436d3356",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436d3344",
+          "target": "436d334e",
+          "type": "UNCONDITIONAL_JUMP"
+        },
+        {
+          "site": "436d334c",
+          "target": "436d3352",
+          "type": "UNCONDITIONAL_JUMP"
+        },
+        {
+          "site": "436d3352",
+          "target": "43ad6f32",
+          "type": "UNCONDITIONAL_CALL"
+        }
+      ],
+      "references_after": [
+        {
+          "from": "436d0816",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d06d8"
+        },
+        {
+          "from": "436d0870",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d06d8"
+        }
+      ]
+    },
+    {
+      "query": "436d27e8",
+      "references_before": [
+        {
+          "from": "436d06ea",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d06d8"
+        },
+        {
+          "from": "436d0740",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d06d8"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "436d27e8",
+      "body": "[[436d27e8, 436d281d]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\nint * FUN_436d27e8(int *param_1,int param_2)\n\n{\n  undefined4 uVar1;\n  \n  FUN_436d1914();\n  *param_1 \u003d DAT_4401efd8 + 8;\n  param_1[3] \u003d 0;\n  if (param_2 \u003d\u003d 0) {\n    uVar1 \u003d 0xfc000000;\n  }\n  else {\n    if (param_2 !\u003d 1) {\n      return param_1;\n    }\n    uVar1 \u003d 0xfc001000;\n  }\n  FUN_43ad6f32(param_1 + 1,uVar1);\n  return param_1;\n}\n\n",
+      "listing": [
+        "436d27e8 push {r4,r5,r6,lr}",
+        "436d27ea mov r4,r0",
+        "436d27ec ldr r5,[0x436d2824]",
+        "436d27ee mov r6,r1",
+        "436d27f0 bl 0x436d1914",
+        "436d27f4 ldr r3,[0x436d2828]",
+        "436d27f6 add r5,pc",
+        "436d27f8 ldr r3,[r5,r3]",
+        "436d27fa adds r3,#0x8",
+        "436d27fc str r3,[r4,#0x0]",
+        "436d27fe movs r3,#0x0",
+        "436d2800 str r3,[r4,#0xc]",
+        "436d2802 cbz r6,0x436d280a",
+        "436d2804 cmp r6,#0x1",
+        "436d2806 bne 0x436d281a",
+        "436d2808 b 0x436d2812",
+        "436d280a adds r0,r4,#0x4",
+        "436d280c mov.w r1,#0xfc000000",
+        "436d2810 b 0x436d2816",
+        "436d2812 ldr r1,[0x436d2820]",
+        "436d2814 adds r0,r4,#0x4",
+        "436d2816 bl 0x43ad6f32",
+        "436d281a mov r0,r4",
+        "436d281c pop {r4,r5,r6,pc}"
+      ],
+      "calls_and_jumps": [
+        {
+          "site": "436d27f0",
+          "target": "436d1914",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436d2802",
+          "target": "436d280a",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436d2806",
+          "target": "436d281a",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436d2808",
+          "target": "436d2812",
+          "type": "UNCONDITIONAL_JUMP"
+        },
+        {
+          "site": "436d2810",
+          "target": "436d2816",
+          "type": "UNCONDITIONAL_JUMP"
+        },
+        {
+          "site": "436d2816",
+          "target": "43ad6f32",
+          "type": "UNCONDITIONAL_CALL"
+        }
+      ],
+      "references_after": [
+        {
+          "from": "436d06ea",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d06d8"
+        },
+        {
+          "from": "436d0740",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d06d8"
+        }
+      ]
+    },
+    {
+      "query": "436d06ac",
+      "references_before": [
+        {
+          "from": "436d0708",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d06d8"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "436d06ac",
+      "body": "[[436d06ac, 436d06cf]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\nint * FUN_436d06ac(int *param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4)\n\n{\n  FUN_436d11c8(param_1,0,param_3,param_4,param_4);\n  *param_1 \u003d DAT_44026acc + 8;\n  param_1[5] \u003d 0;\n  param_1[6] \u003d 0;\n  param_1[7] \u003d 0;\n  param_1[8] \u003d 0;\n  return param_1;\n}\n\n",
+      "listing": [
+        "436d06ac push {r3,r4,r5,lr}",
+        "436d06ae movs r1,#0x0",
+        "436d06b0 ldr r5,[0x436d06d0]",
+        "436d06b2 mov r4,r0",
+        "436d06b4 bl 0x436d11c8",
+        "436d06b8 ldr r3,[0x436d06d4]",
+        "436d06ba add r5,pc",
+        "436d06bc mov r0,r4",
+        "436d06be ldr r3,[r5,r3]",
+        "436d06c0 adds r3,#0x8",
+        "436d06c2 str r3,[r4,#0x0]",
+        "436d06c4 movs r3,#0x0",
+        "436d06c6 str r3,[r4,#0x14]",
+        "436d06c8 str r3,[r4,#0x18]",
+        "436d06ca str r3,[r4,#0x1c]",
+        "436d06cc str r3,[r4,#0x20]",
+        "436d06ce pop {r3,r4,r5,pc}"
+      ],
+      "calls_and_jumps": [
+        {
+          "site": "436d06b4",
+          "target": "436d11c8",
+          "type": "UNCONDITIONAL_CALL"
+        }
+      ],
+      "references_after": [
+        {
+          "from": "436d0708",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d06d8"
+        }
+      ]
+    },
+    {
+      "query": "436d11c8",
+      "references_before": [
+        {
+          "from": "436d0758",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d06d8"
+        },
+        {
+          "from": "436d06b4",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d06ac"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "436d11c8",
+      "body": "[[436d11c8, 436d11e3]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\nint * FUN_436d11c8(int *param_1)\n\n{\n  FUN_436d247c();\n  *param_1 \u003d DAT_44025cf4 + 8;\n  param_1[4] \u003d 0;\n  return param_1;\n}\n\n",
+      "listing": [
+        "436d11c8 push {r3,r4,r5,lr}",
+        "436d11ca mov r5,r0",
+        "436d11cc bl 0x436d247c",
+        "436d11d0 ldr r4,[0x436d11e4]",
+        "436d11d2 mov r0,r5",
+        "436d11d4 ldr r3,[0x436d11e8]",
+        "436d11d6 add r4,pc",
+        "436d11d8 ldr r3,[r4,r3]",
+        "436d11da adds r3,#0x8",
+        "436d11dc str r3,[r5,#0x0]",
+        "436d11de movs r3,#0x0",
+        "436d11e0 str r3,[r5,#0x10]",
+        "436d11e2 pop {r3,r4,r5,pc}"
+      ],
+      "calls_and_jumps": [
+        {
+          "site": "436d11cc",
+          "target": "436d247c",
+          "type": "UNCONDITIONAL_CALL"
+        }
+      ],
+      "references_after": [
+        {
+          "from": "436d0758",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d06d8"
+        },
+        {
+          "from": "436d06b4",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d06ac"
+        }
+      ]
+    },
+    {
+      "query": "4401f4b8",
+      "references_before": [
+        {
+          "from": "436d500a",
+          "type": "READ",
+          "function": "436d4fa4"
+        },
+        {
+          "from": "436d4dae",
+          "type": "READ",
+          "function": "436d4d44"
+        },
+        {
+          "from": "436d07f2",
+          "type": "READ",
+          "function": "436d06d8"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "bytes_128": "58efe7439d2cac430da8f94392a5f7432793b143d63ac243f4dafd4348b3fb43f19daf43d37af943000afd43ecf8f9435611f943c82ee443b97ba343b88ffc4358ddfc431ff6a343200ffd43b8b4f94360dffb4385516a43867af943474ba443e5aeaf43753458432ce90144d767c74378f7fc43d9d6584325a59243d45ce443"
+    },
+    {
+      "query": "44026440",
+      "references_before": [
+        {
+          "from": "436d502a",
+          "type": "READ",
+          "function": "436d4fa4"
+        },
+        {
+          "from": "436d4dce",
+          "type": "READ",
+          "function": "436d4d44"
+        },
+        {
+          "from": "436d0810",
+          "type": "READ",
+          "function": "436d06d8"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "bytes_128": "bceee74321d25743117e9a437bb3f94348dcfb4328c9fe439051f34320d2f7434becaa432f9eaa4349cda143a8bffb436a62f6438847fc439eb4f9435402f043b80dfc43a3b4f94334eef243bc43e6438bbab14380d1f74399e16a434081fc438ff9a743e802e44385f25843c4dbee43cd9ead430d5eab4376b4f943d8a2fc43"
+    },
+    {
+      "query": "4401fddc",
+      "references_before": [
+        {
+          "from": "436d501a",
+          "type": "READ",
+          "function": "436d4fa4"
+        },
+        {
+          "from": "436d4dbe",
+          "type": "READ",
+          "function": "436d4d44"
+        },
+        {
+          "from": "436d0852",
+          "type": "READ",
+          "function": "436d06d8"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "bytes_128": "c8eee743f5889843f880ef4378defc43c0d3f743b0efe7439cefe8434cefe743e2a6f94398e9e84318b4fb4348eefb43c444fa43b473f0437851f6430e24f6433de157439cb7014429de964310fdfc438763ad43e4c8f24349786a43a0acfc4348dafb43359b904330a5e043213a9243701300442002fd4325a06543a0b4f943"
+    },
+    {
+      "query": "4402002c",
+      "references_before": [
+        {
+          "from": "436d503a",
+          "type": "READ",
+          "function": "436d4fa4"
+        },
+        {
+          "from": "436d4de2",
+          "type": "READ",
+          "function": "436d4d44"
+        },
+        {
+          "from": "436d086a",
+          "type": "READ",
+          "function": "436d06d8"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "bytes_128": "a4efe743b52b6843f1d0a243ad95654371816a43c8ddfb43c0fcfc431c11e84371ee6843cd039343c8bdfb432211f9434d747943fbb3f943b103554360dafc43c4910144ce3cc2437411ef43e6b4f9439fd7b0431095fc4318eee8438fc4b143757bf9433802fd43dfc9b543a0b1fc43b088fc434ad7cd43ada26543f1f8f943"
+    },
+    {
+      "query": "44021878",
+      "references_before": [
+        {
+          "from": "436d4fc0",
+          "type": "READ",
+          "function": "436d4fa4"
+        },
+        {
+          "from": "436d4d5e",
+          "type": "READ",
+          "function": "436d4d44"
+        },
+        {
+          "from": "436d06e4",
+          "type": "READ",
+          "function": "436d06d8"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "bytes_128": "38efe743f0defb43c5076843e8dbfb4320d2fd4350e6e44388e0fb43c2a2f74328bffb43604cf143a8a1fc433be9ac4300f7fc43d0d3fb43502ce44353b3b14370dffb43907efc436032fc438b42f94300a2fc43c34aa4435488fa4398bcfb43d8dd0044e8d0fc430012fd43437af9432465e8439c72e74355f4a343e993b143"
+    },
+    {
+      "query": "44024394",
+      "references_before": [
+        {
+          "from": "436d4fdc",
+          "type": "READ",
+          "function": "436d4fa4"
+        },
+        {
+          "from": "436d4d80",
+          "type": "READ",
+          "function": "436d4d44"
+        },
+        {
+          "from": "436d0702",
+          "type": "READ",
+          "function": "436d06d8"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "bytes_128": "14efe74300ddfb43823dc2439782b143395168437cb3f943fd02b0439c29e44390a4fb4398bbfb43c0adfc43c5b3f9432cbff143d858fc4330e0fc43e6b3f94318f9fb43ecc5f74354e00144a00efd432090fb43d801fd4399436a4300c8fb431090f6432de0574374c8ee43f99f90433dfa574390eafb43f859fc43e8a4fc43"
+    },
+    {
+      "query": "44024df0",
+      "references_before": [
+        {
+          "from": "436d4fce",
+          "type": "READ",
+          "function": "436d4fa4"
+        },
+        {
+          "from": "436d4d70",
+          "type": "READ",
+          "function": "436d4d44"
+        },
+        {
+          "from": "436d073c",
+          "type": "READ",
+          "function": "436d06d8"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "bytes_128": "70efe7439005ef43ddfda743e0abfb43477bf943a13f5a4305b4f943c03fe643d92b6743a477ea4318bcfc43b89efc4325ec78436826fc431194b14358c0fb43d13dad43cff8f943c8b3f9434d90aa43c814fc43e0a0fc433cff00442da37943cc16f64380b4f943c2e5f64370d3fe43f0220144409efc430bf8af43cfd0a343"
+    },
+    {
+      "query": "440263d0",
+      "references_before": [
+        {
+          "from": "436d4fea",
+          "type": "READ",
+          "function": "436d4fa4"
+        },
+        {
+          "from": "436d4d8e",
+          "type": "READ",
+          "function": "436d4d44"
+        },
+        {
+          "from": "436d0752",
+          "type": "READ",
+          "function": "436d06d8"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "bytes_128": "24eee7435c18f94364b4f9438fd9b5438442bd4343a2b1430e23f643948efd43bbe8b5434ceae843b09ffb4328c701444c88fa439756cb434899fc43642de44320f7fb43bca401447c51f643c2cef6435009fc4318b3fb434fcfb1431473f04368efba4395d6a343e2d1f643ff85b143bceee74321d25743117e9a437bb3f943"
+    }
+  ]
+}

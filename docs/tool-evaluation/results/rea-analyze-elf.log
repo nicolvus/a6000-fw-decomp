@@ -1,0 +1,56 @@
+$ /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tools/rea/node_modules/.bin/rea analyze /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/analysis/a6000-darwin-rom-analysis-view.elf --token-limit 1500
+--- stdout
+error: Analysis failed
+code: provider_unavailable
+category: unavailable
+message: "The selected analysis provider is unavailable. Review the reported local diagnostics or run `rea doctor`, then retry."
+retryable: true
+remediation:
+  action: "The selected analysis provider is unavailable. Review the reported local diagnostics or run `rea doctor`, then retry."
+details:
+  operation: current_document
+  selection_reason: provider_unavailable
+  requested_provider_id: auto
+  candidate_ids[3]: ghidra,hopper,ida
+  rejections[3]:
+    - provider_id: ghidra
+      code: not_configured
+      reason: Set GHIDRA_INSTALL_DIR to an extracted Ghidra 12.1.x release directory.
+      diagnostics:
+        install_dir: null
+        analyze_headless_path: null
+        native_decompiler_path: null
+        application_properties_path: null
+        provider_version: null
+        java_command: java
+        java_home: null
+        java_version: null
+        java_vm_name: null
+        java_os_arch: null
+        java_os_name: null
+        platform: linux
+        architecture: x64
+        checks[8]{name,ok,code,detail}:
+          configuration,false,not_configured,GHIDRA_INSTALL_DIR is not set
+          platform,true,null,linux
+          architecture,true,null,x64
+          installation,false,executable_missing,Ghidra application properties unavailable
+          version,false,version_unresolved,unknown
+          headless,false,executable_missing,analyzeHeadless unavailable
+          native_decompiler,false,executable_missing,Matching native decompiler for linux/x64 was not found
+          java,false,version_unresolved,java; application.properties is unavailable
+    - provider_id: hopper
+      code: executable_missing
+      reason: "Hopper launcher is missing or not executable: /opt/hopper/bin/Hopper"
+      diagnostics:
+        launcher_path: /opt/hopper/bin/Hopper
+        platform: linux
+    - provider_id: ida
+      code: not_configured
+      reason: Set REA_IDA_MCP_CONFIG to an upstream IDA MCP JSON registration; see docs/ida-provider.md.
+      diagnostics:
+        configured: false
+        live_connection_probed: false
+
+--- stderr
+

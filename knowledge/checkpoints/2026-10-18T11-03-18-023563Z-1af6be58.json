@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "id": "2026-10-18T11-03-18-023563Z-1af6be58",
+  "created_at": "2026-10-18T11-03-18-023563Z",
+  "goal": "Auditoría independiente (usuario) del sistema de conocimiento: corregir defectos de exactitud del grafo y limitaciones de evaluación señalados, sin romper lo que ya funcionaba",
+  "done": [
+    "P1: desambiguación de nombre calificado/corto en CALLS (bug reproducido con dos clases, mismo binario, método homónimo)",
+    "P1: CORRECTS/SUPERSEDES separa candidata (ventana) de evidencia directa (misma línea); status se busca primero en la línea del marcador",
+    "P2: ROOT resuelto por marcador CLAUDE.md (_paths.py::find_root), no por cwd crudo, en los 6 scripts",
+    "P2: _budget_print ya no permite que el primer bloque solo supere el presupuesto",
+    "P2: cmd_exact y rama identifier de ask aplican límite GLOBAL (antes rg --max-count era por archivo)",
+    "P2: cmd_section --subtree (propio vs subárbol completo), cmd_text --offset (paginación), search.py freshness + tool MCP check_index_freshness",
+    "P2: index_docs.py conserva el texto previo al primer encabezado (antes se descartaba)",
+    "P2: límite global MCP_MAX_CHARS=20000 en mcp_server._captured",
+    "P3: docs/OPEN-QUESTIONS.md generado desde relations (grafo), no desde texto libre: 384 -> 39 filas reales tras rebuild",
+    "P3: mensaje de cmd_claim ya no afirma vigencia por ausencia de correcciones"
+  ],
+  "files": [
+    "scripts/knowledge/_paths.py",
+    "scripts/knowledge/build_graph.py",
+    "scripts/knowledge/index_docs.py",
+    "scripts/knowledge/search.py",
+    "scripts/knowledge/export_corrections.py",
+    "scripts/knowledge/mcp_server.py",
+    "scripts/knowledge/checkpoint.py",
+    "scripts/knowledge/benchmark.py",
+    "tests/knowledge/test_build_graph.py",
+    "tests/knowledge/test_index_docs.py",
+    "tests/knowledge/test_adaptive_search.py",
+    "tests/knowledge/test_export_corrections.py",
+    "tests/knowledge/test_mcp_server.py",
+    "tests/knowledge/test_freshness.py",
+    "knowledge/PROGRESS.md"
+  ],
+  "findings": [
+    "El bug de ambigüedad de nombre corto en CALLS era reproducible en el código tal como estaba (dict sobrescrito por (sha256,name)); no hizo falta un caso real del repo, el repro sintético de la auditoría bastó",
+    "OPEN-QUESTIONS.md tenía 384 filas por texto libre; con la fuente correcta (grafo) son 39 — la diferencia es la magnitud real del falso positivo"
+  ],
+  "evidence": [
+    "knowledge/PROGRESS.md Fase 11 (detalle completo con antes/después de cada fix)",
+    "docs/OPEN-QUESTIONS.md regenerado: 39 filas (git-less, no hay diff; comparar con el valor citado en el informe de cierre anterior: 384)"
+  ],
+  "corrections": [
+    "docs/OPEN-QUESTIONS.md ya no es texto-libre sobre NO_VERIFICADO/CONFLICTO_PENDIENTE; es consulta directa a relations"
+  ],
+  "tests": [
+    "pytest tests/knowledge -q -> 39 passed (antes 23)",
+    "ruff check scripts/knowledge tests/knowledge -> All checks passed",
+    "mypy scripts/knowledge -> Success: no issues found in 8 source files",
+    "rebuild real: index_docs --rebuild (359 archivos/2727 secciones) + build_graph (3 entidades/40 relaciones) + export_corrections (39/39) + benchmark (21/21) + freshness (al día)"
+  ],
+  "blockers": [
+    "P4 (rediseño de benchmark con verdad de referencia estructurada) no abordado: requiere diseño nuevo, no un parche",
+    "Verificación real de MCP/skills desde una sesión NUEVA de Claude Code/Codex sigue sin poder hacerse desde esta misma sesión"
+  ],
+  "next_actions": [
+    "Rediseñar benchmark.py: verdad de referencia estructurada (fuente+rango+afirmación), precisión real, separar chars/tokens-estimados/tokens-reales",
+    "Extractores de grafo por esquema GPIO/IMX210/OSAL/REA/Ghidra (Fase 3, aún sin implementar)",
+    "Pedir al usuario que confirme descubrimiento de skills/MCP en una sesión nueva real"
+  ],
+  "permissions_state": "ninguno pendiente; todo dentro del venv aislado ya autorizado, sin instalar paquetes nuevos"
+}

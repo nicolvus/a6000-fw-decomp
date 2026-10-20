@@ -1,0 +1,109 @@
+ELF Header:
+  Magic:   7f 45 4c 46 01 01 01 00 00 00 00 00 00 00 00 00 
+  Class:                             ELF32
+  Data:                              2's complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              DYN (Shared object file)
+  Machine:                           ARM
+  Version:                           0x1
+  Entry point address:               0x0
+  Start of program headers:          52 (bytes into file)
+  Start of section headers:          146036 (bytes into file)
+  Flags:                             0x5000000, Version5 EABI
+  Size of this header:               52 (bytes)
+  Size of program headers:           32 (bytes)
+  Number of program headers:         6
+  Size of section headers:           40 (bytes)
+  Number of section headers:         21
+  Section header string table index: 20
+
+Section Headers:
+  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al
+  [ 0]                   NULL            00000000 000000 000000 00      0   0  0
+  [ 1] .hash             HASH            000000f4 0000f4 0009dc 04   A  2   0  4
+  [ 2] .dynsym           DYNSYM          00000ad0 000ad0 0016e0 10   A  3   0  4
+  [ 3] .dynstr           STRTAB          000021b0 0021b0 0048fd 00   A  0   0  1
+  [ 4] .rel.plt          REL             00006ab0 006ab0 000318 08   A  2   2  4
+  [ 5] .rel.dyn          REL             00006dc8 006dc8 002728 08   A  2   2  4
+  [ 6] .plt              PROGBITS        000094f0 0094f0 0004b8 00  AX  0   0  4
+  [ 7] .text             PROGBITS        000099a8 0099a8 012ff8 00  AX  0   0  4
+  [ 8] .rodata           PROGBITS        0001c9a0 01c9a0 004280 00   A  0   0  4
+  [ 9] .ARM.extab        PROGBITS        00020c20 020c20 00003c 00   A  0   0  4
+  [10] .ARM.exidx        ARM_EXIDX       00020c5c 020c5c 0007b8 08   A  7   0  4
+  [11] .init_array       INIT_ARRAY      00022000 022000 000018 00  WA  0   0  4
+  [12] .fini_array       FINI_ARRAY      00022018 022018 00000c 00  WA  0   0  1
+  [13] .data.rel.ro      PROGBITS        00022028 022028 0008f8 00  WA  0   0  8
+  [14] .dynamic          DYNAMIC         00022920 022920 000128 08  WA  3   0  4
+  [15] .got              PROGBITS        00022a48 022a48 000294 00  WA  0   0  4
+  [16] .data             PROGBITS        00022cdc 022cdc 000c94 00  WA  0   0  4
+  [17] .bss              NOBITS          00023970 023970 000140 00  WA  0   0 16
+  [18] .note.gnu.go[...] NOTE            00000000 023970 000018 00      0   0  4
+  [19] .ARM.attributes   ARM_ATTRIBUTES  00000000 023988 000030 00      0   0  1
+  [20] .shstrtab         STRTAB          00000000 0239b8 0000bc 00      0   0  1
+Key to Flags:
+  W (write), A (alloc), X (execute), M (merge), S (strings), I (info),
+  L (link order), O (extra OS processing required), G (group), T (TLS),
+  C (compressed), x (unknown), o (OS specific), E (exclude),
+  D (mbind), y (purecode), p (processor specific)
+
+Program Headers:
+  Type           Offset   VirtAddr   PhysAddr   FileSiz MemSiz  Flg Align
+  PHDR           0x000034 0x00000034 0x00000034 0x000c0 0x000c0 R   0x4
+  LOAD           0x000000 0x00000000 0x00000000 0x21414 0x21414 R E 0x1000
+  LOAD           0x022000 0x00022000 0x00022000 0x01970 0x01ab0 RW  0x1000
+  DYNAMIC        0x022920 0x00022920 0x00022920 0x00128 0x00128 RW  0x4
+  GNU_STACK      0x000000 0x00000000 0x00000000 0x00000 0x00000 RW  0
+  ARM_EXIDX      0x020c5c 0x00020c5c 0x00020c5c 0x007b8 0x007b8 R   0x4
+
+ Section to Segment mapping:
+  Segment Sections...
+   00     
+   01     .hash .dynsym .dynstr .rel.plt .rel.dyn .plt .text .rodata .ARM.extab .ARM.exidx 
+   02     .init_array .fini_array .data.rel.ro .dynamic .got .data .bss 
+   03     .dynamic 
+   04     
+   05     .ARM.exidx 
+
+Dynamic section at offset 0x22920 contains 37 entries:
+  Tag        Type                         Name/Value
+ 0x00000003 (PLTGOT)                     0x22b44
+ 0x00000002 (PLTRELSZ)                   792 (bytes)
+ 0x00000017 (JMPREL)                     0x6ab0
+ 0x00000014 (PLTREL)                     REL
+ 0x00000011 (REL)                        0x6dc8
+ 0x00000012 (RELSZ)                      10024 (bytes)
+ 0x00000013 (RELENT)                     8 (bytes)
+ 0x6ffffffa (RELCOUNT)                   1112
+ 0x00000006 (SYMTAB)                     0xad0
+ 0x0000000b (SYMENT)                     16 (bytes)
+ 0x00000005 (STRTAB)                     0x21b0
+ 0x0000000a (STRSZ)                      18685 (bytes)
+ 0x00000004 (HASH)                       0xf4
+ 0x00000001 (NEEDED)                     Shared library: [libandroid_runtime.so]
+ 0x00000001 (NEEDED)                     Shared library: [libnativehelper.so]
+ 0x00000001 (NEEDED)                     Shared library: [liblog.so]
+ 0x00000001 (NEEDED)                     Shared library: [libcutils.so]
+ 0x00000001 (NEEDED)                     Shared library: [libutils.so]
+ 0x00000001 (NEEDED)                     Shared library: [libstlport.so]
+ 0x00000001 (NEEDED)                     Shared library: [libcameraex_client.so]
+ 0x00000001 (NEEDED)                     Shared library: [libcameraseq.so]
+ 0x00000001 (NEEDED)                     Shared library: [libcamera.so]
+ 0x00000001 (NEEDED)                     Shared library: [libmediaex.so]
+ 0x00000001 (NEEDED)                     Shared library: [libaudio.so]
+ 0x00000001 (NEEDED)                     Shared library: [libcamera_client.so]
+ 0x00000001 (NEEDED)                     Shared library: [libc.so]
+ 0x00000001 (NEEDED)                     Shared library: [libstdc++.so]
+ 0x00000001 (NEEDED)                     Shared library: [libm.so]
+ 0x0000000e (SONAME)                     Library soname: [libcameraex_jni.so]
+ 0x00000019 (INIT_ARRAY)                 0x22000
+ 0x0000001b (INIT_ARRAYSZ)               24 (bytes)
+ 0x0000001a (FINI_ARRAY)                 0x22018
+ 0x0000001c (FINI_ARRAYSZ)               12 (bytes)
+ 0x00000016 (TEXTREL)                    0x0
+ 0x00000010 (SYMBOLIC)                   0x0
+ 0x0000001e (FLAGS)                      SYMBOLIC TEXTREL
+ 0x00000000 (NULL)                       0x0
+readelf: Warning: [ 4]: Info field (2) should index a relocatable section.
+readelf: Warning: [ 5]: Info field (2) should index a relocatable section.

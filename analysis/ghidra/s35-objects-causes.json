@@ -1,0 +1,4908 @@
+{
+  "source_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "base": "43541000",
+  "method": "persistent project -readOnly -noanalysis; temporary function definitions rolled back; no firmware execution",
+  "functions": [
+    {
+      "query": "43ad6980",
+      "references_before": [
+        {
+          "from": "436cf13c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436cf0c8"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "43ad6980",
+      "body": "[[43ad6980, 43ad6993]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\n/* WARNING: Globals starting with \u0027_\u0027 overlap smaller symbols at the same address */\n\nvoid FUN_43ad6980(void)\n\n{\n  FUN_436cfd20(2);\n  _DAT_fc01f010 \u003d 0x200000;\n  return;\n}\n\n",
+      "listing": [
+        "43ad6980 movs r0,#0x2",
+        "43ad6982 push {r4,lr}",
+        "43ad6984 bl 0x436cfd20",
+        "43ad6988 mov.w r0,#0x200000",
+        "43ad698c pop.w {r4,lr}",
+        "43ad6990 b.w 0x436cfc9c"
+      ],
+      "calls_and_jumps": [
+        {
+          "site": "43ad6984",
+          "target": "436cfd20",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "43ad6990",
+          "target": "436cfc9c",
+          "type": "UNCONDITIONAL_JUMP"
+        }
+      ],
+      "references_after": [
+        {
+          "from": "436cf13c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436cf0c8"
+        }
+      ]
+    },
+    {
+      "query": "43ad6a96",
+      "references_before": [
+        {
+          "from": "436cf20c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436cf19c"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "43ad6a96",
+      "body": "[[43ad6a96, 43ad6aa9]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\n/* WARNING: Globals starting with \u0027_\u0027 overlap smaller symbols at the same address */\n\nvoid FUN_43ad6a96(void)\n\n{\n  FUN_436cfd20(0);\n  _DAT_fc01f014 \u003d 0x200000;\n  return;\n}\n\n",
+      "listing": [
+        "43ad6a96 movs r0,#0x0",
+        "43ad6a98 push {r4,lr}",
+        "43ad6a9a bl 0x436cfd20",
+        "43ad6a9e mov.w r0,#0x200000",
+        "43ad6aa2 pop.w {r4,lr}",
+        "43ad6aa6 b.w 0x436cfca8"
+      ],
+      "calls_and_jumps": [
+        {
+          "site": "43ad6a9a",
+          "target": "436cfd20",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "43ad6aa6",
+          "target": "436cfca8",
+          "type": "UNCONDITIONAL_JUMP"
+        }
+      ],
+      "references_after": [
+        {
+          "from": "436cf20c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436cf19c"
+        }
+      ]
+    },
+    {
+      "query": "43ad6e42",
+      "references_before": [
+        {
+          "from": "43ad7590",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad758c"
+        },
+        {
+          "from": "43ad75a4",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad75a0"
+        },
+        {
+          "from": "43ad779e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7798"
+        },
+        {
+          "from": "43ad77aa",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7798"
+        },
+        {
+          "from": "43ad77b6",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7798"
+        },
+        {
+          "from": "43ad77c8",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad77c2"
+        },
+        {
+          "from": "43ad77d4",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad77c2"
+        },
+        {
+          "from": "43ad7bfa",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7bf6"
+        },
+        {
+          "from": "43ad7c0e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7c0a"
+        },
+        {
+          "from": "43ad7c5c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7c56"
+        },
+        {
+          "from": "43ad7c68",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7c56"
+        },
+        {
+          "from": "43ad7c74",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7c56"
+        },
+        {
+          "from": "43ad7c86",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7c80"
+        },
+        {
+          "from": "43ad7c92",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7c80"
+        },
+        {
+          "from": "43ad7d3e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7d4c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7d58",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7d66",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7d72",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7d80",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7d8e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7d9a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7da6",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7db2",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7dbe",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7dca",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7dd6",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7de2",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7dee",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7dfa",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7e06",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7e12",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7e20",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7e2c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7e3a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7e46",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7e54",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7e68",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7e62"
+        },
+        {
+          "from": "43ad7e74",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7e62"
+        },
+        {
+          "from": "43ad7e80",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7e62"
+        },
+        {
+          "from": "43ad7e8c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7e62"
+        },
+        {
+          "from": "43ad7e98",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7e62"
+        },
+        {
+          "from": "43ad7f0a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7f06"
+        },
+        {
+          "from": "43ad7f1e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7f1a"
+        },
+        {
+          "from": "43ad7f42",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7f3c"
+        },
+        {
+          "from": "43ad7f4e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7f3c"
+        },
+        {
+          "from": "43ad7f5a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7f3c"
+        },
+        {
+          "from": "43ad7f6c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7f66"
+        },
+        {
+          "from": "43ad7f78",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7f66"
+        },
+        {
+          "from": "43ad81e8",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad81e4"
+        },
+        {
+          "from": "43ad81fc",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad81f8"
+        },
+        {
+          "from": "43ad824a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad8244"
+        },
+        {
+          "from": "43ad8256",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad8244"
+        },
+        {
+          "from": "43ad8262",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad8244"
+        },
+        {
+          "from": "43ad8274",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad826e"
+        },
+        {
+          "from": "43ad8280",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad826e"
+        },
+        {
+          "from": "4354346e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad83ce"
+        },
+        {
+          "from": "4354347a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad83ce"
+        },
+        {
+          "from": "43543486",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad83ce"
+        },
+        {
+          "from": "43ad8476",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad8472"
+        },
+        {
+          "from": "43ad848a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad8486"
+        },
+        {
+          "from": "43ad84fc",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad84f6"
+        },
+        {
+          "from": "43ad8508",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad84f6"
+        },
+        {
+          "from": "43ad856c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad8568"
+        },
+        {
+          "from": "43ad8580",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad857c"
+        },
+        {
+          "from": "43ad85ce",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad85c8"
+        },
+        {
+          "from": "43ad85da",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad85c8"
+        },
+        {
+          "from": "43ad85ea",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad85e6"
+        },
+        {
+          "from": "43ad7162",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7154"
+        },
+        {
+          "from": "43ad7170",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7154"
+        },
+        {
+          "from": "43ad717e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7154"
+        },
+        {
+          "from": "43ad877e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad877a"
+        },
+        {
+          "from": "43ad8792",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad878e"
+        },
+        {
+          "from": "43ad87a8",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad87a2"
+        },
+        {
+          "from": "43ad87b4",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad87a2"
+        },
+        {
+          "from": "43ad6f72",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad6f6c"
+        },
+        {
+          "from": "43ad6fec",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad6fe4"
+        },
+        {
+          "from": "43ad7000",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad6fe4"
+        },
+        {
+          "from": "43ad704a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7044"
+        },
+        {
+          "from": "43ad7120",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7116"
+        },
+        {
+          "from": "43ad7130",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7116"
+        },
+        {
+          "from": "43ad8750",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad874a"
+        },
+        {
+          "from": "43ad78ca",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad78c2"
+        },
+        {
+          "from": "43ad78d6",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad78c2"
+        },
+        {
+          "from": "43ad78e2",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad78c2"
+        },
+        {
+          "from": "43ad78ee",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad78c2"
+        },
+        {
+          "from": "43ad78fa",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad78c2"
+        },
+        {
+          "from": "43ad7906",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad78c2"
+        },
+        {
+          "from": "43ad7912",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad78c2"
+        },
+        {
+          "from": "43ad791e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad78c2"
+        },
+        {
+          "from": "43ad792a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad78c2"
+        },
+        {
+          "from": "43ad7936",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad78c2"
+        },
+        {
+          "from": "43ad794a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7944"
+        },
+        {
+          "from": "436d198e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1984"
+        },
+        {
+          "from": "436d199c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1984"
+        },
+        {
+          "from": "436d19aa",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1984"
+        },
+        {
+          "from": "436d19f0",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1984"
+        },
+        {
+          "from": "436d19ba",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1984"
+        },
+        {
+          "from": "436d19d6",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1984"
+        },
+        {
+          "from": "436d1a24",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1984"
+        },
+        {
+          "from": "436d1a0c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1984"
+        },
+        {
+          "from": "43ad71a4",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad718e"
+        },
+        {
+          "from": "43ad71b2",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad718e"
+        },
+        {
+          "from": "43ad71d0",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad718e"
+        },
+        {
+          "from": "43ad71de",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad718e"
+        },
+        {
+          "from": "43ad71ec",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad718e"
+        },
+        {
+          "from": "43ad71fa",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad718e"
+        },
+        {
+          "from": "43ad7208",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad718e"
+        },
+        {
+          "from": "43ad7216",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad718e"
+        },
+        {
+          "from": "43ad7224",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad718e"
+        },
+        {
+          "from": "43ad7232",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad718e"
+        },
+        {
+          "from": "43ad7240",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad718e"
+        },
+        {
+          "from": "436d1a60",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1a3c"
+        },
+        {
+          "from": "436d1a7e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1a3c"
+        },
+        {
+          "from": "436d1a98",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1a3c"
+        },
+        {
+          "from": "436d1acc",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1ab4"
+        },
+        {
+          "from": "436d1aea",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1ab4"
+        },
+        {
+          "from": "436d1b04",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1ab4"
+        },
+        {
+          "from": "43ad7ece",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7ea6"
+        },
+        {
+          "from": "43ad7eda",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7ea6"
+        },
+        {
+          "from": "436d2088",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "436d20c2",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "436d20ce",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "436d20da",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "436d20e6",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "436d20f2",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "43ad789a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7890"
+        },
+        {
+          "from": "43ad78a6",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7890"
+        },
+        {
+          "from": "43ad78b2",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7890"
+        },
+        {
+          "from": "43ad6e4c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad6e46"
+        },
+        {
+          "from": "43ad6efa",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad6ef4"
+        },
+        {
+          "from": "43ad7146",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7140"
+        },
+        {
+          "from": "43ad75e4",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad75d8"
+        },
+        {
+          "from": "43ad75f0",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad75d8"
+        },
+        {
+          "from": "43ad75fc",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad75d8"
+        },
+        {
+          "from": "43ad77f2",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad784e"
+        },
+        {
+          "from": "43ad7800",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad784e"
+        },
+        {
+          "from": "43ad780c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad784e"
+        },
+        {
+          "from": "43ad781c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad784e"
+        },
+        {
+          "from": "43ad7828",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad784e"
+        },
+        {
+          "from": "43ad7834",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad784e"
+        },
+        {
+          "from": "43ad7840",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad784e"
+        },
+        {
+          "from": "43ad7c26",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7c1e"
+        },
+        {
+          "from": "43ad7c32",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7c1e"
+        },
+        {
+          "from": "43ad7c3e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7c1e"
+        },
+        {
+          "from": "43ad8214",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad820c"
+        },
+        {
+          "from": "43ad8220",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad820c"
+        },
+        {
+          "from": "43ad822c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad820c"
+        },
+        {
+          "from": "43ad84a2",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad849a"
+        },
+        {
+          "from": "43ad84ae",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad849a"
+        },
+        {
+          "from": "43ad84ba",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad849a"
+        },
+        {
+          "from": "43ad8598",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad8590"
+        },
+        {
+          "from": "43ad85a4",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad8590"
+        },
+        {
+          "from": "43ad85b0",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad8590"
+        },
+        {
+          "from": "43ad876c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad8768"
+        },
+        {
+          "from": "43ad7876",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad784e"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "43ad6e42",
+      "body": "[[43ad6e42, 43ad6e45]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\nundefined4 FUN_43ad6e42(undefined4 *param_1)\n\n{\n  return *param_1;\n}\n\n",
+      "listing": [
+        "43ad6e42 ldr r0,[r0,#0x0]",
+        "43ad6e44 bx lr"
+      ],
+      "calls_and_jumps": [],
+      "references_after": [
+        {
+          "from": "43ad7590",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad758c"
+        },
+        {
+          "from": "43ad75a4",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad75a0"
+        },
+        {
+          "from": "43ad779e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7798"
+        },
+        {
+          "from": "43ad77aa",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7798"
+        },
+        {
+          "from": "43ad77b6",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7798"
+        },
+        {
+          "from": "43ad77c8",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad77c2"
+        },
+        {
+          "from": "43ad77d4",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad77c2"
+        },
+        {
+          "from": "43ad7bfa",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7bf6"
+        },
+        {
+          "from": "43ad7c0e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7c0a"
+        },
+        {
+          "from": "43ad7c5c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7c56"
+        },
+        {
+          "from": "43ad7c68",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7c56"
+        },
+        {
+          "from": "43ad7c74",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7c56"
+        },
+        {
+          "from": "43ad7c86",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7c80"
+        },
+        {
+          "from": "43ad7c92",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7c80"
+        },
+        {
+          "from": "43ad7d3e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7d4c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7d58",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7d66",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7d72",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7d80",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7d8e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7d9a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7da6",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7db2",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7dbe",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7dca",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7dd6",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7de2",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7dee",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7dfa",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7e06",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7e12",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7e20",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7e2c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7e3a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7e46",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7e54",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7d2e"
+        },
+        {
+          "from": "43ad7e68",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7e62"
+        },
+        {
+          "from": "43ad7e74",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7e62"
+        },
+        {
+          "from": "43ad7e80",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7e62"
+        },
+        {
+          "from": "43ad7e8c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7e62"
+        },
+        {
+          "from": "43ad7e98",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7e62"
+        },
+        {
+          "from": "43ad7f0a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7f06"
+        },
+        {
+          "from": "43ad7f1e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7f1a"
+        },
+        {
+          "from": "43ad7f42",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7f3c"
+        },
+        {
+          "from": "43ad7f4e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7f3c"
+        },
+        {
+          "from": "43ad7f5a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7f3c"
+        },
+        {
+          "from": "43ad7f6c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7f66"
+        },
+        {
+          "from": "43ad7f78",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7f66"
+        },
+        {
+          "from": "43ad81e8",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad81e4"
+        },
+        {
+          "from": "43ad81fc",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad81f8"
+        },
+        {
+          "from": "43ad824a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad8244"
+        },
+        {
+          "from": "43ad8256",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad8244"
+        },
+        {
+          "from": "43ad8262",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad8244"
+        },
+        {
+          "from": "43ad8274",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad826e"
+        },
+        {
+          "from": "43ad8280",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad826e"
+        },
+        {
+          "from": "4354346e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad83ce"
+        },
+        {
+          "from": "4354347a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad83ce"
+        },
+        {
+          "from": "43543486",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad83ce"
+        },
+        {
+          "from": "43ad8476",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad8472"
+        },
+        {
+          "from": "43ad848a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad8486"
+        },
+        {
+          "from": "43ad84fc",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad84f6"
+        },
+        {
+          "from": "43ad8508",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad84f6"
+        },
+        {
+          "from": "43ad856c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad8568"
+        },
+        {
+          "from": "43ad8580",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad857c"
+        },
+        {
+          "from": "43ad85ce",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad85c8"
+        },
+        {
+          "from": "43ad85da",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad85c8"
+        },
+        {
+          "from": "43ad85ea",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad85e6"
+        },
+        {
+          "from": "43ad7162",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7154"
+        },
+        {
+          "from": "43ad7170",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7154"
+        },
+        {
+          "from": "43ad717e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7154"
+        },
+        {
+          "from": "43ad877e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad877a"
+        },
+        {
+          "from": "43ad8792",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad878e"
+        },
+        {
+          "from": "43ad87a8",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad87a2"
+        },
+        {
+          "from": "43ad87b4",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad87a2"
+        },
+        {
+          "from": "43ad6f72",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad6f6c"
+        },
+        {
+          "from": "43ad6fec",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad6fe4"
+        },
+        {
+          "from": "43ad7000",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad6fe4"
+        },
+        {
+          "from": "43ad704a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7044"
+        },
+        {
+          "from": "43ad7120",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7116"
+        },
+        {
+          "from": "43ad7130",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7116"
+        },
+        {
+          "from": "43ad8750",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad874a"
+        },
+        {
+          "from": "43ad78ca",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad78c2"
+        },
+        {
+          "from": "43ad78d6",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad78c2"
+        },
+        {
+          "from": "43ad78e2",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad78c2"
+        },
+        {
+          "from": "43ad78ee",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad78c2"
+        },
+        {
+          "from": "43ad78fa",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad78c2"
+        },
+        {
+          "from": "43ad7906",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad78c2"
+        },
+        {
+          "from": "43ad7912",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad78c2"
+        },
+        {
+          "from": "43ad791e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad78c2"
+        },
+        {
+          "from": "43ad792a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad78c2"
+        },
+        {
+          "from": "43ad7936",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad78c2"
+        },
+        {
+          "from": "43ad794a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7944"
+        },
+        {
+          "from": "436d198e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1984"
+        },
+        {
+          "from": "436d199c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1984"
+        },
+        {
+          "from": "436d19aa",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1984"
+        },
+        {
+          "from": "436d19f0",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1984"
+        },
+        {
+          "from": "436d19ba",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1984"
+        },
+        {
+          "from": "436d19d6",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1984"
+        },
+        {
+          "from": "436d1a24",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1984"
+        },
+        {
+          "from": "436d1a0c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1984"
+        },
+        {
+          "from": "43ad71a4",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad718e"
+        },
+        {
+          "from": "43ad71b2",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad718e"
+        },
+        {
+          "from": "43ad71d0",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad718e"
+        },
+        {
+          "from": "43ad71de",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad718e"
+        },
+        {
+          "from": "43ad71ec",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad718e"
+        },
+        {
+          "from": "43ad71fa",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad718e"
+        },
+        {
+          "from": "43ad7208",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad718e"
+        },
+        {
+          "from": "43ad7216",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad718e"
+        },
+        {
+          "from": "43ad7224",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad718e"
+        },
+        {
+          "from": "43ad7232",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad718e"
+        },
+        {
+          "from": "43ad7240",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad718e"
+        },
+        {
+          "from": "436d1a60",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1a3c"
+        },
+        {
+          "from": "436d1a7e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1a3c"
+        },
+        {
+          "from": "436d1a98",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1a3c"
+        },
+        {
+          "from": "436d1acc",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1ab4"
+        },
+        {
+          "from": "436d1aea",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1ab4"
+        },
+        {
+          "from": "436d1b04",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1ab4"
+        },
+        {
+          "from": "43ad7ece",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7ea6"
+        },
+        {
+          "from": "43ad7eda",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7ea6"
+        },
+        {
+          "from": "436d2088",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "436d20c2",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "436d20ce",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "436d20da",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "436d20e6",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "436d20f2",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "43ad789a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7890"
+        },
+        {
+          "from": "43ad78a6",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7890"
+        },
+        {
+          "from": "43ad78b2",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7890"
+        },
+        {
+          "from": "43ad6e4c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad6e46"
+        },
+        {
+          "from": "43ad6efa",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad6ef4"
+        },
+        {
+          "from": "43ad7146",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7140"
+        },
+        {
+          "from": "43ad75e4",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad75d8"
+        },
+        {
+          "from": "43ad75f0",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad75d8"
+        },
+        {
+          "from": "43ad75fc",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad75d8"
+        },
+        {
+          "from": "43ad77f2",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad784e"
+        },
+        {
+          "from": "43ad7800",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad784e"
+        },
+        {
+          "from": "43ad780c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad784e"
+        },
+        {
+          "from": "43ad781c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad784e"
+        },
+        {
+          "from": "43ad7828",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad784e"
+        },
+        {
+          "from": "43ad7834",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad784e"
+        },
+        {
+          "from": "43ad7840",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad784e"
+        },
+        {
+          "from": "43ad7c26",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7c1e"
+        },
+        {
+          "from": "43ad7c32",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7c1e"
+        },
+        {
+          "from": "43ad7c3e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7c1e"
+        },
+        {
+          "from": "43ad8214",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad820c"
+        },
+        {
+          "from": "43ad8220",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad820c"
+        },
+        {
+          "from": "43ad822c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad820c"
+        },
+        {
+          "from": "43ad84a2",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad849a"
+        },
+        {
+          "from": "43ad84ae",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad849a"
+        },
+        {
+          "from": "43ad84ba",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad849a"
+        },
+        {
+          "from": "43ad8598",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad8590"
+        },
+        {
+          "from": "43ad85a4",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad8590"
+        },
+        {
+          "from": "43ad85b0",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad8590"
+        },
+        {
+          "from": "43ad876c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad8768"
+        },
+        {
+          "from": "43ad7876",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad784e"
+        }
+      ]
+    },
+    {
+      "query": "436d30c8",
+      "references_before": [
+        {
+          "from": "43ad847a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad8472"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "436d30c8",
+      "body": "[[436d30c8, 436d30d1]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\nuint FUN_436d30c8(int param_1)\n\n{\n  return *(uint *)(param_1 + 0xa1610) \u0026 1;\n}\n\n",
+      "listing": [
+        "436d30c8 ldr r3,[0x436d30d4]",
+        "436d30ca ldr r0,[r0,r3]",
+        "436d30cc and r0,r0,#0x1",
+        "436d30d0 bx lr"
+      ],
+      "calls_and_jumps": [],
+      "references_after": [
+        {
+          "from": "43ad847a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad8472"
+        }
+      ]
+    },
+    {
+      "query": "436d3284",
+      "references_before": [
+        {
+          "from": "43ad8570",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad8568"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "436d3284",
+      "body": "[[436d3284, 436d328d]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\nuint FUN_436d3284(int param_1)\n\n{\n  return *(uint *)(param_1 + 0xa1710) \u0026 1;\n}\n\n",
+      "listing": [
+        "436d3284 ldr r3,[0x436d3290]",
+        "436d3286 ldr r0,[r0,r3]",
+        "436d3288 and r0,r0,#0x1",
+        "436d328c bx lr"
+      ],
+      "calls_and_jumps": [],
+      "references_after": [
+        {
+          "from": "43ad8570",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad8568"
+        }
+      ]
+    },
+    {
+      "query": "436d26c4",
+      "references_before": [
+        {
+          "from": "43ad7f0e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7f06"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "436d26c4",
+      "body": "[[436d26c4, 436d26cd]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\nuint FUN_436d26c4(int param_1)\n\n{\n  return *(uint *)(param_1 + 0xa1210) \u0026 1;\n}\n\n",
+      "listing": [
+        "436d26c4 ldr r3,[0x436d26d0]",
+        "436d26c6 ldr r0,[r0,r3]",
+        "436d26c8 and r0,r0,#0x1",
+        "436d26cc bx lr"
+      ],
+      "calls_and_jumps": [],
+      "references_after": [
+        {
+          "from": "43ad7f0e",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7f06"
+        }
+      ]
+    },
+    {
+      "query": "436d23c0",
+      "references_before": [
+        {
+          "from": "43ad7bfe",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7bf6"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "436d23c0",
+      "body": "[[436d23c0, 436d23c9]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\nuint FUN_436d23c0(int param_1)\n\n{\n  return *(uint *)(param_1 + 0xa1310) \u0026 1;\n}\n\n",
+      "listing": [
+        "436d23c0 ldr r3,[0x436d23cc]",
+        "436d23c2 ldr r0,[r0,r3]",
+        "436d23c4 and r0,r0,#0x1",
+        "436d23c8 bx lr"
+      ],
+      "calls_and_jumps": [],
+      "references_after": [
+        {
+          "from": "43ad7bfe",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ad7bf6"
+        }
+      ]
+    },
+    {
+      "query": "436c85a8",
+      "references_before": [
+        {
+          "from": "436c8ef6",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436c8ecc"
+        },
+        {
+          "from": "436c8f08",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436c8ecc"
+        },
+        {
+          "from": "436c8f18",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436c8ecc"
+        },
+        {
+          "from": "436c8f2a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436c8ecc"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "436c85a8",
+      "body": "[[436c85a8, 436c881f] [436c8824, 436c8ab7] [436c8abc, 436c8bbd] [436c8bc4, 436c8e83] [436c8e98, 436c8ec5]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\nvoid FUN_436c85a8(int param_1,undefined4 param_2,int param_3)\n\n{\n  int iVar1;\n  undefined4 uVar2;\n  undefined4 uVar3;\n  uint uVar4;\n  int iVar5;\n  \n  iVar1 \u003d FUN_43ad3ec2(param_2);\n  if (iVar1 !\u003d 0) {\n    if (param_3 \u003d\u003d 2) {\n      uVar2 \u003d 0xf3200000;\n    }\n    else {\n      uVar2 \u003d FUN_43acee62(iVar1 + 4);\n    }\n    iVar5 \u003d param_1 + (param_3 + 0x6c) * 8;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + param_3 * 4 + 0x4a4) \u0026 1) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + param_3 * 8 + 0x30c;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + param_3 * 4 + 0x4a4) \u0026 8) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + param_3 * 8 + 0x324;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + param_3 * 4 + 0x4a4) \u0026 0x10) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + (param_3 + 0x7b) * 8;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + param_3 * 4 + 0x4a4) \u0026 0x20) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + (param_3 + 0x7e) * 8;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + param_3 * 4 + 0x4a4) \u0026 0x40) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + (param_3 + 0x72) * 8;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + param_3 * 4 + 0x4a4) \u0026 0x200) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + (param_3 + 0x78) * 8;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + param_3 * 4 + 0x4a4) \u0026 2) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_3 * 0xc + param_1 + 0x33c;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + param_3 * 4 + 0x4a4) \u0026 0x400) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n      uVar3 \u003d FUN_43ad3ec2(param_2);\n      FUN_43ad42b2(iVar5,uVar3);\n    }\n    iVar5 \u003d param_1 + (param_3 + 0x75) * 8;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + param_3 * 4 + 0x4a4) \u0026 0x100) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + param_3 * 8 + 0x2f4;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + param_3 * 4 + 0x4a4) \u0026 0x800) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + (param_3 + 0x6f) * 8;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + param_3 * 4 + 0x4a4) \u0026 4) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + param_3 * 8 + 0x2dc;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + param_3 * 4 + 0x4a4) \u0026 0x80) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n  }\n  iVar1 \u003d FUN_43ad3ec6(param_2);\n  if (iVar1 !\u003d 0) {\n    if (param_3 \u003d\u003d 2) {\n      uVar2 \u003d 0xf3200000;\n    }\n    else {\n      uVar2 \u003d FUN_43acee62(iVar1 + 4);\n    }\n    iVar5 \u003d param_1 + param_3 * 8;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + param_3 * 4 + 0x4a4) \u0026 0x20000) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + (param_3 + 3) * 8;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + param_3 * 4 + 0x4a4) \u0026 0x40000) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + (param_3 + 6) * 8;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + param_3 * 4 + 0x4a4) \u0026 0x80000) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + (param_3 + 9) * 8;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + param_3 * 4 + 0x4a4) \u0026 0x10000) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n  }\n  iVar1 \u003d FUN_43ad3eca(param_2);\n  if (iVar1 !\u003d 0) {\n    if (param_3 \u003d\u003d 2) {\n      uVar2 \u003d 0xf3200000;\n    }\n    else {\n      uVar2 \u003d FUN_43acee62(iVar1 + 4);\n    }\n    iVar5 \u003d param_3 * 0xc + param_1 + 0x60;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + param_3 * 4 + 0x4a4) \u0026 0x100000) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n      FUN_43ad429e(iVar5,param_2);\n    }\n  }\n  iVar1 \u003d FUN_43ad3ece(param_2);\n  if (iVar1 !\u003d 0) {\n    if (param_3 \u003d\u003d 2) {\n      uVar2 \u003d 0xf3200000;\n    }\n    else {\n      uVar2 \u003d FUN_43acee62(iVar1 + 4);\n    }\n    iVar5 \u003d param_1 + param_3 * 8 + 0x114;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + param_3 * 4 + 0x4a4) \u0026 0x200000) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n  }\n  iVar1 \u003d FUN_43ad3ed2(param_2);\n  if (iVar1 !\u003d 0) {\n    if (param_3 \u003d\u003d 2) {\n      uVar2 \u003d 0xf3200000;\n    }\n    else {\n      uVar2 \u003d FUN_43acee62(iVar1 + 4);\n    }\n    iVar5 \u003d param_1 + param_3 * 8 + 0x84;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + param_3 * 4 + 0x4a4) \u0026 0x4000000) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + param_3 * 8 + 0xfc;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + param_3 * 4 + 0x4a4) \u0026 0x8000000) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + param_3 * 8 + 0x9c;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + param_3 * 4 + 0x4a4) \u0026 0x10000000) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + param_3 * 8 + 0xb4;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + param_3 * 4 + 0x4a4) \u0026 0x20000000) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + param_3 * 8 + 0xcc;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + param_3 * 4 + 0x4a4) \u0026 0x1000000) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + param_3 * 8 + 0xe4;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + param_3 * 4 + 0x4a4) \u0026 0x2000000) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n  }\n  iVar1 \u003d FUN_43ad3ed6(param_2);\n  if (iVar1 !\u003d 0) {\n    if (param_3 \u003d\u003d 2) {\n      uVar2 \u003d 0xf3200000;\n    }\n    else {\n      uVar2 \u003d FUN_43acee62(iVar1 + 4);\n    }\n    iVar5 \u003d param_1 + (param_3 + 0x87) * 8;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + (param_3 + 300) * 4) \u0026 0x10) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + (param_3 + 0x84) * 8;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + (param_3 + 300) * 4) \u0026 8) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + (param_3 + 0x81) * 8;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + (param_3 + 300) * 4) \u0026 4) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + (param_3 + 0x8d) * 8;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + (param_3 + 300) * 4) \u0026 2) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + (param_3 + 0x8a) * 8;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + (param_3 + 300) * 4) \u0026 1) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n  }\n  iVar1 \u003d FUN_43ad3eda(param_2);\n  if (iVar1 !\u003d 0) {\n    if (param_3 \u003d\u003d 2) {\n      uVar2 \u003d 0xf3200000;\n    }\n    else {\n      uVar2 \u003d FUN_43acee62(iVar1 + 4);\n    }\n    iVar5 \u003d param_3 * 0x38 + param_1 + 0x1bc;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + (param_3 + 300) * 4) \u0026 0x4000) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + param_3 * 8 + 0x144;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + (param_3 + 300) * 4) \u0026 0x100) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + param_3 * 8 + 0x174;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + (param_3 + 300) * 4) \u0026 0x800) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + param_3 * 8 + 0x18c;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + (param_3 + 300) * 4) \u0026 0x400) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + param_3 * 8 + 0x294;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + (param_3 + 300) * 4) \u0026 0x1000) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + param_3 * 8 + 0x15c;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + (param_3 + 300) * 4) \u0026 0x80000) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + param_3 * 8 + 0x2c4;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + (param_3 + 300) * 4) \u0026 0x40000) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + param_3 * 8 + 300;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + (param_3 + 300) * 4) \u0026 0x2000) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + param_3 * 8 + 0x264;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + (param_3 + 300) * 4) \u0026 0x200) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + param_3 * 8 + 0x27c;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + (param_3 + 300) * 4) \u0026 0x10000) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + param_3 * 8 + 0x1a4;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + (param_3 + 300) * 4) \u0026 0x8000) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n    iVar5 \u003d param_1 + param_3 * 8 + 0x2ac;\n    uVar3 \u003d FUN_43acee62(iVar5);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar3);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + (param_3 + 300) * 4) \u0026 0x20000) \u003d\u003d 0)) {\n      FUN_43acee66(iVar5,uVar2);\n    }\n  }\n  if (((param_3 \u003d\u003d 2) \u0026\u0026 (uVar4 \u003d FUN_43ad3ebe(param_2), uVar4 \u003c 0x17)) \u0026\u0026\n     ((1 \u003c\u003c (uVar4 \u0026 0xff) \u0026 0x700400U) !\u003d 0)) {\n    uVar2 \u003d FUN_43acee62(param_1 + 0x480);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar2);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + 0x4b8) \u0026 0x8000000) \u003d\u003d 0)) {\n      FUN_43acee66(param_1 + 0x480,0xf300c000);\n    }\n    uVar2 \u003d FUN_43acee62(param_1 + 0x488);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar2);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + 0x4b8) \u0026 0x2000000) \u003d\u003d 0)) {\n      FUN_43acee66(param_1 + 0x488,0xf300d1c0);\n    }\n    uVar2 \u003d FUN_43acee62(param_1 + 0x490);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar2);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + 0x4b8) \u0026 0x4000000) \u003d\u003d 0)) {\n      FUN_43acee66(param_1 + 0x490,0xf300c9d0);\n    }\n    uVar2 \u003d FUN_43acee62(param_1 + 0x498);\n    iVar1 \u003d FUN_43ad4ab8(param_1,uVar2);\n    if ((iVar1 \u003d\u003d 0) \u0026\u0026 ((*(uint *)(param_1 + 0x4b8) \u0026 0x1000000) \u003d\u003d 0)) {\n      FUN_43acee66(param_1 + 0x498,0xf3020f38);\n      return;\n    }\n  }\n  return;\n}\n\n",
+      "listing": [
+        "436c85a8 push {r4,r5,r6,r7,r8,lr}",
+        "436c85ac mov r4,r0",
+        "436c85ae mov r0,r1",
+        "436c85b0 mov r5,r1",
+        "436c85b2 mov r6,r2",
+        "436c85b4 bl 0x43ad3ec2",
+        "436c85b8 cmp r0,#0x0",
+        "436c85ba beq.w 0x436c8808",
+        "436c85be cmp r6,#0x2",
+        "436c85c0 beq 0x436c85cc",
+        "436c85c2 adds r0,#0x4",
+        "436c85c4 bl 0x43acee62",
+        "436c85c8 mov r7,r0",
+        "436c85ca b 0x436c85ce",
+        "436c85cc ldr r7,[0x436c8820]",
+        "436c85ce add.w r8,r6,#0x6c",
+        "436c85d2 add.w r8,r4,r8, lsl #0x3",
+        "436c85d6 mov r0,r8",
+        "436c85d8 bl 0x43acee62",
+        "436c85dc mov r1,r0",
+        "436c85de mov r0,r4",
+        "436c85e0 bl 0x43ad4ab8",
+        "436c85e4 cbnz r0,0x436c85fc",
+        "436c85e6 add.w r3,r4,r6, lsl #0x2",
+        "436c85ea ldr.w r3,[r3,#0x4a4]",
+        "436c85ee tst r3,#0x1",
+        "436c85f2 bne 0x436c85fc",
+        "436c85f4 mov r0,r8",
+        "436c85f6 mov r1,r7",
+        "436c85f8 bl 0x43acee66",
+        "436c85fc add.w r8,r4,r6, lsl #0x3",
+        "436c8600 add.w r8,r8,#0x30c",
+        "436c8604 mov r0,r8",
+        "436c8606 bl 0x43acee62",
+        "436c860a mov r1,r0",
+        "436c860c mov r0,r4",
+        "436c860e bl 0x43ad4ab8",
+        "436c8612 cbnz r0,0x436c862a",
+        "436c8614 add.w r3,r4,r6, lsl #0x2",
+        "436c8618 ldr.w r3,[r3,#0x4a4]",
+        "436c861c tst r3,#0x8",
+        "436c8620 bne 0x436c862a",
+        "436c8622 mov r0,r8",
+        "436c8624 mov r1,r7",
+        "436c8626 bl 0x43acee66",
+        "436c862a add.w r8,r4,r6, lsl #0x3",
+        "436c862e add.w r8,r8,#0x324",
+        "436c8632 mov r0,r8",
+        "436c8634 bl 0x43acee62",
+        "436c8638 mov r1,r0",
+        "436c863a mov r0,r4",
+        "436c863c bl 0x43ad4ab8",
+        "436c8640 cbnz r0,0x436c8658",
+        "436c8642 add.w r3,r4,r6, lsl #0x2",
+        "436c8646 ldr.w r3,[r3,#0x4a4]",
+        "436c864a tst r3,#0x10",
+        "436c864e bne 0x436c8658",
+        "436c8650 mov r0,r8",
+        "436c8652 mov r1,r7",
+        "436c8654 bl 0x43acee66",
+        "436c8658 add.w r8,r6,#0x7b",
+        "436c865c add.w r8,r4,r8, lsl #0x3",
+        "436c8660 mov r0,r8",
+        "436c8662 bl 0x43acee62",
+        "436c8666 mov r1,r0",
+        "436c8668 mov r0,r4",
+        "436c866a bl 0x43ad4ab8",
+        "436c866e cbnz r0,0x436c8686",
+        "436c8670 add.w r3,r4,r6, lsl #0x2",
+        "436c8674 ldr.w r3,[r3,#0x4a4]",
+        "436c8678 tst r3,#0x20",
+        "436c867c bne 0x436c8686",
+        "436c867e mov r0,r8",
+        "436c8680 mov r1,r7",
+        "436c8682 bl 0x43acee66",
+        "436c8686 add.w r8,r6,#0x7e",
+        "436c868a add.w r8,r4,r8, lsl #0x3",
+        "436c868e mov r0,r8",
+        "436c8690 bl 0x43acee62",
+        "436c8694 mov r1,r0",
+        "436c8696 mov r0,r4",
+        "436c8698 bl 0x43ad4ab8",
+        "436c869c cbnz r0,0x436c86b4",
+        "436c869e add.w r3,r4,r6, lsl #0x2",
+        "436c86a2 ldr.w r3,[r3,#0x4a4]",
+        "436c86a6 tst r3,#0x40",
+        "436c86aa bne 0x436c86b4",
+        "436c86ac mov r0,r8",
+        "436c86ae mov r1,r7",
+        "436c86b0 bl 0x43acee66",
+        "436c86b4 add.w r8,r6,#0x72",
+        "436c86b8 add.w r8,r4,r8, lsl #0x3",
+        "436c86bc mov r0,r8",
+        "436c86be bl 0x43acee62",
+        "436c86c2 mov r1,r0",
+        "436c86c4 mov r0,r4",
+        "436c86c6 bl 0x43ad4ab8",
+        "436c86ca cbnz r0,0x436c86e2",
+        "436c86cc add.w r3,r4,r6, lsl #0x2",
+        "436c86d0 ldr.w r3,[r3,#0x4a4]",
+        "436c86d4 tst r3,#0x200",
+        "436c86d8 bne 0x436c86e2",
+        "436c86da mov r0,r8",
+        "436c86dc mov r1,r7",
+        "436c86de bl 0x43acee66",
+        "436c86e2 add.w r8,r6,#0x78",
+        "436c86e6 add.w r8,r4,r8, lsl #0x3",
+        "436c86ea mov r0,r8",
+        "436c86ec bl 0x43acee62",
+        "436c86f0 mov r1,r0",
+        "436c86f2 mov r0,r4",
+        "436c86f4 bl 0x43ad4ab8",
+        "436c86f8 cbnz r0,0x436c8710",
+        "436c86fa add.w r3,r4,r6, lsl #0x2",
+        "436c86fe ldr.w r3,[r3,#0x4a4]",
+        "436c8702 tst r3,#0x2",
+        "436c8706 bne 0x436c8710",
+        "436c8708 mov r0,r8",
+        "436c870a mov r1,r7",
+        "436c870c bl 0x43acee66",
+        "436c8710 mov.w r8,#0xc",
+        "436c8714 mla r8,r8,r6,r4",
+        "436c8718 add.w r8,r8,#0x33c",
+        "436c871c mov r0,r8",
+        "436c871e bl 0x43acee62",
+        "436c8722 mov r1,r0",
+        "436c8724 mov r0,r4",
+        "436c8726 bl 0x43ad4ab8",
+        "436c872a cbnz r0,0x436c8750",
+        "436c872c add.w r3,r4,r6, lsl #0x2",
+        "436c8730 ldr.w r3,[r3,#0x4a4]",
+        "436c8734 tst r3,#0x400",
+        "436c8738 bne 0x436c8750",
+        "436c873a mov r1,r7",
+        "436c873c mov r0,r8",
+        "436c873e bl 0x43acee66",
+        "436c8742 mov r0,r5",
+        "436c8744 bl 0x43ad3ec2",
+        "436c8748 mov r1,r0",
+        "436c874a mov r0,r8",
+        "436c874c bl 0x43ad42b2",
+        "436c8750 add.w r8,r6,#0x75",
+        "436c8754 add.w r8,r4,r8, lsl #0x3",
+        "436c8758 mov r0,r8",
+        "436c875a bl 0x43acee62",
+        "436c875e mov r1,r0",
+        "436c8760 mov r0,r4",
+        "436c8762 bl 0x43ad4ab8",
+        "436c8766 cbnz r0,0x436c877e",
+        "436c8768 add.w r3,r4,r6, lsl #0x2",
+        "436c876c ldr.w r3,[r3,#0x4a4]",
+        "436c8770 tst r3,#0x100",
+        "436c8774 bne 0x436c877e",
+        "436c8776 mov r0,r8",
+        "436c8778 mov r1,r7",
+        "436c877a bl 0x43acee66",
+        "436c877e add.w r8,r4,r6, lsl #0x3",
+        "436c8782 add.w r8,r8,#0x2f4",
+        "436c8786 mov r0,r8",
+        "436c8788 bl 0x43acee62",
+        "436c878c mov r1,r0",
+        "436c878e mov r0,r4",
+        "436c8790 bl 0x43ad4ab8",
+        "436c8794 cbnz r0,0x436c87ac",
+        "436c8796 add.w r3,r4,r6, lsl #0x2",
+        "436c879a ldr.w r3,[r3,#0x4a4]",
+        "436c879e tst r3,#0x800",
+        "436c87a2 bne 0x436c87ac",
+        "436c87a4 mov r0,r8",
+        "436c87a6 mov r1,r7",
+        "436c87a8 bl 0x43acee66",
+        "436c87ac add.w r8,r6,#0x6f",
+        "436c87b0 add.w r8,r4,r8, lsl #0x3",
+        "436c87b4 mov r0,r8",
+        "436c87b6 bl 0x43acee62",
+        "436c87ba mov r1,r0",
+        "436c87bc mov r0,r4",
+        "436c87be bl 0x43ad4ab8",
+        "436c87c2 cbnz r0,0x436c87da",
+        "436c87c4 add.w r3,r4,r6, lsl #0x2",
+        "436c87c8 ldr.w r3,[r3,#0x4a4]",
+        "436c87cc tst r3,#0x4",
+        "436c87d0 bne 0x436c87da",
+        "436c87d2 mov r0,r8",
+        "436c87d4 mov r1,r7",
+        "436c87d6 bl 0x43acee66",
+        "436c87da add.w r8,r4,r6, lsl #0x3",
+        "436c87de add.w r8,r8,#0x2dc",
+        "436c87e2 mov r0,r8",
+        "436c87e4 bl 0x43acee62",
+        "436c87e8 mov r1,r0",
+        "436c87ea mov r0,r4",
+        "436c87ec bl 0x43ad4ab8",
+        "436c87f0 cbnz r0,0x436c8808",
+        "436c87f2 add.w r3,r4,r6, lsl #0x2",
+        "436c87f6 ldr.w r3,[r3,#0x4a4]",
+        "436c87fa tst r3,#0x80",
+        "436c87fe bne 0x436c8808",
+        "436c8800 mov r0,r8",
+        "436c8802 mov r1,r7",
+        "436c8804 bl 0x43acee66",
+        "436c8808 mov r0,r5",
+        "436c880a bl 0x43ad3ec6",
+        "436c880e cmp r0,#0x0",
+        "436c8810 beq 0x436c88da",
+        "436c8812 cmp r6,#0x2",
+        "436c8814 beq 0x436c8824",
+        "436c8816 adds r0,#0x4",
+        "436c8818 bl 0x43acee62",
+        "436c881c mov r7,r0",
+        "436c881e b 0x436c8826",
+        "436c8824 ldr r7,[0x436c8ab8]",
+        "436c8826 add.w r8,r4,r6, lsl #0x3",
+        "436c882a mov r0,r8",
+        "436c882c bl 0x43acee62",
+        "436c8830 mov r1,r0",
+        "436c8832 mov r0,r4",
+        "436c8834 bl 0x43ad4ab8",
+        "436c8838 cbnz r0,0x436c8850",
+        "436c883a add.w r3,r4,r6, lsl #0x2",
+        "436c883e ldr.w r3,[r3,#0x4a4]",
+        "436c8842 tst r3,#0x20000",
+        "436c8846 bne 0x436c8850",
+        "436c8848 mov r0,r8",
+        "436c884a mov r1,r7",
+        "436c884c bl 0x43acee66",
+        "436c8850 add.w r8,r6,#0x3",
+        "436c8854 add.w r8,r4,r8, lsl #0x3",
+        "436c8858 mov r0,r8",
+        "436c885a bl 0x43acee62",
+        "436c885e mov r1,r0",
+        "436c8860 mov r0,r4",
+        "436c8862 bl 0x43ad4ab8",
+        "436c8866 cbnz r0,0x436c887e",
+        "436c8868 add.w r3,r4,r6, lsl #0x2",
+        "436c886c ldr.w r3,[r3,#0x4a4]",
+        "436c8870 tst r3,#0x40000",
+        "436c8874 bne 0x436c887e",
+        "436c8876 mov r0,r8",
+        "436c8878 mov r1,r7",
+        "436c887a bl 0x43acee66",
+        "436c887e add.w r8,r6,#0x6",
+        "436c8882 add.w r8,r4,r8, lsl #0x3",
+        "436c8886 mov r0,r8",
+        "436c8888 bl 0x43acee62",
+        "436c888c mov r1,r0",
+        "436c888e mov r0,r4",
+        "436c8890 bl 0x43ad4ab8",
+        "436c8894 cbnz r0,0x436c88ac",
+        "436c8896 add.w r3,r4,r6, lsl #0x2",
+        "436c889a ldr.w r3,[r3,#0x4a4]",
+        "436c889e tst r3,#0x80000",
+        "436c88a2 bne 0x436c88ac",
+        "436c88a4 mov r0,r8",
+        "436c88a6 mov r1,r7",
+        "436c88a8 bl 0x43acee66",
+        "436c88ac add.w r8,r6,#0x9",
+        "436c88b0 add.w r8,r4,r8, lsl #0x3",
+        "436c88b4 mov r0,r8",
+        "436c88b6 bl 0x43acee62",
+        "436c88ba mov r1,r0",
+        "436c88bc mov r0,r4",
+        "436c88be bl 0x43ad4ab8",
+        "436c88c2 cbnz r0,0x436c88da",
+        "436c88c4 add.w r3,r4,r6, lsl #0x2",
+        "436c88c8 ldr.w r3,[r3,#0x4a4]",
+        "436c88cc tst r3,#0x10000",
+        "436c88d0 bne 0x436c88da",
+        "436c88d2 mov r0,r8",
+        "436c88d4 mov r1,r7",
+        "436c88d6 bl 0x43acee66",
+        "436c88da mov r0,r5",
+        "436c88dc bl 0x43ad3eca",
+        "436c88e0 cbz r0,0x436c892a",
+        "436c88e2 cmp r6,#0x2",
+        "436c88e4 beq 0x436c88f0",
+        "436c88e6 adds r0,#0x4",
+        "436c88e8 bl 0x43acee62",
+        "436c88ec mov r8,r0",
+        "436c88ee b 0x436c88f4",
+        "436c88f0 ldr.w r8,[0x436c8ab8]",
+        "436c88f4 movs r7,#0xc",
+        "436c88f6 mla r7,r7,r6,r4",
+        "436c88fa adds r7,#0x60",
+        "436c88fc mov r0,r7",
+        "436c88fe bl 0x43acee62",
+        "436c8902 mov r1,r0",
+        "436c8904 mov r0,r4",
+        "436c8906 bl 0x43ad4ab8",
+        "436c890a cbnz r0,0x436c892a",
+        "436c890c add.w r3,r4,r6, lsl #0x2",
+        "436c8910 ldr.w r3,[r3,#0x4a4]",
+        "436c8914 tst r3,#0x100000",
+        "436c8918 bne 0x436c892a",
+        "436c891a mov r0,r7",
+        "436c891c mov r1,r8",
+        "436c891e bl 0x43acee66",
+        "436c8922 mov r0,r7",
+        "436c8924 mov r1,r5",
+        "436c8926 bl 0x43ad429e",
+        "436c892a mov r0,r5",
+        "436c892c bl 0x43ad3ece",
+        "436c8930 cbz r0,0x436c8970",
+        "436c8932 cmp r6,#0x2",
+        "436c8934 beq 0x436c8940",
+        "436c8936 adds r0,#0x4",
+        "436c8938 bl 0x43acee62",
+        "436c893c mov r7,r0",
+        "436c893e b 0x436c8942",
+        "436c8940 ldr r7,[0x436c8ab8]",
+        "436c8942 add.w r8,r4,r6, lsl #0x3",
+        "436c8946 add.w r8,r8,#0x114",
+        "436c894a mov r0,r8",
+        "436c894c bl 0x43acee62",
+        "436c8950 mov r1,r0",
+        "436c8952 mov r0,r4",
+        "436c8954 bl 0x43ad4ab8",
+        "436c8958 cbnz r0,0x436c8970",
+        "436c895a add.w r3,r4,r6, lsl #0x2",
+        "436c895e ldr.w r3,[r3,#0x4a4]",
+        "436c8962 tst r3,#0x200000",
+        "436c8966 bne 0x436c8970",
+        "436c8968 mov r0,r8",
+        "436c896a mov r1,r7",
+        "436c896c bl 0x43acee66",
+        "436c8970 mov r0,r5",
+        "436c8972 bl 0x43ad3ed2",
+        "436c8976 cmp r0,#0x0",
+        "436c8978 beq.w 0x436c8aa0",
+        "436c897c cmp r6,#0x2",
+        "436c897e beq 0x436c898a",
+        "436c8980 adds r0,#0x4",
+        "436c8982 bl 0x43acee62",
+        "436c8986 mov r7,r0",
+        "436c8988 b 0x436c898c",
+        "436c898a ldr r7,[0x436c8ab8]",
+        "436c898c add.w r8,r4,r6, lsl #0x3",
+        "436c8990 add.w r8,r8,#0x84",
+        "436c8994 mov r0,r8",
+        "436c8996 bl 0x43acee62",
+        "436c899a mov r1,r0",
+        "436c899c mov r0,r4",
+        "436c899e bl 0x43ad4ab8",
+        "436c89a2 cbnz r0,0x436c89ba",
+        "436c89a4 add.w r3,r4,r6, lsl #0x2",
+        "436c89a8 ldr.w r3,[r3,#0x4a4]",
+        "436c89ac tst r3,#0x4000000",
+        "436c89b0 bne 0x436c89ba",
+        "436c89b2 mov r0,r8",
+        "436c89b4 mov r1,r7",
+        "436c89b6 bl 0x43acee66",
+        "436c89ba add.w r8,r4,r6, lsl #0x3",
+        "436c89be add.w r8,r8,#0xfc",
+        "436c89c2 mov r0,r8",
+        "436c89c4 bl 0x43acee62",
+        "436c89c8 mov r1,r0",
+        "436c89ca mov r0,r4",
+        "436c89cc bl 0x43ad4ab8",
+        "436c89d0 cbnz r0,0x436c89e8",
+        "436c89d2 add.w r3,r4,r6, lsl #0x2",
+        "436c89d6 ldr.w r3,[r3,#0x4a4]",
+        "436c89da tst r3,#0x8000000",
+        "436c89de bne 0x436c89e8",
+        "436c89e0 mov r0,r8",
+        "436c89e2 mov r1,r7",
+        "436c89e4 bl 0x43acee66",
+        "436c89e8 add.w r8,r4,r6, lsl #0x3",
+        "436c89ec add.w r8,r8,#0x9c",
+        "436c89f0 mov r0,r8",
+        "436c89f2 bl 0x43acee62",
+        "436c89f6 mov r1,r0",
+        "436c89f8 mov r0,r4",
+        "436c89fa bl 0x43ad4ab8",
+        "436c89fe cbnz r0,0x436c8a16",
+        "436c8a00 add.w r3,r4,r6, lsl #0x2",
+        "436c8a04 ldr.w r3,[r3,#0x4a4]",
+        "436c8a08 tst r3,#0x10000000",
+        "436c8a0c bne 0x436c8a16",
+        "436c8a0e mov r0,r8",
+        "436c8a10 mov r1,r7",
+        "436c8a12 bl 0x43acee66",
+        "436c8a16 add.w r8,r4,r6, lsl #0x3",
+        "436c8a1a add.w r8,r8,#0xb4",
+        "436c8a1e mov r0,r8",
+        "436c8a20 bl 0x43acee62",
+        "436c8a24 mov r1,r0",
+        "436c8a26 mov r0,r4",
+        "436c8a28 bl 0x43ad4ab8",
+        "436c8a2c cbnz r0,0x436c8a44",
+        "436c8a2e add.w r3,r4,r6, lsl #0x2",
+        "436c8a32 ldr.w r3,[r3,#0x4a4]",
+        "436c8a36 tst r3,#0x20000000",
+        "436c8a3a bne 0x436c8a44",
+        "436c8a3c mov r0,r8",
+        "436c8a3e mov r1,r7",
+        "436c8a40 bl 0x43acee66",
+        "436c8a44 add.w r8,r4,r6, lsl #0x3",
+        "436c8a48 add.w r8,r8,#0xcc",
+        "436c8a4c mov r0,r8",
+        "436c8a4e bl 0x43acee62",
+        "436c8a52 mov r1,r0",
+        "436c8a54 mov r0,r4",
+        "436c8a56 bl 0x43ad4ab8",
+        "436c8a5a cbnz r0,0x436c8a72",
+        "436c8a5c add.w r3,r4,r6, lsl #0x2",
+        "436c8a60 ldr.w r3,[r3,#0x4a4]",
+        "436c8a64 tst r3,#0x1000000",
+        "436c8a68 bne 0x436c8a72",
+        "436c8a6a mov r0,r8",
+        "436c8a6c mov r1,r7",
+        "436c8a6e bl 0x43acee66",
+        "436c8a72 add.w r8,r4,r6, lsl #0x3",
+        "436c8a76 add.w r8,r8,#0xe4",
+        "436c8a7a mov r0,r8",
+        "436c8a7c bl 0x43acee62",
+        "436c8a80 mov r1,r0",
+        "436c8a82 mov r0,r4",
+        "436c8a84 bl 0x43ad4ab8",
+        "436c8a88 cbnz r0,0x436c8aa0",
+        "436c8a8a add.w r3,r4,r6, lsl #0x2",
+        "436c8a8e ldr.w r3,[r3,#0x4a4]",
+        "436c8a92 tst r3,#0x2000000",
+        "436c8a96 bne 0x436c8aa0",
+        "436c8a98 mov r0,r8",
+        "436c8a9a mov r1,r7",
+        "436c8a9c bl 0x43acee66",
+        "436c8aa0 mov r0,r5",
+        "436c8aa2 bl 0x43ad3ed6",
+        "436c8aa6 cmp r0,#0x0",
+        "436c8aa8 beq 0x436c8ba4",
+        "436c8aaa cmp r6,#0x2",
+        "436c8aac beq 0x436c8abc",
+        "436c8aae adds r0,#0x4",
+        "436c8ab0 bl 0x43acee62",
+        "436c8ab4 mov r7,r0",
+        "436c8ab6 b 0x436c8abe",
+        "436c8abc ldr r7,[0x436c8bc0]",
+        "436c8abe add.w r8,r6,#0x87",
+        "436c8ac2 add.w r8,r4,r8, lsl #0x3",
+        "436c8ac6 mov r0,r8",
+        "436c8ac8 bl 0x43acee62",
+        "436c8acc mov r1,r0",
+        "436c8ace mov r0,r4",
+        "436c8ad0 bl 0x43ad4ab8",
+        "436c8ad4 cbnz r0,0x436c8aec",
+        "436c8ad6 add.w r3,r6,#0x12c",
+        "436c8ada ldr.w r3,[r4,r3,lsl #0x2]",
+        "436c8ade tst r3,#0x10",
+        "436c8ae2 bne 0x436c8aec",
+        "436c8ae4 mov r0,r8",
+        "436c8ae6 mov r1,r7",
+        "436c8ae8 bl 0x43acee66",
+        "436c8aec add.w r8,r6,#0x84",
+        "436c8af0 add.w r8,r4,r8, lsl #0x3",
+        "436c8af4 mov r0,r8",
+        "436c8af6 bl 0x43acee62",
+        "436c8afa mov r1,r0",
+        "436c8afc mov r0,r4",
+        "436c8afe bl 0x43ad4ab8",
+        "436c8b02 cbnz r0,0x436c8b1a",
+        "436c8b04 add.w r3,r6,#0x12c",
+        "436c8b08 ldr.w r3,[r4,r3,lsl #0x2]",
+        "436c8b0c tst r3,#0x8",
+        "436c8b10 bne 0x436c8b1a",
+        "436c8b12 mov r0,r8",
+        "436c8b14 mov r1,r7",
+        "436c8b16 bl 0x43acee66",
+        "436c8b1a add.w r8,r6,#0x81",
+        "436c8b1e add.w r8,r4,r8, lsl #0x3",
+        "436c8b22 mov r0,r8",
+        "436c8b24 bl 0x43acee62",
+        "436c8b28 mov r1,r0",
+        "436c8b2a mov r0,r4",
+        "436c8b2c bl 0x43ad4ab8",
+        "436c8b30 cbnz r0,0x436c8b48",
+        "436c8b32 add.w r3,r6,#0x12c",
+        "436c8b36 ldr.w r3,[r4,r3,lsl #0x2]",
+        "436c8b3a tst r3,#0x4",
+        "436c8b3e bne 0x436c8b48",
+        "436c8b40 mov r0,r8",
+        "436c8b42 mov r1,r7",
+        "436c8b44 bl 0x43acee66",
+        "436c8b48 add.w r8,r6,#0x8d",
+        "436c8b4c add.w r8,r4,r8, lsl #0x3",
+        "436c8b50 mov r0,r8",
+        "436c8b52 bl 0x43acee62",
+        "436c8b56 mov r1,r0",
+        "436c8b58 mov r0,r4",
+        "436c8b5a bl 0x43ad4ab8",
+        "436c8b5e cbnz r0,0x436c8b76",
+        "436c8b60 add.w r3,r6,#0x12c",
+        "436c8b64 ldr.w r3,[r4,r3,lsl #0x2]",
+        "436c8b68 tst r3,#0x2",
+        "436c8b6c bne 0x436c8b76",
+        "436c8b6e mov r0,r8",
+        "436c8b70 mov r1,r7",
+        "436c8b72 bl 0x43acee66",
+        "436c8b76 add.w r8,r6,#0x8a",
+        "436c8b7a add.w r8,r4,r8, lsl #0x3",
+        "436c8b7e mov r0,r8",
+        "436c8b80 bl 0x43acee62",
+        "436c8b84 mov r1,r0",
+        "436c8b86 mov r0,r4",
+        "436c8b88 bl 0x43ad4ab8",
+        "436c8b8c cbnz r0,0x436c8ba4",
+        "436c8b8e add.w r3,r6,#0x12c",
+        "436c8b92 ldr.w r3,[r4,r3,lsl #0x2]",
+        "436c8b96 tst r3,#0x1",
+        "436c8b9a bne 0x436c8ba4",
+        "436c8b9c mov r0,r8",
+        "436c8b9e mov r1,r7",
+        "436c8ba0 bl 0x43acee66",
+        "436c8ba4 mov r0,r5",
+        "436c8ba6 bl 0x43ad3eda",
+        "436c8baa cmp r0,#0x0",
+        "436c8bac beq.w 0x436c8df2",
+        "436c8bb0 cmp r6,#0x2",
+        "436c8bb2 beq 0x436c8bc4",
+        "436c8bb4 adds r0,#0x4",
+        "436c8bb6 bl 0x43acee62",
+        "436c8bba mov r7,r0",
+        "436c8bbc b 0x436c8bc6",
+        "436c8bc4 ldr r7,[0x436c8e84]",
+        "436c8bc6 mov.w r8,#0x38",
+        "436c8bca mla r8,r8,r6,r4",
+        "436c8bce add.w r8,r8,#0x1bc",
+        "436c8bd2 mov r0,r8",
+        "436c8bd4 bl 0x43acee62",
+        "436c8bd8 mov r1,r0",
+        "436c8bda mov r0,r4",
+        "436c8bdc bl 0x43ad4ab8",
+        "436c8be0 cbnz r0,0x436c8bf8",
+        "436c8be2 add.w r3,r6,#0x12c",
+        "436c8be6 ldr.w r3,[r4,r3,lsl #0x2]",
+        "436c8bea tst r3,#0x4000",
+        "436c8bee bne 0x436c8bf8",
+        "436c8bf0 mov r0,r8",
+        "436c8bf2 mov r1,r7",
+        "436c8bf4 bl 0x43acee66",
+        "436c8bf8 add.w r8,r4,r6, lsl #0x3",
+        "436c8bfc add.w r8,r8,#0x144",
+        "436c8c00 mov r0,r8",
+        "436c8c02 bl 0x43acee62",
+        "436c8c06 mov r1,r0",
+        "436c8c08 mov r0,r4",
+        "436c8c0a bl 0x43ad4ab8",
+        "436c8c0e cbnz r0,0x436c8c26",
+        "436c8c10 add.w r3,r6,#0x12c",
+        "436c8c14 ldr.w r3,[r4,r3,lsl #0x2]",
+        "436c8c18 tst r3,#0x100",
+        "436c8c1c bne 0x436c8c26",
+        "436c8c1e mov r0,r8",
+        "436c8c20 mov r1,r7",
+        "436c8c22 bl 0x43acee66",
+        "436c8c26 add.w r8,r4,r6, lsl #0x3",
+        "436c8c2a add.w r8,r8,#0x174",
+        "436c8c2e mov r0,r8",
+        "436c8c30 bl 0x43acee62",
+        "436c8c34 mov r1,r0",
+        "436c8c36 mov r0,r4",
+        "436c8c38 bl 0x43ad4ab8",
+        "436c8c3c cbnz r0,0x436c8c54",
+        "436c8c3e add.w r3,r6,#0x12c",
+        "436c8c42 ldr.w r3,[r4,r3,lsl #0x2]",
+        "436c8c46 tst r3,#0x800",
+        "436c8c4a bne 0x436c8c54",
+        "436c8c4c mov r0,r8",
+        "436c8c4e mov r1,r7",
+        "436c8c50 bl 0x43acee66",
+        "436c8c54 add.w r8,r4,r6, lsl #0x3",
+        "436c8c58 add.w r8,r8,#0x18c",
+        "436c8c5c mov r0,r8",
+        "436c8c5e bl 0x43acee62",
+        "436c8c62 mov r1,r0",
+        "436c8c64 mov r0,r4",
+        "436c8c66 bl 0x43ad4ab8",
+        "436c8c6a cbnz r0,0x436c8c82",
+        "436c8c6c add.w r3,r6,#0x12c",
+        "436c8c70 ldr.w r3,[r4,r3,lsl #0x2]",
+        "436c8c74 tst r3,#0x400",
+        "436c8c78 bne 0x436c8c82",
+        "436c8c7a mov r0,r8",
+        "436c8c7c mov r1,r7",
+        "436c8c7e bl 0x43acee66",
+        "436c8c82 add.w r8,r4,r6, lsl #0x3",
+        "436c8c86 add.w r8,r8,#0x294",
+        "436c8c8a mov r0,r8",
+        "436c8c8c bl 0x43acee62",
+        "436c8c90 mov r1,r0",
+        "436c8c92 mov r0,r4",
+        "436c8c94 bl 0x43ad4ab8",
+        "436c8c98 cbnz r0,0x436c8cb0",
+        "436c8c9a add.w r3,r6,#0x12c",
+        "436c8c9e ldr.w r3,[r4,r3,lsl #0x2]",
+        "436c8ca2 tst r3,#0x1000",
+        "436c8ca6 bne 0x436c8cb0",
+        "436c8ca8 mov r0,r8",
+        "436c8caa mov r1,r7",
+        "436c8cac bl 0x43acee66",
+        "436c8cb0 add.w r8,r4,r6, lsl #0x3",
+        "436c8cb4 add.w r8,r8,#0x15c",
+        "436c8cb8 mov r0,r8",
+        "436c8cba bl 0x43acee62",
+        "436c8cbe mov r1,r0",
+        "436c8cc0 mov r0,r4",
+        "436c8cc2 bl 0x43ad4ab8",
+        "436c8cc6 cbnz r0,0x436c8cde",
+        "436c8cc8 add.w r3,r6,#0x12c",
+        "436c8ccc ldr.w r3,[r4,r3,lsl #0x2]",
+        "436c8cd0 tst r3,#0x80000",
+        "436c8cd4 bne 0x436c8cde",
+        "436c8cd6 mov r0,r8",
+        "436c8cd8 mov r1,r7",
+        "436c8cda bl 0x43acee66",
+        "436c8cde add.w r8,r4,r6, lsl #0x3",
+        "436c8ce2 add.w r8,r8,#0x2c4",
+        "436c8ce6 mov r0,r8",
+        "436c8ce8 bl 0x43acee62",
+        "436c8cec mov r1,r0",
+        "436c8cee mov r0,r4",
+        "436c8cf0 bl 0x43ad4ab8",
+        "436c8cf4 cbnz r0,0x436c8d0c",
+        "436c8cf6 add.w r3,r6,#0x12c",
+        "436c8cfa ldr.w r3,[r4,r3,lsl #0x2]",
+        "436c8cfe tst r3,#0x40000",
+        "436c8d02 bne 0x436c8d0c",
+        "436c8d04 mov r0,r8",
+        "436c8d06 mov r1,r7",
+        "436c8d08 bl 0x43acee66",
+        "436c8d0c add.w r8,r4,r6, lsl #0x3",
+        "436c8d10 add.w r8,r8,#0x12c",
+        "436c8d14 mov r0,r8",
+        "436c8d16 bl 0x43acee62",
+        "436c8d1a mov r1,r0",
+        "436c8d1c mov r0,r4",
+        "436c8d1e bl 0x43ad4ab8",
+        "436c8d22 cbnz r0,0x436c8d3a",
+        "436c8d24 add.w r3,r6,#0x12c",
+        "436c8d28 ldr.w r3,[r4,r3,lsl #0x2]",
+        "436c8d2c tst r3,#0x2000",
+        "436c8d30 bne 0x436c8d3a",
+        "436c8d32 mov r0,r8",
+        "436c8d34 mov r1,r7",
+        "436c8d36 bl 0x43acee66",
+        "436c8d3a add.w r8,r4,r6, lsl #0x3",
+        "436c8d3e add.w r8,r8,#0x264",
+        "436c8d42 mov r0,r8",
+        "436c8d44 bl 0x43acee62",
+        "436c8d48 mov r1,r0",
+        "436c8d4a mov r0,r4",
+        "436c8d4c bl 0x43ad4ab8",
+        "436c8d50 cbnz r0,0x436c8d68",
+        "436c8d52 add.w r3,r6,#0x12c",
+        "436c8d56 ldr.w r3,[r4,r3,lsl #0x2]",
+        "436c8d5a tst r3,#0x200",
+        "436c8d5e bne 0x436c8d68",
+        "436c8d60 mov r0,r8",
+        "436c8d62 mov r1,r7",
+        "436c8d64 bl 0x43acee66",
+        "436c8d68 add.w r8,r4,r6, lsl #0x3",
+        "436c8d6c add.w r8,r8,#0x27c",
+        "436c8d70 mov r0,r8",
+        "436c8d72 bl 0x43acee62",
+        "436c8d76 mov r1,r0",
+        "436c8d78 mov r0,r4",
+        "436c8d7a bl 0x43ad4ab8",
+        "436c8d7e cbnz r0,0x436c8d96",
+        "436c8d80 add.w r3,r6,#0x12c",
+        "436c8d84 ldr.w r3,[r4,r3,lsl #0x2]",
+        "436c8d88 tst r3,#0x10000",
+        "436c8d8c bne 0x436c8d96",
+        "436c8d8e mov r0,r8",
+        "436c8d90 mov r1,r7",
+        "436c8d92 bl 0x43acee66",
+        "436c8d96 add.w r8,r4,r6, lsl #0x3",
+        "436c8d9a add.w r8,r8,#0x1a4",
+        "436c8d9e mov r0,r8",
+        "436c8da0 bl 0x43acee62",
+        "436c8da4 mov r1,r0",
+        "436c8da6 mov r0,r4",
+        "436c8da8 bl 0x43ad4ab8",
+        "436c8dac cbnz r0,0x436c8dc4",
+        "436c8dae add.w r3,r6,#0x12c",
+        "436c8db2 ldr.w r3,[r4,r3,lsl #0x2]",
+        "436c8db6 tst r3,#0x8000",
+        "436c8dba bne 0x436c8dc4",
+        "436c8dbc mov r0,r8",
+        "436c8dbe mov r1,r7",
+        "436c8dc0 bl 0x43acee66",
+        "436c8dc4 add.w r8,r4,r6, lsl #0x3",
+        "436c8dc8 add.w r8,r8,#0x2ac",
+        "436c8dcc mov r0,r8",
+        "436c8dce bl 0x43acee62",
+        "436c8dd2 mov r1,r0",
+        "436c8dd4 mov r0,r4",
+        "436c8dd6 bl 0x43ad4ab8",
+        "436c8dda cbnz r0,0x436c8df2",
+        "436c8ddc add.w r3,r6,#0x12c",
+        "436c8de0 ldr.w r3,[r4,r3,lsl #0x2]",
+        "436c8de4 tst r3,#0x20000",
+        "436c8de8 bne 0x436c8df2",
+        "436c8dea mov r0,r8",
+        "436c8dec mov r1,r7",
+        "436c8dee bl 0x43acee66",
+        "436c8df2 cmp r6,#0x2",
+        "436c8df4 bne 0x436c8ec2",
+        "436c8df6 mov r0,r5",
+        "436c8df8 bl 0x43ad3ebe",
+        "436c8dfc cmp r0,#0x16",
+        "436c8dfe bhi 0x436c8ec2",
+        "436c8e00 movs r3,#0x1",
+        "436c8e02 lsls.w r0,r3,r0",
+        "436c8e06 ldr r3,[0x436c8e88]",
+        "436c8e08 and.w r3,r0,r3",
+        "436c8e0c cmp r3,#0x0",
+        "436c8e0e beq 0x436c8ec2",
+        "436c8e10 add.w r5,r4,#0x480",
+        "436c8e14 mov r0,r5",
+        "436c8e16 bl 0x43acee62",
+        "436c8e1a mov r1,r0",
+        "436c8e1c mov r0,r4",
+        "436c8e1e bl 0x43ad4ab8",
+        "436c8e22 cbnz r0,0x436c8e36",
+        "436c8e24 ldr.w r3,[r4,#0x4b8]",
+        "436c8e28 tst r3,#0x8000000",
+        "436c8e2c bne 0x436c8e36",
+        "436c8e2e mov r0,r5",
+        "436c8e30 ldr r1,[0x436c8e8c]",
+        "436c8e32 bl 0x43acee66",
+        "436c8e36 add.w r5,r4,#0x488",
+        "436c8e3a mov r0,r5",
+        "436c8e3c bl 0x43acee62",
+        "436c8e40 mov r1,r0",
+        "436c8e42 mov r0,r4",
+        "436c8e44 bl 0x43ad4ab8",
+        "436c8e48 cbnz r0,0x436c8e5c",
+        "436c8e4a ldr.w r3,[r4,#0x4b8]",
+        "436c8e4e tst r3,#0x2000000",
+        "436c8e52 bne 0x436c8e5c",
+        "436c8e54 mov r0,r5",
+        "436c8e56 ldr r1,[0x436c8e90]",
+        "436c8e58 bl 0x43acee66",
+        "436c8e5c add.w r5,r4,#0x490",
+        "436c8e60 mov r0,r5",
+        "436c8e62 bl 0x43acee62",
+        "436c8e66 mov r1,r0",
+        "436c8e68 mov r0,r4",
+        "436c8e6a bl 0x43ad4ab8",
+        "436c8e6e cbnz r0,0x436c8e98",
+        "436c8e70 ldr.w r3,[r4,#0x4b8]",
+        "436c8e74 tst r3,#0x4000000",
+        "436c8e78 bne 0x436c8e98",
+        "436c8e7a mov r0,r5",
+        "436c8e7c ldr r1,[0x436c8e94]",
+        "436c8e7e bl 0x43acee66",
+        "436c8e82 b 0x436c8e98",
+        "436c8e98 add.w r5,r4,#0x498",
+        "436c8e9c mov r0,r5",
+        "436c8e9e bl 0x43acee62",
+        "436c8ea2 mov r1,r0",
+        "436c8ea4 mov r0,r4",
+        "436c8ea6 bl 0x43ad4ab8",
+        "436c8eaa cbnz r0,0x436c8ec2",
+        "436c8eac ldr.w r3,[r4,#0x4b8]",
+        "436c8eb0 tst r3,#0x1000000",
+        "436c8eb4 bne 0x436c8ec2",
+        "436c8eb6 mov r0,r5",
+        "436c8eb8 ldr r1,[0x436c8ec8]",
+        "436c8eba pop.w {r4,r5,r6,r7,r8,lr}",
+        "436c8ebe b.w 0x43acee66",
+        "436c8ec2 pop.w {r4,r5,r6,r7,r8,pc}"
+      ],
+      "calls_and_jumps": [
+        {
+          "site": "436c85b4",
+          "target": "43ad3ec2",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c85ba",
+          "target": "436c8808",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c85c0",
+          "target": "436c85cc",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c85c4",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c85ca",
+          "target": "436c85ce",
+          "type": "UNCONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c85d8",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c85e0",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c85e4",
+          "target": "436c85fc",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c85f2",
+          "target": "436c85fc",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c85f8",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8606",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c860e",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8612",
+          "target": "436c862a",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8620",
+          "target": "436c862a",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8626",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8634",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c863c",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8640",
+          "target": "436c8658",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c864e",
+          "target": "436c8658",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8654",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8662",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c866a",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c866e",
+          "target": "436c8686",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c867c",
+          "target": "436c8686",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8682",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8690",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8698",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c869c",
+          "target": "436c86b4",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c86aa",
+          "target": "436c86b4",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c86b0",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c86be",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c86c6",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c86ca",
+          "target": "436c86e2",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c86d8",
+          "target": "436c86e2",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c86de",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c86ec",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c86f4",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c86f8",
+          "target": "436c8710",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8706",
+          "target": "436c8710",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c870c",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c871e",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8726",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c872a",
+          "target": "436c8750",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8738",
+          "target": "436c8750",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c873e",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8744",
+          "target": "43ad3ec2",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c874c",
+          "target": "43ad42b2",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c875a",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8762",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8766",
+          "target": "436c877e",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8774",
+          "target": "436c877e",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c877a",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8788",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8790",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8794",
+          "target": "436c87ac",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c87a2",
+          "target": "436c87ac",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c87a8",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c87b6",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c87be",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c87c2",
+          "target": "436c87da",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c87d0",
+          "target": "436c87da",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c87d6",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c87e4",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c87ec",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c87f0",
+          "target": "436c8808",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c87fe",
+          "target": "436c8808",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8804",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c880a",
+          "target": "43ad3ec6",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8810",
+          "target": "436c88da",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8814",
+          "target": "436c8824",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8818",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c881e",
+          "target": "436c8826",
+          "type": "UNCONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c882c",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8834",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8838",
+          "target": "436c8850",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8846",
+          "target": "436c8850",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c884c",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c885a",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8862",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8866",
+          "target": "436c887e",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8874",
+          "target": "436c887e",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c887a",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8888",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8890",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8894",
+          "target": "436c88ac",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c88a2",
+          "target": "436c88ac",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c88a8",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c88b6",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c88be",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c88c2",
+          "target": "436c88da",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c88d0",
+          "target": "436c88da",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c88d6",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c88dc",
+          "target": "43ad3eca",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c88e0",
+          "target": "436c892a",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c88e4",
+          "target": "436c88f0",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c88e8",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c88ee",
+          "target": "436c88f4",
+          "type": "UNCONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c88fe",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8906",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c890a",
+          "target": "436c892a",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8918",
+          "target": "436c892a",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c891e",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8926",
+          "target": "43ad429e",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c892c",
+          "target": "43ad3ece",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8930",
+          "target": "436c8970",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8934",
+          "target": "436c8940",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8938",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c893e",
+          "target": "436c8942",
+          "type": "UNCONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c894c",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8954",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8958",
+          "target": "436c8970",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8966",
+          "target": "436c8970",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c896c",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8972",
+          "target": "43ad3ed2",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8978",
+          "target": "436c8aa0",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c897e",
+          "target": "436c898a",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8982",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8988",
+          "target": "436c898c",
+          "type": "UNCONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8996",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c899e",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c89a2",
+          "target": "436c89ba",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c89b0",
+          "target": "436c89ba",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c89b6",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c89c4",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c89cc",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c89d0",
+          "target": "436c89e8",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c89de",
+          "target": "436c89e8",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c89e4",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c89f2",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c89fa",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c89fe",
+          "target": "436c8a16",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8a0c",
+          "target": "436c8a16",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8a12",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8a20",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8a28",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8a2c",
+          "target": "436c8a44",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8a3a",
+          "target": "436c8a44",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8a40",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8a4e",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8a56",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8a5a",
+          "target": "436c8a72",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8a68",
+          "target": "436c8a72",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8a6e",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8a7c",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8a84",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8a88",
+          "target": "436c8aa0",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8a96",
+          "target": "436c8aa0",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8a9c",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8aa2",
+          "target": "43ad3ed6",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8aa8",
+          "target": "436c8ba4",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8aac",
+          "target": "436c8abc",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8ab0",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8ab6",
+          "target": "436c8abe",
+          "type": "UNCONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8ac8",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8ad0",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8ad4",
+          "target": "436c8aec",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8ae2",
+          "target": "436c8aec",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8ae8",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8af6",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8afe",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8b02",
+          "target": "436c8b1a",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8b10",
+          "target": "436c8b1a",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8b16",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8b24",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8b2c",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8b30",
+          "target": "436c8b48",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8b3e",
+          "target": "436c8b48",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8b44",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8b52",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8b5a",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8b5e",
+          "target": "436c8b76",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8b6c",
+          "target": "436c8b76",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8b72",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8b80",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8b88",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8b8c",
+          "target": "436c8ba4",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8b9a",
+          "target": "436c8ba4",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8ba0",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8ba6",
+          "target": "43ad3eda",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8bac",
+          "target": "436c8df2",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8bb2",
+          "target": "436c8bc4",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8bb6",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8bbc",
+          "target": "436c8bc6",
+          "type": "UNCONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8bd4",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8bdc",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8be0",
+          "target": "436c8bf8",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8bee",
+          "target": "436c8bf8",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8bf4",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8c02",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8c0a",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8c0e",
+          "target": "436c8c26",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8c1c",
+          "target": "436c8c26",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8c22",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8c30",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8c38",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8c3c",
+          "target": "436c8c54",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8c4a",
+          "target": "436c8c54",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8c50",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8c5e",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8c66",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8c6a",
+          "target": "436c8c82",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8c78",
+          "target": "436c8c82",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8c7e",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8c8c",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8c94",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8c98",
+          "target": "436c8cb0",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8ca6",
+          "target": "436c8cb0",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8cac",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8cba",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8cc2",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8cc6",
+          "target": "436c8cde",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8cd4",
+          "target": "436c8cde",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8cda",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8ce8",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8cf0",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8cf4",
+          "target": "436c8d0c",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8d02",
+          "target": "436c8d0c",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8d08",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8d16",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8d1e",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8d22",
+          "target": "436c8d3a",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8d30",
+          "target": "436c8d3a",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8d36",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8d44",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8d4c",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8d50",
+          "target": "436c8d68",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8d5e",
+          "target": "436c8d68",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8d64",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8d72",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8d7a",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8d7e",
+          "target": "436c8d96",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8d8c",
+          "target": "436c8d96",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8d92",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8da0",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8da8",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8dac",
+          "target": "436c8dc4",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8dba",
+          "target": "436c8dc4",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8dc0",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8dce",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8dd6",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8dda",
+          "target": "436c8df2",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8de8",
+          "target": "436c8df2",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8dee",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8df4",
+          "target": "436c8ec2",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8df8",
+          "target": "43ad3ebe",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8dfe",
+          "target": "436c8ec2",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8e0e",
+          "target": "436c8ec2",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8e16",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8e1e",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8e22",
+          "target": "436c8e36",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8e2c",
+          "target": "436c8e36",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8e32",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8e3c",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8e44",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8e48",
+          "target": "436c8e5c",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8e52",
+          "target": "436c8e5c",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8e58",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8e62",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8e6a",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8e6e",
+          "target": "436c8e98",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8e78",
+          "target": "436c8e98",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8e7e",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8e82",
+          "target": "436c8e98",
+          "type": "UNCONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8e9e",
+          "target": "43acee62",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8ea6",
+          "target": "43ad4ab8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436c8eaa",
+          "target": "436c8ec2",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8eb4",
+          "target": "436c8ec2",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436c8ebe",
+          "target": "43acee66",
+          "type": "UNCONDITIONAL_CALL"
+        }
+      ],
+      "references_after": [
+        {
+          "from": "436c8ef6",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436c8ecc"
+        },
+        {
+          "from": "436c8f08",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436c8ecc"
+        },
+        {
+          "from": "436c8f18",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436c8ecc"
+        },
+        {
+          "from": "436c8f2a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436c8ecc"
+        }
+      ]
+    },
+    {
+      "query": "43ae76fe",
+      "references_before": [
+        {
+          "from": "4355977a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43559048"
+        },
+        {
+          "from": "43559de8",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "435597e0"
+        },
+        {
+          "from": "437f3dcc",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "437f3c70"
+        },
+        {
+          "from": "437f406c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "437f3c70"
+        },
+        {
+          "from": "438cafde",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "438caa5c"
+        },
+        {
+          "from": "438c4f04",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "438c4b78"
+        },
+        {
+          "from": "438c5658",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "438c5220"
+        },
+        {
+          "from": "438bec6c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43b18038"
+        },
+        {
+          "from": "43558fea",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43558910"
+        },
+        {
+          "from": "438c4a0a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43b1c296"
+        },
+        {
+          "from": "438c22d6",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "438c1db4"
+        },
+        {
+          "from": "438c18ac",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "438c1214"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "43ae76fe",
+      "body": "[[43ae76fe, 43ae79b5]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\nvoid FUN_43ae76fe(int param_1,undefined2 param_2,uint param_3,undefined2 *param_4,\n                 undefined2 *param_5,undefined2 *param_6)\n\n{\n  undefined1 uVar1;\n  int iVar2;\n  byte bVar3;\n  byte bVar4;\n  undefined1 auStack_38 [8];\n  int iStack_30;\n  byte bStack_2a;\n  byte abStack_29 [5];\n  \n  abStack_29[0] \u003d 0;\n  bStack_2a \u003d 0;\n  FUN_43ae80c2(param_3,abStack_29,\u0026bStack_2a);\n  FUN_43787064(abStack_29[0],bStack_2a,param_1 + 0x5332);\n  FUN_43901a8c(7,param_2,\n               (uint)*(ushort *)(param_1 + 0x1d8) | *(int *)(param_1 + 0x4b68) \u003c\u003c 0x18 |\n               (uint)*(byte *)(param_1 + 0x4b97) \u003c\u003c 0x10,\n               (uint)*(ushort *)(param_1 + 0x4b64) | *(int *)(param_1 + 0x1e0) \u003c\u003c 0x10);\n  FUN_43901a8c(7,0,(uint)*(ushort *)(param_1 + 0x1d8) | *(int *)(param_1 + 0x4b68) \u003c\u003c 0x18 |\n                   (uint)*(byte *)(param_1 + 0x4b97) \u003c\u003c 0x10,\n               (uint)bStack_2a \u003c\u003c 0x10 | (uint)abStack_29[0] \u003c\u003c 0x18 |\n               (uint)*(byte *)(param_1 + 0x5333) | (uint)*(byte *)(param_1 + 0x5332) \u003c\u003c 8);\n  FUN_43901a8c(7,1,CONCAT22(*param_4,param_4[1]),0);\n  FUN_43901a8c(7,2,CONCAT22(param_4[2],param_4[3]),CONCAT22(param_4[4],param_4[5]));\n  FUN_43901a8c(7,5,CONCAT22(*param_6,param_6[1]),CONCAT22(param_6[2],param_6[3]));\n  FUN_43901a8c(7,6,CONCAT22(param_6[4],param_6[5]),CONCAT22(param_6[6],param_6[7]));\n  FUN_43901a8c(7,3,CONCAT22(*param_5,param_5[1]),0);\n  FUN_43901a8c(7,4,CONCAT22(param_5[2],param_5[3]),CONCAT22(param_5[4],param_5[5]));\n  iVar2 \u003d FUN_43ae9226(*(undefined4 *)(param_1 + 0x4a7c),0x9400,auStack_38);\n  if (iVar2 \u003d\u003d 0) {\n    iVar2 \u003d FUN_43ae7c20(param_1);\n    bVar4 \u003d *(byte *)(iStack_30 + 0xba) \u003e\u003e 4;\n    bVar3 \u003d *(byte *)(iStack_30 + 0xba) \u0026 0xf;\n    uVar1 \u003d (undefined1)param_2;\n    if ((param_3 \u0026 3) !\u003d 0) {\n      bVar4 \u003d bVar4 + 1;\n      *(undefined1 *)(iStack_30 + iVar2 + 0xbb) \u003d uVar1;\n    }\n    if ((param_3 \u0026 0x30000) !\u003d 0) {\n      bVar3 \u003d bVar3 + 1;\n      *(undefined1 *)(iStack_30 + iVar2 + 0xc1) \u003d uVar1;\n    }\n    *(byte *)(iStack_30 + 0xba) \u003d bVar3 \u0026 0xf | bVar4 \u003c\u003c 4;\n    bVar4 \u003d *(byte *)(iStack_30 + 199) \u003e\u003e 4;\n    bVar3 \u003d *(byte *)(iStack_30 + 199) \u0026 0xf;\n    if ((param_3 \u0026 4) !\u003d 0) {\n      bVar4 \u003d bVar4 + 1;\n      *(undefined1 *)(iStack_30 + iVar2 + 200) \u003d uVar1;\n    }\n    if ((param_3 \u0026 0x40000) !\u003d 0) {\n      bVar3 \u003d bVar3 + 1;\n      *(undefined1 *)(iStack_30 + iVar2 + 0xce) \u003d uVar1;\n    }\n    *(byte *)(iStack_30 + 199) \u003d bVar3 \u0026 0xf | bVar4 \u003c\u003c 4;\n    bVar4 \u003d *(byte *)(iStack_30 + 0xd4) \u003e\u003e 4;\n    bVar3 \u003d *(byte *)(iStack_30 + 0xd4) \u0026 0xf;\n    if ((param_3 \u0026 8) !\u003d 0) {\n      bVar4 \u003d bVar4 + 1;\n      *(undefined1 *)(iStack_30 + iVar2 + 0xd5) \u003d uVar1;\n    }\n    if ((param_3 \u0026 0x80000) !\u003d 0) {\n      bVar3 \u003d bVar3 + 1;\n      *(undefined1 *)(iStack_30 + iVar2 + 0xdb) \u003d uVar1;\n    }\n    *(byte *)(iStack_30 + 0xd4) \u003d bVar3 \u0026 0xf | bVar4 \u003c\u003c 4;\n    bVar4 \u003d *(byte *)(iStack_30 + 0xe1) \u003e\u003e 4;\n    bVar3 \u003d *(byte *)(iStack_30 + 0xe1) \u0026 0xf;\n    if ((param_3 \u0026 0x10) !\u003d 0) {\n      bVar4 \u003d bVar4 + 1;\n      *(undefined1 *)(iStack_30 + iVar2 + 0xe2) \u003d uVar1;\n    }\n    if ((param_3 \u0026 0x100000) !\u003d 0) {\n      bVar3 \u003d bVar3 + 1;\n      *(undefined1 *)(iStack_30 + iVar2 + 0xe8) \u003d uVar1;\n    }\n    *(byte *)(iStack_30 + 0xe1) \u003d bVar3 \u0026 0xf | bVar4 \u003c\u003c 4;\n    bVar4 \u003d *(byte *)(iStack_30 + 0xee) \u003e\u003e 4;\n    bVar3 \u003d *(byte *)(iStack_30 + 0xee) \u0026 0xf;\n    if ((param_3 \u0026 0x20) !\u003d 0) {\n      bVar4 \u003d bVar4 + 1;\n      *(undefined1 *)(iStack_30 + iVar2 + 0xef) \u003d uVar1;\n    }\n    if ((param_3 \u0026 0x200000) !\u003d 0) {\n      bVar3 \u003d bVar3 + 1;\n      *(undefined1 *)(iStack_30 + iVar2 + 0xf5) \u003d uVar1;\n    }\n    *(byte *)(iStack_30 + 0xee) \u003d bVar3 \u0026 0xf | bVar4 \u003c\u003c 4;\n    bVar4 \u003d *(byte *)(iStack_30 + 0xfb);\n    bVar3 \u003d bVar4 \u0026 0xf;\n    if ((param_3 \u0026 0x40) !\u003d 0) {\n      bVar3 \u003d bVar3 + 1;\n      *(undefined1 *)(iStack_30 + iVar2 + 0xfc) \u003d uVar1;\n    }\n    if ((param_3 \u0026 0x400000) !\u003d 0) {\n      bVar3 \u003d bVar3 + 1;\n      *(undefined1 *)(iStack_30 + iVar2 + 0x102) \u003d uVar1;\n    }\n    *(byte *)(iStack_30 + 0xfb) \u003d bVar3 \u0026 0xf | bVar4 \u0026 0xf0;\n  }\n  return;\n}\n\n",
+      "listing": [
+        "43ae76fe push {r4,r5,r6,r7,r8,r9,r10,r11,lr}",
+        "43ae7702 sub sp,#0x24",
+        "43ae7704 mov r6,r0",
+        "43ae7706 mov r4,r1",
+        "43ae7708 mov r0,r2",
+        "43ae770a add.w r1,sp,#0x1f",
+        "43ae770e mov r5,r2",
+        "43ae7710 add.w r2,sp,#0x1e",
+        "43ae7714 mov r9,r3",
+        "43ae7716 ldr.w r8,[sp,#0x4c]",
+        "43ae771a ldr.w r11,[sp,#0x48]",
+        "43ae771e mov.w r10,#0x0",
+        "43ae7722 strb.w r10,[sp,#0x1f]",
+        "43ae7726 strb.w r10,[sp,#0x1e]",
+        "43ae772a bl 0x43ae80c2",
+        "43ae772e add.w r12,r6,#0x5300",
+        "43ae7732 ldrb.w r0,[sp,#0x1f]",
+        "43ae7736 add.w r2,r12,#0x32",
+        "43ae773a ldrb.w r1,[sp,#0x1e]",
+        "43ae773e str.w r12,[sp,#0xc]",
+        "43ae7742 bl 0x43787064",
+        "43ae7746 add.w r1,r6,#0x4b00",
+        "43ae774a ldrh.w r3,[r6,#0x1d8]",
+        "43ae774e ldr.w r7,[r6,#0x1e0]",
+        "43ae7752 movs r0,#0x7",
+        "43ae7754 ldr r2,[r1,#0x68]",
+        "43ae7756 str r1,[sp,#0x4]",
+        "43ae7758 orr.w lr,r3,r2, lsl #0x18",
+        "43ae775c ldrb.w r2,[r1,#0x97]",
+        "43ae7760 ldrh.w r3,[r1,#0x64]",
+        "43ae7764 uxth r1,r4",
+        "43ae7766 orr.w r2,lr,r2, lsl #0x10",
+        "43ae776a orr.w r3,r3,r7, lsl #0x10",
+        "43ae776e bl 0x43901a8c",
+        "43ae7772 ldr r1,[sp,#0x4]",
+        "43ae7774 ldrh.w r3,[r6,#0x1d8]",
+        "43ae7778 movs r0,#0x7",
+        "43ae777a ldrb.w r7,[sp,#0x1e]",
+        "43ae777e ldr r2,[r1,#0x68]",
+        "43ae7780 ldr.w r12,[sp,#0xc]",
+        "43ae7784 lsls r7,r7,#0x10",
+        "43ae7786 orr.w lr,r3,r2, lsl #0x18",
+        "43ae778a ldrb.w r3,[sp,#0x1f]",
+        "43ae778e ldrb.w r2,[r1,#0x97]",
+        "43ae7792 mov r1,r10",
+        "43ae7794 orr.w r7,r7,r3, lsl #0x18",
+        "43ae7798 ldrb.w r3,[r12,#0x33]",
+        "43ae779c orr.w r2,lr,r2, lsl #0x10",
+        "43ae77a0 orrs r7,r3",
+        "43ae77a2 ldrb.w r3,[r12,#0x32]",
+        "43ae77a6 orr.w r3,r7,r3, lsl #0x8",
+        "43ae77aa bl 0x43901a8c",
+        "43ae77ae ldrh.w r2,[r9,#0x0]",
+        "43ae77b2 ldrh.w r3,[r9,#0x2]",
+        "43ae77b6 movs r0,#0x7",
+        "43ae77b8 movs r1,#0x1",
+        "43ae77ba orr.w r2,r3,r2, lsl #0x10",
+        "43ae77be mov r3,r10",
+        "43ae77c0 bl 0x43901a8c",
+        "43ae77c4 ldrh.w r7,[r9,#0x4]",
+        "43ae77c8 ldrh.w lr,[r9,#0x8]",
+        "43ae77cc movs r0,#0x7",
+        "43ae77ce ldrh.w r2,[r9,#0x6]",
+        "43ae77d2 movs r1,#0x2",
+        "43ae77d4 ldrh.w r3,[r9,#0xa]",
+        "43ae77d8 orr.w r2,r2,r7, lsl #0x10",
+        "43ae77dc orr.w r3,r3,lr, lsl #0x10",
+        "43ae77e0 bl 0x43901a8c",
+        "43ae77e4 ldrh.w lr,[r8,#0x0]",
+        "43ae77e8 ldrh.w r7,[r8,#0x4]",
+        "43ae77ec movs r0,#0x7",
+        "43ae77ee ldrh.w r2,[r8,#0x2]",
+        "43ae77f2 movs r1,#0x5",
+        "43ae77f4 ldrh.w r3,[r8,#0x6]",
+        "43ae77f8 orr.w r2,r2,lr, lsl #0x10",
+        "43ae77fc orr.w r3,r3,r7, lsl #0x10",
+        "43ae7800 bl 0x43901a8c",
+        "43ae7804 ldrh.w lr,[r8,#0x8]",
+        "43ae7808 ldrh.w r7,[r8,#0xc]",
+        "43ae780c movs r0,#0x7",
+        "43ae780e ldrh.w r2,[r8,#0xa]",
+        "43ae7812 movs r1,#0x6",
+        "43ae7814 ldrh.w r3,[r8,#0xe]",
+        "43ae7818 orr.w r2,r2,lr, lsl #0x10",
+        "43ae781c orr.w r3,r3,r7, lsl #0x10",
+        "43ae7820 bl 0x43901a8c",
+        "43ae7824 ldrh.w r2,[r11,#0x0]",
+        "43ae7828 ldrh.w r3,[r11,#0x2]",
+        "43ae782c movs r0,#0x7",
+        "43ae782e movs r1,#0x3",
+        "43ae7830 orr.w r2,r3,r2, lsl #0x10",
+        "43ae7834 mov r3,r10",
+        "43ae7836 bl 0x43901a8c",
+        "43ae783a ldrh.w lr,[r11,#0x4]",
+        "43ae783e ldrh.w r7,[r11,#0x8]",
+        "43ae7842 movs r0,#0x7",
+        "43ae7844 ldrh.w r2,[r11,#0x6]",
+        "43ae7848 movs r1,#0x4",
+        "43ae784a ldrh.w r3,[r11,#0xa]",
+        "43ae784e orr.w r2,r2,lr, lsl #0x10",
+        "43ae7852 orr.w r3,r3,r7, lsl #0x10",
+        "43ae7856 bl 0x43901a8c",
+        "43ae785a add.w r3,r6,#0x4a00",
+        "43ae785e mov.w r1,#0x9400",
+        "43ae7862 add r2,sp,#0x10",
+        "43ae7864 ldr r0,[r3,#0x7c]",
+        "43ae7866 bl 0x43ae9226",
+        "43ae786a cmp r0,#0x0",
+        "43ae786c bne.w 0x43ae79b0",
+        "43ae7870 ldr r7,[sp,#0x18]",
+        "43ae7872 mov r0,r6",
+        "43ae7874 bl 0x43ae7c20",
+        "43ae7878 ldrb.w r2,[r7,#0xba]",
+        "43ae787c lsrs r3,r2,#0x4",
+        "43ae787e tst r5,#0x3",
+        "43ae7882 and r2,r2,#0xf",
+        "43ae7886 beq 0x43ae7890",
+        "43ae7888 adds r1,r7,r0",
+        "43ae788a adds r3,#0x1",
+        "43ae788c strb.w r4,[r1,#0xbb]",
+        "43ae7890 tst r5,#0x30000",
+        "43ae7894 beq 0x43ae78a0",
+        "43ae7896 adds r2,#0x1",
+        "43ae7898 adds r1,r7,r0",
+        "43ae789a uxtb r2,r2",
+        "43ae789c strb.w r4,[r1,#0xc1]",
+        "43ae78a0 and r2,r2,#0xf",
+        "43ae78a4 orr.w r3,r2,r3, lsl #0x4",
+        "43ae78a8 ldrb.w r2,[r7,#0xc7]",
+        "43ae78ac strb.w r3,[r7,#0xba]",
+        "43ae78b0 lsrs r3,r2,#0x4",
+        "43ae78b2 tst r5,#0x4",
+        "43ae78b6 and r2,r2,#0xf",
+        "43ae78ba beq 0x43ae78c4",
+        "43ae78bc adds r1,r7,r0",
+        "43ae78be adds r3,#0x1",
+        "43ae78c0 strb.w r4,[r1,#0xc8]",
+        "43ae78c4 tst r5,#0x40000",
+        "43ae78c8 beq 0x43ae78d4",
+        "43ae78ca adds r2,#0x1",
+        "43ae78cc adds r1,r7,r0",
+        "43ae78ce uxtb r2,r2",
+        "43ae78d0 strb.w r4,[r1,#0xce]",
+        "43ae78d4 and r2,r2,#0xf",
+        "43ae78d8 orr.w r3,r2,r3, lsl #0x4",
+        "43ae78dc ldrb.w r2,[r7,#0xd4]",
+        "43ae78e0 strb.w r3,[r7,#0xc7]",
+        "43ae78e4 lsrs r3,r2,#0x4",
+        "43ae78e6 tst r5,#0x8",
+        "43ae78ea and r2,r2,#0xf",
+        "43ae78ee beq 0x43ae78f8",
+        "43ae78f0 adds r1,r7,r0",
+        "43ae78f2 adds r3,#0x1",
+        "43ae78f4 strb.w r4,[r1,#0xd5]",
+        "43ae78f8 tst r5,#0x80000",
+        "43ae78fc beq 0x43ae7908",
+        "43ae78fe adds r2,#0x1",
+        "43ae7900 adds r1,r7,r0",
+        "43ae7902 uxtb r2,r2",
+        "43ae7904 strb.w r4,[r1,#0xdb]",
+        "43ae7908 and r2,r2,#0xf",
+        "43ae790c orr.w r3,r2,r3, lsl #0x4",
+        "43ae7910 ldrb.w r2,[r7,#0xe1]",
+        "43ae7914 strb.w r3,[r7,#0xd4]",
+        "43ae7918 lsrs r3,r2,#0x4",
+        "43ae791a tst r5,#0x10",
+        "43ae791e and r2,r2,#0xf",
+        "43ae7922 beq 0x43ae792c",
+        "43ae7924 adds r1,r7,r0",
+        "43ae7926 adds r3,#0x1",
+        "43ae7928 strb.w r4,[r1,#0xe2]",
+        "43ae792c tst r5,#0x100000",
+        "43ae7930 beq 0x43ae793c",
+        "43ae7932 adds r2,#0x1",
+        "43ae7934 adds r1,r7,r0",
+        "43ae7936 uxtb r2,r2",
+        "43ae7938 strb.w r4,[r1,#0xe8]",
+        "43ae793c and r2,r2,#0xf",
+        "43ae7940 orr.w r3,r2,r3, lsl #0x4",
+        "43ae7944 ldrb.w r2,[r7,#0xee]",
+        "43ae7948 strb.w r3,[r7,#0xe1]",
+        "43ae794c lsrs r3,r2,#0x4",
+        "43ae794e tst r5,#0x20",
+        "43ae7952 and r2,r2,#0xf",
+        "43ae7956 beq 0x43ae7960",
+        "43ae7958 adds r1,r7,r0",
+        "43ae795a adds r3,#0x1",
+        "43ae795c strb.w r4,[r1,#0xef]",
+        "43ae7960 tst r5,#0x200000",
+        "43ae7964 beq 0x43ae7970",
+        "43ae7966 adds r2,#0x1",
+        "43ae7968 adds r1,r7,r0",
+        "43ae796a uxtb r2,r2",
+        "43ae796c strb.w r4,[r1,#0xf5]",
+        "43ae7970 and r2,r2,#0xf",
+        "43ae7974 orr.w r3,r2,r3, lsl #0x4",
+        "43ae7978 strb.w r3,[r7,#0xee]",
+        "43ae797c ldrb.w r3,[r7,#0xfb]",
+        "43ae7980 lsrs r2,r3,#0x4",
+        "43ae7982 tst r5,#0x40",
+        "43ae7986 and r3,r3,#0xf",
+        "43ae798a beq 0x43ae7994",
+        "43ae798c adds r1,r7,r0",
+        "43ae798e adds r3,#0x1",
+        "43ae7990 strb.w r4,[r1,#0xfc]",
+        "43ae7994 tst r5,#0x400000",
+        "43ae7998 beq 0x43ae79a4",
+        "43ae799a adds r3,#0x1",
+        "43ae799c adds r0,r7,r0",
+        "43ae799e uxtb r3,r3",
+        "43ae79a0 strb.w r4,[r0,#0x102]",
+        "43ae79a4 and r3,r3,#0xf",
+        "43ae79a8 orr.w r3,r3,r2, lsl #0x4",
+        "43ae79ac strb.w r3,[r7,#0xfb]",
+        "43ae79b0 add sp,#0x24",
+        "43ae79b2 pop.w {r4,r5,r6,r7,r8,r9,r10,r11,pc}"
+      ],
+      "calls_and_jumps": [
+        {
+          "site": "43ae772a",
+          "target": "43ae80c2",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "43ae7742",
+          "target": "43787064",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "43ae776e",
+          "target": "43901a8c",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "43ae77aa",
+          "target": "43901a8c",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "43ae77c0",
+          "target": "43901a8c",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "43ae77e0",
+          "target": "43901a8c",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "43ae7800",
+          "target": "43901a8c",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "43ae7820",
+          "target": "43901a8c",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "43ae7836",
+          "target": "43901a8c",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "43ae7856",
+          "target": "43901a8c",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "43ae7866",
+          "target": "43ae9226",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "43ae786c",
+          "target": "43ae79b0",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "43ae7874",
+          "target": "43ae7c20",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "43ae7886",
+          "target": "43ae7890",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "43ae7894",
+          "target": "43ae78a0",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "43ae78ba",
+          "target": "43ae78c4",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "43ae78c8",
+          "target": "43ae78d4",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "43ae78ee",
+          "target": "43ae78f8",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "43ae78fc",
+          "target": "43ae7908",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "43ae7922",
+          "target": "43ae792c",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "43ae7930",
+          "target": "43ae793c",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "43ae7956",
+          "target": "43ae7960",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "43ae7964",
+          "target": "43ae7970",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "43ae798a",
+          "target": "43ae7994",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "43ae7998",
+          "target": "43ae79a4",
+          "type": "CONDITIONAL_JUMP"
+        }
+      ],
+      "references_after": [
+        {
+          "from": "4355977a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43559048"
+        },
+        {
+          "from": "43559de8",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "435597e0"
+        },
+        {
+          "from": "437f3dcc",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "437f3c70"
+        },
+        {
+          "from": "437f406c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "437f3c70"
+        },
+        {
+          "from": "438cafde",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "438caa5c"
+        },
+        {
+          "from": "438c4f04",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "438c4b78"
+        },
+        {
+          "from": "438c5658",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "438c5220"
+        },
+        {
+          "from": "438bec6c",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43b18038"
+        },
+        {
+          "from": "43558fea",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43558910"
+        },
+        {
+          "from": "438c4a0a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43b1c296"
+        },
+        {
+          "from": "438c22d6",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "438c1db4"
+        },
+        {
+          "from": "438c18ac",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "438c1214"
+        }
+      ]
+    },
+    {
+      "query": "43ae80c2",
+      "references_before": [
+        {
+          "from": "43ae772a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ae76fe"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "43ae80c2",
+      "body": "[[43ae80c2, 43ae81af]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\nvoid FUN_43ae80c2(uint param_1,byte *param_2,byte *param_3)\n\n{\n  byte bVar1;\n  byte bVar2;\n  \n  if ((param_1 \u0026 3) !\u003d 0) {\n    bVar1 \u003d *param_2;\n    bVar2 \u003d FUN_43786fc0(1);\n    *param_2 \u003d bVar2 | bVar1;\n  }\n  if ((param_1 \u0026 4) !\u003d 0) {\n    bVar1 \u003d *param_2;\n    bVar2 \u003d FUN_43786fc0(4);\n    *param_2 \u003d bVar2 | bVar1;\n  }\n  if ((param_1 \u0026 8) !\u003d 0) {\n    bVar1 \u003d *param_2;\n    bVar2 \u003d FUN_43786fc0(8);\n    *param_2 \u003d bVar2 | bVar1;\n  }\n  if ((param_1 \u0026 0x10) !\u003d 0) {\n    bVar1 \u003d *param_2;\n    bVar2 \u003d FUN_43786fc0(0x10);\n    *param_2 \u003d bVar2 | bVar1;\n  }\n  if ((param_1 \u0026 0x20) !\u003d 0) {\n    bVar1 \u003d *param_2;\n    bVar2 \u003d FUN_43786fc0(0x20);\n    *param_2 \u003d bVar2 | bVar1;\n  }\n  if ((param_1 \u0026 0x40) !\u003d 0) {\n    bVar1 \u003d *param_2;\n    bVar2 \u003d FUN_43786fc0(0x40);\n    *param_2 \u003d bVar2 | bVar1;\n  }\n  if ((param_1 \u0026 0x30000) !\u003d 0) {\n    bVar1 \u003d *param_3;\n    bVar2 \u003d FUN_43786fc0(0x10000);\n    *param_3 \u003d bVar2 | bVar1;\n  }\n  if ((param_1 \u0026 0x40000) !\u003d 0) {\n    bVar1 \u003d *param_3;\n    bVar2 \u003d FUN_43786fc0(0x40000);\n    *param_3 \u003d bVar2 | bVar1;\n  }\n  if ((param_1 \u0026 0x80000) !\u003d 0) {\n    bVar1 \u003d *param_3;\n    bVar2 \u003d FUN_43786fc0(0x80000);\n    *param_3 \u003d bVar2 | bVar1;\n  }\n  if ((param_1 \u0026 0x100000) !\u003d 0) {\n    bVar1 \u003d *param_3;\n    bVar2 \u003d FUN_43786fc0(0x100000);\n    *param_3 \u003d bVar2 | bVar1;\n  }\n  if ((param_1 \u0026 0x200000) !\u003d 0) {\n    bVar1 \u003d *param_3;\n    bVar2 \u003d FUN_43786fc0(0x200000);\n    *param_3 \u003d bVar2 | bVar1;\n  }\n  if ((param_1 \u0026 0x400000) !\u003d 0) {\n    bVar1 \u003d *param_3;\n    bVar2 \u003d FUN_43786fc0(0x400000);\n    *param_3 \u003d bVar2 | bVar1;\n  }\n  return;\n}\n\n",
+      "listing": [
+        "43ae80c2 tst r0,#0x3",
+        "43ae80c6 push {r3,r4,r5,r6,r7,lr}",
+        "43ae80c8 mov r4,r0",
+        "43ae80ca mov r5,r1",
+        "43ae80cc mov r6,r2",
+        "43ae80ce beq 0x43ae80dc",
+        "43ae80d0 movs r0,#0x1",
+        "43ae80d2 ldrb r7,[r1,#0x0]",
+        "43ae80d4 bl 0x43786fc0",
+        "43ae80d8 orrs r0,r7",
+        "43ae80da strb r0,[r5,#0x0]",
+        "43ae80dc tst r4,#0x4",
+        "43ae80e0 beq 0x43ae80ee",
+        "43ae80e2 movs r0,#0x4",
+        "43ae80e4 ldrb r7,[r5,#0x0]",
+        "43ae80e6 bl 0x43786fc0",
+        "43ae80ea orrs r0,r7",
+        "43ae80ec strb r0,[r5,#0x0]",
+        "43ae80ee tst r4,#0x8",
+        "43ae80f2 beq 0x43ae8100",
+        "43ae80f4 movs r0,#0x8",
+        "43ae80f6 ldrb r7,[r5,#0x0]",
+        "43ae80f8 bl 0x43786fc0",
+        "43ae80fc orrs r0,r7",
+        "43ae80fe strb r0,[r5,#0x0]",
+        "43ae8100 tst r4,#0x10",
+        "43ae8104 beq 0x43ae8112",
+        "43ae8106 movs r0,#0x10",
+        "43ae8108 ldrb r7,[r5,#0x0]",
+        "43ae810a bl 0x43786fc0",
+        "43ae810e orrs r0,r7",
+        "43ae8110 strb r0,[r5,#0x0]",
+        "43ae8112 tst r4,#0x20",
+        "43ae8116 beq 0x43ae8124",
+        "43ae8118 movs r0,#0x20",
+        "43ae811a ldrb r7,[r5,#0x0]",
+        "43ae811c bl 0x43786fc0",
+        "43ae8120 orrs r0,r7",
+        "43ae8122 strb r0,[r5,#0x0]",
+        "43ae8124 tst r4,#0x40",
+        "43ae8128 beq 0x43ae8136",
+        "43ae812a movs r0,#0x40",
+        "43ae812c ldrb r7,[r5,#0x0]",
+        "43ae812e bl 0x43786fc0",
+        "43ae8132 orrs r0,r7",
+        "43ae8134 strb r0,[r5,#0x0]",
+        "43ae8136 tst r4,#0x30000",
+        "43ae813a beq 0x43ae814a",
+        "43ae813c mov.w r0,#0x10000",
+        "43ae8140 ldrb r5,[r6,#0x0]",
+        "43ae8142 bl 0x43786fc0",
+        "43ae8146 orrs r0,r5",
+        "43ae8148 strb r0,[r6,#0x0]",
+        "43ae814a tst r4,#0x40000",
+        "43ae814e beq 0x43ae815e",
+        "43ae8150 mov.w r0,#0x40000",
+        "43ae8154 ldrb r5,[r6,#0x0]",
+        "43ae8156 bl 0x43786fc0",
+        "43ae815a orrs r0,r5",
+        "43ae815c strb r0,[r6,#0x0]",
+        "43ae815e tst r4,#0x80000",
+        "43ae8162 beq 0x43ae8172",
+        "43ae8164 mov.w r0,#0x80000",
+        "43ae8168 ldrb r5,[r6,#0x0]",
+        "43ae816a bl 0x43786fc0",
+        "43ae816e orrs r0,r5",
+        "43ae8170 strb r0,[r6,#0x0]",
+        "43ae8172 tst r4,#0x100000",
+        "43ae8176 beq 0x43ae8186",
+        "43ae8178 mov.w r0,#0x100000",
+        "43ae817c ldrb r5,[r6,#0x0]",
+        "43ae817e bl 0x43786fc0",
+        "43ae8182 orrs r0,r5",
+        "43ae8184 strb r0,[r6,#0x0]",
+        "43ae8186 tst r4,#0x200000",
+        "43ae818a beq 0x43ae819a",
+        "43ae818c mov.w r0,#0x200000",
+        "43ae8190 ldrb r5,[r6,#0x0]",
+        "43ae8192 bl 0x43786fc0",
+        "43ae8196 orrs r0,r5",
+        "43ae8198 strb r0,[r6,#0x0]",
+        "43ae819a tst r4,#0x400000",
+        "43ae819e beq 0x43ae81ae",
+        "43ae81a0 mov.w r0,#0x400000",
+        "43ae81a4 ldrb r4,[r6,#0x0]",
+        "43ae81a6 bl 0x43786fc0",
+        "43ae81aa orrs r0,r4",
+        "43ae81ac strb r0,[r6,#0x0]",
+        "43ae81ae pop {r3,r4,r5,r6,r7,pc}"
+      ],
+      "calls_and_jumps": [
+        {
+          "site": "43ae80ce",
+          "target": "43ae80dc",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "43ae80d4",
+          "target": "43786fc0",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "43ae80e0",
+          "target": "43ae80ee",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "43ae80e6",
+          "target": "43786fc0",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "43ae80f2",
+          "target": "43ae8100",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "43ae80f8",
+          "target": "43786fc0",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "43ae8104",
+          "target": "43ae8112",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "43ae810a",
+          "target": "43786fc0",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "43ae8116",
+          "target": "43ae8124",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "43ae811c",
+          "target": "43786fc0",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "43ae8128",
+          "target": "43ae8136",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "43ae812e",
+          "target": "43786fc0",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "43ae813a",
+          "target": "43ae814a",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "43ae8142",
+          "target": "43786fc0",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "43ae814e",
+          "target": "43ae815e",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "43ae8156",
+          "target": "43786fc0",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "43ae8162",
+          "target": "43ae8172",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "43ae816a",
+          "target": "43786fc0",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "43ae8176",
+          "target": "43ae8186",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "43ae817e",
+          "target": "43786fc0",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "43ae818a",
+          "target": "43ae819a",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "43ae8192",
+          "target": "43786fc0",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "43ae819e",
+          "target": "43ae81ae",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "43ae81a6",
+          "target": "43786fc0",
+          "type": "UNCONDITIONAL_CALL"
+        }
+      ],
+      "references_after": [
+        {
+          "from": "43ae772a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43ae76fe"
+        }
+      ]
+    },
+    {
+      "query": "43ae81f4",
+      "references_before": [
+        {
+          "from": "438c92a2",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "438c9280"
+        },
+        {
+          "from": "438c92b6",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "438c9280"
+        },
+        {
+          "from": "43afe6ec",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43b17fd0"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "43ae81f4",
+      "body": "[[43ae81f4, 43ae820f]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\nbool FUN_43ae81f4(uint param_1)\n\n{\n  uint uVar1;\n  \n  uVar1 \u003d FUN_43786fc0(0x200000);\n  return (uVar1 \u0026 (param_1 \u0026 0xffff) \u003e\u003e 8) !\u003d 0;\n}\n\n",
+      "listing": [
+        "43ae81f4 push {r0,r1,r4,lr}",
+        "43ae81f6 uxth r4,r0",
+        "43ae81f8 strh.w r0,[sp,#0x4]",
+        "43ae81fc mov.w r0,#0x200000",
+        "43ae8200 bl 0x43786fc0",
+        "43ae8204 lsrs r4,r4,#0x8",
+        "43ae8206 tst r0,r4",
+        "43ae8208 ite eq",
+        "43ae820a mov.eq r0,#0x0",
+        "43ae820c mov.ne r0,#0x1",
+        "43ae820e pop {r2,r3,r4,pc}"
+      ],
+      "calls_and_jumps": [
+        {
+          "site": "43ae8200",
+          "target": "43786fc0",
+          "type": "UNCONDITIONAL_CALL"
+        }
+      ],
+      "references_after": [
+        {
+          "from": "438c92a2",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "438c9280"
+        },
+        {
+          "from": "438c92b6",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "438c9280"
+        },
+        {
+          "from": "43afe6ec",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "43b17fd0"
+        }
+      ]
+    },
+    {
+      "query": "436d7356",
+      "references_before": [],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "436d72e8",
+      "body": "[[436d72e8, 436d7461]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\nint * FUN_436d72e8(int *param_1,int param_2)\n\n{\n  FUN_436d93d0();\n  *param_1 \u003d DAT_44026d1c + 8;\n  FUN_43ad8cb2(param_1 + 0xa6,0,0x10,8,*(undefined4 *)(\u0026DAT_43bc16d4 + param_2 * 4));\n  FUN_436d8774(param_1 + 0xd4,0xd,DAT_44020c64,DAT_44026804,DAT_4401ff00,DAT_4401f630,DAT_44024e50,\n               \u0026DAT_43bc2044,\u0026DAT_43bdbd78,\u0026DAT_43bc1c20,\u0026DAT_43bc16dc,\u0026DAT_43bc1ae8,\u0026DAT_43bc1b84,\n               \u0026DAT_43bc1d58,\u0026DAT_43bdbe70,DAT_440206d0,DAT_4402656c,\u0026DAT_43bc1604);\n  *(undefined2 *)(param_1 + 0x6d) \u003d 0x36;\n  *(undefined2 *)(param_1 + 0x78) \u003d 0x1f;\n  *(undefined1 *)((int)param_1 + 0x181) \u003d 0;\n  param_1[0x61] \u003d 3;\n  param_1[0x62] \u003d 5;\n  param_1[99] \u003d 3;\n  param_1[0x6c] \u003d 0;\n  *(undefined2 *)(param_1 + 0x68) \u003d 0xfef;\n  param_1[0x6e] \u003d 0;\n  param_1[0x70] \u003d 0;\n  param_1[0x71] \u003d 0;\n  param_1[0x72] \u003d 2;\n  *(undefined2 *)((int)param_1 + 0x1d2) \u003d 0x1000;\n  *(undefined2 *)(param_1 + 0x75) \u003d 0x1000;\n  param_1[0x76] \u003d 0;\n  *(undefined2 *)((int)param_1 + 0x1de) \u003d 0;\n  param_1[0x79] \u003d 54000000;\n  *(undefined1 *)(param_1 + 0xd2) \u003d 2;\n  *(undefined2 *)(param_1 + 0x7a) \u003d 0x187;\n  *(undefined1 *)((int)param_1 + 0x34a) \u003d 0;\n  *(undefined2 *)((int)param_1 + 0x1ea) \u003d 0x92a;\n  *(undefined1 *)(param_1 + 0x60) \u003d 1;\n  *(undefined2 *)(param_1 + 0x7b) \u003d 0x61c;\n  *(undefined1 *)((int)param_1 + 0x182) \u003d 1;\n  param_1[0x69] \u003d 1;\n  param_1[0x6a] \u003d 1;\n  param_1[0x6b] \u003d 1;\n  param_1[100] \u003d 1;\n  *(undefined1 *)((int)param_1 + 0x1b6) \u003d 1;\n  param_1[0x73] \u003d 1;\n  *(undefined2 *)(param_1 + 0x74) \u003d 1;\n  *(undefined2 *)((int)param_1 + 0x1ee) \u003d 0xb03;\n  *(undefined1 *)((int)param_1 + 0x349) \u003d 1;\n  *(undefined1 *)((int)param_1 + 0x34b) \u003d 2;\n  *(undefined1 *)(param_1 + 0xd3) \u003d 0;\n  *(undefined2 *)(param_1 + 0xe8) \u003d 0;\n  param_1[0x9b] \u003d param_2;\n  *(undefined1 *)((int)param_1 + 0x3a2) \u003d 0xff;\n  *(undefined1 *)((int)param_1 + 0x3a3) \u003d 0;\n  param_1[0xea] \u003d -1;\n  param_1[0xeb] \u003d -1;\n  *(undefined1 *)(param_1 + 0xe9) \u003d 0;\n  param_1[0xa5] \u003d (int)(param_1 + 0xd4);\n  return param_1;\n}\n\n",
+      "listing": [
+        "436d72e8 push {r4,r5,r6,lr}",
+        "436d72ea sub sp,#0x38",
+        "436d72ec ldr r5,[0x436d7470]",
+        "436d72ee mov r4,r0",
+        "436d72f0 mov r6,r1",
+        "436d72f2 bl 0x436d93d0",
+        "436d72f6 ldr r3,[0x436d7474]",
+        "436d72f8 add r5,pc",
+        "436d72fa add.w r0,r4,#0x298",
+        "436d72fe movs r1,#0x0",
+        "436d7300 movs r2,#0x10",
+        "436d7302 ldr r3,[r5,r3]",
+        "436d7304 adds r3,#0x8",
+        "436d7306 str r3,[r4,#0x0]",
+        "436d7308 ldr r3,[0x436d7478]",
+        "436d730a add r3,pc",
+        "436d730c ldr.w r3,[r3,r6,lsl #0x2]",
+        "436d7310 str r3,[sp,#0x0]",
+        "436d7312 movs r3,#0x8",
+        "436d7314 bl 0x43ad8cb2",
+        "436d7318 ldr r3,[0x436d747c]",
+        "436d731a add.w r0,r4,#0x350",
+        "436d731e movs r1,#0xd",
+        "436d7320 ldr r3,[r5,r3]",
+        "436d7322 str r3,[sp,#0x0]",
+        "436d7324 ldr r3,[0x436d7480]",
+        "436d7326 ldr r3,[r5,r3]",
+        "436d7328 str r3,[sp,#0x4]",
+        "436d732a ldr r3,[0x436d7484]",
+        "436d732c ldr r3,[r5,r3]",
+        "436d732e str r3,[sp,#0x8]",
+        "436d7330 ldr r3,[0x436d7488]",
+        "436d7332 add r3,pc",
+        "436d7334 str r3,[sp,#0xc]",
+        "436d7336 ldr r3,[0x436d748c]",
+        "436d7338 add r3,pc",
+        "436d733a str r3,[sp,#0x10]",
+        "436d733c ldr r3,[0x436d7490]",
+        "436d733e add r3,pc",
+        "436d7340 str r3,[sp,#0x14]",
+        "436d7342 ldr r3,[0x436d7494]",
+        "436d7344 add r3,pc",
+        "436d7346 str r3,[sp,#0x18]",
+        "436d7348 ldr r3,[0x436d7498]",
+        "436d734a add r3,pc",
+        "436d734c str r3,[sp,#0x1c]",
+        "436d734e adds r3,#0x9c",
+        "436d7350 str r3,[sp,#0x20]",
+        "436d7352 ldr r3,[0x436d749c]",
+        "436d7354 add r3,pc",
+        "436d7356 str r3,[sp,#0x24]",
+        "436d7358 ldr r3,[0x436d74a0]",
+        "436d735a add r3,pc",
+        "436d735c str r3,[sp,#0x28]",
+        "436d735e ldr r3,[0x436d74a4]",
+        "436d7360 ldr r3,[r5,r3]",
+        "436d7362 str r3,[sp,#0x2c]",
+        "436d7364 ldr r3,[0x436d74a8]",
+        "436d7366 ldr r3,[r5,r3]",
+        "436d7368 str r3,[sp,#0x30]",
+        "436d736a ldr r3,[0x436d74ac]",
+        "436d736c add r3,pc",
+        "436d736e str r3,[sp,#0x34]",
+        "436d7370 ldr r3,[0x436d74b0]",
+        "436d7372 ldr r2,[r5,r3]",
+        "436d7374 ldr r3,[0x436d74b4]",
+        "436d7376 ldr r3,[r5,r3]",
+        "436d7378 bl 0x436d8774",
+        "436d737c movs r5,#0x36",
+        "436d737e strh.w r5,[r4,#0x1b4]",
+        "436d7382 movs r5,#0x1f",
+        "436d7384 strh.w r5,[r4,#0x1e0]",
+        "436d7388 ldr r5,[0x436d746c]",
+        "436d738a movs r3,#0x0",
+        "436d738c movs r0,#0x5",
+        "436d738e movs r2,#0x1",
+        "436d7390 movs r1,#0x3",
+        "436d7392 strb.w r3,[r4,#0x181]",
+        "436d7396 str.w r1,[r4,#0x184]",
+        "436d739a str.w r0,[r4,#0x188]",
+        "436d739e subs r0,#0x3",
+        "436d73a0 str.w r1,[r4,#0x18c]",
+        "436d73a4 movw r1,#0xfef",
+        "436d73a8 str.w r3,[r4,#0x1b0]",
+        "436d73ac strh.w r1,[r4,#0x1a0]",
+        "436d73b0 mov.w r1,#0x1000",
+        "436d73b4 str.w r3,[r4,#0x1b8]",
+        "436d73b8 str.w r3,[r4,#0x1c0]",
+        "436d73bc str.w r3,[r4,#0x1c4]",
+        "436d73c0 str.w r0,[r4,#0x1c8]",
+        "436d73c4 strh.w r1,[r4,#0x1d2]",
+        "436d73c8 strh.w r1,[r4,#0x1d4]",
+        "436d73cc mov r1,r3",
+        "436d73ce str.w r3,[r4,#0x1d8]",
+        "436d73d2 strh.w r3,[r4,#0x1de]",
+        "436d73d6 str.w r5,[r4,#0x1e4]",
+        "436d73da movw r5,#0x187",
+        "436d73de strb.w r0,[r4,#0x348]",
+        "436d73e2 strh.w r5,[r4,#0x1e8]",
+        "436d73e6 movw r5,#0x92a",
+        "436d73ea strb.w r3,[r4,#0x34a]",
+        "436d73ee strh.w r5,[r4,#0x1ea]",
+        "436d73f2 movw r5,#0x61c",
+        "436d73f6 strb.w r2,[r4,#0x180]",
+        "436d73fa strh.w r5,[r4,#0x1ec]",
+        "436d73fe movw r5,#0xb03",
+        "436d7402 strb.w r2,[r4,#0x182]",
+        "436d7406 str.w r2,[r4,#0x1a4]",
+        "436d740a str.w r2,[r4,#0x1a8]",
+        "436d740e str.w r2,[r4,#0x1ac]",
+        "436d7412 str.w r2,[r4,#0x190]",
+        "436d7416 strb.w r2,[r4,#0x1b6]",
+        "436d741a str.w r2,[r4,#0x1cc]",
+        "436d741e strh.w r2,[r4,#0x1d0]",
+        "436d7422 strh.w r5,[r4,#0x1ee]",
+        "436d7426 strb.w r2,[r4,#0x349]",
+        "436d742a strb.w r0,[r4,#0x34b]",
+        "436d742e mov r0,r4",
+        "436d7430 strb.w r3,[r4,#0x34c]",
+        "436d7434 strh.w r3,[r4,#0x3a0]",
+        "436d7438 adds r3,#0xff",
+        "436d743a str.w r6,[r4,#0x26c]",
+        "436d743e strb.w r3,[r4,#0x3a2]",
+        "436d7442 mov.w r3,#0xffffffff",
+        "436d7446 strb.w r1,[r4,#0x3a3]",
+        "436d744a str.w r3,[r4,#0x3a8]",
+        "436d744e str.w r3,[r4,#0x3ac]",
+        "436d7452 add.w r3,r4,#0x350",
+        "436d7456 strb.w r1,[r4,#0x3a4]",
+        "436d745a str.w r3,[r4,#0x294]",
+        "436d745e add sp,#0x38",
+        "436d7460 pop {r4,r5,r6,pc}"
+      ],
+      "calls_and_jumps": [
+        {
+          "site": "436d72f2",
+          "target": "436d93d0",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436d7314",
+          "target": "43ad8cb2",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436d7378",
+          "target": "436d8774",
+          "type": "UNCONDITIONAL_CALL"
+        }
+      ],
+      "references_after": []
+    },
+    {
+      "query": "43bc1d40",
+      "references_before": [],
+      "raw_pointer_hits_unaligned": [],
+      "bytes_128": "02000000010101010000000000000100000c010000000f43000020004c0101000100010000001042000060c000000000020000000000000000000000000020004c010100010001000000f0410000000000000000010000000000000000000000000020004c010100010001000000f041ba490c3e000000000100000000000000"
+    },
+    {
+      "query": "43fcbf78",
+      "references_before": [],
+      "raw_pointer_hits_unaligned": [
+        "44021c18"
+      ],
+      "bytes_128": "00000000e494fe434383ad438f83ad438d82ad43ed2b6d43df82ad43a782ad43c382ad43292b6d431183ad430000000000000000f094fe439d2c6d43d583ad4300000000f894fe436184ad439b84ad43e9306d431f84ad43e16ead437384ad438784ad4305306d434384ad4300000000000000000495fe435785ad439185ad43"
+    },
+    {
+      "query": "43fcbe68",
+      "references_before": [],
+      "raw_pointer_hits_unaligned": [
+        "44026c8c"
+      ],
+      "bytes_128": "000000009094fe43f379ad433b7aad43af79ad4389226d439179ad435979ad437579ad4349216d43cd79ad4300000000000000009c94fe43e57bad431f7cad43e1236d43a17bad436b7bad43f77bad430b7cad43fd226d43c77bad4345419b4345419b430000000000000000a894fe43c1246d439f7cad4300000000c094fe43"
+    }
+  ]
+}

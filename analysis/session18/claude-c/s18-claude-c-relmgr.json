@@ -1,0 +1,93 @@
+{
+  "session": 18,
+  "thread": "claude-c",
+  "scope": "static_analysis_only",
+  "model_effort_declared": {"model": "claude-sonnet-5", "effort": "medium", "run_mode": "background_job", "delegated_to_subagents": false},
+  "rules_followed": {
+    "no_device_connect_or_flash": true,
+    "no_package_install": true,
+    "no_binary_or_context_md_edit": true,
+    "no_subagent_delegation": true,
+    "classification_applied": true,
+    "never_claims_silentshutter_works": true
+  },
+  "load_base_liro_verified": "0x43541000",
+  "methodological_note_thumb_bit": {
+    "status": "VERIFICADO",
+    "description": "Las direcciones de tabla heredadas 0x43b1be37/0x43b1bf05/0x43b1bf67/0x43b1c035 son punteros Thumb (bit0=1). 0x43b1be37 cae a mitad de instruccion (push real en 0x43b1be36) y causa ContextChangeException en Ghidra. Entradas reales corregidas: 0x43b1be36, 0x43b1bf04, 0x43b1bf66, 0x43b1c034."
+  },
+  "question_1_dynamic_rows": {
+    "status": "VERIFICADO_con_salvedad_ABI",
+    "rows_decompiled": [
+      {"offset": "0xa0", "addr": "0x43b1be36", "ghidra_status": "decompiled"},
+      {"offset": "0xc8", "addr": "0x43b1bf04", "ghidra_status": "decompiled"},
+      {"offset": "0xdc", "addr": "0x43b1bf66", "ghidra_status": "decompiled"},
+      {"offset": "0x104", "addr": "0x43b1c034", "ghidra_status": "decompiled"}
+    ],
+    "finding": "Las 4 filas son semanticamente identicas en control de flujo entre si y respecto a la fila 0xb4 (0x43b1be99, decompilada en sesion previa). Difieren solo en nombres de variable (artefacto de Ghidra) y en ancho de retorno de FUN_43afdf16 (32 bits en 0xa0/0xc8, 64 bits en 0xdc/0x104). Comparten campos +0x1d8,+0x1e0,+0x4b70,+0x4b95,+0x4c,+0x54a5,+0x548c,+0x5488,+0x750,+0x754,+0x4ad8 y cadenas Capture_Req_Retry/Capture_Cancel/Panorama_DEBUG_CAPTURE_START.",
+    "silent_efcs_marker_found": false,
+    "caveat": "Las otras 10 filas de la tabla de 15 no se decompilaron en esta tanda; NO VERIFICADO su contenido."
+  },
+  "question_2_queue_0x40193_consumer": {
+    "status": "NO_VERIFICADO_blocker_persiste",
+    "new_finding_verified": {
+      "description": "0x43807d80 (manejador de tecla) termina en 0x43807f2a. Funcion distinta y nueva empieza en 0x43807f4c con prologo push.w {r0,r1,r2,r3,r4,r5,r6,r7,r8,lr}.",
+      "function_0x43807f4c": {
+        "role": "dispatcher denso sobre *param_2 (primer campo del mensaje recibido)",
+        "domain": "0x100..0x207 (local, DISTINTO del dominio 0x3011/0x3013/0x3015 de ObjMsg/cola 0x40193)",
+        "case_0x100_calls": "0x43807d80",
+        "case_0x101_calls": "0x43809e98",
+        "direct_bl_callers_found_in_binary": 0,
+        "called_indirectly": true
+      }
+    },
+    "open_hypothesis": "Relacion entre dominio local 0x100..0x207 y dominio ObjMsg 0x3011/0x3013/0x3015 no probada. Receptor real de la cola 0x40193 sigue sin identificarse por desensamblado crudo en esta tanda.",
+    "verified_7_bl_sites_to_0x43809ed8": [
+      "0x43807e74", "0x43807eb4", "0x43807eee", "0x43807f2a",
+      "0x43808d90", "0x43808da2", "0x43808dd8"
+    ]
+  },
+  "question_3_kernel_primitives": {
+    "status": "DESCARTADO_parcial_NO_VERIFICADO_resto",
+    "finding": "grep -rli av_cam|avcam|relmgr|capturemgr|objmsg sobre arch/arm/mach-cxd90014 y mach-cxd4132 completos: 0 resultados. Solo existe infraestructura generica de SoC (GPIO via framework udif, reloj, GIC/PL310). Ningun archivo ni simbolo especifico de teclas de camara.",
+    "udif_gpio_driver_file": "arch/arm/mach-cxd4132/gpio.c",
+    "camera_key_specific_code_found": false
+  },
+  "question_4_gpio_irq_handler_for_s2": {
+    "status": "NO_VERIFICADO",
+    "finding": "En arch/arm/mach-cxd4132/gpio.c el unico uso de 'irq' es udif_spin_lock_irqsave/unlock_irqrestore (proteccion de spinlock), sin ninguna llamada request_irq ni registro de ISR. No se encontro manejador de interrupcion de teclado reconocible en los arboles mach-cxd90014/mach-cxd4132 disponibles.",
+    "possible_explanations_unverified": [
+      "Escaneo S1/S2 por polling desde userspace (LIRO) sobre el driver GPIO generico",
+      "Driver de teclado propietario ausente de linux-kernel.tar.gz (no verificable con material disponible)"
+    ]
+  },
+  "questions_5_to_14_consolidated_chain": [
+    {"link": "RelMgr envia ObjMsg tipo2 id 0x3011 a cola 0x40193", "status": "VERIFICADO_heredado_sesion17_no_reconfirmado"},
+    {"link": "Callback CaptureStart GOT 0x44021ed0 -> 0x437df641 -> FUN_439018b0", "status": "VERIFICADO_heredado_sesion17"},
+    {"link": "7 sitios bl 0x43809ed8 en 0x43807d80 y 0x438089d4", "status": "VERIFICADO_reconfirmado_esta_tanda"},
+    {"link": "0x43807f4c distinta de 0x43807d80, dispatcher local 0x100..0x207, llama a 0x43807d80 en case 0x100", "status": "VERIFICADO_nuevo_esta_tanda"},
+    {"link": "0x43807f4c invocada solo indirectamente (0 bl directos)", "status": "VERIFICADO_nuevo_esta_tanda"},
+    {"link": "Puente entre dominio 0x100..0x207 y dominio 0x3011/0x3013/0x3015", "status": "NO_VERIFICADO_hipotesis_abierta"},
+    {"link": "Receptor real cola 0x40193", "status": "NO_VERIFICADO_blocker_persiste"},
+    {"link": "0x438089d4 descartado como consumidor de 0x40193", "status": "DESCARTADO_heredado_sesion17_no_reconfirmado"},
+    {"link": "Inicializador 0x437ebed8 puebla tabla selector 0x437eabfc via GOT", "status": "VERIFICADO_heredado_sesion18_previa"},
+    {"link": "Offsets dinamicos reales 0xa0,0xc8,0xdc,0x104", "status": "VERIFICADO_heredado_sesion18_previa"},
+    {"link": "Direcciones reales corregidas (bit Thumb) de las 4 filas dinamicas", "status": "VERIFICADO_nuevo_esta_tanda"},
+    {"link": "Las 4 filas dinamicas identicas entre si y a fila 0xb4, sin marca Silent/EFCS", "status": "VERIFICADO_nuevo_esta_tanda"},
+    {"link": "Primitivas kernel Sony especificas de tecla fisica S2", "status": "NO_VERIFICADO_DESCARTADO_parcial"},
+    {
+      "link": "Existencia de ruta electronica pura activable modificando un campo del struct en cualquiera de las 5 filas conocidas",
+      "status": "HIPOTESIS_puramente_especulativa_NO_VERIFICADA",
+      "note": "Las 5 filas conocidas comparten los mismos campos de control sin bandera visible mecanico/electronico. Ausencia de bifurcacion visible no prueba ni descarta una ruta electronica en las 10 filas restantes no decompiladas. Analisis puramente teorico, nunca propuesta de implementacion real. NUNCA se afirma que SilentShutter funcione."
+    }
+  ],
+  "next_session_open_items": [
+    "Decompilar las 10 filas restantes de la tabla de 15 (offsets 0x0,0x14,0x28,0x3c,0x50,0x64,0x78,0x8c,0xf0,0x118), restando 1 a punteros GOT impares antes de pasarlos a Ghidra",
+    "Buscar llamador indirecto real de 0x43807f4c (tabla de vtable o registro de callback) para intentar cerrar el puente de dominios",
+    "Evaluar si existe kernel propietario ausente de linux-kernel.tar.gz con driver de teclado real (requeriria material adicional no disponible; no se descargo nada nuevo)"
+  ],
+  "incidents": [
+    "ContextChangeException en Ghidra al decompilar 0x43b1be37 (direccion Thumb impar a mitad de instruccion); resuelto usando 0x43b1be36",
+    "Ningun archivo tocado fuera de los entregables; CONTEXT.md no editado; sin conexion a hardware; sin instalacion de paquetes; sin delegacion a subagentes"
+  ]
+}

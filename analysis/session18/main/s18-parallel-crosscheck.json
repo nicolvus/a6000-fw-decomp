@@ -1,0 +1,133 @@
+{
+  "sesion": 18,
+  "fecha": "2026-10-17",
+  "alcance": "8 agentes (4 Claude Sonnet 5 + 4 Codex GPT-5.6-terra) + principal, analisis estatico exclusivo, mas inventario e integracion de archivos fuente oficiales Sony OSS",
+  "metodo": "Agent tool (Claude A-D, background, sonnet/medium) + binario real /home/nicolas/.local/bin/codex con -c model=gpt-5.6-terra -c model_reasoning_effort=medium (Codex E-H, background, --sandbox workspace-write --skip-git-repo-check)",
+  "configuracion_real": {
+    "claude_a": {"modelo_pedido": "sonnet", "modelo_real": "Sonnet 5 confirmado", "esfuerzo_pedido": "medium", "esfuerzo_real": "no verificable desde dentro del agente", "incidente": "ninguno"},
+    "claude_b": {"modelo_pedido": "sonnet", "modelo_real": "Sonnet 5 confirmado", "esfuerzo_pedido": "medium", "esfuerzo_real": "bajo (confirmado, igual que sesion 17)", "incidente": "intento de autocorreccion con set_session_effort bloqueado por la herramienta"},
+    "claude_c": {"modelo_pedido": "sonnet", "modelo_real": "Sonnet 5 confirmado", "esfuerzo_pedido": "medium", "esfuerzo_real": "medium confirmado", "incidente": "ContextChangeException de Ghidra por direccion Thumb impar, resuelta"},
+    "claude_d": {"modelo_pedido": "sonnet", "modelo_real": "Sonnet 5 confirmado", "esfuerzo_pedido": "medium", "esfuerzo_real": "medium confirmado", "incidente": "ninguno"},
+    "codex_e": {"modelo_pedido": "gpt-5.6-terra", "modelo_real": "GPT-5 (Codex), flags de lanzamiento correctos", "esfuerzo_pedido": "medium", "esfuerzo_real": "no expuesto al agente", "incidente": "ninguno"},
+    "codex_f": {"modelo_pedido": "gpt-5.6-terra", "modelo_real": "GPT-5 (Codex)", "esfuerzo_pedido": "medium", "esfuerzo_real": "no expuesto al agente", "incidente": "ninguno"},
+    "codex_g": {"modelo_pedido": "gpt-5.6-terra", "modelo_real": "GPT-5 (Codex)", "esfuerzo_pedido": "medium", "esfuerzo_real": "no expuesto al agente", "incidente": "ninguno"},
+    "codex_h": {"modelo_pedido": "gpt-5.6-terra", "modelo_real": "GPT-5 (Codex)", "esfuerzo_pedido": "medium", "esfuerzo_real": "no expuesto al agente", "incidente": "ninguno"}
+  },
+  "limite_2claude_2codex_x2": "respetado: exactamente 4 Claude + 4 Codex, ningun agente lanzo subagentes propios (confirmado explicitamente por los 8)",
+  "verificacion_cruzada_critica": [
+    {
+      "hallazgo": "GOT[0x44020894] = 0x43afb3bb (trampolin unico de LIRO, no vtabla C++)",
+      "agente_origen": "claude_a",
+      "metodo_verificacion_principal": "lectura cruda de av-cam.bin en offset 0x44020894-0x43541000",
+      "resultado": "CONFIRMADO"
+    },
+    {
+      "hallazgo": "sdc.c/sdc-zqcal*.c de mach-cxd4132 son calibracion de LPDDR, no controlador SD",
+      "agente_origen": "codex_g_h",
+      "metodo_verificacion_principal": "lectura directa de regs-dmc.h: SDC_COMMAND1/2 documentados explicitamente for LPDDR1/LPDDR2",
+      "resultado": "CONFIRMADO, corrige hipotesis inicial del inventario del principal"
+    },
+    {
+      "hallazgo": "las 4 filas dinamicas (0xa0,0xc8,0xdc,0x104) son variantes casi identicas de la fila 0xb4, sin marca Silent",
+      "agente_origen": "claude_a_y_claude_c",
+      "metodo_verificacion_principal": "convergencia cruzada: dos agentes independientes llegaron a la misma conclusion por metodos distintos sin coordinarse",
+      "resultado": "CONFIRMADO_POR_DUPLICADO"
+    },
+    {
+      "hallazgo": "tabla de topologia .rodata 0xcc4210, filas 0x2a/0xb4 con valores [0,6,9,1,1,0xb,0,0]/[0,6,0x35,1,2,0xb,0,0]",
+      "agente_origen": "claude_d",
+      "metodo_verificacion_principal": "coincide exactamente con CONTEXT.md; verificacion de reproducibilidad por segundo metodo, no de novedad",
+      "resultado": "CONFIRMADO_REPRODUCIBLE"
+    },
+    {
+      "hallazgo": "no existe dmm.ko ni interfaz DMM Sony literal en el kernel OSS",
+      "agente_origen": "codex_g",
+      "metodo_verificacion_principal": "coincide con busqueda independiente previa del principal en drivers/{mmc,mtd,video,media}; Codex G amplio a todo el arbol",
+      "resultado": "CONFIRMADO_AMPLIADO"
+    }
+  ],
+  "contradicciones": [],
+  "correcciones_cruzadas": [
+    {
+      "descripcion": "sdc.c de mach-cxd4132 NO es controlador SD, es calibracion LPDDR",
+      "quien_corrige": "codex_g_h",
+      "a_quien": "inventario inicial del principal (sony-oss-inventory.md/.json)",
+      "accion": "corregido en los dos archivos de inventario tras la correccion"
+    }
+  ],
+  "hallazgos_nuevos_por_rama": {
+    "principal": [
+      "base de carga LIRO confirmada 0x43541000",
+      "inicializador 0x437EBED8 resuelve tabla del selector via GOT estatico",
+      "15 filas del selector son trampolines de 4 bytes",
+      "unico hallazgo Silent en LIRO es de audio, descartado"
+    ],
+    "claude_a": [
+      "blocker Connect() reducido a 5 bibliotecas candidatas",
+      "LifeCycle de libObj.so y trampolin LIRO son clases distintas (vtabla real vs trampolin unico)",
+      "3 de 4 filas dinamicas restantes decompiladas, sin marca Silent"
+    ],
+    "claude_b": [
+      "CORRIGE sesion 17: CameraSequence->ScalarDaemon usa libsdcom.so, no Binder",
+      "reafirma cero conexion S2->CameraSequence",
+      "veredicto A>E>P~=E2 sin cambios"
+    ],
+    "claude_c": [
+      "0x43807f4c identificado como llamador real de 0x43807d80",
+      "puente entre dominio 0x100..0x207 y dominio 0x3011/0x40193 sigue sin probarse",
+      "confirma filas dinamicas identicas a 0xb4 por diff textual completo"
+    ],
+    "claude_d": [
+      "confirma por metodo independiente: sin llamador comun createLifeCycles<->Connect",
+      "tecnica GOT->BSS de LIRO no tiene equivalente en libObj.so (tabla ya es rodata estatica)",
+      "re-deriva filas 0x2a/0xb4 por segundo metodo, coinciden con CONTEXT.md"
+    ],
+    "codex_e": [
+      "confirma superficie propietaria real de memoria YC: AvbbcPhycMem, DmmCh, DmmAccessPLA, C_DataflowInfra_StdData_YC",
+      "kernel OSS sin enlace estatico a ObjCamera/YC"
+    ],
+    "codex_f": [
+      "contrato YC/SDS mas preciso: raster 0x50b3f + SDS 0xe0b00 (bloque de control, no pixeles)",
+      "CMPR del kernel es LZPART generico, descartado como evidencia de formato YC/JPEG"
+    ],
+    "codex_g": [
+      "ashmem es el unico mecanismo de memoria compartida en este kernel 3.0.27; ION/DMA-BUF no existen en esta version",
+      "hallazgo sin explicacion: UDIF ldec/mia con IRQ/DMAC registrados, sin controlador fuente ni semantica documentada"
+    ],
+    "codex_h": [
+      "corrige sdc.c como LPDDR no SD",
+      "confirma FAT/VFAT real y habilitado, fsync/fdatasync disponibles",
+      "cadenas DCF/DCIM reales en libmpr.so, secuencia completa sigue sin reconstruir"
+    ]
+  },
+  "que_aporto_sony_oss": {
+    "confirmaciones_plataforma": [
+      "kernel real Linux 3.0.27 con SoCs propios Sony (mach-cxd90014, mach-cxd4132)",
+      "mecanismo de memoria compartida real: ashmem (ION/DMA-BUF no existen en esta version)",
+      "sistema de archivos real para medio extraible: FAT/VFAT con fsync/fdatasync",
+      "integracion de cache PL310 especifica de plataforma CXD4132"
+    ],
+    "cambio_de_conclusion": "ninguno sobre S2/obturador; uno sobre infraestructura propia (sdc.c es LPDDR no SD)",
+    "informacion_generica_sin_aplicacion_directa": "DMA ARM generico, coherencia de cache generica, VFS, completion/kref genericos",
+    "componentes_no_publicados_confirmados_por_ausencia": [
+      "DMM", "FEA", "MPR", "RelMgr", "CaptureManager",
+      "ObjCamera", "ObjEffect", "ObjStillRecorder",
+      "CameraSequence", "CameraEx", "ScalarDaemon", "SDCom",
+      "cualquier driver de sensor/ISP/JPEG reconocible"
+    ],
+    "veredicto": "los archivos Sony OSS no aportaron evidencia sobre FEA, DMM ni el pipeline fotografico; la investigacion continua por las rutas de desensamblado ya identificadas"
+  },
+  "criterios_exito": {
+    "camera_effect_recorder_alcanzable": "sin cambios, bloqueo de control sigue debilitado sin arbitraje activo",
+    "yc_convertible_encodestill": "mas caracterizado (contrato raster+SDS, superficie DMM/AvbbcPhycMem), formato real sigue NO_VERIFICADO",
+    "camerasequence_ruta_mas_corta": "sin cambios de fondo, corregido mecanismo de enlace SDCom no Binder, S2 sigue sin conexion",
+    "liberacion_segura_buffer": "sin avance, ningun liberador DMM real localizado"
+  },
+  "veredicto_arquitecturas": "A > E > P ~= E2, sin cambios respecto a sesion 17",
+  "bloqueos_siguiente_sesion": [
+    "cerrar blocker Connect() dentro de las 5 bibliotecas identificadas por Claude A via analisis de flujo de datos",
+    "probar o refutar el puente entre dominio 0x100..0x207 y dominio 0x3011/0x40193",
+    "decompilar las 10 filas restantes de la tabla de 15 de LIRO",
+    "identificar clase real de ObjId 53 por mecanismo de auto-registro"
+  ]
+}

@@ -1,0 +1,566 @@
+{
+  "source_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "base": "43541000",
+  "method": "persistent project -readOnly -noanalysis; temporary function definitions rolled back; no firmware execution",
+  "functions": [
+    {
+      "query": "436d30e8",
+      "references_before": [],
+      "raw_pointer_hits_unaligned": [
+        "43fcbfc8"
+      ],
+      "entry": "436d30e8",
+      "body": "[[436d30e8, 436d311f]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\nvoid s32_candidate_436d30e8(int param_1)\n\n{\n  int iVar1;\n  \n  FUN_43ad6e42(param_1 + 4);\n  iVar1 \u003d FUN_436d30c8();\n  if (iVar1 !\u003d 0) {\n    func_0x436d301c(0x165,1,1,0x43c9296c);\n    FUN_43902718(0x43c92977);\n  }\n  iVar1 \u003d FUN_43ad6e42(param_1 + 4);\n  *(uint *)(iVar1 + 0xa1610) \u003d *(uint *)(iVar1 + 0xa1610) \u0026 0xfffffffe | 1;\n  return;\n}\n\n",
+      "listing": [
+        "436d30e8 push {r4,lr}",
+        "436d30ea adds r4,r0,#0x4",
+        "436d30ec mov r0,r4",
+        "436d30ee bl 0x43ad6e42",
+        "436d30f2 bl 0x436d30c8",
+        "436d30f6 cbz r0,0x436d3110",
+        "436d30f8 ldr r3,[0x436d3120]",
+        "436d30fa movs r1,#0x1",
+        "436d30fc movw r0,#0x165",
+        "436d3100 mov r2,r1",
+        "436d3102 add r3,pc",
+        "436d3104 bl 0x436d301c",
+        "436d3108 ldr r0,[0x436d3124]",
+        "436d310a add r0,pc",
+        "436d310c bl 0x43902718",
+        "436d3110 mov r0,r4",
+        "436d3112 bl 0x43ad6e42",
+        "436d3116 movs r1,#0x1",
+        "436d3118 pop.w {r4,lr}",
+        "436d311c b.w 0x436d30d8"
+      ],
+      "calls_and_jumps": [
+        {
+          "site": "436d30ee",
+          "target": "43ad6e42",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436d30f2",
+          "target": "436d30c8",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436d30f6",
+          "target": "436d3110",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436d3104",
+          "target": "436d301c",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436d310c",
+          "target": "43902718",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436d3112",
+          "target": "43ad6e42",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436d311c",
+          "target": "436d30d8",
+          "type": "UNCONDITIONAL_JUMP"
+        }
+      ],
+      "references_after": []
+    },
+    {
+      "query": "436d32a4",
+      "references_before": [],
+      "raw_pointer_hits_unaligned": [
+        "43fcbff8"
+      ],
+      "entry": "436d32a4",
+      "body": "[[436d32a4, 436d32db]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\nvoid s32_candidate_436d32a4(int param_1)\n\n{\n  int iVar1;\n  \n  FUN_43ad6e42(param_1 + 4);\n  iVar1 \u003d FUN_436d3284();\n  if (iVar1 !\u003d 0) {\n    func_0x436d31c0(0x165,1,1,0x43c929d5);\n    FUN_43902718(0x43c929e0);\n  }\n  iVar1 \u003d FUN_43ad6e42(param_1 + 4);\n  *(uint *)(iVar1 + 0xa1710) \u003d *(uint *)(iVar1 + 0xa1710) \u0026 0xfffffffe | 1;\n  return;\n}\n\n",
+      "listing": [
+        "436d32a4 push {r4,lr}",
+        "436d32a6 adds r4,r0,#0x4",
+        "436d32a8 mov r0,r4",
+        "436d32aa bl 0x43ad6e42",
+        "436d32ae bl 0x436d3284",
+        "436d32b2 cbz r0,0x436d32cc",
+        "436d32b4 ldr r3,[0x436d32dc]",
+        "436d32b6 movs r1,#0x1",
+        "436d32b8 movw r0,#0x165",
+        "436d32bc mov r2,r1",
+        "436d32be add r3,pc",
+        "436d32c0 bl 0x436d31c0",
+        "436d32c4 ldr r0,[0x436d32e0]",
+        "436d32c6 add r0,pc",
+        "436d32c8 bl 0x43902718",
+        "436d32cc mov r0,r4",
+        "436d32ce bl 0x43ad6e42",
+        "436d32d2 movs r1,#0x1",
+        "436d32d4 pop.w {r4,lr}",
+        "436d32d8 b.w 0x436d3294"
+      ],
+      "calls_and_jumps": [
+        {
+          "site": "436d32aa",
+          "target": "43ad6e42",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436d32ae",
+          "target": "436d3284",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436d32b2",
+          "target": "436d32cc",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436d32c0",
+          "target": "436d31c0",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436d32c8",
+          "target": "43902718",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436d32ce",
+          "target": "43ad6e42",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436d32d8",
+          "target": "436d3294",
+          "type": "UNCONDITIONAL_JUMP"
+        }
+      ],
+      "references_after": []
+    },
+    {
+      "query": "436d26e4",
+      "references_before": [],
+      "raw_pointer_hits_unaligned": [
+        "43fcbef0"
+      ],
+      "entry": "436d26e4",
+      "body": "[[436d26d4, 436d26df] [436d26e4, 436d272d]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\nvoid s32_candidate_436d26e4(int param_1,undefined4 param_2,undefined4 param_3)\n\n{\n  int iVar1;\n  \n  if (*(int *)(param_1 + 0xc) \u003d\u003d 0) {\n    FUN_43ad6e42(param_1 + 4);\n    iVar1 \u003d FUN_436d26c4();\n    if (iVar1 !\u003d 0) {\n      func_0x436d25f0(0x165,1,1,0x43c92752,*(undefined1 *)(param_1 + 8),param_2,param_3);\n      FUN_43902718(0x43c9275d,*(undefined1 *)(param_1 + 8));\n    }\n    iVar1 \u003d FUN_43ad6e42(param_1 + 4);\n    *(uint *)(iVar1 + 0xa1210) \u003d *(uint *)(iVar1 + 0xa1210) \u0026 0xfffffffe | 1;\n    return;\n  }\n  return;\n}\n\n",
+      "listing": [
+        "436d26d4 ldr r3,[0x436d26e0]",
+        "436d26d6 ldr r2,[r0,r3]",
+        "436d26d8 bfi r2,r1,#0x0,#0x1",
+        "436d26dc str r2,[r0,r3]",
+        "436d26de bx lr",
+        "436d26e4 ldr r3,[r0,#0xc]",
+        "436d26e6 push {r0,r1,r2,r4,r5,lr}",
+        "436d26e8 mov r4,r0",
+        "436d26ea cbnz r3,0x436d272a",
+        "436d26ec adds r5,r0,#0x4",
+        "436d26ee mov r0,r5",
+        "436d26f0 bl 0x43ad6e42",
+        "436d26f4 bl 0x436d26c4",
+        "436d26f8 cbz r0,0x436d2718",
+        "436d26fa ldrb r3,[r4,#0x8]",
+        "436d26fc movs r1,#0x1",
+        "436d26fe movw r0,#0x165",
+        "436d2702 mov r2,r1",
+        "436d2704 str r3,[sp,#0x0]",
+        "436d2706 ldr r3,[0x436d2730]",
+        "436d2708 add r3,pc",
+        "436d270a bl 0x436d25f0",
+        "436d270e ldr r0,[0x436d2734]",
+        "436d2710 ldrb r1,[r4,#0x8]",
+        "436d2712 add r0,pc",
+        "436d2714 bl 0x43902718",
+        "436d2718 mov r0,r5",
+        "436d271a bl 0x43ad6e42",
+        "436d271e movs r1,#0x1",
+        "436d2720 add sp,#0xc",
+        "436d2722 pop.w {r4,r5,lr}",
+        "436d2726 b.w 0x436d26d4",
+        "436d272a add sp,#0xc",
+        "436d272c pop {r4,r5,pc}"
+      ],
+      "calls_and_jumps": [
+        {
+          "site": "436d26ea",
+          "target": "436d272a",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436d26f0",
+          "target": "43ad6e42",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436d26f4",
+          "target": "436d26c4",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436d26f8",
+          "target": "436d2718",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436d270a",
+          "target": "436d25f0",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436d2714",
+          "target": "43902718",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436d271a",
+          "target": "43ad6e42",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436d2726",
+          "target": "436d26d4",
+          "type": "UNCONDITIONAL_JUMP"
+        }
+      ],
+      "references_after": []
+    },
+    {
+      "query": "436d23e0",
+      "references_before": [],
+      "raw_pointer_hits_unaligned": [
+        "43fcbd48",
+        "43fcbd80",
+        "43fcbea8"
+      ],
+      "entry": "436d23e0",
+      "body": "[[436d23e0, 436d2421]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\nvoid s32_candidate_436d23e0(int param_1,undefined4 param_2,undefined4 param_3)\n\n{\n  int iVar1;\n  \n  FUN_43ad6e42(param_1 + 4);\n  iVar1 \u003d FUN_436d23c0();\n  if (iVar1 !\u003d 0) {\n    func_0x436d2314(0x165,1,1,0x43c926ab,*(undefined1 *)(param_1 + 8),param_2,param_3);\n    FUN_43902718(0x43c926b6,*(undefined1 *)(param_1 + 8));\n  }\n  iVar1 \u003d FUN_43ad6e42(param_1 + 4);\n  *(uint *)(iVar1 + 0xa1310) \u003d *(uint *)(iVar1 + 0xa1310) \u0026 0xfffffffe | 1;\n  return;\n}\n\n",
+      "listing": [
+        "436d23e0 push {r0,r1,r2,r4,r5,lr}",
+        "436d23e2 adds r5,r0,#0x4",
+        "436d23e4 mov r4,r0",
+        "436d23e6 mov r0,r5",
+        "436d23e8 bl 0x43ad6e42",
+        "436d23ec bl 0x436d23c0",
+        "436d23f0 cbz r0,0x436d2410",
+        "436d23f2 ldrb r3,[r4,#0x8]",
+        "436d23f4 movs r1,#0x1",
+        "436d23f6 movw r0,#0x165",
+        "436d23fa mov r2,r1",
+        "436d23fc str r3,[sp,#0x0]",
+        "436d23fe ldr r3,[0x436d2424]",
+        "436d2400 add r3,pc",
+        "436d2402 bl 0x436d2314",
+        "436d2406 ldr r0,[0x436d2428]",
+        "436d2408 ldrb r1,[r4,#0x8]",
+        "436d240a add r0,pc",
+        "436d240c bl 0x43902718",
+        "436d2410 mov r0,r5",
+        "436d2412 bl 0x43ad6e42",
+        "436d2416 movs r1,#0x1",
+        "436d2418 add sp,#0xc",
+        "436d241a pop.w {r4,r5,lr}",
+        "436d241e b.w 0x436d23d0"
+      ],
+      "calls_and_jumps": [
+        {
+          "site": "436d23e8",
+          "target": "43ad6e42",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436d23ec",
+          "target": "436d23c0",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436d23f0",
+          "target": "436d2410",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436d2402",
+          "target": "436d2314",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436d240c",
+          "target": "43902718",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436d2412",
+          "target": "43ad6e42",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436d241e",
+          "target": "436d23d0",
+          "type": "UNCONDITIONAL_JUMP"
+        }
+      ],
+      "references_after": []
+    },
+    {
+      "query": "43ad6f32",
+      "references_before": [
+        {
+          "from": "436d2032",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d2004"
+        },
+        {
+          "from": "436d25bc",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d2598"
+        },
+        {
+          "from": "436d3192",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d3168"
+        },
+        {
+          "from": "436d3352",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d3328"
+        },
+        {
+          "from": "436d1962",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1930"
+        },
+        {
+          "from": "436d24a6",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d247c"
+        },
+        {
+          "from": "436d2816",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d27e8"
+        },
+        {
+          "from": "436d2b14",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d2ae8"
+        },
+        {
+          "from": "436d356a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d354c"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "43ad6f32",
+      "body": "[[43ad6f32, 43ad6f35]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\nvoid FUN_43ad6f32(undefined4 *param_1,undefined4 param_2)\n\n{\n  *param_1 \u003d param_2;\n  return;\n}\n\n",
+      "listing": [
+        "43ad6f32 str r1,[r0,#0x0]",
+        "43ad6f34 bx lr"
+      ],
+      "calls_and_jumps": [],
+      "references_after": [
+        {
+          "from": "436d2032",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d2004"
+        },
+        {
+          "from": "436d25bc",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d2598"
+        },
+        {
+          "from": "436d3192",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d3168"
+        },
+        {
+          "from": "436d3352",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d3328"
+        },
+        {
+          "from": "436d1962",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d1930"
+        },
+        {
+          "from": "436d24a6",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d247c"
+        },
+        {
+          "from": "436d2816",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d27e8"
+        },
+        {
+          "from": "436d2b14",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d2ae8"
+        },
+        {
+          "from": "436d356a",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d354c"
+        }
+      ]
+    },
+    {
+      "query": "436d247c",
+      "references_before": [
+        {
+          "from": "436d11cc",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d11c8"
+        }
+      ],
+      "raw_pointer_hits_unaligned": [],
+      "entry": "436d247c",
+      "body": "[[436d247c, 436d24b1]]",
+      "status": "decompiled",
+      "error": "",
+      "pseudo_code": "\nint * FUN_436d247c(int *param_1,int param_2)\n\n{\n  undefined4 uVar1;\n  \n  FUN_436d1914();\n  *param_1 \u003d DAT_44020298 + 8;\n  if (param_2 \u003d\u003d 0) {\n    uVar1 \u003d 0xfc000000;\n  }\n  else {\n    if (param_2 !\u003d 1) goto LAB_436d24aa;\n    uVar1 \u003d 0xfc001000;\n  }\n  FUN_43ad6f32(param_1 + 1,uVar1);\nLAB_436d24aa:\n  param_1[3] \u003d 0x3a;\n  return param_1;\n}\n\n",
+      "listing": [
+        "436d247c push {r4,r5,r6,lr}",
+        "436d247e mov r4,r0",
+        "436d2480 ldr r5,[0x436d24b8]",
+        "436d2482 mov r6,r1",
+        "436d2484 bl 0x436d1914",
+        "436d2488 ldr r3,[0x436d24bc]",
+        "436d248a add r5,pc",
+        "436d248c ldr r3,[r5,r3]",
+        "436d248e adds r3,#0x8",
+        "436d2490 str r3,[r4,#0x0]",
+        "436d2492 cbz r6,0x436d249a",
+        "436d2494 cmp r6,#0x1",
+        "436d2496 bne 0x436d24aa",
+        "436d2498 b 0x436d24a2",
+        "436d249a adds r0,r4,#0x4",
+        "436d249c mov.w r1,#0xfc000000",
+        "436d24a0 b 0x436d24a6",
+        "436d24a2 ldr r1,[0x436d24b4]",
+        "436d24a4 adds r0,r4,#0x4",
+        "436d24a6 bl 0x43ad6f32",
+        "436d24aa movs r3,#0x3a",
+        "436d24ac mov r0,r4",
+        "436d24ae str r3,[r4,#0xc]",
+        "436d24b0 pop {r4,r5,r6,pc}"
+      ],
+      "calls_and_jumps": [
+        {
+          "site": "436d2484",
+          "target": "436d1914",
+          "type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "site": "436d2492",
+          "target": "436d249a",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436d2496",
+          "target": "436d24aa",
+          "type": "CONDITIONAL_JUMP"
+        },
+        {
+          "site": "436d2498",
+          "target": "436d24a2",
+          "type": "UNCONDITIONAL_JUMP"
+        },
+        {
+          "site": "436d24a0",
+          "target": "436d24a6",
+          "type": "UNCONDITIONAL_JUMP"
+        },
+        {
+          "site": "436d24a6",
+          "target": "43ad6f32",
+          "type": "UNCONDITIONAL_CALL"
+        }
+      ],
+      "references_after": [
+        {
+          "from": "436d11cc",
+          "type": "UNCONDITIONAL_CALL",
+          "function": "436d11c8"
+        }
+      ]
+    },
+    {
+      "query": "43fcbf78",
+      "references_before": [],
+      "raw_pointer_hits_unaligned": [
+        "44021c18"
+      ],
+      "bytes_128": "00000000e494fe434383ad438f83ad438d82ad43ed2b6d43df82ad43a782ad43c382ad43292b6d431183ad430000000000000000f094fe439d2c6d43d583ad4300000000f894fe436184ad439b84ad43e9306d431f84ad43e16ead437384ad438784ad4305306d434384ad4300000000000000000495fe435785ad439185ad43"
+    },
+    {
+      "query": "43fcbe68",
+      "references_before": [],
+      "raw_pointer_hits_unaligned": [
+        "44026c8c"
+      ],
+      "bytes_128": "000000009094fe43f379ad433b7aad43af79ad4389226d439179ad435979ad437579ad4349216d43cd79ad4300000000000000009c94fe43e57bad431f7cad43e1236d43a17bad436b7bad43f77bad430b7cad43fd226d43c77bad4345419b4345419b430000000000000000a894fe43c1246d439f7cad4300000000c094fe43"
+    },
+    {
+      "query": "43fcbfb8",
+      "references_before": [],
+      "raw_pointer_hits_unaligned": [
+        "4402430c"
+      ],
+      "bytes_128": "00000000f894fe436184ad439b84ad43e9306d431f84ad43e16ead437384ad438784ad4305306d434384ad4300000000000000000495fe435785ad439185ad43a5326d431585ad43e16ead436985ad437d85ad43a9316d433985ad4300000000000000001095fe43e386ad43b186ad43fb85ad437b86ad434d86ad431586ad43"
+    },
+    {
+      "query": "43fcbfe8",
+      "references_before": [],
+      "raw_pointer_hits_unaligned": [
+        "44026090"
+      ],
+      "bytes_128": "000000000495fe435785ad439185ad43a5326d431585ad43e16ead436985ad437d85ad43a9316d433985ad4300000000000000001095fe43e386ad43b186ad43fb85ad437b86ad434d86ad431586ad433186ad4369336d439586ad4300000000000000001c95fe436987ad434b87ad43e5346d431b87ad43e16ead437b87ad43"
+    },
+    {
+      "query": "43fcbee0",
+      "references_before": [],
+      "raw_pointer_hits_unaligned": [
+        "4401efd8"
+      ],
+      "bytes_128": "00000000c094fe4339276d43df7fad43e5266d43937fad432d286d43077fad431b7fad43d9256d43e97ead430000000000000000cc94fe43ed80ad434f81ad433780ad43ed286d439b80ad434780ad437180ad43d5286d43bd80ad430000000000000000d894fe43d381ad430d82ad43592a6d43a381ad43e16ead43e581ad43"
+    },
+    {
+      "query": "43fcbd70",
+      "references_before": [],
+      "raw_pointer_hits_unaligned": [
+        "44026acc"
+      ],
+      "bytes_128": "000000004094fe43e57bad431f7cad43e1236d4375146d436b7bad43f77bad430b7cad4379136d43bf6ead4359126d43476ead4300000000000000004c94fe43d381ad430d82ad43592a6d435d176d43e16ead43e581ad43f981ad4391156d43e36ead43096fad43f56ead4300000000000000005894fe4345419b4345419b43"
+    },
+    {
+      "query": "43fcbd38",
+      "references_before": [],
+      "raw_pointer_hits_unaligned": [
+        "44025cf4"
+      ],
+      "bytes_128": "000000003494fe43e57bad431f7cad43e1236d43936ead436b7bad43f77bad430b7cad43b1106d43316ead4359126d43476ead4300000000000000004094fe43e57bad431f7cad43e1236d4375146d436b7bad43f77bad430b7cad4379136d43bf6ead4359126d43476ead4300000000000000004c94fe43d381ad430d82ad43"
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+There are 26 section headers, starting at offset 0x10a09fc:
+
+Section Headers:
+  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al
+  [ 0]                   NULL            00000000 000000 000000 00      0   0  0
+  [ 1] .gnu.hash         GNU_HASH        000000d4 0000d4 003484 04   A  2   0  4
+  [ 2] .dynsym           DYNSYM          00003558 003558 00e210 10   A  3   3  4
+  [ 3] .dynstr           STRTAB          00011768 011768 0231e5 00   A  0   0  1
+  [ 4] .gnu.version      VERSYM          0003494e 03494e 001c42 02   A  2   0  2
+  [ 5] .gnu.version_r    VERNEED         00036590 036590 000040 00   A  3   2  4
+  [ 6] .rel.dyn          REL             000365d0 0365d0 0a0248 08   A  2   0  4
+  [ 7] .rel.plt          REL             000d6818 0d6818 004ba0 08   A  2   9  4
+  [ 8] .init             PROGBITS        000db3b8 0db3b8 00000a 00  AX  0   0  4
+  [ 9] .plt              PROGBITS        000db3c4 0db3c4 0077a0 04  AX  0   0  4
+  [10] .text             PROGBITS        000e2b70 0e2b70 ae6a1c 00  AX  0   0 16
+  [11] .fini             PROGBITS        00bc958c bc958c 000006 00  AX  0   0  4
+  [12] .rodata           PROGBITS        00bc9598 bc9598 2c8a1a 00   A  0   0  8
+  [13] .ARM.extab        PROGBITS        00e91fb4 e91fb4 0cde80 00   A  0   0  4
+  [14] .ARM.exidx        ARM_EXIDX       00f5fe34 f5fe34 06a770 00  AL 10   0  4
+  [15] .init_array       INIT_ARRAY      00fd25a4 fca5a4 00041c 00  WA  0   0  4
+  [16] .fini_array       FINI_ARRAY      00fd29c0 fca9c0 000008 00  WA  0   0  4
+  [17] .jcr              PROGBITS        00fd29c8 fca9c8 000004 00  WA  0   0  4
+  [18] .data.rel.ro      PROGBITS        00fd29d0 fca9d0 05a090 00  WA  0   0  8
+  [19] .dynamic          DYNAMIC         0102ca60 1024a60 000170 08  WA  3   0  4
+  [20] .got              PROGBITS        0102cbd0 1024bd0 008750 04  WA  0   0  4
+  [21] .data             PROGBITS        01035320 102d320 073588 00  WA  0   0  8
+  [22] .bss              NOBITS          010a88a8 10a08a8 03a328 00  WA  0   0  8
+  [23] .ARM.attributes   ARM_ATTRIBUTES  00000000 10a08a8 000033 00      0   0  1
+  [24] .comment          PROGBITS        00000000 10a08db 00003f 01  MS  0   0  1
+  [25] .shstrtab         STRTAB          00000000 10a091a 0000df 00      0   0  1
+Key to Flags:
+  W (write), A (alloc), X (execute), M (merge), S (strings), I (info),
+  L (link order), O (extra OS processing required), G (group), T (TLS),
+  C (compressed), x (unknown), o (OS specific), E (exclude),
+  D (mbind), y (purecode), p (processor specific)
+
+Elf file type is DYN (Shared object file)
+Entry point 0xe2b70
+There are 5 program headers, starting at offset 52
+
+Program Headers:
+  Type           Offset   VirtAddr   PhysAddr   FileSiz MemSiz  Flg Align
+  ARM_EXIDX      0xf5fe34 0x00f5fe34 0x00f5fe34 0x6a770 0x6a770 R   0x4
+  LOAD           0x000000 0x00000000 0x00000000 0xfca5a4 0xfca5a4 R E 0x8000
+  LOAD           0xfca5a4 0x00fd25a4 0x00fd25a4 0xd6304 0x11062c RW  0x8000
+  DYNAMIC        0x1024a60 0x0102ca60 0x0102ca60 0x00170 0x00170 RW  0x4
+  GNU_STACK      0x000000 0x00000000 0x00000000 0x00000 0x00000 RW  0x4
+
+ Section to Segment mapping:
+  Segment Sections...
+   00     .ARM.exidx 
+   01     .gnu.hash .dynsym .dynstr .gnu.version .gnu.version_r .rel.dyn .rel.plt .init .plt .text .fini .rodata .ARM.extab .ARM.exidx 
+   02     .init_array .fini_array .jcr .data.rel.ro .dynamic .got .data .bss 
+   03     .dynamic 
+   04     
+
+Dynamic section at offset 0x1024a60 contains 42 entries:
+  Tag        Type                         Name/Value
+ 0x00000001 (NEEDED)                     Shared library: [libInfraFsys.so]
+ 0x00000001 (NEEDED)                     Shared library: [libmprctrl.so]
+ 0x00000001 (NEEDED)                     Shared library: [libMWF.so]
+ 0x00000001 (NEEDED)                     Shared library: [libmpr.so]
+ 0x00000001 (NEEDED)                     Shared library: [libutil_date.so]
+ 0x00000001 (NEEDED)                     Shared library: [libcompassutil.so]
+ 0x00000001 (NEEDED)                     Shared library: [libsencore.so]
+ 0x00000001 (NEEDED)                     Shared library: [libBizFw.so]
+ 0x00000001 (NEEDED)                     Shared library: [libBizFw2.so]
+ 0x00000001 (NEEDED)                     Shared library: [libNetContUtil.so]
+ 0x00000001 (NEEDED)                     Shared library: [libUsbControl.so]
+ 0x00000001 (NEEDED)                     Shared library: [libNetCommon.so]
+ 0x00000001 (NEEDED)                     Shared library: [libGOConnectionManager.so]
+ 0x00000001 (NEEDED)                     Shared library: [libInfraMediaCommon.so]
+ 0x00000001 (NEEDED)                     Shared library: [libbackup.so]
+ 0x00000001 (NEEDED)                     Shared library: [libgcc_s.so.1]
+ 0x00000001 (NEEDED)                     Shared library: [libc.so.6]
+ 0x0000000e (SONAME)                     Library soname: [libObj.so]
+ 0x0000000c (INIT)                       0xdb3b9
+ 0x0000000d (FINI)                       0xbc958d
+ 0x00000019 (INIT_ARRAY)                 0xfd25a4
+ 0x0000001b (INIT_ARRAYSZ)               1052 (bytes)
+ 0x0000001a (FINI_ARRAY)                 0xfd29c0
+ 0x0000001c (FINI_ARRAYSZ)               8 (bytes)
+ 0x6ffffef5 (GNU_HASH)                   0xd4
+ 0x00000005 (STRTAB)                     0x11768
+ 0x00000006 (SYMTAB)                     0x3558
+ 0x0000000a (STRSZ)                      143845 (bytes)
+ 0x0000000b (SYMENT)                     16 (bytes)
+ 0x00000003 (PLTGOT)                     0x102cbd0
+ 0x00000002 (PLTRELSZ)                   19360 (bytes)
+ 0x00000014 (PLTREL)                     REL
+ 0x00000017 (JMPREL)                     0xd6818
+ 0x00000011 (REL)                        0x365d0
+ 0x00000012 (RELSZ)                      655944 (bytes)
+ 0x00000013 (RELENT)                     8 (bytes)
+ 0x00000016 (TEXTREL)                    0x0
+ 0x6ffffffe (VERNEED)                    0x36590
+ 0x6fffffff (VERNEEDNUM)                 2
+ 0x6ffffff0 (VERSYM)                     0x3494e
+ 0x6ffffffa (RELCOUNT)                   60946
+ 0x00000000 (NULL)                       0x0

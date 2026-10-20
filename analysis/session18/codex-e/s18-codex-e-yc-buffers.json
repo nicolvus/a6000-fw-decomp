@@ -1,0 +1,96 @@
+{
+  "session": 18,
+  "agent": "Codex E - YC de ObjCamera",
+  "scope": "Analisis estatico local de buffers, DMA, memoria compartida, cache, direcciones y sincronizacion.",
+  "constraints_observed": [
+    "No se conecto ni flasheo una camara.",
+    "No se instalaron paquetes.",
+    "No se modificaron binarios originales ni CONTEXT.md."
+  ],
+  "artifacts": {
+    "libObj.so": {
+      "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libObj.so",
+      "sha256": "8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a",
+      "format": "ELF 32-bit LSB shared object, ARM EABI5, stripped"
+    },
+    "libMWF.so": {
+      "sha256": "2a7f469ac7aa49c1f04f666ede0c26604b78bd31608ee22650ac0d2bd26a0934"
+    },
+    "libmpr.so": {
+      "sha256": "9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30"
+    },
+    "linux-kernel.tar.gz": {
+      "sha256": "b1c74cc1a0160a7fceced6f88fa35521adc431205ad1ebc8a413d20b653785b1",
+      "version": "Linux 3.0.27"
+    }
+  },
+  "findings": [
+    {
+      "status": "VERIFICADO",
+      "claim": "libObj.so exporta ObjCamera_Create (0x00959bdd) y ObjEffect_Create (0x00bc02a1).",
+      "evidence": ["nm -D libObj.so"]
+    },
+    {
+      "status": "VERIFICADO",
+      "claim": "libObj.so contiene C_DataflowInfra_StdData_YC y entradas de tamaño, estado YC, tiempo de salida, tamaño derecho y display.",
+      "evidence": ["strings -a -t x -n 5 libObj.so, offsets 0x1e33c-0x1ebc1"]
+    },
+    {
+      "status": "VERIFICADO",
+      "claim": "ObjEffect diagnostica PARAMID_YC_DATA_MEM_INFO, PARAMID_YC_DATA_MEM_HANDLE y PARAMID_YC_DATA_MEM_TYPE.",
+      "evidence": ["strings -a -t x -n 8 libObj.so, offsets 0xbd164c-0xbd1913"]
+    },
+    {
+      "status": "VERIFICADO",
+      "claim": "YcSdsAcsr::initialize usa AvbbcPhycMem::GetLogAddr y consume entradas StdData_YC; libObj.so importa constructor, GetLogAddr y destructor de AvbbcPhycMem.",
+      "evidence": ["strings -a libObj.so, offsets 0xbd1fd0-0xbd2186", "nm -D libObj.so", "readelf -Wr libObj.so, JUMP_SLOT 0x0102cb1c/0x0102cf0c/0x0102ed88"]
+    },
+    {
+      "status": "VERIFICADO",
+      "claim": "libObj.so importa DmmCh para allocNew, allocShare, open, close, free y freeSdsAndYc, y DmmAccessPLA para handle, direcciones, tamaños y conteos de extensiones.",
+      "evidence": ["nm -D libObj.so", "readelf -Wr libObj.so"]
+    },
+    {
+      "status": "VERIFICADO",
+      "claim": "Los tres ELF importan primitivas de memoria y/o sincronizacion, pero la importacion aislada no prueba una ruta YC.",
+      "evidence": ["readelf -Wr libObj.so", "readelf -Wr libMWF.so", "readelf -Wr libmpr.so"]
+    },
+    {
+      "status": "DESCARTADO",
+      "claim": "Las interfaces BufferArea, GetMemNonCache/ClearMemNonCache y caches de libmpr.so no son evidencia directa del buffer ObjCamera/PlayData.",
+      "evidence": ["nm -D libmpr.so: MprIfMcmd y MprIf/FeaCore", "sin enlace estatico identificado con ObjCamera, ObjEffect o StdData_YC"]
+    },
+    {
+      "status": "VERIFICADO",
+      "claim": "El kernel OSS ARM proporciona APIs coherentes y streaming DMA, incluyendo dma_mmap_coherent, dma_sync_single_for_cpu y dma_sync_single_for_device.",
+      "evidence": ["linux/arch/arm/include/asm/dma-mapping.h:146-185", "linux/arch/arm/include/asm/dma-mapping.h:295-451"]
+    },
+    {
+      "status": "VERIFICADO",
+      "claim": "mach-cxd90014/cmpr.c sincroniza una carga fisica para DMA_TO_DEVICE; qemu.c usa DMA write-combining y mmap para framebuffer.",
+      "evidence": ["linux/arch/arm/mach-cxd90014/cmpr.c:107-161", "linux/arch/arm/mach-cxd90014/qemu.c:96-130"]
+    },
+    {
+      "status": "INFERENCIA",
+      "claim": "Los nombres AvbbcPhycMem/GetLogAddr y DMM de extents son compatibles con una abstraccion de direccion logica y metadatos de memoria.",
+      "evidence": ["nombres de simbolos de libObj.so"],
+      "limit": "No establece direccion fisica, direccion DMA, politica de cache ni ABI."
+    },
+    {
+      "status": "NO_VERIFICADO",
+      "claim": "El formato YC real, el productor/descriptor PlayData, la unidad DMM, las direcciones fisicas/DMA, ownership y la sincronizacion CPU/dispositivo.",
+      "evidence": ["No hay layout, valores ni xref PlayData->DMM/AvbbcPhycMem en la evidencia inspeccionada."]
+    },
+    {
+      "status": "HIPOTESIS",
+      "claim": "Resolver el proveedor de DMM/AvbbcPhycMem y sus tablas GOT/BSS, y seguir los callers de YcSdsAcsr::initialize y Sequence 0x6013, puede aportar evidencia decisiva.",
+      "evidence": ["APIs DMM y AvbbcPhycMem identificadas; tecnica GOT/BSS comunicada en el encargo."],
+      "limit": "No se ha demostrado que estas tablas o callers conecten con PlayData."
+    }
+  ],
+  "kernel_crossing_rule": "Todo hallazgo del kernel es contexto de plataforma; no se atribuye a ObjCamera sin enlace estatico directo.",
+  "silent_shutter": {
+    "status": "NO_VERIFICADO",
+    "claim": "Este analisis no demuestra ni afirma que SilentShutter funcione."
+  }
+}

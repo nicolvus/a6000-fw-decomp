@@ -1,0 +1,95 @@
+{
+  "session": 18,
+  "branch": "claude-b",
+  "scope": "static_analysis_only",
+  "disclaimer": "No se afirma que SilentShutter funcione. No se conecto ni flasheo la camara. No se edito CONTEXT.md ni binarios originales. No se delego en subagentes.",
+  "model_effort_actually_used": {
+    "model": "claude-sonnet-5",
+    "requested_effort": "medium",
+    "actual_effort": "low",
+    "note": "reasoning_effort=20 configurado para el job; set_session_effort no permite que una sesion cambie su propio esfuerzo (rechazado por la herramienta). Mismo problema que sesion 17, declarado explicitamente, no oculto."
+  },
+  "classification_legend": ["VERIFICADO", "INFERENCIA", "HIPOTESIS", "NO_VERIFICADO", "DESCARTADO"],
+  "sources": {
+    "kernel_tarball": "linux-kernel.tar.gz (raiz del proyecto, sin modificar, sha256 ya registrado en sony-oss-inventory.md)",
+    "kernel_extracted": "analysis/session18/main/sony-oss-extracted/linux/",
+    "binaries": [
+      "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha16_unpacked_unpacked/lib/libcameraex_jni.so",
+      "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha16_unpacked_unpacked/lib/libcameraex_client.so",
+      "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha16_unpacked_unpacked/lib/libcameraseq.so",
+      "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libScalarDaemon.so"
+    ],
+    "prior_session": "session 17 closed findings, not re-derived from scratch, referenced where relevant"
+  },
+  "answers": [
+    {
+      "q": 1,
+      "topic": "binder/ashmem del kernel vs binarios reales",
+      "classification": "NO_VERIFICADO",
+      "finding": "El kernel trae binder.c/binder.h estandar de AOSP en drivers/staging/android/, y ashmem.c/ashmem.h en mm/ e include/linux/ (ubicacion atipica respecto a staging/android, donde suele vivir en otras distros AOSP de la epoca). Los binarios de camara estan stripped y no importan ioctl ni simbolos binder_* directamente (nm -D vacio); usan libbinder.so (AOSP generico) para ese tramo. No se pudo comparar IOCTLs/estructuras literalmente contra codigo Sony especifico porque esa superficie es generica, no propietaria.",
+      "evidence": "readelf -d + nm -D sobre los 4 binarios; tar tzf linux-kernel.tar.gz | grep -i binder/ashmem"
+    },
+    {
+      "q": 2,
+      "topic": "driver de camara real (v4l2/media) para el sensor A6000",
+      "classification": "DESCARTADO",
+      "finding": "drivers/media/video/ solo contiene omap3isp/ (TI OMAP3 generico) como subdirectorio con nombre reconocible; ningun driver con nombre Sony/BIONZ/CXD/Exmor. No inventario exhaustivo de todos los archivos de drivers/media (declarado NO_VERIFICADO a nivel exhaustivo, igual que en sony-oss-inventory.md).",
+      "evidence": "tar tzf linux-kernel.tar.gz | grep drivers/media"
+    },
+    {
+      "q": 3,
+      "topic": "ashmem/PMEM/ION como backend de buffers de CameraSequence/DeviceBuffer",
+      "classification": "INFERENCIA",
+      "finding": "ashmem existe (mm/ashmem.c) y es un backend plausible de memoria compartida. No existe ningun driver ION ni PMEM real en el arbol (los matches de 'ion' son subcadenas falsas: version, exception, compaction, etc). No se encontro la cadena 'ashmem' en strings de libcameraseq.so/libcameraex_jni.so/libcameraex_client.so en la revision rapida de esta sesion, por lo que el vinculo especifico con DeviceBuffer es hipotesis razonable, no hecho confirmado.",
+      "evidence": "tar tzf linux-kernel.tar.gz | grep -i ashmem/ion/pmem; strings sobre los binarios de camara"
+    },
+    {
+      "q": 4,
+      "topic": "codigo real que conecte S2 fisico con CameraSequence",
+      "classification": "DESCARTADO",
+      "finding": "Reafirmado con firmeza: no existe, ni en PMCADemo (CameraActivity.java usa takePicture() convencional, confirmado en sesion 17) ni en ningun simbolo de CameraSequenceDiadem/CameraSeqUtil/SystemEventIssuerCameraSequence revisado. El nuevo hallazgo de esta sesion (SDCom en vez de Binder, ver q5) distancia aun mas la ruta P del bus Binder que usa la camara convencional interceptada por S2.",
+      "evidence": "cierre de sesion 17 (PMCADemo) + nm -D de esta sesion sobre libScalarDaemon.so/libcameraseq.so sin ningun simbolo de entrada de teclado/boton"
+    },
+    {
+      "q": 5,
+      "topic": "ciclo de vida de CameraSequence en libScalarDaemon.so",
+      "classification": "VERIFICADO_PARCIAL",
+      "finding": "Simbolos reales confirmados por nm -D: SystemEventIssuerCameraSequence::createStream(int,int,bool), setRawCapture(...), setPreviewPath(...), setPreviewBuffering(int,int), getPreviewInfo, getPreviewBufferingFrame, getPreviewSaAnalizedData, setChangeReleaseLockStatus(int,bool); callbacks CameraSequenceEventRawCaptureEventCb/PreviewErrorEventCb/PreviewSaNotifyEventCb; CommandProcessorFactoryCameraSequence::createProcessor(ScalarDaemonMsg::MESSAGE_ID). No se encontro stopStream/closeStream/destroyStream/releaseStream como simbolo C++ nombrado -- inferencia: el cierre se despacha como un MESSAGE_ID mas via createProcessor, no confirmado por desensamblado (fuera de alcance con el esfuerzo bajo real de esta sesion). CORRECCION A SESION 17: el enlace CameraSequence->ScalarDaemon NO usa Binder; usa una libreria propia libsdcom.so ('SDCom': SDComMsg/SDComIPCListener/SDComMsgUtil). libcameraseq.so (puente real, NEEDED de libcameraex_jni.so) enlaza libsdcom.so, no libbinder.so. libScalarDaemon.so tampoco enlaza libbinder.so -- sus NEEDED son libsdcom.so + libpthread.so.0/libstdc++.so.6/libc.so.6/librt.so.1 (nombres versionados estilo glibc), distinto del libc.so/libstdc++.so sin version de los binarios Bionic/Android de la misma particion -- indicio fuerte de que ScalarDaemon corre en un userland Linux separado del Android/Bionic. Binder si se usa, pero solo en el tramo convencional de camara (libcameraex_client.so -> libbinder.so, ICameraClient/ICameraService), no en el tramo especifico de CameraSequence.",
+      "evidence": "nm -D libScalarDaemon.so; readelf -d libcameraseq.so libcameraex_client.so libScalarDaemon.so; nm -D libcameraseq.so (scalar::CameraSeqUtil::openSDCom/sendSDComMsg/closeSDCom, scalar::CameraSequenceDiadem::*)"
+    },
+    {
+      "q": 6,
+      "topic": "getPreviewSequenceFrames() como simbolo real local",
+      "classification": "DESCARTADO",
+      "finding": "strings sobre libcameraex_jni.so, libcameraseq.so, libcameraex_client.so y libScalarDaemon.so (fw321/A6000): cero coincidencias de la cadena 'getPreviewSequenceFrames' en los cuatro binarios. Sigue sin verificacion local; unica fuente es el issue #35 de terceros de OpenMemories-Framework, no verificable aqui (no se instalo ni ejecuto ese software).",
+      "evidence": "strings <binario> | grep getPreviewSequenceFrames, sin resultados en los 4 archivos"
+    },
+    {
+      "q": 7,
+      "topic": "plausibilidad de kernel 3.0.27 como kernel real de la A6000 (2014)",
+      "classification": "INFERENCIA",
+      "finding": "mtime interno del tarball 2014-02-19 (~2 meses antes del lanzamiento de la A6000, abril 2014); defconfigs cxd90014_android_* arrancan Android sobre SoC propio de Sony (arch/arm/mach-cxd90014). Temporalmente consistente con el ciclo de publicacion GPL de Sony. No hay identificador textual directo (sin 'ILCE-6000' ni numero de modelo en el arbol) ni un segundo paquete (p.ej. A6300) para descartar que el mismo kernel/SoC se comparta entre varios cuerpos de la generacion BIONZ X. Plausible y consistente, no demostrado de forma univoca.",
+      "evidence": "sony-oss-inventory.md (mtime, sha256); Makefile VERSION=3 PATCHLEVEL=0 SUBLEVEL=27; defconfigs arch/arm/configs/cxd90014_android_*"
+    },
+    {
+      "q": 8,
+      "topic": "compatibilidad estructural Binder del kernel vs ICameraExClient/ICameraExService",
+      "classification": "NO_VERIFICADO",
+      "finding": "Pregunta en gran medida sin objeto tras q1/q5: los binarios de camara no invocan Binder/ioctl directamente (delegan en libbinder.so AOSP generico), y el tramo especifico CameraSequence<->ScalarDaemon no usa Binder sino SDCom. No se encontro ninguna extension Sony del protocolo Binder en el arbol liberado -- la superficie Binder presente es consistente con AOSP estandar de la epoca, pero no diferenciadora ni comparable punto a punto con un protocolo propietario porque ese protocolo (SDCom) no es Binder.",
+      "evidence": "readelf -d (ausencia de libbinder.so en libcameraseq.so/libScalarDaemon.so); binder.h generico en el kernel liberado"
+    },
+    {
+      "q": "9-16",
+      "topic": "revalidacion del veredicto A > E > P ~= E2 con el contexto del kernel",
+      "classification": "VERIFICADO_SIN_CAMBIO",
+      "finding": "Sin cambio de fondo: A > E > P ~= E2 se mantiene. El kernel liberado no aporta ninguna pieza propietaria de camara (confirmado en sony-oss-inventory.md: no contiene libObj.so, libMWF.so, libmpr.so, RelMgr, CaptureManager, ObjCamera/ObjEffect/ObjStillRecorder, EncodeStill, DMM, FEA ni CameraSequence/CameraEx) -- es solo contexto de plataforma (SoC, Binder/ashmem genericos, drivers SD/red estandar). Lo que si cambia es la comprension de P: ya no es 'Binder estandar hacia ScalarDaemon' (correccion a sesion 17), sino Binder convencional para camara normal + SDCom propio para CameraSequence/ScalarDaemon, cruzando a un proceso con userland glibc separado del Android/Bionic. Esto hace a P tecnicamente mas compleja y menos 'publica/estandar' de lo que sesion 17 sugeria, sin mejorar su desconexion de S2 (q4) y sin afectar a A ni a E, cuyas piezas no viven en codigo GPL/BSD liberado.",
+      "evidence": "sony-oss-inventory.md seccion 9; docs/capture/s17-parallel-research-verdict.md secciones 3 y 5; hallazgos q5 de esta sesion"
+    }
+  ],
+  "incidents": [
+    "Esfuerzo real usado: Sonnet 5, bajo, no medium como se pidio; set_session_effort rechazo el cambio sobre la propia sesion; declarado explicitamente.",
+    "No se lanzaron subagentes (prohibido explicitamente en el encargo, respetado).",
+    "No se toco CONTEXT.md, no se modifico ningun binario original, no se conecto ni flasheo la camara, no se instalo ningun paquete.",
+    "No se volvieron a descargar los tar.gz de la raiz; se listaron con tar tzf y se uso la extraccion parcial ya hecha por 'main' en analysis/session18/main/sony-oss-extracted/."
+  ]
+}

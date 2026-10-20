@@ -1,0 +1,235 @@
+[
+ {
+  "name": "GetExtListTop",
+  "addr": "0x2c5b0",
+  "hist_name": "DmmAccessPLA::GetExtListTop",
+  "rea_name": "DmmAccessPLA::GetExtListTop",
+  "same_name": true,
+  "n_insn_rea": 4,
+  "n_insn_hist": 4,
+  "asm_equal": true,
+  "callees_rea": [],
+  "hist_calls": [
+   "DmmAccessPLA::GetExtListTop("
+  ],
+  "rea_calls": [
+   "DmmAccessPLA::GetExtListTop("
+  ],
+  "hist_thunk": false,
+  "hist_pseudo_len": 126,
+  "rea_pseudo_len": 126
+ },
+ {
+  "name": "GetUnitHandle",
+  "addr": "0x2c594",
+  "hist_name": "DmmAccessPLA::GetUnitHandle",
+  "rea_name": "DmmAccessPLA::GetUnitHandle",
+  "same_name": true,
+  "n_insn_rea": 6,
+  "n_insn_hist": 6,
+  "asm_equal": true,
+  "callees_rea": [],
+  "hist_calls": [
+   "DmmAccessPLA::GetUnitHandle("
+  ],
+  "rea_calls": [
+   "DmmAccessPLA::GetUnitHandle("
+  ],
+  "hist_thunk": false,
+  "hist_pseudo_len": 147,
+  "rea_pseudo_len": 147
+ },
+ {
+  "name": "GetExtSizeFromDmmAlloc",
+  "addr": "0x2c638",
+  "hist_name": "DmmAccessPLA::GetExtSizeFromDmmAlloc",
+  "rea_name": "DmmAccessPLA::GetExtSizeFromDmmAlloc",
+  "same_name": true,
+  "n_insn_rea": 5,
+  "n_insn_hist": 5,
+  "asm_equal": true,
+  "callees_rea": [],
+  "hist_calls": [
+   "DmmAccessPLA::GetExtSizeFromDmmAlloc("
+  ],
+  "rea_calls": [
+   "DmmAccessPLA::GetExtSizeFromDmmAlloc("
+  ],
+  "hist_thunk": false,
+  "hist_pseudo_len": 219,
+  "rea_pseudo_len": 219
+ },
+ {
+  "name": "SetExtListPackStatus",
+  "addr": "0x2c5ee",
+  "hist_name": "DmmAccessPLA::SetExtListPackStatus",
+  "rea_name": "DmmAccessPLA::SetExtListPackStatus",
+  "same_name": true,
+  "n_insn_rea": 7,
+  "n_insn_hist": 7,
+  "asm_equal": true,
+  "callees_rea": [],
+  "hist_calls": [
+   "DmmAccessPLA::SetExtListPackStatus("
+  ],
+  "rea_calls": [
+   "DmmAccessPLA::SetExtListPackStatus("
+  ],
+  "hist_thunk": false,
+  "hist_pseudo_len": 419,
+  "rea_pseudo_len": 419
+ },
+ {
+  "name": "AllocDmmMemory",
+  "addr": "0x2bc9c",
+  "hist_name": "DmmAccess::AllocDmmMemory",
+  "rea_name": "DmmAccess::AllocDmmMemory",
+  "same_name": true,
+  "n_insn_rea": 53,
+  "n_insn_hist": 53,
+  "asm_equal": true,
+  "callees_rea": [
+   "<EXTERNAL>::MonCtrl::ConPrintfMessage",
+   "DmmAccess::GetDmmExtList",
+   "DmmAccess::UnitTypeTableSelect",
+   "MprCtrlLog::SetEndApiLog",
+   "MprCtrlLog::SetMemoryMapLog",
+   "MprCtrlLog::SetStartApiLog"
+  ],
+  "hist_calls": [
+   "DmmAccess::AllocDmmMemory(",
+   "MprCtrlLog::SetEndApiLog(",
+   "MprCtrlLog::SetMemoryMapLog(",
+   "MprCtrlLog::SetStartApiLog(",
+   "UnitTypeTableSelect("
+  ],
+  "rea_calls": [
+   "DmmAccess::AllocDmmMemory(",
+   "MprCtrlLog::SetEndApiLog(",
+   "MprCtrlLog::SetMemoryMapLog(",
+   "MprCtrlLog::SetStartApiLog(",
+   "UnitTypeTableSelect("
+  ],
+  "hist_thunk": false,
+  "hist_pseudo_len": 1074,
+  "rea_pseudo_len": 977
+ },
+ {
+  "name": "DmmCloseAndFree",
+  "addr": "0x2afe8",
+  "hist_name": "DmmAccess::DmmCloseAndFree",
+  "rea_name": "DmmAccess::DmmCloseAndFree",
+  "same_name": true,
+  "n_insn_rea": 12,
+  "n_insn_hist": 12,
+  "asm_equal": true,
+  "callees_rea": [
+   "MprCtrlLog::SetUnitHandleLog"
+  ],
+  "hist_calls": [
+   "DmmAccess::DmmCloseAndFree(",
+   "MprCtrlLog::SetUnitHandleLog("
+  ],
+  "rea_calls": [
+   "CheckDMMRetCode(",
+   "CheckOSALRetCode(",
+   "DmmAccess::DmmCloseAndFree(",
+   "GetDMMRetMsg(",
+   "GetOSALRetMsg(",
+   "MprCtrlLog::SetErrLog(",
+   "MprCtrlLog::SetUnitHandleLog(",
+   "memset(",
+   "osal_dynamic_id(",
+   "osal_free_msg(",
+   "osal_rcv_msg_tmo(",
+   "osal_snd_msg(",
+   "osal_valloc_msg_wait("
+  ],
+  "hist_thunk": false,
+  "hist_pseudo_len": 388,
+  "rea_pseudo_len": 3416
+ },
+ {
+  "name": "DmmAllocateNEWAndOpen_body",
+  "addr": "0x2b028",
+  "hist_name": "DmmAccess::DmmAllocateNEWAndOpen_body",
+  "rea_name": "DmmAccess::DmmAllocateNEWAndOpen_body",
+  "same_name": true,
+  "n_insn_rea": 331,
+  "n_insn_hist": 331,
+  "asm_equal": false,
+  "callees_rea": [
+   "<EXTERNAL>::MonCtrl::ConPrintfMessage",
+   "<EXTERNAL>::free",
+   "<EXTERNAL>::malloc",
+   "<EXTERNAL>::memcpy",
+   "<EXTERNAL>::memset",
+   "<EXTERNAL>::osal_dynamic_id",
+   "<EXTERNAL>::osal_free_msg",
+   "<EXTERNAL>::osal_rcv_msg_tmo",
+   "<EXTERNAL>::osal_snd_msg",
+   "<EXTERNAL>::osal_valloc_msg_wait",
+   "DmmAccess::CheckDMMRetCode",
+   "DmmAccess::GetDMMRetMsg",
+   "DmmAccess::GetOSALRetMsg",
+   "FUN_0002a9c2",
+   "MprCtrlLog::SetErrLog"
+  ],
+  "hist_calls": [
+   "CheckDMMRetCode(",
+   "DmmAccess::DmmAllocateNEWAndOpen_body(",
+   "GetDMMRetMsg(",
+   "GetOSALRetMsg(",
+   "MprCtrlLog::SetErrLog(",
+   "memset(",
+   "osal_dynamic_id(",
+   "osal_free_msg(",
+   "osal_rcv_msg_tmo(",
+   "osal_snd_msg(",
+   "osal_valloc_msg_wait("
+  ],
+  "rea_calls": [
+   "CheckDMMRetCode(",
+   "DmmAccess::DmmAllocateNEWAndOpen_body(",
+   "GetDMMRetMsg(",
+   "GetOSALRetMsg(",
+   "MprCtrlLog::SetErrLog(",
+   "memset(",
+   "osal_dynamic_id(",
+   "osal_free_msg(",
+   "osal_rcv_msg_tmo(",
+   "osal_snd_msg(",
+   "osal_valloc_msg_wait("
+  ],
+  "hist_thunk": false,
+  "hist_pseudo_len": 5801,
+  "rea_pseudo_len": 6401
+ },
+ {
+  "name": "CtrlAllocDmmMemory",
+  "addr": "0x245d0",
+  "hist_name": "MprCtrlMcmd::CtrlAllocDmmMemory",
+  "rea_name": "MprCtrlMcmd::CtrlAllocDmmMemory",
+  "same_name": true,
+  "n_insn_rea": 27,
+  "n_insn_hist": 27,
+  "asm_equal": true,
+  "callees_rea": [
+   "<EXTERNAL>::MonCtrl::ConPrintf",
+   "<EXTERNAL>::MonCtrl::ConPutStr",
+   "<EXTERNAL>::StrUtil::StrHexToUInt32",
+   "DmmAccess::AllocDmmMemory"
+  ],
+  "hist_calls": [
+   "DmmAccess::AllocDmmMemory(",
+   "MprCtrlMcmd::CtrlAllocDmmMemory("
+  ],
+  "rea_calls": [
+   "DmmAccess::AllocDmmMemory(",
+   "MprCtrlMcmd::CtrlAllocDmmMemory("
+  ],
+  "hist_thunk": false,
+  "hist_pseudo_len": 548,
+  "rea_pseudo_len": 450
+ }
+]

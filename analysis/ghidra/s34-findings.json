@@ -1,0 +1,63 @@
+{
+  "source_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "base": "43541000",
+  "scope": "Static Thumb BL/B.W scan, absolute pointer scan, T1 literal-LDR plus ADD-PC candidates, Ghidra xrefs and conditional callback routing. Does not prove universal computed-call completeness or physical frame timing.",
+  "helper_callers": [
+    {"site": "4355164a", "function": "435503b0", "slot": "44020064", "phase": "VD_Sequence category 0; selector also permits category 1 consumed by HS_Sequence; joint APL branch feasibility is conditional"},
+    {"site": "435536be", "function": "435525c0", "slot": "44020e70", "phase": "VD_Sequence category 0; selector also permits category 1 consumed by HS_Sequence; joint APL branch feasibility is conditional"},
+    {"site": "435557de", "function": "43554590", "slot": "44021a2c", "phase": "VD_Sequence category 0 in recovered selector branches"}
+  ],
+  "image_runners": [
+    {"phase": "VD_Sequence", "chain": ["4379155c", "437916d4", "43796954", "43796c7a", "4381bf38"], "list": "43e9de14", "category": 0},
+    {"phase": "HS_Sequence", "chain": ["43790b68", "43790d38", "437965ec", "43796690", "4381bf38"], "list": "43e9d810", "category": 1}
+  ],
+  "program_and_kick": {
+    "chain": ["43815054->436be554", "43815082->436bdbfc", "436be3a4->43acb2e8", "43acb2f0/43acb2fc->436c019c"],
+    "writes": [{"site": "436bddf8", "writer": "436c0354", "offset": "20"}, {"site": "436bde20", "writer": "436c041c", "offset": "34"}, {"site": "436bde48", "writer": "436c04e4", "offset": "50"}, {"site": "436bde60", "writer": "436c06fc", "offset": "a4"}],
+    "bank_bases": ["f3850400", "f3950400", "f3a50400"],
+    "kick_addresses": ["f3850500", "f3950500", "f3a50500"],
+    "kick_offset_from_bank_bases": "100",
+    "order": "prepare addresses then MMIO writes then immediate 0/1 kick within same callback; before Sequence signals 0x100 on normal category-0 path",
+    "physical_frame": "unresolved: no VD latch/start selection or completion status semantics recovered"
+  },
+  "drive_event": {
+    "event": "0x1a/0x80",
+    "immediate_signal_sites": ["4379192c", "43791986", "437919a4"],
+    "sequence_enqueue_site": "437919bc",
+    "delayed_mode": "43e9bb18==0 && 43e9baec==1: clear 0x80, timer slot 4 at param_1+2*context[10], callback 43ae8d3e signals 0x80",
+    "conclusion": "Immediate paths signal before queued Sequence and kick; delayed path can race Sequence. Not a DMA completion event. Wait timeouts continue execution."
+  },
+  "complex_interrupt": {
+    "handler0": "436cf954", "handler1": "436cf780", "mask": "03380000",
+    "registration": "436cfae0", "condition_converter": "43ad68e0",
+    "slots": "43e7ec28 condition / 43e7ec2c callback, stride 8, four slots",
+    "condition_to_fact": {"1": "00080000", "2": "00100000", "10": "01000000", "20": "02000000"},
+    "unmapped_mask_bit": "00200000",
+    "source": "43ad6d74 (shared tail 436d47a0..): DFE descriptor+0x14 selects logical conditions; 43ae9300 forwards callback",
+    "enable": "fc0a0018", "clear": "fc0a0014",
+    "routing": "handler0 IRQ index 9 via fc01f15c=9 and fc01f010=00800000; handler1 index 10 via fc01f160=10 and fc01f010=01000000",
+    "missing": "Hardware mapping from APL bank/unit and kick/status to fact bits, plus callback identity and buffer/frame tuple. Handler1 only logs/counts."
+  },
+  "ec_lm": {
+    "processed_vd": "43e992dc",
+    "lm_timer": "slot 5, writes f3c3013c target and f3c30138 control",
+    "ec_timer": "slot 0 via 437926fc; alternative callback 43791454",
+    "conclusion": "EC_VD_Post stores software processed-VD number; LM compares it and schedules timer. No APL status read or DMA-completion wait demonstrated."
+  },
+  "exploratory_limits": [
+    "436cfafa and 436cfb46 are interiors of 436cfae0; 43796690 belongs to 437965ec; use complete entries.",
+    "436d47e0 is shared tail of 43ad6d74; pseudocode has unaff registers. Relevant condition-building instructions must be used, not speculative prototypes.",
+    "43659fce was a string-xref interior interpreted as temporary function, not a valid complete CallbackApl entry; excluded from conclusions.",
+    "436cf7d0 and 43814e00 returned no_function (literal pools); no evidence of executable functions there.",
+    "Apl End string 43cb3b0c has no recovered xref in this project; neighboring enum-converter queries do not prove completion. SDF ExecCallBackApl is a separate path without proven bank identity."
+  ],
+  "summary": [
+    {"status": "VERIFICADO", "finding": "Tres BL al helper: 4355164a / 435536be / 435557de; ninguno directo desde VD_Post o VD_Drive."},
+    {"status": "VERIFICADO", "finding": "Programación MMIO seguida de kick 0/1 síncrono en el productor Image; kick en banco ...0400 +0x100."},
+    {"status": "PARCIAL", "finding": "Ruta VD_Sequence demostrada; selector también permite categoría HS para dos productores. No exclusividad universal de fase."},
+    {"status": "VERIFICADO", "finding": "Evento Drive 0x80 inmediato precede Sequence en varias ramas; en modo diferido procede del temporizador 4, no de DMA demostrado."},
+    {"status": "VERIFICADO", "finding": "Registrador de cuatro callbacks DFE y cuatro conversiones de causa resueltos; Handler1 solo cuenta/loguea."},
+    {"status": "INFERENCIA", "finding": "Kick 0/1 compatible con lanzamiento/rearme APL; efecto físico y latch por VD sin especificación recuperada."},
+    {"status": "NO_VERIFICADO", "finding": "Cuadro físico propio/siguiente, APL->IRQ de fin->EC/LM y cierre inicio-exposición/DMA/fin-exposición."}
+  ]
+}

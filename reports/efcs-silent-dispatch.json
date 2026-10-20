@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-15",
+  "binary": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libObj.so",
+  "sha256": "8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a",
+  "method": "LLVM Thumb-2, ELF PT_LOAD and R_ARM_RELATIVE; static analysis only",
+  "coordinates": "ELF relative VA; .text file offsets equal VA; Ghidra adds 0x10000; GOT offsets differ",
+  "dispatcher": {
+    "entry": "0x9bbb5c", "tbh": "0x9bbd64", "table": "0x9bbd68",
+    "index": "selector - 0x4000", "got_base": "0x102cbd0", "indirect_call": "0x9bc8c2",
+    "cases": [
+      {"selector": "0x4099", "table_entry": "0x9bbe9a", "case": "0x9bc34a", "literal": "0x9bc710", "literal_value": "0x31f4", "got_va": "0x102fdc4", "got_file_offset": "0x1027dc4", "thumb_pointer": "0x99e969", "converter": "0x99e968"},
+      {"selector": "0x40e3", "table_entry": "0x9bbf2e", "case": "0x9bc82e", "literal": "0x9bc930", "literal_value": "0x5268", "got_va": "0x1031e38", "got_file_offset": "0x1029e38", "thumb_pointer": "0x99b005", "converter": "0x99b004"}
+    ]
+  },
+  "ranges_half_open_file_offsets": [
+    {"role": "candidate EFCS action", "start": "0x6896ac", "end": "0x6897b8", "sha256": "ad16bfa880398991e6f9f5b1e89182bf5eddf64f86e9300b690750307251aba1"},
+    {"role": "candidate silent action", "start": "0x686d10", "end": "0x686e60", "sha256": "6eda4f114daeeec6cb5052065d81d19ee2a609237ba920d86e365168fa044193"},
+    {"role": "candidate EFCS sequence", "start": "0x95a308", "end": "0x95a49c", "sha256": "3486d99411d1362a5234527adc208a579b421023d60daecc199458aaa2e5a867"},
+    {"role": "candidate silent sequence", "start": "0x978e0c", "end": "0x978fa0", "sha256": "da41f531a89ef3f3ea7b2dd22e15bab306389cb36753ae678231d84c570d5484"},
+    {"role": "candidate EFCS converter", "start": "0x99e968", "end": "0x99ea60", "sha256": "07570fae8c927499ad83a46131a36d7180b2699dadfc9a3b5200dda0f719f5af"},
+    {"role": "generic OSAL sender", "start": "0xa1b21c", "end": "0xa1b2a0", "sha256": "29dde19d349de97af44487c1fe11ef1809a544d2fb18d03d4136e6773195abf0"},
+    {"role": "dispatcher and tables", "start": "0x9bbb5c", "end": "0x9bc99c", "sha256": "68f2cff05cae579f617ea985bed30854c01e060dc621bc0817f7f6f73d06277d"}
+  ],
+  "limits": ["Ranges are inspected byte windows, not proven function extents", "Action-to-sequence registration unresolved", "Queue identity and receiver unresolved", "No sensor register mapping or full electronic still demonstrated", "No camera access or firmware execution"]
+}

@@ -1,0 +1,29 @@
+4382e24e movs r3, #0x1
+4382e250 strb.w r3, [r7, #0x5c]
+4382e254 ldr r3, [r0, #0x50]
+4382e256 ldr r2, [r3, #0x8]
+4382e258 movs r3, #0x0
+4382e25a ldrh r1, [r2, r3]
+4382e25c strh.w r1, [sp, r3]
+4382e260 adds r3, #0x2
+4382e262 cmp r3, #0x10
+4382e264 bne 0x4382e25a
+4382e266 ldrh.w r2, [sp]
+4382e26a uxtb r3, r2
+4382e26c strb.w r3, [r7, #0xb20]
+4382e270 cbnz r3, 0x4382e27a
+4382e272 asrs r2, r2, #0x8
+4382e274 strb.w r2, [r7, #0xb21]
+4382e278 b 0x4382e292
+4382e27a cmp r3, #0x1
+4382e27c mov.w r3, #0x0
+4382e280 bne 0x4382e28e
+4382e282 asrs r2, r2, #0x8
+4382e284 strb.w r3, [r7, #0xb21]
+4382e288 strb.w r2, [r7, #0xb22]
+4382e28c b 0x4382e296
+4382e28e strb.w r3, [r7, #0xb21]
+4382e292 strb.w r3, [r7, #0xb22]
+4382e296 ldrh.w r3, [sp, #0x2]
+4382e29a strb.w r3, [r7, #0xb23]
+4382e29e ldrh.w r3, [sp, #0x4]

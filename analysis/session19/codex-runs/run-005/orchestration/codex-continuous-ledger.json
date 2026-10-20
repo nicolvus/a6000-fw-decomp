@@ -1,0 +1,85 @@
+{
+  "session": 19,
+  "runs": [
+    {
+      "run_number": 1,
+      "task_id": "S19-01",
+      "verdict": "PARTIAL",
+      "verified": ["0x43fcd5d0 contains Thumb callback 0x43807f4d", "local message 0x100 reaches 0x43807d80 and may install CaptureStart via 0x43809ed8", "RelMgr emits 0x3011/0x3013/0x3015 toward CamUser queue 0x40193"],
+      "unverified": ["queue 0x40193 receiver registration", "ObjMsg-to-local-domain translation", "S1/S2 exact event mapping", "cross-domain cancellation and release"],
+      "safety": "No firmware binaries modified; no camera connected or flashed; no claim of functional SilentShutter."
+    },
+    {
+      "run_number": 2,
+      "task_id": "S19-02",
+      "verdict": "PARTIAL",
+      "verified": ["UObjPin::Connect at libBizFw2 0x2bf1c calls MWF ObjPin::Connect through PLT 0x20588", "three ConnectPinWrapper implementations call the same MWF API unless their local defer flag is set", "TM::createLifeCycles constructs at 0x41b6c0 and registers the object", "the LifeCycle vtable address point 0xcc6698 has three Thumb slots"],
+      "unverified": ["runtime execution of the LifeCycle vtable/dispatch", "LifeCycle-to-Connect data-flow edge", "identity of the runtime object/pins at the activation-like dispatcher"],
+      "safety": "Static read-only analysis only; no binary changed, no camera interaction, no claim that SilentShutter is functional."
+    },
+    {
+      "run_number": 3,
+      "task_id": "S19-03",
+      "verdict": "PARTIAL",
+      "verified": [
+        "Topology row 0xb4 carries ObjId 0x35 to ObjStillRecorder input 0",
+        "ObjStillRecorder_Create allocates 0x148 and invokes constructor 0x9178f0",
+        "The constructor initializes ObjActiveBase(0x2f), MWF pins, and ConnectPinWrapper instances",
+        "libObj .init_array has 263 relative entries and none targets ObjStillRecorder APIs"
+      ],
+      "unverified": [
+        "explicit auto-registration mapping ObjId 53 to ObjStillRecorder constructor",
+        "indirect or external registration source",
+        "runtime instance creation and activation of topology 0xb4",
+        "SilentShutter functionality"
+      ],
+      "safety": "Static read-only analysis only; no original binary changed, no Ghidra project deleted, no camera interaction or flashing."
+    },
+    {
+      "run_number": 4,
+      "task_id": "S19-04",
+      "verdict": "PARTIAL",
+      "verified": [
+        "ObjCamera_Create calls constructor 0x98c380 after allocating 0x20c bytes",
+        "ObjCamera constructor does not call DmmCh, DmmAccessPLA or AvbbcPhycMem in its construction range",
+        "helper 0x987dc6 builds nine output pins at this+0x58..this+0x78",
+        "topology 0x0a connects Camera.out0 to Effect.in0",
+        "Effect/PbCap route 0x15fa74 uses DmmCh allocNew for the known raster/SDS pair"
+      ],
+      "unverified": [
+        "Camera YC unitType, DMM handle, offset, physical/DMA address, geometry, format, stride and planes",
+        "Camera YC colorimetry",
+        "Camera YC ownership and recycling",
+        "static edge from Camera.out0 to an Effect DMM descriptor"
+      ],
+      "discarded": [
+        "IMX210 register geometry as proof of Camera YC geometry",
+        "SDS 0xe0b00 / 0x800 as a pixel raster"
+      ],
+      "safety": "Static read-only analysis only; no original binary changed, no Ghidra project deleted, no camera interaction or flashing; SilentShutter is not declared functional."
+        },
+        {
+            "run_number": 5,
+            "task_id": "S19-05",
+            "verdict": "PARTIAL",
+            "verified": [
+                "Factory 0x17b004 creates the 0x6013 sequence with constructor 0x1761a8",
+                "Candidate BeginExecCommand 0x15fd50 requires holder, interface and selector-12 success before SDF setup",
+                "DataflowInfra connection, output DMM allocations, SDF submission and 0x111-gated PlayData publication are present",
+                "Normal output cleanup disconnects DataflowInfra and closes the sequence-owned DMM units",
+                "PbCap output pair remains raster 0x50b3f and SDS metadata 0xe0b00"
+            ],
+            "unverified": [
+                "Camera.out0 execution into the 0x6013 sequence",
+                "Camera identity as the holder or DataflowInfra endpoint",
+                "Camera YC unitType, descriptor, geometry, format and source lifetime",
+                "End-to-end Camera-to-SDF-to-PbCap compatibility"
+            ],
+            "discarded": [
+                "Compatibility inferred solely from the absence of unitType validation in 0x15fd50",
+                "SDS 0xe0b00 / 0x800 as a Camera pixel raster"
+            ],
+            "safety": "Static read-only analysis only; no original binary changed, no Ghidra project deleted, no camera interaction or flashing; SilentShutter is not declared functional."
+        }
+    ]
+}

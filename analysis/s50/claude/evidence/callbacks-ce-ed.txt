@@ -1,0 +1,51 @@
+437dad78 push {r3, r4, r5, lr}
+437dad7a movs r2, #0x4
+437dad7c ldr r3, [r0, #0x50]
+437dad7e mov r5, r1
+437dad80 ldr r4, [pc, #0x24]
+437dad82 add r4, pc
+437dad84 ldr r1, [r3, #0x8]
+437dad86 mov r0, r4
+437dad88 blx 0x439c5320
+437dad8c ldrh r3, [r4]
+437dad8e cbz r3, 0x437dad9a
+437dad90 movs r3, #0x1
+437dad92 strb.w r3, [r5, #0x94]
+437dad96 ldrh r3, [r4, #0x2]
+437dad98 b 0x437dad9e
+437dad9a strb.w r3, [r5, #0x94]
+437dad9e strb.w r3, [r5, #0x95]
+437dada2 movs r0, #0x2
+437dada4 pop {r3, r4, r5, pc}
+437dada6 nop
+437dada8 lsrs r6, r5, #0x19
+437dadaa lsls r2, r7, #0x1
+437dadac push {r3, r4, r5, lr}
+437dadae movs r2, #0x4
+437dadb0 ldr r3, [r0, #0x50]
+437dadb2 mov r5, r1
+437dadb4 ldr r4, [pc, #0x28]
+437dadb6 add r4, pc
+437dadb8 ldr r1, [r3, #0x8]
+437dadba mov r0, r4
+437dadbc blx 0x439c5320
+437dadc0 ldrh r3, [r4]
+437dadc2 cbz r3, 0x437dadd2
+437dadc4 movs r3, #0x1
+437dadc6 strb.w r3, [r5, #0xa0]
+437dadca ldrh r4, [r4, #0x2]
+437dadcc strh.w r4, [r5, #0x9e]
+437dadd0 b 0x437dadda
+437dadd2 strb.w r3, [r5, #0xa0]
+437dadd6 strh.w r3, [r5, #0x9e]
+437dadda movs r0, #0x2
+437daddc pop {r3, r4, r5, pc}
+437dadde nop
+437dade0 lsrs r6, r6, #0x18
+437dade2 lsls r2, r7, #0x1
+437dade4 ldr r3, [r0, #0x50]
+437dade6 movs r2, #0xb5
+437dade8 str r2, [r1, #0x60]
+437dadea ldr r2, [pc, #0x28]
+437dadec ldr r3, [r3, #0x8]
+437dadee add r2, pc

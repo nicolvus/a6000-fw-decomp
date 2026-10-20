@@ -1,0 +1,27 @@
+{
+  "session": 19,
+  "run_number": 9,
+  "task_id": "S19-09",
+  "firmware": "A6000 fw 3.21",
+  "method": [
+    "llvm-nm -D -C",
+    "llvm-objdump -d --triple=thumbv7-linux-gnueabi for libScalarDaemon.so Thumb code",
+    "llvm-objdump -d --triple=armv7-linux-gnueabi for libcameraex client A32 code"
+  ],
+  "findings": [
+    {"classification": "VERIFICADO", "file": "libcameraseq.so", "address": "0x8214,0x85f0,0x8638", "claim": "startPreviewSequence creates SDCom parameters and sends message 0x124 through CameraSeqUtil."},
+    {"classification": "VERIFICADO", "file": "libcameraseq.so", "address": "0x90a4..0x9398", "claim": "getPreviewSequenceFrames sends SDCom 0x127 with parameter ID 5 and creates DeviceMemoryDiadem objects from response vectors."},
+    {"classification": "VERIFICADO", "file": "libcameraseq.so", "address": "0x9f08..0xa2d8", "claim": "DeviceMemoryDiadem retains a ticket and release sends SDCom 0x3 with parameter ID 4 carrying that ticket."},
+    {"classification": "VERIFICADO", "file": "libcameraseq.so", "address": "0xbca4..0xbd6c", "claim": "readBuffer maps shared memory, copies a bounded byte range and unmaps it."},
+    {"classification": "VERIFICADO", "file": "libScalarDaemon.so", "address": "0x11cd0c..0x11ce3a", "claim": "Camseq StartPreview requires a job, validates parameter 0x3001 and registers wait event 0x1e06."},
+    {"classification": "VERIFICADO", "file": "libScalarDaemon.so", "address": "exports at 0x11a080/0x11c868/0x11d274/0x11d868/0x11d998", "claim": "Dedicated Camseq processors exist for frame/info/start/stop/store operations."},
+    {"classification": "INFERENCIA", "file": "libcameraseq.so", "address": "0x9308,0xa290", "claim": "Ticket plus explicit release is a remote resource-loan contract, but reference counting and terminal ownership are not recovered."},
+    {"classification": "NO_VERIFICADO", "file": "libcameraseq.so and libScalarDaemon.so", "address": "0x8268", "claim": "640 is a local default, but 640x480, JPEG format, JPEG producer, YC format and full ownership are not established."},
+    {"classification": "NO_VERIFICADO", "file": "all examined files", "address": "n/a", "claim": "No static edge links CameraSequence to S2, Silent/EFCS, MPR EncodeStill/WriteStill, DCF or a physical capture producer."},
+    {"classification": "DESCARTADO", "file": "libcameraseq.so", "address": "0xbca4", "claim": "A DeviceMemory read is not proof of JPEG decoding, JPEG validity, raster YC or SilentShutter functionality."}
+  ],
+  "next_task_id": "S19-10",
+  "next_task": "(a) entrega del YC de SFRA al cliente Linux",
+  "status": "PARTIAL",
+  "safety": "Static local analysis only; original binaries untouched; no Ghidra project modified; no camera connected or flashed; SilentShutter is not declared functional."
+}
