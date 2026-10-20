@@ -6,6 +6,7 @@ electrónico pasa a ser un [subproyecto](projects/electronic-shutter/README.md).
 
 ## Organización y resultados actuales
 
+- [S59: validación cruzada Claude + GPT-6.1 Sol](docs/capture/s59-conclusions.md): escritor del bloque IMX210 `+0xDD0` recuperado (`0x43b00da0`, valores M de payload externo, sin M/Tv/clk alcanzables); constructor real C_Imager A7S `0x436f3fc0` emulado, corrige tramas/base P2S de S58 y aclara mensajes `0x1000/0x1001` (lista blanca de modos). Fin eléctrico IMX210 NO VERIFICADO; S51 se mantiene.
 - [S58: productores AE y configuración efectiva A7S Silent](docs/capture/s58-conclusions.md): cálculo numérico de svd/shd/spl recuperado; cadena SetMode→SetExposure→SetRead→Execute emulada con stubs; matriz IMX235 corregida (69 filas), 100 escrituras en dos dispositivos. SetRead/ganancia se distingue de SetExposure. Fin eléctrico IMX210 NO VERIFICADO; S51 se mantiene.
 - [S57: semántica de ID1/SSB/svd-shd-spl, Silent IMX235, XPI y sincronía P2S](docs/capture/s57-conclusions.md): ID1 = registro combinado (modo de lectura + ShutMode + strobe); SSB acompaña a toda actualización de exposición y no al fin; svd/shd/spl mapeados exactamente y svd atado a un contador de VD; Silent A7S = modos de lectura 0x4e/0x4f (variantes de 0x4c/0x4d); fin electrónico NO VERIFICADO, S51 se mantiene.
 - [S56: transporte de registros del IMX210 (IDs = direcciones 16 bit, P2S/DFE0), CISIF = receptor](docs/capture/s56-conclusions.md): trama `81|len|81|AH AL|datos`, ShutMode→ID1, pulso SSB; fin electrónico NO VERIFICADO, S51 se mantiene.

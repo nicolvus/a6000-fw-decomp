@@ -1,0 +1,93 @@
+test_accessor_actual_root (test_s59_sol.TimingProbe.test_accessor_actual_root) ... ok
+test_binary_identity (test_s59_sol.TimingProbe.test_binary_identity) ... ok
+test_consumer_zero_or_override (test_s59_sol.TimingProbe.test_consumer_zero_or_override) ... ok
+test_histogram_writer_has_a_different_object (test_s59_sol.TimingProbe.test_histogram_writer_has_a_different_object) ... ERROR
+test_publish_gate (test_s59_sol.TimingProbe.test_publish_gate) ... ok
+test_snapshot_does_not_confuse_histogram_object (test_s59_sol.TimingProbe.test_snapshot_does_not_confuse_histogram_object) ... ok
+test_synthetic_compatibility_boundaries (test_s59_sol.TimingProbe.test_synthetic_compatibility_boundaries) ... ok
+test_vdnum_constructor_range_is_not_a_signed_range (test_s59_sol.TimingProbe.test_vdnum_constructor_range_is_not_a_signed_range) ... 
+  test_vdnum_constructor_range_is_not_a_signed_range (test_s59_sol.TimingProbe.test_vdnum_constructor_range_is_not_a_signed_range) (raw=0) ... ERROR
+  test_vdnum_constructor_range_is_not_a_signed_range (test_s59_sol.TimingProbe.test_vdnum_constructor_range_is_not_a_signed_range) (raw=12287) ... ERROR
+  test_vdnum_constructor_range_is_not_a_signed_range (test_s59_sol.TimingProbe.test_vdnum_constructor_range_is_not_a_signed_range) (raw=12288) ... ERROR
+  test_vdnum_constructor_range_is_not_a_signed_range (test_s59_sol.TimingProbe.test_vdnum_constructor_range_is_not_a_signed_range) (raw=12289) ... ERROR
+  test_vdnum_constructor_range_is_not_a_signed_range (test_s59_sol.TimingProbe.test_vdnum_constructor_range_is_not_a_signed_range) (raw=45055) ... ERROR
+  test_vdnum_constructor_range_is_not_a_signed_range (test_s59_sol.TimingProbe.test_vdnum_constructor_range_is_not_a_signed_range) (raw=45056) ... ERROR
+  test_vdnum_constructor_range_is_not_a_signed_range (test_s59_sol.TimingProbe.test_vdnum_constructor_range_is_not_a_signed_range) (raw=65535) ... ERROR
+test_writer_copies_exactly_80_bytes (test_s59_sol.TimingProbe.test_writer_copies_exactly_80_bytes) ... ok
+
+======================================================================
+ERROR: test_histogram_writer_has_a_different_object (test_s59_sol.TimingProbe.test_histogram_writer_has_a_different_object)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tests/test_s59_sol.py", line 47, in test_histogram_writer_has_a_different_object
+    result = probe.clock_object_binding()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'timing_probe' has no attribute 'clock_object_binding'
+
+======================================================================
+ERROR: test_vdnum_constructor_range_is_not_a_signed_range (test_s59_sol.TimingProbe.test_vdnum_constructor_range_is_not_a_signed_range) (raw=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tests/test_s59_sol.py", line 55, in test_vdnum_constructor_range_is_not_a_signed_range
+    self.assertEqual(probe.vdnum_slice(raw), max(0, raw - 0x3000))
+                     ^^^^^^^^^^^^^^^^^
+AttributeError: module 'timing_probe' has no attribute 'vdnum_slice'
+
+======================================================================
+ERROR: test_vdnum_constructor_range_is_not_a_signed_range (test_s59_sol.TimingProbe.test_vdnum_constructor_range_is_not_a_signed_range) (raw=12287)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tests/test_s59_sol.py", line 55, in test_vdnum_constructor_range_is_not_a_signed_range
+    self.assertEqual(probe.vdnum_slice(raw), max(0, raw - 0x3000))
+                     ^^^^^^^^^^^^^^^^^
+AttributeError: module 'timing_probe' has no attribute 'vdnum_slice'
+
+======================================================================
+ERROR: test_vdnum_constructor_range_is_not_a_signed_range (test_s59_sol.TimingProbe.test_vdnum_constructor_range_is_not_a_signed_range) (raw=12288)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tests/test_s59_sol.py", line 55, in test_vdnum_constructor_range_is_not_a_signed_range
+    self.assertEqual(probe.vdnum_slice(raw), max(0, raw - 0x3000))
+                     ^^^^^^^^^^^^^^^^^
+AttributeError: module 'timing_probe' has no attribute 'vdnum_slice'
+
+======================================================================
+ERROR: test_vdnum_constructor_range_is_not_a_signed_range (test_s59_sol.TimingProbe.test_vdnum_constructor_range_is_not_a_signed_range) (raw=12289)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tests/test_s59_sol.py", line 55, in test_vdnum_constructor_range_is_not_a_signed_range
+    self.assertEqual(probe.vdnum_slice(raw), max(0, raw - 0x3000))
+                     ^^^^^^^^^^^^^^^^^
+AttributeError: module 'timing_probe' has no attribute 'vdnum_slice'
+
+======================================================================
+ERROR: test_vdnum_constructor_range_is_not_a_signed_range (test_s59_sol.TimingProbe.test_vdnum_constructor_range_is_not_a_signed_range) (raw=45055)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tests/test_s59_sol.py", line 55, in test_vdnum_constructor_range_is_not_a_signed_range
+    self.assertEqual(probe.vdnum_slice(raw), max(0, raw - 0x3000))
+                     ^^^^^^^^^^^^^^^^^
+AttributeError: module 'timing_probe' has no attribute 'vdnum_slice'
+
+======================================================================
+ERROR: test_vdnum_constructor_range_is_not_a_signed_range (test_s59_sol.TimingProbe.test_vdnum_constructor_range_is_not_a_signed_range) (raw=45056)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tests/test_s59_sol.py", line 55, in test_vdnum_constructor_range_is_not_a_signed_range
+    self.assertEqual(probe.vdnum_slice(raw), max(0, raw - 0x3000))
+                     ^^^^^^^^^^^^^^^^^
+AttributeError: module 'timing_probe' has no attribute 'vdnum_slice'
+
+======================================================================
+ERROR: test_vdnum_constructor_range_is_not_a_signed_range (test_s59_sol.TimingProbe.test_vdnum_constructor_range_is_not_a_signed_range) (raw=65535)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/tests/test_s59_sol.py", line 55, in test_vdnum_constructor_range_is_not_a_signed_range
+    self.assertEqual(probe.vdnum_slice(raw), max(0, raw - 0x3000))
+                     ^^^^^^^^^^^^^^^^^
+AttributeError: module 'timing_probe' has no attribute 'vdnum_slice'
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.281s
+
+FAILED (errors=8)
