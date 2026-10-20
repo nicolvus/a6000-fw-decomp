@@ -12,7 +12,7 @@ el detalle de cómo se llegó al estado actual.
 Después de editar cualquier `.md` indexado: corre `knowledge-maintenance`.
 Antes de reutilizar un hallazgo: corre `contradiction-audit` (puede estar corregido/superado).
 
-Commits: al terminar cada fase (S54 en adelante) haz SIEMPRE commit local de los cambios propios (Conventional Commits; excluye logs de sesión REA). Actualiza SIEMPRE el README principal con la fase y haz `git push` a `origin` (GitHub personal nicolvus/a6000-fw-decomp, rama actual) tras el commit (orden permanente del usuario, 2026-10-20).
+Commits: al terminar cada fase (S54 en adelante) haz SIEMPRE commit local de los cambios propios (Conventional Commits; excluye logs de sesión REA). Actualiza SIEMPRE el README principal con la fase y haz `git push` a `origin` (GitHub personal nicolvus/a6000-fw-decomp, rama `main`) tras el commit (orden permanente del usuario, 2026-10-20).
 
 Restricciones del proyecto: sin firmware ejecutado, sin cámara, sin flasheo,
 `git push` solo según la regla de commits. Detalle completo en `docs/STATE.md`.
