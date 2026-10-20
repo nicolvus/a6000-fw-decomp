@@ -1,0 +1,255 @@
+{
+ "phase": "S55",
+ "date": "2026-10-20",
+ "sha256": {
+  "av_cam_a6000": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "av_cam_a7s": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+  "bk4_a6000": "ff67f1ab81fbebcfe12000ba396dac546997c7fbf5042e8b3c2a55a7a202cd4b",
+  "bk4_a7s": "eb12e0bd219fac237f97deec68dc8304b6664a4ac1880f2a98417d0ba7e2c979"
+ },
+ "entries": [
+  {
+   "id": "S55-01",
+   "claim": "A7S contiene las tres primitivas GPIO con la misma forma que A6000",
+   "model": "A7S",
+   "firmware": "av-cam.bin",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "address": "get 0x43b585c2, cfg 0x43b58534, set 0x43b585a0",
+   "offset": null,
+   "instructions": [
+    "cmp r0,#0x11; push {r4-r6,lr}; mov r4,r0; mov r5,r1; bhi"
+   ],
+   "references": [
+    "analysis/s55/gpio_calls_diff.py"
+   ],
+   "interpretation": "Misma infraestructura GPIO (base 0xf2910000, banco = ch<<8, 32 bits)",
+   "status": "VERIFICADO",
+   "validation_method": "coincidencia de bytes + capstone",
+   "test": "tests/test_s55_bionz_sync.py::GpioPrimitivesA7S",
+   "limitations": "blobs de distinta versión; solo forma, no equivalencia de cada ruta"
+  },
+  {
+   "id": "S55-02",
+   "claim": "Sitios de llamada: A6000 50 get/43 cfg/4 set; A7S 50/43/5 (único extra: set con IDs 0xf90381/382, valores sin asignar en el preset)",
+   "model": "A6000+A7S",
+   "firmware": "av-cam.bin",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9|b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "address": "analysis/s55/gpio_calls_diff.json",
+   "offset": null,
+   "instructions": [],
+   "references": [
+    "analysis/s55/gpio_calls_diff.py"
+   ],
+   "interpretation": "El único sitio extra de A7S es un no-op (ch=0xffffffff>0x11) con el preset oficial",
+   "status": "VERIFICADO",
+   "validation_method": "capstone; propagación lineal marcada",
+   "test": "::call_site_counts",
+   "limitations": "argumentos por propagación lineal; ramas no exploradas"
+  },
+  {
+   "id": "S55-03",
+   "claim": "Los pares (canal,bit) NO se inicializan desde código externo ni son variables sin escritor: los escribe 0x436bcef4 (A6000) / 0x436dc054 (A7S) con Backup_read_4Byte(id)",
+   "model": "A6000+A7S",
+   "firmware": "av-cam.bin",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9|b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "address": "0x436bcef4 / 0x436dc054",
+   "offset": null,
+   "instructions": [
+    "bl 0x43561508; ldr r3,[r4,r3]; ldr r3,[r3]?; str r0,[r3] x16"
+   ],
+   "references": [
+    "analysis/s55/pin_init.py",
+    "analysis/s55/pin_init.json"
+   ],
+   "interpretation": "Corrige S54: sí hay escritor; el almacenamiento es indirecto vía GOT",
+   "status": "VERIFICADO",
+   "validation_method": "capstone + REA confirma wrapper 0x43561508 (+0x2e0); REA no reconoce 0x436bcef4 (Thumb sin sembrar)",
+   "test": "tests/test_s55_bionz_sync.py::PinDatabase::ca_pin_vars_identical_across_models",
+   "limitations": "la función no figura como procedimiento en REA"
+  },
+  {
+   "id": "S55-04",
+   "claim": "Wrapper 0x43561508 (A7S 0x4355f7c8) = servicio de la tabla +0x2e0 = Backup_read_4Byte (relocación de liro.ko .init.data off 0x2bc)",
+   "model": "A6000+A7S",
+   "firmware": "av-cam.bin",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "0x43561508",
+   "offset": null,
+   "instructions": [
+    "ldr.w r3,[r3,#0x2e0]; blx r3"
+   ],
+   "references": [
+    "liro.ko .rel.init.data",
+    "backup.ko Backup_read_4Byte 0x12ac"
+   ],
+   "interpretation": "Los IDs 0xf9xxxx son claves de la base de backup (subsistema=byte alto), no direcciones",
+   "status": "VERIFICADO",
+   "validation_method": "readelf + objdump + capstone",
+   "test": "tests/test_s55_bionz_sync.py::PinDatabase::service_slot_is_backup_read_4byte",
+   "limitations": "mapeo slot→nombre por orden de relocaciones (ancla osal_dynamic_id +0x200 de S49 coincide)"
+  },
+  {
+   "id": "S55-05",
+   "claim": "Base de backup BK4 (0110_backup/*/CX77500_*.bin A6000; CX78500_* A7S) contiene los valores; formato reconstruido de backup.ko Data_init/Data_SearchId/Data_GetDataPt",
+   "model": "A6000",
+   "firmware": "av-cam.bin",
+   "sha256": "ff67f1ab81fbebcfe12000ba396dac546997c7fbf5042e8b3c2a55a7a202cd4b",
+   "address": "sid_table=0x100 (6 B), entry_table=0x100+6*403, valor=archivo+(off&0xffffff)",
+   "offset": null,
+   "instructions": [
+    "Data_SearchId 0x3e60; Data_GetDataPt 0x40ac"
+   ],
+   "references": [
+    "analysis/s55/bk4.py"
+   ],
+   "interpretation": "Preset de fábrica; los valores por unidad (Backup.bak) pueden sobrescribirlo",
+   "status": "VERIFICADO (formato) / PARCIAL (valor en cámara)",
+   "validation_method": "desensamblado ARM de backup.ko + consistencia interna (suma de cuentas)",
+   "test": "tests/test_s55_bionz_sync.py::Integrity::bk4_structure",
+   "limitations": "el archivo en cámara (/Backup.bak) no está en el repo"
+  },
+  {
+   "id": "S55-06",
+   "claim": "Calibración: (0xf904da,db)=(0,4)=NFC_IRQ=GPIO_S_4 y (0xf904dc,dd)=(0,8)=XNFC_RFDET=GPIO_S_8 → banco 0 = GPIO_S, bit=n",
+   "model": "A6000",
+   "firmware": "av-cam.bin",
+   "sha256": "ff67f1ab81fbebcfe12000ba396dac546997c7fbf5042e8b3c2a55a7a202cd4b",
+   "address": "nfc.ko init_module/nfc_rsrc_*",
+   "offset": null,
+   "instructions": [],
+   "references": [
+    "sony-ilce-6000-level3-sm.txt l.3914"
+   ],
+   "interpretation": "Anclas independientes (kmod + esquema)",
+   "status": "PARCIAL",
+   "validation_method": "coincidencia de dos pines",
+   "test": "tests/test_s55_bionz_sync.py::PinDatabase::nfc_calibration",
+   "limitations": "el bank 0=GPIO_S se infiere de 2 anclas + CA_RELEASE_LOCK_MSS=GPIO_S_7=(0,7); el banco de GPIO_n sin S NO está calibrado"
+  },
+  {
+   "id": "S55-07",
+   "claim": "Lectores de la tarea CA: (3,17),(10,3),(0,12),(0,7),(5,14); salidas (7,15),(7,13); idénticos en A7S; 14 funciones en cada modelo, 1:1",
+   "model": "A6000+A7S",
+   "firmware": "av-cam.bin",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9|b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "address": "0x436ba710 (palabra de 5 pines), 0x436b8a8c/abc/b2c/b5c (salidas)",
+   "offset": null,
+   "instructions": [],
+   "references": [
+    "analysis/s55/var_users.json",
+    "pin_resolve.json"
+   ],
+   "interpretation": "La infraestructura de P4C-candidata es idéntica en A7S y A6000; no hay consumidor A7S exclusivo",
+   "status": "VERIFICADO",
+   "validation_method": "intérprete lineal + REA pseudocódigo 0x436ba710",
+   "test": "tests/test_s55_bionz_sync.py::Consumers",
+   "limitations": "intérprete lineal por función; usos indirectos (punteros guardados) no cubiertos"
+  },
+  {
+   "id": "S55-08",
+   "claim": "(0,7)=CA_RELEASE_LOCK_MSS y (0,12)=DWN_CSREQ_MSS entre los lectores",
+   "model": "A6000",
+   "firmware": "av-cam.bin",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "0x436bc0a0 (comprueba (0,7) al iniciar)",
+   "offset": null,
+   "instructions": [],
+   "references": [
+    "esquema l.3914, l.3899"
+   ],
+   "interpretation": "Los lectores son líneas de handshake SIO/CAIF, no la cortina",
+   "status": "INFERENCIA fuerte",
+   "validation_method": "banco 0=GPIO_S + esquema",
+   "test": "—",
+   "limitations": "dependiente de S55-06"
+  },
+  {
+   "id": "S55-09",
+   "claim": "Ningún par usado por el código tiene bit 9 fuera del banco 0 → GPIO_9 no se lee por gpio_get (si bit==n)",
+   "model": "A6000",
+   "firmware": "av-cam.bin",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9|ff67f1ab81fbebcfe12000ba396dac546997c7fbf5042e8b3c2a55a7a202cd4b",
+   "address": "—",
+   "offset": null,
+   "instructions": [],
+   "references": [
+    "analysis/s55/gpio_calls_diff.json"
+   ],
+   "interpretation": "P4C en GPIO_9 no tiene lector GPIO",
+   "status": "INFERENCIA",
+   "validation_method": "barrido de toda la base ID→valor",
+   "test": "tests/test_s55_bionz_sync.py::Consumers::no_reader_has_bit_9_outside_bank0",
+   "limitations": "supone bit==n en el banco GPIO_n (solo demostrado para GPIO_S); IDs dinámicos de 0x43716dd0 sin resolver"
+  },
+  {
+   "id": "S55-10",
+   "claim": "Manejador de ExposureEndNotify 0x436b8aec: sin GPIO; envía op CAIF 0x436ba234 con 2 bytes; ExpStartComp no tiene sitios en la tarea de pines",
+   "model": "A6000",
+   "firmware": "av-cam.bin",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "0x436b8aec-0x436b8b28; ExpStartComp: 0x435a55ea,0x435a5736,0x435a586c,0x4399db7a,0x43a036a0",
+   "offset": null,
+   "instructions": [],
+   "references": [
+    "analysis/s55/events_mmio.json"
+   ],
+   "interpretation": "Los eventos de exposición no leen P4C en las rutas recuperadas",
+   "status": "VERIFICADO (ausencia en rutas recuperadas)",
+   "validation_method": "capstone",
+   "test": "tests/test_s55_bionz_sync.py::ExposureEvents",
+   "limitations": "ausencia ≠ inexistencia global"
+  },
+  {
+   "id": "S55-11",
+   "claim": "Salidas BIONZ: 0x128/0x12d conmutan (7,15); 0x12c/0x12f conmutan (7,13) (set/clear 0x43b5e2a4/b0)",
+   "model": "A6000",
+   "firmware": "av-cam.bin",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "0x436b8a8c,0x436b8abc,0x436b8b2c,0x436b8b5c",
+   "offset": null,
+   "instructions": [],
+   "references": [],
+   "interpretation": "BIONZ señala lectura de imagen/fin de exposición a Darwin por GPIO",
+   "status": "VERIFICADO (código); identidad de red INFERENCIA",
+   "validation_method": "capstone",
+   "test": "tests/test_s55_bionz_sync.py::ExposureEvents::pin_drivers_at_image_read_events",
+   "limitations": "nombres de red MSS_IMG_READ_CA/MSS_CAM_NOTIFY no probados"
+  },
+  {
+   "id": "S55-12",
+   "claim": "Pin (15,5) = (0xf90343,344): gpio_set(15,5,·) al final del constructor del imager en A6000 (0x436d670a) y en A7S (0x436f3f90)",
+   "model": "A6000+A7S",
+   "firmware": "av-cam.bin",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9|b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "address": "0x436d670a / 0x436f3f90",
+   "offset": null,
+   "instructions": [],
+   "references": [
+    "analysis/s55/gpio_calls_diff.json"
+   ],
+   "interpretation": "Mismo pin de control del imager en IMX210 y IMX235",
+   "status": "VERIFICADO (código) / semántica NO VERIFICADO",
+   "validation_method": "capstone",
+   "test": "tests/test_s55_bionz_sync.py::PinDatabase::known_immediate_matches_database",
+   "limitations": "función del pin desconocida"
+  },
+  {
+   "id": "S55-13",
+   "claim": "SENS_B: sin cadenas ni registros identificables en av-cam; censo MMIO sin bloque dedicado reconocible",
+   "model": "A6000",
+   "firmware": "av-cam.bin",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "—",
+   "offset": null,
+   "instructions": [],
+   "references": [
+    "analysis/s55/events_mmio.json"
+   ],
+   "interpretation": "Frontera: bloque dedicado no localizado",
+   "status": "NO VERIFICADO",
+   "validation_method": "cadenas + censo de literales 0xf2/0xf3",
+   "test": "—",
+   "limitations": "bloques f2a1-f2a3, f2400000 sin semántica"
+  }
+ ]
+}
