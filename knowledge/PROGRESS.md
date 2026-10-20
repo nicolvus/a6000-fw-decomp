@@ -1596,3 +1596,12 @@ Próximo (no iniciado): traza pasiva autorizada de `MSS_SO_DWN`/bobinas, consumi
 - Herramienta: REA `rq.py` (cliente compacto del demonio) en `analysis/s54/rq.py`; ruff instalado en `~/.local/bin` (sin avisos en archivos nuevos); sin dependencias nuevas de proyecto.
 - Frontera: consumidor BIONZ de P4C (pares pin→(canal,bit) sin inicializar en `av-cam`), escritor del byte de tipo, polaridad/rearme P4C, IMX210 (sin datasheet).
 - Próximo exacto: `av-cam` A7S 3.20 — barrido `gpio_get` y localizar el inicializador de `0x43e77298…`.
+
+
+## S55 — origen de pares GPIO, A7S vs A6000 (20-10-2026)
+- Hecho: equivalentes GPIO en A7S (`get 0x43b585c2, cfg 0x43b58534, set 0x43b585a0`), tabla de sitios (`analysis/s55/gpio_calls_diff.py`), descubrimiento de la base de backup BK4 (`analysis/s55/bk4.py`), inicializador de pines
+  (`pin_init.py`), usuarios de variables (`var_users.py`), eventos/MMIO (`events_mmio.py`). Informes `docs/capture/s55-*.md`, matriz `analysis/s55-evidence-matrix.json`, tests 16/16.
+- Herramientas: REA (1 sesión, `GHIDRA_MAXMEM=6G`, cerrada) para confirmar wrapper `+0x2e0` y empaquetado de pines; capstone/readelf/llvm-objdump para el resto; sin dependencias nuevas.
+- Corrección: «variables sin escritor» de S54 es incorrecta (escritor `0x436bcef4`, store vía GOT).
+- Frontera: banco de los `GPIO_n` (sin «S»), `SENS_B`, valores por unidad (`Backup.bak`), IMX210.
+- Próximo exacto: escritores de `0xf2a10000–0xf2a30000`/`0xf2400000` (candidato SENS_B); IDs dinámicos de `0x43716dd0`; traza pasiva autorizada.
