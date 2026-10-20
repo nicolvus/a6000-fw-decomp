@@ -1,0 +1,18 @@
+# S60-Claude — A7S 3.20: mensajes `0x1000/0x1001` y servicios no resueltos
+
+20-10-2026. `av-cam.bin` A7S 3.20, SHA-256 `b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e`. Método: Capstone (barrido Thumb completo), Unicorn (código real de `0x438f6864` y emisores, OSAL sustituido), escenarios S59 con el constructor real. Tests: `tests/test_s60_claude.py` (10). Scripts/salidas: `analysis/s60/claude/`. Todo es **comportamiento de firmware emulado**; nada sobre respuesta eléctrica del IMX235.
+
+| ID | Clasificación | Hallazgo y evidencia |
+|---|---|---|
+| C60-1 | VERIFICADO | `0x438f6864(unit,id,a,b)` es una API **de trazas** de todo el firmware: **381** llamadores (`trace_api.json`); `0x1000/0x1001` son 2 de ellos (`0x436f5ba6`, `0x436f5bb2`). Filtra por máscara de unidad (`0x438f6840`), toma un bloque de `0x2c` B del pool `0x8f013a`, escribe registro tipo 2/clase 3/carga 12 B (`+0x18`: unidad\|id, a, b) y lo envía a la cola `0x8f013a` (`trace_emu.py`, bytes del registro en `trace_emu.json`). |
+| C60-2 | VERIFICADO | El envío es **no bloqueante y su retorno se descarta** (`0x436f5baa` sobrescribe r0). Si falla, reserva `0x20` B en `0x8f0313`, escribe marcador de pérdida (tipo `0xf`), lo fuerza (`0x1d8` de la tabla OSAL) y libera: el emisor nunca espera ni recibe respuesta. No puede sincronizar ni terminar una exposición. |
+| C60-3 | VERIFICADO | **Contenido:** `0x1000` = eco de los parámetros de `SetExposure` (`a=svd<<16\|shd`, `b=spl<<24`) y `0x1001` = eco del argumento de `SetRead` (ganancia `agc<<…`); cada parámetro cambia el mensaje (`msg_content.json`, modo `0x0b`, ctor real). Son una traza de lo programado, no una orden. |
+| C60-4 | VERIFICADO | **Receptor:** los literales de handle `0x8f013a` (186), `0x8f0313` (86), `0x8f0139` (4) aparecen solo en 87 emisores con idéntico patrón alloc→send→(fallo: marcador→force→free) y en ningún receptor; ninguna rama `movw/movt` los construye (`handle_roles.json`, `queue_users.py`). **PARCIAL:** el consumidor (drenaje de la cola) no está en la imagen por referencia directa; probable servicio de trazas externo al código analizado (INFERENCIA). Una consulta vacía no prueba ausencia. |
+| C60-5 | VERIFICADO | Fotografía vs Silent: `0x4c/0x4d/0x4e/0x4f` no emiten (`MessageContent.test_silent_modes_emit_nothing`); la diferencia es solo traza. Sin efecto sobre captura ni sincronía. El byte de depuración puede forzarla (S59), no cambia el contenido de los registros. |
+| C60-6 | VERIFICADO | Servicios: `0x439b3918` = memcpy **ARM** (ldm/stm, 3993 llamadores); `0x438f7114` = `printf` de trazas (vsnprintf `0x439b35fc`, registros a la misma cola; 4230 llamadores); no alteran el estado de captura. |
+| C60-7 | PARCIAL | `0x43544270` (único llamador `0x43ada4be`, tercer método tras `0x436f6710/0x436f68ec`, antes de `0x436f6b9c`) decodifica el estado `[obj]∈0..5` y bytes `+4,+5,+6,+0x11` de la configuración en máscaras de campos mediante 6 ramas `tbb`, que terminan en setters de sombra `0x436f7654…`. Es un decodificador determinista; su efecto eléctrico no se ha demostrado. |
+| C60-8 | NO VERIFICADO | Consumidor de la cola de trazas, OSAL/DFE indirectos más allá de los envoltorios (tabla `+0x14`, 77 envoltorios en `osal_wrappers.json`; semántica de índices inferida por patrón alloc/send/free), origen de cada campo `+0x18c..+0x1a8` más allá de que `SetExposure/SetRead` los alteran. |
+
+Modos: `0x0b`,`0x35` emiten; `0x4c..0x4f` no. Silent no tiene comportamiento exclusivo en esta ruta. **Fin de integración electrónica: NO VERIFICADO**; S51 sin cambios (A=NO, B=NO, C=NO).
+
+Reproducción: `python3 -m unittest tests.test_s60_claude`; scripts `trace_api.py`, `handle_roles.py`, `queue_users.py`, `trace_emu.py`, `msg_content.py`.

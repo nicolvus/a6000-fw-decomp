@@ -1640,3 +1640,10 @@ Próximo (no iniciado): traza pasiva autorizada de `MSS_SO_DWN`/bobinas, consumi
 - Herramientas: REA (1 sesión A7S + 1 sesión A6000 de GPT, cerradas), Capstone, Unicorn; sin dependencias nuevas.
 - Frontera: emisor del payload de `0x438069f0` (origen M/Tv/clk), receptores de `0x1000/0x1001`, servicios Darwin/OSAL stub, física del sensor.
 - Próximo exacto: sembrar Thumb en los emisores/receptores anteriores; traza pasiva CIS0+XPI+VD autorizada. S51 se mantiene.
+
+## S60 — emisor de mensajes IMX210 y receptores A7S (20-10-2026)
+- Hecho: GPT-6 Sol (`codex exec`, medium) localizó la tarea receptora `0x43806e38` y los emisores de respuesta (`docs/capture/s60-sol.md`, 6 tests); cortó por límite de uso antes de su mensaje final y la auditoría cruzada no se obtuvo. Claude (`docs/capture/s60-claude.md`, 12 tests) resolvió la naturaleza de `0x1000/0x1001` (trazas) y localizó los productores del bloque `obj+0xe20`.
+- Hallazgos: ver `docs/capture/s60-conclusions.md`. Corrección a Sol: TBH base `0x43806a08`.
+- Herramientas: Capstone, Unicorn (OSAL sustituido), sin REA nuevo ni dependencias nuevas.
+- Frontera: petición caso 3/9 y bit 31 del handle, productores de `obj+0x168/0x16a`, consumidor de la cola de trazas, física.
+- Próximo exacto: repetir `analysis/s60/sol-audit/task.md` al renovarse el cupo. S51 se mantiene.

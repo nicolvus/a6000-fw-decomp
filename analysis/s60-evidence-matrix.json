@@ -1,0 +1,195 @@
+{
+ "phase": "S60",
+ "date": "2026-10-20",
+ "baseline": "S59",
+ "sha256": {
+  "A6000": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "A7S": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+ },
+ "entries": [
+  {
+   "id": "S60-C1",
+   "executed_by": "Claude Sonnet 5.5",
+   "model": "A7S",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "claim": "0x438f6864(unit,id,a,b) es una API de trazas de todo el firmware (381 llamadores); 0x1000/0x1001 son 2; registro tipo 2/clase 3/carga 12 B a la cola 0x8f013a, no bloqueante",
+   "address": "0x438f6864, 0x43ada07a, 0x43ada0b4",
+   "status": "VERIFICADO",
+   "validation_method": "Capstone + Unicorn con OSAL sustituido (alloc/send)",
+   "test": "tests/test_s60_claude.py::TraceRecord",
+   "limitations": "OSAL es un stub del arnés: no prueba el consumidor real",
+   "independently_verified_by_claude": null
+  },
+  {
+   "id": "S60-C2",
+   "executed_by": "Claude Sonnet 5.5",
+   "model": "A7S",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "claim": "El retorno del envío se descarta (0x436f5baa sobrescribe r0); fallo de envío → marcador tipo 0xf en 0x8f0313; el emisor no espera ni sincroniza",
+   "address": "0x436f5b98..0x436f5bb2, 0x438f68c8..0x438f68fe",
+   "status": "VERIFICADO",
+   "validation_method": "bytes + Unicorn (send_rc=1)",
+   "test": "tests/test_s60_claude.py::TraceRecord, NoReceiver",
+   "limitations": "No excluye que otro actor lea la cola y actúe",
+   "independently_verified_by_claude": null
+  },
+  {
+   "id": "S60-C3",
+   "executed_by": "Claude Sonnet 5.5",
+   "model": "A7S",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "claim": "0x1000 = eco de SetExposure (svd<<16|shd, spl<<24); 0x1001 = eco de SetRead (ganancia); cada parámetro cambia el mensaje",
+   "address": "0x436f5b98..0x436f5bb2",
+   "status": "VERIFICADO",
+   "validation_method": "ctor real + escenarios modo 0x0b",
+   "test": "tests/test_s60_claude.py::MessageContent",
+   "limitations": "Empaquetado exacto de bits de 0x1001 no desglosado",
+   "independently_verified_by_claude": null
+  },
+  {
+   "id": "S60-C4",
+   "executed_by": "Claude Sonnet 5.5",
+   "model": "A7S",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "claim": "Los literales de handle 0x8f013a/0x8f0313/0x8f0139 aparecen solo en emisores (87+ con idéntico patrón) y no hay receptor por literal; consumidor NO localizado en la imagen",
+   "address": "barrido completo av-cam.bin",
+   "status": "PARCIAL",
+   "validation_method": "barrido Capstone de literales, movw/movt y envoltorios OSAL",
+   "test": "tests/test_s60_claude.py::NoReceiver",
+   "limitations": "Una búsqueda vacía no prueba ausencia; el drenaje puede usar handles construidos en tiempo de ejecución",
+   "independently_verified_by_claude": null
+  },
+  {
+   "id": "S60-C5",
+   "executed_by": "Claude Sonnet 5.5",
+   "model": "A7S",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "claim": "0x439b3918 = memcpy ARM (3993 llamadores); 0x438f7114 = printf de trazas (4230 llamadores); 0x43544270 = decodificador de estado→campos de sombra (3er método, único llamador 0x43ada4be)",
+   "address": "0x439b3918, 0x438f7114, 0x43544270",
+   "status": "VERIFICADO / PARCIAL (0x43544270)",
+   "validation_method": "Capstone, barrido de llamadores",
+   "test": "tests/test_s60_claude.py",
+   "limitations": "Efecto eléctrico de 0x43544270 no demostrado",
+   "independently_verified_by_claude": null
+  },
+  {
+   "id": "S60-C6",
+   "executed_by": "Claude Sonnet 5.5",
+   "model": "A7S",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "claim": "Silent (0x4c..0x4f) no emite 0x1000/0x1001; la diferencia foto/Silent en esta ruta es solo traza",
+   "address": "0x436f5b84..0x436f5b96",
+   "status": "VERIFICADO",
+   "validation_method": "Unicorn, 4 modos",
+   "test": "tests/test_s60_claude.py::MessageContent",
+   "limitations": "Con depuración 0xff; byte [dbg+0xc] puede forzar la emisión",
+   "independently_verified_by_claude": null
+  },
+  {
+   "id": "S60-C7",
+   "executed_by": "Claude Sonnet 5.5",
+   "model": "A6000",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "claim": "El bloque de 24 B obj+0xe20 (= payload+0x20 de Sol) lo escriben dos productores vía el accesor 0x43ae8504: A (0x437ab510, 6 pares idénticos de obj+0x168/0x16a) y B (0x43aecbfa, 5 pares de obj8+0x48..0x5f + sexto par por tabla 0x437a5a6c); son 6 pares (u16,u16), no un tiempo directo",
+   "address": "0x43ae8504, 0x437ab510, 0x43aecbfa, 0x437a5a6c",
+   "status": "VERIFICADO (escritores) / HIPÓTESIS (semántica)",
+   "validation_method": "barrido de accesores 0x43ae84xx + Capstone",
+   "test": "tests/test_s60_claude.py::A6000Block",
+   "limitations": "Origen de obj+0x168/0x16a y de obj8+0x48.. y condiciones A/B (0x43aeb0cc, [cfg+0x3a]) sin resolver; no se demuestra que sean M de temporización",
+   "independently_verified_by_claude": null
+  },
+  {
+   "id": "S60-C8",
+   "executed_by": "Claude Sonnet 5.5",
+   "model": "A6000",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "claim": "El accesor de obj+0xe04 (0x43ae84da) solo tiene un llamador (0x4376682c) que escribe un único byte; obj+0xe04..e53 es un registro de estado compuesto por muchos productores (e08:1, e0c:7, e20:2, e3c:5 llamadores)",
+   "address": "0x43ae84da, 0x4376682c",
+   "status": "VERIFICADO",
+   "validation_method": "barrido de accesores",
+   "test": "tests/test_s60_claude.py (json de llamadores)",
+   "limitations": "No se analizaron todos los productores",
+   "independently_verified_by_claude": null
+  },
+  {
+   "id": "S60-G1",
+   "executed_by": "GPT-6 Sol",
+   "model": "A6000",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "claim": "Receptor del despachador: tarea 0x43806e38 (recv 0x3030f, timeout -1) → 0x438069f0 → libera; emisores de respuesta 0x43b00fe6 (caso 3→4) y 0x43b00f62 (caso 9→10) vía 0x43806400 a 0x8003030f",
+   "address": "0x43806e38, 0x43806400, 0x43b00fe6, 0x43b00f62",
+   "status": "VERIFICADO",
+   "validation_method": "Sol: Capstone+Unicorn; Claude: bytes",
+   "test": "tests/test_s60_sol.py",
+   "limitations": "Bit 31 del handle de envío vs 0x3030f del receptor sin resolver; quién envía las peticiones 3/9 no localizado",
+   "independently_verified_by_claude": true
+  },
+  {
+   "id": "S60-G2",
+   "executed_by": "GPT-6 Sol",
+   "model": "A6000",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "claim": "CORRECCIÓN a S60-01: tabla TBH 0x43806a04 usa base pc=0x43806a08; manejadores caso 4→0x43806c28 y caso 10→0x43806d06 (Sol: …c24/…d02); los cuerpos citados coinciden",
+   "address": "0x43806a04",
+   "status": "VERIFICADO (corrección Claude)",
+   "validation_method": "Capstone + lectura de tabla",
+   "test": "tests/test_s60_claude.py::A6000Block::test_sol_dispatch_table",
+   "limitations": "Error de 4 B en la dirección de entrada en s60-sol.md; sin efecto en sus conclusiones",
+   "independently_verified_by_claude": true
+  },
+  {
+   "id": "S60-G3",
+   "executed_by": "GPT-6 Sol",
+   "model": "A6000",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "claim": "Orden de publicación rol 1: obj+d64→db4, luego obj+e04→d64 y d60→c4c; mensajes 4/10 transportan obj+e04; escritor último de e04 no localizado",
+   "address": "0x43b00dd4..0x43b00e1a",
+   "status": "VERIFICADO (orden) / PARCIAL (origen)",
+   "validation_method": "Sol: Unicorn; Claude: desensamblado",
+   "test": "tests/test_s60_sol.py",
+   "limitations": "Valores inyectados sintéticos; ver S60-C8 para los productores del registro",
+   "independently_verified_by_claude": true
+  },
+  {
+   "id": "S60-G4",
+   "executed_by": "GPT-6 Sol",
+   "model": "A6000",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "claim": "Tv: entrada AEOUT3+0xfc+2i → 0x4382fa94 → 0x4383d4d0; clk P+0x4c0 NO VERIFICADO; N/svr/VdNum PARCIAL; 0x0b/0x2f NO VERIFICADO",
+   "address": "0x4383dfb6..0x4383e01a",
+   "status": "PARCIAL / NO VERIFICADO",
+   "validation_method": "Sol: REA + Capstone",
+   "test": "tests/test_s60_sol.py",
+   "limitations": "Sin verificar de forma independiente por Claude en S60 (límite de uso de GPT, sin auditoría)",
+   "independently_verified_by_claude": false
+  }
+ ],
+ "hypotheses": [
+  {
+   "id": "H60-1",
+   "status": "VERIFICADO",
+   "text": "Los mensajes 0x1000/0x1001 son registros de traza que reflejan parámetros ya programados; no son órdenes ni sincronización"
+  },
+  {
+   "id": "H60-2",
+   "status": "PARCIAL",
+   "text": "El consumidor de la cola de trazas 0x8f013a no está en la imagen por referencia directa"
+  },
+  {
+   "id": "H60-3",
+   "status": "PARCIAL",
+   "text": "Los 24 B +0xdd0 del A6000 se componen de 6 pares (u16,u16) con dos productores localizados; su semántica de tiempo es HIPÓTESIS"
+  },
+  {
+   "id": "H60-4",
+   "status": "NO VERIFICADO",
+   "text": "Fin de integración electrónica del IMX210 / IMX235; S51 A=NO, B=NO, C=NO"
+  }
+ ],
+ "gpt_cross_validation": "NO OBTENIDA: codex exec devolvió \"usage limit\" (exit 1) en la auditoría; ver docs/capture/s60-cross-validation.md",
+ "s51": {
+  "A": "NO",
+  "B": "NO",
+  "C": "NO"
+ }
+}
