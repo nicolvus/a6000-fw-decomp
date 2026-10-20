@@ -1,0 +1,268 @@
+{
+ "phase": "S54",
+ "date": "2026-10-20",
+ "sha256": {
+  "a6000": "5f2be06d9885d154e8e0df46a611d6830d29754b4353f6e82cecfe66dd6a0bf4",
+  "a7s": "241f5d311991e8b4e0246b2edab4039517cab55daf431d4ad21670a8866174cf",
+  "av-cam": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
+ },
+ "entries": [
+  {
+   "id": "S54-01",
+   "claim": "CA_1ST_CURTAIN_START (P4C) llega a IC6000 SENS_B (AA13) y GPIO_9 (AD21)",
+   "model": "A6000",
+   "firmware": "service_L3.pdf p.26/28",
+   "sha256": "5f2be06d9885d154e8e0df46a611d6830d29754b4353f6e82cecfe66dd6a0bf4",
+   "address": null,
+   "offset": null,
+   "function": "esquema",
+   "instructions": [
+    "texto vectorial + recorte renderizado"
+   ],
+   "references": [
+    "references/manuals/a6000_service_L3.pdf"
+   ],
+   "status": "VERIFICADO",
+   "validation_method": "coordenadas + inspección visual",
+   "test": "tests/test_s54_p4c.py::SchematicColumns (A7S)",
+   "limitations": "pdf A6000 no re-ejecutado en test; polaridad no probada"
+  },
+  {
+   "id": "S54-02",
+   "claim": "Mismo cableado en A7S (P4B-P4E por columna; SENS_B y GPIO_9 en IC1001)",
+   "model": "A7S",
+   "firmware": "sony-ilce-7s-level3-sm.txt",
+   "sha256": null,
+   "address": "líneas 5780/5877/3506-3508/3959-3961",
+   "offset": null,
+   "function": "esquema",
+   "instructions": [
+    "coincidencia de columna"
+   ],
+   "references": [
+    "docs/references/sony-ilce-7s-level3-sm.txt"
+   ],
+   "status": "VERIFICADO",
+   "validation_method": "texto vectorial",
+   "test": "tests/test_s54_p4c.py::SchematicColumns",
+   "limitations": "sin inspección visual de la hoja A7S; corrige S53 (pines A7S inferidos)",
+   "firmware_note": "documento de manual (no firmware)"
+  },
+  {
+   "id": "S54-03",
+   "claim": "P4C solo se escribe a 0 en ejecución (9 sitios por ROM)",
+   "model": "A6000/A7S",
+   "firmware": "darwin_core.bin",
+   "sha256": {
+    "a6000": "5f2be06d9885d154e8e0df46a611d6830d29754b4353f6e82cecfe66dd6a0bf4",
+    "a7s": "241f5d311991e8b4e0246b2edab4039517cab55daf431d4ad21670a8866174cf"
+   },
+   "address": "A6000 0x20d8a,0x20dba,0x20df6,0x20e30,0x20e64,0x20e96,0x20ece,0x20f14,0x20f34; A7S 0x2181c,0x2184c,0x21888,0x218c6,0x218fa,0x2192c,0x21968,0x219ae,0x219ce",
+   "offset": null,
+   "function": "0x20d26/0x20e0e/0x20e98 · 0x217b2/0x218a0/0x2192e",
+   "instructions": [
+    "movs r1,#0",
+    "mov r0,rX(0x230)",
+    "bl 0x51c0/0x5200"
+   ],
+   "references": [
+    "docs/capture/s54-p4c-signal-trace.md"
+   ],
+   "status": "VERIFICADO",
+   "validation_method": "capstone skipdata + lectura manual",
+   "test": "tests/test_s54_p4c.py::WritersAndP4C",
+   "limitations": "escrituras directas a registros GPIO fuera del alias no excluidas globalmente"
+  },
+  {
+   "id": "S54-04",
+   "claim": "Único otro camino a PDOR4 es 0x51f2 (máscara 0x9fff conserva P4C) con un llamador; init 0x584c fija DDR4=0x7e3f, PDOR4=0",
+   "model": "A6000",
+   "firmware": "darwin_core.bin",
+   "sha256": "5f2be06d9885d154e8e0df46a611d6830d29754b4353f6e82cecfe66dd6a0bf4",
+   "address": "0x51f2, 0x20e3e, 0x584c",
+   "offset": null,
+   "function": "0x51f2,0x584c",
+   "instructions": [
+    "ands r3,r2",
+    "str.w r5,[r4,#0x410]"
+   ],
+   "references": [
+    "s54-p4c-signal-trace.md"
+   ],
+   "status": "VERIFICADO",
+   "validation_method": "capstone",
+   "test": "tests/test_s54_p4c.py::test_pdor4_direct_writers_are_init_and_masked",
+   "limitations": "solo tabla de perfiles para niveles iniciales"
+  },
+  {
+   "id": "S54-05",
+   "claim": "Nivel inicial de P4C: 0 en perfiles 0,1,2,4,5; 1 en el 3; perfil usado NO resuelto",
+   "model": "A6000",
+   "firmware": "darwin_core.bin",
+   "sha256": "5f2be06d9885d154e8e0df46a611d6830d29754b4353f6e82cecfe66dd6a0bf4",
+   "address": "0x25bfc+n*0x98",
+   "offset": null,
+   "function": "0x55d0/0x5b36",
+   "instructions": [
+    "entradas puerto4 modo1"
+   ],
+   "references": [
+    "fm3-gpio-shutter-mapping.md"
+   ],
+   "status": "PARCIAL",
+   "validation_method": "decodificación de tabla",
+   "test": "tests/test_s54_p4c.py::test_profile_p4c_initial_level",
+   "limitations": "semántica del byte de nivel según 0x55d0 (S53); selector 0xcf3a no seguido"
+  },
+  {
+   "id": "S54-06",
+   "claim": "Exposición Darwin: rama sin mecanismo A6000 (tipo 0) ≡ rama Silent A7S, llamada a llamada",
+   "model": "A6000/A7S",
+   "firmware": "darwin_core.bin",
+   "sha256": {
+    "a6000": "5f2be06d9885d154e8e0df46a611d6830d29754b4353f6e82cecfe66dd6a0bf4",
+    "a7s": "241f5d311991e8b4e0246b2edab4039517cab55daf431d4ad21670a8866174cf"
+   },
+   "address": "A6000 0x20d26/0x20e0e/0x20e98/0x20dda; A7S 0x217b2/0x218a0/0x2192e/0x2186c",
+   "offset": null,
+   "function": "exposición",
+   "instructions": [
+    "diff difflib normalizado"
+   ],
+   "references": [
+    "s54-mechanism-type-zero.md"
+   ],
+   "status": "VERIFICADO",
+   "validation_method": "diff estructural + lectura",
+   "test": "tests/test_s54_p4c.py::test_expo_functions_identical_but_silent_gate, test_silent_branch_is_type_zero_branch",
+   "limitations": "equivalencia de código, no de efectos físicos"
+  },
+  {
+   "id": "S54-07",
+   "claim": "Seguimiento ADC se omite con tipo 0 en A6000 (S+0x153←0) y A7S añade 0x216c2",
+   "model": "A6000/A7S",
+   "firmware": "darwin_core.bin",
+   "sha256": {
+    "a6000": "5f2be06d9885d154e8e0df46a611d6830d29754b4353f6e82cecfe66dd6a0bf4",
+    "a7s": "241f5d311991e8b4e0246b2edab4039517cab55daf431d4ad21670a8866174cf"
+   },
+   "address": "0x20734,0x2083c · 0x2116e,0x21282",
+   "offset": null,
+   "function": "ADC tracking",
+   "instructions": [
+    "bl 0x20c74; cbz",
+    "strb r0,[r4,#0x153]"
+   ],
+   "references": [
+    "s54-mechanism-type-zero.md"
+   ],
+   "status": "VERIFICADO",
+   "validation_method": "lectura",
+   "test": "tests/test_s54_p4c.py::test_adc_tracking_gated_by_type_in_a6000",
+   "limitations": "solo las dos funciones"
+  },
+  {
+   "id": "S54-08",
+   "claim": "A7S llama a escritores de bobina con no_silent=1 en reposición; A6000 tipo 0 nunca acciona",
+   "model": "A6000/A7S",
+   "firmware": "darwin_core.bin",
+   "sha256": {
+    "a6000": "5f2be06d9885d154e8e0df46a611d6830d29754b4353f6e82cecfe66dd6a0bf4",
+    "a7s": "241f5d311991e8b4e0246b2edab4039517cab55daf431d4ad21670a8866174cf"
+   },
+   "address": "A7S 0x20db4,0x2112a,0x21130; A6000 0x203c2,0x206f2,0x206f6",
+   "offset": null,
+   "function": "reposición",
+   "instructions": [
+    "movs r0,#1"
+   ],
+   "references": [
+    "s54-mechanism-type-zero.md"
+   ],
+   "status": "VERIFICADO",
+   "validation_method": "lectura de bytes",
+   "test": "tests/test_s54_p4c.py::test_a7s_reset_paths_force_coils_but_type_zero_never_acts",
+   "limitations": "—"
+  },
+  {
+   "id": "S54-09",
+   "claim": "Tipo de mecanismo = [0x20000050+ch] validado por [0x200002c0+ch]; manejador 33 de la tabla 0x2a1a0 fija la validez",
+   "model": "A6000",
+   "firmware": "darwin_core.bin",
+   "sha256": "5f2be06d9885d154e8e0df46a611d6830d29754b4353f6e82cecfe66dd6a0bf4",
+   "address": "0x1b080,0x1b0b2,0x2a1a0",
+   "offset": null,
+   "function": "0x1b080",
+   "instructions": [
+    "ldrb.w r0,[r0,#0x50]"
+   ],
+   "references": [
+    "s54-mechanism-type-zero.md"
+   ],
+   "status": "VERIFICADO",
+   "validation_method": "lectura + tabla",
+   "test": "tests/test_s54_p4c.py::test_config_byte_getter, test_type_config_valid_flag_handler",
+   "limitations": "escritor del valor NO localizado; origen BIONZ = HIPÓTESIS"
+  },
+  {
+   "id": "S54-10",
+   "claim": "Primitivas GPIO de BIONZ: gpio_get 0x43b5e2bc, cfg 0x43b5e22e, set 0x43b5e29a; base 0xf2910000",
+   "model": "A6000",
+   "firmware": "av-cam.bin",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "0x43b5e2bc/22e/29a",
+   "offset": null,
+   "function": "gpio",
+   "instructions": [
+    "pseudocódigo REA"
+   ],
+   "references": [
+    "s54-bionz-darwin-sync.md"
+   ],
+   "status": "VERIFICADO",
+   "validation_method": "REA/Ghidra + capstone",
+   "test": "tests/test_s54_p4c.py::BionzSide",
+   "limitations": "identidad del mapa con CXD90014 = INFERENCIA"
+  },
+  {
+   "id": "S54-11",
+   "claim": "Lectores GPIO de la tarea CA usan variables de pin globales sin inicializar en la imagen",
+   "model": "A6000",
+   "firmware": "av-cam.bin",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "0x43e77298..0x43e772cc",
+   "offset": null,
+   "function": "0x436b945c,0x436ba67c,0x436bb088,0x436bb9d8,0x436bc0a0",
+   "instructions": [
+    "gpio_get(**slot,**slot)"
+   ],
+   "references": [
+    "s54-bionz-darwin-sync.md"
+   ],
+   "status": "VERIFICADO",
+   "validation_method": "REA + lectura de bytes",
+   "test": "tests/test_s54_p4c.py::test_pin_variables_not_initialised_in_image, test_gpio_get_callers_in_ca_task",
+   "limitations": "la inicialización puede venir de fuera de la imagen; no prueba ausencia de lector de GPIO_9"
+  },
+  {
+   "id": "S54-12",
+   "claim": "Tabla de trazas CAIF: ExposureEndNotify 0x12a (2 B), ExpStartComp 0x136 (clase 4)",
+   "model": "A6000",
+   "firmware": "av-cam.bin",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "0x43fe8138+12*i",
+   "offset": null,
+   "function": "tabla",
+   "instructions": [
+    "ptr nombre,código,tamaño"
+   ],
+   "references": [
+    "s54-bionz-darwin-sync.md"
+   ],
+   "status": "VERIFICADO",
+   "validation_method": "bytes",
+   "test": "tests/test_s54_p4c.py::test_caif_trace_table",
+   "limitations": "uso funcional = INFERENCIA"
+  }
+ ]
+}
