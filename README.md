@@ -16,6 +16,27 @@ electrónico pasa a ser un [subproyecto](projects/electronic-shutter/README.md).
   [IMX210/exposición](docs/capture/s52-imx210-electronic-exposure.md) y
   [viabilidad A6000](docs/capture/s52-a7s-a6000-feasibility.md).
 
+- [S51: decisión SÍ/NO sobre exposición totalmente electrónica](docs/capture/s51-decision.md):
+  A (¿ruta demostrada?) NO, B (¿evidencia para parchear?) NO, C (¿imposibilidad probada?) NO
+  — falta de demostración, no prueba de imposibilidad. Decisión vigente: no parchear.
+  Ver también [informe Codex T2/T3](docs/capture/s51-codex-t2-t3.md).
+
+- [S50: conclusiones conjuntas Claude + Codex](docs/capture/s50-parallel-conclusions.md):
+  **NO_VERIFICADO** una foto de resolución completa con exposición electrónica sin
+  cierre de cortina mecánica; tampoco demostrada su imposibilidad. Nombres
+  `CURTAINMODE`/`*_ELEC_SHUT` no prueban efecto eléctrico (ambos investigadores lo
+  rechazan). Informes: [Claude](docs/capture/s50-claude-electronic-config.md) ·
+  [Codex](docs/capture/s50-codex-exposure-curtains.md).
+
+- [S49: productor de configuración de captura](docs/capture/s49-capture-config-producer.md):
+  clave `0xce` = comando `S_IMAGER_CURTAINMODE`; tabla de servicios de `av-cam.bin`
+  inicializada por `liro.ko`. Productores reales: puente USB/«Senser» de `libsencore.so`
+  y cuatro funciones de `libObj.so`.
+
+- [S48: proveedor del servicio de registro `+0x1ec`](docs/capture/s48-service-table-provider.md):
+  wrappers `0x43561298/0x4356…b4/…324` resueltos; slots `+0x1e8/+0x1ec/+0x200` sin
+  escritor en el blob — son importaciones que rellena el cargador/host, no `av-cam.bin`.
+
 - [S47: entrada del payload y orden de C](docs/capture/s47-payload-producer-and-order.md):
   solicitud recibida en `0x43e95420` → payload `0x43ed4620`;
   callback antes de copia C, con `+94/+95` dentro del rango `0x1a4`.
@@ -92,6 +113,13 @@ electrónico pasa a ser un [subproyecto](projects/electronic-shutter/README.md).
 - [S32: callbacks VD y SyncYCout](docs/capture/s32-vd-callbacks-sync-ycout.md):
   destinos de las listas Drive/Post resueltos; productor YC con handle DMM
   compartido. Dirección de píxeles, pitch/formato y fin DMA siguen sin cerrar.
+
+- [S31: subsistema CAMERA_MAIN_SYNC/DFECore](docs/capture/s31-camera-main-sync-strings.md):
+  hallazgo por cadenas (`strings`) de un motor de temporización VD del sensor
+  no explorado en S16–S30 (centradas en libObj.so/libBizFw.so). Decompiladas 8
+  funciones clave (`VD_Pre`→`VD_Sequence`→`VD_Post`→`VD_Drive`); acceso MMIO real
+  verificado a `0xf3c30110–0xf3c3015c`. Candidato más cercano al productor YC
+  sin dirección de píxeles/plano/pitch/fin DMA. Superado por S32.
 
 - [S30: receptor y retorno de EncodeStill](docs/capture/s30-pipelines-capture-encode.md):
   InfraAvbbc→InfraStillEncoder→SDF, espera hasta completion y continuación a Pool.
