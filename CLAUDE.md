@@ -12,6 +12,8 @@ el detalle de cómo se llegó al estado actual.
 Después de editar cualquier `.md` indexado: corre `knowledge-maintenance`.
 Antes de reutilizar un hallazgo: corre `contradiction-audit` (puede estar corregido/superado).
 
+Commits: al terminar cada fase (S54 en adelante) haz SIEMPRE commit local de los cambios propios (Conventional Commits, sin `git push`; excluye logs de sesión REA).
+
 Restricciones del proyecto: sin firmware ejecutado, sin cámara, sin flasheo,
 sin `git push` salvo instrucción explícita. Detalle completo en `docs/STATE.md`.
 

@@ -1588,3 +1588,11 @@ REA no se abrió (mismo motor; lote directo más rápido para ROM pequeñas). Vi
 Resultado: receptor = mss-async ID `0x0c` sobre MFS5; parser A7S `0x18396` / A6000 `0x17f8c`; A7S consume el bit Silent `0x20`
 y deja de accionar P4D/P4E; A6000 no. Escenario B; S51 vigente. Detalle: `docs/capture/s53-conclusions.md`. Suite 42/42.
 Próximo (no iniciado): traza pasiva autorizada de `MSS_SO_DWN`/bobinas, consumidor LIRO de `CA_1ST_CURTAIN_START`, efecto del tipo 0.
+
+
+## S54 — P4C, tipo 0 y sincronización BIONZ (20-10-2026)
+- Hecho: rastreo de escritores P4C en ambas ROM Darwin (`analysis/s54/p4c_scan.py`), esquema BIONZ (SENS_B/GPIO_9, A6000 y A7S), diff tipo 0 ↔ Silent, origen del byte de tipo,
+  primitivas GPIO de BIONZ (`analysis/s54/bionz_gpio_calls.py`, REA sesión única 440 s cerrada). Informes `docs/capture/s54-*.md`, matriz `analysis/s54-evidence-matrix.json`, tests `tests/test_s54_p4c.py` (21/21).
+- Herramienta: REA `rq.py` (cliente compacto del demonio) en `analysis/s54/rq.py`; ruff instalado en `~/.local/bin` (sin avisos en archivos nuevos); sin dependencias nuevas de proyecto.
+- Frontera: consumidor BIONZ de P4C (pares pin→(canal,bit) sin inicializar en `av-cam`), escritor del byte de tipo, polaridad/rearme P4C, IMX210 (sin datasheet).
+- Próximo exacto: `av-cam` A7S 3.20 — barrido `gpio_get` y localizar el inicializador de `0x43e77298…`.
