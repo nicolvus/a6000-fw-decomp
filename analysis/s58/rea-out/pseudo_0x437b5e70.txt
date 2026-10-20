@@ -1,0 +1,48 @@
+### {'procedure': '0x437b5e70'}
+
+void FUN_437b5e70(int param_1)
+
+{
+  int iVar1;
+  undefined4 uVar2;
+  undefined2 *puVar3;
+  int iVar4;
+  int iVar5;
+  undefined4 uVar6;
+  undefined1 auStack_a8 [108];
+  undefined1 auStack_3c [20];
+  undefined1 auStack_28 [16];
+  
+  iVar1 = DAT_437b5f78;
+  FUN_4383b520(0x51,0);
+  iVar1 = iVar1 + 0x437b5e88;
+  iVar4 = *(int *)(iVar1 + DAT_437b5f7c);
+  puVar3 = *(undefined2 **)(iVar1 + DAT_437b5f80);
+  uVar6 = *(undefined4 *)(iVar1 + DAT_437b5f84);
+  FUN_4383d18c(puVar3,uVar6,*(undefined4 *)(iVar1 + DAT_437b5f88),
+               *(int *)(iVar1 + DAT_437b5f8c) + 0x138,iVar4);
+  FUN_4383d704(iVar4,iVar4 + 0x290,iVar4 + 0x860,iVar4 + 0x861);
+  FUN_4383b520(0x51,1);
+  FUN_4383b520(0x52,0);
+  FUN_43aef6bc(puVar3,iVar4 + 0x290,auStack_a8);
+  FUN_437b6310(auStack_a8);
+  FUN_4383b520(0x52,1);
+  FUN_4383b520(0x53,0);
+  iVar5 = *(int *)(iVar1 + DAT_437b5f90);
+  FUN_4383bc6c(puVar3,uVar6,iVar4 + 0x290,iVar5);
+  FUN_4383bf2c(iVar5,iVar5 + 0x224,iVar5 + 0x31c,iVar5 + 0x31d,*(int *)(param_1 + 8) + 0x870,
+               *(int *)(param_1 + 8) + 0xc78);
+  FUN_4383b520(0x53,1);
+  FUN_4383b520(0x54,0);
+  uVar2 = *(undefined4 *)(iVar1 + DAT_437b5f94);
+  FUN_4385ed84(*puVar3,(int)(short)puVar3[0x290],uVar2);
+  FUN_43b0a6ac(puVar3,uVar6,auStack_3c);
+  FUN_438607d4(auStack_3c,uVar2);
+  FUN_43b0a68e(puVar3,uVar6,auStack_28);
+  FUN_4386059c(auStack_28,uVar2);
+  FUN_4383b520(0x54,1);
+  FUN_43861400();
+  return;
+}
+
+

@@ -1,0 +1,77 @@
+### {'procedure': '0x4386b658'}
+
+void FUN_4386b658(int param_1,undefined4 param_2,undefined2 *param_3)
+
+{
+  ushort uVar1;
+  short sVar2;
+  int iVar3;
+  char cVar4;
+  uint uVar5;
+  uint uVar6;
+  short sVar7;
+  int iVar8;
+  undefined4 uStack_1c;
+  
+  iVar8 = DAT_4386b75c + 0x4386b66a;
+  uStack_1c = param_2;
+  if ((((*(int *)(param_1 + 0x50) == 2) && (*(char *)(param_1 + 0x48) == '\x01')) &&
+      (*(char *)(param_1 + 0x68) == '\x01')) &&
+     (iVar3 = FUN_4384a144(*(undefined4 *)(param_1 + 0x8c),*(undefined4 *)(param_1 + 0x90),
+                           *(undefined1 *)(param_1 + 0x3b),1,param_1), iVar3 == 1)) {
+    cVar4 = '\x04';
+    iVar8 = *(int *)(param_1 + 0x34);
+    uVar6 = 0;
+    uVar1 = *(ushort *)(param_1 + 0x94) & ~((short)*(ushort *)(param_1 + 0x94) >> 0x1f);
+    do {
+      if (iVar8 == 0) {
+        param_3[uVar6] = uVar1;
+      }
+      else if (iVar8 == 2) {
+        uVar5 = uVar6 + 5 & 3;
+        if (((*(int *)(param_1 + 0x98) == 2) || (uVar5 == 3)) || (uVar5 == 0)) {
+          param_3[uVar5] = uVar1;
+        }
+        else {
+          param_3[uVar5] = (short)((int)(short)uVar1 >> 1);
+        }
+      }
+      else {
+        param_3[uVar6 & 3] = (short)((int)((int)(short)uVar1 * (uVar6 + 1)) >> 2);
+      }
+      cVar4 = cVar4 + -1;
+      uVar6 = uVar6 + 1 & 0xff;
+    } while (cVar4 != '\0');
+    return;
+  }
+  if (*(int *)(param_1 + 0x50) == 1) {
+    iVar8 = *(int *)(iVar8 + DAT_4386b760);
+    if (*(byte *)(iVar8 + 0x9a) != 0) {
+      iVar3 = (int)*(short *)(param_1 + 0x94) * (uint)*(byte *)(iVar8 + 0x9a);
+      sVar2 = *(short *)(iVar8 + 0x9c);
+      if (iVar3 < 0) {
+        iVar3 = iVar3 + 0x7f;
+      }
+      sVar7 = *(short *)(iVar8 + 0x9e);
+      if (sVar2 == 0) {
+        sVar2 = 0x80;
+      }
+      if (sVar7 == 0) {
+        sVar7 = -0x80;
+      }
+      uStack_1c._2_2_ = (short)(iVar3 >> 7);
+      FUN_43b0d2ac((int)sVar2,(int)&uStack_1c + 2);
+      FUN_43b0d2b8((int)sVar7,(int)&uStack_1c + 2);
+      goto LAB_4386b744;
+    }
+  }
+  uStack_1c._2_2_ = 0;
+LAB_4386b744:
+  *param_3 = uStack_1c._2_2_;
+  param_3[1] = uStack_1c._2_2_;
+  param_3[2] = uStack_1c._2_2_;
+  param_3[3] = uStack_1c._2_2_;
+  return;
+}
+
+

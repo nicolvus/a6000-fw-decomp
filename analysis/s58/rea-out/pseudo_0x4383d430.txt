@@ -1,0 +1,48 @@
+### {'procedure': '0x4383d430'}
+
+undefined8 FUN_4383d430(int param_1,int param_2,int param_3,short param_4,int param_5,uint *param_6)
+
+{
+  byte bVar1;
+  short sVar2;
+  undefined4 uVar3;
+  int iVar4;
+  int iVar5;
+  uint uVar6;
+  uint uVar7;
+  uint uVar8;
+  uint uVar9;
+  
+  uVar7 = (uint)(ushort)param_6[0xb];
+  if (param_5 == 0) {
+    iVar4 = 0xde3;
+  }
+  else {
+    uVar3 = FUN_4355faf0(param_5,1000);
+    iVar4 = FUN_4355faf0(DAT_4383d4cc,uVar3);
+  }
+  uVar9 = *param_6;
+  uVar8 = param_6[2];
+  if (uVar7 == 0) {
+    iVar5 = FUN_43b03ac6(uVar9 - uVar8,0);
+  }
+  else {
+    iVar5 = FUN_4355faf0(uVar7 * iVar4,1000);
+    if (iVar5 + uVar8 < uVar9) {
+      iVar5 = (uVar9 - uVar8) - iVar5;
+    }
+    else {
+      iVar5 = 0;
+    }
+  }
+  uVar9 = param_6[8];
+  bVar1 = *(byte *)((int)param_6 + 0x16);
+  uVar8 = param_6[4];
+  uVar6 = param_6[1];
+  iVar4 = FUN_4355faf0((uVar7 - param_2) * iVar4,1000);
+  sVar2 = FUN_4382faf0(param_3 * uVar9 * bVar1 + uVar6 * ((uint)(ushort)uVar8 - param_1) + iVar4 +
+                       iVar5);
+  return CONCAT44(param_1,(int)(short)(sVar2 - param_4));
+}
+
+

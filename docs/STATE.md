@@ -6,6 +6,12 @@ Para el historial íntegro de sesiones ver `docs/history/` y las correcciones co
 en [docs/CORRECTIONS.md](CORRECTIONS.md) (generado del grafo, no editar a mano).
 Para preguntas abiertas ver [docs/OPEN-QUESTIONS.md](OPEN-QUESTIONS.md).
 
+## Avance S58 (20-10-2026)
+
+Productores numéricos IMX210 recuperados y contrastados con código original; SetMode/SetExposure/SetRead/Execute A7S emulados con objeto sintético y servicios stub. La comparación efectiva actualiza matriz e identidad de métodos A7S de S57. Se conserva la frontera física: fin electrónico de integración **NO VERIFICADO**, S51 **A=NO, B=NO, C=NO**. [Conclusiones y límites S58](capture/s58-conclusions.md).
+
+Próximo: escritor del bloque de 12 u16 `0x437876dc()+0xdd0`→`0x437aa65c`; recuperar M/Tv/clk de un modo alcanzable. No inferir cierre del sensor a partir de fórmulas ni ausencia de comando final. Estado anterior S47 y siguientes se conserva como historial, no como siguiente tarea vigente.
+
 ## Avance S47 (19-10-2026)
 
 VERIFICADO: entrada `0x43789cc0`, registro ID `0x301d7`, fila clave0xce
