@@ -80,3 +80,8 @@ Sesión REA sobre `av-cam.bin` (REA no reconoce las funciones Thumb de esta zona
 - **Selector `0x43804c38`**: solo 6 llamadores, accesores de campo (`+0xa5`, `+0x1f3`, `+0x2c4`…); ninguno lee `+0x238`.
 - **`0x43804c5c`** (único llamador `0x43792d9e`, dentro de `0x43792a0c`): copia el bloque de 0x560 B **a `0x43e9b548`** ("instantánea actual", usada por ~170 sitios PIC en `0x4378e93c…0x4379467e`) conservando unos campos. Esta instantánea es el candidato nuevo: `0x43e9b548+0x238` = `0x43e9b780` (físico `0x83e9b780`, palabra 553283040). Los lectores directos de esa base no cargan `+0x238` (solo el descartado `0x43792fb4`, otra estructura).
 - NO VERIFICADO: que la instantánea `0x43e9b548` esté viva en RAM ni que algo lea `+0x238` a través de punteros pasados a otras funciones. Prueba pendiente en cámara: comparar `0x83e9b548` con el espejo y forzar `+0x238` ahí (`BASE=0x83e9b548 SHOOT=1 scripts/camera_bisect_fields.py 1 0x238`). La cámara dejó de responder (`No route to host`); requiere que el usuario la reconecte.
+
+### Prueba en cámara de la instantánea `0x83e9b548` (2026-10-20)
+
+- RAM viva: 338 de 344 palabras iguales al espejo `0x83edf684`; `+0x238` = 0 en ambos.
+- `BASE=0x83e9b548 SHOOT=1 camera_bisect_fields.py 1 0x238`: 1 disparo remoto correcto (`done 408841`), cámara viva; el usuario oyó **obturador mecánico**. Un solo disparo y valor 1; valor 2 y las 6 palabras distintas sin probar. Electrónico NO detectado.
