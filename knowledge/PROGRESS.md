@@ -1612,3 +1612,13 @@ Próximo (no iniciado): traza pasiva autorizada de `MSS_SO_DWN`/bobinas, consumi
 - Hallazgos: IDs = direcciones 16 bit; trama `81|len|81|AH AL|datos`; `svd/shd/spl` = IDs 3–8; ShutMode→ID1; pulso SSB; CISIF = receptor; A7S mismo P2S con registro de 5 B.
 - Frontera: semántica de registros IMX210 y de `CIS0_SHT_RST→XPI`; consumidor SENS_B; origen de `0x43eb35d0` (tiempo→banco).
 - Próximo exacto: traza pasiva CIS0/XPI/VD (decodificable con `p2s_emu.frames`) o rastreo estático de `0x43eb35d0+0xc4..0xd8`. S51 se mantiene.
+
+
+## S57 — semántica de ID1, SSB, svd/shd/spl, Silent IMX235, XPI y sincronía P2S (20-10-2026)
+- Hecho: escritores y bits de ID1 (seguimiento GOT→registro `analysis/s57/bitops.py`), rejilla 13 modos × 5 ShutMode × SSB con el código real (`analysis/s57/{emu57,id1_grid}.py`, 130 casos con dos rellenos de memoria), productores/orden de SSB, mapeo exacto svd/shd/spl (`c_timing.py`, 400/400), cadena de producción hasta el banco `0x43eb35d0`, matriz efectiva IMX235 (`imx235_matrix.py`), esquema XPI, modos de SyncMode del P2S (`sync_modes.py`).
+  Informes `docs/capture/s57-*.md`, matriz `analysis/s57-evidence-matrix.json` (33 entradas, H57-1…10), tests `tests/test_s57_imx210_exposure.py` 34/34.
+- Herramientas: REA (1 sesión, `GHIDRA_MAXMEM=6G`, cerrada; salidas en `analysis/s57/rea-out/`; cliente `analysis/s57/rq.py`), Capstone y Unicorn; sin dependencias nuevas; `ruff --select F,E9` limpio; mypy no instalado.
+- Hallazgos: ID1 combinado; SSB = strobe de aplicación de exposición (no fin); svd cuenta pasos del host/VD; Silent A7S = modos de lectura; AdjustCmd fija las banderas +0x277…+0x27c; XPI sin controlador visible.
+- Correcciones: B de ID1 es copia de A (no valor propio); no se reproduce «ShutMode 4 escrito en captura»; el pulso ocupa dos bloques de trama separados por una cabecera de 5 B.
+- Frontera: productor AE de las filas de banco (`S+0xC4…0xD8`), unidades de svd/shd/spl, ID1 eléctrico, XPI, evento que activa las banderas del P2S, tabla de categorías de AdjustCmd.
+- Próximo exacto: `trace_native_values` sobre el pipeline AE; o traza pasiva CIS0/XPI/VD autorizada. S51 se mantiene.

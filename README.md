@@ -6,6 +6,7 @@ electrónico pasa a ser un [subproyecto](projects/electronic-shutter/README.md).
 
 ## Organización y resultados actuales
 
+- [S57: semántica de ID1/SSB/svd-shd-spl, Silent IMX235, XPI y sincronía P2S](docs/capture/s57-conclusions.md): ID1 = registro combinado (modo de lectura + ShutMode + strobe); SSB acompaña a toda actualización de exposición y no al fin; svd/shd/spl mapeados exactamente y svd atado a un contador de VD; Silent A7S = modos de lectura 0x4e/0x4f (variantes de 0x4c/0x4d); fin electrónico NO VERIFICADO, S51 se mantiene.
 - [S56: transporte de registros del IMX210 (IDs = direcciones 16 bit, P2S/DFE0), CISIF = receptor](docs/capture/s56-conclusions.md): trama `81|len|81|AH AL|datos`, ShutMode→ID1, pulso SSB; fin electrónico NO VERIFICADO, S51 se mantiene.
 - [S55: origen de los pares GPIO (base de backup BK4), A7S vs A6000](docs/capture/s55-conclusions.md): escritor `0x436bcef4`, infraestructura de pines idéntica en A7S, sin consumidor GPIO de P4C, S51 se mantiene.
 - [S54: P4C, tipo de mecanismo 0 y sincronización BIONZ](docs/capture/s54-conclusions.md):
