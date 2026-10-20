@@ -57,19 +57,52 @@ Claude Code, `.mcp.json` en el directorio padre del repo (Linux del usuario):
 Codex: el mismo bloque en `~/.codex/config.toml` como `[mcp_servers.rea]` y
 `[mcp_servers.sony-a6000-knowledge]` (sintaxis de la Fase 6 de `knowledge/PROGRESS.md`).
 
-## REA en Windows (DSH)
+## REA en Windows
 
 Sin WSL, sin `java` ni Ghidra preinstalados, REA no puede abrir `av-cam.bin`. Para
 una run en Windows hacen falta:
 
 - JDK 21 completo (`JAVA_HOME`, con `javac`).
-- Ghidra 12.1.4 PUBLIC (`GHIDRA_INSTALL_DIR`), con el descompilador nativo de la
-  plataforma en `Ghidra/Features/Decompiler/os/win_x86_64/`.
-- `rea-agents@6.5.0` (ya vendorizado en `tools/rea/node_modules`).
+- Ghidra 12.1.4 PUBLIC (`GHIDRA_INSTALL_DIR`), con el descompilador nativo en
+  `Ghidra/Features/Decompiler/os/win_x86_64/`.
+- `rea-agents@6.5.0` (vendorizado en `tools/rea/node_modules`) y Node 22/24.
 
-Variables recomendadas: `REA_GHIDRA_STARTUP_TIMEOUT_MS=900000`, `GHIDRA_MAXMEM=3G`.
-`analysis/rea-independent/bin/session_daemon.py` es Linux-only (socket Unix, `/proc`);
-en Windows usar el CLI `rea` o el MCP directamente.
+Instalación usada en esta máquina: `C:\tools\jdk-21.0.12.1+1`,
+`C:\tools\ghidra_12.1.4_PUBLIC`, venv de tests `C:\tools\venv-s63`
+(`pytest`, `capstone`, `unicorn`, `pyyaml`). Variables en el perfil de usuario.
+`rea doctor` da `ghidra*` y `ghidra-java` en `healthy` (Hopper/IDA/JADX pueden
+faltar: no se usan).
+
+**Límite real (verificado 2026-10-20):** el bridge Windows de REA es P0 y acepta
+solo PE nativo y 6502 crudo (`target_format_unsupported` para ELF/ARM). Con
+`av-cam.bin` o `libmprctrl.so` (ARM ELF) el proveedor Ghidra no está disponible,
+así que la run REA completa sigue siendo Linux. En Windows quedan como vía:
+Ghidra headless directo (`support/analyzeHeadless.bat`, sí soporta ARM) y
+Capstone/Unicorn para bytes e instrucciones (`C:\tools\venv-s63`).
+
+
+`analysis/rea-independent/bin/session_daemon.py` es Linux-only (socket Unix,
+`/proc`). En Windows/macOS usar el demonio portátil, que mantiene UNA sesión
+MCP viva y atiende lotes (evita los ~8 min de autoanálisis por consulta):
+
+```bash
+# 1) abrir el binario una vez (bloquea hasta acabar el autoanálisis)
+REA_NODE=/ruta/node python scripts/agent/rea_daemon.py \
+  --binary firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin \
+  --args '{"path": "...", "base_address": "0x43541000"}'
+
+# 2) consultar por lotes (lee el puerto de analysis/rea-independent/run/rea-win.json)
+python scripts/agent/rea_client.py --tools
+python scripts/agent/rea_client.py --calls guion.json --out out/respuestas.jsonl
+
+# 3) cerrar
+python scripts/agent/rea_client.py --shutdown
+```
+
+Variables: `REA_GHIDRA_STARTUP_TIMEOUT_MS=900000`, `GHIDRA_MAXMEM=3G` (el demonio
+las fija si no están). El log de la sesión queda en
+`analysis/rea-independent/run/rea-win-session.jsonl`.
+
 
 ## ChatGPT web
 
