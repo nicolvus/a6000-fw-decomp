@@ -61,3 +61,8 @@ Barrido lineal de `av-cam`: 882 sitios `+0x238/+0x280` (872 Thumb, 10 ARM); solo
 - **Bloque alternativo:** `0x43804c38` devuelve `ctx+8` (`0x43e93f3c`, `ctx=0x43e93f34`) si `ctx[+0x57c]!=0`; en vivo ese byte vale 0 ⇒ se usa el bloque primario (alternativo difiere en 70/344 palabras). VERIFICADO en vivo.
 - **A7S:** el conversor `0x4379ec04` mapea el estado (0/1) por una tabla de 2 entradas; no se localizó su equivalente en la A6000 (42 candidatos con la misma forma `cmp r0,#1; ldr.w …lsl #2`, ninguno verificado).
 - Los JPEG de `CameraEx` no traen notas de fabricante Sony (exiftool): no sirven para distinguir mecánico/electrónico. NO VERIFICADO si el modo de aplicaciones usa la misma ruta de captura que la app normal.
+
+## Campos vecinos: reinicio de la cámara (2026-10-20)
+
+- `scripts/camera_shutter_matrix.py HOST vecinos`: caso 1 (base) disparó bien (`done 410745`); en el caso 2 se escribieron **10 palabras `0x230..0x254` del espejo `0x83edf684` a 1** (bucle cada 20 ms, solo RAM) y la cámara **se reinició** (la conexión cayó durante el disparo; el usuario confirmó «se reinició»). Hay `exception.reboot=1` en la línea de comandos del kernel.
+- No se sabe qué palabra (o la combinación con el disparo) provoca el reinicio: NO VERIFICADO. Siguiente: bisecar una palabra por vez (valor 1) y sin disparar, y luego disparando.
