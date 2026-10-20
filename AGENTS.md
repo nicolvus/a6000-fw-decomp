@@ -1,5 +1,7 @@
 # Sony A6000 — instrucciones de proyecto (Codex)
 
+Silencio estricto durante la ejecución: prohibido emitir comentarios, reflexiones o narraciones intermedias entre herramientas (ej.: "Confirmo que...", "Ahora buscaré...", "Reviso ahora..."). Solo ejecuta y piensa en silencio. Cero gasto de tokens visibles durante la ejecución; comenta únicamente al finalizar por completo la tarea.
+
 Antes de investigar manualmente, usa el sistema de conocimiento en
 `scripts/knowledge/` (skills en `.agents/skills/`, enlazadas a la fuente
 canónica en `.claude/skills/`: `knowledge-navigation`, `contradiction-audit`,
