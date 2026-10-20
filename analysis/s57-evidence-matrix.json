@@ -1,0 +1,953 @@
+{
+ "phase": "S57",
+ "date": "2026-10-20",
+ "sha256": {
+  "av_cam_a6000": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "av_cam_a7s": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+ },
+ "entries": [
+  {
+   "id": "S57-01",
+   "claim": "ID1 está en dos registros sombra: A=0x4401ca2c (índice 1 de la lista de 119) y B=0x4401c734 (índice 2); A se transmite antes que B",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "function_address": "lista 0x43fe995c; GOT +0x20b8 (A), +0x1984 (B)",
+   "registers": [
+    "ID1 (dir 0x0001)"
+   ],
+   "bits": "byte de dato +2 de cada registro",
+   "data": "A: 0x4401ca2e; B: 0x4401c736",
+   "instructions": [
+    "—"
+   ],
+   "address": "lista 0x43fe995c; GOT +0x20b8 (A), +0x1984 (B)",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "dos entradas consecutivas de la lista síncrona con la misma dirección",
+   "status": "VERIFICADO",
+   "validation_method": "bytes + emulación del formateador",
+   "test": "tests/test_s57_imx210_exposure.py::Id1Writers",
+   "limitations": "qué hace el sensor con dos escrituras seguidas a la misma dirección: NO VERIFICADO"
+  },
+  {
+   "id": "S57-02",
+   "claim": "Todas las escrituras de bits de ID1 están en SetExposure (0x436d70d2-0x436d7132), 0x436d7c08 (0x436d7c16-0x436d7c46) y 0x436d7cf0 (0x436d7d0e-0x436d7d3a); más la carga de columna de SetMode (0x436d6570) en A",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "function_address": "0x436d6f6c, 0x436d7c08, 0x436d7cf0, 0x436d6570",
+   "registers": [
+    "ID1"
+   ],
+   "bits": "2,3,4,6,7 (+0,2 vía SetMode)",
+   "data": "bfc/orr/bfi sobre [rec,#2]",
+   "instructions": [
+    "analysis/s57/bitops.json"
+   ],
+   "address": "0x436d6f6c, 0x436d7c08, 0x436d7cf0, 0x436d6570",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "no hay otros escritores en la región imager; ID1 no se lee fuera de 0x436d7c08",
+   "status": "VERIFICADO",
+   "validation_method": "seguimiento estático de GOT→registro→orr/bfc (Capstone) + REA pseudo-código de 0x436d7c08/0x436d7cf0",
+   "test": "tests/test_s57_imx210_exposure.py::Id1Writers",
+   "limitations": "seguimiento lineal; escrituras por puntero calculado fuera de la región 0x436d5000-0x436daa00 no excluidas (la lista se recorre por 0x436d75f8 solo para lectura)"
+  },
+  {
+   "id": "S57-03",
+   "claim": "SetMode (0x436d6570, vtable 0x43fcc130) carga A desde la matriz de 59 filas: 0x44 (0x0b,0x2f), 0x40 (0x01,0x12,0x03,0x0a), 0x41 (0x05,0x10,0x07,0x0f,0x18,0x1a,0x19)",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "function_address": "0x436d6570; matriz 0x43fe9b74",
+   "registers": [
+    "ID1"
+   ],
+   "bits": "0 y 2",
+   "data": "ldrb r5,[r5,#4]; strb r5,[r2]",
+   "instructions": [
+    "scripts/imx210_modes.py",
+    "analysis/s57/id1_grid.py"
+   ],
+   "address": "0x436d6570; matriz 0x43fe9b74",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "bit0=1 en el grupo «vídeo» y 0x0f; bit2=1 en los modos fotográficos 0x0b/0x2f",
+   "status": "VERIFICADO",
+   "validation_method": "matriz de bytes originales + emulación de la función",
+   "test": "tests/test_s57_imx210_exposure.py::Id1Emulation",
+   "limitations": "nombres «fotográfico/vídeo» son HIPÓTESIS (S50); significado eléctrico de bits 0/2 desconocido"
+  },
+  {
+   "id": "S57-04",
+   "claim": "SetExposure fija bits (2,7,4,6) de A según ShutMode: 0→(0,0,0,1); 1→(1,1,0,1); 2→(1,1,1,0); 3→(1,1,1,1); 4→(0,1,0,1); no toca bits 0,1,3,5",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "function_address": "tbb 0x436d70c6; 0x436d70d0-0x436d7132",
+   "registers": [
+    "ID1"
+   ],
+   "bits": "2,7,4,6",
+   "data": "ID1 = 0x40/0xC4/0x94/0xD4/0xC0 con base SetMode 0x40",
+   "instructions": [
+    "—"
+   ],
+   "address": "tbb 0x436d70c6; 0x436d70d0-0x436d7132",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "ShutMode es un selector de 5 estados que reparte 4 bits de ID1",
+   "status": "VERIFICADO",
+   "validation_method": "emulación (130 combinaciones, rellenos 0x00/0xA5)",
+   "test": "tests/test_s57_imx210_exposure.py::Id1Emulation",
+   "limitations": "nombre y efecto eléctrico de cada bit: NO VERIFICADO"
+  },
+  {
+   "id": "S57-05",
+   "claim": "Pulso SSB: B←A; si [O+0x268]==1: A|=8, B&=~8 y la petición se borra; si no, ambos &=~8",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "function_address": "0x436d7c08 (REA: FUN_436d7c08)",
+   "registers": [
+    "ID1 A y B"
+   ],
+   "bits": "3",
+   "data": "ldrb.w r1,[r0,#0x268]; orr r1,r1,#8; bfc r2,#3,#1",
+   "instructions": [
+    "analysis/s57/rea-out/pseudo_436d7c08.txt"
+   ],
+   "address": "0x436d7c08 (REA: FUN_436d7c08)",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "strobe de un bit en dos registros consecutivos de la lista",
+   "status": "VERIFICADO",
+   "validation_method": "Capstone + REA procedure_pseudo_code + emulación Execute completo",
+   "test": "tests/test_s57_imx210_exposure.py::Id1Emulation",
+   "limitations": "función eléctrica del bit 3: NO VERIFICADO"
+  },
+  {
+   "id": "S57-06",
+   "claim": "En el flujo de bytes el pulso ocupa dos bloques: [dir0=0x0C, dir1=0xCC] y [cabecera 81 2F 81 00 01][dir1=0xC4, dir2=0x20,…]",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "function_address": "0x43ad8fa2 (formateador) tras 0x436d839c",
+   "registers": [
+    "ID1"
+   ],
+   "bits": "3",
+   "data": "81 05 81 00 00 0c cc 81 2f 81 00 01 c4 20 …",
+   "instructions": [
+    "analysis/s56/p2s_emu.py"
+   ],
+   "address": "0x43ad8fa2 (formateador) tras 0x436d839c",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "separación mínima de 5 B de cabecera; temporización real fijada por hardware P2S",
+   "status": "VERIFICADO",
+   "validation_method": "emulación del formateador y commit reales",
+   "test": "tests/test_s57_imx210_exposure.py::Id1Emulation",
+   "limitations": "duración real del pulso en el pin: NO VERIFICADO (sin analizador)"
+  },
+  {
+   "id": "S57-07",
+   "claim": "Orden de Execute (0x436d839c): 0x436d79c4 → 0x436d7b34 → 0x436d8040 → 0x436d7c08 → 0x436d7c58 → 0x436d7c94 → 0x436d7db4 → 0x436d7cb0 → 0x436d7cf0 → 0x43ad92d0 → 0x436d8244 → 0x436d8064 → vtable+0x9c → lista 119 (modo 2) → espera 0x436d5bcc → 8 inmediatos (modo 0)",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "function_address": "0x436d839c (0x436d84d0-0x436d859e)",
+   "registers": [
+    "ID0",
+    "ID1",
+    "0x1c",
+    "0x1d",
+    "0x65",
+    "0x73",
+    "0xdc",
+    "0x126-0x128",
+    "0x12f"
+   ],
+   "bits": "—",
+   "data": "bl en secuencia",
+   "instructions": [
+    "analysis/s57/thumbdis.py"
+   ],
+   "address": "0x436d839c (0x436d84d0-0x436d859e)",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "las modificaciones de ID1 ocurren dentro de Execute justo antes del envío",
+   "status": "VERIFICADO",
+   "validation_method": "desensamblado Capstone",
+   "test": "tests/test_s57_imx210_exposure.py::P2SSync",
+   "limitations": "duraciones de espera no medidas"
+  },
+  {
+   "id": "S57-08",
+   "claim": "Banderas +0x277/+0x278/+0x279/+0x27c: las pone el manejador AdjustCmd 0x91 (0x43a12d9c) según la categoría (4→+0x278, 7→+0x27c, 8→+0x279, 1/7→+0x277) de una tabla de comandos; +0x279 con drive 0x0b borra bits 2,7,4 de ID1 y pone 3..8=0, 0x73=0x39, 0x12f=0x0E",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "function_address": "0x43a12d9c (case 0x91), 0x43ad9194/91a0/91ac/91b8, 0x436d7c94/7cb0/7cf0",
+   "registers": [
+    "ID1",
+    "3-8",
+    "0x65",
+    "0x73",
+    "0xdc",
+    "0x12f"
+   ],
+   "bits": "2,4,7",
+   "data": "bfc #2,#7,#4; strb #0x39; strb #0xe",
+   "instructions": [
+    "—"
+   ],
+   "address": "0x43a12d9c (case 0x91), 0x43ad9194/91a0/91ac/91b8, 0x436d7c94/7cb0/7cf0",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "ruta de ajuste/servicio (cadena «AdjustCmd Select error»), no fotografía normal",
+   "status": "VERIFICADO",
+   "validation_method": "bytes + emulación con banderas forzadas",
+   "test": "tests/test_s57_imx210_exposure.py::AdjustCmdFlags",
+   "limitations": "uso real de las categorías 7/8: tabla de comandos no resuelta (NO VERIFICADO)"
+  },
+  {
+   "id": "S57-09",
+   "claim": "Los resultados de ID1 no dependen del relleno de memoria (0x00 vs 0xA5) en 130 combinaciones",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "function_address": "—",
+   "registers": [
+    "ID1"
+   ],
+   "bits": "—",
+   "data": "—",
+   "instructions": [
+    "analysis/s57/id1_grid.py"
+   ],
+   "address": "—",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "descarta artefacto de memoria a cero",
+   "status": "VERIFICADO",
+   "validation_method": "doble emulación",
+   "test": "tests/test_s57_imx210_exposure.py::Id1Emulation",
+   "limitations": "estado inicial de la RAM real no medido"
+  },
+  {
+   "id": "S57-10",
+   "claim": "La petición SSB (0x43ad9116: [O+0x268]=1) tiene 5 llamadores: 0x438c7a0a, 0x438c8326, 0x438c883c, 0x438cc5ce, 0x43ae936c (REA da 0x43b1af3a en lugar de 0x438c86b0 por límites de función)",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "function_address": "0x438c7800, 0x438c828c, 0x438c86b0/0x43b1af3a, 0x438cc4b4, 0x43ae935a",
+   "registers": [
+    "ID1"
+   ],
+   "bits": "3",
+   "data": "bl #0x43ad9116",
+   "instructions": [
+    "—"
+   ],
+   "address": "0x438c7800, 0x438c828c, 0x438c86b0/0x43b1af3a, 0x438cc4b4, 0x43ae935a",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "cinco puntos: arranque de captura, StartExposure, ExposureTimerStart(first), prelight y helper SSB+SetExposure",
+   "status": "VERIFICADO",
+   "validation_method": "índice de llamadas + REA procedure_callers",
+   "test": "tests/test_s57_imx210_exposure.py::SsbProducers",
+   "limitations": "llamadas indirectas no cubiertas"
+  },
+  {
+   "id": "S57-11",
+   "claim": "Orden en los productores: captura SetMode→Execute→SetExposure→SSB→SetRead→Execute; StartExposure/TimerStart SetExposure→SetRead→SSB→Execute(1) solo si [cap+0x4b9c]==0 (si no, Execute(0)); helper 0x43ae935a SSB→SetExposure",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "function_address": "0x438c7800, 0x438c828c, 0x438c86b0, 0x43ae935a",
+   "registers": [
+    "ID1",
+    "3-8"
+   ],
+   "bits": "3",
+   "data": "secuencia de bl",
+   "instructions": [
+    "—"
+   ],
+   "address": "0x438c7800, 0x438c828c, 0x438c86b0, 0x43ae935a",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "SSB siempre se solicita justo después de preparar una actualización de exposición; nunca con Execute(0)",
+   "status": "VERIFICADO",
+   "validation_method": "secuencia de llamadas en rango (Capstone)",
+   "test": "tests/test_s57_imx210_exposure.py::SsbProducers",
+   "limitations": "Execute(0) (0x436d6a34) solo reinicia el P2S y no envía registros"
+  },
+  {
+   "id": "S57-12",
+   "claim": "En el camino de «ExposureTimerEnd!» (0x438c893a) no hay SetExposure, SetRead, SSB ni Execute",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "function_address": "0x438c86b0 (0x438c890e-0x438c8960)",
+   "registers": [
+    "—"
+   ],
+   "bits": "—",
+   "data": "ausencia de bl a 0x436d6320/0x436d6398/0x43ad9116/0x43ad911c tras 0x438c8890",
+   "instructions": [
+    "analysis/s57/thumbdis.py"
+   ],
+   "address": "0x438c86b0 (0x438c890e-0x438c8960)",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "el fin de exposición en esta función no reescribe registros del sensor (envía mensaje a Darwin)",
+   "status": "VERIFICADO",
+   "validation_method": "desensamblado de la rama",
+   "test": "tests/test_s57_imx210_exposure.py::SsbProducers",
+   "limitations": "otras rutas de fin (Darwin, ISR) no descartadas"
+  },
+  {
+   "id": "S57-13",
+   "claim": "El bit 3 de ID1 solo lo escribe 0x436d7c08 (A|=8, B&=~8); los demás pares poner/quitar bit de la región imager son ramas excluyentes (SetExposure por ShutMode, 0x436d7b34 por [O+0x267])",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "function_address": "0x436d5000-0x436daa00",
+   "registers": [
+    "52 registros con operaciones de bit"
+   ],
+   "bits": "—",
+   "data": "orr/bfc por función",
+   "instructions": [
+    "analysis/s57/bitops.json"
+   ],
+   "address": "0x436d5000-0x436daa00",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "SSB es el único pulso (dos registros, mismo lote) del sensor en esta región",
+   "status": "VERIFICADO",
+   "validation_method": "escaneo estático",
+   "test": "tests/test_s57_imx210_exposure.py::Id1Writers",
+   "limitations": "seguimiento lineal aproximado"
+  },
+  {
+   "id": "S57-14",
+   "claim": "A7S: la petición de pulso [O+0x3d7] se genera dentro de SetExposure A7S (0x436f4a94): =1 si el parámetro u16 arg+2 > 0x1000, =0 si no; el consumidor activa el bit 0x10 del byte +4 de un registro",
+   "model": "A7S",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "function_address": "0x436f4a94 (0x436f4b10-0x436f4b48); consumidor 0x436f459c",
+   "registers": [
+    "registro IMX235 con byte +4 bit 4"
+   ],
+   "bits": "4 (byte +4)",
+   "data": "cmp.w r8,#0x1000; strb.w r1,[r4,#0x3d7]",
+   "instructions": [
+    "analysis/s57/a7sdis.py"
+   ],
+   "address": "0x436f4a94 (0x436f4b10-0x436f4b48); consumidor 0x436f459c",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "en A7S el strobe es función de la magnitud del parámetro de exposición; en A6000 lo piden los flujos de captura: no equivalentes",
+   "status": "VERIFICADO",
+   "validation_method": "bytes + desensamblado",
+   "test": "tests/test_s57_imx210_exposure.py::Imx235Silent",
+   "limitations": "significado de 0x1000 (¿12 bits?) NO VERIFICADO"
+  },
+  {
+   "id": "S57-15",
+   "claim": "Mapa exacto: arg+4 (svd u16)→ID3 y ID4[3:0]; arg+0 (shd u16)→ID5 y ID6[5:0]; arg+6 (spl u16)→ID7 y ID8[3:0]; arg+9 = ShutMode; los bits altos de ID4/6/8 se conservan",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "function_address": "0x436d6f6c (0x436d6faa-0x436d70a4); log 0x436d723a",
+   "registers": [
+    "ID3",
+    "ID4",
+    "ID5",
+    "ID6",
+    "ID7",
+    "ID8"
+   ],
+   "bits": "ID4[3:0], ID6[5:0], ID8[3:0]",
+   "data": "ldrh r6,[r1,#4]; ldrh r5,[r1]; ldrh r7,[r1,#6]; bfi",
+   "instructions": [
+    "analysis/s57/c_timing.py"
+   ],
+   "address": "0x436d6f6c (0x436d6faa-0x436d70a4); log 0x436d723a",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "svd 12 bit, shd 14 bit, spl 12 bit (los bits de entrada superiores se descartan)",
+   "status": "VERIFICADO",
+   "validation_method": "200 vectores aleatorios x 2 rellenos (400/400)",
+   "test": "tests/test_s57_imx210_exposure.py::TimingMapping",
+   "limitations": "unidades físicas: NO VERIFICADO"
+  },
+  {
+   "id": "S57-16",
+   "claim": "ShutMode 2 carga ID0x100←arg+8 y ID0x101←arg+0x14; en los otros ShutMode 0x100/0x101 no cambian (0x00/0x38 del arranque)",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "function_address": "0x436d7134-0x436d71c0 (rama ShutMode 2)",
+   "registers": [
+    "0x100",
+    "0x101"
+   ],
+   "bits": "byte completo",
+   "data": "lectura de arg+8/+0x14",
+   "instructions": [
+    "analysis/s57/c_timing.py"
+   ],
+   "address": "0x436d7134-0x436d71c0 (rama ShutMode 2)",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "en el log de la captura principal arg+8 se llama «sint»",
+   "status": "VERIFICADO",
+   "validation_method": "emulación",
+   "test": "tests/test_s57_imx210_exposure.py::TimingMapping",
+   "limitations": "significado de 0x100/0x101: NO VERIFICADO"
+  },
+  {
+   "id": "S57-17",
+   "claim": "El espejo 0x144-0x149 de svd/shd/spl solo se escribe si [G(0x4f24)+0x7f] != 0xff",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "function_address": "0x436d7036-0x436d70a4",
+   "registers": [
+    "0x144-0x149"
+   ],
+   "bits": "—",
+   "data": "ldrb r3,[r3,#0x7f]; cmp r3,#0xff",
+   "instructions": [
+    "analysis/s57/c_timing.py"
+   ],
+   "address": "0x436d7036-0x436d70a4",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "indicador de configuración externo a SetExposure",
+   "status": "VERIFICADO",
+   "validation_method": "emulación con ambos valores",
+   "test": "tests/test_s57_imx210_exposure.py::TimingMapping",
+   "limitations": "origen de [G+0x7f]: NO VERIFICADO"
+  },
+  {
+   "id": "S57-18",
+   "claim": "CAMERA_MAIN_SYNC 0x4381106c (StrtExps) comprueba svd contra n·svr_num−1 (VdNum≤1) o n/VdNum−1, con n=[obj+0x1f8] (o 1 si [obj+0x1fc]==9); error si bit15; sustituye solo con indicador de depuración",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "function_address": "0x4381106c (REA: FUN_4381106c)",
+   "registers": [
+    "ID3",
+    "ID4"
+   ],
+   "bits": "—",
+   "data": "muls; bl 0x4355faf0; subs r0,#1; tst.w r0,#0x8000",
+   "instructions": [
+    "analysis/s57/rea-out/pseudo_4381106c.txt"
+   ],
+   "address": "0x4381106c (REA: FUN_4381106c)",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "svd es un contador entero relacionado con repeticiones de VD (svr_num/VdNum) y no una duración en ns",
+   "status": "VERIFICADO",
+   "validation_method": "Capstone + REA pseudo-código",
+   "test": "tests/test_s57_imx210_exposure.py::TimingMapping",
+   "limitations": "qué son svr_num (u8 +0x14e) y VdNum (u16 +0xcc): NO VERIFICADO"
+  },
+  {
+   "id": "S57-19",
+   "claim": "En ese camino ShutMode (arg+9, «gs» en el log) = ([obj+0x1fc]==9) ? 1 : 0",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "function_address": "0x4381118e-0x4381119c",
+   "registers": [
+    "ID1"
+   ],
+   "bits": "2,7,6 (ShutMode 1)",
+   "data": "cmp r3,#9; subs r3,#8; strb.w r3,[sp,#0x21]",
+   "instructions": [
+    "analysis/s57/rea-out/pseudo_4381106c.txt"
+   ],
+   "address": "0x4381118e-0x4381119c",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "el ShutMode 1 (0xC4) se elige cuando el «tipo» de captura vale 9",
+   "status": "VERIFICADO",
+   "validation_method": "Capstone + REA",
+   "test": "tests/test_s57_imx210_exposure.py::TimingMapping",
+   "limitations": "significado de «tipo 9»: NO VERIFICADO"
+  },
+  {
+   "id": "S57-20",
+   "claim": "Constantes escritas en cap+0x655 (ShutMode): 0 en 0x438c79e2 y 0x438c82bc; 1 en 0x438c87f0 (ExposureTimerStart); copia en 0x4389cc28. No se encontró constante 2, 3 ni 4",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "function_address": "0x438c79e2, 0x438c82bc, 0x438c87f0, 0x4389cc28",
+   "registers": [
+    "ID1"
+   ],
+   "bits": "—",
+   "data": "strb.w r3/sb,[r4,#0x655]",
+   "instructions": [
+    "—"
+   ],
+   "address": "0x438c79e2, 0x438c82bc, 0x438c87f0, 0x4389cc28",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "en las rutas rastreadas solo se usan ShutMode 0 y 1",
+   "status": "VERIFICADO",
+   "validation_method": "barrido de stores",
+   "test": "tests/test_s57_imx210_exposure.py::SsbProducers",
+   "limitations": "producer de la copia 0x4389cc28 y otros objetos: NO VERIFICADO"
+  },
+  {
+   "id": "S57-21",
+   "claim": "Banco de parámetros: 0x43b0893c copia la fila de banco (S+4+16·S[0]) a S+0xC4..0xD0; 0x43849fb8 construye el bloque de exposición; 4 bancos de 16 B los prepara 0x43843a44; el pipeline AE 0x437b5b14 (etapas 0x20-0x36) lo alimenta; S=0x43eb35d0 (BSS)",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "function_address": "0x43b0893c, 0x43849fb8, 0x43843a44, 0x437b5b14",
+   "registers": [
+    "svd",
+    "shd",
+    "spl"
+   ],
+   "bits": "—",
+   "data": "ldr/str de 4 palabras",
+   "instructions": [
+    "analysis/s57/rea-out/pseudo_0x43b0893c.txt",
+    "analysis/s57/rea-out/pseudo_0x43849fb8.txt"
+   ],
+   "address": "0x43b0893c, 0x43849fb8, 0x43843a44, 0x437b5b14",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "los números nacen en el pipeline AE (fuera de lo rastreado)",
+   "status": "VERIFICADO",
+   "validation_method": "REA pseudo-código + bytes (S está a cero en la imagen)",
+   "test": "tests/test_s57_imx210_exposure.py::TimingMapping",
+   "limitations": "escritor concreto de +0xC4..+0xD8: NO LOCALIZADO"
+  },
+  {
+   "id": "S57-22",
+   "claim": "[cap+0x650] es svd (arg+4); 0x43b1e7f2/0x43b1e854 incrementan [cap+0x4b9c] por paso y StartExposure solo programa registros en el paso 0; si svd==0 envían el mensaje de fin (4,2) sin repetir",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "function_address": "0x43b1e7f2, 0x43b1e854, 0x438c828c",
+   "registers": [
+    "ID3",
+    "ID4"
+   ],
+   "bits": "—",
+   "data": "ldrh r4,[r0,#0x650]; adds r2,#1; str.w r2,[r3,#0x9c]",
+   "instructions": [
+    "—"
+   ],
+   "address": "0x43b1e7f2, 0x43b1e854, 0x438c828c",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "svd cuenta pasos del secuenciador del host (cada paso = un evento VD o equivalente: INFERENCIA)",
+   "status": "VERIFICADO",
+   "validation_method": "desensamblado; correspondencia arg=cap+0x64c",
+   "test": "tests/test_s57_imx210_exposure.py::TimingMapping",
+   "limitations": "cadencia real de los pasos (VD) no medida"
+  },
+  {
+   "id": "S57-23",
+   "claim": "Matriz efectiva IMX235 (A7S): 35 registros (34 dev 0x81 + 1 dev 0x83) x 34 modos; fila = {ptr, 34 valores, 2 relleno}; registro de 5 B {dev,0,dirLE16,dato} en ptr-4",
+   "model": "A7S",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "function_address": "tabla de modos 0x43fee370, matriz 0x43fee598",
+   "registers": [
+    "34 modos"
+   ],
+   "bits": "—",
+   "data": "—",
+   "instructions": [
+    "analysis/s57/imx235_matrix.py"
+   ],
+   "address": "tabla de modos 0x43fee370, matriz 0x43fee598",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "reconstruye los valores de SetMode por modo sin ejecutar nada",
+   "status": "VERIFICADO",
+   "validation_method": "lectura de bytes",
+   "test": "tests/test_s57_imx210_exposure.py::Imx235Silent",
+   "limitations": "SetExposure/SetRead no están en la matriz"
+  },
+  {
+   "id": "S57-24",
+   "claim": "Selector A7S 0x43826d58: tipo==2 → sub 0 → drive_mode 0x4e; sub 1 → 0x4f; fuera de Silent: 0x0b / 0x35 / 0x17",
+   "model": "A7S",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "function_address": "0x43826d58 (0x43826d7c, 0x43826da6)",
+   "registers": [
+    "drive_mode"
+   ],
+   "bits": "—",
+   "data": "movs r0,#0x4e / #0x4f",
+   "instructions": [
+    "docs/capture/a7s-silent-reconstruction.md"
+   ],
+   "address": "0x43826d58 (0x43826d7c, 0x43826da6)",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "Silent = selección de dos modos de sensor dedicados",
+   "status": "VERIFICADO",
+   "validation_method": "bytes",
+   "test": "tests/test_s57_imx210_exposure.py::Imx235Silent",
+   "limitations": "origen del tipo 2 (UI) heredado de S52/S53"
+  },
+  {
+   "id": "S57-25",
+   "claim": "Los modos Silent 0x4e/0x4f difieren del 0x0b en 33 y 35 de 35 registros; son «hermanos» de 0x4c/0x4d (0x4e vs 0x4c: solo dir 0x000C 0x10 vs 0x20; 0x4f vs 0x4d: solo dir 0x000A 1 vs 2; 0x4e vs 0x4f: 4 registros)",
+   "model": "A7S",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "function_address": "columnas 29,30 vs 27,28 de 0x43fee598",
+   "registers": [
+    "dir 0x000C",
+    "0x0000",
+    "0x0008",
+    "0x000A"
+   ],
+   "bits": "—",
+   "data": "comparación de columnas",
+   "instructions": [
+    "analysis/s57/imx235_matrix.py"
+   ],
+   "address": "columnas 29,30 vs 27,28 de 0x43fee598",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "el Silent A7S no añade un conjunto de registros nuevo: es una variante mínima de modos de lectura 0x4c/0x4d con otra dirección 0x000C",
+   "status": "VERIFICADO",
+   "validation_method": "comparación de bytes",
+   "test": "tests/test_s57_imx210_exposure.py::Imx235Silent",
+   "limitations": "qué son 0x4c/0x4d y el efecto de 0x000C: NO VERIFICADO"
+  },
+  {
+   "id": "S57-26",
+   "claim": "En la matriz IMX235 no hay ningún registro que solo difiera en Silent y que sea candidato de «fin de integración»; la diferencia Silent es el modo de lectura (y la política de clase de S52)",
+   "model": "A7S",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "function_address": "—",
+   "registers": [
+    "35 registros"
+   ],
+   "bits": "—",
+   "data": "—",
+   "instructions": [
+    "—"
+   ],
+   "address": "—",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "D.6: el firmware no revela un comando de terminación; la diferencia funcional recuperada es el modo de lectura + lógica Darwin/LIRO",
+   "status": "INFERENCIA",
+   "validation_method": "ausencia en comparación de columnas",
+   "test": "tests/test_s57_imx210_exposure.py::Imx235Silent",
+   "limitations": "IMX235 podría usar temporización interna no codificada en la matriz (SetExposure, 0x436f4a94)"
+  },
+  {
+   "id": "S57-27",
+   "claim": "Esquema A6000: CIS0_SHT_RST (BIONZ) → conector CN0400 (51P) pin 6 → XPI del sensor (pin F6); vecinos del conector: XCLR(11)=CIS0_IMG_RST, SDO(10), SCK(9), SDI(8), XCE(7)=CIS0_XCS, XVS(2)=CIS0_VD, XHS(3)=CIS0_HD, pin 5 VREF_ON",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "function_address": "docs/references/sony-ilce-6000-level3-sm.txt l.488, 1631, 1694, 2531",
+   "registers": [
+    "XPI"
+   ],
+   "bits": "—",
+   "data": "—",
+   "instructions": [
+    "docs/references/sony-ilce-6000-level3-sm.txt"
+   ],
+   "address": "docs/references/sony-ilce-6000-level3-sm.txt l.488, 1631, 1694, 2531",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "línea discreta directa a la flex del sensor, junto a reset y sincronías",
+   "status": "INFERENCIA",
+   "validation_method": "texto del esquema extraído de PDF (ambiguo)",
+   "test": "tests/test_s57_imx210_exposure.py::MatrixConsistency",
+   "limitations": "polaridad, resistencias, función alternativa del pin y rango de tensión: NO VERIFICADO"
+  },
+  {
+   "id": "S57-28",
+   "claim": "Ninguna cadena SHT_RST/SHTRST/sht_rst en todo el árbol de firmware extraído (rg -a)",
+   "model": "both",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9 | b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "function_address": "firmware/ (todos los módulos)",
+   "registers": [
+    "—"
+   ],
+   "bits": "—",
+   "data": "—",
+   "instructions": [
+    "—"
+   ],
+   "address": "firmware/ (todos los módulos)",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "el controlador de XPI no se identifica por nombre; puede ser hardware o rutas sin cadenas",
+   "status": "VERIFICADO",
+   "validation_method": "barrido de bytes",
+   "test": "tests/test_s57_imx210_exposure.py::MatrixConsistency",
+   "limitations": "ausencia de cadena ≠ ausencia de uso"
+  },
+  {
+   "id": "S57-29",
+   "claim": "SyncMode (cfg[0]) se escribe tal cual en 0xfc088800; solo el modo 2 usa banderas OSAL (grupo 0x18: clr,set,wait,clr,set) y el disparo 1,0,1 en 0xfc088808",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "function_address": "0x436d5b74, 0x43ad8dca, 0x43ad8de4, 0x436d5cdc",
+   "registers": [
+    "P2S 0xfc088800/0xfc088808"
+   ],
+   "bits": "—",
+   "data": "mmio 0xfc088800=2; 0xfc088808=1,0,1",
+   "instructions": [
+    "analysis/s57/sync_modes.py"
+   ],
+   "address": "0x436d5b74, 0x43ad8dca, 0x43ad8de4, 0x436d5cdc",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "SyncMode 2 = transferencia con espera de fin por interrupción/bandera",
+   "status": "VERIFICADO",
+   "validation_method": "emulación de los cuatro modos",
+   "test": "tests/test_s57_imx210_exposure.py::P2SSync",
+   "limitations": "semántica de los valores del registro de bloque en hardware: NO VERIFICADO"
+  },
+  {
+   "id": "S57-30",
+   "claim": "Execute envía la lista de 119 (modo 2), llama a la espera de banderas P2S (0x436d5bcc) y después envía los 8 inmediatos (modo 0)",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "function_address": "0x436d8568-0x436d859a",
+   "registers": [
+    "lista 0x43fe995c, 0x43fe9b50"
+   ],
+   "bits": "—",
+   "data": "bl 0x436d79b0; bl 0x436d75f8; bl 0x436d5bcc; bl 0x436d75f8",
+   "instructions": [
+    "—"
+   ],
+   "address": "0x436d8568-0x436d859a",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "el lote de 119 (con la exposición) precede a los 8 inmediatos; que la espera garantice el fin eléctrico de la transmisión no está demostrado",
+   "status": "VERIFICADO",
+   "validation_method": "desensamblado",
+   "test": "tests/test_s57_imx210_exposure.py::P2SSync",
+   "limitations": "semántica OSAL de la espera y evento que activa la bandera: NO VERIFICADO"
+  },
+  {
+   "id": "S57-31",
+   "claim": "«SIFSyncCode» del log de Execute es el código de sincronía del receptor SIF (0x435440a0 SetSyncCode: patrones tipo 0x3FF/0xFF00), no un parámetro del P2S",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "function_address": "0x435440a0; log 0x43c940d7",
+   "registers": [
+    "—"
+   ],
+   "bits": "—",
+   "data": "—",
+   "instructions": [
+    "—"
+   ],
+   "address": "0x435440a0; log 0x43c940d7",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "no hay vínculo demostrado entre SyncMode del P2S y la sincronía del receptor",
+   "status": "INFERENCIA",
+   "validation_method": "desensamblado parcial",
+   "test": "tests/test_s57_imx210_exposure.py::P2SSync",
+   "limitations": "conexión con VD: NO VERIFICADO"
+  },
+  {
+   "id": "S57-32",
+   "claim": "El planificador CAMERA_MAIN_SYNC (0x43792a0c, «VD_Pre») aplica por VD y avisa «start delayed %dV» / «overflow %dV»",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "function_address": "0x43792a0c",
+   "registers": [
+    "—"
+   ],
+   "bits": "—",
+   "data": "cadenas 0x43ca39e6/0x43ca3a50",
+   "instructions": [
+    "—"
+   ],
+   "address": "0x43792a0c",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "existe un planificador por VD que decide cuándo se programa la exposición",
+   "status": "PARCIAL",
+   "validation_method": "cadenas + referencias literales",
+   "test": "tests/test_s57_imx210_exposure.py::SsbProducers",
+   "limitations": "mecanismo interno no analizado (7 KB)"
+  },
+  {
+   "id": "S57-33",
+   "claim": "Fin electrónico de integración a resolución completa: sin registro, bit ni señal demostrados",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "function_address": "—",
+   "registers": [
+    "ID1",
+    "3-8",
+    "0x100",
+    "0x101",
+    "XPI"
+   ],
+   "bits": "—",
+   "data": "—",
+   "instructions": [
+    "—"
+   ],
+   "address": "—",
+   "references": [
+    "analysis/s57/emu57.py",
+    "analysis/s56/p2s_emu.py"
+   ],
+   "interpretation": "ningún registro se escribe al terminar la exposición; los de duración se fijan al inicio; faltan semántica de unidades y de XPI",
+   "status": "NO VERIFICADO",
+   "validation_method": "cierre de evidencias S57",
+   "test": "tests/test_s57_imx210_exposure.py::MatrixConsistency",
+   "limitations": "datasheet IMX210 o traza pasiva"
+  }
+ ],
+ "hypotheses": {
+  "H57-1": {
+   "status": "PARCIAL",
+   "conf": "alta (estructura) / baja (semántica eléctrica)",
+   "note": "ID1 mezcla bits de modo de lectura (SetMode: bits 0,2), selector ShutMode (bits 2,4,6,7) y strobe (bit 3); clasificación: función combinada"
+  },
+  "H57-2": {
+   "status": "INFERENCIA",
+   "conf": "media",
+   "note": "SSB es un strobe que acompaña a toda actualización de exposición (SetExposure→SSB→Execute) y no aparece en fin de exposición ni en Execute(0); latch/disparo de parámetros probable; fin de exposición no demostrado"
+  },
+  "H57-3": {
+   "status": "INFERENCIA",
+   "conf": "media-alta",
+   "note": "svd/shd/spl son temporización de integración: svd se valida contra n·svr_num−1 y el host cuenta pasos hasta svd; shd/spl sin fórmula"
+  },
+  "H57-4": {
+   "status": "NO VERIFICADO",
+   "conf": "-",
+   "note": "ningún registro 3-8 se reescribe al terminar; el fin podría estar implícito en la temporización fijada al inicio"
+  },
+  "H57-5": {
+   "status": "PARCIAL",
+   "conf": "media",
+   "note": "Silent A7S = modos de lectura 0x4e/0x4f (hermanos de 0x4c/0x4d, 1-4 registros de diferencia); IMX210 tiene 13 modos, ninguno equivalente; no hay comando adicional recuperable"
+  },
+  "H57-6": {
+   "status": "NO VERIFICADO",
+   "conf": "-",
+   "note": "XPI existe como línea discreta; ni controlador ni efecto localizados"
+  },
+  "H57-7": {
+   "status": "PARCIAL",
+   "conf": "media",
+   "note": "SyncMode 2 = transferencia con handshake de banderas y disparo 1,0,1 (VERIFICADO); aplicación en el siguiente VD (INFERENCIA)"
+  },
+  "H57-8": {
+   "status": "NO VERIFICADO",
+   "conf": "-",
+   "note": "existen piezas (svd/shd/spl, ShutMode, strobe) pero ninguna demostrada como fin de integración"
+  },
+  "H57-9": {
+   "status": "HIPÓTESIS",
+   "conf": "baja",
+   "note": "compatible con la evidencia: la terminación podría depender de hardware del sensor no codificado en registros conocidos"
+  },
+  "H57-10": {
+   "status": "NO VERIFICADO",
+   "conf": "-",
+   "note": "no se deduce ninguna ruta de terminación electrónica a partir de las señales y registros recuperados"
+  }
+ }
+}

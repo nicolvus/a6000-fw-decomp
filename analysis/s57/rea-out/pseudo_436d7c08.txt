@@ -1,0 +1,23 @@
+### {'procedure': '0x436d7c08'}
+
+void FUN_436d7c08(int param_1)
+
+{
+  int iVar1;
+  int iVar2;
+  
+  iVar1 = *(int *)(DAT_436d7c4c + 0x436d7c10 + DAT_436d7c50);
+  iVar2 = *(int *)(DAT_436d7c4c + 0x436d7c10 + DAT_436d7c54);
+  *(undefined1 *)(iVar2 + 2) = *(undefined1 *)(iVar1 + 2);
+  if (*(char *)(param_1 + 0x268) == '\x01') {
+    *(byte *)(iVar1 + 2) = *(byte *)(iVar1 + 2) | 8;
+    *(byte *)(iVar2 + 2) = *(byte *)(iVar2 + 2) & 0xf7;
+    *(undefined1 *)(param_1 + 0x268) = 0;
+    return;
+  }
+  *(byte *)(iVar1 + 2) = *(byte *)(iVar1 + 2) & 0xf7;
+  *(byte *)(iVar2 + 2) = *(byte *)(iVar2 + 2) & 0xf7;
+  return;
+}
+
+

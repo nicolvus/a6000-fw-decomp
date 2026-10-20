@@ -1,0 +1,33 @@
+### {'procedure': '0x437b59b8'}
+
+void FUN_437b59b8(int param_1,undefined4 param_2)
+
+{
+  int iVar1;
+  undefined4 uVar2;
+  int iVar3;
+  undefined4 uVar4;
+  int iVar5;
+  
+  iVar3 = DAT_437b5a24 + 0x437b59c6;
+  FUN_43b08748(*(undefined4 *)(iVar3 + DAT_437b5a28),*(int *)(param_1 + 8) + 0x2d4,
+               *(int *)(param_1 + 8) + 0xb78,DAT_437b5a28,param_1,param_2);
+  iVar5 = *(int *)(param_1 + 8) + 0x2d4;
+  iVar1 = FUN_43aef24a(iVar5);
+  uVar4 = *(undefined4 *)(iVar3 + DAT_437b5a2c);
+  if (iVar1 == 0) {
+    uVar2 = 0;
+  }
+  else {
+    uVar2 = 2;
+  }
+  uVar2 = FUN_43aef22e(iVar5,uVar2);
+  FUN_43851fb0(uVar4,uVar2);
+  iVar1 = *(int *)(param_1 + 8);
+  FUN_43b0983a(iVar1 + 0x870,iVar1 + 0x2d4,iVar1 + 0x48,iVar1 + 0xb8,*(undefined2 *)(iVar1 + 0x16c))
+  ;
+  FUN_43859710(0x200);
+  return;
+}
+
+
