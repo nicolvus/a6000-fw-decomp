@@ -6,6 +6,16 @@ electrónico pasa a ser un [subproyecto](projects/electronic-shutter/README.md).
 
 ## Organización y resultados actuales
 
+- [S52: mecanismo Silent Shooting A7S y viabilidad en A6000](docs/capture/s52-parallel-conclusions.md):
+  la A7S no suprime el control de cortinas, lo marca como Silent (bit `0x20` en CAIF)
+  y deja de esperar respuesta del MCU de obturador; cadena clase→ShutMode verificada
+  por instrucciones. Decisión física en el MCU Darwin y semántica eléctrica del IMX210
+  sin verificar; viabilidad en A6000 **NO VERIFICADA**, se mantiene S51 (no parchear).
+  Ver también [cortinas](docs/capture/s52-a7s-curtain-trace.md),
+  [propagación de clase](docs/capture/s52-shutmode-propagation.md),
+  [IMX210/exposición](docs/capture/s52-imx210-electronic-exposure.md) y
+  [viabilidad A6000](docs/capture/s52-a7s-a6000-feasibility.md).
+
 - [S47: entrada del payload y orden de C](docs/capture/s47-payload-producer-and-order.md):
   solicitud recibida en `0x43e95420` → payload `0x43ed4620`;
   callback antes de copia C, con `+94/+95` dentro del rango `0x1a4`.
