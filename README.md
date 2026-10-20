@@ -6,6 +6,7 @@ electrónico pasa a ser un [subproyecto](projects/electronic-shutter/README.md).
 
 ## Organización y resultados actuales
 
+- [S56: transporte de registros del IMX210 (IDs = direcciones 16 bit, P2S/DFE0), CISIF = receptor](docs/capture/s56-conclusions.md): trama `81|len|81|AH AL|datos`, ShutMode→ID1, pulso SSB; fin electrónico NO VERIFICADO, S51 se mantiene.
 - [S55: origen de los pares GPIO (base de backup BK4), A7S vs A6000](docs/capture/s55-conclusions.md): escritor `0x436bcef4`, infraestructura de pines idéntica en A7S, sin consumidor GPIO de P4C, S51 se mantiene.
 - [S54: P4C, tipo de mecanismo 0 y sincronización BIONZ](docs/capture/s54-conclusions.md):
   P4C (`CA_1ST_CURTAIN_START`) llega a BIONZ por `SENS_B` y `GPIO_9`; Darwin solo la escribe a 0, también sin mecanismo.

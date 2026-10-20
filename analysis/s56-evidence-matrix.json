@@ -1,0 +1,519 @@
+{
+ "phase": "S56",
+ "date": "2026-10-20",
+ "sha256": {
+  "av_cam_a6000": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "av_cam_a7s": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+ },
+ "entries": [
+  {
+   "id": "S56-01",
+   "claim": "C_Imager::SetExposure (vtable+0x28 = 0x436d6f6c) solo escribe registros sombra; no transmite",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "0x436d6f6c; vtable 0x43fcc090+0x28",
+   "offset": null,
+   "instructions": [
+    "ldr.w r3,[r0,#0x170]; …; strb rX,[rec,#2]"
+   ],
+   "references": [
+    "analysis/s56/p2s_emu.py",
+    "analysis/s56/xr.py"
+   ],
+   "interpretation": "SetExposure modifica el byte +2 de registros sombra (ID u16/dato u8); el envío ocurre en Execute (vtable+0x38 = 0x436d839c)",
+   "status": "VERIFICADO",
+   "validation_method": "Capstone + REA procedure_pseudo_code + emulación Unicorn",
+   "test": "tests/test_s56_imx210_transport.py::SetExposureChain",
+   "limitations": "REA no reconoce 0x436d6f6c como procedimiento (Thumb): verificado por bytes/LLVM-Capstone"
+  },
+  {
+   "id": "S56-02",
+   "claim": "Consumidor 0x436d75f8: modo 2 = P2S sincronizado con espera; otro modo = carga inmediata sin pulso de inicio",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "0x436d75f8 (llamadores 0x436d7bf2, 0x436d8586, 0x436d859a)",
+   "offset": null,
+   "instructions": [
+    "strb r1,[r0,#0x348]; cmp r1,#2; bl 0x436d5e04 / 0x43ad9004"
+   ],
+   "references": [
+    "analysis/s56/p2s_emu.py",
+    "analysis/s56/xr.py"
+   ],
+   "interpretation": "Execute envía: lista de 119 registros (modo 2) y luego 8 registros (modo 0); Execute_sleep envía 4",
+   "status": "VERIFICADO",
+   "validation_method": "Capstone + REA (decompilación idéntica) + emulación",
+   "test": "tests/test_s56_imx210_transport.py::SetExposureChain",
+   "limitations": "REA y Ghidra comparten motor; semántica física de SyncMode=2 NO VERIFICADO"
+  },
+  {
+   "id": "S56-03",
+   "claim": "Los IDs son direcciones de registro de 16 bits (mapa 0..0x155, dato u8); ID 1 aparece dos veces",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "tabla 0x43fe995c (119 punteros a registros 0x4401c6ac…)",
+   "offset": null,
+   "instructions": [
+    "record = {u16 id; u8 dato; u8 0}"
+   ],
+   "references": [
+    "analysis/s56/p2s_emu.py",
+    "analysis/s56/xr.py"
+   ],
+   "interpretation": "Tabla = lista de envío de 119 registros sombra; ID1 duplicado (0x4401ca2c, 0x4401c734)",
+   "status": "VERIFICADO",
+   "validation_method": "lectura de bytes + emulación del formateador",
+   "test": "tests/test_s56_imx210_transport.py::IdTable",
+   "limitations": "que el sensor (y no el DFE) interprete esas direcciones: NO VERIFICADO"
+  },
+  {
+   "id": "S56-04",
+   "claim": "SetExposure reparte svd/shd/spl en los registros 3..8 y espejo condicional 0x144..0x149",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "SetExposure 0x436d6fac-0x436d70a4",
+   "offset": null,
+   "instructions": [
+    "uxtb/asrs/bfi + strb [rec,#2]"
+   ],
+   "references": [
+    "analysis/s56/p2s_emu.py",
+    "analysis/s56/xr.py"
+   ],
+   "interpretation": "palabras u16 @+4,+0,+6 → (lo,hi4)(lo,hi6)(lo,hi4); nombres svd/shd/spl de la cadena de log 0x43c93cc2",
+   "status": "VERIFICADO",
+   "validation_method": "emulación de SetExposure con valores conocidos",
+   "test": "tests/test_s56_imx210_transport.py::ShutModeRegisters",
+   "limitations": "significado físico de svd/shd/spl (líneas/ciclos) no documentado: NO VERIFICADO"
+  },
+  {
+   "id": "S56-05",
+   "claim": "Formateador P2S de A6000: sin byte extra, dirección 16 bit, dato 8 bit, cabecera 0x81",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "ctor 0x43ad8cb2; formateador 0x43ad8fa2",
+   "offset": null,
+   "instructions": [
+    "strb r1,[r0]; strb r2,[r0,#1]; strb r3,[r0,#2]; movs r3,#0x81; strb r3,[r0,#3]"
+   ],
+   "references": [
+    "analysis/s56/p2s_emu.py",
+    "analysis/s56/xr.py"
+   ],
+   "interpretation": "P[0]=0, P[1]=0x10, P[2]=8, P[3]=0x81",
+   "status": "VERIFICADO",
+   "validation_method": "emulación del constructor real",
+   "test": "tests/test_s56_imx210_transport.py::P2STransport",
+   "limitations": "significado del byte 0x81: NO VERIFICADO"
+  },
+  {
+   "id": "S56-06",
+   "claim": "Formato de trama: 81 | len | 81 | AH AL | datos…; direcciones consecutivas se agrupan; no consecutivas abren trama nueva",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "0x43ad8fa2, 0x436d5d9c (CheckAddrOrder)",
+   "offset": null,
+   "instructions": [
+    "strb 0x81; len placeholder; strb P[3]"
+   ],
+   "references": [
+    "analysis/s56/p2s_emu.py",
+    "analysis/s56/xr.py"
+   ],
+   "interpretation": "ID 1=0x40 → 81 04 81 00 01 40",
+   "status": "VERIFICADO",
+   "validation_method": "emulación Unicorn del código real",
+   "test": "tests/test_s56_imx210_transport.py::P2STransport",
+   "limitations": "cómo el bloque P2S convierte la RAM en señales CIS0 (bits, reloj): NO VERIFICADO"
+  },
+  {
+   "id": "S56-07",
+   "claim": "Los 119 registros salen en 2 transmisiones P2S (127 y 87 B); los pares decodificados == pares de entrada",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "0x436d5cdc commit; RAM de datos 0xfc088340..",
+   "offset": null,
+   "instructions": [
+    "str.w r5,[r2,r4,lsl#2]  (0x436d5ee6)"
+   ],
+   "references": [
+    "analysis/s56/p2s_emu.py",
+    "analysis/s56/xr.py"
+   ],
+   "interpretation": "ID lógico → dirección = ID; valor = dato; frontera: RAM de datos del bloque P2S",
+   "status": "VERIFICADO",
+   "validation_method": "emulación + decodificación inversa de tramas",
+   "test": "tests/test_s56_imx210_transport.py::P2STransport",
+   "limitations": "sin hardware: lo que sale por pin no se observa"
+  },
+  {
+   "id": "S56-08",
+   "claim": "Instancia 0 de C_Imager usa canal P2S 1 (P2S(DFE0)) con bloques 0xfc088300/0xfc088800/0xfc088900",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "GOT 0x440202b0→0x43bc14e8; tabla 0x43bc16d4",
+   "offset": null,
+   "instructions": [
+    "ldr.w r3,[r3,r6,lsl#2]; bl 0x43ad8cb2"
+   ],
+   "references": [
+    "analysis/s56/p2s_emu.py",
+    "analysis/s56/xr.py"
+   ],
+   "interpretation": "tabla instancia→canal = {1,2,0}; cadenas \"P2S(DFE0)/(DFE1) Callback\"",
+   "status": "VERIFICADO",
+   "validation_method": "lectura de bytes + emulación",
+   "test": "tests/test_s56_imx210_transport.py::P2STransport",
+   "limitations": "que DFE0 = CIS0 (SCK/SI/XCS): INFERENCIA por nombres del esquema"
+  },
+  {
+   "id": "S56-09",
+   "claim": "Lista inmediata (SyncMode 0): carga FIFO y habilita, sin pulso 1,0,1 en +0x808",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "0x43ad8de4 (rama cfg[0]!=2)",
+   "offset": null,
+   "instructions": [
+    "ldrb r3,[r5]; cmp r3,#2; bne"
+   ],
+   "references": [
+    "analysis/s56/p2s_emu.py",
+    "analysis/s56/xr.py"
+   ],
+   "interpretation": "solo SyncMode 2 dispara con 0x436d5f60",
+   "status": "VERIFICADO",
+   "validation_method": "emulación",
+   "test": "tests/test_s56_imx210_transport.py::P2STransport",
+   "limitations": "cómo arranca la transmisión en modo 0: NO VERIFICADO"
+  },
+  {
+   "id": "S56-10",
+   "claim": "ShutMode 0..4 fija ID1 = 0x40/0xc4/0x94/0xd4/0xc0 y solo ShutMode 2 carga 0x100/0x101",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "tbb 0x436d70c6; destinos 0x436d70d0…",
+   "offset": null,
+   "instructions": [
+    "bfc/orr #2,#7,#4,#6 sobre dato de 0x4401ca2c"
+   ],
+   "references": [
+    "analysis/s56/p2s_emu.py",
+    "analysis/s56/xr.py"
+   ],
+   "interpretation": "ShutMode no cambia svd/shd/spl; cambia bits de ID1",
+   "status": "VERIFICADO",
+   "validation_method": "emulación de SetExposure por selector",
+   "test": "tests/test_s56_imx210_transport.py::ShutModeRegisters",
+   "limitations": "nombres de bits de ID1: NO VERIFICADO"
+  },
+  {
+   "id": "S56-11",
+   "claim": "El pulso SSB es el bit3 de ID1 enviado dos veces (1.º =1, 2.º =0) en el mismo lote",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "0x436d7c08; setter 0x43ad9116",
+   "offset": null,
+   "instructions": [
+    "ldrb r1,[r2,#2]; orr r1,r1,#8 ; bfc r2,#3,#1"
+   ],
+   "references": [
+    "analysis/s56/p2s_emu.py",
+    "analysis/s56/xr.py"
+   ],
+   "interpretation": "petición [O+0x268] consumida; \"SSBRK_ON\" en cadena 0x43c940d7",
+   "status": "VERIFICADO",
+   "validation_method": "emulación",
+   "test": "tests/test_s56_imx210_transport.py::ShutModeRegisters",
+   "limitations": "el efecto en el sensor (¿corte de flujo?) NO VERIFICADO"
+  },
+  {
+   "id": "S56-12",
+   "claim": "La cadena SetExposure→Execute→P2S no lee GPIO (ni P4C); solo gpio_set(15,5) en el constructor",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "rangos 0x436d5800-0x436d9400 y 0x43ad8c00-0x43ad9a00",
+   "offset": null,
+   "instructions": [
+    "bl 0x43b5e29a @0x436d670a"
+   ],
+   "references": [
+    "analysis/s56/p2s_emu.py",
+    "analysis/s56/xr.py"
+   ],
+   "interpretation": "sin dependencia GPIO de P4C en el camino de registros",
+   "status": "VERIFICADO",
+   "validation_method": "índice de llamadas Capstone",
+   "test": "tests/test_s56_imx210_transport.py::SetExposureChain",
+   "limitations": "ausencia por índice lineal; llamadas indirectas no cubiertas"
+  },
+  {
+   "id": "S56-13",
+   "claim": "El pulso SSB se solicita desde 5 sitios (captura, prelight, StrtExps)",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "0x438c7a0a,0x438c8326,0x438c883c,0x438cc5ce,0x43ae936c",
+   "offset": null,
+   "instructions": [
+    "bl 0x43ad9116"
+   ],
+   "references": [
+    "analysis/s56/p2s_emu.py",
+    "analysis/s56/xr.py"
+   ],
+   "interpretation": "no es específico del fin de exposición: acompaña cambios de modo/exposición",
+   "status": "VERIFICADO",
+   "validation_method": "índice de llamadas + REA procedure_callers",
+   "test": "tests/test_s56_imx210_transport.py::SetExposureChain",
+   "limitations": "semántica de SSB"
+  },
+  {
+   "id": "S56-14",
+   "claim": "CISIF es el lado receptor (mapa de 12 carriles y códigos de sincronía), no el bus de configuración",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "0x436d8c94 SetCISIFRequest; 0x43ad9478; 0x436daf88",
+   "offset": null,
+   "instructions": [
+    "bl 0x43ad9478; 12 pares (carril,bit)"
+   ],
+   "references": [
+    "analysis/s56/p2s_emu.py",
+    "analysis/s56/xr.py"
+   ],
+   "interpretation": "H56-2 refutada como formulada: el transporte de registros es P2S",
+   "status": "VERIFICADO",
+   "validation_method": "Capstone + disjunción de llamadores",
+   "test": "tests/test_s56_imx210_transport.py::CisifIsReceiveSide",
+   "limitations": "backend 0x436daf88 no desensamblado en detalle"
+  },
+  {
+   "id": "S56-15",
+   "claim": "A7S usa el mismo hardware P2S (mismas bases MMIO y misma programación de bloque)",
+   "model": "A7S",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "address": "GOT 0x44024540+0x1780 → 0x43bbce80; 0x436f2630",
+   "offset": null,
+   "instructions": [
+    "bfc/ubfx/bfi idénticos a 0x436d5e58"
+   ],
+   "references": [
+    "analysis/s56/p2s_emu.py",
+    "analysis/s56/xr.py"
+   ],
+   "interpretation": "misma ruta física hacia DFE0; diferencias están en el sensor",
+   "status": "VERIFICADO",
+   "validation_method": "lectura de bytes",
+   "test": "tests/test_s56_imx210_transport.py::DifferentialA7S",
+   "limitations": "misma versión de blob ≠ mismo comportamiento"
+  },
+  {
+   "id": "S56-16",
+   "claim": "A7S: registros de 5 B con byte de dispositivo (94×0x81, 1×0x83) y 95 registros; ID1 también duplicado",
+   "model": "A7S",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "address": "lista GOT 0x44024540+0x8400 → 0x43fee3f8",
+   "offset": null,
+   "instructions": [
+    "ldrb r1,[r3]; ldrh r2,[r3,#2]; ldrb r3,[r3,#4]"
+   ],
+   "references": [
+    "analysis/s56/p2s_emu.py",
+    "analysis/s56/xr.py"
+   ],
+   "interpretation": "protocolo IMX235 distinto (dispositivo por registro, dos formateadores 0x43ad94fe/0x43ad9666)",
+   "status": "VERIFICADO",
+   "validation_method": "lectura de bytes + Capstone",
+   "test": "tests/test_s56_imx210_transport.py::DifferentialA7S",
+   "limitations": "no se emuló el formateador A7S"
+  },
+  {
+   "id": "S56-17",
+   "claim": "ShutMode: A7S no admite el 2 (\"ShutMode:%d is not supported.\"); A6000 sí; codificaciones de bits distintas",
+   "model": "A7S",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "address": "tbb A7S 0x436f4242 vs A6000 0x436d70c6",
+   "offset": null,
+   "instructions": [
+    "tbb [pc,r6]"
+   ],
+   "references": [
+    "analysis/s56/p2s_emu.py",
+    "analysis/s56/xr.py"
+   ],
+   "interpretation": "no hay mapeo 1:1 de ShutMode entre sensores",
+   "status": "VERIFICADO",
+   "validation_method": "bytes de la tabla tbb",
+   "test": "tests/test_s56_imx210_transport.py::DifferentialA7S",
+   "limitations": "significado de cada ShutMode en IMX235: NO VERIFICADO"
+  },
+  {
+   "id": "S56-18",
+   "claim": "Pulso de petición: A7S bit 0x10 del byte +4 de un registro ([O+0x3d7]); A6000 bit 0x08 del dato de ID1 ([O+0x268])",
+   "model": "both",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9 | b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "address": "A7S 0x436f459c; A6000 0x436d7c08",
+   "offset": null,
+   "instructions": [
+    "orr r2,r2,#0x10 ; orr r1,r1,#8"
+   ],
+   "references": [
+    "analysis/s56/p2s_emu.py",
+    "analysis/s56/xr.py"
+   ],
+   "interpretation": "ambos modelos tienen un strobe de registro; no equivalentes por bit",
+   "status": "VERIFICADO",
+   "validation_method": "bytes",
+   "test": "tests/test_s56_imx210_transport.py::DifferentialA7S",
+   "limitations": "equivalencia funcional NO VERIFICADO"
+  },
+  {
+   "id": "S56-19",
+   "claim": "Ningún nombre SENS_B / SHT_RST / CA_1ST en av-cam.bin (ambos modelos)",
+   "model": "both",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9 | b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "address": "barrido de cadenas",
+   "offset": null,
+   "instructions": [
+    "—"
+   ],
+   "references": [
+    "analysis/s56/p2s_emu.py",
+    "analysis/s56/xr.py"
+   ],
+   "interpretation": "SENS_B y CIS0_SHT_RST carecen de rastro nominal",
+   "status": "VERIFICADO",
+   "validation_method": "regex sobre bytes",
+   "test": "tests/test_s56_imx210_transport.py::SensBCandidates",
+   "limitations": "ausencia de cadena ≠ ausencia de uso"
+  },
+  {
+   "id": "S56-20",
+   "claim": "Los clústeres MMIO 0xf2a1xxxx/0xf2403000-0xf2406040 pertenecen a funciones 0x43932xxx y 0x4398e..0x43991xxx, fuera de imager y captura",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "0x43932346.., 0x43990702.., 0x4398ec7e (cerca de \"TSK_ADC\")",
+   "offset": null,
+   "instructions": [
+    "ldr r0,[pc]; =0xf2a01130"
+   ],
+   "references": [
+    "analysis/s56/p2s_emu.py",
+    "analysis/s56/xr.py"
+   ],
+   "interpretation": "candidatos SENS_B NO atribuibles (dominios de reloj / ADC por contexto)",
+   "status": "INFERENCIA",
+   "validation_method": "índice de literales",
+   "test": "tests/test_s56_imx210_transport.py::SensBCandidates",
+   "limitations": "contexto por vecindad de cadenas, no por análisis de campos"
+  },
+  {
+   "id": "S56-21",
+   "claim": "Esquema: CIS0_SHT_RST (BIONZ) → XPI del sensor, línea discreta distinta del bus serie",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "docs/references/sony-ilce-6000-level3-sm.txt líneas 482, 2512, 4418",
+   "offset": null,
+   "instructions": [
+    "—"
+   ],
+   "references": [
+    "analysis/s56/p2s_emu.py",
+    "analysis/s56/xr.py"
+   ],
+   "interpretation": "candidata a reset de obturación; ninguna escritura de firmware la nombra",
+   "status": "INFERENCIA",
+   "validation_method": "texto del esquema",
+   "test": "tests/test_s56_imx210_transport.py::SensBCandidates",
+   "limitations": "función de XPI desconocida sin datasheet"
+  },
+  {
+   "id": "S56-22",
+   "claim": "Terminación electrónica de integración a resolución completa: no demostrada ni refutada",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "—",
+   "offset": null,
+   "instructions": [
+    "—"
+   ],
+   "references": [
+    "analysis/s56/p2s_emu.py",
+    "analysis/s56/xr.py"
+   ],
+   "interpretation": "faltan: semántica de ID1/3..8/0x100/0x101 del IMX210 y quién maneja CIS0_SHT_RST",
+   "status": "NO VERIFICADO",
+   "validation_method": "cierre del conjunto de evidencias",
+   "test": "tests/test_s56_imx210_transport.py::MatrixConsistency",
+   "limitations": "depende de datasheet o traza pasiva"
+  }
+ ],
+ "hypotheses": {
+  "H56-1": {
+   "status": "VERIFICADA (parcial en frontera)",
+   "conf": "alta",
+   "note": "IDs = direcciones de 16 bit en trama P2S; que el sensor las interprete así es NO VERIFICADO"
+  },
+  "H56-2": {
+   "status": "REFUTADA como formulada",
+   "conf": "alta",
+   "note": "CISIF es receptor; el transporte es P2S(DFE0)"
+  },
+  "H56-3": {
+   "status": "PARCIAL",
+   "conf": "alta",
+   "note": "ShutMode toca ID1 y 0x100/0x101, no svd/shd/spl"
+  },
+  "H56-4": {
+   "status": "NO VERIFICADA",
+   "conf": "-",
+   "note": "sin semántica de registros de fin de integración"
+  },
+  "H56-5": {
+   "status": "NO VERIFICADA",
+   "conf": "-",
+   "note": "protocolos y ShutMode difieren; sin equivalente demostrado"
+  },
+  "H56-6": {
+   "status": "NO VERIFICADA",
+   "conf": "-",
+   "note": "ningún consumidor de SENS_B localizado"
+  },
+  "H56-7": {
+   "status": "INFERENCIA",
+   "conf": "media-baja",
+   "note": "P4C ausente de la cadena de registros; VD se aplica vía P2S SyncMode 2 (inferido)"
+  },
+  "H56-8": {
+   "status": "NO VERIFICADA",
+   "conf": "-",
+   "note": "capacidad parcial plausible, sin demostrar"
+  },
+  "H56-9": {
+   "status": "NO VERIFICADA",
+   "conf": "-",
+   "note": "no demostrable sin datasheet/traza"
+  }
+ }
+}

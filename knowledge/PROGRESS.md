@@ -1605,3 +1605,10 @@ Próximo (no iniciado): traza pasiva autorizada de `MSS_SO_DWN`/bobinas, consumi
 - Corrección: «variables sin escritor» de S54 es incorrecta (escritor `0x436bcef4`, store vía GOT).
 - Frontera: banco de los `GPIO_n` (sin «S»), `SENS_B`, valores por unidad (`Backup.bak`), IMX210.
 - Próximo exacto: escritores de `0xf2a10000–0xf2a30000`/`0xf2400000` (candidato SENS_B); IDs dinámicos de `0x43716dd0`; traza pasiva autorizada.
+
+
+## S56 — transporte de registros del IMX210 (20-10-2026)
+- Hecho: cadena `SetExposure → registros sombra → Execute → consumidor 0x436d75f8 → formateador P2S → RAM P2S(DFE0) 0xfc088340` reconstruida y **emulada con Unicorn** (`analysis/s56/{p2s_emu,setexp_emu,rec_users,xr,rq}.py`); REA (sesión única `GHIDRA_MAXMEM=6G`, cerrada) confirmó consumidor y llamadores. Informes `docs/capture/s56-*.md`, matriz `analysis/s56-evidence-matrix.json` (`build_matrix.py`), tests 26/26. Dependencia nueva: `unicorn` (pip --user).
+- Hallazgos: IDs = direcciones 16 bit; trama `81|len|81|AH AL|datos`; `svd/shd/spl` = IDs 3–8; ShutMode→ID1; pulso SSB; CISIF = receptor; A7S mismo P2S con registro de 5 B.
+- Frontera: semántica de registros IMX210 y de `CIS0_SHT_RST→XPI`; consumidor SENS_B; origen de `0x43eb35d0` (tiempo→banco).
+- Próximo exacto: traza pasiva CIS0/XPI/VD (decodificable con `p2s_emu.frames`) o rastreo estático de `0x43eb35d0+0xc4..0xd8`. S51 se mantiene.
