@@ -17,8 +17,8 @@ class PayloadTransport(unittest.TestCase):
 
     def test_binary_and_dispatch_targets(self):
         self.assertEqual(self.result["sha256"], trace_payload.SHA)
-        self.assertEqual(self.result["case_targets"]["4"], "0x43806c24")
-        self.assertEqual(self.result["case_targets"]["10"], "0x43806d02")
+        self.assertEqual(self.result["case_targets"]["4"], "0x43806c28")
+        self.assertEqual(self.result["case_targets"]["10"], "0x43806d06")
 
     def test_direct_calls_link_request_reply_and_receiver(self):
         binary = trace_payload.data("A6000")

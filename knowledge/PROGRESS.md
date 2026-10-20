@@ -1647,3 +1647,10 @@ Próximo (no iniciado): traza pasiva autorizada de `MSS_SO_DWN`/bobinas, consumi
 - Herramientas: Capstone, Unicorn (OSAL sustituido), sin REA nuevo ni dependencias nuevas.
 - Frontera: petición caso 3/9 y bit 31 del handle, productores de `obj+0x168/0x16a`, consumidor de la cola de trazas, física.
 - Próximo exacto: repetir `analysis/s60/sol-audit/task.md` al renovarse el cupo. S51 se mantiene.
+
+## S61 — origen de parámetros IMX210 y flujo de mensajes (20-10-2026)
+- Hecho: corrección TBH de S60-Sol; puertas y cadena de los productores A/B del bloque `obj+0xe20` (`analysis/s61/{e3_chain,e4_producer_a,cfg_refs,g_writers,xr,rea}.py`); tabla del 6.º par = BK4 `0x300AB`; productor de la petición 9 (`HS_Main`) y publicador (`VD_Pre`). Informes `docs/capture/s61-*.md`, matriz `analysis/s61-evidence-matrix.json` (16 entradas, H61-1…4), tests `tests/test_s61_imx210.py` 22/22 + regresión S56–S60.
+- Herramientas: REA (1 sesión, `GHIDRA_MAXMEM=6G`, cerrada), Capstone, Unicorn; sin dependencias nuevas; ruff limpio en lo nuevo.
+- Correcciones: base TBH de Sol; `obj+0x168/0x16A` de S60 = global G; «campos de otro objeto» de B = `obj+0x2cc`.
+- Frontera: escritores de `obj+0x2be..`, `G+0x168`, `G[0xD]`, `stage+0x3a`; petición 3; bit 31 del handle; unidad de los pares; ningún estado ALCANZABLE.
+- Próximo exacto: leer `HS_Main`/`VD_Pre` (fin de exposición), sembrar Thumb, `trace_native_values` sobre P0. S51 se mantiene.
