@@ -93,3 +93,8 @@ Sesión REA sobre `av-cam.bin` (REA no reconoce las funciones Thumb de esta zona
 ### Repetición con app normal (2026-10-20)
 
 - Mismo bucle (espejo + instantánea + copia a 1), disparos con el botón: el usuario oyó obturador mecánico («si suena»); sin reinicio reportado. Electrónico NO detectado. El reinicio anterior no se reprodujo (causa sigue NO VERIFICADO).
+
+### Override de drive_mode `[0x43e95950+0x86]` (2026-10-20)
+
+- `0x437f7ff4` sustituye `cap+0x4d0` por ese byte si es distinto de 0 (`0x437f7ef0` mapea `0x0b→0x37`, `0x35→0x38` y fija `cap+0x778`; sin significado físico verificado).
+- `scripts/camera_drivemode_override.py 0x37 0x38` (RAM, bucle 20 ms, restaura a 0): 2 disparos remotos correctos (`done 392019`, `done 391265`), cámara viva. El usuario respondió «si sonó» (no distinguió mecánico/electrónico por escrito; se interpreta como obturador audible). No se revisó la imagen ni el EXIF. Electrónico NO detectado. Sin comprobar si la captura remota leyó el override (el byte puede ignorarse en esa ruta).
