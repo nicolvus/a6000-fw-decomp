@@ -1580,3 +1580,11 @@ con REA+Unicorn → validación cruzada). Sesiones REA separadas y cerradas. Ins
 mecánicas (no suprime envíos); `+0x748`≙A6000 `+0x740` latente; clase 0→`param+9` VERIFICADA (discrepancia A/B resuelta por el
 coordinador, `analysis/s52_coordinator_check.py`); corrección `cfg2+4|=8` en todos los ShutMode IMX235. P5 NO VERIFICADO, S51 vigente.
 Detalle: `docs/capture/s52-parallel-conclusions.md`. Hashes 8/8 y manifiestos intactos. Próximo: parser CAIF Darwin (bit `0x20`).
+
+## S53 — Darwin: transporte MSS y parser CAIF (Claude, 19-10-2026)
+
+Solo Claude (Opus 5.5), sin subagentes ni Codex. Ghidra headless sobre las tres ROM Darwin (`analysis/s53/`), capstone y LLVM;
+REA no se abrió (mismo motor; lote directo más rápido para ROM pequeñas). Vista ELF nueva `analysis/a7s-darwin-rom-analysis-view.elf`.
+Resultado: receptor = mss-async ID `0x0c` sobre MFS5; parser A7S `0x18396` / A6000 `0x17f8c`; A7S consume el bit Silent `0x20`
+y deja de accionar P4D/P4E; A6000 no. Escenario B; S51 vigente. Detalle: `docs/capture/s53-conclusions.md`. Suite 42/42.
+Próximo (no iniciado): traza pasiva autorizada de `MSS_SO_DWN`/bobinas, consumidor LIRO de `CA_1ST_CURTAIN_START`, efecto del tipo 0.

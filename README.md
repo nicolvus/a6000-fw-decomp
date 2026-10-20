@@ -6,6 +6,13 @@ electrónico pasa a ser un [subproyecto](projects/electronic-shutter/README.md).
 
 ## Organización y resultados actuales
 
+- [S53: parser CAIF de Darwin, A7S vs A6000](docs/capture/s53-conclusions.md):
+  el paquete ev1 llega por MFS5 (ID `0x0c`, 22 B); el parser A7S consume el bit Silent `0x20` y deja de
+  accionar las bobinas de cortina; el de A6000 lo descarta. Falta lógica en el firmware Darwin A6000; S51 se mantiene.
+  Ver también [reconstrucción](docs/capture/s53-darwin-caif-reconstruction.md),
+  [comparación](docs/capture/s53-darwin-a7s-a6000-comparison.md),
+  [cortinas](docs/capture/s53-curtain-actuator-control.md) y
+  [viabilidad](docs/capture/s53-a6000-silent-feasibility.md).
 - [S52: mecanismo Silent Shooting A7S y viabilidad en A6000](docs/capture/s52-parallel-conclusions.md):
   la A7S no suprime el control de cortinas, lo marca como Silent (bit `0x20` en CAIF)
   y deja de esperar respuesta del MCU de obturador; cadena clase→ShutMode verificada
