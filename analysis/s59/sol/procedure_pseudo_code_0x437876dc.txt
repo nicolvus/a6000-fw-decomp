@@ -1,0 +1,16 @@
+
+undefined4 FUN_437876dc(void)
+
+{
+  undefined4 uVar1;
+  uint *puVar2;
+  
+  puVar2 = *(uint **)(DAT_43787700 + 0x437876e6 + DAT_43787704);
+  uVar1 = *(undefined4 *)(DAT_43787700 + 0x437876e6 + DAT_43787708);
+  if ((*puVar2 & 1) == 0) {
+    FUN_43b00b48(uVar1);
+    *puVar2 = 1;
+  }
+  return uVar1;
+}
+

@@ -3,6 +3,12 @@
 Resumen operativo breve. Para el historial completo de decisiones, ver `knowledge/PROGRESS.md`.
 Para restricciones del proyecto (sin firmware ejecutado, sin flasheo, sin `git push`), ver `docs/STATE.md`.
 
+## S59 — Claude + GPT-6.1 Sol: bloque IMX210 `+0xDD0` y constructor real A7S (20-10-2026)
+
+**GPT (A6000, 11 tests):** escritor del bloque `0x437876dc()+0xdd0` = `0x43b00da0` (copia 80 B → `obj+0xdb4`; publicada por `0x43b00dd4` si `obj+0x57c≠0`; fuente `obj+0xd64` ← payload en `0x438069f0` casos 4/10). Constructor deja ceros: M no sale de constantes. `clk` NO es el objeto de histogramas (corrige S58-A §5). VdNum=`max(0,raw−0x3000)`. M/Tv/clk alcanzables 0x0B/0x2F: NO VERIFICADO. **Claude (A7S, 9 tests):** constructor real `C_Imager` = `0x436f3fc0`; con él las mismas 100 escrituras que S58, pero base P2S real `0xfc088300` y 3 tramas (127/94/26 B): S58-C (`0xf3c00300`, 5 tramas) era artefacto sintético. Mensajes `0x1000/0x1001` = lista blanca de modos `{0x0b,0x35,0x37,0x38}` (no estado sin inicializar; receptor sin localizar). Consumidor de ganancia `0x436f459c`: único llamador `0x436f5b40`. Revisión GPT corrigió C59-5/7/9/10. Fin electrónico IMX210 **NO VERIFICADO**; **S51 A=NO/B=NO/C=NO.**
+
+[Conclusiones](../docs/capture/s59-conclusions.md) · [cruzada](../docs/capture/s59-cross-validation.md) · [matriz](../analysis/s59-evidence-matrix.json). Siguiente: emisor del payload de `0x438069f0` (origen real de M/Tv/clk) y receptores de `0x1000/0x1001` (Thumb sembrada); física: traza pasiva autorizada.
+
 ## S58 — productores AE y configuración A7S efectiva (Claude→Codex, 20-10-2026)
 
 **Hito offline cerrado con cobertura delimitada:** productores `0x4383d4d0` y `0x4383c9dc` comprobados en Unicorn (600/600 y 300/300 en campañas); falta origen Tv/M/clk real. Productor/validador host NO son idénticos para todo VdNum/svr. **CORRECCIÓN de S57:** SetExposure A7S=`0x436f4168`, SetRead=`0x436f4a94`; matriz IMX235=69 filas de 0x14 B con selección indirecta de 15 columnas. Diferencias 0x4c→0x4e=14, 0x4d→0x4f=11. Cadena de cuatro métodos y P2S ejecutada para seis modos, objeto sintético y servicios stub; no es captura integral. Son 100 escrituras (99 DEV81 + 1 DEV83), no 99 totales. Umbral 0x1000 pertenece a ganancia; consumidor `0x436f459c` pone/borra bit4 de 0x81:0x5f, también en foto. **S51 A=NO/B=NO/C=NO.** No se demuestra fin electrónico del IMX210.

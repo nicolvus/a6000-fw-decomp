@@ -1,0 +1,304 @@
+{
+ "phase": "S59",
+ "date": "2026-10-20",
+ "baseline": "aa495e0e2c803b15eadf125605cc644d056a5758",
+ "sha256": {
+  "av_cam_a6000": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "av_cam_a7s": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+ },
+ "entries": [
+  {
+   "id": "S59-C1",
+   "executed_by": "Claude Sonnet 5.5",
+   "model": "A7S",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "claim": "Constructor real C_Imager(this,idx)=0x436f3fc0 (destructor 0x436f27b4, base 0x436f2d44) instala la vtable 0x43fce050 y se ejecuta sin stubs",
+   "address": "0x436f3fc0, 0x436f27b4, 0x436f2d44",
+   "status": "VERIFICADO",
+   "validation_method": "Capstone (literal GOT 0x6740, 2 sitios) + Unicorn",
+   "test": "tests/test_s59_claude.py::RealCtor::test_ctor_sets_vtable_without_stubs",
+   "limitations": "servicios del sistema no emulados; objeto inicializado, no arranque completo",
+   "references": [
+    "docs/capture/s59-claude.md",
+    "analysis/s59/claude/ctor_emu.py"
+   ]
+  },
+  {
+   "id": "S59-C2",
+   "executed_by": "Claude Sonnet 5.5",
+   "model": "A7S",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "claim": "Con objeto real, 12 escenarios (6 modos x ShutMode 0/1) emiten las mismas 100 escrituras de bus y el mismo banco sombra que el objeto sintético de S58",
+   "address": "0x436f3b44, 0x436f4168, 0x436f4a94, 0x436f5a14",
+   "status": "VERIFICADO",
+   "validation_method": "Unicorn real vs sintético; revisado por GPT (12/12)",
+   "test": "tests/test_s59_claude.py::RealCtor::test_wire_stream_same_as_synthetic",
+   "limitations": "entradas fijas shd=0x123 svd=0x456 spl=0x78 AGC=0x100; MMIO emulado",
+   "references": [
+    "analysis/s59/claude/real_scen.py"
+   ]
+  },
+  {
+   "id": "S59-C3",
+   "executed_by": "Claude Sonnet 5.5",
+   "model": "A7S",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "claim": "CORRIGE S58-C: base P2S real 0xfc088300 (FIFO +0x40, disparo +0x508) y 3 tramas (127,94,26 B); las 5 tramas y base 0xf3c00300 de S58 eran artefactos del objeto sintético",
+   "address": "0x436f26ae..0x436f26f4",
+   "status": "VERIFICADO",
+   "validation_method": "Unicorn con ctor real; GPT reprodujo",
+   "test": "tests/test_s59_claude.py::RealCtor::test_p2s_base_is_real_not_artifact",
+   "limitations": "sin confirmación eléctrica del bus",
+   "references": [
+    "analysis/s59/claude/p2s59.py"
+   ]
+  },
+  {
+   "id": "S59-C5",
+   "executed_by": "Claude Sonnet 5.5",
+   "model": "A7S",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "claim": "Mensajes 0x1000/0x1001 (0x43ada07a/0x43ada0b4 -> 0x438f6864) solo si mode in {0x0b,0x35,0x37,0x38} o bit0 de [dbg+0xc] (0xff=desactivado); no son dependencia de estado no inicializado",
+   "address": "0x436f5b82..0x436f5bb2, 0x436f5d90",
+   "status": "VERIFICADO",
+   "validation_method": "Capstone + Unicorn; GPT probó dbg 0xff/0/1/2",
+   "test": "tests/test_s59_claude.py::MessageWhitelist",
+   "limitations": "receptor no localizado",
+   "references": [
+    "docs/capture/s59-claude.md"
+   ]
+  },
+  {
+   "id": "S59-C6",
+   "executed_by": "Claude Sonnet 5.5",
+   "model": "A7S",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "claim": "0x438f6864 filtra por máscara de unidad y publica registros tipados de 0x2c B en un pool OSAL; naturaleza (traza/control) no determinada",
+   "address": "0x438f6840, 0x438f6864",
+   "status": "INFERENCIA",
+   "validation_method": "REA pseudocódigo + Capstone",
+   "test": "n/a",
+   "limitations": "receptor no localizado; REA no cubre funciones receptoras",
+   "references": [
+    "analysis/s59/claude/rq.py"
+   ]
+  },
+  {
+   "id": "S59-C7",
+   "executed_by": "Claude Sonnet 5.5",
+   "model": "A7S",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "claim": "Entre 0x0b, 0x4c y 0x4e, Execute difiere solo en emisores de mensajes y en lectores de sustituciones de depuración por grupo de modo; ninguna rama exclusiva de Silent con depuración 0xff",
+   "address": "0x436f4650..0x436f4716, 0x436f5770..0x436f5980",
+   "status": "PARCIAL",
+   "validation_method": "diferencia por rangos de PC (Unicorn); CORREGIDO tras revisión GPT",
+   "test": "tests/test_s59_claude.py::ModeDifferences",
+   "limitations": "0xff en depuración es supuesto del arnés (BSS de la imagen=0); servicios stub",
+   "references": [
+    "analysis/s59/claude/blockdiff.json"
+   ]
+  },
+  {
+   "id": "S59-C8",
+   "executed_by": "Claude Sonnet 5.5",
+   "model": "A7S",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "claim": "Consumidor de ganancia 0x436f459c: único llamador directo 0x436f5b40 (Execute), guarda 0x436f5b14..24",
+   "address": "0x436f459c, 0x436f5b40",
+   "status": "VERIFICADO",
+   "validation_method": "barrido de BL/BLX/B.W/punteros en todo el binario; GPT repitió",
+   "test": "tests/test_s59_claude.py::GainConsumer",
+   "limitations": "no excluye llamadas indirectas calculadas",
+   "references": [
+    "docs/capture/s59-claude.md"
+   ]
+  },
+  {
+   "id": "S59-C9",
+   "executed_by": "Claude Sonnet 5.5",
+   "model": "A7S",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "claim": "Función 0x436f5638 agrupa modos para sustituciones de depuración: foto {0x0b,0x35,0x37,0x38}->+0x50..53; {0x4c,0x4d}->+0x54..57; 0x4e..0x51->+0x5c..5f",
+   "address": "0x436f5638..0x436f5978",
+   "status": "PARCIAL",
+   "validation_method": "Capstone",
+   "test": "tests/test_s59_claude.py::MessageWhitelist::test_static_compares",
+   "limitations": "semántica física de cada grupo desconocida",
+   "references": [
+    "docs/capture/s59-claude.md"
+   ]
+  },
+  {
+   "id": "S59-C10",
+   "executed_by": "Claude Sonnet 5.5",
+   "model": "A7S",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "claim": "Servicios stub restantes: puntero nulo [[GOT+0x1b3c]+0x14]+{0x98,0x9c,0xa0}, 0x439b3918 (24; 34 en 0x4c/0x4d), 0x43544270, 0x438f7114",
+   "address": "0x4355f04c..0x4355f094",
+   "status": "NO VERIFICADO",
+   "validation_method": "Unicorn (registro de stubs)",
+   "test": "n/a",
+   "limitations": "sus efectos no se ejecutan",
+   "references": [
+    "analysis/s59/claude/real_scenarios.json"
+   ]
+  },
+  {
+   "id": "S59-G1",
+   "executed_by": "GPT-6.1 Sol",
+   "model": "A6000",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "claim": "El accesor 0x437876dc devuelve la raíz 0x43e93f34; 0x43ae84c6 suma 0xdd0 -> bloque en 0x43e94d04",
+   "address": "0x437876dc, 0x43ae84c0",
+   "status": "VERIFICADO",
+   "validation_method": "bytes + Unicorn; Claude re-desensambló 0x43ae84c0",
+   "test": "tests/test_s59_sol.py::test_accessor_actual_root",
+   "limitations": "objeto supuesto ya construido",
+   "references": [
+    "docs/capture/s59-sol.md"
+   ]
+  },
+  {
+   "id": "S59-G2",
+   "executed_by": "GPT-6.1 Sol",
+   "model": "A6000",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "claim": "Escritor del bloque +0xDD0: 0x43b00da0 copia 80 B (arg1 -> obj+0xdb4) que cubre obj+0xdd0..0xde7; publicado por 0x43b00dd4 (guarda byte obj+0x57c) con fuente obj+0xd64",
+   "address": "0x43b00da0, 0x43b00dd4",
+   "status": "VERIFICADO",
+   "validation_method": "bytes (verificados también por Claude) + Unicorn con memcpy original",
+   "test": "tests/test_s59_sol.py::test_writer_copies_exactly_80_bytes",
+   "limitations": "no se reclama exclusividad de escritor",
+   "references": [
+    "analysis/s59/sol/override-writer.asm"
+   ]
+  },
+  {
+   "id": "S59-G3",
+   "executed_by": "GPT-6.1 Sol",
+   "model": "A6000",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "claim": "Constructor 0x43b00b48 deja el bloque a cero y la publicación deshabilitada (byte +0x57c=0): ceros de construcción, no M efectivo",
+   "address": "0x43b00b48",
+   "status": "VERIFICADO",
+   "validation_method": "Unicorn",
+   "test": "tests/test_s59_sol.py::test_constructor_clears_override",
+   "limitations": "M efectivo por modo sin recuperar",
+   "references": [
+    "docs/capture/s59-sol.md"
+   ]
+  },
+  {
+   "id": "S59-G4",
+   "executed_by": "GPT-6.1 Sol",
+   "model": "A6000",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "claim": "CORRIGE S58-A §5: el objeto del escritor de histogramas (0x43eb121c) no es el objeto P de la entrada AE (0x43eaee84): el mismo offset +0x4c0 no demuestra alias de clk",
+   "address": "0x437b5b68, 0x43844e80, 0x438479ce",
+   "status": "VERIFICADO",
+   "validation_method": "bytes + Unicorn",
+   "test": "tests/test_s59_sol.py::test_histogram_writer_has_a_different_object",
+   "limitations": "origen final de clk NO VERIFICADO",
+   "references": [
+    "analysis/s59/sol/histogram-call.asm"
+   ]
+  },
+  {
+   "id": "S59-G5",
+   "executed_by": "GPT-6.1 Sol",
+   "model": "A6000",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "claim": "VdNum local = max(0, raw_u16-0x3000) en 0x437aab48..52; rango 0..0xcfff; sin límite signed16 en el segmento",
+   "address": "0x437aab3c..0x437aab52",
+   "status": "VERIFICADO",
+   "validation_method": "bytes (verificados por Claude) + Unicorn, 7 casos",
+   "test": "tests/test_s59_sol.py::test_vdnum_constructor_range_is_not_a_signed_range",
+   "limitations": "no prueba que el productor del raw permita todo el rango",
+   "references": [
+    "analysis/s59/sol/vdnum.asm"
+   ]
+  },
+  {
+   "id": "S59-G6",
+   "executed_by": "GPT-6.1 Sol",
+   "model": "A6000",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "claim": "Productor 0x4383c9dc y host 0x438110be..0x4381112a coinciden en modo=0,f=0 solo si VdNum=1 o svr=1; el host normaliza N=0, estado 9 y desbordamiento bit15",
+   "address": "0x4383c9dc, 0x4381106c",
+   "status": "VERIFICADO",
+   "validation_method": "ejecución comparada de ambos códigos",
+   "test": "tests/test_s59_sol.py::test_synthetic_compatibility_boundaries",
+   "limitations": "dominio sintético, alcanzabilidad NO VERIFICADO",
+   "references": [
+    "analysis/s59/sol/probe-results.json"
+   ]
+  },
+  {
+   "id": "S59-G7",
+   "executed_by": "GPT-6.1 Sol",
+   "model": "A6000",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "claim": "Valores alcanzables de M/Tv/clk/N/svr/VdNum para modos 0x0B y 0x2F",
+   "address": "0x43843e94, 0x4383d704, 0x437aa65c",
+   "status": "NO VERIFICADO",
+   "validation_method": "REA + Unicorn",
+   "test": "n/a",
+   "limitations": "cadena de procedencia incompleta (SOL-10 PARCIAL)",
+   "references": [
+    "docs/capture/s59-sol.md"
+   ]
+  },
+  {
+   "id": "S59-X1",
+   "executed_by": "Claude+GPT",
+   "model": "A6000",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "claim": "Fin electrónico de integración del IMX210 sin segunda cortina",
+   "address": "n/a",
+   "status": "NO VERIFICADO",
+   "validation_method": "S56-S59 estático/offline",
+   "test": "n/a",
+   "limitations": "sin traza pasiva ni datasheet; S51: A=NO B=NO C=NO",
+   "references": [
+    "docs/capture/s59-conclusions.md"
+   ]
+  }
+ ],
+ "hypotheses": [
+  {
+   "id": "H59-1",
+   "status": "VERIFICADO",
+   "text": "Los resultados de S58-C (registros) no dependen del objeto sintético; sí la fragmentación P2S"
+  },
+  {
+   "id": "H59-2",
+   "status": "VERIFICADO",
+   "text": "Los mensajes 0x1000/0x1001 son una lista blanca de modos, no estado no inicializado"
+  },
+  {
+   "id": "H59-3",
+   "status": "PARCIAL",
+   "text": "Execute no tiene ramas de registros exclusivas de Silent (bajo depuración 0xff)"
+  },
+  {
+   "id": "H59-4",
+   "status": "INFERENCIA",
+   "text": "0x1000/0x1001 son tráfico de eventos/diagnóstico más que órdenes de control"
+  },
+  {
+   "id": "H59-5",
+   "status": "NO VERIFICADO",
+   "text": "M/Tv/clk alcanzables 0x0B/0x2F"
+  },
+  {
+   "id": "H59-6",
+   "status": "HIPÓTESIS",
+   "text": "IMX210 puede terminar la integración sin segunda cortina"
+  },
+  {
+   "id": "H59-7",
+   "status": "DESCARTADO",
+   "text": "Atribuir clk al objeto de histogramas por coincidir el offset +0x4c0"
+  }
+ ]
+}

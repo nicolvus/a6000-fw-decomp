@@ -1,0 +1,33 @@
+**VEREDICTO: CAMBIOS.** Los resultados de transporte se reproducen; varias conclusiones exceden la evidencia.
+
+- **ACEPTO — VERIFICADO, C59-1:** `0x436f3fc0` ejecuta el constructor base (`bl 0x436f2d44`, `0x436f3fca`) e instala la vtable (`str r3,[r4]`, `0x436f3fde`). Reproduje índices 0/1 sin stubs y `+0x3d6=0xff`. Esto acredita el constructor bajo el arnés, no la inicialización integral del sistema.
+
+- **ACEPTO — VERIFICADO condicionado, C59-2/3:** reproduje las 12 parejas real/sintético: retornos 0, mismas 100 escrituras ordenadas y misma sombra. Con constructor real aparecen buffers **127/94/26 B** y base **`0xfc088300`**. Las cinco tramas de S58 corresponden al objeto sintético. Son escrituras MMIO emuladas, sin confirmación eléctrica del bus.
+
+- **CORRIJO — PARCIAL, C59-5:** la lista blanca `{0x0b,0x35,0x37,0x38}` está verificada mediante `cmp/beq/bne` en `0x436f5b88–0x436f5b96`. Sin embargo, la descripción del bit de depuración omite una excepción: `0x436f5d9a–0x436f5d9c` trata **`0xff` como desactivado**, aunque tenga el bit 0.
+
+- **ACEPTO — VERIFICADO:** `[dbg+0xc]` puede **eludir** la lista blanca mediante `cbnz r0,0x436f5b98` (`0x436f5b82`); no modifica sus comparaciones. Con modo `0x4e`, probé valores `0xff/0/1/2`: solo **1** produjo `0x1000/0x1001`. El bloque es `0x43dc02e0`, distinto de `OVR=0x43de4910`; su byte inicial aquí es 0.
+
+- **RECHAZO — DESCARTADO como equivalencia de ejecución, C59-7:** «solo difieren los emisores» únicamente describe conjuntos de funciones aproximados. Reproduje Execute: **17045/17035/17003 instrucciones** para `0x0b/0x4c/0x4e`. También difieren bloques internos: `0x436f5770–0x436f57ce` selecciona ramas distintas; `0x436f4708` carga `[r3+0x50]` en `0x4c`. Por tanto, `0x4c` y `0x4e` **sí difieren dentro de Execute**.
+
+- **CORRIJO — PARCIAL:** `modediff.py:10` atribuye cada PC al último `push …lr`, sin límites reales de función. Por eso etiqueta `0x43ada07a` como `0x43ada062/07c`. Además, sus propios JSON muestran diferencias adicionales en SetMode/SetRead entre `0x0b` y `0x4c`; la afirmación sobre los cuatro métodos tampoco se sostiene literalmente.
+
+- **ACEPTO — VERIFICADO con alcance acotado, C59-8:** barrí los **11 455 416 bytes**, buscando BL/BLX Thumb inmediatos: único resultado **`0x436f5b40: bl 0x436f459c`**. También busqué ARM BL, Thumb B.W y punteros literales par/impar al helper: ninguno. Esto acredita el único llamador directo encontrado; no excluye destinos calculados indirectamente.
+
+- **CORRIJO — PARCIAL:** la guarda `0x436f5b14–0x436f5b24` confirma la excepción `cur=0x11, prev∈{0,0x11}`. El contexto SetRead respalda interpretar `+0x3d7` como petición asociada a ganancia; **no demuestra por sí solo** que su efecto eléctrico carezca de relación con exposición.
+
+- **CORRIJO — PARCIAL, C59-9:** los campos de sustitución abarcan más que `+0x50..+0x55`: foto usa `+0x50..53`, `0x4c/4d` usa `+0x54..57`, y `0x4e..51` usa `+0x5c..5f` (`0x436f57d0/580c/5842/587e/592e/596a`). La agrupación existe; su significado físico sigue sin determinarse.
+
+- **ACEPTO — PARCIAL en alcanzabilidad:** SetMode admite e instala estos modos (`str …[O+0x1ac]`, `0x436f3b5a`), y los cuatro métodos terminan bajo el arnés. **NO VERIFICADO:** que el estado completo y los argumentos impuestos sean alcanzables desde una captura real.
+
+- **ACEPTO — NO VERIFICADO en servicios:** página 0 mapeada, memoria ausente rellenada, llamadas externas sustituidas y mitigación ITSTATE condicionan los resultados. Observé **34** llamadas stub a `0x439b3918` en `0x4c/4d`, frente a **24** en los restantes; C59-10 no refleja esa variación y omite `0x438f7114`.
+
+- **ACEPTO — INFERENCIA, C59-6:** máscara de unidad y registros tipados en `0x438f6840/6864` son compatibles con trazas/telemetría. **HIPÓTESIS:** los mensajes informan parámetros solo para ciertos grupos. Su ausencia queda explicada por la guarda ensayada; no prueba ausencia de control Silent ni identifica al receptor.
+
+- **CORRIJO — contradicciones:** S59 corrige justificadamente la fragmentación de S58 y reduce la incertidumbre sobre mensajes. Pero `s59-claude.md:24` afirma que no se emuló el constructor, contradiciendo C59-1. Tampoco queda demostrado que «el fin de integración no es un evento de C_Imager»: solo falta identificarlo en esta cobertura. No encontré contradicción técnica directa con **s59-sol.md**, dedicado al IMX210 y con límites físicos explícitos.
+
+**Pruebas realizadas:** 7/7 tests aprobados; 12 comparaciones real/sintético; constructores 0/1; trazas por etapa de tres modos; cuatro variantes de depuración; barridos y desensamblado directo. SHA A7S coincide. Los tests no comprueban C59-7 ni la excepción `dbg=0xff`.
+
+No modifiqué archivos ni ejecuté los generadores que escriben JSON. Receptores, alcanzabilidad integral y respuesta del sensor permanecen sin verificar; S51 no cambia.
+
+REA no se utilizó para verificar: la revisión automática de aprobación rechazó `binary_session` porque requiere aprobación y la política es `never`; las comprobaciones independientes se hicieron con bytes, Capstone y Unicorn.

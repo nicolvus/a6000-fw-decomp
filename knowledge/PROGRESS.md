@@ -1632,3 +1632,11 @@ Próximo (no iniciado): traza pasiva autorizada de `MSS_SO_DWN`/bobinas, consumi
 - Correcciones: B de ID1 es copia de A (no valor propio); no se reproduce «ShutMode 4 escrito en captura»; el pulso ocupa dos bloques de trama separados por una cabecera de 5 B.
 - Frontera: productor AE de las filas de banco (`S+0xC4…0xD8`), unidades de svd/shd/spl, ID1 eléctrico, XPI, evento que activa las banderas del P2S, tabla de categorías de AdjustCmd.
 - Próximo exacto: `trace_native_values` sobre el pipeline AE; o traza pasiva CIS0/XPI/VD autorizada. S51 se mantiene.
+
+
+## S59 — Claude + GPT-6.1 Sol: bloque IMX210 `+0xDD0` y constructor real C_Imager A7S (20-10-2026)
+- Hecho: GPT (`codex exec`, gpt-6.1-sol/medium) recuperó el escritor `0x43b00da0` del bloque `0x437876dc()+0xdd0` (publicación `0x43b00dd4`, fuente `obj+0xd64`), corrigió la atribución de `clk` de S58 y delimitó VdNum/host (`docs/capture/s59-sol.md`, `tests/test_s59_sol.py` 11/11). Claude localizó y emuló el constructor real `C_Imager` `0x436f3fc0` y rehízo los escenarios (`analysis/s59/claude/`, `tests/test_s59_claude.py` 9/9). Revisión cruzada de GPT (solo lectura) → CAMBIOS aplicados.
+- Hallazgos: M no es constante de construcción (payload externo); S58-C base/tramas P2S eran artefactos (real `0xfc088300`, 3 tramas), registros intactos (100 escrituras); mensajes `0x1000/0x1001` = lista blanca de modos; Execute sin ramas de registros exclusivas de Silent bajo depuración `0xff`; consumidor de ganancia con único llamador directo.
+- Herramientas: REA (1 sesión A7S + 1 sesión A6000 de GPT, cerradas), Capstone, Unicorn; sin dependencias nuevas.
+- Frontera: emisor del payload de `0x438069f0` (origen M/Tv/clk), receptores de `0x1000/0x1001`, servicios Darwin/OSAL stub, física del sensor.
+- Próximo exacto: sembrar Thumb en los emisores/receptores anteriores; traza pasiva CIS0+XPI+VD autorizada. S51 se mantiene.
