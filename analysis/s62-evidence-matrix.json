@@ -1,0 +1,123 @@
+{
+ "phase": "S62",
+ "date": "2026-10-20",
+ "baseline": "S61",
+ "sha256": {
+  "firmware.fdat A6000 3.21": "603b42ec9d2dd66b91e38c15a6a23e860fb8af46a072050903506672036f0f90",
+  "CX77500_ALLLANG.bin": "ff67f1ab81fbebcfe12000ba396dac546997c7fbf5042e8b3c2a55a7a202cd4b",
+  "av-cam A6000": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
+ },
+ "s51": {"A": "NO", "B": "NO", "C": "NO"},
+ "entries": [
+  {
+   "id": "S62-01",
+   "model": "A6000",
+   "claim": "`bk w` es la escritura de una propiedad BK4: `CameraShell.writeBackup` -> backend (`BKWR` en updater, AdjustControl 0x603/2 en senser)",
+   "status": "VERIFICADO",
+   "validation_method": "lectura de fuente PMCA v0.17 (sin ejecutar)",
+   "test": "tests/test_s62_backup_modelname.py (indirecto: misma ruta de datos)",
+   "evidence": "references/pmca/pmca/platform/__init__.py:111-119; platform/backend/usb/__init__.py:101-104; usb/sony.py:1041-1042; updatershell/usbshell.cpp:155-167",
+   "limitations": "No ejecutado contra cámara"
+  },
+  {
+   "id": "S62-02",
+   "model": "A6000",
+   "claim": "`0x003e0005` no es dirección ni offset: es id BK4 = subsistema 0x3e (62) | índice 5 = `modelName` (16 B)",
+   "status": "VERIFICADO",
+   "validation_method": "fuente + parser BK4 sobre el preset + test",
+   "test": "tests/test_s62_backup_modelname.py::ModelNameProperty.test_property_id_is_subsystem_3e_index_5",
+   "evidence": "references/pmca/pmca/backup/__init__.py:109-114; platform/backup.py:169",
+   "limitations": "El offset dentro del blob depende de la tabla de cada unidad"
+  },
+  {
+   "id": "S62-03",
+   "model": "A6000",
+   "claim": "Preset de fábrica `0110_backup/SYSMUSASHI-DSLR/DM_UUD3/CX77500_ALLLANG.bin`: `0x003e0005` attr 0x01, 16 B, `ILCE-6000` + 7 NUL; una sola aparición de `ILCE-`",
+   "status": "VERIFICADO",
+   "validation_method": "bytes (SHA-256 del blob) + test",
+   "test": "tests/test_s62_backup_modelname.py::test_model_name_is_ilce_6000_16_bytes_read_only",
+   "evidence": "firmware.fdat 3.21, miembro tar citado",
+   "limitations": "Preset, no volcado de NVRAM de una unidad concreta"
+  },
+  {
+   "id": "S62-04",
+   "model": "A6000",
+   "claim": "Header del fdat 3.21: magic UDTRFIRM, `model = 0x41030035`, versión 3.21, `firmwareOffset = 0x23200`; el guard es CRC + modelo/región/versión, no firma",
+   "status": "VERIFICADO",
+   "validation_method": "bytes del header + fuente fwtool",
+   "test": "tests/test_s62_backup_modelname.py::test_fdat_header_is_numeric_model_guard",
+   "evidence": "references/fwtool/fwtool/sony/fdat.py:32-56, 298-340; references/fwtool/devices.yml:400-403",
+   "limitations": "La validación la hace el updater de la cámara; no ejecutada"
+  },
+  {
+   "id": "S62-05",
+   "model": "plataforma",
+   "claim": "`updatershell`: `libupdaterbody` en cramfs `/bodylib/`, envuelto en fdat, cifrado de plataforma, ejecutado por el updater (mount de /dev/nflasha2 en /setting + usbshell_loop)",
+   "status": "VERIFICADO",
+   "validation_method": "fuente PMCA + SDK updater (submódulo OpenMemories-Platform no incluido)",
+   "test": "n/a",
+   "evidence": "references/pmca/updatershell/{updaterbody.cpp,usbshell.cpp,pack.py}; README.md:45-49",
+   "limitations": "Contrato de carga (GetBody/Execute) inferido del SDK; no ejecutado"
+  },
+  {
+   "id": "S62-06",
+   "model": "plataforma",
+   "claim": "Shell USB feature 0x23 con TEST/SHEL/PULL/PUSH/RMEM/BLDR/BK*/AMNT/AUMT/EXIT",
+   "status": "VERIFICADO",
+   "validation_method": "fuente PMCA (C++ y Python)",
+   "test": "n/a",
+   "evidence": "references/pmca/updatershell/usbshell.cpp; pmca/platform/backend/usb/__init__.py",
+   "limitations": "Capacidades no ejecutadas"
+  },
+  {
+   "id": "S62-07",
+   "model": "plataforma",
+   "claim": "`serviceshell` (senser): StartSenser/StopSenser, HASP, ProductInfo/AdjustControl/FileControl/MemoryDump; backup 0x603/1-3, terminal 0x601/0x1f",
+   "status": "VERIFICADO",
+   "validation_method": "fuente PMCA",
+   "test": "n/a",
+   "evidence": "references/pmca/pmca/usb/sony.py:890-1057; platform/backend/senser.py",
+   "limitations": "No ejecutado; requiere libusb/Zadig"
+  },
+  {
+   "id": "S62-08",
+   "model": "A6000",
+   "claim": "`ILCE-6001` no aparece en el firmware 3.21 (av-cam.bin, nflasha15, nflasha16, fdat): no puede ser un match literal de tabla; `ILCE-6000` solo en presets de backup",
+   "status": "VERIFICADO (negativo)",
+   "validation_method": "barrido de cadenas sobre el árbol extraído",
+   "test": "tests/test_s62_backup_modelname.py::test_spoof_payload_has_same_size_and_absent_from_firmware (alcance: preset)",
+   "evidence": "este documento §5; barrido árbol fw321",
+   "limitations": "El barrido no cubre binarios comprimidos no extraídos"
+  },
+  {
+   "id": "S62-09",
+   "model": "A6000",
+   "claim": "Escribir `ILCE-6001` habilita un «shell mode»",
+   "status": "NO VERIFICADO",
+   "validation_method": "ninguno estático; solo reporte del usuario",
+   "test": "n/a",
+   "evidence": "procedimiento reportado (updatershell + bk w)",
+   "limitations": "Sin confirmación estática ni dinámica; el nombre es dato, no código"
+  },
+  {
+   "id": "S62-10",
+   "model": "plataforma",
+   "claim": "La reversión necesita `-m ILCE-6000` porque `updatershell` selecciona el fdat por el nombre reportado (`getCameraInfo().modelName` + `getFdat`)",
+   "status": "INFERENCIA",
+   "validation_method": "código + coherencia con el procedimiento",
+   "test": "n/a",
+   "evidence": "references/pmca/pmca/commands/usb.py:319-338, 350-370",
+   "limitations": "No ejecutado; depende de que el nombre reportado provenga del backup"
+  },
+  {
+   "id": "S62-11",
+   "model": "A6000",
+   "claim": "`modelCode` (0x00e70000, 5 B, attr 0x02) y `serialNumber` (0x00e70003, attr 0x02) son propiedades separadas de `modelName`",
+   "status": "VERIFICADO",
+   "validation_method": "parser BK4 + test",
+   "test": "tests/test_s62_backup_modelname.py::test_model_code_is_separate_and_protected",
+   "evidence": "preset citado",
+   "limitations": "Semántica del código no interpretada"
+  }
+ ]
+}

@@ -3,6 +3,12 @@
 Resumen operativo breve. Para el historial completo de decisiones, ver `knowledge/PROGRESS.md`.
 Para restricciones del proyecto (sin firmware ejecutado, sin flasheo, sin `git push`), ver `docs/STATE.md`.
 
+## S62 — PMCA: inyección de código, service shell y `modelName` (20-10-2026)
+
+**VERIFICADO (fuente + firmware):** `updatershell` inyecta un fdat propio (cramfs con `/bodylib/libupdaterbody.so`, header de 0x30 B por modelo, cifrado de plataforma, guard CRC + modelo/región/versión **sin firma**; familia CXD90014) que el updater ejecuta y que expone un shell USB `0x23` (`SHEL`/`PULL`/`PUSH`/`RMEM`/`BK*`). `serviceshell` (senser, HASP) da terminal + backup `0x603` + ficheros/memoria. `bk w 0x003e0005` no es una dirección ni un offset: es el id BK4 `subsistema 0x3e | índice 5` = `modelName` (16 B, attr `0x01`), escrito en el almacén `/setting` (`nflasha2`) vía `BKWR` o `0x603/2`; el preset de fábrica `CX77500_ALLLANG.bin` la trae como `ILCE-6000` + 7 NUL (`tests/test_s62_backup_modelname.py` 5/5). **NO VERIFICADO:** el efecto «shell mode» al escribir `ILCE-6001`; esa cadena no existe en el firmware 3.21 (solo `ILCE-6000` en presets), así que no es un match literal de tabla. S51 A=NO/B=NO/C=NO.
+
+[Documento](../docs/capture/s62-pmca-injection.md) · [matriz](../analysis/s62-evidence-matrix.json). Siguiente: lectores de `Backup_read` para `0x3e0005` (REA) o traza pasiva autorizada.
+
 ## S61 — origen de parámetros IMX210 y flujo de mensajes (20-10-2026)
 
 **A6000 (Claude, 22 tests):** TBH corregido (base `0x43806a08`; script/test de Sol actualizados). Bloque `obj+0xe20`: **A** (`0x437ab474`) escribe solo si `bit6(G[0xD])==0` con `G=0x43e964a4` (GOT+0x21a0; **no** el objeto de 0xF20 B: corrige S60) 6×`(G[0x168],G[0x16A])`; **B** (`0x43aecbec`) solo si `[[p]+0x3a]==1` (stage: 0 en `0x437a9d30`, `src+0xb4` en `0x437aa65c`, borrado si `G[0xD]` bit6). B ← `obj8=obj+0x2cc` ← P0 `0x43861ed0` (←`obj+0x2be..0x2d0`, origen NO localizado); 6.º par ← tabla BK4 `0x300AB` (idéntica en 5 `CX77500`: 18×`(0x2EA0,0x6028)`). Pares = ventanas lo/hi ±0x400 (H «tiempos» debilitada). Petición 9 ← `0x43b00ed8` ← **`HS_Main` `0x4378fef4`**; publicación ← **`VD_Pre` `0x43792a0c`**; petición 3 sin emisor; `0x8003030f`≈alias de `0x3030f`. Estados ALCANZABLES: 0 (un PERMITIDO). Fin electrónico **NO VERIFICADO**; **S51 A=NO/B=NO/C=NO.**
