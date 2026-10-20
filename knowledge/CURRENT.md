@@ -3,6 +3,12 @@
 Resumen operativo breve. Para el historial completo de decisiones, ver `knowledge/PROGRESS.md`.
 Para restricciones del proyecto (sin firmware ejecutado, sin flasheo, sin `git push`), ver `docs/STATE.md`.
 
+## S64 — prueba en cámara de SilentShutter (20-10-2026)
+
+**VERIFICADO:** escribir `1` en `0x83edf8bc` (service mode, `dd`/dev/mem) y restaurar; NVRAM `flash` sin cambios y RAM 4 MB sin cambios atribuibles al modo (control en otra dirección da los mismos artefactos). Estático: `0x43804610` reinicializa el bloque (`+0x238`/`+0x280`=0) leyendo un byte de backup; ningún lector/escritor de backup ligado a `+0x238`. Sin consumidor de captura. S51 se mantiene.
+
+[Detalle](../docs/capture/s64-silent-ram-nvram-test.md). Siguiente: llamadora `0x437881a8` (¿cuándo se inicializa?), handler hermano `0x43802614`, trazar `+0x280` en el objeto de trabajo.
+
 ## S62 — PMCA: inyección de código, service shell y `modelName` (20-10-2026)
 
 **VERIFICADO (fuente + firmware):** `updatershell` inyecta un fdat propio (cramfs con `/bodylib/libupdaterbody.so`, header de 0x30 B por modelo, cifrado de plataforma, guard CRC + modelo/región/versión **sin firma**; familia CXD90014) que el updater ejecuta y que expone un shell USB `0x23` (`SHEL`/`PULL`/`PUSH`/`RMEM`/`BK*`). `serviceshell` (senser, HASP) da terminal + backup `0x603` + ficheros/memoria. `bk w 0x003e0005` no es una dirección ni un offset: es el id BK4 `subsistema 0x3e | índice 5` = `modelName` (16 B, attr `0x01`), escrito en el almacén `/setting` (`nflasha2`) vía `BKWR` o `0x603/2`; el preset de fábrica `CX77500_ALLLANG.bin` la trae como `ILCE-6000` + 7 NUL (`tests/test_s62_backup_modelname.py` 5/5). **NO VERIFICADO:** el efecto «shell mode» al escribir `ILCE-6001`; esa cadena no existe en el firmware 3.21 (solo `ILCE-6000` en presets), así que no es un match literal de tabla. S51 A=NO/B=NO/C=NO.
