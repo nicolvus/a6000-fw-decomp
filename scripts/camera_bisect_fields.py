@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Fuerza una palabra del espejo 0x83edf684+off a un valor durante ~3 s (solo RAM), restaura y comprueba que la cámara sigue viva.
-Uso: camera_bisect_fields.py VALOR OFF1 OFF2 ...   (offsets hex dentro del bloque)"""
+Uso: [BASE=0x83e9b548] [SHOOT=1] camera_bisect_fields.py VALOR OFF1 OFF2 ...   (offsets hex dentro del bloque)"""
 import os, re, socket, sys, time, urllib.request
 sys.path.insert(0, __file__.rsplit('/', 1)[0])
 from camera_telnet import run
 
-HOST, BASEW = '192.168.1.29', 0x83edf684 // 4
+HOST, BASEW = '192.168.1.29', int(os.environ.get('BASE', '0x83edf684'), 16) // 4  # BASE: físico del bloque/copia
 val = int(sys.argv[1])
 
 

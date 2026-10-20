@@ -71,3 +71,12 @@ Barrido lineal de `av-cam`: 882 sitios `+0x238/+0x280` (872 Thumb, 10 ARM); solo
 
 - `scripts/camera_bisect_fields.py` (`SHOOT=1`): cada palabra del espejo `+0x234…+0x254` (9 campos) forzada a 1 durante un disparo remoto: 9/9 disparos correctos; **el usuario oyó el obturador igual en todos**. Sin escritura (8 disparos) y con `+0x230` reescrito a su valor (3 veces): sin reinicio, por lo que los dos reinicios previos no se reproducen y no se atribuyen a un campo (NO VERIFICADO la causa).
 - Valor 2 y copia de trabajo para estos campos: no probados.
+
+## Búsqueda estática del lector de la captura (2026-10-20)
+
+Sesión REA sobre `av-cam.bin` (REA no reconoce las funciones Thumb de esta zona: «no procedure starts at…»; se completó con capstone y `silent-liro.gpr` en solo lectura).
+
+- **Copia de trabajo** (`0x437dfd58`): `memcpy(0x43ed4d28+0x48, bloque, 0x560)`. Sus 15 accesos PIC (`0x437dfb08…0x437e00fc`) son getters; los 14 llamadores de `0x437dfe4c` (retorno = obj+8) **no leen** `+0x278/+0x250/+0x280/+0x238` del retorno. Los accesos `[rX,#0x278/#0x280]` restantes (41/38 en todo el código) son otros objetos: bytes de tablas de ID (`0x4371b8a0`→ struct estática `0x43e86bbc`), `short*` (offset ×2) o contadores; ninguno es lector de Silent.
+- **Selector `0x43804c38`**: solo 6 llamadores, accesores de campo (`+0xa5`, `+0x1f3`, `+0x2c4`…); ninguno lee `+0x238`.
+- **`0x43804c5c`** (único llamador `0x43792d9e`, dentro de `0x43792a0c`): copia el bloque de 0x560 B **a `0x43e9b548`** ("instantánea actual", usada por ~170 sitios PIC en `0x4378e93c…0x4379467e`) conservando unos campos. Esta instantánea es el candidato nuevo: `0x43e9b548+0x238` = `0x43e9b780` (físico `0x83e9b780`, palabra 553283040). Los lectores directos de esa base no cargan `+0x238` (solo el descartado `0x43792fb4`, otra estructura).
+- NO VERIFICADO: que la instantánea `0x43e9b548` esté viva en RAM ni que algo lea `+0x238` a través de punteros pasados a otras funciones. Prueba pendiente en cámara: comparar `0x83e9b548` con el espejo y forzar `+0x238` ahí (`BASE=0x83e9b548 SHOOT=1 scripts/camera_bisect_fields.py 1 0x238`). La cámara dejó de responder (`No route to host`); requiere que el usuario la reconecte.
