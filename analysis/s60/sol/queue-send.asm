@@ -1,0 +1,77 @@
+438063f6 nop 
+438063f8 ldrh r6, [r7, #0x18]
+438063fa lsls r1, r0, #2
+438063fc str r0, [r1, #0x58]
+438063fe movs r0, r0
+43806400 push {r4, r5, r6, r7, lr}
+43806402 sub sp, #0x1c
+43806404 mov r7, r0
+43806406 mov r5, r1
+43806408 ldr r0, [pc, #0x9c] ; lit=0x8003030f
+4380640a add r1, sp, #0x14
+4380640c movs r3, #0
+4380640e mov r6, r2
+43806410 bl #0x435612d0
+43806414 mov r4, r0
+43806416 cbz r0, #0x43806446
+43806418 ldr r3, [pc, #0x94] ; lit=0x4a8bc2
+4380641a movs r1, #0xd
+4380641c ldr r5, [pc, #0x94] ; lit=0x4a8d3d
+4380641e movs r2, #1
+43806420 str r0, [sp]
+43806422 add r3, pc
+43806424 movs r0, #3
+43806426 add r5, pc
+43806428 mov.w r6, #0x7b0
+4380642c str r5, [sp, #4]
+4380642e str r6, [sp, #8]
+43806430 bl #0x43805604
+43806434 ldr r0, [pc, #0x80] ; lit=0x49d7f4
+43806436 mov r1, r4
+43806438 mov r2, r5
+4380643a mov r3, r6
+4380643c add r0, pc
+4380643e bl #0x43902718
+43806442 movs r0, #0
+43806444 b #0x438064a4
+43806446 ldr r0, [sp, #0x14]
+43806448 ldr r1, [pc, #0x60] ; lit=0x3030f
+4380644a bl #0x43b00b42
+4380644e mov r2, r6
+43806450 mov r1, r5
+43806452 ldr r0, [sp, #0x14]
+43806454 blx #0x439c5320
+43806458 ldr r0, [pc, #0x4c] ; lit=0x8003030f
+4380645a ldr r1, [sp, #0x14]
+4380645c bl #0x4356120c
+43806460 mov r6, r0
+43806462 cbz r0, #0x4380649a
+43806464 ldr r1, [sp, #0x14]
+43806466 movw r7, #0x7bf
+4380646a ldr r0, [pc, #0x3c] ; lit=0x8003030f
+4380646c bl #0x435612ec
+43806470 ldr r3, [pc, #0x48] ; lit=0x4a8b6a
+43806472 ldr r5, [pc, #0x4c] ; lit=0x4a8ce7
+43806474 movs r0, #3
+43806476 movs r1, #0xd
+43806478 movs r2, #1
+4380647a add r3, pc
+4380647c add r5, pc
+4380647e str r6, [sp]
+43806480 str r5, [sp, #4]
+43806482 str r7, [sp, #8]
+43806484 bl #0x43805604
+43806488 ldr r0, [pc, #0x38] ; lit=0x49d7a0
+4380648a mov r1, r6
+4380648c mov r2, r5
+4380648e mov r3, r7
+43806490 add r0, pc
+43806492 bl #0x43902718
+43806496 mov r0, r4
+43806498 b #0x438064a4
+4380649a mov r0, r7
+4380649c mov r1, r5
+4380649e bl #0x43805ea8
+438064a2 movs r0, #1
+438064a4 add sp, #0x1c
+438064a6 pop {r4, r5, r6, r7, pc}
