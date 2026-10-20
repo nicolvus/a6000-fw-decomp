@@ -1,0 +1,19 @@
+### {'procedure': '0x43b0793e'}
+
+uint FUN_43b0792e(int param_1,int param_2,int param_3,int param_4)
+
+{
+  int iVar1;
+  short sVar2;
+  
+  if (param_3 < 1) {
+    sVar2 = (short)((uint)(param_4 * (param_2 - param_1) + 0xff) >> 8);
+  }
+  else {
+    sVar2 = (short)((uint)((param_2 - param_1) * param_4 + param_4 + -1) >> 8);
+  }
+  iVar1 = FUN_43b0791e((int)(short)(sVar2 + (short)param_3) << 8,param_4);
+  return param_1 + iVar1 & 0xffff;
+}
+
+

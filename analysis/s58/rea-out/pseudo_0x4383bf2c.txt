@@ -1,0 +1,47 @@
+### {'procedure': '0x4383bf2c'}
+
+void FUN_4383bf2c(int param_1,int param_2,undefined4 param_3,undefined4 param_4,undefined4 param_5,
+                 undefined4 param_6)
+
+{
+  undefined2 *puVar1;
+  int iVar2;
+  int iVar3;
+  int iVar4;
+  undefined2 *puVar5;
+  int iVar6;
+  
+  *(undefined2 *)(param_2 + 0x90) = 0;
+  iVar6 = DAT_4383bfc8;
+  FUN_4383c9dc();
+  FUN_4383b790(param_1,param_2,param_5,param_6);
+  iVar2 = FUN_437284b4();
+  if (iVar2 == 0) {
+    FUN_4383bfd4(param_1,param_2);
+    if (*(int *)(param_1 + 0x50) == 2) {
+      FUN_43b08786(param_1,param_2);
+    }
+  }
+  if (*(char *)(*(int *)(iVar6 + 0x4383bf4c + DAT_4383bfcc) + 0xca) == '\x01') {
+    *(undefined2 *)(param_2 + 0x94) = 0;
+    FUN_4383c818(param_1,param_2);
+    FUN_4383bad0(param_1,param_2);
+    iVar4 = 0;
+    iVar2 = *(int *)(iVar6 + 0x4383bf4c + DAT_4383bfd0);
+    puVar5 = (undefined2 *)(iVar2 + 0xecc);
+    iVar6 = param_2;
+    do {
+      iVar3 = iVar2 + iVar4;
+      iVar4 = iVar4 + 8;
+      FUN_439c5320(iVar3 + 0xeae,param_2 + 0xbe,8);
+      puVar1 = (undefined2 *)(iVar6 + 0xde);
+      param_2 = param_2 + 8;
+      iVar6 = iVar6 + 2;
+      puVar5 = puVar5 + 1;
+      *puVar5 = *puVar1;
+    } while (iVar4 != 0x20);
+  }
+  return;
+}
+
+

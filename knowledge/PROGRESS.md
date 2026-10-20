@@ -1037,7 +1037,17 @@ Sin cámara/ejecución/flasheo/instalaciones/push. Sin `.git`, sin commit.
 - La cadena EncodeStill documentada en `CONTEXT.md:26` no tiene cobertura en el grafo;
   decompilarla no es un bug del extractor.
 
+## S58 — continuación de Claude y cierre offline (20-10-2026)
+
+- Recuperados productores AE y emulación A7S bajo condiciones explícitas; seis informes en `docs/capture/s58-*.md`, 24 evidencias y 12 hipótesis. Se conservan exportaciones REA heredadas y firmware original.
+- Correcciones S57: identidad SetExposure/SetRead, matriz IMX235; auditoría adicional corrige parser que omitía DEV83 y equivalencia incondicional de fórmulas productor/host. Consumidor de petición AGC `0x436f459c` probado en cinco modos.
+- Verificación: 23 tests S58 y 60 S56/S57; campañas 600/600 y 300/300; ruff F/E9 y mypy con imports omitidos limpios en 25 archivos. Integridad: firmware 5/5, silent-liro 9/9, Ghidra 1328/1328. Detalle y comandos en [conclusiones](../docs/capture/s58-conclusions.md).
+- Mantenimiento de índice/grafo/derivados ejecutado; correcciones A7S documentadas con enlaces explícitos. S51 A=NO/B=NO/C=NO; sin hardware, instalaciones ni push. Constructor A7S y semántica eléctrica permanecen fuera de cobertura.
+- Validación de conocimiento: 61 tests ajenos al archivo MCP pasan. `test_mcp_server.py` se detiene por timeout de 15 s en `test_call_tool_get_current_state_reads_real_file` (espera asyncio/AnyIO); la suite completa se interrumpió tras 53 tests. No se modificó esa infraestructura; esta limitación queda abierta y el índice se comprobó mediante CLI.
+
 ## Próximo paso exacto
+
+**Vigente tras S58 (20-10-2026):** recuperar el escritor del bloque `0x437876dc()+0xdd0` que `0x437aa65c` copia como 12 u16, y sus restricciones por modo hasta M/Tv/clk. Reutilizar `analysis/s58/rea-out/` y `analysis/s58/reproduce.py`; no repetir matriz de S57 ni apertura REA en frío sin necesidad. Inicialización real A7S y efecto eléctrico de integración siguen pendientes. Las instrucciones S40 de abajo son históricas, no el próximo paso vigente.
 
 0. **Vigente después de S40:** seguir productores originales de mensajes
    case1/10 de438069f0 (43806a80/43806d50 toman mensaje+4/+8;

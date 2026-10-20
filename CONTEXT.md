@@ -1,5 +1,7 @@
 # Continuidad
 
+Estado vigente: **S58** (20-10-2026), [conclusiones](docs/capture/s58-conclusions.md), [checkpoint](knowledge/CURRENT.md). Productores AE y comparación A7S avanzaron; S51 permanece. Las sesiones descritas a continuación son antecedentes.
+
 Versión breve (18-10-2026). El historial íntegro de sesiones S1–S27 (y este mismo
 archivo antes de reducirse) está preservado sin cambios en
 [docs/history/CONTEXT-full-2026-10-18.md](docs/history/CONTEXT-full-2026-10-18.md),

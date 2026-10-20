@@ -1,0 +1,1144 @@
+{
+ "phase": "S58",
+ "date": "2026-10-20",
+ "sha256": {
+  "av_cam_a6000": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "av_cam_a7s": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+ },
+ "entries": [
+  {
+   "id": "S58-01",
+   "claim": "Cadena de temporización por fotograma (variante 0x51–0x54): 0x437b5e70 → 0x4383d18c (instantánea P→X) → 0x4383d704 (X→AEOUT3: n_i, shd_i, reloj fino_i por banco) → 0x4383bc6c (AEOUT3,P→G) → 0x4383bf2c (G→filas de 16 B + A_i,B_i)",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "0x437b5e70, 0x4383d18c, 0x4383d704, 0x4383bc6c, 0x4383bf2c",
+   "function": "pipeline AE (temporización)",
+   "data": "P=0x43eaee84, X=0x43ead7e0, AEOUT3=X+0x290=0x43eada70, G=0x43eb05d8, G224=G+0x224",
+   "references": [
+    "analysis/s58/rea-out/",
+    "analysis/s58/a2_trace.py",
+    "analysis/s58/a4_trace.py"
+   ],
+   "interpretation": "el pipeline AE contiene el cálculo numérico de svd/shd/spl (no solo copias de tablas)",
+   "status": "VERIFICADO",
+   "validation_method": "REA procedure_pseudo_code + llamadores (Capstone) + trazado de escrituras Unicorn",
+   "test": "tests/test_s58_timing_a7s.py::AETimingA6000",
+   "limitations": "existe una variante 0x437b5d30 (0x42–0x45, 0x4383ecf8) no analizada; llamada de 0x437b617e es indirecta"
+  },
+  {
+   "id": "S58-02",
+   "claim": "El bloque de temporización del modo se copia sin transformar: 0x43844e80 copia [X8+0x138..0x167] a P+0x4c4..0x4f3 y u16 [X8+0xcc] (VdNum) a P+0x4f4; 0x43843e94 guarda N=[X8+0x3c] en P+0x22c; 0x4383bc6c los lleva a G (G+0x16=svr=X8+0x14e, G+0x30=N, G+0x38=VdNum)",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "0x438451c2–0x438451ec, 0x43844998, 0x4383bc6c",
+   "function": "copia de parámetros de modo",
+   "data": "ldm/stm 12 palabras; strh [r4,#0x4f4]; str [r4,#0x22c]",
+   "references": [
+    "analysis/s58/"
+   ],
+   "interpretation": "productor y validador leen la misma tripleta; sus fórmulas NO coinciden incondicionalmente para VdNum>1",
+   "status": "VERIFICADO",
+   "validation_method": "desensamblado Capstone + REA",
+   "test": "tests/test_s58_timing_a7s.py::AETimingA6000",
+   "limitations": "el escritor original del bloque X8+0x138 (tablas de modo, 12 u16 de 0x43ae84c0()=0x437876dc()+0xdd0 y tablas param_2[…]) no se recuperó"
+  },
+  {
+   "id": "S58-03",
+   "claim": "Tv→tiempo: 0x4382fa94 aproxima 256e6·2^(−(Tv−0x1000)/256) con tabla y aritmética entera; Tv≤0xc00→0xffffffff",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "0x4382fa94 (K=0xf424000 en 0x4382fac4; exp2 0x43902924)",
+   "function": "Tv→T",
+   "data": "0x1000→256000000; 0x1100→128000000; 0x1800→1000000; 0xc01→4084937500",
+   "references": [
+    "analysis/s58/"
+   ],
+   "interpretation": "Tv en pasos de 1/256 EV con 0x1000 ≙ 256e6 ud",
+   "status": "VERIFICADO",
+   "validation_method": "Unicorn sobre el código real (9 puntos)",
+   "test": "tests/test_s58_timing_a7s.py::AETimingA6000",
+   "limitations": "unidad física 1/256 µs es INFERENCIA (S58-10); exp2 tabulada y truncada, no igualdad real exacta"
+  },
+  {
+   "id": "S58-04",
+   "claim": "0x4383d4d0(T,M,clk,&n,&shd,&spl): n=T/(F·svr); líneas=(resto−sb)/Lt; shd=máx(M[0x14],M[0x10]−líneas); spl_fino=máx(0,M[0x2c]−(1000·(resto−sb−Lt·líneas)/tick))",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "0x4383d4d0",
+   "function": "descomposición de T",
+   "data": "modelo Python == código real: 120 vectores en suite; campaña a6_verify: 600",
+   "references": [
+    "analysis/s58/"
+   ],
+   "interpretation": "descomposición en cociente, líneas y término fino; reconstrucción ideal sujeta a redondeo, clamps y overflow (no igualdad inversa universal)",
+   "status": "VERIFICADO",
+   "validation_method": "Unicorn, 300 vectores × 2 rellenos (incl. caso ITSTATE)",
+   "test": "tests/test_s58_timing_a7s.py::AETimingA6000",
+   "limitations": "valores reales de M por modo y el significado del argumento clk (X+0x5c ← P+0x4c0, u32 formado por dos u16 de 0x438667e0) no recuperados"
+  },
+  {
+   "id": "S58-05",
+   "claim": "Bucle de 4 bancos de 0x4383d704: T_i=0x4382fa94(Tv_i) con Tv_i=u16[AEOUT3+0xfc+2i]; salidas n_i→AEOUT3+0x348+4i, shd_i→+0x358+4i, fino_i→+0x368+4i; 0x4383bc6c las copia a G+0xd0/+0xb0/+0xc0",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "0x4383d704 (0x4383e01a…), 0x4383d5b8, 0x4383bc6c",
+   "function": "bucle por banco",
+   "data": "escrituras en 0x4383d50a/0x4383d578/0x4383d5ac",
+   "references": [
+    "analysis/s58/"
+   ],
+   "interpretation": "cuatro bancos = cuatro candidatos de exposición por fotograma",
+   "status": "VERIFICADO",
+   "validation_method": "trazado de escrituras Unicorn + pseudo-código REA",
+   "test": "tests/test_s58_timing_a7s.py::AETimingA6000",
+   "limitations": "origen de Tv_i (AE core) no recuperado; override por [param_1+0xb2] cuando flags 0x13f/0xa0"
+  },
+  {
+   "id": "S58-06",
+   "claim": "Filas de 16 B por banco (0x4383c9dc): shd=word0 = mín(shd_i+G[0x18]·(N−1−n_i)·flag, G[0x10]) ≥ G[0x14]; svd = clamp((svr·(N−f)/VdNum)−1); spl = clamp(máx(0,(svr·N/VdNum−1)−n_i·svr), ≤svd); fino_i va a +10",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "0x4383c9dc",
+   "function": "constructor de filas",
+   "data": "build_rows == código real: 80 vectores en suite; campaña a7_verify 150: 300",
+   "references": [
+    "analysis/s58/"
+   ],
+   "interpretation": "spl es un remanente aritmético de pasos; el host usa N/VdNum−1 para VdNum>1, frente a N·svr/VdNum−1 del productor antes de recortes",
+   "status": "VERIFICADO",
+   "validation_method": "Unicorn sobre código real",
+   "test": "tests/test_s58_timing_a7s.py::AETimingA6000",
+   "limitations": "depende de FUN_436f059c (stub 0) y de bytes de depuración (a 0); semántica física de los campos: INFERENCIA"
+  },
+  {
+   "id": "S58-07",
+   "claim": "Fila → SetExposure: 0x43b0893c copia la fila del banco S[0] (S+4+16·b) a S+0xc4; 0x43849fb8 la deja en arg[0..0xf] (shd=arg+0, svd=arg+4, spl=arg+6); S+0xd4/0xd8 → arg+0x10/0x14",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "0x43b0893c, 0x43849fb8, 0x43843a44",
+   "function": "fila→arg",
+   "data": "Unicorn: banco 2 → arg idéntico",
+   "references": [
+    "analysis/s58/"
+   ],
+   "interpretation": "enlaces estáticos y dos tramos emulados; no se ejecutó AE completo hasta P2S en una única llamada",
+   "status": "VERIFICADO",
+   "validation_method": "Unicorn",
+   "test": "tests/test_s58_timing_a7s.py::AETimingA6000",
+   "limitations": "0x43843a44 copia S+0x64.. (staging) a S+4.. según modo (no emulado)"
+  },
+  {
+   "id": "S58-08",
+   "claim": "A_i y B_i por banco (0x4383b790 + 0x43b08684): B∈[0x801,0x1800] (constantes de 0x4383c7a8/0x4383c7c4), reparto con 0x1000; se guardan en G224+0x6e+6i y +0x86+2i",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "0x4383b790, 0x43b08684, 0x4383c7a8, 0x4383c7c4",
+   "function": "valores A/B",
+   "data": "pseudo-código REA",
+   "references": [
+    "analysis/s58/"
+   ],
+   "interpretation": "se envían a arg+0x10/arg+0x1e; significado desconocido",
+   "status": "PARCIAL",
+   "validation_method": "REA + desensamblado",
+   "test": "—",
+   "limitations": "sin emulación dedicada; semántica NO_VERIFICADO"
+  },
+  {
+   "id": "S58-09",
+   "claim": "Escenarios 1/4000…1 s con M SINTÉTICO (lt=4096, vmax=4176, hmax=864, F=vmax·lt, svr=1, reloj 54 MHz): Tv 0x1bf7,0x19f7,0x17f7,0x15e8,0x1200,0x1000 → (n,shd,spl) = (0,4161,316),(0,4114,397),(0,3926,723),(0,3134,754),(3,1079,864),(14,140,864)",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "0x4382fa94 + 0x4383d4d0",
+   "function": "escenarios",
+   "data": "analysis/s58/out/a6000_timing_scenarios.json",
+   "references": [
+    "analysis/s58/"
+   ],
+   "interpretation": "solo ilustran la transformación; NO son valores reales del firmware",
+   "status": "VERIFICADO",
+   "validation_method": "Unicorn",
+   "test": "tests/test_s58_timing_a7s.py::AETimingA6000",
+   "limitations": "M sintético: ninguna velocidad real asociada"
+  },
+  {
+   "id": "S58-10",
+   "claim": "Unidad de T: con clk=0, tick=0xde3 ≙ 72 MHz ⇒ 1 unidad = 1/256 µs, Tv 0x1000 ≙ 1 s, T máx = 16,78 s",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "0x4383d4d0 (0x4383d4fa)",
+   "function": "unidad",
+   "data": "sl=256e6/(clk/1000); 0xde3=3555",
+   "references": [
+    "analysis/s58/"
+   ],
+   "interpretation": "coherente con 72 MHz por defecto",
+   "status": "INFERENCIA",
+   "validation_method": "aritmética",
+   "test": "—",
+   "limitations": "el valor de clk (u32 en P+0x4c0) no es una frecuencia demostrada; sin datasheet"
+  },
+  {
+   "id": "S58-11",
+   "claim": "Tablas de modo 0x0b y 0x2f: ab12 = [864, 4176, 0] en 0x43bc1ae8 (HMAX, VMAX); 864·4176 = 3 608 064 → 66,8 ms solo si el reloj es 54 MHz (inferencia heredada de docs)",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "0x43bc1ae8, 0x43bc1b84",
+   "function": "tablas ctor C_Imager",
+   "data": "analysis/imx210-drvparam-inputs.json",
+   "references": [
+    "analysis/s58/"
+   ],
+   "interpretation": "HMAX/VMAX candidatos de M[0x2c]/M[0x10]; vínculo con M NO demostrado",
+   "status": "NO_VERIFICADO",
+   "validation_method": "bytes",
+   "test": "—",
+   "limitations": "no se localizó la copia tabla→X8+0x138"
+  },
+  {
+   "id": "S58-12",
+   "claim": "IDENTIDAD A7S: vtable 0x43fce050: SetMode +0x20=0x436f3b44, SetExposure +0x28=0x436f4168, SetRead +0x30=0x436f4a94, Execute +0x38=0x436f5a14. CORRECCIÓN S57: SetExposure A7S NO es 0x436f4a94 (es SetRead)",
+   "model": "A7S",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "address": "0x43fce050+0x20/0x28/0x30/0x38",
+   "function": "vtable C_Imager A7S",
+   "data": "cadenas: SetExposure «SHR» y «[svd][shd][spl][shut]» en 0x436f4168; «Read. [AGCont]…» en 0x436f4a94",
+   "references": [
+    "analysis/s58/"
+   ],
+   "interpretation": "S57-B atribuía a SetExposure el pulso arg+2>0x1000",
+   "status": "VERIFICADO",
+   "validation_method": "bytes + cadenas PIC",
+   "test": "tests/test_s58_timing_a7s.py::Integrity",
+   "limitations": "ctor A7S no localizado"
+  },
+  {
+   "id": "S58-13",
+   "claim": "CORRECCIÓN S57-D: la matriz IMX235 tiene filas de 0x14 B {ptr + 16 columnas}, 69 filas, 15 columnas usadas; columna = maptab[idx_modo] (34 B en 0x43c9c5b5): 0x0b→0, 0x35→1, 0x4c/0x4d→5, 0x4e/0x50→12, 0x4f/0x51→13",
+   "model": "A7S",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "address": "matriz 0x43fee598; maptab 0x43c9c5b5; cargador 0x436f3928 (vtable+0xa0)",
+   "function": "SetMode (carga de columna)",
+   "data": "out/a7s_matrix_corrected.json",
+   "references": [
+    "analysis/s58/"
+   ],
+   "interpretation": "S57 usó paso 40 B × 34 modos (mezcla de filas)",
+   "status": "VERIFICADO",
+   "validation_method": "bytes + SetMode emulado 69/69 en 6 modos",
+   "test": "tests/test_s58_timing_a7s.py::A7SMatrix",
+   "limitations": "matriz B (NTPAL, 0x43e8de00) es BSS a cero"
+  },
+  {
+   "id": "S58-14",
+   "claim": "Diferencias reales entre columnas: 0x4c↔0x4e: 14 registros; 0x4d↔0x4f: 11; 0x4e↔0x4f: 4 (0x01,0x09,0x0a,0x0b = mismo conjunto que 0x0b↔0x35); 0x4c≡0x4d: 0; 0x0b↔0x4e: 45 (S52 decía 45/69)",
+   "model": "A7S",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "address": "columnas 5, 12, 13, 0, 1",
+   "function": "comparación de columnas",
+   "data": "0x4c↔0x4e: 0x01,0x08,0x09,0x0a,0x0b,0x0c,0x11,0x1f,0x28,0x3c,0x50,0x51,0x55,0x9a",
+   "references": [
+    "analysis/s58/"
+   ],
+   "interpretation": "Silent no es «variante de 1 registro» de 0x4c: ventana 0x08–0x0c igual a la del modo foto (0x0b), resto propio",
+   "status": "VERIFICADO",
+   "validation_method": "bytes",
+   "test": "tests/test_s58_timing_a7s.py::A7SMatrix",
+   "limitations": "significado de los registros sin datasheet"
+  },
+  {
+   "id": "S58-15",
+   "claim": "SetExposure A7S (0x436f4168) escribe svd(12 b)→0x02/0x03, spl(12 b)→0x04/0x05, shd(14 b)→0x06/0x07 (bits altos preservados) y reg 0x00 bit 3 (tipo SSB)",
+   "model": "A7S",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "address": "0x436f4168",
+   "function": "SetExposure",
+   "data": "60 vectores (30 entradas × 2 rellenos) en la suite",
+   "references": [
+    "analysis/s58/"
+   ],
+   "interpretation": "misma tripleta svd/shd/spl que el IMX210 (regs 3–8) en otras direcciones",
+   "status": "VERIFICADO",
+   "validation_method": "Unicorn sobre código real",
+   "test": "tests/test_s58_timing_a7s.py::A7SExposure",
+   "limitations": "objeto C_Imager sin constructor; parámetros de depuración 0xFF asumidos"
+  },
+  {
+   "id": "S58-16",
+   "claim": "ShutMode A7S: 0,1,3,4 válidos; 2 y ≥5 → error 1; reg 0x01 = 0x00/0x04/·/0x14/0x40 (modo 0x4e)",
+   "model": "A7S",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "address": "0x436f4168 (tbb 0x436f4242)",
+   "function": "ShutMode",
+   "data": "Unicorn",
+   "references": [
+    "analysis/s58/"
+   ],
+   "interpretation": "ShutMode 2 no se admite en la A7S (como en S57)",
+   "status": "VERIFICADO",
+   "validation_method": "Unicorn",
+   "test": "tests/test_s58_timing_a7s.py::A7SExposure",
+   "limitations": "significado de bits desconocido"
+  },
+  {
+   "id": "S58-17",
+   "claim": "El «pulso» arg+2>0x1000 de la A7S está en SetRead (código de ganancia AGC): fija [O+0x3d7]=1 y ajusta el código; no es SetExposure ni fin de exposición",
+   "model": "A7S",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "address": "0x436f4b10",
+   "function": "SetRead",
+   "data": "AGC 0x1000→0; 0x1001→1",
+   "references": [
+    "analysis/s58/"
+   ],
+   "interpretation": "CORRECCIÓN de S57-B (atribución a SetExposure)",
+   "status": "VERIFICADO",
+   "validation_method": "Unicorn",
+   "test": "tests/test_s58_timing_a7s.py::A7SExposure",
+   "limitations": "efecto eléctrico (conmutación de ganancia) INFERENCIA"
+  },
+  {
+   "id": "S58-18",
+   "claim": "Execute A7S: 5 transacciones P2S, 100 escrituras (99 al dispositivo 0x81 y 1 a 0x83:0x17=0x4a), formato 81|03|DEV|ADDR8|DATO y terminador 00",
+   "model": "A7S",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "address": "0x436f5a14, 0x436f26c8, 0x43ad9666",
+   "function": "Execute/P2S",
+   "data": "out/a7s_scenarios.json",
+   "references": [
+    "analysis/s58/"
+   ],
+   "interpretation": "el decodificador inicial omitía 0x83; device_regs conserva dispositivos, duplicados y orden",
+   "status": "VERIFICADO",
+   "validation_method": "Unicorn",
+   "test": "tests/test_s58_timing_a7s.py::A7SExecute",
+   "limitations": "periférico físico no simulado"
+  },
+  {
+   "id": "S58-19",
+   "claim": "Estado efectivo transmitido: ShutMode solo cambia reg 0x01; SetExposure/SetRead aplican los mismos cambios en 0x4c y 0x4e; las diferencias Silent están en la columna de SetMode",
+   "model": "A7S",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "address": "estado tras Execute",
+   "function": "estado efectivo",
+   "data": "14 regs (0x4c↔0x4e), 4 (0x4e↔0x4f)",
+   "references": [
+    "analysis/s58/"
+   ],
+   "interpretation": "H58-6 descartada en el rango emulado",
+   "status": "VERIFICADO",
+   "validation_method": "Unicorn",
+   "test": "tests/test_s58_timing_a7s.py::A7SExecute",
+   "limitations": "rutas de SetExposure con parámetros reales de AE no emuladas"
+  },
+  {
+   "id": "S58-20",
+   "claim": "Execute envía 2 mensajes inter-procesador (0x438f6864; ids 0x1000/0x1001, canal 1) incondicionalmente en modos 0x0b/0x35/0x37/0x38; en 0x4c/0x4d/0x4e/0x4f no (con estado de driver a cero); no existe en el C_Imager A6000",
+   "model": "A7S",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "address": "0x436f5b84–0x436f5ba6; 0x43ada07a/0x43ada0b4",
+   "function": "mensajes Execute",
+   "data": "r2/r3 con valores por defecto",
+   "references": [
+    "analysis/s58/"
+   ],
+   "interpretation": "diferencia funcional A7S sin equivalente identificado en A6000",
+   "status": "PARCIAL",
+   "validation_method": "Unicorn + desensamblado",
+   "test": "tests/test_s58_timing_a7s.py::A7SExecute",
+   "limitations": "receptor del mensaje y condición de 0x436f5d90 no analizados"
+  },
+  {
+   "id": "S58-21",
+   "claim": "Se ejecuta la configuración anticipada SetExposure→Execute; el escenario no ejecuta un evento posterior de fin de exposición",
+   "model": "both",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9 | b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "address": "SetExposure/Execute",
+   "function": "ausencia de comando de fin",
+   "data": "S57 + S58",
+   "references": [
+    "analysis/s58/"
+   ],
+   "interpretation": "compatible con terminación autónoma del sensor, NO demostrada",
+   "status": "INFERENCIA",
+   "validation_method": "ausencia (no es prueba)",
+   "test": "—",
+   "limitations": "la ausencia en ExposureTimerEnd de A6000 procede de S57; la secuencia temporal completa A7S no se emula"
+  },
+  {
+   "id": "S58-22",
+   "claim": "Harness: mitigación ITSTATE reproducida en el vector de regresión; límite de instrucciones debe alcanzar el retorno; 60 tests S56/S57 pasan sin modificaciones",
+   "model": "both",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9 | b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "address": "analysis/s58/wtrace.py",
+   "function": "metodología",
+   "data": "598/600 → 600/600",
+   "references": [
+    "analysis/s58/"
+   ],
+   "interpretation": "riesgo de falsos negativos de emulación Thumb",
+   "status": "VERIFICADO",
+   "validation_method": "Unicorn",
+   "test": "tests/test_s58_timing_a7s.py::Itstate",
+   "limitations": "la mitigación no prueba un defecto general de Unicorn; barrido Thumb lineal puede incluir datos, sin equivalencia exhaustiva"
+  },
+  {
+   "id": "S58-23",
+   "claim": "Fin electrónico de integración a resolución completa: NO VERIFICADO; S51 se mantiene (A=NO, B=NO, C=NO)",
+   "model": "A6000",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "address": "—",
+   "function": "S51",
+   "data": "sin medición",
+   "references": [
+    "analysis/s58/"
+   ],
+   "interpretation": "hay parámetros de temporización; su relación eléctrica con reset, fin de integración y lectura sigue sin demostrarse",
+   "status": "NO_VERIFICADO",
+   "validation_method": "cierre de evidencias",
+   "test": "—",
+   "limitations": "datasheet IMX210 o traza pasiva CIS0+XPI+VD"
+  },
+  {
+   "id": "S58-24",
+   "claim": "El consumidor 0x436f459c lleva O+0x3d7 al bit 4 del registro 0x81:0x5f y borra la petición; una segunda llamada borra ese bit, en foto y Silent",
+   "model": "A7S",
+   "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "address": "0x436f459c–0x436f45c2",
+   "function": "consumidor de petición de ganancia",
+   "data": "ldrb +0x3d7; orr #0x10 / bic #0x10; strb dato+4; clear +0x3d7",
+   "references": [
+    "analysis/s58/"
+   ],
+   "interpretation": "la petición de SetRead no es exclusiva de Silent; efecto eléctrico desconocido",
+   "status": "VERIFICADO",
+   "validation_method": "bytes Capstone + Unicorn, helper llamado explícitamente",
+   "test": "tests/test_s58_timing_a7s.py::A7SExposure.test_gain_request_consumer_sets_then_clears_register_5f",
+   "limitations": "no se demuestra que el escenario Execute alcance ese helper; invocación aislada no demuestra orden físico"
+  }
+ ],
+ "hypotheses": {
+  "H58-1": {
+   "status": "VERIFICADO",
+   "conf": "alta",
+   "note": "el pipeline AE calcula svd/shd/spl (0x4383d4d0, 0x4383c9dc); no es solo selección de tablas; Tv_i y el bloque M de modo quedan como entradas no recuperadas",
+   "support": [
+    "S58-01",
+    "S58-03",
+    "S58-04",
+    "S58-06"
+   ],
+   "against": "No hay evidencia eléctrica; ver limitaciones de cada evidencia. Los estados sintéticos no prueban estados alcanzables de captura.",
+   "address": [
+    "0x437b5e70, 0x4383d18c, 0x4383d704, 0x4383bc6c, 0x4383bf2c",
+    "0x4382fa94 (K=0xf424000 en 0x4382fac4; exp2 0x43902924)",
+    "0x4383d4d0",
+    "0x4383c9dc"
+   ],
+   "function": [
+    "pipeline AE (temporización)",
+    "Tv→T",
+    "descomposición de T",
+    "constructor de filas"
+   ],
+   "binary": [
+    {
+     "model": "A6000",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
+    },
+    {
+     "model": "A6000",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
+    },
+    {
+     "model": "A6000",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
+    },
+    {
+     "model": "A6000",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
+    }
+   ],
+   "instructions": [
+    "P=0x43eaee84, X=0x43ead7e0, AEOUT3=X+0x290=0x43eada70, G=0x43eb05d8, G224=G+0x224",
+    "0x1000→256000000; 0x1100→128000000; 0x1800→1000000; 0xc01→4084937500",
+    "modelo Python == código real: 120 vectores en suite; campaña a6_verify: 600",
+    "build_rows == código real: 80 vectores en suite; campaña a7_verify 150: 300"
+   ],
+   "dependencies": [
+    [
+     "analysis/s58/rea-out/",
+     "analysis/s58/a2_trace.py",
+     "analysis/s58/a4_trace.py"
+    ],
+    [
+     "analysis/s58/"
+    ],
+    [
+     "analysis/s58/"
+    ],
+    [
+     "analysis/s58/"
+    ]
+   ],
+   "test": [
+    "tests/test_s58_timing_a7s.py::AETimingA6000",
+    "tests/test_s58_timing_a7s.py::AETimingA6000",
+    "tests/test_s58_timing_a7s.py::AETimingA6000",
+    "tests/test_s58_timing_a7s.py::AETimingA6000"
+   ],
+   "limitations": [
+    "existe una variante 0x437b5d30 (0x42–0x45, 0x4383ecf8) no analizada; llamada de 0x437b617e es indirecta",
+    "unidad física 1/256 µs es INFERENCIA (S58-10); exp2 tabulada y truncada, no igualdad real exacta",
+    "valores reales de M por modo y el significado del argumento clk (X+0x5c ← P+0x4c0, u32 formado por dos u16 de 0x438667e0) no recuperados",
+    "depende de FUN_436f059c (stub 0) y de bytes de depuración (a 0); semántica física de los campos: INFERENCIA"
+   ],
+   "next_experiment": "Capturar M/Tv de un estado real o recuperar su inicialización; para semántica física, datasheet o traza pasiva autorizada CIS0/XPI/VD."
+  },
+  "H58-2": {
+   "status": "PARCIAL",
+   "conf": "media-alta",
+   "note": "svd+1 = svr·N/VdNum (aritmética verificada); es una cuenta de periodos de secuencia vertical; que cada paso sea un VD físico: INFERENCIA",
+   "support": [
+    "S58-02",
+    "S58-06"
+   ],
+   "against": "No hay evidencia eléctrica; ver limitaciones de cada evidencia. Los estados sintéticos no prueban estados alcanzables de captura.",
+   "address": [
+    "0x438451c2–0x438451ec, 0x43844998, 0x4383bc6c",
+    "0x4383c9dc"
+   ],
+   "function": [
+    "copia de parámetros de modo",
+    "constructor de filas"
+   ],
+   "binary": [
+    {
+     "model": "A6000",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
+    },
+    {
+     "model": "A6000",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
+    }
+   ],
+   "instructions": [
+    "ldm/stm 12 palabras; strh [r4,#0x4f4]; str [r4,#0x22c]",
+    "build_rows == código real: 80 vectores en suite; campaña a7_verify 150: 300"
+   ],
+   "dependencies": [
+    [
+     "analysis/s58/"
+    ],
+    [
+     "analysis/s58/"
+    ]
+   ],
+   "test": [
+    "tests/test_s58_timing_a7s.py::AETimingA6000",
+    "tests/test_s58_timing_a7s.py::AETimingA6000"
+   ],
+   "limitations": [
+    "el escritor original del bloque X8+0x138 (tablas de modo, 12 u16 de 0x43ae84c0()=0x437876dc()+0xdd0 y tablas param_2[…]) no se recuperó",
+    "depende de FUN_436f059c (stub 0) y de bytes de depuración (a 0); semántica física de los campos: INFERENCIA"
+   ],
+   "next_experiment": "Capturar M/Tv de un estado real o recuperar su inicialización; para semántica física, datasheet o traza pasiva autorizada CIS0/XPI/VD."
+  },
+  "H58-3": {
+   "status": "PARCIAL",
+   "conf": "media",
+   "note": "shd = posición de línea (VMAX−líneas, mín M[0x14]) VERIFICADO aritmético; spl (arg+6) es una cuenta de pasos V restantes, no sub-línea; el reloj fino va a arg+0xa",
+   "support": [
+    "S58-04",
+    "S58-06"
+   ],
+   "against": "No hay evidencia eléctrica; ver limitaciones de cada evidencia. Los estados sintéticos no prueban estados alcanzables de captura.",
+   "address": [
+    "0x4383d4d0",
+    "0x4383c9dc"
+   ],
+   "function": [
+    "descomposición de T",
+    "constructor de filas"
+   ],
+   "binary": [
+    {
+     "model": "A6000",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
+    },
+    {
+     "model": "A6000",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
+    }
+   ],
+   "instructions": [
+    "modelo Python == código real: 120 vectores en suite; campaña a6_verify: 600",
+    "build_rows == código real: 80 vectores en suite; campaña a7_verify 150: 300"
+   ],
+   "dependencies": [
+    [
+     "analysis/s58/"
+    ],
+    [
+     "analysis/s58/"
+    ]
+   ],
+   "test": [
+    "tests/test_s58_timing_a7s.py::AETimingA6000",
+    "tests/test_s58_timing_a7s.py::AETimingA6000"
+   ],
+   "limitations": [
+    "valores reales de M por modo y el significado del argumento clk (X+0x5c ← P+0x4c0, u32 formado por dos u16 de 0x438667e0) no recuperados",
+    "depende de FUN_436f059c (stub 0) y de bytes de depuración (a 0); semántica física de los campos: INFERENCIA"
+   ],
+   "next_experiment": "Capturar M/Tv de un estado real o recuperar su inicialización; para semántica física, datasheet o traza pasiva autorizada CIS0/XPI/VD."
+  },
+  "H58-4": {
+   "status": "INFERENCIA",
+   "conf": "media",
+   "note": "descomposición numérica de T verificada; vínculo eléctrico reset→lectura y fin de integración NO demostrado",
+   "support": [
+    "S58-04",
+    "S58-21",
+    "S58-23"
+   ],
+   "against": "No hay evidencia eléctrica; ver limitaciones de cada evidencia. El escenario no contiene un evento final posterior.",
+   "address": [
+    "0x4383d4d0",
+    "SetExposure/Execute",
+    "—"
+   ],
+   "function": [
+    "descomposición de T",
+    "ausencia de comando de fin",
+    "S51"
+   ],
+   "binary": [
+    {
+     "model": "A6000",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
+    },
+    {
+     "model": "both",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9 | b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+    },
+    {
+     "model": "A6000",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
+    }
+   ],
+   "instructions": [
+    "modelo Python == código real: 120 vectores en suite; campaña a6_verify: 600",
+    "S57 + S58",
+    "sin medición"
+   ],
+   "dependencies": [
+    [
+     "analysis/s58/"
+    ],
+    [
+     "analysis/s58/"
+    ],
+    [
+     "analysis/s58/"
+    ]
+   ],
+   "test": [
+    "tests/test_s58_timing_a7s.py::AETimingA6000",
+    "—",
+    "—"
+   ],
+   "limitations": [
+    "valores reales de M por modo y el significado del argumento clk (X+0x5c ← P+0x4c0, u32 formado por dos u16 de 0x438667e0) no recuperados",
+    "la ausencia en ExposureTimerEnd de A6000 procede de S57; la secuencia temporal completa A7S no se emula",
+    "datasheet IMX210 o traza pasiva CIS0+XPI+VD"
+   ],
+   "next_experiment": "Capturar M/Tv de un estado real o recuperar su inicialización; para semántica física, datasheet o traza pasiva autorizada CIS0/XPI/VD."
+  },
+  "H58-5": {
+   "status": "PARCIAL",
+   "conf": "media",
+   "note": "configuración anticipada ejecutada; no se ejecuta un evento de fin posterior en A7S: no demuestra ausencia global de comandos",
+   "support": [
+    "S58-15",
+    "S58-18",
+    "S58-21",
+    "S58-24"
+   ],
+   "against": "No hay evidencia eléctrica; ver limitaciones de cada evidencia. El escenario no contiene un evento final posterior.",
+   "address": [
+    "0x436f4168",
+    "0x436f5a14, 0x436f26c8, 0x43ad9666",
+    "SetExposure/Execute",
+    "0x436f459c–0x436f45c2"
+   ],
+   "function": [
+    "SetExposure",
+    "Execute/P2S",
+    "ausencia de comando de fin",
+    "consumidor de petición de ganancia"
+   ],
+   "binary": [
+    {
+     "model": "A7S",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+    },
+    {
+     "model": "A7S",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+    },
+    {
+     "model": "both",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9 | b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+    },
+    {
+     "model": "A7S",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+    }
+   ],
+   "instructions": [
+    "60 vectores (30 entradas × 2 rellenos) en la suite",
+    "out/a7s_scenarios.json",
+    "S57 + S58",
+    "ldrb +0x3d7; orr #0x10 / bic #0x10; strb dato+4; clear +0x3d7"
+   ],
+   "dependencies": [
+    [
+     "analysis/s58/"
+    ],
+    [
+     "analysis/s58/"
+    ],
+    [
+     "analysis/s58/"
+    ],
+    [
+     "analysis/s58/"
+    ]
+   ],
+   "test": [
+    "tests/test_s58_timing_a7s.py::A7SExposure",
+    "tests/test_s58_timing_a7s.py::A7SExecute",
+    "—",
+    "tests/test_s58_timing_a7s.py::A7SExposure.test_gain_request_consumer_sets_then_clears_register_5f"
+   ],
+   "limitations": [
+    "objeto C_Imager sin constructor; parámetros de depuración 0xFF asumidos",
+    "periférico físico no simulado",
+    "la ausencia en ExposureTimerEnd de A6000 procede de S57; la secuencia temporal completa A7S no se emula",
+    "no se demuestra que el escenario Execute alcance ese helper; invocación aislada no demuestra orden físico"
+   ],
+   "next_experiment": "Capturar M/Tv de un estado real o recuperar su inicialización; para semántica física, datasheet o traza pasiva autorizada CIS0/XPI/VD."
+  },
+  "H58-6": {
+   "status": "DESCARTADO",
+   "conf": "alta (rango emulado)",
+   "note": "SetExposure/SetRead producen los mismos cambios en 0x4c y 0x4e; la diferencia Silent está en la columna de SetMode (14 regs vs 0x4c; 45 vs 0x0b) y, condicionalmente, en los mensajes de Execute",
+   "support": [
+    "S58-14",
+    "S58-19",
+    "S58-20",
+    "S58-24"
+   ],
+   "against": "No hay evidencia eléctrica; ver limitaciones de cada evidencia. Los estados sintéticos no prueban estados alcanzables de captura.",
+   "address": [
+    "columnas 5, 12, 13, 0, 1",
+    "estado tras Execute",
+    "0x436f5b84–0x436f5ba6; 0x43ada07a/0x43ada0b4",
+    "0x436f459c–0x436f45c2"
+   ],
+   "function": [
+    "comparación de columnas",
+    "estado efectivo",
+    "mensajes Execute",
+    "consumidor de petición de ganancia"
+   ],
+   "binary": [
+    {
+     "model": "A7S",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+    },
+    {
+     "model": "A7S",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+    },
+    {
+     "model": "A7S",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+    },
+    {
+     "model": "A7S",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+    }
+   ],
+   "instructions": [
+    "0x4c↔0x4e: 0x01,0x08,0x09,0x0a,0x0b,0x0c,0x11,0x1f,0x28,0x3c,0x50,0x51,0x55,0x9a",
+    "14 regs (0x4c↔0x4e), 4 (0x4e↔0x4f)",
+    "r2/r3 con valores por defecto",
+    "ldrb +0x3d7; orr #0x10 / bic #0x10; strb dato+4; clear +0x3d7"
+   ],
+   "dependencies": [
+    [
+     "analysis/s58/"
+    ],
+    [
+     "analysis/s58/"
+    ],
+    [
+     "analysis/s58/"
+    ],
+    [
+     "analysis/s58/"
+    ]
+   ],
+   "test": [
+    "tests/test_s58_timing_a7s.py::A7SMatrix",
+    "tests/test_s58_timing_a7s.py::A7SExecute",
+    "tests/test_s58_timing_a7s.py::A7SExecute",
+    "tests/test_s58_timing_a7s.py::A7SExposure.test_gain_request_consumer_sets_then_clears_register_5f"
+   ],
+   "limitations": [
+    "significado de los registros sin datasheet",
+    "rutas de SetExposure con parámetros reales de AE no emuladas",
+    "receptor del mensaje y condición de 0x436f5d90 no analizados",
+    "no se demuestra que el escenario Execute alcance ese helper; invocación aislada no demuestra orden físico"
+   ],
+   "next_experiment": "Capturar M/Tv de un estado real o recuperar su inicialización; para semántica física, datasheet o traza pasiva autorizada CIS0/XPI/VD."
+  },
+  "H58-7": {
+   "status": "PARCIAL",
+   "conf": "media",
+   "note": "0x0c participa en diferencias de columna, también comparte valor con foto normal; descarta exclusividad Silent, no su posible participación",
+   "support": [
+    "S58-13",
+    "S58-14"
+   ],
+   "against": "No hay evidencia eléctrica; ver limitaciones de cada evidencia. Los estados sintéticos no prueban estados alcanzables de captura.",
+   "address": [
+    "matriz 0x43fee598; maptab 0x43c9c5b5; cargador 0x436f3928 (vtable+0xa0)",
+    "columnas 5, 12, 13, 0, 1"
+   ],
+   "function": [
+    "SetMode (carga de columna)",
+    "comparación de columnas"
+   ],
+   "binary": [
+    {
+     "model": "A7S",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+    },
+    {
+     "model": "A7S",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+    }
+   ],
+   "instructions": [
+    "out/a7s_matrix_corrected.json",
+    "0x4c↔0x4e: 0x01,0x08,0x09,0x0a,0x0b,0x0c,0x11,0x1f,0x28,0x3c,0x50,0x51,0x55,0x9a"
+   ],
+   "dependencies": [
+    [
+     "analysis/s58/"
+    ],
+    [
+     "analysis/s58/"
+    ]
+   ],
+   "test": [
+    "tests/test_s58_timing_a7s.py::A7SMatrix",
+    "tests/test_s58_timing_a7s.py::A7SMatrix"
+   ],
+   "limitations": [
+    "matriz B (NTPAL, 0x43e8de00) es BSS a cero",
+    "significado de los registros sin datasheet"
+   ],
+   "next_experiment": "Capturar M/Tv de un estado real o recuperar su inicialización; para semántica física, datasheet o traza pasiva autorizada CIS0/XPI/VD."
+  },
+  "H58-8": {
+   "status": "PARCIAL",
+   "conf": "media",
+   "note": "0x0A hace parte del conjunto de sub-modo {0x01,0x09,0x0a,0x0b} que distingue 0x4e/0x4f y también 0x0b/0x35; significado físico desconocido",
+   "support": [
+    "S58-13",
+    "S58-14"
+   ],
+   "against": "No hay evidencia eléctrica; ver limitaciones de cada evidencia. Los estados sintéticos no prueban estados alcanzables de captura.",
+   "address": [
+    "matriz 0x43fee598; maptab 0x43c9c5b5; cargador 0x436f3928 (vtable+0xa0)",
+    "columnas 5, 12, 13, 0, 1"
+   ],
+   "function": [
+    "SetMode (carga de columna)",
+    "comparación de columnas"
+   ],
+   "binary": [
+    {
+     "model": "A7S",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+    },
+    {
+     "model": "A7S",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+    }
+   ],
+   "instructions": [
+    "out/a7s_matrix_corrected.json",
+    "0x4c↔0x4e: 0x01,0x08,0x09,0x0a,0x0b,0x0c,0x11,0x1f,0x28,0x3c,0x50,0x51,0x55,0x9a"
+   ],
+   "dependencies": [
+    [
+     "analysis/s58/"
+    ],
+    [
+     "analysis/s58/"
+    ]
+   ],
+   "test": [
+    "tests/test_s58_timing_a7s.py::A7SMatrix",
+    "tests/test_s58_timing_a7s.py::A7SMatrix"
+   ],
+   "limitations": [
+    "matriz B (NTPAL, 0x43e8de00) es BSS a cero",
+    "significado de los registros sin datasheet"
+   ],
+   "next_experiment": "Capturar M/Tv de un estado real o recuperar su inicialización; para semántica física, datasheet o traza pasiva autorizada CIS0/XPI/VD."
+  },
+  "H58-9": {
+   "status": "NO_VERIFICADO",
+   "conf": "-",
+   "note": "hay paralelos estructurales (tripleta svd/shd/spl, ShutMode, bit 3 tipo SSB) pero ninguna equivalencia de valores demostrable; no se copia nada entre sensores",
+   "support": [
+    "S58-15",
+    "S58-23"
+   ],
+   "against": "No hay evidencia eléctrica; ver limitaciones de cada evidencia. Los estados sintéticos no prueban estados alcanzables de captura.",
+   "address": [
+    "0x436f4168",
+    "—"
+   ],
+   "function": [
+    "SetExposure",
+    "S51"
+   ],
+   "binary": [
+    {
+     "model": "A7S",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+    },
+    {
+     "model": "A6000",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
+    }
+   ],
+   "instructions": [
+    "60 vectores (30 entradas × 2 rellenos) en la suite",
+    "sin medición"
+   ],
+   "dependencies": [
+    [
+     "analysis/s58/"
+    ],
+    [
+     "analysis/s58/"
+    ]
+   ],
+   "test": [
+    "tests/test_s58_timing_a7s.py::A7SExposure",
+    "—"
+   ],
+   "limitations": [
+    "objeto C_Imager sin constructor; parámetros de depuración 0xFF asumidos",
+    "datasheet IMX210 o traza pasiva CIS0+XPI+VD"
+   ],
+   "next_experiment": "Capturar M/Tv de un estado real o recuperar su inicialización; para semántica física, datasheet o traza pasiva autorizada CIS0/XPI/VD."
+  },
+  "H58-10": {
+   "status": "NO_VERIFICADO",
+   "conf": "-",
+   "note": "sin datasheet no se puede decir si faltan funciones del sensor; el IMX210 sí tiene el mismo mecanismo de programación de temporización",
+   "support": [
+    "S58-23"
+   ],
+   "against": "No hay evidencia eléctrica; ver limitaciones de cada evidencia. Los estados sintéticos no prueban estados alcanzables de captura.",
+   "address": [
+    "—"
+   ],
+   "function": [
+    "S51"
+   ],
+   "binary": [
+    {
+     "model": "A6000",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
+    }
+   ],
+   "instructions": [
+    "sin medición"
+   ],
+   "dependencies": [
+    [
+     "analysis/s58/"
+    ]
+   ],
+   "test": [
+    "—"
+   ],
+   "limitations": [
+    "datasheet IMX210 o traza pasiva CIS0+XPI+VD"
+   ],
+   "next_experiment": "Capturar M/Tv de un estado real o recuperar su inicialización; para semántica física, datasheet o traza pasiva autorizada CIS0/XPI/VD."
+  },
+  "H58-11": {
+   "status": "INFERENCIA",
+   "conf": "baja",
+   "note": "SyncMode 2 + planificador por VD (S57); sin evidencia nueva",
+   "support": [
+    "S58-02",
+    "S58-21"
+   ],
+   "against": "No hay evidencia eléctrica; ver limitaciones de cada evidencia. Los estados sintéticos no prueban estados alcanzables de captura.",
+   "address": [
+    "0x438451c2–0x438451ec, 0x43844998, 0x4383bc6c",
+    "SetExposure/Execute"
+   ],
+   "function": [
+    "copia de parámetros de modo",
+    "ausencia de comando de fin"
+   ],
+   "binary": [
+    {
+     "model": "A6000",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
+    },
+    {
+     "model": "both",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9 | b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+    }
+   ],
+   "instructions": [
+    "ldm/stm 12 palabras; strh [r4,#0x4f4]; str [r4,#0x22c]",
+    "S57 + S58"
+   ],
+   "dependencies": [
+    [
+     "analysis/s58/"
+    ],
+    [
+     "analysis/s58/"
+    ]
+   ],
+   "test": [
+    "tests/test_s58_timing_a7s.py::AETimingA6000",
+    "—"
+   ],
+   "limitations": [
+    "el escritor original del bloque X8+0x138 (tablas de modo, 12 u16 de 0x43ae84c0()=0x437876dc()+0xdd0 y tablas param_2[…]) no se recuperó",
+    "la ausencia en ExposureTimerEnd de A6000 procede de S57; la secuencia temporal completa A7S no se emula"
+   ],
+   "next_experiment": "Capturar M/Tv de un estado real o recuperar su inicialización; para semántica física, datasheet o traza pasiva autorizada CIS0/XPI/VD."
+  },
+  "H58-12": {
+   "status": "INFERENCIA",
+   "conf": "media",
+   "note": "la ausencia de comando de fin es compatible con terminación autónoma (el intervalo ya está programado), pero la ausencia no la demuestra",
+   "support": [
+    "S58-21",
+    "S58-23"
+   ],
+   "against": "No hay evidencia eléctrica; ver limitaciones de cada evidencia. El escenario no contiene un evento final posterior.",
+   "address": [
+    "SetExposure/Execute",
+    "—"
+   ],
+   "function": [
+    "ausencia de comando de fin",
+    "S51"
+   ],
+   "binary": [
+    {
+     "model": "both",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9 | b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+    },
+    {
+     "model": "A6000",
+     "firmware": "av-cam.bin (fw 3.21 A6000 / 3.20 A7S)",
+     "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
+    }
+   ],
+   "instructions": [
+    "S57 + S58",
+    "sin medición"
+   ],
+   "dependencies": [
+    [
+     "analysis/s58/"
+    ],
+    [
+     "analysis/s58/"
+    ]
+   ],
+   "test": [
+    "—",
+    "—"
+   ],
+   "limitations": [
+    "la ausencia en ExposureTimerEnd de A6000 procede de S57; la secuencia temporal completa A7S no se emula",
+    "datasheet IMX210 o traza pasiva CIS0+XPI+VD"
+   ],
+   "next_experiment": "Capturar M/Tv de un estado real o recuperar su inicialización; para semántica física, datasheet o traza pasiva autorizada CIS0/XPI/VD."
+  }
+ }
+}
