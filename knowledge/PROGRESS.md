@@ -1654,3 +1654,9 @@ Próximo (no iniciado): traza pasiva autorizada de `MSS_SO_DWN`/bobinas, consumi
 - Correcciones: base TBH de Sol; `obj+0x168/0x16A` de S60 = global G; «campos de otro objeto» de B = `obj+0x2cc`.
 - Frontera: escritores de `obj+0x2be..`, `G+0x168`, `G[0xD]`, `stage+0x3a`; petición 3; bit 31 del handle; unidad de los pares; ningún estado ALCANZABLE.
 - Próximo exacto: leer `HS_Main`/`VD_Pre` (fin de exposición), sembrar Thumb, `trace_native_values` sobre P0. S51 se mantiene.
+
+## S62 — PMCA: updatershell, service shell y `modelName` (20-10-2026)
+- Hecho: lectura de `references/pmca` (v0.17) y `references/fwtool`: mecanismo de inyección de código (fdat propio, cramfs `/bodylib/libupdaterbody.so`, header 0x30 B por modelo, guard CRC + modelo/región/versión sin firma, shell USB `0x23` con SHEL/PULL/PUSH/RMEM/BK*) y service shell (senser, HASP, adjust-control `0x603`, terminal `0x601/0x1f`, ficheros/memoria). Verificación del fdat A6000 3.21: `model = 0x41030035`, versión 3.21, `firmwareOffset = 0x23200`; preset BK4 con `0x003e0005` = `ILCE-6000` (16 B, attr `0x01`). Documento `docs/capture/s62-pmca-injection.md`, matriz `analysis/s62-evidence-matrix.json` (11 entradas), test `tests/test_s62_backup_modelname.py` 5/5.
+- Procedimiento reportado: `bk w 0x003e0005` a `ILCE-6001` y reversión con `-m ILCE-6000` (coherente con la selección de fdat por nombre reportado).
+- Frontera: el efecto «shell mode» no está verificado; `ILCE-6001` no existe en el firmware; falta leer los consumidores de `Backup_read(0x3e0005)`.
+- Próximo exacto: REA sobre lectores de backup de `modelName` o traza pasiva autorizada; S51 se mantiene.

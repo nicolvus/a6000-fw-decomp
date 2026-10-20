@@ -6,6 +6,7 @@ electrónico pasa a ser un [subproyecto](projects/electronic-shutter/README.md).
 
 ## Organización y resultados actuales
 
+- [S62: PMCA — inyección de código, service shell y la propiedad `modelName`](docs/capture/s62-pmca-injection.md): `updatershell` inyecta un fdat propio (cramfs con `libupdaterbody`, header 0x30 B por modelo, guard CRC + modelo/región/versión sin firma; CXD90014) que el updater ejecuta y expone shell USB `0x23`; `serviceshell` (senser, HASP) da terminal y backup `0x603`. `bk w 0x003e0005` no es una dirección sino la propiedad BK4 `modelName` (subsistema `0x3e`/índice 5, 16 B, solo lectura) del almacén `/setting` (`nflasha2`), verificada en el preset de fábrica como `ILCE-6000` (test 5/5). El procedimiento `ILCE-6001` es coherente con la selección de fdat por nombre reportado, pero el efecto «shell mode» queda **NO VERIFICADO** (la cadena no existe en el firmware). S51 se mantiene.
 - [S61: origen de los parámetros IMX210 y flujo de mensajes](docs/capture/s61-conclusions.md): corrección TBH de S60-Sol (base `0x43806a08`); selección A/B del bloque `obj+0xe20` (A: bit6 de `G[0xD]`, G=`0x43e964a4`; B: `[[p]+0x3a]==1`), cadena de B recuperada hasta `obj+0x2be..` vía `0x43861ed0` y 6.º par desde BK4 `0x300AB` (`(0x2EA0,0x6028)`); los pares parecen ventanas lo/hi ±0x400, no tiempos; petición 9 emitida desde `HS_Main` y publicación en `VD_Pre`; petición 3 sin emisor; sin estados alcanzables. Fin electrónico NO VERIFICADO; S51 A/B/C = NO.
 - [S60: emisor de mensajes IMX210 y receptores A7S](docs/capture/s60-conclusions.md): A6000: `0x438069f0` es una tarea de mensajes (casos 4/10 = respuestas a 3/9) y los 24 B `+0xdd0` son 6 pares u16 con dos productores (`0x437ab510`, `0x43aecbfa`); A7S: `0x1000/0x1001` = trazas (eco de SetExposure/SetRead), sin efecto de control. Auditoría GPT no obtenida (límite de uso). Fin electrónico NO VERIFICADO; S51 se mantiene.
 - [S59: validación cruzada Claude + GPT-6.1 Sol](docs/capture/s59-conclusions.md): escritor del bloque IMX210 `+0xDD0` recuperado (`0x43b00da0`, valores M de payload externo, sin M/Tv/clk alcanzables); constructor real C_Imager A7S `0x436f3fc0` emulado, corrige tramas/base P2S de S58 y aclara mensajes `0x1000/0x1001` (lista blanca de modos). Fin eléctrico IMX210 NO VERIFICADO; S51 se mantiene.
@@ -265,7 +266,7 @@ reports/shutter-validation.md; registro previo: reports/atlas-validation.md. Dos
 auxiliares del DMG no legibles se registran como errores; el payload y el
 firmware están inventariados y los 679 ELF se analizaron sin errores.
 
-No hay repositorio Git inicializado utilizable y `.git` es de solo lectura: cambios sin commit. Inicialmente no se instalaron paquetes. Después, el usuario autorizó hacer funcionar REA: se instaló REA localmente y se extrajeron Ghidra/JDK portables. No se hizo push ni se ejecutaron programas del firmware.
+Repositorio Git inicializado y publicado en `github.com/nicolvus/a6000-fw-decomp` (rama `main`); desde S54 cada fase se commitea y se sube. `firmware/` está en `.gitignore`: los artefactos de firmware no se publican. Inicialmente no se instalaron paquetes. Después, el usuario autorizó hacer funcionar REA: se instaló REA localmente y se extrajeron Ghidra/JDK portables. No se ejecutaron programas del firmware.
 
 ## REA operativo
 

@@ -6,6 +6,10 @@ Para el historial íntegro de sesiones ver `docs/history/` y las correcciones co
 en [docs/CORRECTIONS.md](CORRECTIONS.md) (generado del grafo, no editar a mano).
 Para preguntas abiertas ver [docs/OPEN-QUESTIONS.md](OPEN-QUESTIONS.md).
 
+## Avance S62 (20-10-2026)
+
+Mecanismo de PMCA identificado y contrastado con el firmware 3.21: `updatershell` inyecta un fdat propio (cramfs con `libupdaterbody`, header de 0x30 B por modelo, guard CRC + modelo/región/versión **sin firma**; CXD90014) que el updater ejecuta y expone un shell USB `0x23`; `serviceshell` (senser, HASP) da terminal, backup `0x603`, ficheros y memoria. `bk w 0x003e0005` escribe la propiedad BK4 `modelName` (subsistema `0x3e`/índice 5, 16 B, attr solo-lectura) en el almacén `/setting` (`nflasha2`), no una dirección de código; el preset de fábrica la trae como `ILCE-6000` (verificado). El cambio a `ILCE-6001` está reportado pero su efecto «shell mode» queda **NO VERIFICADO**: la cadena no existe en el firmware. S51 **A=NO, B=NO, C=NO**. [Documento](capture/s62-pmca-injection.md) · [matriz](../analysis/s62-evidence-matrix.json).
+
 ## Avance S58 (20-10-2026)
 
 Productores numéricos IMX210 recuperados y contrastados con código original; SetMode/SetExposure/SetRead/Execute A7S emulados con objeto sintético y servicios stub. La comparación efectiva actualiza matriz e identidad de métodos A7S de S57. Se conserva la frontera física: fin electrónico de integración **NO VERIFICADO**, S51 **A=NO, B=NO, C=NO**. [Conclusiones y límites S58](capture/s58-conclusions.md).
