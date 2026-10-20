@@ -20,7 +20,7 @@ MEMCPY = [(0x43B7F878, 0x43B7F880), (0x439C5320, 0x439C5A04)]
 def case_targets():
     blob = data("A6000")
     table = 0x43806A08
-    return {i: 0x43806A04 + 2 * struct.unpack_from("<H", blob, table - B + i * 2)[0]
+    return {i: table + 2 * struct.unpack_from("<H", blob, table - B + i * 2)[0]
             for i in range(12)}
 
 

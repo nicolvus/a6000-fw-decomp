@@ -3,6 +3,12 @@
 Resumen operativo breve. Para el historial completo de decisiones, ver `knowledge/PROGRESS.md`.
 Para restricciones del proyecto (sin firmware ejecutado, sin flasheo, sin `git push`), ver `docs/STATE.md`.
 
+## S61 — origen de parámetros IMX210 y flujo de mensajes (20-10-2026)
+
+**A6000 (Claude, 22 tests):** TBH corregido (base `0x43806a08`; script/test de Sol actualizados). Bloque `obj+0xe20`: **A** (`0x437ab474`) escribe solo si `bit6(G[0xD])==0` con `G=0x43e964a4` (GOT+0x21a0; **no** el objeto de 0xF20 B: corrige S60) 6×`(G[0x168],G[0x16A])`; **B** (`0x43aecbec`) solo si `[[p]+0x3a]==1` (stage: 0 en `0x437a9d30`, `src+0xb4` en `0x437aa65c`, borrado si `G[0xD]` bit6). B ← `obj8=obj+0x2cc` ← P0 `0x43861ed0` (←`obj+0x2be..0x2d0`, origen NO localizado); 6.º par ← tabla BK4 `0x300AB` (idéntica en 5 `CX77500`: 18×`(0x2EA0,0x6028)`). Pares = ventanas lo/hi ±0x400 (H «tiempos» debilitada). Petición 9 ← `0x43b00ed8` ← **`HS_Main` `0x4378fef4`**; publicación ← **`VD_Pre` `0x43792a0c`**; petición 3 sin emisor; `0x8003030f`≈alias de `0x3030f`. Estados ALCANZABLES: 0 (un PERMITIDO). Fin electrónico **NO VERIFICADO**; **S51 A=NO/B=NO/C=NO.**
+
+[Conclusiones](../docs/capture/s61-conclusions.md) · [parámetros](../docs/capture/s61-imx210-parameter-origin.md) · [mensajes](../docs/capture/s61-message-flow.md) · [matriz](../analysis/s61-evidence-matrix.json). Siguiente: escritores de `obj+0x2be..`/`G+0x168`/`G[0xD]`, leer `HS_Main` entero (¿fin de exposición?), sembrar Thumb en los 5 puntos.
+
 ## S60 — emisor de mensajes IMX210 y receptores A7S (20-10-2026)
 
 **A6000 (Sol 6 tests + Claude):** `0x438069f0` = despachador de la tarea de mensajes `0x43806e38` (recv `0x3030f`); casos 4/10 son respuestas a 3/9 (`0x43b00fe6`/`0x43b00f62` → `0x43806400` → `0x8003030f`). Corrección: TBH base `0x43806a08` (casos → `0x43806c28`/`0x43806d06`). Los 24 B `+0xdd0` = `obj+0xe20..e37`: 6 pares u16 escritos por `0x437ab510` (A) y `0x43aecbfa` (B) vía accesor `0x43ae8504`; semántica de tiempo HIPÓTESIS. **A7S (Claude, 12 tests):** `0x1000/0x1001` = registros de traza (API `0x438f6864`, 381 llamadores) a la cola `0x8f013a`, no bloqueantes, eco de SetExposure/SetRead; Silent no los emite; consumidor no localizado. `0x439b3918`=memcpy ARM, `0x438f7114`=printf de trazas. **GPT:** auditoría NO obtenida (límite de uso hasta 17:56). Fin electrónico **NO VERIFICADO**; **S51 A=NO/B=NO/C=NO.**
