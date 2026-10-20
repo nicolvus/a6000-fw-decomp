@@ -6,6 +6,7 @@ Para restricciones del proyecto (sin firmware ejecutado, sin flasheo, sin `git p
 ## S64 — prueba en cámara de SilentShutter (20-10-2026)
 
 - Modo normal por telnet/adb (Tweak, 192.168.1.29): mismo bloque de ajustes; `+0x238`=1 forzado con 3 disparos ⇒ obturador sigue mecánico y la copia `0x83ed4ff0` no cambia; el espejo vuelve a 0 tras un disparo si no se fuerza. Disparo remoto requiere app propia con `CameraEx` (pendiente). Detalle en `docs/capture/s64-silent-ram-nvram-test.md`.
+- Disparo remoto (`tools/remote-shutter/`, `CameraEx` sin preview, HTTP :8080) y matriz de 6 disparos con `+0x238`=1/2 y copia de trabajo: **todos sonaron igual** (oído del usuario); bloque alternativo no activo (`ctx+0x57c`=0). Sin obturador electrónico en modo de aplicaciones. Ver `docs/capture/s64-silent-ram-nvram-test.md`.
 **VERIFICADO:** escribir `1` en `0x83edf8bc` (service mode, `dd`/dev/mem) y restaurar; NVRAM `flash` sin cambios y RAM 4 MB sin cambios atribuibles al modo (control en otra dirección da los mismos artefactos). Estático: `0x43804610` reinicializa el bloque (`+0x238`/`+0x280`=0) leyendo un byte de backup; ningún lector/escritor de backup ligado a `+0x238`. Sin consumidor de captura. S51 se mantiene.
 
 [Detalle](../docs/capture/s64-silent-ram-nvram-test.md). Siguiente: llamadora `0x437881a8` (¿cuándo se inicializa?), handler hermano `0x43802614`, trazar `+0x280` en el objeto de trabajo.
