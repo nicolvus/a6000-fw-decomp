@@ -4,6 +4,14 @@ Investigación de hardware, firmware, arquitectura, arranque, recuperación y
 pipeline de captura. Se conservan los resultados anteriores. El obturador
 electrónico pasa a ser un [subproyecto](projects/electronic-shutter/README.md).
 
+## Agentes (Claude Code, Codex/ChatGPT, DeepSeek Harness)
+
+Reglas en `AGENTS.md` y `CLAUDE.md`; skills en `.claude/skills/` y `.agents/skills/`
+(copias idénticas, verificadas por `tests/test_agent_skills_sync.py`). Instalación de
+REA/Ghidra, MCP y arranque de sesión: [docs/agent/README.md](docs/agent/README.md).
+Para ChatGPT web, pegar [docs/agent/chatgpt-pack.md](docs/agent/chatgpt-pack.md).
+Comprobación de entorno: `python scripts/agent/check_env.py`.
+
 ## Organización y resultados actuales
 
 - [S62: PMCA — inyección de código, service shell y la propiedad `modelName`](docs/capture/s62-pmca-injection.md): `updatershell` inyecta un fdat propio (cramfs con `libupdaterbody`, header 0x30 B por modelo, guard CRC + modelo/región/versión sin firma; CXD90014) que el updater ejecuta y expone shell USB `0x23`; `serviceshell` (senser, HASP) da terminal y backup `0x603`. `bk w 0x003e0005` no es una dirección sino la propiedad BK4 `modelName` (subsistema `0x3e`/índice 5, 16 B, solo lectura) del almacén `/setting` (`nflasha2`), verificada en el preset de fábrica como `ILCE-6000` (test 5/5). El procedimiento `ILCE-6001` es coherente con la selección de fdat por nombre reportado, pero el efecto «shell mode» queda **NO VERIFICADO** (la cadena no existe en el firmware). S51 se mantiene.
