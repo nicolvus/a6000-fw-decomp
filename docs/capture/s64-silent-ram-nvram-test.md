@@ -85,3 +85,7 @@ Sesión REA sobre `av-cam.bin` (REA no reconoce las funciones Thumb de esta zona
 
 - RAM viva: 338 de 344 palabras iguales al espejo `0x83edf684`; `+0x238` = 0 en ambos.
 - `BASE=0x83e9b548 SHOOT=1 camera_bisect_fields.py 1 0x238`: 1 disparo remoto correcto (`done 408841`), cámara viva; el usuario oyó **obturador mecánico**. Un solo disparo y valor 1; valor 2 y las 6 palabras distintas sin probar. Electrónico NO detectado.
+
+### Disparo con la app normal y tres escrituras a la vez (2026-10-20)
+
+- Bucle en la cámara (3000 × 20 ms): espejo `0x83edf8bc`, instantánea `0x83e9b780` y copia `0x83ed4ff0` forzados a 1. El usuario disparó con el botón en la pantalla normal de fotos: los disparos hechos sonaron como obturador de siempre y **la cámara se reinició**. No se sabe cuántos disparos completó antes ni si el reinicio lo causa una de las escrituras (tercer reinicio con escrituras en vuelo; en controles sin escritura no hubo ninguno). Reinicio borra los cambios de RAM; flash no se tocó. Electrónico NO detectado en la app normal. NO VERIFICADO la causa del reinicio.
