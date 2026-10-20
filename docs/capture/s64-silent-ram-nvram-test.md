@@ -89,3 +89,7 @@ Sesión REA sobre `av-cam.bin` (REA no reconoce las funciones Thumb de esta zona
 ### Disparo con la app normal y tres escrituras a la vez (2026-10-20)
 
 - Bucle en la cámara (3000 × 20 ms): espejo `0x83edf8bc`, instantánea `0x83e9b780` y copia `0x83ed4ff0` forzados a 1. El usuario disparó con el botón en la pantalla normal de fotos: los disparos hechos sonaron como obturador de siempre y **la cámara se reinició**. No se sabe cuántos disparos completó antes ni si el reinicio lo causa una de las escrituras (tercer reinicio con escrituras en vuelo; en controles sin escritura no hubo ninguno). Reinicio borra los cambios de RAM; flash no se tocó. Electrónico NO detectado en la app normal. NO VERIFICADO la causa del reinicio.
+
+### Repetición con app normal (2026-10-20)
+
+- Mismo bucle (espejo + instantánea + copia a 1), disparos con el botón: el usuario oyó obturador mecánico («si suena»); sin reinicio reportado. Electrónico NO detectado. El reinicio anterior no se reprodujo (causa sigue NO VERIFICADO).
