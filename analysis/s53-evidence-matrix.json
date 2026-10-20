@@ -1,0 +1,265 @@
+{
+ "phase": "S53",
+ "date": "2026-10-19",
+ "rom_base": "0x4200",
+ "binaries": {
+  "darwin_a6000_3.21": {
+   "path": "firmware/extracted/fw321/firmware.tar_unpacked/0640_darwin/darwin_core.bin",
+   "size": 157276,
+   "sha256": "5f2be06d9885d154e8e0df46a611d6830d29754b4353f6e82cecfe66dd6a0bf4"
+  },
+  "darwin_a7s_3.20": {
+   "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0640_darwin/darwin_core.bin",
+   "size": 161248,
+   "sha256": "241f5d311991e8b4e0246b2edab4039517cab55daf431d4ad21670a8866174cf"
+  },
+  "darwin_a6300_2.01": {
+   "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0640_darwin/darwin_core.bin",
+   "size": 181040,
+   "sha256": "6249d4b7f70d31c50048c85ca39e61c1872b547a26fd4b4ad0343ca9811433ac"
+  }
+ },
+ "tools": [
+  "Ghidra 12.1.4 headless (analysis/s53/ghidra/S53SeedDarwin.java, S53DumpDecomp.java)",
+  "capstone 5.0 (pip --user)",
+  "analysis/s53/dz.py",
+  "analysis/s53/scan_offsets.py",
+  "analysis/s53/fold_literals.py"
+ ],
+ "evidence": [
+  {
+   "claim": "IRQ: manejador único lee ICSR y despacha por tabla ROM 0x4300 (IRQCMODE=1)",
+   "rom": "a6000/a7s",
+   "addresses": [
+    "0x6808",
+    "0x67fa",
+    "0x4300"
+   ],
+   "status": "VERIFICADO",
+   "tests": [
+    "tests/test_s53_darwin_caif.py"
+   ]
+  },
+  {
+   "claim": "Enlace BIONZ-Darwin = MFS5 CSIO en P36-P38 (MSS_*_DWN a IC6000 MHZ4G8G01A)",
+   "rom": "a6000",
+   "addresses": [
+    "0x279e8+1*0x4c",
+    "0x279e8+3*0x4c",
+    "0x40038500"
+   ],
+   "status": "VERIFICADO",
+   "tests": [
+    "tests/test_s53_darwin_caif.py",
+    "scripts/schematic_pin_nets.py (p.23/26 manual L3)"
+   ]
+  },
+  {
+   "claim": "mss-async ID 0x0c: rx 22 B, código 03 01 02",
+   "rom": "a6000",
+   "addresses": [
+    "0x27c78",
+    "0x2000344c"
+   ],
+   "status": "VERIFICADO",
+   "tests": [
+    "tests/test_s53_darwin_caif.py"
+   ]
+  },
+  {
+   "claim": "mss-async ID 0x0c: rx 22 B, código 03 01 02",
+   "rom": "a7s",
+   "addresses": [
+    "0x28bc8",
+    "0x2000321c"
+   ],
+   "status": "VERIFICADO",
+   "tests": [
+    "tests/test_s53_darwin_caif.py"
+   ]
+  },
+  {
+   "claim": "ID 0x0c es el CAIF ev1 op 0x10300 de LIRO",
+   "rom": "a6000/a7s",
+   "addresses": [
+    "0x27c78",
+    "0x28bc8",
+    "LIRO 0x436d8354"
+   ],
+   "status": "INFERENCIA",
+   "tests": []
+  },
+  {
+   "claim": "Offsets 1:1: constructor LIRO A7S escribe pkt[+0..+0x15]",
+   "rom": "av-cam a7s",
+   "addresses": [
+    "0x43862e24..0x4386334e"
+   ],
+   "status": "VERIFICADO",
+   "tests": [
+    "analysis/s53/avcam.py"
+   ]
+  },
+  {
+   "claim": "Parser CAIF ev1",
+   "rom": "a6000",
+   "addresses": [
+    "0x17f8c",
+    "S=0x200036d8"
+   ],
+   "status": "VERIFICADO",
+   "tests": [
+    "tests/test_s53_darwin_caif.py"
+   ]
+  },
+  {
+   "claim": "Parser CAIF ev1",
+   "rom": "a7s",
+   "addresses": [
+    "0x18396",
+    "S=0x200034a0"
+   ],
+   "status": "VERIFICADO",
+   "tests": [
+    "tests/test_s53_darwin_caif.py"
+   ]
+  },
+  {
+   "claim": "A7S guarda pkt[+0x12]&0x20 en S+0xd0.b5 y fuerza clase 2",
+   "rom": "a7s",
+   "addresses": [
+    "0x18460..0x18488"
+   ],
+   "status": "VERIFICADO",
+   "tests": [
+    "tests/test_s53_darwin_caif.py"
+   ]
+  },
+  {
+   "claim": "A6000 descarta pkt[+0x12]&0x20; ningún lector de S+0xd0.b5",
+   "rom": "a6000",
+   "addresses": [
+    "0x17f8c",
+    "0x18052"
+   ],
+   "status": "VERIFICADO",
+   "tests": [
+    "tests/test_s53_darwin_caif.py"
+   ]
+  },
+  {
+   "claim": "A6300 tiene la misma inserción del bit 5 (control positivo)",
+   "rom": "a6300",
+   "addresses": [
+    "0x1943e"
+   ],
+   "status": "VERIFICADO",
+   "tests": []
+  },
+  {
+   "claim": "Predicados no_silent",
+   "rom": "a7s",
+   "addresses": [
+    "0x19a86",
+    "0x216c2"
+   ],
+   "status": "VERIFICADO",
+   "tests": [
+    "tests/test_s53_darwin_caif.py"
+   ]
+  },
+  {
+   "claim": "Escritor bit-band PDOR 0x42668000 (+0x234 P4D, +0x238 P4E, +0x230 P4C)",
+   "rom": "a6000/a7s",
+   "addresses": [
+    "0x51c0",
+    "0x5200"
+   ],
+   "status": "VERIFICADO",
+   "tests": [
+    "tests/test_s53_darwin_caif.py"
+   ]
+  },
+  {
+   "claim": "A7S escritores de bobina condicionados a no_silent",
+   "rom": "a7s",
+   "addresses": [
+    "0x2172c",
+    "0x21786",
+    "0x214dc",
+    "0x214fa",
+    "0x217b2",
+    "0x218a0",
+    "0x2192e"
+   ],
+   "status": "VERIFICADO",
+   "tests": [
+    "tests/test_s53_darwin_caif.py"
+   ]
+  },
+  {
+   "claim": "A6000 escritores de bobina sin condición Silent",
+   "rom": "a6000",
+   "addresses": [
+    "0x20cb2",
+    "0x20d00",
+    "0x20a8a",
+    "0x20aa4",
+    "0x20d26",
+    "0x20e0e",
+    "0x20e98"
+   ],
+   "status": "VERIFICADO",
+   "tests": [
+    "tests/test_s53_darwin_caif.py"
+   ]
+  },
+  {
+   "claim": "A7S omite el seguimiento ADC en Silent; A6000 no",
+   "rom": "a7s/a6000",
+   "addresses": [
+    "0x2116e",
+    "0x21282",
+    "0x20734",
+    "0x2083c"
+   ],
+   "status": "VERIFICADO",
+   "tests": []
+  },
+  {
+   "claim": "pkt[+0x0d] bits 6-7 sin consumidor Darwin",
+   "rom": "a6000/a7s",
+   "addresses": [
+    "S+0x3d"
+   ],
+   "status": "PARCIAL",
+   "tests": [
+    "analysis/s53/scan_offsets.py"
+   ]
+  },
+  {
+   "claim": "Pines A7S iguales a A6000 (P4D/P4E/P4C)",
+   "rom": "a7s",
+   "addresses": [
+    "0x5200"
+   ],
+   "status": "INFERENCIA",
+   "tests": []
+  }
+ ],
+ "hypotheses": {
+  "H53-1": "VERIFICADO",
+  "H53-2": "NO_SOPORTADA",
+  "H53-3": "PARCIAL",
+  "H53-4": "REFUTADA",
+  "H53-5": "VERIFICADO",
+  "H53-6": "VERIFICADO",
+  "H53-7": "REFUTADA",
+  "H53-8": "VERIFICADO"
+ },
+ "questions": {
+  "central": "NO: Darwin A6000 no reconoce el bit Silent ni tiene la rama sin bobinas condicionada por paquete",
+  "scenario": "B",
+  "S51": "se mantiene"
+ }
+}
