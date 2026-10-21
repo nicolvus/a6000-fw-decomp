@@ -43,6 +43,9 @@
 | S98 | orquestador userland | `libBizFw.so` une userland y firmware: la clase `AdfCh` repite el vocabulario `Prc`/`Sys`/`In`/`Out` del ADF | [`analysis/s98_bizfw/`](../analysis/s98_bizfw/) | `tests/test_s98_bizfw.py` |
 | S99 | arquitectura del userland | las capas de `libObj.so`: `MWF` (mensajes), `UFW` (recursos), `MprIf` (medios), `ux`+`GEN_*` (GUI), `AVBIZ` (apps) | [`analysis/s99_userland/`](../analysis/s99_userland/) | `tests/test_s99_userland.py` |
 | S97 | sincronización del codificador | `McAvcEncModeMgr` con 14 `CMD_ID_*`, escritura del bloque AUGI con el audio | [`analysis/s97_encsync/`](../analysis/s97_encsync/) | `tests/test_s97_encsync.py` |
+| S100 | contrato ADF ↔ `AdfCh` | 90 comandos `[ADF][DBGCMD]` y 35 métodos userland emparejados uno a uno | [`analysis/s100_adf_contract/`](../analysis/s100_adf_contract/) | `tests/test_s100_adf_contract.py` |
+| S101 | subsistema SDF | la capa de *dataflow* still: 33 `MSG_ID_SDF_*`, 477 trazas, errores de PTM | [`analysis/s101_sdf/`](../analysis/s101_sdf/) · [doc](s101-sdf.md) | `tests/test_s101_sdf.py` |
+| S103 | prefijos exclusivos A6000 | `ADC_DEBUG`, `AVR`, `ADR`, `BKID`, `AVOUT`, `CAMCORE`: ausentes en A7S | [`analysis/s103_prefixes/`](../analysis/s103_prefixes/) · [doc](s103-prefixes-a6000.md) | `tests/test_s103_prefixes.py` |
 
 ## 2. Cómo se sostiene el rigor
 

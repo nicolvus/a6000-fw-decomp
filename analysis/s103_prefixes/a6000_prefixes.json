@@ -190,7 +190,7 @@
     "El prefijo pertenece al bloque ADC que LIRO arranca en boot: la cadena `boot_exit_adcliro` (0x43ce5315) y el nombre de tarea `TSK_ADC` (0x43ce5291) están en la misma región, y los comandos `ADC_GET_DATA` (0x43ce529f), `ADC_GET_DATA_ALL` (0x43ce52c5) y `ADC_SET_DATA_ALL` (0x43ce52e5) describen una unidad con `unit_no` y 12 canales `data0..data11`.",
     "La función 0x4398eb22 valida `unit_no` (`cmp r0,#1` / `bgt`), reserva 0x20 bytes con OSAL (0x435612d0), escribe la cabecera 0xfff1 en [msg] y el canal en [msg+4], envía con 0x43561228 y luego imprime DATA0..DATA11 leyendo 12 halfwords desde [msg+6].",
     "La función 0x4398ec7e hace lo mismo con cabecera 0xfff0, mensaje de 8 bytes y dos canales; su cadena es el `ADC DATA` genérico 0x43ce5273. El mensaje se libera con OSAL 0x435612ec.",
-    "Los nombres `ADJ_CMD_LIRO_DRIVERS_ADC_LIRO_ADC_*` (0x43ce4fc5-0x43ce507a) son comandos de ajuste de fábrica del mismo bloque; solo cuatro de ellos tienen referencia PIC (GET_DATA_ALL, CHECK_DATA, TEST_MODE, SET_DATA), mientras GET_DATA (0x43ce4fc5) no aparece referenciada."
+    "Los nombres `ADJ_CMD_LIRO_DRIVERS_ADC_LIRO_ADC_*` (0x43ce4fc7-0x43ce507a) son comandos de ajuste de fábrica del mismo bloque; solo cuatro de ellos tienen referencia PIC (GET_DATA_ALL, CHECK_DATA, TEST_MODE, SET_DATA), mientras GET_DATA (0x43ce4fc7) no aparece referenciada."
    ],
    "evidence": "VERIFICADO: cadenas y xrefs PIC comprobadas contra bytes; estructura del mensaje y cabeceras verificadas por desensamblado de 0x4398eb22/0x4398ec7e.",
    "caveats": [
@@ -224,7 +224,7 @@
      "why": "arranque/salida del bloque ADC de LIRO."
     },
     {
-     "vaddr": "0x43ce4fc5",
+     "vaddr": "0x43ce4fc7",
      "text": "ADJ_CMD_LIRO_DRIVERS_ADC_LIRO_ADC_GET_DATA",
      "why": "comando ADJ sin xref PIC (los otros cuatro sí la tienen)."
     }
@@ -919,7 +919,7 @@
  "corrections": [
   {
    "about": "S73 (analysis/s73_adj/adjust_cmd_recon.md)",
-   "text": "S73 afirmaba cuatro nombres ADJ de ADC en 0x43ce4ff2-0x43ce507a; en realidad hay cinco cadenas ADJ_CMD_LIRO_DRIVERS_ADC_LIRO_ADC_* (0x43ce4fc5-0x43ce507a) y solo cuatro tienen xref PIC (GET_DATA_ALL, CHECK_DATA, TEST_MODE, SET_DATA); GET_DATA (0x43ce4fc5) no está referenciada."
+   "text": "S73 afirmaba cuatro nombres ADJ de ADC en 0x43ce4ff2-0x43ce507a; en realidad hay cinco cadenas ADJ_CMD_LIRO_DRIVERS_ADC_LIRO_ADC_* (0x43ce4fc7-0x43ce507a) y solo cuatro tienen xref PIC (GET_DATA_ALL, CHECK_DATA, TEST_MODE, SET_DATA); GET_DATA (0x43ce4fc7) no está referenciada."
   }
  ]
 }

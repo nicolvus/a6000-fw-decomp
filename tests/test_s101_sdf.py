@@ -152,11 +152,11 @@ class TestSDFAggregate:
     """Aggregate checks for the SDF subsystem."""
 
     def test_total_sdf_messages(self):
-        """Count of MSG_ID_SDF_* messages should be 48 (as listed)."""
-        # From the JSON we listed 48 messages
-        expected_count = 48
-        actual_count = 48  # verified from grep output
-        assert actual_count == expected_count, f"Expected 48 MSG_ID_SDF messages, got {actual_count}"
+        """Count of distinct MSG_ID_SDF_* strings found in the binary."""
+        import re
+        data = open(BIN_PATH, "rb").read()
+        found = {m.group(0) for m in re.finditer(rb"MSG_ID_SDF[A-Za-z0-9_]*", data)}
+        assert len(found) == 33, f"Expected 33 distinct MSG_ID_SDF_* strings, got {len(found)}"
 
     def test_sdf_module_span(self):
         """SDF module should span from 0x43c7785b to 0x43c806f9 (A6000)."""
