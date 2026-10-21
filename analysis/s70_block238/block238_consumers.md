@@ -23,3 +23,9 @@ Siguiente: seguir `str rX,[...]` del resultado de `0x43804de8` hacia globales y 
 - Lectores localizados: `0x1b080` (devuelve el byte si `[tabla+ch]≠0`), `0x1b096` (booleano) y `0x1b0b2` (valida `ch<0x18` y copia el estado a la tabla de habilitación); todos hacen `ldrb.w r,[base+ch,#0x50]`.
 - **Ningún escritor por código**: no hay literal `0x20000050…58` en el pool (solo `0x20000000`, `0x20000044/47`, `0x200002c0`), y el arranque (`reset 0x45c8 → 0x4638`) no hace carga de datos desde ROM: solo fija unos bytes sueltos (cadena `1351…_2`, etc.).
 - INFERENCIA: el bloque `0x20000000…` lo rellena un agente externo (el host BIONZ por el enlace MFS5/mss-async) o una copia en bloque con destino calculado; el tipo de mecanismo no se fija por constantes de Darwin. NO VERIFICADO: qué mensaje lo escribe.
+
+## Ampliación 2: búsqueda de escritores del tipo en Darwin (`darwin_type_writers.py`)
+
+- La tabla de tipo es `[0x20000000 + ch + 0x50]` y la de habilitación `[0x200002c0 + ch]` (pools `0x1b0e0/0x1b0e4`); `0x1b0b2` fija la habilitación solo si el tipo ≠ 0 (VERIFICADO por bytes).
+- Barrido de todo `darwin_core.bin`: los únicos `strb` con desplazamiento `0x50–0x67` son bucles de puesta a cero (`0x128b4`, `0x179c0/0x179ca`, `0x1a3a8`: valor 0 en registro, índice con `adds`) o campos de otras estructuras (`0x16bf4`, `0x1793e`). **Ningún almacén escribe un valor de tipo ≠ 0.**
+- Por tanto el tipo no lo fija el código de Darwin; solo cabe (a) carga del bloque `0x20000000…` por un agente externo (host/cargador), o (b) valores a cero ⇒ tipo 0 permanente en A6000, que es coherente con S54 (tipo 0 ≡ rama sin mecanismo). NO VERIFICADO cuál.
