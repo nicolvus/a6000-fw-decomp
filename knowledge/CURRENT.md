@@ -176,6 +176,16 @@ Para restricciones del proyecto (sin firmware ejecutado, sin flasheo, sin `git p
 
 [Conclusiones](../analysis/s87_storage/storage_filesystem.md) · [JSON](../analysis/s87_storage/storage_filesystem.json).
 
+## S93 — el bus de mensajes OSAL del userland (21-10-2026)
+
+**VERIFICADO (6 tests, `tests/test_s93_osal_bus.py`):** el lado Linux de la cámara se organiza en **microservicios** que se hablan por colas OSAL, con dos niveles: **GID** (grupo, 16 nombres) y **LID** (cola, 13 nombres). Grupos: `AIRPLANE_MODE_SCALAR_API`/`_TEST` (libInfraAirplaneMode), `APP_VIEW_SCALAR`/`INFRA_VDF`/`CAMERA_RAW_DEVELOP`/`NET_BACKUP_SERVER` (libObj), **`DETECT_FACE`**/`DMM_CTRL`/`SADRIVER` (libBizFw), **`GPS_GET`** (libmpr), `NETSERVICE_SCALAR_API`/`SYNC_EMU`/`TEST` (libNetService), **`TASK_ADC`** (libRsrcHotshoe), `WLAN_RSRC_DBG`/`_TEST` (libWlanResource). Colas: `AIRPLANE_MODE_API`, `DLNACONTROL_CP`/`_MAIN`/`_MEDIASVR` (libInfraDlnaControl), `GPS_GET` (libmpr), **`MDNS_CONTROL_MAIN`** (libInfraMDnsControl), `NETFUNCTIONMGR_MAIN` (libInfraNetFunctionManager), `NETSERVICE_ASYNC_REQ`/`SYNC_REQ` (libNetService), `NET_BACKUP_SERVER_INFRA_NET_SERVICE_CMP` (libObj), `R_HOTSHOE_API` (libRsrcHotshoe), **`WEBAPI_MAIN`** (libInfraWebApi), `WLAN_RSRC_API` (libWlanResource).
+
+**Lo que revela (VERIFICADO):** el "firmware de negocio" `libBizFw.so` es quien **orquesta la detección de caras** (`OSAL_MSGQ_GID_DETECT_FACE`) y el driver del escalar; la **A6000 incluye soporte de GPS en el firmware** (`libgps_rsrc.so` + `OSAL_MSGQ_GID_GPS_GET` en libmpr) aunque no tenga GPS de hardware (código heredado de la A7S); y la cámara **se anuncia por mDNS y expone una API web** (`libInfraMDnsControl.so`, `libInfraWebApi.so`).
+
+**NO VERIFICADO:** los mensajes concretos de cada cola; qué sirven `CAMERA_RAW_DEVELOP` y `NET_BACKUP_SERVER`; si el bus OSAL del userland es el mismo que el ADF del firmware; el protocolo de la API web.
+
+[Conclusiones](../analysis/s93_osal_bus/osal_message_bus.md).
+
 ## S69 — subsistema de audio de la A6000 (línea general) (21-10-2026)
 
 **VERIFICADO (9 tests, `tests/test_s69_audio.py`):** el audio del `av-cam.bin` A6000 es un *IP* más del driver de sensor: arranque `AUDIOIP INIT COMP` (`0x43c26411`) con configs VGS/PR/MF/CONS/BANDI; micrófono (`AdfSenserCtrl::SetParamSetMicMode` `0x43c26dc1`, `Abb::SetMicConfig` `0x43cddad4`, `AbbMicSensAdjustCtrl::SetStatus` `0x43cddd49`); niveles (`SetParamSetRecLevel` `0x43c26df4`, `SetParamSetRecMode` `0x43c26e91`, `15AbbRecLevelCtrl` `0x43cdddf3`, `RecLevel SetRecLevel` `0x43929fa4`); WNR y cancelación de voz (`WindStage:%d, MagDataRsv:%d` `0x43cddea7`, `MAGIC SetNwnr`, `New WNR ON/OFF`, `PremiumCloserVoice`, `MyvoiceCanceling`, `iVoice` `0x43cddeec`–`0x43cddf9a`); códecs `XAVCS_LPCM` `0x43c6909d`, `MP4_LPCM` `0x43c690c8`, `AAC` `0x43c690f1`; diagnóstico (`targetAudioFormat` `0x43c5c68e`, `audioChannelNum` `0x43c5c6b1`, `audioMuteRec` `0x43c5ca62`); enlace con vídeo (`ProcBuffMgrWrAudioPin` `0x43c28d29`, `AVBB_SCN_START/STOP_AUDIO`); backup de sonido (`9AudioIpIf` `0x43cdd82e`, `Sa SaChangeBackup` `0x43cddfbc`). **A7S (fw3.20) tiene códec externo** (`15AbbExtCodecCtrl` `0x43cd582e`, `ConvChSsau2AudioIpCh` `0x43c2f48a`) que la A6000 (fw3.21) **no tiene**; el resto del audio es prácticamente idéntico (235 vs 237 cadenas).
