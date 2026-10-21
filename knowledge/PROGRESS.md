@@ -1866,20 +1866,22 @@ trabaja en los mismos temas con Capstone (sin sesiones REA: 0 Ghidra abiertas, 9
 | S89 | `IDT`/`IDT_OPD` (mapas del imager, FOPD, Split) | propio |
 | S90 | reproducción de vídeo (PlayArranger, VFC, VDISP) | subagente + revisión |
 | S91 | submódulos del framework ADF | propio |
-| S92 | base de datos de medios (SceneInfo/MovieFile) | subagente (en curso) |
+| S92 | base de datos de medios (SceneInfo/MovieFile) | subagente + revisión |
 | S93 | bus de mensajes OSAL del userland (16 GID, 13 LID) | propio |
-| S94 | API HAPI de la app remota | subagente (en curso) |
+| S94 | API HAPI de la app remota | subagente + revisión |
 | S95 | inventario de ficheros que la cámara lee y escribe | propio |
-| S96 | modos de captura y calibración de fábrica | subagente (en curso) |
+| S96 | modos de captura (`drive_mode`, `CapMode`, 69→14 ShdMode) | propio |
 
 **Correcciones de revisión aplicadas a hitos previos:** S76 (`Stage_WaitControl.cpp` en `0x43cad784`,
 no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 
 **Líneas libres para la siguiente ola** (verificadas sin colisión con `docs/` ni con `analysis/`):
 - `SceneInfo`/índice de medios (S92, en curso), API HAPI (S94, en curso), modos de captura (S96, en curso).
-- Todavía sin tocar: `ENCMODEMGR`/`ENCAUDSYNC`/`SYNCENCSTART` (sincronización audio-vídeo del
-  codificador), `libBizFw.so` (el orquestador de servicios: sus categorías/IDs de mensaje), y el
-  grafo de dependencias entre módulos a partir de `analysis/s79_modules/module_map.json`.
+| S97 | sincronización audio-vídeo del codificador (`ENCMODEMGR`/`ENCAUDSYNC`/`SYNCENCSTART`) | subagente (en curso) |
+
+- Todavía sin tocar: `libBizFw.so` (el orquestador de servicios: sus categorías/IDs de mensaje y su
+  puente con el ADF del firmware), y el grafo de dependencias entre módulos a partir de
+  `analysis/s79_modules/module_map.json`.
 
 ## S92 — la base de datos de medios: SceneInfo, MovieFile e índice (21-10-2026, línea general)
 - Hecho: integración del hito de base de datos de medios (subagente `nemotron-3.5-lightning-free`) **verificado por muestreo**: en `av-cam.bin`, `[CAMERA_MAIN]: LiroSequencerMovieFileFormat : %d` `0x43ca3b3a` (el secuenciador LIRO, que además lee la **posición del dial de diafragma**: `LiroSequencer cannot read IRIS_DIAL_POS` `0x43ccadbf`) y `Scene%02d.txt` `0x43ccb21b`; en el userland, `libmpr.so` con la interfaz `MprIf` (1525 apariciones), `PreRegisterDcfContentSync` (8), `GetHighlightSceneInfo` (2) y `SceneInfo` (10), y `libObj.so` con `SceneInfo`/`HighlightScene` (5). Enlaza con S87 (modelo de objetos e índice). Informe `analysis/s92_mediadb/media_database.md` + JSON, test `tests/test_s92_mediadb.py` 10/10.
