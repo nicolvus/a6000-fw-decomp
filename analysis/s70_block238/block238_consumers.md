@@ -29,3 +29,11 @@ Siguiente: seguir `str rX,[...]` del resultado de `0x43804de8` hacia globales y 
 - La tabla de tipo es `[0x20000000 + ch + 0x50]` y la de habilitación `[0x200002c0 + ch]` (pools `0x1b0e0/0x1b0e4`); `0x1b0b2` fija la habilitación solo si el tipo ≠ 0 (VERIFICADO por bytes).
 - Barrido de todo `darwin_core.bin`: los únicos `strb` con desplazamiento `0x50–0x67` son bucles de puesta a cero (`0x128b4`, `0x179c0/0x179ca`, `0x1a3a8`: valor 0 en registro, índice con `adds`) o campos de otras estructuras (`0x16bf4`, `0x1793e`). **Ningún almacén escribe un valor de tipo ≠ 0.**
 - Por tanto el tipo no lo fija el código de Darwin; solo cabe (a) carga del bloque `0x20000000…` por un agente externo (host/cargador), o (b) valores a cero ⇒ tipo 0 permanente en A6000, que es coherente con S54 (tipo 0 ≡ rama sin mecanismo). NO VERIFICADO cuál.
+
+## Hito S70 (cierre): el tipo de mecanismo no sale de la imagen de Darwin en ningún modelo
+
+**VERIFICADO (bytes, `darwin_type_three_models.py`):** en A6000 fw3.21, A7S fw3.20 y A6300 fw2.01 `darwin_core.bin` tiene exactamente tres lectores de `[0x20000000+ch+0x50]` (A6000 `0x1b090/0x1b0a6/0x1b0cc`, A7S `0x1b5f8/0x1b60e/0x1b634`, A6300 `0x1cf44/0x1cf5a/0x1cf80`), **cero escritores y cero literales** a `0x20000050–58`. La tabla de categoría `0x2d` (`0x2a1a0`) tiene solo 9 manejadores y ninguno escribe tipos.
+
+**VERIFICADO:** el arranque (`reset 0x45c8 → 0x4638` y `__scatterload` `0x4404`) carga solo dos regiones: `0x2a764→0x20002a00` (`0x4d0` B, descompresión RLE `0x4438`) y puesta a cero `0x20002ed0` (`0xf8c` B). `0x20000000–0x200029ff` (bajo la pila inicial `0x20002a00`) **no se inicializa desde la imagen**.
+
+**Conclusión (INFERENCIA fuerte):** la tabla de tipos de mecanismo en Darwin la fija algo ajeno a `darwin_core.bin`: el cargador de `0x0–0x41ff` (no incluido en la actualización) o el host por MFS5. Como la A7S (con Silent) tiene la misma estructura, la diferencia A6000/A7S no está en el código de Darwin que lee el tipo, sino en el **valor suministrado** (o en el bit `0x20` que A6000 descarta, S53). No se puede cerrar sin ver la RAM de Darwin: traza pasiva autorizada o volcado del cargador. S51 se mantiene.
