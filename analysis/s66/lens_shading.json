@@ -1,0 +1,62 @@
+{
+  "milestone": "S66",
+  "subtask": "E",
+  "scope": "Subsistema SHD (sombreado dependiente de la lente) en av-cam.bin",
+  "models": ["A6000", "A7S"],
+  "a6000_functions": [
+    {"name": "SHD::GetShdMode", "addr": "0x438ef40e", "log": "SHD::GetShdMode: unknown drive_mode = 0x%x", "log_addr": "0x43ccca56"},
+    {"name": "SHD::GetLensShdGain", "addr": "0x438eee3c", "log": "SHD::GetLensShdGain: uc_Color = 0x%x", "log_addr": "0x43ccca1f"},
+    {"name": "SHD::job_LensMountSHD_GainCalc", "addr": "0x438f0804", "log": "SHD::job_LensMountSHD_GainCalc: ShdMode = 0x%x", "log_addr": "0x43ccce0c"},
+    {"name": "SHD::CalcLensShdGainToy", "addr": "0x438f10e2", "log": "SHD::CalcLensShdGainToy: ShdMode = 0x%x", "log_addr": "0x43ccce4d"},
+    {"name": "SHD::IsTrackBonoboOn", "addr": "0x438f1f5e", "log": "SHD:IsTrackBonoboOn: LensShdMode = 0x%x", "log_addr": "0x43cccf6b"},
+    {"name": "SHD::CalcLensShdGainAdj / SHD::CalcLensShdGain", "addr": "0x438f3278", "log": "SHD::CalcLensShdGainAdj: ShdMode/ShdSync; SHD::CalcLensShdGain: lens_shd_mode", "log_addr": "0x43ccd31f"}
+  ],
+  "trace_helper": "0x438ee938",
+  "shd_mode_table": {
+    "function": "0x438ef40e",
+    "dispatch": "tbb [pc, r3]",
+    "input": "drive_mode (0..0x44, 69 modos de captura)",
+    "table_addr": "0x438ef418",
+    "entries": 69,
+    "distinct_values": ["0x00","0x01","0x02","0x03","0x04","0x05","0x06","0x07","0x08","0x09","0x0a","0x0b","0x0c","0x0d","0x0f"],
+    "value_0x0e_present": false,
+    "distribution": {"0x00": 10, "0x01": 8, "0x02": 20, "0x03": 4, "0x04": 3, "0x05": 1, "0x06": 2,
+                     "0x07": 1, "0x08": 4, "0x09": 3, "0x0a": 7, "0x0b": 2, "0x0c": 2, "0x0d": 1, "0x0f": 1},
+    "evidence": "analysis/s66/out/shd_modes_a6000.txt"
+  },
+  "per_lens_fields": [
+    {"name": "ss_LensMountShdValue[0..10]", "count": 11, "type": "u8", "addr_range": ["0x43cbe9cb", "0x43cbeabb"]},
+    {"name": "us_LensMountShdGain[0..31]", "count": 32, "type": "u16", "addr_range": ["0x43cbead4", "0x43cbedb2"]},
+    {"name": "us_ShdGainMin", "addr": "0x43cbee03"},
+    {"name": "us_LensMountShdEffect", "addr": "0x43cbee11"},
+    {"name": "uc_SyncLensShdOn", "addr": "0x43cbe73b"}
+  ],
+  "other_shd_logs": [
+    "SHD::JudgeShdOn (LensShdOn vs PzShdOn)",
+    "SHD::GetWviSize",
+    "SHD::GetShdTblData: id = 0x%x",
+    "SHD::IsModulateOn: uc_modulate_bit",
+    "SHD::CalcRateBase / SHD::CalcCenterBase / SHD::GetShiftPixel",
+    "SHD::CalcSensShdCoefAdj: ShdSync"
+  ],
+  "model_comparison": {
+    "a6000_shd_log_count": 217,
+    "a7s_shd_log_count": 217,
+    "log_sets_identical_after_stripping_prefix": true,
+    "only_difference": "A6000 antepone '[CAMERA_MAIN_YC]: ' a todos los logs SHD; A7S usa 'SHD::...' sin prefijo",
+    "conclusion": "El subsistema de correccion de sombreado es el mismo en fw3.21 (A6000) y fw3.20 (A7S)",
+    "shared_features": [
+      "SHD::Std:: y SHD::Regulus:: (ThinoutAdjustQsrfShd)",
+      "job_YC_CalcParam / job_YC_SetParam en fases SYNC, PRELIGHT y CAP",
+      "uc_lshd_gain_idx_num, uc_iris_idx_num, uc_fc_idx_num, uc_shut_idx_num, uc_zm_idx_num",
+      "SHD::GetShdTblData, SHD::GetWviSize, SHD::CalcSensShdCoefAdj",
+      "us_LensMountShdGain[0..31]"
+    ]
+  },
+  "open_questions": [
+    "Origen fisico de ss_LensMountShdValue[]/us_LensMountShdGain[] (fichero de lente vs tabla interna)",
+    "Unidades y escala de las ganancias y de us_ShdGainMin",
+    "Relacion ShdMode / lens_shd_mode / sens_shd_mode con el coeficiente final aplicado al YC",
+    "Significado de Bonobo en SHD::IsTrackBonoboOn"
+  ]
+}

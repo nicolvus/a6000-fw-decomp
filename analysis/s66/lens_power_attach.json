@@ -1,0 +1,142 @@
+{
+  "milestone": "S66",
+  "subtask": "D",
+  "scope": "Montura de lente E-mount (MOUNT/BL) en av-cam.bin A6000 fw3.21 — línea general, sin relación con SilentShutter",
+  "model": "A6000",
+  "firmware": "fw321 (0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin)",
+  "blob_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "verified_by": [
+    "tests/test_s66_lens_mount.py (18 tests, Capstone sobre bytes)",
+    "analysis/s66/out/func_436e5e3c.txt (evidencia cruda)",
+    "REA/Ghidra 12.1.4 vía demonio (decompilación de 0x436e0d74, 0x436e1328, 0x436e239c)"
+  ],
+  "code_regions": {
+    "strings": ["0x43c95659", "0x43c9a900"],
+    "strings_count": 646,
+    "controller_code": ["0x436dfe6c", "0x436e9ea4"],
+    "main_mount_task": ["0x436e5e3c", "0x436e7bf0"],
+    "main_mount_task_bytes": 7604,
+    "main_mount_task_log_refs": 63
+  },
+  "source_files": ["Mount_Controller.cpp", "Mount_DividedInfo.cpp"],
+  "userland_api": {
+    "library": "libInfraLensCommunicator.so",
+    "symbols": [
+      "LensCommunicator::GetMountedLensInfo",
+      "LensCommunicator::GetSuopportedCommandIds",
+      "LensCommunicator::SndSyncMsg",
+      "LensCommunicator::ReadBackup",
+      "LensCommunicator::InitCmd",
+      "LensCommunicator::StartEvt",
+      "LensCommunicator::FinalizeCmd"
+    ]
+  },
+  "protocol": {
+    "name": "BL (body<->lens)",
+    "directions": ["B->L", "L->B"],
+    "transport": "UART (ver logs UART_HZ / UART_HS_COMPLETE) + handshake por lineas CS/DATA via GPIO",
+    "hs_handshake": {
+      "states": [0, 1, 3],
+      "sequence": ["CS_HIGH", "DATA_HIGH", "CS_LOW", "COMPLETE"],
+      "gpio_set_wrapper": "0x43ada128",
+      "gpio_get_wrapper": "0x43ada134",
+      "gpio_get_primitive": "0x43b5e2bc",
+      "timeout_log": "[MOUNT_ERROR]: [BL][HS]POWER SEQ TIME OUT",
+      "pins": "NO_VERIFICADO (descriptores en memoria reubicada fuera del blob)"
+    },
+    "framing_checks": ["HEADER_NG", "FOOTER_NG", "CHECKSUM_NG", "DATASIZE_NG", "COMMTYPE_NG_0"],
+    "credit_flow": ["CS_CREDIT (L->B)", "CS_CREDIT=%d (B->L)", "LIF CREDIT RegistErro Lens doesn't know = %d"],
+    "structures": [
+      "BL ReceiveData", "BL SendData", "BL VsyncBufInfo", "BL Info",
+      "CommState", "ConnectLens", "PowerMode", "PowerMainSeq", "LensPowerState",
+      "ReceiveLastIndex", "PreviousIndexInfo1", "NowIndexInfo1", "ReceiveLastIndexInfo1",
+      "ErrCode", "PowerMainSeq_save", "VsyncErrCount", "VsyncErrCountAll", "ModuleCommand",
+      "Mecha", "LMCommandRes", "Capture", "POST", "Timing", "mastercounter",
+      "nextVDCycle", "nowVDCycle", "vd_counter(VFC)", "vd_counter(BL)",
+      "EditFlg(info1)", "EditFlg(info2)", "SendFlg(info1)", "SendFlg(info2)",
+      "EditCmpMCS(0)", "EditCmpMCS(1)", "EditCmpTC(0)", "EditCmpEC(0)", "EditCmpLC(0)",
+      "WriteSize(info1_0)", "WriteSize(info1_1)", "PreviousSendCnt(info1)", "GPL/GPMA DDS"
+    ],
+    "commands_body_to_lens": [
+      {"msg": "CS_POWER", "instr": "0x436e4412", "func": "0x436e4360"},
+      {"msg": "ATTACH_INFO1", "instr": "0x436e445c", "func": "0x436e4360"},
+      {"msg": "ATTACH_INFO3", "instr": "0x436e449e", "func": "0x436e4360"},
+      {"msg": "ATTACH_INFO4", "instr": "0x436e44da", "func": "0x436e4360"},
+      {"msg": "TEST_CMD", "instr": "0x436e4572", "func": "0x436e4360"},
+      {"msg": "CS_RESET", "instr": "0x436e4708", "func": "0x436e4360"},
+      {"msg": "UPDATE_DATA", "instr": "0x436e4800", "func": "0x436e4800"},
+      {"msg": "ALPHA_LENS_INFO", "instr": "0x436e50c4", "func": "0x436e509c"},
+      {"msg": "CS_CREDIT", "instr": "0x436e520e", "func": "0x436e51ac"},
+      {"msg": "STARTUP_INFO", "instr": "0x436e5c6c", "func": "0x436e5c6c"},
+      {"msg": "ATTACH_INFO2", "instr": "0x436e5cfc", "func": "0x436e5cfc"},
+      {"msg": "UPDATE_ON", "instr": "0x436e714a", "func": "0x436e5e3c"}
+    ],
+    "commands_lens_to_body": [
+      {"msg": "CS_POWER", "instr": "0x436e4b82", "func": "0x436e4b66"},
+      {"msg": "SYSTEM_HZ", "instr": "0x436e4bb2", "func": "0x436e4b96"},
+      {"msg": "CS_RESET", "instr": "0x436e4be8", "func": "0x436e4bc4"},
+      {"msg": "CS_RESET_ERROR", "instr": "0x436e4c06", "func": "0x436e4bc4"},
+      {"msg": "CS_SLEEP", "instr": "0x436e4c42", "func": "0x436e4c26"},
+      {"msg": "CS_CHECK_CMD", "instr": "0x436e4c78", "func": "0x436e4c54"},
+      {"msg": "ATTACH_INFO1", "instr": "0x436e4cc6", "func": "0x436e4ca0"},
+      {"msg": "STARTUP_INFO", "instr": "0x436e5034", "func": "0x436e4f98"},
+      {"msg": "CS_CREDIT", "instr": "0x436e5088", "func": "0x436e505c"},
+      {"msg": "ATTACH_INFO2", "instr": "0x436e67fe", "func": "0x436e5e3c"},
+      {"msg": "ATTACH_INFO3", "instr": "0x436e6854", "func": "0x436e5e3c"},
+      {"msg": "ATTACH_INFO4", "instr": "0x436e68ce", "func": "0x436e5e3c"},
+      {"msg": "ALPHA_LENS_INFO", "instr": "0x436e7292", "func": "0x436e5e3c"},
+      {"msg": "TEST_CMD", "instr": "0x436e7840", "func": "0x436e5e3c"},
+      {"msg": "UART_HZ 750/1500", "instr": "0x436e65bc", "func": "0x436e5e3c"}
+    ]
+  },
+  "lens_type_decode": {
+    "function": "0x436e4eb4",
+    "field": "ldrb r6, [r3, #0x22]",
+    "mask": "and r6, r6, #3",
+    "cases": [
+      {"value": 1, "log": "[MOUNT_DEBUG]: [BL]LENS_POWER_4.8V", "log_addr": "0x43c97cff", "arg": "0x1000 (=4096 mV)"},
+      {"value": 2, "log": "[MOUNT_DEBUG]: [BL]LENS_POWER_UNREG", "log_addr": "0x43c97d22"},
+      {"value": "otro", "log": "[MOUNT_ERROR]: [BL]LENS_TYPE_UNKNOWN", "log_addr": "0x43c97d46", "error_code": "0xFF"}
+    ],
+    "success_error_code": "0x0A"
+  },
+  "lifecycle": {
+    "function": "0x436e5e3c",
+    "log_order": [
+      "MOUNT_CA_REQ_CLOSED", "LOGIC_POWER", "CA LOGIC POWER RES ERR", "POFF(WAIT_LOGICPWR_OFF)",
+      "ERROR DETACH", "DETACH RETRY", "LENS_WEAR_START", "UART_HZ 750/1500", "UART_HZ NG",
+      "UART_HS_COMPLETE NO_WAIT", "UART_HS_COMPLETE", "[L->B]ATTACH_INFO2", "[L->B]ATTACH_INFO3",
+      "[L->B]ATTACH_INFO4", "LENS_WEAR_END", "WAKE_UP_START", "WAKE_UP_END", "POWEROFF_START",
+      "POWEROFF_HANDSHAKE_END", "POWEROFF_HANDSHAKE_TIMEOUT_ERROR", "cam_cmd change (0xC05:PB 0xC06:POFF)",
+      "POWEROFF_END", "DETACH_1", "DETACH_COMP", "DETACH_2", "DETACH_START", "LOGIC_OFF", "LOGIC_OFF_COMP",
+      "LOGIC_ON", "LOGIC_ON_COMP", "[B->L]UPDATE_ON", "LOGIC_OFF2", "LOGIC_OFF_COMP2",
+      "[L->B]ALPHA_LENS_INFO", "WAIT CHGFREQ1", "WAIT CHGFREQ2", "WAIT NEXTVD", "FREQ Now/Send",
+      "STANDBY", "PB->WAKEUP->OFF", "POWEROFF_HANDSHAKE_END", "POWEROFF_ERROR_HANDSHAKE_END",
+      "POWEROFF_END", "[L->B]TEST_CMD", "WAIT_LOGICPWR_OFF", "POFF", "FORCE LENS DETACH",
+      "LastLensError", "POWER PARAM mode/main_seq/hs_seq"
+    ],
+    "aux_logs": [
+      {"log": "/mnt/Mount_ms_log_%03d.dat", "addr": "0x43c97146"},
+      {"log": "[MOUNT_DEBUG]: [BL]CHG FREQ, %d, %d, %d", "addr": "0x43c98ac2", "instr": "0x436e5b16"},
+      {"log": "[MOUNT_WARNING]: [BL]LENS_SLEEP MODE:%d", "addr": "0x43c97a16"}
+    ]
+  },
+  "a7s_comparison": {
+    "model": "A7S",
+    "firmware": "fw320",
+    "same_subsystem": true,
+    "present_in_both": ["Mount_Controller.cpp", "Mount_DividedInfo.cpp", "BonoboDSP_Send/Rcv",
+                        "LensPowerState", "LENS_TYPE_UNKNOWN", "LENS FIRMERR", "UART_HZ NG",
+                        "PREPARE UPDATE", "[L->B]"],
+    "only_a6000": ["[MOUNT_DEBUG]", "[MOUNT_ERROR]", "[B->L]", "LENS_WEAR_START", "DETACH_START",
+                   "ALPHA_LENS_INFO", "LENS_POWER_4.8V", "LENS_POWER_UNREG", "CS_CREDIT",
+                   "LENS_SLEEP MODE", "UART_HZ 750"]
+  },
+  "open_questions": [
+    "Pines fisicos GPIO de CS/DATA y alimentacion 4.8 V (descriptores reubicados fuera del blob)",
+    "Unidades de UART_HZ 750/1500 y del timeout 0x1388",
+    "Formato exacto de trama (cabecera/footer/checksum) y tabla nombre<->ID de comando",
+    "Semantica de ALPHA (lentes de terceros) y del campo LensPowerState",
+    "Codigo que carga /lens/VX91xx_lensfile.bin (subtarea B)"
+  ]
+}

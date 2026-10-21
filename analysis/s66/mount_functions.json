@@ -1,0 +1,1218 @@
+{
+  "milestone": "S66",
+  "subtask": "A",
+  "scope": "MOUNT/BL (montura E-mount) en av-cam.bin A6000 fw3.21: inventario de funciones, protocolo de transporte cuerpo<->lente y estado",
+  "model": "A6000",
+  "firmware": "fw321",
+  "blob": {
+    "path": "analysis/rea-independent/input/av-cam.bin",
+    "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+    "size": 11427236,
+    "load_base": "0x43541000"
+  },
+  "method": [
+    "REA/Ghidra 12.1.4 via demonio compartido (procedure_info, pseudo_codigo)",
+    "Capstone con literales PIC (analysis/s58/tdis.py, analysis/s66/func_strings.py)",
+    "verificacion de bytes y tablas en el blob"
+  ],
+  "region": {
+    "requested": [
+      "0x436dfe00",
+      "0x436e3000"
+    ],
+    "covered": [
+      "0x436dfe1c",
+      "0x436e3370"
+    ],
+    "note": "Mount_DividedInfo.cpp empieza en 0x436e39e8 y el driver B->L/L->B en 0x436e4156-0x436e5e3c, fuera del rango pedido; procedure_info situa 0x436e1554 dos bytes antes del prologo real 0x436e1556"
+  },
+  "legend": {
+    "VERIFICADO": "leido en bytes/instrucciones del blob",
+    "INFERENCIA": "lectura razonada de esos bytes",
+    "NO_VERIFICADO": "pendiente"
+  },
+  "functions": [
+    {
+      "addr": "0x436dfe1c",
+      "end": "0x436dfe28",
+      "bytes": 12,
+      "role": "clear de 6 B de un global (0x4393ac98)",
+      "evidence": "CAP"
+    },
+    {
+      "addr": "0x436dfe2c",
+      "end": "0x436dfe36",
+      "bytes": 10,
+      "role": "clear de 4 B de un global",
+      "evidence": "CAP"
+    },
+    {
+      "addr": "0x436dfe3c",
+      "end": "0x436dfe42",
+      "bytes": 6,
+      "role": "getter: puntero a global",
+      "evidence": "CAP"
+    },
+    {
+      "addr": "0x436dfe48",
+      "end": "0x436dfe50",
+      "bytes": 8,
+      "role": "getter: u32 de global",
+      "evidence": "CAP"
+    },
+    {
+      "addr": "0x436dfe54",
+      "end": "0x436dfe5a",
+      "bytes": 6,
+      "role": "getter: puntero a global (2)",
+      "evidence": "CAP"
+    },
+    {
+      "addr": "0x436dfe60",
+      "end": "0x436dfe68",
+      "bytes": 8,
+      "role": "getter: u8 de global",
+      "evidence": "CAP"
+    },
+    {
+      "addr": "0x436dfe6c",
+      "end": "0x436dff08",
+      "bytes": 156,
+      "role": "AM: agrega entrada a la lista de datos de comandos (13 bloques)",
+      "evidence": "REA",
+      "rea_procedure": true,
+      "strings": [
+        "[MOUNT_ERROR]: [MCS]addCmdDataList data times overflow"
+      ]
+    },
+    {
+      "addr": "0x436dff34",
+      "end": "0x436dffd6",
+      "bytes": 162,
+      "role": "AM: construye y encola informe (cabecera 0x20 B; payload via 0x439c5004 fmt 0x81)",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436dffe0",
+      "end": "0x436e0000",
+      "bytes": 32,
+      "role": "AM: comprobacion de miembro de tabla",
+      "evidence": "REA",
+      "rea_procedure": true,
+      "strings": [
+        "[MOUNT_WARNING]: [MOUNT AM]NO MEMBER CHECK_DATA:%d"
+      ]
+    },
+    {
+      "addr": "0x436e0004",
+      "end": "0x436e0022",
+      "bytes": 30,
+      "role": "AM: comprobacion de miembro del bloque de error",
+      "evidence": "REA",
+      "rea_procedure": true,
+      "strings": [
+        "[MOUNT_WARNING]: [MOUNT AM]NO MEMBER ERR_INFO:%d"
+      ]
+    },
+    {
+      "addr": "0x436e006c",
+      "end": "0x436e00b4",
+      "bytes": 72,
+      "role": "AM: reserva buffers de trabajo 0x43a1b6e0({ctx,0x440,0x200,0x15,0x0E}) y guarda punteros",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e036c",
+      "end": "0x436e03a6",
+      "bytes": 58,
+      "role": "AM: rellena cabecera (u32=0x20) y envia por 0x43561244",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e03b0",
+      "end": "0x436e0432",
+      "bytes": 130,
+      "role": "AM: informe de analisis (msg 0x9a B, vsnprintf a 0x80 B, cola 0x4356120c)",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e0438",
+      "end": "0x436e0463",
+      "bytes": 43,
+      "role": "despacho generico por indice <=3 sobre tabla PIC de 4 punteros",
+      "evidence": "CAP"
+    },
+    {
+      "addr": "0x436e046c",
+      "end": "0x436e04aa",
+      "bytes": 62,
+      "role": "crea objeto mensaje {u8 id@0, void* ptr@4, u16 size@8} con reserva de 0x440 B",
+      "evidence": "REA",
+      "rea_procedure": true,
+      "strings": [
+        "[MOUNT_ERROR]: [BL]SEND AREA ALLOCATE"
+      ]
+    },
+    {
+      "addr": "0x436e04b4",
+      "end": "0x436e0540",
+      "bytes": 140,
+      "role": "AM: envia cadena de monitor (id 5 = solo id; si no copia <=0x80 B)",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e0548",
+      "end": "0x436e05e6",
+      "bytes": 158,
+      "role": "AM: envia bloque {id=2,ptr,size} (cabecera 0x10) y reintenta con id 0x0F",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e05f4",
+      "end": "0x436e06a0",
+      "bytes": 172,
+      "role": "AM: vuelca la base de datos de lente (0x43 registros de 0x32 B)",
+      "evidence": "REA",
+      "rea_procedure": true,
+      "strings": [
+        "BL SendData",
+        "Info1",
+        "Info2"
+      ]
+    },
+    {
+      "addr": "0x436e06bc",
+      "end": "0x436e06d0",
+      "bytes": 20,
+      "role": "setter de dos bytes de estado global",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e0710",
+      "end": "0x436e0745",
+      "bytes": 53,
+      "role": "setter CommState con guardas 0..5 (progresion estricta)",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e074c",
+      "end": "0x436e0760",
+      "bytes": 20,
+      "role": "getter CommState (ctx+0x00)",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e0760",
+      "end": "0x436e0798",
+      "bytes": 56,
+      "role": "gate: CommState en 1..4 y contador ctx[0x24]/[0x25] >= 0x108",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e07a0",
+      "end": "0x436e07b4",
+      "bytes": 20,
+      "role": "setter LensState (ctx+0x10)",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e07b4",
+      "end": "0x436e07c8",
+      "bytes": 20,
+      "role": "getter LensState (ctx+0x10)",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e07c8",
+      "end": "0x436e07e2",
+      "bytes": 26,
+      "role": "inicializa temporizador (ctx+4=0, ctx+8=now, plazo 0x150)",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e07ec",
+      "end": "0x436e0824",
+      "bytes": 56,
+      "role": "gate con plazo 0x150; escribe ctx+0x0c",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e0858",
+      "end": "0x436e0874",
+      "bytes": 28,
+      "role": "predicado ctx[0x9a] bit 0 (tras 0x436e0760)",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e087c",
+      "end": "0x436e0898",
+      "bytes": 28,
+      "role": "predicado ctx[0x9a] bit 1",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e08a0",
+      "end": "0x436e08bc",
+      "bytes": 28,
+      "role": "predicado ctx[0x9a] bit 4",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e08c4",
+      "end": "0x436e08e0",
+      "bytes": 28,
+      "role": "predicado ctx[0x9a] bit 2",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e08e8",
+      "end": "0x436e0904",
+      "bytes": 28,
+      "role": "predicado ctx[0x9a] bit 3",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e090c",
+      "end": "0x436e0920",
+      "bytes": 20,
+      "role": "setter ctx+0x14",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e0920",
+      "end": "0x436e0934",
+      "bytes": 20,
+      "role": "getter ctx+0x14",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e0934",
+      "end": "0x436e094e",
+      "bytes": 26,
+      "role": "getter ctx+0x16 (puerta de sincronizacion)",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e0958",
+      "end": "0x436e096c",
+      "bytes": 20,
+      "role": "setter busy (ctx+0x18)",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e096c",
+      "end": "0x436e0980",
+      "bytes": 20,
+      "role": "getter busy (ctx+0x18)",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e0980",
+      "end": "0x436e0994",
+      "bytes": 20,
+      "role": "setter estado de cola (ctx+0x1c)",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e0994",
+      "end": "0x436e09a8",
+      "bytes": 20,
+      "role": "getter estado de cola (ctx+0x1c)",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e09a8",
+      "end": "0x436e09bc",
+      "bytes": 20,
+      "role": "setter MakeData (ctx+0x20)",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e09bc",
+      "end": "0x436e09d0",
+      "bytes": 20,
+      "role": "getter MakeData (ctx+0x20)",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e09d0",
+      "end": "0x436e09f4",
+      "bytes": 36,
+      "role": "setter del contador de 16 bits (ctx+0x24)",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e09fc",
+      "end": "0x436e0a14",
+      "bytes": 24,
+      "role": "getter ctx+0x24",
+      "evidence": "CAP"
+    },
+    {
+      "addr": "0x436e0a14",
+      "end": "0x436e0a2c",
+      "bytes": 24,
+      "role": "setter byte alto del contador (ctx+0x25)",
+      "evidence": "CAP"
+    },
+    {
+      "addr": "0x436e0a2c",
+      "end": "0x436e0a4c",
+      "bytes": 32,
+      "role": "setter u32 ctx+0x48",
+      "evidence": "CAP"
+    },
+    {
+      "addr": "0x436e0a4c",
+      "end": "0x436e0a6c",
+      "bytes": 32,
+      "role": "setter u32 ctx+0x48 (variante)",
+      "evidence": "CAP"
+    },
+    {
+      "addr": "0x436e0a6c",
+      "end": "0x436e0a80",
+      "bytes": 20,
+      "role": "setter u32 ctx+0x48",
+      "evidence": "CAP"
+    },
+    {
+      "addr": "0x436e0a80",
+      "end": "0x436e0a98",
+      "bytes": 24,
+      "role": "getter u8 ctx+0x4c",
+      "evidence": "CAP"
+    },
+    {
+      "addr": "0x436e0a98",
+      "end": "0x436e0ab0",
+      "bytes": 24,
+      "role": "getter u8 ctx+0x4d",
+      "evidence": "CAP"
+    },
+    {
+      "addr": "0x436e0ab0",
+      "end": "0x436e0ac8",
+      "bytes": 24,
+      "role": "getter u8 ctx+0x4e",
+      "evidence": "CAP"
+    },
+    {
+      "addr": "0x436e0ac8",
+      "end": "0x436e0af0",
+      "bytes": 40,
+      "role": "getter u16 ctx+0x3a",
+      "evidence": "CAP"
+    },
+    {
+      "addr": "0x436e0af0",
+      "end": "0x436e0b0c",
+      "bytes": 28,
+      "role": "setter de dos bytes ctx+0x3a/+0x3b",
+      "evidence": "CAP"
+    },
+    {
+      "addr": "0x436e0b0c",
+      "end": "0x436e0b20",
+      "bytes": 20,
+      "role": "getter de puntero de contexto",
+      "evidence": "CAP"
+    },
+    {
+      "addr": "0x436e0b20",
+      "end": "0x436e0b34",
+      "bytes": 20,
+      "role": "getter u32 ctx+0x54",
+      "evidence": "CAP"
+    },
+    {
+      "addr": "0x436e0b34",
+      "end": "0x436e0b48",
+      "bytes": 20,
+      "role": "getter u32 ctx+0x5c",
+      "evidence": "CAP"
+    },
+    {
+      "addr": "0x436e0b48",
+      "end": "0x436e0b5c",
+      "bytes": 20,
+      "role": "setter ctx+0x70 (byte)",
+      "evidence": "CAP"
+    },
+    {
+      "addr": "0x436e0b5c",
+      "end": "0x436e0b70",
+      "bytes": 20,
+      "role": "setter ctx+0x70 (variante)",
+      "evidence": "CAP"
+    },
+    {
+      "addr": "0x436e0b70",
+      "end": "0x436e0b88",
+      "bytes": 24,
+      "role": "setter ctx+0x70 (byte)",
+      "evidence": "CAP"
+    },
+    {
+      "addr": "0x436e0b88",
+      "end": "0x436e0bb8",
+      "bytes": 48,
+      "role": "getter MakeData ctx+0x71 y flag ctx+0x72",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e0bb8",
+      "end": "0x436e0c06",
+      "bytes": 78,
+      "role": "registra ID/CB pendientes (sync +0x28/+0x2c, async +0x30/+0x34), serializa trama y lanza driver",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e0c10",
+      "end": "0x436e0c28",
+      "bytes": 24,
+      "role": "getter SendData ctx+0x73",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e0c28",
+      "end": "0x436e0c40",
+      "bytes": 24,
+      "role": "getter SendType ctx+0x74",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e0c5c",
+      "end": "0x436e0c74",
+      "bytes": 24,
+      "role": "getter ErrCntQueSync ctx+0x76 (u16)",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e0c90",
+      "end": "0x436e0ca8",
+      "bytes": 24,
+      "role": "getter ErrCntQueVsync ctx+0x78 (u16)",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e0ca8",
+      "end": "0x436e0cc0",
+      "bytes": 24,
+      "role": "getter SameAdrs ctx+0x75",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e0ccc",
+      "end": "0x436e0d1c",
+      "bytes": 80,
+      "role": "elige SendType 1 o 2 segun mascaras de PowMode y escribe ctx+0x74",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e0d28",
+      "end": "0x436e0d46",
+      "bytes": 30,
+      "role": "envoltorio de 0x43ad9f70 -> {ok, valor}",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e0d74",
+      "end": "0x436e0e46",
+      "bytes": 210,
+      "role": "SYNC SEND SET ID: saca nodo de la cola sincrona, valida tamano y lo entrega al driver",
+      "evidence": "CAP",
+      "strings": [
+        "[MOUNT_DEBUG]: [BL]SYNC SEND SET ID(%d):CB(0x%8x)",
+        "[MOUNT_ERROR]: [BL]SYNC ERR TX DATA SIZE=0",
+        "[MOUNT_ERROR]: [BL]SYNC NO DATA"
+      ]
+    },
+    {
+      "addr": "0x436e0e74",
+      "end": "0x436e0eda",
+      "bytes": 102,
+      "role": "valida un mensaje formado: bits altos de commtype y tamano contra el descriptor",
+      "evidence": "REA",
+      "rea_procedure": true,
+      "strings": [
+        "[MOUNT_DEBUG]: [BL SYNC]BLANK ERR (%02X)",
+        "[MOUNT_DEBUG]: [BL SYNC]DATA SIZE ERROR size(%d)"
+      ]
+    },
+    {
+      "addr": "0x436e0eec",
+      "end": "0x436e0f35",
+      "bytes": 73,
+      "role": "QUEUE_DATA_REMAINDER: revalida, baja busy y sigue con la cola restante",
+      "evidence": "CAP",
+      "strings": [
+        "[MOUNT_DEBUG]: [BL]QUEUE_DATA_REMAINDER"
+      ]
+    },
+    {
+      "addr": "0x436e0f4c",
+      "end": "0x436e103c",
+      "bytes": 240,
+      "role": "reset global del contexto BL (CommState/LensState=0, contadores=0, MakeData/SendData/SendType=0xFF)",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e1054",
+      "end": "0x436e10b8",
+      "bytes": 100,
+      "role": "copia 10 B de estado LIF (ctx+0x27..+0x30) a la estructura publica",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e10d8",
+      "end": "0x436e10de",
+      "bytes": 6,
+      "role": "getter: puntero a la estructura LIF",
+      "evidence": "CAP"
+    },
+    {
+      "addr": "0x436e10e4",
+      "end": "0x436e10ec",
+      "bytes": 8,
+      "role": "reset de la estructura LIF (4 B)",
+      "evidence": "CAP"
+    },
+    {
+      "addr": "0x436e10f0",
+      "end": "0x436e1110",
+      "bytes": 32,
+      "role": "copia 4 B de la estructura LIF",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e1134",
+      "end": "0x436e115c",
+      "bytes": 40,
+      "role": "setter de la puerta de sincronizacion (ctx+0x16); exige PowMode==5",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e1164",
+      "end": "0x436e123c",
+      "bytes": 216,
+      "role": "ejecutor de secuencia: tabla de 13 callbacks con retardos ctx+0x90/+0x91",
+      "evidence": "REA",
+      "rea_procedure": true,
+      "strings": [
+        "[MOUNT_DEBUG]: [BL ERR]state:%02Xh, code:06h"
+      ]
+    },
+    {
+      "addr": "0x436e1254",
+      "end": "0x436e1312",
+      "bytes": 190,
+      "role": "SYNC SEND: 0x436e00dc(ID) -> descriptor -> nodo {cb, msg} -> cola -> arranque",
+      "evidence": "REA",
+      "rea_procedure": true,
+      "strings": [
+        "[MOUNT_DEBUG]: [BL]SYNC SEND ID(%d):CB(0x%8x)",
+        "[MOUNT_ERROR]: [BL]SYNC QUE OVERFLOW"
+      ]
+    },
+    {
+      "addr": "0x436e1328",
+      "end": "0x436e1482",
+      "bytes": 346,
+      "role": "ASYNC SEND: guardas CommState/PowMode, construye {3,ptr,size}, registra y encola",
+      "evidence": "REA",
+      "rea_procedure": true,
+      "strings": [
+        "[MOUNT_DEBUG]: [BL]ASYNC SEND ID(%d):CB(0x%8x)",
+        "[MOUNT_DEBUG]: [BL]Wait_BL_ASYNC",
+        "[MOUNT_ERROR]: [BL]ASYNC ERR MAKE SEND DATA"
+      ]
+    },
+    {
+      "addr": "0x436e14ac",
+      "end": "0x436e1524",
+      "bytes": 120,
+      "role": "SendingLensNonCommand (ID 0xFF) y callback de detach restante",
+      "evidence": "CAP",
+      "strings": [
+        "[MOUNT_DEBUG]: [BL ERR]SendingLensNonCommand ID[%d]",
+        "[MOUNT_DEBUG]: [BL ERR]SendingLensNonCommand ID[0xFF]"
+      ]
+    },
+    {
+      "addr": "0x436e1524",
+      "end": "0x436e154e",
+      "bytes": 42,
+      "role": "despacho por indice en tabla (entry+8) con guarda cmp r1,#3 y tail-call a 0x436e14ac",
+      "evidence": "CAP",
+      "note": "inicio real 0x436e1524 (cmp r1,#3) alcanzado por bl desde 0x436e1598; procedure_info solo ve el push de 0x436e1526"
+    },
+    {
+      "addr": "0x436e1556",
+      "end": "0x436e163a",
+      "bytes": 228,
+      "role": "despacho de peticion (tbb de 4 casos, indice 0-3): 0x436e0438 (tabla de callbacks AM), 0x436e1524 y 0x436e14ac; cierra con 0x436e00c4",
+      "evidence": "CAP",
+      "note": "procedure_info de REA situa el inicio en 0x436e1554 (2 bytes antes del prologo real)"
+    },
+    {
+      "addr": "0x436e1664",
+      "end": "0x436e172a",
+      "bytes": 198,
+      "role": "detach: invoca callbacks pendientes con ID 0xF0 y drena colas",
+      "evidence": "REA",
+      "rea_procedure": true,
+      "strings": [
+        "[MOUNT_DEBUG]: [BL]LENS DETACH REMAIN CB(%d)"
+      ]
+    },
+    {
+      "addr": "0x436e1740",
+      "end": "0x436e18a6",
+      "bytes": 358,
+      "role": "reglas VSYNC/VD para Informations1/2 y contador de paquetes",
+      "evidence": "REA",
+      "rea_procedure": true,
+      "strings": [
+        "[MOUNT_ERROR]: [BL]VSYNC ERR Informations1 Violation of rule : now_time=%d",
+        "[MOUNT_ERROR]: [BL]VSYNC ERR Informations2 VD Rap Detect",
+        "[MOUNT_ERROR]: [BL]VSYNC ERR PACKET NUM OVER(%d)"
+      ]
+    },
+    {
+      "addr": "0x436e1918",
+      "end": "0x436e1b3c",
+      "bytes": 548,
+      "role": "DRV_SEND: desencola trama, comprueba busy y despacha por commtype 1/2/3 hacia UART",
+      "evidence": "CAP",
+      "strings": [
+        "[MOUNT_DEBUG]: [BL]DRV_SEND[%d]",
+        "[MOUNT_ERROR]: [BL]DATA SEND ERR QUE_NONE",
+        "[MOUNT_ERROR]: [BL]DATA SEND ERR B_SENDING",
+        "[MOUNT_ERROR]: [BL]CHECK_SENDDATA_ERR[%d]"
+      ]
+    },
+    {
+      "addr": "0x436e1b3c",
+      "end": "0x436e1bc8",
+      "bytes": 140,
+      "role": "seguimiento de la secuencia de power: PowMode + dos temporizadores, byte de reintento",
+      "evidence": "CAP"
+    },
+    {
+      "addr": "0x436e1bc8",
+      "end": "0x436e21be",
+      "bytes": 1526,
+      "role": "volcado de traza del estado de montura/lente (47 llamadas)",
+      "evidence": "REA",
+      "rea_procedure": true,
+      "strings": [
+        "Mount: ",
+        "Mount: Data Pointer NULL,"
+      ]
+    },
+    {
+      "addr": "0x436e2234",
+      "end": "0x436e233e",
+      "bytes": 266,
+      "role": "puente MCS: arma payload AM desde datos de lente (param1=1/2) y lo reporta",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e2348",
+      "end": "0x436e2364",
+      "bytes": 28,
+      "role": "copia 13 u32 de un bloque de parametros a los globales del secuenciador",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e2390",
+      "end": "0x436e239c",
+      "bytes": 12,
+      "role": "getter del contador de timeout LC (u16)",
+      "evidence": "REA",
+      "rea_procedure": true
+    },
+    {
+      "addr": "0x436e239c",
+      "end": "0x436e260c",
+      "bytes": 624,
+      "role": "volcado de estado (12 lineas)",
+      "evidence": "REA",
+      "rea_procedure": true,
+      "strings": [
+        "[MOUNT_ERROR]: [BL]CommState/LensState %02X%02X",
+        "[MOUNT_ERROR]: [BL]PowMode/PowSeq      %02X%02X"
+      ]
+    },
+    {
+      "addr": "0x436e2678",
+      "end": "0x436e2cf8",
+      "bytes": 1664,
+      "role": "analizador RX: valida 0xF0/footer/checksum/datasize/tipo y despacha por ID",
+      "evidence": "CAP",
+      "strings": [
+        "[MOUNT_ERROR]: [BL]HEADER_NG",
+        "[MOUNT_ERROR]: [BL]FOOTER_NG",
+        "[MOUNT_ERROR]: [BL]CHECKSUM_NG",
+        "[MOUNT_ERROR]: [BL]DATASIZE_NG",
+        "[MOUNT_ERROR]: [BL]COMMTYPE_NG_0"
+      ]
+    },
+    {
+      "addr": "0x436e2cf8",
+      "end": "0x436e2e32",
+      "bytes": 314,
+      "role": "espera de CAM_INFO2 con reintento y temporizador 0x17",
+      "evidence": "CAP",
+      "strings": [
+        "[MOUNT_ERROR]: [BL]CAM_INFO2_RCV_WAIT_TIMEOUT_ERR[Timer=%d(ms)][ErrCnt=%d]",
+        "[MOUNT_ERROR]: [BL]CAM_INFO2_RCV_WAIT_TWAI_ERR ercd=%d"
+      ]
+    },
+    {
+      "addr": "0x436e2e32",
+      "end": "0x436e2f64",
+      "bytes": 306,
+      "role": "maquina de estados del comando LIF (0xC00-0xC07) con tabla tbb",
+      "evidence": "CAP",
+      "strings": [
+        "[MOUNT_INFO]: [BL]LIF Command Change : 0x%X >>> 0x%X",
+        "[MOUNT_WARNING]: [BL]LIF Command : Illegal Command Received!!! : cmd=%04X"
+      ]
+    },
+    {
+      "addr": "0x436e2f64",
+      "end": "0x436e3370",
+      "bytes": 1036,
+      "role": "segundo volcado de traza (estado y contadores en formato corto)",
+      "evidence": "REA",
+      "rea_procedure": true
+    }
+  ],
+  "not_in_rea": [
+    "0x436e0438",
+    "0x436e0d74",
+    "0x436e0eec",
+    "0x436e14ac",
+    "0x436e1526",
+    "0x436e1918",
+    "0x436e1b3c",
+    "0x436e2678",
+    "0x436e2cf8",
+    "0x436e2e32"
+  ],
+  "protocol": {
+    "status": "VERIFICADO",
+    "builder": {
+      "tx": "0x43b7b276 (via 0x43ada0b4)",
+      "checksum": "0x43b7b25e (veneer 0x43ada0a8)",
+      "tx_ring": "0x43a1b3e0 (semaforo 0x18, indice [r4+4], capacidad [r4+5])"
+    },
+    "frame": [
+      {
+        "off": 0,
+        "size": 1,
+        "field": "header",
+        "value": "0xF0"
+      },
+      {
+        "off": 1,
+        "size": 2,
+        "field": "length",
+        "value": "size+8, LE"
+      },
+      {
+        "off": 3,
+        "size": 1,
+        "field": "commtype",
+        "value": "tipo & 7"
+      },
+      {
+        "off": 4,
+        "size": 1,
+        "field": "param",
+        "value": "0 en todos los envios del blob"
+      },
+      {
+        "off": 5,
+        "size": 1,
+        "field": "command_id",
+        "value": "primer byte del payload"
+      },
+      {
+        "off": 6,
+        "size": "size-1",
+        "field": "data"
+      },
+      {
+        "off": "len-3",
+        "size": 2,
+        "field": "checksum",
+        "value": "sum8(buf+1, len-4), LE"
+      },
+      {
+        "off": "len-1",
+        "size": 1,
+        "field": "footer",
+        "value": "0x55"
+      }
+    ],
+    "checksum": {
+      "algorithm": "suma aritmetica de bytes truncada a 16 bits",
+      "coverage": "buf+1 durante len-4 bytes (longitud, tipo, param, ID y datos)",
+      "evidence": "0x43b7b25e: movs r0,#0 / ldrb r4,[r3,r2] / adds r0,r0,r4 / uxth r0,r0"
+    },
+    "rx_validation": [
+      {
+        "step": 1,
+        "check": "0x43ad9d08 obtiene (ptr, talla) del buffer del canal"
+      },
+      {
+        "step": 2,
+        "check": "len = u16(buf[1],buf[2])"
+      },
+      {
+        "step": 3,
+        "check": "buf[0]==0xF0",
+        "fail": "HEADER_NG (3)",
+        "addr": "0x436e2736"
+      },
+      {
+        "step": 4,
+        "check": "buf[len-1]==0x55",
+        "fail": "FOOTER_NG (5)",
+        "addr": "0x436e275e"
+      },
+      {
+        "step": 5,
+        "check": "checksum",
+        "fail": "CHECKSUM_NG (4)",
+        "addr": "0x436e279a"
+      },
+      {
+        "step": 6,
+        "check": "len == 0x43ad9cb4(canal): u16 en el descriptor del canal UART (stride 0x31c, campo +4, 0x43a1b1e4)",
+        "fail": "DATASIZE_NG (2)",
+        "addr": "0x436e27c8",
+        "note": "INFERENCIA: ese campo seria el numero de bytes recibidos por el canal"
+      },
+      {
+        "step": 7,
+        "check": "buf[3]&7 en 1..3",
+        "fail": "COMMTYPE_NG_0 (6) / MOUNT_ERR_COMMTYPE_NG_1 (7)",
+        "addr": "0x436e27f2"
+      },
+      {
+        "step": 8,
+        "check": "ID (buf[5]) en tabla 0x436e0134 y tamano contra descriptor",
+        "fail": "MOUNT_ERR_ANALYSE_NG / MOUNT_ERR_DATASIZE OVER",
+        "addr": "0x436e2856"
+      }
+    ],
+    "commtypes": {
+      "1": "Informations (VSYNC/VD); valida reglas y copia ctx+0x14",
+      "2": "sincrono; debe casar con ctx+0x28 e invoca ctx+0x2c",
+      "3": "asincrono"
+    },
+    "descriptor": {
+      "lookup": "0x436e0134",
+      "entry": "{u16 id, u16 size, u16 extra} (6 B)",
+      "terminator": "0x100",
+      "max_bytes": "0x600",
+      "runtime_initialized": true,
+      "static_content": "codigo (no recuperable)"
+    },
+    "lens_knows_command": "0x436e00dc: dos bitmaps (bloque+1 y tabla+0x20*indice), bit (ID-1)&7, indice (ID-1)>>3"
+  },
+  "send_api": {
+    "sync": {
+      "addr": "0x436e1254",
+      "steps": [
+        "0x436e00dc(ID)",
+        "0x436e0134 -> size",
+        "nodo {u32 cb; u8 msg[size]} (0x43ad9ce8)",
+        "cola + 0x436e7e84(7)",
+        "0x436e0d74 -> 0x436e0bb8 (ctx+0x28=ID, ctx+0x2c=CB)"
+      ],
+      "log": "[BL]SYNC SEND ID(%d):CB(0x%8x)"
+    },
+    "async": {
+      "addr": "0x436e1328",
+      "guards": [
+        "CommState>=2",
+        "tipo de lente != 0",
+        "PowMode en {5,6,0xFF}"
+      ],
+      "steps": [
+        "0x436e046c({3,ptr,size})",
+        "0x436e0bb8 (ctx+0x30=ID, ctx+0x34=CB)"
+      ],
+      "log": "[BL]ASYNC SEND ID(%d):CB(0x%8x)"
+    },
+    "frame_enqueue": "0x436e0bb8 -> 0x43ada0b4 -> 0x43b7b276 -> 0x43a1b3e0",
+    "driver": {
+      "addr": "0x436e1918",
+      "steps": [
+        "0x43ad9ce0 desencola",
+        "comprueba busy (ctx+0x18)",
+        "despacha por commtype 1/2/3",
+        "escribe en UART"
+      ]
+    }
+  },
+  "state": {
+    "context_offsets": [
+      {
+        "off": "0x00",
+        "field": "CommState",
+        "accessor": "0x436e0710 / 0x436e074c"
+      },
+      {
+        "off": "0x04",
+        "field": "timer start",
+        "accessor": "0x436e07c8"
+      },
+      {
+        "off": "0x08",
+        "field": "timer value",
+        "accessor": "0x436e07c8"
+      },
+      {
+        "off": "0x0c",
+        "field": "gate marker",
+        "accessor": "0x436e07ec"
+      },
+      {
+        "off": "0x10",
+        "field": "LensState",
+        "accessor": "0x436e07a0 / 0x436e07b4"
+      },
+      {
+        "off": "0x14",
+        "field": "LensState2",
+        "accessor": "0x436e090c / 0x436e0920"
+      },
+      {
+        "off": "0x16",
+        "field": "sync gate",
+        "accessor": "0x436e1134 / 0x436e0934"
+      },
+      {
+        "off": "0x18",
+        "field": "busy",
+        "accessor": "0x436e0958 / 0x436e096c"
+      },
+      {
+        "off": "0x1c",
+        "field": "queue state",
+        "accessor": "0x436e0980 / 0x436e0994"
+      },
+      {
+        "off": "0x20",
+        "field": "MakeData flag",
+        "accessor": "0x436e09a8 / 0x436e09bc"
+      },
+      {
+        "off": "0x24-0x25",
+        "field": "contador 16 bits",
+        "accessor": "0x436e09d0 / 0x436e0a14 / 0x436e09fc"
+      },
+      {
+        "off": "0x28/0x2c",
+        "field": "sync ID / CB",
+        "accessor": "0x436e0bb8"
+      },
+      {
+        "off": "0x30/0x34",
+        "field": "async ID / CB",
+        "accessor": "0x436e0bb8"
+      },
+      {
+        "off": "0x3a/0x3b",
+        "field": "contador de informes",
+        "accessor": "0x436e0ac8 / 0x436e0af0"
+      },
+      {
+        "off": "0x48",
+        "field": "contador u32",
+        "accessor": "0x436e0a2c"
+      },
+      {
+        "off": "0x4c-0x4e",
+        "field": "contadores u8",
+        "accessor": "0x436e0a80 / 0x436e0a98 / 0x436e0ab0"
+      },
+      {
+        "off": "0x54",
+        "field": "valor u32",
+        "accessor": "0x436e0b20"
+      },
+      {
+        "off": "0x5c",
+        "field": "valor u32",
+        "accessor": "0x436e0b34"
+      },
+      {
+        "off": "0x70-0x72",
+        "field": "flags de envio",
+        "accessor": "0x436e0b48 / 0x436e0b70 / 0x436e0b88"
+      },
+      {
+        "off": "0x71",
+        "field": "MakeData (dump)",
+        "accessor": "0x436e0b88"
+      },
+      {
+        "off": "0x73",
+        "field": "SendData",
+        "accessor": "0x436e0c10"
+      },
+      {
+        "off": "0x74",
+        "field": "SendType",
+        "accessor": "0x436e0c28 / 0x436e0ccc"
+      },
+      {
+        "off": "0x75",
+        "field": "SameAdrs",
+        "accessor": "0x436e0ca8"
+      },
+      {
+        "off": "0x76",
+        "field": "ErrCntQueSync",
+        "accessor": "0x436e0c5c"
+      },
+      {
+        "off": "0x78",
+        "field": "ErrCntQueVsync",
+        "accessor": "0x436e0c90"
+      },
+      {
+        "off": "0x9a",
+        "field": "flags de predicado (bits 0-4)",
+        "accessor": "0x436e0858..0x436e08e8"
+      },
+      {
+        "off": "0x27-0x30",
+        "field": "estado LIF (10 B)",
+        "accessor": "0x436e1054"
+      }
+    ],
+    "comm_state": {
+      "setter": "0x436e0710",
+      "values": "0-5",
+      "rules": [
+        "0,1: siempre",
+        "2: solo desde 0 o 1",
+        "3,4,5: solo desde valor-1",
+        "otro: ignorado"
+      ]
+    },
+    "pow_mode_table": {
+      "addr": "0x43c95735",
+      "bytes": "01 02 00 00 06 06 03 00 00 00 00 04 04 00 00 05",
+      "index": "PowMode-1",
+      "use": "0x436e0ccc elige SendType con mascaras (0x60 y complementaria)"
+    },
+    "lif_cmd": {
+      "func": "0x436e2e32",
+      "tbb_table": "0x436e2e68",
+      "states": "0xC00-0xC07",
+      "transition_targets": [
+        "0x436e2e70",
+        "0x436e2e7a",
+        "0x436e2e8c",
+        "0x436e2eb2",
+        "0x436e2ebe",
+        "0x436e2ec8",
+        "0x436e2eda",
+        "0x436e2f06"
+      ],
+      "helpers": [
+        "0x436e5828",
+        "0x436e587c",
+        "0x436e58d4"
+      ],
+      "masks": [
+        "0x4d",
+        "0xa5"
+      ],
+      "semantics": "INFERENCIA: 0xC05=PB, 0xC06=POFF (log 0x43c98714)"
+    },
+    "state_dump": {
+      "func": "0x436e239c",
+      "order": [
+        "CommState/LensState",
+        "PowMode/PowSeq",
+        "LC T.O. Cnt",
+        "VsyncErrCnt",
+        "LIFState/Err",
+        "MakeData/SendData",
+        "SendType/SameAdrs",
+        "ErrCntQueSync",
+        "ErrCntQueVsync"
+      ]
+    }
+  },
+  "open_questions": [
+    "Contenido de la tabla de descriptores (0x440240a8 -> 0x43fea2a0): runtime-initialized; en la imagen estatica hay codigo",
+    "Semantica de los estados LIF 0xC00-0xC04 y 0xC07 (solo 0xC05/0xC06 inferidos)",
+    "Significado del campo +0x04 de la trama (siempre 0 en el blob)",
+    "Unidades y base de tiempo de los plazos 0x108/0x150 y de DATASIZE",
+    "Reparto exacto entre Informations1 e Informations2 (commtype 1)",
+    "Limites reales de 0x436e2f64: REA declara 1016 B, el flujo llega a 0x436e3370"
+  ],
+  "artifacts": {
+    "markdown": "analysis/s66/mount_functions.md",
+    "raw": [
+      "analysis/s66/out/func_436e5e3c.txt",
+      "/tmp/opencode/mount_str.txt",
+      "/tmp/opencode/procinfo.json"
+    ]
+  }
+}

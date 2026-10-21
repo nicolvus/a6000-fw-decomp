@@ -1,0 +1,168 @@
+{
+  "milestone": "S66-C",
+  "topic": "Lente: ruta FW-update, bus BonoboDSP, bus cuerpo\u2194lente f\u00edsico-l\u00f3gico, A6000 vs A7S",
+  "target": {
+    "name": "av-cam.bin",
+    "model_primary": "A6000",
+    "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+    "base_logic": "0x43541000",
+    "model_secondary": "A7S",
+    "secondary_path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin"
+  },
+  "method": {
+    "tools": ["analysis/s58/tdis.py (Capstone Thumb)", "analysis/s66/lens_strings_addr.py (b\u00fasqueda exacta de bytes)", "analysis/s66/pic_refs.py (referencias PIC add rd,pc)"],
+    "rea_session": "no_disponible (demonio rea.sock reiniciado por otros subagentes; an\u00e1lisis en fr\u00edo ~8-10 min)",
+    "addresses_by": "b\u00fasqueda .find() de bytes exactos (nunca aritm\u00e9tica manual)"
+  },
+
+  "fwupdate_path": {
+    "caif_send_fn": "0x436ba2c8",
+    "caif_send_args": {
+      "LUPDT_INFO": [9, 1, 4, "buf+4"],
+      "LUPDT_DATA": [9, 5, "0x104", "buf"]
+    },
+    "caif_packet_layout": {
+      "p+4": "header 0xF0 (Darwin)",
+      "p+5": "tag (9)",
+      "p+6": "cmd",
+      "p+8": "u16 len",
+      "p+0xc": "payload ptr",
+      "verified": true
+    },
+    "emitter": {
+      "addr": "0x436fe070",
+      "states": {
+        "0": "env\u00eda LUPDT_INFO por CAIF; err 'FirmUp Error : CAIF CASND LUPDT_INFO' @0x43c9a09f",
+        "4": "transfiere chunk 0x100 B (memcpy 0x439c5320), env\u00eda LUPDT_DATA (len 0x104=4+0x100); err LUPDT_DATA @0x43c9a0d7",
+        "6": "s\u00f3lo devuelve c\u00f3digo"
+      },
+      "exit": "0x436fe994 (LensFirmUpdateResult)"
+    },
+    "uud_dispatcher": {
+      "addr": "0x436fe500",
+      "dispatch": "tbb sobre msg, cmp #4; bhi (5 casos 0..4)",
+      "cases": {
+        "0": {"name": "MSGID_GET_VERSION", "string": "0x43c98201", "ref": "0x436fe64a"},
+        "1": {"name": "MSGID_GET_FORCE_FIRMUP", "string": "0x43c98234", "ref": "0x436fe672"},
+        "2": {"name": "MSGID_FIRM_UP_REQ", "string": "0x43c9826c", "ref": "0x436fe726"},
+        "3": {"name": "MSGID_PREPARE_UPDATE", "string": "0x43c9829f", "ref": "0x436fe80c"},
+        "4": {"name": "MSGID_UNPLUG_USB", "string": "0x43c982d5", "ref": "0x436fe842"},
+        "illegal": {"string": "0x43c98307", "ref": "0x436fe856"}
+      },
+      "verified": true
+    },
+    "l2b_receivers": {
+      "UPDATE_ON": {"addr": "0x436e54aa", "string": "0x43c97eb8", "calls": "0x436e540c(1)"},
+      "UPDATE_DATA": {"addr": "0x436e54f8", "cmd_byte": "0x15", "string": "0x43c97efb", "calls": "0x436e540c(2)"},
+      "PREPARE_UPDATE_CHECK": {"addr": "0x436e55b8", "dispatch_values": ["0x13", "5", "6", "0xfe", "0xff"], "states": ["0x436e5602", "0x436e5612"]}
+    },
+    "bl_to_l_frame_ctors": [
+      {"cmd_byte": "0x07", "fn": "0x436e4444", "name": "ATTACH_INFO1", "string": "0x43c978f9"},
+      {"cmd_byte": "0x15", "fn": "0x436e4800", "name": "UPDATE_DATA", "payload": "0x400", "note": "memset 0x408, strb 0x15 en [buf], memcpy 0x400"},
+      {"cmd_byte": "0x16", "fn": "0x436e472c", "name": "LENS_SLEEP", "log_cmd": "0x1003"},
+      {"cmd_byte": "0x2B", "fn": "0x436e509c", "name": "ALPHA_LENS_INFO", "string": "0x43c97dd6"},
+      {"cmd_byte": "0x0A", "fn": "0x436e51ac", "name": "CS_CREDIT", "string": "0x43c97e00"},
+      {"cmd_byte": null, "fn": "0x436e4b24", "name": "CS_CHECK_CMD", "payload": "0x20"}
+    ],
+    "all_ctors_tail": "bl 0x436e1254(buf, descriptor) [ensamblador de trama]",
+    "credit": {
+      "CS_CREDIT_BL": {"fn": "0x436e51ac", "cmd_byte": "0x0A", "verified": true},
+      "CS_CREDIT_LB": {"fn": "0x436e5088", "string": "0x43c97db7"},
+      "LIF_CREDIT": {"fn": "0x436e37ea", "string": "0x43c971b4", "helper": "0x436e3754", "text": "LIF CREDIT RegistErro Lens doesn't know = %d"},
+      "LIF_Command_Change": {"fn": "0x436e2e50", "string": "0x43c970c7", "dispatch": "tbb sobre u16 en [ctx+0x24] - 0xC00, rango 0xC00..0xC07"}
+    },
+    "verified": true
+  },
+
+  "frame_format": {
+    "analysis_range": "0x436e2700-0x436e2854",
+    "layout": "[0xF0][len_hi][len_lo][commtype&7 ..][payload ..][cksum_hi][cksum_lo][0x55]",
+    "header": {"byte": "0xF0", "check": "cmp r2,#0xf0", "err": "[BL]HEADER_NG", "err_string": "0x43c96dda", "refs": ["0x436e2746", "0x436e2750"], "code": 3},
+    "length": {"encoding": "u16 big-endian", "bytes": "+1..+2", "build": "ldrb [r5,#2]<<8 | ldrb [r5,#1]"},
+    "footer": {"byte": "0x55", "check": "cmp r3,#0x55", "err": "[BL]FOOTER_NG", "err_string": "0x43c96df7", "refs": ["0x436e2770", "0x436e277a"], "code": 5},
+    "checksum": {"fn": "0x43ada0a8", "range": "len-4 bytes", "err": "[BL]CHECKSUM_NG", "err_string": "0x43c96e14", "refs": ["0x436e27b2", "0x436e27bc"], "code": 4},
+    "commtype": {"field": "byte+3 & 7", "valid": [1, 2, 3], "err": "[BL]COMMTYPE_NG", "err_string": "0x43c96e52", "ref": "0x436e280c", "code": 7},
+    "datasize_err": {"string": "0x43c96e33"},
+    "verified": true,
+    "closes_gap": "docs/capture/s66-lens-mount.md \u00a74 'formato de trama NO determinado'"
+  },
+
+  "handshake": {
+    "hs_cs_data": {
+      "fn": "0x436e48fc",
+      "dispatch": "tbb sobre [r6+0x10], cmp #3 (4 estados)",
+      "sequence": ["CS_HIGH (0x43c97ac6)", "DATA_HIGH (0x43c97ae5)", "CS_LOW (0x43c97b06)", "COMPLETE (0x43c97b24)"],
+      "logger": "0x436e41e4 (r0=0x125)",
+      "verified": true
+    },
+    "uart_hz": {
+      "fn": "0x436e65bc",
+      "string": "0x43c98540 ([BL]UART_HZ 750:%d 1500%d)",
+      "buckets": ["750", "1500"],
+      "ng": {"string": "0x43c98569", "refs": ["0x436e6634", "0x436e6642"]},
+      "complete": ["0x43c985b9 (UART_HS_COMPLETE)", "0x43c9858d (NO_WAIT)"],
+      "verified": true,
+      "note": "inmediatos exactos 750/1500 no localizados en la funci\u00f3n; s\u00f3lo el formato de log"
+    },
+    "chg_freq": {
+      "fn": "0x436e5b7e",
+      "string": "0x43c983cd ([BL]CHG FREQ, %d, %d, %d)",
+      "wait_states": {"CHGFREQ2": "0x43c98915", "NEXTVD": "0x43c98936", "FREQ_Now_Send": "0x43c98955 (ref 0x436e7410)"},
+      "state_fn": "0x436e73b0",
+      "verified": true
+    },
+    "system_hz": {"fn": "0x436e4528", "string": "0x43c9795f", "verified": true},
+    "eclipse_state": {
+      "setter": "0x436e3bc8",
+      "string": "0x43c9734d ([BL]EclipseDataComState [%d] => [%d])",
+      "stanby_to_start": {"fn": "0x436e3f2c", "string": "0x43c976d3", "trigger": "ZPD", "zpd_string": "0x43c976b5"},
+      "init_in_vsync": {"fn": "0x436e3b82", "string": "0x43c972fb (ECLIPSE_COM_STATE is INIT in VSYNC)", "line": "0xdb (219)"},
+      "init_fn": "0x436e3f48 (Mount_InitializeEclipseComState)",
+      "states_named": ["STANDBY", "START"],
+      "verified": true
+    }
+  },
+
+  "bonobodsp": {
+    "prefix": "[LENS_PDR]",
+    "cluster": "0x437089da-0x43708c36",
+    "strings": {
+      "send_latch": "0x43c9a7ca (ref 0x43708a5c)",
+      "ch0_latch": "0x43c9a7fa (ref 0x43708b78)",
+      "ch1_latch": "0x43c9a82e (ref 0x43708be6)",
+      "rcv_parity": "0x43c9a862 (ref 0x43708c1c)"
+    },
+    "getter": {"fn": "0x437089d4/0x437089da", "sensor_word": "u32 BE de 3 bytes (b5<<16|b6<<8|b7)", "channels": 2},
+    "parser": {"fn": "0x43708a88/0x43708a8e", "parse_fn": "0x43adcaca", "response_len": "0x22 (34 B)", "ch0_mask": "sp[7]&4", "ch1_mask": "sp[7]&8"},
+    "dispatcher": {"fn": "0x43708cc4", "msg_type": 2, "subtypes": {"1": "0x437089d4 (getter)", "2": "0x43708a88 (parser)"}},
+    "packer": "0x43708c74",
+    "mmio_base_literal": "0xf292d000 (@0x437072a8)",
+    "transport": {"send_stubs": ["0x43561228", "0x4390406c"], "channel": "CAIF/C3P (vtable +0x1d8)", "magic": "0x740017"},
+    "purpose": "INFERENCIA parcial; rol exacto (AF/\u00f3ptica/sensores lente) NO_VERIFICADO",
+    "verified": "cadenas, getters, dispatcher, parser VERIFICADOS; capa MMIO/prop\u00f3sito INFERENCIA"
+  },
+
+  "a6000_vs_a7s": {
+    "address_mapping": "A7S = otro rango (LUPDT_INFO A6000 0x43c9a09f vs A7S 0x43c9f7ff)",
+    "counts": {"MOUNT_prefix_A6000": 223, "MOUNT_prefix_A7S": 0, "BL_prefix_A7S": 75, "LENS_PDR_A6000": 4, "LENS_PDR_A7S": 0, "BonoboDSP_strings_A6000": 4, "BonoboDSP_strings_A7S": 4},
+    "subsystems": {
+      "fwupdate_route": {"A6000": true, "A7S": true, "A7S_strings": ["0x43c9f7ff LUPDT_INFO", "0x43ca0fc1 PREPARE UPDATE TIME_OUT", "0x43ca0ff0 meg_id illegal", "0x43ca100b LensFirmUpdateResult", "0x43ca0f2f FirmUpReq Error", "0x43ca111e GetLensVersion Error"]},
+      "prepare_update_OK_NG_MSGID_literals": {"A6000": true, "A7S": false},
+      "UPDATE_ON_DATA_CS_LIF": {"A6000": true, "A7S": false},
+      "uart_hz_750_1500": {"A6000": true, "A7S": false, "A7S_only": "0x43ca1239 [L->B]UART_HZ NG"},
+      "hs_cs_data_CHG_FREQ_eclipse_NEXTVD": {"A6000": true, "A7S": false, "A7S_only": "0x43ca1069/0x43ca1084 [HS]POWER SEQ / POWER OFF SEQ TIME OUT"},
+      "bonobodsp": {"A6000": true, "A7S": true, "A7S_note": "sin prefijo [LENS_PDR]; 0x43ca167b/169f/16c7/16ef"}
+    },
+    "conclusion": "A7S conserva ruta FW-update y BonoboDSP pero sin prefijo [MOUNT_DEBUG], sin handshake de montura detallado (CS/DATA, CHG FREQ, Eclipse, NEXTVD) ni CS_CREDIT/LIF/UPDATE_ON/DATA",
+    "code_level_comparison": "NO_VERIFICADO (funci\u00f3n equivalente al emisor A6000 0x436fe070 no localizada por PIC en A7S)",
+    "string_level_comparison": "VERIFICADO"
+  },
+
+  "open_questions": [
+    "Destino final del update CAIF (MCU vs bus de lente) - mismo hueco que S53, NO_VERIFICADO",
+    "Mapeo num\u00e9rico de Error Code en LensFirmUpdateResult (0x436fe994) NO_VERIFICADO",
+    "Sem\u00e1ntica de cada sub-comando LIF 0xC00..0xC07 es INFERENCIA",
+    "Prop\u00f3sito exacto de BonoboDSP (rol de ch0/ch1, 3 sensores de 3 B) NO_VERIFICADO",
+    "Significado de los estados Eclipse num\u00e9ricos m\u00e1s all\u00e1 de STANDBY/START NO_VERIFICADO"
+  ]
+}

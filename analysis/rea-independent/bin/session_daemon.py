@@ -5,8 +5,8 @@ import sys, os, json, socket, time, threading, signal
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from mcpc import Mcp
 sock_path, open_args, idle_max = sys.argv[1], json.loads(sys.argv[2]), 3600
-rss_max = int(os.environ.get("REA_DAEMON_RSS_MAX_MB", "3800"))  # salvaguarda anti-OOM; ampliable por entorno
-os.environ.setdefault("REA_GHIDRA_STARTUP_TIMEOUT_MS", "900000"); os.environ.setdefault("GHIDRA_MAXMEM", "3G")
+rss_max = int(os.environ.get("REA_DAEMON_RSS_MAX_MB", "2600"))  # salvaguarda anti-OOM; ampliable por entorno
+os.environ.setdefault("REA_GHIDRA_STARTUP_TIMEOUT_MS", "900000"); os.environ.setdefault("GHIDRA_MAXMEM", "2G")
 m = Mcp(); last = [time.time()]; lock = threading.Lock()
 LOG = open(os.path.join(os.path.dirname(sock_path), "../out/exp2-session-log.jsonl"), "a")
 def rss_tree(root):
