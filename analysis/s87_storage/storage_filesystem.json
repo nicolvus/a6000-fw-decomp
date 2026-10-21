@@ -1,0 +1,106 @@
+{
+ "hito": "S87 - almacenamiento, sistema de archivos y tarjeta",
+ "avcam": {
+  "ExternalStorageStart": {
+   "A6000": "0x43cb3148",
+   "A7S": "0x43cb4372"
+  },
+  "ExternalStorageAcquire": "0x43cb317f",
+  "ExternalStorageRelease": "0x43cb31b8",
+  "DCIM/100MSDCF/DSC%05d.ARW": {
+   "A6000": "0x43cac566",
+   "A7S": "0x43cb022b"
+  },
+  "DCIM/100MSDCF/DSC00001.ARW": {
+   "A6000": "0x4401ea7f",
+   "A7S": "0x440241e5"
+  },
+  "/setting/psd.bin": {
+   "A6000": "0x43ccf2b6",
+   "A7S": null
+  },
+  "LiroSequencerMovieFileFormat": "0x43ca3b3a",
+  "negativos": [
+   "exFAT",
+   "EXFAT",
+   "FAT32",
+   "CLIP_"
+  ]
+ },
+ "userland": {
+  "libInfraFsys.so": {
+   "bytes_A6000": 375524,
+   "bytes_A7S": 373900,
+   "EXFAT": 51,
+   "FAT32": 8,
+   "estructuras": [
+    "BPB_Media",
+    "BPB_TotSec16/32",
+    "block size (org)",
+    "block start(org)",
+    "FSYS_ATTRIB_ARCHIVE",
+    "FSYS_ATTRIB_DIRECTORY",
+    "FSYS_ATTRIB_VOLUME",
+    "create UTC Offset",
+    "create time_10ms"
+   ]
+  },
+  "libObj.so": {
+   "bytes_A6000": 17436172,
+   "bytes_A7S": 16184848,
+   "CLIP_": 13,
+   "campos": [
+    "contentType",
+    "p_entryIdList",
+    "entryCondition",
+    "p_listInfo",
+    "mediaSizeOnDstDisc",
+    "remainSizeOnDstDisc",
+    "forcastUseSizeOnDstDisc",
+    "isExistUnsupportedContent",
+    "dubbingProhibitionFactor",
+    "mainJpg",
+    "thumJpg",
+    "screenNail",
+    "exifSrcArea",
+    "lensModel",
+    "model",
+    "pimInfo",
+    "publicMakerNote",
+    "secretMakerNote",
+    "software",
+    "mpfSrcArea"
+   ]
+  },
+  "libmpr.so": {
+   "bytes_A6000": 10321204,
+   "bytes_A7S": 10321412,
+   "campos": [
+    "category folder",
+    "content num",
+    "date num",
+    "entry num",
+    "last content",
+    "last date",
+    "last date folder",
+    "playlist num",
+    "playlist folder",
+    "playlist category folder",
+    "playlist content num",
+    "total mark num",
+    "creationTime",
+    "bckPropFileModTime",
+    "orgPropFileModTime",
+    "thumbPictFileModTime",
+    "aviFileModTime",
+    "seekPoint 0x%08x: packLength"
+   ]
+  }
+ },
+ "corrections_vs_subagent_draft": [
+  "las direcciones del borrador eran offsets de fichero; aqui son direcciones del binario",
+  "CLIP_ no esta en av-cam.bin: esta en libObj.so (13) y libmpr.so (3)",
+  "la implementacion exFAT/FAT32 esta en libInfraFsys.so (51 EXFAT, 8 FAT32) con BPB y FSYS_ATTRIB",
+  "/setting/psd.bin no existe en la A7S: es novedad de la fw3.21"
+ ]
+}
