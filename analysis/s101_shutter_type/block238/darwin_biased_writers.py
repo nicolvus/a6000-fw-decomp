@@ -1,10 +1,11 @@
 import re
 import struct
 import sys
+from pathlib import Path
 
 from capstone import *
 
-f=sys.argv[1]; b=open(f,'rb').read(); base=0x4200
+f=sys.argv[1]; b=Path(f).read_bytes(); base=0x4200
 md=Cs(CS_ARCH_ARM,CS_MODE_THUMB); md.skipdata=True
 ins=list(md.disasm(b,base))
 pool={base+o:struct.unpack_from('<I',b,o)[0] for o in range(0,len(b)-3,4)}
