@@ -43,3 +43,15 @@ Método: desensamblado Thumb lineal (capstone) sobre `av-cam.bin` A6000 fw3.21 (
 **INFERENCIA:** en A7S el byte `+0x7a` es la opción SilentShutter ON (S53: opciones On/Off identificadas en `CautionConfig.so`); A6000 la omite en el selector. **NO VERIFICADO:** qué ajuste es `[G+0x808]&7` (candidato: modo de obturación mecánico/EFCS), y si `cap+0x784 = 2` en A6000 cambia algo físico (Darwin A6000 valida tipos 1/2/3, S52).
 
 Siguiente: identificar `G+0x808` (escritores y el menú que lo fija) y comprobar si el camino de A6000 para `cap+0x784 == 2` coincide con el de A7S aguas abajo.
+
+## `G+0x808`: el campo que decide el tipo en A6000 (`pic_field_users.py`)
+
+**VERIFICADO (bytes):**
+- `G = 0x43e9b548` (resuelto del literal PIC de `0x4379315a`): es la **instantánea «actual»** de S64 (raíz `R` de S39–S47). El campo es `0x43e9bd50` (RAM `0x83e9bd50`) y el tipo se guarda en `0x43e9bccc` (`G+0x784`).
+- En la imagen ambos valen `0` ⇒ por defecto `([G+0x808]&7)=0` ⇒ **tipo 0** (rama sin mecanismo, S54).
+- Lectores PIC de `G+0x808`: solo la función `0x43792a0c` (`0x43793106`, `0x43793160`, `0x43793202`, `0x4379348a`, `0x437934b8`); lectores de `G+0x784`: `0x4378f5bc/c8`. **Ningún escritor PIC** de `G+0x808`: se rellena en tiempo de ejecución por copia indirecta (la copia de 0x560 B de S64 no lo cubre: `0x808 > 0x560`).
+- Los `strb [..,#0x808]` del resto del binario (`0x43868ae4`, `0x4395bf9a`, `0x4395d6d0`…) son de otras instancias del mismo tipo de objeto (tabla de campos `0x644/0x704/0x754/0x7b0/0x808/0x8d8`), no de `G`.
+
+**INFERENCIA:** `([G+0x808]&7)==1` ⇒ `cap+0x784=2` en A6000. Un experimento mínimo en cámara sería escribir `1` en `0x83e9bd50` y ver si cambia el tipo (`0x83e9bccc`→2) y el comportamiento del obturador; **no se ha hecho**: requiere tu autorización, backup de NVRAM previo y comprobar que `0x83e9bd50` está viva. S64 ya forzó otros campos de la misma instantánea sin efecto, pero no consta `+0x808` entre ellos.
+
+Siguiente (estático): localizar quién rellena `G+0x808..0x80d` (copia de la instantánea desde un mensaje de menú, `0x43868ae4`/`0x43868c5e` son manejadores de comando con campos `+0x80b/+0x80c`).
