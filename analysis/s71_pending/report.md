@@ -32,3 +32,14 @@ Método: desensamblado Thumb lineal (capstone) sobre `av-cam.bin` A6000 fw3.21 (
 | 10 | **CERRADO** | `analysis/s72_graph/module_graph.md` (348 módulos, 340 aristas; INFERENCIA por menciones en trazas). |
 | 11 | **CERRADO como no resoluble** | Sin expansiones creíbles en los binarios; `analysis/s72_graph/siglas.py`. |
 | 12 | **CERRADO** | Cubierto por S98/S100. |
+
+## Continuación: cómo se decide el «tipo» de mecanismo en A6000 y A7S (misma fecha)
+
+**VERIFICADO (bytes):**
+- **A7S** `0x43813e8c…0x43813ea2`: `cap+0x78c = 0x4379ec04([G+0x250], cap)`; si el resultado es `2` ⇒ `cap+0x748 = 1`. La función `0x4379ec04` devuelve `2` cuando un byte `[X+0x7a]` (X vía GOT) es distinto de cero (registra un aviso con `0x438f7114(…, 2)`), devuelve `0` si `[cap+0x4b84]` ya está fijado o `cap+0x785` es 0, y en otro caso una tabla de 2 entradas indexada por `[G+0x250]`.
+- **A6000** `0x4379316a…0x43793296`: **sí existe un selector de tipo**, pero distinto: con `v = [G+0x808] & 7`, `tbb` (tabla `0d 1c 60 7b 83 8e`) ⇒ `v=1` ⇒ `cap+0x784 = 2` (`0x43793196`); `v=2..6` ⇒ `cap+0x784 = 1`; en otro caso `0`. Tras asignar el tipo no hay almacenamiento de bandera `+0x740` (los `str [..,#0x740]` de A6000 en `0x4373662a/0x43736738` son desplazamientos de un historial de pasos `+0x73c→+0x740`).
+- La A6000 **no tiene el camino «byte `+0x7a` ≠ 0 ⇒ tipo 2 ⇒ bandera»**: el tipo 2 de A6000 depende de `[G+0x808]&7 == 1`, no de ese byte.
+
+**INFERENCIA:** en A7S el byte `+0x7a` es la opción SilentShutter ON (S53: opciones On/Off identificadas en `CautionConfig.so`); A6000 la omite en el selector. **NO VERIFICADO:** qué ajuste es `[G+0x808]&7` (candidato: modo de obturación mecánico/EFCS), y si `cap+0x784 = 2` en A6000 cambia algo físico (Darwin A6000 valida tipos 1/2/3, S52).
+
+Siguiente: identificar `G+0x808` (escritores y el menú que lo fija) y comprobar si el camino de A6000 para `cap+0x784 == 2` coincide con el de A7S aguas abajo.

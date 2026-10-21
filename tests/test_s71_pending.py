@@ -53,3 +53,10 @@ def test_mapa_de_copia_identico_en_a6000_y_a7s():
     out = subprocess.run([sys.executable, str(ROOT / "analysis/s71_pending/copy_map.py")], capture_output=True, text=True, cwd=ROOT, check=True).stdout
     a6, a7 = (ln.split(":", 1)[1] for ln in out.strip().splitlines())
     assert a6 == a7 and "'0x740': '0x133'" in a6 and "'0x748': '0x13d'" in a6
+
+
+@pytest.mark.skipif(not A6.is_file(), reason="falta av-cam.bin")
+def test_selector_de_tipo_a6000_tbb():
+    d = A6.read_bytes()
+    assert d[0x43793174 - BASE : 0x4379317A - BASE] == bytes.fromhex("0d1c607b838e")
+    assert ins(A6, 0x43793196) == ["str.w r2, [r3, #0x784]"]
