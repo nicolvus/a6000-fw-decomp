@@ -41,6 +41,18 @@ Para restricciones del proyecto (sin firmware ejecutado, sin flasheo, sin `git p
 
 [Informe](../analysis/s118_sfra/sfra.md) · [doc](../docs/capture/s118-sfra.md). Siguiente: la correspondencia de los 5 casos del `TBB` con los nombres `[CMP]`; 5 ids de sub-comando sin traza propia; el papel de `RC`/`VFX`/`IIB`.
 
+## S121 — el módulo `[AIP]` (37 trazas): la interfaz de audio con el escalado (21-10-2026, línea de RE general)
+
+**VERIFICADO (97 tests, `tests/test_s121_aip.py`):** 37 cadenas `[AIP]` en `0x43cdd844`–`0x43cdec50`; **16 funciones** y 6 sub-bloques RTTI: `SaWrapper` (8), `SaBackUpCtrl` (12), `SaDriverBase` (4), `LPS` (11), `SaDriverZoomNr` (1), `SetFader` (1). **Callbacks `Ack`/`Comp`/`Err` en tres capas**: SA (`0x43926d1c`/`0x43926de8`, con los predicados `[r1,#1]==0x14`/`0x13`), LPS (`0x4392b16c`/`0x4392b254`) y driver; los errores llevan `errCode`+`errState` (SA) o `ErrCode`+`ErrStatus` (LPS). **Tabla de backup**: **350 entradas de 12 B** en `0x43bd1964` con `{id = 0x10c0000 + n, offset, size}`; `WriteShadow2BakcupArea` vuelca `0x10c` B (`mov.w r0,#0x10c` en `0x4392ab78`) y `SetAudioNrType` publica el **bit 3** de `bkId = 0x10e0000`. Comandos hacia el escalar en `0x4392ac30` (`Cmd`/`Func` + `Zma`/`Ext`/`Mbx`) y `0x4392acb4` (`Cmd`/`Func`/`Unq`). Buffers LPS `0x82`/`0x83`/`0x85` con longitudes `0x2c`/`0x28`/`0x14`; `SetFader` (`0x4355ae98`) divide por 100/20/otro según `[r0,#0x78]`.
+
+**Quién lo usa**: el **ADF** (S81): `[ADF][INIT]AUDIOIP INIT COMP` `0x43c26411`, tipos `AUDIO_IP_CONFIG_TYPE_*` `0x43c264fa`–`0x43c2659e` y comandos `SetAip0/1`, `GetSa0/1`, `SetSa`, `SetFader`, `SetZoomNr`. **No** es el «SA» de S108 (`Camera::SaFuncDrv`, `sa_func_*`): ninguna de las 37 trazas lo menciona.
+
+**Diferencial**: A7S fw3.20 tiene **las mismas 37**; el A6300 fw2.01 tiene **63** = 37 + 26 (25 `[AIP][ZNR_EE]*` y `SetInstanceNumberExec Err %d`).
+
+**Aporte metodológico (rectificó todo el repo)**: el subagente cuantificó los falsos positivos de cada regla de emparejamiento PIC (estricta 37/37 reales; kill analysis 60 pares = 37 verdaderos + **23 falsos**) y el caso concreto donde falla (`0x4355bcb2` resuelve a `0x43ceb58b`, no a `0x43cde863`, cuyo sitio real es `0x4392ab04`). Con la calibración de S118 (`[SFRA]`: 118 reales = 118 con la regla estricta, 166 con kill analysis, 186 con la ancha) se declaró **regla canónica estricta** y se rectificaron S106, S110, S113 y S115.
+
+[Informe](../analysis/s121_aip/aip.md) · [doc](../docs/capture/s121-aip.md). Siguiente: significado de AIP/SA/LPS/ANR/ZNR/Zma/Ext/Mbx; formato de la cola `AudioIpCmdQueue`; contenido de las 350 entradas del backup.
+
 ## S111 — el módulo `[TRK]` (215 cadenas) de tracking y detección (21-10-2026, línea de RE general)
 
 **VERIFICADO (17 tests, `tests/test_s111_trk.py`):** 216 apariciones del literal `[TRK` → **215 cadenas** (214 que empiezan por `[TRK` + 1 anidada: `[TRK]: [TRK] cb_func == NULL`) → **207 textos distintos** (8 repetidos en dos direcciones cada uno) en `0x43cebceb`–`0x43cfe31c`, con **288 sitios de referencia** y **47 funciones** (283 strict + 5 relaxed). Sub-bloques: **STK** 76 trazas (saliency, touch, simulación de color y de toque), **BT** 44, **EDTSA** 19, **PMV** 16, **IRO2G** 13, **DETSA** 9, VAE/VAT/VOT 3 cada uno, más las familias STK_AUTO_SAL / STK_COLOR_SIM / STK_TOUCH_SIM. El código del módulo vive en `0x43a30000`–`0x43a39000` (284 sitios, 43 funciones) y los 4 restantes son *wrappers* de sesión en `0x439c0000`–`0x439d0000`; las zonas `sa_stubs` (ZIT), `fc` y `apl_osal` tienen 0 sitios. El firmware embebido incluye **99 ficheros `FC/*.cpp`** (`0x43cef12a`–`0x43cf707a`).
