@@ -34,3 +34,13 @@ def test_copia_del_flag_en_a6000_y_a7s():
 def test_backup_read_3e0005_tiene_dos_llamadores():
     for a in (0x437DBED4, 0x437DBFF4):
         assert ins(A6, a) and ins(A6, a)[0].startswith("bl")
+
+
+def test_grafo_de_modulos_contiene_aristas_conocidas():
+    import json
+
+    g = json.loads((ROOT / "analysis/s72_graph/module_graph.json").read_text())
+    aristas = {(a, b) for a, b, _ in g["aristas"]}
+    assert ("CAMERA_MAIN_SYNC", "GOLFSHOT") in aristas
+    assert ("ADF", "SYSND") in aristas
+    assert not any(b in {"ERR", "INFO", "DEBUG"} for _, b in aristas)
