@@ -1861,6 +1861,24 @@ expone 9 modelos `free` (ya no incluye `nemotron-3.5-lightning-free`); los ids s
 paralelo. Se lanzan tandas de hasta 3 subagentes y, en paralelo, el agente principal trabaja
 en los mismos temas (sin sesiones REA: 0 Ghidra abiertas, 9 GiB libres).
 
+**Ventana de reinicio (21-10-2026 20:40, medido sobre `~/.local/share/opencode/opencode.db`):**
+el límite es **por modelo** (cada modelo free tiene su propio cupo) y **no se reinicia solo**:
+reconstruyendo los mensajes `assistant` (ok/err por modelo y hora) se ve que cada modelo muere
+al agotar su cupo y sigue muerto muchas horas después — `longcat-2.5-preview-free` último OK
+01:14 y 429 desde entonces, `mimo-v2.6-flash-free` 01:35, `glm-5.3-flash-free` 01:47,
+`big-pickle` 01:49, `beam-free`/`nemotron-3.5-super-vl-free`/`deepseek-v4.1-flash-free` 03:16-03:17,
+`nemotron-3-ultra-free` 09:37 (932 OK previos) — **sin recuperación en 11-20 h**. Único caso de
+recuperación observado: `nemotron-3.5-super-vl-free` 429 a las 01:23 y OK otra vez a las 01:28
+(+5 min) → componente de **ráfaga** (~15-20 rpm) además del cupo. No hay `Retry-After` visible:
+el CLI no lo expone y la llamada directa a `https://opencode.ai/zen/v1` con `curl` devuelve
+**403 `FreeTierError`** (el free tier solo se puede usar desde dentro de OpenCode). Según la
+documentación pública de OpenCode/Comunidad, la ventana gratuita es diaria y se reinicia a las
+**00:00 UTC** (mediciones del `Retry-After` en issues de opencode apuntan al siguiente 00:00 UTC;
+el soporte de OpenCode remite a help@anoma.ly para el dato exacto de cuenta). **Sonda en marcha**:
+`/tmp/opencode/quota-probe.sh` (PID en background) comprueba cada 10 min dos modelos centinela
+(`longcat-2.5-preview-free`, `deepseek-v4.1-flash-free`) y, al primer OK, prueba los 8; el
+resultado queda en `/tmp/opencode/quota-probe.log` con sello UTC.
+
 **Hitos de esta ronda (todos publicados en `origin/main`):**
 
 | hito | tema | origen |
