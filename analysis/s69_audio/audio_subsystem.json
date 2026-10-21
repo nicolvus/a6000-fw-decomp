@@ -1,0 +1,117 @@
+{
+  "hito": "S69",
+  "scope": "Subsistema de audio de la Sony A6000 (fw3.21), linea general (no SilentShutter). VERIFICADO contra bytes de av-cam.bin; NO se ejecuto firmware.",
+  "binary": "firmware/extracted/fw321/.../av-cam.bin",
+  "base": "0x43541000",
+  "sha256_avcam_a6000": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "models_compared": ["A6000 fw3.21", "A7S fw3.20"],
+  "entries": [
+    {"address": "0x43C26411", "symbol": "[ADF][INIT]AUDIOIP INIT COMP", "role": "Inicializacion del Audio IP (ADF)", "evidence": "cadena unica en av-cam.bin A6000; referenciada por 0x4356725c (push+bl 0x435ab880)"},
+    {"address": "0x43C264FA", "symbol": "[ADF]AUDIO_IP_CONFIG_TYPE_VGS", "role": "Tipo de config Audio IP (VGS/PR/MF/CONS/BANDI)", "evidence": "cadena unica"},
+    {"address": "0x43C26DC1", "symbol": "AdfSenserCtrl::SetParamSetMicMode err", "role": "Configuracion de modo de microfono (ADF)", "evidence": "cadena unica"},
+    {"address": "0x43C26DF4", "symbol": "AdfSenserCtrl::SetParamSetRecLevel err", "role": "Nivel de grabacion (ADF)", "evidence": "cadena unica"},
+    {"address": "0x43C26E91", "symbol": "AdfSenserCtrl::SetParamSetRecLevelMode err", "role": "Modo de nivel de grabacion (ADF)", "evidence": "cadena unica"},
+    {"address": "0x43C28D29", "symbol": "ProcBuffMgrWrAudioPin::StartNew1Comp err1", "role": "Buffer manager de pin de audio (escritura)", "evidence": "cadena unica"},
+    {"address": "0x43C5C68E", "symbol": "targetAudioFormat = %#x", "role": "Formato de audio objetivo (debug)", "evidence": "cadena unica"},
+    {"address": "0x43C5C6B1", "symbol": "audioChannelNum = %#x", "role": "Numero de canales de audio (debug)", "evidence": "cadena unica"},
+    {"address": "0x43C5CA62", "symbol": "audioMuteRec = %#x", "role": "Mute de grabacion de audio", "evidence": "cadena unica"},
+    {"address": "0x43C6909D", "symbol": "AUDIO_CODEC_TYPE_XAVCS_LPCM", "role": "Codec de audio en contenedor XAVC-S (LPCM)", "evidence": "cadena unica; ExCodecDecMp4"},
+    {"address": "0x43C690C8", "symbol": "AUDIO_CODEC_TYPE_MP4_LPCM", "role": "Codec de audio en contenedor MP4 (LPCM)", "evidence": "cadena unica"},
+    {"address": "0x43C690F1", "symbol": "AUDIO_CODEC_TYPE_AAC", "role": "Codec de audio AAC", "evidence": "cadena unica; referenciada por 0x43610e74 y 0x43613204"},
+    {"address": "0x43CDDAD4", "symbol": "Abb::SetMicConfig Err mode %x", "role": "Configuracion de microfono (Audio IP / Abb)", "evidence": "cadena unica"},
+    {"address": "0x43CDDB5E", "symbol": "[AudioIp]AbbBackUpCtrl ChangeBackUp START err %x", "role": "Backup de parametros de audio (Abb)", "evidence": "cadena unica"},
+    {"address": "0x43CDDD49", "symbol": "AbbMicSensAdjustCtrl::SetStatus %x", "role": "Ajuste de sensibilidad del microfono", "evidence": "cadena unica"},
+    {"address": "0x43CDDDF3", "symbol": "15AbbRecLevelCtrl", "role": "Controlador de nivel de grabacion (Abb)", "evidence": "cadena unica (RTTI)"},
+    {"address": "0x43CDDEA7", "symbol": "WindStage:%d, MagDataRsv:%d", "role": "Etapa de viento (wind noise) y datos de magnitud reservados", "evidence": "cadena unica; referenciada por 0x43929db4"},
+    {"address": "0x43CDDEC4", "symbol": "MAGIC SetNwnr", "role": "Activacion de reduccion de ruido de viento (WNR) nueva", "evidence": "cadena unica"},
+    {"address": "0x43CDDED3", "symbol": "New WNR ON", "role": "WNR activado", "evidence": "cadena unica"},
+    {"address": "0x43CDDEDF", "symbol": "New WNR OFF", "role": "WNR desactivado", "evidence": "cadena unica"},
+    {"address": "0x43CDDEEC", "symbol": "MAGIC SetPremiumCloserVoice", "role": "Cancelacion de voz cercana (premium)", "evidence": "cadena unica"},
+    {"address": "0x43CDDF09", "symbol": "PremiumCloserVoice ON", "role": "Cancelacion de voz cercana activada", "evidence": "cadena unica"},
+    {"address": "0x43CDDF20", "symbol": "PremiumCloserVoice OFF", "role": "Cancelacion de voz cercana desactivada", "evidence": "cadena unica"},
+    {"address": "0x43CDDF38", "symbol": "MAGIC SetMyvoiceCanceling", "role": "Cancelacion de mi propia voz", "evidence": "cadena unica"},
+    {"address": "0x43CDDF53", "symbol": "MyvoiceCanceling ON", "role": "Cancelacion de mi voz activada", "evidence": "cadena unica"},
+    {"address": "0x43CDDF68", "symbol": "MyvoiceCanceling OFF", "role": "Cancelacion de mi voz desactivada", "evidence": "cadena unica"},
+    {"address": "0x43CDDF7E", "symbol": "MAGIC SetiVoice", "role": "iVoice (reduccion/realce de voz)", "evidence": "cadena unica"},
+    {"address": "0x43CDDF8F", "symbol": "iVoice ON", "role": "iVoice activado", "evidence": "cadena unica"},
+    {"address": "0x43CDDF9A", "symbol": "iVoice OFF", "role": "iVoice desactivado", "evidence": "cadena unica"},
+    {"address": "0x43CDDFA6", "symbol": "RecLevel SetRecLevel", "role": "Ajuste de nivel de grabacion", "evidence": "cadena unica; referenciada por 0x43929fa4"},
+    {"address": "0x43CDE0D3", "symbol": "[RecLevel]SetRecLevel [volume]", "role": "Nivel de grabacion con volumen", "evidence": "cadena unica"},
+    {"address": "0x43CDDFBC", "symbol": "Sa SaChangeBackup", "role": "Sound Analyzer: cambio de backup", "evidence": "cadena unica"},
+    {"address": "0x43CDD82E", "symbol": "9AudioIpIf", "role": "Interfaz Audio IP (RTTI)", "evidence": "cadena unica"},
+    {"address": "0x43CDD844", "symbol": "[AIP]SA OpenConfigCb Ack", "role": "Sound Analyzer: callback de configuracion abierta", "evidence": "cadena unica"},
+    {"address": "0x43CDE8F1", "symbol": "12SaDriverBase", "role": "Driver base del Sound Analyzer", "evidence": "cadena unica"},
+    {"address": "0x43CDF0E5", "symbol": "13SaDriverDummy", "role": "Driver dummy del Sound Analyzer", "evidence": "cadena unica"},
+    {"address": "0x43CDF0F5", "symbol": "[AUDIOIP]DUMMY EXE", "role": "Ejecucion dummy del Audio IP", "evidence": "cadena unica"},
+    {"address": "0x43CDEF06", "symbol": "8AbbSysnd", "role": "System sound (Abb)", "evidence": "cadena unica"},
+    {"address": "0x43CDEF10", "symbol": "ABB SYSND InitComp cnt:%d", "role": "Inicializacion de system sound", "evidence": "cadena unica"},
+    {"address": "0x43CDDAF3", "symbol": "3Abb", "role": "Clase Abb (Audio IP)", "evidence": "cadena unica"},
+    {"address": "0x43CDD811", "symbol": "9AudioIpIf", "role": "Interfaz Audio IP (repetida en tabla)", "evidence": "cadena en region AudioIp"},
+    {"address": "0x4356725C", "symbol": "audio_ip_init (func)", "role": "Funcion que imprime AUDIOIP INIT COMP", "evidence": "referencia a 0x43C26411; instrucciones push/bl/bl 0x4356b648"},
+    {"address": "0x43929DB4", "symbol": "wind_stage_func (func)", "role": "Funcion que imprime WindStage/MagDataRsv", "evidence": "referencia a 0x43CDDEA7"},
+    {"address": "0x43929FA4", "symbol": "reclevel_func (func)", "role": "Funcion que imprime RecLevel SetRecLevel", "evidence": "referencia a 0x43CDDFA6"}
+  ],
+  "userland": {
+    "wrapperAudioRecordingLevel.so": "Clase WrapperAudioRecordingLevel: getAudioRecordingLevel, setAudioRecordingLevel, isInhOn, convertValueToProcessValueId/convertProcessValueIdToValue. Interfaz app<->audio recording level.",
+    "movieRecUtil.so / recUtil.so": "CmnRecUtil: isMovieRecording, getRecordingMedia, getMovieMedia, writeBackup/readBackup. Enlace con captura de video.",
+    "libSR_AudioIn.so / libaudioflinger.so / libaudio.so": "Stack de audio Android (captura de microfono) en nflasha16 (userland).",
+    "scenarios": "AVBB_SCN_START_AUDIO.so / AVBB_SCN_STOP_AUDIO.so"
+  },
+  "data_model": {
+    "verified": [
+      "Codecs de audio en contenedor de video: AUDIO_CODEC_TYPE_XAVCS_LPCM, AUDIO_CODEC_TYPE_MP4_LPCM, AUDIO_CODEC_TYPE_AAC (0x43C6909D/0x43C690C8/0x43C690F1).",
+      "Campos de depuracion: targetAudioFormat, audioChannelNum, audioMuteRec (0x43C5C68E/0x43C5C6B1/0x43C5CA62)."
+    ],
+    "not_verified": [
+      "Frecuencia de muestreo, profundidad de bits, tamano de trama y numero de canales concretos (no aparecen como cadenas en av-cam.bin).",
+      "Escritura exacta del audio en el contenedor de video (muxer) no localizada estaticamente."
+    ]
+  },
+  "microphone": {
+    "verified": [
+      "Configuracion de modo de microfono: AdfSenserCtrl::SetParamSetMicMode (0x43C26DC1), Abb::SetMicConfig (0x43CDDAD4).",
+      "Ajuste de sensibilidad: AbbMicSensAdjustCtrl::SetStatus (0x43CDDD49).",
+      "No se encontro cadena 'reduce voltage' asociada al microfono en av-cam.bin (solo E-MountLens ReduceVoltage)."
+    ],
+    "not_verified": [
+      "Ganancia analogica/digital concreta, calibracion y seleccion interno/externo (no localizadas como cadenas)."
+    ]
+  },
+  "noise_reduction": {
+    "verified": [
+      "Reduccion de ruido de viento: WNR (New WNR ON/OFF, MAGIC SetNwnr, WindStage:%d) en 0x43CDDEC4..0x43CDDEDF.",
+      "Cancelacion de voz: PremiumCloserVoice ON/OFF, MyvoiceCanceling ON/OFF, iVoice ON/OFF (0x43CDDEEC..0x43CDDF9A).",
+      "Sound Analyzer: SaDriverBase (0x43CDE8F1), SA OpenConfigCb (0x43CDD844), Sa SaChangeBackup (0x43CDDFBC).",
+      "NS scalar infra en 0x43CE561F..0x43CEC98B (N15NS_SCALAR_INFRA*)."
+    ],
+    "not_verified": [
+      "Algoritmo DSP concreto y parametros (coeficientes) no recuperados; interfaz app<->audio via WrapperAudioRecordingLevel (userland) identificada por simbolos."
+    ]
+  },
+  "video_link": {
+    "verified": [
+      "Audio se procesa en el flujo de movie: ProcBuffMgrWrAudioPin (0x43C28D29), ExCodecDecMp4 con codecs LPCM/AAC (0x43C6909D..).",
+      "CmnRecUtil (recUtil.so/movieRecUtil.so) gestiona isMovieRecording/getMovieMedia; escenarios AVBB_SCN_START/STOP_AUDIO."
+    ],
+    "cross_check": "docs/capture/record-still-image-route.md y docs/capture/mpr-dcf-recording.md (antecedente; no reanalizados)."
+  },
+  "a7s_comparison": {
+    "verified": [
+      "Subsistema de audio (strings RecLevel/Wind/Mic/AudioIp/Abb) es practicamente identico entre A6000 y A7S (235 vs 237 strings clave).",
+      "A7S (fw3.20) tiene subsistema de codec externo (AbbExtCodecCtrl, ProcMsgSetExternalCodecMgr, ProcTimeKeeperExtCodec, etc.) que A6000 (fw3.21) NO tiene (solo SetExternalCodecState minimal)."
+    ],
+    "a7s_only_strings_example": [
+      "15AbbExtCodecCtrl (0x43CD582E en A7S)",
+      "[ADF]ProcMsgSetExternalCodecMgr::ConvChSsau2AudioIpCh (0x43C2F48A en A7S)"
+    ]
+  },
+  "frontier": {
+    "not_found": [
+      "Frecuencia de muestreo, canales concretos, tamano de trama, profundidad de bits.",
+      "Cadena 'reduce voltage' para microfono.",
+      "Muxer exacto de audio en contenedor de video.",
+      "Parametros DSP (coeficientes WNR/NS)."
+    ],
+    "no_firmware_executed": true
+  }
+}
