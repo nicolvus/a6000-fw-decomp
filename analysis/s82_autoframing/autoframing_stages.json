@@ -1,0 +1,89 @@
+{
+ "hito": "S82 - AutoFraming y etapas de control del pipeline",
+ "autoframing": {
+  "A6000": {
+   "Stage_AutoFraming.cpp": "0x43cc71a3",
+   "Stage_AutoFraming_ResizeRotate": "0x43cc71b9",
+   "Stage_AutoFraming_Branch": "0x43cc71d8"
+  },
+  "A7S": {
+   "Stage_AutoFraming.cpp": "0x43cc26ac",
+   "Stage_AutoFraming_ResizeRotate": "0x43cc26c2",
+   "Stage_AutoFraming_Branch": "0x43cc26e1"
+  },
+  "log_framing_forzado": {
+   "A6000": "0x43cc7143",
+   "A7S": "0x43cc265b"
+  },
+  "validacion_resize_rotate": {
+   "ImageAreaResize.us_Size_X": "0x43cc6e5f",
+   "ImageAreaResize.us_Size_Y": "0x43cc6eaa",
+   "canvas_size.ul_SizeX < Frame_X": "0x43cc6ef5",
+   "canvas_size.ul_SizeY < Frame_Y": "0x43cc6f79",
+   "Align Error us_Frame_X": "0x43cc6ffd",
+   "Align Error us_Frame_Y": "0x43cc704f",
+   "Align Error us_Size_X": "0x43cc70a1",
+   "Align Error us_Size_Y": "0x43cc70f2"
+  }
+ },
+ "etapas_control": {
+  "Stage_CaComm.cpp": {
+   "A6000": "0x43cc7b9c",
+   "A7S": "0x43cc2d53"
+  },
+  "Stage_CameraHAPI.cpp": {
+   "A6000": "0x43cc7bad",
+   "A7S": "0x43cc2d83"
+  },
+  "Stage_Notify.cpp": {
+   "A6000": "0x43caccd6",
+   "A7S": "0x43cb07bb"
+  },
+  "Stage_NotifyLongExpNRCapturing": {
+   "A6000": "0x43caccb7",
+   "A7S": "0x43cb079c"
+  },
+  "Stage_WaitControl.cpp": {
+   "A6000": "0x43cad784",
+   "A7S": "0x43cb0f69"
+  },
+  "Stage_SACC": {
+   "A6000": "0x43c9ee6c",
+   "A7S": "0x43ca484d"
+  },
+  "Stage_SACC.cpp": {
+   "A6000": "0x43c9f18a",
+   "A7S": "0x43ca4a8a"
+  },
+  "Stage_Common.cpp": {
+   "A6000": "0x43cac363",
+   "A7S": "0x43cb0098"
+  },
+  "Stage_DevLater.cpp": {
+   "A6000": "0x43cac51b",
+   "A7S": "0x43cb01ef"
+  },
+  "Stage_DualRec.cpp": {
+   "A6000": "0x43cac9f8",
+   "A7S": "0x43cb0591"
+  }
+ },
+ "relacion_sa_inferencia_por_rodata": {
+  "Stage_CaComm": [
+   "sa_func_CONTP_acquire error 0x43cc7bfa",
+   "sa_func_CONTP_start error 0x43cc7c6a"
+  ],
+  "Stage_DualRec": [
+   "sa_func_DUALREC_BAYER_acquire 0x43cac9c1",
+   "sa_func_DUALREC_CLEARVID_start 0x43cac867"
+  ],
+  "Stage_SACC": [
+   "sa_func_NFLASH_start error 0x43c9ef73",
+   "sa_func_NFLASH_acquire error 0x43c9f20f"
+  ]
+ },
+ "corrections_vs_subagent_draft": [
+  "Stage_WaitControl.cpp esta en 0x43cad784, no en 0x43cad6fd (esa es Stage_RchRcv_ResizeTrim) -> error tambien corregido en S76",
+  "la A7S fw3.20 tiene las mismas tres etapas de AutoFraming y el mismo log: no esta 'disperso o ausente'"
+ ]
+}

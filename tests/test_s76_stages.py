@@ -80,6 +80,13 @@ class CaptureStages(unittest.TestCase):
         for fam in ("BOKS", "DECOMP", "SPICA", "STAR", "YKNR", "LFNR", "DUALREC_BAYER", "BDEX"):
             self.assertTrue(any(n.startswith("sa_func_" + fam) for n in sa), fam)
 
+    def test_waitcontrol_address(self):
+        """Correccion (21-10-2026): Stage_WaitControl.cpp esta en 0x43cad784 (0x43cad6fd es
+        Stage_RchRcv_ResizeTrim)."""
+        self.assertEqual(cstr(0x43CAD784), "Stage_WaitControl.cpp")
+        self.assertEqual(cstr(0x43CAD6FD), "Stage_RchRcv_ResizeTrim")
+        self.assertEqual(cstr(0x43CACCD6), "Stage_Notify.cpp")
+
     def test_a7s_has_the_same_stage_graph(self):
         """La A7S (fw3.20) tiene las mismas etapas del pipeline."""
         a7s = {cstr(a, "A7S") for a in strings_with("Stage_", "A7S")}
