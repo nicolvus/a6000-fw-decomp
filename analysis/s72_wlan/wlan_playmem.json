@@ -1,0 +1,107 @@
+{
+ "hito": "S72 - wireless y transferencia remota (WLAN / PlayMem / Camera on Demand)",
+ "firmware": {
+  "A6000": "fw3.21",
+  "A7S": "fw3.20"
+ },
+ "libraries": [
+  {
+   "name": "libWlanAdjust.so",
+   "size_a6000": 60492,
+   "size_a7s": 49420,
+   "mangled_a6000": 227,
+   "mangled_a7s": 233
+  },
+  {
+   "name": "libWlanControlCommon.so",
+   "size_a6000": 23840,
+   "size_a7s": 14784,
+   "mangled_a6000": 21,
+   "mangled_a7s": 21
+  },
+  {
+   "name": "libWlanResource.so",
+   "size_a6000": 63656,
+   "size_a7s": 33004,
+   "mangled_a6000": 58,
+   "mangled_a7s": 58
+  },
+  {
+   "name": "libGOConnectionManager.so",
+   "size_a6000": 106016,
+   "size_a7s": 64580,
+   "mangled_a6000": 348,
+   "mangled_a7s": 348
+  },
+  {
+   "name": "libInfraDlnaControl.so",
+   "size_a6000": 525892,
+   "size_a7s": 360556,
+   "mangled_a6000": 1971,
+   "mangled_a7s": 1981
+  },
+  {
+   "name": "CameraOnDemandSaver.so",
+   "size_a6000": 20084,
+   "size_a7s": 14244,
+   "mangled_a6000": 28,
+   "mangled_a7s": 28
+  },
+  {
+   "name": "libHapiLib.so",
+   "size_a6000": 89628,
+   "size_a7s": 77380,
+   "mangled_a6000": 375,
+   "mangled_a7s": 375
+  },
+  {
+   "name": "libgps_rsrc.so",
+   "size_a6000": 109384,
+   "size_a7s": 88944,
+   "mangled_a6000": 105,
+   "mangled_a7s": 105
+  }
+ ],
+ "netconf": {
+  "bss.conf": {
+   "sha256_a6000": "fb8e96bd30698c8628ab211f8936fe84cec56a5257d9bd6cf6462ae1e2c1ad87",
+   "sha256_a7s": "fb8e96bd30698c8628ab211f8936fe84cec56a5257d9bd6cf6462ae1e2c1ad87",
+   "identico": true
+  },
+  "dhcpd.conf": {
+   "sha256_a6000": "9ba777bcd7028c31f8d5bfe345348de177a6a028846b7250c241767fa1b4fec6",
+   "sha256_a7s": "30151c871edd07309a5e9a41782de229c6191acf7a6dbb9fcd3e83aa99c8c924",
+   "identico": false
+  },
+  "p2p.conf": {
+   "sha256_a6000": "ad7966d4a67ed8c9d3448881f7b7ae25a6bf190a9f5e338027c249c28321e5fe",
+   "sha256_a7s": "ad7966d4a67ed8c9d3448881f7b7ae25a6bf190a9f5e338027c249c28321e5fe",
+   "identico": true
+  },
+  "pump.conf": {
+   "sha256_a6000": "69e1191b00e7a167ddafb8eba6436d930d9ca7fea73b214c3e3743b119793720",
+   "sha256_a7s": "69e1191b00e7a167ddafb8eba6436d930d9ca7fea73b214c3e3743b119793720",
+   "identico": true
+  }
+ },
+ "differential": {
+  "so_totales_firmware": {
+   "A6000": 460,
+   "A7S": 474
+  },
+  "so_lib_nflasha15": {
+   "A6000": 157,
+   "A7S": 160
+  },
+  "gps_rsrc_en_a6000": true,
+  "nota": "la A6000 tiene mas codigo WLAN/DLNA que la A7S (mismo esquema de simbolos)"
+ },
+ "corrections_vs_subagent_draft": [
+  "getMacAddress -> simbolo real GetMacAddress(WlanResource::ST_MSG_SYNC_REQ*)",
+  "OSAL_MSGQ_GID_WLAN_RSRC_API -> reales OSAL_MSGQ_GID_WLAN_RSRC_DBG y _TEST",
+  "libgps_rsrc.so ausente en A6000 -> PRESENTE (109384 B)",
+  "'la cadena GO esta mas desarrollada en la A7S' -> es al reves: A6000 106016 B vs A7S 64580 B (mismo esquema de 348 simbolos)",
+  "netconf 'identico' -> 3 de 4 ficheros identicos; dhcpd.conf difiere (sha256)",
+  "libInfraHapiLib.so -> el nombre real es libHapiLib.so"
+ ]
+}
