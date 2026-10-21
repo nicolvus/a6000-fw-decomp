@@ -43,3 +43,9 @@ Límites y riesgos:
 ## Volcado de RAM del sistema (2026-10-20)
 
 `scripts/senser_ram_dump.py` leyó 1 GiB de RAM física del sistema en marcha por service mode (`analysis/camera-dumps/ram-servicio-20261020`, solo hash versionado). El volcado de RAM de `full-20261020-nand` es de modo actualizador, no del sistema.
+
+## Resto de volcados (2026-10-20)
+
+- RAM del sistema: `/proc/iomem` declara `System RAM` en `0x80000000-0xbfffffff` = 1 GiB, ya volcado completo (`ram-servicio-20261020`); no hay más RAM.
+- Periféricos (`regiones-20261020`): `arm7sram`, `arm7io`, `nandreg`, USB (EHCI/OHCI/UDC), `uart0/2` y `0xf1000000+0x100` leídos; `nandc` (`0x10000000`) falla. El volcado de 16 MiB en `0xf0000000` no se repite: solo se leen regiones declaradas.
+- `/proc/config.gz` no existe en el kernel de la cámara; `kallsyms` ya estaba volcado. Objetivo (`/lens`) listado, sin volcado de su firmware.
