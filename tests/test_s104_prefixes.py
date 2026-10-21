@@ -1,8 +1,8 @@
-"""S103 — prefijos de traza exclusivos de la A6000.
+"""S104 — prefijos de traza exclusivos de la A6000.
 
 Verifica contra los bytes de av-cam.bin los conteos, las cadenas exactas y las
 xrefs PIC de ADC_DEBUG, AVR, ADR, BKID, AVOUT y CAMCORE.
-Ver analysis/s103_prefixes/a6000_prefixes.md y .json
+Ver analysis/s104_prefixes/a6000_prefixes.md y .json
 """
 import collections
 import json
@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "analysis" / "s58"))
 from tdis import data, B  # noqa: E402
 
-DATA = json.loads((ROOT / "analysis" / "s103_prefixes" / "a6000_prefixes.json").read_text())
+DATA = json.loads((ROOT / "analysis" / "s104_prefixes" / "a6000_prefixes.json").read_text())
 STR_RE = re.compile(rb"[\x09\x20-\x7e]{6,}")
 PREFIX_RE = re.compile(r"\[([A-Z][A-Z0-9_]{2,})\]")
 EXPECTED = {"ADC_DEBUG": 14, "AVR": 2, "ADR": 1, "BKID": 4, "AVOUT": 2, "CAMCORE": 37}
@@ -78,7 +78,7 @@ def pic_target(model, site):
     return None, None
 
 
-class S103Prefixes(unittest.TestCase):
+class S104Prefixes(unittest.TestCase):
     def test_counts_match_s79_and_json(self):
         cnt = count_prefixes()
         self.assertEqual(DATA["counts"], EXPECTED)

@@ -1,11 +1,11 @@
-# S103 — Prefijos de traza exclusivos de la A6000
+# S104 — Prefijos de traza exclusivos de la A6000
 
 **Hito:** documentar los seis prefijos con token `[PREFIJO]` que existen en la A6000 (fw3.21)
 pero **no** en la A7S (fw3.20) y que no tenían hito propio: `ADC_DEBUG`, `AVR`, `ADR`, `BKID`,
 `AVOUT` y `CAMCORE`. **Método:** análisis estático de bytes de `analysis/rea-independent/input/av-cam.bin`
 (regla `vaddr = 0x43541000 + file_offset`), conteo idéntico a S79 y localización de xrefs PIC
 (`ldr rN,[pc,#imm]` + `add rN,pc`). **Sin firmware ejecutado, sin cámara, sin flasheo, sin sesiones
-Ghidra/REA.** Datos completos: `a6000_prefixes.json`; prueba: `tests/test_s103_prefixes.py`.
+Ghidra/REA.** Datos completos: `a6000_prefixes.json`; prueba: `tests/test_s104_prefixes.py`.
 
 ## Resumen
 
@@ -178,7 +178,7 @@ binario (`NO_VERIFICADO`).
 ## 8. Trazabilidad
 
 - Blob: `analysis/rea-independent/input/av-cam.bin` (A6000 fw3.21), base `0x43541000`.
-- Datos: `analysis/s103_prefixes/a6000_prefixes.json` (cadenas, xrefs, funciones, notas).
-- Prueba: `tests/test_s103_prefixes.py` (conteos, bytes exactos, xrefs PIC y ausencia en A7S).
+- Datos: `analysis/s104_prefixes/a6000_prefixes.json` (cadenas, xrefs, funciones, notas).
+- Prueba: `tests/test_s104_prefixes.py` (conteos, bytes exactos, xrefs PIC y ausencia en A7S).
 - Conteo reproducible: mismo regex que `tests/test_s79_modules.py` (`[A-Z][A-Z0-9_]{2,}` en
   cadenas imprimibles de ≥6 bytes).

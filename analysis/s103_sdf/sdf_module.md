@@ -1,10 +1,10 @@
-# SDF Subsystem (S101)
+# SDF Subsystem (S103)
 
 ## What is SDF?
 
 **SDF** stands for **Still DataFlow**. It is the firmware subsystem responsible for processing still-image data flows, including resize/rotate, super-resolution, JPEG encoding, color correction, and other image processing operations for still capture modes. The module has **477 traces** (A6000 fw3.21, prefix `[SDF]`) in the `av-cam.bin` binary, spanning vaddrs `0x43c7785b` → `0x43c806f9`.
 
-SDF is the **dataflow** layer that executes the still-image jobs requested by the capture manager (`IMAGING_CAP`, see S104): resize/rotate, JPEG encode/decode, CCNR, THM. The capture manager owns the *sequence* (which stage runs when); SDF owns the *worker* side that consumes `MSG_ID_SDF_*` jobs and feeds the `OBJAVBBC` (`ObjAVBBCBaseClass::SdfCh`) interface for saving JPEGs. Both belong to the still path — `IMAGING_CAP` is not a video pipeline.
+SDF is the **dataflow** layer that executes the still-image jobs requested by the capture manager (`IMAGING_CAP`, see S106): resize/rotate, JPEG encode/decode, CCNR, THM. The capture manager owns the *sequence* (which stage runs when); SDF owns the *worker* side that consumes `MSG_ID_SDF_*` jobs and feeds the `OBJAVBBC` (`ObjAVBBCBaseClass::SdfCh`) interface for saving JPEGs. Both belong to the still path — `IMAGING_CAP` is not a video pipeline.
 
 ## Key Evidence (vaddr + bytes)
 
