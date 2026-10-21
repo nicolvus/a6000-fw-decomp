@@ -16,6 +16,7 @@ recuperación y pipeline de captura. El obturador electrónico es un
 
 Cada enlace lleva a su informe; el resumen de hallazgos está en el [catálogo](docs/capture/linea-general-re.md) y en el [historial](docs/history/README-historial-2026-10-21.md).
 
+- [S101: selector del tipo de mecanismo y consumidores de los campos de ajuste (A6000 vs A7S)](docs/capture/s101-conclusions.md): `+0x238`/`+0x280` solo se escriben; Darwin nunca fija el tipo (3 lectores, 0 escritores en A6000/A7S/A6300); selector A6000 `0x4379316a` sobre `[G+0x808]&7` (por defecto tipo 0) frente al de A7S por el byte `+0x7a`; plan de pruebas físicas pendientes. S51 se mantiene.
 - [S100: el contrato de comandos del ADF (firmware) ↔ `AdfCh` (userland)](analysis/s100_adf_contract/adf_command_contract.md)
 - [S98: `libBizFw.so` — el orquestador userland y el puente con el ADF](analysis/s98_bizfw/bizfw_bridge.md)
 - [S99: la arquitectura del userland — las capas de `libObj.so`](analysis/s99_userland/userland_architecture.md)

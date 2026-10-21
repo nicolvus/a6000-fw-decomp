@@ -1,6 +1,6 @@
 # Plan de pruebas físicas (pendientes) — obturador electrónico A6000
 
-Estado: **ninguna de estas pruebas se ha ejecutado**. Cada una requiere autorización expresa del usuario en el momento de lanzarla. Se redacta el 21-10-2026 a partir de S64, S70 y S71 (`analysis/s70_block238/`, `analysis/s71_pending/report.md`). Conclusión vigente que estas pruebas podrían cambiar: **S51 (no parchear)**; A7S es la referencia con Silent.
+Estado: **ninguna de estas pruebas se ha ejecutado**. Cada una requiere autorización expresa del usuario en el momento de lanzarla. Se redacta el 21-10-2026 a partir de S64, S70 y S71 (`analysis/s101_shutter_type/block238/`, `analysis/s101_shutter_type/pending/report.md`). Conclusión vigente que estas pruebas podrían cambiar: **S51 (no parchear)**; A7S es la referencia con Silent.
 
 ## 0. Reglas comunes (obligatorias)
 
@@ -86,4 +86,4 @@ Cada paso se detiene si el anterior no es limpio. P1, P2 y P7 son los de mayor i
 
 ## 4. Fuentes
 
-`docs/capture/s64-silent-ram-nvram-test.md` (procedimientos y resultados previos), `docs/capture/rea-tema3-cortinas-darwin.md` (traza pasiva), `docs/capture/s62-pmca-injection.md` (service shell), `analysis/s70_block238/block238_consumers.md`, `analysis/s71_pending/report.md`, scripts `scripts/camera_*.py` y `scripts/senser_*.py`, `tools/remote-shutter/`.
+`docs/capture/s64-silent-ram-nvram-test.md` (procedimientos y resultados previos), `docs/capture/rea-tema3-cortinas-darwin.md` (traza pasiva), `docs/capture/s62-pmca-injection.md` (service shell), `analysis/s101_shutter_type/block238/block238_consumers.md`, `analysis/s101_shutter_type/pending/report.md`, scripts `scripts/camera_*.py` y `scripts/senser_*.py`, `tools/remote-shutter/`.
