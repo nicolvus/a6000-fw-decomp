@@ -51,3 +51,7 @@ Límites y riesgos:
 - `/proc/config.gz` no existe en el kernel de la cámara; `kallsyms` ya estaba volcado. Objetivo (`/lens`) listado, sin volcado de su firmware.
 
 - Barrido de `0xF0000000` (parcial): `analysis/camera-dumps/sfr-scan-20261020`; 128 KiB legibles, falla desde `0xF0020000`; por telnet `/dev/mem` da `Bad address` (no sirve). OpenMemories Tweak reinstalado con pmca (`install -a com.github.ma1co.openmemories.tweak`).
+
+## Ejecutables y APK extraídos (2026-10-21)
+
+`analysis/camera-extract` (manifiesto versionado, binarios locales): 773 archivos, 18 APK del sistema más Tweak en vivo, 268 cargados en ejecución. Ver su README.
