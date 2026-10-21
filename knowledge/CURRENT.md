@@ -5,6 +5,16 @@ Para restricciones del proyecto (sin firmware ejecutado, sin flasheo, sin `git p
 
 [Plan de pruebas físicas pendientes](../docs/capture/physical-test-plan.md) (P1–P8, ninguna ejecutada; requieren tu autorización).
 
+## S109 — el módulo `[CDIAG]` (270 trazas): el banco de diagnóstico del códec (21-10-2026, línea de RE general)
+
+**VERIFICADO (22 tests, `tests/test_s109_cdiag.py`):** 270 tokens `[CDIAG]` (`0x43c3b0d4`–`0x43c3e86a`): 255 cadenas que empiezan por `[CDIAG]` y 15 `[ERR][CDIAG]`. Estructura: **7 escenarios** (HD REC/DEC, SD REC/DEC, JPEG ENC/DEC/ENCDEC) × **8 operaciones** (`DbgDiagAvc` `0x43c3b6df`, `CmpData` `0x43c3b72a`, `RunCodec` `0x43c3c123`, `RelMemArea` `0x43c3b768`, `SetMemArea` `0x43c3b7ec`, `SetData` `0x43c3c162`, `ConfirmDoneCodec`, `SetDiagMode` `0x43c3bf5c`), **27 firmas `CDIAGER …`**, **16 clases** (RTTI: `8CdCtrlIf` `0x43c3b67e` … `13CdUtilSysvMsg` `0x43c3e8ab`) y **2 ficheros** (`cdCtrlIf.cpp` `0x43c3b1a8`, `cdCtrlCore.cpp` `0x43c3b86c`). **Tabla de registro de clases** en `0x43fda6a0`: 16 pares `{vtable base común 0x43fd04f8, puntero al nombre RTTI}` (en la A7S, `0x43fdb6ec`) → es una tabla de **resolución clase→nombre**, no de vtables por clase. 118 funciones (`0x435a127a`–`0x435a50b6`), 295 sitios de referencia; **226/255** cadenas referenciadas y **29 muertas** (ni PIC ni puntero absoluto). Transporte por **OSAL**: `osal_rcv_msg` `0x43561260`, `osal_snd_msg` `0x4356120c`, `osal_free_msg` `0x435612ec`, `osal_try_valloc_msg` `0x435612d0`; el núcleo de la tarea (`0x435a1318`) llega a `osal_rcv_msg` vía `0x435a9f4c` (bl en `0x435a9f68`); escritor `0x435ab880` (310 llamadas), nivel `0xbe`, id `0xbad`.
+
+**Diferencial A7S fw3.20**: 270 tokens, **270 cadenas comunes y 0 exclusivas** en ningún sentido, mismas 16 clases, 2 ficheros y 27 firmas → módulo **idéntico**. El A6300 fw2.01 tiene 310 tokens = 270 + **40 de 4K** (`[CTRL4KREC]`, `CdCtrl4KDec/Rec`, `CdExt*`, `CodecDiagLog`).
+
+**Negativo verificado**: 0 menciones de `shutter`/`silent`/`imager`/`sensor`/`dmm` en las 270 trazas → sin efecto sobre S51.
+
+[Informe](../analysis/s109_cdiag/cdiag.md) · [doc](../docs/capture/s109-cdiag.md). Siguiente: formato de `MSG_SENS_COMMAND`/`DIAGINFO`; codificación numérica de `cmd`/`mode`/`func`; emisor de los comandos `SENS_*`; fichero fuente de las clases de códec (no embebido).
+
 ## S111 — el módulo `[TRK]` (215 cadenas) de tracking y detección (21-10-2026, línea de RE general)
 
 **VERIFICADO (17 tests, `tests/test_s111_trk.py`):** 216 apariciones del literal `[TRK` → **215 cadenas** (214 que empiezan por `[TRK` + 1 anidada: `[TRK]: [TRK] cb_func == NULL`) → **207 textos distintos** (8 repetidos en dos direcciones cada uno) en `0x43cebceb`–`0x43cfe31c`, con **288 sitios de referencia** y **47 funciones** (283 strict + 5 relaxed). Sub-bloques: **STK** 76 trazas (saliency, touch, simulación de color y de toque), **BT** 44, **EDTSA** 19, **PMV** 16, **IRO2G** 13, **DETSA** 9, VAE/VAT/VOT 3 cada uno, más las familias STK_AUTO_SAL / STK_COLOR_SIM / STK_TOUCH_SIM. El código del módulo vive en `0x43a30000`–`0x43a39000` (284 sitios, 43 funciones) y los 4 restantes son *wrappers* de sesión en `0x439c0000`–`0x439d0000`; las zonas `sa_stubs` (ZIT), `fc` y `apl_osal` tienen 0 sitios. El firmware embebido incluye **99 ficheros `FC/*.cpp`** (`0x43cef12a`–`0x43cf707a`).

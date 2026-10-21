@@ -1,0 +1,7266 @@
+{
+ "milestone": "S109",
+ "model": "A6000",
+ "firmware": "fw3.21",
+ "base_vaddr": "0x43541000",
+ "bin": "analysis/rea-independent/input/av-cam.bin",
+ "count_cdiag_token": 270,
+ "count_strings_starting_with_prefix": 255,
+ "count_strings_with_ERR_prefix": 15,
+ "range": [
+  "0x43c3b0d4",
+  "0x43c3e86a"
+ ],
+ "by_class": [
+  {
+   "class": "CdCtrlCore",
+   "tags": [
+    "CTRLCORE"
+   ],
+   "count_strings": 49,
+   "strings_vaddr_min": "0x43c3b89f",
+   "strings_vaddr_max": "0x43c3c0eb",
+   "n_functions": 8,
+   "code_vaddr_min": "0x435a1c5c",
+   "code_vaddr_max": "0x435a2790",
+   "functions": [
+    {
+     "start": "0x435a1c5c",
+     "end": "0x435a1cfc"
+    },
+    {
+     "start": "0x435a1d1c",
+     "end": "0x435a1dc2"
+    },
+    {
+     "start": "0x435a1de0",
+     "end": "0x435a1ee8"
+    },
+    {
+     "start": "0x435a1f18",
+     "end": "0x435a207e"
+    },
+    {
+     "start": "0x435a20b0",
+     "end": "0x435a21d0"
+    },
+    {
+     "start": "0x435a2200",
+     "end": "0x435a2324"
+    },
+    {
+     "start": "0x435a2354",
+     "end": "0x435a23aa"
+    },
+    {
+     "start": "0x435a23b4",
+     "end": "0x435a2790"
+    }
+   ]
+  },
+  {
+   "class": "CdCtrlHdDec",
+   "tags": [
+    "CTRLHDDEC"
+   ],
+   "count_strings": 26,
+   "strings_vaddr_min": "0x43c3c1f1",
+   "strings_vaddr_max": "0x43c3c657",
+   "n_functions": 14,
+   "code_vaddr_min": "0x435a2810",
+   "code_vaddr_max": "0x435a2d94",
+   "functions": [
+    {
+     "start": "0x435a2810",
+     "end": "0x435a2844"
+    },
+    {
+     "start": "0x435a2852",
+     "end": "0x435a28e4"
+    },
+    {
+     "start": "0x435a2852",
+     "end": "0x435a28b4"
+    },
+    {
+     "start": "0x435a28ee",
+     "end": "0x435a292a"
+    },
+    {
+     "start": "0x435a2934",
+     "end": "0x435a298a"
+    },
+    {
+     "start": "0x435a29a0",
+     "end": "0x435a2a06"
+    },
+    {
+     "start": "0x435a2a22",
+     "end": "0x435a2a80"
+    },
+    {
+     "start": "0x435a2a88",
+     "end": "0x435a2ac0"
+    },
+    {
+     "start": "0x435a2b80",
+     "end": "0x435a2c6a"
+    },
+    {
+     "start": "0x435a2c6c",
+     "end": "0x435a2ce8"
+    },
+    {
+     "start": "0x435a2cb4",
+     "end": "0x435a2ce8"
+    },
+    {
+     "start": "0x435a2cf0",
+     "end": "0x435a2d16"
+    },
+    {
+     "start": "0x435a2d1c",
+     "end": "0x435a2d58"
+    },
+    {
+     "start": "0x435a2d68",
+     "end": "0x435a2d94"
+    }
+   ]
+  },
+  {
+   "class": "CdCtrlHdRec",
+   "tags": [
+    "CTRLHDREC"
+   ],
+   "count_strings": 27,
+   "strings_vaddr_min": "0x43c3c761",
+   "strings_vaddr_max": "0x43c3cbeb",
+   "n_functions": 17,
+   "code_vaddr_min": "0x435a2dc4",
+   "code_vaddr_max": "0x435a3410",
+   "functions": [
+    {
+     "start": "0x435a2dc4",
+     "end": "0x435a2df8"
+    },
+    {
+     "start": "0x435a2e06",
+     "end": "0x435a2e9a"
+    },
+    {
+     "start": "0x435a2e06",
+     "end": "0x435a2e6a"
+    },
+    {
+     "start": "0x435a2ea6",
+     "end": "0x435a2f02"
+    },
+    {
+     "start": "0x435a2f10",
+     "end": "0x435a2fb4"
+    },
+    {
+     "start": "0x435a2f10",
+     "end": "0x435a2f76"
+    },
+    {
+     "start": "0x435a2fbe",
+     "end": "0x435a2ffa"
+    },
+    {
+     "start": "0x435a3004",
+     "end": "0x435a304a"
+    },
+    {
+     "start": "0x435a305e",
+     "end": "0x435a30ce"
+    },
+    {
+     "start": "0x435a30d4",
+     "end": "0x435a310c"
+    },
+    {
+     "start": "0x435a31cc",
+     "end": "0x435a32b6"
+    },
+    {
+     "start": "0x435a32b8",
+     "end": "0x435a3334"
+    },
+    {
+     "start": "0x435a3300",
+     "end": "0x435a3334"
+    },
+    {
+     "start": "0x435a333c",
+     "end": "0x435a3362"
+    },
+    {
+     "start": "0x435a3368",
+     "end": "0x435a338a"
+    },
+    {
+     "start": "0x435a3398",
+     "end": "0x435a33d4"
+    },
+    {
+     "start": "0x435a33e4",
+     "end": "0x435a3410"
+    }
+   ]
+  },
+  {
+   "class": "CdCtrlIf",
+   "tags": [
+    "CTRLIF"
+   ],
+   "count_strings": 19,
+   "strings_vaddr_min": "0x43c3b1b5",
+   "strings_vaddr_max": "0x43c3b624",
+   "n_functions": 6,
+   "code_vaddr_min": "0x435a1424",
+   "code_vaddr_max": "0x435a1968",
+   "functions": [
+    {
+     "start": "0x435a1424",
+     "end": "0x435a147e"
+    },
+    {
+     "start": "0x435a157c",
+     "end": "0x435a15dc"
+    },
+    {
+     "start": "0x435a15e8",
+     "end": "0x435a1680"
+    },
+    {
+     "start": "0x435a15e8",
+     "end": "0x435a172a"
+    },
+    {
+     "start": "0x435a15e8",
+     "end": "0x435a1798"
+    },
+    {
+     "start": "0x435a17e8",
+     "end": "0x435a1968"
+    }
+   ]
+  },
+  {
+   "class": "CdCtrlJpgDec",
+   "tags": [
+    "CTRLJPGDEC"
+   ],
+   "count_strings": 21,
+   "strings_vaddr_min": "0x43c3cca7",
+   "strings_vaddr_max": "0x43c3d083",
+   "n_functions": 9,
+   "code_vaddr_min": "0x435a3440",
+   "code_vaddr_max": "0x435a381c",
+   "functions": [
+    {
+     "start": "0x435a3440",
+     "end": "0x435a3474"
+    },
+    {
+     "start": "0x435a3482",
+     "end": "0x435a34e6"
+    },
+    {
+     "start": "0x435a34f4",
+     "end": "0x435a352c"
+    },
+    {
+     "start": "0x435a34f4",
+     "end": "0x435a3560"
+    },
+    {
+     "start": "0x435a356a",
+     "end": "0x435a35a6"
+    },
+    {
+     "start": "0x435a35b0",
+     "end": "0x435a35e8"
+    },
+    {
+     "start": "0x435a35f8",
+     "end": "0x435a3640"
+    },
+    {
+     "start": "0x435a364c",
+     "end": "0x435a3684"
+    },
+    {
+     "start": "0x435a37ac",
+     "end": "0x435a381c"
+    }
+   ]
+  },
+  {
+   "class": "CdCtrlJpgEnc",
+   "tags": [
+    "CTRLJPGENC"
+   ],
+   "count_strings": 21,
+   "strings_vaddr_min": "0x43c3d19f",
+   "strings_vaddr_max": "0x43c3d57f",
+   "n_functions": 9,
+   "code_vaddr_min": "0x435a3850",
+   "code_vaddr_max": "0x435a3bc8",
+   "functions": [
+    {
+     "start": "0x435a3850",
+     "end": "0x435a3884"
+    },
+    {
+     "start": "0x435a3892",
+     "end": "0x435a38f6"
+    },
+    {
+     "start": "0x435a3904",
+     "end": "0x435a3970"
+    },
+    {
+     "start": "0x435a3904",
+     "end": "0x435a393c"
+    },
+    {
+     "start": "0x435a397a",
+     "end": "0x435a39b6"
+    },
+    {
+     "start": "0x435a39c0",
+     "end": "0x435a39f8"
+    },
+    {
+     "start": "0x435a3a08",
+     "end": "0x435a3a50"
+    },
+    {
+     "start": "0x435a3a5c",
+     "end": "0x435a3a94"
+    },
+    {
+     "start": "0x435a3b68",
+     "end": "0x435a3bc8"
+    }
+   ]
+  },
+  {
+   "class": "CdCtrlJpgEncDec",
+   "tags": [
+    "CTRLJPGENCDEC"
+   ],
+   "count_strings": 22,
+   "strings_vaddr_min": "0x43c3d5f6",
+   "strings_vaddr_max": "0x43c3da06",
+   "n_functions": 10,
+   "code_vaddr_min": "0x435a3bfc",
+   "code_vaddr_max": "0x435a3ee2",
+   "functions": [
+    {
+     "start": "0x435a3bfc",
+     "end": "0x435a3c5e"
+    },
+    {
+     "start": "0x435a3bfc",
+     "end": "0x435a3c30"
+    },
+    {
+     "start": "0x435a3c6a",
+     "end": "0x435a3cf2"
+    },
+    {
+     "start": "0x435a3d00",
+     "end": "0x435a3d38"
+    },
+    {
+     "start": "0x435a3d00",
+     "end": "0x435a3d6c"
+    },
+    {
+     "start": "0x435a3d76",
+     "end": "0x435a3db2"
+    },
+    {
+     "start": "0x435a3dbc",
+     "end": "0x435a3df4"
+    },
+    {
+     "start": "0x435a3e04",
+     "end": "0x435a3e78"
+    },
+    {
+     "start": "0x435a3e88",
+     "end": "0x435a3ec0"
+    },
+    {
+     "start": "0x435a3ecc",
+     "end": "0x435a3ee2"
+    }
+   ]
+  },
+  {
+   "class": "CdCtrlSdDec",
+   "tags": [
+    "CTRLSDDEC"
+   ],
+   "count_strings": 26,
+   "strings_vaddr_min": "0x43c3da73",
+   "strings_vaddr_max": "0x43c3ded9",
+   "n_functions": 14,
+   "code_vaddr_min": "0x435a3fc4",
+   "code_vaddr_max": "0x435a452c",
+   "functions": [
+    {
+     "start": "0x435a3fc4",
+     "end": "0x435a3ff8"
+    },
+    {
+     "start": "0x435a4006",
+     "end": "0x435a4098"
+    },
+    {
+     "start": "0x435a4006",
+     "end": "0x435a4068"
+    },
+    {
+     "start": "0x435a40a2",
+     "end": "0x435a40de"
+    },
+    {
+     "start": "0x435a40e8",
+     "end": "0x435a413e"
+    },
+    {
+     "start": "0x435a4154",
+     "end": "0x435a41ba"
+    },
+    {
+     "start": "0x435a41d4",
+     "end": "0x435a4216"
+    },
+    {
+     "start": "0x435a421c",
+     "end": "0x435a4254"
+    },
+    {
+     "start": "0x435a4314",
+     "end": "0x435a43fe"
+    },
+    {
+     "start": "0x435a4400",
+     "end": "0x435a4482"
+    },
+    {
+     "start": "0x435a4448",
+     "end": "0x435a4482"
+    },
+    {
+     "start": "0x435a4488",
+     "end": "0x435a44ae"
+    },
+    {
+     "start": "0x435a44b4",
+     "end": "0x435a44f0"
+    },
+    {
+     "start": "0x435a4500",
+     "end": "0x435a452c"
+    }
+   ]
+  },
+  {
+   "class": "CdCtrlSdRec",
+   "tags": [
+    "CTRLSDREC"
+   ],
+   "count_strings": 27,
+   "strings_vaddr_min": "0x43c3dfda",
+   "strings_vaddr_max": "0x43c3e478",
+   "n_functions": 17,
+   "code_vaddr_min": "0x435a455c",
+   "code_vaddr_max": "0x435a4b98",
+   "functions": [
+    {
+     "start": "0x435a455c",
+     "end": "0x435a4590"
+    },
+    {
+     "start": "0x435a459e",
+     "end": "0x435a4602"
+    },
+    {
+     "start": "0x435a459e",
+     "end": "0x435a4632"
+    },
+    {
+     "start": "0x435a463e",
+     "end": "0x435a469a"
+    },
+    {
+     "start": "0x435a46a8",
+     "end": "0x435a470e"
+    },
+    {
+     "start": "0x435a46a8",
+     "end": "0x435a474c"
+    },
+    {
+     "start": "0x435a4756",
+     "end": "0x435a4792"
+    },
+    {
+     "start": "0x435a479c",
+     "end": "0x435a47e2"
+    },
+    {
+     "start": "0x435a47f4",
+     "end": "0x435a4836"
+    },
+    {
+     "start": "0x435a483c",
+     "end": "0x435a4874"
+    },
+    {
+     "start": "0x435a493c",
+     "end": "0x435a4a26"
+    },
+    {
+     "start": "0x435a4a28",
+     "end": "0x435a4ab2"
+    },
+    {
+     "start": "0x435a4a70",
+     "end": "0x435a4ab2"
+    },
+    {
+     "start": "0x435a4ab8",
+     "end": "0x435a4ade"
+    },
+    {
+     "start": "0x435a4ae4",
+     "end": "0x435a4b06"
+    },
+    {
+     "start": "0x435a4b14",
+     "end": "0x435a4b5c"
+    },
+    {
+     "start": "0x435a4b6c",
+     "end": "0x435a4b98"
+    }
+   ]
+  },
+  {
+   "class": "CdTskCore",
+   "tags": [
+    "TSK"
+   ],
+   "count_strings": 1,
+   "strings_vaddr_min": "0x43c3b0d4",
+   "strings_vaddr_max": "0x43c3b0d4",
+   "n_functions": 1,
+   "code_vaddr_min": "0x435a127a",
+   "code_vaddr_max": "0x435a128e",
+   "functions": [
+    {
+     "start": "0x435a127a",
+     "end": "0x435a128e"
+    }
+   ]
+  },
+  {
+   "class": "CdUtilCmpData",
+   "tags": [
+    "CMPDATA"
+   ],
+   "count_strings": 16,
+   "strings_vaddr_min": "0x43c3e557",
+   "strings_vaddr_max": "0x43c3e86a",
+   "n_functions": 7,
+   "code_vaddr_min": "0x435a4eb0",
+   "code_vaddr_max": "0x435a50b6",
+   "functions": [
+    {
+     "start": "0x435a4eb0",
+     "end": "0x435a4ef2"
+    },
+    {
+     "start": "0x435a4eb0",
+     "end": "0x435a4f18"
+    },
+    {
+     "start": "0x435a4eb0",
+     "end": "0x435a4ede"
+    },
+    {
+     "start": "0x435a4f40",
+     "end": "0x435a50b6"
+    },
+    {
+     "start": "0x435a4f40",
+     "end": "0x435a509c"
+    },
+    {
+     "start": "0x435a4f40",
+     "end": "0x435a4f84"
+    },
+    {
+     "start": "0x435a4f40",
+     "end": "0x435a4f70"
+    }
+   ]
+  }
+ ],
+ "subblocks": [
+  {
+   "tag": "TSK",
+   "count": 1,
+   "vaddr_min": "0x43c3b0d4",
+   "vaddr_max": "0x43c3b0d4",
+   "strings": [
+    {
+     "vaddr": "0x43c3b0d4",
+     "text": "[CDIAG][TSK]act_tsk"
+    }
+   ]
+  },
+  {
+   "tag": "CTRLIF",
+   "count": 19,
+   "vaddr_min": "0x43c3b1b5",
+   "vaddr_max": "0x43c3b624",
+   "strings": [
+    {
+     "vaddr": "0x43c3b1b5",
+     "text": "[CDIAG][CTRLIF]EXEC CMD cmd[0x%02x] mode[%d] func[%d] prm[%d]"
+    },
+    {
+     "vaddr": "0x43c3b2cf",
+     "text": "[CDIAG][CTRLIF]SEND MSG EXEC CMD cmd[0x%02x] mode[%d] func[%d] prm[%d]"
+    },
+    {
+     "vaddr": "0x43c3b316",
+     "text": "[CDIAG][CTRLIF]cmdMode[0x%08X] cmd[0x%08X] mode[0x%08X] [%s]"
+    },
+    {
+     "vaddr": "0x43c3b354",
+     "text": "[CDIAG][CTRLIF]Data0[0x%02X] Data1[0x%02X]"
+    },
+    {
+     "vaddr": "0x43c3b37f",
+     "text": "[CDIAG][CTRLIF]Received SENS_MODE_PROC_START [%s]"
+    },
+    {
+     "vaddr": "0x43c3b3b2",
+     "text": "[CDIAG][CTRLIF]Received SENS_MODE_FIN_SEND_DATA [%s]"
+    },
+    {
+     "vaddr": "0x43c3b433",
+     "text": "[CDIAG][CTRLIF]Received SENS_MODE_FIN_RECV_DATA [%s]"
+    },
+    {
+     "vaddr": "0x43c3b469",
+     "text": "[CDIAG][CTRLIF]Cmd SENS_CNFM_DONE_CODEC [%s]"
+    },
+    {
+     "vaddr": "0x43c3b497",
+     "text": "[CDIAG][CTRLIF]SENS_CNFM_SET_DATA_AREA [%s]"
+    },
+    {
+     "vaddr": "0x43c3b4c4",
+     "text": "[CDIAG][CTRLIF]SENS_CNFM_REL_DATA_AREA [%s]"
+    },
+    {
+     "vaddr": "0x43c3b4f1",
+     "text": "[CDIAG][CTRLIF]SENS_DBG_DIAG_AVC [%s]"
+    },
+    {
+     "vaddr": "0x43c3b518",
+     "text": "[CDIAG][CTRLIF]SENS_SET_DIAG_MODE [%s]"
+    },
+    {
+     "vaddr": "0x43c3b540",
+     "text": "[CDIAG][CTRLIF]SENS_SET_DATA_AREA [%s]"
+    },
+    {
+     "vaddr": "0x43c3b568",
+     "text": "[CDIAG][CTRLIF]SENS_REL_DATA_AREA [%s]"
+    },
+    {
+     "vaddr": "0x43c3b590",
+     "text": "[CDIAG][CTRLIF]SENS_RUN_CODEC [%s]"
+    },
+    {
+     "vaddr": "0x43c3b5b4",
+     "text": "[CDIAG][CTRLIF]SENS_CMP_DATA [%s]"
+    },
+    {
+     "vaddr": "0x43c3b5d7",
+     "text": "[CDIAG][CTRLIF]SENS_CNFM_DONE_CODEC [%s]"
+    },
+    {
+     "vaddr": "0x43c3b601",
+     "text": "[CDIAG][CTRLIF]SENS_SET_DATA [%s]"
+    },
+    {
+     "vaddr": "0x43c3b624",
+     "text": "[CDIAG][CTRLIF]SENS_GET_DATA [%s]"
+    }
+   ]
+  },
+  {
+   "tag": "CTRLCORE",
+   "count": 49,
+   "vaddr_min": "0x43c3b89f",
+   "vaddr_max": "0x43c3c0eb",
+   "strings": [
+    {
+     "vaddr": "0x43c3b89f",
+     "text": "[CDIAG][CTRLCORE]Exec DbgDiagAvc HD REC!!"
+    },
+    {
+     "vaddr": "0x43c3b8c9",
+     "text": "[CDIAG][CTRLCORE]Exec DbgDiagAvc HD DEC!!"
+    },
+    {
+     "vaddr": "0x43c3b8f3",
+     "text": "[CDIAG][CTRLCORE]Exec DbgDiagAvc SD REC!!"
+    },
+    {
+     "vaddr": "0x43c3b91d",
+     "text": "[CDIAG][CTRLCORE]Exec DbgDiagAvc SD DEC!!(NotSupport)"
+    },
+    {
+     "vaddr": "0x43c3b953",
+     "text": "[CDIAG][CTRLCORE]No Support EXEC MODE!!"
+    },
+    {
+     "vaddr": "0x43c3b97b",
+     "text": "[CDIAG][CTRLCORE]ExecCmd !! ConfirmDoneCodec"
+    },
+    {
+     "vaddr": "0x43c3b9a9",
+     "text": "[CDIAG][CTRLCORE]Exec ConfirmDoneCodec HD REC!!"
+    },
+    {
+     "vaddr": "0x43c3b9d9",
+     "text": "[CDIAG][CTRLCORE]Exec ConfirmDoneCodec HD DEC!!"
+    },
+    {
+     "vaddr": "0x43c3ba09",
+     "text": "[CDIAG][CTRLCORE]Exec ConfirmDoneCodec SD REC!!"
+    },
+    {
+     "vaddr": "0x43c3ba39",
+     "text": "[CDIAG][CTRLCORE]Exec ConfirmDoneCodec SD DEC!!"
+    },
+    {
+     "vaddr": "0x43c3ba69",
+     "text": "[CDIAG][CTRLCORE]ExecCmd !!"
+    },
+    {
+     "vaddr": "0x43c3ba86",
+     "text": "[CDIAG][CTRLCORE]Exec CmpData HD REC!!"
+    },
+    {
+     "vaddr": "0x43c3baad",
+     "text": "[CDIAG][CTRLCORE]Exec CmpData HD DEC!!"
+    },
+    {
+     "vaddr": "0x43c3bad4",
+     "text": "[CDIAG][CTRLCORE]Exec CmpData SD REC!!"
+    },
+    {
+     "vaddr": "0x43c3bafb",
+     "text": "[CDIAG][CTRLCORE]Exec CmpData SD DEC!!"
+    },
+    {
+     "vaddr": "0x43c3bb22",
+     "text": "[CDIAG][CTRLCORE]Exec CmpData JPEG ENC!!"
+    },
+    {
+     "vaddr": "0x43c3bb4b",
+     "text": "[CDIAG][CTRLCORE]Exec CmpData JPEG DEC!!"
+    },
+    {
+     "vaddr": "0x43c3bb74",
+     "text": "[CDIAG][CTRLCORE]Exec CmpData JPEG ENCDEC!!"
+    },
+    {
+     "vaddr": "0x43c3bba0",
+     "text": "[CDIAG][CTRLCORE]ExecCmd !! [0x%04X] mode[0x%02X] func[0x%02X]"
+    },
+    {
+     "vaddr": "0x43c3bbe0",
+     "text": "[CDIAG][CTRLCORE]Exec RunCodec HD REC!!"
+    },
+    {
+     "vaddr": "0x43c3bc08",
+     "text": "[CDIAG][CTRLCORE]Exec RunCodec HD DEC!!"
+    },
+    {
+     "vaddr": "0x43c3bc30",
+     "text": "[CDIAG][CTRLCORE]Exec RunCodec SD REC!!"
+    },
+    {
+     "vaddr": "0x43c3bc58",
+     "text": "[CDIAG][CTRLCORE]Exec RunCodec SD DEC!!"
+    },
+    {
+     "vaddr": "0x43c3bc80",
+     "text": "[CDIAG][CTRLCORE]Exec RunCodec JPG ENC!!"
+    },
+    {
+     "vaddr": "0x43c3bca9",
+     "text": "[CDIAG][CTRLCORE]Exec RunCodec JPG DEC!!"
+    },
+    {
+     "vaddr": "0x43c3bcd2",
+     "text": "[CDIAG][CTRLCORE]Exec RunCodec JPG ENCDEC!!"
+    },
+    {
+     "vaddr": "0x43c3bcfe",
+     "text": "[CDIAG][CTRLCORE]Exec RelMemArea HD REC!!"
+    },
+    {
+     "vaddr": "0x43c3bd28",
+     "text": "[CDIAG][CTRLCORE]Exec RelMemArea HD DEC!!"
+    },
+    {
+     "vaddr": "0x43c3bd52",
+     "text": "[CDIAG][CTRLCORE]Exec RelMemArea SD REC!!"
+    },
+    {
+     "vaddr": "0x43c3bd7c",
+     "text": "[CDIAG][CTRLCORE]Exec RelMemArea SD DEC!!"
+    },
+    {
+     "vaddr": "0x43c3bda6",
+     "text": "[CDIAG][CTRLCORE]Exec RelMemArea JPEG ENC!!"
+    },
+    {
+     "vaddr": "0x43c3bdd2",
+     "text": "[CDIAG][CTRLCORE]Exec RelMemArea JPEG DEC!!"
+    },
+    {
+     "vaddr": "0x43c3bdfe",
+     "text": "[CDIAG][CTRLCORE]Exec RelMemArea JPEG ENCDEC!!"
+    },
+    {
+     "vaddr": "0x43c3be2d",
+     "text": "[CDIAG][CTRLCORE]Exec SetMemArea HD REC!!"
+    },
+    {
+     "vaddr": "0x43c3be57",
+     "text": "[CDIAG][CTRLCORE]Exec SetMemArea HD DEC!!"
+    },
+    {
+     "vaddr": "0x43c3be81",
+     "text": "[CDIAG][CTRLCORE]Exec SetMemArea SD REC!!"
+    },
+    {
+     "vaddr": "0x43c3beab",
+     "text": "[CDIAG][CTRLCORE]Exec SetMemArea SD DEC!!"
+    },
+    {
+     "vaddr": "0x43c3bed5",
+     "text": "[CDIAG][CTRLCORE]Exec SetMemArea JPEG ENC!!"
+    },
+    {
+     "vaddr": "0x43c3bf01",
+     "text": "[CDIAG][CTRLCORE]Exec SetMemArea JPEG DEC!!"
+    },
+    {
+     "vaddr": "0x43c3bf2d",
+     "text": "[CDIAG][CTRLCORE]Exec SetMemArea JPEG ENCDEC!!"
+    },
+    {
+     "vaddr": "0x43c3bf5c",
+     "text": "[CDIAG][CTRLCORE]SetDiagMode !!"
+    },
+    {
+     "vaddr": "0x43c3bf7d",
+     "text": "[CDIAG][CTRLCORE][SET_DIAG_MODE] mode[0x%02X] func[0x%02X]"
+    },
+    {
+     "vaddr": "0x43c3bfc7",
+     "text": "[CDIAG][CTRLCORE]Exec SetData HD REC!!"
+    },
+    {
+     "vaddr": "0x43c3bfee",
+     "text": "[CDIAG][CTRLCORE]memIdx[%d] fileId[%02d:%02d] unitHandle[0x%04X] unitType[0x%08X] size[0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3c04e",
+     "text": "[CDIAG][CTRLCORE]Exec SetData HD DEC!!"
+    },
+    {
+     "vaddr": "0x43c3c075",
+     "text": "[CDIAG][CTRLCORE]Exec SetData SD REC!!"
+    },
+    {
+     "vaddr": "0x43c3c09c",
+     "text": "[CDIAG][CTRLCORE]Exec SetData SD DEC!!"
+    },
+    {
+     "vaddr": "0x43c3c0c3",
+     "text": "[CDIAG][CTRLCORE]Exec SetData JPG ENC!!"
+    },
+    {
+     "vaddr": "0x43c3c0eb",
+     "text": "[CDIAG][CTRLCORE]Exec SetData JPG ENCDEC!!"
+    }
+   ]
+  },
+  {
+   "tag": "CTRLHDDEC",
+   "count": 26,
+   "vaddr_min": "0x43c3c1f1",
+   "vaddr_max": "0x43c3c657",
+   "strings": [
+    {
+     "vaddr": "0x43c3c1f1",
+     "text": "[CDIAG][CTRLHDDEC]MEM ALLOC err [0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3c21a",
+     "text": "[CDIAG][CTRLHDDEC]MEM ALLOC COUNT NOT 1 [%d]"
+    },
+    {
+     "vaddr": "0x43c3c247",
+     "text": "[CDIAG][CTRLHDDEC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] fsize[%d] hdl[0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3c29c",
+     "text": "[CDIAG][CTRLHDDEC]MEM SHARE err [0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3c2c5",
+     "text": "[CDIAG][CTRLHDDEC]MEM FREE err [0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3c2ed",
+     "text": "[CDIAG][CTRLHDDEC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] hdl[0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3c338",
+     "text": "[CDIAG][CTRLHDDEC]ExecCmd [%s]!!"
+    },
+    {
+     "vaddr": "0x43c3c35a",
+     "text": "[CDIAG][CTRLHDDEC]Memory Release ERR!! idx[%d]"
+    },
+    {
+     "vaddr": "0x43c3c389",
+     "text": "[CDIAG][CTRLHDDEC]Memory Set ERR!! idx[%d]"
+    },
+    {
+     "vaddr": "0x43c3c3b4",
+     "text": "[CDIAG][CTRLHDDEC]Memory Share ERR!! idx[%d]"
+    },
+    {
+     "vaddr": "0x43c3c3e1",
+     "text": "[CDIAG][CTRLHDDEC]ExecCmd !! CmpData"
+    },
+    {
+     "vaddr": "0x43c3c407",
+     "text": "[CDIAG][CTRLHDDEC]Found File ID [0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3c463",
+     "text": "[CDIAG][CTRLHDDEC]ClkState IDLE->OPEN"
+    },
+    {
+     "vaddr": "0x43c3c489",
+     "text": "[CDIAG][CTRLHDDEC]ClkState Wait OPEN"
+    },
+    {
+     "vaddr": "0x43c3c4ae",
+     "text": "[CDIAG][CTRLHDDEC]ClkState OPEN->CHANGING"
+    },
+    {
+     "vaddr": "0x43c3c4d8",
+     "text": "[CDIAG][CTRLHDDEC]ClkState Wait CHANGING"
+    },
+    {
+     "vaddr": "0x43c3c501",
+     "text": "[CDIAG][CTRLHDDEC]ClkState CHANGING->CHANGED"
+    },
+    {
+     "vaddr": "0x43c3c52e",
+     "text": "[CDIAG][CTRLHDDEC]ClkState CHANGED->CLOSE"
+    },
+    {
+     "vaddr": "0x43c3c558",
+     "text": "[CDIAG][CTRLHDDEC]ClkState CLOSE->IDLE"
+    },
+    {
+     "vaddr": "0x43c3c57f",
+     "text": "[CDIAG][CTRLHDDEC]ClkType [%d] : OK"
+    },
+    {
+     "vaddr": "0x43c3c5a3",
+     "text": "[CDIAG][CTRLHDDEC][VSYNC] RUN CODEC INIT"
+    },
+    {
+     "vaddr": "0x43c3c5cc",
+     "text": "[CDIAG][CTRLHDDEC]UnReg SysV"
+    },
+    {
+     "vaddr": "0x43c3c5e9",
+     "text": "[CDIAG][CTRLHDDEC]PAL(50i) MODE Clk[%d]"
+    },
+    {
+     "vaddr": "0x43c3c612",
+     "text": "[CDIAG][CTRLHDDEC]NTSC(60i) MODE Clk[%d]"
+    },
+    {
+     "vaddr": "0x43c3c63c",
+     "text": "[CDIAG][CTRLHDDEC]Reg SysV"
+    },
+    {
+     "vaddr": "0x43c3c657",
+     "text": "[CDIAG][CTRLHDDEC]Run Codec Set State STATE_CODEC_CLK_CHANGE"
+    }
+   ]
+  },
+  {
+   "tag": "CTRLHDREC",
+   "count": 27,
+   "vaddr_min": "0x43c3c761",
+   "vaddr_max": "0x43c3cbeb",
+   "strings": [
+    {
+     "vaddr": "0x43c3c761",
+     "text": "[CDIAG][CTRLHDREC]MEM ALLOC err [0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3c78a",
+     "text": "[CDIAG][CTRLHDREC]MEM ALLOC COUNT NOT 1 [%d]"
+    },
+    {
+     "vaddr": "0x43c3c7b7",
+     "text": "[CDIAG][CTRLHDREC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] fsize[%d] hdl[0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3c80c",
+     "text": "[CDIAG][CTRLHDREC]MEM SHARE err [0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3c835",
+     "text": "[CDIAG][CTRLHDREC]ExecCmd [%s]!!"
+    },
+    {
+     "vaddr": "0x43c3c857",
+     "text": "[CDIAG][CTRLHDREC]Memory Set ERR!! idx[%d]"
+    },
+    {
+     "vaddr": "0x43c3c882",
+     "text": "[CDIAG][CTRLHDREC]Memory Share ERR!! idx[%d]"
+    },
+    {
+     "vaddr": "0x43c3c8af",
+     "text": "[CDIAG][CTRLHDREC]MEM FREE err [0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3c8d7",
+     "text": "[CDIAG][CTRLHDREC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] hdl[0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3c922",
+     "text": "[CDIAG][CTRLHDREC]Memory Release ERR!! idx[%d]"
+    },
+    {
+     "vaddr": "0x43c3c951",
+     "text": "[CDIAG][CTRLHDREC]ExecCmd !! CmpData"
+    },
+    {
+     "vaddr": "0x43c3c977",
+     "text": "[CDIAG][CTRLHDREC]Found File ID [0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3c9d3",
+     "text": "[CDIAG][CTRLHDREC]ClkState IDLE->OPEN"
+    },
+    {
+     "vaddr": "0x43c3c9f9",
+     "text": "[CDIAG][CTRLHDREC]ClkState Wait OPEN"
+    },
+    {
+     "vaddr": "0x43c3ca1e",
+     "text": "[CDIAG][CTRLHDREC]ClkState OPEN->CHANGING"
+    },
+    {
+     "vaddr": "0x43c3ca48",
+     "text": "[CDIAG][CTRLHDREC]ClkState Wait CHANGING"
+    },
+    {
+     "vaddr": "0x43c3ca71",
+     "text": "[CDIAG][CTRLHDREC]ClkState CHANGING->CHANGED"
+    },
+    {
+     "vaddr": "0x43c3ca9e",
+     "text": "[CDIAG][CTRLHDREC]ClkState CHANGED->CLOSE"
+    },
+    {
+     "vaddr": "0x43c3cac8",
+     "text": "[CDIAG][CTRLHDREC]ClkState CLOSE->IDLE"
+    },
+    {
+     "vaddr": "0x43c3caef",
+     "text": "[CDIAG][CTRLHDREC]ClkType [%d] : OK"
+    },
+    {
+     "vaddr": "0x43c3cb13",
+     "text": "[CDIAG][CTRLHDREC][VSYNC] RUN CODEC INIT"
+    },
+    {
+     "vaddr": "0x43c3cb3c",
+     "text": "[CDIAG][CTRLHDREC]UnReg SysV"
+    },
+    {
+     "vaddr": "0x43c3cb59",
+     "text": "[CDIAG][CTRLHDREC]LOOP NUM [0x%02X]"
+    },
+    {
+     "vaddr": "0x43c3cb7d",
+     "text": "[CDIAG][CTRLHDREC]PAL(50i) MODE Clk[%d]"
+    },
+    {
+     "vaddr": "0x43c3cba6",
+     "text": "[CDIAG][CTRLHDREC]NTSC(60i) MODE Clk[%d]"
+    },
+    {
+     "vaddr": "0x43c3cbd0",
+     "text": "[CDIAG][CTRLHDREC]Reg SysV"
+    },
+    {
+     "vaddr": "0x43c3cbeb",
+     "text": "[CDIAG][CTRLHDREC]Run Codec Set State STATE_CODEC_CLK_CHANGE"
+    }
+   ]
+  },
+  {
+   "tag": "CTRLJPGDEC",
+   "count": 21,
+   "vaddr_min": "0x43c3cca7",
+   "vaddr_max": "0x43c3d083",
+   "strings": [
+    {
+     "vaddr": "0x43c3cca7",
+     "text": "[CDIAG][CTRLJPGDEC]MEM ALLOC err [0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3ccd1",
+     "text": "[CDIAG][CTRLJPGDEC]MEM ALLOC COUNT NOT 1 [%d]"
+    },
+    {
+     "vaddr": "0x43c3ccff",
+     "text": "[CDIAG][CTRLJPGDEC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] fsize[%d] hdl[0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3cd55",
+     "text": "[CDIAG][CTRLJPGDEC]ExecCmd !!"
+    },
+    {
+     "vaddr": "0x43c3cd74",
+     "text": "[CDIAG][CTRLJPGDEC]ERR!![%d]"
+    },
+    {
+     "vaddr": "0x43c3cd91",
+     "text": "[CDIAG][CTRLJPGDEC]MEM SHARE err [0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3cdbb",
+     "text": "[CDIAG][CTRLJPGDEC]MEM FREE err [0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3cde4",
+     "text": "[CDIAG][CTRLJPGDEC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] hdl[0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3ce30",
+     "text": "[CDIAG][CTRLJPGDEC]ExecCmd !! CmpData"
+    },
+    {
+     "vaddr": "0x43c3ce57",
+     "text": "[CDIAG][CTRLJPGDEC]JPEG DEC IMG Differ!!"
+    },
+    {
+     "vaddr": "0x43c3ce81",
+     "text": "[CDIAG][CTRLJPGDEC]Found File ID [0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3cedf",
+     "text": "[CDIAG][CTRLJPGDEC]Run Codec JPEG DEC"
+    },
+    {
+     "vaddr": "0x43c3cf30",
+     "text": "[CDIAG][CTRLJPGDEC]JPEG DEC END... w[%d] h[%d]"
+    },
+    {
+     "vaddr": "0x43c3cf60",
+     "text": "[CDIAG][CTRLJPGDEC]ClkState IDLE->OPEN"
+    },
+    {
+     "vaddr": "0x43c3cf87",
+     "text": "[CDIAG][CTRLJPGDEC]ClkState Wait OPEN"
+    },
+    {
+     "vaddr": "0x43c3cfad",
+     "text": "[CDIAG][CTRLJPGDEC]ClkState OPEN->CHANGING"
+    },
+    {
+     "vaddr": "0x43c3cfd8",
+     "text": "[CDIAG][CTRLJPGDEC]ClkState Wait CHANGING"
+    },
+    {
+     "vaddr": "0x43c3d002",
+     "text": "[CDIAG][CTRLJPGDEC]ClkState CHANGING->CHANGED"
+    },
+    {
+     "vaddr": "0x43c3d030",
+     "text": "[CDIAG][CTRLJPGDEC]ClkState CHANGED->CLOSE"
+    },
+    {
+     "vaddr": "0x43c3d05b",
+     "text": "[CDIAG][CTRLJPGDEC]ClkState CLOSE->IDLE"
+    },
+    {
+     "vaddr": "0x43c3d083",
+     "text": "[CDIAG][CTRLJPGDEC]ClkType [%d] : OK"
+    }
+   ]
+  },
+  {
+   "tag": "CTRLJPGENC",
+   "count": 21,
+   "vaddr_min": "0x43c3d19f",
+   "vaddr_max": "0x43c3d57f",
+   "strings": [
+    {
+     "vaddr": "0x43c3d19f",
+     "text": "[CDIAG][CTRLJPGENC]MEM ALLOC err [0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3d1c9",
+     "text": "[CDIAG][CTRLJPGENC]MEM ALLOC COUNT NOT 1 [%d]"
+    },
+    {
+     "vaddr": "0x43c3d1f7",
+     "text": "[CDIAG][CTRLJPGENC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] fsize[%d] hdl[0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3d24d",
+     "text": "[CDIAG][CTRLJPGENC]ExecCmd !!"
+    },
+    {
+     "vaddr": "0x43c3d26c",
+     "text": "[CDIAG][CTRLJPGENC]ERR!![%d]"
+    },
+    {
+     "vaddr": "0x43c3d289",
+     "text": "[CDIAG][CTRLJPGENC]MEM SHARE err [0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3d2b3",
+     "text": "[CDIAG][CTRLJPGENC]MEM FREE err [0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3d2dc",
+     "text": "[CDIAG][CTRLJPGENC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] hdl[0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3d328",
+     "text": "[CDIAG][CTRLJPGENC]ExecCmd !! CmpData"
+    },
+    {
+     "vaddr": "0x43c3d34f",
+     "text": "[CDIAG][CTRLJPGENC]JPEG ENC ES Differ!!"
+    },
+    {
+     "vaddr": "0x43c3d378",
+     "text": "[CDIAG][CTRLJPGENC]Found File ID [0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3d3d6",
+     "text": "[CDIAG][CTRLJPGENC]Run Codec JPEG ENC and DEC"
+    },
+    {
+     "vaddr": "0x43c3d42f",
+     "text": "[CDIAG][CTRLJPGENC]JPEG ENC END... [%d]bits"
+    },
+    {
+     "vaddr": "0x43c3d45c",
+     "text": "[CDIAG][CTRLJPGENC]ClkState IDLE->OPEN"
+    },
+    {
+     "vaddr": "0x43c3d483",
+     "text": "[CDIAG][CTRLJPGENC]ClkState Wait OPEN"
+    },
+    {
+     "vaddr": "0x43c3d4a9",
+     "text": "[CDIAG][CTRLJPGENC]ClkState OPEN->CHANGING"
+    },
+    {
+     "vaddr": "0x43c3d4d4",
+     "text": "[CDIAG][CTRLJPGENC]ClkState Wait CHANGING"
+    },
+    {
+     "vaddr": "0x43c3d4fe",
+     "text": "[CDIAG][CTRLJPGENC]ClkState CHANGING->CHANGED"
+    },
+    {
+     "vaddr": "0x43c3d52c",
+     "text": "[CDIAG][CTRLJPGENC]ClkState CHANGED->CLOSE"
+    },
+    {
+     "vaddr": "0x43c3d557",
+     "text": "[CDIAG][CTRLJPGENC]ClkState CLOSE->IDLE"
+    },
+    {
+     "vaddr": "0x43c3d57f",
+     "text": "[CDIAG][CTRLJPGENC]ClkType [%d] : OK"
+    }
+   ]
+  },
+  {
+   "tag": "CTRLJPGENCDEC",
+   "count": 22,
+   "vaddr_min": "0x43c3d5f6",
+   "vaddr_max": "0x43c3da06",
+   "strings": [
+    {
+     "vaddr": "0x43c3d5f6",
+     "text": "[CDIAG][CTRLJPGENCDEC]MEM ALLOC err [0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3d623",
+     "text": "[CDIAG][CTRLJPGENCDEC]MEM ALLOC COUNT NOT 1 [%d]"
+    },
+    {
+     "vaddr": "0x43c3d654",
+     "text": "[CDIAG][CTRLJPGENCDEC]MEM SHARE err [0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3d681",
+     "text": "[CDIAG][CTRLJPGENCDEC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] fsize[%d] hdl[0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3d6da",
+     "text": "[CDIAG][CTRLJPGENCDEC]ExecCmd !!"
+    },
+    {
+     "vaddr": "0x43c3d6fc",
+     "text": "[CDIAG][CTRLJPGENCDEC]ERR!![%d]"
+    },
+    {
+     "vaddr": "0x43c3d71c",
+     "text": "[CDIAG][CTRLJPGENCDEC]MEM FREE err [0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3d748",
+     "text": "[CDIAG][CTRLJPGENCDEC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] hdl[0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3d797",
+     "text": "[CDIAG][CTRLJPGENCDEC]ExecCmd !! CmpData"
+    },
+    {
+     "vaddr": "0x43c3d7c1",
+     "text": "[CDIAG][CTRLJPGENCDEC]VideoES Differ!!"
+    },
+    {
+     "vaddr": "0x43c3d7e9",
+     "text": "[CDIAG][CTRLJPGENCDEC]AudioES Differ!!"
+    },
+    {
+     "vaddr": "0x43c3d811",
+     "text": "[CDIAG][CTRLJPGENCDEC]Found File ID [0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3d875",
+     "text": "[CDIAG][CTRLJPGENCDEC]Run Codec JPEG ENC and DEC"
+    },
+    {
+     "vaddr": "0x43c3d8a6",
+     "text": "[CDIAG][CTRLJPGENCDEC]ClkState IDLE->OPEN"
+    },
+    {
+     "vaddr": "0x43c3d8d0",
+     "text": "[CDIAG][CTRLJPGENCDEC]ClkState Wait OPEN"
+    },
+    {
+     "vaddr": "0x43c3d8f9",
+     "text": "[CDIAG][CTRLJPGENCDEC]ClkState OPEN->CHANGING"
+    },
+    {
+     "vaddr": "0x43c3d927",
+     "text": "[CDIAG][CTRLJPGENCDEC]ClkState Wait CHANGING"
+    },
+    {
+     "vaddr": "0x43c3d954",
+     "text": "[CDIAG][CTRLJPGENCDEC]ClkState CHANGING->CHANGED"
+    },
+    {
+     "vaddr": "0x43c3d985",
+     "text": "[CDIAG][CTRLJPGENCDEC]ClkState CHANGED->CLOSE"
+    },
+    {
+     "vaddr": "0x43c3d9b3",
+     "text": "[CDIAG][CTRLJPGENCDEC]ClkState CLOSE->IDLE"
+    },
+    {
+     "vaddr": "0x43c3d9de",
+     "text": "[CDIAG][CTRLJPGENCDEC]ClkType [%d] : OK"
+    },
+    {
+     "vaddr": "0x43c3da06",
+     "text": "[CDIAG][CTRLJPGENCDEC][VSYNC] RUN CODEC INIT"
+    }
+   ]
+  },
+  {
+   "tag": "CTRLSDDEC",
+   "count": 26,
+   "vaddr_min": "0x43c3da73",
+   "vaddr_max": "0x43c3ded9",
+   "strings": [
+    {
+     "vaddr": "0x43c3da73",
+     "text": "[CDIAG][CTRLSDDEC]MEM ALLOC err [0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3da9c",
+     "text": "[CDIAG][CTRLSDDEC]MEM ALLOC COUNT NOT 1 [%d]"
+    },
+    {
+     "vaddr": "0x43c3dac9",
+     "text": "[CDIAG][CTRLSDDEC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] fsize[%d] hdl[0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3db1e",
+     "text": "[CDIAG][CTRLSDDEC]MEM SHARE err [0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3db47",
+     "text": "[CDIAG][CTRLSDDEC]MEM FREE err [0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3db6f",
+     "text": "[CDIAG][CTRLSDDEC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] hdl[0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3dbba",
+     "text": "[CDIAG][CTRLSDDEC]ExecCmd [%s]!!"
+    },
+    {
+     "vaddr": "0x43c3dbdc",
+     "text": "[CDIAG][CTRLSDDEC]Memory Release ERR!! idx[%d]"
+    },
+    {
+     "vaddr": "0x43c3dc0b",
+     "text": "[CDIAG][CTRLSDDEC]Memory Set ERR!! idx[%d]"
+    },
+    {
+     "vaddr": "0x43c3dc36",
+     "text": "[CDIAG][CTRLSDDEC]Memory Share ERR!! idx[%d]"
+    },
+    {
+     "vaddr": "0x43c3dc63",
+     "text": "[CDIAG][CTRLSDDEC]ExecCmd !! CmpData"
+    },
+    {
+     "vaddr": "0x43c3dc89",
+     "text": "[CDIAG][CTRLSDDEC]Found File ID [0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3dce5",
+     "text": "[CDIAG][CTRLSDDEC]ClkState IDLE->OPEN"
+    },
+    {
+     "vaddr": "0x43c3dd0b",
+     "text": "[CDIAG][CTRLSDDEC]ClkState Wait OPEN"
+    },
+    {
+     "vaddr": "0x43c3dd30",
+     "text": "[CDIAG][CTRLSDDEC]ClkState OPEN->CHANGING"
+    },
+    {
+     "vaddr": "0x43c3dd5a",
+     "text": "[CDIAG][CTRLSDDEC]ClkState Wait CHANGING"
+    },
+    {
+     "vaddr": "0x43c3dd83",
+     "text": "[CDIAG][CTRLSDDEC]ClkState CHANGING->CHANGED"
+    },
+    {
+     "vaddr": "0x43c3ddb0",
+     "text": "[CDIAG][CTRLSDDEC]ClkState CHANGED->CLOSE"
+    },
+    {
+     "vaddr": "0x43c3ddda",
+     "text": "[CDIAG][CTRLSDDEC]ClkState CLOSE->IDLE"
+    },
+    {
+     "vaddr": "0x43c3de01",
+     "text": "[CDIAG][CTRLSDDEC]ClkType [%d] : OK"
+    },
+    {
+     "vaddr": "0x43c3de25",
+     "text": "[CDIAG][CTRLSDDEC][VSYNC] RUN CODEC INIT"
+    },
+    {
+     "vaddr": "0x43c3de4e",
+     "text": "[CDIAG][CTRLSDDEC]UnReg SysV"
+    },
+    {
+     "vaddr": "0x43c3de6b",
+     "text": "[CDIAG][CTRLSDDEC]PAL(50i) MODE Clk[%d]"
+    },
+    {
+     "vaddr": "0x43c3de94",
+     "text": "[CDIAG][CTRLSDDEC]NTSC(60i) MODE Clk[%d]"
+    },
+    {
+     "vaddr": "0x43c3debe",
+     "text": "[CDIAG][CTRLSDDEC]Reg SysV"
+    },
+    {
+     "vaddr": "0x43c3ded9",
+     "text": "[CDIAG][CTRLSDDEC]Run Codec Set State STATE_CODEC_CLK_CHANGE"
+    }
+   ]
+  },
+  {
+   "tag": "CTRLSDREC",
+   "count": 27,
+   "vaddr_min": "0x43c3dfda",
+   "vaddr_max": "0x43c3e478",
+   "strings": [
+    {
+     "vaddr": "0x43c3dfda",
+     "text": "[CDIAG][CTRLSDREC]MEM ALLOC err [0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3e003",
+     "text": "[CDIAG][CTRLSDREC]MEM ALLOC COUNT NOT 1 [%d]"
+    },
+    {
+     "vaddr": "0x43c3e030",
+     "text": "[CDIAG][CTRLSDREC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] fsize[%d] hdl[0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3e085",
+     "text": "[CDIAG][CTRLSDREC]MEM SHARE err [0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3e0ae",
+     "text": "[CDIAG][CTRLSDREC]ExecCmd [%s]!!"
+    },
+    {
+     "vaddr": "0x43c3e0d0",
+     "text": "[CDIAG][CTRLSDREC]Memory Set ERR!! idx[%d]"
+    },
+    {
+     "vaddr": "0x43c3e0fb",
+     "text": "[CDIAG][CTRLSDREC]Memory Share ERR!! idx[%d]"
+    },
+    {
+     "vaddr": "0x43c3e128",
+     "text": "[CDIAG][CTRLSDREC]MEM FREE err [0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3e150",
+     "text": "[CDIAG][CTRLSDREC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] hdl[0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3e19b",
+     "text": "[CDIAG][CTRLSDREC]Memory Release ERR!! idx[%d]"
+    },
+    {
+     "vaddr": "0x43c3e1ca",
+     "text": "[CDIAG][CTRLSDREC]ExecCmd !! CmpData"
+    },
+    {
+     "vaddr": "0x43c3e1f0",
+     "text": "[CDIAG][CTRLSDREC]Found File ID [0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3e24c",
+     "text": "[CDIAG][CTRLSDREC]ClkState IDLE->OPEN"
+    },
+    {
+     "vaddr": "0x43c3e272",
+     "text": "[CDIAG][CTRLSDREC]ClkState Wait OPEN"
+    },
+    {
+     "vaddr": "0x43c3e297",
+     "text": "[CDIAG][CTRLSDREC]ClkState OPEN->CHANGING"
+    },
+    {
+     "vaddr": "0x43c3e2c1",
+     "text": "[CDIAG][CTRLSDREC]ClkState Wait CHANGING"
+    },
+    {
+     "vaddr": "0x43c3e2ea",
+     "text": "[CDIAG][CTRLSDREC]ClkState CHANGING->CHANGED"
+    },
+    {
+     "vaddr": "0x43c3e317",
+     "text": "[CDIAG][CTRLSDREC]ClkState CHANGED->CLOSE"
+    },
+    {
+     "vaddr": "0x43c3e341",
+     "text": "[CDIAG][CTRLSDREC]ClkState CLOSE->IDLE"
+    },
+    {
+     "vaddr": "0x43c3e368",
+     "text": "[CDIAG][CTRLSDREC]ClkType [%d] : OK"
+    },
+    {
+     "vaddr": "0x43c3e38c",
+     "text": "[CDIAG][CTRLSDREC][VSYNC] RUN CODEC INIT"
+    },
+    {
+     "vaddr": "0x43c3e3b5",
+     "text": "[CDIAG][CTRLSDREC]UnReg SysV"
+    },
+    {
+     "vaddr": "0x43c3e3d2",
+     "text": "[CDIAG][CTRLSDREC]LOOP NUM [0x%02X]"
+    },
+    {
+     "vaddr": "0x43c3e3f6",
+     "text": "[CDIAG][CTRLSDREC]PAL(50i) MODE Clk[%d] NTPAL[%d]"
+    },
+    {
+     "vaddr": "0x43c3e429",
+     "text": "[CDIAG][CTRLSDREC]NTSC(60i) MODE Clk[%d] NTPAL[%d]"
+    },
+    {
+     "vaddr": "0x43c3e45d",
+     "text": "[CDIAG][CTRLSDREC]Reg SysV"
+    },
+    {
+     "vaddr": "0x43c3e478",
+     "text": "[CDIAG][CTRLSDREC]Run Codec Set State STATE_CODEC_CLK_CHANGE"
+    }
+   ]
+  },
+  {
+   "tag": "CMPDATA",
+   "count": 16,
+   "vaddr_min": "0x43c3e557",
+   "vaddr_max": "0x43c3e86a",
+   "strings": [
+    {
+     "vaddr": "0x43c3e557",
+     "text": "[CDIAG][CMPDATA]p_data is NULL!!!"
+    },
+    {
+     "vaddr": "0x43c3e57a",
+     "text": "[CDIAG][CMPDATA]p_data->src is NULL!!!"
+    },
+    {
+     "vaddr": "0x43c3e5a2",
+     "text": "[CDIAG][CMPDATA]p_data->dst is NULL!!!"
+    },
+    {
+     "vaddr": "0x43c3e5ca",
+     "text": "[CDIAG][CMPDATA]differ size!!!"
+    },
+    {
+     "vaddr": "0x43c3e5ea",
+     "text": "[CDIAG][CMPDATA]src[0x%08X] dst[0x%08X] size[%d]"
+    },
+    {
+     "vaddr": "0x43c3e61c",
+     "text": "[CDIAG][CMPDATA][0x%08X]byte s[0x%02X] d[0x%02X]"
+    },
+    {
+     "vaddr": "0x43c3e64e",
+     "text": "[CDIAG][CMPDATA][step.1] dst stop [0x%08X]byte... s[0x%02X] d[0x%02X]"
+    },
+    {
+     "vaddr": "0x43c3e695",
+     "text": "[CDIAG][CMPDATA][step.1] src stop [0x%08X]byte... s[0x%02X] d[0x%02X]"
+    },
+    {
+     "vaddr": "0x43c3e6dc",
+     "text": "[CDIAG][CMPDATA][step.1] [0x%08X]byte... s[0x%02X] d[0x%02X]"
+    },
+    {
+     "vaddr": "0x43c3e71a",
+     "text": "[CDIAG][CMPDATA][step.2] dadr found [0x%08X]byte... s[0x%02X] d[0x%02X]"
+    },
+    {
+     "vaddr": "0x43c3e763",
+     "text": "[CDIAG][CMPDATA][step.2] sadr found [0x%08X]byte... s[0x%02X] d[0x%02X]"
+    },
+    {
+     "vaddr": "0x43c3e7ac",
+     "text": "[CDIAG][CMPDATA]step2 OK"
+    },
+    {
+     "vaddr": "0x43c3e7c6",
+     "text": "[CDIAG][CMPDATA]step3 sadr[0x%08X] > dadr[0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3e7f9",
+     "text": "[CDIAG][CMPDATA][step.3] [0x%08X]byte... s[0x%02X] d[0x%02X]"
+    },
+    {
+     "vaddr": "0x43c3e837",
+     "text": "[CDIAG][CMPDATA]step3 sadr[0x%08X] < dadr[0x%08X]"
+    },
+    {
+     "vaddr": "0x43c3e86a",
+     "text": "[CDIAG][CMPDATA]step3 sadr[0x%08X] dadr[0x%08X]"
+    }
+   ]
+  }
+ ],
+ "strings": [
+  {
+   "token_vaddr": "0x43c3b0d4",
+   "vaddr": "0x43c3b0d4",
+   "tag": "TSK",
+   "text": "[CDIAG][TSK]act_tsk",
+   "pic_sites": [
+    "0x435a127c"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a127c",
+     "func_start": "0x435a127a",
+     "func_end": "0x435a128e",
+     "push": "0x435a127a"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b1b5",
+   "vaddr": "0x43c3b1b5",
+   "tag": "CTRLIF",
+   "text": "[CDIAG][CTRLIF]EXEC CMD cmd[0x%02x] mode[%d] func[%d] prm[%d]",
+   "pic_sites": [
+    "0x435a1452"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1452",
+     "func_start": "0x435a1424",
+     "func_end": "0x435a147e",
+     "push": "0x435a1424"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b2cf",
+   "vaddr": "0x43c3b2cf",
+   "tag": "CTRLIF",
+   "text": "[CDIAG][CTRLIF]SEND MSG EXEC CMD cmd[0x%02x] mode[%d] func[%d] prm[%d]",
+   "pic_sites": [
+    "0x435a15d0"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a15d0",
+     "func_start": "0x435a157c",
+     "func_end": "0x435a15dc",
+     "push": "0x435a157c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b316",
+   "vaddr": "0x43c3b316",
+   "tag": "CTRLIF",
+   "text": "[CDIAG][CTRLIF]cmdMode[0x%08X] cmd[0x%08X] mode[0x%08X] [%s]",
+   "pic_sites": [
+    "0x435a1618"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1618",
+     "func_start": "0x435a15e8",
+     "func_end": "0x435a1680",
+     "push": "0x435a15e8"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b354",
+   "vaddr": "0x43c3b354",
+   "tag": "CTRLIF",
+   "text": "[CDIAG][CTRLIF]Data0[0x%02X] Data1[0x%02X]",
+   "pic_sites": [
+    "0x435a166e"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a166e",
+     "func_start": "0x435a15e8",
+     "func_end": "0x435a1680",
+     "push": "0x435a15e8"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b37f",
+   "vaddr": "0x43c3b37f",
+   "tag": "CTRLIF",
+   "text": "[CDIAG][CTRLIF]Received SENS_MODE_PROC_START [%s]",
+   "pic_sites": [
+    "0x435a16cc",
+    "0x435a16f8",
+    "0x435a18ca",
+    "0x435a1920"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a16cc",
+     "func_start": "0x435a15e8",
+     "func_end": "0x435a172a",
+     "push": "0x435a15e8"
+    },
+    {
+     "ref_site": "0x435a16f8",
+     "func_start": "0x435a15e8",
+     "func_end": "0x435a172a",
+     "push": "0x435a15e8"
+    },
+    {
+     "ref_site": "0x435a18ca",
+     "func_start": "0x435a17e8",
+     "func_end": "0x435a1968",
+     "push": "0x435a17e8"
+    },
+    {
+     "ref_site": "0x435a1920",
+     "func_start": "0x435a17e8",
+     "func_end": "0x435a1968",
+     "push": "0x435a17e8"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b3b2",
+   "vaddr": "0x43c3b3b2",
+   "tag": "CTRLIF",
+   "text": "[CDIAG][CTRLIF]Received SENS_MODE_FIN_SEND_DATA [%s]",
+   "pic_sites": [
+    "0x435a16d2",
+    "0x435a18dc"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a16d2",
+     "func_start": "0x435a15e8",
+     "func_end": "0x435a172a",
+     "push": "0x435a15e8"
+    },
+    {
+     "ref_site": "0x435a18dc",
+     "func_start": "0x435a17e8",
+     "func_end": "0x435a1968",
+     "push": "0x435a17e8"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b433",
+   "vaddr": "0x43c3b433",
+   "tag": "CTRLIF",
+   "text": "[CDIAG][CTRLIF]Received SENS_MODE_FIN_RECV_DATA [%s]",
+   "pic_sites": [
+    "0x435a16fe",
+    "0x435a1932"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a16fe",
+     "func_start": "0x435a15e8",
+     "func_end": "0x435a172a",
+     "push": "0x435a15e8"
+    },
+    {
+     "ref_site": "0x435a1932",
+     "func_start": "0x435a17e8",
+     "func_end": "0x435a1968",
+     "push": "0x435a17e8"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b469",
+   "vaddr": "0x43c3b469",
+   "tag": "CTRLIF",
+   "text": "[CDIAG][CTRLIF]Cmd SENS_CNFM_DONE_CODEC [%s]",
+   "pic_sites": [
+    "0x435a1718"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1718",
+     "func_start": "0x435a15e8",
+     "func_end": "0x435a172a",
+     "push": "0x435a15e8"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b497",
+   "vaddr": "0x43c3b497",
+   "tag": "CTRLIF",
+   "text": "[CDIAG][CTRLIF]SENS_CNFM_SET_DATA_AREA [%s]",
+   "pic_sites": [
+    "0x435a1744",
+    "0x435a1888"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1744",
+     "func_start": "0x435a15e8",
+     "func_end": "0x435a1798",
+     "push": "0x435a15e8"
+    },
+    {
+     "ref_site": "0x435a1888",
+     "func_start": "0x435a17e8",
+     "func_end": "0x435a1968",
+     "push": "0x435a17e8"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b4c4",
+   "vaddr": "0x43c3b4c4",
+   "tag": "CTRLIF",
+   "text": "[CDIAG][CTRLIF]SENS_CNFM_REL_DATA_AREA [%s]",
+   "pic_sites": [
+    "0x435a175a",
+    "0x435a188e"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a175a",
+     "func_start": "0x435a15e8",
+     "func_end": "0x435a1798",
+     "push": "0x435a15e8"
+    },
+    {
+     "ref_site": "0x435a188e",
+     "func_start": "0x435a17e8",
+     "func_end": "0x435a1968",
+     "push": "0x435a17e8"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b4f1",
+   "vaddr": "0x43c3b4f1",
+   "tag": "CTRLIF",
+   "text": "[CDIAG][CTRLIF]SENS_DBG_DIAG_AVC [%s]",
+   "pic_sites": [
+    "0x435a1768",
+    "0x435a1942"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1768",
+     "func_start": "0x435a15e8",
+     "func_end": "0x435a1798",
+     "push": "0x435a15e8"
+    },
+    {
+     "ref_site": "0x435a1942",
+     "func_start": "0x435a17e8",
+     "func_end": "0x435a1968",
+     "push": "0x435a17e8"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b518",
+   "vaddr": "0x43c3b518",
+   "tag": "CTRLIF",
+   "text": "[CDIAG][CTRLIF]SENS_SET_DIAG_MODE [%s]",
+   "pic_sites": [
+    "0x435a186a"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a186a",
+     "func_start": "0x435a17e8",
+     "func_end": "0x435a1968",
+     "push": "0x435a17e8"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b540",
+   "vaddr": "0x43c3b540",
+   "tag": "CTRLIF",
+   "text": "[CDIAG][CTRLIF]SENS_SET_DATA_AREA [%s]",
+   "pic_sites": [
+    "0x435a1870"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1870",
+     "func_start": "0x435a17e8",
+     "func_end": "0x435a1968",
+     "push": "0x435a17e8"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b568",
+   "vaddr": "0x43c3b568",
+   "tag": "CTRLIF",
+   "text": "[CDIAG][CTRLIF]SENS_REL_DATA_AREA [%s]",
+   "pic_sites": [
+    "0x435a1876"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1876",
+     "func_start": "0x435a17e8",
+     "func_end": "0x435a1968",
+     "push": "0x435a17e8"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b590",
+   "vaddr": "0x43c3b590",
+   "tag": "CTRLIF",
+   "text": "[CDIAG][CTRLIF]SENS_RUN_CODEC [%s]",
+   "pic_sites": [
+    "0x435a187c"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a187c",
+     "func_start": "0x435a17e8",
+     "func_end": "0x435a1968",
+     "push": "0x435a17e8"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b5b4",
+   "vaddr": "0x43c3b5b4",
+   "tag": "CTRLIF",
+   "text": "[CDIAG][CTRLIF]SENS_CMP_DATA [%s]",
+   "pic_sites": [
+    "0x435a1882"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1882",
+     "func_start": "0x435a17e8",
+     "func_end": "0x435a1968",
+     "push": "0x435a17e8"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b5d7",
+   "vaddr": "0x43c3b5d7",
+   "tag": "CTRLIF",
+   "text": "[CDIAG][CTRLIF]SENS_CNFM_DONE_CODEC [%s]",
+   "pic_sites": [
+    "0x435a1894"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1894",
+     "func_start": "0x435a17e8",
+     "func_end": "0x435a1968",
+     "push": "0x435a17e8"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b601",
+   "vaddr": "0x43c3b601",
+   "tag": "CTRLIF",
+   "text": "[CDIAG][CTRLIF]SENS_SET_DATA [%s]",
+   "pic_sites": [
+    "0x435a189c"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a189c",
+     "func_start": "0x435a17e8",
+     "func_end": "0x435a1968",
+     "push": "0x435a17e8"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b624",
+   "vaddr": "0x43c3b624",
+   "tag": "CTRLIF",
+   "text": "[CDIAG][CTRLIF]SENS_GET_DATA [%s]",
+   "pic_sites": [
+    "0x435a18f2"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a18f2",
+     "func_start": "0x435a17e8",
+     "func_end": "0x435a1968",
+     "push": "0x435a17e8"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b89f",
+   "vaddr": "0x43c3b89f",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec DbgDiagAvc HD REC!!",
+   "pic_sites": [
+    "0x435a1ca2"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1ca2",
+     "func_start": "0x435a1c5c",
+     "func_end": "0x435a1cfc",
+     "push": "0x435a1c5c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b8c9",
+   "vaddr": "0x43c3b8c9",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec DbgDiagAvc HD DEC!!",
+   "pic_sites": [
+    "0x435a1cbe"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1cbe",
+     "func_start": "0x435a1c5c",
+     "func_end": "0x435a1cfc",
+     "push": "0x435a1c5c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b8f3",
+   "vaddr": "0x43c3b8f3",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec DbgDiagAvc SD REC!!",
+   "pic_sites": [
+    "0x435a1cc4"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1cc4",
+     "func_start": "0x435a1c5c",
+     "func_end": "0x435a1cfc",
+     "push": "0x435a1c5c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b91d",
+   "vaddr": "0x43c3b91d",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec DbgDiagAvc SD DEC!!(NotSupport)",
+   "pic_sites": [
+    "0x435a1ce2"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1ce2",
+     "func_start": "0x435a1c5c",
+     "func_end": "0x435a1cfc",
+     "push": "0x435a1c5c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b953",
+   "vaddr": "0x43c3b953",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]No Support EXEC MODE!!",
+   "pic_sites": [
+    "0x435a1cee",
+    "0x435a1edc",
+    "0x435a2072",
+    "0x435a21b8",
+    "0x435a230a",
+    "0x435a2782"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1cee",
+     "func_start": "0x435a1c5c",
+     "func_end": "0x435a1cfc",
+     "push": "0x435a1c5c"
+    },
+    {
+     "ref_site": "0x435a1edc",
+     "func_start": "0x435a1de0",
+     "func_end": "0x435a1ee8",
+     "push": "0x435a1de0"
+    },
+    {
+     "ref_site": "0x435a2072",
+     "func_start": "0x435a1f18",
+     "func_end": "0x435a207e",
+     "push": "0x435a1f18"
+    },
+    {
+     "ref_site": "0x435a21b8",
+     "func_start": "0x435a20b0",
+     "func_end": "0x435a21d0",
+     "push": "0x435a20b0"
+    },
+    {
+     "ref_site": "0x435a230a",
+     "func_start": "0x435a2200",
+     "func_end": "0x435a2324",
+     "push": "0x435a2200"
+    },
+    {
+     "ref_site": "0x435a2782",
+     "func_start": "0x435a23b4",
+     "func_end": "0x435a2790",
+     "push": "0x435a23b4"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b97b",
+   "vaddr": "0x43c3b97b",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]ExecCmd !! ConfirmDoneCodec",
+   "pic_sites": [
+    "0x435a1d3c"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1d3c",
+     "func_start": "0x435a1d1c",
+     "func_end": "0x435a1dc2",
+     "push": "0x435a1d1c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b9a9",
+   "vaddr": "0x43c3b9a9",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec ConfirmDoneCodec HD REC!!",
+   "pic_sites": [
+    "0x435a1d66"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1d66",
+     "func_start": "0x435a1d1c",
+     "func_end": "0x435a1dc2",
+     "push": "0x435a1d1c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b9d9",
+   "vaddr": "0x43c3b9d9",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec ConfirmDoneCodec HD DEC!!",
+   "pic_sites": [
+    "0x435a1d7c"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1d7c",
+     "func_start": "0x435a1d1c",
+     "func_end": "0x435a1dc2",
+     "push": "0x435a1d1c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3ba09",
+   "vaddr": "0x43c3ba09",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec ConfirmDoneCodec SD REC!!",
+   "pic_sites": [
+    "0x435a1d92"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1d92",
+     "func_start": "0x435a1d1c",
+     "func_end": "0x435a1dc2",
+     "push": "0x435a1d1c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3ba39",
+   "vaddr": "0x43c3ba39",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec ConfirmDoneCodec SD DEC!!",
+   "pic_sites": [
+    "0x435a1daa"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1daa",
+     "func_start": "0x435a1d1c",
+     "func_end": "0x435a1dc2",
+     "push": "0x435a1d1c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3ba69",
+   "vaddr": "0x43c3ba69",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]ExecCmd !!",
+   "pic_sites": [
+    "0x435a1e00",
+    "0x435a20dc",
+    "0x435a222e",
+    "0x435a23f6"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1e00",
+     "func_start": "0x435a1de0",
+     "func_end": "0x435a1ee8",
+     "push": "0x435a1de0"
+    },
+    {
+     "ref_site": "0x435a20dc",
+     "func_start": "0x435a20b0",
+     "func_end": "0x435a21d0",
+     "push": "0x435a20b0"
+    },
+    {
+     "ref_site": "0x435a222e",
+     "func_start": "0x435a2200",
+     "func_end": "0x435a2324",
+     "push": "0x435a2200"
+    },
+    {
+     "ref_site": "0x435a23f6",
+     "func_start": "0x435a23b4",
+     "func_end": "0x435a2790",
+     "push": "0x435a23b4"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3ba86",
+   "vaddr": "0x43c3ba86",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec CmpData HD REC!!",
+   "pic_sites": [
+    "0x435a1e3a"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1e3a",
+     "func_start": "0x435a1de0",
+     "func_end": "0x435a1ee8",
+     "push": "0x435a1de0"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3baad",
+   "vaddr": "0x43c3baad",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec CmpData HD DEC!!",
+   "pic_sites": [
+    "0x435a1e50"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1e50",
+     "func_start": "0x435a1de0",
+     "func_end": "0x435a1ee8",
+     "push": "0x435a1de0"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3bad4",
+   "vaddr": "0x43c3bad4",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec CmpData SD REC!!",
+   "pic_sites": [
+    "0x435a1e68"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1e68",
+     "func_start": "0x435a1de0",
+     "func_end": "0x435a1ee8",
+     "push": "0x435a1de0"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3bafb",
+   "vaddr": "0x43c3bafb",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec CmpData SD DEC!!",
+   "pic_sites": [
+    "0x435a1e80"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1e80",
+     "func_start": "0x435a1de0",
+     "func_end": "0x435a1ee8",
+     "push": "0x435a1de0"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3bb22",
+   "vaddr": "0x43c3bb22",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec CmpData JPEG ENC!!",
+   "pic_sites": [
+    "0x435a1e96"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1e96",
+     "func_start": "0x435a1de0",
+     "func_end": "0x435a1ee8",
+     "push": "0x435a1de0"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3bb4b",
+   "vaddr": "0x43c3bb4b",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec CmpData JPEG DEC!!",
+   "pic_sites": [
+    "0x435a1eac"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1eac",
+     "func_start": "0x435a1de0",
+     "func_end": "0x435a1ee8",
+     "push": "0x435a1de0"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3bb74",
+   "vaddr": "0x43c3bb74",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec CmpData JPEG ENCDEC!!",
+   "pic_sites": [
+    "0x435a1ec2"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1ec2",
+     "func_start": "0x435a1de0",
+     "func_end": "0x435a1ee8",
+     "push": "0x435a1de0"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3bba0",
+   "vaddr": "0x43c3bba0",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]ExecCmd !! [0x%04X] mode[0x%02X] func[0x%02X]",
+   "pic_sites": [
+    "0x435a1f3e"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1f3e",
+     "func_start": "0x435a1f18",
+     "func_end": "0x435a207e",
+     "push": "0x435a1f18"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3bbe0",
+   "vaddr": "0x43c3bbe0",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec RunCodec HD REC!!",
+   "pic_sites": [
+    "0x435a1f7e"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1f7e",
+     "func_start": "0x435a1f18",
+     "func_end": "0x435a207e",
+     "push": "0x435a1f18"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3bc08",
+   "vaddr": "0x43c3bc08",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec RunCodec HD DEC!!",
+   "pic_sites": [
+    "0x435a1fa0"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1fa0",
+     "func_start": "0x435a1f18",
+     "func_end": "0x435a207e",
+     "push": "0x435a1f18"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3bc30",
+   "vaddr": "0x43c3bc30",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec RunCodec SD REC!!",
+   "pic_sites": [
+    "0x435a1fc6"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1fc6",
+     "func_start": "0x435a1f18",
+     "func_end": "0x435a207e",
+     "push": "0x435a1f18"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3bc58",
+   "vaddr": "0x43c3bc58",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec RunCodec SD DEC!!",
+   "pic_sites": [
+    "0x435a1fe8"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1fe8",
+     "func_start": "0x435a1f18",
+     "func_end": "0x435a207e",
+     "push": "0x435a1f18"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3bc80",
+   "vaddr": "0x43c3bc80",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec RunCodec JPG ENC!!",
+   "pic_sites": [
+    "0x435a200a"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a200a",
+     "func_start": "0x435a1f18",
+     "func_end": "0x435a207e",
+     "push": "0x435a1f18"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3bca9",
+   "vaddr": "0x43c3bca9",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec RunCodec JPG DEC!!",
+   "pic_sites": [
+    "0x435a202c"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a202c",
+     "func_start": "0x435a1f18",
+     "func_end": "0x435a207e",
+     "push": "0x435a1f18"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3bcd2",
+   "vaddr": "0x43c3bcd2",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec RunCodec JPG ENCDEC!!",
+   "pic_sites": [
+    "0x435a2066"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2066",
+     "func_start": "0x435a1f18",
+     "func_end": "0x435a207e",
+     "push": "0x435a1f18"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3bcfe",
+   "vaddr": "0x43c3bcfe",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec RelMemArea HD REC!!",
+   "pic_sites": [
+    "0x435a2116"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2116",
+     "func_start": "0x435a20b0",
+     "func_end": "0x435a21d0",
+     "push": "0x435a20b0"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3bd28",
+   "vaddr": "0x43c3bd28",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec RelMemArea HD DEC!!",
+   "pic_sites": [
+    "0x435a212c"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a212c",
+     "func_start": "0x435a20b0",
+     "func_end": "0x435a21d0",
+     "push": "0x435a20b0"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3bd52",
+   "vaddr": "0x43c3bd52",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec RelMemArea SD REC!!",
+   "pic_sites": [
+    "0x435a2144"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2144",
+     "func_start": "0x435a20b0",
+     "func_end": "0x435a21d0",
+     "push": "0x435a20b0"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3bd7c",
+   "vaddr": "0x43c3bd7c",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec RelMemArea SD DEC!!",
+   "pic_sites": [
+    "0x435a215c"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a215c",
+     "func_start": "0x435a20b0",
+     "func_end": "0x435a21d0",
+     "push": "0x435a20b0"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3bda6",
+   "vaddr": "0x43c3bda6",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec RelMemArea JPEG ENC!!",
+   "pic_sites": [
+    "0x435a2172"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2172",
+     "func_start": "0x435a20b0",
+     "func_end": "0x435a21d0",
+     "push": "0x435a20b0"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3bdd2",
+   "vaddr": "0x43c3bdd2",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec RelMemArea JPEG DEC!!",
+   "pic_sites": [
+    "0x435a2188"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2188",
+     "func_start": "0x435a20b0",
+     "func_end": "0x435a21d0",
+     "push": "0x435a20b0"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3bdfe",
+   "vaddr": "0x43c3bdfe",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec RelMemArea JPEG ENCDEC!!",
+   "pic_sites": [
+    "0x435a219e"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a219e",
+     "func_start": "0x435a20b0",
+     "func_end": "0x435a21d0",
+     "push": "0x435a20b0"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3be2d",
+   "vaddr": "0x43c3be2d",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec SetMemArea HD REC!!",
+   "pic_sites": [
+    "0x435a2268"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2268",
+     "func_start": "0x435a2200",
+     "func_end": "0x435a2324",
+     "push": "0x435a2200"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3be57",
+   "vaddr": "0x43c3be57",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec SetMemArea HD DEC!!",
+   "pic_sites": [
+    "0x435a227e"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a227e",
+     "func_start": "0x435a2200",
+     "func_end": "0x435a2324",
+     "push": "0x435a2200"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3be81",
+   "vaddr": "0x43c3be81",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec SetMemArea SD REC!!",
+   "pic_sites": [
+    "0x435a2296"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2296",
+     "func_start": "0x435a2200",
+     "func_end": "0x435a2324",
+     "push": "0x435a2200"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3beab",
+   "vaddr": "0x43c3beab",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec SetMemArea SD DEC!!",
+   "pic_sites": [
+    "0x435a22ae"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a22ae",
+     "func_start": "0x435a2200",
+     "func_end": "0x435a2324",
+     "push": "0x435a2200"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3bed5",
+   "vaddr": "0x43c3bed5",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec SetMemArea JPEG ENC!!",
+   "pic_sites": [
+    "0x435a22c4"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a22c4",
+     "func_start": "0x435a2200",
+     "func_end": "0x435a2324",
+     "push": "0x435a2200"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3bf01",
+   "vaddr": "0x43c3bf01",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec SetMemArea JPEG DEC!!",
+   "pic_sites": [
+    "0x435a22da"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a22da",
+     "func_start": "0x435a2200",
+     "func_end": "0x435a2324",
+     "push": "0x435a2200"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3bf2d",
+   "vaddr": "0x43c3bf2d",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec SetMemArea JPEG ENCDEC!!",
+   "pic_sites": [
+    "0x435a22f0"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a22f0",
+     "func_start": "0x435a2200",
+     "func_end": "0x435a2324",
+     "push": "0x435a2200"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3bf5c",
+   "vaddr": "0x43c3bf5c",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]SetDiagMode !!",
+   "pic_sites": [
+    "0x435a2364"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2364",
+     "func_start": "0x435a2354",
+     "func_end": "0x435a23aa",
+     "push": "0x435a2354"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3bf7d",
+   "vaddr": "0x43c3bf7d",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE][SET_DIAG_MODE] mode[0x%02X] func[0x%02X]",
+   "pic_sites": [
+    "0x435a23a2"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a23a2",
+     "func_start": "0x435a2354",
+     "func_end": "0x435a23aa",
+     "push": "0x435a2354"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3bfc7",
+   "vaddr": "0x43c3bfc7",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec SetData HD REC!!",
+   "pic_sites": [
+    "0x435a243c"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a243c",
+     "func_start": "0x435a23b4",
+     "func_end": "0x435a2790",
+     "push": "0x435a23b4"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3bfee",
+   "vaddr": "0x43c3bfee",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]memIdx[%d] fileId[%02d:%02d] unitHandle[0x%04X] unitType[0x%08X] size[0x%08X]",
+   "pic_sites": [
+    "0x435a2498",
+    "0x435a250a",
+    "0x435a2586",
+    "0x435a25fa",
+    "0x435a2664",
+    "0x435a26de",
+    "0x435a2760"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2498",
+     "func_start": "0x435a23b4",
+     "func_end": "0x435a2790",
+     "push": "0x435a23b4"
+    },
+    {
+     "ref_site": "0x435a250a",
+     "func_start": "0x435a23b4",
+     "func_end": "0x435a2790",
+     "push": "0x435a23b4"
+    },
+    {
+     "ref_site": "0x435a2586",
+     "func_start": "0x435a23b4",
+     "func_end": "0x435a2790",
+     "push": "0x435a23b4"
+    },
+    {
+     "ref_site": "0x435a25fa",
+     "func_start": "0x435a23b4",
+     "func_end": "0x435a2790",
+     "push": "0x435a23b4"
+    },
+    {
+     "ref_site": "0x435a2664",
+     "func_start": "0x435a23b4",
+     "func_end": "0x435a2790",
+     "push": "0x435a23b4"
+    },
+    {
+     "ref_site": "0x435a26de",
+     "func_start": "0x435a23b4",
+     "func_end": "0x435a2790",
+     "push": "0x435a23b4"
+    },
+    {
+     "ref_site": "0x435a2760",
+     "func_start": "0x435a23b4",
+     "func_end": "0x435a2790",
+     "push": "0x435a23b4"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c04e",
+   "vaddr": "0x43c3c04e",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec SetData HD DEC!!",
+   "pic_sites": [
+    "0x435a24a8"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a24a8",
+     "func_start": "0x435a23b4",
+     "func_end": "0x435a2790",
+     "push": "0x435a23b4"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c075",
+   "vaddr": "0x43c3c075",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec SetData SD REC!!",
+   "pic_sites": [
+    "0x435a2522"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2522",
+     "func_start": "0x435a23b4",
+     "func_end": "0x435a2790",
+     "push": "0x435a23b4"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c09c",
+   "vaddr": "0x43c3c09c",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec SetData SD DEC!!",
+   "pic_sites": [
+    "0x435a2596"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2596",
+     "func_start": "0x435a23b4",
+     "func_end": "0x435a2790",
+     "push": "0x435a23b4"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c0c3",
+   "vaddr": "0x43c3c0c3",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec SetData JPG ENC!!",
+   "pic_sites": [
+    "0x435a267a",
+    "0x435a26f4"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a267a",
+     "func_start": "0x435a23b4",
+     "func_end": "0x435a2790",
+     "push": "0x435a23b4"
+    },
+    {
+     "ref_site": "0x435a26f4",
+     "func_start": "0x435a23b4",
+     "func_end": "0x435a2790",
+     "push": "0x435a23b4"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c0eb",
+   "vaddr": "0x43c3c0eb",
+   "tag": "CTRLCORE",
+   "text": "[CDIAG][CTRLCORE]Exec SetData JPG ENCDEC!!",
+   "pic_sites": [
+    "0x435a2776"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2776",
+     "func_start": "0x435a23b4",
+     "func_end": "0x435a2790",
+     "push": "0x435a23b4"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c1f1",
+   "vaddr": "0x43c3c1f1",
+   "tag": "CTRLHDDEC",
+   "text": "[CDIAG][CTRLHDDEC]MEM ALLOC err [0x%08X]",
+   "pic_sites": [
+    "0x435a282e"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a282e",
+     "func_start": "0x435a2810",
+     "func_end": "0x435a2844",
+     "push": "0x435a2810"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c21a",
+   "vaddr": "0x43c3c21a",
+   "tag": "CTRLHDDEC",
+   "text": "[CDIAG][CTRLHDDEC]MEM ALLOC COUNT NOT 1 [%d]",
+   "pic_sites": [
+    "0x435a283c"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a283c",
+     "func_start": "0x435a2810",
+     "func_end": "0x435a2844",
+     "push": "0x435a2810"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c247",
+   "vaddr": "0x43c3c247",
+   "tag": "CTRLHDDEC",
+   "text": "[CDIAG][CTRLHDDEC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] fsize[%d] hdl[0x%08X]",
+   "pic_sites": [
+    "0x435a28a4"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a28a4",
+     "func_start": "0x435a2852",
+     "func_end": "0x435a28b4",
+     "push": "0x435a2852"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c29c",
+   "vaddr": "0x43c3c29c",
+   "tag": "CTRLHDDEC",
+   "text": "[CDIAG][CTRLHDDEC]MEM SHARE err [0x%08X]",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3c2c5",
+   "vaddr": "0x43c3c2c5",
+   "tag": "CTRLHDDEC",
+   "text": "[CDIAG][CTRLHDDEC]MEM FREE err [0x%08X]",
+   "pic_sites": [
+    "0x435a28dc"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a28dc",
+     "func_start": "0x435a2852",
+     "func_end": "0x435a28e4",
+     "push": "0x435a2852"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c2ed",
+   "vaddr": "0x43c3c2ed",
+   "tag": "CTRLHDDEC",
+   "text": "[CDIAG][CTRLHDDEC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] hdl[0x%08X]",
+   "pic_sites": [
+    "0x435a291c"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a291c",
+     "func_start": "0x435a28ee",
+     "func_end": "0x435a292a",
+     "push": "0x435a28ee"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c338",
+   "vaddr": "0x43c3c338",
+   "tag": "CTRLHDDEC",
+   "text": "[CDIAG][CTRLHDDEC]ExecCmd [%s]!!",
+   "pic_sites": [
+    "0x435a2942",
+    "0x435a29ae"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2942",
+     "func_start": "0x435a2934",
+     "func_end": "0x435a298a",
+     "push": "0x435a2934"
+    },
+    {
+     "ref_site": "0x435a29ae",
+     "func_start": "0x435a29a0",
+     "func_end": "0x435a2a06",
+     "push": "0x435a29a0"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c35a",
+   "vaddr": "0x43c3c35a",
+   "tag": "CTRLHDDEC",
+   "text": "[CDIAG][CTRLHDDEC]Memory Release ERR!! idx[%d]",
+   "pic_sites": [
+    "0x435a296e"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a296e",
+     "func_start": "0x435a2934",
+     "func_end": "0x435a298a",
+     "push": "0x435a2934"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c389",
+   "vaddr": "0x43c3c389",
+   "tag": "CTRLHDDEC",
+   "text": "[CDIAG][CTRLHDDEC]Memory Set ERR!! idx[%d]",
+   "pic_sites": [
+    "0x435a29d0"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a29d0",
+     "func_start": "0x435a29a0",
+     "func_end": "0x435a2a06",
+     "push": "0x435a29a0"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c3b4",
+   "vaddr": "0x43c3c3b4",
+   "tag": "CTRLHDDEC",
+   "text": "[CDIAG][CTRLHDDEC]Memory Share ERR!! idx[%d]",
+   "pic_sites": [
+    "0x435a29f6"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a29f6",
+     "func_start": "0x435a29a0",
+     "func_end": "0x435a2a06",
+     "push": "0x435a29a0"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c3e1",
+   "vaddr": "0x43c3c3e1",
+   "tag": "CTRLHDDEC",
+   "text": "[CDIAG][CTRLHDDEC]ExecCmd !! CmpData",
+   "pic_sites": [
+    "0x435a2a24"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2a24",
+     "func_start": "0x435a2a22",
+     "func_end": "0x435a2a80",
+     "push": "0x435a2a22"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c407",
+   "vaddr": "0x43c3c407",
+   "tag": "CTRLHDDEC",
+   "text": "[CDIAG][CTRLHDDEC]Found File ID [0x%08X]",
+   "pic_sites": [
+    "0x435a2a9e"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2a9e",
+     "func_start": "0x435a2a88",
+     "func_end": "0x435a2ac0",
+     "push": "0x435a2a88"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c463",
+   "vaddr": "0x43c3c463",
+   "tag": "CTRLHDDEC",
+   "text": "[CDIAG][CTRLHDDEC]ClkState IDLE->OPEN",
+   "pic_sites": [
+    "0x435a2bb6"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2bb6",
+     "func_start": "0x435a2b80",
+     "func_end": "0x435a2c6a",
+     "push": "0x435a2b80"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c489",
+   "vaddr": "0x43c3c489",
+   "tag": "CTRLHDDEC",
+   "text": "[CDIAG][CTRLHDDEC]ClkState Wait OPEN",
+   "pic_sites": [
+    "0x435a2bca"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2bca",
+     "func_start": "0x435a2b80",
+     "func_end": "0x435a2c6a",
+     "push": "0x435a2b80"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c4ae",
+   "vaddr": "0x43c3c4ae",
+   "tag": "CTRLHDDEC",
+   "text": "[CDIAG][CTRLHDDEC]ClkState OPEN->CHANGING",
+   "pic_sites": [
+    "0x435a2bde"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2bde",
+     "func_start": "0x435a2b80",
+     "func_end": "0x435a2c6a",
+     "push": "0x435a2b80"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c4d8",
+   "vaddr": "0x43c3c4d8",
+   "tag": "CTRLHDDEC",
+   "text": "[CDIAG][CTRLHDDEC]ClkState Wait CHANGING",
+   "pic_sites": [
+    "0x435a2bf2"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2bf2",
+     "func_start": "0x435a2b80",
+     "func_end": "0x435a2c6a",
+     "push": "0x435a2b80"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c501",
+   "vaddr": "0x43c3c501",
+   "tag": "CTRLHDDEC",
+   "text": "[CDIAG][CTRLHDDEC]ClkState CHANGING->CHANGED",
+   "pic_sites": [
+    "0x435a2c08"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2c08",
+     "func_start": "0x435a2b80",
+     "func_end": "0x435a2c6a",
+     "push": "0x435a2b80"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c52e",
+   "vaddr": "0x43c3c52e",
+   "tag": "CTRLHDDEC",
+   "text": "[CDIAG][CTRLHDDEC]ClkState CHANGED->CLOSE",
+   "pic_sites": [
+    "0x435a2c26"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2c26",
+     "func_start": "0x435a2b80",
+     "func_end": "0x435a2c6a",
+     "push": "0x435a2b80"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c558",
+   "vaddr": "0x43c3c558",
+   "tag": "CTRLHDDEC",
+   "text": "[CDIAG][CTRLHDDEC]ClkState CLOSE->IDLE",
+   "pic_sites": [
+    "0x435a2c4a",
+    "0x435a2c62"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2c4a",
+     "func_start": "0x435a2b80",
+     "func_end": "0x435a2c6a",
+     "push": "0x435a2b80"
+    },
+    {
+     "ref_site": "0x435a2c62",
+     "func_start": "0x435a2b80",
+     "func_end": "0x435a2c6a",
+     "push": "0x435a2b80"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c57f",
+   "vaddr": "0x43c3c57f",
+   "tag": "CTRLHDDEC",
+   "text": "[CDIAG][CTRLHDDEC]ClkType [%d] : OK",
+   "pic_sites": [
+    "0x435a2c88"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2c88",
+     "func_start": "0x435a2c6c",
+     "func_end": "0x435a2ce8",
+     "push": "0x435a2cb4"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c5a3",
+   "vaddr": "0x43c3c5a3",
+   "tag": "CTRLHDDEC",
+   "text": "[CDIAG][CTRLHDDEC][VSYNC] RUN CODEC INIT",
+   "pic_sites": [
+    "0x435a2cba"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2cba",
+     "func_start": "0x435a2cb4",
+     "func_end": "0x435a2ce8",
+     "push": "0x435a2cb4"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c5cc",
+   "vaddr": "0x43c3c5cc",
+   "tag": "CTRLHDDEC",
+   "text": "[CDIAG][CTRLHDDEC]UnReg SysV",
+   "pic_sites": [
+    "0x435a2cfe"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2cfe",
+     "func_start": "0x435a2cf0",
+     "func_end": "0x435a2d16",
+     "push": "0x435a2cf0"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c5e9",
+   "vaddr": "0x43c3c5e9",
+   "tag": "CTRLHDDEC",
+   "text": "[CDIAG][CTRLHDDEC]PAL(50i) MODE Clk[%d]",
+   "pic_sites": [
+    "0x435a2d40"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2d40",
+     "func_start": "0x435a2d1c",
+     "func_end": "0x435a2d58",
+     "push": "0x435a2d1c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c612",
+   "vaddr": "0x43c3c612",
+   "tag": "CTRLHDDEC",
+   "text": "[CDIAG][CTRLHDDEC]NTSC(60i) MODE Clk[%d]",
+   "pic_sites": [
+    "0x435a2d52"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2d52",
+     "func_start": "0x435a2d1c",
+     "func_end": "0x435a2d58",
+     "push": "0x435a2d1c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c63c",
+   "vaddr": "0x43c3c63c",
+   "tag": "CTRLHDDEC",
+   "text": "[CDIAG][CTRLHDDEC]Reg SysV",
+   "pic_sites": [
+    "0x435a2d6e"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2d6e",
+     "func_start": "0x435a2d68",
+     "func_end": "0x435a2d94",
+     "push": "0x435a2d68"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c657",
+   "vaddr": "0x43c3c657",
+   "tag": "CTRLHDDEC",
+   "text": "[CDIAG][CTRLHDDEC]Run Codec Set State STATE_CODEC_CLK_CHANGE",
+   "pic_sites": [
+    "0x435a2d7e"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2d7e",
+     "func_start": "0x435a2d68",
+     "func_end": "0x435a2d94",
+     "push": "0x435a2d68"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c761",
+   "vaddr": "0x43c3c761",
+   "tag": "CTRLHDREC",
+   "text": "[CDIAG][CTRLHDREC]MEM ALLOC err [0x%08X]",
+   "pic_sites": [
+    "0x435a2de2"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2de2",
+     "func_start": "0x435a2dc4",
+     "func_end": "0x435a2df8",
+     "push": "0x435a2dc4"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c78a",
+   "vaddr": "0x43c3c78a",
+   "tag": "CTRLHDREC",
+   "text": "[CDIAG][CTRLHDREC]MEM ALLOC COUNT NOT 1 [%d]",
+   "pic_sites": [
+    "0x435a2df0"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2df0",
+     "func_start": "0x435a2dc4",
+     "func_end": "0x435a2df8",
+     "push": "0x435a2dc4"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c7b7",
+   "vaddr": "0x43c3c7b7",
+   "tag": "CTRLHDREC",
+   "text": "[CDIAG][CTRLHDREC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] fsize[%d] hdl[0x%08X]",
+   "pic_sites": [
+    "0x435a2e5a",
+    "0x435a2ef2"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2e5a",
+     "func_start": "0x435a2e06",
+     "func_end": "0x435a2e6a",
+     "push": "0x435a2e06"
+    },
+    {
+     "ref_site": "0x435a2ef2",
+     "func_start": "0x435a2ea6",
+     "func_end": "0x435a2f02",
+     "push": "0x435a2ea6"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c80c",
+   "vaddr": "0x43c3c80c",
+   "tag": "CTRLHDREC",
+   "text": "[CDIAG][CTRLHDREC]MEM SHARE err [0x%08X]",
+   "pic_sites": [
+    "0x435a2e92"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2e92",
+     "func_start": "0x435a2e06",
+     "func_end": "0x435a2e9a",
+     "push": "0x435a2e06"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c835",
+   "vaddr": "0x43c3c835",
+   "tag": "CTRLHDREC",
+   "text": "[CDIAG][CTRLHDREC]ExecCmd [%s]!!",
+   "pic_sites": [
+    "0x435a2f1e",
+    "0x435a3012",
+    "0x435a3370"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2f1e",
+     "func_start": "0x435a2f10",
+     "func_end": "0x435a2f76",
+     "push": "0x435a2f10"
+    },
+    {
+     "ref_site": "0x435a3012",
+     "func_start": "0x435a3004",
+     "func_end": "0x435a304a",
+     "push": "0x435a3004"
+    },
+    {
+     "ref_site": "0x435a3370",
+     "func_start": "0x435a3368",
+     "func_end": "0x435a338a",
+     "push": "0x435a3368"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c857",
+   "vaddr": "0x43c3c857",
+   "tag": "CTRLHDREC",
+   "text": "[CDIAG][CTRLHDREC]Memory Set ERR!! idx[%d]",
+   "pic_sites": [
+    "0x435a2f40"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2f40",
+     "func_start": "0x435a2f10",
+     "func_end": "0x435a2f76",
+     "push": "0x435a2f10"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c882",
+   "vaddr": "0x43c3c882",
+   "tag": "CTRLHDREC",
+   "text": "[CDIAG][CTRLHDREC]Memory Share ERR!! idx[%d]",
+   "pic_sites": [
+    "0x435a2f66"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2f66",
+     "func_start": "0x435a2f10",
+     "func_end": "0x435a2f76",
+     "push": "0x435a2f10"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c8af",
+   "vaddr": "0x43c3c8af",
+   "tag": "CTRLHDREC",
+   "text": "[CDIAG][CTRLHDREC]MEM FREE err [0x%08X]",
+   "pic_sites": [
+    "0x435a2fac"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2fac",
+     "func_start": "0x435a2f10",
+     "func_end": "0x435a2fb4",
+     "push": "0x435a2f10"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c8d7",
+   "vaddr": "0x43c3c8d7",
+   "tag": "CTRLHDREC",
+   "text": "[CDIAG][CTRLHDREC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] hdl[0x%08X]",
+   "pic_sites": [
+    "0x435a2fec"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2fec",
+     "func_start": "0x435a2fbe",
+     "func_end": "0x435a2ffa",
+     "push": "0x435a2fbe"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c922",
+   "vaddr": "0x43c3c922",
+   "tag": "CTRLHDREC",
+   "text": "[CDIAG][CTRLHDREC]Memory Release ERR!! idx[%d]",
+   "pic_sites": [
+    "0x435a3030"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3030",
+     "func_start": "0x435a3004",
+     "func_end": "0x435a304a",
+     "push": "0x435a3004"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c951",
+   "vaddr": "0x43c3c951",
+   "tag": "CTRLHDREC",
+   "text": "[CDIAG][CTRLHDREC]ExecCmd !! CmpData",
+   "pic_sites": [
+    "0x435a3060"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3060",
+     "func_start": "0x435a305e",
+     "func_end": "0x435a30ce",
+     "push": "0x435a305e"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c977",
+   "vaddr": "0x43c3c977",
+   "tag": "CTRLHDREC",
+   "text": "[CDIAG][CTRLHDREC]Found File ID [0x%08X]",
+   "pic_sites": [
+    "0x435a30ea"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a30ea",
+     "func_start": "0x435a30d4",
+     "func_end": "0x435a310c",
+     "push": "0x435a30d4"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c9d3",
+   "vaddr": "0x43c3c9d3",
+   "tag": "CTRLHDREC",
+   "text": "[CDIAG][CTRLHDREC]ClkState IDLE->OPEN",
+   "pic_sites": [
+    "0x435a3202"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3202",
+     "func_start": "0x435a31cc",
+     "func_end": "0x435a32b6",
+     "push": "0x435a31cc"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c9f9",
+   "vaddr": "0x43c3c9f9",
+   "tag": "CTRLHDREC",
+   "text": "[CDIAG][CTRLHDREC]ClkState Wait OPEN",
+   "pic_sites": [
+    "0x435a3216"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3216",
+     "func_start": "0x435a31cc",
+     "func_end": "0x435a32b6",
+     "push": "0x435a31cc"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3ca1e",
+   "vaddr": "0x43c3ca1e",
+   "tag": "CTRLHDREC",
+   "text": "[CDIAG][CTRLHDREC]ClkState OPEN->CHANGING",
+   "pic_sites": [
+    "0x435a322a"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a322a",
+     "func_start": "0x435a31cc",
+     "func_end": "0x435a32b6",
+     "push": "0x435a31cc"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3ca48",
+   "vaddr": "0x43c3ca48",
+   "tag": "CTRLHDREC",
+   "text": "[CDIAG][CTRLHDREC]ClkState Wait CHANGING",
+   "pic_sites": [
+    "0x435a323e"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a323e",
+     "func_start": "0x435a31cc",
+     "func_end": "0x435a32b6",
+     "push": "0x435a31cc"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3ca71",
+   "vaddr": "0x43c3ca71",
+   "tag": "CTRLHDREC",
+   "text": "[CDIAG][CTRLHDREC]ClkState CHANGING->CHANGED",
+   "pic_sites": [
+    "0x435a3254"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3254",
+     "func_start": "0x435a31cc",
+     "func_end": "0x435a32b6",
+     "push": "0x435a31cc"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3ca9e",
+   "vaddr": "0x43c3ca9e",
+   "tag": "CTRLHDREC",
+   "text": "[CDIAG][CTRLHDREC]ClkState CHANGED->CLOSE",
+   "pic_sites": [
+    "0x435a3272"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3272",
+     "func_start": "0x435a31cc",
+     "func_end": "0x435a32b6",
+     "push": "0x435a31cc"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3cac8",
+   "vaddr": "0x43c3cac8",
+   "tag": "CTRLHDREC",
+   "text": "[CDIAG][CTRLHDREC]ClkState CLOSE->IDLE",
+   "pic_sites": [
+    "0x435a3296",
+    "0x435a32ae"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3296",
+     "func_start": "0x435a31cc",
+     "func_end": "0x435a32b6",
+     "push": "0x435a31cc"
+    },
+    {
+     "ref_site": "0x435a32ae",
+     "func_start": "0x435a31cc",
+     "func_end": "0x435a32b6",
+     "push": "0x435a31cc"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3caef",
+   "vaddr": "0x43c3caef",
+   "tag": "CTRLHDREC",
+   "text": "[CDIAG][CTRLHDREC]ClkType [%d] : OK",
+   "pic_sites": [
+    "0x435a32d4"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a32d4",
+     "func_start": "0x435a32b8",
+     "func_end": "0x435a3334",
+     "push": "0x435a3300"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3cb13",
+   "vaddr": "0x43c3cb13",
+   "tag": "CTRLHDREC",
+   "text": "[CDIAG][CTRLHDREC][VSYNC] RUN CODEC INIT",
+   "pic_sites": [
+    "0x435a3306"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3306",
+     "func_start": "0x435a3300",
+     "func_end": "0x435a3334",
+     "push": "0x435a3300"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3cb3c",
+   "vaddr": "0x43c3cb3c",
+   "tag": "CTRLHDREC",
+   "text": "[CDIAG][CTRLHDREC]UnReg SysV",
+   "pic_sites": [
+    "0x435a334a"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a334a",
+     "func_start": "0x435a333c",
+     "func_end": "0x435a3362",
+     "push": "0x435a333c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3cb59",
+   "vaddr": "0x43c3cb59",
+   "tag": "CTRLHDREC",
+   "text": "[CDIAG][CTRLHDREC]LOOP NUM [0x%02X]",
+   "pic_sites": [
+    "0x435a3382"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3382",
+     "func_start": "0x435a3368",
+     "func_end": "0x435a338a",
+     "push": "0x435a3368"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3cb7d",
+   "vaddr": "0x43c3cb7d",
+   "tag": "CTRLHDREC",
+   "text": "[CDIAG][CTRLHDREC]PAL(50i) MODE Clk[%d]",
+   "pic_sites": [
+    "0x435a33bc"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a33bc",
+     "func_start": "0x435a3398",
+     "func_end": "0x435a33d4",
+     "push": "0x435a3398"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3cba6",
+   "vaddr": "0x43c3cba6",
+   "tag": "CTRLHDREC",
+   "text": "[CDIAG][CTRLHDREC]NTSC(60i) MODE Clk[%d]",
+   "pic_sites": [
+    "0x435a33ce"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a33ce",
+     "func_start": "0x435a3398",
+     "func_end": "0x435a33d4",
+     "push": "0x435a3398"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3cbd0",
+   "vaddr": "0x43c3cbd0",
+   "tag": "CTRLHDREC",
+   "text": "[CDIAG][CTRLHDREC]Reg SysV",
+   "pic_sites": [
+    "0x435a33ea"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a33ea",
+     "func_start": "0x435a33e4",
+     "func_end": "0x435a3410",
+     "push": "0x435a33e4"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3cbeb",
+   "vaddr": "0x43c3cbeb",
+   "tag": "CTRLHDREC",
+   "text": "[CDIAG][CTRLHDREC]Run Codec Set State STATE_CODEC_CLK_CHANGE",
+   "pic_sites": [
+    "0x435a33fa"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a33fa",
+     "func_start": "0x435a33e4",
+     "func_end": "0x435a3410",
+     "push": "0x435a33e4"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3cca7",
+   "vaddr": "0x43c3cca7",
+   "tag": "CTRLJPGDEC",
+   "text": "[CDIAG][CTRLJPGDEC]MEM ALLOC err [0x%08X]",
+   "pic_sites": [
+    "0x435a345e"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a345e",
+     "func_start": "0x435a3440",
+     "func_end": "0x435a3474",
+     "push": "0x435a3440"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3ccd1",
+   "vaddr": "0x43c3ccd1",
+   "tag": "CTRLJPGDEC",
+   "text": "[CDIAG][CTRLJPGDEC]MEM ALLOC COUNT NOT 1 [%d]",
+   "pic_sites": [
+    "0x435a346c"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a346c",
+     "func_start": "0x435a3440",
+     "func_end": "0x435a3474",
+     "push": "0x435a3440"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3ccff",
+   "vaddr": "0x43c3ccff",
+   "tag": "CTRLJPGDEC",
+   "text": "[CDIAG][CTRLJPGDEC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] fsize[%d] hdl[0x%08X]",
+   "pic_sites": [
+    "0x435a34d6"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a34d6",
+     "func_start": "0x435a3482",
+     "func_end": "0x435a34e6",
+     "push": "0x435a3482"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3cd55",
+   "vaddr": "0x43c3cd55",
+   "tag": "CTRLJPGDEC",
+   "text": "[CDIAG][CTRLJPGDEC]ExecCmd !!",
+   "pic_sites": [
+    "0x435a34fe",
+    "0x435a35ba"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a34fe",
+     "func_start": "0x435a34f4",
+     "func_end": "0x435a352c",
+     "push": "0x435a34f4"
+    },
+    {
+     "ref_site": "0x435a35ba",
+     "func_start": "0x435a35b0",
+     "func_end": "0x435a35e8",
+     "push": "0x435a35b0"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3cd74",
+   "vaddr": "0x43c3cd74",
+   "tag": "CTRLJPGDEC",
+   "text": "[CDIAG][CTRLJPGDEC]ERR!![%d]",
+   "pic_sites": [
+    "0x435a351a",
+    "0x435a35d6"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a351a",
+     "func_start": "0x435a34f4",
+     "func_end": "0x435a352c",
+     "push": "0x435a34f4"
+    },
+    {
+     "ref_site": "0x435a35d6",
+     "func_start": "0x435a35b0",
+     "func_end": "0x435a35e8",
+     "push": "0x435a35b0"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3cd91",
+   "vaddr": "0x43c3cd91",
+   "tag": "CTRLJPGDEC",
+   "text": "[CDIAG][CTRLJPGDEC]MEM SHARE err [0x%08X]",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3cdbb",
+   "vaddr": "0x43c3cdbb",
+   "tag": "CTRLJPGDEC",
+   "text": "[CDIAG][CTRLJPGDEC]MEM FREE err [0x%08X]",
+   "pic_sites": [
+    "0x435a3558"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3558",
+     "func_start": "0x435a34f4",
+     "func_end": "0x435a3560",
+     "push": "0x435a34f4"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3cde4",
+   "vaddr": "0x43c3cde4",
+   "tag": "CTRLJPGDEC",
+   "text": "[CDIAG][CTRLJPGDEC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] hdl[0x%08X]",
+   "pic_sites": [
+    "0x435a3598"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3598",
+     "func_start": "0x435a356a",
+     "func_end": "0x435a35a6",
+     "push": "0x435a356a"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3ce30",
+   "vaddr": "0x43c3ce30",
+   "tag": "CTRLJPGDEC",
+   "text": "[CDIAG][CTRLJPGDEC]ExecCmd !! CmpData",
+   "pic_sites": [
+    "0x435a35fe"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a35fe",
+     "func_start": "0x435a35f8",
+     "func_end": "0x435a3640",
+     "push": "0x435a35f8"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3ce57",
+   "vaddr": "0x43c3ce57",
+   "tag": "CTRLJPGDEC",
+   "text": "[CDIAG][CTRLJPGDEC]JPEG DEC IMG Differ!!",
+   "pic_sites": [
+    "0x435a3636"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3636",
+     "func_start": "0x435a35f8",
+     "func_end": "0x435a3640",
+     "push": "0x435a35f8"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3ce81",
+   "vaddr": "0x43c3ce81",
+   "tag": "CTRLJPGDEC",
+   "text": "[CDIAG][CTRLJPGDEC]Found File ID [0x%08X]",
+   "pic_sites": [
+    "0x435a3662"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3662",
+     "func_start": "0x435a364c",
+     "func_end": "0x435a3684",
+     "push": "0x435a364c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3cedf",
+   "vaddr": "0x43c3cedf",
+   "tag": "CTRLJPGDEC",
+   "text": "[CDIAG][CTRLJPGDEC]Run Codec JPEG DEC",
+   "pic_sites": [
+    "0x435a37b4"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a37b4",
+     "func_start": "0x435a37ac",
+     "func_end": "0x435a381c",
+     "push": "0x435a37ac"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3cf30",
+   "vaddr": "0x43c3cf30",
+   "tag": "CTRLJPGDEC",
+   "text": "[CDIAG][CTRLJPGDEC]JPEG DEC END... w[%d] h[%d]",
+   "pic_sites": [
+    "0x435a380e"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a380e",
+     "func_start": "0x435a37ac",
+     "func_end": "0x435a381c",
+     "push": "0x435a37ac"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3cf60",
+   "vaddr": "0x43c3cf60",
+   "tag": "CTRLJPGDEC",
+   "text": "[CDIAG][CTRLJPGDEC]ClkState IDLE->OPEN",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3cf87",
+   "vaddr": "0x43c3cf87",
+   "tag": "CTRLJPGDEC",
+   "text": "[CDIAG][CTRLJPGDEC]ClkState Wait OPEN",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3cfad",
+   "vaddr": "0x43c3cfad",
+   "tag": "CTRLJPGDEC",
+   "text": "[CDIAG][CTRLJPGDEC]ClkState OPEN->CHANGING",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3cfd8",
+   "vaddr": "0x43c3cfd8",
+   "tag": "CTRLJPGDEC",
+   "text": "[CDIAG][CTRLJPGDEC]ClkState Wait CHANGING",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3d002",
+   "vaddr": "0x43c3d002",
+   "tag": "CTRLJPGDEC",
+   "text": "[CDIAG][CTRLJPGDEC]ClkState CHANGING->CHANGED",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3d030",
+   "vaddr": "0x43c3d030",
+   "tag": "CTRLJPGDEC",
+   "text": "[CDIAG][CTRLJPGDEC]ClkState CHANGED->CLOSE",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3d05b",
+   "vaddr": "0x43c3d05b",
+   "tag": "CTRLJPGDEC",
+   "text": "[CDIAG][CTRLJPGDEC]ClkState CLOSE->IDLE",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3d083",
+   "vaddr": "0x43c3d083",
+   "tag": "CTRLJPGDEC",
+   "text": "[CDIAG][CTRLJPGDEC]ClkType [%d] : OK",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3d19f",
+   "vaddr": "0x43c3d19f",
+   "tag": "CTRLJPGENC",
+   "text": "[CDIAG][CTRLJPGENC]MEM ALLOC err [0x%08X]",
+   "pic_sites": [
+    "0x435a386e"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a386e",
+     "func_start": "0x435a3850",
+     "func_end": "0x435a3884",
+     "push": "0x435a3850"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3d1c9",
+   "vaddr": "0x43c3d1c9",
+   "tag": "CTRLJPGENC",
+   "text": "[CDIAG][CTRLJPGENC]MEM ALLOC COUNT NOT 1 [%d]",
+   "pic_sites": [
+    "0x435a387c"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a387c",
+     "func_start": "0x435a3850",
+     "func_end": "0x435a3884",
+     "push": "0x435a3850"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3d1f7",
+   "vaddr": "0x43c3d1f7",
+   "tag": "CTRLJPGENC",
+   "text": "[CDIAG][CTRLJPGENC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] fsize[%d] hdl[0x%08X]",
+   "pic_sites": [
+    "0x435a38e6"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a38e6",
+     "func_start": "0x435a3892",
+     "func_end": "0x435a38f6",
+     "push": "0x435a3892"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3d24d",
+   "vaddr": "0x43c3d24d",
+   "tag": "CTRLJPGENC",
+   "text": "[CDIAG][CTRLJPGENC]ExecCmd !!",
+   "pic_sites": [
+    "0x435a390e",
+    "0x435a39ca"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a390e",
+     "func_start": "0x435a3904",
+     "func_end": "0x435a393c",
+     "push": "0x435a3904"
+    },
+    {
+     "ref_site": "0x435a39ca",
+     "func_start": "0x435a39c0",
+     "func_end": "0x435a39f8",
+     "push": "0x435a39c0"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3d26c",
+   "vaddr": "0x43c3d26c",
+   "tag": "CTRLJPGENC",
+   "text": "[CDIAG][CTRLJPGENC]ERR!![%d]",
+   "pic_sites": [
+    "0x435a392a",
+    "0x435a39e6"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a392a",
+     "func_start": "0x435a3904",
+     "func_end": "0x435a393c",
+     "push": "0x435a3904"
+    },
+    {
+     "ref_site": "0x435a39e6",
+     "func_start": "0x435a39c0",
+     "func_end": "0x435a39f8",
+     "push": "0x435a39c0"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3d289",
+   "vaddr": "0x43c3d289",
+   "tag": "CTRLJPGENC",
+   "text": "[CDIAG][CTRLJPGENC]MEM SHARE err [0x%08X]",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3d2b3",
+   "vaddr": "0x43c3d2b3",
+   "tag": "CTRLJPGENC",
+   "text": "[CDIAG][CTRLJPGENC]MEM FREE err [0x%08X]",
+   "pic_sites": [
+    "0x435a3968"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3968",
+     "func_start": "0x435a3904",
+     "func_end": "0x435a3970",
+     "push": "0x435a3904"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3d2dc",
+   "vaddr": "0x43c3d2dc",
+   "tag": "CTRLJPGENC",
+   "text": "[CDIAG][CTRLJPGENC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] hdl[0x%08X]",
+   "pic_sites": [
+    "0x435a39a8"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a39a8",
+     "func_start": "0x435a397a",
+     "func_end": "0x435a39b6",
+     "push": "0x435a397a"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3d328",
+   "vaddr": "0x43c3d328",
+   "tag": "CTRLJPGENC",
+   "text": "[CDIAG][CTRLJPGENC]ExecCmd !! CmpData",
+   "pic_sites": [
+    "0x435a3a0e"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3a0e",
+     "func_start": "0x435a3a08",
+     "func_end": "0x435a3a50",
+     "push": "0x435a3a08"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3d34f",
+   "vaddr": "0x43c3d34f",
+   "tag": "CTRLJPGENC",
+   "text": "[CDIAG][CTRLJPGENC]JPEG ENC ES Differ!!",
+   "pic_sites": [
+    "0x435a3a46"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3a46",
+     "func_start": "0x435a3a08",
+     "func_end": "0x435a3a50",
+     "push": "0x435a3a08"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3d378",
+   "vaddr": "0x43c3d378",
+   "tag": "CTRLJPGENC",
+   "text": "[CDIAG][CTRLJPGENC]Found File ID [0x%08X]",
+   "pic_sites": [
+    "0x435a3a72"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3a72",
+     "func_start": "0x435a3a5c",
+     "func_end": "0x435a3a94",
+     "push": "0x435a3a5c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3d3d6",
+   "vaddr": "0x43c3d3d6",
+   "tag": "CTRLJPGENC",
+   "text": "[CDIAG][CTRLJPGENC]Run Codec JPEG ENC and DEC",
+   "pic_sites": [
+    "0x435a3b70"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3b70",
+     "func_start": "0x435a3b68",
+     "func_end": "0x435a3bc8",
+     "push": "0x435a3b68"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3d42f",
+   "vaddr": "0x43c3d42f",
+   "tag": "CTRLJPGENC",
+   "text": "[CDIAG][CTRLJPGENC]JPEG ENC END... [%d]bits",
+   "pic_sites": [
+    "0x435a3bbe"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3bbe",
+     "func_start": "0x435a3b68",
+     "func_end": "0x435a3bc8",
+     "push": "0x435a3b68"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3d45c",
+   "vaddr": "0x43c3d45c",
+   "tag": "CTRLJPGENC",
+   "text": "[CDIAG][CTRLJPGENC]ClkState IDLE->OPEN",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3d483",
+   "vaddr": "0x43c3d483",
+   "tag": "CTRLJPGENC",
+   "text": "[CDIAG][CTRLJPGENC]ClkState Wait OPEN",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3d4a9",
+   "vaddr": "0x43c3d4a9",
+   "tag": "CTRLJPGENC",
+   "text": "[CDIAG][CTRLJPGENC]ClkState OPEN->CHANGING",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3d4d4",
+   "vaddr": "0x43c3d4d4",
+   "tag": "CTRLJPGENC",
+   "text": "[CDIAG][CTRLJPGENC]ClkState Wait CHANGING",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3d4fe",
+   "vaddr": "0x43c3d4fe",
+   "tag": "CTRLJPGENC",
+   "text": "[CDIAG][CTRLJPGENC]ClkState CHANGING->CHANGED",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3d52c",
+   "vaddr": "0x43c3d52c",
+   "tag": "CTRLJPGENC",
+   "text": "[CDIAG][CTRLJPGENC]ClkState CHANGED->CLOSE",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3d557",
+   "vaddr": "0x43c3d557",
+   "tag": "CTRLJPGENC",
+   "text": "[CDIAG][CTRLJPGENC]ClkState CLOSE->IDLE",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3d57f",
+   "vaddr": "0x43c3d57f",
+   "tag": "CTRLJPGENC",
+   "text": "[CDIAG][CTRLJPGENC]ClkType [%d] : OK",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3d5f6",
+   "vaddr": "0x43c3d5f6",
+   "tag": "CTRLJPGENCDEC",
+   "text": "[CDIAG][CTRLJPGENCDEC]MEM ALLOC err [0x%08X]",
+   "pic_sites": [
+    "0x435a3c1a"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3c1a",
+     "func_start": "0x435a3bfc",
+     "func_end": "0x435a3c30",
+     "push": "0x435a3bfc"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3d623",
+   "vaddr": "0x43c3d623",
+   "tag": "CTRLJPGENCDEC",
+   "text": "[CDIAG][CTRLJPGENCDEC]MEM ALLOC COUNT NOT 1 [%d]",
+   "pic_sites": [
+    "0x435a3c28"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3c28",
+     "func_start": "0x435a3bfc",
+     "func_end": "0x435a3c30",
+     "push": "0x435a3bfc"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3d654",
+   "vaddr": "0x43c3d654",
+   "tag": "CTRLJPGENCDEC",
+   "text": "[CDIAG][CTRLJPGENCDEC]MEM SHARE err [0x%08X]",
+   "pic_sites": [
+    "0x435a3c56"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3c56",
+     "func_start": "0x435a3bfc",
+     "func_end": "0x435a3c5e",
+     "push": "0x435a3bfc"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3d681",
+   "vaddr": "0x43c3d681",
+   "tag": "CTRLJPGENCDEC",
+   "text": "[CDIAG][CTRLJPGENCDEC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] fsize[%d] hdl[0x%08X]",
+   "pic_sites": [
+    "0x435a3ce2"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3ce2",
+     "func_start": "0x435a3c6a",
+     "func_end": "0x435a3cf2",
+     "push": "0x435a3c6a"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3d6da",
+   "vaddr": "0x43c3d6da",
+   "tag": "CTRLJPGENCDEC",
+   "text": "[CDIAG][CTRLJPGENCDEC]ExecCmd !!",
+   "pic_sites": [
+    "0x435a3d0a",
+    "0x435a3dc6"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3d0a",
+     "func_start": "0x435a3d00",
+     "func_end": "0x435a3d38",
+     "push": "0x435a3d00"
+    },
+    {
+     "ref_site": "0x435a3dc6",
+     "func_start": "0x435a3dbc",
+     "func_end": "0x435a3df4",
+     "push": "0x435a3dbc"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3d6fc",
+   "vaddr": "0x43c3d6fc",
+   "tag": "CTRLJPGENCDEC",
+   "text": "[CDIAG][CTRLJPGENCDEC]ERR!![%d]",
+   "pic_sites": [
+    "0x435a3d26",
+    "0x435a3de2"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3d26",
+     "func_start": "0x435a3d00",
+     "func_end": "0x435a3d38",
+     "push": "0x435a3d00"
+    },
+    {
+     "ref_site": "0x435a3de2",
+     "func_start": "0x435a3dbc",
+     "func_end": "0x435a3df4",
+     "push": "0x435a3dbc"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3d71c",
+   "vaddr": "0x43c3d71c",
+   "tag": "CTRLJPGENCDEC",
+   "text": "[CDIAG][CTRLJPGENCDEC]MEM FREE err [0x%08X]",
+   "pic_sites": [
+    "0x435a3d64"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3d64",
+     "func_start": "0x435a3d00",
+     "func_end": "0x435a3d6c",
+     "push": "0x435a3d00"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3d748",
+   "vaddr": "0x43c3d748",
+   "tag": "CTRLJPGENCDEC",
+   "text": "[CDIAG][CTRLJPGENCDEC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] hdl[0x%08X]",
+   "pic_sites": [
+    "0x435a3da4"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3da4",
+     "func_start": "0x435a3d76",
+     "func_end": "0x435a3db2",
+     "push": "0x435a3d76"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3d797",
+   "vaddr": "0x43c3d797",
+   "tag": "CTRLJPGENCDEC",
+   "text": "[CDIAG][CTRLJPGENCDEC]ExecCmd !! CmpData",
+   "pic_sites": [
+    "0x435a3e0a"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3e0a",
+     "func_start": "0x435a3e04",
+     "func_end": "0x435a3e78",
+     "push": "0x435a3e04"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3d7c1",
+   "vaddr": "0x43c3d7c1",
+   "tag": "CTRLJPGENCDEC",
+   "text": "[CDIAG][CTRLJPGENCDEC]VideoES Differ!!",
+   "pic_sites": [
+    "0x435a3e40"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3e40",
+     "func_start": "0x435a3e04",
+     "func_end": "0x435a3e78",
+     "push": "0x435a3e04"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3d7e9",
+   "vaddr": "0x43c3d7e9",
+   "tag": "CTRLJPGENCDEC",
+   "text": "[CDIAG][CTRLJPGENCDEC]AudioES Differ!!",
+   "pic_sites": [
+    "0x435a3e6e"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3e6e",
+     "func_start": "0x435a3e04",
+     "func_end": "0x435a3e78",
+     "push": "0x435a3e04"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3d811",
+   "vaddr": "0x43c3d811",
+   "tag": "CTRLJPGENCDEC",
+   "text": "[CDIAG][CTRLJPGENCDEC]Found File ID [0x%08X]",
+   "pic_sites": [
+    "0x435a3e9e"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3e9e",
+     "func_start": "0x435a3e88",
+     "func_end": "0x435a3ec0",
+     "push": "0x435a3e88"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3d875",
+   "vaddr": "0x43c3d875",
+   "tag": "CTRLJPGENCDEC",
+   "text": "[CDIAG][CTRLJPGENCDEC]Run Codec JPEG ENC and DEC",
+   "pic_sites": [
+    "0x435a3ed2"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3ed2",
+     "func_start": "0x435a3ecc",
+     "func_end": "0x435a3ee2",
+     "push": "0x435a3ecc"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3d8a6",
+   "vaddr": "0x43c3d8a6",
+   "tag": "CTRLJPGENCDEC",
+   "text": "[CDIAG][CTRLJPGENCDEC]ClkState IDLE->OPEN",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3d8d0",
+   "vaddr": "0x43c3d8d0",
+   "tag": "CTRLJPGENCDEC",
+   "text": "[CDIAG][CTRLJPGENCDEC]ClkState Wait OPEN",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3d8f9",
+   "vaddr": "0x43c3d8f9",
+   "tag": "CTRLJPGENCDEC",
+   "text": "[CDIAG][CTRLJPGENCDEC]ClkState OPEN->CHANGING",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3d927",
+   "vaddr": "0x43c3d927",
+   "tag": "CTRLJPGENCDEC",
+   "text": "[CDIAG][CTRLJPGENCDEC]ClkState Wait CHANGING",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3d954",
+   "vaddr": "0x43c3d954",
+   "tag": "CTRLJPGENCDEC",
+   "text": "[CDIAG][CTRLJPGENCDEC]ClkState CHANGING->CHANGED",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3d985",
+   "vaddr": "0x43c3d985",
+   "tag": "CTRLJPGENCDEC",
+   "text": "[CDIAG][CTRLJPGENCDEC]ClkState CHANGED->CLOSE",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3d9b3",
+   "vaddr": "0x43c3d9b3",
+   "tag": "CTRLJPGENCDEC",
+   "text": "[CDIAG][CTRLJPGENCDEC]ClkState CLOSE->IDLE",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3d9de",
+   "vaddr": "0x43c3d9de",
+   "tag": "CTRLJPGENCDEC",
+   "text": "[CDIAG][CTRLJPGENCDEC]ClkType [%d] : OK",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3da06",
+   "vaddr": "0x43c3da06",
+   "tag": "CTRLJPGENCDEC",
+   "text": "[CDIAG][CTRLJPGENCDEC][VSYNC] RUN CODEC INIT",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3da73",
+   "vaddr": "0x43c3da73",
+   "tag": "CTRLSDDEC",
+   "text": "[CDIAG][CTRLSDDEC]MEM ALLOC err [0x%08X]",
+   "pic_sites": [
+    "0x435a3fe2"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3fe2",
+     "func_start": "0x435a3fc4",
+     "func_end": "0x435a3ff8",
+     "push": "0x435a3fc4"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3da9c",
+   "vaddr": "0x43c3da9c",
+   "tag": "CTRLSDDEC",
+   "text": "[CDIAG][CTRLSDDEC]MEM ALLOC COUNT NOT 1 [%d]",
+   "pic_sites": [
+    "0x435a3ff0"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3ff0",
+     "func_start": "0x435a3fc4",
+     "func_end": "0x435a3ff8",
+     "push": "0x435a3fc4"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3dac9",
+   "vaddr": "0x43c3dac9",
+   "tag": "CTRLSDDEC",
+   "text": "[CDIAG][CTRLSDDEC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] fsize[%d] hdl[0x%08X]",
+   "pic_sites": [
+    "0x435a4058"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4058",
+     "func_start": "0x435a4006",
+     "func_end": "0x435a4068",
+     "push": "0x435a4006"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3db1e",
+   "vaddr": "0x43c3db1e",
+   "tag": "CTRLSDDEC",
+   "text": "[CDIAG][CTRLSDDEC]MEM SHARE err [0x%08X]",
+   "pic_sites": [],
+   "functions": []
+  },
+  {
+   "token_vaddr": "0x43c3db47",
+   "vaddr": "0x43c3db47",
+   "tag": "CTRLSDDEC",
+   "text": "[CDIAG][CTRLSDDEC]MEM FREE err [0x%08X]",
+   "pic_sites": [
+    "0x435a4090"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4090",
+     "func_start": "0x435a4006",
+     "func_end": "0x435a4098",
+     "push": "0x435a4006"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3db6f",
+   "vaddr": "0x43c3db6f",
+   "tag": "CTRLSDDEC",
+   "text": "[CDIAG][CTRLSDDEC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] hdl[0x%08X]",
+   "pic_sites": [
+    "0x435a40d0"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a40d0",
+     "func_start": "0x435a40a2",
+     "func_end": "0x435a40de",
+     "push": "0x435a40a2"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3dbba",
+   "vaddr": "0x43c3dbba",
+   "tag": "CTRLSDDEC",
+   "text": "[CDIAG][CTRLSDDEC]ExecCmd [%s]!!",
+   "pic_sites": [
+    "0x435a40f6",
+    "0x435a4162"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a40f6",
+     "func_start": "0x435a40e8",
+     "func_end": "0x435a413e",
+     "push": "0x435a40e8"
+    },
+    {
+     "ref_site": "0x435a4162",
+     "func_start": "0x435a4154",
+     "func_end": "0x435a41ba",
+     "push": "0x435a4154"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3dbdc",
+   "vaddr": "0x43c3dbdc",
+   "tag": "CTRLSDDEC",
+   "text": "[CDIAG][CTRLSDDEC]Memory Release ERR!! idx[%d]",
+   "pic_sites": [
+    "0x435a4122"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4122",
+     "func_start": "0x435a40e8",
+     "func_end": "0x435a413e",
+     "push": "0x435a40e8"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3dc0b",
+   "vaddr": "0x43c3dc0b",
+   "tag": "CTRLSDDEC",
+   "text": "[CDIAG][CTRLSDDEC]Memory Set ERR!! idx[%d]",
+   "pic_sites": [
+    "0x435a4184"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4184",
+     "func_start": "0x435a4154",
+     "func_end": "0x435a41ba",
+     "push": "0x435a4154"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3dc36",
+   "vaddr": "0x43c3dc36",
+   "tag": "CTRLSDDEC",
+   "text": "[CDIAG][CTRLSDDEC]Memory Share ERR!! idx[%d]",
+   "pic_sites": [
+    "0x435a41aa"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a41aa",
+     "func_start": "0x435a4154",
+     "func_end": "0x435a41ba",
+     "push": "0x435a4154"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3dc63",
+   "vaddr": "0x43c3dc63",
+   "tag": "CTRLSDDEC",
+   "text": "[CDIAG][CTRLSDDEC]ExecCmd !! CmpData",
+   "pic_sites": [
+    "0x435a41da"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a41da",
+     "func_start": "0x435a41d4",
+     "func_end": "0x435a4216",
+     "push": "0x435a41d4"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3dc89",
+   "vaddr": "0x43c3dc89",
+   "tag": "CTRLSDDEC",
+   "text": "[CDIAG][CTRLSDDEC]Found File ID [0x%08X]",
+   "pic_sites": [
+    "0x435a4232"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4232",
+     "func_start": "0x435a421c",
+     "func_end": "0x435a4254",
+     "push": "0x435a421c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3dce5",
+   "vaddr": "0x43c3dce5",
+   "tag": "CTRLSDDEC",
+   "text": "[CDIAG][CTRLSDDEC]ClkState IDLE->OPEN",
+   "pic_sites": [
+    "0x435a434a"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a434a",
+     "func_start": "0x435a4314",
+     "func_end": "0x435a43fe",
+     "push": "0x435a4314"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3dd0b",
+   "vaddr": "0x43c3dd0b",
+   "tag": "CTRLSDDEC",
+   "text": "[CDIAG][CTRLSDDEC]ClkState Wait OPEN",
+   "pic_sites": [
+    "0x435a435e"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a435e",
+     "func_start": "0x435a4314",
+     "func_end": "0x435a43fe",
+     "push": "0x435a4314"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3dd30",
+   "vaddr": "0x43c3dd30",
+   "tag": "CTRLSDDEC",
+   "text": "[CDIAG][CTRLSDDEC]ClkState OPEN->CHANGING",
+   "pic_sites": [
+    "0x435a4372"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4372",
+     "func_start": "0x435a4314",
+     "func_end": "0x435a43fe",
+     "push": "0x435a4314"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3dd5a",
+   "vaddr": "0x43c3dd5a",
+   "tag": "CTRLSDDEC",
+   "text": "[CDIAG][CTRLSDDEC]ClkState Wait CHANGING",
+   "pic_sites": [
+    "0x435a4386"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4386",
+     "func_start": "0x435a4314",
+     "func_end": "0x435a43fe",
+     "push": "0x435a4314"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3dd83",
+   "vaddr": "0x43c3dd83",
+   "tag": "CTRLSDDEC",
+   "text": "[CDIAG][CTRLSDDEC]ClkState CHANGING->CHANGED",
+   "pic_sites": [
+    "0x435a439c"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a439c",
+     "func_start": "0x435a4314",
+     "func_end": "0x435a43fe",
+     "push": "0x435a4314"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3ddb0",
+   "vaddr": "0x43c3ddb0",
+   "tag": "CTRLSDDEC",
+   "text": "[CDIAG][CTRLSDDEC]ClkState CHANGED->CLOSE",
+   "pic_sites": [
+    "0x435a43ba"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a43ba",
+     "func_start": "0x435a4314",
+     "func_end": "0x435a43fe",
+     "push": "0x435a4314"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3ddda",
+   "vaddr": "0x43c3ddda",
+   "tag": "CTRLSDDEC",
+   "text": "[CDIAG][CTRLSDDEC]ClkState CLOSE->IDLE",
+   "pic_sites": [
+    "0x435a43de",
+    "0x435a43f6"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a43de",
+     "func_start": "0x435a4314",
+     "func_end": "0x435a43fe",
+     "push": "0x435a4314"
+    },
+    {
+     "ref_site": "0x435a43f6",
+     "func_start": "0x435a4314",
+     "func_end": "0x435a43fe",
+     "push": "0x435a4314"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3de01",
+   "vaddr": "0x43c3de01",
+   "tag": "CTRLSDDEC",
+   "text": "[CDIAG][CTRLSDDEC]ClkType [%d] : OK",
+   "pic_sites": [
+    "0x435a441c"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a441c",
+     "func_start": "0x435a4400",
+     "func_end": "0x435a4482",
+     "push": "0x435a4448"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3de25",
+   "vaddr": "0x43c3de25",
+   "tag": "CTRLSDDEC",
+   "text": "[CDIAG][CTRLSDDEC][VSYNC] RUN CODEC INIT",
+   "pic_sites": [
+    "0x435a444e"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a444e",
+     "func_start": "0x435a4448",
+     "func_end": "0x435a4482",
+     "push": "0x435a4448"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3de4e",
+   "vaddr": "0x43c3de4e",
+   "tag": "CTRLSDDEC",
+   "text": "[CDIAG][CTRLSDDEC]UnReg SysV",
+   "pic_sites": [
+    "0x435a4496"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4496",
+     "func_start": "0x435a4488",
+     "func_end": "0x435a44ae",
+     "push": "0x435a4488"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3de6b",
+   "vaddr": "0x43c3de6b",
+   "tag": "CTRLSDDEC",
+   "text": "[CDIAG][CTRLSDDEC]PAL(50i) MODE Clk[%d]",
+   "pic_sites": [
+    "0x435a44d8"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a44d8",
+     "func_start": "0x435a44b4",
+     "func_end": "0x435a44f0",
+     "push": "0x435a44b4"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3de94",
+   "vaddr": "0x43c3de94",
+   "tag": "CTRLSDDEC",
+   "text": "[CDIAG][CTRLSDDEC]NTSC(60i) MODE Clk[%d]",
+   "pic_sites": [
+    "0x435a44ea"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a44ea",
+     "func_start": "0x435a44b4",
+     "func_end": "0x435a44f0",
+     "push": "0x435a44b4"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3debe",
+   "vaddr": "0x43c3debe",
+   "tag": "CTRLSDDEC",
+   "text": "[CDIAG][CTRLSDDEC]Reg SysV",
+   "pic_sites": [
+    "0x435a4506"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4506",
+     "func_start": "0x435a4500",
+     "func_end": "0x435a452c",
+     "push": "0x435a4500"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3ded9",
+   "vaddr": "0x43c3ded9",
+   "tag": "CTRLSDDEC",
+   "text": "[CDIAG][CTRLSDDEC]Run Codec Set State STATE_CODEC_CLK_CHANGE",
+   "pic_sites": [
+    "0x435a4516"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4516",
+     "func_start": "0x435a4500",
+     "func_end": "0x435a452c",
+     "push": "0x435a4500"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3dfda",
+   "vaddr": "0x43c3dfda",
+   "tag": "CTRLSDREC",
+   "text": "[CDIAG][CTRLSDREC]MEM ALLOC err [0x%08X]",
+   "pic_sites": [
+    "0x435a457a"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a457a",
+     "func_start": "0x435a455c",
+     "func_end": "0x435a4590",
+     "push": "0x435a455c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e003",
+   "vaddr": "0x43c3e003",
+   "tag": "CTRLSDREC",
+   "text": "[CDIAG][CTRLSDREC]MEM ALLOC COUNT NOT 1 [%d]",
+   "pic_sites": [
+    "0x435a4588"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4588",
+     "func_start": "0x435a455c",
+     "func_end": "0x435a4590",
+     "push": "0x435a455c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e030",
+   "vaddr": "0x43c3e030",
+   "tag": "CTRLSDREC",
+   "text": "[CDIAG][CTRLSDREC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] fsize[%d] hdl[0x%08X]",
+   "pic_sites": [
+    "0x435a45f2",
+    "0x435a468a"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a45f2",
+     "func_start": "0x435a459e",
+     "func_end": "0x435a4602",
+     "push": "0x435a459e"
+    },
+    {
+     "ref_site": "0x435a468a",
+     "func_start": "0x435a463e",
+     "func_end": "0x435a469a",
+     "push": "0x435a463e"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e085",
+   "vaddr": "0x43c3e085",
+   "tag": "CTRLSDREC",
+   "text": "[CDIAG][CTRLSDREC]MEM SHARE err [0x%08X]",
+   "pic_sites": [
+    "0x435a462a"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a462a",
+     "func_start": "0x435a459e",
+     "func_end": "0x435a4632",
+     "push": "0x435a459e"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e0ae",
+   "vaddr": "0x43c3e0ae",
+   "tag": "CTRLSDREC",
+   "text": "[CDIAG][CTRLSDREC]ExecCmd [%s]!!",
+   "pic_sites": [
+    "0x435a46b6",
+    "0x435a47aa",
+    "0x435a4aec"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a46b6",
+     "func_start": "0x435a46a8",
+     "func_end": "0x435a470e",
+     "push": "0x435a46a8"
+    },
+    {
+     "ref_site": "0x435a47aa",
+     "func_start": "0x435a479c",
+     "func_end": "0x435a47e2",
+     "push": "0x435a479c"
+    },
+    {
+     "ref_site": "0x435a4aec",
+     "func_start": "0x435a4ae4",
+     "func_end": "0x435a4b06",
+     "push": "0x435a4ae4"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e0d0",
+   "vaddr": "0x43c3e0d0",
+   "tag": "CTRLSDREC",
+   "text": "[CDIAG][CTRLSDREC]Memory Set ERR!! idx[%d]",
+   "pic_sites": [
+    "0x435a46d8"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a46d8",
+     "func_start": "0x435a46a8",
+     "func_end": "0x435a470e",
+     "push": "0x435a46a8"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e0fb",
+   "vaddr": "0x43c3e0fb",
+   "tag": "CTRLSDREC",
+   "text": "[CDIAG][CTRLSDREC]Memory Share ERR!! idx[%d]",
+   "pic_sites": [
+    "0x435a46fe"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a46fe",
+     "func_start": "0x435a46a8",
+     "func_end": "0x435a470e",
+     "push": "0x435a46a8"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e128",
+   "vaddr": "0x43c3e128",
+   "tag": "CTRLSDREC",
+   "text": "[CDIAG][CTRLSDREC]MEM FREE err [0x%08X]",
+   "pic_sites": [
+    "0x435a4744"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4744",
+     "func_start": "0x435a46a8",
+     "func_end": "0x435a474c",
+     "push": "0x435a46a8"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e150",
+   "vaddr": "0x43c3e150",
+   "tag": "CTRLSDREC",
+   "text": "[CDIAG][CTRLSDREC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] hdl[0x%08X]",
+   "pic_sites": [
+    "0x435a4784"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4784",
+     "func_start": "0x435a4756",
+     "func_end": "0x435a4792",
+     "push": "0x435a4756"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e19b",
+   "vaddr": "0x43c3e19b",
+   "tag": "CTRLSDREC",
+   "text": "[CDIAG][CTRLSDREC]Memory Release ERR!! idx[%d]",
+   "pic_sites": [
+    "0x435a47c8"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a47c8",
+     "func_start": "0x435a479c",
+     "func_end": "0x435a47e2",
+     "push": "0x435a479c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e1ca",
+   "vaddr": "0x43c3e1ca",
+   "tag": "CTRLSDREC",
+   "text": "[CDIAG][CTRLSDREC]ExecCmd !! CmpData",
+   "pic_sites": [
+    "0x435a47fa"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a47fa",
+     "func_start": "0x435a47f4",
+     "func_end": "0x435a4836",
+     "push": "0x435a47f4"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e1f0",
+   "vaddr": "0x43c3e1f0",
+   "tag": "CTRLSDREC",
+   "text": "[CDIAG][CTRLSDREC]Found File ID [0x%08X]",
+   "pic_sites": [
+    "0x435a4852"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4852",
+     "func_start": "0x435a483c",
+     "func_end": "0x435a4874",
+     "push": "0x435a483c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e24c",
+   "vaddr": "0x43c3e24c",
+   "tag": "CTRLSDREC",
+   "text": "[CDIAG][CTRLSDREC]ClkState IDLE->OPEN",
+   "pic_sites": [
+    "0x435a4972"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4972",
+     "func_start": "0x435a493c",
+     "func_end": "0x435a4a26",
+     "push": "0x435a493c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e272",
+   "vaddr": "0x43c3e272",
+   "tag": "CTRLSDREC",
+   "text": "[CDIAG][CTRLSDREC]ClkState Wait OPEN",
+   "pic_sites": [
+    "0x435a4986"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4986",
+     "func_start": "0x435a493c",
+     "func_end": "0x435a4a26",
+     "push": "0x435a493c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e297",
+   "vaddr": "0x43c3e297",
+   "tag": "CTRLSDREC",
+   "text": "[CDIAG][CTRLSDREC]ClkState OPEN->CHANGING",
+   "pic_sites": [
+    "0x435a499a"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a499a",
+     "func_start": "0x435a493c",
+     "func_end": "0x435a4a26",
+     "push": "0x435a493c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e2c1",
+   "vaddr": "0x43c3e2c1",
+   "tag": "CTRLSDREC",
+   "text": "[CDIAG][CTRLSDREC]ClkState Wait CHANGING",
+   "pic_sites": [
+    "0x435a49ae"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a49ae",
+     "func_start": "0x435a493c",
+     "func_end": "0x435a4a26",
+     "push": "0x435a493c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e2ea",
+   "vaddr": "0x43c3e2ea",
+   "tag": "CTRLSDREC",
+   "text": "[CDIAG][CTRLSDREC]ClkState CHANGING->CHANGED",
+   "pic_sites": [
+    "0x435a49c4"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a49c4",
+     "func_start": "0x435a493c",
+     "func_end": "0x435a4a26",
+     "push": "0x435a493c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e317",
+   "vaddr": "0x43c3e317",
+   "tag": "CTRLSDREC",
+   "text": "[CDIAG][CTRLSDREC]ClkState CHANGED->CLOSE",
+   "pic_sites": [
+    "0x435a49e2"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a49e2",
+     "func_start": "0x435a493c",
+     "func_end": "0x435a4a26",
+     "push": "0x435a493c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e341",
+   "vaddr": "0x43c3e341",
+   "tag": "CTRLSDREC",
+   "text": "[CDIAG][CTRLSDREC]ClkState CLOSE->IDLE",
+   "pic_sites": [
+    "0x435a4a06",
+    "0x435a4a1e"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4a06",
+     "func_start": "0x435a493c",
+     "func_end": "0x435a4a26",
+     "push": "0x435a493c"
+    },
+    {
+     "ref_site": "0x435a4a1e",
+     "func_start": "0x435a493c",
+     "func_end": "0x435a4a26",
+     "push": "0x435a493c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e368",
+   "vaddr": "0x43c3e368",
+   "tag": "CTRLSDREC",
+   "text": "[CDIAG][CTRLSDREC]ClkType [%d] : OK",
+   "pic_sites": [
+    "0x435a4a44"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4a44",
+     "func_start": "0x435a4a28",
+     "func_end": "0x435a4ab2",
+     "push": "0x435a4a70"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e38c",
+   "vaddr": "0x43c3e38c",
+   "tag": "CTRLSDREC",
+   "text": "[CDIAG][CTRLSDREC][VSYNC] RUN CODEC INIT",
+   "pic_sites": [
+    "0x435a4a76"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4a76",
+     "func_start": "0x435a4a70",
+     "func_end": "0x435a4ab2",
+     "push": "0x435a4a70"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e3b5",
+   "vaddr": "0x43c3e3b5",
+   "tag": "CTRLSDREC",
+   "text": "[CDIAG][CTRLSDREC]UnReg SysV",
+   "pic_sites": [
+    "0x435a4ac6"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4ac6",
+     "func_start": "0x435a4ab8",
+     "func_end": "0x435a4ade",
+     "push": "0x435a4ab8"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e3d2",
+   "vaddr": "0x43c3e3d2",
+   "tag": "CTRLSDREC",
+   "text": "[CDIAG][CTRLSDREC]LOOP NUM [0x%02X]",
+   "pic_sites": [
+    "0x435a4afe"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4afe",
+     "func_start": "0x435a4ae4",
+     "func_end": "0x435a4b06",
+     "push": "0x435a4ae4"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e3f6",
+   "vaddr": "0x43c3e3f6",
+   "tag": "CTRLSDREC",
+   "text": "[CDIAG][CTRLSDREC]PAL(50i) MODE Clk[%d] NTPAL[%d]",
+   "pic_sites": [
+    "0x435a4b3e"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4b3e",
+     "func_start": "0x435a4b14",
+     "func_end": "0x435a4b5c",
+     "push": "0x435a4b14"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e429",
+   "vaddr": "0x43c3e429",
+   "tag": "CTRLSDREC",
+   "text": "[CDIAG][CTRLSDREC]NTSC(60i) MODE Clk[%d] NTPAL[%d]",
+   "pic_sites": [
+    "0x435a4b56"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4b56",
+     "func_start": "0x435a4b14",
+     "func_end": "0x435a4b5c",
+     "push": "0x435a4b14"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e45d",
+   "vaddr": "0x43c3e45d",
+   "tag": "CTRLSDREC",
+   "text": "[CDIAG][CTRLSDREC]Reg SysV",
+   "pic_sites": [
+    "0x435a4b72"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4b72",
+     "func_start": "0x435a4b6c",
+     "func_end": "0x435a4b98",
+     "push": "0x435a4b6c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e478",
+   "vaddr": "0x43c3e478",
+   "tag": "CTRLSDREC",
+   "text": "[CDIAG][CTRLSDREC]Run Codec Set State STATE_CODEC_CLK_CHANGE",
+   "pic_sites": [
+    "0x435a4b82"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4b82",
+     "func_start": "0x435a4b6c",
+     "func_end": "0x435a4b98",
+     "push": "0x435a4b6c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e557",
+   "vaddr": "0x43c3e557",
+   "tag": "CMPDATA",
+   "text": "[CDIAG][CMPDATA]p_data is NULL!!!",
+   "pic_sites": [
+    "0x435a4eb8",
+    "0x435a4f48"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4eb8",
+     "func_start": "0x435a4eb0",
+     "func_end": "0x435a4ede",
+     "push": "0x435a4eb0"
+    },
+    {
+     "ref_site": "0x435a4f48",
+     "func_start": "0x435a4f40",
+     "func_end": "0x435a4f70",
+     "push": "0x435a4f40"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e57a",
+   "vaddr": "0x43c3e57a",
+   "tag": "CMPDATA",
+   "text": "[CDIAG][CMPDATA]p_data->src is NULL!!!",
+   "pic_sites": [
+    "0x435a4ec8",
+    "0x435a4f58"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4ec8",
+     "func_start": "0x435a4eb0",
+     "func_end": "0x435a4ede",
+     "push": "0x435a4eb0"
+    },
+    {
+     "ref_site": "0x435a4f58",
+     "func_start": "0x435a4f40",
+     "func_end": "0x435a4f70",
+     "push": "0x435a4f40"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e5a2",
+   "vaddr": "0x43c3e5a2",
+   "tag": "CMPDATA",
+   "text": "[CDIAG][CMPDATA]p_data->dst is NULL!!!",
+   "pic_sites": [
+    "0x435a4ed6",
+    "0x435a4f68"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4ed6",
+     "func_start": "0x435a4eb0",
+     "func_end": "0x435a4ede",
+     "push": "0x435a4eb0"
+    },
+    {
+     "ref_site": "0x435a4f68",
+     "func_start": "0x435a4f40",
+     "func_end": "0x435a4f70",
+     "push": "0x435a4f40"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e5ca",
+   "vaddr": "0x43c3e5ca",
+   "tag": "CMPDATA",
+   "text": "[CDIAG][CMPDATA]differ size!!!",
+   "pic_sites": [
+    "0x435a4eea",
+    "0x435a4f7c"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4eea",
+     "func_start": "0x435a4eb0",
+     "func_end": "0x435a4ef2",
+     "push": "0x435a4eb0"
+    },
+    {
+     "ref_site": "0x435a4f7c",
+     "func_start": "0x435a4f40",
+     "func_end": "0x435a4f84",
+     "push": "0x435a4f40"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e5ea",
+   "vaddr": "0x43c3e5ea",
+   "tag": "CMPDATA",
+   "text": "[CDIAG][CMPDATA]src[0x%08X] dst[0x%08X] size[%d]",
+   "pic_sites": [
+    "0x435a4ef6",
+    "0x435a4f8a"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4ef6",
+     "func_start": "0x435a4eb0",
+     "func_end": "0x435a4f18",
+     "push": "0x435a4eb0"
+    },
+    {
+     "ref_site": "0x435a4f8a",
+     "func_start": "0x435a4f40",
+     "func_end": "0x435a509c",
+     "push": "0x435a4f40"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e61c",
+   "vaddr": "0x43c3e61c",
+   "tag": "CMPDATA",
+   "text": "[CDIAG][CMPDATA][0x%08X]byte s[0x%02X] d[0x%02X]",
+   "pic_sites": [
+    "0x435a4f10"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4f10",
+     "func_start": "0x435a4eb0",
+     "func_end": "0x435a4f18",
+     "push": "0x435a4eb0"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e64e",
+   "vaddr": "0x43c3e64e",
+   "tag": "CMPDATA",
+   "text": "[CDIAG][CMPDATA][step.1] dst stop [0x%08X]byte... s[0x%02X] d[0x%02X]",
+   "pic_sites": [
+    "0x435a4fae"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4fae",
+     "func_start": "0x435a4f40",
+     "func_end": "0x435a509c",
+     "push": "0x435a4f40"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e695",
+   "vaddr": "0x43c3e695",
+   "tag": "CMPDATA",
+   "text": "[CDIAG][CMPDATA][step.1] src stop [0x%08X]byte... s[0x%02X] d[0x%02X]",
+   "pic_sites": [
+    "0x435a4fc2"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4fc2",
+     "func_start": "0x435a4f40",
+     "func_end": "0x435a509c",
+     "push": "0x435a4f40"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e6dc",
+   "vaddr": "0x43c3e6dc",
+   "tag": "CMPDATA",
+   "text": "[CDIAG][CMPDATA][step.1] [0x%08X]byte... s[0x%02X] d[0x%02X]",
+   "pic_sites": [
+    "0x435a4fd6"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4fd6",
+     "func_start": "0x435a4f40",
+     "func_end": "0x435a509c",
+     "push": "0x435a4f40"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e71a",
+   "vaddr": "0x43c3e71a",
+   "tag": "CMPDATA",
+   "text": "[CDIAG][CMPDATA][step.2] dadr found [0x%08X]byte... s[0x%02X] d[0x%02X]",
+   "pic_sites": [
+    "0x435a4ff6"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4ff6",
+     "func_start": "0x435a4f40",
+     "func_end": "0x435a509c",
+     "push": "0x435a4f40"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e763",
+   "vaddr": "0x43c3e763",
+   "tag": "CMPDATA",
+   "text": "[CDIAG][CMPDATA][step.2] sadr found [0x%08X]byte... s[0x%02X] d[0x%02X]",
+   "pic_sites": [
+    "0x435a501c"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a501c",
+     "func_start": "0x435a4f40",
+     "func_end": "0x435a509c",
+     "push": "0x435a4f40"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e7ac",
+   "vaddr": "0x43c3e7ac",
+   "tag": "CMPDATA",
+   "text": "[CDIAG][CMPDATA]step2 OK",
+   "pic_sites": [
+    "0x435a5034"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a5034",
+     "func_start": "0x435a4f40",
+     "func_end": "0x435a509c",
+     "push": "0x435a4f40"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e7c6",
+   "vaddr": "0x43c3e7c6",
+   "tag": "CMPDATA",
+   "text": "[CDIAG][CMPDATA]step3 sadr[0x%08X] > dadr[0x%08X]",
+   "pic_sites": [
+    "0x435a5046"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a5046",
+     "func_start": "0x435a4f40",
+     "func_end": "0x435a509c",
+     "push": "0x435a4f40"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e7f9",
+   "vaddr": "0x43c3e7f9",
+   "tag": "CMPDATA",
+   "text": "[CDIAG][CMPDATA][step.3] [0x%08X]byte... s[0x%02X] d[0x%02X]",
+   "pic_sites": [
+    "0x435a5060",
+    "0x435a5094"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a5060",
+     "func_start": "0x435a4f40",
+     "func_end": "0x435a509c",
+     "push": "0x435a4f40"
+    },
+    {
+     "ref_site": "0x435a5094",
+     "func_start": "0x435a4f40",
+     "func_end": "0x435a509c",
+     "push": "0x435a4f40"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e837",
+   "vaddr": "0x43c3e837",
+   "tag": "CMPDATA",
+   "text": "[CDIAG][CMPDATA]step3 sadr[0x%08X] < dadr[0x%08X]",
+   "pic_sites": [
+    "0x435a5078"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a5078",
+     "func_start": "0x435a4f40",
+     "func_end": "0x435a509c",
+     "push": "0x435a4f40"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e86a",
+   "vaddr": "0x43c3e86a",
+   "tag": "CMPDATA",
+   "text": "[CDIAG][CMPDATA]step3 sadr[0x%08X] dadr[0x%08X]",
+   "pic_sites": [
+    "0x435a50ae"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a50ae",
+     "func_start": "0x435a4f40",
+     "func_end": "0x435a50b6",
+     "push": "0x435a4f40"
+    }
+   ]
+  }
+ ],
+ "err_strings": [
+  {
+   "token_vaddr": "0x43c3b0f9",
+   "vaddr": "0x43c3b0f4",
+   "text": "[ERR][CDIAG][TSKCORE]DataflowInfraMsgErr [0x%08X]",
+   "pic_sites": [
+    "0x435a134c"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a134c",
+     "func_start": "0x435a1318",
+     "func_end": "0x435a13b4"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b23d",
+   "vaddr": "0x43c3b238",
+   "text": "[ERR][CDIAG][CTRLIF]NOT SUPPORTED -- COMMAND ID [0x%08X] [%s]",
+   "pic_sites": [
+    "0x435a14cc",
+    "0x435a178a",
+    "0x435a195e"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a14cc",
+     "func_start": "0x435a1424",
+     "func_end": "0x435a14d8"
+    },
+    {
+     "ref_site": "0x435a178a",
+     "func_start": "0x435a15e8",
+     "func_end": "0x435a1798"
+    },
+    {
+     "ref_site": "0x435a195e",
+     "func_start": "0x435a17e8",
+     "func_end": "0x435a1968"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b27c",
+   "vaddr": "0x43c3b277",
+   "text": "[ERR][CDIAG][CTRLIF]SEND MSG EXEC CMD err[0x%04X] cmd[0x%02x] mode[%d] func[%d] prm[%d]",
+   "pic_sites": [
+    "0x435a15c4"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a15c4",
+     "func_start": "0x435a157c",
+     "func_end": "0x435a15dc"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b3ed",
+   "vaddr": "0x43c3b3e8",
+   "text": "[ERR][CDIAG][CTRLIF]NOT SUPPORTED(SENS_SET_DATA) -- MODE ID [0x%08X] [%s]",
+   "pic_sites": [
+    "0x435a16d8",
+    "0x435a170c",
+    "0x435a18ea",
+    "0x435a1938"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a16d8",
+     "func_start": "0x435a15e8",
+     "func_end": "0x435a172a"
+    },
+    {
+     "ref_site": "0x435a170c",
+     "func_start": "0x435a15e8",
+     "func_end": "0x435a172a"
+    },
+    {
+     "ref_site": "0x435a18ea",
+     "func_start": "0x435a17e8",
+     "func_end": "0x435a1968"
+    },
+    {
+     "ref_site": "0x435a1938",
+     "func_start": "0x435a17e8",
+     "func_end": "0x435a1968"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b832",
+   "vaddr": "0x43c3b82d",
+   "text": "[ERR][CDIAG][CTRLCORE]p_prm is NULL file[%s] func[%s] line[%d]",
+   "pic_sites": [
+    "0x435a1b72",
+    "0x435a1c22"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1b72",
+     "func_start": "0x435a1b18",
+     "func_end": "0x435a1b7e"
+    },
+    {
+     "ref_site": "0x435a1c22",
+     "func_start": "0x435a1b18",
+     "func_end": "0x435a1c2e"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3b880",
+   "vaddr": "0x43c3b87b",
+   "text": "[ERR][CDIAG][CTRLCORE]p_prm is NULL",
+   "pic_sites": [
+    "0x435a1bb2",
+    "0x435a1be6"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1bb2",
+     "func_start": "0x435a1b18",
+     "func_end": "0x435a1bba"
+    },
+    {
+     "ref_site": "0x435a1be6",
+     "func_start": "0x435a1b18",
+     "func_end": "0x435a1bee"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c436",
+   "vaddr": "0x43c3c431",
+   "text": "[ERR][CDIAG][CTRLHDDEC]Invalid File ID!! [0x%08X]",
+   "pic_sites": [
+    "0x435a2ab8"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2ab8",
+     "func_start": "0x435a2a88",
+     "func_end": "0x435a2ac0"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3c9a6",
+   "vaddr": "0x43c3c9a1",
+   "text": "[ERR][CDIAG][CTRLHDREC]Invalid File ID!! [0x%08X]",
+   "pic_sites": [
+    "0x435a3104"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3104",
+     "func_start": "0x435a30d4",
+     "func_end": "0x435a310c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3ceb1",
+   "vaddr": "0x43c3ceac",
+   "text": "[ERR][CDIAG][CTRLJPGDEC]Invalid File ID!! [0x%08X]",
+   "pic_sites": [
+    "0x435a367c"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a367c",
+     "func_start": "0x435a364c",
+     "func_end": "0x435a3684"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3cf0a",
+   "vaddr": "0x43c3cf05",
+   "text": "[ERR][CDIAG][CTRLJPGDEC]JPEG DEC FAILED !!",
+   "pic_sites": [
+    "0x435a37fe"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a37fe",
+     "func_start": "0x435a37ac",
+     "func_end": "0x435a381c"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3d3a8",
+   "vaddr": "0x43c3d3a3",
+   "text": "[ERR][CDIAG][CTRLJPGENC]Invalid File ID!! [0x%08X]",
+   "pic_sites": [
+    "0x435a3a8c"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3a8c",
+     "func_start": "0x435a3a5c",
+     "func_end": "0x435a3a94"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3d409",
+   "vaddr": "0x43c3d404",
+   "text": "[ERR][CDIAG][CTRLJPGENC]JPEG ENC FAILED !!",
+   "pic_sites": [
+    "0x435a3bac"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3bac",
+     "func_start": "0x435a3b68",
+     "func_end": "0x435a3bc8"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3d844",
+   "vaddr": "0x43c3d83f",
+   "text": "[ERR][CDIAG][CTRLJPGENCDEC]Invalid File ID!! [0x%08X]",
+   "pic_sites": [
+    "0x435a3eb8"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3eb8",
+     "func_start": "0x435a3e88",
+     "func_end": "0x435a3ec0"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3dcb8",
+   "vaddr": "0x43c3dcb3",
+   "text": "[ERR][CDIAG][CTRLSDDEC]Invalid File ID!! [0x%08X]",
+   "pic_sites": [
+    "0x435a424c"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a424c",
+     "func_start": "0x435a421c",
+     "func_end": "0x435a4254"
+    }
+   ]
+  },
+  {
+   "token_vaddr": "0x43c3e21f",
+   "vaddr": "0x43c3e21a",
+   "text": "[ERR][CDIAG][CTRLSDREC]Invalid File ID!! [0x%08X]",
+   "pic_sites": [
+    "0x435a486c"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a486c",
+     "func_start": "0x435a483c",
+     "func_end": "0x435a4874"
+    }
+   ]
+  }
+ ],
+ "function_signatures": [
+  {
+   "vaddr": "0x43c3b126",
+   "text": "CDIAGER CdCtrlIf::ExecSensCmd(__uint32_t, const OsalRequestPacket*, __uint32_t)",
+   "pic_sites": [
+    "0x435a1608",
+    "0x435a161e",
+    "0x435a178c"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1608",
+     "func_start": "0x435a15e8",
+     "func_end": "0x435a1680"
+    },
+    {
+     "ref_site": "0x435a161e",
+     "func_start": "0x435a15e8",
+     "func_end": "0x435a1680"
+    },
+    {
+     "ref_site": "0x435a178c",
+     "func_start": "0x435a15e8",
+     "func_end": "0x435a1798"
+    }
+   ]
+  },
+  {
+   "vaddr": "0x43c3b647",
+   "text": "CDIAGER CdCtrlIf::ExecCmd(CdCtrlIf::MSG_SENS_COMMAND*)",
+   "pic_sites": [
+    "0x435a143c",
+    "0x435a14ce"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a143c",
+     "func_start": "0x435a1424",
+     "func_end": "0x435a147e"
+    },
+    {
+     "ref_site": "0x435a14ce",
+     "func_start": "0x435a1424",
+     "func_end": "0x435a14d8"
+    }
+   ]
+  },
+  {
+   "vaddr": "0x43c3b688",
+   "text": "CDIAGER CdCtrlIf::ExecSensComp(__uint32_t, OsalResponsePacket*, __uint32_t)",
+   "pic_sites": [
+    "0x435a1808",
+    "0x435a1822",
+    "0x435a1960"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1808",
+     "func_start": "0x435a17e8",
+     "func_end": "0x435a1968"
+    },
+    {
+     "ref_site": "0x435a1822",
+     "func_start": "0x435a17e8",
+     "func_end": "0x435a1968"
+    },
+    {
+     "ref_site": "0x435a1960",
+     "func_start": "0x435a17e8",
+     "func_end": "0x435a1968"
+    }
+   ]
+  },
+  {
+   "vaddr": "0x43c3b6df",
+   "text": "CDIAGER CdCtrlCore::DbgDiagAvc(__uint8_t, __uint8_t, __uint8_t, __uint8_t)",
+   "pic_sites": [
+    "0x435a1cf0"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1cf0",
+     "func_start": "0x435a1c5c",
+     "func_end": "0x435a1cfc"
+    }
+   ]
+  },
+  {
+   "vaddr": "0x43c3b72a",
+   "text": "CDIAGER CdCtrlCore::CmpData(__uint8_t, __uint8_t, __uint32_t)",
+   "pic_sites": [
+    "0x435a1ede"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1ede",
+     "func_start": "0x435a1de0",
+     "func_end": "0x435a1ee8"
+    }
+   ]
+  },
+  {
+   "vaddr": "0x43c3b768",
+   "text": "CDIAGER CdCtrlCore::RelMemArea(__uint8_t, __uint8_t, __uint32_t)",
+   "pic_sites": [
+    "0x435a21ba"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a21ba",
+     "func_start": "0x435a20b0",
+     "func_end": "0x435a21d0"
+    }
+   ]
+  },
+  {
+   "vaddr": "0x43c3b7a9",
+   "text": "CDIAGER CdCtrlCore::SetCompNormal(OsalResponsePacket*, __uint32_t)",
+   "pic_sites": [
+    "0x435a1b76"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1b76",
+     "func_start": "0x435a1b18",
+     "func_end": "0x435a1b7e"
+    }
+   ]
+  },
+  {
+   "vaddr": "0x43c3b7ec",
+   "text": "CDIAGER CdCtrlCore::SetMemArea(__uint8_t, __uint8_t, __uint32_t)",
+   "pic_sites": [
+    "0x435a230c"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a230c",
+     "func_start": "0x435a2200",
+     "func_end": "0x435a2324"
+    }
+   ]
+  },
+  {
+   "vaddr": "0x43c3c123",
+   "text": "CDIAGER CdCtrlCore::RunCodec(__uint8_t, __uint8_t, __uint32_t)",
+   "pic_sites": [
+    "0x435a2074"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2074",
+     "func_start": "0x435a1f18",
+     "func_end": "0x435a207e"
+    }
+   ]
+  },
+  {
+   "vaddr": "0x43c3c162",
+   "text": "CDIAGER CdCtrlCore::SetData(const __uint8_t*, __uint32_t)",
+   "pic_sites": [
+    "0x435a23e6",
+    "0x435a2784"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a23e6",
+     "func_start": "0x435a23b4",
+     "func_end": "0x435a23f0"
+    },
+    {
+     "ref_site": "0x435a2784",
+     "func_start": "0x435a23b4",
+     "func_end": "0x435a2790"
+    }
+   ]
+  },
+  {
+   "vaddr": "0x43c3c19c",
+   "text": "CDIAGER CdCtrlCore::SetCompDeleteData(OsalResponsePacket*, __uint32_t)",
+   "pic_sites": [
+    "0x435a1c26"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a1c26",
+     "func_start": "0x435a1b18",
+     "func_end": "0x435a1c2e"
+    }
+   ]
+  },
+  {
+   "vaddr": "0x43c3c694",
+   "text": "CDIAGER CdCtrlHdDec::SetMemArea(CdCtrlHdDec::DIAGINFO*)",
+   "pic_sites": [
+    "0x435a29b2"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a29b2",
+     "func_start": "0x435a29a0",
+     "func_end": "0x435a2a06"
+    }
+   ]
+  },
+  {
+   "vaddr": "0x43c3c6cc",
+   "text": "CDIAGER CdCtrlHdDec::RelMemArea(CdCtrlHdDec::DIAGINFO*)",
+   "pic_sites": [
+    "0x435a2946"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2946",
+     "func_start": "0x435a2934",
+     "func_end": "0x435a298a"
+    }
+   ]
+  },
+  {
+   "vaddr": "0x43c3c704",
+   "text": "CDIAGER CdCtrlHdRec::SetCodecParam(__uint8_t, __uint8_t, __uint8_t, __uint8_t)",
+   "pic_sites": [
+    "0x435a3372"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3372",
+     "func_start": "0x435a3368",
+     "func_end": "0x435a338a"
+    }
+   ]
+  },
+  {
+   "vaddr": "0x43c3cc28",
+   "text": "CDIAGER CdCtrlHdRec::RelMemArea(CdCtrlHdRec::DIAGINFO*)",
+   "pic_sites": [
+    "0x435a3016"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3016",
+     "func_start": "0x435a3004",
+     "func_end": "0x435a304a"
+    }
+   ]
+  },
+  {
+   "vaddr": "0x43c3cc60",
+   "text": "CDIAGER CdCtrlHdRec::SetMemArea(CdCtrlHdRec::DIAGINFO*)",
+   "pic_sites": [
+    "0x435a2f22"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a2f22",
+     "func_start": "0x435a2f10",
+     "func_end": "0x435a2f76"
+    }
+   ]
+  },
+  {
+   "vaddr": "0x43c3d0a8",
+   "text": "CDIAGER CdCtrlJpgDec::SetMemArea(CdCtrlJpgDec::DIAGINFO*)",
+   "pic_sites": [
+    "0x435a351c"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a351c",
+     "func_start": "0x435a34f4",
+     "func_end": "0x435a352c"
+    }
+   ]
+  },
+  {
+   "vaddr": "0x43c3d0e2",
+   "text": "CDIAGER CdCtrlJpgDec::RelMemArea(CdCtrlJpgDec::DIAGINFO*)",
+   "pic_sites": [
+    "0x435a35d8"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a35d8",
+     "func_start": "0x435a35b0",
+     "func_end": "0x435a35e8"
+    }
+   ]
+  },
+  {
+   "vaddr": "0x43c3d12b",
+   "text": "CDIAGER CdCtrlJpgEnc::RelMemArea(CdCtrlJpgEnc::DIAGINFO*)",
+   "pic_sites": [
+    "0x435a39e8"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a39e8",
+     "func_start": "0x435a39c0",
+     "func_end": "0x435a39f8"
+    }
+   ]
+  },
+  {
+   "vaddr": "0x43c3d165",
+   "text": "CDIAGER CdCtrlJpgEnc::SetMemArea(CdCtrlJpgEnc::DIAGINFO*)",
+   "pic_sites": [
+    "0x435a392c"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a392c",
+     "func_start": "0x435a3904",
+     "func_end": "0x435a393c"
+    }
+   ]
+  },
+  {
+   "vaddr": "0x43c3d5b6",
+   "text": "CDIAGER CdCtrlJpgEncDec::SetMemArea(CdCtrlJpgEncDec::DIAGINFO*)",
+   "pic_sites": [
+    "0x435a3d28"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3d28",
+     "func_start": "0x435a3d00",
+     "func_end": "0x435a3d38"
+    }
+   ]
+  },
+  {
+   "vaddr": "0x43c3da33",
+   "text": "CDIAGER CdCtrlJpgEncDec::RelMemArea(CdCtrlJpgEncDec::DIAGINFO*)",
+   "pic_sites": [
+    "0x435a3de4"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a3de4",
+     "func_start": "0x435a3dbc",
+     "func_end": "0x435a3df4"
+    }
+   ]
+  },
+  {
+   "vaddr": "0x43c3df24",
+   "text": "CDIAGER CdCtrlSdDec::RelMemArea(CdCtrlSdDec::DIAGINFO*)",
+   "pic_sites": [
+    "0x435a40fa"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a40fa",
+     "func_start": "0x435a40e8",
+     "func_end": "0x435a413e"
+    }
+   ]
+  },
+  {
+   "vaddr": "0x43c3df5c",
+   "text": "CDIAGER CdCtrlSdDec::SetMemArea(CdCtrlSdDec::DIAGINFO*)",
+   "pic_sites": [
+    "0x435a4166"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4166",
+     "func_start": "0x435a4154",
+     "func_end": "0x435a41ba"
+    }
+   ]
+  },
+  {
+   "vaddr": "0x43c3df94",
+   "text": "CDIAGER CdCtrlSdRec::SetMemArea(CdCtrlSdRec::DIAGINFO*)",
+   "pic_sites": [
+    "0x435a46ba"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a46ba",
+     "func_start": "0x435a46a8",
+     "func_end": "0x435a470e"
+    }
+   ]
+  },
+  {
+   "vaddr": "0x43c3e4b5",
+   "text": "CDIAGER CdCtrlSdRec::RelMemArea(CdCtrlSdRec::DIAGINFO*)",
+   "pic_sites": [
+    "0x435a47ae"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a47ae",
+     "func_start": "0x435a479c",
+     "func_end": "0x435a47e2"
+    }
+   ]
+  },
+  {
+   "vaddr": "0x43c3e4ed",
+   "text": "CDIAGER CdCtrlSdRec::SetCodecParam(__uint8_t, __uint8_t, __uint8_t, __uint8_t)",
+   "pic_sites": [
+    "0x435a4aee"
+   ],
+   "functions": [
+    {
+     "ref_site": "0x435a4aee",
+     "func_start": "0x435a4ae4",
+     "func_end": "0x435a4b06"
+    }
+   ]
+  }
+ ],
+ "class_names": [
+  {
+   "vaddr": "0x43c3b0cb",
+   "text": "7CdMsgIf"
+  },
+  {
+   "vaddr": "0x43c3b0e9",
+   "text": "9CdTskCore"
+  },
+  {
+   "vaddr": "0x43c3b67e",
+   "text": "8CdCtrlIf"
+  },
+  {
+   "vaddr": "0x43c3b6d4",
+   "text": "9CdMsgCore"
+  },
+  {
+   "vaddr": "0x43c3c116",
+   "text": "10CdCtrlCore"
+  },
+  {
+   "vaddr": "0x43c3c1e3",
+   "text": "11CdCtrlHdDec"
+  },
+  {
+   "vaddr": "0x43c3c753",
+   "text": "11CdCtrlHdRec"
+  },
+  {
+   "vaddr": "0x43c3cc98",
+   "text": "12CdCtrlJpgDec"
+  },
+  {
+   "vaddr": "0x43c3d11c",
+   "text": "12CdCtrlJpgEnc"
+  },
+  {
+   "vaddr": "0x43c3d5a4",
+   "text": "15CdCtrlJpgEncDec"
+  },
+  {
+   "vaddr": "0x43c3df16",
+   "text": "11CdCtrlSdDec"
+  },
+  {
+   "vaddr": "0x43c3dfcc",
+   "text": "11CdCtrlSdRec"
+  },
+  {
+   "vaddr": "0x43c3e53c",
+   "text": "9CdMemCtrl"
+  },
+  {
+   "vaddr": "0x43c3e547",
+   "text": "13CdUtilClkCtrl"
+  },
+  {
+   "vaddr": "0x43c3e89b",
+   "text": "13CdUtilCmpData"
+  },
+  {
+   "vaddr": "0x43c3e8ab",
+   "text": "13CdUtilSysvMsg"
+  }
+ ],
+ "source_files": [
+  {
+   "vaddr": "0x43c3b1a8",
+   "text": "cdCtrlIf.cpp"
+  },
+  {
+   "vaddr": "0x43c3b86c",
+   "text": "cdCtrlCore.cpp"
+  }
+ ],
+ "differential": {
+  "A7S_fw320": {
+   "available": true,
+   "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+   "count_cdiag_token": 270,
+   "token_vaddr_min": "0x43c3b740",
+   "token_vaddr_max": "0x43c3eed6",
+   "tokens": {
+    "SENS_MODE_PROC_START": 2,
+    "SENS_RUN_CODEC": 2,
+    "SENS_CMP_DATA": 1,
+    "SENS_SET_DIAG_MODE": 1,
+    "cdCtrlCore.cpp": 1,
+    "cdCtrlIf.cpp": 1,
+    "DbgDiagAvc": 5,
+    "ClkState IDLE->OPEN": 7,
+    "VideoES Differ!!": 1,
+    "JPEG ENC FAILED !!": 1,
+    "Scenario END": 1,
+    "CDIAGER": 27,
+    "CdCtrlCore": 9,
+    "CdCtrlHdRec": 6,
+    "cdMsgCore": 0,
+    "cdTskCore": 0
+   },
+   "text_comparison": {
+    "comunes": 270,
+    "solo_en_A6000": [],
+    "solo_en_A7S_fw320": []
+   },
+   "classes": [
+    {
+     "vaddr": "0x43c3b737",
+     "text": "7CdMsgIf"
+    },
+    {
+     "vaddr": "0x43c3bcad",
+     "text": "8CdCtrlIf"
+    },
+    {
+     "vaddr": "0x43c3bd03",
+     "text": "9CdMsgCore"
+    },
+    {
+     "vaddr": "0x43c3bd0e",
+     "text": "9CdTskCore"
+    },
+    {
+     "vaddr": "0x43c3c782",
+     "text": "10CdCtrlCore"
+    },
+    {
+     "vaddr": "0x43c3c84f",
+     "text": "11CdCtrlHdDec"
+    },
+    {
+     "vaddr": "0x43c3cdbf",
+     "text": "11CdCtrlHdRec"
+    },
+    {
+     "vaddr": "0x43c3d304",
+     "text": "12CdCtrlJpgDec"
+    },
+    {
+     "vaddr": "0x43c3d788",
+     "text": "15CdCtrlJpgEncDec"
+    },
+    {
+     "vaddr": "0x43c3dc57",
+     "text": "12CdCtrlJpgEnc"
+    },
+    {
+     "vaddr": "0x43c3e582",
+     "text": "11CdCtrlSdDec"
+    },
+    {
+     "vaddr": "0x43c3e638",
+     "text": "11CdCtrlSdRec"
+    },
+    {
+     "vaddr": "0x43c3eba8",
+     "text": "9CdMemCtrl"
+    },
+    {
+     "vaddr": "0x43c3ebb3",
+     "text": "13CdUtilClkCtrl"
+    },
+    {
+     "vaddr": "0x43c3ef07",
+     "text": "13CdUtilCmpData"
+    },
+    {
+     "vaddr": "0x43c3ef17",
+     "text": "13CdUtilSysvMsg"
+    }
+   ],
+   "source_files": [
+    {
+     "vaddr": "0x43c3b7d7",
+     "text": "cdCtrlIf.cpp"
+    },
+    {
+     "vaddr": "0x43c3bed8",
+     "text": "cdCtrlCore.cpp"
+    }
+   ],
+   "n_signatures_cdiager": 27,
+   "class_registry_table": {
+    "table_vaddr": "0x43fdb6ec",
+    "table_end_vaddr": "0x43fdb76c",
+    "n_entries": 16,
+    "classes": [
+     "7CdMsgIf",
+     "8CdCtrlIf",
+     "9CdMsgCore",
+     "9CdTskCore",
+     "10CdCtrlCore",
+     "11CdCtrlHdDec",
+     "11CdCtrlHdRec",
+     "12CdCtrlJpgDec",
+     "15CdCtrlJpgEncDec",
+     "12CdCtrlJpgEnc",
+     "11CdCtrlSdDec",
+     "11CdCtrlSdRec",
+     "9CdMemCtrl",
+     "13CdUtilClkCtrl",
+     "13CdUtilCmpData",
+     "13CdUtilSysvMsg"
+    ]
+   }
+  },
+  "A6300_fw201": {
+   "available": true,
+   "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+   "count_cdiag_token": 310,
+   "token_vaddr_min": "0x43d23795",
+   "token_vaddr_max": "0x43d2dd18",
+   "tokens": {
+    "SENS_MODE_PROC_START": 3,
+    "SENS_RUN_CODEC": 2,
+    "SENS_CMP_DATA": 1,
+    "SENS_SET_DIAG_MODE": 1,
+    "cdCtrlCore.cpp": 1,
+    "cdCtrlIf.cpp": 1,
+    "DbgDiagAvc": 8,
+    "ClkState IDLE->OPEN": 10,
+    "VideoES Differ!!": 1,
+    "JPEG ENC FAILED !!": 1,
+    "Scenario END": 1,
+    "CDIAGER": 52,
+    "CdCtrlCore": 81,
+    "CdCtrlHdRec": 6,
+    "cdMsgCore": 0,
+    "cdTskCore": 0
+   },
+   "text_comparison": {
+    "comunes": 270,
+    "solo_en_A6000": [],
+    "solo_en_A6300_fw201": [
+     "[CDIAG][CTRL4KREC]ClkState CHANGED->CLOSE",
+     "[CDIAG][CTRL4KREC]ClkState CHANGING->CHANGED",
+     "[CDIAG][CTRL4KREC]ClkState CLOSE->IDLE",
+     "[CDIAG][CTRL4KREC]ClkState IDLE->OPEN",
+     "[CDIAG][CTRL4KREC]ClkState OPEN->CHANGING",
+     "[CDIAG][CTRL4KREC]ClkState Wait CHANGING",
+     "[CDIAG][CTRL4KREC]ClkState Wait OPEN",
+     "[CDIAG][CTRL4KREC]ClkType [%d] : OK",
+     "[CDIAG][CTRL4KREC]Error index > MAX_MEMTYPE",
+     "[CDIAG][CTRL4KREC]ExecCmd [%s]!!",
+     "[CDIAG][CTRL4KREC]Found File ID [0x%08X]",
+     "[CDIAG][CTRL4KREC]LOOP NUM [0x%02X]",
+     "[CDIAG][CTRL4KREC]MEM ALLOC COUNT NOT 1 [%d]",
+     "[CDIAG][CTRL4KREC]MEM ALLOC err [0x%08X]",
+     "[CDIAG][CTRL4KREC]MEM FREE err [0x%08X]",
+     "[CDIAG][CTRL4KREC]MEM SHARE err [0x%08X]",
+     "[CDIAG][CTRL4KREC]Memory Release ERR!! idx[%d]",
+     "[CDIAG][CTRL4KREC]Memory Set ERR!! idx[%d]",
+     "[CDIAG][CTRL4KREC]Memory Share ERR!! idx[%d]",
+     "[CDIAG][CTRL4KREC]Reg SysV",
+     "[CDIAG][CTRL4KREC]Run Codec Set State STATE_CODEC_CLK_CHANGE",
+     "[CDIAG][CTRL4KREC]UnReg SysV",
+     "[CDIAG][CTRL4KREC][VSYNC] RUN CODEC INIT",
+     "[CDIAG][CTRL4KREC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] fsize[%d] hdl[0x%08X]",
+     "[CDIAG][CTRL4KREC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] hdl[0x%08X]",
+     "[CDIAG][CTRLCORE]Exec CmpData 4K DEC!!",
+     "[CDIAG][CTRLCORE]Exec CmpData 4K REC!!",
+     "[CDIAG][CTRLCORE]Exec ConfirmDoneCodec 4K DEC!!",
+     "[CDIAG][CTRLCORE]Exec ConfirmDoneCodec 4K REC!!",
+     "[CDIAG][CTRLCORE]Exec DbgDiagAvc 4K DEC!!",
+     "[CDIAG][CTRLCORE]Exec DbgDiagAvc 4K REC!!",
+     "[CDIAG][CTRLCORE]Exec RelMemArea 4K DEC!!",
+     "[CDIAG][CTRLCORE]Exec RelMemArea 4K REC!!",
+     "[CDIAG][CTRLCORE]Exec RunCodec 4K DEC!!",
+     "[CDIAG][CTRLCORE]Exec RunCodec 4K REC!!",
+     "[CDIAG][CTRLCORE]Exec SetData 4K DEC!!",
+     "[CDIAG][CTRLCORE]Exec SetData 4K REC!!",
+     "[CDIAG][CTRLCORE]Exec SetMemArea 4K DEC!!",
+     "[CDIAG][CTRLCORE]Exec SetMemArea 4K ENC!!",
+     "[ERR][CDIAG][CTRL4KREC]Invalid File ID!! [0x%08X]"
+    ]
+   },
+   "classes": [
+    {
+     "vaddr": "0x43d2377f",
+     "text": "10CdExtMsgIf"
+    },
+    {
+     "vaddr": "0x43d2378c",
+     "text": "7CdMsgIf"
+    },
+    {
+     "vaddr": "0x43d23cde",
+     "text": "8CdCtrlIf"
+    },
+    {
+     "vaddr": "0x43d23f0f",
+     "text": "11CdExtCtrlIf"
+    },
+    {
+     "vaddr": "0x43d23f1d",
+     "text": "9CdMsgCore"
+    },
+    {
+     "vaddr": "0x43d23f28",
+     "text": "9CdTskCore"
+    },
+    {
+     "vaddr": "0x43d258ca",
+     "text": "10CdCtrlCore"
+    },
+    {
+     "vaddr": "0x43d25aab",
+     "text": "11CdCtrlHdDec"
+    },
+    {
+     "vaddr": "0x43d2601b",
+     "text": "11CdCtrlHdRec"
+    },
+    {
+     "vaddr": "0x43d26560",
+     "text": "12CdCtrlJpgDec"
+    },
+    {
+     "vaddr": "0x43d269e4",
+     "text": "15CdCtrlJpgEncDec"
+    },
+    {
+     "vaddr": "0x43d26eb3",
+     "text": "12CdCtrlJpgEnc"
+    },
+    {
+     "vaddr": "0x43d277de",
+     "text": "11CdCtrlSdDec"
+    },
+    {
+     "vaddr": "0x43d27894",
+     "text": "11CdCtrlSdRec"
+    },
+    {
+     "vaddr": "0x43d28331",
+     "text": "13CdExtCtrlCore"
+    },
+    {
+     "vaddr": "0x43d28aec",
+     "text": "11CdExtMcCtrl"
+    },
+    {
+     "vaddr": "0x43d28b97",
+     "text": "9CdMemCtrl"
+    },
+    {
+     "vaddr": "0x43d28ba2",
+     "text": "13CdUtilClkCtrl"
+    },
+    {
+     "vaddr": "0x43d292fa",
+     "text": "13CdUtilCmpData"
+    },
+    {
+     "vaddr": "0x43d29350",
+     "text": "13CdUtilSysvMsg"
+    },
+    {
+     "vaddr": "0x43d2c857",
+     "text": "11CdCtrl4KDec"
+    },
+    {
+     "vaddr": "0x43d2d1dd",
+     "text": "11CdCtrl4KRec"
+    }
+   ],
+   "source_files": [
+    {
+     "vaddr": "0x43d235f5",
+     "text": "cdExtMsgIf.cpp"
+    },
+    {
+     "vaddr": "0x43d23808",
+     "text": "cdCtrlIf.cpp"
+    },
+    {
+     "vaddr": "0x43d23d34",
+     "text": "cdExtCtrlIf.cpp"
+    },
+    {
+     "vaddr": "0x43d24137",
+     "text": "cdCtrlCore.cpp"
+    },
+    {
+     "vaddr": "0x43d27eab",
+     "text": "cdExtCtrlCore.cpp"
+    },
+    {
+     "vaddr": "0x43d284eb",
+     "text": "cdExtMcCtrl.cpp"
+    }
+   ],
+   "n_signatures_cdiager": 52,
+   "class_registry_table": {
+    "table_vaddr": "0x4419b094",
+    "table_end_vaddr": "0x4419b134",
+    "n_entries": 20,
+    "classes": [
+     "10CdExtMsgIf",
+     "7CdMsgIf",
+     "8CdCtrlIf",
+     "11CdExtCtrlIf",
+     "9CdMsgCore",
+     "9CdTskCore",
+     "10CdCtrlCore",
+     "11CdCtrlHdDec",
+     "11CdCtrlHdRec",
+     "12CdCtrlJpgDec",
+     "15CdCtrlJpgEncDec",
+     "12CdCtrlJpgEnc",
+     "11CdCtrlSdDec",
+     "11CdCtrlSdRec",
+     "13CdExtCtrlCore",
+     "11CdExtMcCtrl",
+     "9CdMemCtrl",
+     "13CdUtilClkCtrl",
+     "13CdUtilCmpData",
+     "13CdUtilSysvMsg"
+    ]
+   }
+  },
+  "A6000_fw321": {
+   "class_registry_table": {
+    "table_vaddr": "0x43fda6a0",
+    "table_end_vaddr": "0x43fda720",
+    "n_entries": 16,
+    "classes": [
+     "7CdMsgIf",
+     "9CdTskCore",
+     "8CdCtrlIf",
+     "9CdMsgCore",
+     "10CdCtrlCore",
+     "11CdCtrlHdDec",
+     "11CdCtrlHdRec",
+     "12CdCtrlJpgDec",
+     "12CdCtrlJpgEnc",
+     "15CdCtrlJpgEncDec",
+     "11CdCtrlSdDec",
+     "11CdCtrlSdRec",
+     "9CdMemCtrl",
+     "13CdUtilClkCtrl",
+     "13CdUtilCmpData",
+     "13CdUtilSysvMsg"
+    ]
+   }
+  }
+ }
+}
