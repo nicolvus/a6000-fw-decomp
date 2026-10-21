@@ -6,7 +6,7 @@ Para restricciones del proyecto (sin firmware ejecutado, sin flasheo, sin `git p
 ## S71 — recorrido de los 12 puntos abiertos (21-10-2026)
 
 **VERIFICADO (3 tests, `tests/test_s71_pending.py`):** el bloque de 12 u16 `+0xdd0` lo escribe `0x437b1048` (bytes de estado de captura); la copia en bloque `0x438acc24`/`0x4389efc2` es de un bloque de parámetros con **mapa idéntico en A6000 y A7S** (no la estructura de captura desplazada): **S52 sigue vigente** (rectificado, había una afirmación errónea en la primera versión de S71); `0x437881a8` es el `bl` de init de arranque y `0x43802614` el comando `0x402e`; `Backup 0x3e0005` solo lo leen 2 sitios (cadena de 0x18 B). Los 12 puntos están cerrados (2, 8, 9, 11 como bloqueados/no resolubles; 10 con el grafo de menciones `analysis/s72_graph/module_graph.md`; 12 cubierto por S98/S100). **S51 se mantiene.**
-[Informe](../analysis/s71_pending/report.md). Siguiente: identificar el objeto de captura de S52 (`+0x740`/`+0x748`) y sus escritores; el bloque de parámetros `0x730–0x75f` no lo es.
+[Informe](../analysis/s71_pending/report.md). **Selector de tipo:** A7S `cap+0x78c = 0x4379ec04(...)` y tipo 2 ⟸ byte `[X+0x7a]≠0` (opción Silent, inferencia) ⇒ `cap+0x748=1`; **A6000 sí tiene selector** (`0x4379316a`, `tbb` sobre `[G+0x808]&7`: 1→tipo 2, 2..6→tipo 1, resto 0 en `cap+0x784`) pero **no** el camino por el byte `+0x7a` ni escribe la bandera. Siguiente: identificar `G+0x808` (escritores/menú) y el flujo aguas abajo de `cap+0x784==2`. Detalle en `analysis/s71_pending/report.md`.
 
 ## S70 — consumidores de `+0x238`/`+0x280` del bloque `0x43edf684` (21-10-2026)
 
