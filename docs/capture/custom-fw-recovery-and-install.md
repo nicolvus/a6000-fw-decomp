@@ -49,3 +49,5 @@ Límites y riesgos:
 - RAM del sistema: `/proc/iomem` declara `System RAM` en `0x80000000-0xbfffffff` = 1 GiB, ya volcado completo (`ram-servicio-20261020`); no hay más RAM.
 - Periféricos (`regiones-20261020`): `arm7sram`, `arm7io`, `nandreg`, USB (EHCI/OHCI/UDC), `uart0/2` y `0xf1000000+0x100` leídos; `nandc` (`0x10000000`) falla. El volcado de 16 MiB en `0xf0000000` no se repite: solo se leen regiones declaradas.
 - `/proc/config.gz` no existe en el kernel de la cámara; `kallsyms` ya estaba volcado. Objetivo (`/lens`) listado, sin volcado de su firmware.
+
+- Barrido de `0xF0000000` (parcial): `analysis/camera-dumps/sfr-scan-20261020`; 128 KiB legibles, falla desde `0xF0020000`; por telnet `/dev/mem` da `Bad address` (no sirve). OpenMemories Tweak reinstalado con pmca (`install -a com.github.ma1co.openmemories.tweak`).
