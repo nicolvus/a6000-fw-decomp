@@ -5,6 +5,10 @@ Para restricciones del proyecto (sin firmware ejecutado, sin flasheo, sin `git p
 
 [Plan de pruebas físicas pendientes](../docs/capture/physical-test-plan.md) (P1–P8, ninguna ejecutada; requieren tu autorización).
 
+## S102 — menú principal (botón MENU): carga y apertura (21-10-2026, línea de RE general)
+
+[S102](../docs/capture/s102-menu-principal.md): `libObj.so` → `viewUnified2.so` (registro de ~150 vistas; índices = `Vn` del log real) → `viewUnified3..8`; vistas BASE_MENU/GLOBAL_MENU/SETTINGMENUX/FNMENU; `DefRootView::ActionOpen*` es el árbitro de arranque, no la tecla MENU. Abierto: evento base de MENU y la vista de disparo que abre BASE_MENU (requiere log de RAM tras pulsar MENU). Anexos: APK por función y decompilación de apps (solo local).
+
 ## S101 — selector del tipo de mecanismo y consumidores de campos de ajuste (21-10-2026; etiquetado S70/S71/S72 en commits)
 
 [Conclusiones S101](../docs/capture/s101-conclusions.md) — resumen consolidado; los apartados siguientes son el detalle.
