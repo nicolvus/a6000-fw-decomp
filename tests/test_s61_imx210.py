@@ -1,5 +1,6 @@
 """S61: comprobaciones contra los bytes reales de av-cam.bin (A6000) y emulación Unicorn del código original."""
 import hashlib
+import importlib.util
 import re
 import struct
 import sys
@@ -15,6 +16,24 @@ import e3_chain
 import e4_producer_a
 import trace_payload
 from tdis import B, data
+
+
+def _load_module(name, path):
+    """Carga explícita por ruta.
+
+    `analysis/s61/xr.py` y `analysis/s56/xr.py` comparten nombre de módulo: pytest
+    importa todos los módulos de test antes de ejecutar ninguno, así que `sys.modules`
+    puede quedar con el `xr` de S56 y `import xr` devolvería la API equivocada
+    (sin `callers`). Se carga por ruta y con nombre propio para ser independiente
+    del orden de ejecución.
+    """
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+xr = _load_module("xr_s61", ROOT / "analysis/s61/xr.py")
 
 SHA = "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
 MD = Cs(CS_ARCH_ARM, CS_MODE_THUMB)
@@ -192,7 +211,6 @@ class MessageFlow(unittest.TestCase):
         self.assertTrue(all(0x43805900 <= h < 0x43806F00 for h in hits), [hex(h) for h in hits])
 
     def test_request_methods_have_no_direct_callers(self):
-        import xr
         self.assertEqual(xr.callers(0x43B00ED8), [0x437907A6])      # único llamador directo: HS_Main
         self.assertEqual(xr.func_start(0x437907A6), 0x4378FEF4)
         self.assertEqual(sorted(xr.callers(0x4380632C) + xr.callers(0x43806398)), [0x43B00F04, 0x43B00F1C])
@@ -219,7 +237,6 @@ class SyncContext(unittest.TestCase):
         self.assertTrue(any(s.startswith(b"[CAMERA_MAIN_SYNC]: HS_Main") for s in hs))
         vd = self._strings(0x43792A0C, 0x43792E00)
         self.assertTrue(any(b"VD_Pre" in s for s in vd))
-        import xr
         self.assertEqual(xr.callers(0x43B00DD4), [0x43792F62])
         self.assertEqual(xr.func_start(0x43792F62), 0x43792A0C)
 
