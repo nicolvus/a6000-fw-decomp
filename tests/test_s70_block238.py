@@ -27,3 +27,13 @@ def test_handlers_escriben_238_y_280():
 def test_accesor_puro_del_bloque():
     d = BIN.read_bytes()
     assert d[0x43804DEC - BASE : 0x43804DEE - BASE] == bytes.fromhex("7047")  # bx lr
+
+
+def test_darwin_sin_literal_del_byte_de_tipo():
+    f = BIN.parents[3] / "firmware/extracted/fw321/firmware.tar_unpacked/0640_darwin/darwin_core.bin"
+    if not f.is_file():
+        pytest.skip("falta darwin_core.bin")
+    d = f.read_bytes()
+    pool = {struct.unpack_from("<I", d, o)[0] for o in range(0, len(d) - 3, 4)}
+    assert not any(0x20000050 <= v <= 0x20000058 for v in pool)
+    assert struct.unpack_from("<2I", d, 0) == (0x20002A00, 0x45C9)
