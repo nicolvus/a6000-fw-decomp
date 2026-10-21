@@ -3,6 +3,8 @@
 Resumen operativo breve. Para el historial completo de decisiones, ver `knowledge/PROGRESS.md`.
 Para restricciones del proyecto (sin firmware ejecutado, sin flasheo, sin `git push`), ver `docs/STATE.md`.
 
+[Plan de pruebas físicas pendientes](../docs/capture/physical-test-plan.md) (P1–P8, ninguna ejecutada; requieren tu autorización).
+
 ## S71 — recorrido de los 12 puntos abiertos (21-10-2026)
 
 **VERIFICADO (3 tests, `tests/test_s71_pending.py`):** el bloque de 12 u16 `+0xdd0` lo escribe `0x437b1048` (bytes de estado de captura); la copia en bloque `0x438acc24`/`0x4389efc2` es de un bloque de parámetros con **mapa idéntico en A6000 y A7S** (no la estructura de captura desplazada): **S52 sigue vigente** (rectificado, había una afirmación errónea en la primera versión de S71); `0x437881a8` es el `bl` de init de arranque y `0x43802614` el comando `0x402e`; `Backup 0x3e0005` solo lo leen 2 sitios (cadena de 0x18 B). Los 12 puntos están cerrados (2, 8, 9, 11 como bloqueados/no resolubles; 10 con el grafo de menciones `analysis/s72_graph/module_graph.md`; 12 cubierto por S98/S100). **S51 se mantiene.**
