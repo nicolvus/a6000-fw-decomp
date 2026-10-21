@@ -66,3 +66,9 @@ Siguiente (estático): localizar quién rellena `G+0x808..0x80d` (copia de la in
 **INFERENCIA:** el layout `+0x808..+0x80d` de `G` coincide con el de esa estructura de petición; es probable que `G` sea (o reciba una copia de) un objeto «petición/parámetros» que, mientras no cambie, deja `+0x808=0` (tipo 0), y que el valor 1 solo aparezca por una orden concreta de la ruta de captura (lo que habría que ver con P1 del [plan de pruebas físicas](../../docs/capture/physical-test-plan.md)). **NO VERIFICADO:** que `r5` de `0x43868a30` sea `G` (llega por una variable local de los 9 llamadores), y quién lo copia a `G`.
 
 Siguiente estático: seguir `r5` de `0x43868e00` en `0x4385a710`/`0x438e6874` hasta su origen (variable local o objeto global) y buscar la copia hacia `G`.
+
+## Barrido final de escritores de `G+0x805..0x80e` (`pic_field_users.py`, `big_copies_to_g.py`)
+
+**VERIFICADO (barrido PIC de todo `av-cam.bin`):** no existe ningún `str/strb/strh` con base PIC `G=0x43e9b548` y desplazamiento `0x805..0x80e`; solo hay lecturas: `G+0x809` bits 4–6 (`0x43790ac6`), `G+0x80c` (`0x43790654`, `0x43790ee6` bit `0x40`), `G+0x80e` bit 0 (`0x437904a8`), `G+0x808` (`0x43793106/60/202`, `0x4379348a`) y la palabra de banderas `G+0x804` (que sí se modifica por PIC en `0x4378ea1e` y `0x4379009c`, bit 1). Tampoco hay `memcpy` (`0x439c5320`) con tamaño `0x800..0x2000` y destino PIC dentro de `G`.
+
+**Conclusión (INFERENCIA fuerte):** los bytes `G+0x808..0x80e` no los escribe código de `av-cam.bin` con acceso directo: llegan por un puntero a `G` pasado como argumento (p. ej. el constructor de petición `0x43868a30`, cuyo layout coincide) o por copia de estructura a través de otra función. El valor 0 de la imagen se mantiene hasta que esa ruta lo cambie; por eso **P1 del plan físico** (observar `0x83e9bd50` durante los cambios de menú) es la forma directa de saber qué lo gobierna.
