@@ -467,14 +467,47 @@ La cuenta de PTM la lleva `ApiPtmCount` (`ApiPtmCount.cpp` `0x43c7a3c2`, funcion
 
 ---
 
-## 10. Reproducción
+## 10. Inventario por palabra clave y diferencial con la A7S fw3.20
+
+Anexo reproducible: `scan_keyword_inventory.py` → `keyword_inventory.json` (el script se
+**autovalida**: comprueba cada cadena curada contra los bytes y aborta si una dirección no
+contiene el texto esperado; las 5 entradas `MARBLE:` y la dirección `0x43c9ebb4` se corrigieron
+al integrarlo).
+
+Conteo de cadenas que contienen cada palabra clave (A6000 fw3.21 frente a A7S fw3.20):
+
+| palabra clave | A6000 | A7S | lectura |
+|---|---|---|---|
+| `panorama` | 96 (92 distintas) | 89 (85) | fw3.21 añade 7 trazas de panorámica (p. ej. `IS_LensMountPanoramaGyro` `0x43c9a426`, `REQ_PANORAMA_EE` `0x43ca13ff`) |
+| `sweep` | 29 | 24 | fw3.21 añade 5 trazas de barrido |
+| `stitch` | 45 | 43 | motor de costura casi idéntico |
+| `interval` | 16 | 18 | **la A7S tiene 2 trazas más** de intervalo |
+| `bracket` | 1 | 1 | **una sola** en ambas: `lc_BracketAF.cpp` `0x43ca79ba` → el bracketing no se implementa con ese nombre en el firmware |
+
+Negativo destacado (contado sobre los bytes crudos, no sobre las cadenas): la subcadena
+`Bracket` aparece **1 vez** en el binario de la A6000 y 1 en la A7S; la subcadena `bracket` en
+minúsculas, **0 veces** en ambos. El bracketing de exposición no está en `av-cam.bin`: lo
+orquesta el userland y llega a la cámara como `drive_mode`/`ContID`/`BDROSeq` (S96).
+
+Estructuras de control verificadas en ambos firmwares (bytes idénticos en el mapeo):
+
+- `tbb` de `SWEEP_DIRECTION`: `0x437f6f38` (A6000) / `0x438271da` (A7S) → 4 entradas.
+- `tbb` de `SWEEP_LENGTH`: `0x437f6f68` (A6000) / `0x438271f8` (A7S) → 4 entradas.
+- Límite del intervalo: constante `0x000DBBA0` (900 000 PTM) en `0x4363e93c` (A6000) y
+  `0x4365a668` (A7S).
+
+---
+
+## 11. Reproducción
 
 ```bash
 cd /home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter
 .venv/bin/python -m pytest tests/test_s105_panorama.py -q
+.venv/bin/python analysis/s105_panorama/scan_keyword_inventory.py   # anexo §10
 ```
 
 El test verifica, contra bytes: (a) que cada cadena citada existe en `vaddr − 0x43541000` con el
-texto exacto; (b) los recuentos de las 26+ patrones; (c) que cada sitio de referencia citado resuelve
-a la cadena esperada mediante el mecanismo `ldr [pc]` + `add pc`; y (d) que las direcciones de código
-citadas no son relleno (`0x00`/`0xFF`) y empiezan por un prólogo Thumb válido.
+texto exacto; (b) los recuentos de las 26+ patrones y los del anexo §10; (c) que cada sitio de
+referencia citado resuelve a la cadena esperada mediante el mecanismo `ldr [pc]` + `add pc`; y
+(d) que las direcciones de código citadas no son relleno (`0x00`/`0xFF`) y empiezan por un
+prólogo Thumb válido.

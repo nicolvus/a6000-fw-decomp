@@ -30,6 +30,21 @@ con la siguiente. No reescribir historial: añadir entradas nuevas.
   poda de borrados, jerarquía+recuperación exacta).
 - `.knowledge-cache/knowledge.sqlite` — DB regenerable (gitignorada): 355 documentos,
   2684 secciones/nodos, 32 subsistemas (derivados de los 2 primeros componentes de ruta).
+- S107 — `Camera::CamCore` y la pila `ResourceStack` (31-10-2026, línea general)
+  - Hecho: integración del hito S107 (subagente `nemotron-3.5-lightning-free`) **con revisión**.
+    37 cadenas `[CAMCORE]` en A6000 fw3.21, rango `0x43c905ca` → `0x43cebcb2`; **0** en A7S fw3.20.
+    Subsistemas: SGC (3), RDC/PFR (8), AIF (7), Memory/Resource (2), ExlHelper (5), DMA Setter (6),
+    Powersave (1), Defect correction (2). 4 strings de ResourceStack dentro de `[IMAGING_CAP]` S106
+    (vaddrs `0x43ca10d1` → `0x43ca120f`). RTTI confirmado: `N6Camera7CamCore8RdcImageE` (0x43c906b6),
+    `N6Camera7CamCore13SplitRdcImageE` (0x43cb0b94). Diferencial A7S: etiqueta de instrumentación.
+    - Informe: `analysis/s107_camcore/camcore_resources.md` + JSON (`camcore_resources.json`).
+    - Tests: `tests/test_s107_camcore.py` 8/8 verdes (conteos, direcciones, textos, RTTI, A7S diff).
+    - Nota breve: `docs/capture/s107-camcore-resources.md`.
+    - Script reproducible: `analysis/s107_camcore/scan_camcore.py`.
+  - Abierto: semántica exacta de SGC; formato interno de ResourceStack; 2 ExlHelper sin xref PIC;
+    significado de `loadDefectPos` con bytes binarios.
+  - Relacionado: S104 (`CAMCORE` entre 6 prefijos S104), S106 (ResourceStack consumo en IMAGING_CAP),
+    S84 (sa_func_* interacción), A7S fw3.20 comparación.
 - `.venv/` + `knowledge/requirements-dev.txt` — entorno aislado con ruff/mypy/pytest.
 
 ## Fase 3 — Grafo de conocimiento (detalle)
@@ -1956,6 +1971,11 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 ## S100 — el contrato de comandos del ADF ↔ AdfCh (21-10-2026, línea general)
 - Hecho: catálogo completo de la interfaz de control userland↔firmware. Firmware: **90 comandos `[ADF][DBGCMD]`** por familias (`Input` 16, `InputPro` 8, `Output` 9, `OutputPro` 3, `System` 12, `SystemSound` 7, `Proc` 19, `SoundAnalyzer` 4, `CPU2` 4). Userland: clase `OBJAVBBCBASECLASS::AdfCh` con **35 métodos** (`Prc` 8, `Sys` 4, `In` 8, `InPro` 7, `Out` 8) y correspondencia **uno a uno** con los comandos del firmware (`PrcSetPath`↔`Proc SetPath`, `SysSetTable`↔`SystemSound SetTable`, `InSetInput`↔`Input SetInput`, `InProSetAgcLink`↔`InputPro SetAgcLink`, `OutSetOutput`↔`Output SetOutput`, `OutProSetHpMonitor`↔`OutputPro SetHpMonitor`). Excepciones: solo-userland `PrcSetPeakDetect`, `PrcSetAudioOutpinMute`, `OutSetVolume`, `SysSetVolume`; solo-firmware `InputPro SetManualGainLink`. Nota `analysis/s100_adf_contract/adf_command_contract.md`, test `tests/test_s100_adf_contract.py` 7/7.
 - Abierto: el formato binario de los comandos y su equivalencia con las 11 `REQ_*` (S98); el submódulo `Prc`; `PrcSetPeakDetect`.
+
+## S107 — `Camera::CamCore` y la pila de recursos `ResourceStack` (21-10-2026, línea general)
+- Hecho: decodificación de las 37 trazas `[CAMCORE]` de la fw3.21 de la A6000 (`0x43c905ca`→`0x43cebcb2`; 0 en la A7S fw3.20): SGC (`SgcTable`), RDC/PFR (memoria PFR, `PFR in width[%d] > 596` `0x43c90ca3`), AIF (`AIF%d out[%d] > memsize[%d]` `0x43c90a96`, `pbl_aif_set_func` `0x43c90abd`), `MemoryPool has no space.` `0x43c908e7`, `ResourceBase::Release was called without acquire` `0x43c90ec5`, `ExlHelper` (5), *setter* de DMA (6), `MonPowersave` `0x43c90f07`, corrección de defectos (`Acl::CAMHEAD_Z1C::setDefectPt` `0x43cebcb2`); RTTI `N6Camera7CamCore8RdcImageE` `0x43c906b6` y `N6Camera7CamCore13SplitRdcImageE` `0x43cb0b94`. **Pila `ResourceStack`**: 4 mensajes en el bloque `[IMAGING_CAP]` (`0x43ca10d1`–`0x43ca120f`) → la consume el gestor de captura still (S106). Informe `analysis/s107_camcore/camcore_resources.md` + JSON, test `tests/test_s107_camcore.py` 9/9.
+- **Correcciones de la revisión (agente principal):** (a) el borrador daba por expandidas las siglas SGC/RDC/PFR/AIF ("Sensor Gate Controller", "Raw Data Converter", "Arterial Image Framework") — el firmware **no las expande**: se marcan como hipótesis; (b) los sitios de referencia citados para las trazas `sa_func_DUALREC_*` eran funciones, no referencias → los reales son `0x437ed95e`, `0x437ee4ae`, `0x437ee716`, `0x437eeb34`, `0x437ee84e`; (c) el diferencial A7S daba por "no verificado" `ExlHelper` (5) y `MonPowersave` (1) — **existen** en la A7S sin etiqueta, igual que los mensajes `ResourceStack)` (`0x43ca61fa`, `0x43ca6226`, `0x43ca6252`): la fw3.21 solo añade etiquetas de módulo.
+- Abierto: significado de SGC/RDC/PFR/AIF/Exl; formato interno de la ResourceStack; por qué 2 de las 5 cadenas `ExlHelper` no tienen referencia PIC.
 
 ## S106 — `IMAGING_CAP`: el gestor de captura still de la A6000 (21-10-2026, línea general)
 - Hecho: reconstrucción del subsistema de captura still a partir de sus **697 trazas** (`0x43c9b335`–`0x43ccab72`) y de los **83 nombres de fichero fuente embebidos** (`0x43ca8e14`–`0x43cb0cbe`): 16 `*_Selector.cpp`, 10 `CaptureUtility*.cpp`, 9 manejadores, 6 `RawMemManager*.cpp`, 8 `Stage_*.cpp`, `CaptureManager*.cpp`, `SectionController.cpp`, `CaifCom_Control.cpp`, `NotifyController.cpp`, `ImageParamCapture*.cpp`. **Motor de secciones**: tabla de 17 entradas `{id u32, manejador u32}` en `0x43ff8fb4`; el despachador `FUN_437e534c` copia `0x88` B y busca el id entre 17; cada manejador devuelve 20 B (5 u32) de parámetros según el modo de captura; 14 manejadores referencian su `Capture<Etapa>_Selector.cpp`. **CapMgr** con tabla de salto de 16 entradas en `0x43bc4e08`; **CAIF** (`CAP_REQ`, `CAP_REQ_CLR`, `CAP_SETTING`, `CAP_START`, `CAP_DATA`, `CAP_V_COM` con dirección `[EN->CA]`/`[CA->EN]`/`[CA->AVIP]`); **8 modos `MODE_CAP*`** del CamCore; capa `ImageParam_Capture`/`RawMemManager`/DMM. **Método**: esquema **PIC** de referencias a cadenas (`destino = literal_del_pool + (add rX,pc + 4)`) verificado con dos casos; `694/697` cadenas referenciadas y **3 muertas** (sin puntero absoluto ni destino PIC). **Diferencial A7S fw3.20**: 0 cadenas con el prefijo `[IMAGING_CAP]`; los mismos mensajes existen sin etiqueta → la fw3.21 añade la etiqueta; los 16 selectores están en A6000/A7S/A6300. Informe `analysis/s106_imaging_cap/imaging_cap_architecture.md` + JSON, test `tests/test_s106_imaging_cap.py` 18/18.
