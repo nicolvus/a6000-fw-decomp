@@ -422,3 +422,76 @@ def test_informe_y_json_existen():
     assert informe.exists() and informe.stat().st_size > 4000
     assert datos.exists() and datos.stat().st_size > 1000
     assert resumen.exists() and resumen.stat().st_size > 800
+
+
+# ------------------------------------------------------------------ anexo: inventario por palabra clave
+A7S_BIN = (
+    ROOT / "firmware" / "extracted" / "a7s-fw320" / "payload" / "firmware.tar_unpacked"
+    / "0700_part_image" / "dev" / "nflasha3_unpacked_unpacked" / "av-cam.bin"
+)
+PAT_STR = re.compile(rb"[\x20-\x7e]{4,}")
+
+
+def _conteo(blob: bytes, palabra: str):
+    n = 0
+    distintas = set()
+    for m in PAT_STR.finditer(blob):
+        t = m.group(0)
+        if palabra.lower().encode() in t.lower():
+            n += 1
+            distintas.add(t)
+    return n, len(distintas)
+
+
+@pytest.mark.parametrize("palabra,a6000,a7s", [
+    ("panorama", 96, 89),
+    ("sweep", 29, 24),
+    ("stitch", 45, 43),
+    ("interval", 16, 18),
+    ("bracket", 1, 1),
+])
+def test_inventario_por_palabra_clave(palabra, a6000, a7s):
+    """Anexo §10: recuento de cadenas con cada palabra clave en A6000 fw3.21 y A7S fw3.20."""
+    assert _conteo(DATA, palabra)[0] == a6000
+    if A7S_BIN.exists():
+        assert _conteo(A7S_BIN.read_bytes(), palabra)[0] == a7s
+    else:
+        pytest.skip("blob de la A7S no disponible")
+
+
+def test_bracket_solo_aparece_una_vez_en_los_bytes():
+    """Negativo destacado: 'Bracket' 1 vez en A6000 y 1 en A7S; 'bracket' 0 veces en ambos."""
+    assert DATA.count(b"Bracket") == 1
+    assert DATA.count(b"bracket") == 0
+    if A7S_BIN.exists():
+        a7s = A7S_BIN.read_bytes()
+        assert a7s.count(b"Bracket") == 1
+        assert a7s.count(b"bracket") == 0
+
+
+def test_tablas_de_sweep_identicas_en_mapeo_entre_a6000_y_a7s():
+    """tbb de SWEEP_DIRECTION y SWEEP_LENGTH: 4 entradas en ambos firmwares."""
+    assert DATA[0x437F6F38 - BASE:0x437F6F38 - BASE + 4] == bytes.fromhex("11111313")
+    assert DATA[0x437F6F68 - BASE:0x437F6F68 - BASE + 4] == bytes.fromhex("02041517")
+    if A7S_BIN.exists():
+        a7s = A7S_BIN.read_bytes()
+        assert a7s[0x438271DA - BASE:0x438271DA - BASE + 4] == bytes.fromhex("08080a0a")
+        assert a7s[0x438271F8 - BASE:0x438271F8 - BASE + 4] == bytes.fromhex("02040c0e")
+
+
+def test_limite_de_intervalo_900000_ptm_en_ambos_firmwares():
+    """Constante 0x000DBBA0 (900000 PTM = 10 s) en A6000 y A7S."""
+    assert DATA[0x4363E93C - BASE:0x4363E93C - BASE + 4] == bytes.fromhex("a0bb0d00")
+    if A7S_BIN.exists():
+        a7s = A7S_BIN.read_bytes()
+        assert a7s[0x4365A668 - BASE:0x4365A668 - BASE + 4] == bytes.fromhex("a0bb0d00")
+
+
+def test_anexo_keyword_inventory_existe_y_es_consistente():
+    import json
+    ruta = ROOT / "analysis" / "s105_panorama" / "keyword_inventory.json"
+    assert ruta.exists() and ruta.stat().st_size > 1000
+    datos = json.loads(ruta.read_text(encoding="utf-8"))
+    assert datos["counts"]["panorama"]["A6000_ocurrencias"] == 96
+    assert datos["counts"]["bracket_en_bytes_brutos"]["A6000_ocurrencias_de_la_subcadena_Bracket"] == 1
+    assert datos["counts"]["total_ocurrencias_palabras_clave"]["A6000"] == 187
