@@ -1,8 +1,8 @@
-# Metodología de las referencias a cadenas (esquema PIC) — y qué regla usar
+# Metodología de las referencias a cadenas (esquema PIC) — regla canónica y calibración
 
-> Nota metodológica del hito S106/S110, **actualizada tras S118**. Es la referencia que
+> Nota metodológica del hito S106, **actualizada tras S118 y S121**. Es la referencia que
 > deben usar los hitos siguientes: qué es una "referencia PIC", por qué el número depende
-> de la regla de emparejamiento, y qué cifras son defendibles.
+> de la regla de emparejamiento, cuál es la regla canónica y qué cifras son defendibles.
 
 ## 1. El esquema
 
@@ -32,75 +32,69 @@ Detalles de decodificación:
 
 ## 2. El problema: el registro se reutiliza
 
-Entre el `ldr` y el `add` puede haber código que **vuelva a escribir ese registro**. Entonces
-el `add` ya no suma el valor que cargó ese `ldr`, sino otro. De ahí que **la regla de
-emparejamiento**:
+Entre el `ldr` y el `add` puede haber código que **vuelva a escribir ese registro**; entonces
+el `add` ya no suma el valor que cargó ese `ldr`. De ahí que el emparejamiento sea ambiguo y
+que **el número de referencias dependa de la regla**:
 
 | regla | qué hace | sesgo | script |
 |---|---|---|---|
-| **estricta** | empareja cada `add` con el `ldr` **más cercano** del mismo registro | pierde referencias (cuando el `ldr` válido no es el más cercano) | `analysis/s111_trk/scan_refs.py` |
-| **ancha** | prueba **todos** los `ldr` del registro en 4 KB | **inventa** referencias (68 falsos positivos en `[SFRA]`) | `analysis/s106_imaging_cap/scan_pic_refs.py` (v1) |
-| **kill analysis** | como la ancha, pero descarta el par si **alguien escribe el registro** entre `ldr` y `add` | mejora, pero sigue having falsos positivos donde el barrido lineal se desincroniza en zonas de datos | `analysis/s106_imaging_cap/scan_pic_refs_v2.py` |
+| **estricta** *(canónica)* | empareja cada `add` con el `ldr` **más cercano** del mismo registro (ventana 4 KB) | puede **perder** referencias (cuando el `ldr` válido no es el más cercano) | `analysis/s106_imaging_cap/scan_pic_refs_strict.py` |
+| kill analysis | como la anterior, pero descarta el par si alguien escribe el registro entre `ldr` y `add` | mejora la cobertura, pero sigue attributing de más | `analysis/s106_imaging_cap/scan_pic_refs_v2.py` |
+| **ancha** | prueba **todos** los `ldr` del registro en 4 KB | **inventa** referencias | `analysis/s106_imaging_cap/scan_pic_refs.py` (v1) |
 
-## 3. Calibración con un caso verificado a mano
+## 3. Calibración con dos casos verificados a mano
 
-S118 verificó **a mano** (desensamblando) los puntos de emisión de `[SFRA]`:
+S118 verificó **a mano** (desensamblando) los puntos de emisión de `[SFRA]`; S121 hizo lo
+mismo con `[AIP]` y además cuantificó los falsos positivos de la kill analysis:
 
-| regla | puntos de referencia en `[SFRA]` (100 cadenas) |
-|---|---|
-| **real (verificado a mano)** | **118** |
-| estricta | 118 |
-| kill analysis (v2) | 166 |
-| ancha (v1) | 186 |
+| módulo | **real (verificado a mano)** | estricta | kill analysis | ancha |
+|---|---|---|---|---|
+| `[SFRA]` (100 cadenas) | **118 sitios, 47 funciones** | 118 ✓ | 166 | 186 |
+| `[AIP]` (37 cadenas) | **37 sitios, 16 funciones** | 37 ✓ | 60 (23 falsos) | — |
 
-→ la regla estricta acierta en este módulo, la kill analysis se queda a 48 por encima y la
-ancha a 68. **Los recuentos de sitios no son publicables sin verificación manual**; los
-*cadenas con al menos una referencia* sí lo son, comprobando un sitio.
+→ **la regla estricta coincide con la verdad medida en los dos módulos donde se verificó a
+mano**; las otras dos reglas se quedan **por encima** (falsos positivos). Por eso la regla
+canónica del repo es la **estricta**, y por eso **ningún informe debe publicar un número de
+sitios sin indicar la regla usada**.
 
 ## 4. Cifras corregidas de los hitos publicados
 
-Aplicando la kill analysis a los módulos ya publicados (y verificando a mano los dos casos
-disputados):
+Con la regla estricta (canónica) sobre el mapa global de 17 525 destinos:
 
-| hito | cifra publicada | cifra corregida | nota |
+| hito | cifra publicada | cifra canónica (estricta) | nota |
 |---|---|---|---|
-| **S106** `[IMAGING_CAP]` | 696/697 referenciadas, 1 cadena muerta | **695/697 referenciadas, 2 sin referencia confirmada** (`0x43ca9b12` `ShareMem_StlRaw8 Err…` y `0x43cc839c` `Rch_Rcv_Zima_Base Err…`; ninguna tiene puntero absoluto de 4 B en los 11,4 MB) | la "corrección" de S110 (694→696) estaba basada en la regla ancha: los dos sitios que añadía son **falsos** (el `add` de `0x43785d18` materializa `[IMAGING_CAP]: PreProcessRC: Release_RC error` `0x43ca03e0`, no la cadena que se le atribuía) |
-| **S110** `[CAMERA_MAIN_YC]` | 960 de 970 referenciadas | **958 de 968 cadenas** (970 son *ocurrencias* del prefijo; 968 cadenas distintas) | |
-| S111 `[TRK]` | 288 sitios (estricta) | el recuento de sitios es **dependiente de la regla** (estricta 288, kill 515, ancha 657) | las **215 cadenas** y el diferencial A7S (idénticos) no cambian |
-| S112 `[CAMERA_MAIN_SYNC]` | 430 funciones / 1 407 pares | **330 funciones / 1 122 pares** (kill) | las 429 cadenas y el diferencial (418/429) no cambian |
-| S113 `[CAM_DMM]` | 25 funciones | **21 funciones** (kill) | las 54 cadenas y el diferencial no cambian |
-| S115 `[CAM_IMAGER]` | 94 funciones | **90 funciones** (kill) | las 371 cadenas y el diferencial no cambian |
-| S116 `[SFRS]` | 131 sitios / 52 funciones | 136 / 57 (kill) | verificado a mano por el subagente: 131 sitios |
-| S118 `[SFRA]` | 118 sitios / 47 funciones | **118 / 47** (verificado a mano) | |
+| **S106** `[IMAGING_CAP]` | 695/697 (kill) | **690/697 referenciadas, 7 sin referencia** | las 7: `0x43ca05d7`, `0x43ca0603`, `0x43ca069a`, `0x43ca06c6` (DistV/DistH), `0x43ca9b12`, `0x43cc7d5c`, `0x43cc839c`; ninguna tiene puntero absoluto de 4 B en los 11,4 MB |
+| **S110** `[CAMERA_MAIN_YC]` | 958/968 (kill), 304 funciones | **954/968 referenciadas**, 251 funciones con la regla estricta (las 970 son *ocurrencias* del prefijo, no cadenas distintas) | |
+| **S113** `[CAM_DMM]` | 54 cadenas, 21 funciones (kill) | 54 cadenas, **54 sitios, 14 funciones** (estricta) | |
+| **S115** `[CAM_IMAGER]` | 371 cadenas, 90 funciones (kill) | 371 cadenas, 357 referenciadas, **417 sitios, 76 funciones** (estricta) | |
+| S111 `[TRK]` | 215 cadenas, 288 sitios, 47 funciones | **coincide** (el subagente ya usaba la regla estricta) | |
+| S112 `[CAMERA_MAIN_SYNC]` | 429 cadenas, 430 funciones, 1 407 pares | 428 cadenas, 425 referenciadas, 489 sitios (estricta) | las 429 cadenas y el diferencial (418/429) no cambian |
+| S116 `[SFRS]` | 117 cadenas, 131 sitios, 52 funciones | 117 cadenas, 111 referenciadas, 125 sitios (estricta) | el subagente verificó 131 a mano |
+| S118 `[SFRA]` | 118 sitios, 47 funciones | **coincide** (verificado a mano) | |
+| S121 `[AIP]` | 37 sitios, 16 funciones | **coincide** (verificado a mano) | |
 
-**Lo que no cambia**: el número de cadenas de cada módulo, su rango, el diferencial A7S/A6300 y
-las conclusiones estructurales (tablas, clases, ficheros fuente, secuencias de comandos).
+**Lo que no cambia** con ninguna regla: el **número de cadenas** de cada módulo, su rango, el
+**diferencial A7S/A6300** y las conclusiones estructurales (tablas, clases, ficheros fuente,
+secuencias de comandos, decodificaciones de ids).
 
 ## 5. Regla que se usa a partir de ahora
 
 1. Para un **hito de módulo**: se publica el número de cadenas, el rango y el diferencial
-   A7S/A6300 (datos exactos), y el **mapa función→traza** con la regla *kill analysis*
-   (`scan_pic_refs_v2.py`), indicando en el informe que el recuento de sitios es heurístico.
-2. Para una **cifra puntual** (p. ej. "estas 2 cadenas están muertas", "este sitio referencia
-   esta cadena"): se **verifica a mano** desensamblando, como en S118.
-3. El **escáner compartido** es `scan_pic_refs_v2.py` (acepta `LO HI RUTA_SALIDA`; el rango de
-   cadenas válidas cubre toda la imagen). La v1 queda como referencia histórica.
-4. Ningún informe debe afirmar "N sitios" sin indicar la regla usada.
+   A7S/A6300 (datos exactos) y el **mapa función→traza** calculado con
+   `scan_pic_refs_strict.py`, indicando en el informe la regla usada.
+2. Para una **cifra puntual** ("estas 2 cadenas están muertas", "este sitio referencia esta
+   cadena"): se **verifica a mano** desensamblando, como en S118 y S121.
+3. El **escáner canónico** es `analysis/s106_imaging_cap/scan_pic_refs_strict.py`
+   (acepta `LO HI RUTA_SALIDA`; el rango de cadenas válidas cubre toda la imagen).
+   `scan_pic_refs_v2.py` (kill analysis) y `scan_pic_refs.py` (v1, ancha) quedan como
+   referencias históricas y para Auditorías de falsos positivos.
+4. Ningún informe debe afirmar "N sitios" sin decir la regla.
 
 ## 6. Reproducir
 
 ```bash
-# mapa global (≈6 min, 73 336 destinos)
+# mapa global con la regla canónica (≈7 s, 17 525 destinos)
+.venv/bin/python analysis/s106_imaging_cap/scan_pic_refs_strict.py 0x43541000 0x44017000 /tmp/pic_strict.json
+# auditoría: cuántos pares sobreviven con kill analysis y cuántos con la regla ancha
 .venv/bin/python analysis/s106_imaging_cap/scan_pic_refs_v2.py 0x43541000 0x44017000 /tmp/pic_v2.json
-# mapa por módulo (ejemplo)
-.venv/bin/python - <<'PY'
-import json,re
-BASE=0x43541000
-B=open("analysis/rea-independent/input/av-cam.bin","rb").read()
-v2={int(k,16):v for k,v in json.load(open("/tmp/pic_v2.json")).items()}
-for m in re.finditer(rb"[\x20-\x7e]+", B):
-    t=m.group().decode("latin1")
-    if t.startswith("[IMAGING_CAP]") and (BASE+m.start()) in v2:
-        pass
-PY
 ```

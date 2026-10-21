@@ -184,22 +184,24 @@ Verificado con dos casos independientes:
 
 - **5 560** destinos distintos caen en la zona de cadenas del módulo (barrido con el rango
   restringido a `0x43c90000`–`0x43cd0000`; el barrido de toda la imagen da 73 336);
-- **695 de las 697** cadenas de `IMAGING_CAP` tienen referencia confirmada (regla con
-  *kill analysis*, ver [`pic_xref_methodology.md`](pic_xref_methodology.md));
-- las **2** sin referencia son `0x43ca9b12`
-  (`[IMAGING_CAP]: ShareMem_StlRaw8 Err: unit_type[0x%08x], err[%d]`) y `0x43cc839c`
-  (`[IMAGING_CAP]: Rch_Rcv_Zima_Base Err: Func[0x%08x]`): **ni** referencia PIC **ni** puntero
-  absoluto de 4 B en los 11,4 MB → cadenas muertas que el enlazador conservó.
+- **690 de las 697** cadenas de `IMAGING_CAP` tienen referencia (regla canónica *estricta*,
+  ver [`pic_xref_methodology.md`](pic_xref_methodology.md));
+- las **7** sin referencia son `0x43ca05d7`, `0x43ca0603`, `0x43ca069a`, `0x43ca06c6`
+  (los cuatro mensajes `DistV_RC`/`DistH_RC`), `0x43ca9b12`
+  (`ShareMem_StlRaw8 Err: unit_type[0x%08x], err[%d]`), `0x43cc7d5c`
+  (`%s: ContrastPlus error`) y `0x43cc839c` (`Rch_Rcv_Zima_Base Err: Func[0x%08x]`): **ni**
+  referencia PIC **ni** puntero absoluto de 4 B en los 11,4 MB → cadenas muertas que el
+  enlazador conservó.
 
-> **Corrección (hito S110) y rectificación (S118)**: la primera versión del escáner emparejaba
-> cada `add rX,pc` con el `ldr` **más cercano** del mismo registro (694/697). Una segunda
+> **Corrección (S110), rectificación (S118) y cifra canónica (S121)**: la primera versión del
+> escáner emparejaba cada `add rX,pc` con el `ldr` **más cercano** (694/697). Una segunda
 > versión probaba **todos** los `ldr` del registro en 4 KB (696/697), pero esa regla **inventa**
 > referencias: los dos sitios que añadía son falsos (el `add` de `0x43785d18` materializa
 > `[IMAGING_CAP]: PreProcessRC: Release_RC error` `0x43ca03e0`, y el de `0x438c1340`
-> `[IMAGING_CAP]: …` `0x43cc7979`, no las cadenas que se les atribuía). La **kill analysis**
-> (descartar el par si alguien vuelve a escribir el registro entre `ldr` y `add`) da
-> **695/697**. La metodología y la calibración están en
-> [`pic_xref_methodology.md`](pic_xref_methodology.md).
+> `[IMAGING_CAP]: …` `0x43cc7979`). La *kill analysis* (695/697) tampoco es exacta: en
+> `[AIP]` produce 23 falsos positivos sobre 37. **La regla canónica es la estricta** (el `ldr`
+> más cercano), que coincide exactamente con los dos módulos verificados a mano (`[SFRA]`
+> 118 sitios y `[AIP]` 37). Con ella el recuento de este informe es **690/697**.
 
 ## 10. Diferencial con la A7S fw3.20
 

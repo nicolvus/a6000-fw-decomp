@@ -123,10 +123,12 @@ El resto (`CaptureManager*.cpp`, `SectionController.cpp`, `RawMemManager*.cpp`, 
 
 ## 6. Mapa función → trazas
 
-`func_map.json` asigna cada cadena a la función que la referencia: **304 funciones** con
-**1 756 pares** (función, cadena) y **958 de las 968 cadenas** cubiertas (las 970 del informe
-son *ocurrencias* del prefijo, no cadenas distintas). *El recuento de sitios depende de la
-regla: ver [`pic_xref_methodology.md`](../s106_imaging_cap/pic_xref_methodology.md).* Ejemplos:
+`func_map.json` asigna cada cadena a la función que la referencia. Con la **regla canónica
+estricta** (la única validada a mano en dos módulos): **251 funciones** y **954 de las 968
+cadenas** cubiertas (las 970 del informe son *ocurrencias* del prefijo, no cadenas distintas).
+*El mapa que acompaña al informe se calculó con la regla "ancha", que produce atribuciones
+adicionales: ver [`pic_xref_methodology.md`](../s106_imaging_cap/pic_xref_methodology.md).*
+Ejemplos:
 
 | función | n trazas | primera traza |
 |---|---|---|
@@ -194,8 +196,8 @@ confirmada, pero por el criterio *ancho* (que también produce falsos positivos)
 | afirmación | cómo se comprueba |
 |---|---|
 | 970 cadenas, 4 bloques | `extract_yc.py` cuenta las ocurrencias del prefijo y segmenta por huecos |
-| 958/968 referenciadas (kill analysis) | `func_map.json` + búsqueda de punteros absolutos |
-| 304 funciones con la regla de kill analysis | `map_functions.py` (PIC + prólogos Thumb) |
+| 954/968 referenciadas (regla estricta) | `func_map.json` + búsqueda de punteros absolutos |
+| 251 funciones con la regla canónica estricta | `map_functions.py` (PIC + prólogos Thumb) |
 | 8 `api_YC_*`, 12 `job_YC_*` | `build_summary.py` sobre el mapa función→cadenas |
 | 141 sub-módulos | etiqueta tras el prefijo, contada sobre las 970 cadenas |
 | 119 ficheros fuente | `extract_yc.py` busca `*.cpp`/`*.h` en el rango del módulo |

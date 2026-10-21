@@ -111,7 +111,8 @@ Este es el núcleo del driver y donde se ve la parametrización de cada modo de 
 
 ## 4. Mapa función → traza
 
-94 funciones; las que más trazas emiten:
+94 funciones con la regla "ancha"; con la **regla canónica estricta** son **76 funciones** y
+**357 de las 371 cadenas** referenciadas (417 sitios). Las que más trazas emiten:
 
 | función | n | primera traza |
 |---|---|---|
