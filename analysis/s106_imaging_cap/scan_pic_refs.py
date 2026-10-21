@@ -24,7 +24,10 @@ import sys
 
 BASE = 0x43541000
 BIN = "analysis/rea-independent/input/av-cam.bin"
-STR_LO, STR_HI = 0x43C90000, 0x43CD0000
+# Rango de cadenasconsidered "destino válido". Por defecto, toda la imagen: el
+# rango 0x43c90000-0x43cd0000 que usaba la primera version solo cubria la zona
+# de [IMAGING_CAP] y dejaba fuera modulos como [TRK] (0x43cebceb-0x43cfe31c).
+STR_LO, STR_HI = 0x0, 0xFFFFFFFF
 MAX_LDR_GAP = 4096          # ventana de emparejamiento ldr -> add
 
 B = open(BIN, "rb").read()
@@ -40,7 +43,7 @@ def string_starts(lo, hi):
     (NUL o binario): así también se detectan cadenas que siguen a una tabla
     binaria (p. ej. los bytes 01 02 03 04 delante de "EnterCapturing").
     """
-    o0, o1 = lo - BASE, hi - BASE
+    o0, o1 = max(0, lo - BASE), min(N, hi - BASE)
     out = set()
     prev_print = False
     for i in range(o0, o1):
@@ -128,8 +131,8 @@ def scan(lo, hi):
 def main():
     lo = int(sys.argv[1], 0) if len(sys.argv) > 1 else BASE
     hi = int(sys.argv[2], 0) if len(sys.argv) > 2 else BASE + N
+    dest = sys.argv[3] if len(sys.argv) > 3 else "analysis/s106_imaging_cap/pic_refs.json"
     res = scan(lo, hi)
-    dest = "analysis/s106_imaging_cap/pic_refs.json"
     with open(dest, "w") as fh:
         json.dump({f"0x{k:x}": sorted(set(v)) for k, v in sorted(res.items())},
                   fh, indent=0)
