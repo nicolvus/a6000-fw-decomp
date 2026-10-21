@@ -53,6 +53,18 @@ Para restricciones del proyecto (sin firmware ejecutado, sin flasheo, sin `git p
 
 [Informe](../analysis/s121_aip/aip.md) · [doc](../docs/capture/s121-aip.md). Siguiente: significado de AIP/SA/LPS/ANR/ZNR/Zma/Ext/Mbx; formato de la cola `AudioIpCmdQueue`; contenido de las 350 entradas del backup.
 
+## S119 — `[APL]`: la apertura/cierre de SA y HW, dentro de `[CAMERA_SA]` (21-10-2026, línea de RE general)
+
+**VERIFICADO (47 tests, `tests/test_s119_apl.py`):** las **42 apariciones de `[APL]` no son un módulo propio**: las 42 están **dentro** de cadenas que empiezan por `"[CAMERA_SA]: "` (13 bytes), p. ej. `[CAMERA_SA]: [APL] HW Open Err %d` `0x43cebde1`, `[CAMERA_SA]: [APL] SA Open Err` `0x43cebe03`, `[CAMERA_SA]: [APL] Calloc InputPrm Err` `0x43cebe46` → **`[APL]` es una etiqueta de segundo nivel dentro de `[CAMERA_SA]`** y la entrada "APL 42" del mapa de módulos de S79 es una sub-etiqueta. 5 funciones emisoras (`0x439cea30` Open 7 trazas, `0x439cebe4` Close 9, `0x439cedd0` Free&Close 4, `0x439ceeb8` Open+ejecución 20, `0x439cf3b8` SA open/close 2) con **42/42 referencias PIC 1:1** bajo la regla estricta; las 5 equivalentes de la A7S en `0x439bcd80`, `0x439bcea0`, `0x439bcfc8`, `0x439bd05c`, `0x439bd3a4`. API: `ExecuteOpenMSG` `0x439d143c`, `ExecuteCloseMSG` `0x439d133c`, `ExecuteCalcStartMSG` `0x439d185c`, `CallocCamSaParam` `0x439d0f58` (la traza la llama *InputPrm*), `GetMemInfo` `0x439d1bd0`, `GetExecUnit` `0x439d168c` (la traza dice *GetZimaNo*); los `unit_hndl` son **handles del DMM** (S113: open `0x43903280`, close `0x43903414`, free `0x43902fbc`).
+
+**Consumidor único**: `[CAMERA_MAIN_TC]` ("ApolloSA"), **un solo llamador** por función (`0x438765ca`, `0x43876650`, `0x438766da`, `0x43876714`, `0x43876a82`); ni `[IMAGING_CAP]` (S106) ni `CamCore` (S107) lo llaman.
+
+**Diferencial A7S fw3.20**: los 42 textos coinciden uno a uno, pero allí **empiezan por `[APL]`** (`[APL] HW Open Err %d` `0x43ce1588`) → la fw3.21 de la A6000 **antepone la etiqueta de módulo** `[CAMERA_SA]: `. El A6300 fw2.01 tiene las mismas 42.
+
+**Aporte metodológico (tercera calibración)**: la regla "ancha" da **67** pares para 42 cadenas reales → 25 falsos positivos comprobados desensamblando. Con S118 (`[SFRA]` 118) y S121 (`[AIP]` 37) son **tres** módulos donde la regla **estricta** coincide exactamente con la verificación a mano.
+
+[Informe](../analysis/s119_apl/apl.md) · [doc](../docs/capture/s119-apl.md). Siguiente: el módulo `[CAMERA_MAIN_TC]` ("ApolloSA"), su consumidor, que sigue sin hito propio; layout de `InputPrm`; por qué la traza dice *GetZimaNo* si la función es `GetExecUnit`; los códigos de error (2, 6, 8, 0xff).
+
 ## S111 — el módulo `[TRK]` (215 cadenas) de tracking y detección (21-10-2026, línea de RE general)
 
 **VERIFICADO (17 tests, `tests/test_s111_trk.py`):** 216 apariciones del literal `[TRK` → **215 cadenas** (214 que empiezan por `[TRK` + 1 anidada: `[TRK]: [TRK] cb_func == NULL`) → **207 textos distintos** (8 repetidos en dos direcciones cada uno) en `0x43cebceb`–`0x43cfe31c`, con **288 sitios de referencia** y **47 funciones** (283 strict + 5 relaxed). Sub-bloques: **STK** 76 trazas (saliency, touch, simulación de color y de toque), **BT** 44, **EDTSA** 19, **PMV** 16, **IRO2G** 13, **DETSA** 9, VAE/VAT/VOT 3 cada uno, más las familias STK_AUTO_SAL / STK_COLOR_SIM / STK_TOUCH_SIM. El código del módulo vive en `0x43a30000`–`0x43a39000` (284 sitios, 43 funciones) y los 4 restantes son *wrappers* de sesión en `0x439c0000`–`0x439d0000`; las zonas `sa_stubs` (ZIT), `fc` y `apl_osal` tienen 0 sitios. El firmware embebido incluye **99 ficheros `FC/*.cpp`** (`0x43cef12a`–`0x43cf707a`).

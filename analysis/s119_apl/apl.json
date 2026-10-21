@@ -1,0 +1,2238 @@
+{
+ "milestone": "S119",
+ "module": "[APL]",
+ "firmware": "A6000 fw3.21",
+ "base_vaddr": "0x43541000",
+ "counts": {
+  "traces": 42,
+  "functions": 5,
+  "subblocks": 10,
+  "traces_with_pic_ref": 42,
+  "canon_rule_extra_pairs": 25,
+  "traces_sin_subbloque": 0
+ },
+ "strings": [
+  {
+   "vaddr_full": "0x43cebde1",
+   "vaddr_tag": "0x43cebdee",
+   "text": "[CAMERA_SA]: [APL] HW Open Err %d",
+   "core": "[APL] HW Open Err %d",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cea78",
+     "func": "0x439cea30"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cea78",
+     "func": "0x439cea30"
+    }
+   ],
+   "funcs": [
+    "0x439cea30"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cebe03",
+   "vaddr_tag": "0x43cebe10",
+   "text": "[CAMERA_SA]: [APL] SA Open Err",
+   "core": "[APL] SA Open Err",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439ceaa0",
+     "func": "0x439cea30"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439ceaa0",
+     "func": "0x439cea30"
+    }
+   ],
+   "funcs": [
+    "0x439cea30"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cebe22",
+   "vaddr_tag": "0x43cebe2f",
+   "text": "[CAMERA_SA]: [APL] HW Close Err1 %d",
+   "core": "[APL] HW Close Err1 %d",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439ceac4",
+     "func": "0x439cea30"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439ceac4",
+     "func": "0x439cea30"
+    }
+   ],
+   "funcs": [
+    "0x439cea30"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cebe46",
+   "vaddr_tag": "0x43cebe53",
+   "text": "[CAMERA_SA]: [APL] Calloc InputPrm Err",
+   "core": "[APL] Calloc InputPrm Err",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439ceaea",
+     "func": "0x439cea30"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439ceaea",
+     "func": "0x439cea30"
+    }
+   ],
+   "funcs": [
+    "0x439cea30"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cebe6d",
+   "vaddr_tag": "0x43cebe7a",
+   "text": "[CAMERA_SA]: [APL] SA & HW Close Err1 %d %d",
+   "core": "[APL] SA & HW Close Err1 %d %d",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439ceb1a",
+     "func": "0x439cea30"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439ceb1a",
+     "func": "0x439cea30"
+    }
+   ],
+   "funcs": [
+    "0x439cea30"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cebe99",
+   "vaddr_tag": "0x43cebea6",
+   "text": "[CAMERA_SA]: [APL] Open InputPrm Err",
+   "core": "[APL] Open InputPrm Err",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439ceb3e",
+     "func": "0x439cea30"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439ceb3e",
+     "func": "0x439cea30"
+    }
+   ],
+   "funcs": [
+    "0x439cea30"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cebebe",
+   "vaddr_tag": "0x43cebecb",
+   "text": "[CAMERA_SA]: [APL] SA & HW Close Err2 %d %d",
+   "core": "[APL] SA & HW Close Err2 %d %d",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439ceb6c",
+     "func": "0x439cea30"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439ceb6c",
+     "func": "0x439cea30"
+    }
+   ],
+   "funcs": [
+    "0x439cea30"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cebeea",
+   "vaddr_tag": "0x43cebef7",
+   "text": "[CAMERA_SA]: [APL] Close Err1 (unit_hndl:0x%x)",
+   "core": "[APL] Close Err1 (unit_hndl:0x%x)",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cec18",
+     "func": "0x439cebe4"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cec18",
+     "func": "0x439cebe4"
+    }
+   ],
+   "funcs": [
+    "0x439cebe4"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cebf19",
+   "vaddr_tag": "0x43cebf26",
+   "text": "[CAMERA_SA]: [APL] Close Err2 (unit_hndl:0x%x)",
+   "core": "[APL] Close Err2 (unit_hndl:0x%x)",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cec44",
+     "func": "0x439cebe4"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cec44",
+     "func": "0x439cebe4"
+    }
+   ],
+   "funcs": [
+    "0x439cebe4"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cebf48",
+   "vaddr_tag": "0x43cebf55",
+   "text": "[CAMERA_SA]: [APL] Close Err3 (unit_hndl:0x%x)",
+   "core": "[APL] Close Err3 (unit_hndl:0x%x)",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cec6c",
+     "func": "0x439cebe4"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cec6c",
+     "func": "0x439cebe4"
+    }
+   ],
+   "funcs": [
+    "0x439cebe4"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cebf77",
+   "vaddr_tag": "0x43cebf84",
+   "text": "[CAMERA_SA]: [APL] Close Err4 (unit_hndl:0x%x)",
+   "core": "[APL] Close Err4 (unit_hndl:0x%x)",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cec9c",
+     "func": "0x439cebe4"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cec9c",
+     "func": "0x439cebe4"
+    }
+   ],
+   "funcs": [
+    "0x439cebe4"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cebfa6",
+   "vaddr_tag": "0x43cebfb3",
+   "text": "[CAMERA_SA]: [APL] Close Err5 (unit_hndl:0x%x)",
+   "core": "[APL] Close Err5 (unit_hndl:0x%x)",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cecc4",
+     "func": "0x439cebe4"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439b1eea",
+     "func": "0x439b1cb2"
+    },
+    {
+     "site": "0x439cecc4",
+     "func": "0x439cebe4"
+    },
+    {
+     "site": "0x439cecce",
+     "func": "0x439cebe4"
+    }
+   ],
+   "funcs": [
+    "0x439cebe4"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cebfd5",
+   "vaddr_tag": "0x43cebfe2",
+   "text": "[CAMERA_SA]: [APL] Close Err6 (unit_hndl:0x%x)",
+   "core": "[APL] Close Err6 (unit_hndl:0x%x)",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cecec",
+     "func": "0x439cebe4"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cec6c",
+     "func": "0x439cebe4"
+    },
+    {
+     "site": "0x439cecec",
+     "func": "0x439cebe4"
+    },
+    {
+     "site": "0x439cecf6",
+     "func": "0x439cebe4"
+    }
+   ],
+   "funcs": [
+    "0x439cebe4"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec004",
+   "vaddr_tag": "0x43cec011",
+   "text": "[CAMERA_SA]: [APL] Close Err7 (unit_hndl:0x%x)",
+   "core": "[APL] Close Err7 (unit_hndl:0x%x)",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439ced14",
+     "func": "0x439cebe4"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439ced14",
+     "func": "0x439cebe4"
+    }
+   ],
+   "funcs": [
+    "0x439cebe4"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec033",
+   "vaddr_tag": "0x43cec040",
+   "text": "[CAMERA_SA]: [APL] SA Close Err1",
+   "core": "[APL] SA Close Err1",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439ced3c",
+     "func": "0x439cebe4"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439ced3c",
+     "func": "0x439cebe4"
+    }
+   ],
+   "funcs": [
+    "0x439cebe4"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec054",
+   "vaddr_tag": "0x43cec061",
+   "text": "[CAMERA_SA]: [APL] HW Close Err2 %d",
+   "core": "[APL] HW Close Err2 %d",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439ced60",
+     "func": "0x439cebe4"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439ced60",
+     "func": "0x439cebe4"
+    }
+   ],
+   "funcs": [
+    "0x439cebe4"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec078",
+   "vaddr_tag": "0x43cec085",
+   "text": "[CAMERA_SA]: [APL] Open Err1 (unit_hndl:0x%x)",
+   "core": "[APL] Open Err1 (unit_hndl:0x%x)",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cee06",
+     "func": "0x439cedd0"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cee06",
+     "func": "0x439cedd0"
+    }
+   ],
+   "funcs": [
+    "0x439cedd0"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec0a6",
+   "vaddr_tag": "0x43cec0b3",
+   "text": "[CAMERA_SA]: [APL] Free & Close Err1 (unit_hndl:0x%x)",
+   "core": "[APL] Free & Close Err1 (unit_hndl:0x%x)",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cee26",
+     "func": "0x439cedd0"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cee26",
+     "func": "0x439cedd0"
+    }
+   ],
+   "funcs": [
+    "0x439cedd0"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec0dc",
+   "vaddr_tag": "0x43cec0e9",
+   "text": "[CAMERA_SA]: [APL] Open Err2 (unit_hndl:0x%x)",
+   "core": "[APL] Open Err2 (unit_hndl:0x%x)",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cee4c",
+     "func": "0x439cedd0"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cee4c",
+     "func": "0x439cedd0"
+    }
+   ],
+   "funcs": [
+    "0x439cedd0"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec10a",
+   "vaddr_tag": "0x43cec117",
+   "text": "[CAMERA_SA]: [APL] Free & Close Err2 (unit_hndl:0x%x)",
+   "core": "[APL] Free & Close Err2 (unit_hndl:0x%x)",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cee6c",
+     "func": "0x439cedd0"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cee0e",
+     "func": "0x439cedd0"
+    },
+    {
+     "site": "0x439cee6c",
+     "func": "0x439cedd0"
+    }
+   ],
+   "funcs": [
+    "0x439cedd0"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec140",
+   "vaddr_tag": "0x43cec14d",
+   "text": "[CAMERA_SA]: [APL] GetZimaNo Err %d",
+   "core": "[APL] GetZimaNo Err %d",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cef1c",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cee4c",
+     "func": "0x439cedd0"
+    },
+    {
+     "site": "0x439cee54",
+     "func": "0x439cedd0"
+    },
+    {
+     "site": "0x439cef1c",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "funcs": [
+    "0x439ceeb8"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec164",
+   "vaddr_tag": "0x43cec171",
+   "text": "[CAMERA_SA]: [APL] Open Err3 (unit_hndl:0x%x)",
+   "core": "[APL] Open Err3 (unit_hndl:0x%x)",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cef58",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cee06",
+     "func": "0x439cedd0"
+    },
+    {
+     "site": "0x439cef58",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "funcs": [
+    "0x439ceeb8"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec192",
+   "vaddr_tag": "0x43cec19f",
+   "text": "[CAMERA_SA]: [APL] GetMemInfo Err1 (unit_hndl:0x%x)",
+   "core": "[APL] GetMemInfo Err1 (unit_hndl:0x%x)",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cefa4",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cefa4",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "funcs": [
+    "0x439ceeb8"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec1c6",
+   "vaddr_tag": "0x43cec1d3",
+   "text": "[CAMERA_SA]: [APL] `HME_BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X",
+   "core": "[APL] `HME_BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cefd2",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439b288e",
+     "func": "0x439b2814"
+    },
+    {
+     "site": "0x439cefd2",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "funcs": [
+    "0x439ceeb8"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec208",
+   "vaddr_tag": "0x43cec215",
+   "text": "[CAMERA_SA]: [APL] GetMemInfo Err2 (unit_hndl:0x%x)",
+   "core": "[APL] GetMemInfo Err2 (unit_hndl:0x%x)",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cf00c",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cf00c",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "funcs": [
+    "0x439ceeb8"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec23c",
+   "vaddr_tag": "0x43cec249",
+   "text": "[CAMERA_SA]: [APL] `HME_BaseRef_Addr' invalid 0x%X 0x%X 0x%X 0x%X",
+   "core": "[APL] `HME_BaseRef_Addr' invalid 0x%X 0x%X 0x%X 0x%X",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cf03a",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cf03a",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "funcs": [
+    "0x439ceeb8"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec27e",
+   "vaddr_tag": "0x43cec28b",
+   "text": "[CAMERA_SA]: [APL] GetMemInfo Err3 (unit_hndl:0x%x)",
+   "core": "[APL] GetMemInfo Err3 (unit_hndl:0x%x)",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cf07a",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cf00c",
+     "func": "0x439ceeb8"
+    },
+    {
+     "site": "0x439cf07a",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "funcs": [
+    "0x439ceeb8"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec2b2",
+   "vaddr_tag": "0x43cec2bf",
+   "text": "[CAMERA_SA]: [APL] `Work_Addr' invalid 0x%X",
+   "core": "[APL] `Work_Addr' invalid 0x%X",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cf09a",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439b297a",
+     "func": "0x439b2814"
+    },
+    {
+     "site": "0x439cf09a",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "funcs": [
+    "0x439ceeb8"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec2de",
+   "vaddr_tag": "0x43cec2eb",
+   "text": "[CAMERA_SA]: [APL] GetMemInfo Err4 (unit_hndl:0x%x)",
+   "core": "[APL] GetMemInfo Err4 (unit_hndl:0x%x)",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cf0d4",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cf00c",
+     "func": "0x439ceeb8"
+    },
+    {
+     "site": "0x439cf0d4",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "funcs": [
+    "0x439ceeb8"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec312",
+   "vaddr_tag": "0x43cec31f",
+   "text": "[CAMERA_SA]: [APL] `Vec_Addr' invalid 0x%X",
+   "core": "[APL] `Vec_Addr' invalid 0x%X",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cf0f6",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cf016",
+     "func": "0x439ceeb8"
+    },
+    {
+     "site": "0x439cf0f6",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "funcs": [
+    "0x439ceeb8"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec33d",
+   "vaddr_tag": "0x43cec34a",
+   "text": "[CAMERA_SA]: [APL] GetMemInfo Err5 (unit_hndl:0x%x)",
+   "core": "[APL] GetMemInfo Err5 (unit_hndl:0x%x)",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cf126",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cf126",
+     "func": "0x439ceeb8"
+    },
+    {
+     "site": "0x439cf130",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "funcs": [
+    "0x439ceeb8"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec371",
+   "vaddr_tag": "0x43cec37e",
+   "text": "[CAMERA_SA]: [APL] `Result_Addr' invalid 0x%X",
+   "core": "[APL] `Result_Addr' invalid 0x%X",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cf14c",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cf07a",
+     "func": "0x439ceeb8"
+    },
+    {
+     "site": "0x439cf14c",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "funcs": [
+    "0x439ceeb8"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec39f",
+   "vaddr_tag": "0x43cec3ac",
+   "text": "[CAMERA_SA]: [APL] `HME_BaseTar_LineAddAddr' invalid 0x%X",
+   "core": "[APL] `HME_BaseTar_LineAddAddr' invalid 0x%X",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cf170",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cf170",
+     "func": "0x439ceeb8"
+    },
+    {
+     "site": "0x439cf1a4",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "funcs": [
+    "0x439ceeb8"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec3d9",
+   "vaddr_tag": "0x43cec3e6",
+   "text": "[CAMERA_SA]: [APL] HW GetCoreNum Err %d",
+   "core": "[APL] HW GetCoreNum Err %d",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cf19c",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cf154",
+     "func": "0x439ceeb8"
+    },
+    {
+     "site": "0x439cf19c",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "funcs": [
+    "0x439ceeb8"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec401",
+   "vaddr_tag": "0x43cec40e",
+   "text": "[CAMERA_SA]: [APL] HW SetMode Err %d",
+   "core": "[APL] HW SetMode Err %d",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cf1e4",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cf126",
+     "func": "0x439ceeb8"
+    },
+    {
+     "site": "0x439cf1e4",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "funcs": [
+    "0x439ceeb8"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec426",
+   "vaddr_tag": "0x43cec433",
+   "text": "[CAMERA_SA]: [APL] MmuMakeParam Err %d",
+   "core": "[APL] MmuMakeParam Err %d",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cf21a",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cf0d4",
+     "func": "0x439ceeb8"
+    },
+    {
+     "site": "0x439cf21a",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "funcs": [
+    "0x439ceeb8"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec44d",
+   "vaddr_tag": "0x43cec45a",
+   "text": "[CAMERA_SA]: [APL] Open Err4 (unit_hndl:0x%x)",
+   "core": "[APL] Open Err4 (unit_hndl:0x%x)",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cf2dc",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cf226",
+     "func": "0x439ceeb8"
+    },
+    {
+     "site": "0x439cf2dc",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "funcs": [
+    "0x439ceeb8"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec47b",
+   "vaddr_tag": "0x43cec488",
+   "text": "[CAMERA_SA]: [APL] HW TimeOut",
+   "core": "[APL] HW TimeOut",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cf31c",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cf31c",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "funcs": [
+    "0x439ceeb8"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec499",
+   "vaddr_tag": "0x43cec4a6",
+   "text": "[CAMERA_SA]: [APL] HW Abort Err %d",
+   "core": "[APL] HW Abort Err %d",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cf33e",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cd498",
+     "func": "0x439cd420"
+    },
+    {
+     "site": "0x439cf33e",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "funcs": [
+    "0x439ceeb8"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec4bc",
+   "vaddr_tag": "0x43cec4c9",
+   "text": "[CAMERA_SA]: [APL] Output Ref Img",
+   "core": "[APL] Output Ref Img",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cf366",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cf154",
+     "func": "0x439ceeb8"
+    },
+    {
+     "site": "0x439cf348",
+     "func": "0x439ceeb8"
+    },
+    {
+     "site": "0x439cf366",
+     "func": "0x439ceeb8"
+    }
+   ],
+   "funcs": [
+    "0x439ceeb8"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec4de",
+   "vaddr_tag": "0x43cec4eb",
+   "text": "[CAMERA_SA]: [APL] SA Open Err2",
+   "core": "[APL] SA Open Err2",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cf3ea",
+     "func": "0x439cf3b8"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cf2dc",
+     "func": "0x439ceeb8"
+    },
+    {
+     "site": "0x439cf3ea",
+     "func": "0x439cf3b8"
+    }
+   ],
+   "funcs": [
+    "0x439cf3b8"
+   ]
+  },
+  {
+   "vaddr_full": "0x43cec4fe",
+   "vaddr_tag": "0x43cec50b",
+   "text": "[CAMERA_SA]: [APL] SA Close Err2",
+   "core": "[APL] SA Close Err2",
+   "prefix": "[CAMERA_SA]: ",
+   "strict_sites": [
+    {
+     "site": "0x439cf40e",
+     "func": "0x439cf3b8"
+    }
+   ],
+   "canon_sites": [
+    {
+     "site": "0x439cf226",
+     "func": "0x439ceeb8"
+    },
+    {
+     "site": "0x439cf40e",
+     "func": "0x439cf3b8"
+    }
+   ],
+   "funcs": [
+    "0x439cf3b8"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "func": "0x439ceeb8",
+   "role": "APL Open + ejecucion (GetMemInfo/MMU/HW SetMode)",
+   "n_traces": 20,
+   "traces": [
+    {
+     "vaddr_tag": "0x43cec14d",
+     "vaddr_full": "0x43cec140",
+     "text": "[CAMERA_SA]: [APL] GetZimaNo Err %d",
+     "core": "[APL] GetZimaNo Err %d",
+     "site": "0x439cef1c"
+    },
+    {
+     "vaddr_tag": "0x43cec171",
+     "vaddr_full": "0x43cec164",
+     "text": "[CAMERA_SA]: [APL] Open Err3 (unit_hndl:0x%x)",
+     "core": "[APL] Open Err3 (unit_hndl:0x%x)",
+     "site": "0x439cef58"
+    },
+    {
+     "vaddr_tag": "0x43cec19f",
+     "vaddr_full": "0x43cec192",
+     "text": "[CAMERA_SA]: [APL] GetMemInfo Err1 (unit_hndl:0x%x)",
+     "core": "[APL] GetMemInfo Err1 (unit_hndl:0x%x)",
+     "site": "0x439cefa4"
+    },
+    {
+     "vaddr_tag": "0x43cec1d3",
+     "vaddr_full": "0x43cec1c6",
+     "text": "[CAMERA_SA]: [APL] `HME_BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X",
+     "core": "[APL] `HME_BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X",
+     "site": "0x439cefd2"
+    },
+    {
+     "vaddr_tag": "0x43cec215",
+     "vaddr_full": "0x43cec208",
+     "text": "[CAMERA_SA]: [APL] GetMemInfo Err2 (unit_hndl:0x%x)",
+     "core": "[APL] GetMemInfo Err2 (unit_hndl:0x%x)",
+     "site": "0x439cf00c"
+    },
+    {
+     "vaddr_tag": "0x43cec249",
+     "vaddr_full": "0x43cec23c",
+     "text": "[CAMERA_SA]: [APL] `HME_BaseRef_Addr' invalid 0x%X 0x%X 0x%X 0x%X",
+     "core": "[APL] `HME_BaseRef_Addr' invalid 0x%X 0x%X 0x%X 0x%X",
+     "site": "0x439cf03a"
+    },
+    {
+     "vaddr_tag": "0x43cec28b",
+     "vaddr_full": "0x43cec27e",
+     "text": "[CAMERA_SA]: [APL] GetMemInfo Err3 (unit_hndl:0x%x)",
+     "core": "[APL] GetMemInfo Err3 (unit_hndl:0x%x)",
+     "site": "0x439cf07a"
+    },
+    {
+     "vaddr_tag": "0x43cec2bf",
+     "vaddr_full": "0x43cec2b2",
+     "text": "[CAMERA_SA]: [APL] `Work_Addr' invalid 0x%X",
+     "core": "[APL] `Work_Addr' invalid 0x%X",
+     "site": "0x439cf09a"
+    },
+    {
+     "vaddr_tag": "0x43cec2eb",
+     "vaddr_full": "0x43cec2de",
+     "text": "[CAMERA_SA]: [APL] GetMemInfo Err4 (unit_hndl:0x%x)",
+     "core": "[APL] GetMemInfo Err4 (unit_hndl:0x%x)",
+     "site": "0x439cf0d4"
+    },
+    {
+     "vaddr_tag": "0x43cec31f",
+     "vaddr_full": "0x43cec312",
+     "text": "[CAMERA_SA]: [APL] `Vec_Addr' invalid 0x%X",
+     "core": "[APL] `Vec_Addr' invalid 0x%X",
+     "site": "0x439cf0f6"
+    },
+    {
+     "vaddr_tag": "0x43cec34a",
+     "vaddr_full": "0x43cec33d",
+     "text": "[CAMERA_SA]: [APL] GetMemInfo Err5 (unit_hndl:0x%x)",
+     "core": "[APL] GetMemInfo Err5 (unit_hndl:0x%x)",
+     "site": "0x439cf126"
+    },
+    {
+     "vaddr_tag": "0x43cec37e",
+     "vaddr_full": "0x43cec371",
+     "text": "[CAMERA_SA]: [APL] `Result_Addr' invalid 0x%X",
+     "core": "[APL] `Result_Addr' invalid 0x%X",
+     "site": "0x439cf14c"
+    },
+    {
+     "vaddr_tag": "0x43cec3ac",
+     "vaddr_full": "0x43cec39f",
+     "text": "[CAMERA_SA]: [APL] `HME_BaseTar_LineAddAddr' invalid 0x%X",
+     "core": "[APL] `HME_BaseTar_LineAddAddr' invalid 0x%X",
+     "site": "0x439cf170"
+    },
+    {
+     "vaddr_tag": "0x43cec3e6",
+     "vaddr_full": "0x43cec3d9",
+     "text": "[CAMERA_SA]: [APL] HW GetCoreNum Err %d",
+     "core": "[APL] HW GetCoreNum Err %d",
+     "site": "0x439cf19c"
+    },
+    {
+     "vaddr_tag": "0x43cec40e",
+     "vaddr_full": "0x43cec401",
+     "text": "[CAMERA_SA]: [APL] HW SetMode Err %d",
+     "core": "[APL] HW SetMode Err %d",
+     "site": "0x439cf1e4"
+    },
+    {
+     "vaddr_tag": "0x43cec433",
+     "vaddr_full": "0x43cec426",
+     "text": "[CAMERA_SA]: [APL] MmuMakeParam Err %d",
+     "core": "[APL] MmuMakeParam Err %d",
+     "site": "0x439cf21a"
+    },
+    {
+     "vaddr_tag": "0x43cec45a",
+     "vaddr_full": "0x43cec44d",
+     "text": "[CAMERA_SA]: [APL] Open Err4 (unit_hndl:0x%x)",
+     "core": "[APL] Open Err4 (unit_hndl:0x%x)",
+     "site": "0x439cf2dc"
+    },
+    {
+     "vaddr_tag": "0x43cec488",
+     "vaddr_full": "0x43cec47b",
+     "text": "[CAMERA_SA]: [APL] HW TimeOut",
+     "core": "[APL] HW TimeOut",
+     "site": "0x439cf31c"
+    },
+    {
+     "vaddr_tag": "0x43cec4a6",
+     "vaddr_full": "0x43cec499",
+     "text": "[CAMERA_SA]: [APL] HW Abort Err %d",
+     "core": "[APL] HW Abort Err %d",
+     "site": "0x439cf33e"
+    },
+    {
+     "vaddr_tag": "0x43cec4c9",
+     "vaddr_full": "0x43cec4bc",
+     "text": "[CAMERA_SA]: [APL] Output Ref Img",
+     "core": "[APL] Output Ref Img",
+     "site": "0x439cf366"
+    }
+   ]
+  },
+  {
+   "func": "0x439cebe4",
+   "role": "APL Close (7 handles + SA + HW)",
+   "n_traces": 9,
+   "traces": [
+    {
+     "vaddr_tag": "0x43cebef7",
+     "vaddr_full": "0x43cebeea",
+     "text": "[CAMERA_SA]: [APL] Close Err1 (unit_hndl:0x%x)",
+     "core": "[APL] Close Err1 (unit_hndl:0x%x)",
+     "site": "0x439cec18"
+    },
+    {
+     "vaddr_tag": "0x43cebf26",
+     "vaddr_full": "0x43cebf19",
+     "text": "[CAMERA_SA]: [APL] Close Err2 (unit_hndl:0x%x)",
+     "core": "[APL] Close Err2 (unit_hndl:0x%x)",
+     "site": "0x439cec44"
+    },
+    {
+     "vaddr_tag": "0x43cebf55",
+     "vaddr_full": "0x43cebf48",
+     "text": "[CAMERA_SA]: [APL] Close Err3 (unit_hndl:0x%x)",
+     "core": "[APL] Close Err3 (unit_hndl:0x%x)",
+     "site": "0x439cec6c"
+    },
+    {
+     "vaddr_tag": "0x43cebf84",
+     "vaddr_full": "0x43cebf77",
+     "text": "[CAMERA_SA]: [APL] Close Err4 (unit_hndl:0x%x)",
+     "core": "[APL] Close Err4 (unit_hndl:0x%x)",
+     "site": "0x439cec9c"
+    },
+    {
+     "vaddr_tag": "0x43cebfb3",
+     "vaddr_full": "0x43cebfa6",
+     "text": "[CAMERA_SA]: [APL] Close Err5 (unit_hndl:0x%x)",
+     "core": "[APL] Close Err5 (unit_hndl:0x%x)",
+     "site": "0x439cecc4"
+    },
+    {
+     "vaddr_tag": "0x43cebfe2",
+     "vaddr_full": "0x43cebfd5",
+     "text": "[CAMERA_SA]: [APL] Close Err6 (unit_hndl:0x%x)",
+     "core": "[APL] Close Err6 (unit_hndl:0x%x)",
+     "site": "0x439cecec"
+    },
+    {
+     "vaddr_tag": "0x43cec011",
+     "vaddr_full": "0x43cec004",
+     "text": "[CAMERA_SA]: [APL] Close Err7 (unit_hndl:0x%x)",
+     "core": "[APL] Close Err7 (unit_hndl:0x%x)",
+     "site": "0x439ced14"
+    },
+    {
+     "vaddr_tag": "0x43cec040",
+     "vaddr_full": "0x43cec033",
+     "text": "[CAMERA_SA]: [APL] SA Close Err1",
+     "core": "[APL] SA Close Err1",
+     "site": "0x439ced3c"
+    },
+    {
+     "vaddr_tag": "0x43cec061",
+     "vaddr_full": "0x43cec054",
+     "text": "[CAMERA_SA]: [APL] HW Close Err2 %d",
+     "core": "[APL] HW Close Err2 %d",
+     "site": "0x439ced60"
+    }
+   ]
+  },
+  {
+   "func": "0x439cea30",
+   "role": "APL Open (HW + SA + InputPrm)",
+   "n_traces": 7,
+   "traces": [
+    {
+     "vaddr_tag": "0x43cebdee",
+     "vaddr_full": "0x43cebde1",
+     "text": "[CAMERA_SA]: [APL] HW Open Err %d",
+     "core": "[APL] HW Open Err %d",
+     "site": "0x439cea78"
+    },
+    {
+     "vaddr_tag": "0x43cebe10",
+     "vaddr_full": "0x43cebe03",
+     "text": "[CAMERA_SA]: [APL] SA Open Err",
+     "core": "[APL] SA Open Err",
+     "site": "0x439ceaa0"
+    },
+    {
+     "vaddr_tag": "0x43cebe2f",
+     "vaddr_full": "0x43cebe22",
+     "text": "[CAMERA_SA]: [APL] HW Close Err1 %d",
+     "core": "[APL] HW Close Err1 %d",
+     "site": "0x439ceac4"
+    },
+    {
+     "vaddr_tag": "0x43cebe53",
+     "vaddr_full": "0x43cebe46",
+     "text": "[CAMERA_SA]: [APL] Calloc InputPrm Err",
+     "core": "[APL] Calloc InputPrm Err",
+     "site": "0x439ceaea"
+    },
+    {
+     "vaddr_tag": "0x43cebe7a",
+     "vaddr_full": "0x43cebe6d",
+     "text": "[CAMERA_SA]: [APL] SA & HW Close Err1 %d %d",
+     "core": "[APL] SA & HW Close Err1 %d %d",
+     "site": "0x439ceb1a"
+    },
+    {
+     "vaddr_tag": "0x43cebea6",
+     "vaddr_full": "0x43cebe99",
+     "text": "[CAMERA_SA]: [APL] Open InputPrm Err",
+     "core": "[APL] Open InputPrm Err",
+     "site": "0x439ceb3e"
+    },
+    {
+     "vaddr_tag": "0x43cebecb",
+     "vaddr_full": "0x43cebebe",
+     "text": "[CAMERA_SA]: [APL] SA & HW Close Err2 %d %d",
+     "core": "[APL] SA & HW Close Err2 %d %d",
+     "site": "0x439ceb6c"
+    }
+   ]
+  },
+  {
+   "func": "0x439cedd0",
+   "role": "APL Free & Close (InputPrm)",
+   "n_traces": 4,
+   "traces": [
+    {
+     "vaddr_tag": "0x43cec085",
+     "vaddr_full": "0x43cec078",
+     "text": "[CAMERA_SA]: [APL] Open Err1 (unit_hndl:0x%x)",
+     "core": "[APL] Open Err1 (unit_hndl:0x%x)",
+     "site": "0x439cee06"
+    },
+    {
+     "vaddr_tag": "0x43cec0b3",
+     "vaddr_full": "0x43cec0a6",
+     "text": "[CAMERA_SA]: [APL] Free & Close Err1 (unit_hndl:0x%x)",
+     "core": "[APL] Free & Close Err1 (unit_hndl:0x%x)",
+     "site": "0x439cee26"
+    },
+    {
+     "vaddr_tag": "0x43cec0e9",
+     "vaddr_full": "0x43cec0dc",
+     "text": "[CAMERA_SA]: [APL] Open Err2 (unit_hndl:0x%x)",
+     "core": "[APL] Open Err2 (unit_hndl:0x%x)",
+     "site": "0x439cee4c"
+    },
+    {
+     "vaddr_tag": "0x43cec117",
+     "vaddr_full": "0x43cec10a",
+     "text": "[CAMERA_SA]: [APL] Free & Close Err2 (unit_hndl:0x%x)",
+     "core": "[APL] Free & Close Err2 (unit_hndl:0x%x)",
+     "site": "0x439cee6c"
+    }
+   ]
+  },
+  {
+   "func": "0x439cf3b8",
+   "role": "APL SA open/close (ExecuteOpenMSG/ExecuteCloseMSG)",
+   "n_traces": 2,
+   "traces": [
+    {
+     "vaddr_tag": "0x43cec4eb",
+     "vaddr_full": "0x43cec4de",
+     "text": "[CAMERA_SA]: [APL] SA Open Err2",
+     "core": "[APL] SA Open Err2",
+     "site": "0x439cf3ea"
+    },
+    {
+     "vaddr_tag": "0x43cec50b",
+     "vaddr_full": "0x43cec4fe",
+     "text": "[CAMERA_SA]: [APL] SA Close Err2",
+     "core": "[APL] SA Close Err2",
+     "site": "0x439cf40e"
+    }
+   ]
+  }
+ ],
+ "subblocks": [
+  {
+   "name": "HW Open/Close",
+   "n": 3,
+   "vaddr_lo": "0x43cebdee",
+   "vaddr_hi": "0x43cec061",
+   "traces": [
+    "0x43cebdee",
+    "0x43cebe2f",
+    "0x43cec061"
+   ]
+  },
+  {
+   "name": "SA Open/Close",
+   "n": 4,
+   "vaddr_lo": "0x43cebe10",
+   "vaddr_hi": "0x43cec50b",
+   "traces": [
+    "0x43cebe10",
+    "0x43cec040",
+    "0x43cec4eb",
+    "0x43cec50b"
+   ]
+  },
+  {
+   "name": "Handles: Open/Close/Free",
+   "n": 13,
+   "vaddr_lo": "0x43cebef7",
+   "vaddr_hi": "0x43cec45a",
+   "traces": [
+    "0x43cebef7",
+    "0x43cebf26",
+    "0x43cebf55",
+    "0x43cebf84",
+    "0x43cebfb3",
+    "0x43cebfe2",
+    "0x43cec011",
+    "0x43cec085",
+    "0x43cec0b3",
+    "0x43cec0e9",
+    "0x43cec117",
+    "0x43cec171",
+    "0x43cec45a"
+   ]
+  },
+  {
+   "name": "Rollback SA & HW",
+   "n": 2,
+   "vaddr_lo": "0x43cebe7a",
+   "vaddr_hi": "0x43cebecb",
+   "traces": [
+    "0x43cebe7a",
+    "0x43cebecb"
+   ]
+  },
+  {
+   "name": "InputPrm",
+   "n": 2,
+   "vaddr_lo": "0x43cebe53",
+   "vaddr_hi": "0x43cebea6",
+   "traces": [
+    "0x43cebe53",
+    "0x43cebea6"
+   ]
+  },
+  {
+   "name": "GetMemInfo",
+   "n": 5,
+   "vaddr_lo": "0x43cec19f",
+   "vaddr_hi": "0x43cec34a",
+   "traces": [
+    "0x43cec19f",
+    "0x43cec215",
+    "0x43cec28b",
+    "0x43cec2eb",
+    "0x43cec34a"
+   ]
+  },
+  {
+   "name": "Direcciones de memoria (HME/Work/Vec/Result)",
+   "n": 6,
+   "vaddr_lo": "0x43cec1d3",
+   "vaddr_hi": "0x43cec3ac",
+   "traces": [
+    "0x43cec1d3",
+    "0x43cec249",
+    "0x43cec2bf",
+    "0x43cec31f",
+    "0x43cec37e",
+    "0x43cec3ac"
+   ]
+  },
+  {
+   "name": "GetZimaNo",
+   "n": 1,
+   "vaddr_lo": "0x43cec14d",
+   "vaddr_hi": "0x43cec14d",
+   "traces": [
+    "0x43cec14d"
+   ]
+  },
+  {
+   "name": "Programacion HW/MMU",
+   "n": 4,
+   "vaddr_lo": "0x43cec3e6",
+   "vaddr_hi": "0x43cec4a6",
+   "traces": [
+    "0x43cec3e6",
+    "0x43cec40e",
+    "0x43cec433",
+    "0x43cec4a6"
+   ]
+  },
+  {
+   "name": "Ejecucion",
+   "n": 2,
+   "vaddr_lo": "0x43cec488",
+   "vaddr_hi": "0x43cec4c9",
+   "traces": [
+    "0x43cec488",
+    "0x43cec4c9"
+   ]
+  }
+ ],
+ "traces_sin_subbloque": [],
+ "api_calls": {
+  "0x439cea30": [
+   {
+    "site": "0x439cea40",
+    "target": "0x43ae071a"
+   },
+   {
+    "site": "0x439cea46",
+    "target": "0x43ae0752"
+   },
+   {
+    "site": "0x439cea50",
+    "target": "0x43ae1eee"
+   },
+   {
+    "site": "0x439cea66",
+    "target": "0x43b7db64"
+   },
+   {
+    "site": "0x439cea7a",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cea84",
+    "target": "0x43902718"
+   },
+   {
+    "site": "0x439cea90",
+    "target": "0x43b6d796"
+   },
+   {
+    "site": "0x439ceaa2",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439ceaaa",
+    "target": "0x43902718"
+   },
+   {
+    "site": "0x439ceab0",
+    "target": "0x43b7dbd6"
+   },
+   {
+    "site": "0x439ceac6",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cead0",
+    "target": "0x43902718"
+   },
+   {
+    "site": "0x439ceadc",
+    "target": "0x439d0f58"
+   },
+   {
+    "site": "0x439ceaec",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439ceaf4",
+    "target": "0x43902718"
+   },
+   {
+    "site": "0x439ceafe",
+    "target": "0x43b6d77c"
+   },
+   {
+    "site": "0x439ceb06",
+    "target": "0x43b7dbd6"
+   },
+   {
+    "site": "0x439ceb20",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439ceb30",
+    "target": "0x43b6d598"
+   },
+   {
+    "site": "0x439ceb40",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439ceb48",
+    "target": "0x43902718"
+   },
+   {
+    "site": "0x439ceb52",
+    "target": "0x43b6d77c"
+   },
+   {
+    "site": "0x439ceb5a",
+    "target": "0x43b7dbd6"
+   },
+   {
+    "site": "0x439ceb72",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439ceb7e",
+    "target": "0x43902718"
+   },
+   {
+    "site": "0x439ceb92",
+    "target": "0x43ae073a"
+   }
+  ],
+  "0x439cebe4": [
+   {
+    "site": "0x439cebf0",
+    "target": "0x43ae071a"
+   },
+   {
+    "site": "0x439cebf6",
+    "target": "0x43ae0752"
+   },
+   {
+    "site": "0x439cebfe",
+    "target": "0x43ae1eee"
+   },
+   {
+    "site": "0x439cec06",
+    "target": "0x43b6d5ac"
+   },
+   {
+    "site": "0x439cec1a",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cec24",
+    "target": "0x43902718"
+   },
+   {
+    "site": "0x439cec32",
+    "target": "0x43b6d5ac"
+   },
+   {
+    "site": "0x439cec46",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cec50",
+    "target": "0x43902718"
+   },
+   {
+    "site": "0x439cec5a",
+    "target": "0x43b6d5ac"
+   },
+   {
+    "site": "0x439cec6e",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cec78",
+    "target": "0x43902718"
+   },
+   {
+    "site": "0x439cec8a",
+    "target": "0x43b6d5ac"
+   },
+   {
+    "site": "0x439cec9e",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439ceca8",
+    "target": "0x43902718"
+   },
+   {
+    "site": "0x439cecb2",
+    "target": "0x43b6d5ac"
+   },
+   {
+    "site": "0x439cecc6",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cecd0",
+    "target": "0x43902718"
+   },
+   {
+    "site": "0x439cecda",
+    "target": "0x43b6d5ac"
+   },
+   {
+    "site": "0x439cecee",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cecf8",
+    "target": "0x43902718"
+   },
+   {
+    "site": "0x439ced02",
+    "target": "0x43b6d5ac"
+   },
+   {
+    "site": "0x439ced16",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439ced20",
+    "target": "0x43902718"
+   },
+   {
+    "site": "0x439ced2c",
+    "target": "0x43b6d77c"
+   },
+   {
+    "site": "0x439ced3e",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439ced46",
+    "target": "0x43902718"
+   },
+   {
+    "site": "0x439ced4e",
+    "target": "0x43b7dbd6"
+   },
+   {
+    "site": "0x439ced62",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439ced6c",
+    "target": "0x43902718"
+   },
+   {
+    "site": "0x439ced74",
+    "target": "0x43ae073a"
+   }
+  ],
+  "0x439cedd0": [
+   {
+    "site": "0x439ceddc",
+    "target": "0x43ae071a"
+   },
+   {
+    "site": "0x439cede2",
+    "target": "0x43ae0752"
+   },
+   {
+    "site": "0x439cedea",
+    "target": "0x43ae1eee"
+   },
+   {
+    "site": "0x439cedf4",
+    "target": "0x43b6d598"
+   },
+   {
+    "site": "0x439cee08",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cee14",
+    "target": "0x43b6d5b4"
+   },
+   {
+    "site": "0x439cee28",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cee3a",
+    "target": "0x43b6d598"
+   },
+   {
+    "site": "0x439cee4e",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cee5a",
+    "target": "0x43b6d5b4"
+   },
+   {
+    "site": "0x439cee6e",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cee78",
+    "target": "0x43902718"
+   },
+   {
+    "site": "0x439cee84",
+    "target": "0x43ae073a"
+   }
+  ],
+  "0x439ceeb8": [
+   {
+    "site": "0x439ceeca",
+    "target": "0x43ae071a"
+   },
+   {
+    "site": "0x439ceed0",
+    "target": "0x43ae0752"
+   },
+   {
+    "site": "0x439ceed8",
+    "target": "0x43ae1eee"
+   },
+   {
+    "site": "0x439cef0a",
+    "target": "0x439d168c"
+   },
+   {
+    "site": "0x439cef1e",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cef46",
+    "target": "0x43b6d598"
+   },
+   {
+    "site": "0x439cef5a",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cef90",
+    "target": "0x439d1bd0"
+   },
+   {
+    "site": "0x439cefa6",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cefda",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439ceff8",
+    "target": "0x439d1bd0"
+   },
+   {
+    "site": "0x439cf00e",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cf042",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cf054",
+    "target": "0x43902718"
+   },
+   {
+    "site": "0x439cf066",
+    "target": "0x439d1bd0"
+   },
+   {
+    "site": "0x439cf07c",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cf09e",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cf0c0",
+    "target": "0x439d1bd0"
+   },
+   {
+    "site": "0x439cf0d6",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cf0f8",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cf112",
+    "target": "0x439d1bd0"
+   },
+   {
+    "site": "0x439cf128",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cf132",
+    "target": "0x43902718"
+   },
+   {
+    "site": "0x439cf14e",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cf172",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cf17c",
+    "target": "0x43902718"
+   },
+   {
+    "site": "0x439cf18a",
+    "target": "0x43b7dc74"
+   },
+   {
+    "site": "0x439cf19e",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cf1cc",
+    "target": "0x43b7dc26"
+   },
+   {
+    "site": "0x439cf1e6",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cf208",
+    "target": "0x43b5ea54"
+   },
+   {
+    "site": "0x439cf21e",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cf228",
+    "target": "0x43902718"
+   },
+   {
+    "site": "0x439cf2ca",
+    "target": "0x43b6d598"
+   },
+   {
+    "site": "0x439cf2de",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cf2e8",
+    "target": "0x43902718"
+   },
+   {
+    "site": "0x439cf306",
+    "target": "0x43b6d7a8"
+   },
+   {
+    "site": "0x439cf31e",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cf326",
+    "target": "0x43902718"
+   },
+   {
+    "site": "0x439cf32c",
+    "target": "0x43a2ff38"
+   },
+   {
+    "site": "0x439cf340",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cf34a",
+    "target": "0x43902718"
+   },
+   {
+    "site": "0x439cf368",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cf370",
+    "target": "0x43902718"
+   },
+   {
+    "site": "0x439cf382",
+    "target": "0x43ae073a"
+   }
+  ],
+  "0x439cf3b8": [
+   {
+    "site": "0x439cf3c0",
+    "target": "0x43ae071a"
+   },
+   {
+    "site": "0x439cf3c6",
+    "target": "0x43ae0752"
+   },
+   {
+    "site": "0x439cf3ce",
+    "target": "0x43ae1eee"
+   },
+   {
+    "site": "0x439cf3da",
+    "target": "0x43b6d796"
+   },
+   {
+    "site": "0x439cf3ec",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cf3fe",
+    "target": "0x43b6d77c"
+   },
+   {
+    "site": "0x439cf410",
+    "target": "0x439ce984"
+   },
+   {
+    "site": "0x439cf418",
+    "target": "0x43902718"
+   },
+   {
+    "site": "0x439cf41e",
+    "target": "0x43ae073a"
+   }
+  ]
+ },
+ "callers": {
+  "0x43876a80": [
+   "0x4387352c"
+  ],
+  "0x43876ea4": [
+   "0x4354af32"
+  ],
+  "0x43876cc6": [],
+  "0x438765c8": [
+   "0x43873378"
+  ],
+  "0x43876d08": [
+   "0x437d2326"
+  ],
+  "0x43876c0c": [],
+  "0x43876ab4": [
+   "0x4387343a"
+  ],
+  "0x43874674": [
+   "0x437d1c76",
+   "0x43873b26",
+   "0x43874284",
+   "0x438743ca",
+   "0x438747b4",
+   "0x43874c72",
+   "0x43874caa",
+   "0x43874d10",
+   "0x43874ddc",
+   "0x43874e64",
+   "0x43874f30",
+   "0x43874fa8",
+   "0x43875956",
+   "0x43876606",
+   "0x43876778",
+   "0x43af53d4",
+   "0x43af53fc",
+   "0x43b11576"
+  ],
+  "0x43876b74": [
+   "0x438734e8"
+  ],
+  "0x438765fc": [
+   "0x438733e6"
+  ]
+ },
+ "differential": {
+  "a6000_fw321": {
+   "n": 42,
+   "prefix": "[CAMERA_SA]: ",
+   "range": [
+    "0x43cebde1",
+    "0x43cec4fe"
+   ]
+  },
+  "a7s_fw320": {
+   "n": 42,
+   "prefix": "",
+   "range": [
+    "0x43ce1588",
+    "0x43ce1a90"
+   ],
+   "funcs": {
+    "0x439bd05c": 20,
+    "0x439bcea0": 9,
+    "0x439bcd80": 7,
+    "0x439bcfc8": 4,
+    "0x439bd3a4": 2
+   }
+  },
+  "a6300_fw201": {
+   "n": 42
+  },
+  "comunes_texto_a_texto_a7s": 42,
+  "solo_a6000_vs_a7s": [],
+  "solo_a7s": [],
+  "comunes_texto_a_texto_a6300": 42,
+  "solo_a6000_vs_a6300": []
+ },
+ "canon_false_positives": [
+  {
+   "trace": "0x43cebfb3",
+   "text": "[APL] Close Err5 (unit_hndl:0x%x)",
+   "false_site": "0x439b1eea",
+   "canon_func": "0x439b1cb2"
+  },
+  {
+   "trace": "0x43cebfb3",
+   "text": "[APL] Close Err5 (unit_hndl:0x%x)",
+   "false_site": "0x439cecce",
+   "canon_func": "0x439cebe4"
+  },
+  {
+   "trace": "0x43cebfe2",
+   "text": "[APL] Close Err6 (unit_hndl:0x%x)",
+   "false_site": "0x439cec6c",
+   "canon_func": "0x439cebe4"
+  },
+  {
+   "trace": "0x43cebfe2",
+   "text": "[APL] Close Err6 (unit_hndl:0x%x)",
+   "false_site": "0x439cecf6",
+   "canon_func": "0x439cebe4"
+  },
+  {
+   "trace": "0x43cec117",
+   "text": "[APL] Free & Close Err2 (unit_hndl:0x%x)",
+   "false_site": "0x439cee0e",
+   "canon_func": "0x439cedd0"
+  },
+  {
+   "trace": "0x43cec14d",
+   "text": "[APL] GetZimaNo Err %d",
+   "false_site": "0x439cee4c",
+   "canon_func": "0x439cedd0"
+  },
+  {
+   "trace": "0x43cec14d",
+   "text": "[APL] GetZimaNo Err %d",
+   "false_site": "0x439cee54",
+   "canon_func": "0x439cedd0"
+  },
+  {
+   "trace": "0x43cec171",
+   "text": "[APL] Open Err3 (unit_hndl:0x%x)",
+   "false_site": "0x439cee06",
+   "canon_func": "0x439cedd0"
+  },
+  {
+   "trace": "0x43cec1d3",
+   "text": "[APL] `HME_BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X",
+   "false_site": "0x439b288e",
+   "canon_func": "0x439b2814"
+  },
+  {
+   "trace": "0x43cec28b",
+   "text": "[APL] GetMemInfo Err3 (unit_hndl:0x%x)",
+   "false_site": "0x439cf00c",
+   "canon_func": "0x439ceeb8"
+  },
+  {
+   "trace": "0x43cec2bf",
+   "text": "[APL] `Work_Addr' invalid 0x%X",
+   "false_site": "0x439b297a",
+   "canon_func": "0x439b2814"
+  },
+  {
+   "trace": "0x43cec2eb",
+   "text": "[APL] GetMemInfo Err4 (unit_hndl:0x%x)",
+   "false_site": "0x439cf00c",
+   "canon_func": "0x439ceeb8"
+  },
+  {
+   "trace": "0x43cec31f",
+   "text": "[APL] `Vec_Addr' invalid 0x%X",
+   "false_site": "0x439cf016",
+   "canon_func": "0x439ceeb8"
+  },
+  {
+   "trace": "0x43cec34a",
+   "text": "[APL] GetMemInfo Err5 (unit_hndl:0x%x)",
+   "false_site": "0x439cf130",
+   "canon_func": "0x439ceeb8"
+  },
+  {
+   "trace": "0x43cec37e",
+   "text": "[APL] `Result_Addr' invalid 0x%X",
+   "false_site": "0x439cf07a",
+   "canon_func": "0x439ceeb8"
+  },
+  {
+   "trace": "0x43cec3ac",
+   "text": "[APL] `HME_BaseTar_LineAddAddr' invalid 0x%X",
+   "false_site": "0x439cf1a4",
+   "canon_func": "0x439ceeb8"
+  },
+  {
+   "trace": "0x43cec3e6",
+   "text": "[APL] HW GetCoreNum Err %d",
+   "false_site": "0x439cf154",
+   "canon_func": "0x439ceeb8"
+  },
+  {
+   "trace": "0x43cec40e",
+   "text": "[APL] HW SetMode Err %d",
+   "false_site": "0x439cf126",
+   "canon_func": "0x439ceeb8"
+  },
+  {
+   "trace": "0x43cec433",
+   "text": "[APL] MmuMakeParam Err %d",
+   "false_site": "0x439cf0d4",
+   "canon_func": "0x439ceeb8"
+  },
+  {
+   "trace": "0x43cec45a",
+   "text": "[APL] Open Err4 (unit_hndl:0x%x)",
+   "false_site": "0x439cf226",
+   "canon_func": "0x439ceeb8"
+  },
+  {
+   "trace": "0x43cec4a6",
+   "text": "[APL] HW Abort Err %d",
+   "false_site": "0x439cd498",
+   "canon_func": "0x439cd420"
+  },
+  {
+   "trace": "0x43cec4c9",
+   "text": "[APL] Output Ref Img",
+   "false_site": "0x439cf154",
+   "canon_func": "0x439ceeb8"
+  },
+  {
+   "trace": "0x43cec4c9",
+   "text": "[APL] Output Ref Img",
+   "false_site": "0x439cf348",
+   "canon_func": "0x439ceeb8"
+  },
+  {
+   "trace": "0x43cec4eb",
+   "text": "[APL] SA Open Err2",
+   "false_site": "0x439cf2dc",
+   "canon_func": "0x439ceeb8"
+  },
+  {
+   "trace": "0x43cec50b",
+   "text": "[APL] SA Close Err2",
+   "false_site": "0x439cf226",
+   "canon_func": "0x439ceeb8"
+  }
+ ],
+ "source_files": {
+  "embedded_for_apl_module": [],
+  "note": "Las 42 trazas [APL] no incluyen `file=%s line=%d` ni el nombre de ningun .cpp; el modulo no registra su fichero de origen. Los nombres mas proximos en la zona de datos son Stage_Apollo.cpp 0x43cc6e0f y Apollo.cpp 0x43cc6e15 (ambos de [IMAGING_CAP]/Stage_Apollo, S106) y ScalarInfraSuperStableMovieManager.cpp 0x43ceb0aa (bloque [SFRS])."
+ }
+}

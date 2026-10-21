@@ -1,0 +1,375 @@
+===== APL big func 0x439ceeb8-0x439cf500
+0x439ceeb8  2de9f04f     push.w   {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+0x439ceebc  d1b0         sub      sp, #0x144
+0x439ceebe  0c46         mov      r4, r1
+0x439ceec0  8346         mov      fp, r0
+0x439ceec2  0221         movs     r1, #2
+0x439ceec4  9246         mov      sl, r2
+0x439ceec6  4ba8         add      r0, sp, #0x12c
+0x439ceec8  b622         movs     r2, #0xb6
+0x439ceeca  11f126fc     bl       #0x43ae071a
+0x439ceece  4ba8         add      r0, sp, #0x12c
+0x439ceed0  11f13ffc     bl       #0x43ae0752
+0x439ceed4  0146         mov      r1, r0
+0x439ceed6  4ea8         add      r0, sp, #0x138
+0x439ceed8  13f109f8     bl       #0x43ae1eee
+0x439ceedc  2389         ldrh     r3, [r4, #8]
+0x439ceede  4ea8         add      r0, sp, #0x138
+0x439ceee0  2178         ldrb     r1, [r4]
+0x439ceee2  0122         movs     r2, #1
+0x439ceee4  adf81031     strh.w   r3, [sp, #0x110]
+0x439ceee8  6389         ldrh     r3, [r4, #0xa]
+0x439ceeea  adf81231     strh.w   r3, [sp, #0x112]
+0x439ceeee  a389         ldrh     r3, [r4, #0xc]
+0x439ceef0  adf81431     strh.w   r3, [sp, #0x114]
+0x439ceef4  238a         ldrh     r3, [r4, #0x10]
+0x439ceef6  adf81631     strh.w   r3, [sp, #0x116]
+0x439ceefa  638a         ldrh     r3, [r4, #0x12]
+0x439ceefc  adf81831     strh.w   r3, [sp, #0x118]
+0x439cef00  e389         ldrh     r3, [r4, #0xe]
+0x439cef02  adf81a31     strh.w   r3, [sp, #0x11a]
+0x439cef06  4fab         add      r3, sp, #0x13c
+0x439cef08  0333         adds     r3, #3
+0x439cef0a  02f0bffb     bl       #0x439d168c
+0x439cef0e  0546         mov      r5, r0
+0x439cef10  58b1         cbz      r0, #0x439cef2a
+0x439cef12  ca4b         ldr      r3, [pc, #0x328]
+0x439cef14  0021         movs     r1, #0
+0x439cef16  0090         str      r0, [sp]
+0x439cef18  0122         movs     r2, #1
+0x439cef1a  b620         movs     r0, #0xb6
+0x439cef1c  7b44         add      r3, pc  ; STRICT 0x43cec140 '[CAMERA_SA]: [APL] GetZimaNo Err %d' || CANON 0x43cec285 '_SA]: [APL] GetMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec27f 'CAMERA_SA]: [APL] GetMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec27a 'x%X' ; 0x43cec278 ' 0x%X' ; 0x43cec26f '0x%X 0x%X 0x%X' ; 0x43cec277 'X 0x%X' ; 0x43cec26e ' 0x%X 0x%X 0x%X' ; 0x43cec1ee 'valid 0x%X 0x%X 0x%X 0x%X' ; 0x43cec1f1 'id 0x%X 0x%X 0x%X 0x%X' ; 0x43cec1f8 ' 0x%X 0x%X 0x%X' ; 0x43cec1f7 'X 0x%X 0x%X 0x%X' ; 0x43cec1fe '0x%X 0x%X' ; 0x43cec205 '%X' ; 0x43cec20c 'ERA_SA]: [APL] GetMemInfo Err2 (unit_hndl:0x%x)' ; 0x43cec213 ': [APL] GetMemInfo Err2 (unit_hndl:0x%x)' ; 0x43cec210 'SA]: [APL] GetMemInfo Err2 (unit_hndl:0x%x)' ; 0x43cec18e '%x)' ; 0x43cec19c ']: [APL] GetMemInfo Err1 (unit_hndl:0x%x)' ; 0x43cec1ac 'nfo Err1 (unit_hndl:0x%x)' ; 0x43cec1ba '_hndl:0x%x)' ; 0x43cec140 '[CAMERA_SA]: [APL] GetZimaNo Err %d'
+0x439cef1e  fff731fd     bl       #0x439ce984
+0x439cef22  c748         ldr      r0, [pc, #0x31c]
+0x439cef24  2946         mov      r1, r5
+0x439cef26  7844         add      r0, pc  ; STRICT 0x43cec14d '[APL] GetZimaNo Err %d' || CANON 0x43cec292 'etMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec28e 'L] GetMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec287 'A]: [APL] GetMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec287 'A]: [APL] GetMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec27a 'x%X' ; 0x43cec286 'SA]: [APL] GetMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec279 '0x%X' ; 0x43cec1fb '%X 0x%X 0x%X' ; 0x43cec1fe '0x%X 0x%X' ; 0x43cec205 '%X' ; 0x43cec204 'x%X' ; 0x43cec20b 'MERA_SA]: [APL] GetMemInfo Err2 (unit_hndl:0x%x)' ; 0x43cec212 ']: [APL] GetMemInfo Err2 (unit_hndl:0x%x)' ; 0x43cec219 '] GetMemInfo Err2 (unit_hndl:0x%x)' ; 0x43cec222 'nfo Err2 (unit_hndl:0x%x)' ; 0x43cec21d 'tMemInfo Err2 (unit_hndl:0x%x)' ; 0x43cec19d ': [APL] GetMemInfo Err1 (unit_hndl:0x%x)' ; 0x43cec1ab 'Info Err1 (unit_hndl:0x%x)' ; 0x43cec1bb 'hndl:0x%x)' ; 0x43cec1c9 "MERA_SA]: [APL] `HME_BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec14d '[APL] GetZimaNo Err %d'
+0x439cef28  03e1         b        #0x439cf132
+0x439cef2a  9df83f21     ldrb.w   r2, [sp, #0x13f]
+0x439cef2e  032a         cmp      r2, #3
+0x439cef30  04d8         bhi      #0x439cef3c
+0x439cef32  c44b         ldr      r3, [pc, #0x310]
+0x439cef34  7b44         add      r3, pc  ; STRICT 0x43bd69c0 None || CANON 0x43a0ef37 '@ ' ; 0x43bd6e90 'Z' ; 0x43cec29d 'rr3 (unit_hndl:0x%x)' ; 0x43cec297 'Info Err3 (unit_hndl:0x%x)' ; 0x43cec292 'etMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec290 ' GetMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec287 'A]: [APL] GetMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec28f '] GetMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec286 'SA]: [APL] GetMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec206 'X' ; 0x43cec209 'CAMERA_SA]: [APL] GetMemInfo Err2 (unit_hndl:0x%x)' ; 0x43cec210 'SA]: [APL] GetMemInfo Err2 (unit_hndl:0x%x)' ; 0x43cec20f '_SA]: [APL] GetMemInfo Err2 (unit_hndl:0x%x)' ; 0x43cec216 'APL] GetMemInfo Err2 (unit_hndl:0x%x)' ; 0x43cec21d 'tMemInfo Err2 (unit_hndl:0x%x)' ; 0x43cec224 'o Err2 (unit_hndl:0x%x)' ; 0x43cec22b '(unit_hndl:0x%x)' ; 0x43cec228 'r2 (unit_hndl:0x%x)' ; 0x43cec1a6 'etMemInfo Err1 (unit_hndl:0x%x)' ; 0x43cec1b4 ' (unit_hndl:0x%x)' ; 0x43cec1c4 ')' ; 0x43cec1d2 " [APL] `HME_BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec158 'maNo Err %d'
+0x439cef36  53f82290     ldr.w    sb, [r3, r2, lsl #2]
+0x439cef3a  01e0         b        #0x439cef40
+0x439cef3c  4ff00809     mov.w    sb, #8
+0x439cef40  4ea8         add      r0, sp, #0x138
+0x439cef42  618a         ldrh     r1, [r4, #0x12]
+0x439cef44  20aa         add      r2, sp, #0x80
+0x439cef46  9ef127fb     bl       #0x43b6d598
+0x439cef4a  60b1         cbz      r0, #0x439cef66
+0x439cef4c  638a         ldrh     r3, [r4, #0x12]
+0x439cef4e  b620         movs     r0, #0xb6
+0x439cef50  0021         movs     r1, #0
+0x439cef52  0122         movs     r2, #1
+0x439cef54  0093         str      r3, [sp]
+0x439cef56  bc4b         ldr      r3, [pc, #0x2f0]
+0x439cef58  7b44         add      r3, pc  ; STRICT 0x43cec164 '[CAMERA_SA]: [APL] Open Err3 (unit_hndl:0x%x)' || CANON 0x43cec2c1 "PL] `Work_Addr' invalid 0x%X" ; 0x43cec2bb "A]: [APL] `Work_Addr' invalid 0x%X" ; 0x43cec2b6 "ERA_SA]: [APL] `Work_Addr' invalid 0x%X" ; 0x43cec2b4 "AMERA_SA]: [APL] `Work_Addr' invalid 0x%X" ; 0x43cec2ab ':0x%x)' ; 0x43cec2b3 "CAMERA_SA]: [APL] `Work_Addr' invalid 0x%X" ; 0x43cec2aa 'l:0x%x)' ; 0x43cec22a ' (unit_hndl:0x%x)' ; 0x43cec22d 'nit_hndl:0x%x)' ; 0x43cec234 'l:0x%x)' ; 0x43cec233 'dl:0x%x)' ; 0x43cec23a ')' ; 0x43cec241 "RA_SA]: [APL] `HME_BaseRef_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec248 " [APL] `HME_BaseRef_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec24f "`HME_BaseRef_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec24c "L] `HME_BaseRef_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec1ca "ERA_SA]: [APL] `HME_BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec1d8 " `HME_BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec1e8 "dr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec1f6 '%X 0x%X 0x%X 0x%X' ; 0x43cec17c 'Err3 (unit_hndl:0x%x)' ; 0x43cec164 '[CAMERA_SA]: [APL] Open Err3 (unit_hndl:0x%x)'
+0x439cef5a  fff713fd     bl       #0x439ce984
+0x439cef5e  bb48         ldr      r0, [pc, #0x2ec]
+0x439cef60  618a         ldrh     r1, [r4, #0x12]
+0x439cef62  7844         add      r0, pc  ; STRICT 0x43cec171 '[APL] Open Err3 (unit_hndl:0x%x)' || CANON 0x43cec2ce "r' invalid 0x%X" ; 0x43cec2ca "_Addr' invalid 0x%X" ; 0x43cec2c3 "] `Work_Addr' invalid 0x%X" ; 0x43cec2c3 "] `Work_Addr' invalid 0x%X" ; 0x43cec2b6 "ERA_SA]: [APL] `Work_Addr' invalid 0x%X" ; 0x43cec2c2 "L] `Work_Addr' invalid 0x%X" ; 0x43cec2b5 "MERA_SA]: [APL] `Work_Addr' invalid 0x%X" ; 0x43cec237 'x%x)' ; 0x43cec23a ')' ; 0x43cec241 "RA_SA]: [APL] `HME_BaseRef_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec240 "ERA_SA]: [APL] `HME_BaseRef_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec247 ": [APL] `HME_BaseRef_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec24e " `HME_BaseRef_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec255 "aseRef_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec25e "dr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec259 "ef_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec1d9 "`HME_BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec1e7 "ddr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec1f7 'X 0x%X 0x%X 0x%X' ; 0x43cec205 '%X' ; 0x43cec189 'dl:0x%x)' ; 0x43cec171 '[APL] Open Err3 (unit_hndl:0x%x)'
+0x439cef64  c0e1         b        #0x439cf2e8
+0x439cef66  249e         ldr      r6, [sp, #0x90]
+0x439cef68  a269         ldr      r2, [r4, #0x18]
+0x439cef6a  2189         ldrh     r1, [r4, #8]
+0x439cef6c  376e         ldr      r7, [r6, #0x60]
+0x439cef6e  736e         ldr      r3, [r6, #0x64]
+0x439cef70  002f         cmp      r7, #0
+0x439cef72  4fea4708     lsl.w    r8, r7, #1
+0x439cef76  cebf         itee     gt
+0x439cef78  0746         movgt    r7, r0
+0x439cef7a  c8f10007     rsble.w  r7, r8, #0
+0x439cef7e  8046         movle    r8, r0
+0x439cef80  002b         cmp      r3, #0
+0x439cef82  4ea8         add      r0, sp, #0x138
+0x439cef84  ccbf         ite      gt
+0x439cef86  02fb0388     mlagt    r8, r2, r3, r8
+0x439cef8a  03fb1277     mlsle    r7, r3, r2, r7
+0x439cef8e  47aa         add      r2, sp, #0x11c
+0x439cef90  02f01efe     bl       #0x439d1bd0
+0x439cef94  0546         mov      r5, r0
+0x439cef96  60b1         cbz      r0, #0x439cefb2
+0x439cef98  2389         ldrh     r3, [r4, #8]
+0x439cef9a  b620         movs     r0, #0xb6
+0x439cef9c  0021         movs     r1, #0
+0x439cef9e  0122         movs     r2, #1
+0x439cefa0  0093         str      r3, [sp]
+0x439cefa2  ab4b         ldr      r3, [pc, #0x2ac]
+0x439cefa4  7b44         add      r3, pc  ; STRICT 0x43cec192 '[CAMERA_SA]: [APL] GetMemInfo Err1 (unit_hndl:0x%x)' || CANON 0x43a0efa7 'X ' ; 0x43cec30d 'x%x)' ; 0x43cec307 'hndl:0x%x)' ; 0x43cec302 'unit_hndl:0x%x)' ; 0x43cec300 ' (unit_hndl:0x%x)' ; 0x43cec2f7 'Info Err4 (unit_hndl:0x%x)' ; 0x43cec2ff '4 (unit_hndl:0x%x)' ; 0x43cec2f6 'mInfo Err4 (unit_hndl:0x%x)' ; 0x43cec276 '%X 0x%X' ; 0x43cec279 '0x%X' ; 0x43cec280 'AMERA_SA]: [APL] GetMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec27f 'CAMERA_SA]: [APL] GetMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec286 'SA]: [APL] GetMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec28d 'PL] GetMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec294 'MemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec29b ' Err3 (unit_hndl:0x%x)' ; 0x43cec298 'nfo Err3 (unit_hndl:0x%x)' ; 0x43cec216 'APL] GetMemInfo Err2 (unit_hndl:0x%x)' ; 0x43cec224 'o Err2 (unit_hndl:0x%x)' ; 0x43cec234 'l:0x%x)' ; 0x43cec242 "A_SA]: [APL] `HME_BaseRef_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec1c8 "AMERA_SA]: [APL] `HME_BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec1b0 'Err1 (unit_hndl:0x%x)' ; 0x43cec192 '[CAMERA_SA]: [APL] GetMemInfo Err1 (unit_hndl:0x%x)'
+0x439cefa6  fff7edfc     bl       #0x439ce984
+0x439cefaa  aa48         ldr      r0, [pc, #0x2a8]
+0x439cefac  2189         ldrh     r1, [r4, #8]
+0x439cefae  7844         add      r0, pc  ; STRICT 0x43cec19f '[APL] GetMemInfo Err1 (unit_hndl:0x%x)' || CANON 0x43cec31a "SA]: [APL] `Vec_Addr' invalid 0x%X" ; 0x43cec316 "ERA_SA]: [APL] `Vec_Addr' invalid 0x%X" ; 0x43cec30f 'x)' ; 0x43cec30f 'x)' ; 0x43cec302 'unit_hndl:0x%x)' ; 0x43cec30e '%x)' ; 0x43cec301 '(unit_hndl:0x%x)' ; 0x43cec283 'RA_SA]: [APL] GetMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec286 'SA]: [APL] GetMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec28d 'PL] GetMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec28c 'APL] GetMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec293 'tMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec29a 'o Err3 (unit_hndl:0x%x)' ; 0x43cec2a1 '(unit_hndl:0x%x)' ; 0x43cec2aa 'l:0x%x)' ; 0x43cec2a5 't_hndl:0x%x)' ; 0x43cec225 ' Err2 (unit_hndl:0x%x)' ; 0x43cec233 'dl:0x%x)' ; 0x43cec243 "_SA]: [APL] `HME_BaseRef_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec251 "ME_BaseRef_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec1d5 "PL] `HME_BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec1bd 'dl:0x%x)' ; 0x43cec19f '[APL] GetMemInfo Err1 (unit_hndl:0x%x)'
+0x439cefb0  bfe0         b        #0x439cf132
+0x439cefb2  4899         ldr      r1, [sp, #0x120]
+0x439cefb4  e269         ldr      r2, [r4, #0x1c]
+0x439cefb6  9e4b         ldr      r3, [pc, #0x278]
+0x439cefb8  5518         adds     r5, r2, r1
+0x439cefba  05ea0303     and.w    r3, r5, r3
+0x439cefbe  1bb9         cbnz     r3, #0x439cefc8
+0x439cefc0  9c4b         ldr      r3, [pc, #0x270]
+0x439cefc2  07ea0303     and.w    r3, r7, r3
+0x439cefc6  8bb1         cbz      r3, #0x439cefec
+0x439cefc8  a34b         ldr      r3, [pc, #0x28c]
+0x439cefca  b620         movs     r0, #0xb6
+0x439cefcc  0291         str      r1, [sp, #8]
+0x439cefce  0021         movs     r1, #0
+0x439cefd0  0392         str      r2, [sp, #0xc]
+0x439cefd2  7b44         add      r3, pc  ; STRICT 0x43cec1c6 "[CAMERA_SA]: [APL] `HME_BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X" || CANON 0x43a0efd5 ':' ; 0x43cec33b 'X' ; 0x43cec335 'id 0x%X' ; 0x43cec330 'invalid 0x%X' ; 0x43cec32e "' invalid 0x%X" ; 0x43cec325 "`Vec_Addr' invalid 0x%X" ; 0x43cec32d "r' invalid 0x%X" ; 0x43cec324 " `Vec_Addr' invalid 0x%X" ; 0x43cec2a4 'it_hndl:0x%x)' ; 0x43cec2a7 'hndl:0x%x)' ; 0x43cec2ae '%x)' ; 0x43cec2ad 'x%x)' ; 0x43cec2b4 "AMERA_SA]: [APL] `Work_Addr' invalid 0x%X" ; 0x43cec2bb "A]: [APL] `Work_Addr' invalid 0x%X" ; 0x43cec2c2 "L] `Work_Addr' invalid 0x%X" ; 0x43cec2c9 "k_Addr' invalid 0x%X" ; 0x43cec2c6 "Work_Addr' invalid 0x%X" ; 0x43cec244 "SA]: [APL] `HME_BaseRef_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec252 "E_BaseRef_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec262 'invalid 0x%X 0x%X 0x%X 0x%X' ; 0x43cec270 'x%X 0x%X 0x%X' ; 0x43cec1f6 '%X 0x%X 0x%X 0x%X' ; 0x43cec1de "BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec1c0 '0x%x)' ; 0x43cec1c6 "[CAMERA_SA]: [APL] `HME_BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X"
+0x439cefd4  0122         movs     r2, #1
+0x439cefd6  8de8a000     stm.w    sp, {r5, r7}
+0x439cefda  fff7d3fc     bl       #0x439ce984
+0x439cefde  e369         ldr      r3, [r4, #0x1c]
+0x439cefe0  2946         mov      r1, r5
+0x439cefe2  9e48         ldr      r0, [pc, #0x278]
+0x439cefe4  3a46         mov      r2, r7
+0x439cefe6  0093         str      r3, [sp]
+0x439cefe8  7844         add      r0, pc  ; STRICT 0x43cec1d3 "[APL] `HME_BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X" || CANON 0x43cec354 'emInfo Err5 (unit_hndl:0x%x)' ; 0x43cec350 'GetMemInfo Err5 (unit_hndl:0x%x)' ; 0x43cec349 ' [APL] GetMemInfo Err5 (unit_hndl:0x%x)' ; 0x43cec349 ' [APL] GetMemInfo Err5 (unit_hndl:0x%x)' ; 0x43cec348 ': [APL] GetMemInfo Err5 (unit_hndl:0x%x)' ; 0x43cec33b 'X' ; 0x43cec2bd ": [APL] `Work_Addr' invalid 0x%X" ; 0x43cec2c0 "APL] `Work_Addr' invalid 0x%X" ; 0x43cec2c7 "ork_Addr' invalid 0x%X" ; 0x43cec2c6 "Work_Addr' invalid 0x%X" ; 0x43cec2cd "dr' invalid 0x%X" ; 0x43cec2d4 'alid 0x%X' ; 0x43cec2db '%X' ; 0x43cec2e4 'A_SA]: [APL] GetMemInfo Err4 (unit_hndl:0x%x)' ; 0x43cec2df 'CAMERA_SA]: [APL] GetMemInfo Err4 (unit_hndl:0x%x)' ; 0x43cec25f "r' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec26d 'X 0x%X 0x%X 0x%X' ; 0x43cec28b '[APL] GetMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec20f '_SA]: [APL] GetMemInfo Err2 (unit_hndl:0x%x)' ; 0x43cec1f7 'X 0x%X 0x%X 0x%X' ; 0x43cec1d9 "`HME_BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec1d3 "[APL] `HME_BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X"
+0x439cefea  32e0         b        #0x439cf052
+0x439cefec  7f19         adds     r7, r7, r5
+0x439cefee  4ea8         add      r0, sp, #0x138
+0x439ceff0  c6f87472     str.w    r7, [r6, #0x274]
+0x439ceff4  47aa         add      r2, sp, #0x11c
+0x439ceff6  6189         ldrh     r1, [r4, #0xa]
+0x439ceff8  02f0eafd     bl       #0x439d1bd0
+0x439ceffc  0546         mov      r5, r0
+0x439ceffe  60b1         cbz      r0, #0x439cf01a
+0x439cf000  6389         ldrh     r3, [r4, #0xa]
+0x439cf002  b620         movs     r0, #0xb6
+0x439cf004  0021         movs     r1, #0
+0x439cf006  0122         movs     r2, #1
+0x439cf008  0093         str      r3, [sp]
+0x439cf00a  954b         ldr      r3, [pc, #0x254]
+0x439cf00c  7b44         add      r3, pc  ; STRICT 0x43cec208 '[CAMERA_SA]: [APL] GetMemInfo Err2 (unit_hndl:0x%x)' || CANON 0x43a0f00f 'XpG' ; 0x43cec375 "ERA_SA]: [APL] `Result_Addr' invalid 0x%X" ; 0x43cec36f ')' ; 0x43cec36a ':0x%x)' ; 0x43cec368 'dl:0x%x)' ; 0x43cec35f ' (unit_hndl:0x%x)' ; 0x43cec367 'ndl:0x%x)' ; 0x43cec35e '5 (unit_hndl:0x%x)' ; 0x43cec2de '[CAMERA_SA]: [APL] GetMemInfo Err4 (unit_hndl:0x%x)' ; 0x43cec2e1 'MERA_SA]: [APL] GetMemInfo Err4 (unit_hndl:0x%x)' ; 0x43cec2e8 ']: [APL] GetMemInfo Err4 (unit_hndl:0x%x)' ; 0x43cec2e7 'A]: [APL] GetMemInfo Err4 (unit_hndl:0x%x)' ; 0x43cec2ee 'L] GetMemInfo Err4 (unit_hndl:0x%x)' ; 0x43cec2f5 'emInfo Err4 (unit_hndl:0x%x)' ; 0x43cec2fc 'Err4 (unit_hndl:0x%x)' ; 0x43cec303 'nit_hndl:0x%x)' ; 0x43cec300 ' (unit_hndl:0x%x)' ; 0x43cec27e '[CAMERA_SA]: [APL] GetMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec28c 'APL] GetMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec29c 'Err3 (unit_hndl:0x%x)' ; 0x43cec2aa 'l:0x%x)' ; 0x43cec230 '_hndl:0x%x)' ; 0x43cec218 'L] GetMemInfo Err2 (unit_hndl:0x%x)' ; 0x43cec1fa 'x%X 0x%X 0x%X' ; 0x43cec200 '%X 0x%X' ; 0x43cec208 '[CAMERA_SA]: [APL] GetMemInfo Err2 (unit_hndl:0x%x)'
+0x439cf00e  fff7b9fc     bl       #0x439ce984
+0x439cf012  9448         ldr      r0, [pc, #0x250]
+0x439cf014  6189         ldrh     r1, [r4, #0xa]
+0x439cf016  7844         add      r0, pc  ; STRICT 0x43cec215 '[APL] GetMemInfo Err2 (unit_hndl:0x%x)' || CANON 0x43cec382 "] `Result_Addr' invalid 0x%X" ; 0x43cec37e "[APL] `Result_Addr' invalid 0x%X" ; 0x43cec377 "A_SA]: [APL] `Result_Addr' invalid 0x%X" ; 0x43cec377 "A_SA]: [APL] `Result_Addr' invalid 0x%X" ; 0x43cec36a ':0x%x)' ; 0x43cec376 "RA_SA]: [APL] `Result_Addr' invalid 0x%X" ; 0x43cec369 'l:0x%x)' ; 0x43cec2eb '[APL] GetMemInfo Err4 (unit_hndl:0x%x)' ; 0x43cec2ee 'L] GetMemInfo Err4 (unit_hndl:0x%x)' ; 0x43cec2f5 'emInfo Err4 (unit_hndl:0x%x)' ; 0x43cec2f4 'MemInfo Err4 (unit_hndl:0x%x)' ; 0x43cec2fb ' Err4 (unit_hndl:0x%x)' ; 0x43cec302 'unit_hndl:0x%x)' ; 0x43cec309 'dl:0x%x)' ; 0x43cec312 "[CAMERA_SA]: [APL] `Vec_Addr' invalid 0x%X" ; 0x43cec30d 'x%x)' ; 0x43cec28d 'PL] GetMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec29b ' Err3 (unit_hndl:0x%x)' ; 0x43cec2ab ':0x%x)' ; 0x43cec2b9 "_SA]: [APL] `Work_Addr' invalid 0x%X" ; 0x43cec23d "CAMERA_SA]: [APL] `HME_BaseRef_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec225 ' Err2 (unit_hndl:0x%x)' ; 0x43cec201 'X 0x%X' ; 0x43cec215 '[APL] GetMemInfo Err2 (unit_hndl:0x%x)'
+0x439cf018  8be0         b        #0x439cf132
+0x439cf01a  4899         ldr      r1, [sp, #0x120]
+0x439cf01c  226a         ldr      r2, [r4, #0x20]
+0x439cf01e  844b         ldr      r3, [pc, #0x210]
+0x439cf020  5718         adds     r7, r2, r1
+0x439cf022  07ea0303     and.w    r3, r7, r3
+0x439cf026  1bb9         cbnz     r3, #0x439cf030
+0x439cf028  824b         ldr      r3, [pc, #0x208]
+0x439cf02a  08ea0303     and.w    r3, r8, r3
+0x439cf02e  a3b1         cbz      r3, #0x439cf05a
+0x439cf030  8d4b         ldr      r3, [pc, #0x234]
+0x439cf032  b620         movs     r0, #0xb6
+0x439cf034  0291         str      r1, [sp, #8]
+0x439cf036  0021         movs     r1, #0
+0x439cf038  0392         str      r2, [sp, #0xc]
+0x439cf03a  7b44         add      r3, pc  ; STRICT 0x43cec23c "[CAMERA_SA]: [APL] `HME_BaseRef_Addr' invalid 0x%X 0x%X 0x%X 0x%X" || CANON 0x43cec3a3 "ERA_SA]: [APL] `HME_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec39d 'X' ; 0x43cec398 'd 0x%X' ; 0x43cec396 'lid 0x%X' ; 0x43cec38d "ddr' invalid 0x%X" ; 0x43cec395 'alid 0x%X' ; 0x43cec38c "Addr' invalid 0x%X" ; 0x43cec30c '0x%x)' ; 0x43cec30f 'x)' ; 0x43cec316 "ERA_SA]: [APL] `Vec_Addr' invalid 0x%X" ; 0x43cec315 "MERA_SA]: [APL] `Vec_Addr' invalid 0x%X" ; 0x43cec31c "]: [APL] `Vec_Addr' invalid 0x%X" ; 0x43cec323 "] `Vec_Addr' invalid 0x%X" ; 0x43cec32a "Addr' invalid 0x%X" ; 0x43cec331 'nvalid 0x%X' ; 0x43cec32e "' invalid 0x%X" ; 0x43cec2ac '0x%x)' ; 0x43cec2ba "SA]: [APL] `Work_Addr' invalid 0x%X" ; 0x43cec2ca "_Addr' invalid 0x%X" ; 0x43cec2d8 ' 0x%X' ; 0x43cec25e "dr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec246 "]: [APL] `HME_BaseRef_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec228 'r2 (unit_hndl:0x%x)' ; 0x43cec22e 'it_hndl:0x%x)' ; 0x43cec236 '0x%x)' ; 0x43cec23c "[CAMERA_SA]: [APL] `HME_BaseRef_Addr' invalid 0x%X 0x%X 0x%X 0x%X"
+0x439cf03c  0122         movs     r2, #1
+0x439cf03e  8de88001     stm.w    sp, {r7, r8}
+0x439cf042  fff79ffc     bl       #0x439ce984
+0x439cf046  8948         ldr      r0, [pc, #0x224]
+0x439cf048  3946         mov      r1, r7
+0x439cf04a  236a         ldr      r3, [r4, #0x20]
+0x439cf04c  4246         mov      r2, r8
+0x439cf04e  7844         add      r0, pc  ; STRICT 0x43cec249 "[APL] `HME_BaseRef_Addr' invalid 0x%X 0x%X 0x%X 0x%X" || CANON 0x43cec3ba "eTar_LineAddAddr' invalid 0x%X" ; 0x43cec3b6 "_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec3af "L] `HME_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec3af "L] `HME_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec3a2 "MERA_SA]: [APL] `HME_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec3ae "PL] `HME_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec3a1 "AMERA_SA]: [APL] `HME_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec323 "] `Vec_Addr' invalid 0x%X" ; 0x43cec326 "Vec_Addr' invalid 0x%X" ; 0x43cec32d "r' invalid 0x%X" ; 0x43cec32c "dr' invalid 0x%X" ; 0x43cec333 'alid 0x%X' ; 0x43cec33a '%X' ; 0x43cec341 'ERA_SA]: [APL] GetMemInfo Err5 (unit_hndl:0x%x)' ; 0x43cec34a '[APL] GetMemInfo Err5 (unit_hndl:0x%x)' ; 0x43cec345 'SA]: [APL] GetMemInfo Err5 (unit_hndl:0x%x)' ; 0x43cec2c5 "`Work_Addr' invalid 0x%X" ; 0x43cec2d3 'valid 0x%X' ; 0x43cec2e3 'RA_SA]: [APL] GetMemInfo Err4 (unit_hndl:0x%x)' ; 0x43cec2f1 'GetMemInfo Err4 (unit_hndl:0x%x)' ; 0x43cec275 'x%X 0x%X' ; 0x43cec25d "ddr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec23f "MERA_SA]: [APL] `HME_BaseRef_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec239 'x)' ; 0x43cec24d "] `HME_BaseRef_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec249 "[APL] `HME_BaseRef_Addr' invalid 0x%X 0x%X 0x%X 0x%X"
+0x439cf050  0093         str      r3, [sp]
+0x439cf052  489b         ldr      r3, [sp, #0x120]
+0x439cf054  33f760fb     bl       #0x43902718
+0x439cf058  bde0         b        #0x439cf1d6
+0x439cf05a  4744         add      r7, r8
+0x439cf05c  4ea8         add      r0, sp, #0x138
+0x439cf05e  c6f87c72     str.w    r7, [r6, #0x27c]
+0x439cf062  47aa         add      r2, sp, #0x11c
+0x439cf064  a189         ldrh     r1, [r4, #0xc]
+0x439cf066  02f0b3fd     bl       #0x439d1bd0
+0x439cf06a  0546         mov      r5, r0
+0x439cf06c  60b1         cbz      r0, #0x439cf088
+0x439cf06e  a389         ldrh     r3, [r4, #0xc]
+0x439cf070  b620         movs     r0, #0xb6
+0x439cf072  0021         movs     r1, #0
+0x439cf074  0122         movs     r2, #1
+0x439cf076  0093         str      r3, [sp]
+0x439cf078  7d4b         ldr      r3, [pc, #0x1f4]
+0x439cf07a  7b44         add      r3, pc  ; STRICT 0x43cec27e '[CAMERA_SA]: [APL] GetMemInfo Err3 (unit_hndl:0x%x)' || CANON 0x43a0f07d ':' ; 0x43cec3e3 ']: [APL] HW GetCoreNum Err %d' ; 0x43cec3dd 'ERA_SA]: [APL] HW GetCoreNum Err %d' ; 0x43cec3d6 '%X' ; 0x43cec3cd 'nvalid 0x%X' ; 0x43cec3d5 'x%X' ; 0x43cec3cc 'invalid 0x%X' ; 0x43cec34c 'PL] GetMemInfo Err5 (unit_hndl:0x%x)' ; 0x43cec34f ' GetMemInfo Err5 (unit_hndl:0x%x)' ; 0x43cec356 'Info Err5 (unit_hndl:0x%x)' ; 0x43cec355 'mInfo Err5 (unit_hndl:0x%x)' ; 0x43cec35c 'rr5 (unit_hndl:0x%x)' ; 0x43cec363 'it_hndl:0x%x)' ; 0x43cec36a ':0x%x)' ; 0x43cec371 "[CAMERA_SA]: [APL] `Result_Addr' invalid 0x%X" ; 0x43cec36e 'x)' ; 0x43cec2ec 'APL] GetMemInfo Err4 (unit_hndl:0x%x)' ; 0x43cec2fa 'o Err4 (unit_hndl:0x%x)' ; 0x43cec30a 'l:0x%x)' ; 0x43cec318 "A_SA]: [APL] `Vec_Addr' invalid 0x%X" ; 0x43cec29e 'r3 (unit_hndl:0x%x)' ; 0x43cec286 'SA]: [APL] GetMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec268 'd 0x%X 0x%X 0x%X 0x%X' ; 0x43cec26e ' 0x%X 0x%X 0x%X' ; 0x43cec276 '%X 0x%X' ; 0x43cec27c 'X' ; 0x43cec27e '[CAMERA_SA]: [APL] GetMemInfo Err3 (unit_hndl:0x%x)'
+0x439cf07c  fff782fc     bl       #0x439ce984
+0x439cf080  7c48         ldr      r0, [pc, #0x1f0]
+0x439cf082  a189         ldrh     r1, [r4, #0xc]
+0x439cf084  7844         add      r0, pc  ; STRICT 0x43cec28b '[APL] GetMemInfo Err3 (unit_hndl:0x%x)' || CANON 0x43cec3f0 'etCoreNum Err %d' ; 0x43cec3ec 'HW GetCoreNum Err %d' ; 0x43cec3e5 ' [APL] HW GetCoreNum Err %d' ; 0x43cec3e5 ' [APL] HW GetCoreNum Err %d' ; 0x43cec3e4 ': [APL] HW GetCoreNum Err %d' ; 0x43cec3d7 'X' ; 0x43cec359 'o Err5 (unit_hndl:0x%x)' ; 0x43cec35c 'rr5 (unit_hndl:0x%x)' ; 0x43cec363 'it_hndl:0x%x)' ; 0x43cec362 'nit_hndl:0x%x)' ; 0x43cec369 'l:0x%x)' ; 0x43cec377 "A_SA]: [APL] `Result_Addr' invalid 0x%X" ; 0x43cec380 "PL] `Result_Addr' invalid 0x%X" ; 0x43cec37b "]: [APL] `Result_Addr' invalid 0x%X" ; 0x43cec2fb ' Err4 (unit_hndl:0x%x)' ; 0x43cec309 'dl:0x%x)' ; 0x43cec319 "_SA]: [APL] `Vec_Addr' invalid 0x%X" ; 0x43cec327 "ec_Addr' invalid 0x%X" ; 0x43cec2ab ':0x%x)' ; 0x43cec293 'tMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec275 'x%X 0x%X' ; 0x43cec26f '0x%X 0x%X 0x%X' ; 0x43cec283 'RA_SA]: [APL] GetMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec27f 'CAMERA_SA]: [APL] GetMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec28b '[APL] GetMemInfo Err3 (unit_hndl:0x%x)'
+0x439cf086  54e0         b        #0x439cf132
+0x439cf088  489f         ldr      r7, [sp, #0x120]
+0x439cf08a  694b         ldr      r3, [pc, #0x1a4]
+0x439cf08c  07ea0303     and.w    r3, r7, r3
+0x439cf090  53b1         cbz      r3, #0x439cf0a8
+0x439cf092  794b         ldr      r3, [pc, #0x1e4]
+0x439cf094  b620         movs     r0, #0xb6
+0x439cf096  2946         mov      r1, r5
+0x439cf098  0122         movs     r2, #1
+0x439cf09a  7b44         add      r3, pc  ; STRICT 0x43cec2b2 "[CAMERA_SA]: [APL] `Work_Addr' invalid 0x%X" || CANON 0x43a0f09d ':' ; 0x43cec403 'AMERA_SA]: [APL] HW SetMode Err %d' ; 0x43cec3fd ' %d' ; 0x43cec3f8 'm Err %d' ; 0x43cec3f6 'Num Err %d' ; 0x43cec3ed 'W GetCoreNum Err %d' ; 0x43cec3f5 'eNum Err %d' ; 0x43cec3ec 'HW GetCoreNum Err %d' ; 0x43cec36c 'x%x)' ; 0x43cec36f ')' ; 0x43cec376 "RA_SA]: [APL] `Result_Addr' invalid 0x%X" ; 0x43cec375 "ERA_SA]: [APL] `Result_Addr' invalid 0x%X" ; 0x43cec37c ": [APL] `Result_Addr' invalid 0x%X" ; 0x43cec383 " `Result_Addr' invalid 0x%X" ; 0x43cec38a "t_Addr' invalid 0x%X" ; 0x43cec391 ' invalid 0x%X' ; 0x43cec38e "dr' invalid 0x%X" ; 0x43cec30c '0x%x)' ; 0x43cec31a "SA]: [APL] `Vec_Addr' invalid 0x%X" ; 0x43cec32a "Addr' invalid 0x%X" ; 0x43cec338 '0x%X' ; 0x43cec2be " [APL] `Work_Addr' invalid 0x%X" ; 0x43cec2a6 '_hndl:0x%x)' ; 0x43cec288 ']: [APL] GetMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec28e 'L] GetMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec296 'mInfo Err3 (unit_hndl:0x%x)' ; 0x43cec29c 'Err3 (unit_hndl:0x%x)' ; 0x43cec29e 'r3 (unit_hndl:0x%x)' ; 0x43cec2b2 "[CAMERA_SA]: [APL] `Work_Addr' invalid 0x%X"
+0x439cf09c  0097         str      r7, [sp]
+0x439cf09e  fff771fc     bl       #0x439ce984
+0x439cf0a2  7648         ldr      r0, [pc, #0x1d8]
+0x439cf0a4  7844         add      r0, pc  ; STRICT 0x43cec2bf "[APL] `Work_Addr' invalid 0x%X" || CANON 0x43cec410 'PL] HW SetMode Err %d' ; 0x43cec40c ': [APL] HW SetMode Err %d' ; 0x43cec405 'ERA_SA]: [APL] HW SetMode Err %d' ; 0x43cec405 'ERA_SA]: [APL] HW SetMode Err %d' ; 0x43cec3f8 'm Err %d' ; 0x43cec404 'MERA_SA]: [APL] HW SetMode Err %d' ; 0x43cec3f7 'um Err %d' ; 0x43cec379 "SA]: [APL] `Result_Addr' invalid 0x%X" ; 0x43cec37c ": [APL] `Result_Addr' invalid 0x%X" ; 0x43cec383 " `Result_Addr' invalid 0x%X" ; 0x43cec382 "] `Result_Addr' invalid 0x%X" ; 0x43cec389 "lt_Addr' invalid 0x%X" ; 0x43cec390 "' invalid 0x%X" ; 0x43cec397 'id 0x%X' ; 0x43cec3a0 "CAMERA_SA]: [APL] `HME_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec39b 'x%X' ; 0x43cec31b "A]: [APL] `Vec_Addr' invalid 0x%X" ; 0x43cec329 "_Addr' invalid 0x%X" ; 0x43cec339 'x%X' ; 0x43cec347 ']: [APL] GetMemInfo Err5 (unit_hndl:0x%x)' ; 0x43cec2cb "Addr' invalid 0x%X" ; 0x43cec2b3 "CAMERA_SA]: [APL] `Work_Addr' invalid 0x%X" ; 0x43cec295 'emInfo Err3 (unit_hndl:0x%x)' ; 0x43cec28f '] GetMemInfo Err3 (unit_hndl:0x%x)' ; 0x43cec2a3 'nit_hndl:0x%x)' ; 0x43cec29f '3 (unit_hndl:0x%x)' ; 0x43cec2ab ':0x%x)' ; 0x43cec2bf "[APL] `Work_Addr' invalid 0x%X"
+0x439cf0a6  56e0         b        #0x439cf156
+0x439cf0a8  479b         ldr      r3, [sp, #0x11c]
+0x439cf0aa  e189         ldrh     r1, [r4, #0xe]
+0x439cf0ac  c6f88072     str.w    r7, [r6, #0x280]
+0x439cf0b0  c6f88c32     str.w    r3, [r6, #0x28c]
+0x439cf0b4  4ff6ff73     movw     r3, #0xffff
+0x439cf0b8  9942         cmp      r1, r3
+0x439cf0ba  27d0         beq      #0x439cf10c
+0x439cf0bc  4ea8         add      r0, sp, #0x138
+0x439cf0be  47aa         add      r2, sp, #0x11c
+0x439cf0c0  02f086fd     bl       #0x439d1bd0
+0x439cf0c4  0546         mov      r5, r0
+0x439cf0c6  60b1         cbz      r0, #0x439cf0e2
+0x439cf0c8  e389         ldrh     r3, [r4, #0xe]
+0x439cf0ca  b620         movs     r0, #0xb6
+0x439cf0cc  0021         movs     r1, #0
+0x439cf0ce  0122         movs     r2, #1
+0x439cf0d0  0093         str      r3, [sp]
+0x439cf0d2  6b4b         ldr      r3, [pc, #0x1ac]
+0x439cf0d4  7b44         add      r3, pc  ; STRICT 0x43cec2de '[CAMERA_SA]: [APL] GetMemInfo Err4 (unit_hndl:0x%x)' || CANON 0x43a0f0d7 'Xa' ; 0x43cec43d 'akeParam Err %d' ; 0x43cec437 '] MmuMakeParam Err %d' ; 0x43cec432 ' [APL] MmuMakeParam Err %d' ; 0x43cec430 ']: [APL] MmuMakeParam Err %d' ; 0x43cec427 'CAMERA_SA]: [APL] MmuMakeParam Err %d' ; 0x43cec42f 'A]: [APL] MmuMakeParam Err %d' ; 0x43cec426 '[CAMERA_SA]: [APL] MmuMakeParam Err %d' ; 0x43cec3a6 "_SA]: [APL] `HME_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec3a9 "]: [APL] `HME_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec3b0 "] `HME_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec3af "L] `HME_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec3b6 "_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec3bd "r_LineAddAddr' invalid 0x%X" ; 0x43cec3c4 "ddAddr' invalid 0x%X" ; 0x43cec3cb ' invalid 0x%X' ; 0x43cec3c8 "dr' invalid 0x%X" ; 0x43cec346 'A]: [APL] GetMemInfo Err5 (unit_hndl:0x%x)' ; 0x43cec354 'emInfo Err5 (unit_hndl:0x%x)' ; 0x43cec364 't_hndl:0x%x)' ; 0x43cec372 "CAMERA_SA]: [APL] `Result_Addr' invalid 0x%X" ; 0x43cec2f8 'nfo Err4 (unit_hndl:0x%x)' ; 0x43cec2e0 'AMERA_SA]: [APL] GetMemInfo Err4 (unit_hndl:0x%x)' ; 0x43cec2c2 "L] `Work_Addr' invalid 0x%X" ; 0x43cec2c8 "rk_Addr' invalid 0x%X" ; 0x43cec2d0 ' invalid 0x%X' ; 0x43cec2d6 'id 0x%X' ; 0x43cec2d8 ' 0x%X' ; 0x43cec2ec 'APL] GetMemInfo Err4 (unit_hndl:0x%x)' ; 0x43cec2de '[CAMERA_SA]: [APL] GetMemInfo Err4 (unit_hndl:0x%x)'
+0x439cf0d6  fff755fc     bl       #0x439ce984
+0x439cf0da  6a48         ldr      r0, [pc, #0x1a8]
+0x439cf0dc  e189         ldrh     r1, [r4, #0xe]
+0x439cf0de  7844         add      r0, pc  ; STRICT 0x43cec2eb '[APL] GetMemInfo Err4 (unit_hndl:0x%x)' || CANON 0x43cec44a '%d' ; 0x43cec446 'Err %d' ; 0x43cec43f 'eParam Err %d' ; 0x43cec43f 'eParam Err %d' ; 0x43cec432 ' [APL] MmuMakeParam Err %d' ; 0x43cec43e 'keParam Err %d' ; 0x43cec431 ': [APL] MmuMakeParam Err %d' ; 0x43cec3b3 "HME_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec3b6 "_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec3bd "r_LineAddAddr' invalid 0x%X" ; 0x43cec3bc "ar_LineAddAddr' invalid 0x%X" ; 0x43cec3c3 "AddAddr' invalid 0x%X" ; 0x43cec3ca "' invalid 0x%X" ; 0x43cec3d1 'id 0x%X' ; 0x43cec3da 'CAMERA_SA]: [APL] HW GetCoreNum Err %d' ; 0x43cec3d5 'x%X' ; 0x43cec355 'mInfo Err5 (unit_hndl:0x%x)' ; 0x43cec363 'it_hndl:0x%x)' ; 0x43cec373 "AMERA_SA]: [APL] `Result_Addr' invalid 0x%X" ; 0x43cec381 "L] `Result_Addr' invalid 0x%X" ; 0x43cec305 't_hndl:0x%x)' ; 0x43cec2ed 'PL] GetMemInfo Err4 (unit_hndl:0x%x)' ; 0x43cec2cf "' invalid 0x%X" ; 0x43cec2c9 "k_Addr' invalid 0x%X" ; 0x43cec2d9 '0x%X' ; 0x43cec2e5 '_SA]: [APL] GetMemInfo Err4 (unit_hndl:0x%x)' ; 0x43cec2f9 'fo Err4 (unit_hndl:0x%x)' ; 0x43cec2eb '[APL] GetMemInfo Err4 (unit_hndl:0x%x)'
+0x439cf0e0  27e0         b        #0x439cf132
+0x439cf0e2  489b         ldr      r3, [sp, #0x120]
+0x439cf0e4  524a         ldr      r2, [pc, #0x148]
+0x439cf0e6  03ea0202     and.w    r2, r3, r2
+0x439cf0ea  52b1         cbz      r2, #0x439cf102
+0x439cf0ec  0093         str      r3, [sp]
+0x439cf0ee  b620         movs     r0, #0xb6
+0x439cf0f0  654b         ldr      r3, [pc, #0x194]
+0x439cf0f2  2946         mov      r1, r5
+0x439cf0f4  0122         movs     r2, #1
+0x439cf0f6  7b44         add      r3, pc  ; STRICT 0x43cec312 "[CAMERA_SA]: [APL] `Vec_Addr' invalid 0x%X" || CANON 0x43a0f0f9 '<' ; 0x43cec45f ' Open Err4 (unit_hndl:0x%x)' ; 0x43cec459 ' [APL] Open Err4 (unit_hndl:0x%x)' ; 0x43cec454 '_SA]: [APL] Open Err4 (unit_hndl:0x%x)' ; 0x43cec452 'RA_SA]: [APL] Open Err4 (unit_hndl:0x%x)' ; 0x43cec449 ' %d' ; 0x43cec451 'ERA_SA]: [APL] Open Err4 (unit_hndl:0x%x)' ; 0x43cec448 'r %d' ; 0x43cec3c8 "dr' invalid 0x%X" ; 0x43cec3cb ' invalid 0x%X' ; 0x43cec3d2 'd 0x%X' ; 0x43cec3d1 'id 0x%X' ; 0x43cec3df 'A_SA]: [APL] HW GetCoreNum Err %d' ; 0x43cec3e6 '[APL] HW GetCoreNum Err %d' ; 0x43cec3ed 'W GetCoreNum Err %d' ; 0x43cec3ea '] HW GetCoreNum Err %d' ; 0x43cec368 'dl:0x%x)' ; 0x43cec376 "RA_SA]: [APL] `Result_Addr' invalid 0x%X" ; 0x43cec386 "esult_Addr' invalid 0x%X" ; 0x43cec394 'valid 0x%X' ; 0x43cec31a "SA]: [APL] `Vec_Addr' invalid 0x%X" ; 0x43cec302 'unit_hndl:0x%x)' ; 0x43cec2e4 'A_SA]: [APL] GetMemInfo Err4 (unit_hndl:0x%x)' ; 0x43cec2ea ' [APL] GetMemInfo Err4 (unit_hndl:0x%x)' ; 0x43cec2f2 'etMemInfo Err4 (unit_hndl:0x%x)' ; 0x43cec2f8 'nfo Err4 (unit_hndl:0x%x)' ; 0x43cec2fa 'o Err4 (unit_hndl:0x%x)' ; 0x43cec30e '%x)' ; 0x43cec300 ' (unit_hndl:0x%x)' ; 0x43cec312 "[CAMERA_SA]: [APL] `Vec_Addr' invalid 0x%X"
+0x439cf0f8  fff744fc     bl       #0x439ce984
+0x439cf0fc  6348         ldr      r0, [pc, #0x18c]
+0x439cf0fe  7844         add      r0, pc  ; STRICT 0x43cec31f "[APL] `Vec_Addr' invalid 0x%X" || CANON 0x43cec46a '(unit_hndl:0x%x)' ; 0x43cec466 'rr4 (unit_hndl:0x%x)' ; 0x43cec45f ' Open Err4 (unit_hndl:0x%x)' ; 0x43cec45f ' Open Err4 (unit_hndl:0x%x)' ; 0x43cec452 'RA_SA]: [APL] Open Err4 (unit_hndl:0x%x)' ; 0x43cec45e '] Open Err4 (unit_hndl:0x%x)' ; 0x43cec451 'ERA_SA]: [APL] Open Err4 (unit_hndl:0x%x)' ; 0x43cec3d3 ' 0x%X' ; 0x43cec3d6 '%X' ; 0x43cec3dd 'ERA_SA]: [APL] HW GetCoreNum Err %d' ; 0x43cec3dc 'MERA_SA]: [APL] HW GetCoreNum Err %d' ; 0x43cec3e3 ']: [APL] HW GetCoreNum Err %d' ; 0x43cec3ea '] HW GetCoreNum Err %d' ; 0x43cec3f1 'tCoreNum Err %d' ; 0x43cec3fa 'Err %d' ; 0x43cec3f5 'eNum Err %d' ; 0x43cec375 "ERA_SA]: [APL] `Result_Addr' invalid 0x%X" ; 0x43cec383 " `Result_Addr' invalid 0x%X" ; 0x43cec393 'nvalid 0x%X' ; 0x43cec3a1 "AMERA_SA]: [APL] `HME_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec325 "`Vec_Addr' invalid 0x%X" ; 0x43cec30d 'x%x)' ; 0x43cec2ef '] GetMemInfo Err4 (unit_hndl:0x%x)' ; 0x43cec2e9 ': [APL] GetMemInfo Err4 (unit_hndl:0x%x)' ; 0x43cec2fd 'rr4 (unit_hndl:0x%x)' ; 0x43cec2f9 'fo Err4 (unit_hndl:0x%x)' ; 0x43cec305 't_hndl:0x%x)' ; 0x43cec319 "_SA]: [APL] `Vec_Addr' invalid 0x%X" ; 0x43cec30b ':0x%x)' ; 0x43cec31f "[APL] `Vec_Addr' invalid 0x%X"
+0x439cf100  29e0         b        #0x439cf156
+0x439cf102  c6f88432     str.w    r3, [r6, #0x284]
+0x439cf106  479b         ldr      r3, [sp, #0x11c]
+0x439cf108  c6f89032     str.w    r3, [r6, #0x290]
+0x439cf10c  4ea8         add      r0, sp, #0x138
+0x439cf10e  218a         ldrh     r1, [r4, #0x10]
+0x439cf110  47aa         add      r2, sp, #0x11c
+0x439cf112  02f05dfd     bl       #0x439d1bd0
+0x439cf116  0546         mov      r5, r0
+0x439cf118  70b1         cbz      r0, #0x439cf138
+0x439cf11a  238a         ldrh     r3, [r4, #0x10]
+0x439cf11c  b620         movs     r0, #0xb6
+0x439cf11e  0021         movs     r1, #0
+0x439cf120  0122         movs     r2, #1
+0x439cf122  0093         str      r3, [sp]
+0x439cf124  5a4b         ldr      r3, [pc, #0x168]
+0x439cf126  7b44         add      r3, pc  ; STRICT 0x43cec33d '[CAMERA_SA]: [APL] GetMemInfo Err5 (unit_hndl:0x%x)' || CANON 0x43a0f129 'K' ; 0x43cec48f 'W TimeOut' ; 0x43cec489 'APL] HW TimeOut' ; 0x43cec484 'A]: [APL] HW TimeOut' ; 0x43cec482 '_SA]: [APL] HW TimeOut' ; 0x43cec479 ')' ; 0x43cec481 'A_SA]: [APL] HW TimeOut' ; 0x43cec478 'x)' ; 0x43cec3f8 'm Err %d' ; 0x43cec3fb 'rr %d' ; 0x43cec402 'CAMERA_SA]: [APL] HW SetMode Err %d' ; 0x43cec401 '[CAMERA_SA]: [APL] HW SetMode Err %d' ; 0x43cec408 '_SA]: [APL] HW SetMode Err %d' ; 0x43cec40f 'APL] HW SetMode Err %d' ; 0x43cec416 ' SetMode Err %d' ; 0x43cec41d 'e Err %d' ; 0x43cec41a 'Mode Err %d' ; 0x43cec398 'd 0x%X' ; 0x43cec3a6 "_SA]: [APL] `HME_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec3b6 "_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec3c4 "ddAddr' invalid 0x%X" ; 0x43cec34a '[APL] GetMemInfo Err5 (unit_hndl:0x%x)' ; 0x43cec332 'valid 0x%X' ; 0x43cec314 "AMERA_SA]: [APL] `Vec_Addr' invalid 0x%X" ; 0x43cec31a "SA]: [APL] `Vec_Addr' invalid 0x%X" ; 0x43cec322 "L] `Vec_Addr' invalid 0x%X" ; 0x43cec328 "c_Addr' invalid 0x%X" ; 0x43cec32a "Addr' invalid 0x%X" ; 0x43cec33e 'CAMERA_SA]: [APL] GetMemInfo Err5 (unit_hndl:0x%x)' ; 0x43cec330 'invalid 0x%X' ; 0x43cec342 'RA_SA]: [APL] GetMemInfo Err5 (unit_hndl:0x%x)' ; 0x43cec33d '[CAMERA_SA]: [APL] GetMemInfo Err5 (unit_hndl:0x%x)'
+0x439cf128  fff72cfc     bl       #0x439ce984
+0x439cf12c  5948         ldr      r0, [pc, #0x164]
+0x439cf12e  218a         ldrh     r1, [r4, #0x10]
+0x439cf130  7844         add      r0, pc  ; STRICT 0x43cec34a '[APL] GetMemInfo Err5 (unit_hndl:0x%x)' || CANON 0x43cec49c 'MERA_SA]: [APL] HW Abort Err %d' ; 0x43cec491 'TimeOut' ; 0x43cec491 'TimeOut' ; 0x43cec484 'A]: [APL] HW TimeOut' ; 0x43cec490 ' TimeOut' ; 0x43cec483 'SA]: [APL] HW TimeOut' ; 0x43cec405 'ERA_SA]: [APL] HW SetMode Err %d' ; 0x43cec408 '_SA]: [APL] HW SetMode Err %d' ; 0x43cec40f 'APL] HW SetMode Err %d' ; 0x43cec40e '[APL] HW SetMode Err %d' ; 0x43cec415 'W SetMode Err %d' ; 0x43cec41c 'de Err %d' ; 0x43cec423 '%d' ; 0x43cec42c 'A_SA]: [APL] MmuMakeParam Err %d' ; 0x43cec427 'CAMERA_SA]: [APL] MmuMakeParam Err %d' ; 0x43cec3a7 "SA]: [APL] `HME_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec3b5 "E_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec3c5 "dAddr' invalid 0x%X" ; 0x43cec3d3 ' 0x%X' ; 0x43cec357 'nfo Err5 (unit_hndl:0x%x)' ; 0x43cec33f 'AMERA_SA]: [APL] GetMemInfo Err5 (unit_hndl:0x%x)' ; 0x43cec321 "PL] `Vec_Addr' invalid 0x%X" ; 0x43cec31b "A]: [APL] `Vec_Addr' invalid 0x%X" ; 0x43cec32f ' invalid 0x%X' ; 0x43cec32b "ddr' invalid 0x%X" ; 0x43cec337 ' 0x%X' ; 0x43cec34b 'APL] GetMemInfo Err5 (unit_hndl:0x%x)' ; 0x43cec33d '[CAMERA_SA]: [APL] GetMemInfo Err5 (unit_hndl:0x%x)' ; 0x43cec351 'etMemInfo Err5 (unit_hndl:0x%x)' ; 0x43cec34a '[APL] GetMemInfo Err5 (unit_hndl:0x%x)'
+0x439cf132  33f7f1fa     bl       #0x43902718
+0x439cf136  23e1         b        #0x439cf380
+0x439cf138  489b         ldr      r3, [sp, #0x120]
+0x439cf13a  3d49         ldr      r1, [pc, #0xf4]
+0x439cf13c  03ea0101     and.w    r1, r3, r1
+0x439cf140  59b1         cbz      r1, #0x439cf15a
+0x439cf142  0093         str      r3, [sp]
+0x439cf144  b620         movs     r0, #0xb6
+0x439cf146  544b         ldr      r3, [pc, #0x150]
+0x439cf148  2946         mov      r1, r5
+0x439cf14a  0122         movs     r2, #1
+0x439cf14c  7b44         add      r3, pc  ; STRICT 0x43cec371 "[CAMERA_SA]: [APL] `Result_Addr' invalid 0x%X" || CANON 0x43cec4b5 'Err %d' ; 0x43cec4af 'Abort Err %d' ; 0x43cec4aa '] HW Abort Err %d' ; 0x43cec4a8 'PL] HW Abort Err %d' ; 0x43cec49f 'A_SA]: [APL] HW Abort Err %d' ; 0x43cec4a7 'APL] HW Abort Err %d' ; 0x43cec49e 'RA_SA]: [APL] HW Abort Err %d' ; 0x43cec41e ' Err %d' ; 0x43cec421 'r %d' ; 0x43cec428 'AMERA_SA]: [APL] MmuMakeParam Err %d' ; 0x43cec427 'CAMERA_SA]: [APL] MmuMakeParam Err %d' ; 0x43cec42e 'SA]: [APL] MmuMakeParam Err %d' ; 0x43cec435 'PL] MmuMakeParam Err %d' ; 0x43cec43c 'MakeParam Err %d' ; 0x43cec443 'am Err %d' ; 0x43cec440 'Param Err %d' ; 0x43cec3be "_LineAddAddr' invalid 0x%X" ; 0x43cec3cc 'invalid 0x%X' ; 0x43cec3dc 'MERA_SA]: [APL] HW GetCoreNum Err %d' ; 0x43cec3ea '] HW GetCoreNum Err %d' ; 0x43cec358 'fo Err5 (unit_hndl:0x%x)' ; 0x43cec33a '%X' ; 0x43cec340 'MERA_SA]: [APL] GetMemInfo Err5 (unit_hndl:0x%x)' ; 0x43cec348 ': [APL] GetMemInfo Err5 (unit_hndl:0x%x)' ; 0x43cec34e '] GetMemInfo Err5 (unit_hndl:0x%x)' ; 0x43cec350 'GetMemInfo Err5 (unit_hndl:0x%x)' ; 0x43cec364 't_hndl:0x%x)' ; 0x43cec356 'Info Err5 (unit_hndl:0x%x)' ; 0x43cec368 'dl:0x%x)' ; 0x43cec363 'it_hndl:0x%x)' ; 0x43cec371 "[CAMERA_SA]: [APL] `Result_Addr' invalid 0x%X"
+0x439cf14e  fff719fc     bl       #0x439ce984
+0x439cf152  5248         ldr      r0, [pc, #0x148]
+0x439cf154  7844         add      r0, pc  ; STRICT 0x43cec37e "[APL] `Result_Addr' invalid 0x%X" || CANON 0x43cec4c0 'ERA_SA]: [APL] Output Ref Img' ; 0x43cec4bc '[CAMERA_SA]: [APL] Output Ref Img' ; 0x43cec4b5 'Err %d' ; 0x43cec4b5 'Err %d' ; 0x43cec4a8 'PL] HW Abort Err %d' ; 0x43cec4b4 ' Err %d' ; 0x43cec4a7 'APL] HW Abort Err %d' ; 0x43cec429 'MERA_SA]: [APL] MmuMakeParam Err %d' ; 0x43cec42c 'A_SA]: [APL] MmuMakeParam Err %d' ; 0x43cec433 '[APL] MmuMakeParam Err %d' ; 0x43cec432 ' [APL] MmuMakeParam Err %d' ; 0x43cec439 'MmuMakeParam Err %d' ; 0x43cec440 'Param Err %d' ; 0x43cec447 'rr %d' ; 0x43cec450 'MERA_SA]: [APL] Open Err4 (unit_hndl:0x%x)' ; 0x43cec44b 'd' ; 0x43cec3cb ' invalid 0x%X' ; 0x43cec3d9 '[CAMERA_SA]: [APL] HW GetCoreNum Err %d' ; 0x43cec3e9 'L] HW GetCoreNum Err %d' ; 0x43cec3f7 'um Err %d' ; 0x43cec37b "]: [APL] `Result_Addr' invalid 0x%X" ; 0x43cec363 'it_hndl:0x%x)' ; 0x43cec345 'SA]: [APL] GetMemInfo Err5 (unit_hndl:0x%x)' ; 0x43cec33f 'AMERA_SA]: [APL] GetMemInfo Err5 (unit_hndl:0x%x)' ; 0x43cec353 'MemInfo Err5 (unit_hndl:0x%x)' ; 0x43cec34f ' GetMemInfo Err5 (unit_hndl:0x%x)' ; 0x43cec35b 'Err5 (unit_hndl:0x%x)' ; 0x43cec36f ')' ; 0x43cec361 'unit_hndl:0x%x)' ; 0x43cec375 "ERA_SA]: [APL] `Result_Addr' invalid 0x%X" ; 0x43cec36e 'x)' ; 0x43cec37e "[APL] `Result_Addr' invalid 0x%X"
+0x439cf156  4899         ldr      r1, [sp, #0x120]
+0x439cf158  10e0         b        #0x439cf17c
+0x439cf15a  c6f88832     str.w    r3, [r6, #0x288]
+0x439cf15e  364a         ldr      r2, [pc, #0xd8]
+0x439cf160  a369         ldr      r3, [r4, #0x18]
+0x439cf162  03ea0202     and.w    r2, r3, r2
+0x439cf166  62b1         cbz      r2, #0x439cf182
+0x439cf168  0093         str      r3, [sp]
+0x439cf16a  b620         movs     r0, #0xb6
+0x439cf16c  4c4b         ldr      r3, [pc, #0x130]
+0x439cf16e  0122         movs     r2, #1
+0x439cf170  7b44         add      r3, pc  ; STRICT 0x43cec39f "[CAMERA_SA]: [APL] `HME_BaseTar_LineAddAddr' invalid 0x%X" || CANON 0x43cec4d9 ' Img' ; 0x43cec4d3 'ut Ref Img' ; 0x43cec4ce ' Output Ref Img' ; 0x43cec4cc 'L] Output Ref Img' ; 0x43cec4c3 '_SA]: [APL] Output Ref Img' ; 0x43cec4cb 'PL] Output Ref Img' ; 0x43cec4c2 'A_SA]: [APL] Output Ref Img' ; 0x43cec442 'ram Err %d' ; 0x43cec445 ' Err %d' ; 0x43cec44b 'd' ; 0x43cec452 'RA_SA]: [APL] Open Err4 (unit_hndl:0x%x)' ; 0x43cec459 ' [APL] Open Err4 (unit_hndl:0x%x)' ; 0x43cec460 'Open Err4 (unit_hndl:0x%x)' ; 0x43cec467 'r4 (unit_hndl:0x%x)' ; 0x43cec464 ' Err4 (unit_hndl:0x%x)' ; 0x43cec3e2 'A]: [APL] HW GetCoreNum Err %d' ; 0x43cec3f0 'etCoreNum Err %d' ; 0x43cec40e '[APL] HW SetMode Err %d' ; 0x43cec394 'valid 0x%X' ; 0x43cec37c ": [APL] `Result_Addr' invalid 0x%X" ; 0x43cec35e '5 (unit_hndl:0x%x)' ; 0x43cec364 't_hndl:0x%x)' ; 0x43cec36c 'x%x)' ; 0x43cec372 "CAMERA_SA]: [APL] `Result_Addr' invalid 0x%X" ; 0x43cec374 "MERA_SA]: [APL] `Result_Addr' invalid 0x%X" ; 0x43cec388 "ult_Addr' invalid 0x%X" ; 0x43cec37a "A]: [APL] `Result_Addr' invalid 0x%X" ; 0x43cec38c "Addr' invalid 0x%X" ; 0x43cec387 "sult_Addr' invalid 0x%X" ; 0x43cec395 'alid 0x%X' ; 0x43cec39f "[CAMERA_SA]: [APL] `HME_BaseTar_LineAddAddr' invalid 0x%X"
+0x439cf172  fff707fc     bl       #0x439ce984
+0x439cf176  4b48         ldr      r0, [pc, #0x12c]
+0x439cf178  a169         ldr      r1, [r4, #0x18]
+0x439cf17a  7844         add      r0, pc  ; STRICT 0x43cec3ac "[APL] `HME_BaseTar_LineAddAddr' invalid 0x%X" || CANON 0x43cec4e6 'SA]: [APL] SA Open Err2' ; 0x43cec4e2 'ERA_SA]: [APL] SA Open Err2' ; 0x43cec4db 'mg' ; 0x43cec4db 'mg' ; 0x43cec4ce ' Output Ref Img' ; 0x43cec4da 'Img' ; 0x43cec4cd '] Output Ref Img' ; 0x43cec44f 'AMERA_SA]: [APL] Open Err4 (unit_hndl:0x%x)' ; 0x43cec452 'RA_SA]: [APL] Open Err4 (unit_hndl:0x%x)' ; 0x43cec459 ' [APL] Open Err4 (unit_hndl:0x%x)' ; 0x43cec458 ': [APL] Open Err4 (unit_hndl:0x%x)' ; 0x43cec45f ' Open Err4 (unit_hndl:0x%x)' ; 0x43cec466 'rr4 (unit_hndl:0x%x)' ; 0x43cec46d 'it_hndl:0x%x)' ; 0x43cec476 'x%x)' ; 0x43cec471 'ndl:0x%x)' ; 0x43cec3f1 'tCoreNum Err %d' ; 0x43cec3ff 'd' ; 0x43cec40f 'APL] HW SetMode Err %d' ; 0x43cec41d 'e Err %d' ; 0x43cec3a1 "AMERA_SA]: [APL] `HME_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec389 "lt_Addr' invalid 0x%X" ; 0x43cec36b '0x%x)' ; 0x43cec365 '_hndl:0x%x)' ; 0x43cec379 "SA]: [APL] `Result_Addr' invalid 0x%X" ; 0x43cec375 "ERA_SA]: [APL] `Result_Addr' invalid 0x%X" ; 0x43cec381 "L] `Result_Addr' invalid 0x%X" ; 0x43cec395 'alid 0x%X' ; 0x43cec387 "sult_Addr' invalid 0x%X" ; 0x43cec39b 'x%X' ; 0x43cec394 'valid 0x%X' ; 0x43cec3a4 "RA_SA]: [APL] `HME_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec3ac "[APL] `HME_BaseTar_LineAddAddr' invalid 0x%X"
+0x439cf17c  33f7ccfa     bl       #0x43902718
+0x439cf180  29e0         b        #0x439cf1d6
+0x439cf182  c6f87832     str.w    r3, [r6, #0x278]
+0x439cf186  4da9         add      r1, sp, #0x134
+0x439cf188  6068         ldr      r0, [r4, #4]
+0x439cf18a  aef173fd     bl       #0x43b7dc74
+0x439cf18e  0546         mov      r5, r0
+0x439cf190  50b1         cbz      r0, #0x439cf1a8
+0x439cf192  454b         ldr      r3, [pc, #0x114]
+0x439cf194  0021         movs     r1, #0
+0x439cf196  0090         str      r0, [sp]
+0x439cf198  0122         movs     r2, #1
+0x439cf19a  b620         movs     r0, #0xb6
+0x439cf19c  7b44         add      r3, pc  ; STRICT 0x43cec3d9 '[CAMERA_SA]: [APL] HW GetCoreNum Err %d' || CANON 0x43cec505 '_SA]: [APL] SA Close Err2' ; 0x43cec4ff 'CAMERA_SA]: [APL] SA Close Err2' ; 0x43cec4fa 'rr2' ; 0x43cec4f8 ' Err2' ; 0x43cec4ef '] SA Open Err2' ; 0x43cec4f7 'n Err2' ; 0x43cec4ee 'L] SA Open Err2' ; 0x43cec46e 't_hndl:0x%x)' ; 0x43cec471 'ndl:0x%x)' ; 0x43cec478 'x)' ; 0x43cec477 '%x)' ; 0x43cec47e 'MERA_SA]: [APL] HW TimeOut' ; 0x43cec485 ']: [APL] HW TimeOut' ; 0x43cec48c '] HW TimeOut' ; 0x43cec493 'meOut' ; 0x43cec490 ' TimeOut' ; 0x43cec40e '[APL] HW SetMode Err %d' ; 0x43cec41c 'de Err %d' ; 0x43cec42c 'A_SA]: [APL] MmuMakeParam Err %d' ; 0x43cec43a 'muMakeParam Err %d' ; 0x43cec3c0 "ineAddAddr' invalid 0x%X" ; 0x43cec3a8 "A]: [APL] `HME_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec38a "t_Addr' invalid 0x%X" ; 0x43cec390 "' invalid 0x%X" ; 0x43cec398 'd 0x%X' ; 0x43cec3a0 "CAMERA_SA]: [APL] `HME_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec3b4 "ME_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec3a6 "_SA]: [APL] `HME_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec3b8 "aseTar_LineAddAddr' invalid 0x%X" ; 0x43cec3b3 "HME_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec3c1 "neAddAddr' invalid 0x%X" ; 0x43cec3cb ' invalid 0x%X' ; 0x43cec3d9 '[CAMERA_SA]: [APL] HW GetCoreNum Err %d'
+0x439cf19e  fff7f1fb     bl       #0x439ce984
+0x439cf1a2  4248         ldr      r0, [pc, #0x108]
+0x439cf1a4  7844         add      r0, pc  ; STRICT 0x43cec3e6 '[APL] HW GetCoreNum Err %d' || CANON 0x43cec510 ' SA Close Err2' ; 0x43cec50c 'APL] SA Close Err2' ; 0x43cec505 '_SA]: [APL] SA Close Err2' ; 0x43cec505 '_SA]: [APL] SA Close Err2' ; 0x43cec4f8 ' Err2' ; 0x43cec504 'A_SA]: [APL] SA Close Err2' ; 0x43cec4f7 'n Err2' ; 0x43cec479 ')' ; 0x43cec47c 'CAMERA_SA]: [APL] HW TimeOut' ; 0x43cec483 'SA]: [APL] HW TimeOut' ; 0x43cec482 '_SA]: [APL] HW TimeOut' ; 0x43cec489 'APL] HW TimeOut' ; 0x43cec490 ' TimeOut' ; 0x43cec497 't' ; 0x43cec4a0 '_SA]: [APL] HW Abort Err %d' ; 0x43cec49b 'AMERA_SA]: [APL] HW Abort Err %d' ; 0x43cec41b 'ode Err %d' ; 0x43cec429 'MERA_SA]: [APL] MmuMakeParam Err %d' ; 0x43cec439 'MmuMakeParam Err %d' ; 0x43cec447 'rr %d' ; 0x43cec3cb ' invalid 0x%X' ; 0x43cec3b3 "HME_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec395 'alid 0x%X' ; 0x43cec38f "r' invalid 0x%X" ; 0x43cec3a3 "ERA_SA]: [APL] `HME_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec39f "[CAMERA_SA]: [APL] `HME_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec3ab " [APL] `HME_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec3bf "LineAddAddr' invalid 0x%X" ; 0x43cec3b1 " `HME_BaseTar_LineAddAddr' invalid 0x%X" ; 0x43cec3c5 "dAddr' invalid 0x%X" ; 0x43cec3be "_LineAddAddr' invalid 0x%X" ; 0x43cec3ce 'valid 0x%X' ; 0x43cec3d6 '%X' ; 0x43cec3e6 '[APL] HW GetCoreNum Err %d'
+0x439cf1a6  22e0         b        #0x439cf1ee
+0x439cf1a8  4d9b         ldr      r3, [sp, #0x134]
+0x439cf1aa  3ca9         add      r1, sp, #0xf0
+0x439cf1ac  c6f82493     str.w    sb, [r6, #0x324]
+0x439cf1b0  012b         cmp      r3, #1
+0x439cf1b2  08bf         it       eq
+0x439cf1b4  0125         moveq    r5, #1
+0x439cf1b6  6068         ldr      r0, [r4, #4]
+0x439cf1b8  b023         movs     r3, #0xb0
+0x439cf1ba  c6f81c53     str.w    r5, [r6, #0x31c]
+0x439cf1be  3d93         str      r3, [sp, #0xf4]
+0x439cf1c0  af3b         subs     r3, #0xaf
+0x439cf1c2  3c97         str      r7, [sp, #0xf0]
+0x439cf1c4  cdf8f890     str.w    sb, [sp, #0xf8]
+0x439cf1c8  8df8fc30     strb.w   r3, [sp, #0xfc]
+0x439cf1cc  aef12bfd     bl       #0x43b7dc26
+0x439cf1d0  0546         mov      r5, r0
+0x439cf1d2  70b1         cbz      r0, #0x439cf1f2
+0x439cf1d4  01e0         b        #0x439cf1da
+0x439cf1d6  0625         movs     r5, #6
+0x439cf1d8  d2e0         b        #0x439cf380
+0x439cf1da  354b         ldr      r3, [pc, #0xd4]
+0x439cf1dc  0021         movs     r1, #0
+0x439cf1de  0090         str      r0, [sp]
+0x439cf1e0  0122         movs     r2, #1
+0x439cf1e2  b620         movs     r0, #0xb6
+0x439cf1e4  7b44         add      r3, pc  ; STRICT 0x43cec401 '[CAMERA_SA]: [APL] HW SetMode Err %d' || CANON 0x43cec54d "_SA]: %s: CloseHndl for `hndl_for_m_pOverImage' error" ; 0x43cec547 "CAMERA_SA]: %s: CloseHndl for `hndl_for_m_pOverImage' error" ; 0x43cec542 'xit' ; 0x43cec540 '_exit' ; 0x43cec537 'func_BDEX_exit' ; 0x43cec53f 'X_exit' ; 0x43cec536 '_func_BDEX_exit' ; 0x43cec4b6 'rr %d' ; 0x43cec4b9 '%d' ; 0x43cec4c0 'ERA_SA]: [APL] Output Ref Img' ; 0x43cec4bf 'MERA_SA]: [APL] Output Ref Img' ; 0x43cec4c6 ']: [APL] Output Ref Img' ; 0x43cec4cd '] Output Ref Img' ; 0x43cec4d4 't Ref Img' ; 0x43cec4db 'mg' ; 0x43cec4d8 'f Img' ; 0x43cec456 'A]: [APL] Open Err4 (unit_hndl:0x%x)' ; 0x43cec464 ' Err4 (unit_hndl:0x%x)' ; 0x43cec474 ':0x%x)' ; 0x43cec482 '_SA]: [APL] HW TimeOut' ; 0x43cec408 '_SA]: [APL] HW SetMode Err %d' ; 0x43bd6c70 '&' ; 0x43cec3f0 'etCoreNum Err %d' ; 0x43cec3d2 'd 0x%X' ; 0x43cec3e0 '_SA]: [APL] HW GetCoreNum Err %d' ; 0x43cec3e6 '[APL] HW GetCoreNum Err %d' ; 0x43cec3e8 'PL] HW GetCoreNum Err %d' ; 0x43cec3fc 'r %d' ; 0x43cec3ee ' GetCoreNum Err %d' ; 0x43cec3fb 'rr %d' ; 0x43cec409 'SA]: [APL] HW SetMode Err %d' ; 0x43cec413 ' HW SetMode Err %d' ; 0x43cec421 'r %d' ; 0x43cec401 '[CAMERA_SA]: [APL] HW SetMode Err %d'
+0x439cf1e6  fff7cdfb     bl       #0x439ce984
+0x439cf1ea  3248         ldr      r0, [pc, #0xc8]
+0x439cf1ec  7844         add      r0, pc  ; STRICT 0x43cec40e '[APL] HW SetMode Err %d' || CANON 0x43cec558 "loseHndl for `hndl_for_m_pOverImage' error" ; 0x43cec554 "s: CloseHndl for `hndl_for_m_pOverImage' error" ; 0x43cec54d "_SA]: %s: CloseHndl for `hndl_for_m_pOverImage' error" ; 0x43cec54d "_SA]: %s: CloseHndl for `hndl_for_m_pOverImage' error" ; 0x43cec540 '_exit' ; 0x43cec54c "A_SA]: %s: CloseHndl for `hndl_for_m_pOverImage' error" ; 0x43cec53f 'X_exit' ; 0x43cec4c1 'RA_SA]: [APL] Output Ref Img' ; 0x43cec4c4 'SA]: [APL] Output Ref Img' ; 0x43cec4cb 'PL] Output Ref Img' ; 0x43cec4ca 'APL] Output Ref Img' ; 0x43cec4d1 'tput Ref Img' ; 0x43cec4d8 'f Img' ; 0x43cec4df 'CAMERA_SA]: [APL] SA Open Err2' ; 0x43cec4e8 ']: [APL] SA Open Err2' ; 0x43cec4e3 'RA_SA]: [APL] SA Open Err2' ; 0x43cec463 'n Err4 (unit_hndl:0x%x)' ; 0x43cec471 'ndl:0x%x)' ; 0x43cec481 'A_SA]: [APL] HW TimeOut' ; 0x43cec48f 'W TimeOut' ; 0x43cec413 ' HW SetMode Err %d' ; 0x43cec3fb 'rr %d' ; 0x43cec3dd 'ERA_SA]: [APL] HW GetCoreNum Err %d' ; 0x43cec3d7 'X' ; 0x43cec3eb ' HW GetCoreNum Err %d' ; 0x43cec3e7 'APL] HW GetCoreNum Err %d' ; 0x43cec3f3 'oreNum Err %d' ; 0x43cec407 'A_SA]: [APL] HW SetMode Err %d' ; 0x43cec3f9 ' Err %d' ; 0x43cec40d ' [APL] HW SetMode Err %d' ; 0x43cec406 'RA_SA]: [APL] HW SetMode Err %d' ; 0x43cec416 ' SetMode Err %d' ; 0x43cec41e ' Err %d' ; 0x43cec42e 'SA]: [APL] MmuMakeParam Err %d' ; 0x43cec40e '[APL] HW SetMode Err %d'
+0x439cf1ee  2946         mov      r1, r5
+0x439cf1f0  abe0         b        #0x439cf34a
+0x439cf1f2  e289         ldrh     r2, [r4, #0xe]
+0x439cf1f4  4ff6ff73     movw     r3, #0xffff
+0x439cf1f8  9a42         cmp      r2, r3
+0x439cf1fa  02d0         beq      #0x439cf202
+0x439cf1fc  49a8         add      r0, sp, #0x124
+0x439cf1fe  0621         movs     r1, #6
+0x439cf200  01e0         b        #0x439cf206
+0x439cf202  49a8         add      r0, sp, #0x124
+0x439cf204  0521         movs     r1, #5
+0x439cf206  44aa         add      r2, sp, #0x110
+0x439cf208  8ff124fc     bl       #0x43b5ea54
+0x439cf20c  499d         ldr      r5, [sp, #0x124]
+0x439cf20e  002d         cmp      r5, #0
+0x439cf210  56d0         beq      #0x439cf2c0
+0x439cf212  294b         ldr      r3, [pc, #0xa4]
+0x439cf214  b620         movs     r0, #0xb6
+0x439cf216  0021         movs     r1, #0
+0x439cf218  0122         movs     r2, #1
+0x439cf21a  7b44         add      r3, pc  ; STRICT 0x43cec426 '[CAMERA_SA]: [APL] MmuMakeParam Err %d' || CANON 0x43cec583 "[CAMERA_SA]: %s: CloseHndl for `hndl_for_m_pMiddleImage' error" ; 0x43cec57d 'error' ; 0x43cec578 "age' error" ; 0x43cec576 "Image' error" ; 0x43cec56d "r_m_pOverImage' error" ; 0x43cec575 "rImage' error" ; 0x43cec56c "or_m_pOverImage' error" ; 0x43cec4ec 'APL] SA Open Err2' ; 0x43cec4ef '] SA Open Err2' ; 0x43cec4f6 'en Err2' ; 0x43cec4f5 'pen Err2' ; 0x43cec4fc '2' ; 0x43cec503 'RA_SA]: [APL] SA Close Err2' ; 0x43cec50a ' [APL] SA Close Err2' ; 0x43cec511 'SA Close Err2' ; 0x43cec50e 'L] SA Close Err2' ; 0x43cec48c '] HW TimeOut' ; 0x43cec49a 'CAMERA_SA]: [APL] HW Abort Err %d' ; 0x43cec4aa '] HW Abort Err %d' ; 0x43cec4b8 ' %d' ; 0x43cec43e 'keParam Err %d' ; 0x43cec426 '[CAMERA_SA]: [APL] MmuMakeParam Err %d' ; 0x43cec408 '_SA]: [APL] HW SetMode Err %d' ; 0x43cec40e '[APL] HW SetMode Err %d' ; 0x43cec416 ' SetMode Err %d' ; 0x43cec41c 'de Err %d' ; 0x43cec41e ' Err %d' ; 0x43cec432 ' [APL] MmuMakeParam Err %d' ; 0x43cec424 'd' ; 0x43cec436 'L] MmuMakeParam Err %d' ; 0x43cec431 ': [APL] MmuMakeParam Err %d' ; 0x43cec43f 'eParam Err %d' ; 0x43cec449 ' %d' ; 0x43cec457 ']: [APL] Open Err4 (unit_hndl:0x%x)' ; 0x43cec437 '] MmuMakeParam Err %d' ; 0x43cec426 '[CAMERA_SA]: [APL] MmuMakeParam Err %d'
+0x439cf21c  0095         str      r5, [sp]
+0x439cf21e  fff7b1fb     bl       #0x439ce984
+0x439cf222  2648         ldr      r0, [pc, #0x98]
+0x439cf224  2946         mov      r1, r5
+0x439cf226  7844         add      r0, pc  ; STRICT 0x43cec433 '[APL] MmuMakeParam Err %d' || CANON 0x43cec592 ": CloseHndl for `hndl_for_m_pMiddleImage' error" ; 0x43cec58e ": %s: CloseHndl for `hndl_for_m_pMiddleImage' error" ; 0x43cec587 "ERA_SA]: %s: CloseHndl for `hndl_for_m_pMiddleImage' error" ; 0x43cec587 "ERA_SA]: %s: CloseHndl for `hndl_for_m_pMiddleImage' error" ; 0x43cec57a "e' error" ; 0x43cec586 "MERA_SA]: %s: CloseHndl for `hndl_for_m_pMiddleImage' error" ; 0x43cec579 "ge' error" ; 0x43cec4fb 'r2' ; 0x43cec4fe '[CAMERA_SA]: [APL] SA Close Err2' ; 0x43cec505 '_SA]: [APL] SA Close Err2' ; 0x43cec504 'A_SA]: [APL] SA Close Err2' ; 0x43cec50b '[APL] SA Close Err2' ; 0x43cec512 'A Close Err2' ; 0x43cec519 ' Err2' ; 0x43cec522 'func_BDEX_release' ; 0x43cec51d '2' ; 0x43cec49d 'ERA_SA]: [APL] HW Abort Err %d' ; 0x43cec4ab ' HW Abort Err %d' ; 0x43cec4c9 '[APL] Output Ref Img' ; 0x43cec44d '[CAMERA_SA]: [APL] Open Err4 (unit_hndl:0x%x)' ; 0x43cec435 'PL] MmuMakeParam Err %d' ; 0x43cec417 'SetMode Err %d' ; 0x43cec411 'L] HW SetMode Err %d' ; 0x43cec421 'r %d' ; 0x43cec42d '_SA]: [APL] MmuMakeParam Err %d' ; 0x43cec441 'aram Err %d' ; 0x43cec433 '[APL] MmuMakeParam Err %d' ; 0x43cec447 'rr %d' ; 0x43cec440 'Param Err %d' ; 0x43cec450 'MERA_SA]: [APL] Open Err4 (unit_hndl:0x%x)' ; 0x43cec458 ': [APL] Open Err4 (unit_hndl:0x%x)' ; 0x43cec468 '4 (unit_hndl:0x%x)' ; 0x43cec448 'r %d' ; 0x43cec433 '[APL] MmuMakeParam Err %d'
+0x439cf228  33f776fa     bl       #0x43902718
+0x439cf22c  a3e0         b        #0x439cf376
+0x439cf22e  00bf         nop      
+0x439cf230  ff01         lsls     r7, r7, #7
