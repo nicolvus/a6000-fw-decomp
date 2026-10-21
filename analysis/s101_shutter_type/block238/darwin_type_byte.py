@@ -1,10 +1,11 @@
 import collections
 import re
 import struct
+from pathlib import Path
 
 from capstone import *
 
-b=open('firmware/extracted/fw321/firmware.tar_unpacked/0640_darwin/darwin_core.bin','rb').read(); base=0x4200
+b=Path('firmware/extracted/fw321/firmware.tar_unpacked/0640_darwin/darwin_core.bin').read_bytes(); base=0x4200
 md=Cs(CS_ARCH_ARM,CS_MODE_THUMB); md.skipdata=True
 ins=list(md.disasm(b,base))
 pool={base+o:struct.unpack_from('<I',b,o)[0] for o in range(0,len(b)-3,4)}

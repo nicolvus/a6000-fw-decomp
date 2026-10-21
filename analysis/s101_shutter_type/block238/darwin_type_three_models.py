@@ -1,5 +1,6 @@
 import re
 import struct
+from pathlib import Path
 
 from capstone import *
 
@@ -7,7 +8,7 @@ P={'a6000':'firmware/extracted/fw321/firmware.tar_unpacked/0640_darwin/darwin_co
 'a7s':'firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0640_darwin/darwin_core.bin',
 'a6300':'firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0640_darwin/darwin_core.bin'}
 for n,f in P.items():
-    b=open(f,'rb').read(); base=0x4200
+    b=Path(f).read_bytes(); base=0x4200
     md=Cs(CS_ARCH_ARM,CS_MODE_THUMB); md.skipdata=True
     ins=list(md.disasm(b,base))
     pool={base+o:struct.unpack_from('<I',b,o)[0] for o in range(0,len(b)-3,4)}
