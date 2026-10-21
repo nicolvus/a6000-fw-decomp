@@ -39,3 +39,7 @@ Límites y riesgos:
 - (hecho) `scripts/fdat_guard_probe.py`: resultado arriba.
 - (hecho) Volcado de NAND con `scripts/updater_nand_dump.py` → `analysis/camera-dumps/nand-20261020` (916 MB, solo hashes versionados): NAND entera (`nflasha`, 473 MiB) y 20 particiones. `nflasha3/5/7/15/16` empiezan con la imagen exacta del paquete oficial 3.21 (VERIFICADO con `cmp`). `nflasha1` (Updater) está en el volcado. El primer intento (`updater_full_dump.py`, nodos `nflasha0pN`) solo sacó RAM. Restaurar sigue sin camino de escritura de dispositivo en el shell de pmca (`PUSH` escribe archivos): NO VERIFICADO.
 - Copia NVRAM fresca (`senser_backup_dump.py`).
+
+## Volcado de RAM del sistema (2026-10-20)
+
+`scripts/senser_ram_dump.py` leyó 1 GiB de RAM física del sistema en marcha por service mode (`analysis/camera-dumps/ram-servicio-20261020`, solo hash versionado). El volcado de RAM de `full-20261020-nand` es de modo actualizador, no del sistema.
