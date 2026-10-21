@@ -57,3 +57,16 @@ analysis/camera-dumps/silent-ram*/*.bin
 analysis/camera-dumps/nand-*/*.bin
 analysis/camera-dumps/full-*/*.bin
 analysis/camera-dumps/ram-servicio-*/*.bin
+
+# S66+: caches de barrido Capstone regenerables (analysis/s66/.cache = 126 MB)
+.cache/
+**/.cache/
+
+# Demonios REA: logs, sockets y volcados de sesión (regenerables)
+analysis/rea-independent/run/*.log
+analysis/rea-independent/run/*.sock
+analysis/rea-independent/run/*.sock.ready
+analysis/rea-independent/run/*.out
+
+# Volcados de cadenas/TSV regenerables de analyses puntuales
+analysis/s65_video/strings_all.tsv

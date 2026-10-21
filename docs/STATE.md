@@ -94,7 +94,7 @@ Canónica para Codex y Claude Code; `AGENTS.md`/`CLAUDE.md` solo la resumen. No 
    evidencia ya exportada (`knowledge/`, `analysis/rea-independent/out/`). Si hay que abrirlo: comprobar
    si ya hay demonio (`analysis/rea-independent/run/rea.sock` + `.ready`, proceso `session_daemon.py`);
    si no, abrirlo **una vez** con `bin/session_daemon.py` y consultar por lotes con `bin/q.py`
-   (el demonio fija `REA_GHIDRA_STARTUP_TIMEOUT_MS=900000`, `GHIDRA_MAXMEM=3G`, límite 3,8 GB y 1 h de
+   (el demonio fija `REA_GHIDRA_STARTUP_TIMEOUT_MS=900000`, `GHIDRA_MAXMEM=2G`, límite 2,6 GB y 1 h de
    inactividad); cerrar con `q.py SOCK --shutdown` al terminar el hito y comprobar que no quedan
    procesos. Bibliotecas ELF pequeñas (`libmprctrl.so`): MCP `rea` directo (~25 s). Evitar `list_procedures`
    masivo sin paginar. Detalle y parámetros: [rea-independent-milestone.md](capture/rea-independent-milestone.md).
