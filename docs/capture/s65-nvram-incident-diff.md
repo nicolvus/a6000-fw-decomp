@@ -29,3 +29,7 @@ Tres volcados `backup_flash.bin` (BK4, 852 647 B, checksum de cabecera válido, 
 ## Conclusión y límites
 
 La NVRAM del fallo difiere de la de antes sobre todo por ajustes reiniciados a fábrica (explicable por «Inicializar»); no muestra una corrupción evidente. Tampoco demuestra que el fallo mecánico esté o no en la NVRAM: sigue sin haber causa verificada del obturador/objetivo. La comprobación final es física (encender y apagar tras la restauración).
+
+## Resultado físico (2026-10-20)
+
+Tras la restauración de A y desconectar el USB, el usuario informa: **la cámara enciende y apaga correctamente** (objetivo y obturador). Esto indica que el fallo estaba en el estado guardado y no en el hardware; **qué propiedad concreta lo causaba NO VERIFICADO** (se restauraron 215 propiedades juntas; no se aisló ninguna). Causa raíz (pruebas con `CameraSequence`, el formateo o «Inicializar») NO VERIFICADO.
