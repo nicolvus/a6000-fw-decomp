@@ -55,3 +55,14 @@ Siguiente: identificar `G+0x808` (escritores y el menú que lo fija) y comprobar
 **INFERENCIA:** `([G+0x808]&7)==1` ⇒ `cap+0x784=2` en A6000. Un experimento mínimo en cámara sería escribir `1` en `0x83e9bd50` y ver si cambia el tipo (`0x83e9bccc`→2) y el comportamiento del obturador; **no se ha hecho**: requiere tu autorización, backup de NVRAM previo y comprobar que `0x83e9bd50` está viva. S64 ya forzó otros campos de la misma instantánea sin efecto, pero no consta `+0x808` entre ellos.
 
 Siguiente (estático): localizar quién rellena `G+0x808..0x80d` (copia de la instantánea desde un mensaje de menú, `0x43868ae4`/`0x43868c5e` son manejadores de comando con campos `+0x80b/+0x80c`).
+
+## ¿Quién rellena `G+0x808..0x80d`? (estático, parcial)
+
+**VERIFICADO (bytes):**
+- `0x43792a0c` (única lectora PIC de `G+0x808`) llama a `0x43804c5c(r6)` en `0x43792d9e`: copia el bloque de ajustes de 0x560 B a la instantánea `G` conservando algunos campos (`+2,+4,+6..+0x16`). Esa copia **no** alcanza `+0x808`.
+- No existe ningún `strb/str [..,#0x808]` con base PIC `G` en el binario. Los almacenes a `+0x808` se reparten entre otras instancias del mismo tipo de objeto: tabla de valores por defecto `0x644/0x704/0x754/0x7b0/0x808/0x8d8` (`0x4395bf9a`, `0x4395d6d0`, `0x43b56042`, base `0x43f29454`), contadores (`0x439aeeac`), y **constructores de petición** `0x43868a30` y `0x43868b78`.
+- `0x43868a30` (llamada por `0x43868e00`, que a su vez llaman nueve sitios: `0x4385a710`, `0x4385aa66`, `0x4385adce`, `0x438e6874`, `0x438e70f2`, `0x438e71a6`, `0x43b23430`, `0x43b23710`, `0x43b23790`) rellena una estructura destino `r5` con `+0x3f8,+0x3fa,+0x3fc,+0x3fd`, `+0x80a` (2 ó 1 según un `tbb` sobre `ctx+0x2bc`, valores ≤4), `+0x80b`, `+0x80c` (bytes `cmd+0x31/+0x32` si no son 0), y **pone `+0x808` y `+0x80d` a 0**. `args_to_g.py`: ninguno de los 9 llamadores pasa `G` literal por argumento.
+
+**INFERENCIA:** el layout `+0x808..+0x80d` de `G` coincide con el de esa estructura de petición; es probable que `G` sea (o reciba una copia de) un objeto «petición/parámetros» que, mientras no cambie, deja `+0x808=0` (tipo 0), y que el valor 1 solo aparezca por una orden concreta de la ruta de captura (lo que habría que ver con P1 del [plan de pruebas físicas](../../docs/capture/physical-test-plan.md)). **NO VERIFICADO:** que `r5` de `0x43868a30` sea `G` (llega por una variable local de los 9 llamadores), y quién lo copia a `G`.
+
+Siguiente estático: seguir `r5` de `0x43868e00` en `0x4385a710`/`0x438e6874` hasta su origen (variable local o objeto global) y buscar la copia hacia `G`.
