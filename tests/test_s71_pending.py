@@ -23,7 +23,7 @@ def test_constructor_escribe_bloque_dd0():
 
 
 @pytest.mark.skipif(not (A6.is_file() and A7.is_file()), reason="faltan av-cam.bin")
-def test_copia_del_flag_en_a6000_y_a7s():
+def test_copia_en_bloque_en_a6000_y_a7s():
     assert ins(A6, 0x438ACC24) == ["strb.w r1, [r3, #0x740]"]
     assert ins(A6, 0x438ACC20) == ["ldrb.w r1, [r4, #0x133]"]
     assert ins(A7, 0x4389EFC2) == ["strb.w r1, [r3, #0x748]"]
@@ -44,3 +44,12 @@ def test_grafo_de_modulos_contiene_aristas_conocidas():
     assert ("CAMERA_MAIN_SYNC", "GOLFSHOT") in aristas
     assert ("ADF", "SYSND") in aristas
     assert not any(b in {"ERR", "INFO", "DEBUG"} for _, b in aristas)
+
+
+def test_mapa_de_copia_identico_en_a6000_y_a7s():
+    import subprocess
+    import sys
+
+    out = subprocess.run([sys.executable, str(ROOT / "analysis/s71_pending/copy_map.py")], capture_output=True, text=True, cwd=ROOT, check=True).stdout
+    a6, a7 = (ln.split(":", 1)[1] for ln in out.strip().splitlines())
+    assert a6 == a7 and "'0x740': '0x133'" in a6 and "'0x748': '0x13d'" in a6
