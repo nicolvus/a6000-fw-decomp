@@ -1,7 +1,11 @@
 """S71-6/7: llamadores de Backup_read (wrapper 0x435613b0) con ID 0x3e0005; llamadores de 0x43789cc0; referencias al ID 0x301d7."""
-import re, struct
+import re
+import struct
+from pathlib import Path
+
 from capstone import CS_ARCH_ARM, CS_MODE_THUMB, Cs
-b = open('analysis/rea-independent/input/av-cam.bin', 'rb').read(); base = 0x43541000
+
+b = Path('analysis/rea-independent/input/av-cam.bin').read_bytes(); base = 0x43541000
 md = Cs(CS_ARCH_ARM, CS_MODE_THUMB); md.skipdata = True
 ins = list(md.disasm(b[:0x9c0000], base))
 pool = {base+o: struct.unpack_from('<I', b, o)[0] for o in range(0, len(b)-3, 4)}

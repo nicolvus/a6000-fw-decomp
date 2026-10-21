@@ -1,8 +1,12 @@
 """Accesores de campo del singleton 0x437876dc: funciones `push{r3,lr}; bl 0x437876dc; add r0,#N...; pop`.
 Uso: accessors.py [lo hi]  -> lista accesores con desplazamiento en [lo,hi) y sus llamadores."""
-import re, sys
+import re
+import sys
+from pathlib import Path
+
 from capstone import CS_ARCH_ARM, CS_MODE_THUMB, Cs
-b = open('analysis/rea-independent/input/av-cam.bin', 'rb').read(); base = 0x43541000
+
+b = Path('analysis/rea-independent/input/av-cam.bin').read_bytes(); base = 0x43541000
 md = Cs(CS_ARCH_ARM, CS_MODE_THUMB); md.skipdata = True
 ins = list(md.disasm(b[:0x9c0000], base))
 G = '#0x437876dc'

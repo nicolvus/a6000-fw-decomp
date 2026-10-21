@@ -1,7 +1,10 @@
 """S71-1: de dónde sale cada byte de dst+0xdd0..0xde7 en el constructor 0x437b1048 (pares ldrb -> strb)."""
 import re
+from pathlib import Path
+
 from capstone import CS_ARCH_ARM, CS_MODE_THUMB, Cs
-b = open('analysis/rea-independent/input/av-cam.bin', 'rb').read(); base = 0x43541000
+
+b = Path('analysis/rea-independent/input/av-cam.bin').read_bytes(); base = 0x43541000
 md = Cs(CS_ARCH_ARM, CS_MODE_THUMB)
 src = {}
 prev = None
