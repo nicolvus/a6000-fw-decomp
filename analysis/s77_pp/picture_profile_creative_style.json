@@ -1,0 +1,112 @@
+{
+ "hito": "S77 - Creative Style y balance de blancos",
+ "avcam_estilos": {
+  "tabla1": {
+   "rango": "0x43ca6702-0x43ca676d",
+   "n": 13,
+   "nombres": [
+    "Vivid",
+    "Neutral",
+    "Portrait",
+    "Landscape",
+    "Clear",
+    "Deep",
+    "Light",
+    "Sunset",
+    "Nightview",
+    "Autumnleaves",
+    "Real",
+    "Sepia",
+    "Standard"
+   ]
+  },
+  "tabla2": {
+   "rango": "0x43ca678b-0x43ca67f0",
+   "n": 12,
+   "nombres": [
+    "Vivid",
+    "Neutral",
+    "Portrait",
+    "Landscape",
+    "Clear",
+    "Deep",
+    "Light",
+    "Sunset",
+    "Nightview",
+    "Autumnleaves",
+    "Sepia",
+    "Standard"
+   ]
+  },
+  "a7s": {
+   "tabla1": "0x43cb540e-0x43cb5464",
+   "tabla2": "0x43cc5ab8-0x43cc5b08",
+   "nota": "mismos estilos en fw3.20"
+  }
+ },
+ "avcam_wb_block": {
+  "rango": "0x43c76c26-0x43c76e2b",
+  "cadenas": {
+   "wb_b_data=%02X ": "0x43c76c26",
+   "wb_data_tmp=%02X ": "0x43c76c36",
+   "wb_r_data=%02X ": "0x43c76c48",
+   "wb_g_data=%02X ": "0x43c76c6b",
+   "wb_w_data=%02X, ": "0x43c76dca",
+   "wb_mask=%02X, ": "0x43c76dbb",
+   "wb_w_data=%02X ": "0x43c76e21",
+   "wb_mask=%02X ": "0x43c76e13"
+  },
+  "nota": "pertenece al bloque de ajuste de panel ADJ_CMD (S73), no al WB fotografico"
+ },
+ "negativos_verificados": [
+  "CreativeStyle",
+  "PictureProfile",
+  "Highlight",
+  "Saturation",
+  "Sharpness",
+  "ColorTone",
+  "wb_shift"
+ ],
+ "userland": {
+  "wrapperCreativeStyle.so": {
+   "bytes": 8420,
+   "simbolos": [
+    "WrapperCreativeStyle::getCreativeStyle",
+    "WrapperCreativeStyle::setCreativeStyle",
+    "WrapperCreativeStyle::convertProcessValueIdToValue",
+    "WrapperCreativeStyle::convertValueToProcessValueId",
+    "WrapperCreativeStyle::isInhOn",
+    "CmnViewProcessDataMgr::getInstance",
+    "stella::8BitArray<unsigned int>",
+    "stella_print_log"
+   ]
+  },
+  "wrapperWhiteBalance.so": {
+   "bytes": 15556,
+   "simbolos": [
+    "WrapperWhiteBalance::getWhiteBalance",
+    "WrapperWhiteBalance::setWhiteBalance(u8,WRAPPER_WHITE_BALANCE,int,int,int)",
+    "WrapperWhiteBalance::resetAdjustmentValue",
+    "WrapperWhiteBalance::isInhOn",
+    "WrapperSettingUtil::readBackup/writeBackup",
+    "BackupManager::Bkup_Read_Setting_Attr",
+    "ViewBase::requestModelExecute",
+    "ViewBase::getModelInfo"
+   ]
+  },
+  "ruta_compilacion": "/home/jp10239/git-work/build/141H/141H.DSLR.DM_UUD3.reco.LATEST.diadem.set/Guiengine_131H/",
+  "otras": [
+   "cmnShiftExposureCompensation.so",
+   "cmnShiftFlashCompensation.so",
+   "cmnShiftIris.so",
+   "cmnShiftIso.so",
+   "cmnShiftShutterSpeed.so"
+  ]
+ },
+ "corrections_vs_subagent_draft": [
+  "la 'tabla de Picture Profile' en offset 0xaa8d50 es CODIGO Thumb, no datos",
+  "Highlight/Saturation/Sharpness/CreativeStyle/PictureProfile: 0 apariciones en av-cam.bin",
+  "los presets de WB (Auto/Daylight/...) NO aparecen en el firmware",
+  "los offsets del borrador son offsets de fichero; aqui se usan direcciones del binario"
+ ]
+}
