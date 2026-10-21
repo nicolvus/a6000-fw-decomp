@@ -37,3 +37,15 @@ def test_darwin_sin_literal_del_byte_de_tipo():
     pool = {struct.unpack_from("<I", d, o)[0] for o in range(0, len(d) - 3, 4)}
     assert not any(0x20000050 <= v <= 0x20000058 for v in pool)
     assert struct.unpack_from("<2I", d, 0) == (0x20002A00, 0x45C9)
+
+
+def test_darwin_scatterload_no_cubre_el_bloque_de_tipos():
+    f = BIN.parents[3] / "firmware/extracted/fw321/firmware.tar_unpacked/0640_darwin/darwin_core.bin"
+    if not f.is_file():
+        pytest.skip("falta darwin_core.bin")
+    d = f.read_bytes()
+    w = lambda a: struct.unpack_from("<I", d, a - 0x4200)[0]  # noqa: E731
+    t0 = 0x4430 + w(0x4430)
+    regiones = [(w(t0 + 4), w(t0 + 8)), (w(t0 + 20), w(t0 + 24))]
+    assert regiones == [(0x20002A00, 0x4D0), (0x20002ED0, 0xF8C)]
+    assert all(dst >= 0x20002A00 for dst, _ in regiones)
