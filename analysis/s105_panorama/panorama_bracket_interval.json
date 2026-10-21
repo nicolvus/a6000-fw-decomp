@@ -1,0 +1,4590 @@
+{
+ "milestone": "S105",
+ "title": "Los modos de captura especiales: panoramica/barrido (sweep), bracketing e intervalo",
+ "binary": {
+  "path": "analysis/rea-independent/input/av-cam.bin",
+  "size_bytes": 11427236,
+  "load_base": "0x43541000",
+  "address_convention": "vaddr = 0x43541000 + offset_de_fichero"
+ },
+ "method": {
+  "type": "estatico, solo lectura de bytes (sin ejecutar el firmware, sin camara, sin flasheo)",
+  "string_xref_mechanism": "las cadenas NO se referencian con punteros absolutos; el firmware Thumb usa 'ldr rX,[pc,#imm]' (pool literal) seguido de 'add rX,pc' (0x4478+Rd). target = pool_value + (dir_instruccion_add + 4). Verificado byte a byte.",
+  "note": "los punteros a codigo (vtables) no aparecen como direcciones absolutas en el blob; la atribucion a funcion se hace por prologo verificado (push {..,lr}) y por la cadena de fichero .cpp citada.",
+  "rea_daemon": "no usado (el socket compartido analysis/rea-independent/run/rea-s104.sock rechazaba la conexion: ConnectionRefusedError, dos intentos); todo el trabajo se hizo sobre bytes"
+ },
+ "counts": {
+  "Panorama": 67,
+  "Sweep": 26,
+  "Bracket": 1,
+  "Interval": 10,
+  "INTERVAL": 4,
+  "PTM": 59,
+  "Ccnr": 14,
+  "CCNR": 10,
+  "Tanzaku": 27,
+  "still_cnt_panoramaSweep.cpp": 1,
+  "still_cnt_panoramaStitch.cpp": 1,
+  "still_seq_panoramaStitch.cpp": 1,
+  "lc_BracketAF.cpp": 1,
+  "ModulePanoramaCcnrEncode.cpp": 1,
+  "ApiPanoramaCcnrEncode.cpp": 1,
+  "WrapAplCcnrTanzakuStart.cpp": 1,
+  "WrapCamTanzakuStart.cpp": 1,
+  "ddl_stitch.cpp": 1,
+  "ddl_srotate.cpp": 1,
+  "ModuleOnePassCcnrEncode.cpp": 1,
+  "ApiPtmCount.cpp": 1,
+  "MSG_ID_SDF_PANORAMA_CCNR_ENCODE": 1,
+  "MSG_ID_SDF_CCNR_ENCODE": 2,
+  "MSG_ID_SDF_PTM_COUNT": 1,
+  "Stage_PanoramaCcnrEncode": 1,
+  "Stage_InitializeSweepAndSpoolBranch": 1,
+  "PanoramaStripSequence": 2,
+  "exec_tanzaku": 3,
+  "PreProcessResult": 2
+ },
+ "strings_inventory": [
+  {
+   "vaddr": "0x43c43e75",
+   "file_offset": "0x702e75",
+   "text": "29UpdatableRenewIntervalFactory",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c4411d",
+   "file_offset": "0x70311d",
+   "text": "17PTMCalcSeqAdapter",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c44180",
+   "file_offset": "0x703180",
+   "text": "24PTMCalcSeqAdapterFactory",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c4423a",
+   "file_offset": "0x70323a",
+   "text": "20PTMCalculatorFactory",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c44251",
+   "file_offset": "0x703251",
+   "text": "13PTMCalculator",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c44ce0",
+   "file_offset": "0x703ce0",
+   "text": "[MCUTILPTM ]McUtilPtm::Init ins=%08x\n",
+   "xref_sites": [
+    "0x435c552a"
+   ],
+   "containers": [
+    {
+     "func": "0x435c54f8",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c44d24",
+   "file_offset": "0x703d24",
+   "text": "[MCUTILPTM ]SetPtmNormal %08x\n",
+   "xref_sites": [
+    "0x435c5574",
+    "0x435c55ca"
+   ],
+   "containers": [
+    {
+     "func": "0x435c555c",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x435c5598",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c44d4d",
+   "file_offset": "0x703d4d",
+   "text": "[MCUTILPTM ]SetVpiLocalRp old=%08x,new=%08x\n",
+   "xref_sites": [
+    "0x435c5604"
+   ],
+   "containers": [
+    {
+     "func": "0x435c55f0",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c44d7a",
+   "file_offset": "0x703d7a",
+   "text": "[MCUTILPTM ]ChgState STATE_WAIT_START_YC_PIN LastPtm = %08x\n",
+   "xref_sites": [
+    "0x435c5664"
+   ],
+   "containers": [
+    {
+     "func": "0x435c5614",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c44db7",
+   "file_offset": "0x703db7",
+   "text": "[MC PTM] FATAL ERROR !!! \n",
+   "xref_sites": [
+    "0x435c56a0"
+   ],
+   "containers": [
+    {
+     "func": "0x435c5684",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c44dd2",
+   "file_offset": "0x703dd2",
+   "text": "[MCUTILPTM ]Detect StreamEnd ridx=%08x dispEnd=%08x decEnd=%08x\n",
+   "xref_sites": [
+    "0x435c5762"
+   ],
+   "containers": [
+    {
+     "func": "0x435c56c4",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c44e13",
+   "file_offset": "0x703e13",
+   "text": "[MCUTILPTM ]PTM1 diff %08x\n",
+   "xref_sites": [
+    "0x435c578a"
+   ],
+   "containers": [
+    {
+     "func": "0x435c56c4",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c44e2f",
+   "file_offset": "0x703e2f",
+   "text": "[MCUTILPTM ]PTM2 diff %08x\n",
+   "xref_sites": [
+    "0x435c57ac"
+   ],
+   "containers": [
+    {
+     "func": "0x435c56c4",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c44e4b",
+   "file_offset": "0x703e4b",
+   "text": "[MCUTILPTM ]SetDecOpenCmdParam %08x\n",
+   "xref_sites": [
+    "0x435c5802"
+   ],
+   "containers": [
+    {
+     "func": "0x435c57f0",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c44e70",
+   "file_offset": "0x703e70",
+   "text": "[MCUTILPTM ]SetDecStartCmdParam %08x\n",
+   "xref_sites": [
+    "0x435c5840"
+   ],
+   "containers": [
+    {
+     "func": "0x435c5818",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c573c6",
+   "file_offset": "0x7163c6",
+   "text": "IdrFrameIntervalGopNum  %d\n",
+   "xref_sites": [
+    "0x435ee5de"
+   ],
+   "containers": [
+    {
+     "func": "0x435ee524",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c63896",
+   "file_offset": "0x722896",
+   "text": "[%x]idrFrameIntervalGopNum [%d]\n",
+   "xref_sites": [
+    "0x436049a0"
+   ],
+   "containers": [
+    {
+     "func": "0x4360490c",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c63fb8",
+   "file_offset": "0x722fb8",
+   "text": "Set Terminate PTM!!\r\n",
+   "xref_sites": [
+    "0x436057a0"
+   ],
+   "containers": [
+    {
+     "func": "0x43605712",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c66927",
+   "file_offset": "0x725927",
+   "text": "21PTMCalcSeqAdapterImpl",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c6693f",
+   "file_offset": "0x72593f",
+   "text": "29PTMCalcSeqAdapterLogDecorator",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c6695f",
+   "file_offset": "0x72595f",
+   "text": "17PTMCalculatorImpl",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c66973",
+   "file_offset": "0x725973",
+   "text": "25PTMCalculatorLogDecorator",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c706ae",
+   "file_offset": "0x72f6ae",
+   "text": "STATE_PTM_VALID         :%#x",
+   "xref_sites": [
+    "0x43621abe"
+   ],
+   "containers": [
+    {
+     "func": "0x43621a4e",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c72837",
+   "file_offset": "0x731837",
+   "text": "[DVFC]PTM Reverse\n",
+   "xref_sites": [
+    "0x43627274"
+   ],
+   "containers": [
+    {
+     "func": "0x43627118",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c781ac",
+   "file_offset": "0x7371ac",
+   "text": "MSG_ID_SDF_CCNR_ENCODE",
+   "xref_sites": [
+    "0x43639822"
+   ],
+   "containers": [
+    {
+     "func": "0x43639822",
+     "name": "SDF message-name getter"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c781c3",
+   "file_offset": "0x7371c3",
+   "text": "MSG_ID_SDF_CCNR_ENCODE_WITH_MODE",
+   "xref_sites": [
+    "0x43639828"
+   ],
+   "containers": [
+    {
+     "func": "0x43639828",
+     "name": "SDF message-name getter"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c781e4",
+   "file_offset": "0x7371e4",
+   "text": "MSG_ID_SDF_PANORAMA_CCNR_ENCODE",
+   "xref_sites": [
+    "0x4363982e"
+   ],
+   "containers": [
+    {
+     "func": "0x4363982e",
+     "name": "SDF message-name getter"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c78289",
+   "file_offset": "0x737289",
+   "text": "MSG_ID_SDF_CCNR_RESIZE",
+   "xref_sites": [
+    "0x43639858"
+   ],
+   "containers": [
+    {
+     "func": "0x43639858",
+     "name": "SDF message-name getter"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c78350",
+   "file_offset": "0x737350",
+   "text": "MSG_ID_SDF_PTM_COUNT",
+   "xref_sites": [
+    "0x43639882"
+   ],
+   "containers": [
+    {
+     "func": "0x43639882",
+     "name": "SDF message-name getter"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c79532",
+   "file_offset": "0x738532",
+   "text": "[SDF][ERROR] SDF_INTRA_ERR_PTM_COUNT_PAST",
+   "xref_sites": [
+    "0x4363b61a"
+   ],
+   "containers": [
+    {
+     "func": "0x4363b43a",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7955c",
+   "file_offset": "0x73855c",
+   "text": "[SDF][ERROR] SDF_INTRA_ERR_PTM_COUNT_STOP",
+   "xref_sites": [
+    "0x4363b620"
+   ],
+   "containers": [
+    {
+     "func": "0x4363b43a",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c797f7",
+   "file_offset": "0x7387f7",
+   "text": "[SDF][ERROR] SDF_ERR_PTM_COUNT_PAST",
+   "xref_sites": [
+    "0x4363b796"
+   ],
+   "containers": [
+    {
+     "func": "0x4363b43a",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7981b",
+   "file_offset": "0x73881b",
+   "text": "[SDF][ERROR] SDF_ERR_PTM_COUNT_STOP",
+   "xref_sites": [
+    "0x4363b79c"
+   ],
+   "containers": [
+    {
+     "func": "0x4363b43a",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c79fd2",
+   "file_offset": "0x738fd2",
+   "text": "ApiPanoramaCcnrEncode.cpp",
+   "xref_sites": [
+    "0x4363e0c4",
+    "0x4363e108",
+    "0x4363e24c",
+    "0x4363e502"
+   ],
+   "containers": [
+    {
+     "func": "0x4363ded0",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7a007",
+   "file_offset": "0x739007",
+   "text": "21ApiPanoramaCcnrEncode",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7a094",
+   "file_offset": "0x739094",
+   "text": "[SDF] Effect PTM: ptm_32.ptm_31_0 : %08x.%08x \n",
+   "xref_sites": [
+    "0x4363e680"
+   ],
+   "containers": [
+    {
+     "func": "0x4363e550",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7a0d8",
+   "file_offset": "0x7390d8",
+   "text": "[SDF] bigger_value PTM: ptm_32.ptm_31_0 : %08x.%08x \n",
+   "xref_sites": [
+    "0x4363e7d0"
+   ],
+   "containers": [
+    {
+     "func": "0x4363e7ae",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7a10e",
+   "file_offset": "0x73910e",
+   "text": "[SDF] smaller_value PTM: ptm_32.ptm_31_0 : %08x.%08x \n",
+   "xref_sites": [
+    "0x4363e7dc"
+   ],
+   "containers": [
+    {
+     "func": "0x4363e7ae",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7a145",
+   "file_offset": "0x739145",
+   "text": "[SDF_ERR] bigger_value.ptm_32==PTM_SECOND_ZONE\n",
+   "xref_sites": [
+    "0x4363e7f8"
+   ],
+   "containers": [
+    {
+     "func": "0x4363e7ae",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7a175",
+   "file_offset": "0x739175",
+   "text": "[SDF_ERR] smaller_value.ptm_32==PTM_FIRST_ZONE\n",
+   "xref_sites": [
+    "0x4363e828"
+   ],
+   "containers": [
+    {
+     "func": "0x4363e7ae",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7a1a5",
+   "file_offset": "0x7391a5",
+   "text": "[SDF] interval(PTM) %ld\n",
+   "xref_sites": [
+    "0x4363e862"
+   ],
+   "containers": [
+    {
+     "func": "0x4363e7ae",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7a1fb",
+   "file_offset": "0x7391fb",
+   "text": "[SDF] check_value PTM: ptm_32.ptm_31_0 : %08x.%08x \n",
+   "xref_sites": [
+    "0x4363e974"
+   ],
+   "containers": [
+    {
+     "func": "0x4363e95c",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7a230",
+   "file_offset": "0x739230",
+   "text": "[SDF] m_stopPtm PTM: ptm_32.ptm_31_0 : %08x.%08x \n",
+   "xref_sites": [
+    "0x4363e980"
+   ],
+   "containers": [
+    {
+     "func": "0x4363e95c",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7a263",
+   "file_offset": "0x739263",
+   "text": "[SDF] m_currentPtm PTM: ptm_32.ptm_31_0 : %08x.%08x \n",
+   "xref_sites": [
+    "0x4363e990"
+   ],
+   "containers": [
+    {
+     "func": "0x4363e95c",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7a2b1",
+   "file_offset": "0x7392b1",
+   "text": "[SDF_ERR] STOP PTM == CHECK PTM ERR\n",
+   "xref_sites": [
+    "0x4363ea00"
+   ],
+   "containers": [
+    {
+     "func": "0x4363e95c",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7a2d6",
+   "file_offset": "0x7392d6",
+   "text": "[SDF] CHECK PTM32 == CURRENT PTM32\n",
+   "xref_sites": [
+    "0x4363ead6"
+   ],
+   "containers": [
+    {
+     "func": "0x4363e95c",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7a2fa",
+   "file_offset": "0x7392fa",
+   "text": "[SDF_ERR] CHECK PTM0_31 < CURRENT PTM0_31 && CHECK PTM0_31 >= STOP PTM0_31 \n",
+   "xref_sites": [
+    "0x4363eaee"
+   ],
+   "containers": [
+    {
+     "func": "0x4363e95c",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7a347",
+   "file_offset": "0x739347",
+   "text": "[SDF_ERR] CHECK PTM0_31 < CURRENT PTM0_31\n",
+   "xref_sites": [
+    "0x4363eb28"
+   ],
+   "containers": [
+    {
+     "func": "0x4363e95c",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7a372",
+   "file_offset": "0x739372",
+   "text": "[SDF] CHECK PTM0_31 > STOP PTM0_31\n",
+   "xref_sites": [
+    "0x4363eb5c"
+   ],
+   "containers": [
+    {
+     "func": "0x4363e95c",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7a3c2",
+   "file_offset": "0x7393c2",
+   "text": "ApiPtmCount.cpp",
+   "xref_sites": [
+    "0x4363ed0e",
+    "0x4363ed66",
+    "0x4363eebc",
+    "0x4363ef70",
+    "0x4363f002"
+   ],
+   "containers": [
+    {
+     "func": "0x4363ec80",
+     "name": "ApiPtmCount::WaitImcResponse (SDF)"
+    },
+    {
+     "func": "0x4363edf8",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x4363ef52",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x4363efe0",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7a487",
+   "file_offset": "0x739487",
+   "text": "[SDF] Pause PTM: ptm_32.ptm_31_0 : %08x.%08x \n",
+   "xref_sites": [
+    "0x4363f0d0"
+   ],
+   "containers": [
+    {
+     "func": "0x4363f070",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7a4c9",
+   "file_offset": "0x7394c9",
+   "text": "[SDF] Stop PTM: ptm_32.ptm_31_0 : %08x.%08x \n",
+   "xref_sites": [
+    "0x4363f2b4"
+   ],
+   "containers": [
+    {
+     "func": "0x4363f254",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7a521",
+   "file_offset": "0x739521",
+   "text": "[SDF] Start PTM: ptm_32.ptm_31_0 : %08x.%08x \n",
+   "xref_sites": [
+    "0x4363f5d6"
+   ],
+   "containers": [
+    {
+     "func": "0x4363f548",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7a56a",
+   "file_offset": "0x73956a",
+   "text": "[SDF] Current PTM: ptm_32.ptm_31_0 : %08x.%08x \n",
+   "xref_sites": [
+    "0x4363f758"
+   ],
+   "containers": [
+    {
+     "func": "0x4363f728",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7a5b4",
+   "file_offset": "0x7395b4",
+   "text": "[SDF] Pause Start PTM: ptm_32.ptm_31_0 : %08x.%08x \n",
+   "xref_sites": [
+    "0x4363f9ea"
+   ],
+   "containers": [
+    {
+     "func": "0x4363f89c",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7b03d",
+   "file_offset": "0x73a03d",
+   "text": "ExecJpegTanzReady",
+   "xref_sites": [
+    "0x43642f9c"
+   ],
+   "containers": [
+    {
+     "func": "0x43642f7c",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7b16f",
+   "file_offset": "0x73a16f",
+   "text": "ExecJpegTanzEncode",
+   "xref_sites": [
+    "0x43642ff8"
+   ],
+   "containers": [
+    {
+     "func": "0x43642fd8",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7b19f",
+   "file_offset": "0x73a19f",
+   "text": "ExecAplCcnrTanzakuStart",
+   "xref_sites": [
+    "0x436433c8"
+   ],
+   "containers": [
+    {
+     "func": "0x436433a8",
+     "name": "ExecAplCcnrTanzakuStart (SDF)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7b462",
+   "file_offset": "0x73a462",
+   "text": "OpenTanzCalc",
+   "xref_sites": [
+    "0x43644fe2",
+    "0x43645028",
+    "0x43645072"
+   ],
+   "containers": [
+    {
+     "func": "0x43644fc8",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7b4eb",
+   "file_offset": "0x73a4eb",
+   "text": "ExecTanzRcDistCalc",
+   "xref_sites": [
+    "0x4364648c",
+    "0x436464d4"
+   ],
+   "containers": [
+    {
+     "func": "0x436462a8",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7b4fe",
+   "file_offset": "0x73a4fe",
+   "text": "ExecTanzCamCoreDevelop",
+   "xref_sites": [
+    "0x43645fd8",
+    "0x436460ce",
+    "0x43646134",
+    "0x43646222"
+   ],
+   "containers": [
+    {
+     "func": "0x43645f80",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7b515",
+   "file_offset": "0x73a515",
+   "text": "ExecTanzaku",
+   "xref_sites": [
+    "0x4364703c",
+    "0x4364709e",
+    "0x43647100",
+    "0x43647152",
+    "0x436471a8",
+    "0x4364720a",
+    "0x43647292",
+    "0x436472e2",
+    "0x4364736e",
+    "0x436473c0",
+    "0x43647416",
+    "0x4364745e",
+    "0x436474ba",
+    "0x4364751a",
+    "0x436476a8",
+    "0x436476fa",
+    "0x43647752",
+    "0x436477b0"
+   ],
+   "containers": [
+    {
+     "func": "0x43646fe0",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7b526",
+   "file_offset": "0x73a526",
+   "text": "OpenTanzInitParam",
+   "xref_sites": [
+    "0x43644dd4",
+    "0x43644e60",
+    "0x43644eb0",
+    "0x43644f3c"
+   ],
+   "containers": [
+    {
+     "func": "0x43644da0",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7b55c",
+   "file_offset": "0x73a55c",
+   "text": "ExecTanzSrcDistCalc",
+   "xref_sites": [
+    "0x436466ac"
+   ],
+   "containers": [
+    {
+     "func": "0x43646540",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7b615",
+   "file_offset": "0x73a615",
+   "text": "[SDF][CCNR_ENCODE] jpegOverLimit (...going to ENCODE RETRY)\n",
+   "xref_sites": [
+    "0x43647c86",
+    "0x4364bbe6",
+    "0x4365fb90"
+   ],
+   "containers": [
+    {
+     "func": "0x4364794c",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x4364ba10",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x4365f7f8",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7b6be",
+   "file_offset": "0x73a6be",
+   "text": "WaitCallbackJpegTanz",
+   "xref_sites": [
+    "0x43649d88",
+    "0x43649dca"
+   ],
+   "containers": [
+    {
+     "func": "0x43649d50",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7b6d3",
+   "file_offset": "0x73a6d3",
+   "text": "ExecTanzRcDistCalc",
+   "xref_sites": [
+    "0x4364b15c",
+    "0x4364b1a8",
+    "0x4364b1f8",
+    "0x4364b24e"
+   ],
+   "containers": [
+    {
+     "func": "0x4364b144",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7b6f5",
+   "file_offset": "0x73a6f5",
+   "text": "SetInputYcTanz",
+   "xref_sites": [
+    "0x4364b028",
+    "0x4364b076",
+    "0x4364b0ca"
+   ],
+   "containers": [
+    {
+     "func": "0x4364affe",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7b709",
+   "file_offset": "0x73a709",
+   "text": "CalcAreaInputYcTanz",
+   "xref_sites": [
+    "0x4364a30e"
+   ],
+   "containers": [
+    {
+     "func": "0x4364a2c8",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7b73c",
+   "file_offset": "0x73a73c",
+   "text": "GetTanzNoFromDtable",
+   "xref_sites": [
+    "0x4364a276"
+   ],
+   "containers": [
+    {
+     "func": "0x4364a238",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7b788",
+   "file_offset": "0x73a788",
+   "text": "ExecTanzSrcDistCalc",
+   "xref_sites": [
+    "0x43648f8a"
+   ],
+   "containers": [
+    {
+     "func": "0x43648e48",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7b79c",
+   "file_offset": "0x73a79c",
+   "text": "ExecTanzAplStart",
+   "xref_sites": [
+    "0x43649074"
+   ],
+   "containers": [
+    {
+     "func": "0x43648ffa",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7b7ad",
+   "file_offset": "0x73a7ad",
+   "text": "ReadInputYcTanz",
+   "xref_sites": [
+    "0x4364ae0a",
+    "0x4364ae54",
+    "0x4364ae9e"
+   ],
+   "containers": [
+    {
+     "func": "0x4364addc",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7b829",
+   "file_offset": "0x73a829",
+   "text": "OpenTanzCalc",
+   "xref_sites": [
+    "0x43648482",
+    "0x436484ca",
+    "0x43648512"
+   ],
+   "containers": [
+    {
+     "func": "0x43648468",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7b836",
+   "file_offset": "0x73a836",
+   "text": "ExecTanzRcDistCalcForRcH",
+   "xref_sites": [
+    "0x4364ab10"
+   ],
+   "containers": [
+    {
+     "func": "0x4364a970",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7b87f",
+   "file_offset": "0x73a87f",
+   "text": "CalcInputYcTanz",
+   "xref_sites": [
+    "0x4364af34",
+    "0x4364af92"
+   ],
+   "containers": [
+    {
+     "func": "0x4364af08",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7b8a9",
+   "file_offset": "0x73a8a9",
+   "text": "OpenTanzInitParam",
+   "xref_sites": [
+    "0x436482e6",
+    "0x43648354",
+    "0x43648386",
+    "0x436483dc"
+   ],
+   "containers": [
+    {
+     "func": "0x436482b4",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7b8cb",
+   "file_offset": "0x73a8cb",
+   "text": "ExecTanzaku",
+   "xref_sites": [
+    "0x4364b31c",
+    "0x4364b366",
+    "0x4364b3aa",
+    "0x4364b3de",
+    "0x4364b422",
+    "0x4364b47a",
+    "0x4364b4da",
+    "0x4364b512",
+    "0x4364b588",
+    "0x4364b5d6",
+    "0x4364b622",
+    "0x4364b65a",
+    "0x4364b690",
+    "0x4364b6cc",
+    "0x4364b7f4",
+    "0x4364b828",
+    "0x4364b862",
+    "0x4364b8a2"
+   ],
+   "containers": [
+    {
+     "func": "0x4364b2d0",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7b926",
+   "file_offset": "0x73a926",
+   "text": "ModulePanoramaCcnrEncode.cpp",
+   "xref_sites": [
+    "0x43648066",
+    "0x436480dc",
+    "0x43648188",
+    "0x436481fa",
+    "0x4364826c",
+    "0x436482ea",
+    "0x43648358",
+    "0x4364838a",
+    "0x436483e0",
+    "0x43648486",
+    "0x436484ce",
+    "0x43648516",
+    "0x4364862c",
+    "0x4364887e",
+    "0x436488b0",
+    "0x4364890c",
+    "0x4364898c",
+    "0x436489dc",
+    "0x43648a34",
+    "0x43648a8c",
+    "0x43648b2c",
+    "0x43648b7c",
+    "0x43648bd4",
+    "0x43648c2a",
+    "0x43648cc6",
+    "0x43648d2e",
+    "0x43648d9a",
+    "0x43648e02",
+    "0x43648f8e",
+    "0x43649078",
+    "0x4364918c",
+    "0x4364927a",
+    "0x436492a8",
+    "0x4364938a",
+    "0x43649434",
+    "0x436494c2",
+    "0x436495f6",
+    "0x43649744",
+    "0x436497dc",
+    "0x43649886",
+    "0x43649964",
+    "0x436499ba",
+    "0x43649a0a",
+    "0x43649a64",
+    "0x43649ab2",
+    "0x43649b00",
+    "0x43649b4e",
+    "0x43649b9c",
+    "0x43649bec",
+    "0x43649c1e",
+    "0x43649c50",
+    "0x43649c82",
+    "0x43649d8c",
+    "0x43649dce",
+    "0x43649e68",
+    "0x43649eaa",
+    "0x43649f44",
+    "0x43649f86",
+    "0x4364a006",
+    "0x4364a054",
+    "0x4364a0a8",
+    "0x4364a0fa",
+    "0x4364a1a8",
+    "0x4364a27a",
+    "0x4364a312",
+    "0x4364a3fc",
+    "0x4364a4a0",
+    "0x4364a6be",
+    "0x4364a874",
+    "0x4364a8ac",
+    "0x4364a900",
+    "0x4364a938",
+    "0x4364ab14",
+    "0x4364ab7c",
+    "0x4364abd8",
+    "0x4364ac36",
+    "0x4364ac76",
+    "0x4364acca",
+    "0x4364ad20",
+    "0x4364ae0e",
+    "0x4364ae58",
+    "0x4364aea2",
+    "0x4364af38",
+    "0x4364af96",
+    "0x4364b02c",
+    "0x4364b07a",
+    "0x4364b0ce",
+    "0x4364b160",
+    "0x4364b1ac",
+    "0x4364b1fc",
+    "0x4364b252",
+    "0x4364b322",
+    "0x4364b36c",
+    "0x4364b3b0",
+    "0x4364b3e4",
+    "0x4364b428",
+    "0x4364b480",
+    "0x4364b4e0",
+    "0x4364b518",
+    "0x4364b58c",
+    "0x4364b5da",
+    "0x4364b626",
+    "0x4364b65e",
+    "0x4364b694",
+    "0x4364b6d0",
+    "0x4364b7f8",
+    "0x4364b82c",
+    "0x4364b866",
+    "0x4364b8a6",
+    "0x4364ba3c",
+    "0x4364ba94",
+    "0x4364bae6",
+    "0x4364bbc8",
+    "0x4364bc8a",
+    "0x4364bdc4",
+    "0x4364be22",
+    "0x4364be5c",
+    "0x4364be94",
+    "0x4364bf30",
+    "0x4364bfc4",
+    "0x4364c00a",
+    "0x4364c034",
+    "0x4364c06a",
+    "0x4364c094",
+    "0x4364c11e",
+    "0x4364c15a",
+    "0x4364c1a2",
+    "0x4364c1ea",
+    "0x4364c214",
+    "0x4364c23e",
+    "0x4364c268",
+    "0x4364c29e",
+    "0x4364c2dc",
+    "0x4364c460",
+    "0x4364c4a4",
+    "0x4364c4e6",
+    "0x4364c57e"
+   ],
+   "containers": [
+    {
+     "func": "0x4364801c",
+     "name": "ModulePanoramaCcnrEncode (SDF)"
+    },
+    {
+     "func": "0x43648140",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x436481cc",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x43648240",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x436482b4",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x43648468",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x436485ec",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x43648860",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "containers_total": 43,
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7b957",
+   "file_offset": "0x73a957",
+   "text": "24ModulePanoramaCcnrEncode",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7ba78",
+   "file_offset": "0x73aa78",
+   "text": "ExecOneTanz",
+   "xref_sites": [
+    "0x4364cfb4",
+    "0x4364d00a"
+   ],
+   "containers": [
+    {
+     "func": "0x4364cf20",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7ba84",
+   "file_offset": "0x73aa84",
+   "text": "ExecOneTanz",
+   "xref_sites": [
+    "0x4364d118",
+    "0x4364d16a"
+   ],
+   "containers": [
+    {
+     "func": "0x4364d074",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7baba",
+   "file_offset": "0x73aaba",
+   "text": "WrapAplCcnrTanzakuStart.cpp",
+   "xref_sites": [
+    "0x4364d252",
+    "0x4364d29a",
+    "0x4364d332",
+    "0x4364d384"
+   ],
+   "containers": [
+    {
+     "func": "0x4364d214",
+     "name": "WrapAplCcnrTanzakuStart (SDF)"
+    },
+    {
+     "func": "0x4364d2e8",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x4364d360",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7bad6",
+   "file_offset": "0x73aad6",
+   "text": "23WrapAplCcnrTanzakuStart",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7bafe",
+   "file_offset": "0x73aafe",
+   "text": "N6Camera7CamCore11TanzInImageE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7bb49",
+   "file_offset": "0x73ab49",
+   "text": "N6Camera7CamCore12TanzPfrImageE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7bb84",
+   "file_offset": "0x73ab84",
+   "text": "N6Camera7CamCore12TanzOutImageE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7bbc9",
+   "file_offset": "0x73abc9",
+   "text": "WrapCamTanzakuStart.cpp",
+   "xref_sites": [
+    "0x4364d4d4",
+    "0x4364d51c",
+    "0x4364d5c8",
+    "0x4364d684",
+    "0x4364d6cc",
+    "0x4364d792",
+    "0x4364d7d8",
+    "0x4364d81e",
+    "0x4364d864",
+    "0x4364d938",
+    "0x4364d9c2"
+   ],
+   "containers": [
+    {
+     "func": "0x4364d4a8",
+     "name": "WrapCamTanzakuStart (SDF)"
+    },
+    {
+     "func": "0x4364d5a0",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x4364d654",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x4364d758",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x4364d8bc",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x4364d964",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7bbe6",
+   "file_offset": "0x73abe6",
+   "text": "19WrapCamTanzakuStart",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7bdea",
+   "file_offset": "0x73adea",
+   "text": "WrapJpegTanzEncode.cpp",
+   "xref_sites": [
+    "0x4364e02c",
+    "0x4364e058",
+    "0x4364e08a",
+    "0x4364e0b8",
+    "0x4364e0e6",
+    "0x4364e118",
+    "0x4364e146",
+    "0x4364e184",
+    "0x4364e1b4",
+    "0x4364e1e4",
+    "0x4364e20e",
+    "0x4364e23c",
+    "0x4364e26a",
+    "0x4364e298",
+    "0x4364e2c6",
+    "0x4364e426",
+    "0x4364e472",
+    "0x4364e49c"
+   ],
+   "containers": [
+    {
+     "func": "0x4364e00c",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x4364e3e4",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x4364e454",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7bf9a",
+   "file_offset": "0x73af9a",
+   "text": "18WrapJpegTanzEncode",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7bfd0",
+   "file_offset": "0x73afd0",
+   "text": "17WrapJpegTanzReady",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7bfed",
+   "file_offset": "0x73afed",
+   "text": "WrapJpegTanzReady.cpp",
+   "xref_sites": [
+    "0x4364e532",
+    "0x4364e560",
+    "0x4364e592",
+    "0x4364e5be",
+    "0x4364e5fc",
+    "0x4364e62a",
+    "0x4364e658",
+    "0x4364e682",
+    "0x4364e6ae",
+    "0x4364e6da",
+    "0x4364e7b8",
+    "0x4364e826",
+    "0x4364e850"
+   ],
+   "containers": [
+    {
+     "func": "0x4364e514",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x4364e798",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x4364e808",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7c4be",
+   "file_offset": "0x73b4be",
+   "text": "27WrapSpicaExecOneTanzakuBase",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7c4dc",
+   "file_offset": "0x73b4dc",
+   "text": "29WrapSpicaExecOneTanzakuNoWait",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7c557",
+   "file_offset": "0x73b557",
+   "text": "22WrapTanzakuCalcCamJpeg",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7c570",
+   "file_offset": "0x73b570",
+   "text": "21WrapTanzakuCalcCamRch",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7c588",
+   "file_offset": "0x73b588",
+   "text": "23WrapTanzakuCalcCmnParam",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7c5a2",
+   "file_offset": "0x73b5a2",
+   "text": "27WrapTanzakuCalcCmnParamInit",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7c5c0",
+   "file_offset": "0x73b5c0",
+   "text": "22WrapTanzakuCalcRcvJpeg",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7cc72",
+   "file_offset": "0x73bc72",
+   "text": "13ApiCcnrEncode",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7cc82",
+   "file_offset": "0x73bc82",
+   "text": "13ApiCcnrResize",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7cf59",
+   "file_offset": "0x73bf59",
+   "text": "[SDF] PTM: ptm_32.ptm_31_0 : %08x.%08x \n",
+   "xref_sites": [
+    "0x4365391c"
+   ],
+   "containers": [
+    {
+     "func": "0x436538bc",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7da59",
+   "file_offset": "0x73ca59",
+   "text": "SetDataflowMsgTanzakuApi",
+   "xref_sites": [
+    "0x43656fda",
+    "0x43657004",
+    "0x436570c4"
+   ],
+   "containers": [
+    {
+     "func": "0x43656fbc",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7e30b",
+   "file_offset": "0x73d30b",
+   "text": "   err = SDF_INTRA_ERR_PTM_COUNT_PAST",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7e331",
+   "file_offset": "0x73d331",
+   "text": "   err = SDF_INTRA_ERR_PTM_COUNT_STOP",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7e514",
+   "file_offset": "0x73d514",
+   "text": "   err = SDF_ERR_PTM_COUNT_PAST",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7e534",
+   "file_offset": "0x73d534",
+   "text": "   err = SDF_ERR_PTM_COUNT_STOP",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7e8f1",
+   "file_offset": "0x73d8f1",
+   "text": "ModuleCallbackMgrCcnrEnc.cpp",
+   "xref_sites": [
+    "0x4365952a",
+    "0x43659ce0",
+    "0x43659e54",
+    "0x43659fc8"
+   ],
+   "containers": [
+    {
+     "func": "0x436594f4",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x43659cac",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x43659e20",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x43659f94",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7e9e3",
+   "file_offset": "0x73d9e3",
+   "text": "CallbackJpegTanz",
+   "xref_sites": [
+    "0x43659526"
+   ],
+   "containers": [
+    {
+     "func": "0x436594f4",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7ee8b",
+   "file_offset": "0x73de8b",
+   "text": "ExecTanzSrcDistCalc",
+   "xref_sites": [
+    "0x4365d4e6"
+   ],
+   "containers": [
+    {
+     "func": "0x4365d374",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7eefe",
+   "file_offset": "0x73defe",
+   "text": "ModuleOnePassCcnrEncode.cpp",
+   "xref_sites": [
+    "0x4365c0a6",
+    "0x4365c124",
+    "0x4365c1c2",
+    "0x4365c2fc",
+    "0x4365c36e",
+    "0x4365c3e0",
+    "0x4365c492",
+    "0x4365c4e2",
+    "0x4365c56c",
+    "0x4365c5f2",
+    "0x4365c63a",
+    "0x4365c686",
+    "0x4365c750",
+    "0x4365c7a0",
+    "0x4365c7f8",
+    "0x4365c84e",
+    "0x4365c8ec",
+    "0x4365c93c",
+    "0x4365c994",
+    "0x4365c9ea",
+    "0x4365ca86",
+    "0x4365caee",
+    "0x4365cb5a",
+    "0x4365cbc2",
+    "0x4365cc24",
+    "0x4365cc74",
+    "0x4365ccd6",
+    "0x4365cd26",
+    "0x4365cd7c",
+    "0x4365ce0a",
+    "0x4365ce56",
+    "0x4365cea2",
+    "0x4365ceee",
+    "0x4365d0b6",
+    "0x4365d2aa",
+    "0x4365d2f2",
+    "0x4365d4ea",
+    "0x4365d5ea",
+    "0x4365d748",
+    "0x4365d87e",
+    "0x4365d936",
+    "0x4365da36",
+    "0x4365da9c",
+    "0x4365dbe4",
+    "0x4365dd88",
+    "0x4365de3c",
+    "0x4365deee",
+    "0x4365e02c",
+    "0x4365e0e8",
+    "0x4365e1bc",
+    "0x4365e28a",
+    "0x4365e2d4",
+    "0x4365e330",
+    "0x4365e466",
+    "0x4365e4d8",
+    "0x4365e558",
+    "0x4365e5ec",
+    "0x4365e66a",
+    "0x4365e6b4",
+    "0x4365e70e",
+    "0x4365e77c",
+    "0x4365e88e",
+    "0x4365e8de",
+    "0x4365e980",
+    "0x4365ea66",
+    "0x4365eaa6",
+    "0x4365eb3e",
+    "0x4365f822",
+    "0x4365f8e4",
+    "0x4365f970",
+    "0x4365f9ba",
+    "0x4365fa18",
+    "0x4365faf6",
+    "0x4365fb4c",
+    "0x4365fbb0",
+    "0x4365fc94",
+    "0x4365fce8",
+    "0x4365fd3e",
+    "0x4365fd86",
+    "0x4365fe38",
+    "0x4365ff1a",
+    "0x4365ffa2",
+    "0x4365fffc",
+    "0x43660046",
+    "0x4366009e",
+    "0x43660176",
+    "0x436601d0",
+    "0x43660238",
+    "0x4366029c",
+    "0x436602ec",
+    "0x4366033c",
+    "0x4366038e",
+    "0x436603ee",
+    "0x43660448",
+    "0x43660492",
+    "0x436604da",
+    "0x4366052c",
+    "0x436605d2",
+    "0x4366060c",
+    "0x43660652",
+    "0x43660826",
+    "0x4366087a",
+    "0x4366090e",
+    "0x436609b8",
+    "0x43660a1e",
+    "0x43660a78",
+    "0x43660aec",
+    "0x43660b38",
+    "0x43660bfe"
+   ],
+   "containers": [
+    {
+     "func": "0x4365c060",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x4365c188",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x4365c2b4",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x4365c340",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x4365c3b4",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x4365c428",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x4365c5d4",
+     "name": "funcion (proximo prologo verificado)"
+    },
+    {
+     "func": "0x4365c72c",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "containers_total": 32,
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7ef1a",
+   "file_offset": "0x73df1a",
+   "text": "[SDF][INT_ERROR] [CCNR TimeOut] SetPblAifIibNum",
+   "xref_sites": [
+    "0x4365ea70"
+   ],
+   "containers": [
+    {
+     "func": "0x4365e9d8",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7ef6e",
+   "file_offset": "0x73df6e",
+   "text": "[SDF][INT_ERROR] [CCNR TimeOut] twai_flg",
+   "xref_sites": [
+    "0x4365eb48"
+   ],
+   "containers": [
+    {
+     "func": "0x4365e9d8",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7ef97",
+   "file_offset": "0x73df97",
+   "text": "[SDF][CCNR] Timeout! (...going to whole module RETRY)",
+   "xref_sites": [
+    "0x4365eb94"
+   ],
+   "containers": [
+    {
+     "func": "0x4365eb90",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7efcd",
+   "file_offset": "0x73dfcd",
+   "text": "[SDF][CCNR_ENCODE] SDF_RECMODE_OPAL_DUAL_REC\n",
+   "xref_sites": [
+    "0x43660990"
+   ],
+   "containers": [
+    {
+     "func": "0x43660964",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7effb",
+   "file_offset": "0x73dffb",
+   "text": "[SDF][CCNR_ENCODE] SDF_RECMODE_STILL_REC\n",
+   "xref_sites": [
+    "0x43660996"
+   ],
+   "containers": [
+    {
+     "func": "0x43660964",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f02b",
+   "file_offset": "0x73e02b",
+   "text": "23ModuleOnePassCcnrEncode",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f059",
+   "file_offset": "0x73e059",
+   "text": "ExecTanzRcDistCalc",
+   "xref_sites": [
+    "0x4365d0b2",
+    "0x4365d2a6",
+    "0x4365d2ee"
+   ],
+   "containers": [
+    {
+     "func": "0x4365cfcc",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f06c",
+   "file_offset": "0x73e06c",
+   "text": "ExecTanzAplStart",
+   "xref_sites": [
+    "0x4365d5e6"
+   ],
+   "containers": [
+    {
+     "func": "0x4365d552",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f07d",
+   "file_offset": "0x73e07d",
+   "text": "StartTanzaku",
+   "xref_sites": [
+    "0x4365e462",
+    "0x4365e4d4",
+    "0x4365e554",
+    "0x4365e5e8",
+    "0x4365e666",
+    "0x4365e6b0",
+    "0x4365e70a",
+    "0x4365e778"
+   ],
+   "containers": [
+    {
+     "func": "0x4365e424",
+     "name": "ModuleOnePassCcnrEncode::StartTanzaku (SDF)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f08a",
+   "file_offset": "0x73e08a",
+   "text": "OpenTanzCalc",
+   "xref_sites": [
+    "0x4365c5ee",
+    "0x4365c636",
+    "0x4365c682"
+   ],
+   "containers": [
+    {
+     "func": "0x4365c5d4",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f097",
+   "file_offset": "0x73e097",
+   "text": "OpenTanzInitParam",
+   "xref_sites": [
+    "0x4365c48e",
+    "0x4365c4de",
+    "0x4365c568"
+   ],
+   "containers": [
+    {
+     "func": "0x4365c428",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f14b",
+   "file_offset": "0x73e14b",
+   "text": "ExecTanzCamCoreDevelop",
+   "xref_sites": [
+    "0x436618c4",
+    "0x436619be",
+    "0x43661a22",
+    "0x43661b0c"
+   ],
+   "containers": [
+    {
+     "func": "0x43661882",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f172",
+   "file_offset": "0x73e172",
+   "text": "ExecTanzRcDistCalcForApl",
+   "xref_sites": [
+    "0x43662526",
+    "0x4366256e"
+   ],
+   "containers": [
+    {
+     "func": "0x43662368",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f1aa",
+   "file_offset": "0x73e1aa",
+   "text": "[SDF][INT_ERROR] OpenTanzInitParam Err!\n",
+   "xref_sites": [
+    "0x43661102"
+   ],
+   "containers": [
+    {
+     "func": "0x436610dc",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f1d3",
+   "file_offset": "0x73e1d3",
+   "text": "[SDF][INT_ERROR] OpenTanzCalcCmnParam Err!\n",
+   "xref_sites": [
+    "0x4366114a"
+   ],
+   "containers": [
+    {
+     "func": "0x436610dc",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f1ff",
+   "file_offset": "0x73e1ff",
+   "text": "[SDF][INT_ERROR] OpenTanzCalcCmnParamInit Err!\n",
+   "xref_sites": [
+    "0x43661192"
+   ],
+   "containers": [
+    {
+     "func": "0x436610dc",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f395",
+   "file_offset": "0x73e395",
+   "text": "[SDF][INT_ERROR] OpenTanzCalc Err!\n",
+   "xref_sites": [
+    "0x436615e8"
+   ],
+   "containers": [
+    {
+     "func": "0x436611f0",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f57a",
+   "file_offset": "0x73e57a",
+   "text": "[SDF][INT_ERROR] ExecTanzaku Err!\n",
+   "xref_sites": [
+    "0x43662a68"
+   ],
+   "containers": [
+    {
+     "func": "0x43662988",
+     "name": "ModuleOnePassDevelopResize::Exec (Tanzaku) (SDF)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f5ba",
+   "file_offset": "0x73e5ba",
+   "text": "ExecTanzaku",
+   "xref_sites": [
+    "0x43662650",
+    "0x436626a8",
+    "0x436626fc",
+    "0x43662766",
+    "0x436627b6",
+    "0x43662806",
+    "0x43662856",
+    "0x436628ac"
+   ],
+   "containers": [
+    {
+     "func": "0x4366260c",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f5d5",
+   "file_offset": "0x73e5d5",
+   "text": "ExecTanzRcDistCalc",
+   "xref_sites": [
+    "0x43661e10",
+    "0x43661f22",
+    "0x436620f2",
+    "0x43662258",
+    "0x436622a0"
+   ],
+   "containers": [
+    {
+     "func": "0x43661dc0",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f5e8",
+   "file_offset": "0x73e5e8",
+   "text": "OpenTanzInitParam",
+   "xref_sites": [
+    "0x43660f2a",
+    "0x43660fc2",
+    "0x43661056"
+   ],
+   "containers": [
+    {
+     "func": "0x43660ee8",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f630",
+   "file_offset": "0x73e630",
+   "text": "OpenTanzCalc",
+   "xref_sites": [
+    "0x436610f4",
+    "0x4366113c",
+    "0x43661184"
+   ],
+   "containers": [
+    {
+     "func": "0x436610dc",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f8bd",
+   "file_offset": "0x73e8bd",
+   "text": "N8TanzTool8TanzBaseE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f8d2",
+   "file_offset": "0x73e8d2",
+   "text": "N8TanzTool3JpgE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f8e2",
+   "file_offset": "0x73e8e2",
+   "text": "N8TanzTool3RcvE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f8f2",
+   "file_offset": "0x73e8f2",
+   "text": "N8TanzTool7DummyIpE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f906",
+   "file_offset": "0x73e906",
+   "text": "N8TanzTool3RchE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f926",
+   "file_offset": "0x73e926",
+   "text": "N8TanzTool10FlowRcvJpgE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f93e",
+   "file_offset": "0x73e93e",
+   "text": "N8TanzTool4FlowE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f94f",
+   "file_offset": "0x73e94f",
+   "text": "N8TanzTool10FlowCamRchE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f967",
+   "file_offset": "0x73e967",
+   "text": "N8TanzTool10FlowCamJpgE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f97f",
+   "file_offset": "0x73e97f",
+   "text": "N8TanzTool8RawImageE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f994",
+   "file_offset": "0x73e994",
+   "text": "N8TanzTool7TzImageE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f9a8",
+   "file_offset": "0x73e9a8",
+   "text": "N8TanzTool13LimitedEndBufE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f9d3",
+   "file_offset": "0x73e9d3",
+   "text": "N8TanzTool10RdcTanzakuE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7f9ef",
+   "file_offset": "0x73e9ef",
+   "text": "N8TanzTool3RdcE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7fa03",
+   "file_offset": "0x73ea03",
+   "text": "N8TanzTool3SpcE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7fa13",
+   "file_offset": "0x73ea13",
+   "text": "N8TanzTool3SrcE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7fa27",
+   "file_offset": "0x73ea27",
+   "text": "N8TanzTool10SrcTanzakuE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7fa3f",
+   "file_offset": "0x73ea3f",
+   "text": "N8TanzTool8StartBufE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7fa5d",
+   "file_offset": "0x73ea5d",
+   "text": "N8TanzTool7TanzakuE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7fa71",
+   "file_offset": "0x73ea71",
+   "text": "N8TanzTool3VfxE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7feed",
+   "file_offset": "0x73eeed",
+   "text": "23WrapSpicaExecOneTanzaku",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c7ff5e",
+   "file_offset": "0x73ef5e",
+   "text": "15WrapTanzakuBase",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c80312",
+   "file_offset": "0x73f312",
+   "text": "21ModuleOnePassCcnrBase",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c8039d",
+   "file_offset": "0x73f39d",
+   "text": "N8TanzTool10AplTanzakuE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c803b9",
+   "file_offset": "0x73f3b9",
+   "text": "N8TanzTool3AplE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c803d1",
+   "file_offset": "0x73f3d1",
+   "text": "N8TanzTool6BaseIpE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c803e8",
+   "file_offset": "0x73f3e8",
+   "text": "N8TanzTool3CamE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c803f8",
+   "file_offset": "0x73f3f8",
+   "text": "N8TanzTool10CamTanzakuE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c80410",
+   "file_offset": "0x73f410",
+   "text": "N8TanzTool10CutTanzakuE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c8042f",
+   "file_offset": "0x73f42f",
+   "text": "N8TanzTool6EndBufE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c80442",
+   "file_offset": "0x73f442",
+   "text": "N8TanzTool9EndBufJpgE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c80468",
+   "file_offset": "0x73f468",
+   "text": "N8TanzTool3PfrE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c80746",
+   "file_offset": "0x73f746",
+   "text": "N8TanzTool14OverlapTanzakuE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c911df",
+   "file_offset": "0x7501df",
+   "text": "[EXL]: ERR:: @calCamdcvTanz : hphase_end<=0 ",
+   "xref_sites": [
+    "0x436c9904"
+   ],
+   "containers": [
+    {
+     "func": "0x436c98a0",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c9120c",
+   "file_offset": "0x75020c",
+   "text": "[EXL]: ERR:: @calCamdcvTanz : psf_sizh>9 ",
+   "xref_sites": [
+    "0x436c9948"
+   ],
+   "containers": [
+    {
+     "func": "0x436c98a0",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c93511",
+   "file_offset": "0x752511",
+   "text": "short unsigned int Camera::Imager::C_Imager::GetFrameAddReadInterval(Camera::Imager::ReadRsvParam*)",
+   "xref_sites": [
+    "0x436d626e"
+   ],
+   "containers": [
+    {
+     "func": "0x436d6264",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c9a3a7",
+   "file_offset": "0x7593a7",
+   "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyroCB (%x)",
+   "xref_sites": [
+    "0x43705d70"
+   ],
+   "containers": [
+    {
+     "func": "0x43705d64",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c9a3e3",
+   "file_offset": "0x7593e3",
+   "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyroCB - checkData",
+   "xref_sites": [
+    "0x43705dae"
+   ],
+   "containers": [
+    {
+     "func": "0x43705d64",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c9a426",
+   "file_offset": "0x759426",
+   "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyro (%x)",
+   "xref_sites": [
+    "0x43705e20"
+   ],
+   "containers": [
+    {
+     "func": "0x43705dd0",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c9e50f",
+   "file_offset": "0x75d50f",
+   "text": "[IMAGING_CAP]: CameraPanoramaSRotateImage: err[0x%08x]",
+   "xref_sites": [
+    "0x437803c0"
+   ],
+   "containers": [
+    {
+     "func": "0x437802de",
+     "name": "CameraPanoramaSRotateImage (IMAGING_CAP)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c9e617",
+   "file_offset": "0x75d617",
+   "text": "still_seq_panoramaStitch.cpp",
+   "xref_sites": [
+    "0x43780f2a",
+    "0x437814ac",
+    "0x437814fe",
+    "0x43781666",
+    "0x437817ca",
+    "0x4378194e",
+    "0x437819b2",
+    "0x437819f4",
+    "0x43781a76",
+    "0x43781b06",
+    "0x43781b5c",
+    "0x43781b9c",
+    "0x43781bf2",
+    "0x43781c24",
+    "0x43781c6a",
+    "0x43781cfc",
+    "0x43781d30",
+    "0x43781d94",
+    "0x43781dd0",
+    "0x43781e00",
+    "0x43781e36",
+    "0x4378220e"
+   ],
+   "containers": [
+    {
+     "func": "0x43780eb4",
+     "name": "seq_panoramaClippingDecode (IMAGING)"
+    },
+    {
+     "func": "0x43781424",
+     "name": "still_seq_panoramaStitch::seq_* (IMAGING)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43c9ed25",
+   "file_offset": "0x75dd25",
+   "text": "[IMAGING]: [seq_makePanoramaMakerNoteData] Err: 0x%08x : %s:%d",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43ca79ba",
+   "file_offset": "0x7669ba",
+   "text": "lc_BracketAF.cpp",
+   "xref_sites": [
+    "0x437c7512",
+    "0x437c761a",
+    "0x437c7638"
+   ],
+   "containers": [
+    {
+     "func": "0x437c74b6",
+     "name": "lc_BracketAF::f1 (Camera::LC)"
+    },
+    {
+     "func": "0x437c7554",
+     "name": "lc_BracketAF::f2 (Camera::LC)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43ca9f89",
+   "file_offset": "0x768f89",
+   "text": "[IMAGING_CAP]: GetCaptureIntervalResource Error! %x",
+   "xref_sites": [
+    "0x437df430"
+   ],
+   "containers": [
+    {
+     "func": "0x437df338",
+     "name": "CaptureManager::GetCaptureIntervalResource (IMAGING_CAP)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43caa019",
+   "file_offset": "0x769019",
+   "text": "[IMAGING_CAP]: !!! Can't send Panorama cmd",
+   "xref_sites": [
+    "0x437df7ae"
+   ],
+   "containers": [
+    {
+     "func": "0x437df646",
+     "name": "CaptureManager::CaptureStart (IMAGING_CAP)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43caa28b",
+   "file_offset": "0x76928b",
+   "text": "[IMAGING_CAP]: CapMgr) osal_stat_sem: CAPTURE_INTERVAL err %d",
+   "xref_sites": [
+    "0x437e0cf8",
+    "0x437e0fd0"
+   ],
+   "containers": [
+    {
+     "func": "0x437e0ce8",
+     "name": "CaptureManager::IntervalSemaphore (IMAGING_CAP)"
+    },
+    {
+     "func": "0x437e0fc0",
+     "name": "CaptureManager::WaitIntervalSem (IMAGING_CAP)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43caa2c9",
+   "file_offset": "0x7692c9",
+   "text": "[IMAGING_CAP]: CapMgr) osal_sig_sem: CAPTURE_INTERVAL err %d",
+   "xref_sites": [
+    "0x437e0d1e"
+   ],
+   "containers": [
+    {
+     "func": "0x437e0ce8",
+     "name": "CaptureManager::IntervalSemaphore (IMAGING_CAP)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43caa306",
+   "file_offset": "0x769306",
+   "text": "[IMAGING_CAP]: CapMgr) FreeCaptureIntervalResource(): err %d",
+   "xref_sites": [
+    "0x437e0d7a",
+    "0x437e0f2e"
+   ],
+   "containers": [
+    {
+     "func": "0x437e0d5a",
+     "name": "CaptureManager::FreeCaptureIntervalResource (IMAGING_CAP)"
+    },
+    {
+     "func": "0x437e0e1c",
+     "name": "CaptureManager::SetIntervalTimer / callback del timer (IMAGING_CAP)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43caa3a1",
+   "file_offset": "0x7693a1",
+   "text": "[IMAGING_CAP]: CapMgr) SetIntervalTimer(): err %d",
+   "xref_sites": [
+    "0x437e0f0c"
+   ],
+   "containers": [
+    {
+     "func": "0x437e0e1c",
+     "name": "CaptureManager::SetIntervalTimer / callback del timer (IMAGING_CAP)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43caa3d3",
+   "file_offset": "0x7693d3",
+   "text": "[IMAGING_CAP]: CapMgr) osal_wai_sem: CAPTURE_INTERVAL err %d",
+   "xref_sites": [
+    "0x437e0ff8"
+   ],
+   "containers": [
+    {
+     "func": "0x437e0fc0",
+     "name": "CaptureManager::WaitIntervalSem (IMAGING_CAP)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab054",
+   "file_offset": "0x76a054",
+   "text": "[IMAGING]: [PanoramaSweepStart] Err: 0x%08x : %s:%d",
+   "xref_sites": [
+    "0x437e6b5e",
+    "0x437e6b92",
+    "0x437e6bdc",
+    "0x437e6c22",
+    "0x437e6c52",
+    "0x437e6d1a",
+    "0x437e6d3c"
+   ],
+   "containers": [
+    {
+     "func": "0x437e6b3c",
+     "name": "PanoramaSweepStart (IMAGING)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab088",
+   "file_offset": "0x76a088",
+   "text": "still_cnt_panoramaSweep.cpp",
+   "xref_sites": [
+    "0x437e6b62",
+    "0x437e6b96",
+    "0x437e6be0",
+    "0x437e6c26",
+    "0x437e6c56",
+    "0x437e6d1e",
+    "0x437e6d40",
+    "0x437e6e98",
+    "0x437e6ed4",
+    "0x437e6f14",
+    "0x437e6f62",
+    "0x437e6fb4",
+    "0x437e6fec",
+    "0x437e709c",
+    "0x437e7120",
+    "0x437e7178",
+    "0x437e71a8",
+    "0x437e7214",
+    "0x437e732a",
+    "0x437e736a",
+    "0x437e73a8",
+    "0x437e73de",
+    "0x437e75a6",
+    "0x437e75fe",
+    "0x437e7670",
+    "0x437e76ca",
+    "0x437e7722",
+    "0x437e778a",
+    "0x437e77e2",
+    "0x437e7834",
+    "0x437e793a",
+    "0x437e7992",
+    "0x437e7ad8",
+    "0x437e7b56",
+    "0x437e7b92",
+    "0x437e7bd2"
+   ],
+   "containers": [
+    {
+     "func": "0x437e6b3c",
+     "name": "PanoramaSweepStart (IMAGING)"
+    },
+    {
+     "func": "0x437e6e78",
+     "name": "PanoramaSweepEnd (IMAGING)"
+    },
+    {
+     "func": "0x437e751c",
+     "name": "UpdateSweepCanvas (IMAGING)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab0a4",
+   "file_offset": "0x76a0a4",
+   "text": "[IMAGING]: [PanoramaSweepStart] Jpeg Open  err: 0x%08x",
+   "xref_sites": [
+    "0x437e6d6c"
+   ],
+   "containers": [
+    {
+     "func": "0x437e6b3c",
+     "name": "PanoramaSweepStart (IMAGING)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab0db",
+   "file_offset": "0x76a0db",
+   "text": "[IMAGING]: [PanoramaSweepStart] Jpeg Close  err: 0x%08x",
+   "xref_sites": [
+    "0x437e6d8c"
+   ],
+   "containers": [
+    {
+     "func": "0x437e6b3c",
+     "name": "PanoramaSweepStart (IMAGING)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab113",
+   "file_offset": "0x76a113",
+   "text": "[IMAGING]: [PanoramaSweepStart] End  err: 0x%08x",
+   "xref_sites": [
+    "0x437e6da6"
+   ],
+   "containers": [
+    {
+     "func": "0x437e6b3c",
+     "name": "PanoramaSweepStart (IMAGING)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab144",
+   "file_offset": "0x76a144",
+   "text": "[IMAGING]: [PanoramaSweepEnd] Err: 0x%08x : %s:%d",
+   "xref_sites": [
+    "0x437e6e92",
+    "0x437e6ece",
+    "0x437e6f0e",
+    "0x437e6f5c",
+    "0x437e6fae",
+    "0x437e6fe6"
+   ],
+   "containers": [
+    {
+     "func": "0x437e6e78",
+     "name": "PanoramaSweepEnd (IMAGING)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab176",
+   "file_offset": "0x76a176",
+   "text": "[IMAGING]: [PanoramaSweepEnd] Err: 0x%08x, status: 0x%08x",
+   "xref_sites": [
+    "0x437e7086",
+    "0x437e7100",
+    "0x437e7162",
+    "0x437e7190",
+    "0x437e71fc",
+    "0x437e7312",
+    "0x437e7354",
+    "0x437e7390",
+    "0x437e73c8"
+   ],
+   "containers": [
+    {
+     "func": "0x437e6e78",
+     "name": "PanoramaSweepEnd (IMAGING)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab1b0",
+   "file_offset": "0x76a1b0",
+   "text": "[IMAGING]: [PanoramaSweepEnd] Err! %s:%d",
+   "xref_sites": [
+    "0x437e70ac",
+    "0x437e7150",
+    "0x437e718a",
+    "0x437e71ba",
+    "0x437e7226",
+    "0x437e733c",
+    "0x437e73ba",
+    "0x437e73ee"
+   ],
+   "containers": [
+    {
+     "func": "0x437e6e78",
+     "name": "PanoramaSweepEnd (IMAGING)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab1d9",
+   "file_offset": "0x76a1d9",
+   "text": "[IMAGING]: [PanoramaSweepEnd] cmp_execStitchPreProcess() Err! %s:%d",
+   "xref_sites": [
+    "0x437e711c"
+   ],
+   "containers": [
+    {
+     "func": "0x437e6e78",
+     "name": "PanoramaSweepEnd (IMAGING)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab21d",
+   "file_offset": "0x76a21d",
+   "text": "[IMAGING]: [PanoramaSweepEnd] cmp_checkFillResidual() Err! %s:%d",
+   "xref_sites": [
+    "0x437e737a"
+   ],
+   "containers": [
+    {
+     "func": "0x437e6e78",
+     "name": "PanoramaSweepEnd (IMAGING)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab25e",
+   "file_offset": "0x76a25e",
+   "text": "[IMAGING]: [PanoramaSweepEnd] End : 0x%08x",
+   "xref_sites": [
+    "0x437e73fc"
+   ],
+   "containers": [
+    {
+     "func": "0x437e6e78",
+     "name": "PanoramaSweepEnd (IMAGING)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab289",
+   "file_offset": "0x76a289",
+   "text": "[IMAGING]: [UpdateSweepCanvas] UnitOpen() Err: 0x%08x : %s:%d",
+   "xref_sites": [
+    "0x437e75a0",
+    "0x437e75f8"
+   ],
+   "containers": [
+    {
+     "func": "0x437e751c",
+     "name": "UpdateSweepCanvas (IMAGING)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab2c7",
+   "file_offset": "0x76a2c7",
+   "text": "[IMAGING]: [UpdateSweepCanvas] Err: 0x%08x, status: 0x%08x ReqID: 0x%04x",
+   "xref_sites": [
+    "0x437e7652",
+    "0x437e76ac",
+    "0x437e76fe",
+    "0x437e7764",
+    "0x437e77bc",
+    "0x437e780e",
+    "0x437e7922",
+    "0x437e797a",
+    "0x437e7ac0"
+   ],
+   "containers": [
+    {
+     "func": "0x437e751c",
+     "name": "UpdateSweepCanvas (IMAGING)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab310",
+   "file_offset": "0x76a310",
+   "text": "[IMAGING]: [UpdateSweepCanvas] Err! %s:%d",
+   "xref_sites": [
+    "0x437e766c",
+    "0x437e76c6",
+    "0x437e772a",
+    "0x437e7792",
+    "0x437e77ea",
+    "0x437e783c",
+    "0x437e7938",
+    "0x437e7990"
+   ],
+   "containers": [
+    {
+     "func": "0x437e751c",
+     "name": "UpdateSweepCanvas (IMAGING)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab33a",
+   "file_offset": "0x76a33a",
+   "text": "[IMAGING]: [UpdateSweepCanvas] seq_brcEncode() Err! %s:%d",
+   "xref_sites": [
+    "0x437e7ad6"
+   ],
+   "containers": [
+    {
+     "func": "0x437e751c",
+     "name": "UpdateSweepCanvas (IMAGING)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab374",
+   "file_offset": "0x76a374",
+   "text": "[IMAGING]: [UpdateSweepCanvas] SWEEP_ERROR Err: 0x%08x, ReqID: 0x%04x",
+   "xref_sites": [
+    "0x437e7b46"
+   ],
+   "containers": [
+    {
+     "func": "0x437e751c",
+     "name": "UpdateSweepCanvas (IMAGING)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab3ba",
+   "file_offset": "0x76a3ba",
+   "text": "[IMAGING]: [UpdateSweepCanvas] SWEEP_ERROR! %s:%d",
+   "xref_sites": [
+    "0x437e7b5c"
+   ],
+   "containers": [
+    {
+     "func": "0x437e751c",
+     "name": "UpdateSweepCanvas (IMAGING)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab3ec",
+   "file_offset": "0x76a3ec",
+   "text": "[IMAGING]: [UpdateSweepCanvas] UnitClose() Err: 0x%08x : %s:%d",
+   "xref_sites": [
+    "0x437e7b8e",
+    "0x437e7bce"
+   ],
+   "containers": [
+    {
+     "func": "0x437e751c",
+     "name": "UpdateSweepCanvas (IMAGING)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab42b",
+   "file_offset": "0x76a42b",
+   "text": "[IMAGING]: [UpdateSweepCanvas] End  err: 0x%08x",
+   "xref_sites": [
+    "0x437e7bfc",
+    "0x437e7c1a"
+   ],
+   "containers": [
+    {
+     "func": "0x437e751c",
+     "name": "UpdateSweepCanvas (IMAGING)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab45b",
+   "file_offset": "0x76a45b",
+   "text": "[IMAGING]: [PanoramaResizeEncode][JpegSweepInfo] UnitOpen() Err: 0x%08x : %s:%d",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab4ab",
+   "file_offset": "0x76a4ab",
+   "text": "[IMAGING]: [PanoramaResizeEncode][YuvDecodeWorkInfo] UnitOpen() Err: 0x%08x : %s:%d",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab4ff",
+   "file_offset": "0x76a4ff",
+   "text": "[IMAGING]: [PanoramaResizeEncode][JpegResizeEncodeInfo] UnitOpen() Err: 0x%08x : %s:%d",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab556",
+   "file_offset": "0x76a556",
+   "text": "[IMAGING]: [PanoramaResizeEncode] Err Mode: 0x%08x : %s:%d",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab591",
+   "file_offset": "0x76a591",
+   "text": "[IMAGING]: [PanoramaResizeEncode] Err Dir: 0x%08x : %s:%d",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab5cb",
+   "file_offset": "0x76a5cb",
+   "text": "[IMAGING]: [PanoramaResizeEncode] Err seq_bigImageResizeEncode(): 0x%08x : %s:%d",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab61c",
+   "file_offset": "0x76a61c",
+   "text": "[IMAGING]: [PanoramaResizeEncode][JpegSweepInfo] UnitClose() Err: 0x%08x : %s:%d",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab66d",
+   "file_offset": "0x76a66d",
+   "text": "[IMAGING]: [PanoramaResizeEncode][YuvDecodeWorkInfo] UnitClose() Err: 0x%08x : %s:%d",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab6c2",
+   "file_offset": "0x76a6c2",
+   "text": "[IMAGING]: [PanoramaResizeEncode][JpegResizeEncodeInfo] UnitClose() Err: 0x%08x : %s:%d",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cab71a",
+   "file_offset": "0x76a71a",
+   "text": "[IMAGING]: [PanoramaResizeEncode] End  err: 0x%08x",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cacdd2",
+   "file_offset": "0x76bdd2",
+   "text": "[IMAGING_CAP]: NotifySweepProgress: ERR",
+   "xref_sites": [
+    "0x437f0222"
+   ],
+   "containers": [
+    {
+     "func": "0x437f01dc",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cacdfa",
+   "file_offset": "0x76bdfa",
+   "text": "[IMAGING_CAP]: NotifySweepComp: ERR",
+   "xref_sites": [
+    "0x437f0296"
+   ],
+   "containers": [
+    {
+     "func": "0x437f0248",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43caceae",
+   "file_offset": "0x76beae",
+   "text": "[IMAGING_CAP]: UpdateSweepCanvas: err[0x%08x]",
+   "xref_sites": [
+    "0x437f0b0e"
+   ],
+   "containers": [
+    {
+     "func": "0x437f0a58",
+     "name": "UpdateSweepCanvas (IMAGING_CAP)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cacedc",
+   "file_offset": "0x76bedc",
+   "text": "[IMAGING_CAP]: PanoramaStitch: err[0x%08x]",
+   "xref_sites": [
+    "0x437f0c98"
+   ],
+   "containers": [
+    {
+     "func": "0x437f0b58",
+     "name": "PanoramaStitch (IMAGING_CAP)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cacf07",
+   "file_offset": "0x76bf07",
+   "text": "Stage_Panorama.cpp",
+   "xref_sites": [
+    "0x43549042",
+    "0x43549062",
+    "0x437f1204",
+    "0x437f1222"
+   ],
+   "containers": [
+    {
+     "func": "0x43549020",
+     "name": "Stage_Panorama::PanoramaSweepStart (IMAGING_CAP)"
+    },
+    {
+     "func": "0x437f10d4",
+     "name": "Stage_Panorama::ApolloSA_Main (IMAGING_CAP)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cacf3f",
+   "file_offset": "0x76bf3f",
+   "text": "[IMAGING_CAP]: PanoramaSweepStart: err[0x%08x]",
+   "xref_sites": [
+    "0x435492b2"
+   ],
+   "containers": [
+    {
+     "func": "0x43549020",
+     "name": "Stage_Panorama::PanoramaSweepStart (IMAGING_CAP)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cad054",
+   "file_offset": "0x76c054",
+   "text": "[IMAGING_CAP]: ExecutePanoramaTC1ST: PanoraamApollo Err",
+   "xref_sites": [
+    "0x437f1aee"
+   ],
+   "containers": [
+    {
+     "func": "0x437f1ac4",
+     "name": "ExecutePanoramaTC1ST/TC2ND (IMAGING_CAP)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cad08c",
+   "file_offset": "0x76c08c",
+   "text": "[IMAGING_CAP]: ExecutePanoramaTC2ND: PanoramaApollo Err",
+   "xref_sites": [
+    "0x437f1b4e"
+   ],
+   "containers": [
+    {
+     "func": "0x437f1ac4",
+     "name": "ExecutePanoramaTC1ST/TC2ND (IMAGING_CAP)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cad0f4",
+   "file_offset": "0x76c0f4",
+   "text": "Stage_PanoramaCcnrEncode",
+   "xref_sites": [
+    "0x437f179c"
+   ],
+   "containers": [
+    {
+     "func": "0x437f1414",
+     "name": "Stage_PanoramaCcnrEncode (IMAGING_CAP)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cad10d",
+   "file_offset": "0x76c10d",
+   "text": "Stage_InitializeSweepAndSpoolBranch",
+   "xref_sites": [
+    "0x437f0980",
+    "0x437f09a4"
+   ],
+   "containers": [
+    {
+     "func": "0x437f08e4",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cad558",
+   "file_offset": "0x76c558",
+   "text": "Stage_RchRcv_Resize_PanoramaGmvCoarse",
+   "xref_sites": [
+    "0x437f4316",
+    "0x437f432c"
+   ],
+   "containers": [
+    {
+     "func": "0x437f42b8",
+     "name": "Stage_RchRcv_Resize_PanoramaGmvCoarse (IMAGING_CAP)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cad57e",
+   "file_offset": "0x76c57e",
+   "text": "Stage_RchRcv_ResizeFill_PanoramaAutoReview",
+   "xref_sites": [
+    "0x437f4420",
+    "0x437f4436"
+   ],
+   "containers": [
+    {
+     "func": "0x437f4378",
+     "name": "Stage_RchRcv_ResizeFill_PanoramaAutoReview (IMAGING_CAP)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cad72d",
+   "file_offset": "0x76c72d",
+   "text": "Stage_RchRcv_ResizeFill_PanoramaThm",
+   "xref_sites": [
+    "0x437f4160",
+    "0x437f4176"
+   ],
+   "containers": [
+    {
+     "func": "0x437f40c4",
+     "name": "Stage_RchRcv_ResizeFill_PanoramaThm (IMAGING_CAP)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43caddc2",
+   "file_offset": "0x76cdc2",
+   "text": "GetImageSizeFromBackup_Panorama",
+   "xref_sites": [
+    "0x437f6f40",
+    "0x437f6f78",
+    "0x437f6fbe"
+   ],
+   "containers": [
+    {
+     "func": "0x437f6f24",
+     "name": "GetImageSizeFromBackup_Panorama (IMAGING_CAP)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cae41b",
+   "file_offset": "0x76d41b",
+   "text": "ReadBackup_PanoramaJpegStreamSize",
+   "xref_sites": [
+    "0x437f829a",
+    "0x437f82d2",
+    "0x437f8320"
+   ],
+   "containers": [
+    {
+     "func": "0x437f8248",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cae47c",
+   "file_offset": "0x76d47c",
+   "text": "ReadBackup_PanoramaScnJpegTargetSize",
+   "xref_sites": [
+    "0x437f85e8",
+    "0x437f861c"
+   ],
+   "containers": [
+    {
+     "func": "0x437f85b8",
+     "name": "ReadBackup_PanoramaScnJpegTargetSize (IMAGING_CAP)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cb4c60",
+   "file_offset": "0x773c60",
+   "text": "SB_INTERVAL",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cc684d",
+   "file_offset": "0x78584d",
+   "text": "src/srotate/ddl_srotate.cpp",
+   "xref_sites": [
+    "0x438bc0ba"
+   ],
+   "containers": [
+    {
+     "func": "0x438bc0a8",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cc6959",
+   "file_offset": "0x785959",
+   "text": "src/stitch/ddl_stitch.cpp",
+   "xref_sites": [
+    "0x438bc732"
+   ],
+   "containers": [
+    {
+     "func": "0x438bc720",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cc69bf",
+   "file_offset": "0x7859bf",
+   "text": "[IMAGING]: [PanoramaStitch] UnitOpen() Err: 0x%08x : %s:%d",
+   "xref_sites": [
+    "0x438bcff6",
+    "0x438bd042",
+    "0x438bd08a",
+    "0x438bd0d2",
+    "0x438bd122"
+   ],
+   "containers": [
+    {
+     "func": "0x438bcef8",
+     "name": "PanoramaStitch (IMAGING)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cc69fa",
+   "file_offset": "0x7859fa",
+   "text": "still_cnt_panoramaStitch.cpp",
+   "xref_sites": [
+    "0x438bcffc",
+    "0x438bd048",
+    "0x438bd090",
+    "0x438bd0d8",
+    "0x438bd126",
+    "0x438bd162",
+    "0x438bd222",
+    "0x438bd290",
+    "0x438bd2c4",
+    "0x438bd33c",
+    "0x438bd37c",
+    "0x438bd3bc",
+    "0x438bd3fc",
+    "0x438bd43c"
+   ],
+   "containers": [
+    {
+     "func": "0x438bcef8",
+     "name": "PanoramaStitch (IMAGING)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cc6a17",
+   "file_offset": "0x785a17",
+   "text": "[IMAGING]: [PanoramaStitch] Err: 0x%08x : %s:%d",
+   "xref_sites": [
+    "0x438bd15e"
+   ],
+   "containers": [
+    {
+     "func": "0x438bcef8",
+     "name": "PanoramaStitch (IMAGING)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cc6a47",
+   "file_offset": "0x785a47",
+   "text": "[IMAGING]: [PanoramaStitch] seq_initStitch() Err! err: 0x%08x %s:%d",
+   "xref_sites": [
+    "0x438bd21e"
+   ],
+   "containers": [
+    {
+     "func": "0x438bcef8",
+     "name": "PanoramaStitch (IMAGING)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cc6a8b",
+   "file_offset": "0x785a8b",
+   "text": "[IMAGING]: [PanoramaStitch] seq_panoramaParallelStitch() Err! err: 0x%08x %s:%d",
+   "xref_sites": [
+    "0x438bd28c"
+   ],
+   "containers": [
+    {
+     "func": "0x438bcef8",
+     "name": "PanoramaStitch (IMAGING)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cc6adb",
+   "file_offset": "0x785adb",
+   "text": "[IMAGING]: [PanoramaStitch] seq_endStitch() Err! err: 0x%08x %s:%d",
+   "xref_sites": [
+    "0x438bd2c0"
+   ],
+   "containers": [
+    {
+     "func": "0x438bcef8",
+     "name": "PanoramaStitch (IMAGING)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cc6b1e",
+   "file_offset": "0x785b1e",
+   "text": "[IMAGING]: [PanoramaStitch] UnitClose() Err: 0x%08x : %s:%d",
+   "xref_sites": [
+    "0x438bd338",
+    "0x438bd378",
+    "0x438bd3b8",
+    "0x438bd3f8",
+    "0x438bd438"
+   ],
+   "containers": [
+    {
+     "func": "0x438bcef8",
+     "name": "PanoramaStitch (IMAGING)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cc6b5a",
+   "file_offset": "0x785b5a",
+   "text": "[IMAGING]: [PanoramaStitch] End  err: 0x%08x",
+   "xref_sites": [
+    "0x438bd466"
+   ],
+   "containers": [
+    {
+     "func": "0x438bcef8",
+     "name": "PanoramaStitch (IMAGING)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cc6b87",
+   "file_offset": "0x785b87",
+   "text": "[IMAGING]: [PanoramaResize] UnitOpen() Err: 0x%08x : %s:%d",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cc6bc2",
+   "file_offset": "0x785bc2",
+   "text": "[IMAGING]: [PanoramaResize] seq_panoramaResize() Err! err: 0x%08x %s:%d",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cc6c0a",
+   "file_offset": "0x785c0a",
+   "text": "[IMAGING]: [PanoramaResize] seq_makePanoramaMakerNoteData() Err! err: 0x%08x %s:%d",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cc6c5d",
+   "file_offset": "0x785c5d",
+   "text": "[IMAGING]: [PanoramaResize] UnitClose() Err: 0x%08x : %s:%d",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cc6c99",
+   "file_offset": "0x785c99",
+   "text": "[IMAGING]: [PanoramaResize] End  err: 0x%08x",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cc7a2a",
+   "file_offset": "0x786a2a",
+   "text": "[IMAGING_CAP]: [Panorama][DEBUG]CAPTURE_START",
+   "xref_sites": [
+    "0x438c26be"
+   ],
+   "containers": [
+    {
+     "func": "0x438c2538",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43ccd5b0",
+   "file_offset": "0x78c5b0",
+   "text": "21PanoramaStripSequence",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43ccd5c8",
+   "file_offset": "0x78c5c8",
+   "text": "PanoramaStripSequence::StripInfo",
+   "xref_sites": [
+    "0x438f4be4"
+   ],
+   "containers": [
+    {
+     "func": "0x438f4bcc",
+     "name": "PanoramaStripSequence::StripInfo"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43ccd8aa",
+   "file_offset": "0x78c8aa",
+   "text": "#us_RechargeIntervalCnt",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43ccd97e",
+   "file_offset": "0x78c97e",
+   "text": "us_RedeyeIntervalVDCnt",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43ccda6f",
+   "file_offset": "0x78ca6f",
+   "text": "us_RedeyeIntervalVDThr",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43ce087d",
+   "file_offset": "0x79f87d",
+   "text": "[JPEG]: [f_2open][TanzOpen] jpegErr : %d",
+   "xref_sites": [
+    "0x4393d5ea"
+   ],
+   "containers": [
+    {
+     "func": "0x4393d59c",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cef20d",
+   "file_offset": "0x7ae20d",
+   "text": "void Camera::FC::FCTop::ExecApiCancelPanorama(const void*)",
+   "xref_sites": [
+    "0x439d75ce"
+   ],
+   "containers": [
+    {
+     "func": "0x439d75c6",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cef248",
+   "file_offset": "0x7ae248",
+   "text": "void Camera::FC::Api::CancelPanoramaSearch()",
+   "xref_sites": [
+    "0x439d7254"
+   ],
+   "containers": [
+    {
+     "func": "0x439d724c",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cef34f",
+   "file_offset": "0x7ae34f",
+   "text": "CancelPanoramaSearch send message error",
+   "xref_sites": [
+    "0x439d72a4"
+   ],
+   "containers": [
+    {
+     "func": "0x439d724c",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cef377",
+   "file_offset": "0x7ae377",
+   "text": "SetPanoramaFaceMeta send message error",
+   "xref_sites": [
+    "0x439d7346"
+   ],
+   "containers": [
+    {
+     "func": "0x439d72d4",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cef454",
+   "file_offset": "0x7ae454",
+   "text": "void Camera::FC::FCTop::ExecApiStartPanoramaDetection(const void*)",
+   "xref_sites": [
+    "0x439d79f6"
+   ],
+   "containers": [
+    {
+     "func": "0x439d7988",
+     "name": "funcion (proximo prologo verificado)"
+    }
+   ],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cefd08",
+   "file_offset": "0x7aed08",
+   "text": "N6Camera2FC15FeaturePanoramaE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cefd26",
+   "file_offset": "0x7aed26",
+   "text": "N6Camera2FC21FeatureCancelPanoramaE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  },
+  {
+   "vaddr": "0x43cefd4a",
+   "file_offset": "0x7aed4a",
+   "text": "N6Camera2FC23FeaturePanoramaFaceMetaE",
+   "xref_sites": [],
+   "containers": [],
+   "file_offset_matches": true
+  }
+ ],
+ "key_functions": [
+  {
+   "vaddr": "0x437df646",
+   "name": "CaptureManager::CaptureStart",
+   "module": "IMAGING_CAP",
+   "file": "CaptureManager.cpp",
+   "evidence": [
+    "cadena '[IMAGING_CAP]: CapMgr) CaptureStart SeqID(0x%08x)' vaddr 0x43ca9fbd (xref 0x437df658)",
+    "rama panorama: 'movw r0,#0x301f' en 0x437df7a2 (bytes 43 f2 1f 00) -> peticion 0x301f al CAM_CMD",
+    "si la peticion falla: \"[IMAGING_CAP]: !!! Can't send Panorama cmd\" vaddr 0x43caa019 (xref 0x437df7ae)",
+    "rama DualRec: 'movw r0,#0x3005' en 0x437df6de (bytes 43 f2 05 00) -> \"!!! Can't send DualRec cmd\" vaddr 0x43ca9fef"
+   ],
+   "calls": [
+    "0x437fc310 (envio de peticion CAM_CMD: 0x3005 / 0x301f)",
+    "0x437df338 (GetCaptureIntervalResource)",
+    "0x437e4dd8 / 0x437e4de4 (mensaje al gestor de secuencia)"
+   ],
+   "status": "VERIFICADO"
+  },
+  {
+   "vaddr": "0x437f0838",
+   "name": "Stage_InitializeSweepAndSpoolBranch",
+   "module": "IMAGING_CAP",
+   "file": "Stage_Panorama.cpp",
+   "evidence": [
+    "cadena 'Stage_InitializeSweepAndSpoolBranch' vaddr 0x43cad10d (xref 0x437f0980)",
+    "'[IMAGING_CAP]: %s: ImageParam_Create Error! SeqId(0x%x) ExpID(%d)' vaddr 0x43cace6c (xref 0x437f099a)"
+   ],
+   "calls": [
+    "ImageParam_Create"
+   ],
+   "status": "VERIFICADO"
+  },
+  {
+   "vaddr": "0x43549020",
+   "name": "Stage_Panorama::PanoramaSweepStart",
+   "module": "IMAGING_CAP",
+   "file": "Stage_Panorama.cpp",
+   "evidence": [
+    "cadena 'Stage_Panorama.cpp' vaddr 0x43cacf07 (xref 0x43549042)",
+    "'[IMAGING_CAP]: PanoramaSweepStart: err[0x%08x]' vaddr 0x43cacf3f (xref 0x435492b2)"
+   ],
+   "calls": [
+    "0x437e6b3c (PanoramaSweepStart del modulo IMAGING)",
+    "0x437f0838"
+   ],
+   "status": "VERIFICADO"
+  },
+  {
+   "vaddr": "0x437f10d4",
+   "name": "Stage_Panorama::ApolloSA_Main",
+   "module": "IMAGING_CAP",
+   "file": "Stage_Panorama.cpp",
+   "evidence": [
+    "'Stage_Panorama.cpp' 0x43cacf07 (xref 0x437f1204)",
+    "'[IMAGING_CAP]: ApolloSA_Main: err[0x%02x]' vaddr 0x43cacf9c (xref 0x437f1352)"
+   ],
+   "calls": [],
+   "status": "VERIFICADO"
+  },
+  {
+   "vaddr": "0x437e6b3c",
+   "name": "PanoramaSweepStart",
+   "module": "IMAGING",
+   "file": "still_cnt_panoramaSweep.cpp",
+   "evidence": [
+    "'still_cnt_panoramaSweep.cpp' vaddr 0x43cab088 (7 xrefs desde 0x437e6b62)",
+    "'[IMAGING]: [PanoramaSweepStart] Err: 0x%08x : %s:%d' vaddr 0x43cab054 (xref 0x437e6b5e)",
+    "'[IMAGING]: [PanoramaSweepStart] Jpeg Open  err: 0x%08x' vaddr 0x43cab0a4 (xref 0x437e6d6c)",
+    "'[IMAGING]: [PanoramaSweepStart] Jpeg Close  err: 0x%08x' vaddr 0x43cab0db (xref 0x437e6d8c)",
+    "'[IMAGING]: [PanoramaSweepStart] End  err: 0x%08x' vaddr 0x43cab113 (xref 0x437e6da6)"
+   ],
+   "calls": [
+    "0x43afc728 (apertura del encoder JPEG, en 0x437e6d64)",
+    "0x43afc72c (cierre del encoder JPEG, en 0x437e6d84)",
+    "0x437e7dec (traza)"
+   ],
+   "status": "VERIFICADO"
+  },
+  {
+   "vaddr": "0x437e6e78",
+   "name": "PanoramaSweepEnd",
+   "module": "IMAGING",
+   "file": "still_cnt_panoramaSweep.cpp",
+   "evidence": [
+    "'[IMAGING]: [PanoramaSweepEnd] Err: 0x%08x : %s:%d' vaddr 0x43cab144 (xref 0x437e6e92)",
+    "'[IMAGING]: [PanoramaSweepEnd] cmp_execStitchPreProcess() Err! %s:%d' vaddr 0x43cab1d9 (xref 0x437e711c)",
+    "'[IMAGING]: [PanoramaSweepEnd] cmp_checkFillResidual() Err! %s:%d' vaddr 0x43cab21d (xref 0x437e737a)",
+    "'[IMAGING]: [PanoramaSweepEnd] End : 0x%08x' vaddr 0x43cab25e (xref 0x437e73fc)"
+   ],
+   "calls": [
+    "0x437e65f0 (cmp_execStitchPreProcess, en 0x437e70d2)",
+    "0x437e6758 (cmp_checkFillResidual, en 0x437e734c)",
+    "0x4355fd68",
+    "0x43afc784"
+   ],
+   "status": "VERIFICADO"
+  },
+  {
+   "vaddr": "0x437e751c",
+   "name": "UpdateSweepCanvas",
+   "module": "IMAGING",
+   "file": "still_cnt_panoramaSweep.cpp",
+   "evidence": [
+    "'[IMAGING]: [UpdateSweepCanvas] UnitOpen() Err: 0x%08x : %s:%d' vaddr 0x43cab289 (xref 0x437e75a0)",
+    "'[IMAGING]: [UpdateSweepCanvas] seq_brcEncode() Err! %s:%d' vaddr 0x43cab33a (xref 0x437e7ad6)",
+    "'[IMAGING]: [UpdateSweepCanvas] SWEEP_ERROR Err: 0x%08x, ReqID: 0x%04x' vaddr 0x43cab374 (xref 0x437e7b46)"
+   ],
+   "calls": [
+    "0x437e8e14 / 0x437e8e68 (unidades de trabajo)",
+    "0x43afcd4c / 0x43afcd2e / 0x43afc856"
+   ],
+   "status": "VERIFICADO"
+  },
+  {
+   "vaddr": "0x437f0a58",
+   "name": "UpdateSweepCanvas (etapa IMAGING_CAP)",
+   "module": "IMAGING_CAP",
+   "file": "Stage_Panorama.cpp",
+   "evidence": [
+    "'[IMAGING_CAP]: UpdateSweepCanvas: err[0x%08x]' vaddr 0x43caceae (xref 0x437f0b0e)"
+   ],
+   "calls": [
+    "0x437e751c (UpdateSweepCanvas del modulo IMAGING)",
+    "0x437f0838"
+   ],
+   "status": "VERIFICADO"
+  },
+  {
+   "vaddr": "0x437f0b58",
+   "name": "PanoramaStitch (etapa IMAGING_CAP)",
+   "module": "IMAGING_CAP",
+   "file": "Stage_Panorama.cpp",
+   "evidence": [
+    "'[IMAGING_CAP]: PanoramaStitch: err[0x%08x]' vaddr 0x43cacedc (xref 0x437f0c98)"
+   ],
+   "calls": [
+    "0x438bcef8 (PanoramaStitch del modulo IMAGING)",
+    "0x437f0838"
+   ],
+   "status": "VERIFICADO"
+  },
+  {
+   "vaddr": "0x438bcef8",
+   "name": "PanoramaStitch (etapa IMAGING)",
+   "module": "IMAGING",
+   "file": "still_cnt_panoramaStitch.cpp",
+   "evidence": [
+    "'still_cnt_panoramaStitch.cpp' vaddr 0x43cc69fa (13 xrefs desde 0x438bcffc)",
+    "'[IMAGING]: [PanoramaStitch] seq_initStitch() Err! err: 0x%08x %s:%d' vaddr 0x43cc6a47 (xref 0x438bd21e)",
+    "'[IMAGING]: [PanoramaStitch] seq_panoramaParallelStitch() Err! err: 0x%08x %s:%d' vaddr 0x43cc6a8b (xref 0x438bd28c)",
+    "'[IMAGING]: [PanoramaStitch] seq_endStitch() Err! err: 0x%08x %s:%d' vaddr 0x43cc6adb (xref 0x438bd2c0)",
+    "el driver 'src/stitch/ddl_stitch.cpp' (0x438bc720, xref 0x438bc732) no tiene llamadores BL directos: se alcanza de forma indirecta"
+   ],
+   "calls": [
+    "0x43780f74 (seq_panoramaClippingDecode, via 0x438bd216)",
+    "0x43781424 (still_seq_panoramaStitch.cpp)",
+    "0x437e8e14 / 0x437e8e68 (unidades de trabajo)"
+   ],
+   "status": "VERIFICADO"
+  },
+  {
+   "vaddr": "0x43780eb4",
+   "name": "seq_panoramaClippingDecode",
+   "module": "IMAGING",
+   "file": "still_seq_panoramaStitch.cpp",
+   "evidence": [
+    "'still_seq_panoramaStitch.cpp' vaddr 0x43c9e617 (xref 0x43780f2a)",
+    "'[IMAGING]: [seq_panoramaClippingDecode] cmp_decode Err: 0x%08x : %s:%d' vaddr 0x43c9e5d0 (xref 0x43780f26)"
+   ],
+   "calls": [],
+   "status": "VERIFICADO"
+  },
+  {
+   "vaddr": "0x437f1414",
+   "name": "Stage_PanoramaCcnrEncode",
+   "module": "IMAGING_CAP",
+   "file": "Stage_Panorama.cpp",
+   "evidence": [
+    "cadena 'Stage_PanoramaCcnrEncode' vaddr 0x43cad0f4 (xref 0x437f179c)",
+    "'[IMAGING_CAP]: apl_marble_acquire Err: [0x%08x]' vaddr 0x43cacfc6 (xref 0x437f1528)",
+    "'[IMAGING_CAP]: api_YC_SetCapMbl Err: [0x%08x]' vaddr 0x43cacff6 (xref 0x437f1596)"
+   ],
+   "calls": [
+    "0x437f0838",
+    "0x437f0da4",
+    "0x437f6cd8"
+   ],
+   "status": "VERIFICADO"
+  },
+  {
+   "vaddr": "0x4363de9c",
+   "name": "ApiPanoramaCcnrEncode::ExecMain",
+   "module": "SDF",
+   "file": "ApiPanoramaCcnrEncode.cpp",
+   "evidence": [
+    "'ApiPanoramaCcnrEncode.cpp' vaddr 0x43c79fd2 (xref 0x4363e24c)",
+    "'ExecMain' vaddr 0x43c79ffe (xref 0x4363e0be)",
+    "'[SDF] Decode YC Sds handle:%ld, YC Mem handle:%ld\n' vaddr 0x43c7a061 (xref 0x4363e654)",
+    "'[SDF] Effect PTM: ptm_32.ptm_31_0 : %08x.%08x \n' vaddr 0x43c7a094 (xref 0x4363e680)"
+   ],
+   "calls": [
+    "0x43639190 (registro de la API)"
+   ],
+   "status": "VERIFICADO"
+  },
+  {
+   "vaddr": "0x4364801c",
+   "name": "ModulePanoramaCcnrEncode",
+   "module": "SDF",
+   "file": "ModulePanoramaCcnrEncode.cpp",
+   "evidence": [
+    "'ModulePanoramaCcnrEncode.cpp' vaddr 0x43c7b926 (46 funciones del modulo lo referencian)",
+    "sub-operaciones: OpenRcAcquire 0x43c7b69a, OpenSrcAcquire 0x43c7b7fb, OpenJpegOpen 0x43c7b76c, OpenVfxEffectTransferOpen 0x43c7b88f, OpenTanzInitParam 0x43c7b8a9, OpenTanzCalc 0x43c7b829, ExecTanzaku 0x43c7b8cb, WriteToDtable 0x43c7b72e, MakeDevelopResizeTable 0x43c7b8eb, CloseIibClose 0x43c7b6a8, CloseIibStop 0x43c7b856, CloseRcRelease 0x43c7b8d7"
+   ],
+   "calls": [
+    "0x43642970",
+    "0x436511e8",
+    "0x43651208",
+    "0x4364c430 (otra funcion del modulo)",
+    "0x4364d214 (WrapAplCcnrTanzakuStart) se invoca desde 0x4364d370"
+   ],
+   "status": "VERIFICADO"
+  },
+  {
+   "vaddr": "0x4364d214",
+   "name": "WrapAplCcnrTanzakuStart",
+   "module": "SDF",
+   "file": "WrapAplCcnrTanzakuStart.cpp",
+   "evidence": [
+    "'WrapAplCcnrTanzakuStart.cpp' vaddr 0x43c7baba (xrefs 0x4364d252/0x4364d29a/0x4364d332/0x4364d384)",
+    "'SetParam' vaddr 0x43c7baf5, 'MainProcess' 0x43c7baae, 'Exec' 0x43c7baf0"
+   ],
+   "calls": [
+    "invocada desde 0x4364d370 (misma familia de envoltorios)"
+   ],
+   "status": "VERIFICADO"
+  },
+  {
+   "vaddr": "0x4364d4a8",
+   "name": "WrapCamTanzakuStart",
+   "module": "SDF",
+   "file": "WrapCamTanzakuStart.cpp",
+   "evidence": [
+    "'WrapCamTanzakuStart.cpp' vaddr 0x43c7bbc9 (11 xrefs desde 0x4364d4d4)",
+    "'SetParamInRaw' 0x43c7bbbb, 'SetParamInPfr' 0x43c7bba4, 'SetParamOutYc' 0x43c7bc08"
+   ],
+   "calls": [
+    "invocada desde 0x4364d7a8"
+   ],
+   "status": "VERIFICADO"
+  },
+  {
+   "vaddr": "0x436433a8",
+   "name": "ExecAplCcnrTanzakuStart",
+   "module": "SDF",
+   "file": "ApiPanoramaCcnrEncode.cpp",
+   "evidence": [
+    "cadena 'ExecAplCcnrTanzakuStart' vaddr 0x43c7b19f (xref 0x436433c8)"
+   ],
+   "calls": [],
+   "status": "VERIFICADO"
+  },
+  {
+   "vaddr": "0x438f4bcc",
+   "name": "PanoramaStripSequence::StripInfo",
+   "module": "IMAGING",
+   "file": "(clase PanoramaStripSequence)",
+   "evidence": [
+    "'PanoramaStripSequence::StripInfo' vaddr 0x43ccd5c8 (xref 0x438f4be4)",
+    "'PreProcessResult' vaddr 0x43ccd5e9 (xref 0x438f4caa)",
+    "'PreProcessResult::Strip[]' vaddr 0x43ccd5fa (xref 0x438f4cbe)"
+   ],
+   "calls": [],
+   "status": "VERIFICADO"
+  },
+  {
+   "vaddr": "0x437c74b6",
+   "name": "lc_BracketAF::f1 (Camera::LC)",
+   "module": "CAMERA_MAIN_LC",
+   "file": "lc_BracketAF.cpp",
+   "evidence": [
+    "'lc_BracketAF.cpp' vaddr 0x43ca79ba (xref 0x437c7512)",
+    "'[IMAGING]: FATAL! %s:%d' vaddr 0x43c9b47c con linea 158 (0x9e)"
+   ],
+   "calls": [
+    "0x43af1988",
+    "0x43adcc34",
+    "0x43adcc28",
+    "0x43adcc22",
+    "0x43af194e",
+    "0x437c73d8"
+   ],
+   "status": "VERIFICADO (nombre de clase NO_VERIFICADO)"
+  },
+  {
+   "vaddr": "0x437c7554",
+   "name": "lc_BracketAF::f2 (Camera::LC)",
+   "module": "CAMERA_MAIN_LC",
+   "file": "lc_BracketAF.cpp",
+   "evidence": [
+    "'lc_BracketAF.cpp' vaddr 0x43ca79ba (xref 0x437c761a y 0x437c7638)",
+    "'[IMAGING]: FATAL! %s:%d' vaddr 0x43c9b47c con linea 168 (0xa8)",
+    "maquina de estados con tbb sobre el sub-estado this+0x10 (0..4)"
+   ],
+   "calls": [
+    "0x4373e0e8",
+    "0x436ecaa8",
+    "0x43adaac6",
+    "0x436f7354",
+    "0x43af19c8",
+    "0x43af194e",
+    "0x436eccdc",
+    "0x437c73d8"
+   ],
+   "status": "VERIFICADO (nombre de clase NO_VERIFICADO)"
+  },
+  {
+   "vaddr": "0x437df338",
+   "name": "CaptureManager::GetCaptureIntervalResource",
+   "module": "IMAGING_CAP",
+   "file": "CaptureManager.cpp",
+   "evidence": [
+    "'[IMAGING_CAP]: GetCaptureIntervalResource Error! %x' vaddr 0x43ca9f89 (xref 0x437df430)"
+   ],
+   "calls": [],
+   "status": "VERIFICADO"
+  },
+  {
+   "vaddr": "0x437e0ce8",
+   "name": "CaptureManager::IntervalSemaphore",
+   "module": "IMAGING_CAP",
+   "file": "CaptureManager.cpp",
+   "evidence": [
+    "'[IMAGING_CAP]: CapMgr) osal_stat_sem: CAPTURE_INTERVAL err %d' vaddr 0x43caa28b (xref 0x437e0cf8)",
+    "'[IMAGING_CAP]: CapMgr) osal_sig_sem: CAPTURE_INTERVAL err %d' vaddr 0x43caa2c9 (xref 0x437e0d1e)"
+   ],
+   "calls": [],
+   "status": "VERIFICADO"
+  },
+  {
+   "vaddr": "0x437e0d5a",
+   "name": "CaptureManager::FreeCaptureIntervalResource",
+   "module": "IMAGING_CAP",
+   "file": "CaptureManager.cpp",
+   "evidence": [
+    "'[IMAGING_CAP]: CapMgr) FreeCaptureIntervalResource(): err %d' vaddr 0x43caa306 (xref 0x437e0d7a)"
+   ],
+   "calls": [],
+   "status": "VERIFICADO"
+  },
+  {
+   "vaddr": "0x437e0e1c",
+   "name": "CaptureManager::SetIntervalTimer / callback del timer",
+   "module": "IMAGING_CAP",
+   "file": "CaptureManager.cpp",
+   "evidence": [
+    "'[IMAGING_CAP]: CapMgr) osal_alloc_timer: err %x' vaddr 0x43caa343 (xref 0x437e0edc)",
+    "'[IMAGING_CAP]: CapMgr) osal_set_timer: err %x' vaddr 0x43caa373 (xref 0x437e0f02)",
+    "'[IMAGING_CAP]: CapMgr) SetIntervalTimer(): err %d' vaddr 0x43caa3a1 (xref 0x437e0f0c)",
+    "periodo = 0x2710 (10000) * byte del recurso de intervalo: 'movw r2,#0x2710' en 0x437e0e9a (bytes 42 f2 10 72) y 'mul r2,r2,sb' en 0x437e0ea8"
+   ],
+   "calls": [
+    "0x437e0bb4 (osal_set_timer)",
+    "0x437e0ce8 (semaforo)"
+   ],
+   "status": "VERIFICADO"
+  },
+  {
+   "vaddr": "0x437e0fc0",
+   "name": "CaptureManager::WaitIntervalSem",
+   "module": "IMAGING_CAP",
+   "file": "CaptureManager.cpp",
+   "evidence": [
+    "'[IMAGING_CAP]: CapMgr) osal_wai_sem: CAPTURE_INTERVAL err %d' vaddr 0x43caa3d3 (xref 0x437e0ff8)"
+   ],
+   "calls": [],
+   "status": "VERIFICADO"
+  },
+  {
+   "vaddr": "0x4363e7ac",
+   "name": "SDF::CheckPtmInterval (control del intervalo PTM)",
+   "module": "SDF",
+   "file": "SdfMsgAnalyzerRecRcv.cpp",
+   "evidence": [
+    "'[SDF] interval(PTM) %ld\n' vaddr 0x43c7a1a5 (xref 0x4363e862)",
+    "'[SDF_ERR] interval_ptm over 10[sec]\n' vaddr 0x43c7a1be (xref 0x4363e886)",
+    "limite de 64 bits cargado en 0x4363e87a ('ldr r2,[pc,#0xc0]' -> pool 0x4363e93c = 900000)"
+   ],
+   "calls": [],
+   "status": "VERIFICADO"
+  },
+  {
+   "vaddr": "0x4363ec80",
+   "name": "ApiPtmCount::WaitImcResponse",
+   "module": "SDF",
+   "file": "ApiPtmCount.cpp",
+   "evidence": [
+    "'ApiPtmCount.cpp' vaddr 0x43c7a3c2 (xrefs 0x4363ed0e/0x4363ed66/0x4363eebc/0x4363ef70/0x4363f002)",
+    "'WaitImcResponse' 0x43c7a051, 'SendMessageImc' 0x43c7a02d, 'CheckPtmMax' 0x43c7a76e"
+   ],
+   "calls": [
+    "0x43561244 (envio de mensaje)"
+   ],
+   "status": "VERIFICADO"
+  },
+  {
+   "vaddr": "0x4389d180",
+   "name": "MARBLE::STL_PANORAMA (parametros ccnr del motor YC)",
+   "module": "CAMERA_MAIN_YC",
+   "file": "Camera::YC (MARBLE)",
+   "evidence": [
+    "'[CAMERA_MAIN_YC]: MARBLE:\tSTL_PANORAMA\t\tparam->ccnr.cc_bl48_cb_p1 - param->ccnr.cc_bl48_cb_p0 == 0' vaddr 0x43cbdef1 (xref 0x4389d46e)",
+    "idem para cc_bl48_cr 0x43cbdf54, cc_bl14_cb 0x43cbdfb7, cc_bl14_cr 0x43cbe01a",
+    "estilos hermanos: STL_APOLLO 0x43cbe0e4 (0x4389da04) y STL_CAP 0x43cbe2cd (0x4389de06)"
+   ],
+   "calls": [],
+   "status": "VERIFICADO"
+  },
+  {
+   "vaddr": "0x4389c378",
+   "name": "MARBLE::Set_marble_tanzaku_param_rc",
+   "module": "CAMERA_MAIN_YC",
+   "file": "Camera::YC (MARBLE)",
+   "evidence": [
+    "'[CAMERA_MAIN_YC]: MARBLE: STL\tSet_marble_tanzaku_param_rc main_digitalZoomRatioDenom\t=%x' vaddr 0x43cbdce4 (xref 0x4389c382)"
+   ],
+   "calls": [],
+   "status": "VERIFICADO"
+  },
+  {
+   "vaddr": "0x43cbe4a2",
+   "name": "Camera::YC::job_YC_Set_marble_tanzaku_param_makernote",
+   "module": "CAMERA_MAIN_YC",
+   "file": "Camera::YC (MARBLE)",
+   "evidence": [
+    "firma C++ completa: 'void Camera::YC::job_YC_Set_marble_tanzaku_param_makernote(const Camera::CaptureModuleDataAll*, const Camera::APL::APL_MARBLE*)' vaddr 0x43cbe4a2"
+   ],
+   "calls": [],
+   "status": "VERIFICADO"
+  },
+  {
+   "vaddr": "0x43ce29c1",
+   "name": "SPICA: comando exec_tanzaku",
+   "module": "ScalarInfra (SA/SPICA)",
+   "file": "(tabla de comandos SPICA)",
+   "evidence": [
+    "cadenas 'exec_tanzaku' vaddr 0x43ce29c1 y 'exec_tanzaku_mem2mem' vaddr 0x43ce29ce",
+    "'s_callback_exec_tanzaku %08X' vaddr 0x43ce2942, 'CallbackRcct %08X' 0x43ce2930",
+    "RTTI '23WrapSpicaExecOneTanzaku' 0x43c7feed y '27WrapSpicaExecOneTanzakuBase' 0x43c7c4be"
+   ],
+   "calls": [],
+   "status": "VERIFICADO (tabla de comandos, no funcion)"
+  },
+  {
+   "vaddr": "0x4365e424",
+   "name": "ModuleOnePassCcnrEncode::StartTanzaku",
+   "module": "SDF",
+   "file": "ModuleOnePassCcnrEncode.cpp",
+   "evidence": [
+    "'StartTanzaku' vaddr 0x43c7f07d (8 xrefs desde 0x4365e462)",
+    "'ModuleOnePassCcnrEncode.cpp' vaddr 0x43c7eefe"
+   ],
+   "calls": [],
+   "status": "VERIFICADO"
+  }
+ ],
+ "flows": {
+  "panorama_sweep": {
+   "resumen": "N capturas mientras el usuario barre la camara; cada trama se codifica en JPEG, se acumulan en un lienzo (UpdateSweepCanvas), y al final se pre-procesan (stitch pre-process), se decodifican, se cosen por tiras (stitch paralelo) y se reescala/encoda en un unico JPEG panoramico.",
+   "pasos": [
+    "1. CaptureManager::CaptureStart (0x437df646) discrimina el modo con un campo de 2 bits en el contexto de captura 0x43e9b548 (+0x265, bits 2-3) y, en el valor 2, envia la peticion 0x301f al CAM_CMD ('movw r0,#0x301f' en 0x437df7a2); si la peticion falla avisa \"!!! Can't send Panorama cmd\" (0x43caa019).",
+    "2. Stage_InitializeSweepAndSpoolBranch (0x437f0838) crea los parametros de imagen de la secuencia ('ImageParam_Create Error! SeqId(0x%x) ExpID(%d)', 0x43cace6c).",
+    "3. Stage_Panorama::PanoramaSweepStart (0x43549020) llama al modulo IMAGING: PanoramaSweepStart (0x437e6b3c), que abre y cierra el codificador JPEG por trama ('Jpeg Open'/'Jpeg Close', 0x43cab0a4/0x43cab0db).",
+    "4. UpdateSweepCanvas (0x437e751c en IMAGING / 0x437f0a58 en IMAGING_CAP) va componiendo el lienzo con seq_brcEncode() (0x43cab33a) y reporta SWEEP_ERROR (0x43cab374).",
+    "5. PanoramaSweepEnd (0x437e6e78) lanza cmp_execStitchPreProcess() (0x43cab1d9) y cmp_checkFillResidual() (0x43cab21d): analisis de movimiento/solape y comprobacion de huecos.",
+    "6. seq_panoramaClippingDecode (0x43780eb4) decodifica los JPEG de las tiras ('cmp_decode Err', 0x43c9e5d0).",
+    "7. PanoramaStitch (0x438bcef8 en IMAGING / 0x437f0b58 en IMAGING_CAP) ejecuta seq_initStitch(), seq_panoramaParallelStitch() y seq_endStitch() (0x43cc6a47/0x43cc6a8b/0x43cc6adb) apoyandose en src/stitch/ddl_stitch.cpp (0x43cc6959).",
+    "8. PanoramaResize / PanoramaResizeEncode (0x43cc6b87..0x43cab71a) reescalan y codifican el resultado; Stage_PanoramaCcnrEncode (0x437f1414) prepara los parametros MARBLE del trabajo de CCNR por tiras (apl_marble_acquire / api_YC_SetCapMbl) y registra la etapa.",
+    "9. Etapas finales: Stage_RchRcv_ResizeFill_PanoramaThm (0x437f40c4), Stage_RchRcv_Resize_PanoramaGmvCoarse (0x437f42b8), Stage_RchRcv_ResizeFill_PanoramaAutoReview (0x437f4378)."
+   ],
+   "prueba_de_N_tiras": "PanoramaStripSequence::StripInfo (0x438f4bcc) opera sobre 'PreProcessResult::Strip[]' (0x43ccd5fa): el resultado del pre-proceso es un array de tiras, y el stitch es paralelo por tiras (seq_panoramaParallelStitch). El numero N de capturas NO aparece en el firmware (lo decide el userland: PanoramaSize WIDE/STD/16_9/360DEG en libObj.so)."
+  },
+  "bracket": {
+   "resumen": "el firmware NO implementa el modo de bracketing de exposicion/balance: no existe ninguna cadena 'Bracket' salvo el nombre de fichero. Solo hay una pieza: el AF bracketing en Camera::LC.",
+   "pasos": [
+    "1. La unica aparicion de 'Bracket' en av-cam.bin es el nombre de fichero 'lc_BracketAF.cpp' (0x43ca79ba), usado por dos metodos de Camera::LC: 0x437c74b6 (158 B) y 0x437c7554 (344 B).",
+    "2. 0x437c74b6 es una maquina de estados por modo (this+0: 0/1/2) que consulta un u16 en this+0xa, llama 0x43af1988 / 0x43adcc34 y actualiza un contador global; el modo desconocido aborta con '[IMAGING]: FATAL! %s:%d' (0x43c9b47c)#line 158.",
+    "3. 0x437c7554 es la maquina de estados por disparo: comprueba this+0xc, discrimina this+0 con un tbb sobre this+0x10 (sub-estados 0..4) y llama 0x4373e0e8 / 0x436ecaa8 / 0x43adaac6 / 0x436f7354; el estado invalido aborta con FATAL linea 168.",
+    "4. Ninguno de los dos metodos tiene llamadores directos (busqueda exhaustiva de BL en el binario): se invocan por despacho virtual, coherente con que sean metodos de una clase de Camera::LC.",
+    "5. El resto del modo (numero de tomas, escalonado de EV y de balance de blancos) vive en el userland: libObj.so tiene 'CamUser::SequenceSetBracketMode', 'SequenceSyncBracketReset', 'SequenceBracketAF', 'SetBracketForLiro', 'SetBracketStateClearForLiro', 'pvt_ActionObjectBracketCountEvt'."
+   ],
+   "implicacion": "el firmware solo aporta el AF bracketing; la orquestacion de N disparos con EV/WB distintos llega desde el userland como N peticiones de captura ordinarias."
+  },
+  "interval": {
+   "resumen": "el disparo por intervalo se implementa en el CaptureManager (IMAGING_CAP) con un temporizador OSAL y un semaforo 'CAPTURE_INTERVAL', y se valida en el SDF contra el contador PTM.",
+   "pasos": [
+    "1. CaptureStart (0x437df646) llama a GetCaptureIntervalResource (0x437df338) ('[IMAGING_CAP]: GetCaptureIntervalResource Error! %x', 0x43ca9f89).",
+    "2. CaptureEnd (0x437de2a4/0x437de308) llama SetIntervalTimer: osal_alloc_timer (0x43caa343), osal_set_timer (0x43caa373) y, en error, 'SetIntervalTimer(): err %d' (0x43caa3a1).",
+    "3. El periodo se calcula como 0x2710 (10000) * N, con N el byte del recurso de intervalo ('movw r2,#0x2710' en 0x437e0e9a, 'mul r2,r2,sb' en 0x437e0ea8): el timer se arma en multiplos de 10000 unidades de timer (INFERENCIA: 10 s si la unidad del timer es 1 ms).",
+    "4. La coordinacion se hace con un semaforo OSAL llamado CAPTURE_INTERVAL: osal_stat_sem (0x43caa28b), osal_sig_sem (0x43caa2c9) y osal_wai_sem (0x43caa3d3); FreeCaptureIntervalResource (0x43caa306) lo libera.",
+    "5. El SDF comprueba el intervalo real en PTM: '[SDF] interval(PTM) %ld' (0x43c7a1a5) y, si el intervalo medido supera el limite, '[SDF_ERR] interval_ptm over 10[sec]' (0x43c7a1be). El limite es un valor de 64 bits con palabra baja 900000 (pool 0x4363e93c, cargado en 0x4363e87a).",
+    "6. El SDF lleva la cuenta de PTM con ApiPtmCount (0x4363ec80, 'ApiPtmCount.cpp' 0x43c7a3c2): WaitImcResponse, SendMessageImc y CheckPtmMax; el mensaje MSG_ID_SDF_PTM_COUNT esta en 0x43c78350."
+   ],
+   "nota": "el limite de 900000 unidades PTM frente al texto '10[sec]' sugiere una base de 90 kHz (900000/10 s = 90000 unidades/s): INFERENCIA, no verificada."
+  }
+ },
+ "ccnr": {
+  "nombre": "CCNR",
+  "expansion": "NO VERIFICADA. El firmware no expande el acronimo. S101 lo hipotesiza como 'corner noise reduction'; la evidencia de este hito (pares p0/p1, strips, correlacion entre tramas) apunta a reduccion de ruido por correlacion/diferencia entre dos capturas, no a 'corner'.",
+  "mecanismo": [
+   "Mensajes del SDF: MSG_ID_SDF_CCNR_ENCODE (0x43c781ac), MSG_ID_SDF_CCNR_ENCODE_WITH_MODE (0x43c781c3), MSG_ID_SDF_CCNR_RESIZE (0x43c78289) y MSG_ID_SDF_PANORAMA_CCNR_ENCODE (0x43c781e4).",
+   "Modulos: ModuleOnePassCcnrEncode.cpp (0x43c7eefe), ModuleCallbackMgrCcnrEnc.cpp (0x43c7e8f1), ModulePanoramaCcnrEncode.cpp (0x43c7b926).",
+   "El motor YC (MARBLE) calcula parametros de CCNR POR ESTILO DE CAPTURA: STL_PANORAMA (0x43cbdef1, funcion 0x4389d180), STL_APOLLO (0x43cbe0e4) y STL_CAP (0x43cbe2cd). Los cuatro pares del bloque ccnr (cc_bl48_cb, cc_bl48_cr, cc_bl14_cb, cc_bl14_cr) se expresan como DIFERENCIA p1 - p0 entre dos capturas.",
+   "El trabajo se hace por TIRAS (tanzaku): OpenTanzInitParam (0x43c7b8a9), OpenTanzCalc (0x43c7b829), ExecTanzaku (0x43c7b8cb), CalcInputYcTanz / SetInputYcTanz / ReadInputYcTanz, GetTanzNoFromDtable (0x43c7b73c), WriteToDtable (0x43c7b72e), ExecSRotate (0x43c7b7bd), ExecTanzAplStart (0x43c7b79c).",
+   "La ejecucion final la hace el SPICA del acelerador escalar con los comandos 'exec_tanzaku' (0x43ce29c1) y 'exec_tanzaku_mem2mem' (0x43ce29ce); el marcador 's_callback_exec_tanzaku %08X' esta en 0x43ce2942.",
+   "El motor YC escribe ademas los parametros en el MakerNote: 'Camera::YC::job_YC_Set_marble_tanzaku_param_makernote(const Camera::CaptureModuleDataAll*, const Camera::APL::APL_MARBLE*)' (0x43cbe4a2) y 'MARBLE: STL Set_marble_tanzaku_param_rc main_digitalZoomRatioDenom' (0x43cbdce4).",
+   "Gestion de errores: '[SDF][CCNR] Timeout! (...going to whole module RETRY)' (0x43c7ef97), '[SDF][INT_ERROR] [CCNR TimeOut] SetPblAifIibNum' (0x43c7ef1a), '[SDF][CCNR_ENCODE] jpegOverLimit (...going to ENCODE RETRY)' (0x43c7b615)."
+  ],
+  "implicacion_pipeline": "SI: en panoramica se capturan N fotogramas y se combinan. La prueba es la cadena de tiras: PanoramaStripSequence::StripInfo (0x438f4bcc) consume 'PreProcessResult::Strip[]' (0x43ccd5fa) y el stitch es paralelo por tiras (seq_panoramaParallelStitch, 0x43cc6a8b). El CCNR se aplica POR TIRA, usando como referencia los datos de la trama vecina (parametros en forma de diferencia p1-p0), antes de coser el mosaico final.",
+  "diferencia_con_disparo_simple": "el disparo simple no genera tiras, no lanza PanoramaStitch ni PanoramaResize, no usa los estilos STL_PANORAMA del MARBLE y no emite los mensajes MSG_ID_SDF_PANORAMA_CCNR_ENCODE; usa MSG_ID_SDF_CCNR_ENCODE / _WITH_MODE sobre una sola imagen."
+ },
+ "links_other_milestones": [
+  {
+   "milestone": "S96",
+   "que": "Captura: drive_mode/CapMode/ContID/FrameID/BDROSeq; ya citaba PanoramaSweepStart, MSG_ID_SDF_PANORAMA_CCNR_ENCODE, lc_BracketAF.cpp y '[SDF] interval(PTM)'",
+   "verificado": "mismas direcciones"
+  },
+  {
+   "milestone": "S101",
+   "que": "Subsistema SDF: el CCNR, el panorama y el PTM viven dentro de SDF (477 trazas [SDF] en 0x43c7785b..0x43c806f9)",
+   "verificado": "mismo modulo; este hito acota el panorama"
+  },
+  {
+   "milestone": "S97",
+   "que": "Sincronizacion del codificador",
+   "verificado": "no aporta al panorama/bracketing/intervalo"
+  },
+  {
+   "milestone": "S84",
+   "que": "Catalogo de sa_func_* del driver SA",
+   "verificado": "la familia del SPICA que ejecuta exec_tanzaku no es una familia sa_func_*; es el SPICA (0x43ce29c1)"
+  },
+  {
+   "milestone": "S82",
+   "que": "AutoFraming y las etapas de control del pipeline (Stage_*)",
+   "verificado": "las etapas de panorama usan el mismo esquema Stage_* (Stage_Panorama.cpp, Stage_Raw.cpp)"
+  },
+  {
+   "milestone": "S78",
+   "que": "Parametros apc_* del motor de imagen YC",
+   "verificado": "el bloque ccnr del MARBLE es otro conjunto de parametros, con estilos por modo de captura"
+  },
+  {
+   "milestone": "S96/S71",
+   "que": "Deteccion de caras: el modulo FC tiene 'FC/Feature/fc_feature_panorama.cpp' (0x43cf07bd) y APIs ExecApiStartPanoramaDetection / CancelPanoramaSearch",
+   "verificado": "la deteccion de caras en panorama es del lado FC, no del modo de captura"
+  }
+ ],
+ "open_questions": [
+  "Numero de capturas N por barrido: no aparece en av-cam.bin (lo decide el userland).",
+  "Semantica exacta del acronimo CCNR (el texto solo permite afirmar que trabaja con pares p0/p1 y por tiras).",
+  "Unidad del temporizador OSAL (10000 * N): si la unidad es 1 ms el periodo seria de 10 s en multiplos; no verificado.",
+  "Unidad del contador PTM (900000 unidades frente al texto '10[sec]').",
+  "Valor numerico del campo de 2 bits en +0x265 del contexto de captura 0x43e9b548 que selecciona la rama de modo.",
+  "Identidad de la clase de Camera::LC a la que pertenecen 0x437c74b6 y 0x437c7554 (solo virtual; sin vtables absolutas en el blob).",
+  "Sentido de los identificadores de peticion 0x3005 (DualRec) y 0x301f (panorama) en la tabla del CAM_CMD.",
+  "Que algoritmo exacto ejecuta el SPICA en exec_tanzaku y que entrada usa (strips de entrada vs. neighboring strips)."
+ ]
+}
