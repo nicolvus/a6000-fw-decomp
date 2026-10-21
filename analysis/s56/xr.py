@@ -1,12 +1,14 @@
 """S56: índice de llamadas (bl/blx/b.w) y de literales (ldr pc + add pc) de av-cam.bin A6000/A7S.
 uso: xr.py MODELO callers 0xFUNC | lit 0xVALOR (valor literal bruto o resuelto)"""
-import sys, re, struct, pickle, hashlib
+import sys, re, struct, pickle, hashlib, tempfile
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / 's55'))
 from gpio_calls_diff import MODELS, B, disasm
+CACHE_DIR = Path(tempfile.gettempdir()) / 'a6000_re_cache'   # portable: el path original /tmp/claude-1000 no existe en otras maquinas
 def index(model):
     d = MODELS[model]['path'].read_bytes()
-    cache = Path('/tmp/claude-1000/xr-%s-%s.pkl' % (model, hashlib.sha256(d).hexdigest()[:8]))
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    cache = CACHE_DIR / ('xr-%s-%s.pkl' % (model, hashlib.sha256(d).hexdigest()[:8]))
     if cache.exists(): return d, pickle.load(open(cache, 'rb'))
     ins = disasm(d); calls, lits = {}, []; R = {}
     for i in ins:

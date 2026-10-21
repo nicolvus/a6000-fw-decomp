@@ -1,0 +1,4185 @@
+{
+ "meta": {
+  "task": "s66/subtarea B: formato VX*_lensfile.bin + tablas en av-cam.bin + cargador",
+  "date": "2026-10-20",
+  "avcam_base": {
+   "A6000-fw321": 1129582592,
+   "A6300-fw201": null
+  },
+  "direccionamiento": "A6000: VA = 0x43541000 + fileoff, VERIFICADO por sesiones previas (entry_point). A6300: solo fileoff verificado (pool PIC loop interno); base de carga NO_VERIFICADA.",
+  "flags": {
+   "VERIFICADO": "cabecera/secciones/trailer/tamano/lens_id/tablas/literal del parser/instrucciones citadas",
+   "INFERENCIA": "los datos ED/CS/LC son tablas u16 opticas; VX9103/VX9123 = mismo optico; 18 ficheros identicos byte a byte entre A6000 y A6300",
+   "NO_VERIFICADO": "semantica exacta de los datos; algoritmo del trailer (4 B tras LC); significado de u32@8 (0xB/0xE/0xC); A-mount mapping"
+  }
+ },
+ "formato_fichero": {
+  "header_len": 16,
+  "header_fields": {
+   "off": "campo (endianness LE)",
+   "0x00": "magic 'LF' (u16 LE 0x464c; comparado literal 0x464c en parser 0x43907c7c)",
+   "0x02": "u16 header_len = 0x0010 (VERIFICADO en parser 0x43907c7c: consume hdr[u16@2] bytes)",
+   "0x04": "u32 payload_size = filesize - 0x10 (igual en los 57 ficheros A6000+A6300; NO es el tamaño total)",
+   "0x08": "u32 0xB en 16/18 ficheros A6000; VX9111=0xE, VX9116=0xC (semántica NO_VERIFICADA)",
+   "0x0c": "u16 lens_id (0x9101..0x9129, coincide con el nombre VX91xx; VERIFICADO)",
+   "0x0e": "u16 0"
+  },
+  "section_layout": "[ magic u16 ][ hdr_len u16 = 8 ][ payload_len u32 ][ payload(hdr_len=8)+payload_len bytes ]",
+  "section_magics": {
+   "ED (0x4445 'ED')": "payload tabla u16 (0x5c..0x32a4 B según lente); parser av-cam 0x43907c7c salta a 0x43907f54 (setup accessor + 0x43b2bf88)",
+   "CS (0x5343 'CS')": "payload tabla u16 (0x38..0xc0 B)",
+   "LC (0x434c 'LC')": "payload 12 B = 6 x u16, en TODOS los ficheros"
+  },
+  "trailer": "4 bytes tras LC en los 57 ficheros (cadena ED->CS->LC acaba en filesize-4; algoritmo NO_VERIFICADO: crc32/adler/sum/fnv descartados)",
+  "orden_secciones": "todos los ficheros: HDR(16) + ED + CS + LC + trailer(4), sin excepción (A6000: 18/18; A6300: 39/39)",
+  "identificativos": {
+   "2 bytes": "lens_id en 0x0c..0x0d",
+   "4 bytes": "trailer",
+   "pares": "VX9103/VX9123 difieren SOLO en lens_id@0x0c y 1 byte del trailer (datos ED+CS+LC idénticos)",
+   "A6000=A6300": "los 18 ficheros VX91xx de A6000 son byte a byte idénticos a los de A6300"
+  }
+ },
+ "ficheros": {
+  "A6000-fw321": [
+   {
+    "vx": "VX9101",
+    "name": "VX9101_lensfile.bin",
+    "path_rel": "firmware/extracted/fw321/firmware.tar_unpacked/0800_appli/lens/VX9101_lensfile.bin",
+    "size": 6180,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 6164,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37121,
+     "u16@14": 0
+    },
+    "lens_id": 37121,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "f03bd98575f7049ac9697567d347df418ffee90de05995b8219a7d74697c103d",
+    "checksum_u32_end": 41389665,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 5952,
+      "payload_sha256": "0ebc6229511b483130707c0326ceb0f0c78e0286e2c0f24c257b906975319d01"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 5976,
+      "hdr_len": 8,
+      "payload_off": 5984,
+      "payload_len": 172,
+      "payload_sha256": "74bd9b49f542876bdb5ff13eff5b1bfc6c260e1a9891ca12c3ad2450bb3be25c"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 6156,
+      "hdr_len": 8,
+      "payload_off": 6164,
+      "payload_len": 12,
+      "payload_sha256": "5a83b9ef21027fd1a5cd82b06141b4d7e35e99a05084f2f1a3d7cde158c7592b"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     57,
+     7,
+     18,
+     7,
+     2,
+     0,
+     3
+    ],
+    "lc_payload_u16": [
+     0,
+     608,
+     1104,
+     944,
+     3448,
+     0
+    ],
+    "ed_sha": "0ebc6229511b483130707c0326ceb0f0c78e0286e2c0f24c257b906975319d01"
+   },
+   {
+    "vx": "VX9102",
+    "name": "VX9102_lensfile.bin",
+    "path_rel": "firmware/extracted/fw321/firmware.tar_unpacked/0800_appli/lens/VX9102_lensfile.bin",
+    "size": 4984,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 4968,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37122,
+     "u16@14": 0
+    },
+    "lens_id": 37122,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "d8a6fdb12b6a195dd2e10a425e6437f9d768193b66af7c4fcc0f8b9840bb9fb1",
+    "checksum_u32_end": 35752227,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 4812,
+      "payload_sha256": "d9ea5807280ac7017e35ee975be4b4bf6d2e96d9b9d3425a5cafc5d5124e678b"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 4836,
+      "hdr_len": 8,
+      "payload_off": 4844,
+      "payload_len": 116,
+      "payload_sha256": "a0e894442030efb7fff22b399198ca866665ddf3a02cd4f1a317fba64109e6a4"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 4960,
+      "hdr_len": 8,
+      "payload_off": 4968,
+      "payload_len": 12,
+      "payload_sha256": "3698c05758f1affd5fefbaac61c390a5a687867e5fd674f0aa1d200ad57ed2aa"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     34,
+     4,
+     16,
+     7,
+     2,
+     0,
+     3
+    ],
+    "lc_payload_u16": [
+     0,
+     864,
+     1568,
+     1121,
+     3401,
+     0
+    ],
+    "ed_sha": "d9ea5807280ac7017e35ee975be4b4bf6d2e96d9b9d3425a5cafc5d5124e678b"
+   },
+   {
+    "vx": "VX9103",
+    "name": "VX9103_lensfile.bin",
+    "path_rel": "firmware/extracted/fw321/firmware.tar_unpacked/0800_appli/lens/VX9103_lensfile.bin",
+    "size": 13212,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 13196,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37123,
+     "u16@14": 0
+    },
+    "lens_id": 37123,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "1f842ae1f058ea52dbb471574a82152c0a422df8084cb4e0bd3c61ba35031eb1",
+    "checksum_u32_end": 190024116,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 12964,
+      "payload_sha256": "60b7b8b255b189b447fd04ca35be28cdcae87687122c4060e2bc147acddeb303"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 12988,
+      "hdr_len": 8,
+      "payload_off": 12996,
+      "payload_len": 192,
+      "payload_sha256": "39c21b221b665e42358a36ac98d81f30be78f535a27e96d1e788a18b583a5d41"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 13188,
+      "hdr_len": 8,
+      "payload_off": 13196,
+      "payload_len": 12,
+      "payload_sha256": "a9254bc735165664b4054743fd8cab350b939869e47421bbe86be11ed2abe2f9"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     58,
+     16,
+     19,
+     8,
+     6,
+     0,
+     4
+    ],
+    "lc_payload_u16": [
+     0,
+     624,
+     1440,
+     908,
+     3713,
+     0
+    ],
+    "ed_sha": "60b7b8b255b189b447fd04ca35be28cdcae87687122c4060e2bc147acddeb303"
+   },
+   {
+    "vx": "VX9104",
+    "name": "VX9104_lensfile.bin",
+    "path_rel": "firmware/extracted/fw321/firmware.tar_unpacked/0800_appli/lens/VX9104_lensfile.bin",
+    "size": 2064,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 2048,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37124,
+     "u16@14": 0
+    },
+    "lens_id": 37124,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "428bbf78e90ef31901827e99058137014521adbd5dc5db9d9debafa7b6eefb0f",
+    "checksum_u32_end": 204309717,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 1916,
+      "payload_sha256": "c700436ec64152087074ba11174821b5eb05e7ec5845bd8ad47c5ff07d378703"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 1940,
+      "hdr_len": 8,
+      "payload_off": 1948,
+      "payload_len": 92,
+      "payload_sha256": "acba4706ebba5504e29bf20c6a5031127f9323f19a64f515d7a6c72805258d64"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 2040,
+      "hdr_len": 8,
+      "payload_off": 2048,
+      "payload_len": 12,
+      "payload_sha256": "fc422e95255898883b7c05a4fe1ace9f6405be80897100950a3eb4248b698cf2"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     1,
+     23,
+     18,
+     1,
+     3,
+     0,
+     0
+    ],
+    "lc_payload_u16": [
+     0,
+     752,
+     1440,
+     945,
+     3116,
+     0
+    ],
+    "ed_sha": "c700436ec64152087074ba11174821b5eb05e7ec5845bd8ad47c5ff07d378703"
+   },
+   {
+    "vx": "VX9105",
+    "name": "VX9105_lensfile.bin",
+    "path_rel": "firmware/extracted/fw321/firmware.tar_unpacked/0800_appli/lens/VX9105_lensfile.bin",
+    "size": 2600,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 2584,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37125,
+     "u16@14": 0
+    },
+    "lens_id": 37125,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "afaf63fdcf92eddca7942e181d1e1edc6535ac2dbf8c0b4d7e69c0de6424a096",
+    "checksum_u32_end": 54165942,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 2456,
+      "payload_sha256": "876908732c7b6687ca7128617af837a0beff0fe2b5595c6dc51e25572d41dddb"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 2480,
+      "hdr_len": 8,
+      "payload_off": 2488,
+      "payload_len": 88,
+      "payload_sha256": "3e8eaea934a2284e9eed063ee12cdacbe9664048b8bb6d2b613c78841fe47041"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 2576,
+      "hdr_len": 8,
+      "payload_off": 2584,
+      "payload_len": 12,
+      "payload_sha256": "3b3fc9ec1cf6108248c0cded4de213e03e9a086417359ff88c2da76b6ad96af5"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     1,
+     15,
+     24,
+     1,
+     2,
+     0,
+     0
+    ],
+    "lc_payload_u16": [
+     0,
+     704,
+     1440,
+     458,
+     3103,
+     0
+    ],
+    "ed_sha": "876908732c7b6687ca7128617af837a0beff0fe2b5595c6dc51e25572d41dddb"
+   },
+   {
+    "vx": "VX9106",
+    "name": "VX9106_lensfile.bin",
+    "path_rel": "firmware/extracted/fw321/firmware.tar_unpacked/0800_appli/lens/VX9106_lensfile.bin",
+    "size": 3020,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 3004,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37126,
+     "u16@14": 0
+    },
+    "lens_id": 37126,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "0a842639aa0bb9a7722376067a25c9693ca316932b8abbe7bdadd922c5693387",
+    "checksum_u32_end": 143690030,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 2876,
+      "payload_sha256": "10a1a9745f96881dc0f9b0f58f6fb317d1edbf2c57e08a39e190c4c6fe28802d"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 2900,
+      "hdr_len": 8,
+      "payload_off": 2908,
+      "payload_len": 88,
+      "payload_sha256": "9d83b949cb54298afb9ac4a18c41bd2adfb5587aacad819d2c5fc2ee68d9ece0"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 2996,
+      "hdr_len": 8,
+      "payload_off": 3004,
+      "payload_len": 12,
+      "payload_sha256": "705eb3610712c1de0843e233109bf0e885eb24a439eef668fbac6aea97d97c85"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     1,
+     15,
+     24,
+     1,
+     4,
+     0,
+     0
+    ],
+    "lc_payload_u16": [
+     0,
+     736,
+     1088,
+     465,
+     3197,
+     0
+    ],
+    "ed_sha": "10a1a9745f96881dc0f9b0f58f6fb317d1edbf2c57e08a39e190c4c6fe28802d"
+   },
+   {
+    "vx": "VX9107",
+    "name": "VX9107_lensfile.bin",
+    "path_rel": "firmware/extracted/fw321/firmware.tar_unpacked/0800_appli/lens/VX9107_lensfile.bin",
+    "size": 5504,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 5488,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37127,
+     "u16@14": 0
+    },
+    "lens_id": 37127,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "dde4edd2262d22a4c6b55b5755490b72347ad500befc80371b17e1ffce1fbbbc",
+    "checksum_u32_end": 51218188,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 5300,
+      "payload_sha256": "f4d2b6cd159067d58bdaf78a46a212914e8c2cdb91613ccc87d6ef26a59fe432"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 5324,
+      "hdr_len": 8,
+      "payload_off": 5332,
+      "payload_len": 148,
+      "payload_sha256": "df4e9bdb68f0a4e7eb1134f78084f15a428eac71be56387f2dccf8fa96ed83a9"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 5480,
+      "hdr_len": 8,
+      "payload_off": 5488,
+      "payload_len": 12,
+      "payload_sha256": "c49af9d2ec5439d167c22c41da546dace9e35f3fdfec91feb6c071e37e153132"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     42,
+     12,
+     17,
+     5,
+     2,
+     0,
+     14
+    ],
+    "lc_payload_u16": [
+     0,
+     720,
+     1360,
+     1041,
+     3130,
+     0
+    ],
+    "ed_sha": "f4d2b6cd159067d58bdaf78a46a212914e8c2cdb91613ccc87d6ef26a59fe432"
+   },
+   {
+    "vx": "VX9108",
+    "name": "VX9108_lensfile.bin",
+    "path_rel": "firmware/extracted/fw321/firmware.tar_unpacked/0800_appli/lens/VX9108_lensfile.bin",
+    "size": 2140,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 2124,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37128,
+     "u16@14": 0
+    },
+    "lens_id": 37128,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "544125b29feac031d6e59c3077b99ccff3b12c54a6735ae995c519ff599d8d3f",
+    "checksum_u32_end": 35227763,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 1980,
+      "payload_sha256": "3a8932820acc656b7f547b1111965eec90af17a9cf29e20a6a0ffd6ea0912bd3"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 2004,
+      "hdr_len": 8,
+      "payload_off": 2012,
+      "payload_len": 104,
+      "payload_sha256": "12d5b3224bbadbbbb2db715891e1829280a4775eb6aa9b0fcfb0a97d2e036af5"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 2116,
+      "hdr_len": 8,
+      "payload_off": 2124,
+      "payload_len": 12,
+      "payload_sha256": "9ebb3ca5487e5bf621cd9996934a16c7eb76372f0fa454dfdddf2bbecc45973e"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     30,
+     1,
+     17,
+     3,
+     1,
+     0,
+     16
+    ],
+    "lc_payload_u16": [
+     0,
+     432,
+     656,
+     1044,
+     3099,
+     0
+    ],
+    "ed_sha": "3a8932820acc656b7f547b1111965eec90af17a9cf29e20a6a0ffd6ea0912bd3"
+   },
+   {
+    "vx": "VX9109",
+    "name": "VX9109_lensfile.bin",
+    "path_rel": "firmware/extracted/fw321/firmware.tar_unpacked/0800_appli/lens/VX9109_lensfile.bin",
+    "size": 6660,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 6644,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37129,
+     "u16@14": 0
+    },
+    "lens_id": 37129,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "f698adf2876aa0fd6ac86f06a6e4226b1850dd00b04f1d2d018273311a4df152",
+    "checksum_u32_end": 37063511,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 6420,
+      "payload_sha256": "9b2b3f4637b4e2b5fffb48c00e8710d62293ef805548e14c4111f1c512f065e7"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 6444,
+      "hdr_len": 8,
+      "payload_off": 6452,
+      "payload_len": 184,
+      "payload_sha256": "2feb58aa0781ec1211355dfdba17cae142d817e66dfde8329617fba38b3cc7e5"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 6636,
+      "hdr_len": 8,
+      "payload_off": 6644,
+      "payload_len": 12,
+      "payload_sha256": "bf74bd510d9b5a9c16f4daba010ad5cb285b625e30c4c2224e125f672d5a8142"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     51,
+     20,
+     18,
+     9,
+     2,
+     0,
+     4
+    ],
+    "lc_payload_u16": [
+     0,
+     432,
+     896,
+     943,
+     3471,
+     0
+    ],
+    "ed_sha": "9b2b3f4637b4e2b5fffb48c00e8710d62293ef805548e14c4111f1c512f065e7"
+   },
+   {
+    "vx": "VX9110",
+    "name": "VX9110_lensfile.bin",
+    "path_rel": "firmware/extracted/fw321/firmware.tar_unpacked/0800_appli/lens/VX9110_lensfile.bin",
+    "size": 2160,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 2144,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37136,
+     "u16@14": 0
+    },
+    "lens_id": 37136,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "e33024b872f37b20ddfcec339c859e3d044898327726af8ab592ea782959bcf9",
+    "checksum_u32_end": 263687372,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 2048,
+      "payload_sha256": "0aa486e8668caf28c31d7c9e5b07a096bcfde4156e490fa72eeb1faf3c09f40c"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 2072,
+      "hdr_len": 8,
+      "payload_off": 2080,
+      "payload_len": 56,
+      "payload_sha256": "70e14bf2b397ada3124355d988dc7e18b98baad3a9e6322a0405e9e7445c4075"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 2136,
+      "hdr_len": 8,
+      "payload_off": 2144,
+      "payload_len": 12,
+      "payload_sha256": "869a0d94684a25b3d6014de7c1493928b08fb33ac2fd1ee627bbf800f5edb918"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     1,
+     3,
+     20,
+     1,
+     2,
+     0,
+     0
+    ],
+    "lc_payload_u16": [
+     1,
+     528,
+     624,
+     781,
+     3116,
+     0
+    ],
+    "ed_sha": "0aa486e8668caf28c31d7c9e5b07a096bcfde4156e490fa72eeb1faf3c09f40c"
+   },
+   {
+    "vx": "VX9111",
+    "name": "VX9111_lensfile.bin",
+    "path_rel": "firmware/extracted/fw321/firmware.tar_unpacked/0800_appli/lens/VX9111_lensfile.bin",
+    "size": 5956,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 5940,
+     "const_u32@8": 14,
+     "lens_id_u16@12": 37137,
+     "u16@14": 0
+    },
+    "lens_id": 37137,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "46323b864095f896334f049948112b9eb677d88900ec5836eab3112680d7afd2",
+    "checksum_u32_end": 169315482,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 5748,
+      "payload_sha256": "a7ecdc4130666b6e58086ece60d87a35f22a47f8393021de4546275a199ef371"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 5772,
+      "hdr_len": 8,
+      "payload_off": 5780,
+      "payload_len": 152,
+      "payload_sha256": "e9036a751aed630259c4f4bc9c44bc2e231c8243a83bf63caf9e3fbccbd91055"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 5932,
+      "hdr_len": 8,
+      "payload_off": 5940,
+      "payload_len": 12,
+      "payload_sha256": "8b7de843817f978e4eceb3e537b12a79f4a676fa4f9c200b839f4de45121be28"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     49,
+     6,
+     17,
+     9,
+     2,
+     0,
+     1
+    ],
+    "lc_payload_u16": [
+     1,
+     704,
+     1296,
+     1038,
+     3103,
+     0
+    ],
+    "ed_sha": "a7ecdc4130666b6e58086ece60d87a35f22a47f8393021de4546275a199ef371"
+   },
+   {
+    "vx": "VX9113",
+    "name": "VX9113_lensfile.bin",
+    "path_rel": "firmware/extracted/fw321/firmware.tar_unpacked/0800_appli/lens/VX9113_lensfile.bin",
+    "size": 9028,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 9012,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37139,
+     "u16@14": 0
+    },
+    "lens_id": 37139,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "631fb3e42654a1213dd6895f872a4f03e885c6cadd959e56df0a5135eeee9ffd",
+    "checksum_u32_end": 196576244,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 8828,
+      "payload_sha256": "73ee508de3a2707dc816b4a84576f7a73b2838d13870478b1de2476e0253f3c6"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 8852,
+      "hdr_len": 8,
+      "payload_off": 8860,
+      "payload_len": 144,
+      "payload_sha256": "29f7d5cfc61949e8b5a100300a42bc2750a87b0b8ff4edf2739cb6debd812088"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 9004,
+      "hdr_len": 8,
+      "payload_off": 9012,
+      "payload_len": 12,
+      "payload_sha256": "1dfd3ff420a689d9d4445d3cd9980c47821202f7f6d044b1b2adc0e3d552509a"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     45,
+     5,
+     18,
+     8,
+     3,
+     0,
+     4
+    ],
+    "lc_payload_u16": [
+     0,
+     688,
+     1504,
+     914,
+     3493,
+     0
+    ],
+    "ed_sha": "73ee508de3a2707dc816b4a84576f7a73b2838d13870478b1de2476e0253f3c6"
+   },
+   {
+    "vx": "VX9114",
+    "name": "VX9114_lensfile.bin",
+    "path_rel": "firmware/extracted/fw321/firmware.tar_unpacked/0800_appli/lens/VX9114_lensfile.bin",
+    "size": 2164,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 2148,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37140,
+     "u16@14": 0
+    },
+    "lens_id": 37140,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "612de5de2a3527d8fe138d7e780933ef198298adeb02ac12d575f1be31e6cd5e",
+    "checksum_u32_end": 79728606,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 2048,
+      "payload_sha256": "9a8a7a9f86510613e6160bf678ee90d69b96dd584e25ffd020dffbb163fe09df"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 2072,
+      "hdr_len": 8,
+      "payload_off": 2080,
+      "payload_len": 60,
+      "payload_sha256": "f8bc33f6d60d58641a090824427146e5e6fffa5ff52235707d4546309d369399"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 2140,
+      "hdr_len": 8,
+      "payload_off": 2148,
+      "payload_len": 12,
+      "payload_sha256": "9f8c27da9fad52b8fb6fe51ae64fd26c4e9c984cd701e2e2b331dff90d9bdba5"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     1,
+     6,
+     20,
+     1,
+     2,
+     0,
+     0
+    ],
+    "lc_payload_u16": [
+     0,
+     480,
+     528,
+     772,
+     3080,
+     0
+    ],
+    "ed_sha": "9a8a7a9f86510613e6160bf678ee90d69b96dd584e25ffd020dffbb163fe09df"
+   },
+   {
+    "vx": "VX9115",
+    "name": "VX9115_lensfile.bin",
+    "path_rel": "firmware/extracted/fw321/firmware.tar_unpacked/0800_appli/lens/VX9115_lensfile.bin",
+    "size": 2576,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 2560,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37141,
+     "u16@14": 0
+    },
+    "lens_id": 37141,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "06e8895543a3b99086c8d58df567c55b7f13e60fa503c3a814edee308f0b1b78",
+    "checksum_u32_end": 158892718,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 2456,
+      "payload_sha256": "d483dee20ffa6a965d5a217eacdc5748fa2491b018e884df2277633832a64b5b"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 2480,
+      "hdr_len": 8,
+      "payload_off": 2488,
+      "payload_len": 64,
+      "payload_sha256": "1c4698b562e26d9735bddaedaaeaf842c9e98f92c9f4bb237b8a46d56b53dd08"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 2552,
+      "hdr_len": 8,
+      "payload_off": 2560,
+      "payload_len": 12,
+      "payload_sha256": "2fd004a5cf0c37c0634c2d9fc752e2a748d91b469d0f34b5f0489570a4198b01"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     1,
+     4,
+     24,
+     1,
+     2,
+     0,
+     0
+    ],
+    "lc_payload_u16": [
+     0,
+     576,
+     720,
+     458,
+     3159,
+     0
+    ],
+    "ed_sha": "d483dee20ffa6a965d5a217eacdc5748fa2491b018e884df2277633832a64b5b"
+   },
+   {
+    "vx": "VX9116",
+    "name": "VX9116_lensfile.bin",
+    "path_rel": "firmware/extracted/fw321/firmware.tar_unpacked/0800_appli/lens/VX9116_lensfile.bin",
+    "size": 12200,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 12184,
+     "const_u32@8": 12,
+     "lens_id_u16@12": 37142,
+     "u16@14": 0
+    },
+    "lens_id": 37142,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "8b774bca3517619eeb90330c2774fa540f916087a9591bd6ba464d09a9007764",
+    "checksum_u32_end": 176393783,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 11952,
+      "payload_sha256": "daf1c9291d05b4285c6726f41f97fba1aaeca8b25d84360fcd93f901a5e2f5f5"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 11976,
+      "hdr_len": 8,
+      "payload_off": 11984,
+      "payload_len": 192,
+      "payload_sha256": "ba9c68e1a2cc062e762c296194fa63b6afd624f972162ddafc43d5d02f1a024e"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 12176,
+      "hdr_len": 8,
+      "payload_off": 12184,
+      "payload_len": 12,
+      "payload_sha256": "1784e8b9b1d9614213c310c643beb37158fc09ddc1e16d693619a38a10273d4a"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     51,
+     25,
+     17,
+     9,
+     5,
+     0,
+     4
+    ],
+    "lc_payload_u16": [
+     0,
+     496,
+     992,
+     1043,
+     3102,
+     0
+    ],
+    "ed_sha": "daf1c9291d05b4285c6726f41f97fba1aaeca8b25d84360fcd93f901a5e2f5f5"
+   },
+   {
+    "vx": "VX9123",
+    "name": "VX9123_lensfile.bin",
+    "path_rel": "firmware/extracted/fw321/firmware.tar_unpacked/0800_appli/lens/VX9123_lensfile.bin",
+    "size": 13212,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 13196,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37155,
+     "u16@14": 0
+    },
+    "lens_id": 37155,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "3f4e19ef048cfd9412c1d1ae6eb6b5e2bac9d50907f7843e272ded7d5c3f3e4f",
+    "checksum_u32_end": 190024084,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 12964,
+      "payload_sha256": "60b7b8b255b189b447fd04ca35be28cdcae87687122c4060e2bc147acddeb303"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 12988,
+      "hdr_len": 8,
+      "payload_off": 12996,
+      "payload_len": 192,
+      "payload_sha256": "39c21b221b665e42358a36ac98d81f30be78f535a27e96d1e788a18b583a5d41"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 13188,
+      "hdr_len": 8,
+      "payload_off": 13196,
+      "payload_len": 12,
+      "payload_sha256": "a9254bc735165664b4054743fd8cab350b939869e47421bbe86be11ed2abe2f9"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     58,
+     16,
+     19,
+     8,
+     6,
+     0,
+     4
+    ],
+    "lc_payload_u16": [
+     0,
+     624,
+     1440,
+     908,
+     3713,
+     0
+    ],
+    "ed_sha": "60b7b8b255b189b447fd04ca35be28cdcae87687122c4060e2bc147acddeb303"
+   },
+   {
+    "vx": "VX9124",
+    "name": "VX9124_lensfile.bin",
+    "path_rel": "firmware/extracted/fw321/firmware.tar_unpacked/0800_appli/lens/VX9124_lensfile.bin",
+    "size": 2584,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 2568,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37156,
+     "u16@14": 0
+    },
+    "lens_id": 37156,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "9070d6a3c8b34749df2530f66f5c7a85e6dfbe7aae9a66534197aef2e5f39190",
+    "checksum_u32_end": 13600242,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 2456,
+      "payload_sha256": "712dd11cd7c239520002bb375d3830ef6b650051aa3adc68eee2809eb778f547"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 2480,
+      "hdr_len": 8,
+      "payload_off": 2488,
+      "payload_len": 72,
+      "payload_sha256": "600b478893f292271eeb4ffc9edba927543b184e287c2dbc2b1820cd74471be3"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 2560,
+      "hdr_len": 8,
+      "payload_off": 2568,
+      "payload_len": 12,
+      "payload_sha256": "4c355ac6c6ef101fbc9c0498a649806ce2f6e50ff688c0898f10073218ce1eb5"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     1,
+     8,
+     24,
+     1,
+     2,
+     0,
+     0
+    ],
+    "lc_payload_u16": [
+     1,
+     608,
+     736,
+     456,
+     3163,
+     0
+    ],
+    "ed_sha": "712dd11cd7c239520002bb375d3830ef6b650051aa3adc68eee2809eb778f547"
+   },
+   {
+    "vx": "VX9129",
+    "name": "VX9129_lensfile.bin",
+    "path_rel": "firmware/extracted/fw321/firmware.tar_unpacked/0800_appli/lens/VX9129_lensfile.bin",
+    "size": 11908,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 11892,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37161,
+     "u16@14": 0
+    },
+    "lens_id": 37161,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "423e2bc9716ac26422c9f82ce8992d386fc26f46d287e984c7dbdd122964aaa4",
+    "checksum_u32_end": 29656514,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 11664,
+      "payload_sha256": "10bdad6ce29c86bb56c3e484f086a492fe98107f0613f304cce92ee1117e3f9d"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 11688,
+      "hdr_len": 8,
+      "payload_off": 11696,
+      "payload_len": 188,
+      "payload_sha256": "8b09967726e1edc6b45c19748b1fbbf9dbee6c80c7180cefc2eacd753e57ab2a"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 11884,
+      "hdr_len": 8,
+      "payload_off": 11892,
+      "payload_len": 12,
+      "payload_sha256": "669523efdf2c2e585f147f11f0f7d47b1f00e87d4d060b1245f303e4b295cb03"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     56,
+     17,
+     18,
+     8,
+     3,
+     0,
+     2
+    ],
+    "lc_payload_u16": [
+     1,
+     752,
+     1392,
+     932,
+     3481,
+     0
+    ],
+    "ed_sha": "10bdad6ce29c86bb56c3e484f086a492fe98107f0613f304cce92ee1117e3f9d"
+   }
+  ],
+  "A6300-fw201": [
+   {
+    "vx": "VX8903",
+    "name": "VX8903_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX8903_lensfile.bin",
+    "size": 5964,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 5948,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 35075,
+     "u16@14": 0
+    },
+    "lens_id": 35075,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "17a02f8dc4c9af48d29a3bfa6f14ab2e27886954468f059e02b9881daf2b8391",
+    "checksum_u32_end": 12556754,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 5816,
+      "payload_sha256": "b3b2f986cc72c3baabb000994b7618630570b346765686b4ecfe0abcec7acdcb"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 5840,
+      "hdr_len": 8,
+      "payload_off": 5848,
+      "payload_len": 92,
+      "payload_sha256": "6af74b3f819b9e8a46459976d138c8d7a6ea65c433e2ab1c799c981214d199bb"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 5940,
+      "hdr_len": 8,
+      "payload_off": 5948,
+      "payload_len": 12,
+      "payload_sha256": "71e002bb82242ed556deedc45c5bb65d214c273b8b80274a496303b93128a82b"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     17,
+     5,
+     20,
+     8,
+     3,
+     0,
+     4
+    ],
+    "lc_payload_u16": [
+     1,
+     1456,
+     1840,
+     780,
+     3090,
+     0
+    ],
+    "ed_sha": "b3b2f986cc72c3baabb000994b7618630570b346765686b4ecfe0abcec7acdcb"
+   },
+   {
+    "vx": "VX8904",
+    "name": "VX8904_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX8904_lensfile.bin",
+    "size": 4384,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 4368,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 35076,
+     "u16@14": 0
+    },
+    "lens_id": 35076,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "a71e493c6e85af673d3b163f39ba451a3848c59adb397d42cbfc99930cd6561c",
+    "checksum_u32_end": 179935757,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 4260,
+      "payload_sha256": "7c73b946321ad6371feffc8a36848a0c41aa5464fbf9fe76568e024fc6f2f306"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 4284,
+      "hdr_len": 8,
+      "payload_off": 4292,
+      "payload_len": 68,
+      "payload_sha256": "28d11294741f4ec07477c604432a3f14dd22c75d3cc9cc4c299e75881963c58d"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 4360,
+      "hdr_len": 8,
+      "payload_off": 4368,
+      "payload_len": 12,
+      "payload_sha256": "207489105d5ea6c770e86c660010ef5762cfa5ff03a7ecdfdb1b3bcddf27e791"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     9,
+     2,
+     20,
+     4,
+     2,
+     0,
+     2
+    ],
+    "lc_payload_u16": [
+     1,
+     1600,
+     3344,
+     780,
+     3090,
+     0
+    ],
+    "ed_sha": "7c73b946321ad6371feffc8a36848a0c41aa5464fbf9fe76568e024fc6f2f306"
+   },
+   {
+    "vx": "VX8905",
+    "name": "VX8905_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX8905_lensfile.bin",
+    "size": 4936,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 4920,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 35077,
+     "u16@14": 0
+    },
+    "lens_id": 35077,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "3ea6ae40da88766ff94579d8752755e98f4809845e3dbc6785cb87638c90b6b9",
+    "checksum_u32_end": 247175187,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 4780,
+      "payload_sha256": "46014d88669b344cb38226e60287824c1e5bbfc24f31d0f65508cd11a8665856"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 4804,
+      "hdr_len": 8,
+      "payload_off": 4812,
+      "payload_len": 100,
+      "payload_sha256": "a208aa8b9efd9eb319e4a5af695e68e27217d15ae3cea0741bb27743206ed532"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 4912,
+      "hdr_len": 8,
+      "payload_off": 4920,
+      "payload_len": 12,
+      "payload_sha256": "e15057e96a9dfc249034607aced1b978e26231771c5fcd3bc0a62337c11e07be"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     21,
+     8,
+     17,
+     6,
+     3,
+     0,
+     4
+    ],
+    "lc_payload_u16": [
+     1,
+     1504,
+     2720,
+     1044,
+     3394,
+     0
+    ],
+    "ed_sha": "46014d88669b344cb38226e60287824c1e5bbfc24f31d0f65508cd11a8665856"
+   },
+   {
+    "vx": "VX8913",
+    "name": "VX8913_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX8913_lensfile.bin",
+    "size": 6864,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 6848,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 35091,
+     "u16@14": 0
+    },
+    "lens_id": 35091,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "24346b7339dee04f6e45cc6b308846704bad94eb8e46135b5f38f36a4889042f",
+    "checksum_u32_end": 383622477,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 6704,
+      "payload_sha256": "039877dedb9dfd190782083a8efda158f221c2262ba7b2bfbe3f63ee39c857c5"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 6728,
+      "hdr_len": 8,
+      "payload_off": 6736,
+      "payload_len": 104,
+      "payload_sha256": "c3d749a42b0f52606fde147273c993b751ed124e95d3a97a8030267da16b9841"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 6840,
+      "hdr_len": 8,
+      "payload_off": 6848,
+      "payload_len": 12,
+      "payload_sha256": "a08c0a6de80030108e4b4581ab9977e519d5845f3f899a7b71ab5a6c33f986a2"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     23,
+     6,
+     20,
+     9,
+     3,
+     0,
+     3
+    ],
+    "lc_payload_u16": [
+     1,
+     1792,
+     5008,
+     780,
+     3085,
+     0
+    ],
+    "ed_sha": "039877dedb9dfd190782083a8efda158f221c2262ba7b2bfbe3f63ee39c857c5"
+   },
+   {
+    "vx": "VX8916",
+    "name": "VX8916_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX8916_lensfile.bin",
+    "size": 2156,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 2140,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 35094,
+     "u16@14": 0
+    },
+    "lens_id": 35094,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "975691f24845cf7842f77ce0962a5cf3daea67170bf016a9585715c9fa9378c7",
+    "checksum_u32_end": 49582832,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 2048,
+      "payload_sha256": "84bb7542a85410e6042dac33fc330cb682bf686c6e22ff92a457fb83990ea929"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 2072,
+      "hdr_len": 8,
+      "payload_off": 2080,
+      "payload_len": 52,
+      "payload_sha256": "1c5fca5bdba6168f7b17522aaef2f5e259bb66f7c911debfa16255c3b30a74d4"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 2132,
+      "hdr_len": 8,
+      "payload_off": 2140,
+      "payload_len": 12,
+      "payload_sha256": "820b81ee6c943a965071340e7b37930d24f24fce3e2323152b711765b0d40ffb"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     1,
+     2,
+     20,
+     1,
+     2,
+     0,
+     0
+    ],
+    "lc_payload_u16": [
+     1,
+     1840,
+     3216,
+     804,
+     3086,
+     0
+    ],
+    "ed_sha": "84bb7542a85410e6042dac33fc330cb682bf686c6e22ff92a457fb83990ea929"
+   },
+   {
+    "vx": "VX8928",
+    "name": "VX8928_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX8928_lensfile.bin",
+    "size": 4844,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 4828,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 35112,
+     "u16@14": 0
+    },
+    "lens_id": 35112,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "d9526f781ff533d7e91bc79f97eccddd604c1512806a0abb70c6940f1e68ff72",
+    "checksum_u32_end": 228826402,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 4684,
+      "payload_sha256": "c2ae3cfba56ca8134883c03c1fe473435a326f6f752476df97525d2602399483"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 4708,
+      "hdr_len": 8,
+      "payload_off": 4716,
+      "payload_len": 104,
+      "payload_sha256": "90dfdef082da3361bc627f9beb6f6f42ac5213376cfad831dad160a68f2a6f6a"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 4820,
+      "hdr_len": 8,
+      "payload_off": 4828,
+      "payload_len": 12,
+      "payload_sha256": "f6af7ae9e5cc515ea32a16990cec88bc662e6784e906da5ea719f04f271d3b59"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     24,
+     8,
+     16,
+     6,
+     2,
+     0,
+     6
+    ],
+    "lc_payload_u16": [
+     1,
+     1264,
+     2304,
+     1124,
+     3260,
+     0
+    ],
+    "ed_sha": "c2ae3cfba56ca8134883c03c1fe473435a326f6f752476df97525d2602399483"
+   },
+   {
+    "vx": "VX8932",
+    "name": "VX8932_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX8932_lensfile.bin",
+    "size": 2476,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 2460,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 35122,
+     "u16@14": 0
+    },
+    "lens_id": 35122,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "68c77886f721622e3a5808e59d1fbdc8846dbd850cbfe08655a97ed5f2273ef3",
+    "checksum_u32_end": 174823610,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 2356,
+      "payload_sha256": "be1cc890390851febefa0af14a86ce2087f96e71bc5b3fa55165ca3265e39f6d"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 2380,
+      "hdr_len": 8,
+      "payload_off": 2388,
+      "payload_len": 64,
+      "payload_sha256": "c122ccc8587a14655ac3fd63dd99c2da83b2f6afaf07d9e51c245d619990c553"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 2452,
+      "hdr_len": 8,
+      "payload_off": 2460,
+      "payload_len": 12,
+      "payload_sha256": "67f1588634e14a0c405d2bbe8161e8f04040341f67afcacbe7255e4ea9933415"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     1,
+     5,
+     23,
+     1,
+     2,
+     0,
+     0
+    ],
+    "lc_payload_u16": [
+     1,
+     1136,
+     1504,
+     532,
+     3165,
+     0
+    ],
+    "ed_sha": "be1cc890390851febefa0af14a86ce2087f96e71bc5b3fa55165ca3265e39f6d"
+   },
+   {
+    "vx": "VX8935",
+    "name": "VX8935_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX8935_lensfile.bin",
+    "size": 2528,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 2512,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 35125,
+     "u16@14": 0
+    },
+    "lens_id": 35125,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "3f3650ef437004caaeb72b5138bdb6c8a7de25cb6d5ab7215f6f29aa4401b936",
+    "checksum_u32_end": 202807585,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 2376,
+      "payload_sha256": "bd416e3d687327fcedbf6ec3626d06b4350f0eab9136c56cac15d91974743209"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 2400,
+      "hdr_len": 8,
+      "payload_off": 2408,
+      "payload_len": 96,
+      "payload_sha256": "1db774fda8ddc30ae6066ab824a8f2e964bbb9739491070a8cc15366fd326820"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 2504,
+      "hdr_len": 8,
+      "payload_off": 2512,
+      "payload_len": 12,
+      "payload_sha256": "dc17ca30b81f9a8eddd2b0475bf7d498b25699ad02b1e521eeb9d3b09e00123a"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     25,
+     1,
+     18,
+     4,
+     1,
+     0,
+     11
+    ],
+    "lc_payload_u16": [
+     0,
+     800,
+     1424,
+     946,
+     3427,
+     0
+    ],
+    "ed_sha": "bd416e3d687327fcedbf6ec3626d06b4350f0eab9136c56cac15d91974743209"
+   },
+   {
+    "vx": "VX8936",
+    "name": "VX8936_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX8936_lensfile.bin",
+    "size": 7904,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 7888,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 35126,
+     "u16@14": 0
+    },
+    "lens_id": 35126,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "0c33ee964ad405812198b5cfb86747dde9640f81c0198c4e03ad0b5097e35d47",
+    "checksum_u32_end": 30316299,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 7744,
+      "payload_sha256": "7cb476f8add2ee36ff3c3543b5df430ef33d3b7b2e3726e3f166cdb8d66ca3c3"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 7768,
+      "hdr_len": 8,
+      "payload_off": 7776,
+      "payload_len": 104,
+      "payload_sha256": "726dce7ada505af7d449a0b824c0d0f4562d3684c2c4ba2ca3251eb57b6a5456"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 7880,
+      "hdr_len": 8,
+      "payload_off": 7888,
+      "payload_len": 12,
+      "payload_sha256": "bffbb20a70b48207d8732b57ad7b734309b0977ecc550d152c6ffba9d4aad303"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     21,
+     10,
+     17,
+     6,
+     3,
+     0,
+     3
+    ],
+    "lc_payload_u16": [
+     0,
+     912,
+     1296,
+     1041,
+     3327,
+     0
+    ],
+    "ed_sha": "7cb476f8add2ee36ff3c3543b5df430ef33d3b7b2e3726e3f166cdb8d66ca3c3"
+   },
+   {
+    "vx": "VX8937",
+    "name": "VX8937_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX8937_lensfile.bin",
+    "size": 3136,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 3120,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 35127,
+     "u16@14": 0
+    },
+    "lens_id": 35127,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "935fe2be80b1cbe2e98d82980e9ec57982e9664121905102e964d7e8855746b9",
+    "checksum_u32_end": 203657217,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 3016,
+      "payload_sha256": "5c486c2249b8c8ae64555150b842d4635595b5efb8aa15716db4ccef33db4b2b"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 3040,
+      "hdr_len": 8,
+      "payload_off": 3048,
+      "payload_len": 64,
+      "payload_sha256": "563cfd0d5c5de023998c69070c6dda78dcd185c3afa4d04785e45132aa956b52"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 3112,
+      "hdr_len": 8,
+      "payload_off": 3120,
+      "payload_len": 12,
+      "payload_sha256": "2208aaeafb067ea995cac3612f89eefb9aaa86f066d9cf13356816459e0d1aa1"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     1,
+     8,
+     20,
+     1,
+     4,
+     0,
+     0
+    ],
+    "lc_payload_u16": [
+     0,
+     832,
+     1056,
+     785,
+     3422,
+     0
+    ],
+    "ed_sha": "5c486c2249b8c8ae64555150b842d4635595b5efb8aa15716db4ccef33db4b2b"
+   },
+   {
+    "vx": "VX8938",
+    "name": "VX8938_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX8938_lensfile.bin",
+    "size": 2624,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 2608,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 35128,
+     "u16@14": 0
+    },
+    "lens_id": 35128,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "d88cc1bd3bf0f3f245a02995cf8787af46127aae0e4101db90ea38aa67855995",
+    "checksum_u32_end": 166695499,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 2500,
+      "payload_sha256": "e7412aa23d19715ee93fa20cf42eeebaed3fb1f439dbfa39bc7773190be9027c"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 2524,
+      "hdr_len": 8,
+      "payload_off": 2532,
+      "payload_len": 68,
+      "payload_sha256": "c757c8e0f37c7d45a23baed1e4c525b9ebb2c445682c16b262e241aa5fb92290"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 2600,
+      "hdr_len": 8,
+      "payload_off": 2608,
+      "payload_len": 12,
+      "payload_sha256": "1bb3e2606dea6298784396304b81bc6b55c7c55b7d451b7458bb34dd3d00a212"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     1,
+     6,
+     24,
+     1,
+     3,
+     0,
+     0
+    ],
+    "lc_payload_u16": [
+     0,
+     864,
+     1136,
+     459,
+     3216,
+     0
+    ],
+    "ed_sha": "e7412aa23d19715ee93fa20cf42eeebaed3fb1f439dbfa39bc7773190be9027c"
+   },
+   {
+    "vx": "VX8942",
+    "name": "VX8942_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX8942_lensfile.bin",
+    "size": 6292,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 6276,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 35138,
+     "u16@14": 0
+    },
+    "lens_id": 35138,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "4863e5bfd4f23ec9d03a975d01f7be3423b4bd42298cb06875352469fd42d64b",
+    "checksum_u32_end": 43752063,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 6144,
+      "payload_sha256": "27e085c1d83c2d14c09860c919b379c6d61772e346e878683d9daa3faf2390f5"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 6168,
+      "hdr_len": 8,
+      "payload_off": 6176,
+      "payload_len": 92,
+      "payload_sha256": "1aa2d82716ef2521abdc85759657a9f811c5c9850bc1238a575f2f7accc74d49"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 6268,
+      "hdr_len": 8,
+      "payload_off": 6276,
+      "payload_len": 12,
+      "payload_sha256": "e4a426f87adee18b09d649dc99cf5181c2861cc73ea9da577584a2dd3422689d"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     17,
+     5,
+     20,
+     10,
+     3,
+     0,
+     3
+    ],
+    "lc_payload_u16": [
+     1,
+     1168,
+     1552,
+     786,
+     3092,
+     0
+    ],
+    "ed_sha": "27e085c1d83c2d14c09860c919b379c6d61772e346e878683d9daa3faf2390f5"
+   },
+   {
+    "vx": "VX8943",
+    "name": "VX8943_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX8943_lensfile.bin",
+    "size": 1848,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 1832,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 35139,
+     "u16@14": 0
+    },
+    "lens_id": 35139,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "886275f2787b60ba7c50f9d0a958d1c4fa7f2490a793cbd4eb97b45b3c4b3282",
+    "checksum_u32_end": 169383740,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 1744,
+      "payload_sha256": "887e070fb6df31f0716ce494eed8430b68b88365d080aa596a2f22e6517cbc69"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 1768,
+      "hdr_len": 8,
+      "payload_off": 1776,
+      "payload_len": 48,
+      "payload_sha256": "60e9fca9224097fa22ec55d266e57ffef0bb6937f3a0cba34894c6abd79506dc"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 1824,
+      "hdr_len": 8,
+      "payload_off": 1832,
+      "payload_len": 12,
+      "payload_sha256": "897a34b7ac69ccdc1826a4c11d0c1a3dc8baf28d950e7cc9d42a40002100a4b5"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     1,
+     2,
+     17,
+     1,
+     2,
+     0,
+     0
+    ],
+    "lc_payload_u16": [
+     1,
+     2480,
+     3248,
+     1063,
+     3093,
+     0
+    ],
+    "ed_sha": "887e070fb6df31f0716ce494eed8430b68b88365d080aa596a2f22e6517cbc69"
+   },
+   {
+    "vx": "VX8944",
+    "name": "VX8944_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX8944_lensfile.bin",
+    "size": 2880,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 2864,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 35140,
+     "u16@14": 0
+    },
+    "lens_id": 35140,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "bf1e223b0864e4938a4ac61891f94ec47873f57f6e326919bfe49ea0fb9d985c",
+    "checksum_u32_end": 127441349,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 2752,
+      "payload_sha256": "63b22c52cfe9c7886c675d88ef14ef38595d6106d396d2c4ea1a2f0b6184db03"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 2776,
+      "hdr_len": 8,
+      "payload_off": 2784,
+      "payload_len": 72,
+      "payload_sha256": "693f5aae65d45264353563331427f13e5a1a6f4214aceadedd731113ecb5f176"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 2856,
+      "hdr_len": 8,
+      "payload_off": 2864,
+      "payload_len": 12,
+      "payload_sha256": "59c717a7825a241a63d5f0c6b03f151fc90f1a95d52f785294d221351a1a80c5"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     1,
+     7,
+     24,
+     1,
+     2,
+     0,
+     0
+    ],
+    "lc_payload_u16": [
+     0,
+     848,
+     1184,
+     451,
+     3210,
+     0
+    ],
+    "ed_sha": "63b22c52cfe9c7886c675d88ef14ef38595d6106d396d2c4ea1a2f0b6184db03"
+   },
+   {
+    "vx": "VX8945",
+    "name": "VX8945_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX8945_lensfile.bin",
+    "size": 3068,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 3052,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 35141,
+     "u16@14": 0
+    },
+    "lens_id": 35141,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "48ddc89c534c722b58e36008d6dee950143963364c7c278d1b07cd25bcfcf432",
+    "checksum_u32_end": 64069293,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 2932,
+      "payload_sha256": "23620f6d0dd31a423f27d3e6adf00c31a67d3e10895fd4f84d3d176a25ec54ca"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 2956,
+      "hdr_len": 8,
+      "payload_off": 2964,
+      "payload_len": 80,
+      "payload_sha256": "e6de235ece0dabac6f6b9955c179c8f26e740e1c8dca95e688eae285676f3f6b"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 3044,
+      "hdr_len": 8,
+      "payload_off": 3052,
+      "payload_len": 12,
+      "payload_sha256": "cbfad20ac15f577ecfa817014e93d020c802f15a27d6c694ffc8fd6083873e03"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     1,
+     15,
+     20,
+     1,
+     5,
+     0,
+     0
+    ],
+    "lc_payload_u16": [
+     1,
+     912,
+     1328,
+     764,
+     3646,
+     0
+    ],
+    "ed_sha": "23620f6d0dd31a423f27d3e6adf00c31a67d3e10895fd4f84d3d176a25ec54ca"
+   },
+   {
+    "vx": "VX8946",
+    "name": "VX8946_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX8946_lensfile.bin",
+    "size": 5936,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 5920,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 35142,
+     "u16@14": 0
+    },
+    "lens_id": 35142,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "7d36c5cc076f1879421b0d195f118a50dbdb9a33c62b8e575cba7f6a4ae4cbf6",
+    "checksum_u32_end": 44997660,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 5776,
+      "payload_sha256": "f0b11850c477968e2d788efc148995804a49666cefaa9ca70b4c7b70c11497e2"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 5800,
+      "hdr_len": 8,
+      "payload_off": 5808,
+      "payload_len": 104,
+      "payload_sha256": "d587d9dce1f3c08db41753d59dfb35bc78ff6df4fad629904c6479b6910ebc54"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 5912,
+      "hdr_len": 8,
+      "payload_off": 5920,
+      "payload_len": 12,
+      "payload_sha256": "ee7d982b1832a5eacc7f65f569eabfca955733ede49059d50a2183069d5c4bec"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     17,
+     11,
+     20,
+     9,
+     4,
+     0,
+     4
+    ],
+    "lc_payload_u16": [
+     0,
+     1376,
+     2912,
+     783,
+     3087,
+     0
+    ],
+    "ed_sha": "f0b11850c477968e2d788efc148995804a49666cefaa9ca70b4c7b70c11497e2"
+   },
+   {
+    "vx": "VX8948",
+    "name": "VX8948_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX8948_lensfile.bin",
+    "size": 6320,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 6304,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 35144,
+     "u16@14": 0
+    },
+    "lens_id": 35144,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "f7e9c1381ebe2a72d96a2d5f3b3f3cd15bdd8026d69c99068fe13f10286dad36",
+    "checksum_u32_end": 256349393,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 6160,
+      "payload_sha256": "e9612cb578878552e5923ab3922dcf11edeeb4bae3b82b5cb85c3616f133e9cf"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 6184,
+      "hdr_len": 8,
+      "payload_off": 6192,
+      "payload_len": 104,
+      "payload_sha256": "05e8d8585c808be7a6182af3ac3b438d740f787844e7596ce1654783ac3ec643"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 6296,
+      "hdr_len": 8,
+      "payload_off": 6304,
+      "payload_len": 12,
+      "payload_sha256": "2d18f39f7263b282dcae559f84e5087c68867aa4653ac102a9f8941d7b4a0faf"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     26,
+     5,
+     18,
+     8,
+     2,
+     0,
+     2
+    ],
+    "lc_payload_u16": [
+     0,
+     1168,
+     2016,
+     946,
+     3423,
+     0
+    ],
+    "ed_sha": "e9612cb578878552e5923ab3922dcf11edeeb4bae3b82b5cb85c3616f133e9cf"
+   },
+   {
+    "vx": "VX8949",
+    "name": "VX8949_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX8949_lensfile.bin",
+    "size": 3040,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 3024,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 35145,
+     "u16@14": 0
+    },
+    "lens_id": 35145,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "9f4acf041cfa578fc07e7114ef61a5a2ca4994cc44f601e214a302122cb162ec",
+    "checksum_u32_end": 196514063,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 2900,
+      "payload_sha256": "9f45410edef8c61d964e2d5c0f509870c8ec33a6bdfe034369a28a7b47398e81"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 2924,
+      "hdr_len": 8,
+      "payload_off": 2932,
+      "payload_len": 84,
+      "payload_sha256": "49d5daa3a03644709a1a82a2f52bd69cd0c58668ebcc228065c98048c4d0c5bd"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 3016,
+      "hdr_len": 8,
+      "payload_off": 3024,
+      "payload_len": 12,
+      "payload_sha256": "89753cae3e75ed201116ba6f027c7343a2502c8d7108bf53bda3db054378e0a7"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     1,
+     11,
+     26,
+     1,
+     3,
+     0,
+     0
+    ],
+    "lc_payload_u16": [
+     1,
+     944,
+     1344,
+     281,
+     3169,
+     0
+    ],
+    "ed_sha": "9f45410edef8c61d964e2d5c0f509870c8ec33a6bdfe034369a28a7b47398e81"
+   },
+   {
+    "vx": "VX9101",
+    "name": "VX9101_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX9101_lensfile.bin",
+    "size": 6180,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 6164,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37121,
+     "u16@14": 0
+    },
+    "lens_id": 37121,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "f03bd98575f7049ac9697567d347df418ffee90de05995b8219a7d74697c103d",
+    "checksum_u32_end": 41389665,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 5952,
+      "payload_sha256": "0ebc6229511b483130707c0326ceb0f0c78e0286e2c0f24c257b906975319d01"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 5976,
+      "hdr_len": 8,
+      "payload_off": 5984,
+      "payload_len": 172,
+      "payload_sha256": "74bd9b49f542876bdb5ff13eff5b1bfc6c260e1a9891ca12c3ad2450bb3be25c"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 6156,
+      "hdr_len": 8,
+      "payload_off": 6164,
+      "payload_len": 12,
+      "payload_sha256": "5a83b9ef21027fd1a5cd82b06141b4d7e35e99a05084f2f1a3d7cde158c7592b"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     57,
+     7,
+     18,
+     7,
+     2,
+     0,
+     3
+    ],
+    "lc_payload_u16": [
+     0,
+     608,
+     1104,
+     944,
+     3448,
+     0
+    ],
+    "ed_sha": "0ebc6229511b483130707c0326ceb0f0c78e0286e2c0f24c257b906975319d01"
+   },
+   {
+    "vx": "VX9102",
+    "name": "VX9102_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX9102_lensfile.bin",
+    "size": 4984,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 4968,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37122,
+     "u16@14": 0
+    },
+    "lens_id": 37122,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "d8a6fdb12b6a195dd2e10a425e6437f9d768193b66af7c4fcc0f8b9840bb9fb1",
+    "checksum_u32_end": 35752227,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 4812,
+      "payload_sha256": "d9ea5807280ac7017e35ee975be4b4bf6d2e96d9b9d3425a5cafc5d5124e678b"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 4836,
+      "hdr_len": 8,
+      "payload_off": 4844,
+      "payload_len": 116,
+      "payload_sha256": "a0e894442030efb7fff22b399198ca866665ddf3a02cd4f1a317fba64109e6a4"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 4960,
+      "hdr_len": 8,
+      "payload_off": 4968,
+      "payload_len": 12,
+      "payload_sha256": "3698c05758f1affd5fefbaac61c390a5a687867e5fd674f0aa1d200ad57ed2aa"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     34,
+     4,
+     16,
+     7,
+     2,
+     0,
+     3
+    ],
+    "lc_payload_u16": [
+     0,
+     864,
+     1568,
+     1121,
+     3401,
+     0
+    ],
+    "ed_sha": "d9ea5807280ac7017e35ee975be4b4bf6d2e96d9b9d3425a5cafc5d5124e678b"
+   },
+   {
+    "vx": "VX9103",
+    "name": "VX9103_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX9103_lensfile.bin",
+    "size": 13212,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 13196,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37123,
+     "u16@14": 0
+    },
+    "lens_id": 37123,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "1f842ae1f058ea52dbb471574a82152c0a422df8084cb4e0bd3c61ba35031eb1",
+    "checksum_u32_end": 190024116,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 12964,
+      "payload_sha256": "60b7b8b255b189b447fd04ca35be28cdcae87687122c4060e2bc147acddeb303"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 12988,
+      "hdr_len": 8,
+      "payload_off": 12996,
+      "payload_len": 192,
+      "payload_sha256": "39c21b221b665e42358a36ac98d81f30be78f535a27e96d1e788a18b583a5d41"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 13188,
+      "hdr_len": 8,
+      "payload_off": 13196,
+      "payload_len": 12,
+      "payload_sha256": "a9254bc735165664b4054743fd8cab350b939869e47421bbe86be11ed2abe2f9"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     58,
+     16,
+     19,
+     8,
+     6,
+     0,
+     4
+    ],
+    "lc_payload_u16": [
+     0,
+     624,
+     1440,
+     908,
+     3713,
+     0
+    ],
+    "ed_sha": "60b7b8b255b189b447fd04ca35be28cdcae87687122c4060e2bc147acddeb303"
+   },
+   {
+    "vx": "VX9104",
+    "name": "VX9104_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX9104_lensfile.bin",
+    "size": 2064,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 2048,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37124,
+     "u16@14": 0
+    },
+    "lens_id": 37124,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "428bbf78e90ef31901827e99058137014521adbd5dc5db9d9debafa7b6eefb0f",
+    "checksum_u32_end": 204309717,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 1916,
+      "payload_sha256": "c700436ec64152087074ba11174821b5eb05e7ec5845bd8ad47c5ff07d378703"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 1940,
+      "hdr_len": 8,
+      "payload_off": 1948,
+      "payload_len": 92,
+      "payload_sha256": "acba4706ebba5504e29bf20c6a5031127f9323f19a64f515d7a6c72805258d64"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 2040,
+      "hdr_len": 8,
+      "payload_off": 2048,
+      "payload_len": 12,
+      "payload_sha256": "fc422e95255898883b7c05a4fe1ace9f6405be80897100950a3eb4248b698cf2"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     1,
+     23,
+     18,
+     1,
+     3,
+     0,
+     0
+    ],
+    "lc_payload_u16": [
+     0,
+     752,
+     1440,
+     945,
+     3116,
+     0
+    ],
+    "ed_sha": "c700436ec64152087074ba11174821b5eb05e7ec5845bd8ad47c5ff07d378703"
+   },
+   {
+    "vx": "VX9105",
+    "name": "VX9105_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX9105_lensfile.bin",
+    "size": 2600,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 2584,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37125,
+     "u16@14": 0
+    },
+    "lens_id": 37125,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "afaf63fdcf92eddca7942e181d1e1edc6535ac2dbf8c0b4d7e69c0de6424a096",
+    "checksum_u32_end": 54165942,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 2456,
+      "payload_sha256": "876908732c7b6687ca7128617af837a0beff0fe2b5595c6dc51e25572d41dddb"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 2480,
+      "hdr_len": 8,
+      "payload_off": 2488,
+      "payload_len": 88,
+      "payload_sha256": "3e8eaea934a2284e9eed063ee12cdacbe9664048b8bb6d2b613c78841fe47041"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 2576,
+      "hdr_len": 8,
+      "payload_off": 2584,
+      "payload_len": 12,
+      "payload_sha256": "3b3fc9ec1cf6108248c0cded4de213e03e9a086417359ff88c2da76b6ad96af5"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     1,
+     15,
+     24,
+     1,
+     2,
+     0,
+     0
+    ],
+    "lc_payload_u16": [
+     0,
+     704,
+     1440,
+     458,
+     3103,
+     0
+    ],
+    "ed_sha": "876908732c7b6687ca7128617af837a0beff0fe2b5595c6dc51e25572d41dddb"
+   },
+   {
+    "vx": "VX9106",
+    "name": "VX9106_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX9106_lensfile.bin",
+    "size": 3020,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 3004,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37126,
+     "u16@14": 0
+    },
+    "lens_id": 37126,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "0a842639aa0bb9a7722376067a25c9693ca316932b8abbe7bdadd922c5693387",
+    "checksum_u32_end": 143690030,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 2876,
+      "payload_sha256": "10a1a9745f96881dc0f9b0f58f6fb317d1edbf2c57e08a39e190c4c6fe28802d"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 2900,
+      "hdr_len": 8,
+      "payload_off": 2908,
+      "payload_len": 88,
+      "payload_sha256": "9d83b949cb54298afb9ac4a18c41bd2adfb5587aacad819d2c5fc2ee68d9ece0"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 2996,
+      "hdr_len": 8,
+      "payload_off": 3004,
+      "payload_len": 12,
+      "payload_sha256": "705eb3610712c1de0843e233109bf0e885eb24a439eef668fbac6aea97d97c85"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     1,
+     15,
+     24,
+     1,
+     4,
+     0,
+     0
+    ],
+    "lc_payload_u16": [
+     0,
+     736,
+     1088,
+     465,
+     3197,
+     0
+    ],
+    "ed_sha": "10a1a9745f96881dc0f9b0f58f6fb317d1edbf2c57e08a39e190c4c6fe28802d"
+   },
+   {
+    "vx": "VX9107",
+    "name": "VX9107_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX9107_lensfile.bin",
+    "size": 5504,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 5488,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37127,
+     "u16@14": 0
+    },
+    "lens_id": 37127,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "dde4edd2262d22a4c6b55b5755490b72347ad500befc80371b17e1ffce1fbbbc",
+    "checksum_u32_end": 51218188,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 5300,
+      "payload_sha256": "f4d2b6cd159067d58bdaf78a46a212914e8c2cdb91613ccc87d6ef26a59fe432"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 5324,
+      "hdr_len": 8,
+      "payload_off": 5332,
+      "payload_len": 148,
+      "payload_sha256": "df4e9bdb68f0a4e7eb1134f78084f15a428eac71be56387f2dccf8fa96ed83a9"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 5480,
+      "hdr_len": 8,
+      "payload_off": 5488,
+      "payload_len": 12,
+      "payload_sha256": "c49af9d2ec5439d167c22c41da546dace9e35f3fdfec91feb6c071e37e153132"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     42,
+     12,
+     17,
+     5,
+     2,
+     0,
+     14
+    ],
+    "lc_payload_u16": [
+     0,
+     720,
+     1360,
+     1041,
+     3130,
+     0
+    ],
+    "ed_sha": "f4d2b6cd159067d58bdaf78a46a212914e8c2cdb91613ccc87d6ef26a59fe432"
+   },
+   {
+    "vx": "VX9108",
+    "name": "VX9108_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX9108_lensfile.bin",
+    "size": 2140,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 2124,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37128,
+     "u16@14": 0
+    },
+    "lens_id": 37128,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "544125b29feac031d6e59c3077b99ccff3b12c54a6735ae995c519ff599d8d3f",
+    "checksum_u32_end": 35227763,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 1980,
+      "payload_sha256": "3a8932820acc656b7f547b1111965eec90af17a9cf29e20a6a0ffd6ea0912bd3"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 2004,
+      "hdr_len": 8,
+      "payload_off": 2012,
+      "payload_len": 104,
+      "payload_sha256": "12d5b3224bbadbbbb2db715891e1829280a4775eb6aa9b0fcfb0a97d2e036af5"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 2116,
+      "hdr_len": 8,
+      "payload_off": 2124,
+      "payload_len": 12,
+      "payload_sha256": "9ebb3ca5487e5bf621cd9996934a16c7eb76372f0fa454dfdddf2bbecc45973e"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     30,
+     1,
+     17,
+     3,
+     1,
+     0,
+     16
+    ],
+    "lc_payload_u16": [
+     0,
+     432,
+     656,
+     1044,
+     3099,
+     0
+    ],
+    "ed_sha": "3a8932820acc656b7f547b1111965eec90af17a9cf29e20a6a0ffd6ea0912bd3"
+   },
+   {
+    "vx": "VX9109",
+    "name": "VX9109_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX9109_lensfile.bin",
+    "size": 6660,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 6644,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37129,
+     "u16@14": 0
+    },
+    "lens_id": 37129,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "f698adf2876aa0fd6ac86f06a6e4226b1850dd00b04f1d2d018273311a4df152",
+    "checksum_u32_end": 37063511,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 6420,
+      "payload_sha256": "9b2b3f4637b4e2b5fffb48c00e8710d62293ef805548e14c4111f1c512f065e7"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 6444,
+      "hdr_len": 8,
+      "payload_off": 6452,
+      "payload_len": 184,
+      "payload_sha256": "2feb58aa0781ec1211355dfdba17cae142d817e66dfde8329617fba38b3cc7e5"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 6636,
+      "hdr_len": 8,
+      "payload_off": 6644,
+      "payload_len": 12,
+      "payload_sha256": "bf74bd510d9b5a9c16f4daba010ad5cb285b625e30c4c2224e125f672d5a8142"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     51,
+     20,
+     18,
+     9,
+     2,
+     0,
+     4
+    ],
+    "lc_payload_u16": [
+     0,
+     432,
+     896,
+     943,
+     3471,
+     0
+    ],
+    "ed_sha": "9b2b3f4637b4e2b5fffb48c00e8710d62293ef805548e14c4111f1c512f065e7"
+   },
+   {
+    "vx": "VX9110",
+    "name": "VX9110_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX9110_lensfile.bin",
+    "size": 2160,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 2144,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37136,
+     "u16@14": 0
+    },
+    "lens_id": 37136,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "e33024b872f37b20ddfcec339c859e3d044898327726af8ab592ea782959bcf9",
+    "checksum_u32_end": 263687372,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 2048,
+      "payload_sha256": "0aa486e8668caf28c31d7c9e5b07a096bcfde4156e490fa72eeb1faf3c09f40c"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 2072,
+      "hdr_len": 8,
+      "payload_off": 2080,
+      "payload_len": 56,
+      "payload_sha256": "70e14bf2b397ada3124355d988dc7e18b98baad3a9e6322a0405e9e7445c4075"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 2136,
+      "hdr_len": 8,
+      "payload_off": 2144,
+      "payload_len": 12,
+      "payload_sha256": "869a0d94684a25b3d6014de7c1493928b08fb33ac2fd1ee627bbf800f5edb918"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     1,
+     3,
+     20,
+     1,
+     2,
+     0,
+     0
+    ],
+    "lc_payload_u16": [
+     1,
+     528,
+     624,
+     781,
+     3116,
+     0
+    ],
+    "ed_sha": "0aa486e8668caf28c31d7c9e5b07a096bcfde4156e490fa72eeb1faf3c09f40c"
+   },
+   {
+    "vx": "VX9111",
+    "name": "VX9111_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX9111_lensfile.bin",
+    "size": 5956,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 5940,
+     "const_u32@8": 14,
+     "lens_id_u16@12": 37137,
+     "u16@14": 0
+    },
+    "lens_id": 37137,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "46323b864095f896334f049948112b9eb677d88900ec5836eab3112680d7afd2",
+    "checksum_u32_end": 169315482,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 5748,
+      "payload_sha256": "a7ecdc4130666b6e58086ece60d87a35f22a47f8393021de4546275a199ef371"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 5772,
+      "hdr_len": 8,
+      "payload_off": 5780,
+      "payload_len": 152,
+      "payload_sha256": "e9036a751aed630259c4f4bc9c44bc2e231c8243a83bf63caf9e3fbccbd91055"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 5932,
+      "hdr_len": 8,
+      "payload_off": 5940,
+      "payload_len": 12,
+      "payload_sha256": "8b7de843817f978e4eceb3e537b12a79f4a676fa4f9c200b839f4de45121be28"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     49,
+     6,
+     17,
+     9,
+     2,
+     0,
+     1
+    ],
+    "lc_payload_u16": [
+     1,
+     704,
+     1296,
+     1038,
+     3103,
+     0
+    ],
+    "ed_sha": "a7ecdc4130666b6e58086ece60d87a35f22a47f8393021de4546275a199ef371"
+   },
+   {
+    "vx": "VX9113",
+    "name": "VX9113_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX9113_lensfile.bin",
+    "size": 9028,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 9012,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37139,
+     "u16@14": 0
+    },
+    "lens_id": 37139,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "631fb3e42654a1213dd6895f872a4f03e885c6cadd959e56df0a5135eeee9ffd",
+    "checksum_u32_end": 196576244,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 8828,
+      "payload_sha256": "73ee508de3a2707dc816b4a84576f7a73b2838d13870478b1de2476e0253f3c6"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 8852,
+      "hdr_len": 8,
+      "payload_off": 8860,
+      "payload_len": 144,
+      "payload_sha256": "29f7d5cfc61949e8b5a100300a42bc2750a87b0b8ff4edf2739cb6debd812088"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 9004,
+      "hdr_len": 8,
+      "payload_off": 9012,
+      "payload_len": 12,
+      "payload_sha256": "1dfd3ff420a689d9d4445d3cd9980c47821202f7f6d044b1b2adc0e3d552509a"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     45,
+     5,
+     18,
+     8,
+     3,
+     0,
+     4
+    ],
+    "lc_payload_u16": [
+     0,
+     688,
+     1504,
+     914,
+     3493,
+     0
+    ],
+    "ed_sha": "73ee508de3a2707dc816b4a84576f7a73b2838d13870478b1de2476e0253f3c6"
+   },
+   {
+    "vx": "VX9114",
+    "name": "VX9114_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX9114_lensfile.bin",
+    "size": 2164,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 2148,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37140,
+     "u16@14": 0
+    },
+    "lens_id": 37140,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "612de5de2a3527d8fe138d7e780933ef198298adeb02ac12d575f1be31e6cd5e",
+    "checksum_u32_end": 79728606,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 2048,
+      "payload_sha256": "9a8a7a9f86510613e6160bf678ee90d69b96dd584e25ffd020dffbb163fe09df"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 2072,
+      "hdr_len": 8,
+      "payload_off": 2080,
+      "payload_len": 60,
+      "payload_sha256": "f8bc33f6d60d58641a090824427146e5e6fffa5ff52235707d4546309d369399"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 2140,
+      "hdr_len": 8,
+      "payload_off": 2148,
+      "payload_len": 12,
+      "payload_sha256": "9f8c27da9fad52b8fb6fe51ae64fd26c4e9c984cd701e2e2b331dff90d9bdba5"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     1,
+     6,
+     20,
+     1,
+     2,
+     0,
+     0
+    ],
+    "lc_payload_u16": [
+     0,
+     480,
+     528,
+     772,
+     3080,
+     0
+    ],
+    "ed_sha": "9a8a7a9f86510613e6160bf678ee90d69b96dd584e25ffd020dffbb163fe09df"
+   },
+   {
+    "vx": "VX9115",
+    "name": "VX9115_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX9115_lensfile.bin",
+    "size": 2576,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 2560,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37141,
+     "u16@14": 0
+    },
+    "lens_id": 37141,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "06e8895543a3b99086c8d58df567c55b7f13e60fa503c3a814edee308f0b1b78",
+    "checksum_u32_end": 158892718,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 2456,
+      "payload_sha256": "d483dee20ffa6a965d5a217eacdc5748fa2491b018e884df2277633832a64b5b"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 2480,
+      "hdr_len": 8,
+      "payload_off": 2488,
+      "payload_len": 64,
+      "payload_sha256": "1c4698b562e26d9735bddaedaaeaf842c9e98f92c9f4bb237b8a46d56b53dd08"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 2552,
+      "hdr_len": 8,
+      "payload_off": 2560,
+      "payload_len": 12,
+      "payload_sha256": "2fd004a5cf0c37c0634c2d9fc752e2a748d91b469d0f34b5f0489570a4198b01"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     1,
+     4,
+     24,
+     1,
+     2,
+     0,
+     0
+    ],
+    "lc_payload_u16": [
+     0,
+     576,
+     720,
+     458,
+     3159,
+     0
+    ],
+    "ed_sha": "d483dee20ffa6a965d5a217eacdc5748fa2491b018e884df2277633832a64b5b"
+   },
+   {
+    "vx": "VX9116",
+    "name": "VX9116_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX9116_lensfile.bin",
+    "size": 12200,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 12184,
+     "const_u32@8": 12,
+     "lens_id_u16@12": 37142,
+     "u16@14": 0
+    },
+    "lens_id": 37142,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "8b774bca3517619eeb90330c2774fa540f916087a9591bd6ba464d09a9007764",
+    "checksum_u32_end": 176393783,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 11952,
+      "payload_sha256": "daf1c9291d05b4285c6726f41f97fba1aaeca8b25d84360fcd93f901a5e2f5f5"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 11976,
+      "hdr_len": 8,
+      "payload_off": 11984,
+      "payload_len": 192,
+      "payload_sha256": "ba9c68e1a2cc062e762c296194fa63b6afd624f972162ddafc43d5d02f1a024e"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 12176,
+      "hdr_len": 8,
+      "payload_off": 12184,
+      "payload_len": 12,
+      "payload_sha256": "1784e8b9b1d9614213c310c643beb37158fc09ddc1e16d693619a38a10273d4a"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     51,
+     25,
+     17,
+     9,
+     5,
+     0,
+     4
+    ],
+    "lc_payload_u16": [
+     0,
+     496,
+     992,
+     1043,
+     3102,
+     0
+    ],
+    "ed_sha": "daf1c9291d05b4285c6726f41f97fba1aaeca8b25d84360fcd93f901a5e2f5f5"
+   },
+   {
+    "vx": "VX9123",
+    "name": "VX9123_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX9123_lensfile.bin",
+    "size": 13212,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 13196,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37155,
+     "u16@14": 0
+    },
+    "lens_id": 37155,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "3f4e19ef048cfd9412c1d1ae6eb6b5e2bac9d50907f7843e272ded7d5c3f3e4f",
+    "checksum_u32_end": 190024084,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 12964,
+      "payload_sha256": "60b7b8b255b189b447fd04ca35be28cdcae87687122c4060e2bc147acddeb303"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 12988,
+      "hdr_len": 8,
+      "payload_off": 12996,
+      "payload_len": 192,
+      "payload_sha256": "39c21b221b665e42358a36ac98d81f30be78f535a27e96d1e788a18b583a5d41"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 13188,
+      "hdr_len": 8,
+      "payload_off": 13196,
+      "payload_len": 12,
+      "payload_sha256": "a9254bc735165664b4054743fd8cab350b939869e47421bbe86be11ed2abe2f9"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     58,
+     16,
+     19,
+     8,
+     6,
+     0,
+     4
+    ],
+    "lc_payload_u16": [
+     0,
+     624,
+     1440,
+     908,
+     3713,
+     0
+    ],
+    "ed_sha": "60b7b8b255b189b447fd04ca35be28cdcae87687122c4060e2bc147acddeb303"
+   },
+   {
+    "vx": "VX9124",
+    "name": "VX9124_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX9124_lensfile.bin",
+    "size": 2584,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 2568,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37156,
+     "u16@14": 0
+    },
+    "lens_id": 37156,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "9070d6a3c8b34749df2530f66f5c7a85e6dfbe7aae9a66534197aef2e5f39190",
+    "checksum_u32_end": 13600242,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 2456,
+      "payload_sha256": "712dd11cd7c239520002bb375d3830ef6b650051aa3adc68eee2809eb778f547"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 2480,
+      "hdr_len": 8,
+      "payload_off": 2488,
+      "payload_len": 72,
+      "payload_sha256": "600b478893f292271eeb4ffc9edba927543b184e287c2dbc2b1820cd74471be3"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 2560,
+      "hdr_len": 8,
+      "payload_off": 2568,
+      "payload_len": 12,
+      "payload_sha256": "4c355ac6c6ef101fbc9c0498a649806ce2f6e50ff688c0898f10073218ce1eb5"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     1,
+     8,
+     24,
+     1,
+     2,
+     0,
+     0
+    ],
+    "lc_payload_u16": [
+     1,
+     608,
+     736,
+     456,
+     3163,
+     0
+    ],
+    "ed_sha": "712dd11cd7c239520002bb375d3830ef6b650051aa3adc68eee2809eb778f547"
+   },
+   {
+    "vx": "VX9129",
+    "name": "VX9129_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX9129_lensfile.bin",
+    "size": 11908,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 11892,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37161,
+     "u16@14": 0
+    },
+    "lens_id": 37161,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "423e2bc9716ac26422c9f82ce8992d386fc26f46d287e984c7dbdd122964aaa4",
+    "checksum_u32_end": 29656514,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 11664,
+      "payload_sha256": "10bdad6ce29c86bb56c3e484f086a492fe98107f0613f304cce92ee1117e3f9d"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 11688,
+      "hdr_len": 8,
+      "payload_off": 11696,
+      "payload_len": 188,
+      "payload_sha256": "8b09967726e1edc6b45c19748b1fbbf9dbee6c80c7180cefc2eacd753e57ab2a"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 11884,
+      "hdr_len": 8,
+      "payload_off": 11892,
+      "payload_len": 12,
+      "payload_sha256": "669523efdf2c2e585f147f11f0f7d47b1f00e87d4d060b1245f303e4b295cb03"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     56,
+     17,
+     18,
+     8,
+     3,
+     0,
+     2
+    ],
+    "lc_payload_u16": [
+     1,
+     752,
+     1392,
+     932,
+     3481,
+     0
+    ],
+    "ed_sha": "10bdad6ce29c86bb56c3e484f086a492fe98107f0613f304cce92ee1117e3f9d"
+   },
+   {
+    "vx": "VX9200",
+    "name": "VX9200_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX9200_lensfile.bin",
+    "size": 9292,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 9276,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37376,
+     "u16@14": 0
+    },
+    "lens_id": 37376,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "f803a8ce815b52b754ce464bb1b45f3610af5534df9263916164b1bbfeade540",
+    "checksum_u32_end": 181831307,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 9092,
+      "payload_sha256": "bace1a7e6bd81c1b8018bb8ad42eda405da119fe7ee6d82d61fd4dfaabb9594a"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 9116,
+      "hdr_len": 8,
+      "payload_off": 9124,
+      "payload_len": 144,
+      "payload_sha256": "0e1cb95d017f074cbe3e46cbeaaed0f3f683254ff859afb38ad4a0b373380387"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 9268,
+      "hdr_len": 8,
+      "payload_off": 9276,
+      "payload_len": 12,
+      "payload_sha256": "2c97a2f5e7fb377be10c6fb7072ca2a2d19600d118d11b37d36de4e4547c39f8"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     36,
+     16,
+     16,
+     9,
+     4,
+     0,
+     3
+    ],
+    "lc_payload_u16": [
+     0,
+     976,
+     1952,
+     1110,
+     3245,
+     0
+    ],
+    "ed_sha": "bace1a7e6bd81c1b8018bb8ad42eda405da119fe7ee6d82d61fd4dfaabb9594a"
+   },
+   {
+    "vx": "VX9201",
+    "name": "VX9201_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX9201_lensfile.bin",
+    "size": 7148,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 7132,
+     "const_u32@8": 11,
+     "lens_id_u16@12": 37377,
+     "u16@14": 0
+    },
+    "lens_id": 37377,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "f0ba931419f33e11a81adcc83734a84e66770b488ff238cb5574ec6bc8a41d6e",
+    "checksum_u32_end": 404327234,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 6984,
+      "payload_sha256": "03d3c1c5aee884823f5c89ad73d9273ff71cca71a3c98d9730e271bab92c8244"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 7008,
+      "hdr_len": 8,
+      "payload_off": 7016,
+      "payload_len": 108,
+      "payload_sha256": "6d32c3064720a734db0b6780ba6b46b7ac5625404549d5c35054b4aa92902e88"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 7124,
+      "hdr_len": 8,
+      "payload_off": 7132,
+      "payload_len": 12,
+      "payload_sha256": "0e624168238de968209fd41bc022a9c879ebd2bcb043b45ca1410d4cf4c0625d"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     23,
+     8,
+     20,
+     9,
+     3,
+     0,
+     2
+    ],
+    "lc_payload_u16": [
+     1,
+     1776,
+     5312,
+     779,
+     3087,
+     0
+    ],
+    "ed_sha": "03d3c1c5aee884823f5c89ad73d9273ff71cca71a3c98d9730e271bab92c8244"
+   },
+   {
+    "vx": "VX9202",
+    "name": "VX9202_lensfile.bin",
+    "path_rel": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0800_appli/lens/VX9202_lensfile.bin",
+    "size": 2156,
+    "header": {
+     "magic": "LF",
+     "hdr_len_u16@2": 16,
+     "size_u32@4": 2140,
+     "const_u32@8": 1,
+     "lens_id_u16@12": 37378,
+     "u16@14": 0
+    },
+    "lens_id": 37378,
+    "size_field_matches_size_minus_header": true,
+    "sha256": "303aa5c5920cb17001318e7da200bdf507daba60bc1f098c059c751cb2f72298",
+    "checksum_u32_end": 34507012,
+    "checksum_algo": "NO_VERIFICADO",
+    "sections": [
+     {
+      "magic": "ED",
+      "hdr_off": 16,
+      "hdr_len": 8,
+      "payload_off": 24,
+      "payload_len": 2048,
+      "payload_sha256": "b200bb004ba02d938248cbf42692f2eb8810fcb003f687dfd19a36287da2a110"
+     },
+     {
+      "magic": "CS",
+      "hdr_off": 2072,
+      "hdr_len": 8,
+      "payload_off": 2080,
+      "payload_len": 52,
+      "payload_sha256": "1c5fca5bdba6168f7b17522aaef2f5e259bb66f7c911debfa16255c3b30a74d4"
+     },
+     {
+      "magic": "LC",
+      "hdr_off": 2132,
+      "hdr_len": 8,
+      "payload_off": 2140,
+      "payload_len": 12,
+      "payload_sha256": "19646015857c84df3ee78be0d452f9f7d23829153f6c166a314011435bbf8a98"
+     }
+    ],
+    "ed_prelude_u16@0x18": [
+     6,
+     1,
+     2,
+     20,
+     1,
+     2,
+     0,
+     0
+    ],
+    "lc_payload_u16": [
+     1,
+     1840,
+     3232,
+     804,
+     3086,
+     0
+    ],
+    "ed_sha": "b200bb004ba02d938248cbf42692f2eb8810fcb003f687dfd19a36287da2a110"
+   }
+  ]
+ },
+ "pares_ED_identico": {
+  "0ebc6229511b483130707c0326ceb0f0c78e0286e2c0f24c257b906975319d01": [
+   "A6000-fw321/VX9101_lensfile.bin",
+   "A6300-fw201/VX9101_lensfile.bin"
+  ],
+  "d9ea5807280ac7017e35ee975be4b4bf6d2e96d9b9d3425a5cafc5d5124e678b": [
+   "A6000-fw321/VX9102_lensfile.bin",
+   "A6300-fw201/VX9102_lensfile.bin"
+  ],
+  "60b7b8b255b189b447fd04ca35be28cdcae87687122c4060e2bc147acddeb303": [
+   "A6000-fw321/VX9103_lensfile.bin",
+   "A6000-fw321/VX9123_lensfile.bin",
+   "A6300-fw201/VX9103_lensfile.bin",
+   "A6300-fw201/VX9123_lensfile.bin"
+  ],
+  "c700436ec64152087074ba11174821b5eb05e7ec5845bd8ad47c5ff07d378703": [
+   "A6000-fw321/VX9104_lensfile.bin",
+   "A6300-fw201/VX9104_lensfile.bin"
+  ],
+  "876908732c7b6687ca7128617af837a0beff0fe2b5595c6dc51e25572d41dddb": [
+   "A6000-fw321/VX9105_lensfile.bin",
+   "A6300-fw201/VX9105_lensfile.bin"
+  ],
+  "10a1a9745f96881dc0f9b0f58f6fb317d1edbf2c57e08a39e190c4c6fe28802d": [
+   "A6000-fw321/VX9106_lensfile.bin",
+   "A6300-fw201/VX9106_lensfile.bin"
+  ],
+  "f4d2b6cd159067d58bdaf78a46a212914e8c2cdb91613ccc87d6ef26a59fe432": [
+   "A6000-fw321/VX9107_lensfile.bin",
+   "A6300-fw201/VX9107_lensfile.bin"
+  ],
+  "3a8932820acc656b7f547b1111965eec90af17a9cf29e20a6a0ffd6ea0912bd3": [
+   "A6000-fw321/VX9108_lensfile.bin",
+   "A6300-fw201/VX9108_lensfile.bin"
+  ],
+  "9b2b3f4637b4e2b5fffb48c00e8710d62293ef805548e14c4111f1c512f065e7": [
+   "A6000-fw321/VX9109_lensfile.bin",
+   "A6300-fw201/VX9109_lensfile.bin"
+  ],
+  "0aa486e8668caf28c31d7c9e5b07a096bcfde4156e490fa72eeb1faf3c09f40c": [
+   "A6000-fw321/VX9110_lensfile.bin",
+   "A6300-fw201/VX9110_lensfile.bin"
+  ],
+  "a7ecdc4130666b6e58086ece60d87a35f22a47f8393021de4546275a199ef371": [
+   "A6000-fw321/VX9111_lensfile.bin",
+   "A6300-fw201/VX9111_lensfile.bin"
+  ],
+  "73ee508de3a2707dc816b4a84576f7a73b2838d13870478b1de2476e0253f3c6": [
+   "A6000-fw321/VX9113_lensfile.bin",
+   "A6300-fw201/VX9113_lensfile.bin"
+  ],
+  "9a8a7a9f86510613e6160bf678ee90d69b96dd584e25ffd020dffbb163fe09df": [
+   "A6000-fw321/VX9114_lensfile.bin",
+   "A6300-fw201/VX9114_lensfile.bin"
+  ],
+  "d483dee20ffa6a965d5a217eacdc5748fa2491b018e884df2277633832a64b5b": [
+   "A6000-fw321/VX9115_lensfile.bin",
+   "A6300-fw201/VX9115_lensfile.bin"
+  ],
+  "daf1c9291d05b4285c6726f41f97fba1aaeca8b25d84360fcd93f901a5e2f5f5": [
+   "A6000-fw321/VX9116_lensfile.bin",
+   "A6300-fw201/VX9116_lensfile.bin"
+  ],
+  "712dd11cd7c239520002bb375d3830ef6b650051aa3adc68eee2809eb778f547": [
+   "A6000-fw321/VX9124_lensfile.bin",
+   "A6300-fw201/VX9124_lensfile.bin"
+  ],
+  "10bdad6ce29c86bb56c3e484f086a492fe98107f0613f304cce92ee1117e3f9d": [
+   "A6000-fw321/VX9129_lensfile.bin",
+   "A6300-fw201/VX9129_lensfile.bin"
+  ]
+ },
+ "slots_avcam": {
+  "A6000-fw321": {
+   "table_fileoff": 7216114,
+   "table_va": 1136798706,
+   "nslots": 18,
+   "stride": 66,
+   "layout": "[u16 key][char path '/lens/VX%s_lensfile.bin' NUL-padded]",
+   "keys": "0x8011..0x802d (semántica NO_VERIFICADA)",
+   "lookup_fn": "0x43907bc4 (único bl desde 0x43b2a846)",
+   "slots": [
+    {
+     "k": "A0",
+     "key": 32785,
+     "path": "/lens/VX9101_lensfile.bin",
+     "fileoff": 7216114,
+     "va": 1136798706
+    },
+    {
+     "k": "A1",
+     "key": 32786,
+     "path": "/lens/VX9102_lensfile.bin",
+     "fileoff": 7216180,
+     "va": 1136798772
+    },
+    {
+     "k": "A2",
+     "key": 32787,
+     "path": "/lens/VX9103_lensfile.bin",
+     "fileoff": 7216246,
+     "va": 1136798838
+    },
+    {
+     "k": "A3",
+     "key": 32788,
+     "path": "/lens/VX9104_lensfile.bin",
+     "fileoff": 7216312,
+     "va": 1136798904
+    },
+    {
+     "k": "A4",
+     "key": 32789,
+     "path": "/lens/VX9105_lensfile.bin",
+     "fileoff": 7216378,
+     "va": 1136798970
+    },
+    {
+     "k": "A5",
+     "key": 32790,
+     "path": "/lens/VX9106_lensfile.bin",
+     "fileoff": 7216444,
+     "va": 1136799036
+    },
+    {
+     "k": "A6",
+     "key": 32791,
+     "path": "/lens/VX9107_lensfile.bin",
+     "fileoff": 7216510,
+     "va": 1136799102
+    },
+    {
+     "k": "A7",
+     "key": 32792,
+     "path": "/lens/VX9108_lensfile.bin",
+     "fileoff": 7216576,
+     "va": 1136799168
+    },
+    {
+     "k": "A8",
+     "key": 32793,
+     "path": "/lens/VX9109_lensfile.bin",
+     "fileoff": 7216642,
+     "va": 1136799234
+    },
+    {
+     "k": "A9",
+     "key": 32794,
+     "path": "/lens/VX9110_lensfile.bin",
+     "fileoff": 7216708,
+     "va": 1136799300
+    },
+    {
+     "k": "A10",
+     "key": 32795,
+     "path": "/lens/VX9111_lensfile.bin",
+     "fileoff": 7216774,
+     "va": 1136799366
+    },
+    {
+     "k": "A11",
+     "key": 32797,
+     "path": "/lens/VX9113_lensfile.bin",
+     "fileoff": 7216840,
+     "va": 1136799432
+    },
+    {
+     "k": "A12",
+     "key": 32798,
+     "path": "/lens/VX9114_lensfile.bin",
+     "fileoff": 7216906,
+     "va": 1136799498
+    },
+    {
+     "k": "A13",
+     "key": 32799,
+     "path": "/lens/VX9115_lensfile.bin",
+     "fileoff": 7216972,
+     "va": 1136799564
+    },
+    {
+     "k": "A14",
+     "key": 32800,
+     "path": "/lens/VX9116_lensfile.bin",
+     "fileoff": 7217038,
+     "va": 1136799630
+    },
+    {
+     "k": "A15",
+     "key": 32807,
+     "path": "/lens/VX9123_lensfile.bin",
+     "fileoff": 7217104,
+     "va": 1136799696
+    },
+    {
+     "k": "A16",
+     "key": 32808,
+     "path": "/lens/VX9124_lensfile.bin",
+     "fileoff": 7217170,
+     "va": 1136799762
+    },
+    {
+     "k": "A17",
+     "key": 32813,
+     "path": "/lens/VX9129_lensfile.bin",
+     "fileoff": 7217236,
+     "va": 1136799828
+    }
+   ]
+  },
+  "A6300-fw201": {
+   "table_va": null,
+   "lookup_fn": "dos tablas; fileoff relativos al blob (base de carga NO_VERIFICADA): tabla A: base 0x7C826A, 18 slots (bucle fileoff 0x44c10e..0x44c11e, cmp r2,#0x12), claves 0x8011..0x802d, paths VX9101..VX9129; slot 'fixed': clave 0xFFFF comprobada en fileoff 0x44c122..0x44c126 (cmp r1,#0xffff), entrada en 0x7C870E con path '/lens/fixed_lensfile.bin' en 0x7C8710 (k=18, base_A+0x4A4); tabla B: base 0x7C8750 (tabla_A+0x4E4), 22 slots (bucle fileoff 0x44c130..0x44c14a, cmp r2,#0x16), claves 0x0020..0x0046, paths VX89xx/VX920x (VX8905 repetida en 0x35 y 0x45)",
+   "slots": [
+    {
+     "k": "A0",
+     "key": 32785,
+     "path": "/lens/VX9101_lensfile.bin",
+     "fileoff": 8159850
+    },
+    {
+     "k": "A1",
+     "key": 32786,
+     "path": "/lens/VX9102_lensfile.bin",
+     "fileoff": 8159916
+    },
+    {
+     "k": "A2",
+     "key": 32787,
+     "path": "/lens/VX9103_lensfile.bin",
+     "fileoff": 8159982
+    },
+    {
+     "k": "A3",
+     "key": 32788,
+     "path": "/lens/VX9104_lensfile.bin",
+     "fileoff": 8160048
+    },
+    {
+     "k": "A4",
+     "key": 32789,
+     "path": "/lens/VX9105_lensfile.bin",
+     "fileoff": 8160114
+    },
+    {
+     "k": "A5",
+     "key": 32790,
+     "path": "/lens/VX9106_lensfile.bin",
+     "fileoff": 8160180
+    },
+    {
+     "k": "A6",
+     "key": 32791,
+     "path": "/lens/VX9107_lensfile.bin",
+     "fileoff": 8160246
+    },
+    {
+     "k": "A7",
+     "key": 32792,
+     "path": "/lens/VX9108_lensfile.bin",
+     "fileoff": 8160312
+    },
+    {
+     "k": "A8",
+     "key": 32793,
+     "path": "/lens/VX9109_lensfile.bin",
+     "fileoff": 8160378
+    },
+    {
+     "k": "A9",
+     "key": 32794,
+     "path": "/lens/VX9110_lensfile.bin",
+     "fileoff": 8160444
+    },
+    {
+     "k": "A10",
+     "key": 32795,
+     "path": "/lens/VX9111_lensfile.bin",
+     "fileoff": 8160510
+    },
+    {
+     "k": "A11",
+     "key": 32797,
+     "path": "/lens/VX9113_lensfile.bin",
+     "fileoff": 8160576
+    },
+    {
+     "k": "A12",
+     "key": 32798,
+     "path": "/lens/VX9114_lensfile.bin",
+     "fileoff": 8160642
+    },
+    {
+     "k": "A13",
+     "key": 32799,
+     "path": "/lens/VX9115_lensfile.bin",
+     "fileoff": 8160708
+    },
+    {
+     "k": "A14",
+     "key": 32800,
+     "path": "/lens/VX9116_lensfile.bin",
+     "fileoff": 8160774
+    },
+    {
+     "k": "A15",
+     "key": 32807,
+     "path": "/lens/VX9123_lensfile.bin",
+     "fileoff": 8160840
+    },
+    {
+     "k": "A16",
+     "key": 32808,
+     "path": "/lens/VX9124_lensfile.bin",
+     "fileoff": 8160906
+    },
+    {
+     "k": "A17",
+     "key": 32813,
+     "path": "/lens/VX9129_lensfile.bin",
+     "fileoff": 8160972
+    },
+    {
+     "k": "fixed",
+     "key": 65535,
+     "path": "/lens/fixed_lensfile.bin",
+     "fileoff": 8161038
+    },
+    {
+     "k": "B0",
+     "key": 32,
+     "path": "/lens/VX8916_lensfile.bin",
+     "fileoff": 8161104
+    },
+    {
+     "k": "B1",
+     "key": 33,
+     "path": "/lens/VX8913_lensfile.bin",
+     "fileoff": 8161170
+    },
+    {
+     "k": "B2",
+     "key": 48,
+     "path": "/lens/VX8903_lensfile.bin",
+     "fileoff": 8161236
+    },
+    {
+     "k": "B3",
+     "key": 52,
+     "path": "/lens/VX8928_lensfile.bin",
+     "fileoff": 8161302
+    },
+    {
+     "k": "B4",
+     "key": 53,
+     "path": "/lens/VX8905_lensfile.bin",
+     "fileoff": 8161368
+    },
+    {
+     "k": "B5",
+     "key": 54,
+     "path": "/lens/VX8904_lensfile.bin",
+     "fileoff": 8161434
+    },
+    {
+     "k": "B6",
+     "key": 55,
+     "path": "/lens/VX8935_lensfile.bin",
+     "fileoff": 8161500
+    },
+    {
+     "k": "B7",
+     "key": 56,
+     "path": "/lens/VX8936_lensfile.bin",
+     "fileoff": 8161566
+    },
+    {
+     "k": "B8",
+     "key": 57,
+     "path": "/lens/VX8938_lensfile.bin",
+     "fileoff": 8161632
+    },
+    {
+     "k": "B9",
+     "key": 58,
+     "path": "/lens/VX8937_lensfile.bin",
+     "fileoff": 8161698
+    },
+    {
+     "k": "B10",
+     "key": 59,
+     "path": "/lens/VX8942_lensfile.bin",
+     "fileoff": 8161764
+    },
+    {
+     "k": "B11",
+     "key": 60,
+     "path": "/lens/VX8932_lensfile.bin",
+     "fileoff": 8161830
+    },
+    {
+     "k": "B12",
+     "key": 61,
+     "path": "/lens/VX8945_lensfile.bin",
+     "fileoff": 8161896
+    },
+    {
+     "k": "B13",
+     "key": 62,
+     "path": "/lens/VX8944_lensfile.bin",
+     "fileoff": 8161962
+    },
+    {
+     "k": "B14",
+     "key": 63,
+     "path": "/lens/VX8946_lensfile.bin",
+     "fileoff": 8162028
+    },
+    {
+     "k": "B15",
+     "key": 64,
+     "path": "/lens/VX8943_lensfile.bin",
+     "fileoff": 8162094
+    },
+    {
+     "k": "B16",
+     "key": 65,
+     "path": "/lens/VX8948_lensfile.bin",
+     "fileoff": 8162160
+    },
+    {
+     "k": "B17",
+     "key": 66,
+     "path": "/lens/VX9202_lensfile.bin",
+     "fileoff": 8162226
+    },
+    {
+     "k": "B18",
+     "key": 67,
+     "path": "/lens/VX9201_lensfile.bin",
+     "fileoff": 8162292
+    },
+    {
+     "k": "B19",
+     "key": 68,
+     "path": "/lens/VX9200_lensfile.bin",
+     "fileoff": 8162358
+    },
+    {
+     "k": "B20",
+     "key": 69,
+     "path": "/lens/VX8905_lensfile.bin",
+     "fileoff": 8162424
+    },
+    {
+     "k": "B21",
+     "key": 70,
+     "path": "/lens/VX8949_lensfile.bin",
+     "fileoff": 8162490
+    }
+   ]
+  },
+  "A7S-fw320": "ABSENTE: 0 hits de b'/lens/V', b'lensfile', b'VX9' y del patrón de bucle (movs r0,#0x42+mla) en su av-cam.bin; su firmware tampoco incluye un dir lens/"
+ },
+ "codigo_A6000": {
+  "tabla_nombres": {
+   "va": 1136798706,
+   "fileoff": 7216112
+  },
+  "lookup_fn": 1133542340,
+  "lookup_instruccion": "ldrh r4,[r3,r0](lit+pc -> 0x43C22BF2); cmp r4,r1; mla 0x42; adds r0,#2",
+  "lookup_caller": 1135781958,
+  "caller_chain": [
+   1131287336,
+   1131551540,
+   1133522876,
+   1135790796,
+   1133531056,
+   1135781858,
+   1133542340
+  ],
+  "parser_main": 1133542524,
+  "parser_stream": 1133530364,
+  "ed_setup": 1133543252,
+  "ed_next": 1133543324,
+  "tlv_reader": 1135787912,
+  "log_err_va": 1137290878,
+  "log_err_func": 1131550244
+ }
+}

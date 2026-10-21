@@ -1,10 +1,12 @@
 """S56-A: mapa registro sombra (ID) -> funciones que lo escriben/leen (por literal GOT). Salida: rec_map.json"""
-import sys, json, bisect, pickle
+import sys, json, bisect, pickle, tempfile
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent)); sys.path.insert(0, str(Path(__file__).parent.parent / 's55'))
 import rec_users as R
 from gpio_calls_diff import B, disasm
-cache = Path('/tmp/claude-1000/fstarts.pkl')
+CACHE_DIR = Path(tempfile.gettempdir()) / 'a6000_re_cache'   # portable: /tmp/claude-1000 no existe en otras maquinas
+CACHE_DIR.mkdir(parents=True, exist_ok=True)
+cache = CACHE_DIR / 'fstarts.pkl'
 if cache.exists(): starts = pickle.load(open(cache, 'rb'))
 else:
     starts = sorted(i.address for i in disasm(R.d) if (i.mnemonic == 'push' or i.mnemonic == 'push.w') and 'lr' in i.op_str); pickle.dump(starts, open(cache, 'wb'))

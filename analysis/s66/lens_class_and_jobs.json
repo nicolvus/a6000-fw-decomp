@@ -1,0 +1,43 @@
+{
+  "milestone": "S66",
+  "subtask": "F",
+  "scope": "Clase Camera::Lens, cargador ODL de datos opticos y jobs de montura (A6000 fw3.21)",
+  "camera_lens_class": [
+    {"func": "Camera::Lens::Initialize(UPM_BOOT_FACTOR*)", "addr": "0x43721624"},
+    {"func": "Camera::Lens::SetAberrationDataInfo(__uint16_t)", "addr": "0x436fd9b4"},
+    {"func": "Camera::Lens::job_Mount_SaveAberrationDataHndl(__uint16_t)", "addr": "0x436fda1c"},
+    {"func": "Camera::Lens::job_Mount_LoadAberrationDataHndl()", "addr": "0x436fdab0"},
+    {"func": "Camera::Lens::job_Mount_CloseAberrationDataHndl()", "addr": "0x436fdb4e"},
+    {"func": "Lens::HS_M_L S (HS_Main)", "addr": "0x4378fef4"}
+  ],
+  "odl": {
+    "name": "Camera::Lens::ODL (loader de datos opticos)",
+    "methods": [
+      {"func": "ODL::Alloc(ALLOC_ARG*)", "addr": "0x43721aa8"},
+      {"func": "ODL::AllocLensAberrationData(__uint16_t*)", "addr": "0x43721af8"},
+      {"func": "ODL::Free(FREE_ARG*)", "addr": "0x43721b34"},
+      {"func": "ODL::FreeLensAberrationData(__uint16_t)", "addr": "0x43721b6c"},
+      {"func": "ODL::Load(LOAD_ARG*) / ODL::LoadLensAberrationData(__uint16_t)", "addr": "0x43721b9c"}
+    ],
+    "key_fact": "ODL::Load no abre ficheros: usa AsyncSend/AsyncRecieve (0x43721bf6 / 0x43721c20); el acceso a /lens/VX91xx_lensfile.bin esta en otro servicio",
+    "error_logs": ["[LENS_YC]: %s: AsyncSend error (0x%x)", "[LENS_YC]: %s: AsyncRecieve error (0x%x)", "[LENS_YC]: %s: wrong message received"]
+  },
+  "jobs": {
+    "resource": "YC (canal con prefijo [LENS_YC])",
+    "pattern": "Open -> trabajo -> Close",
+    "logs": ["[LENS_YC]: %s: Open error (0x%x)", "[LENS_YC]: %s: Close error (0x%x)"]
+  },
+  "lens_barrier": {
+    "log": "[LensBarrier] KikiLog Move",
+    "log_addr": "0x43ca7e4a",
+    "functions": ["0x437cf490", "0x437cf5f0"],
+    "trace_framework": "KikiLog (0x439c5004)",
+    "state_labels": ["LENS_BARRIER (0x43cb4cc6)", "MOUNT_LC (0x43cb4c9b)"]
+  },
+  "open_questions": [
+    "Servicio que atiende AsyncSend/AsyncRecieve y abre los ficheros de lente",
+    "Formato de LOAD_ARG/ALLOC_ARG/FREE_ARG",
+    "Decision de que fichero de lente corresponde a la lente montada",
+    "GPIO/servicio que mueve la barrera de lente"
+  ]
+}
