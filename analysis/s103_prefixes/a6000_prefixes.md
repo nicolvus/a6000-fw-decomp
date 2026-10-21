@@ -50,9 +50,9 @@ cabecera `0xfff0`, mensaje de 8 bytes y dos canales (cadena genérica `ADC DATA`
 | `0x43ce5253` | `[ADC_DEBUG]: ADC DATA11 = %04x` | `0x4398ec2e` / `0x4398eb22` | Canal 11 del volcado: halfword en [msg+0x1c]. |
 | `0x43ce5273` | `[ADC_DEBUG]: ADC DATA = %04x` | `0x4398eccc` / `0x4398ec7e` | Volcado genérico de 2 canales (mensaje de 8 bytes, cabecera 0xfff0). |
 
-Los cinco nombres `ADJ_CMD_LIRO_DRIVERS_ADC_LIRO_ADC_*` (`0x43ce4fc5`–`0x43ce507a`) son comandos de
+Los cinco nombres `ADJ_CMD_LIRO_DRIVERS_ADC_LIRO_ADC_*` (`0x43ce4fc7`–`0x43ce507a`) son comandos de
 ajuste de fábrica del mismo bloque; **solo cuatro tienen xref PIC** (`GET_DATA_ALL`, `CHECK_DATA`,
-`TEST_MODE`, `SET_DATA`) y `GET_DATA` (`0x43ce4fc5`) no está referenciada. Esto corrige el conteo de
+`TEST_MODE`, `SET_DATA`) y `GET_DATA` (`0x43ce4fc7`) no está referenciada. Esto corrige el conteo de
 cuatro nombres que daba S73.
 
 ## 2. `AVR` (2) — accesorio LANC-AVR
@@ -172,7 +172,7 @@ binario (`NO_VERIFICADO`).
 - **Semántica eléctrica de AvOut/LANC-AVR**: el binario solo muestra las máscaras GPIO y el
   dispatcher; `NO_VERIFICADO` más allá de eso.
 - **Corrección a S73:** hay cinco cadenas `ADJ_CMD_LIRO_DRIVERS_ADC_LIRO_ADC_*`, no cuatro; la
-  quinta (`GET_DATA`, `0x43ce4fc5`) existe pero no está referenciada.
+  quinta (`GET_DATA`, `0x43ce4fc7`) existe pero no está referenciada.
 - **A7S:** los seis prefijos están ausentes del mapa S79 de A7S (fw3.20).
 
 ## 8. Trazabilidad

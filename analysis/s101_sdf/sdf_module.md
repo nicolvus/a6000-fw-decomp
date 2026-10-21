@@ -4,7 +4,7 @@
 
 **SDF** stands for **Still DataFlow**. It is the firmware subsystem responsible for processing still-image data flows, including resize/rotate, super-resolution, JPEG encoding, color correction, and other image processing operations for still capture modes. The module has **477 traces** (A6000 fw3.21, prefix `[SDF]`) in the `av-cam.bin` binary, spanning vaddrs `0x43c7785b` → `0x43c806f9`.
 
-SDF is the still-capture counterpart of the video `IMAGING_CAP` pipeline. While `IMAGING_CAP` (697 traces) handles video capture processing, SDF handles the still-path image processing that feeds into the `OBJAVBBC` (ObjAVBBCBaseClass) and ultimately the `PbCap` (picture before capture) pipeline for saving JPEGs.
+SDF is the **dataflow** layer that executes the still-image jobs requested by the capture manager (`IMAGING_CAP`, see S104): resize/rotate, JPEG encode/decode, CCNR, THM. The capture manager owns the *sequence* (which stage runs when); SDF owns the *worker* side that consumes `MSG_ID_SDF_*` jobs and feeds the `OBJAVBBC` (`ObjAVBBCBaseClass::SdfCh`) interface for saving JPEGs. Both belong to the still path — `IMAGING_CAP` is not a video pipeline.
 
 ## Key Evidence (vaddr + bytes)
 
@@ -51,7 +51,7 @@ SDF is the still-capture counterpart of the video `IMAGING_CAP` pipeline. While 
 | `MSG_ID_SDF_DEVELOP_RESIZE_APL` | `0x43c782fc` | Develop resize APL |
 | `MSG_ID_SDF_PTM_COUNT` | `0x43c78350` | PTM count |
 
-*(Note: vaddrs = 0x43541000 + file_offset; full list of 48+ messages extracted from binary.)*
+*(Note: vaddrs = 0x43541000 + file_offset; full list of 33 distinct messages extracted from binary.)*
 
 ### SDF_ERR strings (vaddr `0x43c7a145` onward)
 
@@ -81,7 +81,7 @@ SDF is the still-capture counterpart of the video `IMAGING_CAP` pipeline. While 
 | **SDF → IMAGING_CAP** | SDF works with `IMAGING_CAP` (697 traces) for still capture pipeline |
 | **SDF → DMM** | Allocates DMM units `0x50b3f` (STL_YCC_1920P) and `0xe0b00` (SDS_YCC) for YC buffer management |
 | **SDF → MMGR** | Manages memory units via `MMGR` (`L_PRM_MMGR_UNIT_MEM_HANDLE_YCC_CAP`) |
-| **SDF → SA (Secure Area)** | Some SDF ops (resize/rotate) go through SA `sa_func_*` dispatch |
+| **SDF → SA (acelerador escalar)** | Some SDF ops (resize/rotate) go through the SA `sa_func_*` dispatch |
 | **SDF ↔ OBJAVBBC** | `OBJAVBBCBASECLASS::SdfCh::*`, the C++ class interface for SDF commands |
 
 ### Code flow (high-level)
@@ -99,10 +99,10 @@ SDF is the still-capture counterpart of the video `IMAGING_CAP` pipeline. While 
 - **Specialized for still-image processing**: resize, rotate, encode, CCNR (corner noise reduction), panorama, THM handling
 - **Uses PTM (Picture Timing Mode)** for timing coordination (error checks: "bigger/smaller value PTM 32"; actual strings: `bigger_value.ptm_32==PTM_SECOND_ZONE`, `smaller_value.ptm_32==PTM_FIRST_ZONE`)
 - **Bridge to PbCap**: The ultimate output of SDF feeds the `PbCap` (picture-before-capture) mechanism for still preview/jpeg generation
-- **A7S difference**: A7S fw3.20 has SDF at `0x43c83082` → `0x43c7a1eb` with 479 traces (2 more than A6000), suggesting slight firmware differences
+- **A7S difference**: A7S fw3.20 has SDF at `0x43c7a1eb` → `0x43c83082` with 479 traces (2 more than A6000), suggesting slight firmware differences
 
 ## Summary
 
-SDF is the **Still DataFlow** subsystem that processes still-image pipelines: resize/rotate, JPEG encoding/decoding, CCNR, scene encoding, panorama, and THM handling. It bridges the camera main pipeline to the `OBJAVBBC`/`PbCap` still-output path, using DMM memory units and optionally the Secure Area for computation. The 477 `[SDF]` traces and 15 `[SDF_ERR]` traces span vaddrs `0x43c7785b` → `0x43c806f9`.
+SDF is the **Still DataFlow** subsystem that processes still-image pipelines: resize/rotate, JPEG encoding/decoding, CCNR, scene encoding, panorama, and THM handling. It bridges the camera main pipeline to the `OBJAVBBC`/`PbCap` still-output path, using DMM memory units and optionally the SA (scalar accelerator) for computation. The 477 `[SDF]` traces and 15 `[SDF_ERR]` traces span vaddrs `0x43c7785b` → `0x43c806f9`.
 
 Key messages include resize/rotate, JPEG encode/decode, CCNR, panorama, scene encode, THM operations, and develop resize. Errors relate to PTM (Picture Timing Mode) value checking.

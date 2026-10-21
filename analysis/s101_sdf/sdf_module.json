@@ -1,262 +1,267 @@
 {
-  "prefix": "SDF",
-  "description": "Still DataFlow subsystem - processes still-image data flows (resize, rotate, JPEG encode, CCNR, scene encode, panorama, THM)",
-  "module_range_a6000": {
-    "lo_vaddr": "0x43c7785b",
-    "hi_vaddr": "0x43c806f9",
-    "file_lo_offset": 7563355,
-    "file_hi_offset": 7566377,
-    "n_traces": 477
+ "prefix": "SDF",
+ "description": "Still DataFlow subsystem - processes still-image data flows (resize, rotate, JPEG encode, CCNR, scene encode, panorama, THM)",
+ "module_range_a6000": {
+  "lo_vaddr": "0x43c7785b",
+  "hi_vaddr": "0x43c806f9",
+  "file_lo_offset": 7563355,
+  "file_hi_offset": 7566377,
+  "n_traces": 477
+ },
+ "module_range_a7s": {
+  "lo_vaddr": "0x43c83082",
+  "hi_vaddr": "0x43c7a1eb",
+  "n_traces": 479
+ },
+ "string_prefix": "[SDF]",
+ "string_prefix_err": "[SDF_ERR]",
+ "msg_ids": [
+  {
+   "id": "MSG_ID_SDF_PAINT_IMAGE",
+   "vaddr": "0x43c78000",
+   "offset": 7565312
   },
-  "module_range_a7s": {
-    "lo_vaddr": "0x43c83082",
-    "hi_vaddr": "0x43c7a1eb",
-    "n_traces": 479
+  {
+   "id": "MSG_ID_SDF_COPY_IMAGE",
+   "vaddr": "0x43c78017",
+   "offset": 7565335
   },
-  "string_prefix": "[SDF]",
-  "string_prefix_err": "[SDF_ERR]",
-  "msg_ids": [
-    {
-      "id": "MSG_ID_SDF_PAINT_IMAGE",
-      "vaddr": "0x43c78000",
-      "offset": 7565312
-    },
-    {
-      "id": "MSG_ID_SDF_COPY_IMAGE",
-      "vaddr": "0x43c78017",
-      "offset": 7565335
-    },
-    {
-      "id": "MSG_ID_SDF_RESIZE_ROTATE",
-      "vaddr": "0x43c7802d",
-      "offset": 7565357
-    },
-    {
-      "id": "MSG_ID_SDF_RESIZE_ROTATE_LOWSPEED",
-      "vaddr": "0x43c78046",
-      "offset": 7565382
-    },
-    {
-      "id": "MSG_ID_SDF_ENCODE_JPEG",
-      "vaddr": "0x43c78068",
-      "offset": 7565416
-    },
-    {
-      "id": "MSG_ID_SDF_DECODE_JPEG",
-      "vaddr": "0x43c7807f",
-      "offset": 7565439
-    },
-    {
-      "id": "MSG_ID_SDF_ENCODE_JPEG_REC",
-      "vaddr": "0x43c78096",
-      "offset": 7565462
-    },
-    {
-      "id": "MSG_ID_SDF_DECODE_JPEG_RSS",
-      "vaddr": "0x43c780b1",
-      "offset": 7565489
-    },
-    {
-      "id": "MSG_ID_SDF_ENCODE_JPEG_WITH_WORK",
-      "vaddr": "0x43c780cc",
-      "offset": 7565516
-    },
-    {
-      "id": "MSG_ID_SDF_REDEYE",
-      "vaddr": "0x43c780ed",
-      "offset": 7565549
-    },
-    {
-      "id": "MSG_ID_SDF_BEAUTY_EFFECT",
-      "vaddr": "0x43c780ff",
-      "offset": 7565567
-    },
-    {
-      "id": "MSG_ID_SDF_IMAGE_EFFECT",
-      "vaddr": "0x43c78118",
-      "offset": 7565592
-    },
-    {
-      "id": "MSG_ID_SDF_IMAGE_MIX",
-      "vaddr": "0x43c78130",
-      "offset": 7565616
-    },
-    {
-      "id": "MSG_ID_SDF_SPLIT_ENCODE",
-      "vaddr": "0x43c78145",
-      "offset": 7565637
-    },
-    {
-      "id": "MSG_ID_SDF_DEVELOP_RESIZE",
-      "vaddr": "0x43c7815d",
-      "offset": 7565661
-    },
-    {
-      "id": "MSG_ID_SDF_SCN_ENCODE",
-      "vaddr": "0x43c78177",
-      "offset": 7565687
-    },
-    {
-      "id": "MSG_ID_SDF_SCN_ENCODE_WITH_THM",
-      "vaddr": "0x43c7818d",
-      "offset": 7565709
-    },
-    {
-      "id": "MSG_ID_SDF_CCNR_ENCODE",
-      "vaddr": "0x43c781ac",
-      "offset": 7565740
-    },
-    {
-      "id": "MSG_ID_SDF_CCNR_ENCODE_WITH_MODE",
-      "vaddr": "0x43c781c3",
-      "offset": 7565763
-    },
-    {
-      "id": "MSG_ID_SDF_PANORAMA_CCNR_ENCODE",
-      "vaddr": "0x43c781e4",
-      "offset": 7565796
-    },
-    {
-      "id": "MSG_ID_SDF_THM_COPY",
-      "vaddr": "0x43c78204",
-      "offset": 7565828
-    },
-    {
-      "id": "MSG_ID_SDF_THM_ENCODE",
-      "vaddr": "0x43c78218",
-      "offset": 7565848
-    },
-    {
-      "id": "MSG_ID_SDF_JPEG_SORT",
-      "vaddr": "0x43c7822e",
-      "offset": 7565870
-    },
-    {
-      "id": "MSG_ID_SDF_DIST_ENCODE",
-      "vaddr": "0x43c78243",
-      "offset": 7565891
-    },
-    {
-      "id": "MSG_ID_SDF_SPLIT_RESIZE",
-      "vaddr": "0x43c7825a",
-      "offset": 7565914
-    },
-    {
-      "id": "MSG_ID_SDF_FACE_RESIZE",
-      "vaddr": "0x43c78272",
-      "offset": 7565938
-    },
-    {
-      "id": "MSG_ID_SDF_CCNR_RESIZE",
-      "vaddr": "0x43c78289",
-      "offset": 7565961
-    },
-    {
-      "id": "MSG_ID_SDF_SET_DATE_IMAGE_PARAM",
-      "vaddr": "0x43c782a0",
-      "offset": 7565984
-    },
-    {
-      "id": "MSG_ID_SDF_SET_DATE_IMAGE_PARAM_DUAL",
-      "vaddr": "0x43c782c0",
-      "offset": 7566016
-    },
-    {
-      "id": "MSG_ID_SDF_DIST_RESIZE",
-      "vaddr": "0x43c782e5",
-      "offset": 7566053
-    },
-    {
-      "id": "MSG_ID_SDF_DEVELOP_RESIZE_APL",
-      "vaddr": "0x43c782fc",
-      "offset": 7566076
-    },
-    {
-      "id": "MSG_ID_SDF_PTM_COUNT",
-      "vaddr": "0x43c78350",
-      "offset": 7566129
-    }
-  ],
-  "msg_id_count": 48,
-  "sdf_err_messages": [
-    {
-      "vaddr": "0x43c7a145",
-      "text": "[SDF_ERR] bigger_value.ptm_32==PTM_SECOND_ZONE"
-    },
-    {
-      "vaddr": "0x43c7a1a5",
-      "text": "[SDF] interval PTM %ld"
-    },
-    {
-      "vaddr": "0x43c7a1e5",
-      "text": "[SDF] check stop PTM stat"
-    },
-    {
-      "vaddr": "0x43c7a225",
-      "text": "[SDF] check value PTM : PTM 32 . PTM 31 0 : %08x . %08x ."
-    },
-    {
-      "vaddr": "0x43c7a265",
-      "text": "[SDF] m_stop PTM PTM : PTM 32 . PTM 31 0 : %08x . %08x ."
-    },
-    {
-      "vaddr": "0x43c7a2a5",
-      "text": "[SDF] m_current PTM PTM : PTM 32 . PTM 31 0 : %08x . %08x ."
-    }
-  ],
-  "key_functions": [
-    {
-      "name": "FUN_43638308",
-      "vaddr": "0x43638308",
-      "description": "SDF initialization; checks runtime flags, calls FUN_435a9d04 and FUN_435ab6f0"
-    },
-    {
-      "name": "FUN_435ab6f0",
-      "vaddr": "0x435ab6f0",
-      "description": "SDF executor dispatch function; called with module base 0x43c77857"
-    },
-    {
-      "name": "FUN_4363c730",
-      "vaddr": "0x4363c730",
-      "description": "SDF JPEG job factory; creates encode/decode jobs"
-    },
-    {
-      "name": "FUN_4363ca28",
-      "vaddr": "0x4363ca28",
-      "description": "SDF executor dispatcher with job management"
-    },
-    {
-      "name": "FUN_43639c78",
-      "vaddr": "0x43639c78",
-      "description": "SDF message handler"
-    },
-    {
-      "name": "OBJAVBBCBASECLASS::SdfCh::resizeRotate",
-      "vaddr": "0x43cd768e",
-      "library": "libObj.so",
-      "description": "C++ method: resize/rotate SDF command"
-    },
-    {
-      "name": "OBJAVBBCBASECLASS::SdfCh::paintImage",
-      "vaddr": "0x43cd768e",
-      "library": "libObj.so",
-      "description": "C++ method: paint image SDF command"
-    },
-    {
-      "name": "OBJAVBBCBASECLASS::SdfCh::copyImage",
-      "vaddr": "0x43cd768e",
-      "library": "libObj.so",
-      "description": "C++ method: copy image SDF command"
-    }
-  ],
-  "relationships": {
-    "sdf_to_vdf": "VDF::VdfToAdfYcDataSender at 0x43c86165 sends YC data from SDF to ADF/VDF",
-    "sdf_to_adf": "SDF sends MSG_ID_SDF_* messages; bridge via OBJAVBBCBaseClass",
-    "sdf_to_imaging_cap": "SDF works with IMAGING_CAP (697 traces) for still capture pipeline",
-    "sdf_to_dmm": "Allocates DMM units 0x50b3f (STL_YCC_1920P) and 0xe0b00 (SDS_YCC) for YC buffer management",
-    "sdf_to_mmgr": "Manages memory units via MMGR (L_PRM_MMGR_UNIT_MEM_HANDLE_YCC_CAP)",
-    "sdf_to_sa": "Some SDF ops go through SA sa_func_* dispatch",
-    "sdf_to_objavbbc": "OBJAVBBCBASECLASS::SdfCh* C++ class interface for SDF commands"
+  {
+   "id": "MSG_ID_SDF_RESIZE_ROTATE",
+   "vaddr": "0x43c7802d",
+   "offset": 7565357
   },
-  "code_flow": "Still capture request \u2192 ADF initializes SDF pipeline \u2192 ObjMsg with MSG_ID_SDF_* \u2192 SDF dispatcher (FUN_435ab6f0) \u2192 allocates DMM units via MMGR \u2192 SA functions may be invoked \u2192 acknowledgment returned"
+  {
+   "id": "MSG_ID_SDF_RESIZE_ROTATE_LOWSPEED",
+   "vaddr": "0x43c78046",
+   "offset": 7565382
+  },
+  {
+   "id": "MSG_ID_SDF_ENCODE_JPEG",
+   "vaddr": "0x43c78068",
+   "offset": 7565416
+  },
+  {
+   "id": "MSG_ID_SDF_DECODE_JPEG",
+   "vaddr": "0x43c7807f",
+   "offset": 7565439
+  },
+  {
+   "id": "MSG_ID_SDF_ENCODE_JPEG_REC",
+   "vaddr": "0x43c78096",
+   "offset": 7565462
+  },
+  {
+   "id": "MSG_ID_SDF_DECODE_JPEG_RSS",
+   "vaddr": "0x43c780b1",
+   "offset": 7565489
+  },
+  {
+   "id": "MSG_ID_SDF_ENCODE_JPEG_WITH_WORK",
+   "vaddr": "0x43c780cc",
+   "offset": 7565516
+  },
+  {
+   "id": "MSG_ID_SDF_REDEYE",
+   "vaddr": "0x43c780ed",
+   "offset": 7565549
+  },
+  {
+   "id": "MSG_ID_SDF_BEAUTY_EFFECT",
+   "vaddr": "0x43c780ff",
+   "offset": 7565567
+  },
+  {
+   "id": "MSG_ID_SDF_IMAGE_EFFECT",
+   "vaddr": "0x43c78118",
+   "offset": 7565592
+  },
+  {
+   "id": "MSG_ID_SDF_IMAGE_MIX",
+   "vaddr": "0x43c78130",
+   "offset": 7565616
+  },
+  {
+   "id": "MSG_ID_SDF_SPLIT_ENCODE",
+   "vaddr": "0x43c78145",
+   "offset": 7565637
+  },
+  {
+   "id": "MSG_ID_SDF_DEVELOP_RESIZE",
+   "vaddr": "0x43c7815d",
+   "offset": 7565661
+  },
+  {
+   "id": "MSG_ID_SDF_SCN_ENCODE",
+   "vaddr": "0x43c78177",
+   "offset": 7565687
+  },
+  {
+   "id": "MSG_ID_SDF_SCN_ENCODE_WITH_THM",
+   "vaddr": "0x43c7818d",
+   "offset": 7565709
+  },
+  {
+   "id": "MSG_ID_SDF_CCNR_ENCODE",
+   "vaddr": "0x43c781ac",
+   "offset": 7565740
+  },
+  {
+   "id": "MSG_ID_SDF_CCNR_ENCODE_WITH_MODE",
+   "vaddr": "0x43c781c3",
+   "offset": 7565763
+  },
+  {
+   "id": "MSG_ID_SDF_PANORAMA_CCNR_ENCODE",
+   "vaddr": "0x43c781e4",
+   "offset": 7565796
+  },
+  {
+   "id": "MSG_ID_SDF_THM_COPY",
+   "vaddr": "0x43c78204",
+   "offset": 7565828
+  },
+  {
+   "id": "MSG_ID_SDF_THM_ENCODE",
+   "vaddr": "0x43c78218",
+   "offset": 7565848
+  },
+  {
+   "id": "MSG_ID_SDF_JPEG_SORT",
+   "vaddr": "0x43c7822e",
+   "offset": 7565870
+  },
+  {
+   "id": "MSG_ID_SDF_DIST_ENCODE",
+   "vaddr": "0x43c78243",
+   "offset": 7565891
+  },
+  {
+   "id": "MSG_ID_SDF_SPLIT_RESIZE",
+   "vaddr": "0x43c7825a",
+   "offset": 7565914
+  },
+  {
+   "id": "MSG_ID_SDF_FACE_RESIZE",
+   "vaddr": "0x43c78272",
+   "offset": 7565938
+  },
+  {
+   "id": "MSG_ID_SDF_CCNR_RESIZE",
+   "vaddr": "0x43c78289",
+   "offset": 7565961
+  },
+  {
+   "id": "MSG_ID_SDF_SET_DATE_IMAGE_PARAM",
+   "vaddr": "0x43c782a0",
+   "offset": 7565984
+  },
+  {
+   "id": "MSG_ID_SDF_SET_DATE_IMAGE_PARAM_DUAL",
+   "vaddr": "0x43c782c0",
+   "offset": 7566016
+  },
+  {
+   "id": "MSG_ID_SDF_DIST_RESIZE",
+   "vaddr": "0x43c782e5",
+   "offset": 7566053
+  },
+  {
+   "id": "MSG_ID_SDF_DEVELOP_RESIZE_APL",
+   "vaddr": "0x43c782fc",
+   "offset": 7566076
+  },
+  {
+   "id": "MSG_ID_SDF_PTM_COUNT",
+   "vaddr": "0x43c78350",
+   "offset": 7566129
+  },
+  {
+   "id": "MSG_ID_SDF_DIST_RESIZE_NO_TANZ",
+   "vaddr": "0x43c78331",
+   "offset": 7566129
+  }
+ ],
+ "msg_id_count": 33,
+ "sdf_err_messages": [
+  {
+   "vaddr": "0x43c7a145",
+   "text": "[SDF_ERR] bigger_value.ptm_32==PTM_SECOND_ZONE"
+  },
+  {
+   "vaddr": "0x43c7a1a5",
+   "text": "[SDF] interval PTM %ld"
+  },
+  {
+   "vaddr": "0x43c7a1e5",
+   "text": "[SDF] check stop PTM stat"
+  },
+  {
+   "vaddr": "0x43c7a225",
+   "text": "[SDF] check value PTM : PTM 32 . PTM 31 0 : %08x . %08x ."
+  },
+  {
+   "vaddr": "0x43c7a265",
+   "text": "[SDF] m_stop PTM PTM : PTM 32 . PTM 31 0 : %08x . %08x ."
+  },
+  {
+   "vaddr": "0x43c7a2a5",
+   "text": "[SDF] m_current PTM PTM : PTM 32 . PTM 31 0 : %08x . %08x ."
+  }
+ ],
+ "key_functions": [
+  {
+   "name": "FUN_43638308",
+   "vaddr": "0x43638308",
+   "description": "SDF initialization; checks runtime flags, calls FUN_435a9d04 and FUN_435ab6f0"
+  },
+  {
+   "name": "FUN_435ab6f0",
+   "vaddr": "0x435ab6f0",
+   "description": "SDF executor dispatch function; called with module base 0x43c77857"
+  },
+  {
+   "name": "FUN_4363c730",
+   "vaddr": "0x4363c730",
+   "description": "SDF JPEG job factory; creates encode/decode jobs"
+  },
+  {
+   "name": "FUN_4363ca28",
+   "vaddr": "0x4363ca28",
+   "description": "SDF executor dispatcher with job management"
+  },
+  {
+   "name": "FUN_43639c78",
+   "vaddr": "0x43639c78",
+   "description": "SDF message handler"
+  },
+  {
+   "name": "OBJAVBBCBASECLASS::SdfCh::resizeRotate",
+   "vaddr": "0x43cd768e",
+   "library": "libObj.so",
+   "description": "C++ method: resize/rotate SDF command"
+  },
+  {
+   "name": "OBJAVBBCBASECLASS::SdfCh::paintImage",
+   "vaddr": "0x43cd768e",
+   "library": "libObj.so",
+   "description": "C++ method: paint image SDF command"
+  },
+  {
+   "name": "OBJAVBBCBASECLASS::SdfCh::copyImage",
+   "vaddr": "0x43cd768e",
+   "library": "libObj.so",
+   "description": "C++ method: copy image SDF command"
+  }
+ ],
+ "relationships": {
+  "sdf_to_vdf": "VDF::VdfToAdfYcDataSender at 0x43c86165 sends YC data from SDF to ADF/VDF",
+  "sdf_to_adf": "SDF sends MSG_ID_SDF_* messages; bridge via OBJAVBBCBaseClass",
+  "sdf_to_imaging_cap": "SDF works with IMAGING_CAP (697 traces) for still capture pipeline",
+  "sdf_to_dmm": "Allocates DMM units 0x50b3f (STL_YCC_1920P) and 0xe0b00 (SDS_YCC) for YC buffer management",
+  "sdf_to_mmgr": "Manages memory units via MMGR (L_PRM_MMGR_UNIT_MEM_HANDLE_YCC_CAP)",
+  "sdf_to_sa": "Some SDF ops go through SA sa_func_* dispatch",
+  "sdf_to_objavbbc": "OBJAVBBCBASECLASS::SdfCh* C++ class interface for SDF commands"
+ },
+ "code_flow": "Still capture request → ADF initializes SDF pipeline → ObjMsg with MSG_ID_SDF_* → SDF dispatcher (FUN_435ab6f0) → allocates DMM units via MMGR → SA functions may be invoked → acknowledgment returned"
 }

@@ -18,8 +18,8 @@ attach/detach que conmutan máscaras GPIO. `ADR` y `BKID` son campos entre corch
 cámara (selección de controlador por modo, tablas SGC, procesado RDC/PFR, AIF, recursos, DMA) y su
 última cadena enlaza con la corrección de puntos defectuosos (`setDefectPt`, `0x43cebcb2`).
 
-**Corrección a S73:** existen cinco cadenas `ADJ_CMD_LIRO_DRIVERS_ADC_LIRO_ADC_*` (`0x43ce4fc5`–
-`0x43ce507a`), no cuatro; solo cuatro tienen xref PIC y `GET_DATA` (`0x43ce4fc5`) no está referenciada.
+**Corrección a S73:** existen cinco cadenas `ADJ_CMD_LIRO_DRIVERS_ADC_LIRO_ADC_*` (`0x43ce4fc7`–
+`0x43ce507a`), no cuatro; solo cuatro tienen xref PIC y `GET_DATA` (`0x43ce4fc7`) no está referenciada.
 
 **Frontera (NO_VERIFICADO):** qué magnitud mide cada canal ADC y la función eléctrica de AvOut no se
 deducen del binario; requieren esquema o traza en cámara.
