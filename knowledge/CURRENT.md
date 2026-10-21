@@ -15,6 +15,16 @@ Para restricciones del proyecto (sin firmware ejecutado, sin flasheo, sin `git p
 
 [Informe](../analysis/s109_cdiag/cdiag.md) · [doc](../docs/capture/s109-cdiag.md). Siguiente: formato de `MSG_SENS_COMMAND`/`DIAGINFO`; codificación numérica de `cmd`/`mode`/`func`; emisor de los comandos `SENS_*`; fichero fuente de las clases de códec (no embebido).
 
+## S116 — el módulo `[SFRS]` (117 trazas) de control por *pins* (21-10-2026, línea de RE general)
+
+**VERIFICADO (23 tests, `tests/test_s116_sfrs.py`):** 117 cadenas `[SFRS]` en `0x43ce7661`–`0x43ceb8c4`; **131 puntos de emisión PIC** (`ldr rX,[pc,#imm]` + `add rX,pc`) y **52 funciones**, todas dentro de `0x439a0000`–`0x439c0000` (módulo compacto y localizado), **0** cadenas sin referencia. Sub-bloques: SUPERSTABLEMOVIE 37, MOTIONSHOTVIDEO 25, EFFECTMOVIEREC 23, PINSEND 12, SET_PATH_STATUS 9, SA 6, RC_AIC_TRIGGER 3, MULTIPLEXTRIGGER 2. Contenido: `SETPIN`/`GETPIN`/`PINSEND` con `file=%s line=%d`, `ReqYccAsap`, `YccOut`, `SendExecTrigger`, `CtSetAicParam`, `RC_CALLBACK`. Evidencia de código: `SETPIN` `cmp r1,#1` en `0x439aada4` (línea 58 en `0x439aadc0`), `GETPIN` `cmp` en `0x439aae3c` (línea 56: `movs r2,#0x38` en `0x439aae4c`), cola de `EXECUTE_PIN_SEND` en `0x439b1f4c`–`0x439b1f6c` (lee `[r4,#0x3f4..0x3ff]`, escribe `[r4,#0x410]=1` y `[r4,#0x40c]`, traza `0x43ceb80d`).
+
+**Diferencial A7S fw3.20**: la A7S tiene **151** cadenas `[SFRS]`: **117 comunes, 0 exclusivas de la A6000 y 34 exclusivas de la A7S** → el módulo de la A6000 es un **subconjunto** del de la A7S.
+
+**Observación**: 40 de las 52 funciones no imprimen `file=%s`, así que no se les puede asignar fichero fuente; de las 24 clases `.cpp` citadas solo 12 se localizan en el código.
+
+[Informe](../analysis/s116_sfrs/sfrs.md) · [doc](../docs/capture/s116-sfrs.md). Siguiente: significado de SFRS, AIC, RC, VFX, IIB y PINSEND; si `line=%d` corresponde al `.cpp` de `file=%s` (falta la tabla de líneas); semántica de los tres modos de grabación.
+
 ## S111 — el módulo `[TRK]` (215 cadenas) de tracking y detección (21-10-2026, línea de RE general)
 
 **VERIFICADO (17 tests, `tests/test_s111_trk.py`):** 216 apariciones del literal `[TRK` → **215 cadenas** (214 que empiezan por `[TRK` + 1 anidada: `[TRK]: [TRK] cb_func == NULL`) → **207 textos distintos** (8 repetidos en dos direcciones cada uno) en `0x43cebceb`–`0x43cfe31c`, con **288 sitios de referencia** y **47 funciones** (283 strict + 5 relaxed). Sub-bloques: **STK** 76 trazas (saliency, touch, simulación de color y de toque), **BT** 44, **EDTSA** 19, **PMV** 16, **IRO2G** 13, **DETSA** 9, VAE/VAT/VOT 3 cada uno, más las familias STK_AUTO_SAL / STK_COLOR_SIM / STK_TOUCH_SIM. El código del módulo vive en `0x43a30000`–`0x43a39000` (284 sitios, 43 funciones) y los 4 restantes son *wrappers* de sesión en `0x439c0000`–`0x439d0000`; las zonas `sa_stubs` (ZIT), `fc` y `apl_osal` tienen 0 sitios. El firmware embebido incluye **99 ficheros `FC/*.cpp`** (`0x43cef12a`–`0x43cf707a`).
