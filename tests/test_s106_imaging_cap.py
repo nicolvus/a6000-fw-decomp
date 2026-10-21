@@ -265,5 +265,5 @@ class TestResumen:
         assert data["counts"]["strings"] == 697
         assert data["counts"]["sections"] == 17
         assert data["counts"]["source_files"] == 83
-        assert data["counts"]["referenced_strings"] == 694
-        assert data["counts"]["unreferenced_strings"] == 3
+        assert data["counts"]["referenced_strings"] == 696
+        assert data["counts"]["unreferenced_strings"] == 1
