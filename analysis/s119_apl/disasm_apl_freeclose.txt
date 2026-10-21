@@ -1,0 +1,102 @@
+===== APL free-close func 0x439cedd0-0x439ceeb8
+0x439cedd0  10b5         push     {r4, lr}
+0x439cedd2  a2b0         sub      sp, #0x88
+0x439cedd4  b622         movs     r2, #0xb6
+0x439cedd6  0221         movs     r1, #2
+0x439cedd8  0446         mov      r4, r0
+0x439cedda  1fa8         add      r0, sp, #0x7c
+0x439ceddc  11f19dfc     bl       #0x43ae071a
+0x439cede0  1fa8         add      r0, sp, #0x7c
+0x439cede2  11f1b6fc     bl       #0x43ae0752
+0x439cede6  0146         mov      r1, r0
+0x439cede8  21a8         add      r0, sp, #0x84
+0x439cedea  13f180f8     bl       #0x43ae1eee
+0x439cedee  21a8         add      r0, sp, #0x84
+0x439cedf0  618a         ldrh     r1, [r4, #0x12]
+0x439cedf2  03aa         add      r2, sp, #0xc
+0x439cedf4  9ef1d0fb     bl       #0x43b6d598
+0x439cedf8  618a         ldrh     r1, [r4, #0x12]
+0x439cedfa  50b1         cbz      r0, #0x439cee12
+0x439cedfc  264b         ldr      r3, [pc, #0x98]
+0x439cedfe  b620         movs     r0, #0xb6
+0x439cee00  0091         str      r1, [sp]
+0x439cee02  0122         movs     r2, #1
+0x439cee04  0021         movs     r1, #0
+0x439cee06  7b44         add      r3, pc  ; STRICT 0x43cec078 '[CAMERA_SA]: [APL] Open Err1 (unit_hndl:0x%x)' || CANON 0x43cec16f ': [APL] Open Err3 (unit_hndl:0x%x)' ; 0x43cec169 'RA_SA]: [APL] Open Err3 (unit_hndl:0x%x)' ; 0x43cec164 '[CAMERA_SA]: [APL] Open Err3 (unit_hndl:0x%x)' ; 0x43cec162 'd' ; 0x43cec159 'aNo Err %d' ; 0x43cec161 '%d' ; 0x43cec158 'maNo Err %d' ; 0x43cec0d8 '%x)' ; 0x43cec0e2 'A_SA]: [APL] Open Err2 (unit_hndl:0x%x)' ; 0x43cec0e1 'RA_SA]: [APL] Open Err2 (unit_hndl:0x%x)' ; 0x43cec0e8 ' [APL] Open Err2 (unit_hndl:0x%x)' ; 0x43cec0ef 'Open Err2 (unit_hndl:0x%x)' ; 0x43cec0f6 'r2 (unit_hndl:0x%x)' ; 0x43cec0fd 't_hndl:0x%x)' ; 0x43cec0fa 'unit_hndl:0x%x)' ; 0x43cec078 '[CAMERA_SA]: [APL] Open Err1 (unit_hndl:0x%x)'
+0x439cee08  fff7bcfd     bl       #0x439ce984
+0x439cee0c  2348         ldr      r0, [pc, #0x8c]
+0x439cee0e  7844         add      r0, pc  ; STRICT 0x43cec085 '[APL] Open Err1 (unit_hndl:0x%x)' || CANON 0x43cec17a 'n Err3 (unit_hndl:0x%x)' ; 0x43cec176 ' Open Err3 (unit_hndl:0x%x)' ; 0x43cec16f ': [APL] Open Err3 (unit_hndl:0x%x)' ; 0x43cec16f ': [APL] Open Err3 (unit_hndl:0x%x)' ; 0x43cec162 'd' ; 0x43cec16e ']: [APL] Open Err3 (unit_hndl:0x%x)' ; 0x43cec161 '%d' ; 0x43cec0e3 '_SA]: [APL] Open Err2 (unit_hndl:0x%x)' ; 0x43cec0e6 ']: [APL] Open Err2 (unit_hndl:0x%x)' ; 0x43cec0ed '] Open Err2 (unit_hndl:0x%x)' ; 0x43cec0ec 'L] Open Err2 (unit_hndl:0x%x)' ; 0x43cec0f3 ' Err2 (unit_hndl:0x%x)' ; 0x43cec0fa 'unit_hndl:0x%x)' ; 0x43cec101 'dl:0x%x)' ; 0x43cec10a '[CAMERA_SA]: [APL] Free & Close Err2 (unit_hndl:0x%x)' ; 0x43cec105 'x%x)' ; 0x43cec085 '[APL] Open Err1 (unit_hndl:0x%x)'
+0x439cee10  0ee0         b        #0x439cee30
+0x439cee12  21a8         add      r0, sp, #0x84
+0x439cee14  9ef1cefb     bl       #0x43b6d5b4
+0x439cee18  60b1         cbz      r0, #0x439cee34
+0x439cee1a  638a         ldrh     r3, [r4, #0x12]
+0x439cee1c  b620         movs     r0, #0xb6
+0x439cee1e  0021         movs     r1, #0
+0x439cee20  0122         movs     r2, #1
+0x439cee22  0093         str      r3, [sp]
+0x439cee24  1e4b         ldr      r3, [pc, #0x78]
+0x439cee26  7b44         add      r3, pc  ; STRICT 0x43cec0a6 '[CAMERA_SA]: [APL] Free & Close Err1 (unit_hndl:0x%x)' || CANON 0x43a0ee29 'K' ; 0x43cec18f 'x)' ; 0x43cec189 'dl:0x%x)' ; 0x43cec184 'it_hndl:0x%x)' ; 0x43cec182 'unit_hndl:0x%x)' ; 0x43cec179 'en Err3 (unit_hndl:0x%x)' ; 0x43cec181 '(unit_hndl:0x%x)' ; 0x43cec178 'pen Err3 (unit_hndl:0x%x)' ; 0x43cec0f8 ' (unit_hndl:0x%x)' ; 0x43cec0fb 'nit_hndl:0x%x)' ; 0x43cec102 'l:0x%x)' ; 0x43cec101 'dl:0x%x)' ; 0x43cec108 ')' ; 0x43cec10f 'RA_SA]: [APL] Free & Close Err2 (unit_hndl:0x%x)' ; 0x43cec116 ' [APL] Free & Close Err2 (unit_hndl:0x%x)' ; 0x43cec11d 'Free & Close Err2 (unit_hndl:0x%x)' ; 0x43cec11a 'L] Free & Close Err2 (unit_hndl:0x%x)' ; 0x43cec098 'it_hndl:0x%x)' ; 0x43cec0a6 '[CAMERA_SA]: [APL] Free & Close Err1 (unit_hndl:0x%x)'
+0x439cee28  fff7acfd     bl       #0x439ce984
+0x439cee2c  1d48         ldr      r0, [pc, #0x74]
+0x439cee2e  7844         add      r0, pc  ; STRICT 0x43cec0b3 '[APL] Free & Close Err1 (unit_hndl:0x%x)' || CANON 0x43a7f2b0 'L2' ; 0x43a7f2b0 'L2' ; 0x43a7f2b0 'L2' ; 0x43a7f2b0 'L2' ; 0x43a7f2b0 'L2' ; 0x43cec19a 'SA]: [APL] GetMemInfo Err1 (unit_hndl:0x%x)' ; 0x43cec196 'ERA_SA]: [APL] GetMemInfo Err1 (unit_hndl:0x%x)' ; 0x43cec18f 'x)' ; 0x43cec18f 'x)' ; 0x43cec182 'unit_hndl:0x%x)' ; 0x43cec18e '%x)' ; 0x43cec181 '(unit_hndl:0x%x)' ; 0x43cec103 ':0x%x)' ; 0x43cec106 '%x)' ; 0x43cec10d 'MERA_SA]: [APL] Free & Close Err2 (unit_hndl:0x%x)' ; 0x43cec10c 'AMERA_SA]: [APL] Free & Close Err2 (unit_hndl:0x%x)' ; 0x43cec113 'A]: [APL] Free & Close Err2 (unit_hndl:0x%x)' ; 0x43cec11a 'L] Free & Close Err2 (unit_hndl:0x%x)' ; 0x43cec121 ' & Close Err2 (unit_hndl:0x%x)' ; 0x43cec12a 'Err2 (unit_hndl:0x%x)' ; 0x43cec125 'lose Err2 (unit_hndl:0x%x)' ; 0x43cec0b3 '[APL] Free & Close Err1 (unit_hndl:0x%x)'
+0x439cee30  618a         ldrh     r1, [r4, #0x12]
+0x439cee32  21e0         b        #0x439cee78
+0x439cee34  21a8         add      r0, sp, #0x84
+0x439cee36  a18a         ldrh     r1, [r4, #0x14]
+0x439cee38  03aa         add      r2, sp, #0xc
+0x439cee3a  9ef1adfb     bl       #0x43b6d598
+0x439cee3e  a18a         ldrh     r1, [r4, #0x14]
+0x439cee40  50b1         cbz      r0, #0x439cee58
+0x439cee42  194b         ldr      r3, [pc, #0x64]
+0x439cee44  b620         movs     r0, #0xb6
+0x439cee46  0091         str      r1, [sp]
+0x439cee48  0122         movs     r2, #1
+0x439cee4a  0021         movs     r1, #0
+0x439cee4c  7b44         add      r3, pc  ; STRICT 0x43cec0dc '[CAMERA_SA]: [APL] Open Err2 (unit_hndl:0x%x)' || CANON 0x43cec1b5 '(unit_hndl:0x%x)' ; 0x43cec1af ' Err1 (unit_hndl:0x%x)' ; 0x43cec1aa 'mInfo Err1 (unit_hndl:0x%x)' ; 0x43cec1a8 'MemInfo Err1 (unit_hndl:0x%x)' ; 0x43cec19f '[APL] GetMemInfo Err1 (unit_hndl:0x%x)' ; 0x43cec1a7 'tMemInfo Err1 (unit_hndl:0x%x)' ; 0x43cec19e ' [APL] GetMemInfo Err1 (unit_hndl:0x%x)' ; 0x43cec11e 'ree & Close Err2 (unit_hndl:0x%x)' ; 0x43cec121 ' & Close Err2 (unit_hndl:0x%x)' ; 0x43cec128 'e Err2 (unit_hndl:0x%x)' ; 0x43cec127 'se Err2 (unit_hndl:0x%x)' ; 0x43cec12e ' (unit_hndl:0x%x)' ; 0x43cec135 'hndl:0x%x)' ; 0x43cec13c '%x)' ; 0x43cec143 'MERA_SA]: [APL] GetZimaNo Err %d' ; 0x43cec140 '[CAMERA_SA]: [APL] GetZimaNo Err %d' ; 0x43cec0be '& Close Err1 (unit_hndl:0x%x)' ; 0x43cec0cc 'unit_hndl:0x%x)' ; 0x43cec0dc '[CAMERA_SA]: [APL] Open Err2 (unit_hndl:0x%x)'
+0x439cee4e  fff799fd     bl       #0x439ce984
+0x439cee52  1648         ldr      r0, [pc, #0x58]
+0x439cee54  7844         add      r0, pc  ; STRICT 0x43cec0e9 '[APL] Open Err2 (unit_hndl:0x%x)' || CANON 0x43cec1c0 '0x%x)' ; 0x43cec1bc 'ndl:0x%x)' ; 0x43cec1b5 '(unit_hndl:0x%x)' ; 0x43cec1b5 '(unit_hndl:0x%x)' ; 0x43cec1a8 'MemInfo Err1 (unit_hndl:0x%x)' ; 0x43cec1b4 ' (unit_hndl:0x%x)' ; 0x43cec1a7 'tMemInfo Err1 (unit_hndl:0x%x)' ; 0x43cec129 ' Err2 (unit_hndl:0x%x)' ; 0x43cec12c 'r2 (unit_hndl:0x%x)' ; 0x43cec133 't_hndl:0x%x)' ; 0x43cec132 'it_hndl:0x%x)' ; 0x43cec139 ':0x%x)' ; 0x43cec140 '[CAMERA_SA]: [APL] GetZimaNo Err %d' ; 0x43cec147 '_SA]: [APL] GetZimaNo Err %d' ; 0x43cec150 'L] GetZimaNo Err %d' ; 0x43cec14b ': [APL] GetZimaNo Err %d' ; 0x43cec0cb '(unit_hndl:0x%x)' ; 0x43cec0d9 'x)' ; 0x43cec0e9 '[APL] Open Err2 (unit_hndl:0x%x)'
+0x439cee56  0ee0         b        #0x439cee76
+0x439cee58  21a8         add      r0, sp, #0x84
+0x439cee5a  9ef1abfb     bl       #0x43b6d5b4
+0x439cee5e  78b1         cbz      r0, #0x439cee80
+0x439cee60  a38a         ldrh     r3, [r4, #0x14]
+0x439cee62  b620         movs     r0, #0xb6
+0x439cee64  0021         movs     r1, #0
+0x439cee66  0122         movs     r2, #1
+0x439cee68  0093         str      r3, [sp]
+0x439cee6a  114b         ldr      r3, [pc, #0x44]
+0x439cee6c  7b44         add      r3, pc  ; STRICT 0x43cec10a '[CAMERA_SA]: [APL] Free & Close Err2 (unit_hndl:0x%x)' || CANON 0x43cec1d5 "PL] `HME_BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec1cf "A]: [APL] `HME_BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec1ca "ERA_SA]: [APL] `HME_BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec1c8 "AMERA_SA]: [APL] `HME_BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec1bf ':0x%x)' ; 0x43cec1c7 "CAMERA_SA]: [APL] `HME_BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec1be 'l:0x%x)' ; 0x43cec13e ')' ; 0x43cec141 'CAMERA_SA]: [APL] GetZimaNo Err %d' ; 0x43cec148 'SA]: [APL] GetZimaNo Err %d' ; 0x43cec147 '_SA]: [APL] GetZimaNo Err %d' ; 0x43cec14e 'APL] GetZimaNo Err %d' ; 0x43cec155 'tZimaNo Err %d' ; 0x43cec15c ' Err %d' ; 0x43cec160 ' %d' ; 0x43cec0de 'AMERA_SA]: [APL] Open Err2 (unit_hndl:0x%x)' ; 0x43cec0ec 'L] Open Err2 (unit_hndl:0x%x)' ; 0x43cec0fc 'it_hndl:0x%x)' ; 0x43cec10a '[CAMERA_SA]: [APL] Free & Close Err2 (unit_hndl:0x%x)'
+0x439cee6e  fff789fd     bl       #0x439ce984
+0x439cee72  1048         ldr      r0, [pc, #0x40]
+0x439cee74  7844         add      r0, pc  ; STRICT 0x43cec117 '[APL] Free & Close Err2 (unit_hndl:0x%x)' || CANON 0x43cec1e0 "seTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec1dc "E_BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec1d5 "PL] `HME_BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec1d5 "PL] `HME_BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec1c8 "AMERA_SA]: [APL] `HME_BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec1d4 "APL] `HME_BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec1c7 "CAMERA_SA]: [APL] `HME_BaseTar_Addr' invalid 0x%X 0x%X 0x%X 0x%X" ; 0x43cec149 'A]: [APL] GetZimaNo Err %d' ; 0x43cec14c ' [APL] GetZimaNo Err %d' ; 0x43cec153 'GetZimaNo Err %d' ; 0x43cec152 ' GetZimaNo Err %d' ; 0x43cec159 'aNo Err %d' ; 0x43cec160 ' %d' ; 0x43cec167 'MERA_SA]: [APL] Open Err3 (unit_hndl:0x%x)' ; 0x43cec170 ' [APL] Open Err3 (unit_hndl:0x%x)' ; 0x43cec16b '_SA]: [APL] Open Err3 (unit_hndl:0x%x)' ; 0x43cec0eb 'PL] Open Err2 (unit_hndl:0x%x)' ; 0x43cec0f9 '(unit_hndl:0x%x)' ; 0x43cec117 '[APL] Free & Close Err2 (unit_hndl:0x%x)'
+0x439cee76  a18a         ldrh     r1, [r4, #0x14]
+0x439cee78  33f74efc     bl       #0x43902718
+0x439cee7c  0224         movs     r4, #2
+0x439cee7e  00e0         b        #0x439cee82
+0x439cee80  0446         mov      r4, r0
+0x439cee82  1fa8         add      r0, sp, #0x7c
+0x439cee84  11f159fc     bl       #0x43ae073a
+0x439cee88  2046         mov      r0, r4
+0x439cee8a  22b0         add      sp, #0x88
+0x439cee8c  10bd         pop      {r4, pc}
+0x439cee8e  1fa8         add      r0, sp, #0x7c
+0x439cee90  11f153fc     bl       #0x43ae073a
+0x439cee94  97f15af8     bl       #0x43b65f4c
+0x439cee98  6ed2         bhs      #0x439cef78
+0x439cee9a  3100         movs     r1, r6
+0x439cee9c  73d2         bhs      #0x439cef86
+0x439cee9e  3100         movs     r1, r6
+0x439ceea0  7cd2         bhs      #0x439cef9c
+0x439ceea2  3100         movs     r1, r6
+0x439ceea4  81d2         bhs      #0x439cedaa
+0x439ceea6  3100         movs     r1, r6
+0x439ceea8  8cd2         bhs      #0x439cedc4
+0x439ceeaa  3100         movs     r1, r6
+0x439ceeac  91d2         bhs      #0x439cedd2
+0x439ceeae  3100         movs     r1, r6
+0x439ceeb0  9ad2         bhs      #0x439cede8
+0x439ceeb2  3100         movs     r1, r6
+0x439ceeb4  9fd2         bhs      #0x439cedf6
+0x439ceeb6  3100         movs     r1, r6

@@ -1,0 +1,189 @@
+===== APL open func 0x439cea30-0x439cebe4
+0x439cea30  70b5         push     {r4, r5, r6, lr}
+0x439cea32  a2b0         sub      sp, #0x88
+0x439cea34  0546         mov      r5, r0
+0x439cea36  0c46         mov      r4, r1
+0x439cea38  1646         mov      r6, r2
+0x439cea3a  0221         movs     r1, #2
+0x439cea3c  b622         movs     r2, #0xb6
+0x439cea3e  1fa8         add      r0, sp, #0x7c
+0x439cea40  11f16bfe     bl       #0x43ae071a
+0x439cea44  1fa8         add      r0, sp, #0x7c
+0x439cea46  11f184fe     bl       #0x43ae0752
+0x439cea4a  013d         subs     r5, #1
+0x439cea4c  0146         mov      r1, r0
+0x439cea4e  21a8         add      r0, sp, #0x84
+0x439cea50  13f14dfa     bl       #0x43ae1eee
+0x439cea54  201d         adds     r0, r4, #4
+0x439cea56  012d         cmp      r5, #1
+0x439cea58  04d8         bhi      #0x439cea64
+0x439cea5a  534b         ldr      r3, [pc, #0x14c]
+0x439cea5c  7b44         add      r3, pc  ; STRICT 0x43bd69b8 None
+0x439cea5e  53f82510     ldr.w    r1, [r3, r5, lsl #2]
+0x439cea62  00e0         b        #0x439cea66
+0x439cea64  0021         movs     r1, #0
+0x439cea66  aff17df8     bl       #0x43b7db64
+0x439cea6a  0546         mov      r5, r0
+0x439cea6c  68b1         cbz      r0, #0x439cea8a
+0x439cea6e  4f4b         ldr      r3, [pc, #0x13c]
+0x439cea70  0021         movs     r1, #0
+0x439cea72  0090         str      r0, [sp]
+0x439cea74  0122         movs     r2, #1
+0x439cea76  b620         movs     r0, #0xb6
+0x439cea78  7b44         add      r3, pc  ; STRICT 0x43cebde1 '[CAMERA_SA]: [APL] HW Open Err %d' || CANON 0x43a0ea7b 'X ' ; 0x43cebde1 '[CAMERA_SA]: [APL] HW Open Err %d'
+0x439cea7a  fff783ff     bl       #0x439ce984
+0x439cea7e  4c48         ldr      r0, [pc, #0x130]
+0x439cea80  2946         mov      r1, r5
+0x439cea82  7844         add      r0, pc  ; STRICT 0x43cebdee '[APL] HW Open Err %d'
+0x439cea84  33f748fe     bl       #0x43902718
+0x439cea88  7fe0         b        #0x439ceb8a
+0x439cea8a  21a8         add      r0, sp, #0x84
+0x439cea8c  2146         mov      r1, r4
+0x439cea8e  0122         movs     r2, #1
+0x439cea90  9ef181fe     bl       #0x43b6d796
+0x439cea94  0546         mov      r5, r0
+0x439cea96  f0b1         cbz      r0, #0x439cead6
+0x439cea98  464b         ldr      r3, [pc, #0x118]
+0x439cea9a  b620         movs     r0, #0xb6
+0x439cea9c  0021         movs     r1, #0
+0x439cea9e  0122         movs     r2, #1
+0x439ceaa0  7b44         add      r3, pc  ; STRICT 0x43cebe03 '[CAMERA_SA]: [APL] SA Open Err' || CANON 0x4401fdb8 '5' ; 0x43bd782a 'tIcSt19istreambuf_iteratorIcSt11char_traitsIcEEE' ; 0x43cebe09 'A_SA]: [APL] SA Open Err' ; 0x43cebe03 '[CAMERA_SA]: [APL] SA Open Err'
+0x439ceaa2  fff76fff     bl       #0x439ce984
+0x439ceaa6  4448         ldr      r0, [pc, #0x110]
+0x439ceaa8  7844         add      r0, pc  ; STRICT 0x43cebe10 '[APL] SA Open Err' || CANON 0x43cebe14 '] SA Open Err' ; 0x43cebe10 '[APL] SA Open Err'
+0x439ceaaa  33f735fe     bl       #0x43902718
+0x439ceaae  6068         ldr      r0, [r4, #4]
+0x439ceab0  aff191f8     bl       #0x43b7dbd6
+0x439ceab4  0446         mov      r4, r0
+0x439ceab6  0028         cmp      r0, #0
+0x439ceab8  6ad0         beq      #0x439ceb90
+0x439ceaba  404b         ldr      r3, [pc, #0x100]
+0x439ceabc  0021         movs     r1, #0
+0x439ceabe  0090         str      r0, [sp]
+0x439ceac0  0122         movs     r2, #1
+0x439ceac2  b620         movs     r0, #0xb6
+0x439ceac4  7b44         add      r3, pc  ; STRICT 0x43cebe22 '[CAMERA_SA]: [APL] HW Close Err1 %d' || CANON 0x43bd784e '_traitsIcEEE' ; 0x43a0eac7 'PpG' ; 0x43cebe2d ': [APL] HW Close Err1 %d' ; 0x43cebe27 'RA_SA]: [APL] HW Close Err1 %d' ; 0x43cebe22 '[CAMERA_SA]: [APL] HW Close Err1 %d'
+0x439ceac6  fff75dff     bl       #0x439ce984
+0x439ceaca  3d48         ldr      r0, [pc, #0xf4]
+0x439ceacc  2146         mov      r1, r4
+0x439ceace  7844         add      r0, pc  ; STRICT 0x43cebe2f '[APL] HW Close Err1 %d' || CANON 0x43cebe3a 'ose Err1 %d' ; 0x43cebe36 'W Close Err1 %d' ; 0x43cebe2f '[APL] HW Close Err1 %d'
+0x439cead0  33f722fe     bl       #0x43902718
+0x439cead4  5ce0         b        #0x439ceb90
+0x439cead6  21a8         add      r0, sp, #0x84
+0x439cead8  04f11201     add.w    r1, r4, #0x12
+0x439ceadc  02f03cfa     bl       #0x439d0f58
+0x439ceae0  18b3         cbz      r0, #0x439ceb2a
+0x439ceae2  384b         ldr      r3, [pc, #0xe0]
+0x439ceae4  b620         movs     r0, #0xb6
+0x439ceae6  0021         movs     r1, #0
+0x439ceae8  0122         movs     r2, #1
+0x439ceaea  7b44         add      r3, pc  ; STRICT 0x43cebe46 '[CAMERA_SA]: [APL] Calloc InputPrm Err' || CANON 0x43bd7874 ',t' ; 0x43a0eaed '9' ; 0x43cebe53 '[APL] Calloc InputPrm Err' ; 0x43cebe4d '_SA]: [APL] Calloc InputPrm Err' ; 0x43cebe48 'AMERA_SA]: [APL] Calloc InputPrm Err' ; 0x43cebe46 '[CAMERA_SA]: [APL] Calloc InputPrm Err'
+0x439ceaec  fff74aff     bl       #0x439ce984
+0x439ceaf0  3548         ldr      r0, [pc, #0xd4]
+0x439ceaf2  7844         add      r0, pc  ; STRICT 0x43cebe53 '[APL] Calloc InputPrm Err' || CANON 0x43cebe5e 'c InputPrm Err' ; 0x43cebe5a 'alloc InputPrm Err' ; 0x43cebe53 '[APL] Calloc InputPrm Err' ; 0x43cebe53 '[APL] Calloc InputPrm Err'
+0x439ceaf4  33f710fe     bl       #0x43902718
+0x439ceaf8  21a8         add      r0, sp, #0x84
+0x439ceafa  2178         ldrb     r1, [r4]
+0x439ceafc  0122         movs     r2, #1
+0x439ceafe  9ef13dfe     bl       #0x43b6d77c
+0x439ceb02  0546         mov      r5, r0
+0x439ceb04  6068         ldr      r0, [r4, #4]
+0x439ceb06  aff166f8     bl       #0x43b7dbd6
+0x439ceb0a  0446         mov      r4, r0
+0x439ceb0c  0db9         cbnz     r5, #0x439ceb12
+0x439ceb0e  0028         cmp      r0, #0
+0x439ceb10  3dd0         beq      #0x439ceb8e
+0x439ceb12  2e4b         ldr      r3, [pc, #0xb8]
+0x439ceb14  b620         movs     r0, #0xb6
+0x439ceb16  0021         movs     r1, #0
+0x439ceb18  0122         movs     r2, #1
+0x439ceb1a  7b44         add      r3, pc  ; STRICT 0x43cebe6d '[CAMERA_SA]: [APL] SA & HW Close Err1 %d %d' || CANON 0x43bd78a4 'heIcLb0EE' ; 0x43a0eb1d '9' ; 0x43cebe83 '& HW Close Err1 %d %d' ; 0x43cebe7d 'L] SA & HW Close Err1 %d %d' ; 0x43cebe78 ': [APL] SA & HW Close Err1 %d %d' ; 0x43cebe76 'A]: [APL] SA & HW Close Err1 %d %d' ; 0x43cebe6d '[CAMERA_SA]: [APL] SA & HW Close Err1 %d %d'
+0x439ceb1c  0095         str      r5, [sp]
+0x439ceb1e  0194         str      r4, [sp, #4]
+0x439ceb20  fff730ff     bl       #0x439ce984
+0x439ceb24  2a48         ldr      r0, [pc, #0xa8]
+0x439ceb26  7844         add      r0, pc  ; STRICT 0x43cebe7a '[APL] SA & HW Close Err1 %d %d' || CANON 0x43cebe92 ' %d %d' ; 0x43cebe8e 'Err1 %d %d' ; 0x43cebe87 ' Close Err1 %d %d' ; 0x43cebe87 ' Close Err1 %d %d' ; 0x43cebe7a '[APL] SA & HW Close Err1 %d %d'
+0x439ceb28  27e0         b        #0x439ceb7a
+0x439ceb2a  21a8         add      r0, sp, #0x84
+0x439ceb2c  618a         ldrh     r1, [r4, #0x12]
+0x439ceb2e  03aa         add      r2, sp, #0xc
+0x439ceb30  9ef132fd     bl       #0x43b6d598
+0x439ceb34  30b3         cbz      r0, #0x439ceb84
+0x439ceb36  274b         ldr      r3, [pc, #0x9c]
+0x439ceb38  b620         movs     r0, #0xb6
+0x439ceb3a  0021         movs     r1, #0
+0x439ceb3c  0122         movs     r2, #1
+0x439ceb3e  7b44         add      r3, pc  ; STRICT 0x43cebe99 '[CAMERA_SA]: [APL] Open InputPrm Err' || CANON 0x4401fe56 'eC' ; 0x43a0eb41 'K' ; 0x43cebea7 'APL] Open InputPrm Err' ; 0x43cebea1 'SA]: [APL] Open InputPrm Err' ; 0x43cebe9c 'MERA_SA]: [APL] Open InputPrm Err' ; 0x43cebe9a 'CAMERA_SA]: [APL] Open InputPrm Err' ; 0x43cebe91 '1 %d %d' ; 0x43cebe99 '[CAMERA_SA]: [APL] Open InputPrm Err'
+0x439ceb40  fff720ff     bl       #0x439ce984
+0x439ceb44  2448         ldr      r0, [pc, #0x90]
+0x439ceb46  7844         add      r0, pc  ; STRICT 0x43cebea6 '[APL] Open InputPrm Err' || CANON 0x43cebeb2 'nputPrm Err' ; 0x43cebeae 'en InputPrm Err' ; 0x43cebea7 'APL] Open InputPrm Err' ; 0x43cebea7 'APL] Open InputPrm Err' ; 0x43cebe9a 'CAMERA_SA]: [APL] Open InputPrm Err' ; 0x43cebea6 '[APL] Open InputPrm Err'
+0x439ceb48  33f7e6fd     bl       #0x43902718
+0x439ceb4c  21a8         add      r0, sp, #0x84
+0x439ceb4e  2178         ldrb     r1, [r4]
+0x439ceb50  0122         movs     r2, #1
+0x439ceb52  9ef113fe     bl       #0x43b6d77c
+0x439ceb56  0546         mov      r5, r0
+0x439ceb58  6068         ldr      r0, [r4, #4]
+0x439ceb5a  aff13cf8     bl       #0x43b7dbd6
+0x439ceb5e  0446         mov      r4, r0
+0x439ceb60  05b9         cbnz     r5, #0x439ceb64
+0x439ceb62  a0b1         cbz      r0, #0x439ceb8e
+0x439ceb64  1d4b         ldr      r3, [pc, #0x74]
+0x439ceb66  b620         movs     r0, #0xb6
+0x439ceb68  0021         movs     r1, #0
+0x439ceb6a  0122         movs     r2, #1
+0x439ceb6c  7b44         add      r3, pc  ; STRICT 0x43cebebe '[CAMERA_SA]: [APL] SA & HW Close Err2 %d %d' || CANON 0x43cebed5 ' HW Close Err2 %d %d' ; 0x43cebecf '] SA & HW Close Err2 %d %d' ; 0x43cebeca ' [APL] SA & HW Close Err2 %d %d' ; 0x43cebec8 ']: [APL] SA & HW Close Err2 %d %d' ; 0x43cebebf 'CAMERA_SA]: [APL] SA & HW Close Err2 %d %d' ; 0x43cebec7 'A]: [APL] SA & HW Close Err2 %d %d' ; 0x43cebebe '[CAMERA_SA]: [APL] SA & HW Close Err2 %d %d'
+0x439ceb6e  0095         str      r5, [sp]
+0x439ceb70  0194         str      r4, [sp, #4]
+0x439ceb72  fff707ff     bl       #0x439ce984
+0x439ceb76  1a48         ldr      r0, [pc, #0x68]
+0x439ceb78  7844         add      r0, pc  ; STRICT 0x43cebecb '[APL] SA & HW Close Err2 %d %d' || CANON 0x43cebee4 '%d %d' ; 0x43cebee0 'rr2 %d %d' ; 0x43cebed9 'Close Err2 %d %d' ; 0x43cebed9 'Close Err2 %d %d' ; 0x43cebecc 'APL] SA & HW Close Err2 %d %d' ; 0x43cebed8 ' Close Err2 %d %d' ; 0x43cebecb '[APL] SA & HW Close Err2 %d %d'
+0x439ceb7a  2946         mov      r1, r5
+0x439ceb7c  2246         mov      r2, r4
+0x439ceb7e  33f7cbfd     bl       #0x43902718
+0x439ceb82  04e0         b        #0x439ceb8e
+0x439ceb84  079b         ldr      r3, [sp, #0x1c]
+0x439ceb86  3360         str      r3, [r6]
+0x439ceb88  02e0         b        #0x439ceb90
+0x439ceb8a  0825         movs     r5, #8
+0x439ceb8c  00e0         b        #0x439ceb90
+0x439ceb8e  0225         movs     r5, #2
+0x439ceb90  1fa8         add      r0, sp, #0x7c
+0x439ceb92  11f1d2fd     bl       #0x43ae073a
+0x439ceb96  2846         mov      r0, r5
+0x439ceb98  22b0         add      sp, #0x88
+0x439ceb9a  70bd         pop      {r4, r5, r6, pc}
+0x439ceb9c  1fa8         add      r0, sp, #0x7c
+0x439ceb9e  11f1ccfd     bl       #0x43ae073a
+0x439ceba2  97f1d3f9     bl       #0x43b65f4c
+0x439ceba6  00bf         nop      
+0x439ceba8  587f         ldrb     r0, [r3, #0x1d]
+0x439cebaa  2000         movs     r0, r4
+0x439cebac  65d3         blo      #0x439cec7a
+0x439cebae  3100         movs     r1, r6
+0x439cebb0  68d3         blo      #0x439cec84
+0x439cebb2  3100         movs     r1, r6
+0x439cebb4  5fd3         blo      #0x439cec76
+0x439cebb6  3100         movs     r1, r6
+0x439cebb8  64d3         blo      #0x439cec84
+0x439cebba  3100         movs     r1, r6
+0x439cebbc  5ad3         blo      #0x439cec74
+0x439cebbe  3100         movs     r1, r6
+0x439cebc0  5dd3         blo      #0x439cec7e
+0x439cebc2  3100         movs     r1, r6
+0x439cebc4  58d3         blo      #0x439cec78
+0x439cebc6  3100         movs     r1, r6
+0x439cebc8  5dd3         blo      #0x439cec86
+0x439cebca  3100         movs     r1, r6
+0x439cebcc  4fd3         blo      #0x439cec6e
+0x439cebce  3100         movs     r1, r6
+0x439cebd0  50d3         blo      #0x439cec74
+0x439cebd2  3100         movs     r1, r6
+0x439cebd4  57d3         blo      #0x439cec86
+0x439cebd6  3100         movs     r1, r6
+0x439cebd8  5cd3         blo      #0x439cec94
+0x439cebda  3100         movs     r1, r6
+0x439cebdc  4ed3         blo      #0x439cec7c
+0x439cebde  3100         movs     r1, r6
+0x439cebe0  4fd3         blo      #0x439cec82
+0x439cebe2  3100         movs     r1, r6
