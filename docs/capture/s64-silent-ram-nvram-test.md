@@ -114,3 +114,11 @@ Sesión REA sobre `av-cam.bin` (REA no reconoce las funciones Thumb de esta zona
 ### Condiciones de EFCS forzadas en RAM (2026-10-20)
 
 - `scripts/camera_efcs_conditions.py [d78|e34|ambos]`: fuerza `[0x43e95950+0x78]=0x40` y/o `[0x43e94ee4+0x34]=1` (originales 0; bucle 20 ms; restaura) y dispara en remoto. Disparos: ambos, d78, e34 → el usuario creyó que el tercero (e34) **no sonó**; repetido 2 veces con e34 → «sonó dos veces». El silencio no se reprodujo ⇒ se atribuye a una percepción aislada, sin efecto demostrado. Cámara viva siempre; electrónico NO detectado.
+
+## Primer efecto reproducible: espejo `+0x210` (2026-10-20)
+
+- Candidato EFCS: en la copia de trabajo EFCS está en `+0x258` (= bloque `+0x210`; Silent `+0x280` = bloque `+0x238`). Espejo `0x83edf894`, palabra 553352741; valor en reposo 0.
+- `+0x210` forzado a **1** (`camera_bisect_fields.py 1 0x210`, disparo remoto): el usuario oyó un **disparo múltiple** en el primer disparo y en los 3 siguientes (4/4; con valor 2: no se anotó). Cada petición guardó **un solo JPEG** (`RS8`=395900 B; 3 más ≈ 403–407 KB), de modo que el «múltiple» es sonoro; no se contó número de cierres ni se comparó con control en el mismo bloque. Cámara viva siempre.
+- **Es un cambio de comportamiento, no una prueba de obturador electrónico**: no se sabe si es el EFCS, un modo de ráfaga/otro, ni si el sonido es mecánico (segunda cortina) o artificial. NO VERIFICADO el significado de `+0x210`. Siguiente prueba posible: alternar EFCS en el menú y comparar el bloque (no se hizo; el usuario decidió detener las pruebas).
+- Incidente: un restauro prematuro dejó `+0x210` en 1 hasta que se devolvió a 0 (verificado con volcado: solo difieren 8 palabras de contadores respecto al inicio). `camera_bisect_fields.py` ahora espera a que acabe el bucle antes de restaurar. Una escritura accidental de 0 en `+0xd0` no cambió su valor.
+- **Cierre de pruebas en cámara (decisión del usuario).** Resumen S64 en cámara: Silent (`+0x238`), copia de trabajo, instantánea `0x43e9b548`, 9 campos vecinos, override de drive_mode `0x37/0x38` y condiciones `D+0x78`/`+0x34`: sin cambio de obturador oído; solo `+0x210`=1 produjo un sonido distinto. Obturador totalmente electrónico: NO demostrado (S51 en NO).

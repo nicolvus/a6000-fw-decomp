@@ -31,6 +31,7 @@ for o in sys.argv[2:]:
     off = int(o, 16); w = BASEW + off // 4
     orig = rd(w)
     esc = f'\\0{val:03o}\\0000\\0000\\0000'
+    t0 = time.time()
     run(HOST, [f'(i=0; while [ $i -lt 120 ]; do echo -ne "{esc}" | dd of=/dev/mem bs=4 seek={w} count=1 2>/dev/null; usleep 20000; i=$((i+1)); done) >/dev/null 2>&1 &'])
     st = ''
     if os.environ.get('SHOOT'):
@@ -47,4 +48,5 @@ for o in sys.argv[2:]:
     print(f'+{off:#x} orig={orig.hex()} forzado a {val}: cámara {"viva" if ok else "CAÍDA"} {st}', flush=True)
     if not ok:
         break
+    time.sleep(max(0, 5 - (time.time() - t0)))  # el bucle de fondo dura ~3-4 s: restaurar antes lo deja forzado
     wr(w, orig)
