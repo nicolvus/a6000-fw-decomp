@@ -14,6 +14,7 @@ Comprobación de entorno: `python scripts/agent/check_env.py`.
 
 ## Organización y resultados actuales
 
+- [S99: la arquitectura del userland — las capas de `libObj.so`](analysis/s99_userland/userland_architecture.md): la mayor biblioteca del userland (17 436 172 B; **2507 símbolos en 167 namespaces**, prácticamente los mismos que la A7S) revela las capas del software de la cámara — `MWF` (241, núcleo de mensajes: `ObjMsgList`/`ObjMsg`/`RsrcAcsr`), `UFW` (34, **arbitraje de recursos**: `RsrcWrapper::AcquireSingle/ReleaseAll`), `MprIf`/`MprCtrl` (376, medios), `ux` (227, gráficos) + `GEN_*` (toolkit de widgets) + `ViewBase` (GUI), `AVBIZ::UNIVERSE` (138, **gestor de aplicaciones** con `UActiveObject::SendMsgToApp`), `OBJAVBBCBASECLASS` (128, imagen) y `C_DataflowInfra_*` (44), `NetCommonLibrary_`/`GCM_` (red, **10 símbolos menos en la A6000**). 6 tests (`tests/test_s99_userland.py`).
 Catálogo completo de la línea de **ingeniería inversa general** de la cámara (27 hitos, con su
 informe, su test y su hallazgo central): **[docs/capture/linea-general-re.md](docs/capture/linea-general-re.md)**.
 
