@@ -1,0 +1,69 @@
+{
+ "hito": "S88 - GOLFSHOT y MOTIONSHOT",
+ "golfshot": {
+  "cadenas_con_GOLFSHOT": {
+   "A6000": 72,
+   "A7S": 72
+  },
+  "prefijo_principal": {
+   "A6000": 0,
+   "A7S": 65
+  },
+  "modulos_contenedores": [
+   "[IMAGING_RSRC]:",
+   "[IMAGING_CAP]:",
+   "[CAMERA_MAIN_SYNC]:",
+   "[ADF]SAN ..."
+  ],
+  "fases_sa": [
+   "SA_LPF 0x43ca492f",
+   "SA_BGEST 0x43ca4984",
+   "SA_SSP 0x43ca49d5"
+  ],
+  "modulo_SAN": {
+   "StartGolfShot": "0x43c2c72e",
+   "StopGolfShot": "0x43c2c77a",
+   "AnalyzeGolfShot": "0x43c2c792",
+   "SetSoundAnalyze": "0x43c2c7dd",
+   "CLAP DETECT SCORE": "0x43ce2f27"
+  },
+  "adf_dbgcmd": {
+   "StartGolfShot": "0x43c2b143",
+   "StopGolfShot": "0x43c2b16c",
+   "AnalyzeGolfShot": "0x43c2b194",
+   "SetSoundAnalyze": "0x43c2b1bf"
+  },
+  "alock_buffers": {
+   "BG_INPUT_IMAGE": "0x43cb1915",
+   "BG_IMAGE": "0x43cb1952",
+   "BG_MASK_IMAGE": "0x43cb1988",
+   "INPUT_IMAGE": "0x43cb19c3",
+   "INPUT_LPF_IMAGE": "0x43cb1a00",
+   "ALPHA_IMAGE": "0x43cb1a3d",
+   "KEY_ALPHA_LPF_IMAGE": "0x43cb1a76",
+   "SSP_IMAGE": "0x43cb1abb",
+   "PRE_KEY_SSP_IMAGE": "0x43cb1af6"
+  },
+  "vfc": {
+   "vfc2indx": "0x43ca4a8a",
+   "shot_time_vfc": "0x43cb18a9",
+   "analyze_ok": "0x43c36d0a"
+  },
+  "api_sa": [
+   "Camera::SaFuncDrv::SA_FUNCDRV_ERR Camera::SaFuncDrv::sa_func_GOLFSHOT_release(__uint8_t, __uint16_t, Camera::SaFuncDrv::GOLFSHOT_START_PARAM*)",
+   "Camera::SaFuncDrv::SA_FUNCDRV_ERR Camera::SaFuncDrv::sa_func_GOLFSHOT_start(__uint8_t, __uint16_t, Camera::SaFuncDrv::BGEST_START_PARAM*, Camera::SaFuncDrv::SA_MBX_0123*, __uint8_t*)",
+   "Camera::SaFuncDrv::SA_FUNCDRV_ERR Camera::SaFuncDrv::sa_func_GOLFSHOT_start(__uint8_t, __uint16_t, Camera::SaFuncDrv::SSP_START_PARAM*, Camera::SaFuncDrv::SSP_START_MBX*, __uint8_t*)"
+  ]
+ },
+ "motionshot": {
+  "A6000_sa_func_MOTIONSHOT": 0,
+  "A7S_sa_func_MOTIONSHOT": 5,
+  "MOTIONSHOTVIDEO_en_A6000": 24,
+  "nota": "MOTIONSHOTVIDEO pertenece al modulo SFRS y no es el modo fotografico"
+ },
+ "corrections_vs_subagent_draft": [
+  "las cadenas citadas eran etiquetas de Ghidra; aqui se citan las cadenas reales del binario",
+  "en la A6000 la etiqueta [GOLFSHOT] va anidada en [IMAGING_RSRC]/[IMAGING_CAP]/[CAMERA_MAIN_SYNC]; en la A7S es prefijo principal",
+  "el recuento de cadenas con GOLFSHOT es 72 en ambos modelos"
+ ]
+}
