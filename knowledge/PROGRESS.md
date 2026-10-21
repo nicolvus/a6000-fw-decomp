@@ -1811,6 +1811,16 @@ Próximo (no iniciado): traza pasiva autorizada de `MSS_SO_DWN`/bobinas, consumi
 - Abierto: cómo se calcula el encuadre y qué es la rotación impuesta; su relación con los `apc_*`; qué intercambian `CaComm`/`CameraHAPI` con la app; qué es "SACC".
 - Siguiente línea libre: S87 (almacenamiento/exFAT), pendiente por cuota de subagentes; en paralelo el agente principal puede emparejar el encuadre con los `apc_*` del motor YC.
 
+- **2.ª entrega (subagente, ya con las correcciones de la revisión aplicadas):** el informe incluye
+  ahora la tabla completa de las **ocho etapas de control** con direcciones en A6000 **y** A7S
+  (`Stage_CaComm.cpp` `0x43cc7b9c`/`0x43cc2d53`, `Stage_CameraHAPI.cpp` `0x43cc7bad`/`0x43cc2d83`,
+  `Stage_Notify.cpp` `0x43caccd6`/`0x43cb07bb`, `Stage_WaitControl.cpp` `0x43cad784`/`0x43cb0f69`,
+  `Stage_SACC` `0x43c9ee6c`/`0x43ca484d`, `Stage_Common.cpp` `0x43cac363`/`0x43cb0098`,
+  `Stage_DevLater.cpp` `0x43cac51b`/`0x43cb01ef`, `Stage_DualRec.cpp` `0x43cac9f8`/`0x43cb0591`) y la
+  relación con el motor de imagen por proximidad en rodata (`CaComm`→`CONTP`,
+  `DualRec`→`DUALREC_BAYER`/`DUALREC_CLEARVID`, `SACC`→`NFLASH`); confirma que **en AutoFraming no
+  hay ninguna llamada `sa_func_*`** (el encuadre se aplica con parámetros de imagen propios,
+  `ImageAreaResize`). Test `tests/test_s82_autoframing.py` 8/8.
 ## S91 — submódulos del framework ADF (21-10-2026, línea general)
 - Hecho: cierre de los submódulos de ADF que S81 dejó abiertos. `[ADF][ADJ]` (24 trazas) = ajuste del sensor de audio: `AdfSenserCtrl::SetParamSetMicMode err %x` `0x43c26dc1`, `SetParamSetRecLevel` `0x43c26df4`, `SetParamSetChSource` `0x43c26e28`, `SetParamSetInputType` `0x43c26e5c`, `SetParamSetRecLevelMode` `0x43c26e91`, `SetParamSetHpMonitor` `0x43c26ec9`, `SetParamSetInputTrim` `0x43c26efe`, `SetParamSetLowCut` `0x43c26f33` → es la implementación de los comandos `[ADF][DBGCMD] InputPro Set*` (S81) y enlaza con S69. `[ADF][SYSND]` (27) = sonido del sistema: `PS ON` `0x43c278f0`, `SET PATH SendComp Err` `0x43c27904`, `m_dummySetOutputSysndDelay` `0x43c27941`, `m_StartTransDelay60` `0x43c279a4`, `m_StartTransDelay50` `0x43c279f9` → retardo según el estándar de TV (60/50 Hz), en el mismo eje que el `DOWNCON` PAL/NTSC del visor (S86). `[ADF][GS]` (2) = `START PROC PATH ERR` `0x43c327d3`, `START STATE ERR state : %x` `0x43c327f2`. `[ADF][FACE]` (2) = `StartExecFace` `0x43c32a3b`, `StopExecFace` `0x43c32a54` → el ADF arranca/detiene la detección de caras (puente ADF↔S71). `[ADF][AFNR]` (2) = `StartExecAfnr:%x` `0x43c32990`, `StopExecAfnr` `0x43c329ac` → proceso de reducción de ruido del AF. `[ADF][CH_SRC]` (1) = `AvioMicStateStart fifoErr %x` `0x43c2e99a` → micrófono AVIO. Nota `analysis/s91_adf/adf_submodules.md`, test `tests/test_s91_adf_submods.py` 8/8.
 - Abierto: qué es "GS"; el modo de AFNR; los 24 mensajes de ADJ completos; la relación de los retardos 60/50 Hz con el estándar de TV.
