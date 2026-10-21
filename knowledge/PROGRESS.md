@@ -1935,3 +1935,7 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 ## S101 — selector del tipo de mecanismo y consumidores de los campos de ajuste (21-10-2026, línea del obturador)
 - Hecho: análisis estático de `+0x238`/`+0x280`, del tipo de mecanismo de Darwin (A6000/A7S/A6300), de los 12 puntos abiertos, del grafo de módulos y del selector de tipo de A6000/A7S. Plan de pruebas físicas redactado, sin ejecutar. Detalle: [docs/capture/s101-conclusions.md](../docs/capture/s101-conclusions.md). Nota: en commits aparece como S70/S71/S72 (numeración usada además por otros hitos).
 - Abierto: qué ajuste gobierna `G+0x808` y quién lo rellena; P0–P8 del plan físico.
+
+## S102 — menú principal (botón MENU): cadena de carga y apertura (21-10-2026, línea de RE general)
+- Hecho: APK de la cámara organizadas por función y decompiladas (jadx; WifiSettings no decompila por odex optimizado); cadena `libObj`→`viewUnified2`→`viewUnified3..8` y registro de vistas verificados contra el log real; vistas de menú; `DefRootView` identificado como árbitro de arranque (hipótesis previa de `ActionOpenSettingMenu` = tecla MENU, refutada); conversión de teclas `0x1501xxxx` (base+1/+2/+4).
+- Abierto: código de evento de MENU y la vista de disparo que abre BASE_MENU; significado de los tokens `@Vxxx`; volcar el log de RAM tras pulsar MENU. Doc: `docs/capture/s102-menu-principal.md`.

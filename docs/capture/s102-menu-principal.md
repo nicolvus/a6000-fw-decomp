@@ -1,4 +1,4 @@
-# Menú principal (botón MENU): cadena de carga y apertura
+# S102 — Menú principal (botón MENU): cadena de carga y apertura
 
 Estado: VERIFICADO = contra bytes/desensamblado/log real; INFERENCIA = razonado; NO_VERIFICADO = pendiente.
 Fuentes: `analysis/camera-extract/usr/lib/{libObj,viewUnified2..8}.so`, `analysis/camera-dumps/mem-20261020-log/log.txt` (A6000 fw3.21). Desensamblado Thumb con capstone; REA/Ghidra solo para comprobar que no resuelven nombres (binarios sin símbolos locales).
