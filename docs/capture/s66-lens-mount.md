@@ -53,8 +53,10 @@ independiente) para el barrido y las tablas. **Ningún firmware ejecutado, ningu
    `[u16 key][ruta NUL-pad]`, claves `0x8011`–`0x802D`) y se consulta en `0x43907bc4`; el parser del
    fichero está en `0x43907c7c`. Los 18 ficheros de A6000 son **byte a byte idénticos** a los de la
    A6300; la A7S 3.20 **no tiene** nada de esto (0 hits de `/lens/`, `lensfile`, `VX9`).
-6. **La carga de esos datos no ocurre en `av-cam.bin`**: `Camera::Lens::ODL::Load`
-   (`0x43721b9c`) usa `AsyncSend`/`AsyncRecieve` → el fichero lo abre **otro servicio**.
+6. **La carga de esos datos**: `Camera::Lens::ODL::Load` (`0x43721b9c`) pide los datos por
+   `AsyncSend`/`AsyncRecieve`; el **servicio que resuelve y abre el fichero está dentro de
+   `av-cam.bin`** (`0x43904fb0` → `0x43b2a7e2` → lookup `0x43907bc4` sobre la tabla `0x43C22BF2`
+   → parser `0x43907c7c`). "lensfile" solo aparece en `av-cam.bin` en toda la partición `dev`.
 7. **El sombreado depende de la lente**: 11 valores (`ss_LensMountShdValue[0..10]`) y 32 ganancias
    (`us_LensMountShdGain[0..31]`) por lente, y el perfil de corrección se elige con una **tabla
    `tbb` de 69 modos de captura → 14 ShdMode**.
