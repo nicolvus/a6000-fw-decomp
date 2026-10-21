@@ -42,9 +42,24 @@ se pide **a otro servicio por mensaje asíncrono**; el acceso real al fichero es
 `av-cam.bin`.
 
 Consecuencia para la búsqueda del código de carga (subtarea B): el punto de entrada en `av-cam.bin`
-es `Camera::Lens::ODL::Load` → `AsyncSend`/`AsyncRecieve`, y el *servicio* que responde (y que
-posiblemente abre `/lens/VX91xx_lensfile.bin`) está en otro binario del firmware (userland:
-p. ej. `libInfraMediaMount.so` / `libInfraLensCommunicator.so`).
+es `Camera::Lens::ODL::Load` → `AsyncSend`/`AsyncRecieve`.
+
+**Cierre de la frontera (VERIFICADO por índice de llamadas + Capstone):** el *servicio* que resuelve y
+abre el fichero **está dentro de `av-cam.bin`**, en la región `0x43904000`–`0x4390a000` (sin strings
+de traza, es una biblioteca interna):
+
+| Dirección | Papel |
+|---|---|
+| `0x43904fd8` (en `0x43904fb0`) | API del servicio: pide la ruta del fichero de lente |
+| `0x43b2a7e2` | **resuelve la ruta**: `bl 0x43907bc4` y guarda el puntero en `[r5+8]` (`0x43b2a84a`) |
+| `0x43907bc4` | **lookup en la tabla** `0x43C22BF2`: 18 slots × `0x42` = `[u16 key][ruta NUL-pad]`; devuelve el puntero a la cadena |
+| `0x43907c7c` | **parser** del fichero: comprueba el magic `LF`, copia la cabecera y llama al lector TLV `0x43b2bf88` y al setup de sección `ED` `0x43907f54` |
+
+Además, `grep` sobre toda la partición `dev` del fw321 demuestra que **"lensfile" solo aparece en
+`av-cam.bin`**: ninguna biblioteca de usuario (`.so`) ni otro binario de la partición conoce los
+nombres `/lens/VX91xx_lensfile.bin`; el path se construye en la cámara y se entrega al servicio por
+mensaje. La tabla de la A6300 tiene además una entrada `fixed_lensfile.bin` (clave `0xFFFF`) cuyo
+fichero **no está** en el firmware.
 
 ## 3. Barrera de lente (`LensBarrier`) (VERIFICADO, parcial)
 
