@@ -8,6 +8,10 @@ línea SilentShutter, ni la montura (S66), ni el AF, ni ADJ_CMD (`analysis/s73_a
 
 **Estado:** VERIFICADO = contra bytes. INFERENCIA = lectura razonada. NO_VERIFICADO = pendiente.
 
+> **Corrección (21-10-2026, al revisar S82):** `Stage_WaitControl.cpp` está en `0x43cad784`
+> (no `0x43cad6fd`, que es `Stage_RchRcv_ResizeTrim`). `Stage_Notify.cpp` sigue en
+> `0x43caccd6` (y `Stage_NotifyLongExpNRCapturing` en `0x43caccb7`).
+
 ---
 
 ## 1. Las 73 etapas (VERIFICADO: cadenas `Stage_*` en `0x43c9ee6c`–`0x43cca4d9`)
@@ -17,7 +21,7 @@ del procesado:
 
 | Familia | Etapas (dirección de la cadena) |
 |---|---|
-| Base y contenedores | `Stage_SACC` (0x43c9ee6c), `Stage_Common.cpp` (0x43cac363), `Stage_DevLater.cpp` (0x43cac51b), `Stage_DualRec.cpp` (0x43cac9f8), `Stage_Notify.cpp` (0x43caccd6), `Stage_WaitControl.cpp` (0x43cad6fd) |
+| Base y contenedores | `Stage_SACC` (0x43c9ee6c), `Stage_Common.cpp` (0x43cac363), `Stage_DevLater.cpp` (0x43cac51b), `Stage_DualRec.cpp` (0x43cac9f8), `Stage_Notify.cpp` (0x43caccd6), `Stage_WaitControl.cpp` (0x43cad784) |
 | Panorama | `Stage_Panorama.cpp` (0x43cacf07), `Stage_PanoramaCcnrEncode` (0x43cad0f4) |
 | Ramas de disparo | `Stage_InitializeSweepAndSpoolBranch` (0x43cad10d), `Stage_DummyPreReview` (0x43cad160), `Stage_MkOpenBranch` (0x43cad175), `Stage_MkOpenWait` (0x43cad188), `Stage_FaceDetectPreReviewBranch` (0x43cad199) |
 | RAW / resize / trim | `Stage_Raw.cpp` (0x43cad1e2), `Stage_ResizeHV.cpp` (0x43cad6ea) + `Stage_RchRcv_Resize*` (0x43cad558–0x43cad784), `Stage_Rch_*`/`Stage_Rcv_Dist*` (0x43cc8417–0x43cc87b1) |
