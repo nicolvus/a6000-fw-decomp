@@ -17,7 +17,7 @@ Fecha: 2026-10-20. Cámara ILCE-6000 fw 3.21 (CXD90014). Solo estático y lectur
 ## Cómo volver atrás (de menos a más invasivo)
 
 1. **Ajustes/NVRAM corruptos** (el caso del 2026-10-20): service mode + `scripts/senser_backup_restore.py FILE SHA256` con la copia buena `analysis/camera-dumps/nvram-referencia-20261020-214913/backup_flash.bin`. Probado en hardware: la cámara volvió a encender/apagar bien.
-2. **Firmware propio defectuoso pero la cámara aún entra en modo actualizador**: reinstalar el `.dat` oficial 3.21 con `scripts/camera_reflash_fw321.sh` (pmca `firmware`). Obstáculo: el guard rechaza la misma versión. Para poder volver, el FDAT propio debe llevar una versión **distinta de la oficial** y el de recuperación una **aceptada por el guard** (p. ej. reempaquetar el oficial con versión 9.99 como hace pmca, o mayor que la instalada). Qué versiones acepta el guard (3.20 / 3.22 / 9.99): NO VERIFICADO — `scripts/fdat_guard_probe.py` lo comprueba sin escribir; falta ejecutarlo con la cámara en MTP/almacenamiento masivo.
+2. **Firmware propio defectuoso pero la cámara aún entra en modo actualizador**: reinstalar el `.dat` oficial 3.21 con `scripts/camera_reflash_fw321.sh` (pmca `firmware`). Obstáculo: el guard rechaza la misma versión. Para poder volver, el FDAT propio debe llevar una versión **distinta de la oficial** y el de recuperación una **aceptada por el guard** (p. ej. reempaquetar el oficial con versión 9.99 como hace pmca, o mayor que la instalada). Guard medido en esta cámara (fw 3.21, `scripts/fdat_guard_probe.py`, solo chequeo, sin escribir): 3.20 RECHAZADA, 3.21 RECHAZADA, 3.22 ACEPTADA, 9.99 ACEPTADA (`Invalid version` en las rechazadas) ⇒ solo acepta versiones **estrictamente mayores** que la instalada: no se puede volver al oficial 3.21 desde una versión propia ≥3.22 sin reempaquetar el oficial con una versión mayor (p. ej. 9.99). VERIFICADO.
 3. **No arranca ni la app**: depende de que `nflasha1` (Updater) siga intacto, que no está en el paquete, y de poder entrar en modo actualizador (botón/USB). NO VERIFICADO en hardware. No existe en el repo un volcado completo de la NAND (`updater_full_dump.py` está escrito, nunca ejecutado: no hay `analysis/camera-dumps/full-*`).
 4. **Sin modo actualizador**: no hay vía demostrada (JTAG/NAND externa no investigados; ver `docs/boot-and-recovery.md`).
 
@@ -36,5 +36,6 @@ Límites y riesgos:
 ## Antes de cualquier flasheo (pendiente de hacer)
 
 - `scripts/updater_full_dump.py` (solo lectura) para guardar la NAND y las particiones 1–7, 10, 11, 15–18, 23.
-- `scripts/fdat_guard_probe.py` con la cámara en MTP/almacenamiento masivo.
+- (hecho) `scripts/fdat_guard_probe.py`: resultado arriba.
+- Volcado de NAND: `updater_full_dump.py` volcó 1 GiB de RAM y el shell, pero el PULL de `/dev/nflasha0pN` falló (nombres de nodo incorrectos o no legibles con PULL). Nuevo `scripts/updater_nand_dump.py` (lista nodos y hace PULL de `/dev/nflasha*`): pendiente de ejecutar; la cámara quedó en modo actualizador sin responder y requiere apagado (sacar batería).
 - Copia NVRAM fresca (`senser_backup_dump.py`).
