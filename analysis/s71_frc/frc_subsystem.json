@@ -1,0 +1,714 @@
+{
+ "subsystem": "FC/FRC (deteccion de caras y objetos)",
+ "firmware": "av-cam.bin A6000 fw3.21",
+ "comparison_target": "A7S fw3.20",
+ "file_count": {
+  "A6000": 99,
+  "A7S": 99,
+  "identical": true
+ },
+ "inventory_by_group": {
+  "Api": [
+   {
+    "file": "FC/Api/fc_api_camera_param.cpp",
+    "addr": "0x43cef12a",
+    "addr_a7s": "0x43ce40fd"
+   },
+   {
+    "file": "FC/Api/fc_api_cap.cpp",
+    "addr": "0x43cef2ca",
+    "addr_a7s": "0x43ce429d"
+   },
+   {
+    "file": "FC/Api/fc_api_idt.cpp",
+    "addr": "0x43cef51a",
+    "addr_a7s": "0x43ce44ed"
+   },
+   {
+    "file": "FC/Api/fc_api_monitoring.cpp",
+    "addr": "0x43cef71d",
+    "addr_a7s": "0x43ce46f0"
+   },
+   {
+    "file": "FC/Api/fc_api_startup.cpp",
+    "addr": "0x43cef80f",
+    "addr_a7s": "0x43ce47e2"
+   },
+   {
+    "file": "FC/Api/fc_api_tracking.cpp",
+    "addr": "0x43cefa43",
+    "addr_a7s": "0x43ce4a16"
+   },
+   {
+    "file": "FC/Api/fc_api_callback.cpp",
+    "addr": "0x43cf5e59",
+    "addr_a7s": "0x43ce9441"
+   },
+   {
+    "file": "FC/Api/fc_api_face_record.cpp",
+    "addr": "0x43cf5ecb",
+    "addr_a7s": "0x43ce94b3"
+   },
+   {
+    "file": "FC/Api/fc_api_retouch.cpp",
+    "addr": "0x43cf5fd3",
+    "addr_a7s": "0x43ce95bb"
+   }
+  ],
+  "Drv": [
+   {
+    "file": "FC/Drv/fc_drv_frc.cpp",
+    "addr": "0x43cefb74",
+    "addr_a7s": "0x43ce4b47"
+   },
+   {
+    "file": "FC/Drv/fc_drv_fdt.cpp",
+    "addr": "0x43cf03ce",
+    "addr_a7s": "0x43ce552f"
+   },
+   {
+    "file": "FC/Drv/fc_drv_vat.cpp",
+    "addr": "0x43cf03e4",
+    "addr_a7s": "0x43ce5545"
+   },
+   {
+    "file": "FC/Drv/fc_drv_detsa.cpp",
+    "addr": "0x43cf03fa",
+    "addr_a7s": "0x43ce555b"
+   },
+   {
+    "file": "FC/Drv/fc_drv_fat.cpp",
+    "addr": "0x43cf04e6",
+    "addr_a7s": "0x43ce5647"
+   },
+   {
+    "file": "FC/Drv/fc_drv_iro.cpp",
+    "addr": "0x43cf059e",
+    "addr_a7s": "0x43ce56ff"
+   },
+   {
+    "file": "FC/Drv/fc_drv_vae.cpp",
+    "addr": "0x43cf06d1",
+    "addr_a7s": "0x43ce5832"
+   },
+   {
+    "file": "FC/Drv/fc_drv_prc.cpp",
+    "addr": "0x43cf08a0",
+    "addr_a7s": "0x43ce5a01"
+   },
+   {
+    "file": "FC/Drv/fc_drv_bt.cpp",
+    "addr": "0x43cf603a",
+    "addr_a7s": "0x43ce9622"
+   },
+   {
+    "file": "FC/Drv/fc_drv_stk.cpp",
+    "addr": "0x43cf627a",
+    "addr_a7s": "0x43ce9b20"
+   },
+   {
+    "file": "FC/Drv/fc_drv_edt.cpp",
+    "addr": "0x43cf6fd9",
+    "addr_a7s": "0x43ce9727"
+   },
+   {
+    "file": "FC/Drv/fc_drv_iro2g.cpp",
+    "addr": "0x43cf7044",
+    "addr_a7s": "0x43ce9972"
+   },
+   {
+    "file": "FC/Drv/fc_drv_pmv.cpp",
+    "addr": "0x43cf707a",
+    "addr_a7s": "0x43ce99a8"
+   }
+  ],
+  "Feature": [
+   {
+    "file": "FC/Feature/fc_feature_develop_art.cpp",
+    "addr": "0x43cefc26",
+    "addr_a7s": "0x43ce4dc4"
+   },
+   {
+    "file": "FC/Feature/fc_feature_mon_obj_for_face.cpp",
+    "addr": "0x43cefcbf",
+    "addr_a7s": "0x43ce4e7a"
+   },
+   {
+    "file": "FC/Feature/fc_feature_pmv.cpp",
+    "addr": "0x43cefdd2",
+    "addr_a7s": "0x43ce4f8d"
+   },
+   {
+    "file": "FC/Feature/fc_feature_re_init.cpp",
+    "addr": "0x43cefe20",
+    "addr_a7s": "0x43ce4fdb"
+   },
+   {
+    "file": "FC/Feature/fc_feature_touch.cpp",
+    "addr": "0x43cefe59",
+    "addr_a7s": "0x43ce5038"
+   },
+   {
+    "file": "FC/Feature/fc_feature_track_init.cpp",
+    "addr": "0x43ceffc1",
+    "addr_a7s": "0x43ce517c"
+   },
+   {
+    "file": "FC/Feature/fc_feature_mon_face.cpp",
+    "addr": "0x43cf04a7",
+    "addr_a7s": "0x43ce5608"
+   },
+   {
+    "file": "FC/Feature/fc_feature_mon_object.cpp",
+    "addr": "0x43cf0618",
+    "addr_a7s": "0x43ce5779"
+   },
+   {
+    "file": "FC/Feature/fc_feature_vae.cpp",
+    "addr": "0x43cf06e7",
+    "addr_a7s": "0x43ce5848"
+   },
+   {
+    "file": "FC/Feature/fc_feature_capture.cpp",
+    "addr": "0x43cf0779",
+    "addr_a7s": "0x43ce58da"
+   },
+   {
+    "file": "FC/Feature/fc_feature_retouch.cpp",
+    "addr": "0x43cf079b",
+    "addr_a7s": "0x43ce58fc"
+   },
+   {
+    "file": "FC/Feature/fc_feature_panorama.cpp",
+    "addr": "0x43cf07bd",
+    "addr_a7s": "0x43ce591e"
+   },
+   {
+    "file": "FC/Feature/fc_feature_develop.cpp",
+    "addr": "0x43cf07e0",
+    "addr_a7s": "0x43ce5941"
+   },
+   {
+    "file": "FC/Feature/fc_feature_panorama_face_meta.cpp",
+    "addr": "0x43cf0802",
+    "addr_a7s": "0x43ce5963"
+   },
+   {
+    "file": "FC/Feature/fc_feature_touch_for_scanaf.cpp",
+    "addr": "0x43cf085f",
+    "addr_a7s": "0x43ce59c0"
+   },
+   {
+    "file": "FC/Feature/fc_feature_prc_retouch.cpp",
+    "addr": "0x43cf08b6",
+    "addr_a7s": "0x43ce5a17"
+   },
+   {
+    "file": "FC/Feature/fc_feature_base_setting.cpp",
+    "addr": "0x43cf08dc",
+    "addr_a7s": "0x43ce5a3d"
+   },
+   {
+    "file": "FC/Feature/fc_feature_beauty_effect.cpp",
+    "addr": "0x43cf633d",
+    "addr_a7s": "0x43ce9be3"
+   },
+   {
+    "file": "FC/Feature/fc_feature_rec_face.cpp",
+    "addr": "0x43cf63f1",
+    "addr_a7s": "0x43ce9c97"
+   },
+   {
+    "file": "FC/Feature/fc_feature_retouch_art.cpp",
+    "addr": "0x43cf6471",
+    "addr_a7s": "0x43ce9cfa"
+   },
+   {
+    "file": "FC/Feature/fc_feature_scalara_oneshot.cpp",
+    "addr": "0x43cf64ba",
+    "addr_a7s": "0x43ce9d60"
+   }
+  ],
+  "Lib": [
+   {
+    "file": "FC/Lib/fc_lib_dds.cpp",
+    "addr": "0x43cf0020",
+    "addr_a7s": "0x43ce51db"
+   },
+   {
+    "file": "FC/Lib/fc_lib_image.cpp",
+    "addr": "0x43cf0061",
+    "addr_a7s": "0x43ce521c"
+   },
+   {
+    "file": "FC/Lib/fc_lib_message.cpp",
+    "addr": "0x43cf015e",
+    "addr_a7s": "0x43ce5319"
+   },
+   {
+    "file": "FC/Lib/fc_lib_if_flash.cpp",
+    "addr": "0x43cf0331",
+    "addr_a7s": "0x43ce5492"
+   },
+   {
+    "file": "FC/Lib/fc_lib_print.cpp",
+    "addr": "0x43cf034c",
+    "addr_a7s": "0x43ce54ad"
+   },
+   {
+    "file": "FC/Lib/fc_lib_record_log.cpp",
+    "addr": "0x43cf0364",
+    "addr_a7s": "0x43ce54c5"
+   },
+   {
+    "file": "FC/Lib/fc_lib_resource.cpp",
+    "addr": "0x43cf0381",
+    "addr_a7s": "0x43ce54e2"
+   }
+  ],
+  "(raiz)": [
+   {
+    "file": "FC/fc_api.cpp",
+    "addr": "0x43cf02e8",
+    "addr_a7s": "0x43ce5484"
+   },
+   {
+    "file": "FC/fc_top.cpp",
+    "addr": "0x43cf02f6",
+    "addr_a7s": "0x43ce4cc1"
+   },
+   {
+    "file": "FC/fc_tsk_start.cpp",
+    "addr": "0x43cf0304",
+    "addr_a7s": "0x43ce4d41"
+   },
+   {
+    "file": "FC/fc_seq_controller.cpp",
+    "addr": "0x43cf0318",
+    "addr_a7s": "0x43ce4b7c"
+   }
+  ],
+  "Seq": [
+   {
+    "file": "FC/Seq/fc_seq_base.cpp",
+    "addr": "0x43cf039c",
+    "addr_a7s": "0x43ce54fd"
+   },
+   {
+    "file": "FC/Seq/fc_seq_mon_face.cpp",
+    "addr": "0x43cf03b3",
+    "addr_a7s": "0x43ce5514"
+   },
+   {
+    "file": "FC/Seq/fc_seq_attribute.cpp",
+    "addr": "0x43cf04ca",
+    "addr_a7s": "0x43ce562b"
+   },
+   {
+    "file": "FC/Seq/fc_data_frc.cpp",
+    "addr": "0x43cf0518",
+    "addr_a7s": "0x43ce5679"
+   },
+   {
+    "file": "FC/Seq/fc_seq_mon_object.cpp",
+    "addr": "0x43cf0563",
+    "addr_a7s": "0x43ce56c4"
+   },
+   {
+    "file": "FC/Seq/fc_data_mon_object.cpp",
+    "addr": "0x43cf0580",
+    "addr_a7s": "0x43ce56e1"
+   },
+   {
+    "file": "FC/Seq/fc_seq_mon_frame.cpp",
+    "addr": "0x43cf063d",
+    "addr_a7s": "0x43ce579e"
+   },
+   {
+    "file": "FC/Seq/fc_data_track_human_frame.cpp",
+    "addr": "0x43cf0659",
+    "addr_a7s": "0x43ce57ba"
+   },
+   {
+    "file": "FC/Seq/fc_data_track_object_frame.cpp",
+    "addr": "0x43cf067e",
+    "addr_a7s": "0x43ce57df"
+   },
+   {
+    "file": "FC/Seq/fc_seq_vae.cpp",
+    "addr": "0x43cf06a4",
+    "addr_a7s": "0x43ce5805"
+   },
+   {
+    "file": "FC/Seq/fc_data_vae.cpp",
+    "addr": "0x43cf06ba",
+    "addr_a7s": "0x43ce581b"
+   },
+   {
+    "file": "FC/Seq/fc_seq_oneshot.cpp",
+    "addr": "0x43cf0705",
+    "addr_a7s": "0x43ce5866"
+   },
+   {
+    "file": "FC/Seq/fc_seq_touch.cpp",
+    "addr": "0x43cf082f",
+    "addr_a7s": "0x43ce5990"
+   },
+   {
+    "file": "FC/Seq/fc_seq_prc.cpp",
+    "addr": "0x43cf088a",
+    "addr_a7s": "0x43ce59eb"
+   },
+   {
+    "file": "FC/Seq/fc_seq_re_init.cpp",
+    "addr": "0x43cf0f2d",
+    "addr_a7s": "0x43ce65ac"
+   },
+   {
+    "file": "FC/Seq/fc_seq_track_init.cpp",
+    "addr": "0x43cf1016",
+    "addr_a7s": "0x43ce667d"
+   },
+   {
+    "file": "FC/Seq/fc_data_pmv.cpp",
+    "addr": "0x43cf652f",
+    "addr_a7s": "0x43ce6002"
+   },
+   {
+    "file": "FC/Seq/fc_seq_pmv.cpp",
+    "addr": "0x43cf697b",
+    "addr_a7s": "0x43ce64f2"
+   },
+   {
+    "file": "FC/Seq/fc_seq_rec_face.cpp",
+    "addr": "0x43cf6a1a",
+    "addr_a7s": "0x43ce6591"
+   }
+  ],
+  "Alg": [
+   {
+    "file": "FC/Alg/fc_alg_smoothing.cpp",
+    "addr": "0x43cf0412",
+    "addr_a7s": "0x43ce5573"
+   },
+   {
+    "file": "FC/Alg/fc_alg_remove_overlap.cpp",
+    "addr": "0x43cf042e",
+    "addr_a7s": "0x43ce558f"
+   },
+   {
+    "file": "FC/Alg/fc_alg_target_selecting.cpp",
+    "addr": "0x43cf044f",
+    "addr_a7s": "0x43ce55b0"
+   },
+   {
+    "file": "FC/Alg/fc_alg_tracking.cpp",
+    "addr": "0x43cf0472",
+    "addr_a7s": "0x43ce55d3"
+   },
+   {
+    "file": "FC/Alg/fc_alg_pre_fdt.cpp",
+    "addr": "0x43cf048d",
+    "addr_a7s": "0x43ce55ee"
+   },
+   {
+    "file": "FC/Alg/fc_alg_attribute.cpp",
+    "addr": "0x43cf04fc",
+    "addr_a7s": "0x43ce565d"
+   },
+   {
+    "file": "FC/Alg/fc_alg_frc.cpp",
+    "addr": "0x43cf052f",
+    "addr_a7s": "0x43ce5690"
+   },
+   {
+    "file": "FC/Alg/fc_alg_tracking_obj_color.cpp",
+    "addr": "0x43cf05b4",
+    "addr_a7s": "0x43ce5715"
+   },
+   {
+    "file": "FC/Alg/fc_alg_tracking_obj.cpp",
+    "addr": "0x43cf05d9",
+    "addr_a7s": "0x43ce573a"
+   },
+   {
+    "file": "FC/Alg/fc_alg_extract_color.cpp",
+    "addr": "0x43cf05f8",
+    "addr_a7s": "0x43ce5759"
+   },
+   {
+    "file": "FC/Alg/fc_alg_blink.cpp",
+    "addr": "0x43cf071f",
+    "addr_a7s": "0x43ce5880"
+   },
+   {
+    "file": "FC/Alg/fc_alg_exif_face_data.cpp",
+    "addr": "0x43cf0737",
+    "addr_a7s": "0x43ce5898"
+   },
+   {
+    "file": "FC/Alg/fc_alg_exif_makernote.cpp",
+    "addr": "0x43cf0758",
+    "addr_a7s": "0x43ce58b9"
+   },
+   {
+    "file": "FC/Alg/fc_alg_touch.cpp",
+    "addr": "0x43cf0847",
+    "addr_a7s": "0x43ce59a8"
+   },
+   {
+    "file": "FC/Alg/fc_alg_normalize.cpp",
+    "addr": "0x43cf5c06",
+    "addr_a7s": "0x43ce8ed7"
+   },
+   {
+    "file": "FC/Alg/fc_alg_track_init.cpp",
+    "addr": "0x43cf5c56",
+    "addr_a7s": "0x43ce940e"
+   },
+   {
+    "file": "FC/Alg/fc_alg_tracking_face_object.cpp",
+    "addr": "0x43cf5cdd",
+    "addr_a7s": "0x43ce923e"
+   },
+   {
+    "file": "FC/Alg/fc_alg_object.cpp",
+    "addr": "0x43cf6c1d",
+    "addr_a7s": "0x43ce8f0f"
+   },
+   {
+    "file": "FC/Alg/fc_alg_pmv.cpp",
+    "addr": "0x43cf6cbb",
+    "addr_a7s": "0x43ce8fc5"
+   },
+   {
+    "file": "FC/Alg/fc_alg_select_key.cpp",
+    "addr": "0x43cf6daa",
+    "addr_a7s": "0x43ce90b4"
+   }
+  ],
+  "SaFuncDrv": [
+   {
+    "file": "FC/SaFuncDrv/recog_sa_drv.cpp",
+    "addr": "0x43cf0545",
+    "addr_a7s": "0x43ce56a6"
+   },
+   {
+    "file": "FC/SaFuncDrv/fc_sa_frc2_drv.cpp",
+    "addr": "0x43cf0a5c",
+    "addr_a7s": "0x43ce5bbd"
+   },
+   {
+    "file": "FC/SaFuncDrv/fc_sa_frc2_mmu.cpp",
+    "addr": "0x43cf0bf1",
+    "addr_a7s": "0x43ce5d52"
+   }
+  ],
+  "Misc": [
+   {
+    "file": "FC/Misc/fc_detect_cb_handler.cpp",
+    "addr": "0x43cf0903",
+    "addr_a7s": "0x43ce5a64"
+   },
+   {
+    "file": "FC/Misc/fc_prc_request_controller.cpp",
+    "addr": "0x43cf0924",
+    "addr_a7s": "0x43ce5a85"
+   },
+   {
+    "file": "FC/Misc/fc_scalara_detect_cb_handler.cpp",
+    "addr": "0x43cf0a33",
+    "addr_a7s": "0x43ce5b94"
+   }
+  ]
+ },
+ "key_strings_and_addresses": {
+  "FRC: Init FaceIcon": "0x43cf0d6c",
+  "FRC: Update FaceIcon :%d": "0x43cf0d7f",
+  "FaceIconInfo::Free() handle:%d": "0x43cf0d98",
+  "FaceIconInfo::Alloc() handle:%d": "0x43cf0db8",
+  "s_sa_temp_icon_mem.Alloc": "0x43cf0bd8",
+  "s_sa_temp_icon_mem.Free": "0x43cf0b64",
+  "s_sa_param_mem.Alloc": "0x43cf0bc3",
+  "s_sa_param_mem.Free": "0x43cf0b7c",
+  "alloc size:%d, expected:%d": "0x43cf0b39",
+  "SA result: NULL": "0x43cf0b54",
+  "error_status (cancel): %d": "0x43cf0a7c",
+  "AcquireRes 0x%x<-0x%x Core2 user[0]:[ 0x%08x, 0x%08x ]": "0x43cf094a",
+  "AcquireRes 0x%x<-0x%x Core3 user[1]:[ 0x%08x, 0x%08x ]": "0x43cf0981",
+  "release res error: RES_SA_FOR_FRC2 = 0 (0x%x)": "0x43cf09b8",
+  "MakeMmu - SA_MMU_NUM_MEM_ERR :%d": "0x43cf0c11",
+  "MakeMmu - MakeExtentError[%d->%d] :0x%x": "0x43cf0cf9",
+  "FC MMU param open error %d": "0x43cf0aaf",
+  "ddl_saCalcCancel: %d": "0x43cf0afb",
+  "warn: int_fact=NOT_FINISH": "0x43cf0ad4"
+ },
+ "drivers": {
+  "fc_drv_edt.cpp": {
+   "addr": "0x43cf6fd9",
+   "evidence": [
+    "idt_edt_start",
+    "idt_edt_get_result",
+    "EyeDetection"
+   ],
+   "role": "deteccion de ojos"
+  },
+  "fc_drv_fat.cpp": {
+   "addr": "0x43cf04e6",
+   "evidence": [
+    "ProcessFat::startAttributeDetection",
+    "ProcessFat::getAttributeResult",
+    "cancel_attribute_search",
+    "start_monitoring_search",
+    "start_immediate_search"
+   ],
+   "role": "atraccion de atributos de cara"
+  },
+  "fc_drv_bt.cpp": {
+   "addr": "0x43cf603a",
+   "evidence": [
+    "fg_area",
+    "bg_area",
+    "detect_area",
+    "bayes_map_level",
+    "gaussian_map_level",
+    "big_obj_size_thres",
+    "af_rect_thres"
+   ],
+   "role": "deteccion de objetos (primer plano/fondo, mapas bayesianos)"
+  },
+  "fc_drv_stk.cpp": {
+   "addr": null,
+   "evidence": [
+    "Saliency CB",
+    "TouchSimilarity CB",
+    "ColorSimilarity CB",
+    "idt_stk_start_auto_saliency",
+    "idt_stk_start_touch_similarity"
+   ],
+   "role": "saliencia y similitud (toque/color)"
+  },
+  "fc_drv_pmv.cpp": {
+   "addr": null,
+   "evidence": [
+    "Affine_err_thresh",
+    "Vector_thresh",
+    "Motion_frame_num",
+    "Cont_block_thresh"
+   ],
+   "role": "tracking por vectores de movimiento"
+  },
+  "fc_drv_iro2g.cpp": {
+   "addr": "0x43cf7044",
+   "evidence": [
+    "idt_iro2G_stop",
+    "ALIGNMENT ERR",
+    "HUE ERR",
+    "HEIGHT ERR",
+    "ValidWidth ERR"
+   ],
+   "role": "deteccion que entrega matiz/alto/ancho (IRO2G)"
+  },
+  "fc_drv_prc.cpp": {
+   "addr": "0x43cf08a0",
+   "evidence": [
+    "PRC Acquire Error",
+    "PRC Start Error",
+    "FeaturePrcRetouch",
+    "FeaturePrcBeautyEffect",
+    "FeaturePrcRecFace"
+   ],
+   "role": "grupo de funciones de retoque/procesado de cara (PRC)"
+  },
+  "fc_drv_vae.cpp": {
+   "addr": "0x43cf06d1",
+   "evidence": [
+    "Vae_Work Alloc_Error",
+    "Vat Work Alloc Error",
+    "VOT RefMap Get ERR"
+   ],
+   "role": "analisis por votacion (VAE/VAT/VOT) - siglas NO_VERIFICADO"
+  },
+  "fc_drv_frc.cpp": {
+   "addr": null,
+   "evidence": [
+    "index error : %d (face_num=%d)"
+   ],
+   "role": "reconocimiento de caras (FRC)"
+  },
+  "fc_drv_fdt.cpp": {
+   "addr": null,
+   "evidence": [
+    "[FACE]: FDT Int Error"
+   ],
+   "role": "deteccion de caras en el pipeline IDT"
+  }
+ },
+ "trk_detectors": {
+  "DETSA": {
+   "core": "Core2",
+   "evidence": [
+    "CORE2 RESOURCE CONTENTION",
+    "PARAM ERR !! face_num"
+   ]
+  },
+  "EDTSA": {
+   "core": "Core3",
+   "evidence": [
+    "CORE3 RESOURCE CONTENTION",
+    "Face size is too small",
+    "face : [%d, %d, %d, %d]",
+    "angle : %d",
+    "node : %d",
+    "hue_range",
+    "saturation_range",
+    "value_range"
+   ]
+  },
+  "IRO2G": {
+   "core": "Core2",
+   "evidence": [
+    "ALIGNMENT ERR",
+    "HUE ERR",
+    "HEIGHT ERR",
+    "ValidWidth ERR"
+   ]
+  },
+  "PMV": {
+   "core": "Core3",
+   "evidence": [
+    "Param GM conf_th1",
+    "Affine_err_thresh",
+    "Vector_thresh",
+    "Motion_frame_num",
+    "Cont_block_thresh"
+   ]
+  },
+  "STK": {
+   "core": "Core2",
+   "evidence": [
+    "Saliency CB",
+    "TouchSimilarity CB",
+    "ColorSimilarity CB"
+   ]
+  },
+  "BT": {
+   "core": null,
+   "evidence": [
+    "fg_area",
+    "bg_area",
+    "lost_fg_area",
+    "bayes_map_level",
+    "big_obj_size_thres",
+    "color_mask_thres"
+   ]
+  }
+ },
+ "corrections_vs_subagent_draft": [
+  "direcciones en espacio de ficheros (0x8060839) -> direcciones del binario (0x43cf0db8)",
+  "s_temp_icon_mem/s_param_mem -> s_sa_temp_icon_mem/s_sa_param_mem",
+  "'SA (Secure Area)' -> SA = acelerador Scalar (ScalarA; sa_dfdet.bin = deteccion de caras en el Scalar)",
+  "semantica inventada de BT/FAT/IRO/PMV/STK -> corregida con la evidencia de sus parametros",
+  "diferencial A7S falso (fc_drv_iro2g.c y fc_feature_panorama_face_meta.c existen en A7S) -> los 99 ficheros FC/ son identicos en ambas camaras"
+ ]
+}
