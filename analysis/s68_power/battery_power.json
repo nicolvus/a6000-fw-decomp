@@ -1,0 +1,272 @@
+{
+  "milestone": "S68",
+  "topic": "battery_power",
+  "camera": "A6000 fw3.21",
+  "firmware": "av-cam.bin",
+  "firmware_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "compare_camera": "A7S fw3.20",
+  "compare_firmware_sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+  "base": 0x43541000,
+  "method": "static byte analysis of av-cam.bin with Capstone + PIC literals; no firmware executed, no camera touched",
+  "strings": {
+    "battery_level_upm": {
+      "addr": "0x43ca2dfd",
+      "text": "[CAMERA_MAIN_SYNC]: Set UPM Battery Level [state] %d [Error] %d",
+      "role": "battery level read via UPM, logs state and error",
+      "status": "VERIFIED"
+    },
+    "batteryinfo_error": {
+      "addr": "0x43ca6a3c",
+      "text": "[CAMERA_MAIN_FC]: OSAL_ERROR: BatteryInfo",
+      "role": "BatteryInfo error log in main camera (FC)",
+      "status": "VERIFIED"
+    },
+    "batteryinfo_name": {
+      "addr": "0x43ca6a5a",
+      "text": "BatteryInfo",
+      "role": "battery info property name",
+      "status": "VERIFIED"
+    },
+    "irlight_battery_info": {
+      "addr": "0x43ca7e2e",
+      "text": "[IRLight] Battery Info : %d",
+      "role": "IR illuminator battery info log",
+      "status": "VERIFIED"
+    },
+    "videolight_battery_info": {
+      "addr": "0x43ca7f1d",
+      "text": "[VideoLight] Battery Info : %d",
+      "role": "video light battery info log",
+      "status": "VERIFIED"
+    },
+    "acv_error_voltage": {
+      "addr": "0x43c8f83b",
+      "text": "ACV Error Voltage",
+      "role": "voltage error string (ACV)",
+      "status": "VERIFIED"
+    },
+    "acv_batt_snd": {
+      "addr": "0x43c8f95e",
+      "text": "ACV_BATT_Snd",
+      "role": "send ACV battery status",
+      "status": "VERIFIED"
+    },
+    "batt_auth_snd": {
+      "addr": "0x43c8f96b",
+      "text": "BATT_AUTH_Snd",
+      "role": "send battery authentication",
+      "status": "VERIFIED"
+    },
+    "batt_state1_snd": {
+      "addr": "0x43c8f979",
+      "text": "BATT_STATE1_Snd",
+      "role": "send battery state 1",
+      "status": "VERIFIED"
+    },
+    "batt_state2_snd": {
+      "addr": "0x43c8f989",
+      "text": "BATT_STATE2_Snd",
+      "role": "send battery state 2",
+      "status": "VERIFIED"
+    },
+    "batt_state3_snd": {
+      "addr": "0x43c8f999",
+      "text": "BATT_STATE3_Snd",
+      "role": "send battery state 3",
+      "status": "VERIFIED"
+    },
+    "batt_type1_snd": {
+      "addr": "0x43c8f9a9",
+      "text": "BATT_TYPE1_Snd",
+      "role": "send battery type 1",
+      "status": "VERIFIED"
+    },
+    "batt_type2_snd": {
+      "addr": "0x43c8f9b8",
+      "text": "BATT_TYPE2_Snd",
+      "role": "send battery type 2",
+      "status": "VERIFIED"
+    },
+    "box_temperature_snd": {
+      "addr": "0x43c8f9fc",
+      "text": "Box_Temperature_Snd",
+      "role": "send box/battery temperature",
+      "status": "VERIFIED"
+    },
+    "sb_charge": {
+      "addr": "0x43cb4c23",
+      "text": "SB_CHARGE",
+      "role": "flash/strobe (SB) charge state name",
+      "status": "VERIFIED"
+    },
+    "wait_mem_chg": {
+      "addr": "0x43cb4cac",
+      "text": "WAIT_MEM_CHG",
+      "role": "wait memory/charge state name",
+      "status": "VERIFIED"
+    },
+    "cam_strb_charge_on": {
+      "addr": "0x43cb58b3",
+      "text": "EV CamStrbChargeOn",
+      "role": "flash charge ON event",
+      "status": "VERIFIED"
+    },
+    "cam_strb_charge_off": {
+      "addr": "0x43cb58c6",
+      "text": "EV CamStrbChargeOff",
+      "role": "flash charge OFF event",
+      "status": "VERIFIED"
+    },
+    "mon_powersave": {
+      "addr": "0x43c90f07",
+      "text": "[CAMCORE]: MonPowersave[%d] is already Enabled !",
+      "role": "CAMCORE power save monitor",
+      "status": "VERIFIED"
+    },
+    "imager_power_save_on": {
+      "addr": "0x43c9469c",
+      "text": "[CAM_IMAGER]: ImagerCommon::MacroPowerSaveOnRequest Unknown index number",
+      "role": "imager power save on request",
+      "status": "VERIFIED"
+    },
+    "imager_power_off_request": {
+      "addr": "0x43c94729",
+      "text": "[CAM_IMAGER]: ImagerCommon::MacroPowerOffRequest Unknown index number",
+      "role": "imager power off request",
+      "status": "VERIFIED"
+    },
+    "sublvds_power_save_on": {
+      "addr": "0x43c95466",
+      "text": "[CAM_IMAGER]: SubLVDS PowerSaveOn: SUBLCNTL_DFE1 does not exist on Regulus.",
+      "role": "SubLVDS power save on (Regulus ISP)",
+      "status": "VERIFIED"
+    },
+    "sublvds_power_save_off": {
+      "addr": "0x43c954ed",
+      "text": "[CAM_IMAGER]: SubLVDS PowerSaveOff: SUBLCNTL_DFE1 does not exist on Regulus.",
+      "role": "SubLVDS power save off (Regulus ISP)",
+      "status": "VERIFIED"
+    },
+    "lens_reduce_voltage": {
+      "addr": "0x43cc2ca6",
+      "text": "[IMAGING_CAP]: Warning! Wait E-MountLens ReduceVoltage Wait(%d ms)",
+      "role": "capture waits for E-mount lens voltage reduction",
+      "status": "VERIFIED"
+    },
+    "capture_cancel_power_off": {
+      "addr": "0x43ca9d85",
+      "text": "[IMAGING_CAP]: CapMgr)CaptureCancel_PowerOffDetect() offFactor=%d",
+      "role": "capture cancel on power-off detect",
+      "status": "VERIFIED"
+    }
+  },
+  "charge_variable_names": {
+    "us_RechargeIntervalCnt": { "addr": "0x43ccd8aa", "status": "VERIFIED" },
+    "uc_ChargeCommand": { "addr": "0x43ccd8c2", "status": "VERIFIED" },
+    "us_ChargeCnt": { "addr": "0x43ccd8d3", "status": "VERIFIED" },
+    "uc_ChargeOnCnt": { "addr": "0x43ccd8e0", "status": "VERIFIED" },
+    "uc_ChargeStatus": { "addr": "0x43ccd8ef", "status": "VERIFIED" },
+    "uc_AcvOn": { "addr": "0x43ccd8ff", "status": "VERIFIED" },
+    "uc_UnregVolltage": { "addr": "0x43ccd908", "status": "VERIFIED" },
+    "uc_CapacitorStatus": { "addr": "0x43ccd919", "status": "VERIFIED" },
+    "uc_PwmStatus": { "addr": "0x43ccd92c", "status": "VERIFIED" },
+    "uc_ChargeEnable": { "addr": "0x43ccd939", "status": "VERIFIED" },
+    "us_ActivePwmDutySlope": { "addr": "0x43ccd949", "status": "VERIFIED" },
+    "uc_GetInfoOK": { "addr": "0x43ccd95f", "status": "VERIFIED" },
+    "uc_ChargeForceOff": { "addr": "0x43ccd96c", "status": "VERIFIED" },
+    "uc_ChargeRequest": { "addr": "0x43ccda49", "status": "VERIFIED" },
+    "uc_ChargeStopRequest": { "addr": "0x43ccda5a", "status": "VERIFIED" },
+    "b_GpflLogicPowerOn": { "addr": "0x43ccdc63", "status": "VERIFIED" },
+    "b_SBChargeReq": { "addr": "0x43ccdc76", "status": "VERIFIED" }
+  },
+  "functions": {
+    "0x4378f364": {
+      "name": "Set UPM Battery Level",
+      "role": "reads 8 bytes from device at obj+5, logs [state] [Error]; error -> code 4",
+      "xref_string": "0x43ca2dfd at 0x4378f3ca",
+      "status": "VERIFIED"
+    },
+    "0x437b7d6c": {
+      "name": "BatteryInfo OSAL_ERROR handler",
+      "role": "compares bl 0x439fd740 result with 2, reads obj[0x49c], logs OSAL_ERROR: BatteryInfo",
+      "xref_string": "0x43ca6a3c at 0x437b7dee",
+      "status": "VERIFIED"
+    },
+    "0x437cf1f0": {
+      "name": "IRLight Battery Info",
+      "role": "decodes battery info from struct fields (offsets 0x1a,0x22,0x7,0xf), logs [IRLight] Battery Info : %d",
+      "xref_string": "0x43ca7e2e at 0x437cf2fe",
+      "status": "VERIFIED"
+    },
+    "0x437d0768": {
+      "name": "VideoLight Battery Info",
+      "role": "decodes battery info from struct fields, threshold 0x302 (770), recharge counters, logs [VideoLight] Battery Info : %d",
+      "xref_string": "0x43ca7f1d at 0x437d0946",
+      "status": "VERIFIED"
+    },
+    "0x4385fff0": {
+      "name": "CamStrbChargeOn/Off",
+      "role": "emits EV CamStrbChargeOn / EV CamStrbChargeOff events (flash/strobe charge)",
+      "xrefs": ["0x43cb58b3 at 0x43860124", "0x43cb58c6 at 0x4386051a"],
+      "status": "VERIFIED"
+    }
+  },
+  "callers_verified": {
+    "0x437b7d6c": ["0x437b7ee6 (in 0x437b7ea2)"],
+    "0x437cf1f0": ["0x437cf996 (in 0x437cf928)", "0x437cf972 (in 0x437cf928)"],
+    "0x437d0768": ["0x437d0946 (in 0x437d0768)"],
+    "0x4385fff0": ["0x437b5e18 (in 0x437b5d30)"]
+  },
+  "absent_strings_a6000": [
+    "NP-FW", "NPFW", "FW50", "USB power", "PowerProfile", "AutoPowerOff",
+    "N.Stickby", "DV.power", "PowerMgr", "Energy", "Drain", "libbackup"
+  ],
+  "note_flash_vs_battery": "The variables uc_ChargeCommand/uc_ChargeStatus/uc_ChargeEnable/uc_ChargeForceOff/uc_ChargeRequest/uc_ChargeStopRequest and b_SBChargeReq sit alongside SB_CHARGE/CamStrbChargeOn/Off/uc_CapacitorStatus: they belong to the flash/strobe (SB) charge subsystem, NOT to the NP-FW50 battery pack.",
+  "comparison_a6000_vs_a7s": {
+    "set_upm_battery_level": { "A6000": "0x43ca2dfd", "A7S": "0x43ca8a94", "both": true },
+    "batteryinfo_property": { "A6000": "0x43ca6a5a", "A7S": null, "both": false },
+    "irlight_battery_info": { "A6000": "0x43ca7e2e", "A7S": null, "both": false },
+    "videolight_battery_info": { "A6000": "0x43ca7f1d", "A7S": null, "both": false },
+    "acv_error_voltage": { "A6000": "0x43c8f83b", "A7S": null, "both": false },
+    "acv_batt_snd": { "A6000": "0x43c8f95e", "A7S": null, "both": false },
+    "batt_auth_snd": { "A6000": "0x43c8f96b", "A7S": "0x43c983f6", "both": true },
+    "batt_state1_3_snd": { "A6000": "0x43c8f979-0x43c8f999", "A7S": "0x43c98411-0x43c98431", "both": true },
+    "batt_type1_2_snd": { "A6000": "0x43c8f9a9-0x43c8f9b8", "A7S": "0x43c98441-0x43c98450", "both": true },
+    "box_temperature_snd": { "A6000": "0x43c8f9fc", "A7S": "0x43c98494", "both": true },
+    "sb_charge": { "A6000": "0x43cb4c23", "A7S": "0x43caa7d4", "both": true },
+    "cam_strb_charge_on_off": { "A6000": "0x43cb58b3/0x43cb58c6", "A7S": "0x43cab730/0x43cab743", "both": true },
+    "charge_variables": { "A6000": "0x43ccd8c2..0x43ccda5a", "A7S": "0x43cc7663..0x43cc77fb", "both": true },
+    "powersave_imager": { "A6000": "present", "A7S": "present", "both": true },
+    "poweroff_imager_timers": { "A6000": "present", "A7S": "present", "both": true },
+    "np_fw_fw50_usb_power_autopoweroff_powermgr_energy": { "A6000": "absent", "A7S": "absent", "both": false }
+  },
+  "conclusion": {
+    "verified": [
+      "Battery level read via UPM (0x4378f364, string 0x43ca2dfd)",
+      "BatteryInfo error handling (0x437b7d6c, string 0x43ca6a3c)",
+      "IRLight/VideoLight battery info (0x437cf1f0 / 0x437d0768)",
+      "BATT_*_Snd / ACV_BATT_Snd / Box_Temperature_Snd protocol strings (0x43c8f95e-0x43c8f9fc)",
+      "Flash/strobe (SB) charge subsystem (SB_CHARGE, CamStrbChargeOn/Off, uc_Charge* variables, 0x4385fff0)",
+      "Imager power save / power off / SubLVDS power save",
+      "Lens reduce-voltage wait (0x43cc2ca6) and capture-cancel power-off detect (0x43ca9d85)",
+      "A7S shares SB charge + BATT_*_Snd; lacks BatteryInfo + ACV_BATT_Snd"
+    ],
+    "not_verified": [
+      "NP-FW50 pack data: model ID, voltage, current, temperature, cycles, capacity, SOC (no NP-FW/FW50 string)",
+      "Pack decode tables or field masks",
+      "Write-back to pack (calibration, cycle reset)",
+      "USB (MTP/PD) or dock charging; full/abnormal charge logs",
+      "Power profiles (LCD/AF/Picture Effect) and PowerProfile/PowerMgr/Energy manager",
+      "Auto power-off (no AutoPowerOff string)",
+      "Battery charge circuit control (on/off, current limit)",
+      "DC/DD / libbackup battery module or energy drain",
+      "Explicit capture <-> card power-off ordering",
+      "Battery <-> body logic on/off (LOGIC_ON/LOGIC_OFF are mount, S66)"
+    ],
+    "inference": [
+      "8 bytes read by 0x4378f364 = battery level/charge (semantics not byte-proven)",
+      "BATT_*_Snd / ACV_BATT_Snd = send battery status to external MCU (destination not proven)",
+      "uc_AcvOn = AC adapter state (name suggests AC, not proven)"
+    ]
+  }
+}
