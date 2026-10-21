@@ -1,5 +1,7 @@
 import re
+
 from capstone import *
+
 b=open('analysis/rea-independent/input/av-cam.bin','rb').read(); base=0x43541000
 md=Cs(CS_ARCH_ARM,CS_MODE_THUMB); md.skipdata=True
 ins=list(md.disasm(b[:0x9c0000],base))

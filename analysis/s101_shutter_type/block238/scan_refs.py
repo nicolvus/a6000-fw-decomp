@@ -1,6 +1,9 @@
 # S70: referencias PC-relativas al bloque 0x43edf684 (lento: ~3 min). Resultado: 62 sitios, todos en 0x43802000-0x43805000.
-import struct,re,sys
+import re
+import struct
+
 from capstone import *
+
 b=open('analysis/rea-independent/input/av-cam.bin','rb').read(); base=0x43541000
 md=Cs(CS_ARCH_ARM,CS_MODE_THUMB); md.skipdata=True; md.detail=True
 T0,T1=0x43edf684,0x43edf684+0x700
