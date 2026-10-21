@@ -53,7 +53,7 @@ Las tres operaciones asíncronas fallan con códigos **OSAL**, no DMM: `ERR_OSAL
 `rcv Invalid Src!: 0x%08x` (origen inesperado de la respuesta). Esto coincide con lo que
 S38Ya había observado: en `av-cam.bin` la frontera **DMM↔OSAL** es real, no una inferencia.
 
-## 3. Mapa función → traza (25 funciones)
+## 3. Mapa función → traza (25 funciones con la regla ancha; **14** con la regla canónica estricta)
 
 La atribución se hace con el esquema **PIC** (`destino = literal_del_pool + (add rX,pc + 4)`,
 probando todos los `ldr` del registro) y los prólogos Thumb. Resultado: una función por
