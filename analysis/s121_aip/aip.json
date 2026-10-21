@@ -1,0 +1,1481 @@
+{
+ "milestone": "S121",
+ "module": "AIP",
+ "module_reading": "Audio IP (evidencia: RTTI 9AudioIpIf/9SaWrapper y [AudioIp]/[AudioIP] del mismo bloque)",
+ "binary": "analysis/rea-independent/input/av-cam.bin",
+ "base": "0x43541000",
+ "counts": {
+  "strings": 37,
+  "strings_range": [
+   "0x43cdd844",
+   "0x43cdec50"
+  ],
+  "pic_sites_strict": 37,
+  "strings_referenced": 37,
+  "dead_strings": [],
+  "add_rX_pc_image": 95599,
+  "add_rX_pc_with_ldr": 88158,
+  "targets_in_block": 123,
+  "functions": 16,
+  "subblocks": 6,
+  "file_offsets": [
+   "0x79c844",
+   "0x79dc50"
+  ]
+ },
+ "strings": [
+  {
+   "vaddr": "0x43cdd844",
+   "text": "[AIP]SA OpenConfigCb Ack",
+   "site": "0x43926d2c",
+   "func": "0x43926d1c",
+   "ldr": "0x43926d28",
+   "pool": "0x43926dd4",
+   "gap": 4,
+   "subblock": "SaWrapper",
+   "marker": "9AudioIpIf`0x43cdd82e + 9SaWrapper`0x43cdd839 (RTTI)"
+  },
+  {
+   "vaddr": "0x43cdd85e",
+   "text": "[AIP]SA OpenConfigCb Ack Err errCode %x errState %x",
+   "site": "0x43926d4a",
+   "func": "0x43926d1c",
+   "ldr": "0x43926d46",
+   "pool": "0x43926dd8",
+   "gap": 4,
+   "subblock": "SaWrapper",
+   "marker": "9AudioIpIf`0x43cdd82e + 9SaWrapper`0x43cdd839 (RTTI)"
+  },
+  {
+   "vaddr": "0x43cdd893",
+   "text": "[AIP]SA OpenConfigCb Comp",
+   "site": "0x43926d7a",
+   "func": "0x43926d1c",
+   "ldr": "0x43926d76",
+   "pool": "0x43926ddc",
+   "gap": 4,
+   "subblock": "SaWrapper",
+   "marker": "9AudioIpIf`0x43cdd82e + 9SaWrapper`0x43cdd839 (RTTI)"
+  },
+  {
+   "vaddr": "0x43cdd8ae",
+   "text": "[AIP]SA OpenConfigCb Comp Err errCode %x errState %x",
+   "site": "0x43926d98",
+   "func": "0x43926d1c",
+   "ldr": "0x43926d94",
+   "pool": "0x43926de0",
+   "gap": 4,
+   "subblock": "SaWrapper",
+   "marker": "9AudioIpIf`0x43cdd82e + 9SaWrapper`0x43cdd839 (RTTI)"
+  },
+  {
+   "vaddr": "0x43cdd8e4",
+   "text": "[AIP]SA OpenConfigCb Err",
+   "site": "0x43926db4",
+   "func": "0x43926d1c",
+   "ldr": "0x43926db2",
+   "pool": "0x43926de4",
+   "gap": 2,
+   "subblock": "SaWrapper",
+   "marker": "9AudioIpIf`0x43cdd82e + 9SaWrapper`0x43cdd839 (RTTI)"
+  },
+  {
+   "vaddr": "0x43cdd8fe",
+   "text": "[AIP]SA CloseConfigCb Done",
+   "site": "0x43926df8",
+   "func": "0x43926de8",
+   "ldr": "0x43926df4",
+   "pool": "0x43926ec0",
+   "gap": 4,
+   "subblock": "SaWrapper",
+   "marker": "9AudioIpIf`0x43cdd82e + 9SaWrapper`0x43cdd839 (RTTI)"
+  },
+  {
+   "vaddr": "0x43cdd91a",
+   "text": "[AIP]SA CloseCallback Err errCode %x errState %x",
+   "site": "0x43926e16",
+   "func": "0x43926de8",
+   "ldr": "0x43926e12",
+   "pool": "0x43926ec4",
+   "gap": 4,
+   "subblock": "SaWrapper",
+   "marker": "9AudioIpIf`0x43cdd82e + 9SaWrapper`0x43cdd839 (RTTI)"
+  },
+  {
+   "vaddr": "0x43cdd94c",
+   "text": "[AIP]SA CloseCallback Err uniqueId %x ",
+   "site": "0x43926e42",
+   "func": "0x43926de8",
+   "ldr": "0x43926e40",
+   "pool": "0x43926ec8",
+   "gap": 2,
+   "subblock": "SaWrapper",
+   "marker": "9AudioIpIf`0x43cdd82e + 9SaWrapper`0x43cdd839 (RTTI)"
+  },
+  {
+   "vaddr": "0x43cdd9e3",
+   "text": "[AIP][SA ANR MGR]SetAudioNrType %x",
+   "site": "0x4392732a",
+   "func": "0x439272dc",
+   "ldr": "0x43927324",
+   "pool": "0x43927338",
+   "gap": 6,
+   "subblock": "SaDriverZoomNr",
+   "marker": "14SaDriverZoomNr`0x43cdda06 (RTTI, tras la cadena)"
+  },
+  {
+   "vaddr": "0x43cddab5",
+   "text": "[AIP]SetFader m_fader.count %x",
+   "site": "0x4355af04",
+   "func": "0x4355ae98",
+   "ldr": "0x4355aefe",
+   "pool": "0x4355af40",
+   "gap": 6,
+   "subblock": "SetFader",
+   "marker": "entre 14SaDriverZoomNr y 3Abb`0x43cddaf3"
+  },
+  {
+   "vaddr": "0x43cde67a",
+   "text": "[AIP]SaBackUpCtrl::UnREG CB OK",
+   "site": "0x4392a722",
+   "func": "0x4392a712",
+   "ldr": "0x4392a720",
+   "pool": "0x4392a764",
+   "gap": 2,
+   "subblock": "SaBackUpCtrl",
+   "marker": "12SaBackUpCtrl`0x43cde564 (RTTI)"
+  },
+  {
+   "vaddr": "0x43cde69a",
+   "text": "[AIP]SaBackUpCtrl::UnREG CB err %d",
+   "site": "0x4392a73a",
+   "func": "0x4392a712",
+   "ldr": "0x4392a736",
+   "pool": "0x4392a768",
+   "gap": 4,
+   "subblock": "SaBackUpCtrl",
+   "marker": "12SaBackUpCtrl`0x43cde564 (RTTI)"
+  },
+  {
+   "vaddr": "0x43cde6be",
+   "text": "[AIP]SaBackUpCtrl GetBackUp err bkId %x",
+   "site": "0x4392a7b0",
+   "func": "0x4392a76e",
+   "ldr": "0x4392a7ac",
+   "pool": "0x4392a7e4",
+   "gap": 4,
+   "subblock": "SaBackUpCtrl",
+   "marker": "12SaBackUpCtrl`0x43cde564 (RTTI)"
+  },
+  {
+   "vaddr": "0x43cde77b",
+   "text": "[AIP]SaBackUpCtrl::CreateBackUpLpsList Err",
+   "site": "0x4392a9ca",
+   "func": "0x4392a98c",
+   "ldr": "0x4392a9c6",
+   "pool": "0x4392a9fc",
+   "gap": 4,
+   "subblock": "SaBackUpCtrl",
+   "marker": "12SaBackUpCtrl`0x43cde564 (RTTI)"
+  },
+  {
+   "vaddr": "0x43cde7a7",
+   "text": "[AIP]SaBackUpCtrl::Init Sa OK id num = %d",
+   "site": "0x4392aa46",
+   "func": "0x4392aa00",
+   "ldr": "0x4392aa42",
+   "pool": "0x4392ab4c",
+   "gap": 4,
+   "subblock": "SaBackUpCtrl",
+   "marker": "12SaBackUpCtrl`0x43cde564 (RTTI)"
+  },
+  {
+   "vaddr": "0x43cde7d2",
+   "text": "[AIP]SaBackUpCtrl::Init Sa err %d",
+   "site": "0x4392aa5c",
+   "func": "0x4392aa00",
+   "ldr": "0x4392aa58",
+   "pool": "0x4392ab50",
+   "gap": 4,
+   "subblock": "SaBackUpCtrl",
+   "marker": "12SaBackUpCtrl`0x43cde564 (RTTI)"
+  },
+  {
+   "vaddr": "0x43cde7f5",
+   "text": "[AIP]SaBackUpCtrl::Init Lps OK id num = %d",
+   "site": "0x4392aa86",
+   "func": "0x4392aa00",
+   "ldr": "0x4392aa82",
+   "pool": "0x4392ab54",
+   "gap": 4,
+   "subblock": "SaBackUpCtrl",
+   "marker": "12SaBackUpCtrl`0x43cde564 (RTTI)"
+  },
+  {
+   "vaddr": "0x43cde821",
+   "text": "[AIP]SaBackUpCtrl::Init Lps err %d",
+   "site": "0x4392aa9c",
+   "func": "0x4392aa00",
+   "ldr": "0x4392aa98",
+   "pool": "0x4392ab58",
+   "gap": 4,
+   "subblock": "SaBackUpCtrl",
+   "marker": "12SaBackUpCtrl`0x43cde564 (RTTI)"
+  },
+  {
+   "vaddr": "0x43cde845",
+   "text": "[AIP]SaBackUpCtrl::REG CB OK",
+   "site": "0x4392aaec",
+   "func": "0x4392aa00",
+   "ldr": "0x4392aaea",
+   "pool": "0x4392ab68",
+   "gap": 2,
+   "subblock": "SaBackUpCtrl",
+   "marker": "12SaBackUpCtrl`0x43cde564 (RTTI)"
+  },
+  {
+   "vaddr": "0x43cde863",
+   "text": "[AIP]SaBackUpCtrl::REG CB err %d",
+   "site": "0x4392ab04",
+   "func": "0x4392aa00",
+   "ldr": "0x4392ab00",
+   "pool": "0x4392ab6c",
+   "gap": 4,
+   "subblock": "SaBackUpCtrl",
+   "marker": "12SaBackUpCtrl`0x43cde564 (RTTI)"
+  },
+  {
+   "vaddr": "0x43cde885",
+   "text": "[AIP]SaBackUpCtrl::WriteShadow2BakcupArea OK id num = %d",
+   "site": "0x4392ab8e",
+   "func": "0x4392ab76",
+   "ldr": "0x4392ab8a",
+   "pool": "0x4392abd8",
+   "gap": 4,
+   "subblock": "SaBackUpCtrl",
+   "marker": "12SaBackUpCtrl`0x43cde564 (RTTI)"
+  },
+  {
+   "vaddr": "0x43cde8bf",
+   "text": "[AIP]SaBackUpCtrl::WriteShadow2BackupArea err %d",
+   "site": "0x4392aba4",
+   "func": "0x4392ab76",
+   "ldr": "0x4392aba0",
+   "pool": "0x4392abdc",
+   "gap": 4,
+   "subblock": "SaBackUpCtrl",
+   "marker": "12SaBackUpCtrl`0x43cde564 (RTTI)"
+  },
+  {
+   "vaddr": "0x43cde900",
+   "text": "[AIP]Sa OpenConfig Cmd %x Func %x",
+   "site": "0x4392ac3a",
+   "func": "0x4392ac30",
+   "ldr": "0x4392ac34",
+   "pool": "0x4392aca8",
+   "gap": 6,
+   "subblock": "SaDriverBase",
+   "marker": "12SaDriverBase`0x43cde8f1 (RTTI)"
+  },
+  {
+   "vaddr": "0x43cde923",
+   "text": "[AIP]Zma %x Ext %x Mbx %x",
+   "site": "0x4392ac46",
+   "func": "0x4392ac30",
+   "ldr": "0x4392ac40",
+   "pool": "0x4392acac",
+   "gap": 6,
+   "subblock": "SaDriverBase",
+   "marker": "12SaDriverBase`0x43cde8f1 (RTTI)"
+  },
+  {
+   "vaddr": "0x43cde957",
+   "text": "[AIP]Sa Close Cmd %x Func %x Unq %x",
+   "site": "0x4392acbe",
+   "func": "0x4392acb4",
+   "ldr": "0x4392acb8",
+   "pool": "0x4392ad0c",
+   "gap": 6,
+   "subblock": "SaDriverBase",
+   "marker": "12SaDriverBase`0x43cde8f1 (RTTI)"
+  },
+  {
+   "vaddr": "0x43cde97c",
+   "text": "[AIP]SaDriver CloseConfig",
+   "site": "0x4392ace4",
+   "func": "0x4392acb4",
+   "ldr": "0x4392ace2",
+   "pool": "0x4392ad10",
+   "gap": 2,
+   "subblock": "SaDriverBase",
+   "marker": "12SaDriverBase`0x43cde8f1 (RTTI)"
+  },
+  {
+   "vaddr": "0x43cdea9e",
+   "text": "[AIP]LPS OpenConfigCb Ack",
+   "site": "0x4392b17c",
+   "func": "0x4392b16c",
+   "ldr": "0x4392b178",
+   "pool": "0x4392b240",
+   "gap": 4,
+   "subblock": "LPS",
+   "marker": "tras 10SaSysvCtrl`0x43cdea07 / 19SaDriverLinearPhase`0x43cdea14"
+  },
+  {
+   "vaddr": "0x43cdeab9",
+   "text": "[AIP]LPS OpenConfigCb Ack Err errCode %x errState %x",
+   "site": "0x4392b19a",
+   "func": "0x4392b16c",
+   "ldr": "0x4392b196",
+   "pool": "0x4392b244",
+   "gap": 4,
+   "subblock": "LPS",
+   "marker": "tras 10SaSysvCtrl`0x43cdea07 / 19SaDriverLinearPhase`0x43cdea14"
+  },
+  {
+   "vaddr": "0x43cdeaef",
+   "text": "[AIP]Lps OpenConfigCb Comp OK",
+   "site": "0x4392b1ce",
+   "func": "0x4392b16c",
+   "ldr": "0x4392b1cc",
+   "pool": "0x4392b248",
+   "gap": 2,
+   "subblock": "LPS",
+   "marker": "tras 10SaSysvCtrl`0x43cdea07 / 19SaDriverLinearPhase`0x43cdea14"
+  },
+  {
+   "vaddr": "0x43cdeb0e",
+   "text": "[AIP]LPS OpenConfigCb Comp ErrCode %x ErrStatus %x",
+   "site": "0x4392b1f8",
+   "func": "0x4392b16c",
+   "ldr": "0x4392b1f2",
+   "pool": "0x4392b24c",
+   "gap": 6,
+   "subblock": "LPS",
+   "marker": "tras 10SaSysvCtrl`0x43cdea07 / 19SaDriverLinearPhase`0x43cdea14"
+  },
+  {
+   "vaddr": "0x43cdeb63",
+   "text": "[AIP]LPS CloseConfigCb Comp",
+   "site": "0x4392b25e",
+   "func": "0x4392b254",
+   "ldr": "0x4392b258",
+   "pool": "0x4392b2ec",
+   "gap": 6,
+   "subblock": "LPS",
+   "marker": "tras 10SaSysvCtrl`0x43cdea07 / 19SaDriverLinearPhase`0x43cdea14"
+  },
+  {
+   "vaddr": "0x43cdeb80",
+   "text": "[AIP]LPS CloseCallback Err errCode %x errState %x",
+   "site": "0x4392b27c",
+   "func": "0x4392b254",
+   "ldr": "0x4392b278",
+   "pool": "0x4392b2f0",
+   "gap": 4,
+   "subblock": "LPS",
+   "marker": "tras 10SaSysvCtrl`0x43cdea07 / 19SaDriverLinearPhase`0x43cdea14"
+  },
+  {
+   "vaddr": "0x43cdebb3",
+   "text": "[AIP]LPS CloseCallback Err uniqueId %x ",
+   "site": "0x4392b2a8",
+   "func": "0x4392b254",
+   "ldr": "0x4392b2a6",
+   "pool": "0x4392b2f4",
+   "gap": 2,
+   "subblock": "LPS",
+   "marker": "tras 10SaSysvCtrl`0x43cdea07 / 19SaDriverLinearPhase`0x43cdea14"
+  },
+  {
+   "vaddr": "0x43cdebdc",
+   "text": "[AIP]LPS SetMailBox Err",
+   "site": "0x4392b416",
+   "func": "0x4392b392",
+   "ldr": "0x4392b414",
+   "pool": "0x4392b444",
+   "gap": 2,
+   "subblock": "LPS",
+   "marker": "tras 10SaSysvCtrl`0x43cdea07 / 19SaDriverLinearPhase`0x43cdea14"
+  },
+  {
+   "vaddr": "0x43cdec04",
+   "text": "[AIP]LPS GetMailBox Err",
+   "site": "0x4392b4de",
+   "func": "0x4392b46c",
+   "ldr": "0x4392b4dc",
+   "pool": "0x4392b550",
+   "gap": 2,
+   "subblock": "LPS",
+   "marker": "tras 10SaSysvCtrl`0x43cdea07 / 19SaDriverLinearPhase`0x43cdea14"
+  },
+  {
+   "vaddr": "0x43cdec1c",
+   "text": "[AIP]LPS GetMb Callback TimeOut Err",
+   "site": "0x4392b512",
+   "func": "0x4392b46c",
+   "ldr": "0x4392b510",
+   "pool": "0x4392b554",
+   "gap": 2,
+   "subblock": "LPS",
+   "marker": "tras 10SaSysvCtrl`0x43cdea07 / 19SaDriverLinearPhase`0x43cdea14"
+  },
+  {
+   "vaddr": "0x43cdec50",
+   "text": "[AIP]LPS SetLpsSysv Err",
+   "site": "0x4392b6ac",
+   "func": "0x4392b660",
+   "ldr": "0x4392b6aa",
+   "pool": "0x4392b6d4",
+   "gap": 2,
+   "subblock": "LPS",
+   "marker": "tras 10SaSysvCtrl`0x43cdea07 / 19SaDriverLinearPhase`0x43cdea14"
+  }
+ ],
+ "functions": [
+  {
+   "func": "0x4355ae98",
+   "n": 1,
+   "subblocks": [
+    "SetFader"
+   ],
+   "first_site": "0x4355af04",
+   "strings": [
+    {
+     "vaddr": "0x43cddab5",
+     "text": "[AIP]SetFader m_fader.count %x",
+     "site": "0x4355af04"
+    }
+   ]
+  },
+  {
+   "func": "0x43926d1c",
+   "n": 5,
+   "subblocks": [
+    "SaWrapper"
+   ],
+   "first_site": "0x43926d2c",
+   "strings": [
+    {
+     "vaddr": "0x43cdd844",
+     "text": "[AIP]SA OpenConfigCb Ack",
+     "site": "0x43926d2c"
+    },
+    {
+     "vaddr": "0x43cdd85e",
+     "text": "[AIP]SA OpenConfigCb Ack Err errCode %x errState %x",
+     "site": "0x43926d4a"
+    },
+    {
+     "vaddr": "0x43cdd893",
+     "text": "[AIP]SA OpenConfigCb Comp",
+     "site": "0x43926d7a"
+    },
+    {
+     "vaddr": "0x43cdd8ae",
+     "text": "[AIP]SA OpenConfigCb Comp Err errCode %x errState %x",
+     "site": "0x43926d98"
+    },
+    {
+     "vaddr": "0x43cdd8e4",
+     "text": "[AIP]SA OpenConfigCb Err",
+     "site": "0x43926db4"
+    }
+   ]
+  },
+  {
+   "func": "0x43926de8",
+   "n": 3,
+   "subblocks": [
+    "SaWrapper"
+   ],
+   "first_site": "0x43926df8",
+   "strings": [
+    {
+     "vaddr": "0x43cdd8fe",
+     "text": "[AIP]SA CloseConfigCb Done",
+     "site": "0x43926df8"
+    },
+    {
+     "vaddr": "0x43cdd91a",
+     "text": "[AIP]SA CloseCallback Err errCode %x errState %x",
+     "site": "0x43926e16"
+    },
+    {
+     "vaddr": "0x43cdd94c",
+     "text": "[AIP]SA CloseCallback Err uniqueId %x ",
+     "site": "0x43926e42"
+    }
+   ]
+  },
+  {
+   "func": "0x439272dc",
+   "n": 1,
+   "subblocks": [
+    "SaDriverZoomNr"
+   ],
+   "first_site": "0x4392732a",
+   "strings": [
+    {
+     "vaddr": "0x43cdd9e3",
+     "text": "[AIP][SA ANR MGR]SetAudioNrType %x",
+     "site": "0x4392732a"
+    }
+   ]
+  },
+  {
+   "func": "0x4392a712",
+   "n": 2,
+   "subblocks": [
+    "SaBackUpCtrl"
+   ],
+   "first_site": "0x4392a722",
+   "strings": [
+    {
+     "vaddr": "0x43cde67a",
+     "text": "[AIP]SaBackUpCtrl::UnREG CB OK",
+     "site": "0x4392a722"
+    },
+    {
+     "vaddr": "0x43cde69a",
+     "text": "[AIP]SaBackUpCtrl::UnREG CB err %d",
+     "site": "0x4392a73a"
+    }
+   ]
+  },
+  {
+   "func": "0x4392a76e",
+   "n": 1,
+   "subblocks": [
+    "SaBackUpCtrl"
+   ],
+   "first_site": "0x4392a7b0",
+   "strings": [
+    {
+     "vaddr": "0x43cde6be",
+     "text": "[AIP]SaBackUpCtrl GetBackUp err bkId %x",
+     "site": "0x4392a7b0"
+    }
+   ]
+  },
+  {
+   "func": "0x4392a98c",
+   "n": 1,
+   "subblocks": [
+    "SaBackUpCtrl"
+   ],
+   "first_site": "0x4392a9ca",
+   "strings": [
+    {
+     "vaddr": "0x43cde77b",
+     "text": "[AIP]SaBackUpCtrl::CreateBackUpLpsList Err",
+     "site": "0x4392a9ca"
+    }
+   ]
+  },
+  {
+   "func": "0x4392aa00",
+   "n": 6,
+   "subblocks": [
+    "SaBackUpCtrl"
+   ],
+   "first_site": "0x4392aa46",
+   "strings": [
+    {
+     "vaddr": "0x43cde7a7",
+     "text": "[AIP]SaBackUpCtrl::Init Sa OK id num = %d",
+     "site": "0x4392aa46"
+    },
+    {
+     "vaddr": "0x43cde7d2",
+     "text": "[AIP]SaBackUpCtrl::Init Sa err %d",
+     "site": "0x4392aa5c"
+    },
+    {
+     "vaddr": "0x43cde7f5",
+     "text": "[AIP]SaBackUpCtrl::Init Lps OK id num = %d",
+     "site": "0x4392aa86"
+    },
+    {
+     "vaddr": "0x43cde821",
+     "text": "[AIP]SaBackUpCtrl::Init Lps err %d",
+     "site": "0x4392aa9c"
+    },
+    {
+     "vaddr": "0x43cde845",
+     "text": "[AIP]SaBackUpCtrl::REG CB OK",
+     "site": "0x4392aaec"
+    },
+    {
+     "vaddr": "0x43cde863",
+     "text": "[AIP]SaBackUpCtrl::REG CB err %d",
+     "site": "0x4392ab04"
+    }
+   ]
+  },
+  {
+   "func": "0x4392ab76",
+   "n": 2,
+   "subblocks": [
+    "SaBackUpCtrl"
+   ],
+   "first_site": "0x4392ab8e",
+   "strings": [
+    {
+     "vaddr": "0x43cde885",
+     "text": "[AIP]SaBackUpCtrl::WriteShadow2BakcupArea OK id num = %d",
+     "site": "0x4392ab8e"
+    },
+    {
+     "vaddr": "0x43cde8bf",
+     "text": "[AIP]SaBackUpCtrl::WriteShadow2BackupArea err %d",
+     "site": "0x4392aba4"
+    }
+   ]
+  },
+  {
+   "func": "0x4392ac30",
+   "n": 2,
+   "subblocks": [
+    "SaDriverBase"
+   ],
+   "first_site": "0x4392ac3a",
+   "strings": [
+    {
+     "vaddr": "0x43cde900",
+     "text": "[AIP]Sa OpenConfig Cmd %x Func %x",
+     "site": "0x4392ac3a"
+    },
+    {
+     "vaddr": "0x43cde923",
+     "text": "[AIP]Zma %x Ext %x Mbx %x",
+     "site": "0x4392ac46"
+    }
+   ]
+  },
+  {
+   "func": "0x4392acb4",
+   "n": 2,
+   "subblocks": [
+    "SaDriverBase"
+   ],
+   "first_site": "0x4392acbe",
+   "strings": [
+    {
+     "vaddr": "0x43cde957",
+     "text": "[AIP]Sa Close Cmd %x Func %x Unq %x",
+     "site": "0x4392acbe"
+    },
+    {
+     "vaddr": "0x43cde97c",
+     "text": "[AIP]SaDriver CloseConfig",
+     "site": "0x4392ace4"
+    }
+   ]
+  },
+  {
+   "func": "0x4392b16c",
+   "n": 4,
+   "subblocks": [
+    "LPS"
+   ],
+   "first_site": "0x4392b17c",
+   "strings": [
+    {
+     "vaddr": "0x43cdea9e",
+     "text": "[AIP]LPS OpenConfigCb Ack",
+     "site": "0x4392b17c"
+    },
+    {
+     "vaddr": "0x43cdeab9",
+     "text": "[AIP]LPS OpenConfigCb Ack Err errCode %x errState %x",
+     "site": "0x4392b19a"
+    },
+    {
+     "vaddr": "0x43cdeaef",
+     "text": "[AIP]Lps OpenConfigCb Comp OK",
+     "site": "0x4392b1ce"
+    },
+    {
+     "vaddr": "0x43cdeb0e",
+     "text": "[AIP]LPS OpenConfigCb Comp ErrCode %x ErrStatus %x",
+     "site": "0x4392b1f8"
+    }
+   ]
+  },
+  {
+   "func": "0x4392b254",
+   "n": 3,
+   "subblocks": [
+    "LPS"
+   ],
+   "first_site": "0x4392b25e",
+   "strings": [
+    {
+     "vaddr": "0x43cdeb63",
+     "text": "[AIP]LPS CloseConfigCb Comp",
+     "site": "0x4392b25e"
+    },
+    {
+     "vaddr": "0x43cdeb80",
+     "text": "[AIP]LPS CloseCallback Err errCode %x errState %x",
+     "site": "0x4392b27c"
+    },
+    {
+     "vaddr": "0x43cdebb3",
+     "text": "[AIP]LPS CloseCallback Err uniqueId %x ",
+     "site": "0x4392b2a8"
+    }
+   ]
+  },
+  {
+   "func": "0x4392b392",
+   "n": 1,
+   "subblocks": [
+    "LPS"
+   ],
+   "first_site": "0x4392b416",
+   "strings": [
+    {
+     "vaddr": "0x43cdebdc",
+     "text": "[AIP]LPS SetMailBox Err",
+     "site": "0x4392b416"
+    }
+   ]
+  },
+  {
+   "func": "0x4392b46c",
+   "n": 2,
+   "subblocks": [
+    "LPS"
+   ],
+   "first_site": "0x4392b4de",
+   "strings": [
+    {
+     "vaddr": "0x43cdec04",
+     "text": "[AIP]LPS GetMailBox Err",
+     "site": "0x4392b4de"
+    },
+    {
+     "vaddr": "0x43cdec1c",
+     "text": "[AIP]LPS GetMb Callback TimeOut Err",
+     "site": "0x4392b512"
+    }
+   ]
+  },
+  {
+   "func": "0x4392b660",
+   "n": 1,
+   "subblocks": [
+    "LPS"
+   ],
+   "first_site": "0x4392b6ac",
+   "strings": [
+    {
+     "vaddr": "0x43cdec50",
+     "text": "[AIP]LPS SetLpsSysv Err",
+     "site": "0x4392b6ac"
+    }
+   ]
+  }
+ ],
+ "subblocks": [
+  {
+   "name": "SaWrapper",
+   "n": 8,
+   "lo": "0x43cdd844",
+   "hi": "0x43cdd94c",
+   "marker": "9AudioIpIf`0x43cdd82e + 9SaWrapper`0x43cdd839 (RTTI)",
+   "functions": [
+    "0x43926d1c",
+    "0x43926de8"
+   ]
+  },
+  {
+   "name": "SaDriverZoomNr",
+   "n": 1,
+   "lo": "0x43cdd9e3",
+   "hi": "0x43cdd9e3",
+   "marker": "14SaDriverZoomNr`0x43cdda06 (RTTI, tras la cadena)",
+   "functions": [
+    "0x439272dc"
+   ]
+  },
+  {
+   "name": "SetFader",
+   "n": 1,
+   "lo": "0x43cddab5",
+   "hi": "0x43cddab5",
+   "marker": "entre 14SaDriverZoomNr y 3Abb`0x43cddaf3",
+   "functions": [
+    "0x4355ae98"
+   ]
+  },
+  {
+   "name": "SaBackUpCtrl",
+   "n": 12,
+   "lo": "0x43cde67a",
+   "hi": "0x43cde8bf",
+   "marker": "12SaBackUpCtrl`0x43cde564 (RTTI)",
+   "functions": [
+    "0x4392a712",
+    "0x4392a76e",
+    "0x4392a98c",
+    "0x4392aa00",
+    "0x4392ab76"
+   ]
+  },
+  {
+   "name": "SaDriverBase",
+   "n": 4,
+   "lo": "0x43cde900",
+   "hi": "0x43cde97c",
+   "marker": "12SaDriverBase`0x43cde8f1 (RTTI)",
+   "functions": [
+    "0x4392ac30",
+    "0x4392acb4"
+   ]
+  },
+  {
+   "name": "LPS",
+   "n": 11,
+   "lo": "0x43cdea9e",
+   "hi": "0x43cdec50",
+   "marker": "tras 10SaSysvCtrl`0x43cdea07 / 19SaDriverLinearPhase`0x43cdea14",
+   "functions": [
+    "0x4392b16c",
+    "0x4392b254",
+    "0x4392b392",
+    "0x4392b46c",
+    "0x4392b660"
+   ]
+  }
+ ],
+ "vocabulary": {
+  "Ack": 4,
+  "Cb": 11,
+  "Err": 14,
+  "errCode": 5,
+  "errState": 5,
+  "Comp": 5,
+  "uniqueId": 2,
+  "ANR": 1,
+  "fader": 1,
+  "OK": 6,
+  "Sa": 15,
+  "bkId": 1,
+  "Lps": 5,
+  "id num": 3,
+  "Cmd": 2,
+  "Func": 2,
+  "Zma": 1,
+  "Ext": 1,
+  "Mbx": 1,
+  "Unq": 1,
+  "LPS": 10,
+  "ErrCode": 1,
+  "ErrStatus": 1
+ },
+ "pic_rule": "add rX,pc (0x4478) + ldr rX,[pc,#imm] más cercano hacia atrás mismo registro; destino = word_del_pool + (dir_add + 4)",
+ "kill_analysis": {
+  "source": "/tmp/opencode/pic_refs_v2.json",
+  "pairs": 60,
+  "ok": 37,
+  "wrong": 23,
+  "wrong_other_string": 21,
+  "wrong_not_string": 2,
+  "true_sites": [
+   "0x4355af04",
+   "0x43926d2c",
+   "0x43926d4a",
+   "0x43926d7a",
+   "0x43926d98",
+   "0x43926db4",
+   "0x43926df8",
+   "0x43926e16",
+   "0x43926e42",
+   "0x4392732a",
+   "0x4392a722",
+   "0x4392a73a",
+   "0x4392a7b0",
+   "0x4392a9ca",
+   "0x4392aa46",
+   "0x4392aa5c",
+   "0x4392aa86",
+   "0x4392aa9c",
+   "0x4392aaec",
+   "0x4392ab04",
+   "0x4392ab8e",
+   "0x4392aba4",
+   "0x4392ac3a",
+   "0x4392ac46",
+   "0x4392acbe",
+   "0x4392ace4",
+   "0x4392b17c",
+   "0x4392b19a",
+   "0x4392b1ce",
+   "0x4392b1f8",
+   "0x4392b25e",
+   "0x4392b27c",
+   "0x4392b2a8",
+   "0x4392b416",
+   "0x4392b4de",
+   "0x4392b512",
+   "0x4392b6ac"
+  ],
+  "wrong_detail": [
+   {
+    "string": "0x43cdd893",
+    "site": "0x4392634a",
+    "strict_target": "0x43cdb620",
+    "ok": false
+   },
+   {
+    "string": "0x43cdd8ae",
+    "site": "0x43925fac",
+    "strict_target": "0x43cdd680",
+    "ok": false
+   },
+   {
+    "string": "0x43cdd8fe",
+    "site": "0x43924d5a",
+    "strict_target": "0x43cdd49d",
+    "ok": false
+   },
+   {
+    "string": "0x43cde69a",
+    "site": "0x4392a722",
+    "strict_target": "0x43cde67a",
+    "ok": false
+   },
+   {
+    "string": "0x43cde7a7",
+    "site": "0x4392a5ac",
+    "strict_target": "0x43cde614",
+    "ok": false
+   },
+   {
+    "string": "0x43cde7a7",
+    "site": "0x4392a6f0",
+    "strict_target": "0x43f1c4b4",
+    "ok": false
+   },
+   {
+    "string": "0x43cde7f5",
+    "site": "0x4392a7b0",
+    "strict_target": "0x43cde6be",
+    "ok": false
+   },
+   {
+    "string": "0x43cde863",
+    "site": "0x4355bcb2",
+    "strict_target": "0x43ceb58b",
+    "ok": false
+   },
+   {
+    "string": "0x43cde885",
+    "site": "0x4392a870",
+    "strict_target": "0x43cde71b",
+    "ok": false
+   },
+   {
+    "string": "0x43cde923",
+    "site": "0x4392aa5c",
+    "strict_target": "0x43cde7d2",
+    "ok": false
+   },
+   {
+    "string": "0x43cde97c",
+    "site": "0x4392a8ee",
+    "strict_target": "0x43cde750",
+    "ok": false
+   },
+   {
+    "string": "0x43cde97c",
+    "site": "0x4392aa9c",
+    "strict_target": "0x43cde821",
+    "ok": false
+   },
+   {
+    "string": "0x43cdeab9",
+    "site": "0x4392ab8e",
+    "strict_target": "0x43cde885",
+    "ok": false
+   },
+   {
+    "string": "0x43cdeb0e",
+    "site": "0x4392aba4",
+    "strict_target": "0x43cde8bf",
+    "ok": false
+   },
+   {
+    "string": "0x43cdeb63",
+    "site": "0x4392aa9c",
+    "strict_target": "0x43cde821",
+    "ok": false
+   },
+   {
+    "string": "0x43cdeb63",
+    "site": "0x4392ab04",
+    "strict_target": "0x43cde863",
+    "ok": false
+   },
+   {
+    "string": "0x43cdeb63",
+    "site": "0x4392af24",
+    "strict_target": "0x43f1c5f4",
+    "ok": false
+   },
+   {
+    "string": "0x43cdeb80",
+    "site": "0x4392b25e",
+    "strict_target": "0x43cdeb63",
+    "ok": false
+   },
+   {
+    "string": "0x43cdebb3",
+    "site": "0x4392aaec",
+    "strict_target": "0x43cde845",
+    "ok": false
+   },
+   {
+    "string": "0x43cdebdc",
+    "site": "0x4392b27c",
+    "strict_target": "0x43cdeb80",
+    "ok": false
+   },
+   {
+    "string": "0x43cdec04",
+    "site": "0x4392ac3a",
+    "strict_target": "0x43cde900",
+    "ok": false
+   },
+   {
+    "string": "0x43cdec04",
+    "site": "0x4392ac7e",
+    "strict_target": "0x43cde93e",
+    "ok": false
+   },
+   {
+    "string": "0x43cdec1c",
+    "site": "0x4392ab8e",
+    "strict_target": "0x43cde885",
+    "ok": false
+   }
+  ],
+  "pairs_detail": [
+   {
+    "string": "0x43cdd844",
+    "site": "0x43926d2c",
+    "strict_target": "0x43cdd844",
+    "ok": true
+   },
+   {
+    "string": "0x43cdd85e",
+    "site": "0x43926d4a",
+    "strict_target": "0x43cdd85e",
+    "ok": true
+   },
+   {
+    "string": "0x43cdd893",
+    "site": "0x4392634a",
+    "strict_target": "0x43cdb620",
+    "ok": false
+   },
+   {
+    "string": "0x43cdd893",
+    "site": "0x43926d7a",
+    "strict_target": "0x43cdd893",
+    "ok": true
+   },
+   {
+    "string": "0x43cdd8ae",
+    "site": "0x43925fac",
+    "strict_target": "0x43cdd680",
+    "ok": false
+   },
+   {
+    "string": "0x43cdd8ae",
+    "site": "0x43926d98",
+    "strict_target": "0x43cdd8ae",
+    "ok": true
+   },
+   {
+    "string": "0x43cdd8e4",
+    "site": "0x43926db4",
+    "strict_target": "0x43cdd8e4",
+    "ok": true
+   },
+   {
+    "string": "0x43cdd8fe",
+    "site": "0x43924d5a",
+    "strict_target": "0x43cdd49d",
+    "ok": false
+   },
+   {
+    "string": "0x43cdd8fe",
+    "site": "0x43926df8",
+    "strict_target": "0x43cdd8fe",
+    "ok": true
+   },
+   {
+    "string": "0x43cdd91a",
+    "site": "0x43926e16",
+    "strict_target": "0x43cdd91a",
+    "ok": true
+   },
+   {
+    "string": "0x43cdd94c",
+    "site": "0x43926e42",
+    "strict_target": "0x43cdd94c",
+    "ok": true
+   },
+   {
+    "string": "0x43cdd9e3",
+    "site": "0x4392732a",
+    "strict_target": "0x43cdd9e3",
+    "ok": true
+   },
+   {
+    "string": "0x43cddab5",
+    "site": "0x4355af04",
+    "strict_target": "0x43cddab5",
+    "ok": true
+   },
+   {
+    "string": "0x43cde67a",
+    "site": "0x4392a722",
+    "strict_target": "0x43cde67a",
+    "ok": true
+   },
+   {
+    "string": "0x43cde69a",
+    "site": "0x4392a722",
+    "strict_target": "0x43cde67a",
+    "ok": false
+   },
+   {
+    "string": "0x43cde69a",
+    "site": "0x4392a73a",
+    "strict_target": "0x43cde69a",
+    "ok": true
+   },
+   {
+    "string": "0x43cde6be",
+    "site": "0x4392a7b0",
+    "strict_target": "0x43cde6be",
+    "ok": true
+   },
+   {
+    "string": "0x43cde77b",
+    "site": "0x4392a9ca",
+    "strict_target": "0x43cde77b",
+    "ok": true
+   },
+   {
+    "string": "0x43cde7a7",
+    "site": "0x4392a5ac",
+    "strict_target": "0x43cde614",
+    "ok": false
+   },
+   {
+    "string": "0x43cde7a7",
+    "site": "0x4392a6f0",
+    "strict_target": "0x43f1c4b4",
+    "ok": false
+   },
+   {
+    "string": "0x43cde7a7",
+    "site": "0x4392aa46",
+    "strict_target": "0x43cde7a7",
+    "ok": true
+   },
+   {
+    "string": "0x43cde7d2",
+    "site": "0x4392aa5c",
+    "strict_target": "0x43cde7d2",
+    "ok": true
+   },
+   {
+    "string": "0x43cde7f5",
+    "site": "0x4392a7b0",
+    "strict_target": "0x43cde6be",
+    "ok": false
+   },
+   {
+    "string": "0x43cde7f5",
+    "site": "0x4392aa86",
+    "strict_target": "0x43cde7f5",
+    "ok": true
+   },
+   {
+    "string": "0x43cde821",
+    "site": "0x4392aa9c",
+    "strict_target": "0x43cde821",
+    "ok": true
+   },
+   {
+    "string": "0x43cde845",
+    "site": "0x4392aaec",
+    "strict_target": "0x43cde845",
+    "ok": true
+   },
+   {
+    "string": "0x43cde863",
+    "site": "0x4355bcb2",
+    "strict_target": "0x43ceb58b",
+    "ok": false
+   },
+   {
+    "string": "0x43cde863",
+    "site": "0x4392ab04",
+    "strict_target": "0x43cde863",
+    "ok": true
+   },
+   {
+    "string": "0x43cde885",
+    "site": "0x4392a870",
+    "strict_target": "0x43cde71b",
+    "ok": false
+   },
+   {
+    "string": "0x43cde885",
+    "site": "0x4392ab8e",
+    "strict_target": "0x43cde885",
+    "ok": true
+   },
+   {
+    "string": "0x43cde8bf",
+    "site": "0x4392aba4",
+    "strict_target": "0x43cde8bf",
+    "ok": true
+   },
+   {
+    "string": "0x43cde900",
+    "site": "0x4392ac3a",
+    "strict_target": "0x43cde900",
+    "ok": true
+   },
+   {
+    "string": "0x43cde923",
+    "site": "0x4392aa5c",
+    "strict_target": "0x43cde7d2",
+    "ok": false
+   },
+   {
+    "string": "0x43cde923",
+    "site": "0x4392ac46",
+    "strict_target": "0x43cde923",
+    "ok": true
+   },
+   {
+    "string": "0x43cde957",
+    "site": "0x4392acbe",
+    "strict_target": "0x43cde957",
+    "ok": true
+   },
+   {
+    "string": "0x43cde97c",
+    "site": "0x4392a8ee",
+    "strict_target": "0x43cde750",
+    "ok": false
+   },
+   {
+    "string": "0x43cde97c",
+    "site": "0x4392aa9c",
+    "strict_target": "0x43cde821",
+    "ok": false
+   },
+   {
+    "string": "0x43cde97c",
+    "site": "0x4392ace4",
+    "strict_target": "0x43cde97c",
+    "ok": true
+   },
+   {
+    "string": "0x43cdea9e",
+    "site": "0x4392b17c",
+    "strict_target": "0x43cdea9e",
+    "ok": true
+   },
+   {
+    "string": "0x43cdeab9",
+    "site": "0x4392ab8e",
+    "strict_target": "0x43cde885",
+    "ok": false
+   },
+   {
+    "string": "0x43cdeab9",
+    "site": "0x4392b19a",
+    "strict_target": "0x43cdeab9",
+    "ok": true
+   },
+   {
+    "string": "0x43cdeaef",
+    "site": "0x4392b1ce",
+    "strict_target": "0x43cdeaef",
+    "ok": true
+   },
+   {
+    "string": "0x43cdeb0e",
+    "site": "0x4392aba4",
+    "strict_target": "0x43cde8bf",
+    "ok": false
+   },
+   {
+    "string": "0x43cdeb0e",
+    "site": "0x4392b1f8",
+    "strict_target": "0x43cdeb0e",
+    "ok": true
+   },
+   {
+    "string": "0x43cdeb63",
+    "site": "0x4392aa9c",
+    "strict_target": "0x43cde821",
+    "ok": false
+   },
+   {
+    "string": "0x43cdeb63",
+    "site": "0x4392ab04",
+    "strict_target": "0x43cde863",
+    "ok": false
+   },
+   {
+    "string": "0x43cdeb63",
+    "site": "0x4392af24",
+    "strict_target": "0x43f1c5f4",
+    "ok": false
+   },
+   {
+    "string": "0x43cdeb63",
+    "site": "0x4392b25e",
+    "strict_target": "0x43cdeb63",
+    "ok": true
+   },
+   {
+    "string": "0x43cdeb80",
+    "site": "0x4392b25e",
+    "strict_target": "0x43cdeb63",
+    "ok": false
+   },
+   {
+    "string": "0x43cdeb80",
+    "site": "0x4392b27c",
+    "strict_target": "0x43cdeb80",
+    "ok": true
+   },
+   {
+    "string": "0x43cdebb3",
+    "site": "0x4392aaec",
+    "strict_target": "0x43cde845",
+    "ok": false
+   },
+   {
+    "string": "0x43cdebb3",
+    "site": "0x4392b2a8",
+    "strict_target": "0x43cdebb3",
+    "ok": true
+   },
+   {
+    "string": "0x43cdebdc",
+    "site": "0x4392b27c",
+    "strict_target": "0x43cdeb80",
+    "ok": false
+   },
+   {
+    "string": "0x43cdebdc",
+    "site": "0x4392b416",
+    "strict_target": "0x43cdebdc",
+    "ok": true
+   },
+   {
+    "string": "0x43cdec04",
+    "site": "0x4392ac3a",
+    "strict_target": "0x43cde900",
+    "ok": false
+   },
+   {
+    "string": "0x43cdec04",
+    "site": "0x4392ac7e",
+    "strict_target": "0x43cde93e",
+    "ok": false
+   },
+   {
+    "string": "0x43cdec04",
+    "site": "0x4392b4de",
+    "strict_target": "0x43cdec04",
+    "ok": true
+   },
+   {
+    "string": "0x43cdec1c",
+    "site": "0x4392ab8e",
+    "strict_target": "0x43cde885",
+    "ok": false
+   },
+   {
+    "string": "0x43cdec1c",
+    "site": "0x4392b512",
+    "strict_target": "0x43cdec1c",
+    "ok": true
+   },
+   {
+    "string": "0x43cdec50",
+    "site": "0x4392b6ac",
+    "strict_target": "0x43cdec50",
+    "ok": true
+   }
+  ]
+ },
+ "a7s_fw320": {
+  "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+  "n": 37,
+  "lo": "0x79305f",
+  "hi": "0x794165",
+  "comunes": 37,
+  "solo_a6000": [],
+  "solo_otro": []
+ },
+ "a6300_fw201": {
+  "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+  "n": 63,
+  "lo": "0x8ae3e1",
+  "hi": "0x8afa6b",
+  "comunes": 37,
+  "solo_a6000": [],
+  "solo_otro": [
+   "[AIP][ZNR]SetInstanceNumberExec Err %d",
+   "[AIP][ZNR_EE] SA SetZoomNrEeSysv Err",
+   "[AIP][ZNR_EE] SetSaZoomNrSysvCallback OK",
+   "[AIP][ZNR_EE] SetSaZoomNrSysvCallback ErrCode %x ErrStatus %x",
+   "[AIP][ZNR_EE] SetSaZoomNrSysvCallback Err result_code %x",
+   "[AIP][ZNR_EE] debug_info = %x",
+   "[AIP][ZNR_EE] debug_info2 = %x",
+   "[AIP][ZNR_EE] SetSaZoomNrState: %x -> %x",
+   "[AIP][ZNR_EE]Get PresetParam err ",
+   "[AIP][ZNR_EE] eeInputMuteFlag = %d",
+   "[AIP][ZNR_EE] SetSaStart Can't Start SA, Terminate %x",
+   "[AIP][ZNR_EE] SA_Start addr=%x, size=%x, iW=%x, iR=%x, oW=%x",
+   "[AIP][ZNR_EE] SetSaOpen Err Status %x",
+   "[AIP][ZNR_EE] SA OpenConfigCb Ack",
+   "[AIP][ZNR_EE] SA OpenConfigCb Ack Err errCode %x errState %x",
+   "[AIP][ZNR_EE] SA OpenConfigCb Comp Err errCode %x errState %x",
+   "[AIP][ZNR_EE] SA OpenConfigCb Comp",
+   "[AIP][ZNR_EE] SA OpenConfigCb Err",
+   "[AIP][ZNR_EE] SA CloseConfigCb Done",
+   "[AIP][ZNR_EE] SA CloseCallback Err errCode %x errState %x",
+   "[AIP][ZNR_EE] SA CloseCallback Err uniqueId %x ",
+   "[AIP][ZNR_EE] SaDriverZoomNrEe::CloseCallbackExec Err result_code %x",
+   "[AIP][ZNR_EE][ERR] Ap = 0",
+   "[AIP][ZNR_EE][ERR] GetEeAp() Err = %x",
+   "[AIP][ZNR_EE] timingVfc INVALID tV[0] %x tV[1] %x tV[2] %x ",
+   "[AIP][ZNR_EE] ExecGard Err config: %x!!"
+  ]
+ },
+ "not_verified": [
+  "desarrollo de las siglas AIP, SA, LPS, ANR, ZNR, Zma, Ext, Mbx",
+  "semántica de cada valor de errState/ErrStatus/result_code",
+  "significado de los campos bkId, id num, uniqueId, Unq, Func",
+  "el formato exacto de los mensajes y de la cola AudioIpCmdQueue",
+  "si SetFader y SetAudioNrType comparten el mismo objeto SaWrapper"
+ ]
+}
