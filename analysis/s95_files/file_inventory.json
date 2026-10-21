@@ -1,0 +1,61 @@
+{
+ "hito": "S95 - ficheros que la camara lee y escribe",
+ "total_rutas": 43,
+ "zonas": {
+  "/usr/sabin": 27,
+  "/mnt": 11,
+  "/setting": 1,
+  "otros": 4
+ },
+ "spica": {
+  "/usr/sabin/spica_musashi_dualrec_4k_c_tap_step1.bin": "0x43cc38f4",
+  "/usr/sabin/spica_musashi_dualrec_4k_c_tap_step2.bin": "0x43cc3b9a",
+  "/usr/sabin/spica_musashi_dualrec_4k_y_tap_step1.bin": "0x43cc3954",
+  "/usr/sabin/spica_musashi_dualrec_4k_y_tap_step2.bin": "0x43cc3c5a",
+  "/usr/sabin/spica_musashi_dualrec_c_tap_step1.bin": "0x43cc3b3a",
+  "/usr/sabin/spica_musashi_dualrec_c_tap_step2.bin": "0x43cc3cba",
+  "/usr/sabin/spica_musashi_dualrec_y_tap_step1.bin": "0x43cc3ada",
+  "/usr/sabin/spica_musashi_dualrec_y_tap_step2.bin": "0x43cc3bfa",
+  "/usr/sabin/spica_musashi_mov_4k_c_tap_step1.bin": "0x43cc35f4",
+  "/usr/sabin/spica_musashi_mov_4k_c_tap_step2.bin": "0x43cc3495",
+  "/usr/sabin/spica_musashi_mov_4k_y_tap_step1.bin": "0x43cc36b4",
+  "/usr/sabin/spica_musashi_mov_4k_y_tap_step2.bin": "0x43cc3714",
+  "/usr/sabin/spica_musashi_mov_c_tap_step1.bin": "0x43cc3375",
+  "/usr/sabin/spica_musashi_mov_c_tap_step2.bin": "0x43cc33d5",
+  "/usr/sabin/spica_musashi_mov_interlace_c_tap_step1.bin": "0x43cc3654",
+  "/usr/sabin/spica_musashi_mov_interlace_y_tap_step1.bin": "0x43cc37d4",
+  "/usr/sabin/spica_musashi_mov_y_tap_step1.bin": "0x43cc3435",
+  "/usr/sabin/spica_musashi_mov_y_tap_step2.bin": "0x43cc34f5",
+  "/usr/sabin/spica_musashi_still_c_tap_step1.bin": "0x43cc3774",
+  "/usr/sabin/spica_musashi_still_c_tap_step2.bin": "0x43cc3834",
+  "/usr/sabin/spica_musashi_still_y_tap_step1.bin": "0x43cc3894",
+  "/usr/sabin/spica_musashi_still_y_tap_step2.bin": "0x43cc3315"
+ },
+ "otros_sabin": {
+  "/usr/sabin/dcv_psf_table_dualrec.bin": "0x43cba9ea",
+  "/usr/sabin/dcv_psf_table_movie.bin": "0x43cba98a",
+  "/usr/sabin/dcv_psf_table_movie_4k.bin": "0x43cbaa4a",
+  "/usr/sabin/dcv_psf_table_still.bin": "0x43cb9a34",
+  "/usr/sabin/star_kernel_param.bin": "0x43cc3d1a"
+ },
+ "mnt": {
+  "/mnt/%s.%4d%02d%02d_%02d%02d%02d.dat": "0x43cb4eeb",
+  "/mnt/FILE%04x.dat": "0x43cb57f8",
+  "/mnt/FILE_IS_%04x.dat": "0x43c9a535",
+  "/mnt/FILE_TC_COMMON_%04x.dat": "0x43ca84f2",
+  "/mnt/Mount_ms_log_%03d.dat": "0x43c97146",
+  "/mnt/YC_FILE%04x.dat": "0x43cbe562",
+  "/mnt/cc_ms_log%04x.dat": "0x43cb5004",
+  "/mnt/cc_ms_log%s.dat": "0x43cb4f4d",
+  "/mnt/detect_ms_log%04x.dat": "0x43c9162e",
+  "/mnt/lc_mslog_%04x.dat": "0x43ca7a7d",
+  "/mnt/log.bin": "0x43c8f789"
+ },
+ "otros": {
+  "/etc/localtime": "0x43bd5744",
+  "/usr/dfe/dfe.bin": "0x43cd1b94",
+  "/usr/share/locale": "0x43bd92b4",
+  "/usr/share/zoneinfo": "0x43bd5754"
+ },
+ "hallazgo": "la camara escribe sus propias trazas en el disco RAM (/mnt/*.dat), que deben estar en los volcados de camara de analysis/camera-dumps/"
+}
