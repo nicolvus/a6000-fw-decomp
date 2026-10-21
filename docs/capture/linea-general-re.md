@@ -40,6 +40,8 @@
 | S94 | API HAPI | la API de la app remota: `REQ_MSGE`/`EVT_MSGE`/`COMP_MSGE` y 139 símbolos `CamApi*` | [`analysis/s94_hapi/`](../analysis/s94_hapi/) | `tests/test_s94_hapi.py` |
 | S95 | ficheros de la cámara | **43 rutas**: parámetros SPICA/PSF en `/usr/sabin/` y **trazas que la cámara escribe en `/mnt/`** | [`analysis/s95_files/`](../analysis/s95_files/) | `tests/test_s95_files.py` |
 | S96 | modos de captura | `drive_mode` (69) del imager y `CapMode`/`ExposureID`/`ContID`/`BDROSeq` de la captura | [`analysis/s96_modes/`](../analysis/s96_modes/) | `tests/test_s96_modes.py` |
+| S98 | orquestador userland | `libBizFw.so` une userland y firmware: la clase `AdfCh` repite el vocabulario `Prc`/`Sys`/`In`/`Out` del ADF | [`analysis/s98_bizfw/`](../analysis/s98_bizfw/) | `tests/test_s98_bizfw.py` |
+| S99 | arquitectura del userland | las capas de `libObj.so`: `MWF` (mensajes), `UFW` (recursos), `MprIf` (medios), `ux`+`GEN_*` (GUI), `AVBIZ` (apps) | [`analysis/s99_userland/`](../analysis/s99_userland/) | `tests/test_s99_userland.py` |
 | S97 | sincronización del codificador | `McAvcEncModeMgr` con 14 `CMD_ID_*`, escritura del bloque AUGI con el audio | [`analysis/s97_encsync/`](../analysis/s97_encsync/) | `tests/test_s97_encsync.py` |
 
 ## 2. Cómo se sostiene el rigor
