@@ -33,3 +33,7 @@ La NVRAM del fallo difiere de la de antes sobre todo por ajustes reiniciados a f
 ## Resultado físico (2026-10-20)
 
 Tras la restauración de A y desconectar el USB, el usuario informa: **la cámara enciende y apaga correctamente** (objetivo y obturador). Esto indica que el fallo estaba en el estado guardado y no en el hardware; **qué propiedad concreta lo causaba NO VERIFICADO** (se restauraron 215 propiedades juntas; no se aisló ninguna). Causa raíz (pruebas con `CameraSequence`, el formateo o «Inicializar») NO VERIFICADO.
+
+## Volcados versionados (2026-10-20)
+
+Los volcados de cámara de `analysis/camera-dumps/` se versionan, cada uno con su `README.md` (archivos, tamaños y SHA-256). Referencias de NVRAM: `nvram-referencia-20261020-214913` (cámara funcionando, copia buena para recuperar), `post-restauracion-20261020-214352` y `post-incidente-20261020-213936` (estado fallado; no restaurar). Quedan fuera (`.gitignore`): binarios Sony extraídos (`pull-*`, `live-android-*`), JPEG con EXIF (`live-shots-*`) y los `.bin` de 4 MiB de `silent-ram*` (solo README y SHA256SUMS). Los `info.txt`/NVRAM incluyen el número de serie de la unidad.

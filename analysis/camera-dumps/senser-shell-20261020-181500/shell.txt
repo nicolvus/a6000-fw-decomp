@@ -1,0 +1,28 @@
+[  232.674241] console [usbgcon-1] enabled
+[  232.674470] [usbter usbg_sen_ldisc_open][154]exit
+
+
+BusyBox v1.13.4 (2012-07-17 15:11:04 JST) built-in shell (ash)
+Enter 'help' for a list of built-in commands.
+
+ash: can't access tty; job control turned off
+/usr/share/app # which dd od hexdump xxd cat head
+ash: which: not found
+/usr/share/app # ls -la /usr/lib/libmprctrl.so /usr/lib/libmpr.so /usr/lib/libSc
+alarDaemon.so /usr/lib/libInfraLensCommunicator.so /usr/lib/libsencore.so /usr/l
+ib/libmprdummy.so
+-r-xr-xr-x    1 57285    1000         8152 Jan 24  2019 /usr/lib/libInfraLensCommunicator.so
+-r-xr-xr-x    1 57285    1000      1883224 Jan 24  2019 /usr/lib/libScalarDaemon.so
+-r-xr-xr-x    1 57285    1000     10321204 Jan 24  2019 /usr/lib/libmpr.so
+-r-xr-xr-x    1 57285    1000       221700 Jan 24  2019 /usr/lib/libmprctrl.so
+-r-xr-xr-x    1 57285    1000         5700 Jan 24  2019 /usr/lib/libmprdummy.so
+-r-xr-xr-x    1 57285    1000       293332 Jan 24  2019 /usr/lib/libsencore.so
+/usr/share/app # ls -la /usr/share/app/av-cam.bin /usr/share/app/*.bin /usr/bin/
+im.elf
+ls: /usr/share/app/av-cam.bin: No such file or directory
+ls: /usr/share/app/*.bin: No such file or directory
+-r-xr-xr-x    1 57285    1000        23108 Jan 24  2019 /usr/bin/im.elf
+/usr/share/app # ls -la /dev/mem /dev/kmem
+crw-r-----    1 0        9          1,   2 Aug  6  2012 /dev/kmem
+crw-r-----    1 0        9          1,   1 Aug  6  2012 /dev/mem
+/usr/share/app # 
