@@ -1,0 +1,138 @@
+{
+  "subsystem": "S90 - Playback (PLAY/MPLAY/VDISP)",
+  "firmware": "A6000 fw3.21",
+  "comparison_firmware": "A7S fw3.20",
+  "inventory": {
+    "classes": [
+      {
+        "name": "20AbstractPlayArranger",
+        "address": "0x43c43c7c",
+        "rtti": "_ZTI20AbstractPlayArranger",
+        "offset": "0x702c7c",
+        "description": "Organizador base de reproducción"
+      },
+      {
+        "name": "12PlayArranger",
+        "address": "0x43c43c93",
+        "rtti": "_ZTI12PlayArranger",
+        "offset": "0x702c93",
+        "description": "Organizador de reproducción concreto"
+      },
+      {
+        "name": "20AbstractVFCCmdIssuer",
+        "address": "0x43c43dea",
+        "rtti": "_ZTI20AbstractVFCCmdIssuer",
+        "offset": "0x702dea",
+        "description": "Emisor abstracto de comando VFC"
+      },
+      {
+        "name": "12VFCCmdIssuer",
+        "address": "0x43c43e01",
+        "rtti": "_ZTI12VFCCmdIssuer",
+        "offset": "0x702e01",
+        "description": "Emisor concreto de comando VFC"
+      },
+      {
+        "name": "12VFCConverter",
+        "address": "0x43c43e10",
+        "rtti": "_ZTI12VFCConverter",
+        "offset": "0x702e10",
+        "description": "Conversor de VFC"
+      },
+      {
+        "name": "10MPlayState",
+        "address": "0x43c43ecf",
+        "rtti": "_ZTI10MPlayState",
+        "offset": "0x702ecf",
+        "description": "Estado de reproducción de películas"
+      },
+      {
+        "name": "MPlay",
+        "address": "0x43c66542",
+        "offset": "0x725542",
+        "description": "Subsistema Movie Play"
+      },
+      {
+        "name": "MPlayBB",
+        "address": "0x43c6686a",
+        "offset": "0x72586a",
+        "description": "Sub-subsistema BB de MPlay"
+      },
+      {
+        "name": "MPlayCodec",
+        "address": "0x43c66883",
+        "offset": "0x725883",
+        "description": "Control de codecs de MPlay"
+      },
+      {
+        "name": "MPlayHost",
+        "address": "0x43c668f4",
+        "offset": "0x7258f4",
+        "description": "Control host/software de MPlay"
+      }
+    ],
+    "vfccmd_issues": [
+      {
+        "command": "Issue VFCCmd to DEBUG",
+        "address": "0x43c72907",
+        "description": "Modo de depuración del comando VFC"
+      },
+      {
+        "command": "Issue VFCCmd to MPLAY",
+        "address": "0x43c7291e",
+        "description": "Emisión de comando VFC al subsistema MPLAY"
+      }
+    ],
+    "playback_strings": [
+      {
+        "address": "0x43c660e0",
+        "format": "bid=MPLAY cid=%#hx flg=%d dvfc=%#x ivfc=%#x edge=%#hx",
+        "description": "Sintaxis de comando de reproducción MPLAY con parámetros VFC"
+      },
+      {
+        "address": "0x43c27b55",
+        "format": "[ADF]PlayEnd SendComp err %x ki %x replyId %x",
+        "description": "Error de SendComp al final de reproducción ADF"
+      },
+      {
+        "address": "0x43c27b84",
+        "format": "[ADF]JudgePlayPriority",
+        "description": "Prioridad de selección de contenido para reproducción"
+      },
+      {
+        "address": "0x43c3ec70",
+        "format": "[CodecSeq][TD] VideoIP Play END(0x1A) : %x",
+        "description": "Fin de reproducción de vídeo (código 0x1A)"
+      },
+      {
+        "address": "0x43c3ec9c",
+        "format": "[CodecSeq][TD] VideoIP Play END(0x1B) : %x",
+        "description": "Fin de reproducción de vídeo (código 0x1B)"
+      }
+    ],
+    "vdisp_modes": [
+      {
+        "mode": "VDISP24p",
+        "address": "0x43c4811f",
+        "description": "Modo de salida 24p (cine)"
+      },
+      {
+        "mode": "VDISP30p25p",
+        "address": "0x43c481c2",
+        "description": "Modo de salida 30p/25p (PAL/NTSC)"
+      },
+      {
+        "mode": "VDISP60i50i",
+        "address": "0x43c48341",
+        "description": "Modo de salida 60i/50i (interlazado)"
+      },
+      {
+        "mode": "VDISP60p50p",
+        "address": "0x43c4856a",
+        "description": "Modo de salida 60p/50p (progresivo)"
+      }
+    ]
+  },
+  "verified_against": "bytes en av-cam.bin y RTTI en libmpr.so / libObj.so",
+  "notes": "Todas las direcciones son virtuales del firmware (0x43xxxxxx), no offsets de fichero."
+}
