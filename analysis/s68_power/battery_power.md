@@ -55,6 +55,15 @@ Todo lo relativo a "gestión de batería NP-FW50 real" (lectura del pack, umbral
 | `0x43cb58b3` | `EV CamStrbChargeOn` | Evento: carga de flash ON |
 | `0x43cb58c6` | `EV CamStrbChargeOff` | Evento: carga de flash OFF |
 
+### 2.2.b La carga de flash está controlada por PWM (variables contiguas al bloque de nombres)
+
+`uc_AcvOn` (`0x43ccd8ff`), `uc_UnregVolltage` (`0x43ccd908`), `uc_CapacitorStatus`
+(`0x43ccd919`), `uc_PwmStatus` (`0x43ccd92c`), `us_ActivePwmDutySlope` (`0x43ccd949`),
+`us_PwmDutySet`, `us_PwmDutyHighRatio`/`Max`, `us_ActiveChargeSlope` (`0x43ccda10`),
+`uc_ChargeRequest` (`0x43ccda49`), `uc_ChargeStopRequest` (`0x43ccda5a`). La carga del flash es,
+por tanto, un control **PWM con realimentación del estado del condensador** y una vía de tensión
+"no regulada" (`uc_UnregVolltage`).
+
 ### 2.3 Power management del imager / sensor
 
 | Dirección | Cadena | Rol |

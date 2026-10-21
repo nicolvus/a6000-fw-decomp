@@ -1721,3 +1721,10 @@ Próximo (no iniciado): traza pasiva autorizada de `MSS_SO_DWN`/bobinas, consumi
 - Abierto: formato del chunk de lente (`LensInterpretChunk`/`ChunkEd`) y si es el mismo tipo de bloque que `/lens/VX91xx_lensfile.bin`; qué es "dra data"; cómo se calculan las posiciones de defecto; relación ZPD0/ZPD1 con los subcanales W/R ch0..ch2.
 - Próximo exacto: emparejar `LensInterpretChunk` con el formato de los ficheros de lente (S66) y localizar el escritor de los datos ZPD en el cuerpo (`load lens data from body` → qué fichero/backup). S51 se mantiene.
 - Cuota de subagentes agotada en el proveedor (6 intentos con "Rate limit exceeded"); el trabajo continúa en el agente principal.
+
+## Revisión de S68 y cierre de huecos (21-10-2026)
+- El test canónico del hito es `tests/test_s68_power.py` (19/19); el duplicado `tests/test_s68_battery.py` se eliminó (el subagente ya había generado el suyo antes de agotarse el cupo).
+- Correcciones aplicadas al test/informe del subagente: (a) la cadena `Wait E-MountLens ReduceVoltage` está en `0x43cc7aa4` (no `0x43cc2ca6`, que apuntaba a otra cadena de SHD); (b) la **A7S sí tiene** `ACV_BATT_Snd` (`0x43c983f6`) y `ACV Error Voltage` (`0x43c982d3`) — lo que la A6000 añade es `BatteryInfo` y los `Battery Info` de IRLight/VideoLight; (c) en la A7S la cadena de nivel de batería va **sin** el prefijo `[CAMERA_MAIN_SYNC]: `; (d) el bloque de nombres de carga empieza con un `#` en `0x43ccd8aa`; (e) rango de búsqueda de las cadenas ACV (0x43c8f83b/0x43c8f95e) por debajo de 0x43c90000.
+- **Hallazgo adicional (S68)**: la carga de flash está controlada por **PWM** con realimentación del condensador: `uc_AcvOn` `0x43ccd8ff`, `uc_UnregVolltage` `0x43ccd908`, `uc_CapacitorStatus` `0x43ccd919`, `uc_PwmStatus` `0x43ccd92c`, `us_ActivePwmDutySlope` `0x43ccd949`, `us_ActiveChargeSlope` `0x43ccda10`, `uc_ChargeRequest` `0x43ccda49`, `uc_ChargeStopRequest` `0x43ccda5a`.
+- **Hallazgo adicional (S75)**: el origen "from body" de los datos ZPD es el fichero **`/setting/psd.bin`** (cadena contigua a los logs `[ZPD]:`).
+- Suite completa: **383 passed + 49 subtests**.
