@@ -1675,3 +1675,9 @@ Próximo (no iniciado): traza pasiva autorizada de `MSS_SO_DWN`/bobinas, consumi
 - Herramientas: subagente (`beam-free`) con Capstone sobre bytes; sin REA nuevo (RAM: 4 sesiones Ghidra ya abiertas).
 - Frontera: muestreo/bits/canales reales; "reduce voltage" del micrófono; muxer de audio en el contenedor; coeficientes WNR; ganancia/calibración; semántica de VGS/PR/MF/CONS/BANDI.
 - Próximo exacto: muestreo/canales desde la configuración de `AUDIOIP`; contenedor de vídeo y audio (AVCHD/MP4) y su muxer; `libInfra*.so` de userland para el códec externo que solo tiene la A7S. S51 se mantiene.
+
+## S70 (reconocimiento) — EIS/gyro (21-10-2026, línea abierta)
+- Hecho: mapa del subsistema de estabilización del `av-cam.bin`: tres capas con prefijo propio (`[CAMERA_IS][AS]` 0x436fecbe–0x436ffab4 con cola OSAL y factor `upm_get_hcrn_ura`; `[CAMERA_IS][EIS]` 0x43702dac–0x437046a4 con `rcct_SetStblzPower`, `rcct_SetStblzGridH` y lecturas `GyroAD[p],GyroAD[y]`; `[CAMERA_IS][DIST]` 0x436ea470–0x436ea65c), puente con la montura (`IS_LensMountExpStartCB` 0x436ea2d0, `IS_LensMountPanoramaGyro` 0x43705dd0), cadena de time control (`GyroStitScl` 0x437d0768, `JudgeBrkGyro` 0x43874c50) y **fichero de calibración IS por lente `/mnt/FILE_IS_%04x.dat`** (0x43707152). Nota `analysis/s70_is/is_gyro_recon.md`, test `tests/test_s70_is.py` 4/4.
+- Verificado: direcciones y textos de los logs anteriores (bytes). Inferencia: "AS" ≠ "EIS"; el EIS se coordina con el disparo y con el barrido panorámico.
+- Abierto: formato de `FILE_IS_%04x.dat` y quién lo escribe; unidades de `GyroStitScl`; rail `EIS_RC1V`; relación con el OSS del objetivo y con `LensShdOn`/`PzShdOn` (S66).
+- Próximo exacto: parsear `/mnt/FILE_IS_*.dat` (si existe en el firmware) y localizar al escritor; trazar `GyroAD` → `GyroStitScl`. S51 se mantiene.
