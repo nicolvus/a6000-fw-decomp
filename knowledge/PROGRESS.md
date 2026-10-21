@@ -1835,3 +1835,48 @@ Próximo (no iniciado): traza pasiva autorizada de `MSS_SO_DWN`/bobinas, consumi
 - Hecho: inventario de las 43 rutas de fichero que usa el firmware de la A6000 fw3.21. `/usr/sabin/` (27): **22 ficheros SPICA** `spica_musashi_<modo>_<canal>_tap_step<N>.bin` (modos still, mov, mov_4k, mov_interlace, dualrec, dualrec_4k; canales C e Y; dos pasos) — `still_c_tap_step1` `0x43cc3774`, `still_c_tap_step2` `0x43cc3834`, `still_y_tap_step1` `0x43cc3894`, `still_y_tap_step2` `0x43cc3315`, `mov_c_tap_step1` `0x43cc3375`, `mov_c_tap_step2` `0x43cc33d5`, `mov_y_tap_step1` `0x43cc3435`, `mov_y_tap_step2` `0x43cc34f5`, `mov_4k_c_tap_step1` `0x43cc35f4`, `mov_4k_c_tap_step2` `0x43cc3495`, `mov_4k_y_tap_step1` `0x43cc36b4`, `mov_4k_y_tap_step2` `0x43cc3714`, `mov_interlace_c_tap_step1` `0x43cc3654`, `mov_interlace_y_tap_step1` `0x43cc37d4`, `dualrec_c_tap_step1` `0x43cc3b3a`, `dualrec_c_tap_step2` `0x43cc3cba`, `dualrec_y_tap_step1` `0x43cc3ada`, `dualrec_y_tap_step2` `0x43cc3bfa`, `dualrec_4k_c_tap_step1` `0x43cc38f4`, `dualrec_4k_c_tap_step2` `0x43cc3b9a`, `dualrec_4k_y_tap_step1` `0x43cc3954`, `dualrec_4k_y_tap_step2` `0x43cc3c5a`; `star_kernel_param.bin` `0x43cc3d1a`; `dcv_psf_table_still.bin` `0x43cb9a34`, `dcv_psf_table_movie.bin` `0x43cba98a`, `dcv_psf_table_movie_4k.bin` `0x43cbaa4a`, `dcv_psf_table_dualrec.bin` `0x43cba9ea`. `/mnt/` (11): trazas de la propia cámara — `/mnt/%s.%4d%02d%02d_%02d%02d%02d.dat` `0x43cb4eeb` (con fecha/hora), `/mnt/FILE%04x.dat` `0x43cbe562`, `/mnt/FILE_IS_%04x.dat` `0x43c9a535`, `/mnt/FILE_TC_COMMON_%04x.dat` `0x43ca84f2`, `/mnt/lc_mslog_%04x.dat` `0x43ca7a7d`, `/mnt/Mount_ms_log_%03d.dat` `0x43c97146`, `/mnt/cc_ms_log%04x.dat` `0x43cb5004`, `/mnt/cc_ms_log%s.dat` `0x43cb4f4d`, `/mnt/detect_ms_log%04x.dat` `0x43c9162e`, `/mnt/log.bin` `0x43c8f789`. `/setting/psd.bin` `0x43ccf2b6` (0 en A7S). `/usr/dfe/dfe.bin` `0x43cd1b94`. `/etc/localtime` `0x43bd5744`, `/usr/share/zoneinfo` `0x43bd5754`, `/usr/share/locale` `0x43bd92b4`. Nota `analysis/s95_files/file_inventory.md` + JSON, test `tests/test_s95_files.py` 7/7.
 - **Hallazgo operativo:** la cámara escribe sus propias trazas en el disco RAM con nombre por módulo y fecha/hora → deben estar en los volcados de `analysis/camera-dumps/` (S64/S65) → fuente primaria para contrastar montura (S66), ZPD (S75), IS/EIS (S70) y detección (S71) sin más instrumentación.
 - Abierto: formato binario de los `spica_musashi_*` y de las tablas PSF; qué es "musashi"; formato de `/mnt/*.dat`; supervivencia de esas trazas en el volcado; por qué 4K/dualrec tienen parameter sets propios.
+
+## Mapa de temas en vuelo y estado (21-10-2026, fin de ronda)
+
+**Cuota de subagentes:** los 8 modelos `free` (`deepseek-v4.1-flash`, `nemotron-3.5-super-vl`,
+`nemotron-3.5-lightning`, `beam`, `mimo-v2.6`, `longcat-2.5-preview`, `glm-5.3-flash`, `big-pickle`)
+devuelven "Rate limit exceeded" **salvo `nemotron-3.5-lightning-free`**, que es el único que sigue
+entregando hitos. Se lanzan tandas de hasta 3 subagentes y, en paralelo, el agente principal
+trabaja en los mismos temas con Capstone (sin sesiones REA: 0 Ghidra abiertas, 9 GiB libres).
+
+**Hitos de esta ronda (todos publicados en `origin/main`):**
+
+| hito | tema | origen |
+|---|---|---|
+| S71 | caras / FC-FRC (99 ficheros, puente con el escalar) | subagente + revisión |
+| S72 | wireless / PlayMem / Camera on Demand | subagente + revisión |
+| S73/S74 | protocolo `ADJ_CMD` y su máscara de 8 sub-comandos | propio |
+| S77 | Creative Style y WB (tablas de estilos; `wb_*` del display) | subagente + revisión |
+| S78 | los 50 parámetros `apc_*` del motor YC | propio |
+| S79 | mapa de los 348 módulos del firmware | propio |
+| S80 | ZIT: corrección de defectos (DDC) | propio |
+| S81 | ADF: framework, MSGQ, MMGR, 102 DBGCMD | propio |
+| S82 | AutoFraming y etapas de control | subagente + revisión |
+| S83 | módulos menores (ACCY, CAM_FUNC_MGR, VIDENCSTAT, ENCSEQCTRL, SAD, PNL, AUGI, WSX) | propio |
+| S84 | API del motor de imagen (`sa_func_*`, 19 familias) | propio |
+| S85 | `CLK_CTRL` + `VPH_API` (nuevos en fw3.21) | propio |
+| S86 | `VDF` + `VEF` (el visor) | propio |
+| S87 | almacenamiento, sistema de archivos, tarjeta | subagente + revisión |
+| S88 | GOLFSHOT y MOTIONSHOT | subagente + revisión |
+| S89 | `IDT`/`IDT_OPD` (mapas del imager, FOPD, Split) | propio |
+| S90 | reproducción de vídeo (PlayArranger, VFC, VDISP) | subagente + revisión |
+| S91 | submódulos del framework ADF | propio |
+| S92 | base de datos de medios (SceneInfo/MovieFile) | subagente (en curso) |
+| S93 | bus de mensajes OSAL del userland (16 GID, 13 LID) | propio |
+| S94 | API HAPI de la app remota | subagente (en curso) |
+| S95 | inventario de ficheros que la cámara lee y escribe | propio |
+| S96 | modos de captura y calibración de fábrica | subagente (en curso) |
+
+**Correcciones de revisión aplicadas a hitos previos:** S76 (`Stage_WaitControl.cpp` en `0x43cad784`,
+no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
+
+**Líneas libres para la siguiente ola** (verificadas sin colisión con `docs/` ni con `analysis/`):
+- `SceneInfo`/índice de medios (S92, en curso), API HAPI (S94, en curso), modos de captura (S96, en curso).
+- Todavía sin tocar: `ENCMODEMGR`/`ENCAUDSYNC`/`SYNCENCSTART` (sincronización audio-vídeo del
+  codificador), `libBizFw.so` (el orquestador de servicios: sus categorías/IDs de mensaje), y el
+  grafo de dependencias entre módulos a partir de `analysis/s79_modules/module_map.json`.
