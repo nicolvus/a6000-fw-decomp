@@ -1880,3 +1880,8 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 - Todavía sin tocar: `ENCMODEMGR`/`ENCAUDSYNC`/`SYNCENCSTART` (sincronización audio-vídeo del
   codificador), `libBizFw.so` (el orquestador de servicios: sus categorías/IDs de mensaje), y el
   grafo de dependencias entre módulos a partir de `analysis/s79_modules/module_map.json`.
+
+## S92 — la base de datos de medios: SceneInfo, MovieFile e índice (21-10-2026, línea general)
+- Hecho: integración del hito de base de datos de medios (subagente `nemotron-3.5-lightning-free`) **verificado por muestreo**: en `av-cam.bin`, `[CAMERA_MAIN]: LiroSequencerMovieFileFormat : %d` `0x43ca3b3a` (el secuenciador LIRO, que además lee la **posición del dial de diafragma**: `LiroSequencer cannot read IRIS_DIAL_POS` `0x43ccadbf`) y `Scene%02d.txt` `0x43ccb21b`; en el userland, `libmpr.so` con la interfaz `MprIf` (1525 apariciones), `PreRegisterDcfContentSync` (8), `GetHighlightSceneInfo` (2) y `SceneInfo` (10), y `libObj.so` con `SceneInfo`/`HighlightScene` (5). Enlaza con S87 (modelo de objetos e índice). Informe `analysis/s92_mediadb/media_database.md` + JSON, test `tests/test_s92_mediadb.py` 10/10.
+- Revisión: **sin correcciones**; se añade el dato de `IRIS_DIAL_POS`.
+- Abierto: contenido y ubicación de los `Scene%02d.txt`; la relación con la especificación DCF (`xDCF`/`D2FxDCF`); `MovieFileFormat` vs la nomenclatura de clips; el formato del índice en disco (`Index/`).

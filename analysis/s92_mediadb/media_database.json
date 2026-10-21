@@ -1,0 +1,114 @@
+{
+  "hito": "S92 — Base de datos de medios de la cámara: SceneInfo, MovieFileManager, Index/ y modelo de contenidos (A6000 fw3.21)",
+
+  "avcam_bin": {
+    " addresses": {
+      "LiroSequencerMovieFileFormat": "0x43ca3b3a",
+      "MovieFileFormat_string": "0x43ca3b56",
+      "Scene_file_pattern": "0x43ccb21b",
+      "DCIM_image_path": "0x43cac566",
+      "ExternalStorageStart": "0x43cb3148",
+      "ExternalStorageAcquire": "0x43cb317f",
+      "ExternalStorageRelease": "0x43cb31b8",
+      "setting_psd_bin_A6000": "0x43ccf2b6",
+      "setting_psd_bin_A7S": null
+    },
+
+    "strings_verified": {
+      "LiroSequencerMovieFileFormat": "[CAMERA_MAIN]: LiroSequencerMovieFileFormat : %d",
+      "MovieFileFormat": "MovieFileFormat : %d",
+      "Scene_pattern": "Scene%02d.txt",
+      "DCIM_path": "DCIM/100MSDCF/DSC%05d.ARW",
+      "DSC_example": "DCIM/100MSDCF/DSC00001.ARW"
+    }
+  },
+
+  "userland_libs": {
+    "libObj.so": {
+      "size_a6000": 17436172,
+      "size_a7s": 16184848,
+      "CLIP_count": 13,
+      "fields": [
+        "contentType",
+        "p_entryIdList",
+        "entryCondition",
+        "p_listInfo",
+        "mediaSizeOnDstDisc",
+        "remainSizeOnDstDisc",
+        "forcastUseSizeOnDstDisc",
+        "isExistUnsupportedContent",
+        "dubbingProhibitionFactor",
+        "mainJpg",
+        "thumJpg",
+        "screenNail",
+        "exifSrcArea",
+        "lensModel",
+        "model",
+        "pimInfo",
+        "publicMakerNote",
+        "secretMakerNote",
+        "software",
+        "mpfSrcArea"
+      ]
+    },
+
+    "libmpr.so": {
+      "size_a6000": 10321204,
+      "size_a7s": 10321412,
+      "index_fields": [
+        "category folder",
+        "content num",
+        "date num",
+        "entry num",
+        "last content",
+        "last date",
+        "last date folder",
+        "playlist num",
+        "playlist folder",
+        "playlist category folder",
+        "playlist content num",
+        "total mark num",
+        "creationTime",
+        "bckPropFileModTime",
+        "orgPropFileModTime",
+        "thumbPictFileModTime",
+        "aviFileModTime",
+        "m_firstContentCreationTime",
+        "seekPoint 0x%08x: packLength 0x%08x PH PF%d"
+      ]
+    },
+
+    "libInfraFsys.so": {
+      "size_a6000": 375524,
+      "size_a7s": 373900,
+      "exfat_count": 51,
+      "fat32_count": 8,
+      "structures": [
+        "BPB_Media",
+        "BPB_TotSec16/32",
+        "block size (org)",
+        "block start(org)",
+        "FSYS_ATTRIB_ALL",
+        "FSYS_ATTRIB_ARCHIVE",
+        "FSYS_ATTRIB_DIRECTORY",
+        "FSYS_ATTRIB_VOLUME",
+        "create UTC Offset",
+        "create time_10ms"
+      ]
+    }
+  },
+
+  "comparison_fw321_vs_fw320": {
+    "storage_libs_same": ["libInfraFsys.so", "libObj.so", "libmpr.so"],
+    "dcim_path_identical": true,
+    "psd_bin_a6000_only": true,
+    "CLIP_in_both": 13,
+    "mpr_structure_same": true
+  },
+
+  "verified_against": {
+    "binary_adrresses": true,
+    "userland_symbols": true,
+    "cross_camera_comparison": true
+  }
+}

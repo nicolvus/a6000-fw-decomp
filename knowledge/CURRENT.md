@@ -204,6 +204,16 @@ Para restricciones del proyecto (sin firmware ejecutado, sin flasheo, sin `git p
 
 [Conclusiones](../analysis/s95_files/file_inventory.md) · [JSON](../analysis/s95_files/file_inventory.json).
 
+## S92 — la base de datos de medios: SceneInfo, MovieFile e índice (21-10-2026)
+
+**VERIFICADO (10 tests, `tests/test_s92_mediadb.py`):** el modelo de medios de la cámara tiene su parte de **userland** (`libmpr.so`, `libObj.so`, `libInfraFsys.so` — ver S87) y su parte de **firmware** en `av-cam.bin`: el **secuenciador LIRO** (`[CAMERA_MAIN]: LiroSequencerMovieFileFormat : %d` `0x43ca3b3a`, que además lee la **posición del dial de diafragma**: `LiroSequencer cannot read IRIS_DIAL_POS` `0x43ccadbf`) y la **nomenclatura de escena** `Scene%02d.txt` (`0x43ccb21b`). En el userland, la interfaz `MprIf` (1525 apariciones en `libmpr.so`) gestiona el contenido: `PreRegisterDcfContentSync` (8), `GetHighlightSceneInfo` (2), `SceneInfo` (10) y, en `libObj.so`, `SceneInfo`/`HighlightScene` (5). La ruta de la foto sigue siendo `DCIM/100MSDCF/DSC%05d.ARW` (`0x43cac566`).
+
+**Revisión:** verificado por muestreo (todas las cadenas citadas en sus direcciones) — el informe del subagente era correcto, sin correcciones; se añade el dato de `IRIS_DIAL_POS`.
+
+**NO VERIFICADO:** el contenido de los `Scene%02d.txt` y dónde se almacenan exactamente; la relación con la especificación **DCF** (`xDCF`/`D2FxDCF` en el blob); cómo se relacionan `MovieFileFormat` y la nomenclatura de clips de la tarjeta; el formato del índice en disco (`Index/`).
+
+[Conclusiones](../analysis/s92_mediadb/media_database.md) · [JSON](../analysis/s92_mediadb/media_database.json).
+
 ## S69 — subsistema de audio de la A6000 (línea general) (21-10-2026)
 
 **VERIFICADO (9 tests, `tests/test_s69_audio.py`):** el audio del `av-cam.bin` A6000 es un *IP* más del driver de sensor: arranque `AUDIOIP INIT COMP` (`0x43c26411`) con configs VGS/PR/MF/CONS/BANDI; micrófono (`AdfSenserCtrl::SetParamSetMicMode` `0x43c26dc1`, `Abb::SetMicConfig` `0x43cddad4`, `AbbMicSensAdjustCtrl::SetStatus` `0x43cddd49`); niveles (`SetParamSetRecLevel` `0x43c26df4`, `SetParamSetRecMode` `0x43c26e91`, `15AbbRecLevelCtrl` `0x43cdddf3`, `RecLevel SetRecLevel` `0x43929fa4`); WNR y cancelación de voz (`WindStage:%d, MagDataRsv:%d` `0x43cddea7`, `MAGIC SetNwnr`, `New WNR ON/OFF`, `PremiumCloserVoice`, `MyvoiceCanceling`, `iVoice` `0x43cddeec`–`0x43cddf9a`); códecs `XAVCS_LPCM` `0x43c6909d`, `MP4_LPCM` `0x43c690c8`, `AAC` `0x43c690f1`; diagnóstico (`targetAudioFormat` `0x43c5c68e`, `audioChannelNum` `0x43c5c6b1`, `audioMuteRec` `0x43c5ca62`); enlace con vídeo (`ProcBuffMgrWrAudioPin` `0x43c28d29`, `AVBB_SCN_START/STOP_AUDIO`); backup de sonido (`9AudioIpIf` `0x43cdd82e`, `Sa SaChangeBackup` `0x43cddfbc`). **A7S (fw3.20) tiene códec externo** (`15AbbExtCodecCtrl` `0x43cd582e`, `ConvChSsau2AudioIpCh` `0x43c2f48a`) que la A6000 (fw3.21) **no tiene**; el resto del audio es prácticamente idéntico (235 vs 237 cadenas).
