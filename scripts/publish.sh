@@ -27,6 +27,12 @@ echo "== fetch =="
 git fetch origin 2>&1 | tail -2
 
 echo "== rebase sobre origin/main =="
+# el demonio REA sigue escribiendo el log de sesion: se aparta (stash) para poder rebasar
+STASHED=0
+if ! git diff --quiet || ! git diff --cached --quiet; then
+  git stash push -q -m "publish-autostash" && STASHED=1
+  echo "-- cambios sin commit apartados en un stash --"
+fi
 if ! git rebase origin/main; then
   echo "-- conflictos: se resuelven los derivados con la version de origin/main --"
   for f in docs/CORRECTIONS.md docs/OPEN-QUESTIONS.md; do
@@ -66,12 +72,21 @@ if [ "$PUSH" = "1" ]; then
     fi
     echo "-- el remoto ha avanzado: reintento (rebase) --"
     git fetch origin 2>&1 | tail -1
+    STASHED=0
+    if ! git diff --quiet || ! git diff --cached --quiet; then
+      git stash push -q -m "publish-autostash" && STASHED=1
+    fi
     git rebase origin/main 2>&1 | tail -2
     pending=$(git diff --name-only --diff-filter=U)
     if [ -n "$pending" ]; then
       echo "   CONFLICTOS PENDIENTES:"; echo "$pending" | sed 's/^/     - /'; exit 2
     fi
   done
+fi
+
+# restaurar lo apartado (el log de sesion puede haber cambiado: se prioriza el estado actual)
+if [ "$STASHED" = "1" ]; then
+  git stash pop -q 2>/dev/null || { echo "-- el stash no se reaplica limpio (log de sesion en movimiento); se conserva el estado actual --"; git stash drop -q; }
 fi
 
 echo "== final =="

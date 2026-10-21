@@ -1,193 +1,134 @@
-"""S77: comprobaciones contra los bytes reales de av-cam.bin (A6000 fw3.21)
-y extracción de datos de Creative Style, Picture Profile y White Balance."""
-import hashlib
-import json
+"""S77 — Creative Style y balance de blancos (A6000 fw3.21 / A7S fw3.20).
+
+Anclas verificadas contra los bytes del av-cam.bin y contra las .so del userland.
+Ver analysis/s77_pp/picture_profile_creative_style.md
+
+Sustituye al borrador del subagente (tabla de Picture Profile inexistente, nombres de
+parametro que no estan en el firmware, presets de WB no presentes).
+"""
 import re
-import struct
 import sys
 import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "analysis" / "s58"))
+from tdis import data, B  # noqa: E402
 
-# Cargar config JSON
-JSON_PATH = ROOT / "analysis/s77_pp/picture_profile_creative_style.json"
-with open(JSON_PATH, "r") as f:
-    JSON_CONFIG = json.load(f)
-
-BLOB_PATH = ROOT / "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin"
-with open(BLOB_PATH, "rb") as f:
-    BLOB = f.read()
-
-# Base del blob av-cam.bin (dirección donde empiezan los nombres de Stage_)
-B = 0x43c9ee6c
-
-# Capstone para disassembly
-from capstone import CS_ARCH_ARM, CS_MODE_THUMB, Cs
-MD = Cs(CS_ARCH_ARM, CS_MODE_THUMB)
+LIB = ROOT / ("firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/"
+              "nflasha15_unpacked_unpacked/lib")
+LIB_A7 = ROOT / ("firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/"
+                 "nflasha15_unpacked_unpacked/lib")
+STR_RE = re.compile(rb"[\x09\x20-\x7e]{3,}")
 
 
-def dis(a, b):
-    """Disasm instrucciones del blob av-cam.bin."""
-    return [(i.address, i.mnemonic, i.op_str) for i in MD.disasm(BLOB[a - B:b - B], a)]
+def cstr(addr, model="A6000"):
+    d = data(model)
+    off = addr - B
+    end = d.find(b"\x00", off, off + 200)
+    return d[off:end].decode("ascii", "replace").rstrip("\n")
 
 
-def u32(a):
-    """Lee un entero sin signo de 32 bits little-endian del blob."""
-    return struct.unpack_from("<I", BLOB, a - B)[0]
-
-
-# ════════════════════════════════════════════════════════════════════════════
-# Test classes
-# ════════════════════════════════════════════════════════════════════════════
+def blob_text(path):
+    return path.read_bytes().decode("latin-1")
 
 
 class CreativeStyleNames(unittest.TestCase):
-    """Verifica el inventario de estilos Creative Style en av-cam.bin."""
+    TABLE1 = ["Vivid", "Neutral", "Portrait", "Landscape", "Clear", "Deep", "Light",
+              "Sunset", "Nightview", "Autumnleaves", "Real", "Sepia", "Standard"]
+    ADDR1 = [0x43CA6702, 0x43CA6709, 0x43CA6712, 0x43CA671C, 0x43CA672B, 0x43CA6732,
+             0x43CA6738, 0x43CA673F, 0x43CA6747, 0x43CA6752, 0x43CA6760, 0x43CA6766,
+             0x43CA676D]
 
-    def test_creative_style_vivid_present(self):
-        """Vivid debe aparecer en av-cam.bin."""
-        text = BLOB.decode("latin-1", errors="replace")
-        self.assertIn("Vivid", text, "Estilo 'Vivid' no encontrado")
+    def test_first_table_13_entries(self):
+        for name, addr in zip(self.TABLE1, self.ADDR1):
+            self.assertEqual(cstr(addr), name, hex(addr))
 
-    def test_creative_style_neutral_present(self):
-        """Neutral debe aparecer en av-cam.bin."""
-        text = BLOB.decode("latin-1", errors="replace")
-        self.assertIn("Neutral", text, "Estilo 'Neutral' no encontrado")
+    def test_second_table_12_entries(self):
+        """La segunda tabla repite los estilos sin la entrada 'Real'."""
+        addrs = [0x43CA678B, 0x43CA6792, 0x43CA679B, 0x43CA67A5, 0x43CA67B4, 0x43CA67BB,
+                 0x43CA67C1, 0x43CA67C8, 0x43CA67D0, 0x43CA67DB, 0x43CA67E9, 0x43CA67F0]
+        expected = ["Vivid", "Neutral", "Portrait", "Landscape", "Clear", "Deep", "Light",
+                    "Sunset", "Nightview", "Autumnleaves", "Sepia", "Standard"]
+        for name, addr in zip(expected, addrs):
+            self.assertEqual(cstr(addr), name, hex(addr))
 
-    def test_creative_style_portrait_present(self):
-        """Portrait debe aparecer en av-cam.bin."""
-        text = BLOB.decode("latin-1", errors="replace")
-        self.assertIn("Portrait", text, "Estilo 'Portrait' no encontrado")
+    def test_same_styles_in_a7s(self):
+        for addr, name in ((0x43CB540E, "Vivid"), (0x43CB5415, "Neutral"),
+                           (0x43CB543E, "Deep"), (0x43CB545E, "Autumnleaves"),
+                           (0x43CB5453, "Nightview")):
+            self.assertEqual(cstr(addr, "A7S"), name, hex(addr))
 
-    def test_creative_style_landscape_present(self):
-        """Landscape debe aparecer en av-cam.bin."""
-        text = BLOB.decode("latin-1", errors="replace")
-        self.assertIn("Landscape", text, "Estilo 'Landscape' no encontrado")
+    def test_picture_profile_names_absent_in_firmware(self):
+        """Resultado NEGATIVO verificado: no hay 'CreativeStyle'/'PictureProfile'/params en av-cam."""
+        d = data("A6000")
+        for probe in (b"CreativeStyle", b"PictureProfile", b"Highlight", b"Saturation",
+                      b"Sharpness", b"ColorTone", b"wb_shift"):
+            self.assertEqual(d.find(probe), -1, probe)
 
-    def test_creative_style_bw_present(self):
-        """BW (Black & White) debe aparecer en av-cam.bin."""
-        text = BLOB.decode("latin-1", errors="replace")
-        self.assertIn("BW", text, "Estilo 'BW' no encontrado")
-
-    def test_creative_style_clear_present(self):
-        """Clear debe aparecer en av-cam.bin."""
-        text = BLOB.decode("latin-1", errors="replace")
-        self.assertIn("Clear", text, "Estilo 'Clear' no encontrado")
-
-    def test_creative_style_deep_present(self):
-        """Deep debe aparecer en av-cam.bin."""
-        text = BLOB.decode("latin-1", errors="replace")
-        self.assertIn("Deep", text, "Estilo 'Deep' no encontrado")
-
-    def test_creative_style_light_present(self):
-        """Light debe aparecer en av-cam.bin."""
-        text = BLOB.decode("latin-1", errors="replace")
-        self.assertIn("Light", text, "Estilo 'Light' no encontrado")
-
-    def test_creative_style_sunset_present(self):
-        """Sunset debe aparecer en av-cam.bin."""
-        text = BLOB.decode("latin-1", errors="replace")
-        self.assertIn("Sunset", text, "Estilo 'Sunset' no encontrado")
-
-    def test_creative_style_nightview_present(self):
-        """Nightview debe aparecer en av-cam.bin."""
-        text = BLOB.decode("latin-1", errors="replace")
-        self.assertIn("Nightview", text, "Estilo 'Nightview' no encontrado")
-
-    def test_creative_style_autumnleaves_present(self):
-        """Autumnleaves debe aparecer en av-cam.bin."""
-        text = BLOB.decode("latin-1", errors="replace")
-        self.assertIn("Autumnleaves", text, "Estilo 'Autumnleaves' no encontrado")
-
-    def test_creative_style_standard_present(self):
-        """Standard debe aparecer en av-cam.bin."""
-        text = BLOB.decode("latin-1", errors="replace")
-        self.assertIn("Standard", text, "Estilo 'Standard' no encontrado")
-
-    def test_creative_style_total_count(self):
-        """Debe haber exactamente 13 estilos Creative Style únicos."""
-        text = BLOB.decode("latin-1", errors="replace")
-        # Los nombres aparecen como: VividNeutralPortraitLandscapeBWClearDeepLightSunsetNightviewAutumnleavesRealSepiaStandard
-        # Usamos regex para encontrar todos los nombres (manejo de null bytes y concatenación)
-        pattern = r"(?:Vivid|Neutral|Portrait|Landscape|BW|Clear|Deep|Light|Sunset|Nightview|Autumnleaves|RealSepia|Standard)"
-        names = re.findall(pattern, text, re.IGNORECASE)
-        unique_names = set(names)
-        # Normalizar a títulos para comparar
-        expected = ["Vivid", "Neutral", "Portrait", "Landscape", "BW", "Clear", "Deep", "Light", "Sunset", "Nightview", "Autumnleaves", "RealSepia", "Standard"]
-        normalized = [n.title() for n in unique_names]
-        for exp in expected:
-            self.assertIn(exp, normalized,
-                          f"Estilo esperado '{exp}' no encontrado en los {len(unique_names)} únicos: {normalized}")
+    def test_wb_preset_names_absent_as_strings(self):
+        """Los presets fotograficos de WB NO aparecen como cadenas propias del firmware."""
+        d = data("A6000")
+        for probe in (b"Daylight", b"Incandescent", b"Fluorescent", b"Cloudy"):
+            self.assertEqual(d.find(probe), -1, probe)
 
 
-class WhiteBalancePresets(unittest.TestCase):
-    """Verifica los presets y coeficientes de balance de blancos."""
+class WhiteBalanceBlock(unittest.TestCase):
+    def test_wb_strings_are_display_calibration(self):
+        """Las cadenas wb_* forman parte del bloque de ajuste de panel (ADJ_CMD, S73)."""
+        for addr, text in {
+            0x43C76C26: "wb_b_data=%02X ",
+            0x43C76C36: "wb_data_tmp=%02X ",
+            0x43C76C48: "wb_r_data=%02X ",
+            0x43C76C6B: "wb_g_data=%02X ",
+            0x43C76DCA: "wb_w_data=%02X, ",
+            0x43C76DBB: "wb_mask=%02X, ",
+            0x43C76E13: "wb_mask=%02X ",
+            0x43C76E21: "wb_w_data=%02X ",
+        }.items():
+            self.assertEqual(cstr(addr), text, hex(addr))
 
-    def test_wb_auto_present(self):
-        """Auto WB preset debe aparecer en av-cam.bin."""
-        text = BLOB.decode("latin-1", errors="replace")
-        self.assertIn("Auto", text, "Preset WB 'Auto' no encontrado")
-
-    def test_wb_shade_present(self):
-        """Shade WB preset debe aparecer en av-cam.bin."""
-        text = BLOB.decode("latin-1", errors="replace")
-        self.assertIn("Shade", text, "Preset WB 'Shade' no encontrado")
-
-    def test_wb_flash_present(self):
-        """Flash WB preset debe aparecer en av-cam.bin."""
-        text = BLOB.decode("latin-1", errors="replace")
-        self.assertIn("Flash", text, "Preset WB 'Flash' no encontrado")
-
-    def test_wb_underwater_present(self):
-        """Underwater WB preset debe aparecer en av-cam.bin."""
-        text = BLOB.decode("latin-1", errors="replace")
-        self.assertIn("Underwater", text, "Preset WB 'Underwater' no encontrado")
-
-    def test_wb_coefficients_present(self):
-        """Los coeficientes wb_r_data, wb_g_data, wb_b_data deben estar en av-cam.bin."""
-        text = BLOB.decode("latin-1", errors="replace")
-        for sym in ["wb_r_data", "wb_g_data", "wb_b_data"]:
-            positions = [m.start() for m in re.finditer(sym, text, re.IGNORECASE)]
-            self.assertGreater(len(positions), 0,
-                               f"Símbolo '{sym}' no encontrado en av-cam.bin")
-            # Verificar que las posiciones están en el área WB esperada (~7560230-7560299)
-            for p in positions:
-                self.assertIn(p, range(7560220, 7560310),
-                              f"Offset de '{sym}' fuera del área esperada: {p}")
+    def test_wb_block_precedes_adj_cmd_block(self):
+        """El bloque wb_* esta justo antes de los nombres ADJ_CMD_AVBB_PANELEVF_* (S73)."""
+        self.assertEqual(cstr(0x43C76C93), "ADJ_CMD_AVBB_PANELEVF_PANELEVF_ADJ_START")
+        self.assertLess(0x43C76C26, 0x43C76C93)
 
 
-class PictureProfileParams(unittest.TestCase):
-    """Verifica los parámetros de Picture Profile en av-cam.bin."""
+class Userland(unittest.TestCase):
+    def test_wrapper_creative_style_symbols(self):
+        t = blob_text(LIB / "wrapperCreativeStyle.so")
+        for s in ("_ZN20WrapperCreativeStyle16getCreativeStyleEP15ViewBaseProductPNS_22WRAPPER_CREATIVE_STYLE",
+                  "_ZN20WrapperCreativeStyle16setCreativeStyleEP15ViewBaseProductNS_22WRAPPER_CREATIVE_STYLEE",
+                  "_ZN20WrapperCreativeStyle28convertProcessValueIdToValueEiPNS_22WRAPPER_CREATIVE_STYLEE",
+                  "_ZN20WrapperCreativeStyle28convertValueToProcessValueIdENS_22WRAPPER_CREATIVE_STYLEERi",
+                  "_ZN21CmnViewProcessDataMgr11getInstanceEP15ViewBaseProduct",
+                  "6stella8BitArrayIjE"):
+            self.assertIn(s, t, s)
 
-    def test_contrast_present(self):
-        """El parámetro Contrast debe aparecer en av-cam.bin."""
-        text = BLOB.decode("latin-1", errors="replace")
-        self.assertTrue(
-            re.search(r"(?i)Contrast", text),
-            "Parámetro 'Contrast' no encontrado en av-cam.bin"
-        )
+    def test_wrapper_white_balance_symbols(self):
+        t = blob_text(LIB / "wrapperWhiteBalance.so")
+        for s in ("_ZN19WrapperWhiteBalance15getWhiteBalanceEP15ViewBaseProductPNS_21WRAPPER_WHITE_BALANCEEPi",
+                  "_ZN19WrapperWhiteBalance15setWhiteBalanceEP15ViewBaseProductNS_21WRAPPER_WHITE_BALANCEEiii",
+                  "_ZN19WrapperWhiteBalance20resetAdjustmentValueEP15ViewBaseProductNS_21WRAPPER_WHITE_BALANC",
+                  "_ZN18WrapperSettingUtil10readBackupEP15ViewBaseProductja",
+                  "_ZN8ViewBase19requestModelExecuteEPKcmP9ParamList",
+                  "_ZN13BackupManager22Bkup_Read_Setting_AttrEiiPv"):
+            self.assertIn(s, t, s)
 
-    def test_saturation_present(self):
-        """El parámetro Saturation debe aparecer en av-cam.bin."""
-        text = BLOB.decode("latin-1", errors="replace")
-        self.assertTrue(
-            re.search(r"(?i)Saturation", text),
-            "Parámetro 'Saturation' no encontrado en av-cam.bin"
-        )
+    def test_compensation_libraries_exist(self):
+        for f in ("cmnShiftExposureCompensation.so", "cmnShiftFlashCompensation.so",
+                  "cmnShiftIris.so", "cmnShiftIso.so", "cmnShiftShutterSpeed.so",
+                  "wrapperCreativeStyle.so", "wrapperWhiteBalance.so"):
+            self.assertTrue((LIB / f).exists(), f)
+        # los nombres sugeridos inicialmente no existen
+        self.assertFalse((LIB / "cmnShiftHSV.so").exists())
+        self.assertFalse((LIB / "cmnShiftWB.so").exists())
 
-    def test_brightness_present(self):
-        """El parámetro Brightness debe aparecer en av-cam.bin."""
-        text = BLOB.decode("latin-1", errors="replace")
-        self.assertTrue(
-            re.search(r"(?i)Brightness", text),
-            "Parámetro 'Brightness' no encontrado en av-cam.bin"
-        )
+    def test_build_path_identifies_model(self):
+        t = blob_text(LIB / "wrapperCreativeStyle.so")
+        self.assertIn("141H.DSLR.DM_UUD3", t)
+        self.assertIn("Guiengine_131H", t)
 
-
-# ════════════════════════════════════════════════════════════════════════════
-# Main
-# ═══════════════════════════════════════════════════════════════════════════
 
 if __name__ == "__main__":
     unittest.main()
