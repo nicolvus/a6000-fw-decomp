@@ -1,0 +1,160 @@
+{
+  "hito": "S97",
+  "scope": "Audio/Video Encoder Synchronization in Sony A6000 fw3.21, linea general (no SilentShutter, no mount, no AF, no JPEG). Verificado contra bytes de av-cam.bin; no se ejecutó firmware.",
+  "binary": "analysis/rea-independent/input/av-cam.bin",
+  "base": "0x43000000",
+  "models_compared": ["A6000 fw3.21", "A7S fw3.20"],
+  "modules": [
+    {
+      "name": "ENCMODEMGR",
+      "base_address": "0x7021fb",
+      "tag_string_address": "0x709c73",
+      "role": "McAvcEncModeMgr: gestiona el modo de codificación AVC y la secuencia de comandos. Coordena el flujo de codificación de alto nivel.",
+      "evidence": " cadenas únicas en av-cam.bin A6000; referenciadas por código de McAvcEncModeMgr.",
+      "key_strings": [
+        "SetState = %x",
+        "RecordCodecIfCmd: CmdCode:%x, CmdTime:%x, ExecTime:%x, CurrentRefTime =%x",
+        "ComQue CANNOT Exec! cur:%ld cmd:0x%x tim:%ld",
+        "CMD_ID_ACT_ENC", "CMD_ID_GET_REF_TIMER", "CMD_ID_INIT_ES_API_PARAM",
+        "CMD_ID_INACT_CHIP", "CMD_ID_ALLOC_USER_DATA_AREA", "CMD_ID_BEGIN_ENC",
+        "CMD_ID_SET_SEQ_PARAM", "CMD_ID_TERM_ENC", "CMD_ID_STILL_ENC",
+        "CMD_ID_APPLY_USER_DATA_GOP", "CMD_ID_APPLY_USER_DATA_PIC",
+        "CMD_ID_MUTE_AUDIO_CAPTURE", "CMD_ID_INIT_RC_BUFFER", "CMD_ID_SET_RC_WTPT",
+        "CMD_ID_SET_ENC_READ_POINTER", "ExecCodecIfCmd err = %d",
+        "ProcVsyncPre()", "ProcVsyncPost()", "ProcMsg(const MSG_MC_AVC_ENC*)",
+        "EnqueueCodecIfCmd(const DefCodecIf2McAvcCmd::CMD_CODECIF2MCAVC*)"
+      ]
+    },
+    {
+      "name": "ENCAUDOUCR",
+      "base_address": "0x70a444",
+      "role": "Maneja el desbordamiento AUGI y la escritura de FLAG END durante la codificación. Coordina la sincronización de muestras de audio con el inicio de la codificación de video.",
+      "evidence": " cadenas únicas en av-cam.bin A6000.",
+      "key_strings": [
+        "IsOuCrank = %x, Sampling = %x,FrameRate = %x,ImagingRate = %d",
+        "TermEnc(vfc24:%x,vfc32:%x,cnt:%x):NormalTerm = %x,OuCrankTerm = %x,GopNum = %x",
+        "FrameRate Unknown...",
+        "Current Sample = %x, TotalEncodeTerm = %x",
+        "Begin Enc: StartAdr = %x, BuffAdr = %x, BuffSize = %x",
+        "AUGI(AVCODEC-AVSC) OverFlowFile:%s, Func:%s() ,Line:%d",
+        "WriteAugi : AUGI FLAG END",
+        "[AUDIO INFO] Pts = 0x%08x EndFlug = 0x%02x, Num Au = %x"
+      ]
+    },
+    {
+      "name": "ENCOUCUDMG",
+      "base_address": "0x7112fb",
+      "role": "Gestiona los datos de usuario para la codificación, particularmente relacionados con la velocidad de obturación. Emite BUG/WARNING cuando los datos de usuario se desbordan o hay errores de alineación.",
+      "evidence": " cadenas únicas en av-cam.bin A6000.",
+      "key_strings": [
+        "BUG : File:%s, Func:%s() ,Line:%d (index = %x, state = %x)",
+        "WRN : File:%s, Func:%s() ,Line:%d",
+        "Same Exec Time User Data Exist : File:%s, Func:%s() ,Line:%d",
+        "UserData OverFlow", "UserData Align Error = %x",
+        "EDIT SHUTTER SPEED ERROR : File:%s, Func:%s() ,Line:%d"
+      ]
+    },
+    {
+      "name": "ENCAUDSYNC / McSyncEncStart",
+      "base_address": "0x7116d3",
+      "methods_address": "0x72ec30",
+      "role": "El módulo central de sincronización que coordina el inicio de la codificación entre unidades MC, asegurando que audio y video comiencen a codificarse en sincronía, particularmente para la generación de miniatura.",
+      "evidence": " cadenas únicas en av-cam.bin A6000; clases y métodos de mcSyncEncStart.cpp.",
+      "key_strings": [
+        "File:%s, Func:%s() ,Line:%d (header)",
+        "wai semaphore error, Err:%d", "sig semaphore error, Err:%d",
+        "MC[%d] comes later, encStartTime for Thumbnail:[%d]",
+        "MC[%d]'s startEncTime for thumbnail was changed for sync start encoding. sync value is [%d]->[%d]",
+        "MC[%d] comes earlier, encStartTime for Thumbnail:[%d]",
+        "MC[%d] comes later, beginEncTimingVFC:[%d]",
+        "one of two beginEncTimingVfcSync wrapped",
+        "MC[%d]'s beginEncTimingVFC was changed for sync start encoding. sync value is [%d]->[%d]",
+        "[WRN] offset is odd, offset %d, beginEncTimingVfcSync %d",
+        "[WRN]mcAvcEncSeqCtrlParam Null", "[WRN]m_mcAvcEncSeqCtrl Null"
+      ],
+      "methods": [
+        "SetIsSyncStartNeeded(bool)",
+        "SetEncStartTimeForThumbnail(UInt32, DefMcAvcCommon::MC_OBJECT_SERIAL_NUM, McAvCtrlIf*)",
+        "Finalize()",
+        "SetBeginEncTimingVFC(UInt32, DefMcAvcCommon::MC_OBJECT_SERIAL_NUM, McAvcEncSeqCtrlParam*)",
+        "Initialize()",
+        "SetBeginEncCompTime(DefMcAvcCommon::MC_OBJECT_SERIAL_NUM, McAvcEncSeqCtrl*, DefMcAvcCommon::MC_AVC_FRAMERATE)"
+      ],
+      "data_model": {
+        "MC_OBJECT_SERIAL_NUM": "DefMcAvcCommon::MC_OBJECT_SERIAL_NUM — identificador por MC para rastrear y sincronizar el tiempo de inicio de codificación de cada unidad de compensación de movimiento.",
+        "semaphore": "wai/sig: bloqueo hasta que se necesita inicio sincronizado y señalización."
+      }
+    },
+    {
+      "name": "SYNCENCSTART",
+      "base_address": "0x72ecbc",
+      "role": "Señalización basada en semáforo para el inicio de la codificación. informa diferencias de temporización entre unidades MC.",
+      "evidence": " cadenas únicas dentro del ámbito de McSyncEncStart.",
+      "key_strings": [
+        "MC[%d] comes later, encStartTime for Thumbnail:[%d]",
+        "MC[%d] comes earlier, encStartTime for Thumbnail:[%d]",
+        "sync value is [%d]->[%d]",
+        "[WRN] offset is odd, offset %d, beginEncTimingVfcSync %d",
+        "[WRN]mcAvcEncSeqCtrlParam Null", "[WRN]m_mcAvcEncSeqCtrl Null"
+      ]
+    },
+    {
+      "name": "VIDENCCTRL",
+      "base_address": "0x795070",
+      "role": "Controla la máquina de estados del encoder de vídeo. Interfaz directa con [VIDENCSTAT] y [ENCOUCSTAT] para gestionar el ciclo de vida del encoder (open/initialize/encode/finalize).",
+      "evidence": " cadenas únicas en av-cam.bin A6000.",
+      "key_strings": [
+        "ChangeState %08x -> %08x",
+        "MSGID_AVC_ENC_VIDEO_OPEN", "CLOSE",
+        "MSGID_AVC_ENC_VIDEO_INITIALIZE_MOVIE", "INITIALIZE_STILL",
+        "MSGID_AVC_ENC_VIDEO_ENC_PICTURE", "ENC_FINAL_PICTURE", "FINALIZE",
+        "MSGID_AVC_ENC_VIDEO_RELEASE_ES", "SET_MOVIE_QUALITY_INFO", "SET_FACE_INFO",
+        "Err!!! File:%s, Func:%s(), Line:%d, Msg:%x, Err:%x"
+      ]
+    },
+    {
+      "name": "VIDENCSTAT",
+      "base_address": "0x7957bb",
+      "s83_id": "70",
+      "role": "Estado del encoder de vídeo. Consume bloques AUGI con padding. Rastrea PTS (timestamps de presentación) y banderas de fin.",
+      "evidence": " Ver S83 §2.4 (70 trazas VERIFICADO).",
+      "key_strings": [
+        "[VIDEO INFO] Pts = 0x%08x EndFlug = 0x%02x",
+        "Notify Final Es", "augi,paddingAreaLength:%#x",
+        "ExecuteEncPictureFailure", "Use 2nd Latest Index",
+        "ExecuteEncPictureNormal", "ERR can't protect %d[us] restriction, currentTime %d[us]"
+      ]
+    },
+    {
+      "name": "ENCOUCSTAT",
+      "base_address": "0x70f5bc",
+      "s83_id": "49",
+      "role": "Estados de error del encoder AVC H.264. Categorías: STATE, MEMORY, PARAM, INDEX, SA_TIMEOUT, ENCODING, PICTURE_DATA_FULL.",
+      "evidence": " Ver S83 §2.3 (49 trazas VERIFICADO).",
+      "key_strings": [
+        "MSG SET ERROR: File:%s, Func:%s() ,Line:%d",
+        "MSG SEND ERROR: File:%s, Func:%s() ,Line:%d",
+        "ES Overflow!! [%s][%s][%d]",
+        "AVC_ENC_VIDEO_ERR_STATE", "AVC_ENC_VIDEO_ERR_MEMORY",
+        "AVC_ENC_VIDEO_ERR_PARAM", "AVC_ENC_VIDEO_ERR_INDEX",
+        "AVC_ENC_VIDEO_ERR_SA_TIMEOUT", "AVC_ENC_VIDEO_ERR_ENCODING",
+        "AVC_ENC_VIDEO_ERR_PICTURE_DATA_FULL"
+      ]
+    }
+  ],
+  "comparison_a6s_vs_a7s": {
+    "encsync_present_a6000": true,
+    "encsync_present_a7s": false,
+    "note": "McSyncEncStart / ENCAUDSYNC appears to be A6000-specific; A7S fw3.20 has external codec infrastructure (AbbExtCodecCtrl, etc.) that A6000 lacks (S69 §6). CMD_ID_* and MSGID_AVC_ENC_VIDEO_* patterns are consistent at string level.",
+    "consistent_patterns": ["VIDENCCTRL MSGIDs", "VIDENCSTAT / ENCOUCSTAT error categories"]
+  },
+  "frontend": {
+    "not_verified": [
+      "Semántica cuantitativa de los ajustes de beginEncTimingVFC (delta de tiempo real).",
+      "Cómo mapping 'MC comes later/earlier' a offsets de tiempo de frame reales.",
+      "Flujo completo de datos de usuario entre [ENCOUCUDMG] y el muxer.",
+      "Si CMD_ID_MUTE_AUDIO_CAPTURE efectivamente deshabilita la escritura del pin de audio o solo lo gatea."
+    ],
+    "no_firmware_executed": true
+  }
+}

@@ -1,0 +1,28 @@
+S97 Resumen Ejecutivo (A6000 fw3.21): Sincronizacion Audio/Video Encoder
+
+VERIFICADO (direcciones binarias, strings -t x):
+
+[ENCMODEMGR] (0x43C4AC73): 21 strings. McAvcEncModeMgr. CMD_ID_* (ACT_ENC,BEGIN_ENC,SET_SEQ_PARAM,MUTE_AUDIO_CAPTURE,etc.), SetState, ProcVsyncPre/Post. Coordena modo codificacion.
+
+[ENCAUDSYNC] McSyncEncStart (0x43C526D3): 13 strings SYNCENCSTART + 6 metodos. Semaphore wai/sig. MC[%d] comes later/earlier, sync value [%d]->[%d], beginEncTimingVFC. SetEncStartTimeForThumbnail con MC_OBJECT_SERIAL_NUM. Sincroniza inicio encoding entre unidades MC.
+
+[ENCAUDOUCR] (0x70A444): 5 strings. AUGI overflow, FLAG END, PtS/Au info. Escribe AUGI FLAG END en flujo encoding.
+
+[ENCOUCUDMG] (0x43C522FB): 7 strings. BUG/WRN, UserData OverFlow/Align Error, EDIT SHUTTER SPEED ERROR. Usuario data management overflow/alignment.
+
+[VIDENCCTRL] (0x43CD6070): 12 strings. ChangeState, 12 MSGID_AVC_ENC_VIDEO_* (OPEN/CLOSE/INIT/ENC/PICTURE/FINALIZE/RELEASE/SET_QUALITY/SET_FACE). Lifecycle control encoder.
+
+[VIDENCSTAT] (0x43CD67BB): 7 strings (S83 modulo 70). Pts, EndFlug, Notify Final Es, AUGI padding, ExecuteEncPictureFailure, 2nd Latest Index, time restriction. Consume bloques AUGI con padding.
+
+[ENCOUCSTAT] (0x43C505bc): 9 strings (S83 modulo 49). MSG SET/SEND ERROR, ES Overflow, 7 error categories (STATE/MEMORY/PARAM/INDEX/SA_TIMEOUT/ENCODING/PICTURE_DATA_FULL). Errores encoder AVC H.264.
+
+NO_VERIFICADO (sin evidencia bytes):
+
+- Delta tiempo real beginEncTimingVFC, mapping MC later/earlier a offsets frame.
+- Flujo datos usuario ENCOUCUDMG -> muxer.
+- Si CMD_ID_MUTE_AUDIO_CAPTURE deshabilita total o solo gatea pin.
+- Frecuencia muestreo, bits, tamaño trama, canales (no aparecen cadenas av-cam.bin; S69).
+
+Comparacion A6000 fw3.21 vs A7S fw3.20: ENCAUDSYNC especifica A6000; A7S tiene codec externo falta A6000; comparten MSGIDs VIDENCCTRL y categorias ENCOUCSTAT.
+
+Fuente: strings -t x av-cam.bin; 0x43541000 base; sin firmware, sin flasheo.
