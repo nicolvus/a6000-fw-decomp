@@ -1,0 +1,97 @@
+{
+  "firmware": "A6000 fw3.21",
+  "base_vaddr": 43541000,
+  "total_strings": 231,
+  "vaddr_range": "0x43cc5286 -> 0x43cef0d8",
+  "file_size": 11427236,
+  "sub_blocks": {
+    "APL_Module": {
+      "count": 27,
+      "vaddr_range": "0x43cc5286 -> 0x43cee903",
+      "description": "M\u00f3dulo APL: inicializaci\u00f3n y cierre, gesti\u00f3n de unidades, errores de HW Open/Save"
+    },
+    "Memory_Management": {
+      "count": 20,
+      "vaddr_range": "0x43cec140 -> 0x43cecf5e",
+      "description": "Gesti\u00f3n de memoria: GetMemInfo, direcciones HME, GetCoreNum, SetMode, MMU, TimeOut/Abort"
+    },
+    "GetAddr_Errors": {
+      "count": 35,
+      "vaddr_range": "0x43ceca80 -> 0x43ceeffc",
+      "description": "Errores al obtener direcciones de par\u00e1metros para handles e im\u00e1genes"
+    },
+    "Parameter_Alignment": {
+      "count": 29,
+      "vaddr_range": "0x43cecead -> 0x43ceee02",
+      "description": "Errores de alineamiento de par\u00e1metros SA: direcciones, dimensiones, PSF, flash/amb/int"
+    },
+    "Invalid_Parameters": {
+      "count": 2,
+      "vaddr_range": "0x43cec93d -> 0x43cec964",
+      "description": "Par\u00e1metros de captura claramente inv\u00e1lidos: width, height, dx1, dx2, first_mode inv\u00e1lidos"
+    },
+    "Message_Passing": {
+      "count": 18,
+      "vaddr_range": "0x43cec785 -> 0x43ceee78",
+      "description": "Comunicaci\u00f3n mailbox: RcvMsg, AsyncOpen, func_code, ExecuteSetBandWidthMSG, ExecuteOpenMSG"
+    },
+    "DUALREC_Yc_Params": {
+      "count": 14,
+      "vaddr_range": "0x43cedae3 -> 0x43cedf40",
+      "description": "Par\u00e1metros YC de DUALREC: tama\u00f1os y offsets de raw y YC"
+    },
+    "CloseHndl_ImageHandles": {
+      "count": 4,
+      "vaddr_range": "0x43cec546 -> 0x43cec600",
+      "description": "CloseHndl para handles de imagen m_pOverImage, m_pMiddleImage, m_pUnderImage, m_pOutputImage"
+    },
+    "CloseHndl_WorkMemArea": {
+      "count": 3,
+      "vaddr_range": "0x43cec63f -> 0x43cec6bf",
+      "description": "CloseHndl para m_pWorkMemArea0/1/2"
+    },
+    "CloseHndl_Generic": {
+      "count": 13,
+      "vaddr_range": "0x43ced960 -> 0x43ceef2f",
+      "description": "CloseHndl para handles gen\u00e9ricos: pWork, pRawImg, pYcImg, pRegArea, pRawImg2, PSF_tbl, src_addr, kk_work_addr, yk_work_addr, input_raw, output_raw, pImgIn, pImgOut"
+    },
+    "SA_API_References": {
+      "count": 8,
+      "vaddr_range": "0x43cec6ff -> 0x43ceef6c",
+      "description": "Referencias a funciones sa_func_* del driver del motor de imagen (S84): BDEX, BFNR, BOKS, LFNR, KKNR, NFLASH, YKNR, DUALREC_BAYER"
+    },
+    "Special_Errors": {
+      "count": 4,
+      "vaddr_range": "0x43ced103 -> 0x43ced58d",
+      "description": "Errores especiales: NOTREACHED, sp_cnt is over 4095!, Wrong Message Received, ddl_saCalcStart error func_code"
+    },
+    "Error_Codes": {
+      "count": 3,
+      "vaddr_range": "0x43ced44e -> 0x43ced498",
+      "description": "C\u00f3digos de error SA_FUNCDRV_E_* del driver: OSAL, RSLTCODE, ERRCODE"
+    },
+    "Other": {
+      "count": 51,
+      "vaddr_range": "0x43cec72a -> 0x43cef0d8",
+      "description": "Strings con contenido mixto que abarcan m\u00faltiples categor\u00edas: CloseFreeCamSaParam, CloseFreeCamMMUParam, FreeHndl, par\u00e1metros width/height/dx/first_mode inv\u00e1lidos, cap_addr/blk_addr Error, inputImage*/bgImage*/sspImage* invalid, line_ofst invalid, CMD error, in_addr/out_addr/Hsize/Vsize/EffectiveHsize/LineOffset invalid, fdt_adr/kernel_adr invalid, Alignment error src_addr/work, GetAddr or Alignment error kk_work, unit_num error, handle open error in/out, image error line_ofs/width/height, yk_work Size/Alignment errors"
+    }
+  },
+  "total_by_subblock": {
+    "APL_Module": 27,
+    "Memory_Management": 20,
+    "GetAddr_Errors": 35,
+    "Parameter_Alignment": 29,
+    "Invalid_Parameters": 2,
+    "Message_Passing": 18,
+    "DUALREC_Yc_Params": 14,
+    "CloseHndl_ImageHandles": 4,
+    "CloseHndl_WorkMemArea": 3,
+    "CloseHndl_Generic": 13,
+    "SA_API_References": 8,
+    "Special_Errors": 4,
+    "Error_Codes": 3,
+    "Other": 51
+  },
+  "grand_total": 231,
+  "verification": "sum = 27+20+35+29+2+18+14+4+3+13+8+4+3+51 = 231"
+}
