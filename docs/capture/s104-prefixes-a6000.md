@@ -1,7 +1,7 @@
-# S103 — Prefijos de traza exclusivos de la A6000
+# S104 — Prefijos de traza exclusivos de la A6000
 **Hito:** documentar los seis tokens `[PREFIJO]` de la A6000 (fw3.21) ausentes en la A7S (fw3.20)
 sin hito propio. **Método:** bytes de `av-cam.bin`, conteo S79 y xrefs PIC; sin firmware, cámara,
-Ghidra ni REA. Informe: `analysis/s103_prefixes/a6000_prefixes.md`; prueba: `tests/test_s103_prefixes.py` (6 tests, verde).
+Ghidra ni REA. Informe: `analysis/s104_prefixes/a6000_prefixes.md`; prueba: `tests/test_s104_prefixes.py` (6 tests, verde).
 
 | Prefijo | n | Qué es | Evidencia principal |
 |---|---:|---|---|
