@@ -46,6 +46,8 @@
 | S100 | contrato ADF ↔ `AdfCh` | 90 comandos `[ADF][DBGCMD]` y 35 métodos userland emparejados uno a uno | [`analysis/s100_adf_contract/`](../analysis/s100_adf_contract/) | `tests/test_s100_adf_contract.py` |
 | S103 | subsistema SDF | la capa de *dataflow* still: 33 `MSG_ID_SDF_*`, 477 trazas, errores de PTM | [`analysis/s103_sdf/`](../analysis/s103_sdf/) · [doc](s103-sdf.md) | `tests/test_s103_sdf.py` |
 | S104 | prefijos exclusivos A6000 | `ADC_DEBUG`, `AVR`, `ADR`, `BKID`, `AVOUT`, `CAMCORE`: ausentes en A7S | [`analysis/s104_prefixes/`](../analysis/s104_prefixes/) · [doc](s104-prefixes-a6000.md) | `tests/test_s104_prefixes.py` |
+| S105 | panorámica / barrido / bracketing / intervalo | el modo se decide con 2 bits del contexto `0x43e9b548` y pide la petición `0x301f`; cadena `PanoramaSweepStart` → `PanoramaStitch`; bracketing solo como `lc_BracketAF.cpp`; intervalo con semáforo `CAPTURE_INTERVAL` y PTM | [`analysis/s105_panorama/`](../analysis/s105_panorama/) · [doc](s105-panorama-bracket-interval.md) | `tests/test_s105_panorama.py` |
+| S106 | `IMAGING_CAP` (gestor de captura still) | 697 trazas + 83 ficheros fuente embebidos; motor de **17 secciones** (`0x43ff8fb4`), CapMgr, CAIF, 8 modos `MODE_CAP*`; esquema PIC de referencias a cadenas | [`analysis/s106_imaging_cap/`](../analysis/s106_imaging_cap/) · [doc](s106-imaging-cap.md) | `tests/test_s106_imaging_cap.py` |
 
 ## 2. Cómo se sostiene el rigor
 
