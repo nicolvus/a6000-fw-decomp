@@ -44,7 +44,7 @@ def test_darwin_scatterload_no_cubre_el_bloque_de_tipos():
     if not f.is_file():
         pytest.skip("falta darwin_core.bin")
     d = f.read_bytes()
-    w = lambda a: struct.unpack_from("<I", d, a - 0x4200)[0]  # noqa: E731
+    w = lambda a: struct.unpack_from("<I", d, a - 0x4200)[0]
     t0 = 0x4430 + w(0x4430)
     regiones = [(w(t0 + 4), w(t0 + 8)), (w(t0 + 20), w(t0 + 24))]
     assert regiones == [(0x20002A00, 0x4D0), (0x20002ED0, 0xF8C)]
