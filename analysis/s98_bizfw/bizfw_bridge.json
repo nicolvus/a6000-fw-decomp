@@ -1,0 +1,60 @@
+{
+  "library": "libBizFw.so",
+  "size_bytes": 332600,
+  "osald_gids": [
+    "OSAL_MSGQ_GID_DETECT_FACE",
+    "OSAL_MSGQ_GID_DMM_CTRL",
+    "OSAL_MSGQ_GID_SADRIVER"
+  ],
+  "cateid_categories": [
+    "CATEID_PIN/ALL",
+    "CATEID_RENDERER",
+    "CATEID_DISPLAY",
+    "CATEID_SYSTEMSOUND",
+    "CATEID_AUDIOPROCESSOR",
+    "CATEID_MIC",
+    "CATEID_MIXER",
+    "CATEID_SPEAKER",
+    "CATEID_EFFECT"
+  ],
+  "msg_id_constants": [
+    "MSG_ID_VDF_SRVC_SET_YC_REC_CONTROL"
+  ],
+  "req_operation_types": [
+    "REQ_DEPOSITE",
+    "REQ_WITHDRAWE",
+    "REQ_INQUIREE",
+    "REQ_DESTRUCTE",
+    "REQ_SHAREE",
+    "REQ_OVERWRITEE",
+    "REQ_PARSEE",
+    "REQ_PEEKE",
+    "REQ_DEPOSIT_MULTIE",
+    "REQ_POKEE",
+    "REQ_RAW_PARSEE"
+  ],
+  "cpp_classes": [
+    "OBJAVBBCBASECLASS",
+    "StmCh",
+    "SADriverCh",
+    "VdfCh",
+    "AdfCh",
+    "HdmiCh",
+    "SdiCh",
+    "State",
+    "Event"
+  ],
+  "bridge_with_adf": {
+    "userland_to_firmware_msg_transfer": true,
+    "scalar_gid_correspondence": "OSAL_MSGQ_GID_SADRIVER <-> NS_SCALAR_INFRA* (firmware)",
+    "vdface_gid_correspondence": "CATEID/MSG_ID VDF shared between userland and firmware",
+    "adf_msg_target": "logs confirm 'PrcSetPath to ADF': libBizFw.so sends messages to ADF framework",
+    "shared_constants_vs_a7s_fw320": true
+  },
+  "verified_against": ["A6000 fw3.21 libBizFw.so", "A7S fw3.20 libBizFw.so"],
+  "constant_comparison": {
+    "cateid_identical": true,
+    "msg_id_identical": true,
+    "req_identical": true
+  }
+}
