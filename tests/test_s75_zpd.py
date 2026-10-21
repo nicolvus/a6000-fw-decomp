@@ -94,3 +94,45 @@ class ZpdNamespace(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class LensFileCalibrationSection(unittest.TestCase):
+    """La seccion LC (12 B) de los ficheros de lente contiene 6 parametros por lente (S66+S75)."""
+
+    LENS_DIR = ROOT / ("firmware/extracted/fw321/firmware.tar_unpacked/0800_appli/lens")
+
+    def _lc(self, name):
+        import struct
+        b = (self.LENS_DIR / name).read_bytes()
+        off = 16
+        while off + 8 <= len(b) - 4:
+            magic = b[off:off + 2]
+            hdr = struct.unpack_from("<H", b, off + 2)[0]
+            plen = struct.unpack_from("<I", b, off + 4)[0]
+            if magic == b"LC":
+                self.assertEqual(plen, 12)
+                return struct.unpack_from("<6H", b, off + hdr)
+            off += hdr + plen
+        raise AssertionError("sin seccion LC en " + name)
+
+    def test_lc_section_differs_per_lens(self):
+        a = self._lc("VX9101_lensfile.bin")
+        b = self._lc("VX9129_lensfile.bin")
+        self.assertEqual(len(a), 6)
+        self.assertNotEqual(a, b)
+        # el ultimo valor es 0 en ambos (terminador) y hay un valor alto (~0x0d00) caracteristico
+        self.assertEqual(a[5], 0)
+        self.assertEqual(b[5], 0)
+        self.assertGreater(a[4], 0x0d00 - 0x100)
+
+
+class ZpdBodyDataFile(unittest.TestCase):
+    """El origen 'from body' de los datos ZPD es /setting/psd.bin."""
+
+    def test_psd_bin_next_to_zpd_logs(self):
+        """'/setting/psd.bin' aparece justo despues de los logs [ZPD] del cuerpo."""
+        joined = "\n".join(cstr(a, "A6000") for a in strings_with("[ZPD]:", "A6000"))
+        self.assertIn("[ZPD]: load lens data from body.", joined)
+        hits = [a for a in strings_with("/setting/psd.bin", "A6000")]
+        self.assertEqual(len(hits), 1)
+        self.assertEqual(cstr(hits[0]), "/setting/psd.bin")

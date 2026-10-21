@@ -46,9 +46,11 @@ Estructura: `Camera::ZPD` tiene **memoria** (`MemObj`, `MemUnit`, `MemUnitBackup
 | `[ZPD]: load lens data from lens.` | `0x43ccf2c7` | `0x43904c90` |
 | `[ZPD]: load lens data from body.` | `0x43ccf2e8` | `0x43904cfc` |
 | `[ZPD]: load:%s` | `0x43ccf309` | `0x43904cfc` |
+| `/setting/psd.bin` (fichero de datos del cuerpo) | `0x43ccf33f` (junto a los anteriores) | — |
 
 Tres orígenes distintos: **la lente** (datos de calibración almacenados en ella), **el cuerpo**
-(backup local) y **"dra data"** (otro conjunto de datos del sistema). INFERENCIA: la cámara recalibra
+(fichero **`/setting/psd.bin`**, cadena inmediatamente posterior a los logs ZPD) y **"dra data"**
+(otro conjunto de datos del sistema). INFERENCIA: la cámara recalibra
 el sensor con los datos que trae la lente, y guarda una copia en el cuerpo.
 
 ## 3. Consumo en el DFE/sensor (VERIFICADO)
@@ -85,6 +87,23 @@ el sensor con los datos que trae la lente, y guarda una copia en el cuerpo.
 INFERENCIA: en el AF **híbrido** (pixel-shift / DM AF) la cámara usa los datos ZPD como
 **resultado de la medición** (`zpd_flags`, `defocus`, `stabilize num`), es decir, ZPD es el sensor
 de medición *en el propio sensor* (DM = digital monitor) que complement al AF del objetivo.
+
+## 4.bis Enlace con los ficheros de lente (S66) — INFERENCIA fuerte
+
+Las secciones del fichero `/lens/VX91xx_lensfile.bin` (S66) son `ED` (tabla grande de u16),
+`CS` (lista ordenada de u16) y **`LC` (12 B = 6 u16)**. Contenido de `LC` (verificado):
+
+| fichero | LC (6 u16) |
+|---|---|
+| VX9101 | `0000 0260 0450 03b0 0d78 0000` |
+| VX9102 | `0000 0360 0620 0461 0d49 0000` |
+| VX9129 | `0001 02f0 0570 03a4 0d99 0000` |
+
+Los valores **cambian por lente** (6 parámetros numéricos del orden de 10²–10³) → INFERENCIA
+fuerte: `LC` = **datos de calibración de la lente** (el "chunk" que ZPD interpreta: coherente con
+`ZPD::Lens::LensInterpretChunk` y con el canal `LC` del protocolo de montura, S66 §"LC T.O. Cnt").
+No está probado que el ZPD de la A6000 lea *estos* ficheros (el log dice "load lens data **from
+lens**", es decir, del propio objetivo por el bus, no del fichero del cuerpo).
 
 ## 5. Abierto (NO_VERIFICADO)
 
