@@ -1848,11 +1848,18 @@ Próximo (no iniciado): traza pasiva autorizada de `MSS_SO_DWN`/bobinas, consumi
 
 ## Mapa de temas en vuelo y estado (21-10-2026, fin de ronda)
 
-**Cuota de subagentes:** los 8 modelos `free` (`deepseek-v4.1-flash`, `nemotron-3.5-super-vl`,
-`nemotron-3.5-lightning`, `beam`, `mimo-v2.6`, `longcat-2.5-preview`, `glm-5.3-flash`, `big-pickle`)
-devuelven "Rate limit exceeded" **salvo `nemotron-3.5-lightning-free`**, que es el único que sigue
-entregando hitos. Se lanzan tandas de hasta 3 subagentes y, en paralelo, el agente principal
-trabaja en los mismos temas con Capstone (sin sesiones REA: 0 Ghidra abiertas, 9 GiB libres).
+**Cuota de subagentes (re-verificada 21-10-2026 20:30-20:40, 10 modelos probados uno a uno):**
+con cuota **solo 2**: `opencode/nemotron-3.5-lightning-free` (sigue entregando hitos; **ya no
+aparece en el catálogo** del `models` tool, pero sigue enrutando — id histórico) y
+`opencode/minimax-m3.1-flash-free` (el propio modelo del agente principal). **Rate limit
+exceeded** en los 8 restantes: `flint-40b-free`, `nemotron-3.5-super-vl-free`, `beam-free`,
+`longcat-2.5-preview-free`, `mimo-v2.6-flash-free`, `deepseek-v4.1-flash-free`,
+`glm-5.3-flash-free`, `big-pickle` (dos rondas, resultado estable). El catálogo actual
+expone 9 modelos `free` (ya no incluye `nemotron-3.5-lightning-free`); los ids sin sufijo
+`-free` (p. ej. `deepseek-v4.1-flash`, `beam`) dan "Model not available". El límite es
+**por modelo**, no global: los 8 agotados fallan mientras los 2 con cuota responden en
+paralelo. Se lanzan tandas de hasta 3 subagentes y, en paralelo, el agente principal trabaja
+en los mismos temas (sin sesiones REA: 0 Ghidra abiertas, 9 GiB libres).
 
 **Hitos de esta ronda (todos publicados en `origin/main`):**
 
