@@ -53,6 +53,38 @@ implementa la **compensación térmica de los displays**: se mide la temperatura
 panel OLED y del EVF y se ajustan sus parámetros. `PANELEVF_EVF_OLED_CALDAC` sugiere además un DAC de
 calibración asociado.
 
+## 1.4 Estructura del despacho: máscara acumulativa de 8 sub-comandos (VERIFICADO)
+
+El manejador **no** tiene un ID por comando: hay **un único ID de comando** (u16 `0x302`, con el
+que se compara al inicio) y un **sub-comando** u8 en `[r6+0x1a]` que se traduce a una **máscara
+acumulativa** mediante un `tbb` (`0x436354fc`, tabla de 8 bytes en `0x43635500`):
+
+| sub-comando | máscara (r2) | stub |
+|---|---|---|
+| 1 | `0x01` | `0x43635508` |
+| 2 | `0x03` | `0x4363550c` |
+| 3 | `0x07` | `0x43635510` |
+| 4 | `0x0F` | `0x43635514` |
+| 5 | `0x1F` | `0x43635518` |
+| 6 | `0x3F` | `0x4363551c` |
+| 7 | `0x7F` | `0x43635520` |
+| 8 | `0xFF` | `0x43635524` |
+
+(`subs r2,#1` @ `0x436354f6`; `cmp r2,#7` @ `0x436354f8`; tabla `04 06 08 0a 0c 0e 10 12`;
+cada stub hace `movs r2, #<máscara>` y `b 0x43635526`, donde se guarda `strb r2,[r3,r5]`.)
+
+**Interpretación (INFERENCIA):** el ajuste de panel/EVF es **por bits**: cada bit de la máscara
+habilita un elemento de ajuste (VCOM, WB, CALDAC, VO, termistor, test…), y el sub-comando *n*
+habilita los *n* primeros elementos (acumulativo). Los 38 nombres `ADJ_CMD_AVBB_PANELEVF_*` son las
+**etiquetas de los elementos**, no comandos independientes; el código recorre los elementos y
+registra el nombre de los que están habilitados por la máscara. Un segundo `tbb` en `0x436357b2`
+despacha los **canales R/G/B** del ajuste de WB del display (`WB_SubB_{R,G,B}_Adrs`).
+
+**Pendiente:** el emparejamiento exacto *elemento → bit* (y por tanto el ID/sub-comando de cada
+ajuste). La extracción por Capstone no lo da de forma fiable (los `cmp` son de distintos registros
+y contadores) → hace falta la decompilación de REA/Ghidra de `0x4363524c` o un análisis de flujo
+propio; no se ha hecho por falta de sesión REA libre (RAM: 6 sesiones Ghidra abiertas).
+
 ## 2. `ADJ_CMD_LIRO_DRIVERS_ADC_*` (VERIFICADO)
 
 Cuatro nombres en `0x43ce4ff2`–`0x43ce507a`, todos referenciados por `0x4398e578`:
@@ -70,9 +102,8 @@ el realce de contraste por píxel; aquí solo consta su existencia, su tabla bas
 ## 4. Cómo se codifican los IDs (NO_VERIFICADO / siguiente paso)
 
 Los 38 nombres **no** están en una tabla de punteros: cada rama del manejador carga su literal con
-`ldr rX, [pc, #imm]; add rX, pc` y lo pasa a `0x435ab880` (traza). Por tanto, **el mapa ID↔nombre
-está en el flujo de control**, no en los datos. Recuperarlo exige recorrer las comparaciones
-previas a cada rama (el `cmp` con el ID) — trabajo mecánico pero extenso.
+`ldr rX, [pc, #imm]; add rX, pc` y lo pasa a `0x435ab880` (traza). El mapa comando→ajuste vive,
+por tanto, en el **flujo de control** (ver §1.4: un ID, 8 máscaras y un recorrido de elementos).
 
 ## 5. Abierto (NO_VERIFICADO)
 
