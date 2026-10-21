@@ -37,5 +37,5 @@ Límites y riesgos:
 
 - `scripts/updater_full_dump.py` (solo lectura) para guardar la NAND y las particiones 1–7, 10, 11, 15–18, 23.
 - (hecho) `scripts/fdat_guard_probe.py`: resultado arriba.
-- Volcado de NAND: `updater_full_dump.py` volcó 1 GiB de RAM y el shell, pero el PULL de `/dev/nflasha0pN` falló (nombres de nodo incorrectos o no legibles con PULL). Nuevo `scripts/updater_nand_dump.py` (lista nodos y hace PULL de `/dev/nflasha*`): pendiente de ejecutar; la cámara quedó en modo actualizador sin responder y requiere apagado (sacar batería).
+- (hecho) Volcado de NAND con `scripts/updater_nand_dump.py` → `analysis/camera-dumps/nand-20261020` (916 MB, solo hashes versionados): NAND entera (`nflasha`, 473 MiB) y 20 particiones. `nflasha3/5/7/15/16` empiezan con la imagen exacta del paquete oficial 3.21 (VERIFICADO con `cmp`). `nflasha1` (Updater) está en el volcado. El primer intento (`updater_full_dump.py`, nodos `nflasha0pN`) solo sacó RAM. Restaurar sigue sin camino de escritura de dispositivo en el shell de pmca (`PUSH` escribe archivos): NO VERIFICADO.
 - Copia NVRAM fresca (`senser_backup_dump.py`).
