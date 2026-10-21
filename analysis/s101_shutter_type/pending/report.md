@@ -1,13 +1,13 @@
 # S71 — recorrido de los 12 puntos abiertos con REA/capstone (21-10-2026)
 
-Método: desensamblado Thumb lineal (capstone) sobre `av-cam.bin` A6000 fw3.21 (base `0x43541000`) y A7S fw3.20; REA no aportó (funciones Thumb sin reconocer). Scripts en esta carpeta; 3 tests en `tests/test_s71_pending.py`.
+Método: desensamblado Thumb lineal (capstone) sobre `av-cam.bin` A6000 fw3.21 (base `0x43541000`) y A7S fw3.20; REA no aportó (funciones Thumb sin reconocer). Scripts en esta carpeta; 3 tests en `tests/test_s101_pending.py`.
 
 | # | Punto | Estado | Resultado |
 |---|---|---|---|
 | 1 | Escritor del bloque de 12 u16 `0x437876dc()+0xdd0` | **CERRADO (escritor)** | Lo escribe el constructor **`0x437b1048`** (llamadores `0x437b4938`, `0x438404ce`), byte a byte: `dd0←r8+0x2eb`, `dd1..dd6←r8+0x3f0..0x3f5`, `dd7..dda←r8+0x2ec..0x2ef`, `ddb..de0←r7+0x6af`, `de1..de7←r0+0xa..0x10`. Son datos de estado de captura, no constantes. **NO VERIFICADO:** el significado físico de cada byte. `block_dd0_sources.py`. |
 | 2 | Consumidor de P4C en el BIONZ | **SIN AVANCE** | 45 `gpio_get` y 43 `gpio_cfg` con pin variable; S55 ya mostró que `GPIO_9` no tiene lector GPIO. El consumo probable es por interrupción o hardware del CIS, fuera de lo que REA ve. `gpio_calls.py` (heurística gruesa). |
 | 3 | Bandera `0x800000` de `+0x740` (A6000) vs `+0x748` (A7S) | **SIGUE ABIERTO (rectificado)** | La copia en bloque `0x438acc24` (A6000) / `0x4389efc2` (A7S) es de un bloque de parámetros `0x730–0x75f` con **mapa idéntico en ambos modelos** (`copy_map.py`: `0x740←0x133`, `0x748←0x13d` en los dos). No es la estructura de captura desplazada +8 de S52, así que **no contradice S52**: el `+0x740` de captura de A6000 sigue sin escritor directo. El escritor de `r4+0x133` en el origen (`0x438de020`, evento `r5+0xb==1` ⇒ `0x133=1`, `0x124=2`) y su homólogo A7S (`0x438cae1e`, escribe `0x137`/`0x128`) son del mismo bloque de parámetros. |
-| 4 | Puntero guardado del bloque `0x43edf684` | **CERRADO (S70)** | Sin lectores de `+0x238/+0x280` ni vía accesores ni copia. Ver `analysis/s70_block238/`. |
+| 4 | Puntero guardado del bloque `0x43edf684` | **CERRADO (S70)** | Sin lectores de `+0x238/+0x280` ni vía accesores ni copia. Ver `analysis/s101_shutter_type/block238/`. |
 | 5 | Llamadora `0x437881a8` y handler `0x43802614` | **CERRADO** | `0x437881a8` es la *instrucción* `bl 0x43804610` dentro de la secuencia de inicialización de módulos (tras `0x437e18b4`, antes de `0x4378f9b4`): se ejecuta **una vez al arrancar**. El handler `0x43802614` es el comando **`0x402e`** (tabla `0x43fff4c0`), que guarda `[r0+8]` en `+0x280`. |
 | 6 | Productor del payload (`0x43789cc0`, ID `0x301d7`) | **PARCIAL** | `0x43789cc0` **no tiene llamadores directos** (se invoca por tabla/callback). El literal `0x301d7` está en pools `0x4378a030` y `0x4378a4a8` (registro de ID). Falta seguir el registro. `backup_and_producers.py`. |
 | 7 | Lectores de `Backup_read` para `0x3e0005` | **CERRADO** | Solo **2 llamadores**: `0x437dbed4` y `0x437dbff4`. Leen un buffer de `0x18` B tratado como **cadena terminada en NUL** (longitud por `strlen` manual) y alimentan `0x437dca84`: parece un identificador/nombre, **no** un ajuste de obturador. NO VERIFICADO el contenido. |
@@ -29,8 +29,8 @@ Método: desensamblado Thumb lineal (capstone) sobre `av-cam.bin` A6000 fw3.21 (
 | 6 | **CERRADO** | `0x301d7` se registra en dos funciones de arranque: `0x43789fde` (servicio vía `0x43561298`) y `0x4378a3d0` (vía `0x435612b4`), ambas envoltorios del servicio importado `+0x1ec` que, según S48, rellena el cargador/host. El productor original queda fuera de `av-cam.bin`. |
 | 8 | **CERRADO como fuera de alcance** | Cadena JPEG/DCF/rollback sin relación con el obturador; se mantiene el estado de S20–S21. |
 | 9 | **CERRADO como bloqueado** | Slots `+0x1e8/+0x1ec/+0x200` rellenados por el cargador (S48); no ampliable con REA. |
-| 10 | **CERRADO** | `analysis/s72_graph/module_graph.md` (348 módulos, 340 aristas; INFERENCIA por menciones en trazas). |
-| 11 | **CERRADO como no resoluble** | Sin expansiones creíbles en los binarios; `analysis/s72_graph/siglas.py`. |
+| 10 | **CERRADO** | `analysis/s101_shutter_type/graph/module_graph.md` (348 módulos, 340 aristas; INFERENCIA por menciones en trazas). |
+| 11 | **CERRADO como no resoluble** | Sin expansiones creíbles en los binarios; `analysis/s101_shutter_type/graph/siglas.py`. |
 | 12 | **CERRADO** | Cubierto por S98/S100. |
 
 ## Continuación: cómo se decide el «tipo» de mecanismo en A6000 y A7S (misma fecha)

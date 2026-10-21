@@ -39,7 +39,7 @@ def test_backup_read_3e0005_tiene_dos_llamadores():
 def test_grafo_de_modulos_contiene_aristas_conocidas():
     import json
 
-    g = json.loads((ROOT / "analysis/s72_graph/module_graph.json").read_text())
+    g = json.loads((ROOT / "analysis/s101_shutter_type/graph/module_graph.json").read_text())
     aristas = {(a, b) for a, b, _ in g["aristas"]}
     assert ("CAMERA_MAIN_SYNC", "GOLFSHOT") in aristas
     assert ("ADF", "SYSND") in aristas
@@ -50,7 +50,7 @@ def test_mapa_de_copia_identico_en_a6000_y_a7s():
     import subprocess
     import sys
 
-    out = subprocess.run([sys.executable, str(ROOT / "analysis/s71_pending/copy_map.py")], capture_output=True, text=True, cwd=ROOT, check=True).stdout
+    out = subprocess.run([sys.executable, str(ROOT / "analysis/s101_shutter_type/pending/copy_map.py")], capture_output=True, text=True, cwd=ROOT, check=True).stdout
     a6, a7 = (ln.split(":", 1)[1] for ln in out.strip().splitlines())
     assert a6 == a7 and "'0x740': '0x133'" in a6 and "'0x748': '0x13d'" in a6
 
