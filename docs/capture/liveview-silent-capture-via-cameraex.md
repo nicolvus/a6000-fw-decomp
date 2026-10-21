@@ -29,3 +29,11 @@ Ventaja de A/B/C: el criterio es objetivo para el oído: **sin ningún clic** = 
 - Resolución: preview/vídeo ≈ 2 MP (no 24 MP). La foto a 24 MP electrónica sigue NO demostrada (S51 en NO).
 - `CameraSequence`/`DSP` pueden requerir permisos o firma de plataforma; no se ha comprobado que una app instalada por adb (usuario `shell`) pueda abrirlas.
 - Nada se ha ejecutado aún: esto es el plan y el inventario de API.
+
+## Prueba en cámara de `CameraSequence` (2026-10-20) — resultado
+
+- `tools/remote-shutter/` ampliado con `GET /seq?w=&h=&f=&n=&p=&t=` (reflexión sobre `CameraSequence`); `scripts/camera_install_apk.py` instala por ADB.
+- VERIFICADO: `CameraSequence.open(cameraEx)` y `startPreviewSequence(Options)` aceptan la llamada desde una app instalada por adb (`open-ok`, `preview-ok` con `startPreview()` sin pantalla, `start-ok`); `getPreviewSequenceFrameInfo().detailData` devuelve 4096 B (cabecera `02008000 0800 1803 …`, significado NO VERIFICADO).
+- `getPreviewSequenceFrames(0..2)` devolvió **null** (4 s tras el inicio, sin disparo): no se obtuvieron frames. Registrar `setShutterSequenceCallback` (1 y 2 argumentos, con `RECORD_COUNT=1`, `EXPOSURE_COUNT=1`, también tras parar la secuencia) falló con `RuntimeException: setShutterSequenceCallbackMode failed`. Sin frames, sin foto: la vía A no se logró.
+- **Incidente:** al instalar y abrir la última versión (callback registrado antes de arrancar el preview), la cámara se colgó; tras reinicio duro **no arranca con el objetivo puesto** (el objetivo «queda abierto»); conectada por USB arranca en modo MTP y se pudo reactivar ADB/telnet. En ese arranque: sin proceso `av-cam`, logcat sin excepciones de `ar.shutter` ni cierres forzados, `dropbox` solo `SYSTEM_BOOT`; `dmesg` solo ruido wifi. Espejo de ajustes en RAM sin valores forzados (Silent=0, `+0x210`=0; otras 19 palabras difieren del inicio por ser otro modo de arranque). **Causa NO VERIFICADO**; no hay evidencia de que haya persistido nada en NVRAM/flash, pero tampoco se pudo descartar (el volcado de backup por USB service mode no estaba disponible). `ar.shutter` desinstalada por ADB al final.
+- Lección: `CameraSequence` toca el pipeline de captura de la cámara (no es solo RAM del espejo); no se repite sin un plan de recuperación.
