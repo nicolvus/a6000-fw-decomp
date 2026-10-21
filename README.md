@@ -14,6 +14,8 @@ recuperación y pipeline de captura. El obturador electrónico es un
 
 ## Empezar desde cero (clon nuevo + firmware 3.21 recién descargado)
 
+**Para agentes de IA:** ejecutar `scripts/agent/bootstrap.sh` (idempotente, `--dry-run` disponible) y seguir el runbook [docs/agent/bootstrap-desde-cero.md](docs/agent/bootstrap-desde-cero.md) (verificación, orientación, REA, ciclo de fase y límites). Lo siguiente es el desglose manual de esos mismos pasos.
+
 Los binarios (firmware, Ghidra, JDK, `node_modules`, `.venv`) no están en Git: se reconstruyen así.
 Todo desde la raíz del repo; Linux x86_64.
 
