@@ -26,7 +26,7 @@ for k, i in enumerate(ins):
         r = i.op_str.split(",")[0]
         if r in pend and k - pend[r][1] < 14:
             t = (pend[r][0] + i.address + 4) & 0xFFFFFFFF
-            if G <= t < G + 0x1000:
+            if G <= t < G + 0x2000:
                 for j in ins[k + 1:k + 40]:
                     mm = re.match(rf"(\w+), \[{r}, #(0x[0-9a-f]+)\]$", j.op_str)
                     if mm and j.mnemonic.startswith(("ldr", "str")) and t + int(mm.group(2), 16) - G in offs:
