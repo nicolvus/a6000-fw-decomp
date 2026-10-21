@@ -123,9 +123,10 @@ El resto (`CaptureManager*.cpp`, `SectionController.cpp`, `RawMemManager*.cpp`, 
 
 ## 6. Mapa función → trazas
 
-`func_map.json` asigna cada una de las 970 cadenas a la función que la referencia:
-**332 funciones** (0 referencias sin función atribuible) y **2 295** pares
-(función, cadena); **960 de las 970** cadenas quedan cubiertas. Ejemplos:
+`func_map.json` asigna cada cadena a la función que la referencia: **304 funciones** con
+**1 756 pares** (función, cadena) y **958 de las 968 cadenas** cubiertas (las 970 del informe
+son *ocurrencias* del prefijo, no cadenas distintas). *El recuento de sitios depende de la
+regla: ver [`pic_xref_methodology.md`](../s106_imaging_cap/pic_xref_methodology.md).* Ejemplos:
 
 | función | n trazas | primera traza |
 |---|---|---|
@@ -159,16 +160,21 @@ puntero absoluto de 4 B (búsqueda exhaustiva sobre los 11,4 MB):
 
 Son cadenas **muertas** que el enlazador conservó (algunas son mensajes de error completos,
 como `ZDL::job_YC_Initialize: GetHeadZdl error`): el código que las usaba ya no está en esta
-fw3.21, pero los *format strings* quedaron en el blob.
+fw3.21, pero los *format strings* quedaron en el blob. Con la regla de *kill analysis* la
+lista baja a **2** (`0x43ca88f6` y `0x43ca8af8`); las 8 restantes sí tienen referencia
+confirmada, pero por el criterio *ancho* (que también produce falsos positivos) — quedan como
+"referencia probable" hasta verificarlas a mano.
 
-> **Corrección de método (arrastrada a S106):** la primera versión del escáner PIC
-> (`analysis/s106_imaging_cap/scan_pic_refs.py`) emparejaba cada `add rX,pc` con el `ldr`
-> **más cercano** del mismo registro y se detenía en el primer destino válido. Como el
-> registro se reutiliza, ese `ldr` no siempre es el que carga el valor. Corregido: se
-> prueban **todos** los `ldr` del registro dentro de la ventana de 4 KB y solo se aceptan los
-> destinos que caen en el **inicio** de una cadena. Con el escáner corregido: las 970
-> cadenas de YC dan **960** referencias (antes 958) y en S106 el recuento pasa de
-> **694/697** a **696/697** (de "3 cadenas muertas" a **1**: `0x43ca9b12`).
+> **Corrección de método (rectificada tras S118):** la primera versión del escáner PIC
+> emparejaba cada `add rX,pc` con el `ldr` más cercano del registro; la segunda probaba
+> **todos** los `ldr` del registro en 4 KB. La segunda regla **inventa** referencias (en
+> `[SFRA]` dio 186 puntos donde la verificación manual encuentra 118). La regla correcta es la
+> **kill analysis** (`analysis/s106_imaging_cap/scan_pic_refs_v2.py`): descartar el par si
+> alguien vuelve a escribir el registro entre `ldr` y `add`. Con ella, las 968 cadenas de YC
+> dan **958** referencias (las 970 del informe son *ocurrencias* del prefijo, no cadenas
+> distintas) y el mapa función→traza baja de 332 a **304** funciones. La metodología
+> completa, con la calibración de S118, está en
+> [`analysis/s106_imaging_cap/pic_xref_methodology.md`](../s106_imaging_cap/pic_xref_methodology.md).
 > La atribución cadena→función se valida contra S78 (Ghidra): `job_apc_main_stl` →
 > `0x438b3ea8` y `job_apc_main_mov` → `0x438b5810`, sin cambios.
 
@@ -188,8 +194,8 @@ fw3.21, pero los *format strings* quedaron en el blob.
 | afirmación | cómo se comprueba |
 |---|---|
 | 970 cadenas, 4 bloques | `extract_yc.py` cuenta las ocurrencias del prefijo y segmenta por huecos |
-| 960/970 referenciadas, 10 muertas | `func_map.json` + búsqueda de punteros absolutos |
-| 332 funciones / 0 sin atribuir | `map_functions.py` (PIC + prólogos Thumb) |
+| 958/968 referenciadas (kill analysis) | `func_map.json` + búsqueda de punteros absolutos |
+| 304 funciones con la regla de kill analysis | `map_functions.py` (PIC + prólogos Thumb) |
 | 8 `api_YC_*`, 12 `job_YC_*` | `build_summary.py` sobre el mapa función→cadenas |
 | 141 sub-módulos | etiqueta tras el prefijo, contada sobre las 970 cadenas |
 | 119 ficheros fuente | `extract_yc.py` busca `*.cpp`/`*.h` en el rango del módulo |
