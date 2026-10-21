@@ -20,7 +20,7 @@ def main():
     files = load("source_files.json")
     diff = load("imaging_cap_a7s_diff.json")
     strings = load("strings_raw.json")
-    refs = load("pic_refs.json")
+    refs = load("pic_refs_v2.json")   # kill analysis (v2); ver pic_xref_methodology.md
 
     ref_keys = {int(k, 16) for k in refs}
     referenced = [s for s in strings if int(s["vaddr"], 16) in ref_keys]

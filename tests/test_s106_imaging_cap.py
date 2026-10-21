@@ -178,20 +178,20 @@ class TestReferenciasPIC:
         assert destino == 0x43CAD93C
         assert _cstr(data, destino).startswith("[IMAGING_CAP]: Raw Addr[")
 
-    def test_696_de_697_cadenas_referenciadas(self):
+    def test_695_de_697_cadenas_referenciadas(self):
         data = _data()
-        with open(ROOT / "analysis/s106_imaging_cap/pic_refs.json") as fh:
+        with open(ROOT / "analysis/s106_imaging_cap/pic_refs_v2.json") as fh:
             refs = {int(k, 16) for k in json.load(fh)}
         strings = _imaging_cap_strings(data)
         referenciadas = [v for v, _ in strings if v in refs]
-        assert len(referenciadas) == 696
+        assert len(referenciadas) == 695
         assert len(strings) == 697
 
-    def test_la_cadena_muerta_no_tiene_referencia(self):
+    def test_las_dos_cadenas_muertas_no_tienen_referencia(self):
         data = _data()
-        with open(ROOT / "analysis/s106_imaging_cap/pic_refs.json") as fh:
+        with open(ROOT / "analysis/s106_imaging_cap/pic_refs_v2.json") as fh:
             refs = {int(k, 16) for k in json.load(fh)}
-        muertas = [0x43CA9B12]
+        muertas = [0x43CA9B12, 0x43CC839C]
         for vaddr in muertas:
             assert vaddr not in refs
             # tampoco hay puntero absoluto de 4 bytes en toda la imagen
@@ -265,5 +265,5 @@ class TestResumen:
         assert data["counts"]["strings"] == 697
         assert data["counts"]["sections"] == 17
         assert data["counts"]["source_files"] == 83
-        assert data["counts"]["referenced_strings"] == 696
-        assert data["counts"]["unreferenced_strings"] == 1
+        assert data["counts"]["referenced_strings"] == 695
+        assert data["counts"]["unreferenced_strings"] == 2

@@ -182,19 +182,24 @@ Verificado con dos casos independientes:
 
 `scan_pic_refs.py` implementa el cálculo para toda la imagen (`pic_refs.json`):
 
-- **5 560** destinos distintos caen en la zona de cadenas del módulo;
-- **696 de las 697** cadenas de `IMAGING_CAP` tienen referencia directa en su inicio;
-- la **única** cadena sin referencia es `0x43ca9b12`
-  (`[IMAGING_CAP]: ShareMem_StlRaw8 Err: unit_type[0x%08x], err[%d]`): **ni** referencia PIC
-  **ni** puntero absoluto de 4 B en toda la imagen → cadena muerta que el enlazador conservó.
+- **5 560** destinos distintos caen en la zona de cadenas del módulo (barrido con el rango
+  restringido a `0x43c90000`–`0x43cd0000`; el barrido de toda la imagen da 73 336);
+- **695 de las 697** cadenas de `IMAGING_CAP` tienen referencia confirmada (regla con
+  *kill analysis*, ver [`pic_xref_methodology.md`](pic_xref_methodology.md));
+- las **2** sin referencia son `0x43ca9b12`
+  (`[IMAGING_CAP]: ShareMem_StlRaw8 Err: unit_type[0x%08x], err[%d]`) y `0x43cc839c`
+  (`[IMAGING_CAP]: Rch_Rcv_Zima_Base Err: Func[0x%08x]`): **ni** referencia PIC **ni** puntero
+  absoluto de 4 B en los 11,4 MB → cadenas muertas que el enlazador conservó.
 
-> **Corrección (hito S110):** una primera versión del escáner emparejaba cada `add rX,pc`
-> con el `ldr` **más cercano** del mismo registro y se detenía ahí. Como el registro se
-> reutiliza, ese `ldr` no siempre es el que carga el valor: dos cadenas que este informe
-> daba por muertas (`0x43ca05d7` y `0x43cc7d5c`) **sí** tienen referencia (sitios
-> `0x437855dc` y `0x438c11c6`). El escáner prueba ahora **todos** los `ldr` del registro
-> dentro de la ventana de 4 KB y solo acepta los destinos que caen en el inicio de una
-> cadena. El recuento correcto es **696/697** y queda **una** cadena muerta.
+> **Corrección (hito S110) y rectificación (S118)**: la primera versión del escáner emparejaba
+> cada `add rX,pc` con el `ldr` **más cercano** del mismo registro (694/697). Una segunda
+> versión probaba **todos** los `ldr` del registro en 4 KB (696/697), pero esa regla **inventa**
+> referencias: los dos sitios que añadía son falsos (el `add` de `0x43785d18` materializa
+> `[IMAGING_CAP]: PreProcessRC: Release_RC error` `0x43ca03e0`, y el de `0x438c1340`
+> `[IMAGING_CAP]: …` `0x43cc7979`, no las cadenas que se les atribuía). La **kill analysis**
+> (descartar el par si alguien vuelve a escribir el registro entre `ldr` y `add`) da
+> **695/697**. La metodología y la calibración están en
+> [`pic_xref_methodology.md`](pic_xref_methodology.md).
 
 ## 10. Diferencial con la A7S fw3.20
 

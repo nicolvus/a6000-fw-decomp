@@ -41,11 +41,12 @@ cadenas.
    `RawMemManager` (MemPool/MemBuffer/MemRuleLib/UnitTypeLib), `GetMem_*`/`ShareMem_*`/
    `UseRaw_DualRec`/`FreeRaw_DualRec`, DMM (`SetDmmInfo) FATAL! overwrite`).
 8. **Cómo se referencian las cadenas**: esquema **PIC** (el pool guarda un desplazamiento:
-   `destino = literal + (add + 4)`). Con el escáner correspondiente: **696 de las 697**
-   cadenas referenciadas; la **única** restante (`ShareMem_StlRaw8 Err: …` `0x43ca9b12`) no
-   tiene referencia alguna (ni PIC ni puntero absoluto) → cadena muerta. *(Corregido en
-   S110: el escáner empareja cada `add` con **todos** los `ldr` del registro, no solo con el
-   más cercano.)*
+   `destino = literal + (add + 4)`). Con la regla con *kill analysis* (la única que no inventa
+   referencias): **695 de las 697** cadenas referenciadas; las **2** restantes
+   (`ShareMem_StlRaw8 Err: …` `0x43ca9b12` y `Rch_Rcv_Zima_Base Err…` `0x43cc839c`) no
+   tienen referencia alguna (ni PIC ni puntero absoluto) → cadenas muertas. La metodología
+   completa (y por qué el número depende de la regla) está en
+   [`analysis/s106_imaging_cap/pic_xref_methodology.md`](../../analysis/s106_imaging_cap/pic_xref_methodology.md).
 9. **Diferencial A7S fw3.20**: 0 cadenas con el prefijo `[IMAGING_CAP]`; los mismos mensajes
    existen **sin etiqueta de módulo** (`CapMgr) LastDetectionEnd…` `0x43cae3b3`,
    `SectionCtrl) Fatal!…` `0x43caefd1`). La fw3.21 de la A6000 **añade la etiqueta**; los 16
