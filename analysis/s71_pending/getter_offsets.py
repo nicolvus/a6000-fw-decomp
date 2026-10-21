@@ -1,8 +1,12 @@
 """Usos de un getter-singleton con desplazamientos en [lo,hi).
 Uso: getter_offsets.py GETTER lo hi [ventana]  (p.ej. 437876dc dd0 df0 40)"""
-import re, sys
+import re
+import sys
+from pathlib import Path
+
 from capstone import CS_ARCH_ARM, CS_MODE_THUMB, Cs
-b = open('analysis/rea-independent/input/av-cam.bin', 'rb').read(); base = 0x43541000
+
+b = Path('analysis/rea-independent/input/av-cam.bin').read_bytes(); base = 0x43541000
 md = Cs(CS_ARCH_ARM, CS_MODE_THUMB); md.skipdata = True
 ins = list(md.disasm(b[:0x9c0000], base))
 G = f'#0x{sys.argv[1]}'; lo, hi = int(sys.argv[2], 16), int(sys.argv[3], 16)

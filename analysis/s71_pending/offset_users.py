@@ -1,8 +1,13 @@
 """Todos los ldr/str/add/movw con inmediato en [lo,hi) (barrido global, Thumb lineal).
 Uso: offset_users.py lo hi [mnemonicos-prefijo,...]"""
-import re, sys
+import os
+import re
+import sys
+from pathlib import Path
+
 from capstone import CS_ARCH_ARM, CS_MODE_THUMB, Cs
-b = open(__import__('os').environ.get('AVCAM', 'analysis/rea-independent/input/av-cam.bin'), 'rb').read(); base = int(__import__('os').environ.get('BASE', '0x43541000'), 16)
+
+b = Path(os.environ.get('AVCAM', 'analysis/rea-independent/input/av-cam.bin')).read_bytes(); base = int(os.environ.get('BASE', '0x43541000'), 16)
 md = Cs(CS_ARCH_ARM, CS_MODE_THUMB); md.skipdata = True
 lo, hi = int(sys.argv[1], 16), int(sys.argv[2], 16)
 pref = tuple(sys.argv[3].split(',')) if len(sys.argv) > 3 else ('ldr', 'str', 'add', 'movw', 'mov')

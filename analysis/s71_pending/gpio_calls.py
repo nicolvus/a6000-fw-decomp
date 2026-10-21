@@ -1,7 +1,11 @@
 """S71-2: llamadas a gpio_get/gpio_cfg/gpio_set de BIONZ y el origen de sus argumentos (r0/r1)."""
-import re, collections
+import collections
+import re
+from pathlib import Path
+
 from capstone import CS_ARCH_ARM, CS_MODE_THUMB, Cs
-b = open('analysis/rea-independent/input/av-cam.bin', 'rb').read(); base = 0x43541000
+
+b = Path('analysis/rea-independent/input/av-cam.bin').read_bytes(); base = 0x43541000
 md = Cs(CS_ARCH_ARM, CS_MODE_THUMB); md.skipdata = True
 ins = list(md.disasm(b[:0x9c0000], base))
 P = {'#0x43b5e2bc': 'get', '#0x43b5e22e': 'cfg', '#0x43b5e29a': 'set'}
