@@ -5,6 +5,14 @@ Para restricciones del proyecto (sin firmware ejecutado, sin flasheo, sin `git p
 
 [Plan de pruebas físicas pendientes](../docs/capture/physical-test-plan.md) (P1–P8, ninguna ejecutada; requieren tu autorización).
 
+## S113 — `[CAM_DMM]`: el gestor de memoria dinámico de la cámara (21-10-2026, línea de RE general)
+
+**VERIFICADO (11 tests, `tests/test_s113_cam_dmm.py`):** 54 trazas `[CAM_DMM]` (todas de error) `0x43cce6ae`–`0x43ccf1c3`, con la implementación en **25 funciones contiguas** `0x439011d8`–`0x43903d5c`. **11 operaciones**: `AllocNew` (4), `AllocNewRdv` (4, *rendezvous*, confirmado por `MemoryHandle::AllocRendezvous` `0x43cceb4c`), `AllocShare` (4), `Free` (2), `FreeRdv` (2), `Open` (3), `Close` (2), 4 `MemoryHandle::*` (5) y las asíncronas `AsyncAllocNew` (9, función `0x439037c0`), `AsyncAllocRule` (7, `0x43903b80`), `LoadExtraMap` (7, `0x43903d5c`). **4 clases de error** del DMM: `ERR_DMM_RET_CODE` (10), `ERR_DMM_DIFFERENT_COMP` (10, con `msg_id`/`my_id` → la unidad pertenece a otro componente), `ERR_DMM_HANDLE` (4), `ERR_DMM_OPEN` (5); y **4 de capa OSAL** en las asíncronas (`ERR_OSAL_MSGQ`, `ERR_OSAL_HANDLE`, `ERR_OSAL_UIPC`, `rcv Invalid Src!`) → la frontera **DMM↔OSAL** del firmware es real (S38). El userland `DmmAccess` de `libmprctrl.so` (S37: `DmmAllocateNEWAndOpen_body`, `DmmShare`, `DmmCloseORFree_body`, `GetUnitHandleFromDmmAlloc`, `GetDMMRetMsg`) es **cliente** de este servidor, no una reimplementación.
+
+**Diferencial A7S fw3.20**: 0 trazas con el prefijo; **50 de las 54** tienen mensaje equivalente sin etiqueta; las 4 restantes son `AllocNew`, que en la A7S se registraba como `AllocNew(DMM_OPTION_NOUNIT_WARN): ERR_DMM_RET_CODE!: %x` (`0x43cb4f99`) y que la fw3.21 sustituyó por cuatro mensajes detallados.
+
+[Informe](../analysis/s113_cam_dmm/dmm_module.md) · [doc](../docs/capture/s113-cam-dmm.md). Siguiente: valores numéricos de `ERR_DMM_*`/`ERR_OSAL_*`; formato del mensaje OSAL asíncrono; tabla de reglas de `AsyncAllocRule`.
+
 ## S108 — el módulo `[CAMERA_SA]` (231 trazas) del acelerador escalar (21-10-2026, línea de RE general)
 
 **VERIFICADO (4 tests, `tests/test_s108_camera_sa.py`):** 231 trazas `[CAMERA_SA]` en `0x43cc5286`–`0x43cef0d8`: la capa de cámara que reporta errores y estado del acelerador escalar (`Camera::SaFuncDrv`, S84), en 13 sub-bloques —APL (27), gestión de memoria (20), errores `GetAddr` (35), alineación de parámetros (29), paso de mensajes/mailbox (18), parámetros DUALREC (14), cierre de handles (20), referencias `sa_func_*` (8), errores especiales (4) y códigos `SA_FUNCDRV_E_OSAL/RSLTCODE/ERRCODE` (3)— más 51 de contenido mixto. **8 de las 19 familias `sa_func_*`** de S84 tienen traza directa aquí (`BDEX_exit`, `BFNR_release`, `BOKS`, `LFNR`, `KKNR`, `NFLASH`, `YKNR`, `DUALREC_BAYER`).
