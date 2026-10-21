@@ -1,0 +1,73 @@
+{
+  "library": "libHapiLib.so",
+  "firmware": "A6000 fw3.21",
+  "size_bytes": 89628,
+  "a7s_fw320_size": 77380,
+  
+  "exported_classes": {
+    "HapiLibMain": ["getInstance", "run", "interrupt", "getTargetQId", "mainLoop"],
+    "CamService": ["getInstance", "run", "interrupt", "processCaptureEvent", "sendComp", "processComp", "processReq", "mainLoop"],
+    "SdfService": ["getInstance", "run", "interrupt", "sendComp", "processNext", "processAck", "processReq", "processComp", "mainLoop"],
+    "CamApiBase": ["setHapiCommon", "apiFactory", "convertErrorCode", "checkThreeRawTickets", "stmInquire", "stmDepositRaw", "stmWithdraw", "stmDestruct", "freeStdYc", "freeExif"],
+    "CamApiRawCapture": ["getInstance", "getCompMsgId", "getCompMsgLength", "errorProcess", "preProcess", "postProcess", "eventProcess"],
+    "CamApiCreateStream": ["getInstance", "getCompMsgId", "getCompMsgLength", "errorProcess", "preProcess", "postProcess"],
+    "CamApiGetImageInfo": ["getInstance", "getCompMsgId", "getCompMsgLength", "errorProcess", "preProcess", "postProcess"],
+    "CamApiDevelop": ["getInstance", "getCompMsgId", "getCompMsgLength", "errorProcess", "preProcess", "postProcess"],
+    "CamApiHdr": ["getInstance", "getCompMsgId", "getCompMsgLength", "errorProcess", "preProcess", "postProcess"],
+    "CamApiRichtoneMono": ["getInstance", "getCompMsgId", "getCompMsgLength", "errorProcess", "preProcess", "postProcess"],
+    "CamApiSuperResolution": ["getInstance", "getCompMsgId", "getCompMsgLength", "errorProcess", "preProcess", "postProcess"],
+    "CamApiMiniature": ["getInstance", "getCompMsgId", "getCompMsgLength", "errorProcess", "preProcess", "postProcess"],
+    "CamApiSoftFocus": ["getInstance", "getCompMsgId", "getCompMsgLength", "errorProcess", "preProcess", "postProcess"],
+    "CamApiArtEffect": ["getInstance", "getCompMsgId", "getCompMsgLength", "errorProcess", "preProcess", "postProcess"],
+    "CamApiContrastPlus": ["getInstance", "getCompMsgId", "getCompMsgLength", "errorProcess", "preProcess", "postProcess"],
+    "CamApiFaceNr": ["getInstance", "getCompMsgId", "getCompMsgLength", "errorProcess", "preProcess", "postProcess"],
+    "CamApiChangeReleaseStatus": ["getInstance", "getCompMsgId", "getCompMsgLength", "errorProcess", "preProcess", "postProcess"]
+  },
+  
+  "message_types": {
+    "REQ_MSGE": "Request message (app -> camera)",
+    "EVT_MSGE": "Event message (camera -> app notifications)",
+    "COMP_MSGE": "Completion message (reply to request)",
+    "SDF_MSG_SENDE": "SDF send message",
+    "MAIN_MSG_RECVE": "Main message receive"
+  },
+  
+  "category_ids": {
+    "CATEID_HAPI": 1,
+    "CATEID_SDF_ACK": "SDF acknowledgment",
+    "CATEID_SDF_COMP": "SDF completion",
+    "CATEID_SDF_NEXT": "SDF next"
+  },
+  
+  "osal_primitives": {
+    "snd_sync_direct": "Sync send direct",
+    "snd_sync_msg": "Sync send message",
+    "snd_msg": "Send message",
+    "free_msg": "Free message",
+    "wait_thread_exit": "Wait for thread exit",
+    "create_waitable_thread": "Create waitable thread",
+    "exit_thread": "Exit thread",
+    "dynamic_id": "Dynamic ID generation",
+    "rcv_msg_tmo": "Receive message with timeout",
+    "prepare": "Prepare async msg",
+    "getQId": "Get queue ID",
+    "sndRcv": "Send/receive",
+    "clean": "Clean async msg"
+  },
+  
+  "cam_apis_capabilities": {
+    "capture_still": "CamApiRawCapture",
+    "start_stream": "CamApiCreateStream",
+    "get_image_info": "CamApiGetImageInfo",
+    "develop_raw": "CamApiDevelop",
+    "hdr_mode": "CamApiHdr",
+    "richtone_mono": "CamApiRichtoneMono",
+    "super_resolution": "CamApiSuperResolution",
+    "miniature": "CamApiMiniature",
+    "soft_focus": "CamApiSoftFocus",
+    "art_effect": "CamApiArtEffect",
+    "contrast_plus": "CamApiContrastPlus",
+    "face_detection": "CamApiFaceNr",
+    "release_status": "CamApiChangeReleaseStatus"
+  }
+}
