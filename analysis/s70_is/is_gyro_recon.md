@@ -38,6 +38,11 @@ ni la de la montura (S66). Solo lectura de bytes; nada ejecutado.
    se coordina con el disparo (exp start) y con el barrido panorámico.
 3. `/mnt/FILE_IS_%04x.dat` = **datos de calibración del EIS por lente** (el `0x04x` es el ID de
    lente), en la misma convención que `/lens/VX91xx_lensfile.bin` (S66) y `/mnt/Mount_ms_log_%03d.dat`.
+   VERIFICADO en la función `0x43707152`: la ruta se construye con
+   `snprintf(buf, 0x100, "/mnt/FILE_IS_%04x.dat", id)` (`bl 0x439c1c2c` en `0x4370717a`) y el `id` es
+   un **contador u16 incremental** (`ldrh r3,[r2]; adds r1,r3,#1; strh r1,[r2]`, `0x4370716c`–`0x43707170`);
+   en la misma función se copían búferes de `0x100` y `0x80` B. El fichero **no existe en el firmware**
+   (`find` en `fw321`: 0 resultados) → es un fichero de runtime en `/mnt`.
 4. `GyroStitScl` y `JudgeBrkGyro` operan en la cadena de **time control (TC)**: escalado por el
    movimiento medido y detección de "break" del giroscopio.
 
