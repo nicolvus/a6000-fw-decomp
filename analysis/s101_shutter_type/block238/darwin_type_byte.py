@@ -1,5 +1,9 @@
-import struct,re,collections
+import collections
+import re
+import struct
+
 from capstone import *
+
 b=open('firmware/extracted/fw321/firmware.tar_unpacked/0640_darwin/darwin_core.bin','rb').read(); base=0x4200
 md=Cs(CS_ARCH_ARM,CS_MODE_THUMB); md.skipdata=True
 ins=list(md.disasm(b,base))

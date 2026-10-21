@@ -1,5 +1,7 @@
 import re
+
 from capstone import *
+
 b=open('analysis/rea-independent/input/av-cam.bin','rb').read(); base=0x43541000
 md=Cs(CS_ARCH_ARM,CS_MODE_THUMB); md.skipdata=True
 ins=list(md.disasm(b[:0x9c0000],base))
@@ -11,7 +13,6 @@ for k,i in enumerate(ins):
             m=re.search(r'\[(r\d+), #(0x[0-9a-f]+)\]',j.op_str)
             if m and j.mnemonic.startswith(('ldr','str')): seen.append((j.address,j.mnemonic,int(m.group(2),16)))
             if j.mnemonic in('bl','pop','bx'): break
-        pass
         for j in ins[k+1:k+16]:
             mm=re.search(r"#(0x[0-9a-f]+)$|#(0x[0-9a-f]+)\]",j.op_str)
             if mm:

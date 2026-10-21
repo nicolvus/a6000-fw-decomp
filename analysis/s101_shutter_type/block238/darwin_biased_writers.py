@@ -1,5 +1,9 @@
-import struct,re,sys
+import re
+import struct
+import sys
+
 from capstone import *
+
 f=sys.argv[1]; b=open(f,'rb').read(); base=0x4200
 md=Cs(CS_ARCH_ARM,CS_MODE_THUMB); md.skipdata=True
 ins=list(md.disasm(b,base))

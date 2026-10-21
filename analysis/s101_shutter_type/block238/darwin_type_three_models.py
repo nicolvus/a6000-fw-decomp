@@ -1,5 +1,8 @@
-import struct,re,sys
+import re
+import struct
+
 from capstone import *
+
 P={'a6000':'firmware/extracted/fw321/firmware.tar_unpacked/0640_darwin/darwin_core.bin',
 'a7s':'firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0640_darwin/darwin_core.bin',
 'a6300':'firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0640_darwin/darwin_core.bin'}
