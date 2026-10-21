@@ -3,6 +3,11 @@
 Resumen operativo breve. Para el historial completo de decisiones, ver `knowledge/PROGRESS.md`.
 Para restricciones del proyecto (sin firmware ejecutado, sin flasheo, sin `git push`), ver `docs/STATE.md`.
 
+## S70 — consumidores de `+0x238`/`+0x280` del bloque `0x43edf684` (21-10-2026)
+
+**VERIFICADO (3 tests, `tests/test_s70_block238.py`):** comando `0x40e3` (`0x43fffc60`) → handler `0x438032d5` → `+0x238`; `+0x280` por `0x43802614`. Las 62 referencias PC-relativas al bloque están todas en `0x43802000–0x43805000`; los accesores `0x43804de8` (40 llamadores) y `0x43804c38` (6) no van seguidos de ningún acceso a `0x234/0x238/0x23c/0x280`. **INFERENCIA fuerte:** ambos campos son solo escritura en `av-cam.bin` (explica S64). El parser CAIF de Darwin A6000 ya está resuelto en S53 (descarta el bit `0x20`). **NO VERIFICADO:** lectura vía puntero guardado en global o desde otro binario. S51 se mantiene.
+[Informe](../analysis/s70_block238/block238_consumers.md). Siguiente: seguir el puntero devuelto por `0x43804de8` hacia globales; escritor de `[0x20000050+ch]` en `darwin_core.bin`.
+
 ## S64 — prueba en cámara de SilentShutter (20-10-2026)
 
 - Modo normal por telnet/adb (Tweak, 192.168.1.29): mismo bloque de ajustes; `+0x238`=1 forzado con 3 disparos ⇒ obturador sigue mecánico y la copia `0x83ed4ff0` no cambia; el espejo vuelve a 0 tras un disparo si no se fuerza. Disparo remoto requiere app propia con `CameraEx` (pendiente). Detalle en `docs/capture/s64-silent-ram-nvram-test.md`.
