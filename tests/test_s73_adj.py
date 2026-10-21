@@ -91,3 +91,30 @@ class AdjustCommands(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class AdjustDispatch(unittest.TestCase):
+    """Despacho por mascara acumulativa: 1 ID de comando (0x302) y 8 sub-comandos."""
+
+    def test_subcommand_masks(self):
+        """sub_cmd 1..8 -> mascaras 0x01,0x03,0x07,0x0F,0x1F,0x3F,0x7F,0xFF (stubs en 0x43635508+)."""
+        d = data("A6000")
+        masks = []
+        for k in range(8):
+            ins = [i for i in MD.disasm(d[0x43635508 + 4 * k - B:0x43635508 + 4 * k - B + 4], 0x43635508 + 4 * k)
+                   if i.mnemonic != ".byte"]
+            self.assertEqual(ins[0].mnemonic, "movs", hex(0x43635508 + 4 * k))
+            masks.append(int(ins[0].op_str.split("#")[1], 0))
+        self.assertEqual(masks, [1, 3, 7, 15, 31, 63, 127, 255])
+
+    def test_tbb_table_bytes(self):
+        d = data("A6000")
+        self.assertEqual(list(d[0x43635500 - B:0x43635508 - B]), [0x04, 0x06, 0x08, 0x0A, 0x0C, 0x0E, 0x10, 0x12])
+
+    def test_dispatch_instructions(self):
+        d = data("A6000")
+        ins = list(MD.disasm(d[0x436354F0 - B:0x43635502 - B], 0x436354F0))
+        ops = [(i.address, i.mnemonic, i.op_str) for i in ins if i.mnemonic != ".byte"]
+        self.assertIn((0x436354F6, "subs", "r2, #1"), ops)
+        self.assertIn((0x436354F8, "cmp", "r2, #7"), ops)
+        self.assertIn((0x436354FC, "tbb", "[pc, r2]"), ops)
