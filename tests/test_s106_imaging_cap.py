@@ -178,20 +178,20 @@ class TestReferenciasPIC:
         assert destino == 0x43CAD93C
         assert _cstr(data, destino).startswith("[IMAGING_CAP]: Raw Addr[")
 
-    def test_694_de_697_cadenas_referenciadas(self):
+    def test_696_de_697_cadenas_referenciadas(self):
         data = _data()
         with open(ROOT / "analysis/s106_imaging_cap/pic_refs.json") as fh:
             refs = {int(k, 16) for k in json.load(fh)}
         strings = _imaging_cap_strings(data)
         referenciadas = [v for v, _ in strings if v in refs]
-        assert len(referenciadas) == 694
+        assert len(referenciadas) == 696
         assert len(strings) == 697
 
-    def test_las_3_cadenas_muertas_no_tienen_referencia(self):
+    def test_la_cadena_muerta_no_tiene_referencia(self):
         data = _data()
         with open(ROOT / "analysis/s106_imaging_cap/pic_refs.json") as fh:
             refs = {int(k, 16) for k in json.load(fh)}
-        muertas = [0x43CA05D7, 0x43CA9B12, 0x43CC7D5C]
+        muertas = [0x43CA9B12]
         for vaddr in muertas:
             assert vaddr not in refs
             # tampoco hay puntero absoluto de 4 bytes en toda la imagen

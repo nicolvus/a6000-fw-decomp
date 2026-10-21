@@ -111,6 +111,9 @@ def scan(lo, hi):
             continue
         ks = keys[reg]
         i = bisect.bisect_left(ks, a) - 1
+        # Se prueban TODOS los `ldr` del mismo registro dentro de la ventana (4 KB):
+        # el `ldr` válido no siempre es el más cercano (el registro puede reutilizarse
+        # entremedias). Solo se aceptan los destinos que caen en el inicio de una cadena.
         while i >= 0:
             la, w = v[i]
             if a - la > MAX_LDR_GAP:
@@ -118,7 +121,6 @@ def scan(lo, hi):
             tgt = (w + (a + 4)) & 0xFFFFFFFF
             if tgt in starts:
                 out.setdefault(tgt, []).append(a)
-                break
             i -= 1
     return out
 
