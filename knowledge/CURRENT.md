@@ -18,6 +18,18 @@ Para restricciones del proyecto (sin firmware ejecutado, sin flasheo, sin `git p
 
 [Documento](../docs/capture/s62-pmca-injection.md) · [matriz](../analysis/s62-evidence-matrix.json). Siguiente: lectores de `Backup_read` para `0x3e0005` (REA) o traza pasiva autorizada.
 
+## S68 — gestión de batería, energía y carga (NP-FW50) (21-10-2026)
+
+**VERIFICADO (7 tests, `tests/test_s68_battery.py`):** resultado **negativo**: el `av-cam.bin` de A6000 **no contiene modelo del pack NP-FW50** (0 hits de `NP-FW`/`NPFW`/`FW50`, sin tensión/corriente/ciclos/SOC). Sí hay: nivel de batería vía UPM (`Set UPM Battery Level` `0x43ca2dfd`, función `0x4378f364`, lee 8 B de un dispositivo), códigos de estado hacia un MCU (`ACV_BATT_Snd` `0x43c8f95e`, `BATT_AUTH_Snd` `0x43c8f96b`, `BATT_STATE1..3_Snd`, `BATT_TYPE1/2_Snd`, `Box_Temperature_Snd` `0x43c8f9fc`, `ACV Error Voltage` `0x43c8f83b`), **carga del flash** y no de la batería (`SB_CHARGE` `0x43cb4c23`, `CamStrbChargeOn/Off`, `uc_ChargeCommand` `0x43ccd8c2`, `uc_ChargeStatus` `0x43ccd8ef`, `uc_ChargeEnable` `0x43ccd939`, `uc_ChargeForceOff` `0x43ccd96c`, `b_SBChargeReq` `0x43ccdc76`), power save del imager (`MacroPowerSaveOn/OffRequest`, `SubLVDS PowerSaveOn/Off`, `MonPowersave`) y coordinación lente↔voltaje (`Wait E-MountLens ReduceVoltage Wait(%d ms` `0x43cc7aa4`, `CaptureCancel_PowerOffDetect()` `0x43ca9d85`). La A7S (fw3.20) conserva el bloque de estado (`ACV_BATT_Snd` `0x43c983f6`, `ACV Error Voltage` `0x43c982d3`) pero **no** tiene `BatteryInfo` ni los `[IRLight]/[VideoLight] Battery Info`.
+
+**Corrección de la revisión (21-10-2026):** el informe inicial del subagente afirmaba que la A7S carecía de `ACV Error Voltage` y `ACV_BATT_Snd`; es falso y está corregido en `analysis/s68_power/battery_power.md` y fijado por test.
+
+**NO VERIFICADO:** modelo del pack (está en otro binario); destino de los códigos `BATT_*_Snd`; carga por USB/MTP/PD y por base (no hay modelo en el firmware); perfiles de consumo y apagado automático por batería.
+
+**Sin efecto en la línea SilentShutter:** fin electrónico NO VERIFICADO; **S51 A=NO/B=NO/C=NO** se mantiene.
+
+[Conclusiones](../docs/capture/s68-battery-power.md) · [informe](../analysis/s68_power/battery_power.md). Siguiente: el modelo del pack está fuera de `av-cam.bin` (userland o MCU); el bloque de "carga" es del flash; el destino de `ACV_BATT_Snd`.
+
 ## S69 — subsistema de audio de la A6000 (línea general) (21-10-2026)
 
 **VERIFICADO (9 tests, `tests/test_s69_audio.py`):** el audio del `av-cam.bin` A6000 es un *IP* más del driver de sensor: arranque `AUDIOIP INIT COMP` (`0x43c26411`) con configs VGS/PR/MF/CONS/BANDI; micrófono (`AdfSenserCtrl::SetParamSetMicMode` `0x43c26dc1`, `Abb::SetMicConfig` `0x43cddad4`, `AbbMicSensAdjustCtrl::SetStatus` `0x43cddd49`); niveles (`SetParamSetRecLevel` `0x43c26df4`, `SetParamSetRecMode` `0x43c26e91`, `15AbbRecLevelCtrl` `0x43cdddf3`, `RecLevel SetRecLevel` `0x43929fa4`); WNR y cancelación de voz (`WindStage:%d, MagDataRsv:%d` `0x43cddea7`, `MAGIC SetNwnr`, `New WNR ON/OFF`, `PremiumCloserVoice`, `MyvoiceCanceling`, `iVoice` `0x43cddeec`–`0x43cddf9a`); códecs `XAVCS_LPCM` `0x43c6909d`, `MP4_LPCM` `0x43c690c8`, `AAC` `0x43c690f1`; diagnóstico (`targetAudioFormat` `0x43c5c68e`, `audioChannelNum` `0x43c5c6b1`, `audioMuteRec` `0x43c5ca62`); enlace con vídeo (`ProcBuffMgrWrAudioPin` `0x43c28d29`, `AVBB_SCN_START/STOP_AUDIO`); backup de sonido (`9AudioIpIf` `0x43cdd82e`, `Sa SaChangeBackup` `0x43cddfbc`). **A7S (fw3.20) tiene códec externo** (`15AbbExtCodecCtrl` `0x43cd582e`, `ConvChSsau2AudioIpCh` `0x43c2f48a`) que la A6000 (fw3.21) **no tiene**; el resto del audio es prácticamente idéntico (235 vs 237 cadenas).
