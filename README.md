@@ -12,6 +12,61 @@ recuperación y pipeline de captura. El obturador electrónico es un
 - Resultados y viabilidad: [docs/findings.md](docs/findings.md), [docs/feasibility-report.md](docs/feasibility-report.md).
 - README histórico íntegro (S19–S100, antes de esta reorganización): [docs/history/README-historial-2026-10-21.md](docs/history/README-historial-2026-10-21.md).
 
+## Empezar desde cero (clon nuevo + firmware 3.21 recién descargado)
+
+Los binarios (firmware, Ghidra, JDK, `node_modules`, `.venv`) no están en Git: se reconstruyen así.
+Todo desde la raíz del repo; Linux x86_64.
+
+```sh
+# 1. Clonar y entrar
+git clone https://github.com/nicolvus/a6000-fw-decomp.git sony-a6000-electronic-shutter && cd sony-a6000-electronic-shutter
+
+# 2. Firmware oficial 3.21 (Mac updater) y verificación
+mkdir -p firmware/original && cd firmware/original
+curl -L -o Update_ILCE6000V321.dmg "https://support.d-imaging.sony.co.jp/download/NEX/AcicwqgUEQ/Update_ILCE6000V321.dmg?fm=am"
+sha256sum Update_ILCE6000V321.dmg   # esperado: 844349ff7edddc294c0fddd90a454848eeda8987b6bf043c9757982b3a42ba3e
+cd ../..
+
+# 3. Entorno Python (herramientas, tests, grafo de conocimiento)
+python3 -m venv .venv && . .venv/bin/activate && pip install pytest ruff mypy pyyaml capstone unicorn
+
+# 4. Desempaquetar con fwtool (vendorizado en references/fwtool; necesita sus dependencias Python, ver su README)
+7z x firmware/original/Update_ILCE6000V321.dmg -ofirmware/extracted/updater
+python references/fwtool/fwtool.py unpack \
+  -f firmware/extracted/updater/Update_ILCE6000V321/Resources/FirmwareUpdater.app/Contents/Resources/FirmwareData_ILCE6000V321.dat \
+  -o firmware/extracted/fw321
+# Si falla la extracción WBI anidada: procedimiento alterno en docs/firmware-analysis.md
+# Comprobación: firmware/extracted/fw321/firmware.fdat debe tener SHA-256
+#   603b42ec9d2dd66b91e38c15a6a23e860fb8af46a072050903506672036f0f90 (firmware/hashes/sha256.json)
+
+# 5. Inventario y atlas ELF (679 ELF ARM esperados)
+python3 -m src.inventory firmware/extracted/fw321 reports/inventory.json
+python3 -m src.atlas
+
+# 6. REA + Ghidra + JDK locales (versiones y hashes en reports/rea-provider-downloads.json)
+(cd tools/rea && npm ci)                      # rea-agents 6.5.0 (Node 22/24)
+mkdir -p tools/providers   # descomprimir aquí ghidra_12.1.4_PUBLIC y jdk-21.0.12.1+1 (URLs en el JSON)
+./scripts/rea doctor --client codex --provider ghidra --json
+
+# 7. Binario principal para REA: av-cam.bin (base 0x43541000, ARM)
+mkdir -p analysis/rea-independent/input
+cp firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin analysis/rea-independent/input/
+
+# 8. Comprobar todo y arrancar el grafo de conocimiento
+python scripts/agent/check_env.py --sha
+python3 scripts/knowledge/index_docs.py && python3 scripts/knowledge/build_graph.py
+python -m pytest tests -q
+```
+
+Después de instalar:
+
+1. Leer [knowledge/CURRENT.md](knowledge/CURRENT.md) y [docs/STATE.md](docs/STATE.md) (restricciones y política de RE).
+2. Registrar los MCP `rea` y `sony-a6000-knowledge` ([docs/agent/README.md](docs/agent/README.md#mcp-claude-code-y-codex)); ajustar las rutas absolutas de `.mcp.json` a tu clon.
+3. Abrir **una sola** sesión REA (`av-cam.bin` tarda ~8 min en frío): `python analysis/rea-independent/bin/session_daemon.py <sock> "$(cat analysis/rea-independent/exp2-open-args.json)"` (ajustar `path` al clon) y consultar por lotes con `bin/q.py <sock> guion.json`; cerrarla al acabar el hito.
+4. Antes de reutilizar un hallazgo: skill `contradiction-audit`; antes de buscar a mano: `knowledge-navigation`; tras editar `.md`: `knowledge-maintenance`.
+5. Reglas que no cambian: sin ejecutar firmware, sin flasheo, REA primero y verificar lo decisivo contra bytes. Foco actual: obturador electrónico (decisión vigente S51: no parchear).
+6. Para saber qué falta, ver [docs/OPEN-QUESTIONS.md](docs/OPEN-QUESTIONS.md) y los «Próximo» del final de [knowledge/PROGRESS.md](knowledge/PROGRESS.md).
+
 ## Agentes (Claude Code, Codex/ChatGPT, DeepSeek Harness)
 
 Reglas en `AGENTS.md` y `CLAUDE.md`; skills en `.claude/skills/` y `.agents/skills/`
