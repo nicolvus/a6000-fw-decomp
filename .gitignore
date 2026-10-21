@@ -49,4 +49,8 @@ analysis/s53/ghidra/*.log
 
 # Estado y logs de sesiones REA (sockets, puertos, respuestas)
 analysis/rea-independent/run/
-analysis/camera-dumps/
+# Volcados de cámara: se versionan con README; fuera los binarios Sony (libs/odex/jar), los JPEG con EXIF y las series de RAM de 4 MiB (solo README y SHA256SUMS)
+analysis/camera-dumps/pull-*/
+analysis/camera-dumps/live-android-*/
+analysis/camera-dumps/live-shots-*/
+analysis/camera-dumps/silent-ram*/*.bin

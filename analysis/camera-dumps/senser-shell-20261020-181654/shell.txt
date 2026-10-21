@@ -1,0 +1,33 @@
+[    5.555161] console [usbgcon-1] enabled
+[    5.555395] [usbter usbg_sen_ldisc_open][154]exit
+
+
+BusyBox v1.13.4 (2012-07-17 15:11:04 JST) built-in shell (ash)
+Enter 'help' for a list of built-in commands.
+
+ash: can't access tty; job control turned off
+/usr/share/app # dd --help 2>&1 | head -3
+ash: head: not found
+/usr/share/app # od --help 2>&1 | head -3
+ash: head: not found
+/usr/share/app # echo ADDR 0x82d90000; dd if=/dev/mem bs=4096 skip=535952 count=
+1 2>/dev/null | od -A x -t x1 -v
+ADDR 0x82d90000
+ash: od: not found
+/usr/share/app # echo ADDR 0x93383000; dd if=/dev/mem bs=4096 skip=603011 count=
+1 2>/dev/null | od -A x -t x1 -v
+ADDR 0x93383000
+ash: od: not found
+/usr/share/app # echo ADDR 0x965de000; dd if=/dev/mem bs=4096 skip=615902 count=
+1 2>/dev/null | od -A x -t x1 -v
+ADDR 0x965de000
+ash: od: not found
+/usr/share/app # echo ADDR 0x83438000; dd if=/dev/mem bs=4096 skip=537656 count=
+1 2>/dev/null | od -A x -t x1 -v
+ADDR 0x83438000
+ash: od: not found
+/usr/share/app # echo ADDR 0x8303e000; dd if=/dev/mem bs=4096 skip=536638 count=
+1 2>/dev/null | od -A x -t x1 -v
+ADDR 0x8303e000
+ash: od: not found
+/usr/share/app # 

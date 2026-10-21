@@ -1,0 +1,657 @@
+sh: can't access tty; job control turned off
+
+
+BusyBox v1.13.4 (2012-07-17 15:11:04 JST) built-in shell (ash)
+Enter 'help' for a list of built-in commands.
+
+/ # Linux (none) 3.0.27_nl-rt106 #1 SMP PREEMPT RT Tue Oct 1 17:20:18 JST 2013 armv7l unknown
+/ # sh: id: not found
+/ # Linux version 3.0.27_nl-rt106 (0000139168@build-f-001) (gcc version 4.5.1 (20120717 (Sony CE Linux 8.2.1.1)) ) #1 SMP PREEMPT RT Tue Oct 1 17:20:18 JST 2013
+initrd=0x80628000,0x00F00000 root=/dev/ram0 init=/sbin/init stack_usage=y heap_profile.records=0 cxd90014.bam=N console=ttyAM0,115200n8 rw noatime noalign amba2.console=0 cfg.uart=5 cfg.poff=1,1 pm.ddr_ctrl=dpd warm.boot_drop=0 warm.ignore_drop=1 mem=1024M@0x80000000@0 memrsv=0x28000@0x80000000 memrsv=0x3D270000@0x82D90000
+Processor	: ARMv7 Processor rev 1 (v7l)
+processor	: 0
+BogoMIPS	: 334.23
+
+processor	: 1
+BogoMIPS	: 334.23
+
+processor	: 2
+BogoMIPS	: 334.23
+
+processor	: 3
+BogoMIPS	: 334.23
+
+Features	: swp half thumb fastmult vfp edsp vfpv3 vfpv3d16 tls vfpv4 
+CPU implementer	: 0x41
+CPU architecture: 7
+CPU variant	: 0x0
+CPU part	: 0xc05
+CPU revision	: 1
+
+Hardware	: ARM-CXD90014
+Revision	: 0000
+Serial		: 0000000000000000
+cat: can't open '/proc/mtd': No such file or directory
+major minor  #blocks  name
+
+   7        0         12 loop0
+ 252        0     484352 nflasha0
+ 252        1       6144 nflasha0p1
+ 252        2      13312 nflasha0p2
+ 252        3      30720 nflasha0p3
+ 252        4      10240 nflasha0p4
+ 252        5      61440 nflasha0p5
+ 252        6       5120 nflasha0p6
+ 252        7       4096 nflasha0p7
+ 252       10       5120 nflasha0p10
+ 252       11       6144 nflasha0p11
+ 252       15     102400 nflasha0p15
+ 252       16      84736 nflasha0p16
+ 252       17     102144 nflasha0p17
+ 252       18      20480 nflasha0p18
+ 252       23       1024 nflasha0p23
+rootfs / rootfs rw 0 0
+/dev/root / cramfs ro,noatime 0 0
+proc /proc proc rw,relatime 0 0
+none /sys sysfs rw,relatime 0 0
+tmpfs /tmp_updater tmpfs rw,relatime,size=12582912 0 0
+/dev/loop0 /tmp_updater/updater/bodyfs cramfs ro,noatime 0 0
+/dev/nflasha2 /setting vfat rw,sync,noatime,fmask=0000,dmask=0000,allow_utime=0022,codepage=cp437,iocharset=ascii,shortname=mixed,posix_attr,avoid_dlink,errors=remount-ro 0 0
+MemTotal:          35312 kB
+MemFree:           10552 kB
+Buffers:            3276 kB
+Cached:             6028 kB
+SwapCached:            0 kB
+Active:             5056 kB
+Inactive:           6876 kB
+Active(anon):       2628 kB
+Inactive(anon):        0 kB
+Active(file):       2428 kB
+Inactive(file):     6876 kB
+Unevictable:           0 kB
+Mlocked:               0 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+Dirty:                 0 kB
+Writeback:             0 kB
+AnonPages:          2720 kB
+Mapped:             2148 kB
+Shmem:                 0 kB
+Slab:               2968 kB
+SReclaimable:        276 kB
+SUnreclaim:         2692 kB
+KernelStack:         784 kB
+PageTables:          212 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:       17656 kB
+Committed_AS:     106724 kB
+VmallocTotal:     737280 kB
+VmallocUsed:         220 kB
+VmallocChunk:     736956 kB
+/ # ls: /proc/device-tree: No such file or directory
+/:
+drwxrwxr-x    1 57762    232           916 Jan  1  1970 bin
+drwxr-xr-x    1 57762    0            9928 Jan  1  1970 dev
+drwxrwxr-x    1 57762    232             0 Jan  1  1970 etc
+drwxrwxr-x    1 57762    232           576 Jan  1  1970 kmod
+drwxrwxr-x    1 57762    232           680 Jan  1  1970 lib
+drwxrwxr-x    1 57762    232             0 Jan  1  1970 mnt
+drwxrwxr-x    1 57762    232             0 Jan  1  1970 mnt1
+drwxrwxr-x    1 57762    232             0 Jan  1  1970 mnt2
+drwxrwxr-x    1 57762    232             0 Jan  1  1970 mnt3
+drwxrwxr-x    1 57762    232             0 Jan  1  1970 mnt4
+drwxrwxr-x    1 57762    232             0 Jan  1  1970 mnt5
+dr-xr-xr-x   94 0        0               0 Jan  1  1970 proc
+lrwxrwxrwx    1 57762    232            11 Jan  1  1970 ramdsk -> tmp_updater
+drwxrwxr-x    1 57762    232            44 Jan  1  1970 root
+drwxrwxr-x    1 57762    232           300 Jan  1  1970 sbin
+drwxrwxrwx    6 0        0           16384 Jan  1  1970 setting
+drwxr-xr-x   12 0        0               0 Jan  1  1970 sys
+drwxrwxr-x    1 57762    232             0 Jan  1  1970 system
+drwxrwxr-x    1 57762    232             0 Jan  1  1970 tmp
+drwxr-xr-x    3 0        0               0 Jan  1 00:00 tmp_updater
+drwxrwxr-x    1 57762    232            88 Jan  1  1970 usr
+drwxrwxr-x    1 57762    232             0 Jan  1  1970 var
+-r--r--r--    1 57762    232             9 Jan  1  1970 version.txt
+
+/bin:
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 ash -> busybox
+-rwxrwxrwx    1 57762    232        233448 Jan  1  1970 busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 cat -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 chgrp -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 chmod -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 chown -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 cp -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 cpio -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 cut -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 date -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 dd -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 dmesg -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 echo -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 egrep -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 false -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 fgrep -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 grep -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 gunzip -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 gzip -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 kill -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 ln -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 login -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 ls -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 md5sum -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 mkdir -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 mkfifo -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 mknod -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 mktemp -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 mount -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 mv -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 pidof -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 ping -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 ping6 -> busybox
+-rwxrwxrwx    1 57762    232         59500 Jan  1  1970 ps
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 pwd -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 rm -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 rmdir -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 sed -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 sh -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 sleep -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 sync -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 tar -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 tee -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 touch -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 true -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 umount -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 uname -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 usleep -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 wc -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 xargs -> busybox
+lrwxrwxrwx    1 57762    232             7 Jan  1  1970 zcat -> busybox
+
+/dev:
+lrwxrwxrwx    1 57762    0              16 Jan  1  1970 MAKEDEV -> ..//sbin/MAKEDEV
+crwxrwxrwx    1 57762    0        252, 128 Jan  1  1970 anflasha0
+crwxrwxrwx    1 57762    0        252, 129 Jan  1  1970 anflasha1
+crwxrwxrwx    1 57762    0        252, 138 Jan  1  1970 anflasha10
+crwxrwxrwx    1 57762    0        252, 139 Jan  1  1970 anflasha11
+crwxrwxrwx    1 57762    0        252, 140 Jan  1  1970 anflasha12
+crwxrwxrwx    1 57762    0        252, 141 Jan  1  1970 anflasha13
+crwxrwxrwx    1 57762    0        252, 142 Jan  1  1970 anflasha14
+crwxrwxrwx    1 57762    0        252, 143 Jan  1  1970 anflasha15
+crwxrwxrwx    1 57762    0        252, 144 Jan  1  1970 anflasha16
+crwxrwxrwx    1 57762    0        252, 145 Jan  1  1970 anflasha17
+crwxrwxrwx    1 57762    0        252, 146 Jan  1  1970 anflasha18
+crwxrwxrwx    1 57762    0        252, 147 Jan  1  1970 anflasha19
+crwxrwxrwx    1 57762    0        252, 130 Jan  1  1970 anflasha2
+crwxrwxrwx    1 57762    0        252, 148 Jan  1  1970 anflasha20
+crwxrwxrwx    1 57762    0        252, 149 Jan  1  1970 anflasha21
+crwxrwxrwx    1 57762    0        252, 150 Jan  1  1970 anflasha22
+crwxrwxrwx    1 57762    0        252, 151 Jan  1  1970 anflasha23
+crwxrwxrwx    1 57762    0        252, 152 Jan  1  1970 anflasha24
+crwxrwxrwx    1 57762    0        252, 153 Jan  1  1970 anflasha25
+crwxrwxrwx    1 57762    0        252, 154 Jan  1  1970 anflasha26
+crwxrwxrwx    1 57762    0        252, 155 Jan  1  1970 anflasha27
+crwxrwxrwx    1 57762    0        252, 156 Jan  1  1970 anflasha28
+crwxrwxrwx    1 57762    0        252, 157 Jan  1  1970 anflasha29
+crwxrwxrwx    1 57762    0        252, 131 Jan  1  1970 anflasha3
+crwxrwxrwx    1 57762    0        252, 158 Jan  1  1970 anflasha30
+crwxrwxrwx    1 57762    0        252, 159 Jan  1  1970 anflasha31
+crwxrwxrwx    1 57762    0        252, 132 Jan  1  1970 anflasha4
+crwxrwxrwx    1 57762    0        252, 133 Jan  1  1970 anflasha5
+crwxrwxrwx    1 57762    0        252, 134 Jan  1  1970 anflasha6
+crwxrwxrwx    1 57762    0        252, 135 Jan  1  1970 anflasha7
+crwxrwxrwx    1 57762    0        252, 136 Jan  1  1970 anflasha8
+crwxrwxrwx    1 57762    0        252, 137 Jan  1  1970 anflasha9
+crwxrwxrwx    1 57762    0        251, 128 Jan  1  1970 anflashb0
+crwxrwxrwx    1 57762    0        251, 129 Jan  1  1970 anflashb1
+crwxrwxrwx    1 57762    0        251, 138 Jan  1  1970 anflashb10
+crwxrwxrwx    1 57762    0        251, 139 Jan  1  1970 anflashb11
+crwxrwxrwx    1 57762    0        251, 140 Jan  1  1970 anflashb12
+crwxrwxrwx    1 57762    0        251, 141 Jan  1  1970 anflashb13
+crwxrwxrwx    1 57762    0        251, 142 Jan  1  1970 anflashb14
+crwxrwxrwx    1 57762    0        251, 143 Jan  1  1970 anflashb15
+crwxrwxrwx    1 57762    0        251, 144 Jan  1  1970 anflashb16
+crwxrwxrwx    1 57762    0        251, 145 Jan  1  1970 anflashb17
+crwxrwxrwx    1 57762    0        251, 146 Jan  1  1970 anflashb18
+crwxrwxrwx    1 57762    0        251, 147 Jan  1  1970 anflashb19
+crwxrwxrwx    1 57762    0        251, 130 Jan  1  1970 anflashb2
+crwxrwxrwx    1 57762    0        251, 148 Jan  1  1970 anflashb20
+crwxrwxrwx    1 57762    0        251, 149 Jan  1  1970 anflashb21
+crwxrwxrwx    1 57762    0        251, 150 Jan  1  1970 anflashb22
+crwxrwxrwx    1 57762    0        251, 151 Jan  1  1970 anflashb23
+crwxrwxrwx    1 57762    0        251, 152 Jan  1  1970 anflashb24
+crwxrwxrwx    1 57762    0        251, 153 Jan  1  1970 anflashb25
+crwxrwxrwx    1 57762    0        251, 154 Jan  1  1970 anflashb26
+crwxrwxrwx    1 57762    0        251, 155 Jan  1  1970 anflashb27
+crwxrwxrwx    1 57762    0        251, 156 Jan  1  1970 anflashb28
+crwxrwxrwx    1 57762    0        251, 157 Jan  1  1970 anflashb29
+crwxrwxrwx    1 57762    0        251, 131 Jan  1  1970 anflashb3
+crwxrwxrwx    1 57762    0        251, 158 Jan  1  1970 anflashb30
+crwxrwxrwx    1 57762    0        251, 159 Jan  1  1970 anflashb31
+crwxrwxrwx    1 57762    0        251, 132 Jan  1  1970 anflashb4
+crwxrwxrwx    1 57762    0        251, 133 Jan  1  1970 anflashb5
+crwxrwxrwx    1 57762    0        251, 134 Jan  1  1970 anflashb6
+crwxrwxrwx    1 57762    0        251, 135 Jan  1  1970 anflashb7
+crwxrwxrwx    1 57762    0        251, 136 Jan  1  1970 anflashb8
+crwxrwxrwx    1 57762    0        251, 137 Jan  1  1970 anflashb9
+crwxrwxrwx    1 57762    0        251, 208 Jan  1  1970 backup
+crw-------    1 57762    0         10, 191 Jan  1  1970 bootimg
+crwxrwxrwx    1 57762    0        251, 209 Jan  1  1970 boss-t1
+crwxrwxrwx    1 57762    0        251, 210 Jan  1  1970 boss-t2
+crwxrwxrwx    1 57762    0        251, 211 Jan  1  1970 boss-t3
+crwxrwxrwx    1 57762    0        248,  28 Jan  1  1970 ca
+crwxrwxrwx    1 57762    0        248,  27 Jan  1  1970 cec
+crwxrwxrwx    1 57762    0        252,   0 Jan  1  1970 cnflasha0
+crwxrwxrwx    1 57762    0        252,   1 Jan  1  1970 cnflasha1
+crwxrwxrwx    1 57762    0        252,  10 Jan  1  1970 cnflasha10
+crwxrwxrwx    1 57762    0        252,  11 Jan  1  1970 cnflasha11
+crwxrwxrwx    1 57762    0        252,  12 Jan  1  1970 cnflasha12
+crwxrwxrwx    1 57762    0        252,  13 Jan  1  1970 cnflasha13
+crwxrwxrwx    1 57762    0        252,  14 Jan  1  1970 cnflasha14
+crwxrwxrwx    1 57762    0        252,  15 Jan  1  1970 cnflasha15
+crwxrwxrwx    1 57762    0        252,  16 Jan  1  1970 cnflasha16
+crwxrwxrwx    1 57762    0        252,  17 Jan  1  1970 cnflasha17
+crwxrwxrwx    1 57762    0        252,  18 Jan  1  1970 cnflasha18
+crwxrwxrwx    1 57762    0        252,  19 Jan  1  1970 cnflasha19
+crwxrwxrwx    1 57762    0        252,   2 Jan  1  1970 cnflasha2
+crwxrwxrwx    1 57762    0        252,  20 Jan  1  1970 cnflasha20
+crwxrwxrwx    1 57762    0        252,  21 Jan  1  1970 cnflasha21
+crwxrwxrwx    1 57762    0        252,  22 Jan  1  1970 cnflasha22
+crwxrwxrwx    1 57762    0        252,  23 Jan  1  1970 cnflasha23
+crwxrwxrwx    1 57762    0        252,  24 Jan  1  1970 cnflasha24
+crwxrwxrwx    1 57762    0        252,  25 Jan  1  1970 cnflasha25
+crwxrwxrwx    1 57762    0        252,  26 Jan  1  1970 cnflasha26
+crwxrwxrwx    1 57762    0        252,  27 Jan  1  1970 cnflasha27
+crwxrwxrwx    1 57762    0        252,  28 Jan  1  1970 cnflasha28
+crwxrwxrwx    1 57762    0        252,  29 Jan  1  1970 cnflasha29
+crwxrwxrwx    1 57762    0        252,   3 Jan  1  1970 cnflasha3
+crwxrwxrwx    1 57762    0        252,  30 Jan  1  1970 cnflasha30
+crwxrwxrwx    1 57762    0        252,  31 Jan  1  1970 cnflasha31
+crwxrwxrwx    1 57762    0        252,   4 Jan  1  1970 cnflasha4
+crwxrwxrwx    1 57762    0        252,   5 Jan  1  1970 cnflasha5
+crwxrwxrwx    1 57762    0        252,   6 Jan  1  1970 cnflasha6
+crwxrwxrwx    1 57762    0        252,   7 Jan  1  1970 cnflasha7
+crwxrwxrwx    1 57762    0        252,   8 Jan  1  1970 cnflasha8
+crwxrwxrwx    1 57762    0        252,   9 Jan  1  1970 cnflasha9
+crwxrwxrwx    1 57762    0        251,   0 Jan  1  1970 cnflashb0
+crwxrwxrwx    1 57762    0        251,   1 Jan  1  1970 cnflashb1
+crwxrwxrwx    1 57762    0        251,  10 Jan  1  1970 cnflashb10
+crwxrwxrwx    1 57762    0        251,  11 Jan  1  1970 cnflashb11
+crwxrwxrwx    1 57762    0        251,  12 Jan  1  1970 cnflashb12
+crwxrwxrwx    1 57762    0        251,  13 Jan  1  1970 cnflashb13
+crwxrwxrwx    1 57762    0        251,  14 Jan  1  1970 cnflashb14
+crwxrwxrwx    1 57762    0        251,  15 Jan  1  1970 cnflashb15
+crwxrwxrwx    1 57762    0        251,  16 Jan  1  1970 cnflashb16
+crwxrwxrwx    1 57762    0        251,  17 Jan  1  1970 cnflashb17
+crwxrwxrwx    1 57762    0        251,  18 Jan  1  1970 cnflashb18
+crwxrwxrwx    1 57762    0        251,  19 Jan  1  1970 cnflashb19
+crwxrwxrwx    1 57762    0        251,   2 Jan  1  1970 cnflashb2
+crwxrwxrwx    1 57762    0        251,  20 Jan  1  1970 cnflashb20
+crwxrwxrwx    1 57762    0        251,  21 Jan  1  1970 cnflashb21
+crwxrwxrwx    1 57762    0        251,  22 Jan  1  1970 cnflashb22
+crwxrwxrwx    1 57762    0        251,  23 Jan  1  1970 cnflashb23
+crwxrwxrwx    1 57762    0        251,  24 Jan  1  1970 cnflashb24
+crwxrwxrwx    1 57762    0        251,  25 Jan  1  1970 cnflashb25
+crwxrwxrwx    1 57762    0        251,  26 Jan  1  1970 cnflashb26
+crwxrwxrwx    1 57762    0        251,  27 Jan  1  1970 cnflashb27
+crwxrwxrwx    1 57762    0        251,  28 Jan  1  1970 cnflashb28
+crwxrwxrwx    1 57762    0        251,  29 Jan  1  1970 cnflashb29
+crwxrwxrwx    1 57762    0        251,   3 Jan  1  1970 cnflashb3
+crwxrwxrwx    1 57762    0        251,  30 Jan  1  1970 cnflashb30
+crwxrwxrwx    1 57762    0        251,  31 Jan  1  1970 cnflashb31
+crwxrwxrwx    1 57762    0        251,   4 Jan  1  1970 cnflashb4
+crwxrwxrwx    1 57762    0        251,   5 Jan  1  1970 cnflashb5
+crwxrwxrwx    1 57762    0        251,   6 Jan  1  1970 cnflashb6
+crwxrwxrwx    1 57762    0        251,   7 Jan  1  1970 cnflashb7
+crwxrwxrwx    1 57762    0        251,   8 Jan  1  1970 cnflashb8
+crwxrwxrwx    1 57762    0        251,   9 Jan  1  1970 cnflashb9
+crw-------    1 57762    5          5,   1 Jan  1  1970 console
+lrwxrwxrwx    1 57762    0              11 Jan  1  1970 core -> /proc/kcore
+crw-------    1 57762    0         10, 190 Jan  1  1970 crash
+crwxrwxrwx    1 57762    0        251, 206 Jan  1  1970 dmac
+crwxrwxrwx    1 57762    0        248,  29 Jan  1  1970 dmpgles2
+brwxrwxrwx    1 57762    0        252, 128 Jan  1  1970 dnflasha
+brwxrwxrwx    1 57762    0        252, 129 Jan  1  1970 dnflasha1
+brwxrwxrwx    1 57762    0        252, 138 Jan  1  1970 dnflasha10
+brwxrwxrwx    1 57762    0        252, 139 Jan  1  1970 dnflasha11
+brwxrwxrwx    1 57762    0        252, 140 Jan  1  1970 dnflasha12
+brwxrwxrwx    1 57762    0        252, 141 Jan  1  1970 dnflasha13
+brwxrwxrwx    1 57762    0        252, 142 Jan  1  1970 dnflasha14
+brwxrwxrwx    1 57762    0        252, 143 Jan  1  1970 dnflasha15
+brwxrwxrwx    1 57762    0        252, 144 Jan  1  1970 dnflasha16
+brwxrwxrwx    1 57762    0        252, 145 Jan  1  1970 dnflasha17
+brwxrwxrwx    1 57762    0        252, 146 Jan  1  1970 dnflasha18
+brwxrwxrwx    1 57762    0        252, 147 Jan  1  1970 dnflasha19
+brwxrwxrwx    1 57762    0        252, 130 Jan  1  1970 dnflasha2
+brwxrwxrwx    1 57762    0        252, 148 Jan  1  1970 dnflasha20
+brwxrwxrwx    1 57762    0        252, 149 Jan  1  1970 dnflasha21
+brwxrwxrwx    1 57762    0        252, 150 Jan  1  1970 dnflasha22
+brwxrwxrwx    1 57762    0        252, 151 Jan  1  1970 dnflasha23
+brwxrwxrwx    1 57762    0        252, 152 Jan  1  1970 dnflasha24
+brwxrwxrwx    1 57762    0        252, 153 Jan  1  1970 dnflasha25
+brwxrwxrwx    1 57762    0        252, 154 Jan  1  1970 dnflasha26
+brwxrwxrwx    1 57762    0        252, 155 Jan  1  1970 dnflasha27
+brwxrwxrwx    1 57762    0        252, 156 Jan  1  1970 dnflasha28
+brwxrwxrwx    1 57762    0        252, 157 Jan  1  1970 dnflasha29
+brwxrwxrwx    1 57762    0        252, 131 Jan  1  1970 dnflasha3
+brwxrwxrwx    1 57762    0        252, 158 Jan  1  1970 dnflasha30
+brwxrwxrwx    1 57762    0        252, 159 Jan  1  1970 dnflasha31
+brwxrwxrwx    1 57762    0        252, 132 Jan  1  1970 dnflasha4
+brwxrwxrwx    1 57762    0        252, 133 Jan  1  1970 dnflasha5
+brwxrwxrwx    1 57762    0        252, 134 Jan  1  1970 dnflasha6
+brwxrwxrwx    1 57762    0        252, 135 Jan  1  1970 dnflasha7
+brwxrwxrwx    1 57762    0        252, 136 Jan  1  1970 dnflasha8
+brwxrwxrwx    1 57762    0        252, 137 Jan  1  1970 dnflasha9
+brwxrwxrwx    1 57762    0        251, 128 Jan  1  1970 dnflashb
+brwxrwxrwx    1 57762    0        251, 129 Jan  1  1970 dnflashb1
+brwxrwxrwx    1 57762    0        251, 138 Jan  1  1970 dnflashb10
+brwxrwxrwx    1 57762    0        251, 139 Jan  1  1970 dnflashb11
+brwxrwxrwx    1 57762    0        251, 140 Jan  1  1970 dnflashb12
+brwxrwxrwx    1 57762    0        251, 141 Jan  1  1970 dnflashb13
+brwxrwxrwx    1 57762    0        251, 142 Jan  1  1970 dnflashb14
+brwxrwxrwx    1 57762    0        251, 143 Jan  1  1970 dnflashb15
+brwxrwxrwx    1 57762    0        251, 144 Jan  1  1970 dnflashb16
+brwxrwxrwx    1 57762    0        251, 145 Jan  1  1970 dnflashb17
+brwxrwxrwx    1 57762    0        251, 146 Jan  1  1970 dnflashb18
+brwxrwxrwx    1 57762    0        251, 147 Jan  1  1970 dnflashb19
+brwxrwxrwx    1 57762    0        251, 130 Jan  1  1970 dnflashb2
+brwxrwxrwx    1 57762    0        251, 148 Jan  1  1970 dnflashb20
+brwxrwxrwx    1 57762    0        251, 149 Jan  1  1970 dnflashb21
+brwxrwxrwx    1 57762    0        251, 150 Jan  1  1970 dnflashb22
+brwxrwxrwx    1 57762    0        251, 151 Jan  1  1970 dnflashb23
+brwxrwxrwx    1 57762    0        251, 152 Jan  1  1970 dnflashb24
+brwxrwxrwx    1 57762    0        251, 153 Jan  1  1970 dnflashb25
+brwxrwxrwx    1 57762    0        251, 154 Jan  1  1970 dnflashb26
+brwxrwxrwx    1 57762    0        251, 155 Jan  1  1970 dnflashb27
+brwxrwxrwx    1 57762    0        251, 156 Jan  1  1970 dnflashb28
+brwxrwxrwx    1 57762    0        251, 157 Jan  1  1970 dnflashb29
+brwxrwxrwx    1 57762    0        251, 131 Jan  1  1970 dnflashb3
+brwxrwxrwx    1 57762    0        251, 158 Jan  1  1970 dnflashb30
+brwxrwxrwx    1 57762    0        251, 159 Jan  1  1970 dnflashb31
+brwxrwxrwx    1 57762    0        251, 132 Jan  1  1970 dnflashb4
+brwxrwxrwx    1 57762    0        251, 133 Jan  1  1970 dnflashb5
+brwxrwxrwx    1 57762    0        251, 134 Jan  1  1970 dnflashb6
+brwxrwxrwx    1 57762    0        251, 135 Jan  1  1970 dnflashb7
+brwxrwxrwx    1 57762    0        251, 136 Jan  1  1970 dnflashb8
+brwxrwxrwx    1 57762    0        251, 137 Jan  1  1970 dnflashb9
+crw-r--r--    1 57762    0         29,   0 Jan  1  1970 fb0
+crw-r--r--    1 57762    0         29,   1 Jan  1  1970 fb1
+lrwxrwxrwx    1 57762    0              13 Jan  1  1970 fd -> /proc/self/fd
+crw-rw-rw-    1 57762    0          1,   7 Jan  1  1970 full
+crwxrwxrwx    1 57762    0        240,   0 Jan  1  1970 gpio
+crwxrwxrwx    1 57762    0        248,  25 Jan  1  1970 hdmi
+crwxrwxrwx    1 57762    0        248,  26 Jan  1  1970 hdmi_external_tx
+crwxrwxrwx    1 57762    0        248,  30 Jan  1  1970 hdmi_input
+drwxrwxr-x    1 57762    232            60 Jan  1  1970 input
+drwxrwxrwx    1 57762    0             156 Jan  1  1970 jet
+crw-r-----    1 57762    9          1,   2 Jan  1  1970 kmem
+crwxrwxrwx    1 57762    0        251, 205 Jan  1  1970 ldec
+brw-rw----    1 57762    6          7,   0 Jan  1  1970 loop0
+brw-rw----    1 57762    6          7,   1 Jan  1  1970 loop1
+brw-rw----    1 57762    6          7,   2 Jan  1  1970 loop2
+brw-rw----    1 57762    6          7,   3 Jan  1  1970 loop3
+brw-rw----    1 57762    6          7,   4 Jan  1  1970 loop4
+brw-rw----    1 57762    6          7,   5 Jan  1  1970 loop5
+brw-rw----    1 57762    6          7,   6 Jan  1  1970 loop6
+brw-rw----    1 57762    6          7,   7 Jan  1  1970 loop7
+crwxrwxrwx    1 57762    0        249,   1 Jan  1  1970 mcmn
+crw-r-----    1 57762    9          1,   1 Jan  1  1970 mem
+brwxrwxrwx    1 57762    0        250,  10 Jan  1  1970 mmca
+crwxrwxrwx    1 57762    0        250,   0 Jan  1  1970 mmca-char
+brwxrwxrwx    1 57762    0        250,  11 Jan  1  1970 mmca1
+brwxrwxrwx    1 57762    0        250,  12 Jan  1  1970 mmca2
+brwxrwxrwx    1 57762    0        250,  13 Jan  1  1970 mmca3
+brwxrwxrwx    1 57762    0        250,  14 Jan  1  1970 mmca4
+brwxrwxrwx    1 57762    0        250,  15 Jan  1  1970 mmcaa
+brwxrwxrwx    1 57762    0        250,  16 Jan  1  1970 mmcaa1
+brwxrwxrwx    1 57762    0        250,  17 Jan  1  1970 mmcab
+brwxrwxrwx    1 57762    0        250,  18 Jan  1  1970 mmcab1
+brwxrwxrwx    1 57762    0        250,  19 Jan  1  1970 mmcac
+brwxrwxrwx    1 57762    0        250,  20 Jan  1  1970 mmcac1
+brwxrwxrwx    1 57762    0        250,  21 Jan  1  1970 mmcad
+brwxrwxrwx    1 57762    0        250,  22 Jan  1  1970 mmcad1
+brwxrwxrwx    1 57762    0        250,  30 Jan  1  1970 mmcb
+crwxrwxrwx    1 57762    0        250,   1 Jan  1  1970 mmcb-char
+brwxrwxrwx    1 57762    0        250,  31 Jan  1  1970 mmcb1
+brwxrwxrwx    1 57762    0        250,  32 Jan  1  1970 mmcb2
+brwxrwxrwx    1 57762    0        250,  33 Jan  1  1970 mmcb3
+brwxrwxrwx    1 57762    0        250,  34 Jan  1  1970 mmcb4
+brwxrwxrwx    1 57762    0        250,  35 Jan  1  1970 mmcba
+brwxrwxrwx    1 57762    0        250,  36 Jan  1  1970 mmcba1
+brwxrwxrwx    1 57762    0        250,  37 Jan  1  1970 mmcbb
+brwxrwxrwx    1 57762    0        250,  38 Jan  1  1970 mmcbb1
+brwxrwxrwx    1 57762    0        250,  39 Jan  1  1970 mmcbc
+brwxrwxrwx    1 57762    0        250,  40 Jan  1  1970 mmcbc1
+brwxrwxrwx    1 57762    0        250,  41 Jan  1  1970 mmcbd
+brwxrwxrwx    1 57762    0        250,  42 Jan  1  1970 mmcbd1
+brwxrwxrwx    1 57762    0        250,  50 Jan  1  1970 mmcc
+crwxrwxrwx    1 57762    0        250,   2 Jan  1  1970 mmcc-char
+brwxrwxrwx    1 57762    0        250,  51 Jan  1  1970 mmcc1
+brwxrwxrwx    1 57762    0        250,  52 Jan  1  1970 mmcc2
+brwxrwxrwx    1 57762    0        250,  53 Jan  1  1970 mmcc3
+brwxrwxrwx    1 57762    0        250,  54 Jan  1  1970 mmcc4
+brwxrwxrwx    1 57762    0        250,  55 Jan  1  1970 mmcca
+brwxrwxrwx    1 57762    0        250,  56 Jan  1  1970 mmcca1
+brwxrwxrwx    1 57762    0        250,  57 Jan  1  1970 mmccb
+brwxrwxrwx    1 57762    0        250,  58 Jan  1  1970 mmccb1
+brwxrwxrwx    1 57762    0        250,  59 Jan  1  1970 mmccc
+brwxrwxrwx    1 57762    0        250,  60 Jan  1  1970 mmccc1
+brwxrwxrwx    1 57762    0        250,  61 Jan  1  1970 mmccd
+brwxrwxrwx    1 57762    0        250,  62 Jan  1  1970 mmccd1
+brwxrwxrwx    1 57762    0        249,   0 Jan  1  1970 ms
+crwxrwxrwx    1 57762    0        249,   0 Jan  1  1970 ms-char
+brwxrwxrwx    1 57762    0        249,   1 Jan  1  1970 ms1
+brwxrwxrwx    1 57762    0        249,   2 Jan  1  1970 ms2
+brwxrwxrwx    1 57762    0        249,   3 Jan  1  1970 ms3
+brwxrwxrwx    1 57762    0        249,   4 Jan  1  1970 ms4
+brwxrwxrwx    1 57762    0        249,   5 Jan  1  1970 ms5
+brwxrwxrwx    1 57762    0        249,   6 Jan  1  1970 ms6
+brwxrwxrwx    1 57762    0        249,   7 Jan  1  1970 ms7
+brwxrwxrwx    1 57762    0        249,   8 Jan  1  1970 ms8
+brwxrwxrwx    1 57762    0        249,   9 Jan  1  1970 ms9
+brwxrwxrwx    1 57762    0        252,   0 Jan  1  1970 nflasha
+brwxrwxrwx    1 57762    0        252,   1 Jan  1  1970 nflasha1
+brwxrwxrwx    1 57762    0        252,  10 Jan  1  1970 nflasha10
+brwxrwxrwx    1 57762    0        252,  11 Jan  1  1970 nflasha11
+brwxrwxrwx    1 57762    0        252,  12 Jan  1  1970 nflasha12
+brwxrwxrwx    1 57762    0        252,  13 Jan  1  1970 nflasha13
+brwxrwxrwx    1 57762    0        252,  14 Jan  1  1970 nflasha14
+brwxrwxrwx    1 57762    0        252,  15 Jan  1  1970 nflasha15
+brwxrwxrwx    1 57762    0        252,  16 Jan  1  1970 nflasha16
+brwxrwxrwx    1 57762    0        252,  17 Jan  1  1970 nflasha17
+brwxrwxrwx    1 57762    0        252,  18 Jan  1  1970 nflasha18
+brwxrwxrwx    1 57762    0        252,  19 Jan  1  1970 nflasha19
+brwxrwxrwx    1 57762    0        252,   2 Jan  1  1970 nflasha2
+brwxrwxrwx    1 57762    0        252,  20 Jan  1  1970 nflasha20
+brwxrwxrwx    1 57762    0        252,  21 Jan  1  1970 nflasha21
+brwxrwxrwx    1 57762    0        252,  22 Jan  1  1970 nflasha22
+brwxrwxrwx    1 57762    0        252,  23 Jan  1  1970 nflasha23
+brwxrwxrwx    1 57762    0        252,  24 Jan  1  1970 nflasha24
+brwxrwxrwx    1 57762    0        252,  25 Jan  1  1970 nflasha25
+brwxrwxrwx    1 57762    0        252,  26 Jan  1  1970 nflasha26
+brwxrwxrwx    1 57762    0        252,  27 Jan  1  1970 nflasha27
+brwxrwxrwx    1 57762    0        252,  28 Jan  1  1970 nflasha28
+brwxrwxrwx    1 57762    0        252,  29 Jan  1  1970 nflasha29
+brwxrwxrwx    1 57762    0        252,   3 Jan  1  1970 nflasha3
+brwxrwxrwx    1 57762    0        252,  30 Jan  1  1970 nflasha30
+brwxrwxrwx    1 57762    0        252,  31 Jan  1  1970 nflasha31
+brwxrwxrwx    1 57762    0        252,   4 Jan  1  1970 nflasha4
+brwxrwxrwx    1 57762    0        252,   5 Jan  1  1970 nflasha5
+brwxrwxrwx    1 57762    0        252,   6 Jan  1  1970 nflasha6
+brwxrwxrwx    1 57762    0        252,   7 Jan  1  1970 nflasha7
+brwxrwxrwx    1 57762    0        252,   8 Jan  1  1970 nflasha8
+brwxrwxrwx    1 57762    0        252,   9 Jan  1  1970 nflasha9
+brwxrwxrwx    1 57762    0        251,   0 Jan  1  1970 nflashb
+brwxrwxrwx    1 57762    0        251,   1 Jan  1  1970 nflashb1
+brwxrwxrwx    1 57762    0        251,  10 Jan  1  1970 nflashb10
+brwxrwxrwx    1 57762    0        251,  11 Jan  1  1970 nflashb11
+brwxrwxrwx    1 57762    0        251,  12 Jan  1  1970 nflashb12
+brwxrwxrwx    1 57762    0        251,  13 Jan  1  1970 nflashb13
+brwxrwxrwx    1 57762    0        251,  14 Jan  1  1970 nflashb14
+brwxrwxrwx    1 57762    0        251,  15 Jan  1  1970 nflashb15
+brwxrwxrwx    1 57762    0        251,  16 Jan  1  1970 nflashb16
+brwxrwxrwx    1 57762    0        251,  17 Jan  1  1970 nflashb17
+brwxrwxrwx    1 57762    0        251,  18 Jan  1  1970 nflashb18
+brwxrwxrwx    1 57762    0        251,  19 Jan  1  1970 nflashb19
+brwxrwxrwx    1 57762    0        251,   2 Jan  1  1970 nflashb2
+brwxrwxrwx    1 57762    0        251,  20 Jan  1  1970 nflashb20
+brwxrwxrwx    1 57762    0        251,  21 Jan  1  1970 nflashb21
+brwxrwxrwx    1 57762    0        251,  22 Jan  1  1970 nflashb22
+brwxrwxrwx    1 57762    0        251,  23 Jan  1  1970 nflashb23
+brwxrwxrwx    1 57762    0        251,  24 Jan  1  1970 nflashb24
+brwxrwxrwx    1 57762    0        251,  25 Jan  1  1970 nflashb25
+brwxrwxrwx    1 57762    0        251,  26 Jan  1  1970 nflashb26
+brwxrwxrwx    1 57762    0        251,  27 Jan  1  1970 nflashb27
+brwxrwxrwx    1 57762    0        251,  28 Jan  1  1970 nflashb28
+brwxrwxrwx    1 57762    0        251,  29 Jan  1  1970 nflashb29
+brwxrwxrwx    1 57762    0        251,   3 Jan  1  1970 nflashb3
+brwxrwxrwx    1 57762    0        251,  30 Jan  1  1970 nflashb30
+brwxrwxrwx    1 57762    0        251,  31 Jan  1  1970 nflashb31
+brwxrwxrwx    1 57762    0        251,   4 Jan  1  1970 nflashb4
+brwxrwxrwx    1 57762    0        251,   5 Jan  1  1970 nflashb5
+brwxrwxrwx    1 57762    0        251,   6 Jan  1  1970 nflashb6
+brwxrwxrwx    1 57762    0        251,   7 Jan  1  1970 nflashb7
+brwxrwxrwx    1 57762    0        251,   8 Jan  1  1970 nflashb8
+brwxrwxrwx    1 57762    0        251,   9 Jan  1  1970 nflashb9
+crw-rw-rw-    1 57762    0          1,   3 Jan  1  1970 null
+crw-r-----    1 57762    9          1,   4 Jan  1  1970 port
+crw-r--r--    1 57762    0          5,   2 Jan  1  1970 ptmx
+drwxrwxr-x    1 57762    232             0 Jan  1  1970 pts
+lrwxrwxrwx    1 57762    0               4 Jan  1  1970 ram -> ram1
+brw-rw----    1 57762    6          1,   0 Jan  1  1970 ram0
+brw-rw----    1 57762    6          1,   1 Jan  1  1970 ram1
+brw-rw----    1 57762    6          1,  10 Jan  1  1970 ram10
+brw-rw----    1 57762    6          1,  11 Jan  1  1970 ram11
+brw-rw----    1 57762    6          1,  12 Jan  1  1970 ram12
+brw-rw----    1 57762    6          1,  13 Jan  1  1970 ram13
+brw-rw----    1 57762    6          1,  14 Jan  1  1970 ram14
+brw-rw----    1 57762    6          1,  15 Jan  1  1970 ram15
+brw-rw----    1 57762    6          1,  16 Jan  1  1970 ram16
+brw-rw----    1 57762    6          1,   2 Jan  1  1970 ram2
+brw-rw----    1 57762    6          1,   3 Jan  1  1970 ram3
+brw-rw----    1 57762    6          1,   4 Jan  1  1970 ram4
+brw-rw----    1 57762    6          1,   5 Jan  1  1970 ram5
+brw-rw----    1 57762    6          1,   6 Jan  1  1970 ram6
+brw-rw----    1 57762    6          1,   7 Jan  1  1970 ram7
+brw-rw----    1 57762    6          1,   8 Jan  1  1970 ram8
+brw-rw----    1 57762    6          1,   9 Jan  1  1970 ram9
+cr--r--r--    1 57762    0          1,   8 Jan  1  1970 random
+crw-------    1 57762    0         10, 222 Jan  1  1970 rmon
+crw-rw----    1 57762    0         10, 135 Jan  1  1970 rtc
+crwxrwxrwx    1 57762    0        249,   2 Jan  1  1970 sata
+crwxrwxrwx    1 57762    0        249,   3 Jan  1  1970 sataa
+crwxrwxrwx    1 57762    0        249,   4 Jan  1  1970 satab
+crwxrwxrwx    1 57762    0        249,   5 Jan  1  1970 satac
+crwxrwxrwx    1 57762    0        249,   6 Jan  1  1970 satad
+brw-r--r--    1 57762    0          8,   0 Jan  1  1970 sda
+brw-r--r--    1 57762    0          8,  16 Jan  1  1970 sdb
+brw-r--r--    1 57762    0          8,  32 Jan  1  1970 sdc
+brw-r--r--    1 57762    0          8,  48 Jan  1  1970 sdd
+crwxrwxrwx    1 57762    0        251, 200 Jan  1  1970 sio0
+crwxrwxrwx    1 57762    0        251, 201 Jan  1  1970 sio1
+crwxrwxrwx    1 57762    0        251, 202 Jan  1  1970 sio2
+crwxrwxrwx    1 57762    0        251, 203 Jan  1  1970 sio3
+crwxrwxrwx    1 57762    0        251, 204 Jan  1  1970 sio4
+brw-r--r--    1 57762    0         11,   0 Jan  1  1970 sr0
+brw-r--r--    1 57762    0         11,   1 Jan  1  1970 sr1
+lrwxrwxrwx    1 57762    0               4 Jan  1  1970 stderr -> fd/2
+lrwxrwxrwx    1 57762    0               4 Jan  1  1970 stdin -> fd/0
+lrwxrwxrwx    1 57762    0               4 Jan  1  1970 stdout -> fd/1
+crwxrwxrwx    1 57762    0        249,   7 Jan  1  1970 stream
+crwxrwxrwx    1 57762    0        249,   8 Jan  1  1970 stream2
+crw-rw-rw-    1 57762    5          5,   0 Jan  1  1970 tty
+crw-------    1 57762    5          4,   0 Jan  1  1970 tty0
+crw-rw-rw-    1 57762    5          4,   1 Jan  1  1970 tty1
+crw-rw-rw-    1 57762    5          4,  10 Jan  1  1970 tty10
+crw-rw-rw-    1 57762    5          4,  11 Jan  1  1970 tty11
+crw-rw-rw-    1 57762    5          4,  12 Jan  1  1970 tty12
+crw-rw-rw-    1 57762    5          4,  13 Jan  1  1970 tty13
+crw-rw-rw-    1 57762    5          4,  14 Jan  1  1970 tty14
+crw-rw-rw-    1 57762    5          4,  15 Jan  1  1970 tty15
+crw-rw-rw-    1 57762    5          4,  16 Jan  1  1970 tty16
+crw-rw-rw-    1 57762    5          4,  17 Jan  1  1970 tty17
+crw-rw-rw-    1 57762    5          4,  18 Jan  1  1970 tty18
+crw-rw-rw-    1 57762    5          4,  19 Jan  1  1970 tty19
+crw-rw-rw-    1 57762    5          4,   2 Jan  1  1970 tty2
+crw-rw-rw-    1 57762    5          4,   3 Jan  1  1970 tty3
+crw-rw-rw-    1 57762    5          4,   4 Jan  1  1970 tty4
+crw-rw-rw-    1 57762    5          4,   5 Jan  1  1970 tty5
+crw-rw-rw-    1 57762    5          4,   6 Jan  1  1970 tty6
+crw-rw-rw-    1 57762    5          4,   7 Jan  1  1970 tty7
+crw-rw-rw-    1 57762    5          4,   8 Jan  1  1970 tty8
+crw-rw-rw-    1 57762    5          4,   9 Jan  1  1970 tty9
+crw-r--r--    1 57762    0        204,  16 Jan  1  1970 ttyAM0
+crw-r--r--    1 57762    0        204,  17 Jan  1  1970 ttyAM1
+crw-r--r--    1 57762    0        204,  18 Jan  1  1970 ttyAM2
+crw-rw----    1 57762    14         4,  64 Jan  1  1970 ttyS0
+crw-rw----    1 57762    14         4,  65 Jan  1  1970 ttyS1
+crw-rw----    1 57762    14         4,  66 Jan  1  1970 ttyS2
+crw-rw----    1 57762    14         4,  67 Jan  1  1970 ttyS3
+lrwxrwxrwx    1 57762    0               6 Jan  1  1970 ttycons -> ttyAM0
+crwxrwxrwx    1 57762    0        251, 207 Jan  1  1970 uipc
+cr--r--r--    1 57762    0          1,   9 Jan  1  1970 urandom
+drwxrwxr-x    1 57762    232           436 Jan  1  1970 usb
+lrwxrwxrwx    1 57762    0               4 Jan  1  1970 vcs -> vcs0
+crw-------    1 57762    0          7,   0 Jan  1  1970 vcs0
+crw-------    1 57762    0          7,   1 Jan  1  1970 vcs1
+crw-------    1 57762    0          7,  10 Jan  1  1970 vcs10
+crw-------    1 57762    0          7,  11 Jan  1  1970 vcs11
+crw-------    1 57762    0          7,  12 Jan  1  1970 vcs12
+crw-------    1 57762    0          7,  13 Jan  1  1970 vcs13
+crw-------    1 57762    0          7,  14 Jan  1  1970 vcs14
+crw-------    1 57762    0          7,  15 Jan  1  1970 vcs15
+crw-------    1 57762    0          7,  16 Jan  1  1970 vcs16
+crw-------    1 57762    0          7,  17 Jan  1  1970 vcs17
+crw-------    1 57762    0          7,  18 Jan  1  1970 vcs18
+crw-------    1 57762    0          7,  19 Jan  1  1970 vcs19
+crw-------    1 57762    0          7,   2 Jan  1  1970 vcs2
+crw-------    1 57762    0          7,   3 Jan  1  1970 vcs3
+crw-------    1 57762    0          7,   4 Jan  1  1970 vcs4
+crw-------    1 57762    0          7,   5 Jan  1  1970 vcs5
+crw-------    1 57762    0          7,   6 Jan  1  1970 vcs6
+crw-------    1 57762    0          7,   7 Jan  1  1970 vcs7
+crw-------    1 57762    0          7,   8 Jan  1  1970 vcs8
+crw-------    1 57762    0          7,   9 Jan  1  1970 vcs9
+lrwxrwxrwx    1 57762    0               5 Jan  1  1970 vcsa -> vcsa0
+crw-------    1 57762    0          7, 128 Jan  1  1970 vcsa0
+crw-------    1 57762    0          7, 129 Jan  1  1970 vcsa1
+crw-------    1 57762    0          7, 138 Jan  1  1970 vcsa10
+crw-------    1 57762    0          7, 139 Jan  1  1970 vcsa11
+crw-------    1 57762    0          7, 140 Jan  1  1970 vcsa12
+crw-------    1 57762    0          7, 141 Jan  1  1970 vcsa13
+crw-------    1 57762    0          7, 142 Jan  1  1970 vcsa14
+crw-------    1 57762    0          7, 143 Jan  1  1970 vcsa15
+crw-------    1 57762    0          7, 144 Jan  1  1970 vcsa16
+crw-------    1 57762    0          7, 145 Jan  1  1970 vcsa17
+crw-------    1 57762    0          7, 146 Jan  1  1970 vcsa18
+crw-------    1 57762    0          7, 147 Jan  1  1970 vcsa19
+crw-------    1 57762    0          7, 130 Jan  1  1970 vcsa2
+crw-------    1 57762    0          7, 131 Jan  1  1970 vcsa3
+crw-------    1 57762    0          7, 132 Jan  1  1970 vcsa4
+crw-------    1 57762    0          7, 133 Jan  1  1970 vcsa5
+crw-------    1 57762    0          7, 134 Jan  1  1970 vcsa6
+crw-------    1 57762    0          7, 135 Jan  1  1970 vcsa7
+crw-------    1 57762    0          7, 136 Jan  1  1970 vcsa8
+crw-------    1 57762    0          7, 137 Jan  1  1970 vcsa9
+crw-rw-rw-    1 57762    0          1,   5 Jan  1  1970 zero
+
+/etc:
+
+/sbin:
+-rwxrwxrwx    1 57762    232         38888 Jan  1  1970 dosfsck
+lrwxrwxrwx    1 57762    232            14 Jan  1  1970 freeramdisk -> ../bin/busybox
+lrwxrwxrwx    1 57762    232            14 Jan  1  1970 getty -> ../bin/busybox
+lrwxrwxrwx    1 57762    232            14 Jan  1  1970 halt -> ../bin/busybox
+lrwxrwxrwx    1 57762    232            14 Jan  1  1970 ifconfig -> ../bin/busybox
+-r-xr-xr-x    1 57762    232          1451 Jan  1  1970 init
+lrwxrwxrwx    1 57762    232            14 Jan  1  1970 insmod -> ../bin/busybox
+lrwxrwxrwx    1 57762    232            14 Jan  1  1970 lsmod -> ../bin/busybox
+-rwxrwxrwx    1 57762    232         22836 Jan  1  1970 mkdosfs
+lrwxrwxrwx    1 57762    232            14 Jan  1  1970 pivot_root -> ../bin/busybox
+lrwxrwxrwx    1 57762    232            14 Jan  1  1970 poweroff -> ../bin/busybox
+lrwxrwxrwx    1 57762    232            14 Jan  1  1970 reboot -> ../bin/busybox
+lrwxrwxrwx    1 57762    232            14 Jan  1  1970 rmmod -> ../bin/busybox
+lrwxrwxrwx    1 57762    232            14 Jan  1  1970 swapoff -> ../bin/busybox
+lrwxrwxrwx    1 57762    232            14 Jan  1  1970 swapon -> ../bin/busybox
+/ # 

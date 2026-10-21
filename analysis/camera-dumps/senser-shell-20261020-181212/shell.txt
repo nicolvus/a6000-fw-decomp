@@ -1,0 +1,1347 @@
+[   65.461927] console [usbgcon-1] enabled
+[   65.462192] [usbter usbg_sen_ldisc_open][154]exit
+
+
+BusyBox v1.13.4 (2012-07-17 15:11:04 JST) built-in shell (ash)
+Enter 'help' for a list of built-in commands.
+
+ash: can't access tty; job control turned off
+/usr/share/app # cat /proc/148/status
+Name:   im.elf
+State:  S (sleeping)
+Tgid:   148
+Pid:    148
+PPid:   1
+TracerPid:      0
+Uid:    0       0       0       0
+Gid:    0       0       0       0
+FDSize: 256
+Groups: 
+VmPeak:   493052 kB
+VmSize:   431608 kB
+VmLck:         0 kB
+VmHWM:     35496 kB
+VmRSS:     35496 kB
+VmData:   349652 kB
+VmStk:       136 kB
+VmExe:        20 kB
+VmLib:     45440 kB
+VmPTE:       474 kB
+VmSwap:        0 kB
+Threads:        165
+SigQ:   0/1529
+SigPnd: 0000000000000000
+ShdPnd: 0000000000000000
+SigBlk: 0000000000000000
+SigIgn: 0000000000001006
+SigCgt: 0000000180014001
+CapInh: 0000000000000000
+CapPrm: ffffffffffffffff
+CapEff: ffffffffffffffff
+CapBnd: ffffffffffffffff
+Cpus_allowed:   1
+Cpus_allowed_list:      0
+voluntary_ctxt_switches:        3825
+nonvoluntary_ctxt_switches:     3560
+Stack size:     8192
+/usr/share/app # cat /proc/148/maps
+00008000-0000d000 r-xp 00000000 fc:8f 8029       /usr/bin/im.elf
+00015000-00016000 rw-p 00005000 fc:8f 8029       /usr/bin/im.elf
+00016000-00201000 rw-p 00000000 00:00 0          [heap]
+04001000-04005000 r-xp 00000000 fc:8f 95910      /usr/lib/arbiter.so
+04005000-0400d000 ---p 00004000 fc:8f 95910      /usr/lib/arbiter.so
+0400d000-0400e000 rw-p 00004000 fc:8f 95910      /usr/lib/arbiter.so
+04010000-04011000 r-xp 00000000 fc:8f 95974      /usr/lib/libosal_utm.so
+04011000-04018000 ---p 00001000 fc:8f 95974      /usr/lib/libosal_utm.so
+04018000-04019000 rw-p 00000000 fc:8f 95974      /usr/lib/libosal_utm.so
+04019000-04029000 r-xp 00000000 fc:87 594        /lib/libpthread-2.11.2.so
+04029000-04030000 ---p 00010000 fc:87 594        /lib/libpthread-2.11.2.so
+04030000-04031000 r--p 0000f000 fc:87 594        /lib/libpthread-2.11.2.so
+04031000-04032000 rw-p 00010000 fc:87 594        /lib/libpthread-2.11.2.so
+04032000-04034000 rw-p 00000000 00:00 0 
+04034000-0403a000 r-xp 00000000 fc:8f 95920      /usr/lib/libosal_uipc.so
+0403a000-04042000 ---p 00006000 fc:8f 95920      /usr/lib/libosal_uipc.so
+04042000-04043000 rw-p 00006000 fc:8f 95920      /usr/lib/libosal_uipc.so
+04043000-04048000 r-xp 00000000 fc:87 618        /lib/librt-2.11.2.so
+04048000-0404f000 ---p 00005000 fc:87 618        /lib/librt-2.11.2.so
+0404f000-04050000 r--p 00004000 fc:87 618        /lib/librt-2.11.2.so
+04050000-04051000 rw-p 00005000 fc:87 618        /lib/librt-2.11.2.so
+04051000-04052000 rw-s 93383000 fc:87 306        /dev/mem
+04052000-04053000 rw-s 82d90000 fc:87 306        /dev/mem
+04053000-04054000 rw-p 00000000 00:00 0 
+04054000-0405d000 r-xp 00000000 fc:87 606        /lib/libgcc_s.so.1
+0405d000-04064000 ---p 00009000 fc:87 606        /lib/libgcc_s.so.1
+04064000-04065000 rw-p 00008000 fc:87 606        /lib/libgcc_s.so.1
+04065000-04067000 r-xp 00000000 fc:8f 63951      /usr/lib/libInfraKikiLogGenerator.so
+04067000-0406e000 ---p 00002000 fc:8f 63951      /usr/lib/libInfraKikiLogGenerator.so
+0406e000-0406f000 rw-p 00001000 fc:8f 63951      /usr/lib/libInfraKikiLogGenerator.so
+0406f000-04070000 rw-p 00000000 00:00 0 
+04070000-04072000 r--p 00000000 fc:8f 39962      /usr/share/app/viewCaution.uxc
+04072000-04073000 rw-s 82d90000 fc:87 306        /dev/mem
+04073000-04076000 r-xp 00000000 fc:87 716        /lib/libdl-2.11.2.so
+04076000-0407d000 ---p 00003000 fc:87 716        /lib/libdl-2.11.2.so
+0407d000-0407e000 r--p 00002000 fc:87 716        /lib/libdl-2.11.2.so
+0407e000-0407f000 rw-p 00003000 fc:87 716        /lib/libdl-2.11.2.so
+0407f000-04086000 r-xp 00000000 fc:8f 103999     /usr/lib/libosal_ulogio.so
+04086000-0408e000 ---p 00007000 fc:8f 103999     /usr/lib/libosal_ulogio.so
+0408e000-0408f000 rw-p 00007000 fc:8f 103999     /usr/lib/libosal_ulogio.so
+0408f000-04090000 ---p 00000000 00:00 0 
+04090000-04097000 rw-p 00000000 00:00 0 
+04097000-04098000 rw-s 82d90000 fc:87 306        /dev/mem
+04098000-040b0000 r-xp 00000000 fc:87 613        /lib/ld-2.11.2.so
+040b0000-040b2000 rw-p 00000000 00:00 0 
+040b2000-040b6000 rw-s f1000000 fc:87 306        /dev/mem
+040b6000-040b7000 rw-p 00000000 00:00 0 
+040b7000-040b8000 r--p 00017000 fc:87 613        /lib/ld-2.11.2.so
+040b8000-040b9000 rw-p 00018000 fc:87 613        /lib/ld-2.11.2.so
+040b9000-040ba000 rw-s 82d90000 fc:87 306        /dev/mem
+040bb000-040bc000 rw-p 00000000 00:00 0 
+040bc000-040be000 rw-s 965de000 fc:87 306        /dev/mem
+040be000-040bf000 rw-p 00000000 00:00 0 
+040bf000-040c0000 r--p 00000000 fc:8f 79966      /usr/share/app/lang_cmn.uxc
+040c0000-040c1000 r--p 00000000 fc:8f 79995      /usr/share/app/lang.uxb
+040c1000-040c3000 r--p 00000000 fc:8f 87914      /usr/share/app/viewSinglePb.uxc
+040c4000-040c7000 r-xp 00000000 fc:8f 95967      /usr/lib/libbackup.so
+040c7000-040ce000 ---p 00003000 fc:8f 95967      /usr/lib/libbackup.so
+040ce000-040cf000 rw-p 00002000 fc:8f 95967      /usr/lib/libbackup.so
+040cf000-04137000 r-xp 00000000 fc:87 614        /lib/libm-2.11.2.so
+04137000-0413e000 ---p 00068000 fc:87 614        /lib/libm-2.11.2.so
+0413e000-0413f000 r--p 00067000 fc:87 614        /lib/libm-2.11.2.so
+0413f000-04140000 rw-p 00068000 fc:87 614        /lib/libm-2.11.2.so
+04140000-04141000 rw-p 00000000 00:00 0 
+04141000-0414a000 r-xp 00000000 fc:8f 95928      /usr/lib/libOnDemandLoader.so
+0414a000-04151000 ---p 00009000 fc:8f 95928      /usr/lib/libOnDemandLoader.so
+04151000-04152000 rw-p 00008000 fc:8f 95928      /usr/lib/libOnDemandLoader.so
+04152000-04153000 rw-s 93383000 fc:87 306        /dev/mem
+04154000-04159000 r-xp 00000000 fc:8f 103991     /usr/lib/libIMDB.so
+04159000-04160000 ---p 00005000 fc:8f 103991     /usr/lib/libIMDB.so
+04160000-04162000 rw-p 00004000 fc:8f 103991     /usr/lib/libIMDB.so
+04162000-04201000 r-xp 00000000 fc:87 603        /lib/libstdc++.so.6.0.14
+04201000-04209000 ---p 0009f000 fc:87 603        /lib/libstdc++.so.6.0.14
+04209000-0420c000 r--p 0009f000 fc:87 603        /lib/libstdc++.so.6.0.14
+0420c000-0420e000 rw-p 000a2000 fc:87 603        /lib/libstdc++.so.6.0.14
+0420e000-04214000 rw-p 00000000 00:00 0 
+04214000-0421c000 rw-s 83438000 fc:87 306        /dev/mem
+0421c000-0421d000 r-xp 00000000 fc:8f 135871     /usr/lib/libutil_date.so
+0421d000-04224000 ---p 00001000 fc:8f 135871     /usr/lib/libutil_date.so
+04224000-04225000 rw-p 00000000 fc:8f 135871     /usr/lib/libutil_date.so
+04225000-04227000 r-xp 00000000 fc:8f 95960      /usr/lib/libcompassutil.so
+04227000-0422e000 ---p 00002000 fc:8f 95960      /usr/lib/libcompassutil.so
+0422e000-0422f000 rw-p 00001000 fc:8f 95960      /usr/lib/libcompassutil.so
+0422f000-04230000 rw-s 93383000 fc:87 306        /dev/mem
+04230000-04231000 r--p 00000000 fc:8f 87927      /usr/share/app/style_cmn.uxc
+04231000-04319000 r-xp 00000000 fc:87 598        /lib/libc-2.11.2.so
+04319000-04320000 ---p 000e8000 fc:87 598        /lib/libc-2.11.2.so
+04320000-04322000 r--p 000e7000 fc:87 598        /lib/libc-2.11.2.so
+04322000-04323000 rw-p 000e9000 fc:87 598        /lib/libc-2.11.2.so
+04323000-04326000 rw-p 00000000 00:00 0 
+04326000-043a6000 rw-s 80a80000 fc:87 512        /dev/uipc
+043a6000-043b9000 r-xp 00000000 fc:8f 95938      /usr/lib/libInfraMediaDetect.so
+043b9000-043c0000 ---p 00013000 fc:8f 95938      /usr/lib/libInfraMediaDetect.so
+043c0000-043c1000 rw-p 00012000 fc:8f 95938      /usr/lib/libInfraMediaDetect.so
+043c1000-043c4000 -w-s 8303e000 fc:87 306        /dev/mem
+043c4000-043e4000 rw-p 00000000 00:00 0 
+043e4000-043e5000 rw-s 93383000 fc:87 306        /dev/mem
+043e7000-043e8000 ---p 00000000 00:00 0 
+043e8000-045e7000 rw-p 00000000 00:00 0 
+045e7000-04621000 r-xp 00000000 fc:8f 95976      /usr/lib/libMWF.so
+04621000-04628000 ---p 0003a000 fc:8f 95976      /usr/lib/libMWF.so
+04628000-0462a000 rw-p 00039000 fc:8f 95976      /usr/lib/libMWF.so
+0462a000-0462e000 rw-p 00000000 00:00 0 
+0462e000-04645000 r-xp 00000000 fc:8f 95968      /usr/lib/libNetContUtil.so
+04645000-0464c000 ---p 00017000 fc:8f 95968      /usr/lib/libNetContUtil.so
+0464c000-0464d000 rw-p 00016000 fc:8f 95968      /usr/lib/libNetContUtil.so
+0464d000-04655000 r-xp 00000000 fc:8f 95909      /usr/lib/libInfraMediaMount.so
+04655000-04656000 rw-p 00008000 fc:8f 95909      /usr/lib/libInfraMediaMount.so
+04656000-04657000 r-xp 00000000 fc:8f 95939      /usr/lib/libpro00.so
+04657000-0465e000 ---p 00001000 fc:8f 95939      /usr/lib/libpro00.so
+0465e000-0465f000 rw-p 00000000 fc:8f 95939      /usr/lib/libpro00.so
+0465f000-04662000 r--p 00000000 fc:8f 119885     /usr/share/app/global.xdb
+04662000-04664000 rw-s 965df000 fc:87 306        /dev/mem
+04666000-04667000 ---p 00000000 00:00 0 
+04667000-04866000 rw-p 00000000 00:00 0 
+04866000-0487a000 r-xp 00000000 fc:8f 8054       /usr/lib/libSysDef.so
+0487a000-04881000 ---p 00014000 fc:8f 8054       /usr/lib/libSysDef.so
+04881000-04907000 rw-p 00013000 fc:8f 8054       /usr/lib/libSysDef.so
+04907000-04939000 r-xp 00000000 fc:8f 63942      /usr/lib/libmprctrl.so
+04939000-04941000 ---p 00032000 fc:8f 63942      /usr/lib/libmprctrl.so
+04941000-04945000 rw-p 00032000 fc:8f 63942      /usr/lib/libmprctrl.so
+04945000-04950000 r-xp 00000000 fc:8f 103998     /usr/lib/libAK8975.so
+04950000-04957000 ---p 0000b000 fc:8f 103998     /usr/lib/libAK8975.so
+04957000-04958000 rw-p 0000a000 fc:8f 103998     /usr/lib/libAK8975.so
+04958000-0495e000 r--p 00000000 fc:8f 79988      /usr/share/app/master_browser.uxc
+0495f000-04960000 ---p 00000000 00:00 0 
+04960000-04b5f000 rw-p 00000000 00:00 0 
+04b5f000-04b60000 ---p 00000000 00:00 0 
+04b60000-04d5f000 rw-p 00000000 00:00 0 
+04d5f000-04d60000 ---p 00000000 00:00 0 
+04d60000-04f5f000 rw-p 00000000 00:00 0 
+04f5f000-04f60000 ---p 00000000 00:00 0 
+04f60000-0515f000 rw-p 00000000 00:00 0 
+0515f000-05160000 ---p 00000000 00:00 0 
+05160000-0535f000 rw-p 00000000 00:00 0 
+0535f000-053db000 rw-s 82df9000 fc:87 306        /dev/mem
+053db000-053de000 r-xp 00000000 fc:8f 95961      /usr/lib/libtestcmd.so
+053de000-053e5000 ---p 00003000 fc:8f 95961      /usr/lib/libtestcmd.so
+053e5000-053e6000 rw-p 00002000 fc:8f 95961      /usr/lib/libtestcmd.so
+053eb000-053ec000 ---p 00000000 00:00 0 
+053ec000-055eb000 rw-p 00000000 00:00 0 
+055eb000-05632000 r-xp 00000000 fc:8f 95912      /usr/lib/libsencore.so
+05632000-05639000 ---p 00047000 fc:8f 95912      /usr/lib/libsencore.so
+05639000-0563b000 rw-p 00046000 fc:8f 95912      /usr/lib/libsencore.so
+0563b000-0563c000 ---p 00000000 00:00 0 
+0563c000-05643000 rw-p 00000000 00:00 0 
+05647000-056cc000 rw-p 00000000 00:00 0 
+056cc000-056cd000 ---p 00000000 00:00 0 
+056cd000-058cc000 rw-p 00000000 00:00 0 
+058cc000-0591b000 r-xp 00000000 fc:8f 8053       /usr/lib/libBizFw.so
+0591b000-05922000 ---p 0004f000 fc:8f 8053       /usr/lib/libBizFw.so
+05922000-05925000 rw-p 0004e000 fc:8f 8053       /usr/lib/libBizFw.so
+05929000-068f4000 r-xp 00000000 fc:8f 135903     /usr/lib/libObj.so
+068f4000-068fb000 ---p 00fcb000 fc:8f 135903     /usr/lib/libObj.so
+068fb000-069d2000 rw-p 00fca000 fc:8f 135903     /usr/lib/libObj.so
+069d2000-06a0c000 rw-p 00000000 00:00 0 
+06a0c000-06a66000 r-xp 00000000 fc:8f 95919      /usr/lib/libInfraFsys.so
+06a66000-06a6d000 ---p 0005a000 fc:8f 95919      /usr/lib/libInfraFsys.so
+06a6d000-06a70000 rw-p 00059000 fc:8f 95919      /usr/lib/libInfraFsys.so
+06a70000-06ab5000 rw-p 00000000 00:00 0 
+06ab5000-07471000 r-xp 00000000 fc:8f 47953      /usr/lib/libmpr.so
+07471000-07478000 ---p 009bc000 fc:8f 47953      /usr/lib/libmpr.so
+07478000-07495000 rw-p 009bb000 fc:8f 47953      /usr/lib/libmpr.so
+07495000-07591000 rw-p 00000000 00:00 0 
+07591000-075cd000 r-xp 00000000 fc:8f 135890     /usr/lib/libBizFw2.so
+075cd000-075d4000 ---p 0003c000 fc:8f 135890     /usr/lib/libBizFw2.so
+075d4000-075d6000 rw-p 0003b000 fc:8f 135890     /usr/lib/libBizFw2.so
+075d6000-075ed000 r-xp 00000000 fc:8f 103979     /usr/lib/libUsbControl.so
+075ed000-075f5000 ---p 00017000 fc:8f 103979     /usr/lib/libUsbControl.so
+075f5000-075f6000 rw-p 00017000 fc:8f 103979     /usr/lib/libUsbControl.so
+075f6000-07612000 r-xp 00000000 fc:8f 135893     /usr/lib/libNetCommon.so
+07612000-07619000 ---p 0001c000 fc:8f 135893     /usr/lib/libNetCommon.so
+07619000-0761b000 rw-p 0001b000 fc:8f 135893     /usr/lib/libNetCommon.so
+0761b000-07634000 r-xp 00000000 fc:8f 95907      /usr/lib/libGOConnectionManager.so
+07634000-0763b000 ---p 00019000 fc:8f 95907      /usr/lib/libGOConnectionManager.so
+0763b000-0763d000 rw-p 00018000 fc:8f 95907      /usr/lib/libGOConnectionManager.so
+0763d000-07676000 r-xp 00000000 fc:8f 95924      /usr/lib/libInfraMediaCommon.so
+07676000-0767e000 ---p 00039000 fc:8f 95924      /usr/lib/libInfraMediaCommon.so
+0767e000-07682000 rw-p 00039000 fc:8f 95924      /usr/lib/libInfraMediaCommon.so
+07682000-07683000 rw-p 00000000 00:00 0 
+07683000-07696000 r-xp 00000000 fc:8f 63955      /usr/lib/libclema.so
+07696000-0769d000 ---p 00013000 fc:8f 63955      /usr/lib/libclema.so
+0769d000-0769e000 rw-p 00012000 fc:8f 63955      /usr/lib/libclema.so
+0769e000-076cd000 r-xp 00000000 fc:8f 95917      /usr/lib/libssl.so.0.9.8
+076cd000-076d4000 ---p 0002f000 fc:8f 95917      /usr/lib/libssl.so.0.9.8
+076d4000-076d8000 rw-p 0002e000 fc:8f 95917      /usr/lib/libssl.so.0.9.8
+076d8000-077a8000 r-xp 00000000 fc:8f 63938      /usr/lib/libcrypto.so.0.9.8
+077a8000-077bc000 rw-p 000d0000 fc:8f 63938      /usr/lib/libcrypto.so.0.9.8
+077bc000-077bf000 rw-p 00000000 00:00 0 
+077bf000-077d1000 r-xp 00000000 fc:8f 135883     /usr/lib/libusb.so
+077d1000-077d8000 ---p 00012000 fc:8f 135883     /usr/lib/libusb.so
+077d8000-077db000 rw-p 00011000 fc:8f 135883     /usr/lib/libusb.so
+077db000-077fc000 r-xp 00000000 fc:8f 103985     /usr/lib/dataflowInfraFramework.so
+077fc000-07804000 ---p 00021000 fc:8f 103985     /usr/lib/dataflowInfraFramework.so
+07804000-07805000 rw-p 00021000 fc:8f 103985     /usr/lib/dataflowInfraFramework.so
+07805000-07965000 r-xp 00000000 fc:8f 135866     /usr/lib/libmintx.so
+07965000-07974000 rw-p 00160000 fc:8f 135866     /usr/lib/libmintx.so
+07974000-0798c000 r-xp 00000000 fc:8f 135878     /usr/lib/libexpat.so.1.5.2
+0798c000-0798e000 rw-p 00018000 fc:8f 135878     /usr/lib/libexpat.so.1.5.2
+0798e000-0799d000 r-xp 00000000 fc:8f 95940      /usr/lib/libJiritsu.so
+0799d000-079a4000 ---p 0000f000 fc:8f 95940      /usr/lib/libJiritsu.so
+079a4000-079a5000 rw-p 0000e000 fc:8f 95940      /usr/lib/libJiritsu.so
+079a5000-079a6000 ---p 00000000 00:00 0 
+079a6000-07ba5000 rw-p 00000000 00:00 0 
+07ba5000-07ba6000 ---p 00000000 00:00 0 
+07ba6000-07be5000 rw-p 00000000 00:00 0 
+07be5000-07bea000 r-xp 00000000 fc:8f 95975      /usr/lib/CameraOnDemandSaver.so
+07bea000-07bf1000 ---p 00005000 fc:8f 95975      /usr/lib/CameraOnDemandSaver.so
+07bf1000-07bf2000 rw-p 00004000 fc:8f 95975      /usr/lib/CameraOnDemandSaver.so
+07bf2000-07bf5000 r-xp 00000000 fc:8f 103977     /usr/lib/libInfraAirplaneMode.so
+07bf5000-07bfd000 ---p 00003000 fc:8f 103977     /usr/lib/libInfraAirplaneMode.so
+07bfd000-07bfe000 rw-p 00003000 fc:8f 103977     /usr/lib/libInfraAirplaneMode.so
+07bfe000-07c06000 rw-s 82eae000 fc:87 306        /dev/mem
+07c07000-07c08000 ---p 00000000 00:00 0 
+07c08000-07c47000 rw-p 00000000 00:00 0 
+07c47000-07c5f000 r-xp 00000000 fc:8f 63953      /usr/lib/libUsbAppDlSvr.so
+07c5f000-07c66000 ---p 00018000 fc:8f 63953      /usr/lib/libUsbAppDlSvr.so
+07c66000-07c68000 rw-p 00017000 fc:8f 63953      /usr/lib/libUsbAppDlSvr.so
+07c68000-07c6f000 r-xp 00000000 fc:8f 8051       /usr/lib/libInfraNfc.so
+07c6f000-07c76000 ---p 00007000 fc:8f 8051       /usr/lib/libInfraNfc.so
+07c76000-07c77000 rw-p 00006000 fc:8f 8051       /usr/lib/libInfraNfc.so
+07c77000-07c7a000 r-xp 00000000 fc:8f 95945      /usr/lib/libnl-genl-3.so.200.17.0
+07c7a000-07c81000 ---p 00003000 fc:8f 95945      /usr/lib/libnl-genl-3.so.200.17.0
+07c81000-07c82000 rw-p 00002000 fc:8f 95945      /usr/lib/libnl-genl-3.so.200.17.0
+07c82000-07c83000 r-xp 00000000 fc:8f 95982      /usr/lib/libExternalCommand.so
+07c83000-07c8b000 ---p 00001000 fc:8f 95982      /usr/lib/libExternalCommand.so
+07c8b000-07c8c000 rw-p 00001000 fc:8f 95982      /usr/lib/libExternalCommand.so
+07c8d000-07c8e000 ---p 00000000 00:00 0 
+07c8e000-07e8d000 rw-p 00000000 00:00 0 
+07e8d000-07eac000 r-xp 00000000 fc:8f 95913      /usr/lib/libptp.so
+07eac000-07eb4000 ---p 0001f000 fc:8f 95913      /usr/lib/libptp.so
+07eb4000-07eb8000 rw-p 0001f000 fc:8f 95913      /usr/lib/libptp.so
+07eb8000-07eda000 rw-p 00000000 00:00 0 
+07edd000-07ede000 ---p 00000000 00:00 0 
+07ede000-080dd000 rw-p 00000000 00:00 0 
+080dd000-080de000 ---p 00000000 00:00 0 
+080de000-080e5000 rw-p 00000000 00:00 0 
+080e5000-080ea000 r-xp 00000000 fc:8f 95948      /usr/lib/libUsbBusPower.so
+080ea000-080f1000 ---p 00005000 fc:8f 95948      /usr/lib/libUsbBusPower.so
+080f1000-080f2000 rw-p 00004000 fc:8f 95948      /usr/lib/libUsbBusPower.so
+080f2000-080f3000 ---p 00000000 00:00 0 
+080f3000-082f2000 rw-p 00000000 00:00 0 
+082f2000-082f8000 r-xp 00000000 fc:8f 103960     /usr/lib/libWlanControlCommon.so
+082f8000-082ff000 ---p 00006000 fc:8f 103960     /usr/lib/libWlanControlCommon.so
+082ff000-08300000 rw-p 00005000 fc:8f 103960     /usr/lib/libWlanControlCommon.so
+08300000-083fd000 rw-p 00000000 00:00 0 
+083fd000-08400000 ---p 00000000 00:00 0 
+08400000-08401000 ---p 00000000 00:00 0 
+08401000-08600000 rw-p 00000000 00:00 0 
+08600000-08601000 ---p 00000000 00:00 0 
+08601000-08800000 rw-p 00000000 00:00 0 
+08800000-0a800000 rw-s 8f708000 fc:87 479        /dev/stream
+0a800000-0a803000 r-xp 00000000 fc:8f 95941      /usr/lib/libInfraNetDeviceInfo.so
+0a803000-0a80a000 ---p 00003000 fc:8f 95941      /usr/lib/libInfraNetDeviceInfo.so
+0a80a000-0a80b000 rw-p 00002000 fc:8f 95941      /usr/lib/libInfraNetDeviceInfo.so
+0a80b000-0a80c000 ---p 00000000 00:00 0 
+0a80c000-0aa0b000 rw-p 00000000 00:00 0 
+0aa0b000-0aa0c000 ---p 00000000 00:00 0 
+0aa0c000-0ac0b000 rw-p 00000000 00:00 0 
+0ac0b000-0ac0c000 ---p 00000000 00:00 0 
+0ac0c000-0ae0b000 rw-p 00000000 00:00 0 
+0ae0b000-0ae60000 r-xp 00000000 fc:8f 103986     /usr/lib/libInfraHdmi.so
+0ae60000-0ae68000 ---p 00055000 fc:8f 103986     /usr/lib/libInfraHdmi.so
+0ae68000-0ae6b000 rw-p 00055000 fc:8f 103986     /usr/lib/libInfraHdmi.so
+0ae6b000-0ae7a000 r-xp 00000000 fc:8f 103978     /usr/lib/libWlanResource.so
+0ae7a000-0ae82000 ---p 0000f000 fc:8f 103978     /usr/lib/libWlanResource.so
+0ae82000-0ae83000 rw-p 0000f000 fc:8f 103978     /usr/lib/libWlanResource.so
+0ae83000-0ae98000 r-xp 00000000 fc:8f 63937      /usr/lib/iw.so
+0ae98000-0ae9f000 ---p 00015000 fc:8f 63937      /usr/lib/iw.so
+0ae9f000-0aea2000 rw-p 00014000 fc:8f 63937      /usr/lib/iw.so
+0aea2000-0aeb5000 r-xp 00000000 fc:8f 95972      /usr/lib/libnl-3.so.200.17.0
+0aeb5000-0aebc000 ---p 00013000 fc:8f 95972      /usr/lib/libnl-3.so.200.17.0
+0aebc000-0aebd000 rw-p 00012000 fc:8f 95972      /usr/lib/libnl-3.so.200.17.0
+0aebd000-0aec4000 r-xp 00000000 fc:8f 95965      /usr/lib/libnl-cli-3.so.200.17.0
+0aec4000-0aecb000 ---p 00007000 fc:8f 95965      /usr/lib/libnl-cli-3.so.200.17.0
+0aecb000-0aecc000 rw-p 00006000 fc:8f 95965      /usr/lib/libnl-cli-3.so.200.17.0
+0aece000-0aecf000 ---p 00000000 00:00 0 
+0aecf000-0b0ce000 rw-p 00000000 00:00 0 
+0b0ce000-0b0cf000 ---p 00000000 00:00 0 
+0b0cf000-0b2ce000 rw-p 00000000 00:00 0 
+0b2ce000-0b2cf000 ---p 00000000 00:00 0 
+0b2cf000-0b4ce000 rw-p 00000000 00:00 0 
+0b4ce000-0b536000 rw-s 82d91000 fc:87 479        /dev/stream
+0b536000-0b53c000 r-xp 00000000 fc:8f 95981      /usr/lib/libRsrcHotshoe.so
+0b53c000-0b543000 ---p 00006000 fc:8f 95981      /usr/lib/libRsrcHotshoe.so
+0b543000-0b544000 rw-p 00005000 fc:8f 95981      /usr/lib/libRsrcHotshoe.so
+0b546000-0b547000 ---p 00000000 00:00 0 
+0b547000-0b746000 rw-p 00000000 00:00 0 
+0b746000-0b747000 ---p 00000000 00:00 0 
+0b747000-0b946000 rw-p 00000000 00:00 0 
+0b946000-0b966000 rw-s 00000000 fc:87 206        /dev/dmpgles2
+0b966000-0b994000 r-xp 00000000 fc:8f 95955      /usr/lib/libnl-route-3.so.200.17.0
+0b994000-0b99c000 ---p 0002e000 fc:8f 95955      /usr/lib/libnl-route-3.so.200.17.0
+0b99c000-0b99f000 rw-p 0002e000 fc:8f 95955      /usr/lib/libnl-route-3.so.200.17.0
+0b99f000-0b9a0000 rw-p 00000000 00:00 0 
+0b9a0000-0b9ad000 r-xp 00000000 fc:8f 8057       /usr/lib/libnl-nf-3.so.200.17.0
+0b9ad000-0b9b4000 ---p 0000d000 fc:8f 8057       /usr/lib/libnl-nf-3.so.200.17.0
+0b9b4000-0b9b6000 rw-p 0000c000 fc:8f 8057       /usr/lib/libnl-nf-3.so.200.17.0
+0b9b6000-0b9c5000 r-xp 00000000 fc:8f 135868     /usr/lib/libWlanAdjust.so
+0b9c5000-0b9cc000 ---p 0000f000 fc:8f 135868     /usr/lib/libWlanAdjust.so
+0b9cc000-0b9cd000 rw-p 0000e000 fc:8f 135868     /usr/lib/libWlanAdjust.so
+0b9cd000-0b9ce000 r-xp 00000000 fc:8f 63956      /usr/lib/libmprdummy.so
+0b9ce000-0b9d6000 ---p 00001000 fc:8f 63956      /usr/lib/libmprdummy.so
+0b9d6000-0b9d7000 rw-p 00001000 fc:8f 63956      /usr/lib/libmprdummy.so
+0b9d7000-0b9db000 r-xp 00000000 fc:8f 135880     /usr/lib/libSyncAndroid.so
+0b9db000-0b9e2000 ---p 00004000 fc:8f 135880     /usr/lib/libSyncAndroid.so
+0b9e2000-0b9e3000 rw-p 00003000 fc:8f 135880     /usr/lib/libSyncAndroid.so
+0b9e3000-0b9e4000 rw-p 00000000 00:00 0 
+0b9e4000-0b9e8000 r-xp 00000000 fc:8f 135877     /usr/lib/libInputServant.so
+0b9e8000-0b9ef000 ---p 00004000 fc:8f 135877     /usr/lib/libInputServant.so
+0b9ef000-0b9f0000 rw-p 00003000 fc:8f 135877     /usr/lib/libInputServant.so
+0b9f1000-0b9f2000 ---p 00000000 00:00 0 
+0b9f2000-0bbf1000 rw-p 00000000 00:00 0 
+0bbf1000-0bc05000 r-xp 00000000 fc:8f 95988      /usr/lib/libsdcom.so
+0bc05000-0bc0c000 ---p 00014000 fc:8f 95988      /usr/lib/libsdcom.so
+0bc0c000-0bc0d000 rw-p 00013000 fc:8f 95988      /usr/lib/libsdcom.so
+0bc0d000-0bc0e000 ---p 00000000 00:00 0 
+0bc0e000-0bc15000 rw-p 00000000 00:00 0 
+0bc15000-0bc16000 ---p 00000000 00:00 0 
+0bc16000-0be15000 rw-p 00000000 00:00 0 
+0be15000-0be2f000 r-xp 00000000 fc:8f 63957      /usr/lib/libgps_rsrc.so
+0be2f000-0be37000 ---p 0001a000 fc:8f 63957      /usr/lib/libgps_rsrc.so
+0be37000-0be38000 rw-p 0001a000 fc:8f 63957      /usr/lib/libgps_rsrc.so
+0be38000-0be5a000 rw-p 00000000 00:00 0 
+0be5a000-0bed6000 rw-s 82df9000 fc:87 306        /dev/mem
+0bed7000-0bed8000 ---p 00000000 00:00 0 
+0bed8000-0c11f000 rw-p 00000000 00:00 0 
+0c11f000-0c120000 r-xp 00000000 fc:8f 63944      /usr/lib/libupdatertalk.so
+0c120000-0c127000 ---p 00001000 fc:8f 63944      /usr/lib/libupdatertalk.so
+0c127000-0c128000 rw-p 00000000 fc:8f 63944      /usr/lib/libupdatertalk.so
+0c12b000-0c12c000 ---p 00000000 00:00 0 
+0c12c000-0c32b000 rw-p 00000000 00:00 0 
+0c32b000-0c32f000 r-xp 00000000 fc:8f 95978      /usr/lib/libupdaterufp.so
+0c32f000-0c336000 ---p 00004000 fc:8f 95978      /usr/lib/libupdaterufp.so
+0c336000-0c337000 rw-p 00003000 fc:8f 95978      /usr/lib/libupdaterufp.so
+0c337000-0c347000 rw-p 00000000 00:00 0 
+0c348000-0c349000 ---p 00000000 00:00 0 
+0c349000-0c548000 rw-p 00000000 00:00 0 
+0c548000-0c55d000 r-xp 00000000 fc:8f 63961      /usr/lib/libHapiLib.so
+0c55d000-0c565000 ---p 00015000 fc:8f 63961      /usr/lib/libHapiLib.so
+0c565000-0c566000 rw-p 00015000 fc:8f 63961      /usr/lib/libHapiLib.so
+0c566000-0c56c000 r-xp 00000000 fc:8f 95956      /usr/lib/libStm.so
+0c56c000-0c573000 ---p 00006000 fc:8f 95956      /usr/lib/libStm.so
+0c573000-0c574000 rw-p 00005000 fc:8f 95956      /usr/lib/libStm.so
+0c574000-0c599000 r-xp 00000000 fc:8f 103964     /usr/lib/libInfraCacheMgr.so
+0c599000-0c5a1000 ---p 00025000 fc:8f 103964     /usr/lib/libInfraCacheMgr.so
+0c5a1000-0c5a3000 rw-p 00025000 fc:8f 103964     /usr/lib/libInfraCacheMgr.so
+0c5a3000-0c5aa000 r-xp 00000000 fc:8f 95947      /usr/lib/libdig_level.so
+0c5aa000-0c5b1000 ---p 00007000 fc:8f 95947      /usr/lib/libdig_level.so
+0c5b1000-0c5b2000 rw-p 00006000 fc:8f 95947      /usr/lib/libdig_level.so
+0c5b6000-0c5b7000 ---p 00000000 00:00 0 
+0c5b7000-0c7b6000 rw-p 00000000 00:00 0 
+0c7b6000-0c7eb000 r-xp 00000000 fc:8f 95954      /usr/lib/libInfraScalarMpr.so
+0c7eb000-0c7f2000 ---p 00035000 fc:8f 95954      /usr/lib/libInfraScalarMpr.so
+0c7f2000-0c7f4000 rw-p 00034000 fc:8f 95954      /usr/lib/libInfraScalarMpr.so
+0c7f4000-0c7fd000 r-xp 00000000 fc:8f 63939      /usr/lib/libInfraFuFsys.so
+0c7fd000-0c805000 ---p 00009000 fc:8f 63939      /usr/lib/libInfraFuFsys.so
+0c805000-0c806000 rw-p 00009000 fc:8f 63939      /usr/lib/libInfraFuFsys.so
+0c806000-0c812000 rw-p 00000000 00:00 0 
+0c812000-0c82a000 r-xp 00000000 fc:8f 95983      /usr/lib/libfuse.so.2.9.2
+0c82a000-0c833000 rw-p 00018000 fc:8f 95983      /usr/lib/libfuse.so.2.9.2
+0c833000-0c855000 rw-p 00000000 00:00 0 
+0c85a000-0c85b000 ---p 00000000 00:00 0 
+0c85b000-0ca5a000 rw-p 00000000 00:00 0 
+0ca5a000-0ca5b000 ---p 00000000 00:00 0 
+0ca5b000-0cc5a000 rw-p 00000000 00:00 0 
+0cc5a000-0cc5b000 ---p 00000000 00:00 0 
+0cc5b000-0ce5a000 rw-p 00000000 00:00 0 
+0ce5a000-0ce5b000 ---p 00000000 00:00 0 
+0ce5b000-0d05a000 rw-p 00000000 00:00 0 
+0d05a000-0d05b000 ---p 00000000 00:00 0 
+0d05b000-0d25a000 rw-p 00000000 00:00 0 
+0d25a000-0d25b000 ---p 00000000 00:00 0 
+0d25b000-0d45a000 rw-p 00000000 00:00 0 
+0d45a000-0d45b000 ---p 00000000 00:00 0 
+0d45b000-0d65a000 rw-p 00000000 00:00 0 
+0d65a000-0e65a000 rw-s 91eb8000 fc:87 479        /dev/stream
+0e65a000-0e65b000 ---p 00000000 00:00 0 
+0e65b000-0e662000 rw-p 00000000 00:00 0 
+0e662000-0e663000 ---p 00000000 00:00 0 
+0e663000-0e862000 rw-p 00000000 00:00 0 
+0e862000-0e8f8000 rw-s 92ec0000 fc:87 479        /dev/stream
+0e8f9000-0e8fa000 ---p 00000000 00:00 0 
+0e8fa000-0eaf9000 rw-p 00000000 00:00 0 
+0eaf9000-0eafb000 r-xp 00000000 fc:8f 95987      /usr/lib/ModelCautionConfig.so
+0eafb000-0eb02000 ---p 00002000 fc:8f 95987      /usr/lib/ModelCautionConfig.so
+0eb02000-0eb03000 rw-p 00001000 fc:8f 95987      /usr/lib/ModelCautionConfig.so
+0eb03000-0eb13000 r-xp 00000000 fc:8f 95952      /usr/lib/CautionRsrcConfig.so
+0eb13000-0eb1a000 ---p 00010000 fc:8f 95952      /usr/lib/CautionRsrcConfig.so
+0eb1a000-0eb1d000 rw-p 0000f000 fc:8f 95952      /usr/lib/CautionRsrcConfig.so
+0eb1f000-0eb20000 ---p 00000000 00:00 0 
+0eb20000-0ed1f000 rw-p 00000000 00:00 0 
+0ed1f000-0ed20000 ---p 00000000 00:00 0 
+0ed20000-0ef1f000 rw-p 00000000 00:00 0 
+0ef1f000-0ef20000 ---p 00000000 00:00 0 
+0ef20000-0f11f000 rw-p 00000000 00:00 0 
+0f11f000-0f129000 r-xp 00000000 fc:8f 103969     /usr/lib/libInfraMscServer.so
+0f129000-0f131000 ---p 0000a000 fc:8f 103969     /usr/lib/libInfraMscServer.so
+0f131000-0f132000 rw-p 0000a000 fc:8f 103969     /usr/lib/libInfraMscServer.so
+0f132000-0f139000 r-xp 00000000 fc:8f 95966      /usr/lib/libInfraPtpControl.so
+0f139000-0f141000 ---p 00007000 fc:8f 95966      /usr/lib/libInfraPtpControl.so
+0f141000-0f142000 rw-p 00007000 fc:8f 95966      /usr/lib/libInfraPtpControl.so
+0f142000-0f146000 r-xp 00000000 fc:8f 95930      /usr/lib/libInfraExtCmdSvc.so
+0f146000-0f14d000 ---p 00004000 fc:8f 95930      /usr/lib/libInfraExtCmdSvc.so
+0f14d000-0f14e000 rw-p 00003000 fc:8f 95930      /usr/lib/libInfraExtCmdSvc.so
+0f155000-0f185000 rw-p 00000000 00:00 0 
+0f18a000-0f18b000 ---p 00000000 00:00 0 
+0f18b000-0f38a000 rw-p 00000000 00:00 0 
+0f38a000-0f395000 r-xp 00000000 fc:8f 95986      /usr/lib/libInfraNetConnectionManager.so
+0f395000-0f39c000 ---p 0000b000 fc:8f 95986      /usr/lib/libInfraNetConnectionManager.so
+0f39c000-0f39d000 rw-p 0000a000 fc:8f 95986      /usr/lib/libInfraNetConnectionManager.so
+0f39d000-0f3ae000 r--p 00000000 fc:8f 104022     /usr/share/app/viewStlrec.uxc
+0f3b0000-0f3b1000 ---p 00000000 00:00 0 
+0f3b1000-0f5b0000 rw-p 00000000 00:00 0 
+0f5b0000-0f5b4000 r-xp 00000000 fc:8f 103975     /usr/lib/libusbcmd.so
+0f5b4000-0f5bb000 ---p 00004000 fc:8f 103975     /usr/lib/libusbcmd.so
+0f5bb000-0f5bc000 rw-p 00003000 fc:8f 103975     /usr/lib/libusbcmd.so
+0f5bc000-0f5c4000 r-xp 00000000 fc:8f 103971     /usr/lib/libInfraPtpExtCmd.so
+0f5c4000-0f5cb000 ---p 00008000 fc:8f 103971     /usr/lib/libInfraPtpExtCmd.so
+0f5cb000-0f5cc000 rw-p 00007000 fc:8f 103971     /usr/lib/libInfraPtpExtCmd.so
+0f5cd000-0f5ce000 ---p 00000000 00:00 0 
+0f5ce000-0f7cd000 rw-p 00000000 00:00 0 
+0f7d4000-0f8aa000 r-xp 00000000 fc:8f 135891     /usr/lib/libNetService.so
+0f8aa000-0f8b2000 ---p 000d6000 fc:8f 135891     /usr/lib/libNetService.so
+0f8b2000-0f8b9000 rw-p 000d6000 fc:8f 135891     /usr/lib/libNetService.so
+0f8b9000-0f8bd000 rw-p 00000000 00:00 0 
+0f8bd000-0f8be000 ---p 00000000 00:00 0 
+0f8be000-0fabd000 rw-p 00000000 00:00 0 
+0fabd000-0fac0000 r-xp 00000000 fc:8f 135872     /usr/lib/libInfraDevInfoSender.so
+0fac0000-0fac7000 ---p 00003000 fc:8f 135872     /usr/lib/libInfraDevInfoSender.so
+0fac7000-0fac8000 rw-p 00002000 fc:8f 135872     /usr/lib/libInfraDevInfoSender.so
+0fac8000-0faca000 r-xp 00000000 fc:8f 103992     /usr/lib/libInfraKikiLogSender.so
+0faca000-0fad1000 ---p 00002000 fc:8f 103992     /usr/lib/libInfraKikiLogSender.so
+0fad1000-0fad2000 rw-p 00001000 fc:8f 103992     /usr/lib/libInfraKikiLogSender.so
+0fad2000-0fad5000 r-xp 00000000 fc:8f 103983     /usr/lib/libInfraExtBackupCommunicator.so
+0fad5000-0fadd000 ---p 00003000 fc:8f 103983     /usr/lib/libInfraExtBackupCommunicator.so
+0fadd000-0fade000 rw-p 00003000 fc:8f 103983     /usr/lib/libInfraExtBackupCommunicator.so
+0fae4000-0fae5000 ---p 00000000 00:00 0 
+0fae5000-0fce4000 rw-p 00000000 00:00 0 
+0fce4000-0fd1a000 r-xp 00000000 fc:8f 63959      /usr/lib/viewUnified8.so
+0fd1a000-0fd22000 ---p 00036000 fc:8f 63959      /usr/lib/viewUnified8.so
+0fd22000-0fd27000 rw-p 00036000 fc:8f 63959      /usr/lib/viewUnified8.so
+0fd27000-0fd5c000 rw-p 00000000 00:00 0 
+0fd5c000-0fd99000 r--p 00000000 fc:8f 119901     /usr/share/app/string_spanish.uxc
+0fd99000-0fd9c000 r-xp 00000000 fc:8f 95971      /usr/lib/libInfraScalarExtCmdPlugIn.so
+0fd9c000-0fda3000 ---p 00003000 fc:8f 95971      /usr/lib/libInfraScalarExtCmdPlugIn.so
+0fda3000-0fda4000 rw-p 00002000 fc:8f 95971      /usr/lib/libInfraScalarExtCmdPlugIn.so
+0fda4000-0fda6000 r-xp 00000000 fc:8f 103968     /usr/lib/libInfraLensCommunicator.so
+0fda6000-0fdad000 ---p 00002000 fc:8f 103968     /usr/lib/libInfraLensCommunicator.so
+0fdad000-0fdae000 rw-p 00001000 fc:8f 103968     /usr/lib/libInfraLensCommunicator.so
+0fdb8000-0fdb9000 ---p 00000000 00:00 0 
+0fdb9000-0ffb8000 rw-p 00000000 00:00 0 
+0ffb8000-0ffde000 r-xp 00000000 fc:8f 95908      /usr/lib/libInfraMtpServer.so
+0ffde000-0ffe5000 ---p 00026000 fc:8f 95908      /usr/lib/libInfraMtpServer.so
+0ffe5000-0ffe7000 rw-p 00025000 fc:8f 95908      /usr/lib/libInfraMtpServer.so
+0ffe7000-0ffe9000 rw-p 00000000 00:00 0 
+0fff7000-0fff8000 ---p 00000000 00:00 0 
+0fff8000-101f7000 rw-p 00000000 00:00 0 
+101f7000-1024c000 r-xp 00000000 fc:8f 95984      /usr/lib/viewUnified6.so
+1024c000-10253000 ---p 00055000 fc:8f 95984      /usr/lib/viewUnified6.so
+10253000-1025f000 rw-p 00054000 fc:8f 95984      /usr/lib/viewUnified6.so
+10262000-10263000 ---p 00000000 00:00 0 
+10263000-10462000 rw-p 00000000 00:00 0 
+10462000-10473000 rw-s 8ed68000 fc:87 480        /dev/stream2
+104c3000-104c4000 ---p 00000000 00:00 0 
+104c4000-106c3000 rw-p 00000000 00:00 0 
+106c3000-10759000 rw-s 92f56000 fc:87 479        /dev/stream
+107ba000-107bb000 ---p 00000000 00:00 0 
+107bb000-109ba000 rw-p 00000000 00:00 0 
+109ba000-109bb000 ---p 00000000 00:00 0 
+109bb000-10bba000 rw-p 00000000 00:00 0 
+10bba000-10bbb000 ---p 00000000 00:00 0 
+10bbb000-10dba000 rw-p 00000000 00:00 0 
+10dba000-10dbb000 ---p 00000000 00:00 0 
+10dbb000-1106b000 rw-p 00000000 00:00 0 
+11087000-11088000 ---p 00000000 00:00 0 
+11088000-11287000 rw-p 00000000 00:00 0 
+112ef000-112f0000 ---p 00000000 00:00 0 
+112f0000-114ef000 rw-p 00000000 00:00 0 
+115ae000-115af000 ---p 00000000 00:00 0 
+115af000-117ae000 rw-p 00000000 00:00 0 
+117ae000-1182e000 rw-s 8ede8000 fc:87 480        /dev/stream2
+11837000-11838000 ---p 00000000 00:00 0 
+11838000-11a37000 rw-p 00000000 00:00 0 
+11ab6000-11ab7000 ---p 00000000 00:00 0 
+11ab7000-11cb6000 rw-p 00000000 00:00 0 
+11db4000-11db5000 ---p 00000000 00:00 0 
+11db5000-11fb4000 rw-p 00000000 00:00 0 
+12087000-12088000 ---p 00000000 00:00 0 
+12088000-12287000 rw-p 00000000 00:00 0 
+12346000-12347000 ---p 00000000 00:00 0 
+12347000-12546000 rw-p 00000000 00:00 0 
+125dc000-125dd000 ---p 00000000 00:00 0 
+125dd000-127dc000 rw-p 00000000 00:00 0 
+128cf000-128d0000 ---p 00000000 00:00 0 
+128d0000-12acf000 rw-p 00000000 00:00 0 
+12acf000-12c7f000 r-xp 00000000 fc:8f 135902     /usr/lib/libScalarDaemon.so
+12c7f000-12c86000 ---p 001b0000 fc:8f 135902     /usr/lib/libScalarDaemon.so
+12c86000-12ca3000 rw-p 001af000 fc:8f 135902     /usr/lib/libScalarDaemon.so
+12ca3000-13124000 rw-p 00000000 00:00 0 
+13160000-13161000 ---p 00000000 00:00 0 
+13161000-13360000 rw-p 00000000 00:00 0 
+13360000-13361000 ---p 00000000 00:00 0 
+13361000-13560000 rw-p 00000000 00:00 0 
+13640000-13641000 ---p 00000000 00:00 0 
+13641000-13840000 rw-p 00000000 00:00 0 
+13843000-13844000 ---p 00000000 00:00 0 
+13844000-13a43000 rw-p 00000000 00:00 0 
+13a43000-13a44000 ---p 00000000 00:00 0 
+13a44000-13c43000 rw-p 00000000 00:00 0 
+13c43000-13c44000 ---p 00000000 00:00 0 
+13c44000-13e43000 rw-p 00000000 00:00 0 
+13f39000-13f3a000 ---p 00000000 00:00 0 
+13f3a000-14139000 rw-p 00000000 00:00 0 
+1417a000-1417b000 ---p 00000000 00:00 0 
+1417b000-1437a000 rw-p 00000000 00:00 0 
+1437a000-1437b000 ---p 00000000 00:00 0 
+1437b000-1457a000 rw-p 00000000 00:00 0 
+1465d000-1465e000 ---p 00000000 00:00 0 
+1465e000-1485d000 rw-p 00000000 00:00 0 
+148e2000-148e3000 ---p 00000000 00:00 0 
+148e3000-14ae2000 rw-p 00000000 00:00 0 
+14b3c000-14b3d000 ---p 00000000 00:00 0 
+14b3d000-14d3c000 rw-p 00000000 00:00 0 
+14e1f000-14e20000 ---p 00000000 00:00 0 
+14e20000-1501f000 rw-p 00000000 00:00 0 
+1501f000-15020000 ---p 00000000 00:00 0 
+15020000-1521f000 rw-p 00000000 00:00 0 
+1526f000-15270000 ---p 00000000 00:00 0 
+15270000-1546f000 rw-p 00000000 00:00 0 
+15521000-15522000 ---p 00000000 00:00 0 
+15522000-15721000 rw-p 00000000 00:00 0 
+15721000-15722000 ---p 00000000 00:00 0 
+15722000-15921000 rw-p 00000000 00:00 0 
+15921000-15922000 ---p 00000000 00:00 0 
+15922000-15b21000 rw-p 00000000 00:00 0 
+15b21000-15b22000 ---p 00000000 00:00 0 
+15b22000-15d21000 rw-p 00000000 00:00 0 
+15d4e000-15d4f000 ---p 00000000 00:00 0 
+15d4f000-15f4e000 rw-p 00000000 00:00 0 
+15f4e000-15f4f000 ---p 00000000 00:00 0 
+15f4f000-1614e000 rw-p 00000000 00:00 0 
+1614e000-1614f000 ---p 00000000 00:00 0 
+1614f000-1634e000 rw-p 00000000 00:00 0 
+16445000-16446000 ---p 00000000 00:00 0 
+16446000-16645000 rw-p 00000000 00:00 0 
+1667c000-16ab8000 r-xp 00000000 fc:8f 63950      /usr/lib/viewUnified2.so
+16ab8000-16abf000 ---p 0043c000 fc:8f 63950      /usr/lib/viewUnified2.so
+16abf000-16b3e000 rw-p 0043b000 fc:8f 63950      /usr/lib/viewUnified2.so
+16b3e000-16b47000 rw-p 00000000 00:00 0 
+16b47000-16cc0000 r-xp 00000000 fc:8f 95934      /usr/lib/CautionConfig.so
+16cc0000-16cc7000 ---p 00179000 fc:8f 95934      /usr/lib/CautionConfig.so
+16cc7000-16cef000 rw-p 00178000 fc:8f 95934      /usr/lib/CautionConfig.so
+16cef000-16d12000 rw-p 00000000 00:00 0 
+16d12000-17112000 rw-s 91718000 fc:87 479        /dev/stream
+17135000-17335000 rw-s 91cb8000 fc:87 479        /dev/stream
+173a7000-17547000 rw-s 91b18000 fc:87 479        /dev/stream
+17547000-176de000 r--p 00000000 fc:8f 104028     /usr/share/app/image_DSLR_Only_169.uxc
+177dd000-179dd000 r--p 00000000 fc:8f 87979      /usr/share/app/image_EVF.uxc
+179dd000-179de000 ---p 00000000 00:00 0 
+179de000-17bdd000 rw-p 00000000 00:00 0 
+17c29000-17c2a000 ---p 00000000 00:00 0 
+17c2a000-17e29000 rw-p 00000000 00:00 0 
+17e9b000-17e9c000 ---p 00000000 00:00 0 
+17e9c000-1809b000 rw-p 00000000 00:00 0 
+1811f000-18120000 ---p 00000000 00:00 0 
+18120000-1831f000 rw-p 00000000 00:00 0 
+18356000-18357000 ---p 00000000 00:00 0 
+18357000-18556000 rw-p 00000000 00:00 0 
+18592000-18593000 ---p 00000000 00:00 0 
+18593000-18792000 rw-p 00000000 00:00 0 
+1882e000-1882f000 ---p 00000000 00:00 0 
+1882f000-18a2e000 rw-p 00000000 00:00 0 
+18a34000-18a35000 ---p 00000000 00:00 0 
+18a35000-18c34000 rw-p 00000000 00:00 0 
+18cb1000-18cb2000 ---p 00000000 00:00 0 
+18cb2000-18eb1000 rw-p 00000000 00:00 0 
+18eda000-18edb000 ---p 00000000 00:00 0 
+18edb000-190da000 rw-p 00000000 00:00 0 
+1911a000-1911b000 ---p 00000000 00:00 0 
+1911b000-1931a000 rw-p 00000000 00:00 0 
+193f3000-193f4000 ---p 00000000 00:00 0 
+193f4000-195f3000 rw-p 00000000 00:00 0 
+1967f000-19680000 ---p 00000000 00:00 0 
+19680000-1987f000 rw-p 00000000 00:00 0 
+19970000-19971000 ---p 00000000 00:00 0 
+19971000-19b70000 rw-p 00000000 00:00 0 
+19c00000-19cf6000 rw-p 00000000 00:00 0 
+19cf6000-19d00000 ---p 00000000 00:00 0 
+19d00000-19d01000 ---p 00000000 00:00 0 
+19d01000-19f00000 rw-p 00000000 00:00 0 
+1a000000-1a0d5000 rw-p 00000000 00:00 0 
+1a0d5000-1a100000 ---p 00000000 00:00 0 
+1a100000-1a101000 ---p 00000000 00:00 0 
+1a101000-1a510000 rw-p 00000000 00:00 0 
+1a510000-1a511000 ---p 00000000 00:00 0 
+1a511000-1a710000 rw-p 00000000 00:00 0 
+1a710000-1a711000 ---p 00000000 00:00 0 
+1a711000-1a910000 rw-p 00000000 00:00 0 
+1a999000-1a99a000 ---p 00000000 00:00 0 
+1a99a000-1ab99000 rw-p 00000000 00:00 0 
+1ab99000-1ab9a000 ---p 00000000 00:00 0 
+1ab9a000-1ad99000 rw-p 00000000 00:00 0 
+1ada7000-1ada8000 ---p 00000000 00:00 0 
+1ada8000-1afa7000 rw-p 00000000 00:00 0 
+1afa7000-1afa8000 ---p 00000000 00:00 0 
+1afa8000-1b1a7000 rw-p 00000000 00:00 0 
+1b1ed000-1b1ee000 ---p 00000000 00:00 0 
+1b1ee000-1b3ed000 rw-p 00000000 00:00 0 
+1b414000-1b415000 ---p 00000000 00:00 0 
+1b415000-1b614000 rw-p 00000000 00:00 0 
+1b614000-1b615000 ---p 00000000 00:00 0 
+1b615000-1b814000 rw-p 00000000 00:00 0 
+1b814000-1b815000 ---p 00000000 00:00 0 
+1b815000-1ba14000 rw-p 00000000 00:00 0 
+1ba14000-1ba15000 ---p 00000000 00:00 0 
+1ba15000-1bc14000 rw-p 00000000 00:00 0 
+1bc14000-1bc15000 ---p 00000000 00:00 0 
+1bc15000-1be14000 rw-p 00000000 00:00 0 
+1be65000-1be66000 ---p 00000000 00:00 0 
+1be66000-1c065000 rw-p 00000000 00:00 0 
+1c12b000-1c12c000 ---p 00000000 00:00 0 
+1c12c000-1c32b000 rw-p 00000000 00:00 0 
+1c32b000-1c32c000 ---p 00000000 00:00 0 
+1c32c000-1c52b000 rw-p 00000000 00:00 0 
+1c52b000-1c52c000 ---p 00000000 00:00 0 
+1c52c000-1c72b000 rw-p 00000000 00:00 0 
+1c72b000-1c72c000 ---p 00000000 00:00 0 
+1c72c000-1c92b000 rw-p 00000000 00:00 0 
+1c9e6000-1c9e7000 ---p 00000000 00:00 0 
+1c9e7000-1cbe6000 rw-p 00000000 00:00 0 
+1cc47000-1cc48000 ---p 00000000 00:00 0 
+1cc48000-1ce47000 rw-p 00000000 00:00 0 
+1ce47000-1ce48000 ---p 00000000 00:00 0 
+1ce48000-1d047000 rw-p 00000000 00:00 0 
+1d047000-1d048000 ---p 00000000 00:00 0 
+1d048000-1d247000 rw-p 00000000 00:00 0 
+1d326000-1d327000 ---p 00000000 00:00 0 
+1d327000-1d526000 rw-p 00000000 00:00 0 
+1d52b000-1d52c000 ---p 00000000 00:00 0 
+1d52c000-1d72b000 rw-p 00000000 00:00 0 
+1d7dc000-1d7dd000 ---p 00000000 00:00 0 
+1d7dd000-1d9dc000 rw-p 00000000 00:00 0 
+1dab3000-1dab4000 ---p 00000000 00:00 0 
+1dab4000-1dcb3000 rw-p 00000000 00:00 0 
+1dd89000-1dd8a000 ---p 00000000 00:00 0 
+1dd8a000-1df89000 rw-p 00000000 00:00 0 
+1df89000-1df8a000 ---p 00000000 00:00 0 
+1df8a000-1e189000 rw-p 00000000 00:00 0 
+1e205000-1e206000 ---p 00000000 00:00 0 
+1e206000-1e405000 rw-p 00000000 00:00 0 
+1e47c000-1e47d000 ---p 00000000 00:00 0 
+1e47d000-1e67c000 rw-p 00000000 00:00 0 
+1e746000-1e747000 ---p 00000000 00:00 0 
+1e747000-1e946000 rw-p 00000000 00:00 0 
+1e969000-1e96a000 ---p 00000000 00:00 0 
+1e96a000-1eb69000 rw-p 00000000 00:00 0 
+1ebb4000-1ebb5000 ---p 00000000 00:00 0 
+1ebb5000-1edb4000 rw-p 00000000 00:00 0 
+1edb4000-1edb5000 ---p 00000000 00:00 0 
+1edb5000-1efb4000 rw-p 00000000 00:00 0 
+1f088000-1f089000 ---p 00000000 00:00 0 
+1f089000-1f288000 rw-p 00000000 00:00 0 
+1f288000-1f289000 ---p 00000000 00:00 0 
+1f289000-1f589000 rw-p 00000000 00:00 0 
+1f5ae000-1f5af000 ---p 00000000 00:00 0 
+1f5af000-1f7ae000 rw-p 00000000 00:00 0 
+1f900000-1f965000 rw-p 00000000 00:00 0 
+1f965000-1fa00000 ---p 00000000 00:00 0 
+1fa00000-1fa01000 ---p 00000000 00:00 0 
+1fa01000-1fc00000 rw-p 00000000 00:00 0 
+1fc00000-1fc01000 ---p 00000000 00:00 0 
+1fc01000-1fe00000 rw-p 00000000 00:00 0 
+1fe00000-1fe01000 ---p 00000000 00:00 0 
+1fe01000-20000000 rw-p 00000000 00:00 0 
+20000000-20001000 ---p 00000000 00:00 0 
+20001000-20200000 rw-p 00000000 00:00 0 
+20200000-20201000 ---p 00000000 00:00 0 
+20201000-20400000 rw-p 00000000 00:00 0 
+204fe000-204ff000 ---p 00000000 00:00 0 
+204ff000-206fe000 rw-p 00000000 00:00 0 
+206ff000-20700000 ---p 00000000 00:00 0 
+20700000-208ff000 rw-p 00000000 00:00 0 
+208ff000-22109000 r--p 00000000 fc:8f 87921      /usr/share/app/image_cmn_169.uxc
+22109000-2210a000 ---p 00000000 00:00 0 
+2210a000-22309000 rw-p 00000000 00:00 0 
+223ba000-223bb000 ---p 00000000 00:00 0 
+223bb000-225ba000 rw-p 00000000 00:00 0 
+225ba000-225bb000 ---p 00000000 00:00 0 
+225bb000-227ba000 rw-p 00000000 00:00 0 
+227ba000-227bb000 ---p 00000000 00:00 0 
+227bb000-229ba000 rw-p 00000000 00:00 0 
+229ba000-229bb000 ---p 00000000 00:00 0 
+229bb000-22bba000 rw-p 00000000 00:00 0 
+22c4f000-22c50000 ---p 00000000 00:00 0 
+22c50000-22e4f000 rw-p 00000000 00:00 0 
+22e4f000-22e50000 ---p 00000000 00:00 0 
+22e50000-2304f000 rw-p 00000000 00:00 0 
+2304f000-23050000 ---p 00000000 00:00 0 
+23050000-2324f000 rw-p 00000000 00:00 0 
+2324f000-23250000 ---p 00000000 00:00 0 
+23250000-2344f000 rw-p 00000000 00:00 0 
+2344f000-23450000 ---p 00000000 00:00 0 
+23450000-2364f000 rw-p 00000000 00:00 0 
+23700000-23800000 rw-p 00000000 00:00 0 
+23800000-239dd000 r--p 00000000 fc:8f 79959      /usr/share/app/image_DSC_Only_169.uxc
+239dd000-239de000 ---p 00000000 00:00 0 
+239de000-23bdd000 rw-p 00000000 00:00 0 
+23c02000-23c03000 ---p 00000000 00:00 0 
+23c03000-23e02000 rw-p 00000000 00:00 0 
+23f00000-23f36000 rw-p 00000000 00:00 0 
+23f36000-24000000 ---p 00000000 00:00 0 
+24000000-2407e000 rw-p 00000000 00:00 0 
+2407e000-24100000 ---p 00000000 00:00 0 
+24100000-24101000 ---p 00000000 00:00 0 
+24101000-24300000 rw-p 00000000 00:00 0 
+243cc000-243cd000 ---p 00000000 00:00 0 
+243cd000-245cc000 rw-p 00000000 00:00 0 
+3ebc2000-3ebe3000 rw-p 00000000 00:00 0          [stack]
+ffff0000-ffff1000 r-xp 00000000 00:00 0          [vectors]
+/usr/share/app # ls -l /proc/148/fd
+lr-x------    1 0        0              64 Jan  1 00:02 0 -> /dev/null
+lrwx------    1 0        0              64 Jan  1 00:02 1 -> /dev/console
+lrwx------    1 0        0              64 Jan  1 00:02 10 -> /dev/mmca
+lr-x------    1 0        0              64 Jan  1 00:02 11 -> pipe:[1336]
+lrwx------    1 0        0              64 Jan  1 00:02 12 -> /dev/hdmi
+lrwx------    1 0        0              64 Jan  1 00:02 13 -> /dev/hdmi
+lr-x------    1 0        0              64 Jan  1 00:02 14 -> /dev/mem
+lrwx------    1 0        0              64 Jan  1 00:02 15 -> /dev/hdmi
+lrwx------    1 0        0              64 Jan  1 00:02 16 -> /dev/cec
+lr-x------    1 0        0              64 Jan  1 00:02 17 -> pipe:[2091]
+l-wx------    1 0        0              64 Jan  1 00:02 18 -> pipe:[2091]
+lrwx------    1 0        0              64 Jan  1 00:02 19 -> /dev/cec
+lrwx------    1 0        0              64 Jan  1 00:02 2 -> /dev/console
+lrwx------    1 0        0              64 Jan  1 00:02 20 -> /dev/cec
+l-wx------    1 0        0              64 Jan  1 00:02 21 -> pipe:[1336]
+lr-x------    1 0        0              64 Jan  1 00:02 22 -> pipe:[2092]
+l-wx------    1 0        0              64 Jan  1 00:02 23 -> pipe:[2092]
+lrwx------    1 0        0              64 Jan  1 00:02 24 -> /dev/mem
+lrwx------    1 0        0              64 Jan  1 00:02 25 -> /dev/mem
+lrwx------    1 0        0              64 Jan  1 00:02 26 -> /dev/mem
+lrwx------    1 0        0              64 Jan  1 00:02 27 -> /dev/mem
+lrwx------    1 0        0              64 Jan  1 00:02 28 -> /dev/mem
+lrwx------    1 0        0              64 Jan  1 00:02 29 -> /dev/mem
+l-wx------    1 0        0              64 Jan  1 00:02 3 -> /proc/snsc_boot_time
+lrwx------    1 0        0              64 Jan  1 00:02 30 -> /dev/dmpgles2
+lrwx------    1 0        0              64 Jan  1 00:02 31 -> /dev/mem
+lrwx------    1 0        0              64 Jan  1 00:02 32 -> /dev/stream
+lrwx------    1 0        0              64 Jan  1 00:02 33 -> /dev/uinput
+lrwx------    1 0        0              64 Jan  1 00:02 34 -> /dev/stream2
+lrwx------    1 0        0              64 Jan  1 00:02 35 -> /dev/mem
+lrwx------    1 0        0              64 Jan  1 00:02 36 -> /dev/nflasha4
+lrwx------    1 0        0              64 Jan  1 00:02 37 -> /dev/stream2
+lrwx------    1 0        0              64 Jan  1 00:02 38 -> /dev/stream
+lrwx------    1 0        0              64 Jan  1 00:02 39 -> /dev/fuse
+lrwx------    1 0        0              64 Jan  1 00:02 4 -> /dev/uipc
+lr-x------    1 0        0              64 Jan  1 00:02 40 -> pipe:[25]
+l-wx------    1 0        0              64 Jan  1 00:02 41 -> pipe:[25]
+lrwx------    1 0        0              64 Jan  1 00:02 42 -> /dev/stream
+lrwx------    1 0        0              64 Jan  1 00:02 43 -> /dev/stream
+lrwx------    1 0        0              64 Jan  1 00:02 44 -> /dev/stream
+lrwx------    1 0        0              64 Jan  1 00:02 45 -> /dev/stream
+lr-x------    1 0        0              64 Jan  1 00:02 46 -> /usr/share/app/image_DSLR_Only_169.uxc
+lr-x------    1 0        0              64 Jan  1 00:02 47 -> /usr/share/app/image_EVF.uxc
+lr-x------    1 0        0              64 Jan  1 00:02 48 -> /usr/share/app/image_cmn_169.uxc
+lr-x------    1 0        0              64 Jan  1 00:02 49 -> /usr/share/app/global.xdb
+lrwx------    1 0        0              64 Jan  1 00:02 5 -> /dev/usb/kikilog
+lrwx------    1 0        0              64 Jan  1 00:02 50 -> /dev/usb/sen
+lr-x------    1 0        0              64 Jan  1 00:02 51 -> /usr/share/app/lang.uxb
+lr-x------    1 0        0              64 Jan  1 00:02 52 -> /usr/share/app/image_DSC_Only_169.uxc
+lr-x------    1 0        0              64 Jan  1 00:02 53 -> /usr/share/app/UniversOTS-SJ_wIcon.ltt
+lr-x------    1 0        0              64 Jan  1 00:02 54 -> /usr/share/app/Sony_DI_Icons.ttf
+lrwx------    1 0        0              64 Jan  1 00:02 55 -> /dev/stream
+lrwx------    1 0        0              64 Jan  1 00:02 56 -> /dev/mem
+lrwx------    1 0        0              64 Jan  1 00:02 57 -> /dev/mem
+lrwx------    1 0        0              64 Jan  1 00:02 58 -> /dev/mem
+lr-x------    1 0        0              64 Jan  1 00:02 59 -> /usr/share/app/lang_cmn.uxc
+lrwx------    1 0        0              64 Jan  1 00:02 6 -> /dev/mem
+lrwx------    1 0        0              64 Jan  1 00:02 60 -> /dev/usb/ter
+lrwx------    1 0        0              64 Jan  1 00:02 61 -> /dev/usb/gadgetcore
+lrwx------    1 0        0              64 Jan  1 00:02 62 -> /dev/mem
+lrwx------    1 0        0              64 Jan  1 00:02 63 -> /dev/mem
+lrwx------    1 0        0              64 Jan  1 00:02 64 -> /dev/mem
+lrwx------    1 0        0              64 Jan  1 00:02 65 -> /dev/nflasha23
+lrwx------    1 0        0              64 Jan  1 00:02 66 -> /dev/mmca-char
+lrwx------    1 0        0              64 Jan  1 00:02 67 -> /dev/mmca
+lr-x------    1 0        0              64 Jan  1 00:02 68 -> /usr/share/app/viewStlrec.uxc
+lr-x------    1 0        0              64 Jan  1 00:02 69 -> /usr/share/app/viewCaution.uxc
+lrwx------    1 0        0              64 Jan  1 00:02 7 -> /dev/stream
+lrwx------    1 0        0              64 Jan  1 00:02 70 -> /dev/ptmx
+lr-x------    1 0        0              64 Jan  1 00:02 71 -> /usr/share/app/string_spanish.uxc
+lr-x------    1 0        0              64 Jan  1 00:02 73 -> /usr/share/app/viewSinglePb.uxc
+lr-x------    1 0        0              64 Jan  1 00:02 74 -> /usr/share/app/style_cmn.uxc
+lrwx------    1 0        0              64 Jan  1 00:02 75 -> /dev/stream2
+lrwx------    1 0        0              64 Jan  1 00:02 76 -> /dev/usb/event
+lrwx------    1 0        0              64 Jan  1 00:02 77 -> /dev/usb/otgcore
+lrwx------    1 0        0              64 Jan  1 00:02 78 -> /dev/pts/0
+lrwx------    1 0        0              64 Jan  1 00:02 79 -> /dev/ptmx
+lr-x------    1 0        0              64 Jan  1 00:02 8 -> pipe:[2052]
+lr-x------    1 0        0              64 Jan  1 00:02 80 -> /usr/share/app/master_browser.uxc
+l-wx------    1 0        0              64 Jan  1 00:02 9 -> pipe:[2052]
+/usr/share/app # cat /proc/148/cmdline
+im.elf debug s g r u l i a lazy-global /usr/share/app # ls -l /proc/148/exe
+lrwxrwxrwx    1 0        0               0 Jan  1 00:02 /proc/148/exe -> /usr/bin/im.elf
+/usr/share/app # cat /proc/148/limits
+Limit                     Soft Limit           Hard Limit           Units     
+Max cpu time              unlimited            unlimited            seconds   
+Max file size             unlimited            unlimited            bytes     
+Max data size             unlimited            unlimited            bytes     
+Max stack size            2097152              2097152              bytes     
+Max core file size        0                    unlimited            bytes     
+Max resident set          unlimited            unlimited            bytes     
+Max processes             1529                 1529                 processes 
+Max open files            1024                 4096                 files     
+Max locked memory         65536                65536                bytes     
+Max address space         unlimited            unlimited            bytes     
+Max file locks            unlimited            unlimited            locks     
+Max pending signals       1529                 1529                 signals   
+Max msgqueue size         819200               819200               bytes     
+Max nice priority         0                    0                    
+Max realtime priority     0                    0                    
+Max realtime timeout      unlimited            unlimited            us        
+/usr/share/app # ls -la /dev | grep -i -E "liro|mem|dmm|shutter|sensor"
+crw-r-----    1 0        9          1,   2 Aug  6  2012 kmem
+crw-r-----    1 0        9          1,   1 Aug  6  2012 mem
+/usr/share/app # ls -la /usr /usr/share/app /system
+/system:
+drwxr-xr-x    4 0        0           16384 Jan  1 00:00 .
+drwxr-xr-x   23 57285    1000         1024 Jan 24  2019 ..
+-rwxr-xr-x    1 0        0        11427236 Jan 24  2019 av-cam.bin
+-rwxr-xr-x    1 0        0         4079616 Jan 24  2019 initrd.img
+drwxr-xr-x    2 0        0           16384 Jan 24  2019 lensbin_lensproperty
+drwxr-xr-x    2 0        0           16384 Jan 24  2019 sabin
+-rwxr-xr-x    1 0        0         3478912 Jan 24  2019 vmlinux.bin
+
+/usr:
+drwxr-xr-x   13 57285    1000         1024 Jan 24  2019 .
+drwxr-xr-x   23 57285    1000         1024 Jan 24  2019 ..
+drwxr-xr-x    2 57285    1000         2048 Jan 24  2019 bin
+drwxr-xr-x    2 57285    1000         1024 Jan 24  2019 dfe
+drwxr-xr-x    2 57285    1000         2048 Jan 24  2019 kmod
+drwxr-xr-x    4 57285    1000         6144 Jan 24  2019 lib
+drwxr-xr-x    3 57285    1000         1024 Jan 24  2019 local
+drwxr-xr-x    2 57285    1000         3072 Jan 24  2019 sabin
+drwxr-xr-x    2 57285    1000         1024 Jan 24  2019 sbin
+drwxr-xr-x    2 57285    1000         2048 Jan 24  2019 scenario
+drwxr-xr-x    9 57285    1000         1024 Jan 24  2019 share
+drwxr-xr-x    2 57285    1000         1024 Jan 24  2019 tool
+drwxr-xr-x    3 57285    1000         1024 Jan 24  2019 wlan
+
+/usr/share/app:
+drwxr-xr-x    2 57285    1000         8192 Jan 24  2019 .
+drwxr-xr-x    9 57285    1000         1024 Jan 24  2019 ..
+-rw-r--r--    1 57285    1000       851496 Jan 21  2019 HeiseiKakuGothW5-SJ_wIcon.ltt
+-rwxr-xr-x    1 57285    1000         7124 Jan 21  2019 IRShooting.uxc
+-rw-r--r--    1 57285    1000         3512 Jan 21  2019 LayoutMaster_Menu.uxc
+-rw-r--r--    1 57285    1000      1150740 Jan 21  2019 MYingHeiC-Big5-SJ_wIcon.ltt
+-rw-r--r--    1 57285    1000      1958432 Jan 21  2019 MYingHeiC-GB18030-SJ_wIcon.ltt
+-rw-r--r--    1 57285    1000       924104 Jan 21  2019 MYingHeiC-KSX1001-SJ_wIcon.ltt
+-rw-r--r--    1 57285    1000       481960 Jan 21  2019 Sony_DI_Icons.ttf
+-rw-r--r--    1 57285    1000       379996 Jan 21  2019 UniversOTS-SJ_wIcon.ltt
+-rw-r--r--    1 57285    1000          276 Jan 21  2019 color_cmn.uxc
+-rw-r--r--    1 57285    1000          364 Jan 21  2019 fontlist.dat
+-rwxr-xr-x    1 57285    1000        10540 Jan 21  2019 global.xdb
+-rwxr-xr-x    1 57285    1000      1693452 Jan 21  2019 image_DSC_Entry_Only_169.uxc
+-rwxr-xr-x    1 57285    1000      1952272 Jan 21  2019 image_DSC_Only_169.uxc
+-rwxr-xr-x    1 57285    1000      1666736 Jan 21  2019 image_DSLR_Only_169.uxc
+-rw-r--r--    1 57285    1000      2097148 Jan 21  2019 image_EVF.uxc
+-rwxr-xr-x    1 57285    1000       153036 Jan 21  2019 image_Fn_Menu_169.uxc
+-rwxr-xr-x    1 57285    1000      4851952 Jan 21  2019 image_Rich_Help_Guide_169.uxc
+-rw-r--r--    1 57285    1000     25204848 Jan 21  2019 image_cmn_169.uxc
+-rw-r--r--    1 57285    1000      1229312 Jan 21  2019 image_cmn_o_direct_169.uxc
+-rw-r--r--    1 57285    1000         2656 Jan 21  2019 lang.uxb
+-rw-r--r--    1 57285    1000          980 Jan 21  2019 lang_cmn.uxc
+-rw-r--r--    1 57285    1000        21192 Jan 21  2019 master_browser.uxc
+-rw-r--r--    1 57285    1000       102244 Jan 21  2019 master_camera.uxc
+-rw-r--r--    1 57285    1000        30196 Jan 21  2019 master_network.uxc
+-rwxr-xr-x    1 57285    1000        12616 Jan 21  2019 master_other.uxc
+-rwxr-xr-x    1 57285    1000       329956 Jan 21  2019 string_arabic.uxc
+-rw-r--r--    1 57285    1000         6612 Jan 21  2019 string_arabic_guide.uxc
+-rwxr-xr-x    1 57285    1000       216876 Jan 21  2019 string_brazilianportuguese.uxc
+-rw-r--r--    1 57285    1000         6612 Jan 21  2019 string_brazilianportuguese_guide.uxc
+-rwxr-xr-x    1 57285    1000       340460 Jan 21  2019 string_bulgarian.uxc
+-rw-r--r--    1 57285    1000         6612 Jan 21  2019 string_bulgarian_guide.uxc
+-rw-r--r--    1 57285    1000       230420 Jan 21  2019 string_canadianfrench.uxc
+-rw-r--r--    1 57285    1000         6612 Jan 21  2019 string_canadianfrench_guide.uxc
+-rwxr-xr-x    1 57285    1000       207816 Jan 21  2019 string_croatian.uxc
+-rw-r--r--    1 57285    1000         6612 Jan 21  2019 string_croatian_guide.uxc
+-rwxr-xr-x    1 57285    1000       241056 Jan 21  2019 string_czech.uxc
+-rw-r--r--    1 57285    1000         6612 Jan 21  2019 string_czech_guide.uxc
+-rwxr-xr-x    1 57285    1000       229804 Jan 21  2019 string_danish.uxc
+-rw-r--r--    1 57285    1000         6612 Jan 21  2019 string_danish_guide.uxc
+-rwxr-xr-x    1 57285    1000       238276 Jan 21  2019 string_dutch.uxc
+-rw-r--r--    1 57285    1000        32948 Jan 21  2019 string_dutch_guide.uxc
+-rw-r--r--    1 57285    1000       219996 Jan 21  2019 string_english.uxc
+-rw-r--r--    1 57285    1000        78716 Jan 21  2019 string_english_guide.uxc
+-rwxr-xr-x    1 57285    1000       229276 Jan 21  2019 string_finnish.uxc
+-rw-r--r--    1 57285    1000        32948 Jan 21  2019 string_finnish_guide.uxc
+-rwxr-xr-x    1 57285    1000       257880 Jan 21  2019 string_french.uxc
+-rw-r--r--    1 57285    1000        32948 Jan 21  2019 string_french_guide.uxc
+-rwxr-xr-x    1 57285    1000       244332 Jan 21  2019 string_german.uxc
+-rw-r--r--    1 57285    1000        32948 Jan 21  2019 string_german_guide.uxc
+-rwxr-xr-x    1 57285    1000       412300 Jan 21  2019 string_greek.uxc
+-rw-r--r--    1 57285    1000        32948 Jan 21  2019 string_greek_guide.uxc
+-rwxr-xr-x    1 57285    1000       253532 Jan 21  2019 string_hungarian.uxc
+-rw-r--r--    1 57285    1000        32948 Jan 21  2019 string_hungarian_guide.uxc
+-rwxr-xr-x    1 57285    1000       205476 Jan 21  2019 string_indonesia.uxc
+-rw-r--r--    1 57285    1000        32948 Jan 21  2019 string_indonesia_guide.uxc
+-rwxr-xr-x    1 57285    1000       256464 Jan 21  2019 string_italian.uxc
+-rw-r--r--    1 57285    1000        32948 Jan 21  2019 string_italian_guide.uxc
+-rwxr-xr-x    1 57285    1000       284464 Jan 21  2019 string_japanese.uxc
+-rw-r--r--    1 57285    1000       109468 Jan 21  2019 string_japanese_guide.uxc
+-rwxr-xr-x    1 57285    1000       257260 Jan 21  2019 string_korean.uxc
+-rw-r--r--    1 57285    1000        32948 Jan 21  2019 string_korean_guide.uxc
+-rwxr-xr-x    1 57285    1000       228880 Jan 21  2019 string_malay.uxc
+-rw-r--r--    1 57285    1000        32948 Jan 21  2019 string_malay_guide.uxc
+-rwxr-xr-x    1 57285    1000       226008 Jan 21  2019 string_norwegian.uxc
+-rw-r--r--    1 57285    1000        32948 Jan 21  2019 string_norwegian_guide.uxc
+-rwxr-xr-x    1 57285    1000       359208 Jan 21  2019 string_persian.uxc
+-rw-r--r--    1 57285    1000        32948 Jan 21  2019 string_persian_guide.uxc
+-rwxr-xr-x    1 57285    1000       242968 Jan 21  2019 string_polish.uxc
+-rw-r--r--    1 57285    1000        32948 Jan 21  2019 string_polish_guide.uxc
+-rwxr-xr-x    1 57285    1000       239644 Jan 21  2019 string_portuguese.uxc
+-rw-r--r--    1 57285    1000        32948 Jan 21  2019 string_portuguese_guide.uxc
+-rwxr-xr-x    1 57285    1000       223904 Jan 21  2019 string_romanian.uxc
+-rw-r--r--    1 57285    1000        32948 Jan 21  2019 string_romanian_guide.uxc
+-rwxr-xr-x    1 57285    1000       391480 Jan 21  2019 string_russian.uxc
+-rw-r--r--    1 57285    1000        32948 Jan 21  2019 string_russian_guide.uxc
+-rwxr-xr-x    1 57285    1000       197420 Jan 21  2019 string_simplifiedchinese.uxc
+-rw-r--r--    1 57285    1000        32948 Jan 21  2019 string_simplifiedchinese_guide.uxc
+-rwxr-xr-x    1 57285    1000       246480 Jan 21  2019 string_spanish.uxc
+-rw-r--r--    1 57285    1000        32948 Jan 21  2019 string_spanish_guide.uxc
+-rwxr-xr-x    1 57285    1000       225092 Jan 21  2019 string_swedish.uxc
+-rw-r--r--    1 57285    1000        32948 Jan 21  2019 string_swedish_guide.uxc
+-rwxr-xr-x    1 57285    1000       488728 Jan 21  2019 string_thai.uxc
+-rw-r--r--    1 57285    1000        32948 Jan 21  2019 string_thai_guide.uxc
+-rwxr-xr-x    1 57285    1000       198948 Jan 21  2019 string_traditionalchinese.uxc
+-rw-r--r--    1 57285    1000        32948 Jan 21  2019 string_traditionalchinese_guide.uxc
+-rwxr-xr-x    1 57285    1000       237948 Jan 21  2019 string_turkish.uxc
+-rw-r--r--    1 57285    1000        32948 Jan 21  2019 string_turkish_guide.uxc
+-rwxr-xr-x    1 57285    1000       347112 Jan 21  2019 string_ukrainian.uxc
+-rw-r--r--    1 57285    1000        32948 Jan 21  2019 string_ukrainian_guide.uxc
+-rwxr-xr-x    1 57285    1000       250752 Jan 21  2019 string_vietnamese.uxc
+-rw-r--r--    1 57285    1000        32948 Jan 21  2019 string_vietnamese_guide.uxc
+-rw-r--r--    1 57285    1000         1596 Jan 21  2019 style_cmn.uxc
+-rwxr-xr-x    1 57285    1000          748 Jan 21  2019 view24pMode.uxc
+-rwxr-xr-x    1 57285    1000          748 Jan 21  2019 view3DPb.uxc
+-rwxr-xr-x    1 57285    1000        21348 Jan 21  2019 viewAccessPoint.uxc
+-rwxr-xr-x    1 57285    1000         1352 Jan 21  2019 viewAfAdjustment.uxc
+-rw-r--r--    1 57285    1000          588 Jan 21  2019 viewAnimation360.uxc
+-rwxr-xr-x    1 57285    1000         1172 Jan 21  2019 viewAreaSet.uxc
+-rwxr-xr-x    1 57285    1000         1112 Jan 21  2019 viewArtFilter.uxc
+-rw-r--r--    1 57285    1000         1352 Jan 21  2019 viewAspectRatio.uxc
+-rw-r--r--    1 57285    1000          876 Jan 21  2019 viewAudioRecLevel_D.uxc
+-rwxr-xr-x    1 57285    1000         1108 Jan 21  2019 viewAutoPlay.uxc
+-rwxr-xr-x    1 57285    1000         1308 Jan 21  2019 viewAutoPlaySetting.uxc
+-rwxr-xr-x    1 57285    1000         1272 Jan 21  2019 viewAutoRepair.uxc
+-rw-r--r--    1 57285    1000         1040 Jan 21  2019 viewAutoSelection.uxc
+-rw-r--r--    1 57285    1000           84 Jan 21  2019 viewBaseMenu.uxc
+-rwxr-xr-x    1 57285    1000         6892 Jan 21  2019 viewBeautyEffect.uxc
+-rw-r--r--    1 57285    1000         1708 Jan 21  2019 viewCalibration.uxc
+-rwxr-xr-x    1 57285    1000         4340 Jan 21  2019 viewCaution.uxc
+-rwxr-xr-x    1 57285    1000          428 Jan 21  2019 viewCertificationLogo.uxc
+-rwxr-xr-x    1 57285    1000          556 Jan 21  2019 viewCleaningMode.uxc
+-rw-r--r--    1 57285    1000         4752 Jan 21  2019 viewCommonShootingSetting.uxc
+-rwxr-xr-x    1 57285    1000          724 Jan 21  2019 viewContPriorityExpMode.uxc
+-rwxr-xr-x    1 57285    1000          412 Jan 21  2019 viewCreateFolder.uxc
+-rwxr-xr-x    1 57285    1000         1120 Jan 21  2019 viewCreativeStyle.uxc
+-rwxr-xr-x    1 57285    1000         2652 Jan 21  2019 viewCustomWB.uxc
+-rwxr-xr-x    1 57285    1000         1440 Jan 21  2019 viewDateSet.uxc
+-rwxr-xr-x    1 57285    1000         1108 Jan 21  2019 viewDeleteAllIn4Single.uxc
+-rwxr-xr-x    1 57285    1000         2848 Jan 21  2019 viewDeleteSelected4Index.uxc
+-rwxr-xr-x    1 57285    1000         2456 Jan 21  2019 viewDeleteSelected4Single.uxc
+-rw-r--r--    1 57285    1000          216 Jan 21  2019 viewDeleteThis4Index.uxc
+-rwxr-xr-x    1 57285    1000          372 Jan 21  2019 viewDeleteThis4Single.uxc
+-rw-r--r--    1 57285    1000          268 Jan 21  2019 viewDeleteThisConfirm4Index.uxc
+-rwxr-xr-x    1 57285    1000          552 Jan 21  2019 viewDemoMoviePb.uxc
+-rwxr-xr-x    1 57285    1000         1748 Jan 21  2019 viewDgtlZoomSetting.uxc
+-rwxr-xr-x    1 57285    1000         1112 Jan 21  2019 viewDpofCancelAll.uxc
+-rw-r--r--    1 57285    1000          500 Jan 21  2019 viewDpofPhotoBookDatePrint.uxc
+-rwxr-xr-x    1 57285    1000         2792 Jan 21  2019 viewDpofPhotoBookSelected4Index.uxc
+-rwxr-xr-x    1 57285    1000         2404 Jan 21  2019 viewDpofPhotoBookSelected4Single.uxc
+-rwxr-xr-x    1 57285    1000         1336 Jan 21  2019 viewDpofSetting.uxc
+-rwxr-xr-x    1 57285    1000         1320 Jan 21  2019 viewDro.uxc
+-rwxr-xr-x    1 57285    1000         2620 Jan 21  2019 viewEpo.uxc
+-rw-r--r--    1 57285    1000          920 Jan 21  2019 viewEvfAdjustment_D.uxc
+-rwxr-xr-x    1 57285    1000         1312 Jan 21  2019 viewEvfBrightness.uxc
+-rwxr-xr-x    1 57285    1000         1372 Jan 21  2019 viewExposureCompensation.uxc
+-rwxr-xr-x    1 57285    1000         1148 Jan 21  2019 viewFaceDetection.uxc
+-rwxr-xr-x    1 57285    1000         1252 Jan 21  2019 viewFlash.uxc
+-rw-r--r--    1 57285    1000         1324 Jan 21  2019 viewFlashLevel.uxc
+-rwxr-xr-x    1 57285    1000         5904 Jan 21  2019 viewFnMenu.uxc
+-rwxr-xr-x    1 57285    1000         2420 Jan 21  2019 viewFocusArea.uxc
+-rw-r--r--    1 57285    1000         1796 Jan 21  2019 viewFocusArea_C.uxc
+-rw-r--r--    1 57285    1000         1196 Jan 21  2019 viewFocusControl.uxc
+-rwxr-xr-x    1 57285    1000         6960 Jan 21  2019 viewFocusMagnification.uxc
+-rw-r--r--    1 57285    1000         6384 Jan 21  2019 viewFocusMagnificationMovie.uxc
+-rwxr-xr-x    1 57285    1000         1316 Jan 21  2019 viewFocusMode.uxc
+-rw-r--r--    1 57285    1000         3760 Jan 21  2019 viewFocusSet.uxc
+-rwxr-xr-x    1 57285    1000         1356 Jan 21  2019 viewFormat.uxc
+-rw-r--r--    1 57285    1000         2332 Jan 21  2019 viewGlobalMenu.uxc
+-rwxr-xr-x    1 57285    1000         5380 Jan 21  2019 viewGpsInfo.uxc
+-rw-r--r--    1 57285    1000          440 Jan 21  2019 viewGpsTest.uxc
+-rw-r--r--    1 57285    1000         4344 Jan 21  2019 viewGpsTracker.uxc
+-rw-r--r--    1 57285    1000         3728 Jan 21  2019 viewGroupSelectionCalendar.uxc
+-rw-r--r--    1 57285    1000         2508 Jan 21  2019 viewGroupSelectionFolder.uxc
+-rwxr-xr-x    1 57285    1000        14488 Jan 21  2019 viewIREditOne.uxc
+-rwxr-xr-x    1 57285    1000         1016 Jan 21  2019 viewImageRotate.uxc
+-rwxr-xr-x    1 57285    1000         2580 Jan 21  2019 viewIndexPb.uxc
+-rwxr-xr-x    1 57285    1000         2112 Jan 21  2019 viewIndividualRecognition.uxc
+-rwxr-xr-x    1 57285    1000         3400 Jan 21  2019 viewInitialSetting.uxc
+-rw-r--r--    1 57285    1000        36952 Jan 21  2019 viewIroiroCon.uxc
+-rwxr-xr-x    1 57285    1000         1860 Jan 21  2019 viewIsoSensitivity.uxc
+-rw-r--r--    1 57285    1000        13816 Jan 21  2019 viewKeyboard.uxc
+-rw-r--r--    1 57285    1000         1096 Jan 21  2019 viewLcdBrightness.uxc
+-rw-r--r--    1 57285    1000         1212 Jan 21  2019 viewLensRing.uxc
+-rw-r--r--    1 57285    1000         8996 Jan 21  2019 viewManualControlDial_D.uxc
+-rwxr-xr-x    1 57285    1000         2212 Jan 21  2019 viewManualRepair.uxc
+-rwxr-xr-x    1 57285    1000         1832 Jan 21  2019 viewManualRepairForPlay.uxc
+-rw-r--r--    1 57285    1000         2544 Jan 21  2019 viewMediaCopy.uxc
+-rwxr-xr-x    1 57285    1000         1544 Jan 21  2019 viewMediaFileMgmt.uxc
+-rwxr-xr-x    1 57285    1000         1004 Jan 21  2019 viewMeteringmode.uxc
+-rwxr-xr-x    1 57285    1000         1332 Jan 21  2019 viewModeDialGuide.uxc
+-rwxr-xr-x    1 57285    1000         1352 Jan 21  2019 viewMonitorBrightness.uxc
+-rw-r--r--    1 57285    1000         1504 Jan 21  2019 viewMotionAdjustment.uxc
+-rw-r--r--    1 57285    1000         2956 Jan 21  2019 viewMotionVideo.uxc
+-rwxr-xr-x    1 57285    1000         2488 Jan 21  2019 viewMovieExpMode.uxc
+-rwxr-xr-x    1 57285    1000         4796 Jan 21  2019 viewMoviePb.uxc
+-rw-r--r--    1 57285    1000         2216 Jan 21  2019 viewMoviePreview.uxc
+-rw-r--r--    1 57285    1000         1804 Jan 21  2019 viewNoImage.uxc
+-rw-r--r--    1 57285    1000          700 Jan 21  2019 viewNtscPalSEL_D.uxc
+-rwxr-xr-x    1 57285    1000         1048 Jan 21  2019 viewObjectTracking.uxc
+-rwxr-xr-x    1 57285    1000         1132 Jan 21  2019 viewObjecttrackingBase.uxc
+-rw-r--r--    1 57285    1000          912 Jan 21  2019 viewPanoramaMode.uxc
+-rwxr-xr-x    1 57285    1000         2440 Jan 21  2019 viewPanoramaPb.uxc
+-rwxr-xr-x    1 57285    1000        41520 Jan 21  2019 viewPanoramaStl.uxc
+-rw-r--r--    1 57285    1000         2380 Jan 21  2019 viewPictureEffectPb_C.uxc
+-rw-r--r--    1 57285    1000         1216 Jan 21  2019 viewPlayingMedia_D.uxc
+-rwxr-xr-x    1 57285    1000         1248 Jan 21  2019 viewPortraitFraming.uxc
+-rw-r--r--    1 57285    1000         1164 Jan 21  2019 viewProtectAll.uxc
+-rwxr-xr-x    1 57285    1000         2800 Jan 21  2019 viewProtectSelected4Index.uxc
+-rwxr-xr-x    1 57285    1000         2304 Jan 21  2019 viewProtectSelected4Single.uxc
+-rw-r--r--    1 57285    1000         8412 Jan 21  2019 viewQuickNavi.uxc
+-rwxr-xr-x    1 57285    1000          192 Jan 21  2019 viewRecCustomReset.uxc
+-rw-r--r--    1 57285    1000         1828 Jan 21  2019 viewRecDriveMode.uxc
+-rw-r--r--    1 57285    1000         1820 Jan 21  2019 viewRecRecordingMedia.uxc
+-rw-r--r--    1 57285    1000         2084 Jan 21  2019 viewRecSteadyShot.uxc
+-rwxr-xr-x    1 57285    1000          172 Jan 21  2019 viewRecovery.uxc
+-rw-r--r--    1 57285    1000         6328 Jan 21  2019 viewRemoteCameraControl.uxc
+-rwxr-xr-x    1 57285    1000         2552 Jan 21  2019 viewRichHelpGuide.uxc
+-rw-r--r--    1 57285    1000         1764 Jan 21  2019 viewRootPowerSw.uxc
+-rwxr-xr-x    1 57285    1000         1040 Jan 21  2019 viewSalvageRestore.uxc
+-rwxr-xr-x    1 57285    1000          668 Jan 21  2019 viewScnSelection.uxc
+-rw-r--r--    1 57285    1000         1364 Jan 21  2019 viewSelectContentType.uxc
+-rwxr-xr-x    1 57285    1000          636 Jan 21  2019 viewSelectFolder.uxc
+-rw-r--r--    1 57285    1000         2488 Jan 21  2019 viewSendSelected4Index.uxc
+-rw-r--r--    1 57285    1000         2980 Jan 21  2019 viewSendSelected4Single.uxc
+-rwxr-xr-x    1 57285    1000         5376 Jan 21  2019 viewSendToComputer.uxc
+-rw-r--r--    1 57285    1000         7112 Jan 21  2019 viewSendToSmartphone.uxc
+-rwxr-xr-x    1 57285    1000         4984 Jan 21  2019 viewSettingMenu.uxc
+-rw-r--r--    1 57285    1000         1408 Jan 21  2019 viewSettingReset.uxc
+-rwxr-xr-x    1 57285    1000         5316 Jan 21  2019 viewSettingSave.uxc
+-rw-r--r--    1 57285    1000         1356 Jan 21  2019 viewSetupCustomFunction.uxc
+-rwxr-xr-x    1 57285    1000         2420 Jan 21  2019 viewShootingInfoDisp.uxc
+-rwxr-xr-x    1 57285    1000         4520 Jan 21  2019 viewSinglePb.uxc
+-rw-r--r--    1 57285    1000         2224 Jan 21  2019 viewSinglePb4K.uxc
+-rwxr-xr-x    1 57285    1000         1736 Jan 21  2019 viewSmileShutter.uxc
+-rw-r--r--    1 57285    1000          132 Jan 21  2019 viewSnapShotBoot.uxc
+-rw-r--r--    1 57285    1000         1648 Jan 21  2019 viewSoftSkin.uxc
+-rwxr-xr-x    1 57285    1000         1004 Jan 21  2019 viewStillImageQuality.uxc
+-rwxr-xr-x    1 57285    1000         1912 Jan 21  2019 viewStillImageSize.uxc
+-rwxr-xr-x    1 57285    1000        66644 Jan 21  2019 viewStlrec.uxc
+-rw-r--r--    1 57285    1000         3088 Jan 21  2019 viewTriDial.uxc
+-rwxr-xr-x    1 57285    1000         2876 Jan 21  2019 viewUsbAuto.uxc
+-rwxr-xr-x    1 57285    1000         2360 Jan 21  2019 viewUsbMTP.uxc
+-rwxr-xr-x    1 57285    1000         2104 Jan 21  2019 viewUsbMassStorage.uxc
+-rw-r--r--    1 57285    1000          632 Jan 21  2019 viewUsbRemotePc.uxc
+-rwxr-xr-x    1 57285    1000          720 Jan 21  2019 viewUserUpdate.uxc
+-rwxr-xr-x    1 57285    1000         1108 Jan 21  2019 viewVersionNumber.uxc
+-rw-r--r--    1 57285    1000         2372 Jan 21  2019 viewViewOnTVForConnect.uxc
+-rw-r--r--    1 57285    1000         1400 Jan 21  2019 viewViewOnTVForSinglePb.uxc
+-rw-r--r--    1 57285    1000         1384 Jan 21  2019 viewViewOnTVForSlideShow.uxc
+-rw-r--r--    1 57285    1000         2236 Jan 21  2019 viewViewOnTVForSlideShowSetting.uxc
+-rw-r--r--    1 57285    1000          556 Jan 21  2019 viewVolume.uxc
+-rwxr-xr-x    1 57285    1000         1256 Jan 21  2019 viewWaterProof.uxc
+-rwxr-xr-x    1 57285    1000         5960 Jan 21  2019 viewWhiteBalance.uxc
+-rwxr-xr-x    1 57285    1000          120 Jan 21  2019 viewWidgetTest.uxc
+-rwxr-xr-x    1 57285    1000         1968 Jan 21  2019 viewWlanTest.uxc
+-rwxr-xr-x    1 57285    1000         1508 Jan 21  2019 viewZoomPb.uxc
+-rwxr-xr-x    1 57285    1000        79412 Jan 21  2019 viewmovierecpatch.uxc
+-rw-r--r--    1 57285    1000        35896 Jan 21  2019 viewmovierecpatch_c.uxc
+/usr/share/app # find /usr /system /setting /lens -maxdepth 3
+ash: find: not found
+/usr/share/app # cat /proc/148/task/*/comm
+im.elf
+uipc_proxy_0
+uipc_proxy_1
+uipc_proxy_2
+ULOGIOD_MAIN
+uipc_proxy_3
+ULOGIOD_CB
+mwf_monitor_inp
+ABT_WORKER
+UsbBusPower
+THREAD_INFRA0
+THREAD_INFRA0
+UDATE_ASYNCSET
+UsbControl
+Hotplug
+InfraAudioDecod
+InfraAvEffector
+InfraDecoder
+MtpAppDlSvr
+InfraMovieEdito
+InfraMovieEncod
+InfraMovieEncTh
+InfraStillEncod
+InfraAvbbcIf
+HDMI Msg Thread
+HDMI Dev Thread
+CEC Msg Thread
+CEC Dev Thread
+InfraNfc
+THREAD_INFRA0
+grm_result
+grm_gpe
+WlanResource_Ma
+IFsys
+IFsys
+IFsys
+IFsys
+IMM
+IMM
+IMM
+IMM
+THREAD_INFRA0
+IMD-Default
+NetServiceMainT
+InfraIndctr
+I-TpRecv
+HotshoeResource
+I-HotshoeMain
+I-HotshoeRecv
+I-SircsMain
+I-InputMain
+I-InputRepeat
+I-InputRecv
+I-LancMain
+CameraBackgroun
+MMgrCtrl
+monio(input)
+AVCodec
+MprIf
+InfraDatabase
+InfraDatabase
+InfraDatabase
+InfraSalvageSta
+InfraSelector
+StlDateEvtLoop
+Appframework
+InfraScalarMpr
+uxengine_res1
+uxengine_res2
+FuFsys
+IMM
+InfraMediaPwrMg
+ObjCntMgr
+ObjMedia
+ObjCntMgr
+ObjMedia
+ObjCntMgr
+ObjMedia
+AVIThread
+HddDcfMMgr
+ObjRendererInfr
+ObjRenderer
+ObjSystemSoundI
+ObjSystemSound
+ObjDisplayInfra
+ObjDisplay
+ObjEffect
+ObjEffectInfraI
+ObjSpeakerInfra
+ObjSpeaker
+ObjMedia
+ObjMixer
+ObjMixerInfraIf
+ObjMixerThreadA
+ObjRemote
+ObjHandover
+CAMERA On Deman
+InfraOnDmdLdr
+grm_dn_vdf_if
+IMD-RM
+AV_DDS
+I-TpMain
+gps_main_thread
+I-InputEvent
+ScalarHapiMain
+ScalarHapiSdf
+ScalarHapiCam
+ScalarSTM
+I-InputEvent
+DVDFlashBackup
+I-InputEvent
+I-InputEvent
+I-InputEvent
+I-InputEvent
+I-InputEvent
+I-InputEvent
+I-InputEvent
+I-InputEvent
+I-InputEvent
+I-InputEvent
+I-InputEvent
+I-InputEvent
+I-InputEvent
+I-InputEvent
+I-InputEvent
+I-InputEvent
+I-InputEvent
+I-InputEvent
+I-InputEvent
+I-InputEvent
+I-InputEvent
+I-InputEvent
+I-InputEvent
+ObjRendererCTHR
+ObjRendererCTHS
+IMCMN-DRV-CYCLE
+UsbControl
+UsbControl
+UsbControl
+UsbControl
+UsbControl
+ObjPlayer
+CAMUSER_CAMPOST
+CAMUSER_OBJCAME
+ObjFaceRecorder
+ObjCameraAgent
+ObjStillRecorde
+ObjMovieRecorde
+ObjAudioProcess
+ObjAudioProcess
+ObjMicIThread
+ObjMic
+capcon_osal_UTM
+FaceRecorderRcv
+ObjStillRecorde
+ObjPlayerPreCac
+CAMUSER_CAM_CAP
+agentmainif_osa
+cam_agentmain_o
+CAMUSER_CAMMANA
+CAMUSER_CAMLIRO
+CAMUSER_CAMLIRO
+I-InputEvent
+UsbControl
+UsbControl
+/usr/share/app # cat /proc/iomem
+00000000-00003fff : arm7sram
+00011000-00011fff : arm7io
+00020000-0002ffff : nandreg
+10000000-1000ffff : nandc
+80000000-8fffffff : System RAM
+  80038000-80333023 : Kernel text
+  8035e000-803b5227 : Kernel data
+90000000-907fffff : System RAM
+90800000-90ffffff : System RAM
+91000000-917fffff : System RAM
+91800000-91ffffff : System RAM
+92000000-927fffff : System RAM
+92800000-92ffffff : System RAM
+93000000-937fffff : System RAM
+93800000-93ffffff : System RAM
+94000000-947fffff : System RAM
+94800000-94ffffff : System RAM
+95000000-957fffff : System RAM
+95800000-95ffffff : System RAM
+96000000-967fffff : System RAM
+96800000-96ffffff : System RAM
+97000000-977fffff : System RAM
+97800000-97ffffff : System RAM
+98000000-987fffff : System RAM
+98800000-98ffffff : System RAM
+99000000-997fffff : System RAM
+99800000-99ffffff : System RAM
+9a000000-9a7fffff : System RAM
+9a800000-9affffff : System RAM
+9b000000-9b7fffff : System RAM
+9b800000-9bffffff : System RAM
+9c000000-bfffffff : System RAM
+f0200000-f0200fff : f_usb20ho_ehci.0
+f0201000-f0201fff : f_usb20ho_ohci.0
+f0210000-f022ffff : f_usb20hdc_udc.0
+f2000000-f2000fff : uart0
+  f2000000-f2000fff : cxd90014-uart
+f2002000-f2002fff : uart2
+  f2002000-f2002fff : cxd90014-uart
+/usr/share/app # 
