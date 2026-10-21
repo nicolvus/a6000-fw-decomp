@@ -1,283 +1,125 @@
 # Sony A6000 Hardware & Firmware Reverse Engineering Project
 
-Investigación de hardware, firmware, arquitectura, arranque, recuperación y
-pipeline de captura. Se conservan los resultados anteriores. El obturador
-electrónico pasa a ser un [subproyecto](projects/electronic-shutter/README.md).
+Ingeniería inversa de hardware y firmware de la Sony A6000 (fw 3.21): arquitectura, arranque,
+recuperación y pipeline de captura. El obturador electrónico es un
+[subproyecto](projects/electronic-shutter/README.md). Sin firmware ejecutado, sin cámara, sin flasheo.
+
+## Dónde mirar primero
+
+- Estado operativo breve: [knowledge/CURRENT.md](knowledge/CURRENT.md) · restricciones: [docs/STATE.md](docs/STATE.md) · continuidad: [CONTEXT.md](CONTEXT.md).
+- Historial completo de fases: [knowledge/PROGRESS.md](knowledge/PROGRESS.md).
+- Catálogo de la línea de RE general (29 hitos): [docs/capture/linea-general-re.md](docs/capture/linea-general-re.md).
+- Resultados y viabilidad: [docs/findings.md](docs/findings.md), [docs/feasibility-report.md](docs/feasibility-report.md).
+- README histórico íntegro (S19–S100, antes de esta reorganización): [docs/history/README-historial-2026-10-21.md](docs/history/README-historial-2026-10-21.md).
+
+## Fases recientes (más nuevas primero)
+
+Cada enlace lleva a su informe; el resumen de hallazgos está en el [catálogo](docs/capture/linea-general-re.md) y en el [historial](docs/history/README-historial-2026-10-21.md).
+
+- [S104: prefijos de traza exclusivos de la A6000 sin decodificar](analysis/s104_prefixes/a6000_prefixes.md): seis prefijos que la A7S fw3.20 no tiene — `ADC_DEBUG` (ADC de 12 canales del LIRO), `AVR` y `AVOUT` (accesorios de `ACCY`), `ADR` (campo de dirección, no un módulo), `BKID` (*backup ID*) y `CAMCORE` (la librería `Camera::CamCore`); corrige S73 (cinco cadenas `ADJ ADC`, no cuatro).
+- [S103: el subsistema SDF — la capa de *dataflow* de imagen still](analysis/s103_sdf/sdf_module.md): `[SDF]` (477 trazas) es el **ejecutor de trabajos de imagen still** al que el gestor de captura (`IMAGING_CAP`) envía **33 `MSG_ID_SDF_*`** (resize/rotate, encode/decode JPEG, CCNR, panorámica, THM, develop resize, face resize…); los 15 `[SDF_ERR]` son casi todos comprobaciones de **PTM** (el temporizador de imagen); en el userland, `OBJAVBBCBASECLASS::SdfCh`.
+- [S102: menú principal (botón MENU), cadena de carga y apertura](docs/capture/s102-menu-principal.md): `libObj.so` → `viewUnified2.so` (registro de ~150 vistas, índices = `Vn` del log real) → `viewUnified3..8`; vistas BASE_MENU/GLOBAL_MENU/SETTINGMENUX/FNMENU; `DefRootView::ActionOpen*` es el árbitro de arranque, no la tecla MENU; evento de MENU sin demostrar. Anexos: [APK por función](analysis/apk-por-funcion/README.md), [decompilación de apps](analysis/decomp-apk/README.md).
+- [S101: selector del tipo de mecanismo y consumidores de los campos de ajuste (A6000 vs A7S)](docs/capture/s101-conclusions.md): `+0x238`/`+0x280` solo se escriben; Darwin nunca fija el tipo (3 lectores, 0 escritores en A6000/A7S/A6300); selector A6000 `0x4379316a` sobre `[G+0x808]&7` (por defecto tipo 0) frente al de A7S por el byte `+0x7a`; plan de pruebas físicas pendientes. S51 se mantiene.
+- [S100: el contrato de comandos del ADF (firmware) ↔ `AdfCh` (userland)](analysis/s100_adf_contract/adf_command_contract.md)
+- [S98: `libBizFw.so` — el orquestador userland y el puente con el ADF](analysis/s98_bizfw/bizfw_bridge.md)
+- [S99: la arquitectura del userland — las capas de `libObj.so`](analysis/s99_userland/userland_architecture.md)
+- [S97: sincronización audio/vídeo del codificador](analysis/s97_encsync/encoder_sync.md)
+- [S94: la API HAPI de la app remota](analysis/s94_hapi/hapi_api.md)
+- [S96: modos de captura — `drive_mode`, `CapMode` y la tabla 69 → 14 ShdMode](analysis/s96_modes/capture_modes.md)
+- [S92: la base de datos de medios — SceneInfo, MovieFile e índice](analysis/s92_mediadb/media_database.md)
+- [S95: los ficheros que la cámara lee y escribe](analysis/s95_files/file_inventory.md)
+- [S90: reproducción de vídeo — PlayArranger, VFC y VDISP](analysis/s90_playback/playback.md)
+- [S93: el bus de mensajes OSAL del userland](analysis/s93_osal_bus/osal_message_bus.md)
+- [S87: almacenamiento, sistema de archivos y tarjeta](analysis/s87_storage/storage_filesystem.md)
+- [S91: submódulos del framework ADF (ADJ, SYSND, GS, FACE, AFNR, CH_SRC)](analysis/s91_adf/adf_submodules.md)
+- [S82: AutoFraming y las etapas de control del pipeline](analysis/s82_autoframing/autoframing_stages.md)
+- [S88: GOLFSHOT (disparo de golf por sonido) y MOTIONSHOT](analysis/s88_shotmodes/golfshot_motionshot.md)
+- [S89: el módulo `IDT`/`IDT_OPD` — mapas del imager, FOPD e IDTSA](analysis/s89_idt/idt_opd_maps.md)
+- [S77: Creative Style y balance de blancos](analysis/s77_pp/picture_profile_creative_style.md)
+- [S86: el subsistema del visor — `VDF` (marco de display) y `VEF` (visor electrónico)](analysis/s86_vdf_vef/vdf_vef_viewfinder.md)
+- [S85: `CLK_CTRL` (control de reloj) y `VPH_API` (API del vídeo del visor)](analysis/s85_clk_vph/clk_ctrl_vph_api.md)
+- [S72: wireless y transferencia remota (WLAN / PlayMem / "Camera on Demand")](analysis/s72_wlan/wlan_playmem.md)
+- [S84: el API del motor de imagen (SA) — catálogo de `sa_func_*`](analysis/s84_sa_api/sa_api_catalogue.md)
+- [S83: los módulos "menores" del firmware, decodificados](analysis/s83_modules/minor_modules.md)
+- [S81: ADF — framework de arranque, MSGQ, MMGR y comandos DBGCMD](analysis/s81_adf/adf_framework.md)
+- [S71: subsistema de detección de caras y objetos (FC/FRC)](analysis/s71_frc/frc_subsystem.md)
+- [S80: ZIT — corrección de defectos del sensor (DDC) en el imager](analysis/s80_zit/zit_defect_correction.md)
+- [S79: mapa de módulos del firmware por prefijos de log](analysis/s79_modules/module_map.md)
+- [S78: parámetros `apc_*` del motor de imagen YC](analysis/s78_apc/yc_apc_params.md)
+- [S76: pipeline de captura (etapas `Stage_*`) y motor de imagen](analysis/s76_stages/stage_pipeline.md)
+- [S75: ZPD (zone plate detection) — calibración del sensor con datos de la lente](analysis/s75_zpd/zpd_subsystem.md)
+- [S73/S74: protocolo de ajuste de fábrica `ADJ_CMD` (panel/EVF/OLED) y `ContrastPlus`](analysis/s73_adj/adjust_cmd_recon.md)
+- [S70: reconocimiento del subsistema EIS/gyro](analysis/s70_is/is_gyro_recon.md)
+- [S68: gestión de batería, energía y carga (NP-FW50)](docs/capture/s68-battery-power.md)
+- [S69: subsistema de audio de la A6000 (línea general)](docs/capture/s69-audio-subsystem.md)
+- [S66: montura de lente E-mount (línea general, sin relación con SilentShutter)](docs/capture/s66-lens-mount.md)
+- [S64: prueba en cámara de SilentShutter](docs/capture/s64-silent-ram-nvram-test.md)
+- [S62: PMCA — inyección de código, service shell y la propiedad `modelName`](docs/capture/s62-pmca-injection.md)
+- [S61: origen de los parámetros IMX210 y flujo de mensajes](docs/capture/s61-conclusions.md)
+- [S60: emisor de mensajes IMX210 y receptores A7S](docs/capture/s60-conclusions.md)
+- [S59: validación cruzada Claude + GPT-6.1 Sol](docs/capture/s59-conclusions.md)
+- [S58: productores AE y configuración efectiva A7S Silent](docs/capture/s58-conclusions.md)
+- [S57: semántica de ID1/SSB/svd-shd-spl, Silent IMX235, XPI y sincronía P2S](docs/capture/s57-conclusions.md)
+- [S56: transporte de registros del IMX210 (IDs = direcciones 16 bit, P2S/DFE0), CISIF = receptor](docs/capture/s56-conclusions.md)
+- [S55: origen de los pares GPIO (base de backup BK4), A7S vs A6000](docs/capture/s55-conclusions.md)
+- [S54: P4C, tipo de mecanismo 0 y sincronización BIONZ](docs/capture/s54-conclusions.md)
+- [S53: parser CAIF de Darwin, A7S vs A6000](docs/capture/s53-conclusions.md)
+- [S52: mecanismo Silent Shooting A7S y viabilidad en A6000](docs/capture/s52-parallel-conclusions.md)
+- [S51: decisión SÍ/NO sobre exposición totalmente electrónica](docs/capture/s51-decision.md)
+- [S50: conclusiones conjuntas Claude + Codex](docs/capture/s50-parallel-conclusions.md)
+- [S49: productor de configuración de captura](docs/capture/s49-capture-config-producer.md)
+- [S48: proveedor del servicio de registro `+0x1ec`](docs/capture/s48-service-table-provider.md)
+- [S47: entrada del payload y orden de C](docs/capture/s47-payload-producer-and-order.md)
+- [S46: base VD y escritor del contexto](docs/capture/s46-vd-base-and-context-identity.md)
+- [S45: contexto y consumidor real del timing IMX210](docs/capture/s45-context-identity-and-physical-closure.md)
+- [S44: consumidor de registros y tabla de modos](docs/capture/s44-register-consumer-mode-table.md)
+- [S43: tabla PIC y códigos de modo IMX210](docs/capture/s43-exposure-mmio-and-lock-codes.md)
+- [S42: identidad de la llamada de exposición](docs/capture/s42-exposure-call-identity.md)
+- [S41: productores de mensajes y snapshots](docs/capture/s41-message-origin-imx210.md)
+- [S40: origen del contexto de modo](docs/capture/s40-context-origin-imx210.md)
+- [S39: enum de imagen y discriminador APL](docs/capture/s39-image-format-apl.md)
+- [S38: frontera DMM/OSAL en av-cam](docs/capture/s38-dmm-osal-static-frontier.md)
+- [S37: definidor DMM en libmprctrl](docs/capture/s37-libmprctrl-dmm-extents.md)
+- [S36: memoria de libInfraScalarMpr](docs/capture/s36-libinfra-scalar-mpr-memory.md)
+- [S35: objetos DFE y frontera estática APL/IRQ](docs/capture/s35-dfe-objects-static-frontier.md)
+- [S34: APL/DMA frente a VD e interrupciones](docs/capture/s34-apl-dma-vd-interrupts.md)
+- [S33: origen de los handles YC](docs/capture/s33-yc-rendezvous-producer.md)
+- [S32: callbacks VD y SyncYCout](docs/capture/s32-vd-callbacks-sync-ycout.md)
+- [S31: subsistema CAMERA_MAIN_SYNC/DFECore](docs/capture/s31-camera-main-sync-strings.md)
+- [S30: receptor y retorno de EncodeStill](docs/capture/s30-pipelines-capture-encode.md)
+
 
 ## Agentes (Claude Code, Codex/ChatGPT, DeepSeek Harness)
 
 Reglas en `AGENTS.md` y `CLAUDE.md`; skills en `.claude/skills/` y `.agents/skills/`
 (copias idénticas, verificadas por `tests/test_agent_skills_sync.py`). Instalación de
 REA/Ghidra, MCP y arranque de sesión: [docs/agent/README.md](docs/agent/README.md).
-Para ChatGPT web, pegar [docs/agent/chatgpt-pack.md](docs/agent/chatgpt-pack.md).
-Comprobación de entorno: `python scripts/agent/check_env.py`.
+Para ChatGPT web: [docs/agent/chatgpt-pack.md](docs/agent/chatgpt-pack.md).
+Entorno: `python scripts/agent/check_env.py`.
 
-## Organización y resultados actuales
+## Estructura
 
-- [S103: prefijos de traza exclusivos de la A6000 sin decodificar](analysis/s103_prefixes/a6000_prefixes.md): seis prefijos que la A7S fw3.20 no tiene — `ADC_DEBUG` (14: ADC de 12 canales del LIRO, tarea `TSK_ADC`, mensaje OSAL de 0x20 B con cabecera `0xfff1`), `AVR` (2: accesorio LANC-AVR de `ACCY`), `ADR` (1: campo de dirección de una apertura IM en un mensaje de `0x43901d50`, no un módulo), `BKID` (4: *backup ID*, `BKID_SDF_QTBL_C`), `AVOUT` (2: accesorio AvOut de `ACCY`) y `CAMCORE` (37: la librería `Camera::CamCore` — SGC, RDC/PFR, AIF/DMA; RTTI `N6Camera7CamCore8RdcImageE` `0x43c906b6`); corrige S73 (cinco cadenas `ADJ ADC`, no cuatro). 6 tests (`tests/test_s103_prefixes.py`).
-- [S101: el subsistema SDF — la capa de *dataflow* de imagen still](analysis/s101_sdf/sdf_module.md): `[SDF]` (477 trazas, `0x43c7785b`→`0x43c806f9`) es el **ejecutor de trabajos de imagen** al que el gestor de captura envía **33 `MSG_ID_SDF_*`** (`resize_rotate`, `encode_jpeg`/`decode_jpeg`, `ccnr_encode`, `panorama_ccnr_encode`, `thm_encode`, `develop_resize`, `dist_encode`, `face_resize`, `set_date_image_param`…); **15 `[SDF_ERR]`** (`0x43c7a145`→`0x43c7eb78`) son casi todas comprobaciones de **PTM** (zonas *first/second*, `ptm_32`), el temporizador de imagen; funciones `FUN_43638308` (init, base `0x43c77857` = `"sdf"`), `FUN_435ab6f0` (dispatcher), `FUN_4363c730` (factoría de trabajos JPEG), `FUN_4363ca28`, `FUN_43639c78`; en userland `OBJAVBBCBASECLASS::SdfCh`; A7S fw3.20 tiene el mismo módulo con 479 trazas (`0x43c7a1eb`→`0x43c83082`). 51 tests (`tests/test_s101_sdf.py`).
-- [S100: el contrato de comandos del ADF (firmware) ↔ `AdfCh` (userland)](analysis/s100_adf_contract/adf_command_contract.md): el firmware expone **90 comandos `[ADF][DBGCMD]`** en familias (`Input` 16, `InputPro` 8, `Output` 9, `OutputPro` 3, `System` 12, `SystemSound` 7, `Proc` 19 —las fases lineales del arranque—, `SoundAnalyzer` 4, `CPU2` 4 —la medida del tiempo de ejecución a 60/48 Hz—); el userland implementa **`OBJAVBBCBASECLASS::AdfCh`** con **35 métodos** y **cada uno tiene su comando gemelo** con la familia traducida (`PrcSetPath`↔`Proc SetPath`, `SysSetTable`↔`SystemSound SetTable`, `InSetInput`↔`Input SetInput`, `OutProSetHpMonitor`↔`OutputPro SetHpMonitor`) → **la numeración de prefijos y verbos es el contrato userland↔firmware**; 4 métodos son solo-userland y 1 comando solo-firmware. 7 tests (`tests/test_s100_adf_contract.py`).
-- [S98: `libBizFw.so` — el orquestador userland y el puente con el ADF](analysis/s98_bizfw/bizfw_bridge.md): la biblioteca (332 600 B) que **une userland y firmware** — 3 colas OSAL (`DETECT_FACE`, `DMM_CTRL`, `SADRIVER`), **9 categorías** (`CATEID_PIN/RENDERER/DISPLAY/SYSTEMSOUND/AUDIOPROCESSOR/MIC/MIXER/SPEAKER/EFFECT`), **11 peticiones** con respuesta (`REQ_DEPOSITE`…`REQ_WITHDRAWE` = ciclo de vida de un objeto) y la clase **`OBJAVBBCBASECLASS::AdfCh`**, cuyos métodos (`PrcSetPath`, `SysSetTable`, `InSetInput`, `InSetWindNr`, `OutSetVolume`…) **repiten el vocabulario de comandos del ADF del firmware** → la numeración `Prc`/`Sys`/`In`/`Out` **es el contrato** entre ambos lados; el userland envía a **diez destinos** (ADF, DETECT, DMM, HAPI, HDMI, SA, SDF, SDI, VDF, VEF). 9 tests (`tests/test_s98_bizfw.py`).
-- [S99: la arquitectura del userland — las capas de `libObj.so`](analysis/s99_userland/userland_architecture.md): la mayor biblioteca del userland (17 436 172 B; **2507 símbolos en 167 namespaces**, prácticamente los mismos que la A7S) revela las capas del software de la cámara — `MWF` (241, núcleo de mensajes: `ObjMsgList`/`ObjMsg`/`RsrcAcsr`), `UFW` (34, **arbitraje de recursos**: `RsrcWrapper::AcquireSingle/ReleaseAll`), `MprIf`/`MprCtrl` (376, medios), `ux` (227, gráficos) + `GEN_*` (toolkit de widgets) + `ViewBase` (GUI), `AVBIZ::UNIVERSE` (138, **gestor de aplicaciones** con `UActiveObject::SendMsgToApp`), `OBJAVBBCBASECLASS` (128, imagen) y `C_DataflowInfra_*` (44), `NetCommonLibrary_`/`GCM_` (red, **10 símbolos menos en la A6000**). 6 tests (`tests/test_s99_userland.py`).
-Catálogo completo de la línea de **ingeniería inversa general** de la cámara (27 hitos, con su
-informe, su test y su hallazgo central): **[docs/capture/linea-general-re.md](docs/capture/linea-general-re.md)**.
+| Carpeta | Contenido |
+|---|---|
+| `docs/` | Documentación: arquitectura, captura (`docs/capture/`), historial, referencias |
+| `analysis/` | Un directorio por hito (`sNN_*`), con informe y datos |
+| `tests/` | Un test por hito + utilidades |
+| `scripts/` | Herramientas, conocimiento (`scripts/knowledge/`), agente |
+| `knowledge/` | Estado (`CURRENT.md`), progreso e índices derivados |
+| `src/` | Inventario, atlas, LIRO |
+| `tools/`, `reports/`, `references/`, `research/`, `work/` | REA/Ghidra, informes, fuentes públicas, notas |
+| `firmware/` | Firmware Sony original/extraído (en `.gitignore`, no se publica) |
 
-- [S97: sincronización audio/vídeo del codificador](analysis/s97_encsync/encoder_sync.md): `[ENCMODEMGR]` (21, `0x43c4ac73`) = `McAvcEncModeMgr` con la **secuencia de comandos** de encoding (`RecordCodecIfCmd: CmdCode/CmdTime/ExecTime/CurrentRefTime` y 14 `CMD_ID_*`: `ACT_ENC`, `BEGIN_ENC`, `TERM_ENC`, `STILL_ENC`, `APPLY_USER_DATA_GOP/PIC`, `MUTE_AUDIO_CAPTURE`, `SET_ENC_READ_POINTER`…); `[ENCAUDOUCR]` (9, `0x43c4b444`) escribe el bloque **AUGI** con el audio (`IsOuCrank/Sampling/FrameRate`, `TermEnc(vfc24/vfc32/cnt)`, `AUGI(AVCODEC-AVSC) OverFlowFile`); `[ENCAUDSYNC]` (17, `0x43c526d3`) sincroniza por **semáforos** (`McSyncEncStart::SetEncStartTimeForThumbnail`); `[VIDENCCTRL]` (13, `0x43cd6070`) con 22 `MSGID_AVC_ENC_VIDEO_*`. **Corrección**: no son exclusivos de la A6000 (la A7S tiene los mismos módulos; solo `[ENCOUCSTAT]` tiene 5 trazas más). 12 tests (`tests/test_s97_encsync.py`).
-- [S94: la API HAPI de la app remota](analysis/s94_hapi/hapi_api.md): `libHapiLib.so` (89 628 B) es la API de la app Sony — `HapiLibMain` (singleton + `mainLoop`/`interrupt`/`getTargetQId`), `Cam::CamService` (`processReq`/`processComp`/`processCaptureEvent`) y `Sdf::SdfService`; tipos de mensaje **`REQ_MSGE`/`EVT_MSGE`/`COMP_MSGE`** + `CATEID_HAPI`; **139 símbolos `Camera::CamApi*`** (`apiFactory`, `stmDepositYc/Raw`, `stmInquire`, `stmWithdraw`, `checkOneTicket`/`checkThreeRawTickets`, `freeImageInstance`) → la app deposita YC/RAW y pide tickets; en la cámara, la etapa `Stage_CameraHAPI.cpp` `0x43cc7bad`. 6 tests (`tests/test_s94_hapi.py`).
-- [S96: modos de captura — `drive_mode`, `CapMode` y la tabla 69 → 14 ShdMode](analysis/s96_modes/capture_modes.md): el **`drive_mode`** del imager (0..0x44 = **69 modos**) sincroniza el sensor con el sistema (`SIFSyncCode`, `GetPrelightImagerDriveMode` `0x43cae26b`) y condiciona el tamaño de lectura (`getDriveModeSizeRatio` `0x43cae2b7`); el **`CapMode`** + `ExposureID`/`ContID`/`FrameID`/`BDROSeq` identifican la captura en `CAMERA_MAIN_CC` (`ExtractCaptureData()` `0x43ca54c8`, `CaptureInit()` `0x43ca552b`, `SetReadImageParam/SetNRParam/SetOPDParam`); el cruce con el sombreado es la `tbb` de 69 bytes `0x438ef418` de `SHD::GetShdMode` `0x438ef40e` → **14 ShdMode**; modos nombrados: foto `0x43c7effb`, vídeo `0x43ca13be`, ráfaga `0x43cb4bfe`, panorámica `0x43c781e4`, barrido `0x43cab054`, bracketing `0x43ca79ba`, intervalo `0x43c7a1a5`. 7 tests (`tests/test_s96_modes.py`).
-- [S92: la base de datos de medios — SceneInfo, MovieFile e índice](analysis/s92_mediadb/media_database.md): en el firmware, el **secuenciador LIRO** (`LiroSequencerMovieFileFormat : %d` `0x43ca3b3a`, que también lee la **posición del dial de diafragma** `0x43ccadbf`) y la nomenclatura de escena **`Scene%02d.txt`** `0x43ccb21b`; en el userland, la interfaz `MprIf` de `libmpr.so` (1525 apariciones) con `PreRegisterDcfContentSync` (8), `GetHighlightSceneInfo` (2) y `SceneInfo` (10), y `SceneInfo`/`HighlightScene` en `libObj.so`; la ruta de foto sigue siendo `DCIM/100MSDCF/DSC%05d.ARW` `0x43cac566`. 10 tests (`tests/test_s92_mediadb.py`).
-- [S95: los ficheros que la cámara lee y escribe](analysis/s95_files/file_inventory.md): **43 rutas** en el firmware — **`/usr/sabin/`** (27: **22 ficheros SPICA** `spica_musashi_<modo>_<canal C/Y>_tap_step<N>.bin` para still/mov/mov_4k/mov_interlace/dualrec/dualrec_4k, más `star_kernel_param.bin` `0x43cc3d1a` y las tablas PSF `dcv_psf_table_*` `0x43cb9a34`–`0x43cba9ea`), **`/mnt/`** (11: **la cámara escribe sus propias trazas en el disco RAM** — `FILE_IS_*`, `FILE_TC_COMMON_*`, `lc_mslog_*`, `Mount_ms_log_*`, `cc_ms_log*`, `detect_ms_log*`, `YC_FILE*`, `log.bin` y un nombre con fecha/hora — que deben estar en los volcados de `analysis/camera-dumps/`), `/setting/psd.bin` `0x43ccf2b6` y `/usr/dfe/dfe.bin` `0x43cd1b94`. 7 tests (`tests/test_s95_files.py`).
-- [S90: reproducción de vídeo — PlayArranger, VFC y VDISP](analysis/s90_playback/playback.md): tres ejes — **organizadores de reproducción** (`12PlayArranger` `0x43c43c93`, `20AbstractPlayArranger` `0x43c43c7c`, `19PlayArrangerAdapter`, `16NullPlayArranger`), **programador de VFC** (`12VFCCmdIssuer` `0x43c43e01`, `12VFCScheduler` `0x43c43e95`, `VFCScheCmdList` → el reloj de vídeo, S85) y **estado MPLAY** (`10MPlayState` `0x43c43ecf`, cabecera `bid=MPLAY cid=… flg=… dvfc=… ivfc=… edge=…` `0x43c660e0`, `Issue VFCCmd to MPLAY.` `0x43c7291e`); **cuatro modos de salida VDISP** (`24p` `0x43c4811f`, `30p25p` `0x43c481c2`, `60i50i` `0x43c48341`, `60p50p` `0x43c4856a`) con descarte de cubos TCUB (mismo eje PAL/NTSC que S86); consume el bloque `AUGI` (`16DecAugiConverter` `0x43c43d2a`) y la tabla VP (`24AbstractVpTableSequencer` `0x43c43d3d`). 23 tests (`tests/test_s90_playback.py`).
-- [S93: el bus de mensajes OSAL del userland](analysis/s93_osal_bus/osal_message_bus.md): la cámara se organiza en **microservicios** con dos niveles de cola — **16 grupos (GID)** y **13 colas (LID)**: `DETECT_FACE`/`DMM_CTRL`/`SADRIVER` en `libBizFw.so` (el que **orquesta la detección de caras**), `APP_VIEW_SCALAR`/`INFRA_VDF`/`CAMERA_RAW_DEVELOP`/`NET_BACKUP_SERVER` en `libObj.so`, `NETSERVICE_*` en `libNetService.so`, `DLNACONTROL_{CP,MAIN,MEDIASVR}`, **`MDNS_CONTROL_MAIN`** (mDNS) y **`WEBAPI_MAIN`** (API web), `TASK_ADC`/`R_HOTSHOE_API` (hotshoe), `WLAN_RSRC_*`, `AIRPLANE_MODE_*`; y `GPS_GET` en `libmpr.so` → **la A6000 incluye GPS en el firmware** aunque no tenga hardware. 6 tests (`tests/test_s93_osal_bus.py`).
-- [S87: almacenamiento, sistema de archivos y tarjeta](analysis/s87_storage/storage_filesystem.md): el medio externo es un **recurso sincronizado** de `CAMERA_MAIN_SYNC` (`ExternalStorageStart/Acquire/Release` `0x43cb3148`–`0x43cb31b8`); ruta de foto **`DCIM/100MSDCF/DSC%05d.ARW`** `0x43cac566`; **`/setting/psd.bin`** `0x43ccf2b6` es **novedad fw3.21** (0 en A7S); **negativo verificado**: 0 hits de `exFAT`/`FAT32`/`CLIP_` en `av-cam.bin` → el FS está en el userland: **`libInfraFsys.so`** (51 × "EXFAT", 8 × "FAT32", BPB y `FSYS_ATTRIB_*`), **`libObj.so`** (13 × "CLIP_", `forcastUseSizeOnDstDisc` = previsión de espacio, `remainSizeOnDstDisc`, `mainJpg`/`thumJpg`, MakerNote público/secreto) y **`libmpr.so`** (índice: `category folder`, `date num`, `playlist num`, `total mark num`, `seekPoint … packLength`). 9 tests (`tests/test_s87_storage.py`).
-- [S91: submódulos del framework ADF (ADJ, SYSND, GS, FACE, AFNR, CH_SRC)](analysis/s91_adf/adf_submodules.md): `[ADF][ADJ]` (24) = ajuste del **sensor de audio** (`AdfSenserCtrl::SetParamSet{MicMode, RecLevel, ChSource, InputType, RecLevelMode, HpMonitor, InputTrim, LowCut}` `0x43c26dc1`–`0x43c26f33`), implementación de los comandos `InputPro Set*` de S81; `[ADF][SYSND]` (27) = sonido del sistema con retardo **60/50 Hz** (`m_StartTransDelay60` `0x43c279a4`, `…50` `0x43c279f9`); `[ADF][GS]` (2) = arranque de paths; `[ADF][FACE]` (2) = **el ADF arranca y detiene la detección de caras** (`StartExecFace` `0x43c32a3b`, puente con S71); `[ADF][AFNR]` (2) = reducción de ruido del AF; `[ADF][CH_SRC]` (1) = micrófono AVIO (`0x43c2e99a`). 8 tests (`tests/test_s91_adf_submods.py`).
-- [S82: AutoFraming y las etapas de control del pipeline](analysis/s82_autoframing/autoframing_stages.md): el **encuadre automático** = tres etapas (`Stage_AutoFraming.cpp` `0x43cc71a3`, `_ResizeRotate` `0x43cc71b9`, `_Branch` `0x43cc71d8`, **idénticas en la A7S** `0x43cc26ac`…); el encuadre se **impone** con offset/tamaño/**rotación** (`ResizeRotate Framing size force set` `0x43cc7143`) tras **validar** tamaño, lienzo y alineación (`0x43cc6e5f`–`0x43cc70f2`); ocho etapas de control (`Stage_CaComm.cpp` `0x43cc7b9c`, `Stage_CameraHAPI.cpp` `0x43cc7bad`, `Stage_Notify.cpp` `0x43caccd6`, `Stage_WaitControl.cpp` `0x43cad784`, `Stage_SACC` `0x43c9ee6c`, `Stage_Common.cpp` `0x43cac363`, `Stage_DevLater.cpp` `0x43cac51b`, `Stage_DualRec.cpp` `0x43cac9f8`) con su relación con el motor de imagen (`CONTP`, `DUALREC_BAYER/CLEARVID`, `NFLASH`). 8 tests (`tests/test_s82_autoframing.py`).
-- [S88: GOLFSHOT (disparo de golf por sonido) y MOTIONSHOT](analysis/s88_shotmodes/golfshot_motionshot.md): 72 cadenas con `GOLFSHOT`; en la A6000 la etiqueta va **anidada** en `[IMAGING_RSRC]:`/`[IMAGING_CAP]:`/`[CAMERA_MAIN_SYNC]:` (`SA_LPF` `0x43ca492f`, `SA_BGEST` `0x43ca4984`, `SA_SSP` `0x43ca49d5`) y en la A7S es prefijo principal (65) → la fw3.21 reorganizó la traza, no la función; módulo `[SAN]` (`StartGolfShot` `0x43c2c72e`, `AnalyzeGolfShot` `0x43c2c792`, `CLAP DETECT SCORE = %d (%d[deg]) DIFF = %d` `0x43ce2f27` → detección del golpe por sonido con ángulo); **ALOCK** con sus 9 búferes (`BG_INPUT_IMAGE` `0x43cb1915` … `PRE_KEY_SSP_IMAGE` `0x43cb1af6`); temporización **por VFC** (`vfc2indx` `0x43ca4a8a`, `shot_time_vfc` `0x43cb18a9`, enlace con S85); `BGEST` decodifica un JPEG (`0x43cb1ba1`); **MOTIONSHOT eliminado** en la A6000 (0 apariciones) y solo queda `MOTIONSHOTVIDEO` (SFRS). 9 tests (`tests/test_s88_shotmodes.py`).
-- [S89: el módulo `IDT`/`IDT_OPD` — mapas del imager, FOPD e IDTSA](analysis/s89_idt/idt_opd_maps.md): **el mismo código con dos prefijos** (cada mensaje aparece dos veces, contiguas: `4cmap.adrs Err:%X` `0x43cf2c2e`/`0x43cf2c4b`, igual `histmap`, `summap`, `shade_map`, `imgmap`, `refmap`, `backImgData`, `miniRAW`, `msain0/1`, `msaout`); mapas entregados al imager (`backImgData`, `imgmap`, `refmap`, `shade_map`, `4cmap`, `histmap`, `summap`, `miniRAW`, `msain0/1`, `msaout`, `ie_in/out`, `lc_in/out`); el **miniRAW** lo usa el AF híbrido (`[LC] Movie DM AF cannot get miniRAW Stored memhandle` `0x43c9c8ba`); **FOPD** con 4 canales (`FOPD_AIF_R0/W0/W1/W2_ERROR` `0x43c91547`–`0x43c915a7`, `KickFOPD error` `0x43cadd2d`) repartido por el `SyncResMgr` (`0x43ca2939`); **Split/IDTSA** = captura partida (`GetIDTSA Unknown aspect` `0x43cf3306`, `Split Movie Cannot use AIF`); **regiones de detección** para el módulo de caras (`kido_th[%d].up/dn` `0x43cf2962`, `ratio_wak[%d]` `0x43cf29de`, `sel_hist`/`sel_sum`); `VATR` (36) y `NSX_OPD` (`FRM set SGC unknown` `0x43c915c7`). 11 tests (`tests/test_s89_idt.py`).
-- [S77: Creative Style y balance de blancos](analysis/s77_pp/picture_profile_creative_style.md): dos tablas de estilos en `av-cam.bin` (13 entradas en `0x43ca6702`–`0x43ca676d` con `Real`, 12 en `0x43ca678b`–`0x43ca67f0` sin él), **idénticas en la A7S fw3.20**; el bloque `wb_*` (`0x43c76c26`–`0x43c76e2b`) es la **calibración de WB del display** (dentro de `ADJ_CMD`, S73), no el WB fotográfico; **negativo verificado**: 0 apariciones de `CreativeStyle`/`PictureProfile`/`Highlight`/`Saturation`/`Sharpness`/`wb_shift` en el firmware → el control vive en el userland: `wrapperCreativeStyle.so` (8 420 B: `getCreativeStyle`/`setCreativeStyle`/`convertProcessValueIdToValue`/`convertValueToProcessValueId`, `stella::8BitArray`, ruta de build `141H…Guiengine_131H`) y `wrapperWhiteBalance.so` (15 556 B: `setWhiteBalance(…,int,int,int)`, `resetAdjustmentValue`, backup vía `Bkup_Read_Setting_Attr`, aplicación vía `ViewBase::requestModelExecute`). 10 tests (`tests/test_s77_pp.py`).
-- [S86: el subsistema del visor — `VDF` (marco de display) y `VEF` (visor electrónico)](analysis/s86_vdf_vef/vdf_vef_viewfinder.md): `VDF` (243 trazas) es un framework C++ completo del display (~200 clases RTTI `N3VDF*`): núcleo (`SubsystemMain::Main()` `0x43c8221b`), framework de mensajes (`MsgAccessor`/`MsgIterator`/`WaitQueue`), cmds de sistema (Pin*/Trigger/Receive/Sysv/CipaModeOut), de display (`SetPanelOut` `0x43c8714a`, `SetPanelBrightness` `0x43c86eea`, `SetPanelColorTemperature` `0x43c86886`, `SetParallax`, `SetOsdAlpha`), de entrada (`UpdateYuv` `0x43c888ef`, `SetYuvLayout`, `SetYuvMute`, `SetShutterMute`, `UpdateFaceFramePin` `0x43c887e9`), de servicio (`SetZebra`, `SetPeaking`, `SetHistogram`, `SetFaceFrame`, `SetEvfParallax`, `SetLiveDemo`), rutas de imagen (`SetPath` `0x43c89fca`, `4K…`) y dispositivos (`EoLineDevice`/`EoPanelDevice`/`MirrorSubsystemSynchronizer`); **puente con VPH** (S85: `VphSetZebraCall` `0x43c87294`, `VphUpdateYuvFunction` `0x43c85017`), **con ADF** (S81: `VdfToAdfYcDataSender` `0x43c86165` + bus **SSBI** del display), **con CLK_CTRL** (S85: `CheckUpdateYuvTiming` `0x43c847d1`) y **con las caras** (S71: marco de cara). `VEF` (149) = visor electrónico: espejo con el panel, modos 3D/2D, multicast de pausa, down-conversion **PAL/NTSC** y cancelación de efectos sincronizada con el VFC. 14 tests (`tests/test_s86_vdf_vef.py`).
-- [S85: `CLK_CTRL` (control de reloj) y `VPH_API` (API del vídeo del visor)](analysis/s85_clk_vph/clk_ctrl_vph_api.md): dos módulos **nuevos en la fw3.21** (0 trazas en la A7S fw3.20). `[CLK_CTRL]` (66): 12 llamadas `ddl_clkctrl_*`, estados `STATE_INIT1(InitDelay)`→`STATE_NORMAL(InitSignal)`→`STATE_LOCK` (+ `STATE_CHANGE_CLK`), gestión **por subsistema** (`open/close subsytem = 0x%04x`, `Busy!! already opened`), cambios de reloj/retardo con **dos VFC** (`m_vfc.main/sub` `0x43c3ac2f`) y arquitectura **maestro/esclavo** (`Receive Message from Master` `0x43c3abd0`, `Send Message to Slave` `0x43c3ac86`) que se coordina con VPH (`vph stat:%d,mode:%d` `0x43c3aa69`). `[VPH_API]` (106): vocabulario de comandos del procesado de vídeo del visor — ruta, OSD, **marco de cara** (`<faceframe_on>`/`<update_faceframe>`/`<faceframe_color>`, puente con S71), timecode, mute, línea (closedcaption/macrovision/vbidwss), panel (brightness/cabc/depth/reverse/ysetup), ayudas (zebra/peaking/gridline/histogram/testpattern) y corrección (parallax/extblackframe/color_temperature), **cada uno con su gemelo `_sub`** (los dos canales) más 11 salidas de estado. 11 tests (`tests/test_s85_clk_vph.py`).
-- [S72: wireless y transferencia remota (WLAN / PlayMem / "Camera on Demand")](analysis/s72_wlan/wlan_playmem.md): pila wireless del userland fw3.21 — `libWlanAdjust.so` (60 492 B: `wlanSetSsid/TxCh/TxMode/TxRate/TxPower`, 11 `wpa_ctrl_*`, `SetMacAddress`), `libWlanControlCommon.so` (23 840 B: `initializePort`, `installWlanDrivers`, 25 × "BMI"), `libWlanResource.so` (63 656 B: `GetMacAddress(WlanResource::ST_MSG_SYNC_REQ*)`, `OSAL_MSGQ_GID_WLAN_RSRC_DBG/_TEST`), **`libGOConnectionManager.so`** (106 016 B: P2P con rol **Group Owner**, estados Idle→Init→Auth→Wait→ChgKey→AuthConn→Finalizing→Stop, comandos WPS `StartWpsCmd`/`InputPin`/`AuthPush`/`ChangeKey`), `libInfraDlnaControl.so` (525 892 B: **DLNA/UPnP**, `dc_statetbl`, 9 `m_lid_*`), **`CameraOnDemandSaver.so`** (20 084 B: escribe en `/mnt/dcim/100msdcf` y **`/setting/psd.bin`**, el mismo fichero ZPD de S75) y `libHapiLib.so`; **`netconf/`** con 4 configuraciones (`bss.conf`/`p2p.conf` WPS `SonyImagingDevice` + `uuid=12345678-9abc-def0-1234-56789abcdef0`, `p2p_go_intent=10`, `p2p_ssid_postfix=-WCM`, `dhcpd.conf` subred 10.0.0.0/16). 16 tests (`tests/test_s72_wlan.py`).
-- [S84: el API del motor de imagen (SA) — catálogo de `sa_func_*`](analysis/s84_sa_api/sa_api_catalogue.md): la superficie del driver `Camera::SaFuncDrv` tiene forma uniforme (`SA_FUNCDRV_ERR sa_func_<X>_<op>(__uint8_t unidad, __uint16_t func_code, <X>_START_PARAM*)`) y **19 familias**: `BFNR`, `BOKS`, `CONTP`, `DECOMP`, `DUALREC_BAYER`/`CLEARVID`, `GOLFSHOT` (dos sobrecargas de `start`: SSP y BGEST), `KKNR`, `LFNR`, `NFLASH` (flash), `PreDCV`, `SFTFCS`, `SPICA` (fases **PRE/MAPPING/POST**), `STAR`, `TBOX`, `YKNR`, `BDEX` (+ `MOTIONSHOT` y `NLAP` solo en A7S); 92 cadenas con `sa_func_` en A6000 (109 en A7S); errores `SA_FUNCDRV_E_OSAL/RLTCODE/ERRCODE`. **Diferencial**: la fw3.21 de A6000 **elimina** `NLAP` (0 ocurrencias) y `sa_func_MOTIONSHOT_*`; lo que queda es `MOTIONSHOTVIDEO` del módulo SFRS. 11 tests (`tests/test_s84_sa_api.py`).
-- [S83: los módulos "menores" del firmware, decodificados](analysis/s83_modules/minor_modules.md): `[ACCY]` (106) = **accesorios por UART** (`NotifyAttachedUart` `0x43c24cca`, `[HW]:AD=%d, ID=%d` `0x43c24cac`); `[CAM_FUNC_MGR]` (43) = **gestor de funciones de captura** (`SyncProcMargin[usec] HS0..HS3@CPU2/CPU0(IDT)/CPU3(RCH)` `0x43ca12f6`, `SetCapMode:Invalid CapMode` `0x43caf036`); `[ENCOUCSTAT]` (49) = **errores del codificador AVC** (`AVC_ENC_VIDEO_ERR_STATE/MEMORY/PARAM/INDEX`); `[VIDENCSTAT]` (70) = **estado del encoder de vídeo** (`Pts`/`EndFlug` `0x43cd680b`); `[ENCSEQCTRL]` (46) = **secuenciador de encoding** (`[O/U Crank] Table[%d] fR sR` `0x43c4bd2b`); `[SAD]` (45) = **programas del motor de imagen** con cabecera (`CdcSaPrg/NmlSaPrg/RsdSaPrg Hdr Err`); `[PNL]` (41) = **panel/display** con callbacks y backup (`cmd_set_conf_cb_NULL` `0x43c761bd`); `[AUGI]` = **formato de bloque con cabecera** (`end_flag`/`PS_flag`/`EP_flag`); `[WSX]` (59) = **búsqueda en fichero "BSFS"** (`BSFS SEARCH LOOP ERROR` `0x43ce41fe`). 10 tests (`tests/test_s83_modules.py`).
-- [S81: ADF — framework de arranque, MSGQ, MMGR y comandos DBGCMD](analysis/s81_adf/adf_framework.md): el **módulo más grande del firmware por trazas** (1220 cadenas `[ADF]` en A6000, 1269 en A7S) en `0x43c26366`–`0x43c37a62`; **arranque** `BootInit` `0x43c26366` → `InitWaitVsync SelectCompo` `0x43c26375` → `AVIO/AUDIOIP INIT COMP` `0x43c263f6`/`0x43c26411` → `BootExit` `0x43c263c9`, con **reenvío de mensajes** (`INIT Resend …` `0x43c263d8`–`0x43c264e1`); **IP de audio** (`AUDIO_IP_CONFIG_TYPE_VGS/PR/MF/CONS/BANDI` `0x43c264fa`–`0x43c2659e`, enlace con S69); **MMGR** (`MMGR COMM INFO` `0x43c265ce`); **MSGQ** (`MSGQ Set:srcId/msgId` `0x43c26788`, `SendImmediateComp` `0x43c268a8`, grupo `MSGQ_GID_HOTSHOE_INFRA1` `0x43c266e6`); y **102 comandos DBGCMD** (`0x43c2a443`–`0x43c2b315`): `System`, **medida del tiempo de CPU2 a 60/48 Hz** (`CPU2 ExecTime 60Hz max m/s` `0x43c2a465`), `Input`/`InputPro`, `Output`/`OutputPro`, `Proc` (**fases lineales del arranque**: `SetLinearPhase`, `SetDec0/1`, `SetAip0/1`, `GetSa0/1`, `GetPin0/1`), `SystemSound` y `SoundAnalyzer` con el **disparo de golf** (`StartGolfShot` `0x43c2b143`). 9 tests (`tests/test_s81_adf.py`).
-- [S71: subsistema de detección de caras y objetos (FC/FRC)](analysis/s71_frc/frc_subsystem.md): **99 ficheros `FC/…`** en el `av-cam.bin`, **idénticos en A6000 fw3.21 y A7S fw3.20**; puente con el **acelerador Scalar (SA)**: recursos en Core2/Core3 (`AcquireRes … Core2 user[0]` `0x43cf094a`, `RES_SA_FOR_FRC2` `0x43cf09b8`), búferes `s_sa_temp_icon_mem`/`s_sa_param_mem` (`0x43cf0bd8`), MMU (`MakeMmu` `0x43cf0c11`), ciclo de cálculo (`ddl_saCalcCancel` `0x43cf0afb`, `alloc size:%d, expected:%d` `0x43cf0b39`) e iconos (`FRC: Init FaceIcon` `0x43cf0d6c`, `FaceIconInfo::Alloc()` `0x43cf0db8`); módulo `[FACE]` (70 trazas) y módulo `[TRK]` (216) con **seis detectores** — DETSA (Core2), EDTSA (Core3: cara/ángulo/nodo/rangos HSV), IRO2G, PMV (vectores de movimiento), STK (saliencia y similitud toque/color) y BT (fg/bg + mapas bayesianos); el algoritmo FRC reordena IDs por `record_rank` y prioriza la creación de iconos; además parpadeo, Pre-FDT, alternancia cara↔objeto, panorámica/retoque y MakerNote de caras. 20 tests (`tests/test_s71_frc.py`).
-- [S80: ZIT — corrección de defectos del sensor (DDC) en el imager](analysis/s80_zit/zit_defect_correction.md): motor de corrección de defectos con 118 trazas `ZIT` (75 en A7S fw3.20) y clases `ZitMemBuffer` `0x43cf768e`, `ZitZphDefectBuffer` `0x43cf81a1`, `ZitZphLineTableBuffer` `0x43cf96ef`; trabaja sobre **cuatro áreas** (`adj`/`usr`/`slow`/`mend`, `0x43cf7706`) y en **bancos por read mode** (`0x43cf7771`); puente al motor de imagen con `ZitSaFunctionDriver` (`ZIT_SaOpen`/`ZIT_SaStart`/`ZIT_SaClose` `0x43cfa2a7`–`0x43cfa2ee`) y MMU propio; **siete operaciones en el SA** — `Merge`, `ConvThin`, `ConvUnity`, `ConvZ1C`, `Det` (`DetectInfo [ch1..ch4]`, `RAWInfo [AVE/MIN/MAX]`), `Hist` y `ZphSA` — más `ZitSA_ConvDdc`; registro de nivel y posiciones de defecto (`SetZitLog_*` `0x43cf7e5f`–`0x43cf7f2e`) y búferes `Zph*`; variantes de **long exposure** (`buildLongExpCapData_DDC`) y **vídeo** (`MovieAdj_SpreadDefectsOverSharedPixels`); drivers `ZitDdcDriver` (`0x4386bbee`) y `ZitZ1cDriver` (`0x437b93c0`) en `CAMERA_MAIN_IM`. 9 tests (`tests/test_s80_zit.py`).
-- [S79: mapa de módulos del firmware por prefijos de log](analysis/s79_modules/module_map.md): extraídos todos los prefijos `[MÓDULO]` de las cadenas del blob: **348 módulos** en A6000 fw3.21 y **277** en A7S fw3.20; `CAMERA_MAIN` se descompone en **8 submódulos** — `CAMERA_MAIN_YC` (970, motor de imagen), `CAMERA_MAIN_SYNC` (429, `SyncResMgr`/`CAMDEV(0|1)`), `CAMERA_MAIN` (135), `CAMERA_MAIN_TC` (127, **giro**: `GyroStitScl`/`LmtGyroVect`, enlaza con S70), `CAMERA_MAIN_LC` (72, **calibración de lente**: `lc_Movie_DM_AF_Util_*`, enlaza con S75/ZPD), `CAMERA_MAIN_CC` (49, **control de captura**: `ExtractCaptureData`/`CaptureInit`/`SetNRParam` con `CapMode/ExposureID/ContID/BDROSeq`), `CAMERA_MAIN_IM` (42, **térmico**) y `CAMERA_MAIN_FC` (9, **datos de ojo**); y las familias mayores: `ADF` (1231), `IMAGING_CAP` (697), `SDF` (477), `CAM_IMAGER` (371), `IDT` (298), `IDT_OPD` (274), `VDF` (243), `CAMERA_SA` (231), `TRK` (216), `MOUNT_DEBUG/ERROR` (132/80), `SFRS/SFRA`, `VPH_API`, `ACCY`, `DBGCMD`, `STK`, `FACE`, `VIDENCSTAT`, `CLK_CTRL`, `GOLFSHOT`, `WSX`, `CTRLCORE`, `CAM_DMM`, `SAD`, `CAM_FUNC_MGR`, `APL`, `PNL`. 5 tests (`tests/test_s79_modules.py`).
-- [S78: parámetros `apc_*` del motor de imagen YC](analysis/s78_apc/yc_apc_params.md): el motor `Camera::YC` calcula sus parámetros de imagen con un espacio de nombres jerárquico `apc_<módulo>.<parámetro>`: **50 parámetros** en **7 módulos** (`apc_lpf` 2, `apc_mask` 6, `apc_yld` 9, `apc_acm` 4, `apc_zoukou` 18, `apc_coring` 8, `apc_gain` 3) entre `0x43cc44cb` y `0x43cc4fe4`; el nombre va **embebido en la cadena de formato** del log (`'[CAMERA_MAIN_YC]: YAP:\tapc_lpf.vaplpf\t=%x'` `0x43cc44b4`); cada módulo lo calcula un job distinto (`apc_lpf`→`0x438b0f80`, `apc_mask`→`0x438b1058`, `apc_yld`→`0x438b11f0`, `apc_acm`→`0x438b177c`, `apc_zoukou`→`0x438b2070`, `apc_coring`→`0x438b2ac4` con firma `job_apc_coring_stl` `0x43cc513d`, `apc_gain`→`0x438b3570` con firma `job_apc_gain_stl` `0x43cc40df`); el cálculo depende de la secuencia BDRO, del ISO y del efecto de imagen. 6 tests (`tests/test_s78_apc.py`).
-- [S76: pipeline de captura (etapas `Stage_*`) y motor de imagen](analysis/s76_stages/stage_pipeline.md): **73** etapas del procesado embebidas en el `av-cam.bin` con su fichero fuente (`Stage_Apollo.cpp` `0x43cc6e0f`, `Stage_BDRO.cpp` `0x43cc71fa`, `Stage_BOKS.cpp` `0x43cc7569`, `Stage_Decomp.cpp` `0x43cc7df8`, `Stage_Develop.cpp` `0x43cc82be`, `Stage_FaceDetect.cpp` `0x43cc8d9d`, `Stage_KKNR.cpp` `0x43cc9329`, `Stage_MARBLE.cpp` `0x43cc956d`, `Stage_OPD.cpp` `0x43cc9785`, `Stage_Orientation.cpp` `0x43cc97b4`, `Stage_SPICA` `0x43cc990c`, `Stage_STAR` `0x43cc9dd6`, `Stage_SoftFocus.cpp` `0x43cc9f22`, `Stage_StillDate.cpp` `0x43cca086`, `Stage_TBOX.cpp` `0x43cca36a`, `Stage_YKNR` `0x43cca4d9`, + Panorama/Raw/Resize/CaComm/CameraHAPI/AutoFraming/Adjust/Notify) y **26** funciones `sa_func_*` con correspondencia nominal etapa↔SA (BOKS, DECOMP, SPICA, STAR, YKNR, LFNR, DUALREC_BAYER/CLEARVID, BDEX); `Stage_SPICA` carga sus parámetros de `/usr/sabin/spica_*_tap_step*.bin` y `Stage_Adjust` contiene `ContrastPlus_Base` (`0x43cc7bc2`). 5 tests (`tests/test_s76_stages.py`).
-- [S75: ZPD (zone plate detection) — calibración del sensor con datos de la lente](analysis/s75_zpd/zpd_subsystem.md): namespace `Camera::ZPD` con **14** clases (`MemObj`, `MemUnit`, `MemUnitBackup`, `MemFileLoadObj`, `Control::Detect`, `Control::WorkerBase`, `Control::SequencerBase`→`Sync`/`Async`/`Sequencer`, `ITrace` y **`ZPD::Lens::LensInterpretChunk`/`…ChunkEd`**, `0x43ccf318`–`0x43cd1c3b`); **tres orígenes de datos**: de la lente (`[ZPD]: load lens data from lens.` `0x43ccf2c7`), del cuerpo (**`/setting/psd.bin`**) y `dra data` (`0x43ccf2a0`); consumo en el DFE: factores de interrupción `ZPD0`/`ZPD1` (`0x43c91781`–`0x43c91925`), carga de posiciones de defecto en la **SRAM del sensor** (`ImgDdcSetter::loadDefectPos ZPD_SRAM shortage` `0x43cf75ee`) y trazas APB/AIF (`ZPD_APB0/1`, `ZPD W-ch0/R-ch1`); coordinación con el bus de la lente (`[BL]ZPD change EclipseDataComState from STANDBY to START` `0x43c976b5`; el protocolo MOUNT incluye el campo **`LC T.O. Cnt`** `0x43c96c1e`) y con el AF híbrido (`zpd_mario_afa.cpp`, `LC_GetZpdResultInfo`); **diferencial A7S fw3.20**: sin namespace de aplicación pero con los factores ZPD del DFE. 9 tests (`tests/test_s75_zpd.py`).
-- [S73/S74: protocolo de ajuste de fábrica `ADJ_CMD` (panel/EVF/OLED) y `ContrastPlus`](analysis/s73_adj/adjust_cmd_recon.md): **38** comandos `ADJ_CMD_AVBB_PANELEVF_*` (`0x43c76c93`–`0x43c774b2`) para el display (VCOM, WB por sub-bloques R/G/B con `WB_SubB_{R,G,B}_Adrs=%02X`, CALDAC, **termistores** OLED/EVF, test de fábrica, detección de panel y de tipo de EVF) y 4 `ADJ_CMD_LIRO_DRIVERS_ADC_*` (`0x4398e578`); estructura del manejador `0x4363524c`: **un solo ID** (u16 `0x302` en `[r6+0x18]`) y **8 sub-comandos** (u8 en `[r6+0x1a]`, 1..8) que son **máscaras acumulativas** `0x01,0x03,0x07,0x0F,0x1F,0x3F,0x7F,0xFF` (`tbb` en `0x436354fc`, tabla de 8 bytes en `0x43635500`); `ContrastPlus_Base` (`0x43cc7bc2`) es procesado de imagen en el camino de captura. 10 tests (`tests/test_s73_adj.py`).
-- [S70: reconocimiento del subsistema EIS/gyro](analysis/s70_is/is_gyro_recon.md): tres capas de trazas (`[CAMERA_IS][AS]`, `[EIS]`, `[DIST]`), termistores de display y **fichero de calibración por lente** `/mnt/FILE_IS_%04x.dat` (contador u16 + `snprintf`); la capa `IS` es el motor de estabilización por desplazamiento del sensor y **no** tiene relación con el obturador electrónico. 4 tests (`tests/test_s70_is.py`).
-- [S68: gestión de batería, energía y carga (NP-FW50)](docs/capture/s68-battery-power.md): **resultado negativo verificado**: el `av-cam.bin` de A6000 **no tiene modelo del pack NP-FW50** (0 hits de `NP-FW`/`NPFW`/`FW50`); lo que hay es nivel de batería vía UPM (`Set UPM Battery Level` `0x43ca2dfd`), códigos de estado hacia un MCU (`ACV_BATT_Snd` `0x43c8f95e`, `BATT_AUTH_Snd` `0x43c8f96b`, `BATT_STATE1..3_Snd`, `BATT_TYPE1/2_Snd`, `Box_Temperature_Snd` `0x43c8f9fc`, `ACV Error Voltage` `0x43c8f83b`), **carga del flash** y no de la batería (`SB_CHARGE` `0x43cb4c23`, `uc_Charge*` `0x43ccd8c2`–`0x43ccd96c`), power save del imager y coordinación lente↔voltaje (`Wait E-MountLens ReduceVoltage` `0x43cc7aa4`, `CaptureCancel_PowerOffDetect` `0x43ca9d85`); la A7S conserva el bloque de estado pero no `BatteryInfo` ni los `Battery Info` de las luces. 19 tests (`tests/test_s68_power.py`). Sin efecto en S51 (fin electrónico NO VERIFICADO; A/B/C = NO).
-- [S69: subsistema de audio de la A6000 (línea general)](docs/capture/s69-audio-subsystem.md): el audio es un *IP* más del driver de sensor (`AUDIOIP INIT COMP` `0x43c26411`, configs VGS/PR/MF/CONS/BANDI); micrófono (`SetParamSetMicMode` `0x43c26dc1`, `Abb::SetMicConfig` `0x43cddad4`); niveles (`SetParamSetRecLevel` `0x43c26df4`, `15AbbRecLevelCtrl` `0x43cdddf3`, `RecLevel SetRecLevel` `0x43929fa4`); WNR/voz (`WindStage:%d, MagDataRsv:%d` `0x43cddea7`, `MAGIC SetNwnr`, `PremiumCloserVoice`, `MyvoiceCanceling`); códecs `XAVCS_LPCM`/`MP4_LPCM`/`AAC` (`0x43c6909d`/`0x43c690c8`/`0x43c690f1`); enlace con vídeo (`ProcBuffMgrWrAudioPin` `0x43c28d29`, `AVBB_SCN_START/STOP_AUDIO`); la **A7S tiene códec externo** (`15AbbExtCodecCtrl` `0x43cd582e`) que la A6000 no. 9 tests (`tests/test_s69_audio.py`). Sin efecto en S51 (fin electrónico NO VERIFICADO; A/B/C = NO).
-- [S66: montura de lente E-mount (línea general, sin relación con SilentShutter)](docs/capture/s66-lens-mount.md): subsistema `MOUNT`/"BL" del `av-cam.bin` A6000 (código `0x436dfe6c`–`0x436e9ea4`, 646 logs en `0x43c95659`–`0x43c9a900`, ficheros internos `Mount_Controller.cpp`/`Mount_DividedInfo.cpp`); bus cuerpo↔lente **UART** con handshake **CS/DATA** por GPIO (`gpio_get` `0x43b5e2bc`); **trama** `0xF0` | longitud `size+8` LE | commtype(`&7`) | **ID de comando** (`0x07` ATTACH_INFO1, `0x0A` CS_CREDIT, `0x15` UPDATE_DATA, `0x16` LENS_SLEEP, `0x2B` ALPHA_LENS_INFO) | datos | **checksum u16 LE** | footer `0x55`, con validación `HEADER/FOOTER/CHECKSUM/DATASIZE/COMMTYPE`; tipo de lente por 2 bits (`& 3`): 1 = **4.8 V** (4096 mV), 2 = no registrada, resto = desconocido (error `0xFF`, válido `0x0A`); ciclo de vida completo en los 63 logs de `0x436e5e3c` (LENS_WEAR → UART_HZ → ATTACH_INFO1..4 → STARTUP_INFO → CS_CREDIT → WAKE_UP → POWEROFF → DETACH_1/2/COMP → LOGIC_ON/OFF → STANDBY); **FW de la lente** por el mismo bus con CAIF/C3P (`0x436fe070`: LUPDT_INFO/LUPDT_DATA) y **segundo bus al DSP** `[LENS_PDR]`/BonoboDSP (`0x437089d4`, `0x43708a88`, `0x43708cc4`, MMIO `0xf292d000`); 18 ficheros `/lens/VX91xx_lensfile.bin` (cabecera `LF` de 16 B con `lens_id` en `+0x0c`, secciones `ED`/`CS`/`LC`, parser `0x43907c7c`), idénticos byte a byte a los de A6300 y **ausentes en A7S 3.20**; sombreado por lente (11 `ss_LensMountShdValue[]` + 32 `us_LensMountShdGain[]`) con tabla `tbb` de 69 modos de captura → 14 ShdMode (`0x438ef418`), bloque SHD **idéntico** A6000/A7S (217 logs cada uno); fw3.21 añade 4.8 V, LENS_WEAR, DETACH/attach, ALPHA_LENS_INFO, CS_CREDIT, CHG FREQ y handshake `[HS]` frente a la fw3.20. 31 tests (`tests/test_s66_lens_mount.py`). Sin efecto en S51 (fin electrónico NO VERIFICADO; A/B/C = NO).
-- [S64: prueba en cámara de SilentShutter](docs/capture/s64-silent-ram-nvram-test.md): campo `0x83edf8bc` escrito/restaurado por service mode; backups NVRAM y 4 MB de RAM en ciclos off/on con control: sin cambios atribuibles al modo; `0x43804610` reinicializa el bloque (`+0x238`=0) y no hay ruta de persistencia en backup; sin consumidor de captura. Fin electrónico NO VERIFICADO; S51 A/B/C = NO. Prueba en modo normal por telnet/adb (OpenMemories Tweak): mismo bloque, `+0x238` forzado a 1 con 3 disparos ⇒ obturador sigue mecánico y la copia de trabajo no cambia; `scripts/camera_telnet.py`. Búsqueda estática del lector: copia de trabajo sin lector de Silent; instantánea `0x43e9b548`, campos vecinos, override de drive_mode y condiciones EFCS probados en cámara: sin cambio de obturador; solo el espejo `+0x210`=1 dio un sonido de disparo múltiple (4/4, un JPEG por petición; significado NO VERIFICADO). Pruebas en cámara detenidas por el usuario. Inventario de captura silenciosa vía `CameraSequence` (preview frames): [liveview-silent-capture-via-cameraex.md](docs/capture/liveview-silent-capture-via-cameraex.md). Volcados de cámara versionados en `analysis/camera-dumps/` (cada uno con `README.md`; referencia NVRAM buena: `nvram-referencia-20261020-214913`), ver [s65-nvram-incident-diff.md](docs/capture/s65-nvram-incident-diff.md). Reinicios de la cámara (logs en RAM, WDT/oops): [camera-reset-logs.md](docs/capture/camera-reset-logs.md). Firmware propio (vuelta atrás e instalación): [custom-fw-recovery-and-install.md](docs/capture/custom-fw-recovery-and-install.md); sondeo de guard `scripts/fdat_guard_probe.py` pendiente de ejecutar.
+## Subproyecto: obturador electrónico
 
-- [S62: PMCA — inyección de código, service shell y la propiedad `modelName`](docs/capture/s62-pmca-injection.md): `updatershell` inyecta un fdat propio (cramfs con `libupdaterbody`, header 0x30 B por modelo, guard CRC + modelo/región/versión sin firma; CXD90014) que el updater ejecuta y expone shell USB `0x23`; `serviceshell` (senser, HASP) da terminal y backup `0x603`. `bk w 0x003e0005` no es una dirección sino la propiedad BK4 `modelName` (subsistema `0x3e`/índice 5, 16 B, solo lectura) del almacén `/setting` (`nflasha2`), verificada en el preset de fábrica como `ILCE-6000` (test 5/5). El procedimiento `ILCE-6001` es coherente con la selección de fdat por nombre reportado, pero el efecto «shell mode» queda **NO VERIFICADO** (la cadena no existe en el firmware). S51 se mantiene.
-- [S61: origen de los parámetros IMX210 y flujo de mensajes](docs/capture/s61-conclusions.md): corrección TBH de S60-Sol (base `0x43806a08`); selección A/B del bloque `obj+0xe20` (A: bit6 de `G[0xD]`, G=`0x43e964a4`; B: `[[p]+0x3a]==1`), cadena de B recuperada hasta `obj+0x2be..` vía `0x43861ed0` y 6.º par desde BK4 `0x300AB` (`(0x2EA0,0x6028)`); los pares parecen ventanas lo/hi ±0x400, no tiempos; petición 9 emitida desde `HS_Main` y publicación en `VD_Pre`; petición 3 sin emisor; sin estados alcanzables. Fin electrónico NO VERIFICADO; S51 A/B/C = NO.
-- [S60: emisor de mensajes IMX210 y receptores A7S](docs/capture/s60-conclusions.md): A6000: `0x438069f0` es una tarea de mensajes (casos 4/10 = respuestas a 3/9) y los 24 B `+0xdd0` son 6 pares u16 con dos productores (`0x437ab510`, `0x43aecbfa`); A7S: `0x1000/0x1001` = trazas (eco de SetExposure/SetRead), sin efecto de control. Auditoría GPT no obtenida (límite de uso). Fin electrónico NO VERIFICADO; S51 se mantiene.
-- [S59: validación cruzada Claude + GPT-6.1 Sol](docs/capture/s59-conclusions.md): escritor del bloque IMX210 `+0xDD0` recuperado (`0x43b00da0`, valores M de payload externo, sin M/Tv/clk alcanzables); constructor real C_Imager A7S `0x436f3fc0` emulado, corrige tramas/base P2S de S58 y aclara mensajes `0x1000/0x1001` (lista blanca de modos). Fin eléctrico IMX210 NO VERIFICADO; S51 se mantiene.
-- [S58: productores AE y configuración efectiva A7S Silent](docs/capture/s58-conclusions.md): cálculo numérico de svd/shd/spl recuperado; cadena SetMode→SetExposure→SetRead→Execute emulada con stubs; matriz IMX235 corregida (69 filas), 100 escrituras en dos dispositivos. SetRead/ganancia se distingue de SetExposure. Fin eléctrico IMX210 NO VERIFICADO; S51 se mantiene.
-- [S57: semántica de ID1/SSB/svd-shd-spl, Silent IMX235, XPI y sincronía P2S](docs/capture/s57-conclusions.md): ID1 = registro combinado (modo de lectura + ShutMode + strobe); SSB acompaña a toda actualización de exposición y no al fin; svd/shd/spl mapeados exactamente y svd atado a un contador de VD; Silent A7S = modos de lectura 0x4e/0x4f (variantes de 0x4c/0x4d); fin electrónico NO VERIFICADO, S51 se mantiene.
-- [S56: transporte de registros del IMX210 (IDs = direcciones 16 bit, P2S/DFE0), CISIF = receptor](docs/capture/s56-conclusions.md): trama `81|len|81|AH AL|datos`, ShutMode→ID1, pulso SSB; fin electrónico NO VERIFICADO, S51 se mantiene.
-- [S55: origen de los pares GPIO (base de backup BK4), A7S vs A6000](docs/capture/s55-conclusions.md): escritor `0x436bcef4`, infraestructura de pines idéntica en A7S, sin consumidor GPIO de P4C, S51 se mantiene.
-- [S54: P4C, tipo de mecanismo 0 y sincronización BIONZ](docs/capture/s54-conclusions.md):
-  P4C (`CA_1ST_CURTAIN_START`) llega a BIONZ por `SENS_B` y `GPIO_9`; Darwin solo la escribe a 0, también sin mecanismo.
-  El tipo 0 de A6000 equivale a Silent de A7S en exposición/ADC, no en reposición. Consumidor en BIONZ no localizado; S51 se mantiene.
-  Ver también [P4C](docs/capture/s54-p4c-signal-trace.md), [BIONZ](docs/capture/s54-bionz-darwin-sync.md),
-  [tipo 0](docs/capture/s54-mechanism-type-zero.md), [IMX210](docs/capture/s54-imx210-electronic-exposure.md) y
-  [cronología](docs/capture/s54-capture-timeline.md).
-- [S53: parser CAIF de Darwin, A7S vs A6000](docs/capture/s53-conclusions.md):
-  el paquete ev1 llega por MFS5 (ID `0x0c`, 22 B); el parser A7S consume el bit Silent `0x20` y deja de
-  accionar las bobinas de cortina; el de A6000 lo descarta. Falta lógica en el firmware Darwin A6000; S51 se mantiene.
-  Ver también [reconstrucción](docs/capture/s53-darwin-caif-reconstruction.md),
-  [comparación](docs/capture/s53-darwin-a7s-a6000-comparison.md),
-  [cortinas](docs/capture/s53-curtain-actuator-control.md) y
-  [viabilidad](docs/capture/s53-a6000-silent-feasibility.md).
-- [S52: mecanismo Silent Shooting A7S y viabilidad en A6000](docs/capture/s52-parallel-conclusions.md):
-  la A7S no suprime el control de cortinas, lo marca como Silent (bit `0x20` en CAIF)
-  y deja de esperar respuesta del MCU de obturador; cadena clase→ShutMode verificada
-  por instrucciones. Decisión física en el MCU Darwin y semántica eléctrica del IMX210
-  sin verificar; viabilidad en A6000 **NO VERIFICADA**, se mantiene S51 (no parchear).
-  Ver también [cortinas](docs/capture/s52-a7s-curtain-trace.md),
-  [propagación de clase](docs/capture/s52-shutmode-propagation.md),
-  [IMX210/exposición](docs/capture/s52-imx210-electronic-exposure.md) y
-  [viabilidad A6000](docs/capture/s52-a7s-a6000-feasibility.md).
+- Pruebas físicas pendientes (no ejecutadas): [docs/capture/physical-test-plan.md](docs/capture/physical-test-plan.md).
+- Decisión vigente: **no parchear** (S51, [decisión SÍ/NO](docs/capture/s51-decision.md)); categoría E, evidencia insuficiente; ni viabilidad ni imposibilidad demostradas.
+- Conclusiones: [S50](docs/capture/s50-parallel-conclusions.md) · [S52 viabilidad A6000](docs/capture/s52-a7s-a6000-feasibility.md) · [EFCS](docs/capture/efcs-capture-selector.md) · [estado Silent](docs/capture/silent-shutter-status.md) · [traza](docs/silent-shutter-trace.md).
+- Referencia comparativa: A7S 3.20 ([A6300 vs A6000](docs/capture/a6300-silent-comparison.md)).
 
-- [S51: decisión SÍ/NO sobre exposición totalmente electrónica](docs/capture/s51-decision.md):
-  A (¿ruta demostrada?) NO, B (¿evidencia para parchear?) NO, C (¿imposibilidad probada?) NO
-  — falta de demostración, no prueba de imposibilidad. Decisión vigente: no parchear.
-  Ver también [informe Codex T2/T3](docs/capture/s51-codex-t2-t3.md).
+## Documentos generales
 
-- [S50: conclusiones conjuntas Claude + Codex](docs/capture/s50-parallel-conclusions.md):
-  **NO_VERIFICADO** una foto de resolución completa con exposición electrónica sin
-  cierre de cortina mecánica; tampoco demostrada su imposibilidad. Nombres
-  `CURTAINMODE`/`*_ELEC_SHUT` no prueban efecto eléctrico (ambos investigadores lo
-  rechazan). Informes: [Claude](docs/capture/s50-claude-electronic-config.md) ·
-  [Codex](docs/capture/s50-codex-exposure-curtains.md).
-
-- [S49: productor de configuración de captura](docs/capture/s49-capture-config-producer.md):
-  clave `0xce` = comando `S_IMAGER_CURTAINMODE`; tabla de servicios de `av-cam.bin`
-  inicializada por `liro.ko`. Productores reales: puente USB/«Senser» de `libsencore.so`
-  y cuatro funciones de `libObj.so`.
-
-- [S48: proveedor del servicio de registro `+0x1ec`](docs/capture/s48-service-table-provider.md):
-  wrappers `0x43561298/0x4356…b4/…324` resueltos; slots `+0x1e8/+0x1ec/+0x200` sin
-  escritor en el blob — son importaciones que rellena el cargador/host, no `av-cam.bin`.
-
-- [S47: entrada del payload y orden de C](docs/capture/s47-payload-producer-and-order.md):
-  solicitud recibida en `0x43e95420` → payload `0x43ed4620`;
-  callback antes de copia C, con `+94/+95` dentro del rango `0x1a4`.
-  S48: productor anterior a `0x43789cc0`, registro `0x301d7`; hito abierto.
-
-- [S46: base VD y escritor del contexto](docs/capture/s46-vd-base-and-context-identity.md):
-  inicialización `0x43e16d2c=0xf3120000`, destino `0xf3120220`;
-  callback `0x437dad78`, clave `0xce`, produce C+94/+95 desde dos u16.
-  Antecedente; S47 resuelve entrada y orden. Productor original y efecto físico pendientes.
-
-- [S45: contexto y consumidor real del timing IMX210](docs/capture/s45-context-identity-and-physical-closure.md):
-  antecedente: contexto C localizado; virtual+74 consume IMX210+3a0 hasta
-  escritura del controlador base+220. La base se resuelve en S46; alias P/C pendiente.
-
-- [S44: consumidor de registros y tabla de modos](docs/capture/s44-register-consumer-mode-table.md):
-  119 pares ID/valor llegan al backend de comandos y a MMIO; virtual+a8
-  compara clases de modo. Productor local de byte+95=2 recuperado;
-  alias con C y cierre físico pendientes.
-
-- [S43: tabla PIC y códigos de modo IMX210](docs/capture/s43-exposure-mmio-and-lock-codes.md):
-  registros preparados en memoria software, sin MMIO directo; las llamadas
-  posteriores guardan estado. Cadenas refutan códigos de bloqueo AF y confirman
-  selección de modos. Transporte físico y origen de clase2 siguen pendientes.
-
-- [S42: identidad de la llamada de exposición](docs/capture/s42-exposure-call-identity.md):
-  wrapper `436d6320` → slot virtual +28 → backend `436d6f6c`;
-  productor de controles por copia y usos byte de clase2 contrastados.
-  Origen del valor2, parser3023 y dependencia R+5cc todavía pendientes.
-
-- [S41: productores de mensajes y snapshots](docs/capture/s41-message-origin-imx210.md):
-  productores internos de `4000/4036`, tablas de valores y constructores de
-  snapshots recuperados; frontera OSAL activa Línea C: selector EFCS y
-  clase2 contrastados, sin fin electrónico demostrado. Origen `3023` PARCIAL.
-
-- [S40: origen del contexto de modo](docs/capture/s40-context-origin-imx210.md):
-  comandos API `4000/4036/3023` alimentan `+24/+48/+458`; copias de `0x560`
-  bytes y tabla de despacho recuperadas. Semántica IMX210 y alias PARCIAL.
-
-- [S39: enum de imagen y discriminador APL](docs/capture/s39-image-format-apl.md):
-  tres consumidores convergen en detección de cambio y reinicialización;
-  origen del enum con cuatro escrituras condicionales en VD_Pre.
-  Formato de píxel/pitch y vínculo con opción de usuario/FPS sin cerrar.
-
-- [S38: frontera DMM/OSAL en av-cam](docs/capture/s38-dmm-osal-static-frontier.md):
-  blob LIRO sin resolución ELF; slot importado +0x2e4 cero en archivo.
-  Pool 0x61003c compartido, servidor/escritor de extents sin recuperar.
-  Próximo: enum de formato S33 hasta campos APL, stride y tamaño.
-
-- [S37: definidor DMM en libmprctrl](docs/capture/s37-libmprctrl-dmm-extents.md):
-  getters de extents DmmAccessPLA y paquete AllocDmmMemory resueltos;
-  cliente OSAL 0x61003c y enlace exacto al PLT S30. Dominio físico/lógico,
-  identidad del slot av-cam y productor físico YC todavía sin demostrar.
-
-- [S36: memoria de libInfraScalarMpr](docs/capture/s36-libinfra-scalar-mpr-memory.md):
-  `void**` devuelve un mapeo SysV usado para copiar datos still. Las dos APIs
-  DMM son importaciones UND; backend av-cam y productor físico YC siguen abiertos.
-
-- [S35: objetos DFE y frontera estática APL/IRQ](docs/capture/s35-dfe-objects-static-frontier.md):
-  Ofmt/Ifmt y métodos virtuales resueltos; leen/activan SGC `0xfc0a…`, sin
-  vínculo APL→IRQ→EC/LM demostrado. Frontera de esta vía agotada; siguiente:
-  proveedor DMM importado `0x43561524` y consumidor real del handle YC.
-
-- [S34: APL/DMA frente a VD e interrupciones](docs/capture/s34-apl-dma-vd-interrupts.md):
-  programación y kick síncronos; evento Drive no acredita fin DMA. Registrador
-  DFE y causas software resueltos; vínculo banco APL→IRQ→EC/LM y cuadro físico
-  propio/siguiente aún sin demostrar.
-
-- [S33: origen de los handles YC](docs/capture/s33-yc-rendezvous-producer.md):
-  26 llamadas y 13 parámetros locales rastreados hasta handles Rendezvous;
-  escritor secundario `0x43814ea0→input+0xd4=P+0xbc` identificado.
-  Rama APL seguida hasta configuración MMIO; backend DMM, layout/pitch/formato
-  y fin DMA físico pendientes.
-
-- [S32: callbacks VD y SyncYCout](docs/capture/s32-vd-callbacks-sync-ycout.md):
-  destinos de las listas Drive/Post resueltos; productor YC con handle DMM
-  compartido. Dirección de píxeles, pitch/formato y fin DMA siguen sin cerrar.
-
-- [S31: subsistema CAMERA_MAIN_SYNC/DFECore](docs/capture/s31-camera-main-sync-strings.md):
-  hallazgo por cadenas (`strings`) de un motor de temporización VD del sensor
-  no explorado en S16–S30 (centradas en libObj.so/libBizFw.so). Decompiladas 8
-  funciones clave (`VD_Pre`→`VD_Sequence`→`VD_Post`→`VD_Drive`); acceso MMIO real
-  verificado a `0xf3c30110–0xf3c3015c`. Candidato más cercano al productor YC
-  sin dirección de píxeles/plano/pitch/fin DMA. Superado por S32.
-
-- [S30: receptor y retorno de EncodeStill](docs/capture/s30-pipelines-capture-encode.md):
-  InfraAvbbc→InfraStillEncoder→SDF, espera hasta completion y continuación a Pool.
-  CaptureId no es un descriptor YC; captura nueva sin cortinas y contrato DMA/caché
-  del YC siguen abiertos. Auditoría estática: 12 comprobaciones.
-
-- [Avance Darwin y control del obturador](docs/capture/darwin-state-machine.md):
-  tablas de fases reconstruidas, notificación y escrituras comparadas;
-  viabilidad de obturación totalmente electrónica A6000 aún sin demostrar.
-
-- [Alcance general y dos líneas de trabajo](docs/project-scope.md).
-- [Línea A: arquitectura general](docs/architecture/README.md).
-- [Línea B: pipeline de captura](docs/capture/README.md).
-- [Inventario físico documental](docs/hardware-inventory.md): 16 bloques y preguntas,
-  con identificación de chips pendiente.
-- [Atlas ELF](docs/elf-classification.md): 679 rutas ARM, 641 contenidos únicos;
-  147 ejecutables, 469 bibliotecas candidatas y 63 módulos. 391 asociaciones
-  funcionales todavía desconocidas.
-- [Mapa de dependencias](docs/subsystem-dependencies.md): 3890 DT_NEEDED,
-  incluidas 8 resoluciones ambiguas. Datos completos: reports/elf-atlas.json.
-- [Arranque y recuperación](docs/boot-and-recovery.md): evidencia inicial y
-  preguntas; recuperación de hardware no demostrada.
-
-La carpeta conserva el nombre histórico para mantener válidas las rutas de
-REA y las evidencias. No se movió ni eliminó firmware o investigación anterior.
-
-## Estado del subproyecto de obturador
-
-Comparación activa: [A6300 2.01 frente a A6000 3.21](docs/capture/a6300-silent-comparison.md).
-Referencia comparativa vigente desde 19-10-2026: **A7S 3.20** (instrucción del usuario; sustituye a A6300 2.01, que queda como histórico). Ver [manuales de servicio](docs/references/a7s-vs-a6000-service-manuals.md).
-Se identificaron modos y callbacks específicos de Silent en A6300; el modo
-`0x4e` de IMX284 es rechazado por el controlador IMX210 de A6000.
-Los selectores se comprobaron con 14 casos de emulación de instrucciones.
-El [ajuste y sus respuestas de software](docs/capture/a6300-silent-software.md)
-se han seguido separadamente de la captura física.
-Se reconstruyó además la [selección Silent del paquete CAIF](docs/capture/silent-caif-transport.md)
-hasta el transporte de sus 31 bytes; falta identificar su interpretación física.
-Una ruta omitida por Silent quedó identificada como
-[contabilidad de eventos KikiLog](docs/capture/silent-kikilog.md), con
-receptor comprobado por REA; se descarta como prueba de control de cortinas.
-Esto impide trasladar directamente esa opción y no demuestra una limitación
-del silicio. La investigación continúa; no hay parche funcional validado.
-
-**EFCS reconstruido: [selector de captura e IMX210](docs/capture/efcs-capture-selector.md).**
-Se identificó la copia entre bancos que transporta EFCS, su selección de clase
-y la copia al byte +9 recibido por SetExposure, con sus condiciones de backend.
-La clase 2 sigue sin interpretación física suficiente para activar SilentShutter.
-Base anterior: [exposición IMX210 y transferencia P2S](docs/capture/imager-exposure-p2s.md).
-Se siguieron el coordinador de exposición, la selección por bancos, los métodos
-SetExposure/SetRead y las escrituras del transporte P2S. Se corrigieron entradas
-de función y se descartó un falso lector de Silent por identidad de estructura.
-[Consumidores y correcciones E018](docs/capture/silent-imager-consumers.md).
-El proyecto Ghidra conserva más de 37000 funciones registradas; el análisis amplio
-terminó por tiempo, por lo que ese número no acredita cobertura completa.
-Las exportaciones de funciones conservan el hash del firmware original.
-
-[Ruta de configuración y receptor LIRO](docs/capture/silent-shutter-status.md):
-Se verificaron factory, CamMgr, Off/On y cola 0x30001; av-cam.bin recibe tipo5,
-despacha 0x40e3 y guarda el modo. Tabla de 220 comandos reproducible. El blob
-contiene un controlador IMX210 candidato; funciones conservadas en un
-proyecto Ghidra persistente. Todavía no hay vínculo probado entre ese estado
-y el fin electrónico de exposición: no hay parche funcional ni viabilidad cerrada.
-
-Prioridad actual del usuario: **EFCS y posible cortina trasera electrónica**.
-Se localizaron acciones, secuencias, despacho a conversores y envío OSAL
-separados para EFCS y SilentShutter. El éxito de envío no demuestra final de
-exposición. [Informe principal y comparación de métodos](docs/capture/shutter-investigation.md).
-También se verificó el caso 0x1008 del coordinador y se documentaron eventos
-de captura/AutoReview en el [pipeline parcial](docs/capture-pipeline.md).
-La lectura electrónica completa y el receptor físico permanecen abiertos.
-El transporte se acotó hasta /dev/uipc y el encolado del núcleo; hay una cola
-0x30001 cuya correspondencia estática con el receptor quedó resuelta en E016.
-
-Al 15-10-2026: **categoría E, evidencia insuficiente**. Extracción oficial 3.21
-e inventario realizados; no hay parche ni viabilidad demostrada. Esta categoría
-solo corresponde al subproyecto, no limita la investigación general.
-
-Avance con REA tras el reinicio: constructor y dos opciones On/Off de SilentShutter
-identificados en CautionConfig.so; rama de conversión de mensajes localizada en
-libObj.so. El diagnóstico NON SUPPORTED rechaza ciertos mensajes; no demuestra
-imposibilidad por hardware. Tampoco se demuestra soporte funcional en A6000.
-Evidencias y limitaciones: [traza SilentShutter](docs/silent-shutter-trace.md).
-
-Último avance de captura: [S29, WriteStill de entrada a cierre](docs/capture/s29-writestill-end-to-end.md): orden `0x10000003`, escritura, retorno RecStill→FEA→Obj, cierre del Pool y respuesta `0x10000004`. SetImageWrited corresponde a `0x6108/0x1007`, no `0x1009`. El cierre de software no acredita durabilidad física ni SilentShutter.
-
-[S28, contrato de pines YC](docs/capture/s28-osal-pin-contract-closure.md): InfraImaging sirve `0x50004`; VEF y ScalarInfra identificados. Las cuatro propiedades del pin no son una imagen para WriteStill.
-
-Resultados: `docs/findings.md`, `docs/feasibility-report.md`; continuidad: `CONTEXT.md`.
-Original Sony conservado en `firmware/original/`; fuentes públicas fijadas en `reports/source-revisions.json`. No publicar `firmware/` ni las copias locales de fuentes sin revisar sus licencias. No se accedió a una cámara.
+[Alcance](docs/project-scope.md) · [Arquitectura](docs/architecture/README.md) · [Captura](docs/capture/README.md) · [Inventario físico](docs/hardware-inventory.md) · [Atlas ELF](docs/elf-classification.md) · [Dependencias](docs/subsystem-dependencies.md) · [Arranque y recuperación](docs/boot-and-recovery.md).
 
 ## Reproducción local sin instalar paquetes
 
@@ -327,66 +169,59 @@ REA 6.5.0 instalado en `tools/rea` con versión y dependencias fijadas en packag
 
 Comprobado: protocolo MCP initialize, 207 herramientas, binary_session, diagnóstico Ghidra/Codex y análisis ARM real. En este sandbox, la comprobación Java desde Node requiere ejecución autorizada fuera de la restricción EPERM; no confundir ese fallo con ausencia del JDK. Binwalk, Unblob y JADX siguen pendientes; no son necesarios para el ELF ya extraído.
 
-## Sesión 19 — seguimiento de conectividad
+## Empezar desde cero (clon nuevo + firmware 3.21 recién descargado)
 
-S19-02 verificó el salto efectivo `UObjPin::Connect`/`ConnectPinWrapper` hacia
-`MWF::ObjPin::Connect`, incluido el comportamiento de validación genérico. La
-instancia LifeCycle creada por `TM::createLifeCycles` sigue sin una arista de
-ejecución demostrada hasta ese salto; esto no acredita SilentShutter funcional.
-Detalle reproducible: [S19-02 LifeCycle/Connect](docs/capture/s19-lifecycle-connect.md).
+**Para agentes de IA:** ejecutar `scripts/agent/bootstrap.sh` (idempotente, `--dry-run` disponible) y seguir el runbook [docs/agent/bootstrap-desde-cero.md](docs/agent/bootstrap-desde-cero.md) (verificación, orientación, REA, ciclo de fase y límites). Lo siguiente es el desglose manual de esos mismos pasos.
 
-S19-03 corroboró que el extremo ObjId 53 de la topología `0xb4` corresponde a
-la clase `ObjStillRecorder` por su constructor exportado y sus pines, pero no
-recuperó su auto-registro dinámico. No hay evidencia de SilentShutter funcional.
-Detalle: [S19-03 ObjId 53](docs/capture/s19-objid53-registration.md).
+Los binarios (firmware, Ghidra, JDK, `node_modules`, `.venv`) no están en Git: se reconstruyen así.
+Todo desde la raíz del repo; Linux x86_64.
 
-S19-04 verificó que `ObjCamera` construye nueve pines de salida y que la fila
-`0x0a` enlaza Camera.out0 con Effect.in0, pero no encontró un descriptor DMM o
-`AvbbcPhycMem` atribuible a ese YC. El par DMM conocido es de Effect/PbCap y la
-SDS de `0x800` B no es raster. El contrato real de Live View continúa pendiente;
-no hay evidencia de SilentShutter funcional. Detalle:
-[S19-04 contrato YC](docs/capture/s19-camera-yc-real-contract.md).
+```sh
+# 1. Clonar y entrar
+git clone https://github.com/nicolvus/a6000-fw-decomp.git sony-a6000-electronic-shutter && cd sony-a6000-electronic-shutter
 
-S19-11 verificó que ObjEffect acepta los valores de modo efectivos 2–5, pero
-sólo 3 intenta `0x3900/0x0002`; 2/4/5 retornan por error. No es la ruta PbCap
-ni demuestra una condición de obturación electrónica. Detalle:
-[S19-11 modos ObjEffect](docs/capture/s19-objeffect-modes-2-5.md).
+# 2. Firmware oficial 3.21 (Mac updater) y verificación
+mkdir -p firmware/original && cd firmware/original
+curl -L -o Update_ILCE6000V321.dmg "https://support.d-imaging.sony.co.jp/download/NEX/AcicwqgUEQ/Update_ILCE6000V321.dmg?fm=am"
+sha256sum Update_ILCE6000V321.dmg   # esperado: 844349ff7edddc294c0fddd90a454848eeda8987b6bf043c9757982b3a42ba3e
+cd ../..
 
-S19-05 confirmó el ciclo interno PbCap de ObjEffect/SDF (precondiciones,
-conexión de infraestructura, buffers de salida, entrega y cleanup), pero no
-una ruta Camera→SDF ni compatibilidad del YC real de Camera. La SDS no es
-raster y la ausencia de un único guard de tipo no prueba aceptación. No hay
-evidencia de SilentShutter funcional. Detalle:
-[S19-05 ObjEffect/SDF](docs/capture/s19-camera-effect-sdf.md).
+# 3. Entorno Python (herramientas, tests, grafo de conocimiento)
+python3 -m venv .venv && . .venv/bin/activate && pip install pytest ruff mypy pyyaml capstone unicorn
 
-La tabla LIRO de captura quedó inventariada hasta sus diez variantes no
-seleccionables; son secuencias convencionales con estados/retry, sin prueba de
-adquisición electrónica o Silent. Véase
-[S19-07](docs/capture/s19-liro-remaining-sequences.md).
+# 4. Desempaquetar con fwtool (vendorizado en references/fwtool; necesita sus dependencias Python, ver su README)
+7z x firmware/original/Update_ILCE6000V321.dmg -ofirmware/extracted/updater
+python references/fwtool/fwtool.py unpack \
+  -f firmware/extracted/updater/Update_ILCE6000V321/Resources/FirmwareUpdater.app/Contents/Resources/FirmwareData_ILCE6000V321.dat \
+  -o firmware/extracted/fw321
+# Si falla la extracción WBI anidada: procedimiento alterno en docs/firmware-analysis.md
+# Comprobación: firmware/extracted/fw321/firmware.fdat debe tener SHA-256
+#   603b42ec9d2dd66b91e38c15a6a23e860fb8af46a072050903506672036f0f90 (firmware/hashes/sha256.json)
 
-S19-09 reconstruyó la frontera `CameraSequence → SDCom → ScalarDaemon` y el
-ciclo ticket/memoria compartida/`release` del cliente, sin demostrar JPEG,
-640×480, YC, S2, MPR ni SilentShutter. Véase
-[S19-09 CameraSequence/SDCom](docs/capture/s19-camerasequence-sdcom.md).
+# 5. Inventario y atlas ELF (679 ELF ARM esperados)
+python3 -m src.inventory firmware/extracted/fw321 reports/inventory.json
+python3 -m src.atlas
 
-S19-13 separó la emisión RelMgr de `0x3015`, la limpieza local del dispatcher
-y la limpieza LIRO de `ctx+0x754`; no vinculó esos hechos a idle, liberación
-DMM, CAIF/Darwin ni una ventana segura antes de cortinas. Véase
-[S19-13 cancelación posterior a S2](docs/capture/s19-post-s2-cancellation-states.md).
+# 6. REA + Ghidra + JDK locales (versiones y hashes en reports/rea-provider-downloads.json)
+(cd tools/rea && npm ci)                      # rea-agents 6.5.0 (Node 22/24)
+mkdir -p tools/providers   # descomprimir aquí ghidra_12.1.4_PUBLIC y jdk-21.0.12.1+1 (URLs en el JSON)
+./scripts/rea doctor --client codex --provider ghidra --json
 
-S20 — **VERIFICADO:** recuperados llamadores DCF, registro JPEG/contenido en
-la variante AVI y callback `0x40000012`; **NO_VERIFICADO:** cadena completa de
-una solicitud, rollback y persistencia SD/reproducción. Véase
-[cadena MPR/DCF posterior a WriteStill](docs/capture/s20-codex-mpr-dcf-chain.md).
-Se mantiene **A > E > P ≈ E2**; SilentShutter no se declara funcional.
+# 7. Binario principal para REA: av-cam.bin (base 0x43541000, ARM)
+mkdir -p analysis/rea-independent/input
+cp firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin analysis/rea-independent/input/
 
-S21 Codex — **VERIFICADO:** pre-registro condicional anterior a WriteStill,
-unión Recorder/RecStill → StillWriterFilter y ramas JPEG/RAW. **NO_VERIFICADO:**
-completion FEA completa, rollback DCF y primera visibilidad en reproducción.
-Véase [exposición → biblioteca](docs/capture/s21-codex-exposure-to-library.md).
+# 8. Comprobar todo y arrancar el grafo de conocimiento
+python scripts/agent/check_env.py --sha
+python3 scripts/knowledge/index_docs.py && python3 scripts/knowledge/build_graph.py
+python -m pytest tests -q
+```
 
-S22 separa la serialización LIRO del productor físico de un YC nuevo: el
-primero está comprobado, el segundo no. Informe:
-[sensor → YC para StillRecorder](docs/capture/s22-sensor-to-yc.md).
-Auditor estático: 194 PASS; **A > E > P ≈ E2** sin cambios.
-SilentShutter no se declara funcional.
+Después de instalar:
+
+1. Leer [knowledge/CURRENT.md](knowledge/CURRENT.md) y [docs/STATE.md](docs/STATE.md) (restricciones y política de RE).
+2. Registrar los MCP `rea` y `sony-a6000-knowledge` ([docs/agent/README.md](docs/agent/README.md#mcp-claude-code-y-codex)); ajustar las rutas absolutas de `.mcp.json` a tu clon.
+3. Abrir **una sola** sesión REA (`av-cam.bin` tarda ~8 min en frío): `python analysis/rea-independent/bin/session_daemon.py <sock> "$(cat analysis/rea-independent/exp2-open-args.json)"` (ajustar `path` al clon) y consultar por lotes con `bin/q.py <sock> guion.json`; cerrarla al acabar el hito.
+4. Antes de reutilizar un hallazgo: skill `contradiction-audit`; antes de buscar a mano: `knowledge-navigation`; tras editar `.md`: `knowledge-maintenance`.
+5. Reglas que no cambian: sin ejecutar firmware, sin flasheo, REA primero y verificar lo decisivo contra bytes. Foco actual: obturador electrónico (decisión vigente S51: no parchear).
+6. Para saber qué falta, ver [docs/OPEN-QUESTIONS.md](docs/OPEN-QUESTIONS.md) y los «Próximo» del final de [knowledge/PROGRESS.md](knowledge/PROGRESS.md).
