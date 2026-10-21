@@ -3,6 +3,11 @@
 Resumen operativo breve. Para el historial completo de decisiones, ver `knowledge/PROGRESS.md`.
 Para restricciones del proyecto (sin firmware ejecutado, sin flasheo, sin `git push`), ver `docs/STATE.md`.
 
+## S71 — recorrido de los 12 puntos abiertos (21-10-2026)
+
+**VERIFICADO (3 tests, `tests/test_s71_pending.py`):** el bloque de 12 u16 `+0xdd0` lo escribe `0x437b1048` (bytes de estado de captura); **la A6000 sí escribe `+0x740`** por copia en bloque (`0x438acc24` ← `r4+0x133`, ≙ A7S `0x4389efc2` ← `r4+0x13d`), lo que **corrige** la «bandera latente sin escritor» de S52; `0x437881a8` es el `bl` de init de arranque y `0x43802614` el comando `0x402e`; `Backup 0x3e0005` solo lo leen 2 sitios (cadena de 0x18 B). Puntos 2, 8–11 sin avance; 12 ya cubierto por S98/S100. **S51 se mantiene.**
+[Informe](../analysis/s71_pending/report.md). Siguiente: quién escribe `r4+0x133` (A6000) / `r4+0x13d` (A7S) en la estructura que consume `0x438ab3e8`.
+
 ## S70 — consumidores de `+0x238`/`+0x280` del bloque `0x43edf684` (21-10-2026)
 
 **VERIFICADO (3 tests, `tests/test_s70_block238.py`):** comando `0x40e3` (`0x43fffc60`) → handler `0x438032d5` → `+0x238`; `+0x280` por `0x43802614`. Las 62 referencias PC-relativas al bloque están todas en `0x43802000–0x43805000`; los accesores `0x43804de8` (40 llamadores) y `0x43804c38` (6) no van seguidos de ningún acceso a `0x234/0x238/0x23c/0x280`. **INFERENCIA fuerte:** ambos campos son solo escritura en `av-cam.bin` (explica S64). El parser CAIF de Darwin A6000 ya está resuelto en S53 (descarta el bit `0x20`). **NO VERIFICADO:** lectura vía puntero guardado en global o desde otro binario. S51 se mantiene.
