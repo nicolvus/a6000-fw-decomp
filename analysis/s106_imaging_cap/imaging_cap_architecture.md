@@ -182,12 +182,19 @@ Verificado con dos casos independientes:
 
 `scan_pic_refs.py` implementa el cálculo para toda la imagen (`pic_refs.json`):
 
-- **5 019** destinos distintos caen en la zona de cadenas del módulo;
-- **694 de las 697** cadenas de `IMAGING_CAP` tienen referencia directa en su inicio;
-- las **3 restantes** (`0x43ca05d7` `DistV_RC: PreProcessRC error`, `0x43ca9b12`
-  `ShareMem_StlRaw8 Err: …`, `0x43cc7d5c` `%s: ContrastPlus error`) **no tienen ninguna
-  referencia**: ni PIC ni puntero absoluto de 4 B en toda la imagen → cadenas muertas que el
-  enlazador conservó.
+- **5 560** destinos distintos caen en la zona de cadenas del módulo;
+- **696 de las 697** cadenas de `IMAGING_CAP` tienen referencia directa en su inicio;
+- la **única** cadena sin referencia es `0x43ca9b12`
+  (`[IMAGING_CAP]: ShareMem_StlRaw8 Err: unit_type[0x%08x], err[%d]`): **ni** referencia PIC
+  **ni** puntero absoluto de 4 B en toda la imagen → cadena muerta que el enlazador conservó.
+
+> **Corrección (hito S110):** una primera versión del escáner emparejaba cada `add rX,pc`
+> con el `ldr` **más cercano** del mismo registro y se detenía ahí. Como el registro se
+> reutiliza, ese `ldr` no siempre es el que carga el valor: dos cadenas que este informe
+> daba por muertas (`0x43ca05d7` y `0x43cc7d5c`) **sí** tienen referencia (sitios
+> `0x437855dc` y `0x438c11c6`). El escáner prueba ahora **todos** los `ldr` del registro
+> dentro de la ventana de 4 KB y solo acepta los destinos que caen en el inicio de una
+> cadena. El recuento correcto es **696/697** y queda **una** cadena muerta.
 
 ## 10. Diferencial con la A7S fw3.20
 
