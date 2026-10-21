@@ -20,3 +20,15 @@ Método: desensamblado Thumb lineal (capstone) sobre `av-cam.bin` A6000 fw3.21 (
 **Hallazgo principal (punto 3):** la hipótesis «bandera latente sin escritor» de S52 era incompleta. A6000 y A7S **copian** ese byte con el mismo patrón desde una estructura de origen. El interruptor está aguas arriba, en quien escribe `r4+0x133` (A6000) / `r4+0x13d` (A7S), y ese es el siguiente hilo estático con más valor.
 
 **Límites:** análisis lineal con capstone (puede perder código tras datos); no se ha usado REA en la sesión; sin cámara. S51 se mantiene.
+
+## Cierre (misma fecha)
+
+| # | Estado final | Detalle |
+|---|---|---|
+| 2 | **CERRADO como bloqueado** | 45 `gpio_get`, 43 `gpio_cfg`, 3 `gpio_set`, todos con pin en variable; S55: ningún par con bit 9 fuera del banco 0 ⇒ `GPIO_9` sin lector GPIO. El consumo de P4C no pasa por estas primitivas; hace falta traza pasiva (hardware). |
+| 6 | **CERRADO** | `0x301d7` se registra en dos funciones de arranque: `0x43789fde` (servicio vía `0x43561298`) y `0x4378a3d0` (vía `0x435612b4`), ambas envoltorios del servicio importado `+0x1ec` que, según S48, rellena el cargador/host. El productor original queda fuera de `av-cam.bin`. |
+| 8 | **CERRADO como fuera de alcance** | Cadena JPEG/DCF/rollback sin relación con el obturador; se mantiene el estado de S20–S21. |
+| 9 | **CERRADO como bloqueado** | Slots `+0x1e8/+0x1ec/+0x200` rellenados por el cargador (S48); no ampliable con REA. |
+| 10 | **CERRADO** | `analysis/s72_graph/module_graph.md` (348 módulos, 340 aristas; INFERENCIA por menciones en trazas). |
+| 11 | **CERRADO como no resoluble** | Sin expansiones creíbles en los binarios; `analysis/s72_graph/siglas.py`. |
+| 12 | **CERRADO** | Cubierto por S98/S100. |

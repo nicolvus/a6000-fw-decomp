@@ -5,7 +5,7 @@ Para restricciones del proyecto (sin firmware ejecutado, sin flasheo, sin `git p
 
 ## S71 — recorrido de los 12 puntos abiertos (21-10-2026)
 
-**VERIFICADO (3 tests, `tests/test_s71_pending.py`):** el bloque de 12 u16 `+0xdd0` lo escribe `0x437b1048` (bytes de estado de captura); **la A6000 sí escribe `+0x740`** por copia en bloque (`0x438acc24` ← `r4+0x133`, ≙ A7S `0x4389efc2` ← `r4+0x13d`), lo que **corrige** la «bandera latente sin escritor» de S52; `0x437881a8` es el `bl` de init de arranque y `0x43802614` el comando `0x402e`; `Backup 0x3e0005` solo lo leen 2 sitios (cadena de 0x18 B). Puntos 2, 8–11 sin avance; 12 ya cubierto por S98/S100. **S51 se mantiene.**
+**VERIFICADO (3 tests, `tests/test_s71_pending.py`):** el bloque de 12 u16 `+0xdd0` lo escribe `0x437b1048` (bytes de estado de captura); **la A6000 sí escribe `+0x740`** por copia en bloque (`0x438acc24` ← `r4+0x133`, ≙ A7S `0x4389efc2` ← `r4+0x13d`), lo que **corrige** la «bandera latente sin escritor» de S52; `0x437881a8` es el `bl` de init de arranque y `0x43802614` el comando `0x402e`; `Backup 0x3e0005` solo lo leen 2 sitios (cadena de 0x18 B). Los 12 puntos están cerrados (2, 8, 9, 11 como bloqueados/no resolubles; 10 con el grafo de menciones `analysis/s72_graph/module_graph.md`; 12 cubierto por S98/S100). **S51 se mantiene.**
 [Informe](../analysis/s71_pending/report.md). Siguiente: quién escribe `r4+0x133` (A6000) / `r4+0x13d` (A7S) en la estructura que consume `0x438ab3e8`.
 
 ## S70 — consumidores de `+0x238`/`+0x280` del bloque `0x43edf684` (21-10-2026)
