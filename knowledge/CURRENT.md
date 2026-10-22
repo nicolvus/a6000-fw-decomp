@@ -427,6 +427,20 @@ fw3.21), **S127** (`[CAMERA_MAIN_LC]`), **S126** (`[CAMERA_MAIN]`), **S125** (`[
 
 [Informe](../analysis/s164_camera_is/camera_is.md) · [doc](../docs/capture/s164-camera-is.md). Siguiente: fichero fuente propio del módulo (no embebido); significado de `upm_get_hcrn_ura` y de las sub-capas `AS`/`DIST`; el significado físico de `SetStblzGridH` y el camino RC→imager; el formato binario de `/mnt/FILE_IS_%04x.dat`; las 4 funciones sin llamadores `bl` directos (¿tabla de callbacks?).
 
+## S165 — el módulo `[JOG]` (14 trazas): el subsistema de la rueda de control (22-10-2026, línea de RE general)
+
+**VERIFICADO (tests del hito + comprobaciones a mano):** 14 cadenas `[JOG]` en la A6000 fw3.21 entre `0x43c40eb4` y `0x43c411bd` (contiguas en `.rodata`); **0** en la A7S fw3.20 y el A6300 fw2.01; `deg/sec` **1/0/0**. **14/14 referenciadas**, **24 sitios** (regla estricta) en **12 funciones**, **0 cadenas muertas**; los **34 pares PIC** de la zona `0x435ae400`–`0x435afb00` (24 de `[JOG]` + 10 de `__PRETTY_FUNCTION__`) se verificaron **a mano 34/34**, comprobando que el registro no se reescribe entre el `ldr` y el `add` (kill analysis con `movs/adds Rd,#imm` → `Rd = (h>>8)&7`).
+
+**Qué es**: **la fuente de eventos de la rueda de control**. Sondea `JogFg`/`JogTpu`/`JogVGrip` con temporizador OSAL, traduce el movimiento a un `key_code` de cámara + delta en grados (`JogKey::SendKeyEvent` `0x435af9d0`) y emite un evento de 12 B (`JogMain::SendEvent` `0x435aeb18`) a la **cola de eventos de cámara (id `0x106`)**. Tabla de key codes `0x43fdab20` (`0x11`–`0x17`); montaje en `JogMain::Init` `0x435ae6b6`.
+
+**Diferencial**: las clases RTTI `JogDev` (2/1/1), `JogFg` (3/1/1), `JogTpu` (3/1/1) y `JogVGrip` (**3/1/0**) están **en los tres firmware** → el subsistema ya existía; lo propio de la fw3.21 es la **instrumentación** `[JOG]` y la clase `JogKey` (**5/0/0**). **Matiz propio del A6300**: sustituye `JogVGrip` por **`JogCaif`** (**0/0/1**) → en el A6300 la rueda se toma por la interfaz CAIF en vez de por la empuñadura vertical.
+
+**Colateral**: el módulo hermano `[ILLUMI]` (sensor de luz ambiente; clases `IllumiDev`/`IllumiAd`/`IllumiCam`/`IllumiRPR0400` en las tres fw) emite en la A6000 una traza **gemela** `[ILLUMI]<Send Event> key_code = 0x%x,Level:%d` `0x43c40798` → mismo patrón de emisión por `key_code`; `ILLUMI]` es **34/0/0**.
+
+**Negativo acotado**: 0 coincidencias de `shutter`/`capture`/`exposure`/`sensor`/`read`/`frame` en las 14 trazas ni en las 10 `__PRETTY_FUNCTION__`; los únicos temporizadores son de **sondeo de la rueda** → **sin efecto en S51**.
+
+[Informe](../analysis/s165_jog/jog.md) · [doc](../docs/capture/s165-jog.md). Siguiente: ficheros fuente (no embebidos); siglas `Fg`/`Tpu` (sin base textual); significado de los key codes `0x11`–`0x17`; la cola OSAL concreta (recurso `0x011b02aa`); las ranuras 0/3/4/5 de las vtables `Jog*`.
+
 ## S121 — el módulo `[AIP]` (37 trazas): la interfaz de audio con el escalado (21-10-2026, línea de RE general)
 
 **VERIFICADO (97 tests, `tests/test_s121_aip.py`):** 37 cadenas `[AIP]` en `0x43cdd844`–`0x43cdec50`; **16 funciones** y 6 sub-bloques RTTI: `SaWrapper` (8), `SaBackUpCtrl` (12), `SaDriverBase` (4), `LPS` (11), `SaDriverZoomNr` (1), `SetFader` (1). **Callbacks `Ack`/`Comp`/`Err` en tres capas**: SA (`0x43926d1c`/`0x43926de8`, con los predicados `[r1,#1]==0x14`/`0x13`), LPS (`0x4392b16c`/`0x4392b254`) y driver; los errores llevan `errCode`+`errState` (SA) o `ErrCode`+`ErrStatus` (LPS). **Tabla de backup**: **350 entradas de 12 B** en `0x43bd1964` con `{id = 0x10c0000 + n, offset, size}`; `WriteShadow2BakcupArea` vuelca `0x10c` B (`mov.w r0,#0x10c` en `0x4392ab78`) y `SetAudioNrType` publica el **bit 3** de `bkId = 0x10e0000`. Comandos hacia el escalar en `0x4392ac30` (`Cmd`/`Func` + `Zma`/`Ext`/`Mbx`) y `0x4392acb4` (`Cmd`/`Func`/`Unq`). Buffers LPS `0x82`/`0x83`/`0x85` con longitudes `0x2c`/`0x28`/`0x14`; `SetFader` (`0x4355ae98`) divide por 100/20/otro según `[r0,#0x78]`.
