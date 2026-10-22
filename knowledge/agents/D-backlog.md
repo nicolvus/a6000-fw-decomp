@@ -11,5 +11,10 @@ Tema distinto de A (sensor/driver), B (imager estado) y C (ruta de control): dec
 - S506 [TD] (73 trazas) DONE 6d4db7a5
 - S507 [VIDENCSTAT] (70 trazas) DONE 960a3170
 - S508 [GOLFSHOT] (65 trazas) DONE cd6fac05
-- S509 [WSX] (59 trazas)
+- S509 [WSX] (59 trazas) DONE 60fad377
+- S510 [RE] (54 trazas)
+- S511 [INT_ERROR] (53 trazas)
+- S512 [ENCOUCSTAT] (49 trazas)
+- S513 [CONFIG] (47 trazas)
+- S514 [BT] (44 trazas)
 - regenerar al vaciar
