@@ -540,6 +540,25 @@ Los cuatro nombres comunes: `GetImagerDriveMode`, `GetImagerTemperature`, `GetIm
 
 [Informe](../analysis/s171_imager_api/imager_api.md) · [doc](../docs/capture/s171-imager-api.md). Siguiente: qué magnitud devuelve `GetImagerStabilizationTime`; el formato del paquete `SteadyShotInfo`; si la clase `SyncUtilityUpm` tiene más métodos con nombre.
 
+## S172 — el módulo `ElecShutter` del A6300: qué hace realmente (22-10-2026, línea de RE general)
+
+**VERIFICADO (15 tests, `tests/test_s172_elec_shutter_a6300.py`):** **S135** localizó el subsistema `ElecShutter/` del A6300 por sus **nombres de fichero** (`ElecShutter/EC_ElecShutter_Main.cpp` `0x43dcfa41`, `ElecShutter/EC_NonlinearElecShutter_MechShutterTable.cpp` `0x43dcfa65`) y sus ajustes, **sin decodificar el comportamiento**. Este hito **localiza el código** (los nombres son cadenas `__FILE__` de un `EC_ASSERT %s:%d` `0x43db1a4d`) y **caracteriza las dos funciones**:
+
+1. **`EC_ElecShutter_Main.cpp`** (función `0x4391d67c`; sitio `0x4391d6a2`): lee un **u16** de una tabla global (`ldr r3,[pc,#0x38]` → puntero; `ldr r3,[r3,r2]`; `ldrh r3,[r3]`) y devuelve un **código de modo de obturador**: `0x80` → **3**, `0x100` → **4**; otro valor → `EC_ASSERT` con línea **0x421** (1057) y devuelve 3.
+2. **`EC_NonlinearElecShutter_MechShutterTable.cpp`** (sitios `0x4391dd50` y `0x4391ddb0`): la **equivalencia no lineal entre velocidad electrónica y mecánica**:
+   * **interpolación por tramos**: lee una fila con `ldr.w r3,[r2,r6,lsl #2]` (**32 bits por fila**), compara con el valor pedido e interpola con escalas **10000** (`0x2710`) y **1000** (`0x3e8`), helper aritmético `0x435586f8` y setters `0x4391da74`/`0x4391da9c`; `EC_ASSERT` línea **0x23c** (572);
+   * **búsqueda en punto fijo 16.16**: escala `0x8000` y **15 bits fraccionarios** (`mov.w r3,#0x8000`; `movs r2,#0xf`), valor = `(r3 + r0*2) << r2`; `EC_ASSERT` línea **0x24f** (591).
+
+**Corrección a S135**: los **128 bytes** que S135 identificó como «tabla de índices de velocidad de obturación» en `0x43dcfa9e` **no tienen ninguna referencia de código** (ni PIC —no están en `pic_refs_strict_a6300.json`— ni puntero absoluto de 4 B) y forman una tabla byte→byte **no decreciente** (`54 54`, `60 60`, `66 66`, `6a 6a`, `6e 6e`, `71 71`, `74 74`, `77 77`, `7b 7b`, `7d 7d`, `7f 7f`), más compatible con una tabla de **caracteres imprimibles**. La tabla real se indexa **por fila con 32 bits por entrada**. **Lo que S135 acertó** (existencia del módulo `ElecShutter/`, sus ficheros y sus ajustes) **se mantiene**.
+
+**Colateral**: `EC_ASSERT` **0/1/1** y `EC_ERR_PRINT` **0/0/5** (A6000/A7S/A6300) → el motor EC de la A6000 **no instrumenta sus aserciones**, otra diferencia de *logging* coherente con S128/S130.
+
+**Salvedad** (S130 §4): el A6300 es de otra generación de plataforma (LIRO/CXD).
+
+**Efecto en S51: NINGUNO — S51 sigue A=NO, B=NO, C=NO.** La ausencia del módulo en la fw3.21 de la A6000 no demuestra incapacidad del hardware; sigue faltando la prueba física.
+
+[Informe](../analysis/s172_elec_shutter_a6300/elec_shutter_a6300.md) · [doc](../docs/capture/s172-elec-shutter-a6300.md). Siguiente: qué significan los códigos 3 y 4; la base de datos de la tabla (índice de fila) y quién la escribe; la ruta hasta el driver del obturador.
+
 ## S121 — el módulo `[AIP]` (37 trazas): la interfaz de audio con el escalado (21-10-2026, línea de RE general)
 
 **VERIFICADO (97 tests, `tests/test_s121_aip.py`):** 37 cadenas `[AIP]` en `0x43cdd844`–`0x43cdec50`; **16 funciones** y 6 sub-bloques RTTI: `SaWrapper` (8), `SaBackUpCtrl` (12), `SaDriverBase` (4), `LPS` (11), `SaDriverZoomNr` (1), `SetFader` (1). **Callbacks `Ack`/`Comp`/`Err` en tres capas**: SA (`0x43926d1c`/`0x43926de8`, con los predicados `[r1,#1]==0x14`/`0x13`), LPS (`0x4392b16c`/`0x4392b254`) y driver; los errores llevan `errCode`+`errState` (SA) o `ErrCode`+`ErrStatus` (LPS). **Tabla de backup**: **350 entradas de 12 B** en `0x43bd1964` con `{id = 0x10c0000 + n, offset, size}`; `WriteShadow2BakcupArea` vuelca `0x10c` B (`mov.w r0,#0x10c` en `0x4392ab78`) y `SetAudioNrType` publica el **bit 3** de `bkId = 0x10e0000`. Comandos hacia el escalar en `0x4392ac30` (`Cmd`/`Func` + `Zma`/`Ext`/`Mbx`) y `0x4392acb4` (`Cmd`/`Func`/`Unq`). Buffers LPS `0x82`/`0x83`/`0x85` con longitudes `0x2c`/`0x28`/`0x14`; `SetFader` (`0x4355ae98`) divide por 100/20/otro según `[r0,#0x78]`.

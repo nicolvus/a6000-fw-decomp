@@ -139,3 +139,17 @@ Las 15 apariciones de `shutter`/`Shutter` de la A6000 son **del obturador mecán
 |---|---|
 | `elec_shutter_scan.md` | este informe |
 | `elec_shutter_scan.py` | script reproducible del barrido de términos en los tres blobs |
+
+---
+
+## Corrección posterior (hito S172, 22-10-2026)
+
+El bloque de 128 bytes en `0x43dcfa9e`, identificado aquí como «tabla de **índices de velocidad de
+obturación**», **no está referenciado por ningún código** del A6300 fw2.01 (ni por la regla PIC
+estricta ni por puntero absoluto de 4 B) y es una tabla byte→byte **no decreciente**, más
+compatible con una tabla de caracteres imprimibles. La tabla real de velocidades se indexa
+**por fila, con 32 bits por entrada**, dentro de
+`EC_NonlinearElecShutter_MechShutterTable.cpp` (ver `analysis/s172_elec_shutter_a6300/`).
+
+El resto de las conclusiones de este hito (existencia del módulo `ElecShutter/` en el A6300 y su
+ausencia en la A6000 fw3.21 y la A7S fw3.20) **se mantiene**.
