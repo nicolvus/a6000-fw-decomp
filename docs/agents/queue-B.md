@@ -58,3 +58,9 @@
 - TODO S320 Seguir los candidatos que reciben `ctx` como argumento (`0x437c7b0c`→`0x437c83e8`, `0x437ca5c8`) para localizar el escritor de `[ctx]`/`[ctx+8]`, o cerrar la frontera con un barrido de `memcpy`/`stm` con destino `ctx` en todo el blob.
 
 - BACKLOG S321 Identificar la tabla de 68 filas `0x43fee5ac` y su relación con los drive modes (S302).
+
+- DONE S320 Los aplicadores de listas usan la **misma trama**: `0x43ad968a` (modo !=2) y `0x436f25f0` (modo 2) comparten 7 instrucciones y el formateador `0x43ad9666`; modo 2 añade un reintento (`r0==2` → `0x43ad92e6`, segundo intento y log). El modo elige la lista, no la trama. 0 firmas en A6000. Evidencia: `docs/capture/s320-frame-retry.md`, `analysis/s320_frame_retry/frames.json` (20 comprobaciones, 5 tests).
+
+- TODO S321 Identificar la tabla de 68 filas `0x43fee5ac` (`{ptr,16 B}`) y su relación con los drive modes (S302); buscar su índice/consumidor.
+
+- BACKLOG S322 Decodificar el contenido de la trama en `0x43ad9666`→`0x43ad9628`/`0x436f2554` (formato de registro y cabecera).
