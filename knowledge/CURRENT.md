@@ -1,5 +1,11 @@
 # Estado actual — léeme primero
 
+## S161 — otro spill del state pointer (22-10-2026)
+
+En `FUN_4384b268`, `0x4384cb06` carga `0x43f72d02` desde GOT y `0x4384cb0a` almacena el puntero en `[sp+0x20]`; el edge al objeto es de valor, el WRITE efectivo es stack. El cuerpo lee otros campos, no gates `+3/+6`. [S161](../docs/capture/s161-imager-state-spill.md), `analysis/s161_imager_state_spill/state_spill.json` (3 tests). Límite local.
+
+**Siguiente:** escoger otro xref restante y clasificar si es acceso de memoria efectivo o propagación de puntero; no convertirlo en conclusión global.
+
 ## S160 — writer local de `state+0` (22-10-2026)
 
 `FUN_4383abec` carga el state pointer vía GOT y `0x4383ac90` ejecuta `strb r3,[r2]`, edge REA WRITE a `0x43f72d02+0`; en la ruta que alcanza el store el contador expira y el byte se pone a cero. No escribe gates `+3/+6`, y la condición de los callers no acredita ejecución runtime. [S160](../docs/capture/s160-state-open-flag.md), JSON y 3 tests en `analysis/s160_state_open_flag_writer/`. Commit publicado: `0a7daba9`.
