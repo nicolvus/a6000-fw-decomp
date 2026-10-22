@@ -1,0 +1,1 @@
+- S300 (rev.2, `b2f5ff12`): barrido único de 67 xrefs al estado IMX210 de la A6000. Cero escritores de `+3`/`+6`; únicos stores `+0x00` y `+0x02`. Corregido el sesgo +0x58 de la rev.1. Siguiente: S301 (A7S fw3.20).
