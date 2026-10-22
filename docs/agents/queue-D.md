@@ -16,5 +16,7 @@ Tema: decodificación de módulos de la línea general de la A6000 fw3.21 no cub
 - DONE 93cc54d4 S511 Decodificar [INT_ERROR] (53 trazas). Informe docs/capture/s511-int-error.md; tests/test_s511_int_error.py (5 verdes).
 - DONE f016266c S512 Decodificar [ENCOUCSTAT] (49 trazas). Informe docs/capture/s512-encoucstat.md; tests/test_s512_encoucstat.py (5 verdes).
 - DONE 3ee87e6d S513 Decodificar [CONFIG] (47 trazas). Informe docs/capture/s513-config.md; tests/test_s513_config.py (5 verdes).
-- TODO S514 Decodificar [BT] (44 trazas).
-- TODO S515 Al vaciar, regenerar la cola con los siguientes modulos pendientes del censo S178 (priorizar exclusivos A6000 y >40 trazas).
+- DONE fc0fe2a4 S514 Decodificar [BT] (44 trazas). Informe docs/capture/s514-bt.md; tests/test_s514_bt.py (5 verdes).
+- TODO S515 Decodificar [BL] (backlight montura, 154 trazas).
+- TODO S516 Decodificar [PNL] (panel, 41 trazas).
+- TODO S517 Al vaciar, regenerar la cola con los siguientes modulos pendientes del censo S178 (priorizar exclusivos A6000 y >40 trazas).
