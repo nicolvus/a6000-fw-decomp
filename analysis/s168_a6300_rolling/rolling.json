@@ -1,0 +1,124 @@
+{
+ "milestone": "S168",
+ "titulo": "control positivo del rolling shutter del A6300: la cadena es muerta",
+ "base_vaddr": "43541000",
+ "firmwares": {
+  "A6000_fw321": {
+   "ruta": "analysis/rea-independent/input/av-cam.bin",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "len": 11427236,
+   "position_num_in_rolling": 0,
+   "position_num_in_vd": 0,
+   "position_num_in": 0,
+   "rolling_cualquier_grafia": 0,
+   "roll_cualquier_grafia": 40
+  },
+  "A7S_fw320": {
+   "ruta": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "len": 11455416,
+   "position_num_in_rolling": 0,
+   "position_num_in_vd": 0,
+   "position_num_in": 0,
+   "rolling_cualquier_grafia": 0,
+   "roll_cualquier_grafia": 40
+  },
+  "A6300_fw201": {
+   "ruta": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+   "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16",
+   "len": 13382836,
+   "position_num_in_rolling": 1,
+   "position_num_in_vd": 1,
+   "position_num_in": 2,
+   "rolling_cualquier_grafia": 1,
+   "roll_cualquier_grafia": 44
+  }
+ },
+ "refs_pic_estricta_A6300": {
+  "0x43d9fe03_position_num_in_rolling": [],
+  "0x43d9fde2_position_num_in_vd": [
+   "0x43729166"
+  ]
+ },
+ "refs_metodo_inverso_A6300": {
+  "0x43d9fe03_position_num_in_rolling": [],
+  "0x43d9fde2_position_num_in_vd": [
+   "0x43729166"
+  ]
+ },
+ "mapa_vivo_muerto_banda": {
+  "blob": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+  "base": "43541000",
+  "banda": [
+   "43d9fd80",
+   "43d9fe80"
+  ],
+  "cadenas": [
+   {
+    "addr": "43d9fdc5",
+    "text": "[BL]Wait_BL_ASYNC_RCV (%+hd)",
+    "refs_pic": [
+     "43727690"
+    ],
+    "n_refs_pic": 1,
+    "punteros_absolutos": [],
+    "movw_movt": []
+   },
+   {
+    "addr": "43d9fde2",
+    "text": "position num in vd is strange %d",
+    "refs_pic": [
+     "43729166"
+    ],
+    "n_refs_pic": 1,
+    "punteros_absolutos": [],
+    "movw_movt": []
+   },
+   {
+    "addr": "43d9fe03",
+    "text": "position num in rolling is strange %d",
+    "refs_pic": [],
+    "n_refs_pic": 0,
+    "punteros_absolutos": [],
+    "movw_movt": []
+   },
+   {
+    "addr": "43d9fe29",
+    "text": "this vsync command has another command",
+    "refs_pic": [
+     "4372a178"
+    ],
+    "n_refs_pic": 1,
+    "punteros_absolutos": [],
+    "movw_movt": []
+   },
+   {
+    "addr": "43d9fe50",
+    "text": "ASYNC BL COMMAND BANISH ! Mount_FcZm_BLComm.cpp %d",
+    "refs_pic": [
+     "4372a1b2"
+    ],
+    "n_refs_pic": 1,
+    "punteros_absolutos": [],
+    "movw_movt": []
+   }
+  ]
+ },
+ "funcion_viva": {
+  "dir": "0x4372914c",
+  "que_hace": "calculo de ancho en bits del numero de posicion del VD con control de rango ((1<<n)-1 <= 0xFE); si no cabe, traza 'position num in vd is strange %d' y fuerza 8 bits",
+  "pool": "0x43729174",
+  "valor_pool": "0x00676c78",
+  "ldr": "0x43729164",
+  "add": "0x43729166"
+ },
+ "conclusiones": [
+  "la cadena 'position num in rolling is strange %d' del A6300 fw2.01 tiene 0 referencias de codigo: es una cadena MUERTA",
+  "no hay puntero absoluto de 4 B ni par movw/movt que la compongan",
+  "no aparece en ningun otro fichero del paquete del A6300",
+  "la unica cadena viva del entorno es 'position num in vd is strange %d' (calculo de ancho del numero de posicion del VD)",
+  "las 36/37/40 apariciones de 'roll' en A6000/A7S/A6300 estan todas dentro de Controller/Scroll: no son evidencia de rolling shutter",
+  "corrige el colateral de S164: la cadena del A6300 NO demuestra que ese firmware implemente rolling shutter"
+ ],
+ "efecto_en_S51": "ninguno: S51 sigue A=NO, B=NO, C=NO; S135 (control positivo ElecShutter en el HAL del A6300) es independiente"
+}

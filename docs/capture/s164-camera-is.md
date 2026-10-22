@@ -79,7 +79,15 @@ y la programación de la **rejilla del EIS desde `Sync_EndExpose`** (`0x43702dac
 **A6300** tiene la API **`GetImagerStabilizationTime`** (`0x43d9ce7f`) y el texto
 **`position num in rolling is strange %d`** (`0x43d9fe03`), **ambos ausentes** en la A6000
 fw3.21 y en la A7S fw3.20.
-**S51 (A/B/C = NO) se mantiene.**
+
+> **Corrección (S168, 22-10-2026)**: el texto del *rolling* del A6300 es una **cadena MUERTA**
+> (0 referencias de código, 0 punteros absolutos, 0 pares `movw`/`movt`; control cruzado con un
+> método inverso independiente) → **no** demuestra que el A6300 fw2.01 implemente *rolling
+> shutter*. `GetImagerStabilizationTime` sí es una API viva, pero **no se ha analizado** aquí.
+> El único código vivo de esa banda de `.rodata` es el cálculo de ancho del **número de posición
+> del VD** (`0x4372914c`). Ver `analysis/s168_a6300_rolling/`.
+>
+> **S51 (A/B/C = NO) se mantiene.**
 
 ## NO VERIFICADO / abierto
 

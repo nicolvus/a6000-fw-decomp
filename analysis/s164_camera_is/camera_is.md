@@ -411,3 +411,23 @@ cadenas resueltas) y `analysis/s164_camera_is/scan_context.py 0x436e8000 0x43708
 6. **Salvedad metodológica**: la comparación mezcla versión de firmware y modelo de cámara;
    con los tres blobs disponibles no se puede separar «nuevo en la fw3.21» de «propio del
    A6000» (heredada de S130 §4).
+
+---
+
+### Corrección posterior (hito S168, 22-10-2026) — la cadena del *rolling* del A6300 está **muerta**
+
+El punto 5 de la revisión de arriba queda **matizado**: la cadena
+`position num in rolling is strange %d` del A6300 fw2.01 (`0x43d9fe03`) **no la referencia
+ningún código** (0 referencias PIC por la regla estricta, 0 punteros absolutos, 0 pares
+`movw`/`movt`; control cruzado con un método inverso independiente). Es una **cadena muerta**.
+
+Lo que **sigue en pie** es el dato bruto: la cadena está en el A6300 fw2.01 y **no** en la A6000
+fw3.21 ni en la A7S fw3.20, y las 36/37/40 apariciones de `roll` en las tres son casi todas
+`Controller`/`Scroll` (nombres de clase RTTI), no el concepto de *rolling shutter*.
+
+Lo que **cae** es la inferencia «el A6300 implementa *rolling shutter*». El único código vivo
+en esa banda es el cálculo de ancho del **número de posición del VD** (`0x4372914c`).
+
+**No cambia S51** (A=NO, B=NO, C=NO) ni S135 (control positivo del subsistema `ElecShutter/`
+en el HAL del A6300, que es un hallazgo **independiente** de esta cadena); de hecho **debilita**
+un argumento potencial. Detalle y herramientas: `analysis/s168_a6300_rolling/`.
