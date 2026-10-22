@@ -1,0 +1,64 @@
+{
+  "milestone": "S311",
+  "title": "ruta de configuraci\u00f3n propia de la A6000 (writers de +0x00/+0x02)",
+  "firmware": {
+    "a6000": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+    "a7s": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+  },
+  "base": "0x43541000",
+  "writers": [
+    {
+      "function": "0x43833ff8",
+      "field": "state+0x02",
+      "head_hex": "2de9f04f1f46c24c89b0c24b0e467c4403920546b0f81221",
+      "a7s_head_hits": 0,
+      "write_sites": [
+        "0x4383415a",
+        "0x4383418a"
+      ],
+      "callers": [
+        "0x438357cc",
+        "0x438359ae"
+      ]
+    },
+    {
+      "function": "0x4383ace0",
+      "field": "state+0x02",
+      "head_hex": "38b5f34bf34a7b449a581178002900f04381f14a9d582878",
+      "a7s_head_hits": 0,
+      "write_sites": [
+        "0x4383afd0"
+      ],
+      "callers": [
+        "0x43844bec"
+      ]
+    },
+    {
+      "function": "0x4383b2dc",
+      "field": "state+0x02",
+      "head_hex": "70b50346134c144a7c44a6583278012a19d1124aa5582a78",
+      "a7s_head_hits": 1,
+      "write_sites": [
+        "0x4383b316"
+      ],
+      "callers": [
+        "0x438358cc",
+        "0x43835bdc"
+      ]
+    },
+    {
+      "function": "0x4383abec",
+      "field": "state+0x00",
+      "head_hex": "2c4b10b57b442c4c1b887c44002b50d02a4b7b441b68013b",
+      "a7s_head_hits": 1,
+      "write_sites": [
+        "0x4383ac90"
+      ],
+      "callers": [
+        "0x4383b36c",
+        "0x4383b3f6"
+      ]
+    }
+  ],
+  "scope_limit": "Presencia por 24 B de pr\u00f3logo y callers directos; no prueba equivalencia funcional entre las rutas de las dos c\u00e1maras."
+}

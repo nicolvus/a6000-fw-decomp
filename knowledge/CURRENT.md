@@ -1692,3 +1692,14 @@ virtual (`vtable+0x64`), no a un “mensaje”. El consumidor real depende del o
 
 **Siguiente:** identificar el objeto/vtable de `r0` en `0x43549084` (constructor o RTTI) para
 resolver el slot 0x64, o cerrar el carril con el estado actual.
+
+## S311 — ruta de configuración propia de la A6000 (22-10-2026, agente B)
+
+Cuatro writers de `+0x00`/`+0x02` en la A6000: `0x43833ff8` y `0x4383ace0` **ausentes** en la
+A7S (0 firmas de 24 B); `0x4383b2dc` y `0x4383abec` compartidos (1). Con S309, el cuadro es
+simétrico: cada cámara tiene su código de configuración y solo comparten helpers sueltos; la
+A7S añade selector silent y bloque de tiempos. [S311](../docs/capture/s311-a6000-config.md),
+`analysis/s311_a6000_config/config.json` (3 tests).
+
+**Siguiente:** S312 identificar el objeto/vtable del selector (`vtable+0x64`) o cerrar el carril
+con la síntesis A7S↔A6000.
