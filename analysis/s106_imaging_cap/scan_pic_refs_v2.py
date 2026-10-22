@@ -35,6 +35,20 @@ N = len(B)
 U16 = struct.Struct("<H").unpack_from
 U32 = struct.Struct("<I").unpack_from
 MD = Cs(CS_ARCH_ARM, CS_MODE_THUMB)
+MD.detail = True          # imprescindible: sin detail, ins.operands lanza CsError
+
+# Capstone codifica los registros ARM como ARM_REG_R0 + n (66 + n); no sirve
+# `reg & 0xF` (confundiría r1 con r3, p. ej.).
+ARM_REG_R0 = 66
+
+
+def _reg_index(reg):
+    """0..15 para r0..r12/sp/lr/pc; None si no es un registro de 32 bits."""
+    if ARM_REG_R0 <= reg < ARM_REG_R0 + 13:
+        return reg - ARM_REG_R0
+    if 13 <= reg <= 15:       # sp, lr, pc
+        return reg
+    return None
 
 
 def u16(a):
@@ -115,15 +129,16 @@ def _writes_to(ins, reg):
         return False
     if not ops:
         return False
+    reg = reg & 0xF
     if mn.startswith("push") or mn.startswith("stm"):
         # salvan: el registro queda con el valor antiguo solo si está en la lista
-        return any(op.type == 1 and (op.reg & 0xF) == (reg & 0xF) for op in ops[1:])
+        return any(op.type == 1 and _reg_index(op.reg) == reg for op in ops[1:])
     if mn.startswith("pop") or mn.startswith("ldm"):
-        return any(op.type == 1 and (op.reg & 0xF) == (reg & 0xF) for op in ops)
+        return any(op.type == 1 and _reg_index(op.reg) == reg for op in ops)
     op = ops[0]
     if op.type != 1:            # no es un registro destino
         return False
-    return (op.reg & 0xF) == (reg & 0xF)
+    return _reg_index(op.reg) == reg
 
 
 def killed_between(ldr_addr, add_addr, reg):
