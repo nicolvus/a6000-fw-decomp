@@ -2,7 +2,7 @@
 
 ## S142 — referencias directas al struct S (22-10-2026)
 
-**VERIFICADO:** REA `xrefs(S=0x43eb35d0)` devuelve `0x437b56b4` (inicialización que limpia 0x148 bytes) y `0x437b59ce` (lee `u16 S+0xda`, lo consume en `0x4383c638`). Bytes Thumb del GOT/lectura/thunk corroborados y reproducibles en `analysis/s142_imager_s_init/s_accesses.json`; 3 tests.
+**VERIFICADO:** REA `xrefs(S=0x43eb35d0)` devuelve `0x437b56b4` (inicialización que limpia 0x148 bytes) y `0x437b59ce` (lee `u16 S+0xda`, lo consume en `0x4383c638`). Bytes Thumb del GOT/lectura/thunk corroborados y reproducibles en `analysis/s142_imager_s_init/s_accesses.json`; 3 tests. Commit publicado: `bf199b15`.
 
 **PARCIAL:** el memset inicializa `S[0]=0` pero no identifica escritor posterior ni valor por modo. Las xrefs directas no incluyen necesariamente rutinas que reciben S como argumento; no se toma el listado como prueba de ausencia. [Informe](../docs/capture/s142-imager-s-init.md). S51 intacto.
 
