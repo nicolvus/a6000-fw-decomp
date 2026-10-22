@@ -1,5 +1,13 @@
 # Estado actual — léeme primero
 
+## S142 — referencias directas al struct S (22-10-2026)
+
+**VERIFICADO:** REA `xrefs(S=0x43eb35d0)` devuelve `0x437b56b4` (inicialización que limpia 0x148 bytes) y `0x437b59ce` (lee `u16 S+0xda`, lo consume en `0x4383c638`). Bytes Thumb del GOT/lectura/thunk corroborados y reproducibles en `analysis/s142_imager_s_init/s_accesses.json`; 3 tests.
+
+**PARCIAL:** el memset inicializa `S[0]=0` pero no identifica escritor posterior ni valor por modo. Las xrefs directas no incluyen necesariamente rutinas que reciben S como argumento; no se toma el listado como prueba de ausencia. [Informe](../docs/capture/s142-imager-s-init.md). S51 intacto.
+
+**Siguiente:** trazar con REA funciones que reciben `S` como argumento, empezando por la entrada al staging `0x43843a44`; primero hallar coordenada de función admisible, después seguir stores y gates de `S[0]`.
+
 ## S141 — selección de fila IMX210, origen sin cerrar (21-10-2026)
 
 **PARCIAL:** REA `0x43b0893c` + bytes Thumb verifican `S[0]` como selector, fila en `S+4+16·S[0]` y copia de 16 bytes a `S+0xc4`; `0x43849fb8` consume esa fila al construir exposición. **NO_VERIFICADO:** quién escribe `S[0]`, condiciones de staging y origen G+`0x224`; REA no reconoció `0x43843a44`, consulta vacía no prueba ausencia. Evidencias y reproducción: [S141](../docs/capture/s141-imager-row-copy.md), `analysis/s141_imager_row_trace/row_trace.json`; 3 tests. Commit publicado: `47147952`.
