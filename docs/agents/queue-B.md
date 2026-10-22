@@ -39,3 +39,10 @@
 
 - BACKLOG S318 Resolver constructor/vtable de `[0x43e8dd98]` (objeto de `0x43ad9704`) o documentar la frontera cross-module.
 - BACKLOG S319 Cerrar la frontera del `ctx` `0x43ea709e`: buscar en módulos hermanos (`liro.ko`, `libObj.so`) el escritor de `[ctx]`/`[ctx+8]`.
+
+- DONE S317 `obj+0x2b4` indexa **tres tablas paralelas** de stride `0x1c` (`0x436f618c`): T1 `0x43bbeb6e` (→`obj+0x16`), T2 `0x43bbf2ea` (→`obj+0x2e`), T3 `0x43bbef32` (→`obj+0xa5`); campos `u32 +0x14`, `u16 +0x18`; `T3→T2 = 34` filas exactas, `T1→T3 = 0x3c4`. Base calculada 2 mod 4 → lectura alineada vs desalineada **NO_VERIFICADA**. 111 sitios `str [#0x2b4]` no atribuibles; entrada exclusiva A7S. Evidencia: `docs/capture/s317-mode-tables.md`, `analysis/s317_mode_tables/mode_tables.json` (39 comprobaciones, 6 tests).
+
+- TODO S318 Resolver la alineación real y el rango de las tablas de `+0x2b4` con REA/Ghidra (tipos de datos en `0x43bbeb6e..`) y buscar el escritor de `+0x2b4` para esta clase (xrefs al campo desde métodos propios).
+
+- BACKLOG S319 Cerrar la frontera del `ctx` `0x43ea709e`: buscar en módulos hermanos (`liro.ko`, `libObj.so`) el escritor de `[ctx]`/`[ctx+8]`.
+- BACKLOG S320 Identificar la tabla de 68 filas `0x43fee5ac` y su relación con los drive modes (S302).

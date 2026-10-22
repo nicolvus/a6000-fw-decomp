@@ -1778,3 +1778,17 @@ instanciador runtime, enlace con el silent. S51 sin cambios.
 [S316](../docs/capture/s316-class-vtable.md), `analysis/s316_class_vtable/class.json`.
 
 **Siguiente:** S317, tabla indexada por `obj+0x2b4` y escritores de `+0x1b0/+0x1ac`.
+
+## S317 — `obj+0x2b4` y las tres tablas de 0x1c B (22-10-2026, agente B)
+
+**VERIFICADO (bytes; 39 comprobaciones, 6 tests):** `0x436f618c(obj,idx,modo)` usa `idx` con
+stride `0x1c` (`movs r2,#0x1c` en `0x436f61a4`, `muls` en `0x436f61a6`) sobre tres tablas paralelas:
+T1 `0x43bbeb6e` (destino `obj+0x16`), T2 `0x43bbf2ea` (`obj+0x2e`), T3 `0x43bbef32` (`obj+0xa5`).
+Lee `u32 @+0x14` y `u16 @+0x18`. `T3→T2 = 0x3b8 = 34 × 0x1c` (34 filas); `T1→T3 = 0x3c4`
+(34 filas + 12 B). La base calculada por `add pc` es 2 mod 4: lectura desalineada legal pero la
+alineación real queda **NO_VERIFICADA** (se documentan ambas). **111** sitios `str [#0x2b4]` no
+atribuibles a esta clase. Entrada con **0 firmas** en la A6000. **NO_VERIFICADO:** rango del índice,
+escritor de `+0x2b4`, semántica de campos y enlace con el silent. S51 sin cambios.
+[S317](../docs/capture/s317-mode-tables.md), `analysis/s317_mode_tables/mode_tables.json`.
+
+**Siguiente:** S318, alineación/rango de las tablas y escritor de `+0x2b4` (REA).
