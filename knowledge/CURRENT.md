@@ -1,5 +1,11 @@
 # Estado actual — léeme primero
 
+## S152 — lectura diagnóstica de un byte del gap G (22-10-2026)
+
+Las celdas de S150 son campos `addr` de dos tablas `{u16 id,u16 size,u32 addr}`: A[32] y B[6] = `{0x0030,1,0x43eb0850}`. `FUN_43858338` dirige al raw copier `FUN_43b09c7a`, que lee `addr+size−1` hacia abajo y copia a buffer; con size=1, lectura exacta del byte gap. **No escribe el byte.** Dos gates dependen de flags con valor runtime desconocido, así que alcanzabilidad es PARCIAL. [S152](../docs/capture/s152-imager-gap-descriptor-read.md); `analysis/s152_imager_descriptor_reads/descriptor_reads.json` (3 tests).
+
+**Siguiente:** identificar escritores de los bits gates de `0x43f72d05`/`0x43f72d08` o demostrar cómo se inicializan dinámicamente; mantener la distinción entre ruta de volcado y exposición. S51 sigue A/B/C=NO.
+
 ## S150 — xrefs de los huecos +8/+9 y pista de descriptor (22-10-2026)
 
 REA devolvió `[]` para las ocho direcciones exactas de los huecos de fila; el control positivo muestra xrefs al inicio de una fila. Una búsqueda completa de bytes encuentra dos celdas que empiezan con literal `0x43eb0850` (el hueco +8/+9 de la tercera fila), pero no se ha identificado su consumidor ni formato: **no afirmar lectura/escritura efectiva**. Bytes estructurados en `analysis/s150_imager_row_gaps/gap_refs.json`; [informe](../docs/capture/s150-imager-row-gaps.md), 3 tests. El resultado vacío no prueba ausencia de escritores por alias/argumento. Commit publicado: `feb767e5`.
