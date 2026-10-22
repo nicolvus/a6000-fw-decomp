@@ -27,6 +27,7 @@ hardware. Se conservan todas las evidencias anteriores en sus rutas originales.
 - [S158: spill de puntero y lectores de otros campos del estado](../../docs/capture/s158-imager-state-ref.md).
 - [S159: otro spill de puntero y lecturas de campos del estado](../../docs/capture/s159-imager-state-spill.md).
 - [S160: escritura de `state+0` al expirar un contador](../../docs/capture/s160-state-open-flag.md).
+- [S161: otro xref de base es spill a stack](../../docs/capture/s161-imager-state-spill.md).
 - [Comparación entre modelos](../../docs/comparative-analysis.md).
 - [Límites de hardware pendientes](../../docs/hardware-limitations.md).
 

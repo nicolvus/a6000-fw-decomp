@@ -17,13 +17,14 @@ recuperación y pipeline de captura. El obturador electrónico es un
 
 | fecha | sesión | alcance | hitos |
 |---|---|---|---|
-| **22-10-2026** | **sesión actual**: línea de RE general por módulos + línea del obturador electrónico | continuación IMX210 S140–S160; mapa, filas G, volcado gap y clasificación de xrefs del estado; control positivo ElecShutter A6300 (S135) | S140–S160 |
+| **22-10-2026** | **sesión actual**: línea de RE general por módulos + línea del obturador electrónico | continuación IMX210 S140–S161; mapa, filas G, volcado gap y clasificación de xrefs del estado; control positivo ElecShutter A6300 (S135) | S140–S161 |
 | 20-10-2026 | transporte IMX210, SetMode/SetExposure emulados, inyección PMCA, montura E-mount | 50 commits | S54–S66 |
 | 19-10-2026 | base de la RE general y de la línea del obturador (payload, VD, callbacks, tabla PIC) | 5 commits | S16–S53 |
 | 18-10-2026 | sistema de conocimiento: indexación FTS5, grafo de conocimiento, CLI + servidor MCP, skills, benchmarks y **checkpoints de sesión** (`knowledge/checkpoints/`) | 5 checkpoints | — |
 
 ## Fases recientes (más nuevas primero)
 Cada enlace lleva a su informe; el resumen de hallazgos está en el [catálogo](docs/capture/linea-general-re.md) y en el [historial](docs/history/README-historial-2026-10-21.md).
+- [S161: `0x4384cb0a` guarda el state pointer en stack](docs/capture/s161-imager-state-spill.md): `FUN_4384b268` carga el puntero vía GOT y lo derrama a stack; después lee otros offsets, sin tocar gates `+3/+6` en este cuerpo. No es un writer, ni una conclusión global. [Script](analysis/s161_imager_state_spill/verify_state_spill.py) · 3 tests.
 - [S160: writer de `state+0` en el objeto de gates](docs/capture/s160-state-open-flag.md): `0x4383ac90` escribe cero en `0x43f72d02+0` al expirar un contador; no escribe los gates `+3/+6`. Dos callers estáticos, alcanzabilidad runtime desconocida. [Script](analysis/s160_state_open_flag_writer/verify_open_flag_store.py) · 3 tests.
 - [S159: `0x4386001c` es otro spill del puntero al objeto](docs/capture/s159-imager-state-spill.md): `FUN_4385fff0` carga `0x43f72d02` desde GOT y derrama el puntero a stack; lee campos `+0/+0x1c/+0xa2` y escribe otros destinos, no gates `+3/+6` en ese cuerpo. Sin conclusión global. [Script](analysis/s159_imager_state_ref/verify_state_spill.py) · 3 tests.
 - [S158: `0x4385b268` es un spill del puntero del objeto](docs/capture/s158-imager-state-ref.md): `FUN_4385b234` carga el estado, guarda el puntero en stack en el xref y lee otros campos; sus stores van a otros destinos, no a gates `+3/+6` en esa función. Sin conclusión global. [Script](analysis/s158_imager_state_ref/verify_gate_accessor.py) · 3 tests.
