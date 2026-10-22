@@ -60,7 +60,7 @@ def main():
     assert callers(a7, sel) == d["selector"]["callers_direct"]
 
     tf = int(d["timing_function"]["entry"], 16)
-    assert callers(a7, tf) == d["timing_function"]["direct_callers"] == []
+    assert callers(a7, tf) == d["timing_function"]["direct_callers"] == ["0x43861be4"]
 
     absent = [w["site"] for r in d["writers"] for w in r["write_sites"]
               if w["a6000_signature_hits"] == 0]

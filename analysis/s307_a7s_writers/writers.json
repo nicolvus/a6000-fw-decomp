@@ -143,9 +143,11 @@
     ]
   },
   "timing_function": {
-    "entry": "0x438645be",
-    "prologue_insn": "push {r4, r5, r6, r7, lr}",
-    "direct_callers": [],
+    "entry": "0x438645bc",
+    "prologue_insn": "sub sp, #0x10 + push {r4, r5, r6, r7, lr}",
+    "direct_callers": [
+      "0x43861be4"
+    ],
     "literal_pointer_hits": 0
   },
   "scope_limit": "Ausencia por firma exacta de 24 B alrededor del store; no prueba que no exista c\u00f3digo equivalente reescrito. Alcanzabilidad runtime NO_VERIFICADA."

@@ -31,9 +31,10 @@ class A7sOnlyWriters(unittest.TestCase):
         plus2 = rows["0x4385a98c"]["write_sites"][0]
         self.assertEqual(plus2["a6000_signature_hits"], 1)
 
-    def test_timing_function_has_no_direct_callers(self):
+    def test_timing_function_has_one_direct_caller_and_no_pointer(self):
         tf = self.data["timing_function"]
-        self.assertEqual(tf["direct_callers"], [])
+        self.assertEqual(tf["entry"], "0x438645bc")
+        self.assertEqual(tf["direct_callers"], ["0x43861be4"])
         self.assertEqual(tf["literal_pointer_hits"], 0)
 
     def test_selector_has_two_callers(self):

@@ -34,9 +34,13 @@ La firma es la ventana de 24 bytes `[store−8, store+16)`, que incluye el inmed
 (`#0xde`, `#0xe6`, `#0xe8`, `#0xea`). Una coincidencia de 0 significa que esa secuencia
 exacta no está en el otro firmware.
 
-## 2. La función de tiempos `FUN_438645be`
+## 2. La función de tiempos `FUN_438645bc` (corrección rev.2)
 
-`FUN_438645be` (`push {r4,r5,r6,r7,lr}`) contiene:
+La entrada real es **`0x438645bc`** (`sub sp,#0x10` + `push {r4,r5,r6,r7,lr}`), no
+`0x438645be`: una búsqueda de llamadas a `0x438645be` daba 0 porque el destino del `bl` es
+`0x438645bc`. **Tiene un único caller directo: `0x43861be4`.**
+
+`FUN_438645bc` contiene:
 
 - lectura de `state+0xae` (`0x43864732`) y multiplicación por 1000 (`muls r7,r3,#0x3e8`);
 - llamada a `FUN_438642f0` (`0x438647e6`, `0x4386484e`) que escribe el trío `+0xe6/+0xe8/+0xea`
@@ -44,10 +48,9 @@ exacta no está en el otro firmware.
 - llamada a `FUN_43865100` (`0x438648b0`) que escribe `state+0xde` en su epílogo;
 - lecturas de `+0xe0/+0xe2/+0xe4` y de `+0xe6`.
 
-**Pero no tiene llamadas directas ni aparece como literal de 32 bits en todo el blob.**
-Se entra por vía indirecta (puntero de función, tabla o salto calculado), que este método no
-resuelve. Por tanto su **alcanzabilidad runtime es NO_VERIFICADA**, aunque su contenido
-(tiempos ×100/milisegundos) es coherente con un bloque de configuración de exposición.
+El caller `0x43861be4` copia 0x70 bytes a un buffer de pila, elige `r2 ∈ {1,2}` según
+`[r7+0x484]`/`[r7+0x485]`, y tras la llamada encadena `0x43864c34/c74/c80/c90/ca0`. Es una
+ruta de **configuración/parametrización**, no un manejador de disparo. (INFERENCIA)
 
 ## 3. Relación con el modo Silent
 

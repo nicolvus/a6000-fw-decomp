@@ -3,3 +3,4 @@
 - S303 rev.2: tabla `0x43ff3200` = 148 entradas (no 60), estado en índice 18; dumper con 2 callers reales en `FUN_43859710` (10 callers, `FUN_43859944` con 35). Corregido el sesgo +0x58 heredado (S303rev1/S304). Siguiente: S305 usuarios del GOT `0x4401f080`.
 - S303 rev.3: contraste REA (1/5 funciones) y slot `0x4401f080` invisible para REA; usuario por bytes en `0x4378bb6c`. Siguiente: writers del clúster A7S `+0xde..+0xea` o desambiguar los 40 `add.w #0x19c`.
 - S307: `+0xde` y `+0xe6/+0xe8/+0xea` se escriben desde funciones ausentes en la A6000 (firma 24 B, 0 hits); `FUN_438645be` entra por vía indirecta. Siguiente: S308, entrada indirecta y flujo desde `0x4354908c`.
+- S308: flujo silent → mensaje (`0x43ad9704`), no al bloque de tiempos; entrada correcta `0x438645bc` con caller `0x43861be4`. Siguiente: S309, consumidor de la estructura del mensaje.
