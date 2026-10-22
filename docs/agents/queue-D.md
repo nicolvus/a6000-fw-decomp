@@ -10,6 +10,6 @@ Tema: decodificación de módulos de la línea general de la A6000 fw3.21 no cub
 - DONE 2348326f S505 Decodificar [VEF] (visor EVF, 149 trazas). Informe docs/capture/s505-vef.md; tests/test_s505_vef.py (5 verdes).
 - DONE 6d4db7a5 S506 Decodificar [TD] (codec transcode/decode, 73 trazas). Informe docs/capture/s506-td.md; tests/test_s506_td.py (5 verdes).
 - DONE 960a3170 S507 Decodificar [VIDENCSTAT] (70 trazas). Informe docs/capture/s507-videncstat.md; tests/test_s507_videncstat.py (5 verdes).
-- TODO S508 Decodificar [GOLFSHOT] (65 trazas).
+- DONE cd6fac05 S508 Decodificar [GOLFSHOT] (63 trazas REA). Informe docs/capture/s508-golfshot.md; tests/test_s508_golfshot.py (5 verdes).
 - TODO S509 Decodificar [WSX] (59 trazas).
 - TODO S510 Al vaciar, regenerar la cola con los siguientes modulos pendientes del censo S178 (priorizar exclusivos A6000 y >40 trazas).

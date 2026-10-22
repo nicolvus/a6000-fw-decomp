@@ -10,6 +10,6 @@ Tema distinto de A (sensor/driver), B (imager estado) y C (ruta de control): dec
 - S505 [VEF] visor EVF (149 trazas) DONE 2348326f
 - S506 [TD] (73 trazas) DONE 6d4db7a5
 - S507 [VIDENCSTAT] (70 trazas) DONE 960a3170
-- S508 [GOLFSHOT] (65 trazas)
+- S508 [GOLFSHOT] (65 trazas) DONE cd6fac05
 - S509 [WSX] (59 trazas)
 - regenerar al vaciar
