@@ -6,7 +6,7 @@
 - REA Evidence del vector: `ev_3e4a16b351da4229205a68b4225aedf7ff70d9edb3e89440d91314576341614b`; `0x43b0893c`: `ev_b376d03662f3edddb3c528e4fa223070270ef09dbc71e5ef8ccc7d012e05857b`.
 - Resultado: 119 punteros, cero terminador en `0x43fe9b38`; los rangos BSS examinados están a cero; selector `S[0]` indexa fila y copia a `S+0xc4`. No se recupera el contenido runtime.
 - Artefactos: `analysis/s140_imager_regmap/{extract_regmap.py,imager_regmap.json}`, `tests/test_s140_imager_regmap.py`, `docs/capture/s140-imager-register-map.md`.
-- Verificación: unittest 3/3 PASS. Push/commit aún pendiente al registrar este checkpoint; respetar archivos ajenos S138/S139.
+- Verificación: unittest del hito 3/3 y suite `tests/knowledge` 67/67 PASS; `git diff --check` PASS. Commit `6f064d93` publicado en `origin/main`; no se incluyeron archivos ajenos S138/S139.
 - Siguiente paso exacto: seguir selectivamente `0x43843a44` por REA/bytes desde una sesión que mapee las direcciones virtuales, identificando stores de `S[0]` y origen de la fila, sin tocar la asignación física.
 
 Checkpoint persistente. Actualizar al terminar cada etapa, antes de continuar
