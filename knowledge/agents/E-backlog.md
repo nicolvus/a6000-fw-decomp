@@ -2,7 +2,7 @@
 
 Tema distinto de A/B/C: decodificación de módulos exclusivos de la A6000 fw3.21 (0 en A7S/A6300). Numeración S600–S699.
 
-- S600 [CAM_FUNC_MGR] (43 trazas)
+- ✅ S600 [CAM_FUNC_MGR] (43 trazas) — DONE
 - S601 [CAM_SCALAR] (34 trazas)
 - S602 [REMOTE] (32 trazas)
 - S603 [CAMERA_DSP_APL]
