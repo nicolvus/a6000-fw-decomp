@@ -1,0 +1,207 @@
+{
+ "A6000": {
+  "string_vaddr": "0x43c93cc2",
+  "ref_sites": [
+   "0x436d7242",
+   "0x436d7280"
+  ],
+  "func": "0x436d6f70",
+  "disasm": [
+   "0x436d6f70 push.w {r4, r5, r6, r7, r8, sb, sl, fp, lr}",
+   "0x436d6f74 cmp r3, #0x11",
+   "0x436d6f76 ldr.w r8, [pc, #0x320]",
+   "0x436d6f7a sub sp, #0x44",
+   "0x436d6f7c mov r4, r0",
+   "0x436d6f7e mov sl, r1",
+   "0x436d6f80 add r8, pc",
+   "0x436d6f82 bne #0x436d6faa",
+   "0x436d6f84 add.w r0, r0, #0xfc",
+   "0x436d6f88 movs r1, #1",
+   "0x436d6f8a bl #0x436d9f70",
+   "0x436d6f8e cmp r0, #0",
+   "0x436d6f90 beq.w #0x436d728a",
+   "0x436d6f94 ldr.w r3, [r4, #0x170]",
+   "0x436d6f98 movs r0, #0xbc",
+   "0x436d6f9a movs r1, #0",
+   "0x436d6f9c movs r2, #3",
+   "0x436d6f9e str r3, [sp]",
+   "0x436d6fa0 ldr r3, [pc, #0x2f8]",
+   "0x436d6fa2 add r3, pc",
+   "0x436d6fa4 bl #0x436d6738",
+   "0x436d6fa8 b #0x436d728a",
+   "0x436d6faa ldrh r6, [r1, #4]",
+   "0x436d6fac ldr r3, [pc, #0x2f0]",
+   "0x436d6fae ldrh r5, [r1]",
+   "0x436d6fb0 ldrh r7, [r1, #6]",
+   "0x436d6fb2 uxtb.w fp, r6",
+   "0x436d6fb6 ldrb.w sb, [r1, #9]",
+   "0x436d6fba str.w r6, [r0, #0x3a8]",
+   "0x436d6fbe ldr.w lr, [r8, r3]",
+   "0x436d6fc2 ldr r3, [pc, #0x2e0]",
+   "0x436d6fc4 ldr.w r0, [r8, r3]",
+   "0x436d6fc8 ldr r3, [pc, #0x2dc]",
+   "0x436d6fca ldr.w ip, [r8, r3]",
+   "0x436d6fce ldr r3, [pc, #0x2dc]",
+   "0x436d6fd0 ldr.w r2, [r8, r3]",
+   "0x436d6fd4 ldr r3, [pc, #0x2d8]",
+   "0x436d6fd6 ldr.w r3, [r8, r3]",
+   "0x436d6fda str r3, [sp, #0x30]",
+   "0x436d6fdc ldr r3, [pc, #0x2d4]",
+   "0x436d6fde ldr.w r3, [r8, r3]",
+   "0x436d6fe2 strb.w fp, [lr, #2]",
+   "0x436d6fe6 asr.w lr, r6, #8",
+   "0x436d6fea and lr, lr, #0xf",
+   "0x436d6fee str.w lr, [sp, #0x2c]",
+   "0x436d6ff2 ldr r1, [sp, #0x2c]",
+   "0x436d6ff4 ldrb.w lr, [r0, #2]",
+   "0x436d6ff8 bfi lr, r1, #0, #4",
+   "0x436d6ffc strb.w lr, [r0, #2]",
+   "0x436d7000 asrs r0, r5, #8",
+   "0x436d7002 uxtb.w lr, r5",
+   "0x436d7006 and r0, r0, #0x3f",
+   "0x436d700a strb.w lr, [ip, #2]",
+   "0x436d700e str r0, [sp, #0x24]",
+   "0x436d7010 asrs r1, r7, #8",
+   "0x436d7012 ldrb.w ip, [r2, #2]",
+   "0x436d7016 and r1, r1, #0xf",
+   "0x436d701a bfi ip, r0, #0, #6",
+   "0x436d701e strb.w ip, [r2, #2]",
+   "0x436d7022 ldr r0, [sp, #0x30]"
+  ]
+ },
+ "A7S": {
+  "string_vaddr": "0x43c9c942",
+  "ref_sites": [
+   "0x436f436a"
+  ],
+  "func": "0x436f4168",
+  "disasm": [
+   "0x436f4168 push.w {r0, r1, r2, r3, r4, r5, r6, r7, r8, sb, sl, lr}",
+   "0x436f416c mov r4, r0",
+   "0x436f416e ldr.w r3, [r0, #0x1ac]",
+   "0x436f4172 mov sl, r1",
+   "0x436f4174 ldr r5, [pc, #0x20c]",
+   "0x436f4176 cmp r3, #0x11",
+   "0x436f4178 add r5, pc",
+   "0x436f417a bne #0x436f418a",
+   "0x436f417c add.w r0, r0, #0x13c",
+   "0x436f4180 movs r1, #1",
+   "0x436f4182 bl #0x436f5db8",
+   "0x436f4186 movs r0, #2",
+   "0x436f4188 b #0x436f437c",
+   "0x436f418a ldr r3, [pc, #0x1fc]",
+   "0x436f418c ldrh.w r8, [r1, #4]",
+   "0x436f4190 ldr r1, [r1]",
+   "0x436f4192 ldr r3, [r5, r3]",
+   "0x436f4194 ldrh.w sb, [sl, #6]",
+   "0x436f4198 ldrb.w r6, [sl, #9]",
+   "0x436f419c ldrb.w r2, [r3, #0x2d]",
+   "0x436f41a0 ldrb.w r7, [r3, #0x2e]",
+   "0x436f41a4 ldrb.w r3, [r3, #0x2f]",
+   "0x436f41a8 cmp r2, #0xff",
+   "0x436f41aa it ne",
+   "0x436f41ac movne r8, r2",
+   "0x436f41ae cmp r7, #0xff",
+   "0x436f41b0 it eq",
+   "0x436f41b2 uxtheq r7, r1",
+   "0x436f41b4 cmp r3, #0xff",
+   "0x436f41b6 it ne",
+   "0x436f41b8 movne sb, r3",
+   "0x436f41ba ldr r3, [pc, #0x1d0]",
+   "0x436f41bc lsl.w r8, r8, #0x14",
+   "0x436f41c0 lsl.w sb, sb, #0x14",
+   "0x436f41c4 lsr.w r8, r8, #0x14",
+   "0x436f41c8 ldr r1, [r5, r3]",
+   "0x436f41ca lsr.w sb, sb, #0x14",
+   "0x436f41ce ldr r3, [pc, #0x1c0]",
+   "0x436f41d0 ldr r2, [r5, r3]",
+   "0x436f41d2 mov r3, r8",
+   "0x436f41d4 bl #0x43ad9ec6",
+   "0x436f41d8 ldr r3, [pc, #0x1b8]",
+   "0x436f41da mov r0, r4",
+   "0x436f41dc ldr r1, [r5, r3]",
+   "0x436f41de ldr r3, [pc, #0x1b8]",
+   "0x436f41e0 ldr r2, [r5, r3]",
+   "0x436f41e2 mov r3, sb",
+   "0x436f41e4 bl #0x43ad9ec6",
+   "0x436f41e8 cbnz r6, #0x436f41f8",
+   "0x436f41ea cbnz r7, #0x436f41f8",
+   "0x436f41ec ldr r0, [pc, #0x1ac]",
+   "0x436f41ee mov r1, r7",
+   "0x436f41f0 adds r7, #1",
+   "0x436f41f2 add r0, pc",
+   "0x436f41f4 bl #0x438f7114",
+   "0x436f41f8 ldr r3, [pc, #0x1a4]",
+   "0x436f41fa lsls r7, r7, #0x12",
+   "0x436f41fc mov r0, r4",
+   "0x436f41fe lsrs r7, r7, #0x12",
+   "0x436f4200 ldr r1, [r5, r3]"
+  ]
+ },
+ "compare": {
+  "n": 60,
+  "identicas": 1,
+  "diferencias": [
+   {
+    "i": 0,
+    "a6000": "0x436d6f70 push.w {r4, r5, r6, r7, r8, sb, sl, fp, lr}",
+    "a7s": "0x436f4168 push.w {r0, r1, r2, r3, r4, r5, r6, r7, r8, sb, sl, lr}"
+   },
+   {
+    "i": 1,
+    "a6000": "0x436d6f74 cmp r3, #0x11",
+    "a7s": "0x436f416c mov r4, r0"
+   },
+   {
+    "i": 2,
+    "a6000": "0x436d6f76 ldr.w r8, [pc, #0x320]",
+    "a7s": "0x436f416e ldr.w r3, [r0, #0x1ac]"
+   },
+   {
+    "i": 3,
+    "a6000": "0x436d6f7a sub sp, #0x44",
+    "a7s": "0x436f4172 mov sl, r1"
+   },
+   {
+    "i": 4,
+    "a6000": "0x436d6f7c mov r4, r0",
+    "a7s": "0x436f4174 ldr r5, [pc, #0x20c]"
+   },
+   {
+    "i": 5,
+    "a6000": "0x436d6f7e mov sl, r1",
+    "a7s": "0x436f4176 cmp r3, #0x11"
+   },
+   {
+    "i": 6,
+    "a6000": "0x436d6f80 add r8, pc",
+    "a7s": "0x436f4178 add r5, pc"
+   },
+   {
+    "i": 7,
+    "a6000": "0x436d6f82 bne #0x436d6faa",
+    "a7s": "0x436f417a bne #0x436f418a"
+   },
+   {
+    "i": 8,
+    "a6000": "0x436d6f84 add.w r0, r0, #0xfc",
+    "a7s": "0x436f417c add.w r0, r0, #0x13c"
+   },
+   {
+    "i": 10,
+    "a6000": "0x436d6f8a bl #0x436d9f70",
+    "a7s": "0x436f4182 bl #0x436f5db8"
+   },
+   {
+    "i": 11,
+    "a6000": "0x436d6f8e cmp r0, #0",
+    "a7s": "0x436f4186 movs r0, #2"
+   },
+   {
+    "i": 12,
+    "a6000": "0x436d6f90 beq.w #0x436d728a",
+    "a7s": "0x436f4188 b #0x436f437c"
+   }
+  ]
+ }
+}
