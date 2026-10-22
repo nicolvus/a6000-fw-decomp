@@ -1726,3 +1726,23 @@ Incluye la nota de las sesiones paralelas S304/S305 supersedidas (+0x58). S51 si
 [S313](../docs/capture/s313-synthesis-carril-b.md) (4 tests de consistencia).
 
 **Siguiente:** S314 resolver el objeto/vtable de `0x43549084` o la tabla `0x43fee3f8`.
+
+## S314 — procedencia del selector y tabla de registros (22-10-2026, agente B)
+
+**VERIFICADO (bytes + Capstone; 58 comprobaciones, 10 tests):** la premisa «objeto/vtable de `r0`
+en `0x43549084`» era incorrecta: en `0x43549084` se carga **`r1`** (`ldr.w r1,[r3,#0x21c]` con
+`r3=[ctx+8]`), `r2` en `0x43549088` (`+0x220`) y el selector `0x43826d58` se llama en `0x4354908c`
+con `r0=[[ctx]]+0x6c`, `ctx=0x43ea709e` (getter `0x437b38ec`). El thunk del **slot `0x64`** es
+`0x43ad96f8`; `0x43ad9704` desreferencia y salta a `0x43ad9ada`, que usa `vtable+0x24` dos veces
+(corrige S310/S313). Tabla de decisión del selector: `a==5→0x0c`, `a==0x1b→0x35`, `c==2` y
+`b∈{0,1}→0x4e/0x4f`, `c!=2` y `b==2→0x17`, resto `0x0b`; **el silent se elige con `c==2`**.
+La tabla `0x43fee3f8` es un array terminado en NULL de **95** punteros a registros de 6 B
+(`u8 dev | u8 0 | u16 reg | u8 data | u8 0`; 94×`0x81`, 1×`0x83`), terminador `0x43fee574`;
+consumidor `0x436f4526`/`0x436f455c`. La cifra «19 filas» de S313 **no es reproducible**. En la
+A6000 la misma VA es otra tabla (71 punteros, terminador `0x43fee41c`) y **no existe** el par
+`+0x21c/+0x220`. **NO_VERIFICADO:** escritor/identidad de clase de `[ctx]`/`[ctx+8]` y de
+`[0x43e8dd98]`; semántica de las 68 filas de `0x43fee5ac`. S51 sin cambios.
+[S314](../docs/capture/s314-selector-object.md), `analysis/s314_selector_object/selector.json`.
+
+**Siguiente:** S315, seguir la lista de 95 registros hasta el formateador (`0x436f44c4` →
+`0x436f25f0`) y comparar con la tabla A6000 de 71 entradas.

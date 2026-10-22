@@ -18,3 +18,10 @@
 
 - DONE S306 (cubierto en S303 rev.3 §2b) Usuarios del slot `0x4401f080`: REA devuelve `undecodable`/0 xrefs (no prueba ausencia); por bytes, `0x4378bb6c` lo carga con `GOT base 0x4401eee4 + 0x19c` y lo pasa a `0x435613e8`. `procedure_callers` valida 1 función para el dumper y 5 para `FUN_43859710`.
  (fix(B): S303 rev.2 arbol real de 0x43ff3200 y callers del dumper)
+
+- DONE S314 Procedencia real del selector y tabla `0x43fee3f8`: en `0x43549084` se carga **`r1`** (`[ctx+8]+0x21c`), no `r0`; el thunk del slot `0x64` es `0x43ad96f8` (no `0x43ad9704`, que va a `0x43ad9ada` y usa `vtable+0x24`). `ctx=0x43ea709e` (getter `0x437b38ec`), sin escritor estático de `[ctx]`/`[ctx+8]`. Selector: `c==2 && b∈{0,1}` → `0x4e/0x4f`. Tabla `0x43fee3f8`: **95** registros de 6 B (`dev|0|reg:u16|data:u8|0`, 94×`0x81`, 1×`0x83`), terminador `0x43fee574`; la cifra «19 filas» no es reproducible. A6000: 0 apariciones del par `+0x21c/+0x220` y otra tabla en la misma VA (71 punteros, terminador `0x43fee41c`). Evidencia: `docs/capture/s314-selector-object.md`, `analysis/s314_selector_object/selector.json` (58 comprobaciones de `verify_selector.py`, 10 tests).
+
+- TODO S315 Seguir la lista de 95 registros hasta el formateador: callers/reachability de `0x436f44c4` y `0x436f25f0` (registro→trama), comparar con la tabla A6000 de 71 entradas (`0x43fee300..0x43fee418`) y decidir si el modo silent usa una lista distinta (p. ej. la de `0x43fee578`/`0x43fee590`).
+
+- BACKLOG S316 (si S315 no cierra): identificar índice/consumidor de las 68 filas de `0x43fee5ac` (`{ptr,16 B}`) y su relación con los 69 drive modes de S302.
+- BACKLOG S317: resolver constructor/vtable de `[0x43e8dd98]` (objeto de `0x43ad9704`) o documentar la frontera cross-module con evidencia de ausencia local.
