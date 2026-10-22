@@ -13,7 +13,7 @@ Tema: decodificación de módulos de la línea general de la A6000 fw3.21 no cub
 - DONE cd6fac05 S508 Decodificar [GOLFSHOT] (63 trazas REA). Informe docs/capture/s508-golfshot.md; tests/test_s508_golfshot.py (5 verdes).
 - DONE 60fad377 S509 Decodificar [WSX] (BSFS, 59 trazas). Informe docs/capture/s509-wsx.md; tests/test_s509_wsx.py (5 verdes).
 - DONE 51a8d3fa S510 Decodificar [RE] (54 trazas). Informe docs/capture/s510-re.md; tests/test_s510_re.py (5 verdes).
-- TODO S511 Decodificar [INT_ERROR] (53 trazas).
+- DONE 93cc54d4 S511 Decodificar [INT_ERROR] (53 trazas). Informe docs/capture/s511-int-error.md; tests/test_s511_int_error.py (5 verdes).
 - TODO S512 Decodificar [ENCOUCSTAT] (49 trazas).
 - TODO S513 Decodificar [CONFIG] (47 trazas).
 - TODO S514 Decodificar [BT] (44 trazas).
