@@ -7,7 +7,7 @@ Tema: decodificación de módulos de la línea general de la A6000 fw3.21 no cub
 - DONE 2cbe4af6 S502 Decodificar [EIS] (estabilizacion electronica). Informe docs/capture/s502-eis.md; tests/test_s502_eis.py (5 verdes).
 - DONE aa19fb01 S503 Decodificar [ZPD] (zero point detection/AF). Informe docs/capture/s503-zpd.md; tests/test_s503_zpd.py (5 verdes).
 - DONE 0258cf16 S504 Decodificar [STABILIZER]. Informe docs/capture/s504-stabilizer.md; tests/test_s504_stabilizer.py (5 verdes).
-- TODO S505 Decodificar [VEF] (visor EVF, 149 trazas). Informe + tests + JSON.
+- DONE 2348326f S505 Decodificar [VEF] (visor EVF, 149 trazas). Informe docs/capture/s505-vef.md; tests/test_s505_vef.py (5 verdes).
 - TODO S506 Decodificar [TD] (73 trazas).
 - TODO S507 Decodificar [VIDENCSTAT] (70 trazas).
 - TODO S508 Decodificar [GOLFSHOT] (65 trazas).
