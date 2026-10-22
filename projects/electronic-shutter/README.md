@@ -29,6 +29,7 @@ hardware. Se conservan todas las evidencias anteriores en sus rutas originales.
 - [S160: escritura de `state+0` al expirar un contador](../../docs/capture/s160-state-open-flag.md).
 - [S161: otro xref de base es spill a stack](../../docs/capture/s161-imager-state-spill.md).
 - [S162: lectores de un halfword del estado en helpers de eventos](../../docs/capture/s162-imager-state-event-readers.md).
+- [S163: tercer lector de campos del estado en el pipeline de eventos](../../docs/capture/s163-imager-state-event-reader.md).
 - [Comparación entre modelos](../../docs/comparative-analysis.md).
 - [Límites de hardware pendientes](../../docs/hardware-limitations.md).
 

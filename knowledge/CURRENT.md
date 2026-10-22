@@ -1,5 +1,11 @@
 # Estado actual — léeme primero
 
+## S163 — tercer lector del estado (22-10-2026)
+
+`FUN_438d939c` lee `state+0x1c` (halfword) y `+0x1e` (byte); defaults 3/4 si los campos valen cero. Construye un mensaje y almacena resultados a otros globals, no a estado/gates dentro de este cuerpo. **Notificación es INFERENCIA; runtime no probado.** [S163](../docs/capture/s163-imager-state-event-reader.md), JSON/3 tests en `analysis/s163_imager_state_event_reader/`.
+
+**Siguiente:** seguir un xref aún no clasificado hacia `0x43f72d02`, especialmente si hay store tipado; mantener “no demostrado” en lugar de inferir ausencia.
+
 ## S162 — lectores de `state+0x1c` (22-10-2026)
 
 `FUN_438d9318`/`FUN_438d936c` cargan el state pointer y leen un halfword en `+0x1c`; cada resultado se escribe a `0x43f7c702` o `0x43f7c704`, no al objeto/gates. La lectura es VERIFICADA; “notificación” es INFERENCIA, alcanzabilidad runtime NO_VERIFICADA. [S162](../docs/capture/s162-imager-state-event-readers.md), `analysis/s162_imager_state_event_readers/event_readers.json` (3 tests). Commit publicado: `8f17819a`.
