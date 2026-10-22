@@ -4,7 +4,7 @@ Tema distinto de A (sensor/driver), B (imager estado) y C (ruta de control): dec
 
 - S500 [VDF] visor (243 trazas) DONE 381c75b3
 - S501 [STK] (76 trazas, eliminado en A6300) DONE 18a2ea0e
-- S502 [EIS] estabilización electrónica
+- S502 [EIS] estabilización electrónica DONE 2cbe4af6
 - S503 [ZPD] zero point detection
 - S504 [STABILIZER]
 - regenerar al vaciar
