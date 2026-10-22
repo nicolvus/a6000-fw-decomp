@@ -2,7 +2,7 @@
 
 ## S147 — escritor parcial de filas G (22-10-2026)
 
-**VERIFICADO:** `0x437b5f00` forma `G+0x224` y prepara la llamada a `0x4383bf2c`; éste llama a `0x4383c9dc`, cuyo loop usa stride `0x10` durante cuatro iteraciones y escribe offsets relativos `0,4,6,0xa,0xc,0xe` en cada fila desde `+0x2c`. No escribe `+8/+9` **en ese loop**. REA evidence/páginas y bytes: [S147](../docs/capture/s147-imager-g-rows.md), `analysis/s147_imager_g_rows/g_rows.json` (3 tests).
+**VERIFICADO:** `0x437b5f00` forma `G+0x224` y prepara la llamada a `0x4383bf2c`; éste llama a `0x4383c9dc`, cuyo loop usa stride `0x10` durante cuatro iteraciones y escribe offsets relativos `0,4,6,0xa,0xc,0xe` en cada fila desde `+0x2c`. No escribe `+8/+9` **en ese loop**. REA evidence/páginas y bytes: [S147](../docs/capture/s147-imager-g-rows.md), `analysis/s147_imager_g_rows/g_rows.json` (3 tests). Commit publicado: `ffdba84b`.
 
 **PARCIAL:** los otros xrefs a G son paso de puntero o loads; consumidores indirectos/efectos restantes, otros escritores, modo fotográfico y semántica física no se cerraron. No cambia S51.
 
