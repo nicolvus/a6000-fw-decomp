@@ -6,5 +6,10 @@ Tema: decodificación de módulos de la línea general de la A6000 fw3.21 no cub
 - DONE 18a2ea0e S501 Decodificar `[STK]` (76 trazas): eliminado en A6300. Informe docs/capture/s501-stk.md; tests/test_s501_stk.py (5 verdes).
 - DONE 2cbe4af6 S502 Decodificar [EIS] (estabilizacion electronica). Informe docs/capture/s502-eis.md; tests/test_s502_eis.py (5 verdes).
 - DONE aa19fb01 S503 Decodificar [ZPD] (zero point detection/AF). Informe docs/capture/s503-zpd.md; tests/test_s503_zpd.py (5 verdes).
-- TODO S504 Decodificar `[STABILIZER]`.
-- TODO S505 Al vaciar, regenerar la cola con los siguientes módulos pendientes del censo S178 (priorizar exclusivos A6000 y los >40 trazas).
+- DONE 0258cf16 S504 Decodificar [STABILIZER]. Informe docs/capture/s504-stabilizer.md; tests/test_s504_stabilizer.py (5 verdes).
+- TODO S505 Decodificar [VEF] (visor EVF, 149 trazas). Informe + tests + JSON.
+- TODO S506 Decodificar [TD] (73 trazas).
+- TODO S507 Decodificar [VIDENCSTAT] (70 trazas).
+- TODO S508 Decodificar [GOLFSHOT] (65 trazas).
+- TODO S509 Decodificar [WSX] (59 trazas).
+- TODO S510 Al vaciar, regenerar la cola con los siguientes modulos pendientes del censo S178 (priorizar exclusivos A6000 y >40 trazas).

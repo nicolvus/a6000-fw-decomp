@@ -6,5 +6,10 @@ Tema distinto de A (sensor/driver), B (imager estado) y C (ruta de control): dec
 - S501 [STK] (76 trazas, eliminado en A6300) DONE 18a2ea0e
 - S502 [EIS] estabilización electrónica DONE 2cbe4af6
 - S503 [ZPD] zero point detection DONE aa19fb01
-- S504 [STABILIZER]
+- S504 [STABILIZER] DONE 0258cf16
+- S505 [VEF] visor EVF (149 trazas)
+- S506 [TD] (73 trazas)
+- S507 [VIDENCSTAT] (70 trazas)
+- S508 [GOLFSHOT] (65 trazas)
+- S509 [WSX] (59 trazas)
 - regenerar al vaciar
