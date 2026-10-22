@@ -1648,11 +1648,23 @@ Rev.3 añade el contraste con REA: `procedure_callers` confirma 1 función para 
 Firmas de 24 B alrededor de cada store: `+0xde` (`0x4386521a`) y `+0xe6/+0xe8/+0xea`
 (`0x438643a6/b2/bc`) dan **0 coincidencias** en la A6000; dos escritores de `+0x02`
 (`FUN_4385352c`, `FUN_4385a384`) también. Los stores a `+0x00` y uno de `+0x02` sí existen en la
-A6000. `FUN_438645be` (lee `+0xae`×1000, llama a los escritores) no tiene llamadas directas ni
-literal de puntero → entrada indirecta; alcanzabilidad NO_VERIFICADA. El selector silent
+A6000. `FUN_438645bc` (lee `+0xae`×1000, llama a los escritores) tiene **un** caller directo (`0x43861be4`)
+y ningún puntero; la entrada correcta es `bc`, no `be` (corregido en S308). El selector silent
 `0x43826d58` solo tiene 2 callers (`0x4354908c`, `0x43826df2`) y ninguno llama a este bloque: la
 conexión modo→tiempos queda NO_VERIFICADA. [S307](../docs/capture/s307-a7s-only-writers.md),
 `analysis/s307_a7s_writers/writers.json` (4 tests).
 
 **Siguiente:** identificar la entrada indirecta de `FUN_438645be` (tabla de punteros/estructura) o
 seguir `0x4354908c` (caller del selector) para cerrar el flujo del modo silent.
+
+## S308 — flujo del selector silent y entrada del bloque de tiempos (22-10-2026, agente B)
+
+El resultado del selector `0x43826d58` se guarda en `[sp+0x2c]` (`0x43549098`) y se pasa a
+`0x43ad9704` (`0x435490c4`), un constructor/despachador de mensajes: **no** va directo al bloque
+de tiempos. El bloque es `FUN_438645bc` (S307 decía `…be`: corregido) con **un** caller directo,
+`0x43861be4` (ruta de configuración: buffer 0x70 B + variante 1/2). Solo hay 4 punteros a
+`0x43864xxx` y ninguno apunta al bloque. El enlace silent→tiempos sigue **NO_VERIFICADO**; el
+siguiente paso es el consumidor de `0x43ad9704`. [S308](../docs/capture/s308-silent-flow.md),
+`analysis/s308_silent_flow/flow.json` (3 tests).
+
+**Siguiente:** consumidor de la estructura de `0x43ad9704` (dónde se lee el modo 0x4e/0x4f).

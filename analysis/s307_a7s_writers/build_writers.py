@@ -65,7 +65,7 @@ def main():
 
     sel = 0x43826D58
     sel_ins = next(MD.disasm(a7[sel - BASE:sel - BASE + 4], sel), None)
-    win = 0x438645BE
+    win = 0x438645BC
     data = {
         "milestone": "S307",
         "title": "escrituras A7S exclusivas del estado (+0xde, +0xe6..+0xea) en código ausente en la A6000",
@@ -82,8 +82,8 @@ def main():
         },
         "timing_function": {
             "entry": f"0x{win:08x}",
-            "prologue_insn": "push {r4, r5, r6, r7, lr}",
-            "direct_callers": [], "literal_pointer_hits": 0,
+            "prologue_insn": "sub sp, #0x10 + push {r4, r5, r6, r7, lr}",
+            "direct_callers": ["0x43861be4"], "literal_pointer_hits": 0,
         },
         "scope_limit": "Ausencia por firma exacta de 24 B alrededor del store; no prueba que no "
                        "exista código equivalente reescrito. Alcanzabilidad runtime NO_VERIFICADA.",

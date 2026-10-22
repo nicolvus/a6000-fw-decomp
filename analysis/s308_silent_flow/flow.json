@@ -1,0 +1,75 @@
+{
+  "milestone": "S308",
+  "title": "flujo del selector silent y entrada del escritor de tiempos",
+  "firmware": {
+    "name": "av-cam.bin (A7S fw3.20)",
+    "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+  },
+  "base": "0x43541000",
+  "selector_site": [
+    {
+      "label": "selector_args_mode",
+      "address": "0x43549084",
+      "bytes_hex": "d3f81c12",
+      "insn": "ldr.w r1, [r3, #0x21c]"
+    },
+    {
+      "label": "selector_args_sub",
+      "address": "0x43549088",
+      "bytes_hex": "d3f82022",
+      "insn": "ldr.w r2, [r3, #0x220]"
+    },
+    {
+      "label": "selector_call",
+      "address": "0x4354908c",
+      "bytes_hex": "ddf264fe",
+      "insn": "bl #0x43826d58"
+    },
+    {
+      "label": "selector_result_saved",
+      "address": "0x43549098",
+      "bytes_hex": "0b901cd8",
+      "insn": "str r0, [sp, #0x2c]"
+    },
+    {
+      "label": "selector_result_used",
+      "address": "0x435490c4",
+      "bytes_hex": "90f11ef3",
+      "insn": "bl #0x43ad9704"
+    },
+    {
+      "label": "timing_prev_return",
+      "address": "0x4386458c",
+      "bytes_hex": "bde8f087",
+      "insn": "pop.w {r4, r5, r6, r7, r8, sb, sl, pc}"
+    },
+    {
+      "label": "timing_entry",
+      "address": "0x438645bc",
+      "bytes_hex": "84b0f0b5",
+      "insn": "sub sp, #0x10"
+    }
+  ],
+  "pointers_into_0x43864xxx": [
+    {
+      "at": "0x4375526e",
+      "value": "0x43864770"
+    },
+    {
+      "at": "0x43be1104",
+      "value": "0x438643cd"
+    },
+    {
+      "at": "0x43be6ba4",
+      "value": "0x438643cd"
+    },
+    {
+      "at": "0x4402d2dc",
+      "value": "0x43864189"
+    }
+  ],
+  "timing_entry_direct_callers": [
+    "0x43861be4"
+  ],
+  "scope_limit": "Solo transferencias directas y punteros absolutos de 32 bits; no cubre saltos calculados ni tablas relativas."
+}
