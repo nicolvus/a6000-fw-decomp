@@ -1,0 +1,456 @@
+{
+  "milestone": "S316",
+  "title": "Clase duena de las listas: constructor 0x436f27b4, vtable 0x43fce050 y slots 0x38/0x44",
+  "firmware": {
+    "a7s": {
+      "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+      "size": 11455416
+    },
+    "a6000": {
+      "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+      "size": 11427236
+    }
+  },
+  "constructor": {
+    "entry": "0x436f27b4",
+    "insn": [
+      {
+        "address": "0x436f27b4",
+        "bytes": "0a4b",
+        "insn": "ldr r3, [pc, #0x28]"
+      },
+      {
+        "address": "0x436f27b6",
+        "bytes": "0b4a",
+        "insn": "ldr r2, [pc, #0x2c]"
+      },
+      {
+        "address": "0x436f27b8",
+        "bytes": "7b44",
+        "insn": "add r3, pc"
+      },
+      {
+        "address": "0x436f27ba",
+        "bytes": "10b5",
+        "insn": "push {r4, lr}"
+      },
+      {
+        "address": "0x436f27bc",
+        "bytes": "0446",
+        "insn": "mov r4, r0"
+      },
+      {
+        "address": "0x436f27be",
+        "bytes": "9b58",
+        "insn": "ldr r3, [r3, r2]"
+      },
+      {
+        "address": "0x436f27c0",
+        "bytes": "0833",
+        "insn": "adds r3, #8"
+      },
+      {
+        "address": "0x436f27c2",
+        "bytes": "0360",
+        "insn": "str r3, [r0]"
+      },
+      {
+        "address": "0x436f27c4",
+        "bytes": "00f56570",
+        "insn": "add.w r0, r0, #0x394"
+      },
+      {
+        "address": "0x436f27c8",
+        "bytes": "00f03cff",
+        "insn": "bl #0x436f3644"
+      },
+      {
+        "address": "0x436f27cc",
+        "bytes": "2046",
+        "insn": "mov r0, r4"
+      },
+      {
+        "address": "0x436f27ce",
+        "bytes": "fff7e5ff",
+        "insn": "bl #0x436f279c"
+      },
+      {
+        "address": "0x436f27d2",
+        "bytes": "2046",
+        "insn": "mov r0, r4"
+      },
+      {
+        "address": "0x436f27d4",
+        "bytes": "10bd",
+        "insn": "pop {r4, pc}"
+      },
+      {
+        "address": "0x436f27d6",
+        "bytes": "2046",
+        "insn": "mov r0, r4"
+      }
+    ],
+    "got": {
+      "base": "0x44024540",
+      "literal_at": "0x436f27e0",
+      "literal": "0x00931d84",
+      "offset": "0x6740",
+      "slot": "0x4402ac80",
+      "value": "0x43fce048"
+    },
+    "vptr_stored": "0x43fce050"
+  },
+  "wrapper": {
+    "entry": "0x43ad9840",
+    "insn": [
+      {
+        "address": "0x43ad9840",
+        "bytes": "10b5",
+        "insn": "push {r4, lr}"
+      },
+      {
+        "address": "0x43ad9842",
+        "bytes": "0446",
+        "insn": "mov r4, r0"
+      },
+      {
+        "address": "0x43ad9844",
+        "bytes": "18f4b6ff",
+        "insn": "bl #0x436f27b4"
+      },
+      {
+        "address": "0x43ad9848",
+        "bytes": "2046",
+        "insn": "mov r0, r4"
+      },
+      {
+        "address": "0x43ad984a",
+        "bytes": "c8f699ff",
+        "insn": "bl #0x439a2780"
+      },
+      {
+        "address": "0x43ad984e",
+        "bytes": "2046",
+        "insn": "mov r0, r4"
+      },
+      {
+        "address": "0x43ad9850",
+        "bytes": "10bd",
+        "insn": "pop {r4, pc}"
+      },
+      {
+        "address": "0x43ad9852",
+        "bytes": "7047",
+        "insn": "bx lr"
+      }
+    ],
+    "role": "crea (bl 0x436f27b4) y registra (bl 0x439a2780)"
+  },
+  "vtable": {
+    "metadata": "0x43fce048",
+    "offset_to_top": 0,
+    "typeinfo": "0x43feeb20",
+    "table": "0x43fce050",
+    "count": 45,
+    "end": "0x43fce104",
+    "terminator": 0,
+    "entries": [
+      {
+        "slot": "0x00",
+        "addr": "0x43fce050",
+        "target": "0x436f27b4"
+      },
+      {
+        "slot": "0x04",
+        "addr": "0x43fce054",
+        "target": "0x43ad9840"
+      },
+      {
+        "slot": "0x08",
+        "addr": "0x43fce058",
+        "target": "0x436f3f28"
+      },
+      {
+        "slot": "0x0c",
+        "addr": "0x43fce05c",
+        "target": "0x436f3ee4"
+      },
+      {
+        "slot": "0x10",
+        "addr": "0x43fce060",
+        "target": "0x436f2af4"
+      },
+      {
+        "slot": "0x14",
+        "addr": "0x43fce064",
+        "target": "0x436f2ae0"
+      },
+      {
+        "slot": "0x18",
+        "addr": "0x43fce068",
+        "target": "0x436f3db8"
+      },
+      {
+        "slot": "0x1c",
+        "addr": "0x43fce06c",
+        "target": "0x436f3c98"
+      },
+      {
+        "slot": "0x20",
+        "addr": "0x43fce070",
+        "target": "0x436f3b44"
+      },
+      {
+        "slot": "0x24",
+        "addr": "0x43fce074",
+        "target": "0x436f3464"
+      },
+      {
+        "slot": "0x28",
+        "addr": "0x43fce078",
+        "target": "0x436f4168"
+      },
+      {
+        "slot": "0x2c",
+        "addr": "0x43fce07c",
+        "target": "0x43ad9854"
+      },
+      {
+        "slot": "0x30",
+        "addr": "0x43fce080",
+        "target": "0x436f4a94"
+      },
+      {
+        "slot": "0x34",
+        "addr": "0x43fce084",
+        "target": "0x43ad9858"
+      },
+      {
+        "slot": "0x38",
+        "addr": "0x43fce088",
+        "target": "0x436f5a14"
+      },
+      {
+        "slot": "0x3c",
+        "addr": "0x43fce08c",
+        "target": "0x436f3a40"
+      },
+      {
+        "slot": "0x40",
+        "addr": "0x43fce090",
+        "target": "0x436f35c0"
+      },
+      {
+        "slot": "0x44",
+        "addr": "0x43fce094",
+        "target": "0x436f53f4"
+      },
+      {
+        "slot": "0x48",
+        "addr": "0x43fce098",
+        "target": "0x43ad9e74"
+      },
+      {
+        "slot": "0x4c",
+        "addr": "0x43fce09c",
+        "target": "0x43ad98ca"
+      },
+      {
+        "slot": "0x50",
+        "addr": "0x43fce0a0",
+        "target": "0x436f3900"
+      },
+      {
+        "slot": "0x54",
+        "addr": "0x43fce0a4",
+        "target": "0x43ad9e50"
+      },
+      {
+        "slot": "0x58",
+        "addr": "0x43fce0a8",
+        "target": "0x436f3914"
+      },
+      {
+        "slot": "0x5c",
+        "addr": "0x43fce0ac",
+        "target": "0x436f4420"
+      },
+      {
+        "slot": "0x60",
+        "addr": "0x43fce0b0",
+        "target": "0x436f2ac0"
+      },
+      {
+        "slot": "0x64",
+        "addr": "0x43fce0b4",
+        "target": "0x436f3974"
+      },
+      {
+        "slot": "0x68",
+        "addr": "0x43fce0b8",
+        "target": "0x43ad9e08"
+      },
+      {
+        "slot": "0x6c",
+        "addr": "0x43fce0bc",
+        "target": "0x435437b8"
+      },
+      {
+        "slot": "0x70",
+        "addr": "0x43fce0c0",
+        "target": "0x436f3a98"
+      },
+      {
+        "slot": "0x74",
+        "addr": "0x43fce0c4",
+        "target": "0x43ad9e44"
+      },
+      {
+        "slot": "0x78",
+        "addr": "0x43fce0c8",
+        "target": "0x43ad9e4a"
+      },
+      {
+        "slot": "0x7c",
+        "addr": "0x43fce0cc",
+        "target": "0x43ad98a4"
+      },
+      {
+        "slot": "0x80",
+        "addr": "0x43fce0d0",
+        "target": "0x43ad98a8"
+      },
+      {
+        "slot": "0x84",
+        "addr": "0x43fce0d4",
+        "target": "0x43ad98ac"
+      },
+      {
+        "slot": "0x88",
+        "addr": "0x43fce0d8",
+        "target": "0x43543b90"
+      },
+      {
+        "slot": "0x8c",
+        "addr": "0x43fce0dc",
+        "target": "0x43543878"
+      },
+      {
+        "slot": "0x90",
+        "addr": "0x43fce0e0",
+        "target": "0x43ad9898"
+      },
+      {
+        "slot": "0x94",
+        "addr": "0x43fce0e4",
+        "target": "0x43ad996a"
+      },
+      {
+        "slot": "0x98",
+        "addr": "0x43fce0e8",
+        "target": "0x43ad98bc"
+      },
+      {
+        "slot": "0x9c",
+        "addr": "0x43fce0ec",
+        "target": "0x436f3ac0"
+      },
+      {
+        "slot": "0xa0",
+        "addr": "0x43fce0f0",
+        "target": "0x436f3928"
+      },
+      {
+        "slot": "0xa4",
+        "addr": "0x43fce0f4",
+        "target": "0x43ad9e06"
+      },
+      {
+        "slot": "0xa8",
+        "addr": "0x43fce0f8",
+        "target": "0x436f3990"
+      },
+      {
+        "slot": "0xac",
+        "addr": "0x43fce0fc",
+        "target": "0x436f3b10"
+      },
+      {
+        "slot": "0xb0",
+        "addr": "0x43fce100",
+        "target": "0x43ad9e04"
+      }
+    ]
+  },
+  "method_slots": {
+    "0x436f5a14": {
+      "expected_slot": "0x38",
+      "vtable_entry": {
+        "slot": "0x38",
+        "addr": "0x43fce088",
+        "target": "0x436f5a14"
+      },
+      "matches": true
+    },
+    "0x436f53f4": {
+      "expected_slot": "0x44",
+      "vtable_entry": {
+        "slot": "0x44",
+        "addr": "0x43fce094",
+        "target": "0x436f53f4"
+      },
+      "matches": true
+    },
+    "0x43ad9840": {
+      "expected_slot": "0x04",
+      "vtable_entry": {
+        "slot": "0x04",
+        "addr": "0x43fce054",
+        "target": "0x43ad9840"
+      },
+      "matches": true
+    }
+  },
+  "fields": {
+    "obj+0x13c": "add.w r7,r0,#0x13c (0x436f44c8) y 0x436f450a",
+    "obj+0x1ac/+0x1b0": "comparados con 0x11 (0x436f5b14..0x436f5b20)",
+    "obj+0x1b4": "escrito desde +0x1b0 en 0x436f5b60",
+    "obj+0x2b2": "byte leido en 0x436f5a9c/0x436f5aa0",
+    "obj+0x2b4": "indice usado en 0x436f4546 y 0x436f4476",
+    "obj+0x2dc": "subobjeto add.w r5,r4,#0x2dc (0x436f4514)",
+    "obj+0x394": "subobjeto inicializado por el constructor (0x436f27c4)",
+    "obj+0x3dc": "estado leido/escrito en 0x436f43c0..0x436f4414"
+  },
+  "a6000_presence": {
+    "ctor": {
+      "address": "0x436f27b4",
+      "bytes": 32,
+      "signature": "0a4b0b4a7b4410b504469b580833036000f5657000f03cff2046fff7e5ff2046",
+      "a6000_hits": 0
+    },
+    "wrapper": {
+      "address": "0x43ad9840",
+      "bytes": 16,
+      "signature": "10b5044618f4b6ff2046c8f699ff2046",
+      "a6000_hits": 0
+    },
+    "method_5a14": {
+      "address": "0x436f5a14",
+      "bytes": 32,
+      "signature": "6e4b2de9f7437b446d4e04461a787e4412b100221a7013e06a4b7b441a786a4b",
+      "a6000_hits": 0
+    },
+    "method_53f4": {
+      "address": "0x436f53f4",
+      "bytes": 24,
+      "signature": "38b501210c4c054600f59e707c4400f0d9fc28b1094895f8",
+      "a6000_hits": 0
+    }
+  },
+  "limits": [
+    "Estatico: sin firmware ejecutado, sin camara, sin flasheo.",
+    "Que el objeto sea 'el de las listas' se apoya en que sus metodos +0x38/+0x44 llaman a 0x436f44c4 con las listas de S315; la semantica de la clase no tiene nombre.",
+    "El campo +0x2b4 se usa como indice de tabla, pero la tabla y su dominio quedan NO_VERIFICADOS.",
+    "El enlace con el silent shutter sigue NO_VERIFICADO; S51 sin cambios."
+  ]
+}

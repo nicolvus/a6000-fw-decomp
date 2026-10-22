@@ -1763,3 +1763,18 @@ la semántica física de los registros. S51 sin cambios.
 
 **Siguiente:** S316, quién elige `modo 0/2` (callers de `0x436f53f4`/`0x436f5a14`, campo
 `+0x1b0/+0x1ac`) y origen de las listas.
+
+## S316 — clase dueña de las listas (22-10-2026, agente B)
+
+**VERIFICADO (bytes; 81 comprobaciones, 6 tests):** el objeto que aplica las listas de S315 tiene
+constructor `0x436f27b4`, que carga el slot GOT `0x4402ac80` (`0x43fce048`), suma 8 y guarda
+**vptr `0x43fce050`**. Metadata de vtable en `0x43fce048` (offset-to-top 0, typeinfo `0x43feeb20`);
+tabla de **45** entradas `0x43fce050..0x43fce100`, terminador `0x43fce104`. Los métodos que aplican
+listas ocupan `+0x38` (`0x436f5a14`) y `+0x44` (`0x436f53f4`); el wrapper de creación/registro
+`0x43ad9840` ocupa `+0x04` (llama al constructor y a `0x439a2780`). Campos usados: `+0x13c`,
+`+0x1ac/+0x1b0` (comparados con `0x11`), `+0x2b2`, `+0x2b4` (índice de tabla), `+0x2dc`, `+0x394`,
+`+0x3dc`. **0 firmas** en la A6000. **NO_VERIFICADO:** nombre de la clase, tabla de `+0x2b4`,
+instanciador runtime, enlace con el silent. S51 sin cambios.
+[S316](../docs/capture/s316-class-vtable.md), `analysis/s316_class_vtable/class.json`.
+
+**Siguiente:** S317, tabla indexada por `obj+0x2b4` y escritores de `+0x1b0/+0x1ac`.
