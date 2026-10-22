@@ -1,0 +1,97 @@
+{
+ "phase": "S202",
+ "date": "2026-10-22",
+ "agent": "A",
+ "imx210_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+ "imx235_sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+ "imx210_time_registers": {
+  "3": {
+   "id": 3,
+   "addr": 1140967392,
+   "nombre": "svd bajo",
+   "id_leido": 3,
+   "ok": true
+  },
+  "4": {
+   "id": 4,
+   "addr": 1140967032,
+   "nombre": "svd alto",
+   "id_leido": 4,
+   "ok": true
+  },
+  "5": {
+   "id": 5,
+   "addr": 1140967236,
+   "nombre": "shd bajo",
+   "id_leido": 5,
+   "ok": true
+  },
+  "6": {
+   "id": 6,
+   "addr": 1140967044,
+   "nombre": "shd alto",
+   "id_leido": 6,
+   "ok": true
+  },
+  "7": {
+   "id": 7,
+   "addr": 1140967064,
+   "nombre": "spl bajo",
+   "id_leido": 7,
+   "ok": true
+  },
+  "8": {
+   "id": 8,
+   "addr": 1140967268,
+   "nombre": "spl alto",
+   "id_leido": 8,
+   "ok": true
+  }
+ },
+ "imx210_svd_formula": "svd = n·svr_num − 1 (o n/VdNum − 1), validado en 0x4381106c",
+ "imx210_readout_lines": 4176,
+ "imx210_readout_ms": "≈66,8 ms/cuadro (cálculo sobre matriz, no dato de sensor)",
+ "imx235_time_registers": null,
+ "imx235_modes": [
+  11,
+  55,
+  53,
+  56,
+  19,
+  31,
+  5,
+  24,
+  16,
+  26,
+  7,
+  25,
+  50,
+  52,
+  51,
+  70,
+  1,
+  48,
+  3,
+  49,
+  10,
+  54,
+  15,
+  18,
+  63,
+  68,
+  69,
+  76,
+  77,
+  78,
+  79,
+  80,
+  81,
+  8
+ ],
+ "imx235_silent_columns": [
+  29,
+  30
+ ],
+ "end_of_integration": "No reescritura de registros al terminar en ninguno (NO_VERIFICADO fin eléctrico)",
+ "units": "NO_VERIFICADO (sin datasheet): no se asignan µs/líneas/ciclos a svd/shd/spl"
+}
