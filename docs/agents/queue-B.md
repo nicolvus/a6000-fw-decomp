@@ -25,3 +25,10 @@
 
 - BACKLOG S316 (si S315 no cierra): identificar índice/consumidor de las 68 filas de `0x43fee5ac` (`{ptr,16 B}`) y su relación con los 69 drive modes de S302.
 - BACKLOG S317: resolver constructor/vtable de `[0x43e8dd98]` (objeto de `0x43ad9704`) o documentar la frontera cross-module con evidencia de ausencia local.
+
+- DONE S315 Tres listas de registros aplicadas por `0x436f44c4(obj,modo,lista)`: **L95** `0x43fee3f8` (95) con `modo 2` en `0x436f5b32`; **L5** `0x43fee578` (5: regs `0x5f,0x61,0x88,0x94,0xe3`) con `modo 0` en `0x436f5b52`; **L1** `0x43fee590` (reg `0x00`, data `0x04`) con `modo 2` en `0x436f5422`. Getter `0x436f4588` → GOT `0x4402c940` → L95; slots `0x44025ec0`→L5 y `0x440292b0`→L1. L5 **no** es subconjunto de L95. Consumidor/getter/llamadas con **0 firmas** en la A6000. El enlace `modo 2`→silent sigue NO_VERIFICADO. Evidencia: `docs/capture/s315-register-lists.md`, `analysis/s315_register_lists/lists.json` (139 comprobaciones, 8 tests).
+
+- TODO S316 Identificar el origen/escritor de las tres listas y del selector de modo: quién elige `modo 0/2` en `0x436f44c4` (callers de `0x436f53f4`/`0x436f5a14` y campo `+0x1b0/+0x1ac`), y si el modo silent usa L95/L5/L1 en runtime.
+
+- BACKLOG S317 Identificar índice/consumidor de las 68 filas de `0x43fee5ac` (`{ptr,16 B}`) y su relación con los drive modes (S302).
+- BACKLOG S318 Resolver constructor/vtable de `[0x43e8dd98]` (objeto de `0x43ad9704`) o documentar la frontera cross-module.
