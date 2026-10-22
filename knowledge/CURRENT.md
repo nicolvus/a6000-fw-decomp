@@ -1,5 +1,11 @@
 # Estado actual — léeme primero
 
+## S153 — gates lectores del volcado del gap (22-10-2026)
+
+REA/bytes verifican los gates en `FUN_43858338`: `[obj+3]&2` y `[obj+6]&0x20` habilitan líneas del dumper; los xrefs directos a esos bytes son lecturas y los bytes BSS iniciales están a cero. **Escritor/valor runtime NO_VERIFICADOS**; no prueba ausencia global ni ejecución en una foto. [Informe](../docs/capture/s153-imager-dump-gates.md), `analysis/s153_imager_dump_gates/dump_gates.json` (3 tests).
+
+**Siguiente:** seguir refs al bloque de estado `0x43f72d02` buscando copias estructuradas a +3/+6, distinguiendo base-pointer stores de inicialización `+0/+2`; si no se resuelve, mover a otra ruta estática independiente. No hacer pruebas físicas.
+
 ## S152 — lectura diagnóstica de un byte del gap G (22-10-2026)
 
 Las celdas de S150 son campos `addr` de dos tablas `{u16 id,u16 size,u32 addr}`: A[32] y B[6] = `{0x0030,1,0x43eb0850}`. `FUN_43858338` dirige al raw copier `FUN_43b09c7a`, que lee `addr+size−1` hacia abajo y copia a buffer; con size=1, lectura exacta del byte gap. **No escribe el byte.** Dos gates dependen de flags con valor runtime desconocido, así que alcanzabilidad es PARCIAL. [S152](../docs/capture/s152-imager-gap-descriptor-read.md); `analysis/s152_imager_descriptor_reads/descriptor_reads.json` (3 tests). Commit publicado: `024bb46f`.

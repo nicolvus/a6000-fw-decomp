@@ -79,6 +79,10 @@ REA no tiene xrefs directas para las ocho direcciones exactas de huecos `+8/+9`,
 
 S152 identifica las dos referencias literales de S150 como campos `addr` de tablas A[32] y B[6], ambas `{id=0x30,size=1,addr=0x43eb0850}`. El copiador `0x43b09c7a` lee de addr según size y escribe al buffer llamador: con size=1 lee un byte del gap, no lo modifica. Las puertas dependen de flags BSS cuyo valor runtime se desconoce; alcanzabilidad PARTIAL. [S152](capture/s152-imager-gap-descriptor-read.md).
 
+## Avance S153 — gates del volcado
+
+En `FUN_43858338`, `ldrb [r6,#3]` + `tst #2` y `ldrb [r6,#6]` + `tst #0x20` gobiernan emisión de líneas del volcado. Los xrefs directos a ambos bytes son lecturas; imagen estática del objeto `0x43f72d02` toda a cero. No se confirmó escritor ni valor runtime; no se infiere ausencia global ni ejecución en captura. [S153](capture/s153-imager-dump-gates.md).
+
 Mecanismo de PMCA identificado y contrastado con el firmware 3.21: `updatershell` inyecta un fdat propio (cramfs con `libupdaterbody`, header de 0x30 B por modelo, guard CRC + modelo/región/versión **sin firma**; CXD90014) que el updater ejecuta y expone un shell USB `0x23`; `serviceshell` (senser, HASP) da terminal, backup `0x603`, ficheros y memoria. `bk w 0x003e0005` escribe la propiedad BK4 `modelName` (subsistema `0x3e`/índice 5, 16 B, attr solo-lectura) en el almacén `/setting` (`nflasha2`), no una dirección de código; el preset de fábrica la trae como `ILCE-6000` (verificado). El cambio a `ILCE-6001` está reportado pero su efecto «shell mode» queda **NO VERIFICADO**: la cadena no existe en el firmware. S51 **A=NO, B=NO, C=NO**. [Documento](capture/s62-pmca-injection.md) · [matriz](../analysis/s62-evidence-matrix.json).
 
 ## Avance S58 (20-10-2026)
