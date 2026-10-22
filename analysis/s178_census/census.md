@@ -13,9 +13,11 @@ cuánto queda por decodificar y cuáles son los candidatos másoborosos.
 
 | magnitud | valor |
 |---|---|
-| etiquetas distintas `[XXX]` en la A6000 fw3.21 | **372** |
-| etiquetas **con hito de decodificación** en el catálogo | **52** (fotografía del momento; el catálogo sigue creciendo en paralelo) |
-| etiquetas **pendientes** | **320** (ídem) |
+| etiquetas distintas `[XXX]` en la A6000 fw3.21 | **372** (techo) |
+| etiquetas **con hito de decodificación** propio | **58** |
+| etiquetas **cubiertas como sub-etiqueta** de un módulo ya decodificado (`[X][Y]` con `X` decodificado) | **38** |
+| **pendientes reales** | **276** |
+| **cobertura total** (hito + sub-etiqueta) | **96/372** = **25.81 %** |
 | etiquetas **exclusivas de la A6000** (0 en A7S y 0 en A6300) | **93** |
 | etiquetas presentes en A6000/A7S pero **ausentes en el A6300** | **7** |
 
