@@ -102,6 +102,8 @@ después lectores IMX210+3a0 y significado físico de ID0.
 
 ## Conclusión general vigente (17-10-2026)
 
+S157 añade otra clasificación local: `0x43859954` carga `0x43f72d02` desde GOT; `FUN_43859944` lee `+5/+0xf`, copia a buffers y stores a otros objetos, no a gates `+3/+6`. No cierra escritores restantes. [Informe S157](capture/s157-imager-state-snapshot.md).
+
 Proyecto abierto: hay piezas reales y reutilizables, pero **ninguna captura silenciosa
 completa validada**; no está demostrada la capacidad ni la imposibilidad de fotografía
 totalmente electrónica a resolución completa.
