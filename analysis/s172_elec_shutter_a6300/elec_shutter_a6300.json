@@ -1,0 +1,132 @@
+{
+ "milestone": "S172",
+ "titulo": "el modulo ElecShutter del A6300: que hace realmente (control positivo del obturador electronico)",
+ "base_vaddr": "43541000",
+ "firmwares": {
+  "A6000_fw321": {
+   "ruta": "analysis/rea-independent/input/av-cam.bin",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "len": 11427236,
+   "terminos": {
+    "ElecShutter/EC_ElecShutter_Main.cpp": 0,
+    "ElecShutter/EC_NonlinearElecShutter_MechShutterTable.cpp": 0,
+    "EC_ASSERT %s:%d": 0,
+    "ElecShutter": 0,
+    "EC_NonlinearElecShutter": 0,
+    "MechShutterTable": 0,
+    "SilentShutterMode": 0,
+    "shutterType": 0,
+    "front_eshutter": 0,
+    "EC_ASSERT": 0,
+    "EC_ERR_PRINT": 0
+   }
+  },
+  "A7S_fw320": {
+   "ruta": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "len": 11455416,
+   "terminos": {
+    "ElecShutter/EC_ElecShutter_Main.cpp": 0,
+    "ElecShutter/EC_NonlinearElecShutter_MechShutterTable.cpp": 0,
+    "EC_ASSERT %s:%d": 1,
+    "ElecShutter": 0,
+    "EC_NonlinearElecShutter": 0,
+    "MechShutterTable": 0,
+    "SilentShutterMode": 0,
+    "shutterType": 0,
+    "front_eshutter": 0,
+    "EC_ASSERT": 1,
+    "EC_ERR_PRINT": 0
+   }
+  },
+  "A6300_fw201": {
+   "ruta": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+   "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16",
+   "len": 13382836,
+   "terminos": {
+    "ElecShutter/EC_ElecShutter_Main.cpp": 1,
+    "ElecShutter/EC_NonlinearElecShutter_MechShutterTable.cpp": 1,
+    "EC_ASSERT %s:%d": 1,
+    "ElecShutter": 4,
+    "EC_NonlinearElecShutter": 1,
+    "MechShutterTable": 1,
+    "SilentShutterMode": 2,
+    "shutterType": 1,
+    "front_eshutter": 1,
+    "EC_ASSERT": 1,
+    "EC_ERR_PRINT": 5
+   }
+  }
+ },
+ "cadenas_de_file_y_sitios": [
+  {
+   "cadena": "ElecShutter/EC_ElecShutter_Main.cpp",
+   "addr": "0x43dcfa41",
+   "sitios": [
+    "0x4391d6a2"
+   ],
+   "lineas_de_assert": [
+    "0x421"
+   ]
+  },
+  {
+   "cadena": "ElecShutter/EC_NonlinearElecShutter_MechShutterTable.cpp",
+   "addr": "0x43dcfa65",
+   "sitios": [
+    "0x4391dd50",
+    "0x4391ddb0"
+   ],
+   "lineas_de_assert": [
+    "0x23c",
+    "0x24f"
+   ]
+  },
+  {
+   "cadena": "EC_ASSERT %s:%d",
+   "addr": "0x43db1a4d",
+   "sitios": [
+    "0x4391d6a2",
+    "0x4391dd50",
+    "0x4391ddb0"
+   ]
+  }
+ ],
+ "funcion_modo_obturador": {
+  "dir": "0x4391d67c",
+  "que_hace": "lee un u16 de una tabla global (ldr r3,[pc,#0x38] -> puntero; ldr r3,[r3,r2]; ldrh r3,[r3]) y devuelve un codigo: 0x80 -> 3, 0x100 -> 4; otro valor -> EC_ASSERT linea 0x421 y devuelve 3",
+  "codigos": {
+   "0x80": 3,
+   "0x100": 4
+  },
+  "no_verificado": "que significan los codigos 3 y 4, que tabla global se lee, que son 0x438fae00 y 0x438fade0"
+ },
+ "tabla_no_linear": {
+  "fichero": "ElecShutter/EC_NonlinearElecShutter_MechShutterTable.cpp",
+  "interpolacion_por_tramos": {
+   "sitio": "0x4391dd50",
+   "que_hace": "lee una fila de la tabla con ldr.w r3,[r2,r6,lsl #2] (32 bits por fila), compara con el valor pedido y interpola con escalas 10000 (0x2710) y 1000 (0x3e8), helper aritmetico 0x435586f8 y setters 0x4391da74 / 0x4391da9c",
+   "assert_linea": "0x23c"
+  },
+  "busqueda_punto_fijo_16_16": {
+   "sitio": "0x4391ddb0",
+   "que_hace": "busqueda por tramos con escala 0x8000 y 15 bits fraccionarios (mov.w r3,#0x8000 ; movs r2,#0xf); valor = (r3 + r0*2) << r2",
+   "assert_linea": "0x24f"
+  }
+ },
+ "correccion_a_s135": {
+  "que_decia_s135": "el bloque de 128 bytes en 0x43dcfa9e es la tabla de indices de velocidad de obtenuracion",
+  "verificacion": "ese bloque NO tiene ninguna referencia PIC (no esta en pic_refs_strict_a6300.json) ni puntero absoluto de 4 B, y es una tabla byte->byte NO decreciente (54 54, 60 60, 66 66, 6a 6a, 6e 6e, 71 71, 74 74, 77 77, 7b 7b, 7d 7d, 7f 7f), mas compatible con una tabla de caracteres imprimibles",
+  "conclusion": "la identificacion de S135 NO esta verificada y queda corregida; la tabla real se indexa POR FILA con 32 bits por entrada. Lo que S135 acertó (existencia del modulo ElecShutter/, sus ficheros y sus ajustes) se mantiene"
+ },
+ "conclusiones": [
+  "S135 localizo el modulo ElecShutter por sus nombres de fichero; este hito lo LOCALIZA en el codigo (los nombres son cadenas __FILE__ de un EC_ASSERT %s:%d) y caracteriza sus dos funciones",
+  "EC_ElecShutter_Main.cpp devuelve un codigo de modo de obturador: 0x80 -> 3, 0x100 -> 4",
+  "EC_NonlinearElecShutter_MechShutterTable.cpp implementa la equivalencia NO LINEAL entre velocidad electronica y mecanica: interpolacion por tramos (32 bits por fila, escalas 10000/1000) y busqueda en punto fijo 16.16 (escala 0x8000, 15 bits fraccionarios)",
+  "corrige S135: los 128 bytes de 0x43dcfa9e no tienen ninguna referencia de codigo",
+  "no cambia S51 (A=NO, B=NO, C=NO): sigue faltando la prueba fisica",
+  "la A6000 fw3.21 no tiene ni 'EC_ASSERT' (0/1/1) ni 'EC_ERR_PRINT' (0/0/5): su motor EC no instrumenta las aserciones con ese formato"
+ ],
+ "salvedad": "el A6300 es de otra generacion de plataforma (LIRO/CXD); no se puede separar 'nuevo en el fw2.01' de 'propio de la plataforma'",
+ "efecto_en_S51": "ninguno: S51 sigue A=NO, B=NO, C=NO",
+ "nota_ec_assert": "el formato 'EC_ASSERT %s:%d' NO existe en la A6000 fw3.21 (0) y si en la A7S fw3.20 y el A6300 fw2.01 (1/1): lo que el A6300 aporta en este modulo es ademas los nombres de fichero ElecShutter/... que se le pasan (0/0/1 y 0/0/1)"
+}

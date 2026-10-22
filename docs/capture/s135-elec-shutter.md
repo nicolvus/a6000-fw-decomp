@@ -53,3 +53,24 @@ que decide.
 - Si la política **EFCS** de la A6000 en `libObj.so` (E012) es el mismo concepto que
   `ElecShutter` del A6300 en `av-cam.bin`: son binarios y capas distintas, no enlazados.
 - Si una fw anterior de la A6000 tuvo ese módulo (no hay más blobs de la A6000 en el repo).
+
+## Corrección posterior (hito S172, 22-10-2026)
+
+1. **El bloque de 128 bytes en `0x43dcfa9e` NO es una tabla de velocidad de obturación.**
+   Verificado: **0 referencias PIC** (no está en el mapa global del A6300) y **0 punteros
+   absolutos de 4 B**; además es una tabla byte→byte **no decreciente** (`54 54`, `60 60`,
+   `66 66`, `6a 6a`, `6e 6e`, `71 71`, `74 74`, `77 77`, `7b 7b`, `7d 7d`, `7f 7f`), más
+   compatible con una tabla de **caracteres imprimibles**. La tabla real de velocidades se
+   indexa **por fila, con 32 bits por entrada**, y la consume el código de
+   `EC_NonlinearElecShutter_MechShutterTable.cpp`.
+2. **El módulo ha sido localizado y caracterizado** (S172): `EC_ElecShutter_Main.cpp`
+   (`0x4391d67c`) devuelve un **código de modo de obturador** (`0x80` → 3, `0x100` → 4) y
+   `EC_NonlinearElecShutter_MechShutterTable.cpp` implementa la **equivalencia no lineal entre
+   velocidad electrónica y mecánica** (interpolación por tramos con escalas 10000/1000 y
+   búsqueda en punto fijo 16.16 con escala `0x8000`).
+
+**Lo que S135 acertó se mantiene**: la existencia del módulo `ElecShutter/` en el A6300 fw2.01
+y su ausencia en la A6000 fw3.21 y la A7S fw3.20, con los ajustes `SilentShutterMode` /
+`shutterType` / `front_eshutter`. **S51 no cambia** (A=NO, B=NO, C=NO).
+
+Detalle: [S172](../analysis/s172_elec_shutter_a6300/elec_shutter_a6300.md).
