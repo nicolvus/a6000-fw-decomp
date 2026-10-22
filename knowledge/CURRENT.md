@@ -1,5 +1,13 @@
 # Estado actual — léeme primero
 
+## S140 — vector de registros IMX210 y bancos de filas (21-10-2026)
+
+**VERIFICADO:** REA leyó 119 punteros en `0x43fe995c`, terminador cero en `0x43fe9b38`; cada registro empieza `{u16 ID little-endian, byte +2, byte +3}`. El vector completo está en `analysis/s140_imager_regmap/imager_regmap.json` y se reproduce con `analysis/s140_imager_regmap/extract_regmap.py` (3 tests).
+
+**PARCIAL:** los rangos S `0x43eb35d0` y G+`0x224` `0x43eb07fc` son cero en el blob. El código selecciona fila mediante `S[0]` desde `S+4+16·índice` y la copia a `S+0xc4`; no se ha determinado la asignación modo→fila ni su contenido runtime o significado físico. **S51 A/B/C=NO se mantiene.** [Informe](../docs/capture/s140-imager-register-map.md).
+
+**Siguiente:** seguir con REA los stores a `S[0]` y la copia desde G+`0x224` hacia S en la ruta `0x43843a44`; bytes/instrucciones originales requeridos. Identificadores S138/S139 están ocupados por trabajo no relacionado/in progreso; evitar sus archivos.
+
 Resumen operativo breve. Para el historial completo de decisiones, ver `knowledge/PROGRESS.md`.
 Para restricciones del proyecto (sin firmware ejecutado, sin flasheo) ver `docs/STATE.md`; el usuario
 ha instruido explícitamente subir cada hito terminado a `origin/main`.

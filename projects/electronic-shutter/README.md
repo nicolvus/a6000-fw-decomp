@@ -11,6 +11,7 @@ hardware. Se conservan todas las evidencias anteriores en sus rutas originales.
 - [EFCS y cortina trasera electrónica: investigación principal](../../docs/capture/shutter-investigation.md).
 - [Hallazgos](../../docs/findings.md).
 - [SilentShutter](../../docs/silent-shutter-trace.md).
+- [S140: vector de registros IMX210 y bancos de filas (enumeración estática; valores runtime pendientes)](../../docs/capture/s140-imager-register-map.md).
 - [Comparación entre modelos](../../docs/comparative-analysis.md).
 - [Límites de hardware pendientes](../../docs/hardware-limitations.md).
 
