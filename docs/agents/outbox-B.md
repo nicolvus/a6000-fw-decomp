@@ -7,3 +7,4 @@
 - S309: 7/7 funciones de la cadena silent/config con 0 coincidencias (24 B) en A6000 → código ausente. Siguiente: S310 consumidor del mensaje; S311 ruta de config propia de la A6000.
 - S310: `0x43ad9704` es thunk virtual (vtable+0x64). Consumidor del modo no resuelto. Siguiente: S312 identificar objeto/vtable.
 - S311: comparación simétrica de la configuración: 2 writers A6000 exclusivos, 2 compartidos. Siguiente: S312 objeto/vtable o síntesis final.
+- S312: los 6 consumidores del cluster A7S son código exclusivo (0 hits en A6000); cuadro consolidado S300–S312.
