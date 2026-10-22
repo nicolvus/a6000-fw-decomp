@@ -34,7 +34,7 @@
 - Bytes REA corroborados: prólogo `ev_1341f2fcb0c98ed30d51646e21fd980c2c7fdd917c14493817665a26e707173a`; BL `ev_51665d015dc585c586b3ef325ee488b0a7dbe64ea0c74cf3f7519e63649a6336`; staging candidate `ev_f6cf7574b2e3b18fcec3ebf5f5fc14bbfd36049e3fdc90b9ac37a20541919ebb`.
 - Resultado PARCIAL: bytes demuestran una llamada codificada, no ejecución. El código candidato queda en zona no representada por funciones REA, así que no hay pseudocódigo/call graph para el store a S[0].
 - Artefactos: `analysis/s145_imager_unanalyzed_code/{verify_code_gap.py,code_gap.json}`, `tests/test_s145_imager_unanalyzed_code.py`, `docs/capture/s145-imager-code-gap.md`.
-- Pruebas: unittest 3/3 PASS; falta suite, commit/push.
+- Pruebas: unittest S145 3/3 PASS; suite S140–S143/S145 + knowledge 79/79 PASS; `git diff --check` PASS. Commit `a0955258` publicado en `origin/main`.
 - Siguiente: entradas Thumb en REA para `0x437b617e` y `0x43843a44`; observar refs del caller hacia callback/tabla y stores de S.
 
 Checkpoint persistente. Actualizar al terminar cada etapa, antes de continuar
