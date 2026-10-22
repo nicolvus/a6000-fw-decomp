@@ -631,6 +631,20 @@ Los 6 del A6300: `SetApertureSTFForLiro`, `SetAutoDualRecModeForLiro`, `SetExpan
 
 [Informe](../analysis/s170_illumi/illumi.md) · [doc](../docs/capture/s170-illumi.md). Siguiente: qué magnitud física mide el chip `RPR0400` y cómo se usa su lectura (auto-ganancia, filtrado, corrección); la semántica de los 6 subcomandos ADJ de `IllumiDiag`; por qué el módulo emite un evento `key_code` (mismo patrón que `[JOG]`, S165).
 
+## S178 — censo de cobertura de la línea de módulos (22-10-2026, línea de RE general)
+
+**VERIFICADO (8 tests, `tests/test_s178_census.py`):** censo completo de las etiquetas `[XXX]` de la A6000 fw3.21: **372** distintas (techo), **52** con hito de decodificación en el catálogo y **320 pendientes**; **93** son **exclusivas de la A6000** (0 en A7S y 0 en A6300).
+
+**Hallazgo de versionado de plataforma**: la familia **`[STK]`** (`[STK]`, `[STK_AUTO_SAL]`, `[STK_COLOR_SIM]`, `[STK_C_SIM]`, `[STK_TOUCH_SIM]`, `[STK_T_SIM]`) y **`[OSD]`** existen en la A6000 y en la A7S fw3.20 y **desaparecen por completo en el A6300 fw2.01** → son funciones de la **plataforma antigua** (E-mount / pre-LIRO) que la nueva plataforma no arrastra. Es un control de **plataforma**, no de modelo: la A7S (2016) comparte plataforma con la A6000; el A6300 (2019) es de otra.
+
+**Otros datos**: `[VDF]` tiene **81 apariciones más** en la A6000 (243) que en la A7S y el A6300 (162). Pendientes más grandes: `[SDF]` 477, `[ERR]` 288, `[VDF]` 243, `[ERROR]` 213, `[BL]` 154, `[VEF]` 149, `[STK]` 76, `[TD]` 73, `[VIDENCSTAT]` 70, `[FACE]` 70, `[RC]` 69, `[DEBUG]` 67, `[GOLFSHOT]` 65, `[WSX]` 59, `[INFO]` 58, `[RE]` 54, `[INT_ERROR]` 53, `[ENCOUCSTAT]` 49, `[CONFIG]` 47, `[BT]` 44, `[CAM_FUNC_MGR]` 43, `[PNL]` 41, `[SAN]` 35, `[AUDPINEDTR]` 34, `[CAM_SCALAR]` 34, `[REMOTE]` 32.
+
+**Salvedad del propio censo**: el patrón de extracción captura también fragmentos de formato (`[D0]`–`[D7]`, `[IN1]`, `[IN2]`, `[NULL]`, `[SIZE]`, `[STAT]`, `[HW]`) → **372 es un techo**, no el número exacto de módulos.
+
+**Efecto en S51: NINGUNO — S51 sigue A=NO, B=NO, C=NO.** El censo es de cobertura, no de contenido.
+
+[Informe](../analysis/s178_census/census.md) · [doc](../docs/capture/s178-census.md). Siguiente: elegir las siguientes etiquetas por **valor** (las que hablan de disparo, lectura del sensor o tiempos: `[VDF]`, `[RC]`, `[EIS]`, `[STABILIZER]`, `[ZPD]`) y no solo por tamaño.
+
 ## S121 — el módulo `[AIP]` (37 trazas): la interfaz de audio con el escalado (21-10-2026, línea de RE general)
 
 **VERIFICADO (97 tests, `tests/test_s121_aip.py`):** 37 cadenas `[AIP]` en `0x43cdd844`–`0x43cdec50`; **16 funciones** y 6 sub-bloques RTTI: `SaWrapper` (8), `SaBackUpCtrl` (12), `SaDriverBase` (4), `LPS` (11), `SaDriverZoomNr` (1), `SetFader` (1). **Callbacks `Ack`/`Comp`/`Err` en tres capas**: SA (`0x43926d1c`/`0x43926de8`, con los predicados `[r1,#1]==0x14`/`0x13`), LPS (`0x4392b16c`/`0x4392b254`) y driver; los errores llevan `errCode`+`errState` (SA) o `ErrCode`+`ErrStatus` (LPS). **Tabla de backup**: **350 entradas de 12 B** en `0x43bd1964` con `{id = 0x10c0000 + n, offset, size}`; `WriteShadow2BakcupArea` vuelca `0x10c` B (`mov.w r0,#0x10c` en `0x4392ab78`) y `SetAudioNrType` publica el **bit 3** de `bkId = 0x10e0000`. Comandos hacia el escalar en `0x4392ac30` (`Cmd`/`Func` + `Zma`/`Ext`/`Mbx`) y `0x4392acb4` (`Cmd`/`Func`/`Unq`). Buffers LPS `0x82`/`0x83`/`0x85` con longitudes `0x2c`/`0x28`/`0x14`; `SetFader` (`0x4355ae98`) divide por 100/20/otro según `[r0,#0x78]`.
