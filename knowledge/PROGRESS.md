@@ -152,7 +152,7 @@
 - Resultado: `ldr.w r3,[r8,r3]` carga el puntero GOT; `str r3,[sp,#0x20]` lo derrama en pila. Luego lee +0x40/+0xa5/+0x42; stores a otros destinos, no gates +3/+6 en el cuerpo.
 - Evidencia REA: procedimiento `ev_1e8e048eb0f0141cf4d85e3688d89fe80dba6b0653e5ad1a7171f615be7c3de4`; instrucciones `ev_e619946dcb53ed41e95f05e0c71ea3c2c80e31a62fec960cff765160d0789e49`; refs `ev_3303b18d85c46c4e2f17bbd020bc6d05f0c6ea1dcb7fee814e779e672f12ab01`.
 - Artefactos: `analysis/s161_imager_state_spill/{verify_state_spill.py,state_spill.json}`, `tests/test_s161_imager_state_spill.py`, `docs/capture/s161-imager-state-spill.md`.
-- Pruebas: unittest 3/3 PASS; falta suite/commit/push.
+- Pruebas: unittest S161 3/3 PASS; suite S140–S161 + knowledge 118/118 PASS; `git diff --check` PASS. Commit `0a26c130` publicado en `origin/main`.
 - Siguiente: clasificar otro xref pendiente por edge tipado y destino efectivo.
 
 Checkpoint persistente. Actualizar al terminar cada etapa, antes de continuar
