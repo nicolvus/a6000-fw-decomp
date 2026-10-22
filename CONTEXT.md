@@ -1,6 +1,14 @@
 # Continuidad
 
-Última sesión documentada: **S102** (21-10-2026), [menú principal](docs/capture/s102-menu-principal.md). El estado operativo y los hitos posteriores a este resumen están en [knowledge/CURRENT.md](knowledge/CURRENT.md); la decisión sobre el obturador permanece en [S51](docs/capture/s51-decision.md). Las sesiones descritas a continuación son antecedentes.
+Estado vigente: **S174** (22-10-2026) — línea de RE general por módulos de trazas (S138–S174) y
+**cinco controles positivos sobre el obturador electrónico** (S168 cadena muerta; S169 la API de
+*drive* del A6300 —`sc_ShutDrive`, `front_eshutter`, `SilentShutterMode`, `shutterType`— **no
+existe** en la A6000 ni en la A7S; S171 canal «SteadyShot»; S172 qué hace `ElecShutter/`; S174 el
+API `…ForLiro`: 0/0/6 soportados) más una **regla metodológica**: *la presencia de una cadena no
+prueba una funcionalidad*, [knowledge/CURRENT.md](knowledge/CURRENT.md) ·
+[catálogo de la línea general](docs/capture/linea-general-re.md) ·
+[estado y restricciones](docs/STATE.md). S51 **permanece (A=NO, B=NO, C=NO)**. Las sesiones descritas a
+continuación son antecedentes.
 
 Versión breve (18-10-2026). El historial íntegro de sesiones S1–S27 (y este mismo
 archivo antes de reducirse) está preservado sin cambios en
@@ -14,6 +22,123 @@ Correcciones y preguntas abiertas (generadas del grafo de conocimiento):
 Este archivo conserva solo las sesiones más recientes (investigación activa).
 No acumular aquí el historial completo de nuevo: cada sesión cerrada se traslada
 a `docs/history/` y se referencia desde `docs/STATE.md`/`docs/CORRECTIONS.md`.
+
+## S170–S174 — cinco controles positivos sobre el obturador y una regla metodológica (22-10-2026)
+
+* **S168** — `position num in rolling is strange %d` (`0x43d9fe03`, A6300) tiene **0 referencias
+  de código** → **cadena muerta**; **corrige** el colateral de S164.
+* **S169** — el A6300 tiene una capa de validación de parámetros de cámara (`LiroSeq`, **201**
+  propiedades `CheckSet*`, **370** comprobaciones) con parámetros de obturador `sc_ShutDrive`
+  (`+0x1dd`), `uc_ShutDriveMode` (`+0x1dc`), **`front_eshutter`** (`+0x23c`),
+  **`SilentShutterMode`** (`+0x264`), **`shutterType`** (`+0x268`); la A6000 y la A7S tienen
+  **0/0** → **falta el parámetro, no solo la traza**.
+* **S171** — API del imager **4/4/7** (el A6300 añade `GetImagerStabilizationTime`, viva en
+  `0x43718d04`, y la clase `Camera::Sync::SyncUtilityUpm` **0/0/3** con el tipo `IMAGER_DRIVEMODE`
+  **0/0/2**) y **canal «SteadyShot» del objetivo** (`SteadyShotInfo` **0/0/7**).
+* **S172** — `ElecShutter/` **caracterizado**: `EC_ElecShutter_Main.cpp` (`0x4391d67c`) devuelve un
+  **código de modo de obturador** (`0x80`→3, `0x100`→4) y
+  `EC_NonlinearElecShutter_MechShutterTable.cpp` implementa la **equivalencia no lineal
+  electrónica/mecánica**; **corrige a S135** (los 128 bytes de `0x43dcfa9e` no tienen referencias).
+* **S174** — el conversor `CamMsgConv` del `libObj.so` conoce **216/221/240** nombres `…ForLiro` y
+  **soporta 0/0/6**; en la A6000 y la A7S **todos** están en la lista de **rechazo**.
+
+**Regla metodológica**: **la presencia de una cadena no prueba una funcionalidad** (cadena muerta de
+S168, bloque sin referencias de S172, nombres `…ForLiro` rechazados de S174).
+
+**Efecto en S51: NINGUNO — sigue A=NO, B=NO, C=NO.** Son hallazgos **sobre el firmware**: la
+ausencia estática de un módulo, una cadena o un parámetro no demuestra incapacidad del hardware; la
+prueba física sigue pendiente de autorización.
+
+## S168–S169 — dos controles positivos sobre el obturador electrónico (22-10-2026)
+
+**S168 (cadena muerta):** `position num in rolling is strange %d` (`0x43d9fe03`, A6300 fw2.01)
+tiene **0 referencias de código** (regla estricta, punteros absolutos, pares `movw`/`movt` y un
+método inverso independiente); de las 5 cadenas de su banda, **4 están referenciadas** → es una
+**cadena muerta** y **no** demuestra que el A6300 implemente *rolling shutter*. **Corrige** el
+colateral de la revisión de S164.
+
+**S169 (control positivo del parámetro):** el A6300 fw2.01 tiene una **capa de validación de
+parámetros de cámara** (`LiroSeq`) con **201** propiedades `CheckSet*` y **370** comprobaciones
+`ParamCheckErr`, con parámetros de obturador **`sc_ShutDrive`** (`+0x1dd`), **`uc_ShutDriveMode`**
+(`+0x1dc`), **`front_eshutter`** (`+0x23c`), **`SilentShutterMode`** (`+0x264`),
+**`shutterType`** (`+0x268`), `ul_ShutLowLimit`, `sc_IrisDrive`, `uc_IrisDriveMode`,
+`sc_ExposureDrive`. La **A6000 fw3.21 y la A7S fw3.20 tienen 0/0** → **falta el parámetro, no
+solo la traza**. Refuerza S135 con evidencia de **parámetros en runtime**.
+
+**Efecto en S51: NINGUNO — sigue A=NO, B=NO, C=NO.** Son hallazgos **sobre el firmware**: la
+ausencia estática de un parámetro no demuestra incapacidad del hardware; la prueba física sigue
+pendiente de autorización.
+
+## S138–S164 — siete módulos más de la línea de RE general (22-10-2026)
+
+**VERIFICADO (cada hito con sus propios tests de bytes):**
+
+- **S138 `[CAMERA_MAIN_FC]`** (9 trazas `0x43ca6944`–`0x43ca6aec`): el glue `CAMERA_MAIN` →
+  `Camera::FC`. La sigla **tiene base textual** (namespace C++ `Camera::FC`: 45 apariciones de
+  `Camera::FC::` y 101 de `FC/` en **los tres** firmware) → lo propio de la fw3.21 es el
+  *logging* del glue. **No participa en la cadena de disparo táctil `0x3011`** (ninguna de sus
+  8 funciones la llama); tiene API propia (`ReplyForTouchShutter`, cableada por `wrapper/Face.cpp`
+  → `FC/Api/fc_api_tracking.cpp` `0x43cefa43`).
+- **S143 `[CAM_UTIL_ADJ]`** (22 trazas `0x43ccdcee`–`0x43cce0f2`): la **escritura de calibración en
+  la RAM del sensor**; 22 sitios en 3 funciones, tabla de despacho `0x440121f8` (**1 de 3
+  operaciones implementada**) y **51 comandos «Sens»** de 12 B en `0x43fe858c`. La etiqueta es
+  propia de la fw3.21 pero la **capa «Sens» es común a los tres** → instrumentación, no función.
+  Colateral: la convención `vaddr = 0x43541000 + offset` **también vale** para A7S y A6300.
+- **S144 `[CAM_UTIL_SENS]`** (21 trazas `0x43cce1ea`–`0x43cce66b`): módulo **hermano** del anterior;
+  **dependencia cruzada verificada** (`0x43900c9c`, `0x439012fa`/`0x43901302`) e **ids OSAL
+  compartidos** → mismo par. `cam_util_debug_file_write` (`0x43901d50`, 17 llamadas) **vuelca imagen
+  (RAW/YC) en la memoria del sensor**.
+- **S148 `[DEPTH]`** (16 trazas `0x43c249ec`–`0x43c24c73`): la clase `DepthGaugeMain` (**ya en los
+  tres firmware**) con 6 comandos en `0x43fd7c30` y GID `0x018b04dc`; su consumidor real es la
+  **EXIF** (`CS_ExifMakerNote.cpp` `0x43cc56dc` → tags **0x5001** = `(valueDepth*10 : 1000)` y
+  **0x5002** = estado).
+- **S151 `[PANDA]`** (10 trazas `0x43c9a599`–`0x43c9a7c8`): gestor de mensajes del **drive de
+  iris**; 7 colas OSAL y GID `0x00740017`; "Panda" tiene base textual (`Panda_SendMessage`,
+  `uc_PandaADErrorOpen` `0x43c99267`) pero **no es un módulo de logging registrado**; el código
+  **ya existía en los tres firmware** → lo nuevo es el logging.
+- **S156 `[TP_R]`** (18 trazas `0x43c80f23`–`0x43c812f3`): **reporter de un framework de mensajes**
+  (confirma S151; recuentos estricto **43/0/0**); la tabla de comandos DDL `0x43fe3f28` y el
+  registro `tp` **ya existían en los tres** (silenciosos) → la fw3.21 añade 15 trazas. **Corrige un
+  falso positivo de S130**: los 2 «textos comunes» con `[DMMYSIOCOM]` son **plantillas OSAL
+  genéricas**, no el mismo código.
+- **S164 `[CAMERA_IS]`** (17 trazas `0x43c98da6`–`0x43c9a426`): **la capa que aplica la
+  estabilización** (recurso RC `rcct_SetStblzPower`/`GridH`, giroscopio por ADC, corrección de
+  distorsión, sincronía con `LENS_MOUNT` y `[CAMERA_MAIN_SYNC]`); **17/17 pares PIC verificados a
+  mano → valida el mapa de S70**. La **infraestructura RC es común a los tres** → lo nuevo es la
+  capa de cámara.
+
+**Patrón que se repite (reforzado):** en los siete hitos, la **etiqueta de módulo es propia de la
+fw3.21** pero la **funcionalidad ya existía** en la A7S/A6300 → la fw3.21 de la A6000 **reescribe
+el logging, no el firmware** (conclusión de S128/S130, ahora con 7 ejemplos más).
+
+**Colateral con valor para la línea del obturador (verificado):** `rolling` aparece **0** en la
+A6000 fw3.21 y la A7S fw3.20, y **1** en el A6300 fw2.01 (`position num in rolling is strange %d`
+`0x43d9fe03`, junto a `position num in vd is strange %d` `0x43d9fde2`) → el concepto de *rolling
+shutter* **existe en el A6300 y no en la A6000/A7S**. **No cambia S51** (A/B/C = NO): la ausencia
+estática de una cadena no demuestra incapacidad del hardware.
+
+## S137 — control positivo del obturador electrónico y mapa de etiquetado (21-10-2026)
+
+VERIFICADO: la fw3.21 de la A6000 **reescribe el logging, no el firmware**. S128 comparó 98 prefijos de
+módulo contra la A7S fw3.20 (58 idénticos, **18 "renombrados"** = mismos mensajes sin etiqueta, 2
+parciales, 20 propios) y S130 mostró que de esos 20 solo **2** son cambio de etiqueta (`[IDT_OPD]` →
+`[IDT]`, `[DFE]`) y **17 tienen contenido ausente** en la A7S y el A6300.
+
+S135 (control positivo del obturador): el **A6300 fw2.01 sí tiene** subsistema de obturador electrónico
+en su HAL — `ElecShutter/EC_ElecShutter_Main.cpp` `0x43dcfa41`,
+`EC_NonlinearElecShutter_MechShutterTable.cpp` `0x43dcfa65`, tabla de velocidades no lineales
+`0x43dcfa9e`, ajustes `SilentShutterMode` `0x43dc9a14`, `shutterType` `0x43dca61f`, `front_eshutter`
+`0x43dc821d` — mientras que la **A6000 fw3.21 y la A7S fw3.20 tienen 0**. En la A6000 la ausencia es
+**selectiva**: conserva el motor de exposición `EC` (`EC::EcTagData` `0x43ca91ce`, `api_EC_GetApolloLapNum`
+`0x43caa193`); falta **solo** la sub-rama `ElecShutter/`. Sus 15 `shutter` son del **mecánico**
+(silenciador `0x43c851d8`/`0x43ce956e`/`0x43ce3634`). S134: la relación `shut`→`svd` del imager es
+**aritmética** (`svd_esperado = (svd==9 ? 1 : shut) * svr_num − 1`), lo que **descarta** la tabla por
+`drive_mode`.
+
+Estado: S51 **A=NO, B=NO, C=NO** (sin cambios). La ausencia estática no demuestra incapacidad del
+hardware: el plan de pruebas físicas P1–P8 sigue **sin ejecutar** y pendiente de autorización.
+Continuidad operativa y próximos pasos: [docs/STATE.md](docs/STATE.md) ·
+[knowledge/CURRENT.md](knowledge/CURRENT.md) · [knowledge/PROGRESS.md](knowledge/PROGRESS.md).
 
 ## S47 — entrada del payload y orden de C (19-10-2026)
 

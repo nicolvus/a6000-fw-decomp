@@ -1,0 +1,1977 @@
+{
+ "milestone": "S132",
+ "modulo": "[CLK_CTRL]",
+ "base": "0x43541000",
+ "bin": "analysis/rea-independent/input/av-cam.bin",
+ "regla_referencias": "estricta (scan_pic_refs_strict.py) sobre el mapa global",
+ "conteo": {
+  "cadenas": 66,
+  "cadenas_referenciadas": 62,
+  "cadenas_sin_referencia": 4,
+  "sitios": 85,
+  "funciones": 36
+ },
+ "subbloques": {
+  "DDL_CALL": [
+   "0x43c3a1df",
+   "0x43c3a220",
+   "0x43c3a261",
+   "0x43c3a2a6",
+   "0x43c3a2f2",
+   "0x43c3a335",
+   "0x43c3a379",
+   "0x43c3a3bf",
+   "0x43c3a40a",
+   "0x43c3a442",
+   "0x43c3a479",
+   "0x43c3a4b1"
+  ],
+  "OSAL_ERR": [
+   "0x43c3a4e8",
+   "0x43c3a640",
+   "0x43c3a669",
+   "0x43c3a6bb",
+   "0x43c3a8ee",
+   "0x43c3ab06",
+   "0x43c3ab32",
+   "0x43c3ab57",
+   "0x43c3ab7d",
+   "0x43c3aef8"
+  ],
+  "SET_DELAY_SYNC": [
+   "0x43c3a510",
+   "0x43c3a693",
+   "0x43c3af24",
+   "0x43c3af5b",
+   "0x43c3af89",
+   "0x43c3b034",
+   "0x43c3b06e",
+   "0x43c3b09c"
+  ],
+  "STATE": [
+   "0x43c3a534",
+   "0x43c3a55d",
+   "0x43c3a588"
+  ],
+  "LOCK": [
+   "0x43c3a5a5",
+   "0x43c3a5d1"
+  ],
+  "TASK": [
+   "0x43c3a5ff",
+   "0x43c3a61f"
+  ],
+  "CHANGE_CLK": [
+   "0x43c3a6e9",
+   "0x43c3a71b",
+   "0x43c3a768",
+   "0x43c3a7a2",
+   "0x43c3a7d6",
+   "0x43c3a811",
+   "0x43c3a843",
+   "0x43c3a87a",
+   "0x43c3a8c3"
+  ],
+  "SUBSYS_OPEN_CLOSE": [
+   "0x43c3a91a",
+   "0x43c3a93d",
+   "0x43c3a97e",
+   "0x43c3a9a2",
+   "0x43c3a9e4",
+   "0x43c3aa28"
+  ],
+  "VPH_HTP": [
+   "0x43c3aa69",
+   "0x43c3aa89",
+   "0x43c3aaab",
+   "0x43c3aac2",
+   "0x43c3aae7"
+  ],
+  "MSG_MASTER_SLAVE": [
+   "0x43c3aba2",
+   "0x43c3abd0",
+   "0x43c3ac02",
+   "0x43c3ac2f",
+   "0x43c3ac5d",
+   "0x43c3ac86"
+  ],
+  "OTROS": [
+   "0x43c3afc0",
+   "0x43c3afe4",
+   "0x43c3b007"
+  ]
+ },
+ "cadenas": [
+  {
+   "vaddr": "0x43c3a1df",
+   "offset": "0x6f91df",
+   "text": "[CLK_CTRL]: Call:ddl_clkctrl_get_clk_chg_enable(0x0%x),ret=0x%0x",
+   "nucleo": "Call:ddl_clkctrl_get_clk_chg_enable(0x0%x),ret=0x%0x",
+   "subbloque": "DDL_CALL",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359ee48"
+   ],
+   "funciones": [
+    "0x4359ee24"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a220",
+   "offset": "0x6f9220",
+   "text": "[CLK_CTRL]: Call:ddl_clkctrl_unlock_sync_signal(0x0%x),ret=0x%0x",
+   "nucleo": "Call:ddl_clkctrl_unlock_sync_signal(0x0%x),ret=0x%0x",
+   "subbloque": "DDL_CALL",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359eea2"
+   ],
+   "funciones": [
+    "0x4359ee78"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a261",
+   "offset": "0x6f9261",
+   "text": "[CLK_CTRL]: Call:ddl_clkctrl_lock_sync_signal(0x0%x,0x0%x),ret=0x%0x",
+   "nucleo": "Call:ddl_clkctrl_lock_sync_signal(0x0%x,0x0%x),ret=0x%0x",
+   "subbloque": "DDL_CALL",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359eefc"
+   ],
+   "funciones": [
+    "0x4359eed0"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a2a6",
+   "offset": "0x6f92a6",
+   "text": "[CLK_CTRL]: Call:ddl_clkctrl_set_sysv_delay_changing(0x0%x,0x0%x),ret=0x%0x",
+   "nucleo": "Call:ddl_clkctrl_set_sysv_delay_changing(0x0%x,0x0%x),ret=0x%0x",
+   "subbloque": "DDL_CALL",
+   "n_sitios": 0,
+   "sitios": [],
+   "funciones": [],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a2f2",
+   "offset": "0x6f92f2",
+   "text": "[CLK_CTRL]: Call:ddl_clkctrl_set_sysv_delay(0x0%x,0x0%x),ret=0x%0x",
+   "nucleo": "Call:ddl_clkctrl_set_sysv_delay(0x0%x,0x0%x),ret=0x%0x",
+   "subbloque": "DDL_CALL",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359ef52"
+   ],
+   "funciones": [
+    "0x4359ef2c"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a335",
+   "offset": "0x6f9335",
+   "text": "[CLK_CTRL]: Call:ddl_clkctrl_set_sync_signal(0x0%x,0x0%x),ret=0x%0x",
+   "nucleo": "Call:ddl_clkctrl_set_sync_signal(0x0%x,0x0%x),ret=0x%0x",
+   "subbloque": "DDL_CALL",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359efae"
+   ],
+   "funciones": [
+    "0x4359ef88"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a379",
+   "offset": "0x6f9379",
+   "text": "[CLK_CTRL]: Call:ddl_clkctrl_set_sync_initial_signal(0x0%x),ret=0x%0x",
+   "nucleo": "Call:ddl_clkctrl_set_sync_initial_signal(0x0%x),ret=0x%0x",
+   "subbloque": "DDL_CALL",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359f016"
+   ],
+   "funciones": [
+    "0x4359f000"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a3bf",
+   "offset": "0x6f93bf",
+   "text": "[CLK_CTRL]: Call:ddl_clkctrl_set_sysv_initial_delay(0x0%x,0x0%x),ret=0x%0x",
+   "nucleo": "Call:ddl_clkctrl_set_sysv_initial_delay(0x0%x,0x0%x),ret=0x%0x",
+   "subbloque": "DDL_CALL",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359f068"
+   ],
+   "funciones": [
+    "0x4359f048"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a40a",
+   "offset": "0x6f940a",
+   "text": "[CLK_CTRL]: Call:ddl_clkctrl_close_dly(0x0%x),ret=0x%0x",
+   "nucleo": "Call:ddl_clkctrl_close_dly(0x0%x),ret=0x%0x",
+   "subbloque": "DDL_CALL",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359f0b2"
+   ],
+   "funciones": [
+    "0x4359f09c"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a442",
+   "offset": "0x6f9442",
+   "text": "[CLK_CTRL]: Call:ddl_clkctrl_open_dly(0x0%x),ret=0x%0x",
+   "nucleo": "Call:ddl_clkctrl_open_dly(0x0%x),ret=0x%0x",
+   "subbloque": "DDL_CALL",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359f0fa"
+   ],
+   "funciones": [
+    "0x4359f0e4"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a479",
+   "offset": "0x6f9479",
+   "text": "[CLK_CTRL]: Call:ddl_clkctrl_close_clk(0x0%x),ret=0x%0x",
+   "nucleo": "Call:ddl_clkctrl_close_clk(0x0%x),ret=0x%0x",
+   "subbloque": "DDL_CALL",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359f142"
+   ],
+   "funciones": [
+    "0x4359f12c"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a4b1",
+   "offset": "0x6f94b1",
+   "text": "[CLK_CTRL]: Call:ddl_clkctrl_open_clk(0x0%x),ret=0x%0x",
+   "nucleo": "Call:ddl_clkctrl_open_clk(0x0%x),ret=0x%0x",
+   "subbloque": "DDL_CALL",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359f18a"
+   ],
+   "funciones": [
+    "0x4359f174"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a4e8",
+   "offset": "0x6f94e8",
+   "text": "[CLK_CTRL]: [ERR]OSAL_SEM_ERR %08x L=%d",
+   "nucleo": "[ERR]OSAL_SEM_ERR %08x L=%d",
+   "subbloque": "OSAL_ERR",
+   "n_sitios": 8,
+   "sitios": [
+    "0x4359f2d4",
+    "0x4359f37e",
+    "0x4359f51c",
+    "0x4359f612",
+    "0x435a01ec",
+    "0x435a0256",
+    "0x435a02c8",
+    "0x435a038e"
+   ],
+   "funciones": [
+    "0x4359f2b4",
+    "0x4359f360",
+    "0x4359f4f8",
+    "0x4359f5f4",
+    "0x435a01a0",
+    "0x435a0362"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a510",
+   "offset": "0x6f9510",
+   "text": "[CLK_CTRL]: [ERR]State Error:0x%02x",
+   "nucleo": "[ERR]State Error:0x%02x",
+   "subbloque": "SET_DELAY_SYNC",
+   "n_sitios": 2,
+   "sitios": [
+    "0x4359f2f8",
+    "0x4359f3a4"
+   ],
+   "funciones": [
+    "0x4359f2b4",
+    "0x4359f360"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a534",
+   "offset": "0x6f9534",
+   "text": "[CLK_CTRL]: State:STATE_INIT1(InitDelay)",
+   "nucleo": "State:STATE_INIT1(InitDelay)",
+   "subbloque": "STATE",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359f314"
+   ],
+   "funciones": [
+    "0x4359f2b4"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a55d",
+   "offset": "0x6f955d",
+   "text": "[CLK_CTRL]: State:STATE_NORMAL(InitSignal)",
+   "nucleo": "State:STATE_NORMAL(InitSignal)",
+   "subbloque": "STATE",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359f3c0"
+   ],
+   "funciones": [
+    "0x4359f360"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a588",
+   "offset": "0x6f9588",
+   "text": "[CLK_CTRL]: State:STATE_LOCK",
+   "nucleo": "State:STATE_LOCK",
+   "subbloque": "STATE",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359f556"
+   ],
+   "funciones": [
+    "0x4359f4f8"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a5a5",
+   "offset": "0x6f95a5",
+   "text": "[CLK_CTRL]: lock_sync_signal subsystem = %x",
+   "nucleo": "lock_sync_signal subsystem = %x",
+   "subbloque": "LOCK",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359f580"
+   ],
+   "funciones": [
+    "0x4359f4f8"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a5d1",
+   "offset": "0x6f95d1",
+   "text": "[CLK_CTRL]: unlock_sync_signal subsystem = %x",
+   "nucleo": "unlock_sync_signal subsystem = %x",
+   "subbloque": "LOCK",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359f632"
+   ],
+   "funciones": [
+    "0x4359f5f4"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a5ff",
+   "offset": "0x6f95ff",
+   "text": "[CLK_CTRL]: Tsk ClkCtrl Initial",
+   "nucleo": "Tsk ClkCtrl Initial",
+   "subbloque": "TASK",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359f7ba"
+   ],
+   "funciones": [
+    "0x4359f7b4"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a61f",
+   "offset": "0x6f961f",
+   "text": "[CLK_CTRL]: Main routine start!!",
+   "nucleo": "Main routine start!!",
+   "subbloque": "TASK",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359f7e2"
+   ],
+   "funciones": [
+    "0x4359f7d8"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a640",
+   "offset": "0x6f9640",
+   "text": "[CLK_CTRL]: [ERR] osal rcv err %08x L=%d",
+   "nucleo": "[ERR] osal rcv err %08x L=%d",
+   "subbloque": "OSAL_ERR",
+   "n_sitios": 2,
+   "sitios": [
+    "0x4359f802",
+    "0x435a0236"
+   ],
+   "funciones": [
+    "0x4359f7d8",
+    "0x435a01a0"
+   ],
+   "L": [
+    125
+   ],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a669",
+   "offset": "0x6f9669",
+   "text": "[CLK_CTRL]: [ERR]osal_sig_sem 0x%08x L=%d",
+   "nucleo": "[ERR]osal_sig_sem 0x%08x L=%d",
+   "subbloque": "OSAL_ERR",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359f898"
+   ],
+   "funciones": [
+    "0x4359f87c"
+   ],
+   "L": [
+    173
+   ],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a693",
+   "offset": "0x6f9693",
+   "text": "[CLK_CTRL]: set sync signal... clk = %d",
+   "nucleo": "set sync signal... clk = %d",
+   "subbloque": "SET_DELAY_SYNC",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359f922"
+   ],
+   "funciones": [
+    "0x4359f908"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a6bb",
+   "offset": "0x6f96bb",
+   "text": "[CLK_CTRL]: [ERR]osal_try_wai_sem 0x%08x L=%d",
+   "nucleo": "[ERR]osal_try_wai_sem 0x%08x L=%d",
+   "subbloque": "OSAL_ERR",
+   "n_sitios": 2,
+   "sitios": [
+    "0x4359f954",
+    "0x4359f984"
+   ],
+   "funciones": [
+    "0x4359f908"
+   ],
+   "L": [
+    198,
+    202
+   ],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a6e9",
+   "offset": "0x6f96e9",
+   "text": "[CLK_CTRL]: tsk state = STATE_CHANGE_CLK , L = %d",
+   "nucleo": "tsk state = STATE_CHANGE_CLK , L = %d",
+   "subbloque": "CHANGE_CLK",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359f9f0"
+   ],
+   "funciones": [
+    "0x4359f9c0"
+   ],
+   "L": [
+    259
+   ],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a71b",
+   "offset": "0x6f971b",
+   "text": "[CLK_CTRL]: CHANGE_CLK dly 0x%x -> 0x%x , clk 0x%x -> 0x%x : change_vfc=0x%x",
+   "nucleo": "CHANGE_CLK dly 0x%x -> 0x%x , clk 0x%x -> 0x%x : change_vfc=0x%x",
+   "subbloque": "CHANGE_CLK",
+   "n_sitios": 2,
+   "sitios": [
+    "0x4359fa14",
+    "0x4359fa6a"
+   ],
+   "funciones": [
+    "0x4359f9c0"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a768",
+   "offset": "0x6f9768",
+   "text": "[CLK_CTRL]: tsk state = STATE_CHANGE_CLK_LOCKING , L = %d",
+   "nucleo": "tsk state = STATE_CHANGE_CLK_LOCKING , L = %d",
+   "subbloque": "CHANGE_CLK",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359fa46"
+   ],
+   "funciones": [
+    "0x4359f9c0"
+   ],
+   "L": [
+    270
+   ],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a7a2",
+   "offset": "0x6f97a2",
+   "text": "[CLK_CTRL]: CHANGE_CLK2 dly %x -> %x , clk %x -> %x",
+   "nucleo": "CHANGE_CLK2 dly %x -> %x , clk %x -> %x",
+   "subbloque": "CHANGE_CLK",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359faa2"
+   ],
+   "funciones": [
+    "0x4359f9c0"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a7d6",
+   "offset": "0x6f97d6",
+   "text": "[CLK_CTRL]: clk_now=%d, clk_next=%d, change_vfc=0x%x, L=%d",
+   "nucleo": "clk_now=%d, clk_next=%d, change_vfc=0x%x, L=%d",
+   "subbloque": "CHANGE_CLK",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359fac2"
+   ],
+   "funciones": [
+    "0x4359f9c0"
+   ],
+   "L": [
+    286
+   ],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a811",
+   "offset": "0x6f9811",
+   "text": "[CLK_CTRL]: ClkChgExec at %x clk=%x, delay=%x->%x",
+   "nucleo": "ClkChgExec at %x clk=%x, delay=%x->%x",
+   "subbloque": "CHANGE_CLK",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359fb70"
+   ],
+   "funciones": [
+    "0x4359fb24"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a843",
+   "offset": "0x6f9843",
+   "text": "[CLK_CTRL]: tsk state = %d(%d:NORMAL,%d:LOCK) , L = %d",
+   "nucleo": "tsk state = %d(%d:NORMAL,%d:LOCK) , L = %d",
+   "subbloque": "CHANGE_CLK",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359fbc2"
+   ],
+   "funciones": [
+    "0x4359fb7e"
+   ],
+   "L": [
+    365
+   ],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a87a",
+   "offset": "0x6f987a",
+   "text": "[CLK_CTRL]: clk_now=%x, clk_next=%x, delay_now=%x, change_vfc=0x%x, L=%d",
+   "nucleo": "clk_now=%x, clk_next=%x, delay_now=%x, change_vfc=0x%x, L=%d",
+   "subbloque": "CHANGE_CLK",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359fbe4"
+   ],
+   "funciones": [
+    "0x4359fb7e"
+   ],
+   "L": [
+    367
+   ],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a8c3",
+   "offset": "0x6f98c3",
+   "text": "[CLK_CTRL]: DelayChgExec at 0x%x, delay=%x",
+   "nucleo": "DelayChgExec at 0x%x, delay=%x",
+   "subbloque": "CHANGE_CLK",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359fc4e"
+   ],
+   "funciones": [
+    "0x4359fc14"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a8ee",
+   "offset": "0x6f98ee",
+   "text": "[CLK_CTRL]: [ERR]osal_wai_sem_tmo %08x L=%d",
+   "nucleo": "[ERR]osal_wai_sem_tmo %08x L=%d",
+   "subbloque": "OSAL_ERR",
+   "n_sitios": 4,
+   "sitios": [
+    "0x4359fdae",
+    "0x4359fe62",
+    "0x435a0d96",
+    "0x435a0f3a"
+   ],
+   "funciones": [
+    "0x4359fd90",
+    "0x4359fe44",
+    "0x435a0d60",
+    "0x435a0f04"
+   ],
+   "L": [
+    68,
+    146
+   ],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a91a",
+   "offset": "0x6f991a",
+   "text": "[CLK_CTRL]: open subsytem = 0x%04x",
+   "nucleo": "open subsytem = 0x%04x",
+   "subbloque": "SUBSYS_OPEN_CLOSE",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359fde4"
+   ],
+   "funciones": [
+    "0x4359fd90"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a93d",
+   "offset": "0x6f993d",
+   "text": "[CLK_CTRL]: [ERR]Busy!! 0x%04x already opened, 0x%04x can't open",
+   "nucleo": "[ERR]Busy!! 0x%04x already opened, 0x%04x can't open",
+   "subbloque": "SUBSYS_OPEN_CLOSE",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359fdfe"
+   ],
+   "funciones": [
+    "0x4359fd90"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a97e",
+   "offset": "0x6f997e",
+   "text": "[CLK_CTRL]: close subsytem = 0x%04x",
+   "nucleo": "close subsytem = 0x%04x",
+   "subbloque": "SUBSYS_OPEN_CLOSE",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359fe98"
+   ],
+   "funciones": [
+    "0x4359fe44"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a9a2",
+   "offset": "0x6f99a2",
+   "text": "[CLK_CTRL]: [ERR]Busy!! 0x%04x already opend...0x%04x can't close",
+   "nucleo": "[ERR]Busy!! 0x%04x already opend...0x%04x can't close",
+   "subbloque": "SUBSYS_OPEN_CLOSE",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359feb2"
+   ],
+   "funciones": [
+    "0x4359fe44"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3a9e4",
+   "offset": "0x6f99e4",
+   "text": "[CLK_CTRL]: [ERR]0x%04x request open... CLK already opend by 0x%04x",
+   "nucleo": "[ERR]0x%04x request open... CLK already opend by 0x%04x",
+   "subbloque": "SUBSYS_OPEN_CLOSE",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359ff0e"
+   ],
+   "funciones": [
+    "0x4359fef6"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3aa28",
+   "offset": "0x6f9a28",
+   "text": "[CLK_CTRL]: 0x%04x request open... DELAY already opend by 0x%04x",
+   "nucleo": "0x%04x request open... DELAY already opend by 0x%04x",
+   "subbloque": "SUBSYS_OPEN_CLOSE",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4359ff56"
+   ],
+   "funciones": [
+    "0x4359ff3e"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3aa69",
+   "offset": "0x6f9a69",
+   "text": "[CLK_CTRL]: vph stat:%d,mode:%d",
+   "nucleo": "vph stat:%d,mode:%d",
+   "subbloque": "VPH_HTP",
+   "n_sitios": 2,
+   "sitios": [
+    "0x435a00ac",
+    "0x435a0156"
+   ],
+   "funciones": [
+    "0x435a007c"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3aa89",
+   "offset": "0x6f9a89",
+   "text": "[CLK_CTRL]: 10Count:%d, subVFC:%d",
+   "nucleo": "10Count:%d, subVFC:%d",
+   "subbloque": "VPH_HTP",
+   "n_sitios": 1,
+   "sitios": [
+    "0x435a00b8"
+   ],
+   "funciones": [
+    "0x435a007c"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3aaab",
+   "offset": "0x6f9aab",
+   "text": "[CLK_CTRL]: 10Count:%d",
+   "nucleo": "10Count:%d",
+   "subbloque": "VPH_HTP",
+   "n_sitios": 1,
+   "sitios": [
+    "0x435a016c"
+   ],
+   "funciones": [
+    "0x435a007c"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3aac2",
+   "offset": "0x6f9ac2",
+   "text": "[CLK_CTRL]: Now:0x%08x,target:0x%08x",
+   "nucleo": "Now:0x%08x,target:0x%08x",
+   "subbloque": "VPH_HTP",
+   "n_sitios": 1,
+   "sitios": [
+    "0x435a02a2"
+   ],
+   "funciones": [
+    "0x435a01a0"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3aae7",
+   "offset": "0x6f9ae7",
+   "text": "[CLK_CTRL]: Send HTP at 0x%08x",
+   "nucleo": "Send HTP at 0x%08x",
+   "subbloque": "VPH_HTP",
+   "n_sitios": 1,
+   "sitios": [
+    "0x435a0306"
+   ],
+   "funciones": [
+    "0x435a01a0"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3ab06",
+   "offset": "0x6f9b06",
+   "text": "[CLK_CTRL]: [ERR] osal_try_valloc_msg 0x%0x",
+   "nucleo": "[ERR] osal_try_valloc_msg 0x%0x",
+   "subbloque": "OSAL_ERR",
+   "n_sitios": 2,
+   "sitios": [
+    "0x435a052c",
+    "0x435a0778"
+   ],
+   "funciones": [
+    "0x435a0510",
+    "0x435a0734"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3ab32",
+   "offset": "0x6f9b32",
+   "text": "[CLK_CTRL]: [ERR] osal_snd_msg 0x%0x",
+   "nucleo": "[ERR] osal_snd_msg 0x%0x",
+   "subbloque": "OSAL_ERR",
+   "n_sitios": 2,
+   "sitios": [
+    "0x435a055a",
+    "0x435a07f4"
+   ],
+   "funciones": [
+    "0x435a0510",
+    "0x435a0734"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3ab57",
+   "offset": "0x6f9b57",
+   "text": "[CLK_CTRL]: [ERR] osal_free_msg 0x%0x",
+   "nucleo": "[ERR] osal_free_msg 0x%0x",
+   "subbloque": "OSAL_ERR",
+   "n_sitios": 2,
+   "sitios": [
+    "0x435a0574",
+    "0x435a0828"
+   ],
+   "funciones": [
+    "0x435a0510",
+    "0x435a0734"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3ab7d",
+   "offset": "0x6f9b7d",
+   "text": "[CLK_CTRL]: [ERR] osal_rcv_msg 0x%0x",
+   "nucleo": "[ERR] osal_rcv_msg 0x%0x",
+   "subbloque": "OSAL_ERR",
+   "n_sitios": 1,
+   "sitios": [
+    "0x435a05cc"
+   ],
+   "funciones": [
+    "0x435a0596"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3aba2",
+   "offset": "0x6f9ba2",
+   "text": "[CLK_CTRL]: [ERR] unknown message?? src=0x%0x",
+   "nucleo": "[ERR] unknown message?? src=0x%0x",
+   "subbloque": "MSG_MASTER_SLAVE",
+   "n_sitios": 2,
+   "sitios": [
+    "0x435a0632",
+    "0x435a06c8"
+   ],
+   "funciones": [
+    "0x435a0596"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3abd0",
+   "offset": "0x6f9bd0",
+   "text": "[CLK_CTRL]: Receive Message from Master src=0x%0x",
+   "nucleo": "Receive Message from Master src=0x%0x",
+   "subbloque": "MSG_MASTER_SLAVE",
+   "n_sitios": 1,
+   "sitios": [
+    "0x435a064e"
+   ],
+   "funciones": [
+    "0x435a0596"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3ac02",
+   "offset": "0x6f9c02",
+   "text": "[CLK_CTRL]: targetVfc=0x%0x, delay_req=0x%0x",
+   "nucleo": "targetVfc=0x%0x, delay_req=0x%0x",
+   "subbloque": "MSG_MASTER_SLAVE",
+   "n_sitios": 2,
+   "sitios": [
+    "0x435a0668",
+    "0x435a07ce"
+   ],
+   "funciones": [
+    "0x435a0596",
+    "0x435a0734"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3ac2f",
+   "offset": "0x6f9c2f",
+   "text": "[CLK_CTRL]: m_vfc.main=0x%0x, m_vfc.sub=0x%0x",
+   "nucleo": "m_vfc.main=0x%0x, m_vfc.sub=0x%0x",
+   "subbloque": "MSG_MASTER_SLAVE",
+   "n_sitios": 2,
+   "sitios": [
+    "0x435a0682",
+    "0x435a07e4"
+   ],
+   "funciones": [
+    "0x435a0596",
+    "0x435a0734"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3ac5d",
+   "offset": "0x6f9c5d",
+   "text": "[CLK_CTRL]: [ERR] SndMsgPublic request??",
+   "nucleo": "[ERR] SndMsgPublic request??",
+   "subbloque": "MSG_MASTER_SLAVE",
+   "n_sitios": 1,
+   "sitios": [
+    "0x435a0758"
+   ],
+   "funciones": [
+    "0x435a0734"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3ac86",
+   "offset": "0x6f9c86",
+   "text": "[CLK_CTRL]: Send Message to Slave 0x%0x",
+   "nucleo": "Send Message to Slave 0x%0x",
+   "subbloque": "MSG_MASTER_SLAVE",
+   "n_sitios": 1,
+   "sitios": [
+    "0x435a07b2"
+   ],
+   "funciones": [
+    "0x435a0734"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3aef8",
+   "offset": "0x6f9ef8",
+   "text": "[CLK_CTRL]: [ERR]osal_try_wai_sem %08x L=%d",
+   "nucleo": "[ERR]osal_try_wai_sem %08x L=%d",
+   "subbloque": "OSAL_ERR",
+   "n_sitios": 3,
+   "sitios": [
+    "0x435a0dd4",
+    "0x435a0e98",
+    "0x435a0eb2"
+   ],
+   "funciones": [
+    "0x435a0d60"
+   ],
+   "L": [
+    159,
+    185,
+    188
+   ],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3af24",
+   "offset": "0x6f9f24",
+   "text": "[CLK_CTRL]: [ERR]CLKCTRL_ERR_BUSY...State is LOCK L=%d",
+   "nucleo": "[ERR]CLKCTRL_ERR_BUSY...State is LOCK L=%d",
+   "subbloque": "SET_DELAY_SYNC",
+   "n_sitios": 1,
+   "sitios": [
+    "0x435a0dee"
+   ],
+   "funciones": [
+    "0x435a0d60"
+   ],
+   "L": [
+    165
+   ],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3af5b",
+   "offset": "0x6f9f5b",
+   "text": "[CLK_CTRL]: Delay is no change(delay=%x) L=%d",
+   "nucleo": "Delay is no change(delay=%x) L=%d",
+   "subbloque": "SET_DELAY_SYNC",
+   "n_sitios": 1,
+   "sitios": [
+    "0x435a0e38"
+   ],
+   "funciones": [
+    "0x435a0d60"
+   ],
+   "L": [
+    172
+   ],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3af89",
+   "offset": "0x6f9f89",
+   "text": "[CLK_CTRL]: set sysv delay subsystem = %x , delay = %d",
+   "nucleo": "set sysv delay subsystem = %x , delay = %d",
+   "subbloque": "SET_DELAY_SYNC",
+   "n_sitios": 1,
+   "sitios": [
+    "0x435a0e5e"
+   ],
+   "funciones": [
+    "0x435a0d60"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3afc0",
+   "offset": "0x6f9fc0",
+   "text": "[CLK_CTRL]: [ERR]dly_now = 0.5 L=%d",
+   "nucleo": "[ERR]dly_now = 0.5 L=%d",
+   "subbloque": "OTROS",
+   "n_sitios": 0,
+   "sitios": [],
+   "funciones": [],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3afe4",
+   "offset": "0x6f9fe4",
+   "text": "[CLK_CTRL]: [ERR]clk_now = %x L=%d",
+   "nucleo": "[ERR]clk_now = %x L=%d",
+   "subbloque": "OTROS",
+   "n_sitios": 0,
+   "sitios": [],
+   "funciones": [],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3b007",
+   "offset": "0x6fa007",
+   "text": "[CLK_CTRL]: [ERR]Not Changing state= %x L=%d",
+   "nucleo": "[ERR]Not Changing state= %x L=%d",
+   "subbloque": "OTROS",
+   "n_sitios": 0,
+   "sitios": [],
+   "funciones": [],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3b034",
+   "offset": "0x6fa034",
+   "text": "[CLK_CTRL]: clk_now=%d, ret=%d, id=0x%x, clk_req=%d, L=%d",
+   "nucleo": "clk_now=%d, ret=%d, id=0x%x, clk_req=%d, L=%d",
+   "subbloque": "SET_DELAY_SYNC",
+   "n_sitios": 1,
+   "sitios": [
+    "0x435a0fdc"
+   ],
+   "funciones": [
+    "0x435a0f04"
+   ],
+   "L": [
+    110
+   ],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3b06e",
+   "offset": "0x6fa06e",
+   "text": "[CLK_CTRL]: [ERR]normal_delay MAX OVER:0x%08x",
+   "nucleo": "[ERR]normal_delay MAX OVER:0x%08x",
+   "subbloque": "SET_DELAY_SYNC",
+   "n_sitios": 1,
+   "sitios": [
+    "0x435a115c"
+   ],
+   "funciones": [
+    "0x435a1142"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  },
+  {
+   "vaddr": "0x43c3b09c",
+   "offset": "0x6fa09c",
+   "text": "[CLK_CTRL]: [ERR]special_delay MAX OVER:0x%08x",
+   "nucleo": "[ERR]special_delay MAX OVER:0x%08x",
+   "subbloque": "SET_DELAY_SYNC",
+   "n_sitios": 1,
+   "sitios": [
+    "0x435a1174"
+   ],
+   "funciones": [
+    "0x435a1142"
+   ],
+   "L": [],
+   "en_a7s": false,
+   "en_a6300": false
+  }
+ ],
+ "funciones": [
+  {
+   "func": "0x4359ee24",
+   "n_cadenas": 1,
+   "cadenas": [
+    "0x43c3a1df"
+   ]
+  },
+  {
+   "func": "0x4359ee78",
+   "n_cadenas": 1,
+   "cadenas": [
+    "0x43c3a220"
+   ]
+  },
+  {
+   "func": "0x4359eed0",
+   "n_cadenas": 1,
+   "cadenas": [
+    "0x43c3a261"
+   ]
+  },
+  {
+   "func": "0x4359ef2c",
+   "n_cadenas": 1,
+   "cadenas": [
+    "0x43c3a2f2"
+   ]
+  },
+  {
+   "func": "0x4359ef88",
+   "n_cadenas": 1,
+   "cadenas": [
+    "0x43c3a335"
+   ]
+  },
+  {
+   "func": "0x4359f000",
+   "n_cadenas": 1,
+   "cadenas": [
+    "0x43c3a379"
+   ]
+  },
+  {
+   "func": "0x4359f048",
+   "n_cadenas": 1,
+   "cadenas": [
+    "0x43c3a3bf"
+   ]
+  },
+  {
+   "func": "0x4359f09c",
+   "n_cadenas": 1,
+   "cadenas": [
+    "0x43c3a40a"
+   ]
+  },
+  {
+   "func": "0x4359f0e4",
+   "n_cadenas": 1,
+   "cadenas": [
+    "0x43c3a442"
+   ]
+  },
+  {
+   "func": "0x4359f12c",
+   "n_cadenas": 1,
+   "cadenas": [
+    "0x43c3a479"
+   ]
+  },
+  {
+   "func": "0x4359f174",
+   "n_cadenas": 1,
+   "cadenas": [
+    "0x43c3a4b1"
+   ]
+  },
+  {
+   "func": "0x4359f2b4",
+   "n_cadenas": 3,
+   "cadenas": [
+    "0x43c3a4e8",
+    "0x43c3a510",
+    "0x43c3a534"
+   ]
+  },
+  {
+   "func": "0x4359f360",
+   "n_cadenas": 3,
+   "cadenas": [
+    "0x43c3a4e8",
+    "0x43c3a510",
+    "0x43c3a55d"
+   ]
+  },
+  {
+   "func": "0x4359f4f8",
+   "n_cadenas": 3,
+   "cadenas": [
+    "0x43c3a4e8",
+    "0x43c3a588",
+    "0x43c3a5a5"
+   ]
+  },
+  {
+   "func": "0x4359f5f4",
+   "n_cadenas": 2,
+   "cadenas": [
+    "0x43c3a4e8",
+    "0x43c3a5d1"
+   ]
+  },
+  {
+   "func": "0x4359f7b4",
+   "n_cadenas": 1,
+   "cadenas": [
+    "0x43c3a5ff"
+   ]
+  },
+  {
+   "func": "0x4359f7d8",
+   "n_cadenas": 2,
+   "cadenas": [
+    "0x43c3a61f",
+    "0x43c3a640"
+   ]
+  },
+  {
+   "func": "0x4359f87c",
+   "n_cadenas": 1,
+   "cadenas": [
+    "0x43c3a669"
+   ]
+  },
+  {
+   "func": "0x4359f908",
+   "n_cadenas": 2,
+   "cadenas": [
+    "0x43c3a693",
+    "0x43c3a6bb"
+   ]
+  },
+  {
+   "func": "0x4359f9c0",
+   "n_cadenas": 5,
+   "cadenas": [
+    "0x43c3a6e9",
+    "0x43c3a71b",
+    "0x43c3a768",
+    "0x43c3a7a2",
+    "0x43c3a7d6"
+   ]
+  },
+  {
+   "func": "0x4359fb24",
+   "n_cadenas": 1,
+   "cadenas": [
+    "0x43c3a811"
+   ]
+  },
+  {
+   "func": "0x4359fb7e",
+   "n_cadenas": 2,
+   "cadenas": [
+    "0x43c3a843",
+    "0x43c3a87a"
+   ]
+  },
+  {
+   "func": "0x4359fc14",
+   "n_cadenas": 1,
+   "cadenas": [
+    "0x43c3a8c3"
+   ]
+  },
+  {
+   "func": "0x4359fd90",
+   "n_cadenas": 3,
+   "cadenas": [
+    "0x43c3a8ee",
+    "0x43c3a91a",
+    "0x43c3a93d"
+   ]
+  },
+  {
+   "func": "0x4359fe44",
+   "n_cadenas": 3,
+   "cadenas": [
+    "0x43c3a8ee",
+    "0x43c3a97e",
+    "0x43c3a9a2"
+   ]
+  },
+  {
+   "func": "0x4359fef6",
+   "n_cadenas": 1,
+   "cadenas": [
+    "0x43c3a9e4"
+   ]
+  },
+  {
+   "func": "0x4359ff3e",
+   "n_cadenas": 1,
+   "cadenas": [
+    "0x43c3aa28"
+   ]
+  },
+  {
+   "func": "0x435a007c",
+   "n_cadenas": 3,
+   "cadenas": [
+    "0x43c3aa69",
+    "0x43c3aa89",
+    "0x43c3aaab"
+   ]
+  },
+  {
+   "func": "0x435a01a0",
+   "n_cadenas": 4,
+   "cadenas": [
+    "0x43c3a4e8",
+    "0x43c3a640",
+    "0x43c3aac2",
+    "0x43c3aae7"
+   ]
+  },
+  {
+   "func": "0x435a0362",
+   "n_cadenas": 1,
+   "cadenas": [
+    "0x43c3a4e8"
+   ]
+  },
+  {
+   "func": "0x435a0510",
+   "n_cadenas": 3,
+   "cadenas": [
+    "0x43c3ab06",
+    "0x43c3ab32",
+    "0x43c3ab57"
+   ]
+  },
+  {
+   "func": "0x435a0596",
+   "n_cadenas": 5,
+   "cadenas": [
+    "0x43c3ab7d",
+    "0x43c3aba2",
+    "0x43c3abd0",
+    "0x43c3ac02",
+    "0x43c3ac2f"
+   ]
+  },
+  {
+   "func": "0x435a0734",
+   "n_cadenas": 7,
+   "cadenas": [
+    "0x43c3ab06",
+    "0x43c3ab32",
+    "0x43c3ab57",
+    "0x43c3ac02",
+    "0x43c3ac2f",
+    "0x43c3ac5d",
+    "0x43c3ac86"
+   ]
+  },
+  {
+   "func": "0x435a0d60",
+   "n_cadenas": 5,
+   "cadenas": [
+    "0x43c3a8ee",
+    "0x43c3aef8",
+    "0x43c3af24",
+    "0x43c3af5b",
+    "0x43c3af89"
+   ]
+  },
+  {
+   "func": "0x435a0f04",
+   "n_cadenas": 2,
+   "cadenas": [
+    "0x43c3a8ee",
+    "0x43c3b034"
+   ]
+  },
+  {
+   "func": "0x435a1142",
+   "n_cadenas": 2,
+   "cadenas": [
+    "0x43c3b06e",
+    "0x43c3b09c"
+   ]
+  }
+ ],
+ "api_ddl_despachador": "0x435a0880 (CALL CB3)",
+ "api_ddl_mapa": {
+  "0": {
+   "nombre": "ddl_clkctrl_open_clk",
+   "impl": "0x4359f174"
+  },
+  "1": {
+   "nombre": "ddl_clkctrl_close_clk",
+   "impl": "0x4359f12c"
+  },
+  "2": {
+   "nombre": "ddl_clkctrl_open_dly",
+   "impl": "0x4359f0e4"
+  },
+  "3": {
+   "nombre": "ddl_clkctrl_close_dly",
+   "impl": "0x4359f09c"
+  },
+  "4": {
+   "nombre": "ddl_clkctrl_set_sync_signal",
+   "impl": "0x4359ef88"
+  },
+  "5": {
+   "nombre": "ddl_clkctrl_set_sysv_delay",
+   "impl": "0x4359ef2c"
+  },
+  "6": {
+   "nombre": "ddl_clkctrl_lock_sync_signal",
+   "impl": "0x4359eed0"
+  },
+  "7": {
+   "nombre": "ddl_clkctrl_unlock_sync_signal",
+   "impl": "0x4359ee78"
+  },
+  "8": {
+   "nombre": "ddl_clkctrl_set_sysv_initial_delay",
+   "impl": "0x4359f048"
+  },
+  "9": {
+   "nombre": "ddl_clkctrl_set_sync_initial_signal",
+   "impl": "0x4359f000"
+  },
+  "10": {
+   "nombre": "ddl_clkctrl_printf_info",
+   "impl": "0x43a486b6"
+  },
+  "11": {
+   "nombre": "set_sync_signal + bucle de cambio de retardo (0x4359ecc0)",
+   "impl": null
+  },
+  "12": {
+   "nombre": "set_sync_signal + bucle de cambio de retardo (0x4359ecc0)",
+   "impl": null
+  },
+  "13": {
+   "nombre": "set_sync_signal + lock_sync_signal",
+   "impl": null
+  },
+  "14": {
+   "nombre": "lock_sync_signal",
+   "impl": null
+  }
+ },
+ "consumidores": [
+  {
+   "func": "0x4378dfde",
+   "subsistema": "0x03",
+   "modulo": "CAMERA_MAIN_SYNC",
+   "nota": "abre/cierra el reloj, bloquea (lock) y desbloquea la señal de sync alrededor de las secuencias de exposición/lectura"
+  },
+  {
+   "func": "0x4368b3e4",
+   "subsistema": "0x0a",
+   "modulo": "VDF",
+   "nota": "VdfDisplayCmdSetPanelOut (VdfDisplayCmdSetPanelOut.cpp)"
+  },
+  {
+   "func": "0x436afba0",
+   "subsistema": "0x0d",
+   "modulo": "VEF",
+   "nota": "módulo de efectos del finder"
+  },
+  {
+   "func": "0x4366bd38",
+   "subsistema": "0xc2",
+   "modulo": "SYSV / TP_R",
+   "nota": "sincronización vertical del sistema"
+  },
+  {
+   "func": "0x4362840e",
+   "subsistema": "0x57",
+   "modulo": "MC (shell)",
+   "nota": "comando de depuración: 24P/25P/30P/50I/50P/60I/60P"
+  },
+  {
+   "func": "0x43628e98",
+   "subsistema": "0x57",
+   "modulo": "MC",
+   "nota": "McMsgAvscDec::ClockChange(FRAME_RATE) (mcMsgAvscDec.cpp)"
+  },
+  {
+   "func": "0x43617f22",
+   "subsistema": "0x57",
+   "modulo": "MC",
+   "nota": "comandos de shell clk_open / clk_chg / clk_close"
+  },
+  {
+   "func": "0x43a79c60",
+   "subsistema": "0x57",
+   "modulo": "MC",
+   "nota": "McUtilMulti"
+  },
+  {
+   "func": "0x43622d82",
+   "subsistema": "dinámico (ldrh [r0,#4])",
+   "modulo": "MC",
+   "nota": "McAvcDecCmdParamCheck::CheckActDecParam1st (seqctrl/mcAvcDecCmdParamCheck.cpp)"
+  },
+  {
+   "func": "0x43a4928a",
+   "subsistema": "0x10b",
+   "modulo": "(no identificado)",
+   "nota": "id de subsistema 0x10b"
+  },
+  {
+   "func": "0x43a84942",
+   "subsistema": "dinámico (ldrh [r0,#4])",
+   "modulo": "(no identificado)",
+   "nota": ""
+  },
+  {
+   "func": "0x437947cc",
+   "subsistema": "-",
+   "modulo": "CAMERA_MAIN",
+   "nota": "init_cam_clkctrl (init_cam_SetCamParam_main.cpp): fija CLKTYPE y sysv_delay inicial"
+  },
+  {
+   "func": "0x43ae8c66",
+   "subsistema": "-",
+   "modulo": "(no identificado)",
+   "nota": "único consumidor de ddl_clkctrl_get_clk_chg_enable"
+  }
+ ],
+ "diferencial": {
+  "nucleo_en_a7s": 0,
+  "nucleo_en_a6300": 0,
+  "cadenas_totales": 66,
+  "api_ddl_a6000": [
+   [
+    0,
+    "ddl_clkctrl_open_clk(id)"
+   ],
+   [
+    1,
+    "ddl_clkctrl_close_clk(id)"
+   ],
+   [
+    2,
+    "ddl_clkctrl_open_dly(id)"
+   ],
+   [
+    3,
+    "ddl_clkctrl_close_dly(id)"
+   ],
+   [
+    4,
+    "ddl_clkctrl_set_sync_signal(id , clk)"
+   ],
+   [
+    5,
+    "ddl_clkctrl_set_sysv_delay(id , delay)"
+   ],
+   [
+    6,
+    "ddl_clkctrl_lock_sync_signal(id)"
+   ],
+   [
+    7,
+    "ddl_clkctrl_unlock_sync_signal(id)"
+   ],
+   [
+    8,
+    "ddl_clkctrl_set_sysv_initial_delay(normal,special)"
+   ],
+   [
+    9,
+    "ddl_clkctrl_set_sync_initial_signal(CLKTYPE)"
+   ],
+   [
+    10,
+    "ddl_clkctrl_printf_info"
+   ],
+   [
+    12,
+    "total test clk->cly id,clk,dly_tsk"
+   ],
+   [
+    13,
+    "total test clk->lock id,clk"
+   ],
+   [
+    14,
+    "total test lock->clk id,clk"
+   ]
+  ],
+  "api_ddl_a7s": [
+   [
+    0,
+    "ddl_clkctrl_open_clk(id)"
+   ],
+   [
+    1,
+    "ddl_clkctrl_close_clk(id)"
+   ],
+   [
+    2,
+    "ddl_clkctrl_open_dly(id)"
+   ],
+   [
+    3,
+    "ddl_clkctrl_close_dly(id)"
+   ],
+   [
+    4,
+    "ddl_clkctrl_set_sync_signal(id , clk)"
+   ],
+   [
+    5,
+    "ddl_clkctrl_set_sysv_delay(id , delay)"
+   ],
+   [
+    6,
+    "ddl_clkctrl_lock_sync_signal(id)"
+   ],
+   [
+    7,
+    "ddl_clkctrl_unlock_sync_signal(id)"
+   ],
+   [
+    8,
+    "ddl_clkctrl_set_sysv_initial_delay(normal,special)"
+   ],
+   [
+    9,
+    "ddl_clkctrl_set_sync_initial_signal(CLKTYPE)"
+   ],
+   [
+    10,
+    "ddl_clkctrl_printf_info"
+   ],
+   [
+    12,
+    "total test clk->cly id,clk,dly_tsk"
+   ],
+   [
+    13,
+    "total test clk->lock id,clk"
+   ],
+   [
+    14,
+    "total test lock->clk id,clk"
+   ]
+  ],
+  "api_ddl_a6300": [
+   [
+    0,
+    "ddl_clkctrl_open_clk(id)"
+   ],
+   [
+    1,
+    "ddl_clkctrl_close_clk(id)"
+   ],
+   [
+    2,
+    "ddl_clkctrl_open_dly(id)"
+   ],
+   [
+    3,
+    "ddl_clkctrl_close_dly(id)"
+   ],
+   [
+    4,
+    "ddl_clkctrl_set_sync_signal(id , clk)"
+   ],
+   [
+    5,
+    "ddl_clkctrl_set_sysv_delay(id , delay)"
+   ],
+   [
+    6,
+    "ddl_clkctrl_lock_sync_signal(id)"
+   ],
+   [
+    7,
+    "ddl_clkctrl_unlock_sync_signal(id)"
+   ],
+   [
+    8,
+    "ddl_clkctrl_set_sysv_initial_delay(normal,special)"
+   ],
+   [
+    9,
+    "ddl_clkctrl_set_sync_initial_signal(CLKTYPE)"
+   ],
+   [
+    10,
+    "ddl_clkctrl_printf_info"
+   ],
+   [
+    12,
+    "total test clk->cly id,clk,dly_tsk"
+   ],
+   [
+    13,
+    "total test clk->lock id,clk"
+   ],
+   [
+    14,
+    "total test lock->clk id,clk"
+   ]
+  ],
+  "tokens": {
+   "[CLK_CTRL]": {
+    "a6000": 66,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "ddl_clkctrl_": {
+    "a6000": 26,
+    "a7s": 14,
+    "a6300": 15
+   },
+   "ClkCtrl": {
+    "a6000": 6,
+    "a7s": 5,
+    "a6300": 6
+   },
+   "CLKTYPE": {
+    "a6000": 7,
+    "a7s": 7,
+    "a6300": 8
+   },
+   "SYSV_DELAY": {
+    "a6000": 3,
+    "a7s": 3,
+    "a6300": 3
+   },
+   "init_cam_clkctrl": {
+    "a6000": 3,
+    "a7s": 3,
+    "a6300": 3
+   },
+   "targetVfc": {
+    "a6000": 5,
+    "a7s": 4,
+    "a6300": 4
+   },
+   "STATE_CHANGE_CLK": {
+    "a6000": 2,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "ClkChgExec": {
+    "a6000": 1,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "DelayChgExec": {
+    "a6000": 1,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "change_vfc": {
+    "a6000": 3,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "subVFC": {
+    "a6000": 1,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "[CLKCTRL]": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   }
+  }
+ },
+ "conteo_subbloques": {
+  "CHANGE_CLK": 9,
+  "DDL_CALL": 12,
+  "LOCK": 2,
+  "MSG_MASTER_SLAVE": 6,
+  "OSAL_ERR": 10,
+  "OTROS": 3,
+  "SET_DELAY_SYNC": 8,
+  "STATE": 3,
+  "SUBSYS_OPEN_CLOSE": 6,
+  "TASK": 2,
+  "VPH_HTP": 5
+ }
+}

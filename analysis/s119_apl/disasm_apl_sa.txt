@@ -1,0 +1,136 @@
+===== APL SA open/close 0x439cf3b8-0x439cf500
+0x439cf3b8  1fb5         push     {r0, r1, r2, r3, r4, lr}
+0x439cf3ba  b622         movs     r2, #0xb6
+0x439cf3bc  0221         movs     r1, #2
+0x439cf3be  6846         mov      r0, sp
+0x439cf3c0  11f1abf9     bl       #0x43ae071a
+0x439cf3c4  6846         mov      r0, sp
+0x439cf3c6  11f1c4f9     bl       #0x43ae0752
+0x439cf3ca  0146         mov      r1, r0
+0x439cf3cc  02a8         add      r0, sp, #8
+0x439cf3ce  12f18efd     bl       #0x43ae1eee
+0x439cf3d2  02a8         add      r0, sp, #8
+0x439cf3d4  0df10f01     add.w    r1, sp, #0xf
+0x439cf3d8  0122         movs     r2, #1
+0x439cf3da  9ef1dcf9     bl       #0x43b6d796
+0x439cf3de  0446         mov      r4, r0
+0x439cf3e0  48b1         cbz      r0, #0x439cf3f6
+0x439cf3e2  144b         ldr      r3, [pc, #0x50]
+0x439cf3e4  b620         movs     r0, #0xb6
+0x439cf3e6  0021         movs     r1, #0
+0x439cf3e8  0122         movs     r2, #1
+0x439cf3ea  7b44         add      r3, pc  ; STRICT 0x43cec4de '[CAMERA_SA]: [APL] SA Open Err2' || CANON 0x43cec753 'ror' ; 0x43cec74d "am' error" ; 0x43cec748 "SaParam' error" ; 0x43cec746 "amSaParam' error" ; 0x43cec73d "loseFreeCamSaParam' error" ; 0x43cec745 "CamSaParam' error" ; 0x43cec73c "CloseFreeCamSaParam' error" ; 0x43cec6bc 'or' ; 0x43cec6bf "[CAMERA_SA]: %s: CloseHndl for `hndl_for_m_pWorkMemArea2' error" ; 0x43cec6c6 "_SA]: %s: CloseHndl for `hndl_for_m_pWorkMemArea2' error" ; 0x43cec6c5 "A_SA]: %s: CloseHndl for `hndl_for_m_pWorkMemArea2' error" ; 0x43cec6cc "%s: CloseHndl for `hndl_for_m_pWorkMemArea2' error" ; 0x43cec6d3 "seHndl for `hndl_for_m_pWorkMemArea2' error" ; 0x43cec6da "for `hndl_for_m_pWorkMemArea2' error" ; 0x43cec6e1 "dl_for_m_pWorkMemArea2' error" ; 0x43cec6de "`hndl_for_m_pWorkMemArea2' error" ; 0x43cec65c "r `hndl_for_m_pWorkMemArea0' error" ; 0x43cec66a "pWorkMemArea0' error" ; 0x43cec67a 'rror' ; 0x43cec688 "A]: %s: CloseHndl for `hndl_for_m_pWorkMemArea1' error" ; 0x43cec60e "s: CloseHndl for `hndl_for_m_pOutputImage' error" ; 0x43cec5f6 "ge' error" ; 0x43cec5d8 "Hndl for `hndl_for_m_pUnderImage' error" ; 0x43cec5de "or `hndl_for_m_pUnderImage' error" ; 0x43cec5e6 "_for_m_pUnderImage' error" ; 0x43cec5ec "_pUnderImage' error" ; 0x43cec5ee "UnderImage' error" ; 0x43cec602 "AMERA_SA]: %s: CloseHndl for `hndl_for_m_pOutputImage' error" ; 0x43cec5f4 "mage' error" ; 0x43cec606 "A_SA]: %s: CloseHndl for `hndl_for_m_pOutputImage' error" ; 0x43cec601 "CAMERA_SA]: %s: CloseHndl for `hndl_for_m_pOutputImage' error" ; 0x43cec60f ": CloseHndl for `hndl_for_m_pOutputImage' error" ; 0x43cec619 "l for `hndl_for_m_pOutputImage' error" ; 0x43cec627 "r_m_pOutputImage' error" ; 0x43cec607 "_SA]: %s: CloseHndl for `hndl_for_m_pOutputImage' error" ; 0x43cec5f6 "ge' error" ; 0x43cec55b "eHndl for `hndl_for_m_pOverImage' error" ; 0x43cec549 "MERA_SA]: %s: CloseHndl for `hndl_for_m_pOverImage' error" ; 0x43cec540 '_exit' ; 0x43cec4de '[CAMERA_SA]: [APL] SA Open Err2'
+0x439cf3ec  fff7cafa     bl       #0x439ce984
+0x439cf3f0  1148         ldr      r0, [pc, #0x44]
+0x439cf3f2  7844         add      r0, pc  ; STRICT 0x43cec4eb '[APL] SA Open Err2' || CANON 0x43cec75e "_SA]: %s: `CloseFreeCamMMUParam' error" ; 0x43cec75a "MERA_SA]: %s: `CloseFreeCamMMUParam' error" ; 0x43cec753 'ror' ; 0x43cec753 'ror' ; 0x43cec746 "amSaParam' error" ; 0x43cec752 'rror' ; 0x43cec745 "CamSaParam' error" ; 0x43cec6c7 "SA]: %s: CloseHndl for `hndl_for_m_pWorkMemArea2' error" ; 0x43cec6ca ": %s: CloseHndl for `hndl_for_m_pWorkMemArea2' error" ; 0x43cec6d1 "loseHndl for `hndl_for_m_pWorkMemArea2' error" ; 0x43cec6d0 "CloseHndl for `hndl_for_m_pWorkMemArea2' error" ; 0x43cec6d7 "dl for `hndl_for_m_pWorkMemArea2' error" ; 0x43cec6de "`hndl_for_m_pWorkMemArea2' error" ; 0x43cec6e5 "or_m_pWorkMemArea2' error" ; 0x43cec6ee "kMemArea2' error" ; 0x43cec6e9 "_pWorkMemArea2' error" ; 0x43cec669 "_pWorkMemArea0' error" ; 0x43cec677 "' error" ; 0x43cec687 "SA]: %s: CloseHndl for `hndl_for_m_pWorkMemArea1' error" ; 0x43cec695 "Hndl for `hndl_for_m_pWorkMemArea1' error" ; 0x43cec619 "l for `hndl_for_m_pOutputImage' error" ; 0x43cec601 "CAMERA_SA]: %s: CloseHndl for `hndl_for_m_pOutputImage' error" ; 0x43cec5e3 "ndl_for_m_pUnderImage' error" ; 0x43cec5dd "for `hndl_for_m_pUnderImage' error" ; 0x43cec5f1 "erImage' error" ; 0x43cec5ed "pUnderImage' error" ; 0x43cec5f9 ' error' ; 0x43cec60d "%s: CloseHndl for `hndl_for_m_pOutputImage' error" ; 0x43cec613 "oseHndl for `hndl_for_m_pOutputImage' error" ; 0x43cec60c " %s: CloseHndl for `hndl_for_m_pOutputImage' error" ; 0x43cec61c "or `hndl_for_m_pOutputImage' error" ; 0x43cec624 "_for_m_pOutputImage' error" ; 0x43cec634 "age' error" ; 0x43cec614 "seHndl for `hndl_for_m_pOutputImage' error" ; 0x43cec566 "hndl_for_m_pOverImage' error" ; 0x43cec556 " CloseHndl for `hndl_for_m_pOverImage' error" ; 0x43cec550 "]: %s: CloseHndl for `hndl_for_m_pOverImage' error" ; 0x43cec54d "_SA]: %s: CloseHndl for `hndl_for_m_pOverImage' error" ; 0x43cec4eb '[APL] SA Open Err2'
+0x439cf3f4  10e0         b        #0x439cf418
+0x439cf3f6  02a8         add      r0, sp, #8
+0x439cf3f8  9df80f10     ldrb.w   r1, [sp, #0xf]
+0x439cf3fc  0122         movs     r2, #1
+0x439cf3fe  9ef1bdf9     bl       #0x43b6d77c
+0x439cf402  0446         mov      r4, r0
+0x439cf404  50b1         cbz      r0, #0x439cf41c
+0x439cf406  0d4b         ldr      r3, [pc, #0x34]
+0x439cf408  b620         movs     r0, #0xb6
+0x439cf40a  0021         movs     r1, #0
+0x439cf40c  0122         movs     r2, #1
+0x439cf40e  7b44         add      r3, pc  ; STRICT 0x43cec4fe '[CAMERA_SA]: [APL] SA Close Err2' || CANON 0x43cec777 "UParam' error" ; 0x43cec771 "eCamMMUParam' error" ; 0x43cec76c "seFreeCamMMUParam' error" ; 0x43cec76a "loseFreeCamMMUParam' error" ; 0x43cec761 "]: %s: `CloseFreeCamMMUParam' error" ; 0x43cec769 "CloseFreeCamMMUParam' error" ; 0x43cec760 "A]: %s: `CloseFreeCamMMUParam' error" ; 0x43cec6e0 "ndl_for_m_pWorkMemArea2' error" ; 0x43cec6e3 "_for_m_pWorkMemArea2' error" ; 0x43cec6ea "pWorkMemArea2' error" ; 0x43cec6e9 "_pWorkMemArea2' error" ; 0x43cec6f0 "emArea2' error" ; 0x43cec6f7 "' error" ; 0x43cec705 "A_SA]: %s: `sa_func_BDEX_exit' error" ; 0x43cec702 "MERA_SA]: %s: `sa_func_BDEX_exit' error" ; 0x43cec680 "CAMERA_SA]: %s: CloseHndl for `hndl_for_m_pWorkMemArea1' error" ; 0x43cec68e ": CloseHndl for `hndl_for_m_pWorkMemArea1' error" ; 0x43cec69e "`hndl_for_m_pWorkMemArea1' error" ; 0x43cec6ac "orkMemArea1' error" ; 0x43cec632 "Image' error" ; 0x43cec61a " for `hndl_for_m_pOutputImage' error" ; 0x43cec5fc 'ror' ; 0x43cec602 "AMERA_SA]: %s: CloseHndl for `hndl_for_m_pOutputImage' error" ; 0x43cec60a "]: %s: CloseHndl for `hndl_for_m_pOutputImage' error" ; 0x43cec610 " CloseHndl for `hndl_for_m_pOutputImage' error" ; 0x43cec612 "loseHndl for `hndl_for_m_pOutputImage' error" ; 0x43cec626 "or_m_pOutputImage' error" ; 0x43cec618 "dl for `hndl_for_m_pOutputImage' error" ; 0x43cec62a "_pOutputImage' error" ; 0x43cec625 "for_m_pOutputImage' error" ; 0x43cec633 "mage' error" ; 0x43cec63d 'r' ; 0x43cec64b " %s: CloseHndl for `hndl_for_m_pWorkMemArea0' error" ; 0x43cec62b "pOutputImage' error" ; 0x43cec61a " for `hndl_for_m_pOutputImage' error" ; 0x43cec57f 'ror' ; 0x43cec56d "r_m_pOverImage' error" ; 0x43cec569 "l_for_m_pOverImage' error" ; 0x43cec564 " `hndl_for_m_pOverImage' error" ; 0x43cec502 'ERA_SA]: [APL] SA Close Err2' ; 0x43cec4fe '[CAMERA_SA]: [APL] SA Close Err2'
+0x439cf410  fff7b8fa     bl       #0x439ce984
+0x439cf414  0a48         ldr      r0, [pc, #0x28]
+0x439cf416  7844         add      r0, pc  ; STRICT 0x43cec50b '[APL] SA Close Err2' || CANON 0x43a7f898 'A' ; 0x43a7f898 'A' ; 0x43a7f898 'A' ; 0x43a7f898 'A' ; 0x43a7f898 'A' ; 0x43cec782 'or' ; 0x43cec77e ' error' ; 0x43cec777 "UParam' error" ; 0x43cec777 "UParam' error" ; 0x43cec76a "loseFreeCamMMUParam' error" ; 0x43cec776 "MUParam' error" ; 0x43cec769 "CloseFreeCamMMUParam' error" ; 0x43cec6eb "WorkMemArea2' error" ; 0x43cec6ee "kMemArea2' error" ; 0x43cec6f5 "a2' error" ; 0x43cec6f4 "ea2' error" ; 0x43cec6fb 'ror' ; 0x43cec702 "MERA_SA]: %s: `sa_func_BDEX_exit' error" ; 0x43cec709 "]: %s: `sa_func_BDEX_exit' error" ; 0x43cec712 "a_func_BDEX_exit' error" ; 0x43cec70d "s: `sa_func_BDEX_exit' error" ; 0x43cec68d "s: CloseHndl for `hndl_for_m_pWorkMemArea1' error" ; 0x43cec69b "or `hndl_for_m_pWorkMemArea1' error" ; 0x43cec6ab "WorkMemArea1' error" ; 0x43cec6b9 'error' ; 0x43cec63d 'r' ; 0x43cec625 "for_m_pOutputImage' error" ; 0x43cec607 "_SA]: %s: CloseHndl for `hndl_for_m_pOutputImage' error" ; 0x43cec601 "CAMERA_SA]: %s: CloseHndl for `hndl_for_m_pOutputImage' error" ; 0x43cec615 "eHndl for `hndl_for_m_pOutputImage' error" ; 0x43cec611 "CloseHndl for `hndl_for_m_pOutputImage' error" ; 0x43cec61d "r `hndl_for_m_pOutputImage' error" ; 0x43cec631 "tImage' error" ; 0x43cec623 "l_for_m_pOutputImage' error" ; 0x43cec637 "' error" ; 0x43cec630 "utImage' error" ; 0x43cec640 "CAMERA_SA]: %s: CloseHndl for `hndl_for_m_pWorkMemArea0' error" ; 0x43cec648 "A]: %s: CloseHndl for `hndl_for_m_pWorkMemArea0' error" ; 0x43cec658 "l for `hndl_for_m_pWorkMemArea0' error" ; 0x43cec638 ' error' ; 0x43cec623 "l_for_m_pOutputImage' error" ; 0x43cec58a "_SA]: %s: CloseHndl for `hndl_for_m_pMiddleImage' error" ; 0x43cec57a "e' error" ; 0x43cec574 "erImage' error" ; 0x43cec571 "pOverImage' error" ; 0x43cec50f '] SA Close Err2' ; 0x43cec50b '[APL] SA Close Err2'
+0x439cf418  33f77ef9     bl       #0x43902718
+0x439cf41c  6846         mov      r0, sp
+0x439cf41e  11f18cf9     bl       #0x43ae073a
+0x439cf422  2046         mov      r0, r4
+0x439cf424  04b0         add      sp, #0x10
+0x439cf426  10bd         pop      {r4, pc}
+0x439cf428  6846         mov      r0, sp
+0x439cf42a  11f186f9     bl       #0x43ae073a
+0x439cf42e  96f18dfd     bl       #0x43b65f4c
+0x439cf432  00bf         nop      
+0x439cf434  f0d0         beq      #0x439cf418
+0x439cf436  3100         movs     r1, r6
+0x439cf438  f5d0         beq      #0x439cf426
+0x439cf43a  3100         movs     r1, r6
+0x439cf43c  ecd0         beq      #0x439cf418
+0x439cf43e  3100         movs     r1, r6
+0x439cf440  f1d0         beq      #0x439cf426
+0x439cf442  3100         movs     r1, r6
+0x439cf444  08b4         push     {r3}
+0x439cf446  0023         movs     r3, #0
+0x439cf448  2de9f047     push.w   {r4, r5, r6, r7, r8, sb, sl, lr}
+0x439cf44c  8bb0         sub      sp, #0x2c
+0x439cf44e  13ad         add      r5, sp, #0x4c
+0x439cf450  0746         mov      r7, r0
+0x439cf452  8846         mov      r8, r1
+0x439cf454  9146         mov      sb, r2
+0x439cf456  55f804ab     ldr      sl, [r5], #4
+0x439cf45a  08a9         add      r1, sp, #0x20
+0x439cf45c  2248         ldr      r0, [pc, #0x88]
+0x439cf45e  9a22         movs     r2, #0x9a
+0x439cf460  0995         str      r5, [sp, #0x24]
+0x439cf462  91f735f7     bl       #0x435612d0
+0x439cf466  0646         mov      r6, r0
+0x439cf468  0028         cmp      r0, #0
+0x439cf46a  37d1         bne      #0x439cf4dc
+0x439cf46c  089c         ldr      r4, [sp, #0x20]
+0x439cf46e  0023         movs     r3, #0
+0x439cf470  0122         movs     r2, #1
+0x439cf472  3146         mov      r1, r6
+0x439cf474  6846         mov      r0, sp
+0x439cf476  6780         strh     r7, [r4, #2]
+0x439cf478  2027         movs     r7, #0x20
+0x439cf47a  2280         strh     r2, [r4]
+0x439cf47c  0022         movs     r2, #0
+0x439cf47e  c4f80480     str.w    r8, [r4, #4]
+0x439cf482  c4e90223     strd     r2, r3, [r4, #8]
+0x439cf486  3a46         mov      r2, r7
+0x439cf488  a4f81090     strh.w   sb, [r4, #0x10]
+0x439cf48c  f6f7baea     blx      #0x439c5a04
+0x439cf490  6946         mov      r1, sp
+0x439cf492  1648         ldr      r0, [pc, #0x58]
+0x439cf494  0097         str      r7, [sp]
+0x439cf496  91f7d5f6     bl       #0x43561244
+0x439cf49a  dde90623     ldrd     r2, r3, [sp, #0x18]
+0x439cf49e  8121         movs     r1, #0x81
+0x439cf4a0  04f11400     add.w    r0, r4, #0x14
+0x439cf4a4  c4e90223     strd     r2, r3, [r4, #8]
+0x439cf4a8  5246         mov      r2, sl
+0x439cf4aa  2b46         mov      r3, r5
+0x439cf4ac  f5f7aafd     bl       #0x439c5004
+0x439cf4b0  0028         cmp      r0, #0
+0x439cf4b2  04da         bge      #0x439cf4be
+0x439cf4b4  0899         ldr      r1, [sp, #0x20]
+0x439cf4b6  0c48         ldr      r0, [pc, #0x30]
+0x439cf4b8  91f718f7     bl       #0x435612ec
+0x439cf4bc  0ee0         b        #0x439cf4dc
+0x439cf4be  8028         cmp      r0, #0x80
+0x439cf4c0  a8bf         it       ge
+0x439cf4c2  8020         movge    r0, #0x80
+0x439cf4c4  0a22         movs     r2, #0xa
+0x439cf4c6  2318         adds     r3, r4, r0
+0x439cf4c8  0130         adds     r0, #1
+0x439cf4ca  6082         strh     r0, [r4, #0x12]
+0x439cf4cc  1a75         strb     r2, [r3, #0x14]
+0x439cf4ce  5e75         strb     r6, [r3, #0x15]
+0x439cf4d0  0899         ldr      r1, [sp, #0x20]
+0x439cf4d2  0548         ldr      r0, [pc, #0x14]
+0x439cf4d4  41f8040c     str      r0, [r1, #-0x4]
+0x439cf4d8  91f798f6     bl       #0x4356120c
+0x439cf4dc  0bb0         add      sp, #0x2c
+0x439cf4de  bde8f047     pop.w    {r4, r5, r6, r7, r8, sb, sl, lr}
+0x439cf4e2  01b0         add      sp, #4
+0x439cf4e4  7047         bx       lr
+0x439cf4e6  00bf         nop      
+0x439cf4e8  3901         lsls     r1, r7, #4
+0x439cf4ea  8f00         lsls     r7, r1, #2
+0x439cf4ec  4200         lsls     r2, r0, #1
+0x439cf4ee  9100         lsls     r1, r2, #2
+0x439cf4f0  f0b5         push     {r4, r5, r6, r7, lr}
+0x439cf4f2  87b0         sub      sp, #0x1c
+0x439cf4f4  1546         mov      r5, r2
+0x439cf4f6  0646         mov      r6, r0
+0x439cf4f8  b622         movs     r2, #0xb6
+0x439cf4fa  0f46         mov      r7, r1
+0x439cf4fc  03a8         add      r0, sp, #0xc
+0x439cf4fe  0221         movs     r1, #2

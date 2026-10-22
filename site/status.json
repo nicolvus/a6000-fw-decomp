@@ -1,8 +1,393 @@
 {
   "generated_from": "Documentos versionados en docs/capture/ y analysis/",
-  "latest": "S102",
-  "documented_count": 85,
+  "latest": "S180",
+  "documented_count": 162,
   "sessions": [
+    {
+      "id": "S180",
+      "title": "S180 — `[REMOTE]`: el mando a distancia (sub-bloque de `[ACCY]`) — etiqueta nueva de la fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s180-remote.md"
+    },
+    {
+      "id": "S179",
+      "title": "S179 — `[CAM_SCALAR]`: la capa HAPI de imagen de la cámara (etiqueta nueva de la fw3.21)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s179-cam-scalar.md"
+    },
+    {
+      "id": "S178",
+      "title": "S178 — censo de cobertura de la línea de módulos",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s178-census.md"
+    },
+    {
+      "id": "S177",
+      "title": "S177 — `[CAM_FUNC_MGR]`: el gestor de funciones de cámara (`Camera::Function`)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s177-cam-func-mgr.md"
+    },
+    {
+      "id": "S175",
+      "title": "S175 — el módulo `[LIF_DEBUG]` (13 trazas): el sensor de luz de la cámara",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s175-lif-debug.md"
+    },
+    {
+      "id": "S174",
+      "title": "S174 — el API de mensajes «…ForLiro» del `libObj.so`: 216/221/240 nombres, 0/0/6 soportados",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s174-forliro-api.md"
+    },
+    {
+      "id": "S173",
+      "title": "S173 — `[CAM_UTIL]` (10) y `[CAMERA_ADJ]` (3): las utilidades compartidas",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s173-cam-util-labels.md"
+    },
+    {
+      "id": "S172",
+      "title": "S172 — el módulo `ElecShutter` del A6300: qué hace realmente",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s172-elec-shutter-a6300.md"
+    },
+    {
+      "id": "S171",
+      "title": "S171 — la API del imager y el canal «SteadyShot» del objetivo",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s171-imager-api.md"
+    },
+    {
+      "id": "S170",
+      "title": "S170 — `[ILLUMI]`: el subsistema de iluminación (sensor de luz ambiente)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s170-illumi.md"
+    },
+    {
+      "id": "S169",
+      "title": "S169 — control positivo del obturador electrónico: la API de **drive** del A6300",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s169-drive-api-a6300.md"
+    },
+    {
+      "id": "S168",
+      "title": "S168 — control positivo del «rolling shutter» del A6300: la cadena es **muerta**",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s168-a6300-rolling.md"
+    },
+    {
+      "id": "S167",
+      "title": "S167 — el módulo `[SAD]` (44 trazas) del firmware A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s167-sad.md"
+    },
+    {
+      "id": "S166",
+      "title": "S166 — `[ADC_DEBUG]`: la capa de depuración del ADC (14 trazas)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s166-adc-debug.md"
+    },
+    {
+      "id": "S165",
+      "title": "S165 — `[JOG]`: el subsistema de rueda/joystick (A6000 fw3.21)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s165-jog.md"
+    },
+    {
+      "id": "S164",
+      "title": "S164 — el módulo `[CAMERA_IS]` (17 trazas): la capa de estabilización de imagen de la cámara",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s164-camera-is.md"
+    },
+    {
+      "id": "S163",
+      "title": "S163 — tercer helper lee `state+0x1c/+0x1e` y genera un mensaje",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s163-imager-state-event-reader.md"
+    },
+    {
+      "id": "S162",
+      "title": "S162 — dos helpers leen `state+0x1c` y notifican a otros destinos",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s162-imager-state-event-readers.md"
+    },
+    {
+      "id": "S161",
+      "title": "S161 — `0x4384cb0a` es un spill del puntero a estado",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s161-imager-state-spill.md"
+    },
+    {
+      "id": "S160",
+      "title": "S160 — `FUN_4383abec` escribe `state+0`, no los gates",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s160-state-open-flag.md"
+    },
+    {
+      "id": "S159",
+      "title": "S159 — `0x4386001c` también derrama el puntero, no escribe el estado",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s159-imager-state-spill.md"
+    },
+    {
+      "id": "S158",
+      "title": "S158 — xref `0x4385b268` es un spill del puntero del estado",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s158-imager-state-ref.md"
+    },
+    {
+      "id": "S157",
+      "title": "S157 — `0x43859954` carga el estado para un snapshot",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s157-imager-state-snapshot.md"
+    },
+    {
+      "id": "S156",
+      "title": "S156 — `[TP_R]`: el módulo de panel táctil de la fw3.21 de la A6000 (22-10-2026)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s156-tp-r.md"
+    },
+    {
+      "id": "S155",
+      "title": "S155 — tres xrefs al objeto de gates son lectores/accesores",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s155-imager-state-readers.md"
+    },
+    {
+      "id": "S154",
+      "title": "S154 — el xref `0x438363e6` carga el objeto de gates, no lo escribe",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s154-imager-state-ref.md"
+    },
+    {
+      "id": "S153",
+      "title": "S153 — gates de los descriptores son flags de lectura diagnóstica",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s153-imager-dump-gates.md"
+    },
+    {
+      "id": "S152",
+      "title": "S152 — una ruta de diagnóstico lee el byte del hueco G",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s152-imager-gap-descriptor-read.md"
+    },
+    {
+      "id": "S151",
+      "title": "S151 — el módulo `[PANDA]` (10 trazas) de la A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s151-panda.md"
+    },
+    {
+      "id": "S150",
+      "title": "S150 — referencias directas a los huecos +8/+9 de las filas",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s150-imager-row-gaps.md"
+    },
+    {
+      "id": "S149",
+      "title": "S149 — helpers del builder no rellenan el hueco de cada fila",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s149-imager-row-helpers.md"
+    },
+    {
+      "id": "S148",
+      "title": "S148 — el módulo `[DEPTH]` (16 trazas) del firmware A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s148-depth.md"
+    },
+    {
+      "id": "S147",
+      "title": "S147 — productor parcial de filas del banco G",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s147-imager-g-rows.md"
+    },
+    {
+      "id": "S146",
+      "title": "S146 — REA no puede sembrar procedimientos en el hueco actual",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s146-rea-seed-limit.md"
+    },
+    {
+      "id": "S145",
+      "title": "S145 — el staging IMX210 existe en un hueco de cobertura REA",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s145-imager-code-gap.md"
+    },
+    {
+      "id": "S144",
+      "title": "S144 — `[CAM_UTIL_SENS]`: la utilidad de la memoria interna del sensor (A6000 fw3.21)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s144-cam-util-sens.md"
+    },
+    {
+      "id": "S143",
+      "title": "S143 — `[CAM_UTIL_ADJ]`: la utilidad de ajuste (A6000 fw3.21)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s143-cam-util-adj.md"
+    },
+    {
+      "id": "S142",
+      "title": "S142 — inicialización directa y lector indirecto del banco S",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s142-imager-s-init.md"
+    },
+    {
+      "id": "S141",
+      "title": "S141 — selección de fila y límite del origen dinámico",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s141-imager-row-copy.md"
+    },
+    {
+      "id": "S140",
+      "title": "S140 — vector de registros IMX210 y bancos dinámicos",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s140-imager-register-map.md"
+    },
+    {
+      "id": "S139",
+      "title": "S139 — `[ENCSEQCTRL]`: el control de secuencias de codificación (46 trazas)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s139-encseqctrl.md"
+    },
+    {
+      "id": "S138",
+      "title": "S138 — el módulo `[CAMERA_MAIN_FC]` (9 trazas)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s138-camera-main-fc.md"
+    },
+    {
+      "id": "S137",
+      "title": "S137 — `[CTRLCORE]`: el núcleo de control del códec (`*CtrlCore`)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s137-ctrlcore.md"
+    },
+    {
+      "id": "S136",
+      "title": "S136 — `[ACCY]`: el subsistema de accesorios (A6000 fw3.21)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s136-accy.md"
+    },
+    {
+      "id": "S135",
+      "title": "S135 — el subsistema `ElecShutter` del A6300 como control positivo",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s135-elec-shutter.md"
+    },
+    {
+      "id": "S134",
+      "title": "S134 — la aritmética de los parámetros del imager (`shut`, `svd`, `shd`, `spl`, `sint`, `gs`)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s134-imager-params.md"
+    },
+    {
+      "id": "S133",
+      "title": "S133 — `[MOUNT_DEBUG]` es el diagnóstico de la montura de lente, no del obturador",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s133-mount-debug.md"
+    },
+    {
+      "id": "S132",
+      "title": "S132 — `[CLK_CTRL]`: el gestor de control de reloj de la A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s132-clk-ctrl.md"
+    },
+    {
+      "id": "S131",
+      "title": "S131 — `[VPH_API]`: la API de parámetros del subsistema VPH (106 trazas)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s131-vph-api.md"
+    },
+    {
+      "id": "S130",
+      "title": "S130 — los 20 módulos \"NUEVO/PROPIO\": ¿contenido nuevo o solo otra etiqueta?",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s130-new-modules.md"
+    },
+    {
+      "id": "S129",
+      "title": "S129 — `[CAMERA_MAIN_IM]`: la monitorización térmica del imager (42 trazas)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s129-camera-main-im.md"
+    },
+    {
+      "id": "S128",
+      "title": "S128 — el mapa de etiquetado de la fw3.21: qué módulos son nuevos y cuáles se renombraron",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s128-label-map.md"
+    },
+    {
+      "id": "S127",
+      "title": "S127 — `[CAMERA_MAIN_LC]` no calibra la lente: es el motor de AF de `Camera::LC`",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s127-camera-main-lc.md"
+    },
+    {
+      "id": "S126",
+      "title": "S126 — `[CAMERA_MAIN]`: el módulo raíz de la cámara (135 trazas)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s126-camera-main.md"
+    },
+    {
+      "id": "S125",
+      "title": "S125 — `[IMAGING_REL]` (31 trazas) y `[IMAGING]` (120 trazas): los dos módulos menores del gestor de captura",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s125-imaging-rel.md"
+    },
+    {
+      "id": "S124",
+      "title": "S124 — el bloque de parámetros de exposición/lectura por `drive_mode` (imager)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s124-exposure-params.md"
+    },
+    {
+      "id": "S123",
+      "title": "S123 — `[CAMERA_MAIN_CC]`: el control de captura (clase `CC`)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s123-camera-main-cc.md"
+    },
+    {
+      "id": "S122",
+      "title": "S122 — el módulo `[CAMERA_MAIN_TC]`: 127 trazas, doble emisión y *time compression*",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s122-camera-main-tc.md"
+    },
+    {
+      "id": "S121",
+      "title": "S121 — `[AIP]`: el Audio IP (37 trazas)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s121-aip.md"
+    },
+    {
+      "id": "S120",
+      "title": "S120 — `[IDT_OPD]`: la segunda instancia del módulo IDT (mapas de imagen)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s120-idt-opd.md"
+    },
+    {
+      "id": "S119",
+      "title": "S119 — el módulo `[APL]`: la capa de aplicación sobre HW y SA",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s119-apl.md"
+    },
+    {
+      "id": "S118",
+      "title": "S118 — `[SFRA]`: el módulo de control del escalar en la cámara",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s118-sfra.md"
+    },
+    {
+      "id": "S117",
+      "title": "S117 — `[AUGI]`: la cabecera de 32 B del bloque de códec",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s117-augi.md"
+    },
+    {
+      "id": "S116",
+      "title": "S116 — `[SFRS]`: 117 trazas del subsistema",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s116-sfrs.md"
+    },
+    {
+      "id": "S115",
+      "title": "S115 — `[CAM_IMAGER]`: el driver del imager en la cámara",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s115-cam-imager.md"
+    },
+    {
+      "id": "S114",
+      "title": "S114 — el motor de secciones de la captura: 17 ids ↔ 17 etapas",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s114-section-engine.md"
+    },
+    {
+      "id": "S113",
+      "title": "S113 — `[CAM_DMM]`: el gestor de memoria dinámico de la cámara",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s113-cam-dmm.md"
+    },
+    {
+      "id": "S112",
+      "title": "S112 — Módulo `[CAMERA_MAIN_SYNC]` (429 trazas)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s112-camera-main-sync.md"
+    },
+    {
+      "id": "S111",
+      "title": "S111 — Módulo `[TRK]`: 215 trazas, 288 sitios y 47 funciones",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s111-trk.md"
+    },
+    {
+      "id": "S110",
+      "title": "S110 — `Camera::YC`: el motor de imagen de la A6000 (`[CAMERA_MAIN_YC]`)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s110-camera-main-yc.md"
+    },
+    {
+      "id": "S109",
+      "title": "S109 — `[CDIAG]`: el banco de diagnóstico del códec de la A6000",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s109-cdiag.md"
+    },
+    {
+      "id": "S108",
+      "title": "S108 — Módulo [CAMERA_SA] (231 trazas)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s108-camera-sa.md"
+    },
+    {
+      "id": "S107",
+      "title": "S107 — `Camera::CamCore` y la pila `ResourceStack`",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s107-camcore-resources.md"
+    },
+    {
+      "id": "S106",
+      "title": "S106 — `IMAGING_CAP`: el gestor de captura still de la A6000",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s106-imaging-cap.md"
+    },
+    {
+      "id": "S105",
+      "title": "S105 — Panorámica/barrido, bracketing e intervalo (modos de captura especiales)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s105-panorama-bracket-interval.md"
+    },
+    {
+      "id": "S104",
+      "title": "S104 — Prefijos de traza exclusivos de la A6000",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s104-prefixes-a6000.md"
+    },
+    {
+      "id": "S103",
+      "title": "S103 — subsistema SDF (Still DataFlow)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s103-sdf.md"
+    },
     {
       "id": "S102",
       "title": "S102 — Menú principal (botón MENU): cadena de carga y apertura",
@@ -429,6 +814,13 @@
       "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s16-claude-effect-control.md"
     }
   ],
+  "module_coverage": {
+    "covered": 96,
+    "total": 372,
+    "pending": 276,
+    "percent": "25.81",
+    "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s178_census/census.md"
+  },
   "exceptions": {
     "S67": {
       "label": "Cancelada; el tema de AF se asignó a S63.",

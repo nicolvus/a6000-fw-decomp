@@ -4,10 +4,12 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "site" / "status.json"
+PROGRESS = ROOT / "analysis" / "s178_census" / "census.md"
 REPO = "https://github.com/nicolvus/a6000-fw-decomp/blob/main/"
 SESSION = re.compile(r"(?:^|/)s(\d{1,3})(?:[-_/]|\.md$)", re.IGNORECASE)
 HEADING = re.compile(r"^#\s+(.+)$", re.MULTILINE)
@@ -47,11 +49,25 @@ def main() -> None:
         }
         for number, (_, path) in sorted(candidates.items(), reverse=True)
     ]
+    census = PROGRESS.read_text(encoding="utf-8")
+    coverage = re.search(r"\*\*(\d+)/(\d+)\*\* = \*\*([\d.,]+) %\*\*", census)
+    pending = re.search(r"\| \*\*pendientes reales\*\* \| \*\*(\d+)\*\*", census)
+    if not coverage or not pending:
+        raise ValueError("No se pudo leer la cobertura de S178")
+    covered, total, percent = coverage.groups()
+    if int(covered) + int(pending.group(1)) != int(total):
+        raise ValueError("El censo S178 no suma cobertura y pendientes")
+
     data = {
         "generated_from": "Documentos versionados en docs/capture/ y analysis/",
         "latest": sessions[0]["id"] if sessions else None,
         "documented_count": len(sessions),
         "sessions": sessions,
+        "module_coverage": {
+            "covered": int(covered), "total": int(total),
+            "pending": int(pending.group(1)), "percent": percent,
+            "source": REPO + "analysis/s178_census/census.md",
+        },
         "exceptions": {
             "S67": {
                 "label": "Cancelada; el tema de AF se asignó a S63.",
@@ -62,6 +78,8 @@ def main() -> None:
         "decision": {"label": "No parchear: evidencia insuficiente", "source": REPO + "docs/capture/s51-decision.md"},
     }
     OUTPUT.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    (ROOT / "site" / "progress").mkdir(exist_ok=True)
+    shutil.copyfile(ROOT / "docs" / "progress" / "index.html", ROOT / "site" / "progress" / "index.html")
     print(f"{len(sessions)} sesiones documentadas; última {data['latest']}; salida {OUTPUT}")
 
 

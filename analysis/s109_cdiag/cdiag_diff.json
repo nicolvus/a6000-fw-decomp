@@ -1,0 +1,770 @@
+{
+ "models": {
+  "A6000_fw321": {
+   "path": "analysis/rea-independent/input/av-cam.bin",
+   "size": 11427236,
+   "tokens": 270,
+   "classes": [
+    {
+     "vaddr": "0x43c3b0cb",
+     "text": "7CdMsgIf"
+    },
+    {
+     "vaddr": "0x43c3b0e9",
+     "text": "9CdTskCore"
+    },
+    {
+     "vaddr": "0x43c3b67e",
+     "text": "8CdCtrlIf"
+    },
+    {
+     "vaddr": "0x43c3b6d4",
+     "text": "9CdMsgCore"
+    },
+    {
+     "vaddr": "0x43c3c116",
+     "text": "10CdCtrlCore"
+    },
+    {
+     "vaddr": "0x43c3c1e3",
+     "text": "11CdCtrlHdDec"
+    },
+    {
+     "vaddr": "0x43c3c753",
+     "text": "11CdCtrlHdRec"
+    },
+    {
+     "vaddr": "0x43c3cc98",
+     "text": "12CdCtrlJpgDec"
+    },
+    {
+     "vaddr": "0x43c3d11c",
+     "text": "12CdCtrlJpgEnc"
+    },
+    {
+     "vaddr": "0x43c3d5a4",
+     "text": "15CdCtrlJpgEncDec"
+    },
+    {
+     "vaddr": "0x43c3df16",
+     "text": "11CdCtrlSdDec"
+    },
+    {
+     "vaddr": "0x43c3dfcc",
+     "text": "11CdCtrlSdRec"
+    },
+    {
+     "vaddr": "0x43c3e53c",
+     "text": "9CdMemCtrl"
+    },
+    {
+     "vaddr": "0x43c3e547",
+     "text": "13CdUtilClkCtrl"
+    },
+    {
+     "vaddr": "0x43c3e89b",
+     "text": "13CdUtilCmpData"
+    },
+    {
+     "vaddr": "0x43c3e8ab",
+     "text": "13CdUtilSysvMsg"
+    }
+   ],
+   "source_files": [
+    {
+     "vaddr": "0x43c3b1a8",
+     "text": "cdCtrlIf.cpp"
+    },
+    {
+     "vaddr": "0x43c3b86c",
+     "text": "cdCtrlCore.cpp"
+    }
+   ],
+   "signatures": [
+    {
+     "vaddr": "0x43c3b126",
+     "text": "CDIAGER CdCtrlIf::ExecSensCmd(__uint32_t, const OsalRequestPacket*, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43c3b647",
+     "text": "CDIAGER CdCtrlIf::ExecCmd(CdCtrlIf::MSG_SENS_COMMAND*)"
+    },
+    {
+     "vaddr": "0x43c3b688",
+     "text": "CDIAGER CdCtrlIf::ExecSensComp(__uint32_t, OsalResponsePacket*, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43c3b6df",
+     "text": "CDIAGER CdCtrlCore::DbgDiagAvc(__uint8_t, __uint8_t, __uint8_t, __uint8_t)"
+    },
+    {
+     "vaddr": "0x43c3b72a",
+     "text": "CDIAGER CdCtrlCore::CmpData(__uint8_t, __uint8_t, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43c3b768",
+     "text": "CDIAGER CdCtrlCore::RelMemArea(__uint8_t, __uint8_t, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43c3b7a9",
+     "text": "CDIAGER CdCtrlCore::SetCompNormal(OsalResponsePacket*, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43c3b7ec",
+     "text": "CDIAGER CdCtrlCore::SetMemArea(__uint8_t, __uint8_t, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43c3c123",
+     "text": "CDIAGER CdCtrlCore::RunCodec(__uint8_t, __uint8_t, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43c3c162",
+     "text": "CDIAGER CdCtrlCore::SetData(const __uint8_t*, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43c3c19c",
+     "text": "CDIAGER CdCtrlCore::SetCompDeleteData(OsalResponsePacket*, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43c3c694",
+     "text": "CDIAGER CdCtrlHdDec::SetMemArea(CdCtrlHdDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43c3c6cc",
+     "text": "CDIAGER CdCtrlHdDec::RelMemArea(CdCtrlHdDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43c3c704",
+     "text": "CDIAGER CdCtrlHdRec::SetCodecParam(__uint8_t, __uint8_t, __uint8_t, __uint8_t)"
+    },
+    {
+     "vaddr": "0x43c3cc28",
+     "text": "CDIAGER CdCtrlHdRec::RelMemArea(CdCtrlHdRec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43c3cc60",
+     "text": "CDIAGER CdCtrlHdRec::SetMemArea(CdCtrlHdRec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43c3d0a8",
+     "text": "CDIAGER CdCtrlJpgDec::SetMemArea(CdCtrlJpgDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43c3d0e2",
+     "text": "CDIAGER CdCtrlJpgDec::RelMemArea(CdCtrlJpgDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43c3d12b",
+     "text": "CDIAGER CdCtrlJpgEnc::RelMemArea(CdCtrlJpgEnc::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43c3d165",
+     "text": "CDIAGER CdCtrlJpgEnc::SetMemArea(CdCtrlJpgEnc::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43c3d5b6",
+     "text": "CDIAGER CdCtrlJpgEncDec::SetMemArea(CdCtrlJpgEncDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43c3da33",
+     "text": "CDIAGER CdCtrlJpgEncDec::RelMemArea(CdCtrlJpgEncDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43c3df24",
+     "text": "CDIAGER CdCtrlSdDec::RelMemArea(CdCtrlSdDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43c3df5c",
+     "text": "CDIAGER CdCtrlSdDec::SetMemArea(CdCtrlSdDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43c3df94",
+     "text": "CDIAGER CdCtrlSdRec::SetMemArea(CdCtrlSdRec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43c3e4b5",
+     "text": "CDIAGER CdCtrlSdRec::RelMemArea(CdCtrlSdRec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43c3e4ed",
+     "text": "CDIAGER CdCtrlSdRec::SetCodecParam(__uint8_t, __uint8_t, __uint8_t, __uint8_t)"
+    }
+   ]
+  },
+  "A7S_fw320": {
+   "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+   "size": 11455416,
+   "tokens": 270,
+   "classes": [
+    {
+     "vaddr": "0x43c3b737",
+     "text": "7CdMsgIf"
+    },
+    {
+     "vaddr": "0x43c3bcad",
+     "text": "8CdCtrlIf"
+    },
+    {
+     "vaddr": "0x43c3bd03",
+     "text": "9CdMsgCore"
+    },
+    {
+     "vaddr": "0x43c3bd0e",
+     "text": "9CdTskCore"
+    },
+    {
+     "vaddr": "0x43c3c782",
+     "text": "10CdCtrlCore"
+    },
+    {
+     "vaddr": "0x43c3c84f",
+     "text": "11CdCtrlHdDec"
+    },
+    {
+     "vaddr": "0x43c3cdbf",
+     "text": "11CdCtrlHdRec"
+    },
+    {
+     "vaddr": "0x43c3d304",
+     "text": "12CdCtrlJpgDec"
+    },
+    {
+     "vaddr": "0x43c3d788",
+     "text": "15CdCtrlJpgEncDec"
+    },
+    {
+     "vaddr": "0x43c3dc57",
+     "text": "12CdCtrlJpgEnc"
+    },
+    {
+     "vaddr": "0x43c3e582",
+     "text": "11CdCtrlSdDec"
+    },
+    {
+     "vaddr": "0x43c3e638",
+     "text": "11CdCtrlSdRec"
+    },
+    {
+     "vaddr": "0x43c3eba8",
+     "text": "9CdMemCtrl"
+    },
+    {
+     "vaddr": "0x43c3ebb3",
+     "text": "13CdUtilClkCtrl"
+    },
+    {
+     "vaddr": "0x43c3ef07",
+     "text": "13CdUtilCmpData"
+    },
+    {
+     "vaddr": "0x43c3ef17",
+     "text": "13CdUtilSysvMsg"
+    }
+   ],
+   "source_files": [
+    {
+     "vaddr": "0x43c3b7d7",
+     "text": "cdCtrlIf.cpp"
+    },
+    {
+     "vaddr": "0x43c3bed8",
+     "text": "cdCtrlCore.cpp"
+    }
+   ],
+   "signatures": [
+    {
+     "vaddr": "0x43c3b755",
+     "text": "CDIAGER CdCtrlIf::ExecSensCmd(__uint32_t, const OsalRequestPacket*, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43c3bc76",
+     "text": "CDIAGER CdCtrlIf::ExecCmd(CdCtrlIf::MSG_SENS_COMMAND*)"
+    },
+    {
+     "vaddr": "0x43c3bcb7",
+     "text": "CDIAGER CdCtrlIf::ExecSensComp(__uint32_t, OsalResponsePacket*, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43c3bd4b",
+     "text": "CDIAGER CdCtrlCore::DbgDiagAvc(__uint8_t, __uint8_t, __uint8_t, __uint8_t)"
+    },
+    {
+     "vaddr": "0x43c3bd96",
+     "text": "CDIAGER CdCtrlCore::CmpData(__uint8_t, __uint8_t, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43c3bdd4",
+     "text": "CDIAGER CdCtrlCore::RelMemArea(__uint8_t, __uint8_t, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43c3be15",
+     "text": "CDIAGER CdCtrlCore::SetCompNormal(OsalResponsePacket*, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43c3be58",
+     "text": "CDIAGER CdCtrlCore::SetMemArea(__uint8_t, __uint8_t, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43c3c78f",
+     "text": "CDIAGER CdCtrlCore::RunCodec(__uint8_t, __uint8_t, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43c3c7ce",
+     "text": "CDIAGER CdCtrlCore::SetData(const __uint8_t*, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43c3c808",
+     "text": "CDIAGER CdCtrlCore::SetCompDeleteData(OsalResponsePacket*, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43c3cd00",
+     "text": "CDIAGER CdCtrlHdDec::SetMemArea(CdCtrlHdDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43c3cd38",
+     "text": "CDIAGER CdCtrlHdDec::RelMemArea(CdCtrlHdDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43c3cd70",
+     "text": "CDIAGER CdCtrlHdRec::SetCodecParam(__uint8_t, __uint8_t, __uint8_t, __uint8_t)"
+    },
+    {
+     "vaddr": "0x43c3d294",
+     "text": "CDIAGER CdCtrlHdRec::RelMemArea(CdCtrlHdRec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43c3d2cc",
+     "text": "CDIAGER CdCtrlHdRec::SetMemArea(CdCtrlHdRec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43c3d714",
+     "text": "CDIAGER CdCtrlJpgDec::SetMemArea(CdCtrlJpgDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43c3d74e",
+     "text": "CDIAGER CdCtrlJpgDec::RelMemArea(CdCtrlJpgDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43c3d79a",
+     "text": "CDIAGER CdCtrlJpgEncDec::SetMemArea(CdCtrlJpgEncDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43c3dc17",
+     "text": "CDIAGER CdCtrlJpgEncDec::RelMemArea(CdCtrlJpgEncDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43c3dc66",
+     "text": "CDIAGER CdCtrlJpgEnc::RelMemArea(CdCtrlJpgEnc::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43c3dca0",
+     "text": "CDIAGER CdCtrlJpgEnc::SetMemArea(CdCtrlJpgEnc::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43c3e590",
+     "text": "CDIAGER CdCtrlSdDec::RelMemArea(CdCtrlSdDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43c3e5c8",
+     "text": "CDIAGER CdCtrlSdDec::SetMemArea(CdCtrlSdDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43c3e600",
+     "text": "CDIAGER CdCtrlSdRec::SetMemArea(CdCtrlSdRec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43c3eb21",
+     "text": "CDIAGER CdCtrlSdRec::RelMemArea(CdCtrlSdRec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43c3eb59",
+     "text": "CDIAGER CdCtrlSdRec::SetCodecParam(__uint8_t, __uint8_t, __uint8_t, __uint8_t)"
+    }
+   ]
+  },
+  "A6300_fw201": {
+   "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+   "size": 13382836,
+   "tokens": 310,
+   "classes": [
+    {
+     "vaddr": "0x43d2377f",
+     "text": "10CdExtMsgIf"
+    },
+    {
+     "vaddr": "0x43d2378c",
+     "text": "7CdMsgIf"
+    },
+    {
+     "vaddr": "0x43d23cde",
+     "text": "8CdCtrlIf"
+    },
+    {
+     "vaddr": "0x43d23f0f",
+     "text": "11CdExtCtrlIf"
+    },
+    {
+     "vaddr": "0x43d23f1d",
+     "text": "9CdMsgCore"
+    },
+    {
+     "vaddr": "0x43d23f28",
+     "text": "9CdTskCore"
+    },
+    {
+     "vaddr": "0x43d258ca",
+     "text": "10CdCtrlCore"
+    },
+    {
+     "vaddr": "0x43d25aab",
+     "text": "11CdCtrlHdDec"
+    },
+    {
+     "vaddr": "0x43d2601b",
+     "text": "11CdCtrlHdRec"
+    },
+    {
+     "vaddr": "0x43d26560",
+     "text": "12CdCtrlJpgDec"
+    },
+    {
+     "vaddr": "0x43d269e4",
+     "text": "15CdCtrlJpgEncDec"
+    },
+    {
+     "vaddr": "0x43d26eb3",
+     "text": "12CdCtrlJpgEnc"
+    },
+    {
+     "vaddr": "0x43d277de",
+     "text": "11CdCtrlSdDec"
+    },
+    {
+     "vaddr": "0x43d27894",
+     "text": "11CdCtrlSdRec"
+    },
+    {
+     "vaddr": "0x43d28331",
+     "text": "13CdExtCtrlCore"
+    },
+    {
+     "vaddr": "0x43d28aec",
+     "text": "11CdExtMcCtrl"
+    },
+    {
+     "vaddr": "0x43d28b97",
+     "text": "9CdMemCtrl"
+    },
+    {
+     "vaddr": "0x43d28ba2",
+     "text": "13CdUtilClkCtrl"
+    },
+    {
+     "vaddr": "0x43d292fa",
+     "text": "13CdUtilCmpData"
+    },
+    {
+     "vaddr": "0x43d29350",
+     "text": "13CdUtilSysvMsg"
+    },
+    {
+     "vaddr": "0x43d2c857",
+     "text": "11CdCtrl4KDec"
+    },
+    {
+     "vaddr": "0x43d2d1dd",
+     "text": "11CdCtrl4KRec"
+    }
+   ],
+   "source_files": [
+    {
+     "vaddr": "0x43d235f5",
+     "text": "cdExtMsgIf.cpp"
+    },
+    {
+     "vaddr": "0x43d23808",
+     "text": "cdCtrlIf.cpp"
+    },
+    {
+     "vaddr": "0x43d23d34",
+     "text": "cdExtCtrlIf.cpp"
+    },
+    {
+     "vaddr": "0x43d24137",
+     "text": "cdCtrlCore.cpp"
+    },
+    {
+     "vaddr": "0x43d27eab",
+     "text": "cdExtCtrlCore.cpp"
+    },
+    {
+     "vaddr": "0x43d284eb",
+     "text": "cdExtMcCtrl.cpp"
+    }
+   ],
+   "signatures": [
+    {
+     "vaddr": "0x43d237aa",
+     "text": "CDIAGER CdCtrlIf::ExecSensCmd(__uint32_t, const OsalRequestPacket*, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43d23ca7",
+     "text": "CDIAGER CdCtrlIf::ExecCmd(CdCtrlIf::MSG_SENS_COMMAND*)"
+    },
+    {
+     "vaddr": "0x43d23ce8",
+     "text": "CDIAGER CdCtrlIf::ExecSensComp(__uint32_t, OsalResponsePacket*, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43d23f65",
+     "text": "CDIAGER CdCtrlCore::SetCompGetData(OsalResponsePacket*, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43d23fa9",
+     "text": "CDIAGER CdCtrlCore::CmpData(__uint8_t, __uint8_t, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43d23fe7",
+     "text": "CDIAGER CdCtrlCore::SetCompSetData(OsalResponsePacket*, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43d2402b",
+     "text": "CDIAGER CdCtrlCore::ConfirmRelDataArea(const __uint8_t*, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43d24070",
+     "text": "CDIAGER CdCtrlCore::SetCompNormal(OsalResponsePacket*, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43d240b3",
+     "text": "CDIAGER CdCtrlCore::ConfirmSetDataArea(const __uint8_t*, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43d258d7",
+     "text": "CDIAGER CdCtrlCore::RunCodec(__uint8_t, __uint8_t, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43d25916",
+     "text": "CDIAGER CdCtrlCore::SetData(const __uint8_t*, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43d25950",
+     "text": "CDIAGER CdCtrlCore::DbgDiagAvc(__uint8_t, __uint8_t, __uint8_t, __uint8_t)"
+    },
+    {
+     "vaddr": "0x43d2599b",
+     "text": "CDIAGER CdCtrlCore::RelMemArea(__uint8_t, __uint8_t, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43d259dc",
+     "text": "CDIAGER CdCtrlCore::SetMemArea(__uint8_t, __uint8_t, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43d25a1d",
+     "text": "CDIAGER CdCtrlCore::ConfirmDoneCodec(__uint8_t, __uint8_t, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43d25a64",
+     "text": "CDIAGER CdCtrlCore::SetCompDeleteData(OsalResponsePacket*, __uint32_t)"
+    },
+    {
+     "vaddr": "0x43d25f5c",
+     "text": "CDIAGER CdCtrlHdDec::SetMemArea(CdCtrlHdDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43d25f94",
+     "text": "CDIAGER CdCtrlHdDec::RelMemArea(CdCtrlHdDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43d25fcc",
+     "text": "CDIAGER CdCtrlHdRec::SetCodecParam(__uint8_t, __uint8_t, __uint8_t, __uint8_t)"
+    },
+    {
+     "vaddr": "0x43d264f0",
+     "text": "CDIAGER CdCtrlHdRec::RelMemArea(CdCtrlHdRec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43d26528",
+     "text": "CDIAGER CdCtrlHdRec::SetMemArea(CdCtrlHdRec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43d26970",
+     "text": "CDIAGER CdCtrlJpgDec::SetMemArea(CdCtrlJpgDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43d269aa",
+     "text": "CDIAGER CdCtrlJpgDec::RelMemArea(CdCtrlJpgDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43d269f6",
+     "text": "CDIAGER CdCtrlJpgEncDec::SetMemArea(CdCtrlJpgEncDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43d26e73",
+     "text": "CDIAGER CdCtrlJpgEncDec::RelMemArea(CdCtrlJpgEncDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43d26ec2",
+     "text": "CDIAGER CdCtrlJpgEnc::RelMemArea(CdCtrlJpgEnc::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43d26efc",
+     "text": "CDIAGER CdCtrlJpgEnc::SetMemArea(CdCtrlJpgEnc::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43d277ec",
+     "text": "CDIAGER CdCtrlSdDec::RelMemArea(CdCtrlSdDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43d27824",
+     "text": "CDIAGER CdCtrlSdDec::SetMemArea(CdCtrlSdDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43d2785c",
+     "text": "CDIAGER CdCtrlSdRec::SetMemArea(CdCtrlSdRec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43d27d7d",
+     "text": "CDIAGER CdCtrlSdRec::RelMemArea(CdCtrlSdRec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43d27db5",
+     "text": "CDIAGER CdCtrlSdRec::SetCodecParam(__uint8_t, __uint8_t, __uint8_t, __uint8_t)"
+    },
+    {
+     "vaddr": "0x43d28bb2",
+     "text": "CDIAGER CdUtilCmpData::CompareRingBuffer(const CdUtilCmpData::CMPDATA*)"
+    },
+    {
+     "vaddr": "0x43d2930a",
+     "text": "CDIAGER CdUtilCmpData::CompareByteData(const CdUtilCmpData::CMPDATA*)"
+    },
+    {
+     "vaddr": "0x43d2c865",
+     "text": "CDIAGER CdCtrl4KDec::RelMemUnit(__uint32_t, CdCtrl4KDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43d2c8a9",
+     "text": "CDIAGER CdCtrl4KDec::FreeMem(__uint32_t, CdMemType::CMD_PARAM*, CdMemType::RES_PARAM*)"
+    },
+    {
+     "vaddr": "0x43d2c900",
+     "text": "CDIAGER CdCtrl4KDec::CmpData(CdCtrl4KDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43d2c935",
+     "text": "CDIAGER CdCtrl4KDec::RelMemArea(CdCtrl4KDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43d2cf80",
+     "text": "CDIAGER CdCtrl4KDec::AllocMem(__uint32_t, CdMemType::CMD_PARAM*, CdMemType::RES_PARAM*)"
+    },
+    {
+     "vaddr": "0x43d2cfd8",
+     "text": "CDIAGER CdCtrl4KDec::ConfirmDoneCodec(CdCtrl4KDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43d2d016",
+     "text": "CDIAGER CdCtrl4KDec::RunCodec(CdCtrl4KDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43d2d04c",
+     "text": "CDIAGER CdCtrl4KDec::GetMemUnit(__uint32_t, CdCtrl4KDec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43d2d090",
+     "text": "CDIAGER CdCtrl4KRec::AllocMem(__uint32_t, CdMemType::CMD_PARAM*, CdMemType::RES_PARAM*)"
+    },
+    {
+     "vaddr": "0x43d2d0e8",
+     "text": "CDIAGER CdCtrl4KRec::CmpData(CdCtrl4KRec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43d2d11d",
+     "text": "CDIAGER CdCtrl4KRec::GetMemUnit(__uint32_t, CdCtrl4KRec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43d2d161",
+     "text": "CDIAGER CdCtrl4KRec::RelMemArea(CdCtrl4KRec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43d2d199",
+     "text": "CDIAGER CdCtrl4KRec::RelMemUnit(__uint32_t, CdCtrl4KRec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43d2d1eb",
+     "text": "CDIAGER CdCtrl4KRec::FreeMem(__uint32_t, CdMemType::CMD_PARAM*, CdMemType::RES_PARAM*)"
+    },
+    {
+     "vaddr": "0x43d2dd55",
+     "text": "CDIAGER CdCtrl4KRec::ShareMemUnit(__uint32_t, CdCtrl4KRec::DIAGINFO*)"
+    },
+    {
+     "vaddr": "0x43d2dd9b",
+     "text": "CDIAGER CdCtrl4KRec::ShareMem(__uint32_t, CdMemType::CMD_PARAM*, CdMemType::RES_PARAM*)"
+    },
+    {
+     "vaddr": "0x43d2ddf3",
+     "text": "CDIAGER CdCtrl4KRec::SetCodecParam(__uint8_t, __uint8_t, __uint8_t, __uint8_t)"
+    },
+    {
+     "vaddr": "0x43d2de96",
+     "text": "CDIAGER CdCtrl4KRec::SetMemArea(CdCtrl4KRec::DIAGINFO*)"
+    }
+   ]
+  }
+ },
+ "comparison": {
+  "A7S_fw320": {
+   "solo_en_A6000": [],
+   "solo_en_A7S_fw320": [],
+   "comunes": 270
+  },
+  "A6300_fw201": {
+   "solo_en_A6000": [],
+   "solo_en_A6300_fw201": [
+    "[CDIAG][CTRL4KREC]ClkState CHANGED->CLOSE",
+    "[CDIAG][CTRL4KREC]ClkState CHANGING->CHANGED",
+    "[CDIAG][CTRL4KREC]ClkState CLOSE->IDLE",
+    "[CDIAG][CTRL4KREC]ClkState IDLE->OPEN",
+    "[CDIAG][CTRL4KREC]ClkState OPEN->CHANGING",
+    "[CDIAG][CTRL4KREC]ClkState Wait CHANGING",
+    "[CDIAG][CTRL4KREC]ClkState Wait OPEN",
+    "[CDIAG][CTRL4KREC]ClkType [%d] : OK",
+    "[CDIAG][CTRL4KREC]Error index > MAX_MEMTYPE",
+    "[CDIAG][CTRL4KREC]ExecCmd [%s]!!",
+    "[CDIAG][CTRL4KREC]Found File ID [0x%08X]",
+    "[CDIAG][CTRL4KREC]LOOP NUM [0x%02X]",
+    "[CDIAG][CTRL4KREC]MEM ALLOC COUNT NOT 1 [%d]",
+    "[CDIAG][CTRL4KREC]MEM ALLOC err [0x%08X]",
+    "[CDIAG][CTRL4KREC]MEM FREE err [0x%08X]",
+    "[CDIAG][CTRL4KREC]MEM SHARE err [0x%08X]",
+    "[CDIAG][CTRL4KREC]Memory Release ERR!! idx[%d]",
+    "[CDIAG][CTRL4KREC]Memory Set ERR!! idx[%d]",
+    "[CDIAG][CTRL4KREC]Memory Share ERR!! idx[%d]",
+    "[CDIAG][CTRL4KREC]Reg SysV",
+    "[CDIAG][CTRL4KREC]Run Codec Set State STATE_CODEC_CLK_CHANGE",
+    "[CDIAG][CTRL4KREC]UnReg SysV",
+    "[CDIAG][CTRL4KREC][VSYNC] RUN CODEC INIT",
+    "[CDIAG][CTRL4KREC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] fsize[%d] hdl[0x%08X]",
+    "[CDIAG][CTRL4KREC]index[%d] unit[0x%08X] addr[0x%08X] size[%d] hdl[0x%08X]",
+    "[CDIAG][CTRLCORE]Exec CmpData 4K DEC!!",
+    "[CDIAG][CTRLCORE]Exec CmpData 4K REC!!",
+    "[CDIAG][CTRLCORE]Exec ConfirmDoneCodec 4K DEC!!",
+    "[CDIAG][CTRLCORE]Exec ConfirmDoneCodec 4K REC!!",
+    "[CDIAG][CTRLCORE]Exec DbgDiagAvc 4K DEC!!",
+    "[CDIAG][CTRLCORE]Exec DbgDiagAvc 4K REC!!",
+    "[CDIAG][CTRLCORE]Exec RelMemArea 4K DEC!!",
+    "[CDIAG][CTRLCORE]Exec RelMemArea 4K REC!!",
+    "[CDIAG][CTRLCORE]Exec RunCodec 4K DEC!!",
+    "[CDIAG][CTRLCORE]Exec RunCodec 4K REC!!",
+    "[CDIAG][CTRLCORE]Exec SetData 4K DEC!!",
+    "[CDIAG][CTRLCORE]Exec SetData 4K REC!!",
+    "[CDIAG][CTRLCORE]Exec SetMemArea 4K DEC!!",
+    "[CDIAG][CTRLCORE]Exec SetMemArea 4K ENC!!",
+    "[ERR][CDIAG][CTRL4KREC]Invalid File ID!! [0x%08X]"
+   ],
+   "comunes": 270
+  }
+ }
+}

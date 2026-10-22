@@ -1,0 +1,777 @@
+{
+ "module": "CAMERA_MAIN_CC",
+ "rule": "estricta (scan_pic_refs_strict.py)",
+ "n_sites": 47,
+ "n_functions": 29,
+ "functions": [
+  {
+   "func": "0x4379ec84",
+   "func_end": "0x4379ed16",
+   "n_strings": 1,
+   "strings": [
+    {
+     "vaddr": "0x43ca54c8",
+     "text": "[CAMERA_MAIN_CC]: ExtractCaptureData()       [CapMode:%d] [ExposureID:%d] [ContID:%d] [FrameID:%d]",
+     "site": "0x4379ecba"
+    }
+   ]
+  },
+  {
+   "func": "0x4379ed34",
+   "func_end": "0x4379ede8",
+   "n_strings": 1,
+   "strings": [
+    {
+     "vaddr": "0x43ca552b",
+     "text": "[CAMERA_MAIN_CC]: CaptureInit()              [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+     "site": "0x4379ed7a"
+    }
+   ]
+  },
+  {
+   "func": "0x4379ee04",
+   "func_end": "0x4379eec4",
+   "n_strings": 1,
+   "strings": [
+    {
+     "vaddr": "0x43ca55a9",
+     "text": "[CAMERA_MAIN_CC]: SetReadImageParam()        [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+     "site": "0x4379ee4e"
+    }
+   ]
+  },
+  {
+   "func": "0x4379eee0",
+   "func_end": "0x4379ef94",
+   "n_strings": 1,
+   "strings": [
+    {
+     "vaddr": "0x43ca5627",
+     "text": "[CAMERA_MAIN_CC]: SetNRParam()               [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+     "site": "0x4379ef26"
+    }
+   ]
+  },
+  {
+   "func": "0x4379efb0",
+   "func_end": "0x4379f064",
+   "n_strings": 1,
+   "strings": [
+    {
+     "vaddr": "0x43ca56a5",
+     "text": "[CAMERA_MAIN_CC]: SetOPDParam()              [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+     "site": "0x4379eff6"
+    }
+   ]
+  },
+  {
+   "func": "0x4379f080",
+   "func_end": "0x4379f134",
+   "n_strings": 1,
+   "strings": [
+    {
+     "vaddr": "0x43ca5723",
+     "text": "[CAMERA_MAIN_CC]: AfterOPDAfterNR()          [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+     "site": "0x4379f0c6"
+    }
+   ]
+  },
+  {
+   "func": "0x4379f150",
+   "func_end": "0x4379f204",
+   "n_strings": 1,
+   "strings": [
+    {
+     "vaddr": "0x43ca57a1",
+     "text": "[CAMERA_MAIN_CC]: SetDevelopParam()          [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+     "site": "0x4379f196"
+    }
+   ]
+  },
+  {
+   "func": "0x4379f220",
+   "func_end": "0x4379f2d4",
+   "n_strings": 1,
+   "strings": [
+    {
+     "vaddr": "0x43ca581f",
+     "text": "[CAMERA_MAIN_CC]: SetDevDetectDevelopParam() [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+     "site": "0x4379f266"
+    }
+   ]
+  },
+  {
+   "func": "0x4379f2f0",
+   "func_end": "0x4379f3a6",
+   "n_strings": 1,
+   "strings": [
+    {
+     "vaddr": "0x43ca589d",
+     "text": "[CAMERA_MAIN_CC]: DetectYC()                 [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+     "site": "0x4379f336"
+    }
+   ]
+  },
+  {
+   "func": "0x4379f3c0",
+   "func_end": "0x4379f47c",
+   "n_strings": 1,
+   "strings": [
+    {
+     "vaddr": "0x43ca591b",
+     "text": "[CAMERA_MAIN_CC]: SetDualRecParam()          [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+     "site": "0x4379f406"
+    }
+   ]
+  },
+  {
+   "func": "0x4379f498",
+   "func_end": "0x4379f568",
+   "n_strings": 1,
+   "strings": [
+    {
+     "vaddr": "0x43ca5999",
+     "text": "[CAMERA_MAIN_CC]: SetDAEParam()              [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+     "site": "0x4379f4dc"
+    }
+   ]
+  },
+  {
+   "func": "0x4379f586",
+   "func_end": "0x4379f604",
+   "n_strings": 1,
+   "strings": [
+    {
+     "vaddr": "0x43ca5a17",
+     "text": "[CAMERA_MAIN_CC]: SetBdroIdtData()           [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+     "site": "0x4379f5c6"
+    }
+   ]
+  },
+  {
+   "func": "0x4379f618",
+   "func_end": "0x4379f6cc",
+   "n_strings": 1,
+   "strings": [
+    {
+     "vaddr": "0x43ca5a95",
+     "text": "[CAMERA_MAIN_CC]: SetSACCParam()             [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+     "site": "0x4379f65e"
+    }
+   ]
+  },
+  {
+   "func": "0x4379f6ea",
+   "func_end": "0x4379f730",
+   "n_strings": 1,
+   "strings": [
+    {
+     "vaddr": "0x43ca5b13",
+     "text": "[CAMERA_MAIN_CC]: SetSACCSaEndParam()",
+     "site": "0x4379f706"
+    }
+   ]
+  },
+  {
+   "func": "0x4379f744",
+   "func_end": "0x4379f7f8",
+   "n_strings": 1,
+   "strings": [
+    {
+     "vaddr": "0x43ca5b39",
+     "text": "[CAMERA_MAIN_CC]: WriteExifMakernote()       [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+     "site": "0x4379f78a"
+    }
+   ]
+  },
+  {
+   "func": "0x4379f814",
+   "func_end": "0x4379f8c6",
+   "n_strings": 1,
+   "strings": [
+    {
+     "vaddr": "0x43ca5c35",
+     "text": "[CAMERA_MAIN_CC]: SetPlayRawDevDetectDevelop [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+     "site": "0x4379f858"
+    }
+   ]
+  },
+  {
+   "func": "0x4379f8e0",
+   "func_end": "0x4379f992",
+   "n_strings": 1,
+   "strings": [
+    {
+     "vaddr": "0x43ca5cb3",
+     "text": "[CAMERA_MAIN_CC]: SetPlayRawDevelopParam()   [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+     "site": "0x4379f924"
+    }
+   ]
+  },
+  {
+   "func": "0x4379f9ac",
+   "func_end": "0x4379fa60",
+   "n_strings": 1,
+   "strings": [
+    {
+     "vaddr": "0x43ca5daf",
+     "text": "[CAMERA_MAIN_CC]: SetReviewDevelopParam()       [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+     "site": "0x4379f9f2"
+    }
+   ]
+  },
+  {
+   "func": "0x4379fb48",
+   "func_end": "0x4379fc02",
+   "n_strings": 1,
+   "strings": [
+    {
+     "vaddr": "0x43ca5e30",
+     "text": "[CAMERA_MAIN_CC]: WriteSACCMakerNote()       [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+     "site": "0x4379fb92"
+    }
+   ]
+  },
+  {
+   "func": "0x437a1a7e",
+   "func_end": "0x437a1ce0",
+   "n_strings": 5,
+   "strings": [
+    {
+     "vaddr": "0x43ca5f0a",
+     "text": "[CAMERA_MAIN_CC]: LutMode Change SA %02X <- %02X",
+     "site": "0x437a1bde"
+    },
+    {
+     "vaddr": "0x43ca5f3b",
+     "text": "[CAMERA_MAIN_CC]: LutMode Change CAP %02X <- %02X",
+     "site": "0x437a1bfa"
+    },
+    {
+     "vaddr": "0x43ca5f6d",
+     "text": "[CAMERA_MAIN_CC]: LutMode Change MOV/MON %02X <- %02X",
+     "site": "0x437a1c16"
+    },
+    {
+     "vaddr": "0x43ca5fa3",
+     "text": "[CAMERA_MAIN_CC]: IsSplit Change [%02X] -> [%02X]",
+     "site": "0x437a1c62"
+    },
+    {
+     "vaddr": "0x43ca5fd5",
+     "text": "[CAMERA_MAIN_CC]: uc_sync = [%02X]",
+     "site": "0x437a1cae"
+    }
+   ]
+  },
+  {
+   "func": "0x437a1d7e",
+   "func_end": "0x437a24ae",
+   "n_strings": 6,
+   "strings": [
+    {
+     "vaddr": "0x43ca5ff8",
+     "text": "[CAMERA_MAIN_CC]: Create3DLUT 0x%X > 0x%X Level:%d ConvSD:%d BlkOfs Cr:%X, Cb:%X",
+     "site": "0x437a1fc2"
+    },
+    {
+     "vaddr": "0x43ca6049",
+     "text": "[CAMERA_MAIN_CC]: Create3DLUT  NullError RefAdr:0x%X BufAdr:0x%X",
+     "site": "0x437a2002"
+    },
+    {
+     "vaddr": "0x43ca608a",
+     "text": "[CAMERA_MAIN_CC]: Copy3DLUT 0x%X > 0x%X ",
+     "site": "0x437a2344"
+    },
+    {
+     "vaddr": "0x43ca60b3",
+     "text": "[CAMERA_MAIN_CC]: Copy3DLUT NullError RefAdr:0x%X BufAdr:0x%X",
+     "site": "0x437a236c"
+    },
+    {
+     "vaddr": "0x43ca60f1",
+     "text": "[CAMERA_MAIN_CC]: Copy2DLUT 0x%X > 0x%X ",
+     "site": "0x437a2404"
+    },
+    {
+     "vaddr": "0x43ca611a",
+     "text": "[CAMERA_MAIN_CC]: Copy2DLUT NullError RefAdr:0x%X BufAdr:0x%X",
+     "site": "0x437a242c"
+    }
+   ]
+  },
+  {
+   "func": "0x437a24fc",
+   "func_end": "0x437a27b2",
+   "n_strings": 1,
+   "strings": [
+    {
+     "vaddr": "0x43ca6158",
+     "text": "[CAMERA_MAIN_CC]: LUT Write Cnt:%d ",
+     "site": "0x437a2782"
+    }
+   ]
+  },
+  {
+   "func": "0x437a6890",
+   "func_end": "0x437a6be4",
+   "n_strings": 5,
+   "strings": [
+    {
+     "vaddr": "0x43ca6470",
+     "text": "[CAMERA_MAIN_CC]: IE     Error Null Address",
+     "site": "0x437a68d6"
+    },
+    {
+     "vaddr": "0x43ca649c",
+     "text": "[CAMERA_MAIN_CC]: IE     Error Status[errorCode:   %08x]",
+     "site": "0x437a691c"
+    },
+    {
+     "vaddr": "0x43ca64d5",
+     "text": "[CAMERA_MAIN_CC]: IE     Hold SCAN AF etc",
+     "site": "0x437a6984"
+    },
+    {
+     "vaddr": "0x43ca64ff",
+     "text": "[CAMERA_MAIN_CC]: IE     Get   [LightNum:   %2d][MapNum:   %2d][ResAdress:%10lx] ",
+     "site": "0x437a6b60"
+    },
+    {
+     "vaddr": "0x43ca6551",
+     "text": "[CAMERA_MAIN_CC]: IE     Get sync closed NG ",
+     "site": "0x437a6b9a"
+    }
+   ]
+  },
+  {
+   "func": "0x437a7e00",
+   "func_end": "0x437a7e3a",
+   "n_strings": 1,
+   "strings": [
+    {
+     "vaddr": "0x43ca657e",
+     "text": "[CAMERA_MAIN_CC]: IE Invalid Light or Map Number   [num:%2d   ] ",
+     "site": "0x437a7e1e"
+    }
+   ]
+  },
+  {
+   "func": "0x437a7e90",
+   "func_end": "0x437a80a6",
+   "n_strings": 2,
+   "strings": [
+    {
+     "vaddr": "0x43ca65bf",
+     "text": "[CAMERA_MAIN_CC]: IE Set       [LightNum:%2d   ][MapNum:%2d   ] ",
+     "site": "0x437a7f24"
+    },
+    {
+     "vaddr": "0x43ca6600",
+     "text": "[CAMERA_MAIN_CC]: IE     Set init NG ",
+     "site": "0x437a8090"
+    }
+   ]
+  },
+  {
+   "func": "0x437a8fac",
+   "func_end": "0x437a9552",
+   "n_strings": 2,
+   "strings": [
+    {
+     "vaddr": "0x43ca665e",
+     "text": "[CAMERA_MAIN_CC]: CC miniRaw Size Error [width: %3d][height: %3d] ",
+     "site": "0x437a9314"
+    },
+    {
+     "vaddr": "0x43ca66a1",
+     "text": "[CAMERA_MAIN_CC]: CC miniRaw norm Size Error [width: %3d][height: %3d] ",
+     "site": "0x437a9422"
+    }
+   ]
+  },
+  {
+   "func": "0x437ada6e",
+   "func_end": "0x437adaee",
+   "n_strings": 1,
+   "strings": [
+    {
+     "vaddr": "0x43ca6805",
+     "text": "[CAMERA_MAIN_CC]: CC::WriteMakerNotePlayRaw [err %d] [CcTagDaraSize %d] [CC_PLAYRAW_MAKERNOTE SIZE %d] ",
+     "site": "0x437adad0"
+    }
+   ]
+  },
+  {
+   "func": "0x437adafe",
+   "func_end": "0x437adb74",
+   "n_strings": 1,
+   "strings": [
+    {
+     "vaddr": "0x43ca686d",
+     "text": "[CAMERA_MAIN_CC]: CC::SetExtOutputMakerNotePlayRaw [err %d] [CcTagDaraSize %d] [CC_PLAYRAW_MAKERNOTE SIZE %d] ",
+     "site": "0x437adb48"
+    }
+   ]
+  },
+  {
+   "func": "0x4381d296",
+   "func_end": "0x4381d386",
+   "n_strings": 4,
+   "strings": [
+    {
+     "vaddr": "0x43cb4cd3",
+     "text": "[CAMERA_MAIN_CC]: CamCore 3D-Lut table Write Start",
+     "site": "0x4381d2ec"
+    },
+    {
+     "vaddr": "0x43cb4d06",
+     "text": "[CAMERA_MAIN_CC]: CamCore 3D-Lut table Write End",
+     "site": "0x4381d31c"
+    },
+    {
+     "vaddr": "0x43cb4d37",
+     "text": "[CAMERA_MAIN_CC]: CamCore Change 3D-Lut %X",
+     "site": "0x4381d336"
+    },
+    {
+     "vaddr": "0x43cb4d62",
+     "text": "[CAMERA_MAIN_CC]: CamCore GetBaseAddress  %X",
+     "site": "0x4381d350"
+    }
+   ]
+  }
+ ],
+ "xrefs": [
+  {
+   "string": "0x43ca54c8",
+   "text": "[CAMERA_MAIN_CC]: ExtractCaptureData()       [CapMode:%d] [ExposureID:%d] [ContID:%d] [FrameID:%d]",
+   "site": "0x4379ecba",
+   "func": "0x4379ec84",
+   "func_end": "0x4379ed16"
+  },
+  {
+   "string": "0x43ca552b",
+   "text": "[CAMERA_MAIN_CC]: CaptureInit()              [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+   "site": "0x4379ed7a",
+   "func": "0x4379ed34",
+   "func_end": "0x4379ede8"
+  },
+  {
+   "string": "0x43ca55a9",
+   "text": "[CAMERA_MAIN_CC]: SetReadImageParam()        [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+   "site": "0x4379ee4e",
+   "func": "0x4379ee04",
+   "func_end": "0x4379eec4"
+  },
+  {
+   "string": "0x43ca5627",
+   "text": "[CAMERA_MAIN_CC]: SetNRParam()               [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+   "site": "0x4379ef26",
+   "func": "0x4379eee0",
+   "func_end": "0x4379ef94"
+  },
+  {
+   "string": "0x43ca56a5",
+   "text": "[CAMERA_MAIN_CC]: SetOPDParam()              [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+   "site": "0x4379eff6",
+   "func": "0x4379efb0",
+   "func_end": "0x4379f064"
+  },
+  {
+   "string": "0x43ca5723",
+   "text": "[CAMERA_MAIN_CC]: AfterOPDAfterNR()          [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+   "site": "0x4379f0c6",
+   "func": "0x4379f080",
+   "func_end": "0x4379f134"
+  },
+  {
+   "string": "0x43ca57a1",
+   "text": "[CAMERA_MAIN_CC]: SetDevelopParam()          [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+   "site": "0x4379f196",
+   "func": "0x4379f150",
+   "func_end": "0x4379f204"
+  },
+  {
+   "string": "0x43ca581f",
+   "text": "[CAMERA_MAIN_CC]: SetDevDetectDevelopParam() [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+   "site": "0x4379f266",
+   "func": "0x4379f220",
+   "func_end": "0x4379f2d4"
+  },
+  {
+   "string": "0x43ca589d",
+   "text": "[CAMERA_MAIN_CC]: DetectYC()                 [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+   "site": "0x4379f336",
+   "func": "0x4379f2f0",
+   "func_end": "0x4379f3a6"
+  },
+  {
+   "string": "0x43ca591b",
+   "text": "[CAMERA_MAIN_CC]: SetDualRecParam()          [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+   "site": "0x4379f406",
+   "func": "0x4379f3c0",
+   "func_end": "0x4379f47c"
+  },
+  {
+   "string": "0x43ca5999",
+   "text": "[CAMERA_MAIN_CC]: SetDAEParam()              [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+   "site": "0x4379f4dc",
+   "func": "0x4379f498",
+   "func_end": "0x4379f568"
+  },
+  {
+   "string": "0x43ca5a17",
+   "text": "[CAMERA_MAIN_CC]: SetBdroIdtData()           [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+   "site": "0x4379f5c6",
+   "func": "0x4379f586",
+   "func_end": "0x4379f604"
+  },
+  {
+   "string": "0x43ca5a95",
+   "text": "[CAMERA_MAIN_CC]: SetSACCParam()             [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+   "site": "0x4379f65e",
+   "func": "0x4379f618",
+   "func_end": "0x4379f6cc"
+  },
+  {
+   "string": "0x43ca5b13",
+   "text": "[CAMERA_MAIN_CC]: SetSACCSaEndParam()",
+   "site": "0x4379f706",
+   "func": "0x4379f6ea",
+   "func_end": "0x4379f730"
+  },
+  {
+   "string": "0x43ca5b39",
+   "text": "[CAMERA_MAIN_CC]: WriteExifMakernote()       [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+   "site": "0x4379f78a",
+   "func": "0x4379f744",
+   "func_end": "0x4379f7f8"
+  },
+  {
+   "string": "0x43ca5c35",
+   "text": "[CAMERA_MAIN_CC]: SetPlayRawDevDetectDevelop [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+   "site": "0x4379f858",
+   "func": "0x4379f814",
+   "func_end": "0x4379f8c6"
+  },
+  {
+   "string": "0x43ca5cb3",
+   "text": "[CAMERA_MAIN_CC]: SetPlayRawDevelopParam()   [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+   "site": "0x4379f924",
+   "func": "0x4379f8e0",
+   "func_end": "0x4379f992"
+  },
+  {
+   "string": "0x43ca5daf",
+   "text": "[CAMERA_MAIN_CC]: SetReviewDevelopParam()       [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+   "site": "0x4379f9f2",
+   "func": "0x4379f9ac",
+   "func_end": "0x4379fa60"
+  },
+  {
+   "string": "0x43ca5e30",
+   "text": "[CAMERA_MAIN_CC]: WriteSACCMakerNote()       [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d] [BDRObase:%d] [FrameID:%d]",
+   "site": "0x4379fb92",
+   "func": "0x4379fb48",
+   "func_end": "0x4379fc02"
+  },
+  {
+   "string": "0x43ca5f0a",
+   "text": "[CAMERA_MAIN_CC]: LutMode Change SA %02X <- %02X",
+   "site": "0x437a1bde",
+   "func": "0x437a1a7e",
+   "func_end": "0x437a1ce0"
+  },
+  {
+   "string": "0x43ca5f3b",
+   "text": "[CAMERA_MAIN_CC]: LutMode Change CAP %02X <- %02X",
+   "site": "0x437a1bfa",
+   "func": "0x437a1a7e",
+   "func_end": "0x437a1ce0"
+  },
+  {
+   "string": "0x43ca5f6d",
+   "text": "[CAMERA_MAIN_CC]: LutMode Change MOV/MON %02X <- %02X",
+   "site": "0x437a1c16",
+   "func": "0x437a1a7e",
+   "func_end": "0x437a1ce0"
+  },
+  {
+   "string": "0x43ca5fa3",
+   "text": "[CAMERA_MAIN_CC]: IsSplit Change [%02X] -> [%02X]",
+   "site": "0x437a1c62",
+   "func": "0x437a1a7e",
+   "func_end": "0x437a1ce0"
+  },
+  {
+   "string": "0x43ca5fd5",
+   "text": "[CAMERA_MAIN_CC]: uc_sync = [%02X]",
+   "site": "0x437a1cae",
+   "func": "0x437a1a7e",
+   "func_end": "0x437a1ce0"
+  },
+  {
+   "string": "0x43ca5ff8",
+   "text": "[CAMERA_MAIN_CC]: Create3DLUT 0x%X > 0x%X Level:%d ConvSD:%d BlkOfs Cr:%X, Cb:%X",
+   "site": "0x437a1fc2",
+   "func": "0x437a1d7e",
+   "func_end": "0x437a24ae"
+  },
+  {
+   "string": "0x43ca6049",
+   "text": "[CAMERA_MAIN_CC]: Create3DLUT  NullError RefAdr:0x%X BufAdr:0x%X",
+   "site": "0x437a2002",
+   "func": "0x437a1d7e",
+   "func_end": "0x437a24ae"
+  },
+  {
+   "string": "0x43ca608a",
+   "text": "[CAMERA_MAIN_CC]: Copy3DLUT 0x%X > 0x%X ",
+   "site": "0x437a2344",
+   "func": "0x437a1d7e",
+   "func_end": "0x437a24ae"
+  },
+  {
+   "string": "0x43ca60b3",
+   "text": "[CAMERA_MAIN_CC]: Copy3DLUT NullError RefAdr:0x%X BufAdr:0x%X",
+   "site": "0x437a236c",
+   "func": "0x437a1d7e",
+   "func_end": "0x437a24ae"
+  },
+  {
+   "string": "0x43ca60f1",
+   "text": "[CAMERA_MAIN_CC]: Copy2DLUT 0x%X > 0x%X ",
+   "site": "0x437a2404",
+   "func": "0x437a1d7e",
+   "func_end": "0x437a24ae"
+  },
+  {
+   "string": "0x43ca611a",
+   "text": "[CAMERA_MAIN_CC]: Copy2DLUT NullError RefAdr:0x%X BufAdr:0x%X",
+   "site": "0x437a242c",
+   "func": "0x437a1d7e",
+   "func_end": "0x437a24ae"
+  },
+  {
+   "string": "0x43ca6158",
+   "text": "[CAMERA_MAIN_CC]: LUT Write Cnt:%d ",
+   "site": "0x437a2782",
+   "func": "0x437a24fc",
+   "func_end": "0x437a27b2"
+  },
+  {
+   "string": "0x43ca6470",
+   "text": "[CAMERA_MAIN_CC]: IE     Error Null Address",
+   "site": "0x437a68d6",
+   "func": "0x437a6890",
+   "func_end": "0x437a6be4"
+  },
+  {
+   "string": "0x43ca649c",
+   "text": "[CAMERA_MAIN_CC]: IE     Error Status[errorCode:   %08x]",
+   "site": "0x437a691c",
+   "func": "0x437a6890",
+   "func_end": "0x437a6be4"
+  },
+  {
+   "string": "0x43ca64d5",
+   "text": "[CAMERA_MAIN_CC]: IE     Hold SCAN AF etc",
+   "site": "0x437a6984",
+   "func": "0x437a6890",
+   "func_end": "0x437a6be4"
+  },
+  {
+   "string": "0x43ca64ff",
+   "text": "[CAMERA_MAIN_CC]: IE     Get   [LightNum:   %2d][MapNum:   %2d][ResAdress:%10lx] ",
+   "site": "0x437a6b60",
+   "func": "0x437a6890",
+   "func_end": "0x437a6be4"
+  },
+  {
+   "string": "0x43ca6551",
+   "text": "[CAMERA_MAIN_CC]: IE     Get sync closed NG ",
+   "site": "0x437a6b9a",
+   "func": "0x437a6890",
+   "func_end": "0x437a6be4"
+  },
+  {
+   "string": "0x43ca657e",
+   "text": "[CAMERA_MAIN_CC]: IE Invalid Light or Map Number   [num:%2d   ] ",
+   "site": "0x437a7e1e",
+   "func": "0x437a7e00",
+   "func_end": "0x437a7e3a"
+  },
+  {
+   "string": "0x43ca65bf",
+   "text": "[CAMERA_MAIN_CC]: IE Set       [LightNum:%2d   ][MapNum:%2d   ] ",
+   "site": "0x437a7f24",
+   "func": "0x437a7e90",
+   "func_end": "0x437a80a6"
+  },
+  {
+   "string": "0x43ca6600",
+   "text": "[CAMERA_MAIN_CC]: IE     Set init NG ",
+   "site": "0x437a8090",
+   "func": "0x437a7e90",
+   "func_end": "0x437a80a6"
+  },
+  {
+   "string": "0x43ca665e",
+   "text": "[CAMERA_MAIN_CC]: CC miniRaw Size Error [width: %3d][height: %3d] ",
+   "site": "0x437a9314",
+   "func": "0x437a8fac",
+   "func_end": "0x437a9552"
+  },
+  {
+   "string": "0x43ca66a1",
+   "text": "[CAMERA_MAIN_CC]: CC miniRaw norm Size Error [width: %3d][height: %3d] ",
+   "site": "0x437a9422",
+   "func": "0x437a8fac",
+   "func_end": "0x437a9552"
+  },
+  {
+   "string": "0x43ca6805",
+   "text": "[CAMERA_MAIN_CC]: CC::WriteMakerNotePlayRaw [err %d] [CcTagDaraSize %d] [CC_PLAYRAW_MAKERNOTE SIZE %d] ",
+   "site": "0x437adad0",
+   "func": "0x437ada6e",
+   "func_end": "0x437adaee"
+  },
+  {
+   "string": "0x43ca686d",
+   "text": "[CAMERA_MAIN_CC]: CC::SetExtOutputMakerNotePlayRaw [err %d] [CcTagDaraSize %d] [CC_PLAYRAW_MAKERNOTE SIZE %d] ",
+   "site": "0x437adb48",
+   "func": "0x437adafe",
+   "func_end": "0x437adb74"
+  },
+  {
+   "string": "0x43cb4cd3",
+   "text": "[CAMERA_MAIN_CC]: CamCore 3D-Lut table Write Start",
+   "site": "0x4381d2ec",
+   "func": "0x4381d296",
+   "func_end": "0x4381d386"
+  },
+  {
+   "string": "0x43cb4d06",
+   "text": "[CAMERA_MAIN_CC]: CamCore 3D-Lut table Write End",
+   "site": "0x4381d31c",
+   "func": "0x4381d296",
+   "func_end": "0x4381d386"
+  },
+  {
+   "string": "0x43cb4d37",
+   "text": "[CAMERA_MAIN_CC]: CamCore Change 3D-Lut %X",
+   "site": "0x4381d336",
+   "func": "0x4381d296",
+   "func_end": "0x4381d386"
+  },
+  {
+   "string": "0x43cb4d62",
+   "text": "[CAMERA_MAIN_CC]: CamCore GetBaseAddress  %X",
+   "site": "0x4381d350",
+   "func": "0x4381d296",
+   "func_end": "0x4381d386"
+  }
+ ]
+}

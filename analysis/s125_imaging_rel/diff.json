@@ -1,0 +1,1830 @@
+{
+ "base": "0x43541000",
+ "modules": {
+  "IMAGING_REL": {
+   "prefix": "[IMAGING_REL]: ",
+   "n_a6000": 31,
+   "n_cores": 31,
+   "per_profile": {
+    "A7S": {
+     "n_comunes": 30,
+     "n_solo_a6000": 1,
+     "solo_a6000": [
+      "(%d,%d,%d)"
+     ],
+     "comunes": [
+      {
+       "text": "CapIdTblMgr) CheckCapIDAvailability irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x)",
+       "vaddr": [
+        "0x43caa63b"
+       ]
+      },
+      {
+       "text": "CapIdTblMgr) ClearInnerRP           irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x)",
+       "vaddr": [
+        "0x43caa58d"
+       ]
+      },
+      {
+       "text": "CapIdTblMgr) ClearInnerRPCapIdIdx   irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x)",
+       "vaddr": [
+        "0x43caa536"
+       ]
+      },
+      {
+       "text": "CapIdTblMgr) GetCaptureID           irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x)",
+       "vaddr": [
+        "0x43caa692"
+       ]
+      },
+      {
+       "text": "CapIdTblMgr) IncrementInnerRP       irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x) cnum(%x)",
+       "vaddr": [
+        "0x43caa4d6"
+       ]
+      },
+      {
+       "text": "CapIdTblMgr) IncrementRP            irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x)",
+       "vaddr": [
+        "0x43caa5e4"
+       ]
+      },
+      {
+       "text": "CapIdTblMgr) Initialize irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x)",
+       "vaddr": [
+        "0x43caa48b"
+       ]
+      },
+      {
+       "text": "CapIdTblMgrIf) GetTblAddr Cmp To   %08X",
+       "vaddr": [
+        "0x43cb5215"
+       ]
+      },
+      {
+       "text": "CapIdTblMgrIf) GetTblAddr Req From %08X",
+       "vaddr": [
+        "0x43cb51ed"
+       ]
+      },
+      {
+       "text": "CapIdTblMgrIf) Init End",
+       "vaddr": [
+        "0x43cb5185"
+       ]
+      },
+      {
+       "text": "CapIdTblMgrIf) StartAccess Cmp To %08X",
+       "vaddr": [
+        "0x43cb5135"
+       ]
+      },
+      {
+       "text": "CapIdTblMgrIf) StartAccess Req From %08X",
+       "vaddr": [
+        "0x43cb515c"
+       ]
+      },
+      {
+       "text": "CapIdTblMgrIf) StopAccess Cmp To   %08X",
+       "vaddr": [
+        "0x43cb51c5"
+       ]
+      },
+      {
+       "text": "CapIdTblMgrIf) StopAccess Req From %08X",
+       "vaddr": [
+        "0x43cb519d"
+       ]
+      },
+      {
+       "text": "CapIdTblMgrIf) pop queue StartAccess From %08X",
+       "vaddr": [
+        "0x43cb523d"
+       ]
+      },
+      {
+       "text": "NoMprCap InnerRp Clear!!",
+       "vaddr": [
+        "0x43caa784"
+       ]
+      },
+      {
+       "text": "NotifyEEStartEnable (%08X)",
+       "vaddr": [
+        "0x43ca66d1"
+       ]
+      },
+      {
+       "text": "RelKey) %02d: %02d",
+       "vaddr": [
+        "0x43ca2c31"
+       ]
+      },
+      {
+       "text": "RelLock) You may forget to hold down the LOCK key...",
+       "vaddr": [
+        "0x43caa74f"
+       ]
+      },
+      {
+       "text": "RelMgr) <ExecMsg> CLEAR_INNER_RP %d",
+       "vaddr": [
+        "0x43ca2cea"
+       ]
+      },
+      {
+       "text": "RelMgr) <ExecMsg> CLEAR_INNER_RP_CAPID_IDX %d",
+       "vaddr": [
+        "0x43ca2cbc"
+       ]
+      },
+      {
+       "text": "RelMgr) Invalid RelLock Factor %08x",
+       "vaddr": [
+        "0x43ca2d0e"
+       ]
+      },
+      {
+       "text": "RelQueue) err. queue is empty (PopBack)",
+       "vaddr": [
+        "0x43cb5093"
+       ]
+      },
+      {
+       "text": "RelQueue) err. queue is empty (PopFront)",
+       "vaddr": [
+        "0x43cb50bb"
+       ]
+      },
+      {
+       "text": "RelQueue) err. queue is full (PushBack)",
+       "vaddr": [
+        "0x43cb510d"
+       ]
+      },
+      {
+       "text": "RelQueue) err. queue is full (PushFront)",
+       "vaddr": [
+        "0x43cb50e4"
+       ]
+      },
+      {
+       "text": "Spinal) osal_free_timer: err %x",
+       "vaddr": [
+        "0x43ca2d32"
+       ]
+      },
+      {
+       "text": "Unknown REL_EVT (%02X)",
+       "vaddr": [
+        "0x43ca2ca5"
+       ]
+      },
+      {
+       "text": "it is a strange trig in IsNeedForceS1ON : %d",
+       "vaddr": [
+        "0x43ca2c44"
+       ]
+      },
+      {
+       "text": "remote capture cancel due to camuser's release lock",
+       "vaddr": [
+        "0x43ca2c71"
+       ]
+      }
+     ],
+     "n_own": 0,
+     "own": []
+    },
+    "A6300": {
+     "n_comunes": 22,
+     "n_solo_a6000": 9,
+     "solo_a6000": [
+      "(%d,%d,%d)",
+      "RelKey) %02d: %02d",
+      "RelMgr) <ExecMsg> CLEAR_INNER_RP %d",
+      "RelMgr) <ExecMsg> CLEAR_INNER_RP_CAPID_IDX %d",
+      "RelMgr) Invalid RelLock Factor %08x",
+      "RelQueue) err. queue is empty (PopBack)",
+      "RelQueue) err. queue is full (PushFront)",
+      "Spinal) osal_free_timer: err %x",
+      "remote capture cancel due to camuser's release lock"
+     ],
+     "comunes": [
+      {
+       "text": "CapIdTblMgr) CheckCapIDAvailability irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x)",
+       "vaddr": [
+        "0x43db0c82"
+       ]
+      },
+      {
+       "text": "CapIdTblMgr) ClearInnerRP           irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x)",
+       "vaddr": [
+        "0x43db0de7"
+       ]
+      },
+      {
+       "text": "CapIdTblMgr) ClearInnerRPCapIdIdx   irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x)",
+       "vaddr": [
+        "0x43db0e3e"
+       ]
+      },
+      {
+       "text": "CapIdTblMgr) GetCaptureID           irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x)",
+       "vaddr": [
+        "0x43db0d90"
+       ]
+      },
+      {
+       "text": "CapIdTblMgr) IncrementInnerRP       irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x) cnum(%x)",
+       "vaddr": [
+        "0x43db0d30"
+       ]
+      },
+      {
+       "text": "CapIdTblMgr) IncrementRP            irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x)",
+       "vaddr": [
+        "0x43db0cd9"
+       ]
+      },
+      {
+       "text": "CapIdTblMgr) Initialize irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x)",
+       "vaddr": [
+        "0x43db0be9"
+       ]
+      },
+      {
+       "text": "CapIdTblMgrIf) GetTblAddr Cmp To   %08X",
+       "vaddr": [
+        "0x43dcea92"
+       ]
+      },
+      {
+       "text": "CapIdTblMgrIf) GetTblAddr Req From %08X",
+       "vaddr": [
+        "0x43dcea6a"
+       ]
+      },
+      {
+       "text": "CapIdTblMgrIf) Init End",
+       "vaddr": [
+        "0x43dce9d9"
+       ]
+      },
+      {
+       "text": "CapIdTblMgrIf) StartAccess Cmp To %08X",
+       "vaddr": [
+        "0x43dce9b2"
+       ]
+      },
+      {
+       "text": "CapIdTblMgrIf) StartAccess Req From %08X",
+       "vaddr": [
+        "0x43dce9f1"
+       ]
+      },
+      {
+       "text": "CapIdTblMgrIf) StopAccess Cmp To   %08X",
+       "vaddr": [
+        "0x43dcea42"
+       ]
+      },
+      {
+       "text": "CapIdTblMgrIf) StopAccess Req From %08X",
+       "vaddr": [
+        "0x43dcea1a"
+       ]
+      },
+      {
+       "text": "CapIdTblMgrIf) pop queue StartAccess From %08X",
+       "vaddr": [
+        "0x43dcead9"
+       ]
+      },
+      {
+       "text": "NoMprCap InnerRp Clear!!",
+       "vaddr": [
+        "0x43da6f04"
+       ]
+      },
+      {
+       "text": "NotifyEEStartEnable (%08X)",
+       "vaddr": [
+        "0x43daaeac"
+       ]
+      },
+      {
+       "text": "RelLock) You may forget to hold down the LOCK key...",
+       "vaddr": [
+        "0x43db0f1c"
+       ]
+      },
+      {
+       "text": "RelQueue) err. queue is empty (PopFront)",
+       "vaddr": [
+        "0x43dce961"
+       ]
+      },
+      {
+       "text": "RelQueue) err. queue is full (PushBack)",
+       "vaddr": [
+        "0x43dce98a"
+       ]
+      },
+      {
+       "text": "Unknown REL_EVT (%02X)",
+       "vaddr": [
+        "0x43da6eed"
+       ]
+      },
+      {
+       "text": "it is a strange trig in IsNeedForceS1ON : %d",
+       "vaddr": [
+        "0x43da6e90"
+       ]
+      }
+     ],
+     "n_own": 2,
+     "own": [
+      {
+       "offset": "0x86fc34",
+       "vaddr": "0x43db0c34",
+       "text": "CapIdTblMgr) SetMprInitEnd irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x)"
+      },
+      {
+       "offset": "0x88daba",
+       "vaddr": "0x43dceaba",
+       "text": "CapIdTblMgrIf) Unknown massage"
+      }
+     ]
+    }
+   },
+   "tags": [
+    "CapIdTblMgr)",
+    "CapIdTblMgrIf)",
+    "RelKey)",
+    "RelLock)",
+    "RelMgr)",
+    "RelQueue)",
+    "Spinal)"
+   ]
+  },
+  "IMAGING": {
+   "prefix": "[IMAGING]: ",
+   "n_a6000": 120,
+   "n_cores": 120,
+   "per_profile": {
+    "A7S": {
+     "n_comunes": 115,
+     "n_solo_a6000": 5,
+     "solo_a6000": [
+      "[PanoramaSweepEnd] Err! %s:%d",
+      "[PanoramaSweepEnd] Err: 0x%08x, status: 0x%08x",
+      "[PanoramaSweepEnd] cmp_checkFillResidual() Err! %s:%d",
+      "[PanoramaSweepEnd] cmp_execStitchPreProcess() Err! %s:%d",
+      "[seq_panoramaParallelStitch][OK] StitchProc ALL OK : %s:%d"
+     ],
+     "comunes": [
+      {
+       "text": "%s:%d \n",
+       "vaddr": [
+        "0x43caf94f"
+       ]
+      },
+      {
+       "text": "FATAL! %s:%d",
+       "vaddr": [
+        "0x43ca1f9d"
+       ]
+      },
+      {
+       "text": "FATAL! %s:%d [0x%x]",
+       "vaddr": [
+        "0x43ca4052"
+       ]
+      },
+      {
+       "text": "[Jpeg Close Callback] ercd: 0x%08x",
+       "vaddr": [
+        "0x43cafdd5"
+       ]
+      },
+      {
+       "text": "[Jpeg Open Callback] ercd: 0x%08x",
+       "vaddr": [
+        "0x43cafdf8"
+       ]
+      },
+      {
+       "text": "[PanoramaResizeEncode] End  err: 0x%08x",
+       "vaddr": [
+        "0x43caf608"
+       ]
+      },
+      {
+       "text": "[PanoramaResizeEncode] Err Dir: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf4b6"
+       ]
+      },
+      {
+       "text": "[PanoramaResizeEncode] Err Mode: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf486"
+       ]
+      },
+      {
+       "text": "[PanoramaResizeEncode] Err seq_bigImageResizeEncode(): 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf4e5"
+       ]
+      },
+      {
+       "text": "[PanoramaResizeEncode][JpegResizeEncodeInfo] UnitClose() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf5bb"
+       ]
+      },
+      {
+       "text": "[PanoramaResizeEncode][JpegResizeEncodeInfo] UnitOpen() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf43a"
+       ]
+      },
+      {
+       "text": "[PanoramaResizeEncode][JpegSweepInfo] UnitClose() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf52b"
+       ]
+      },
+      {
+       "text": "[PanoramaResizeEncode][JpegSweepInfo] UnitOpen() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf3ac"
+       ]
+      },
+      {
+       "text": "[PanoramaResizeEncode][YuvDecodeWorkInfo] UnitClose() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf571"
+       ]
+      },
+      {
+       "text": "[PanoramaResizeEncode][YuvDecodeWorkInfo] UnitOpen() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf3f1"
+       ]
+      },
+      {
+       "text": "[PanoramaResize] End  err: 0x%08x",
+       "vaddr": [
+        "0x43cc229d"
+       ]
+      },
+      {
+       "text": "[PanoramaResize] UnitClose() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43cc226c"
+       ]
+      },
+      {
+       "text": "[PanoramaResize] UnitOpen() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43cc21b7"
+       ]
+      },
+      {
+       "text": "[PanoramaResize] seq_makePanoramaMakerNoteData() Err! err: 0x%08x %s:%d",
+       "vaddr": [
+        "0x43cc2224"
+       ]
+      },
+      {
+       "text": "[PanoramaResize] seq_panoramaResize() Err! err: 0x%08x %s:%d",
+       "vaddr": [
+        "0x43cc21e7"
+       ]
+      },
+      {
+       "text": "[PanoramaStitch] End  err: 0x%08x",
+       "vaddr": [
+        "0x43cc2195"
+       ]
+      },
+      {
+       "text": "[PanoramaStitch] Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43cc2089"
+       ]
+      },
+      {
+       "text": "[PanoramaStitch] UnitClose() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43cc2164"
+       ]
+      },
+      {
+       "text": "[PanoramaStitch] UnitOpen() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43cc203c"
+       ]
+      },
+      {
+       "text": "[PanoramaStitch] seq_endStitch() Err! err: 0x%08x %s:%d",
+       "vaddr": [
+        "0x43cc212c"
+       ]
+      },
+      {
+       "text": "[PanoramaStitch] seq_initStitch() Err! err: 0x%08x %s:%d",
+       "vaddr": [
+        "0x43cc20ae"
+       ]
+      },
+      {
+       "text": "[PanoramaStitch] seq_panoramaParallelStitch() Err! err: 0x%08x %s:%d",
+       "vaddr": [
+        "0x43cc20e7"
+       ]
+      },
+      {
+       "text": "[PanoramaSweepEnd] End : 0x%08x",
+       "vaddr": [
+        "0x43caf212"
+       ]
+      },
+      {
+       "text": "[PanoramaSweepEnd] Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf1eb"
+       ]
+      },
+      {
+       "text": "[PanoramaSweepStart] End  err: 0x%08x",
+       "vaddr": [
+        "0x43caf1c5"
+       ]
+      },
+      {
+       "text": "[PanoramaSweepStart] Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf127"
+       ]
+      },
+      {
+       "text": "[PanoramaSweepStart] Jpeg Close  err: 0x%08x",
+       "vaddr": [
+        "0x43caf198"
+       ]
+      },
+      {
+       "text": "[PanoramaSweepStart] Jpeg Open  err: 0x%08x",
+       "vaddr": [
+        "0x43caf16c"
+       ]
+      },
+      {
+       "text": "[StitchInterrupt] Stitch Interrupt Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43ca443b"
+       ]
+      },
+      {
+       "text": "[StitchInterrupt] Stop Stitch (Cancel) Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43ca4603"
+       ]
+      },
+      {
+       "text": "[StitchInterrupt] clr_flg Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43ca4572"
+       ]
+      },
+      {
+       "text": "[StitchInterrupt] cmp_stopStitch Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43ca45a0"
+       ]
+      },
+      {
+       "text": "[StitchInterrupt] csl_RingBuff_endReadImage Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43ca4532"
+       ]
+      },
+      {
+       "text": "[StitchInterrupt] csl_RingBuff_getDataNum Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43ca4472"
+       ]
+      },
+      {
+       "text": "[StitchInterrupt] csl_RingBuff_getInputImage Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43ca44b0"
+       ]
+      },
+      {
+       "text": "[StitchInterrupt] ringBuffDataHeader == NULL Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43ca44f1"
+       ]
+      },
+      {
+       "text": "[StitchInterrupt] wai_flg Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43ca45d5"
+       ]
+      },
+      {
+       "text": "[UpdateSweepCanvas] End  err: 0x%08x",
+       "vaddr": [
+        "0x43caf387"
+       ]
+      },
+      {
+       "text": "[UpdateSweepCanvas] Err! %s:%d",
+       "vaddr": [
+        "0x43caf2a3"
+       ]
+      },
+      {
+       "text": "[UpdateSweepCanvas] Err: 0x%08x, status: 0x%08x ReqID: 0x%04x",
+       "vaddr": [
+        "0x43caf265"
+       ]
+      },
+      {
+       "text": "[UpdateSweepCanvas] SWEEP_ERROR Err: 0x%08x, ReqID: 0x%04x",
+       "vaddr": [
+        "0x43caf2f1"
+       ]
+      },
+      {
+       "text": "[UpdateSweepCanvas] SWEEP_ERROR! %s:%d",
+       "vaddr": [
+        "0x43caf32c"
+       ]
+      },
+      {
+       "text": "[UpdateSweepCanvas] UnitClose() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf353"
+       ]
+      },
+      {
+       "text": "[UpdateSweepCanvas] UnitOpen() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf232"
+       ]
+      },
+      {
+       "text": "[UpdateSweepCanvas] seq_brcEncode() Err! %s:%d",
+       "vaddr": [
+        "0x43caf2c2"
+       ]
+      },
+      {
+       "text": "[allocOutputArea] Size over!: data[0x%08x] ram[0x%08x]: %s:%d",
+       "vaddr": [
+        "0x43caf630"
+       ]
+      },
+      {
+       "text": "[cmp_fill] Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf095"
+       ]
+      },
+      {
+       "text": "[cmp_fill_validArea] Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf0c9"
+       ]
+      },
+      {
+       "text": "[cmp_resizeMirror] dda_rc_resize Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf0f2"
+       ]
+      },
+      {
+       "text": "[dda_jpg_close] WrapJpegClose_Exec Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf686"
+       ]
+      },
+      {
+       "text": "[dda_jpg_decode] WrapJpegDecode_Exec Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf74e"
+       ]
+      },
+      {
+       "text": "[dda_jpg_fill] WrapJpegFill_Exec Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf7c3"
+       ]
+      },
+      {
+       "text": "[dda_jpg_fill] csl_checkImageObjectArea Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf787"
+       ]
+      },
+      {
+       "text": "[dda_jpg_get_stream_samplingfactor] Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf716"
+       ]
+      },
+      {
+       "text": "[dda_jpg_stream_anlyze] WrapJpegAnalyzeStream_Exec Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf6cf"
+       ]
+      },
+      {
+       "text": "[dda_rc_fill] WrapRcrtFill_Exec Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf91b"
+       ]
+      },
+      {
+       "text": "[dda_rc_fill] csl_checkImageObjectArea Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf8e0"
+       ]
+      },
+      {
+       "text": "[dda_rc_resize] WrapRcctAcquire_Exec Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf7f8"
+       ]
+      },
+      {
+       "text": "[dda_rc_resize] WrapRcctRelease_Exec Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf8a7"
+       ]
+      },
+      {
+       "text": "[dda_rc_resize] WrapRcctResize_Exec Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf86f"
+       ]
+      },
+      {
+       "text": "[ddas_rc_set_rcct_param] Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf842"
+       ]
+      },
+      {
+       "text": "[ddls_srotate_sa_start_cb] SA DRV Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43cc1e46"
+       ]
+      },
+      {
+       "text": "[ddls_srotate_sa_start_cb] SA Err: 0x%08x",
+       "vaddr": [
+        "0x43cc1e98"
+       ]
+      },
+      {
+       "text": "[ddls_srotate_sa_start_cb][Debug NG] CallBack Addr = NULL: 0x%08x",
+       "vaddr": [
+        "0x43cc1ec2"
+       ]
+      },
+      {
+       "text": "[ddls_stitch_sa_start_cb] SA DRV Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43cc1f27"
+       ]
+      },
+      {
+       "text": "[ddls_stitch_sa_start_cb][Debug NG] CallBack Addr = NULL: 0x%08x",
+       "vaddr": [
+        "0x43cc1f76"
+       ]
+      },
+      {
+       "text": "[ddls_stitch_set_flg] ercd: 0x%08x",
+       "vaddr": [
+        "0x43cc1f04"
+       ]
+      },
+      {
+       "text": "[panoramaSRotateLeftStitchImage][Debug] End  err: 0x%08x",
+       "vaddr": [
+        "0x43ca46c8"
+       ]
+      },
+      {
+       "text": "[seqClippingDecCallback] ercd: 0x%08x",
+       "vaddr": [
+        "0x43ca411b"
+       ]
+      },
+      {
+       "text": "[seqSRotateCallBack] ercd: 0x%08x",
+       "vaddr": [
+        "0x43ca40d8"
+       ]
+      },
+      {
+       "text": "[seqStitchCallBack] ercd: 0x%08x",
+       "vaddr": [
+        "0x43ca40fa"
+       ]
+      },
+      {
+       "text": "[seq_bigImageClippingDecode] Jpeg Close  err: 0x%08x",
+       "vaddr": [
+        "0x43ca4818"
+       ]
+      },
+      {
+       "text": "[seq_bigImageClippingDecode] Jpeg Open  err: 0x%08x",
+       "vaddr": [
+        "0x43ca4771"
+       ]
+      },
+      {
+       "text": "[seq_bigImageClippingDecode] cmp_decode() err: 0x%08x",
+       "vaddr": [
+        "0x43ca47a5"
+       ]
+      },
+      {
+       "text": "[seq_bigImageClippingDecode] cmp_stream_anlyze() err: 0x%08x",
+       "vaddr": [
+        "0x43ca47db"
+       ]
+      },
+      {
+       "text": "[seq_bigImageEncode] Jpeg Close  err: 0x%08x",
+       "vaddr": [
+        "0x43cafd63"
+       ]
+      },
+      {
+       "text": "[seq_bigImageEncode] Jpeg Open  err: 0x%08x",
+       "vaddr": [
+        "0x43cafc92"
+       ]
+      },
+      {
+       "text": "[seq_bigImageEncode] OverFlow err: 0x%08x codeSize: 0x%08x ",
+       "vaddr": [
+        "0x43cafd27"
+       ]
+      },
+      {
+       "text": "[seq_bigImageEncode] RetryEnc : qvalue = 0x%f",
+       "vaddr": [
+        "0x43cafcbe"
+       ]
+      },
+      {
+       "text": "[seq_bigImageEncode] csl_checkImageObjectArea() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43cafc4e"
+       ]
+      },
+      {
+       "text": "[seq_bigImageEncode][Err] RetryEnc err: 0x%08x qvalue : %f",
+       "vaddr": [
+        "0x43cafcec"
+       ]
+      },
+      {
+       "text": "[seq_bigImageResizeEncode][Err] getJPGListID(): 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43cafb81"
+       ]
+      },
+      {
+       "text": "[seq_bigImageResizeEncode][Err] seq_bigImageClippingDecode(): 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43cafc01"
+       ]
+      },
+      {
+       "text": "[seq_bigImageResizeEncode][Err] seq_bigImageEncode(): 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43cafd90"
+       ]
+      },
+      {
+       "text": "[seq_bigImageResizeEncode][Err] setDecodeParam(): 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43cafbc0"
+       ]
+      },
+      {
+       "text": "[seq_brcEncode] Retry Encode NG  err: 0x%08x codeSize: 0x%08x retryCount: %d",
+       "vaddr": [
+        "0x43cafb34"
+       ]
+      },
+      {
+       "text": "[seq_brcEncode] RetryEnc | err: 0x%08x codeSize: 0x%08x retryCount: %d estimQvalue: %f",
+       "vaddr": [
+        "0x43cafadd"
+       ]
+      },
+      {
+       "text": "[seq_brcEncode] cmp_checkStreamAreaSizeForEncode() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf9ba"
+       ]
+      },
+      {
+       "text": "[seq_brcEncode] cmp_estimate() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43cafa01"
+       ]
+      },
+      {
+       "text": "[seq_brcEncode] cmp_estimateQvalue() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43cafa6b"
+       ]
+      },
+      {
+       "text": "[seq_brcEncode] cmp_makeBrcGraph() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43cafa34"
+       ]
+      },
+      {
+       "text": "[seq_brcEncode] cmp_remakeBrcGraph() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43cafaa4"
+       ]
+      },
+      {
+       "text": "[seq_brcEncode] csl_checkImageObjectArea() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43caf969"
+       ]
+      },
+      {
+       "text": "[seq_makePanoramaMakerNoteData] Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43ca473d"
+       ]
+      },
+      {
+       "text": "[seq_panoramaClippingDecode] cmp_decode Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43ca4141"
+       ]
+      },
+      {
+       "text": "[seq_panoramaParallelStitch] Decode Interrupt Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43ca43b6"
+       ]
+      },
+      {
+       "text": "[seq_panoramaParallelStitch] DecodeControl Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43ca4286"
+       ]
+      },
+      {
+       "text": "[seq_panoramaParallelStitch] SRotate Interrupt Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43ca43f8"
+       ]
+      },
+      {
+       "text": "[seq_panoramaParallelStitch] SRotateControl Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43ca42c5"
+       ]
+      },
+      {
+       "text": "[seq_panoramaParallelStitch] Stitch Interrupt Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43ca463e"
+       ]
+      },
+      {
+       "text": "[seq_panoramaParallelStitch] StitchControl Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43ca4305"
+       ]
+      },
+      {
+       "text": "[seq_panoramaParallelStitch] clr_flg Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43ca437d"
+       ]
+      },
+      {
+       "text": "[seq_panoramaParallelStitch] cmp_getBackStitchParam Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43ca4680"
+       ]
+      },
+      {
+       "text": "[seq_panoramaParallelStitch] getJPGListI Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43ca41ff"
+       ]
+      },
+      {
+       "text": "[seq_panoramaParallelStitch] setStitchImageObjectInfo Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43ca423c"
+       ]
+      },
+      {
+       "text": "[seq_panoramaParallelStitch] wai_flg Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43ca4344"
+       ]
+      },
+      {
+       "text": "[seq_panoramaParallelStitch][OK] SRotateLeftProc OK : %s:%d",
+       "vaddr": [
+        "0x43ca4701"
+       ]
+      },
+      {
+       "text": "[seq_panoramaResize] effectImage Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43ca419a"
+       ]
+      },
+      {
+       "text": "[seq_panoramaResize][OK] effectImage OK : %s:%d",
+       "vaddr": [
+        "0x43ca41cf"
+       ]
+      },
+      {
+       "text": "[wrapRcrtFill Callback] ercd: 0x%08x",
+       "vaddr": [
+        "0x43cafe1a"
+       ]
+      }
+     ],
+     "n_own": 0,
+     "own": []
+    },
+    "A6300": {
+     "n_comunes": 115,
+     "n_solo_a6000": 5,
+     "solo_a6000": [
+      "[PanoramaSweepEnd] Err! %s:%d",
+      "[PanoramaSweepEnd] Err: 0x%08x, status: 0x%08x",
+      "[PanoramaSweepEnd] cmp_checkFillResidual() Err! %s:%d",
+      "[PanoramaSweepEnd] cmp_execStitchPreProcess() Err! %s:%d",
+      "[seq_panoramaParallelStitch][OK] StitchProc ALL OK : %s:%d"
+     ],
+     "comunes": [
+      {
+       "text": "%s:%d \n",
+       "vaddr": [
+        "0x43dc1cef"
+       ]
+      },
+      {
+       "text": "FATAL! %s:%d",
+       "vaddr": [
+        "0x43da5fd2"
+       ]
+      },
+      {
+       "text": "FATAL! %s:%d [0x%x]",
+       "vaddr": [
+        "0x43da844b"
+       ]
+      },
+      {
+       "text": "[Jpeg Close Callback] ercd: 0x%08x",
+       "vaddr": [
+        "0x43dc2175"
+       ]
+      },
+      {
+       "text": "[Jpeg Open Callback] ercd: 0x%08x",
+       "vaddr": [
+        "0x43dc2198"
+       ]
+      },
+      {
+       "text": "[PanoramaResizeEncode] End  err: 0x%08x",
+       "vaddr": [
+        "0x43dc19a8"
+       ]
+      },
+      {
+       "text": "[PanoramaResizeEncode] Err Dir: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1856"
+       ]
+      },
+      {
+       "text": "[PanoramaResizeEncode] Err Mode: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1826"
+       ]
+      },
+      {
+       "text": "[PanoramaResizeEncode] Err seq_bigImageResizeEncode(): 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1885"
+       ]
+      },
+      {
+       "text": "[PanoramaResizeEncode][JpegResizeEncodeInfo] UnitClose() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc195b"
+       ]
+      },
+      {
+       "text": "[PanoramaResizeEncode][JpegResizeEncodeInfo] UnitOpen() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc17da"
+       ]
+      },
+      {
+       "text": "[PanoramaResizeEncode][JpegSweepInfo] UnitClose() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc18cb"
+       ]
+      },
+      {
+       "text": "[PanoramaResizeEncode][JpegSweepInfo] UnitOpen() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc174c"
+       ]
+      },
+      {
+       "text": "[PanoramaResizeEncode][YuvDecodeWorkInfo] UnitClose() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1911"
+       ]
+      },
+      {
+       "text": "[PanoramaResizeEncode][YuvDecodeWorkInfo] UnitOpen() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1791"
+       ]
+      },
+      {
+       "text": "[PanoramaResize] End  err: 0x%08x",
+       "vaddr": [
+        "0x43dd3766"
+       ]
+      },
+      {
+       "text": "[PanoramaResize] UnitClose() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dd3735"
+       ]
+      },
+      {
+       "text": "[PanoramaResize] UnitOpen() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dd3680"
+       ]
+      },
+      {
+       "text": "[PanoramaResize] seq_makePanoramaMakerNoteData() Err! err: 0x%08x %s:%d",
+       "vaddr": [
+        "0x43dd36ed"
+       ]
+      },
+      {
+       "text": "[PanoramaResize] seq_panoramaResize() Err! err: 0x%08x %s:%d",
+       "vaddr": [
+        "0x43dd36b0"
+       ]
+      },
+      {
+       "text": "[PanoramaStitch] End  err: 0x%08x",
+       "vaddr": [
+        "0x43dd365e"
+       ]
+      },
+      {
+       "text": "[PanoramaStitch] Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dd3552"
+       ]
+      },
+      {
+       "text": "[PanoramaStitch] UnitClose() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dd362d"
+       ]
+      },
+      {
+       "text": "[PanoramaStitch] UnitOpen() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dd3505"
+       ]
+      },
+      {
+       "text": "[PanoramaStitch] seq_endStitch() Err! err: 0x%08x %s:%d",
+       "vaddr": [
+        "0x43dd35f5"
+       ]
+      },
+      {
+       "text": "[PanoramaStitch] seq_initStitch() Err! err: 0x%08x %s:%d",
+       "vaddr": [
+        "0x43dd3577"
+       ]
+      },
+      {
+       "text": "[PanoramaStitch] seq_panoramaParallelStitch() Err! err: 0x%08x %s:%d",
+       "vaddr": [
+        "0x43dd35b0"
+       ]
+      },
+      {
+       "text": "[PanoramaSweepEnd] End : 0x%08x",
+       "vaddr": [
+        "0x43dc15b2"
+       ]
+      },
+      {
+       "text": "[PanoramaSweepEnd] Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc158b"
+       ]
+      },
+      {
+       "text": "[PanoramaSweepStart] End  err: 0x%08x",
+       "vaddr": [
+        "0x43dc1565"
+       ]
+      },
+      {
+       "text": "[PanoramaSweepStart] Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc14c7"
+       ]
+      },
+      {
+       "text": "[PanoramaSweepStart] Jpeg Close  err: 0x%08x",
+       "vaddr": [
+        "0x43dc1538"
+       ]
+      },
+      {
+       "text": "[PanoramaSweepStart] Jpeg Open  err: 0x%08x",
+       "vaddr": [
+        "0x43dc150c"
+       ]
+      },
+      {
+       "text": "[StitchInterrupt] Stitch Interrupt Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43da8834"
+       ]
+      },
+      {
+       "text": "[StitchInterrupt] Stop Stitch (Cancel) Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43da89fc"
+       ]
+      },
+      {
+       "text": "[StitchInterrupt] clr_flg Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43da896b"
+       ]
+      },
+      {
+       "text": "[StitchInterrupt] cmp_stopStitch Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43da8999"
+       ]
+      },
+      {
+       "text": "[StitchInterrupt] csl_RingBuff_endReadImage Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43da892b"
+       ]
+      },
+      {
+       "text": "[StitchInterrupt] csl_RingBuff_getDataNum Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43da886b"
+       ]
+      },
+      {
+       "text": "[StitchInterrupt] csl_RingBuff_getInputImage Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43da88a9"
+       ]
+      },
+      {
+       "text": "[StitchInterrupt] ringBuffDataHeader == NULL Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43da88ea"
+       ]
+      },
+      {
+       "text": "[StitchInterrupt] wai_flg Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43da89ce"
+       ]
+      },
+      {
+       "text": "[UpdateSweepCanvas] End  err: 0x%08x",
+       "vaddr": [
+        "0x43dc1727"
+       ]
+      },
+      {
+       "text": "[UpdateSweepCanvas] Err! %s:%d",
+       "vaddr": [
+        "0x43dc1643"
+       ]
+      },
+      {
+       "text": "[UpdateSweepCanvas] Err: 0x%08x, status: 0x%08x ReqID: 0x%04x",
+       "vaddr": [
+        "0x43dc1605"
+       ]
+      },
+      {
+       "text": "[UpdateSweepCanvas] SWEEP_ERROR Err: 0x%08x, ReqID: 0x%04x",
+       "vaddr": [
+        "0x43dc1691"
+       ]
+      },
+      {
+       "text": "[UpdateSweepCanvas] SWEEP_ERROR! %s:%d",
+       "vaddr": [
+        "0x43dc16cc"
+       ]
+      },
+      {
+       "text": "[UpdateSweepCanvas] UnitClose() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc16f3"
+       ]
+      },
+      {
+       "text": "[UpdateSweepCanvas] UnitOpen() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc15d2"
+       ]
+      },
+      {
+       "text": "[UpdateSweepCanvas] seq_brcEncode() Err! %s:%d",
+       "vaddr": [
+        "0x43dc1662"
+       ]
+      },
+      {
+       "text": "[allocOutputArea] Size over!: data[0x%08x] ram[0x%08x]: %s:%d",
+       "vaddr": [
+        "0x43dc19d0"
+       ]
+      },
+      {
+       "text": "[cmp_fill] Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1435"
+       ]
+      },
+      {
+       "text": "[cmp_fill_validArea] Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1469"
+       ]
+      },
+      {
+       "text": "[cmp_resizeMirror] dda_rc_resize Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1492"
+       ]
+      },
+      {
+       "text": "[dda_jpg_close] WrapJpegClose_Exec Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1a26"
+       ]
+      },
+      {
+       "text": "[dda_jpg_decode] WrapJpegDecode_Exec Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1aee"
+       ]
+      },
+      {
+       "text": "[dda_jpg_fill] WrapJpegFill_Exec Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1b63"
+       ]
+      },
+      {
+       "text": "[dda_jpg_fill] csl_checkImageObjectArea Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1b27"
+       ]
+      },
+      {
+       "text": "[dda_jpg_get_stream_samplingfactor] Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1ab6"
+       ]
+      },
+      {
+       "text": "[dda_jpg_stream_anlyze] WrapJpegAnalyzeStream_Exec Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1a6f"
+       ]
+      },
+      {
+       "text": "[dda_rc_fill] WrapRcrtFill_Exec Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1cbb"
+       ]
+      },
+      {
+       "text": "[dda_rc_fill] csl_checkImageObjectArea Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1c80"
+       ]
+      },
+      {
+       "text": "[dda_rc_resize] WrapRcctAcquire_Exec Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1b98"
+       ]
+      },
+      {
+       "text": "[dda_rc_resize] WrapRcctRelease_Exec Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1c47"
+       ]
+      },
+      {
+       "text": "[dda_rc_resize] WrapRcctResize_Exec Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1c0f"
+       ]
+      },
+      {
+       "text": "[ddas_rc_set_rcct_param] Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1be2"
+       ]
+      },
+      {
+       "text": "[ddls_srotate_sa_start_cb] SA DRV Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dd330f"
+       ]
+      },
+      {
+       "text": "[ddls_srotate_sa_start_cb] SA Err: 0x%08x",
+       "vaddr": [
+        "0x43dd3361"
+       ]
+      },
+      {
+       "text": "[ddls_srotate_sa_start_cb][Debug NG] CallBack Addr = NULL: 0x%08x",
+       "vaddr": [
+        "0x43dd338b"
+       ]
+      },
+      {
+       "text": "[ddls_stitch_sa_start_cb] SA DRV Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dd33f0"
+       ]
+      },
+      {
+       "text": "[ddls_stitch_sa_start_cb][Debug NG] CallBack Addr = NULL: 0x%08x",
+       "vaddr": [
+        "0x43dd343f"
+       ]
+      },
+      {
+       "text": "[ddls_stitch_set_flg] ercd: 0x%08x",
+       "vaddr": [
+        "0x43dd33cd"
+       ]
+      },
+      {
+       "text": "[panoramaSRotateLeftStitchImage][Debug] End  err: 0x%08x",
+       "vaddr": [
+        "0x43da8ac1"
+       ]
+      },
+      {
+       "text": "[seqClippingDecCallback] ercd: 0x%08x",
+       "vaddr": [
+        "0x43da8514"
+       ]
+      },
+      {
+       "text": "[seqSRotateCallBack] ercd: 0x%08x",
+       "vaddr": [
+        "0x43da84d1"
+       ]
+      },
+      {
+       "text": "[seqStitchCallBack] ercd: 0x%08x",
+       "vaddr": [
+        "0x43da84f3"
+       ]
+      },
+      {
+       "text": "[seq_bigImageClippingDecode] Jpeg Close  err: 0x%08x",
+       "vaddr": [
+        "0x43da8c11"
+       ]
+      },
+      {
+       "text": "[seq_bigImageClippingDecode] Jpeg Open  err: 0x%08x",
+       "vaddr": [
+        "0x43da8b6a"
+       ]
+      },
+      {
+       "text": "[seq_bigImageClippingDecode] cmp_decode() err: 0x%08x",
+       "vaddr": [
+        "0x43da8b9e"
+       ]
+      },
+      {
+       "text": "[seq_bigImageClippingDecode] cmp_stream_anlyze() err: 0x%08x",
+       "vaddr": [
+        "0x43da8bd4"
+       ]
+      },
+      {
+       "text": "[seq_bigImageEncode] Jpeg Close  err: 0x%08x",
+       "vaddr": [
+        "0x43dc2103"
+       ]
+      },
+      {
+       "text": "[seq_bigImageEncode] Jpeg Open  err: 0x%08x",
+       "vaddr": [
+        "0x43dc2032"
+       ]
+      },
+      {
+       "text": "[seq_bigImageEncode] OverFlow err: 0x%08x codeSize: 0x%08x ",
+       "vaddr": [
+        "0x43dc20c7"
+       ]
+      },
+      {
+       "text": "[seq_bigImageEncode] RetryEnc : qvalue = 0x%f",
+       "vaddr": [
+        "0x43dc205e"
+       ]
+      },
+      {
+       "text": "[seq_bigImageEncode] csl_checkImageObjectArea() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1fee"
+       ]
+      },
+      {
+       "text": "[seq_bigImageEncode][Err] RetryEnc err: 0x%08x qvalue : %f",
+       "vaddr": [
+        "0x43dc208c"
+       ]
+      },
+      {
+       "text": "[seq_bigImageResizeEncode][Err] getJPGListID(): 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1f21"
+       ]
+      },
+      {
+       "text": "[seq_bigImageResizeEncode][Err] seq_bigImageClippingDecode(): 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1fa1"
+       ]
+      },
+      {
+       "text": "[seq_bigImageResizeEncode][Err] seq_bigImageEncode(): 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc2130"
+       ]
+      },
+      {
+       "text": "[seq_bigImageResizeEncode][Err] setDecodeParam(): 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1f60"
+       ]
+      },
+      {
+       "text": "[seq_brcEncode] Retry Encode NG  err: 0x%08x codeSize: 0x%08x retryCount: %d",
+       "vaddr": [
+        "0x43dc1ed4"
+       ]
+      },
+      {
+       "text": "[seq_brcEncode] RetryEnc | err: 0x%08x codeSize: 0x%08x retryCount: %d estimQvalue: %f",
+       "vaddr": [
+        "0x43dc1e7d"
+       ]
+      },
+      {
+       "text": "[seq_brcEncode] cmp_checkStreamAreaSizeForEncode() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1d5a"
+       ]
+      },
+      {
+       "text": "[seq_brcEncode] cmp_estimate() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1da1"
+       ]
+      },
+      {
+       "text": "[seq_brcEncode] cmp_estimateQvalue() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1e0b"
+       ]
+      },
+      {
+       "text": "[seq_brcEncode] cmp_makeBrcGraph() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1dd4"
+       ]
+      },
+      {
+       "text": "[seq_brcEncode] cmp_remakeBrcGraph() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1e44"
+       ]
+      },
+      {
+       "text": "[seq_brcEncode] csl_checkImageObjectArea() Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43dc1d09"
+       ]
+      },
+      {
+       "text": "[seq_makePanoramaMakerNoteData] Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43da8b36"
+       ]
+      },
+      {
+       "text": "[seq_panoramaClippingDecode] cmp_decode Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43da853a"
+       ]
+      },
+      {
+       "text": "[seq_panoramaParallelStitch] Decode Interrupt Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43da87af"
+       ]
+      },
+      {
+       "text": "[seq_panoramaParallelStitch] DecodeControl Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43da867f"
+       ]
+      },
+      {
+       "text": "[seq_panoramaParallelStitch] SRotate Interrupt Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43da87f1"
+       ]
+      },
+      {
+       "text": "[seq_panoramaParallelStitch] SRotateControl Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43da86be"
+       ]
+      },
+      {
+       "text": "[seq_panoramaParallelStitch] Stitch Interrupt Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43da8a37"
+       ]
+      },
+      {
+       "text": "[seq_panoramaParallelStitch] StitchControl Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43da86fe"
+       ]
+      },
+      {
+       "text": "[seq_panoramaParallelStitch] clr_flg Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43da8776"
+       ]
+      },
+      {
+       "text": "[seq_panoramaParallelStitch] cmp_getBackStitchParam Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43da8a79"
+       ]
+      },
+      {
+       "text": "[seq_panoramaParallelStitch] getJPGListI Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43da85f8"
+       ]
+      },
+      {
+       "text": "[seq_panoramaParallelStitch] setStitchImageObjectInfo Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43da8635"
+       ]
+      },
+      {
+       "text": "[seq_panoramaParallelStitch] wai_flg Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43da873d"
+       ]
+      },
+      {
+       "text": "[seq_panoramaParallelStitch][OK] SRotateLeftProc OK : %s:%d",
+       "vaddr": [
+        "0x43da8afa"
+       ]
+      },
+      {
+       "text": "[seq_panoramaResize] effectImage Err: 0x%08x : %s:%d",
+       "vaddr": [
+        "0x43da8593"
+       ]
+      },
+      {
+       "text": "[seq_panoramaResize][OK] effectImage OK : %s:%d",
+       "vaddr": [
+        "0x43da85c8"
+       ]
+      },
+      {
+       "text": "[wrapRcrtFill Callback] ercd: 0x%08x",
+       "vaddr": [
+        "0x43dc21ba"
+       ]
+      }
+     ],
+     "n_own": 0,
+     "own": []
+    }
+   },
+   "tags": [
+    "[Jpeg Close Callback]",
+    "[Jpeg Open Callback]",
+    "[PanoramaResizeEncode]",
+    "[PanoramaResize]",
+    "[PanoramaStitch]",
+    "[PanoramaSweepEnd]",
+    "[PanoramaSweepStart]",
+    "[StitchInterrupt]",
+    "[UpdateSweepCanvas]",
+    "[allocOutputArea]",
+    "[cmp_fill]",
+    "[cmp_fill_validArea]",
+    "[cmp_resizeMirror]",
+    "[dda_jpg_close]",
+    "[dda_jpg_decode]",
+    "[dda_jpg_fill]",
+    "[dda_jpg_get_stream_samplingfactor]",
+    "[dda_jpg_stream_anlyze]",
+    "[dda_rc_fill]",
+    "[dda_rc_resize]",
+    "[ddas_rc_set_rcct_param]",
+    "[ddls_srotate_sa_start_cb]",
+    "[ddls_stitch_sa_start_cb]",
+    "[ddls_stitch_set_flg]",
+    "[panoramaSRotateLeftStitchImage]",
+    "[seqClippingDecCallback]",
+    "[seqSRotateCallBack]",
+    "[seqStitchCallBack]",
+    "[seq_bigImageClippingDecode]",
+    "[seq_bigImageEncode]",
+    "[seq_bigImageResizeEncode]",
+    "[seq_brcEncode]",
+    "[seq_makePanoramaMakerNoteData]",
+    "[seq_panoramaClippingDecode]",
+    "[seq_panoramaParallelStitch]",
+    "[seq_panoramaResize]",
+    "[wrapRcrtFill Callback]"
+   ]
+  }
+ }
+}

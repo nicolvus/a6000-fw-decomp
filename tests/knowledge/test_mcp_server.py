@@ -53,7 +53,16 @@ class McpServerProtocolTest(unittest.TestCase):
         text1 = mcp_server.get_current_state(offset=0)
         text2 = mcp_server.get_current_state(offset=10)
         self.assertNotEqual(text1, text2)
-        self.assertEqual(text1[10:], text2[:len(text1) - 10])
+        if "\n[truncado a " in text1:
+            # El documento supera MCP_MAX_CHARS: ambas páginas están truncadas y el
+            # aviso final difiere (lleva el offset), así que la igualdad literal no
+            # puede darse. Se comprueba la propiedad útil: la página 2 continúa
+            # donde termina la 1 y ambas avisan del truncado.
+            self.assertTrue(text2.startswith(text1[10:][:200]))
+            self.assertIn("límite MCP", text1)
+            self.assertIn("límite MCP", text2)
+        else:
+            self.assertEqual(text1[10:], text2[:len(text1) - 10])
 
     def test_call_tool_with_invalid_input_does_not_crash_server(self):
         result = asyncio.run(mcp_server.server.call_tool(

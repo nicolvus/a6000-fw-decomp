@@ -1,0 +1,57 @@
+cadenas	42
+sitios	43
+funciones	10
+sin_referencia	
+FUNC 0x43547362	3	sites=0x43547394,0x43547426,0x4354746c
+   0x43547394	0x43ca6b32	[CAMERA_MAIN_IM]: movie thermal diffTemp < 0 :(%d)
+   0x43547426	0x43ca6b65	[CAMERA_MAIN_IM]: paramA%f paramB%f diff:%d
+   0x4354746c	0x43ca6b91	[CAMERA_MAIN_IM]: envOld:%d env':%d boot:%d
+FUNC 0x437b8774	22	sites=0x437b87e0,0x437b881c,0x437b8844,0x437b8864,0x437b88de,0x437b890a,0x437b8930,0x437b8950,0x437b8982,0x437b89b2,0x437b89ea,0x437b8b14,0x437b8b74,0x437b8bc6,0x437b8c34,0x437b8c5c,0x437b8c7a,0x437b8ca0,0x437b8cc8,0x437b8d1c,0x437b8d38,0x437b8d68
+   0x437b87e0	0x43ca6bbd	[CAMERA_MAIN_IM]: environmentalTemp:%d
+   0x437b881c	0x43ca6be4	[CAMERA_MAIN_IM]: movie Table
+   0x437b8844	0x43ca6c02	[CAMERA_MAIN_IM]: bulb Table
+   0x437b8864	0x43ca6c1f	[CAMERA_MAIN_IM]: still Table
+   0x437b88de	0x43ca6c3d	[CAMERA_MAIN_IM]: ISOAuto TH
+   0x437b890a	0x43ca6c5a	[CAMERA_MAIN_IM]: ISO1 TH
+   0x437b8930	0x43ca6c74	[CAMERA_MAIN_IM]: ISO2 TH
+   0x437b8950	0x43ca6c8e	[CAMERA_MAIN_IM]: ISO3 TH
+   0x437b8982	0x43ca6ca8	[CAMERA_MAIN_IM]: Abs:Tnow=%d shutdownTh=%d cautionTh=%d
+   0x437b89b2	0x43ca6ce1	[CAMERA_MAIN_IM]: Abs:THERMAL_SHUTDOWN: %d > %d
+   0x437b89ea	0x43ca6d11	[CAMERA_MAIN_IM]: Abs:THERMAL_CAUTION:%d > %d
+   0x437b8b14	0x43ca6d3f	[CAMERA_MAIN_IM]: Env:Tnow=%d Tenv=%d envTh=%d shutdownTh=%d cautionTh=%d
+   0x437b8b74	0x43ca6d89	[CAMERA_MAIN_IM]: Env:THERMAL_SHUTDOWN:(%d - %d) > %d
+   0x437b8bc6	0x43ca6dbf	[CAMERA_MAIN_IM]: Env:THERMAL_CAUTION:(%d - %d) > %d
+   0x437b8c34	0x43ca6df4	[CAMERA_MAIN_IM]: send THERMAL_CAUTION on
+   0x437b8c5c	0x43ca6e1e	[CAMERA_MAIN_IM]: sendCaution(true) return %d
+   0x437b8c7a	0x43ca6e4c	[CAMERA_MAIN_IM]: send THERMAL_CAUTION off
+   0x437b8ca0	0x43ca6e77	[CAMERA_MAIN_IM]: sendCaution(false) return %d
+   0x437b8cc8	0x43ca6ea6	[CAMERA_MAIN_IM]: send THERMAL_SHUTDOWN
+   0x437b8d1c	0x43ca6ece	[CAMERA_MAIN_IM]: upm_set_off_factor() return %d
+   0x437b8d38	0x43ca6eff	[CAMERA_MAIN_IM]: Error : GetImagerTemperature
+   0x437b8d68	0x43ca6f2e	[CAMERA_MAIN_IM]: ImCheckThermal setTimer:%x
+FUNC 0x437b8e1c	1	sites=0x437b8e8c
+   0x437b8e8c	0x43ca6f5b	[CAMERA_MAIN_IM]: EcGain:%x isoAuto:%x bulb:%x
+FUNC 0x437b8ed6	3	sites=0x437b8ef4,0x437b8f2a,0x437b8f5c
+   0x437b8ef4	0x43ca6f8a	[CAMERA_MAIN_IM]: startImagerThermalCheck
+   0x437b8f2a	0x43ca6fb4	[CAMERA_MAIN_IM]: StartImThermal allocTimer:%x
+   0x437b8f5c	0x43ca6fe3	[CAMERA_MAIN_IM]: StartImThermal setTimer:%x
+FUNC 0x437b8fb2	3	sites=0x437b8fd6,0x437b9002,0x437b9022
+   0x437b8fd6	0x43ca7010	[CAMERA_MAIN_IM]: EndImThermal freeTimer:%x
+   0x437b9002	0x43ca703c	[CAMERA_MAIN_IM]: endImagerThermalCheck sendCaution(false) return %d
+   0x437b9022	0x43ca7081	[CAMERA_MAIN_IM]: endImagerThermalCheck
+FUNC 0x437b906a	3	sites=0x437b908e,0x437b90ca,0x437b90fe
+   0x437b908e	0x43ca70a9	[CAMERA_MAIN_IM]: RecStart
+   0x437b90ca	0x43ca70c4	[CAMERA_MAIN_IM]: ImStartMovThermal allocTimer:%x
+   0x437b90fe	0x43ca70f6	[CAMERA_MAIN_IM]: ImStartMovThermal set_timer:%x
+FUNC 0x437b9162	2	sites=0x437b9184,0x437b91a8
+   0x437b9184	0x43ca7127	[CAMERA_MAIN_IM]: RecEnd
+   0x437b91a8	0x43ca7140	[CAMERA_MAIN_IM]: ImEndMovThermal freeTimer:%x
+FUNC 0x437b91ea	3	sites=0x437b9268,0x437b9220,0x437b92a0
+   0x437b9268	0x43ca70f6	[CAMERA_MAIN_IM]: ImStartMovThermal set_timer:%x
+   0x437b9220	0x43ca716f	[CAMERA_MAIN_IM]: TimeA ImgTmp:%d
+   0x437b92a0	0x43ca7191	[CAMERA_MAIN_IM]: Err:Timer2Callback
+FUNC 0x437b93c0	1	sites=0x437b942e
+   0x437b942e	0x43ca71b6	[CAMERA_MAIN_IM]: ZitZ1cDriver ch:%d is not exist.
+FUNC 0x4386bbee	2	sites=0x4386bc12,0x4386bc30
+   0x4386bc12	0x43cb5fc1	[CAMERA_MAIN_IM]: ZitDdcDriver: Invalid format. [%d][%d]
+   0x4386bc30	0x43cb5ffa	[CAMERA_MAIN_IM]: ZitDdcDriver: Invalid numPt. [%d][%d]

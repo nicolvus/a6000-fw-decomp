@@ -1,0 +1,3013 @@
+{
+ "hito": "S139",
+ "token": "[ENCSEQCTRL]",
+ "firmware": {
+  "modelo": "A6000",
+  "version": "fw3.21",
+  "binario": "analysis/rea-independent/input/av-cam.bin",
+  "convencion": "vaddr = 0x43541000 + file_offset"
+ },
+ "clase": {
+  "nombre": "McAvcEncSeqCtrl",
+  "vaddr": "0x43c4320f",
+  "fichero": "seqCtrl/mcAvcEncSeqCtrl.cpp",
+  "vaddr_fichero": "0x43c4bd0f",
+  "componente": "Avbb-MovieCodec_131H (ruta de build 0x43c41227)"
+ },
+ "sigla": {
+  "desarrollo": null,
+  "nota": "no hay base textual para desarrollar ENCSEQCTRL; la clase de RTTI es McAvcEncSeqCtrl (Mc=MovieCodec, Avc=AVC/H.264, Enc=encoder, SeqCtrl=sequence control)"
+ },
+ "totales": {
+  "cadenas": 46,
+  "referenciadas": 46,
+  "sin_referencia": [],
+  "sitios": 96,
+  "funciones": 32
+ },
+ "regla_pic": "estricta (analysis/s106_imaging_cap/scan_pic_refs_strict.py, mapa global pic_refs_strict_global.json)",
+ "id_modulo_log": "0x0e (movs r1,#0xe en todas las llamadas al logger)",
+ "cadenas": [
+  {
+   "vaddr": "0x43c4bce5",
+   "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n",
+   "sub_bloque": "LOG_MACRO",
+   "sitios": [
+    "0x435d6b12",
+    "0x435d6b94",
+    "0x435d6c22",
+    "0x435d6c60",
+    "0x435d6cee",
+    "0x435d6d2c",
+    "0x435d6db8",
+    "0x435d6e54",
+    "0x435d6ec6",
+    "0x435d6f56",
+    "0x435d6f9c",
+    "0x435d6ff6",
+    "0x435d7080",
+    "0x435d71ca",
+    "0x435d7224",
+    "0x435d727c",
+    "0x435d7388",
+    "0x435d7450",
+    "0x435d753e",
+    "0x435d758a",
+    "0x435d766e",
+    "0x435d775e",
+    "0x435d77a0",
+    "0x435d78aa",
+    "0x435d78f2",
+    "0x435d7a30",
+    "0x435d7a8c",
+    "0x435d7c34",
+    "0x435d7c94",
+    "0x435d7d26",
+    "0x435d7dbe",
+    "0x435d7dfa",
+    "0x435d7e6a",
+    "0x435d853a",
+    "0x435d8724",
+    "0x435d87b4",
+    "0x435d8914",
+    "0x435d8960",
+    "0x435d89fe",
+    "0x435d8b14",
+    "0x435d8b72",
+    "0x435d8bca",
+    "0x435d8f80",
+    "0x435d9050",
+    "0x435d907a",
+    "0x435d911a",
+    "0x435d9154",
+    "0x435d92a8"
+   ],
+   "funciones": [
+    "0x435d6ad0",
+    "0x435d6b3c",
+    "0x435d6bc8",
+    "0x435d6c94",
+    "0x435d6d60",
+    "0x435d6df8",
+    "0x435d6f04",
+    "0x435d7040",
+    "0x435d7190",
+    "0x435d72f8",
+    "0x435d74f4",
+    "0x435d7608",
+    "0x435d79cc",
+    "0x435d7bf8",
+    "0x435d7d60",
+    "0x435d84cc",
+    "0x435d882c",
+    "0x435d8988",
+    "0x435d8a84",
+    "0x435d8d38",
+    "0x435d900e",
+    "0x435d90ac"
+   ],
+   "lineas_fuente": [
+    89,
+    149,
+    166,
+    211,
+    229,
+    321,
+    429,
+    655,
+    673,
+    713,
+    725,
+    741,
+    790,
+    834,
+    858,
+    923,
+    943,
+    997,
+    1025,
+    1052,
+    1058,
+    1143,
+    1245,
+    1265,
+    1315,
+    1370,
+    1386,
+    1402,
+    1593,
+    1629
+   ]
+  },
+  {
+   "vaddr": "0x43c4bd2b",
+   "texto": "[ENCSEQCTRL][O/U Crank] Table[%d] fR[0x%x] sR[0x%x]",
+   "sub_bloque": "O_U_CRANK",
+   "sitios": [
+    "0x435d7108"
+   ],
+   "funciones": [
+    "0x435d70a2"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4bd5f",
+   "texto": "[ENCSEQCTRL]OuCrank Config Err: FrameRate = %x,SamplingRate = %x \n",
+   "sub_bloque": "O_U_CRANK",
+   "sitios": [
+    "0x435d7142"
+   ],
+   "funciones": [
+    "0x435d70a2"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4bda2",
+   "texto": "[ENCSEQCTRL][state]0x%x -> 0x%x \n",
+   "sub_bloque": "STATE",
+   "sitios": [
+    "0x435d717a"
+   ],
+   "funciones": [
+    "0x435d715c"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4bdc4",
+   "texto": "[ENCSEQCTRL]Warning, m_beginEncCompTime < refTime, change state forcibly\n",
+   "sub_bloque": "TIMING_WARNING",
+   "sitios": [
+    "0x435d74bc"
+   ],
+   "funciones": [
+    "0x435d7488"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4be0e",
+   "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d,Err = %x \n",
+   "sub_bloque": "LOG_MACRO",
+   "sitios": [
+    "0x435d7ae6"
+   ],
+   "funciones": [
+    "0x435d79cc"
+   ],
+   "lineas_fuente": [
+    1697
+   ]
+  },
+  {
+   "vaddr": "0x43c4be41",
+   "texto": "[ENCSEQCTRL]Func:%s() ,Line:%d, State:0x%x->0x%x \n",
+   "sub_bloque": "STATE",
+   "sitios": [
+    "0x435d7bd6"
+   ],
+   "funciones": [
+    "0x435d7b70"
+   ],
+   "lineas_fuente": [
+    1510
+   ]
+  },
+  {
+   "vaddr": "0x43c4be74",
+   "texto": "[ENCSEQCTRL][AVC ENC SEQ CTRL] Chip Mode = %x \n",
+   "sub_bloque": "CHIP_MODE",
+   "sitios": [
+    "0x435d7cdc"
+   ],
+   "funciones": [
+    "0x435d7bf8"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4bea4",
+   "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d, State:0x%x->0x%x \n",
+   "sub_bloque": "STATE",
+   "sitios": [
+    "0x435d7ee0"
+   ],
+   "funciones": [
+    "0x435d7d60"
+   ],
+   "lineas_fuente": [
+    763
+   ]
+  },
+  {
+   "vaddr": "0x43c4bee0",
+   "texto": "[ENCSEQCTRL]Invalid syshsCnt File:%s, Func:%s() ,Line:%d \n",
+   "sub_bloque": "SYSHS",
+   "sitios": [
+    "0x435d8002",
+    "0x435d8092"
+   ],
+   "funciones": [
+    "0x435d7f34"
+   ],
+   "lineas_fuente": [
+    2168,
+    2237
+   ]
+  },
+  {
+   "vaddr": "0x43c4bf1b",
+   "texto": "[ENCSEQCTRL]WRN: Pin Supply Timing UNKNOWN \n",
+   "sub_bloque": "PIN_SUPPLY",
+   "sitios": [
+    "0x435d80be",
+    "0x435d8442"
+   ],
+   "funciones": [
+    "0x435d7f34",
+    "0x435d832c"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4bf48",
+   "texto": "[ENCSEQCTRL]EXEC TIME = %x PIN SUPPLY TIMING = %x REVISED VFCNUM = %d\n",
+   "sub_bloque": "PIN_SUPPLY",
+   "sitios": [
+    "0x435d80f2",
+    "0x435d8488"
+   ],
+   "funciones": [
+    "0x435d7f34",
+    "0x435d832c"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4bf8f",
+   "texto": "[ENCSEQCTRL]OU StopInfo(NrmlTerm:%x,OuTerm:%x=((%x+%x)*smpl(%x)),Stt:%x,Stp:%x(%x)->%x \n",
+   "sub_bloque": "OU_STOP",
+   "sitios": [
+    "0x435d81ee"
+   ],
+   "funciones": [
+    "0x435d8128"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4bfe8",
+   "texto": "[ENCSEQCTRL]abcd[%d] eTime[0x%x] cTime[0x%x] revFA[%d] FramePos[%d] revTA[%d] vNum[%d]\n",
+   "sub_bloque": "FRAME_DEBUG",
+   "sitios": [
+    "0x435d8300"
+   ],
+   "funciones": [
+    "0x435d8206"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c040",
+   "texto": "[ENCSEQCTRL][Begin][odd] ReviseNum Set to zero [%d]\n",
+   "sub_bloque": "REVISE_NUM",
+   "sitios": [
+    "0x435d8382"
+   ],
+   "funciones": [
+    "0x435d832c"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c075",
+   "texto": "[ENCSEQCTRL][Begin][odd] ReviseNum Set to one  [%d]\n",
+   "sub_bloque": "REVISE_NUM",
+   "sitios": [
+    "0x435d8394"
+   ],
+   "funciones": [
+    "0x435d832c"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c0aa",
+   "texto": "[ENCSEQCTRL][Begin][even] ReviseNum Set to zero [%d]\n",
+   "sub_bloque": "REVISE_NUM",
+   "sitios": [
+    "0x435d83a8"
+   ],
+   "funciones": [
+    "0x435d832c"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c0e0",
+   "texto": "[ENCSEQCTRL][Begin][even] ReviseNum Set to one  [%d]\n",
+   "sub_bloque": "REVISE_NUM",
+   "sitios": [
+    "0x435d83b8"
+   ],
+   "funciones": [
+    "0x435d832c"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c116",
+   "texto": "[ENCSEQCTRL][Term][odd] ReviseNum Set to one [%d]\n",
+   "sub_bloque": "REVISE_NUM",
+   "sitios": [
+    "0x435d83d8"
+   ],
+   "funciones": [
+    "0x435d832c"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c149",
+   "texto": "[ENCSEQCTRL][Term][odd] ReviseNum Set to zero  [%d]\n",
+   "sub_bloque": "REVISE_NUM",
+   "sitios": [
+    "0x435d83e6"
+   ],
+   "funciones": [
+    "0x435d832c"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c17e",
+   "texto": "[ENCSEQCTRL][Term][even] ReviseNum Set to one [%d]\n",
+   "sub_bloque": "REVISE_NUM",
+   "sitios": [
+    "0x435d83fe"
+   ],
+   "funciones": [
+    "0x435d832c"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c1b2",
+   "texto": "[ENCSEQCTRL][Term][even] ReviseNum Set to zero  [%d]\n",
+   "sub_bloque": "REVISE_NUM",
+   "sitios": [
+    "0x435d8416"
+   ],
+   "funciones": [
+    "0x435d832c"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c1e8",
+   "texto": "[ENCSEQCTRL]HighSpeed Rec is set to zero [%d]\n",
+   "sub_bloque": "SYSHS",
+   "sitios": [
+    "0x435d8460"
+   ],
+   "funciones": [
+    "0x435d832c"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c217",
+   "texto": "[ENCSEQCTRL]MCodec%d changed termEncodeVfc %d->%d\n",
+   "sub_bloque": "TERM_VFC",
+   "sitios": [
+    "0x435d867a"
+   ],
+   "funciones": [
+    "0x435d84cc"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c24a",
+   "texto": "[ENCSEQCTRL]TermEnc TimeInfo = %x, RefTime(VFC) = %x, EnsStopTime(VFC) = %x EnsStopTimeAudio(VFC) = %x \n",
+   "sub_bloque": "TERM_VFC",
+   "sitios": [
+    "0x435d86bc"
+   ],
+   "funciones": [
+    "0x435d84cc"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c2b3",
+   "texto": "[ENCSEQCTRL]CheckSendFirstRefTimer = %x \n",
+   "sub_bloque": "REF_TIMER",
+   "sitios": [
+    "0x435d8a34"
+   ],
+   "funciones": [
+    "0x435d8988"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c2dd",
+   "texto": "[ENCSEQCTRL]CheckSendFirstRefTimer NOP \n",
+   "sub_bloque": "REF_TIMER",
+   "sitios": [
+    "0x435d8a50"
+   ],
+   "funciones": [
+    "0x435d8988"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c306",
+   "texto": "[ENCSEQCTRL]%s() [%s] Invalid replyId !!!!\n",
+   "sub_bloque": "REPLY_ID",
+   "sitios": [
+    "0x435d8c26"
+   ],
+   "funciones": [
+    "0x435d8c08"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c332",
+   "texto": "[ENCSEQCTRL]AVSC_CID_MPRNTFY_ENC_SA_CONFIRM_EVENT(msgId:0x%x)::mid:0x%x,cid:0x%x,err:%x,cdcId:0x%x,replyId:0x%x\n",
+   "sub_bloque": "SA_CONFIRM",
+   "sitios": [
+    "0x435d8d08"
+   ],
+   "funciones": [
+    "0x435d8c3c"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c3a3",
+   "texto": "[ENCSEQCTRL]MSGID_AVC_ENC_VIDEO_OPEN_COMP ERR = %x \n",
+   "sub_bloque": "MSGID_COMP",
+   "sitios": [
+    "0x435d8d82"
+   ],
+   "funciones": [
+    "0x435d8d38"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c3d8",
+   "texto": "[ENCSEQCTRL]MSGID_AVC_ENC_VIDEO_CLOSE_COMP ERR = %x \n",
+   "sub_bloque": "MSGID_COMP",
+   "sitios": [
+    "0x435d8df4"
+   ],
+   "funciones": [
+    "0x435d8d38"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c40e",
+   "texto": "[ENCSEQCTRL]MSGID_AVC_ENC_VIDEO_INITIALIZE_MOVIE_COMP ERR = %x \n",
+   "sub_bloque": "MSGID_COMP",
+   "sitios": [
+    "0x435d8e16"
+   ],
+   "funciones": [
+    "0x435d8d38"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c44f",
+   "texto": "[ENCSEQCTRL]MSGID_AVC_ENC_VIDEO_INITIALIZE_STILL_COMP ERR = %x \n",
+   "sub_bloque": "MSGID_COMP",
+   "sitios": [
+    "0x435d8e38"
+   ],
+   "funciones": [
+    "0x435d8d38"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c490",
+   "texto": "[ENCSEQCTRL]MSGID_AVC_ENC_VIDEO_ENC_PICTURE_COMP ERR = %x \n",
+   "sub_bloque": "MSGID_COMP",
+   "sitios": [
+    "0x435d8e5a"
+   ],
+   "funciones": [
+    "0x435d8d38"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c4cc",
+   "texto": "[ENCSEQCTRL]MSGID_AVC_ENC_VIDEO_ENC_FINAL_PICTURE_COMP ERR = %x \n",
+   "sub_bloque": "MSGID_COMP",
+   "sitios": [
+    "0x435d8e7c"
+   ],
+   "funciones": [
+    "0x435d8d38"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c50e",
+   "texto": "[ENCSEQCTRL]MSGID_AVC_ENC_VIDEO_FINALIZE_COMP ERR = %x \n",
+   "sub_bloque": "MSGID_COMP",
+   "sitios": [
+    "0x435d8e9e"
+   ],
+   "funciones": [
+    "0x435d8d38"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c547",
+   "texto": "[ENCSEQCTRL]MSGID_AVC_ENC_VIDEO_RELEASE_ES_COMP ERR = %x \n",
+   "sub_bloque": "MSGID_COMP",
+   "sitios": [
+    "0x435d8ec0"
+   ],
+   "funciones": [
+    "0x435d8d38"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c582",
+   "texto": "[ENCSEQCTRL]MSGID_AVC_ENC_VIDEO_RELEASE_PICTURE_NOTIFY ERR = %x \n",
+   "sub_bloque": "MSGID_COMP",
+   "sitios": [
+    "0x435d8ee2"
+   ],
+   "funciones": [
+    "0x435d8d38"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c5c4",
+   "texto": "[ENCSEQCTRL]MSGID_AVC_ENC_VIDEO_GET_ES_NOTIFY ERR = %x \n",
+   "sub_bloque": "MSGID_COMP",
+   "sitios": [
+    "0x435d8f04"
+   ],
+   "funciones": [
+    "0x435d8d38"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c5fd",
+   "texto": "[ENCSEQCTRL]MSGID_AVC_ENC_VIDEO_SET_MOVIE_QUALITY_INFO_COMP ERR = %x \n",
+   "sub_bloque": "MSGID_COMP",
+   "sitios": [
+    "0x435d8f2c"
+   ],
+   "funciones": [
+    "0x435d8d38"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c644",
+   "texto": "[ENCSEQCTRL]MSGID_AVC_ENC_VIDEO_SET_FACE_INFO_COMP ERR = %x \n",
+   "sub_bloque": "MSGID_COMP",
+   "sitios": [
+    "0x435d8f4e"
+   ],
+   "funciones": [
+    "0x435d8d38"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c682",
+   "texto": "[ENCSEQCTRL]ProcAvcMsg: Err = %x, MsgId = %x \n",
+   "sub_bloque": "PROCAVCMSG",
+   "sitios": [
+    "0x435d8fba"
+   ],
+   "funciones": [
+    "0x435d8d38"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c6b1",
+   "texto": "[ENCSEQCTRL]BeginEnc TimeInfo = %x, RefTime(VFC) = %x, EnsStartTime(VFC) = %x , EncStartTimeAudio(VFC) = %x \n",
+   "sub_bloque": "BEGIN_TIMEINFO",
+   "sitios": [
+    "0x435d9234"
+   ],
+   "funciones": [
+    "0x435d90ac"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c71f",
+   "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d, Stat \n",
+   "sub_bloque": "LOG_MACRO",
+   "sitios": [
+    "0x435d9336"
+   ],
+   "funciones": [
+    "0x435d90ac"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c74f",
+   "texto": "[ENCSEQCTRL]wai semaphore error, Err:%d, File:%s, Func:%s() ,Line:%d \n",
+   "sub_bloque": "SEMAPHORE",
+   "sitios": [
+    "0x435d9390"
+   ],
+   "funciones": [
+    "0x435d90ac"
+   ],
+   "lineas_fuente": []
+  },
+  {
+   "vaddr": "0x43c4c796",
+   "texto": "[ENCSEQCTRL]sig semaphore error, Err:%d, File:%s, Func:%s() ,Line:%d \n",
+   "sub_bloque": "SEMAPHORE",
+   "sitios": [
+    "0x435d944e"
+   ],
+   "funciones": [
+    "0x435d90ac"
+   ],
+   "lineas_fuente": []
+  }
+ ],
+ "sub_bloques": {
+  "LOG_MACRO": [
+   "0x43c4bce5",
+   "0x43c4be0e",
+   "0x43c4c71f"
+  ],
+  "O_U_CRANK": [
+   "0x43c4bd2b",
+   "0x43c4bd5f"
+  ],
+  "STATE": [
+   "0x43c4bda2",
+   "0x43c4be41",
+   "0x43c4bea4"
+  ],
+  "TIMING_WARNING": [
+   "0x43c4bdc4"
+  ],
+  "CHIP_MODE": [
+   "0x43c4be74"
+  ],
+  "SYSHS": [
+   "0x43c4bee0",
+   "0x43c4c1e8"
+  ],
+  "PIN_SUPPLY": [
+   "0x43c4bf1b",
+   "0x43c4bf48"
+  ],
+  "OU_STOP": [
+   "0x43c4bf8f"
+  ],
+  "FRAME_DEBUG": [
+   "0x43c4bfe8"
+  ],
+  "REVISE_NUM": [
+   "0x43c4c040",
+   "0x43c4c075",
+   "0x43c4c0aa",
+   "0x43c4c0e0",
+   "0x43c4c116",
+   "0x43c4c149",
+   "0x43c4c17e",
+   "0x43c4c1b2"
+  ],
+  "TERM_VFC": [
+   "0x43c4c217",
+   "0x43c4c24a"
+  ],
+  "REF_TIMER": [
+   "0x43c4c2b3",
+   "0x43c4c2dd"
+  ],
+  "REPLY_ID": [
+   "0x43c4c306"
+  ],
+  "SA_CONFIRM": [
+   "0x43c4c332"
+  ],
+  "MSGID_COMP": [
+   "0x43c4c3a3",
+   "0x43c4c3d8",
+   "0x43c4c40e",
+   "0x43c4c44f",
+   "0x43c4c490",
+   "0x43c4c4cc",
+   "0x43c4c50e",
+   "0x43c4c547",
+   "0x43c4c582",
+   "0x43c4c5c4",
+   "0x43c4c5fd",
+   "0x43c4c644"
+  ],
+  "PROCAVCMSG": [
+   "0x43c4c682"
+  ],
+  "BEGIN_TIMEINFO": [
+   "0x43c4c6b1"
+  ],
+  "SEMAPHORE": [
+   "0x43c4c74f",
+   "0x43c4c796"
+  ]
+ },
+ "funciones": {
+  "0x435d6ad0": {
+   "sitios": [
+    "0x435d6b12"
+   ],
+   "cadenas": [
+    "0x43c4bce5"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d6b12",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    }
+   ],
+   "llamadores_bl": [],
+   "metodo": {
+    "vaddr": "0x43c4bc12",
+    "texto": "Int32 McAvcEncSeqCtrl::ExecSeqAllocUserDataArea(const DefCodecIf2McAvcCmd::CMD_ALLOC_USER_DATA_AREA*)"
+   },
+   "fichero": {
+    "vaddr": "0x43c4bd0f",
+    "texto": "seqCtrl/mcAvcEncSeqCtrl.cpp"
+   }
+  },
+  "0x435d6b3c": {
+   "sitios": [
+    "0x435d6b94"
+   ],
+   "cadenas": [
+    "0x43c4bce5"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d6b94",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    }
+   ],
+   "llamadores_bl": [],
+   "metodo": {
+    "vaddr": "0x43c4b9ef",
+    "texto": "Int32 McAvcEncSeqCtrl::ExecSeqSetSeqParam(const DefCodecIf2McAvcCmd::CMD_SET_SEQ_PARAM*)"
+   },
+   "fichero": {
+    "vaddr": "0x43c4bd0f",
+    "texto": "seqCtrl/mcAvcEncSeqCtrl.cpp"
+   }
+  },
+  "0x435d6bc8": {
+   "sitios": [
+    "0x435d6c22",
+    "0x435d6c60"
+   ],
+   "cadenas": [
+    "0x43c4bce5"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d6c22",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d6c60",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    }
+   ],
+   "llamadores_bl": [],
+   "metodo": {
+    "vaddr": "0x43c4c9b0",
+    "texto": "Int32 McAvcEncSeqCtrl::ExecSeqApllyUserDataGop(const DefCodecIf2McAvcCmd::CMD_APPLY_USER_DATA_GOP*)"
+   },
+   "fichero": {
+    "vaddr": "0x43c4bd0f",
+    "texto": "seqCtrl/mcAvcEncSeqCtrl.cpp"
+   }
+  },
+  "0x435d6c94": {
+   "sitios": [
+    "0x435d6cee",
+    "0x435d6d2c"
+   ],
+   "cadenas": [
+    "0x43c4bce5"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d6cee",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d6d2c",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    }
+   ],
+   "llamadores_bl": [],
+   "metodo": {
+    "vaddr": "0x43c4caae",
+    "texto": "Int32 McAvcEncSeqCtrl::ExecSeqApplyUserDataPic(const DefCodecIf2McAvcCmd::CMD_APPLY_USER_DATA_PIC*)"
+   },
+   "fichero": {
+    "vaddr": "0x43c4bd0f",
+    "texto": "seqCtrl/mcAvcEncSeqCtrl.cpp"
+   }
+  },
+  "0x435d6d60": {
+   "sitios": [
+    "0x435d6db8"
+   ],
+   "cadenas": [
+    "0x43c4bce5"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d6db8",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    }
+   ],
+   "llamadores_bl": [],
+   "metodo": {
+    "vaddr": "0x43c4c7dd",
+    "texto": "Int32 McAvcEncSeqCtrl::ExecSeqMuteAudioCapture(const DefCodecIf2McAvcCmd::CMD_MUTE_AUDIO_CAPTURE*)"
+   },
+   "fichero": {
+    "vaddr": "0x43c4bd0f",
+    "texto": "seqCtrl/mcAvcEncSeqCtrl.cpp"
+   }
+  },
+  "0x435d6df8": {
+   "sitios": [
+    "0x435d6e54",
+    "0x435d6ec6"
+   ],
+   "cadenas": [
+    "0x43c4bce5"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d6e54",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d6ec6",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    }
+   ],
+   "llamadores_bl": [],
+   "metodo": {
+    "vaddr": "0x43c4baa3",
+    "texto": "Int32 McAvcEncSeqCtrl::ExecSeqSetEncReadPt(const DefCodecIf2McAvcCmd::CMD_SET_ENC_READ_POINTER*)"
+   },
+   "fichero": {
+    "vaddr": "0x43c4bd0f",
+    "texto": "seqCtrl/mcAvcEncSeqCtrl.cpp"
+   }
+  },
+  "0x435d6f04": {
+   "sitios": [
+    "0x435d6f56",
+    "0x435d6f9c",
+    "0x435d6ff6"
+   ],
+   "cadenas": [
+    "0x43c4bce5"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d6f56",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d6f9c",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d6ff6",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    }
+   ],
+   "llamadores_bl": [],
+   "metodo": {
+    "vaddr": "0x43c4ba48",
+    "texto": "Int32 McAvcEncSeqCtrl::ExecSeqInitEsApi(const DefCodecIf2McAvcCmd::CMD_INIT_ES_API_PARAM*)"
+   },
+   "fichero": {
+    "vaddr": "0x43c4bd0f",
+    "texto": "seqCtrl/mcAvcEncSeqCtrl.cpp"
+   }
+  },
+  "0x435d7040": {
+   "sitios": [
+    "0x435d7080"
+   ],
+   "cadenas": [
+    "0x43c4bce5"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d7080",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    }
+   ],
+   "llamadores_bl": [],
+   "metodo": {
+    "vaddr": "0x43c4b950",
+    "texto": "Int32 McAvcEncSeqCtrl::ExecSeqStillEncState()"
+   },
+   "fichero": {
+    "vaddr": "0x43c4bd0f",
+    "texto": "seqCtrl/mcAvcEncSeqCtrl.cpp"
+   }
+  },
+  "0x435d7190": {
+   "sitios": [
+    "0x435d71ca",
+    "0x435d7224",
+    "0x435d727c"
+   ],
+   "cadenas": [
+    "0x43c4bce5"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d71ca",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d7224",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d727c",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    }
+   ],
+   "llamadores_bl": [],
+   "metodo": {
+    "vaddr": "0x43c4c874",
+    "texto": "Int32 McAvcEncSeqCtrl::ExecSeqErrEncReadyState()"
+   },
+   "fichero": {
+    "vaddr": "0x43c4bd0f",
+    "texto": "seqCtrl/mcAvcEncSeqCtrl.cpp"
+   }
+  },
+  "0x435d72f8": {
+   "sitios": [
+    "0x435d7388",
+    "0x435d7450"
+   ],
+   "cadenas": [
+    "0x43c4bce5"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d7388",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d7450",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    }
+   ],
+   "llamadores_bl": [],
+   "metodo": null,
+   "fichero": {
+    "vaddr": "0x43c4bd0f",
+    "texto": "seqCtrl/mcAvcEncSeqCtrl.cpp"
+   }
+  },
+  "0x435d74f4": {
+   "sitios": [
+    "0x435d753e",
+    "0x435d758a"
+   ],
+   "cadenas": [
+    "0x43c4bce5"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d753e",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d758a",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    }
+   ],
+   "llamadores_bl": [],
+   "metodo": {
+    "vaddr": "0x43c4bb04",
+    "texto": "Int32 McAvcEncSeqCtrl::ExecSeqInActChip(const DefCodecIf2McAvcCmd::CMD_INACT_CHIP*, McAvcEncSeqCtrl::callback_if*)"
+   },
+   "fichero": {
+    "vaddr": "0x43c4bd0f",
+    "texto": "seqCtrl/mcAvcEncSeqCtrl.cpp"
+   }
+  },
+  "0x435d7608": {
+   "sitios": [
+    "0x435d766e",
+    "0x435d775e",
+    "0x435d77a0",
+    "0x435d78aa",
+    "0x435d78f2"
+   ],
+   "cadenas": [
+    "0x43c4bce5"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d766e",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d775e",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d77a0",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d78aa",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d78f2",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    }
+   ],
+   "llamadores_bl": [],
+   "metodo": {
+    "vaddr": "0x43c4bc78",
+    "texto": "Int32 McAvcEncSeqCtrl::ExecSeqActEnc(const DefCodecIf2McAvcCmd::CMD_ACT_ENC*, McAvcEncSeqCtrl::callback_if*)"
+   },
+   "fichero": {
+    "vaddr": "0x43c4bd0f",
+    "texto": "seqCtrl/mcAvcEncSeqCtrl.cpp"
+   }
+  },
+  "0x435d79cc": {
+   "sitios": [
+    "0x435d7a30",
+    "0x435d7a8c",
+    "0x435d7ae6"
+   ],
+   "cadenas": [
+    "0x43c4bce5",
+    "0x43c4be0e"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d7a30",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d7a8c",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d7ae6",
+     "cadena": "0x43c4be0e",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d,Err = %x \n"
+    }
+   ],
+   "llamadores_bl": [],
+   "metodo": {
+    "vaddr": "0x43c4bb77",
+    "texto": "Int32 McAvcEncSeqCtrl::ExecSeqEncodeState()"
+   },
+   "fichero": {
+    "vaddr": "0x43c4bd0f",
+    "texto": "seqCtrl/mcAvcEncSeqCtrl.cpp"
+   }
+  },
+  "0x435d7bf8": {
+   "sitios": [
+    "0x435d7c34",
+    "0x435d7c94",
+    "0x435d7cdc",
+    "0x435d7d26"
+   ],
+   "cadenas": [
+    "0x43c4bce5",
+    "0x43c4be74"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d7c34",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d7c94",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d7cdc",
+     "cadena": "0x43c4be74",
+     "texto": "[ENCSEQCTRL][AVC ENC SEQ CTRL] Chip Mode = %x \n"
+    },
+    {
+     "sitio": "0x435d7d26",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    }
+   ],
+   "llamadores_bl": [],
+   "metodo": {
+    "vaddr": "0x43c4c93c",
+    "texto": "Int32 McAvcEncSeqCtrl::ExecSeqInactiveState()"
+   },
+   "fichero": {
+    "vaddr": "0x43c4bd0f",
+    "texto": "seqCtrl/mcAvcEncSeqCtrl.cpp"
+   }
+  },
+  "0x435d7d60": {
+   "sitios": [
+    "0x435d7dbe",
+    "0x435d7dfa",
+    "0x435d7e6a",
+    "0x435d7ee0"
+   ],
+   "cadenas": [
+    "0x43c4bce5",
+    "0x43c4bea4"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d7dbe",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d7dfa",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d7e6a",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d7ee0",
+     "cadena": "0x43c4bea4",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d, State:0x%x->0x%x \n"
+    }
+   ],
+   "llamadores_bl": [
+    "0x435d6100"
+   ],
+   "metodo": {
+    "vaddr": "0x43c4b8aa",
+    "texto": "Int32 McAvcEncSeqCtrl::ExecSeqStillEnc(const DefCodecIf2McAvcCmd::CMD_STILL_ENC*, McAvcEncSeqCtrl::callback_if*)"
+   },
+   "fichero": {
+    "vaddr": "0x43c4bd0f",
+    "texto": "seqCtrl/mcAvcEncSeqCtrl.cpp"
+   }
+  },
+  "0x435d84cc": {
+   "sitios": [
+    "0x435d853a",
+    "0x435d867a",
+    "0x435d86bc",
+    "0x435d8724",
+    "0x435d87b4"
+   ],
+   "cadenas": [
+    "0x43c4bce5",
+    "0x43c4c217",
+    "0x43c4c24a"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d853a",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d867a",
+     "cadena": "0x43c4c217",
+     "texto": "[ENCSEQCTRL]MCodec%d changed termEncodeVfc %d->%d\n"
+    },
+    {
+     "sitio": "0x435d86bc",
+     "cadena": "0x43c4c24a",
+     "texto": "[ENCSEQCTRL]TermEnc TimeInfo = %x, RefTime(VFC) = %x, EnsStopTime(VFC) = %x EnsStopTimeAudio(VFC) = %x \n"
+    },
+    {
+     "sitio": "0x435d8724",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d87b4",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    }
+   ],
+   "llamadores_bl": [
+    "0x435d3d30"
+   ],
+   "metodo": {
+    "vaddr": "0x43c4bba3",
+    "texto": "Int32 McAvcEncSeqCtrl::ExecSeqTermEnc(const DefCodecIf2McAvcCmd::CMD_TERM_ENC*, McAvcEncSeqCtrl::callback_if*)"
+   },
+   "fichero": {
+    "vaddr": "0x43c4bd0f",
+    "texto": "seqCtrl/mcAvcEncSeqCtrl.cpp"
+   }
+  },
+  "0x435d882c": {
+   "sitios": [
+    "0x435d8914",
+    "0x435d8960"
+   ],
+   "cadenas": [
+    "0x43c4bce5"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d8914",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d8960",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    }
+   ],
+   "llamadores_bl": [
+    "0x435d9022"
+   ],
+   "metodo": {
+    "vaddr": "0x43c4c8a5",
+    "texto": "Int32 McAvcEncSeqCtrl::ProcMCMsg(const MSG_MC_AVC_ENC*)"
+   },
+   "fichero": {
+    "vaddr": "0x43c4bd0f",
+    "texto": "seqCtrl/mcAvcEncSeqCtrl.cpp"
+   }
+  },
+  "0x435d8988": {
+   "sitios": [
+    "0x435d89fe",
+    "0x435d8a34",
+    "0x435d8a50"
+   ],
+   "cadenas": [
+    "0x43c4bce5",
+    "0x43c4c2b3",
+    "0x43c4c2dd"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d89fe",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d8a34",
+     "cadena": "0x43c4c2b3",
+     "texto": "[ENCSEQCTRL]CheckSendFirstRefTimer = %x \n"
+    },
+    {
+     "sitio": "0x435d8a50",
+     "cadena": "0x43c4c2dd",
+     "texto": "[ENCSEQCTRL]CheckSendFirstRefTimer NOP \n"
+    }
+   ],
+   "llamadores_bl": [
+    "0x435d8dc2"
+   ],
+   "metodo": null,
+   "fichero": {
+    "vaddr": "0x43c4bd0f",
+    "texto": "seqCtrl/mcAvcEncSeqCtrl.cpp"
+   }
+  },
+  "0x435d8a84": {
+   "sitios": [
+    "0x435d8b14",
+    "0x435d8b72",
+    "0x435d8bca"
+   ],
+   "cadenas": [
+    "0x43c4bce5"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d8b14",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d8b72",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d8bca",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    }
+   ],
+   "llamadores_bl": [],
+   "metodo": {
+    "vaddr": "0x43c4ca14",
+    "texto": "Int32 McAvcEncSeqCtrl::ExecSeqEncReadyState()"
+   },
+   "fichero": {
+    "vaddr": "0x43c4bd0f",
+    "texto": "seqCtrl/mcAvcEncSeqCtrl.cpp"
+   }
+  },
+  "0x435d8d38": {
+   "sitios": [
+    "0x435d8d82",
+    "0x435d8df4",
+    "0x435d8e16",
+    "0x435d8e38",
+    "0x435d8e5a",
+    "0x435d8e7c",
+    "0x435d8e9e",
+    "0x435d8ec0",
+    "0x435d8ee2",
+    "0x435d8f04",
+    "0x435d8f2c",
+    "0x435d8f4e",
+    "0x435d8f80",
+    "0x435d8fba"
+   ],
+   "cadenas": [
+    "0x43c4bce5",
+    "0x43c4c3a3",
+    "0x43c4c3d8",
+    "0x43c4c40e",
+    "0x43c4c44f",
+    "0x43c4c490",
+    "0x43c4c4cc",
+    "0x43c4c50e",
+    "0x43c4c547",
+    "0x43c4c582",
+    "0x43c4c5c4",
+    "0x43c4c5fd",
+    "0x43c4c644",
+    "0x43c4c682"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d8d82",
+     "cadena": "0x43c4c3a3",
+     "texto": "[ENCSEQCTRL]MSGID_AVC_ENC_VIDEO_OPEN_COMP ERR = %x \n"
+    },
+    {
+     "sitio": "0x435d8df4",
+     "cadena": "0x43c4c3d8",
+     "texto": "[ENCSEQCTRL]MSGID_AVC_ENC_VIDEO_CLOSE_COMP ERR = %x \n"
+    },
+    {
+     "sitio": "0x435d8e16",
+     "cadena": "0x43c4c40e",
+     "texto": "[ENCSEQCTRL]MSGID_AVC_ENC_VIDEO_INITIALIZE_MOVIE_COMP ERR = %x \n"
+    },
+    {
+     "sitio": "0x435d8e38",
+     "cadena": "0x43c4c44f",
+     "texto": "[ENCSEQCTRL]MSGID_AVC_ENC_VIDEO_INITIALIZE_STILL_COMP ERR = %x \n"
+    },
+    {
+     "sitio": "0x435d8e5a",
+     "cadena": "0x43c4c490",
+     "texto": "[ENCSEQCTRL]MSGID_AVC_ENC_VIDEO_ENC_PICTURE_COMP ERR = %x \n"
+    },
+    {
+     "sitio": "0x435d8e7c",
+     "cadena": "0x43c4c4cc",
+     "texto": "[ENCSEQCTRL]MSGID_AVC_ENC_VIDEO_ENC_FINAL_PICTURE_COMP ERR = %x \n"
+    },
+    {
+     "sitio": "0x435d8e9e",
+     "cadena": "0x43c4c50e",
+     "texto": "[ENCSEQCTRL]MSGID_AVC_ENC_VIDEO_FINALIZE_COMP ERR = %x \n"
+    },
+    {
+     "sitio": "0x435d8ec0",
+     "cadena": "0x43c4c547",
+     "texto": "[ENCSEQCTRL]MSGID_AVC_ENC_VIDEO_RELEASE_ES_COMP ERR = %x \n"
+    },
+    {
+     "sitio": "0x435d8ee2",
+     "cadena": "0x43c4c582",
+     "texto": "[ENCSEQCTRL]MSGID_AVC_ENC_VIDEO_RELEASE_PICTURE_NOTIFY ERR = %x \n"
+    },
+    {
+     "sitio": "0x435d8f04",
+     "cadena": "0x43c4c5c4",
+     "texto": "[ENCSEQCTRL]MSGID_AVC_ENC_VIDEO_GET_ES_NOTIFY ERR = %x \n"
+    },
+    {
+     "sitio": "0x435d8f2c",
+     "cadena": "0x43c4c5fd",
+     "texto": "[ENCSEQCTRL]MSGID_AVC_ENC_VIDEO_SET_MOVIE_QUALITY_INFO_COMP ERR = %x \n"
+    },
+    {
+     "sitio": "0x435d8f4e",
+     "cadena": "0x43c4c644",
+     "texto": "[ENCSEQCTRL]MSGID_AVC_ENC_VIDEO_SET_FACE_INFO_COMP ERR = %x \n"
+    },
+    {
+     "sitio": "0x435d8f80",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d8fba",
+     "cadena": "0x43c4c682",
+     "texto": "[ENCSEQCTRL]ProcAvcMsg: Err = %x, MsgId = %x \n"
+    }
+   ],
+   "llamadores_bl": [
+    "0x435d9028"
+   ],
+   "metodo": {
+    "vaddr": "0x43c4c903",
+    "texto": "Int32 McAvcEncSeqCtrl::ProcAvcMsg(const MSG_MC_AVC_ENC*)"
+   },
+   "fichero": {
+    "vaddr": "0x43c4bd0f",
+    "texto": "seqCtrl/mcAvcEncSeqCtrl.cpp"
+   }
+  },
+  "0x435d900e": {
+   "sitios": [
+    "0x435d9050",
+    "0x435d907a"
+   ],
+   "cadenas": [
+    "0x43c4bce5"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d9050",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d907a",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    }
+   ],
+   "llamadores_bl": [],
+   "metodo": {
+    "vaddr": "0x43c4ca42",
+    "texto": "Int32 McAvcEncSeqCtrl::ProcMsg(const MSG_MC_AVC_ENC*)"
+   },
+   "fichero": {
+    "vaddr": "0x43c4bd0f",
+    "texto": "seqCtrl/mcAvcEncSeqCtrl.cpp"
+   }
+  },
+  "0x435d90ac": {
+   "sitios": [
+    "0x435d911a",
+    "0x435d9154",
+    "0x435d9234",
+    "0x435d92a8",
+    "0x435d9336",
+    "0x435d9390",
+    "0x435d944e"
+   ],
+   "cadenas": [
+    "0x43c4bce5",
+    "0x43c4c6b1",
+    "0x43c4c71f",
+    "0x43c4c74f",
+    "0x43c4c796"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d911a",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d9154",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d9234",
+     "cadena": "0x43c4c6b1",
+     "texto": "[ENCSEQCTRL]BeginEnc TimeInfo = %x, RefTime(VFC) = %x, EnsStartTime(VFC) = %x , EncStartTimeAudio(VFC) = %x \n"
+    },
+    {
+     "sitio": "0x435d92a8",
+     "cadena": "0x43c4bce5",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d9336",
+     "cadena": "0x43c4c71f",
+     "texto": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d, Stat \n"
+    },
+    {
+     "sitio": "0x435d9390",
+     "cadena": "0x43c4c74f",
+     "texto": "[ENCSEQCTRL]wai semaphore error, Err:%d, File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d944e",
+     "cadena": "0x43c4c796",
+     "texto": "[ENCSEQCTRL]sig semaphore error, Err:%d, File:%s, Func:%s() ,Line:%d \n"
+    }
+   ],
+   "llamadores_bl": [
+    "0x435d6188"
+   ],
+   "metodo": {
+    "vaddr": "0x43c4b97e",
+    "texto": "Int32 McAvcEncSeqCtrl::ExecSeqBeginEnc(const DefCodecIf2McAvcCmd::CMD_BEGIN_ENC*, McAvcEncSeqCtrl::callback_if*)"
+   },
+   "fichero": {
+    "vaddr": "0x43c4bd0f",
+    "texto": "seqCtrl/mcAvcEncSeqCtrl.cpp"
+   }
+  },
+  "0x435d70a2": {
+   "sitios": [
+    "0x435d7108",
+    "0x435d7142"
+   ],
+   "cadenas": [
+    "0x43c4bd2b",
+    "0x43c4bd5f"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d7108",
+     "cadena": "0x43c4bd2b",
+     "texto": "[ENCSEQCTRL][O/U Crank] Table[%d] fR[0x%x] sR[0x%x]"
+    },
+    {
+     "sitio": "0x435d7142",
+     "cadena": "0x43c4bd5f",
+     "texto": "[ENCSEQCTRL]OuCrank Config Err: FrameRate = %x,SamplingRate = %x \n"
+    }
+   ],
+   "llamadores_bl": [],
+   "metodo": null,
+   "fichero": null
+  },
+  "0x435d715c": {
+   "sitios": [
+    "0x435d717a"
+   ],
+   "cadenas": [
+    "0x43c4bda2"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d717a",
+     "cadena": "0x43c4bda2",
+     "texto": "[ENCSEQCTRL][state]0x%x -> 0x%x \n"
+    }
+   ],
+   "llamadores_bl": [
+    "0x435d5f86",
+    "0x435d72c0",
+    "0x435d740e",
+    "0x435d74e0",
+    "0x435d75d0",
+    "0x435d7972",
+    "0x435d7b3a",
+    "0x435d7be4",
+    "0x435d7d04",
+    "0x435d7eee",
+    "0x435d87f4",
+    "0x435d8de0",
+    "0x435d8f90",
+    "0x435d9476"
+   ],
+   "metodo": null,
+   "fichero": null
+  },
+  "0x435d7488": {
+   "sitios": [
+    "0x435d74bc"
+   ],
+   "cadenas": [
+    "0x43c4bdc4"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d74bc",
+     "cadena": "0x43c4bdc4",
+     "texto": "[ENCSEQCTRL]Warning, m_beginEncCompTime < refTime, change state forcibly\n"
+    }
+   ],
+   "llamadores_bl": [],
+   "metodo": null,
+   "fichero": null
+  },
+  "0x435d7b70": {
+   "sitios": [
+    "0x435d7bd6"
+   ],
+   "cadenas": [
+    "0x43c4be41"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d7bd6",
+     "cadena": "0x43c4be41",
+     "texto": "[ENCSEQCTRL]Func:%s() ,Line:%d, State:0x%x->0x%x \n"
+    }
+   ],
+   "llamadores_bl": [
+    "0x435d8ae0"
+   ],
+   "metodo": {
+    "vaddr": "0x43c4c840",
+    "texto": "Int32 McAvcEncSeqCtrl::ExecSeqEncReady2StillState()"
+   },
+   "fichero": null
+  },
+  "0x435d7f34": {
+   "sitios": [
+    "0x435d8002",
+    "0x435d8092",
+    "0x435d80be",
+    "0x435d80f2"
+   ],
+   "cadenas": [
+    "0x43c4bee0",
+    "0x43c4bf1b",
+    "0x43c4bf48"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d8002",
+     "cadena": "0x43c4bee0",
+     "texto": "[ENCSEQCTRL]Invalid syshsCnt File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d8092",
+     "cadena": "0x43c4bee0",
+     "texto": "[ENCSEQCTRL]Invalid syshsCnt File:%s, Func:%s() ,Line:%d \n"
+    },
+    {
+     "sitio": "0x435d80be",
+     "cadena": "0x43c4bf1b",
+     "texto": "[ENCSEQCTRL]WRN: Pin Supply Timing UNKNOWN \n"
+    },
+    {
+     "sitio": "0x435d80f2",
+     "cadena": "0x43c4bf48",
+     "texto": "[ENCSEQCTRL]EXEC TIME = %x PIN SUPPLY TIMING = %x REVISED VFCNUM = %d\n"
+    }
+   ],
+   "llamadores_bl": [
+    "0x435d858e",
+    "0x435d85ca",
+    "0x435d91c6"
+   ],
+   "metodo": {
+    "vaddr": "0x43c4c96a",
+    "texto": "UInt32 McAvcEncSeqCtrl::CalcEncStartStopTimingForSysHS(UInt32, UInt8)"
+   },
+   "fichero": {
+    "vaddr": "0x43c4bd0f",
+    "texto": "seqCtrl/mcAvcEncSeqCtrl.cpp"
+   }
+  },
+  "0x435d832c": {
+   "sitios": [
+    "0x435d8382",
+    "0x435d8394",
+    "0x435d83a8",
+    "0x435d83b8",
+    "0x435d83d8",
+    "0x435d83e6",
+    "0x435d83fe",
+    "0x435d8416",
+    "0x435d8442",
+    "0x435d8460",
+    "0x435d8488"
+   ],
+   "cadenas": [
+    "0x43c4bf1b",
+    "0x43c4bf48",
+    "0x43c4c040",
+    "0x43c4c075",
+    "0x43c4c0aa",
+    "0x43c4c0e0",
+    "0x43c4c116",
+    "0x43c4c149",
+    "0x43c4c17e",
+    "0x43c4c1b2",
+    "0x43c4c1e8"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d8382",
+     "cadena": "0x43c4c040",
+     "texto": "[ENCSEQCTRL][Begin][odd] ReviseNum Set to zero [%d]\n"
+    },
+    {
+     "sitio": "0x435d8394",
+     "cadena": "0x43c4c075",
+     "texto": "[ENCSEQCTRL][Begin][odd] ReviseNum Set to one  [%d]\n"
+    },
+    {
+     "sitio": "0x435d83a8",
+     "cadena": "0x43c4c0aa",
+     "texto": "[ENCSEQCTRL][Begin][even] ReviseNum Set to zero [%d]\n"
+    },
+    {
+     "sitio": "0x435d83b8",
+     "cadena": "0x43c4c0e0",
+     "texto": "[ENCSEQCTRL][Begin][even] ReviseNum Set to one  [%d]\n"
+    },
+    {
+     "sitio": "0x435d83d8",
+     "cadena": "0x43c4c116",
+     "texto": "[ENCSEQCTRL][Term][odd] ReviseNum Set to one [%d]\n"
+    },
+    {
+     "sitio": "0x435d83e6",
+     "cadena": "0x43c4c149",
+     "texto": "[ENCSEQCTRL][Term][odd] ReviseNum Set to zero  [%d]\n"
+    },
+    {
+     "sitio": "0x435d83fe",
+     "cadena": "0x43c4c17e",
+     "texto": "[ENCSEQCTRL][Term][even] ReviseNum Set to one [%d]\n"
+    },
+    {
+     "sitio": "0x435d8416",
+     "cadena": "0x43c4c1b2",
+     "texto": "[ENCSEQCTRL][Term][even] ReviseNum Set to zero  [%d]\n"
+    },
+    {
+     "sitio": "0x435d8442",
+     "cadena": "0x43c4bf1b",
+     "texto": "[ENCSEQCTRL]WRN: Pin Supply Timing UNKNOWN \n"
+    },
+    {
+     "sitio": "0x435d8460",
+     "cadena": "0x43c4c1e8",
+     "texto": "[ENCSEQCTRL]HighSpeed Rec is set to zero [%d]\n"
+    },
+    {
+     "sitio": "0x435d8488",
+     "cadena": "0x43c4bf48",
+     "texto": "[ENCSEQCTRL]EXEC TIME = %x PIN SUPPLY TIMING = %x REVISED VFCNUM = %d\n"
+    }
+   ],
+   "llamadores_bl": [
+    "0x435d85fe",
+    "0x435d8628",
+    "0x435d91fa"
+   ],
+   "metodo": null,
+   "fichero": null
+  },
+  "0x435d8128": {
+   "sitios": [
+    "0x435d81ee"
+   ],
+   "cadenas": [
+    "0x43c4bf8f"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d81ee",
+     "cadena": "0x43c4bf8f",
+     "texto": "[ENCSEQCTRL]OU StopInfo(NrmlTerm:%x,OuTerm:%x=((%x+%x)*smpl(%x)),Stt:%x,Stp:%x(%x)->%x \n"
+    }
+   ],
+   "llamadores_bl": [
+    "0x435d8596",
+    "0x435d85d2",
+    "0x435d8606"
+   ],
+   "metodo": null,
+   "fichero": null
+  },
+  "0x435d8206": {
+   "sitios": [
+    "0x435d8300"
+   ],
+   "cadenas": [
+    "0x43c4bfe8"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d8300",
+     "cadena": "0x43c4bfe8",
+     "texto": "[ENCSEQCTRL]abcd[%d] eTime[0x%x] cTime[0x%x] revFA[%d] FramePos[%d] revTA[%d] vNum[%d]\n"
+    }
+   ],
+   "llamadores_bl": [],
+   "metodo": null,
+   "fichero": null
+  },
+  "0x435d8c08": {
+   "sitios": [
+    "0x435d8c26"
+   ],
+   "cadenas": [
+    "0x43c4c306"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d8c26",
+     "cadena": "0x43c4c306",
+     "texto": "[ENCSEQCTRL]%s() [%s] Invalid replyId !!!!\n"
+    }
+   ],
+   "llamadores_bl": [],
+   "metodo": {
+    "vaddr": "0x43c4c8dd",
+    "texto": "OSAL_ID McAvcEncSeqCtrl::GetReplyId()"
+   },
+   "fichero": null
+  },
+  "0x435d8c3c": {
+   "sitios": [
+    "0x435d8d08"
+   ],
+   "cadenas": [
+    "0x43c4c332"
+   ],
+   "detalle": [
+    {
+     "sitio": "0x435d8d08",
+     "cadena": "0x43c4c332",
+     "texto": "[ENCSEQCTRL]AVSC_CID_MPRNTFY_ENC_SA_CONFIRM_EVENT(msgId:0x%x)::mid:0x%x,cid:0x%x,err:%x,cdcId:0x%x,replyId:0x%x\n"
+    }
+   ],
+   "llamadores_bl": [
+    "0x435d8d9e"
+   ],
+   "metodo": null,
+   "fichero": null
+  }
+ },
+ "tabla_msgids": [
+  {
+   "msgid": "0x8101",
+   "tbh_destino": "0x435d8d74",
+   "nombre": "MSGID_AVC_ENC_VIDEO_OPEN_COMP",
+   "nombre_esperado": "MSGID_AVC_ENC_VIDEO_OPEN_COMP",
+   "cadena": "0x43c4c3a3",
+   "sitio": "0x435d8d82"
+  },
+  {
+   "msgid": "0x8102",
+   "tbh_destino": "0x435d8de6",
+   "nombre": "MSGID_AVC_ENC_VIDEO_CLOSE_COMP",
+   "nombre_esperado": "MSGID_AVC_ENC_VIDEO_CLOSE_COMP",
+   "cadena": "0x43c4c3d8",
+   "sitio": "0x435d8df4"
+  },
+  {
+   "msgid": "0x8103",
+   "tbh_destino": "0x435d8e08",
+   "nombre": "MSGID_AVC_ENC_VIDEO_INITIALIZE_MOVIE_COMP",
+   "nombre_esperado": "MSGID_AVC_ENC_VIDEO_INITIALIZE_MOVIE_COMP",
+   "cadena": "0x43c4c40e",
+   "sitio": "0x435d8e16"
+  },
+  {
+   "msgid": "0x8104",
+   "tbh_destino": "0x435d8e2a",
+   "nombre": "MSGID_AVC_ENC_VIDEO_INITIALIZE_STILL_COMP",
+   "nombre_esperado": "MSGID_AVC_ENC_VIDEO_INITIALIZE_STILL_COMP",
+   "cadena": "0x43c4c44f",
+   "sitio": "0x435d8e38"
+  },
+  {
+   "msgid": "0x8105",
+   "tbh_destino": "0x435d8e4c",
+   "nombre": "MSGID_AVC_ENC_VIDEO_ENC_PICTURE_COMP",
+   "nombre_esperado": "MSGID_AVC_ENC_VIDEO_ENC_PICTURE_COMP",
+   "cadena": "0x43c4c490",
+   "sitio": "0x435d8e5a"
+  },
+  {
+   "msgid": "0x8106",
+   "tbh_destino": "0x435d8e6e",
+   "nombre": "MSGID_AVC_ENC_VIDEO_ENC_FINAL_PICTURE_COMP",
+   "nombre_esperado": "MSGID_AVC_ENC_VIDEO_ENC_FINAL_PICTURE_COMP",
+   "cadena": "0x43c4c4cc",
+   "sitio": "0x435d8e7c"
+  },
+  {
+   "msgid": "0x8107",
+   "tbh_destino": "0x435d8e90",
+   "nombre": "MSGID_AVC_ENC_VIDEO_FINALIZE_COMP",
+   "nombre_esperado": "MSGID_AVC_ENC_VIDEO_FINALIZE_COMP",
+   "cadena": "0x43c4c50e",
+   "sitio": "0x435d8e9e"
+  },
+  {
+   "msgid": "0x8108",
+   "tbh_destino": "0x435d8eb2",
+   "nombre": "MSGID_AVC_ENC_VIDEO_RELEASE_ES_COMP",
+   "nombre_esperado": "MSGID_AVC_ENC_VIDEO_RELEASE_ES_COMP",
+   "cadena": "0x43c4c547",
+   "sitio": "0x435d8ec0"
+  },
+  {
+   "msgid": "0x8109",
+   "tbh_destino": "0x435d8f1e",
+   "nombre": "MSGID_AVC_ENC_VIDEO_SET_MOVIE_QUALITY_INFO_COMP",
+   "nombre_esperado": "MSGID_AVC_ENC_VIDEO_SET_MOVIE_QUALITY_INFO_COMP",
+   "cadena": "0x43c4c5fd",
+   "sitio": "0x435d8f2c"
+  },
+  {
+   "msgid": "0x810a",
+   "tbh_destino": "0x435d8f40",
+   "nombre": "MSGID_AVC_ENC_VIDEO_SET_FACE_INFO_COMP",
+   "nombre_esperado": "MSGID_AVC_ENC_VIDEO_SET_FACE_INFO_COMP",
+   "cadena": "0x43c4c644",
+   "sitio": "0x435d8f4e"
+  },
+  {
+   "msgid": "0x810b",
+   "tbh_destino": "0x435d8f62",
+   "nombre": null,
+   "nombre_esperado": null,
+   "cadena": "0x43c4bce5",
+   "sitio": "0x435d8f80"
+  },
+  {
+   "msgid": "0x810c",
+   "tbh_destino": "0x435d8f62",
+   "nombre": null,
+   "nombre_esperado": null,
+   "cadena": "0x43c4bce5",
+   "sitio": "0x435d8f80"
+  },
+  {
+   "msgid": "0x810d",
+   "tbh_destino": "0x435d8f62",
+   "nombre": null,
+   "nombre_esperado": null,
+   "cadena": "0x43c4bce5",
+   "sitio": "0x435d8f80"
+  },
+  {
+   "msgid": "0x810e",
+   "tbh_destino": "0x435d8f62",
+   "nombre": null,
+   "nombre_esperado": null,
+   "cadena": "0x43c4bce5",
+   "sitio": "0x435d8f80"
+  },
+  {
+   "msgid": "0x810f",
+   "tbh_destino": "0x435d8f62",
+   "nombre": null,
+   "nombre_esperado": null,
+   "cadena": "0x43c4bce5",
+   "sitio": "0x435d8f80"
+  },
+  {
+   "msgid": "0x8110",
+   "tbh_destino": "0x435d8f62",
+   "nombre": null,
+   "nombre_esperado": null,
+   "cadena": "0x43c4bce5",
+   "sitio": "0x435d8f80"
+  },
+  {
+   "msgid": "0x8111",
+   "tbh_destino": "0x435d8ed4",
+   "nombre": "MSGID_AVC_ENC_VIDEO_RELEASE_PICTURE_NOTIFY",
+   "nombre_esperado": "MSGID_AVC_ENC_VIDEO_RELEASE_PICTURE_NOTIFY",
+   "cadena": "0x43c4c582",
+   "sitio": "0x435d8ee2"
+  },
+  {
+   "msgid": "0x8112",
+   "tbh_destino": "0x435d8ef6",
+   "nombre": "MSGID_AVC_ENC_VIDEO_GET_ES_NOTIFY",
+   "nombre_esperado": "MSGID_AVC_ENC_VIDEO_GET_ES_NOTIFY",
+   "cadena": "0x43c4c5c4",
+   "sitio": "0x435d8f04"
+  }
+ ],
+ "tabla_ouc_rank": {
+  "vaddr": "0x43b93bf4",
+  "entradas": 57,
+  "bytes_por_entrada": 8,
+  "entradas_completas": [
+   {
+    "idx": 0,
+    "vaddr": "0x43b93bf4",
+    "f0": 4,
+    "f0_hex": "0x4",
+    "u32_4": 316,
+    "byte_4": 60,
+    "byte_5": 1
+   },
+   {
+    "idx": 1,
+    "vaddr": "0x43b93bfc",
+    "f0": 4,
+    "f0_hex": "0x4",
+    "u32_4": 286,
+    "byte_4": 30,
+    "byte_5": 1
+   },
+   {
+    "idx": 2,
+    "vaddr": "0x43b93c04",
+    "f0": 4,
+    "f0_hex": "0x4",
+    "u32_4": 276,
+    "byte_4": 20,
+    "byte_5": 1
+   },
+   {
+    "idx": 3,
+    "vaddr": "0x43b93c0c",
+    "f0": 4,
+    "f0_hex": "0x4",
+    "u32_4": 272,
+    "byte_4": 16,
+    "byte_5": 1
+   },
+   {
+    "idx": 4,
+    "vaddr": "0x43b93c14",
+    "f0": 4,
+    "f0_hex": "0x4",
+    "u32_4": 268,
+    "byte_4": 12,
+    "byte_5": 1
+   },
+   {
+    "idx": 5,
+    "vaddr": "0x43b93c1c",
+    "f0": 4,
+    "f0_hex": "0x4",
+    "u32_4": 266,
+    "byte_4": 10,
+    "byte_5": 1
+   },
+   {
+    "idx": 6,
+    "vaddr": "0x43b93c24",
+    "f0": 4,
+    "f0_hex": "0x4",
+    "u32_4": 264,
+    "byte_4": 8,
+    "byte_5": 1
+   },
+   {
+    "idx": 7,
+    "vaddr": "0x43b93c2c",
+    "f0": 4,
+    "f0_hex": "0x4",
+    "u32_4": 262,
+    "byte_4": 6,
+    "byte_5": 1
+   },
+   {
+    "idx": 8,
+    "vaddr": "0x43b93c34",
+    "f0": 4,
+    "f0_hex": "0x4",
+    "u32_4": 260,
+    "byte_4": 4,
+    "byte_5": 1
+   },
+   {
+    "idx": 9,
+    "vaddr": "0x43b93c3c",
+    "f0": 4,
+    "f0_hex": "0x4",
+    "u32_4": 258,
+    "byte_4": 2,
+    "byte_5": 1
+   },
+   {
+    "idx": 10,
+    "vaddr": "0x43b93c44",
+    "f0": 4,
+    "f0_hex": "0x4",
+    "u32_4": 257,
+    "byte_4": 1,
+    "byte_5": 1
+   },
+   {
+    "idx": 11,
+    "vaddr": "0x43b93c4c",
+    "f0": 2,
+    "f0_hex": "0x2",
+    "u32_4": 316,
+    "byte_4": 60,
+    "byte_5": 1
+   },
+   {
+    "idx": 12,
+    "vaddr": "0x43b93c54",
+    "f0": 2,
+    "f0_hex": "0x2",
+    "u32_4": 286,
+    "byte_4": 30,
+    "byte_5": 1
+   },
+   {
+    "idx": 13,
+    "vaddr": "0x43b93c5c",
+    "f0": 2,
+    "f0_hex": "0x2",
+    "u32_4": 276,
+    "byte_4": 20,
+    "byte_5": 1
+   },
+   {
+    "idx": 14,
+    "vaddr": "0x43b93c64",
+    "f0": 2,
+    "f0_hex": "0x2",
+    "u32_4": 272,
+    "byte_4": 16,
+    "byte_5": 1
+   },
+   {
+    "idx": 15,
+    "vaddr": "0x43b93c6c",
+    "f0": 2,
+    "f0_hex": "0x2",
+    "u32_4": 268,
+    "byte_4": 12,
+    "byte_5": 1
+   },
+   {
+    "idx": 16,
+    "vaddr": "0x43b93c74",
+    "f0": 2,
+    "f0_hex": "0x2",
+    "u32_4": 266,
+    "byte_4": 10,
+    "byte_5": 1
+   },
+   {
+    "idx": 17,
+    "vaddr": "0x43b93c7c",
+    "f0": 2,
+    "f0_hex": "0x2",
+    "u32_4": 264,
+    "byte_4": 8,
+    "byte_5": 1
+   },
+   {
+    "idx": 18,
+    "vaddr": "0x43b93c84",
+    "f0": 2,
+    "f0_hex": "0x2",
+    "u32_4": 262,
+    "byte_4": 6,
+    "byte_5": 1
+   },
+   {
+    "idx": 19,
+    "vaddr": "0x43b93c8c",
+    "f0": 2,
+    "f0_hex": "0x2",
+    "u32_4": 260,
+    "byte_4": 4,
+    "byte_5": 1
+   },
+   {
+    "idx": 20,
+    "vaddr": "0x43b93c94",
+    "f0": 2,
+    "f0_hex": "0x2",
+    "u32_4": 258,
+    "byte_4": 2,
+    "byte_5": 1
+   },
+   {
+    "idx": 21,
+    "vaddr": "0x43b93c9c",
+    "f0": 2,
+    "f0_hex": "0x2",
+    "u32_4": 257,
+    "byte_4": 1,
+    "byte_5": 1
+   },
+   {
+    "idx": 22,
+    "vaddr": "0x43b93ca4",
+    "f0": 6,
+    "f0_hex": "0x6",
+    "u32_4": 316,
+    "byte_4": 60,
+    "byte_5": 1
+   },
+   {
+    "idx": 23,
+    "vaddr": "0x43b93cac",
+    "f0": 6,
+    "f0_hex": "0x6",
+    "u32_4": 286,
+    "byte_4": 30,
+    "byte_5": 1
+   },
+   {
+    "idx": 24,
+    "vaddr": "0x43b93cb4",
+    "f0": 6,
+    "f0_hex": "0x6",
+    "u32_4": 276,
+    "byte_4": 20,
+    "byte_5": 1
+   },
+   {
+    "idx": 25,
+    "vaddr": "0x43b93cbc",
+    "f0": 6,
+    "f0_hex": "0x6",
+    "u32_4": 272,
+    "byte_4": 16,
+    "byte_5": 1
+   },
+   {
+    "idx": 26,
+    "vaddr": "0x43b93cc4",
+    "f0": 6,
+    "f0_hex": "0x6",
+    "u32_4": 268,
+    "byte_4": 12,
+    "byte_5": 1
+   },
+   {
+    "idx": 27,
+    "vaddr": "0x43b93ccc",
+    "f0": 6,
+    "f0_hex": "0x6",
+    "u32_4": 266,
+    "byte_4": 10,
+    "byte_5": 1
+   },
+   {
+    "idx": 28,
+    "vaddr": "0x43b93cd4",
+    "f0": 6,
+    "f0_hex": "0x6",
+    "u32_4": 264,
+    "byte_4": 8,
+    "byte_5": 1
+   },
+   {
+    "idx": 29,
+    "vaddr": "0x43b93cdc",
+    "f0": 6,
+    "f0_hex": "0x6",
+    "u32_4": 262,
+    "byte_4": 6,
+    "byte_5": 1
+   },
+   {
+    "idx": 30,
+    "vaddr": "0x43b93ce4",
+    "f0": 6,
+    "f0_hex": "0x6",
+    "u32_4": 260,
+    "byte_4": 4,
+    "byte_5": 1
+   },
+   {
+    "idx": 31,
+    "vaddr": "0x43b93cec",
+    "f0": 6,
+    "f0_hex": "0x6",
+    "u32_4": 258,
+    "byte_4": 2,
+    "byte_5": 1
+   },
+   {
+    "idx": 32,
+    "vaddr": "0x43b93cf4",
+    "f0": 6,
+    "f0_hex": "0x6",
+    "u32_4": 257,
+    "byte_4": 1,
+    "byte_5": 1
+   },
+   {
+    "idx": 33,
+    "vaddr": "0x43b93cfc",
+    "f0": 5,
+    "f0_hex": "0x5",
+    "u32_4": 306,
+    "byte_4": 50,
+    "byte_5": 1
+   },
+   {
+    "idx": 34,
+    "vaddr": "0x43b93d04",
+    "f0": 5,
+    "f0_hex": "0x5",
+    "u32_4": 280,
+    "byte_4": 24,
+    "byte_5": 1
+   },
+   {
+    "idx": 35,
+    "vaddr": "0x43b93d0c",
+    "f0": 5,
+    "f0_hex": "0x5",
+    "u32_4": 272,
+    "byte_4": 16,
+    "byte_5": 1
+   },
+   {
+    "idx": 36,
+    "vaddr": "0x43b93d14",
+    "f0": 5,
+    "f0_hex": "0x5",
+    "u32_4": 268,
+    "byte_4": 12,
+    "byte_5": 1
+   },
+   {
+    "idx": 37,
+    "vaddr": "0x43b93d1c",
+    "f0": 5,
+    "f0_hex": "0x5",
+    "u32_4": 266,
+    "byte_4": 10,
+    "byte_5": 1
+   },
+   {
+    "idx": 38,
+    "vaddr": "0x43b93d24",
+    "f0": 5,
+    "f0_hex": "0x5",
+    "u32_4": 264,
+    "byte_4": 8,
+    "byte_5": 1
+   },
+   {
+    "idx": 39,
+    "vaddr": "0x43b93d2c",
+    "f0": 5,
+    "f0_hex": "0x5",
+    "u32_4": 262,
+    "byte_4": 6,
+    "byte_5": 1
+   },
+   {
+    "idx": 40,
+    "vaddr": "0x43b93d34",
+    "f0": 5,
+    "f0_hex": "0x5",
+    "u32_4": 260,
+    "byte_4": 4,
+    "byte_5": 1
+   },
+   {
+    "idx": 41,
+    "vaddr": "0x43b93d3c",
+    "f0": 5,
+    "f0_hex": "0x5",
+    "u32_4": 258,
+    "byte_4": 2,
+    "byte_5": 1
+   },
+   {
+    "idx": 42,
+    "vaddr": "0x43b93d44",
+    "f0": 5,
+    "f0_hex": "0x5",
+    "u32_4": 257,
+    "byte_4": 1,
+    "byte_5": 1
+   },
+   {
+    "idx": 43,
+    "vaddr": "0x43b93d4c",
+    "f0": 3,
+    "f0_hex": "0x3",
+    "u32_4": 306,
+    "byte_4": 50,
+    "byte_5": 1
+   },
+   {
+    "idx": 44,
+    "vaddr": "0x43b93d54",
+    "f0": 3,
+    "f0_hex": "0x3",
+    "u32_4": 280,
+    "byte_4": 24,
+    "byte_5": 1
+   },
+   {
+    "idx": 45,
+    "vaddr": "0x43b93d5c",
+    "f0": 3,
+    "f0_hex": "0x3",
+    "u32_4": 272,
+    "byte_4": 16,
+    "byte_5": 1
+   },
+   {
+    "idx": 46,
+    "vaddr": "0x43b93d64",
+    "f0": 3,
+    "f0_hex": "0x3",
+    "u32_4": 268,
+    "byte_4": 12,
+    "byte_5": 1
+   },
+   {
+    "idx": 47,
+    "vaddr": "0x43b93d6c",
+    "f0": 3,
+    "f0_hex": "0x3",
+    "u32_4": 266,
+    "byte_4": 10,
+    "byte_5": 1
+   },
+   {
+    "idx": 48,
+    "vaddr": "0x43b93d74",
+    "f0": 3,
+    "f0_hex": "0x3",
+    "u32_4": 264,
+    "byte_4": 8,
+    "byte_5": 1
+   },
+   {
+    "idx": 49,
+    "vaddr": "0x43b93d7c",
+    "f0": 3,
+    "f0_hex": "0x3",
+    "u32_4": 262,
+    "byte_4": 6,
+    "byte_5": 1
+   },
+   {
+    "idx": 50,
+    "vaddr": "0x43b93d84",
+    "f0": 3,
+    "f0_hex": "0x3",
+    "u32_4": 260,
+    "byte_4": 4,
+    "byte_5": 1
+   },
+   {
+    "idx": 51,
+    "vaddr": "0x43b93d8c",
+    "f0": 3,
+    "f0_hex": "0x3",
+    "u32_4": 258,
+    "byte_4": 2,
+    "byte_5": 1
+   },
+   {
+    "idx": 52,
+    "vaddr": "0x43b93d94",
+    "f0": 3,
+    "f0_hex": "0x3",
+    "u32_4": 257,
+    "byte_4": 1,
+    "byte_5": 1
+   },
+   {
+    "idx": 53,
+    "vaddr": "0x43b93d9c",
+    "f0": 7,
+    "f0_hex": "0x7",
+    "u32_4": 257,
+    "byte_4": 1,
+    "byte_5": 1
+   },
+   {
+    "idx": 54,
+    "vaddr": "0x43b93da4",
+    "f0": 8,
+    "f0_hex": "0x8",
+    "u32_4": 257,
+    "byte_4": 1,
+    "byte_5": 1
+   },
+   {
+    "idx": 55,
+    "vaddr": "0x43b93dac",
+    "f0": 9,
+    "f0_hex": "0x9",
+    "u32_4": 257,
+    "byte_4": 1,
+    "byte_5": 1
+   },
+   {
+    "idx": 56,
+    "vaddr": "0x43b93db4",
+    "f0": 10,
+    "f0_hex": "0xa",
+    "u32_4": 257,
+    "byte_4": 1,
+    "byte_5": 1
+   }
+  ]
+ },
+ "estados": {
+  "campo_estado_offset": "0x15B84",
+  "setter": "0x435d715c",
+  "nota": "u32 en [obj+0x15B84]; el setter lo escribe y lo anuncia con [ENCSEQCTRL][state]0x%x -> 0x%x (0x43c4bda2)"
+ },
+ "numeros_de_linea_fuente": {
+  "0x43c4bce5": [
+   {
+    "line": 321,
+    "log_call": "0x435d6b14",
+    "fn": "0x435d6ad0"
+   },
+   {
+    "line": 790,
+    "log_call": "0x435d6c24",
+    "fn": "0x435d6bc8"
+   },
+   {
+    "line": 834,
+    "log_call": "0x435d6d2e",
+    "fn": "0x435d6c94"
+   },
+   {
+    "line": 858,
+    "log_call": "0x435d6dba",
+    "fn": "0x435d6d60"
+   },
+   {
+    "line": 923,
+    "log_call": "0x435d6e56",
+    "fn": "0x435d6df8"
+   },
+   {
+    "line": 943,
+    "log_call": "0x435d6ec8",
+    "fn": "0x435d6df8"
+   },
+   {
+    "line": 997,
+    "log_call": "0x435d6f58",
+    "fn": "0x435d6f04"
+   },
+   {
+    "line": 1025,
+    "log_call": "0x435d6ffc",
+    "fn": "0x435d6f04"
+   },
+   {
+    "line": 1629,
+    "log_call": "0x435d7082",
+    "fn": "0x435d7040"
+   },
+   {
+    "line": 1593,
+    "log_call": "0x435d7452",
+    "fn": "0x435d72f8"
+   },
+   {
+    "line": 89,
+    "log_call": "0x435d7670",
+    "fn": "0x435d7608"
+   },
+   {
+    "line": 149,
+    "log_call": "0x435d7760",
+    "fn": "0x435d7608"
+   },
+   {
+    "line": 166,
+    "log_call": "0x435d77a2",
+    "fn": "0x435d7608"
+   },
+   {
+    "line": 211,
+    "log_call": "0x435d78ac",
+    "fn": "0x435d7608"
+   },
+   {
+    "line": 229,
+    "log_call": "0x435d78f4",
+    "fn": "0x435d7608"
+   },
+   {
+    "line": 1265,
+    "log_call": "0x435d7c36",
+    "fn": "0x435d7bf8"
+   },
+   {
+    "line": 1315,
+    "log_call": "0x435d7d28",
+    "fn": "0x435d7bf8"
+   },
+   {
+    "line": 713,
+    "log_call": "0x435d7dc0",
+    "fn": "0x435d7d60"
+   },
+   {
+    "line": 725,
+    "log_call": "0x435d7dfc",
+    "fn": "0x435d7d60"
+   },
+   {
+    "line": 741,
+    "log_call": "0x435d7e6c",
+    "fn": "0x435d7d60"
+   },
+   {
+    "line": 655,
+    "log_call": "0x435d8726",
+    "fn": "0x435d84cc"
+   },
+   {
+    "line": 673,
+    "log_call": "0x435d87b6",
+    "fn": "0x435d84cc"
+   },
+   {
+    "line": 1245,
+    "log_call": "0x435d8962",
+    "fn": "0x435d882c"
+   },
+   {
+    "line": 1370,
+    "log_call": "0x435d8b16",
+    "fn": "0x435d8a84"
+   },
+   {
+    "line": 1386,
+    "log_call": "0x435d8b74",
+    "fn": "0x435d8a84"
+   },
+   {
+    "line": 1402,
+    "log_call": "0x435d8bcc",
+    "fn": "0x435d8a84"
+   },
+   {
+    "line": 1143,
+    "log_call": "0x435d8f82",
+    "fn": "0x435d8d38"
+   },
+   {
+    "line": 1052,
+    "log_call": "0x435d9052",
+    "fn": "0x435d900e"
+   },
+   {
+    "line": 1058,
+    "log_call": "0x435d907c",
+    "fn": "0x435d900e"
+   },
+   {
+    "line": 429,
+    "log_call": "0x435d92ae",
+    "fn": "0x435d90ac"
+   }
+  ],
+  "0x43c4be0e": [
+   {
+    "line": 1697,
+    "log_call": "0x435d7ae8",
+    "fn": "0x435d79cc"
+   }
+  ],
+  "0x43c4be41": [
+   {
+    "line": 1510,
+    "log_call": "0x435d7bdc",
+    "fn": "0x435d7b70"
+   }
+  ],
+  "0x43c4bea4": [
+   {
+    "line": 763,
+    "log_call": "0x435d7ee6",
+    "fn": "0x435d7d60"
+   }
+  ],
+  "0x43c4bee0": [
+   {
+    "line": 2168,
+    "log_call": "0x435d8004",
+    "fn": "0x435d7f34"
+   },
+   {
+    "line": 2237,
+    "log_call": "0x435d8094",
+    "fn": "0x435d7f34"
+   }
+  ]
+ },
+ "rtti_clases": {
+  "McAvcEncSeqCtrl": [
+   "0x43c4320f",
+   "0x43c43523",
+   "0x43c4ab9e",
+   "0x43c4b8b0",
+   "0x43c4b8fc",
+   "0x43c4b920"
+  ],
+  "McAvcEncVideoSeqCtrlIf": [
+   "0x43c43319"
+  ],
+  "McAvcEncVideoSeqCtrlStateBase": [
+   "0x43c43332"
+  ],
+  "McAvcEncVideoSeqCtrlBase": [
+   "0x43c4336b",
+   "0x43c4ec55",
+   "0x43c4ecba",
+   "0x43c4ed2c",
+   "0x43c4eda9",
+   "0x43c4ee10"
+  ],
+  "McAvcEncVideo24PSeqCtrl": [
+   "0x43c43498",
+   "0x43c4cd0a",
+   "0x43c4cd3c",
+   "0x43c4cdb2",
+   "0x43c4cecd"
+  ],
+  "McAvcEncVideo30P25PSeqCtrl": [
+   "0x43c434cc",
+   "0x43c4cf0f",
+   "0x43c4cf8b",
+   "0x43c4cfb5"
+  ],
+  "McAvcEncVideo60I50ISeqCtrl": [
+   "0x43c434e9",
+   "0x43c4ab49",
+   "0x43c4d045",
+   "0x43c4d087",
+   "0x43c4d0ee",
+   "0x43c4d143"
+  ],
+  "McAvcEncVideo60P50PSeqCtrl": [
+   "0x43c43506",
+   "0x43c4aafd",
+   "0x43c4e0cc",
+   "0x43c4e148",
+   "0x43c4e17d",
+   "0x43c4e1d2"
+  ],
+  "McAvcEncSeqCtrlParam": [
+   "0x43c43523",
+   "0x43c70113"
+  ],
+  "McAvcEncAudioSeqCtrlIf": [
+   "0x43c43239",
+   "0x43c71682",
+   "0x43c716c6",
+   "0x43c716ef",
+   "0x43c71915"
+  ],
+  "McAvcEncAudioSeqCtrlState": [
+   "0x43c43252",
+   "0x43c4b319",
+   "0x43c4b406",
+   "0x43c4b422",
+   "0x43c4b4ef",
+   "0x43c4b515"
+  ],
+  "McAvcEncAudioSeqCtrlStateOuCrank": [
+   "0x43c43252",
+   "0x43c4b58b",
+   "0x43c4b6b7",
+   "0x43c71a32"
+  ],
+  "McAvcEncAudioSeqCtrlStateEncoding": [
+   "0x43c4b422"
+  ],
+  "McAvcEncAudioSeqCtrlStateNotInit": [
+   "0x43c4b4ef",
+   "0x43c4b515"
+  ],
+  "McAvcEncAudioSeqCtrlStateOuCrankEncoding": [
+   "0x43c4b58b",
+   "0x43c4b6b7"
+  ],
+  "McAvcEncAudioSeqCtrlStateReady": [
+   "0x43c4b7da"
+  ],
+  "McAvcEncAudioSeqCtrlStateStub": [
+   "0x43c4b7fb"
+  ],
+  "McAvcEncAudioSeqCtrlStateWaitClose": [
+   "0x43c4b81b"
+  ],
+  "McAvcEncAudioSeqCtrlStateWaitEnc": [
+   "0x43c4b840"
+  ],
+  "McAvcEncAudioSeqCtrlStateWaitOpen": [
+   "0x43c4b863"
+  ],
+  "McAvcEncAudioSeqCtrlStateWaitReady": [
+   "0x43c4b887"
+  ],
+  "McAvcEncModeMgr": [
+   "0x43c431fd",
+   "0x43c4ac2c",
+   "0x43c4ac52",
+   "0x43c4afd0",
+   "0x43c4aff4",
+   "0x43c4b02a"
+  ],
+  "McAvcEncModeReady": [
+   "0x43c4abbf",
+   "0x43c4b0a8",
+   "0x43c4b1f1",
+   "0x43c4b221",
+   "0x43c4b25a",
+   "0x43c4b2ae"
+  ],
+  "McAvcEncModeEncErr": [
+   "0x43c4a8fd",
+   "0x43c4aa34",
+   "0x43c4aa8a",
+   "0x43c4ac06"
+  ],
+  "McAvcEncModeEncMovie": [
+   "0x43c4aab7",
+   "0x43c4abe1"
+  ],
+  "McAvcEncModeEncStill": [
+   "0x43c4aace"
+  ],
+  "McAvcEncModeInActive": [
+   "0x43c4aae5",
+   "0x43c4ab79"
+  ],
+  "McAvcEncMode": [
+   "0x43c431fd",
+   "0x43c4a8ee",
+   "0x43c4a8fd",
+   "0x43c4aa34",
+   "0x43c4aa8a",
+   "0x43c4aab7"
+  ],
+  "McAvcEncVfm": [
+   "0x43c4282e",
+   "0x43c4ab2d",
+   "0x43c52766",
+   "0x43c52991",
+   "0x43c529b0"
+  ],
+  "McAvcEncLpcmBufIf": [
+   "0x43c4287e",
+   "0x43c72518"
+  ]
+ },
+ "ficheros_fuente": {
+  "seqCtrl/mcAvcEncSeqCtrl.cpp": "0x43c4bd0f",
+  "mcAvcEncModeMgr.cpp": "0x43c4acb9",
+  "mcAvcEncModeReady.cpp": "0x43c4b169",
+  "mcAvcEncModeEncErr.cpp": "0x43c4a980",
+  "seqCtrl/audio/mcAvcEncAudioSeqCtrlState.cpp": "0x43c4b36a",
+  "seqCtrl/audio/mcAvcEncAudioSeqCtrlStateNotInit.cpp": "0x43c4b46e",
+  "seqCtrl/audio/mcAvcEncAudioSeqCtrlStateOuCrankEncoding.cpp": "0x43c4b5b4",
+  "seqCtrl/audio/mcAvcEncAudioSeqCtrlStateOuCrankReady.cpp": "0x43c4b6f0",
+  "seqctrl/mcAvcDecSeqCtrl.cpp": "0x43c48017"
+ },
+ "diferencial": {
+  "A7S_fw320": {
+   "ocurrencias_token": 46,
+   "textos": 46,
+   "comunes": 46,
+   "solo_a6000": [],
+   "solo_modelo": []
+  },
+  "A6300_fw201": {
+   "ocurrencias_token": 50,
+   "textos": 50,
+   "comunes": 45,
+   "solo_a6000": [
+    "[ENCSEQCTRL]TermEnc TimeInfo = %x, RefTime(VFC) = %x, EnsStopTime(VFC) = %x EnsStopTimeAudio(VFC) = %x \n"
+   ],
+   "solo_modelo": [
+    "[ENCSEQCTRL]%s Remain=%d gopNum=%d startVfc=0x%x stopVfc=0x%x ouCrankStopVfc=0x%x\n",
+    "[ENCSEQCTRL]%s Remain=%d gopNum=%d startVfc=0x%x stopVfc=0x%x quickRestartVfc=0x%x\n",
+    "[ENCSEQCTRL]Audio Buffer Overflow detected in Terminate encode Sequence\n",
+    "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d Impossible to come here \n",
+    "[ENCSEQCTRL]TermEnc TimeInfo = %x, RefTime(VFC) = %x, EnsStopTime(VFC) = %x EnsStopTimeAudio(VFC) = %x EnsRestartTime(VFC) = %x \n"
+   ]
+  }
+ }
+}

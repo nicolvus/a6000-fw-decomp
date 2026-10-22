@@ -1,0 +1,1154 @@
+{
+ "milestone": "S167",
+ "token": "[SAD]",
+ "que_es": {
+  "lectura": "Módulo de depuración/diagnóstico del subsistema 'SA' (acelerador escalar): volcado del estado de configuracion, de la FIFO de JPEG, de los tiempos de calculo y de las cabeceras de programa SA (SaProgHdr), mas la gestion de handles de unidad/DMM.",
+  "base_textual": "NO VERIFICADO / sigla sin expandir: no existe ninguna cadena en el firmware que exponga 'SAD' como sigla (RTTI, nombres de fichero, simbolos). Se deja sin desarrollar.",
+  "indicios_de_la_sigla": [
+   "SA es el acelerador escalar del firmware: `SA_PREINSTALLED_PRG:` (0x43ce561f), `SA_JPEG_ENC` (0x43ce5634), `SA_JPEG_DEC` (0x43ce5640), `SA0_V1.0SA5_V1.0` (0x43ce5402), `ZMA0V1.0SA5_V1.0` (0x43ce5435)",
+   "las trazas [SAD] estan intercaladas en .rodata entre esas cadenas de SA (0x43ce546b-0x43ce59c1)",
+   "el codigo emisor esta en la misma zona que el gestor de programas preinstalados SA (0x4399ede0 referencia SA_PREINSTALLED_PRG:)",
+   "`exec_sadone` (RTTI, 0x43ce7004) pertenece a NS_SCALAR_INFRA (ScalarInfraSequenceSaStageAuto::exec_sa_done), NO al modulo [SAD]"
+  ]
+ },
+ "cadenas": [
+  {
+   "vaddr": "0x43ce546b",
+   "texto": "[SAD] Same Unit Handle Get",
+   "sub_bloque": "HANDLE_ALLOC",
+   "sitios_pic": [
+    "0x43998602"
+   ]
+  },
+  {
+   "vaddr": "0x43ce5486",
+   "texto": "[SAD] same hndl get_cnt=0x%08x",
+   "sub_bloque": "HANDLE_ALLOC",
+   "sitios_pic": [
+    "0x43998614"
+   ]
+  },
+  {
+   "vaddr": "0x43ce54a5",
+   "texto": "[SAD] alloc_cnt=0x%08x",
+   "sub_bloque": "HANDLE_ALLOC",
+   "sitios_pic": [
+    "0x43998626"
+   ]
+  },
+  {
+   "vaddr": "0x43ce55bc",
+   "texto": "[SAD] !!! CdcSaPrg Hdr Err !!!",
+   "sub_bloque": "SA_HDR_ERR",
+   "sitios_pic": [
+    "0x4399d4d2"
+   ]
+  },
+  {
+   "vaddr": "0x43ce55db",
+   "texto": "[SAD] !!! NmlSaPrg Hdr Err !!!",
+   "sub_bloque": "SA_HDR_ERR",
+   "sitios_pic": [
+    "0x4399d5d8"
+   ]
+  },
+  {
+   "vaddr": "0x43ce55fa",
+   "texto": "[SAD] !!! RsdSaPrg Hdr Err !!!",
+   "sub_bloque": "SA_HDR_ERR",
+   "sitios_pic": [
+    "0x4399d6ac"
+   ]
+  },
+  {
+   "vaddr": "0x43ce564c",
+   "texto": "[SAD] DbgPrt CmdRcv",
+   "sub_bloque": "DBGPRT_CMD",
+   "sitios_pic": [
+    "0x439a11b4"
+   ]
+  },
+  {
+   "vaddr": "0x43ce5660",
+   "texto": "[SAD] CfgStatePrt",
+   "sub_bloque": "CFG_STATE",
+   "sitios_pic": [
+    "0x439a11e4"
+   ]
+  },
+  {
+   "vaddr": "0x43ce5672",
+   "texto": "[SAD]      D3,D2,D1,D0",
+   "sub_bloque": "OTROS",
+   "sitios_pic": [
+    "0x439a11f6"
+   ]
+  },
+  {
+   "vaddr": "0x43ce5689",
+   "texto": "[SAD] ----------------",
+   "sub_bloque": "OTROS",
+   "sitios_pic": [
+    "0x439a1208",
+    "0x439a1290"
+   ]
+  },
+  {
+   "vaddr": "0x43ce56a0",
+   "texto": "[SAD] ZmCfg=0x%08x",
+   "sub_bloque": "CFG_STATE",
+   "sitios_pic": [
+    "0x439a121c"
+   ]
+  },
+  {
+   "vaddr": "0x43ce56b3",
+   "texto": "[SAD] ",
+   "sub_bloque": "OTROS",
+   "sitios_pic": [
+    "0x439a1230",
+    "0x439a1328",
+    "0x439a13b4"
+   ]
+  },
+  {
+   "vaddr": "0x43ce56ba",
+   "texto": "[SAD] SaCfg=0x%08x",
+   "sub_bloque": "CFG_STATE",
+   "sitios_pic": [
+    "0x439a1234"
+   ]
+  },
+  {
+   "vaddr": "0x43ce56cd",
+   "texto": "[SAD] = FifoStatePrt =",
+   "sub_bloque": "FIFO",
+   "sitios_pic": [
+    "0x439a1274"
+   ]
+  },
+  {
+   "vaddr": "0x43ce56e4",
+   "texto": "[SAD] D3:dummy,D2:WrtPtr,D1:RdPtr,D0:NumQue",
+   "sub_bloque": "OTROS",
+   "sitios_pic": [
+    "0x439a1284"
+   ]
+  },
+  {
+   "vaddr": "0x43ce5710",
+   "texto": "[SAD] OpnCmd=0x%08x",
+   "sub_bloque": "FIFO",
+   "sitios_pic": [
+    "0x439a12b2"
+   ]
+  },
+  {
+   "vaddr": "0x43ce5724",
+   "texto": "[SAD] JpgNrm=0x%08x",
+   "sub_bloque": "FIFO",
+   "sitios_pic": [
+    "0x439a12e2"
+   ]
+  },
+  {
+   "vaddr": "0x43ce5738",
+   "texto": "[SAD] JpgSrt=0x%08x",
+   "sub_bloque": "FIFO",
+   "sitios_pic": [
+    "0x439a1312"
+   ]
+  },
+  {
+   "vaddr": "0x43ce574c",
+   "texto": "[SAD] = FifoDataPrt =",
+   "sub_bloque": "FIFO",
+   "sitios_pic": [
+    "0x439a1336"
+   ]
+  },
+  {
+   "vaddr": "0x43ce5762",
+   "texto": "[SAD] JpgNrmIndex=0x%02x",
+   "sub_bloque": "FIFO",
+   "sitios_pic": [
+    "0x439a1354"
+   ]
+  },
+  {
+   "vaddr": "0x43ce577b",
+   "texto": "[SAD] JpgSrtIndex=0x%02x",
+   "sub_bloque": "FIFO",
+   "sitios_pic": [
+    "0x439a136e"
+   ]
+  },
+  {
+   "vaddr": "0x43ce5794",
+   "texto": "[SAD] OpnCmdIndex=0x%02x",
+   "sub_bloque": "FIFO",
+   "sitios_pic": [
+    "0x439a138e"
+   ]
+  },
+  {
+   "vaddr": "0x43ce57ad",
+   "texto": "[SAD] FifoSize=0x%02x",
+   "sub_bloque": "FIFO",
+   "sitios_pic": [
+    "0x439a13a4"
+   ]
+  },
+  {
+   "vaddr": "0x43ce57c3",
+   "texto": "[SAD]     D3,D2,D1,D0",
+   "sub_bloque": "OTROS",
+   "sitios_pic": [
+    "0x439a13c2"
+   ]
+  },
+  {
+   "vaddr": "0x43ce57d9",
+   "texto": "[SAD] ---------------",
+   "sub_bloque": "OTROS",
+   "sitios_pic": [
+    "0x439a13d0",
+    "0x439a1474"
+   ]
+  },
+  {
+   "vaddr": "0x43ce57ef",
+   "texto": "[SAD] Fifo=0x%08x",
+   "sub_bloque": "FIFO",
+   "sitios_pic": [
+    "0x439a13e6"
+   ]
+  },
+  {
+   "vaddr": "0x43ce5801",
+   "texto": "[SAD] = CalcTimePrt =",
+   "sub_bloque": "CALCTIME",
+   "sitios_pic": [
+    "0x439a1400"
+   ]
+  },
+  {
+   "vaddr": "0x43ce5817",
+   "texto": "[SAD] (ave):(max) (dummy):(count)",
+   "sub_bloque": "OTROS",
+   "sitios_pic": [
+    "0x439a140e"
+   ]
+  },
+  {
+   "vaddr": "0x43ce5839",
+   "texto": "[SAD] --------------------------",
+   "sub_bloque": "OTROS",
+   "sitios_pic": [
+    "0x439a141a"
+   ]
+  },
+  {
+   "vaddr": "0x43ce585a",
+   "texto": "[SAD] Data=0x%08x 0x%08x",
+   "sub_bloque": "OTROS",
+   "sitios_pic": [
+    "0x439a1446"
+   ]
+  },
+  {
+   "vaddr": "0x43ce5873",
+   "texto": "[SAD] = End ==",
+   "sub_bloque": "OTROS",
+   "sitios_pic": [
+    "0x439a145a"
+   ]
+  },
+  {
+   "vaddr": "0x43ce5882",
+   "texto": "[SAD] = CalcTimeSum Prt(sum:4byte)=",
+   "sub_bloque": "CALCTIME",
+   "sitios_pic": [
+    "0x439a1466"
+   ]
+  },
+  {
+   "vaddr": "0x43ce58a6",
+   "texto": "[SAD] Data=0x%08x",
+   "sub_bloque": "OTROS",
+   "sitios_pic": [
+    "0x439a1498"
+   ]
+  },
+  {
+   "vaddr": "0x43ce58b8",
+   "texto": "[SAD] = End =",
+   "sub_bloque": "OTROS",
+   "sitios_pic": [
+    "0x439a14aa"
+   ]
+  },
+  {
+   "vaddr": "0x43ce58c6",
+   "texto": "[SAD] DdsDataAdd=0x%08x",
+   "sub_bloque": "DDS_DATA_ADD",
+   "sitios_pic": [
+    "0x439a14b8"
+   ]
+  },
+  {
+   "vaddr": "0x43ce58de",
+   "texto": "[SAD] !!! SaProgHdr Err !!!",
+   "sub_bloque": "SA_HDR_ERR",
+   "sitios_pic": [
+    "0x439a14d4"
+   ]
+  },
+  {
+   "vaddr": "0x43ce58fa",
+   "texto": "[SAD] PrgID=0x%02x",
+   "sub_bloque": "SA_PROG_HDR",
+   "sitios_pic": [
+    "0x439a14ea"
+   ]
+  },
+  {
+   "vaddr": "0x43ce590d",
+   "texto": "[SAD] Add=0x%08x",
+   "sub_bloque": "OTROS",
+   "sitios_pic": [
+    "0x439a14fc"
+   ]
+  },
+  {
+   "vaddr": "0x43ce591e",
+   "texto": "[SAD] Data=0x%08x 0x%08x 0x%08x 0x%08x",
+   "sub_bloque": "OTROS",
+   "sitios_pic": [
+    "0x439a151e"
+   ]
+  },
+  {
+   "vaddr": "0x43ce5945",
+   "texto": "[SAD] SaProgHdr OK",
+   "sub_bloque": "SA_PROG_HDR",
+   "sitios_pic": [
+    "0x439a1532"
+   ]
+  },
+  {
+   "vaddr": "0x43ce5958",
+   "texto": "[SAD] Dmm Same Handle Get Num",
+   "sub_bloque": "HANDLE_ALLOC",
+   "sitios_pic": [
+    "0x439a153e"
+   ]
+  },
+  {
+   "vaddr": "0x43ce5976",
+   "texto": "[SAD] SameHandleGetCnt=0x%08x",
+   "sub_bloque": "HANDLE_ALLOC",
+   "sitios_pic": [
+    "0x439a154e"
+   ]
+  },
+  {
+   "vaddr": "0x43ce5994",
+   "texto": "[SAD] Alloc all Cnt=0x%08x",
+   "sub_bloque": "HANDLE_ALLOC",
+   "sitios_pic": [
+    "0x439a1562"
+   ]
+  },
+  {
+   "vaddr": "0x43ce59af",
+   "texto": "[SAD] data1=other",
+   "sub_bloque": "SELCODE",
+   "sitios_pic": [
+    "0x439a1576"
+   ]
+  },
+  {
+   "vaddr": "0x43ce59c1",
+   "texto": "[SAD] SelCodeErr",
+   "sub_bloque": "SELCODE",
+   "sitios_pic": [
+    "0x439a1582"
+   ]
+  }
+ ],
+ "n_cadenas_totales": 45,
+ "n_cadenas_con_contenido": 44,
+ "n_cadenas_solo_prefijo": 1,
+ "solo_prefijo": [
+  "0x43ce56b3"
+ ],
+ "n_sitios_pic_totales": 49,
+ "n_cadenas_sin_referencia": 0,
+ "mapa_funcion_traza": {
+  "0x43998578": {
+   "func": "0x43998578",
+   "n_sitios_pic": 3,
+   "sitios_pic": [
+    "0x43998602",
+    "0x43998614",
+    "0x43998626"
+   ],
+   "llamadores_bl": [],
+   "n_trazas": 3,
+   "trazas": [
+    {
+     "vaddr": "0x43ce546b",
+     "texto": "[SAD] Same Unit Handle Get",
+     "sub_bloque": "HANDLE_ALLOC"
+    },
+    {
+     "vaddr": "0x43ce5486",
+     "texto": "[SAD] same hndl get_cnt=0x%08x",
+     "sub_bloque": "HANDLE_ALLOC"
+    },
+    {
+     "vaddr": "0x43ce54a5",
+     "texto": "[SAD] alloc_cnt=0x%08x",
+     "sub_bloque": "HANDLE_ALLOC"
+    }
+   ]
+  },
+  "0x4399d464": {
+   "func": "0x4399d464",
+   "n_sitios_pic": 1,
+   "sitios_pic": [
+    "0x4399d4d2"
+   ],
+   "llamadores_bl": [
+    "0x4399a9c6",
+    "0x4399aa0c",
+    "0x4399aa34",
+    "0x4399ab0a",
+    "0x4399abd2",
+    "0x4399acee",
+    "0x4399ad14",
+    "0x4399ad3c",
+    "0x4399ae12",
+    "0x4399aeb4",
+    "0x4399af68",
+    "0x4399b010"
+   ],
+   "n_trazas": 1,
+   "trazas": [
+    {
+     "vaddr": "0x43ce55bc",
+     "texto": "[SAD] !!! CdcSaPrg Hdr Err !!!",
+     "sub_bloque": "SA_HDR_ERR"
+    }
+   ]
+  },
+  "0x4399d528": {
+   "func": "0x4399d528",
+   "n_sitios_pic": 1,
+   "sitios_pic": [
+    "0x4399d5d8"
+   ],
+   "llamadores_bl": [
+    "0x4399872a",
+    "0x43998876",
+    "0x4399888a",
+    "0x439989d4",
+    "0x43998b18"
+   ],
+   "n_trazas": 1,
+   "trazas": [
+    {
+     "vaddr": "0x43ce55db",
+     "texto": "[SAD] !!! NmlSaPrg Hdr Err !!!",
+     "sub_bloque": "SA_HDR_ERR"
+    }
+   ]
+  },
+  "0x4399d618": {
+   "func": "0x4399d618",
+   "n_sitios_pic": 1,
+   "sitios_pic": [
+    "0x4399d6ac"
+   ],
+   "llamadores_bl": [
+    "0x43998c2c",
+    "0x43998cf2",
+    "0x43998db6",
+    "0x43998e7a"
+   ],
+   "n_trazas": 1,
+   "trazas": [
+    {
+     "vaddr": "0x43ce55fa",
+     "texto": "[SAD] !!! RsdSaPrg Hdr Err !!!",
+     "sub_bloque": "SA_HDR_ERR"
+    }
+   ]
+  },
+  "0x439a119c": {
+   "func": "0x439a119c",
+   "n_sitios_pic": 43,
+   "sitios_pic": [
+    "0x439a11b4",
+    "0x439a11e4",
+    "0x439a11f6",
+    "0x439a1208",
+    "0x439a121c",
+    "0x439a1230",
+    "0x439a1234",
+    "0x439a1274",
+    "0x439a1284",
+    "0x439a1290",
+    "0x439a12b2",
+    "0x439a12e2",
+    "0x439a1312",
+    "0x439a1328",
+    "0x439a1336",
+    "0x439a1354",
+    "0x439a136e",
+    "0x439a138e",
+    "0x439a13a4",
+    "0x439a13b4",
+    "0x439a13c2",
+    "0x439a13d0",
+    "0x439a13e6",
+    "0x439a1400",
+    "0x439a140e",
+    "0x439a141a",
+    "0x439a1446",
+    "0x439a145a",
+    "0x439a1466",
+    "0x439a1474",
+    "0x439a1498",
+    "0x439a14aa",
+    "0x439a14b8",
+    "0x439a14d4",
+    "0x439a14ea",
+    "0x439a14fc",
+    "0x439a151e",
+    "0x439a1532",
+    "0x439a153e",
+    "0x439a154e",
+    "0x439a1562",
+    "0x439a1576",
+    "0x439a1582"
+   ],
+   "llamadores_bl": [
+    "0x4399b5ac"
+   ],
+   "n_trazas": 39,
+   "trazas": [
+    {
+     "vaddr": "0x43ce564c",
+     "texto": "[SAD] DbgPrt CmdRcv",
+     "sub_bloque": "DBGPRT_CMD"
+    },
+    {
+     "vaddr": "0x43ce5660",
+     "texto": "[SAD] CfgStatePrt",
+     "sub_bloque": "CFG_STATE"
+    },
+    {
+     "vaddr": "0x43ce5672",
+     "texto": "[SAD]      D3,D2,D1,D0",
+     "sub_bloque": "OTROS"
+    },
+    {
+     "vaddr": "0x43ce5689",
+     "texto": "[SAD] ----------------",
+     "sub_bloque": "OTROS"
+    },
+    {
+     "vaddr": "0x43ce56a0",
+     "texto": "[SAD] ZmCfg=0x%08x",
+     "sub_bloque": "CFG_STATE"
+    },
+    {
+     "vaddr": "0x43ce56b3",
+     "texto": "[SAD] ",
+     "sub_bloque": "OTROS"
+    },
+    {
+     "vaddr": "0x43ce56ba",
+     "texto": "[SAD] SaCfg=0x%08x",
+     "sub_bloque": "CFG_STATE"
+    },
+    {
+     "vaddr": "0x43ce56cd",
+     "texto": "[SAD] = FifoStatePrt =",
+     "sub_bloque": "FIFO"
+    },
+    {
+     "vaddr": "0x43ce56e4",
+     "texto": "[SAD] D3:dummy,D2:WrtPtr,D1:RdPtr,D0:NumQue",
+     "sub_bloque": "OTROS"
+    },
+    {
+     "vaddr": "0x43ce5710",
+     "texto": "[SAD] OpnCmd=0x%08x",
+     "sub_bloque": "FIFO"
+    },
+    {
+     "vaddr": "0x43ce5724",
+     "texto": "[SAD] JpgNrm=0x%08x",
+     "sub_bloque": "FIFO"
+    },
+    {
+     "vaddr": "0x43ce5738",
+     "texto": "[SAD] JpgSrt=0x%08x",
+     "sub_bloque": "FIFO"
+    },
+    {
+     "vaddr": "0x43ce574c",
+     "texto": "[SAD] = FifoDataPrt =",
+     "sub_bloque": "FIFO"
+    },
+    {
+     "vaddr": "0x43ce5762",
+     "texto": "[SAD] JpgNrmIndex=0x%02x",
+     "sub_bloque": "FIFO"
+    },
+    {
+     "vaddr": "0x43ce577b",
+     "texto": "[SAD] JpgSrtIndex=0x%02x",
+     "sub_bloque": "FIFO"
+    },
+    {
+     "vaddr": "0x43ce5794",
+     "texto": "[SAD] OpnCmdIndex=0x%02x",
+     "sub_bloque": "FIFO"
+    },
+    {
+     "vaddr": "0x43ce57ad",
+     "texto": "[SAD] FifoSize=0x%02x",
+     "sub_bloque": "FIFO"
+    },
+    {
+     "vaddr": "0x43ce57c3",
+     "texto": "[SAD]     D3,D2,D1,D0",
+     "sub_bloque": "OTROS"
+    },
+    {
+     "vaddr": "0x43ce57d9",
+     "texto": "[SAD] ---------------",
+     "sub_bloque": "OTROS"
+    },
+    {
+     "vaddr": "0x43ce57ef",
+     "texto": "[SAD] Fifo=0x%08x",
+     "sub_bloque": "FIFO"
+    },
+    {
+     "vaddr": "0x43ce5801",
+     "texto": "[SAD] = CalcTimePrt =",
+     "sub_bloque": "CALCTIME"
+    },
+    {
+     "vaddr": "0x43ce5817",
+     "texto": "[SAD] (ave):(max) (dummy):(count)",
+     "sub_bloque": "OTROS"
+    },
+    {
+     "vaddr": "0x43ce5839",
+     "texto": "[SAD] --------------------------",
+     "sub_bloque": "OTROS"
+    },
+    {
+     "vaddr": "0x43ce585a",
+     "texto": "[SAD] Data=0x%08x 0x%08x",
+     "sub_bloque": "OTROS"
+    },
+    {
+     "vaddr": "0x43ce5873",
+     "texto": "[SAD] = End ==",
+     "sub_bloque": "OTROS"
+    },
+    {
+     "vaddr": "0x43ce5882",
+     "texto": "[SAD] = CalcTimeSum Prt(sum:4byte)=",
+     "sub_bloque": "CALCTIME"
+    },
+    {
+     "vaddr": "0x43ce58a6",
+     "texto": "[SAD] Data=0x%08x",
+     "sub_bloque": "OTROS"
+    },
+    {
+     "vaddr": "0x43ce58b8",
+     "texto": "[SAD] = End =",
+     "sub_bloque": "OTROS"
+    },
+    {
+     "vaddr": "0x43ce58c6",
+     "texto": "[SAD] DdsDataAdd=0x%08x",
+     "sub_bloque": "DDS_DATA_ADD"
+    },
+    {
+     "vaddr": "0x43ce58de",
+     "texto": "[SAD] !!! SaProgHdr Err !!!",
+     "sub_bloque": "SA_HDR_ERR"
+    },
+    {
+     "vaddr": "0x43ce58fa",
+     "texto": "[SAD] PrgID=0x%02x",
+     "sub_bloque": "SA_PROG_HDR"
+    },
+    {
+     "vaddr": "0x43ce590d",
+     "texto": "[SAD] Add=0x%08x",
+     "sub_bloque": "OTROS"
+    },
+    {
+     "vaddr": "0x43ce591e",
+     "texto": "[SAD] Data=0x%08x 0x%08x 0x%08x 0x%08x",
+     "sub_bloque": "OTROS"
+    },
+    {
+     "vaddr": "0x43ce5945",
+     "texto": "[SAD] SaProgHdr OK",
+     "sub_bloque": "SA_PROG_HDR"
+    },
+    {
+     "vaddr": "0x43ce5958",
+     "texto": "[SAD] Dmm Same Handle Get Num",
+     "sub_bloque": "HANDLE_ALLOC"
+    },
+    {
+     "vaddr": "0x43ce5976",
+     "texto": "[SAD] SameHandleGetCnt=0x%08x",
+     "sub_bloque": "HANDLE_ALLOC"
+    },
+    {
+     "vaddr": "0x43ce5994",
+     "texto": "[SAD] Alloc all Cnt=0x%08x",
+     "sub_bloque": "HANDLE_ALLOC"
+    },
+    {
+     "vaddr": "0x43ce59af",
+     "texto": "[SAD] data1=other",
+     "sub_bloque": "SELCODE"
+    },
+    {
+     "vaddr": "0x43ce59c1",
+     "texto": "[SAD] SelCodeErr",
+     "sub_bloque": "SELCODE"
+    }
+   ]
+  }
+ },
+ "n_funciones_emisoras": 5,
+ "sub_bloques": {
+  "HANDLE_ALLOC": [
+   {
+    "vaddr": "0x43ce546b",
+    "texto": "[SAD] Same Unit Handle Get"
+   },
+   {
+    "vaddr": "0x43ce5486",
+    "texto": "[SAD] same hndl get_cnt=0x%08x"
+   },
+   {
+    "vaddr": "0x43ce54a5",
+    "texto": "[SAD] alloc_cnt=0x%08x"
+   },
+   {
+    "vaddr": "0x43ce5958",
+    "texto": "[SAD] Dmm Same Handle Get Num"
+   },
+   {
+    "vaddr": "0x43ce5976",
+    "texto": "[SAD] SameHandleGetCnt=0x%08x"
+   },
+   {
+    "vaddr": "0x43ce5994",
+    "texto": "[SAD] Alloc all Cnt=0x%08x"
+   }
+  ],
+  "SA_HDR_ERR": [
+   {
+    "vaddr": "0x43ce55bc",
+    "texto": "[SAD] !!! CdcSaPrg Hdr Err !!!"
+   },
+   {
+    "vaddr": "0x43ce55db",
+    "texto": "[SAD] !!! NmlSaPrg Hdr Err !!!"
+   },
+   {
+    "vaddr": "0x43ce55fa",
+    "texto": "[SAD] !!! RsdSaPrg Hdr Err !!!"
+   },
+   {
+    "vaddr": "0x43ce58de",
+    "texto": "[SAD] !!! SaProgHdr Err !!!"
+   }
+  ],
+  "DBGPRT_CMD": [
+   {
+    "vaddr": "0x43ce564c",
+    "texto": "[SAD] DbgPrt CmdRcv"
+   }
+  ],
+  "CFG_STATE": [
+   {
+    "vaddr": "0x43ce5660",
+    "texto": "[SAD] CfgStatePrt"
+   },
+   {
+    "vaddr": "0x43ce56a0",
+    "texto": "[SAD] ZmCfg=0x%08x"
+   },
+   {
+    "vaddr": "0x43ce56ba",
+    "texto": "[SAD] SaCfg=0x%08x"
+   }
+  ],
+  "OTROS": [
+   {
+    "vaddr": "0x43ce5672",
+    "texto": "[SAD]      D3,D2,D1,D0"
+   },
+   {
+    "vaddr": "0x43ce5689",
+    "texto": "[SAD] ----------------"
+   },
+   {
+    "vaddr": "0x43ce56e4",
+    "texto": "[SAD] D3:dummy,D2:WrtPtr,D1:RdPtr,D0:NumQue"
+   },
+   {
+    "vaddr": "0x43ce57c3",
+    "texto": "[SAD]     D3,D2,D1,D0"
+   },
+   {
+    "vaddr": "0x43ce57d9",
+    "texto": "[SAD] ---------------"
+   },
+   {
+    "vaddr": "0x43ce5817",
+    "texto": "[SAD] (ave):(max) (dummy):(count)"
+   },
+   {
+    "vaddr": "0x43ce5839",
+    "texto": "[SAD] --------------------------"
+   },
+   {
+    "vaddr": "0x43ce585a",
+    "texto": "[SAD] Data=0x%08x 0x%08x"
+   },
+   {
+    "vaddr": "0x43ce5873",
+    "texto": "[SAD] = End =="
+   },
+   {
+    "vaddr": "0x43ce58a6",
+    "texto": "[SAD] Data=0x%08x"
+   },
+   {
+    "vaddr": "0x43ce58b8",
+    "texto": "[SAD] = End ="
+   },
+   {
+    "vaddr": "0x43ce590d",
+    "texto": "[SAD] Add=0x%08x"
+   },
+   {
+    "vaddr": "0x43ce591e",
+    "texto": "[SAD] Data=0x%08x 0x%08x 0x%08x 0x%08x"
+   }
+  ],
+  "FIFO": [
+   {
+    "vaddr": "0x43ce56cd",
+    "texto": "[SAD] = FifoStatePrt ="
+   },
+   {
+    "vaddr": "0x43ce5710",
+    "texto": "[SAD] OpnCmd=0x%08x"
+   },
+   {
+    "vaddr": "0x43ce5724",
+    "texto": "[SAD] JpgNrm=0x%08x"
+   },
+   {
+    "vaddr": "0x43ce5738",
+    "texto": "[SAD] JpgSrt=0x%08x"
+   },
+   {
+    "vaddr": "0x43ce574c",
+    "texto": "[SAD] = FifoDataPrt ="
+   },
+   {
+    "vaddr": "0x43ce5762",
+    "texto": "[SAD] JpgNrmIndex=0x%02x"
+   },
+   {
+    "vaddr": "0x43ce577b",
+    "texto": "[SAD] JpgSrtIndex=0x%02x"
+   },
+   {
+    "vaddr": "0x43ce5794",
+    "texto": "[SAD] OpnCmdIndex=0x%02x"
+   },
+   {
+    "vaddr": "0x43ce57ad",
+    "texto": "[SAD] FifoSize=0x%02x"
+   },
+   {
+    "vaddr": "0x43ce57ef",
+    "texto": "[SAD] Fifo=0x%08x"
+   }
+  ],
+  "CALCTIME": [
+   {
+    "vaddr": "0x43ce5801",
+    "texto": "[SAD] = CalcTimePrt ="
+   },
+   {
+    "vaddr": "0x43ce5882",
+    "texto": "[SAD] = CalcTimeSum Prt(sum:4byte)="
+   }
+  ],
+  "DDS_DATA_ADD": [
+   {
+    "vaddr": "0x43ce58c6",
+    "texto": "[SAD] DdsDataAdd=0x%08x"
+   }
+  ],
+  "SA_PROG_HDR": [
+   {
+    "vaddr": "0x43ce58fa",
+    "texto": "[SAD] PrgID=0x%02x"
+   },
+   {
+    "vaddr": "0x43ce5945",
+    "texto": "[SAD] SaProgHdr OK"
+   }
+  ],
+  "SELCODE": [
+   {
+    "vaddr": "0x43ce59af",
+    "texto": "[SAD] data1=other"
+   },
+   {
+    "vaddr": "0x43ce59c1",
+    "texto": "[SAD] SelCodeErr"
+   }
+  ]
+ },
+ "ficheros_fuente": {
+  "nota": "Las 5 funciones emisoras NO imprimen `file=%s`; el modulo no embebe ningun nombre de fichero propio. La zona de codigo (0x43990000-0x439a1600) pertenece al bloque ScalarInfra (NS_SCALAR_INFRA): sus ficheros vecinos son `ScalarInfraAsyncMain.cpp` (0x43ce59fd), `ScalarInfraSequenceSa.cpp` (0x43ce6c15) y `ScalarInfraSequenceSaStage.cpp` (0x43ce6e16), referenciados desde 0x439a18d6 / 0x439a4024 / 0x439a47a0.",
+  "ficheros_vecinos": {
+   "ScalarInfraAsyncMain.cpp": "0x43ce59fd",
+   "ScalarInfraSequenceSa.cpp": "0x43ce6c15",
+   "ScalarInfraSequenceSaStage.cpp": "0x43ce6e16"
+  },
+  "fichero_propio_del_modulo": "NO VERIFICADO (no embebido)"
+ },
+ "rtti_relacionado": {
+  "NS_SCALAR_INFRA41ScalarInfraSequenceSaStageAutoexec_sadoneE": "0x43ce7004",
+  "nota": "Unico RTTI con 'sad' en el binario. Pertenece a NS_SCALAR_INFRA (etapa Sa del ScalarInfra), NO es el modulo [SAD]."
+ },
+ "comando_entrante": {
+  "id_mensaje_u16": "0x9548",
+  "id_mensaje_u16_vaddr": "0x439a119e",
+  "despachador": "0x439a119c",
+  "llamador": "0x4399b5ac",
+  "dispatcher_padre": "0x4399b074",
+  "registro_del_dispatcher_padre": "0x43fd2a88",
+  "nota": "En 0x439a119e `movw r3,#0x9548` + `ldrh r2,[r0,#2]` + `cmp r2,r3` comprueba que el mensaje recibido lleva el id 0x9548. El byte [r0+4] debe ser 1 y el byte [r0+5] selecciona 6 subcomandos mediante la tabla `tbh` de 0x439a11d0 (casos 1..6).",
+  "subcomandos_tbh": {
+   "tabla": "0x439a11d0",
+   "caso_1_cfg_state": "0x439a11dc",
+   "caso_2_fifo_state": "0x439a126c",
+   "caso_3_fifo_data": "0x439a13f2",
+   "caso_4_dds_data_add": "0x439a14ae",
+   "caso_5_sa_prog_hdr": "0x439a14c0",
+   "caso_6_dmm_handle": "0x439a1536"
+  }
+ },
+ "verificacion_pic": {
+  "regla": "estricta (ldr rX,[pc,#imm] mas cercano por detras, ventana 4 KB)",
+  "n_sitios_verificados_a_mano": 49,
+  "n_ok": 49,
+  "n_fallo": 0,
+  "cotejo_con_mapa_global_repo": {
+   "n_discrepancias": 0,
+   "detalle": []
+  }
+ },
+ "diferencial": {
+  "A7S_fw320": {
+   "ocurrencias_token": 0,
+   "cadenas_[SAD]": 0,
+   "nucleos_texto_comunes_con_a6000": [],
+   "nota": "0 apariciones del token [SAD]: la etiqueta y sus 44 mensajes no existen en este firmware"
+  },
+  "A6300_fw201": {
+   "ocurrencias_token": 0,
+   "cadenas_[SAD]": 0,
+   "nucleos_texto_comunes_con_a6000": [],
+   "nota": "0 apariciones del token [SAD]: la etiqueta y sus 44 mensajes no existen en este firmware"
+  }
+ },
+ "diferencial_estructural": {
+  "hallazgo": "La tabla de bytes que en la A7S/A6300 ocupa el hueco entre `ZMA0V1.0SA5_V1.0` y `SA_PREINSTALLED_PRG:` esta INTERCALADA en la A6000 con las 44 cadenas [SAD]: la cabecera de 27 B y la tabla de 25 indices (0x03..0x1b) sobreviven intactas, pero las trazas se han insertado en dos huecos, partiendo el bloque en 3 (A: 3 cadenas, B: 3 cadenas, C: 39 cadenas).",
+  "tabla_A7S": "0x43cda6ef",
+  "tabla_A6300": "0x43df89bc",
+  "cabecera_27B_identica_en_los_tres": {
+   "A6000": "0x43ce5445",
+   "A7S": "0x43cda6ef",
+   "A6300": "0x43df89bc",
+   "bytes": "000101010001010204088383830483838307070707070707070707"
+  },
+  "tabla_indices_25_identica": {
+   "A6000": "0x43ce54bc",
+   "A7S": "0x43cda716",
+   "bytes_no_0x1c": [
+    "0x3",
+    "0x4",
+    "0x5",
+    "0x6",
+    "0x7",
+    "0x8",
+    "0x9",
+    "0xa",
+    "0xb",
+    "0xc",
+    "0xd",
+    "0xe",
+    "0xf",
+    "0x10",
+    "0x11",
+    "0x12",
+    "0x13",
+    "0x14",
+    "0x15",
+    "0x16",
+    "0x17",
+    "0x18",
+    "0x19",
+    "0x1a",
+    "0x1b"
+   ]
+  },
+  "bloques_de_cadenas_SAD": {
+   "A_handles": [
+    "0x43ce546b",
+    "0x43ce54bb",
+    3
+   ],
+   "B_hdr_err": [
+    "0x43ce55bc",
+    "0x43ce5618",
+    3
+   ],
+   "C_dbgprt": [
+    "0x43ce564c",
+    "0x43ce59d1",
+    39
+   ]
+  }
+ },
+ "interes_para_la_linea_del_obturador": {
+  "menciona_obturacion": false,
+  "negativo_verificado": {
+   "shutter": 0,
+   "silent": 0,
+   "obtur": 0,
+   "expos": 0,
+   "imager": 0,
+   "sensor": 0,
+   "readout": 0,
+   "drive": 0,
+   "brack": 0,
+   "sweep": 0,
+   "interval": 0,
+   "still": 0,
+   "movie": 0,
+   "focus": 0,
+   "aperture": 0,
+   "iso": 0
+  },
+  "unicas_apariciones_de_jpg": [
+   "JpgNrm",
+   "JpgSrt",
+   "JpgNrmIndex",
+   "JpgSrtIndex"
+  ],
+  "nota": "El modulo no habla de obturacion, exposicion ni sensor. Solo aparece 'Jpg' en 4 mensajes, pero como indice de cola FIFO (JpgNrm/JpgSrt = indices normal/sort de JPEG), no como captura. Sin efecto en S51 (A/B/C = NO)."
+ },
+ "verif_adicional": {
+  "canal_de_log_propio": {
+   "impresor": "0x439a10f0",
+   "id_mensaje": "0x93 (147)",
+   "tamano_mensaje": "0x9a",
+   "reserva": "osal_try_valloc_msg 0x435612d0",
+   "nota": "impresor propio del modulo, distinto del logger global 0x435ab880 que usan [SFRA]/[SFRS]"
+  },
+  "direcciones_de_datos_de_los_emisores": {
+   "tabla_handles_255_u16": {
+    "vaddr": "0x43f84bfe",
+    "como": "ldr r3,[pc,#0xb8] en 0x43998574 + add r3,pc en 0x4399857a; fin = base+0x1fe"
+   },
+   "tabla_handles_32_u16": {
+    "vaddr": "0x43f85932",
+    "como": "ldr r3,[pc,#0x98] en 0x43998598 + add r3,pc en 0x4399859a; fin = base+0x40"
+   },
+   "contador_u32_alloc_cnt": {
+    "vaddr": "0x43f31368",
+    "como": "ldr r3,[pc,#0x80] en 0x439985b6 + add r3,pc en 0x439985b8"
+   },
+   "contador_u16_same_hndl_get_cnt": {
+    "vaddr": "0x43f84bfc",
+    "como": "ldr r3,[pc,#0x70] en 0x439985ca + add r3,pc en 0x439985d0"
+   }
+  },
+  "tabla_de_versiones_sa": {
+   "vaddr_ini": "0x43ce5402",
+   "entradas": [
+    "SA0_V1.0|SA5_V1.0",
+    "ZMA1V1.0|SA5_V1.0",
+    "SA1_V1.0|SA5_V1.0",
+    "ZMA0V1.0|SA5_V1.0"
+   ],
+   "comparacion_16_bytes": "0x43993128",
+   "globales_runtime": [
+    "0x43f2ef7c",
+    "0x43f2ef6e",
+    "0x43f2ef5c",
+    "0x43f2ef8c"
+   ]
+  },
+  "anclas_de_codigo_para_el_diferencial": {
+   "nota": "sitios PIC de las mismas cadenas del driver SA en los tres firmwares: el bloque de codigo es el mismo modulo pero distinto codigo (crece en la fw3.21 de la A6000)",
+   "[SIO]osal_valloc_msg": {
+    "A6000": "0x43990414",
+    "A7S": "0x4397df30",
+    "A6300": "0x43a24b68"
+   },
+   "SA_PREINSTALLED_PRG:": {
+    "A6000": "0x4399ee6a",
+    "A7S": "0x4398c8cc",
+    "A6300": "0x43a2accc"
+   },
+   "ScalarInfraAsyncMain.cpp": {
+    "A6000": "0x439a18d6",
+    "A7S": "0x4398f122",
+    "A6300": "0x43a387fa"
+   }
+  },
+  "cadena_PEG_DEC_muerta": {
+   "vaddr": "0x43ce5644",
+   "texto": "PEG_DEC",
+   "nota": "subcadena de 'SA_JPEG_DEC' (0x43ce5640) + 4. 0 referencias PIC y 0 punteros embebidos de 4 B: es una cadena MUERTA. El ldr r3,[pc,#0x3e4] de 0x439a11ac apunta al pool 0x439a1594 (W=0x344494) y con el add r3,pc de 0x439a11b4 el destino es 0x43ce564c ('[SAD] DbgPrt CmdRcv'), NO 0x43ce5644."
+  }
+ },
+ "abierto_no_verificado": [
+  "sigla 'SAD' sin expansion textual: NO VERIFICADO (no se inventa)",
+  "fichero fuente propio del modulo: NO VERIFICADO (no embebido en el binario)",
+  "significado de CdcSaPrg/NmlSaPrg/RsdSaPrg: NO VERIFICADO (3 tipos de cabecera de programa SA; solo se sabe que validan y dan error)",
+  "que representa exactamente la 'unit' y el 'Dmm' (handle): NO VERIFICADO",
+  "el binario A7S/A6300 tiene el mismo codigo sin la etiqueta [SAD]: NO VERIFICADO (no se ha localizado codigo equivalente alli)"
+ ]
+}

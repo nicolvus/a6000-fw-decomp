@@ -5,12 +5,66 @@ documento canónico donde está comprobada, con su rango de líneas cuando aplic
 Para el historial íntegro de sesiones ver `docs/history/` y las correcciones completas
 en [docs/CORRECTIONS.md](CORRECTIONS.md) (generado del grafo, no editar a mano).
 Para preguntas abiertas ver [docs/OPEN-QUESTIONS.md](OPEN-QUESTIONS.md).
-Última sesión documentada: [S102, menú principal](capture/s102-menu-principal.md).
 Para el estado operativo actualizado, ver [knowledge/CURRENT.md](../knowledge/CURRENT.md);
 para el obturador, la decisión [S51](capture/s51-decision.md) y el
 [plan de ocho pruebas físicas pendientes](capture/physical-test-plan.md).
 
-## Avance S62 (20-10-2026)
+## Avance S138–S174 (22-10-2026) — línea de RE general, controles positivos del obturador y una regla metodológica
+
+**Línea de RE general** (catálogo con 105 hitos: [docs/capture/linea-general-re.md](capture/linea-general-re.md)).
+Hitos nuevos decodificados con bytes y tests propios: `[CAMERA_MAIN_FC]` (S138), `[CAM_UTIL_ADJ]` (S143),
+`[CAM_UTIL_SENS]` (S144), `[DEPTH]` (S148), `[PANDA]` (S151), `[TP_R]` (S156), `[CAMERA_IS]` (S164),
+`[JOG]` (S165), `[ADC_DEBUG]` (S166), `[SAD]` (S167), `[CAM_UTIL]`/`[CAMERA_ADJ]` (S173).
+
+**Patrón consolidado**: en los módulos de trazas, la **etiqueta de módulo es propia de la fw3.21** pero la
+**funcionalidad ya existía** en la A7S fw3.20 o el A6300 fw2.01 → la fw3.21 de la A6000 **reescribe el logging,
+no el firmware** (S128/S130, con 9 ejemplos más). Casos notables: `[CAM_UTIL_ADJ]`/`[CAM_UTIL_SENS]` son **el
+mismo par** (dependencia cruzada `0x43900c9c`, `0x439012fa`/`0x43901302`; id de módulo `0xb5`) y escriben
+**calibración en la RAM del sensor** (51 comandos «Sens» en `0x43fe858c`); `[DEPTH]` sale a la **EXIF** (tags
+`0x5001`/`0x5002`); `[TP_R]` es un **reporter** y **corrige un falso positivo de S130**; `[CAMERA_IS]` es **la
+capa que aplica la estabilización** (17/17 pares PIC a mano → **valida el mapa de S70**); `[JOG]` es la **fuente
+de eventos de la rueda** (el A6300 sustituye `JogVGrip` por `JogCaif`); `[ADC_DEBUG]` es el **volcado del driver
+LIRO ADC** y **corrige una lectura de S164**; `[SAD]` es el **diagnóstico de la biblioteca «SA»** con la sigla
+**sin base textual** (sin desarrollar).
+
+**Controles positivos del obturador electrónico** (todos con bytes, sin ejecutar firmware):
+
+* **S168** — la cadena `position num in rolling is strange %d` del A6300 (`0x43d9fe03`) tiene **0 referencias de
+  código** (regla estricta, punteros absolutos, pares `movw`/`movt` y un método inverso independiente) → **cadena
+  muerta**; de las 5 de su banda, 4 sí lo están (el único código vivo es el cálculo de ancho del **número de
+  posición del VD**, `0x4372914c`). **Corrige** el colateral de S164.
+* **S169** — el A6300 tiene una **capa de validación de parámetros de cámara** (`LiroSeq`) con **201** propiedades
+  `CheckSet*` y **370** comprobaciones, con parámetros de obturador `sc_ShutDrive` (`+0x1dd`), `uc_ShutDriveMode`
+  (`+0x1dc`), **`front_eshutter`** (`+0x23c`), **`SilentShutterMode`** (`+0x264`), **`shutterType`** (`+0x268`),
+  `ul_ShutLowLimit`, `sc_IrisDrive`, `uc_IrisDriveMode`, `sc_ExposureDrive`. **La A6000 fw3.21 y la A7S fw3.20
+  tienen 0/0 de todo eso** → **falta el parámetro, no solo la traza**. Refuerza S135 con evidencia de **parámetros
+  en runtime**.
+* **S171** — la API del imager del A6300 tiene **7** entradas y las de la A6000/A7S **4** (`GetImagerStabilizationTime`
+  viva en `0x43718d04`; clase `Camera::Sync::SyncUtilityUpm` **0/0/3**; tipo `IMAGER_DRIVEMODE` **0/0/2**) y el
+  A6300 tiene un **canal de estabilización del objetivo** (`SteadyShotInfo` **0/0/7**) que la A6000 no tiene.
+* **S172** — el módulo `ElecShutter/` del A6300, que S135 solo había localizado por sus nombres de fichero, queda
+  **caracterizado**: `EC_ElecShutter_Main.cpp` (`0x4391d67c`) devuelve un **código de modo de obturador**
+  (`0x80`→3, `0x100`→4) y `EC_NonlinearElecShutter_MechShutterTable.cpp` implementa la **equivalencia no lineal
+  electrónica/mecánica** (32 bits por fila, escalas 10000/1000 y punto fijo 16.16 con escala `0x8000`).
+  **Corrige a S135**: los 128 bytes de `0x43dcfa9e` **no tienen ninguna referencia de código**.
+* **S174** — el conversor `CamMsgConv` del `libObj.so` conoce **216/221/240** nombres `…ForLiro` y **soporta
+  0/0/6**; en la A6000 y la A7S **todos** están en la lista de **rechazo**.
+
+**Regla metodológica que deja S174**: **la presencia de una cadena no prueba una funcionalidad**. Tres casos ya
+en el repo: la cadena muerta del *rolling shutter* (S168), el bloque de 128 bytes sin referencias (S172) y los
+nombres `…ForLiro` de la A6000, todos rechazados (S174).
+
+**S51 se mantiene: A=NO, B=NO, C=NO.** Todos estos hallazgos son **sobre el firmware**: la ausencia estática de
+un módulo, una cadena o un parámetro **no** demuestra incapacidad del hardware. El plan de pruebas físicas (P1–P8,
+[capture/physical-test-plan.md](capture/physical-test-plan.md)) sigue **pendiente de autorización**.
+
+## Avance IMX210 S140–S155 (22-10-2026)
+
+**VERIFICADO:** vector `0x43fe995c` con 119 registros; `S[0]` selecciona una fila y el builder `0x4383c9dc` procesa 4 filas de 16 B desde G+`0x224`, con stores relativos 0/4/6/a/c/e. Dos tablas de diagnóstico incluyen `{id=0x30,size=1,addr=0x43eb0850}`; un copier raw puede leer ese byte y copiarlo a un buffer.
+
+**PARCIAL:** bytes +8/+9 de fila sin store en los cuerpos auditados, con xrefs directas vacías; el literal en tabla demuestra una ruta diagnóstica que puede leer `0x43eb0850`. El dumper está condicionado por flags `0x43f72d05&2`/`0x43f72d08&0x20`; se clasificaron varios xrefs locales, pero no se halló escritor ni valor runtime. La superficie REA no permite sembrar las funciones candidatas no reconocidas. No se infiere ausencia global ni semántica física.
+
+Informes principales: [S140](capture/s140-imager-register-map.md), [S147](capture/s147-imager-g-rows.md), [S149](capture/s149-imager-row-helpers.md), [S150](capture/s150-imager-row-gaps.md), [S152](capture/s152-imager-gap-descriptor-read.md), [S153](capture/s153-imager-dump-gates.md), [S154](capture/s154-imager-state-ref.md), [S155](capture/s155-imager-state-readers.md). S51 A/B/C=NO y sin cambios.
 
 Mecanismo de PMCA identificado y contrastado con el firmware 3.21: `updatershell` inyecta un fdat propio (cramfs con `libupdaterbody`, header de 0x30 B por modelo, guard CRC + modelo/región/versión **sin firma**; CXD90014) que el updater ejecuta y expone un shell USB `0x23`; `serviceshell` (senser, HASP) da terminal, backup `0x603`, ficheros y memoria. `bk w 0x003e0005` escribe la propiedad BK4 `modelName` (subsistema `0x3e`/índice 5, 16 B, attr solo-lectura) en el almacén `/setting` (`nflasha2`), no una dirección de código; el preset de fábrica la trae como `ILCE-6000` (verificado). El cambio a `ILCE-6001` está reportado pero su efecto «shell mode» queda **NO VERIFICADO**: la cadena no existe en el firmware. S51 **A=NO, B=NO, C=NO**. [Documento](capture/s62-pmca-injection.md) · [matriz](../analysis/s62-evidence-matrix.json).
 
@@ -67,6 +121,20 @@ después lectores IMX210+3a0 y significado físico de ID0.
 
 ## Conclusión general vigente (17-10-2026)
 
+S157 añade otra clasificación local: `0x43859954` carga `0x43f72d02` desde GOT; `FUN_43859944` lee `+5/+0xf`, copia a buffers y stores a otros objetos, no a gates `+3/+6`. No cierra escritores restantes. [Informe S157](capture/s157-imager-state-snapshot.md).
+
+S158 clasifica `0x4385b268`: `FUN_4385b234` carga el puntero GOT del estado y lo derrama a stack; lee +0x26/+0x28/+0x29 y escribe otros destinos, no +3/+6 en este cuerpo. Sigue sin cerrar otros escritores. [Informe S158](capture/s158-imager-state-ref.md).
+
+S159 clasifica `0x4386001c` como otro spill a stack en `FUN_4385fff0`; el cuerpo lee `+0/+0x1c/+0xa2` y escribe a otros destinos, no a +3/+6 en este procedimiento. No es una conclusión global. [Informe S159](capture/s159-imager-state-spill.md).
+
+S160 confirma un store a `0x43f72d02+0` en `0x4383ac90` cuando expira un contador compartido. Es el único campo escrito por ese sitio; no modifica `+3/+6`. La alcanzabilidad en una captura no está probada. [Informe S160](capture/s160-state-open-flag.md).
+
+S161 clasifica `0x4384cb0a` como spill del puntero `0x43f72d02` a stack; el procedimiento lee otros offsets y escribe otro objeto, no `+3/+6` localmente. Sin conclusión global. [Informe S161](capture/s161-imager-state-spill.md).
+
+S162: `0x438d933e/9378` cargan el state pointer y leen `state+0x1c`; los resultados se guardan en `0x43f7c702/704`, no en el estado. Posible notificación es INFERENCIA; runtime no observado. [Informe S162](capture/s162-imager-state-event-readers.md).
+
+S163 añade `FUN_438d939c`, lector de `state+0x1c/+0x1e` que usa defaults 3/4 si cero y empaqueta los valores en mensaje a otros destinos. No escribe state/gates en ese cuerpo; propósito de notificación/alcanzabilidad permanecen parciales. [Informe S163](capture/s163-imager-state-event-reader.md).
+
 Proyecto abierto: hay piezas reales y reutilizables, pero **ninguna captura silenciosa
 completa validada**; no está demostrada la capacidad ni la imposibilidad de fotografía
 totalmente electrónica a resolución completa.
@@ -115,10 +183,25 @@ Canónica para Codex y Claude Code; `AGENTS.md`/`CLAUDE.md` solo la resumen. No 
 ## Restricciones activas
 
 - No se ha ejecutado firmware en hardware real; no se ha flasheado ninguna cámara.
+- **Git**: el usuario ha instruido explícitamente (21-10-2026) **subir cada hito terminado a
+  `origin/main`**; sigue vigente la prohibición de subir firmware, de tocar la cámara y de flashear.
+  Los hitos se commitean **por ruta** (nunca `git add -A`) y el repositorio se compacta con
+  `git gc` (`gc.auto=512`).
 - Ningún resultado estático se ha convertido en demostración física sin evidencia adicional explícita.
 - EFCS/SilentShutter: hay opciones de software y transporte identificados; **no** hay control físico demostrado ni finalización electrónica de exposición confirmada.
 
-## Próximos pasos de investigación (vigentes al 17-10-2026)
+## Próximos pasos de investigación (vigentes al 21-10-2026)
+
+1. **Línea del obturador**: ejecutar el plan de pruebas físicas P0–P2 y P7 (requiere autorización
+   explícita del usuario); en estático, seguir el destino de las etapas de captura
+   (`0x4385a630`, `0x438e67dc`, `0x43b2335e`) hasta el origen del valor que gobierna el tipo de
+   mecanismo (`[G+0x808]&7`, S101).
+2. **Línea general**: seguir con los módulos "de contenido nuevo" que quedan sin decodificar
+   (`[DEPTH]`, `[PANDA]`, `[CAM_UTIL_ADJ]`, `[CAM_UTIL_SENS]`, `[TP_R]`, `[CAMERA_IS]`, `[JOG]`,
+   `[ADC_DEBUG]`, `[LIF_DEBUG]`, `[CAMERA_MAIN_FC]`) y cerrar las preguntas abiertas de S134
+   (quién escribe `svr_num`/`VdNum`; el bloque de modo por `drive_mode`).
+
+### Próximos pasos (histórico al 17-10-2026)
 
 Ver tabla "Flujos incompletos" en [estado-y-viabilidad-2026-10-17.md](../docs/estado-y-viabilidad-2026-10-17.md):
 botón físico → orden de cortinas (falta tabla de teclas y puente InfraInput),

@@ -1,0 +1,7548 @@
+{
+ "hito": "S125",
+ "titulo": "Los módulos de trazas [IMAGING_REL] y [IMAGING] de la A6000 fw3.21",
+ "perfil": "A6000",
+ "binario": "analysis/rea-independent/input/av-cam.bin",
+ "base": "0x43541000",
+ "metodo": {
+  "referencias": "esquema PIC, regla estricta canónica (analysis/s106_imaging_cap/scan_pic_refs_strict.py): cada `add rX,pc` se empareja con el `ldr rX,[pc,#imm]` más cercano por detrás (ventana 4 KB)",
+  "funciones": "prólogo Thumb `push {..,lr}` más cercano por detrás (máx. 16 KB)",
+  "ficheros": "literal `__FILE__` (nombre .cpp/.h) referenciado dentro de la función",
+  "nota": "toda cifra de sitios indica la regla usada"
+ },
+ "modulos": {
+  "IMAGING_REL": {
+   "prefijo": "[IMAGING_REL]: ",
+   "n_cadenas": 31,
+   "rango": [
+    "0x43c9c520",
+    "0x43cb4bc4"
+   ],
+   "n_referenciadas": 30,
+   "n_sin_referencia": 1,
+   "n_sitios": 34,
+   "n_funciones": 26,
+   "n_cadenas_genericas": 0,
+   "n_sitios_genericos": 0,
+   "n_cadenas_especificas": 31,
+   "n_sitios_especificos": 34,
+   "n_funciones_con_especifico": 26,
+   "bloques": {
+    "CapIdTblMgrIf)": {
+     "tag": "CapIdTblMgrIf)",
+     "n": 8,
+     "n_sites": 8,
+     "generico": false,
+     "funciones": {
+      "0x4381cc7c": [
+       "0x43cb49b0",
+       "0x43cb49e6",
+       "0x43cb4a1e",
+       "0x43cb4a45",
+       "0x43cb4a7c",
+       "0x43cb4ab3",
+       "0x43cb4aea",
+       "0x43cb4b21"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43cb49b0",
+       "texto": "[IMAGING_REL]: CapIdTblMgrIf) StartAccess Cmp To %08X",
+       "sitios": [
+        "0x4381ccce"
+       ],
+       "funciones": [
+        "0x4381cc7c"
+       ]
+      },
+      {
+       "vaddr": "0x43cb49e6",
+       "texto": "[IMAGING_REL]: CapIdTblMgrIf) StartAccess Req From %08X",
+       "sitios": [
+        "0x4381cd3e"
+       ],
+       "funciones": [
+        "0x4381cc7c"
+       ]
+      },
+      {
+       "vaddr": "0x43cb4a1e",
+       "texto": "[IMAGING_REL]: CapIdTblMgrIf) Init End",
+       "sitios": [
+        "0x4381cd7e"
+       ],
+       "funciones": [
+        "0x4381cc7c"
+       ]
+      },
+      {
+       "vaddr": "0x43cb4a45",
+       "texto": "[IMAGING_REL]: CapIdTblMgrIf) StopAccess Req From %08X",
+       "sitios": [
+        "0x4381cdb6"
+       ],
+       "funciones": [
+        "0x4381cc7c"
+       ]
+      },
+      {
+       "vaddr": "0x43cb4a7c",
+       "texto": "[IMAGING_REL]: CapIdTblMgrIf) StopAccess Cmp To   %08X",
+       "sitios": [
+        "0x4381cdea"
+       ],
+       "funciones": [
+        "0x4381cc7c"
+       ]
+      },
+      {
+       "vaddr": "0x43cb4ab3",
+       "texto": "[IMAGING_REL]: CapIdTblMgrIf) GetTblAddr Req From %08X",
+       "sitios": [
+        "0x4381ce2a"
+       ],
+       "funciones": [
+        "0x4381cc7c"
+       ]
+      },
+      {
+       "vaddr": "0x43cb4aea",
+       "texto": "[IMAGING_REL]: CapIdTblMgrIf) GetTblAddr Cmp To   %08X",
+       "sitios": [
+        "0x4381ce5e"
+       ],
+       "funciones": [
+        "0x4381cc7c"
+       ]
+      },
+      {
+       "vaddr": "0x43cb4b21",
+       "texto": "[IMAGING_REL]: CapIdTblMgrIf) pop queue StartAccess From %08X",
+       "sitios": [
+        "0x4381ceaa"
+       ],
+       "funciones": [
+        "0x4381cc7c"
+       ]
+      }
+     ],
+     "ficheros": []
+    },
+    "CapIdTblMgr)": {
+     "tag": "CapIdTblMgr)",
+     "n": 7,
+     "n_sites": 7,
+     "generico": false,
+     "funciones": {
+      "0x4381c30c": [
+       "0x43cb4549"
+      ],
+      "0x4381c39c": [
+       "0x43cb45a3"
+      ],
+      "0x4381c448": [
+       "0x43cb4612"
+      ],
+      "0x4381c4e0": [
+       "0x43cb4678"
+      ],
+      "0x4381c568": [
+       "0x43cb46de"
+      ],
+      "0x4381c62a": [
+       "0x43cb4744"
+      ],
+      "0x4381c6cc": [
+       "0x43cb47aa"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43cb4549",
+       "texto": "[IMAGING_REL]: CapIdTblMgr) Initialize irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x)",
+       "sitios": [
+        "0x4381c356"
+       ],
+       "funciones": [
+        "0x4381c30c"
+       ]
+      },
+      {
+       "vaddr": "0x43cb45a3",
+       "texto": "[IMAGING_REL]: CapIdTblMgr) IncrementInnerRP       irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x) cnum(%x)",
+       "sitios": [
+        "0x4381c40c"
+       ],
+       "funciones": [
+        "0x4381c39c"
+       ]
+      },
+      {
+       "vaddr": "0x43cb4612",
+       "texto": "[IMAGING_REL]: CapIdTblMgr) ClearInnerRPCapIdIdx   irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x)",
+       "sitios": [
+        "0x4381c4a8"
+       ],
+       "funciones": [
+        "0x4381c448"
+       ]
+      },
+      {
+       "vaddr": "0x43cb4678",
+       "texto": "[IMAGING_REL]: CapIdTblMgr) ClearInnerRP           irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x)",
+       "sitios": [
+        "0x4381c532"
+       ],
+       "funciones": [
+        "0x4381c4e0"
+       ]
+      },
+      {
+       "vaddr": "0x43cb46de",
+       "texto": "[IMAGING_REL]: CapIdTblMgr) IncrementRP            irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x)",
+       "sitios": [
+        "0x4381c5bc"
+       ],
+       "funciones": [
+        "0x4381c568"
+       ]
+      },
+      {
+       "vaddr": "0x43cb4744",
+       "texto": "[IMAGING_REL]: CapIdTblMgr) CheckCapIDAvailability irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x)",
+       "sitios": [
+        "0x4381c678"
+       ],
+       "funciones": [
+        "0x4381c62a"
+       ]
+      },
+      {
+       "vaddr": "0x43cb47aa",
+       "texto": "[IMAGING_REL]: CapIdTblMgr) GetCaptureID           irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x)",
+       "sitios": [
+        "0x4381c7ea"
+       ],
+       "funciones": [
+        "0x4381c6cc"
+       ]
+      }
+     ],
+     "ficheros": []
+    },
+    "(sin etiqueta)": {
+     "tag": "(sin etiqueta)",
+     "n": 6,
+     "n_sites": 6,
+     "generico": false,
+     "funciones": {
+      "0x43792a0c": [
+       "0x43ca3887"
+      ],
+      "0x4379d37a": [
+       "0x43ca533b"
+      ],
+      "0x4379d83a": [
+       "0x43ca5377",
+       "0x43ca53ba"
+      ],
+      "0x43807488": [
+       "0x43cafd53"
+      ],
+      "0x4381d114": [
+       "0x43cb4bc4"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43ca3887",
+       "texto": "[IMAGING_REL]: (%d,%d,%d)",
+       "sitios": [
+        "0x43792a64"
+       ],
+       "funciones": [
+        "0x43792a0c"
+       ]
+      },
+      {
+       "vaddr": "0x43ca533b",
+       "texto": "[IMAGING_REL]: it is a strange trig in IsNeedForceS1ON : %d",
+       "sitios": [
+        "0x4379d3c0"
+       ],
+       "funciones": [
+        "0x4379d37a"
+       ]
+      },
+      {
+       "vaddr": "0x43ca5377",
+       "texto": "[IMAGING_REL]: remote capture cancel due to camuser's release lock",
+       "sitios": [
+        "0x4379d9c8"
+       ],
+       "funciones": [
+        "0x4379d83a"
+       ]
+      },
+      {
+       "vaddr": "0x43ca53ba",
+       "texto": "[IMAGING_REL]: Unknown REL_EVT (%02X)",
+       "sitios": [
+        "0x4379e186"
+       ],
+       "funciones": [
+        "0x4379d83a"
+       ]
+      },
+      {
+       "vaddr": "0x43cafd53",
+       "texto": "[IMAGING_REL]: NotifyEEStartEnable (%08X)",
+       "sitios": [
+        "0x43807930"
+       ],
+       "funciones": [
+        "0x43807488"
+       ]
+      },
+      {
+       "vaddr": "0x43cb4bc4",
+       "texto": "[IMAGING_REL]: NoMprCap InnerRp Clear!!",
+       "sitios": [
+        "0x4381d13e"
+       ],
+       "funciones": [
+        "0x4381d114"
+       ]
+      }
+     ],
+     "ficheros": [
+      "ExecModeHandler.cpp",
+      "SyncTask.cpp"
+     ]
+    },
+    "RelQueue)": {
+     "tag": "RelQueue)",
+     "n": 4,
+     "n_sites": 8,
+     "generico": false,
+     "funciones": {
+      "0x4381c93c": [
+       "0x43cb48d2"
+      ],
+      "0x4381ca90": [
+       "0x43cb48d2"
+      ],
+      "0x4381c98c": [
+       "0x43cb4909"
+      ],
+      "0x4381cadc": [
+       "0x43cb4909"
+      ],
+      "0x4381c9e0": [
+       "0x43cb4941"
+      ],
+      "0x4381cb2c": [
+       "0x43cb4941"
+      ],
+      "0x4381ca38": [
+       "0x43cb4979"
+      ],
+      "0x4381cb7c": [
+       "0x43cb4979"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43cb48d2",
+       "texto": "[IMAGING_REL]: RelQueue) err. queue is empty (PopBack)",
+       "sitios": [
+        "0x4381c950",
+        "0x4381caa4"
+       ],
+       "funciones": [
+        "0x4381c93c",
+        "0x4381ca90"
+       ]
+      },
+      {
+       "vaddr": "0x43cb4909",
+       "texto": "[IMAGING_REL]: RelQueue) err. queue is empty (PopFront)",
+       "sitios": [
+        "0x4381c9a0",
+        "0x4381caf0"
+       ],
+       "funciones": [
+        "0x4381c98c",
+        "0x4381cadc"
+       ]
+      },
+      {
+       "vaddr": "0x43cb4941",
+       "texto": "[IMAGING_REL]: RelQueue) err. queue is full (PushFront)",
+       "sitios": [
+        "0x4381c9f8",
+        "0x4381cb44"
+       ],
+       "funciones": [
+        "0x4381c9e0",
+        "0x4381cb2c"
+       ]
+      },
+      {
+       "vaddr": "0x43cb4979",
+       "texto": "[IMAGING_REL]: RelQueue) err. queue is full (PushBack)",
+       "sitios": [
+        "0x4381ca50",
+        "0x4381cb94"
+       ],
+       "funciones": [
+        "0x4381ca38",
+        "0x4381cb7c"
+       ]
+      }
+     ],
+     "ficheros": []
+    },
+    "RelMgr)": {
+     "tag": "RelMgr)",
+     "n": 3,
+     "n_sites": 3,
+     "generico": false,
+     "funciones": {
+      "0x4379e354": [
+       "0x43ca53e0"
+      ],
+      "0x4379e3a8": [
+       "0x43ca541d"
+      ],
+      "0x4379e500": [
+       "0x43ca5450"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43ca53e0",
+       "texto": "[IMAGING_REL]: RelMgr) <ExecMsg> CLEAR_INNER_RP_CAPID_IDX %d",
+       "sitios": [
+        "0x4379e376"
+       ],
+       "funciones": [
+        "0x4379e354"
+       ]
+      },
+      {
+       "vaddr": "0x43ca541d",
+       "texto": "[IMAGING_REL]: RelMgr) <ExecMsg> CLEAR_INNER_RP %d",
+       "sitios": [
+        "0x4379e3c8"
+       ],
+       "funciones": [
+        "0x4379e3a8"
+       ]
+      },
+      {
+       "vaddr": "0x43ca5450",
+       "texto": "[IMAGING_REL]: RelMgr) Invalid RelLock Factor %08x",
+       "sitios": [
+        "0x4379e5e6"
+       ],
+       "funciones": [
+        "0x4379e500"
+       ]
+      }
+     ],
+     "ficheros": []
+    },
+    "Spinal)": {
+     "tag": "Spinal)",
+     "n": 1,
+     "n_sites": 0,
+     "generico": false,
+     "funciones": {},
+     "cadenas": [
+      {
+       "vaddr": "0x43c9c520",
+       "texto": "[IMAGING_REL]: Spinal) osal_free_timer: err %x",
+       "sitios": [],
+       "funciones": []
+      }
+     ],
+     "ficheros": []
+    },
+    "RelKey)": {
+     "tag": "RelKey)",
+     "n": 1,
+     "n_sites": 1,
+     "generico": false,
+     "funciones": {
+      "0x4379d114": [
+       "0x43ca5319"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43ca5319",
+       "texto": "[IMAGING_REL]: RelKey) %02d: %02d",
+       "sitios": [
+        "0x4379d14a"
+       ],
+       "funciones": [
+        "0x4379d114"
+       ]
+      }
+     ],
+     "ficheros": []
+    },
+    "RelLock)": {
+     "tag": "RelLock)",
+     "n": 1,
+     "n_sites": 1,
+     "generico": false,
+     "funciones": {
+      "0x4381d088": [
+       "0x43cb4b80"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43cb4b80",
+       "texto": "[IMAGING_REL]: RelLock) You may forget to hold down the LOCK key...",
+       "sitios": [
+        "0x4381d0d4"
+       ],
+       "funciones": [
+        "0x4381d088"
+       ]
+      }
+     ],
+     "ficheros": []
+    }
+   },
+   "ficheros_fuente": {
+    "SyncTask.cpp": [
+     "0x4379355a",
+     "0x43793784"
+    ]
+   },
+   "cadenas": [
+    {
+     "vaddr": "0x43c9c520",
+     "texto": "[IMAGING_REL]: Spinal) osal_free_timer: err %x",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43ca3887",
+     "texto": "[IMAGING_REL]: (%d,%d,%d)",
+     "sitios": [
+      "0x43792a64"
+     ],
+     "funciones": [
+      "0x43792a0c"
+     ],
+     "fichero": [
+      "SyncTask.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43ca5319",
+     "texto": "[IMAGING_REL]: RelKey) %02d: %02d",
+     "sitios": [
+      "0x4379d14a"
+     ],
+     "funciones": [
+      "0x4379d114"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43ca533b",
+     "texto": "[IMAGING_REL]: it is a strange trig in IsNeedForceS1ON : %d",
+     "sitios": [
+      "0x4379d3c0"
+     ],
+     "funciones": [
+      "0x4379d37a"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43ca5377",
+     "texto": "[IMAGING_REL]: remote capture cancel due to camuser's release lock",
+     "sitios": [
+      "0x4379d9c8"
+     ],
+     "funciones": [
+      "0x4379d83a"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43ca53ba",
+     "texto": "[IMAGING_REL]: Unknown REL_EVT (%02X)",
+     "sitios": [
+      "0x4379e186"
+     ],
+     "funciones": [
+      "0x4379d83a"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43ca53e0",
+     "texto": "[IMAGING_REL]: RelMgr) <ExecMsg> CLEAR_INNER_RP_CAPID_IDX %d",
+     "sitios": [
+      "0x4379e376"
+     ],
+     "funciones": [
+      "0x4379e354"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43ca541d",
+     "texto": "[IMAGING_REL]: RelMgr) <ExecMsg> CLEAR_INNER_RP %d",
+     "sitios": [
+      "0x4379e3c8"
+     ],
+     "funciones": [
+      "0x4379e3a8"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43ca5450",
+     "texto": "[IMAGING_REL]: RelMgr) Invalid RelLock Factor %08x",
+     "sitios": [
+      "0x4379e5e6"
+     ],
+     "funciones": [
+      "0x4379e500"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cafd53",
+     "texto": "[IMAGING_REL]: NotifyEEStartEnable (%08X)",
+     "sitios": [
+      "0x43807930"
+     ],
+     "funciones": [
+      "0x43807488"
+     ],
+     "fichero": [
+      "ExecModeHandler.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cb4549",
+     "texto": "[IMAGING_REL]: CapIdTblMgr) Initialize irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x)",
+     "sitios": [
+      "0x4381c356"
+     ],
+     "funciones": [
+      "0x4381c30c"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cb45a3",
+     "texto": "[IMAGING_REL]: CapIdTblMgr) IncrementInnerRP       irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x) cnum(%x)",
+     "sitios": [
+      "0x4381c40c"
+     ],
+     "funciones": [
+      "0x4381c39c"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cb4612",
+     "texto": "[IMAGING_REL]: CapIdTblMgr) ClearInnerRPCapIdIdx   irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x)",
+     "sitios": [
+      "0x4381c4a8"
+     ],
+     "funciones": [
+      "0x4381c448"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cb4678",
+     "texto": "[IMAGING_REL]: CapIdTblMgr) ClearInnerRP           irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x)",
+     "sitios": [
+      "0x4381c532"
+     ],
+     "funciones": [
+      "0x4381c4e0"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cb46de",
+     "texto": "[IMAGING_REL]: CapIdTblMgr) IncrementRP            irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x)",
+     "sitios": [
+      "0x4381c5bc"
+     ],
+     "funciones": [
+      "0x4381c568"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cb4744",
+     "texto": "[IMAGING_REL]: CapIdTblMgr) CheckCapIDAvailability irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x)",
+     "sitios": [
+      "0x4381c678"
+     ],
+     "funciones": [
+      "0x4381c62a"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cb47aa",
+     "texto": "[IMAGING_REL]: CapIdTblMgr) GetCaptureID           irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x)",
+     "sitios": [
+      "0x4381c7ea"
+     ],
+     "funciones": [
+      "0x4381c6cc"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cb48d2",
+     "texto": "[IMAGING_REL]: RelQueue) err. queue is empty (PopBack)",
+     "sitios": [
+      "0x4381c950",
+      "0x4381caa4"
+     ],
+     "funciones": [
+      "0x4381c93c",
+      "0x4381ca90"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cb4909",
+     "texto": "[IMAGING_REL]: RelQueue) err. queue is empty (PopFront)",
+     "sitios": [
+      "0x4381c9a0",
+      "0x4381caf0"
+     ],
+     "funciones": [
+      "0x4381c98c",
+      "0x4381cadc"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cb4941",
+     "texto": "[IMAGING_REL]: RelQueue) err. queue is full (PushFront)",
+     "sitios": [
+      "0x4381c9f8",
+      "0x4381cb44"
+     ],
+     "funciones": [
+      "0x4381c9e0",
+      "0x4381cb2c"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cb4979",
+     "texto": "[IMAGING_REL]: RelQueue) err. queue is full (PushBack)",
+     "sitios": [
+      "0x4381ca50",
+      "0x4381cb94"
+     ],
+     "funciones": [
+      "0x4381ca38",
+      "0x4381cb7c"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cb49b0",
+     "texto": "[IMAGING_REL]: CapIdTblMgrIf) StartAccess Cmp To %08X",
+     "sitios": [
+      "0x4381ccce"
+     ],
+     "funciones": [
+      "0x4381cc7c"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cb49e6",
+     "texto": "[IMAGING_REL]: CapIdTblMgrIf) StartAccess Req From %08X",
+     "sitios": [
+      "0x4381cd3e"
+     ],
+     "funciones": [
+      "0x4381cc7c"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cb4a1e",
+     "texto": "[IMAGING_REL]: CapIdTblMgrIf) Init End",
+     "sitios": [
+      "0x4381cd7e"
+     ],
+     "funciones": [
+      "0x4381cc7c"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cb4a45",
+     "texto": "[IMAGING_REL]: CapIdTblMgrIf) StopAccess Req From %08X",
+     "sitios": [
+      "0x4381cdb6"
+     ],
+     "funciones": [
+      "0x4381cc7c"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cb4a7c",
+     "texto": "[IMAGING_REL]: CapIdTblMgrIf) StopAccess Cmp To   %08X",
+     "sitios": [
+      "0x4381cdea"
+     ],
+     "funciones": [
+      "0x4381cc7c"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cb4ab3",
+     "texto": "[IMAGING_REL]: CapIdTblMgrIf) GetTblAddr Req From %08X",
+     "sitios": [
+      "0x4381ce2a"
+     ],
+     "funciones": [
+      "0x4381cc7c"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cb4aea",
+     "texto": "[IMAGING_REL]: CapIdTblMgrIf) GetTblAddr Cmp To   %08X",
+     "sitios": [
+      "0x4381ce5e"
+     ],
+     "funciones": [
+      "0x4381cc7c"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cb4b21",
+     "texto": "[IMAGING_REL]: CapIdTblMgrIf) pop queue StartAccess From %08X",
+     "sitios": [
+      "0x4381ceaa"
+     ],
+     "funciones": [
+      "0x4381cc7c"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cb4b80",
+     "texto": "[IMAGING_REL]: RelLock) You may forget to hold down the LOCK key...",
+     "sitios": [
+      "0x4381d0d4"
+     ],
+     "funciones": [
+      "0x4381d088"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cb4bc4",
+     "texto": "[IMAGING_REL]: NoMprCap InnerRp Clear!!",
+     "sitios": [
+      "0x4381d13e"
+     ],
+     "funciones": [
+      "0x4381d114"
+     ],
+     "fichero": []
+    }
+   ]
+  },
+  "IMAGING": {
+   "prefijo": "[IMAGING]: ",
+   "n_cadenas": 120,
+   "rango": [
+    "0x43c9b47c",
+    "0x43cc6c99"
+   ],
+   "n_referenciadas": 82,
+   "n_sin_referencia": 38,
+   "n_sitios": 608,
+   "n_funciones": 346,
+   "n_cadenas_genericas": 3,
+   "n_sitios_genericos": 473,
+   "n_cadenas_especificas": 117,
+   "n_sitios_especificos": 135,
+   "n_funciones_con_especifico": 24,
+   "bloques": {
+    "[seq_panoramaParallelStitch]": {
+     "tag": "[seq_panoramaParallelStitch]",
+     "n": 13,
+     "n_sites": 13,
+     "generico": false,
+     "funciones": {
+      "0x43781424": [
+       "0x43c9e6af",
+       "0x43c9e6f7",
+       "0x43c9e74c",
+       "0x43c9e796",
+       "0x43c9e7e1",
+       "0x43c9e82b",
+       "0x43c9e86f",
+       "0x43c9e8b3",
+       "0x43c9e900",
+       "0x43c9ebb4",
+       "0x43c9ec01",
+       "0x43c9ec47",
+       "0x43c9ecde"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43c9e6af",
+       "texto": "[IMAGING]: [seq_panoramaParallelStitch] getJPGListI Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x437814b4"
+       ],
+       "funciones": [
+        "0x43781424"
+       ]
+      },
+      {
+       "vaddr": "0x43c9e6f7",
+       "texto": "[IMAGING]: [seq_panoramaParallelStitch] setStitchImageObjectInfo Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x4378150a"
+       ],
+       "funciones": [
+        "0x43781424"
+       ]
+      },
+      {
+       "vaddr": "0x43c9e74c",
+       "texto": "[IMAGING]: [seq_panoramaParallelStitch] DecodeControl Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x4378166e"
+       ],
+       "funciones": [
+        "0x43781424"
+       ]
+      },
+      {
+       "vaddr": "0x43c9e796",
+       "texto": "[IMAGING]: [seq_panoramaParallelStitch] SRotateControl Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x437817d2"
+       ],
+       "funciones": [
+        "0x43781424"
+       ]
+      },
+      {
+       "vaddr": "0x43c9e7e1",
+       "texto": "[IMAGING]: [seq_panoramaParallelStitch] StitchControl Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x43781956"
+       ],
+       "funciones": [
+        "0x43781424"
+       ]
+      },
+      {
+       "vaddr": "0x43c9e82b",
+       "texto": "[IMAGING]: [seq_panoramaParallelStitch] wai_flg Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x437819ba"
+       ],
+       "funciones": [
+        "0x43781424"
+       ]
+      },
+      {
+       "vaddr": "0x43c9e86f",
+       "texto": "[IMAGING]: [seq_panoramaParallelStitch] clr_flg Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x437819fc"
+       ],
+       "funciones": [
+        "0x43781424"
+       ]
+      },
+      {
+       "vaddr": "0x43c9e8b3",
+       "texto": "[IMAGING]: [seq_panoramaParallelStitch] Decode Interrupt Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x43781a7e"
+       ],
+       "funciones": [
+        "0x43781424"
+       ]
+      },
+      {
+       "vaddr": "0x43c9e900",
+       "texto": "[IMAGING]: [seq_panoramaParallelStitch] SRotate Interrupt Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x43781b0e"
+       ],
+       "funciones": [
+        "0x43781424"
+       ]
+      },
+      {
+       "vaddr": "0x43c9ebb4",
+       "texto": "[IMAGING]: [seq_panoramaParallelStitch] Stitch Interrupt Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x43781e06"
+       ],
+       "funciones": [
+        "0x43781424"
+       ]
+      },
+      {
+       "vaddr": "0x43c9ec01",
+       "texto": "[IMAGING]: [seq_panoramaParallelStitch][OK] StitchProc ALL OK : %s:%d",
+       "sitios": [
+        "0x43781e3c"
+       ],
+       "funciones": [
+        "0x43781424"
+       ]
+      },
+      {
+       "vaddr": "0x43c9ec47",
+       "texto": "[IMAGING]: [seq_panoramaParallelStitch] cmp_getBackStitchParam Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x43781e6a"
+       ],
+       "funciones": [
+        "0x43781424"
+       ]
+      },
+      {
+       "vaddr": "0x43c9ecde",
+       "texto": "[IMAGING]: [seq_panoramaParallelStitch][OK] SRotateLeftProc OK : %s:%d",
+       "sitios": [
+        "0x43782214"
+       ],
+       "funciones": [
+        "0x43781424"
+       ]
+      }
+     ],
+     "ficheros": [
+      "still_seq_panoramaStitch.cpp"
+     ]
+    },
+    "[PanoramaResizeEncode]": {
+     "tag": "[PanoramaResizeEncode]",
+     "n": 10,
+     "n_sites": 0,
+     "generico": false,
+     "funciones": {},
+     "cadenas": [
+      {
+       "vaddr": "0x43cab45b",
+       "texto": "[IMAGING]: [PanoramaResizeEncode][JpegSweepInfo] UnitOpen() Err: 0x%08x : %s:%d",
+       "sitios": [],
+       "funciones": []
+      },
+      {
+       "vaddr": "0x43cab4ab",
+       "texto": "[IMAGING]: [PanoramaResizeEncode][YuvDecodeWorkInfo] UnitOpen() Err: 0x%08x : %s:%d",
+       "sitios": [],
+       "funciones": []
+      },
+      {
+       "vaddr": "0x43cab4ff",
+       "texto": "[IMAGING]: [PanoramaResizeEncode][JpegResizeEncodeInfo] UnitOpen() Err: 0x%08x : %s:%d",
+       "sitios": [],
+       "funciones": []
+      },
+      {
+       "vaddr": "0x43cab556",
+       "texto": "[IMAGING]: [PanoramaResizeEncode] Err Mode: 0x%08x : %s:%d",
+       "sitios": [],
+       "funciones": []
+      },
+      {
+       "vaddr": "0x43cab591",
+       "texto": "[IMAGING]: [PanoramaResizeEncode] Err Dir: 0x%08x : %s:%d",
+       "sitios": [],
+       "funciones": []
+      },
+      {
+       "vaddr": "0x43cab5cb",
+       "texto": "[IMAGING]: [PanoramaResizeEncode] Err seq_bigImageResizeEncode(): 0x%08x : %s:%d",
+       "sitios": [],
+       "funciones": []
+      },
+      {
+       "vaddr": "0x43cab61c",
+       "texto": "[IMAGING]: [PanoramaResizeEncode][JpegSweepInfo] UnitClose() Err: 0x%08x : %s:%d",
+       "sitios": [],
+       "funciones": []
+      },
+      {
+       "vaddr": "0x43cab66d",
+       "texto": "[IMAGING]: [PanoramaResizeEncode][YuvDecodeWorkInfo] UnitClose() Err: 0x%08x : %s:%d",
+       "sitios": [],
+       "funciones": []
+      },
+      {
+       "vaddr": "0x43cab6c2",
+       "texto": "[IMAGING]: [PanoramaResizeEncode][JpegResizeEncodeInfo] UnitClose() Err: 0x%08x : %s:%d",
+       "sitios": [],
+       "funciones": []
+      },
+      {
+       "vaddr": "0x43cab71a",
+       "texto": "[IMAGING]: [PanoramaResizeEncode] End  err: 0x%08x",
+       "sitios": [],
+       "funciones": []
+      }
+     ],
+     "ficheros": []
+    },
+    "[StitchInterrupt]": {
+     "tag": "[StitchInterrupt]",
+     "n": 9,
+     "n_sites": 9,
+     "generico": false,
+     "funciones": {
+      "0x43781424": [
+       "0x43c9e94e",
+       "0x43c9e990",
+       "0x43c9e9d9",
+       "0x43c9ea25",
+       "0x43c9ea71",
+       "0x43c9eabc",
+       "0x43c9eaf5",
+       "0x43c9eb35",
+       "0x43c9eb6e"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43c9e94e",
+       "texto": "[IMAGING]: [StitchInterrupt] Stitch Interrupt Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x43781b64"
+       ],
+       "funciones": [
+        "0x43781424"
+       ]
+      },
+      {
+       "vaddr": "0x43c9e990",
+       "texto": "[IMAGING]: [StitchInterrupt] csl_RingBuff_getDataNum Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x43781bac"
+       ],
+       "funciones": [
+        "0x43781424"
+       ]
+      },
+      {
+       "vaddr": "0x43c9e9d9",
+       "texto": "[IMAGING]: [StitchInterrupt] csl_RingBuff_getInputImage Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x43781bfa"
+       ],
+       "funciones": [
+        "0x43781424"
+       ]
+      },
+      {
+       "vaddr": "0x43c9ea25",
+       "texto": "[IMAGING]: [StitchInterrupt] ringBuffDataHeader == NULL Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x43781c34"
+       ],
+       "funciones": [
+        "0x43781424"
+       ]
+      },
+      {
+       "vaddr": "0x43c9ea71",
+       "texto": "[IMAGING]: [StitchInterrupt] csl_RingBuff_endReadImage Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x43781c7a"
+       ],
+       "funciones": [
+        "0x43781424"
+       ]
+      },
+      {
+       "vaddr": "0x43c9eabc",
+       "texto": "[IMAGING]: [StitchInterrupt] clr_flg Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x43781d04"
+       ],
+       "funciones": [
+        "0x43781424"
+       ]
+      },
+      {
+       "vaddr": "0x43c9eaf5",
+       "texto": "[IMAGING]: [StitchInterrupt] cmp_stopStitch Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x43781d38"
+       ],
+       "funciones": [
+        "0x43781424"
+       ]
+      },
+      {
+       "vaddr": "0x43c9eb35",
+       "texto": "[IMAGING]: [StitchInterrupt] wai_flg Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x43781d9a"
+       ],
+       "funciones": [
+        "0x43781424"
+       ]
+      },
+      {
+       "vaddr": "0x43c9eb6e",
+       "texto": "[IMAGING]: [StitchInterrupt] Stop Stitch (Cancel) Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x43781dd6"
+       ],
+       "funciones": [
+        "0x43781424"
+       ]
+      }
+     ],
+     "ficheros": [
+      "still_seq_panoramaStitch.cpp"
+     ]
+    },
+    "[UpdateSweepCanvas]": {
+     "tag": "[UpdateSweepCanvas]",
+     "n": 8,
+     "n_sites": 26,
+     "generico": false,
+     "funciones": {
+      "0x437e751c": [
+       "0x43cab289",
+       "0x43cab289",
+       "0x43cab2c7",
+       "0x43cab2c7",
+       "0x43cab2c7",
+       "0x43cab2c7",
+       "0x43cab2c7",
+       "0x43cab2c7",
+       "0x43cab2c7",
+       "0x43cab2c7",
+       "0x43cab2c7",
+       "0x43cab310",
+       "0x43cab310",
+       "0x43cab310",
+       "0x43cab310",
+       "0x43cab310",
+       "0x43cab310",
+       "0x43cab310",
+       "0x43cab310",
+       "0x43cab33a",
+       "0x43cab374",
+       "0x43cab3ba",
+       "0x43cab3ec",
+       "0x43cab3ec",
+       "0x43cab42b",
+       "0x43cab42b"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43cab289",
+       "texto": "[IMAGING]: [UpdateSweepCanvas] UnitOpen() Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x437e75ae",
+        "0x437e7606"
+       ],
+       "funciones": [
+        "0x437e751c",
+        "0x437e751c"
+       ]
+      },
+      {
+       "vaddr": "0x43cab2c7",
+       "texto": "[IMAGING]: [UpdateSweepCanvas] Err: 0x%08x, status: 0x%08x ReqID: 0x%04x",
+       "sitios": [
+        "0x437e7656",
+        "0x437e76b0",
+        "0x437e770a",
+        "0x437e7772",
+        "0x437e77ca",
+        "0x437e781c",
+        "0x437e7924",
+        "0x437e797c",
+        "0x437e7ac2"
+       ],
+       "funciones": [
+        "0x437e751c",
+        "0x437e751c",
+        "0x437e751c",
+        "0x437e751c",
+        "0x437e751c",
+        "0x437e751c",
+        "0x437e751c",
+        "0x437e751c",
+        "0x437e751c"
+       ]
+      },
+      {
+       "vaddr": "0x43cab310",
+       "texto": "[IMAGING]: [UpdateSweepCanvas] Err! %s:%d",
+       "sitios": [
+        "0x437e767a",
+        "0x437e76d4",
+        "0x437e7734",
+        "0x437e779c",
+        "0x437e77f4",
+        "0x437e7846",
+        "0x437e7942",
+        "0x437e799a"
+       ],
+       "funciones": [
+        "0x437e751c",
+        "0x437e751c",
+        "0x437e751c",
+        "0x437e751c",
+        "0x437e751c",
+        "0x437e751c",
+        "0x437e751c",
+        "0x437e751c"
+       ]
+      },
+      {
+       "vaddr": "0x43cab33a",
+       "texto": "[IMAGING]: [UpdateSweepCanvas] seq_brcEncode() Err! %s:%d",
+       "sitios": [
+        "0x437e7ae0"
+       ],
+       "funciones": [
+        "0x437e751c"
+       ]
+      },
+      {
+       "vaddr": "0x43cab374",
+       "texto": "[IMAGING]: [UpdateSweepCanvas] SWEEP_ERROR Err: 0x%08x, ReqID: 0x%04x",
+       "sitios": [
+        "0x437e7b48"
+       ],
+       "funciones": [
+        "0x437e751c"
+       ]
+      },
+      {
+       "vaddr": "0x43cab3ba",
+       "texto": "[IMAGING]: [UpdateSweepCanvas] SWEEP_ERROR! %s:%d",
+       "sitios": [
+        "0x437e7b64"
+       ],
+       "funciones": [
+        "0x437e751c"
+       ]
+      },
+      {
+       "vaddr": "0x43cab3ec",
+       "texto": "[IMAGING]: [UpdateSweepCanvas] UnitClose() Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x437e7b98",
+        "0x437e7bd8"
+       ],
+       "funciones": [
+        "0x437e751c",
+        "0x437e751c"
+       ]
+      },
+      {
+       "vaddr": "0x43cab42b",
+       "texto": "[IMAGING]: [UpdateSweepCanvas] End  err: 0x%08x",
+       "sitios": [
+        "0x437e7c04",
+        "0x437e7c22"
+       ],
+       "funciones": [
+        "0x437e751c",
+        "0x437e751c"
+       ]
+      }
+     ],
+     "ficheros": [
+      "still_cnt_panoramaSweep.cpp"
+     ]
+    },
+    "[seq_brcEncode]": {
+     "tag": "[seq_brcEncode]",
+     "n": 8,
+     "n_sites": 12,
+     "generico": false,
+     "funciones": {
+      "0x437e9068": [
+       "0x43cabb20",
+       "0x43cabb7c",
+       "0x43cabbce",
+       "0x43cabbce",
+       "0x43cabbce",
+       "0x43cabc0c",
+       "0x43cabc0c",
+       "0x43cabc4e",
+       "0x43cabc92",
+       "0x43cabcd6",
+       "0x43cabd38",
+       "0x43cabd38"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43cabb20",
+       "texto": "[IMAGING]: [seq_brcEncode] csl_checkImageObjectArea() Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x437e908e"
+       ],
+       "funciones": [
+        "0x437e9068"
+       ]
+      },
+      {
+       "vaddr": "0x43cabb7c",
+       "texto": "[IMAGING]: [seq_brcEncode] cmp_checkStreamAreaSizeForEncode() Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x437e90c4"
+       ],
+       "funciones": [
+        "0x437e9068"
+       ]
+      },
+      {
+       "vaddr": "0x43cabbce",
+       "texto": "[IMAGING]: [seq_brcEncode] cmp_estimate() Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x437e91a6",
+        "0x437e91f4",
+        "0x437e9264"
+       ],
+       "funciones": [
+        "0x437e9068",
+        "0x437e9068",
+        "0x437e9068"
+       ]
+      },
+      {
+       "vaddr": "0x43cabc0c",
+       "texto": "[IMAGING]: [seq_brcEncode] cmp_makeBrcGraph() Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x437e9232",
+        "0x437e9298"
+       ],
+       "funciones": [
+        "0x437e9068",
+        "0x437e9068"
+       ]
+      },
+      {
+       "vaddr": "0x43cabc4e",
+       "texto": "[IMAGING]: [seq_brcEncode] cmp_estimateQvalue() Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x437e92ca"
+       ],
+       "funciones": [
+        "0x437e9068"
+       ]
+      },
+      {
+       "vaddr": "0x43cabc92",
+       "texto": "[IMAGING]: [seq_brcEncode] cmp_remakeBrcGraph() Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x437e9318"
+       ],
+       "funciones": [
+        "0x437e9068"
+       ]
+      },
+      {
+       "vaddr": "0x43cabcd6",
+       "texto": "[IMAGING]: [seq_brcEncode] RetryEnc | err: 0x%08x codeSize: 0x%08x retryCount: %d estimQvalue: %f",
+       "sitios": [
+        "0x437e9420"
+       ],
+       "funciones": [
+        "0x437e9068"
+       ]
+      },
+      {
+       "vaddr": "0x43cabd38",
+       "texto": "[IMAGING]: [seq_brcEncode] Retry Encode NG  err: 0x%08x codeSize: 0x%08x retryCount: %d",
+       "sitios": [
+        "0x437e9466",
+        "0x437e94d0"
+       ],
+       "funciones": [
+        "0x437e9068",
+        "0x437e9068"
+       ]
+      }
+     ],
+     "ficheros": [
+      "still_seq_enc.cpp"
+     ]
+    },
+    "[PanoramaStitch]": {
+     "tag": "[PanoramaStitch]",
+     "n": 7,
+     "n_sites": 15,
+     "generico": false,
+     "funciones": {
+      "0x438bcef8": [
+       "0x43cc69bf",
+       "0x43cc69bf",
+       "0x43cc69bf",
+       "0x43cc69bf",
+       "0x43cc69bf",
+       "0x43cc6a17",
+       "0x43cc6a47",
+       "0x43cc6a8b",
+       "0x43cc6adb",
+       "0x43cc6b1e",
+       "0x43cc6b1e",
+       "0x43cc6b1e",
+       "0x43cc6b1e",
+       "0x43cc6b1e",
+       "0x43cc6b5a"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43cc69bf",
+       "texto": "[IMAGING]: [PanoramaStitch] UnitOpen() Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x438bd004",
+        "0x438bd050",
+        "0x438bd098",
+        "0x438bd0e0",
+        "0x438bd12c"
+       ],
+       "funciones": [
+        "0x438bcef8",
+        "0x438bcef8",
+        "0x438bcef8",
+        "0x438bcef8",
+        "0x438bcef8"
+       ]
+      },
+      {
+       "vaddr": "0x43cc6a17",
+       "texto": "[IMAGING]: [PanoramaStitch] Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x438bd16a"
+       ],
+       "funciones": [
+        "0x438bcef8"
+       ]
+      },
+      {
+       "vaddr": "0x43cc6a47",
+       "texto": "[IMAGING]: [PanoramaStitch] seq_initStitch() Err! err: 0x%08x %s:%d",
+       "sitios": [
+        "0x438bd228"
+       ],
+       "funciones": [
+        "0x438bcef8"
+       ]
+      },
+      {
+       "vaddr": "0x43cc6a8b",
+       "texto": "[IMAGING]: [PanoramaStitch] seq_panoramaParallelStitch() Err! err: 0x%08x %s:%d",
+       "sitios": [
+        "0x438bd296"
+       ],
+       "funciones": [
+        "0x438bcef8"
+       ]
+      },
+      {
+       "vaddr": "0x43cc6adb",
+       "texto": "[IMAGING]: [PanoramaStitch] seq_endStitch() Err! err: 0x%08x %s:%d",
+       "sitios": [
+        "0x438bd2ca"
+       ],
+       "funciones": [
+        "0x438bcef8"
+       ]
+      },
+      {
+       "vaddr": "0x43cc6b1e",
+       "texto": "[IMAGING]: [PanoramaStitch] UnitClose() Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x438bd342",
+        "0x438bd382",
+        "0x438bd3c2",
+        "0x438bd402",
+        "0x438bd442"
+       ],
+       "funciones": [
+        "0x438bcef8",
+        "0x438bcef8",
+        "0x438bcef8",
+        "0x438bcef8",
+        "0x438bcef8"
+       ]
+      },
+      {
+       "vaddr": "0x43cc6b5a",
+       "texto": "[IMAGING]: [PanoramaStitch] End  err: 0x%08x",
+       "sitios": [
+        "0x438bd46e"
+       ],
+       "funciones": [
+        "0x438bcef8"
+       ]
+      }
+     ],
+     "ficheros": [
+      "still_cnt_panoramaStitch.cpp"
+     ]
+    },
+    "[PanoramaSweepEnd]": {
+     "tag": "[PanoramaSweepEnd]",
+     "n": 6,
+     "n_sites": 26,
+     "generico": false,
+     "funciones": {
+      "0x437e6e78": [
+       "0x43cab144",
+       "0x43cab144",
+       "0x43cab144",
+       "0x43cab144",
+       "0x43cab144",
+       "0x43cab144",
+       "0x43cab176",
+       "0x43cab176",
+       "0x43cab176",
+       "0x43cab176",
+       "0x43cab176",
+       "0x43cab176",
+       "0x43cab176",
+       "0x43cab176",
+       "0x43cab176",
+       "0x43cab1b0",
+       "0x43cab1b0",
+       "0x43cab1b0",
+       "0x43cab1b0",
+       "0x43cab1b0",
+       "0x43cab1b0",
+       "0x43cab1b0",
+       "0x43cab1b0",
+       "0x43cab1d9",
+       "0x43cab21d",
+       "0x43cab25e"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43cab144",
+       "texto": "[IMAGING]: [PanoramaSweepEnd] Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x437e6ea2",
+        "0x437e6ede",
+        "0x437e6f1e",
+        "0x437e6f6a",
+        "0x437e6fbe",
+        "0x437e6ff6"
+       ],
+       "funciones": [
+        "0x437e6e78",
+        "0x437e6e78",
+        "0x437e6e78",
+        "0x437e6e78",
+        "0x437e6e78",
+        "0x437e6e78"
+       ]
+      },
+      {
+       "vaddr": "0x43cab176",
+       "texto": "[IMAGING]: [PanoramaSweepEnd] Err: 0x%08x, status: 0x%08x",
+       "sitios": [
+        "0x437e7090",
+        "0x437e7108",
+        "0x437e716a",
+        "0x437e7198",
+        "0x437e7204",
+        "0x437e731a",
+        "0x437e735e",
+        "0x437e7398",
+        "0x437e73d0"
+       ],
+       "funciones": [
+        "0x437e6e78",
+        "0x437e6e78",
+        "0x437e6e78",
+        "0x437e6e78",
+        "0x437e6e78",
+        "0x437e6e78",
+        "0x437e6e78",
+        "0x437e6e78",
+        "0x437e6e78"
+       ]
+      },
+      {
+       "vaddr": "0x43cab1b0",
+       "texto": "[IMAGING]: [PanoramaSweepEnd] Err! %s:%d",
+       "sitios": [
+        "0x437e70b0",
+        "0x437e7158",
+        "0x437e718c",
+        "0x437e71bc",
+        "0x437e7228",
+        "0x437e733e",
+        "0x437e73bc",
+        "0x437e73f2"
+       ],
+       "funciones": [
+        "0x437e6e78",
+        "0x437e6e78",
+        "0x437e6e78",
+        "0x437e6e78",
+        "0x437e6e78",
+        "0x437e6e78",
+        "0x437e6e78",
+        "0x437e6e78"
+       ]
+      },
+      {
+       "vaddr": "0x43cab1d9",
+       "texto": "[IMAGING]: [PanoramaSweepEnd] cmp_execStitchPreProcess() Err! %s:%d",
+       "sitios": [
+        "0x437e7124"
+       ],
+       "funciones": [
+        "0x437e6e78"
+       ]
+      },
+      {
+       "vaddr": "0x43cab21d",
+       "texto": "[IMAGING]: [PanoramaSweepEnd] cmp_checkFillResidual() Err! %s:%d",
+       "sitios": [
+        "0x437e737e"
+       ],
+       "funciones": [
+        "0x437e6e78"
+       ]
+      },
+      {
+       "vaddr": "0x43cab25e",
+       "texto": "[IMAGING]: [PanoramaSweepEnd] End : 0x%08x",
+       "sitios": [
+        "0x437e7404"
+       ],
+       "funciones": [
+        "0x437e6e78"
+       ]
+      }
+     ],
+     "ficheros": [
+      "still_cnt_panoramaSweep.cpp"
+     ]
+    },
+    "[seq_bigImageEncode]": {
+     "tag": "[seq_bigImageEncode]",
+     "n": 6,
+     "n_sites": 0,
+     "generico": false,
+     "funciones": {},
+     "cadenas": [
+      {
+       "vaddr": "0x43cabe7e",
+       "texto": "[IMAGING]: [seq_bigImageEncode] csl_checkImageObjectArea() Err: 0x%08x : %s:%d",
+       "sitios": [],
+       "funciones": []
+      },
+      {
+       "vaddr": "0x43cabecd",
+       "texto": "[IMAGING]: [seq_bigImageEncode] Jpeg Open  err: 0x%08x",
+       "sitios": [],
+       "funciones": []
+      },
+      {
+       "vaddr": "0x43cabf04",
+       "texto": "[IMAGING]: [seq_bigImageEncode] RetryEnc : qvalue = 0x%f",
+       "sitios": [],
+       "funciones": []
+      },
+      {
+       "vaddr": "0x43cabf3d",
+       "texto": "[IMAGING]: [seq_bigImageEncode][Err] RetryEnc err: 0x%08x qvalue : %f",
+       "sitios": [],
+       "funciones": []
+      },
+      {
+       "vaddr": "0x43cabf83",
+       "texto": "[IMAGING]: [seq_bigImageEncode] OverFlow err: 0x%08x codeSize: 0x%08x ",
+       "sitios": [],
+       "funciones": []
+      },
+      {
+       "vaddr": "0x43cabfca",
+       "texto": "[IMAGING]: [seq_bigImageEncode] Jpeg Close  err: 0x%08x",
+       "sitios": [],
+       "funciones": []
+      }
+     ],
+     "ficheros": []
+    },
+    "[PanoramaResize]": {
+     "tag": "[PanoramaResize]",
+     "n": 5,
+     "n_sites": 0,
+     "generico": false,
+     "funciones": {},
+     "cadenas": [
+      {
+       "vaddr": "0x43cc6b87",
+       "texto": "[IMAGING]: [PanoramaResize] UnitOpen() Err: 0x%08x : %s:%d",
+       "sitios": [],
+       "funciones": []
+      },
+      {
+       "vaddr": "0x43cc6bc2",
+       "texto": "[IMAGING]: [PanoramaResize] seq_panoramaResize() Err! err: 0x%08x %s:%d",
+       "sitios": [],
+       "funciones": []
+      },
+      {
+       "vaddr": "0x43cc6c0a",
+       "texto": "[IMAGING]: [PanoramaResize] seq_makePanoramaMakerNoteData() Err! err: 0x%08x %s:%d",
+       "sitios": [],
+       "funciones": []
+      },
+      {
+       "vaddr": "0x43cc6c5d",
+       "texto": "[IMAGING]: [PanoramaResize] UnitClose() Err: 0x%08x : %s:%d",
+       "sitios": [],
+       "funciones": []
+      },
+      {
+       "vaddr": "0x43cc6c99",
+       "texto": "[IMAGING]: [PanoramaResize] End  err: 0x%08x",
+       "sitios": [],
+       "funciones": []
+      }
+     ],
+     "ficheros": []
+    },
+    "[seq_bigImageClippingDecode]": {
+     "tag": "[seq_bigImageClippingDecode]",
+     "n": 4,
+     "n_sites": 0,
+     "generico": false,
+     "funciones": {},
+     "cadenas": [
+      {
+       "vaddr": "0x43c9ed64",
+       "texto": "[IMAGING]: [seq_bigImageClippingDecode] Jpeg Open  err: 0x%08x",
+       "sitios": [],
+       "funciones": []
+      },
+      {
+       "vaddr": "0x43c9eda3",
+       "texto": "[IMAGING]: [seq_bigImageClippingDecode] cmp_decode() err: 0x%08x",
+       "sitios": [],
+       "funciones": []
+      },
+      {
+       "vaddr": "0x43c9ede4",
+       "texto": "[IMAGING]: [seq_bigImageClippingDecode] cmp_stream_anlyze() err: 0x%08x",
+       "sitios": [],
+       "funciones": []
+      },
+      {
+       "vaddr": "0x43c9ee2c",
+       "texto": "[IMAGING]: [seq_bigImageClippingDecode] Jpeg Close  err: 0x%08x",
+       "sitios": [],
+       "funciones": []
+      }
+     ],
+     "ficheros": []
+    },
+    "[PanoramaSweepStart]": {
+     "tag": "[PanoramaSweepStart]",
+     "n": 4,
+     "n_sites": 10,
+     "generico": false,
+     "funciones": {
+      "0x437e6b3c": [
+       "0x43cab054",
+       "0x43cab054",
+       "0x43cab054",
+       "0x43cab054",
+       "0x43cab054",
+       "0x43cab054",
+       "0x43cab054",
+       "0x43cab0a4",
+       "0x43cab0db",
+       "0x43cab113"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43cab054",
+       "texto": "[IMAGING]: [PanoramaSweepStart] Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x437e6b6a",
+        "0x437e6b9e",
+        "0x437e6be6",
+        "0x437e6c2e",
+        "0x437e6c5e",
+        "0x437e6d26",
+        "0x437e6d46"
+       ],
+       "funciones": [
+        "0x437e6b3c",
+        "0x437e6b3c",
+        "0x437e6b3c",
+        "0x437e6b3c",
+        "0x437e6b3c",
+        "0x437e6b3c",
+        "0x437e6b3c"
+       ]
+      },
+      {
+       "vaddr": "0x43cab0a4",
+       "texto": "[IMAGING]: [PanoramaSweepStart] Jpeg Open  err: 0x%08x",
+       "sitios": [
+        "0x437e6d76"
+       ],
+       "funciones": [
+        "0x437e6b3c"
+       ]
+      },
+      {
+       "vaddr": "0x43cab0db",
+       "texto": "[IMAGING]: [PanoramaSweepStart] Jpeg Close  err: 0x%08x",
+       "sitios": [
+        "0x437e6d96"
+       ],
+       "funciones": [
+        "0x437e6b3c"
+       ]
+      },
+      {
+       "vaddr": "0x43cab113",
+       "texto": "[IMAGING]: [PanoramaSweepStart] End  err: 0x%08x",
+       "sitios": [
+        "0x437e6dae"
+       ],
+       "funciones": [
+        "0x437e6b3c"
+       ]
+      }
+     ],
+     "ficheros": [
+      "still_cnt_panoramaSweep.cpp"
+     ]
+    },
+    "[seq_bigImageResizeEncode]": {
+     "tag": "[seq_bigImageResizeEncode]",
+     "n": 4,
+     "n_sites": 0,
+     "generico": false,
+     "funciones": {},
+     "cadenas": [
+      {
+       "vaddr": "0x43cabd90",
+       "texto": "[IMAGING]: [seq_bigImageResizeEncode][Err] getJPGListID(): 0x%08x : %s:%d",
+       "sitios": [],
+       "funciones": []
+      },
+      {
+       "vaddr": "0x43cabdda",
+       "texto": "[IMAGING]: [seq_bigImageResizeEncode][Err] setDecodeParam(): 0x%08x : %s:%d",
+       "sitios": [],
+       "funciones": []
+      },
+      {
+       "vaddr": "0x43cabe26",
+       "texto": "[IMAGING]: [seq_bigImageResizeEncode][Err] seq_bigImageClippingDecode(): 0x%08x : %s:%d",
+       "sitios": [],
+       "funciones": []
+      },
+      {
+       "vaddr": "0x43cac002",
+       "texto": "[IMAGING]: [seq_bigImageResizeEncode][Err] seq_bigImageEncode(): 0x%08x : %s:%d",
+       "sitios": [],
+       "funciones": []
+      }
+     ],
+     "ficheros": []
+    },
+    "(genérico)": {
+     "tag": "(sin etiqueta)",
+     "n": 3,
+     "n_sites": 473,
+     "generico": true,
+     "funciones": {
+      "0x43549020": [
+       "0x43c9b47c"
+      ],
+      "0x4354a678": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x4354c6d0": [
+       "0x43c9b47c"
+      ],
+      "0x4354d740": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x435503b0": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x435525c0": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x43554590": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x43558910": [
+       "0x43c9b47c"
+      ],
+      "0x43728a64": [
+       "0x43c9b47c"
+      ],
+      "0x43728dec": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437298e8": [
+       "0x43c9b47c"
+      ],
+      "0x4372a98c": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x43780188": [
+       "0x43c9b47c"
+      ],
+      "0x43782464": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x43782c20": [
+       "0x43c9b47c"
+      ],
+      "0x43782e44": [
+       "0x43c9b47c"
+      ],
+      "0x4378304a": [
+       "0x43c9b47c"
+      ],
+      "0x43783764": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x43783e34": [
+       "0x43c9b47c"
+      ],
+      "0x43784140": [
+       "0x43c9b47c"
+      ],
+      "0x43784ee0": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x4378517e": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x43785a78": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x43786840": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x4378695c": [
+       "0x43c9b47c"
+      ],
+      "0x43786e28": [
+       "0x43c9b47c"
+      ],
+      "0x43786e74": [
+       "0x43c9b47c"
+      ],
+      "0x43786ec0": [
+       "0x43c9b47c"
+      ],
+      "0x43786f68": [
+       "0x43c9b47c"
+      ],
+      "0x43786fc2": [
+       "0x43c9b47c"
+      ],
+      "0x437872f8": [
+       "0x43c9b47c"
+      ],
+      "0x437873a4": [
+       "0x43c9b47c"
+      ],
+      "0x43787414": [
+       "0x43c9b47c"
+      ],
+      "0x43787484": [
+       "0x43c9b47c"
+      ],
+      "0x437874e4": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x43787590": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x4378764c": [
+       "0x43c9b47c"
+      ],
+      "0x4378836c": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x4378de88": [
+       "0x43c9b47c"
+      ],
+      "0x43792a0c": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437947cc": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x43794f04": [
+       "0x43c9b47c"
+      ],
+      "0x43794f5a": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x43796106": [
+       "0x43c9b47c"
+      ],
+      "0x4379643a": [
+       "0x43c9b47c"
+      ],
+      "0x4379744c": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x43798ccc": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437992f8": [
+       "0x43c9b47c"
+      ],
+      "0x437999e4": [
+       "0x43c9b47c"
+      ],
+      "0x43799a38": [
+       "0x43c9b47c"
+      ],
+      "0x43799a94": [
+       "0x43c9b47c"
+      ],
+      "0x43799b74": [
+       "0x43c9b47c"
+      ],
+      "0x43799fa8": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x4379a140": [
+       "0x43c9b47c"
+      ],
+      "0x4379a20c": [
+       "0x43c9b47c"
+      ],
+      "0x4379a7ee": [
+       "0x43c9b47c"
+      ],
+      "0x4379b40a": [
+       "0x43c9b47c"
+      ],
+      "0x4379b450": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x4379bb90": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437c5c86": [
+       "0x43c9b47c"
+      ],
+      "0x437c74b6": [
+       "0x43c9b47c"
+      ],
+      "0x437c7554": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437dbbbc": [
+       "0x43c9b47c"
+      ],
+      "0x437dc13c": [
+       "0x43c9b47c"
+      ],
+      "0x437dc1a0": [
+       "0x43c9b47c"
+      ],
+      "0x437dcee8": [
+       "0x43c9b47c"
+      ],
+      "0x437dcfc8": [
+       "0x43c9b47c"
+      ],
+      "0x437dd318": [
+       "0x43c9b47c"
+      ],
+      "0x437dd404": [
+       "0x43c9b47c"
+      ],
+      "0x437dd74e": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437dd8ee": [
+       "0x43c9b47c"
+      ],
+      "0x437dd9cc": [
+       "0x43c9b47c"
+      ],
+      "0x437dda40": [
+       "0x43c9b47c"
+      ],
+      "0x437ddeda": [
+       "0x43c9b47c"
+      ],
+      "0x437de072": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437de470": [
+       "0x43c9b47c"
+      ],
+      "0x437de518": [
+       "0x43c9b47c"
+      ],
+      "0x437de670": [
+       "0x43c9b47c"
+      ],
+      "0x437de9f0": [
+       "0x43c9b47c"
+      ],
+      "0x437ded64": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437df0a4": [
+       "0x43c9b47c"
+      ],
+      "0x437dfb0c": [
+       "0x43c9b47c"
+      ],
+      "0x437dfbd8": [
+       "0x43c9b47c"
+      ],
+      "0x437dfc9a": [
+       "0x43c9b47c"
+      ],
+      "0x437dfd58": [
+       "0x43c9b47c"
+      ],
+      "0x437dfdf2": [
+       "0x43c9b47c"
+      ],
+      "0x437dfe52": [
+       "0x43c9b47c"
+      ],
+      "0x437dff9a": [
+       "0x43c9b47c"
+      ],
+      "0x437e0016": [
+       "0x43c9b47c"
+      ],
+      "0x437e009e": [
+       "0x43c9b47c"
+      ],
+      "0x437e00fe": [
+       "0x43c9b47c"
+      ],
+      "0x437e0224": [
+       "0x43c9b47c"
+      ],
+      "0x437e0290": [
+       "0x43c9b47c"
+      ],
+      "0x437e02f8": [
+       "0x43c9b47c"
+      ],
+      "0x437e03a4": [
+       "0x43c9b47c"
+      ],
+      "0x437e042e": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437e0560": [
+       "0x43c9b47c"
+      ],
+      "0x437e067c": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437e0a4a": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437e11c4": [
+       "0x43c9b47c"
+      ],
+      "0x437e1240": [
+       "0x43c9b47c"
+      ],
+      "0x437e12d0": [
+       "0x43c9b47c"
+      ],
+      "0x437e13b8": [
+       "0x43c9b47c"
+      ],
+      "0x437e14f8": [
+       "0x43c9b47c"
+      ],
+      "0x437e24a0": [
+       "0x43c9b47c",
+       "0x43c9f6d9",
+       "0x43c9f6d9"
+      ],
+      "0x437e2924": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437e2af2": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437e2d14": [
+       "0x43c9b47c"
+      ],
+      "0x437e2f1e": [
+       "0x43c9b47c"
+      ],
+      "0x437e3002": [
+       "0x43c9b47c"
+      ],
+      "0x437e3444": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437e34c8": [
+       "0x43c9b47c"
+      ],
+      "0x437e35d8": [
+       "0x43c9b47c"
+      ],
+      "0x437e3832": [
+       "0x43c9b47c"
+      ],
+      "0x437e3a86": [
+       "0x43c9b47c"
+      ],
+      "0x437e3af6": [
+       "0x43c9b47c"
+      ],
+      "0x437e3c12": [
+       "0x43c9b47c"
+      ],
+      "0x437e4de6": [
+       "0x43c9b47c"
+      ],
+      "0x437e4e94": [
+       "0x43c9b47c"
+      ],
+      "0x437e4f44": [
+       "0x43c9b47c"
+      ],
+      "0x437e50dc": [
+       "0x43c9b47c"
+      ],
+      "0x437e5128": [
+       "0x43c9b47c"
+      ],
+      "0x437e51f8": [
+       "0x43c9b47c"
+      ],
+      "0x437e5254": [
+       "0x43c9b47c"
+      ],
+      "0x437e5508": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437e55d4": [
+       "0x43c9b47c"
+      ],
+      "0x437e5654": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437e56ec": [
+       "0x43c9b47c"
+      ],
+      "0x437e57d0": [
+       "0x43c9b47c"
+      ],
+      "0x437e58c4": [
+       "0x43c9b47c"
+      ],
+      "0x437e5de8": [
+       "0x43c9b47c"
+      ],
+      "0x437e5e30": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437e5ec0": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437e5fa4": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437e6098": [
+       "0x43c9b47c"
+      ],
+      "0x437e611c": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437e6224": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437e9a70": [
+       "0x43c9b47c"
+      ],
+      "0x437e9be8": [
+       "0x43c9b47c"
+      ],
+      "0x437e9d2c": [
+       "0x43c9b47c"
+      ],
+      "0x437e9d78": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437ea034": [
+       "0x43c9b47c"
+      ],
+      "0x437ea178": [
+       "0x43c9b47c"
+      ],
+      "0x437ea2bc": [
+       "0x43c9b47c"
+      ],
+      "0x437ea410": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437ea724": [
+       "0x43c9b47c"
+      ],
+      "0x437ea8cc": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437eab64": [
+       "0x43c9b47c"
+      ],
+      "0x437ead4c": [
+       "0x43c9b47c"
+      ],
+      "0x437eaf38": [
+       "0x43c9b47c"
+      ],
+      "0x437eb07c": [
+       "0x43c9b47c"
+      ],
+      "0x437eb24c": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437eb470": [
+       "0x43c9b47c"
+      ],
+      "0x437eb5c4": [
+       "0x43c9b47c"
+      ],
+      "0x437eb632": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437eba9c": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437ed5bc": [
+       "0x43c9b47c"
+      ],
+      "0x437ed71c": [
+       "0x43c9b47c"
+      ],
+      "0x437edafa": [
+       "0x43c9b47c"
+      ],
+      "0x437ee398": [
+       "0x43c9b47c"
+      ],
+      "0x437ef8cc": [
+       "0x43c9b47c"
+      ],
+      "0x437f03b8": [
+       "0x43c9b47c"
+      ],
+      "0x437f05d4": [
+       "0x43c9b47c"
+      ],
+      "0x437f06c0": [
+       "0x43c9b47c"
+      ],
+      "0x437f10d4": [
+       "0x43c9b47c"
+      ],
+      "0x437f247c": [
+       "0x43c9b47c"
+      ],
+      "0x437f2540": [
+       "0x43c9b47c"
+      ],
+      "0x437f261c": [
+       "0x43c9b47c"
+      ],
+      "0x437f2978": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437f4a1c": [
+       "0x43c9b47c"
+      ],
+      "0x437f4ac8": [
+       "0x43c9b47c"
+      ],
+      "0x437f4bb4": [
+       "0x43c9b47c"
+      ],
+      "0x437f4c84": [
+       "0x43c9b47c"
+      ],
+      "0x437f4dec": [
+       "0x43c9b47c"
+      ],
+      "0x437f4e54": [
+       "0x43c9b47c"
+      ],
+      "0x437f4ea4": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437f4fb4": [
+       "0x43c9b47c"
+      ],
+      "0x437f50a4": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437f52b4": [
+       "0x43c9b47c"
+      ],
+      "0x437f532c": [
+       "0x43c9b47c"
+      ],
+      "0x437f5554": [
+       "0x43c9b47c"
+      ],
+      "0x437f55a0": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437f5690": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437f5a04": [
+       "0x43c9b47c"
+      ],
+      "0x437f663c": [
+       "0x43c9b47c"
+      ],
+      "0x437f6718": [
+       "0x43c9b47c"
+      ],
+      "0x437f6824": [
+       "0x43c9b47c"
+      ],
+      "0x437f6b28": [
+       "0x43c9b47c"
+      ],
+      "0x437f6b94": [
+       "0x43c9b47c"
+      ],
+      "0x437f6bf8": [
+       "0x43c9b47c"
+      ],
+      "0x437f6c84": [
+       "0x43c9b47c"
+      ],
+      "0x437f6cd8": [
+       "0x43c9b47c"
+      ],
+      "0x437f776c": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437f7af8": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437f8104": [
+       "0x43c9b47c"
+      ],
+      "0x437f87b2": [
+       "0x43c9b47c"
+      ],
+      "0x437f8ddc": [
+       "0x43c9b47c"
+      ],
+      "0x437f9068": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437f918c": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437f9cf8": [
+       "0x43c9b47c"
+      ],
+      "0x437f9ea0": [
+       "0x43c9b47c"
+      ],
+      "0x437f9fde": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437fa19a": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437fa758": [
+       "0x43c9b47c"
+      ],
+      "0x437fa7b0": [
+       "0x43c9b47c"
+      ],
+      "0x437fa7fc": [
+       "0x43c9b47c"
+      ],
+      "0x437fa83e": [
+       "0x43c9b47c"
+      ],
+      "0x437fa8b4": [
+       "0x43c9b47c"
+      ],
+      "0x437fa8fc": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437fa984": [
+       "0x43c9b47c"
+      ],
+      "0x437faab4": [
+       "0x43c9b47c"
+      ],
+      "0x437fac18": [
+       "0x43c9b47c"
+      ],
+      "0x437fae50": [
+       "0x43c9b47c"
+      ],
+      "0x437fb298": [
+       "0x43c9b47c"
+      ],
+      "0x437fb4de": [
+       "0x43c9b47c"
+      ],
+      "0x437fb52c": [
+       "0x43c9b47c"
+      ],
+      "0x437fb6f0": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437fba30": [
+       "0x43c9b47c"
+      ],
+      "0x437fbd1c": [
+       "0x43c9b47c"
+      ],
+      "0x437fbddc": [
+       "0x43c9b47c"
+      ],
+      "0x437fbf08": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x437fea62": [
+       "0x43c9b47c"
+      ],
+      "0x437fee08": [
+       "0x43c9b47c"
+      ],
+      "0x43804610": [
+       "0x43c9b47c"
+      ],
+      "0x43805930": [
+       "0x43c9b47c"
+      ],
+      "0x43809e3a": [
+       "0x43c9b47c"
+      ],
+      "0x4380a2f4": [
+       "0x43c9b47c"
+      ],
+      "0x4380a384": [
+       "0x43c9b47c"
+      ],
+      "0x4380a424": [
+       "0x43c9b47c"
+      ],
+      "0x4380b6bc": [
+       "0x43c9b47c"
+      ],
+      "0x4380c7f8": [
+       "0x43c9b47c"
+      ],
+      "0x4380c9bc": [
+       "0x43c9b47c"
+      ],
+      "0x4380ca5c": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x4380d708": [
+       "0x43c9b47c"
+      ],
+      "0x4380d972": [
+       "0x43c9b47c"
+      ],
+      "0x4380fd70": [
+       "0x43c9b47c"
+      ],
+      "0x4380fdae": [
+       "0x43c9b47c"
+      ],
+      "0x4381002c": [
+       "0x43c9b47c"
+      ],
+      "0x4381007c": [
+       "0x43c9b47c"
+      ],
+      "0x43814530": [
+       "0x43c9b47c"
+      ],
+      "0x438145fe": [
+       "0x43c9b47c"
+      ],
+      "0x43814d24": [
+       "0x43c9b47c"
+      ],
+      "0x43814d76": [
+       "0x43c9b47c"
+      ],
+      "0x43814db4": [
+       "0x43c9b47c"
+      ],
+      "0x43814e04": [
+       "0x43c9b47c"
+      ],
+      "0x43814e44": [
+       "0x43c9b47c"
+      ],
+      "0x43816448": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x4381ad58": [
+       "0x43c9b47c"
+      ],
+      "0x4381adb4": [
+       "0x43c9b47c"
+      ],
+      "0x4386d100": [
+       "0x43c9b47c"
+      ],
+      "0x4386d1ce": [
+       "0x43c9b47c"
+      ],
+      "0x438b8bc0": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x438b8f44": [
+       "0x43c9b47c",
+       "0x43c9f6d9",
+       "0x43c9f6d9"
+      ],
+      "0x438b9108": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x438b91b4": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x438b9716": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x438bbbb0": [
+       "0x43c9b47c"
+      ],
+      "0x438bbc0c": [
+       "0x43c9b47c"
+      ],
+      "0x438bbef0": [
+       "0x43c9b47c"
+      ],
+      "0x438bd764": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x438be020": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x438be1f0": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x438be4b8": [
+       "0x43c9b47c"
+      ],
+      "0x438be9e0": [
+       "0x43c9b47c"
+      ],
+      "0x438bee92": [
+       "0x43c9b47c"
+      ],
+      "0x438bf1bc": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x438bf2ec": [
+       "0x43c9b47c"
+      ],
+      "0x438bf45c": [
+       "0x43c9b47c"
+      ],
+      "0x438bf554": [
+       "0x43c9b47c"
+      ],
+      "0x438bf64c": [
+       "0x43c9b47c"
+      ],
+      "0x438bf868": [
+       "0x43c9b47c"
+      ],
+      "0x438bfda0": [
+       "0x43c9b47c"
+      ],
+      "0x438bfe84": [
+       "0x43c9b47c"
+      ],
+      "0x438bff30": [
+       "0x43c9b47c",
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x438c0ac8": [
+       "0x43c9b47c"
+      ],
+      "0x438c0cc4": [
+       "0x43c9b47c"
+      ],
+      "0x438c29ec": [
+       "0x43c9b47c"
+      ],
+      "0x438c2bfc": [
+       "0x43c9b47c"
+      ],
+      "0x438c328c": [
+       "0x43c9b47c"
+      ],
+      "0x438c33f4": [
+       "0x43c9b47c"
+      ],
+      "0x438c4008": [
+       "0x43c9b47c"
+      ],
+      "0x438c8f84": [
+       "0x43c9b47c",
+       "0x43c9b47c"
+      ],
+      "0x438c9580": [
+       "0x43c9b47c"
+      ],
+      "0x438cb068": [
+       "0x43c9b47c"
+      ],
+      "0x438cbb70": [
+       "0x43c9b47c"
+      ],
+      "0x438cbc94": [
+       "0x43c9b47c"
+      ],
+      "0x438cbe30": [
+       "0x43c9b47c"
+      ],
+      "0x438cbea6": [
+       "0x43c9b47c"
+      ],
+      "0x438cbf58": [
+       "0x43c9b47c"
+      ],
+      "0x438cbfd8": [
+       "0x43c9b47c"
+      ],
+      "0x438cc0a0": [
+       "0x43c9b47c"
+      ],
+      "0x438ce238": [
+       "0x43c9b47c"
+      ],
+      "0x438cec88": [
+       "0x43c9b47c"
+      ],
+      "0x438cf818": [
+       "0x43c9b47c"
+      ],
+      "0x438d0068": [
+       "0x43c9b47c"
+      ],
+      "0x438d0260": [
+       "0x43c9b47c"
+      ],
+      "0x438d0340": [
+       "0x43c9b47c"
+      ],
+      "0x438d0424": [
+       "0x43c9b47c"
+      ],
+      "0x438d0510": [
+       "0x43c9b47c"
+      ],
+      "0x438d0590": [
+       "0x43c9b47c"
+      ],
+      "0x438d0664": [
+       "0x43c9b47c"
+      ],
+      "0x438d0cdc": [
+       "0x43c9b47c"
+      ],
+      "0x438d0d34": [
+       "0x43c9b47c"
+      ],
+      "0x438d0dcc": [
+       "0x43c9b47c"
+      ],
+      "0x438f43a4": [
+       "0x43c9b47c"
+      ],
+      "0x43784072": [
+       "0x43c9f6d9"
+      ],
+      "0x437e1858": [
+       "0x43c9f6d9"
+      ],
+      "0x437e18e4": [
+       "0x43c9f6d9",
+       "0x43c9f6d9",
+       "0x43c9f6d9"
+      ],
+      "0x437e1b60": [
+       "0x43c9f6d9",
+       "0x43c9f6d9",
+       "0x43c9f6d9"
+      ],
+      "0x437e1d40": [
+       "0x43c9f6d9"
+      ],
+      "0x437e1e48": [
+       "0x43c9f6d9",
+       "0x43c9f6d9",
+       "0x43c9f6d9"
+      ],
+      "0x437e210a": [
+       "0x43c9f6d9",
+       "0x43c9f6d9"
+      ],
+      "0x437e26b0": [
+       "0x43c9f6d9"
+      ],
+      "0x437e3f6e": [
+       "0x43c9f6d9"
+      ],
+      "0x437e47e8": [
+       "0x43c9f6d9",
+       "0x43c9f6d9"
+      ],
+      "0x437e49b0": [
+       "0x43c9f6d9",
+       "0x43c9f6d9"
+      ],
+      "0x437e4ac4": [
+       "0x43c9f6d9"
+      ],
+      "0x437e4bac": [
+       "0x43c9f6d9"
+      ],
+      "0x437e4c40": [
+       "0x43c9f6d9"
+      ],
+      "0x437f480c": [
+       "0x43c9f6d9"
+      ],
+      "0x43807f4c": [
+       "0x43c9f6d9"
+      ],
+      "0x437e8e14": [
+       "0x43cabafb"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43c9b47c",
+       "texto": "[IMAGING]: FATAL! %s:%d",
+       "sitios": [
+        "0x43549056",
+        "0x4354ab1e",
+        "0x4354aca6",
+        "0x4354ace0",
+        "0x4354ad92",
+        "0x4354c798",
+        "0x4354da82",
+        "0x4354e9ea",
+        "0x435510ce",
+        "0x4355165c",
+        "0x43552f4a",
+        "0x43552fe2",
+        "0x435534c0",
+        "0x43553da6",
+        "0x43555244",
+        "0x435557f8",
+        "0x43558f9e",
+        "0x43728b16",
+        "0x4372943e",
+        "0x43729476",
+        "0x43729588",
+        "0x4372a1f6",
+        "0x4372a9b4",
+        "0x4372aa02",
+        "0x437801c0",
+        "0x43782836",
+        "0x43782884",
+        "0x43782cce",
+        "0x43782e9a",
+        "0x43783076",
+        "0x43783804",
+        "0x43783872",
+        "0x43783914",
+        "0x43783944",
+        "0x43783efa",
+        "0x437842c4",
+        "0x43784f30",
+        "0x43784f66",
+        "0x43784faa",
+        "0x43784fe0",
+        "0x4378504e",
+        "0x437851a8",
+        "0x43785210",
+        "0x4378525e",
+        "0x43785b98",
+        "0x43785c7c",
+        "0x437868d8",
+        "0x43786918",
+        "0x4378699e",
+        "0x43786e34",
+        "0x43786e80",
+        "0x43786eea",
+        "0x43786f7e",
+        "0x43787032",
+        "0x43787314",
+        "0x437873bc",
+        "0x4378742c",
+        "0x437874b2",
+        "0x43787506",
+        "0x4378752e",
+        "0x437875b2",
+        "0x437875da",
+        "0x43787666",
+        "0x4378838e",
+        "0x437883ca",
+        "0x43788400",
+        "0x4378887c",
+        "0x437888c8",
+        "0x4378898c",
+        "0x437889f2",
+        "0x43788aec",
+        "0x43788b42",
+        "0x43788bc8",
+        "0x4378deda",
+        "0x43793556",
+        "0x43793782",
+        "0x43794850",
+        "0x43794892",
+        "0x43794f28",
+        "0x43794f94",
+        "0x43794fe4",
+        "0x43795004",
+        "0x43796126",
+        "0x43796448",
+        "0x4379794a",
+        "0x4379797e",
+        "0x437979c6",
+        "0x437979e2",
+        "0x437979fe",
+        "0x43797a1a",
+        "0x43797ac8",
+        "0x43797ae4",
+        "0x43798fbe",
+        "0x43799134",
+        "0x437996a0",
+        "0x43799a0c",
+        "0x43799a68",
+        "0x43799b32",
+        "0x43799be6",
+        "0x43799fe2",
+        "0x4379a002",
+        "0x4379a048",
+        "0x4379a1c2",
+        "0x4379a22e",
+        "0x4379a80a",
+        "0x4379b41c",
+        "0x4379b64c",
+        "0x4379b9fa",
+        "0x4379bfc6",
+        "0x4379c03e",
+        "0x437c5ce6",
+        "0x437c7518",
+        "0x437c7620",
+        "0x437c763e",
+        "0x437dbbe8",
+        "0x437dc16a",
+        "0x437dc1ce",
+        "0x437dcf0c",
+        "0x437dcfec",
+        "0x437dd34a",
+        "0x437dd464",
+        "0x437dd7ec",
+        "0x437dd814",
+        "0x437dd996",
+        "0x437dda0a",
+        "0x437ddab6",
+        "0x437ddf12",
+        "0x437de0c4",
+        "0x437de156",
+        "0x437de4ae",
+        "0x437de5ee",
+        "0x437de7fa",
+        "0x437deb86",
+        "0x437dee68",
+        "0x437defd6",
+        "0x437df2a0",
+        "0x437dfb50",
+        "0x437dfc0c",
+        "0x437dfcb2",
+        "0x437dfd7c",
+        "0x437dfe10",
+        "0x437dfe66",
+        "0x437dffbe",
+        "0x437e0050",
+        "0x437e00c0",
+        "0x437e0126",
+        "0x437e0264",
+        "0x437e02ca",
+        "0x437e0338",
+        "0x437e03f2",
+        "0x437e047e",
+        "0x437e04b2",
+        "0x437e04e2",
+        "0x437e0624",
+        "0x437e0718",
+        "0x437e0752",
+        "0x437e0838",
+        "0x437e0a68",
+        "0x437e0ab8",
+        "0x437e0ae4",
+        "0x437e120a",
+        "0x437e127c",
+        "0x437e1374",
+        "0x437e1414",
+        "0x437e1546",
+        "0x437e24c2",
+        "0x437e2936",
+        "0x437e29c2",
+        "0x437e29f0",
+        "0x437e2b34",
+        "0x437e2b64",
+        "0x437e2d52",
+        "0x437e2f5e",
+        "0x437e30b0",
+        "0x437e346a",
+        "0x437e3492",
+        "0x437e34e0",
+        "0x437e3746",
+        "0x437e3852",
+        "0x437e3aba",
+        "0x437e3b40",
+        "0x437e3c54",
+        "0x437e4e00",
+        "0x437e4eb4",
+        "0x437e4f52",
+        "0x437e50f6",
+        "0x437e5138",
+        "0x437e5208",
+        "0x437e5264",
+        "0x437e5570",
+        "0x437e5590",
+        "0x437e55e6",
+        "0x437e5664",
+        "0x437e56a0",
+        "0x437e56fe",
+        "0x437e57fc",
+        "0x437e58e2",
+        "0x437e5df8",
+        "0x437e5e50",
+        "0x437e5e84",
+        "0x437e5ef4",
+        "0x437e5f4e",
+        "0x437e6006",
+        "0x437e6056",
+        "0x437e60ec",
+        "0x437e613e",
+        "0x437e61b2",
+        "0x437e626a",
+        "0x437e62a6",
+        "0x437e6334",
+        "0x437e9ada",
+        "0x437e9c1c",
+        "0x437e9d4a",
+        "0x437e9ef6",
+        "0x437e9f18",
+        "0x437ea068",
+        "0x437ea1ac",
+        "0x437ea306",
+        "0x437ea476",
+        "0x437ea4b2",
+        "0x437ea4f8",
+        "0x437ea534",
+        "0x437ea570",
+        "0x437ea5ac",
+        "0x437ea5ce",
+        "0x437ea7bc",
+        "0x437ea95c",
+        "0x437ea9b4",
+        "0x437ea9de",
+        "0x437eab98",
+        "0x437eae24",
+        "0x437eaf6c",
+        "0x437eb0b4",
+        "0x437eb2ba",
+        "0x437eb342",
+        "0x437eb4b4",
+        "0x437eb5f6",
+        "0x437eb6a4",
+        "0x437eb6f0",
+        "0x437eb718",
+        "0x437eb74a",
+        "0x437eb7b8",
+        "0x437eb816",
+        "0x437eb9d0",
+        "0x437eba02",
+        "0x437ebae2",
+        "0x437ebdec",
+        "0x437ebe1c",
+        "0x437ed5f0",
+        "0x437ed7c8",
+        "0x437edb26",
+        "0x437ee8e0",
+        "0x437efa12",
+        "0x437f03e8",
+        "0x437f068c",
+        "0x437f072e",
+        "0x437f1216",
+        "0x437f24da",
+        "0x437f25c2",
+        "0x437f266e",
+        "0x437f2a3c",
+        "0x437f2a7a",
+        "0x437f2c52",
+        "0x437f4a7a",
+        "0x437f4af0",
+        "0x437f4bd0",
+        "0x437f4caa",
+        "0x437f4e02",
+        "0x437f4e64",
+        "0x437f4ed0",
+        "0x437f4f7c",
+        "0x437f5072",
+        "0x437f5144",
+        "0x437f51c2",
+        "0x437f52f8",
+        "0x437f5348",
+        "0x437f5572",
+        "0x437f55fc",
+        "0x437f564e",
+        "0x437f56c4",
+        "0x437f5722",
+        "0x437f63ea",
+        "0x437f66a0",
+        "0x437f676c",
+        "0x437f688e",
+        "0x437f6b58",
+        "0x437f6bca",
+        "0x437f6c32",
+        "0x437f6ca6",
+        "0x437f6d10",
+        "0x437f77fe",
+        "0x437f78e4",
+        "0x437f79be",
+        "0x437f7b22",
+        "0x437f7c5e",
+        "0x437f8126",
+        "0x437f889e",
+        "0x437f8e78",
+        "0x437f90e0",
+        "0x437f90fe",
+        "0x437f9380",
+        "0x437f9722",
+        "0x437f9e28",
+        "0x437f9efa",
+        "0x437fa024",
+        "0x437fa06c",
+        "0x437fa110",
+        "0x437fa140",
+        "0x437fa1e0",
+        "0x437fa212",
+        "0x437fa282",
+        "0x437fa2b2",
+        "0x437fa782",
+        "0x437fa7cc",
+        "0x437fa80e",
+        "0x437fa858",
+        "0x437fa8ca",
+        "0x437fa90c",
+        "0x437fa940",
+        "0x437fa9b4",
+        "0x437faad2",
+        "0x437fad02",
+        "0x437fae76",
+        "0x437fb2b2",
+        "0x437fb4f4",
+        "0x437fb548",
+        "0x437fb7f6",
+        "0x437fb820",
+        "0x437fb872",
+        "0x437fba72",
+        "0x437fbd78",
+        "0x437fbe02",
+        "0x437fbf2e",
+        "0x437fbfa2",
+        "0x437feb26",
+        "0x437fee22",
+        "0x4380462a",
+        "0x43805a8a",
+        "0x43809e60",
+        "0x4380a336",
+        "0x4380a3d0",
+        "0x4380a470",
+        "0x4380b798",
+        "0x4380c80c",
+        "0x4380c9fe",
+        "0x4380cf6e",
+        "0x4380cfd8",
+        "0x4380d7ec",
+        "0x4380d9d8",
+        "0x4380fd82",
+        "0x4380fdc2",
+        "0x43810044",
+        "0x43810096",
+        "0x43814550",
+        "0x4381463e",
+        "0x43814d3e",
+        "0x43814d8a",
+        "0x43814dcc",
+        "0x43814e16",
+        "0x43814e56",
+        "0x438166a2",
+        "0x4381678c",
+        "0x4381ad82",
+        "0x4381ade8",
+        "0x4386d162",
+        "0x4386d1de",
+        "0x438b8c50",
+        "0x438b8c70",
+        "0x438b8d04",
+        "0x438b8d34",
+        "0x438b8d60",
+        "0x438b8d8c",
+        "0x438b8db8",
+        "0x438b8de4",
+        "0x438b8e10",
+        "0x438b8e3c",
+        "0x438b8e62",
+        "0x438b8fc6",
+        "0x438b912e",
+        "0x438b917a",
+        "0x438b9268",
+        "0x438b92a2",
+        "0x438b974a",
+        "0x438b9768",
+        "0x438bbbca",
+        "0x438bbc4e",
+        "0x438bbf4a",
+        "0x438bd7a6",
+        "0x438bd800",
+        "0x438bdb02",
+        "0x438be0a4",
+        "0x438be0ee",
+        "0x438be198",
+        "0x438be216",
+        "0x438be2de",
+        "0x438be7be",
+        "0x438bea46",
+        "0x438beedc",
+        "0x438bf1fe",
+        "0x438bf266",
+        "0x438bf2a4",
+        "0x438bf414",
+        "0x438bf4d8",
+        "0x438bf5d2",
+        "0x438bf674",
+        "0x438bf890",
+        "0x438bfde2",
+        "0x438bfef8",
+        "0x438bffc2",
+        "0x438c0002",
+        "0x438c05bc",
+        "0x438c0b70",
+        "0x438c0d06",
+        "0x438c2aec",
+        "0x438c2cba",
+        "0x438c32f4",
+        "0x438c3482",
+        "0x438c40cc",
+        "0x438c91b2",
+        "0x438c9224",
+        "0x438c95be",
+        "0x438cb17e",
+        "0x438cbc10",
+        "0x438cbd24",
+        "0x438cbe6e",
+        "0x438cbf18",
+        "0x438cbfaa",
+        "0x438cc03c",
+        "0x438cc0ec",
+        "0x438ce2c4",
+        "0x438ceeb4",
+        "0x438cf89e",
+        "0x438d00dc",
+        "0x438d0280",
+        "0x438d03d6",
+        "0x438d04c2",
+        "0x438d0550",
+        "0x438d05d0",
+        "0x438d06a6",
+        "0x438d0cfa",
+        "0x438d0d52",
+        "0x438d0e22",
+        "0x438f43b6"
+       ],
+       "funciones": [
+        "0x43549020",
+        "0x4354a678",
+        "0x4354a678",
+        "0x4354a678",
+        "0x4354a678",
+        "0x4354c6d0",
+        "0x4354d740",
+        "0x4354d740",
+        "0x435503b0",
+        "0x435503b0",
+        "0x435525c0",
+        "0x435525c0",
+        "0x435525c0",
+        "0x435525c0",
+        "0x43554590",
+        "0x43554590",
+        "0x43558910",
+        "0x43728a64",
+        "0x43728dec",
+        "0x43728dec",
+        "0x43728dec",
+        "0x437298e8",
+        "0x4372a98c",
+        "0x4372a98c",
+        "0x43780188",
+        "0x43782464",
+        "0x43782464",
+        "0x43782c20",
+        "0x43782e44",
+        "0x4378304a",
+        "0x43783764",
+        "0x43783764",
+        "0x43783764",
+        "0x43783764",
+        "0x43783e34",
+        "0x43784140",
+        "0x43784ee0",
+        "0x43784ee0",
+        "0x43784ee0",
+        "0x43784ee0",
+        "0x43784ee0",
+        "0x4378517e",
+        "0x4378517e",
+        "0x4378517e",
+        "0x43785a78",
+        "0x43785a78",
+        "0x43786840",
+        "0x43786840",
+        "0x4378695c",
+        "0x43786e28",
+        "0x43786e74",
+        "0x43786ec0",
+        "0x43786f68",
+        "0x43786fc2",
+        "0x437872f8",
+        "0x437873a4",
+        "0x43787414",
+        "0x43787484",
+        "0x437874e4",
+        "0x437874e4",
+        "0x43787590",
+        "0x43787590",
+        "0x4378764c",
+        "0x4378836c",
+        "0x4378836c",
+        "0x4378836c",
+        "0x4378836c",
+        "0x4378836c",
+        "0x4378836c",
+        "0x4378836c",
+        "0x4378836c",
+        "0x4378836c",
+        "0x4378836c",
+        "0x4378de88",
+        "0x43792a0c",
+        "0x43792a0c",
+        "0x437947cc",
+        "0x437947cc",
+        "0x43794f04",
+        "0x43794f5a",
+        "0x43794f5a",
+        "0x43794f5a",
+        "0x43796106",
+        "0x4379643a",
+        "0x4379744c",
+        "0x4379744c",
+        "0x4379744c",
+        "0x4379744c",
+        "0x4379744c",
+        "0x4379744c",
+        "0x4379744c",
+        "0x4379744c",
+        "0x43798ccc",
+        "0x43798ccc",
+        "0x437992f8",
+        "0x437999e4",
+        "0x43799a38",
+        "0x43799a94",
+        "0x43799b74",
+        "0x43799fa8",
+        "0x43799fa8",
+        "0x43799fa8",
+        "0x4379a140",
+        "0x4379a20c",
+        "0x4379a7ee",
+        "0x4379b40a",
+        "0x4379b450",
+        "0x4379b450",
+        "0x4379bb90",
+        "0x4379bb90",
+        "0x437c5c86",
+        "0x437c74b6",
+        "0x437c7554",
+        "0x437c7554",
+        "0x437dbbbc",
+        "0x437dc13c",
+        "0x437dc1a0",
+        "0x437dcee8",
+        "0x437dcfc8",
+        "0x437dd318",
+        "0x437dd404",
+        "0x437dd74e",
+        "0x437dd74e",
+        "0x437dd8ee",
+        "0x437dd9cc",
+        "0x437dda40",
+        "0x437ddeda",
+        "0x437de072",
+        "0x437de072",
+        "0x437de470",
+        "0x437de518",
+        "0x437de670",
+        "0x437de9f0",
+        "0x437ded64",
+        "0x437ded64",
+        "0x437df0a4",
+        "0x437dfb0c",
+        "0x437dfbd8",
+        "0x437dfc9a",
+        "0x437dfd58",
+        "0x437dfdf2",
+        "0x437dfe52",
+        "0x437dff9a",
+        "0x437e0016",
+        "0x437e009e",
+        "0x437e00fe",
+        "0x437e0224",
+        "0x437e0290",
+        "0x437e02f8",
+        "0x437e03a4",
+        "0x437e042e",
+        "0x437e042e",
+        "0x437e042e",
+        "0x437e0560",
+        "0x437e067c",
+        "0x437e067c",
+        "0x437e067c",
+        "0x437e0a4a",
+        "0x437e0a4a",
+        "0x437e0a4a",
+        "0x437e11c4",
+        "0x437e1240",
+        "0x437e12d0",
+        "0x437e13b8",
+        "0x437e14f8",
+        "0x437e24a0",
+        "0x437e2924",
+        "0x437e2924",
+        "0x437e2924",
+        "0x437e2af2",
+        "0x437e2af2",
+        "0x437e2d14",
+        "0x437e2f1e",
+        "0x437e3002",
+        "0x437e3444",
+        "0x437e3444",
+        "0x437e34c8",
+        "0x437e35d8",
+        "0x437e3832",
+        "0x437e3a86",
+        "0x437e3af6",
+        "0x437e3c12",
+        "0x437e4de6",
+        "0x437e4e94",
+        "0x437e4f44",
+        "0x437e50dc",
+        "0x437e5128",
+        "0x437e51f8",
+        "0x437e5254",
+        "0x437e5508",
+        "0x437e5508",
+        "0x437e55d4",
+        "0x437e5654",
+        "0x437e5654",
+        "0x437e56ec",
+        "0x437e57d0",
+        "0x437e58c4",
+        "0x437e5de8",
+        "0x437e5e30",
+        "0x437e5e30",
+        "0x437e5ec0",
+        "0x437e5ec0",
+        "0x437e5fa4",
+        "0x437e5fa4",
+        "0x437e6098",
+        "0x437e611c",
+        "0x437e611c",
+        "0x437e6224",
+        "0x437e6224",
+        "0x437e6224",
+        "0x437e9a70",
+        "0x437e9be8",
+        "0x437e9d2c",
+        "0x437e9d78",
+        "0x437e9d78",
+        "0x437ea034",
+        "0x437ea178",
+        "0x437ea2bc",
+        "0x437ea410",
+        "0x437ea410",
+        "0x437ea410",
+        "0x437ea410",
+        "0x437ea410",
+        "0x437ea410",
+        "0x437ea410",
+        "0x437ea724",
+        "0x437ea8cc",
+        "0x437ea8cc",
+        "0x437ea8cc",
+        "0x437eab64",
+        "0x437ead4c",
+        "0x437eaf38",
+        "0x437eb07c",
+        "0x437eb24c",
+        "0x437eb24c",
+        "0x437eb470",
+        "0x437eb5c4",
+        "0x437eb632",
+        "0x437eb632",
+        "0x437eb632",
+        "0x437eb632",
+        "0x437eb632",
+        "0x437eb632",
+        "0x437eb632",
+        "0x437eb632",
+        "0x437eba9c",
+        "0x437eba9c",
+        "0x437eba9c",
+        "0x437ed5bc",
+        "0x437ed71c",
+        "0x437edafa",
+        "0x437ee398",
+        "0x437ef8cc",
+        "0x437f03b8",
+        "0x437f05d4",
+        "0x437f06c0",
+        "0x437f10d4",
+        "0x437f247c",
+        "0x437f2540",
+        "0x437f261c",
+        "0x437f2978",
+        "0x437f2978",
+        "0x437f2978",
+        "0x437f4a1c",
+        "0x437f4ac8",
+        "0x437f4bb4",
+        "0x437f4c84",
+        "0x437f4dec",
+        "0x437f4e54",
+        "0x437f4ea4",
+        "0x437f4ea4",
+        "0x437f4fb4",
+        "0x437f50a4",
+        "0x437f50a4",
+        "0x437f52b4",
+        "0x437f532c",
+        "0x437f5554",
+        "0x437f55a0",
+        "0x437f55a0",
+        "0x437f5690",
+        "0x437f5690",
+        "0x437f5a04",
+        "0x437f663c",
+        "0x437f6718",
+        "0x437f6824",
+        "0x437f6b28",
+        "0x437f6b94",
+        "0x437f6bf8",
+        "0x437f6c84",
+        "0x437f6cd8",
+        "0x437f776c",
+        "0x437f776c",
+        "0x437f776c",
+        "0x437f7af8",
+        "0x437f7af8",
+        "0x437f8104",
+        "0x437f87b2",
+        "0x437f8ddc",
+        "0x437f9068",
+        "0x437f9068",
+        "0x437f918c",
+        "0x437f918c",
+        "0x437f9cf8",
+        "0x437f9ea0",
+        "0x437f9fde",
+        "0x437f9fde",
+        "0x437f9fde",
+        "0x437f9fde",
+        "0x437fa19a",
+        "0x437fa19a",
+        "0x437fa19a",
+        "0x437fa19a",
+        "0x437fa758",
+        "0x437fa7b0",
+        "0x437fa7fc",
+        "0x437fa83e",
+        "0x437fa8b4",
+        "0x437fa8fc",
+        "0x437fa8fc",
+        "0x437fa984",
+        "0x437faab4",
+        "0x437fac18",
+        "0x437fae50",
+        "0x437fb298",
+        "0x437fb4de",
+        "0x437fb52c",
+        "0x437fb6f0",
+        "0x437fb6f0",
+        "0x437fb6f0",
+        "0x437fba30",
+        "0x437fbd1c",
+        "0x437fbddc",
+        "0x437fbf08",
+        "0x437fbf08",
+        "0x437fea62",
+        "0x437fee08",
+        "0x43804610",
+        "0x43805930",
+        "0x43809e3a",
+        "0x4380a2f4",
+        "0x4380a384",
+        "0x4380a424",
+        "0x4380b6bc",
+        "0x4380c7f8",
+        "0x4380c9bc",
+        "0x4380ca5c",
+        "0x4380ca5c",
+        "0x4380d708",
+        "0x4380d972",
+        "0x4380fd70",
+        "0x4380fdae",
+        "0x4381002c",
+        "0x4381007c",
+        "0x43814530",
+        "0x438145fe",
+        "0x43814d24",
+        "0x43814d76",
+        "0x43814db4",
+        "0x43814e04",
+        "0x43814e44",
+        "0x43816448",
+        "0x43816448",
+        "0x4381ad58",
+        "0x4381adb4",
+        "0x4386d100",
+        "0x4386d1ce",
+        "0x438b8bc0",
+        "0x438b8bc0",
+        "0x438b8bc0",
+        "0x438b8bc0",
+        "0x438b8bc0",
+        "0x438b8bc0",
+        "0x438b8bc0",
+        "0x438b8bc0",
+        "0x438b8bc0",
+        "0x438b8bc0",
+        "0x438b8bc0",
+        "0x438b8f44",
+        "0x438b9108",
+        "0x438b9108",
+        "0x438b91b4",
+        "0x438b91b4",
+        "0x438b9716",
+        "0x438b9716",
+        "0x438bbbb0",
+        "0x438bbc0c",
+        "0x438bbef0",
+        "0x438bd764",
+        "0x438bd764",
+        "0x438bd764",
+        "0x438be020",
+        "0x438be020",
+        "0x438be020",
+        "0x438be1f0",
+        "0x438be1f0",
+        "0x438be4b8",
+        "0x438be9e0",
+        "0x438bee92",
+        "0x438bf1bc",
+        "0x438bf1bc",
+        "0x438bf1bc",
+        "0x438bf2ec",
+        "0x438bf45c",
+        "0x438bf554",
+        "0x438bf64c",
+        "0x438bf868",
+        "0x438bfda0",
+        "0x438bfe84",
+        "0x438bff30",
+        "0x438bff30",
+        "0x438bff30",
+        "0x438c0ac8",
+        "0x438c0cc4",
+        "0x438c29ec",
+        "0x438c2bfc",
+        "0x438c328c",
+        "0x438c33f4",
+        "0x438c4008",
+        "0x438c8f84",
+        "0x438c8f84",
+        "0x438c9580",
+        "0x438cb068",
+        "0x438cbb70",
+        "0x438cbc94",
+        "0x438cbe30",
+        "0x438cbea6",
+        "0x438cbf58",
+        "0x438cbfd8",
+        "0x438cc0a0",
+        "0x438ce238",
+        "0x438cec88",
+        "0x438cf818",
+        "0x438d0068",
+        "0x438d0260",
+        "0x438d0340",
+        "0x438d0424",
+        "0x438d0510",
+        "0x438d0590",
+        "0x438d0664",
+        "0x438d0cdc",
+        "0x438d0d34",
+        "0x438d0dcc",
+        "0x438f43a4"
+       ]
+      },
+      {
+       "vaddr": "0x43c9f6d9",
+       "texto": "[IMAGING]: FATAL! %s:%d [0x%x]",
+       "sitios": [
+        "0x43784090",
+        "0x437e187e",
+        "0x437e19be",
+        "0x437e1a00",
+        "0x437e1a50",
+        "0x437e1bd2",
+        "0x437e1c1c",
+        "0x437e1c5a",
+        "0x437e1d94",
+        "0x437e1f84",
+        "0x437e1fc4",
+        "0x437e2014",
+        "0x437e2250",
+        "0x437e22cc",
+        "0x437e257e",
+        "0x437e25d2",
+        "0x437e2726",
+        "0x437e3fc4",
+        "0x437e48ca",
+        "0x437e490a",
+        "0x437e4a18",
+        "0x437e4a66",
+        "0x437e4b3e",
+        "0x437e4c0a",
+        "0x437e4c88",
+        "0x437f48a4",
+        "0x4380848a",
+        "0x438b901c",
+        "0x438b906e"
+       ],
+       "funciones": [
+        "0x43784072",
+        "0x437e1858",
+        "0x437e18e4",
+        "0x437e18e4",
+        "0x437e18e4",
+        "0x437e1b60",
+        "0x437e1b60",
+        "0x437e1b60",
+        "0x437e1d40",
+        "0x437e1e48",
+        "0x437e1e48",
+        "0x437e1e48",
+        "0x437e210a",
+        "0x437e210a",
+        "0x437e24a0",
+        "0x437e24a0",
+        "0x437e26b0",
+        "0x437e3f6e",
+        "0x437e47e8",
+        "0x437e47e8",
+        "0x437e49b0",
+        "0x437e49b0",
+        "0x437e4ac4",
+        "0x437e4bac",
+        "0x437e4c40",
+        "0x437f480c",
+        "0x43807f4c",
+        "0x438b8f44",
+        "0x438b8f44"
+       ]
+      },
+      {
+       "vaddr": "0x43cabafb",
+       "texto": "[IMAGING]: %s:%d \n",
+       "sitios": [
+        "0x437e8e3c"
+       ],
+       "funciones": [
+        "0x437e8e14"
+       ]
+      }
+     ],
+     "ficheros": [
+      "./Utility/EnumConverter.h",
+      "CAIF/CaifCom_Control.cpp",
+      "CS_Command.cpp",
+      "CS_ExifMakerNote.cpp",
+      "CS_ExifMakerNote_dslr.cpp",
+      "CS_imaging.cpp",
+      "Capture/zpd_capture_async_cmd.cpp",
+      "Capture/zpd_capture_sequence.cpp",
+      "CaptureAfterEffect_Selector.cpp",
+      "CaptureAfterEnc_Selector.cpp",
+      "CaptureAfterRead_Selector.cpp",
+      "CaptureCorrectRaw_Selector.cpp",
+      "CaptureDevEntry_Selector.cpp",
+      "CaptureDevExit_Selector.cpp",
+      "CaptureDevelop_Selector.cpp",
+      "CaptureEncode_Selector.cpp",
+      "CaptureExposure_Selector.cpp",
+      "CaptureFeatureEffect_Selector.cpp",
+      "CaptureManager.cpp",
+      "CaptureManager_FunctionIF.cpp",
+      "CaptureManager_ModeInfo.cpp",
+      "CaptureManager_ReleaseIF.cpp",
+      "CaptureMarble_Selector.cpp",
+      "CaptureOpdBeforeNR_Selector.cpp",
+      "CapturePrelight_Selector.cpp",
+      "CaptureRead_Selector.cpp",
+      "CaptureSortJpeg_Selector.cpp",
+      "CaptureUtilityCAIF.cpp",
+      "CaptureUtilityCamCore.cpp",
+      "CaptureUtilityCommon.cpp",
+      "CaptureUtilityDebug.cpp",
+      "CaptureUtilityExifMkNote.cpp",
+      "CaptureUtilityIDT.cpp",
+      "CaptureUtilityImageSize.cpp",
+      "CaptureUtilityImager.cpp",
+      "CaptureUtilityModuleAPI.cpp",
+      "CaptureUtilityPreReview.cpp",
+      "CaptureUtilityRC.cpp",
+      "CaptureUtilityReadFlow.cpp",
+      "CaptureUtilitySDF.cpp",
+      "CaptureUtilityStdYc.cpp",
+      "CaptureUtilitySyncResource.cpp",
+      "ClockControl.cpp",
+      "Dfs/Dfs_Control.cpp",
+      "ExecReleaseHandler.cpp",
+      "Function/FunctionMessage.cpp",
+      "Function/FunctionSetParam.cpp",
+      "Function/LRBridge.cpp",
+      "HAPI_Filter_TBOX.cpp",
+      "ImageParamCapture.cpp",
+      "ImageParamCapture_Memory.cpp",
+      "ImageParamCapture_SyncBranch.cpp",
+      "ImageParam_SpecialSeq.cpp",
+      "ImageParam_Sync.cpp",
+      "ImagingMain.cpp",
+      "InfraImaging.cpp",
+      "Initialize/StaticSetInfo.cpp",
+      "InternalCapture.cpp",
+      "NotifyController.cpp",
+      "RCWrapper.cpp",
+      "RawMemManager.cpp",
+      "RawMemManager_Beforehand.cpp",
+      "RawMemManager_MemBuffer.cpp",
+      "RawMemManager_MemPool.cpp",
+      "RawMemManager_MemRuleLib.cpp",
+      "RawMemManager_UnitTypeLib.cpp",
+      "Resource/CamResource.cpp",
+      "Resource/CamSyncResource.cpp",
+      "Resource/DualRecResManager.cpp",
+      "Resource/JpegRingBuf.cpp",
+      "S2Handler.cpp",
+      "SectionController.cpp",
+      "SectionEndFunc.cpp",
+      "SectionQueueManager.cpp",
+      "SequenceFilter_Selector.cpp",
+      "Sequence_Common.cpp",
+      "Sequence_HSRecGolfshot.cpp",
+      "Sequence_Movie.cpp",
+      "Sequence_MovieSplit.cpp",
+      "Sequence_SuperSlowMotion.cpp",
+      "Spinal.cpp",
+      "StageResourceStack.cpp",
+      "Stage_Adjust.cpp",
+      "Stage_Apollo.cpp",
+      "Stage_AutoFraming.cpp",
+      "Stage_BDRO.cpp",
+      "Stage_BOKS.cpp",
+      "Stage_CaComm.cpp",
+      "Stage_CameraHAPI.cpp",
+      "Stage_Common.cpp",
+      "Stage_Decomp.cpp",
+      "Stage_DevLater.cpp",
+      "Stage_Develop.cpp",
+      "Stage_DualRec.cpp",
+      "Stage_FaceDetect.cpp",
+      "Stage_MARBLE.cpp",
+      "Stage_Notify.cpp",
+      "Stage_OPD.cpp",
+      "Stage_Orientation.cpp",
+      "Stage_Panorama.cpp",
+      "Stage_Raw.cpp",
+      "Stage_ResizeHV.cpp",
+      "Stage_SACC.cpp",
+      "Stage_SoftFocus.cpp",
+      "Stage_StillDate.cpp",
+      "Stage_TBOX.cpp",
+      "Stage_WaitControl.cpp",
+      "StillInfoAccr.cpp",
+      "SyncLoader.cpp",
+      "SyncTask.cpp",
+      "SyncYCOut.cpp",
+      "SystemDelay.cpp",
+      "init_cam_SetCamParam.cpp",
+      "init_cam_SetCamParam_Util.cpp",
+      "init_cam_SetCamParam_main.cpp",
+      "lc_BracketAF.cpp",
+      "still_mem_mgr.cpp",
+      "wrapper/CamMain.cpp",
+      "wrapper/Face.cpp"
+     ]
+    },
+    "[dda_rc_resize]": {
+     "tag": "[dda_rc_resize]",
+     "n": 3,
+     "n_sites": 0,
+     "generico": false,
+     "funciones": {},
+     "cadenas": [
+      {
+       "vaddr": "0x43cab962",
+       "texto": "[IMAGING]: [dda_rc_resize] WrapRcctAcquire_Exec Err: 0x%08x : %s:%d",
+       "sitios": [],
+       "funciones": []
+      },
+      {
+       "vaddr": "0x43cab9ef",
+       "texto": "[IMAGING]: [dda_rc_resize] WrapRcctResize_Exec Err: 0x%08x : %s:%d",
+       "sitios": [],
+       "funciones": []
+      },
+      {
+       "vaddr": "0x43caba32",
+       "texto": "[IMAGING]: [dda_rc_resize] WrapRcctRelease_Exec Err: 0x%08x : %s:%d",
+       "sitios": [],
+       "funciones": []
+      }
+     ],
+     "ficheros": []
+    },
+    "[ddls_srotate_sa_start_cb]": {
+     "tag": "[ddls_srotate_sa_start_cb]",
+     "n": 3,
+     "n_sites": 3,
+     "generico": false,
+     "funciones": {
+      "0x438bc0a8": [
+       "0x43cc680c",
+       "0x43cc6869",
+       "0x43cc689e"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43cc680c",
+       "texto": "[IMAGING]: [ddls_srotate_sa_start_cb] SA DRV Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x438bc0c0"
+       ],
+       "funciones": [
+        "0x438bc0a8"
+       ]
+      },
+      {
+       "vaddr": "0x43cc6869",
+       "texto": "[IMAGING]: [ddls_srotate_sa_start_cb] SA Err: 0x%08x",
+       "sitios": [
+        "0x438bc122"
+       ],
+       "funciones": [
+        "0x438bc0a8"
+       ]
+      },
+      {
+       "vaddr": "0x43cc689e",
+       "texto": "[IMAGING]: [ddls_srotate_sa_start_cb][Debug NG] CallBack Addr = NULL: 0x%08x",
+       "sitios": [
+        "0x438bc15e"
+       ],
+       "funciones": [
+        "0x438bc0a8"
+       ]
+      }
+     ],
+     "ficheros": [
+      "src/srotate/ddl_srotate.cpp"
+     ]
+    },
+    "[seq_panoramaResize]": {
+     "tag": "[seq_panoramaResize]",
+     "n": 2,
+     "n_sites": 0,
+     "generico": false,
+     "funciones": {},
+     "cadenas": [
+      {
+       "vaddr": "0x43c9e634",
+       "texto": "[IMAGING]: [seq_panoramaResize] effectImage Err: 0x%08x : %s:%d",
+       "sitios": [],
+       "funciones": []
+      },
+      {
+       "vaddr": "0x43c9e674",
+       "texto": "[IMAGING]: [seq_panoramaResize][OK] effectImage OK : %s:%d",
+       "sitios": [],
+       "funciones": []
+      }
+     ],
+     "ficheros": []
+    },
+    "[dda_jpg_fill]": {
+     "tag": "[dda_jpg_fill]",
+     "n": 2,
+     "n_sites": 2,
+     "generico": false,
+     "funciones": {
+      "0x437e83dc": [
+       "0x43cab8db",
+       "0x43cab922"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43cab8db",
+       "texto": "[IMAGING]: [dda_jpg_fill] csl_checkImageObjectArea Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x437e8408"
+       ],
+       "funciones": [
+        "0x437e83dc"
+       ]
+      },
+      {
+       "vaddr": "0x43cab922",
+       "texto": "[IMAGING]: [dda_jpg_fill] WrapJpegFill_Exec Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x437e84a0"
+       ],
+       "funciones": [
+        "0x437e83dc"
+       ]
+      }
+     ],
+     "ficheros": [
+      "still_dda_jpg.cpp"
+     ]
+    },
+    "[dda_rc_fill]": {
+     "tag": "[dda_rc_fill]",
+     "n": 2,
+     "n_sites": 2,
+     "generico": false,
+     "funciones": {
+      "0x437e858c": [
+       "0x43caba76",
+       "0x43cababc"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43caba76",
+       "texto": "[IMAGING]: [dda_rc_fill] csl_checkImageObjectArea Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x437e85b4"
+       ],
+       "funciones": [
+        "0x437e858c"
+       ]
+      },
+      {
+       "vaddr": "0x43cababc",
+       "texto": "[IMAGING]: [dda_rc_fill] WrapRcrtFill_Exec Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x437e8642"
+       ],
+       "funciones": [
+        "0x437e858c"
+       ]
+      }
+     ],
+     "ficheros": [
+      "still_dda_rc.cpp"
+     ]
+    },
+    "[ddls_stitch_sa_start_cb]": {
+     "tag": "[ddls_stitch_sa_start_cb]",
+     "n": 2,
+     "n_sites": 2,
+     "generico": false,
+     "funciones": {
+      "0x438bc720": [
+       "0x43cc6919",
+       "0x43cc6973"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43cc6919",
+       "texto": "[IMAGING]: [ddls_stitch_sa_start_cb] SA DRV Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x438bc738"
+       ],
+       "funciones": [
+        "0x438bc720"
+       ]
+      },
+      {
+       "vaddr": "0x43cc6973",
+       "texto": "[IMAGING]: [ddls_stitch_sa_start_cb][Debug NG] CallBack Addr = NULL: 0x%08x",
+       "sitios": [
+        "0x438bc77a"
+       ],
+       "funciones": [
+        "0x438bc720"
+       ]
+      }
+     ],
+     "ficheros": [
+      "src/stitch/ddl_stitch.cpp"
+     ]
+    },
+    "[seqSRotateCallBack]": {
+     "tag": "[seqSRotateCallBack]",
+     "n": 1,
+     "n_sites": 1,
+     "generico": false,
+     "funciones": {
+      "0x43780496": [
+       "0x43c9e546"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43c9e546",
+       "texto": "[IMAGING]: [seqSRotateCallBack] ercd: 0x%08x",
+       "sitios": [
+        "0x437804b8"
+       ],
+       "funciones": [
+        "0x43780496"
+       ]
+      }
+     ],
+     "ficheros": []
+    },
+    "[seqStitchCallBack]": {
+     "tag": "[seqStitchCallBack]",
+     "n": 1,
+     "n_sites": 1,
+     "generico": false,
+     "funciones": {
+      "0x437804da": [
+       "0x43c9e573"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43c9e573",
+       "texto": "[IMAGING]: [seqStitchCallBack] ercd: 0x%08x",
+       "sitios": [
+        "0x437804fe"
+       ],
+       "funciones": [
+        "0x437804da"
+       ]
+      }
+     ],
+     "ficheros": []
+    },
+    "[seqClippingDecCallback]": {
+     "tag": "[seqClippingDecCallback]",
+     "n": 1,
+     "n_sites": 1,
+     "generico": false,
+     "funciones": {
+      "0x43780522": [
+       "0x43c9e59f"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43c9e59f",
+       "texto": "[IMAGING]: [seqClippingDecCallback] ercd: 0x%08x",
+       "sitios": [
+        "0x43780546"
+       ],
+       "funciones": [
+        "0x43780522"
+       ]
+      }
+     ],
+     "ficheros": []
+    },
+    "[seq_panoramaClippingDecode]": {
+     "tag": "[seq_panoramaClippingDecode]",
+     "n": 1,
+     "n_sites": 1,
+     "generico": false,
+     "funciones": {
+      "0x43780eb4": [
+       "0x43c9e5d0"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43c9e5d0",
+       "texto": "[IMAGING]: [seq_panoramaClippingDecode] cmp_decode Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x43780f30"
+       ],
+       "funciones": [
+        "0x43780eb4"
+       ]
+      }
+     ],
+     "ficheros": [
+      "still_seq_panoramaStitch.cpp"
+     ]
+    },
+    "[panoramaSRotateLeftStitchImage]": {
+     "tag": "[panoramaSRotateLeftStitchImage]",
+     "n": 1,
+     "n_sites": 1,
+     "generico": false,
+     "funciones": {
+      "0x43781424": [
+       "0x43c9ec9a"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43c9ec9a",
+       "texto": "[IMAGING]: [panoramaSRotateLeftStitchImage][Debug] End  err: 0x%08x",
+       "sitios": [
+        "0x437821c8"
+       ],
+       "funciones": [
+        "0x43781424"
+       ]
+      }
+     ],
+     "ficheros": [
+      "still_seq_panoramaStitch.cpp"
+     ]
+    },
+    "[seq_makePanoramaMakerNoteData]": {
+     "tag": "[seq_makePanoramaMakerNoteData]",
+     "n": 1,
+     "n_sites": 0,
+     "generico": false,
+     "funciones": {},
+     "cadenas": [
+      {
+       "vaddr": "0x43c9ed25",
+       "texto": "[IMAGING]: [seq_makePanoramaMakerNoteData] Err: 0x%08x : %s:%d",
+       "sitios": [],
+       "funciones": []
+      }
+     ],
+     "ficheros": []
+    },
+    "[cmp_fill]": {
+     "tag": "[cmp_fill]",
+     "n": 1,
+     "n_sites": 1,
+     "generico": false,
+     "funciones": {
+      "0x437e643a": [
+       "0x43caafa1"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43caafa1",
+       "texto": "[IMAGING]: [cmp_fill] Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x437e6458"
+       ],
+       "funciones": [
+        "0x437e643a"
+       ]
+      }
+     ],
+     "ficheros": [
+      "still_cmp_effect.cpp"
+     ]
+    },
+    "[cmp_fill_validArea]": {
+     "tag": "[cmp_fill_validArea]",
+     "n": 1,
+     "n_sites": 0,
+     "generico": false,
+     "funciones": {},
+     "cadenas": [
+      {
+       "vaddr": "0x43caafe0",
+       "texto": "[IMAGING]: [cmp_fill_validArea] Err: 0x%08x : %s:%d",
+       "sitios": [],
+       "funciones": []
+      }
+     ],
+     "ficheros": []
+    },
+    "[cmp_resizeMirror]": {
+     "tag": "[cmp_resizeMirror]",
+     "n": 1,
+     "n_sites": 0,
+     "generico": false,
+     "funciones": {},
+     "cadenas": [
+      {
+       "vaddr": "0x43cab014",
+       "texto": "[IMAGING]: [cmp_resizeMirror] dda_rc_resize Err: 0x%08x : %s:%d",
+       "sitios": [],
+       "funciones": []
+      }
+     ],
+     "ficheros": []
+    },
+    "[allocOutputArea]": {
+     "tag": "[allocOutputArea]",
+     "n": 1,
+     "n_sites": 1,
+     "generico": false,
+     "funciones": {
+      "0x437e7f50": [
+       "0x43cab74d"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43cab74d",
+       "texto": "[IMAGING]: [allocOutputArea] Size over!: data[0x%08x] ram[0x%08x]: %s:%d",
+       "sitios": [
+        "0x437e7fb0"
+       ],
+       "funciones": [
+        "0x437e7f50"
+       ]
+      }
+     ],
+     "ficheros": [
+      "still_csl_ring_buff.cpp"
+     ]
+    },
+    "[dda_jpg_close]": {
+     "tag": "[dda_jpg_close]",
+     "n": 1,
+     "n_sites": 1,
+     "generico": false,
+     "funciones": {
+      "0x437e8144": [
+       "0x43cab7ae"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43cab7ae",
+       "texto": "[IMAGING]: [dda_jpg_close] WrapJpegClose_Exec Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x437e8162"
+       ],
+       "funciones": [
+        "0x437e8144"
+       ]
+      }
+     ],
+     "ficheros": [
+      "still_dda_jpg.cpp"
+     ]
+    },
+    "[dda_jpg_stream_anlyze]": {
+     "tag": "[dda_jpg_stream_anlyze]",
+     "n": 1,
+     "n_sites": 1,
+     "generico": false,
+     "funciones": {
+      "0x437e8194": [
+       "0x43cab802"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43cab802",
+       "texto": "[IMAGING]: [dda_jpg_stream_anlyze] WrapJpegAnalyzeStream_Exec Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x437e81f4"
+       ],
+       "funciones": [
+        "0x437e8194"
+       ]
+      }
+     ],
+     "ficheros": [
+      "still_dda_jpg.cpp"
+     ]
+    },
+    "[dda_jpg_get_stream_samplingfactor]": {
+     "tag": "[dda_jpg_get_stream_samplingfactor]",
+     "n": 1,
+     "n_sites": 1,
+     "generico": false,
+     "funciones": {
+      "0x437e8244": [
+       "0x43cab854"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43cab854",
+       "texto": "[IMAGING]: [dda_jpg_get_stream_samplingfactor] Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x437e8270"
+       ],
+       "funciones": [
+        "0x437e8244"
+       ]
+      }
+     ],
+     "ficheros": [
+      "still_dda_jpg.cpp"
+     ]
+    },
+    "[dda_jpg_decode]": {
+     "tag": "[dda_jpg_decode]",
+     "n": 1,
+     "n_sites": 1,
+     "generico": false,
+     "funciones": {
+      "0x437e82a4": [
+       "0x43cab897"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43cab897",
+       "texto": "[IMAGING]: [dda_jpg_decode] WrapJpegDecode_Exec Err: 0x%08x : %s:%d",
+       "sitios": [
+        "0x437e83a8"
+       ],
+       "funciones": [
+        "0x437e82a4"
+       ]
+      }
+     ],
+     "ficheros": [
+      "still_dda_jpg.cpp"
+     ]
+    },
+    "[ddas_rc_set_rcct_param]": {
+     "tag": "[ddas_rc_set_rcct_param]",
+     "n": 1,
+     "n_sites": 0,
+     "generico": false,
+     "funciones": {},
+     "cadenas": [
+      {
+       "vaddr": "0x43cab9b7",
+       "texto": "[IMAGING]: [ddas_rc_set_rcct_param] Err: 0x%08x : %s:%d",
+       "sitios": [],
+       "funciones": []
+      }
+     ],
+     "ficheros": []
+    },
+    "[Jpeg Close Callback]": {
+     "tag": "[Jpeg Close Callback]",
+     "n": 1,
+     "n_sites": 1,
+     "generico": false,
+     "funciones": {
+      "0x437e961c": [
+       "0x43cac052"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43cac052",
+       "texto": "[IMAGING]: [Jpeg Close Callback] ercd: 0x%08x",
+       "sitios": [
+        "0x437e964a"
+       ],
+       "funciones": [
+        "0x437e961c"
+       ]
+      }
+     ],
+     "ficheros": []
+    },
+    "[Jpeg Open Callback]": {
+     "tag": "[Jpeg Open Callback]",
+     "n": 1,
+     "n_sites": 1,
+     "generico": false,
+     "funciones": {
+      "0x437e977a": [
+       "0x43cac080"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43cac080",
+       "texto": "[IMAGING]: [Jpeg Open Callback] ercd: 0x%08x",
+       "sitios": [
+        "0x437e97ac"
+       ],
+       "funciones": [
+        "0x437e977a"
+       ]
+      }
+     ],
+     "ficheros": []
+    },
+    "[wrapRcrtFill Callback]": {
+     "tag": "[wrapRcrtFill Callback]",
+     "n": 1,
+     "n_sites": 1,
+     "generico": false,
+     "funciones": {
+      "0x437e98ec": [
+       "0x43cac0ad"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43cac0ad",
+       "texto": "[IMAGING]: [wrapRcrtFill Callback] ercd: 0x%08x",
+       "sitios": [
+        "0x437e991a"
+       ],
+       "funciones": [
+        "0x437e98ec"
+       ]
+      }
+     ],
+     "ficheros": []
+    },
+    "[ddls_stitch_set_flg]": {
+     "tag": "[ddls_stitch_set_flg]",
+     "n": 1,
+     "n_sites": 1,
+     "generico": false,
+     "funciones": {
+      "0x438bc6ac": [
+       "0x43cc68eb"
+      ]
+     },
+     "cadenas": [
+      {
+       "vaddr": "0x43cc68eb",
+       "texto": "[IMAGING]: [ddls_stitch_set_flg] ercd: 0x%08x",
+       "sitios": [
+        "0x438bc6ca"
+       ],
+       "funciones": [
+        "0x438bc6ac"
+       ]
+      }
+     ],
+     "ficheros": []
+    }
+   },
+   "ficheros_fuente": {
+    "src/srotate/ddl_srotate.cpp": [
+     "0x438bc0c2"
+    ],
+    "src/stitch/ddl_stitch.cpp": [
+     "0x438bc73a"
+    ],
+    "still_cmp_effect.cpp": [
+     "0x437e645c"
+    ],
+    "still_cnt_panoramaStitch.cpp": [
+     "0x438bd008",
+     "0x438bd054",
+     "0x438bd09c",
+     "0x438bd0e4",
+     "0x438bd130",
+     "0x438bd16c",
+     "0x438bd22c",
+     "0x438bd298",
+     "0x438bd2ce",
+     "0x438bd346",
+     "0x438bd386",
+     "0x438bd3c6",
+     "0x438bd406",
+     "0x438bd446"
+    ],
+    "still_cnt_panoramaSweep.cpp": [
+     "0x437e6b6e",
+     "0x437e6ba0",
+     "0x437e6bea",
+     "0x437e6c32",
+     "0x437e6c62",
+     "0x437e6d2a",
+     "0x437e6d4a",
+     "0x437e6ea6",
+     "0x437e6ee2",
+     "0x437e6f20",
+     "0x437e6f6c",
+     "0x437e6fc2",
+     "0x437e6ffa",
+     "0x437e70a2",
+     "0x437e712a",
+     "0x437e7180",
+     "0x437e71b0",
+     "0x437e721c",
+     "0x437e7332",
+     "0x437e7370",
+     "0x437e73b0",
+     "0x437e73e4",
+     "0x437e75b2",
+     "0x437e760a",
+     "0x437e767c",
+     "0x437e76d6",
+     "0x437e7736",
+     "0x437e779e",
+     "0x437e77f6",
+     "0x437e7848",
+     "0x437e7944",
+     "0x437e799c",
+     "0x437e7ae2",
+     "0x437e7b66",
+     "0x437e7b9c",
+     "0x437e7bdc"
+    ],
+    "still_csl_ring_buff.cpp": [
+     "0x437e7fb6"
+    ],
+    "still_dda_jpg.cpp": [
+     "0x437e8166",
+     "0x437e81f8",
+     "0x437e8274",
+     "0x437e83ac",
+     "0x437e840c",
+     "0x437e84a4"
+    ],
+    "still_dda_rc.cpp": [
+     "0x437e85b8",
+     "0x437e8646"
+    ],
+    "still_seq_enc.cpp": [
+     "0x437e9092",
+     "0x437e90c8",
+     "0x437e91aa",
+     "0x437e91f8",
+     "0x437e9236",
+     "0x437e9268",
+     "0x437e929c",
+     "0x437e92ce",
+     "0x437e931c"
+    ],
+    "still_seq_panoramaStitch.cpp": [
+     "0x43780f34",
+     "0x437814b8",
+     "0x4378150c",
+     "0x43781670",
+     "0x437817d4",
+     "0x43781958",
+     "0x437819be",
+     "0x43781a00",
+     "0x43781a82",
+     "0x43781b12",
+     "0x43781b66",
+     "0x43781bae",
+     "0x43781bfc",
+     "0x43781c36",
+     "0x43781c7c",
+     "0x43781d06",
+     "0x43781d3a",
+     "0x43781d9c",
+     "0x43781dd8",
+     "0x43781e0a",
+     "0x43781e40",
+     "0x43782216"
+    ]
+   },
+   "cadenas": [
+    {
+     "vaddr": "0x43c9b47c",
+     "texto": "[IMAGING]: FATAL! %s:%d",
+     "sitios": [
+      "0x43549056",
+      "0x4354ab1e",
+      "0x4354aca6",
+      "0x4354ace0",
+      "0x4354ad92",
+      "0x4354c798",
+      "0x4354da82",
+      "0x4354e9ea",
+      "0x435510ce",
+      "0x4355165c",
+      "0x43552f4a",
+      "0x43552fe2",
+      "0x435534c0",
+      "0x43553da6",
+      "0x43555244",
+      "0x435557f8",
+      "0x43558f9e",
+      "0x43728b16",
+      "0x4372943e",
+      "0x43729476",
+      "0x43729588",
+      "0x4372a1f6",
+      "0x4372a9b4",
+      "0x4372aa02",
+      "0x437801c0",
+      "0x43782836",
+      "0x43782884",
+      "0x43782cce",
+      "0x43782e9a",
+      "0x43783076",
+      "0x43783804",
+      "0x43783872",
+      "0x43783914",
+      "0x43783944",
+      "0x43783efa",
+      "0x437842c4",
+      "0x43784f30",
+      "0x43784f66",
+      "0x43784faa",
+      "0x43784fe0",
+      "0x4378504e",
+      "0x437851a8",
+      "0x43785210",
+      "0x4378525e",
+      "0x43785b98",
+      "0x43785c7c",
+      "0x437868d8",
+      "0x43786918",
+      "0x4378699e",
+      "0x43786e34",
+      "0x43786e80",
+      "0x43786eea",
+      "0x43786f7e",
+      "0x43787032",
+      "0x43787314",
+      "0x437873bc",
+      "0x4378742c",
+      "0x437874b2",
+      "0x43787506",
+      "0x4378752e",
+      "0x437875b2",
+      "0x437875da",
+      "0x43787666",
+      "0x4378838e",
+      "0x437883ca",
+      "0x43788400",
+      "0x4378887c",
+      "0x437888c8",
+      "0x4378898c",
+      "0x437889f2",
+      "0x43788aec",
+      "0x43788b42",
+      "0x43788bc8",
+      "0x4378deda",
+      "0x43793556",
+      "0x43793782",
+      "0x43794850",
+      "0x43794892",
+      "0x43794f28",
+      "0x43794f94",
+      "0x43794fe4",
+      "0x43795004",
+      "0x43796126",
+      "0x43796448",
+      "0x4379794a",
+      "0x4379797e",
+      "0x437979c6",
+      "0x437979e2",
+      "0x437979fe",
+      "0x43797a1a",
+      "0x43797ac8",
+      "0x43797ae4",
+      "0x43798fbe",
+      "0x43799134",
+      "0x437996a0",
+      "0x43799a0c",
+      "0x43799a68",
+      "0x43799b32",
+      "0x43799be6",
+      "0x43799fe2",
+      "0x4379a002",
+      "0x4379a048",
+      "0x4379a1c2",
+      "0x4379a22e",
+      "0x4379a80a",
+      "0x4379b41c",
+      "0x4379b64c",
+      "0x4379b9fa",
+      "0x4379bfc6",
+      "0x4379c03e",
+      "0x437c5ce6",
+      "0x437c7518",
+      "0x437c7620",
+      "0x437c763e",
+      "0x437dbbe8",
+      "0x437dc16a",
+      "0x437dc1ce",
+      "0x437dcf0c",
+      "0x437dcfec",
+      "0x437dd34a",
+      "0x437dd464",
+      "0x437dd7ec",
+      "0x437dd814",
+      "0x437dd996",
+      "0x437dda0a",
+      "0x437ddab6",
+      "0x437ddf12",
+      "0x437de0c4",
+      "0x437de156",
+      "0x437de4ae",
+      "0x437de5ee",
+      "0x437de7fa",
+      "0x437deb86",
+      "0x437dee68",
+      "0x437defd6",
+      "0x437df2a0",
+      "0x437dfb50",
+      "0x437dfc0c",
+      "0x437dfcb2",
+      "0x437dfd7c",
+      "0x437dfe10",
+      "0x437dfe66",
+      "0x437dffbe",
+      "0x437e0050",
+      "0x437e00c0",
+      "0x437e0126",
+      "0x437e0264",
+      "0x437e02ca",
+      "0x437e0338",
+      "0x437e03f2",
+      "0x437e047e",
+      "0x437e04b2",
+      "0x437e04e2",
+      "0x437e0624",
+      "0x437e0718",
+      "0x437e0752",
+      "0x437e0838",
+      "0x437e0a68",
+      "0x437e0ab8",
+      "0x437e0ae4",
+      "0x437e120a",
+      "0x437e127c",
+      "0x437e1374",
+      "0x437e1414",
+      "0x437e1546",
+      "0x437e24c2",
+      "0x437e2936",
+      "0x437e29c2",
+      "0x437e29f0",
+      "0x437e2b34",
+      "0x437e2b64",
+      "0x437e2d52",
+      "0x437e2f5e",
+      "0x437e30b0",
+      "0x437e346a",
+      "0x437e3492",
+      "0x437e34e0",
+      "0x437e3746",
+      "0x437e3852",
+      "0x437e3aba",
+      "0x437e3b40",
+      "0x437e3c54",
+      "0x437e4e00",
+      "0x437e4eb4",
+      "0x437e4f52",
+      "0x437e50f6",
+      "0x437e5138",
+      "0x437e5208",
+      "0x437e5264",
+      "0x437e5570",
+      "0x437e5590",
+      "0x437e55e6",
+      "0x437e5664",
+      "0x437e56a0",
+      "0x437e56fe",
+      "0x437e57fc",
+      "0x437e58e2",
+      "0x437e5df8",
+      "0x437e5e50",
+      "0x437e5e84",
+      "0x437e5ef4",
+      "0x437e5f4e",
+      "0x437e6006",
+      "0x437e6056",
+      "0x437e60ec",
+      "0x437e613e",
+      "0x437e61b2",
+      "0x437e626a",
+      "0x437e62a6",
+      "0x437e6334",
+      "0x437e9ada",
+      "0x437e9c1c",
+      "0x437e9d4a",
+      "0x437e9ef6",
+      "0x437e9f18",
+      "0x437ea068",
+      "0x437ea1ac",
+      "0x437ea306",
+      "0x437ea476",
+      "0x437ea4b2",
+      "0x437ea4f8",
+      "0x437ea534",
+      "0x437ea570",
+      "0x437ea5ac",
+      "0x437ea5ce",
+      "0x437ea7bc",
+      "0x437ea95c",
+      "0x437ea9b4",
+      "0x437ea9de",
+      "0x437eab98",
+      "0x437eae24",
+      "0x437eaf6c",
+      "0x437eb0b4",
+      "0x437eb2ba",
+      "0x437eb342",
+      "0x437eb4b4",
+      "0x437eb5f6",
+      "0x437eb6a4",
+      "0x437eb6f0",
+      "0x437eb718",
+      "0x437eb74a",
+      "0x437eb7b8",
+      "0x437eb816",
+      "0x437eb9d0",
+      "0x437eba02",
+      "0x437ebae2",
+      "0x437ebdec",
+      "0x437ebe1c",
+      "0x437ed5f0",
+      "0x437ed7c8",
+      "0x437edb26",
+      "0x437ee8e0",
+      "0x437efa12",
+      "0x437f03e8",
+      "0x437f068c",
+      "0x437f072e",
+      "0x437f1216",
+      "0x437f24da",
+      "0x437f25c2",
+      "0x437f266e",
+      "0x437f2a3c",
+      "0x437f2a7a",
+      "0x437f2c52",
+      "0x437f4a7a",
+      "0x437f4af0",
+      "0x437f4bd0",
+      "0x437f4caa",
+      "0x437f4e02",
+      "0x437f4e64",
+      "0x437f4ed0",
+      "0x437f4f7c",
+      "0x437f5072",
+      "0x437f5144",
+      "0x437f51c2",
+      "0x437f52f8",
+      "0x437f5348",
+      "0x437f5572",
+      "0x437f55fc",
+      "0x437f564e",
+      "0x437f56c4",
+      "0x437f5722",
+      "0x437f63ea",
+      "0x437f66a0",
+      "0x437f676c",
+      "0x437f688e",
+      "0x437f6b58",
+      "0x437f6bca",
+      "0x437f6c32",
+      "0x437f6ca6",
+      "0x437f6d10",
+      "0x437f77fe",
+      "0x437f78e4",
+      "0x437f79be",
+      "0x437f7b22",
+      "0x437f7c5e",
+      "0x437f8126",
+      "0x437f889e",
+      "0x437f8e78",
+      "0x437f90e0",
+      "0x437f90fe",
+      "0x437f9380",
+      "0x437f9722",
+      "0x437f9e28",
+      "0x437f9efa",
+      "0x437fa024",
+      "0x437fa06c",
+      "0x437fa110",
+      "0x437fa140",
+      "0x437fa1e0",
+      "0x437fa212",
+      "0x437fa282",
+      "0x437fa2b2",
+      "0x437fa782",
+      "0x437fa7cc",
+      "0x437fa80e",
+      "0x437fa858",
+      "0x437fa8ca",
+      "0x437fa90c",
+      "0x437fa940",
+      "0x437fa9b4",
+      "0x437faad2",
+      "0x437fad02",
+      "0x437fae76",
+      "0x437fb2b2",
+      "0x437fb4f4",
+      "0x437fb548",
+      "0x437fb7f6",
+      "0x437fb820",
+      "0x437fb872",
+      "0x437fba72",
+      "0x437fbd78",
+      "0x437fbe02",
+      "0x437fbf2e",
+      "0x437fbfa2",
+      "0x437feb26",
+      "0x437fee22",
+      "0x4380462a",
+      "0x43805a8a",
+      "0x43809e60",
+      "0x4380a336",
+      "0x4380a3d0",
+      "0x4380a470",
+      "0x4380b798",
+      "0x4380c80c",
+      "0x4380c9fe",
+      "0x4380cf6e",
+      "0x4380cfd8",
+      "0x4380d7ec",
+      "0x4380d9d8",
+      "0x4380fd82",
+      "0x4380fdc2",
+      "0x43810044",
+      "0x43810096",
+      "0x43814550",
+      "0x4381463e",
+      "0x43814d3e",
+      "0x43814d8a",
+      "0x43814dcc",
+      "0x43814e16",
+      "0x43814e56",
+      "0x438166a2",
+      "0x4381678c",
+      "0x4381ad82",
+      "0x4381ade8",
+      "0x4386d162",
+      "0x4386d1de",
+      "0x438b8c50",
+      "0x438b8c70",
+      "0x438b8d04",
+      "0x438b8d34",
+      "0x438b8d60",
+      "0x438b8d8c",
+      "0x438b8db8",
+      "0x438b8de4",
+      "0x438b8e10",
+      "0x438b8e3c",
+      "0x438b8e62",
+      "0x438b8fc6",
+      "0x438b912e",
+      "0x438b917a",
+      "0x438b9268",
+      "0x438b92a2",
+      "0x438b974a",
+      "0x438b9768",
+      "0x438bbbca",
+      "0x438bbc4e",
+      "0x438bbf4a",
+      "0x438bd7a6",
+      "0x438bd800",
+      "0x438bdb02",
+      "0x438be0a4",
+      "0x438be0ee",
+      "0x438be198",
+      "0x438be216",
+      "0x438be2de",
+      "0x438be7be",
+      "0x438bea46",
+      "0x438beedc",
+      "0x438bf1fe",
+      "0x438bf266",
+      "0x438bf2a4",
+      "0x438bf414",
+      "0x438bf4d8",
+      "0x438bf5d2",
+      "0x438bf674",
+      "0x438bf890",
+      "0x438bfde2",
+      "0x438bfef8",
+      "0x438bffc2",
+      "0x438c0002",
+      "0x438c05bc",
+      "0x438c0b70",
+      "0x438c0d06",
+      "0x438c2aec",
+      "0x438c2cba",
+      "0x438c32f4",
+      "0x438c3482",
+      "0x438c40cc",
+      "0x438c91b2",
+      "0x438c9224",
+      "0x438c95be",
+      "0x438cb17e",
+      "0x438cbc10",
+      "0x438cbd24",
+      "0x438cbe6e",
+      "0x438cbf18",
+      "0x438cbfaa",
+      "0x438cc03c",
+      "0x438cc0ec",
+      "0x438ce2c4",
+      "0x438ceeb4",
+      "0x438cf89e",
+      "0x438d00dc",
+      "0x438d0280",
+      "0x438d03d6",
+      "0x438d04c2",
+      "0x438d0550",
+      "0x438d05d0",
+      "0x438d06a6",
+      "0x438d0cfa",
+      "0x438d0d52",
+      "0x438d0e22",
+      "0x438f43b6"
+     ],
+     "funciones": [
+      "0x43549020",
+      "0x4354a678",
+      "0x4354a678",
+      "0x4354a678",
+      "0x4354a678",
+      "0x4354c6d0",
+      "0x4354d740",
+      "0x4354d740",
+      "0x435503b0",
+      "0x435503b0",
+      "0x435525c0",
+      "0x435525c0",
+      "0x435525c0",
+      "0x435525c0",
+      "0x43554590",
+      "0x43554590",
+      "0x43558910",
+      "0x43728a64",
+      "0x43728dec",
+      "0x43728dec",
+      "0x43728dec",
+      "0x437298e8",
+      "0x4372a98c",
+      "0x4372a98c",
+      "0x43780188",
+      "0x43782464",
+      "0x43782464",
+      "0x43782c20",
+      "0x43782e44",
+      "0x4378304a",
+      "0x43783764",
+      "0x43783764",
+      "0x43783764",
+      "0x43783764",
+      "0x43783e34",
+      "0x43784140",
+      "0x43784ee0",
+      "0x43784ee0",
+      "0x43784ee0",
+      "0x43784ee0",
+      "0x43784ee0",
+      "0x4378517e",
+      "0x4378517e",
+      "0x4378517e",
+      "0x43785a78",
+      "0x43785a78",
+      "0x43786840",
+      "0x43786840",
+      "0x4378695c",
+      "0x43786e28",
+      "0x43786e74",
+      "0x43786ec0",
+      "0x43786f68",
+      "0x43786fc2",
+      "0x437872f8",
+      "0x437873a4",
+      "0x43787414",
+      "0x43787484",
+      "0x437874e4",
+      "0x437874e4",
+      "0x43787590",
+      "0x43787590",
+      "0x4378764c",
+      "0x4378836c",
+      "0x4378836c",
+      "0x4378836c",
+      "0x4378836c",
+      "0x4378836c",
+      "0x4378836c",
+      "0x4378836c",
+      "0x4378836c",
+      "0x4378836c",
+      "0x4378836c",
+      "0x4378de88",
+      "0x43792a0c",
+      "0x43792a0c",
+      "0x437947cc",
+      "0x437947cc",
+      "0x43794f04",
+      "0x43794f5a",
+      "0x43794f5a",
+      "0x43794f5a",
+      "0x43796106",
+      "0x4379643a",
+      "0x4379744c",
+      "0x4379744c",
+      "0x4379744c",
+      "0x4379744c",
+      "0x4379744c",
+      "0x4379744c",
+      "0x4379744c",
+      "0x4379744c",
+      "0x43798ccc",
+      "0x43798ccc",
+      "0x437992f8",
+      "0x437999e4",
+      "0x43799a38",
+      "0x43799a94",
+      "0x43799b74",
+      "0x43799fa8",
+      "0x43799fa8",
+      "0x43799fa8",
+      "0x4379a140",
+      "0x4379a20c",
+      "0x4379a7ee",
+      "0x4379b40a",
+      "0x4379b450",
+      "0x4379b450",
+      "0x4379bb90",
+      "0x4379bb90",
+      "0x437c5c86",
+      "0x437c74b6",
+      "0x437c7554",
+      "0x437c7554",
+      "0x437dbbbc",
+      "0x437dc13c",
+      "0x437dc1a0",
+      "0x437dcee8",
+      "0x437dcfc8",
+      "0x437dd318",
+      "0x437dd404",
+      "0x437dd74e",
+      "0x437dd74e",
+      "0x437dd8ee",
+      "0x437dd9cc",
+      "0x437dda40",
+      "0x437ddeda",
+      "0x437de072",
+      "0x437de072",
+      "0x437de470",
+      "0x437de518",
+      "0x437de670",
+      "0x437de9f0",
+      "0x437ded64",
+      "0x437ded64",
+      "0x437df0a4",
+      "0x437dfb0c",
+      "0x437dfbd8",
+      "0x437dfc9a",
+      "0x437dfd58",
+      "0x437dfdf2",
+      "0x437dfe52",
+      "0x437dff9a",
+      "0x437e0016",
+      "0x437e009e",
+      "0x437e00fe",
+      "0x437e0224",
+      "0x437e0290",
+      "0x437e02f8",
+      "0x437e03a4",
+      "0x437e042e",
+      "0x437e042e",
+      "0x437e042e",
+      "0x437e0560",
+      "0x437e067c",
+      "0x437e067c",
+      "0x437e067c",
+      "0x437e0a4a",
+      "0x437e0a4a",
+      "0x437e0a4a",
+      "0x437e11c4",
+      "0x437e1240",
+      "0x437e12d0",
+      "0x437e13b8",
+      "0x437e14f8",
+      "0x437e24a0",
+      "0x437e2924",
+      "0x437e2924",
+      "0x437e2924",
+      "0x437e2af2",
+      "0x437e2af2",
+      "0x437e2d14",
+      "0x437e2f1e",
+      "0x437e3002",
+      "0x437e3444",
+      "0x437e3444",
+      "0x437e34c8",
+      "0x437e35d8",
+      "0x437e3832",
+      "0x437e3a86",
+      "0x437e3af6",
+      "0x437e3c12",
+      "0x437e4de6",
+      "0x437e4e94",
+      "0x437e4f44",
+      "0x437e50dc",
+      "0x437e5128",
+      "0x437e51f8",
+      "0x437e5254",
+      "0x437e5508",
+      "0x437e5508",
+      "0x437e55d4",
+      "0x437e5654",
+      "0x437e5654",
+      "0x437e56ec",
+      "0x437e57d0",
+      "0x437e58c4",
+      "0x437e5de8",
+      "0x437e5e30",
+      "0x437e5e30",
+      "0x437e5ec0",
+      "0x437e5ec0",
+      "0x437e5fa4",
+      "0x437e5fa4",
+      "0x437e6098",
+      "0x437e611c",
+      "0x437e611c",
+      "0x437e6224",
+      "0x437e6224",
+      "0x437e6224",
+      "0x437e9a70",
+      "0x437e9be8",
+      "0x437e9d2c",
+      "0x437e9d78",
+      "0x437e9d78",
+      "0x437ea034",
+      "0x437ea178",
+      "0x437ea2bc",
+      "0x437ea410",
+      "0x437ea410",
+      "0x437ea410",
+      "0x437ea410",
+      "0x437ea410",
+      "0x437ea410",
+      "0x437ea410",
+      "0x437ea724",
+      "0x437ea8cc",
+      "0x437ea8cc",
+      "0x437ea8cc",
+      "0x437eab64",
+      "0x437ead4c",
+      "0x437eaf38",
+      "0x437eb07c",
+      "0x437eb24c",
+      "0x437eb24c",
+      "0x437eb470",
+      "0x437eb5c4",
+      "0x437eb632",
+      "0x437eb632",
+      "0x437eb632",
+      "0x437eb632",
+      "0x437eb632",
+      "0x437eb632",
+      "0x437eb632",
+      "0x437eb632",
+      "0x437eba9c",
+      "0x437eba9c",
+      "0x437eba9c",
+      "0x437ed5bc",
+      "0x437ed71c",
+      "0x437edafa",
+      "0x437ee398",
+      "0x437ef8cc",
+      "0x437f03b8",
+      "0x437f05d4",
+      "0x437f06c0",
+      "0x437f10d4",
+      "0x437f247c",
+      "0x437f2540",
+      "0x437f261c",
+      "0x437f2978",
+      "0x437f2978",
+      "0x437f2978",
+      "0x437f4a1c",
+      "0x437f4ac8",
+      "0x437f4bb4",
+      "0x437f4c84",
+      "0x437f4dec",
+      "0x437f4e54",
+      "0x437f4ea4",
+      "0x437f4ea4",
+      "0x437f4fb4",
+      "0x437f50a4",
+      "0x437f50a4",
+      "0x437f52b4",
+      "0x437f532c",
+      "0x437f5554",
+      "0x437f55a0",
+      "0x437f55a0",
+      "0x437f5690",
+      "0x437f5690",
+      "0x437f5a04",
+      "0x437f663c",
+      "0x437f6718",
+      "0x437f6824",
+      "0x437f6b28",
+      "0x437f6b94",
+      "0x437f6bf8",
+      "0x437f6c84",
+      "0x437f6cd8",
+      "0x437f776c",
+      "0x437f776c",
+      "0x437f776c",
+      "0x437f7af8",
+      "0x437f7af8",
+      "0x437f8104",
+      "0x437f87b2",
+      "0x437f8ddc",
+      "0x437f9068",
+      "0x437f9068",
+      "0x437f918c",
+      "0x437f918c",
+      "0x437f9cf8",
+      "0x437f9ea0",
+      "0x437f9fde",
+      "0x437f9fde",
+      "0x437f9fde",
+      "0x437f9fde",
+      "0x437fa19a",
+      "0x437fa19a",
+      "0x437fa19a",
+      "0x437fa19a",
+      "0x437fa758",
+      "0x437fa7b0",
+      "0x437fa7fc",
+      "0x437fa83e",
+      "0x437fa8b4",
+      "0x437fa8fc",
+      "0x437fa8fc",
+      "0x437fa984",
+      "0x437faab4",
+      "0x437fac18",
+      "0x437fae50",
+      "0x437fb298",
+      "0x437fb4de",
+      "0x437fb52c",
+      "0x437fb6f0",
+      "0x437fb6f0",
+      "0x437fb6f0",
+      "0x437fba30",
+      "0x437fbd1c",
+      "0x437fbddc",
+      "0x437fbf08",
+      "0x437fbf08",
+      "0x437fea62",
+      "0x437fee08",
+      "0x43804610",
+      "0x43805930",
+      "0x43809e3a",
+      "0x4380a2f4",
+      "0x4380a384",
+      "0x4380a424",
+      "0x4380b6bc",
+      "0x4380c7f8",
+      "0x4380c9bc",
+      "0x4380ca5c",
+      "0x4380ca5c",
+      "0x4380d708",
+      "0x4380d972",
+      "0x4380fd70",
+      "0x4380fdae",
+      "0x4381002c",
+      "0x4381007c",
+      "0x43814530",
+      "0x438145fe",
+      "0x43814d24",
+      "0x43814d76",
+      "0x43814db4",
+      "0x43814e04",
+      "0x43814e44",
+      "0x43816448",
+      "0x43816448",
+      "0x4381ad58",
+      "0x4381adb4",
+      "0x4386d100",
+      "0x4386d1ce",
+      "0x438b8bc0",
+      "0x438b8bc0",
+      "0x438b8bc0",
+      "0x438b8bc0",
+      "0x438b8bc0",
+      "0x438b8bc0",
+      "0x438b8bc0",
+      "0x438b8bc0",
+      "0x438b8bc0",
+      "0x438b8bc0",
+      "0x438b8bc0",
+      "0x438b8f44",
+      "0x438b9108",
+      "0x438b9108",
+      "0x438b91b4",
+      "0x438b91b4",
+      "0x438b9716",
+      "0x438b9716",
+      "0x438bbbb0",
+      "0x438bbc0c",
+      "0x438bbef0",
+      "0x438bd764",
+      "0x438bd764",
+      "0x438bd764",
+      "0x438be020",
+      "0x438be020",
+      "0x438be020",
+      "0x438be1f0",
+      "0x438be1f0",
+      "0x438be4b8",
+      "0x438be9e0",
+      "0x438bee92",
+      "0x438bf1bc",
+      "0x438bf1bc",
+      "0x438bf1bc",
+      "0x438bf2ec",
+      "0x438bf45c",
+      "0x438bf554",
+      "0x438bf64c",
+      "0x438bf868",
+      "0x438bfda0",
+      "0x438bfe84",
+      "0x438bff30",
+      "0x438bff30",
+      "0x438bff30",
+      "0x438c0ac8",
+      "0x438c0cc4",
+      "0x438c29ec",
+      "0x438c2bfc",
+      "0x438c328c",
+      "0x438c33f4",
+      "0x438c4008",
+      "0x438c8f84",
+      "0x438c8f84",
+      "0x438c9580",
+      "0x438cb068",
+      "0x438cbb70",
+      "0x438cbc94",
+      "0x438cbe30",
+      "0x438cbea6",
+      "0x438cbf58",
+      "0x438cbfd8",
+      "0x438cc0a0",
+      "0x438ce238",
+      "0x438cec88",
+      "0x438cf818",
+      "0x438d0068",
+      "0x438d0260",
+      "0x438d0340",
+      "0x438d0424",
+      "0x438d0510",
+      "0x438d0590",
+      "0x438d0664",
+      "0x438d0cdc",
+      "0x438d0d34",
+      "0x438d0dcc",
+      "0x438f43a4"
+     ],
+     "fichero": [
+      "./Utility/EnumConverter.h",
+      "CAIF/CaifCom_Control.cpp",
+      "CS_Command.cpp",
+      "CS_ExifMakerNote.cpp",
+      "CS_ExifMakerNote_dslr.cpp",
+      "CS_imaging.cpp",
+      "Capture/zpd_capture_async_cmd.cpp",
+      "Capture/zpd_capture_sequence.cpp",
+      "CaptureAfterEffect_Selector.cpp",
+      "CaptureAfterEnc_Selector.cpp",
+      "CaptureAfterRead_Selector.cpp",
+      "CaptureCorrectRaw_Selector.cpp",
+      "CaptureDevEntry_Selector.cpp",
+      "CaptureDevExit_Selector.cpp",
+      "CaptureDevelop_Selector.cpp",
+      "CaptureEncode_Selector.cpp",
+      "CaptureExposure_Selector.cpp",
+      "CaptureFeatureEffect_Selector.cpp",
+      "CaptureManager.cpp",
+      "CaptureManager_FunctionIF.cpp",
+      "CaptureManager_ModeInfo.cpp",
+      "CaptureManager_ReleaseIF.cpp",
+      "CaptureMarble_Selector.cpp",
+      "CaptureOpdBeforeNR_Selector.cpp",
+      "CapturePrelight_Selector.cpp",
+      "CaptureRead_Selector.cpp",
+      "CaptureSortJpeg_Selector.cpp",
+      "CaptureUtilityCAIF.cpp",
+      "CaptureUtilityCamCore.cpp",
+      "CaptureUtilityCommon.cpp",
+      "CaptureUtilityDebug.cpp",
+      "CaptureUtilityExifMkNote.cpp",
+      "CaptureUtilityIDT.cpp",
+      "CaptureUtilityImageSize.cpp",
+      "CaptureUtilityImager.cpp",
+      "CaptureUtilityModuleAPI.cpp",
+      "CaptureUtilityPreReview.cpp",
+      "CaptureUtilityRC.cpp",
+      "CaptureUtilityReadFlow.cpp",
+      "CaptureUtilitySDF.cpp",
+      "CaptureUtilityStdYc.cpp",
+      "CaptureUtilitySyncResource.cpp",
+      "ClockControl.cpp",
+      "Dfs/Dfs_Control.cpp",
+      "Function/FunctionMessage.cpp",
+      "Function/FunctionSetParam.cpp",
+      "Function/LRBridge.cpp",
+      "HAPI_Filter_TBOX.cpp",
+      "ImageParamCapture.cpp",
+      "ImageParamCapture_Memory.cpp",
+      "ImageParamCapture_SyncBranch.cpp",
+      "ImageParam_SpecialSeq.cpp",
+      "ImageParam_Sync.cpp",
+      "ImagingMain.cpp",
+      "InfraImaging.cpp",
+      "Initialize/StaticSetInfo.cpp",
+      "InternalCapture.cpp",
+      "NotifyController.cpp",
+      "RCWrapper.cpp",
+      "RawMemManager.cpp",
+      "RawMemManager_Beforehand.cpp",
+      "RawMemManager_MemBuffer.cpp",
+      "RawMemManager_MemPool.cpp",
+      "Resource/CamResource.cpp",
+      "Resource/CamSyncResource.cpp",
+      "Resource/DualRecResManager.cpp",
+      "Resource/JpegRingBuf.cpp",
+      "S2Handler.cpp",
+      "SectionController.cpp",
+      "SectionEndFunc.cpp",
+      "SectionQueueManager.cpp",
+      "SequenceFilter_Selector.cpp",
+      "Sequence_Common.cpp",
+      "Sequence_HSRecGolfshot.cpp",
+      "Sequence_Movie.cpp",
+      "Sequence_MovieSplit.cpp",
+      "Sequence_SuperSlowMotion.cpp",
+      "Spinal.cpp",
+      "StageResourceStack.cpp",
+      "Stage_Adjust.cpp",
+      "Stage_Apollo.cpp",
+      "Stage_AutoFraming.cpp",
+      "Stage_BDRO.cpp",
+      "Stage_BOKS.cpp",
+      "Stage_CaComm.cpp",
+      "Stage_CameraHAPI.cpp",
+      "Stage_Common.cpp",
+      "Stage_Decomp.cpp",
+      "Stage_DevLater.cpp",
+      "Stage_Develop.cpp",
+      "Stage_DualRec.cpp",
+      "Stage_FaceDetect.cpp",
+      "Stage_MARBLE.cpp",
+      "Stage_Notify.cpp",
+      "Stage_OPD.cpp",
+      "Stage_Orientation.cpp",
+      "Stage_Panorama.cpp",
+      "Stage_Raw.cpp",
+      "Stage_SACC.cpp",
+      "Stage_SoftFocus.cpp",
+      "Stage_StillDate.cpp",
+      "Stage_TBOX.cpp",
+      "Stage_WaitControl.cpp",
+      "StillInfoAccr.cpp",
+      "SyncLoader.cpp",
+      "SyncTask.cpp",
+      "SyncYCOut.cpp",
+      "SystemDelay.cpp",
+      "init_cam_SetCamParam.cpp",
+      "init_cam_SetCamParam_Util.cpp",
+      "init_cam_SetCamParam_main.cpp",
+      "lc_BracketAF.cpp",
+      "wrapper/CamMain.cpp",
+      "wrapper/Face.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43c9e546",
+     "texto": "[IMAGING]: [seqSRotateCallBack] ercd: 0x%08x",
+     "sitios": [
+      "0x437804b8"
+     ],
+     "funciones": [
+      "0x43780496"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43c9e573",
+     "texto": "[IMAGING]: [seqStitchCallBack] ercd: 0x%08x",
+     "sitios": [
+      "0x437804fe"
+     ],
+     "funciones": [
+      "0x437804da"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43c9e59f",
+     "texto": "[IMAGING]: [seqClippingDecCallback] ercd: 0x%08x",
+     "sitios": [
+      "0x43780546"
+     ],
+     "funciones": [
+      "0x43780522"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43c9e5d0",
+     "texto": "[IMAGING]: [seq_panoramaClippingDecode] cmp_decode Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x43780f30"
+     ],
+     "funciones": [
+      "0x43780eb4"
+     ],
+     "fichero": [
+      "still_seq_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43c9e634",
+     "texto": "[IMAGING]: [seq_panoramaResize] effectImage Err: 0x%08x : %s:%d",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43c9e674",
+     "texto": "[IMAGING]: [seq_panoramaResize][OK] effectImage OK : %s:%d",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43c9e6af",
+     "texto": "[IMAGING]: [seq_panoramaParallelStitch] getJPGListI Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x437814b4"
+     ],
+     "funciones": [
+      "0x43781424"
+     ],
+     "fichero": [
+      "still_seq_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43c9e6f7",
+     "texto": "[IMAGING]: [seq_panoramaParallelStitch] setStitchImageObjectInfo Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x4378150a"
+     ],
+     "funciones": [
+      "0x43781424"
+     ],
+     "fichero": [
+      "still_seq_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43c9e74c",
+     "texto": "[IMAGING]: [seq_panoramaParallelStitch] DecodeControl Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x4378166e"
+     ],
+     "funciones": [
+      "0x43781424"
+     ],
+     "fichero": [
+      "still_seq_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43c9e796",
+     "texto": "[IMAGING]: [seq_panoramaParallelStitch] SRotateControl Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x437817d2"
+     ],
+     "funciones": [
+      "0x43781424"
+     ],
+     "fichero": [
+      "still_seq_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43c9e7e1",
+     "texto": "[IMAGING]: [seq_panoramaParallelStitch] StitchControl Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x43781956"
+     ],
+     "funciones": [
+      "0x43781424"
+     ],
+     "fichero": [
+      "still_seq_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43c9e82b",
+     "texto": "[IMAGING]: [seq_panoramaParallelStitch] wai_flg Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x437819ba"
+     ],
+     "funciones": [
+      "0x43781424"
+     ],
+     "fichero": [
+      "still_seq_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43c9e86f",
+     "texto": "[IMAGING]: [seq_panoramaParallelStitch] clr_flg Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x437819fc"
+     ],
+     "funciones": [
+      "0x43781424"
+     ],
+     "fichero": [
+      "still_seq_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43c9e8b3",
+     "texto": "[IMAGING]: [seq_panoramaParallelStitch] Decode Interrupt Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x43781a7e"
+     ],
+     "funciones": [
+      "0x43781424"
+     ],
+     "fichero": [
+      "still_seq_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43c9e900",
+     "texto": "[IMAGING]: [seq_panoramaParallelStitch] SRotate Interrupt Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x43781b0e"
+     ],
+     "funciones": [
+      "0x43781424"
+     ],
+     "fichero": [
+      "still_seq_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43c9e94e",
+     "texto": "[IMAGING]: [StitchInterrupt] Stitch Interrupt Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x43781b64"
+     ],
+     "funciones": [
+      "0x43781424"
+     ],
+     "fichero": [
+      "still_seq_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43c9e990",
+     "texto": "[IMAGING]: [StitchInterrupt] csl_RingBuff_getDataNum Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x43781bac"
+     ],
+     "funciones": [
+      "0x43781424"
+     ],
+     "fichero": [
+      "still_seq_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43c9e9d9",
+     "texto": "[IMAGING]: [StitchInterrupt] csl_RingBuff_getInputImage Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x43781bfa"
+     ],
+     "funciones": [
+      "0x43781424"
+     ],
+     "fichero": [
+      "still_seq_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43c9ea25",
+     "texto": "[IMAGING]: [StitchInterrupt] ringBuffDataHeader == NULL Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x43781c34"
+     ],
+     "funciones": [
+      "0x43781424"
+     ],
+     "fichero": [
+      "still_seq_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43c9ea71",
+     "texto": "[IMAGING]: [StitchInterrupt] csl_RingBuff_endReadImage Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x43781c7a"
+     ],
+     "funciones": [
+      "0x43781424"
+     ],
+     "fichero": [
+      "still_seq_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43c9eabc",
+     "texto": "[IMAGING]: [StitchInterrupt] clr_flg Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x43781d04"
+     ],
+     "funciones": [
+      "0x43781424"
+     ],
+     "fichero": [
+      "still_seq_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43c9eaf5",
+     "texto": "[IMAGING]: [StitchInterrupt] cmp_stopStitch Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x43781d38"
+     ],
+     "funciones": [
+      "0x43781424"
+     ],
+     "fichero": [
+      "still_seq_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43c9eb35",
+     "texto": "[IMAGING]: [StitchInterrupt] wai_flg Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x43781d9a"
+     ],
+     "funciones": [
+      "0x43781424"
+     ],
+     "fichero": [
+      "still_seq_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43c9eb6e",
+     "texto": "[IMAGING]: [StitchInterrupt] Stop Stitch (Cancel) Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x43781dd6"
+     ],
+     "funciones": [
+      "0x43781424"
+     ],
+     "fichero": [
+      "still_seq_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43c9ebb4",
+     "texto": "[IMAGING]: [seq_panoramaParallelStitch] Stitch Interrupt Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x43781e06"
+     ],
+     "funciones": [
+      "0x43781424"
+     ],
+     "fichero": [
+      "still_seq_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43c9ec01",
+     "texto": "[IMAGING]: [seq_panoramaParallelStitch][OK] StitchProc ALL OK : %s:%d",
+     "sitios": [
+      "0x43781e3c"
+     ],
+     "funciones": [
+      "0x43781424"
+     ],
+     "fichero": [
+      "still_seq_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43c9ec47",
+     "texto": "[IMAGING]: [seq_panoramaParallelStitch] cmp_getBackStitchParam Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x43781e6a"
+     ],
+     "funciones": [
+      "0x43781424"
+     ],
+     "fichero": [
+      "still_seq_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43c9ec9a",
+     "texto": "[IMAGING]: [panoramaSRotateLeftStitchImage][Debug] End  err: 0x%08x",
+     "sitios": [
+      "0x437821c8"
+     ],
+     "funciones": [
+      "0x43781424"
+     ],
+     "fichero": [
+      "still_seq_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43c9ecde",
+     "texto": "[IMAGING]: [seq_panoramaParallelStitch][OK] SRotateLeftProc OK : %s:%d",
+     "sitios": [
+      "0x43782214"
+     ],
+     "funciones": [
+      "0x43781424"
+     ],
+     "fichero": [
+      "still_seq_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43c9ed25",
+     "texto": "[IMAGING]: [seq_makePanoramaMakerNoteData] Err: 0x%08x : %s:%d",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43c9ed64",
+     "texto": "[IMAGING]: [seq_bigImageClippingDecode] Jpeg Open  err: 0x%08x",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43c9eda3",
+     "texto": "[IMAGING]: [seq_bigImageClippingDecode] cmp_decode() err: 0x%08x",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43c9ede4",
+     "texto": "[IMAGING]: [seq_bigImageClippingDecode] cmp_stream_anlyze() err: 0x%08x",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43c9ee2c",
+     "texto": "[IMAGING]: [seq_bigImageClippingDecode] Jpeg Close  err: 0x%08x",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43c9f6d9",
+     "texto": "[IMAGING]: FATAL! %s:%d [0x%x]",
+     "sitios": [
+      "0x43784090",
+      "0x437e187e",
+      "0x437e19be",
+      "0x437e1a00",
+      "0x437e1a50",
+      "0x437e1bd2",
+      "0x437e1c1c",
+      "0x437e1c5a",
+      "0x437e1d94",
+      "0x437e1f84",
+      "0x437e1fc4",
+      "0x437e2014",
+      "0x437e2250",
+      "0x437e22cc",
+      "0x437e257e",
+      "0x437e25d2",
+      "0x437e2726",
+      "0x437e3fc4",
+      "0x437e48ca",
+      "0x437e490a",
+      "0x437e4a18",
+      "0x437e4a66",
+      "0x437e4b3e",
+      "0x437e4c0a",
+      "0x437e4c88",
+      "0x437f48a4",
+      "0x4380848a",
+      "0x438b901c",
+      "0x438b906e"
+     ],
+     "funciones": [
+      "0x43784072",
+      "0x437e1858",
+      "0x437e18e4",
+      "0x437e18e4",
+      "0x437e18e4",
+      "0x437e1b60",
+      "0x437e1b60",
+      "0x437e1b60",
+      "0x437e1d40",
+      "0x437e1e48",
+      "0x437e1e48",
+      "0x437e1e48",
+      "0x437e210a",
+      "0x437e210a",
+      "0x437e24a0",
+      "0x437e24a0",
+      "0x437e26b0",
+      "0x437e3f6e",
+      "0x437e47e8",
+      "0x437e47e8",
+      "0x437e49b0",
+      "0x437e49b0",
+      "0x437e4ac4",
+      "0x437e4bac",
+      "0x437e4c40",
+      "0x437f480c",
+      "0x43807f4c",
+      "0x438b8f44",
+      "0x438b8f44"
+     ],
+     "fichero": [
+      "CS_ExifMakerNote.cpp",
+      "CaptureUtilityRC.cpp",
+      "ExecReleaseHandler.cpp",
+      "RawMemManager.cpp",
+      "RawMemManager_MemRuleLib.cpp",
+      "RawMemManager_UnitTypeLib.cpp",
+      "Stage_ResizeHV.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43caafa1",
+     "texto": "[IMAGING]: [cmp_fill] Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x437e6458"
+     ],
+     "funciones": [
+      "0x437e643a"
+     ],
+     "fichero": [
+      "still_cmp_effect.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43caafe0",
+     "texto": "[IMAGING]: [cmp_fill_validArea] Err: 0x%08x : %s:%d",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cab014",
+     "texto": "[IMAGING]: [cmp_resizeMirror] dda_rc_resize Err: 0x%08x : %s:%d",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cab054",
+     "texto": "[IMAGING]: [PanoramaSweepStart] Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x437e6b6a",
+      "0x437e6b9e",
+      "0x437e6be6",
+      "0x437e6c2e",
+      "0x437e6c5e",
+      "0x437e6d26",
+      "0x437e6d46"
+     ],
+     "funciones": [
+      "0x437e6b3c",
+      "0x437e6b3c",
+      "0x437e6b3c",
+      "0x437e6b3c",
+      "0x437e6b3c",
+      "0x437e6b3c",
+      "0x437e6b3c"
+     ],
+     "fichero": [
+      "still_cnt_panoramaSweep.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cab0a4",
+     "texto": "[IMAGING]: [PanoramaSweepStart] Jpeg Open  err: 0x%08x",
+     "sitios": [
+      "0x437e6d76"
+     ],
+     "funciones": [
+      "0x437e6b3c"
+     ],
+     "fichero": [
+      "still_cnt_panoramaSweep.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cab0db",
+     "texto": "[IMAGING]: [PanoramaSweepStart] Jpeg Close  err: 0x%08x",
+     "sitios": [
+      "0x437e6d96"
+     ],
+     "funciones": [
+      "0x437e6b3c"
+     ],
+     "fichero": [
+      "still_cnt_panoramaSweep.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cab113",
+     "texto": "[IMAGING]: [PanoramaSweepStart] End  err: 0x%08x",
+     "sitios": [
+      "0x437e6dae"
+     ],
+     "funciones": [
+      "0x437e6b3c"
+     ],
+     "fichero": [
+      "still_cnt_panoramaSweep.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cab144",
+     "texto": "[IMAGING]: [PanoramaSweepEnd] Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x437e6ea2",
+      "0x437e6ede",
+      "0x437e6f1e",
+      "0x437e6f6a",
+      "0x437e6fbe",
+      "0x437e6ff6"
+     ],
+     "funciones": [
+      "0x437e6e78",
+      "0x437e6e78",
+      "0x437e6e78",
+      "0x437e6e78",
+      "0x437e6e78",
+      "0x437e6e78"
+     ],
+     "fichero": [
+      "still_cnt_panoramaSweep.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cab176",
+     "texto": "[IMAGING]: [PanoramaSweepEnd] Err: 0x%08x, status: 0x%08x",
+     "sitios": [
+      "0x437e7090",
+      "0x437e7108",
+      "0x437e716a",
+      "0x437e7198",
+      "0x437e7204",
+      "0x437e731a",
+      "0x437e735e",
+      "0x437e7398",
+      "0x437e73d0"
+     ],
+     "funciones": [
+      "0x437e6e78",
+      "0x437e6e78",
+      "0x437e6e78",
+      "0x437e6e78",
+      "0x437e6e78",
+      "0x437e6e78",
+      "0x437e6e78",
+      "0x437e6e78",
+      "0x437e6e78"
+     ],
+     "fichero": [
+      "still_cnt_panoramaSweep.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cab1b0",
+     "texto": "[IMAGING]: [PanoramaSweepEnd] Err! %s:%d",
+     "sitios": [
+      "0x437e70b0",
+      "0x437e7158",
+      "0x437e718c",
+      "0x437e71bc",
+      "0x437e7228",
+      "0x437e733e",
+      "0x437e73bc",
+      "0x437e73f2"
+     ],
+     "funciones": [
+      "0x437e6e78",
+      "0x437e6e78",
+      "0x437e6e78",
+      "0x437e6e78",
+      "0x437e6e78",
+      "0x437e6e78",
+      "0x437e6e78",
+      "0x437e6e78"
+     ],
+     "fichero": [
+      "still_cnt_panoramaSweep.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cab1d9",
+     "texto": "[IMAGING]: [PanoramaSweepEnd] cmp_execStitchPreProcess() Err! %s:%d",
+     "sitios": [
+      "0x437e7124"
+     ],
+     "funciones": [
+      "0x437e6e78"
+     ],
+     "fichero": [
+      "still_cnt_panoramaSweep.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cab21d",
+     "texto": "[IMAGING]: [PanoramaSweepEnd] cmp_checkFillResidual() Err! %s:%d",
+     "sitios": [
+      "0x437e737e"
+     ],
+     "funciones": [
+      "0x437e6e78"
+     ],
+     "fichero": [
+      "still_cnt_panoramaSweep.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cab25e",
+     "texto": "[IMAGING]: [PanoramaSweepEnd] End : 0x%08x",
+     "sitios": [
+      "0x437e7404"
+     ],
+     "funciones": [
+      "0x437e6e78"
+     ],
+     "fichero": [
+      "still_cnt_panoramaSweep.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cab289",
+     "texto": "[IMAGING]: [UpdateSweepCanvas] UnitOpen() Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x437e75ae",
+      "0x437e7606"
+     ],
+     "funciones": [
+      "0x437e751c",
+      "0x437e751c"
+     ],
+     "fichero": [
+      "still_cnt_panoramaSweep.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cab2c7",
+     "texto": "[IMAGING]: [UpdateSweepCanvas] Err: 0x%08x, status: 0x%08x ReqID: 0x%04x",
+     "sitios": [
+      "0x437e7656",
+      "0x437e76b0",
+      "0x437e770a",
+      "0x437e7772",
+      "0x437e77ca",
+      "0x437e781c",
+      "0x437e7924",
+      "0x437e797c",
+      "0x437e7ac2"
+     ],
+     "funciones": [
+      "0x437e751c",
+      "0x437e751c",
+      "0x437e751c",
+      "0x437e751c",
+      "0x437e751c",
+      "0x437e751c",
+      "0x437e751c",
+      "0x437e751c",
+      "0x437e751c"
+     ],
+     "fichero": [
+      "still_cnt_panoramaSweep.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cab310",
+     "texto": "[IMAGING]: [UpdateSweepCanvas] Err! %s:%d",
+     "sitios": [
+      "0x437e767a",
+      "0x437e76d4",
+      "0x437e7734",
+      "0x437e779c",
+      "0x437e77f4",
+      "0x437e7846",
+      "0x437e7942",
+      "0x437e799a"
+     ],
+     "funciones": [
+      "0x437e751c",
+      "0x437e751c",
+      "0x437e751c",
+      "0x437e751c",
+      "0x437e751c",
+      "0x437e751c",
+      "0x437e751c",
+      "0x437e751c"
+     ],
+     "fichero": [
+      "still_cnt_panoramaSweep.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cab33a",
+     "texto": "[IMAGING]: [UpdateSweepCanvas] seq_brcEncode() Err! %s:%d",
+     "sitios": [
+      "0x437e7ae0"
+     ],
+     "funciones": [
+      "0x437e751c"
+     ],
+     "fichero": [
+      "still_cnt_panoramaSweep.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cab374",
+     "texto": "[IMAGING]: [UpdateSweepCanvas] SWEEP_ERROR Err: 0x%08x, ReqID: 0x%04x",
+     "sitios": [
+      "0x437e7b48"
+     ],
+     "funciones": [
+      "0x437e751c"
+     ],
+     "fichero": [
+      "still_cnt_panoramaSweep.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cab3ba",
+     "texto": "[IMAGING]: [UpdateSweepCanvas] SWEEP_ERROR! %s:%d",
+     "sitios": [
+      "0x437e7b64"
+     ],
+     "funciones": [
+      "0x437e751c"
+     ],
+     "fichero": [
+      "still_cnt_panoramaSweep.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cab3ec",
+     "texto": "[IMAGING]: [UpdateSweepCanvas] UnitClose() Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x437e7b98",
+      "0x437e7bd8"
+     ],
+     "funciones": [
+      "0x437e751c",
+      "0x437e751c"
+     ],
+     "fichero": [
+      "still_cnt_panoramaSweep.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cab42b",
+     "texto": "[IMAGING]: [UpdateSweepCanvas] End  err: 0x%08x",
+     "sitios": [
+      "0x437e7c04",
+      "0x437e7c22"
+     ],
+     "funciones": [
+      "0x437e751c",
+      "0x437e751c"
+     ],
+     "fichero": [
+      "still_cnt_panoramaSweep.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cab45b",
+     "texto": "[IMAGING]: [PanoramaResizeEncode][JpegSweepInfo] UnitOpen() Err: 0x%08x : %s:%d",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cab4ab",
+     "texto": "[IMAGING]: [PanoramaResizeEncode][YuvDecodeWorkInfo] UnitOpen() Err: 0x%08x : %s:%d",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cab4ff",
+     "texto": "[IMAGING]: [PanoramaResizeEncode][JpegResizeEncodeInfo] UnitOpen() Err: 0x%08x : %s:%d",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cab556",
+     "texto": "[IMAGING]: [PanoramaResizeEncode] Err Mode: 0x%08x : %s:%d",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cab591",
+     "texto": "[IMAGING]: [PanoramaResizeEncode] Err Dir: 0x%08x : %s:%d",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cab5cb",
+     "texto": "[IMAGING]: [PanoramaResizeEncode] Err seq_bigImageResizeEncode(): 0x%08x : %s:%d",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cab61c",
+     "texto": "[IMAGING]: [PanoramaResizeEncode][JpegSweepInfo] UnitClose() Err: 0x%08x : %s:%d",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cab66d",
+     "texto": "[IMAGING]: [PanoramaResizeEncode][YuvDecodeWorkInfo] UnitClose() Err: 0x%08x : %s:%d",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cab6c2",
+     "texto": "[IMAGING]: [PanoramaResizeEncode][JpegResizeEncodeInfo] UnitClose() Err: 0x%08x : %s:%d",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cab71a",
+     "texto": "[IMAGING]: [PanoramaResizeEncode] End  err: 0x%08x",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cab74d",
+     "texto": "[IMAGING]: [allocOutputArea] Size over!: data[0x%08x] ram[0x%08x]: %s:%d",
+     "sitios": [
+      "0x437e7fb0"
+     ],
+     "funciones": [
+      "0x437e7f50"
+     ],
+     "fichero": [
+      "still_csl_ring_buff.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cab7ae",
+     "texto": "[IMAGING]: [dda_jpg_close] WrapJpegClose_Exec Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x437e8162"
+     ],
+     "funciones": [
+      "0x437e8144"
+     ],
+     "fichero": [
+      "still_dda_jpg.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cab802",
+     "texto": "[IMAGING]: [dda_jpg_stream_anlyze] WrapJpegAnalyzeStream_Exec Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x437e81f4"
+     ],
+     "funciones": [
+      "0x437e8194"
+     ],
+     "fichero": [
+      "still_dda_jpg.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cab854",
+     "texto": "[IMAGING]: [dda_jpg_get_stream_samplingfactor] Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x437e8270"
+     ],
+     "funciones": [
+      "0x437e8244"
+     ],
+     "fichero": [
+      "still_dda_jpg.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cab897",
+     "texto": "[IMAGING]: [dda_jpg_decode] WrapJpegDecode_Exec Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x437e83a8"
+     ],
+     "funciones": [
+      "0x437e82a4"
+     ],
+     "fichero": [
+      "still_dda_jpg.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cab8db",
+     "texto": "[IMAGING]: [dda_jpg_fill] csl_checkImageObjectArea Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x437e8408"
+     ],
+     "funciones": [
+      "0x437e83dc"
+     ],
+     "fichero": [
+      "still_dda_jpg.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cab922",
+     "texto": "[IMAGING]: [dda_jpg_fill] WrapJpegFill_Exec Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x437e84a0"
+     ],
+     "funciones": [
+      "0x437e83dc"
+     ],
+     "fichero": [
+      "still_dda_jpg.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cab962",
+     "texto": "[IMAGING]: [dda_rc_resize] WrapRcctAcquire_Exec Err: 0x%08x : %s:%d",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cab9b7",
+     "texto": "[IMAGING]: [ddas_rc_set_rcct_param] Err: 0x%08x : %s:%d",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cab9ef",
+     "texto": "[IMAGING]: [dda_rc_resize] WrapRcctResize_Exec Err: 0x%08x : %s:%d",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43caba32",
+     "texto": "[IMAGING]: [dda_rc_resize] WrapRcctRelease_Exec Err: 0x%08x : %s:%d",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43caba76",
+     "texto": "[IMAGING]: [dda_rc_fill] csl_checkImageObjectArea Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x437e85b4"
+     ],
+     "funciones": [
+      "0x437e858c"
+     ],
+     "fichero": [
+      "still_dda_rc.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cababc",
+     "texto": "[IMAGING]: [dda_rc_fill] WrapRcrtFill_Exec Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x437e8642"
+     ],
+     "funciones": [
+      "0x437e858c"
+     ],
+     "fichero": [
+      "still_dda_rc.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cabafb",
+     "texto": "[IMAGING]: %s:%d \n",
+     "sitios": [
+      "0x437e8e3c"
+     ],
+     "funciones": [
+      "0x437e8e14"
+     ],
+     "fichero": [
+      "still_mem_mgr.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cabb20",
+     "texto": "[IMAGING]: [seq_brcEncode] csl_checkImageObjectArea() Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x437e908e"
+     ],
+     "funciones": [
+      "0x437e9068"
+     ],
+     "fichero": [
+      "still_seq_enc.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cabb7c",
+     "texto": "[IMAGING]: [seq_brcEncode] cmp_checkStreamAreaSizeForEncode() Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x437e90c4"
+     ],
+     "funciones": [
+      "0x437e9068"
+     ],
+     "fichero": [
+      "still_seq_enc.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cabbce",
+     "texto": "[IMAGING]: [seq_brcEncode] cmp_estimate() Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x437e91a6",
+      "0x437e91f4",
+      "0x437e9264"
+     ],
+     "funciones": [
+      "0x437e9068",
+      "0x437e9068",
+      "0x437e9068"
+     ],
+     "fichero": [
+      "still_seq_enc.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cabc0c",
+     "texto": "[IMAGING]: [seq_brcEncode] cmp_makeBrcGraph() Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x437e9232",
+      "0x437e9298"
+     ],
+     "funciones": [
+      "0x437e9068",
+      "0x437e9068"
+     ],
+     "fichero": [
+      "still_seq_enc.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cabc4e",
+     "texto": "[IMAGING]: [seq_brcEncode] cmp_estimateQvalue() Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x437e92ca"
+     ],
+     "funciones": [
+      "0x437e9068"
+     ],
+     "fichero": [
+      "still_seq_enc.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cabc92",
+     "texto": "[IMAGING]: [seq_brcEncode] cmp_remakeBrcGraph() Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x437e9318"
+     ],
+     "funciones": [
+      "0x437e9068"
+     ],
+     "fichero": [
+      "still_seq_enc.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cabcd6",
+     "texto": "[IMAGING]: [seq_brcEncode] RetryEnc | err: 0x%08x codeSize: 0x%08x retryCount: %d estimQvalue: %f",
+     "sitios": [
+      "0x437e9420"
+     ],
+     "funciones": [
+      "0x437e9068"
+     ],
+     "fichero": [
+      "still_seq_enc.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cabd38",
+     "texto": "[IMAGING]: [seq_brcEncode] Retry Encode NG  err: 0x%08x codeSize: 0x%08x retryCount: %d",
+     "sitios": [
+      "0x437e9466",
+      "0x437e94d0"
+     ],
+     "funciones": [
+      "0x437e9068",
+      "0x437e9068"
+     ],
+     "fichero": [
+      "still_seq_enc.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cabd90",
+     "texto": "[IMAGING]: [seq_bigImageResizeEncode][Err] getJPGListID(): 0x%08x : %s:%d",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cabdda",
+     "texto": "[IMAGING]: [seq_bigImageResizeEncode][Err] setDecodeParam(): 0x%08x : %s:%d",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cabe26",
+     "texto": "[IMAGING]: [seq_bigImageResizeEncode][Err] seq_bigImageClippingDecode(): 0x%08x : %s:%d",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cabe7e",
+     "texto": "[IMAGING]: [seq_bigImageEncode] csl_checkImageObjectArea() Err: 0x%08x : %s:%d",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cabecd",
+     "texto": "[IMAGING]: [seq_bigImageEncode] Jpeg Open  err: 0x%08x",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cabf04",
+     "texto": "[IMAGING]: [seq_bigImageEncode] RetryEnc : qvalue = 0x%f",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cabf3d",
+     "texto": "[IMAGING]: [seq_bigImageEncode][Err] RetryEnc err: 0x%08x qvalue : %f",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cabf83",
+     "texto": "[IMAGING]: [seq_bigImageEncode] OverFlow err: 0x%08x codeSize: 0x%08x ",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cabfca",
+     "texto": "[IMAGING]: [seq_bigImageEncode] Jpeg Close  err: 0x%08x",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cac002",
+     "texto": "[IMAGING]: [seq_bigImageResizeEncode][Err] seq_bigImageEncode(): 0x%08x : %s:%d",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cac052",
+     "texto": "[IMAGING]: [Jpeg Close Callback] ercd: 0x%08x",
+     "sitios": [
+      "0x437e964a"
+     ],
+     "funciones": [
+      "0x437e961c"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cac080",
+     "texto": "[IMAGING]: [Jpeg Open Callback] ercd: 0x%08x",
+     "sitios": [
+      "0x437e97ac"
+     ],
+     "funciones": [
+      "0x437e977a"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cac0ad",
+     "texto": "[IMAGING]: [wrapRcrtFill Callback] ercd: 0x%08x",
+     "sitios": [
+      "0x437e991a"
+     ],
+     "funciones": [
+      "0x437e98ec"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cc680c",
+     "texto": "[IMAGING]: [ddls_srotate_sa_start_cb] SA DRV Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x438bc0c0"
+     ],
+     "funciones": [
+      "0x438bc0a8"
+     ],
+     "fichero": [
+      "src/srotate/ddl_srotate.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cc6869",
+     "texto": "[IMAGING]: [ddls_srotate_sa_start_cb] SA Err: 0x%08x",
+     "sitios": [
+      "0x438bc122"
+     ],
+     "funciones": [
+      "0x438bc0a8"
+     ],
+     "fichero": [
+      "src/srotate/ddl_srotate.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cc689e",
+     "texto": "[IMAGING]: [ddls_srotate_sa_start_cb][Debug NG] CallBack Addr = NULL: 0x%08x",
+     "sitios": [
+      "0x438bc15e"
+     ],
+     "funciones": [
+      "0x438bc0a8"
+     ],
+     "fichero": [
+      "src/srotate/ddl_srotate.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cc68eb",
+     "texto": "[IMAGING]: [ddls_stitch_set_flg] ercd: 0x%08x",
+     "sitios": [
+      "0x438bc6ca"
+     ],
+     "funciones": [
+      "0x438bc6ac"
+     ],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cc6919",
+     "texto": "[IMAGING]: [ddls_stitch_sa_start_cb] SA DRV Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x438bc738"
+     ],
+     "funciones": [
+      "0x438bc720"
+     ],
+     "fichero": [
+      "src/stitch/ddl_stitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cc6973",
+     "texto": "[IMAGING]: [ddls_stitch_sa_start_cb][Debug NG] CallBack Addr = NULL: 0x%08x",
+     "sitios": [
+      "0x438bc77a"
+     ],
+     "funciones": [
+      "0x438bc720"
+     ],
+     "fichero": [
+      "src/stitch/ddl_stitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cc69bf",
+     "texto": "[IMAGING]: [PanoramaStitch] UnitOpen() Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x438bd004",
+      "0x438bd050",
+      "0x438bd098",
+      "0x438bd0e0",
+      "0x438bd12c"
+     ],
+     "funciones": [
+      "0x438bcef8",
+      "0x438bcef8",
+      "0x438bcef8",
+      "0x438bcef8",
+      "0x438bcef8"
+     ],
+     "fichero": [
+      "still_cnt_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cc6a17",
+     "texto": "[IMAGING]: [PanoramaStitch] Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x438bd16a"
+     ],
+     "funciones": [
+      "0x438bcef8"
+     ],
+     "fichero": [
+      "still_cnt_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cc6a47",
+     "texto": "[IMAGING]: [PanoramaStitch] seq_initStitch() Err! err: 0x%08x %s:%d",
+     "sitios": [
+      "0x438bd228"
+     ],
+     "funciones": [
+      "0x438bcef8"
+     ],
+     "fichero": [
+      "still_cnt_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cc6a8b",
+     "texto": "[IMAGING]: [PanoramaStitch] seq_panoramaParallelStitch() Err! err: 0x%08x %s:%d",
+     "sitios": [
+      "0x438bd296"
+     ],
+     "funciones": [
+      "0x438bcef8"
+     ],
+     "fichero": [
+      "still_cnt_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cc6adb",
+     "texto": "[IMAGING]: [PanoramaStitch] seq_endStitch() Err! err: 0x%08x %s:%d",
+     "sitios": [
+      "0x438bd2ca"
+     ],
+     "funciones": [
+      "0x438bcef8"
+     ],
+     "fichero": [
+      "still_cnt_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cc6b1e",
+     "texto": "[IMAGING]: [PanoramaStitch] UnitClose() Err: 0x%08x : %s:%d",
+     "sitios": [
+      "0x438bd342",
+      "0x438bd382",
+      "0x438bd3c2",
+      "0x438bd402",
+      "0x438bd442"
+     ],
+     "funciones": [
+      "0x438bcef8",
+      "0x438bcef8",
+      "0x438bcef8",
+      "0x438bcef8",
+      "0x438bcef8"
+     ],
+     "fichero": [
+      "still_cnt_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cc6b5a",
+     "texto": "[IMAGING]: [PanoramaStitch] End  err: 0x%08x",
+     "sitios": [
+      "0x438bd46e"
+     ],
+     "funciones": [
+      "0x438bcef8"
+     ],
+     "fichero": [
+      "still_cnt_panoramaStitch.cpp"
+     ]
+    },
+    {
+     "vaddr": "0x43cc6b87",
+     "texto": "[IMAGING]: [PanoramaResize] UnitOpen() Err: 0x%08x : %s:%d",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cc6bc2",
+     "texto": "[IMAGING]: [PanoramaResize] seq_panoramaResize() Err! err: 0x%08x %s:%d",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cc6c0a",
+     "texto": "[IMAGING]: [PanoramaResize] seq_makePanoramaMakerNoteData() Err! err: 0x%08x %s:%d",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cc6c5d",
+     "texto": "[IMAGING]: [PanoramaResize] UnitClose() Err: 0x%08x : %s:%d",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    },
+    {
+     "vaddr": "0x43cc6c99",
+     "texto": "[IMAGING]: [PanoramaResize] End  err: 0x%08x",
+     "sitios": [],
+     "funciones": [],
+     "fichero": []
+    }
+   ]
+  }
+ },
+ "diferencial": {
+  "IMAGING_REL": {
+   "A7S": {
+    "n_cadenas_etiquetadas_en_esa_camara": 0,
+    "n_comunes_texto_a_texto": 30,
+    "n_solo_a6000": 1,
+    "solo_a6000": [
+     "(%d,%d,%d)"
+    ],
+    "n_propias_del_ajeno": 0,
+    "propias_del_ajeno": []
+   },
+   "A6300": {
+    "n_cadenas_etiquetadas_en_esa_camara": 0,
+    "n_comunes_texto_a_texto": 22,
+    "n_solo_a6000": 9,
+    "solo_a6000": [
+     "(%d,%d,%d)",
+     "RelKey) %02d: %02d",
+     "RelMgr) <ExecMsg> CLEAR_INNER_RP %d",
+     "RelMgr) <ExecMsg> CLEAR_INNER_RP_CAPID_IDX %d",
+     "RelMgr) Invalid RelLock Factor %08x",
+     "RelQueue) err. queue is empty (PopBack)",
+     "RelQueue) err. queue is full (PushFront)",
+     "Spinal) osal_free_timer: err %x",
+     "remote capture cancel due to camuser's release lock"
+    ],
+    "n_propias_del_ajeno": 2,
+    "propias_del_ajeno": [
+     {
+      "offset": "0x86fc34",
+      "vaddr": "0x43db0c34",
+      "text": "CapIdTblMgr) SetMprInitEnd irp(%x), cidx(%x), rp(%x), wp(%x), wpd(%x), dm(%x)"
+     },
+     {
+      "offset": "0x88daba",
+      "vaddr": "0x43dceaba",
+      "text": "CapIdTblMgrIf) Unknown massage"
+     }
+    ]
+   }
+  },
+  "IMAGING": {
+   "A7S": {
+    "n_cadenas_etiquetadas_en_esa_camara": 0,
+    "n_comunes_texto_a_texto": 115,
+    "n_solo_a6000": 5,
+    "solo_a6000": [
+     "[PanoramaSweepEnd] Err! %s:%d",
+     "[PanoramaSweepEnd] Err: 0x%08x, status: 0x%08x",
+     "[PanoramaSweepEnd] cmp_checkFillResidual() Err! %s:%d",
+     "[PanoramaSweepEnd] cmp_execStitchPreProcess() Err! %s:%d",
+     "[seq_panoramaParallelStitch][OK] StitchProc ALL OK : %s:%d"
+    ],
+    "n_propias_del_ajeno": 0,
+    "propias_del_ajeno": []
+   },
+   "A6300": {
+    "n_cadenas_etiquetadas_en_esa_camara": 0,
+    "n_comunes_texto_a_texto": 115,
+    "n_solo_a6000": 5,
+    "solo_a6000": [
+     "[PanoramaSweepEnd] Err! %s:%d",
+     "[PanoramaSweepEnd] Err: 0x%08x, status: 0x%08x",
+     "[PanoramaSweepEnd] cmp_checkFillResidual() Err! %s:%d",
+     "[PanoramaSweepEnd] cmp_execStitchPreProcess() Err! %s:%d",
+     "[seq_panoramaParallelStitch][OK] StitchProc ALL OK : %s:%d"
+    ],
+    "n_propias_del_ajeno": 0,
+    "propias_del_ajeno": []
+   }
+  }
+ }
+}

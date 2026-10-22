@@ -1,0 +1,106 @@
+{
+  "milestone": "S150",
+  "firmware_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "base": "0x43541000",
+  "gaps": [
+    {
+      "address": "0x43eb0830",
+      "file_offset": "0x96f830",
+      "bytes_hex": "0000"
+    },
+    {
+      "address": "0x43eb0831",
+      "file_offset": "0x96f831",
+      "bytes_hex": "0000"
+    },
+    {
+      "address": "0x43eb0840",
+      "file_offset": "0x96f840",
+      "bytes_hex": "0000"
+    },
+    {
+      "address": "0x43eb0841",
+      "file_offset": "0x96f841",
+      "bytes_hex": "0000"
+    },
+    {
+      "address": "0x43eb0850",
+      "file_offset": "0x96f850",
+      "bytes_hex": "0000"
+    },
+    {
+      "address": "0x43eb0851",
+      "file_offset": "0x96f851",
+      "bytes_hex": "0000"
+    },
+    {
+      "address": "0x43eb0860",
+      "file_offset": "0x96f860",
+      "bytes_hex": "0000"
+    },
+    {
+      "address": "0x43eb0861",
+      "file_offset": "0x96f861",
+      "bytes_hex": "0000"
+    }
+  ],
+  "tables_with_pointer_literal": [
+    {
+      "address": "0x4400812c",
+      "file_offset": "0xac712c",
+      "bytes_hex": "5008eb433100010073e6ea4332000100",
+      "words_le": [
+        "0x43eb0850",
+        "0x00010031",
+        "0x43eae673",
+        "0x00010032"
+      ]
+    },
+    {
+      "address": "0x4400b27c",
+      "file_offset": "0xaca27c",
+      "bytes_hex": "5008eb43c00102003c91e143c1010200",
+      "words_le": [
+        "0x43eb0850",
+        "0x000201c0",
+        "0x43e1913c",
+        "0x000201c1"
+      ]
+    }
+  ],
+  "rea": {
+    "direct_xrefs_empty_at_each_gap": true,
+    "xref_evidence_ids": [
+      "ev_c42a7d7fd9a1e599c8d0b74992d387d3f1e7164896d259abe3a6ef0f7e68f68c",
+      "ev_c1664bce2a3920c0c801a1aaff003ca91ccc4b4b8633f708cba8bdb44b125d34",
+      "ev_fbcf9d3ee8809bd2b72d2e50e7052aa6f06e982d175373f0d17886c1686255d6",
+      "ev_59e95069b0a10c85cd584c28412ab5fe83867491a6b91797175eaad10f6f1856",
+      "ev_77d3f4ce807b15caecfc43cf8a05b1d15042431081d2c73161bdcf6783d672af",
+      "ev_0c07447897f2035e5bde864612e549695f004dd7d302f953b2c89004188583d8",
+      "ev_5fb7233ea97b868884f119553adfa2a46f25bf15aab56f3e5e2129d56116f6e6",
+      "ev_55c7c05551f922a8af96f3b4d7dbae64da5be5e55e55eacc780eb55d0149416b"
+    ],
+    "positive_control": {
+      "address": "0x43eb0848",
+      "evidence_id": "ev_afcfff7678cf182ee835cd1ed4dfd1b2f55fdb0872a6bfc51817b3a9ab9f3b55",
+      "xrefs": [
+        "0x43836910",
+        "0x43836916"
+      ],
+      "instruction_evidence_ids": [
+        "ev_0e3051e04e63b42f37198d1ffd69bbe5f5a36c94f3632a2d5afd6cd431e7400d",
+        "ev_3134e5228b2566b14c6a9911612f9563b3350dab0b38e7d82336e41a12af955a"
+      ]
+    },
+    "literal_search": {
+      "pattern": "5008eb43",
+      "evidence_id": "ev_201b0a5e0f16fe153da29642e861f41b0a7cebeb611865db65540927452d7668",
+      "complete": true,
+      "matches": [
+        "0x4400812c",
+        "0x4400b27c"
+      ]
+    }
+  },
+  "conclusion_scope": "No direct xrefs to the eight exact gap bytes under this REA analysis. Literal pointer to 0x43eb0850 exists in data; it is not itself a classified read/write reference. Alias/parameterized accesses remain unknown."
+}

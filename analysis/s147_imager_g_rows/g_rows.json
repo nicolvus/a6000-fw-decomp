@@ -1,0 +1,407 @@
+{
+  "milestone": "S147",
+  "firmware_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "base": "0x43541000",
+  "row_layout_observed": {
+    "first_row_offset_from_G_plus_0x224": "0x2c",
+    "row_count": 4,
+    "row_stride": "0x10",
+    "writer_function": "0x4383c9dc",
+    "relative_store_offsets_in_writer": [
+      "0x0",
+      "0x4",
+      "0x6",
+      "0xa",
+      "0xc",
+      "0xe"
+    ],
+    "not_written_by_this_loop": [
+      "0x8",
+      "0x9"
+    ],
+    "meaning": "unassigned; no physical sensor semantics inferred"
+  },
+  "rea_evidence_ids": {
+    "G_xrefs": "ev_7375812f6a63afe1d0db14b91c6cec50187e7d53a2f6bd7a4436500fb2ec9df0",
+    "builder_4383bf2c": "ev_5305a4dbabf37e02baec4bd8b258137d9e733c0817ce4b373defe5a8ecc12203",
+    "row_writer_4383c9dc": "ev_cd6567d4fb0af5c12b4d8d21ee30a574ca5bd289cfba828745757f185d89ecb2",
+    "row_writer_page_1": "ev_d4653d3615add43984db5b04eb31c812b23d2a5865e6038908736caf291fd05a",
+    "row_writer_page_2": "ev_9caa8366dd8aa3149c26482110e5523aa6132b3fd299d39fb05de95a2003380e",
+    "row_reader_context_43836a": "ev_afc6e27db62a908c1a0a4efc787ccfa5608e0adaff61d037fea073abdebaa48c"
+  },
+  "coverage_limit": "Only the direct xrefs and listed routines are characterized. The mode meanings, unlisted aliases, and physical sensor semantics remain unknown.",
+  "regions": [
+    {
+      "address": "0x437b57ec",
+      "length": 4,
+      "file_offset": "0x2747ec",
+      "bytes_hex": "02930392",
+      "thumb_instructions": [
+        {
+          "address": "0x437b57ec",
+          "text": "str r3, [sp, #8]"
+        },
+        {
+          "address": "0x437b57ee",
+          "text": "str r2, [sp, #0xc]"
+        }
+      ]
+    },
+    {
+      "address": "0x437b5f00",
+      "length": 32,
+      "file_offset": "0x274f00",
+      "bytes_hex": "06f5097103f5076203f546631833019306f546730092053306f5477286f006f8",
+      "thumb_instructions": [
+        {
+          "address": "0x437b5f00",
+          "text": "add.w r1, r6, #0x224"
+        },
+        {
+          "address": "0x437b5f04",
+          "text": "add.w r2, r3, #0x870"
+        },
+        {
+          "address": "0x437b5f08",
+          "text": "add.w r3, r3, #0xc60"
+        },
+        {
+          "address": "0x437b5f0c",
+          "text": "adds r3, #0x18"
+        },
+        {
+          "address": "0x437b5f0e",
+          "text": "str r3, [sp, #4]"
+        },
+        {
+          "address": "0x437b5f10",
+          "text": "add.w r3, r6, #0x318"
+        },
+        {
+          "address": "0x437b5f14",
+          "text": "str r2, [sp]"
+        },
+        {
+          "address": "0x437b5f16",
+          "text": "adds r3, #5"
+        },
+        {
+          "address": "0x437b5f18",
+          "text": "add.w r2, r6, #0x31c"
+        },
+        {
+          "address": "0x437b5f1c",
+          "text": "bl #0x4383bf2c"
+        }
+      ]
+    },
+    {
+      "address": "0x437b60e6",
+      "length": 4,
+      "file_offset": "0x2750e6",
+      "bytes_hex": "03f50973",
+      "thumb_instructions": [
+        {
+          "address": "0x437b60e6",
+          "text": "add.w r3, r3, #0x224"
+        }
+      ]
+    },
+    {
+      "address": "0x4383bf2c",
+      "length": 32,
+      "file_offset": "0x2faf2c",
+      "bytes_hex": "2de9f04100230546a1f890300c46234e00f04efd28462146069a079b7e44fff7",
+      "thumb_instructions": [
+        {
+          "address": "0x4383bf2c",
+          "text": "push.w {r4, r5, r6, r7, r8, lr}"
+        },
+        {
+          "address": "0x4383bf30",
+          "text": "movs r3, #0"
+        },
+        {
+          "address": "0x4383bf32",
+          "text": "mov r5, r0"
+        },
+        {
+          "address": "0x4383bf34",
+          "text": "strh.w r3, [r1, #0x90]"
+        },
+        {
+          "address": "0x4383bf38",
+          "text": "mov r4, r1"
+        },
+        {
+          "address": "0x4383bf3a",
+          "text": "ldr r6, [pc, #0x8c]"
+        },
+        {
+          "address": "0x4383bf3c",
+          "text": "bl #0x4383c9dc"
+        },
+        {
+          "address": "0x4383bf40",
+          "text": "mov r0, r5"
+        },
+        {
+          "address": "0x4383bf42",
+          "text": "mov r1, r4"
+        },
+        {
+          "address": "0x4383bf44",
+          "text": "ldr r2, [sp, #0x18]"
+        },
+        {
+          "address": "0x4383bf46",
+          "text": "ldr r3, [sp, #0x1c]"
+        },
+        {
+          "address": "0x4383bf48",
+          "text": "add r6, pc"
+        }
+      ]
+    },
+    {
+      "address": "0x4383c9dc",
+      "length": 96,
+      "file_offset": "0x2fb9dc",
+      "bytes_hex": "2de9f04f0c4689b08b4e894605467e44804604200490d8f8c010d8f8b030d8f8d0200691e98da88d03920791071e95f8241018bf01272a8a059089b1d5f830a003980af1ff3eb5f818c0c0eb0e0ecdf80ca00cfb0efe73449644cdf808e000e0",
+      "thumb_instructions": [
+        {
+          "address": "0x4383c9dc",
+          "text": "push.w {r4, r5, r6, r7, r8, sb, sl, fp, lr}"
+        },
+        {
+          "address": "0x4383c9e0",
+          "text": "mov r4, r1"
+        },
+        {
+          "address": "0x4383c9e2",
+          "text": "sub sp, #0x24"
+        },
+        {
+          "address": "0x4383c9e4",
+          "text": "ldr r6, [pc, #0x22c]"
+        },
+        {
+          "address": "0x4383c9e6",
+          "text": "mov sb, r1"
+        },
+        {
+          "address": "0x4383c9e8",
+          "text": "mov r5, r0"
+        },
+        {
+          "address": "0x4383c9ea",
+          "text": "add r6, pc"
+        },
+        {
+          "address": "0x4383c9ec",
+          "text": "mov r8, r0"
+        },
+        {
+          "address": "0x4383c9ee",
+          "text": "movs r0, #4"
+        },
+        {
+          "address": "0x4383c9f0",
+          "text": "str r0, [sp, #0x10]"
+        },
+        {
+          "address": "0x4383c9f2",
+          "text": "ldr.w r1, [r8, #0xc0]"
+        },
+        {
+          "address": "0x4383c9f6",
+          "text": "ldr.w r3, [r8, #0xb0]"
+        },
+        {
+          "address": "0x4383c9fa",
+          "text": "ldr.w r2, [r8, #0xd0]"
+        },
+        {
+          "address": "0x4383c9fe",
+          "text": "str r1, [sp, #0x18]"
+        },
+        {
+          "address": "0x4383ca00",
+          "text": "ldrh r1, [r5, #0x2e]"
+        },
+        {
+          "address": "0x4383ca02",
+          "text": "ldrh r0, [r5, #0x2c]"
+        },
+        {
+          "address": "0x4383ca04",
+          "text": "str r2, [sp, #0xc]"
+        },
+        {
+          "address": "0x4383ca06",
+          "text": "str r1, [sp, #0x1c]"
+        },
+        {
+          "address": "0x4383ca08",
+          "text": "subs r7, r0, #0"
+        },
+        {
+          "address": "0x4383ca0a",
+          "text": "ldrb.w r1, [r5, #0x24]"
+        },
+        {
+          "address": "0x4383ca0e",
+          "text": "it ne"
+        },
+        {
+          "address": "0x4383ca10",
+          "text": "movne r7, #1"
+        },
+        {
+          "address": "0x4383ca12",
+          "text": "ldrh r2, [r5, #0x10]"
+        },
+        {
+          "address": "0x4383ca14",
+          "text": "str r0, [sp, #0x14]"
+        },
+        {
+          "address": "0x4383ca16",
+          "text": "cbz r1, #0x4383ca3c"
+        },
+        {
+          "address": "0x4383ca18",
+          "text": "ldr.w sl, [r5, #0x30]"
+        },
+        {
+          "address": "0x4383ca1c",
+          "text": "ldr r0, [sp, #0xc]"
+        },
+        {
+          "address": "0x4383ca1e",
+          "text": "add.w lr, sl, #-1"
+        },
+        {
+          "address": "0x4383ca22",
+          "text": "ldrh.w ip, [r5, #0x18]"
+        },
+        {
+          "address": "0x4383ca26",
+          "text": "rsb lr, r0, lr"
+        },
+        {
+          "address": "0x4383ca2a",
+          "text": "str.w sl, [sp, #0xc]"
+        },
+        {
+          "address": "0x4383ca2e",
+          "text": "mul lr, ip, lr"
+        },
+        {
+          "address": "0x4383ca32",
+          "text": "add r3, lr"
+        },
+        {
+          "address": "0x4383ca34",
+          "text": "add lr, r2"
+        },
+        {
+          "address": "0x4383ca36",
+          "text": "str.w lr, [sp, #8]"
+        },
+        {
+          "address": "0x4383ca3a",
+          "text": "b #0x4383ca3e"
+        }
+      ]
+    },
+    {
+      "address": "0x43836a00",
+      "length": 52,
+      "file_offset": "0x2f5a00",
+      "bytes_hex": "262212128271b3f824224271b3f8242212120271b3f83622c270b3f8362212128270b3f82c224270b3f82c321b120370704700bf",
+      "thumb_instructions": [
+        {
+          "address": "0x43836a00",
+          "text": "movs r2, #0x26"
+        },
+        {
+          "address": "0x43836a02",
+          "text": "asrs r2, r2, #8"
+        },
+        {
+          "address": "0x43836a04",
+          "text": "strb r2, [r0, #6]"
+        },
+        {
+          "address": "0x43836a06",
+          "text": "ldrh.w r2, [r3, #0x224]"
+        },
+        {
+          "address": "0x43836a0a",
+          "text": "strb r2, [r0, #5]"
+        },
+        {
+          "address": "0x43836a0c",
+          "text": "ldrh.w r2, [r3, #0x224]"
+        },
+        {
+          "address": "0x43836a10",
+          "text": "asrs r2, r2, #8"
+        },
+        {
+          "address": "0x43836a12",
+          "text": "strb r2, [r0, #4]"
+        },
+        {
+          "address": "0x43836a14",
+          "text": "ldrh.w r2, [r3, #0x236]"
+        },
+        {
+          "address": "0x43836a18",
+          "text": "strb r2, [r0, #3]"
+        },
+        {
+          "address": "0x43836a1a",
+          "text": "ldrh.w r2, [r3, #0x236]"
+        },
+        {
+          "address": "0x43836a1e",
+          "text": "asrs r2, r2, #8"
+        },
+        {
+          "address": "0x43836a20",
+          "text": "strb r2, [r0, #2]"
+        },
+        {
+          "address": "0x43836a22",
+          "text": "ldrh.w r2, [r3, #0x22c]"
+        },
+        {
+          "address": "0x43836a26",
+          "text": "strb r2, [r0, #1]"
+        },
+        {
+          "address": "0x43836a28",
+          "text": "ldrh.w r3, [r3, #0x22c]"
+        },
+        {
+          "address": "0x43836a2c",
+          "text": "asrs r3, r3, #8"
+        },
+        {
+          "address": "0x43836a2e",
+          "text": "strb r3, [r0]"
+        },
+        {
+          "address": "0x43836a30",
+          "text": "bx lr"
+        },
+        {
+          "address": "0x43836a32",
+          "text": "nop"
+        }
+      ]
+    }
+  ]
+}

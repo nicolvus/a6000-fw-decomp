@@ -1,0 +1,1104 @@
+{
+ "milestone": "S166",
+ "modulo": "[ADC_DEBUG]",
+ "binary": "analysis/rea-independent/input/av-cam.bin",
+ "vaddr_rule": "vaddr = 0x43541000 + file_offset",
+ "xref_rule": "estricta (analysis/s106_imaging_cap/pic_refs_strict_global.json); ver analysis/s106_imaging_cap/pic_xref_methodology.md",
+ "counts": {
+  "cadenas": 14,
+  "sitios_pic": 15,
+  "pares_verificados_a_mano": 15,
+  "referenciadas": 14,
+  "sin_referencia": 0,
+  "funciones": 2,
+  "clientes_servicio_liro_adc": 11,
+  "callos_totales_al_servicio_generico": 282
+ },
+ "strings": [
+  {
+   "vaddr": 1137594589,
+   "vaddr_hex": "43ce50dd",
+   "text": "[ADC_DEBUG]: few arg\n",
+   "n_sites": 2,
+   "sites": [
+    1134095154,
+    1134095502
+   ],
+   "sites_hex": [
+    "4398eb32",
+    "4398ec8e"
+   ],
+   "functions": [
+    1134095138,
+    1134095486
+   ],
+   "functions_hex": [
+    "4398eb22",
+    "4398ec7e"
+   ],
+   "manual_ok_all": true,
+   "a7s_present": false,
+   "a6300_present": false
+  },
+  {
+   "vaddr": 1137594611,
+   "vaddr_hex": "43ce50f3",
+   "text": "[ADC_DEBUG]: ADC DATA0  = %04x\n",
+   "n_sites": 1,
+   "sites": [
+    1134095210
+   ],
+   "sites_hex": [
+    "4398eb6a"
+   ],
+   "functions": [
+    1134095138
+   ],
+   "functions_hex": [
+    "4398eb22"
+   ],
+   "manual_ok_all": true,
+   "a7s_present": false,
+   "a6300_present": false
+  },
+  {
+   "vaddr": 1137594643,
+   "vaddr_hex": "43ce5113",
+   "text": "[ADC_DEBUG]: ADC DATA1  = %04x\n",
+   "n_sites": 1,
+   "sites": [
+    1134095228
+   ],
+   "sites_hex": [
+    "4398eb7c"
+   ],
+   "functions": [
+    1134095138
+   ],
+   "functions_hex": [
+    "4398eb22"
+   ],
+   "manual_ok_all": true,
+   "a7s_present": false,
+   "a6300_present": false
+  },
+  {
+   "vaddr": 1137594675,
+   "vaddr_hex": "43ce5133",
+   "text": "[ADC_DEBUG]: ADC DATA2  = %04x\n",
+   "n_sites": 1,
+   "sites": [
+    1134095246
+   ],
+   "sites_hex": [
+    "4398eb8e"
+   ],
+   "functions": [
+    1134095138
+   ],
+   "functions_hex": [
+    "4398eb22"
+   ],
+   "manual_ok_all": true,
+   "a7s_present": false,
+   "a6300_present": false
+  },
+  {
+   "vaddr": 1137594707,
+   "vaddr_hex": "43ce5153",
+   "text": "[ADC_DEBUG]: ADC DATA3  = %04x\n",
+   "n_sites": 1,
+   "sites": [
+    1134095264
+   ],
+   "sites_hex": [
+    "4398eba0"
+   ],
+   "functions": [
+    1134095138
+   ],
+   "functions_hex": [
+    "4398eb22"
+   ],
+   "manual_ok_all": true,
+   "a7s_present": false,
+   "a6300_present": false
+  },
+  {
+   "vaddr": 1137594739,
+   "vaddr_hex": "43ce5173",
+   "text": "[ADC_DEBUG]: ADC DATA4  = %04x\n",
+   "n_sites": 1,
+   "sites": [
+    1134095282
+   ],
+   "sites_hex": [
+    "4398ebb2"
+   ],
+   "functions": [
+    1134095138
+   ],
+   "functions_hex": [
+    "4398eb22"
+   ],
+   "manual_ok_all": true,
+   "a7s_present": false,
+   "a6300_present": false
+  },
+  {
+   "vaddr": 1137594771,
+   "vaddr_hex": "43ce5193",
+   "text": "[ADC_DEBUG]: ADC DATA5  = %04x\n",
+   "n_sites": 1,
+   "sites": [
+    1134095300
+   ],
+   "sites_hex": [
+    "4398ebc4"
+   ],
+   "functions": [
+    1134095138
+   ],
+   "functions_hex": [
+    "4398eb22"
+   ],
+   "manual_ok_all": true,
+   "a7s_present": false,
+   "a6300_present": false
+  },
+  {
+   "vaddr": 1137594803,
+   "vaddr_hex": "43ce51b3",
+   "text": "[ADC_DEBUG]: ADC DATA6  = %04x\n",
+   "n_sites": 1,
+   "sites": [
+    1134095318
+   ],
+   "sites_hex": [
+    "4398ebd6"
+   ],
+   "functions": [
+    1134095138
+   ],
+   "functions_hex": [
+    "4398eb22"
+   ],
+   "manual_ok_all": true,
+   "a7s_present": false,
+   "a6300_present": false
+  },
+  {
+   "vaddr": 1137594835,
+   "vaddr_hex": "43ce51d3",
+   "text": "[ADC_DEBUG]: ADC DATA7  = %04x\n",
+   "n_sites": 1,
+   "sites": [
+    1134095336
+   ],
+   "sites_hex": [
+    "4398ebe8"
+   ],
+   "functions": [
+    1134095138
+   ],
+   "functions_hex": [
+    "4398eb22"
+   ],
+   "manual_ok_all": true,
+   "a7s_present": false,
+   "a6300_present": false
+  },
+  {
+   "vaddr": 1137594867,
+   "vaddr_hex": "43ce51f3",
+   "text": "[ADC_DEBUG]: ADC DATA8  = %04x\n",
+   "n_sites": 1,
+   "sites": [
+    1134095354
+   ],
+   "sites_hex": [
+    "4398ebfa"
+   ],
+   "functions": [
+    1134095138
+   ],
+   "functions_hex": [
+    "4398eb22"
+   ],
+   "manual_ok_all": true,
+   "a7s_present": false,
+   "a6300_present": false
+  },
+  {
+   "vaddr": 1137594899,
+   "vaddr_hex": "43ce5213",
+   "text": "[ADC_DEBUG]: ADC DATA9  = %04x\n",
+   "n_sites": 1,
+   "sites": [
+    1134095372
+   ],
+   "sites_hex": [
+    "4398ec0c"
+   ],
+   "functions": [
+    1134095138
+   ],
+   "functions_hex": [
+    "4398eb22"
+   ],
+   "manual_ok_all": true,
+   "a7s_present": false,
+   "a6300_present": false
+  },
+  {
+   "vaddr": 1137594931,
+   "vaddr_hex": "43ce5233",
+   "text": "[ADC_DEBUG]: ADC DATA10 = %04x\n",
+   "n_sites": 1,
+   "sites": [
+    1134095390
+   ],
+   "sites_hex": [
+    "4398ec1e"
+   ],
+   "functions": [
+    1134095138
+   ],
+   "functions_hex": [
+    "4398eb22"
+   ],
+   "manual_ok_all": true,
+   "a7s_present": false,
+   "a6300_present": false
+  },
+  {
+   "vaddr": 1137594963,
+   "vaddr_hex": "43ce5253",
+   "text": "[ADC_DEBUG]: ADC DATA11 = %04x\n",
+   "n_sites": 1,
+   "sites": [
+    1134095408
+   ],
+   "sites_hex": [
+    "4398ec30"
+   ],
+   "functions": [
+    1134095138
+   ],
+   "functions_hex": [
+    "4398eb22"
+   ],
+   "manual_ok_all": true,
+   "a7s_present": false,
+   "a6300_present": false
+  },
+  {
+   "vaddr": 1137594995,
+   "vaddr_hex": "43ce5273",
+   "text": "[ADC_DEBUG]: ADC DATA = %04x\n",
+   "n_sites": 1,
+   "sites": [
+    1134095566
+   ],
+   "sites_hex": [
+    "4398ecce"
+   ],
+   "functions": [
+    1134095486
+   ],
+   "functions_hex": [
+    "4398ec7e"
+   ],
+   "manual_ok_all": true,
+   "a7s_present": false,
+   "a6300_present": false
+  }
+ ],
+ "functions": [
+  {
+   "vaddr": 1134095138,
+   "vaddr_hex": "4398eb22",
+   "func_entry": 1134095136,
+   "func_entry_hex": "4398eb20",
+   "n_sites": 13,
+   "sites_hex": [
+    "4398eb32",
+    "4398eb6a",
+    "4398eb7c",
+    "4398eb8e",
+    "4398eba0",
+    "4398ebb2",
+    "4398ebc4",
+    "4398ebd6",
+    "4398ebe8",
+    "4398ebfa",
+    "4398ec0c",
+    "4398ec1e",
+    "4398ec30"
+   ],
+   "strings_hex": [
+    "43ce50dd",
+    "43ce50f3",
+    "43ce5113",
+    "43ce5133",
+    "43ce5153",
+    "43ce5173",
+    "43ce5193",
+    "43ce51b3",
+    "43ce51d3",
+    "43ce51f3",
+    "43ce5213",
+    "43ce5233",
+    "43ce5253"
+   ],
+   "texts": [
+    "[ADC_DEBUG]: few arg\n",
+    "[ADC_DEBUG]: ADC DATA0  = %04x\n",
+    "[ADC_DEBUG]: ADC DATA1  = %04x\n",
+    "[ADC_DEBUG]: ADC DATA2  = %04x\n",
+    "[ADC_DEBUG]: ADC DATA3  = %04x\n",
+    "[ADC_DEBUG]: ADC DATA4  = %04x\n",
+    "[ADC_DEBUG]: ADC DATA5  = %04x\n",
+    "[ADC_DEBUG]: ADC DATA6  = %04x\n",
+    "[ADC_DEBUG]: ADC DATA7  = %04x\n",
+    "[ADC_DEBUG]: ADC DATA8  = %04x\n",
+    "[ADC_DEBUG]: ADC DATA9  = %04x\n",
+    "[ADC_DEBUG]: ADC DATA10 = %04x\n",
+    "[ADC_DEBUG]: ADC DATA11 = %04x\n"
+   ],
+   "approx_function": false
+  },
+  {
+   "vaddr": 1134095486,
+   "vaddr_hex": "4398ec7e",
+   "func_entry": 1134095484,
+   "func_entry_hex": "4398ec7c",
+   "n_sites": 2,
+   "sites_hex": [
+    "4398ec8e",
+    "4398ecce"
+   ],
+   "strings_hex": [
+    "43ce50dd",
+    "43ce5273"
+   ],
+   "texts": [
+    "[ADC_DEBUG]: few arg\n",
+    "[ADC_DEBUG]: ADC DATA = %04x\n"
+   ],
+   "approx_function": false
+  }
+ ],
+ "pares_pic": [
+  {
+   "string": 1137594589,
+   "string_hex": "43ce50dd",
+   "text": "[ADC_DEBUG]: few arg\n",
+   "site": 1134095154,
+   "site_hex": "4398eb32",
+   "manual_ok": true,
+   "manual_dest": "43ce50dd",
+   "ldr_addr": "4398eb2a",
+   "pool_addr": "4398ec48",
+   "pool_offset": "0x003565a7",
+   "func": 1134095138,
+   "func_hex": "4398eb22",
+   "approx_function": false
+  },
+  {
+   "string": 1137594589,
+   "string_hex": "43ce50dd",
+   "text": "[ADC_DEBUG]: few arg\n",
+   "site": 1134095502,
+   "site_hex": "4398ec8e",
+   "manual_ok": true,
+   "manual_dest": "43ce50dd",
+   "ldr_addr": "4398ec86",
+   "pool_addr": "4398ece8",
+   "pool_offset": "0x0035644b",
+   "func": 1134095486,
+   "func_hex": "4398ec7e",
+   "approx_function": false
+  },
+  {
+   "string": 1137594611,
+   "string_hex": "43ce50f3",
+   "text": "[ADC_DEBUG]: ADC DATA0  = %04x\n",
+   "site": 1134095210,
+   "site_hex": "4398eb6a",
+   "manual_ok": true,
+   "manual_dest": "43ce50f3",
+   "ldr_addr": "4398eb68",
+   "pool_addr": "4398ec4c",
+   "pool_offset": "0x00356585",
+   "func": 1134095138,
+   "func_hex": "4398eb22",
+   "approx_function": false
+  },
+  {
+   "string": 1137594643,
+   "string_hex": "43ce5113",
+   "text": "[ADC_DEBUG]: ADC DATA1  = %04x\n",
+   "site": 1134095228,
+   "site_hex": "4398eb7c",
+   "manual_ok": true,
+   "manual_dest": "43ce5113",
+   "ldr_addr": "4398eb7a",
+   "pool_addr": "4398ec50",
+   "pool_offset": "0x00356593",
+   "func": 1134095138,
+   "func_hex": "4398eb22",
+   "approx_function": false
+  },
+  {
+   "string": 1137594675,
+   "string_hex": "43ce5133",
+   "text": "[ADC_DEBUG]: ADC DATA2  = %04x\n",
+   "site": 1134095246,
+   "site_hex": "4398eb8e",
+   "manual_ok": true,
+   "manual_dest": "43ce5133",
+   "ldr_addr": "4398eb8c",
+   "pool_addr": "4398ec54",
+   "pool_offset": "0x003565a1",
+   "func": 1134095138,
+   "func_hex": "4398eb22",
+   "approx_function": false
+  },
+  {
+   "string": 1137594707,
+   "string_hex": "43ce5153",
+   "text": "[ADC_DEBUG]: ADC DATA3  = %04x\n",
+   "site": 1134095264,
+   "site_hex": "4398eba0",
+   "manual_ok": true,
+   "manual_dest": "43ce5153",
+   "ldr_addr": "4398eb9e",
+   "pool_addr": "4398ec58",
+   "pool_offset": "0x003565af",
+   "func": 1134095138,
+   "func_hex": "4398eb22",
+   "approx_function": false
+  },
+  {
+   "string": 1137594739,
+   "string_hex": "43ce5173",
+   "text": "[ADC_DEBUG]: ADC DATA4  = %04x\n",
+   "site": 1134095282,
+   "site_hex": "4398ebb2",
+   "manual_ok": true,
+   "manual_dest": "43ce5173",
+   "ldr_addr": "4398ebb0",
+   "pool_addr": "4398ec5c",
+   "pool_offset": "0x003565bd",
+   "func": 1134095138,
+   "func_hex": "4398eb22",
+   "approx_function": false
+  },
+  {
+   "string": 1137594771,
+   "string_hex": "43ce5193",
+   "text": "[ADC_DEBUG]: ADC DATA5  = %04x\n",
+   "site": 1134095300,
+   "site_hex": "4398ebc4",
+   "manual_ok": true,
+   "manual_dest": "43ce5193",
+   "ldr_addr": "4398ebc2",
+   "pool_addr": "4398ec60",
+   "pool_offset": "0x003565cb",
+   "func": 1134095138,
+   "func_hex": "4398eb22",
+   "approx_function": false
+  },
+  {
+   "string": 1137594803,
+   "string_hex": "43ce51b3",
+   "text": "[ADC_DEBUG]: ADC DATA6  = %04x\n",
+   "site": 1134095318,
+   "site_hex": "4398ebd6",
+   "manual_ok": true,
+   "manual_dest": "43ce51b3",
+   "ldr_addr": "4398ebd4",
+   "pool_addr": "4398ec64",
+   "pool_offset": "0x003565d9",
+   "func": 1134095138,
+   "func_hex": "4398eb22",
+   "approx_function": false
+  },
+  {
+   "string": 1137594835,
+   "string_hex": "43ce51d3",
+   "text": "[ADC_DEBUG]: ADC DATA7  = %04x\n",
+   "site": 1134095336,
+   "site_hex": "4398ebe8",
+   "manual_ok": true,
+   "manual_dest": "43ce51d3",
+   "ldr_addr": "4398ebe6",
+   "pool_addr": "4398ec68",
+   "pool_offset": "0x003565e7",
+   "func": 1134095138,
+   "func_hex": "4398eb22",
+   "approx_function": false
+  },
+  {
+   "string": 1137594867,
+   "string_hex": "43ce51f3",
+   "text": "[ADC_DEBUG]: ADC DATA8  = %04x\n",
+   "site": 1134095354,
+   "site_hex": "4398ebfa",
+   "manual_ok": true,
+   "manual_dest": "43ce51f3",
+   "ldr_addr": "4398ebf8",
+   "pool_addr": "4398ec6c",
+   "pool_offset": "0x003565f5",
+   "func": 1134095138,
+   "func_hex": "4398eb22",
+   "approx_function": false
+  },
+  {
+   "string": 1137594899,
+   "string_hex": "43ce5213",
+   "text": "[ADC_DEBUG]: ADC DATA9  = %04x\n",
+   "site": 1134095372,
+   "site_hex": "4398ec0c",
+   "manual_ok": true,
+   "manual_dest": "43ce5213",
+   "ldr_addr": "4398ec0a",
+   "pool_addr": "4398ec70",
+   "pool_offset": "0x00356603",
+   "func": 1134095138,
+   "func_hex": "4398eb22",
+   "approx_function": false
+  },
+  {
+   "string": 1137594931,
+   "string_hex": "43ce5233",
+   "text": "[ADC_DEBUG]: ADC DATA10 = %04x\n",
+   "site": 1134095390,
+   "site_hex": "4398ec1e",
+   "manual_ok": true,
+   "manual_dest": "43ce5233",
+   "ldr_addr": "4398ec1c",
+   "pool_addr": "4398ec74",
+   "pool_offset": "0x00356611",
+   "func": 1134095138,
+   "func_hex": "4398eb22",
+   "approx_function": false
+  },
+  {
+   "string": 1137594963,
+   "string_hex": "43ce5253",
+   "text": "[ADC_DEBUG]: ADC DATA11 = %04x\n",
+   "site": 1134095408,
+   "site_hex": "4398ec30",
+   "manual_ok": true,
+   "manual_dest": "43ce5253",
+   "ldr_addr": "4398ec2e",
+   "pool_addr": "4398ec78",
+   "pool_offset": "0x0035661f",
+   "func": 1134095138,
+   "func_hex": "4398eb22",
+   "approx_function": false
+  },
+  {
+   "string": 1137594995,
+   "string_hex": "43ce5273",
+   "text": "[ADC_DEBUG]: ADC DATA = %04x\n",
+   "site": 1134095566,
+   "site_hex": "4398ecce",
+   "manual_ok": true,
+   "manual_dest": "43ce5273",
+   "ldr_addr": "4398eccc",
+   "pool_addr": "4398ecec",
+   "pool_offset": "0x003565a1",
+   "func": 1134095486,
+   "func_hex": "4398ec7e",
+   "approx_function": false
+  }
+ ],
+ "tabla_adj": {
+  "descriptor_addr": "440189bc",
+  "n_cmds": 3,
+  "mask": 255,
+  "entries": {
+   "get_d": {
+    "name_addr": "43ce5299",
+    "name": "get_d",
+    "help_addr": "43ce529f",
+    "help": "ADC_GET_DATA     unit_no ch_no",
+    "handler_ptr": "4398ec7d",
+    "handler": "4398ec7c"
+   },
+   "get_da": {
+    "name_addr": "43ce52be",
+    "name": "get_da",
+    "help_addr": "43ce52c5",
+    "help": "ADC_GET_DATA_ALL unit_no",
+    "handler_ptr": "4398eb21",
+    "handler": "4398eb20"
+   },
+   "set_da": {
+    "name_addr": "43ce52de",
+    "name": "set_da",
+    "help_addr": "43ce52e5",
+    "help": "ADC_SET_DATA_ALL unit_no data0 data1 ... data11",
+    "handler_ptr": "4398e9dd",
+    "handler": "4398e9dc"
+   }
+  }
+ },
+ "despachador_subcomandos": {
+  "func": "4398e578",
+  "cmd_id": "0x901",
+  "tbb_table": "4398e5d0",
+  "tbb_raw": "03 19 36 55 67",
+  "subcomandos": [
+   {
+    "subcmd": 1,
+    "tbb_target": "4398e5da",
+    "label_addr": "43ce4fc7",
+    "label": "ADJ_CMD_LIRO_DRIVERS_ADC_LIRO_ADC_GET_DATA"
+   },
+   {
+    "subcmd": 2,
+    "tbb_target": "4398e606",
+    "label_addr": "43ce4ff2",
+    "label": "ADJ_CMD_LIRO_DRIVERS_ADC_LIRO_ADC_GET_DATA_ALL"
+   },
+   {
+    "subcmd": 3,
+    "tbb_target": "4398e640",
+    "label_addr": "43ce5021",
+    "label": "ADJ_CMD_LIRO_DRIVERS_ADC_LIRO_ADC_CHECK_DATA"
+   },
+   {
+    "subcmd": 4,
+    "tbb_target": "4398e67e",
+    "label_addr": "43ce504e",
+    "label": "ADJ_CMD_LIRO_DRIVERS_ADC_LIRO_ADC_TEST_MODE"
+   },
+   {
+    "subcmd": 5,
+    "tbb_target": "4398e6a2",
+    "label_addr": "43ce507a",
+    "label": "ADJ_CMD_LIRO_DRIVERS_ADC_LIRO_ADC_SET_DATA"
+   }
+  ]
+ },
+ "clientes_liro_adc": [
+  {
+   "site": 1129720388,
+   "site_hex": "43562a44",
+   "func": 1129720328,
+   "func_hex": "43562a08"
+  },
+  {
+   "site": 1130026150,
+   "site_hex": "435ad4a6",
+   "func": 1130026100,
+   "func_hex": "435ad474"
+  },
+  {
+   "site": 1130589376,
+   "site_hex": "43636cc0",
+   "func": 1130589288,
+   "func_hex": "43636c68"
+  },
+  {
+   "site": 1131388782,
+   "site_hex": "436f9f6e",
+   "func": 1131388740,
+   "func_hex": "436f9f44"
+  },
+  {
+   "site": 1132850048,
+   "site_hex": "4385eb80",
+   "func": 1132849964,
+   "func_hex": "4385eb2c"
+  },
+  {
+   "site": 1133319400,
+   "site_hex": "438d14e8",
+   "func": 1133319344,
+   "func_hex": "438d14b0"
+  },
+  {
+   "site": 1133319444,
+   "site_hex": "438d1514",
+   "func": 1133319344,
+   "func_hex": "438d14b0"
+  },
+  {
+   "site": 1133322756,
+   "site_hex": "438d2204",
+   "func": 1133322708,
+   "func_hex": "438d21d4"
+  },
+  {
+   "site": 1134094944,
+   "site_hex": "4398ea60",
+   "func": 1134094812,
+   "func_hex": "4398e9dc"
+  },
+  {
+   "site": 1134095194,
+   "site_hex": "4398eb5a",
+   "func": 1134095138,
+   "func_hex": "4398eb22"
+  },
+  {
+   "site": 1134095550,
+   "site_hex": "4398ecbe",
+   "func": 1134095486,
+   "func_hex": "4398ec7e"
+  }
+ ],
+ "estructura": {
+  "array_valores_adc": "43f84b80",
+  "array_valores_adc_layout": "2 unidades x 12 canales, u16 cada uno (indice = unidad*12 + canal)",
+  "hw_base_unidad0": "f2406000",
+  "hw_base_unidad1": "f2407000",
+  "hw_registro_por_canal_unidad0": "f2406014",
+  "handle_servicio_liro_adc": "00720018",
+  "ids_mensaje": {
+   "0xfff0": "ADC_GET_DATA (1 canal) -> [4]=unidad, [5]=canal, [6]=valor u16",
+   "0xfff1": "ADC_GET_DATA_ALL (12 canales) -> [4]=unidad, [6..0x1d]=12 u16",
+   "0xfff2": "ADC_SET_DATA_ALL (12 canales) -> [4..5], [6..0x1d]=12 u16"
+  }
+ },
+ "ficheros_fuente": {
+  "region": "4398e000-4398f200",
+  "cadenas_referenciadas": [
+   {
+    "site": "4398e60c",
+    "addr": "43ce4ff2",
+    "text": "ADJ_CMD_LIRO_DRIVERS_ADC_LIRO_ADC_GET_DATA_ALL"
+   },
+   {
+    "site": "4398e646",
+    "addr": "43ce5021",
+    "text": "ADJ_CMD_LIRO_DRIVERS_ADC_LIRO_ADC_CHECK_DATA"
+   },
+   {
+    "site": "4398e684",
+    "addr": "43ce504e",
+    "text": "ADJ_CMD_LIRO_DRIVERS_ADC_LIRO_ADC_TEST_MODE"
+   },
+   {
+    "site": "4398e6a8",
+    "addr": "43ce507a",
+    "text": "ADJ_CMD_LIRO_DRIVERS_ADC_LIRO_ADC_SET_DATA"
+   },
+   {
+    "site": "4398e758",
+    "addr": "43ce50a5",
+    "text": "sem=%x"
+   },
+   {
+    "site": "4398e796",
+    "addr": "43ce50a5",
+    "text": "sem=%x"
+   },
+   {
+    "site": "4398e808",
+    "addr": "4398e399",
+    "text": "hOöñq\u0010µB\u0003F\nÐ\u00011B\u000bÐOöðsB\u0019Ñ½è\u0010@ÿ÷¾¿½è\u0010@ÿ÷Ð¿\tJzD\u0012xj¹"
+   },
+   {
+    "site": "4398e81c",
+    "addr": "43ce50ac",
+    "text": "reg_sync err=%d"
+   },
+   {
+    "site": "4398e840",
+    "addr": "43ce50ac",
+    "text": "reg_sync err=%d"
+   },
+   {
+    "site": "4398e864",
+    "addr": "43ce50bc",
+    "text": "Backup Read Error!"
+   },
+   {
+    "site": "4398e944",
+    "addr": "43ce50cf",
+    "text": "unreg_sync=%d"
+   },
+   {
+    "site": "4398e964",
+    "addr": "43ce50cf",
+    "text": "unreg_sync=%d"
+   },
+   {
+    "site": "4398eb32",
+    "addr": "43ce50dd",
+    "text": "[ADC_DEBUG]: few arg\n"
+   },
+   {
+    "site": "4398eb6a",
+    "addr": "43ce50f3",
+    "text": "[ADC_DEBUG]: ADC DATA0  = %04x\n"
+   },
+   {
+    "site": "4398eb7c",
+    "addr": "43ce5113",
+    "text": "[ADC_DEBUG]: ADC DATA1  = %04x\n"
+   },
+   {
+    "site": "4398eb8e",
+    "addr": "43ce5133",
+    "text": "[ADC_DEBUG]: ADC DATA2  = %04x\n"
+   },
+   {
+    "site": "4398eba0",
+    "addr": "43ce5153",
+    "text": "[ADC_DEBUG]: ADC DATA3  = %04x\n"
+   },
+   {
+    "site": "4398ebb2",
+    "addr": "43ce5173",
+    "text": "[ADC_DEBUG]: ADC DATA4  = %04x\n"
+   },
+   {
+    "site": "4398ebc4",
+    "addr": "43ce5193",
+    "text": "[ADC_DEBUG]: ADC DATA5  = %04x\n"
+   },
+   {
+    "site": "4398ebd6",
+    "addr": "43ce51b3",
+    "text": "[ADC_DEBUG]: ADC DATA6  = %04x\n"
+   },
+   {
+    "site": "4398ebe8",
+    "addr": "43ce51d3",
+    "text": "[ADC_DEBUG]: ADC DATA7  = %04x\n"
+   },
+   {
+    "site": "4398ebfa",
+    "addr": "43ce51f3",
+    "text": "[ADC_DEBUG]: ADC DATA8  = %04x\n"
+   },
+   {
+    "site": "4398ec0c",
+    "addr": "43ce5213",
+    "text": "[ADC_DEBUG]: ADC DATA9  = %04x\n"
+   },
+   {
+    "site": "4398ec1e",
+    "addr": "43ce5233",
+    "text": "[ADC_DEBUG]: ADC DATA10 = %04x\n"
+   },
+   {
+    "site": "4398ec30",
+    "addr": "43ce5253",
+    "text": "[ADC_DEBUG]: ADC DATA11 = %04x\n"
+   },
+   {
+    "site": "4398ec8e",
+    "addr": "43ce50dd",
+    "text": "[ADC_DEBUG]: few arg\n"
+   },
+   {
+    "site": "4398ecce",
+    "addr": "43ce5273",
+    "text": "[ADC_DEBUG]: ADC DATA = %04x\n"
+   },
+   {
+    "site": "4398ecf4",
+    "addr": "43ce5291",
+    "text": "TSK_ADC"
+   },
+   {
+    "site": "4398efd4",
+    "addr": "43ce5327",
+    "text": "[DMAC%d]pbl_dmac_open() is open."
+   },
+   {
+    "site": "4398f05c",
+    "addr": "43ce5348",
+    "text": "[DMAC%d]pbl_dmac_close() is not open. semcnt=%d"
+   }
+  ],
+  "nombres_de_fichero_o_rtti": [],
+  "nota": "vacio: el driver LIRO ADC no embebe ningun nombre de fichero ni de clase RTTI"
+ },
+ "diferencial": {
+  "[ADC_DEBUG]": {
+   "A6000": 14,
+   "A7S": 0,
+   "A6300": 0
+  },
+  "[ADC_DEBUG]: few arg": {
+   "A6000": 1,
+   "A7S": 0,
+   "A6300": 0
+  },
+  "[ADC_DEBUG]: ADC DATA0": {
+   "A6000": 1,
+   "A7S": 0,
+   "A6300": 0
+  },
+  "[ADC_DEBUG]: ADC DATA11": {
+   "A6000": 1,
+   "A7S": 0,
+   "A6300": 0
+  },
+  "[ADC_DEBUG]: ADC DATA = ": {
+   "A6000": 1,
+   "A7S": 0,
+   "A6300": 0
+  },
+  "ADJ_CMD_LIRO_DRIVERS_ADC_LIRO_ADC_GET_DATA": {
+   "A6000": 2,
+   "A7S": 0,
+   "A6300": 0
+  },
+  "ADJ_CMD_LIRO_DRIVERS_ADC_LIRO_ADC_GET_DATA_ALL": {
+   "A6000": 1,
+   "A7S": 0,
+   "A6300": 0
+  },
+  "ADJ_CMD_LIRO_DRIVERS_ADC_LIRO_ADC_CHECK_DATA": {
+   "A6000": 1,
+   "A7S": 0,
+   "A6300": 0
+  },
+  "ADJ_CMD_LIRO_DRIVERS_ADC_LIRO_ADC_TEST_MODE": {
+   "A6000": 1,
+   "A7S": 0,
+   "A6300": 0
+  },
+  "ADJ_CMD_LIRO_DRIVERS_ADC_LIRO_ADC_SET_DATA": {
+   "A6000": 1,
+   "A7S": 0,
+   "A6300": 0
+  },
+  "get_d": {
+   "A6000": 2,
+   "A7S": 2,
+   "A6300": 2
+  },
+  "get_da": {
+   "A6000": 1,
+   "A7S": 1,
+   "A6300": 1
+  },
+  "set_da": {
+   "A6000": 2,
+   "A7S": 2,
+   "A6300": 2
+  },
+  "TSK_ADC": {
+   "A6000": 1,
+   "A7S": 1,
+   "A6300": 1
+  },
+  "boot_exit_adcliro": {
+   "A6000": 1,
+   "A7S": 1,
+   "A6300": 1
+  },
+  "ADC_GET_DATA     unit_no ch_no": {
+   "A6000": 1,
+   "A7S": 1,
+   "A6300": 1
+  },
+  "ADC_GET_DATA_ALL unit_no": {
+   "A6000": 1,
+   "A7S": 1,
+   "A6300": 1
+  },
+  "ADC_SET_DATA_ALL unit_no data0 data1 ... data11": {
+   "A6000": 1,
+   "A7S": 1,
+   "A6300": 1
+  },
+  "liro_adc": {
+   "A6000": 3,
+   "A7S": 3,
+   "A6300": 3
+  },
+  "CNF_ADC_CH_EVF_TEMP": {
+   "A6000": 1,
+   "A7S": 1,
+   "A6300": 1
+  },
+  "Get ADC CNF_ADC_CH_EVF_TEMP": {
+   "A6000": 1,
+   "A7S": 1,
+   "A6300": 1
+  },
+  "int_ADC_Handler": {
+   "A6000": 3,
+   "A7S": 3,
+   "A6300": 3
+  },
+  "ADC::Initialize": {
+   "A6000": 1,
+   "A7S": 1,
+   "A6300": 1
+  },
+  "SendToADCTask": {
+   "A6000": 1,
+   "A7S": 1,
+   "A6300": 1
+  },
+  "ADC flg timeout": {
+   "A6000": 2,
+   "A7S": 2,
+   "A6300": 2
+  },
+  "ADC error fact": {
+   "A6000": 1,
+   "A7S": 1,
+   "A6300": 1
+  },
+  "jitter NG": {
+   "A6000": 3,
+   "A7S": 3,
+   "A6300": 3
+  },
+  "ADCkeyInfo": {
+   "A6000": 1,
+   "A7S": 1,
+   "A6300": 1
+  },
+  "sem=%x": {
+   "A6000": 1,
+   "A7S": 0,
+   "A6300": 0
+  },
+  "reg_sync err=%d": {
+   "A6000": 1,
+   "A7S": 0,
+   "A6300": 0
+  },
+  "unreg_sync=%d": {
+   "A6000": 1,
+   "A7S": 0,
+   "A6300": 0
+  },
+  "Backup Read Error!": {
+   "A6000": 1,
+   "A7S": 0,
+   "A6300": 0
+  },
+  "[ACCY][INFO][HW]:AD=%d, ID=%d": {
+   "A6000": 1,
+   "A7S": 0,
+   "A6300": 0
+  },
+  "[ILLUMI]AD MAXOVER": {
+   "A6000": 1,
+   "A7S": 0,
+   "A6300": 0
+  },
+  "ADcor=0x%x": {
+   "A6000": 1,
+   "A7S": 0,
+   "A6300": 0
+  }
+ },
+ "diferencial_nota": "El driver LIRO ADC y sus comandos ADJ (get_d/get_da/set_da) existen en los TRES firmwares con el mismo layout y los mismos ids de mensaje (0xfff0/0xfff1/0xfff2). Lo propio de la A6000 fw3.21 es (a) la etiqueta [ADC_DEBUG] con sus 14 trazas y (b) las 5 etiquetas ADJ_CMD_LIRO_DRIVERS_ADC_LIRO_ADC_*. En la A7S fw3.20 (handlers 0x4397c860 / 0x4397c89c) y en el A6300 fw2.01 (handler 0x43a23480) los handlers son estructuralmente identicos pero NO imprimen nada."
+}
