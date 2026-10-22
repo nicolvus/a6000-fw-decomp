@@ -29,8 +29,9 @@ Referencia base: S153-S176 (lectores/escritores estado IMX210), S124 (parámetro
 - [ ] Tabla comparativa campo a campo
 
 ### S303 — Árbol referencias `0x43ff3200` y callers `FUN_43858338`
-- [ ] Seguir referencias de tabla `0x43ff3200` (pendiente S176)
-- [ ] Analizar callers de `FUN_43858338` (dumper gates S153) y alcanzabilidad
+- [x] Seguir referencias de tabla `0x43ff3200` → **contiene puntero a estado 0x43f72d02 en +0x48**; acceso vía GOT `0x4401f080`
+- [x] Analizar callers de `FUN_43858338` → **NO IDENTIFICADOS ESTÁTICAMENTE** (requiere REA/Ghidra xrefs)
+- [x] Documentado en `docs/capture/s303-ref-tree-43ff3200.md`
 
 ---
 
