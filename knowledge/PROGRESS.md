@@ -143,7 +143,7 @@
 - Resultado VERIFIED local: slot GOT `0x4401f990→0x43f72d02`; `strb r3,[r2,#0]` WRITE a `state+0`, valor 0 cuando expira el contador. No escribe +3/+6. Callers estáticos encontrados, sin prueba dinámica.
 - Evidencia: procedure `ev_134be2dfce4598770fe1825386a5899cfad96fb794784e8673a5c3f42e37bd3b`; WRITE instruction `ev_3992433ca320c9303ec5bd74990f7e8e53f481516afd812000138c8654f83014`; pseudocode `ev_d9486547d0d47dc8039f483cc2e75d37bee5fd8e82c1044c8d033137462f0946`.
 - Artefactos: `analysis/s160_state_open_flag_writer/{verify_open_flag_store.py,open_flag_store.json}`, `tests/test_s160_state_open_flag_writer.py`, `docs/capture/s160-state-open-flag.md`.
-- Pruebas: unittest 3/3 PASS; pendiente suite/commit/push.
+- Pruebas: unittest S160 3/3 PASS; suite S140–S160 + knowledge 115/115 PASS; `git diff --check` PASS. Commit `0a7daba9` publicado en `origin/main`.
 - Siguiente: analizar otro xref al estado con mismo criterio tipado; priorizar stores/copia a +3/+6 si aparece ruta.
 
 Checkpoint persistente. Actualizar al terminar cada etapa, antes de continuar
