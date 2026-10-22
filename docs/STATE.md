@@ -112,6 +112,8 @@ S160 confirma un store a `0x43f72d02+0` en `0x4383ac90` cuando expira un contado
 
 S161 clasifica `0x4384cb0a` como spill del puntero `0x43f72d02` a stack; el procedimiento lee otros offsets y escribe otro objeto, no `+3/+6` localmente. Sin conclusión global. [Informe S161](capture/s161-imager-state-spill.md).
 
+S162: `0x438d933e/9378` cargan el state pointer y leen `state+0x1c`; los resultados se guardan en `0x43f7c702/704`, no en el estado. Posible notificación es INFERENCIA; runtime no observado. [Informe S162](capture/s162-imager-state-event-readers.md).
+
 Proyecto abierto: hay piezas reales y reutilizables, pero **ninguna captura silenciosa
 completa validada**; no está demostrada la capacidad ni la imposibilidad de fotografía
 totalmente electrónica a resolución completa.
