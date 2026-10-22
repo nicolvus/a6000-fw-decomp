@@ -24,7 +24,7 @@
 - Evidencia REA: xrefs `ev_c003561cd210577dc1bc7acc5d8edee0f20991a28f194009e2bd8d4f278b19ab`; función de memset `0x437b5614`, lector `0x437b59b8`, thunk `0x43b08748`, consumidor `0x4383c638`; Evidence IDs adicionales y límites en `docs/capture/s142-imager-s-init.md`.
 - Resultado: VERIFICADO reset de 0x148 B a cero; VERIFICADO lectura/consumo de `S+0xda`; PARCIAL para escritor `S[0]` (xrefs directas no cubren aliases/punteros argumentos).
 - Artefactos: `analysis/s142_imager_s_init/{verify_s_accesses.py,s_accesses.json}`, `tests/test_s142_imager_s_init.py`, `docs/capture/s142-imager-s-init.md`.
-- Pruebas: unittest 3/3 PASS; falta integrar suite, commit y push.
+- Pruebas: unittest S142 3/3; suite S140–S142 + knowledge 76/76 PASS; `git diff --check` PASS. Commit `bf199b15` publicado en `origin/main`.
 - Siguiente: REA para recuperar coordenada de procedimiento Thumb de staging `0x43843a44` y seguir el store al selector.
 
 Checkpoint persistente. Actualizar al terminar cada etapa, antes de continuar
