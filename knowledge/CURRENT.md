@@ -2,7 +2,7 @@
 
 ## S145 — staging en hueco de análisis (22-10-2026)
 
-**PARCIAL:** REA reconoce `FUN_43843a38` (`0x43843a38..0x43843a3f`), pero `0x43843a44` y la rutina que empieza en `0x437b617e` están fuera de procedimientos analizados. Los bytes originales verifican el prólogo Thumb candidato y `BL 0x43843a44` en `0x437b61d2`. Evidencia y reproducción: [S145](../docs/capture/s145-imager-code-gap.md), `analysis/s145_imager_unanalyzed_code/code_gap.json` (3 tests). Esto **no prueba ejecución ni ausencia**.
+**PARCIAL:** REA reconoce `FUN_43843a38` (`0x43843a38..0x43843a3f`), pero `0x43843a44` y la rutina que empieza en `0x437b617e` están fuera de procedimientos analizados. Los bytes originales verifican el prólogo Thumb candidato y `BL 0x43843a44` en `0x437b61d2`. Evidencia y reproducción: [S145](../docs/capture/s145-imager-code-gap.md), `analysis/s145_imager_unanalyzed_code/code_gap.json` (3 tests). Esto **no prueba ejecución ni ausencia**. Commit publicado: `a0955258`.
 
 **Siguiente exacto:** en REA sembrar solo entradas Thumb observadas `0x437b617e` y `0x43843a44`; recuperar `procedure_info` y refs salientes; después seguir referencias a tablas/callbacks del caller.
 
