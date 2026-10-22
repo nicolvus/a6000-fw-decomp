@@ -43,7 +43,7 @@ Completado: comparación de registros y tiempos de lectura/exposición IMX235 (A
 
 ## Fase del agente D — módulos de línea general (S500+)
 
-S500 cerrado: módulo `[VDF]` (visor/display) — 243 cadenas en A6000 vs 162 en A7S/A6300; 81 exclusivas de la A6000 concentran la ruta QFHD/4K, el índice EO y el paralaje EVF. 78 funciones contenedoras y 298 xrefs. Informe `docs/capture/s500-vdf.md`, tests `tests/test_s500_vdf.py` (5 verdes). S501 cerrado: módulo `[STK]` (saliencia/tracking) — 76 cadenas en A6000/A7S, 0 en A6300; idéntico A6000/A7S. Código Thumb no sembrado: 143 xrefs sin función resuelta. Informe `docs/capture/s501-stk.md`, tests `tests/test_s501_stk.py` (5 verdes). S502+ pendientes.
+S500 cerrado: módulo `[VDF]` (visor/display) — 243 cadenas en A6000 vs 162 en A7S/A6300; 81 exclusivas de la A6000 concentran la ruta QFHD/4K, el índice EO y el paralaje EVF. 78 funciones contenedoras y 298 xrefs. Informe `docs/capture/s500-vdf.md`, tests `tests/test_s500_vdf.py` (5 verdes). S501 cerrado: módulo `[STK]` (saliencia/tracking) — 76 cadenas en A6000/A7S, 0 en A6300; idéntico A6000/A7S. Código Thumb no sembrado: 143 xrefs sin función resuelta. Informe `docs/capture/s501-stk.md`, tests `tests/test_s501_stk.py` (5 verdes). S502 cerrado: módulo `[EIS]` (estabilización) — 4 cadenas `[CAMERA_IS][EIS]` exclusivas de A6000; 3 funciones. Informe `docs/capture/s502-eis.md`, tests `tests/test_s502_eis.py` (5 verdes). S503+ pendientes.
 
 ## Objetivo técnico vigente
 
