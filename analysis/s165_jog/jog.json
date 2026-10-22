@@ -1,0 +1,484 @@
+{
+ "milestone": "S165",
+ "subject": "modulo [JOG] — subsistema de rueda/joystick (A6000 fw3.21)",
+ "convention": "vaddr = 0x43541000 + file_offset",
+ "binary": {
+  "path": "analysis/rea-independent/input/av-cam.bin",
+  "size": 11427236,
+  "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
+ },
+ "counters": {
+  "n_jog_strings": 14,
+  "n_ref_sites_total": 24,
+  "n_ref_sites_by_rule": "estricta (analysis/s106_imaging_cap/scan_pic_refs_strict.py)",
+  "n_functions_with_jog_traces": 12,
+  "n_dead_strings": 0,
+  "n_pretty_function_refs": 10
+ },
+ "strings": [
+  {
+   "vaddr": "0x43c40eb4",
+   "file_offset": "0x6ffeb4",
+   "text": "[JOG]JogMain::%s:%d",
+   "ref_sites": [
+    "0x435ae5d4",
+    "0x435ae6ce"
+   ],
+   "ref_count": 2,
+   "functions": [
+    "JogMain::Exit",
+    "JogMain::Init"
+   ]
+  },
+  {
+   "vaddr": "0x43c40ef2",
+   "file_offset": "0x6ffef2",
+   "text": "[JOG]ERR. osal_try_valloc_msg. err=0x%x, line=%d",
+   "ref_sites": [
+    "0x435aeb42"
+   ],
+   "ref_count": 1,
+   "functions": [
+    "JogMain::SendEvent"
+   ]
+  },
+  {
+   "vaddr": "0x43c40f23",
+   "file_offset": "0x6fff23",
+   "text": "[JOG]<Send Event> key_code = 0x%x, deg/sec = %d",
+   "ref_sites": [
+    "0x435aeb74"
+   ],
+   "ref_count": 1,
+   "functions": [
+    "JogMain::SendEvent"
+   ]
+  },
+  {
+   "vaddr": "0x43c40f53",
+   "file_offset": "0x6fff53",
+   "text": "[JOG]ERR. osal_snd_msg. err=0x%x, line=%d",
+   "ref_sites": [
+    "0x435aebb4"
+   ],
+   "ref_count": 1,
+   "functions": [
+    "JogMain::SendEvent"
+   ]
+  },
+  {
+   "vaddr": "0x43c40f85",
+   "file_offset": "0x6fff85",
+   "text": "[JOG]ERR. osal_free_timer. err=0x%x, line=%d",
+   "ref_sites": [
+    "0x435aeda6",
+    "0x435af1da",
+    "0x435af5f6"
+   ],
+   "ref_count": 3,
+   "functions": [
+    "JogFg::Exit",
+    "JogTpu::Exit",
+    "JogVGrip::Exit"
+   ]
+  },
+  {
+   "vaddr": "0x43c40fb2",
+   "file_offset": "0x6fffb2",
+   "text": "[JOG]JogFg::%s:%d",
+   "ref_sites": [
+    "0x435aee00",
+    "0x435aef18"
+   ],
+   "ref_count": 2,
+   "functions": [
+    "JogFg::Start"
+   ]
+  },
+  {
+   "vaddr": "0x43c40fc4",
+   "file_offset": "0x6fffc4",
+   "text": "[JOG]ERR. osal_alloc_timer. err=0x%x, line=%d",
+   "ref_sites": [
+    "0x435aeeac",
+    "0x435af2e0",
+    "0x435af6fc"
+   ],
+   "ref_count": 3,
+   "functions": [
+    "JogFg::Start",
+    "JogTpu::Start",
+    "JogVGrip::Start"
+   ]
+  },
+  {
+   "vaddr": "0x43c40ff2",
+   "file_offset": "0x6ffff2",
+   "text": "[JOG]ERR. osal_set_timer. err=0x%x, line=%d",
+   "ref_sites": [
+    "0x435aeee6",
+    "0x435af31a",
+    "0x435af736"
+   ],
+   "ref_count": 3,
+   "functions": [
+    "JogFg::Start",
+    "JogTpu::Start",
+    "JogVGrip::Start"
+   ]
+  },
+  {
+   "vaddr": "0x43c410a2",
+   "file_offset": "0x7000a2",
+   "text": "[JOG]JogTpu::%s:%d",
+   "ref_sites": [
+    "0x435af234",
+    "0x435af34c"
+   ],
+   "ref_count": 2,
+   "functions": [
+    "JogTpu::Start"
+   ]
+  },
+  {
+   "vaddr": "0x43c410fe",
+   "file_offset": "0x7000fe",
+   "text": "[JOG]JogVGrip::%s:%d",
+   "ref_sites": [
+    "0x435af650",
+    "0x435af768"
+   ],
+   "ref_count": 2,
+   "functions": [
+    "JogVGrip::Start"
+   ]
+  },
+  {
+   "vaddr": "0x43c41113",
+   "file_offset": "0x700113",
+   "text": "[JOG]UpdateDataFromVgrip SndErr, line=%d",
+   "ref_sites": [
+    "0x435af890"
+   ],
+   "ref_count": 1,
+   "functions": [
+    "JogVGrip::UpdateDataFromVgrip"
+   ]
+  },
+  {
+   "vaddr": "0x43c41184",
+   "file_offset": "0x700184",
+   "text": "[JOG]JogKey::%s:%d:0x%x,%d",
+   "ref_sites": [
+    "0x435af990"
+   ],
+   "ref_count": 1,
+   "functions": [
+    "JogKey::SetDev"
+   ]
+  },
+  {
+   "vaddr": "0x43c4119f",
+   "file_offset": "0x70019f",
+   "text": "[JOG]JogKey::%s:%d,pos:%d->%d",
+   "ref_sites": [
+    "0x435afa0c"
+   ],
+   "ref_count": 1,
+   "functions": [
+    "JogKey::SendKeyEvent"
+   ]
+  },
+  {
+   "vaddr": "0x43c411bd",
+   "file_offset": "0x7001bd",
+   "text": "[JOG]JogKey::%s:%d,Deg=0,Not Send",
+   "ref_sites": [
+    "0x435afa66"
+   ],
+   "ref_count": 1,
+   "functions": [
+    "JogKey::SendKeyEvent"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "start": "0x435ae5bc",
+   "end": "0x435ae616",
+   "name": "JogMain::Exit",
+   "class": "JogMain",
+   "role": "sale del subsistema: desregistra handlers y temporizadores",
+   "jog_sites": [
+    "0x435ae5d4"
+   ]
+  },
+  {
+   "start": "0x435ae6b6",
+   "end": "0x435ae846",
+   "name": "JogMain::Init",
+   "class": "JogMain",
+   "role": "construye hasta 5 JogKey, los liga a un JogDev y llama dev->Start(cb,u32,u32)",
+   "jog_sites": [
+    "0x435ae6ce"
+   ]
+  },
+  {
+   "start": "0x435aeb18",
+   "end": "0x435aebd2",
+   "name": "JogMain::SendEvent",
+   "class": "JogMain",
+   "role": "arma el mensaje de 12 B {key_code, deg, err} y lo entrega",
+   "jog_sites": [
+    "0x435aeb42",
+    "0x435aeb74",
+    "0x435aebb4"
+   ]
+  },
+  {
+   "start": "0x435aed30",
+   "end": "0x435aedc6",
+   "name": "JogFg::Exit",
+   "class": "JogFg",
+   "role": "libera el temporizador y el handler de eventos",
+   "jog_sites": [
+    "0x435aeda6"
+   ]
+  },
+  {
+   "start": "0x435aedd0",
+   "end": "0x435aef24",
+   "name": "JogFg::Start",
+   "class": "JogFg",
+   "role": "registra callback + temporizador de sondeo",
+   "jog_sites": [
+    "0x435aee00",
+    "0x435aeeac",
+    "0x435aeee6",
+    "0x435aef18"
+   ]
+  },
+  {
+   "start": "0x435af166",
+   "end": "0x435af1fa",
+   "name": "JogTpu::Exit",
+   "class": "JogTpu",
+   "role": "libera el temporizador y el handler de eventos",
+   "jog_sites": [
+    "0x435af1da"
+   ]
+  },
+  {
+   "start": "0x435af204",
+   "end": "0x435af358",
+   "name": "JogTpu::Start",
+   "class": "JogTpu",
+   "role": "registra callback + temporizador de sondeo",
+   "jog_sites": [
+    "0x435af234",
+    "0x435af2e0",
+    "0x435af31a",
+    "0x435af34c"
+   ]
+  },
+  {
+   "start": "0x435af582",
+   "end": "0x435af616",
+   "name": "JogVGrip::Exit",
+   "class": "JogVGrip",
+   "role": "libera el temporizador y el handler de eventos",
+   "jog_sites": [
+    "0x435af5f6"
+   ]
+  },
+  {
+   "start": "0x435af620",
+   "end": "0x435af774",
+   "name": "JogVGrip::Start",
+   "class": "JogVGrip",
+   "role": "registra callback + temporizador de sondeo",
+   "jog_sites": [
+    "0x435af650",
+    "0x435af6fc",
+    "0x435af736",
+    "0x435af768"
+   ]
+  },
+  {
+   "start": "0x435af848",
+   "end": "0x435af8b2",
+   "name": "JogVGrip::UpdateDataFromVgrip",
+   "class": "JogVGrip",
+   "role": "recibe 12 B del grip vertical y los reenvía",
+   "jog_sites": [
+    "0x435af890"
+   ]
+  },
+  {
+   "start": "0x435af968",
+   "end": "0x435af9ae",
+   "name": "JogKey::SetDev",
+   "class": "JogKey",
+   "role": "liga un JogKey a su JogDev (y fija el índice de key_code)",
+   "jog_sites": [
+    "0x435af990"
+   ]
+  },
+  {
+   "start": "0x435af9d0",
+   "end": "0x435afa76",
+   "name": "JogKey::SendKeyEvent",
+   "class": "JogKey",
+   "role": "calcula el delta y emite el evento de rueda",
+   "jog_sites": [
+    "0x435afa0c",
+    "0x435afa66"
+   ]
+  }
+ ],
+ "rtti": {
+  "JogDev": {
+   "typeinfo": "0x43fdaaf4",
+   "base": null,
+   "vtable": "0x43fbb640",
+   "slots": [
+    1134248261,
+    1134248261,
+    1134248261,
+    1134248261,
+    1134248261,
+    1134248261
+   ]
+  },
+  "JogFg": {
+   "typeinfo": "0x43fdaafc",
+   "base": "0x43fdaaf4",
+   "vtable": "0x43fbb660",
+   "slots": [
+    1134862921,
+    1130032593,
+    1130032433,
+    1134862937,
+    1134862929,
+    1134862933
+   ]
+  },
+  "JogTpu": {
+   "typeinfo": "0x43fdab08",
+   "base": "0x43fdaaf4",
+   "vtable": "0x43fbb680",
+   "slots": [
+    1134863047,
+    1130033669,
+    1130033509,
+    1134862963,
+    1134863029,
+    1134862967
+   ]
+  },
+  "JogVGrip": {
+   "typeinfo": "0x43fdab14",
+   "base": "0x43fdaaf4",
+   "vtable": "0x43fbb6a0",
+   "slots": [
+    1134863087,
+    1130034721,
+    1130034561,
+    1134863177,
+    1134863095,
+    1134863123
+   ]
+  }
+ },
+ "keycode_table": {
+  "addr": "0x43fdab20",
+  "entries": [
+   "0x11",
+   "0x12",
+   "0x16",
+   "0x17",
+   "0x14",
+   "0x15"
+  ]
+ },
+ "differential": {
+  "A6000_fw321": {
+   "path": "analysis/rea-independent/input/av-cam.bin",
+   "size": 11427236,
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "n_jog_token_occurrences": 14,
+   "n_jog_strings": 14,
+   "jog_strings": [
+    "[JOG]<Send Event> key_code = 0x%x, deg/sec = %d",
+    "[JOG]ERR. osal_alloc_timer. err=0x%x, line=%d",
+    "[JOG]ERR. osal_free_timer. err=0x%x, line=%d",
+    "[JOG]ERR. osal_set_timer. err=0x%x, line=%d",
+    "[JOG]ERR. osal_snd_msg. err=0x%x, line=%d",
+    "[JOG]ERR. osal_try_valloc_msg. err=0x%x, line=%d",
+    "[JOG]JogFg::%s:%d",
+    "[JOG]JogKey::%s:%d,Deg=0,Not Send",
+    "[JOG]JogKey::%s:%d,pos:%d->%d",
+    "[JOG]JogKey::%s:%d:0x%x,%d",
+    "[JOG]JogMain::%s:%d",
+    "[JOG]JogTpu::%s:%d",
+    "[JOG]JogVGrip::%s:%d",
+    "[JOG]UpdateDataFromVgrip SndErr, line=%d"
+   ],
+   "rtti_class_names": [
+    "13IllumiRPR0400",
+    "5JogFg",
+    "6JogDev",
+    "6JogTpu",
+    "8IllumiAd",
+    "8JogVGrip",
+    "8McAssert",
+    "9IllumiCam",
+    "9IllumiDev"
+   ],
+   "has_jogkey_text": true,
+   "has_send_event_text": true
+  },
+  "A7S_fw320": {
+   "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+   "size": 11455416,
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "n_jog_token_occurrences": 0,
+   "n_jog_strings": 0,
+   "jog_strings": [],
+   "rtti_class_names": [
+    "13IllumiRPR0400",
+    "5JogFg",
+    "6JogDev",
+    "6JogTpu",
+    "8IllumiAd",
+    "8JogVGrip",
+    "8McAssert",
+    "9IllumiCam",
+    "9IllumiDev"
+   ],
+   "has_jogkey_text": false,
+   "has_send_event_text": false
+  },
+  "A6300_fw201": {
+   "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+   "size": 13382836,
+   "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16",
+   "n_jog_token_occurrences": 0,
+   "n_jog_strings": 0,
+   "jog_strings": [],
+   "rtti_class_names": [
+    "13IllumiRPR0400",
+    "5JogFg",
+    "6JogDev",
+    "6JogTpu",
+    "7JogCaif",
+    "8IllumiAd",
+    "8McAssert",
+    "9IllumiCam",
+    "9IllumiDev"
+   ],
+   "has_jogkey_text": false,
+   "has_send_event_text": false
+  }
+ }
+}
