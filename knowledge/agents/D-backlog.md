@@ -8,7 +8,7 @@ Tema distinto de A (sensor/driver), B (imager estado) y C (ruta de control): dec
 - S503 [ZPD] zero point detection DONE aa19fb01
 - S504 [STABILIZER] DONE 0258cf16
 - S505 [VEF] visor EVF (149 trazas) DONE 2348326f
-- S506 [TD] (73 trazas)
+- S506 [TD] (73 trazas) DONE 6d4db7a5
 - S507 [VIDENCSTAT] (70 trazas)
 - S508 [GOLFSHOT] (65 trazas)
 - S509 [WSX] (59 trazas)
