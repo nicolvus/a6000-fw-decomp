@@ -17,13 +17,14 @@ recuperación y pipeline de captura. El obturador electrónico es un
 
 | fecha | sesión | alcance | hitos |
 |---|---|---|---|
-| **22-10-2026** | **sesión actual**: línea de RE general por módulos + línea del obturador electrónico | continuación IMX210 S140–S152; mapa, filas G y ruta estática de lectura diagnóstica del byte gap; control positivo ElecShutter A6300 (S135) | S140–S152 |
+| **22-10-2026** | **sesión actual**: línea de RE general por módulos + línea del obturador electrónico | continuación IMX210 S140–S153; mapa, filas G, lectura diagnóstica del gap y gates del volcado; control positivo ElecShutter A6300 (S135) | S140–S153 |
 | 20-10-2026 | transporte IMX210, SetMode/SetExposure emulados, inyección PMCA, montura E-mount | 50 commits | S54–S66 |
 | 19-10-2026 | base de la RE general y de la línea del obturador (payload, VD, callbacks, tabla PIC) | 5 commits | S16–S53 |
 | 18-10-2026 | sistema de conocimiento: indexación FTS5, grafo de conocimiento, CLI + servidor MCP, skills, benchmarks y **checkpoints de sesión** (`knowledge/checkpoints/`) | 5 checkpoints | — |
 
 ## Fases recientes (más nuevas primero)
 Cada enlace lleva a su informe; el resumen de hallazgos está en el [catálogo](docs/capture/linea-general-re.md) y en el [historial](docs/history/README-historial-2026-10-21.md).
+- [S153: flags de lectura del volcado gap](docs/capture/s153-imager-dump-gates.md): REA/bytes confirman los gates `+3 & 2` y `+6 & 0x20` en el dumper de descriptores; refs directas solo leen los bits y el estado estático es cero. **No hay escritor/valor runtime confirmado**; no prueba ausencia global ni camino de captura. [Script](analysis/s153_imager_dump_gates/verify_gates.py) · 3 tests.
 - [S152: descriptores de diagnóstico leen el byte `G+0x278`](docs/capture/s152-imager-gap-descriptor-read.md): dos tablas de registros contienen `{id=0x30,size=1,addr=0x43eb0850}`; `FUN_43858338` puede seleccionar el copiador raw que lee ese byte y lo vuelca al buffer. Los gates runtime siguen **PARCIALES**, no hay escritura ni efecto físico demostrado. [Script](analysis/s152_imager_descriptor_reads/verify_descriptor_reads.py) · 3 tests.
 - [S150: referencias directas a los huecos `+8/+9` de filas G](docs/capture/s150-imager-row-gaps.md): xrefs REA vacíos en las ocho direcciones exactas, con límite explícito; control positivo de lecturas en inicio de fila. Búsqueda completa además encuentra dos literales de puntero a `0x43eb0850`, dentro de celdas de datos no interpretadas: **pista de consumidor, no prueba de acceso**. [Script](analysis/s150_imager_row_gaps/verify_gap_refs.py) · 3 tests.
 - [S149: helpers del builder y hueco `+8/+9` de las filas G](docs/capture/s149-imager-row-helpers.md): se corrige una interpretación inicial de este hito: `0x4383c9dc` sí hace cuatro iteraciones (`count=4`, stride `0x10`) y escribe las cuatro filas; ninguno de los cuatro helpers auditados escribe campos de fila `+8/+9`. **Parcial:** solo esa ruta y gates; otros escritores no excluidos. [Script](analysis/s149_imager_row_helpers/verify_helper_stores.py) · 3 tests.
