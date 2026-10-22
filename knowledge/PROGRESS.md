@@ -2407,3 +2407,14 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 ## S101 — selector del tipo de mecanismo y consumidores de los campos de ajuste (21-10-2026, línea del obturador)
 - Hecho: análisis estático de `+0x238`/`+0x280`, del tipo de mecanismo de Darwin (A6000/A7S/A6300), de los 12 puntos abiertos, del grafo de módulos y del selector de tipo de A6000/A7S. Plan de pruebas físicas redactado, sin ejecutar. Detalle: [docs/capture/s101-conclusions.md](../docs/capture/s101-conclusions.md). Nota: en commits aparece como S70/S71/S72 (numeración usada además por otros hitos).
 - Abierto: qué ajuste gobierna `G+0x808` y quién lo rellena; P0–P8 del plan físico.
+
+## Agente E (Nemotron 3 Ultra Free) — carril módulos exclusivos A6000 (22-10-2026, línea general)
+- Hecho: decodificación de 5 módulos exclusivos de la A6000 fw3.21 (0 en A7S/A6300), todos con patrón **cambio de logging, no de código** (mismo código subyacente, prefijo de traza nuevo, duplicación con logger global):
+  - **S600** `[CAM_FUNC_MGR]` (43 trazas) → **S177** ya existía, confirmado.
+  - **S601** `[CAM_SCALAR]` (34 trazas) → **S179** ya existía, confirmado.
+  - **S602** `[REMOTE]` (32 trazas) → **S180** ya existía, confirmado.
+  - **S603** `[CAMERA_DSP_APL]` (18 trazas): driver APL/SAPL de memoria eSRAM/DDR y DMA; logger común `FUN_436bd784`; duplicación con logger global `0x43902770`; prefijo 21–24 B. Doc: `docs/capture/s603-camera-dsp-apl.md`.
+  - **S604** `[LENS_YC]` (21 trazas) + `[IMAGING_RAW]` (20 trazas): `Camera::Lens` + ODL (aberraciones objetivo) y `RawMemMgr` (memoria RAW, MemPool/MemQue); ambos con prefijo ajustado al nombre (10 B y 14 B), duplicación con logger global, 0/0 en A7S/A6300 para el token, 21/21 y 20/20 para el núcleo. Doc: `docs/capture/s604-lens-yc-imaging-raw.md`.
+- Cola regenerada con **26 módulos pendientes** (S605–S630) ordenados por tamaño: `[JPEG]` 17, `[NSX_VOT]` 7, `[CAM_CMD]`/`[MOUNT_INFO]` 6, `[DIST]`/`[HOUSING]`/`[IMAGING_RSRC]`/`[MOUNT]`/`[MOUNT_WARNING]`/`[ZPD]` 5, etc. Ficheros: `docs/agents/queue-E.md`, `knowledge/agents/E-backlog.md`.
+- Tests: `python -m pytest tests/knowledge -q` 67/67 PASS; grafo estable 1455 entidades / 2879 relaciones; `git diff --check` PASS.
+- Próximo paso exacto: **S605** `[JPEG]` (17 trazas) — buscar strings, xrefs, diferencial A7S/A6300, logging rewrite, clase RTTI/estructura, verificación obturador.

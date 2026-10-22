@@ -2,39 +2,35 @@
 
 Tema distinto de A/B/C: decodificación de módulos exclusivos de la A6000 fw3.21 (0 en A7S/A6300). Numeración S600–S699.
 
-- ✅ S600 [CAM_FUNC_MGR] (43 trazas) — DONE
-- ✅ S601 [CAM_SCALAR] (34 trazas) — DONE
-- ✅ S602 [REMOTE] (32 trazas) — DONE
-- ✅ S603 [CAMERA_DSP_APL] — DONE
-- ✅ S604 [LENS_YC], [IMAGING_RAW] — DONE
-
-## Próximos (censo S178, exclusivos A6000):
-
-- S605 [JPEG] (17 trazas, parcial A7S)
-- S606 [NSX_VOT]
-- S607 [CAM_CMD]
-- S608 [MOUNT_INFO]
-- S609 [DIST]
-- S610 [HOUSING]
-- S611 [IMAGING_RSRC]
-- S612 [MOUNT]
-- S613 [MOUNT_WARNING]
-- S614 [ZPD]
-- S615 [EIS]
-- S616 [LENS_PDR]
-- S617 [CAMERA_DEVICE]
-- S618 [DET_DIR]
-- S619 [SENSER]
-- S620 [STABILIZER]
-- S621 [AVOUT]
-- S622 [AVR]
-- S623 [JIRO]
-- S624 [UTILITY]
-- S625 [ADR]
-- S626 [CAMERA_DETECT_FC]
-- S627 [EO_SW]
-- S628 [FILE_NUM]
-- S629 [FSYSMODE]
-- S630 [RING_DIAL]
-
-- regenerar al vaciar con siguientes del censo S178
+- S600 [CAM_FUNC_MGR] (43 trazas) → DONE (S177)
+- S601 [CAM_SCALAR] (34 trazas) → DONE (S179)
+- S602 [REMOTE] (32 trazas) → DONE (S180)
+- S603 [CAMERA_DSP_APL] (18 trazas) → DONE (S603)
+- S604 [LENS_YC] (21 trazas), [IMAGING_RAW] (20 trazas) → DONE (S604)
+- S605 [JPEG] (17 trazas)
+- S606 [NSX_VOT] (7 trazas)
+- S607 [CAM_CMD] (6 trazas)
+- S608 [MOUNT_INFO] (6 trazas)
+- S609 [DIST] (5 trazas)
+- S610 [HOUSING] (5 trazas)
+- S611 [IMAGING_RSRC] (5 trazas)
+- S612 [MOUNT] (5 trazas)
+- S613 [MOUNT_WARNING] (5 trazas)
+- S614 [ZPD] (5 trazas)
+- S615 [EIS] (4 trazas)
+- S616 [LENS_PDR] (4 trazas)
+- S617 [CAMERA_DEVICE] (3 trazas)
+- S618 [DET_DIR] (3 trazas)
+- S619 [SENSER] (3 trazas)
+- S620 [STABILIZER] (3 trazas)
+- S621 [AVOUT] (2 trazas)
+- S622 [AVR] (2 trazas)
+- S623 [JIRO] (2 trazas)
+- S624 [UTILITY] (2 trazas)
+- S625 [ADR] (1 traza)
+- S626 [CAMERA_DETECT_FC] (1 traza)
+- S627 [EO_SW] (1 traza)
+- S628 [FILE_NUM] (1 traza)
+- S629 [FSYSMODE] (1 traza)
+- S630 [RING_DIAL] (1 traza)
+- regenerar al vaciar
