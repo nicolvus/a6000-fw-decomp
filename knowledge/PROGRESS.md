@@ -46,6 +46,15 @@
 - Pruebas: unittest S146 3/3 PASS; suite S140–S146 + knowledge 82/82 PASS; `git diff --check` PASS. Commit `0a865472` publicado en `origin/main`.
 - Siguiente: recorrido estático de bytes con `read_bytes` REA para localizar stores/gates, o mover a otra pregunta independiente; no repetir `file-offset:` como seeding.
 
+## Investigación S147 — referencias y writer de filas G
+
+- Pregunta: clasificar cinco xrefs REA a `G+0x224` y comprobar si alguno escribe las cuatro filas.
+- Evidencia REA: xrefs `ev_7375812f6a63afe1d0db14b91c6cec50187e7d53a2f6bd7a4436500fb2ec9df0`; builder `0x4383bf2c` `ev_5305a4dbabf37e02baec4bd8b258137d9e733c0817ce4b373defe5a8ecc12203`; writer `0x4383c9dc` `ev_cd6567d4fb0af5c12b4d8d21ee30a574ca5bd289cfba828745757f185d89ecb2`, pseudocode paginado `ev_d4653d3615add43984db5b04eb31c812b23d2a5865e6038908736caf291fd05a` + `ev_9caa8366dd8aa3149c26482110e5523aa6132b3fd299d39fb05de95a2003380e`.
+- Resultado: un path observado escribe en cuatro filas 16 B, offset base `G+0x224+0x2c`, stores relativos 0/4/6/a/c/e; no se atribuye semántica física. Los otros xrefs son pasos/lecturas; por cobertura limitada se conserva PARCIAL.
+- Artefactos: `analysis/s147_imager_g_rows/{verify_g_rows.py,g_rows.json}`, `tests/test_s147_imager_g_rows.py`, `docs/capture/s147-imager-g-rows.md`.
+- Pruebas: unittest 3/3 PASS; pendiente suite, commit y push.
+- Siguiente: revisar helpers `0x4383bfd4`, `0x4383c818`, `0x43b08786` para cerrar escrituras faltantes por evidencia, sin semántica física.
+
 Checkpoint persistente. Actualizar al terminar cada etapa, antes de continuar
 con la siguiente. No reescribir historial: añadir entradas nuevas.
 
