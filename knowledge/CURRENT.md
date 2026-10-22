@@ -1668,3 +1668,16 @@ siguiente paso es el consumidor de `0x43ad9704`. [S308](../docs/capture/s308-sil
 `analysis/s308_silent_flow/flow.json` (3 tests).
 
 **Siguiente:** consumidor de la estructura de `0x43ad9704` (dónde se lee el modo 0x4e/0x4f).
+
+## S309 — la cadena silent/config de la A7S no está en la A6000 (22-10-2026, agente B)
+
+Siete funciones (`0x43548c70` caller, `0x43826d58` selector, `0x43ad96fa` mensaje,
+`0x43861a58` config, `0x438645bc` tiempos, `0x438642f0` trío, `0x43865100` `+0xde`): **0
+coincidencias** de sus primeros 24 B en la A6000. Una firma de 12 B de `0x438642f0` sí aparecía,
+pero era un prólogo genérico; con 24 B desaparece. Implica que la diferencia es código ausente,
+no un valor distinto; la A6000 tiene su propia ruta de configuración (escribe `+0x02` desde 4
+funciones, S300). Límite: no descarta una reescritura equivalente. [S309](../docs/capture/s309-chain-presence.md),
+`analysis/s309_chain_presence/presence.json` (3 tests).
+
+**Siguiente:** comparar la ruta de configuración propia de la A6000 (writers de `+0x02`) o el
+consumidor del mensaje de `0x43ad96fa`.

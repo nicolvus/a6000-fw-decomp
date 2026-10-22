@@ -1,0 +1,68 @@
+{
+  "milestone": "S309",
+  "title": "la cadena silent/config de la A7S no aparece en la A6000",
+  "firmware": {
+    "a6000": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+    "a7s": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+  },
+  "base": "0x43541000",
+  "chain": [
+    {
+      "label": "selector_caller",
+      "entry": "0x43548c70",
+      "role": "configura y llama al selector silent",
+      "head_hex": "2de9f04fadf59e6ddff84c5a81b090f8783d04467d44002b",
+      "insn": "push.w {r4, r5, r6, r7, r8, sb, sl, fp, lr}",
+      "a6000_hits": 0
+    },
+    {
+      "label": "selector",
+      "entry": "0x43826d58",
+      "role": "tipo==2 -> 0x4e/0x4f",
+      "head_hex": "052808b50b4620d01b2823d0022a0bd141b101291bd01048",
+      "insn": "cmp r0, #5",
+      "a6000_hits": 0
+    },
+    {
+      "label": "message_builder",
+      "entry": "0x43ad96fa",
+      "role": "recibe el codigo de modo",
+      "head_hex": "08b503685b6e984708bd10b5039c0068bde8104000f0e4b9",
+      "insn": "push {r3, lr}",
+      "a6000_hits": 0
+    },
+    {
+      "label": "config_caller",
+      "entry": "0x43861a58",
+      "role": "construye el buffer y llama al bloque de tiempos",
+      "head_hex": "2de9f047b6b0924605460e46aaf63afa704c00227c440746",
+      "insn": "push.w {r4, r5, r6, r7, r8, sb, sl, lr}",
+      "a6000_hits": 0
+    },
+    {
+      "label": "timing_block",
+      "entry": "0x438645bc",
+      "role": "lee +0xae, escribe +0xde/+0xe6..+0xea",
+      "head_hex": "84b0f0b5a3b028ace24d489e84e80f000021e14c88227d44",
+      "insn": "sub sp, #0x10",
+      "a6000_hits": 0
+    },
+    {
+      "label": "trio_writer",
+      "entry": "0x438642f0",
+      "role": "escribe +0xe6/+0xe8/+0xea",
+      "head_hex": "f0b585b00c220446002101a84ff17eee304b314d7b447d44",
+      "insn": "push {r4, r5, r6, r7, lr}",
+      "a6000_hits": 0
+    },
+    {
+      "label": "de_writer",
+      "entry": "0x43865100",
+      "role": "escribe +0xde",
+      "head_hex": "84b02de9f047a0b028ad474c85e80f000022464b68462946",
+      "insn": "sub sp, #0x10",
+      "a6000_hits": 0
+    }
+  ],
+  "scope_limit": "Coincidencia exacta de 24 B de pr\u00f3logo; no prueba ausencia de funcionalidad equivalente reescrita en la A6000."
+}
