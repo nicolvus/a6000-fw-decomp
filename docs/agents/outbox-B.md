@@ -1,1 +1,2 @@
 - S300 (rev.2, `b2f5ff12`): barrido único de 67 xrefs al estado IMX210 de la A6000. Cero escritores de `+3`/`+6`; únicos stores `+0x00` y `+0x02`. Corregido el sesgo +0x58 de la rev.1. Siguiente: S301 (A7S fw3.20).
+- S301 (`ef9ec487`): barrido A7S. Estado en `0x43f7bce6`; gates `+3`/`+6` idénticos a la A6000 (no son el mecanismo). La A7S escribe `+0xde` y `+0xe6/+0xe8/+0xea` y lee 11 campos que la A6000 no. Siguiente: S302 (drive modes A7S↔A6000).
