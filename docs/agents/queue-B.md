@@ -32,3 +32,10 @@
 
 - BACKLOG S317 Identificar índice/consumidor de las 68 filas de `0x43fee5ac` (`{ptr,16 B}`) y su relación con los drive modes (S302).
 - BACKLOG S318 Resolver constructor/vtable de `[0x43e8dd98]` (objeto de `0x43ad9704`) o documentar la frontera cross-module.
+
+- DONE S316 Clase dueña de las listas: constructor `0x436f27b4` (vptr `0x43fce050` desde GOT `0x4402ac80`=`0x43fce048`), metadata de vtable `0x43fce048` (offset-to-top 0, typeinfo `0x43feeb20`), **45** entradas `0x43fce050..0x43fce100`, terminador `0x43fce104`. Métodos de listas en slots `+0x38` (`0x436f5a14`) y `+0x44` (`0x436f53f4`); wrapper de creación/registro `0x43ad9840` en slot `+0x04`. Campos `+0x1ac/+0x1b0/+0x2b4/+0x2dc/+0x394/+0x3dc` documentados. **0 firmas** en la A6000. Evidencia: `docs/capture/s316-class-vtable.md`, `analysis/s316_class_vtable/class.json` (81 comprobaciones, 6 tests).
+
+- TODO S317 Identificar la tabla indexada por `obj+0x2b4` (`ldr r0,[r3,r2,lsl#2]` en `0x436f4546`) y comprobar si es la tabla de 34 códigos de S302 (`0x43fee370`) o la de 68 filas de `0x43fee5ac`; después, quién escribe `+0x1b0/+0x1ac` (`0x11`) para cerrar la selección de modo.
+
+- BACKLOG S318 Resolver constructor/vtable de `[0x43e8dd98]` (objeto de `0x43ad9704`) o documentar la frontera cross-module.
+- BACKLOG S319 Cerrar la frontera del `ctx` `0x43ea709e`: buscar en módulos hermanos (`liro.ko`, `libObj.so`) el escritor de `[ctx]`/`[ctx+8]`.
