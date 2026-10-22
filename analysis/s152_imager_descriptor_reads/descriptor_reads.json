@@ -1,0 +1,51 @@
+{
+  "milestone": "S152",
+  "firmware_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "base": "0x43541000",
+  "descriptor_schema_observed_by_bytes": "{u16 id, u16 size, u32 address}, little-endian; 8 bytes",
+  "matching_entries": [
+    {
+      "table_address": "0x44008028",
+      "table_file_offset": "0xac7028",
+      "entry_count_including_terminator": 68,
+      "terminator_index": 67,
+      "target_index": 32,
+      "target_entry_address": "0x44008128",
+      "entry_raw_hex": "300001005008eb43",
+      "entry_fields": {
+        "id_u16_le": "0x0030",
+        "size_u16_le": 1,
+        "address_u32_le": "0x43eb0850"
+      }
+    },
+    {
+      "table_address": "0x4400b248",
+      "table_file_offset": "0xaca248",
+      "entry_count_including_terminator": 59,
+      "terminator_index": 58,
+      "target_index": 6,
+      "target_entry_address": "0x4400b278",
+      "entry_raw_hex": "300001005008eb43",
+      "entry_fields": {
+        "id_u16_le": "0x0030",
+        "size_u16_le": 1,
+        "address_u32_le": "0x43eb0850"
+      }
+    }
+  ],
+  "rea": {
+    "raw_copy_formatter": "0x43b09c7a reads address+size-1 downward and writes into caller buffer",
+    "size_one_result": "reads exactly one byte at address 0x43eb0850",
+    "reachability": "two caller-side gates are statically identified; their runtime values are unknown",
+    "write_effect": "the identified copier writes the destination buffer, not the source address"
+  },
+  "evidence_ids": {
+    "table_a_entry": "ev_f8bd0f66f1e8d90f997d6ea0c37e47e3911c40c8dc9de66f9652bfca536f4289",
+    "table_b_entry": "ev_01d929687b87aa4343c193261123044fac8ffad3ae264dda33a77826adfffa90",
+    "consumer_copier": "ev_2d31ad1d2d49ace2985775034cfc294bb17251c7e6930056dfb4cb9c47716ffa",
+    "consumer_hex_formatter": "ev_6efbdb9318dab3f4c890adbbc9f1e066ffa8905d6ccb639967336a706653e212",
+    "caller_gates": "ev_f944e886a327ba29e26b3daefbb015d751b348023b937b6ee1eae21ed370ddc3",
+    "gate_state_zero_in_blob": "ev_bb32443f6fbf218e8e633251877e90f9a85a57324d21e818d58e4f45a8d72c0f"
+  },
+  "scope_limit": "Identified static diagnostic-copy path only; it does not establish runtime reachability or global absence of other writers/readers."
+}

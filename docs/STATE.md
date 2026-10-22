@@ -75,6 +75,10 @@ La instrucción completa de `0x4383c9dc` confirma contador inicial 4, incremento
 
 REA no tiene xrefs directas para las ocho direcciones exactas de huecos `+8/+9`, con control positivo de refs a una base de fila. Búsqueda literal completa encuentra dos celdas de datos cuyo primer word apunta a `0x43eb0850`; sin consumidor o criterio de tabla identificado, es solo pista, no acceso demostrado. [S150](capture/s150-imager-row-gaps.md).
 
+## Avance S152 — descriptor de diagnóstico al hueco
+
+S152 identifica las dos referencias literales de S150 como campos `addr` de tablas A[32] y B[6], ambas `{id=0x30,size=1,addr=0x43eb0850}`. El copiador `0x43b09c7a` lee de addr según size y escribe al buffer llamador: con size=1 lee un byte del gap, no lo modifica. Las puertas dependen de flags BSS cuyo valor runtime se desconoce; alcanzabilidad PARTIAL. [S152](capture/s152-imager-gap-descriptor-read.md).
+
 Mecanismo de PMCA identificado y contrastado con el firmware 3.21: `updatershell` inyecta un fdat propio (cramfs con `libupdaterbody`, header de 0x30 B por modelo, guard CRC + modelo/región/versión **sin firma**; CXD90014) que el updater ejecuta y expone un shell USB `0x23`; `serviceshell` (senser, HASP) da terminal, backup `0x603`, ficheros y memoria. `bk w 0x003e0005` escribe la propiedad BK4 `modelName` (subsistema `0x3e`/índice 5, 16 B, attr solo-lectura) en el almacén `/setting` (`nflasha2`), no una dirección de código; el preset de fábrica la trae como `ILCE-6000` (verificado). El cambio a `ILCE-6001` está reportado pero su efecto «shell mode» queda **NO VERIFICADO**: la cadena no existe en el firmware. S51 **A=NO, B=NO, C=NO**. [Documento](capture/s62-pmca-injection.md) · [matriz](../analysis/s62-evidence-matrix.json).
 
 ## Avance S58 (20-10-2026)
