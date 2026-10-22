@@ -37,6 +37,10 @@ Fuente de métricas: [`analysis/s178_census/census.md`](analysis/s178_census/cen
 El flujo [Pages](.github/workflows/pages.yml) publica solo `site/`; el generador
 `scripts/build_pages_status.py` actualiza el índice y genera `docs/progress/index.html` y los badges `site/badge-*.json` y `progress.svg` (solo en Pages).
 
+### Fase del agente A — sensor y driver (S200–S204)
+
+Completado: comparación de registros y tiempos de lectura/exposición IMX235 (A7S fw3.20) vs IMX210 (A6000 fw3.21), una tabla por subsistema (`docs/capture/s201-imx210-imx235-registers.md`, `s202-imx210-imx235-timing.md`, `s204-clasificacion-final.md`). La A7S implementa el obturador silencioso por **drive mode** (`tipo==2` → modos `0x4e`/`0x4f`, selector `0x43826d58`) y su tabla de timings, no por `CheckSet*` de LiroSeq (0/0 en ambos) ni por mensaje `…ForLiro` (rechazado en ambos). La A6000 no tiene modos de lectura silenciosa equivalentes. **S51 sin cambios (A=NO, B=NO, C=NO).**
+
 ## Objetivo técnico vigente
 
 Responder con evidencia estática si la A6000 puede soportar captura totalmente electrónica a resolución completa, separando siempre:
