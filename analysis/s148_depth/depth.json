@@ -1,0 +1,532 @@
+{
+ "hito": "S148",
+ "modulo": "[DEPTH]",
+ "fw": "A6000 fw3.21",
+ "base": "vaddr = 0x43541000 + file_offset",
+ "regla_pic": "estricta (analysis/s106_imaging_cap/scan_pic_refs_strict.py)",
+ "contadores": {
+  "n_cadenas": 16,
+  "n_textos_distintos": 16,
+  "rango": [
+   "0x43c249ec",
+   "0x43c24c73"
+  ],
+  "n_sitios_pic": 17,
+  "n_funcs_emisoras": 11,
+  "n_funcs_modulo_total": 22,
+  "n_comandos": 6,
+  "n_muertas": 0
+ },
+ "cadenas": [
+  {
+   "addr": "0x43c249ec",
+   "text": "[DEPTH][INFO]Regist Dummy Receiver 0x %08X",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x435622ba",
+     "ldr": "0x435622b8",
+     "pool": "0x435622d0",
+     "pool_value": "0x006c272e",
+     "dest": "0x43c249ec",
+     "func": "0x4356228c"
+    }
+   ]
+  },
+  {
+   "addr": "0x43c24a17",
+   "text": "[DEPTH][INFO]Rsp: cid = %08X, status = %d, valueDepth = %d",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x435622ec",
+     "ldr": "0x435622ea",
+     "pool": "0x43562304",
+     "pool_value": "0x006c2727",
+     "dest": "0x43c24a17",
+     "func": "0x435622d4"
+    }
+   ]
+  },
+  {
+   "addr": "0x43c24a52",
+   "text": "[DEPTH][INFO]status = %d, valueDepth = %d",
+   "n_sites": 2,
+   "sites": [
+    {
+     "site": "0x43562338",
+     "ldr": "0x43562336",
+     "pool": "0x43562350",
+     "pool_value": "0x006c2716",
+     "dest": "0x43c24a52",
+     "func": "0x4356230c"
+    },
+    {
+     "site": "0x43562444",
+     "ldr": "0x43562442",
+     "pool": "0x43562450",
+     "pool_value": "0x006c260a",
+     "dest": "0x43c24a52",
+     "func": "0x43562424"
+    }
+   ]
+  },
+  {
+   "addr": "0x43c24a7c",
+   "text": "[DEPTH][INFO]usage: notifyOff respGID(as HEX)",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43562366",
+     "ldr": "0x4356235e",
+     "pool": "0x435623b4",
+     "pool_value": "0x006c2712",
+     "dest": "0x43c24a7c",
+     "func": "0x43562356"
+    }
+   ]
+  },
+  {
+   "addr": "0x43c24aaa",
+   "text": "[DEPTH][INFO]ret = %08X",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x4356239c",
+     "ldr": "0x4356239a",
+     "pool": "0x435623b8",
+     "pool_value": "0x006c270a",
+     "dest": "0x43c24aaa",
+     "func": "0x43562356"
+    }
+   ]
+  },
+  {
+   "addr": "0x43c24ac2",
+   "text": "[DEPTH][INFO]usage: notifyOn respGID(as HEX)",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x435623ce",
+     "ldr": "0x435623c6",
+     "pool": "0x4356241c",
+     "pool_value": "0x006c26f0",
+     "dest": "0x43c24ac2",
+     "func": "0x435623be"
+    }
+   ]
+  },
+  {
+   "addr": "0x43c24aef",
+   "text": "[DEPTH][INFO]ret = 0x%08X",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43562402",
+     "ldr": "0x43562400",
+     "pool": "0x43562420",
+     "pool_value": "0x006c26e9",
+     "dest": "0x43c24aef",
+     "func": "0x435623be"
+    }
+   ]
+  },
+  {
+   "addr": "0x43c24b09",
+   "text": "[DEPTH][INFO]usage: Update status(as HEX) valueDepth(as HEX)",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43562464",
+     "ldr": "0x4356245c",
+     "pool": "0x43562488",
+     "pool_value": "0x006c26a1",
+     "dest": "0x43c24b09",
+     "func": "0x43562456"
+    }
+   ]
+  },
+  {
+   "addr": "0x43c24b96",
+   "text": "[DEPTH][INFO]GET %d %d",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43562652",
+     "ldr": "0x43562650",
+     "pool": "0x4356265c",
+     "pool_value": "0x006c2540",
+     "dest": "0x43c24b96",
+     "func": "0x43562634"
+    }
+   ]
+  },
+  {
+   "addr": "0x43c24bad",
+   "text": "[DEPTH][INFO]NOTIFY to %08X %d %d",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x435626b8",
+     "ldr": "0x435626b6",
+     "pool": "0x435626d0",
+     "pool_value": "0x006c24f1",
+     "dest": "0x43c24bad",
+     "func": "0x43562660"
+    }
+   ]
+  },
+  {
+   "addr": "0x43c24bcf",
+   "text": "[DEPTH][INFO]UPDATE %d %d",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43541b28",
+     "ldr": "0x43541b26",
+     "pool": "0x43541bb4",
+     "pool_value": "0x006e30a3",
+     "dest": "0x43c24bcf",
+     "func": "0x43541b02"
+    }
+   ]
+  },
+  {
+   "addr": "0x43c24be9",
+   "text": "[DEPTH][DEBUG]NOTTIFY_ON %08X",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x4356270c",
+     "ldr": "0x4356270a",
+     "pool": "0x435627cc",
+     "pool_value": "0x006c24d9",
+     "dest": "0x43c24be9",
+     "func": "0x435626d4"
+    }
+   ]
+  },
+  {
+   "addr": "0x43c24c07",
+   "text": "[DEPTH][WARN]ERR NOTTIFY_ON %08X %08X",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x4356273e",
+     "ldr": "0x4356273c",
+     "pool": "0x435627d0",
+     "pool_value": "0x006c24c5",
+     "dest": "0x43c24c07",
+     "func": "0x435626d4"
+    }
+   ]
+  },
+  {
+   "addr": "0x43c24c2d",
+   "text": "[DEPTH][DEBUG]NOTTIFY_OFF %08X",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43562764",
+     "ldr": "0x43562762",
+     "pool": "0x435627d4",
+     "pool_value": "0x006c24c5",
+     "dest": "0x43c24c2d",
+     "func": "0x435626d4"
+    }
+   ]
+  },
+  {
+   "addr": "0x43c24c4c",
+   "text": "[DEPTH][WARN]ERR NOTTIFY_OFF %08X %08X",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43562786",
+     "ldr": "0x43562784",
+     "pool": "0x435627d8",
+     "pool_value": "0x006c24c2",
+     "dest": "0x43c24c4c",
+     "func": "0x435626d4"
+    }
+   ]
+  },
+  {
+   "addr": "0x43c24c73",
+   "text": "[DEPTH][WARN]ERR Invalid Command %08X %08X",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x435627a6",
+     "ldr": "0x435627a4",
+     "pool": "0x435627dc",
+     "pool_value": "0x006c24c9",
+     "dest": "0x43c24c73",
+     "func": "0x435626d4"
+    }
+   ]
+  }
+ ],
+ "funcs_emisoras": [
+  "0x43541b02",
+  "0x4356228c",
+  "0x435622d4",
+  "0x4356230c",
+  "0x43562356",
+  "0x435623be",
+  "0x43562424",
+  "0x43562456",
+  "0x43562634",
+  "0x43562660",
+  "0x435626d4"
+ ],
+ "funcs_roles": {
+  "0x43541b00": "implementacion de `update`: recorta valueDepth a 0xFA0 y traza 'UPDATE'",
+  "0x4356228c": "handler del comando `enableDummyRecv` (registra el receptor 'dummy')",
+  "0x435622d4": "callback de respuesta (Rsp): traza cid/status/valueDepth y libera el mensaje",
+  "0x4356230c": "handler del comando `getMsg`",
+  "0x43562354": "handler del comando `notifyOff`",
+  "0x435623bc": "handler del comando `notifyOn`",
+  "0x43562424": "handler del comando `getLiro`",
+  "0x43562454": "handler del comando `update` (parsea 2 hexadecimales)",
+  "0x4356248c": "registro del modulo: init + alta con el nombre 'depth' y su tabla de comandos",
+  "0x435624b0": "constructor de la clase DepthGaugeMain (fija el vptr 0x43FB8F50)",
+  "0x43562578": "fija el vptr de un objeto DepthGaugeMain",
+  "0x43562590": "init: registra el callback de notificacion (0x43A3ACE2) con 0x439B4244",
+  "0x435625dc": "init: da de alta el modulo como receptor del GID 0x018B04DC",
+  "0x43562618": "getLiro interno: envia una peticion al GID 0x018B04DC y lee el valor",
+  "0x43562634": "manejador de la notificacion GET (traza 'GET %d %d')",
+  "0x43562660": "emite la notificacion al GID destino (traza 'NOTIFY to ...')",
+  "0x435626d4": "despachador de notificaciones: cmd 1=GET, 2=NOTIFY_ON, 3=NOTIFY_OFF",
+  "0x43a3abfe": "funcion de arranque que da de alta el modulo 'depth'",
+  "0x43a3ac8c": "API: conversion de cadena hexadecimal (strtoul base 16)",
+  "0x43a3ac98": "API: getMsg -> 0x43562634",
+  "0x43a3acaa": "API: update -> 0x43541B00",
+  "0x43a3acbc": "API: getLiro -> 0x43562618"
+ },
+ "tabla_comandos": {
+  "a6000": "0x43fd7c30",
+  "a7s": "0x43fd9914",
+  "a6300": "0x4419920c",
+  "formato_entrada": "12 B: {char* nombre, char* nombre, puntero a handler}",
+  "entradas": [
+   {
+    "name": "update",
+    "handler": "0x43562454",
+    "handler_is_thumb": true
+   },
+   {
+    "name": "getLiro",
+    "handler": "0x43562424",
+    "handler_is_thumb": true
+   },
+   {
+    "name": "getMsg",
+    "handler": "0x4356230c",
+    "handler_is_thumb": true
+   },
+   {
+    "name": "notifyOn",
+    "handler": "0x435623bc",
+    "handler_is_thumb": true
+   },
+   {
+    "name": "notifyOff",
+    "handler": "0x43562354",
+    "handler_is_thumb": true
+   },
+   {
+    "name": "enableDummyRecv",
+    "handler": "0x4356228c",
+    "handler_is_thumb": true
+   }
+  ]
+ },
+ "datos_verificados": {
+  "gid": "0x018B04DC",
+  "clase": "14DepthGaugeMain (RTTI, 0x43C24B85)",
+  "type_info": "0x43FD7C84 (vptr 0x43FD04F8 + nombre)",
+  "vtable": "0x43FB8F50 (offset-to-top 0, type_info, 2 funciones virtuales)",
+  "nombre_registro": "depth (0x43C24B46)",
+  "singleton": "0x43E131E8",
+  "tabla_servicios_global": "0x4401EEE4",
+  "clamp_valueDepth": "0xFA0 (4000) en 0x43541B04",
+  "ids_notificacion": "1=GET, 2=NOTIFY_ON, 3=NOTIFY_OFF (0x435626D4)"
+ },
+ "consumidores_verificados": [
+  {
+   "fichero": "CS_ExifMakerNote.cpp (0x43CC56DC)",
+   "sitio": "0x438B900A",
+   "que_hace": "llama a getMsg (0x43A3AC98) y escribe el valor en el MakerNote: tag Exif 0x5001 = racional (valueDepth*10 : 1000) en 0x438B90A8 y tag 0x5002 = estado (0 / 0x80 / 0x81) en 0x438B90B8"
+  },
+  {
+   "fichero": "[ACCY][INFO][HOUSING] (0x43C25414)",
+   "sitio": "0x43564DC0",
+   "que_hace": "llama a update (0x43A3ACAA) con {status=2, valueDepth=0}"
+  },
+  {
+   "fichero": "[ACCY][INFO][HOUSING] (0x43C25414)",
+   "sitio": "0x43564ED2",
+   "que_hace": "llama a update (0x43A3ACAA) con el estado recibido"
+  }
+ ],
+ "linea_obturador": {
+  "menciona_obturador": 0,
+  "menciona_sensor": 0,
+  "menciona_exposicion": 0,
+  "menciona_enfoque": 0,
+  "menciona_lectura_sensor": 0,
+  "conclusion": "sin relacion con el obturador electronico; S51 (A/B/C = NO) intacto"
+ },
+ "diferencial": {
+  "a7s_fw320": {
+   "n_token_depth": 0,
+   "n_cadenas_depth": 0,
+   "n_cores_comunes": 0,
+   "cores_solo_a6000": [
+    "ERR Invalid Command %08X %08X",
+    "ERR NOTTIFY_OFF %08X %08X",
+    "ERR NOTTIFY_ON %08X %08X",
+    "GET %d %d",
+    "NOTIFY to %08X %d %d",
+    "NOTTIFY_OFF %08X",
+    "NOTTIFY_ON %08X",
+    "Regist Dummy Receiver 0x %08X",
+    "Rsp: cid = %08X, status = %d, valueDepth = %d",
+    "UPDATE %d %d",
+    "ret = %08X",
+    "ret = 0x%08X",
+    "status = %d, valueDepth = %d",
+    "usage: Update status(as HEX) valueDepth(as HEX)",
+    "usage: notifyOff respGID(as HEX)",
+    "usage: notifyOn respGID(as HEX)"
+   ],
+   "clase_depthgauge_main": 1,
+   "tabla_comandos": [
+    {
+     "name": "update",
+     "handler": "0x43a20010"
+    },
+    {
+     "name": "getLiro",
+     "handler": "0x43a1ffea"
+    },
+    {
+     "name": "getMsg",
+     "handler": "0x435600b8"
+    },
+    {
+     "name": "notifyOn",
+     "handler": "0x43560120"
+    },
+    {
+     "name": "notifyOff",
+     "handler": "0x435600e4"
+    },
+    {
+     "name": "enableDummyRecv",
+     "handler": "0x43560074"
+    }
+   ],
+   "gid_0x018b04dc": 6
+  },
+  "a6300_fw201": {
+   "n_token_depth": 0,
+   "n_cadenas_depth": 0,
+   "n_cores_comunes": 0,
+   "cores_solo_a6000": [
+    "ERR Invalid Command %08X %08X",
+    "ERR NOTTIFY_OFF %08X %08X",
+    "ERR NOTTIFY_ON %08X %08X",
+    "GET %d %d",
+    "NOTIFY to %08X %d %d",
+    "NOTTIFY_OFF %08X",
+    "NOTTIFY_ON %08X",
+    "Regist Dummy Receiver 0x %08X",
+    "Rsp: cid = %08X, status = %d, valueDepth = %d",
+    "UPDATE %d %d",
+    "ret = %08X",
+    "ret = 0x%08X",
+    "status = %d, valueDepth = %d",
+    "usage: Update status(as HEX) valueDepth(as HEX)",
+    "usage: notifyOff respGID(as HEX)",
+    "usage: notifyOn respGID(as HEX)"
+   ],
+   "clase_depthgauge_main": 1,
+   "tabla_comandos": [
+    {
+     "name": "update",
+     "handler": "0x43ac9378"
+    },
+    {
+     "name": "getLiro",
+     "handler": "0x43ac9352"
+    },
+    {
+     "name": "getMsg",
+     "handler": "0x4355a7cc"
+    },
+    {
+     "name": "notifyOn",
+     "handler": "0x4355a834"
+    },
+    {
+     "name": "notifyOff",
+     "handler": "0x4355a7f8"
+    },
+    {
+     "name": "enableDummyRecv",
+     "handler": "0x4355a788"
+    }
+   ],
+   "gid_0x018b04dc": 6
+  },
+  "a6000_fw321": {
+   "n_token_depth": 16,
+   "n_cadenas_depth": 16,
+   "n_cores_comunes": 16,
+   "cores_solo_a6000": [],
+   "clase_depthgauge_main": 1,
+   "tabla_comandos": [
+    {
+     "name": "update",
+     "handler": "0x43562454",
+     "handler_is_thumb": true
+    },
+    {
+     "name": "getLiro",
+     "handler": "0x43562424",
+     "handler_is_thumb": true
+    },
+    {
+     "name": "getMsg",
+     "handler": "0x4356230c",
+     "handler_is_thumb": true
+    },
+    {
+     "name": "notifyOn",
+     "handler": "0x435623bc",
+     "handler_is_thumb": true
+    },
+    {
+     "name": "notifyOff",
+     "handler": "0x43562354",
+     "handler_is_thumb": true
+    },
+    {
+     "name": "enableDummyRecv",
+     "handler": "0x4356228c",
+     "handler_is_thumb": true
+    }
+   ],
+   "gid_0x018b04dc": 6
+  }
+ },
+ "no_verificado": [
+  "que magnitud fisica mide 'valueDepth' (0..4000) y que significa 'status'",
+  "el fichero fuente que implementa el modulo: no hay ningun nombre de fichero embebido en sus 16 trazas ni en la zona de codigo 0x4356228C-0x435627B0",
+  "el significado de la sigla DEPTH (no aparece expandida en ningun byte)",
+  "el receptor final del GID 0x018B04DC fuera de este binario",
+  "el sentido de los codigos 0x80/0x81 escritos en el tag Exif 0x5002"
+ ]
+}
