@@ -1,0 +1,1548 @@
+{
+ "milestone": "S164",
+ "modulo": "[CAMERA_IS]",
+ "binary": "analysis/rea-independent/input/av-cam.bin",
+ "vaddr_rule": "vaddr = 0x43541000 + file_offset",
+ "xref_rule": "estricta (analysis/s106_imaging_cap/pic_refs_strict_global.json); ver analysis/s106_imaging_cap/pic_xref_methodology.md",
+ "counts": {
+  "cadenas": 17,
+  "sitios_pic": 21,
+  "referenciadas": 17,
+  "sin_referencia": 0,
+  "funciones": 13
+ },
+ "subcapas": {
+  "MOUNT": "interfaz IS <-> montura de objetivo (CAIF/LENS_MOUNT)",
+  "DIST": "correccion de distorsion (parametros y conversion de posiciones)",
+  "AS": "estabilizador activo (STABILIZER) y su cola de mensajes OSAL",
+  "EIS": "estabilizacion electronica (EIS): alimentacion, rejilla y giroscopio"
+ },
+ "contadores_por_subcapa": {
+  "MOUNT": 5,
+  "DIST": 5,
+  "AS": 3,
+  "EIS": 4
+ },
+ "contadores_por_subcapa_sitios": {
+  "MOUNT": 5,
+  "DIST": 5,
+  "AS": 6,
+  "EIS": 5
+ },
+ "strings": [
+  {
+   "vaddr": 1137282470,
+   "vaddr_hex": "0x43c98da6",
+   "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountExpStartCB (%x)",
+   "inner_text": "[Error] IS_LensMountExpStartCB (%x)",
+   "sublayer": "MOUNT",
+   "sites": [
+    1131324134
+   ],
+   "sites_hex": [
+    "0x436ea2e6"
+   ],
+   "functions": [
+    1131324112
+   ],
+   "functions_hex": [
+    "0x436ea2d0"
+   ],
+   "n_refs": 1,
+   "a7s_inner_present": false,
+   "a6300_inner_present": false,
+   "log_wrapper": {
+    "0x436ea2e6": {
+     "wrapper": "0x436ea224",
+     "categoria_r1": 6,
+     "r0_nivel": 15
+    }
+   }
+  },
+  {
+   "vaddr": 1137282526,
+   "vaddr_hex": "0x43c98dde",
+   "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountExpStartCB - checkData",
+   "inner_text": "[Error] IS_LensMountExpStartCB - checkData",
+   "sublayer": "MOUNT",
+   "sites": [
+    1131324178
+   ],
+   "sites_hex": [
+    "0x436ea312"
+   ],
+   "functions": [
+    1131324112
+   ],
+   "functions_hex": [
+    "0x436ea2d0"
+   ],
+   "n_refs": 1,
+   "a7s_inner_present": false,
+   "a6300_inner_present": false,
+   "log_wrapper": {
+    "0x436ea312": {
+     "wrapper": "0x436ea224",
+     "categoria_r1": 6,
+     "r0_nivel": 15
+    }
+   }
+  },
+  {
+   "vaddr": 1137282589,
+   "vaddr_hex": "0x43c98e1d",
+   "text": "[CAMERA_IS][DIST]: ERR:MakeDistCorPrm prm=null\n",
+   "inner_text": "ERR:MakeDistCorPrm prm=null\n",
+   "sublayer": "DIST",
+   "sites": [
+    1131324562
+   ],
+   "sites_hex": [
+    "0x436ea492"
+   ],
+   "functions": [
+    1131324528
+   ],
+   "functions_hex": [
+    "0x436ea470"
+   ],
+   "n_refs": 1,
+   "a7s_inner_present": false,
+   "a6300_inner_present": false,
+   "log_wrapper": {
+    "0x436ea492": {
+     "wrapper": "0x436ea3c4",
+     "categoria_r1": 1,
+     "r0_nivel": 15
+    }
+   }
+  },
+  {
+   "vaddr": 1137282637,
+   "vaddr_hex": "0x43c98e4d",
+   "text": "[CAMERA_IS][DIST]: ERR:CnvPosInvDistCorr prm=null\n",
+   "inner_text": "ERR:CnvPosInvDistCorr prm=null\n",
+   "sublayer": "DIST",
+   "sites": [
+    1131324732
+   ],
+   "sites_hex": [
+    "0x436ea53c"
+   ],
+   "functions": [
+    1131324684
+   ],
+   "functions_hex": [
+    "0x436ea50c"
+   ],
+   "n_refs": 1,
+   "a7s_inner_present": false,
+   "a6300_inner_present": false,
+   "log_wrapper": {
+    "0x436ea53c": {
+     "wrapper": "0x436ea3c4",
+     "categoria_r1": 1,
+     "r0_nivel": 15
+    }
+   }
+  },
+  {
+   "vaddr": 1137282688,
+   "vaddr_hex": "0x43c98e80",
+   "text": "[CAMERA_IS][DIST]: ERR:CnvPosInvDistCorr prm=inv1 (%d, %d)\n",
+   "inner_text": "ERR:CnvPosInvDistCorr prm=inv1 (%d, %d)\n",
+   "sublayer": "DIST",
+   "sites": [
+    1131324790
+   ],
+   "sites_hex": [
+    "0x436ea576"
+   ],
+   "functions": [
+    1131324684
+   ],
+   "functions_hex": [
+    "0x436ea50c"
+   ],
+   "n_refs": 1,
+   "a7s_inner_present": false,
+   "a6300_inner_present": false,
+   "log_wrapper": {
+    "0x436ea576": {
+     "wrapper": "0x436ea3c4",
+     "categoria_r1": 1,
+     "r0_nivel": 15
+    }
+   }
+  },
+  {
+   "vaddr": 1137282748,
+   "vaddr_hex": "0x43c98ebc",
+   "text": "[CAMERA_IS][DIST]: WRN:CnvPosInvDistCorr prm=inv2 (%d, %d) \n",
+   "inner_text": "WRN:CnvPosInvDistCorr prm=inv2 (%d, %d) \n",
+   "sublayer": "DIST",
+   "sites": [
+    1131324928
+   ],
+   "sites_hex": [
+    "0x436ea600"
+   ],
+   "functions": [
+    1131324684
+   ],
+   "functions_hex": [
+    "0x436ea50c"
+   ],
+   "n_refs": 1,
+   "a7s_inner_present": false,
+   "a6300_inner_present": false,
+   "log_wrapper": {
+    "0x436ea600": {
+     "wrapper": "0x436ea3c4",
+     "categoria_r1": 1,
+     "r0_nivel": 15
+    }
+   }
+  },
+  {
+   "vaddr": 1137282809,
+   "vaddr_hex": "0x43c98ef9",
+   "text": "[CAMERA_IS][DIST]: ERR:MakeDistRawAppliTag prm=null\n",
+   "inner_text": "ERR:MakeDistRawAppliTag prm=null\n",
+   "sublayer": "DIST",
+   "sites": [
+    1131325040
+   ],
+   "sites_hex": [
+    "0x436ea670"
+   ],
+   "functions": [
+    1131325020
+   ],
+   "functions_hex": [
+    "0x436ea65c"
+   ],
+   "n_refs": 1,
+   "a7s_inner_present": false,
+   "a6300_inner_present": false,
+   "log_wrapper": {
+    "0x436ea670": {
+     "wrapper": "0x436ea3c4",
+     "categoria_r1": 1,
+     "r0_nivel": 15
+    }
+   }
+  },
+  {
+   "vaddr": 1137287667,
+   "vaddr_hex": "0x43c9a1f3",
+   "text": "[CAMERA_IS][AS]: [STABILIZER][AS][osal_reg_sync_msg_queue_cb] %x",
+   "inner_text": "[STABILIZER][AS][osal_reg_sync_msg_queue_cb] %x",
+   "sublayer": "AS",
+   "sites": [
+    1131408762,
+    1131408796
+   ],
+   "sites_hex": [
+    "0x436fed7a",
+    "0x436fed9c"
+   ],
+   "functions": [
+    1131408574
+   ],
+   "functions_hex": [
+    "0x436fecbe"
+   ],
+   "n_refs": 2,
+   "a7s_inner_present": false,
+   "a6300_inner_present": false,
+   "log_wrapper": {
+    "0x436fed7a": {
+     "wrapper": "0x436febc4",
+     "categoria_r1": 4,
+     "r0_nivel": 15
+    },
+    "0x436fed9c": {
+     "wrapper": "0x436febc4",
+     "categoria_r1": 4,
+     "r0_nivel": 15
+    }
+   }
+  },
+  {
+   "vaddr": 1137287732,
+   "vaddr_hex": "0x43c9a234",
+   "text": "[CAMERA_IS][AS]: [STABILIZER][AS][upm_get_hcrn_ura] %x",
+   "inner_text": "[STABILIZER][AS][upm_get_hcrn_ura] %x",
+   "sublayer": "AS",
+   "sites": [
+    1131409560,
+    1131538232
+   ],
+   "sites_hex": [
+    "0x436ff098",
+    "0x4371e738"
+   ],
+   "functions": [
+    1131409024,
+    1131537612
+   ],
+   "functions_hex": [
+    "0x436fee80",
+    "0x4371e4cc"
+   ],
+   "n_refs": 2,
+   "a7s_inner_present": false,
+   "a6300_inner_present": false,
+   "log_wrapper": {
+    "0x436ff098": {
+     "wrapper": "0x436febc4",
+     "categoria_r1": 4,
+     "r0_nivel": 15
+    },
+    "0x4371e738": {
+     "wrapper": "0x4371e39c",
+     "categoria_r1": 4,
+     "r0_nivel": 15
+    }
+   }
+  },
+  {
+   "vaddr": 1137287787,
+   "vaddr_hex": "0x43c9a26b",
+   "text": "[CAMERA_IS][AS]: [STABILIZER][AS][osal_unreg_sync_msg_queue_cb] %x",
+   "inner_text": "[STABILIZER][AS][osal_unreg_sync_msg_queue_cb] %x",
+   "sublayer": "AS",
+   "sites": [
+    1131412174,
+    1131412204
+   ],
+   "sites_hex": [
+    "0x436fface",
+    "0x436ffaec"
+   ],
+   "functions": [
+    1131412148
+   ],
+   "functions_hex": [
+    "0x436ffab4"
+   ],
+   "n_refs": 2,
+   "a7s_inner_present": false,
+   "a6300_inner_present": false,
+   "log_wrapper": {
+    "0x436fface": {
+     "wrapper": "0x436febc4",
+     "categoria_r1": 4,
+     "r0_nivel": 15
+    },
+    "0x436ffaec": {
+     "wrapper": "0x436febc4",
+     "categoria_r1": 4,
+     "r0_nivel": 15
+    }
+   }
+  },
+  {
+   "vaddr": 1137287858,
+   "vaddr_hex": "0x43c9a2b2",
+   "text": "[CAMERA_IS][EIS]: error:0x%02x rcct_SetStblzPower error!",
+   "inner_text": "error:0x%02x rcct_SetStblzPower error!",
+   "sublayer": "EIS",
+   "sites": [
+    1131425282,
+    1131433392
+   ],
+   "sites_hex": [
+    "0x43702e02",
+    "0x43704db0"
+   ],
+   "functions": [
+    1131425196,
+    1131433360
+   ],
+   "functions_hex": [
+    "0x43702dac",
+    "0x43704d90"
+   ],
+   "n_refs": 2,
+   "a7s_inner_present": false,
+   "a6300_inner_present": false,
+   "log_wrapper": {
+    "0x43702e02": {
+     "wrapper": "0x437026ac",
+     "categoria_r1": 2,
+     "r0_nivel": 15
+    },
+    "0x43704db0": {
+     "wrapper": "0x437041dc",
+     "categoria_r1": 2,
+     "r0_nivel": 15
+    }
+   }
+  },
+  {
+   "vaddr": 1137287915,
+   "vaddr_hex": "0x43c9a2eb",
+   "text": "[CAMERA_IS][EIS]: error:0x%02x rcct_SetStblzGridH error!",
+   "inner_text": "error:0x%02x rcct_SetStblzGridH error!",
+   "sublayer": "EIS",
+   "sites": [
+    1131425308
+   ],
+   "sites_hex": [
+    "0x43702e1c"
+   ],
+   "functions": [
+    1131425196
+   ],
+   "functions_hex": [
+    "0x43702dac"
+   ],
+   "n_refs": 1,
+   "a7s_inner_present": false,
+   "a6300_inner_present": false,
+   "log_wrapper": {
+    "0x43702e1c": {
+     "wrapper": "0x437026ac",
+     "categoria_r1": 2,
+     "r0_nivel": 15
+    }
+   }
+  },
+  {
+   "vaddr": 1137287972,
+   "vaddr_hex": "0x43c9a324",
+   "text": "[CAMERA_IS][EIS]: GyroAD[p],GyroAD[y], %d, %d",
+   "inner_text": "GyroAD[p],GyroAD[y], %d, %d",
+   "sublayer": "EIS",
+   "sites": [
+    1131431938
+   ],
+   "sites_hex": [
+    "0x43704802"
+   ],
+   "functions": [
+    1131431588
+   ],
+   "functions_hex": [
+    "0x437046a4"
+   ],
+   "n_refs": 1,
+   "a7s_inner_present": false,
+   "a6300_inner_present": false,
+   "log_wrapper": {
+    "0x43704802": {
+     "wrapper": "0x437041dc",
+     "categoria_r1": 2,
+     "r0_nivel": 15
+    }
+   }
+  },
+  {
+   "vaddr": 1137288018,
+   "vaddr_hex": "0x43c9a352",
+   "text": "[CAMERA_IS][EIS]: %x, %d, %d",
+   "inner_text": "%x, %d, %d",
+   "sublayer": "EIS",
+   "sites": [
+    1131432962
+   ],
+   "sites_hex": [
+    "0x43704c02"
+   ],
+   "functions": [
+    1131431588
+   ],
+   "functions_hex": [
+    "0x437046a4"
+   ],
+   "n_refs": 1,
+   "a7s_inner_present": true,
+   "a6300_inner_present": true,
+   "log_wrapper": {
+    "0x43704c02": {
+     "wrapper": "0x437041dc",
+     "categoria_r1": 2,
+     "r0_nivel": 15
+    }
+   }
+  },
+  {
+   "vaddr": 1137288103,
+   "vaddr_hex": "0x43c9a3a7",
+   "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyroCB (%x)",
+   "inner_text": "[Error] IS_LensMountPanoramaGyroCB (%x)",
+   "sublayer": "MOUNT",
+   "sites": [
+    1131437434
+   ],
+   "sites_hex": [
+    "0x43705d7a"
+   ],
+   "functions": [
+    1131437412
+   ],
+   "functions_hex": [
+    "0x43705d64"
+   ],
+   "n_refs": 1,
+   "a7s_inner_present": false,
+   "a6300_inner_present": false,
+   "log_wrapper": {
+    "0x43705d7a": {
+     "wrapper": "0x43705cb8",
+     "categoria_r1": 6,
+     "r0_nivel": 15
+    }
+   }
+  },
+  {
+   "vaddr": 1137288163,
+   "vaddr_hex": "0x43c9a3e3",
+   "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyroCB - checkData",
+   "inner_text": "[Error] IS_LensMountPanoramaGyroCB - checkData",
+   "sublayer": "MOUNT",
+   "sites": [
+    1131437494
+   ],
+   "sites_hex": [
+    "0x43705db6"
+   ],
+   "functions": [
+    1131437412
+   ],
+   "functions_hex": [
+    "0x43705d64"
+   ],
+   "n_refs": 1,
+   "a7s_inner_present": false,
+   "a6300_inner_present": false,
+   "log_wrapper": {
+    "0x43705db6": {
+     "wrapper": null,
+     "categoria_r1": 6,
+     "r0_nivel": 15
+    }
+   }
+  },
+  {
+   "vaddr": 1137288230,
+   "vaddr_hex": "0x43c9a426",
+   "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyro (%x)",
+   "inner_text": "[Error] IS_LensMountPanoramaGyro (%x)",
+   "sublayer": "MOUNT",
+   "sites": [
+    1131437608
+   ],
+   "sites_hex": [
+    "0x43705e28"
+   ],
+   "functions": [
+    1131437520
+   ],
+   "functions_hex": [
+    "0x43705dd0"
+   ],
+   "n_refs": 1,
+   "a7s_inner_present": false,
+   "a6300_inner_present": false,
+   "log_wrapper": {
+    "0x43705e28": {
+     "wrapper": "0x43705cb8",
+     "categoria_r1": 6,
+     "r0_nivel": 15
+    }
+   }
+  }
+ ],
+ "functions": [
+  {
+   "vaddr": 1131324112,
+   "vaddr_hex": "0x436ea2d0",
+   "n_sites": 2,
+   "sites": [
+    1131324134,
+    1131324178
+   ],
+   "sites_hex": [
+    "0x436ea2e6",
+    "0x436ea312"
+   ],
+   "strings": [
+    1137282470,
+    1137282526
+   ],
+   "strings_hex": [
+    "0x43c98da6",
+    "0x43c98dde"
+   ],
+   "texts": [
+    "[CAMERA_IS][MOUNT]: [Error] IS_LensMountExpStartCB (%x)",
+    "[CAMERA_IS][MOUNT]: [Error] IS_LensMountExpStartCB - checkData"
+   ],
+   "approx_function": false,
+   "bl_callers": [],
+   "bl_callers_hex": [],
+   "llamadores_contexto": []
+  },
+  {
+   "vaddr": 1131324528,
+   "vaddr_hex": "0x436ea470",
+   "n_sites": 1,
+   "sites": [
+    1131324562
+   ],
+   "sites_hex": [
+    "0x436ea492"
+   ],
+   "strings": [
+    1137282589
+   ],
+   "strings_hex": [
+    "0x43c98e1d"
+   ],
+   "texts": [
+    "[CAMERA_IS][DIST]: ERR:MakeDistCorPrm prm=null\n"
+   ],
+   "approx_function": false,
+   "bl_callers": [
+    1132278946,
+    1135565122
+   ],
+   "bl_callers_hex": [
+    "0x437d34a2",
+    "0x43af5942"
+   ],
+   "llamadores_contexto": [
+    {
+     "caller": "0x437d34a2",
+     "caller_func": "0x437d3484",
+     "cadenas_cercanas": []
+    },
+    {
+     "caller": "0x43af5942",
+     "caller_func": "0x43af58f8",
+     "cadenas_cercanas": []
+    }
+   ]
+  },
+  {
+   "vaddr": 1131324684,
+   "vaddr_hex": "0x436ea50c",
+   "n_sites": 3,
+   "sites": [
+    1131324732,
+    1131324790,
+    1131324928
+   ],
+   "sites_hex": [
+    "0x436ea53c",
+    "0x436ea576",
+    "0x436ea600"
+   ],
+   "strings": [
+    1137282637,
+    1137282688,
+    1137282748
+   ],
+   "strings_hex": [
+    "0x43c98e4d",
+    "0x43c98e80",
+    "0x43c98ebc"
+   ],
+   "texts": [
+    "[CAMERA_IS][DIST]: ERR:CnvPosInvDistCorr prm=null\n",
+    "[CAMERA_IS][DIST]: ERR:CnvPosInvDistCorr prm=inv1 (%d, %d)\n",
+    "[CAMERA_IS][DIST]: WRN:CnvPosInvDistCorr prm=inv2 (%d, %d) \n"
+   ],
+   "approx_function": false,
+   "bl_callers": [
+    1132530188,
+    1134506032,
+    1134507358,
+    1134513690,
+    1134514260,
+    1134515388,
+    1134515400,
+    1134516412,
+    1134516430,
+    1134516726,
+    1134516740,
+    1136074726,
+    1136074738
+   ],
+   "bl_callers_hex": [
+    "0x43810a0c",
+    "0x439f3030",
+    "0x439f355e",
+    "0x439f4e1a",
+    "0x439f5054",
+    "0x439f54bc",
+    "0x439f54c8",
+    "0x439f58bc",
+    "0x439f58ce",
+    "0x439f59f6",
+    "0x439f5a04",
+    "0x43b71fe6",
+    "0x43b71ff2"
+   ],
+   "llamadores_contexto": [
+    {
+     "caller": "0x43810a0c",
+     "caller_func": "0x438106ec",
+     "cadenas_cercanas": [
+      [
+       "0x4381072e",
+       "Cam_Sttng S"
+      ],
+      [
+       "0x43810632",
+       "JdgBBOut S"
+      ]
+     ]
+    },
+    {
+     "caller": "0x439f3030",
+     "caller_func": "0x439f3000",
+     "cadenas_cercanas": []
+    },
+    {
+     "caller": "0x439f355e",
+     "caller_func": "0x439f34c2",
+     "cadenas_cercanas": []
+    },
+    {
+     "caller": "0x439f4e1a",
+     "caller_func": "0x439f4c30",
+     "cadenas_cercanas": [
+      [
+       "0x439f4dea",
+       "[IDT]: Invlid distortion area"
+      ],
+      [
+       "0x439f4de2",
+       "[IDT_OPD]: Invlid distortion area"
+      ],
+      [
+       "0x439f4dc2",
+       "[IDT]: Invlid distortion area"
+      ]
+     ]
+    },
+    {
+     "caller": "0x439f5054",
+     "caller_func": "0x439f4ef0",
+     "cadenas_cercanas": [
+      [
+       "0x439f4dea",
+       "[IDT]: Invlid distortion area"
+      ],
+      [
+       "0x439f4de2",
+       "[IDT_OPD]: Invlid distortion area"
+      ],
+      [
+       "0x439f4dc2",
+       "[IDT]: Invlid distortion area"
+      ]
+     ]
+    },
+    {
+     "caller": "0x439f54bc",
+     "caller_func": "0x439f5290",
+     "cadenas_cercanas": []
+    },
+    {
+     "caller": "0x439f54c8",
+     "caller_func": "0x439f5290",
+     "cadenas_cercanas": []
+    },
+    {
+     "caller": "0x439f58bc",
+     "caller_func": "0x439f57a0",
+     "cadenas_cercanas": []
+    },
+    {
+     "caller": "0x439f58ce",
+     "caller_func": "0x439f57a0",
+     "cadenas_cercanas": []
+    },
+    {
+     "caller": "0x439f59f6",
+     "caller_func": "0x439f57a0",
+     "cadenas_cercanas": []
+    },
+    {
+     "caller": "0x439f5a04",
+     "caller_func": "0x439f57a0",
+     "cadenas_cercanas": []
+    },
+    {
+     "caller": "0x43b71fe6",
+     "caller_func": "0x43b71fa8",
+     "cadenas_cercanas": []
+    },
+    {
+     "caller": "0x43b71ff2",
+     "caller_func": "0x43b71fa8",
+     "cadenas_cercanas": []
+    }
+   ]
+  },
+  {
+   "vaddr": 1131325020,
+   "vaddr_hex": "0x436ea65c",
+   "n_sites": 1,
+   "sites": [
+    1131325040
+   ],
+   "sites_hex": [
+    "0x436ea670"
+   ],
+   "strings": [
+    1137282809
+   ],
+   "strings_hex": [
+    "0x43c98ef9"
+   ],
+   "texts": [
+    "[CAMERA_IS][DIST]: ERR:MakeDistRawAppliTag prm=null\n"
+   ],
+   "approx_function": false,
+   "bl_callers": [
+    1132295860
+   ],
+   "bl_callers_hex": [
+    "0x437d76b4"
+   ],
+   "llamadores_contexto": [
+    {
+     "caller": "0x437d76b4",
+     "caller_func": "0x437d765c",
+     "cadenas_cercanas": [
+      [
+       "0x437d7694",
+       "[CAMERA_MAIN_TC]: TC:DIST:Err:WriteRawAppliTagValue1"
+      ],
+      [
+       "0x437d75ee",
+       "[CAMERA_MAIN_TC]: TC:DIST:Err:SetDistModeForCapture dist_corr_sw, %d"
+      ],
+      [
+       "0x437d75ba",
+       "[CAMERA_MAIN_TC]: TC:DIST:Err:SetModeForCapture crop_type, %d"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "vaddr": 1131408574,
+   "vaddr_hex": "0x436fecbe",
+   "n_sites": 2,
+   "sites": [
+    1131408762,
+    1131408796
+   ],
+   "sites_hex": [
+    "0x436fed7a",
+    "0x436fed9c"
+   ],
+   "strings": [
+    1137287667
+   ],
+   "strings_hex": [
+    "0x43c9a1f3"
+   ],
+   "texts": [
+    "[CAMERA_IS][AS]: [STABILIZER][AS][osal_reg_sync_msg_queue_cb] %x",
+    "[CAMERA_IS][AS]: [STABILIZER][AS][osal_reg_sync_msg_queue_cb] %x"
+   ],
+   "approx_function": false,
+   "bl_callers": [],
+   "bl_callers_hex": [],
+   "llamadores_contexto": []
+  },
+  {
+   "vaddr": 1131409024,
+   "vaddr_hex": "0x436fee80",
+   "n_sites": 1,
+   "sites": [
+    1131409560
+   ],
+   "sites_hex": [
+    "0x436ff098"
+   ],
+   "strings": [
+    1137287732
+   ],
+   "strings_hex": [
+    "0x43c9a234"
+   ],
+   "texts": [
+    "[CAMERA_IS][AS]: [STABILIZER][AS][upm_get_hcrn_ura] %x"
+   ],
+   "approx_function": false,
+   "bl_callers": [],
+   "bl_callers_hex": [],
+   "llamadores_contexto": []
+  },
+  {
+   "vaddr": 1131412148,
+   "vaddr_hex": "0x436ffab4",
+   "n_sites": 2,
+   "sites": [
+    1131412174,
+    1131412204
+   ],
+   "sites_hex": [
+    "0x436fface",
+    "0x436ffaec"
+   ],
+   "strings": [
+    1137287787
+   ],
+   "strings_hex": [
+    "0x43c9a26b"
+   ],
+   "texts": [
+    "[CAMERA_IS][AS]: [STABILIZER][AS][osal_unreg_sync_msg_queue_cb] %x",
+    "[CAMERA_IS][AS]: [STABILIZER][AS][osal_unreg_sync_msg_queue_cb] %x"
+   ],
+   "approx_function": false,
+   "bl_callers": [
+    1136117532
+   ],
+   "bl_callers_hex": [
+    "0x43b7c71c"
+   ],
+   "llamadores_contexto": [
+    {
+     "caller": "0x43b7c71c",
+     "caller_func": "0x43b7c700",
+     "cadenas_cercanas": []
+    }
+   ]
+  },
+  {
+   "vaddr": 1131425196,
+   "vaddr_hex": "0x43702dac",
+   "n_sites": 2,
+   "sites": [
+    1131425282,
+    1131425308
+   ],
+   "sites_hex": [
+    "0x43702e02",
+    "0x43702e1c"
+   ],
+   "strings": [
+    1137287858,
+    1137287915
+   ],
+   "strings_hex": [
+    "0x43c9a2b2",
+    "0x43c9a2eb"
+   ],
+   "texts": [
+    "[CAMERA_IS][EIS]: error:0x%02x rcct_SetStblzPower error!",
+    "[CAMERA_IS][EIS]: error:0x%02x rcct_SetStblzGridH error!"
+   ],
+   "approx_function": false,
+   "bl_callers": [
+    1129621884
+   ],
+   "bl_callers_hex": [
+    "0x4354a97c"
+   ],
+   "llamadores_contexto": [
+    {
+     "caller": "0x4354a97c",
+     "caller_func": "0x4354a678",
+     "cadenas_cercanas": [
+      [
+       "0x4354a7b6",
+       "[CAMERA_MAIN_SYNC]: Sync_EndExpose: DIST_RSLT_NG MakeDistortionCorrectionParamForSync erro"
+      ],
+      [
+       "0x4354a6c4",
+       "EndExps S"
+      ],
+      [
+       "0x4354a5fc",
+       "[CAMERA_MAIN_SYNC]: Sequence Stage Error!"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "vaddr": 1131431588,
+   "vaddr_hex": "0x437046a4",
+   "n_sites": 2,
+   "sites": [
+    1131431938,
+    1131432962
+   ],
+   "sites_hex": [
+    "0x43704802",
+    "0x43704c02"
+   ],
+   "strings": [
+    1137287972,
+    1137288018
+   ],
+   "strings_hex": [
+    "0x43c9a324",
+    "0x43c9a352"
+   ],
+   "texts": [
+    "[CAMERA_IS][EIS]: GyroAD[p],GyroAD[y], %d, %d",
+    "[CAMERA_IS][EIS]: %x, %d, %d"
+   ],
+   "approx_function": false,
+   "bl_callers": [
+    1131542182,
+    1131542252
+   ],
+   "bl_callers_hex": [
+    "0x4371f6a6",
+    "0x4371f6ec"
+   ],
+   "llamadores_contexto": [
+    {
+     "caller": "0x4371f6a6",
+     "caller_func": "0x4371f658",
+     "cadenas_cercanas": []
+    },
+    {
+     "caller": "0x4371f6ec",
+     "caller_func": "0x4371f658",
+     "cadenas_cercanas": []
+    }
+   ]
+  },
+  {
+   "vaddr": 1131433360,
+   "vaddr_hex": "0x43704d90",
+   "n_sites": 1,
+   "sites": [
+    1131433392
+   ],
+   "sites_hex": [
+    "0x43704db0"
+   ],
+   "strings": [
+    1137287858
+   ],
+   "strings_hex": [
+    "0x43c9a2b2"
+   ],
+   "texts": [
+    "[CAMERA_IS][EIS]: error:0x%02x rcct_SetStblzPower error!"
+   ],
+   "approx_function": false,
+   "bl_callers": [
+    1129637148,
+    1132550586,
+    1132550822
+   ],
+   "bl_callers_hex": [
+    "0x4354e51c",
+    "0x438159ba",
+    "0x43815aa6"
+   ],
+   "llamadores_contexto": [
+    {
+     "caller": "0x4354e51c",
+     "caller_func": "0x4354d740",
+     "cadenas_cercanas": [
+      [
+       "0x4354e510",
+       "b ee EIS_RC1V_SetPower"
+      ],
+      [
+       "0x4354e3c2",
+       "e ee CamMGetRCV"
+      ],
+      [
+       "0x4354e3b0",
+       "e ee CamMGetRCV"
+      ]
+     ]
+    },
+    {
+     "caller": "0x438159ba",
+     "caller_func": "0x4381592c",
+     "cadenas_cercanas": [
+      [
+       "0x438158b0",
+       "[CAMERA_MAIN_SYNC]: Sequence_HSRecGolfshot: APL_ERR:0x%02x apl_mov_start error!"
+      ],
+      [
+       "0x43815858",
+       "[CAMERA_MAIN_SYNC]: Sequence_HSRecGolfshot: APL_ERR:0x%02x apl_mov_set_dma_addr error!"
+      ],
+      [
+       "0x438157fc",
+       "[CAMERA_MAIN_SYNC]: [GOLFSHOT]GS_Apl_Wrapper: ALOCK_SHARE_ERR: APL_INPUT(JPEG_DEC)"
+      ]
+     ]
+    },
+    {
+     "caller": "0x43815aa6",
+     "caller_func": "0x43815a2a",
+     "cadenas_cercanas": [
+      [
+       "0x438158b0",
+       "[CAMERA_MAIN_SYNC]: Sequence_HSRecGolfshot: APL_ERR:0x%02x apl_mov_start error!"
+      ],
+      [
+       "0x43815858",
+       "[CAMERA_MAIN_SYNC]: Sequence_HSRecGolfshot: APL_ERR:0x%02x apl_mov_set_dma_addr error!"
+      ],
+      [
+       "0x438157fc",
+       "[CAMERA_MAIN_SYNC]: [GOLFSHOT]GS_Apl_Wrapper: ALOCK_SHARE_ERR: APL_INPUT(JPEG_DEC)"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "vaddr": 1131437412,
+   "vaddr_hex": "0x43705d64",
+   "n_sites": 2,
+   "sites": [
+    1131437434,
+    1131437494
+   ],
+   "sites_hex": [
+    "0x43705d7a",
+    "0x43705db6"
+   ],
+   "strings": [
+    1137288103,
+    1137288163
+   ],
+   "strings_hex": [
+    "0x43c9a3a7",
+    "0x43c9a3e3"
+   ],
+   "texts": [
+    "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyroCB (%x)",
+    "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyroCB - checkData"
+   ],
+   "approx_function": true,
+   "bl_callers": [],
+   "bl_callers_hex": [],
+   "llamadores_contexto": []
+  },
+  {
+   "vaddr": 1131437520,
+   "vaddr_hex": "0x43705dd0",
+   "n_sites": 1,
+   "sites": [
+    1131437608
+   ],
+   "sites_hex": [
+    "0x43705e28"
+   ],
+   "strings": [
+    1137288230
+   ],
+   "strings_hex": [
+    "0x43c9a426"
+   ],
+   "texts": [
+    "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyro (%x)"
+   ],
+   "approx_function": false,
+   "bl_callers": [
+    1136116882
+   ],
+   "bl_callers_hex": [
+    "0x43b7c492"
+   ],
+   "llamadores_contexto": [
+    {
+     "caller": "0x43b7c492",
+     "caller_func": "0x43b7c470",
+     "cadenas_cercanas": []
+    }
+   ]
+  },
+  {
+   "vaddr": 1131537612,
+   "vaddr_hex": "0x4371e4cc",
+   "n_sites": 1,
+   "sites": [
+    1131538232
+   ],
+   "sites_hex": [
+    "0x4371e738"
+   ],
+   "strings": [
+    1137287732
+   ],
+   "strings_hex": [
+    "0x43c9a234"
+   ],
+   "texts": [
+    "[CAMERA_IS][AS]: [STABILIZER][AS][upm_get_hcrn_ura] %x"
+   ],
+   "approx_function": false,
+   "bl_callers": [
+    1136117164
+   ],
+   "bl_callers_hex": [
+    "0x43b7c5ac"
+   ],
+   "llamadores_contexto": [
+    {
+     "caller": "0x43b7c5ac",
+     "caller_func": "0x43b7c4fc",
+     "cadenas_cercanas": []
+    }
+   ]
+  }
+ ],
+ "diferencial": {
+  "[CAMERA_IS]": {
+   "A6000": 17,
+   "A7S": 0,
+   "A6300": 0
+  },
+  "GyroAD": {
+   "A6000": 2,
+   "A7S": 0,
+   "A6300": 0
+  },
+  "FILE_IS_%04x.dat": {
+   "A6000": 1,
+   "A7S": 1,
+   "A6300": 1
+  },
+  "SetStblzPower": {
+   "A6000": 6,
+   "A7S": 5,
+   "A6300": 5
+  },
+  "SetStblzGridH": {
+   "A6000": 5,
+   "A7S": 4,
+   "A6300": 4
+  },
+  "SetStblzParamV": {
+   "A6000": 4,
+   "A7S": 4,
+   "A6300": 4
+  },
+  "SetStblzVectorH": {
+   "A6000": 3,
+   "A7S": 3,
+   "A6300": 3
+  },
+  "IS_LensMountExpStartCB": {
+   "A6000": 2,
+   "A7S": 0,
+   "A6300": 0
+  },
+  "IS_LensMountPanoramaGyro": {
+   "A6000": 3,
+   "A7S": 0,
+   "A6300": 0
+  },
+  "MakeDistCorPrm": {
+   "A6000": 1,
+   "A7S": 0,
+   "A6300": 0
+  },
+  "CnvPosInvDistCorr": {
+   "A6000": 3,
+   "A7S": 0,
+   "A6300": 0
+  },
+  "MakeDistRawAppliTag": {
+   "A6000": 1,
+   "A7S": 0,
+   "A6300": 0
+  },
+  "upm_get_hcrn_ura": {
+   "A6000": 1,
+   "A7S": 0,
+   "A6300": 0
+  },
+  "osal_reg_sync_msg_queue_cb": {
+   "A6000": 3,
+   "A7S": 0,
+   "A6300": 0
+  },
+  "osal_unreg_sync_msg_queue_cb": {
+   "A6000": 2,
+   "A7S": 0,
+   "A6300": 0
+  },
+  "[STABILIZER]": {
+   "A6000": 3,
+   "A7S": 0,
+   "A6300": 0
+  },
+  "LENS_MOUNT": {
+   "A6000": 2,
+   "A7S": 2,
+   "A6300": 2
+  },
+  "EIS_RC1V_SetPower": {
+   "A6000": 2,
+   "A7S": 2,
+   "A6300": 2
+  },
+  "rcct_SetStblz": {
+   "A6000": 5,
+   "A7S": 3,
+   "A6300": 3
+  },
+  "src/api_rc.cpp": {
+   "A6000": 1,
+   "A7S": 1,
+   "A6300": 1
+  },
+  "WrapRcctSetStblzPower.cpp": {
+   "A6000": 1,
+   "A7S": 1,
+   "A6300": 1
+  },
+  "WrapRcctSetStblzGridH.cpp": {
+   "A6000": 1,
+   "A7S": 1,
+   "A6300": 1
+  },
+  "WrapRcctSetStblzParamV.cpp": {
+   "A6000": 1,
+   "A7S": 1,
+   "A6300": 1
+  },
+  "WrapRcctSetStblzVectorH.cpp": {
+   "A6000": 1,
+   "A7S": 1,
+   "A6300": 1
+  },
+  "ModuleDistBase.cpp": {
+   "A6000": 1,
+   "A7S": 1,
+   "A6300": 1
+  },
+  "rolling": {
+   "A6000": 0,
+   "A7S": 0,
+   "A6300": 1
+  },
+  "readout": {
+   "A6000": 0,
+   "A7S": 0,
+   "A6300": 0
+  },
+  "position num in rolling is strange %d": {
+   "A6000": 0,
+   "A7S": 0,
+   "A6300": 1
+  },
+  "GetImagerStabilizationTime": {
+   "A6000": 0,
+   "A7S": 0,
+   "A6300": 1
+  }
+ },
+ "diferencial_nota": "A7S fw3.20 y A6300 fw2.01: 0 apariciones del token [CAMERA_IS] y 0 textos interiores coincidentes; la capa RC de estabilizacion (rcct_SetStblz*, WrapRcctSetStblz*.cpp) y el fichero /mnt/FILE_IS_%04x.dat SI existen en los tres. Lo propio de la A6000 fw3.21 es la capa de aplicacion (giroscopio, matematica de distorsion, callbacks de montura, cola AS). El concepto de rolling shutter y la API GetImagerStabilizationTime solo existen en el A6300 fw2.01, y tampoco pertenecen a [CAMERA_IS].",
+ "verificacion_manual_pic": [
+  {
+   "ldr": "0x436ea2dc",
+   "kind": "ldr16",
+   "literal": "0x436ea328",
+   "pool_w": "0x5aeabc",
+   "add": "0x436ea2e6",
+   "destino": "0x43c98da6",
+   "texto": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountExpStartCB (%x)",
+   "subcapa": "MOUNT",
+   "ok": true
+  },
+  {
+   "ldr": "0x436ea30a",
+   "kind": "ldr16",
+   "literal": "0x436ea330",
+   "pool_w": "0x5aeac8",
+   "add": "0x436ea312",
+   "destino": "0x43c98dde",
+   "texto": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountExpStartCB - checkData",
+   "subcapa": "MOUNT",
+   "ok": true
+  },
+  {
+   "ldr": "0x436ea48a",
+   "kind": "ldr16",
+   "literal": "0x436ea500",
+   "pool_w": "0x5ae987",
+   "add": "0x436ea492",
+   "destino": "0x43c98e1d",
+   "texto": "[CAMERA_IS][DIST]: ERR:MakeDistCorPrm prm=null",
+   "subcapa": "DIST",
+   "ok": true
+  },
+  {
+   "ldr": "0x436ea534",
+   "kind": "ldr16",
+   "literal": "0x436ea644",
+   "pool_w": "0x5ae90d",
+   "add": "0x436ea53c",
+   "destino": "0x43c98e4d",
+   "texto": "[CAMERA_IS][DIST]: ERR:CnvPosInvDistCorr prm=null",
+   "subcapa": "DIST",
+   "ok": true
+  },
+  {
+   "ldr": "0x436ea570",
+   "kind": "ldr16",
+   "literal": "0x436ea648",
+   "pool_w": "0x5ae906",
+   "add": "0x436ea576",
+   "destino": "0x43c98e80",
+   "texto": "[CAMERA_IS][DIST]: ERR:CnvPosInvDistCorr prm=inv1 (%d, %d)",
+   "subcapa": "DIST",
+   "ok": true
+  },
+  {
+   "ldr": "0x436ea5fe",
+   "kind": "ldr16",
+   "literal": "0x436ea654",
+   "pool_w": "0x5ae8b8",
+   "add": "0x436ea600",
+   "destino": "0x43c98ebc",
+   "texto": "[CAMERA_IS][DIST]: WRN:CnvPosInvDistCorr prm=inv2 (%d, %d) ",
+   "subcapa": "DIST",
+   "ok": true
+  },
+  {
+   "ldr": "0x436ea668",
+   "kind": "ldr16",
+   "literal": "0x436ea694",
+   "pool_w": "0x5ae885",
+   "add": "0x436ea670",
+   "destino": "0x43c98ef9",
+   "texto": "[CAMERA_IS][DIST]: ERR:MakeDistRawAppliTag prm=null",
+   "subcapa": "DIST",
+   "ok": true
+  },
+  {
+   "ldr": "0x436fed70",
+   "kind": "ldr16",
+   "literal": "0x436fee40",
+   "pool_w": "0x59b475",
+   "add": "0x436fed7a",
+   "destino": "0x43c9a1f3",
+   "texto": "[CAMERA_IS][AS]: [STABILIZER][AS][osal_reg_sync_msg_queue_cb] %x",
+   "subcapa": "AS",
+   "ok": true
+  },
+  {
+   "ldr": "0x436ff090",
+   "kind": "ldr16",
+   "literal": "0x436ff320",
+   "pool_w": "0x59b198",
+   "add": "0x436ff098",
+   "destino": "0x43c9a234",
+   "texto": "[CAMERA_IS][AS]: [STABILIZER][AS][upm_get_hcrn_ura] %x",
+   "subcapa": "AS",
+   "ok": true
+  },
+  {
+   "ldr": "0x436ffac4",
+   "kind": "ldr16",
+   "literal": "0x436ffb18",
+   "pool_w": "0x59a799",
+   "add": "0x436fface",
+   "destino": "0x43c9a26b",
+   "texto": "[CAMERA_IS][AS]: [STABILIZER][AS][osal_unreg_sync_msg_queue_cb] %x",
+   "subcapa": "AS",
+   "ok": true
+  },
+  {
+   "ldr": "0x43702df8",
+   "kind": "ldr16",
+   "literal": "0x43702e38",
+   "pool_w": "0x5974ac",
+   "add": "0x43702e02",
+   "destino": "0x43c9a2b2",
+   "texto": "[CAMERA_IS][EIS]: error:0x%02x rcct_SetStblzPower error!",
+   "subcapa": "EIS",
+   "ok": true
+  },
+  {
+   "ldr": "0x43702e12",
+   "kind": "ldr16",
+   "literal": "0x43702e3c",
+   "pool_w": "0x5974cb",
+   "add": "0x43702e1c",
+   "destino": "0x43c9a2eb",
+   "texto": "[CAMERA_IS][EIS]: error:0x%02x rcct_SetStblzGridH error!",
+   "subcapa": "EIS",
+   "ok": true
+  },
+  {
+   "ldr": "0x437047f8",
+   "kind": "ldr.w",
+   "literal": "0x43704ca0",
+   "pool_w": "0x595b1e",
+   "add": "0x43704802",
+   "destino": "0x43c9a324",
+   "texto": "[CAMERA_IS][EIS]: GyroAD[p],GyroAD[y], %d, %d",
+   "subcapa": "EIS",
+   "ok": true
+  },
+  {
+   "ldr": "0x43704c00",
+   "kind": "ldr16",
+   "literal": "0x43704d1c",
+   "pool_w": "0x59574c",
+   "add": "0x43704c02",
+   "destino": "0x43c9a352",
+   "texto": "[CAMERA_IS][EIS]: %x, %d, %d",
+   "subcapa": "EIS",
+   "ok": true
+  },
+  {
+   "ldr": "0x43705d70",
+   "kind": "ldr16",
+   "literal": "0x43705dc4",
+   "pool_w": "0x594629",
+   "add": "0x43705d7a",
+   "destino": "0x43c9a3a7",
+   "texto": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyroCB (%x)",
+   "subcapa": "MOUNT",
+   "ok": true
+  },
+  {
+   "ldr": "0x43705dae",
+   "kind": "ldr16",
+   "literal": "0x43705dcc",
+   "pool_w": "0x594629",
+   "add": "0x43705db6",
+   "destino": "0x43c9a3e3",
+   "texto": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyroCB - checkData",
+   "subcapa": "MOUNT",
+   "ok": true
+  },
+  {
+   "ldr": "0x43705e20",
+   "kind": "ldr16",
+   "literal": "0x43705e70",
+   "pool_w": "0x5945fa",
+   "add": "0x43705e28",
+   "destino": "0x43c9a426",
+   "texto": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyro (%x)",
+   "subcapa": "MOUNT",
+   "ok": true
+  }
+ ]
+}
