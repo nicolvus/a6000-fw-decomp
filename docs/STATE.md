@@ -39,53 +39,13 @@ incapacidad del hardware: solo que esta fw3.21 no lo implementa. El plan de prue
 (P1–P8, [capture/physical-test-plan.md](capture/physical-test-plan.md)) sigue **pendiente de autorización**
 y ninguna prueba se ha ejecutado.
 
-## Avance S62 (20-10-2026)
+## Avance IMX210 S140–S155 (22-10-2026)
 
-## Avance S140 — mapa IMX210 (21-10-2026)
+**VERIFICADO:** vector `0x43fe995c` con 119 registros; `S[0]` selecciona una fila y el builder `0x4383c9dc` procesa 4 filas de 16 B desde G+`0x224`, con stores relativos 0/4/6/a/c/e. Dos tablas de diagnóstico incluyen `{id=0x30,size=1,addr=0x43eb0850}`; un copier raw puede leer ese byte y copiarlo a un buffer.
 
-VERIFICADO: vector `0x43fe995c` = 119 punteros a registros `{u16 ID, byte +2, byte +3}`, terminador cero `0x43fe9b38`; bytes completos en [S140](capture/s140-imager-register-map.md) y `analysis/s140_imager_regmap/imager_regmap.json`. REA leyó el vector y la ruta de selección; las instrucciones Thumb se contrastaron contra bytes originales.
-PARCIAL: S=`0x43eb35d0` y G+`0x224`=`0x43eb07fc` están cero en el blob; fila indexada mediante `S[0]` y copiada a `S+0xc4`, pero valores runtime, asociación modo→fila y significado físico quedan sin resolver. S51 permanece A/B/C=NO.
-Siguiente: S141 debe seguir con REA los stores a `S[0]` y la copia G+`0x224`→`S` en la ruta identificada como `0x43843a44`, contrastando las instrucciones y determinando solamente las condiciones/copia, no la semántica eléctrica.
+**PARCIAL:** bytes +8/+9 de fila sin store en los cuerpos auditados, con xrefs directas vacías; el literal en tabla demuestra una ruta diagnóstica que puede leer `0x43eb0850`. El dumper está condicionado por flags `0x43f72d05&2`/`0x43f72d08&0x20`; se clasificaron varios xrefs locales, pero no se halló escritor ni valor runtime. La superficie REA no permite sembrar las funciones candidatas no reconocidas. No se infiere ausencia global ni semántica física.
 
-## Avance S141 — consumidor de fila IMX210 (21-10-2026)
-
-REA `0x43b0893c` y bytes Thumb confirman la lectura de `S[0]`, indexación `S+4+16·S[0]`, copia de 16 B a `S+0xc4`; `0x43849fb8` consume las cuatro palabras. El proveedor no reconoció `0x43843a44`; store/gates y origen del selector siguen **NO_VERIFICADOS**, sin inferir ausencia. [Informe](capture/s141-imager-row-copy.md), [bytes y desensamblado reproducible](../analysis/s141_imager_row_trace/row_trace.json). S51 sin cambios.
-
-## Avance S142 — referencias directas a S
-
-REA encontró dos xrefs directas al objeto S: `0x437b56b4` participa en un `memset(S,0,0x148)`; `0x437b59ce` lee `u16 S+0xda` y envía el valor a `0x4383c638`, que escribe otros objetos. Se confirma inicialización a cero, no valor de selector runtime. Escritores por puntero argumento siguen fuera del alcance de estas xrefs. [Informe](capture/s142-imager-s-init.md). S51 sin cambios.
-
-## Avance S145 — hueco de cobertura alrededor del staging
-
-REA sitúa `0x43843a44` fuera de sus procedimientos, mientras reconoce el setter vecino de ocho bytes en `0x43843a38`; bytes Thumb confirman prólogo candidato y una llamada directa visible desde el bloque no analizado `0x437b617e` (`BL` en `0x437b61d2`). No se prueba que se ejecute ni se rellene el selector. [Informe S145](capture/s145-imager-code-gap.md). S146 confirma que no es posible sembrar esas entradas con la superficie REA actual; se requiere recorrido estático de bytes o capacidad nueva.
-
-## Avance S146 — límite de seeding REA
-
-REA resuelve `file-offset:0x302a44` a `0x43843a44`, pero rechaza la pseudodecompilación porque no hay procedimiento existente; las consultas de info/assembly/analyze tampoco crean entradas. El caller `0x437b617e` tiene offset `0x27517e` (no `0x27617e`). Esto limita la cobertura de pseudocódigo y **no** demuestra ausencia ni no-ejecución. [S146](capture/s146-rea-seed-limit.md).
-
-## Avance S147 — escritura parcial de las filas G
-
-REA/bytes siguen `G+0x224` desde el `add` de `0x437b5f00` hasta `0x4383bf2c`, que llama al writer `0x4383c9dc`. Este itera cuatro filas, stride 0x10, con stores en offsets relativos 0,4,6,0xa,0xc,0xe; `+8/+9` no están escritos por ese bucle. Otros refs son staging/lecturas y varias rutas quedan parciales. No se asigna modo ni nombre físico. [S147](capture/s147-imager-g-rows.md).
-
-## Avance S149 — auditoría de los helpers por fila
-
-La instrucción completa de `0x4383c9dc` confirma contador inicial 4, incremento destino `+0x10` y back-edge `bne.w`; rectifica una primera descripción S149 que decía “solo fila 0”. En el alcance auditado, los helpers `0x4383b790`, `0x4383bfd4`, `0x43b08786`, `0x4383c818` no escriben la región de filas `+0x2c..+0x6b`; `+8/+9` siguen sin store dentro del writer. No excluye otros writers. [S149](capture/s149-imager-row-helpers.md).
-
-## Avance S150 — xrefs de offsets vacíos de fila
-
-REA no tiene xrefs directas para las ocho direcciones exactas de huecos `+8/+9`, con control positivo de refs a una base de fila. Búsqueda literal completa encuentra dos celdas de datos cuyo primer word apunta a `0x43eb0850`; sin consumidor o criterio de tabla identificado, es solo pista, no acceso demostrado. [S150](capture/s150-imager-row-gaps.md).
-
-## Avance S152 — descriptor de diagnóstico al hueco
-
-S152 identifica las dos referencias literales de S150 como campos `addr` de tablas A[32] y B[6], ambas `{id=0x30,size=1,addr=0x43eb0850}`. El copiador `0x43b09c7a` lee de addr según size y escribe al buffer llamador: con size=1 lee un byte del gap, no lo modifica. Las puertas dependen de flags BSS cuyo valor runtime se desconoce; alcanzabilidad PARTIAL. [S152](capture/s152-imager-gap-descriptor-read.md).
-
-## Avance S153 — gates del volcado
-
-En `FUN_43858338`, `ldrb [r6,#3]` + `tst #2` y `ldrb [r6,#6]` + `tst #0x20` gobiernan emisión de líneas del volcado. Los xrefs directos a ambos bytes son lecturas; imagen estática del objeto `0x43f72d02` toda a cero. No se confirmó escritor ni valor runtime; no se infiere ausencia global ni ejecución en captura. [S153](capture/s153-imager-dump-gates.md).
-
-## Avance S154 — xref a base GOT del objeto gate
-
-`0x438363e6` lee el slot GOT `0x4401f990` cuyo valor de imagen es `0x43f72d02`; el edge al objeto es DATA, no store. `FUN_438363cc` lee +0x38..+0x3b y stores van a otros objetos/buffer. No escribe gates +3/+6 en este procedimiento; quedan otras referencias y alias por investigar. [S154](capture/s154-imager-state-ref.md).
+Informes principales: [S140](capture/s140-imager-register-map.md), [S147](capture/s147-imager-g-rows.md), [S149](capture/s149-imager-row-helpers.md), [S150](capture/s150-imager-row-gaps.md), [S152](capture/s152-imager-gap-descriptor-read.md), [S153](capture/s153-imager-dump-gates.md), [S154](capture/s154-imager-state-ref.md), [S155](capture/s155-imager-state-readers.md). S51 A/B/C=NO y sin cambios.
 
 Mecanismo de PMCA identificado y contrastado con el firmware 3.21: `updatershell` inyecta un fdat propio (cramfs con `libupdaterbody`, header de 0x30 B por modelo, guard CRC + modelo/región/versión **sin firma**; CXD90014) que el updater ejecuta y expone un shell USB `0x23`; `serviceshell` (senser, HASP) da terminal, backup `0x603`, ficheros y memoria. `bk w 0x003e0005` escribe la propiedad BK4 `modelName` (subsistema `0x3e`/índice 5, 16 B, attr solo-lectura) en el almacén `/setting` (`nflasha2`), no una dirección de código; el preset de fábrica la trae como `ILCE-6000` (verificado). El cambio a `ILCE-6001` está reportado pero su efecto «shell mode» queda **NO VERIFICADO**: la cadena no existe en el firmware. S51 **A=NO, B=NO, C=NO**. [Documento](capture/s62-pmca-injection.md) · [matriz](../analysis/s62-evidence-matrix.json).
 

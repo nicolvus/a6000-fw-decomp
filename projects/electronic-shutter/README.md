@@ -22,6 +22,7 @@ hardware. Se conservan todas las evidencias anteriores en sus rutas originales.
 - [S152: lectura diagnóstica del byte gap por descriptores](../../docs/capture/s152-imager-gap-descriptor-read.md).
 - [S153: gates de flags del dumper y límite de alcanzabilidad](../../docs/capture/s153-imager-dump-gates.md).
 - [S154: xref de GOT al objeto de flags, sin escritura](../../docs/capture/s154-imager-state-ref.md).
+- [S155: más xrefs al objeto gate, clasificadas como lectores/accesores](../../docs/capture/s155-imager-state-readers.md).
 - [Comparación entre modelos](../../docs/comparative-analysis.md).
 - [Límites de hardware pendientes](../../docs/hardware-limitations.md).
 
