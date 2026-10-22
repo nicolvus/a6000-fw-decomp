@@ -18,10 +18,6 @@ Referencia base: S153-S176 (lectores/escritores estado IMX210), S124 (parámetro
 - [ ] Mismo barrido en A7S (objeto equivalente al `0x43f72d02`)
 - [ ] Tabla de diferencias A7S vs A6000
 
-### S301 — Barrido xrefs a estado imager en A7S fw3.20
-- [ ] Mismo barrido en A7S (objeto equivalente al `0x43f72d02`)
-- [ ] Tabla de diferencias A7S vs A6000
-
 ### S302 — Tablas de drive mode/exposición A7S vs A6000
 - [x] Campos S124 (`shut`, `svd`, `shd`, `spl`, `sint`, `gs`, `epdsel`) por drive_mode
 - [x] Fórmula svd S134 (`0x4381106c`) en ambos
@@ -32,6 +28,13 @@ Referencia base: S153-S176 (lectores/escritores estado IMX210), S124 (parámetro
 - [x] Seguir referencias de tabla `0x43ff3200` → **contiene puntero a estado 0x43f72d02 en +0x48**; acceso vía GOT `0x4401f080`
 - [x] Analizar callers de `FUN_43858338` → **NO IDENTIFICADOS ESTÁTICAMENTE** (requiere REA/Ghidra xrefs)
 - [x] Documentado en `docs/capture/s303-ref-tree-43ff3200.md`
+
+### S304 — REA/Ghidra: callers de `FUN_43858338` (dumper gates S153) y código que carga GOT `0x4401f080`
+- [x] Analizar callers de `FUN_43858338` (dumper gates) → **Único caller: `FUN_43858390` con 13 callsites**
+- [x] Analizar dumper `FUN_438581e8` (dirección real) → **Lee gates `state+3`/`state+6` (vía offsets estructura), no escribe**
+- [x] Código que carga GOT `0x4401f080` → **NO_VERIFICADO** (acceso vía literal pool, REA no expone xrefs)
+- [x] Escritores de gates `state+3`/`state+6` → **NO_VERIFICADO** (dumper solo lee)
+- [x] Documentado en `docs/capture/s304-rea-dumper-callers.md`
 
 ---
 
