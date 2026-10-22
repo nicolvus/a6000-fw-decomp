@@ -170,7 +170,7 @@
 - Resultado: `FUN_438d939c` lee `u16 state+0x1c` y `u8 state+0x1e`, defaults a 3/4 cuando cero, construye buffers/mensaje y escribe a `0x43f7c708/70a` y `0x43eff43c`, no al objeto de estado. La etiqueta “notificación/evento” queda como INFERENCIA; runtime no alcanzado.
 - Evidencia: función `ev_102b271ac6592a0bafc828c3d02e3a2d717b827f29445c7c46fc53a24e2942d9`; read `+1c` `ev_3d73989ad3bf9bf698d74295d05425993f61317c5abb3c491511a3a71c5f800e`; read `+1e` `ev_acf64d0ce0966ca85e468761ddb57b8dd267b30031d509fc210fabec25001053`; outgoing refs `ev_0a887b1bd052d8b3d5b4d678910ef9808acc4c0ec7648dab3c13fc020e0fc190`.
 - Artefactos: `analysis/s163_imager_state_event_reader/{verify_state_event.py,state_event_reader.json}`, `tests/test_s163_imager_state_event_reader.py`, `docs/capture/s163-imager-state-event-reader.md`.
-- Pruebas: unittest 3/3 PASS; falta suite/commit/push.
+- Pruebas: unittest S163 3/3 PASS; suite S140–S163 + knowledge 124/124 PASS; `git diff --check` PASS. Commit `ff5bbb98` publicado en `origin/main`.
 - Siguiente: seguir un xref restante al estado y distinguir lectura de campo, pointer spill y write real.
 
 Checkpoint persistente. Actualizar al terminar cada etapa, antes de continuar
