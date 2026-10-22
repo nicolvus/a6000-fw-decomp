@@ -12,6 +12,7 @@ hardware. Se conservan todas las evidencias anteriores en sus rutas originales.
 - [Hallazgos](../../docs/findings.md).
 - [SilentShutter](../../docs/silent-shutter-trace.md).
 - [S140: vector de registros IMX210 y bancos de filas (enumeración estática; valores runtime pendientes)](../../docs/capture/s140-imager-register-map.md).
+- [S141: selección/copia de fila y origen runtime aún abierto](../../docs/capture/s141-imager-row-copy.md).
 - [Comparación entre modelos](../../docs/comparative-analysis.md).
 - [Límites de hardware pendientes](../../docs/hardware-limitations.md).
 

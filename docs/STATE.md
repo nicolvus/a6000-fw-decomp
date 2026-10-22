@@ -47,6 +47,10 @@ VERIFICADO: vector `0x43fe995c` = 119 punteros a registros `{u16 ID, byte +2, by
 PARCIAL: S=`0x43eb35d0` y G+`0x224`=`0x43eb07fc` están cero en el blob; fila indexada mediante `S[0]` y copiada a `S+0xc4`, pero valores runtime, asociación modo→fila y significado físico quedan sin resolver. S51 permanece A/B/C=NO.
 Siguiente: S141 debe seguir con REA los stores a `S[0]` y la copia G+`0x224`→`S` en la ruta identificada como `0x43843a44`, contrastando las instrucciones y determinando solamente las condiciones/copia, no la semántica eléctrica.
 
+## Avance S141 — consumidor de fila IMX210 (21-10-2026)
+
+REA `0x43b0893c` y bytes Thumb confirman la lectura de `S[0]`, indexación `S+4+16·S[0]`, copia de 16 B a `S+0xc4`; `0x43849fb8` consume las cuatro palabras. El proveedor no reconoció `0x43843a44`; store/gates y origen del selector siguen **NO_VERIFICADOS**, sin inferir ausencia. [Informe](capture/s141-imager-row-copy.md), [bytes y desensamblado reproducible](../analysis/s141_imager_row_trace/row_trace.json). S51 sin cambios.
+
 Mecanismo de PMCA identificado y contrastado con el firmware 3.21: `updatershell` inyecta un fdat propio (cramfs con `libupdaterbody`, header de 0x30 B por modelo, guard CRC + modelo/región/versión **sin firma**; CXD90014) que el updater ejecuta y expone un shell USB `0x23`; `serviceshell` (senser, HASP) da terminal, backup `0x603`, ficheros y memoria. `bk w 0x003e0005` escribe la propiedad BK4 `modelName` (subsistema `0x3e`/índice 5, 16 B, attr solo-lectura) en el almacén `/setting` (`nflasha2`), no una dirección de código; el preset de fábrica la trae como `ILCE-6000` (verificado). El cambio a `ILCE-6001` está reportado pero su efecto «shell mode» queda **NO VERIFICADO**: la cadena no existe en el firmware. S51 **A=NO, B=NO, C=NO**. [Documento](capture/s62-pmca-injection.md) · [matriz](../analysis/s62-evidence-matrix.json).
 
 ## Avance S58 (20-10-2026)

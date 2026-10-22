@@ -1,5 +1,11 @@
 # Estado actual — léeme primero
 
+## S141 — selección de fila IMX210, origen sin cerrar (21-10-2026)
+
+**PARCIAL:** REA `0x43b0893c` + bytes Thumb verifican `S[0]` como selector, fila en `S+4+16·S[0]` y copia de 16 bytes a `S+0xc4`; `0x43849fb8` consume esa fila al construir exposición. **NO_VERIFICADO:** quién escribe `S[0]`, condiciones de staging y origen G+`0x224`; REA no reconoció `0x43843a44`, consulta vacía no prueba ausencia. Evidencias y reproducción: [S141](../docs/capture/s141-imager-row-copy.md), `analysis/s141_imager_row_trace/row_trace.json`; 3 tests.
+
+**Siguiente:** obtener una dirección Thumb que REA admita para el código referido como `0x43843a44` y seguir evidencia positiva del store a `S[0]` / copia G→S. No nueva Ghidra. No semántica física ni cambio de S51.
+
 ## S140 — vector de registros IMX210 y bancos de filas (21-10-2026)
 
 **VERIFICADO:** REA leyó 119 punteros en `0x43fe995c`, terminador cero en `0x43fe9b38`; cada registro empieza `{u16 ID little-endian, byte +2, byte +3}`. El vector completo está en `analysis/s140_imager_regmap/imager_regmap.json` y se reproduce con `analysis/s140_imager_regmap/extract_regmap.py` (3 tests). Commit publicado: `6f064d93`.
