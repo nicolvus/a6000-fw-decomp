@@ -155,6 +155,15 @@
 - Pruebas: unittest S161 3/3 PASS; suite S140–S161 + knowledge 118/118 PASS; `git diff --check` PASS. Commit `0a26c130` publicado en `origin/main`.
 - Siguiente: clasificar otro xref pendiente por edge tipado y destino efectivo.
 
+## Investigación S162 — lectores de `state+0x1c`
+
+- Pregunta: clasificar xrefs `0x438d933e/9378` al estado y sus efectos.
+- Resultado: ambos usan `ldrh [state+0x1c]`; devuelven default 3 si cero y almacenan el halfword en `0x43f7c702/704`. No escriben state/gates en esos dos cuerpos. “Notificación” queda INFERENCIA; alcanzabilidad PARTIAL.
+- Evidencia: xrefs `ev_4db80d5468d11118561f766f8d8699b7d85f44889d368fd8c5eacd01aae0454d`; lectores `ev_02d7e5d7893000bd111b30f25f386665394b5759bfb5ae161c19b78576267719` / `ev_59bc79c25846b1f1541a2e92f6dc4702c4546864117f903afa9c76c5a9ee6dfd`.
+- Artefactos: `analysis/s162_imager_state_event_readers/{verify_state_event_readers.py,event_readers.json}`, `tests/test_s162_imager_state_event_readers.py`, `docs/capture/s162-imager-state-event-readers.md`.
+- Pruebas: unittest 3/3 PASS; falta suite/commit/push.
+- Siguiente: clasificar otro xref restante con evidencia de edge y bytes.
+
 Checkpoint persistente. Actualizar al terminar cada etapa, antes de continuar
 con la siguiente. No reescribir historial: añadir entradas nuevas.
 

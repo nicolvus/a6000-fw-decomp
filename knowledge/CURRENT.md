@@ -1,5 +1,11 @@
 # Estado actual — léeme primero
 
+## S162 — lectores de `state+0x1c` (22-10-2026)
+
+`FUN_438d9318`/`FUN_438d936c` cargan el state pointer y leen un halfword en `+0x1c`; cada resultado se escribe a `0x43f7c702` o `0x43f7c704`, no al objeto/gates. La lectura es VERIFICADA; “notificación” es INFERENCIA, alcanzabilidad runtime NO_VERIFICADA. [S162](../docs/capture/s162-imager-state-event-readers.md), `analysis/s162_imager_state_event_readers/event_readers.json` (3 tests).
+
+**Siguiente:** otro xref pendiente; comprobar si es puntero/GOT, field read o writer tipado antes de atribuirlo a gates.
+
 ## S161 — otro spill del state pointer (22-10-2026)
 
 En `FUN_4384b268`, `0x4384cb06` carga `0x43f72d02` desde GOT y `0x4384cb0a` almacena el puntero en `[sp+0x20]`; el edge al objeto es de valor, el WRITE efectivo es stack. El cuerpo lee otros campos, no gates `+3/+6`. [S161](../docs/capture/s161-imager-state-spill.md), `analysis/s161_imager_state_spill/state_spill.json` (3 tests). Límite local. Commit publicado: `0a26c130`.
