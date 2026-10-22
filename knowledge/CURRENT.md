@@ -1,5 +1,11 @@
 # Estado actual — léeme primero
 
+## S145 — staging en hueco de análisis (22-10-2026)
+
+**PARCIAL:** REA reconoce `FUN_43843a38` (`0x43843a38..0x43843a3f`), pero `0x43843a44` y la rutina que empieza en `0x437b617e` están fuera de procedimientos analizados. Los bytes originales verifican el prólogo Thumb candidato y `BL 0x43843a44` en `0x437b61d2`. Evidencia y reproducción: [S145](../docs/capture/s145-imager-code-gap.md), `analysis/s145_imager_unanalyzed_code/code_gap.json` (3 tests). Esto **no prueba ejecución ni ausencia**.
+
+**Siguiente exacto:** en REA sembrar solo entradas Thumb observadas `0x437b617e` y `0x43843a44`; recuperar `procedure_info` y refs salientes; después seguir referencias a tablas/callbacks del caller.
+
 ## S142 — referencias directas al struct S (22-10-2026)
 
 **VERIFICADO:** REA `xrefs(S=0x43eb35d0)` devuelve `0x437b56b4` (inicialización que limpia 0x148 bytes) y `0x437b59ce` (lee `u16 S+0xda`, lo consume en `0x4383c638`). Bytes Thumb del GOT/lectura/thunk corroborados y reproducibles en `analysis/s142_imager_s_init/s_accesses.json`; 3 tests. Commit publicado: `bf199b15`.
