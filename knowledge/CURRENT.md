@@ -597,6 +597,22 @@ Los 6 del A6300: `SetApertureSTFForLiro`, `SetAutoDualRecModeForLiro`, `SetExpan
 
 [Informe](../analysis/s174_forliro_api/forliro_api.md) · [doc](../docs/capture/s174-forliro-api.md). Siguiente: por qué el `CamMsgConv` de la A6000 y la A7S no soporta ninguno (¿otra ruta de conversión?); qué ganan exactamente los 6 del A6300; si los mensajes rechazados se envían por otra vía (tabla `MsgID` → manejador).
 
+## S175 — el módulo `[LIF_DEBUG]` (13 trazas): el diagnóstico del sensor de luz de la cámara (22-10-2026, línea de RE general)
+
+**VERIFICADO (11 tests, `tests/test_s175_lif_debug.py`):** `[LIF_DEBUG]` es la traza de diagnóstico del **subsistema de sensor de luz de la cámara** (`CAM LIF SENSER`): su inicialización, el registro/desregistro de los *callbacks* de **backup** (`BK`, con `BKID`) y las **copias «shadow»** entre el estado de *backup* y el «shadow». Es el **último** de los 17 módulos «de contenido nuevo» de S130.
+
+13 cadenas en `0x43cfb032`–`0x43cfb224`; **13/0/0** (A6000/A7S/A6300). **14 sitios** (regla estricta) en **3 funciones contiguas** (`0x43a1c9d8` con 8, `0x43a1cb0c` con 1, `0x43a1cb3c` con 5), **0 muertas**, con **logger propio de id `0x125`** (`0x43a1c92c`: mensaje OSAL de `0x9a` B → `osal_try_valloc_msg` `0x435612d0`, `vsnprintf` `0x439c5a04`, `osal_send_msg` `0x43561244`), igual que `[TP_R]` (S156) y `[SAD]` (S167).
+
+**Mecánica**: copia de seguridad **bidireccional** entre el estado «shadow» y el «BK», de **2** elementos (`cmp r7,#2` en `0x43a1caa2`; `cmp r4,#2` en `0x43a1cb9c`), con `bl 0x435614d0` / `bl 0x435614ec` por elemento y `bl 0x435613e8` al cerrar. Contenido: `[BKID]`, `[DataSize]`, `[Count]`, `[HandleValue]`, `[HandlerValue]`, `[Erro]`.
+
+**Los dos nombres de función aparecen SOLO dentro de las trazas**: `cam_lif_senser_copy_bk2shadow` `0x43cfb14d` y `cam_lif_senser_copy_shadow2bk` `0x43cfb18a` (**0** apariciones como símbolo independiente) → son **texto literal**, no símbolos del enlazador.
+
+**Diferencial**: el **subsistema existe en los tres firmware** (`LIF` **64/43/81**, `BKID` **28/23/22**, `SENSER` **12/7/8**) → lo propio de la fw3.21 de la A6000 es la **etiqueta** y los dos nombres escritos como texto: otra vez «se reescribe el logging, no el firmware».
+
+**Negativo acotado**: 0 menciones de obturador, disparo, lectura del sensor, exposición o tiempos → **sin efecto en S51** (A/B/C = NO).
+
+[Informe](../analysis/s175_lif_debug/lif_debug.md) · [doc](../docs/capture/s175-lif-debug.md). Siguiente: qué es el «BK» (backup) y quién registra los *callbacks*; por qué solo 2 elementos; los ids `0x125`/`0x93`/`0xa1` y los helpers `0x435613e8`/`0x435614d0`/`0x435614ec`.
+
 ## S121 — el módulo `[AIP]` (37 trazas): la interfaz de audio con el escalado (21-10-2026, línea de RE general)
 
 **VERIFICADO (97 tests, `tests/test_s121_aip.py`):** 37 cadenas `[AIP]` en `0x43cdd844`–`0x43cdec50`; **16 funciones** y 6 sub-bloques RTTI: `SaWrapper` (8), `SaBackUpCtrl` (12), `SaDriverBase` (4), `LPS` (11), `SaDriverZoomNr` (1), `SetFader` (1). **Callbacks `Ack`/`Comp`/`Err` en tres capas**: SA (`0x43926d1c`/`0x43926de8`, con los predicados `[r1,#1]==0x14`/`0x13`), LPS (`0x4392b16c`/`0x4392b254`) y driver; los errores llevan `errCode`+`errState` (SA) o `ErrCode`+`ErrStatus` (LPS). **Tabla de backup**: **350 entradas de 12 B** en `0x43bd1964` con `{id = 0x10c0000 + n, offset, size}`; `WriteShadow2BakcupArea` vuelca `0x10c` B (`mov.w r0,#0x10c` en `0x4392ab78`) y `SetAudioNrType` publica el **bit 3** de `bkId = 0x10e0000`. Comandos hacia el escalar en `0x4392ac30` (`Cmd`/`Func` + `Zma`/`Ext`/`Mbx`) y `0x4392acb4` (`Cmd`/`Func`/`Unq`). Buffers LPS `0x82`/`0x83`/`0x85` con longitudes `0x2c`/`0x28`/`0x14`; `SetFader` (`0x4355ae98`) divide por 100/20/otro según `[r0,#0x78]`.
