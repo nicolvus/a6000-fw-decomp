@@ -115,6 +115,16 @@ Para restricciones del proyecto (sin firmware ejecutado, sin flasheo, sin `git p
 
 [Informe](../analysis/s127_camera_main_lc/camera_main_lc.md) · [doc](../docs/capture/s127-camera-main-lc.md). Siguiente: el layout completo del resultado ZPD; qué consume `LC_GetZpdResultInfo`; el significado de `lc_Movie_DM_AF_Util_*`.
 
+## S131 — `[VPH_API]`: la API de parámetros del subsistema VPH (21-10-2026, línea de RE general)
+
+**VERIFICADO (7 tests, `tests/test_s131_vph_api.py`):** 106 trazas `[VPH_API]` contiguas `0x43ce32e7`–`0x43ce3dfc` con **sintaxis de API explícita**: 49 entradas `<nombre>` (p. ej. `[VPH_API]<mode>` `0x43ce32e7`), 42 variantes `_sub` (`<mode_sub>` `0x43ce3781`), 11 salidas `>nombre<` (`>mode_status<` `0x43ce3d0e`) y 4 `=x=` (`=v_command_comp=` `0x43ce374b`) → **60 familias de parámetros** del subsistema de display (OSD, panel, salida de línea, muteos, ayudas de encuadre, línea de vídeo). Las emiten **48 manejadores** (uno por parámetro, una sola traza cada uno) en dos bloques: `0x4395aab8`–`0x4395b5f4` (39) y `0x4395e1b8`–`0x4395e34c` (9), de 52 a 160 B cada uno.
+
+**Línea del obturador**: la API incluye el **silenciador del obturador** con 4 trazas (`<shutter_mute_param>` `0x43ce3634`, `<shutter_mute_param_sub>` `0x43ce3b5a`, `>shutter_mute<` `0x43ce3de4`, `>shutter_mute_status<o/f:%d` `0x43ce3dfc`): las 4 cadenas `shutter_mute*` **no existen** en la A7S fw3.20 ni en el A6300 fw2.01, mientras que la traza `shutter mute on/off` (`[SFRS][PINSEND]`, S118) **sí** está en los tres → la fw3.21 **añade el parámetro de API**, no el mecanismo (es el obturador **mecánico**, como `yuv_mute` y `chroma_mute`). **Sin efecto en S51.**
+
+**Diferencial**: A7S fw3.20 y A6300 fw2.01 con **0** trazas `[VPH_API]` y 24 apariciones del token `VPH`, frente a las **106** trazas y **134** apariciones de la A6000 fw3.21 → el subsistema VPH es mucho mayor en esta fw; no solo se etiqueta (S128), es que la API completa no está en ellos.
+
+[Informe](../analysis/s131_vph_api/vph_api.md) · [doc](../docs/capture/s131-vph-api.md). Siguiente: cómo se referencia la tabla de manejadores y quién la invoca; qué hacen `laxo`, `diceic_arb`, `line_fchr`, `set_eomainsub_inverse`; qué hace exactamente `shutter_mute_param` y quién lo consume.
+
 ## S121 — el módulo `[AIP]` (37 trazas): la interfaz de audio con el escalado (21-10-2026, línea de RE general)
 
 **VERIFICADO (97 tests, `tests/test_s121_aip.py`):** 37 cadenas `[AIP]` en `0x43cdd844`–`0x43cdec50`; **16 funciones** y 6 sub-bloques RTTI: `SaWrapper` (8), `SaBackUpCtrl` (12), `SaDriverBase` (4), `LPS` (11), `SaDriverZoomNr` (1), `SetFader` (1). **Callbacks `Ack`/`Comp`/`Err` en tres capas**: SA (`0x43926d1c`/`0x43926de8`, con los predicados `[r1,#1]==0x14`/`0x13`), LPS (`0x4392b16c`/`0x4392b254`) y driver; los errores llevan `errCode`+`errState` (SA) o `ErrCode`+`ErrStatus` (LPS). **Tabla de backup**: **350 entradas de 12 B** en `0x43bd1964` con `{id = 0x10c0000 + n, offset, size}`; `WriteShadow2BakcupArea` vuelca `0x10c` B (`mov.w r0,#0x10c` en `0x4392ab78`) y `SetAudioNrType` publica el **bit 3** de `bkId = 0x10e0000`. Comandos hacia el escalar en `0x4392ac30` (`Cmd`/`Func` + `Zma`/`Ext`/`Mbx`) y `0x4392acb4` (`Cmd`/`Func`/`Unq`). Buffers LPS `0x82`/`0x83`/`0x85` con longitudes `0x2c`/`0x28`/`0x14`; `SetFader` (`0x4355ae98`) divide por 100/20/otro según `[r0,#0x78]`.
