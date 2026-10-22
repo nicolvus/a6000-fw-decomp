@@ -1,0 +1,744 @@
+{
+ "milestone": "S169",
+ "titulo": "control positivo del obturador electronico: la API de drive del A6300 y su ausencia total en la A6000",
+ "base_vaddr": "43541000",
+ "firmwares": {
+  "A6000_fw321": {
+   "ruta": "analysis/rea-independent/input/av-cam.bin",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "len": 11427236,
+   "terminos": {
+    "CheckSet": 0,
+    "ParamCheckErr": 0,
+    "LiroSeq": 2,
+    "sc_ShutDrive": 0,
+    "uc_ShutDriveMode": 0,
+    "front_eshutter": 0,
+    "SilentShutterMode": 0,
+    "shutterType": 0,
+    "sc_IrisDrive": 0,
+    "uc_IrisDriveMode": 0,
+    "sc_ExposureDrive": 0,
+    "ul_ShutLowLimit": 0,
+    "isoAutoMinShutSpeedMode": 0,
+    "MovieAutoSlowshutMode": 0,
+    "drive_mode": 10
+   }
+  },
+  "A7S_fw320": {
+   "ruta": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "len": 11455416,
+   "terminos": {
+    "CheckSet": 0,
+    "ParamCheckErr": 0,
+    "LiroSeq": 2,
+    "sc_ShutDrive": 0,
+    "uc_ShutDriveMode": 0,
+    "front_eshutter": 0,
+    "SilentShutterMode": 0,
+    "shutterType": 0,
+    "sc_IrisDrive": 0,
+    "uc_IrisDriveMode": 0,
+    "sc_ExposureDrive": 0,
+    "ul_ShutLowLimit": 0,
+    "isoAutoMinShutSpeedMode": 0,
+    "MovieAutoSlowshutMode": 0,
+    "drive_mode": 4
+   }
+  },
+  "A6300_fw201": {
+   "ruta": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+   "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16",
+   "len": 13382836,
+   "terminos": {
+    "CheckSet": 201,
+    "ParamCheckErr": 370,
+    "LiroSeq": 372,
+    "sc_ShutDrive": 1,
+    "uc_ShutDriveMode": 1,
+    "front_eshutter": 1,
+    "SilentShutterMode": 2,
+    "shutterType": 1,
+    "sc_IrisDrive": 1,
+    "uc_IrisDriveMode": 1,
+    "sc_ExposureDrive": 1,
+    "ul_ShutLowLimit": 1,
+    "isoAutoMinShutSpeedMode": 1,
+    "MovieAutoSlowshutMode": 1,
+    "drive_mode": 6
+   }
+  }
+ },
+ "capas_liro_seq": {
+  "CheckSet_nombres": {
+   "A6000_fw321": 0,
+   "A7S_fw320": 0,
+   "A6300_fw201": 201
+  },
+  "ParamCheckErr_mensajes": {
+   "A6000_fw321": 0,
+   "A7S_fw320": 0,
+   "A6300_fw201": 370
+  },
+  "pares_propiedad_campo": 387,
+  "region_despachadora_A6300": [
+   "0x438c4ade",
+   "0x438c8c76"
+  ],
+  "todos_los_nombres_vivos": true
+ },
+ "propiedades_de_obturador": [
+  {
+   "propiedad": "CheckSetAFRangeLimitDrive",
+   "campo": "af_range_limit_drive_near",
+   "mensaje": "LiroSeq ParamCheckErr@%s[af_range_limit_drive_near] cur:%d req:%d",
+   "sitio_add_mensaje": "438c7ea4",
+   "sitio_add_etiqueta": "438c7ea6",
+   "offset_campo": "0x3ec",
+   "tipo": "byte"
+  },
+  {
+   "propiedad": "CheckSetAFRangeLimitDrive",
+   "campo": "af_range_limit_drive_near",
+   "mensaje": "LiroSeq ParamCheckErr@%s[af_range_limit_drive_near] cur:%d req:%d",
+   "sitio_add_mensaje": "438c7ebc",
+   "sitio_add_etiqueta": "438c7ebe",
+   "offset_campo": "0x3ec",
+   "tipo": "byte"
+  },
+  {
+   "propiedad": "CheckSetAfDriveSpeed",
+   "campo": "af_drive_speed",
+   "mensaje": "LiroSeq ParamCheckErr@%s[af_drive_speed] cur:%d req:%d",
+   "sitio_add_mensaje": "438c576c",
+   "sitio_add_etiqueta": "438c576e",
+   "offset_campo": "0x348",
+   "tipo": "word"
+  },
+  {
+   "propiedad": "CheckSetDriveMode",
+   "campo": "drive_mode",
+   "mensaje": "LiroSeq ParamCheckErr@%s[drive_mode] cur:%d req:%d",
+   "sitio_add_mensaje": "438c4dec",
+   "sitio_add_etiqueta": "438c4dee",
+   "offset_campo": "0x64",
+   "tipo": "word"
+  },
+  {
+   "propiedad": "CheckSetDriveMode",
+   "campo": "drive_speed",
+   "mensaje": "LiroSeq ParamCheckErr@%s[drive_speed] cur:%d req:%d",
+   "sitio_add_mensaje": "438c4e00",
+   "sitio_add_etiqueta": "438c4e02",
+   "offset_campo": "0x64",
+   "tipo": "word"
+  },
+  {
+   "propiedad": "CheckSetDriveMode",
+   "campo": "burst_count_max",
+   "mensaje": "LiroSeq ParamCheckErr@%s[burst_count_max] cur:%d req:%d",
+   "sitio_add_mensaje": "438c4e26",
+   "sitio_add_etiqueta": "438c4e28",
+   "offset_campo": null,
+   "tipo": null
+  },
+  {
+   "propiedad": "CheckSetExposureBias",
+   "campo": "sc_ExposureBias",
+   "mensaje": "LiroSeq ParamCheckErr@%s[sc_ExposureBias] cur:%d req:%d",
+   "sitio_add_mensaje": "438c5e78",
+   "sitio_add_etiqueta": "438c5e7a",
+   "offset_campo": "0x1bf",
+   "tipo": "byte"
+  },
+  {
+   "propiedad": "CheckSetExposureBias",
+   "campo": "ExposureBiasStep",
+   "mensaje": "LiroSeq ParamCheckErr@%s[ExposureBiasStep] cur:%d req:%d",
+   "sitio_add_mensaje": "438c5e8e",
+   "sitio_add_etiqueta": "438c5e90",
+   "offset_campo": "0x1bf",
+   "tipo": "byte"
+  },
+  {
+   "propiedad": "CheckSetExposureBias",
+   "campo": "uc_ExposureBiasSW",
+   "mensaje": "LiroSeq ParamCheckErr@%s[uc_ExposureBiasSW] cur:%d req:%d",
+   "sitio_add_mensaje": "438c5ea4",
+   "sitio_add_etiqueta": "438c5ea6",
+   "offset_campo": null,
+   "tipo": null
+  },
+  {
+   "propiedad": "CheckSetFocusContDrive",
+   "campo": "focus_cont_drive_dir",
+   "mensaje": "LiroSeq ParamCheckErr@%s[focus_cont_drive_dir] cur:%d req:%d",
+   "sitio_add_mensaje": "438c5738",
+   "sitio_add_etiqueta": "438c573a",
+   "offset_campo": "0x33c",
+   "tipo": "word"
+  },
+  {
+   "propiedad": "CheckSetFocusDrive",
+   "campo": "focus_speed",
+   "mensaje": "LiroSeq ParamCheckErr@%s[focus_speed] cur:%d req:%d",
+   "sitio_add_mensaje": "438c5704",
+   "sitio_add_etiqueta": "438c5706",
+   "offset_campo": "0x334",
+   "tipo": "byte"
+  },
+  {
+   "propiedad": "CheckSetFrontEshutter",
+   "campo": "front_eshutter",
+   "mensaje": "LiroSeq ParamCheckErr@%s[front_eshutter] cur:%d req:%d",
+   "sitio_add_mensaje": "438c6e1c",
+   "sitio_add_etiqueta": "438c6e1e",
+   "offset_campo": "0x23c",
+   "tipo": "word"
+  },
+  {
+   "propiedad": "CheckSetIrisDial",
+   "campo": "us_iris_dial_no",
+   "mensaje": "LiroSeq ParamCheckErr@%s[us_iris_dial_no] cur:%d req:%d",
+   "sitio_add_mensaje": "438c7ffc",
+   "sitio_add_etiqueta": "438c7ffe",
+   "offset_campo": "0x254",
+   "tipo": "half"
+  },
+  {
+   "propiedad": "CheckSetIrisDial",
+   "campo": "uc_iris_dial_enable",
+   "mensaje": "LiroSeq ParamCheckErr@%s[uc_iris_dial_enable] cur:%d req:%d",
+   "sitio_add_mensaje": "438c8012",
+   "sitio_add_etiqueta": "438c8014",
+   "offset_campo": "0x254",
+   "tipo": "half"
+  },
+  {
+   "propiedad": "CheckSetIrisDial",
+   "campo": "uc_iris_dial_backup",
+   "mensaje": "LiroSeq ParamCheckErr@%s[uc_iris_dial_backup] cur:%d req:%d",
+   "sitio_add_mensaje": "438c8028",
+   "sitio_add_etiqueta": "438c802a",
+   "offset_campo": null,
+   "tipo": null
+  },
+  {
+   "propiedad": "CheckSetIrisDrive",
+   "campo": "sc_IrisDrive",
+   "mensaje": "LiroSeq ParamCheckErr@%s[sc_IrisDrive] cur:%d req:%d",
+   "sitio_add_mensaje": "438c55a0",
+   "sitio_add_etiqueta": "438c55a2",
+   "offset_campo": "0x1d1",
+   "tipo": "byte"
+  },
+  {
+   "propiedad": "CheckSetIrisDrive",
+   "campo": "iris_switch",
+   "mensaje": "LiroSeq ParamCheckErr@%s[iris_switch] cur:%d req:%d",
+   "sitio_add_mensaje": "438c55b6",
+   "sitio_add_etiqueta": "438c55b8",
+   "offset_campo": "0x1d1",
+   "tipo": "byte"
+  },
+  {
+   "propiedad": "CheckSetIrisDrive",
+   "campo": "us_iris_abs_no",
+   "mensaje": "LiroSeq ParamCheckErr@%s[us_iris_abs_no] cur:%d req:%d",
+   "sitio_add_mensaje": "438c55d2",
+   "sitio_add_etiqueta": "438c55d4",
+   "offset_campo": null,
+   "tipo": null
+  },
+  {
+   "propiedad": "CheckSetIrisDrive",
+   "campo": "us_iris_cont",
+   "mensaje": "LiroSeq ParamCheckErr@%s[us_iris_cont] cur:%d req:%d",
+   "sitio_add_mensaje": "438c55ee",
+   "sitio_add_etiqueta": "438c55f0",
+   "offset_campo": null,
+   "tipo": null
+  },
+  {
+   "propiedad": "CheckSetIrisDriveMode",
+   "campo": "uc_IrisDriveMode",
+   "mensaje": "LiroSeq ParamCheckErr@%s[uc_IrisDriveMode] cur:%d req:%d",
+   "sitio_add_mensaje": "438c680c",
+   "sitio_add_etiqueta": "438c680e",
+   "offset_campo": "0x1d0",
+   "tipo": "byte"
+  },
+  {
+   "propiedad": "CheckSetIsoAutoMinShutSpeed",
+   "campo": "isoAutoMinShutSpeedMode",
+   "mensaje": "LiroSeq ParamCheckErr@%s[isoAutoMinShutSpeedMode] cur:%d req:%d",
+   "sitio_add_mensaje": "438c8aca",
+   "sitio_add_etiqueta": "438c8acc",
+   "offset_campo": "0x28c",
+   "tipo": "word"
+  },
+  {
+   "propiedad": "CheckSetIsoAutoMinShutSpeed",
+   "campo": "ul_IsoAutoMinShutSpeedDenom",
+   "mensaje": "LiroSeq ParamCheckErr@%s[ul_IsoAutoMinShutSpeedDenom] cur:%d req:%d",
+   "sitio_add_mensaje": "438c8af2",
+   "sitio_add_etiqueta": "438c8af4",
+   "offset_campo": null,
+   "tipo": null
+  },
+  {
+   "propiedad": "CheckSetIsoAutoMinShutSpeed",
+   "campo": "us_IsoAutoMinShutSpeedNumer",
+   "mensaje": "LiroSeq ParamCheckErr@%s[us_IsoAutoMinShutSpeedNumer] cur:%d req:%d",
+   "sitio_add_mensaje": "438c8b0e",
+   "sitio_add_etiqueta": "438c8b10",
+   "offset_campo": null,
+   "tipo": null
+  },
+  {
+   "propiedad": "CheckSetIsoSpeedRate",
+   "campo": "IsoSpeedRate",
+   "mensaje": "LiroSeq ParamCheckErr@%s[IsoSpeedRate] cur:%d req:%d",
+   "sitio_add_mensaje": "438c563a",
+   "sitio_add_etiqueta": "438c563c",
+   "offset_campo": null,
+   "tipo": null
+  },
+  {
+   "propiedad": "CheckSetIsoSpeedRate",
+   "campo": "IsoSpeedRateMin",
+   "mensaje": "LiroSeq ParamCheckErr@%s[IsoSpeedRateMin] cur:%d req:%d",
+   "sitio_add_mensaje": "438c5650",
+   "sitio_add_etiqueta": "438c5652",
+   "offset_campo": "0x1e0",
+   "tipo": "word"
+  },
+  {
+   "propiedad": "CheckSetIsoSpeedRate",
+   "campo": "IsoSpeedRateMax",
+   "mensaje": "LiroSeq ParamCheckErr@%s[IsoSpeedRateMax] cur:%d req:%d",
+   "sitio_add_mensaje": "438c5666",
+   "sitio_add_etiqueta": "438c5668",
+   "offset_campo": null,
+   "tipo": null
+  },
+  {
+   "propiedad": "CheckSetIsoSpeedRate",
+   "campo": "IsoSpeedRateMinAvailable",
+   "mensaje": "LiroSeq ParamCheckErr@%s[IsoSpeedRateMinAvailable] cur:%d req:%d",
+   "sitio_add_mensaje": "438c567c",
+   "sitio_add_etiqueta": "438c567e",
+   "offset_campo": null,
+   "tipo": null
+  },
+  {
+   "propiedad": "CheckSetIsoSpeedRate",
+   "campo": "IsoSpeedRateMaxAvailable",
+   "mensaje": "LiroSeq ParamCheckErr@%s[IsoSpeedRateMaxAvailable] cur:%d req:%d",
+   "sitio_add_mensaje": "438c5692",
+   "sitio_add_etiqueta": "438c5694",
+   "offset_campo": null,
+   "tipo": null
+  },
+  {
+   "propiedad": "CheckSetIsoSpeedRate",
+   "campo": "MultiShotNRLevel",
+   "mensaje": "LiroSeq ParamCheckErr@%s[MultiShotNRLevel] cur:%d req:%d",
+   "sitio_add_mensaje": "438c56a8",
+   "sitio_add_etiqueta": "438c56aa",
+   "offset_campo": null,
+   "tipo": null
+  },
+  {
+   "propiedad": "CheckSetManualExposureDrive",
+   "campo": "sc_ExposureDrive",
+   "mensaje": "LiroSeq ParamCheckErr@%s[sc_ExposureDrive] cur:%d req:%d",
+   "sitio_add_mensaje": "438c5d12",
+   "sitio_add_etiqueta": "438c5d14",
+   "offset_campo": "0x1ac",
+   "tipo": "byte"
+  },
+  {
+   "propiedad": "CheckSetManualExposureMode",
+   "campo": "uc_ManualExposureMode",
+   "mensaje": "LiroSeq ParamCheckErr@%s[uc_ManualExposureMode] cur:%d req:%d",
+   "sitio_add_mensaje": "438c72e0",
+   "sitio_add_etiqueta": "438c72e2",
+   "offset_campo": "0x240",
+   "tipo": "byte"
+  },
+  {
+   "propiedad": "CheckSetMovieAFSensibility",
+   "campo": "movie_af_sensibility",
+   "mensaje": "LiroSeq ParamCheckErr@%s[movie_af_sensibility] cur:%d req:%d",
+   "sitio_add_mensaje": "438c7c6c",
+   "sitio_add_etiqueta": "438c7c6e",
+   "offset_campo": "0x3d8",
+   "tipo": "word"
+  },
+  {
+   "propiedad": "CheckSetMovieAfDriveSpeed",
+   "campo": "movie_af_drive_speed",
+   "mensaje": "LiroSeq ParamCheckErr@%s[movie_af_drive_speed] cur:%d req:%d",
+   "sitio_add_mensaje": "438c8344",
+   "sitio_add_etiqueta": "438c8346",
+   "offset_campo": "0x410",
+   "tipo": "word"
+  },
+  {
+   "propiedad": "CheckSetMovieAutoSlowShutMode",
+   "campo": "MovieAutoSlowshutMode",
+   "mensaje": "LiroSeq ParamCheckErr@%s[MovieAutoSlowshutMode] cur:%d req:%d",
+   "sitio_add_mensaje": "438c7ef8",
+   "sitio_add_etiqueta": "438c7efa",
+   "offset_campo": "0x250",
+   "tipo": "word"
+  },
+  {
+   "propiedad": "CheckSetMovieColorSpace",
+   "campo": "movie_color_space",
+   "mensaje": "LiroSeq ParamCheckErr@%s[movie_color_space] cur:%d req:%d",
+   "sitio_add_mensaje": "438c5d44",
+   "sitio_add_etiqueta": "438c5d46",
+   "offset_campo": "0x444",
+   "tipo": "word"
+  },
+  {
+   "propiedad": "CheckSetMovieFormat",
+   "campo": "mov_size_req",
+   "mensaje": "LiroSeq ParamCheckErr@%s[mov_size_req] cur:%d req:%d",
+   "sitio_add_mensaje": "438c4adc",
+   "sitio_add_etiqueta": "438c4ade",
+   "offset_campo": "0x1c",
+   "tipo": "word"
+  },
+  {
+   "propiedad": "CheckSetMovieFormat",
+   "campo": "frate_req",
+   "mensaje": "LiroSeq ParamCheckErr@%s[frate_req] cur:%d req:%d",
+   "sitio_add_mensaje": "438c4af0",
+   "sitio_add_etiqueta": "438c4af2",
+   "offset_campo": "0x1c",
+   "tipo": "word"
+  },
+  {
+   "propiedad": "CheckSetMovieFormat",
+   "campo": "mov_aspect_req",
+   "mensaje": "LiroSeq ParamCheckErr@%s[mov_aspect_req] cur:%d req:%d",
+   "sitio_add_mensaje": "438c4b04",
+   "sitio_add_etiqueta": "438c4b06",
+   "offset_campo": null,
+   "tipo": null
+  },
+  {
+   "propiedad": "CheckSetMovieFormat",
+   "campo": "mov_sizeh_req",
+   "mensaje": "LiroSeq ParamCheckErr@%s[mov_sizeh_req] cur:%d req:%d",
+   "sitio_add_mensaje": "438c4b18",
+   "sitio_add_etiqueta": "438c4b1a",
+   "offset_campo": null,
+   "tipo": null
+  },
+  {
+   "propiedad": "CheckSetMovieFormat",
+   "campo": "mov_proxy_req",
+   "mensaje": "LiroSeq ParamCheckErr@%s[mov_proxy_req] cur:%d req:%d",
+   "sitio_add_mensaje": "438c4b2c",
+   "sitio_add_etiqueta": "438c4b2e",
+   "offset_campo": null,
+   "tipo": null
+  },
+  {
+   "propiedad": "CheckSetMovieFormat",
+   "campo": "mov_size_proxy_req",
+   "mensaje": "LiroSeq ParamCheckErr@%s[mov_size_proxy_req] cur:%d req:%d",
+   "sitio_add_mensaje": "438c4b40",
+   "sitio_add_etiqueta": "438c4b42",
+   "offset_campo": null,
+   "tipo": null
+  },
+  {
+   "propiedad": "CheckSetMovieFormat",
+   "campo": "frate_proxy_req",
+   "mensaje": "LiroSeq ParamCheckErr@%s[frate_proxy_req] cur:%d req:%d",
+   "sitio_add_mensaje": "438c4b54",
+   "sitio_add_etiqueta": "438c4b56",
+   "offset_campo": null,
+   "tipo": null
+  },
+  {
+   "propiedad": "CheckSetMovieFormat",
+   "campo": "mov_raw_output_mode",
+   "mensaje": "LiroSeq ParamCheckErr@%s[mov_raw_output_mode] cur:%d req:%d",
+   "sitio_add_mensaje": "438c4b68",
+   "sitio_add_etiqueta": "438c4b6a",
+   "offset_campo": null,
+   "tipo": null
+  },
+  {
+   "propiedad": "CheckSetMovieFormat",
+   "campo": "mov_raw_size",
+   "mensaje": "LiroSeq ParamCheckErr@%s[mov_raw_size] cur:%d req:%d",
+   "sitio_add_mensaje": "438c4b7c",
+   "sitio_add_etiqueta": "438c4b7e",
+   "offset_campo": null,
+   "tipo": null
+  },
+  {
+   "propiedad": "CheckSetMovieRecMode",
+   "campo": "movrec_mode_req",
+   "mensaje": "LiroSeq ParamCheckErr@%s[movrec_mode_req] cur:%d req:%d",
+   "sitio_add_mensaje": "438c73bc",
+   "sitio_add_etiqueta": "438c73be",
+   "offset_campo": "0xcc",
+   "tipo": "word"
+  },
+  {
+   "propiedad": "CheckSetPShiftDrive",
+   "campo": "sc_PShiftDrive",
+   "mensaje": "LiroSeq ParamCheckErr@%s[sc_PShiftDrive] cur:%d req:%d",
+   "sitio_add_mensaje": "438c516c",
+   "sitio_add_etiqueta": "438c516e",
+   "offset_campo": "0x1ba",
+   "tipo": "byte"
+  },
+  {
+   "propiedad": "CheckSetPShiftDrive",
+   "campo": "uc_PShiftTimeout",
+   "mensaje": "LiroSeq ParamCheckErr@%s[uc_PShiftTimeout] cur:%d req:%d",
+   "sitio_add_mensaje": "438c5182",
+   "sitio_add_etiqueta": "438c5184",
+   "offset_campo": "0x1ba",
+   "tipo": "byte"
+  },
+  {
+   "propiedad": "CheckSetParallaxCalibrationDrive",
+   "campo": "parallax_calibration_drive",
+   "mensaje": "LiroSeq ParamCheckErr@%s[parallax_calibration_drive] cur:%d req:%d",
+   "sitio_add_mensaje": "438c69e2",
+   "sitio_add_etiqueta": "438c69e4",
+   "offset_campo": "0x4eb",
+   "tipo": "byte"
+  },
+  {
+   "propiedad": "CheckSetPushAutoIrisMode",
+   "campo": "PushAutoIrisMode",
+   "mensaje": "LiroSeq ParamCheckErr@%s[PushAutoIrisMode] cur:%d req:%d",
+   "sitio_add_mensaje": "438c763c",
+   "sitio_add_etiqueta": "438c763e",
+   "offset_campo": "0x244",
+   "tipo": "word"
+  },
+  {
+   "propiedad": "CheckSetShutDrive",
+   "campo": "sc_ShutDrive",
+   "mensaje": "LiroSeq ParamCheckErr@%s[sc_ShutDrive] cur:%d req:%d",
+   "sitio_add_mensaje": "438c51be",
+   "sitio_add_etiqueta": "438c51c0",
+   "offset_campo": "0x1dd",
+   "tipo": "byte"
+  },
+  {
+   "propiedad": "CheckSetShutDriveMode",
+   "campo": "uc_ShutDriveMode",
+   "mensaje": "LiroSeq ParamCheckErr@%s[uc_ShutDriveMode] cur:%d req:%d",
+   "sitio_add_mensaje": "438c6840",
+   "sitio_add_etiqueta": "438c6842",
+   "offset_campo": "0x1dc",
+   "tipo": "byte"
+  },
+  {
+   "propiedad": "CheckSetShutLowLimit",
+   "campo": "ul_ShutLowLimit",
+   "mensaje": "LiroSeq ParamCheckErr@%s[ul_ShutLowLimit] cur:%d req:%d",
+   "sitio_add_mensaje": "438c7ba2",
+   "sitio_add_etiqueta": "438c7ba4",
+   "offset_campo": "0x248",
+   "tipo": "word"
+  },
+  {
+   "propiedad": "CheckSetShutterType",
+   "campo": "shutterType",
+   "mensaje": "LiroSeq ParamCheckErr@%s[shutterType] cur:%d req:%d",
+   "sitio_add_mensaje": "438c8b50",
+   "sitio_add_etiqueta": "438c8b52",
+   "offset_campo": "0x268",
+   "tipo": "word"
+  },
+  {
+   "propiedad": "CheckSetSilentShutterMode",
+   "campo": "SilentShutterMode",
+   "mensaje": "LiroSeq ParamCheckErr@%s[SilentShutterMode] cur:%d req:%d",
+   "sitio_add_mensaje": "438c81d8",
+   "sitio_add_etiqueta": "438c81da",
+   "offset_campo": "0x264",
+   "tipo": "word"
+  },
+  {
+   "propiedad": "CheckSetSmileShutterMode",
+   "campo": "smile_shutter_mode",
+   "mensaje": "LiroSeq ParamCheckErr@%s[smile_shutter_mode] cur:%d req:%d",
+   "sitio_add_mensaje": "438c7314",
+   "sitio_add_etiqueta": "438c7316",
+   "offset_campo": "0xac",
+   "tipo": "word"
+  },
+  {
+   "propiedad": "CheckSetSteadyShotAdvancedMovie",
+   "campo": "steadyshot_info",
+   "mensaje": "LiroSeq ParamCheckErr@%s[steadyshot_info] cur:%d req:%d",
+   "sitio_add_mensaje": "438c89f2",
+   "sitio_add_etiqueta": "438c89f4",
+   "offset_campo": "0x508",
+   "tipo": "word"
+  },
+  {
+   "propiedad": "CheckSetSteadyShotAdvancedMovie",
+   "campo": "steadyshot_body_axis",
+   "mensaje": "LiroSeq ParamCheckErr@%s[steadyshot_body_axis] cur:%d req:%d",
+   "sitio_add_mensaje": "438c8a08",
+   "sitio_add_etiqueta": "438c8a0a",
+   "offset_campo": "0x508",
+   "tipo": "word"
+  },
+  {
+   "propiedad": "CheckSetSteadyShotAdvancedMovie",
+   "campo": "us_steadyshot_focal_length",
+   "mensaje": "LiroSeq ParamCheckErr@%s[us_steadyshot_focal_length] cur:%d req:%d",
+   "sitio_add_mensaje": "438c8a24",
+   "sitio_add_etiqueta": "438c8a26",
+   "offset_campo": null,
+   "tipo": null
+  },
+  {
+   "propiedad": "CheckSetSteadyShotAdvancedMovie",
+   "campo": "steadyshot_info_movie",
+   "mensaje": "LiroSeq ParamCheckErr@%s[steadyshot_info_movie] cur:%d req:%d",
+   "sitio_add_mensaje": "438c8a3a",
+   "sitio_add_etiqueta": "438c8a3c",
+   "offset_campo": null,
+   "tipo": null
+  },
+  {
+   "propiedad": "CheckSetSteadyShotAdvancedMovie",
+   "campo": "steadyshot_body_axis_movie",
+   "mensaje": "LiroSeq ParamCheckErr@%s[steadyshot_body_axis_movie] cur:%d req:%d",
+   "sitio_add_mensaje": "438c8a50",
+   "sitio_add_etiqueta": "438c8a52",
+   "offset_campo": null,
+   "tipo": null
+  },
+  {
+   "propiedad": "CheckSetSteadyShotAdvancedMovie",
+   "campo": "us_steadyshot_focal_length_movie",
+   "mensaje": "LiroSeq ParamCheckErr@%s[us_steadyshot_focal_length_movie] cur:%d req:%d",
+   "sitio_add_mensaje": "438c8a6c",
+   "sitio_add_etiqueta": "438c8a6e",
+   "offset_campo": null,
+   "tipo": null
+  },
+  {
+   "propiedad": "CheckSetSyncMShiftDrive",
+   "campo": "sc_MShiftDrive",
+   "mensaje": "LiroSeq ParamCheckErr@%s[sc_MShiftDrive] cur:%d req:%d",
+   "sitio_add_mensaje": "438c6a7e",
+   "sitio_add_etiqueta": "438c6a80",
+   "offset_campo": "0x228",
+   "tipo": "byte"
+  },
+  {
+   "propiedad": "CheckSetTcOnMovie",
+   "campo": "is_on_movie",
+   "mensaje": "LiroSeq ParamCheckErr@%s[is_on_movie] cur:%d req:%d",
+   "sitio_add_mensaje": "438c4f00",
+   "sitio_add_etiqueta": "438c4f02",
+   "offset_campo": "0x4d8",
+   "tipo": "word"
+  },
+  {
+   "propiedad": "CheckSetZoomDrive",
+   "campo": "zoom_speed",
+   "mensaje": "LiroSeq ParamCheckErr@%s[zoom_speed] cur:%d req:%d",
+   "sitio_add_mensaje": "438c4c26",
+   "sitio_add_etiqueta": "438c4c28",
+   "offset_campo": "0x320",
+   "tipo": "byte"
+  },
+  {
+   "propiedad": "CheckSetZoomDrive",
+   "campo": "zoom_drive",
+   "mensaje": "LiroSeq ParamCheckErr@%s[zoom_drive] cur:%d req:%d",
+   "sitio_add_mensaje": "438c4c3c",
+   "sitio_add_etiqueta": "438c4c3e",
+   "offset_campo": "0x320",
+   "tipo": "byte"
+  },
+  {
+   "propiedad": "CheckSetZoomDrive",
+   "campo": "zoom_trigger",
+   "mensaje": "LiroSeq ParamCheckErr@%s[zoom_trigger] cur:%d req:%d",
+   "sitio_add_mensaje": "438c4c52",
+   "sitio_add_etiqueta": "438c4c54",
+   "offset_campo": null,
+   "tipo": null
+  },
+  {
+   "propiedad": "CheckSetZoomDriveAssign",
+   "campo": "uc_zoom_drive_asign",
+   "mensaje": "LiroSeq ParamCheckErr@%s[uc_zoom_drive_asign] cur:%d req:%d",
+   "sitio_add_mensaje": "438c7f2c",
+   "sitio_add_etiqueta": "438c7f2e",
+   "offset_campo": "0x3f0",
+   "tipo": "word"
+  },
+  {
+   "propiedad": "CheckSetZoomDriveSpeed",
+   "campo": "uc_zoom_speed_type",
+   "mensaje": "LiroSeq ParamCheckErr@%s[uc_zoom_speed_type] cur:%d req:%d",
+   "sitio_add_mensaje": "438c7f62",
+   "sitio_add_etiqueta": "438c7f64",
+   "offset_campo": "0x3f4",
+   "tipo": "word"
+  },
+  {
+   "propiedad": "CheckSetZoomDriveSpeed",
+   "campo": "ul_zoom_fixed_speed_num",
+   "mensaje": "LiroSeq ParamCheckErr@%s[ul_zoom_fixed_speed_num] cur:%d req:%d",
+   "sitio_add_mensaje": "438c7f8a",
+   "sitio_add_etiqueta": "438c7f8c",
+   "offset_campo": null,
+   "tipo": null
+  },
+  {
+   "propiedad": "CheckSetZoomDriveSpeed",
+   "campo": "ul_zoom_fixed_speed_denom",
+   "mensaje": "LiroSeq ParamCheckErr@%s[ul_zoom_fixed_speed_denom] cur:%d req:%d",
+   "sitio_add_mensaje": "438c7fb2",
+   "sitio_add_etiqueta": "438c7fb4",
+   "offset_campo": null,
+   "tipo": null
+  }
+ ],
+ "mapas_pic": {
+  "a6000": "analysis/s106_imaging_cap/pic_refs_strict_global.json",
+  "a6300": {
+   "ruta": "analysis/s169_drive_api/pic_refs_strict_a6300.json",
+   "destinos": 20001
+  },
+  "a7s": {
+   "ruta": "analysis/s169_drive_api/pic_refs_strict_a7s.json",
+   "destinos": 16638
+  }
+ },
+ "conclusiones": [
+  "el A6300 fw2.01 tiene una capa LiroSeq de validacion de parametros con 201 propiedades CheckSet* y 370 comprobaciones ParamCheckErr",
+  "entre ellas hay parametros de obturador: sc_ShutDrive (+0x1dd), uc_ShutDriveMode (+0x1dc), front_eshutter (+0x23c), SilentShutterMode (+0x264), shutterType (+0x268), ul_ShutLowLimit (+0x248)",
+  "la A6000 fw3.21 y la A7S fw3.20 tienen 0 de todo eso: no existe el parametro, no solo la traza",
+  "la A6000 SI tiene el modulo LiroSeq (2 trazas) y el drive_mode del imager (S134): lo que no tiene es la capa de validacion de parametros",
+  "reforza S135 con evidencia de parametros en runtime, no solo de configuracion del HAL",
+  "no cambia S51 (A=NO, B=NO, C=NO): sigue faltando la prueba fisica"
+ ],
+ "salvedad": "la comparacion mezcla version de firmware y modelo (el A6300 es de otra generacion de plataforma LIRO/CXD); no se puede separar 'nuevo en el fw2.01' de 'propio de la plataforma'",
+ "efecto_en_S51": "ninguno: S51 sigue A=NO, B=NO, C=NO"
+}
