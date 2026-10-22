@@ -1,6 +1,10 @@
 # Continuidad
 
-Estado vigente: **S62** (20-10-2026), [PMCA: inyección, service shell y `modelName`](docs/capture/s62-pmca-injection.md), [checkpoint](knowledge/CURRENT.md). El mecanismo de PMCA y la propiedad BK4 `modelName` quedan verificados; el efecto «shell mode» de `ILCE-6001` no. S51 permanece. Las sesiones descritas a continuación son antecedentes.
+Estado vigente: **S137** (21-10-2026) — línea de RE general por módulos de trazas y control positivo
+del obturador electrónico, [knowledge/CURRENT.md](knowledge/CURRENT.md) ·
+[catálogo de la línea general](docs/capture/linea-general-re.md) ·
+[estado y restricciones](docs/STATE.md). S51 **permanece (A=NO, B=NO, C=NO)**. Las sesiones descritas a
+continuación son antecedentes.
 
 Versión breve (18-10-2026). El historial íntegro de sesiones S1–S27 (y este mismo
 archivo antes de reducirse) está preservado sin cambios en
@@ -14,6 +18,29 @@ Correcciones y preguntas abiertas (generadas del grafo de conocimiento):
 Este archivo conserva solo las sesiones más recientes (investigación activa).
 No acumular aquí el historial completo de nuevo: cada sesión cerrada se traslada
 a `docs/history/` y se referencia desde `docs/STATE.md`/`docs/CORRECTIONS.md`.
+
+## S137 — control positivo del obturador electrónico y mapa de etiquetado (21-10-2026)
+
+VERIFICADO: la fw3.21 de la A6000 **reescribe el logging, no el firmware**. S128 comparó 98 prefijos de
+módulo contra la A7S fw3.20 (58 idénticos, **18 "renombrados"** = mismos mensajes sin etiqueta, 2
+parciales, 20 propios) y S130 mostró que de esos 20 solo **2** son cambio de etiqueta (`[IDT_OPD]` →
+`[IDT]`, `[DFE]`) y **17 tienen contenido ausente** en la A7S y el A6300.
+
+S135 (control positivo del obturador): el **A6300 fw2.01 sí tiene** subsistema de obturador electrónico
+en su HAL — `ElecShutter/EC_ElecShutter_Main.cpp` `0x43dcfa41`,
+`EC_NonlinearElecShutter_MechShutterTable.cpp` `0x43dcfa65`, tabla de velocidades no lineales
+`0x43dcfa9e`, ajustes `SilentShutterMode` `0x43dc9a14`, `shutterType` `0x43dca61f`, `front_eshutter`
+`0x43dc821d` — mientras que la **A6000 fw3.21 y la A7S fw3.20 tienen 0**. En la A6000 la ausencia es
+**selectiva**: conserva el motor de exposición `EC` (`EC::EcTagData` `0x43ca91ce`, `api_EC_GetApolloLapNum`
+`0x43caa193`); falta **solo** la sub-rama `ElecShutter/`. Sus 15 `shutter` son del **mecánico**
+(silenciador `0x43c851d8`/`0x43ce956e`/`0x43ce3634`). S134: la relación `shut`→`svd` del imager es
+**aritmética** (`svd_esperado = (svd==9 ? 1 : shut) * svr_num − 1`), lo que **descarta** la tabla por
+`drive_mode`.
+
+Estado: S51 **A=NO, B=NO, C=NO** (sin cambios). La ausencia estática no demuestra incapacidad del
+hardware: el plan de pruebas físicas P1–P8 sigue **sin ejecutar** y pendiente de autorización.
+Continuidad operativa y próximos pasos: [docs/STATE.md](docs/STATE.md) ·
+[knowledge/CURRENT.md](knowledge/CURRENT.md) · [knowledge/PROGRESS.md](knowledge/PROGRESS.md).
 
 ## S47 — entrada del payload y orden de C (19-10-2026)
 
