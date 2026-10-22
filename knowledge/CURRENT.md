@@ -2,7 +2,7 @@
 
 ## S150 — xrefs de los huecos +8/+9 y pista de descriptor (22-10-2026)
 
-REA devolvió `[]` para las ocho direcciones exactas de los huecos de fila; el control positivo muestra xrefs al inicio de una fila. Una búsqueda completa de bytes encuentra dos celdas que empiezan con literal `0x43eb0850` (el hueco +8/+9 de la tercera fila), pero no se ha identificado su consumidor ni formato: **no afirmar lectura/escritura efectiva**. Bytes estructurados en `analysis/s150_imager_row_gaps/gap_refs.json`; [informe](../docs/capture/s150-imager-row-gaps.md), 3 tests. El resultado vacío no prueba ausencia de escritores por alias/argumento.
+REA devolvió `[]` para las ocho direcciones exactas de los huecos de fila; el control positivo muestra xrefs al inicio de una fila. Una búsqueda completa de bytes encuentra dos celdas que empiezan con literal `0x43eb0850` (el hueco +8/+9 de la tercera fila), pero no se ha identificado su consumidor ni formato: **no afirmar lectura/escritura efectiva**. Bytes estructurados en `analysis/s150_imager_row_gaps/gap_refs.json`; [informe](../docs/capture/s150-imager-row-gaps.md), 3 tests. El resultado vacío no prueba ausencia de escritores por alias/argumento. Commit publicado: `feb767e5`.
 
 **Siguiente:** resolver quién consulta las dos celdas `0x4400812c` y `0x4400b27c` y cómo se interpreta su primer campo; confirmar si se usa como puntero a `0x43eb0850` antes de atribuir acceso a gap.
 
