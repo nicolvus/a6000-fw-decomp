@@ -1,0 +1,2063 @@
+{
+  "milestone": "S300",
+  "rea_xrefs": {
+    "0x43f72d02": [
+      "0x438363e6",
+      "0x4383ac90",
+      "0x4384cb06",
+      "0x4384cb0a",
+      "0x43857f90",
+      "0x43857fb0",
+      "0x43858134",
+      "0x43859954",
+      "0x4385b268",
+      "0x4386001c",
+      "0x43860112",
+      "0x43860506",
+      "0x438d933e",
+      "0x438d9378",
+      "0x43ff3248"
+    ],
+    "0x4401f990": [
+      "0x4382e526",
+      "0x43830994",
+      "0x43834158",
+      "0x43834188",
+      "0x438363e6",
+      "0x4383ac8e",
+      "0x4383afce",
+      "0x4383b30e",
+      "0x4383f0d2",
+      "0x4383f1e0",
+      "0x438475b8",
+      "0x4384cb06",
+      "0x4384f7e4",
+      "0x43857f8e",
+      "0x43857fae",
+      "0x43858134",
+      "0x438581a6",
+      "0x4385837e",
+      "0x438586b6",
+      "0x43858a9a",
+      "0x4385971e",
+      "0x43859954",
+      "0x4385b160",
+      "0x4385b262",
+      "0x4385d3c8",
+      "0x4385d3fe",
+      "0x4385d42c",
+      "0x4385d458",
+      "0x4385d498",
+      "0x4385df4c",
+      "0x4385e6fc",
+      "0x4385e8c2",
+      "0x43860018",
+      "0x4386140a",
+      "0x438693ec",
+      "0x43869528",
+      "0x43869990",
+      "0x438d933e",
+      "0x438d9378",
+      "0x438d93a8",
+      "0x438d9ee6",
+      "0x438e758e"
+    ],
+    "0x43ff3248": []
+  },
+  "title": "barrido \u00fanico de xrefs al state IMX210 (base y slot GOT)",
+  "firmware": {
+    "name": "av-cam.bin (A6000 fw3.21)",
+    "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
+  },
+  "base": "0x43541000",
+  "targets": {
+    "state_base": "0x43f72d02",
+    "got_slot": "0x4401f990",
+    "gate_plus3": "0x43f72d05",
+    "gate_plus6": "0x43f72d08"
+  },
+  "absolute_pointer_literals": [
+    {
+      "address": "0x43ff3248",
+      "kind": "entrada de tabla de punteros"
+    },
+    {
+      "address": "0x4401f990",
+      "kind": "slot GOT"
+    }
+  ],
+  "sites": [
+    {
+      "site": "0x4382e526",
+      "function": "0x4382dd78",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r3, [r5, r3]",
+      "bytes_hex": "eb5893f8",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x4382e528",
+          "insn": "ldrb.w r3, [r3, #0x42]",
+          "kind": "read",
+          "offset": 66
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x43830994",
+      "function": "0x4383075c",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr.w r3, [r8, r3]",
+      "bytes_hex": "58f80330",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x43830998",
+          "insn": "ldrb.w r3, [r3, #0x51]",
+          "kind": "read",
+          "offset": 81
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x43834158",
+      "function": "0x43833ff8",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r3, [r4, r3]",
+      "bytes_hex": "e3589a70",
+      "class": "escritura",
+      "accesses": [
+        {
+          "address": "0x4383415a",
+          "insn": "strb r2, [r3, #2]",
+          "kind": "write",
+          "offset": 2
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x43834188",
+      "function": "0x43833ff8",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r3, [r4, r3]",
+      "bytes_hex": "e3589870",
+      "class": "escritura",
+      "accesses": [
+        {
+          "address": "0x4383418a",
+          "insn": "strb r0, [r3, #2]",
+          "kind": "write",
+          "offset": 2
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x438363e6",
+      "function": "0x438363cc",
+      "edges": {
+        "0x43f72d02": {
+          "type": "DATA",
+          "read": false,
+          "write": false
+        },
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r0, [r5, r3]",
+      "bytes_hex": "e85890f8",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x438363e8",
+          "insn": "ldrb.w r3, [r0, #0x3a]",
+          "kind": "read",
+          "offset": 58
+        },
+        {
+          "address": "0x43836404",
+          "insn": "ldrb.w r3, [r0, #0x39]",
+          "kind": "read",
+          "offset": 57
+        },
+        {
+          "address": "0x43836412",
+          "insn": "ldrb.w r2, [r0, #0x3b]",
+          "kind": "read",
+          "offset": 59
+        },
+        {
+          "address": "0x4383647e",
+          "insn": "ldrb.w r2, [r0, #0x38]",
+          "kind": "read",
+          "offset": 56
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x4383ac8e",
+      "function": "0x4383abec",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r2, [r4, r2]",
+      "bytes_hex": "a2581370",
+      "class": "escritura",
+      "accesses": [
+        {
+          "address": "0x4383ac90",
+          "insn": "strb r3, [r2]",
+          "kind": "write",
+          "offset": null
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x4383ac90",
+      "function": "0x4383abec",
+      "edges": {
+        "0x43f72d02": {
+          "type": "WRITE",
+          "read": false,
+          "write": true
+        }
+      },
+      "insn": "strb r3, [r2]",
+      "bytes_hex": "1370114a",
+      "class": "escritura",
+      "accesses": [
+        {
+          "address": "0x4383ac90",
+          "insn": "strb r3, [r2]",
+          "kind": "write",
+          "offset": null
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x4383afce",
+      "function": "0x4383ace0",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r3, [r3, r2]",
+      "bytes_hex": "9b589c70",
+      "class": "escritura",
+      "accesses": [
+        {
+          "address": "0x4383afd0",
+          "insn": "strb r4, [r3, #2]",
+          "kind": "write",
+          "offset": 2
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x4383b30e",
+      "function": "0x4383b2dc",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r1, [r4, r3]",
+      "bytes_hex": "e1580023",
+      "class": "escritura",
+      "accesses": [
+        {
+          "address": "0x4383b316",
+          "insn": "strb r3, [r1, #2]",
+          "kind": "write",
+          "offset": 2
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x4383f0d2",
+      "function": "0x4383f0c8",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r5, [r3, r2]",
+      "bytes_hex": "9d586a8c",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x4383f0d4",
+          "insn": "ldrh r2, [r5, #0x22]",
+          "kind": "read",
+          "offset": 34
+        },
+        {
+          "address": "0x4383f142",
+          "insn": "ldrh r3, [r5, #0x20]",
+          "kind": "read",
+          "offset": 32
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x4383f1e0",
+      "function": "0x4383f17c",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r3, [r5, r3]",
+      "bytes_hex": "eb58e277",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x4383f1e4",
+          "insn": "ldrh r3, [r3, #0x22]",
+          "kind": "read",
+          "offset": 34
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x438475b8",
+      "function": "0x43844e80",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r0, [r6, r0]",
+      "bytes_hex": "305890f8",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x438475ba",
+          "insn": "ldrb.w r0, [r0, #0x7f]",
+          "kind": "read",
+          "offset": 127
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x4384cb06",
+      "function": "0x4384b268",
+      "edges": {
+        "0x43f72d02": {
+          "type": "PARAM",
+          "read": false,
+          "write": false
+        },
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr.w r3, [r8, r3]",
+      "bytes_hex": "58f80330",
+      "class": "propagaci\u00f3n",
+      "accesses": [],
+      "note": "carga el puntero desde el slot GOT; el acceso real ocurre tras el spill"
+    },
+    {
+      "site": "0x4384cb0a",
+      "function": "0x4384b268",
+      "edges": {
+        "0x43f72d02": {
+          "type": "DATA",
+          "read": false,
+          "write": false
+        }
+      },
+      "insn": "str r3, [sp, #0x20]",
+      "bytes_hex": "08930146",
+      "class": "spill",
+      "accesses": [
+        {
+          "address": "0x4384cee4",
+          "insn": "ldr r0, [sp, #0x20]",
+          "kind": "read",
+          "offset": 165,
+          "through": "spill reload"
+        },
+        {
+          "address": "0x4384d21a",
+          "insn": "ldr r0, [sp, #0x20]",
+          "kind": "read",
+          "offset": 165,
+          "through": "spill reload"
+        },
+        {
+          "address": "0x4384d584",
+          "insn": "ldr r7, [sp, #0x20]",
+          "kind": "read",
+          "offset": 66,
+          "through": "spill reload"
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x4384f7e4",
+      "function": "0x4384d8bc",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r3, [r7, r3]",
+      "bytes_hex": "fb5893f8",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x4384f7e6",
+          "insn": "ldrb.w r3, [r3, #0x48]",
+          "kind": "read",
+          "offset": 72
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x43857f8e",
+      "function": "0x43857f88",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r3, [r3, r2]",
+      "bytes_hex": "9b581878",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x43857f90",
+          "insn": "ldrb r0, [r3]",
+          "kind": "read",
+          "offset": null
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x43857f90",
+      "function": "0x43857f88",
+      "edges": {
+        "0x43f72d02": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldrb r0, [r3]",
+      "bytes_hex": "1878a0f1",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x43857f90",
+          "insn": "ldrb r0, [r3]",
+          "kind": "read",
+          "offset": null
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x43857fae",
+      "function": "0x43857fa8",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r3, [r3, r2]",
+      "bytes_hex": "9b581878",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x43857fb0",
+          "insn": "ldrb r0, [r3]",
+          "kind": "read",
+          "offset": null
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x43857fb0",
+      "function": "0x43857fa8",
+      "edges": {
+        "0x43f72d02": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldrb r0, [r3]",
+      "bytes_hex": "18780138",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x43857fb0",
+          "insn": "ldrb r0, [r3]",
+          "kind": "read",
+          "offset": null
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x43858134",
+      "function": "0x4385812c",
+      "edges": {
+        "0x43f72d02": {
+          "type": "PARAM",
+          "read": false,
+          "write": false
+        },
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r3, [r5, r3]",
+      "bytes_hex": "eb581a79",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x43858136",
+          "insn": "ldrb r2, [r3, #4]",
+          "kind": "read",
+          "offset": 4
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x438581a6",
+      "function": "0x43858190",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r7, [r4, r3]",
+      "bytes_hex": "e7583b79",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x438581a8",
+          "insn": "ldrb r3, [r7, #4]",
+          "kind": "read",
+          "offset": 4
+        },
+        {
+          "address": "0x438581e6",
+          "insn": "ldrh.w sl, [r7, #0x1c]",
+          "kind": "read",
+          "offset": 28
+        },
+        {
+          "address": "0x438581f6",
+          "insn": "ldrb.w fp, [r7, #0x1e]",
+          "kind": "read",
+          "offset": 30
+        },
+        {
+          "address": "0x438581fa",
+          "insn": "ldrb r3, [r7, #0x1f]",
+          "kind": "read",
+          "offset": 31
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x4385837e",
+      "function": "0x43858338",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr.w r6, [r8, r3]",
+      "bytes_hex": "58f80360",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x43858382",
+          "insn": "ldrb r3, [r6, #0x1f]",
+          "kind": "read",
+          "offset": 31
+        },
+        {
+          "address": "0x43858396",
+          "insn": "ldrb r3, [r6, #3]",
+          "kind": "read",
+          "offset": 3
+        },
+        {
+          "address": "0x438583b0",
+          "insn": "ldrb r3, [r6, #3]",
+          "kind": "read",
+          "offset": 3
+        },
+        {
+          "address": "0x438583ca",
+          "insn": "ldrb r3, [r6, #3]",
+          "kind": "read",
+          "offset": 3
+        },
+        {
+          "address": "0x438583ec",
+          "insn": "ldrb r3, [r6, #3]",
+          "kind": "read",
+          "offset": 3
+        },
+        {
+          "address": "0x43858406",
+          "insn": "ldrb r3, [r6, #3]",
+          "kind": "read",
+          "offset": 3
+        },
+        {
+          "address": "0x43858420",
+          "insn": "ldrb r3, [r6, #3]",
+          "kind": "read",
+          "offset": 3
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x43858396",
+      "function": "0x43858338",
+      "edges": {
+        "0x43f72d05": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldrb r3, [r6, #3]",
+      "bytes_hex": "f37813f0",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x43858396",
+          "insn": "ldrb r3, [r6, #3]",
+          "kind": "read",
+          "offset": 3
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x438583b0",
+      "function": "0x43858338",
+      "edges": {
+        "0x43f72d05": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldrb r3, [r6, #3]",
+      "bytes_hex": "f37813f0",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x438583b0",
+          "insn": "ldrb r3, [r6, #3]",
+          "kind": "read",
+          "offset": 3
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x438583ca",
+      "function": "0x43858338",
+      "edges": {
+        "0x43f72d05": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldrb r3, [r6, #3]",
+      "bytes_hex": "f37813f0",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x438583ca",
+          "insn": "ldrb r3, [r6, #3]",
+          "kind": "read",
+          "offset": 3
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x438583ec",
+      "function": "0x43858338",
+      "edges": {
+        "0x43f72d05": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldrb r3, [r6, #3]",
+      "bytes_hex": "f37813f0",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x438583ec",
+          "insn": "ldrb r3, [r6, #3]",
+          "kind": "read",
+          "offset": 3
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x43858406",
+      "function": "0x43858338",
+      "edges": {
+        "0x43f72d05": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldrb r3, [r6, #3]",
+      "bytes_hex": "f37813f0",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x43858406",
+          "insn": "ldrb r3, [r6, #3]",
+          "kind": "read",
+          "offset": 3
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x43858420",
+      "function": "0x43858338",
+      "edges": {
+        "0x43f72d05": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldrb r3, [r6, #3]",
+      "bytes_hex": "f37813f0",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x43858420",
+          "insn": "ldrb r3, [r6, #3]",
+          "kind": "read",
+          "offset": 3
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x4385843a",
+      "function": "0x43858338",
+      "edges": {
+        "0x43f72d05": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldrb r3, [r6, #3]",
+      "bytes_hex": "f37813f0",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x4385843a",
+          "insn": "ldrb r3, [r6, #3]",
+          "kind": "read",
+          "offset": 3
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x43858454",
+      "function": "0x43858338",
+      "edges": {
+        "0x43f72d05": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldrsb.w r3, [r6, #3]",
+      "bytes_hex": "96f90330",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x43858454",
+          "insn": "ldrsb.w r3, [r6, #3]",
+          "kind": "read",
+          "offset": 3
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x4385846e",
+      "function": "0x43858338",
+      "edges": {
+        "0x43f72d08": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldrb r3, [r6, #6]",
+      "bytes_hex": "b37913f0",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x4385846e",
+          "insn": "ldrb r3, [r6, #6]",
+          "kind": "read",
+          "offset": 6
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x43858488",
+      "function": "0x43858338",
+      "edges": {
+        "0x43f72d08": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldrb r3, [r6, #6]",
+      "bytes_hex": "b37913f0",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x43858488",
+          "insn": "ldrb r3, [r6, #6]",
+          "kind": "read",
+          "offset": 6
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x438584a2",
+      "function": "0x43858338",
+      "edges": {
+        "0x43f72d08": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldrb r3, [r6, #6]",
+      "bytes_hex": "b37913f0",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x438584a2",
+          "insn": "ldrb r3, [r6, #6]",
+          "kind": "read",
+          "offset": 6
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x438584bc",
+      "function": "0x43858338",
+      "edges": {
+        "0x43f72d08": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldrb r3, [r6, #6]",
+      "bytes_hex": "b37913f0",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x438584bc",
+          "insn": "ldrb r3, [r6, #6]",
+          "kind": "read",
+          "offset": 6
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x438584d6",
+      "function": "0x43858338",
+      "edges": {
+        "0x43f72d08": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldrb r3, [r6, #6]",
+      "bytes_hex": "b37913f0",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x438584d6",
+          "insn": "ldrb r3, [r6, #6]",
+          "kind": "read",
+          "offset": 6
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x438584f0",
+      "function": "0x43858338",
+      "edges": {
+        "0x43f72d08": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldrb r3, [r6, #6]",
+      "bytes_hex": "b37913f0",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x438584f0",
+          "insn": "ldrb r3, [r6, #6]",
+          "kind": "read",
+          "offset": 6
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x4385850a",
+      "function": "0x43858338",
+      "edges": {
+        "0x43f72d08": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldrb r3, [r6, #6]",
+      "bytes_hex": "b37913f0",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x4385850a",
+          "insn": "ldrb r3, [r6, #6]",
+          "kind": "read",
+          "offset": 6
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x43858524",
+      "function": "0x43858338",
+      "edges": {
+        "0x43f72d08": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldrsb.w r3, [r6, #6]",
+      "bytes_hex": "96f90630",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x43858524",
+          "insn": "ldrsb.w r3, [r6, #6]",
+          "kind": "read",
+          "offset": 6
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x438586b6",
+      "function": "0x43858338",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr.w r7, [r8, r3]",
+      "bytes_hex": "58f80370",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x438586ba",
+          "insn": "ldrb r3, [r7, #0xa]",
+          "kind": "read",
+          "offset": 10
+        },
+        {
+          "address": "0x438586d4",
+          "insn": "ldrsb.w r3, [r7, #0xa]",
+          "kind": "read",
+          "offset": 10
+        },
+        {
+          "address": "0x438586ee",
+          "insn": "ldrb r3, [r7, #0xb]",
+          "kind": "read",
+          "offset": 11
+        },
+        {
+          "address": "0x43858708",
+          "insn": "ldrb r3, [r7, #0xb]",
+          "kind": "read",
+          "offset": 11
+        },
+        {
+          "address": "0x43858722",
+          "insn": "ldrb r3, [r7, #0xb]",
+          "kind": "read",
+          "offset": 11
+        },
+        {
+          "address": "0x4385873c",
+          "insn": "ldrb r3, [r7, #0xb]",
+          "kind": "read",
+          "offset": 11
+        },
+        {
+          "address": "0x43858756",
+          "insn": "ldrb r3, [r7, #0xb]",
+          "kind": "read",
+          "offset": 11
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x43858a9a",
+      "function": "0x43858338",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr.w r7, [r8, r3]",
+      "bytes_hex": "58f80370",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x43858a9e",
+          "insn": "ldrb r3, [r7, #0xf]",
+          "kind": "read",
+          "offset": 15
+        },
+        {
+          "address": "0x43858ab8",
+          "insn": "ldrb r3, [r7, #0xf]",
+          "kind": "read",
+          "offset": 15
+        },
+        {
+          "address": "0x43858ad2",
+          "insn": "ldrb r3, [r7, #0xf]",
+          "kind": "read",
+          "offset": 15
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x4385971e",
+      "function": "0x43859710",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r5, [r4, r3]",
+      "bytes_hex": "e5586b79",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x43859720",
+          "insn": "ldrb r3, [r5, #5]",
+          "kind": "read",
+          "offset": 5
+        },
+        {
+          "address": "0x43859728",
+          "insn": "ldrb r3, [r5, #0x1f]",
+          "kind": "read",
+          "offset": 31
+        },
+        {
+          "address": "0x4385974a",
+          "insn": "ldrb r3, [r5, #2]",
+          "kind": "read",
+          "offset": 2
+        },
+        {
+          "address": "0x43859758",
+          "insn": "ldrb r2, [r5, #1]",
+          "kind": "read",
+          "offset": 1
+        },
+        {
+          "address": "0x43859760",
+          "insn": "ldrh r1, [r5, #0x2e]",
+          "kind": "read",
+          "offset": 46
+        },
+        {
+          "address": "0x43859762",
+          "insn": "ldrb.w r3, [r5, #0x24]",
+          "kind": "read",
+          "offset": 36
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x43859954",
+      "function": "0x43859944",
+      "edges": {
+        "0x43f72d02": {
+          "type": "PARAM",
+          "read": false,
+          "write": false
+        },
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r2, [r4, r3]",
+      "bytes_hex": "e2585379",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x43859956",
+          "insn": "ldrb r3, [r2, #5]",
+          "kind": "read",
+          "offset": 5
+        },
+        {
+          "address": "0x43859964",
+          "insn": "ldrb r6, [r2, #0xf]",
+          "kind": "read",
+          "offset": 15
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x4385b160",
+      "function": "0x4385b100",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r3, [r3, r2]",
+      "bytes_hex": "9b58314a",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x4385b164",
+          "insn": "ldrh.w sb, [r3, #0x26]",
+          "kind": "read",
+          "offset": 38
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x4385b262",
+      "function": "0x4385b234",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r3, [r4, r3]",
+      "bytes_hex": "e35893f8",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x4385b264",
+          "insn": "ldrb.w r1, [r3, #0x28]",
+          "kind": "read",
+          "offset": 40
+        }
+      ],
+      "note": "carga el puntero desde el slot GOT y lo derrama en [sp,#0x20]"
+    },
+    {
+      "site": "0x4385b268",
+      "function": "0x4385b234",
+      "edges": {
+        "0x43f72d02": {
+          "type": "DATA",
+          "read": false,
+          "write": false
+        }
+      },
+      "insn": "str r3, [sp, #0x20]",
+      "bytes_hex": "089379b9",
+      "class": "spill",
+      "accesses": [
+        {
+          "address": "0x4385ba46",
+          "insn": "ldr r1, [sp, #0x20]",
+          "kind": "read",
+          "offset": 38,
+          "through": "spill reload"
+        },
+        {
+          "address": "0x4385beae",
+          "insn": "ldr r4, [sp, #0x20]",
+          "kind": "read",
+          "offset": 41,
+          "through": "spill reload"
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x4385d3c8",
+      "function": "0x4385d350",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r2, [r4, r2]",
+      "bytes_hex": "a25892f8",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x4385d3ca",
+          "insn": "ldrb.w r2, [r2, #0xa0]",
+          "kind": "read",
+          "offset": 160
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x4385d3fe",
+      "function": "0x4385d350",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r2, [r4, r2]",
+      "bytes_hex": "a25892f8",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x4385d400",
+          "insn": "ldrb.w r2, [r2, #0xa0]",
+          "kind": "read",
+          "offset": 160
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x4385d42c",
+      "function": "0x4385d350",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r2, [r4, r2]",
+      "bytes_hex": "a25892f8",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x4385d42e",
+          "insn": "ldrb.w r2, [r2, #0xa0]",
+          "kind": "read",
+          "offset": 160
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x4385d458",
+      "function": "0x4385d350",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r2, [r4, r2]",
+      "bytes_hex": "a25892f8",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x4385d45a",
+          "insn": "ldrb.w r2, [r2, #0xa0]",
+          "kind": "read",
+          "offset": 160
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x4385d498",
+      "function": "0x4385d350",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r2, [r4, r2]",
+      "bytes_hex": "a25892f8",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x4385d49a",
+          "insn": "ldrb.w r2, [r2, #0xa0]",
+          "kind": "read",
+          "offset": 160
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x4385df4c",
+      "function": "0x4385dee4",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r3, [r6, r3]",
+      "bytes_hex": "f35893f8",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x4385df4e",
+          "insn": "ldrb.w r3, [r3, #0xa1]",
+          "kind": "read",
+          "offset": 161
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x4385e6fc",
+      "function": "0x4385e5dc",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r3, [r5, r3]",
+      "bytes_hex": "eb58b3f8",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x4385e6fe",
+          "insn": "ldrh.w r3, [r3, #0xaa]",
+          "kind": "read",
+          "offset": 170
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x4385e8c2",
+      "function": "0x4385e8a4",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r3, [r7, r3]",
+      "bytes_hex": "fb5893f8",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x4385e8c4",
+          "insn": "ldrb.w r3, [r3, #0xa3]",
+          "kind": "read",
+          "offset": 163
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x43860018",
+      "function": "0x4385fff0",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr.w r3, [r8, r3]",
+      "bytes_hex": "58f80330",
+      "class": "propagaci\u00f3n",
+      "accesses": [],
+      "note": "carga el puntero desde el slot GOT y lo derrama en [sp,#0x1c]"
+    },
+    {
+      "site": "0x4386001c",
+      "function": "0x4385fff0",
+      "edges": {
+        "0x43f72d02": {
+          "type": "DATA",
+          "read": false,
+          "write": false
+        }
+      },
+      "insn": "str r3, [sp, #0x1c]",
+      "bytes_hex": "0793dff8",
+      "class": "spill",
+      "accesses": [],
+      "note": null
+    },
+    {
+      "site": "0x43860112",
+      "function": "0x4385fff0",
+      "edges": {
+        "0x43f72d02": {
+          "type": "PARAM",
+          "read": false,
+          "write": false
+        }
+      },
+      "insn": "ldr r1, [sp, #0x1c]",
+      "bytes_hex": "079991f8",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x43860114",
+          "insn": "ldrb.w r2, [r1, #0xa2]",
+          "kind": "read",
+          "offset": 162
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x43860506",
+      "function": "0x4385fff0",
+      "edges": {
+        "0x43f72d02": {
+          "type": "PARAM",
+          "read": false,
+          "write": false
+        }
+      },
+      "insn": "ldr r1, [sp, #0x1c]",
+      "bytes_hex": "079991f8",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x43860508",
+          "insn": "ldrb.w r3, [r1, #0xa2]",
+          "kind": "read",
+          "offset": 162
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x4386140a",
+      "function": "0x43861400",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r3, [r2, r3]",
+      "bytes_hex": "d3580549",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x43861410",
+          "insn": "ldrb.w r2, [r3, #0xac]",
+          "kind": "read",
+          "offset": 172
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x438693ec",
+      "function": "0x438690dc",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r3, [r5, r3]",
+      "bytes_hex": "eb5893f8",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x438693ee",
+          "insn": "ldrb.w r2, [r3, #0x30]",
+          "kind": "read",
+          "offset": 48
+        },
+        {
+          "address": "0x438693f8",
+          "insn": "ldrb.w r2, [r3, #0x31]",
+          "kind": "read",
+          "offset": 49
+        },
+        {
+          "address": "0x43869402",
+          "insn": "ldrb.w r2, [r3, #0x32]",
+          "kind": "read",
+          "offset": 50
+        },
+        {
+          "address": "0x4386940c",
+          "insn": "ldrb.w r2, [r3, #0x33]",
+          "kind": "read",
+          "offset": 51
+        },
+        {
+          "address": "0x43869416",
+          "insn": "ldrb.w r2, [r3, #0x34]",
+          "kind": "read",
+          "offset": 52
+        },
+        {
+          "address": "0x43869420",
+          "insn": "ldrb.w r2, [r3, #0x35]",
+          "kind": "read",
+          "offset": 53
+        },
+        {
+          "address": "0x4386942a",
+          "insn": "ldrb.w r2, [r3, #0x36]",
+          "kind": "read",
+          "offset": 54
+        },
+        {
+          "address": "0x43869434",
+          "insn": "ldrb.w r3, [r3, #0x37]",
+          "kind": "read",
+          "offset": 55
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x43869528",
+      "function": "0x438694cc",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r3, [r3, r2]",
+      "bytes_hex": "9b5893f8",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x4386952a",
+          "insn": "ldrb.w r2, [r3, #0x30]",
+          "kind": "read",
+          "offset": 48
+        },
+        {
+          "address": "0x43869534",
+          "insn": "ldrb.w r2, [r3, #0x31]",
+          "kind": "read",
+          "offset": 49
+        },
+        {
+          "address": "0x4386953e",
+          "insn": "ldrb.w r2, [r3, #0x32]",
+          "kind": "read",
+          "offset": 50
+        },
+        {
+          "address": "0x43869548",
+          "insn": "ldrb.w r2, [r3, #0x33]",
+          "kind": "read",
+          "offset": 51
+        },
+        {
+          "address": "0x43869552",
+          "insn": "ldrb.w r2, [r3, #0x34]",
+          "kind": "read",
+          "offset": 52
+        },
+        {
+          "address": "0x4386955c",
+          "insn": "ldrb.w r2, [r3, #0x35]",
+          "kind": "read",
+          "offset": 53
+        },
+        {
+          "address": "0x43869566",
+          "insn": "ldrb.w r2, [r3, #0x36]",
+          "kind": "read",
+          "offset": 54
+        },
+        {
+          "address": "0x43869570",
+          "insn": "ldrb.w r3, [r3, #0x37]",
+          "kind": "read",
+          "offset": 55
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x43869990",
+      "function": "0x438698fc",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r0, [r4, r3]",
+      "bytes_hex": "e05890f8",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x43869992",
+          "insn": "ldrb.w r3, [r0, #0xfe]",
+          "kind": "read",
+          "offset": 254
+        },
+        {
+          "address": "0x438699a0",
+          "insn": "ldrb.w r0, [r0, #0xff]",
+          "kind": "read",
+          "offset": 255
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x438d933e",
+      "function": "0x438d9318",
+      "edges": {
+        "0x43f72d02": {
+          "type": "PARAM",
+          "read": false,
+          "write": false
+        },
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r3, [r4, r3]",
+      "bytes_hex": "e358988b",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x438d9340",
+          "insn": "ldrh r0, [r3, #0x1c]",
+          "kind": "read",
+          "offset": 28
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x438d9378",
+      "function": "0x438d936c",
+      "edges": {
+        "0x43f72d02": {
+          "type": "PARAM",
+          "read": false,
+          "write": false
+        },
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r3, [r4, r3]",
+      "bytes_hex": "e358988b",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x438d937a",
+          "insn": "ldrh r0, [r3, #0x1c]",
+          "kind": "read",
+          "offset": 28
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x438d93a8",
+      "function": "0x438d939c",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r3, [r4, r3]",
+      "bytes_hex": "e3589f8b",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x438d93aa",
+          "insn": "ldrh r7, [r3, #0x1c]",
+          "kind": "read",
+          "offset": 28
+        },
+        {
+          "address": "0x438d93ac",
+          "insn": "ldrb.w r8, [r3, #0x1e]",
+          "kind": "read",
+          "offset": 30
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x438d9ee6",
+      "function": "0x438d9cc0",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr.w r3, [lr, r3]",
+      "bytes_hex": "5ef80330",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x438d9eea",
+          "insn": "ldrb.w r0, [r3, #0x41]",
+          "kind": "read",
+          "offset": 65
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x438e758e",
+      "function": "0x438e72d8",
+      "edges": {
+        "0x4401f990": {
+          "type": "READ",
+          "read": true,
+          "write": false
+        }
+      },
+      "insn": "ldr r3, [r5, r3]",
+      "bytes_hex": "eb58b3f8",
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x438e7590",
+          "insn": "ldrh.w r3, [r3, #0xa8]",
+          "kind": "read",
+          "offset": 168
+        }
+      ],
+      "note": null
+    },
+    {
+      "site": "0x43ff3248",
+      "function": null,
+      "edges": {
+        "0x43f72d02": {
+          "type": "DATA",
+          "read": false,
+          "write": false
+        }
+      },
+      "insn": "cmp r5, #2",
+      "bytes_hex": "022df743",
+      "class": "dato",
+      "accesses": [],
+      "note": "entrada de tabla de punteros (dato), no instrucci\u00f3n"
+    }
+  ],
+  "counts": {
+    "total_sites": 67,
+    "lectura": 55,
+    "escritura": 6,
+    "propagaci\u00f3n": 2,
+    "spill": 3,
+    "dato": 1
+  },
+  "gates": {
+    "rows": [
+      {
+        "target": "state+3",
+        "address": "0x43f72d05",
+        "site": "0x43858396",
+        "type": "READ",
+        "insn": "ldrb r3, [r6, #3]",
+        "bytes_hex": "f37813f0"
+      },
+      {
+        "target": "state+3",
+        "address": "0x43f72d05",
+        "site": "0x438583b0",
+        "type": "READ",
+        "insn": "ldrb r3, [r6, #3]",
+        "bytes_hex": "f37813f0"
+      },
+      {
+        "target": "state+3",
+        "address": "0x43f72d05",
+        "site": "0x438583ca",
+        "type": "READ",
+        "insn": "ldrb r3, [r6, #3]",
+        "bytes_hex": "f37813f0"
+      },
+      {
+        "target": "state+3",
+        "address": "0x43f72d05",
+        "site": "0x438583ec",
+        "type": "READ",
+        "insn": "ldrb r3, [r6, #3]",
+        "bytes_hex": "f37813f0"
+      },
+      {
+        "target": "state+3",
+        "address": "0x43f72d05",
+        "site": "0x43858406",
+        "type": "READ",
+        "insn": "ldrb r3, [r6, #3]",
+        "bytes_hex": "f37813f0"
+      },
+      {
+        "target": "state+3",
+        "address": "0x43f72d05",
+        "site": "0x43858420",
+        "type": "READ",
+        "insn": "ldrb r3, [r6, #3]",
+        "bytes_hex": "f37813f0"
+      },
+      {
+        "target": "state+3",
+        "address": "0x43f72d05",
+        "site": "0x4385843a",
+        "type": "READ",
+        "insn": "ldrb r3, [r6, #3]",
+        "bytes_hex": "f37813f0"
+      },
+      {
+        "target": "state+3",
+        "address": "0x43f72d05",
+        "site": "0x43858454",
+        "type": "READ",
+        "insn": "ldrsb.w r3, [r6, #3]",
+        "bytes_hex": "96f90330"
+      },
+      {
+        "target": "state+6",
+        "address": "0x43f72d08",
+        "site": "0x4385846e",
+        "type": "READ",
+        "insn": "ldrb r3, [r6, #6]",
+        "bytes_hex": "b37913f0"
+      },
+      {
+        "target": "state+6",
+        "address": "0x43f72d08",
+        "site": "0x43858488",
+        "type": "READ",
+        "insn": "ldrb r3, [r6, #6]",
+        "bytes_hex": "b37913f0"
+      },
+      {
+        "target": "state+6",
+        "address": "0x43f72d08",
+        "site": "0x438584a2",
+        "type": "READ",
+        "insn": "ldrb r3, [r6, #6]",
+        "bytes_hex": "b37913f0"
+      },
+      {
+        "target": "state+6",
+        "address": "0x43f72d08",
+        "site": "0x438584bc",
+        "type": "READ",
+        "insn": "ldrb r3, [r6, #6]",
+        "bytes_hex": "b37913f0"
+      },
+      {
+        "target": "state+6",
+        "address": "0x43f72d08",
+        "site": "0x438584d6",
+        "type": "READ",
+        "insn": "ldrb r3, [r6, #6]",
+        "bytes_hex": "b37913f0"
+      },
+      {
+        "target": "state+6",
+        "address": "0x43f72d08",
+        "site": "0x438584f0",
+        "type": "READ",
+        "insn": "ldrb r3, [r6, #6]",
+        "bytes_hex": "b37913f0"
+      },
+      {
+        "target": "state+6",
+        "address": "0x43f72d08",
+        "site": "0x4385850a",
+        "type": "READ",
+        "insn": "ldrb r3, [r6, #6]",
+        "bytes_hex": "b37913f0"
+      },
+      {
+        "target": "state+6",
+        "address": "0x43f72d08",
+        "site": "0x43858524",
+        "type": "READ",
+        "insn": "ldrsb.w r3, [r6, #6]",
+        "bytes_hex": "96f90630"
+      }
+    ],
+    "writers": []
+  },
+  "verdict": {
+    "writer_plus3": false,
+    "writer_plus6": false,
+    "basis": "xrefs exactos tipados a +3 y +6 (8 lecturas cada uno) + 66 sitios de la base/slot con traza local",
+    "limit": "no cubre \u00edndice de registro din\u00e1mico no observado, DMA ni otro CPU; tampoco prueba alcanzabilidad runtime"
+  },
+  "scope_limit": "Barrido est\u00e1tico del blob A6000 fw3.21; los accesos se demuestran por bytes e instrucci\u00f3n, no por ejecuci\u00f3n."
+}

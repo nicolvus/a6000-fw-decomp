@@ -8,11 +8,10 @@ Verifica:
 4. Literales 0x43f72d05/0x43f72d08 ausentes en binario
 """
 
-import unittest
-import mmap
-import struct
 import json
+import mmap
 import os
+import unittest
 
 BIN_PATH = os.path.join(
     os.path.dirname(__file__),
