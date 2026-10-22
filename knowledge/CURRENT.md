@@ -1,5 +1,11 @@
 # Estado actual — léeme primero
 
+## S158 — `0x4385b268` guarda el puntero de estado en stack (22-10-2026)
+
+`FUN_4385b234` lee GOT `0x4401f990→0x43f72d02`; el xref `0x4385b268` es `str r3,[sp,#0x20]`, un spill, no acceso de escritura a la base. El cuerpo lee `+0x26/+0x28/+0x29`, escribe a otros objetos, y no toca gates `+3/+6` localmente. [S158](../docs/capture/s158-imager-state-ref.md), `analysis/s158_imager_state_ref/state_accessor.json` (3 tests). Sin conclusión global.
+
+**Siguiente:** clasificar otro xref restante; priorizar candidato que use store/copy sobre puntero estado, no otro spill, mediante typed references y bytes.
+
 ## S157 — lector de snapshot del estado (22-10-2026)
 
 `0x43859954` lee el GOT slot `0x4401f990` y obtiene el puntero `0x43f72d02`; `FUN_43859944` lee `+5`, condicional `+0xf`, vuelca/copía a buffer y escribe un global distinto. No hay stores `+3/+6` en este cuerpo. **Límite local**, no ausencia global. [S157](../docs/capture/s157-imager-state-snapshot.md), JSON/3 tests `analysis/s157_imager_state_snapshot/`. Commit publicado: `6d8680c8`.

@@ -104,6 +104,8 @@ después lectores IMX210+3a0 y significado físico de ID0.
 
 S157 añade otra clasificación local: `0x43859954` carga `0x43f72d02` desde GOT; `FUN_43859944` lee `+5/+0xf`, copia a buffers y stores a otros objetos, no a gates `+3/+6`. No cierra escritores restantes. [Informe S157](capture/s157-imager-state-snapshot.md).
 
+S158 clasifica `0x4385b268`: `FUN_4385b234` carga el puntero GOT del estado y lo derrama a stack; lee +0x26/+0x28/+0x29 y escribe otros destinos, no +3/+6 en este cuerpo. Sigue sin cerrar otros escritores. [Informe S158](capture/s158-imager-state-ref.md).
+
 Proyecto abierto: hay piezas reales y reutilizables, pero **ninguna captura silenciosa
 completa validada**; no está demostrada la capacidad ni la imposibilidad de fotografía
 totalmente electrónica a resolución completa.

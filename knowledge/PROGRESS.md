@@ -119,6 +119,15 @@
 - Pruebas: unittest S157 3/3 PASS; suite S140–S157 + knowledge 106/106 PASS; `git diff --check` PASS. Commit `6d8680c8` publicado en `origin/main`.
 - Siguiente: inspeccionar otro xref al estado, distinguiendo base-pointer loads de field writes.
 
+## Investigación S158 — spill del puntero en xref de estado
+
+- Pregunta: clasificar `0x4385b268` en `FUN_4385b234` y ver si escribe gates.
+- Resultado: `ldr` previo obtiene objeto desde GOT; el xref es `str r3,[sp,#0x20]`, edge de valor/stack, no store a `0x43f72d02`. El cuerpo lee +0x26/+0x28/+0x29 y escribe otros objetos; no gates +3/+6 en el cuerpo.
+- Evidencia REA: función `ev_633b2499c1f64a98ef9dd1dee3a8785a4eb185e877a01886c8f80b10ecfb5551`, instrucción `ev_a1843181423095ac768e124db07db27e4259ffb8776b681caea4238fdb06414e`, refs `ev_34d9295f6218a4ff16b071ff3c48aabd51ee2f8280c09aeb46d5ca2e438bfc4d`.
+- Artefactos: `analysis/s158_imager_state_ref/{verify_gate_accessor.py,state_accessor.json}`, `tests/test_s158_imager_state_ref.py`, `docs/capture/s158-imager-state-ref.md`.
+- Pruebas: unittest 3/3 PASS; falta suite/commit/push.
+- Siguiente: clasificar xref restante a base, evitando confundir edge al valor con acceso a memoria.
+
 Checkpoint persistente. Actualizar al terminar cada etapa, antes de continuar
 con la siguiente. No reescribir historial: añadir entradas nuevas.
 
