@@ -7,7 +7,7 @@ Tema distinto de A (sensor/driver), B (imager estado) y C (ruta de control): dec
 - S502 [EIS] estabilización electrónica DONE 2cbe4af6
 - S503 [ZPD] zero point detection DONE aa19fb01
 - S504 [STABILIZER] DONE 0258cf16
-- S505 [VEF] visor EVF (149 trazas)
+- S505 [VEF] visor EVF (149 trazas) DONE 2348326f
 - S506 [TD] (73 trazas)
 - S507 [VIDENCSTAT] (70 trazas)
 - S508 [GOLFSHOT] (65 trazas)
