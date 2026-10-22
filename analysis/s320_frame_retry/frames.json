@@ -1,0 +1,400 @@
+{
+  "milestone": "S320",
+  "title": "Modo 2 no cambia la trama: reintenta el mismo formateador",
+  "firmware": {
+    "a7s": {
+      "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+      "size": 11455416
+    },
+    "a6000": {
+      "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+      "size": 11427236
+    }
+  },
+  "retry_path": {
+    "entry": "0x436f25f0",
+    "insn": [
+      {
+        "address": "0x436f25f0",
+        "bytes": "73b5",
+        "insn": "push {r0, r1, r4, r5, r6, lr}"
+      },
+      {
+        "address": "0x436f25f2",
+        "bytes": "0446",
+        "insn": "mov r4, r0"
+      },
+      {
+        "address": "0x436f25f4",
+        "bytes": "1546",
+        "insn": "mov r5, r2"
+      },
+      {
+        "address": "0x436f25f6",
+        "bytes": "1e46",
+        "insn": "mov r6, r3"
+      },
+      {
+        "address": "0x436f25f8",
+        "bytes": "c170",
+        "insn": "strb r1, [r0, #3]"
+      },
+      {
+        "address": "0x436f25fa",
+        "bytes": "2146",
+        "insn": "mov r1, r4"
+      },
+      {
+        "address": "0x436f25fc",
+        "bytes": "01a8",
+        "insn": "add r0, sp, #4"
+      },
+      {
+        "address": "0x436f25fe",
+        "bytes": "e6f38dfe",
+        "insn": "bl #0x43ad931c"
+      },
+      {
+        "address": "0x436f2602",
+        "bytes": "01a8",
+        "insn": "add r0, sp, #4"
+      },
+      {
+        "address": "0x436f2604",
+        "bytes": "2946",
+        "insn": "mov r1, r5"
+      },
+      {
+        "address": "0x436f2606",
+        "bytes": "3246",
+        "insn": "mov r2, r6"
+      },
+      {
+        "address": "0x436f2608",
+        "bytes": "e7f32df8",
+        "insn": "bl #0x43ad9666"
+      },
+      {
+        "address": "0x436f260c",
+        "bytes": "0228",
+        "insn": "cmp r0, #2"
+      },
+      {
+        "address": "0x436f260e",
+        "bytes": "0dd1",
+        "insn": "bne #0x436f262c"
+      },
+      {
+        "address": "0x436f2610",
+        "bytes": "2046",
+        "insn": "mov r0, r4"
+      },
+      {
+        "address": "0x436f2612",
+        "bytes": "e6f368fe",
+        "insn": "bl #0x43ad92e6"
+      },
+      {
+        "address": "0x436f2616",
+        "bytes": "01a8",
+        "insn": "add r0, sp, #4"
+      },
+      {
+        "address": "0x436f2618",
+        "bytes": "2946",
+        "insn": "mov r1, r5"
+      },
+      {
+        "address": "0x436f261a",
+        "bytes": "3246",
+        "insn": "mov r2, r6"
+      },
+      {
+        "address": "0x436f261c",
+        "bytes": "e7f323f8",
+        "insn": "bl #0x43ad9666"
+      }
+    ]
+  },
+  "plain_path": {
+    "entry": "0x43ad968a",
+    "insn": [
+      {
+        "address": "0x43ad968a",
+        "bytes": "73b5",
+        "insn": "push {r0, r1, r4, r5, r6, lr}"
+      },
+      {
+        "address": "0x43ad968c",
+        "bytes": "0446",
+        "insn": "mov r4, r0"
+      },
+      {
+        "address": "0x43ad968e",
+        "bytes": "1546",
+        "insn": "mov r5, r2"
+      },
+      {
+        "address": "0x43ad9690",
+        "bytes": "1e46",
+        "insn": "mov r6, r3"
+      },
+      {
+        "address": "0x43ad9692",
+        "bytes": "c170",
+        "insn": "strb r1, [r0, #3]"
+      },
+      {
+        "address": "0x43ad9694",
+        "bytes": "2146",
+        "insn": "mov r1, r4"
+      },
+      {
+        "address": "0x43ad9696",
+        "bytes": "01a8",
+        "insn": "add r0, sp, #4"
+      },
+      {
+        "address": "0x43ad9698",
+        "bytes": "fff740fe",
+        "insn": "bl #0x43ad931c"
+      },
+      {
+        "address": "0x43ad969c",
+        "bytes": "01a8",
+        "insn": "add r0, sp, #4"
+      },
+      {
+        "address": "0x43ad969e",
+        "bytes": "2946",
+        "insn": "mov r1, r5"
+      },
+      {
+        "address": "0x43ad96a0",
+        "bytes": "3246",
+        "insn": "mov r2, r6"
+      },
+      {
+        "address": "0x43ad96a2",
+        "bytes": "fff7e0ff",
+        "insn": "bl #0x43ad9666"
+      },
+      {
+        "address": "0x43ad96a6",
+        "bytes": "7cbd",
+        "insn": "pop {r2, r3, r4, r5, r6, pc}"
+      }
+    ]
+  },
+  "common_insn": 7,
+  "extra_block": [
+    {
+      "address": "0x436f260c",
+      "bytes": "0228",
+      "insn": "cmp r0, #2"
+    },
+    {
+      "address": "0x436f260e",
+      "bytes": "0dd1",
+      "insn": "bne #0x436f262c"
+    },
+    {
+      "address": "0x436f2610",
+      "bytes": "2046",
+      "insn": "mov r0, r4"
+    },
+    {
+      "address": "0x436f2612",
+      "bytes": "e6f368fe",
+      "insn": "bl #0x43ad92e6"
+    },
+    {
+      "address": "0x436f2616",
+      "bytes": "01a8",
+      "insn": "add r0, sp, #4"
+    },
+    {
+      "address": "0x436f2618",
+      "bytes": "2946",
+      "insn": "mov r1, r5"
+    },
+    {
+      "address": "0x436f261a",
+      "bytes": "3246",
+      "insn": "mov r2, r6"
+    },
+    {
+      "address": "0x436f261c",
+      "bytes": "e7f323f8",
+      "insn": "bl #0x43ad9666"
+    },
+    {
+      "address": "0x436f2620",
+      "bytes": "0228",
+      "insn": "cmp r0, #2"
+    },
+    {
+      "address": "0x436f2622",
+      "bytes": "03d1",
+      "insn": "bne #0x436f262c"
+    },
+    {
+      "address": "0x436f2624",
+      "bytes": "0248",
+      "insn": "ldr r0, [pc, #8]"
+    },
+    {
+      "address": "0x436f2626",
+      "bytes": "7844",
+      "insn": "add r0, pc"
+    }
+  ],
+  "formatter": {
+    "entry": "0x43ad9666",
+    "insn": [
+      {
+        "address": "0x43ad9666",
+        "bytes": "70b5",
+        "insn": "push {r4, r5, r6, lr}"
+      },
+      {
+        "address": "0x43ad9668",
+        "bytes": "0546",
+        "insn": "mov r5, r0"
+      },
+      {
+        "address": "0x43ad966a",
+        "bytes": "0c46",
+        "insn": "mov r4, r1"
+      },
+      {
+        "address": "0x43ad966c",
+        "bytes": "1646",
+        "insn": "mov r6, r2"
+      },
+      {
+        "address": "0x43ad966e",
+        "bytes": "18f471ff",
+        "insn": "bl #0x436f2554"
+      },
+      {
+        "address": "0x43ad9672",
+        "bytes": "40b1",
+        "insn": "cbz r0, #0x43ad9686"
+      },
+      {
+        "address": "0x43ad9674",
+        "bytes": "2846",
+        "insn": "mov r0, r5"
+      },
+      {
+        "address": "0x43ad9676",
+        "bytes": "2146",
+        "insn": "mov r1, r4"
+      },
+      {
+        "address": "0x43ad9678",
+        "bytes": "3246",
+        "insn": "mov r2, r6"
+      },
+      {
+        "address": "0x43ad967a",
+        "bytes": "fff7d5ff",
+        "insn": "bl #0x43ad9628"
+      },
+      {
+        "address": "0x43ad967e",
+        "bytes": "80f00100",
+        "insn": "eor r0, r0, #1"
+      },
+      {
+        "address": "0x43ad9682",
+        "bytes": "c0b2",
+        "insn": "uxtb r0, r0"
+      },
+      {
+        "address": "0x43ad9684",
+        "bytes": "70bd",
+        "insn": "pop {r4, r5, r6, pc}"
+      }
+    ]
+  },
+  "busy": {
+    "entry": "0x43ad92e6",
+    "insn": [
+      {
+        "address": "0x43ad92e6",
+        "bytes": "10b5",
+        "insn": "push {r4, lr}"
+      },
+      {
+        "address": "0x43ad92e8",
+        "bytes": "0446",
+        "insn": "mov r4, r0"
+      },
+      {
+        "address": "0x43ad92ea",
+        "bytes": "fff77dff",
+        "insn": "bl #0x43ad91e8"
+      },
+      {
+        "address": "0x43ad92ee",
+        "bytes": "2046",
+        "insn": "mov r0, r4"
+      },
+      {
+        "address": "0x43ad92f0",
+        "bytes": "19f474f8",
+        "insn": "bl #0x436f23dc"
+      },
+      {
+        "address": "0x43ad92f4",
+        "bytes": "2046",
+        "insn": "mov r0, r4"
+      },
+      {
+        "address": "0x43ad92f6",
+        "bytes": "bde81040",
+        "insn": "pop.w {r4, lr}"
+      },
+      {
+        "address": "0x43ad92fa",
+        "bytes": "fff767bf",
+        "insn": "b.w #0x43ad91cc"
+      }
+    ]
+  },
+  "presence": {
+    "retry": {
+      "address": "0x436f25f0",
+      "bytes": 48,
+      "signature": "73b5044615461e46c170214601a8e6f38dfe01a829463246e7f32df802280dd12046e6f368fe01a829463246e7f323f8",
+      "a6000_hits": 0
+    },
+    "plain": {
+      "address": "0x43ad968a",
+      "bytes": 30,
+      "signature": "73b5044615461e46c170214601a8fff740fe01a829463246fff7e0ff7cbd",
+      "a6000_hits": 0
+    },
+    "formatter": {
+      "address": "0x43ad9666",
+      "bytes": 32,
+      "signature": "70b505460c46164618f471ff40b1284621463246fff7d5ff80f00100c0b270bd",
+      "a6000_hits": 0
+    },
+    "busy": {
+      "address": "0x43ad92e6",
+      "bytes": 24,
+      "signature": "10b50446fff77dff204619f474f82046bde81040fff767bf",
+      "a6000_hits": 0
+    }
+  },
+  "conclusion": "modo 2 == misma trama + un reintento tras 0x43ad92e6",
+  "limits": [
+    "Estatico: sin firmware ejecutado, sin camara, sin flasheo.",
+    "No se decodifica el contenido de la trama (0x43ad9666 delega en 0x43ad9628/0x436f2554).",
+    "El enlace de 'modo 2' con el silent shutter sigue NO_VERIFICADO.",
+    "S51 sin cambios."
+  ]
+}

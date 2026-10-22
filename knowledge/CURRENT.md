@@ -1821,3 +1821,15 @@ compartida/OSAL; la ausencia de literales no prueba ausencia. S51 sin cambios.
 
 **Siguiente:** S320, seguir los candidatos que reciben `ctx` o cerrar con un barrido de
 `memcpy`/`stm` con destino `ctx`.
+
+## S320 — mismo formateador, modo 2 con reintento (22-10-2026, agente B)
+
+**VERIFICADO (bytes; 20 comprobaciones, 5 tests):** `0x43ad968a` (modo !=2) y `0x436f25f0`
+(modo 2) comparten 7 instrucciones (fijan `obj[3]=arg1`, llaman a `0x43ad931c` y a
+`0x43ad9666`). El de modo 2 añade: si `r0==2` tras el formateador, llama a `0x43ad92e6`,
+repite `0x43ad9666` y registra un log si sigue ocupado. Por tanto el modo elige **qué lista**
+se aplica (S315), no una trama distinta. Las cuatro firmas tienen **0 coincidencias** en la
+A6000. **NO_VERIFICADO:** contenido exacto de la trama y enlace con el silent. S51 sin cambios.
+[S320](../docs/capture/s320-frame-retry.md), `analysis/s320_frame_retry/frames.json`.
+
+**Siguiente:** S321, tabla de 68 filas `0x43fee5ac` y su relación con los drive modes.
