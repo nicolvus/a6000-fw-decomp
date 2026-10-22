@@ -1,5 +1,11 @@
 # Estado actual — léeme primero
 
+## S159 — spill del puntero de estado en `0x4386001c` (22-10-2026)
+
+`FUN_4385fff0` carga el objeto vía GOT; `0x4386001c` es `str r3,[sp,#0x1c]` (spill), no write a estado. Este cuerpo lee `+0/+0x1c/+0xa2`, stores van a otros destinos; no gates `+3/+6` localmente. [S159](../docs/capture/s159-imager-state-spill.md), reproducción `analysis/s159_imager_state_ref/state_spill.json` (3 tests); no prueba ausencia global.
+
+**Siguiente:** otro xref restante a `0x43f72d02`; distinguir el edge de valor del acceso al contenido y priorizar instrucciones de escritura/copia.
+
 ## S158 — `0x4385b268` guarda el puntero de estado en stack (22-10-2026)
 
 `FUN_4385b234` lee GOT `0x4401f990→0x43f72d02`; el xref `0x4385b268` es `str r3,[sp,#0x20]`, un spill, no acceso de escritura a la base. El cuerpo lee `+0x26/+0x28/+0x29`, escribe a otros objetos, y no toca gates `+3/+6` localmente. [S158](../docs/capture/s158-imager-state-ref.md), `analysis/s158_imager_state_ref/state_accessor.json` (3 tests). Sin conclusión global. Commit publicado: `3affd7cc`.

@@ -128,6 +128,15 @@
 - Pruebas: unittest S158 3/3 PASS; suite S140–S158 + knowledge 109/109 PASS; `git diff --check` PASS. Commit `3affd7cc` publicado en `origin/main`.
 - Siguiente: clasificar xref restante a base, evitando confundir edge al valor con acceso a memoria.
 
+## Investigación S159 — segundo spill del estado
+
+- Pregunta: clasificar `0x4386001c` y el uso posterior del puntero a `0x43f72d02` en su procedimiento.
+- Resultado: `FUN_4385fff0` lee el GOT slot y derrama `r3` a `[sp+0x1c]`; lee +0/+0x1c/+0xa2 y stores a otros targets. Ningún store a +3/+6 en ese cuerpo; no se infiere ausencia global.
+- Evidencia REA: contenedor `ev_5b0f148005650c3e22de895825765d726859466967149bcff370c3d43ddd1f73`; instrucción `ev_3c2f0fbe550810719bf22e531025709d7c0ca323e91ab8635e60f9afca166181`; referencias `ev_eb099b43bb1c2559ab27672e7a60d390533927b72af8b8a486614aaee8090843`; slot `ev_ef0ae04fe4e640945736ea7bd40211f7cbdc4dbc7865e58ec0051c994f67bc7f`.
+- Artefactos: `analysis/s159_imager_state_ref/{verify_state_spill.py,state_spill.json}`, `tests/test_s159_imager_state_ref.py`, `docs/capture/s159-imager-state-spill.md`.
+- Pruebas: unittest 3/3 PASS; falta suite/commit/push.
+- Siguiente: escoger un xref restante, preferiblemente uno con typed WRITE directo, y verificar si base-pointer edge es spill u objeto efectivo.
+
 Checkpoint persistente. Actualizar al terminar cada etapa, antes de continuar
 con la siguiente. No reescribir historial: añadir entradas nuevas.
 
