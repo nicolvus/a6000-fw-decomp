@@ -1,0 +1,77 @@
+{
+  "session": "S604",
+  "modules": ["[LENS_YC]", "[IMAGING_RAW]"],
+  "firmware": "A6000 fw3.21",
+  "exclusivity": "A6000-only (0 in A7S fw3.20, 0 in A6300 fw2.01)",
+  "string_counts": {
+    "LENS_YC": {"rea_unique": 22, "strings_total": 21},
+    "IMAGING_RAW": {"rea_unique": 18, "strings_total": 20}
+  },
+  "LENS_YC": {
+    "strings": [
+      {"address": "0x43c9a074", "value": "[LENS_YC]: %s: Open error (0x%x)"},
+      {"address": "0x43c9a095", "value": "[LENS_YC]: %s: Close error (0x%x)"},
+      {"address": "0x43c9aed6", "value": "[LENS_YC]: %s: LoadLensAberrationData error (0x%x)"},
+      {"address": "0x43c9af09", "value": "[LENS_YC]: %s: FreeLensAberrationData error (0x%x)"},
+      {"address": "0x43c9af3c", "value": "[LENS_YC]: %s: AllocLensAberrationData error (0x%x)"},
+      {"address": "0x43c9b012", "value": "[LENS_YC]: %s: AllocNewWait error (0x%x)"},
+      {"address": "0x43c9b03b", "value": "[LENS_YC]: %s: Alloc error (0x%x)"},
+      {"address": "0x43c9b05d", "value": "[LENS_YC]: %s: Free error (0x%x)"},
+      {"address": "0x43c9b07e", "value": "[LENS_YC]: %s: AsyncSend error (0x%x)"},
+      {"address": "0x43c9b0a4", "value": "[LENS_YC]: %s: AsyncRecieve error (0x%x)"},
+      {"address": "0x43c9b0cd", "value": "[LENS_YC]: %s: wrong message received"},
+      {"address": "0x43c9b0f3", "value": "[LENS_YC]: base.msg_code  = 0x%x"},
+      {"address": "0x43c9b114", "value": "[LENS_YC]: base.option    = 0x%x"},
+      {"address": "0x43c9b135", "value": "[LENS_YC]: base.prg_num   = 0x%x"},
+      {"address": "0x43c9b156", "value": "[LENS_YC]: base.timeout   = 0x%x"},
+      {"address": "0x43c9b177", "value": "[LENS_YC]: base.err_code  = 0x%x"},
+      {"address": "0x43c9b198", "value": "[LENS_YC]: prg.prg_id     = 0x%x"},
+      {"address": "0x43c9b1b9", "value": "[LENS_YC]: prg.usr_unq_id = 0x%x"},
+      {"address": "0x43c9b1da", "value": "[LENS_YC]: prg.offset     = 0x%x"},
+      {"address": "0x43c9b1fb", "value": "[LENS_YC]: prg.unit_type  = 0x%x"},
+      {"address": "0x43c9b21c", "value": "[LENS_YC]: %s: Load error (0x%x)"}
+    ],
+    "key_themes": {
+      "lifecycle": "Open/Close/Load/Free",
+      "aberration": "LoadLensAberrationData, FreeLensAberrationData, AllocLensAberrationData",
+      "memory": "AllocNewWait, Alloc, Free",
+      "async_io": "AsyncSend, AsyncRecieve",
+      "message_struct": "base.msg_code, option, prg_num, timeout, err_code",
+      "program_struct": "prg.prg_id, usr_unq_id, offset, unit_type"
+    }
+  },
+  "IMAGING_RAW": {
+    "strings": [
+      {"address": "0x43caa727", "value": "[IMAGING_RAW]: RawMemMgr) DisableSetMode_Unlock Multiple call count:%d"},
+      {"address": "0x43caa76e", "value": "[IMAGING_RAW]: RawMemMgr) Callback Dummy!"},
+      {"address": "0x43caa7b5", "value": "[IMAGING_RAW]: RawMemMgr) GetMem Warning: Please wait callback. %x"},
+      {"address": "0x43caa7f8", "value": "[IMAGING_RAW]: RawMemMgr) isMemEmpty State Err: now state. %x"},
+      {"address": "0x43caa836", "value": "[IMAGING_RAW]: RawMemMgr) FreeRemainingMem State Err: now state. %x"},
+      {"address": "0x43caa8f0", "value": "[IMAGING_RAW]: RawMemMgr) FreeAll state Error: %d"},
+      {"address": "0x43caa922", "value": "[IMAGING_RAW]: RawMemMgr) ReserveAll State Err: now state. %x"},
+      {"address": "0x43caa9d9", "value": "[IMAGING_RAW]: RawMemMgr_MemPool) Wait Alloc"},
+      {"address": "0x43caaa06", "value": "[IMAGING_RAW]: RawMemMgr_MemPool) Wait Alloc - Comp(%d)"},
+      {"address": "0x43caaa3e", "value": "[IMAGING_RAW]: RawMemMgr_MemPool) AllocArea(MemQue) Dmm Err: type[0x%08x] err[%d]"},
+      {"address": "0x43caaa90", "value": "[IMAGING_RAW]: RawMemMgr_MemPool) AllocArea(ImgPrm) Dmm Err: err[%d]"},
+      {"address": "0x43caaad5", "value": "[IMAGING_RAW]: RawMemMgr_MemPool) AllocArea(MemQue) Dmm Err: err[%d]"},
+      {"address": "0x43caac1e", "value": "[IMAGING_RAW]: RawMemMgr_MemQue) Req id:[0x%08x] FrontQue que:[0x%x] Empty! **"},
+      {"address": "0x43caac6d", "value": "[IMAGING_RAW]: RawMemMgr_MemQue) Req id:[0x%08x] FrontQue que:[0x%x] id:[0x%08x] remain:[%d] **"},
+      {"address": "0x43caaccd", "value": "[IMAGING_RAW]: RawMemMgr_MemQue: Remaining Queue id:[0x%04x] param:[0x%08x]  **"},
+      {"address": "0x43caad1d", "value": "[IMAGING_RAW]: RawMemMgr_MemQue: SetMemoryPool Err:[%d]"},
+      {"address": "0x43caad55", "value": "[IMAGING_RAW]: RawMemMgr_MemQue: Add Que Front Full Err:[0x%04x] param:[0x%08x]  **"},
+      {"address": "0x43caada9", "value": "[IMAGING_RAW]: RawMemMgr_MemQue: Add Que Full Err:[0x%04x] param:[0x%08x]  **"}
+    ],
+    "key_themes": {
+      "RawMemMgr": "DisableSetMode_Unlock, Callback Dummy, GetMem, isMemEmpty, FreeRemainingMem, FreeAll, ReserveAll",
+      "MemPool": "Wait Alloc, AllocArea (MemQue/ImgPrm), DMM errors",
+      "MemQue": "Req id/FrontQue/Empty/Remaining Queue, SetMemoryPool, Add Que Front/Full"
+    }
+  },
+  "differential": {
+    "A7S_fw320": "0 strings for both modules",
+    "A6300_fw201": "0 strings for both modules"
+  },
+  "evidence": "REA search_strings on av-cam.bin (SHA256: b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9); strings -a on all three firmwares",
+  "verdict": "VERIFICADO",
+  "limitations": "No xrefs/decompilation performed for these modules (time-boxed). Function bodies not analyzed. Source file names not recovered. Semantics inferred from trace format. No runtime verification."
+}
