@@ -2,7 +2,7 @@
 
 ## S161 — otro spill del state pointer (22-10-2026)
 
-En `FUN_4384b268`, `0x4384cb06` carga `0x43f72d02` desde GOT y `0x4384cb0a` almacena el puntero en `[sp+0x20]`; el edge al objeto es de valor, el WRITE efectivo es stack. El cuerpo lee otros campos, no gates `+3/+6`. [S161](../docs/capture/s161-imager-state-spill.md), `analysis/s161_imager_state_spill/state_spill.json` (3 tests). Límite local.
+En `FUN_4384b268`, `0x4384cb06` carga `0x43f72d02` desde GOT y `0x4384cb0a` almacena el puntero en `[sp+0x20]`; el edge al objeto es de valor, el WRITE efectivo es stack. El cuerpo lee otros campos, no gates `+3/+6`. [S161](../docs/capture/s161-imager-state-spill.md), `analysis/s161_imager_state_spill/state_spill.json` (3 tests). Límite local. Commit publicado: `0a26c130`.
 
 **Siguiente:** escoger otro xref restante y clasificar si es acceso de memoria efectivo o propagación de puntero; no convertirlo en conclusión global.
 
