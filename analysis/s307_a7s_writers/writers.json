@@ -1,0 +1,152 @@
+{
+  "milestone": "S307",
+  "title": "escrituras A7S exclusivas del estado (+0xde, +0xe6..+0xea) en c\u00f3digo ausente en la A6000",
+  "base": "0x43541000",
+  "firmware": {
+    "a6000": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+    "a7s": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+  },
+  "writers": [
+    {
+      "function": "0x43865100",
+      "field": "state+0xde",
+      "callers": [
+        "0x438648b0"
+      ],
+      "write_sites": [
+        {
+          "site": "0x4386521a",
+          "insn": "strb.w r5, [r3, #0xde]",
+          "signature_hex": "19805a80094be35883f8de5020b0bde8f04704b0704724f4",
+          "a6000_signature_hits": 0
+        }
+      ]
+    },
+    {
+      "function": "0x438642f0",
+      "field": "state+0xe6/+0xe8/+0xea",
+      "callers": [
+        "0x438647e6",
+        "0x4386484e"
+      ],
+      "write_sites": [
+        {
+          "site": "0x438643a6",
+          "insn": "strh.w r0, [r4, #0xe6]",
+          "signature_hex": "ec58f9f47afd0a21a4f8e6003846f9f474fd0a21a4f8e800",
+          "a6000_signature_hits": 0
+        },
+        {
+          "site": "0x438643b2",
+          "insn": "strh.w r0, [r4, #0xe8]",
+          "signature_hex": "3846f9f474fd0a21a4f8e8003046f9f46efda4f8ea0005b0",
+          "a6000_signature_hits": 0
+        },
+        {
+          "site": "0x438643bc",
+          "insn": "strh.w r0, [r4, #0xea]",
+          "signature_hex": "e8003046f9f46efda4f8ea0005b0f0bd7e24720036027c00",
+          "a6000_signature_hits": 0
+        }
+      ]
+    },
+    {
+      "function": "0x4385352c",
+      "field": "state+0x02",
+      "callers": [
+        "0x43854d1c",
+        "0x43854f0c"
+      ],
+      "write_sites": [
+        {
+          "site": "0x438536a0",
+          "insn": "strb r2, [r3, #2]",
+          "signature_hex": "40ea0e200880e3589a707b4a7b497a447944138808889842",
+          "a6000_signature_hits": 0
+        },
+        {
+          "site": "0x438536d0",
+          "insn": "strb r0, [r3, #2]",
+          "signature_hex": "037018466f4be3589870724b7b441a8801321a8003e0a7f8",
+          "a6000_signature_hits": 0
+        }
+      ]
+    },
+    {
+      "function": "0x4385a290",
+      "field": "state+0x00",
+      "callers": [
+        "0x4385aa1c",
+        "0x4385aaa6"
+      ],
+      "write_sites": [
+        {
+          "site": "0x4385a334",
+          "insn": "strb r3, [r2]",
+          "signature_hex": "138043b9114aa2581370114aa2581370104aa258137010bd",
+          "a6000_signature_hits": 1
+        }
+      ]
+    },
+    {
+      "function": "0x4385a384",
+      "field": "state+0x02",
+      "callers": [
+        "0x437cb34a"
+      ],
+      "write_sites": [
+        {
+          "site": "0x4385a67c",
+          "insn": "strb r4, [r3, #2]",
+          "signature_hex": "05211180784a9b589c700223037038bd7649774a59587a44",
+          "a6000_signature_hits": 0
+        }
+      ]
+    },
+    {
+      "function": "0x4385a98c",
+      "field": "state+0x02",
+      "callers": [
+        "0x43854e20",
+        "0x4385514a"
+      ],
+      "write_sites": [
+        {
+          "site": "0x4385a9c6",
+          "insn": "strb r3, [r1, #2]",
+          "signature_hex": "e158002333702b708b700b4b01327b441a8070bd0a4a7a44",
+          "a6000_signature_hits": 1
+        }
+      ]
+    }
+  ],
+  "reads_only": [
+    {
+      "function": "0x438642f0",
+      "field": "lectura state+0xae/+0xe6",
+      "sites": [
+        {
+          "site": "0x43864732",
+          "signature_hex": "bb42f3d1924bec58b4f8ae30a3b14ff47a775f438f4b7b44",
+          "a6000_signature_hits": 0
+        }
+      ]
+    }
+  ],
+  "selector": {
+    "entry": "0x43826d58",
+    "bytes_hex": "052808b5",
+    "insn": "cmp r0, #5",
+    "callers_direct": [
+      "0x4354908c",
+      "0x43826df2"
+    ]
+  },
+  "timing_function": {
+    "entry": "0x438645be",
+    "prologue_insn": "push {r4, r5, r6, r7, lr}",
+    "direct_callers": [],
+    "literal_pointer_hits": 0
+  },
+  "scope_limit": "Ausencia por firma exacta de 24 B alrededor del store; no prueba que no exista c\u00f3digo equivalente reescrito. Alcanzabilidad runtime NO_VERIFICADA."
+}
