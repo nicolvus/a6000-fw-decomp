@@ -24,6 +24,7 @@ hardware. Se conservan todas las evidencias anteriores en sus rutas originales.
 - [S154: xref de GOT al objeto de flags, sin escritura](../../docs/capture/s154-imager-state-ref.md).
 - [S155: más xrefs al objeto gate, clasificadas como lectores/accesores](../../docs/capture/s155-imager-state-readers.md).
 - [S157: rutina de snapshot del estado, sin escritura de los gates](../../docs/capture/s157-imager-state-snapshot.md).
+- [S158: spill de puntero y lectores de otros campos del estado](../../docs/capture/s158-imager-state-ref.md).
 - [Comparación entre modelos](../../docs/comparative-analysis.md).
 - [Límites de hardware pendientes](../../docs/hardware-limitations.md).
 
