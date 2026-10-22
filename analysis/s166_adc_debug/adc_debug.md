@@ -324,9 +324,10 @@ del EVF y a la sincronización de la secuencia HS; **no** documenta el giroscopi
 ## 10. NO VERIFICADO / abierto
 
 1. **Fichero fuente y clase RTTI del driver LIRO ADC: no hay ninguno embebido.**
-   En la región de código del driver (`0x4398e000`–`0x4398f200`) **ninguna**
-   cadena referenciada es un nombre de fichero `.cpp`/`.c`/`.h` ni un nombre de clase
-   RTTI. Los nombres embebidos más cercanos son de otros módulos
+   De las **30** cadenas referenciadas desde la región de código del driver
+   (`0x4398e000`–`0x4398f200`, listadas en `adc_debug.json` → `ficheros_fuente`),
+   **ninguna** es un nombre de fichero `.cpp`/`.c`/`.h` ni un nombre de clase RTTI.
+   Los nombres embebidos más cercanos son de otros módulos
    (`src/RcDriver.cpp` `0x43ce1b1d`, `src/api_rc.cpp` `0x43ce15d1`, `Stage_Adjust.cpp`
    `0x43cc6cc6` — esta última es la etapa ADJ **de la cámara**, en `0x438bd79c`…, no
    el driver LIRO). **No se puede atribuir un fichero fuente al módulo.**

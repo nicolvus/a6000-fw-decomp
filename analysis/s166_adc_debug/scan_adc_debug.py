@@ -313,6 +313,23 @@ def main():
         })
     n_handles_total = sum(len(v) for v in handles.values())
 
+    # ---- ficheros fuente / RTTI embebidos en la region del driver ----------
+    driver_lo, driver_hi = 0x4398E000, 0x4398F200
+    rev = defaultdict(list)
+    for d, v in refs.items():
+        for s in v:
+            rev[s].append(d)
+    driver_strings = []
+    for site in sorted(rev):
+        if driver_lo <= site < driver_hi:
+            for d in rev[site]:
+                txt = cstr(DATA, d)
+                if txt:
+                    driver_strings.append({"site": "%08x" % site, "addr": "%08x" % d,
+                                           "text": txt})
+    file_like = [s for s in driver_strings
+                 if re.search(r"\.(cpp|c|h|hpp)$", s["text"]) or re.match(r"^\d+[A-Z]", s["text"])]
+
     # ---- diferencial --------------------------------------------------------
     terms = [
         "[ADC_DEBUG]", "[ADC_DEBUG]: few arg", "[ADC_DEBUG]: ADC DATA0",
@@ -378,6 +395,13 @@ def main():
                 "0xfff1": "ADC_GET_DATA_ALL (12 canales) -> [4]=unidad, [6..0x1d]=12 u16",
                 "0xfff2": "ADC_SET_DATA_ALL (12 canales) -> [4..5], [6..0x1d]=12 u16",
             },
+        },
+        "ficheros_fuente": {
+            "region": "%08x-%08x" % (driver_lo, driver_hi),
+            "cadenas_referenciadas": driver_strings,
+            "nombres_de_fichero_o_rtti": file_like,
+            "nota": "vacio: el driver LIRO ADC no embebe ningun nombre de fichero "
+                    "ni de clase RTTI",
         },
         "diferencial": diff,
         "diferencial_nota": "El driver LIRO ADC y sus comandos ADJ (get_d/get_da/set_da) "
