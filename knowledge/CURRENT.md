@@ -2,7 +2,7 @@
 
 ## S152 — lectura diagnóstica de un byte del gap G (22-10-2026)
 
-Las celdas de S150 son campos `addr` de dos tablas `{u16 id,u16 size,u32 addr}`: A[32] y B[6] = `{0x0030,1,0x43eb0850}`. `FUN_43858338` dirige al raw copier `FUN_43b09c7a`, que lee `addr+size−1` hacia abajo y copia a buffer; con size=1, lectura exacta del byte gap. **No escribe el byte.** Dos gates dependen de flags con valor runtime desconocido, así que alcanzabilidad es PARCIAL. [S152](../docs/capture/s152-imager-gap-descriptor-read.md); `analysis/s152_imager_descriptor_reads/descriptor_reads.json` (3 tests).
+Las celdas de S150 son campos `addr` de dos tablas `{u16 id,u16 size,u32 addr}`: A[32] y B[6] = `{0x0030,1,0x43eb0850}`. `FUN_43858338` dirige al raw copier `FUN_43b09c7a`, que lee `addr+size−1` hacia abajo y copia a buffer; con size=1, lectura exacta del byte gap. **No escribe el byte.** Dos gates dependen de flags con valor runtime desconocido, así que alcanzabilidad es PARCIAL. [S152](../docs/capture/s152-imager-gap-descriptor-read.md); `analysis/s152_imager_descriptor_reads/descriptor_reads.json` (3 tests). Commit publicado: `024bb46f`.
 
 **Siguiente:** identificar escritores de los bits gates de `0x43f72d05`/`0x43f72d08` o demostrar cómo se inicializan dinámicamente; mantener la distinción entre ruta de volcado y exposición. S51 sigue A/B/C=NO.
 

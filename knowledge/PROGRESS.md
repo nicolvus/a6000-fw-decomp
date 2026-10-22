@@ -80,7 +80,7 @@
 - Resultado: tablas A[32]/B[6] se decodifican `{id=0x30,size=1,addr=0x43eb0850}`. `FUN_43858338` selecciona formato raw/hex; raw `FUN_43b09c7a` lee desde addr y copia a buffer; size=1 implica lectura de un byte. Sin store al origen en ese copiador. Gates de runtime dependen de dos bits y permanecen PARCIAL.
 - Evidencia REA: tabla A `ev_f8bd0f66f1e8d90f997d6ea0c37e47e3911c40c8dc9de66f9652bfca536f4289`, B `ev_01d929687b87aa4343c193261123044fac8ffad3ae264dda33a77826adfffa90`, copiador `ev_2d31ad1d2d49ace2985775034cfc294bb17251c7e6930056dfb4cb9c47716ffa`, hex formatter `ev_6efbdb9318dab3f4c890adbbc9f1e066ffa8905d6ccb639967336a706653e212`.
 - Artefactos: `analysis/s152_imager_descriptor_reads/{verify_descriptor_reads.py,descriptor_reads.json}`, `tests/test_s152_imager_descriptor_reads.py`, `docs/capture/s152-imager-gap-descriptor-read.md`.
-- Pruebas: unittest 3/3 PASS; falta suite/commit/push.
+- Pruebas: unittest S152 3/3 PASS; suite S140–S152 + knowledge 94/94 PASS; `git diff --check` PASS. Commit `024bb46f` publicado en `origin/main`.
 - Siguiente: localizar escritores de flags `0x43f72d05&2` y `0x43f72d08&0x20`; no reabrir asignación física del byte gap.
 
 Checkpoint persistente. Actualizar al terminar cada etapa, antes de continuar
