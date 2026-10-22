@@ -1746,3 +1746,20 @@ A6000 la misma VA es otra tabla (71 punteros, terminador `0x43fee41c`) y **no ex
 
 **Siguiente:** S315, seguir la lista de 95 registros hasta el formateador (`0x436f44c4` →
 `0x436f25f0`) y comparar con la tabla A6000 de 71 entradas.
+
+## S315 — tres listas de registros y su consumidor (22-10-2026, agente B)
+
+**VERIFICADO (bytes; 139 comprobaciones, 8 tests):** el consumidor `0x436f44c4(obj,modo,lista)`
+recorre arrays de punteros terminados en NULL y aplica registros de 5 B lógicos (`dev`,`reg:u16`,
+`data:u8`; almacenados en 6 B con padding). Tres llamadas: `0x436f5b32` (`modo 2`) → **L95**
+`0x43fee3f8` (95 registros, 94×`0x81`+1×`0x83`); `0x436f5b52` (`modo 0`) → **L5** `0x43fee578`
+(5: regs `0x5f,0x61,0x88,0x94,0xe3`); `0x436f5422` (`modo 2`) → **L1** `0x43fee590` (reg `0x00`,
+data `0x04`). El getter `0x436f4588` resuelve L95 por GOT (`0x44024540+0x8400` → slot
+`0x4402c940`); los slots `0x44025ec0` y `0x440292b0` resuelven L5/L1. L5 **no** es subconjunto de
+L95 (añade `0x61,0x88,0xe3`). Consumidor, getter y las tres llamadas tienen **0 firmas** de 16/24 B
+en la A6000. **NO_VERIFICADO:** que `modo 2` sea el modo silent, el origen/escritor de las listas y
+la semántica física de los registros. S51 sin cambios.
+[S315](../docs/capture/s315-register-lists.md), `analysis/s315_register_lists/lists.json`.
+
+**Siguiente:** S316, quién elige `modo 0/2` (callers de `0x436f53f4`/`0x436f5a14`, campo
+`+0x1b0/+0x1ac`) y origen de las listas.
