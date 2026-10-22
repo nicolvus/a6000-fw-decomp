@@ -2,7 +2,7 @@
 
 Tema: decodificación de módulos exclusivos de la A6000 fw3.21 (0 en A7S y A6300) no cubiertos por A/B/C, con comparación. Foco inicial: gestores de cámara y escalar.
 
-- TODO S600 Decodificar `[CAM_FUNC_MGR]` (43 trazas): exclusiva A6000. Ficheros fuente, funciones, estructuras.
+- DONE S600 Decodificar `[CAM_FUNC_MGR]` (43 trazas): exclusiva A6000. Ficheros fuente, funciones, estructuras. <b2f5ff12>
 - TODO S601 Decodificar `[CAM_SCALAR]` (34 trazas): exclusiva A6000.
 - TODO S602 Decodificar `[REMOTE]` (32 trazas): exclusiva A6000.
 - TODO S603 Decodificar `[CAMERA_DSP_APL]`.

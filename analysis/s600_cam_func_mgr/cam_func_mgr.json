@@ -1,0 +1,86 @@
+{
+  "session": "S600",
+  "module": "[CAM_FUNC_MGR]",
+  "firmware": "A6000 fw3.21",
+  "exclusivity": "A6000-only (0 in A7S fw3.20, 0 in A6300 fw2.01)",
+  "string_count": {
+    "rea_unique": 36,
+    "strings_total": 43
+  },
+  "strings": [
+    {"address": "0x43ca1307", "value": "[CAM_FUNC_MGR]: CAPCON WARNING! FILE:%s LINE=%d func:%s param=%x %x %x"},
+    {"address": "0x43ca134e", "value": "[CAM_FUNC_MGR]: SyncProcMargin[usec] HS0:%u HS1:%u HS2:%u HS3@CPU2:%u HS3@CPU0(IDT):%u HS3@CPU3(RCH):%u VDDrive:%u VDPost:%u"},
+    {"address": "0x43caf040", "value": "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d"},
+    {"address": "0x43caf08e", "value": "[CAM_FUNC_MGR]: SetCapMode:Invalid CapMode[0x%x: %d: %d: %d: %d]"},
+    {"address": "0x43caf0cf", "value": "[CAM_FUNC_MGR]: receive[%d,%d] before comp[%d,%d] (QUEUEING)"},
+    {"address": "0x43caf10c", "value": "[CAM_FUNC_MGR]: receive[%d,%d] before comp[%d,%d] (FAILED)"},
+    {"address": "0x43caf18e", "value": "[CAM_FUNC_MGR]: ERROR !!! osalErr:0x%04x %s : %d"},
+    {"address": "0x43caf1d5", "value": "[CAM_FUNC_MGR]: ERROR !!! LSI_NUM_TYPE:0x%04x %s : %d"},
+    {"address": "0x43caf20b", "value": "[CAM_FUNC_MGR]: UNKNOWN EID !!! type:[0x%02x] %s : %d"},
+    {"address": "0x43caf241", "value": "[CAM_FUNC_MGR]: ERROR !!! type:[0x%02x] %s : %d"},
+    {"address": "0x43caf271", "value": "[CAM_FUNC_MGR]: [LRB]REQ_APP_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"},
+    {"address": "0x43caf2c7", "value": "[CAM_FUNC_MGR]: [LRB]APP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"},
+    {"address": "0x43caf315", "value": "[CAM_FUNC_MGR]: [LRB]APP_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"},
+    {"address": "0x43caf367", "value": "[CAM_FUNC_MGR]: [LRB]REQ_VSYNC_CUST_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x"},
+    {"address": "0x43caf43d", "value": "[CAM_FUNC_MGR]: [LRB]VSYNC_CUST_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x"},
+    {"address": "0x43caf4ff", "value": "[CAM_FUNC_MGR]: [LRB]V2ND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"},
+    {"address": "0x43caf5a1", "value": "[CAM_FUNC_MGR]: [LRB]REQ_FSPSUM_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"},
+    {"address": "0x43caf64b", "value": "[CAM_FUNC_MGR]: [LRB]FSPSUM_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"},
+    {"address": "0x43caf6a0", "value": "[CAM_FUNC_MGR]: ERROR !!! LRBridge SndV2ndLatchCmp. %s : %d"},
+    {"address": "0x43caf6dc", "value": "[CAM_FUNC_MGR]: ERROR !!! LRBridge SndApp2Cmp. %s : %d"},
+    {"address": "0x43caf713", "value": "[CAM_FUNC_MGR]: [LRB]REQ_APP_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"},
+    {"address": "0x43caf769", "value": "[CAM_FUNC_MGR]: [LRB]APP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"},
+    {"address": "0x43caf7b7", "value": "[CAM_FUNC_MGR]: [LRB]APP_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"},
+    {"address": "0x43caf809", "value": "[CAM_FUNC_MGR]: [LRB]REQ_VSYNC_CUST_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x"},
+    {"address": "0x43caf8df", "value": "[CAM_FUNC_MGR]: [LRB]VSYNC_CUST_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x"},
+    {"address": "0x43caf9a1", "value": "[CAM_FUNC_MGR]: [LRB]V2ND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"},
+    {"address": "0x43cafa43", "value": "[CAM_FUNC_MGR]: [LRB]REQ_FSPSUM_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"},
+    {"address": "0x43cafaed", "value": "[CAM_FUNC_MGR]: [LRB]FSPSUM_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"},
+    {"address": "0x43cb00f3", "value": "[CAM_FUNC_MGR]: Unexpected ExpFocusTransition : message [%x] timing [%d]"},
+    {"address": "0x43cb0162", "value": "[CAM_FUNC_MGR]: Unexpected SleepTransition : message [%x] timing [%d]"},
+    {"address": "0x43cb01a8", "value": "[CAM_FUNC_MGR]: unknown message in Imager Sleep Process: %x"},
+    {"address": "0x43cb0305", "value": "[CAM_FUNC_MGR]: IsNeedScanAf (%d)"},
+    {"address": "0x43cb0327", "value": "[CAM_FUNC_MGR]: IsNeedAe     (%d)"},
+    {"address": "0x43cb0349", "value": "[CAM_FUNC_MGR]: Pseudo AF Stop %d"}
+  ],
+  "emitting_functions": {
+    "0x43787bc8": "CAPCON WARNING logger (7 params)",
+    "0x43803e84": "SetCapMode handler (validates cap mode 0x19, 0x17, 0x1c, 0x03)",
+    "0x43804010": "Request queueing (Snd) - checks slot at +0x26",
+    "0x43805860": "OSAL error logger",
+    "0x438058c8": "Message send (Snd) with OSAL msg allocation",
+    "0x43805f00": "LRB message dispatcher (Snd) - 12 message types 0x00-0x0b",
+    "0x4380621c": "Message handler -> calls FUN_43805f00",
+    "0x43806458": "Message handler -> calls FUN_43805f00",
+    "0x43806520": "Message handler -> calls FUN_43805f00",
+    "0x438065e8": "Sends LRB REQ_APP_SND (type 0x0b)",
+    "0x43806654": "Sends LRB APP_SND (type 0x05)",
+    "0x438066c0": "Sends LRB APP_SND (type 0x02)",
+    "0x4380672c": "LRB message dispatcher (Rsv) - 12 message types 0x00-0x0b"
+  },
+  "key_structures": {
+    "LRB": "Link Bridge - inter-LSI messaging (Snd=Send, Rsv=Reserve/Response)",
+    "message_types": "0x00-0x0b: REQ_APP, APP, APP_CMP, REQ_VSYNC_CUST, VSYNC_CUST, VSYNC_CUST_CMP, V2ND, REQ_FSPSUM, FSPSUM_CMP, REQ_V2ND, V2ND, V2ND_CMP",
+    "flags_at_0x41_0x44_0x45_0x46": "Bitmask enabling per-message-type tracing",
+    "sequence_counter": "At param_1+0x57a (incremented per send)"
+  },
+  "osal_usage": {
+    "osal_try_valloc_msg": "0x435612d0 (msg allocation)",
+    "osal_snd_msg": "0x4356120c (msg send)",
+    "osal_rcv_msg": "0x43561260 (msg receive)",
+    "osal_free_msg": "0x435612ec (msg free)"
+  },
+  "cap_modes_handled": {
+    "0x19": "Special path (calls FUN_4372a538(0), FUN_4372a65c(0x1a))",
+    "0x17": "Sets param_1+0xa = 1",
+    "0x1c": "Sets param_1+0xc=2, +0xd=0, +0xe=0, +0xf=0",
+    "0x03": "Sets param_1+0xc=3, +0xd=0, +0xe=0, +0xf=0"
+  },
+  "differential": {
+    "A7S_fw320": "0 strings, module absent",
+    "A6300_fw201": "0 strings, module absent"
+  },
+  "evidence": "REA search_strings + xrefs + procedure_pseudo_code on av-cam.bin (SHA256: b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9); strings -a on all three firmwares",
+  "verdict": "VERIFICADO",
+  "limitations": "Function names are Ghidra-generated (FUN_...); source file names not recovered. LRB semantics inferred from trace format. CapMode values observed but not exhaustively mapped to capture modes."
+}
