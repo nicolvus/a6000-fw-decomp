@@ -503,9 +503,12 @@ aporta ninguna ruta electrónica al obturador.
    nivel, puntos de calibración de `C_AD`): se leen de tablas indexadas por la GOT
    (`0x435ac3b4`, `0x435ad600`); **de qué parámetro de configuración se trata no está
    identificado**. NO VERIFICADO.
-8. **Sentido de `ADwork` vs `ADcor`**: por el código, `ADwork` es el valor medido y
-   `ADcor` el corregido (la traza `AD MAXOVER` imprime el medido y `C_AD` imprime
-   `0xffff` como corregido saturado). La nomenclatura exacta es NO VERIFICADA.
+8. **Sentido de `ADwork` vs `ADcor`**: por el código, `'[ILLUMI]AD MAXOVER. ADwork=0x%x'`
+   imprime (`0x435ad528`) el valor **interpolado** que acaba de calcular `C_AD` (`r0`),
+   cuando supera `0xfffe`; y `'[ILLUMI]C_AD. ADcor=0x%x'` imprime (`0x435ad54c`) el
+   centinela `0xffff` que la función devuelve en esa saturación. La nomenclatura exacta
+   de ambos nombres es NO VERIFICADA. Lo mismo para `gain` / `gain_pre` (§2.6), que
+   viven en dos globals distintos.
 9. **Tabla de 19 ids OSAL `0x10600xx`** (`0x43fdaaa4`): presente en las tres fw, junto
    a los typeinfo de `Illumi*`; **su uso NO VERIFICADO**.
 10. **Qué canal del ADC LIRO usa el `[ILLUMI]`**: el byte de canal se lee de un global
