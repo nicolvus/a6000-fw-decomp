@@ -1602,3 +1602,17 @@ sesgo +0x58 de la rev.1 (commit `75f5fa28`) y deja S176 como no reutilizable (ar
 (4 tests + 7 del test previo). Límite: estático, sin runtime/DMA/índice dinámico.
 
 **Siguiente:** S301, mismo barrido en la A7S fw3.20 y tabla de diferencias.
+
+## S301 — barrido A7S fw3.20 y diferencias con la A6000 (22-10-2026, agente B)
+
+Estado A7S localizado en `0x43f7bce6` (slot GOT `0x440251e4`, entrada de tabla `0x43ff928c`),
+derivado del dumper homólogo `0x437e0974` (patrón de gate idéntico). 79 sitios: 65 lectura,
+8 escritura, 4 spill, 1 propagación, 1 dato. **Gates `+3`/`+6` idénticos** (código del dumper
+semánticamente igual; solo cambian los pools) y sin escritores en ambas cámaras → no son el
+mecanismo del silent shutter. Diferencias: la A7S escribe `+0xde` (`0x4386521a`) y el trío
+`+0xe6/+0xe8/+0xea` (`0x438643a6/b2/bc`, divisiones ×10), y lee 11 campos que la A6000 no
+(`+0x47,+0x60,+0x61,+0x6d,+0xae,+0xde,+0xdf,+0xe0,+0xe2,+0xe4,+0xe6`); la A6000 solo lee
+`+0x7f`. Homología del objeto: INFERENCIA fuerte (índice 18 en la tabla, mismo rol). Semántica
+del clúster: NO_VERIFICADA. [S301](../docs/capture/s301-a7s-state-xref-sweep.md).
+
+**Siguiente:** S302, tablas de drive mode/exposición A7S↔A6000 campo a campo (S124/S134/S140).
