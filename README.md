@@ -13,16 +13,16 @@ Proyecto de ingeniería inversa del firmware **Sony A6000 (fw 3.21)**, con foco 
 
 ## Avance total
 
-![linea-general](https://img.shields.io/badge/línea_general-25.81%25-yellow)
-![modulos-nuevos](https://img.shields.io/badge/módulos_nuevos-100%25-brightgreen)
 
 - **Línea general de módulos:** **25.81%** (**96/372**) cubiertos — **58** con hito propio y **38** como sub-etiqueta de un módulo ya decodificado; **276 pendientes reales**.
 - **Módulos “contenido nuevo” (S130):** **100%** (**17/17**) cerrados.
 - **Obturador completamente electrónico:** [S51](docs/capture/s51-decision.md) mantiene la decisión de no parchear; [P1–P8](docs/capture/physical-test-plan.md) siguen sin ejecutarse.
 
-![progreso](docs/progress/progress.svg)
+[![módulos](https://img.shields.io/endpoint?url=https://nicolvus.github.io/a6000-fw-decomp/badge-modulos.json)](https://nicolvus.github.io/a6000-fw-decomp/progress/)
+[![sesiones](https://img.shields.io/endpoint?url=https://nicolvus.github.io/a6000-fw-decomp/badge-sesiones.json)](https://nicolvus.github.io/a6000-fw-decomp/progress/)
+[![pruebas](https://img.shields.io/endpoint?url=https://nicolvus.github.io/a6000-fw-decomp/badge-pruebas.json)](https://nicolvus.github.io/a6000-fw-decomp/progress/)
 
-<sub>Cada cuadrado es una etiqueta de módulo, una sesión o una prueba física (verde = hecho, verde claro = sub-etiqueta cubierta, gris = pendiente, ámbar = cancelada). Pasa el ratón en la [página](https://nicolvus.github.io/a6000-fw-decomp/progress/) para ver cada etiqueta.</sub>
+<sub>GitHub no permite incrustar páginas en el README: los badges se leen de Pages y se actualizan con cada despliegue; el tablero completo (cuadrados, familias, prioridades) está en la [página de progreso](https://nicolvus.github.io/a6000-fw-decomp/progress/).</sub>
 
 Fuente de métricas: [`analysis/s178_census/census.md`](analysis/s178_census/census.md).
 
@@ -32,7 +32,7 @@ Fuente de métricas: [`analysis/s178_census/census.md`](analysis/s178_census/cen
 - Índice de sesiones y verificador Sx: <https://nicolvus.github.io/a6000-fw-decomp/> (generado desde los informes versionados).
 
 El flujo [Pages](.github/workflows/pages.yml) publica solo `site/`; el generador
-`scripts/build_pages_status.py` actualiza el índice y genera `docs/progress/index.html` y `progress.svg`.
+`scripts/build_pages_status.py` actualiza el índice y genera `docs/progress/index.html` y los badges `site/badge-*.json`.
 
 ## Objetivo técnico vigente
 

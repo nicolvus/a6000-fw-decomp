@@ -79,18 +79,6 @@ def groups(data: dict) -> list[tuple[str, str, list[tuple[str, str]]]]:
     ]
 
 
-def render_svg(grids) -> str:
-    out, y = [], 0
-    for title, _, cells in grids:
-        out.append(f'<text x="4" y="{y + 21}" font-family="sans-serif" font-size="16" fill="#fff">{escape(title)}</text>')
-        for i, (cls, tooltip) in enumerate(cells):
-            x, row = 1 + (i % COLS) * 16, y + 31 + (i // COLS) * 16
-            out.append(f'<rect x="{x}" y="{row}" width="14" height="14" rx="2" fill="{FILL[cls]}"><title>{escape(tooltip)}</title></rect>')
-        y += 31 + -(-len(cells) // COLS) * 16 + 14
-    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 {y}" width="1000" height="{y}">'
-            f'<rect width="1000" height="{y}" fill="#0d1117"/>\n' + "\n".join(out) + "\n</svg>\n")
-
-
 def render_html(grids, data: dict) -> str:
     cov = data["module_coverage"]
     detail = json.loads(DETAIL.read_text(encoding="utf-8"))
@@ -214,10 +202,17 @@ def main() -> None:
     (ROOT / "site" / "progress").mkdir(exist_ok=True)
     grids = groups(data)
     src_dir = ROOT / "docs" / "progress"
-    (src_dir / "progress.svg").write_text(render_svg(grids), encoding="utf-8")
     (src_dir / "index.html").write_text(render_html(grids, data), encoding="utf-8")
-    for name in ("index.html", "progress.svg"):
-        shutil.copyfile(src_dir / name, ROOT / "site" / "progress" / name)
+    shutil.copyfile(src_dir / "index.html", ROOT / "site" / "progress" / "index.html")
+    # Shields "endpoint" JSON: README badges read these from Pages, so they follow every deploy.
+    cov, tests = data["module_coverage"], data["physical_tests"]
+    for name, label, msg, color in (
+        ("modulos", "módulos", f"{cov['percent']}% ({cov['covered']}/{cov['total']})", "yellow"),
+        ("sesiones", "sesiones", f"{len(sessions)}/{data['latest_number']}", "blue"),
+        ("pruebas", "pruebas físicas", f"{tests['done']}/{tests['total']}", "lightgrey"),
+    ):
+        badge = {"schemaVersion": 1, "label": label, "message": msg, "color": color}
+        (ROOT / "site" / f"badge-{name}.json").write_text(json.dumps(badge, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"{len(sessions)} sesiones documentadas; última {data['latest']}; salida {OUTPUT}")
 
 
