@@ -1616,3 +1616,16 @@ mecanismo del silent shutter. Diferencias: la A7S escribe `+0xde` (`0x4386521a`)
 del clúster: NO_VERIFICADA. [S301](../docs/capture/s301-a7s-state-xref-sweep.md).
 
 **Siguiente:** S302, tablas de drive mode/exposición A7S↔A6000 campo a campo (S124/S134/S140).
+
+## S302 — drive mode y exposición A7S↔A6000 (22-10-2026, agente B)
+
+Misma estructura, offsets desplazados: guard `0xd70`→`0xd78`, `shut` `0x1f8`→`0x200`, `VdNum`
+`+0xcc`→`+0xd8`, `svr_num` `+0x14e`→`+0x15e`; bloque de parámetros 4→3 palabras. A7S añade
+selector textual `0x43826d58` (`tipo==2`→`0x4e/0x4f`) e indirección modo→columna con 34 códigos
+(`0x43fee370`) y mapa `0x43c9c5b5` sobre 69 filas×16 B; A6000 usa columna directa sobre 59 filas
+(`0x43fe9b74`). **Hallazgo:** mapa[0x4c..0x4f]=1 → los modos silent comparten columna de registro
+con `0x4c/0x4d`; discrepancia con S204 marcada para re-verificar (no se edita CORRECTIONS).
+[S302](../docs/capture/s302-drive-modes.md), `analysis/s302_drive_modes/compare.json` (4 tests).
+
+**Siguiente:** S303, árbol de referencias de la tabla `0x43ff3200` y alcanzabilidad de callers de
+`FUN_43858338`.

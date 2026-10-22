@@ -1,0 +1,981 @@
+{
+  "milestone": "S302",
+  "title": "drive mode y exposici\u00f3n: A7S fw3.20 vs A6000 fw3.21, campo a campo",
+  "base": "0x43541000",
+  "firmware": {
+    "a6000": {
+      "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
+    },
+    "a7s": {
+      "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+    }
+  },
+  "claims": [
+    {
+      "label": "a6000_param_state_accessor",
+      "firmware": "a6000",
+      "address": "0x438110ae",
+      "bytes_hex": "7ef781fc",
+      "insn": "bl #0x4378f9b4"
+    },
+    {
+      "label": "a6000_param_block_ptr",
+      "firmware": "a6000",
+      "address": "0x438110b4",
+      "bytes_hex": "436a0746",
+      "insn": "ldr r3, [r0, #0x24]"
+    },
+    {
+      "label": "a6000_param_block_words",
+      "firmware": "a6000",
+      "address": "0x438110b8",
+      "bytes_hex": "0fcb86e8",
+      "insn": "ldm r3, {r0, r1, r2, r3}"
+    },
+    {
+      "label": "a6000_param_shut",
+      "firmware": "a6000",
+      "address": "0x438110be",
+      "bytes_hex": "d4f8f801",
+      "insn": "ldr.w r0, [r4, #0x1f8]"
+    },
+    {
+      "label": "a6000_param_shut_alt",
+      "firmware": "a6000",
+      "address": "0x438110ca",
+      "bytes_hex": "d4f8fc61",
+      "insn": "ldr.w r6, [r4, #0x1fc]"
+    },
+    {
+      "label": "a6000_param_vdnum",
+      "firmware": "a6000",
+      "address": "0x438110ce",
+      "bytes_hex": "baf8cc90",
+      "insn": "ldrh.w sb, [sl, #0xcc]"
+    },
+    {
+      "label": "a6000_param_svrnum",
+      "firmware": "a6000",
+      "address": "0x438110e0",
+      "bytes_hex": "9af84e01",
+      "insn": "ldrb.w r0, [sl, #0x14e]"
+    },
+    {
+      "label": "a6000_param_div",
+      "firmware": "a6000",
+      "address": "0x438110ec",
+      "bytes_hex": "4ef500fd",
+      "insn": "bl #0x4355faf0"
+    },
+    {
+      "label": "a7s_param_state_accessor",
+      "firmware": "a7s",
+      "address": "0x4383264c",
+      "bytes_hex": "81f74ef9",
+      "insn": "bl #0x437b38ec"
+    },
+    {
+      "label": "a7s_param_block_ptr",
+      "firmware": "a7s",
+      "address": "0x43832652",
+      "bytes_hex": "426a0746",
+      "insn": "ldr r2, [r0, #0x24]"
+    },
+    {
+      "label": "a7s_param_block_words",
+      "firmware": "a7s",
+      "address": "0x43832656",
+      "bytes_hex": "07ca83e8",
+      "insn": "ldm r2, {r0, r1, r2}"
+    },
+    {
+      "label": "a7s_param_shut",
+      "firmware": "a7s",
+      "address": "0x4383265c",
+      "bytes_hex": "d4f80032",
+      "insn": "ldr.w r3, [r4, #0x200]"
+    },
+    {
+      "label": "a7s_param_shut_alt",
+      "firmware": "a7s",
+      "address": "0x43832666",
+      "bytes_hex": "d4f80422",
+      "insn": "ldr.w r2, [r4, #0x204]"
+    },
+    {
+      "label": "a7s_param_vdnum",
+      "firmware": "a7s",
+      "address": "0x4383266a",
+      "bytes_hex": "b8f8d870",
+      "insn": "ldrh.w r7, [r8, #0xd8]"
+    },
+    {
+      "label": "a7s_param_svrnum",
+      "firmware": "a7s",
+      "address": "0x4383267c",
+      "bytes_hex": "98f85e31",
+      "insn": "ldrb.w r3, [r8, #0x15e]"
+    },
+    {
+      "label": "a7s_param_div",
+      "firmware": "a7s",
+      "address": "0x4383268c",
+      "bytes_hex": "2bf504fc",
+      "insn": "bl #0x4355de98"
+    },
+    {
+      "label": "a6000_matrix_stride",
+      "firmware": "a6000",
+      "address": "0x436d657e",
+      "bytes_hex": "14342d79",
+      "insn": "adds r4, #0x14"
+    },
+    {
+      "label": "a6000_matrix_row_walk",
+      "firmware": "a6000",
+      "address": "0x436d6588",
+      "bytes_hex": "6259002a",
+      "insn": "ldr r2, [r4, r5]"
+    },
+    {
+      "label": "a6000_matrix_payload",
+      "firmware": "a6000",
+      "address": "0x436d6580",
+      "bytes_hex": "2d791570",
+      "insn": "ldrb r5, [r5, #4]"
+    },
+    {
+      "label": "a7s_selector_tipo2",
+      "firmware": "a7s",
+      "address": "0x43826d64",
+      "bytes_hex": "022a0bd1",
+      "insn": "cmp r2, #2"
+    },
+    {
+      "label": "a7s_selector_sub0",
+      "firmware": "a7s",
+      "address": "0x43826d68",
+      "bytes_hex": "41b10129",
+      "insn": "cbz r1, #0x43826d7c"
+    },
+    {
+      "label": "a7s_selector_4e",
+      "firmware": "a7s",
+      "address": "0x43826d7c",
+      "bytes_hex": "4e2008bd",
+      "insn": "movs r0, #0x4e"
+    },
+    {
+      "label": "a7s_selector_4f",
+      "firmware": "a7s",
+      "address": "0x43826da6",
+      "bytes_hex": "4f2008bd",
+      "insn": "movs r0, #0x4f"
+    },
+    {
+      "label": "a7s_selector_0b",
+      "firmware": "a7s",
+      "address": "0x43826d9e",
+      "bytes_hex": "0b2008bd",
+      "insn": "movs r0, #0xb"
+    },
+    {
+      "label": "a7s_selector_35",
+      "firmware": "a7s",
+      "address": "0x43826daa",
+      "bytes_hex": "352008bd",
+      "insn": "movs r0, #0x35"
+    },
+    {
+      "label": "a7s_selector_17",
+      "firmware": "a7s",
+      "address": "0x43826d8c",
+      "bytes_hex": "172008bd",
+      "insn": "movs r0, #0x17"
+    },
+    {
+      "label": "a7s_selector_mode5",
+      "firmware": "a7s",
+      "address": "0x43826da2",
+      "bytes_hex": "0c2008bd",
+      "insn": "movs r0, #0xc"
+    },
+    {
+      "label": "a7s_matrix_map_lookup",
+      "firmware": "a7s",
+      "address": "0x436f3930",
+      "bytes_hex": "515c0e4a",
+      "insn": "ldrb r1, [r2, r1]"
+    },
+    {
+      "label": "a7s_matrix_row_walk",
+      "firmware": "a7s",
+      "address": "0x436f3942",
+      "bytes_hex": "1468002c",
+      "insn": "ldr r4, [r2]"
+    },
+    {
+      "label": "a7s_matrix_payload",
+      "firmware": "a7s",
+      "address": "0x436f393e",
+      "bytes_hex": "2d792570",
+      "insn": "ldrb r5, [r5, #4]"
+    }
+  ],
+  "exposure_offsets": {
+    "a6000": {
+      "guard_ctx": "0xd70",
+      "ldrd_ctx": "0xd60+8",
+      "state_accessor": "0x4378f9b4",
+      "block_ptr": "state+0x24",
+      "block_words": 4,
+      "shut": "ctx+0x1f8",
+      "shut_alt": "ctx+0x1fc",
+      "vdnum": "[state+8]+0xcc",
+      "svrnum": "[state+8]+0x14e",
+      "divide": "0x4355faf0"
+    },
+    "a7s": {
+      "guard_ctx": "0xd78",
+      "ldrd_ctx": "0xd70",
+      "state_accessor": "0x437b38ec",
+      "block_ptr": "state+0x24",
+      "block_words": 3,
+      "shut": "ctx+0x200",
+      "shut_alt": "ctx+0x204",
+      "vdnum": "[state+8]+0xd8",
+      "svrnum": "[state+8]+0x15e",
+      "divide": "0x4355de98"
+    }
+  },
+  "matrices": {
+    "a6000": {
+      "addr": "0x43fe9b74",
+      "stride": 20,
+      "header_bytes": 4,
+      "payload_bytes": 16,
+      "rows": [
+        {
+          "index": 0,
+          "header": "0x4401c6ae",
+          "payload_hex": "0c6c2c2c2c6c5c7c0c2c2c2c0c000000"
+        },
+        {
+          "index": 1,
+          "header": "0x4401ca2e",
+          "payload_hex": "44404141414040404141414144000000"
+        },
+        {
+          "index": 2,
+          "header": "0x4401c72a",
+          "payload_hex": "20202121212020202021212120000000"
+        },
+        {
+          "index": 3,
+          "header": "0x4401c75e",
+          "payload_hex": "00004c4c4c000000944c4c4c00000000"
+        },
+        {
+          "index": 4,
+          "header": "0x4401c7fe",
+          "payload_hex": "00000101010000000601010100000000"
+        },
+        {
+          "index": 5,
+          "header": "0x4401c716",
+          "payload_hex": "0000747474000000c474747400000000"
+        },
+        {
+          "index": 6,
+          "header": "0x4401c82a",
+          "payload_hex": "00000404040000000204040400000000"
+        },
+        {
+          "index": 7,
+          "header": "0x4401c752",
+          "payload_hex": "02010202020102020202020202000000"
+        },
+        {
+          "index": 8,
+          "header": "0x4401c6c2",
+          "payload_hex": "64181818180c18181818181864000000"
+        },
+        {
+          "index": 9,
+          "header": "0x4401ca32",
+          "payload_hex": "23171717171717172317171723000000"
+        },
+        {
+          "index": 10,
+          "header": "0x4401c72e",
+          "payload_hex": "02020202020202020202020202000000"
+        },
+        {
+          "index": 11,
+          "header": "0x4401c6b6",
+          "payload_hex": "08080808080808080808080808000000"
+        },
+        {
+          "index": 12,
+          "header": "0x4401c776",
+          "payload_hex": "00000000000000000000000000000000"
+        },
+        {
+          "index": 13,
+          "header": "0x4401c822",
+          "payload_hex": "06020202020202020202020206000000"
+        },
+        {
+          "index": 14,
+          "header": "0x4401ca22",
+          "payload_hex": "0c02020202020202020202020c000000"
+        },
+        {
+          "index": 15,
+          "header": "0x4401c792",
+          "payload_hex": "00000000000000000000000000000000"
+        },
+        {
+          "index": 16,
+          "header": "0x4401c702",
+          "payload_hex": "08090909090909090809090908000000"
+        },
+        {
+          "index": 17,
+          "header": "0x4401c696",
+          "payload_hex": "18040404040404041804040418000000"
+        },
+        {
+          "index": 18,
+          "header": "0x4401c6d6",
+          "payload_hex": "00020404040202020004040400000000"
+        },
+        {
+          "index": 19,
+          "header": "0x4401c6fe",
+          "payload_hex": "86767676767676768676767686000000"
+        },
+        {
+          "index": 20,
+          "header": "0x4401ca3a",
+          "payload_hex": "63676767676767676367676763000000"
+        },
+        {
+          "index": 21,
+          "header": "0x4401c726",
+          "payload_hex": "44444444440444444444444444000000"
+        },
+        {
+          "index": 22,
+          "header": "0x4401c6e6",
+          "payload_hex": "08282828282828280828282808000000"
+        },
+        {
+          "index": 23,
+          "header": "0x4401c7c6",
+          "payload_hex": "cccccccccccccccccccccccccc000000"
+        },
+        {
+          "index": 24,
+          "header": "0x4401c67e",
+          "payload_hex": "56505050505050505650505056000000"
+        },
+        {
+          "index": 25,
+          "header": "0x4401c7ca",
+          "payload_hex": "38383838383838383838383838000000"
+        },
+        {
+          "index": 26,
+          "header": "0x4401c83e",
+          "payload_hex": "58404040404040405840404058000000"
+        },
+        {
+          "index": 27,
+          "header": "0x4401c7b2",
+          "payload_hex": "2c1e1e1e1e1e1e1e2c1e1e1e2c000000"
+        },
+        {
+          "index": 28,
+          "header": "0x4401ca16",
+          "payload_hex": "2a1c1c1c1c1c1c1c2a1c1c1c2a000000"
+        },
+        {
+          "index": 29,
+          "header": "0x4401c71a",
+          "payload_hex": "28101010101010102810101028000000"
+        },
+        {
+          "index": 30,
+          "header": "0x4401c80a",
+          "payload_hex": "0a040404040404040a0404040a000000"
+        },
+        {
+          "index": 31,
+          "header": "0x4401c826",
+          "payload_hex": "04444444444444440444444404000000"
+        },
+        {
+          "index": 32,
+          "header": "0x4401c74e",
+          "payload_hex": "10101010101010101010101010000000"
+        },
+        {
+          "index": 33,
+          "header": "0x4401c6ee",
+          "payload_hex": "08080808080808080808080808000000"
+        },
+        {
+          "index": 34,
+          "header": "0x4401c7a6",
+          "payload_hex": "504a4a4a4a4a4a4a504a4a4a50000000"
+        },
+        {
+          "index": 35,
+          "header": "0x4401c84e",
+          "payload_hex": "27272727272727272727272727000000"
+        },
+        {
+          "index": 36,
+          "header": "0x4401c70a",
+          "payload_hex": "20080808080808082008080820000000"
+        },
+        {
+          "index": 37,
+          "header": "0x4401ca3e",
+          "payload_hex": "c1c1c1c1c1c1c1c1c1c1c1c1c1000000"
+        },
+        {
+          "index": 38,
+          "header": "0x4401c75a",
+          "payload_hex": "22222222222222222222222222000000"
+        },
+        {
+          "index": 39,
+          "header": "0x4401c806",
+          "payload_hex": "56505050505050505650505056000000"
+        },
+        {
+          "index": 40,
+          "header": "0x4401c77a",
+          "payload_hex": "a088888888888888a0888888a0000000"
+        },
+        {
+          "index": 41,
+          "header": "0x4401c7da",
+          "payload_hex": "07070707070707070707070707000000"
+        },
+        {
+          "index": 42,
+          "header": "0x4401c76a",
+          "payload_hex": "70787878787878787878787870000000"
+        },
+        {
+          "index": 43,
+          "header": "0x4401c7be",
+          "payload_hex": "00000000004000000000000000000000"
+        },
+        {
+          "index": 44,
+          "header": "0x4401c722",
+          "payload_hex": "00000000004000000000000000000000"
+        },
+        {
+          "index": 45,
+          "header": "0x4401c816",
+          "payload_hex": "00000000000000000000000000000000"
+        },
+        {
+          "index": 46,
+          "header": "0x4401c7de",
+          "payload_hex": "00000000000000000000000000000000"
+        },
+        {
+          "index": 47,
+          "header": "0x4401c73e",
+          "payload_hex": "8e8e8e8e8e8e8e8e8e8e8e8e8e000000"
+        },
+        {
+          "index": 48,
+          "header": "0x4401c692",
+          "payload_hex": "02000000000000000200000002000000"
+        },
+        {
+          "index": 49,
+          "header": "0x4401c842",
+          "payload_hex": "38303030303030303830303038000000"
+        },
+        {
+          "index": 50,
+          "header": "0x4401c7b6",
+          "payload_hex": "1e121212121212121e1212121e000000"
+        },
+        {
+          "index": 51,
+          "header": "0x4401c786",
+          "payload_hex": "00828282828282020082828200000000"
+        },
+        {
+          "index": 52,
+          "header": "0x4401c81a",
+          "payload_hex": "000f0f0f0f0f0f00000f0f0f00000000"
+        },
+        {
+          "index": 53,
+          "header": "0x4401c756",
+          "payload_hex": "0c0202020202020c0c0202020c000000"
+        },
+        {
+          "index": 54,
+          "header": "0x4401c836",
+          "payload_hex": "062e2e2e2e2e2e06062e2e2e06000000"
+        },
+        {
+          "index": 55,
+          "header": "0x4401c7d2",
+          "payload_hex": "00d3abababd3d30000ababab00000000"
+        },
+        {
+          "index": 56,
+          "header": "0x4401c6de",
+          "payload_hex": "00000101010000000001010100000000"
+        },
+        {
+          "index": 57,
+          "header": "0x4401c7fa",
+          "payload_hex": "00110f0f0f111100000f0f0f00000000"
+        },
+        {
+          "index": 58,
+          "header": "0x4401c742",
+          "payload_hex": "020a0a0a0a000a02020a0a0a02000000"
+        }
+      ]
+    },
+    "a7s": {
+      "addr": "0x43fee598",
+      "stride": 20,
+      "header_bytes": 4,
+      "payload_bytes": 16,
+      "rows": [
+        {
+          "index": 0,
+          "header": "0x44021ff2",
+          "payload_hex": "141414042404449494a4a48404047400"
+        },
+        {
+          "index": 1,
+          "header": "0x440220ac",
+          "payload_hex": "04050101010101000100010000010000"
+        },
+        {
+          "index": 2,
+          "header": "0x44021f68",
+          "payload_hex": "00004ef4f8928400fb00fe0000000000"
+        },
+        {
+          "index": 3,
+          "header": "0x44022046",
+          "payload_hex": "00020400000202000100010000020000"
+        },
+        {
+          "index": 4,
+          "header": "0x44021fd4",
+          "payload_hex": "00a85eb4b01624007200780000a80000"
+        },
+        {
+          "index": 5,
+          "header": "0x44021f5c",
+          "payload_hex": "00030104040303000200010000030000"
+        },
+        {
+          "index": 6,
+          "header": "0x44021ede",
+          "payload_hex": "64640c0c140a14181818180264641800"
+        },
+        {
+          "index": 7,
+          "header": "0x440220b2",
+          "payload_hex": "02020220020202202010200202021000"
+        },
+        {
+          "index": 8,
+          "header": "0x440220e2",
+          "payload_hex": "03030000000000000000000003030000"
+        },
+        {
+          "index": 9,
+          "header": "0x44021ecc",
+          "payload_hex": "000000000700070f0f0f0f0f00000f00"
+        },
+        {
+          "index": 10,
+          "header": "0x440220d0",
+          "payload_hex": "000000000e000e0f0f0f0f0f00000f00"
+        },
+        {
+          "index": 11,
+          "header": "0x44021fbc",
+          "payload_hex": "00000000000000010101010100000100"
+        },
+        {
+          "index": 12,
+          "header": "0x44021f20",
+          "payload_hex": "08080808020802020202020208080200"
+        },
+        {
+          "index": 13,
+          "header": "0x44022070",
+          "payload_hex": "81818181818181818181818181818100"
+        },
+        {
+          "index": 14,
+          "header": "0x44021f44",
+          "payload_hex": "0c0c060608080404040404020c0c0200"
+        },
+        {
+          "index": 15,
+          "header": "0x44022088",
+          "payload_hex": "01010101012929010101010101010100"
+        },
+        {
+          "index": 16,
+          "header": "0x44021f1a",
+          "payload_hex": "00000000000000000000000000000000"
+        },
+        {
+          "index": 17,
+          "header": "0x440220f4",
+          "payload_hex": "2525252323232d232323232d23232d00"
+        },
+        {
+          "index": 18,
+          "header": "0x44021f62",
+          "payload_hex": "14141416161613161616161316161300"
+        },
+        {
+          "index": 19,
+          "header": "0x44021f92",
+          "payload_hex": "6e6e6e46464642464646464246464200"
+        },
+        {
+          "index": 20,
+          "header": "0x44022064",
+          "payload_hex": "36363622222220222222222022222000"
+        },
+        {
+          "index": 21,
+          "header": "0x44021fe6",
+          "payload_hex": "6464643e3e3e3c3e3e3e3e3c3e3e3c00"
+        },
+        {
+          "index": 22,
+          "header": "0x440220a0",
+          "payload_hex": "40404028282826282828282628282600"
+        },
+        {
+          "index": 23,
+          "header": "0x44022058",
+          "payload_hex": "3333331f1f1f1d1f1f1f1f1d1f1f1d00"
+        },
+        {
+          "index": 24,
+          "header": "0x44022004",
+          "payload_hex": "77777748484848484848484848484800"
+        },
+        {
+          "index": 25,
+          "header": "0x440220be",
+          "payload_hex": "2b2b2b17171717171717171717171700"
+        },
+        {
+          "index": 26,
+          "header": "0x44021fc2",
+          "payload_hex": "a0a0a060606060606060606060606000"
+        },
+        {
+          "index": 27,
+          "header": "0x440220b8",
+          "payload_hex": "2b2b2b17171717171717171717171700"
+        },
+        {
+          "index": 28,
+          "header": "0x440220ee",
+          "payload_hex": "a0a0a060606060606060606060606000"
+        },
+        {
+          "index": 29,
+          "header": "0x44021f56",
+          "payload_hex": "2b2b2b17171717171717171717171700"
+        },
+        {
+          "index": 30,
+          "header": "0x4402203a",
+          "payload_hex": "a6a6a66666664e666666664e66664e00"
+        },
+        {
+          "index": 31,
+          "header": "0x44022082",
+          "payload_hex": "4c4c4c31313131313131313131313100"
+        },
+        {
+          "index": 32,
+          "header": "0x4402210c",
+          "payload_hex": "404040281b1b14282828281428281400"
+        },
+        {
+          "index": 33,
+          "header": "0x44021fec",
+          "payload_hex": "6e6e6e48484844484848484448484400"
+        },
+        {
+          "index": 34,
+          "header": "0x44022100",
+          "payload_hex": "36363622222222222222222222222200"
+        },
+        {
+          "index": 35,
+          "header": "0x4402209a",
+          "payload_hex": "7272724a4a4a444a4a4a4a444a4a4400"
+        },
+        {
+          "index": 36,
+          "header": "0x4402204c",
+          "payload_hex": "4c4c4c31313131313131313131313100"
+        },
+        {
+          "index": 37,
+          "header": "0x44021ed8",
+          "payload_hex": "9090905252524a525252524a52524a00"
+        },
+        {
+          "index": 38,
+          "header": "0x44021ec6",
+          "payload_hex": "4c4c4c31313131313131313131313100"
+        },
+        {
+          "index": 39,
+          "header": "0x44021eea",
+          "payload_hex": "3232323232321e323232321e32321e00"
+        },
+        {
+          "index": 40,
+          "header": "0x44021fb6",
+          "payload_hex": "35353535353521353535352135352100"
+        },
+        {
+          "index": 41,
+          "header": "0x4402207c",
+          "payload_hex": "31313110101009101010100910100900"
+        },
+        {
+          "index": 42,
+          "header": "0x44021f38",
+          "payload_hex": "31313110101009101010100910100900"
+        },
+        {
+          "index": 43,
+          "header": "0x44022034",
+          "payload_hex": "4c4c4c4ccc4ccc4c4c4c4ccc4c4ccc00"
+        },
+        {
+          "index": 44,
+          "header": "0x4402208e",
+          "payload_hex": "2c2c2c801c78b81c1c1c1cb81c1cb800"
+        },
+        {
+          "index": 45,
+          "header": "0x44021f7a",
+          "payload_hex": "03030304020301020202020102020100"
+        },
+        {
+          "index": 46,
+          "header": "0x44021f98",
+          "payload_hex": "4040401c1c1c0c1c1c1c1c0c1c1c0c00"
+        },
+        {
+          "index": 47,
+          "header": "0x4402206a",
+          "payload_hex": "a8a8a8c070e8505858585850d0d05000"
+        },
+        {
+          "index": 48,
+          "header": "0x44021efc",
+          "payload_hex": "03030303010201010101010102020100"
+        },
+        {
+          "index": 49,
+          "header": "0x44021f8c",
+          "payload_hex": "4040405c5c5c2c5c5c5c5c2c5c5c2c00"
+        },
+        {
+          "index": 50,
+          "header": "0x440220e8",
+          "payload_hex": "01010100280030000000003000003000"
+        },
+        {
+          "index": 51,
+          "header": "0x44022052",
+          "payload_hex": "02020202020202020202020202020200"
+        },
+        {
+          "index": 52,
+          "header": "0x44022094",
+          "payload_hex": "33333303030303333333333303033300"
+        },
+        {
+          "index": 53,
+          "header": "0x44022022",
+          "payload_hex": "40404080808080808080808080808000"
+        },
+        {
+          "index": 54,
+          "header": "0x44021f0e",
+          "payload_hex": "0404040101010a010101010a01010a00"
+        },
+        {
+          "index": 55,
+          "header": "0x44021fc8",
+          "payload_hex": "20202000000040000000004000004000"
+        },
+        {
+          "index": 56,
+          "header": "0x44021faa",
+          "payload_hex": "10101012121213121212121312121300"
+        },
+        {
+          "index": 57,
+          "header": "0x44022076",
+          "payload_hex": "00000000000000000000000000000000"
+        },
+        {
+          "index": 58,
+          "header": "0x440220a6",
+          "payload_hex": "adadad1d1d1d0c1d1d1d1d0c1d1d0c00"
+        },
+        {
+          "index": 59,
+          "header": "0x4402201c",
+          "payload_hex": "adadad1d1d1d0c1d1d1d1d0c1d1d0c00"
+        },
+        {
+          "index": 60,
+          "header": "0x44021f32",
+          "payload_hex": "cdcdcd8585857d858585857d85857d00"
+        },
+        {
+          "index": 61,
+          "header": "0x4402200a",
+          "payload_hex": "6a6a6a4646466a464646466a46466a00"
+        },
+        {
+          "index": 62,
+          "header": "0x440220ca",
+          "payload_hex": "33333321212133212121213321213300"
+        },
+        {
+          "index": 63,
+          "header": "0x44021fa4",
+          "payload_hex": "6a6a6aaa8585aaaaaaaaaaaaaaaaaa00"
+        },
+        {
+          "index": 64,
+          "header": "0x44022106",
+          "payload_hex": "e0e0e0e080e0a0e0e0e0e0a0e0e0a000"
+        },
+        {
+          "index": 65,
+          "header": "0x44021f4a",
+          "payload_hex": "5e5e5e5e585e5a5e5e5e5e5a5e5e5a00"
+        },
+        {
+          "index": 66,
+          "header": "0x44022028",
+          "payload_hex": "c6c6c6c606c646c6c6c6c646c6c64600"
+        },
+        {
+          "index": 67,
+          "header": "0x44021f26",
+          "payload_hex": "6868e8e8e8e8e8e8e8e8e8e8e8e8e800"
+        },
+        {
+          "index": 68,
+          "header": "0x440220dc",
+          "payload_hex": "4a4a4a4a404a4a4a4a4a4a4a4a4a4a00"
+        }
+      ]
+    }
+  },
+  "mode_list": {
+    "addr": "0x43fee370",
+    "codes": [
+      11,
+      55,
+      53,
+      56,
+      19,
+      31,
+      5,
+      24,
+      16,
+      26,
+      7,
+      25,
+      50,
+      52,
+      51,
+      70,
+      1,
+      48,
+      3,
+      49,
+      10,
+      54,
+      15,
+      18,
+      63,
+      68,
+      69,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      8
+    ]
+  },
+  "mode_map": {
+    "addr": "0x43c9c5b5",
+    "count": 82,
+    "bytes": "00000101030304040404040405050506090a07080b0b02090a070805050c0d0c0d0e010101010101010000000101010101010100000001010101010101000000010101010101010000000101010101010100",
+    "columns_for_modes": {
+      "0x0b": 4,
+      "0x17": 9,
+      "0x35": 0,
+      "0x46": 1,
+      "0x4c": 1,
+      "0x4d": 1,
+      "0x4e": 1,
+      "0x4f": 1,
+      "0x51": 0
+    }
+  },
+  "selector_a7s": {
+    "entry": "0x43826d58",
+    "tipo2_sub0": "0x4e",
+    "tipo2_sub1": "0x4f",
+    "sub0": "0x0b",
+    "sub1": "0x35",
+    "sub2": "0x17",
+    "mode5": "0x0c"
+  },
+  "deltas": {
+    "guard_ctx": 8,
+    "shut": 8,
+    "shut_alt": 8,
+    "vdnum": 12,
+    "svrnum": 16
+  },
+  "scope_limit": "Comparaci\u00f3n est\u00e1tica; la sem\u00e1ntica de los campos y la equivalencia f\u00edsica de los modos no se demuestran aqu\u00ed."
+}
