@@ -26,6 +26,7 @@ hardware. Se conservan todas las evidencias anteriores en sus rutas originales.
 - [S157: rutina de snapshot del estado, sin escritura de los gates](../../docs/capture/s157-imager-state-snapshot.md).
 - [S158: spill de puntero y lectores de otros campos del estado](../../docs/capture/s158-imager-state-ref.md).
 - [S159: otro spill de puntero y lecturas de campos del estado](../../docs/capture/s159-imager-state-spill.md).
+- [S160: escritura de `state+0` al expirar un contador](../../docs/capture/s160-state-open-flag.md).
 - [Comparación entre modelos](../../docs/comparative-analysis.md).
 - [Límites de hardware pendientes](../../docs/hardware-limitations.md).
 
