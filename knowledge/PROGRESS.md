@@ -55,6 +55,16 @@
 - Pruebas: unittest S147 3/3 PASS; suite S140–S147 + knowledge 85/85 PASS; `git diff --check` PASS. Commit `ffdba84b` publicado en `origin/main`.
 - Siguiente: revisar helpers `0x4383bfd4`, `0x4383c818`, `0x43b08786` para cerrar escrituras faltantes por evidencia, sin semántica física.
 
+## Investigación S149 — auditoría de helpers por fila
+
+- Pregunta: si cuatro helpers del builder modifican `+8/+9` u otros campos de filas; verificación adversarial del número de iteraciones del writer.
+- Corrección interna: el primer pase S149 confundió la vuelta inicial con el loop completo; instructions y bytes muestran count=4, `r4+=0x10`, `bne.w` al loop head. `0x4383c9dc` escribe las cuatro filas; no se afirma que solo se modifique una.
+- Helpers/gates auditados: `0x4383b790`, `0x4383bfd4`, `0x43b08786` si `[G+0x50]==2`, `0x4383c818` si `[GOT+0xca]==1`. No tienen stores en `+0x2c..+0x6b`; S149 acota que no existen en esos cuerpos, no globalmente.
+- Evidencia del loop: `read_function_instructions` `ev_05541f7fa796e9902a584d283765f42028aa618772a3ece2a2b2e519b172211b`; pseudocode page 1/2 y cada dossier/helper en S149 report. Los bytes `0x4383c9ec`, `0x4383cbfa`, `0x4383cbbe` se reproducen desde el blob.
+- Artefactos: `analysis/s149_imager_row_helpers/{verify_helper_stores.py,row_helper_stores.json}`, `tests/test_s149_imager_row_helpers.py`, `docs/capture/s149-imager-row-helpers.md`.
+- Pruebas: unittest 3/3 PASS; falta suite, commit/push.
+- Siguiente: búsqueda de writers alternos de los bytes `G+0x234/+0x235` (hueco relativo +8/+9 del primer row), con REA/bytes y sin inferir ausencia por scans vacíos.
+
 Checkpoint persistente. Actualizar al terminar cada etapa, antes de continuar
 con la siguiente. No reescribir historial: añadir entradas nuevas.
 
