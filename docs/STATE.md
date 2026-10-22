@@ -114,6 +114,8 @@ S161 clasifica `0x4384cb0a` como spill del puntero `0x43f72d02` a stack; el proc
 
 S162: `0x438d933e/9378` cargan el state pointer y leen `state+0x1c`; los resultados se guardan en `0x43f7c702/704`, no en el estado. Posible notificación es INFERENCIA; runtime no observado. [Informe S162](capture/s162-imager-state-event-readers.md).
 
+S163 añade `FUN_438d939c`, lector de `state+0x1c/+0x1e` que usa defaults 3/4 si cero y empaqueta los valores en mensaje a otros destinos. No escribe state/gates en ese cuerpo; propósito de notificación/alcanzabilidad permanecen parciales. [Informe S163](capture/s163-imager-state-event-reader.md).
+
 Proyecto abierto: hay piezas reales y reutilizables, pero **ninguna captura silenciosa
 completa validada**; no está demostrada la capacidad ni la imposibilidad de fotografía
 totalmente electrónica a resolución completa.
