@@ -36,7 +36,15 @@ Referencia base: S153-S176 (lectores/escritores estado IMX210), S124 (parámetro
 - [x] Escritores de gates `state+3`/`state+6` → **NO_VERIFICADO** (dumper solo lee)
 - [x] Documentado en `docs/capture/s304-rea-dumper-callers.md`
 
----
+### S304 — REA/Ghidra: callers de `FUN_43858338` (dumper gates S153) y código que carga GOT `0x4401f080`
+- [x] Analizar callers de `FUN_43858338` (dumper gates) → **Único caller: `FUN_43858390` con 13 callsites**
+- [x] Analizar dumper `FUN_438581e8` (dirección real) → **Lee gates `state+3`/`state+6` (vía offsets estructura), no escribe**
+- [x] Código que carga GOT `0x4401f080` → **NO_VERIFICADO** (acceso vía literal pool, REA no expone xrefs)
+- [x] Escritores de gates `state+3`/`state+6` → **NO_VERIFICADO** (dumper solo lee)
+- [x] Documentado en `docs/capture/s304-rea-dumper-callers.md`
 
-## Ítems derivados (se añaden al agotar)
-(none yet)
+### S305 — Análisis `FUN_43858390` + búsqueda literal pool `0x4401f080`
+- [ ] Analizar `FUN_43858390` por tramos (REA `file-offset`) → entender bucle principal
+- [ ] Buscar literal pool `0x4401f080` (Ghidra `findReferencesTo(DAT_4401f080)`)
+- [ ] Identificar escritores de gates `state+3`/`state+6` (xrefs a `0x43f72d05`/`0x43f72d08`)
+- [ ] Documentar en `docs/capture/s305-fun43858390-literal-pool.md`

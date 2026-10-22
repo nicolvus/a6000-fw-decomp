@@ -10,4 +10,4 @@
 
 - TODO S301 Mismo barrido en A7S fw3.20; tabla de diferencias.
 
-- TODO S305 Analizar `FUN_43858390` por tramos (REA `file-offset`) para entender bucle principal; buscar literal pool `0x4401f080` (Ghidra `findReferencesTo`).
+- TODO S305 Analizar `FUN_43858390` por tramos (REA `file-offset`) para entender bucle principal; buscar literal pool `0x4401f080` (Ghidra `findReferencesTo`). **Evidencia**: `docs/capture/s305-fun43858390-literal-pool.md` — S305 en progreso.
