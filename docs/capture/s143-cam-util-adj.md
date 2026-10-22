@@ -1,7 +1,7 @@
-# S140 — `[CAM_UTIL_ADJ]`: la utilidad de ajuste (A6000 fw3.21)
+# S143 — `[CAM_UTIL_ADJ]`: la utilidad de ajuste (A6000 fw3.21)
 
 > Módulo con **22 trazas**, propio de la A6000 fw3.21. Informe completo:
-> `analysis/s140_cam_util_adj/cam_util_adj.md` · datos: `cam_util_adj.json`.
+> `analysis/s143_cam_util_adj/cam_util_adj.md` · datos: `cam_util_adj.json`.
 
 ## Qué es
 

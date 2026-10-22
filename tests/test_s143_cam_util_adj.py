@@ -1,4 +1,4 @@
-"""Tests de S140 — el módulo `[CAM_UTIL_ADJ]` (22 trazas) de la A6000 fw3.21.
+"""Tests de S143 — el módulo `[CAM_UTIL_ADJ]` (22 trazas) de la A6000 fw3.21.
 
 Todos los tests son de **bytes reales**: leen el firmware, **recalculan** el mapa de
 referencias PIC de forma independiente (regla estricta canónica del repo,
@@ -15,7 +15,7 @@ import struct
 
 BASE_VADDR = 0x43541000
 BIN_PATH = "analysis/rea-independent/input/av-cam.bin"
-JSON_PATH = "analysis/s140_cam_util_adj/cam_util_adj.json"
+JSON_PATH = "analysis/s143_cam_util_adj/cam_util_adj.json"
 A7S_BIN = (
     "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/"
     "0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin"
@@ -570,7 +570,7 @@ class TestJson:
     def test_json_consistente_con_los_bytes(self):
         data = _data()
         j = _json()
-        assert j["milestone"] == "S140"
+        assert j["milestone"] == "S143"
         assert j["modulo"] == "[CAM_UTIL_ADJ]"
         assert j["contadores"]["cadenas"] == 22
         assert j["contadores"]["cadenas_con_referencia"] == 22

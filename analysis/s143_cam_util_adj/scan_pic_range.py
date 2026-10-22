@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""S140 - escaneo PIC "sin filtro de inicio de cadena": calcula TODOS los
+"""S143 - escaneo PIC "sin filtro de inicio de cadena": calcula TODOS los
 destinos `add rX,pc` (regla estricta) y busca los que caen en un rango dado.
 
 Sirve para localizar tablas de datos (p.ej. la tabla de codigos "Sens:*") que no
@@ -82,5 +82,5 @@ if __name__ == "__main__":
         print(f"  dest 0x{dest:08x}  <- add@0x{a:08x} (ldr@0x{la:08x})")
     json.dump([{"dest": f"0x{d:08x}", "add": f"0x{a:08x}", "ldr": f"0x{l:08x}"}
                for d, a, l in sorted(hits)],
-              open(os.path.join(REPO, "analysis/s140_cam_util_adj/pic_range_hits.json"), "w"),
+              open(os.path.join(REPO, "analysis/s143_cam_util_adj/pic_range_hits.json"), "w"),
               indent=1)
