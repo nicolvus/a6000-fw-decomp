@@ -57,7 +57,11 @@ REA encontró dos xrefs directas al objeto S: `0x437b56b4` participa en un `mems
 
 ## Avance S145 — hueco de cobertura alrededor del staging
 
-REA sitúa `0x43843a44` fuera de sus procedimientos, mientras reconoce el setter vecino de ocho bytes en `0x43843a38`; bytes Thumb confirman prólogo candidato y una llamada directa visible desde el bloque no analizado `0x437b617e` (`BL` en `0x437b61d2`). No se prueba que se ejecute ni se rellene el selector. [Informe S145](capture/s145-imager-code-gap.md). Próximo paso: entradas Thumb explícitas en REA.
+REA sitúa `0x43843a44` fuera de sus procedimientos, mientras reconoce el setter vecino de ocho bytes en `0x43843a38`; bytes Thumb confirman prólogo candidato y una llamada directa visible desde el bloque no analizado `0x437b617e` (`BL` en `0x437b61d2`). No se prueba que se ejecute ni se rellene el selector. [Informe S145](capture/s145-imager-code-gap.md). S146 confirma que no es posible sembrar esas entradas con la superficie REA actual; se requiere recorrido estático de bytes o capacidad nueva.
+
+## Avance S146 — límite de seeding REA
+
+REA resuelve `file-offset:0x302a44` a `0x43843a44`, pero rechaza la pseudodecompilación porque no hay procedimiento existente; las consultas de info/assembly/analyze tampoco crean entradas. El caller `0x437b617e` tiene offset `0x27517e` (no `0x27617e`). Esto limita la cobertura de pseudocódigo y **no** demuestra ausencia ni no-ejecución. [S146](capture/s146-rea-seed-limit.md).
 
 Mecanismo de PMCA identificado y contrastado con el firmware 3.21: `updatershell` inyecta un fdat propio (cramfs con `libupdaterbody`, header de 0x30 B por modelo, guard CRC + modelo/región/versión **sin firma**; CXD90014) que el updater ejecuta y expone un shell USB `0x23`; `serviceshell` (senser, HASP) da terminal, backup `0x603`, ficheros y memoria. `bk w 0x003e0005` escribe la propiedad BK4 `modelName` (subsistema `0x3e`/índice 5, 16 B, attr solo-lectura) en el almacén `/setting` (`nflasha2`), no una dirección de código; el preset de fábrica la trae como `ILCE-6000` (verificado). El cambio a `ILCE-6001` está reportado pero su efecto «shell mode» queda **NO VERIFICADO**: la cadena no existe en el firmware. S51 **A=NO, B=NO, C=NO**. [Documento](capture/s62-pmca-injection.md) · [matriz](../analysis/s62-evidence-matrix.json).
 
