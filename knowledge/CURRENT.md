@@ -510,6 +510,36 @@ fw3.21), **S127** (`[CAMERA_MAIN_LC]`), **S126** (`[CAMERA_MAIN]`), **S125** (`[
 
 [Informe](../analysis/s167_sad/sad.md) · [doc](../docs/capture/s167-sad.md). Siguiente: `0x43998578` no tiene llamador `bl` ni puntero absoluto de 4 B → se invoca por puntero; sentido de `DdsDataAdd`/`SelCode`/`ZmCfg` vs `SaCfg`; los ids `0x9548`/`0x93`/`0xa1` sin decodificar.
 
+## S171 — la API del imager y el canal «SteadyShot» del objetivo (22-10-2026, línea de RE general)
+
+**VERIFICADO (20 tests, `tests/test_s171_imager_api.py`):** tres diferencias de **superficie de API** entre el A6300 fw2.01 y la A6000 fw3.21 / A7S fw3.20:
+
+| elemento | A6000 fw3.21 | A7S fw3.20 | A6300 fw2.01 |
+|---|---|---|---|
+| nombres de API del imager (`Get/Set*Imager*`) | **4** | **4** | **7** |
+| → `GetImagerStabilizationTime` | 0 | 0 | **1** |
+| → `SetImagerFrameSize` (traza `SetImagerFrameSize[%d]` `0x43daccdd`) | 0 | 0 | **1** |
+| → `SetImagerMode` (firma C++ `0x43daf786`) | 0 | 0 | **1** |
+| clase `Camera::Sync::SyncUtilityUpm` | **0** | **0** | **3** |
+| tipo `Camera::Imager::IMAGER_DRIVEMODE` | **0** | **0** | **2** |
+| `SteadyShot` (cualquier grafía) | **0** | **0** | **11** |
+| `SteadyShotInfo` (canal del objetivo) | **0** | **0** | **7** |
+| `Mount_DividedInfo` (módulo que lo contiene) | 5 | 3 | 5 |
+
+Los cuatro nombres comunes: `GetImagerDriveMode`, `GetImagerTemperature`, `GetImagerTemperatureAD` y `GetPrelightImagerDriveMode` (el `drive_mode` del imager de **S134**).
+
+**`GetImagerStabilizationTime` (solo A6300)**: cadena `GetImagerStabilizationTime Request Error` `0x43d9ce7f`, **viva** con **1** sitio PIC (`ldr 0x43718d02`, pool `0x43718d14` = `0x00684177`, `add r0,pc` `0x43718d04` → logger `0x43986518`). El manejador (`0x43718cd8`) **suma** los `count` bytes de una tabla en `base + 3·índice + 0x25a` (count en `+0x258`) y devuelve `(suma + 2) & 0xFF`; con la tabla vacía avisa («Request Error») y devuelve 0. **NO VERIFICADO**: qué magnitud devuelve (el nombre viene de la tabla de API, no del código), qué es la tabla de `+0x25a` y quién la escribe.
+
+**Canal «SteadyShot» del objetivo (solo A6300)**: las 7 apariciones de `SteadyShotInfo` están en el **driver de la montura (BL)**: el objetivo manda su información de estabilización y el cuerpo la recibe en dos callbacks (`CallBack_SteadyShotInfo_Com_1st` `0x43da460a` y `_Com_2nd` `0x43da46aa`, entre otras, con sitios `0x4374eb60`–`0x4374ed6c`), con `Mount_DividedInfo_SteadyShotInfo.cpp` como fichero. Las otras 4 apariciones de `SteadyShot` son propiedades de la capa `LiroSeq` de **S169**: `CheckSetFrameLockOnSteadyShot` `0x43dc5494`, `CheckSetSteadyShotAdvancedStill` `0x43dca7b7`, `CheckSetS1SteadyShotMode` `0x43dca8b5`, `CheckSetSteadyShotAdvancedMovie` `0x43dcabd7`.
+
+**Matiz**: el módulo `Mount_DividedInfo` **existe en los tres** (5/3/5) → lo exclusivo del A6300 es la **variante `SteadyShotInfo`**, no el driver de la montura. Y la A6000 **no** carece de estabilización (tiene el subsistema IS/EIS de **S164**): lo que le falta es **este canal del objetivo** y la entrada de API `GetImagerStabilizationTime`.
+
+**Salvedad** (S130 §4): la comparación mezcla versión de firmware y modelo.
+
+**Efecto en S51: NINGUNO — S51 sigue A=NO, B=NO, C=NO.** Son diferencias de **firmware**; la ausencia estática de una API no demuestra incapacidad del hardware.
+
+[Informe](../analysis/s171_imager_api/imager_api.md) · [doc](../docs/capture/s171-imager-api.md). Siguiente: qué magnitud devuelve `GetImagerStabilizationTime`; el formato del paquete `SteadyShotInfo`; si la clase `SyncUtilityUpm` tiene más métodos con nombre.
+
 ## S121 — el módulo `[AIP]` (37 trazas): la interfaz de audio con el escalado (21-10-2026, línea de RE general)
 
 **VERIFICADO (97 tests, `tests/test_s121_aip.py`):** 37 cadenas `[AIP]` en `0x43cdd844`–`0x43cdec50`; **16 funciones** y 6 sub-bloques RTTI: `SaWrapper` (8), `SaBackUpCtrl` (12), `SaDriverBase` (4), `LPS` (11), `SaDriverZoomNr` (1), `SetFader` (1). **Callbacks `Ack`/`Comp`/`Err` en tres capas**: SA (`0x43926d1c`/`0x43926de8`, con los predicados `[r1,#1]==0x14`/`0x13`), LPS (`0x4392b16c`/`0x4392b254`) y driver; los errores llevan `errCode`+`errState` (SA) o `ErrCode`+`ErrStatus` (LPS). **Tabla de backup**: **350 entradas de 12 B** en `0x43bd1964` con `{id = 0x10c0000 + n, offset, size}`; `WriteShadow2BakcupArea` vuelca `0x10c` B (`mov.w r0,#0x10c` en `0x4392ab78`) y `SetAudioNrType` publica el **bit 3** de `bkId = 0x10e0000`. Comandos hacia el escalar en `0x4392ac30` (`Cmd`/`Func` + `Zma`/`Ext`/`Mbx`) y `0x4392acb4` (`Cmd`/`Func`/`Unq`). Buffers LPS `0x82`/`0x83`/`0x85` con longitudes `0x2c`/`0x28`/`0x14`; `SetFader` (`0x4355ae98`) divide por 100/20/otro según `[r0,#0x78]`.
