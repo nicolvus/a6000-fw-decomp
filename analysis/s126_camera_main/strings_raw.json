@@ -1,0 +1,681 @@
+{
+ "module": "CAMERA_MAIN",
+ "count": 135,
+ "strings": [
+  {
+   "vaddr": "0x43c9c57b",
+   "off": 7714171,
+   "text": "[CAMERA_MAIN]: calibration_fc_pos:%d getFcPos(suc_ref_index_target):%d getFcPos(suc_ref_index_target + 1):%d"
+  },
+  {
+   "vaddr": "0x43c9c5e8",
+   "off": 7714280,
+   "text": "[CAMERA_MAIN]: agus_debug_dmaf_fc_inf:%d"
+  },
+  {
+   "vaddr": "0x43c9c611",
+   "off": 7714321,
+   "text": "[CAMERA_MAIN]: agus_debug_dmaf_fc_pos_set:%d"
+  },
+  {
+   "vaddr": "0x43c9c63e",
+   "off": 7714366,
+   "text": "[CAMERA_MAIN]: %d, %d, %d, %d, %d, %lf"
+  },
+  {
+   "vaddr": "0x43c9c665",
+   "off": 7714405,
+   "text": "[CAMERA_MAIN]: fc_depth >> 1:%d, afspd_unit:%d, fno:%d"
+  },
+  {
+   "vaddr": "0x43c9c69c",
+   "off": 7714460,
+   "text": "[CAMERA_MAIN]: aui_fc_pos_set:%d,  agui_fc_pre_pos[0]:%d"
+  },
+  {
+   "vaddr": "0x43c9c6d5",
+   "off": 7714517,
+   "text": "[CAMERA_MAIN]: Calibration start"
+  },
+  {
+   "vaddr": "0x43c9cd19",
+   "off": 7716121,
+   "text": "[CAMERA_MAIN]: FOCUS MODE is not AF-A"
+  },
+  {
+   "vaddr": "0x43c9cd3f",
+   "off": 7716159,
+   "text": "[CAMERA_MAIN]: Scanless NG because of Face AF"
+  },
+  {
+   "vaddr": "0x43c9cd6d",
+   "off": 7716205,
+   "text": "[CAMERA_MAIN]: Scanless NG because of CenterOnlyLens"
+  },
+  {
+   "vaddr": "0x43c9cda2",
+   "off": 7716258,
+   "text": "[CAMERA_MAIN]: Select AF Area is out of SCANLESS-RANGE x %d y %d"
+  },
+  {
+   "vaddr": "0x43c9cde3",
+   "off": 7716323,
+   "text": "[CAMERA_MAIN]: NG fno limit %d > %d"
+  },
+  {
+   "vaddr": "0x43c9ce07",
+   "off": 7716359,
+   "text": "[CAMERA_MAIN]: this lens is not permitted"
+  },
+  {
+   "vaddr": "0x43c9ce31",
+   "off": 7716401,
+   "text": "[CAMERA_MAIN]: NG ympc %d > %d"
+  },
+  {
+   "vaddr": "0x43c9ce50",
+   "off": 7716432,
+   "text": "[CAMERA_MAIN]: NG cpeak %d < %d"
+  },
+  {
+   "vaddr": "0x43c9ce70",
+   "off": 7716464,
+   "text": "[CAMERA_MAIN]: NG csum %d < %d"
+  },
+  {
+   "vaddr": "0x43c9ce8f",
+   "off": 7716495,
+   "text": "[CAMERA_MAIN]: SCANLESS OK! %d ympc %d csum %d cpeak %d defocus %d"
+  },
+  {
+   "vaddr": "0x43c9d07e",
+   "off": 7716990,
+   "text": "[CAMERA_MAIN]: NOT_DETECT from ZPD MODULE in spite of ZpdPreEnable. lc_HybridAF.cpp %d"
+  },
+  {
+   "vaddr": "0x43c9d53f",
+   "off": 7718207,
+   "text": "[CAMERA_MAIN]: waku area is %d"
+  },
+  {
+   "vaddr": "0x43c9d55e",
+   "off": 7718238,
+   "text": "[CAMERA_MAIN]: waku : [%d %d] [%d %d] tracking : [%d %d] [%d %d]"
+  },
+  {
+   "vaddr": "0x43c9d695",
+   "off": 7718549,
+   "text": "[CAMERA_MAIN]: null"
+  },
+  {
+   "vaddr": "0x43c9d6a9",
+   "off": 7718569,
+   "text": "[CAMERA_MAIN]: Set data afa_tracking_area %d : [%d %d %d %d] "
+  },
+  {
+   "vaddr": "0x43c9d6e7",
+   "off": 7718631,
+   "text": "[CAMERA_MAIN]: BETA ; %d"
+  },
+  {
+   "vaddr": "0x43c9d700",
+   "off": 7718656,
+   "text": "[CAMERA_MAIN]: [%d][%d] Is %d (%d)under the DFmove_threshold %d ?"
+  },
+  {
+   "vaddr": "0x43c9d742",
+   "off": 7718722,
+   "text": "[CAMERA_MAIN]: [%d] NONE"
+  },
+  {
+   "vaddr": "0x43c9d75b",
+   "off": 7718747,
+   "text": "[CAMERA_MAIN]: ABSmedian df %d"
+  },
+  {
+   "vaddr": "0x43c9d77a",
+   "off": 7718778,
+   "text": "[CAMERA_MAIN]: [%d]vel history %d %d %d %d %d %d %d %d %d"
+  },
+  {
+   "vaddr": "0x43c9d7b4",
+   "off": 7718836,
+   "text": "[CAMERA_MAIN]: [%d]continuous judge %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d"
+  },
+  {
+   "vaddr": "0x43c9d808",
+   "off": 7718920,
+   "text": "[CAMERA_MAIN]: focus suit : %d [%d %d][%d %d]"
+  },
+  {
+   "vaddr": "0x43c9d836",
+   "off": 7718966,
+   "text": "[CAMERA_MAIN]: circle %d"
+  },
+  {
+   "vaddr": "0x43c9d84f",
+   "off": 7718991,
+   "text": "[CAMERA_MAIN]: suit judge is not reliable!!!"
+  },
+  {
+   "vaddr": "0x43c9d87c",
+   "off": 7719036,
+   "text": "[CAMERA_MAIN]: JUDGE!! justpint_count : %d"
+  },
+  {
+   "vaddr": "0x43c9d8a7",
+   "off": 7719079,
+   "text": "[CAMERA_MAIN]: yes justpint_count : %d"
+  },
+  {
+   "vaddr": "0x43c9d8ce",
+   "off": 7719118,
+   "text": "[CAMERA_MAIN]: justpint_count : %d"
+  },
+  {
+   "vaddr": "0x43c9d8f1",
+   "off": 7719153,
+   "text": "[CAMERA_MAIN]: near<> : %d [%d %d][%d %d]"
+  },
+  {
+   "vaddr": "0x43c9d91b",
+   "off": 7719195,
+   "text": "[CAMERA_MAIN]: exist_near_defocus_threshold %d"
+  },
+  {
+   "vaddr": "0x43c9d94a",
+   "off": 7719242,
+   "text": "[CAMERA_MAIN]: clear flag is true !!!"
+  },
+  {
+   "vaddr": "0x43c9d970",
+   "off": 7719280,
+   "text": "[CAMERA_MAIN]: !!!!!!!!!!TRACKING  LOST !!!!!!!!!!!!!! %d "
+  },
+  {
+   "vaddr": "0x43c9d9ab",
+   "off": 7719339,
+   "text": "[CAMERA_MAIN]: [][][][][][][][][]TRACKING RESTART [][][][][][][][][][][]"
+  },
+  {
+   "vaddr": "0x43c9d9f4",
+   "off": 7719412,
+   "text": "[CAMERA_MAIN]: stabilize num error zpd_mario_afa.cpp line %d"
+  },
+  {
+   "vaddr": "0x43c9da31",
+   "off": 7719473,
+   "text": "[CAMERA_MAIN]: beta %d only Mestimator : %d dvcode : %x"
+  },
+  {
+   "vaddr": "0x43c9da69",
+   "off": 7719529,
+   "text": "[CAMERA_MAIN]: **********************pre_time : %ld now_time : %ld****************************"
+  },
+  {
+   "vaddr": "0x43c9dac8",
+   "off": 7719624,
+   "text": "[CAMERA_MAIN]: NOT EVALUATE timedif : %d wp : %d lastwp : %d"
+  },
+  {
+   "vaddr": "0x43c9db05",
+   "off": 7719685,
+   "text": "[CAMERA_MAIN]: **********************reference_time : %lu now_time : %lu****************************"
+  },
+  {
+   "vaddr": "0x43c9db6a",
+   "off": 7719786,
+   "text": "[CAMERA_MAIN]: time is zero Main/LC/ZPD/zpd_mario_afa.cpp %d"
+  },
+  {
+   "vaddr": "0x43c9dba7",
+   "off": 7719847,
+   "text": "[CAMERA_MAIN]: **********************initial_area : %d %d %d %d ****************************"
+  },
+  {
+   "vaddr": "0x43c9dc04",
+   "off": 7719940,
+   "text": "[CAMERA_MAIN]: **********************initial_time : %lu now_time : %lu****************************"
+  },
+  {
+   "vaddr": "0x43c9dc67",
+   "off": 7720039,
+   "text": "[CAMERA_MAIN]: [%d] df_stable_move_count %d average_num %d"
+  },
+  {
+   "vaddr": "0x43c9dca2",
+   "off": 7720098,
+   "text": "[CAMERA_MAIN]: Clear HistoryVel of MarioAFA"
+  },
+  {
+   "vaddr": "0x43c9dcce",
+   "off": 7720142,
+   "text": "[CAMERA_MAIN]: Clear History of MarioAFA"
+  },
+  {
+   "vaddr": "0x43c9dcf7",
+   "off": 7720183,
+   "text": "[CAMERA_MAIN]: MOVE OBJECT ! %x"
+  },
+  {
+   "vaddr": "0x43c9dd17",
+   "off": 7720215,
+   "text": "[CAMERA_MAIN]: NOT SUIT ! %d"
+  },
+  {
+   "vaddr": "0x43c9dd34",
+   "off": 7720244,
+   "text": "[CAMERA_MAIN]: start k-means"
+  },
+  {
+   "vaddr": "0x43c9dd51",
+   "off": 7720273,
+   "text": "[CAMERA_MAIN]: end k-means"
+  },
+  {
+   "vaddr": "0x43ca1748",
+   "off": 7735112,
+   "text": "[CAMERA_MAIN]: Liro Start\n"
+  },
+  {
+   "vaddr": "0x43ca17db",
+   "off": 7735259,
+   "text": "[CAMERA_MAIN]: >>### LoadNum %x, Ch %x"
+  },
+  {
+   "vaddr": "0x43ca1802",
+   "off": 7735298,
+   "text": "[CAMERA_MAIN]: >>### RcvCmd %x, EC Flag %x"
+  },
+  {
+   "vaddr": "0x43ca182d",
+   "off": 7735341,
+   "text": "[CAMERA_MAIN]: >>###0 CC0:%x,CC1:%x,CC2:%x,CC3:%x"
+  },
+  {
+   "vaddr": "0x43ca185f",
+   "off": 7735391,
+   "text": "[CAMERA_MAIN]: >>###0 CC4_F:%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x"
+  },
+  {
+   "vaddr": "0x43ca189f",
+   "off": 7735455,
+   "text": "[CAMERA_MAIN]: >>###0 CC10_1B:%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x"
+  },
+  {
+   "vaddr": "0x43ca18e1",
+   "off": 7735521,
+   "text": "[CAMERA_MAIN]: >>###0 CC1C_1F:%x,%x,%x,%x"
+  },
+  {
+   "vaddr": "0x43ca190b",
+   "off": 7735563,
+   "text": "[CAMERA_MAIN]: >>###0 CC20_2B:%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x"
+  },
+  {
+   "vaddr": "0x43ca194d",
+   "off": 7735629,
+   "text": "[CAMERA_MAIN]: >>###0 CC2C_2F:%x,%x,%x,%x"
+  },
+  {
+   "vaddr": "0x43ca1977",
+   "off": 7735671,
+   "text": "[CAMERA_MAIN]: >>###0 CC30_38:%x,%x,%x,%x,%x,%x,%x,%x"
+  },
+  {
+   "vaddr": "0x43ca19ad",
+   "off": 7735725,
+   "text": "[CAMERA_MAIN]: >>###0 EC00:%x,EC01:%x,EC02:%x,EC03:%x"
+  },
+  {
+   "vaddr": "0x43ca19e3",
+   "off": 7735779,
+   "text": "[CAMERA_MAIN]: >>###0 EC04:%x,EC05:%x,EC06:%x,EC07:%x"
+  },
+  {
+   "vaddr": "0x43ca1a19",
+   "off": 7735833,
+   "text": "[CAMERA_MAIN]: >>###0 EC08:%x,EC09:%x,EC0A:%x,EC0B:%x"
+  },
+  {
+   "vaddr": "0x43ca1a4f",
+   "off": 7735887,
+   "text": "[CAMERA_MAIN]: >>###0 EC0C:%x,EC0D:%x,EC0E:%x,EC0F:%x"
+  },
+  {
+   "vaddr": "0x43ca1a85",
+   "off": 7735941,
+   "text": "[CAMERA_MAIN]: >>###0 EC10:%x,EC11:%x,EC12:%x,EC13:%x"
+  },
+  {
+   "vaddr": "0x43ca1abb",
+   "off": 7735995,
+   "text": "[CAMERA_MAIN]: >>###0 EC14:%x,EC15:%x,EC16:%x,EC17:%x"
+  },
+  {
+   "vaddr": "0x43ca1af1",
+   "off": 7736049,
+   "text": "[CAMERA_MAIN]: >>###0 EC18:%x,EC19:%x,EC1A:%x,EC1B:%x"
+  },
+  {
+   "vaddr": "0x43ca1b27",
+   "off": 7736103,
+   "text": "[CAMERA_MAIN]: >>###0 EC1C:%x,EC1D:%x,EC1E:%x,EC1F:%x"
+  },
+  {
+   "vaddr": "0x43ca1b5d",
+   "off": 7736157,
+   "text": "[CAMERA_MAIN]: >>###0 LC00_01:%x,LC02_03:%x"
+  },
+  {
+   "vaddr": "0x43ca1b89",
+   "off": 7736201,
+   "text": "[CAMERA_MAIN]: >>###1 CC0:%x,CC1:%x,CC2:%x,CC3:%x"
+  },
+  {
+   "vaddr": "0x43ca1bbb",
+   "off": 7736251,
+   "text": "[CAMERA_MAIN]: >>###1 CC4_F:%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x"
+  },
+  {
+   "vaddr": "0x43ca1bfb",
+   "off": 7736315,
+   "text": "[CAMERA_MAIN]: >>###1 CC10_1B:%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x"
+  },
+  {
+   "vaddr": "0x43ca1c3d",
+   "off": 7736381,
+   "text": "[CAMERA_MAIN]: >>###1 CC1C_1F:%x,%x,%x,%x"
+  },
+  {
+   "vaddr": "0x43ca1c67",
+   "off": 7736423,
+   "text": "[CAMERA_MAIN]: >>###1 CC20_2B:%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x"
+  },
+  {
+   "vaddr": "0x43ca1ca9",
+   "off": 7736489,
+   "text": "[CAMERA_MAIN]: >>###1 CC2C_2F:%x,%x,%x,%x"
+  },
+  {
+   "vaddr": "0x43ca1cd3",
+   "off": 7736531,
+   "text": "[CAMERA_MAIN]: >>###1 CC30_38:%x,%x,%x,%x,%x,%x,%x,%x"
+  },
+  {
+   "vaddr": "0x43ca1d09",
+   "off": 7736585,
+   "text": "[CAMERA_MAIN]: >>###1 EC00:%x,EC01:%x,EC02:%x,EC03:%x"
+  },
+  {
+   "vaddr": "0x43ca1d3f",
+   "off": 7736639,
+   "text": "[CAMERA_MAIN]: >>###1 EC04:%x,EC05:%x,EC06:%x,EC07:%x"
+  },
+  {
+   "vaddr": "0x43ca1d75",
+   "off": 7736693,
+   "text": "[CAMERA_MAIN]: >>###1 EC08:%x,EC09:%x,EC0A:%x,EC0B:%x"
+  },
+  {
+   "vaddr": "0x43ca1dab",
+   "off": 7736747,
+   "text": "[CAMERA_MAIN]: >>###1 EC0C:%x,EC0D:%x,EC0E:%x,EC0F:%x"
+  },
+  {
+   "vaddr": "0x43ca1de1",
+   "off": 7736801,
+   "text": "[CAMERA_MAIN]: >>###1 EC10:%x,EC11:%x,EC12:%x,EC13:%x"
+  },
+  {
+   "vaddr": "0x43ca1e17",
+   "off": 7736855,
+   "text": "[CAMERA_MAIN]: >>###1 EC14:%x,EC15:%x,EC16:%x,EC17:%x"
+  },
+  {
+   "vaddr": "0x43ca1e4d",
+   "off": 7736909,
+   "text": "[CAMERA_MAIN]: >>###1 EC18:%x,EC19:%x,EC1A:%x,EC1B:%x"
+  },
+  {
+   "vaddr": "0x43ca1e83",
+   "off": 7736963,
+   "text": "[CAMERA_MAIN]: >>###1 EC1C:%x,EC1D:%x,EC1E:%x,EC1F:%x"
+  },
+  {
+   "vaddr": "0x43ca1eb9",
+   "off": 7737017,
+   "text": "[CAMERA_MAIN]: >>###1 LC00_01:%x,LC02_03:%x"
+  },
+  {
+   "vaddr": "0x43ca1ee5",
+   "off": 7737061,
+   "text": "[CAMERA_MAIN]: >>SETTING: CC0:%x,CC1:%x,CC2:%x,CC3:%x"
+  },
+  {
+   "vaddr": "0x43ca1f1b",
+   "off": 7737115,
+   "text": "[CAMERA_MAIN]: >>SETTING: CC4_F:%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x"
+  },
+  {
+   "vaddr": "0x43ca1f5f",
+   "off": 7737183,
+   "text": "[CAMERA_MAIN]: >>SETTING: CC10_1F:%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x"
+  },
+  {
+   "vaddr": "0x43ca1fb1",
+   "off": 7737265,
+   "text": "[CAMERA_MAIN]: >>SETTING: CC20_2B:%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x"
+  },
+  {
+   "vaddr": "0x43ca1ff7",
+   "off": 7737335,
+   "text": "[CAMERA_MAIN]: >>SETTING: CC2C_2F:%x,%x,%x,%x"
+  },
+  {
+   "vaddr": "0x43ca2025",
+   "off": 7737381,
+   "text": "[CAMERA_MAIN]: >>SETTING: CC30_38:%x,%x,%x,%x,%x,%x,%x,%x"
+  },
+  {
+   "vaddr": "0x43ca205f",
+   "off": 7737439,
+   "text": "[CAMERA_MAIN]: >>SETTING: EC00:%x,EC01:%x,EC02:%x,EC03:%x"
+  },
+  {
+   "vaddr": "0x43ca2099",
+   "off": 7737497,
+   "text": "[CAMERA_MAIN]: >>SETTING: EC04:%x,EC05:%x,EC06:%x,EC07:%x"
+  },
+  {
+   "vaddr": "0x43ca20d3",
+   "off": 7737555,
+   "text": "[CAMERA_MAIN]: >>SETTING: EC08:%x,EC09:%x,EC0A:%x,EC0B:%x"
+  },
+  {
+   "vaddr": "0x43ca210d",
+   "off": 7737613,
+   "text": "[CAMERA_MAIN]: >>SETTING: EC0C:%x,EC0D:%x,EC0E:%x,EC0F:%x"
+  },
+  {
+   "vaddr": "0x43ca2147",
+   "off": 7737671,
+   "text": "[CAMERA_MAIN]: >>SETTING: EC10:%x,EC11:%x,EC12:%x,EC13:%x"
+  },
+  {
+   "vaddr": "0x43ca2181",
+   "off": 7737729,
+   "text": "[CAMERA_MAIN]: >>SETTING: EC14:%x,EC15:%x,EC16:%x,EC17:%x"
+  },
+  {
+   "vaddr": "0x43ca21bb",
+   "off": 7737787,
+   "text": "[CAMERA_MAIN]: >>SETTING: EC18:%x,EC19:%x,EC1A:%x,EC1B:%x"
+  },
+  {
+   "vaddr": "0x43ca21f5",
+   "off": 7737845,
+   "text": "[CAMERA_MAIN]: >>SETTING: EC1C:%x,EC1D:%x,EC1E:%x,EC1F:%x"
+  },
+  {
+   "vaddr": "0x43ca222f",
+   "off": 7737903,
+   "text": "[CAMERA_MAIN]: >>SETTING: LC00_01:%x,LC02_03:%x"
+  },
+  {
+   "vaddr": "0x43ca225f",
+   "off": 7737951,
+   "text": "[CAMERA_MAIN]: >>[EC_00toOF][CODE]: %x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x"
+  },
+  {
+   "vaddr": "0x43ca22a4",
+   "off": 7738020,
+   "text": "[CAMERA_MAIN]: >>[EC_30to3F][MANU]: %x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x"
+  },
+  {
+   "vaddr": "0x43ca22e9",
+   "off": 7738089,
+   "text": "[CAMERA_MAIN]: #####ERR!! [SetLoadDataTrans]%x"
+  },
+  {
+   "vaddr": "0x43ca2318",
+   "off": 7738136,
+   "text": "[CAMERA_MAIN]: #####ERR!! [SetLoadData]%x"
+  },
+  {
+   "vaddr": "0x43ca3b15",
+   "off": 7744277,
+   "text": "[CAMERA_MAIN]: read size error L=%d\n"
+  },
+  {
+   "vaddr": "0x43ca3b3a",
+   "off": 7744314,
+   "text": "[CAMERA_MAIN]: LiroSequencerMovieFileFormat : %d"
+  },
+  {
+   "vaddr": "0x43ca3b7b",
+   "off": 7744379,
+   "text": "[CAMERA_MAIN]: init_cam_clkctrl used DEBUG_SYSV_DELAY"
+  },
+  {
+   "vaddr": "0x43ca3bb1",
+   "off": 7744433,
+   "text": "[CAMERA_MAIN]: init_cam_clkctrl used DEBUG_CLK_TYPE"
+  },
+  {
+   "vaddr": "0x43ca3be5",
+   "off": 7744485,
+   "text": "[CAMERA_MAIN]: init_cam_clkctrl CLKTYPE=%x, sysv_delay=%dus"
+  },
+  {
+   "vaddr": "0x43ca3c25",
+   "off": 7744549,
+   "text": "[CAMERA_MAIN]: ERROR !!! osal_err:0x%04x %s : %d"
+  },
+  {
+   "vaddr": "0x43ca3ca3",
+   "off": 7744675,
+   "text": "[CAMERA_MAIN]: !!!!!!! UNKNOWN CATEGORY in Lirosequencer !!!!!!!"
+  },
+  {
+   "vaddr": "0x43ca7c52",
+   "off": 7760978,
+   "text": "[CAMERA_MAIN]: min %d max %d in the num of %d"
+  },
+  {
+   "vaddr": "0x43ca7c80",
+   "off": 7761024,
+   "text": "[CAMERA_MAIN]: [0 : ave : %d : num %d ] [1 : ave : %d : num %d ] [2 : ave : %d : num %d ] suitable : %d df : %d ave: %d"
+  },
+  {
+   "vaddr": "0x43ca7cf8",
+   "off": 7761144,
+   "text": "[CAMERA_MAIN]: multi select defocus : %d [%d]"
+  },
+  {
+   "vaddr": "0x43cb40d1",
+   "off": 7811281,
+   "text": "[CAMERA_MAIN]: SetGainBI is failed : %d"
+  },
+  {
+   "vaddr": "0x43cb40f9",
+   "off": 7811321,
+   "text": "[CAMERA_MAIN]: I don't know this FOCUS_SWITCH_MODE. Please check init_cam_SetCamParam.cpp %d"
+  },
+  {
+   "vaddr": "0x43cb4156",
+   "off": 7811414,
+   "text": "[CAMERA_MAIN]: !!!!!!! UNKNOWN DSC CATEGORY in SetCamParam_Project_One !!!!!!!"
+  },
+  {
+   "vaddr": "0x43ccabd8",
+   "off": 7904216,
+   "text": "[CAMERA_MAIN]: osal_alloc_msg(liro_adc) error:%d\n"
+  },
+  {
+   "vaddr": "0x43ccac0a",
+   "off": 7904266,
+   "text": "[CAMERA_MAIN]: osal_send_sync_msg(liro_adc) error:%d\n"
+  },
+  {
+   "vaddr": "0x43ccac40",
+   "off": 7904320,
+   "text": "[CAMERA_MAIN]: osal_free_msg(liro_adc) error:%d\n"
+  },
+  {
+   "vaddr": "0x43ccac71",
+   "off": 7904369,
+   "text": "[CAMERA_MAIN]: keymap size is under 0 [%d]"
+  },
+  {
+   "vaddr": "0x43ccac9c",
+   "off": 7904412,
+   "text": "[CAMERA_MAIN]: keymap size is over [%d]"
+  },
+  {
+   "vaddr": "0x43ccacc4",
+   "off": 7904452,
+   "text": "[CAMERA_MAIN]: keymap size is not much , data_size : [%d] ,  s_keymap_table : [%d]"
+  },
+  {
+   "vaddr": "0x43ccad17",
+   "off": 7904535,
+   "text": "[CAMERA_MAIN]: keyconfing size is 0"
+  },
+  {
+   "vaddr": "0x43ccad3b",
+   "off": 7904571,
+   "text": "[CAMERA_MAIN]: ADCkeyInfo size is over [%d]"
+  },
+  {
+   "vaddr": "0x43ccad69",
+   "off": 7904617,
+   "text": "[CAMERA_MAIN]: cannot read ev dial2 ::: %d"
+  },
+  {
+   "vaddr": "0x43ccad94",
+   "off": 7904660,
+   "text": "[CAMERA_MAIN]: cannot read ev dial1 ::: %d"
+  },
+  {
+   "vaddr": "0x43ccadbf",
+   "off": 7904703,
+   "text": "[CAMERA_MAIN]: LiroSequencer cannot read IRIS_DIAL_POS ::: %d"
+  },
+  {
+   "vaddr": "0x43ccadfd",
+   "off": 7904765,
+   "text": "[CAMERA_MAIN]: %s : it's not MR mode"
+  },
+  {
+   "vaddr": "0x43ccae22",
+   "off": 7904802,
+   "text": "[CAMERA_MAIN]: %s : invalid MR mode"
+  },
+  {
+   "vaddr": "0x43ccae46",
+   "off": 7904838,
+   "text": "[CAMERA_MAIN]: !!!!!!! UNKNOWN ModeDial in getInitScnMode_Pj1 !!!!!!!"
+  }
+ ]
+}
