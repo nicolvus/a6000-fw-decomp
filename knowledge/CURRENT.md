@@ -1,5 +1,11 @@
 # Estado actual — léeme primero
 
+## S150 — xrefs de los huecos +8/+9 y pista de descriptor (22-10-2026)
+
+REA devolvió `[]` para las ocho direcciones exactas de los huecos de fila; el control positivo muestra xrefs al inicio de una fila. Una búsqueda completa de bytes encuentra dos celdas que empiezan con literal `0x43eb0850` (el hueco +8/+9 de la tercera fila), pero no se ha identificado su consumidor ni formato: **no afirmar lectura/escritura efectiva**. Bytes estructurados en `analysis/s150_imager_row_gaps/gap_refs.json`; [informe](../docs/capture/s150-imager-row-gaps.md), 3 tests. El resultado vacío no prueba ausencia de escritores por alias/argumento.
+
+**Siguiente:** resolver quién consulta las dos celdas `0x4400812c` y `0x4400b27c` y cómo se interpreta su primer campo; confirmar si se usa como puntero a `0x43eb0850` antes de atribuir acceso a gap.
+
 ## S149 — cierre parcial de helpers de filas G (22-10-2026)
 
 Se verificó el cierre del loop por instrucciones: el writer `0x4383c9dc` **itera cuatro veces** (contador 4, stride `0x10`, back-edge), no solo una; stores por fila en `0,4,6,0xa,0xc,0xe`. Los cuatro helpers auditados no escriben `+0x2c..+0x6b` ni el hueco +8/+9. **Limitado** a estos cuerpos/gates, no excluye otros writers. Evidencias y test reproducible: [S149](../docs/capture/s149-imager-row-helpers.md), `analysis/s149_imager_row_helpers/row_helper_stores.json` (3 tests). S51 sin cambios. Commit publicado: `c4193a2a`.

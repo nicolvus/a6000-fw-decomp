@@ -18,6 +18,7 @@ hardware. Se conservan todas las evidencias anteriores en sus rutas originales.
 - [S146: REA no permite sembrar procedimientos fuera del análisis](../../docs/capture/s146-rea-seed-limit.md).
 - [S147: recorrido parcial de las filas de 16 B del banco G](../../docs/capture/s147-imager-g-rows.md).
 - [S149: auditoría de los helpers y offsets aún no escritos dentro de cada fila](../../docs/capture/s149-imager-row-helpers.md).
+- [S150: referencias directas y literales de puntero a los huecos de fila](../../docs/capture/s150-imager-row-gaps.md).
 - [Comparación entre modelos](../../docs/comparative-analysis.md).
 - [Límites de hardware pendientes](../../docs/hardware-limitations.md).
 

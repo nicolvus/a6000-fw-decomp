@@ -65,6 +65,15 @@
 - Pruebas: unittest S149 3/3 PASS; suite S140–S149 + knowledge 88/88 PASS; `git diff --check` PASS. Commit `c4193a2a` publicado en `origin/main`.
 - Siguiente: búsqueda de writers alternos de los bytes `G+0x234/+0x235` (hueco relativo +8/+9 del primer row), con REA/bytes y sin inferir ausencia por scans vacíos.
 
+## Investigación S150 — xrefs directas y literales a los gaps
+
+- Pregunta: xrefs directas para los ocho bytes `+8/+9` de las filas y presencia de palabras absolutas con esos destinos.
+- Resultado parcial: 8/8 xrefs exactas vacías; REA control positivo a la base de una fila; bytes BSS cero. Búsqueda de imagen completa encontró dos words `0x43eb0850` en `0x4400812c`/`0x4400b27c`; son literales dentro de datos sin xrefs/instrucción consumidora identificada. No convertirlo en lectura/escritura efectiva.
+- Evidencia: xrefs exactas `ev_c42a7d7fd9a1e599c8d0b74992d387d3f1e7164896d259abe3a6ef0f7e68f68c` … `ev_55c7c05551f922a8af96f3b4d7dbae64da5be5e55e55eacc780eb55d0149416b`; control `ev_afcfff7678cf182ee835cd1ed4dfd1b2f55fdb0872a6bfc51817b3a9ab9f3b55`; búsqueda literal completa `ev_201b0a5e0f16fe153da29642e861f41b0a7cebeb611865db65540927452d7668`.
+- Artefactos: `analysis/s150_imager_row_gaps/{verify_gap_refs.py,gap_refs.json}`, `tests/test_s150_imager_row_gaps.py`, `docs/capture/s150-imager-row-gaps.md`.
+- Pruebas: unittest S150 3/3 PASS; falta suite/commit/push.
+- Siguiente: identificar consumidores de las celdas `0x4400812c` y `0x4400b27c`; seguir el word inicial `0x43eb0850` con REA xrefs/lecturas y evidencia de índice/call path.
+
 Checkpoint persistente. Actualizar al terminar cada etapa, antes de continuar
 con la siguiente. No reescribir historial: añadir entradas nuevas.
 
