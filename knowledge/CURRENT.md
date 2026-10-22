@@ -1,5 +1,11 @@
 # Estado actual — léeme primero
 
+## S154 — referencia del estado desde `0x438363e6` (22-10-2026)
+
+`FUN_438363cc` en `0x438363e6` carga el valor del slot `0x4401f990` (`0x43f72d02`); el edge al objeto es DATA y el READ efectivo es al GOT slot. Este procedimiento lee otros campos +0x38..+0x3b y no escribe +3/+6; sus stores van a otros objetos/buffers. **Acotado a esta función**; no prueba ausencia de otros writers. [S154](../docs/capture/s154-imager-state-ref.md), JSON y 3 tests en `analysis/s154_imager_state_ref/`.
+
+**Siguiente:** revisar otro xref a la base del estado para detectar copias estructuradas o stores a +3/+6 con evidencia positiva; no inferir ausencia por la lista de xrefs.
+
 ## S153 — gates lectores del volcado del gap (22-10-2026)
 
 REA/bytes verifican los gates en `FUN_43858338`: `[obj+3]&2` y `[obj+6]&0x20` habilitan líneas del dumper; los xrefs directos a esos bytes son lecturas y los bytes BSS iniciales están a cero. **Escritor/valor runtime NO_VERIFICADOS**; no prueba ausencia global ni ejecución en una foto. [Informe](../docs/capture/s153-imager-dump-gates.md), `analysis/s153_imager_dump_gates/dump_gates.json` (3 tests). Commit publicado: `7ce7f329`.

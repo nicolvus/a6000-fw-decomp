@@ -83,6 +83,10 @@ S152 identifica las dos referencias literales de S150 como campos `addr` de tabl
 
 En `FUN_43858338`, `ldrb [r6,#3]` + `tst #2` y `ldrb [r6,#6]` + `tst #0x20` gobiernan emisión de líneas del volcado. Los xrefs directos a ambos bytes son lecturas; imagen estática del objeto `0x43f72d02` toda a cero. No se confirmó escritor ni valor runtime; no se infiere ausencia global ni ejecución en captura. [S153](capture/s153-imager-dump-gates.md).
 
+## Avance S154 — xref a base GOT del objeto gate
+
+`0x438363e6` lee el slot GOT `0x4401f990` cuyo valor de imagen es `0x43f72d02`; el edge al objeto es DATA, no store. `FUN_438363cc` lee +0x38..+0x3b y stores van a otros objetos/buffer. No escribe gates +3/+6 en este procedimiento; quedan otras referencias y alias por investigar. [S154](capture/s154-imager-state-ref.md).
+
 Mecanismo de PMCA identificado y contrastado con el firmware 3.21: `updatershell` inyecta un fdat propio (cramfs con `libupdaterbody`, header de 0x30 B por modelo, guard CRC + modelo/región/versión **sin firma**; CXD90014) que el updater ejecuta y expone un shell USB `0x23`; `serviceshell` (senser, HASP) da terminal, backup `0x603`, ficheros y memoria. `bk w 0x003e0005` escribe la propiedad BK4 `modelName` (subsistema `0x3e`/índice 5, 16 B, attr solo-lectura) en el almacén `/setting` (`nflasha2`), no una dirección de código; el preset de fábrica la trae como `ILCE-6000` (verificado). El cambio a `ILCE-6001` está reportado pero su efecto «shell mode» queda **NO VERIFICADO**: la cadena no existe en el firmware. S51 **A=NO, B=NO, C=NO**. [Documento](capture/s62-pmca-injection.md) · [matriz](../analysis/s62-evidence-matrix.json).
 
 ## Avance S58 (20-10-2026)

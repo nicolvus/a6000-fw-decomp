@@ -21,6 +21,7 @@ hardware. Se conservan todas las evidencias anteriores en sus rutas originales.
 - [S150: referencias directas y literales de puntero a los huecos de fila](../../docs/capture/s150-imager-row-gaps.md).
 - [S152: lectura diagnóstica del byte gap por descriptores](../../docs/capture/s152-imager-gap-descriptor-read.md).
 - [S153: gates de flags del dumper y límite de alcanzabilidad](../../docs/capture/s153-imager-dump-gates.md).
+- [S154: xref de GOT al objeto de flags, sin escritura](../../docs/capture/s154-imager-state-ref.md).
 - [Comparación entre modelos](../../docs/comparative-analysis.md).
 - [Límites de hardware pendientes](../../docs/hardware-limitations.md).
 

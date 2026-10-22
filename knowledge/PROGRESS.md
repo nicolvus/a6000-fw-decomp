@@ -92,6 +92,15 @@
 - Pruebas: unittest S153 3/3 PASS; suite S140–S153 + knowledge 97/97 PASS; `git diff --check` PASS. Commit `7ce7f329` publicado en `origin/main`.
 - Siguiente: inspeccionar consumidores/copiadores del bloque state `0x43f72d02` para detectar escrituras estructuradas a +3/+6; no equiparar xrefs vacíos con ausencia.
 
+## Investigación S154 — clasificación del xref a estado
+
+- Pregunta: qué instrucción representa `0x438363e6` a `0x43f72d02` y si su procedimiento escribe los gates.
+- Resultado: `ldr r0,[r5,r3]` lee el slot GOT `0x4401f990`; segundo edge DATA apunta al valor base, no a un store/read directo del objeto. La función lee campos +0x38..+0x3b y escribe en otros targets; no hay store +3/+6 en ese procedimiento. PARCIAL global.
+- Evidencia: instructions `ev_98aa775d3c95df94438bb40d89c729bddd5b0493c30968d146bfee6243fb3c63`; typed refs `ev_e8a264c61f10ca8c40c32e8171a4b743ec4bfa571f23898386dd5ab4a8ec7efa`; slot `ev_ef0ae04fe4e640945736ea7bd40211f7cbdc4dbc7865e58ec0051c994f67bc7f`.
+- Artefactos: `analysis/s154_imager_state_ref/{verify_state_ref.py,state_ref.json}`, `tests/test_s154_imager_state_ref.py`, `docs/capture/s154-imager-state-ref.md`.
+- Pruebas: unittest 3/3 PASS; pendiente suite/commit/push.
+- Siguiente: seleccionar otro xref de base y clasificar con typed references/instructions, buscando stores estructurados a los flags.
+
 Checkpoint persistente. Actualizar al terminar cada etapa, antes de continuar
 con la siguiente. No reescribir historial: añadir entradas nuevas.
 
