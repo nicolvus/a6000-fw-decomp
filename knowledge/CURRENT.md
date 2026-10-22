@@ -2,7 +2,7 @@
 
 ## S162 — lectores de `state+0x1c` (22-10-2026)
 
-`FUN_438d9318`/`FUN_438d936c` cargan el state pointer y leen un halfword en `+0x1c`; cada resultado se escribe a `0x43f7c702` o `0x43f7c704`, no al objeto/gates. La lectura es VERIFICADA; “notificación” es INFERENCIA, alcanzabilidad runtime NO_VERIFICADA. [S162](../docs/capture/s162-imager-state-event-readers.md), `analysis/s162_imager_state_event_readers/event_readers.json` (3 tests).
+`FUN_438d9318`/`FUN_438d936c` cargan el state pointer y leen un halfword en `+0x1c`; cada resultado se escribe a `0x43f7c702` o `0x43f7c704`, no al objeto/gates. La lectura es VERIFICADA; “notificación” es INFERENCIA, alcanzabilidad runtime NO_VERIFICADA. [S162](../docs/capture/s162-imager-state-event-readers.md), `analysis/s162_imager_state_event_readers/event_readers.json` (3 tests). Commit publicado: `8f17819a`.
 
 **Siguiente:** otro xref pendiente; comprobar si es puntero/GOT, field read o writer tipado antes de atribuirlo a gates.
 
