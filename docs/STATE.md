@@ -63,6 +63,10 @@ REA sitúa `0x43843a44` fuera de sus procedimientos, mientras reconoce el setter
 
 REA resuelve `file-offset:0x302a44` a `0x43843a44`, pero rechaza la pseudodecompilación porque no hay procedimiento existente; las consultas de info/assembly/analyze tampoco crean entradas. El caller `0x437b617e` tiene offset `0x27517e` (no `0x27617e`). Esto limita la cobertura de pseudocódigo y **no** demuestra ausencia ni no-ejecución. [S146](capture/s146-rea-seed-limit.md).
 
+## Avance S147 — escritura parcial de las filas G
+
+REA/bytes siguen `G+0x224` desde el `add` de `0x437b5f00` hasta `0x4383bf2c`, que llama al writer `0x4383c9dc`. Este itera cuatro filas, stride 0x10, con stores en offsets relativos 0,4,6,0xa,0xc,0xe; `+8/+9` no están escritos por ese bucle. Otros refs son staging/lecturas y varias rutas quedan parciales. No se asigna modo ni nombre físico. [S147](capture/s147-imager-g-rows.md).
+
 Mecanismo de PMCA identificado y contrastado con el firmware 3.21: `updatershell` inyecta un fdat propio (cramfs con `libupdaterbody`, header de 0x30 B por modelo, guard CRC + modelo/región/versión **sin firma**; CXD90014) que el updater ejecuta y expone un shell USB `0x23`; `serviceshell` (senser, HASP) da terminal, backup `0x603`, ficheros y memoria. `bk w 0x003e0005` escribe la propiedad BK4 `modelName` (subsistema `0x3e`/índice 5, 16 B, attr solo-lectura) en el almacén `/setting` (`nflasha2`), no una dirección de código; el preset de fábrica la trae como `ILCE-6000` (verificado). El cambio a `ILCE-6001` está reportado pero su efecto «shell mode» queda **NO VERIFICADO**: la cadena no existe en el firmware. S51 **A=NO, B=NO, C=NO**. [Documento](capture/s62-pmca-injection.md) · [matriz](../analysis/s62-evidence-matrix.json).
 
 ## Avance S58 (20-10-2026)

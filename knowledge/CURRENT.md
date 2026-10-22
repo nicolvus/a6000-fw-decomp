@@ -1,5 +1,13 @@
 # Estado actual — léeme primero
 
+## S147 — escritor parcial de filas G (22-10-2026)
+
+**VERIFICADO:** `0x437b5f00` forma `G+0x224` y prepara la llamada a `0x4383bf2c`; éste llama a `0x4383c9dc`, cuyo loop usa stride `0x10` durante cuatro iteraciones y escribe offsets relativos `0,4,6,0xa,0xc,0xe` en cada fila desde `+0x2c`. No escribe `+8/+9` **en ese loop**. REA evidence/páginas y bytes: [S147](../docs/capture/s147-imager-g-rows.md), `analysis/s147_imager_g_rows/g_rows.json` (3 tests).
+
+**PARCIAL:** los otros xrefs a G son paso de puntero o loads; consumidores indirectos/efectos restantes, otros escritores, modo fotográfico y semántica física no se cerraron. No cambia S51.
+
+**Siguiente:** seguir `FUN_4383bfd4`, `FUN_4383c818` y `FUN_43b08786` para identificar stores a `+0x34/+0x35` o campos restantes por evidencia positiva; después revisar consumidores de lectura. No atribuir significados eléctricos.
+
 ## S146 — límite de seeding REA y offset corregido (22-10-2026)
 
 REA acepta `file-offset:` solo para resolver un procedimiento ya existente; no ofrece creación/seeding de función en el proveedor activo. `0x43843a44` mapea a `0x302a44` pero pseudocode falla por `no procedure`; `0x437b617e` corresponde a `0x27517e` (el offset `0x27617e` fue error de coordenada y mapea a otra VA). **La cobertura limitada no prueba ausencia.** [Informe](../docs/capture/s146-rea-seed-limit.md), reproducción `analysis/s146_rea_seed_capability/rea_seed_capability.json` (3 tests). Commit publicado: `0a865472`.
