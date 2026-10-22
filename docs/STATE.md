@@ -108,6 +108,8 @@ S158 clasifica `0x4385b268`: `FUN_4385b234` carga el puntero GOT del estado y lo
 
 S159 clasifica `0x4386001c` como otro spill a stack en `FUN_4385fff0`; el cuerpo lee `+0/+0x1c/+0xa2` y escribe a otros destinos, no a +3/+6 en este procedimiento. No es una conclusión global. [Informe S159](capture/s159-imager-state-spill.md).
 
+S160 confirma un store a `0x43f72d02+0` en `0x4383ac90` cuando expira un contador compartido. Es el único campo escrito por ese sitio; no modifica `+3/+6`. La alcanzabilidad en una captura no está probada. [Informe S160](capture/s160-state-open-flag.md).
+
 Proyecto abierto: hay piezas reales y reutilizables, pero **ninguna captura silenciosa
 completa validada**; no está demostrada la capacidad ni la imposibilidad de fotografía
 totalmente electrónica a resolución completa.

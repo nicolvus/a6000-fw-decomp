@@ -100,6 +100,7 @@
 | S157 | clasificar `0x43859954` al objeto de gates | edge `PARAM` al valor de `0x43f72d02` después de READ GOT; `FUN_43859944` lee `+5/+0xf`, stores a otros destinos y no escribe gates en este cuerpo | [`analysis/s157_imager_state_snapshot/`](../analysis/s157_imager_state_snapshot/) · [doc](s157-imager-state-snapshot.md) | `tests/test_s157_imager_state_snapshot.py` |
 | S158 | clasificar el xref `0x4385b268` al estado | `FUN_4385b234` carga `0x43f72d02` desde GOT y derrama el puntero a stack; después lee `+0x26/+0x28/+0x29` y escribe otro objeto. No es store a la base ni a gates `+3/+6` en este procedimiento | [`analysis/s158_imager_state_ref/`](../analysis/s158_imager_state_ref/) · [doc](s158-imager-state-ref.md) | `tests/test_s158_imager_state_ref.py` |
 | S159 | clasificar el xref `0x4386001c` en el estado | `FUN_4385fff0` carga el objeto desde GOT y derrama el puntero a stack; lee `+0/+0x1c/+0xa2`, escribe otros destinos, no gates `+3/+6` en este cuerpo. No concluye ausencia global | [`analysis/s159_imager_state_ref/`](../analysis/s159_imager_state_ref/) · [doc](s159-imager-state-spill.md) | `tests/test_s159_imager_state_ref.py` |
+| S160 | writer de `state+0` | `0x4383ac90` almacena un byte cero en `0x43f72d02+0` cuando el contador local llega a 0; no es writer de `+3/+6`. Caller/runtime no demostrado | [`analysis/s160_state_open_flag_writer/`](../analysis/s160_state_open_flag_writer/) · [doc](s160-state-open-flag.md) | `tests/test_s160_state_open_flag_writer.py` |
 
 ## 2. Cómo se sostiene el rigor
 

@@ -1,0 +1,27 @@
+{
+  "milestone": "S160",
+  "firmware_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "base": "0x43541000",
+  "state_slot": {
+    "address": "0x4401f990",
+    "bytes_hex": "022df743",
+    "value_le": "0x43f72d02"
+  },
+  "store": {
+    "address": "0x4383ac90",
+    "bytes_hex": "1370",
+    "rea_typed_target": "0x43f72d02",
+    "field_offset": "0x0",
+    "store_data_semantics": "reaching path stores byte value 0 when the shared countdown expires"
+  },
+  "rea_evidence_ids": {
+    "procedure": "ev_134be2dfce4598770fe1825386a5899cfad96fb794784e8673a5c3f42e37bd3b",
+    "typed_write_instruction": "ev_3992433ca320c9303ec5bd74990f7e8e53f481516afd812000138c8654f83014",
+    "body_pseudocode": "ev_d9486547d0d47dc8039f483cc2e75d37bee5fd8e82c1044c8d033137462f0946",
+    "caller_conditions": [
+      "ev_d26c82da23892ec4f409332c9f21087a17c6239b8c09a0c620d048fd5aae0213",
+      "ev_2db8b63f3ac711416bf1412cf5b9f69e4bce744fb6e3edf0af500029e9d7aa32"
+    ]
+  },
+  "scope_limit": "This store is to state+0, not gate bytes +3/+6; runtime reachability and writers of the gate bits remain unknown."
+}

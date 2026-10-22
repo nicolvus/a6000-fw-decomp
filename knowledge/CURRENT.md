@@ -1,5 +1,11 @@
 # Estado actual — léeme primero
 
+## S160 — writer local de `state+0` (22-10-2026)
+
+`FUN_4383abec` carga el state pointer vía GOT y `0x4383ac90` ejecuta `strb r3,[r2]`, edge REA WRITE a `0x43f72d02+0`; en la ruta que alcanza el store el contador expira y el byte se pone a cero. No escribe gates `+3/+6`, y la condición de los callers no acredita ejecución runtime. [S160](../docs/capture/s160-state-open-flag.md), JSON y 3 tests en `analysis/s160_state_open_flag_writer/`.
+
+**Siguiente:** clasificar xrefs restantes; buscar escritura estructurada/copias hacia `+3/+6`, sin inferir ausencia global.
+
 ## S159 — spill del puntero de estado en `0x4386001c` (22-10-2026)
 
 `FUN_4385fff0` carga el objeto vía GOT; `0x4386001c` es `str r3,[sp,#0x1c]` (spill), no write a estado. Este cuerpo lee `+0/+0x1c/+0xa2`, stores van a otros destinos; no gates `+3/+6` localmente. [S159](../docs/capture/s159-imager-state-spill.md), reproducción `analysis/s159_imager_state_ref/state_spill.json` (3 tests); no prueba ausencia global. Commit publicado: `98262cd6`.
