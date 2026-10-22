@@ -1,0 +1,592 @@
+{
+ "hito": "S156",
+ "modulo": "[TP_R]",
+ "codigo_del_modulo": {
+  "extento": [
+   "0x4366c2a4",
+   "0x4366cd38"
+  ],
+  "funciones": [
+   "0x4366c2a4",
+   "0x4366c2bc",
+   "0x4366c300",
+   "0x4366c388",
+   "0x4366c410",
+   "0x4366c456",
+   "0x4366c498",
+   "0x4366c540",
+   "0x4366c568",
+   "0x4366c624",
+   "0x4366c6e8",
+   "0x4366c840",
+   "0x4366c8fc",
+   "0x4366c924",
+   "0x4366c978",
+   "0x4366ca92",
+   "0x4366cadc",
+   "0x4366caf4"
+  ],
+  "tabla_de_comandos_ddl": "0x43fe3f28",
+  "nombre_registrado": "tp",
+  "comandos": [
+   "start",
+   "set_mode",
+   "print_xy",
+   "dds_on",
+   "dds_off"
+  ],
+  "boot_init": {
+   "funcion": "0x4366caf4",
+   "llamada_desde": "0x43a464dc",
+   "id_de_arranque": 135,
+   "parametro": 280
+  },
+  "boot_exit": {
+   "funcion": "0x4366c6e8",
+   "llamada_desde": "0x43a4670c",
+   "id_de_parada": 134
+  }
+ },
+ "base_vaddr": "0x43541000",
+ "binario": "analysis/rea-independent/input/av-cam.bin",
+ "regla_referencias": "estricta (analysis/s106_imaging_cap/scan_pic_refs_strict.py)",
+ "cadenas": [
+  {
+   "addr": "0x43c80f23",
+   "text": "[TP_R]: ERR. osal_try_valloc_msg. err=0x%x, L=%d",
+   "token": "[TP_R]",
+   "pic_refs": [
+    "0x4366c3b0",
+    "0x4366c5a0",
+    "0x4366c65c"
+   ],
+   "funcs": [
+    "0x4366c388",
+    "0x4366c568",
+    "0x4366c624"
+   ],
+   "abs_ptrs": [],
+   "viva": true
+  },
+  {
+   "addr": "0x43c80f54",
+   "text": "[TP_R]: ERR. osal_snd_msg. err=0x%x, L=%d",
+   "token": "[TP_R]",
+   "pic_refs": [
+    "0x4366c3e2",
+    "0x4366c5f4",
+    "0x4366c698"
+   ],
+   "funcs": [
+    "0x4366c388",
+    "0x4366c568",
+    "0x4366c624"
+   ],
+   "abs_ptrs": [],
+   "viva": true
+  },
+  {
+   "addr": "0x43c80f7e",
+   "text": "[TP_R]: debug_num=0x%02x",
+   "token": "[TP_R]",
+   "pic_refs": [],
+   "funcs": [],
+   "abs_ptrs": [],
+   "viva": false
+  },
+  {
+   "addr": "0x43c80f97",
+   "text": "[TP R] debug_num = %02x",
+   "token": "[TP R]",
+   "pic_refs": [],
+   "funcs": [],
+   "abs_ptrs": [],
+   "viva": false
+  },
+  {
+   "addr": "0x43c80faf",
+   "text": "[TP_R]: ERR. osal_free_msg. err=0x%x, L=%d",
+   "token": "[TP_R]",
+   "pic_refs": [
+    "0x4366c6cc",
+    "0x4366c8bc"
+   ],
+   "funcs": [
+    "0x4366c624",
+    "0x4366c840"
+   ],
+   "abs_ptrs": [],
+   "viva": true
+  },
+  {
+   "addr": "0x43c80fda",
+   "text": "[TP_R]: boot_exit_tp come",
+   "token": "[TP_R]",
+   "pic_refs": [
+    "0x4366c704"
+   ],
+   "funcs": [
+    "0x4366c6e8"
+   ],
+   "abs_ptrs": [],
+   "viva": true
+  },
+  {
+   "addr": "0x43c80ff4",
+   "text": "[TP_R]: ERR. osal_unreg_msg_queue_cb. err=0x%x, L=%d",
+   "token": "[TP_R]",
+   "pic_refs": [
+    "0x4366c7ba"
+   ],
+   "funcs": [
+    "0x4366c6e8"
+   ],
+   "abs_ptrs": [],
+   "viva": true
+  },
+  {
+   "addr": "0x43c81029",
+   "text": "[TP_R]: ERR. osal_free_timer. err=0x%x, L=%d",
+   "token": "[TP_R]",
+   "pic_refs": [
+    "0x4366c802"
+   ],
+   "funcs": [
+    "0x4366c6e8"
+   ],
+   "abs_ptrs": [],
+   "viva": true
+  },
+  {
+   "addr": "0x43c81056",
+   "text": "[TP_R]: ERR. osal_rcv_msg. err=0x%x, L=%d",
+   "token": "[TP_R]",
+   "pic_refs": [
+    "0x4366c88a"
+   ],
+   "funcs": [
+    "0x4366c840"
+   ],
+   "abs_ptrs": [],
+   "viva": true
+  },
+  {
+   "addr": "0x43c81080",
+   "text": "[TP_R]: ERR. osal_set_timer. err=%x, L=%d",
+   "token": "[TP_R]",
+   "pic_refs": [
+    "0x4366ca22"
+   ],
+   "funcs": [
+    "0x4366c978"
+   ],
+   "abs_ptrs": [],
+   "viva": true
+  },
+  {
+   "addr": "0x43c810aa",
+   "text": "[TP_R]: ERR. unkown tp_type. tp_type=0x%x, L=%d",
+   "token": "[TP_R]",
+   "pic_refs": [
+    "0x4366ca50"
+   ],
+   "funcs": [
+    "0x4366c978"
+   ],
+   "abs_ptrs": [],
+   "viva": true
+  },
+  {
+   "addr": "0x43c810da",
+   "text": "[TP_R]: ERR. unknown cmd. cmd=0x%x, L=%d",
+   "token": "[TP_R]",
+   "pic_refs": [
+    "0x4366cad2"
+   ],
+   "funcs": [
+    "0x4366ca92"
+   ],
+   "abs_ptrs": [],
+   "viva": true
+  },
+  {
+   "addr": "0x43c81103",
+   "text": "[TP_R]: ERR. osal_valloc_msg. err=0x%x, L=%d",
+   "token": "[TP_R]",
+   "pic_refs": [],
+   "funcs": [],
+   "abs_ptrs": [],
+   "viva": false
+  },
+  {
+   "addr": "0x43c81130",
+   "text": "[TP_R]: <Water> key_code=0x%08x, xy=0x%08x, status=0x%08x, ex_status=0x%08x, ex_info=0x%08x",
+   "token": "[TP_R]",
+   "pic_refs": [],
+   "funcs": [],
+   "abs_ptrs": [],
+   "viva": false
+  },
+  {
+   "addr": "0x43c8118c",
+   "text": "[TP R] <Water> key_code=%08x, xy=%08x, status=%08x, ex_status=%08x, ex_info=%08x",
+   "token": "[TP R]",
+   "pic_refs": [],
+   "funcs": [],
+   "abs_ptrs": [],
+   "viva": false
+  },
+  {
+   "addr": "0x43c811dd",
+   "text": "[TP_R]: key_code=0x%08x, xy=0x%08x, status=0x%08x, ex_status=0x%08x, ex_info=0x%08x",
+   "token": "[TP_R]",
+   "pic_refs": [],
+   "funcs": [],
+   "abs_ptrs": [],
+   "viva": false
+  },
+  {
+   "addr": "0x43c81231",
+   "text": "[TP R] key_code=%08x, xy=%08x, status=%08x, ex_status=%08x, ex_info=%08x",
+   "token": "[TP R]",
+   "pic_refs": [],
+   "funcs": [],
+   "abs_ptrs": [],
+   "viva": false
+  },
+  {
+   "addr": "0x43c8127d",
+   "text": "[TP_R]: boot_init_tp come",
+   "token": "[TP_R]",
+   "pic_refs": [
+    "0x4366cb14"
+   ],
+   "funcs": [
+    "0x4366caf4"
+   ],
+   "abs_ptrs": [],
+   "viva": true
+  },
+  {
+   "addr": "0x43c81297",
+   "text": "[TP_R]: ERR. read size error. size=0x%x, L=%d",
+   "token": "[TP_R]",
+   "pic_refs": [
+    "0x4366cb56",
+    "0x4366cc9e"
+   ],
+   "funcs": [
+    "0x4366caf4"
+   ],
+   "abs_ptrs": [],
+   "viva": true
+  },
+  {
+   "addr": "0x43c812c5",
+   "text": "[TP_R]: ERR. osal_alloc_timer. err=0x%x, L=%d",
+   "token": "[TP_R]",
+   "pic_refs": [
+    "0x4366cc1c"
+   ],
+   "funcs": [
+    "0x4366caf4"
+   ],
+   "abs_ptrs": [],
+   "viva": true
+  },
+  {
+   "addr": "0x43c812f3",
+   "text": "[TP_R]: ERR. osal_reg_sync_msg_queue_cb. err=0x%x, L=%d",
+   "token": "[TP_R]",
+   "pic_refs": [
+    "0x4366cc56"
+   ],
+   "funcs": [
+    "0x4366caf4"
+   ],
+   "abs_ptrs": [],
+   "viva": true
+  }
+ ],
+ "contadores": {
+  "n_cadenas_TP_R": 18,
+  "n_cadenas_TP_espacio": 3,
+  "n_cadenas_totales": 21,
+  "n_vivas": 14,
+  "n_muertas": 7,
+  "n_sitios_pic": 20,
+  "n_funciones": 8
+ },
+ "mapa_funcion_traza": {
+  "0x4366c388": [
+   {
+    "site": "0x4366c3b0",
+    "text": "[TP_R]: ERR. osal_try_valloc_msg. err=0x%x, L=%d",
+    "cadena": "0x43c80f23"
+   },
+   {
+    "site": "0x4366c3e2",
+    "text": "[TP_R]: ERR. osal_snd_msg. err=0x%x, L=%d",
+    "cadena": "0x43c80f54"
+   }
+  ],
+  "0x4366c568": [
+   {
+    "site": "0x4366c5a0",
+    "text": "[TP_R]: ERR. osal_try_valloc_msg. err=0x%x, L=%d",
+    "cadena": "0x43c80f23"
+   },
+   {
+    "site": "0x4366c5f4",
+    "text": "[TP_R]: ERR. osal_snd_msg. err=0x%x, L=%d",
+    "cadena": "0x43c80f54"
+   }
+  ],
+  "0x4366c624": [
+   {
+    "site": "0x4366c65c",
+    "text": "[TP_R]: ERR. osal_try_valloc_msg. err=0x%x, L=%d",
+    "cadena": "0x43c80f23"
+   },
+   {
+    "site": "0x4366c698",
+    "text": "[TP_R]: ERR. osal_snd_msg. err=0x%x, L=%d",
+    "cadena": "0x43c80f54"
+   },
+   {
+    "site": "0x4366c6cc",
+    "text": "[TP_R]: ERR. osal_free_msg. err=0x%x, L=%d",
+    "cadena": "0x43c80faf"
+   }
+  ],
+  "0x4366c840": [
+   {
+    "site": "0x4366c8bc",
+    "text": "[TP_R]: ERR. osal_free_msg. err=0x%x, L=%d",
+    "cadena": "0x43c80faf"
+   },
+   {
+    "site": "0x4366c88a",
+    "text": "[TP_R]: ERR. osal_rcv_msg. err=0x%x, L=%d",
+    "cadena": "0x43c81056"
+   }
+  ],
+  "0x4366c6e8": [
+   {
+    "site": "0x4366c704",
+    "text": "[TP_R]: boot_exit_tp come",
+    "cadena": "0x43c80fda"
+   },
+   {
+    "site": "0x4366c7ba",
+    "text": "[TP_R]: ERR. osal_unreg_msg_queue_cb. err=0x%x, L=%d",
+    "cadena": "0x43c80ff4"
+   },
+   {
+    "site": "0x4366c802",
+    "text": "[TP_R]: ERR. osal_free_timer. err=0x%x, L=%d",
+    "cadena": "0x43c81029"
+   }
+  ],
+  "0x4366c978": [
+   {
+    "site": "0x4366ca22",
+    "text": "[TP_R]: ERR. osal_set_timer. err=%x, L=%d",
+    "cadena": "0x43c81080"
+   },
+   {
+    "site": "0x4366ca50",
+    "text": "[TP_R]: ERR. unkown tp_type. tp_type=0x%x, L=%d",
+    "cadena": "0x43c810aa"
+   }
+  ],
+  "0x4366ca92": [
+   {
+    "site": "0x4366cad2",
+    "text": "[TP_R]: ERR. unknown cmd. cmd=0x%x, L=%d",
+    "cadena": "0x43c810da"
+   }
+  ],
+  "0x4366caf4": [
+   {
+    "site": "0x4366cb14",
+    "text": "[TP_R]: boot_init_tp come",
+    "cadena": "0x43c8127d"
+   },
+   {
+    "site": "0x4366cb56",
+    "text": "[TP_R]: ERR. read size error. size=0x%x, L=%d",
+    "cadena": "0x43c81297"
+   },
+   {
+    "site": "0x4366cc9e",
+    "text": "[TP_R]: ERR. read size error. size=0x%x, L=%d",
+    "cadena": "0x43c81297"
+   },
+   {
+    "site": "0x4366cc1c",
+    "text": "[TP_R]: ERR. osal_alloc_timer. err=0x%x, L=%d",
+    "cadena": "0x43c812c5"
+   },
+   {
+    "site": "0x4366cc56",
+    "text": "[TP_R]: ERR. osal_reg_sync_msg_queue_cb. err=0x%x, L=%d",
+    "cadena": "0x43c812f3"
+   }
+  ]
+ },
+ "colas_osal_gid": {
+  "cola_de_log_del_firmware_0x4366c300": "0x008f0139",
+  "cola_auxiliar_0x4366c388": "0x005c011c",
+  "cola_propia_del_modulo_TP_osal_rcv_msg": "0x01010227",
+  "cola_propia_del_modulo_TP_reg_sync_cb": "0x01010227",
+  "cola_en_boot_init_tp": "0x00910040",
+  "cola_en_boot_exit_tp": "0x00910040"
+ },
+ "familia_loggers_s151": {
+  "reporter_TP": "0x4366c300",
+  "miembro_de_la_familia_laxa": true,
+  "prologo": "0x4366c300 push {r3}; 0x4366c302 movs r3,#0; push.w {...}; 0x4366c318 movs r2,#0x9a",
+  "contadores": {
+   "A6000": {
+    "laxa_push_r3_movs_r2_0x9a": 561,
+    "estricta_push_r3_seguido_de_movs_r2_0x9a": 43
+   },
+   "A7S": {
+    "laxa_push_r3_movs_r2_0x9a": 0,
+    "estricta_push_r3_seguido_de_movs_r2_0x9a": 0
+   },
+   "A6300": {
+    "laxa_push_r3_movs_r2_0x9a": 2,
+    "estricta_push_r3_seguido_de_movs_r2_0x9a": 0
+   }
+  }
+ },
+ "diferencial": {
+  "A7S": {
+   "n_cadenas": 3,
+   "cadenas": [
+    {
+     "addr": "0x43c838e4",
+     "text": "[TP R] debug_num = %02x",
+     "pic_refs": [],
+     "abs_ptrs": [],
+     "viva": false
+    },
+    {
+     "addr": "0x43c838fc",
+     "text": "[TP R] <Water> key_code=%08x, xy=%08x, status=%08x, ex_status=%08x, ex_info=%08x",
+     "pic_refs": [],
+     "abs_ptrs": [],
+     "viva": false
+    },
+    {
+     "addr": "0x43c8394d",
+     "text": "[TP R] key_code=%08x, xy=%08x, status=%08x, ex_status=%08x, ex_info=%08x",
+     "pic_refs": [],
+     "abs_ptrs": [],
+     "viva": false
+    }
+   ]
+  },
+  "A6300": {
+   "n_cadenas": 4,
+   "cadenas": [
+    {
+     "addr": "0x43d8337f",
+     "text": "[TP R] debug_num = %02x",
+     "pic_refs": [],
+     "abs_ptrs": [],
+     "viva": false
+    },
+    {
+     "addr": "0x43d83397",
+     "text": "[TP R] <Water> key_code=%08x, xy=%08x, status=%08x, ex_status=%08x, ex_info=%08x",
+     "pic_refs": [],
+     "abs_ptrs": [],
+     "viva": false
+    },
+    {
+     "addr": "0x43d833e8",
+     "text": "[TP R] key_code=%08x, xy=%08x, status=%08x, ex_info=%08x",
+     "pic_refs": [],
+     "abs_ptrs": [],
+     "viva": false
+    },
+    {
+     "addr": "0x43d83421",
+     "text": "[TP R] key_code=%08x, xy=%08x, status=%08x, ex_status=%08x, ex_info=%08x",
+     "pic_refs": [],
+     "abs_ptrs": [],
+     "viva": false
+    }
+   ]
+  },
+  "nucleos_por_etiqueta": {
+   "A7S": {
+    "ERR. osal_snd_msg. err=0x%x, L=%d": [
+     {
+      "addr": "0x43c73764",
+      "text": "[DMMYSIOCOM]ERR. osal_snd_msg. err=0x%x, L=%d"
+     }
+    ],
+    "[TP R] debug_num = %02x": [
+     {
+      "addr": "0x43c838e4",
+      "text": "[TP R] debug_num = %02x"
+     }
+    ],
+    "ERR. osal_free_msg. err=0x%x, L=%d": [
+     {
+      "addr": "0x43c73792",
+      "text": "[DMMYSIOCOM]ERR. osal_free_msg. err=0x%x, L=%d"
+     }
+    ],
+    "[TP R] <Water> key_code=%08x, xy=%08x, status=%08x, ex_status=%08x, ex_info=%08x": [
+     {
+      "addr": "0x43c838fc",
+      "text": "[TP R] <Water> key_code=%08x, xy=%08x, status=%08x, ex_status=%08x, ex_info=%08x"
+     }
+    ],
+    "[TP R] key_code=%08x, xy=%08x, status=%08x, ex_status=%08x, ex_info=%08x": [
+     {
+      "addr": "0x43c8394d",
+      "text": "[TP R] key_code=%08x, xy=%08x, status=%08x, ex_status=%08x, ex_info=%08x"
+     }
+    ]
+   },
+   "A6300": {
+    "ERR. osal_snd_msg. err=0x%x, L=%d": [
+     {
+      "addr": "0x43d7296b",
+      "text": "[DMMYSIOCOM]ERR. osal_snd_msg. err=0x%x, L=%d"
+     }
+    ],
+    "[TP R] debug_num = %02x": [
+     {
+      "addr": "0x43d8337f",
+      "text": "[TP R] debug_num = %02x"
+     }
+    ],
+    "ERR. osal_free_msg. err=0x%x, L=%d": [
+     {
+      "addr": "0x43d72999",
+      "text": "[DMMYSIOCOM]ERR. osal_free_msg. err=0x%x, L=%d"
+     }
+    ],
+    "[TP R] <Water> key_code=%08x, xy=%08x, status=%08x, ex_status=%08x, ex_info=%08x": [
+     {
+      "addr": "0x43d83397",
+      "text": "[TP R] <Water> key_code=%08x, xy=%08x, status=%08x, ex_status=%08x, ex_info=%08x"
+     }
+    ],
+    "[TP R] key_code=%08x, xy=%08x, status=%08x, ex_status=%08x, ex_info=%08x": [
+     {
+      "addr": "0x43d83421",
+      "text": "[TP R] key_code=%08x, xy=%08x, status=%08x, ex_status=%08x, ex_info=%08x"
+     }
+    ]
+   }
+  }
+ }
+}

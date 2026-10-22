@@ -1,0 +1,491 @@
+{
+ "hito": "S151",
+ "titulo": "el modulo [PANDA] (10 trazas) del subsistema de lente de la A6000 fw3.21",
+ "base": {
+  "convención": "vaddr = 0x43541000 + file_offset",
+  "blob_a6000": "analysis/rea-independent/input/av-cam.bin",
+  "blob_a7s": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+  "blob_a6300": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin"
+ },
+ "regla_referencias": "estricta (analysis/s106_imaging_cap/scan_pic_refs_strict.py)",
+ "cadenas": [
+  {
+   "vaddr": 1137288601,
+   "texto": "[PANDA]: Panda_SendMessage: Pre1 osal_valloc_msg error!\n"
+  },
+  {
+   "vaddr": 1137288658,
+   "texto": "[PANDA]: Panda_SendMessage: Pre2 osal_valloc_msg error!\n"
+  },
+  {
+   "vaddr": 1137288715,
+   "texto": "[PANDA]: Panda_SendMessage: Post1 osal_valloc_msg error!\n"
+  },
+  {
+   "vaddr": 1137288773,
+   "texto": "[PANDA]: Panda_SendMessage: Post2 osal_valloc_msg error!\n"
+  },
+  {
+   "vaddr": 1137288831,
+   "texto": "[PANDA]: Panda_SendMessage: Async osal_valloc_msg error!\n"
+  },
+  {
+   "vaddr": 1137288889,
+   "texto": "[PANDA]: Panda_SendMessage: Pre1 osal_snd_msg error!\n"
+  },
+  {
+   "vaddr": 1137288943,
+   "texto": "[PANDA]: Panda_SendMessage: Pre2 osal_snd_msg error!\n"
+  },
+  {
+   "vaddr": 1137288997,
+   "texto": "[PANDA]: Panda_SendMessage: Post1 osal_snd_msg error!\n"
+  },
+  {
+   "vaddr": 1137289052,
+   "texto": "[PANDA]: Panda_SendMessage: Post2 osal_snd_msg error!\n"
+  },
+  {
+   "vaddr": 1137289107,
+   "texto": "[PANDA]: Panda_SendMessage: Async osal_snd_msg error!\n"
+  }
+ ],
+ "referencias": {
+  "0x43c9a599": [
+   {
+    "sitio": 1131443274,
+    "ldr": 1131443266,
+    "pool": 1131443812,
+    "valor_pool": 5845323
+   },
+   {
+    "sitio": 1131446374,
+    "ldr": 1131446366,
+    "pool": 1131446660,
+    "valor_pool": 5842223
+   }
+  ],
+  "0x43c9a5d2": [
+   {
+    "sitio": 1131443294,
+    "ldr": 1131443286,
+    "pool": 1131443816,
+    "valor_pool": 5845360
+   },
+   {
+    "sitio": 1131446584,
+    "ldr": 1131446576,
+    "pool": 1131446708,
+    "valor_pool": 5842070
+   }
+  ],
+  "0x43c9a60b": [
+   {
+    "sitio": 1131443312,
+    "ldr": 1131443304,
+    "pool": 1131443820,
+    "valor_pool": 5845399
+   }
+  ],
+  "0x43c9a645": [
+   {
+    "sitio": 1131443330,
+    "ldr": 1131443322,
+    "pool": 1131443824,
+    "valor_pool": 5845439
+   },
+   {
+    "sitio": 1131446942,
+    "ldr": 1131446934,
+    "pool": 1131447216,
+    "valor_pool": 5841827
+   },
+   {
+    "sitio": 1131447140,
+    "ldr": 1131447132,
+    "pool": 1131447264,
+    "valor_pool": 5841629
+   }
+  ],
+  "0x43c9a67f": [
+   {
+    "sitio": 1131443348,
+    "ldr": 1131443340,
+    "pool": 1131443828,
+    "valor_pool": 5845479
+   },
+   {
+    "sitio": 1131447632,
+    "ldr": 1131447624,
+    "pool": 1131447724,
+    "valor_pool": 5841195
+   }
+  ],
+  "0x43c9a6b9": [
+   {
+    "sitio": 1131446344,
+    "ldr": 1131446334,
+    "pool": 1131446656,
+    "valor_pool": 5842541
+   }
+  ],
+  "0x43c9a6ef": [
+   {
+    "sitio": 1131446554,
+    "ldr": 1131446544,
+    "pool": 1131446704,
+    "valor_pool": 5842385
+   }
+  ],
+  "0x43c9a725": [
+   {
+    "sitio": 1131446912,
+    "ldr": 1131446902,
+    "pool": 1131447212,
+    "valor_pool": 5842081
+   }
+  ],
+  "0x43c9a75c": [
+   {
+    "sitio": 1131447110,
+    "ldr": 1131447100,
+    "pool": 1131447260,
+    "valor_pool": 5841938
+   }
+  ],
+  "0x43c9a793": [
+   {
+    "sitio": 1131447602,
+    "ldr": 1131447592,
+    "pool": 1131447720,
+    "valor_pool": 5841501
+   }
+  ]
+ },
+ "funcion_de_cadena": {
+  "0x43c9a599": [
+   {
+    "funcion": "F1_init",
+    "inicio": 1131443148,
+    "fin": 1131443752,
+    "sitio": 1131443274
+   },
+   {
+    "funcion": "F4_pre",
+    "inicio": 1131446156,
+    "fin": 1131446600,
+    "sitio": 1131446374
+   }
+  ],
+  "0x43c9a5d2": [
+   {
+    "funcion": "F1_init",
+    "inicio": 1131443148,
+    "fin": 1131443752,
+    "sitio": 1131443294
+   },
+   {
+    "funcion": "F4_pre",
+    "inicio": 1131446156,
+    "fin": 1131446600,
+    "sitio": 1131446584
+   }
+  ],
+  "0x43c9a60b": [
+   {
+    "funcion": "F1_init",
+    "inicio": 1131443148,
+    "fin": 1131443752,
+    "sitio": 1131443312
+   }
+  ],
+  "0x43c9a645": [
+   {
+    "funcion": "F1_init",
+    "inicio": 1131443148,
+    "fin": 1131443752,
+    "sitio": 1131443330
+   },
+   {
+    "funcion": "F5_post",
+    "inicio": 1131446712,
+    "fin": 1131447156,
+    "sitio": 1131446942
+   },
+   {
+    "funcion": "F5_post",
+    "inicio": 1131446712,
+    "fin": 1131447156,
+    "sitio": 1131447140
+   }
+  ],
+  "0x43c9a67f": [
+   {
+    "funcion": "F1_init",
+    "inicio": 1131443148,
+    "fin": 1131443752,
+    "sitio": 1131443348
+   },
+   {
+    "funcion": "F6_async",
+    "inicio": 1131447268,
+    "fin": 1131447648,
+    "sitio": 1131447632
+   }
+  ],
+  "0x43c9a6b9": [
+   {
+    "funcion": "F4_pre",
+    "inicio": 1131446156,
+    "fin": 1131446600,
+    "sitio": 1131446344
+   }
+  ],
+  "0x43c9a6ef": [
+   {
+    "funcion": "F4_pre",
+    "inicio": 1131446156,
+    "fin": 1131446600,
+    "sitio": 1131446554
+   }
+  ],
+  "0x43c9a725": [
+   {
+    "funcion": "F5_post",
+    "inicio": 1131446712,
+    "fin": 1131447156,
+    "sitio": 1131446912
+   }
+  ],
+  "0x43c9a75c": [
+   {
+    "funcion": "F5_post",
+    "inicio": 1131446712,
+    "fin": 1131447156,
+    "sitio": 1131447110
+   }
+  ],
+  "0x43c9a793": [
+   {
+    "funcion": "F6_async",
+    "inicio": 1131447268,
+    "fin": 1131447648,
+    "sitio": 1131447602
+   }
+  ]
+ },
+ "funciones_emisoras": {
+  "F1_init": {
+   "inicio": 1131443148,
+   "fin": 1131443752
+  },
+  "F4_pre": {
+   "inicio": 1131446156,
+   "fin": 1131446600
+  },
+  "F5_post": {
+   "inicio": 1131446712,
+   "fin": 1131447156
+  },
+  "F6_async": {
+   "inicio": 1131447268,
+   "fin": 1131447648
+  }
+ },
+ "helper_reporter": {
+  "vaddr": 1131442980,
+  "nota": "formatea el texto con vsnprintf 0x439c5004 en un mensaje OSAL de 0x9a B (GID 0x008f0139) y lo envia con osal_snd_msg 0x4356120c"
+ },
+ "llamadas_al_reporter": [
+  1131443276,
+  1131443296,
+  1131443314,
+  1131443332,
+  1131443350,
+  1131446376,
+  1131446590,
+  1131446944,
+  1131447146,
+  1131447638
+ ],
+ "canales": {
+  "Pre1": [
+   1137288601,
+   1137288889
+  ],
+  "Pre2": [
+   1137288658,
+   1137288943
+  ],
+  "Post1": [
+   1137288715,
+   1137288997
+  ],
+  "Post2": [
+   1137288773,
+   1137289052
+  ],
+  "Async": [
+   1137288831,
+   1137289107
+  ]
+ },
+ "ids_osal": {
+  "colas_abiertas": [
+   16318652,
+   16318584,
+   16318677,
+   16318865,
+   16318852,
+   16319776,
+   16319777
+  ],
+  "gid_mensajes_lente": 7602199,
+  "gid_log": 9371961,
+  "id_log_panda": 22,
+  "tam_mensaje_log": 154,
+  "tam_buffer_lente": 64,
+  "id_log_auxiliar": 9502786
+ },
+ "tabla_global": 1140977380,
+ "slots_buffer_por_canal": {
+  "Pre1": 30064,
+  "Pre2": 17028,
+  "Post1": 10580,
+  "Post2": 29520,
+  "Async": 31860
+ },
+ "slot_fuente_por_canal": {
+  "Pre1": 5152,
+  "Pre2": 18736,
+  "Post1": 7440,
+  "Post2": 25160,
+  "Async": 23944
+ },
+ "callers": {
+  "F1_init": {
+   "llamador": 1131550244,
+   "sitio_llamada": 1131550270,
+   "funcion": "void Camera::Lens::Initialize(UPM_BOOT_FACTOR*)",
+   "cadena_nombre": 1137290830
+  },
+  "F4_pre": {
+   "llamador": 1131550712,
+   "sitio_llamada": 1131550744,
+   "llamador_2": 1132019454,
+   "cadena_contexto": 1137326672
+  },
+  "F5_post": {
+   "llamador": 1131550784,
+   "sitio_llamada": 1131550792,
+   "llamador_2": 1132004942,
+   "cadena_contexto": 1137324393
+  },
+  "F6_async": {
+   "llamador": 1131367708,
+   "sitio_llamada": 1131367796
+  }
+ },
+ "base_textual_panda": {
+  "nombre_funcion_en_las_trazas": "Panda_SendMessage",
+  "parametros_iris_analog_drive": [
+   {
+    "nombre": "uc_PandaADErrorOpen",
+    "vaddr": 1137283687,
+    "puntero_tabla": 1140768260,
+    "direccion_variable": 1138795650
+   },
+   {
+    "nombre": "uc_PandaADErrorClose",
+    "vaddr": 1137283707,
+    "puntero_tabla": 1140768276,
+    "direccion_variable": 1139297412
+   }
+  ],
+  "clases_rtti_panda": 0,
+  "ficheros_panda": 0,
+  "cadena_independiente_PANDA": 0,
+  "nota": "No hay RTTI, ni nombre de fichero, ni expansion de la sigla en ningun byte: la sigla se deja SIN DESARROLLAR."
+ },
+ "diferencial": {
+  "a6000_fw321": {
+   "ocurrencias_token": 10,
+   "textos_internos_presentes": 10,
+   "textos_internos_totales": 10,
+   "panda_sendmessage": 10,
+   "uc_PandaADErrorOpen": 1,
+   "uc_PandaADErrorClose": 1,
+   "Camera::Lens::ODL": 15,
+   "LENS_YC": 21,
+   "patron_reporter_push_r3_movs_r2_0x9a": 43,
+   "apariciones_cada_id_cola": {
+    "0x00f900bc": 1,
+    "0x00f90078": 1,
+    "0x00f900d5": 1,
+    "0x00f90191": 1,
+    "0x00f90184": 1,
+    "0x00f90520": 1,
+    "0x00f90521": 1
+   }
+  },
+  "a7s_fw320": {
+   "ocurrencias_token": 0,
+   "textos_internos_presentes": 0,
+   "textos_internos_totales": 10,
+   "panda_sendmessage": 0,
+   "uc_PandaADErrorOpen": 1,
+   "uc_PandaADErrorClose": 1,
+   "Camera::Lens::ODL": 15,
+   "LENS_YC": 0,
+   "patron_reporter_push_r3_movs_r2_0x9a": 0,
+   "apariciones_cada_id_cola": {
+    "0x00f900bc": 1,
+    "0x00f90078": 1,
+    "0x00f900d5": 1,
+    "0x00f90191": 1,
+    "0x00f90184": 1,
+    "0x00f90520": 1,
+    "0x00f90521": 1
+   }
+  },
+  "a6300_fw201": {
+   "ocurrencias_token": 0,
+   "textos_internos_presentes": 0,
+   "textos_internos_totales": 10,
+   "panda_sendmessage": 0,
+   "uc_PandaADErrorOpen": 1,
+   "uc_PandaADErrorClose": 1,
+   "Camera::Lens::ODL": 15,
+   "LENS_YC": 0,
+   "patron_reporter_push_r3_movs_r2_0x9a": 0,
+   "apariciones_cada_id_cola": {
+    "0x00f900bc": 1,
+    "0x00f90078": 1,
+    "0x00f900d5": 1,
+    "0x00f90191": 1,
+    "0x00f90184": 1,
+    "0x00f90520": 1,
+    "0x00f90521": 1
+   }
+  }
+ },
+ "equivalencias_otros_firmwares": {
+  "F1_init": {
+   "a6000_fw321": 1131443148,
+   "a7s_fw320": 1131583760,
+   "a6300_fw201": 1131825360
+  },
+  "F4_pre": {
+   "a6000_fw321": 1131446156,
+   "a7s_fw320": 1131586646
+  },
+  "F5_post": {
+   "a6000_fw321": 1131446712,
+   "a7s_fw320": 1131587256
+  },
+  "F6_async": {
+   "a6000_fw321": 1131447268,
+   "a7s_fw320": 1131587720
+  }
+ }
+}

@@ -1,0 +1,67 @@
+{
+  "milestone": "S161",
+  "firmware_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "base": "0x43541000",
+  "state_got_slot": {
+    "address": "0x4401f990",
+    "bytes_hex": "022df743",
+    "value_le": "0x43f72d02"
+  },
+  "regions": [
+    {
+      "address": "0x4384cb02",
+      "length": 16,
+      "file_offset": "0x30bb02",
+      "bytes_hex": "dff89c3458f8033008930146002f47d1",
+      "instructions": [
+        {
+          "address": "0x4384cb02",
+          "text": "ldr.w r3, [pc, #0x49c]"
+        },
+        {
+          "address": "0x4384cb06",
+          "text": "ldr.w r3, [r8, r3]"
+        },
+        {
+          "address": "0x4384cb0a",
+          "text": "str r3, [sp, #0x20]"
+        },
+        {
+          "address": "0x4384cb0c",
+          "text": "mov r1, r0"
+        },
+        {
+          "address": "0x4384cb0e",
+          "text": "cmp r7, #0"
+        },
+        {
+          "address": "0x4384cb10",
+          "text": "bne #0x4384cba2"
+        }
+      ]
+    },
+    {
+      "address": "0x4384cfa0",
+      "length": 4,
+      "file_offset": "0x30bfa0",
+      "bytes_hex": "ac0a0000",
+      "instructions": [
+        {
+          "address": "0x4384cfa0",
+          "text": "lsrs r4, r5, #0xa"
+        },
+        {
+          "address": "0x4384cfa2",
+          "text": "movs r0, r0"
+        }
+      ]
+    }
+  ],
+  "rea_evidence_ids": {
+    "procedure": "ev_1e8e048eb0f0141cf4d85e3688d89fe80dba6b0653e5ad1a7171f615be7c3de4",
+    "got_load_instruction": "ev_d4025f0b945b5cb7b78c5d9cc83524a9b740a27a939c671a69cd8d903f897061",
+    "spill_instruction": "ev_92b61d8fa023614fa3a5d727782551016292e79dbeeec8e093567b03cf125a06",
+    "body_references": "ev_3303b18d85c46c4e2f17bbd020bc6d05f0c6ea1dcb7fee814e779e672f12ab01"
+  },
+  "scope_limit": "The DATA/PARAM edge at the xref carries the state pointer; the actual instruction writes stack. This body-local result does not exclude other writers."
+}

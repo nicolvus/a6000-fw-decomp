@@ -1,0 +1,1867 @@
+{
+ "milestone": "S143",
+ "modulo": "[CAM_UTIL_ADJ]",
+ "firmware": "A6000 fw3.21",
+ "convencion": "vaddr = 0x43541000 + file_offset",
+ "regla_pic": "estricta (canonica) - analysis/s106_imaging_cap/scan_pic_refs_strict.py",
+ "contadores": {
+  "cadenas": 22,
+  "cadenas_con_referencia": 22,
+  "sitios": 22,
+  "funciones": 3
+ },
+ "cadenas": [
+  {
+   "vaddr": "0x43ccdcee",
+   "offset": "0x0078ccee",
+   "text": "[CAM_UTIL_ADJ]:  -- Table Write",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x439007f8",
+     "ldr": "0x439007f0",
+     "pool": "0x003cd4f2",
+     "dest": "0x43ccdcee",
+     "verificado_a_mano": true
+    }
+   ],
+   "func": "0x439007b0"
+  },
+  {
+   "vaddr": "0x43ccdd0e",
+   "offset": "0x0078cd0e",
+   "text": "[CAM_UTIL_ADJ]:  -- :[Size] %08x [Orgdata] %x",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x4390080e",
+     "ldr": "0x4390080c",
+     "pool": "0x003cd4fc",
+     "dest": "0x43ccdd0e",
+     "verificado_a_mano": true
+    }
+   ],
+   "func": "0x439007b0"
+  },
+  {
+   "vaddr": "0x43ccdd3c",
+   "offset": "0x0078cd3c",
+   "text": "[CAM_UTIL_ADJ]:  -- :[Wdata] %x",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43900824",
+     "ldr": "0x43900822",
+     "pool": "0x003cd514",
+     "dest": "0x43ccdd3c",
+     "verificado_a_mano": true
+    }
+   ],
+   "func": "0x439007b0"
+  },
+  {
+   "vaddr": "0x43ccdd5c",
+   "offset": "0x0078cd5c",
+   "text": "[CAM_UTIL_ADJ]:  -- Table Read",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43900864",
+     "ldr": "0x4390085c",
+     "pool": "0x003cd4f4",
+     "dest": "0x43ccdd5c",
+     "verificado_a_mano": true
+    }
+   ],
+   "func": "0x439007b0"
+  },
+  {
+   "vaddr": "0x43ccdd7b",
+   "offset": "0x0078cd7b",
+   "text": "[CAM_UTIL_ADJ]:  -- :[Size] %08x [Rdata] %x",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43900878",
+     "ldr": "0x43900876",
+     "pool": "0x003cd4ff",
+     "dest": "0x43ccdd7b",
+     "verificado_a_mano": true
+    }
+   ],
+   "func": "0x439007b0"
+  },
+  {
+   "vaddr": "0x43ccdda7",
+   "offset": "0x0078cda7",
+   "text": "[CAM_UTIL_ADJ]:  -- :[Orgdata] %x",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x4390088e",
+     "ldr": "0x4390088c",
+     "pool": "0x003cd515",
+     "dest": "0x43ccdda7",
+     "verificado_a_mano": true
+    }
+   ],
+   "func": "0x439007b0"
+  },
+  {
+   "vaddr": "0x43ccddc9",
+   "offset": "0x0078cdc9",
+   "text": "[CAM_UTIL_ADJ]: Senser RAM Access: CMD %x, Block %x",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43900a6a",
+     "ldr": "0x43900a68",
+     "pool": "0x003cd35b",
+     "dest": "0x43ccddc9",
+     "verificado_a_mano": true
+    }
+   ],
+   "func": "0x43900a24"
+  },
+  {
+   "vaddr": "0x43ccddfd",
+   "offset": "0x0078cdfd",
+   "text": "[CAM_UTIL_ADJ]:   : [Mode]:%x, [ResCode]:%x, [StepNum]:%x",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43900a84",
+     "ldr": "0x43900a82",
+     "pool": "0x003cd375",
+     "dest": "0x43ccddfd",
+     "verificado_a_mano": true
+    }
+   ],
+   "func": "0x43900a24"
+  },
+  {
+   "vaddr": "0x43ccde37",
+   "offset": "0x0078ce37",
+   "text": "[CAM_UTIL_ADJ]:   : [Adr]:%08x, [BSize]:%08x,[Size]:%08x",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43900a9e",
+     "ldr": "0x43900a9c",
+     "pool": "0x003cd395",
+     "dest": "0x43ccde37",
+     "verificado_a_mano": true
+    }
+   ],
+   "func": "0x43900a24"
+  },
+  {
+   "vaddr": "0x43ccde70",
+   "offset": "0x0078ce70",
+   "text": "[CAM_UTIL_ADJ]:   : [D0]:%04x, [D1]:%04x,[D2]:%04x, [D3]:%04x",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43900abc",
+     "ldr": "0x43900aba",
+     "pool": "0x003cd3b0",
+     "dest": "0x43ccde70",
+     "verificado_a_mano": true
+    }
+   ],
+   "func": "0x43900a24"
+  },
+  {
+   "vaddr": "0x43ccdeae",
+   "offset": "0x0078ceae",
+   "text": "[CAM_UTIL_ADJ]:   : [D4]:%04x, [D5]:%04x,[D6]:%04x, [D7]:%04x",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43900ae2",
+     "ldr": "0x43900ae0",
+     "pool": "0x003cd3c8",
+     "dest": "0x43ccdeae",
+     "verificado_a_mano": true
+    }
+   ],
+   "func": "0x43900a24"
+  },
+  {
+   "vaddr": "0x43ccdeec",
+   "offset": "0x0078ceec",
+   "text": "[CAM_UTIL_ADJ]:   : [Module ID]:%08x, [Offset]:%08x, [Size]:%08x",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43900af0",
+     "ldr": "0x43900ae8",
+     "pool": "0x003cd3f8",
+     "dest": "0x43ccdeec",
+     "verificado_a_mano": true
+    }
+   ],
+   "func": "0x43900a24"
+  },
+  {
+   "vaddr": "0x43ccdf2d",
+   "offset": "0x0078cf2d",
+   "text": "[CAM_UTIL_ADJ]: ---cam_adjcmd_handle_cb()---[CmdCode]:%04x",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43900b04",
+     "ldr": "0x43900b00",
+     "pool": "0x003cd425",
+     "dest": "0x43ccdf2d",
+     "verificado_a_mano": true
+    }
+   ],
+   "func": "0x43900a24"
+  },
+  {
+   "vaddr": "0x43ccdf68",
+   "offset": "0x0078cf68",
+   "text": "[CAM_UTIL_ADJ]:  For SensRamAcs[DataSize]%x",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43900b14",
+     "ldr": "0x43900b0c",
+     "pool": "0x003cd450",
+     "dest": "0x43ccdf68",
+     "verificado_a_mano": true
+    }
+   ],
+   "func": "0x43900a24"
+  },
+  {
+   "vaddr": "0x43ccdf94",
+   "offset": "0x0078cf94",
+   "text": "[CAM_UTIL_ADJ]:  For SensRamAcs[ModuleID]%x [Value]%x",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43900b26",
+     "ldr": "0x43900b1e",
+     "pool": "0x003cd46a",
+     "dest": "0x43ccdf94",
+     "verificado_a_mano": true
+    }
+   ],
+   "func": "0x43900a24"
+  },
+  {
+   "vaddr": "0x43ccdfca",
+   "offset": "0x0078cfca",
+   "text": "[CAM_UTIL_ADJ]:  [OriginalCmdCode ]:%04x",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43900b3c",
+     "ldr": "0x43900b3a",
+     "pool": "0x003cd48a",
+     "dest": "0x43ccdfca",
+     "verificado_a_mano": true
+    }
+   ],
+   "func": "0x43900a24"
+  },
+  {
+   "vaddr": "0x43ccdff3",
+   "offset": "0x0078cff3",
+   "text": "[CAM_UTIL_ADJ]:  [OriginalDataSize]:%04x",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43900b4e",
+     "ldr": "0x43900b4c",
+     "pool": "0x003cd4a1",
+     "dest": "0x43ccdff3",
+     "verificado_a_mano": true
+    }
+   ],
+   "func": "0x43900a24"
+  },
+  {
+   "vaddr": "0x43cce01c",
+   "offset": "0x0078d01c",
+   "text": "[CAM_UTIL_ADJ]:  [OriginalBDataSize]:%04x",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43900b60",
+     "ldr": "0x43900b5e",
+     "pool": "0x003cd4b8",
+     "dest": "0x43cce01c",
+     "verificado_a_mano": true
+    }
+   ],
+   "func": "0x43900a24"
+  },
+  {
+   "vaddr": "0x43cce046",
+   "offset": "0x0078d046",
+   "text": "[CAM_UTIL_ADJ]: ---Finish SENSER Infra Call Back Operation--- :%x",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43900bc6",
+     "ldr": "0x43900bbc",
+     "pool": "0x003cd47c",
+     "dest": "0x43cce046",
+     "verificado_a_mano": true
+    }
+   ],
+   "func": "0x43900a24"
+  },
+  {
+   "vaddr": "0x43cce088",
+   "offset": "0x0078d088",
+   "text": "[CAM_UTIL_ADJ]:     tsk_cam_adjctrl: begin. [Osal]%d",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43900c5e",
+     "ldr": "0x43900c58",
+     "pool": "0x003cd426",
+     "dest": "0x43cce088",
+     "verificado_a_mano": true
+    }
+   ],
+   "func": "0x43900c44"
+  },
+  {
+   "vaddr": "0x43cce0bd",
+   "offset": "0x0078d0bd",
+   "text": "[CAM_UTIL_ADJ]:     tsk_cam_adjctrl: rcv failed(%d).",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43900c86",
+     "ldr": "0x43900c7e",
+     "pool": "0x003cd433",
+     "dest": "0x43cce0bd",
+     "verificado_a_mano": true
+    }
+   ],
+   "func": "0x43900c44"
+  },
+  {
+   "vaddr": "0x43cce0f2",
+   "offset": "0x0078d0f2",
+   "text": "[CAM_UTIL_ADJ]:     tsk_cam_adjctrl: rcv cmd err(%x).",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43900d0a",
+     "ldr": "0x43900d02",
+     "pool": "0x003cd3e4",
+     "dest": "0x43cce0f2",
+     "verificado_a_mano": true
+    }
+   ],
+   "func": "0x43900c44"
+  }
+ ],
+ "funciones": [
+  {
+   "func": "0x439007b0",
+   "nombre": "cam_util_adj_table_rw (Table Write / Table Read)",
+   "n_trazas": 6,
+   "n_sitios": 6,
+   "vaddr_inicio": "0x439007b0",
+   "vaddr_fin": "0x439008AC",
+   "trazas": [
+    {
+     "site": "0x439007f8",
+     "vaddr": "0x43ccdcee",
+     "text": "[CAM_UTIL_ADJ]:  -- Table Write"
+    },
+    {
+     "site": "0x4390080e",
+     "vaddr": "0x43ccdd0e",
+     "text": "[CAM_UTIL_ADJ]:  -- :[Size] %08x [Orgdata] %x"
+    },
+    {
+     "site": "0x43900824",
+     "vaddr": "0x43ccdd3c",
+     "text": "[CAM_UTIL_ADJ]:  -- :[Wdata] %x"
+    },
+    {
+     "site": "0x43900864",
+     "vaddr": "0x43ccdd5c",
+     "text": "[CAM_UTIL_ADJ]:  -- Table Read"
+    },
+    {
+     "site": "0x43900878",
+     "vaddr": "0x43ccdd7b",
+     "text": "[CAM_UTIL_ADJ]:  -- :[Size] %08x [Rdata] %x"
+    },
+    {
+     "site": "0x4390088e",
+     "vaddr": "0x43ccdda7",
+     "text": "[CAM_UTIL_ADJ]:  -- :[Orgdata] %x"
+    }
+   ]
+  },
+  {
+   "func": "0x43900a24",
+   "nombre": "cam_adjcmd_handle_cb()",
+   "n_trazas": 13,
+   "n_sitios": 13,
+   "vaddr_inicio": "0x43900a24",
+   "vaddr_fin": "0x43900BDE",
+   "trazas": [
+    {
+     "site": "0x43900a6a",
+     "vaddr": "0x43ccddc9",
+     "text": "[CAM_UTIL_ADJ]: Senser RAM Access: CMD %x, Block %x"
+    },
+    {
+     "site": "0x43900a84",
+     "vaddr": "0x43ccddfd",
+     "text": "[CAM_UTIL_ADJ]:   : [Mode]:%x, [ResCode]:%x, [StepNum]:%x"
+    },
+    {
+     "site": "0x43900a9e",
+     "vaddr": "0x43ccde37",
+     "text": "[CAM_UTIL_ADJ]:   : [Adr]:%08x, [BSize]:%08x,[Size]:%08x"
+    },
+    {
+     "site": "0x43900abc",
+     "vaddr": "0x43ccde70",
+     "text": "[CAM_UTIL_ADJ]:   : [D0]:%04x, [D1]:%04x,[D2]:%04x, [D3]:%04x"
+    },
+    {
+     "site": "0x43900ae2",
+     "vaddr": "0x43ccdeae",
+     "text": "[CAM_UTIL_ADJ]:   : [D4]:%04x, [D5]:%04x,[D6]:%04x, [D7]:%04x"
+    },
+    {
+     "site": "0x43900af0",
+     "vaddr": "0x43ccdeec",
+     "text": "[CAM_UTIL_ADJ]:   : [Module ID]:%08x, [Offset]:%08x, [Size]:%08x"
+    },
+    {
+     "site": "0x43900b04",
+     "vaddr": "0x43ccdf2d",
+     "text": "[CAM_UTIL_ADJ]: ---cam_adjcmd_handle_cb()---[CmdCode]:%04x"
+    },
+    {
+     "site": "0x43900b14",
+     "vaddr": "0x43ccdf68",
+     "text": "[CAM_UTIL_ADJ]:  For SensRamAcs[DataSize]%x"
+    },
+    {
+     "site": "0x43900b26",
+     "vaddr": "0x43ccdf94",
+     "text": "[CAM_UTIL_ADJ]:  For SensRamAcs[ModuleID]%x [Value]%x"
+    },
+    {
+     "site": "0x43900b3c",
+     "vaddr": "0x43ccdfca",
+     "text": "[CAM_UTIL_ADJ]:  [OriginalCmdCode ]:%04x"
+    },
+    {
+     "site": "0x43900b4e",
+     "vaddr": "0x43ccdff3",
+     "text": "[CAM_UTIL_ADJ]:  [OriginalDataSize]:%04x"
+    },
+    {
+     "site": "0x43900b60",
+     "vaddr": "0x43cce01c",
+     "text": "[CAM_UTIL_ADJ]:  [OriginalBDataSize]:%04x"
+    },
+    {
+     "site": "0x43900bc6",
+     "vaddr": "0x43cce046",
+     "text": "[CAM_UTIL_ADJ]: ---Finish SENSER Infra Call Back Operation--- :%x"
+    }
+   ]
+  },
+  {
+   "func": "0x43900c44",
+   "nombre": "tsk_cam_adjctrl (bucle de tarea OSAL)",
+   "n_trazas": 3,
+   "n_sitios": 3,
+   "vaddr_inicio": "0x43900c44",
+   "vaddr_fin": "0x43900D30",
+   "trazas": [
+    {
+     "site": "0x43900c5e",
+     "vaddr": "0x43cce088",
+     "text": "[CAM_UTIL_ADJ]:     tsk_cam_adjctrl: begin. [Osal]%d"
+    },
+    {
+     "site": "0x43900c86",
+     "vaddr": "0x43cce0bd",
+     "text": "[CAM_UTIL_ADJ]:     tsk_cam_adjctrl: rcv failed(%d)."
+    },
+    {
+     "site": "0x43900d0a",
+     "vaddr": "0x43cce0f2",
+     "text": "[CAM_UTIL_ADJ]:     tsk_cam_adjctrl: rcv cmd err(%x)."
+    }
+   ]
+  }
+ ],
+ "tabla_despacho": [
+  {
+   "idx": 0,
+   "vaddr": "0x440121f8",
+   "campo0": "0x00000000",
+   "func_ptr": "0x43b2a0b9",
+   "destino": "0x43b2a0b8",
+   "es_stub_no_soportado": true
+  },
+  {
+   "idx": 1,
+   "vaddr": "0x44012200",
+   "campo0": "0x00000001",
+   "func_ptr": "0x439007b1",
+   "destino": "0x439007b0",
+   "es_stub_no_soportado": false
+  },
+  {
+   "idx": 2,
+   "vaddr": "0x44012208",
+   "campo0": "0x00000002",
+   "func_ptr": "0x43b2a0b9",
+   "destino": "0x43b2a0b8",
+   "es_stub_no_soportado": true
+  }
+ ],
+ "tabla_sens": {
+  "a6000_fw321": {
+   "offset_inicio": "0x00aa758c",
+   "vaddr_inicio": "0x43fe858c",
+   "delta_vaddr_menos_offset": 1129582592,
+   "n": 51,
+   "filas": [
+    {
+     "cmd": "0x0400015d",
+     "size": 0,
+     "str_ptr": "0x43c8f796",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x0100015e",
+     "size": 4,
+     "str_ptr": "0x43c8fe88",
+     "text": "TskJobNG"
+    },
+    {
+     "cmd": "0x0402015f",
+     "size": 4,
+     "str_ptr": "0x43c8fe91",
+     "text": "TskJobOK"
+    },
+    {
+     "cmd": "0x04000160",
+     "size": 0,
+     "str_ptr": "0x43c8fe9a",
+     "text": "SaveUsr:POFF Req"
+    },
+    {
+     "cmd": "0x04000161",
+     "size": 0,
+     "str_ptr": "0x43c8feab",
+     "text": "SaveUsr:Read POW"
+    },
+    {
+     "cmd": "0x04000162",
+     "size": 0,
+     "str_ptr": "0x43c8febc",
+     "text": "SaveUsr:Read CAM"
+    },
+    {
+     "cmd": "0x04000163",
+     "size": 16,
+     "str_ptr": "0x43c8fecd",
+     "text": "SaveUsr:Read End"
+    },
+    {
+     "cmd": "0x04000164",
+     "size": 4,
+     "str_ptr": "0x43c8fede",
+     "text": "SaveUsr:BkWrite End"
+    },
+    {
+     "cmd": "0x04000165",
+     "size": 0,
+     "str_ptr": "0x43c8f796",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x04000166",
+     "size": 0,
+     "str_ptr": "0x43c8fef2",
+     "text": "SaveUsr:POFF Res"
+    },
+    {
+     "cmd": "0x04000167",
+     "size": 0,
+     "str_ptr": "0x43c8f796",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x04000168",
+     "size": 4,
+     "str_ptr": "0x43c8ff03",
+     "text": "Sens:BkWrPoffAsync"
+    },
+    {
+     "cmd": "0x01000169",
+     "size": 4,
+     "str_ptr": "0x43c8ff16",
+     "text": "Sens:BkWrPoffAsync Err"
+    },
+    {
+     "cmd": "0x0400016a",
+     "size": 0,
+     "str_ptr": "0x43c8ff2d",
+     "text": "Sens:BkWrPoffAsync End"
+    },
+    {
+     "cmd": "0x0400016b",
+     "size": 4,
+     "str_ptr": "0x43c8ff44",
+     "text": "Sens:BkSyncCb"
+    },
+    {
+     "cmd": "0x0400016c",
+     "size": 0,
+     "str_ptr": "0x43c8ff52",
+     "text": "Sens:BkSyncCb busy"
+    },
+    {
+     "cmd": "0x0400016d",
+     "size": 8,
+     "str_ptr": "0x43c8ff65",
+     "text": "Sens:BkSyncCb writing"
+    },
+    {
+     "cmd": "0x0100016e",
+     "size": 0,
+     "str_ptr": "0x43c8ff7b",
+     "text": "Sens:BkSyncCb Tgt NULL"
+    },
+    {
+     "cmd": "0x0400016f",
+     "size": 0,
+     "str_ptr": "0x43c8f796",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x04000170",
+     "size": 4,
+     "str_ptr": "0x43c8ff92",
+     "text": "Sens:BkWrSync"
+    },
+    {
+     "cmd": "0x04000171",
+     "size": 0,
+     "str_ptr": "0x43c8ffa0",
+     "text": "Sens:BkWrSync NoBk"
+    },
+    {
+     "cmd": "0x01000172",
+     "size": 0,
+     "str_ptr": "0x43c8ffb3",
+     "text": "Sens:BkWrSync Attr Err"
+    },
+    {
+     "cmd": "0x01000173",
+     "size": 4,
+     "str_ptr": "0x43c8ffca",
+     "text": "Sens:BkWrSync size err"
+    },
+    {
+     "cmd": "0x01000174",
+     "size": 0,
+     "str_ptr": "0x43c8ffe1",
+     "text": "Sens:BkSyncCb snd err"
+    },
+    {
+     "cmd": "0x01000175",
+     "size": 1,
+     "str_ptr": "0x43c8fff7",
+     "text": "Sens:BkSyncCb res err"
+    },
+    {
+     "cmd": "0x04000176",
+     "size": 4,
+     "str_ptr": "0x43c9000d",
+     "text": "Sens:BkSyncCb CAIF"
+    },
+    {
+     "cmd": "0x04000177",
+     "size": 0,
+     "str_ptr": "0x43c8f796",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x04000178",
+     "size": 0,
+     "str_ptr": "0x43c8f796",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x04000179",
+     "size": 0,
+     "str_ptr": "0x43c8f796",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x0400017a",
+     "size": 0,
+     "str_ptr": "0x43c8f796",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x0400017b",
+     "size": 0,
+     "str_ptr": "0x43c8f796",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x0400017c",
+     "size": 0,
+     "str_ptr": "0x43c8f796",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x0400017d",
+     "size": 0,
+     "str_ptr": "0x43c8f796",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x0400017e",
+     "size": 0,
+     "str_ptr": "0x43c8f796",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x0400017f",
+     "size": 0,
+     "str_ptr": "0x43c8f796",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x04020180",
+     "size": 12,
+     "str_ptr": "0x43c90020",
+     "text": "Sens:AdjCmd CAIF"
+    },
+    {
+     "cmd": "0x01000181",
+     "size": 2,
+     "str_ptr": "0x43c90031",
+     "text": "Sens:Invalid block"
+    },
+    {
+     "cmd": "0x01000182",
+     "size": 2,
+     "str_ptr": "0x43c90044",
+     "text": "Sens:Invalid code"
+    },
+    {
+     "cmd": "0x01000183",
+     "size": 4,
+     "str_ptr": "0x43c90056",
+     "text": "Sens:Invalid offset"
+    },
+    {
+     "cmd": "0x01000184",
+     "size": 4,
+     "str_ptr": "0x43c9006a",
+     "text": "Sens:Invalid size"
+    },
+    {
+     "cmd": "0x01000185",
+     "size": 4,
+     "str_ptr": "0x43c9007c",
+     "text": "Sens:Read only"
+    },
+    {
+     "cmd": "0x01000186",
+     "size": 4,
+     "str_ptr": "0x43c9008b",
+     "text": "Sens:Write only"
+    },
+    {
+     "cmd": "0x01000187",
+     "size": 0,
+     "str_ptr": "0x43c9009b",
+     "text": "Sens:no buf"
+    },
+    {
+     "cmd": "0x04000188",
+     "size": 1,
+     "str_ptr": "0x43c900a7",
+     "text": "Sens:RAM Write"
+    },
+    {
+     "cmd": "0x04020189",
+     "size": 1,
+     "str_ptr": "0x43c900b6",
+     "text": "Sens:RAM Read"
+    },
+    {
+     "cmd": "0x0400018a",
+     "size": 12,
+     "str_ptr": "0x43c900c4",
+     "text": "Sens:AdjCmd DwnCamera"
+    },
+    {
+     "cmd": "0x0100018b",
+     "size": 0,
+     "str_ptr": "0x43c900da",
+     "text": "Sens:System error"
+    },
+    {
+     "cmd": "0x0400018c",
+     "size": 12,
+     "str_ptr": "0x43c900ec",
+     "text": "Sens:DwnCamera Done"
+    },
+    {
+     "cmd": "0x0400018d",
+     "size": 0,
+     "str_ptr": "0x43c8f796",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x0400018e",
+     "size": 0,
+     "str_ptr": "0x43c8f796",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x0400018f",
+     "size": 0,
+     "str_ptr": "0x43c8f796",
+     "text": "Reserved"
+    }
+   ]
+  },
+  "a7s_fw320": {
+   "offset_inicio": "0x00aabb60",
+   "vaddr_inicio": null,
+   "delta_vaddr_menos_offset": 1129582592,
+   "n": 51,
+   "filas": [
+    {
+     "cmd": "0x0400015d",
+     "size": 0,
+     "str_ptr": "0x43c9822e",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x0100015e",
+     "size": 4,
+     "str_ptr": "0x43c9892b",
+     "text": "TskJobNG"
+    },
+    {
+     "cmd": "0x0402015f",
+     "size": 4,
+     "str_ptr": "0x43c98934",
+     "text": "TskJobOK"
+    },
+    {
+     "cmd": "0x04000160",
+     "size": 0,
+     "str_ptr": "0x43c9893d",
+     "text": "SaveUsr:POFF Req"
+    },
+    {
+     "cmd": "0x04000161",
+     "size": 0,
+     "str_ptr": "0x43c9894e",
+     "text": "SaveUsr:Read POW"
+    },
+    {
+     "cmd": "0x04000162",
+     "size": 0,
+     "str_ptr": "0x43c9895f",
+     "text": "SaveUsr:Read CAM"
+    },
+    {
+     "cmd": "0x04000163",
+     "size": 16,
+     "str_ptr": "0x43c98970",
+     "text": "SaveUsr:Read End"
+    },
+    {
+     "cmd": "0x04000164",
+     "size": 4,
+     "str_ptr": "0x43c98981",
+     "text": "SaveUsr:BkWrite End"
+    },
+    {
+     "cmd": "0x04000165",
+     "size": 0,
+     "str_ptr": "0x43c9822e",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x04000166",
+     "size": 0,
+     "str_ptr": "0x43c98995",
+     "text": "SaveUsr:POFF Res"
+    },
+    {
+     "cmd": "0x04000167",
+     "size": 0,
+     "str_ptr": "0x43c989a6",
+     "text": "POFF return"
+    },
+    {
+     "cmd": "0x04000168",
+     "size": 4,
+     "str_ptr": "0x43c989b2",
+     "text": "Sens:BkWrPoffAsync"
+    },
+    {
+     "cmd": "0x01000169",
+     "size": 4,
+     "str_ptr": "0x43c989c5",
+     "text": "Sens:BkWrPoffAsync Err"
+    },
+    {
+     "cmd": "0x0400016a",
+     "size": 0,
+     "str_ptr": "0x43c989dc",
+     "text": "Sens:BkWrPoffAsync End"
+    },
+    {
+     "cmd": "0x0400016b",
+     "size": 4,
+     "str_ptr": "0x43c989f3",
+     "text": "Sens:BkSyncCb"
+    },
+    {
+     "cmd": "0x0400016c",
+     "size": 0,
+     "str_ptr": "0x43c98a01",
+     "text": "Sens:BkSyncCb busy"
+    },
+    {
+     "cmd": "0x0400016d",
+     "size": 8,
+     "str_ptr": "0x43c98a14",
+     "text": "Sens:BkSyncCb writing"
+    },
+    {
+     "cmd": "0x0100016e",
+     "size": 0,
+     "str_ptr": "0x43c98a2a",
+     "text": "Sens:BkSyncCb Tgt NULL"
+    },
+    {
+     "cmd": "0x0400016f",
+     "size": 0,
+     "str_ptr": "0x43c9822e",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x04000170",
+     "size": 4,
+     "str_ptr": "0x43c98a41",
+     "text": "Sens:BkWrSync"
+    },
+    {
+     "cmd": "0x04000171",
+     "size": 0,
+     "str_ptr": "0x43c98a4f",
+     "text": "Sens:BkWrSync NoBk"
+    },
+    {
+     "cmd": "0x01000172",
+     "size": 0,
+     "str_ptr": "0x43c98a62",
+     "text": "Sens:BkWrSync Attr Err"
+    },
+    {
+     "cmd": "0x01000173",
+     "size": 4,
+     "str_ptr": "0x43c98a79",
+     "text": "Sens:BkWrSync size err"
+    },
+    {
+     "cmd": "0x01000174",
+     "size": 0,
+     "str_ptr": "0x43c98a90",
+     "text": "Sens:BkSyncCb snd err"
+    },
+    {
+     "cmd": "0x01000175",
+     "size": 1,
+     "str_ptr": "0x43c98aa6",
+     "text": "Sens:BkSyncCb res err"
+    },
+    {
+     "cmd": "0x04000176",
+     "size": 4,
+     "str_ptr": "0x43c98abc",
+     "text": "Sens:BkSyncCb CAIF"
+    },
+    {
+     "cmd": "0x04000177",
+     "size": 0,
+     "str_ptr": "0x43c9822e",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x04000178",
+     "size": 0,
+     "str_ptr": "0x43c9822e",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x04000179",
+     "size": 0,
+     "str_ptr": "0x43c9822e",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x0400017a",
+     "size": 0,
+     "str_ptr": "0x43c9822e",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x0400017b",
+     "size": 0,
+     "str_ptr": "0x43c9822e",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x0400017c",
+     "size": 0,
+     "str_ptr": "0x43c9822e",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x0400017d",
+     "size": 0,
+     "str_ptr": "0x43c9822e",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x0400017e",
+     "size": 0,
+     "str_ptr": "0x43c9822e",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x0400017f",
+     "size": 0,
+     "str_ptr": "0x43c9822e",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x04020180",
+     "size": 12,
+     "str_ptr": "0x43c98acf",
+     "text": "Sens:AdjCmd CAIF"
+    },
+    {
+     "cmd": "0x01000181",
+     "size": 2,
+     "str_ptr": "0x43c98ae0",
+     "text": "Sens:Invalid block"
+    },
+    {
+     "cmd": "0x01000182",
+     "size": 2,
+     "str_ptr": "0x43c98af3",
+     "text": "Sens:Invalid code"
+    },
+    {
+     "cmd": "0x01000183",
+     "size": 4,
+     "str_ptr": "0x43c98b05",
+     "text": "Sens:Invalid offset"
+    },
+    {
+     "cmd": "0x01000184",
+     "size": 4,
+     "str_ptr": "0x43c98b19",
+     "text": "Sens:Invalid size"
+    },
+    {
+     "cmd": "0x01000185",
+     "size": 4,
+     "str_ptr": "0x43c98b2b",
+     "text": "Sens:Read only"
+    },
+    {
+     "cmd": "0x01000186",
+     "size": 4,
+     "str_ptr": "0x43c98b3a",
+     "text": "Sens:Write only"
+    },
+    {
+     "cmd": "0x01000187",
+     "size": 0,
+     "str_ptr": "0x43c98b4a",
+     "text": "Sens:no buf"
+    },
+    {
+     "cmd": "0x04000188",
+     "size": 1,
+     "str_ptr": "0x43c98b56",
+     "text": "Sens:RAM Write"
+    },
+    {
+     "cmd": "0x04020189",
+     "size": 1,
+     "str_ptr": "0x43c98b65",
+     "text": "Sens:RAM Read"
+    },
+    {
+     "cmd": "0x0400018a",
+     "size": 12,
+     "str_ptr": "0x43c98b73",
+     "text": "Sens:AdjCmd DwnCamera"
+    },
+    {
+     "cmd": "0x0100018b",
+     "size": 0,
+     "str_ptr": "0x43c98b89",
+     "text": "Sens:System error"
+    },
+    {
+     "cmd": "0x0400018c",
+     "size": 12,
+     "str_ptr": "0x43c98b9b",
+     "text": "Sens:DwnCamera Done"
+    },
+    {
+     "cmd": "0x0400018d",
+     "size": 0,
+     "str_ptr": "0x43c9822e",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x0400018e",
+     "size": 0,
+     "str_ptr": "0x43c9822e",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x0400018f",
+     "size": 0,
+     "str_ptr": "0x43c9822e",
+     "text": "Reserved"
+    }
+   ]
+  },
+  "a6300_fw201": {
+   "offset_inicio": "0x00c6c230",
+   "vaddr_inicio": null,
+   "delta_vaddr_menos_offset": 1129582592,
+   "n": 51,
+   "filas": [
+    {
+     "cmd": "0x0400015d",
+     "size": 0,
+     "str_ptr": "0x43d980f2",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x0100015e",
+     "size": 4,
+     "str_ptr": "0x43d987ef",
+     "text": "TskJobNG"
+    },
+    {
+     "cmd": "0x0402015f",
+     "size": 4,
+     "str_ptr": "0x43d987f8",
+     "text": "TskJobOK"
+    },
+    {
+     "cmd": "0x04000160",
+     "size": 0,
+     "str_ptr": "0x43d98801",
+     "text": "SaveUsr:POFF Req"
+    },
+    {
+     "cmd": "0x04000161",
+     "size": 0,
+     "str_ptr": "0x43d98812",
+     "text": "SaveUsr:Read POW"
+    },
+    {
+     "cmd": "0x04000162",
+     "size": 0,
+     "str_ptr": "0x43d98823",
+     "text": "SaveUsr:Read CAM"
+    },
+    {
+     "cmd": "0x04000163",
+     "size": 16,
+     "str_ptr": "0x43d98834",
+     "text": "SaveUsr:Read End"
+    },
+    {
+     "cmd": "0x04000164",
+     "size": 4,
+     "str_ptr": "0x43d98845",
+     "text": "SaveUsr:BkWrite End"
+    },
+    {
+     "cmd": "0x04000165",
+     "size": 0,
+     "str_ptr": "0x43d980f2",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x04000166",
+     "size": 0,
+     "str_ptr": "0x43d98859",
+     "text": "SaveUsr:POFF Res"
+    },
+    {
+     "cmd": "0x04000167",
+     "size": 0,
+     "str_ptr": "0x43d9886a",
+     "text": "POFF return"
+    },
+    {
+     "cmd": "0x04000168",
+     "size": 4,
+     "str_ptr": "0x43d98876",
+     "text": "Sens:BkWrPoffAsync"
+    },
+    {
+     "cmd": "0x01000169",
+     "size": 4,
+     "str_ptr": "0x43d98889",
+     "text": "Sens:BkWrPoffAsync Err"
+    },
+    {
+     "cmd": "0x0400016a",
+     "size": 0,
+     "str_ptr": "0x43d988a0",
+     "text": "Sens:BkWrPoffAsync End"
+    },
+    {
+     "cmd": "0x0400016b",
+     "size": 4,
+     "str_ptr": "0x43d988b7",
+     "text": "Sens:BkSyncCb"
+    },
+    {
+     "cmd": "0x0400016c",
+     "size": 0,
+     "str_ptr": "0x43d988c5",
+     "text": "Sens:BkSyncCb busy"
+    },
+    {
+     "cmd": "0x0400016d",
+     "size": 8,
+     "str_ptr": "0x43d988d8",
+     "text": "Sens:BkSyncCb writing"
+    },
+    {
+     "cmd": "0x0100016e",
+     "size": 0,
+     "str_ptr": "0x43d988ee",
+     "text": "Sens:BkSyncCb Tgt NULL"
+    },
+    {
+     "cmd": "0x0400016f",
+     "size": 0,
+     "str_ptr": "0x43d980f2",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x04000170",
+     "size": 4,
+     "str_ptr": "0x43d98905",
+     "text": "Sens:BkWrSync"
+    },
+    {
+     "cmd": "0x04000171",
+     "size": 0,
+     "str_ptr": "0x43d98913",
+     "text": "Sens:BkWrSync NoBk"
+    },
+    {
+     "cmd": "0x01000172",
+     "size": 0,
+     "str_ptr": "0x43d98926",
+     "text": "Sens:BkWrSync Attr Err"
+    },
+    {
+     "cmd": "0x01000173",
+     "size": 4,
+     "str_ptr": "0x43d9893d",
+     "text": "Sens:BkWrSync size err"
+    },
+    {
+     "cmd": "0x01000174",
+     "size": 0,
+     "str_ptr": "0x43d98954",
+     "text": "Sens:BkSyncCb snd err"
+    },
+    {
+     "cmd": "0x01000175",
+     "size": 1,
+     "str_ptr": "0x43d9896a",
+     "text": "Sens:BkSyncCb res err"
+    },
+    {
+     "cmd": "0x04000176",
+     "size": 4,
+     "str_ptr": "0x43d98980",
+     "text": "Sens:BkSyncCb CAIF"
+    },
+    {
+     "cmd": "0x04000177",
+     "size": 0,
+     "str_ptr": "0x43d980f2",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x04000178",
+     "size": 0,
+     "str_ptr": "0x43d980f2",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x04000179",
+     "size": 0,
+     "str_ptr": "0x43d980f2",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x0400017a",
+     "size": 0,
+     "str_ptr": "0x43d980f2",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x0400017b",
+     "size": 0,
+     "str_ptr": "0x43d980f2",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x0400017c",
+     "size": 0,
+     "str_ptr": "0x43d980f2",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x0400017d",
+     "size": 0,
+     "str_ptr": "0x43d980f2",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x0400017e",
+     "size": 0,
+     "str_ptr": "0x43d980f2",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x0400017f",
+     "size": 0,
+     "str_ptr": "0x43d980f2",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x04020180",
+     "size": 12,
+     "str_ptr": "0x43d98993",
+     "text": "Sens:AdjCmd CAIF"
+    },
+    {
+     "cmd": "0x01000181",
+     "size": 2,
+     "str_ptr": "0x43d989a4",
+     "text": "Sens:Invalid block"
+    },
+    {
+     "cmd": "0x01000182",
+     "size": 2,
+     "str_ptr": "0x43d989b7",
+     "text": "Sens:Invalid code"
+    },
+    {
+     "cmd": "0x01000183",
+     "size": 4,
+     "str_ptr": "0x43d989c9",
+     "text": "Sens:Invalid offset"
+    },
+    {
+     "cmd": "0x01000184",
+     "size": 4,
+     "str_ptr": "0x43d989dd",
+     "text": "Sens:Invalid size"
+    },
+    {
+     "cmd": "0x01000185",
+     "size": 4,
+     "str_ptr": "0x43d989ef",
+     "text": "Sens:Read only"
+    },
+    {
+     "cmd": "0x01000186",
+     "size": 4,
+     "str_ptr": "0x43d989fe",
+     "text": "Sens:Write only"
+    },
+    {
+     "cmd": "0x01000187",
+     "size": 0,
+     "str_ptr": "0x43d98a0e",
+     "text": "Sens:no buf"
+    },
+    {
+     "cmd": "0x04000188",
+     "size": 1,
+     "str_ptr": "0x43d98a1a",
+     "text": "Sens:RAM Write"
+    },
+    {
+     "cmd": "0x04020189",
+     "size": 1,
+     "str_ptr": "0x43d98a29",
+     "text": "Sens:RAM Read"
+    },
+    {
+     "cmd": "0x0400018a",
+     "size": 12,
+     "str_ptr": "0x43d98a37",
+     "text": "Sens:AdjCmd DwnCamera"
+    },
+    {
+     "cmd": "0x0100018b",
+     "size": 0,
+     "str_ptr": "0x43d98a4d",
+     "text": "Sens:System error"
+    },
+    {
+     "cmd": "0x0400018c",
+     "size": 12,
+     "str_ptr": "0x43d98a5f",
+     "text": "Sens:DwnCamera Done"
+    },
+    {
+     "cmd": "0x0400018d",
+     "size": 0,
+     "str_ptr": "0x43d980f2",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x0400018e",
+     "size": 0,
+     "str_ptr": "0x43d980f2",
+     "text": "Reserved"
+    },
+    {
+     "cmd": "0x0400018f",
+     "size": 0,
+     "str_ptr": "0x43d980f2",
+     "text": "Reserved"
+    }
+   ]
+  }
+ },
+ "vecindario_0x43900000_0x43910000": {
+  "(sin etiqueta)": {
+   "n_cadenas": 274,
+   "funciones": [
+    "0x43900234",
+    "0x439002cc",
+    "0x43900380",
+    "0x43900460",
+    "0x4390053c",
+    "0x439007b0",
+    "0x4390092c",
+    "0x43900a24",
+    "0x43900c44",
+    "0x43900d54",
+    "0x439010a0",
+    "0x439010dc",
+    "0x439013be",
+    "0x4390145c",
+    "0x43901480",
+    "0x4390178e",
+    "0x439018b0",
+    "0x4390199c",
+    "0x43901c04",
+    "0x43901ccc",
+    "0x439026f8",
+    "0x43902a34",
+    "0x43902c2c",
+    "0x43902df8",
+    "0x43902fbc",
+    "0x43903118",
+    "0x43903280",
+    "0x43903414",
+    "0x43903558",
+    "0x439035e0",
+    "0x4390366c",
+    "0x43903720",
+    "0x439037c0",
+    "0x43903b80",
+    "0x43903d5c",
+    "0x4390400e",
+    "0x4390406c",
+    "0x439041ee",
+    "0x439044b8",
+    "0x43904544",
+    "0x43904590",
+    "0x439046d0",
+    "0x43904874",
+    "0x43904aa0",
+    "0x43904ab4",
+    "0x43904be8",
+    "0x43904c4a",
+    "0x43905362",
+    "0x43905430",
+    "0x43906a22",
+    "0x43906ab6",
+    "0x43906ad2",
+    "0x43906b06",
+    "0x43906be4",
+    "0x43906c04",
+    "0x43906fee",
+    "0x439074c0",
+    "0x43907b24",
+    "0x43907bc6",
+    "0x43907f54",
+    "0x43908244",
+    "0x439082c0",
+    "0x43908308",
+    "0x43908434",
+    "0x43908460",
+    "0x43908474",
+    "0x43908564",
+    "0x43908d5c",
+    "0x439093a4",
+    "0x43909ad8",
+    "0x43909b34",
+    "0x43909b88",
+    "0x43909bdc",
+    "0x43909f7c",
+    "0x4390a128",
+    "0x4390a164",
+    "0x4390a244",
+    "0x4390af54",
+    "0x4390b004",
+    "0x4390b090",
+    "0x4390b104",
+    "0x4390b1e0",
+    "0x4390b4a0",
+    "0x4390c198",
+    "0x4390c3cc",
+    "0x4390c4e0",
+    "0x4390c5fe",
+    "0x4390cbc4",
+    "0x4390dc04",
+    "0x4390ddc6",
+    "0x4390ddee",
+    "0x4390df1e",
+    "0x4390e050",
+    "0x4390e0a8",
+    "0x4390e0fc",
+    "0x4390e1a4",
+    "0x4390e210",
+    "0x4390e2a8",
+    "0x4390e514",
+    "0x4390e5b8",
+    "0x4390e68c",
+    "0x4390e720",
+    "0x4390e7d4",
+    "0x4390e95c",
+    "0x4390eae4",
+    "0x4390ed94",
+    "0x4390efd4",
+    "0x4390f058",
+    "0x4390f094",
+    "0x4390f14e",
+    "0x4390f274",
+    "0x4390f418",
+    "0x4390f468",
+    "0x4390f4d4",
+    "0x4390f628",
+    "0x4390f7fc",
+    "0x4390f858",
+    "0x4390fd88",
+    "0x4390ffd8"
+   ]
+  },
+  "CAM_DMM": {
+   "n_cadenas": 54,
+   "funciones": [
+    "0x43902a34",
+    "0x43902c2c",
+    "0x43902df8",
+    "0x43902fbc",
+    "0x43903118",
+    "0x43903280",
+    "0x43903414",
+    "0x43903558",
+    "0x439035e0",
+    "0x4390366c",
+    "0x43903720",
+    "0x439037c0",
+    "0x43903b80",
+    "0x43903d5c"
+   ]
+  },
+  "CAM_UTIL_ADJ": {
+   "n_cadenas": 22,
+   "funciones": [
+    "0x439007b0",
+    "0x43900a24",
+    "0x43900c44"
+   ]
+  },
+  "CAM_UTIL_SENS": {
+   "n_cadenas": 21,
+   "funciones": [
+    "0x439012d0",
+    "0x43901d50",
+    "0x43902168",
+    "0x439023b8"
+   ]
+  },
+  "CAM_UTIL": {
+   "n_cadenas": 7,
+   "funciones": [
+    "0x43900234",
+    "0x439018b0",
+    "0x4390199c",
+    "0x4390400e",
+    "0x4390406c"
+   ]
+  },
+  "ZPD": {
+   "n_cadenas": 5,
+   "funciones": [
+    "0x43904ab4",
+    "0x43904be8",
+    "0x43904c90",
+    "0x43904cfc"
+   ]
+  },
+  "CAMERA_ADJ": {
+   "n_cadenas": 3,
+   "funciones": [
+    "0x43900d54",
+    "0x43900e30",
+    "0x43900f1c"
+   ]
+  }
+ },
+ "cadenas_sens_por_firmware": {
+  "a6000_fw321": [
+   "Sens:BkWrPoffAsync",
+   "Sens:BkWrPoffAsync Err",
+   "Sens:BkWrPoffAsync End",
+   "Sens:BkSyncCb",
+   "Sens:BkSyncCb busy",
+   "Sens:BkSyncCb writing",
+   "Sens:BkSyncCb Tgt NULL",
+   "Sens:BkWrSync",
+   "Sens:BkWrSync NoBk",
+   "Sens:BkWrSync Attr Err",
+   "Sens:BkWrSync size err",
+   "Sens:BkSyncCb snd err",
+   "Sens:BkSyncCb res err",
+   "Sens:BkSyncCb CAIF",
+   "Sens:AdjCmd CAIF",
+   "Sens:Invalid block",
+   "Sens:Invalid code",
+   "Sens:Invalid offset",
+   "Sens:Invalid size",
+   "Sens:Read only",
+   "Sens:Write only",
+   "Sens:no buf",
+   "Sens:RAM Write",
+   "Sens:RAM Read",
+   "Sens:AdjCmd DwnCamera",
+   "Sens:System error",
+   "Sens:DwnCamera Done"
+  ],
+  "a7s_fw320": [
+   "Sens:BkWrPoffAsync",
+   "Sens:BkWrPoffAsync Err",
+   "Sens:BkWrPoffAsync End",
+   "Sens:BkSyncCb",
+   "Sens:BkSyncCb busy",
+   "Sens:BkSyncCb writing",
+   "Sens:BkSyncCb Tgt NULL",
+   "Sens:BkWrSync",
+   "Sens:BkWrSync NoBk",
+   "Sens:BkWrSync Attr Err",
+   "Sens:BkWrSync size err",
+   "Sens:BkSyncCb snd err",
+   "Sens:BkSyncCb res err",
+   "Sens:BkSyncCb CAIF",
+   "Sens:AdjCmd CAIF",
+   "Sens:Invalid block",
+   "Sens:Invalid code",
+   "Sens:Invalid offset",
+   "Sens:Invalid size",
+   "Sens:Read only",
+   "Sens:Write only",
+   "Sens:no buf",
+   "Sens:RAM Write",
+   "Sens:RAM Read",
+   "Sens:AdjCmd DwnCamera",
+   "Sens:System error",
+   "Sens:DwnCamera Done"
+  ],
+  "a6300_fw201": [
+   "Sens:BkWrPoffAsync",
+   "Sens:BkWrPoffAsync Err",
+   "Sens:BkWrPoffAsync End",
+   "Sens:BkSyncCb",
+   "Sens:BkSyncCb busy",
+   "Sens:BkSyncCb writing",
+   "Sens:BkSyncCb Tgt NULL",
+   "Sens:BkWrSync",
+   "Sens:BkWrSync NoBk",
+   "Sens:BkWrSync Attr Err",
+   "Sens:BkWrSync size err",
+   "Sens:BkSyncCb snd err",
+   "Sens:BkSyncCb res err",
+   "Sens:BkSyncCb CAIF",
+   "Sens:AdjCmd CAIF",
+   "Sens:Invalid block",
+   "Sens:Invalid code",
+   "Sens:Invalid offset",
+   "Sens:Invalid size",
+   "Sens:Read only",
+   "Sens:Write only",
+   "Sens:no buf",
+   "Sens:RAM Write",
+   "Sens:RAM Read",
+   "Sens:AdjCmd DwnCamera",
+   "Sens:System error",
+   "Sens:DwnCamera Done"
+  ]
+ },
+ "diferencial": {
+  "n_cadenas_a6000": 22,
+  "n_cadenas_a7s": 0,
+  "n_cadenas_a6300": 0,
+  "interiores_presentes_a7s": 0,
+  "interiores_presentes_a6300": 0,
+  "interiores": [
+   "-- Table Write",
+   "-- :[Size] %08x [Orgdata] %x",
+   "-- :[Wdata] %x",
+   "-- Table Read",
+   "-- :[Size] %08x [Rdata] %x",
+   "-- :[Orgdata] %x",
+   "Senser RAM Access: CMD %x, Block %x",
+   ": [Mode]:%x, [ResCode]:%x, [StepNum]:%x",
+   ": [Adr]:%08x, [BSize]:%08x,[Size]:%08x",
+   ": [D0]:%04x, [D1]:%04x,[D2]:%04x, [D3]:%04x",
+   ": [D4]:%04x, [D5]:%04x,[D6]:%04x, [D7]:%04x",
+   ": [Module ID]:%08x, [Offset]:%08x, [Size]:%08x",
+   "---cam_adjcmd_handle_cb()---[CmdCode]:%04x",
+   "For SensRamAcs[DataSize]%x",
+   "For SensRamAcs[ModuleID]%x [Value]%x",
+   "[OriginalCmdCode ]:%04x",
+   "[OriginalDataSize]:%04x",
+   "[OriginalBDataSize]:%04x",
+   "---Finish SENSER Infra Call Back Operation--- :%x",
+   "tsk_cam_adjctrl: begin. [Osal]%d",
+   "tsk_cam_adjctrl: rcv failed(%d).",
+   "tsk_cam_adjctrl: rcv cmd err(%x)."
+  ],
+  "marcas_auxiliares": {
+   "tsk_cam_adjctrl": {
+    "a6000": 3,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "cam_adjcmd_handle_cb": {
+    "a6000": 1,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "SensRamAcs": {
+    "a6000": 2,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "Senser RAM Access": {
+    "a6000": 1,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "prefijo_CAM_UTIL": {
+    "a6000": 10,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "prefijo_CAM_UTIL_SENS": {
+    "a6000": 21,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "prefijo_CAMERA_ADJ": {
+    "a6000": 3,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "prefijo_Sens": {
+    "a6000": 27,
+    "a7s": 27,
+    "a6300": 27
+   }
+  },
+  "tabla_sens_comun": {
+   "a6000_n": 51,
+   "a7s_n": 51,
+   "a6300_n": 51,
+   "cmd_ids_identicos_a7s": true,
+   "cmd_ids_identicos_a6300": true
+  }
+ },
+ "ayudantes": [
+  {
+   "vaddr": "0x43900728",
+   "rol": "log [CAM_UTIL] (formato + varargs)"
+  },
+  {
+   "vaddr": "0x4390092C",
+   "rol": "construye y envia mensaje OSAL al infra"
+  },
+  {
+   "vaddr": "0x439009C8",
+   "rol": "escribe (module id, valor) en variable global"
+  },
+  {
+   "vaddr": "0x439009F0",
+   "rol": "escribe (tipo, a, b, c) y despacha"
+  },
+  {
+   "vaddr": "0x43900C1C",
+   "rol": "despacha la respuesta; si no lista -> 0x4390092C"
+  },
+  {
+   "vaddr": "0x439023B8",
+   "rol": "[CAM_UTIL_SENS] UTIL MS Mgr -> Call CB"
+  },
+  {
+   "vaddr": "0x43B2A0B8",
+   "rol": "stub de respuesta 'no soportado'"
+  }
+ ]
+}

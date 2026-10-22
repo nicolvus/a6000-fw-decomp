@@ -1,0 +1,1064 @@
+{
+  "milestone": "S105",
+  "title": "Panorámica, barrido (sweep), bracketing y disparo por intervalo en la A6000",
+  "binary": {
+    "A6000": {
+      "path": "analysis/rea-independent/input/av-cam.bin",
+      "size_bytes": 11427236,
+      "fw": "3.21"
+    },
+    "A7S": {
+      "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+      "size_bytes": 11455416,
+      "fw": "3.20"
+    }
+  },
+  "convention": "vaddr = 0x43541000 + file_offset (igual en A6000 y A7S)",
+  "method": {
+    "type": "estatico, solo lectura de bytes (sin ejecutar firmware, sin camara, sin flasheo)",
+    "string_xref": "las cadenas se referencian con 'ldr rX,[pc,#imm]' (pool literal) + 'add rX,pc' (0x4478+Rd): target = pool_value + (dir_add + 4). Verificado byte a byte (p.ej. 0x438ef492 -> '[CAMERA_MAIN_YC]: SHD::GetShdMode: unknown drive_mode = 0x%x' 0x43ccca56).",
+    "scripts": [
+      "analysis/s105_panorama/scan_strings.py",
+      "analysis/s105_panorama/scan_kw.py",
+      "analysis/s105_panorama/scan_xref.py",
+      "analysis/s105_panorama/scan_diff.py",
+      "analysis/s105_panorama/scan_keyword_inventory.py"
+    ]
+  },
+  "counts": {
+    "panorama": {
+      "A6000_ocurrencias": 96,
+      "A6000_distintas": 92,
+      "A7S_ocurrencias": 89,
+      "A7S_distintas": 85,
+      "comunes_normalizados": 84,
+      "solo_A6000": [
+        {
+          "vaddr": "0x43c9a426",
+          "off": "0x00759426",
+          "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyro (%x)"
+        },
+        {
+          "vaddr": "0x43c9a3a7",
+          "off": "0x007593a7",
+          "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyroCB (%x)"
+        },
+        {
+          "vaddr": "0x43c9a3e3",
+          "off": "0x007593e3",
+          "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyroCB - checkData"
+        },
+        {
+          "vaddr": "0x43cab1b0",
+          "off": "0x0076a1b0",
+          "text": "[IMAGING]: [PanoramaSweepEnd] Err! %s:%d"
+        },
+        {
+          "vaddr": "0x43cab176",
+          "off": "0x0076a176",
+          "text": "[IMAGING]: [PanoramaSweepEnd] Err: 0x%08x, status: 0x%08x"
+        },
+        {
+          "vaddr": "0x43cab21d",
+          "off": "0x0076a21d",
+          "text": "[IMAGING]: [PanoramaSweepEnd] cmp_checkFillResidual() Err! %s:%d"
+        },
+        {
+          "vaddr": "0x43cab1d9",
+          "off": "0x0076a1d9",
+          "text": "[IMAGING]: [PanoramaSweepEnd] cmp_execStitchPreProcess() Err! %s:%d"
+        },
+        {
+          "vaddr": "0x43c9ec01",
+          "off": "0x0075dc01",
+          "text": "[IMAGING]: [seq_panoramaParallelStitch][OK] StitchProc ALL OK : %s:%d"
+        }
+      ],
+      "solo_A7S": [
+        {
+          "vaddr": "0x43c9eb2d",
+          "off": "0x0075db2d",
+          "text": "b4_menu_panorama"
+        }
+      ]
+    },
+    "sweep": {
+      "A6000_ocurrencias": 29,
+      "A6000_distintas": 29,
+      "A7S_ocurrencias": 24,
+      "A7S_distintas": 24,
+      "comunes_normalizados": 24,
+      "solo_A6000": [
+        {
+          "vaddr": "0x43cbc27c",
+          "off": "0x0077b27c",
+          "text": "[CAMERA_MAIN_YC]: HD_SWEEP_HOLD  =%x"
+        },
+        {
+          "vaddr": "0x43cab1b0",
+          "off": "0x0076a1b0",
+          "text": "[IMAGING]: [PanoramaSweepEnd] Err! %s:%d"
+        },
+        {
+          "vaddr": "0x43cab176",
+          "off": "0x0076a176",
+          "text": "[IMAGING]: [PanoramaSweepEnd] Err: 0x%08x, status: 0x%08x"
+        },
+        {
+          "vaddr": "0x43cab21d",
+          "off": "0x0076a21d",
+          "text": "[IMAGING]: [PanoramaSweepEnd] cmp_checkFillResidual() Err! %s:%d"
+        },
+        {
+          "vaddr": "0x43cab1d9",
+          "off": "0x0076a1d9",
+          "text": "[IMAGING]: [PanoramaSweepEnd] cmp_execStitchPreProcess() Err! %s:%d"
+        }
+      ],
+      "solo_A7S": []
+    },
+    "stitch": {
+      "A6000_ocurrencias": 45,
+      "A6000_distintas": 45,
+      "A7S_ocurrencias": 43,
+      "A7S_distintas": 43,
+      "comunes_normalizados": 43,
+      "solo_A6000": [
+        {
+          "vaddr": "0x43cab1d9",
+          "off": "0x0076a1d9",
+          "text": "[IMAGING]: [PanoramaSweepEnd] cmp_execStitchPreProcess() Err! %s:%d"
+        },
+        {
+          "vaddr": "0x43c9ec01",
+          "off": "0x0075dc01",
+          "text": "[IMAGING]: [seq_panoramaParallelStitch][OK] StitchProc ALL OK : %s:%d"
+        }
+      ],
+      "solo_A7S": []
+    },
+    "interval": {
+      "A6000_ocurrencias": 16,
+      "A6000_distintas": 16,
+      "A7S_ocurrencias": 18,
+      "A7S_distintas": 18,
+      "comunes_normalizados": 16,
+      "solo_A6000": [],
+      "solo_A7S": [
+        {
+          "vaddr": "0x43cc3876",
+          "off": "0x00782876",
+          "text": "interval time is too short. %d -> %d"
+        },
+        {
+          "vaddr": "0x43c77d04",
+          "off": "0x00736d04",
+          "text": "updateInterval                    %d"
+        }
+      ]
+    },
+    "bracket": {
+      "A6000_ocurrencias": 1,
+      "A6000_distintas": 1,
+      "A7S_ocurrencias": 1,
+      "A7S_distintas": 1,
+      "comunes_normalizados": 1,
+      "solo_A6000": [],
+      "solo_A7S": []
+    },
+    "total_ocurrencias_palabras_clave": {
+      "A6000": 187,
+      "A7S": 175
+    },
+    "bracket_en_bytes_brutos": {
+      "A6000_ocurrencias_de_la_subcadena_Bracket": 1,
+      "A7S_ocurrencias_de_la_subcadena_Bracket": 1,
+      "A6000_ocurrencias_de_la_subcadena_bracket": 0,
+      "A7S_ocurrencias_de_la_subcadena_bracket": 0
+    }
+  },
+  "strings": {
+    "A6000": [
+      {
+        "vaddr": "0x43c781e4",
+        "off": "0x007371e4",
+        "mode": "panorama",
+        "text": "MSG_ID_SDF_PANORAMA_CCNR_ENCODE"
+      },
+      {
+        "vaddr": "0x43c79fd2",
+        "off": "0x00738fd2",
+        "mode": "panorama",
+        "text": "ApiPanoramaCcnrEncode.cpp"
+      },
+      {
+        "vaddr": "0x43c7a007",
+        "off": "0x00739007",
+        "mode": "panorama",
+        "text": "21ApiPanoramaCcnrEncode"
+      },
+      {
+        "vaddr": "0x43c7b926",
+        "off": "0x0073a926",
+        "mode": "panorama",
+        "text": "ModulePanoramaCcnrEncode.cpp"
+      },
+      {
+        "vaddr": "0x43c7b957",
+        "off": "0x0073a957",
+        "mode": "panorama",
+        "text": "24ModulePanoramaCcnrEncode"
+      },
+      {
+        "vaddr": "0x43c7b8eb",
+        "off": "0x0073a8eb",
+        "mode": "panorama",
+        "text": "MakeDevelopResizeTable"
+      },
+      {
+        "vaddr": "0x43cacf07",
+        "off": "0x0076bf07",
+        "mode": "panorama",
+        "text": "Stage_Panorama.cpp"
+      },
+      {
+        "vaddr": "0x43cad0f4",
+        "off": "0x0076c0f4",
+        "mode": "panorama",
+        "text": "Stage_PanoramaCcnrEncode"
+      },
+      {
+        "vaddr": "0x43cad558",
+        "off": "0x0076c558",
+        "mode": "panorama",
+        "text": "Stage_RchRcv_Resize_PanoramaGmvCoarse"
+      },
+      {
+        "vaddr": "0x43cad57e",
+        "off": "0x0076c57e",
+        "mode": "panorama",
+        "text": "Stage_RchRcv_ResizeFill_PanoramaAutoReview"
+      },
+      {
+        "vaddr": "0x43cad72d",
+        "off": "0x0076c72d",
+        "mode": "panorama",
+        "text": "Stage_RchRcv_ResizeFill_PanoramaThm"
+      },
+      {
+        "vaddr": "0x43cc7a2a",
+        "off": "0x00786a2a",
+        "mode": "panorama",
+        "text": "[IMAGING_CAP]: [Panorama][DEBUG]CAPTURE_START"
+      },
+      {
+        "vaddr": "0x43caa019",
+        "off": "0x00769019",
+        "mode": "panorama",
+        "text": "[IMAGING_CAP]: !!! Can't send Panorama cmd"
+      },
+      {
+        "vaddr": "0x43ca13ff",
+        "off": "0x007603ff",
+        "mode": "panorama",
+        "text": "REQ_PANORAMA_EE"
+      },
+      {
+        "vaddr": "0x43ca1603",
+        "off": "0x00760603",
+        "mode": "panorama",
+        "text": "REPLY_PANORAMA_EE"
+      },
+      {
+        "vaddr": "0x43cae41b",
+        "off": "0x0076d41b",
+        "mode": "panorama",
+        "text": "ReadBackup_PanoramaJpegStreamSize"
+      },
+      {
+        "vaddr": "0x43cae47c",
+        "off": "0x0076d47c",
+        "mode": "panorama",
+        "text": "ReadBackup_PanoramaScnJpegTargetSize"
+      },
+      {
+        "vaddr": "0x43caddc2",
+        "off": "0x0076cdc2",
+        "mode": "panorama",
+        "text": "GetImageSizeFromBackup_Panorama"
+      },
+      {
+        "vaddr": "0x43cade26",
+        "off": "0x0076ce26",
+        "mode": "panorama",
+        "text": "CaptureUtilityImageSize.cpp"
+      },
+      {
+        "vaddr": "0x43cb6b8b",
+        "off": "0x00775b8b",
+        "mode": "panorama",
+        "text": "[CAMERA_MAIN_TC]: APL_PANORAMA_INFO %d %d %d %d 0x%X 0x%X %d 0x%X 0x%X 0x%X 0x%X"
+      },
+      {
+        "vaddr": "0x43cbdf03",
+        "off": "0x0077cf03",
+        "mode": "panorama",
+        "text": "MARBLE:\tSTL_PANORAMA\t\tparam->ccnr.cc_bl48_cb_p1 - param->ccnr.cc_bl48_cb_p0 == 0"
+      },
+      {
+        "vaddr": "0x43cbdf66",
+        "off": "0x0077cf66",
+        "mode": "panorama",
+        "text": "MARBLE:\tSTL_PANORAMA\t\tparam->ccnr.cc_bl48_cr_p1 - param->ccnr.cc_bl48_cr_p0 == 0"
+      },
+      {
+        "vaddr": "0x43cbdfc9",
+        "off": "0x0077cfc9",
+        "mode": "panorama",
+        "text": "MARBLE:\tSTL_PANORAMA\t\tparam->ccnr.cc_bl14_cb_p1 - param->ccnr.cc_bl14_cb_p0 == 0"
+      },
+      {
+        "vaddr": "0x43cbe02c",
+        "off": "0x0077d02c",
+        "mode": "panorama",
+        "text": "MARBLE:\tSTL_PANORAMA\t\tparam->ccnr.cc_bl14_cr_p1 - param->ccnr.cc_bl14_cr_p0 == 0"
+      },
+      {
+        "vaddr": "0x43cbe08f",
+        "off": "0x0077d08f",
+        "mode": "panorama",
+        "text": "MARBLE:\tSTL_PANORAMA\t\tparam->marble_y.yy_emodu_p1 - param->marble_y.yy_emodu_p0 == 0"
+      },
+      {
+        "vaddr": "0x43cace1e",
+        "off": "0x0076be1e",
+        "mode": "panorama",
+        "text": "[IMAGING_CAP]: NotifyStitchProgress: ERR"
+      },
+      {
+        "vaddr": "0x43cace47",
+        "off": "0x0076be47",
+        "mode": "panorama",
+        "text": "[IMAGING_CAP]: NotifyStitchComp: ERR"
+      },
+      {
+        "vaddr": "0x43cacedc",
+        "off": "0x0076bedc",
+        "mode": "panorama",
+        "text": "[IMAGING_CAP]: PanoramaStitch: err[0x%08x]"
+      },
+      {
+        "vaddr": "0x43cad054",
+        "off": "0x0076c054",
+        "mode": "panorama",
+        "text": "[IMAGING_CAP]: ExecutePanoramaTC1ST: PanoraamApollo Err"
+      },
+      {
+        "vaddr": "0x43cad08c",
+        "off": "0x0076c08c",
+        "mode": "panorama",
+        "text": "[IMAGING_CAP]: ExecutePanoramaTC2ND: PanoramaApollo Err"
+      },
+      {
+        "vaddr": "0x43c9a3a7",
+        "off": "0x007593a7",
+        "mode": "panorama",
+        "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyroCB (%x)"
+      },
+      {
+        "vaddr": "0x43c9a3e3",
+        "off": "0x007593e3",
+        "mode": "panorama",
+        "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyroCB - checkData"
+      },
+      {
+        "vaddr": "0x43c9a426",
+        "off": "0x00759426",
+        "mode": "panorama",
+        "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyro (%x)"
+      },
+      {
+        "vaddr": "0x43c9e617",
+        "off": "0x0075d617",
+        "mode": "stitch",
+        "text": "still_seq_panoramaStitch.cpp"
+      },
+      {
+        "vaddr": "0x43cc69fa",
+        "off": "0x007859fa",
+        "mode": "stitch",
+        "text": "still_cnt_panoramaStitch.cpp"
+      },
+      {
+        "vaddr": "0x43c9e50f",
+        "off": "0x0075d50f",
+        "mode": "stitch",
+        "text": "[IMAGING_CAP]: CameraPanoramaSRotateImage: err[0x%08x]"
+      },
+      {
+        "vaddr": "0x43c9e573",
+        "off": "0x0075d573",
+        "mode": "stitch",
+        "text": "[IMAGING]: [seqStitchCallBack] ercd: 0x%08x"
+      },
+      {
+        "vaddr": "0x43c9e5d0",
+        "off": "0x0075d5d0",
+        "mode": "stitch",
+        "text": "[IMAGING]: [seq_panoramaClippingDecode] cmp_decode Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43c9e634",
+        "off": "0x0075d634",
+        "mode": "stitch",
+        "text": "[IMAGING]: [seq_panoramaResize] effectImage Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43c9e674",
+        "off": "0x0075d674",
+        "mode": "stitch",
+        "text": "[IMAGING]: [seq_panoramaResize][OK] effectImage OK : %s:%d"
+      },
+      {
+        "vaddr": "0x43c9e6af",
+        "off": "0x0075d6af",
+        "mode": "stitch",
+        "text": "[IMAGING]: [seq_panoramaParallelStitch] getJPGListI Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43c9e6f7",
+        "off": "0x0075d6f7",
+        "mode": "stitch",
+        "text": "[IMAGING]: [seq_panoramaParallelStitch] setStitchImageObjectInfo Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43c9e74c",
+        "off": "0x0075d74c",
+        "mode": "stitch",
+        "text": "[IMAGING]: [seq_panoramaParallelStitch] DecodeControl Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43c9e796",
+        "off": "0x0075d796",
+        "mode": "stitch",
+        "text": "[IMAGING]: [seq_panoramaParallelStitch] SRotateControl Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43c9e7e1",
+        "off": "0x0075d7e1",
+        "mode": "stitch",
+        "text": "[IMAGING]: [seq_panoramaParallelStitch] StitchControl Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43c9e82b",
+        "off": "0x0075d82b",
+        "mode": "stitch",
+        "text": "[IMAGING]: [seq_panoramaParallelStitch] wai_flg Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43c9e86f",
+        "off": "0x0075d86f",
+        "mode": "stitch",
+        "text": "[IMAGING]: [seq_panoramaParallelStitch] clr_flg Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43c9e8b3",
+        "off": "0x0075d8b3",
+        "mode": "stitch",
+        "text": "[IMAGING]: [seq_panoramaParallelStitch] Decode Interrupt Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43c9e900",
+        "off": "0x0075d900",
+        "mode": "stitch",
+        "text": "[IMAGING]: [seq_panoramaParallelStitch] SRotate Interrupt Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43c9ebb4",
+        "off": "0x0075dbb4",
+        "mode": "stitch",
+        "text": "[IMAGING]: [seq_panoramaParallelStitch] Stitch Interrupt Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43c9ec01",
+        "off": "0x0075dc01",
+        "mode": "stitch",
+        "text": "[IMAGING]: [seq_panoramaParallelStitch][OK] StitchProc ALL OK : %s:%d"
+      },
+      {
+        "vaddr": "0x43c9ec47",
+        "off": "0x0075dc47",
+        "mode": "stitch",
+        "text": "[IMAGING]: [seq_panoramaParallelStitch] cmp_getBackStitchParam Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43c9ec9a",
+        "off": "0x0075dc9a",
+        "mode": "stitch",
+        "text": "[IMAGING]: [panoramaSRotateLeftStitchImage][Debug] End  err: 0x%08x"
+      },
+      {
+        "vaddr": "0x43c9ecde",
+        "off": "0x0075dcde",
+        "mode": "stitch",
+        "text": "[IMAGING]: [seq_panoramaParallelStitch][OK] SRotateLeftProc OK : %s:%d"
+      },
+      {
+        "vaddr": "0x43c9ed25",
+        "off": "0x0075dd25",
+        "mode": "stitch",
+        "text": "[IMAGING]: [seq_makePanoramaMakerNoteData] Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43c9e94e",
+        "off": "0x0075d94e",
+        "mode": "stitch",
+        "text": "[IMAGING]: [StitchInterrupt] Stitch Interrupt Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43c9e990",
+        "off": "0x0075d990",
+        "mode": "stitch",
+        "text": "[IMAGING]: [StitchInterrupt] csl_RingBuff_getDataNum Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43c9e9d9",
+        "off": "0x0075d9d9",
+        "mode": "stitch",
+        "text": "[IMAGING]: [StitchInterrupt] csl_RingBuff_getInputImage Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43c9ea25",
+        "off": "0x0075da25",
+        "mode": "stitch",
+        "text": "[IMAGING]: [StitchInterrupt] ringBuffDataHeader == NULL Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43c9ea71",
+        "off": "0x0075da71",
+        "mode": "stitch",
+        "text": "[IMAGING]: [StitchInterrupt] csl_RingBuff_endReadImage Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43c9eabc",
+        "off": "0x0075dabc",
+        "mode": "stitch",
+        "text": "[IMAGING]: [StitchInterrupt] clr_flg Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43c9eaf5",
+        "off": "0x0075daf5",
+        "mode": "stitch",
+        "text": "[IMAGING]: [StitchInterrupt] cmp_stopStitch Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43c9eb35",
+        "off": "0x0075db35",
+        "mode": "stitch",
+        "text": "[IMAGING]: [StitchInterrupt] wai_flg Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43c9eb6e",
+        "off": "0x0075db6e",
+        "mode": "stitch",
+        "text": "[IMAGING]: [StitchInterrupt] Stop Stitch (Cancel) Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43cc68eb",
+        "off": "0x007858eb",
+        "mode": "stitch",
+        "text": "[IMAGING]: [ddls_stitch_set_flg] ercd: 0x%08x"
+      },
+      {
+        "vaddr": "0x43cc6919",
+        "off": "0x00785919",
+        "mode": "stitch",
+        "text": "[IMAGING]: [ddls_stitch_sa_start_cb] SA DRV Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43cc6959",
+        "off": "0x00785959",
+        "mode": "stitch",
+        "text": "src/stitch/ddl_stitch.cpp"
+      },
+      {
+        "vaddr": "0x43cc6973",
+        "off": "0x00785973",
+        "mode": "stitch",
+        "text": "[IMAGING]: [ddls_stitch_sa_start_cb][Debug NG] CallBack Addr = NULL: 0x%08x"
+      },
+      {
+        "vaddr": "0x43cc69bf",
+        "off": "0x007859bf",
+        "mode": "stitch",
+        "text": "[IMAGING]: [PanoramaStitch] UnitOpen() Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43cc6a17",
+        "off": "0x00785a17",
+        "mode": "stitch",
+        "text": "[IMAGING]: [PanoramaStitch] Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43cc6a47",
+        "off": "0x00785a47",
+        "mode": "stitch",
+        "text": "[IMAGING]: [PanoramaStitch] seq_initStitch() Err! err: 0x%08x %s:%d"
+      },
+      {
+        "vaddr": "0x43cc6a8b",
+        "off": "0x00785a8b",
+        "mode": "stitch",
+        "text": "[IMAGING]: [PanoramaStitch] seq_panoramaParallelStitch() Err! err: 0x%08x %s:%d"
+      },
+      {
+        "vaddr": "0x43cc6adb",
+        "off": "0x00785adb",
+        "mode": "stitch",
+        "text": "[IMAGING]: [PanoramaStitch] seq_endStitch() Err! err: 0x%08x %s:%d"
+      },
+      {
+        "vaddr": "0x43cc6b1e",
+        "off": "0x00785b1e",
+        "mode": "stitch",
+        "text": "[IMAGING]: [PanoramaStitch] UnitClose() Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43cc6b5a",
+        "off": "0x00785b5a",
+        "mode": "stitch",
+        "text": "[IMAGING]: [PanoramaStitch] End  err: 0x%08x"
+      },
+      {
+        "vaddr": "0x43cc6b87",
+        "off": "0x00785b87",
+        "mode": "stitch",
+        "text": "[IMAGING]: [PanoramaResize] UnitOpen() Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43cc6bc2",
+        "off": "0x00785bc2",
+        "mode": "stitch",
+        "text": "[IMAGING]: [PanoramaResize] seq_panoramaResize() Err! err: 0x%08x %s:%d"
+      },
+      {
+        "vaddr": "0x43cc6c0a",
+        "off": "0x00785c0a",
+        "mode": "stitch",
+        "text": "[IMAGING]: [PanoramaResize] seq_makePanoramaMakerNoteData() Err! err: 0x%08x %s:%d"
+      },
+      {
+        "vaddr": "0x43cc6c5d",
+        "off": "0x00785c5d",
+        "mode": "stitch",
+        "text": "[IMAGING]: [PanoramaResize] UnitClose() Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43cc6c99",
+        "off": "0x00785c99",
+        "mode": "stitch",
+        "text": "[IMAGING]: [PanoramaResize] End  err: 0x%08x"
+      },
+      {
+        "vaddr": "0x43cab054",
+        "off": "0x0076a054",
+        "mode": "sweep",
+        "text": "[IMAGING]: [PanoramaSweepStart] Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43cab088",
+        "off": "0x0076a088",
+        "mode": "sweep",
+        "text": "still_cnt_panoramaSweep.cpp"
+      },
+      {
+        "vaddr": "0x43cab0a4",
+        "off": "0x0076a0a4",
+        "mode": "sweep",
+        "text": "[IMAGING]: [PanoramaSweepStart] Jpeg Open  err: 0x%08x"
+      },
+      {
+        "vaddr": "0x43cab0db",
+        "off": "0x0076a0db",
+        "mode": "sweep",
+        "text": "[IMAGING]: [PanoramaSweepStart] Jpeg Close  err: 0x%08x"
+      },
+      {
+        "vaddr": "0x43cab113",
+        "off": "0x0076a113",
+        "mode": "sweep",
+        "text": "[IMAGING]: [PanoramaSweepStart] End  err: 0x%08x"
+      },
+      {
+        "vaddr": "0x43cab144",
+        "off": "0x0076a144",
+        "mode": "sweep",
+        "text": "[IMAGING]: [PanoramaSweepEnd] Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43cab176",
+        "off": "0x0076a176",
+        "mode": "sweep",
+        "text": "[IMAGING]: [PanoramaSweepEnd] Err: 0x%08x, status: 0x%08x"
+      },
+      {
+        "vaddr": "0x43cab1b0",
+        "off": "0x0076a1b0",
+        "mode": "sweep",
+        "text": "[IMAGING]: [PanoramaSweepEnd] Err! %s:%d"
+      },
+      {
+        "vaddr": "0x43cab1d9",
+        "off": "0x0076a1d9",
+        "mode": "sweep",
+        "text": "[IMAGING]: [PanoramaSweepEnd] cmp_execStitchPreProcess() Err! %s:%d"
+      },
+      {
+        "vaddr": "0x43cab21d",
+        "off": "0x0076a21d",
+        "mode": "sweep",
+        "text": "[IMAGING]: [PanoramaSweepEnd] cmp_checkFillResidual() Err! %s:%d"
+      },
+      {
+        "vaddr": "0x43cab25e",
+        "off": "0x0076a25e",
+        "mode": "sweep",
+        "text": "[IMAGING]: [PanoramaSweepEnd] End : 0x%08x"
+      },
+      {
+        "vaddr": "0x43cab289",
+        "off": "0x0076a289",
+        "mode": "sweep",
+        "text": "[IMAGING]: [UpdateSweepCanvas] UnitOpen() Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43cab2c7",
+        "off": "0x0076a2c7",
+        "mode": "sweep",
+        "text": "[IMAGING]: [UpdateSweepCanvas] Err: 0x%08x, status: 0x%08x ReqID: 0x%04x"
+      },
+      {
+        "vaddr": "0x43cab310",
+        "off": "0x0076a310",
+        "mode": "sweep",
+        "text": "[IMAGING]: [UpdateSweepCanvas] Err! %s:%d"
+      },
+      {
+        "vaddr": "0x43cab33a",
+        "off": "0x0076a33a",
+        "mode": "sweep",
+        "text": "[IMAGING]: [UpdateSweepCanvas] seq_brcEncode() Err! %s:%d"
+      },
+      {
+        "vaddr": "0x43cab374",
+        "off": "0x0076a374",
+        "mode": "sweep",
+        "text": "[IMAGING]: [UpdateSweepCanvas] SWEEP_ERROR Err: 0x%08x, ReqID: 0x%04x"
+      },
+      {
+        "vaddr": "0x43cab3ba",
+        "off": "0x0076a3ba",
+        "mode": "sweep",
+        "text": "[IMAGING]: [UpdateSweepCanvas] SWEEP_ERROR! %s:%d"
+      },
+      {
+        "vaddr": "0x43cab3ec",
+        "off": "0x0076a3ec",
+        "mode": "sweep",
+        "text": "[IMAGING]: [UpdateSweepCanvas] UnitClose() Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43cab42b",
+        "off": "0x0076a42b",
+        "mode": "sweep",
+        "text": "[IMAGING]: [UpdateSweepCanvas] End  err: 0x%08x"
+      },
+      {
+        "vaddr": "0x43cab45b",
+        "off": "0x0076a45b",
+        "mode": "sweep",
+        "text": "[IMAGING]: [PanoramaResizeEncode][JpegSweepInfo] UnitOpen() Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43cab4ab",
+        "off": "0x0076a4ab",
+        "mode": "sweep",
+        "text": "[IMAGING]: [PanoramaResizeEncode][YuvDecodeWorkInfo] UnitOpen() Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43cab4ff",
+        "off": "0x0076a4ff",
+        "mode": "sweep",
+        "text": "[IMAGING]: [PanoramaResizeEncode][JpegResizeEncodeInfo] UnitOpen() Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43cab556",
+        "off": "0x0076a556",
+        "mode": "sweep",
+        "text": "[IMAGING]: [PanoramaResizeEncode] Err Mode: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43cab591",
+        "off": "0x0076a591",
+        "mode": "sweep",
+        "text": "[IMAGING]: [PanoramaResizeEncode] Err Dir: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43cab5cb",
+        "off": "0x0076a5cb",
+        "mode": "sweep",
+        "text": "[IMAGING]: [PanoramaResizeEncode] Err seq_bigImageResizeEncode(): 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43cab61c",
+        "off": "0x0076a61c",
+        "mode": "sweep",
+        "text": "[IMAGING]: [PanoramaResizeEncode][JpegSweepInfo] UnitClose() Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43cab66d",
+        "off": "0x0076a66d",
+        "mode": "sweep",
+        "text": "[IMAGING]: [PanoramaResizeEncode][YuvDecodeWorkInfo] UnitClose() Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43cab6c2",
+        "off": "0x0076a6c2",
+        "mode": "sweep",
+        "text": "[IMAGING]: [PanoramaResizeEncode][JpegResizeEncodeInfo] UnitClose() Err: 0x%08x : %s:%d"
+      },
+      {
+        "vaddr": "0x43cab71a",
+        "off": "0x0076a71a",
+        "mode": "sweep",
+        "text": "[IMAGING]: [PanoramaResizeEncode] End  err: 0x%08x"
+      },
+      {
+        "vaddr": "0x43cad10d",
+        "off": "0x0076c10d",
+        "mode": "sweep",
+        "text": "Stage_InitializeSweepAndSpoolBranch"
+      },
+      {
+        "vaddr": "0x43cacdd2",
+        "off": "0x0076bdd2",
+        "mode": "sweep",
+        "text": "[IMAGING_CAP]: NotifySweepProgress: ERR"
+      },
+      {
+        "vaddr": "0x43cacdfa",
+        "off": "0x0076bdfa",
+        "mode": "sweep",
+        "text": "[IMAGING_CAP]: NotifySweepComp: ERR"
+      },
+      {
+        "vaddr": "0x43caceae",
+        "off": "0x0076beae",
+        "mode": "sweep",
+        "text": "[IMAGING_CAP]: UpdateSweepCanvas: err[0x%08x]"
+      },
+      {
+        "vaddr": "0x43cacf3f",
+        "off": "0x0076bf3f",
+        "mode": "sweep",
+        "text": "[IMAGING_CAP]: PanoramaSweepStart: err[0x%08x]"
+      },
+      {
+        "vaddr": "0x43cade8c",
+        "off": "0x0076ce8c",
+        "mode": "sweep",
+        "text": "[IMAGING_CAP]: %s Invalid SWEEP_DIRECTION"
+      },
+      {
+        "vaddr": "0x43cadeb6",
+        "off": "0x0076ceb6",
+        "mode": "sweep",
+        "text": "[IMAGING_CAP]: %s Invalid SWEEP_LENGTH"
+      },
+      {
+        "vaddr": "0x43cbc27c",
+        "off": "0x0077b27c",
+        "mode": "sweep",
+        "text": "[CAMERA_MAIN_YC]: HD_SWEEP_HOLD  =%x"
+      },
+      {
+        "vaddr": "0x43ca79ba",
+        "off": "0x007669ba",
+        "mode": "bracket",
+        "text": "lc_BracketAF.cpp"
+      },
+      {
+        "vaddr": "0x43ca54c8",
+        "off": "0x007644c8",
+        "mode": "bracket",
+        "text": "[CAMERA_MAIN_CC]: ExtractCaptureData()       [CapMode:%d] [ExposureID:%d] [ContID:%d] [FrameID:%d]"
+      },
+      {
+        "vaddr": "0x43ca552b",
+        "off": "0x0076452b",
+        "mode": "bracket",
+        "text": "[CAMERA_MAIN_CC]: CaptureInit()              [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d]"
+      },
+      {
+        "vaddr": "0x43ca55a9",
+        "off": "0x007645a9",
+        "mode": "bracket",
+        "text": "[CAMERA_MAIN_CC]: SetReadImageParam()        [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d]"
+      },
+      {
+        "vaddr": "0x43ca5627",
+        "off": "0x00764627",
+        "mode": "bracket",
+        "text": "[CAMERA_MAIN_CC]: SetNRParam()               [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d]"
+      },
+      {
+        "vaddr": "0x43ca56a5",
+        "off": "0x007646a5",
+        "mode": "bracket",
+        "text": "[CAMERA_MAIN_CC]: SetOPDParam()              [CapMode:%d] [ExposureID:%d] [ContID:%d] [BDROSeq:%d]"
+      },
+      {
+        "vaddr": "0x43cc8c32",
+        "off": "0x00787c32",
+        "mode": "bracket",
+        "text": "[IMAGING_CAP]: ExposureTimerStart!(first)"
+      },
+      {
+        "vaddr": "0x43cc8c5c",
+        "off": "0x00787c5c",
+        "mode": "bracket",
+        "text": "[IMAGING_CAP]: ExposureTimerEnd!"
+      },
+      {
+        "vaddr": "0x43ccdb75",
+        "off": "0x0078cb75",
+        "mode": "bracket",
+        "text": "uc_DrvMode"
+      },
+      {
+        "vaddr": "0x43ca7bc4",
+        "off": "0x00766bc4",
+        "mode": "interval",
+        "text": "N6Camera2LC18CPafStateSelfTimerE"
+      },
+      {
+        "vaddr": "0x43cb4c60",
+        "off": "0x00773c60",
+        "mode": "interval",
+        "text": "SB_INTERVAL"
+      },
+      {
+        "vaddr": "0x43c7a1a5",
+        "off": "0x007391a5",
+        "mode": "interval",
+        "text": "[SDF] interval(PTM) %ld"
+      },
+      {
+        "vaddr": "0x43c7a1be",
+        "off": "0x007391be",
+        "mode": "interval",
+        "text": "[SDF_ERR] interval_ptm over 10[sec]"
+      },
+      {
+        "vaddr": "0x43ca9f89",
+        "off": "0x00768f89",
+        "mode": "interval",
+        "text": "[IMAGING_CAP]: GetCaptureIntervalResource Error! %x"
+      },
+      {
+        "vaddr": "0x43caa28b",
+        "off": "0x0076928b",
+        "mode": "interval",
+        "text": "[IMAGING_CAP]: CapMgr) osal_stat_sem: CAPTURE_INTERVAL err %d"
+      },
+      {
+        "vaddr": "0x43caa2c9",
+        "off": "0x007692c9",
+        "mode": "interval",
+        "text": "[IMAGING_CAP]: CapMgr) osal_sig_sem: CAPTURE_INTERVAL err %d"
+      },
+      {
+        "vaddr": "0x43caa306",
+        "off": "0x00769306",
+        "mode": "interval",
+        "text": "[IMAGING_CAP]: CapMgr) FreeCaptureIntervalResource(): err %d"
+      },
+      {
+        "vaddr": "0x43caa3a1",
+        "off": "0x007693a1",
+        "mode": "interval",
+        "text": "[IMAGING_CAP]: CapMgr) SetIntervalTimer(): err %d"
+      },
+      {
+        "vaddr": "0x43caa3d3",
+        "off": "0x007693d3",
+        "mode": "interval",
+        "text": "[IMAGING_CAP]: CapMgr) osal_wai_sem: CAPTURE_INTERVAL err %d"
+      }
+    ],
+    "A7S": []
+  },
+  "tables": [
+    {
+      "vaddr": "0x437f6f38",
+      "blob": "A6000",
+      "bytes": "11111313",
+      "desc": "tbb SWEEP_DIRECTION: 4 entradas (0,1)->idx0; (2,3)->idx1"
+    },
+    {
+      "vaddr": "0x437f6f68",
+      "blob": "A6000",
+      "bytes": "02041517",
+      "desc": "tbb SWEEP_LENGTH: 4 entradas -> idx 2,3,0,1"
+    },
+    {
+      "vaddr": "0x438271da",
+      "blob": "A7S",
+      "bytes": "08080a0a",
+      "desc": "A7S: tbb SWEEP_DIRECTION (idéntico mapeo)"
+    },
+    {
+      "vaddr": "0x438271f8",
+      "blob": "A7S",
+      "bytes": "02040c0e",
+      "desc": "A7S: tbb SWEEP_LENGTH (idéntico mapeo)"
+    },
+    {
+      "vaddr": "0x4363e93c",
+      "blob": "A6000",
+      "bytes": "a0bb0d00",
+      "desc": "A6000: límite intervalo SDF = 900000 PTM (10 s)"
+    },
+    {
+      "vaddr": "0x4365a668",
+      "blob": "A7S",
+      "bytes": "a0bb0d00",
+      "desc": "A7S: mismo límite 900000 PTM"
+    },
+    {
+      "vaddr": "0x438f3e08",
+      "blob": "A6000",
+      "bytes": "00008045",
+      "desc": "A6000: float 4096.0 (escala Q12 de la Cubic Table)"
+    },
+    {
+      "vaddr": "0x438f3e0c",
+      "blob": "A6000",
+      "bytes": "00008048",
+      "desc": "A6000: float 262144.0 (divisor de la Div Table)"
+    },
+    {
+      "vaddr": "0x437e0e9a",
+      "blob": "A6000",
+      "bytes": "42f21072",
+      "desc": "A6000: movw r2,#0x2710 (10000) -> periodo = 10000 * campo"
+    }
+  ],
+  "notes": [
+    "El unico 'Bracket' del firmware A6000 es 'lc_BracketAF.cpp' (0x43ca79ba): el bracketing NO se implementa con ese nombre en av-cam.bin; vive en el userland (libScalarDaemon.so / libObj.so) y llega a la camara como drive_mode / ContID / BDROSeq.",
+    "El barrido (sweep) se valida con dos tablas tbb identicas en A6000 fw3.21 y A7S fw3.20: SWEEP_DIRECTION (0..3) y SWEEP_LENGTH (0..3) -> indice de 8 entradas (2 direcciones x 4 longitudes).",
+    "El limite superior del intervalo (10 s) esta implementado con la constante 0x000DBBA0 = 900000 PTM, identica en A6000 (0x4363e93c) y A7S (0x4365a668).",
+    "El motor de costura (stitch) se ejecuta en el SA (acelerador Scalar) con 4 argumentos de mailbox: STITCH_ARG (0x3C B), Cubic Table (0x44 B), Div Table (0x400 B) y STITCH_STRIP_INFO (16 B por franja).",
+    "Los 4 'stage' de panoramic y el barrido comparten el modulo CAMERA_MAIN_CC/IMAGING; la ruta de codificacion pasa por el SDF con MSG_ID_SDF_PANORAMA_CCNR_ENCODE."
+  ]
+}

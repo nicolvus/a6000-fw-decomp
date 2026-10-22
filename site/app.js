@@ -11,6 +11,7 @@ fetch('status.json')
     document.querySelector('#latest').textContent = data.latest;
     document.querySelector('#count').textContent = data.documented_count;
     document.querySelector('#physical').textContent = `${data.physical_tests.done}/${data.physical_tests.total}`;
+    document.querySelector('#coverage').textContent = `${data.module_coverage.covered}/${data.module_coverage.total}`;
     document.querySelector('#index-note').textContent = `${data.documented_count} identificadores Sx con un documento localizado. El índice puede omitir sesiones con otro nombre de archivo.`;
 
     const byId = new Map(data.sessions.map(session => [session.id, session]));

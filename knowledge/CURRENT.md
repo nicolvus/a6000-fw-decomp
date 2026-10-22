@@ -1,9 +1,815 @@
 # Estado actual — léeme primero
 
+## S176 — dos lectores más del state IMX210 (22-10-2026)
+
+REA/bytes clasifican `0x4386140a` como load del state pointer seguido por lectura de `state+0xac` en `0x43861410`; si el byte es cero, la cola usa default 6. `0x438693ec` carga el mismo pointer y el bloque lee bytes `+0x30..+0x37`, copiando ceros/defaults a un objeto distinto apuntado por `r6`. No hay store a state ni a gates `+3/+6` en esos dos procedimientos. **Límite local:** campos estáticos cero no determinan runtime, y no se concluye ausencia global. [S176](../docs/capture/s176-imager-state-readers.md), reproducción `analysis/s176_imager_state_readers/state_readers.json` (3 tests).
+
+**Siguiente:** clasificar el próximo xref no resuelto del state pointer con REA typed refs y bytes; considerar el árbol de referencias de la tabla `0x43ff3200` como investigación separada, porque xrefs exactas al vector/GOT base no fueron observadas.
+
+## S163 — tercer lector del estado (22-10-2026)
+
+`FUN_438d939c` lee `state+0x1c` (halfword) y `+0x1e` (byte); defaults 3/4 si los campos valen cero. Construye un mensaje y almacena resultados a otros globals, no a estado/gates dentro de este cuerpo. **Notificación es INFERENCIA; runtime no probado.** [S163](../docs/capture/s163-imager-state-event-reader.md), JSON/3 tests en `analysis/s163_imager_state_event_reader/`. Commit publicado `ff5bbb98`.
+
+**Siguiente:** seguir un xref aún no clasificado hacia `0x43f72d02`, especialmente si hay store tipado; mantener “no demostrado” en lugar de inferir ausencia.
+
+## S162 — lectores de `state+0x1c` (22-10-2026)
+
+`FUN_438d9318`/`FUN_438d936c` cargan el state pointer y leen un halfword en `+0x1c`; cada resultado se escribe a `0x43f7c702` o `0x43f7c704`, no al objeto/gates. La lectura es VERIFICADA; “notificación” es INFERENCIA, alcanzabilidad runtime NO_VERIFICADA. [S162](../docs/capture/s162-imager-state-event-readers.md), `analysis/s162_imager_state_event_readers/event_readers.json` (3 tests). Commit publicado: `8f17819a`.
+
+**Siguiente:** otro xref pendiente; comprobar si es puntero/GOT, field read o writer tipado antes de atribuirlo a gates.
+
+## S161 — otro spill del state pointer (22-10-2026)
+
+En `FUN_4384b268`, `0x4384cb06` carga `0x43f72d02` desde GOT y `0x4384cb0a` almacena el puntero en `[sp+0x20]`; el edge al objeto es de valor, el WRITE efectivo es stack. El cuerpo lee otros campos, no gates `+3/+6`. [S161](../docs/capture/s161-imager-state-spill.md), `analysis/s161_imager_state_spill/state_spill.json` (3 tests). Límite local. Commit publicado: `0a26c130`.
+
+**Siguiente:** escoger otro xref restante y clasificar si es acceso de memoria efectivo o propagación de puntero; no convertirlo en conclusión global.
+
+## S160 — writer local de `state+0` (22-10-2026)
+
+`FUN_4383abec` carga el state pointer vía GOT y `0x4383ac90` ejecuta `strb r3,[r2]`, edge REA WRITE a `0x43f72d02+0`; en la ruta que alcanza el store el contador expira y el byte se pone a cero. No escribe gates `+3/+6`, y la condición de los callers no acredita ejecución runtime. [S160](../docs/capture/s160-state-open-flag.md), JSON y 3 tests en `analysis/s160_state_open_flag_writer/`. Commit publicado: `0a7daba9`.
+
+**Siguiente:** clasificar xrefs restantes; buscar escritura estructurada/copias hacia `+3/+6`, sin inferir ausencia global.
+
+## S159 — spill del puntero de estado en `0x4386001c` (22-10-2026)
+
+`FUN_4385fff0` carga el objeto vía GOT; `0x4386001c` es `str r3,[sp,#0x1c]` (spill), no write a estado. Este cuerpo lee `+0/+0x1c/+0xa2`, stores van a otros destinos; no gates `+3/+6` localmente. [S159](../docs/capture/s159-imager-state-spill.md), reproducción `analysis/s159_imager_state_ref/state_spill.json` (3 tests); no prueba ausencia global. Commit publicado: `98262cd6`.
+
+**Siguiente:** otro xref restante a `0x43f72d02`; distinguir el edge de valor del acceso al contenido y priorizar instrucciones de escritura/copia.
+
+## S158 — `0x4385b268` guarda el puntero de estado en stack (22-10-2026)
+
+`FUN_4385b234` lee GOT `0x4401f990→0x43f72d02`; el xref `0x4385b268` es `str r3,[sp,#0x20]`, un spill, no acceso de escritura a la base. El cuerpo lee `+0x26/+0x28/+0x29`, escribe a otros objetos, y no toca gates `+3/+6` localmente. [S158](../docs/capture/s158-imager-state-ref.md), `analysis/s158_imager_state_ref/state_accessor.json` (3 tests). Sin conclusión global. Commit publicado: `3affd7cc`.
+
+**Siguiente:** clasificar otro xref restante; priorizar candidato que use store/copy sobre puntero estado, no otro spill, mediante typed references y bytes.
+
+## S157 — lector de snapshot del estado (22-10-2026)
+
+`0x43859954` lee el GOT slot `0x4401f990` y obtiene el puntero `0x43f72d02`; `FUN_43859944` lee `+5`, condicional `+0xf`, vuelca/copía a buffer y escribe un global distinto. No hay stores `+3/+6` en este cuerpo. **Límite local**, no ausencia global. [S157](../docs/capture/s157-imager-state-snapshot.md), JSON/3 tests `analysis/s157_imager_state_snapshot/`. Commit publicado: `6d8680c8`.
+
+**Siguiente:** clasificar otro xref a base del estado, especialmente candidatos no cubiertos en S153–S157; seguir stores y alias por evidencia directa.
+
+## S155 — tres referencias más al estado de gates (22-10-2026)
+
+REA/bytes: `0x43857f90` y `0x43857fb0` cargan el byte `+0` y devuelven predicados; `0x43858134` carga el puntero GOT pero solo lee campos `+4` y `+0x1c`, almacenando en otros objetos. No se observa write a gates `+3/+6` **en estos cuerpos**. No es ausencia global. [S155](../docs/capture/s155-imager-state-readers.md), reproducción `analysis/s155_imager_state_readers/state_readers.json` (3 tests). Commit publicado: `d0888afd`.
+
+**Siguiente:** elegir un xref restante a `0x43f72d02` (p. ej. `0x43859954`/`0x4385b268`) y clasificar su dataflow/store por evidencia, uno o un grupo acotado.
+
+## S154 — referencia del estado desde `0x438363e6` (22-10-2026)
+
+`FUN_438363cc` en `0x438363e6` carga el valor del slot `0x4401f990` (`0x43f72d02`); el edge al objeto es DATA y el READ efectivo es al GOT slot. Este procedimiento lee otros campos +0x38..+0x3b y no escribe +3/+6; sus stores van a otros objetos/buffers. **Acotado a esta función**; no prueba ausencia de otros writers. [S154](../docs/capture/s154-imager-state-ref.md), JSON y 3 tests en `analysis/s154_imager_state_ref/`. Commit publicado: `9030811f`.
+
+**Siguiente:** revisar otro xref a la base del estado para detectar copias estructuradas o stores a +3/+6 con evidencia positiva; no inferir ausencia por la lista de xrefs.
+
+## S153 — gates lectores del volcado del gap (22-10-2026)
+
+REA/bytes verifican los gates en `FUN_43858338`: `[obj+3]&2` y `[obj+6]&0x20` habilitan líneas del dumper; los xrefs directos a esos bytes son lecturas y los bytes BSS iniciales están a cero. **Escritor/valor runtime NO_VERIFICADOS**; no prueba ausencia global ni ejecución en una foto. [Informe](../docs/capture/s153-imager-dump-gates.md), `analysis/s153_imager_dump_gates/dump_gates.json` (3 tests). Commit publicado: `7ce7f329`.
+
+**Siguiente:** seguir refs al bloque de estado `0x43f72d02` buscando copias estructuradas a +3/+6, distinguiendo base-pointer stores de inicialización `+0/+2`; si no se resuelve, mover a otra ruta estática independiente. No hacer pruebas físicas.
+
+## S152 — lectura diagnóstica de un byte del gap G (22-10-2026)
+
+Las celdas de S150 son campos `addr` de dos tablas `{u16 id,u16 size,u32 addr}`: A[32] y B[6] = `{0x0030,1,0x43eb0850}`. `FUN_43858338` dirige al raw copier `FUN_43b09c7a`, que lee `addr+size−1` hacia abajo y copia a buffer; con size=1, lectura exacta del byte gap. **No escribe el byte.** Dos gates dependen de flags con valor runtime desconocido, así que alcanzabilidad es PARCIAL. [S152](../docs/capture/s152-imager-gap-descriptor-read.md); `analysis/s152_imager_descriptor_reads/descriptor_reads.json` (3 tests). Commit publicado: `024bb46f`.
+
+**Siguiente:** identificar escritores de los bits gates de `0x43f72d05`/`0x43f72d08` o demostrar cómo se inicializan dinámicamente; mantener la distinción entre ruta de volcado y exposición. S51 sigue A/B/C=NO.
+
+## S150 — xrefs de los huecos +8/+9 y pista de descriptor (22-10-2026)
+
+REA devolvió `[]` para las ocho direcciones exactas de los huecos de fila; el control positivo muestra xrefs al inicio de una fila. Una búsqueda completa de bytes encuentra dos celdas que empiezan con literal `0x43eb0850` (el hueco +8/+9 de la tercera fila), pero no se ha identificado su consumidor ni formato: **no afirmar lectura/escritura efectiva**. Bytes estructurados en `analysis/s150_imager_row_gaps/gap_refs.json`; [informe](../docs/capture/s150-imager-row-gaps.md), 3 tests. El resultado vacío no prueba ausencia de escritores por alias/argumento. Commit publicado: `feb767e5`.
+
+**Siguiente:** resolver quién consulta las dos celdas `0x4400812c` y `0x4400b27c` y cómo se interpreta su primer campo; confirmar si se usa como puntero a `0x43eb0850` antes de atribuir acceso a gap.
+
+## S149 — cierre parcial de helpers de filas G (22-10-2026)
+
+Se verificó el cierre del loop por instrucciones: el writer `0x4383c9dc` **itera cuatro veces** (contador 4, stride `0x10`, back-edge), no solo una; stores por fila en `0,4,6,0xa,0xc,0xe`. Los cuatro helpers auditados no escriben `+0x2c..+0x6b` ni el hueco +8/+9. **Limitado** a estos cuerpos/gates, no excluye otros writers. Evidencias y test reproducible: [S149](../docs/capture/s149-imager-row-helpers.md), `analysis/s149_imager_row_helpers/row_helper_stores.json` (3 tests). S51 sin cambios. Commit publicado: `c4193a2a`.
+
+**Siguiente:** decidir una pregunta IMX210 independiente para cerrar el consumidor de filas/valores modo; buscar escritores alternos de `+0x34/+0x35` con evidencia positiva, sin asumir que el silencio de estos helpers es ausencia global.
+
+## S147 — escritor parcial de filas G (22-10-2026)
+
+**VERIFICADO:** `0x437b5f00` forma `G+0x224` y prepara la llamada a `0x4383bf2c`; éste llama a `0x4383c9dc`, cuyo loop usa stride `0x10` durante cuatro iteraciones y escribe offsets relativos `0,4,6,0xa,0xc,0xe` en cada fila desde `+0x2c`. No escribe `+8/+9` **en ese loop**. REA evidence/páginas y bytes: [S147](../docs/capture/s147-imager-g-rows.md), `analysis/s147_imager_g_rows/g_rows.json` (3 tests). Commit publicado: `ffdba84b`.
+
+**PARCIAL:** los otros xrefs a G son paso de puntero o loads; consumidores indirectos/efectos restantes, otros escritores, modo fotográfico y semántica física no se cerraron. No cambia S51.
+
+**Siguiente:** seguir `FUN_4383bfd4`, `FUN_4383c818` y `FUN_43b08786` para identificar stores a `+0x34/+0x35` o campos restantes por evidencia positiva; después revisar consumidores de lectura. No atribuir significados eléctricos.
+
+## S146 — límite de seeding REA y offset corregido (22-10-2026)
+
+REA acepta `file-offset:` solo para resolver un procedimiento ya existente; no ofrece creación/seeding de función en el proveedor activo. `0x43843a44` mapea a `0x302a44` pero pseudocode falla por `no procedure`; `0x437b617e` corresponde a `0x27517e` (el offset `0x27617e` fue error de coordenada y mapea a otra VA). **La cobertura limitada no prueba ausencia.** [Informe](../docs/capture/s146-rea-seed-limit.md), reproducción `analysis/s146_rea_seed_capability/rea_seed_capability.json` (3 tests). Commit publicado: `0a865472`.
+
+**S145 se conserva** como observación de bytes; su sugerencia de sembrar se reemplaza por recorrido estático reproducible. Siguiente: delimitar código Thumb mediante `read_bytes` REA y contrastar stores/gates sin afirmar CFG completo; si no cierra, pasar a otra pregunta IMX210 independiente.
+
+## S145 — staging en hueco de análisis (22-10-2026)
+
+**PARCIAL:** REA reconoce `FUN_43843a38` (`0x43843a38..0x43843a3f`), pero `0x43843a44` y la rutina que empieza en `0x437b617e` están fuera de procedimientos analizados. Los bytes originales verifican el prólogo Thumb candidato y `BL 0x43843a44` en `0x437b61d2`. Evidencia y reproducción: [S145](../docs/capture/s145-imager-code-gap.md), `analysis/s145_imager_unanalyzed_code/code_gap.json` (3 tests). Esto **no prueba ejecución ni ausencia**. Commit publicado: `a0955258`.
+
+**Siguiente exacto:** en REA sembrar solo entradas Thumb observadas `0x437b617e` y `0x43843a44`; recuperar `procedure_info` y refs salientes; después seguir referencias a tablas/callbacks del caller.
+
+## S142 — referencias directas al struct S (22-10-2026)
+
+**VERIFICADO:** REA `xrefs(S=0x43eb35d0)` devuelve `0x437b56b4` (inicialización que limpia 0x148 bytes) y `0x437b59ce` (lee `u16 S+0xda`, lo consume en `0x4383c638`). Bytes Thumb del GOT/lectura/thunk corroborados y reproducibles en `analysis/s142_imager_s_init/s_accesses.json`; 3 tests. Commit publicado: `bf199b15`.
+
+**PARCIAL:** el memset inicializa `S[0]=0` pero no identifica escritor posterior ni valor por modo. Las xrefs directas no incluyen necesariamente rutinas que reciben S como argumento; no se toma el listado como prueba de ausencia. [Informe](../docs/capture/s142-imager-s-init.md). S51 intacto.
+
+**Siguiente:** trazar con REA funciones que reciben `S` como argumento, empezando por la entrada al staging `0x43843a44`; primero hallar coordenada de función admisible, después seguir stores y gates de `S[0]`.
+
+## S141 — selección de fila IMX210, origen sin cerrar (21-10-2026)
+
+**PARCIAL:** REA `0x43b0893c` + bytes Thumb verifican `S[0]` como selector, fila en `S+4+16·S[0]` y copia de 16 bytes a `S+0xc4`; `0x43849fb8` consume esa fila al construir exposición. **NO_VERIFICADO:** quién escribe `S[0]`, condiciones de staging y origen G+`0x224`; REA no reconoció `0x43843a44`, consulta vacía no prueba ausencia. Evidencias y reproducción: [S141](../docs/capture/s141-imager-row-copy.md), `analysis/s141_imager_row_trace/row_trace.json`; 3 tests. Commit publicado: `47147952`.
+
+**Siguiente:** obtener una dirección Thumb que REA admita para el código referido como `0x43843a44` y seguir evidencia positiva del store a `S[0]` / copia G→S. No nueva Ghidra. No semántica física ni cambio de S51.
+
+## S140 — vector de registros IMX210 y bancos de filas (21-10-2026)
+
+**VERIFICADO:** REA leyó 119 punteros en `0x43fe995c`, terminador cero en `0x43fe9b38`; cada registro empieza `{u16 ID little-endian, byte +2, byte +3}`. El vector completo está en `analysis/s140_imager_regmap/imager_regmap.json` y se reproduce con `analysis/s140_imager_regmap/extract_regmap.py` (3 tests). Commit publicado: `6f064d93`.
+
+**PARCIAL:** los rangos S `0x43eb35d0` y G+`0x224` `0x43eb07fc` son cero en el blob. El código selecciona fila mediante `S[0]` desde `S+4+16·índice` y la copia a `S+0xc4`; no se ha determinado la asignación modo→fila ni su contenido runtime o significado físico. **S51 A/B/C=NO se mantiene.** [Informe](../docs/capture/s140-imager-register-map.md).
+
+**Siguiente:** seguir con REA los stores a `S[0]` y la copia desde G+`0x224` hacia S en la ruta `0x43843a44`; bytes/instrucciones originales requeridos. Identificadores S138/S139 están ocupados por trabajo no relacionado/in progreso; evitar sus archivos.
+
 Resumen operativo breve. Para el historial completo de decisiones, ver `knowledge/PROGRESS.md`.
-Para restricciones del proyecto (sin firmware ejecutado, sin flasheo, sin `git push`), ver `docs/STATE.md`.
+Para restricciones del proyecto (sin firmware ejecutado, sin flasheo) ver `docs/STATE.md`; el usuario
+ha instruido explícitamente subir cada hito terminado a `origin/main`.
 
 [Plan de pruebas físicas pendientes](../docs/capture/physical-test-plan.md) (P1–P8, ninguna ejecutada; requieren tu autorización).
+
+**Sesión actual (21-10-2026)**: línea de RE general por módulos de trazas + línea del obturador
+electrónico. Lo último: **S137** (`[CTRLCORE]`), **S136** (`[ACCY]`), **S135** (control positivo:
+el A6300 tiene `ElecShutter/` y la A6000/A7S **no**), **S134** (la relación `shut`→`svd` es
+aritmética, no tabulada), **S133** (`[MOUNT_DEBUG]`), **S132** (`[CLK_CTRL]`), **S131** (`[VPH_API]`),
+**S130** (los 20 módulos "nuevos"), **S129** (`[CAMERA_MAIN_IM]`), **S128** (mapa de etiquetado de la
+fw3.21), **S127** (`[CAMERA_MAIN_LC]`), **S126** (`[CAMERA_MAIN]`), **S125** (`[IMAGING_REL]`/
+`[IMAGING]`). **S51 A=NO, B=NO, C=NO** (sin cambios). Catálogo: 69 hitos en
+[docs/capture/linea-general-re.md](../docs/capture/linea-general-re.md). Sesiones: [README](../README.md).
+
+## S109 — el módulo `[CDIAG]` (270 trazas): el banco de diagnóstico del códec (21-10-2026, línea de RE general)
+
+**VERIFICADO (22 tests, `tests/test_s109_cdiag.py`):** 270 tokens `[CDIAG]` (`0x43c3b0d4`–`0x43c3e86a`): 255 cadenas que empiezan por `[CDIAG]` y 15 `[ERR][CDIAG]`. Estructura: **7 escenarios** (HD REC/DEC, SD REC/DEC, JPEG ENC/DEC/ENCDEC) × **8 operaciones** (`DbgDiagAvc` `0x43c3b6df`, `CmpData` `0x43c3b72a`, `RunCodec` `0x43c3c123`, `RelMemArea` `0x43c3b768`, `SetMemArea` `0x43c3b7ec`, `SetData` `0x43c3c162`, `ConfirmDoneCodec`, `SetDiagMode` `0x43c3bf5c`), **27 firmas `CDIAGER …`**, **16 clases** (RTTI: `8CdCtrlIf` `0x43c3b67e` … `13CdUtilSysvMsg` `0x43c3e8ab`) y **2 ficheros** (`cdCtrlIf.cpp` `0x43c3b1a8`, `cdCtrlCore.cpp` `0x43c3b86c`). **Tabla de registro de clases** en `0x43fda6a0`: 16 pares `{vtable base común 0x43fd04f8, puntero al nombre RTTI}` (en la A7S, `0x43fdb6ec`) → es una tabla de **resolución clase→nombre**, no de vtables por clase. 118 funciones (`0x435a127a`–`0x435a50b6`), 295 sitios de referencia; **226/255** cadenas referenciadas y **29 muertas** (ni PIC ni puntero absoluto). Transporte por **OSAL**: `osal_rcv_msg` `0x43561260`, `osal_snd_msg` `0x4356120c`, `osal_free_msg` `0x435612ec`, `osal_try_valloc_msg` `0x435612d0`; el núcleo de la tarea (`0x435a1318`) llega a `osal_rcv_msg` vía `0x435a9f4c` (bl en `0x435a9f68`); escritor `0x435ab880` (310 llamadas), nivel `0xbe`, id `0xbad`.
+
+**Diferencial A7S fw3.20**: 270 tokens, **270 cadenas comunes y 0 exclusivas** en ningún sentido, mismas 16 clases, 2 ficheros y 27 firmas → módulo **idéntico**. El A6300 fw2.01 tiene 310 tokens = 270 + **40 de 4K** (`[CTRL4KREC]`, `CdCtrl4KDec/Rec`, `CdExt*`, `CodecDiagLog`).
+
+**Negativo verificado**: 0 menciones de `shutter`/`silent`/`imager`/`sensor`/`dmm` en las 270 trazas → sin efecto sobre S51.
+
+[Informe](../analysis/s109_cdiag/cdiag.md) · [doc](../docs/capture/s109-cdiag.md). Siguiente: formato de `MSG_SENS_COMMAND`/`DIAGINFO`; codificación numérica de `cmd`/`mode`/`func`; emisor de los comandos `SENS_*`; fichero fuente de las clases de códec (no embebido).
+
+## S116 — el módulo `[SFRS]` (117 trazas) de control por *pins* (21-10-2026, línea de RE general)
+
+**VERIFICADO (23 tests, `tests/test_s116_sfrs.py`):** 117 cadenas `[SFRS]` en `0x43ce7661`–`0x43ceb8c4`; **131 puntos de emisión PIC** (`ldr rX,[pc,#imm]` + `add rX,pc`) y **52 funciones**, todas dentro de `0x439a0000`–`0x439c0000` (módulo compacto y localizado), **0** cadenas sin referencia. Sub-bloques: SUPERSTABLEMOVIE 37, MOTIONSHOTVIDEO 25, EFFECTMOVIEREC 23, PINSEND 12, SET_PATH_STATUS 9, SA 6, RC_AIC_TRIGGER 3, MULTIPLEXTRIGGER 2. Contenido: `SETPIN`/`GETPIN`/`PINSEND` con `file=%s line=%d`, `ReqYccAsap`, `YccOut`, `SendExecTrigger`, `CtSetAicParam`, `RC_CALLBACK`. Evidencia de código: `SETPIN` `cmp r1,#1` en `0x439aada4` (línea 58 en `0x439aadc0`), `GETPIN` `cmp` en `0x439aae3c` (línea 56: `movs r2,#0x38` en `0x439aae4c`), cola de `EXECUTE_PIN_SEND` en `0x439b1f4c`–`0x439b1f6c` (lee `[r4,#0x3f4..0x3ff]`, escribe `[r4,#0x410]=1` y `[r4,#0x40c]`, traza `0x43ceb80d`).
+
+**Diferencial A7S fw3.20**: la A7S tiene **151** cadenas `[SFRS]`: **117 comunes, 0 exclusivas de la A6000 y 34 exclusivas de la A7S** → el módulo de la A6000 es un **subconjunto** del de la A7S.
+
+**Observación**: 40 de las 52 funciones no imprimen `file=%s`, así que no se les puede asignar fichero fuente; de las 24 clases `.cpp` citadas solo 12 se localizan en el código.
+
+[Informe](../analysis/s116_sfrs/sfrs.md) · [doc](../docs/capture/s116-sfrs.md). Siguiente: significado de SFRS, AIC, RC, VFX, IIB y PINSEND; si `line=%d` corresponde al `.cpp` de `file=%s` (falta la tabla de líneas); semántica de los tres modos de grabación.
+
+## S117 — `[AUGI]`: la cabecera de 32 B del códec (21-10-2026, línea de RE general)
+
+**VERIFICADO (27 tests, `tests/test_s117_augi.py`):** 75 apariciones de `[AUGI]` → **26 cadenas** con el prefijo `[AUGI]` y **49** con `[CodecIF][AUGI]…`; dos *clusters* de cadenas: los **impresores de estructura** (`0x43c6a909`–`0x43c6b517`, con los nombres de campo `length`, `num_AUs`, `PTS`, `DTS`, `nextHRDBuffer`, `nextPTS`, `size_SPS`, `size_PPS`, `PictureType`, `seq_parameter_set_id`) y el **volcado de depuración** `[AUGI] campo = %d` (`0x43cd993d`–`0x43cd9c8d`). **No es un subsistema de trazas**: es el nombre de una **cabecera de bloque de códec**, y las clases que la manipulan están nombradas en el binario: `DecExAugiConverter` `0x43c6a8db`, `DecInAudioAugiConverter` `0x43c6acc5`, `DecInVideoAugiConverter` `0x43c6b02e`, `EncExAugiConverter` `0x43c6b554`, más la entrada de API `StrmEngEncCIIf::CodecEventCreateVAUGI` `0x43c66fbf`. 86 puntos de emisión y **0** cadenas sin referencia; los impresores ocupan 4 funciones contiguas `0x436150ce`–`0x436163c0` y el dumper `0x4391ca90`. **La sigla no aparece expandida en ningún byte** (no se inventa su significado) y no se afirma qué cuenta `length`.
+
+**Diferencial A7S fw3.20**: **idéntico** — mismas 75 apariciones y mismas 26 cadenas.
+
+[Informe](../analysis/s117_augi/augi.md) · [doc](../docs/capture/s117-augi.md). Siguiente: qué cuenta exactamente `length`; el layout binario de la cabecera; el emisor de `CodecEventCreateVAUGI`.
+
+## S118 — el módulo `[SFRA]` (100 trazas) de la infraestructura escalar (21-10-2026, línea de RE general)
+
+**VERIFICADO (22 tests, `tests/test_s118_sfra.py`):** 100 trazas `[SFRA]` en `0x43ce5a16`–`0x43ce7723` (100 textos distintos), 11 sub-bloques (`[CMD]`, `[CMP]`, `[BUF]`, `[RATECONTROL]`, `[RC]`, `[NOTIFY]`, `[ERROR]`/`[ERR]`, `[WARNING]`, `[SFR_ERR_NOTREADY]`), 11 ficheros fuente (`ScalarInfraAsyncMain.cpp`, `SfrJpegBuffer.h`, 7× `ScalarInfraSequence*.cpp`, `SfrYc.cpp`, `DrvCallRc.cpp`) y 47 funciones. **`SFR` = `NS_SCALAR_INFRA` verificado por los nombres de clase C++** de la zona `[SFR]`, no por conjetura. **17 comandos** con los **ids decodificados de los bytes** en los predicados `0x43b63xxx` (tipo de mensaje en `+0x02`, sub-comando en `+0x0f`): `0x0100`/`0x10` GET_INFO, `/0x20` GET_JPEG, `/0x22` SET_JPEG_PARAM, `/0x30` GET_SA_RESULT, `/0x32` SET_SA_NOTIFY, `/0x42` LiveView SET_JPEG, `0x8110` SET_PATH(CLOSE), `0x8120` SET_PATH(OPEN), `0x9010` GET_INFO_CMP; despachador de finalizaciones `0x439a1640` con `TBB` de 5 bytes en `0x439a1654`; núcleo `ScalarInfraAsyncMain` `0x439a1864`.
+
+**Diferencial A7S fw3.20**: **100/100 mensajes idénticos** y en el mismo orden (mismo conjunto, mismos sitios y funciones) → módulo **idéntico**, solo cambia su posición en el blob (`0x7a4a16` en la A6000 frente a `0x7998c4` en la A7S). El A6300 fw2.01 tiene **108** trazas: las 100 de la A6000 más 8 con nomenclatura antigua (`CMD_JPEG`, `CMD_LIVEVIEW`, `SET_PATH_CMP(JPEG CLOSE)`, `LiveViewStageIdle::exec openReq/closeReq`…).
+
+[Informe](../analysis/s118_sfra/sfra.md) · [doc](../docs/capture/s118-sfra.md). Siguiente: la correspondencia de los 5 casos del `TBB` con los nombres `[CMP]`; 5 ids de sub-comando sin traza propia; el papel de `RC`/`VFX`/`IIB`.
+
+## S124 — el bloque de parámetros de exposición/lectura por `drive_mode` (imager) (21-10-2026, línea de RE general)
+
+**VERIFICADO (7 tests, `tests/test_s124_exposure_params.py`):** de dónde salen los campos de la traza `[CAM_IMAGER]: SetExps : [PrevDrv][NowDrv][NextDrv][svd][shd][spl][shut]` (`0x43c93cc2`), leída de la función que la emite (`FUN_436d6f70`, localizada por sus sitios PIC `0x436d7242`/`0x436d7280`): `PrevDrv` = u16 [r1+4], `NowDrv` = u16 [r1+0], `NextDrv` = u16 [r1+6] y **`shut` = byte [r1+9]**; `svd`/`shd`/`spl` = tres u32 del **contexto de captura** en +0x178/+0x174/+0x170 (lecturas en `0x436d725c`, `0x436d726a`, `0x436d7274`).
+
+**Diferencial A6000 fw3.21 vs A7S fw3.20**: el **conjunto de parámetros es el mismo** (`shut`, `svd`, `shd`, `spl`, `sint`, `gs`, `epdsel`): las 5 trazas de `[CAMERA_MAIN_SYNC]` que lo revelan coinciden texto a texto (`ZAF img_id:%04X, shut:%d, svd:%d, shd:%d, spl:%d, epdsel:%d` `0x43ca3356`/`0x43ca8e9b`, `Imager param error shut:%d…` `0x43cb11d2`/`0x43cb2bcd`, `Imager svd error…` `0x43cb1217`/`0x43cb2bfe`, `shut:%d, svd:%d, shd:%d, spl:%d, sint:%d, gs:%d` `0x43cb1253`/`0x43cb2c26`, `vfc%d[%d] shut%d->%d…` `0x43ca3a50`/`0x43ca936f`). Lo que **sí** cambia en la fw3.21: (a) el vocabulario de trazas (`SetExps`/`SetExpsZ`/`SetRead`/`Execute` con el drive mode **anterior** frente a `Exposure.`/`Change ImagerMode.` de la A7S, `0x43c9c942`/`0x43c9c8d9`); (b) el **layout del contexto** (la rama de modo `0x11` usa `r0+0xfc` en la A6000 frente a `r0+0x13c` en la A7S); (c) una traza **nueva** `[CAMERA_MAIN_LC]: zaf_now_shut_cycle=%d` `0x43ca7836` (la A7S no la tiene) y la retirada de `b8_shutter_limit` `0x43c9f01c` (solo A7S).
+
+**Para la línea del obturador**: `shut` convive con `shutter mute on/off` `0x43c8253b` (el silenciador del obturador **mecánico**), `shutCycleCount` `0x43cbee6b` y `uc_shut_idx_num` `0x43cc326d` → es el **índice/contador de obturación** del modo de lectura, **no** un selector de mecanismo. La fw3.21 **no** introduce ningún parámetro de obturador electrónico (el DFE/IMX210 sigue por P2S/DFE0 y CISIF, S56). **Sin efecto en S51 (A/B/C = NO).**
+
+[Informe](../analysis/s124_exposure_params/exposure_params.md) · [doc](../docs/capture/s124-exposure-params.md). Siguiente: la **tabla de valores por `drive_mode`** (sin ella no puede afirmarse que ningún modo concreto difiera entre A6000 y A7S); el significado de `sint` y `gs`; si `zaf_now_shut_cycle` cuenta obturaciones mecánicas o electrónicas.
+
+## S120 — `[IDT_OPD]`: la segunda instancia del módulo IDT (21-10-2026, línea de RE general)
+
+**VERIFICADO (97 tests, `tests/test_s120_idt_opd.py`):** 274 apariciones del token `[IDT_OPD]` → **273** cadenas que empiezan por él (la 274.ª es anidada: `' $(,0[IDT_OPD]: CCinitParam addr null'`) y 274 textos distintos, en `0x43cf11f9`–`0x43cf5810`. **Los 274 mensajes van seguidos, byte a byte y separados por NUL, de su gemelo `[IDT]`** → el etiquetado es la única diferencia. **`IDT_OPD` no es una sigla inventada**: es un **recurso del `SyncResMgr`** (`RESOURCE_IDT_OPD` `0x43c9c461`, presente también en la A7S en el offset `0x761b67`) y unos **comandos** (`IDT_OPD_TOP_Sync_OPDAcquire` `0x43c9c2fc`, `IDT_OPD_TOP_Sync_SetFOPD`): la fw3.21 de la A6000 es la **única de las tres** que etiqueta con `[IDT_OPD]`. 165 funciones (`0x439dde84`–`0x439fcf9c`, ~127 KB de código) y **271 de las 274** cadenas con referencia confirmada (3 sin referencia: `0x43cf150f`, `0x43cf1557`, `0x43cf274a`). Estructuras verificadas: bloque IE (`0x439e80c8`, 19 campos, `tar_num`+0x00 … `backImgData`+0x78), bloque MAP (`0x439ee7e8`, 18 campos, `miniraw`+0x0c … `out_opd_ec`+0x4c) y 18 punteros de volcado en `0x43f41b30`/`0x43f41cbc`/`0x43f418a8`. Relaciones: `KickFOPD` desde `[IMAGING_CAP]` (`0x43cadd2d`), miniRAW hacia `[CAMERA_MAIN_LC]` (`0x43c9c8ba`), IDT en **HS3@CPU0** (`0x43ca12f6`); el driver del imager (S115) **no nombra** el IDT.
+
+**Diferencial**: A7S fw3.20 y A6300 fw2.01 tienen **0** trazas `[IDT_OPD]` (306 y 382 `[IDT]`); **270 de los 274** mensajes son comunes texto a texto, 4 son sólo de la A6000 (reformulaciones de `Sync rate`, `det:xs:`, `test`, `test2`) y 36 son sólo de la A7S (16 del tipo `PBL … ERROR. R0./W0./W1./W2.`).
+
+**Corrección de una herramienta del repo**: el subagente encontró que la *kill analysis* de `analysis/s106_imaging_cap/scan_pic_refs_v2.py` **estaba inerte** (`md.detail` apagado → `ins.operands` lanzaba `CsError` → nunca mataba nada; además `op.reg & 0xF` confunde r1 con r3 en Capstone). **Ya corregido**: ahora coincide con la regla estricta en el conjunto de cadenas y en los sitios verificados a mano (`[SFRA]` 118, `[AIP]` 37, `[TRK]` 288) y solo elimina los sitios falsos.
+
+[Informe](../analysis/s120_idt_opd/idt_opd.md) · [doc](../docs/capture/s120-idt-opd.md). Siguiente: qué distingue la instancia OPD de la IDT normal; el layout del bloque LC y del array `waku`; el tamaño en bytes de cada mapa; el significado de `tar_num`, `isSpectRef`, `msain0/1`, `msaout`, `kido_th`, `sel_hist/sel_sum`.
+
+## S126 — `[CAMERA_MAIN]`: el módulo raíz de la cámara (21-10-2026, línea de RE general)
+
+**VERIFICADO (7 tests, `tests/test_s126_camera_main.py`):** 135 trazas `[CAMERA_MAIN]` en `0x43c9c57b`–`0x43ccae46`, **48 funciones** emisoras (regla estricta) y **148 ficheros fuente** embebidos en la zona. Es el contenedor de la capa de **coordinación** (AF y calibración, seguimiento, keymap, carga de parámetros), la que no pertenece a ningún submódulo especializado. Contenido: `calibration_fc_pos:%d getFcPos(suc_ref_index_target):%d` `0x43c9c57b`, `Calibration start` `0x43c9c6d5`, `FOCUS MODE is not AF-A` `0x43c9cd19`, `Scanless NG because of Face AF` `0x43c9cd3f`, `this lens is not permitted` `0x43c9ce07`, `SCANLESS OK! %d ympc %d csum %d cpeak %d defocus %d` `0x43c9ce8f`, `waku area is %d` `0x43c9d53f`, `keymap size is under 0 [%d]` `0x438d16b0` y `>>### LoadNum %x, Ch %x` `0x4378a68c` (51 trazas: la que más emite). **Puente con el ZPD** (S75): `NOT_DETECT from ZPD MODULE in spite of ZpdPreEnable. lc_HybridAF.cpp %d` `0x43c9d07e`. Ficheros fuente de la zona: `CamResource.cpp`, `CamSyncResource.cpp`, `SyncTask.cpp`, `ClockControl.cpp`, `SystemDelay.cpp`, `init_cam_SetCamParam_main.cpp`, `ImagingMain.cpp`, `InfraImaging.cpp`, `CS_imaging.cpp`, `lc_AF_Scan.cpp`, `lc_HybridAF.cpp`, `RCWrapper.cpp`, `DualRecResManager.cpp`, `StageResourceStack.cpp`, `CaptureUtilityCommon/RC/Debug/ExifMkNote.cpp`, `Spinal.cpp`… → el núcleo es un **gestor de recursos** con tareas de sincronización, control de reloj y planificador de secuencias.
+
+**Diferencial**: la etiqueta `[CAMERA_MAIN]:` es **nueva en la fw3.21 de la A6000**: A7S fw3.20 y A6300 fw2.01 tienen **0** trazas con ese prefijo, pero **92** y **121** de los mensajes existen allí **sin etiqueta** → misma política de etiquetado por submódulo que en S106 (`[IMAGING_CAP]`), S119 (`[APL]` dentro de `[CAMERA_SA]`) y S120 (`[IDT_OPD]`).
+
+[Informe](../analysis/s126_camera_main/camera_main.md) · [doc](../docs/capture/s126-camera-main.md). Siguiente: subdivisión de los 82 mensajes "sin etiqueta"; qué fichero fuente corresponde a cada función; significado de `waku`, `ympc`, `csum`, `cpeak`, `LoadNum`/`Ch`.
+
+## S122 — el módulo `[CAMERA_MAIN_TC]` (127 trazas) de tiempo y giroscopio (21-10-2026, línea de RE general)
+
+**VERIFICADO (40 tests, `tests/test_s122_camera_main_tc.py`):** 127 tokens `[CAMERA_MAIN_TC]` (127 textos distintos) en **6 tramos** entre `0x43ca7fd7` y `0x43ccb350`; **123 vivas** y 4 muertas; **256 sitios PIC** en **41 funciones** (regla estricta). Reparto por contenido: **GYRO/CALIB 32**, **DIST 13**, **APL/ApolloSA 47**, **SMART ZOOM 16**, **DDT 18**, JudgeBdroRslt 1. **17 publicadores** con prólogo uniforme `push {r3}` y primer `bl` a `osal_try_valloc_msg` `0x435612d0` (publicación por cola OSAL, con `memset` `0x439c5a04` y `osal_free_msg` `0x435612ec`). **Despachador `ApolloSA_Main` `0x438730b0`**: `tbb` de rango en `0x4387333e` (tabla `dfe805f005050914140d0f0d`) y `tbh` de 9 casos en `0x4387348e`, con el caso 3 convergiendo en `0x438735d8`; desde él salen los **6 clientes de `[APL]`** (S119), cada uno con un único llamador (`0x43873378`, `0x438733e6`, `0x43873418`, `0x4387343a`, `0x438734e8`, `0x4387352c`). Dos llamadores del módulo: la panorámica (`bl 0x438730b0` en `0x437f1324`, con `cmp r7,#2` en `0x437f12f6` y el error `0x43cacf9c`) y `0x438bdeac`.
+
+**Diferencial**: la etiqueta es **nueva en la fw3.21 de la A6000**: A7S fw3.20 y A6300 fw2.01 tienen **0** apariciones del token, con **126/127** textos interiores literales y 123 sitios (frente a los 256 de la A6000).
+
+**No toca la línea del obturador**: 0 apariciones de `shut`, `silent`, `electro`, `mech`, `sensor`, `exposure`, `drive`, `readout`, `jpeg`, `movie`, `bracket`, `sweep`, `interval` en sus 127 trazas → **S51 A/B/C = NO se mantiene**.
+
+[Informe](../analysis/s122_camera_main_tc/camera_main_tc.md) · [doc](../docs/capture/s122-camera-main-tc.md). Siguiente: por qué se pierden sitios en la A7S/A6300 (idx 2, 32, 108); llamadas por puntero a `0x438786c4`/`0x43879204`/`0x438792dc`/`0x4387938e`; significado de TC/DDT/DIST/ARC/Gmv/Lmv; el pipeline interno de calibración, DIST, DDT y SMART ZOOM.
+
+## S128 — el mapa de etiquetado de la fw3.21 (21-10-2026, línea de RE general)
+
+**VERIFICADO (6 tests, `tests/test_s128_label_map.py`):** comparación **texto a texto** de los 98 prefijos de módulo con ≥ 8 cadenas entre la A6000 fw3.21 y la A7S fw3.20: **58 IGUAL** (la A7S usa el mismo prefijo y los textos coinciden), **18 RENOMBRADO** (la A7S **no** usa ese prefijo pero los textos coinciden: la fw3.21 **añadió la etiqueta**), 2 PARCIAL y 20 NUEVO/PROPIO. Los 18 renombrados: `[CAMERA_MAIN_YC]` (958/968), `[IMAGING_CAP]` (678/697), `[CAMERA_MAIN_SYNC]` (412/428), `[CAMERA_SA]` (228/231), `[CAMERA_MAIN]` (97/134), `[CAMERA_MAIN_TC]` (122/125), `[IMAGING]` (115/120), `[MOUNT_ERROR]` (78/80).
+
+**Conclusión transversal**: la fw3.21 de la A6000 **no reescribe el firmware: reescribe el logging** — confirma, de forma transversal, lo medido hito a hito (S106 `[IMAGING_CAP]`, S119 `[APL]` dentro de `[CAMERA_SA]`, S120 `[IDT_OPD]`, S122 `[CAMERA_MAIN_TC]`, S126 `[CAMERA_MAIN]`). El único módulo con **cambio de contenido real y grande** es `[CAM_IMAGER]` (179/371 = 0.48; S124) y `[SFRS]` va al revés (117 en la A6000 frente a 151 en la A7S, S116).
+
+[Informe](../analysis/s128_label_map/label_map.md) · [doc](../docs/capture/s128-label-map.md). Siguiente: comprobar uno por uno los 20 "NUEVO/PROPIO" (contenido nuevo o etiqueta distinta en la A7S).
+
+## S123 — el módulo `[CAMERA_MAIN_CC]` (49 trazas) de control de captura (21-10-2026, línea de RE general)
+
+**VERIFICADO (32 tests, `tests/test_s123_camera_main_cc.py`):** 49 apariciones del token `[CAMERA_MAIN_CC]` en 6 tramos contiguos de `.rodata` (control de captura 21 `0x43ca54c8`–`0x43ca5e30`, LUT 12 `0x43ca5f0a`–`0x43ca6158`, IE 8 `0x43ca6470`–`0x43ca6600`, miniRaw 2, MakerNote-playraw 2, CamCore-3DLUT 4 `0x43cb4cd3`–`0x43cb4d62`); **47/49** referenciadas (regla estricta, 1 sitio cada una) en **29 funciones** emisoras; las 2 huérfanas (`GetKDZMode()` `0x43ca5bb7`, `SetMovDevelopParam()` `0x43ca5d31`) tienen un par "ancho" demostrado como **falso positivo**. **Máquina de estados de 10 etapas** (cada método vivo delega en una función de etapa que escribe estado en `obj+0xb` y sub-paso en `obj+0xa`): `ExtractCaptureData`→`CaptureInit`→`SetReadImageParam`→`SetNRParam`→`SetOPDParam`→`AfterOPDAfterNR`→`SetDevelopParam`→`SetDualRecParam`→`SetDevDetectDevelopParam`→`WriteExifMakernote`. **Identidad de captura** (precisa S96): `CapMode`@`0x1c0`, `ExposureID`@`0x1b8`, `ContID`@`0x1bc`, `BDROSeq`@`0x6ec`, `BDRObase`@`0x6f4`, `FrameID`@`0x701`. **Clase `CC`**: nombres verificados en los bytes (`CcEncryptedTagData` `0x43ca9242`, `CcEncryptedFtTagData` `0x43ca9259`, `ImageParam_Capture` `0x43ca9802`; las direcciones `0x43ff8ee4`/`0x43ff8f24` son tablas de punteros/vptrs). **Grafo entrante**: 37 llamadas desde 22 funciones (`Stage_SACC.cpp` → `SetSACCParam`/`WriteSACCMakerNote`, `Stage_OPD.cpp` → `SetOPDParam`/`AfterOPDAfterNR`, `Stage_MARBLE.cpp`, `Stage_Orientation.cpp`, `CaptureUtilityModuleAPI.cpp`), **0 llamadas directas** a `[CAM_DMM]`/`[CAM_IMAGER]`/`[CAMERA_MAIN_YC]`: el enlace es por **tabla de parámetros compartida** `0x43ae9226` (ids `0x9408`/`0x9409`/`0x9410`).
+
+**Diferencial**: A7S fw3.20 y A6300 fw2.01 tienen **0** cadenas con el prefijo (ninguno de los dos modelos tiene familia `[CAMERA_MAIN_*]`), con **47/49** mensajes idénticos sin etiqueta → coherente con el mapa de etiquetado de S128.
+
+[Informe](../analysis/s123_camera_main_cc/camera_main_cc.md) · [doc](../docs/capture/s123-camera-main-cc.md). Siguiente: fichero(s) fuente que implementan la clase `CC`; significado de la sigla; rangos reales de `CapMode`/`ContID`/`BDROSeq`/`FrameID`; `drive_mode`↔`CapMode`; flujo completo de la LUT 3D.
+
+## S130 — los 20 módulos "nuevos" del mapa de etiquetado (21-10-2026, línea de RE general)
+
+**VERIFICADO (7 tests, `tests/test_s130_new_modules.py`):** buscando el **núcleo** de cada mensaje (el texto tras `"[PREFIX]: "`) como subcadena en la A7S fw3.20 y el A6300 fw2.01, de los 20 módulos que S128 clasificó como `NUEVO/PROPIO` solo **2 son un cambio de etiqueta** (`[IDT_OPD]`: 270 de 273 núcleos presentes en la A7S, todos bajo `[IDT]`; `[DFE]`: 11/11, 10 sin etiqueta y 1 con `[DFE]`), **1 es parcial** (`[JPEG]`: 4/17) y **17 tienen contenido que no está en los otros dos firmwares** (`[MOUNT_DEBUG]` 2/132, `[CAMERA_MAIN_LC]` 1/72, `[SAD]` 3/44, `[TP_R]` 2/18, `[ILLUMI]` 1/34 y `[ACCY]`, `[VPH_API]`, `[CLK_CTRL]`, `[CAM_UTIL_ADJ]`, `[CAM_UTIL_SENS]`, `[CAMERA_IS]`, `[DEPTH]`, `[JOG]`, `[ADC_DEBUG]`, `[LIF_DEBUG]`, `[PANDA]`, `[CAMERA_MAIN_FC]` con 0). Los tokens `ACCY`, `VPH_API`, `CLK_CTRL`, `CAMERA_MAIN_LC`, `MOUNT_DEBUG`, `ILLUMI` y `PANDA` **no aparecen ni una vez** en la A7S ni en el A6300.
+
+**Detalle para la línea del obturador**: el módulo `[VPH_API]` (106 trazas, la API de cámara) incluye una **API de silenciador de obturador nueva en la fw3.21**: `<shutter_mute_param>` `0x43ce3634`, `<shutter_mute_param_sub>` `0x43ce3b5a`, `>shutter_mute<` `0x43ce3de4`, `>shutter_mute_status<o/f:%d` `0x43ce3dfc` (4 apariciones de `shutter_mute*` en la A6000, **0** en la A7S y el A6300), mientras que la traza del silenciador en sí (`shutter mute on/off`, `[SFRS][PINSEND]`, S118) **sí** está en los tres firmwares → la fw3.21 **añade el parámetro de API**, no el mecanismo (y el silenciador es del obturador **mecánico**).
+
+**Advertencia**: la comparación mezcla **versión y modelo**; no hay una fw anterior de la A6000 en el repositorio, así que no se puede separar «nuevo en la fw3.21» de «propio de este modelo».
+
+[Informe](../analysis/s130_new_modules/new_modules.md) · [doc](../docs/capture/s130-new-modules.md). Siguiente: qué son `[ACCY]`, `[VPH_API]`, `[CLK_CTRL]`, `[DEPTH]`, `[PANDA]` (sin desarrollar siglas); quién consume la API nueva de silenciador.
+
+## S127 — el módulo `[CAMERA_MAIN_LC]` (72 trazas): AF, ZPD y DM AF (21-10-2026, línea de RE general)
+
+**VERIFICADO (22 tests, `tests/test_s127_camera_main_lc.py`):** 72 cadenas `[CAMERA_MAIN_LC]` entre `0x43c9c6f6` y `0x43ca7e0b`; **78 sitios PIC** (regla estricta) en **37 funciones** y **1 cadena muerta** (`0x43c9c779`). **Corrección de la premisa del hito**: el módulo **no calibra la lente** — es la capa de **AF + ZPD + DM AF** (`Camera::LC` probado por RTTI; sigla **sin desarrollar**). Puente con el ZPD (S75): `LC_GetZpdResultInfo` (cadena `0x43ca78c8`, **función** `0x437c1e48`, prólogo `0xb5f7`), con gate `ldrb.w [rX,#0xc0]` + `tst.w #2` + `beq`, 10 lecturas de campo y 10 trazas; `full_count` es el primer argumento. Reparto real 32/40 (37/41 sitios) en 13 sub-bloques.
+
+**Diferencial**: A7S fw3.20 y A6300 fw2.01 con **0** prefijos y **0/72** mensajes interiores coincidentes → material **propio de la A6000 fw3.21** (con la salvedad versión/modelo de S130 §4).
+
+**Sin efecto en S51** (A/B/C = NO).
+
+[Informe](../analysis/s127_camera_main_lc/camera_main_lc.md) · [doc](../docs/capture/s127-camera-main-lc.md). Siguiente: el layout completo del resultado ZPD; qué consume `LC_GetZpdResultInfo`; el significado de `lc_Movie_DM_AF_Util_*`.
+
+## S131 — `[VPH_API]`: la API de parámetros del subsistema VPH (21-10-2026, línea de RE general)
+
+**VERIFICADO (7 tests, `tests/test_s131_vph_api.py`):** 106 trazas `[VPH_API]` contiguas `0x43ce32e7`–`0x43ce3dfc` con **sintaxis de API explícita**: 49 entradas `<nombre>` (p. ej. `[VPH_API]<mode>` `0x43ce32e7`), 42 variantes `_sub` (`<mode_sub>` `0x43ce3781`), 11 salidas `>nombre<` (`>mode_status<` `0x43ce3d0e`) y 4 `=x=` (`=v_command_comp=` `0x43ce374b`) → **60 familias de parámetros** del subsistema de display (OSD, panel, salida de línea, muteos, ayudas de encuadre, línea de vídeo). Las emiten **48 manejadores** (uno por parámetro, una sola traza cada uno) en dos bloques: `0x4395aab8`–`0x4395b5f4` (39) y `0x4395e1b8`–`0x4395e34c` (9), de 52 a 160 B cada uno.
+
+**Línea del obturador**: la API incluye el **silenciador del obturador** con 4 trazas (`<shutter_mute_param>` `0x43ce3634`, `<shutter_mute_param_sub>` `0x43ce3b5a`, `>shutter_mute<` `0x43ce3de4`, `>shutter_mute_status<o/f:%d` `0x43ce3dfc`): las 4 cadenas `shutter_mute*` **no existen** en la A7S fw3.20 ni en el A6300 fw2.01, mientras que la traza `shutter mute on/off` (`[SFRS][PINSEND]`, S118) **sí** está en los tres → la fw3.21 **añade el parámetro de API**, no el mecanismo (es el obturador **mecánico**, como `yuv_mute` y `chroma_mute`). **Sin efecto en S51.**
+
+**Diferencial**: A7S fw3.20 y A6300 fw2.01 con **0** trazas `[VPH_API]` y 24 apariciones del token `VPH`, frente a las **106** trazas y **134** apariciones de la A6000 fw3.21 → el subsistema VPH es mucho mayor en esta fw; no solo se etiqueta (S128), es que la API completa no está en ellos.
+
+[Informe](../analysis/s131_vph_api/vph_api.md) · [doc](../docs/capture/s131-vph-api.md). Siguiente: cómo se referencia la tabla de manejadores y quién la invoca; qué hacen `laxo`, `diceic_arb`, `line_fchr`, `set_eomainsub_inverse`; qué hace exactamente `shutter_mute_param` y quién lo consume.
+
+## S129 — el módulo `[CAMERA_MAIN_IM]` (42 trazas) de control térmico (21-10-2026, línea de RE general)
+
+**VERIFICADO (21 tests, `tests/test_s129_camera_main_im.py`):** 42 cadenas `[CAMERA_MAIN_IM]:` (40 contiguas `0x43ca6b32`–`0x43ca71e7` y 2 sueltas `0x43cb5fc1`/`0x43cb5ffa`); **43 sitios PIC** (regla estricta) en **10 funciones** (`0x43547362`, `0x437b8774` (22), `0x437b8e1c`, `0x437b8ed4`, `0x437b8fb0`, `0x437b9064`, `0x437b915c`, `0x437b91e8`, `0x437b93c0`, `0x4386bbec`); **0 cadenas sin referencia** y una con doble referencia (`0x43ca70f6`, `ImStartMovThermal set_timer:%x`, desde `0x437b90fe` y `0x437b9268`). **Despachador** `0x437b8384`: id u16 de `[ctx+0x10]` → 24 pares en `0x43befc32` (bytes `000a0000100a1000110a1100120a1200`), defecto `0xa00` (`0x437b8404`), `0xa20`→`0x437b9064`, `0xa21`→`0x437b915c`. Contenido: térmico del imager (`movie thermal diffTemp < 0`, `paramA%f paramB%f diff:%d`, `envOld:%d env':%d boot:%d`, `ImStartMovThermal set_timer:%x`). Enlaces: con el driver del imager (S115) en `0x437b877a bl 0x436d6118` / `0x437b8780 bl 0x436d648c` (slot `0x6c`), `vldr s14,[sp,#0x34]` ×`0x42c80000` (100.0f); con el bloque de parámetros por `drive_mode` (S124) en `ldrb` `0x437b87f6`/`0x437b87fe` (+6/+4) e intervalos `×0x186a0` en `0x437b8f42`/`0x437b90e4`/`0x437b924e`.
+
+**Negativo verificado (importante)**: el módulo **no expone el obturador** — las únicas apariciones de `shut` en sus 42 trazas son la subcadena de `shutdownTh` en `0x43ca6ca8` y `0x43ca6d3f` (texto de `[CAM_IMAGER]`), y no hay `svd`/`shd`/`spl`/`sint`/`gs`/`epdsel` → **sin efecto en S51**.
+
+**Diferencial**: 0 prefijos en la A7S y el A6300 con **34/42** y **33/42** textos interiores idénticos → módulo **RENOMBRADO** (el mecanismo térmico ya existía con otro etiquetado; la fw3.21 añade instrumentación).
+
+[Informe](../analysis/s129_camera_main_im/camera_main_im.md) · [doc](../docs/capture/s129-camera-main-im.md). Siguiente: por qué `0x437b8774` no tiene ningún `bl` ni puntero de 32 bits en toda la imagen; el slot `0x6c` ↔ `GetImagerTemperature(float*)` `0x43c936a3` (inferido, no está en la vtable); los 24 ids del despachador.
+
+## S134 — la aritmética de los parámetros del imager (21-10-2026, línea de RE general)
+
+**VERIFICADO (8 tests, `tests/test_s134_imager_params.py`):** en la función validadora `0x4381106c` (prologo `push.w {r4-r8, sb, sl, lr}`) del módulo `[CAMERA_MAIN_SYNC]`, la relación **`shut`→`svd` es aritmética y no tabulada**: `svd_esperado = (svd == 9 ? 1 : shut) * svr_num − 1` con `svr_num` = u8 en `[estado+0x14e]`, o `= (svd == 9 ? 1 : shut) / VdNum − 1` cuando `VdNum` (u16 en `[estado+0xcc]`) > 1, con la división sin signo en `0x4355faf0` (tipo `__aeabi_uidiv`). El desbordamiento (bit 15 tras `uxth`) dispara `Imager param error shut:%d, svr_num:%d, VdNum:%d` `0x43cb11d2` (sitio `0x4381110e`) e `Imager svd error. shut:%d, svd:%d -> %d` `0x43cb1217` (sitio `0x43811162`); el volcado completo es `shut:%d, svd:%d, shd:%d, spl:%d, sint:%d, gs:%d` `0x43cb1253` (sitio `0x438111d4`). **Procedencia de los seis parámetros**: `shd` = `[estado+0x24]` (u32), `svd` = u16 bajo de `[estado+0x28]`, `spl` = u16 **alto de la misma palabra** (`svd` y `spl` van empaquetados), `sint` = u8 de `[estado+0x2c]`, `gs` = **flag binario** (1 si el `svd` del contexto vale 9, si no 0: `cmp r3,#9` + `subs r3,#8` / `movs r3,#0`), `shut` = `[ctx_sync+0x1f8]`. El estado se obtiene con un **accesor de singleton** `0x4378f9b4` → global `0x43e99208` (cero en el blob).
+
+**Conclusión para S124**: **descarta** la hipótesis de una «tabla de valores por `drive_mode`» para `svd`; el peso de `shut` está en la fórmula. El bloque de modo que S124 vio leer (`[r1+0]`, `[r1+4]`, `[r1+6]`, `[r1+9]`) **sigue sin localizar**. `shut` sigue siendo el índice/contador de obturación, no un selector de mecanismo → **sin efecto en S51**.
+
+[Informe](../analysis/s134_imager_params/imager_params.md) · [doc](../docs/capture/s134-imager-params.md). Siguiente: qué son `svr_num` y `VdNum` y quién los escribe; por qué `svd == 9` es un centinela; si la A7S fw3.20 usa la misma fórmula.
+
+## S125 — `[IMAGING_REL]` y `[IMAGING]`: el liberador de recursos y el motor de panorama (21-10-2026, línea de RE general)
+
+**VERIFICADO (38 tests, `tests/test_s125_imaging_rel.py`):** **"REL" = RELease, y está en el RTTI** (nombre mangled `N6Camera11ReleaseLock9RelLockS1E` en `0x43ca5489`; `RelLockBase` `0x43ca54bb`, `RelLockS2` `0x43cb4b75`), no es una sigla inventada. **`[IMAGING_REL]`**: 31 cadenas `0x43c9c520`–`0x43cb4bc4`, 30 referenciadas, **34 sitios** en **26 funciones**; es el gestor `RelMgr` `0x4379d114`–`0x4379e600` con despachador `REL_EVT` `0x4379d83a` (`subs r2,r3,#1` + `cmp r2,#0x26` + `tbh` → ids `0x01`–`0x27`) y el bloque `CapIdTblMgr`/`RelQueue`/`RelLock` `0x4381c30c`–`0x4381d150`; fichero fuente **`Spinal.cpp`** `0x43c9c54f`; el programa es el **LIRO** (S105). Una cadena **muerta**: `0x43c9c520` (`Spinal) osal_free_timer`), también muerta en la A7S. **`[IMAGING]`**: 120 cadenas `0x43c9b47c`–`0x43cc6c99`, 82 referenciadas, **608 sitios** en **346 funciones**; 3 genéricas (`FATAL! %s:%d` literal en `0x43c9b487`, **443 sitios**; `FATAL! %s:%d [0x%x]` `0x43c9f6d9`, 29; `%s:%d \n` `0x43cabafb`, 1) = el macro de todo el subsistema de captura, y 117 específicas del **motor de panorama/stitch** (`still_cnt_panoramaSweep.cpp` 62 sitios, `still_seq_panoramaStitch.cpp` 25, `still_cnt_panoramaStitch.cpp` 15, `still_seq_enc.cpp` 12, `src/stitch/ddl_stitch.cpp`…), con direcciones que coinciden con la cadena de S105 y con el motor de secciones de S114 (que no emite mensajes específicos).
+
+**Diferencial**: A7S fw3.20 y A6300 fw2.01 con **0** trazas etiquetadas. `[IMAGING]`: **115/120** comunes texto a texto y **5 nuevas** de la fw3.21 (4 `[PanoramaSweepEnd]…` + `[seq_panoramaParallelStitch][OK] StitchProc ALL OK`); `[IMAGING_REL]`: 30/31 en la A7S (1 nueva: `(%d,%d,%d)` `0x43ca3887` en `SyncTask.cpp`) y 22/31 en el A6300 (que sí tiene `Camera::ReleaseLock`). Las 38 cadenas sin referencia de `[IMAGING]` **ya estaban muertas en la A7S**.
+
+**Sin efecto en S51**: ninguno de los dos módulos menciona `shutter`/`silent`/`EFCS` ni mecanismo de obturación.
+
+[Informe](../analysis/s125_imaging_rel/imaging_rel.md) · [doc](../docs/capture/s125-imaging-rel.md). Siguiente: significado de `irp/cidx/rp/wp/wpd/dm` e `InnerRP`; ids concretos de `REL_EVT`; por qué la fw3.21 etiqueta con `[IMAGING]:` el `FATAL!` genérico de toda la captura.
+
+## S135 — el subsistema `ElecShutter` del A6300 como control positivo (21-10-2026, línea de RE general + línea del obturador)
+
+**VERIFICADO (25 tests, `tests/test_s135_elec_shutter.py`):** barrido literal de una batería de términos de obturador electrónico en los tres `av-cam.bin`. El **A6300 fw2.01 sí tiene** un subsistema de obturador electrónico: `ElecShutter/EC_ElecShutter_Main.cpp` `0x43dcfa41`, `ElecShutter/EC_NonlinearElecShutter_MechShutterTable.cpp` `0x43dcfa65` (seguida de la tabla de códigos de velocidad no lineal `0x43dcfa9e`: `00 01 03 04 05 06 08 09 0a 0b 0d 0e 0f 10 12 13 14 16 17 18 19 1b 1c 1d 1e 1f 21 22`), los ajustes `SET Silent Shutter Type: %d` `0x43dc4f43`, `LiroSeq ParamCheckErr@%s[SilentShutterMode]…` `0x43dc9a14`, `[shutterType]` `0x43dca61f`, `[front_eshutter]` `0x43dc821d` y `CheckSetSilentShutterMode` `0x43dca9ad`, `CheckSetShutterType` `0x43dcb09c`, `CheckSetFrontEshutter` `0x43dca84a`; además el motor `EC` (`job_EC_move_iris error:[%x]` `0x43dcf97d`, `CapRawDSLR::ECShare is NULL![%d]` `0x43dcf9cd`, `EC::ISO Range Error…` `0x43dcf9ee`, `EC::CapISO Error…` `0x43dcfa1c`). La **A6000 fw3.21 y la A7S fw3.20 tienen 0** de todo eso (`efcs`/`EFCS`, `electronic`, `curtain`, `mechanical`, `flicker` y `silent` en minúsculas: 0 en los tres). La única coincidencia de la A7S es el diagnóstico `SET Silent Shutter Type: %d` `0x43ca4b6b` (ya documentado en `work/claude/a7s_silent_execution_trace.md`, convertidor `0x4379ec04`).
+
+**La ausencia en la A6000 es selectiva**: sí tiene el motor de exposición `EC` (`EC::EcTagData` `0x43ca91ce`, `EC::EcEncryptedTagData` `0x43ca9227`, `EC::EcAmcTagData` `0x43ca931b`, `api_EC_GetApolloLapNum()` `0x43caa193`); lo que falta es **exactamente** la sub-rama `ElecShutter/`. Sus 15 apariciones de `shutter`/`Shutter` son del **obturador mecánico** (silenciador `VDF::ShutterMuteOffExecutor` `0x43c851d8`, `[SFRS][PINSEND] shutter mute thru` `0x43ce956e`, `[VPH_API]<shutter_mute_param>` `0x43ce3634`) y del disparo táctil (`[CAMERA_MAIN_FC]: ReplyForTouchShutter` `0x43ca6a85`).
+
+**Lectura**: es un **control positivo** — cuando un firmware de Sony trae obturador electrónico en esta capa deja huellas inequívocas, y la A6000 fw3.21 no tiene ninguna → su HAL **no implementa** un subsistema de obturador electrónico. Refuerza la conclusión vigente de **S51 (A/B/C = NO)** y complementa a S101 (allí el selector de tipo de mecanismo `0x4379316a` tenía valor 0 por defecto y sin escritor; aquí se ve que tampoco existe el módulo que lo interpretaría). **Límite**: la ausencia estática no demuestra incapacidad del hardware, solo la no implementación en el HAL (la prueba física P0–P8 sigue pendiente).
+
+[Informe](../analysis/s135_elec_shutter/elec_shutter_scan.md) · [doc](../docs/capture/s135-elec-shutter.md). Siguiente: si el módulo `ElecShutter` del A6300 se ejecuta; si la política EFCS de la A6000 en `libObj.so` (E012) es el mismo concepto (capas distintas, no enlazado); si una fw anterior de la A6000 lo tuvo.
+
+## S133 — el módulo `[MOUNT_DEBUG]` (132 trazas) de diagnóstico de la montura (21-10-2026, línea de RE general)
+
+**VERIFICADO (42 tests, `tests/test_s133_mount_debug.py`):** 132 cadenas `[MOUNT_DEBUG]` entre `0x43c9648d` y `0x43c9a10f`, **148 sitios PIC** (regla estricta) en **65 funciones** y **9 sinks**; con `[MOUNT_ERROR]` (80), `[MOUNT_INFO]` (6) y `[MOUNT_WARNING]` (5) son **223 trazas `[MOUNT_*]`**. En la A7S fw3.20 y el A6300 fw2.01: **0** cadenas con esos prefijos y **0/132** mensajes interiores idénticos → material **propio de la A6000 fw3.21**; pero el mecanismo de captura (`/mnt/Mount_ms_log_%03d.dat`) y el módulo Eclipse son **preexistentes** en las tres cámaras → lo nuevo es la *instrumentación*, no la función. El subagente comprobó además la sensibilidad de los tests (cambiar una dirección o el `push {r3}` de `0x436e03b0` hace fallar 5 pruebas).
+
+**Negativo acotado**: ninguna traza del módulo menciona obturador, sensor, apertura, actuador ni autofoco → **sin efecto en S51**.
+
+[Informe](../analysis/s133_mount_debug/mount_debug.md) · [doc](../docs/capture/s133-mount-debug.md). Siguiente: atribución de módulo de los puentes `0x4377e0e8` y `0x437d24c8`; el consumidor de `osal_snd_msg`; la semántica de los códigos `CS_*`/`PowerSeq` y de los estados 0-2.
+
+## S137 — `[CTRLCORE]`: la sub-etiqueta del núcleo de control de códec (21-10-2026, línea de RE general)
+
+**VERIFICADO (54 tests, `tests/test_s137_ctrlcore.py`):** 55 cadenas con el token `[CTRLCORE]` entre `0x43c3b82d` y `0x43cdb492`, **74 sitios PIC** (regla estricta) en **16 funciones** emisoras, **74/74 recalculados de forma independiente** por `analysis/s137_ctrlcore/verify_sites.py` (`ldr` del mismo registro → literal → `destino = W + add + 4`). **Corrección de la premisa del hito**: `[CTRLCORE]` **no es un módulo de primer nivel**, es una **sub-etiqueta de segundo nivel** (como `[APL]` dentro de `[CAMERA_SA]`, S119): `[CDIAG][CTRLCORE]` (51, clase `CdCtrlCore`), `[MCSENS][CTRLCORE]` (1, `McSensCtrlCore`) y `[AMSENS][CTRLCORE]` (3, `AmSensCtrlCore`). Capas: `CdCtrlIf` despacha y `*CtrlCore` ejecuta, con `ExecCmd` (comandos `MSG_SENS_COMMAND` `0x435a1424`), `ExecSensCmd` (`0x435a15e8`) y `ExecSensComp` (`0x435a17e8`); ficheros `cdCtrlCore.cpp` `0x43c3b86c`, `mcSensCtrlCore.cpp` `0x43c73689`, `amSensCtrlCore.cpp` `0x43cdb45a`, `mcAvCtrlCore.cpp` `0x43c454e8`.
+
+**Diferencial**: A7S fw3.20 con **55/55** cadenas idénticas (mismas operaciones y ficheros); A6300 fw2.01 con **90** = las 55 comunes + 14 `[CDIAG][CTRLCORE] … 4K` + 21 `[CDEXT][CTRLCORE]` (`CdExtCtrlCore` **no existe** en la A6000).
+
+**Negativo acotado**: ninguna de las 55 cadenas menciona obturador, disparo, cortinilla ni lectura del sensor → **sin efecto en S51**.
+
+[Informe](../analysis/s137_ctrlcore/ctrlcore.md) · [doc](../docs/capture/s137-ctrlcore.md). Siguiente: nombre de `0x439b4244` (registro de mensaje/clase); los ids `0x32`/`0x33` de `ExecSensCmd`; la entrada indirecta a `ExecSensCmd`/`ExecSensComp`.
+
+## S132 — el módulo `[CLK_CTRL]` (66 trazas): el control de reloj (21-10-2026, línea de RE general)
+
+**VERIFICADO (180 tests, `tests/test_s132_clk_ctrl.py`):** `[CLK_CTRL]` es el **etiquetado de un subsistema ya existente**, no un módulo nuevo: el gestor de control de reloj **ClkCtrl** de la A6000, expuesto como **14 funciones DDL** (`ddl_clkctrl_*`), con **tarea propia**, **máquina de estados**, **arbitraje** (abrir/cerrar el reloj, bloquear/desbloquear la señal de sync) e **intercambio maestro/esclavo**. Las **66 trazas** viven en `0x43c3a1df`–`0x43c3b09c`; con la regla estricta: **62/66 referenciadas**, **85 sitios de emisión** en **36 funciones**, todas en el cluster de código `0x4359ee24`–`0x435a1150`; **4 cadenas sin referencia** (`0x43c3a2a6`, `0x43c3afc0`, `0x43c3afe4`, `0x43c3b007`), verificadas sin referencia PIC (mapa global de 17 525 destinos) **ni** puntero absoluto de 4 B → texto muerto. Cadillas verificadas: `CALL CB3` `0x43c3acae`, `ClkCtrl` `0x43c3aef0`, `[CAMERA_MAIN]: init_cam_clkctrl CLKTYPE=%x, sysv_delay=%dus` `0x43ca3be5`, `ddl_clkctrl_set_sync_signal err = %d` `0x43c3aea5`; despachador DDL `0x435a0880` (prólogo `0xb570`).
+
+**Diferencial**: la etiqueta es **nueva en la fw3.21 de la A6000** (66 apariciones; **0** en la A7S fw3.20 y el A6300 fw2.01) y **los 66 núcleos de mensaje no existen** en los otros dos, pero los tres comparten **la misma tabla de 14 nombres de API DDL** y los mismos mensajes de inicialización → **lo nuevo es la instrumentación (trazas + traza de la llamada DDL), no la funcionalidad** (26 apariciones de `ddl_clkctrl_` en la A6000 frente a 14 en la A7S y 15 en el A6300).
+
+**Para la línea del obturador**: el módulo fija (a) el **tipo de reloj** `CLKTYPE` (24P/25P/30P/50I/50P/60I/60P) y (b) el **retardo de sincronía vertical** `sysv_delay` (µs). No fija frecuencias en Hz ni divisores de obturación y ninguna de sus 66 trazas menciona obturador: gobierna la **duración del frame** y, por tanto, el presupuesto temporal de exposición y lectura, de forma **indirecta** → **sin efecto en S51**.
+
+[Informe](../analysis/s132_clk_ctrl/clk_ctrl.md) · [doc](../docs/capture/s132-clk-ctrl.md). Siguiente: qué ajustes exactos hace `sysv_delay` sobre el presupuesto de exposición; la relación entre `CLKTYPE` y `change_vfc`/`subVFC` (presentes solo en la A6000).
+
+## S136 — el módulo `[ACCY]` (106 trazas) de accesorios (21-10-2026, línea de RE general)
+
+**VERIFICADO (16 tests, `tests/test_s136_accy.py`):** 106 cadenas `[ACCY]` en el bloque contiguo `0x43c24cac`–`0x43c26319`, **111 sitios PIC** (regla estricta) en **61 funciones** (`0x43562a08`–`0x43566f20`), las 106 referenciadas (0 muertas), en **15 sub-bloques** `[ACCY][nivel][sub]`: HW1, Main 9, MAIN 4, SENSER 3, UART 13, UTILITY 2, FACTORY 7, HOUSING 5, AVOUT 2, AVR 2, BASE 7, HELLO 16, JIRO 2, NULL 1, REMOTE 32. **9 clases RTTI `AccyUm*`** intercaladas (`0x43c2536d`–`0x43c26340`) con tabla `type_info` en `0x43fd7c8c`–`0x43fd7dbc`: `AccyUmDeviceBase` + 7 derivadas (`WaterHousing`, `AvOut`, `Avr`, `Hello`, `Jiro`, `Null`, `Remote`); `AccyUmKeyStatusMgr` sin clase base. Taxonomía (`FACTORY` `0x435646a4`): ID `0`=AvOut, `1`=JIRO1.5, `4`=HELLO, `5`=LANC-AVR, resto `UNSUPPORTED`; máscara `0x80`=Remote, `0x40`=WaterHousing. Transporte: UART propio (`AccyUartOpen` `0x43563bf8`, `Close` `0x43563de8`, `Send` `0x43563ef4`) + OSAL (`0x435612d0`/`0x4356120c`/`0x435612ec`); GID emisor `0x008F0139` (`0x43562284`); `NotifyInput` `0x43565814` entrega `{KeyCode,ID,State,INFO}`.
+
+**Corrección de la premisa (hallazgo)**: `[ACCY]` = **0** trazas en la A7S fw3.20 y el A6300 fw2.01 y **0/106** textos presentes allí, **pero el módulo sí existe** en ambos: las mismas 9 clases `AccyUm*` (bloque RTTI `0x43c25a23`–`0x43c25afc` en la A7S y `0x43d0c9a2`–`0x43d0ca7d` en el A6300) están presentes **sin trazas**, con tabla de nombres de comando (`accy`, `edr`, `SendCommand`…) y dos clases `AccyMi*` que la A6000 no tiene → lo propio de la fw3.21 de la A6000 es el **logging**, no el módulo.
+
+**Para la línea del obturador**: 0/106 trazas mencionan obturador, flash, lente, montura o batería; el **disparador remoto aparece solo como tecla del mando** (`START STOP OFF` `0x43c260b0` → `KEY:0x0A00000D` en el pool `0x43566cfc`), entregada como evento genérico por `NotifyInput` → **no decide ni ejecuta el disparo**. La montura (S66) es un subsistema **distinto** (otro UART, otro protocolo) → **sin efecto en S51**.
+
+[Informe](../analysis/s136_accy/accy.md) · [doc](../docs/capture/s136-accy.md). Siguiente: significado de `ACCY`/`UM`/`Spinal`/`GF`/`SS`/`Tally`/`JIRO`/`AVR`/`LANC`/`AISATSU`; la tabla de teclas `0x0A0000xx` → acción; la cola OSAL destino (`0x007A0020`); el papel de las clases `AccyMi*`.
+
+## S139 — el módulo `[ENCSEQCTRL]` (46 trazas): el control de secuencias de codificación (21-10-2026, línea de RE general)
+
+**VERIFICADO (35 tests, `tests/test_s139_encseqctrl.py`):** 46 cadenas `[ENCSEQCTRL]` en `0x43c4bce5`–`0x43c4c796`, **46/46 referenciadas**, **96 sitios PIC** (regla estricta, **96/96 reconfirmados** de forma independiente) en **32 funciones** (`0x435d6ad0`–`0x435d90ac`), 0 muertas. La clase es **`McAvcEncSeqCtrl`** (RTTI `0x43c4320f`), con fichero **`seqCtrl/mcAvcEncSeqCtrl.cpp`** `0x43c4bd0f` y componente **`Avbb-MovieCodec_131H`** `0x43c41227`; id de log `0x0e` en las 82 llamadas al logger. **18 ids de mensaje** `0x8101`–`0x8112` (`tbh` en `0x435d8d50`, despachador `ProcAvcMsg` `0x435d8d38`): 12 con nombre (`OPEN_COMP`…`GET_ES_NOTIFY`) y 6 sin nombre. Estado = u32 en **`obj+0x15B84`** (getter `0x43a5d2da`, setter `0x435d715c`, 17 llamadores; estados vistos 0,1,2,3,4,6,7,8,10,11). Tabla **O/U Crank** de 57×8 B en `0x43b93bf4`; **35 nº de línea** del `.cpp` recuperados (89–2237). Relaciones: S132 solo temporal (razona en **VFC**, 0 menciones de `CLKTYPE`); S137 por la interfaz `mcAvCtrlIf/mcAvCtrlCore` y el evento `AVSC_CID_MPRNTFY_ENC_SA_CONFIRM_EVENT` `0x43c4c332`; S106 indirecta vía `[SYNCENCSTART]` (`0x43620dd0`–`0x43621298`); S114 y S115 sin relación (0 llamadas cruzadas).
+
+**Diferencial**: A7S fw3.20 **idéntico** (46/46 textos, 96 sitios, 32 funciones y la tabla `tbh` de `ProcAvcMsg` **byte a byte igual**: `0x435d69e0` frente a `0x435d8d50`); A6300 fw2.01 = **superset** (50 cadenas, 100 sitios, 34 funciones; 45 comunes y 5 nuevas: `quickRestartVfc`, `ouCrankStopVfc`, `Remain/gopNum`, `EnsRestartTime(VFC)`, `Audio Buffer Overflow…`).
+
+**Negativo acotado**: 0 apariciones de `shut`/`silent`/`electro`/`mech`/`sensor`/`imager`/`expos`/`drive`/`readout`/`bracket`/`sweep`/`flicker`/`curtain` en sus 46 trazas → **sin efecto en S51**.
+
+[Informe](../analysis/s139_encseqctrl/encseqctrl.md) · [doc](../docs/capture/s139-encseqctrl.md). Siguiente: qué es exactamente `VFC`; la semántica de la tabla O/U Crank; los 6 ids de mensaje sin nombre; quién crea el objeto de la clase (0 punteros absolutos de 4 B).
+
+## S138 — el módulo `[CAMERA_MAIN_FC]` (9 trazas): el glue hacia `Camera::FC` (22-10-2026, línea de RE general)
+
+**VERIFICADO (53 tests, `tests/test_s138_camera_main_fc.py`):** 9 cadenas `[CAMERA_MAIN_FC]:` en `0x43ca6944`–`0x43ca6aec` (**0** en la A7S fw3.20 y el A6300 fw2.01), **13 sitios PIC** (regla estricta, **recalculados a mano 13/13** por `verify_sites.py`) en **7 funciones** del bloque `0x437b7200`–`0x437b821e`, con logger propio en `0x437b7158` (11 llamadas). Contenido: `Eye data is invalid, but lc flag is true.` (dos flags del contexto, `[ctx+0xde]` y `[ctx+0xdf]`, deben valer 1), `OSAL_ERROR: osal_alloc_timer`/`osal_set_timer`/`osal_free_timer` (`0x437b74a4` alta/activación, `0x437b7778` baja), `APP MODE ERROR: face_on, obj_on` (`0x437b7844`: error si `[ctx+0x49c]` y `[ctx+0x49e]` están ambos activos), `OSAL_ERROR: BatteryInfo` (`0x437b7d6c`) y las tres de disparo táctil (`ReplyForTouchShutter ERROR - NULL cb_func`, `SetRequestReplyForTouchShutter ERROR - multiple request`/`- NULL cb_func`).
+
+**La sigla `FC` tiene base textual** (no inventada): es el *namespace* C++ `Camera::FC` (**45** apariciones de `Camera::FC::` y **101** de `FC/` en **los tres** firmwares) con el árbol `FC/**/*.cpp` (99 ficheros) → la biblioteca es común a las tres cámaras; lo propio de la A6000 fw3.21 es el *logging* del *glue* `CAMERA_MAIN`→`Camera::FC`.
+
+**Negativo bien acotado**: el módulo **no participa en la cadena de disparo táctil** documentada (`0x4379d838`, `0x4379e6a8`, `0x4379eba0`→`0x3011`, `0x43809ed8`, `0x437df640`, `0x437df338`, `0x437eabfc`, `0x437e4de4`): ninguna de esas funciones llama a la zona del módulo ni a `Camera::FC`. El módulo **sí** tiene su **propia** API de respuesta al disparo táctil (`ReplyForTouchShutter`/`SetRequestReplyForTouchShutter`), cableada por `wrapper/Face.cpp` → **camino distinto**, lo que evita un falso positivo de correlación.
+
+[Informe](../analysis/s138_camera_main_fc/camera_main_fc.md) · [doc](../docs/capture/s138-camera-main-fc.md). Siguiente: quién invoca la API de respuesta al disparo táctil del módulo y qué la connects con la cadena `0x3011`; el significado de `[ctx+0xde]`/`[ctx+0xdf]` (flags de `lc`).
+
+## S143 — el módulo `[CAM_UTIL_ADJ]` (22 trazas): la utilidad de ajuste de la cámara (22-10-2026, línea de RE general)
+
+**VERIFICADO (30 tests, `tests/test_s143_cam_util_adj.py`):** 22 cadenas `[CAM_UTIL_ADJ]` en el bloque contiguo `0x43ccdcee`–`0x43cce0f2`; **22/22 referenciadas**, **22 sitios** (1 por cadena) en **3 funciones** (regla estricta canónica, aritmética `ldr`/`add` verificada a mano): `0x439007b0`–`0x439008ac` (Table Write/Read, 6 trazas), `0x43900a24`–`0x43900bde` (`cam_adjcmd_handle_cb()`, 13) y `0x43900c44`–`0x43900d30` (`tsk_cam_adjctrl`, 3). Tabla de despacho en `0x440121f8`: idx 1 → `0x439007b0`; idx 0 y 2 → stub `0x43b2a0b8` (**1 de 3 operaciones implementada**); puntero del callback `0x43900a25` registrado en `0x4401f7a4`. **Tabla de comandos «Sens»** (`{cmd,size,str}` de 12 B) en `0x43fe858c`: **51 entradas** `0x0400015d`–`0x0400018f`, con `Sens:AdjCmd CAIF` `0x04020180`, `Sens:RAM Write` `0x04000188`, `Sens:RAM Read` `0x04020189`, `Sens:AdjCmd DwnCamera` `0x0400018a`.
+
+**Diferencial (hallazgo de fondo)**: la **etiqueta** es propia de la A6000 fw3.21 (token 22 / **0** / **0**; interiores **0/22** en A7S y **0/22** en A6300; tampoco existen allí `[CAM_UTIL_SENS]`, `[CAM_UTIL]`, `[CAMERA_ADJ]`), **pero la capa de comandos «Sens» es común a los tres**: 27 cadenas `Sens:*` idénticas y **51 entradas con los mismos cmd y size** (única diferencia de texto: cmd `0x04000167` = `Reserved` vs `POFF return`) → lo nuevo en la A6000 es la **instrumentación**, no la función.
+
+**Para la línea del obturador**: el módulo **no toca** obturación, iris, ISO ni lectura de sensor; los únicos destinos de llamada de las 3 funciones son el log `0x43900728`, OSAL `0x43561260`/`0x435612ec`, `[CAM_UTIL_SENS]` `0x439023b8`, `0x4390092c`/`0x439009f0`/`0x439009c8`/`0x439009c1c` y memcpy/memset → es una **vía genérica de escritura de calibración en la RAM del sensor**, no el punto de materialización de un Silent/EFCS → **sin efecto en S51**.
+
+**Colateral reutilizable**: la convención **vaddr = 0x43541000 + offset** también vale para la A7S fw3.20 y el A6300 fw2.01 (verificado con los punteros de la tabla `Sens`) → confirmado con otro par de blobs.
+
+[Informe](../analysis/s140_cam_util_adj/cam_util_adj.md) · [doc](../docs/capture/s140-cam-util-adj.md). Siguiente: qué `Module ID` corresponde a iris/ISO/shutter/WB; los ids OSAL `0x008f013a` y la plantilla `0x43c04d70`; los índices 0 y 2 de la tabla de despacho; el módulo `[CAMERA_ADJ]`.
+
+## S144 — el módulo `[CAM_UTIL_SENS]` (21 trazas): la interfaz de ajuste hacia el sensor (22-10-2026, línea de RE general)
+
+**VERIFICADO (22 tests, `tests/test_s144_cam_util_sens.py`):** 21 cadenas `[CAM_UTIL_SENS]` en `0x43cce1ea`–`0x43cce66b` (bloque `0x43cce1ea`–`0x43cce6ad`, con 3 cadenas `[CAM_UTIL]` intercaladas en `0x43cce282`–`0x43cce2f3`); **21/21 referenciadas**, **39 sitios** (regla estricta) en **5 funciones**: `0x439012d0` (CB de BKID), `0x43901d50` (Debug IM ASync Open, con camino sync en `0x43901ef8`), `0x43902168` (SET FILE NUM), `0x439023b8` (UTIL MS Mgr Call CB) y `0x43902418` (Debug IM Sync Open). Globales: plantilla/parámetros `0x43f062c8`, «MountSTAT» `0x43fa29f0`, «Flg» `0x43fa2d23`, puntero al callback del gestor MS `0x43f062d4`, tabla de objetos `0x4401eee4`. **Ids OSAL compartidos con `[CAM_UTIL_ADJ]`** (S143): log `0x008f0139`, comando `0x008f013a`, id de módulo `0xb5`; **dependencia cruzada verificada**: ADJ→SENS `0x43900c9c`, SENS→ADJ/`[CAMERA_ADJ]` `0x439012fa` (Mount) y `0x43901302` (UnMount) → son **el mismo par**. El CB de BKID tiene **0 `bl`** y se registra por puntero absoluto `0x439012d1` en `0x44022d84`.
+
+**Pieza transversal**: **17 llamadas** a `0x43901d50` desde `[CAMERA_MAIN_LC]`, `[IMAGING_CAP]`, `[CAMERA_MAIN_TC]`, `[CAMERA_MAIN_YC]`, `[IDT]`/`[IDT_OPD]` → `cam_util_debug_file_write` es la pieza que **vuelca imagen (RAW/YC) en la memoria del sensor**: un sumidero de depuración transversal, no un módulo de captura.
+
+**Diferencial**: la etiqueta es **propia de la fw3.21** (21/0/0; interiores 0/21 y 0/21), **pero la funcionalidad ya existía en los tres** (`cam_util_debug_file_write` 3/2/2, `MemAreaMSDebug` 4/4/10, `Sens:` 27/27/27) → lo nuevo es la **instrumentación**, no la función.
+
+**Negativo acotado**: 0 coincidencias de `shut`/`iris`/`iso`/`exposure`/`silent`/`elec`/`efcs`/`fps` en las 21 trazas ni en las 47 cadenas de la banda `0x43901000`–`0x43902610`; destinos de llamada solo OSAL, thunks y memcpy → **sin efecto en S51**.
+
+[Informe](../analysis/s144_cam_util_sens/cam_util_sens.md) · [doc](../docs/capture/s144-cam-util-sens.md). Siguiente: siglas «IM»/«MS» (sin expansión en los bytes); semántica de `BKID`/`SWFLG`/`MODEFLG`/`MountSTAT`/`FsysMode`; naturaleza de la tabla de `0x44022d84`; el canal exacto hacia el driver.
+
+## S148 — el módulo `[DEPTH]` (16 trazas): el medidor de profundidad (22-10-2026, línea de RE general)
+
+**VERIFICADO (25 tests, `tests/test_s148_depth.py`):** 16 cadenas `[DEPTH]` en `0x43c249ec`–`0x43c24c73` (11 `INFO`, 2 `DEBUG`, 3 `WARN`); **0** en la A7S fw3.20 y el A6300 fw2.01; **17 sitios de emisión** (regla estricta, **verificados a mano** los 17) en **11 funciones** (`0x43541b00` `update`, `0x4356228c` `enableDummyRecv`, `0x435622d4` Rsp, `0x4356230c` `getMsg`, `0x43562354` `notifyOff`, `0x435623bc` `notifyOn`, `0x43562424` `getLiro`, `0x43562454` `update`, `0x43562634` GET, `0x43562660` NOTIFY, `0x435626d4` despachador); 0 cadenas sin referencia y ningún puntero absoluto de 4 B.
+
+**No es un módulo nuevo**: la clase **`DepthGaugeMain`** (RTTI `14DepthGaugeMain` `0x43c24b85`, `type_info` `0x43fd7c84`, vtable `0x43fb8f50`) está **en los tres firmware** (1/1/1) y se registra con el nombre **`depth`** (`0x43c24b46`) en `0x435ab6f0`; **tabla de 6 comandos** de 12 B en `0x43fd7c30` (`update`, `getLiro`, `getMsg`, `notifyOn`, `notifyOff`, `enableDummyRecv`); GID **`0x018b04dc`**; ids de notificación 1=GET / 2=NOTIFY_ON / 3=NOTIFY_OFF (`0x435626d4`); `valueDepth` acotado a **0xFA0 = 4000** (`0x43541b04`) → la fw3.21 de la A6000 **añade solo el logging** (patrón S130/S132/S136).
+
+**Consumidor real (aportación)**: `CS_ExifMakerNote.cpp` (`0x43cc56dc`) → `getMsg` en `0x438b900a` → tag Exif **0x5001** = racional `(valueDepth*10 : 1000)` (`0x438b90a8`) y **0x5002** = estado (`0`/`1`/`0x80`/`0x81`, `0x438b90b8`); segundo consumidor: `[ACCY]` → `update` en `0x43564dc0`/`0x43564ed2`. La "profundidad" sale a la **EXIF** de la foto.
+
+**Negativo acotado**: 0/16 menciones de obturador/sensor/exposición/enfoque/lectura/distancia (`shut`, `shutter`, `silent`, `electro`, `mech`, `sensor`, `exposure`, `readout`, `focus`, `af`, `dist`, `iso`, `aperture`, `iris`, `zpd`, `imager`, `drv`, `drive` = 0 cada uno) y los **26 destinos de llamada** del módulo no salen de él (cero llamadas a `[CAM_IMAGER]`, `[CAMERA_MAIN*]`, `[IDT_OPD]`, `[VPH_API]`/`[VDF]`) → **S51 A/B/C = NO intacto**.
+
+[Informe](../analysis/s148_depth/depth.md) · [doc](../docs/capture/s148-depth.md). Siguiente: qué magnitud física mide `valueDepth` (0..4000) y qué significa `status`; el receptor final del GID fuera de `av-cam.bin`; por qué `[ACCY]` publica `update` con `status=2`; el sentido de `0x80`/`0x81` en el MakerNote.
+
+## S151 — el módulo `[PANDA]` (10 trazas): el gestor de mensajes del drive de iris (22-10-2026, línea de RE general)
+
+**VERIFICADO (26 tests, `tests/test_s151_panda.py`):** 10 cadenas `[PANDA]` contiguas `0x43c9a599`–`0x43c9a7c8` (`Panda_SendMessage: <canal> osal_valloc_msg error!`, 5 canales Pre1/Pre2/Post1/Post2/Async); **10/10 referenciadas**, **15 sitios** (regla estricta) en **4 funciones** (`F1_init` `0x437073cc` con 5, `F4_pre` `0x43707f8c` con 4, `F5_post` `0x437081b8` con 4, `F6_async` `0x437083e4` con 2) y logger privado `0x43707324` (10 llamadas: 7 `bl` + 3 `b.w`). Mecánica: **7 colas OSAL** (`0x00f900bc`, `0x00f90078`, `0x00f900d5`, `0x00f90191`, `0x00f90184`, `0x00f90520`, `0x00f90521`), **5 buffers de 0x40 B** con GID `0x00740017` (tabla global `0x4401eee4`), envío por thunk `0x43561228`, errores por GID de log `0x008f0139` (id `0x16`, mensaje 0x9a B); lo inicializa `void Camera::Lens::Initialize(UPM_BOOT_FACTOR*)` `0x43721624` (`bl` en `0x4372163e`).
+
+**Base textual de "Panda"**: el nombre de función `Panda_SendMessage` (10/0/0) y los **parámetros de iris** `uc_PandaADErrorOpen` `0x43c99267` / `uc_PandaADErrorClose` `0x43c9927b` (**1/1/1** en los tres firmware; tabla `0x43febe04`/`0x43febe14`). **0 RTTI, 0 ficheros y 0 cadena independiente `PANDA`** → **`[PANDA]` no es un módulo de logging registrado** (al contrario que `[LENS_MOUNT]`); la sigla se deja **sin desarrollar**.
+
+**Diferencial**: token **10/0/0** y 0/10 textos interiores, **pero el código existe en los tres firmware** (los 7 ids de cola aparecen 1 vez en cada blob; `F1_init` equivalente en `0x43729910` (A7S) y `0x437648d0` (A6300), mismo prólogo y misma secuencia de `bl` salvo las del reporter: F1 19 vs 14, F4 7 vs 6, F5 5 vs 4; la familia de loggers `push {r3}; movs r2,#0x9a` da 43/0/0) → **lo nuevo es el logging, no la función**.
+
+**Negativo acotado**: 0/10 menciones de obturador, sensor, exposición o tiempos; los 47 `bl` del código PANDA van solo a thunks OSAL, helpers propios y `[CAM_UTIL]`; el único vínculo físico es el **drive del iris** → **sin efecto en S51**.
+
+[Informe](../analysis/s151_panda/panda.md) · [doc](../docs/capture/s151-panda.md). Siguiente: qué significan Pre/Post/Async; los ids de cola `0x00f9xxxx`; el GID `0x00740017`; el id de log `0x16`; el papel de `0x00910042`; el receptor final del log.
+
+## S156 — el módulo `[TP_R]` (18 trazas): el reporter de un framework de mensajes (22-10-2026, línea de RE general)
+
+**VERIFICADO (19 tests, `tests/test_s156_tp_r.py`):** 18 cadenas `[TP_R]` en la A6000 fw3.21 entre `0x43c80f23` y `0x43c812f3`: **14 vivas** (20 sitios PIC en 8 funciones emisoras) + **4 muertas**; además **3** con la etiqueta antigua `[TP R]`, todas muertas → 21 cadenas con el token. Funciones: `0x4366c388`/`0x4366c568`/`0x4366c624` (errores OSAL), `boot_exit_tp` `0x4366c6e8`, bucle de recepción `0x4366c840`, `0x4366c978`, despachador `0x4366ca92`, `boot_init_tp` `0x4366caf4` (llamados desde `0x43a464dc` id 135 y `0x43a4670c` id 134). Módulo: código `0x4366c2a4`–`0x4366cd38` (18 funciones); **tabla de comandos DDL** `0x43fe3f28` (`start`, `set_mode`, `print_xy`, `dds_on`, `dds_off`) registrada con el nombre **`tp`** en `0x4366cae8`; colas OSAL: log `0x008f0139`, eventos `0x005c011c`, control `0x01010227`.
+
+**Confirma S151**: el reporter `0x4366c300` (`push {r3}` … `movs r2,#0x9a` → `osal_try_valloc_msg` → `vsnprintf` → `osal_snd_msg`) es **miembro de la familia**; recuentos estricto 43/0/0 (reproduce S151) y laxo 561/0/2 → el conteo con regla estricta es el canónico.
+
+**Corrección de S130 (falso positivo)**: los 2 "textos comunes" entre `[TP_R]` y `[DMMYSIOCOM]` son las **plantillas OSAL** `ERR. osal_snd_msg…`/`ERR. osal_free_msg…`; en la A7S están en `0x43c73764`/`0x43c73792` (ref. `0x4362cc7a`) y en el A6300 en `0x43d7296b`/`0x43d72999`, mientras que en la A6000 ese módulo sigue intacto en `0x43c72e7d`/`0x43c72eab` (ref. `0x43628a5e`/`0x43628a80`) → **código distinto**: falso positivo textual (el texto es genérico de OSAL).
+
+**Diferencial**: A7S 3 cadenas `[TP R]` y A6300 4, **0 vivas**; la tabla de comandos y el registro `tp` existen en los tres (`0x43fe3f28` / `0x43fe54d0` / `0x441a59c0`) → el módulo ya existía **silencioso** y la fw3.21 **añade 15 trazas**.
+
+**Negativo acotado**: la única coincidencia del barrido es `read` en `[TP_R]: ERR. read size error` (tamaño leído por una llamada OSAL) → **sin efecto en S51**.
+
+[Informe](../analysis/s156_tp_r/tp_r.md) · [doc](../docs/capture/s156-tp-r.md). Siguiente: siglas "TP" y "DDS" (sin desarrollar); `<Water>` y `ex_status`/`ex_info`; el consumidor de los eventos de la cola `0x005c011c`; los nombres exactos de `0x43561244`/`0x4356127c`/`0x435613b0`.
+
+## S164 — el módulo `[CAMERA_IS]` (17 trazas): la capa de estabilización de imagen de la cámara (22-10-2026, línea de RE general)
+
+**VERIFICADO (18 tests, `tests/test_s164_camera_is.py`):** 17 cadenas `[CAMERA_IS]` en la A6000 fw3.21 entre `0x43c98da6` y `0x43c9a426` (sub-etiquetas: `MOUNT` 5, `DIST` 5, `EIS` 4, `AS` 3); **0** en la A7S fw3.20 y el A6300 fw2.01. **21 sitios** de emisión (regla estricta) en **13 funciones** emisoras, con los **17 pares PIC verificados a mano (17/17)** → **validación cruzada del mapa de S70**: S164 añade las **5 trazas** que S70 no listaba (`0x43c98dde`, `0x43c98e80`, `0x43c98ebc`, `0x43c9a352`, `0x43c9a3e3`) y la **13.ª función** `0x4371e4cc` (máquina de estados del estabilizador "AS").
+
+**Qué es (VERIFICADO)**: **la capa que aplica la estabilización**. Coordina el recurso RC de estabilización (`rcct_SetStblzPower` `0x439417c8`, `rcct_SetStblzGridH` `0x43941814`, rejilla redondeada a múltiplo de 8 en `0x43702db0`/`0x43702db6`), **lee el giroscopio por ADC** (`GyroAD[p],GyroAD[y], %d, %d` `0x43c9a324`, emitido en `0x437046a4` con los valores de `0x4370665c`), aplica la **corrección de distorsión** (`pos -= (coef·(pos−centro))>>10` en `0x436ea594`/`0x436ea596`, centro/coef en los globales `0x43f61884`/`0x43f61886`), y se sincroniza con la **montura** (se registra como cliente del servicio literal `LENS_MOUNT` `0x43c9a39c`; callbacks `IS_LensMountExpStartCB` `0x436ea2d0` e `IS_LensMountPanoramaGyroCB` `0x43705d64`, códigos `0xF0`/`0xF1`, y envío al objetivo por el canal de no-comandos `SendingLensNonCommand` `0x436e1254`) y con la **secuencia de exposición** (`[CAMERA_MAIN_SYNC]`: `0x43702dac` llamada desde `0x4354a97c` en `0x4354a678`; `0x43704d90` desde `0x4354e51c` en `0x4354d740`). Escribe `/mnt/FILE_IS_%04x.dat` `0x43c9a535` (contador `u16` global `0x43f65d3c`).
+
+**Diferencial**: la etiqueta y la **capa de cámara** del IS (giroscopio propio, matemática de distorsión, callbacks con la montura, cola del estabilizador "AS") **solo existen en la A6000 fw3.21**; pero la **infraestructura del driver RC** es **común a los tres** (`rcct_SetStblzPower` **2/1/1**, `rcct_SetStblzGridH` **2/1/1**, `WrapRcctSetStblz*.cpp` 4/4/4, `/mnt/FILE_IS_%04x.dat` **1/1/1**, `EIS_RC1V_SetPower` 2/2/2) → la diferencia está en la *capa de cámara*, no en el driver.
+
+**Negativo verificado**: 0/17 trazas mencionan obturador, lectura del sensor, *rolling shutter*, tiempo de exposición o solapamiento EIS/obturador → **sin efecto en S51**.
+
+**Colateral con valor para la línea del obturador**: la A6000 fw3.21 tiene **0 apariciones** de `rolling` y de `readout` (igual la A7S fw3.20), mientras que el **A6300 fw2.01 tiene 1**: `position num in rolling is strange %d` (`0x43d9fe03`), junto a `position num in vd is strange %d` (`0x43d9fde2`) → el concepto de *rolling shutter* **existe en el A6300 y no en la A6000/A7S** (y la cadena `vd`/VD del visor aparece en el A6300 pero no en la A6000). Refuerza que el A6300 es el cuerpo con más funciones de lectura, pero **no cambia S51** (A/B/C = NO): la ausencia estática de una cadena no demuestra incapacidad del hardware.
+
+[Informe](../analysis/s164_camera_is/camera_is.md) · [doc](../docs/capture/s164-camera-is.md). Siguiente: fichero fuente propio del módulo (no embebido); significado de `upm_get_hcrn_ura` y de las sub-capas `AS`/`DIST`; el significado físico de `SetStblzGridH` y el camino RC→imager; el formato binario de `/mnt/FILE_IS_%04x.dat`; las 4 funciones sin llamadores `bl` directos (¿tabla de callbacks?).
+
+## S165 — el módulo `[JOG]` (14 trazas): el subsistema de la rueda de control (22-10-2026, línea de RE general)
+
+**VERIFICADO (tests del hito + comprobaciones a mano):** 14 cadenas `[JOG]` en la A6000 fw3.21 entre `0x43c40eb4` y `0x43c411bd` (contiguas en `.rodata`); **0** en la A7S fw3.20 y el A6300 fw2.01; `deg/sec` **1/0/0**. **14/14 referenciadas**, **24 sitios** (regla estricta) en **12 funciones**, **0 cadenas muertas**; los **34 pares PIC** de la zona `0x435ae400`–`0x435afb00` (24 de `[JOG]` + 10 de `__PRETTY_FUNCTION__`) se verificaron **a mano 34/34**, comprobando que el registro no se reescribe entre el `ldr` y el `add` (kill analysis con `movs/adds Rd,#imm` → `Rd = (h>>8)&7`).
+
+**Qué es**: **la fuente de eventos de la rueda de control**. Sondea `JogFg`/`JogTpu`/`JogVGrip` con temporizador OSAL, traduce el movimiento a un `key_code` de cámara + delta en grados (`JogKey::SendKeyEvent` `0x435af9d0`) y emite un evento de 12 B (`JogMain::SendEvent` `0x435aeb18`) a la **cola de eventos de cámara (id `0x106`)**. Tabla de key codes `0x43fdab20` (`0x11`–`0x17`); montaje en `JogMain::Init` `0x435ae6b6`.
+
+**Diferencial**: las clases RTTI `JogDev` (2/1/1), `JogFg` (3/1/1), `JogTpu` (3/1/1) y `JogVGrip` (**3/1/0**) están **en los tres firmware** → el subsistema ya existía; lo propio de la fw3.21 es la **instrumentación** `[JOG]` y la clase `JogKey` (**5/0/0**). **Matiz propio del A6300**: sustituye `JogVGrip` por **`JogCaif`** (**0/0/1**) → en el A6300 la rueda se toma por la interfaz CAIF en vez de por la empuñadura vertical.
+
+**Colateral**: el módulo hermano `[ILLUMI]` (sensor de luz ambiente; clases `IllumiDev`/`IllumiAd`/`IllumiCam`/`IllumiRPR0400` en las tres fw) emite en la A6000 una traza **gemela** `[ILLUMI]<Send Event> key_code = 0x%x,Level:%d` `0x43c40798` → mismo patrón de emisión por `key_code`; `ILLUMI]` es **34/0/0**.
+
+**Negativo acotado**: 0 coincidencias de `shutter`/`capture`/`exposure`/`sensor`/`read`/`frame` en las 14 trazas ni en las 10 `__PRETTY_FUNCTION__`; los únicos temporizadores son de **sondeo de la rueda** → **sin efecto en S51**.
+
+[Informe](../analysis/s165_jog/jog.md) · [doc](../docs/capture/s165-jog.md). Siguiente: ficheros fuente (no embebidos); siglas `Fg`/`Tpu` (sin base textual); significado de los key codes `0x11`–`0x17`; la cola OSAL concreta (recurso `0x011b02aa`); las ranuras 0/3/4/5 de las vtables `Jog*`.
+
+## S166 — el módulo `[ADC_DEBUG]` (14 trazas): el volcado del ADC del driver LIRO (22-10-2026, línea de RE general)
+
+**VERIFICADO (tests del hito + comprobaciones a mano):** 14 cadenas `[ADC_DEBUG]` en la A6000 fw3.21 entre `0x43ce50dd` y `0x43ce5273` (bloque contiguo, paso 0x20 B); **0** en la A7S fw3.20 y el A6300 fw2.01. **14/14 referenciadas**, **15 sitios** (regla estricta; `few arg` se emite en 2 sitios) en **2 funciones** — `0x4398eb20` (handler ADJ `get_da`) y `0x4398ec7c` (handler ADJ `get_d`) — con los **15 pares PIC verificados a mano 15/15**.
+
+**Qué es**: **no es un módulo autónomo**, es la capa de volcado de valores crudos que la fw3.21 añadió a los *handlers* de los comandos de fábrica (`ADJ`) del **driver LIRO del ADC**. El ADC tiene **2 unidades × 12 canales** (array en RAM `0x43f84b80`, índice `= unidad*12 + canal`; registro de HW `0xf2406014` + `0x1000`/unidad + `4`/canal, leído por `0x4398ee14`; rango validado con `cmp r2,#0xb` `0x4398e6b8` y `cmp r1,#1` `0x4398e6b2`); base HW `0xf2406000` (u0) / `0xf2407000` (u1); handle de servicio `0x720018` (**LIRO_ADC**) y **11 clientes**; ids de mensaje `0xfff0` (1 canal) / `0xfff1` (12 canales) / `0xfff2` (escribir 12).
+
+**Diferencial**: el driver ya existía en los tres firmware (`TSK_ADC` **1/1/1**, `get_d` **1/1/1**, `get_da` **1/1/1**, `set_da` **2/2/2**, `CNF_ADC_CH_EVF_TEMP` **1/1/1**, las tres plantillas `ADC_GET_DATA…`/`ADC_SET_DATA_ALL…` **1/1/1**, base HW `0xf2406000` **5/5/5**); los handlers equivalentes (`0x4397c860`/`0x4397c89c` en la A7S, `0x43a23480`/`0x43a234bc` en el A6300) son **estructuralmente idénticos pero no imprimen nada**. Lo propio de la fw3.21: la capa `[ADC_DEBUG]`, las **etiquetas de comando** `ADJ_CMD_LIRO_DRIVERS_ADC_*` (**5/0/0**) y trazas internas del driver (`sem=%x`, `reg_sync err=%d`, `Backup Read Error!`, **1/0/0** cada una) → **instrumentación, no función**.
+
+**Corrección de una lectura posible de S164**: el «acceso ADC» del giroscopio de `[CAMERA_IS]` **NO** es el servicio LIRO ADC — la región del estabilizador hace **0** y **1** llamadas al helper genérico `0x43561228` y **ninguna** con el handle `0x720018`; el lector de `GyroAD` lee una **tabla de constantes** en `0x43bdc0a6`. Dos mecanismos distintos que comparten la palabra "ADC".
+
+**Aportación a la línea del obturador (verificada)**: el ADC participa en la **sincronización temporal de la secuencia HS** (`HS_Main` `0x4378fef4` → `SendToADCTask` `0x4378d3b4`; espera con `ADC flg timeout %dV #%d, %04x` `0x43ca30fd`) y en la **medida de jitter** (`int_ADC_Handler #%d jitter NG %d->%d, jitter:%dusec` `0x43ca241e`, umbral `cmp.w r8,#0x320`), pero **ningún canal está ligado a la decisión mecánico/electrónico**: el único canal con nombre simbólico es `CNF_ADC_CH_EVF_TEMP` (temperatura del EVF) y el **A6300 fw2.01, que sí implementa `ElecShutter/` (S135), tiene el MISMO ADC LIRO y no añade ningún canal ni traza de obturador electrónico** → **S51 sigue A=NO, B=NO, C=NO**.
+
+[Informe](../analysis/s166_adc_debug/adc_debug.md) · [doc](../docs/capture/s166-adc-debug.md). Siguiente: asignación canal→sensor (los ids de configuración se leen en runtime, `0xf9034d`/`0xf90413`/`0xf90414`); fichero fuente y clase RTTI del driver LIRO ADC (no embebidos); el canal `CNF_ADC_CH_EVF_TEMP` y las siglas `CNF`/`EVF_TEMP`.
+
+## S168 — control positivo del *rolling shutter* del A6300: la cadena es **muerta** (22-10-2026, línea de RE general)
+
+**VERIFICADO (16 tests, `tests/test_s168_a6300_rolling.py`):** la cadena `position num in rolling is strange %d` del **A6300 fw2.01** (`0x43d9fe03`) **no la referencia NINGÚN código**: **0 referencias PIC** (regla estricta canónica), **0 punteros absolutos de 4 B**, **0 pares `movw`/`movt`**, y **0** por el **método inverso independiente** (`add_addr = destino − W − 4`). La cadena tampoco aparece en ningún otro fichero del paquete del A6300 (solo en `av-cam.bin`).
+
+**Control de contraste**: en la banda `0x43d9fd80`–`0x43d9fe80` hay **5** cadenas y **4 están referenciadas** (`[BL]Wait_BL_ASYNC_RCV (%+hd)` `0x43d9fdc5`; `position num in vd is strange %d` `0x43d9fde2`; `this vsync command has another command` `0x43d9fe29`; `ASYNC BL COMMAND BANISH ! Mount_FcZm_BLComm.cpp %d` `0x43d9fe50`) → el discriminante funciona y **exactamente una —la del *rolling*— está muerta**. El código vivo es `0x4372914c`: **cálculo de ancho en bits del número de posición del VD** con control de rango (`r1 = 1 << n`; `cmp r3,#0xfe`; si no cabe, traza y fuerza 8 bits), referencia en `ldr 0x43729164` (pool `0x43729174` = `0x00676c78`) + `add 0x43729166`.
+
+**Método (reutilizable)**: tres herramientas parametrizadas en `analysis/s168_a6300_rolling/` — `scan_refs.py` (réplica de la regla estricta con *blob* y *base* como parámetros), `find_ref.py` (**método inverso independiente**) y `alive_map.py` (mapa vivo/muerto de una banda de `.rodata`). Controles validados: A6000 `Get ADC CNF_ADC_CH_EVF_TEMP Val:0x%x(%d)` `0x43c7751a` → 1 referencia (`ldr 0x43636ce2` + `add 0x43636ce6`); A6300 `0x43d9fde2` → 1 (`ldr 0x43729164` + `add 0x43729166`).
+
+**Corrección que impone sobre S164**: el colateral de la revisión de S164 («el concepto de *rolling shutter* **existe en el A6300**») **queda matizado**: la cadena existe pero **está muerta** → no prueba el concepto en ese firmware. Lo que **sigue en pie** es el dato bruto (la cadena está en el A6300 y no en la A6000/A7S) y que las 36/37/40 apariciones de `roll` en las tres son casi todas `Controller`/`Scroll` (RTTI), no el concepto. **No cambia S51** (A=NO, B=NO, C=NO) ni S135 (control positivo del `ElecShutter/` en el HAL del A6300, **independiente** de esta cadena); de hecho **debilita** un argumento potencial.
+
+**Excepciones de `roll` que NO son *rolling shutter***: `SetDistRoll` `0x43c7b1f3` (**1/1/1**, comando de la API RC), `SetRoll` `0x43c7fc61` (**1/1/1**, comando RC) y `RollAD,%d,%d,%d,%d,%d,%d,%d,%d` `0x43c9ae2e` (**1/0/0**, propio de la fw3.21 de la A6000; imprime 9 valores AD de un global en `0x437212b8`). Análisis de esa familia: hito **S169**.
+
+[Informe](../analysis/s168_a6300_rolling/rolling.md) · [doc](../docs/capture/s168-a6300-rolling.md). Siguiente: `GetImagerStabilizationTime` del A6300 (`0x43d9ce7f`, viva pero no analizada); qué comandos RC son `SetRoll`/`SetDistRoll`; el global de los 9 valores AD de `RollAD`.
+
+## S169 — control positivo del obturador electrónico: la API de **drive** del A6300 (22-10-2026, línea de RE general)
+
+**VERIFICADO (32 tests, `tests/test_s169_drive_api.py`):** el **A6300 fw2.01** tiene una **capa de validación de parámetros de cámara** (`LiroSeq`) con **201 propiedades** `CheckSet*` y **370 comprobaciones** `LiroSeq ParamCheckErr@%s[campo] cur:%d req:%d`. Entre ellas, los **parámetros de obturador** (nombre de campo + offset en el bloque de parámetros + sitio del `add`):
+
+| propiedad | campo | offset | sitio |
+|---|---|---|---|
+| `CheckSetShutDrive` | **`sc_ShutDrive`** | `+0x1dd` | `0x438c51c0` |
+| `CheckSetShutDriveMode` | **`uc_ShutDriveMode`** | `+0x1dc` | `0x438c6842` |
+| `CheckSetFrontEshutter` | **`front_eshutter`** | `+0x23c` | `0x438c6e1e` |
+| `CheckSetSilentShutterMode` | **`SilentShutterMode`** | `+0x264` | `0x438c81da` |
+| `CheckSetShutterType` | **`shutterType`** | `+0x268` | `0x438c8b52` |
+| `CheckSetShutLowLimit` | `ul_ShutLowLimit` | `+0x248` | `0x438c7ba4` |
+| `CheckSetIrisDrive` / `CheckSetIrisDriveMode` | `sc_IrisDrive` / `uc_IrisDriveMode` | `+0x1d1` / `+0x1d0` | `0x438c55a2` / `0x438c680e` |
+| `CheckSetManualExposureDrive` | `sc_ExposureDrive` | `+0x1ac` | `0x438c5d14` |
+
+**La A6000 fw3.21 y la A7S fw3.20 tienen 0 de todo eso**: `CheckSet*` **0/0/201**, `ParamCheckErr` **0/0/370**, `sc_ShutDrive` **0/0/1**, `front_eshutter` **0/0/1**, `SilentShutterMode` **0/0/2**, `shutterType` **0/0/1** → **no falta la traza, falta el parámetro**: la fw3.21 de la A6000 **no expone ningún parámetro de obturador electrónico**.
+
+**Patrón verificado a mano** (3 casos): `ldrsb.w r2,[r0,#0x1dd]` (valor actual) vs `ldrsb.w r3,[r4,#8]` (solicitado) → si difieren, `ldr`+`add` al mensaje y a la etiqueta y `b.w 0x43986518` (traza). Los **201 nombres están vivos** (1 referencia PIC cada uno) y se despachan desde la región contigua `0x438c4ade`–`0x438c8c76` (390 sitios), **en el orden del bloque de parámetros**.
+
+**Matiz**: la A6000 **sí** tiene el módulo LiroSeq (2 trazas: `[CAMERA_MAIN]: LiroSequencerMovieFileFormat : %d` `0x43ca3b3a`, `[CAMERA_MAIN]: LiroSequencer cannot read IRIS_DIAL_POS ::: %d` `0x43ccadbf`) y **sí** tiene `drive_mode` (el del imager de S134, 10 apariciones) → no le falta el subsistema, le falta **esta capa de validación de parámetros**.
+
+**Salvedad** (S130 §4): la comparación mezcla versión de firmware y modelo (el A6300 es de otra generación de plataforma, LIRO/CXD).
+
+**Efecto en S51: NINGUNO — S51 sigue A=NO, B=NO, C=NO.** El hallazgo dice que la fw3.21 de la A6000 no expone parámetros de obturador electrónico, no que su hardware sea incapaz; la ausencia estática no demuestra incapacidad del hardware y sigue faltando la prueba física.
+
+[Informe](../analysis/s169_drive_api/drive_api.md) · [doc](../docs/capture/s169-drive-api-a6300.md). Herramientas reutilizables: `scan_all_refs.py` (mapa global PIC de un blob parametrizado: A6300 **20 001** destinos, A7S **16 638**, A6000 17 525 ya existente) y `pair_checkset.py` (**387** pares propiedad↔campo con offset y sitio). Siguiente: qué valores toman `shutterType`/`SilentShutterMode`/`front_eshutter` en runtime y quién los escribe; la ruta de `sc_ShutDrive` hasta el driver del obturador.
+
+## S167 — el módulo `[SAD]` (44 trazas): el diagnóstico de la biblioteca «SA» (22-10-2026, línea de RE general)
+
+**VERIFICADO (124 tests: 106 del hito + 18 de verificación independiente):** 45 apariciones del token `[SAD]` en la A6000 fw3.21 entre `0x43ce546b` y `0x43ce59d1` (44 con mensaje + el token suelto `[SAD] ` `0x43ce56b3`); **0** en la A7S fw3.20 y el A6300 fw2.01. **49 sitios** (regla estricta) en **5 funciones** emisoras: `0x43998578` (gestión de handle de unidad, 3), `0x4399d464` (validador de cabecera **Cdc**SaPrg), `0x4399d528` (**Nml**SaPrg), `0x4399d618` (**Rsd**SaPrg) y el **despachador de volcado `0x439a119c`** (43); **0 cadenas sin referencia**. Los **49 pares PIC verificados a mano (49/49)** y la reimplementación del escáner del subagente reproduce el mapa canónico del repo (`analysis/s106_imaging_cap/pic_refs_strict_global.json`, 17 525 destinos) con **0 discrepancias**.
+
+**Qué es**: el **módulo de diagnóstico del subsistema «SA»** (acelerador escalar): vuelca el estado de configuración (`CFG_STATE`), el estado y los datos de la **FIFO de JPEG** (`JpgNrm` `0x43ce5724`, `JpgSrt` `0x43ce5738`, `JpgNrmIndex` `0x43ce5762`, `JpgSrtIndex` `0x43ce577b`), los **tiempos de cálculo** (`CALCTIME`), las **cabeceras de programa SA** (`SaProgHdr`, validadores Cdc/Nml/Rsd con error `0x0d` y el byte «una sola vez» `0x43e211c8`) y la gestión de **handles de unidad/DMM** (`0x43f85932` 32 u16, `0x43f84bfe` 255 u16 → **`[CAM_DMM]`**, S113). Canal de log **propio** `0x439a10f0` (id OSAL `0x93`), frente al logger global `0x435ab880` de `[SFRA]`/`[SFRS]`.
+
+**La sigla NO tiene base textual → sin desarrollar**: `SAD` = 45 apariciones = solo las 45 trazas; `SAD_`/`_SAD`/`Sad[A-Za-z]` = 0; los 11 `SaD` son del subsistema de **audio** (`SaDriverBase` `0x43cde8f1`, `SaDriverZoomNr` `0x43cdda06`); 0 nombres de fichero con `sad`/`SaD`; **0** apariciones de `[SAD]` en los **148 `.so`** de la fw3.21. **No** se propone «SA Debug» ni «Scene Auto Detection»: no tienen respaldo en los bytes.
+
+**Diferencial**: la **biblioteca SA es común a los tres firmware** (`ScalarInfraSequenceSa` **10/10/10**, `ScalarInfraSequenceSa.cpp` **1/1/1**, `ScalarInfraSequenceSaStage.cpp` **1/1/1**, `SaStageAutoexec_sadone` **1/1/1**, `SA_JPEG_DEC` **1/1/1**; versiones SA0/SA1/SA5/ZMA0/ZMA1 en `0x43ce5402`–`0x43ce5445`) → lo propio de la fw3.21 es la **instrumentación** (`[SAD]` 45/0/0, `SaProgHdr` **2/0/0**).
+
+**Negativo acotado**: 0 de `shutter`/`silent`/`obtur`/`expos`/`imager`/`sensor`/`readout`/`drive`/`brack`/`sweep`/`interval`/`still`/`movie`/`focus`/`aperture`/`iso` en las 45 cadenas; las 4 apariciones de `Jpg` son **índices de la FIFO** → **sin efecto en S51** (A/B/C = NO).
+
+**Corrección aceptada del subagente (verificada por el agente principal)**: el puntero embebido `"PEG_DEC"` en `0x43ce5644` **no existe**; el `ldr r3,[pc,#0x3e4]` de `0x439a11ac` resuelve al pool `0x439a1594` (`W=0x344494`) y, con el `add r3,pc` de `0x439a11b4`, el destino es `0x43ce564c` = **`[SAD] DbgPrt CmdRcv`**. `"PEG_DEC"` es una **cadena muerta** (0 referencias PIC, 0 punteros de 4 B). También se corrigió la afirmación «bloque contiguo»: son **3 bloques** (3 + 3 + 39).
+
+[Informe](../analysis/s167_sad/sad.md) · [doc](../docs/capture/s167-sad.md). Siguiente: `0x43998578` no tiene llamador `bl` ni puntero absoluto de 4 B → se invoca por puntero; sentido de `DdsDataAdd`/`SelCode`/`ZmCfg` vs `SaCfg`; los ids `0x9548`/`0x93`/`0xa1` sin decodificar; semántica de los 6 subcomandos y quién envía `0x9548`.
+
+## S171 — la API del imager y el canal «SteadyShot» del objetivo (22-10-2026, línea de RE general)
+
+**VERIFICADO (20 tests, `tests/test_s171_imager_api.py`):** tres diferencias de **superficie de API** entre el A6300 fw2.01 y la A6000 fw3.21 / A7S fw3.20:
+
+| elemento | A6000 fw3.21 | A7S fw3.20 | A6300 fw2.01 |
+|---|---|---|---|
+| nombres de API del imager (`Get/Set*Imager*`) | **4** | **4** | **7** |
+| → `GetImagerStabilizationTime` | 0 | 0 | **1** |
+| → `SetImagerFrameSize` (traza `SetImagerFrameSize[%d]` `0x43daccdd`) | 0 | 0 | **1** |
+| → `SetImagerMode` (firma C++ `0x43daf786`) | 0 | 0 | **1** |
+| clase `Camera::Sync::SyncUtilityUpm` | **0** | **0** | **3** |
+| tipo `Camera::Imager::IMAGER_DRIVEMODE` | **0** | **0** | **2** |
+| `SteadyShot` (cualquier grafía) | **0** | **0** | **11** |
+| `SteadyShotInfo` (canal del objetivo) | **0** | **0** | **7** |
+| `Mount_DividedInfo` (módulo que lo contiene) | 5 | 3 | 5 |
+
+Los cuatro nombres comunes: `GetImagerDriveMode`, `GetImagerTemperature`, `GetImagerTemperatureAD` y `GetPrelightImagerDriveMode` (el `drive_mode` del imager de **S134**).
+
+**`GetImagerStabilizationTime` (solo A6300)**: cadena `GetImagerStabilizationTime Request Error` `0x43d9ce7f`, **viva** con **1** sitio PIC (`ldr 0x43718d02`, pool `0x43718d14` = `0x00684177`, `add r0,pc` `0x43718d04` → logger `0x43986518`). El manejador (`0x43718cd8`) **suma** los `count` bytes de una tabla en `base + 3·índice + 0x25a` (count en `+0x258`) y devuelve `(suma + 2) & 0xFF`; con la tabla vacía avisa («Request Error») y devuelve 0. **NO VERIFICADO**: qué magnitud devuelve (el nombre viene de la tabla de API, no del código), qué es la tabla de `+0x25a` y quién la escribe.
+
+**Canal «SteadyShot» del objetivo (solo A6300)**: las 7 apariciones de `SteadyShotInfo` están en el **driver de la montura (BL)**: el objetivo manda su información de estabilización y el cuerpo la recibe en dos callbacks (`CallBack_SteadyShotInfo_Com_1st` `0x43da460a` y `_Com_2nd` `0x43da46aa`, entre otras, con sitios `0x4374eb60`–`0x4374ed6c`), con `Mount_DividedInfo_SteadyShotInfo.cpp` como fichero. Las otras 4 apariciones de `SteadyShot` son propiedades de la capa `LiroSeq` de **S169**: `CheckSetFrameLockOnSteadyShot` `0x43dc5494`, `CheckSetSteadyShotAdvancedStill` `0x43dca7b7`, `CheckSetS1SteadyShotMode` `0x43dca8b5`, `CheckSetSteadyShotAdvancedMovie` `0x43dcabd7`.
+
+**Matiz**: el módulo `Mount_DividedInfo` **existe en los tres** (5/3/5) → lo exclusivo del A6300 es la **variante `SteadyShotInfo`**, no el driver de la montura. Y la A6000 **no** carece de estabilización (tiene el subsistema IS/EIS de **S164**): lo que le falta es **este canal del objetivo** y la entrada de API `GetImagerStabilizationTime`.
+
+**Salvedad** (S130 §4): la comparación mezcla versión de firmware y modelo.
+
+**Efecto en S51: NINGUNO — S51 sigue A=NO, B=NO, C=NO.** Son diferencias de **firmware**; la ausencia estática de una API no demuestra incapacidad del hardware.
+
+[Informe](../analysis/s171_imager_api/imager_api.md) · [doc](../docs/capture/s171-imager-api.md). Siguiente: qué magnitud devuelve `GetImagerStabilizationTime`; el formato del paquete `SteadyShotInfo`; si la clase `SyncUtilityUpm` tiene más métodos con nombre.
+
+## S172 — el módulo `ElecShutter` del A6300: qué hace realmente (22-10-2026, línea de RE general)
+
+**VERIFICADO (15 tests, `tests/test_s172_elec_shutter_a6300.py`):** **S135** localizó el subsistema `ElecShutter/` del A6300 por sus **nombres de fichero** (`ElecShutter/EC_ElecShutter_Main.cpp` `0x43dcfa41`, `ElecShutter/EC_NonlinearElecShutter_MechShutterTable.cpp` `0x43dcfa65`) y sus ajustes, **sin decodificar el comportamiento**. Este hito **localiza el código** (los nombres son cadenas `__FILE__` de un `EC_ASSERT %s:%d` `0x43db1a4d`) y **caracteriza las dos funciones**:
+
+1. **`EC_ElecShutter_Main.cpp`** (función `0x4391d67c`; sitio `0x4391d6a2`): lee un **u16** de una tabla global (`ldr r3,[pc,#0x38]` → puntero; `ldr r3,[r3,r2]`; `ldrh r3,[r3]`) y devuelve un **código de modo de obturador**: `0x80` → **3**, `0x100` → **4**; otro valor → `EC_ASSERT` con línea **0x421** (1057) y devuelve 3.
+2. **`EC_NonlinearElecShutter_MechShutterTable.cpp`** (sitios `0x4391dd50` y `0x4391ddb0`): la **equivalencia no lineal entre velocidad electrónica y mecánica**:
+   * **interpolación por tramos**: lee una fila con `ldr.w r3,[r2,r6,lsl #2]` (**32 bits por fila**), compara con el valor pedido e interpola con escalas **10000** (`0x2710`) y **1000** (`0x3e8`), helper aritmético `0x435586f8` y setters `0x4391da74`/`0x4391da9c`; `EC_ASSERT` línea **0x23c** (572);
+   * **búsqueda en punto fijo 16.16**: escala `0x8000` y **15 bits fraccionarios** (`mov.w r3,#0x8000`; `movs r2,#0xf`), valor = `(r3 + r0*2) << r2`; `EC_ASSERT` línea **0x24f** (591).
+
+**Corrección a S135**: los **128 bytes** que S135 identificó como «tabla de índices de velocidad de obturación» en `0x43dcfa9e` **no tienen ninguna referencia de código** (ni PIC —no están en `pic_refs_strict_a6300.json`— ni puntero absoluto de 4 B) y forman una tabla byte→byte **no decreciente** (`54 54`, `60 60`, `66 66`, `6a 6a`, `6e 6e`, `71 71`, `74 74`, `77 77`, `7b 7b`, `7d 7d`, `7f 7f`), más compatible con una tabla de **caracteres imprimibles**. La tabla real se indexa **por fila con 32 bits por entrada**. **Lo que S135 acertó** (existencia del módulo `ElecShutter/`, sus ficheros y sus ajustes) **se mantiene**.
+
+**Colateral**: `EC_ASSERT` **0/1/1** y `EC_ERR_PRINT` **0/0/5** (A6000/A7S/A6300) → el motor EC de la A6000 **no instrumenta sus aserciones**, otra diferencia de *logging* coherente con S128/S130.
+
+**Salvedad** (S130 §4): el A6300 es de otra generación de plataforma (LIRO/CXD).
+
+**Efecto en S51: NINGUNO — S51 sigue A=NO, B=NO, C=NO.** La ausencia del módulo en la fw3.21 de la A6000 no demuestra incapacidad del hardware; sigue faltando la prueba física.
+
+[Informe](../analysis/s172_elec_shutter_a6300/elec_shutter_a6300.md) · [doc](../docs/capture/s172-elec-shutter-a6300.md). Siguiente: qué significan los códigos 3 y 4; la base de datos de la tabla (índice de fila) y quién la escribe; la ruta hasta el driver del obturador.
+
+## S173 — `[CAM_UTIL]` (10) y `[CAMERA_ADJ]` (3): las utilidades compartidas (22-10-2026, línea de RE general)
+
+**VERIFICADO (21 tests, `tests/test_s173_cam_util_labels.py`):** las etiquetas **`[CAM_UTIL]`** (10 cadenas) y **`[CAMERA_ADJ]`** (3) **no son un módulo propio**: son el rótulo de **utilidades compartidas** por la familia `CAM_UTIL` (`[CAM_UTIL_ADJ]` de S143 y `[CAM_UTIL_SENS]` de S144) y por el gestor de memoria **DMM** de `[CAMERA_MAIN]`. `[CAM_UTIL]` **10/0/0** y `[CAMERA_ADJ]` **3/0/0** (A6000/A7S/A6300).
+
+Las **13 cadenas están vivas** (0 muertas) con **16 sitios** (regla estricta) en **13 funciones**: 5 en la zona **DMM** (`0x437e3c92`–`0x437e446e`: `MemPool Free Err`, `Dmm Open/Close Err hdl`) y 8 en la zona **`CAM_UTIL`** (`0x43900234`–`0x43904092`): `AV DDS Alloc/Snd Msg Err`, `Utility Adjust Ctrl` / `Utility MS Mount Start` / `Utility MS UnMount Start` (fallos de reserva OSAL), `EvtDrvnTsk) Send Err` / `Print Max` / `Task tid` (driver de eventos) y el **contador de fallos de `osal_try_valloc_msg`** con reintento (si el bit 0 del byte de estado `[r6,#0xfc]` está activo, traza el error y lo limpia con `bic r3,r3,#1`). Son **funciones que S143 y S144 no cubrían** porque emiten con otra etiqueta.
+
+**Coherencia con S144**: la inicialización `0x4390178e` limpia una tabla de **17 entradas** (`cmp r2,#0x11`) y **22 registros** de 0x18 B (`0x198/0x18`) y escribe el **id de módulo `0xb5`** (`movs r2,#0xb5`) y un contador **5** (`subs r2,#0xb0`) → el **mismo `0xb5`** que S144 identificó como compartido por `[CAM_UTIL_ADJ]` y `[CAM_UTIL_SENS]`.
+
+**Diferencial**: las etiquetas son **propias de la fw3.21** de la A6000 (0/0 en A7S y A6300), pero los **nombres** que avisan (`DmmMemPool`, `AV DDS`, `Utility MS`, `EvtDrvnTsk`) describen **utilidades preexistentes** del framework → otra vez el patrón «se reescribe el logging» (S128/S130).
+
+**Negativo acotado**: 0 menciones de obturador, disparo, sensor, exposición o tiempos → **sin efecto en S51** (A/B/C = NO).
+
+[Informe](../analysis/s173_cam_util_labels/cam_util_labels.md) · [doc](../docs/capture/s173-cam-util-labels.md). Siguiente: qué es «AV DDS» y «Utility MS» (siglas sin desarrollar); la tabla de 17 entradas y los 22 registros de `0x4390178e`; el byte de estado `+0xfc` y su bit 0; por qué la A6000 usa dos etiquetas para el mismo subsistema.
+
+## S174 — el API de mensajes «…ForLiro» del `libObj.so`: 216/221/240 nombres, 0/0/6 soportados (22-10-2026, línea de RE general)
+
+**VERIFICADO (17 tests, `tests/test_s174_forliro_api.py`):** el conversor de mensajes `CamMsgConv` de la capa *camera-user* (`libObj.so`) conoce **216 / 221 / 240** nombres de mensaje `…ForLiro` (A6000 fw3.21 / A7S fw3.20 / A6300 fw2.01) y **soporta 0 / 0 / 6**:
+
+| firmware | nombres `…ForLiro` | en mensajes de **SOPORTE** | en mensajes de **RECHAZO** |
+|---|---|---|---|
+| A6000 fw3.21 | **216** | **0** | 216 |
+| A7S fw3.20 | **221** | **0** | 221 |
+| A6300 fw2.01 | **240** | **6** | 234 |
+
+Los 6 del A6300: `SetApertureSTFForLiro`, `SetAutoDualRecModeForLiro`, `SetExpandFocusAfModeForLiro`, `SetMountAdapterFocusTypeForLiro`, `SetPowerStatusForLiro` y `SetVolpfModeForLiro` — **ninguno del obturador**. El A6300 añade **25** nombres `…ForLiro` (incluido **`SetShutterTypeForLiro`**, 0/0/1) y la A6000 añade **1** (`SetStepzoomModeForLiro`); la A7S añade 5 respecto de la A6000.
+
+**Advertencia metodológica (lo más importante del hito)**: en la A6000 y la A7S, **los 216 y 221 nombres `…ForLiro` aparecen TODOS dentro de mensajes de RECHAZO** (`… <Nombre> NON SUPPORTED MsgID[0x%04x]…`; el de soporte es `… <Nombre> SUPPORTED MsgID…`). La clasificación es **exacta** (el nombre va seguido literalmente de ` NON SUPPORTED MsgID` / ` SUPPORTED MsgID`), no por proximidad. → **La presencia del nombre NO prueba soporte**: `SetSilentShutterModeForLiro`, `SetShutDriveForLiro`, `SetShutDriveModeForLiro`, `SetShutLowLimitForLiro`, `SetFrontEShutterModeForLiro`, `SetIrisDriveForLiro`, `SetDriveModeForLiro` y `SetMovieAutoSlowshutModeForLiro` **están** en el `libObj.so` de la A6000 **y están rechazados**.
+
+**Coherencia con S169**: el mensaje (capa *camera-user*, `libObj.so`) y el parámetro (capa LiroSeq de `av-cam.bin`) **concuerdan** — solo el A6300 tiene el mensaje `SetShutterTypeForLiro` **y** el campo `shutterType` (+`sc_ShutDrive`, `front_eshutter`, `SilentShutterMode`).
+
+**Regla que deja este hito**: **la presencia de una cadena no prueba una funcionalidad**. Tres casos ya en el repo: la cadena del *rolling shutter* del A6300 **muerta** (S168), el bloque de 128 bytes de `0x43dcfa9e` **sin referencias** (S172) y ahora los nombres `…ForLiro` de la A6000 **todos rechazados**. Antes de afirmar que una cámara «tiene» algo por el nombre de su cadena, hay que comprobar que el nombre **se usa**.
+
+**Efecto en S51: NINGUNO — S51 sigue A=NO, B=NO, C=NO.** El `libObj.so` es una capa de *mensajería*, no una implementación; la ausencia estática no demuestra incapacidad del hardware.
+
+[Informe](../analysis/s174_forliro_api/forliro_api.md) · [doc](../docs/capture/s174-forliro-api.md). Siguiente: por qué el `CamMsgConv` de la A6000 y la A7S no soporta ninguno (¿otra ruta de conversión?); qué ganan exactamente los 6 del A6300; si los mensajes rechazados se envían por otra vía (tabla `MsgID` → manejador).
+
+## S175 — el módulo `[LIF_DEBUG]` (13 trazas): el diagnóstico del sensor de luz de la cámara (22-10-2026, línea de RE general)
+
+**VERIFICADO (11 tests, `tests/test_s175_lif_debug.py`):** `[LIF_DEBUG]` es la traza de diagnóstico del **subsistema de sensor de luz de la cámara** (`CAM LIF SENSER`): su inicialización, el registro/desregistro de los *callbacks* de **backup** (`BK`, con `BKID`) y las **copias «shadow»** entre el estado de *backup* y el «shadow». Es el **último** de los 17 módulos «de contenido nuevo» de S130.
+
+13 cadenas en `0x43cfb032`–`0x43cfb224`; **13/0/0** (A6000/A7S/A6300). **14 sitios** (regla estricta) en **3 funciones contiguas** (`0x43a1c9d8` con 8, `0x43a1cb0c` con 1, `0x43a1cb3c` con 5), **0 muertas**, con **logger propio de id `0x125`** (`0x43a1c92c`: mensaje OSAL de `0x9a` B → `osal_try_valloc_msg` `0x435612d0`, `vsnprintf` `0x439c5a04`, `osal_send_msg` `0x43561244`), igual que `[TP_R]` (S156) y `[SAD]` (S167).
+
+**Mecánica**: copia de seguridad **bidireccional** entre el estado «shadow» y el «BK», de **2** elementos (`cmp r7,#2` en `0x43a1caa2`; `cmp r4,#2` en `0x43a1cb9c`), con `bl 0x435614d0` / `bl 0x435614ec` por elemento y `bl 0x435613e8` al cerrar. Contenido: `[BKID]`, `[DataSize]`, `[Count]`, `[HandleValue]`, `[HandlerValue]`, `[Erro]`.
+
+**Los dos nombres de función aparecen SOLO dentro de las trazas**: `cam_lif_senser_copy_bk2shadow` `0x43cfb14d` y `cam_lif_senser_copy_shadow2bk` `0x43cfb18a` (**0** apariciones como símbolo independiente) → son **texto literal**, no símbolos del enlazador.
+
+**Diferencial**: el **subsistema existe en los tres firmware** (`LIF` **64/43/81**, `BKID` **28/23/22**, `SENSER` **12/7/8**) → lo propio de la fw3.21 de la A6000 es la **etiqueta** y los dos nombres escritos como texto: otra vez «se reescribe el logging, no el firmware».
+
+**Negativo acotado**: 0 menciones de obturador, disparo, lectura del sensor, exposición o tiempos → **sin efecto en S51** (A/B/C = NO).
+
+[Informe](../analysis/s175_lif_debug/lif_debug.md) · [doc](../docs/capture/s175-lif-debug.md). Siguiente: qué es el «BK» (backup) y quién registra los *callbacks*; por qué solo 2 elementos; los ids `0x125`/`0x93`/`0xa1` y los helpers `0x435613e8`/`0x435614d0`/`0x435614ec`.
+
+## S170 — el módulo `[ILLUMI]` (34 trazas): el subsistema de iluminación (22-10-2026, línea de RE general)
+
+**VERIFICADO (30 tests, `tests/test_s170_illumi.py`):** 34 cadenas `[ILLUMI]` en la A6000 fw3.21 entre `0x43c40570` y `0x43c40ddc` (bloque contiguo); **0** en la A7S fw3.20 y el A6300 fw2.01. **52 sitios** (regla estricta) en **25 funciones** emisoras, **0 cadenas muertas**, con los **52 pares PIC verificados a mano (52/52)** y sin reuso de registro.
+
+**Corrige la inferencia de S130/S165**: el **subsistema de iluminación es COMÚN a las tres fw** — las cuatro clases RTTI `IllumiDev`, `IllumiAd`, `IllumiCam`, `IllumiRPR0400` existen en las tres con la misma jerarquía, y el acceso al chip es el mismo: `ReadDevice` con dirección `0x39` y registros `0x46` (GetAD) / `0x41` (PollingDevice) en `0x435adffe`/`0x435ae060` (A6000), `0x435afee0`/`0x435affd0` (A7S) y `0x435b0cd0`/`0x435b0dc0` (A6300), con los mismos ids OSAL (`0x520250` bus del dispositivo, `0x720018` ADC LIRO, `0x7a0020` cola de eventos) y los mismos *backup ids* (`0x133003c`/`0x133003d`). Lo **propio de la fw3.21 de la A6000 es la instrumentación**: las 34 trazas `[ILLUMI]` y las **20** cadenas `__PRETTY_FUNCTION__` (`IllumiDiag`, `IllumiGain`, `IllumiLevel`, `IllumiAd`, `IllumiCam`, `IllumiRPR0400`), **0** en la A7S y el A6300.
+
+**Coherencia**: el **id de módulo de traza es `0x133`** (307) — primer argumento de todas las llamadas de log (`movw r0,#0x133`, p. ej. `0x435acdf2`) — y es el prefijo de sus ids OSAL/backup (`0x133003c`, `0x133003d`, `0x13303ba` cola sync de `IllumiDiag`, `0x13303be` de `IllumiCam`). Mismo patrón que el id `0xb5` de la familia `CAM_UTIL` (S173) y el `0x93` de `[TP_R]` (S156).
+
+**Negativo acotado**: 0 de `shutter`/`curtain`/`expos`/`iso`/`apert`/`frame`/`capture`/`photo`/`sensor`/`compens` en las 34 trazas; los 2 `read` son `ReadDevice`/`Backup_read` (**registros del chip de luz**, no del sensor de imagen) y los 5 `sync` son colas OSAL síncronas. El «gain» es la **ganancia del amplificador del sensor de luz** (seleccionada con dos GPIO en `SetGainMode` `0x435aca80`), no la ganancia de imagen → **sin efecto en S51** (A/B/C = NO).
+
+[Informe](../analysis/s170_illumi/illumi.md) · [doc](../docs/capture/s170-illumi.md). Siguiente: qué magnitud física mide el chip `RPR0400` y cómo se usa su lectura (auto-ganancia, filtrado, corrección); la semántica de los 6 subcomandos ADJ de `IllumiDiag`; por qué el módulo emite un evento `key_code` (mismo patrón que `[JOG]`, S165).
+
+## S178 — censo de cobertura de la línea de módulos (22-10-2026, línea de RE general)
+
+**VERIFICADO (8 tests, `tests/test_s178_census.py`):** censo completo de las etiquetas `[XXX]` de la A6000 fw3.21: **372** distintas (techo), **52** con hito de decodificación en el catálogo y **320 pendientes**; **93** son **exclusivas de la A6000** (0 en A7S y 0 en A6300).
+
+**Hallazgo de versionado de plataforma**: la familia **`[STK]`** (`[STK]`, `[STK_AUTO_SAL]`, `[STK_COLOR_SIM]`, `[STK_C_SIM]`, `[STK_TOUCH_SIM]`, `[STK_T_SIM]`) y **`[OSD]`** existen en la A6000 y en la A7S fw3.20 y **desaparecen por completo en el A6300 fw2.01** → son funciones de la **plataforma antigua** (E-mount / pre-LIRO) que la nueva plataforma no arrastra. Es un control de **plataforma**, no de modelo: la A7S (2016) comparte plataforma con la A6000; el A6300 (2019) es de otra.
+
+**Otros datos**: `[VDF]` tiene **81 apariciones más** en la A6000 (243) que en la A7S y el A6300 (162). Pendientes más grandes: `[SDF]` 477, `[ERR]` 288, `[VDF]` 243, `[ERROR]` 213, `[BL]` 154, `[VEF]` 149, `[STK]` 76, `[TD]` 73, `[VIDENCSTAT]` 70, `[FACE]` 70, `[RC]` 69, `[DEBUG]` 67, `[GOLFSHOT]` 65, `[WSX]` 59, `[INFO]` 58, `[RE]` 54, `[INT_ERROR]` 53, `[ENCOUCSTAT]` 49, `[CONFIG]` 47, `[BT]` 44, `[CAM_FUNC_MGR]` 43, `[PNL]` 41, `[SAN]` 35, `[AUDPINEDTR]` 34, `[CAM_SCALAR]` 34, `[REMOTE]` 32.
+
+**Salvedad del propio censo**: el patrón de extracción captura también fragmentos de formato (`[D0]`–`[D7]`, `[IN1]`, `[IN2]`, `[NULL]`, `[SIZE]`, `[STAT]`, `[HW]`) → **372 es un techo**, no el número exacto de módulos.
+
+**Efecto en S51: NINGUNO — S51 sigue A=NO, B=NO, C=NO.** El censo es de cobertura, no de contenido.
+
+[Informe](../analysis/s178_census/census.md) · [doc](../docs/capture/s178-census.md). Siguiente: elegir las siguientes etiquetas por **valor** (las que hablan de disparo, lectura del sensor o tiempos: `[VDF]`, `[RC]`, `[EIS]`, `[STABILIZER]`, `[ZPD]`) y no solo por tamaño.
+
+## S177 — el módulo `[CAM_FUNC_MGR]` (43 trazas): el gestor de funciones de cámara (22-10-2026, línea de RE general)
+
+**VERIFICADO (31 tests / 1024 subtests, `tests/test_s177_cam_func_mgr.py`):** 43 cadenas `[CAM_FUNC_MGR]` en la A6000 fw3.21 entre `0x43ca12af` y `0x43cb02f1`; **0** en la A7S fw3.20 y el A6300 fw2.01. **57 sitios** (regla estricta; coincide 57=57 con el mapa global) en **25 funciones**, con los **57/57 pares PIC verificados a mano**; **1 cadena muerta**: `Pseudo AF Stop %d` `0x43cb02f1`.
+
+**Qué es**: la etiqueta de traza del namespace C++ **`Camera::Function`** (RTTI `N6Camera8Function…`, **18 clases idénticas en las tres fw**): un **gestor/despachador de funciones de cámara** que enruta peticiones/respuestas entre 4 clientes (`CamUser`, `CameraBackGround`, `Release`, `CamMain`) y las traduce al bus inter-LSI mediante el puente **`LRBridge`**.
+
+**Tabla de 65 funciones** en `0x43ff17b8` (paso 12 B): `{const char *origin; const char *name; u32 id;}` — comprobado directamente: `[0] "UNKNOWN" id=0`, `[1] "REQ_MOVIE" id=1`, `[2] "REQ_MOVIE_REC" id=2`, `[3] "REQ_STILL_EE" id=3`, `[4] "REQ_PB" id=4`; `origin` vale 0 en el fichero (se inicializa en runtime, `0x43787d88`).
+
+**Despachador `0x43805930`** (`Function/LRBridge.cpp`): tipo de mensaje u16 en `[msg+2]`, `sub.w r2,r3,#0x3000` (`0x4380599a`), `cmp r2,#0x30` (`0x4380599e`) y **`tbb` de 49 entradas** (`0x438059a2`) → **tipos de bus `0x3000`–`0x3030`**. Los **12 `type_id`** del puente salen de las comparaciones en `0x43805ec0`–`0x43806126` (`REQ_APP_SND`, `APP`, `APP_CMP`, `REQ_V2ND_SND`, `V2ND`, `V2ND_CMP`, `REQ_VSYNC_CUST_SND`, `VSYNC_CUST`, `VSYNC_CUST_CMP`, `REQ_FSPSUM_SND`, `FSPSUM`, `FSPSUM_CMP`); cada rama se habilita con un bit de máscara en `[obj+0x41]`; campos impresos: `type_id` (`[msg+0]`), `from_lsi` (`[msg+1]`), `req_seq_id` (u16 en `[msg+2]`).
+
+**Firma mecánica del rewrite de logging (verificada a mano)**: las **43/43** cadenas tienen **gemelo exacto en `vaddr+16`** — el prefijo `"[CAM_FUNC_MGR]: "` ocupa exactamente **16 B** y se antepone al literal original, que **queda intacto**: no se reescribe la cadena, se antepone una copia.
+
+**Es cambio de logging, no de código**: los **textos interiores** están presentes **43/43** en la A7S y **42/43** en el A6300 (la A7S solo tiene la traza *vieja* en `0x437ac63e` → `bl 0x438f7114`; el A6300 en `0x437f621e` → `bl 0x43986518`), y la **tabla de 65 funciones no existe en el A6300** (`REPLY_` **0**, `MSG_NONE` **0**, `FUNC <= ` **0**; en la A6000 27 / 1 / 4).
+
+**Negativo acotado**: 0 de `shutter`/`silent`/`curtain`/`electro`/`mech`/`expos`/`iso`/`apert`/`sensor`/`shut`/`svd`/`frame` en las 43 trazas. Gestiona órdenes de alto nivel (`REQ_CAPTURE_START/END`, `REQ_AF_START/STOP`, `REQ_AE_START/STOP`…) pero **no baja al nivel del obturador**; el `unretract` `0x43cb027c` es del obturador **mecánico** → **sin efecto en S51** (A/B/C = NO).
+
+[Informe](../analysis/s177_cam_func_mgr/cam_func_mgr.md) · [doc](../docs/capture/s177-cam-func-mgr.md). Siguiente: la relación entre el `id` de la tabla de 65 funciones y los tipos de bus `0x3000`–`0x3030` (dos espacios de ids distintos); la lista de LSIs; la semántica de `APP`/`V2ND`/`FSPSUM`/`VSYNC_CUST`.
+
+## S179 — el módulo `[CAM_SCALAR]` (34 trazas): la capa HAPI de imagen de la cámara (22-10-2026, línea de RE general)
+
+**VERIFICADO (38 tests, `tests/test_s179_cam_scalar.py`):** 34 cadenas `[CAM_SCALAR]` en la A6000 fw3.21 entre `0x43cb045a` y `0x43cc679a` (33 en un bloque + 1 aislada); token **34/0/0**. **47 sitios** (regla estricta) en **14 funciones**; de las 34 cadenas, **31** están en el mapa global y **vivas**, y **3 están muertas** (`0x43cb0aa5`, `0x43cb0abe`, `0x43cb0ae3`, con sus gemelos `+14` también muertos); **0 punteros absolutos** de 4 B. **94/94 pares PIC verificados a mano** (47 nuevos + 47 gemelos), 0 fallos y **0 discrepancias** contra el mapa canónico (17 525 destinos).
+
+**Segunda confirmación de la firma del rewrite de logging**: **34/34** cadenas tienen **gemelo exacto en `+14`** — el prefijo `"[CAM_SCALAR]: "` ocupa **14 B** antepuesto y el literal original **queda intacto y referenciado** por el logger global `0x43902718`; la fw3.21 **duplica** la traza (nueva con logger de módulo `0x4380a5d0`, **id de módulo 5**, **nivel 6**, flag 1, + la vieja). Es el mismo mecanismo que en **S177** (prefijo de 16 B) → **el prefijo no tiene longitud fija: se ajusta al nombre del módulo**.
+
+**Qué es**: la **capa HAPI de imagen** de la cámara: despachador `0x4380a688` con `tbh` de **23 entradas** (base `0x4380a72c`) → `MSG_ID` **0x5001–0x5017**; `SetSpecialSequence` `0x4380c344` valida `ExposureCount`=1, `RecordCount`≤5 y `CapMode`=`CAP_SINGLE`; handles DMM `YCC_FULL`/`RAW_FULL`; ficheros `HAPI_Filter_TBOX.cpp` `0x43cb07b7` (línea 99), `CS_Command.cpp` `0x43cb0b85` (línea 112) e `ImageParamCapture_SyncBranch.cpp` `0x43cc6779`.
+
+**Hipótesis del enunciado REFUTADA**: **no** es la capa del acelerador escalar «SA» — **0 llamadas** al rango `NS_SCALAR_INFRA` (`0x43990000`–`0x439c0000`, donde viven `[SAD]`/`[SFRA]`/`[SFRS]`) y **0** referencias a `sa_func_*`; todas las cadenas `SCALAR`/`Scalar` de la A6000 (88 + 261) son de `NS_SCALAR_INFRA`. La sigla **se deja sin desarrollar** (`CAM_SCALAR` = 34 apariciones = 34 trazas; `CamScalar`/`cam_scalar` = 0).
+
+**Es ETIQUETADO, no contenido nuevo (refina a S128)**: los **núcleos** sin prefijo están presentes **34/34** en la A7S y **34/34** en el A6300 (mismo código: A6000 `0x4380a688`, A7S `0x4382d49c`, A6300 `0x438c8dxx`; mismos ficheros y mismos 29 nombres `req_*`/`Start_*`/`Check*`). Los cambios **propios del A6300**: `%s: Develop(RAW->YC) fail.`, `%s: invalid parameter on simple develop.` y `req_image_clone` → `req_yc_image_parse`.
+
+**Negativo acotado**: 0 de `shutter`/`silent`/`curtain`/`electro`/`mech`/`obtur`/`sensor`/`readout`/`shut`/`svd`/`shd`/`spl`/`frame`/`imager`/`drive`/`brack`/`sweep`/`still`/`movie`/`focus`/`iso`/`apert`/`sync`/`vsync`/`scan`; el único `expos` es `ExposureCount` → **sin efecto en S51** (A/B/C = NO).
+
+[Informe](../analysis/s179_cam_scalar/cam_scalar.md) · [doc](../docs/capture/s179-cam-scalar.md). Siguiente: por qué quedaron 3 literales muertos; la equivalencia `MSG_ID`↔petición para los 6 ids con destino por defecto (`0x4380ae0e`) o «imagen inválida» (`0x4380adf8`); la lista completa de `CapMode`; el criterio de reparto `[CAM_SCALAR]` vs `[IMAGING_CAP]`/`[IMAGING]`.
+
+## S180 — el módulo `[REMOTE]` (32 trazas): el mando a distancia por UART (22-10-2026, línea de RE general)
+
+**VERIFICADO (50 tests, `tests/test_s180_remote.py`):** 32 cadenas con el token `[REMOTE]` en la A6000 fw3.21 (rango `0x43c25b47`–`0x43c26319`); token **32 / 0 / 0** (A6000/A7S/A6300). **33 sitios** PIC (regla estricta, reproducidos por el agente principal) en **16 funciones**, **0 cadenas muertas**; los **33/33 pares** verificados a mano (0 fallos, 0 reuso de registro) y el escaneo local reproduce el mapa canónico con **0 discrepancias**. El mapa global contiene **32** destinos con `[REMOTE]`, y una de ellos (`[ACCY][INFO][REMOTE]:%d:ZOOM OFF  KEY:%08X…` `0x43c26186`) se referencia **dos** veces (`0x43566c8e`, `0x43566cb0`) → 33 sitios sobre 32 cadenas.
+
+**Precisión estructural (verificada por el agente principal)**: las 32 cadenas **no son cadenas propias**, son **subcadenas** de cadenas con el formato **`[ACCY][<NIVEL>][REMOTE]:%d:<mensaje>`**, y **la referencia PIC apunta al INICIO de la cadena completa** (p. ej. `0x43c25b47` = `[ACCY][INFO][REMOTE]:%d:NotifyUartCommand…`), no a la posición de `[REMOTE]`. Repartición de niveles por el prefijo: **INFO 24, ERR 3, DEBUG 3, WARN 2** → **el nivel va en la propia cadena** y el logger `0x435661e4` recibe `(id_módulo=93, ?, nivel, fmt, …)`; por eso el mapa global no lista las que empiezan por `[REMOTE]` (empiezan por `[ACCY][…]`): no es contradicción, es la misma regla.
+
+**Qué es**: el **subsistema de MANDO A DISTANCIA (control remoto por UART)**, y es **exactamente** el sub-bloque `REMOTE` de `[ACCY]` que S136 ya había delimitado (mismo rango, mismos 33 sitios, mismas 16 funciones) → **no es un módulo nuevo**. Lo implementa la clase RTTI **`AccyUmDeviceRemote`** (`0x43c26340`, `type_info` `0x43fd7dbc`, vtable `0x43fb9114` con los 8 métodos virtuales del accesorio) → **`REMOTE` sí tiene base textual**; `ACCY`/`UM` se dejan sin desarrollar.
+
+**Estructura de datos (verificada)**: objeto con flags `+0x3C` GF, `+0x3D` SS, `+0x3E` Freeze, `+0x3F` Photo, `+0x40/+41/+42` Tally, `+0x34/+0x38` Zoom, `+0x0C` Spinal; estado serializado en **3 bytes** (`SaveInfo` `0x435664d0` / `RestoreInfo` `0x43566580`); tabla de **5 códigos de tecla** (`0x0A000009`/`0D`/`08`/`0C`/`11`) y **3 tablas `tbb`** (`0x435662f4`, `0x43566638`, `0x43566960`).
+
+**Cambio de logging, no de código**: **no** hay gemelo «prefijo + original» (a diferencia de S177/S179): el núcleo autónomo `[REMOTE]` está **0/32** en la A7S y el A6300 (las 6 coincidencias en la A6000 son literales de otros sub-bloques `[ACCY]`: `[HELLO]` y `[HOUSING]`) y **no hay doble emisión** (el logger global `0x43902718` no aparece en ninguna de las 16 funciones). Pero **el código del mando existe en los tres**: misma clase RTTI (`0x43c25aed`/`0x43d0ca6c`), misma vtable de 8 métodos (`0x43fb2e14`/`0x4416fd74`), misma tabla de 5 códigos de tecla (`0x43564874`/`0x4355f040`) y `NotifyUartCommand` con la **misma secuencia de instrucciones** (`cmp #0x23`/`cmp #0x37`/`sub #0x30`/`cmp #5`/`tbb`).
+
+**Negativo acotado**: 0 de `shutter`/`silent`/`curtain`/`electro`/`mech`/`obtur`/`sensor`/`readout`/`imager`/`iso`/`apert`/`expos`/`brack`/`drive`/`release`/`flash`/`sync`/`vsync`/`capture`/`shot`/`still`/`movie`/`focus`. Lo único: `GUIDE FRAME`, `PHOTO REC`, `Zoom…Speed` y timeouts de UART; el «START STOP» (`0x0A00000D`) es una **tecla genérica** entregada por `NotifyInput` `0x43565814` → el módulo **no ejecuta el disparo** → **sin efecto en S51** (A/B/C = NO).
+
+[Informe](../analysis/s180_remote/remote.md) · [doc](../docs/capture/s180-remote.md). Siguiente: qué hace la tabla `0x0A0000xx` (en particular `0x0A00000D`); la cola OSAL de `NotifyInput` (`0x007A0020`); por qué solo la A6000 fw3.21 trae trazas `[ACCY]`; la categoría UART `'F'` solo del A6300.
+
+## S121 — el módulo `[AIP]` (37 trazas): la interfaz de audio con el escalado (21-10-2026, línea de RE general)
+
+**VERIFICADO (97 tests, `tests/test_s121_aip.py`):** 37 cadenas `[AIP]` en `0x43cdd844`–`0x43cdec50`; **16 funciones** y 6 sub-bloques RTTI: `SaWrapper` (8), `SaBackUpCtrl` (12), `SaDriverBase` (4), `LPS` (11), `SaDriverZoomNr` (1), `SetFader` (1). **Callbacks `Ack`/`Comp`/`Err` en tres capas**: SA (`0x43926d1c`/`0x43926de8`, con los predicados `[r1,#1]==0x14`/`0x13`), LPS (`0x4392b16c`/`0x4392b254`) y driver; los errores llevan `errCode`+`errState` (SA) o `ErrCode`+`ErrStatus` (LPS). **Tabla de backup**: **350 entradas de 12 B** en `0x43bd1964` con `{id = 0x10c0000 + n, offset, size}`; `WriteShadow2BakcupArea` vuelca `0x10c` B (`mov.w r0,#0x10c` en `0x4392ab78`) y `SetAudioNrType` publica el **bit 3** de `bkId = 0x10e0000`. Comandos hacia el escalar en `0x4392ac30` (`Cmd`/`Func` + `Zma`/`Ext`/`Mbx`) y `0x4392acb4` (`Cmd`/`Func`/`Unq`). Buffers LPS `0x82`/`0x83`/`0x85` con longitudes `0x2c`/`0x28`/`0x14`; `SetFader` (`0x4355ae98`) divide por 100/20/otro según `[r0,#0x78]`.
+
+**Quién lo usa**: el **ADF** (S81): `[ADF][INIT]AUDIOIP INIT COMP` `0x43c26411`, tipos `AUDIO_IP_CONFIG_TYPE_*` `0x43c264fa`–`0x43c2659e` y comandos `SetAip0/1`, `GetSa0/1`, `SetSa`, `SetFader`, `SetZoomNr`. **No** es el «SA» de S108 (`Camera::SaFuncDrv`, `sa_func_*`): ninguna de las 37 trazas lo menciona.
+
+**Diferencial**: A7S fw3.20 tiene **las mismas 37**; el A6300 fw2.01 tiene **63** = 37 + 26 (25 `[AIP][ZNR_EE]*` y `SetInstanceNumberExec Err %d`).
+
+**Aporte metodológico (rectificó todo el repo)**: el subagente cuantificó los falsos positivos de cada regla de emparejamiento PIC (estricta 37/37 reales; kill analysis 60 pares = 37 verdaderos + **23 falsos**) y el caso concreto donde falla (`0x4355bcb2` resuelve a `0x43ceb58b`, no a `0x43cde863`, cuyo sitio real es `0x4392ab04`). Con la calibración de S118 (`[SFRA]`: 118 reales = 118 con la regla estricta, 166 con kill analysis, 186 con la ancha) se declaró **regla canónica estricta** y se rectificaron S106, S110, S113 y S115.
+
+[Informe](../analysis/s121_aip/aip.md) · [doc](../docs/capture/s121-aip.md). Siguiente: significado de AIP/SA/LPS/ANR/ZNR/Zma/Ext/Mbx; formato de la cola `AudioIpCmdQueue`; contenido de las 350 entradas del backup.
+
+## S119 — `[APL]`: la apertura/cierre de SA y HW, dentro de `[CAMERA_SA]` (21-10-2026, línea de RE general)
+
+**VERIFICADO (47 tests, `tests/test_s119_apl.py`):** las **42 apariciones de `[APL]` no son un módulo propio**: las 42 están **dentro** de cadenas que empiezan por `"[CAMERA_SA]: "` (13 bytes), p. ej. `[CAMERA_SA]: [APL] HW Open Err %d` `0x43cebde1`, `[CAMERA_SA]: [APL] SA Open Err` `0x43cebe03`, `[CAMERA_SA]: [APL] Calloc InputPrm Err` `0x43cebe46` → **`[APL]` es una etiqueta de segundo nivel dentro de `[CAMERA_SA]`** y la entrada "APL 42" del mapa de módulos de S79 es una sub-etiqueta. 5 funciones emisoras (`0x439cea30` Open 7 trazas, `0x439cebe4` Close 9, `0x439cedd0` Free&Close 4, `0x439ceeb8` Open+ejecución 20, `0x439cf3b8` SA open/close 2) con **42/42 referencias PIC 1:1** bajo la regla estricta; las 5 equivalentes de la A7S en `0x439bcd80`, `0x439bcea0`, `0x439bcfc8`, `0x439bd05c`, `0x439bd3a4`. API: `ExecuteOpenMSG` `0x439d143c`, `ExecuteCloseMSG` `0x439d133c`, `ExecuteCalcStartMSG` `0x439d185c`, `CallocCamSaParam` `0x439d0f58` (la traza la llama *InputPrm*), `GetMemInfo` `0x439d1bd0`, `GetExecUnit` `0x439d168c` (la traza dice *GetZimaNo*); los `unit_hndl` son **handles del DMM** (S113: open `0x43903280`, close `0x43903414`, free `0x43902fbc`).
+
+**Consumidor único**: `[CAMERA_MAIN_TC]` ("ApolloSA"), **un solo llamador** por función (`0x438765ca`, `0x43876650`, `0x438766da`, `0x43876714`, `0x43876a82`); ni `[IMAGING_CAP]` (S106) ni `CamCore` (S107) lo llaman.
+
+**Diferencial A7S fw3.20**: los 42 textos coinciden uno a uno, pero allí **empiezan por `[APL]`** (`[APL] HW Open Err %d` `0x43ce1588`) → la fw3.21 de la A6000 **antepone la etiqueta de módulo** `[CAMERA_SA]: `. El A6300 fw2.01 tiene las mismas 42.
+
+**Aporte metodológico (tercera calibración)**: la regla "ancha" da **67** pares para 42 cadenas reales → 25 falsos positivos comprobados desensamblando. Con S118 (`[SFRA]` 118) y S121 (`[AIP]` 37) son **tres** módulos donde la regla **estricta** coincide exactamente con la verificación a mano.
+
+[Informe](../analysis/s119_apl/apl.md) · [doc](../docs/capture/s119-apl.md). Siguiente: el módulo `[CAMERA_MAIN_TC]` ("ApolloSA"), su consumidor, que sigue sin hito propio; layout de `InputPrm`; por qué la traza dice *GetZimaNo* si la función es `GetExecUnit`; los códigos de error (2, 6, 8, 0xff).
+
+## S111 — el módulo `[TRK]` (215 cadenas) de tracking y detección (21-10-2026, línea de RE general)
+
+**VERIFICADO (17 tests, `tests/test_s111_trk.py`):** 216 apariciones del literal `[TRK` → **215 cadenas** (214 que empiezan por `[TRK` + 1 anidada: `[TRK]: [TRK] cb_func == NULL`) → **207 textos distintos** (8 repetidos en dos direcciones cada uno) en `0x43cebceb`–`0x43cfe31c`, con **288 sitios de referencia** y **47 funciones** (283 strict + 5 relaxed). Sub-bloques: **STK** 76 trazas (saliency, touch, simulación de color y de toque), **BT** 44, **EDTSA** 19, **PMV** 16, **IRO2G** 13, **DETSA** 9, VAE/VAT/VOT 3 cada uno, más las familias STK_AUTO_SAL / STK_COLOR_SIM / STK_TOUCH_SIM. El código del módulo vive en `0x43a30000`–`0x43a39000` (284 sitios, 43 funciones) y los 4 restantes son *wrappers* de sesión en `0x439c0000`–`0x439d0000`; las zonas `sa_stubs` (ZIT), `fc` y `apl_osal` tienen 0 sitios. El firmware embebido incluye **99 ficheros `FC/*.cpp`** (`0x43cef12a`–`0x43cf707a`).
+
+**Diferencial A7S fw3.20**: la A7S tiene **las mismas 215 cadenas y los mismos 207 textos** (listas `only_a6000`/`only_a7s` vacías) y los mismos recuentos (288 sitios, 47 funciones) → **módulo idéntico**, solo cambia su posición en el blob (`0x43ce1492`–`0x43cee615`).
+
+**Nota metodológica**: el subagente usó la regla estricta (*nearest-ldr*, `MAX_GAP=0x40`); con la regla canónica del repo (todos los `ldr` del registro en 4 KB, aceptando solo destinos en el inicio de una cadena) las 215 cadenas dan **214 referenciadas y 657 sitios**. Además se **`ancho el rango de cadenas válidas** de `scan_pic_refs.py` (estaba fijo a `0x43c90000`–`0x43cd0000` y excluía la zona de `[TRK]`, lo que daba 0 referencias)**: ahora acepta `LO HI RUTA_SALIDA` y cubre toda la imagen.
+
+[Informe](../analysis/s111_trk/trk.md) · [doc](../docs/capture/s111-trk.md). Siguiente: límites de las funciones `0x43a376d8`/`0x437a37734`; semántica de los 2 sitios *relaxed*; correspondencia 1:1 de los 99 ficheros `FC/*.cpp` con funciones.
+
+## S115 — `[CAM_IMAGER]`: el driver del imager de la cámara (21-10-2026, línea de RE general)
+
+**VERIFICADO (9 tests, `tests/test_s115_cam_imager.py`):** 371 trazas `[CAM_IMAGER]` (79 del módulo ZIT, ya de S80 → **292 del driver**) en **94 funciones** (`0x43543568`–`0x436dbd66`). **P2S**: dos canales (**DFE0**, **DFE1**), datos **por páginas** (`P2SData[Page:%01x]` `0x43c931d6`), `P2STransferSize` `0x43c931b2`, `P2SFormatter` `0x43c932ac`, `P2S CheckAddrOrder: ORDER ERROR !` `0x43c9327c`, `P2SWaitTransComp` `0x43c93180`, `P2S : Unsupported SyncMode.` `0x43c93156` → es el camino que S56 ("transporte de registros del IMX210, P2S/DFE0") siguió en la línea del obturador. **Interrupciones**: `int_p2s_handler` (+`_dfe0`/`_dfe1`), `int_timer_handler` y el temporizador por canal (`Imager TimerSetFunc/TimerStart Error!! [CH:%02x, err:%02x]`). **SIF** (11 trazas): `SetSyncCode` distingue **sync code en serie** (`0x43c94e55`) o **en paralelo** (`0x43c94e92`), más `SetSIFMode`, `SetSIFSigsel`, `SetDitherSet`, `SetDataEnableParam`, `ReadSIFScodeCnt`, `SyncCodeDetNum`, `SIF AD_MODE`. **`ImagerCommon`** (16): API "macro" hacia el **CISIF** (`Update_IIFINSEL`, `SetCISIFRequest`, `GetCISIFSyncCodeRequest`, `MacroPowerOn/SaveOn/OffRequest`, `Update_CISIFConnectParam`, `Update_MacroRxEnable`), 8 de ellas con `do not use CH_1` → **un solo canal**. **`SubLVDS`** (9): PowerOn/PowerSave/ChangeParam/GetReceiverEnable por bloque, con `SUBLCNTL_DFE1 does not exist on Regulus`.
+
+**Punto de contacto con la línea del obturador**: la exposición y la lectura se programan **por `drive_mode`**: `SetExps : [PrevDrv][NowDrv][NextDrv][svd][shd][spl][shut]` `0x43c93cc2` (**campo `shut`**), `SetExpsZ` `0x43c939b5` (`svrz`, `shrz`, `splz`, `epd`, `epdsel`), `SetRead` `0x43c93fcb` (`AGainCont_EC`, `AGainCont`, `AGainDrv`), `SetReadZ` `0x43c93d67`, `Execute : […][SSBRK_ON][SLEEP_ON]` `0x43c94076`, `Execute. […][SSBRK_ON][SIFSyncCode]` `0x43c940d7`, `Execute0/1` `0x43c93ae2`/`0x43c9413a` (`ssb`, `read`, `svr`), `SetMode […][ntpal]` `0x43c93b2f`. El campo **`shut`** y el **SSB** son los puntos que conectan con S56–S58 (ID1/SSB).
+
+**Diferencial A7S fw3.20**: 0 trazas con el prefijo, pero el mismo driver (P2S, SubLVDS, ImagerCommon, SIF, NTPAL, SSBRK) existe **sin etiqueta** y con menos instrumentación: `SetExps`, `Execute0` y `AGainCont` tienen **0** apariciones en la A7S.
+
+**NO VERIFICADO**: el significado de `svd`, `shd`, `spl`, **`shut`**, `epd`, `epdsel`, `ssb`, `read`, `svr`, `ntpal` (el firmware no expande las siglas) y si `shut` difiere entre A6000 y A7S. Nada de esto **modifica** S51 (A/B/C = NO): no hay ningún mensaje de obturador electrónico.
+
+[Informe](../analysis/s115_cam_imager/imager_driver.md) · [doc](../docs/capture/s115-cam-imager.md). Siguiente: decodificar la tabla de parámetros por `drive_mode` (69 modos, S96) y el significado de `shut`.
+
+## S112 — el módulo `[CAMERA_MAIN_SYNC]` (429 trazas) de sincronización de recursos (21-10-2026, línea de RE general)
+
+**VERIFICADO (12 tests, `tests/test_s112_camera_main_sync.py`):** 429 cadenas `[CAMERA_MAIN_SYNC]` en `0x43c9b409`–`0x43cb5616` (tras reextraerlas: el borrador del subagente apuntaba **un byte después** del inicio real y no cortaba el texto en el NUL). Contenido: **`SyncResMgr`** (55 trazas: `Lock`/`Unlock`/`Free`/`Get` sobre `CAMDEV(0|1)`, RC y APL), volcado de registros `[CAM0]`/`[DDT]`/`[APL0]`, `DFS`/`DVS` (11+5), `Sync_Kick_IDT`/`RCH`/`RCV`, `HS_Sequence` (5) e `int_HS timing`; 101 sub-bloques distintos (160 sin etiqueta, `SyncResMgr` 55, `APL_ERR` 17, `jpeg` 13, `DFS` 11, `Sequence_Movie` 9). **Mapa función→traza completo** (regla estricta): 425 cadenas referenciadas, 489 sitios (las que más emiten: `0x4354d740` 57, `0x43728dec` 44, `0x43812848` 40, `0x43812f34` 35, `0x437298e8` 32, `0x4379bb90` 29).
+
+**Diferencial A7S fw3.20** (verificado byte a byte, ignorando especificadores de formato): 0 trazas con el prefijo y **418/429** mensajes comunes; los **11** exclusivos de la A6000 son `CamOutV` `0x43ca2de1`, `CamV` `0x43ca35b6`, `CONNETCT_COMP err` `0x43ca3fe7`, `DISCONNETCT err` `0x43ca4045`, `SuperSlowMotion[Buffering] error` `0x43cb0ded`, `Sync_Kick_IDT: overflow` (2), `Sync_Cam_Setting: DIST_RSLT_NG …` `0x43cb10f7`, `Sync_Kick_RCH: overflow` (2) y `EC::CapISO Error` `0x43cb55dd`.
+
+[Informe](../analysis/s112_camera_main_sync/camera_main_sync.md) · [doc](../docs/capture/s112-camera-main-sync.md). Siguiente: significado de `Sync_Kick_IDT/RCH/RCV` y del contador `%d/8V`.
+
+## S114 — el motor de secciones de la captura: 17 ids ↔ 17 etapas (21-10-2026, línea de RE general)
+
+**VERIFICADO (9 tests, `tests/test_s114_sections.py`):** cierra la pregunta abierta de S106. **15 de las 17 secciones** de la tabla `{id u32, manejador u32}` de `0x43ff8fb4` quedan **nombradas**: `0x01` = **Prelight** (nuevo: el manejador `0x437eb144` llama a `0x437eb07c`, que registra `CapturePrelight_Selector.cpp`) y las 14 restantes por su propio `*_Selector.cpp` (`0x02` Exposure, `0x03` Read, `0x04` AfterRead, `0x05` DevEntry, `0x07` CorrectRaw, `0x08` OpdBeforeNR, `0x09` Develop, `0x0a` Marble, `0x0b` FeatureEffect, `0x0c` AfterEffect, `0x0d` Encode, `0x0e` AfterEnc, `0x0f` SortJpeg, `0x10` DevExit). **`0x00` (`0x437eabfc`) y `0x06` (`0x437eaa5c`) no tienen nombre** en el firmware: `0x00` es un selector puro de perfil (2 llamadas: `0x43ae75dc` obtener contexto, `0x43ae76ca` fijar modo) que elige un registro de 20 B según el modo; `0x06` tiene la misma forma que `0x01` pero sin llamar al selector de Prelight. Además **5 de los 16 nombres los registra código fuera de la tabla** (`SequenceFilter` en 5 funciones con 14 registros; `CapturePrelight` en 2; `CaptureDevelop`+`CaptureMarble` en una compartida) → existen **selectores auxiliares** que no son secciones.
+
+**Método**: referencia PIC de la cadena → prólogo Thumb → si el sitio cae dentro del manejador, ese es el selector; si no, sus llamadas `bl` (capstone) → `0x01` llama al selector de Prelight.
+
+[Informe](../analysis/s114_sections/section_engine.md) · [doc](../docs/capture/s114-section-engine.md). Siguiente: significado de `0x00` y `0x06`; la tabla de 20 B por sección; la relación entre secciones (`SectionQueueManager.cpp` `0x43caaf62`, `SectionEndFunc.cpp` `0x43caea54`).
+
+## S113 — `[CAM_DMM]`: el gestor de memoria dinámico de la cámara (21-10-2026, línea de RE general)
+
+**VERIFICADO (11 tests, `tests/test_s113_cam_dmm.py`):** 54 trazas `[CAM_DMM]` (todas de error) `0x43cce6ae`–`0x43ccf1c3`, con la implementación en **25 funciones contiguas** `0x439011d8`–`0x43903d5c`. **11 operaciones**: `AllocNew` (4), `AllocNewRdv` (4, *rendezvous*, confirmado por `MemoryHandle::AllocRendezvous` `0x43cceb4c`), `AllocShare` (4), `Free` (2), `FreeRdv` (2), `Open` (3), `Close` (2), 4 `MemoryHandle::*` (5) y las asíncronas `AsyncAllocNew` (9, función `0x439037c0`), `AsyncAllocRule` (7, `0x43903b80`), `LoadExtraMap` (7, `0x43903d5c`). **4 clases de error** del DMM: `ERR_DMM_RET_CODE` (10), `ERR_DMM_DIFFERENT_COMP` (10, con `msg_id`/`my_id` → la unidad pertenece a otro componente), `ERR_DMM_HANDLE` (4), `ERR_DMM_OPEN` (5); y **4 de capa OSAL** en las asíncronas (`ERR_OSAL_MSGQ`, `ERR_OSAL_HANDLE`, `ERR_OSAL_UIPC`, `rcv Invalid Src!`) → la frontera **DMM↔OSAL** del firmware es real (S38). El userland `DmmAccess` de `libmprctrl.so` (S37: `DmmAllocateNEWAndOpen_body`, `DmmShare`, `DmmCloseORFree_body`, `GetUnitHandleFromDmmAlloc`, `GetDMMRetMsg`) es **cliente** de este servidor, no una reimplementación.
+
+**Diferencial A7S fw3.20**: 0 trazas con el prefijo; **50 de las 54** tienen mensaje equivalente sin etiqueta; las 4 restantes son `AllocNew`, que en la A7S se registraba como `AllocNew(DMM_OPTION_NOUNIT_WARN): ERR_DMM_RET_CODE!: %x` (`0x43cb4f99`) y que la fw3.21 sustituyó por cuatro mensajes detallados.
+
+[Informe](../analysis/s113_cam_dmm/dmm_module.md) · [doc](../docs/capture/s113-cam-dmm.md). Siguiente: valores numéricos de `ERR_DMM_*`/`ERR_OSAL_*`; formato del mensaje OSAL asíncrono; tabla de reglas de `AsyncAllocRule`.
+
+## S108 — el módulo `[CAMERA_SA]` (231 trazas) del acelerador escalar (21-10-2026, línea de RE general)
+
+**VERIFICADO (4 tests, `tests/test_s108_camera_sa.py`):** 231 trazas `[CAMERA_SA]` en `0x43cc5286`–`0x43cef0d8`: la capa de cámara que reporta errores y estado del acelerador escalar (`Camera::SaFuncDrv`, S84), en 13 sub-bloques —APL (27), gestión de memoria (20), errores `GetAddr` (35), alineación de parámetros (29), paso de mensajes/mailbox (18), parámetros DUALREC (14), cierre de handles (20), referencias `sa_func_*` (8), errores especiales (4) y códigos `SA_FUNCDRV_E_OSAL/RSLTCODE/ERRCODE` (3)— más 51 de contenido mixto. **8 de las 19 familias `sa_func_*`** de S84 tienen traza directa aquí (`BDEX_exit`, `BFNR_release`, `BOKS`, `LFNR`, `KKNR`, `NFLASH`, `YKNR`, `DUALREC_BAYER`).
+
+**Diferencial**: la A7S fw3.20 y el A6300 fw2.01 tienen **0** trazas con la etiqueta y los **231/231** mensajes **idénticos sin ella** → la fw3.21 solo añade el prefijo de módulo.
+
+**Correcciones de la revisión** (agente principal): el borrador ponía "Parámetros Inválidos: 17" y omitía la categoría "Otros" (las 13 filas sumaban 195, no 231); daba `ExlHelper`/`MonPowersave` por presentes en `[CAMERA_SA]` (no lo están: son de `[CAMCORE]`, S107); y afirmaba que el A6300 tenía más trazas (tiene las mismas 231, sin etiqueta).
+
+[Informe](../analysis/s108_camera_sa/camera_sa.md) · [doc](../docs/capture/s108-camera-sa.md). Siguiente: atribución función→traza (el esquema PIC de S110 permite hacerla) y el formato binario del mailbox del SA.
+
+## S110 — `Camera::YC`: el motor de imagen de la A6000 (21-10-2026, línea de RE general)
+
+**VERIFICADO (15 tests, `tests/test_s110_camera_main_yc.py`):** `[CAMERA_MAIN_YC]` = **970 trazas** `0x43ca88f6`–`0x43ccd469` en 4 bloques. **API de 8 funciones**: `api_YC_InitCap` `0x437cf5f0`, `api_YC_SetCapBoks` `0x437d8c88`, `api_YC_SetCapStar` `0x437cfe94`, `api_YC_SetCapTbox` `0x437d88e4`, `api_YC_SetSaCamDsp` `0x437ce0cc`/`0x437d77a8`/`0x437d8940`, `api_YC_SetVdPreParam` `0x437d0768`/`0x437d5608`/`0x437d9a04`, `api_YC_LfnrSetParam` `0x437d8bd4`, `api_YC_DEV_SetCoodinate` `0x437d9d1c`. **12 jobs**: `job_YC_Initialize` `0x438aa574`, `job_YC_ModeManager` `0x4389f29e`, `job_YC_SetParam` (15 sitios), `job_YC_SetParamOn` `0x438b7c48`, `job_YC_SetParamOff` `0x438b7ba4`, `job_YC_SetParamPrelight` `0x4389b80c`, `job_YC_SetPreParam` `0x4388bb54`, `job_YC_SetSaCamDspParam` `0x4388b2c4`, `job_YC_CalcParam` (14 sitios), `job_YC_SetCapBoks` `0x4387f4b0`, `job_YC_SetCapStar` `0x438aec84`, `job_YC_GetTagPointer` (19 sitios). **141 sub-módulos etiquetados**: `SHD` 219, `ITP` 90, `YAP` 79, `DCV` 42, `OLC` 37, `NR` 36, `CLP` 29, `MARBLE` 24, `KKNR` 22, `PFR` 19 (las siglas **no están expandidas** en el firmware). **Mapa función→traza**: 968 cadenas en **304 funciones** (1 756 pares), **958** referenciadas (kill analysis) y **2 cadenas muertas** confirmadas (ni PIC ni puntero absoluto). **119 ficheros fuente** embebidos en la zona: `Sequence_Common.cpp` `0x43cb14a1`, `Sequence_Movie.cpp` `0x43cb31f1`, `yc_clp_common.cpp` `0x43cb81ac`, `init_cam_SetCamParam.cpp` `0x43cb40b8`, `SyncLoader.cpp` `0x43cb397a`, `CS_ExifMakerNote.cpp` `0x43cc56dc`, `ddl_stitch.cpp` `0x43cc6964`… **Comprobación cruzada con S78** (Ghidra): la atribución PIC da `job_apc_main_stl` → `0x438b3ea8` y `job_apc_main_mov` → `0x438b5810`, las mismas direcciones de S78.
+
+**Diferencial A7S fw3.20**: 0 cadenas con el prefijo (los mismos mensajes existen sin etiqueta) y, comparando el texto sin prefijo, **969 de las 970** cadenas de la A6000 existen también en la A7S; la única traza nueva de la fw3.21 es `HD_SWEEP_HOLD  =%x` (`0x43cbc27c`).
+
+**Corrección de método (arrastrada a S106):** el escáner PIC emparejaba cada `add rX,pc` con el `ldr` más cercano del registro y se detenía en el primer destino válido; como el registro se reutiliza, atribtaba mal algunas referencias. Corregido (se prueban todos los `ldr` del registro en 4 KB y solo se aceptan destinos que caen en el inicio de una cadena): S106 pasa de 694/697 a **696/697** (de 3 cadenas muertas a **1**, `0x43ca9b12`).
+
+[Informe](../analysis/s110_camera_main_yc/yc_engine.md) · [doc](../docs/capture/s110-camera-main-yc.md). Siguiente: significado de las siglas (SHD, ITP, DCV, OLC, CLP, PFR…); tabla de despacho de jobs (no localizada); enlace por código entre `api_YC_SetCapBoks/Star/Tbox` y las etapas `Stage_BOKS/STAR/TBOX`; sentido de `HD_SWEEP_HOLD`.
+
+## S107 — `Camera::CamCore` y la pila de recursos `ResourceStack` (21-10-2026, línea de RE general)
+
+**VERIFICADO (9 tests, `tests/test_s107_camcore.py`):** 37 trazas `[CAMCORE]` en la fw3.21 de la A6000 (`0x43c905ca`→`0x43cebcb2`) y **0** en la A7S fw3.20. RTTI: `N6Camera7CamCore8RdcImageE` `0x43c906b6` y `N6Camera7CamCore13SplitRdcImageE` `0x43cb0b94`. Contenido: SGC (`GetFlowType: No SgcTable` `0x43c905ca`), RDC/PFR (memoria PFR `0x43c90846`/`0x43c9088e`, `PFR in width[%d] > 596` `0x43c90ca3`), AIF (`AIF%d out[%d] > memsize[%d]` `0x43c90a96`, `pbl_aif_set_func` `0x43c90abd`, extents 1 o 2), `MemoryPool has no space.` `0x43c908e7`, `ResourceBase::Release was called without acquire` `0x43c90ec5`, `ExlHelper` (5 cadenas `0x43c90f98`–`0x43c91074`), *setter* de DMA (6 cadenas `0x43c910a4`–`0x43c91160`), `MonPowersave` `0x43c90f07` y corrección de defectos (`Acl::CAMHEAD_Z1C::setDefectPt` `0x43cebcb2`). **Las siglas (SGC, RDC, PFR, AIF, Exl) NO están expandidas en el firmware**: cualquier desarrollo es hipótesis.
+
+**Pila `ResourceStack`**: 4 mensajes dentro del bloque `[IMAGING_CAP]` (`0x43ca10d1` `ResourceStack)CamCore Release Error!`, `0x43ca110d` `rcct_Release err RC`, `0x43ca11c2` `Dfe Release Error!`, `0x43ca120f` `ResStack) GetMemIndex Err handle`) → la pila de recursos de CamCore la consume el gestor de captura still (S106).
+
+**Corrección de la revisión** (agente principal): el borrador daba por no verificada la presencia de `ExlHelper` (5) y `MonPowersave` (1) en la A7S — **existen** en ambos blobs, sin etiqueta; la fw3.21 solo **añade la etiqueta** `[CAMCORE]:`/`[IMAGING_CAP]:`. También se corrigieron los sitios de referencia de las trazas `sa_func_DUALREC_*` (los reales: `0x437ed95e`, `0x437ee4ae`, `0x437ee716`, `0x437eeb34`, `0x437ee84e`).
+
+[Informe](../analysis/s107_camcore/camcore_resources.md) · [doc](../docs/capture/s107-camcore-resources.md). Siguiente: significado de SGC/RDC/PFR/AIF/Exl; formato interno de la ResourceStack; por qué 2 de las 5 cadenas `ExlHelper` no tienen referencia PIC.
+
+## S106 — `IMAGING_CAP`: el gestor de captura still de la A6000 (21-10-2026, línea de RE general)
+
+**VERIFICADO (18 tests, `tests/test_s106_imaging_cap.py`):** `[IMAGING_CAP]` = **697 trazas** `0x43c9b335`–`0x43ccab72` en 11 bloques; es el **gestor de captura still** (no el pipeline de vídeo, no el obturador). En el mismo bloque de cadenas el firmware lleva **83 nombres de fichero fuente** (`0x43ca8e14`–`0x43cb0cbe`): 16 `*_Selector.cpp`, 10 `CaptureUtility*.cpp`, 9 manejadores, 6 `RawMemManager*.cpp`, 8 `Stage_*.cpp`, `CaptureManager*.cpp`, `SectionController.cpp`, `CaifCom_Control.cpp`, `NotifyController.cpp`, `ImageParamCapture*.cpp`… → así se reconstruye la arquitectura real. **Motor de secciones**: tabla de **17 entradas** `{id u32, manejador u32}` en `0x43ff8fb4`; el despachador `FUN_437e534c` copia `0x88` B y busca el id entre 17; cada manejador devuelve un bloque de **20 B (5 u32)** con los parámetros de la sección, elegido según el modo de captura; 14 de los 17 referencian su `Capture<Etapa>_Selector.cpp` (`Exposure`, `Read`, `AfterRead`, `DevEntry`, `CorrectRaw`, `OpdBeforeNR`, `Develop`, `Marble`, `FeatureEffect`, `AfterEffect`, `Encode`, `AfterEnc`, `SortJpeg`, `DevExit`); los ids `0x00`, `0x01`, `0x06` no lo hacen y `CapturePrelight`/`SequenceFilter` se referencian fuera de la tabla → asignación id↔etapa completa NO VERIFICADA. **CapMgr**: eventos `LastDetectionEnd` `0x43ca9caa`, `NotifySyncStart` `0x43ca9cf2`, `StartRawSequence` `0x43ca9dc7`, `EndRawSequence` `0x43ca9e81`, `CaptureEnd` `0x43ca9d55`, `CheckLastDet` `0x43ca9dfd`, `CaptureCancel_PowerOffDetect` `0x43ca9d85`; el despachador `FUN_437ddf4c` salta con una tabla de 16 entradas en `0x43bc4e08`. **CAIF**: `CAP_REQ`/`CAP_REQ_CLR`/`CAP_SETTING`/`CAP_START`/`CAP_DATA`/`CAP_V_COM` con dirección `[EN->CA]`/`[CA->EN]`/`[CA->AVIP]` (`0x43cca4fb`–`0x43cca8c3`); `CAP_*` son nombres de mensaje del protocolo, no estados internos. **CamCore**: 8 modos de adquisición (`MODE_CAP`, `MODE_CAP_DRP`, `MODE_CAP_PREREVIEW`, `MODE_CAP_SNR`, `MODE_CAP_SNR_PREREVIEW`, `MODE_SNR_BUS_THROUGH`, `MODE_SNR_BUS_THROUGH_PREREVIEW`, `MODE_CDET`). **Memoria**: `ImageParam_Capture_Base` AddRef/Release/ALL Released (`0x43ca9842`–`0x43ca99d0`), `RawMemManager` (MemPool/MemBuffer/MemRuleLib/UnitTypeLib), `GetMem_*`/`ShareMem_StlRaw8`/`UseRaw_DualRec`/`FreeRaw_DualRec`, DMM (`SetDmmInfo) FATAL! overwrite` `0x43ca9bd1`. **Método**: las cadenas no se apuntan con punteros absolutos, sino con el esquema PIC `destino = literal_del_pool + (add rX,pc + 4)` (verificado con `0x437284da`→`0x43c9b335` y `0x437f5b4a`→`0x43cad93c`): **690 de las 697** cadenas referenciadas (regla canónica *estricta*); las **7** restantes (los cuatro `DistV_RC`/`DistH_RC`, `0x43ca9b12` `ShareMem_StlRaw8 Err…`, `0x43cc7d5c` `%s: ContrastPlus error` y `0x43cc839c` `Rch_Rcv_Zima_Base Err…`) no tienen referencia alguna (ni PIC ni puntero absoluto) → cadenas muertas. *(La «corrección» de S110, 694→696, se apoyaba en una regla que inventa referencias; la kill analysis tampoco es exacta. La regla canónica es la estricta, validada a mano en `[SFRA]` y `[AIP]`. Metodología: `analysis/s106_imaging_cap/pic_xref_methodology.md`.)* **Diferencial A7S fw3.20**: 0 cadenas con el prefijo `[IMAGING_CAP]`; los mismos mensajes existen **sin etiqueta** (`CapMgr) LastDetectionEnd…` `0x43cae3b3`, `SectionCtrl) Fatal!…` `0x43caefd1`) → la fw3.21 **añade la etiqueta**; los 16 `*_Selector.cpp` están en A6000, A7S y A6300.
+
+**Negativo verificado:** 0 apariciones de `shutter`/`silent`/`EFCS`/`curtain`/`mechan` en las 697 trazas → el gestor de captura no registra nada del obturador. **Sin efecto en S51 (A/B/C = NO).**
+
+[Informe](../analysis/s106_imaging_cap/imaging_cap_architecture.md) · [doc](../docs/capture/s106-imaging-cap.md). Siguiente: ids de sección sin nombre (`0x00`, `0x01`, `0x06`); significado de los 20 B por sección; formatos binarios de CAIF y `MSG_ID_SDF_*`.
+
+## S105 — panorámica/barrido, bracketing e intervalo (21-10-2026, línea de RE general)
+
+**VERIFICADO (305 tests, `tests/test_s105_panorama.py`):** `CaptureManager::CaptureStart` (`0x437df646`) discrimina el modo con un **campo de 2 bits** del contexto de captura `0x43e9b548`; en el valor 2 pide la petición **`0x301f`** (`movw r0,#0x301f` en `0x437df7a2`; error `[IMAGING_CAP]: !!! Can't send Panorama cmd` `0x43caa019`). Cadena: `Stage_InitializeSweepAndSpoolBranch` (`0x437f0838`) → `Stage_Panorama::PanoramaSweepStart` (`0x43549020`) → `PanoramaSweepStart` (`0x437e6b3c`, abre/cierra el encoder JPEG por trama) → `UpdateSweepCanvas` (`0x437e751c`, `seq_brcEncode()`) → `PanoramaSweepEnd` (`0x437e6e78`, `cmp_execStitchPreProcess()` + `cmp_checkFillResidual()`) → `seq_panoramaClippingDecode` (`0x43780eb4`) → `PanoramaStitch` (`0x438bcef8`: `seq_initStitch`/`seq_panoramaParallelStitch`/`seq_endStitch`) → `PanoramaResize`/`PanoramaResizeEncode`. El stitch es **por tiras** (`PanoramaStripSequence::StripInfo` `0x438f4bcc` consume `PreProcessResult::Strip[]` `0x43ccd5fa`); el **número de capturas no está en el firmware** (lo decide el userland). **Bracketing**: en el firmware solo `lc_BracketAF.cpp` (`0x43ca79ba`) → 2 métodos de `Camera::LC` (`0x437c74b6`, `0x437c7554`); el bracketing de EV/WB lo orquesta `libObj.so`. **Intervalo**: `GetCaptureIntervalResource` (`0x437df338`), semáforo OSAL `CAPTURE_INTERVAL` (`0x43caa2b1`–`0x43caa3f8`) y control por PTM (`[SDF] interval(PTM) %ld` `0x43c7a1a5`, límite 900000 → `[SDF_ERR] interval_ptm over 10[sec]` `0x43c7a1be`).
+
+**NO VERIFICADO:** N de capturas, acrónimo CCNR, unidad del timer OSAL y del PTM, valor concreto del campo de 2 bits, clase LC del bracketing, ids `0x3005`/`0x301f`, algoritmo de `exec_tanzaku`.
+
+[Informe](../analysis/s105_panorama/panorama_bracket_interval.md) · [doc](../docs/capture/s105-panorama-bracket-interval.md). Siguiente: el número de capturas (userland) y el significado del campo de 2 bits del contexto.
 
 ## S102 — menú principal (botón MENU): carga y apertura (21-10-2026, línea de RE general)
 
@@ -287,6 +1093,18 @@ Para restricciones del proyecto (sin firmware ejecutado, sin flasheo, sin `git p
 **NO VERIFICADO:** el formato binario de cada comando y su equivalencia con las 11 peticiones `REQ_*` (S98); qué hace el submódulo `Prc`; la semántica de `PrcSetPeakDetect`.
 
 [Conclusiones](../analysis/s100_adf_contract/adf_command_contract.md).
+
+## S104 — prefijos de traza exclusivos de la A6000 (21-10-2026)
+
+**VERIFICADO (6 tests, `tests/test_s104_prefixes.py`):** seis prefijos de `analysis/s79_modules/module_map.json` que la A7S fw3.20 **no** tiene. `ADC_DEBUG` (14 cadenas, `0x43ce50dd`→`0x43ce5273`): ADC de **12 canales** del LIRO, tarea `TSK_ADC` y `boot_exit_adcliro`, mensaje OSAL de 0x20 B con cabecera `0xfff1` (`0x4398eb22`). `AVR` (2, `0x43c25502`→`0x43c25528`): **accesorio** LANC-AVR del módulo `ACCY` (`LANC-AVR Attached` `0x43c252b4`, handlers GPIO `0x43565680`/`0x435656d4`). `ADR` (1, `0x43cce3fa`): **campo** de dirección de una apertura IM dentro de un mensaje de `0x43901d50`, no un módulo. `BKID` (4, `0x43cce1ea`→`0x43cfb1a8`): *backup ID* (`BKID_SDF_QTBL_C` `0x43c77aeb`, `Backup_read(BKID_*)`). `AVOUT` (2, `0x43c2549e`→`0x43c254c6`): accesorio **AvOut** de `ACCY` (`AvOut Attached` `0x43c25260`). `CAMCORE` (37, `0x43c905ca`→`0x43cebcb2`): la librería **`Camera::CamCore`** (SGC, RDC/PFR, AIF/DMA, recursos, `ExlHelper`; RTTI `N6Camera7CamCore8RdcImageE` `0x43c906b6`).
+
+**Corrección de S73:** hay **cinco** cadenas `ADJ ADC`, no cuatro; `GET_DATA` (`0x43ce4fc7`) no está referenciada.
+
+## S103 — el subsistema SDF: la capa de dataflow de imagen still (21-10-2026)
+
+**VERIFICADO (51 tests, `tests/test_s103_sdf.py`):** `[SDF]` = **477 trazas** (`0x43c7785b`→`0x43c806f9`) y **15 `[SDF_ERR]`** (`0x43c7a145`→`0x43c7eb78`). SDF es el **ejecutor de trabajos** de imagen still: el gestor de captura (`IMAGING_CAP`, S106) le envía **33 `MSG_ID_SDF_*`** distintos (`paint_image`, `copy_image`, `resize_rotate`, `resize_rotate_lowspeed`, `encode_jpeg`, `decode_jpeg`, `encode_jpeg_rec`, `decode_jpeg_rss`, `encode_jpeg_with_work`, `redeye`, `beauty_effect`, `image_effect`, `image_mix`, `split_encode`, `split_resize`, `develop_resize`, `develop_resize_apl`, `scn_encode`, `scn_encode_with_thm`, `ccnr_encode`, `ccnr_encode_with_mode`, `ccnr_resize`, `panorama_ccnr_encode`, `thm_copy`, `thm_encode`, `jpeg_sort`, `dist_encode`, `dist_resize`, `dist_resize_no_tanz`, `face_resize`, `set_date_image_param`, `set_date_image_param_dual`, `ptm_count`), todos en `0x43c78000`→`0x43c78350`. Los errores son casi todos de **PTM** (`bigger_value.ptm_32==PTM_SECOND_ZONE`, `smaller_value.ptm_32==PTM_FIRST_ZONE`, `interval PTM`, `check stop PTM`) → el temporizador de imagen (`PTM`, `MSG_ID_SDF_PTM_COUNT`). Funciones: `FUN_43638308` (init; pasa `0x43c77857` = la cadena `"sdf"`), `FUN_435ab6f0` (dispatcher), `FUN_4363c730` (factoría de trabajos JPEG), `FUN_4363ca28` (ejecutor), `FUN_43639c78` (manejador de mensajes). En userland, `OBJAVBBCBASECLASS::SdfCh::{resizeRotate,paintImage,copyImage}` (`libObj.so`). La A7S fw3.20 tiene el mismo módulo con **479** trazas (`0x43c7a1eb`→`0x43c83082`).
+
+**NO VERIFICADO:** el significado del acrónimo (la hipótesis *Still DataFlow* encaja con `DataflowInfraErrorCode` en la primera traza, pero no hay evidencia textual); el formato de los mensajes `MSG_ID_SDF_*`; las dos trazas de diferencia con la A7S.
 
 ## S69 — subsistema de audio de la A6000 (línea general) (21-10-2026)
 

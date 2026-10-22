@@ -1,0 +1,44 @@
+{
+  "milestone": "S146",
+  "firmware_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "base": "0x43541000",
+  "address_mappings": [
+    {
+      "address": "0x437b617e",
+      "file_offset": "0x27517e",
+      "first_4_bytes_hex": "2de9f347"
+    },
+    {
+      "address": "0x43843a44",
+      "file_offset": "0x302a44",
+      "first_4_bytes_hex": "2de9f04f"
+    },
+    {
+      "address": "0x437b717e",
+      "file_offset": "0x27617e",
+      "first_4_bytes_hex": "20080122"
+    }
+  ],
+  "rea_tool_result": {
+    "procedure_pseudo_code_selector": "file-offset:<offset> resolves file mapping then requires an already observed containing/starting procedure; it does not create or seed one.",
+    "procedures_rejected_selector": [
+      "procedure_info",
+      "procedure_assembly",
+      "analyze_function"
+    ],
+    "candidate_offsets": {
+      "0x43843a44": "0x302a44",
+      "0x437b617e": "0x27517e",
+      "mistyped_offset_0x27617e_maps_to": "0x437b717e (unrelated analyzed procedure extent)"
+    },
+    "coverage_error": "File offset 0x302a44 maps to analysis address 0x43843a44, but no procedure starts at or contains that address in the current Ghidra analysis."
+  },
+  "evidence_ids": [
+    "ev_adf4d88907eb3ff81fba796af3f1ddac9680ffe4aded30e67aa18febd79e3417",
+    "ev_26bca5083b40a7c16bcf21eec1635a774c20532c95739f7acd57aa3649d06ad7",
+    "ev_ea22a2182a4e3d23312394b402b358789ae6a158f2c91f4dd012453fd50de7ed",
+    "ev_b0d6874334a9baa4823bb7b150b77290a5434ef146c37fcd58858065b1babd63",
+    "ev_b0f83d8206f65a014ebfad1dd74c5428aa1aa66ff8fe6cb7067cfa007f94e20b"
+  ],
+  "conclusion": "REA current tool surface cannot seed these unrecognized entries; this is an analysis coverage limit, not evidence of absent code or non-execution."
+}

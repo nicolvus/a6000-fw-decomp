@@ -1,0 +1,4058 @@
+{
+ "hit": "S133",
+ "trace_tag": "[MOUNT_DEBUG]",
+ "namespace": "módulo de montura del bloque BL (Mount_*)",
+ "binary": "analysis/rea-independent/input/av-cam.bin (A6000 fw3.21)",
+ "vaddr_rule": "vaddr = 0x43541000 + file_offset",
+ "xref_rule": "estricta (analysis/s106_imaging_cap/scan_pic_refs_strict.py; mapa global analysis/s106_imaging_cap/pic_refs_strict_global.json)",
+ "counts": {
+  "strings": 132,
+  "sites": 148,
+  "functions": 65,
+  "unreferenced": 0,
+  "functions_by_first_site": 64,
+  "string_blocks": [
+   {
+    "range": [
+     "0x43c9648d",
+     "0x43c9a10f"
+    ],
+    "strings": 132,
+    "sites": 148
+   }
+  ],
+  "prefix_tokens": {
+   "[MOUNT_DEBUG]": 132,
+   "[MOUNT_ERROR]": 80,
+   "[MOUNT_INFO]": 6,
+   "[MOUNT_WARNING]": 5,
+   "[MOUNT_*]": 223
+  },
+  "sink_sites": {
+   "0x436e41e4": 94,
+   "0x436e03b0": 29,
+   "0x436e3914": 10,
+   "0x436fe410": 6,
+   "0x436e808c": 4,
+   "0x436e9c70": 2,
+   "0x436e36a8": 1,
+   "0x436e7bec": 1,
+   "0x436fdfc4": 1,
+   "sin_resolver": 0
+  }
+ },
+ "unreferenced": [],
+ "sub_blocks": [
+  {
+   "id": "sync_send",
+   "name": "BL sync/async send: cola de envío y comandos al objetivo",
+   "functions": [
+    "0x436e0d74",
+    "0x436e0e74",
+    "0x436e0eec",
+    "0x436e1164",
+    "0x436e1254",
+    "0x436e1328",
+    "0x436e14ac",
+    "0x436e1664"
+   ],
+   "functions_touched": 8,
+   "strings_first_site": 13,
+   "sites": 17,
+   "string_vaddr_range": [
+    "0x43c9648d",
+    "0x43c9678b"
+   ],
+   "site_range": [
+    "0x436e0dcc",
+    "0x436e1718"
+   ],
+   "note": "Ejemplos: BL]SYNC SEND SET ID(%d):CB(0x%8x) (0x43c9648d); BL ERR]SendingLensNonCommand ID[%d] (0x43c965b9); BL]Wait_BL_ASYNC (0x43c966a8); BL]LENS DETACH REMAIN CB(%d) (0x43c9678b)"
+  },
+  {
+   "id": "drv_uart",
+   "name": "DRV_SEND: envío UART de bajo nivel",
+   "functions": [
+    "0x436e1918"
+   ],
+   "functions_touched": 1,
+   "strings_first_site": 1,
+   "sites": 2,
+   "string_vaddr_range": [
+    "0x43c96946",
+    "0x43c96946"
+   ],
+   "site_range": [
+    "0x436e1a40",
+    "0x436e1ab0"
+   ],
+   "note": "Ejemplos: BL]DRV_SEND[%d] (0x43c96946)"
+  },
+  {
+   "id": "rx_analyzer",
+   "name": "analizador RX del protocolo BL",
+   "functions": [
+    "0x436e2678"
+   ],
+   "functions_touched": 1,
+   "strings_first_site": 8,
+   "sites": 8,
+   "string_vaddr_range": [
+    "0x43c96e73",
+    "0x43c97010"
+   ],
+   "site_range": [
+    "0x436e284e",
+    "0x436e2c04"
+   ],
+   "note": "Ejemplos: BL ERR]MOUNT_ERR_COMMTYPE_NG_1 (0x43c96e73); B->L]ALPHALENS:%d,%d (0x43c96ea2); BL]SYNC RECIVE ID(%d):CB(0x%8x) (0x43c96f49); BL ERR]Receive Buffer Overwrite(Lap) (0x43c97010)"
+  },
+  {
+   "id": "cap_lif",
+   "name": "captura de log de diagnóstico y crédito LIF",
+   "functions": [
+    "0x436e3508",
+    "0x436e3754"
+   ],
+   "functions_touched": 2,
+   "strings_first_site": 3,
+   "sites": 3,
+   "string_vaddr_range": [
+    "0x43c97161",
+    "0x43c971b4"
+   ],
+   "site_range": [
+    "0x436e3550",
+    "0x436e37ea"
+   ],
+   "note": "Ejemplos: BL]osal_capstart Ret=%04x (0x43c97161); BL]osal_capstop Ret=%04x (0x43c9718b); BL ERR]LIF CREDIT RegistErro Lens doesn't know = %d (0x43c971b4)"
+  },
+  {
+   "id": "divided_eclipse",
+   "name": "Mount_DividedInfo: eclipse/divided info de la lente",
+   "functions": [
+    "0x436e39e8",
+    "0x436e3bc8",
+    "0x436e3bf8",
+    "0x436e3dc8",
+    "0x436e3f18",
+    "0x436e3f48",
+    "0x436e3f9c",
+    "0x436e405c"
+   ],
+   "functions_touched": 8,
+   "strings_first_site": 10,
+   "sites": 10,
+   "string_vaddr_range": [
+    "0x43c97218",
+    "0x43c97802"
+   ],
+   "site_range": [
+    "0x436e3a14",
+    "0x436e406c"
+   ],
+   "note": "Ejemplos: BL]EclipseDataComState [%d] => [%d] (0x43c9734d); ount_EclipseComInit Mount_DividedInfo.cpp line %d (0x43c97754); ount LensConnect : %d (0x43c97796); ount_InitializeEclipseDataForLensDetach Mount_DividedInfo.cpp line %d (0x43c97802)"
+  },
+  {
+   "id": "mount_controller",
+   "name": "Mount_Controller: máquina de estados de montura y handshake",
+   "functions": [
+    "0x436e4294",
+    "0x436e4360",
+    "0x436e438a",
+    "0x436e4444",
+    "0x436e4478",
+    "0x436e44b8",
+    "0x436e44f8",
+    "0x436e4548",
+    "0x436e4598",
+    "0x436e4674",
+    "0x436e472c",
+    "0x436e47a8",
+    "0x436e4800",
+    "0x436e48fc",
+    "0x436e4a94",
+    "0x436e4b24",
+    "0x436e4b66",
+    "0x436e4b96",
+    "0x436e4bc4",
+    "0x436e4c26",
+    "0x436e4c54",
+    "0x436e4ca0",
+    "0x436e4eb4",
+    "0x436e4f98",
+    "0x436e505c",
+    "0x436e509c",
+    "0x436e51ac",
+    "0x436e52bc",
+    "0x436e54aa",
+    "0x436e54f8",
+    "0x436e55c2",
+    "0x436e5b16",
+    "0x436e5c6c",
+    "0x436e5cfc"
+   ],
+   "functions_touched": 35,
+   "strings_first_site": 47,
+   "sites": 50,
+   "string_vaddr_range": [
+    "0x43c9788a",
+    "0x43c98417"
+   ],
+   "site_range": [
+    "0x436e42d2",
+    "0x436e5dea"
+   ],
+   "note": "Ejemplos: B->L]CS_POWER (0x43c978db); BL]CAM CmdStatus:%04X (0x43c979a0); BL]Mount_ChkCamCmdState RetVal:%d (0x43c979c6); BL]LENS_POWER_UNREG (0x43c97d22); BL]PREPARE UPDATE CHECK OK (0x43c98151)"
+  },
+  {
+   "id": "main_task",
+   "name": "tarea principal BL: secuencia de power/arranque/apagado",
+   "functions": [
+    "0x436e5e3c"
+   ],
+   "functions_touched": 1,
+   "strings_first_site": 37,
+   "sites": 44,
+   "string_vaddr_range": [
+    "0x43c98460",
+    "0x43c98a9e"
+   ],
+   "site_range": [
+    "0x436e6046",
+    "0x436e7a38"
+   ],
+   "note": "Ejemplos: BL]LOGIC_POWER:%d (0x43c98460); BL]POWEROFF_HANDSHAKE_END (0x43c986b6); BL]LOGIC_ON (0x43c9882f); AIT_LOGICPWR_OFF (0x43c98a08)"
+  },
+  {
+   "id": "lif_tasks",
+   "name": "tareas LIF: botones y callbacks BL asíncronos",
+   "functions": [
+    "0x436e7c9e",
+    "0x436e8836",
+    "0x436e88f0",
+    "0x436e89f4",
+    "0x436e97a8",
+    "0x436e9d1c",
+    "0x436e9d78"
+   ],
+   "functions_touched": 7,
+   "strings_first_site": 7,
+   "sites": 7,
+   "string_vaddr_range": [
+    "0x43c98b58",
+    "0x43c98c8e"
+   ],
+   "site_range": [
+    "0x436e7cb8",
+    "0x436e9db2"
+   ],
+   "note": "Ejemplos: BL] TSK_LIF is called by %d (0x43c98b58); BL]CHG FHButton old=%d new=%d (0x43c98bb0); BL]CHG PzMzButton old=%d new=%d (0x43c98c36); BL]BL_ASYNC_RCV_BYTE_CB (0x43c98c66)"
+  },
+  {
+   "id": "lens_remove",
+   "name": "detección de extracción de lente",
+   "functions": [
+    "0x436fe16a"
+   ],
+   "functions_touched": 1,
+   "strings_first_site": 1,
+   "sites": 1,
+   "string_vaddr_range": [
+    "0x43c9a10f",
+    "0x43c9a10f"
+   ],
+   "site_range": [
+    "0x436fe196",
+    "0x436fe196"
+   ],
+   "note": "Ejemplos: BL]CHG LENS REMOVE DET old=%d new=%d (0x43c9a10f)"
+  },
+  {
+   "id": "fw_update",
+   "name": "actualización de firmware de lente",
+   "functions": [
+    "0x436fe500"
+   ],
+   "functions_touched": 1,
+   "strings_first_site": 5,
+   "sites": 6,
+   "string_vaddr_range": [
+    "0x43c9805f",
+    "0x43c981dc"
+   ],
+   "site_range": [
+    "0x436fe740",
+    "0x436fe890"
+   ],
+   "note": "Ejemplos: BL]PREPARE UPDATE REQ RCV (0x43c9805f); BL]PREPARE UPDATE OK (0x43c98089); BL]PREPARE UPDATE NG (0x43c980ae); BL]UPDATE UNPLUG USB (0x43c981dc)"
+  }
+ ],
+ "sinks": {
+  "0x436e03b0": {
+   "kind": "directo",
+   "sites": 29,
+   "prologue": "push {r3}; push.w {r0,r1,r2,r4,r5,r6,r7,r8,sb,sl,lr}",
+   "size": "movs r2,#0x9a en 0x436e03c8",
+   "alloc": "bl 0x435612d0 (osal_try_valloc_msg) en 0x436e03cc",
+   "format": "bl 0x439c5004 (vsnprintf, tamaño 0x81) en 0x436e03f6",
+   "hook": "bl 0x43ad9eae en 0x436e041e",
+   "send": "bl 0x4356120c (osal_snd_msg) en 0x436e0426",
+   "message": "[+0]=1 (strh), [+2]=tag, [+4]=r1, [+0x10]=r2, [+0x12]=longitud+1, texto en +0x14"
+  },
+  "0x436e41e4": {
+   "kind": "wrapper",
+   "sites": 94,
+   "prologue": "push {r3}; push.w {r4,r5,r6,r7,r8,sb,sl,lr}; sub sp,#0x2c",
+   "size": "movs r2,#0x9a en 0x436e41fe",
+   "alloc": "bl 0x435612d0 en 0x436e4202",
+   "ext": "bl 0x43561244 en 0x436e4236",
+   "format": "bl 0x439c5004 (vsnprintf) en 0x436e424c",
+   "hook": "bl 0x43ada13c en 0x436e4274",
+   "send": "bl 0x4356120c (osal_snd_msg) en 0x436e427c",
+   "format_arg": "r3 (recuperado con push {r3} + add r5,sp,#0x4c; ldr sl,[r5],#4 en 0x436e41f6)"
+  },
+  "0x436e9c70": {
+   "kind": "wrapper",
+   "sites": 2,
+   "tag": "0x125 fijado con movw r3,#0x125 en 0x436e9c9a"
+  },
+  "tail_calls": {
+   "0x436e4378": "pop.w + b.w 0x436e41e4 (0x436e437a/0x436e437e)",
+   "0x436e55fe": "b #0x436e561e, luego cola a 0x436e41e4",
+   "0x436e560e": "b #0x436e561e, luego cola a 0x436e41e4",
+   "0x436e561c": "b #0x436e561e, luego cola a 0x436e41e4"
+  }
+ },
+ "sources": [
+  {
+   "name": "Mount_Controller.cpp",
+   "vaddr": "0x43c9671a",
+   "tag": "[MOUNT_ERROR]",
+   "text": "[MOUNT_ERROR]: [BL]ASYNC ERR Mount_Controller.cpp %d lines",
+   "site": "0x436e146a",
+   "func": "0x436e1328",
+   "sub_block": "sync_send"
+  },
+  {
+   "name": "Mount_DividedInfo.cpp",
+   "vaddr": "0x43c972fb",
+   "tag": "[MOUNT_ERROR]",
+   "text": "[MOUNT_ERROR]: [BL]ECLIPSE_COM_STATE is INIT in VSYNC at Mount_DividedInfo.cpp %d",
+   "site": "0x436e3b82",
+   "func": "0x436e3b5c",
+   "sub_block": "divided_eclipse"
+  },
+  {
+   "name": "Mount_DividedInfo.cpp",
+   "vaddr": "0x43c9756f",
+   "tag": "[MOUNT_ERROR]",
+   "text": "[MOUNT_ERROR]: datasize is over [%d] < [%d] in Mount_DividedInfo.cpp %d",
+   "site": "0x436e3e40",
+   "func": "0x436e3dc8",
+   "sub_block": "divided_eclipse"
+  },
+  {
+   "name": "Mount_DividedInfo.cpp",
+   "vaddr": "0x43c97754",
+   "tag": "[MOUNT_DEBUG]",
+   "text": "[MOUNT_DEBUG]: Mount_EclipseComInit Mount_DividedInfo.cpp line %d",
+   "site": "0x436e3fb4",
+   "func": "0x436e3f9c",
+   "sub_block": "divided_eclipse"
+  },
+  {
+   "name": "Mount_DividedInfo.cpp",
+   "vaddr": "0x43c977bc",
+   "tag": "[MOUNT_ERROR]",
+   "text": "[MOUNT_ERROR]: unsupported number[%d].  Mount_DividedInfo.cpp line %d",
+   "site": "0x436e4006",
+   "func": "0x436e3f9c",
+   "sub_block": "divided_eclipse"
+  },
+  {
+   "name": "Mount_DividedInfo.cpp",
+   "vaddr": "0x43c97802",
+   "tag": "[MOUNT_DEBUG]",
+   "text": "[MOUNT_DEBUG]: Mount_InitializeEclipseDataForLensDetach Mount_DividedInfo.cpp line %d",
+   "site": "0x436e406c",
+   "func": "0x436e405c",
+   "sub_block": "divided_eclipse"
+  }
+ ],
+ "other_strings": [
+  {
+   "prefix": "[MOUNT_ERROR]",
+   "count": 80,
+   "first": "0x43c95659",
+   "example": "[MOUNT_ERROR]: [MCS]addCmdDataList data times overflow\\n"
+  },
+  {
+   "prefix": "[MOUNT_INFO]",
+   "count": 6,
+   "example": "[MOUNT_INFO]: …"
+  },
+  {
+   "prefix": "[MOUNT_WARNING]",
+   "count": 5,
+   "example": "[MOUNT_WARNING]: [MOUNT AM]NO MEMBER CHECK_DATA:%d"
+  },
+  {
+   "text": "/mnt/Mount_ms_log_%03d.dat",
+   "vaddr": "0x43c97146",
+   "count": 1,
+   "note": "nombre del fichero de captura; preexistente en A7S y A6300"
+  },
+  {
+   "text": "Eclipse",
+   "count": 13,
+   "note": "13 cadenas [MOUNT_*] contienen Eclipse; preexistente en A7S (6) y A6300 (6)"
+  },
+  {
+   "text": "LENS DETACH",
+   "count": 2,
+   "note": "[MOUNT_DEBUG] LENS DETACH REMAIN CB(%d) y [MOUNT_ERROR] FORCE LENS DETACH count:%d debug:%d"
+  },
+  {
+   "text": "Diagnosis",
+   "count": 0,
+   "note": "0 en A6000, A7S y A6300; ninguna de las tres cámaras contiene Diagnosis/DIAGNOSIS/diagnosis"
+  }
+ ],
+ "details": [
+  "Las 132 cadenas llevan el prefijo completo en el texto: \"[MOUNT_DEBUG]: …\". Para comparar núcleos con A7S/A6300 hay que quitar \"[MOUNT_DEBUG]: \".",
+  "La traza más emitida es [BL]SYNC SEND SET ID(%d):CB(0x%8x) 0x43c9648d, desde 0x436e0dcc en 0x436e0d74.",
+  "Los chequeos del protocolo (HEADER_NG, FOOTER_NG, CHECKSUM_NG, DATASIZE_NG, COMMTYPE_NG_0, SYNC TIMEOUT y el volcado de 12 líneas de 0x436e239c) son [MOUNT_ERROR], no [MOUNT_DEBUG]: el bloque DEBUG traza tráfico y máquina de estados, no los chequeos.",
+  "El reparto por sink se obtuvo siguiendo add rX,pc, los b incondicionales y, cuando hay epílogo, el b.w de cola; los 4 sitios de cola (0x436e4378, 0x436e55fe, 0x436e560e, 0x436e561c) acaban en 0x436e41e4.",
+  "Patrón de llamada típico en 0x436e4b42: movw r0,#0x125; movs r2,#3; add r3,pc en 0x436e4b48; bl 0x436e41e4 en 0x436e4b4a.",
+  "0x436e4598 (Mount_ChkCamCmdState) lee [r0+0x28] con ldrb.w en 0x436e45a4 y [r0+0x24] con ldrh en 0x436e45a8; acepta 0xC00-0xC03 (cmp.w r3,#0xc00 en 0x436e45b6, movw r2,#0xc03 en 0x436e45be) y emite 0x43c979a0 y 0x43c979c6.",
+  "0x436e3508 captura log de diagnóstico: estado 0/1/2 en un byte; movs r0,#0xd en 0x436e350a + bl 0x439025e0 en 0x436e350e; snprintf de /mnt/Mount_ms_log_%03d.dat en 0x436e3538; osal_capstart (r1=4) en 0x436e3546 y osal_capstop (r1=5) en 0x436e357c.",
+  "Puentes sin trazas: 0x4377e0e8 (bl 0x436e8328 en 0x4377e0f0; comandos de cámara 0xC00-0xC07 con sub.w r3,r2,#0xc00 en 0x4377e21e y tbb en 0x4377e22c) y 0x437d24c8 (bl 0x436e97a8 en 0x437d24f2). Ninguno contiene sitios del mapa estricto; su atribución de módulo es NO VERIFICADO.",
+  "Las cadenas se reparten por sub-bloques de funciones verificadas en S66, pero el orden del bloque de cadenas no sigue el orden del código: fw_update emite 0x43c9805f-0x43c981dc desde 0x436fe500, mientras mount_controller emite 0x43c98151-0x43c981a7 desde 0x436e55c2."
+ ],
+ "differential": {
+  "a6000_strings": 132,
+  "a7s_with_prefix": 0,
+  "a6300_with_prefix": 0,
+  "a7s_interior_exact": 0,
+  "a6300_interior_exact": 0,
+  "a7s_interior_substring": 2,
+  "a6300_interior_substring": 2,
+  "substring_false_positives": [
+   {
+    "vaddr": "0x43c966a8",
+    "text": "[MOUNT_DEBUG]: [BL]Wait_BL_ASYNC",
+    "note": "aparece dentro de [BL]Wait_BL_ASYNC_RCV (%+hd) en A7S (offset 7719423) y A6300 (8777157); no es una traza independiente"
+   },
+   {
+    "vaddr": "0x43c98a29",
+    "text": "[MOUNT_DEBUG]: POFF",
+    "note": "aparece dentro de SaveUsr:POFF Req en A7S (7698757) y A6300 (8747017); no es una traza independiente"
+   }
+  ],
+  "prefix_tokens": {
+   "[MOUNT_": {
+    "a6000": 223,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "[MOUNT_DEBUG": {
+    "a6000": 132,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "[MOUNT_ERROR": {
+    "a6000": 80,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "[MOUNT_INFO": {
+    "a6000": 6,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "[MOUNT_WARNING": {
+    "a6000": 5,
+    "a7s": 0,
+    "a6300": 0
+   }
+  },
+  "preexisting": {
+   "Mount_DividedInfo.cpp": {
+    "a6000": 5,
+    "a7s": 3,
+    "a6300": 4
+   },
+   "Mount_Controller.cpp": {
+    "a6000": 1,
+    "a7s": 2,
+    "a6300": 1
+   },
+   "/mnt/Mount_ms_log_%03d.dat": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "LENS DETACH": {
+    "a6000": 2,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "Eclipse": {
+    "a6000": 13,
+    "a7s": 6,
+    "a6300": 6
+   }
+  },
+  "nuance": "La captura de log de montura y el módulo Eclipse existen en las tres cámaras; lo nuevo en fw3.21 es la instrumentación [MOUNT_*]. El A7S conserva el módulo con otro vocabulario ([BL]SYNC ERR TX DATA SIZE=0 0x75e884, [BL]SYNC NO DATA 0x75e8a0, [BL]HEADER_NG 0x75ee0b, dump 0x75eca3-0x75eddd); el A6300 añade DIVIDEDINFO_COM_STATE/STEADYSHOTINFO_COM_STATE (0x863348/0x863593)."
+ },
+ "unverified": [
+  "La atribución de módulo de los puentes 0x4377e0e8 y 0x437d24c8 es NO VERIFICADO: no contienen sitios del mapa estricto y no se ha medido su módulo de origen.",
+  "No existe ninguna cadena Diagnosis/DIAGNOSIS/diagnosis en A6000, A7S ni A6300: la faceta \"Diagnosis\" del encargo no se puede verificar con bytes.",
+  "BL no está expandido en el firmware; no se ha medido si significa un bloque interno, BackLight u otra cosa.",
+  "No se ha medido el consumidor de los mensajes (osal_snd_msg) ni el módulo que los formatea; solo el emisor y el mensaje construido.",
+  "La semántica de los códigos CS_*, ATTACH_INFO*, PowerSeq y de los estados 0/1/2 del log no está verificada; solo los nombres literales y las comparaciones.",
+  "Ninguna de las 132 trazas menciona obturador, sensor, apertura, actuador ni autofoco (0 coincidencias de SHUT/SENS/APER/ACTU/DIAG/CONTACT/FC/AF sensible a mayúsculas; el único aF está en Mount_InitializeEclipseDataForLensDetach 0x43c97802 y no es una referencia a AF). No se puede afirmar ni negar una interacción indirecta con el obturador.",
+  "No se ha localizado la definición de las macros [MOUNT_DEBUG]/[MOUNT_ERROR]/[MOUNT_INFO]/[MOUNT_WARNING]; su compilación condicional es NO VERIFICADO."
+ ],
+ "main_agent_review": [],
+ "strings": [
+  {
+   "vaddr": "0x43c9648d",
+   "text": "[MOUNT_DEBUG]: [BL]SYNC SEND SET ID(%d):CB(0x%8x)",
+   "first_site_func": "0x436e0d74",
+   "sub_block": "sync_send",
+   "sites": [
+    {
+     "site": "0x436e0dcc",
+     "func": "0x436e0d74",
+     "approx": false,
+     "sink": "0x436e03b0"
+    }
+   ],
+   "funcs": [
+    "0x436e0d74"
+   ]
+  },
+  {
+   "vaddr": "0x43c9650a",
+   "text": "[MOUNT_DEBUG]: [BL SYNC]BLANK ERR (%02X)",
+   "first_site_func": "0x436e0e74",
+   "sub_block": "sync_send",
+   "sites": [
+    {
+     "site": "0x436e0e9a",
+     "func": "0x436e0e74",
+     "approx": false,
+     "sink": "0x436e03b0"
+    }
+   ],
+   "funcs": [
+    "0x436e0e74"
+   ]
+  },
+  {
+   "vaddr": "0x43c96533",
+   "text": "[MOUNT_DEBUG]: [BL SYNC]DATA SIZE ERROR size(%d)",
+   "first_site_func": "0x436e0e74",
+   "sub_block": "sync_send",
+   "sites": [
+    {
+     "site": "0x436e0ed0",
+     "func": "0x436e0e74",
+     "approx": false,
+     "sink": "0x436e03b0"
+    }
+   ],
+   "funcs": [
+    "0x436e0e74"
+   ]
+  },
+  {
+   "vaddr": "0x43c96564",
+   "text": "[MOUNT_DEBUG]: [BL]QUEUE_DATA_REMAINDER",
+   "first_site_func": "0x436e0eec",
+   "sub_block": "sync_send",
+   "sites": [
+    {
+     "site": "0x436e0f10",
+     "func": "0x436e0eec",
+     "approx": false,
+     "sink": "0x436e03b0"
+    }
+   ],
+   "funcs": [
+    "0x436e0eec"
+   ]
+  },
+  {
+   "vaddr": "0x43c9658c",
+   "text": "[MOUNT_DEBUG]: [BL ERR]state:%02Xh, code:06h",
+   "first_site_func": "0x436e1164",
+   "sub_block": "sync_send",
+   "sites": [
+    {
+     "site": "0x436e1202",
+     "func": "0x436e1164",
+     "approx": false,
+     "sink": "0x436e03b0"
+    }
+   ],
+   "funcs": [
+    "0x436e1164"
+   ]
+  },
+  {
+   "vaddr": "0x43c965b9",
+   "text": "[MOUNT_DEBUG]: [BL ERR]SendingLensNonCommand ID[%d]",
+   "first_site_func": "0x436e1254",
+   "sub_block": "sync_send",
+   "sites": [
+    {
+     "site": "0x436e1272",
+     "func": "0x436e1254",
+     "approx": false,
+     "sink": "0x436e03b0"
+    },
+    {
+     "site": "0x436e138a",
+     "func": "0x436e1328",
+     "approx": true,
+     "sink": "0x436e03b0"
+    },
+    {
+     "site": "0x436e14f2",
+     "func": "0x436e14ac",
+     "approx": false,
+     "sink": "0x436e03b0"
+    }
+   ],
+   "funcs": [
+    "0x436e1254",
+    "0x436e1328",
+    "0x436e14ac"
+   ]
+  },
+  {
+   "vaddr": "0x43c965ed",
+   "text": "[MOUNT_DEBUG]: [BL SYNC ERR]VSYNC ENABLE DUPLICATION(%d)",
+   "first_site_func": "0x436e1254",
+   "sub_block": "sync_send",
+   "sites": [
+    {
+     "site": "0x436e128c",
+     "func": "0x436e1254",
+     "approx": false,
+     "sink": "0x436e03b0"
+    }
+   ],
+   "funcs": [
+    "0x436e1254"
+   ]
+  },
+  {
+   "vaddr": "0x43c96626",
+   "text": "[MOUNT_DEBUG]: [BL]SYNC SEND ID(%d):CB(0x%8x)",
+   "first_site_func": "0x436e1254",
+   "sub_block": "sync_send",
+   "sites": [
+    {
+     "site": "0x436e12d2",
+     "func": "0x436e1254",
+     "approx": false,
+     "sink": "0x436e03b0"
+    }
+   ],
+   "funcs": [
+    "0x436e1254"
+   ]
+  },
+  {
+   "vaddr": "0x43c96679",
+   "text": "[MOUNT_DEBUG]: [BL]ASYNC SEND ID(%d):CB(0x%8x)",
+   "first_site_func": "0x436e1328",
+   "sub_block": "sync_send",
+   "sites": [
+    {
+     "site": "0x436e13d2",
+     "func": "0x436e1328",
+     "approx": true,
+     "sink": "0x436e03b0"
+    }
+   ],
+   "funcs": [
+    "0x436e1328"
+   ]
+  },
+  {
+   "vaddr": "0x43c966a8",
+   "text": "[MOUNT_DEBUG]: [BL]Wait_BL_ASYNC",
+   "first_site_func": "0x436e1328",
+   "sub_block": "sync_send",
+   "sites": [
+    {
+     "site": "0x436e13fa",
+     "func": "0x436e1328",
+     "approx": true,
+     "sink": "0x436e03b0"
+    }
+   ],
+   "funcs": [
+    "0x436e1328"
+   ]
+  },
+  {
+   "vaddr": "0x43c966c9",
+   "text": "[MOUNT_DEBUG]: [BL ASYNC]SEND ID(%d)",
+   "first_site_func": "0x436e1328",
+   "sub_block": "sync_send",
+   "sites": [
+    {
+     "site": "0x436e1410",
+     "func": "0x436e1328",
+     "approx": true,
+     "sink": "0x436e03b0"
+    }
+   ],
+   "funcs": [
+    "0x436e1328"
+   ]
+  },
+  {
+   "vaddr": "0x43c96755",
+   "text": "[MOUNT_DEBUG]: [BL ERR]SendingLensNonCommand ID[0xFF]",
+   "first_site_func": "0x436e14ac",
+   "sub_block": "sync_send",
+   "sites": [
+    {
+     "site": "0x436e150e",
+     "func": "0x436e14ac",
+     "approx": false,
+     "sink": "0x436e03b0"
+    }
+   ],
+   "funcs": [
+    "0x436e14ac"
+   ]
+  },
+  {
+   "vaddr": "0x43c9678b",
+   "text": "[MOUNT_DEBUG]: [BL]LENS DETACH REMAIN CB(%d)",
+   "first_site_func": "0x436e1664",
+   "sub_block": "sync_send",
+   "sites": [
+    {
+     "site": "0x436e169a",
+     "func": "0x436e1664",
+     "approx": false,
+     "sink": "0x436e03b0"
+    },
+    {
+     "site": "0x436e16de",
+     "func": "0x436e1664",
+     "approx": false,
+     "sink": "0x436e03b0"
+    },
+    {
+     "site": "0x436e1718",
+     "func": "0x436e1664",
+     "approx": false,
+     "sink": "0x436e03b0"
+    }
+   ],
+   "funcs": [
+    "0x436e1664"
+   ]
+  },
+  {
+   "vaddr": "0x43c96946",
+   "text": "[MOUNT_DEBUG]: [BL]DRV_SEND[%d]",
+   "first_site_func": "0x436e1918",
+   "sub_block": "drv_uart",
+   "sites": [
+    {
+     "site": "0x436e1a40",
+     "func": "0x436e1918",
+     "approx": false,
+     "sink": "0x436e03b0"
+    },
+    {
+     "site": "0x436e1ab0",
+     "func": "0x436e1918",
+     "approx": false,
+     "sink": "0x436e03b0"
+    }
+   ],
+   "funcs": [
+    "0x436e1918"
+   ]
+  },
+  {
+   "vaddr": "0x43c96e73",
+   "text": "[MOUNT_DEBUG]: [BL ERR]MOUNT_ERR_COMMTYPE_NG_1",
+   "first_site_func": "0x436e2678",
+   "sub_block": "rx_analyzer",
+   "sites": [
+    {
+     "site": "0x436e284e",
+     "func": "0x436e2678",
+     "approx": false,
+     "sink": "0x436e03b0"
+    }
+   ],
+   "funcs": [
+    "0x436e2678"
+   ]
+  },
+  {
+   "vaddr": "0x43c96ea2",
+   "text": "[MOUNT_DEBUG]: [B->L]ALPHALENS:%d,%d",
+   "first_site_func": "0x436e2678",
+   "sub_block": "rx_analyzer",
+   "sites": [
+    {
+     "site": "0x436e28fa",
+     "func": "0x436e2678",
+     "approx": false,
+     "sink": "0x436e03b0"
+    }
+   ],
+   "funcs": [
+    "0x436e2678"
+   ]
+  },
+  {
+   "vaddr": "0x43c96f49",
+   "text": "[MOUNT_DEBUG]: [BL]SYNC RECIVE ID(%d):CB(0x%8x)",
+   "first_site_func": "0x436e2678",
+   "sub_block": "rx_analyzer",
+   "sites": [
+    {
+     "site": "0x436e29fe",
+     "func": "0x436e2678",
+     "approx": false,
+     "sink": "0x436e03b0"
+    }
+   ],
+   "funcs": [
+    "0x436e2678"
+   ]
+  },
+  {
+   "vaddr": "0x43c96f79",
+   "text": "[MOUNT_DEBUG]: [BL ERR]LENS ERR",
+   "first_site_func": "0x436e2678",
+   "sub_block": "rx_analyzer",
+   "sites": [
+    {
+     "site": "0x436e2a66",
+     "func": "0x436e2678",
+     "approx": false,
+     "sink": "0x436e03b0"
+    }
+   ],
+   "funcs": [
+    "0x436e2678"
+   ]
+  },
+  {
+   "vaddr": "0x43c96f99",
+   "text": "[MOUNT_DEBUG]: [BL ERR]TRANS ERR",
+   "first_site_func": "0x436e2678",
+   "sub_block": "rx_analyzer",
+   "sites": [
+    {
+     "site": "0x436e2aa6",
+     "func": "0x436e2678",
+     "approx": false,
+     "sink": "0x436e03b0"
+    }
+   ],
+   "funcs": [
+    "0x436e2678"
+   ]
+  },
+  {
+   "vaddr": "0x43c96fba",
+   "text": "[MOUNT_DEBUG]: [BL]ASYNC RECIVE ID(%d):CB(0x%8x)",
+   "first_site_func": "0x436e2678",
+   "sub_block": "rx_analyzer",
+   "sites": [
+    {
+     "site": "0x436e2ae2",
+     "func": "0x436e2678",
+     "approx": false,
+     "sink": "0x436e03b0"
+    }
+   ],
+   "funcs": [
+    "0x436e2678"
+   ]
+  },
+  {
+   "vaddr": "0x43c96feb",
+   "text": "[MOUNT_DEBUG]: [BL ERR]MOUNT_DATA_NG",
+   "first_site_func": "0x436e2678",
+   "sub_block": "rx_analyzer",
+   "sites": [
+    {
+     "site": "0x436e2bec",
+     "func": "0x436e2678",
+     "approx": false,
+     "sink": "0x436e03b0"
+    }
+   ],
+   "funcs": [
+    "0x436e2678"
+   ]
+  },
+  {
+   "vaddr": "0x43c97010",
+   "text": "[MOUNT_DEBUG]: [BL ERR]Receive Buffer Overwrite(Lap)",
+   "first_site_func": "0x436e2678",
+   "sub_block": "rx_analyzer",
+   "sites": [
+    {
+     "site": "0x436e2c04",
+     "func": "0x436e2678",
+     "approx": false,
+     "sink": "0x436e03b0"
+    }
+   ],
+   "funcs": [
+    "0x436e2678"
+   ]
+  },
+  {
+   "vaddr": "0x43c97161",
+   "text": "[MOUNT_DEBUG]: [BL]osal_capstart Ret=%04x",
+   "first_site_func": "0x436e3508",
+   "sub_block": "cap_lif",
+   "sites": [
+    {
+     "site": "0x436e3550",
+     "func": "0x436e3508",
+     "approx": false,
+     "sink": "0x436e03b0"
+    }
+   ],
+   "funcs": [
+    "0x436e3508"
+   ]
+  },
+  {
+   "vaddr": "0x43c9718b",
+   "text": "[MOUNT_DEBUG]: [BL]osal_capstop Ret=%04x",
+   "first_site_func": "0x436e3508",
+   "sub_block": "cap_lif",
+   "sites": [
+    {
+     "site": "0x436e3586",
+     "func": "0x436e3508",
+     "approx": false,
+     "sink": "0x436e03b0"
+    }
+   ],
+   "funcs": [
+    "0x436e3508"
+   ]
+  },
+  {
+   "vaddr": "0x43c971b4",
+   "text": "[MOUNT_DEBUG]: [BL ERR]LIF CREDIT RegistErro Lens doesn't know = %d",
+   "first_site_func": "0x436e3754",
+   "sub_block": "cap_lif",
+   "sites": [
+    {
+     "site": "0x436e37ea",
+     "func": "0x436e3754",
+     "approx": false,
+     "sink": "0x436e36a8"
+    }
+   ],
+   "funcs": [
+    "0x436e3754"
+   ]
+  },
+  {
+   "vaddr": "0x43c97218",
+   "text": "[MOUNT_DEBUG]: MOUNT_DIVIDED_INFO_1st message",
+   "first_site_func": "0x436e39e8",
+   "sub_block": "divided_eclipse",
+   "sites": [
+    {
+     "site": "0x436e3a14",
+     "func": "0x436e39e8",
+     "approx": false,
+     "sink": "0x436e3914"
+    }
+   ],
+   "funcs": [
+    "0x436e39e8"
+   ]
+  },
+  {
+   "vaddr": "0x43c97246",
+   "text": "[MOUNT_DEBUG]: MOUNT_DIVIDED_INFO_2nd message %d",
+   "first_site_func": "0x436e39e8",
+   "sub_block": "divided_eclipse",
+   "sites": [
+    {
+     "site": "0x436e3a42",
+     "func": "0x436e39e8",
+     "approx": false,
+     "sink": "0x436e3914"
+    }
+   ],
+   "funcs": [
+    "0x436e39e8"
+   ]
+  },
+  {
+   "vaddr": "0x43c9734d",
+   "text": "[MOUNT_DEBUG]: [BL]EclipseDataComState [%d] => [%d]",
+   "first_site_func": "0x436e3bc8",
+   "sub_block": "divided_eclipse",
+   "sites": [
+    {
+     "site": "0x436e3be0",
+     "func": "0x436e3bc8",
+     "approx": false,
+     "sink": "0x436e3914"
+    }
+   ],
+   "funcs": [
+    "0x436e3bc8"
+   ]
+  },
+  {
+   "vaddr": "0x43c973d8",
+   "text": "[MOUNT_DEBUG]: [BL]ASYNC RECIVE CallBack_Eclipse_Com_2nd. Current_data_count / Max_count [%d  / %d]",
+   "first_site_func": "0x436e3bf8",
+   "sub_block": "divided_eclipse",
+   "sites": [
+    {
+     "site": "0x436e3cea",
+     "func": "0x436e3bf8",
+     "approx": true,
+     "sink": "0x436e3914"
+    }
+   ],
+   "funcs": [
+    "0x436e3bf8"
+   ]
+  },
+  {
+   "vaddr": "0x43c975b7",
+   "text": "[MOUNT_DEBUG]: [BL]ASYNC RECIVE CallBack_Eclipse_Com_1st. Max_data_count [%d]",
+   "first_site_func": "0x436e3dc8",
+   "sub_block": "divided_eclipse",
+   "sites": [
+    {
+     "site": "0x436e3e82",
+     "func": "0x436e3dc8",
+     "approx": false,
+     "sink": "0x436e3914"
+    }
+   ],
+   "funcs": [
+    "0x436e3dc8"
+   ]
+  },
+  {
+   "vaddr": "0x43c976b5",
+   "text": "[MOUNT_DEBUG]: [BL]ZPD change EclipseDataComState from STANDBY to START",
+   "first_site_func": "0x436e3f18",
+   "sub_block": "divided_eclipse",
+   "sites": [
+    {
+     "site": "0x436e3f2c",
+     "func": "0x436e3f18",
+     "approx": false,
+     "sink": "0x436e3914"
+    }
+   ],
+   "funcs": [
+    "0x436e3f18"
+   ]
+  },
+  {
+   "vaddr": "0x43c976fd",
+   "text": "[MOUNT_DEBUG]: [BL]EclipseDataComState [%d] => [%d] in Mount_InitializeEclipseComState",
+   "first_site_func": "0x436e3f48",
+   "sub_block": "divided_eclipse",
+   "sites": [
+    {
+     "site": "0x436e3f60",
+     "func": "0x436e3f48",
+     "approx": false,
+     "sink": "0x436e3914"
+    }
+   ],
+   "funcs": [
+    "0x436e3f48"
+   ]
+  },
+  {
+   "vaddr": "0x43c97754",
+   "text": "[MOUNT_DEBUG]: Mount_EclipseComInit Mount_DividedInfo.cpp line %d",
+   "first_site_func": "0x436e3f9c",
+   "sub_block": "divided_eclipse",
+   "sites": [
+    {
+     "site": "0x436e3fb4",
+     "func": "0x436e3f9c",
+     "approx": false,
+     "sink": "0x436e3914"
+    }
+   ],
+   "funcs": [
+    "0x436e3f9c"
+   ]
+  },
+  {
+   "vaddr": "0x43c97796",
+   "text": "[MOUNT_DEBUG]: Mount LensConnect : %d",
+   "first_site_func": "0x436e3f9c",
+   "sub_block": "divided_eclipse",
+   "sites": [
+    {
+     "site": "0x436e3fd6",
+     "func": "0x436e3f9c",
+     "approx": false,
+     "sink": "0x436e3914"
+    }
+   ],
+   "funcs": [
+    "0x436e3f9c"
+   ]
+  },
+  {
+   "vaddr": "0x43c97802",
+   "text": "[MOUNT_DEBUG]: Mount_InitializeEclipseDataForLensDetach Mount_DividedInfo.cpp line %d",
+   "first_site_func": "0x436e405c",
+   "sub_block": "divided_eclipse",
+   "sites": [
+    {
+     "site": "0x436e406c",
+     "func": "0x436e405c",
+     "approx": false,
+     "sink": "0x436e3914"
+    }
+   ],
+   "funcs": [
+    "0x436e405c"
+   ]
+  },
+  {
+   "vaddr": "0x43c9788a",
+   "text": "[MOUNT_DEBUG]: [BL]MOUNT_CA_REQ_RECEIVE_1ST:%d",
+   "first_site_func": "0x436e4294",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e42d2",
+     "func": "0x436e4294",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e4294"
+   ]
+  },
+  {
+   "vaddr": "0x43c978b9",
+   "text": "[MOUNT_DEBUG]: [BL]LENS_POWER_OFF",
+   "first_site_func": "0x436e4360",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e4378",
+     "func": "0x436e4360",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e4360"
+   ]
+  },
+  {
+   "vaddr": "0x43c978db",
+   "text": "[MOUNT_DEBUG]: [B->L]CS_POWER",
+   "first_site_func": "0x436e438a",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e4412",
+     "func": "0x436e438a",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e438a"
+   ]
+  },
+  {
+   "vaddr": "0x43c978f9",
+   "text": "[MOUNT_DEBUG]: [B->L]ATTACH_INFO1",
+   "first_site_func": "0x436e4444",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e445c",
+     "func": "0x436e4444",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e4444"
+   ]
+  },
+  {
+   "vaddr": "0x43c9791b",
+   "text": "[MOUNT_DEBUG]: [B->L]ATTACH_INFO3",
+   "first_site_func": "0x436e4478",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e449e",
+     "func": "0x436e4478",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e4478"
+   ]
+  },
+  {
+   "vaddr": "0x43c9793d",
+   "text": "[MOUNT_DEBUG]: [B->L]ATTACH_INFO4",
+   "first_site_func": "0x436e44b8",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e44da",
+     "func": "0x436e44b8",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e44b8"
+   ]
+  },
+  {
+   "vaddr": "0x43c9795f",
+   "text": "[MOUNT_DEBUG]: [BL]SYSTEM_HZ:%d",
+   "first_site_func": "0x436e44f8",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e4528",
+     "func": "0x436e44f8",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e44f8"
+   ]
+  },
+  {
+   "vaddr": "0x43c9797f",
+   "text": "[MOUNT_DEBUG]: [B->L]TEST_CMD:%d",
+   "first_site_func": "0x436e4548",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e4572",
+     "func": "0x436e4548",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e4548"
+   ]
+  },
+  {
+   "vaddr": "0x43c979a0",
+   "text": "[MOUNT_DEBUG]: [BL]CAM CmdStatus:%04X",
+   "first_site_func": "0x436e4598",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e45f2",
+     "func": "0x436e4598",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e4598"
+   ]
+  },
+  {
+   "vaddr": "0x43c979c6",
+   "text": "[MOUNT_DEBUG]: [BL]Mount_ChkCamCmdState RetVal:%d",
+   "first_site_func": "0x436e4598",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e4602",
+     "func": "0x436e4598",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e4598"
+   ]
+  },
+  {
+   "vaddr": "0x43c979f8",
+   "text": "[MOUNT_DEBUG]: [B->L]CS_RESET",
+   "first_site_func": "0x436e4674",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e4708",
+     "func": "0x436e4674",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e4674"
+   ]
+  },
+  {
+   "vaddr": "0x43c97a16",
+   "text": "[MOUNT_DEBUG]: [BL]LENS_SLEEP MODE:%d",
+   "first_site_func": "0x436e472c",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e478c",
+     "func": "0x436e472c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e472c"
+   ]
+  },
+  {
+   "vaddr": "0x43c97a3c",
+   "text": "[MOUNT_DEBUG]: [BL]PowerSeq -> MOUNT_POWER_SEQ_PB",
+   "first_site_func": "0x436e47a8",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e47d2",
+     "func": "0x436e47a8",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e47a8"
+   ]
+  },
+  {
+   "vaddr": "0x43c97a6e",
+   "text": "[MOUNT_DEBUG]: [BL]PowerSeq -> MOUNT_POWER_SEQ_STANDBY",
+   "first_site_func": "0x436e47a8",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e47e0",
+     "func": "0x436e47a8",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e47a8"
+   ]
+  },
+  {
+   "vaddr": "0x43c97aa5",
+   "text": "[MOUNT_DEBUG]: [B->L]UPDATE_DATA",
+   "first_site_func": "0x436e4800",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e4830",
+     "func": "0x436e4800",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e4800"
+   ]
+  },
+  {
+   "vaddr": "0x43c97ac6",
+   "text": "[MOUNT_DEBUG]: [BL][HS]CS_HIGH",
+   "first_site_func": "0x436e48fc",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e4938",
+     "func": "0x436e48fc",
+     "approx": false,
+     "sink": "0x436e41e4"
+    },
+    {
+     "site": "0x436e4da2",
+     "func": "0x436e4d68",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e48fc",
+    "0x436e4d68"
+   ]
+  },
+  {
+   "vaddr": "0x43c97ae5",
+   "text": "[MOUNT_DEBUG]: [BL][HS]DATA_HIGH",
+   "first_site_func": "0x436e48fc",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e497a",
+     "func": "0x436e48fc",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e48fc"
+   ]
+  },
+  {
+   "vaddr": "0x43c97b06",
+   "text": "[MOUNT_DEBUG]: [BL][HS]CS_LOW",
+   "first_site_func": "0x436e48fc",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e49ba",
+     "func": "0x436e48fc",
+     "approx": false,
+     "sink": "0x436e41e4"
+    },
+    {
+     "site": "0x436e4dea",
+     "func": "0x436e4d68",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e48fc",
+    "0x436e4d68"
+   ]
+  },
+  {
+   "vaddr": "0x43c97b24",
+   "text": "[MOUNT_DEBUG]: [BL][HS]COMPLETE",
+   "first_site_func": "0x436e48fc",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e49f6",
+     "func": "0x436e48fc",
+     "approx": false,
+     "sink": "0x436e41e4"
+    },
+    {
+     "site": "0x436e4e20",
+     "func": "0x436e4d68",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e48fc",
+    "0x436e4d68"
+   ]
+  },
+  {
+   "vaddr": "0x43c97b6e",
+   "text": "[MOUNT_DEBUG]: [BL]OFF_SEQ_COMP",
+   "first_site_func": "0x436e4a94",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e4ab0",
+     "func": "0x436e4a94",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e4a94"
+   ]
+  },
+  {
+   "vaddr": "0x43c97bbc",
+   "text": "[MOUNT_DEBUG]: [B->L]CS_CHECK_CMD",
+   "first_site_func": "0x436e4b24",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e4b48",
+     "func": "0x436e4b24",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e4b24"
+   ]
+  },
+  {
+   "vaddr": "0x43c97bde",
+   "text": "[MOUNT_DEBUG]: [L->B]CS_POWER",
+   "first_site_func": "0x436e4b66",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e4b82",
+     "func": "0x436e4b66",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e4b66"
+   ]
+  },
+  {
+   "vaddr": "0x43c97bfc",
+   "text": "[MOUNT_DEBUG]: [L->B]SYSTEM_HZ",
+   "first_site_func": "0x436e4b96",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e4bb2",
+     "func": "0x436e4b96",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e4b96"
+   ]
+  },
+  {
+   "vaddr": "0x43c97c1b",
+   "text": "[MOUNT_DEBUG]: [L->B]CS_RESET",
+   "first_site_func": "0x436e4bc4",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e4be8",
+     "func": "0x436e4bc4",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e4bc4"
+   ]
+  },
+  {
+   "vaddr": "0x43c97c39",
+   "text": "[MOUNT_DEBUG]: [L->B]CS_RESET_ERROR",
+   "first_site_func": "0x436e4bc4",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e4c06",
+     "func": "0x436e4bc4",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e4bc4"
+   ]
+  },
+  {
+   "vaddr": "0x43c97c5d",
+   "text": "[MOUNT_DEBUG]: [L->B]CS_SLEEP",
+   "first_site_func": "0x436e4c26",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e4c42",
+     "func": "0x436e4c26",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e4c26"
+   ]
+  },
+  {
+   "vaddr": "0x43c97c7b",
+   "text": "[MOUNT_DEBUG]: [L->B]CS_CHECK_CMD",
+   "first_site_func": "0x436e4c54",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e4c78",
+     "func": "0x436e4c54",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e4c54"
+   ]
+  },
+  {
+   "vaddr": "0x43c97c9d",
+   "text": "[MOUNT_DEBUG]: [L->B]ATTACH_INFO1",
+   "first_site_func": "0x436e4ca0",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e4cc6",
+     "func": "0x436e4ca0",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e4ca0"
+   ]
+  },
+  {
+   "vaddr": "0x43c97cff",
+   "text": "[MOUNT_DEBUG]: [BL]LENS_POWER_4.8V",
+   "first_site_func": "0x436e4eb4",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e4f00",
+     "func": "0x436e4eb4",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e4eb4"
+   ]
+  },
+  {
+   "vaddr": "0x43c97d22",
+   "text": "[MOUNT_DEBUG]: [BL]LENS_POWER_UNREG",
+   "first_site_func": "0x436e4eb4",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e4f38",
+     "func": "0x436e4eb4",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e4eb4"
+   ]
+  },
+  {
+   "vaddr": "0x43c97d95",
+   "text": "[MOUNT_DEBUG]: [L->B]STARTUP_INFO",
+   "first_site_func": "0x436e4f98",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e5034",
+     "func": "0x436e4f98",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e4f98"
+   ]
+  },
+  {
+   "vaddr": "0x43c97db7",
+   "text": "[MOUNT_DEBUG]: [L->B]CS_CREDIT",
+   "first_site_func": "0x436e505c",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e5088",
+     "func": "0x436e505c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e505c"
+   ]
+  },
+  {
+   "vaddr": "0x43c97dd6",
+   "text": "[MOUNT_DEBUG]: [B->L]ALPHA_LENS_INFO:%d",
+   "first_site_func": "0x436e509c",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e50c4",
+     "func": "0x436e509c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e509c"
+   ]
+  },
+  {
+   "vaddr": "0x43c97dfe",
+   "text": "[MOUNT_DEBUG]: [B->L]CS_CREDIT=%d",
+   "first_site_func": "0x436e51ac",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e520e",
+     "func": "0x436e51ac",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e51ac"
+   ]
+  },
+  {
+   "vaddr": "0x43c97e20",
+   "text": "[MOUNT_DEBUG]: [BL]WarmBoot:%d",
+   "first_site_func": "0x436e52bc",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e5348",
+     "func": "0x436e52bc",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e52bc"
+   ]
+  },
+  {
+   "vaddr": "0x43c97eb8",
+   "text": "[MOUNT_DEBUG]: [L->B]UPDATE_ON",
+   "first_site_func": "0x436e54aa",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e54cc",
+     "func": "0x436e54aa",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e54aa"
+   ]
+  },
+  {
+   "vaddr": "0x43c97ed7",
+   "text": "[MOUNT_DEBUG]: [L->B]UPDATE_ON_NG",
+   "first_site_func": "0x436e54aa",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e54e6",
+     "func": "0x436e54aa",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e54aa"
+   ]
+  },
+  {
+   "vaddr": "0x43c97ef9",
+   "text": "[MOUNT_DEBUG]: [L->B]UPDATE_DATA",
+   "first_site_func": "0x436e54f8",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e5520",
+     "func": "0x436e54f8",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e54f8"
+   ]
+  },
+  {
+   "vaddr": "0x43c97f1a",
+   "text": "[MOUNT_DEBUG]: [L->B]UPDATE_NG",
+   "first_site_func": "0x436e54f8",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e5538",
+     "func": "0x436e54f8",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e54f8"
+   ]
+  },
+  {
+   "vaddr": "0x43c97f39",
+   "text": "[MOUNT_DEBUG]: [BL]UPDATE times %d",
+   "first_site_func": "0x436e54f8",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e5552",
+     "func": "0x436e54f8",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e54f8"
+   ]
+  },
+  {
+   "vaddr": "0x43c97f5c",
+   "text": "[MOUNT_DEBUG]: [BL]UPDATE %d",
+   "first_site_func": "0x436e54f8",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e556a",
+     "func": "0x436e54f8",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e54f8"
+   ]
+  },
+  {
+   "vaddr": "0x43c9805f",
+   "text": "[MOUNT_DEBUG]: [BL]PREPARE UPDATE REQ RCV",
+   "first_site_func": "0x436fe500",
+   "sub_block": "fw_update",
+   "sites": [
+    {
+     "site": "0x436fe740",
+     "func": "0x436fe500",
+     "approx": false,
+     "sink": "0x436fe410"
+    }
+   ],
+   "funcs": [
+    "0x436fe500"
+   ]
+  },
+  {
+   "vaddr": "0x43c98089",
+   "text": "[MOUNT_DEBUG]: [BL]PREPARE UPDATE OK",
+   "first_site_func": "0x436fe500",
+   "sub_block": "fw_update",
+   "sites": [
+    {
+     "site": "0x436fe75a",
+     "func": "0x436fe500",
+     "approx": false,
+     "sink": "0x436fe410"
+    },
+    {
+     "site": "0x436fe7f8",
+     "func": "0x436fe500",
+     "approx": false,
+     "sink": "0x436fe410"
+    }
+   ],
+   "funcs": [
+    "0x436fe500"
+   ]
+  },
+  {
+   "vaddr": "0x43c980ae",
+   "text": "[MOUNT_DEBUG]: [BL]PREPARE UPDATE NG",
+   "first_site_func": "0x436fe500",
+   "sub_block": "fw_update",
+   "sites": [
+    {
+     "site": "0x436fe780",
+     "func": "0x436fe500",
+     "approx": false,
+     "sink": "0x436fe410"
+    }
+   ],
+   "funcs": [
+    "0x436fe500"
+   ]
+  },
+  {
+   "vaddr": "0x43c980d3",
+   "text": "[MOUNT_DEBUG]: [BL]PREPARE UPDATE WAIT",
+   "first_site_func": "0x436fe500",
+   "sub_block": "fw_update",
+   "sites": [
+    {
+     "site": "0x436fe890",
+     "func": "0x436fe500",
+     "approx": false,
+     "sink": "0x436fe410"
+    }
+   ],
+   "funcs": [
+    "0x436fe500"
+   ]
+  },
+  {
+   "vaddr": "0x43c98151",
+   "text": "[MOUNT_DEBUG]: [BL]PREPARE UPDATE CHECK OK",
+   "first_site_func": "0x436e55c2",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e55fe",
+     "func": "0x436e55c2",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e55c2"
+   ]
+  },
+  {
+   "vaddr": "0x43c9817c",
+   "text": "[MOUNT_DEBUG]: [BL]PREPARE UPDATE CHECK NG",
+   "first_site_func": "0x436e55c2",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e560e",
+     "func": "0x436e55c2",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e55c2"
+   ]
+  },
+  {
+   "vaddr": "0x43c981a7",
+   "text": "[MOUNT_DEBUG]: [BL]PREPARE UPDATE CHECK NG LENS_NONE",
+   "first_site_func": "0x436e55c2",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e561c",
+     "func": "0x436e55c2",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e55c2"
+   ]
+  },
+  {
+   "vaddr": "0x43c981dc",
+   "text": "[MOUNT_DEBUG]: [BL]UPDATE UNPLUG USB",
+   "first_site_func": "0x436fe500",
+   "sub_block": "fw_update",
+   "sites": [
+    {
+     "site": "0x436fe830",
+     "func": "0x436fe500",
+     "approx": false,
+     "sink": "0x436fe410"
+    }
+   ],
+   "funcs": [
+    "0x436fe500"
+   ]
+  },
+  {
+   "vaddr": "0x43c983cd",
+   "text": "[MOUNT_DEBUG]: [BL]CHG FREQ, %d, %d, %d",
+   "first_site_func": "0x436e5b16",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e5b7e",
+     "func": "0x436e5b16",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5b16"
+   ]
+  },
+  {
+   "vaddr": "0x43c983f5",
+   "text": "[MOUNT_DEBUG]: [B->L]STARTUP_INFO",
+   "first_site_func": "0x436e5c6c",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e5cd6",
+     "func": "0x436e5c6c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5c6c"
+   ]
+  },
+  {
+   "vaddr": "0x43c98417",
+   "text": "[MOUNT_DEBUG]: [B->L]ATTACH_INFO2",
+   "first_site_func": "0x436e5cfc",
+   "sub_block": "mount_controller",
+   "sites": [
+    {
+     "site": "0x436e5dea",
+     "func": "0x436e5cfc",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5cfc"
+   ]
+  },
+  {
+   "vaddr": "0x43c98460",
+   "text": "[MOUNT_DEBUG]: [BL]LOGIC_POWER:%d",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e6046",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    },
+    {
+     "site": "0x436e60a2",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c984ac",
+   "text": "[MOUNT_DEBUG]: POFF(WAIT_LOGICPWR_OFF)",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e6102",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c984d3",
+   "text": "[MOUNT_DEBUG]: ERROR DETACH",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e6156",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c98521",
+   "text": "[MOUNT_DEBUG]: LENS_WEAR_START",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e64c6",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c98540",
+   "text": "[MOUNT_DEBUG]: [BL]UART_HZ 750:%d 1500%d",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e65bc",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c9858d",
+   "text": "[MOUNT_DEBUG]: [BL]UART_HS_COMPLETE NO_WAIT",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e666c",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c985b9",
+   "text": "[MOUNT_DEBUG]: [BL]UART_HS_COMPLETE",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e66a2",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c985dd",
+   "text": "[MOUNT_DEBUG]: [L->B]ATTACH_INFO2",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e67fe",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c985ff",
+   "text": "[MOUNT_DEBUG]: [L->B]ATTACH_INFO3",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e6854",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c98621",
+   "text": "[MOUNT_DEBUG]: [L->B]ATTACH_INFO4",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e68ce",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c98643",
+   "text": "[MOUNT_DEBUG]: LENS_WEAR_END",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e6982",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c98660",
+   "text": "[MOUNT_DEBUG]: WAKE_UP_START",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e6a56",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c9867d",
+   "text": "[MOUNT_DEBUG]: WAKE_UP_END",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e6b94",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c98698",
+   "text": "[MOUNT_DEBUG]: POWEROFF_START",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e6c0e",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c986b6",
+   "text": "[MOUNT_DEBUG]: [BL]POWEROFF_HANDSHAKE_END",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e6cf8",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    },
+    {
+     "site": "0x436e76b2",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    },
+    {
+     "site": "0x436e76d8",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c98765",
+   "text": "[MOUNT_DEBUG]: POWEROFF_END",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e6d6e",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    },
+    {
+     "site": "0x436e772c",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c98781",
+   "text": "[MOUNT_DEBUG]: [BL]DETACH_1",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e6dba",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c9879d",
+   "text": "[MOUNT_DEBUG]: DETACH_COMP",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e6dec",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c987b8",
+   "text": "[MOUNT_DEBUG]: [BL]DETACH_2",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e6e08",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c987d4",
+   "text": "[MOUNT_DEBUG]: DETACH_START",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e6e2a",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c987f0",
+   "text": "[MOUNT_DEBUG]: [BL]LOGIC_OFF",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e6fa0",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c9880d",
+   "text": "[MOUNT_DEBUG]: [BL]LOGIC_OFF_COMP",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e6fd4",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c9882f",
+   "text": "[MOUNT_DEBUG]: [BL]LOGIC_ON",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e6ff0",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c9884b",
+   "text": "[MOUNT_DEBUG]: [BL]LOGIC_ON_COMP",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e702e",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c9886c",
+   "text": "[MOUNT_DEBUG]: [B->L]UPDATE_ON",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e714a",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c9888b",
+   "text": "[MOUNT_DEBUG]: [BL]LOGIC_OFF2",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e71b6",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c988a9",
+   "text": "[MOUNT_DEBUG]: [BL]LOGIC_OFF_COMP2",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e71e8",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c988cc",
+   "text": "[MOUNT_DEBUG]: [L->B]ALPHA_LENS_INFO:%d",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e7292",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c988f4",
+   "text": "[MOUNT_DEBUG]: [BL]WAIT CHGFREQ1",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e73b0",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    },
+    {
+     "site": "0x436e7482",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c98915",
+   "text": "[MOUNT_DEBUG]: [BL]WAIT CHGFREQ2",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e73d0",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    },
+    {
+     "site": "0x436e74a4",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c98936",
+   "text": "[MOUNT_DEBUG]: [BL]WAIT NEXTVD",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e73f6",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    },
+    {
+     "site": "0x436e751a",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c9897d",
+   "text": "[MOUNT_DEBUG]: [BL]STANDBY",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e7534",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c98998",
+   "text": "[MOUNT_DEBUG]: PB->WAKEUP->OFF",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e75aa",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c989e7",
+   "text": "[MOUNT_DEBUG]: [L->B]TEST_CMD:%d",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e7840",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c98a08",
+   "text": "[MOUNT_DEBUG]: WAIT_LOGICPWR_OFF",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e7910",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c98a29",
+   "text": "[MOUNT_DEBUG]: POFF",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e7926",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c98a9e",
+   "text": "[MOUNT_DEBUG]: [BL]POWER PARAM mode:%d, main_seq:%d, hs_seq: %d",
+   "first_site_func": "0x436e5e3c",
+   "sub_block": "main_task",
+   "sites": [
+    {
+     "site": "0x436e7a38",
+     "func": "0x436e5e3c",
+     "approx": false,
+     "sink": "0x436e41e4"
+    }
+   ],
+   "funcs": [
+    "0x436e5e3c"
+   ]
+  },
+  {
+   "vaddr": "0x43c98b58",
+   "text": "[MOUNT_DEBUG]: [BL] TSK_LIF is called by %d",
+   "first_site_func": "0x436e7c9e",
+   "sub_block": "lif_tasks",
+   "sites": [
+    {
+     "site": "0x436e7cb8",
+     "func": "0x436e7c9e",
+     "approx": false,
+     "sink": "0x436e7bec"
+    }
+   ],
+   "funcs": [
+    "0x436e7c9e"
+   ]
+  },
+  {
+   "vaddr": "0x43c98bb0",
+   "text": "[MOUNT_DEBUG]: [BL]CHG FHButton old=%d new=%d",
+   "first_site_func": "0x436e8836",
+   "sub_block": "lif_tasks",
+   "sites": [
+    {
+     "site": "0x436e888c",
+     "func": "0x436e8836",
+     "approx": false,
+     "sink": "0x436e808c"
+    }
+   ],
+   "funcs": [
+    "0x436e8836"
+   ]
+  },
+  {
+   "vaddr": "0x43c98bde",
+   "text": "[MOUNT_DEBUG]: [BL]LensOpChg old=%d new=%d",
+   "first_site_func": "0x436e88f0",
+   "sub_block": "lif_tasks",
+   "sites": [
+    {
+     "site": "0x436e89aa",
+     "func": "0x436e88f0",
+     "approx": false,
+     "sink": "0x436e808c"
+    }
+   ],
+   "funcs": [
+    "0x436e88f0"
+   ]
+  },
+  {
+   "vaddr": "0x43c98c09",
+   "text": "[MOUNT_DEBUG]: [BL]LensOpState old=%d new=%d",
+   "first_site_func": "0x436e89f4",
+   "sub_block": "lif_tasks",
+   "sites": [
+    {
+     "site": "0x436e8a8e",
+     "func": "0x436e89f4",
+     "approx": false,
+     "sink": "0x436e808c"
+    }
+   ],
+   "funcs": [
+    "0x436e89f4"
+   ]
+  },
+  {
+   "vaddr": "0x43c98c36",
+   "text": "[MOUNT_DEBUG]: [BL]CHG PzMzButton old=%d new=%d",
+   "first_site_func": "0x436e97a8",
+   "sub_block": "lif_tasks",
+   "sites": [
+    {
+     "site": "0x436e97d6",
+     "func": "0x436e97a8",
+     "approx": false,
+     "sink": "0x436e808c"
+    }
+   ],
+   "funcs": [
+    "0x436e97a8"
+   ]
+  },
+  {
+   "vaddr": "0x43c98c66",
+   "text": "[MOUNT_DEBUG]: [BL]BL_ASYNC_RCV_BYTE_CB",
+   "first_site_func": "0x436e9d1c",
+   "sub_block": "lif_tasks",
+   "sites": [
+    {
+     "site": "0x436e9d56",
+     "func": "0x436e9d1c",
+     "approx": false,
+     "sink": "0x436e9c70"
+    }
+   ],
+   "funcs": [
+    "0x436e9d1c"
+   ]
+  },
+  {
+   "vaddr": "0x43c98c8e",
+   "text": "[MOUNT_DEBUG]: [BL]BL_ASYNC_RCV_PAGE_CB",
+   "first_site_func": "0x436e9d78",
+   "sub_block": "lif_tasks",
+   "sites": [
+    {
+     "site": "0x436e9db2",
+     "func": "0x436e9d78",
+     "approx": false,
+     "sink": "0x436e9c70"
+    }
+   ],
+   "funcs": [
+    "0x436e9d78"
+   ]
+  },
+  {
+   "vaddr": "0x43c9a10f",
+   "text": "[MOUNT_DEBUG]: [BL]CHG LENS REMOVE DET old=%d new=%d",
+   "first_site_func": "0x436fe16a",
+   "sub_block": "lens_remove",
+   "sites": [
+    {
+     "site": "0x436fe196",
+     "func": "0x436fe16a",
+     "approx": false,
+     "sink": "0x436fdfc4"
+    }
+   ],
+   "funcs": [
+    "0x436fe16a"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "vaddr": "0x436e0d74",
+   "site_count": 1,
+   "sites": [
+    "0x436e0dcc"
+   ],
+   "string_vaddrs": [
+    "0x43c9648d"
+   ],
+   "sub_block": "sync_send",
+   "approx_function": false,
+   "bl_callers": []
+  },
+  {
+   "vaddr": "0x436e0e74",
+   "site_count": 2,
+   "sites": [
+    "0x436e0e9a",
+    "0x436e0ed0"
+   ],
+   "string_vaddrs": [
+    "0x43c9650a",
+    "0x43c96533"
+   ],
+   "sub_block": "sync_send",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e0eee"
+   ]
+  },
+  {
+   "vaddr": "0x436e0eec",
+   "site_count": 1,
+   "sites": [
+    "0x436e0f10"
+   ],
+   "string_vaddrs": [
+    "0x43c96564"
+   ],
+   "sub_block": "sync_send",
+   "approx_function": false,
+   "bl_callers": []
+  },
+  {
+   "vaddr": "0x436e1164",
+   "site_count": 1,
+   "sites": [
+    "0x436e1202"
+   ],
+   "string_vaddrs": [
+    "0x43c9658c"
+   ],
+   "sub_block": "sync_send",
+   "approx_function": false,
+   "bl_callers": [
+    "0x43ada1f4"
+   ]
+  },
+  {
+   "vaddr": "0x436e1254",
+   "site_count": 3,
+   "sites": [
+    "0x436e1272",
+    "0x436e128c",
+    "0x436e12d2"
+   ],
+   "string_vaddrs": [
+    "0x43c965b9",
+    "0x43c965ed",
+    "0x43c96626"
+   ],
+   "sub_block": "sync_send",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e442a",
+    "0x436e4468",
+    "0x436e44aa",
+    "0x436e44e6",
+    "0x436e4536",
+    "0x436e457e",
+    "0x436e4714",
+    "0x436e4798",
+    "0x436e483c",
+    "0x436e4b54",
+    "0x436e50d6",
+    "0x436e521a",
+    "0x436e5ce2",
+    "0x436e5e04",
+    "0x436e65ca",
+    "0x436e6706",
+    "0x436e7156",
+    "0x436ea374",
+    "0x43705e0e",
+    "0x43a1e252",
+    "0x43a1e390",
+    "0x43a1e3fc"
+   ]
+  },
+  {
+   "vaddr": "0x436e1328",
+   "site_count": 4,
+   "sites": [
+    "0x436e138a",
+    "0x436e13d2",
+    "0x436e13fa",
+    "0x436e1410"
+   ],
+   "string_vaddrs": [
+    "0x43c965b9",
+    "0x43c96679",
+    "0x43c966a8",
+    "0x43c966c9"
+   ],
+   "sub_block": "sync_send",
+   "approx_function": true,
+   "bl_callers": [
+    "0x436e2c58",
+    "0x436e9c50",
+    "0x436e9e86"
+   ]
+  },
+  {
+   "vaddr": "0x436e14ac",
+   "site_count": 2,
+   "sites": [
+    "0x436e14f2",
+    "0x436e150e"
+   ],
+   "string_vaddrs": [
+    "0x43c965b9",
+    "0x43c96755"
+   ],
+   "sub_block": "sync_send",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e161a"
+   ]
+  },
+  {
+   "vaddr": "0x436e1664",
+   "site_count": 3,
+   "sites": [
+    "0x436e169a",
+    "0x436e16de",
+    "0x436e1718"
+   ],
+   "string_vaddrs": [
+    "0x43c9678b"
+   ],
+   "sub_block": "sync_send",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e7a7e"
+   ]
+  },
+  {
+   "vaddr": "0x436e1918",
+   "site_count": 2,
+   "sites": [
+    "0x436e1a40",
+    "0x436e1ab0"
+   ],
+   "string_vaddrs": [
+    "0x43c96946"
+   ],
+   "sub_block": "drv_uart",
+   "approx_function": false,
+   "bl_callers": []
+  },
+  {
+   "vaddr": "0x436e2678",
+   "site_count": 8,
+   "sites": [
+    "0x436e284e",
+    "0x436e28fa",
+    "0x436e29fe",
+    "0x436e2a66",
+    "0x436e2aa6",
+    "0x436e2ae2",
+    "0x436e2bec",
+    "0x436e2c04"
+   ],
+   "string_vaddrs": [
+    "0x43c96e73",
+    "0x43c96ea2",
+    "0x43c96f49",
+    "0x43c96f79",
+    "0x43c96f99",
+    "0x43c96fba",
+    "0x43c96feb",
+    "0x43c97010"
+   ],
+   "sub_block": "rx_analyzer",
+   "approx_function": false,
+   "bl_callers": [],
+   "note": "Analizador RX del protocolo BL; 8 sitios de 8 cadenas."
+  },
+  {
+   "vaddr": "0x436e3508",
+   "site_count": 2,
+   "sites": [
+    "0x436e3550",
+    "0x436e3586"
+   ],
+   "string_vaddrs": [
+    "0x43c97161",
+    "0x43c9718b"
+   ],
+   "sub_block": "cap_lif",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e8496"
+   ],
+   "note": "Control de captura de log: 0xd -> 0x439025e0, snprintf de /mnt/Mount_ms_log_%03d.dat, osal_capstart/stop."
+  },
+  {
+   "vaddr": "0x436e3754",
+   "site_count": 1,
+   "sites": [
+    "0x436e37ea"
+   ],
+   "string_vaddrs": [
+    "0x43c971b4"
+   ],
+   "sub_block": "cap_lif",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e51c4"
+   ]
+  },
+  {
+   "vaddr": "0x436e39e8",
+   "site_count": 2,
+   "sites": [
+    "0x436e3a14",
+    "0x436e3a42"
+   ],
+   "string_vaddrs": [
+    "0x43c97218",
+    "0x43c97246"
+   ],
+   "sub_block": "divided_eclipse",
+   "approx_function": false,
+   "bl_callers": []
+  },
+  {
+   "vaddr": "0x436e3bc8",
+   "site_count": 1,
+   "sites": [
+    "0x436e3be0"
+   ],
+   "string_vaddrs": [
+    "0x43c9734d"
+   ],
+   "sub_block": "divided_eclipse",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e3c5c",
+    "0x436e3ca2",
+    "0x436e3d22",
+    "0x436e3df4",
+    "0x436e3e58",
+    "0x436e3ea8",
+    "0x436e4020"
+   ]
+  },
+  {
+   "vaddr": "0x436e3bf8",
+   "site_count": 1,
+   "sites": [
+    "0x436e3cea"
+   ],
+   "string_vaddrs": [
+    "0x43c973d8"
+   ],
+   "sub_block": "divided_eclipse",
+   "approx_function": true,
+   "bl_callers": []
+  },
+  {
+   "vaddr": "0x436e3dc8",
+   "site_count": 1,
+   "sites": [
+    "0x436e3e82"
+   ],
+   "string_vaddrs": [
+    "0x43c975b7"
+   ],
+   "sub_block": "divided_eclipse",
+   "approx_function": false,
+   "bl_callers": []
+  },
+  {
+   "vaddr": "0x436e3f18",
+   "site_count": 1,
+   "sites": [
+    "0x436e3f2c"
+   ],
+   "string_vaddrs": [
+    "0x43c976b5"
+   ],
+   "sub_block": "divided_eclipse",
+   "approx_function": false,
+   "bl_callers": []
+  },
+  {
+   "vaddr": "0x436e3f48",
+   "site_count": 1,
+   "sites": [
+    "0x436e3f60"
+   ],
+   "string_vaddrs": [
+    "0x43c976fd"
+   ],
+   "sub_block": "divided_eclipse",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e3f9e",
+    "0x436e4072"
+   ]
+  },
+  {
+   "vaddr": "0x436e3f9c",
+   "site_count": 2,
+   "sites": [
+    "0x436e3fb4",
+    "0x436e3fd6"
+   ],
+   "string_vaddrs": [
+    "0x43c97754",
+    "0x43c97796"
+   ],
+   "sub_block": "divided_eclipse",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e6818",
+    "0x436e6a94",
+    "0x436e6abc"
+   ]
+  },
+  {
+   "vaddr": "0x436e405c",
+   "site_count": 1,
+   "sites": [
+    "0x436e406c"
+   ],
+   "string_vaddrs": [
+    "0x43c97802"
+   ],
+   "sub_block": "divided_eclipse",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e6e12"
+   ]
+  },
+  {
+   "vaddr": "0x436e4294",
+   "site_count": 1,
+   "sites": [
+    "0x436e42d2"
+   ],
+   "string_vaddrs": [
+    "0x43c9788a"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": []
+  },
+  {
+   "vaddr": "0x436e4360",
+   "site_count": 1,
+   "sites": [
+    "0x436e4378"
+   ],
+   "string_vaddrs": [
+    "0x43c978b9"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e6ccc",
+    "0x436e6e48",
+    "0x436e6f36",
+    "0x436e7696"
+   ]
+  },
+  {
+   "vaddr": "0x436e438a",
+   "site_count": 1,
+   "sites": [
+    "0x436e4412"
+   ],
+   "string_vaddrs": [
+    "0x43c978db"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": []
+  },
+  {
+   "vaddr": "0x436e4444",
+   "site_count": 1,
+   "sites": [
+    "0x436e445c"
+   ],
+   "string_vaddrs": [
+    "0x43c978f9"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e654e",
+    "0x436e7080"
+   ]
+  },
+  {
+   "vaddr": "0x436e4478",
+   "site_count": 1,
+   "sites": [
+    "0x436e449e"
+   ],
+   "string_vaddrs": [
+    "0x43c9791b"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e671c",
+    "0x436e679c"
+   ]
+  },
+  {
+   "vaddr": "0x436e44b8",
+   "site_count": 1,
+   "sites": [
+    "0x436e44da"
+   ],
+   "string_vaddrs": [
+    "0x43c9793d"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e6734",
+    "0x436e67b4",
+    "0x436e6882"
+   ]
+  },
+  {
+   "vaddr": "0x436e44f8",
+   "site_count": 1,
+   "sites": [
+    "0x436e4528"
+   ],
+   "string_vaddrs": [
+    "0x43c9795f"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e690c",
+    "0x436e6b16",
+    "0x436e7390",
+    "0x436e764c"
+   ]
+  },
+  {
+   "vaddr": "0x436e4548",
+   "site_count": 1,
+   "sites": [
+    "0x436e4572"
+   ],
+   "string_vaddrs": [
+    "0x43c9797f"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e7812"
+   ]
+  },
+  {
+   "vaddr": "0x436e4598",
+   "site_count": 2,
+   "sites": [
+    "0x436e45f2",
+    "0x436e4602"
+   ],
+   "string_vaddrs": [
+    "0x43c979a0",
+    "0x43c979c6"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e5f7c",
+    "0x436e5ffa"
+   ],
+   "note": "Mount_ChkCamCmdState: valida comandos de cámara 0xC00-0xC03 y emite 0x43c979a0/0x43c979c6."
+  },
+  {
+   "vaddr": "0x436e4674",
+   "site_count": 1,
+   "sites": [
+    "0x436e4708"
+   ],
+   "string_vaddrs": [
+    "0x43c979f8"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e6930",
+    "0x436e6b3e",
+    "0x436e7666"
+   ]
+  },
+  {
+   "vaddr": "0x436e472c",
+   "site_count": 1,
+   "sites": [
+    "0x436e478c"
+   ],
+   "string_vaddrs": [
+    "0x43c97a16"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e6c42",
+    "0x436e6f20",
+    "0x436e7680"
+   ]
+  },
+  {
+   "vaddr": "0x436e47a8",
+   "site_count": 2,
+   "sites": [
+    "0x436e47d2",
+    "0x436e47e0"
+   ],
+   "string_vaddrs": [
+    "0x43c97a3c",
+    "0x43c97a6e"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e6d1e"
+   ]
+  },
+  {
+   "vaddr": "0x436e4800",
+   "site_count": 1,
+   "sites": [
+    "0x436e4830"
+   ],
+   "string_vaddrs": [
+    "0x43c97aa5"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e557e"
+   ]
+  },
+  {
+   "vaddr": "0x436e48fc",
+   "site_count": 4,
+   "sites": [
+    "0x436e4938",
+    "0x436e497a",
+    "0x436e49ba",
+    "0x436e49f6"
+   ],
+   "string_vaddrs": [
+    "0x43c97ac6",
+    "0x43c97ae5",
+    "0x43c97b06",
+    "0x43c97b24"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e64fa",
+    "0x436e651a",
+    "0x436e6a84",
+    "0x436e6aac",
+    "0x436e7038",
+    "0x436e7058",
+    "0x436e75c4",
+    "0x436e75e4"
+   ]
+  },
+  {
+   "vaddr": "0x436e4a94",
+   "site_count": 1,
+   "sites": [
+    "0x436e4ab0"
+   ],
+   "string_vaddrs": [
+    "0x43c97b6e"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e6cd4",
+    "0x436e6ce6",
+    "0x436e6f3e",
+    "0x436e6f62",
+    "0x436e769e",
+    "0x436e76c4"
+   ]
+  },
+  {
+   "vaddr": "0x436e4b24",
+   "site_count": 1,
+   "sites": [
+    "0x436e4b48"
+   ],
+   "string_vaddrs": [
+    "0x43c97bbc"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e64e2",
+    "0x436e6506",
+    "0x436e6528",
+    "0x436e7046",
+    "0x436e7068"
+   ]
+  },
+  {
+   "vaddr": "0x436e4b66",
+   "site_count": 1,
+   "sites": [
+    "0x436e4b82"
+   ],
+   "string_vaddrs": [
+    "0x43c97bde"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": []
+  },
+  {
+   "vaddr": "0x436e4b96",
+   "site_count": 1,
+   "sites": [
+    "0x436e4bb2"
+   ],
+   "string_vaddrs": [
+    "0x43c97bfc"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": []
+  },
+  {
+   "vaddr": "0x436e4bc4",
+   "site_count": 2,
+   "sites": [
+    "0x436e4be8",
+    "0x436e4c06"
+   ],
+   "string_vaddrs": [
+    "0x43c97c1b",
+    "0x43c97c39"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e6940",
+    "0x436e6b4c",
+    "0x436e7672"
+   ]
+  },
+  {
+   "vaddr": "0x436e4c26",
+   "site_count": 1,
+   "sites": [
+    "0x436e4c42"
+   ],
+   "string_vaddrs": [
+    "0x43c97c5d"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": []
+  },
+  {
+   "vaddr": "0x436e4c54",
+   "site_count": 1,
+   "sites": [
+    "0x436e4c78"
+   ],
+   "string_vaddrs": [
+    "0x43c97c7b"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e6544",
+    "0x436e7076"
+   ]
+  },
+  {
+   "vaddr": "0x436e4ca0",
+   "site_count": 1,
+   "sites": [
+    "0x436e4cc6"
+   ],
+   "string_vaddrs": [
+    "0x43c97c9d"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e655e",
+    "0x436e70e2",
+    "0x436e70ea"
+   ]
+  },
+  {
+   "vaddr": "0x436e4d68",
+   "site_count": 3,
+   "sites": [
+    "0x436e4da2",
+    "0x436e4dea",
+    "0x436e4e20"
+   ],
+   "string_vaddrs": [
+    "0x43c97ac6",
+    "0x43c97b06",
+    "0x43c97b24"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e668c",
+    "0x436e7ad2"
+   ]
+  },
+  {
+   "vaddr": "0x436e4eb4",
+   "site_count": 2,
+   "sites": [
+    "0x436e4f00",
+    "0x436e4f38"
+   ],
+   "string_vaddrs": [
+    "0x43c97cff",
+    "0x43c97d22"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e65d6",
+    "0x436e664a",
+    "0x436e6672",
+    "0x436e66a8",
+    "0x436e6a8e",
+    "0x436e6ab6",
+    "0x436e75ce",
+    "0x436e75ee"
+   ]
+  },
+  {
+   "vaddr": "0x436e4f98",
+   "site_count": 1,
+   "sites": [
+    "0x436e5034"
+   ],
+   "string_vaddrs": [
+    "0x43c97d95"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e68fe",
+    "0x436e6b08",
+    "0x436e7638"
+   ]
+  },
+  {
+   "vaddr": "0x436e505c",
+   "site_count": 1,
+   "sites": [
+    "0x436e5088"
+   ],
+   "string_vaddrs": [
+    "0x43c97db7"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": []
+  },
+  {
+   "vaddr": "0x436e509c",
+   "site_count": 1,
+   "sites": [
+    "0x436e50c4"
+   ],
+   "string_vaddrs": [
+    "0x43c97dd6"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e725e",
+    "0x436e72c2"
+   ]
+  },
+  {
+   "vaddr": "0x436e51ac",
+   "site_count": 1,
+   "sites": [
+    "0x436e520e"
+   ],
+   "string_vaddrs": [
+    "0x43c97dfe"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e5242",
+    "0x436e6950",
+    "0x436e6b5c",
+    "0x436e6c28",
+    "0x436e6f08",
+    "0x436e724a",
+    "0x436e72da",
+    "0x436e7308",
+    "0x436e7372",
+    "0x436e7430",
+    "0x436e777a",
+    "0x436e779c",
+    "0x436e77fe",
+    "0x436e7850"
+   ]
+  },
+  {
+   "vaddr": "0x436e52bc",
+   "site_count": 1,
+   "sites": [
+    "0x436e5348"
+   ],
+   "string_vaddrs": [
+    "0x43c97e20"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": [
+    "0x43ada032"
+   ]
+  },
+  {
+   "vaddr": "0x436e54aa",
+   "site_count": 2,
+   "sites": [
+    "0x436e54cc",
+    "0x436e54e6"
+   ],
+   "string_vaddrs": [
+    "0x43c97eb8",
+    "0x43c97ed7"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": []
+  },
+  {
+   "vaddr": "0x436e54f8",
+   "site_count": 4,
+   "sites": [
+    "0x436e5520",
+    "0x436e5538",
+    "0x436e5552",
+    "0x436e556a"
+   ],
+   "string_vaddrs": [
+    "0x43c97ef9",
+    "0x43c97f1a",
+    "0x43c97f39",
+    "0x43c97f5c"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e716c",
+    "0x436e7186"
+   ]
+  },
+  {
+   "vaddr": "0x436e55c2",
+   "site_count": 3,
+   "sites": [
+    "0x436e55fe",
+    "0x436e560e",
+    "0x436e561c"
+   ],
+   "string_vaddrs": [
+    "0x43c98151",
+    "0x43c9817c",
+    "0x43c981a7"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": []
+  },
+  {
+   "vaddr": "0x436e5b16",
+   "site_count": 1,
+   "sites": [
+    "0x436e5b7e"
+   ],
+   "string_vaddrs": [
+    "0x43c983cd"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": []
+  },
+  {
+   "vaddr": "0x436e5c6c",
+   "site_count": 1,
+   "sites": [
+    "0x436e5cd6"
+   ],
+   "string_vaddrs": [
+    "0x43c983f5"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e6822",
+    "0x436e6af8",
+    "0x436e762a"
+   ]
+  },
+  {
+   "vaddr": "0x436e5cfc",
+   "site_count": 1,
+   "sites": [
+    "0x436e5dea"
+   ],
+   "string_vaddrs": [
+    "0x43c98417"
+   ],
+   "sub_block": "mount_controller",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e6758",
+    "0x436e67d2",
+    "0x436e68a4",
+    "0x436e68ea",
+    "0x436e72f2"
+   ]
+  },
+  {
+   "vaddr": "0x436e5e3c",
+   "site_count": 44,
+   "sites": [
+    "0x436e6046",
+    "0x436e60a2",
+    "0x436e6102",
+    "0x436e6156",
+    "0x436e64c6",
+    "0x436e65bc",
+    "0x436e666c",
+    "0x436e66a2",
+    "0x436e67fe",
+    "0x436e6854",
+    "0x436e68ce",
+    "0x436e6982",
+    "0x436e6a56",
+    "0x436e6b94",
+    "0x436e6c0e",
+    "0x436e6cf8",
+    "0x436e6d6e",
+    "0x436e6dba",
+    "0x436e6dec",
+    "0x436e6e08",
+    "0x436e6e2a",
+    "0x436e6fa0",
+    "0x436e6fd4",
+    "0x436e6ff0",
+    "0x436e702e",
+    "0x436e714a",
+    "0x436e71b6",
+    "0x436e71e8",
+    "0x436e7292",
+    "0x436e73b0",
+    "0x436e73d0",
+    "0x436e73f6",
+    "0x436e7482",
+    "0x436e74a4",
+    "0x436e751a",
+    "0x436e7534",
+    "0x436e75aa",
+    "0x436e76b2",
+    "0x436e76d8",
+    "0x436e772c",
+    "0x436e7840",
+    "0x436e7910",
+    "0x436e7926",
+    "0x436e7a38"
+   ],
+   "string_vaddrs": [
+    "0x43c98460",
+    "0x43c984ac",
+    "0x43c984d3",
+    "0x43c98521",
+    "0x43c98540",
+    "0x43c9858d",
+    "0x43c985b9",
+    "0x43c985dd",
+    "0x43c985ff",
+    "0x43c98621",
+    "0x43c98643",
+    "0x43c98660",
+    "0x43c9867d",
+    "0x43c98698",
+    "0x43c986b6",
+    "0x43c98765",
+    "0x43c98781",
+    "0x43c9879d",
+    "0x43c987b8",
+    "0x43c987d4",
+    "0x43c987f0",
+    "0x43c9880d",
+    "0x43c9882f",
+    "0x43c9884b",
+    "0x43c9886c",
+    "0x43c9888b",
+    "0x43c988a9",
+    "0x43c988cc",
+    "0x43c988f4",
+    "0x43c98915",
+    "0x43c98936",
+    "0x43c9897d",
+    "0x43c98998",
+    "0x43c989e7",
+    "0x43c98a08",
+    "0x43c98a29",
+    "0x43c98a9e"
+   ],
+   "sub_block": "main_task",
+   "approx_function": false,
+   "bl_callers": [
+    "0x436e2904",
+    "0x43ada1de"
+   ],
+   "note": "Tarea principal BL (rango verificado en S66); 44 sitios de 37 cadenas."
+  },
+  {
+   "vaddr": "0x436e7c9e",
+   "site_count": 1,
+   "sites": [
+    "0x436e7cb8"
+   ],
+   "string_vaddrs": [
+    "0x43c98b58"
+   ],
+   "sub_block": "lif_tasks",
+   "approx_function": false,
+   "bl_callers": []
+  },
+  {
+   "vaddr": "0x436e8836",
+   "site_count": 1,
+   "sites": [
+    "0x436e888c"
+   ],
+   "string_vaddrs": [
+    "0x43c98bb0"
+   ],
+   "sub_block": "lif_tasks",
+   "approx_function": false,
+   "bl_callers": []
+  },
+  {
+   "vaddr": "0x436e88f0",
+   "site_count": 1,
+   "sites": [
+    "0x436e89aa"
+   ],
+   "string_vaddrs": [
+    "0x43c98bde"
+   ],
+   "sub_block": "lif_tasks",
+   "approx_function": false,
+   "bl_callers": [
+    "0x4377e33e"
+   ]
+  },
+  {
+   "vaddr": "0x436e89f4",
+   "site_count": 1,
+   "sites": [
+    "0x436e8a8e"
+   ],
+   "string_vaddrs": [
+    "0x43c98c09"
+   ],
+   "sub_block": "lif_tasks",
+   "approx_function": false,
+   "bl_callers": [
+    "0x4377e386"
+   ]
+  },
+  {
+   "vaddr": "0x436e97a8",
+   "site_count": 1,
+   "sites": [
+    "0x436e97d6"
+   ],
+   "string_vaddrs": [
+    "0x43c98c36"
+   ],
+   "sub_block": "lif_tasks",
+   "approx_function": false,
+   "bl_callers": [
+    "0x4377ea54",
+    "0x437d24f2",
+    "0x43ada288"
+   ]
+  },
+  {
+   "vaddr": "0x436e9d1c",
+   "site_count": 1,
+   "sites": [
+    "0x436e9d56"
+   ],
+   "string_vaddrs": [
+    "0x43c98c66"
+   ],
+   "sub_block": "lif_tasks",
+   "approx_function": false,
+   "bl_callers": []
+  },
+  {
+   "vaddr": "0x436e9d78",
+   "site_count": 1,
+   "sites": [
+    "0x436e9db2"
+   ],
+   "string_vaddrs": [
+    "0x43c98c8e"
+   ],
+   "sub_block": "lif_tasks",
+   "approx_function": false,
+   "bl_callers": []
+  },
+  {
+   "vaddr": "0x436fe16a",
+   "site_count": 1,
+   "sites": [
+    "0x436fe196"
+   ],
+   "string_vaddrs": [
+    "0x43c9a10f"
+   ],
+   "sub_block": "lens_remove",
+   "approx_function": false,
+   "bl_callers": []
+  },
+  {
+   "vaddr": "0x436fe500",
+   "site_count": 6,
+   "sites": [
+    "0x436fe740",
+    "0x436fe75a",
+    "0x436fe780",
+    "0x436fe7f8",
+    "0x436fe830",
+    "0x436fe890"
+   ],
+   "string_vaddrs": [
+    "0x43c9805f",
+    "0x43c98089",
+    "0x43c980ae",
+    "0x43c980d3",
+    "0x43c981dc"
+   ],
+   "sub_block": "fw_update",
+   "approx_function": false,
+   "bl_callers": []
+  }
+ ]
+}

@@ -1,0 +1,174 @@
+{
+  "milestone": "S162",
+  "firmware_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "base": "0x43541000",
+  "state_pointer_slot": {
+    "address": "0x4401f990",
+    "bytes_hex": "022df743",
+    "value_le": "0x43f72d02"
+  },
+  "other_destination_slots": [
+    {
+      "address": "0x4401f7b0",
+      "bytes_hex": "02c7f743",
+      "value_le": "0x43f7c702"
+    },
+    {
+      "address": "0x440220a0",
+      "bytes_hex": "04c7f743",
+      "value_le": "0x43f7c704"
+    }
+  ],
+  "rea_evidence_ids": {
+    "xref_base": "ev_4db80d5468d11118561f766f8d8699b7d85f44889d368fd8c5eacd01aae0454d",
+    "first_reader": "ev_02d7e5d7893000bd111b30f25f386665394b5759bfb5ae161c19b78576267719",
+    "second_reader": "ev_59bc79c25846b1f1541a2e92f6dc4702c4546864117f903afa9c76c5a9ee6dfd",
+    "first_state_field_load": "ev_6a42bc996de46b8fcf43744545e137c4fdb396d441dcaff4fc2927f5d04ba023",
+    "second_state_field_load": "ev_99cc8a35a1ce639df757c861113ec77dbfaccfdcee754a4f307ee10210a02d83",
+    "write_first_other_object": "ev_b854d8070081b91afd67f83ed553f32981e05ad26dd437820c559fa0a609b9ca",
+    "write_second_other_object": "ev_142578032f626c121d666087158687149c10c3b7c262d075f72e2423cd0cf7bc"
+  },
+  "conclusion_scope": "Two reader functions only; a separate reader at 0x438d93aa and global writer/runtime reachability are outside this result.",
+  "regions": [
+    {
+      "address": "0x438d932a",
+      "length": 24,
+      "file_offset": "0x39832a",
+      "bytes_hex": "11800c4a4ff480717a44e8f07afc0a4b69460422e358988b",
+      "instructions": [
+        {
+          "address": "0x438d932a",
+          "text": "strh r1, [r2]"
+        },
+        {
+          "address": "0x438d932c",
+          "text": "ldr r2, [pc, #0x30]"
+        },
+        {
+          "address": "0x438d932e",
+          "text": "mov.w r1, #0x100"
+        },
+        {
+          "address": "0x438d9332",
+          "text": "add r2, pc"
+        },
+        {
+          "address": "0x438d9334",
+          "text": "bl #0x439c1c2c"
+        },
+        {
+          "address": "0x438d9338",
+          "text": "ldr r3, [pc, #0x28]"
+        },
+        {
+          "address": "0x438d933a",
+          "text": "mov r1, sp"
+        },
+        {
+          "address": "0x438d933c",
+          "text": "movs r2, #4"
+        },
+        {
+          "address": "0x438d933e",
+          "text": "ldr r3, [r4, r3]"
+        },
+        {
+          "address": "0x438d9340",
+          "text": "ldrh r0, [r3, #0x1c]"
+        }
+      ]
+    },
+    {
+      "address": "0x438d9376",
+      "length": 26,
+      "file_offset": "0x398376",
+      "bytes_hex": "7c44e358988b002808bf0320fff781ff044be358188010bd00bf",
+      "instructions": [
+        {
+          "address": "0x438d9376",
+          "text": "add r4, pc"
+        },
+        {
+          "address": "0x438d9378",
+          "text": "ldr r3, [r4, r3]"
+        },
+        {
+          "address": "0x438d937a",
+          "text": "ldrh r0, [r3, #0x1c]"
+        },
+        {
+          "address": "0x438d937c",
+          "text": "cmp r0, #0"
+        },
+        {
+          "address": "0x438d937e",
+          "text": "it eq"
+        },
+        {
+          "address": "0x438d9380",
+          "text": "moveq r0, #3"
+        },
+        {
+          "address": "0x438d9382",
+          "text": "bl #0x438d9288"
+        },
+        {
+          "address": "0x438d9386",
+          "text": "ldr r3, [pc, #0x10]"
+        },
+        {
+          "address": "0x438d9388",
+          "text": "ldr r3, [r4, r3]"
+        },
+        {
+          "address": "0x438d938a",
+          "text": "strh r0, [r3]"
+        },
+        {
+          "address": "0x438d938c",
+          "text": "pop {r4, pc}"
+        },
+        {
+          "address": "0x438d938e",
+          "text": "nop"
+        }
+      ]
+    },
+    {
+      "address": "0x438d9340",
+      "length": 2,
+      "file_offset": "0x398340",
+      "bytes_hex": "988b",
+      "instructions": [
+        {
+          "address": "0x438d9340",
+          "text": "ldrh r0, [r3, #0x1c]"
+        }
+      ]
+    },
+    {
+      "address": "0x438d937a",
+      "length": 2,
+      "file_offset": "0x39837a",
+      "bytes_hex": "988b",
+      "instructions": [
+        {
+          "address": "0x438d937a",
+          "text": "ldrh r0, [r3, #0x1c]"
+        }
+      ]
+    },
+    {
+      "address": "0x43f72d1e",
+      "length": 2,
+      "file_offset": "0xa31d1e",
+      "bytes_hex": "0000",
+      "instructions": [
+        {
+          "address": "0x43f72d1e",
+          "text": "movs r0, r0"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,294 @@
+{
+ "milestone": "S130",
+ "counts": {
+  "ETIQUETADO": 2,
+  "CONTENIDO NUEVO": 17,
+  "PARCIAL": 1
+ },
+ "modulos": [
+  {
+   "prefijo": "IDT_OPD",
+   "n_a6000": 273,
+   "nucleos_en_a7s": 270,
+   "nucleos_en_a6300": 270,
+   "fraccion": 0.989,
+   "etiqueta_en_a7s": {
+    "IDT": 270
+   },
+   "clase": "ETIQUETADO",
+   "ejemplos": [
+    {
+     "a6000": "[IDT_OPD]: SEND MESSAGE alloc ERROR",
+     "a7s": "[IDT] SEND MESSAGE alloc ERROR"
+    },
+    {
+     "a6000": "[IDT_OPD]: SEND MESSAGE ERROR",
+     "a7s": "[IDT] SEND MESSAGE ERROR"
+    }
+   ]
+  },
+  {
+   "prefijo": "MOUNT_DEBUG",
+   "n_a6000": 132,
+   "nucleos_en_a7s": 2,
+   "nucleos_en_a6300": 2,
+   "fraccion": 0.015,
+   "etiqueta_en_a7s": {
+    "BL": 1,
+    "(sin etiqueta)": 1
+   },
+   "clase": "CONTENIDO NUEVO",
+   "ejemplos": [
+    {
+     "a6000": "[MOUNT_DEBUG]: [BL]Wait_BL_ASYNC",
+     "a7s": "[BL] [BL]Wait_BL_ASYNC"
+    },
+    {
+     "a6000": "[MOUNT_DEBUG]: POFF",
+     "a7s": "POFF"
+    }
+   ]
+  },
+  {
+   "prefijo": "ACCY",
+   "n_a6000": 106,
+   "nucleos_en_a7s": 0,
+   "nucleos_en_a6300": 0,
+   "fraccion": 0.0,
+   "etiqueta_en_a7s": {},
+   "clase": "CONTENIDO NUEVO",
+   "ejemplos": []
+  },
+  {
+   "prefijo": "VPH_API",
+   "n_a6000": 106,
+   "nucleos_en_a7s": 0,
+   "nucleos_en_a6300": 0,
+   "fraccion": 0.0,
+   "etiqueta_en_a7s": {},
+   "clase": "CONTENIDO NUEVO",
+   "ejemplos": []
+  },
+  {
+   "prefijo": "CAMERA_MAIN_LC",
+   "n_a6000": 72,
+   "nucleos_en_a7s": 1,
+   "nucleos_en_a6300": 1,
+   "fraccion": 0.014,
+   "etiqueta_en_a7s": {
+    "(sin etiqueta)": 1
+   },
+   "clase": "CONTENIDO NUEVO",
+   "ejemplos": [
+    {
+     "a6000": "[CAMERA_MAIN_LC]: ************",
+     "a7s": "************"
+    }
+   ]
+  },
+  {
+   "prefijo": "CLK_CTRL",
+   "n_a6000": 66,
+   "nucleos_en_a7s": 0,
+   "nucleos_en_a6300": 0,
+   "fraccion": 0.0,
+   "etiqueta_en_a7s": {},
+   "clase": "CONTENIDO NUEVO",
+   "ejemplos": []
+  },
+  {
+   "prefijo": "SAD",
+   "n_a6000": 44,
+   "nucleos_en_a7s": 3,
+   "nucleos_en_a6300": 3,
+   "fraccion": 0.068,
+   "etiqueta_en_a7s": {
+    "ADF": 3
+   },
+   "clase": "CONTENIDO NUEVO",
+   "ejemplos": [
+    {
+     "a6000": "[SAD]: ----------------",
+     "a7s": "[ADF] ----------------"
+    },
+    {
+     "a6000": "[SAD]: ---------------",
+     "a7s": "[ADF] ---------------"
+    }
+   ]
+  },
+  {
+   "prefijo": "ILLUMI",
+   "n_a6000": 34,
+   "nucleos_en_a7s": 1,
+   "nucleos_en_a6300": 1,
+   "fraccion": 0.029,
+   "etiqueta_en_a7s": {
+    "PNLEVF": 1
+   },
+   "clase": "CONTENIDO NUEVO",
+   "ejemplos": [
+    {
+     "a6000": "[ILLUMI]: ADJ BLOCK ERROR",
+     "a7s": "[PNLEVF] ADJ BLOCK ERROR"
+    }
+   ]
+  },
+  {
+   "prefijo": "CAM_UTIL_ADJ",
+   "n_a6000": 22,
+   "nucleos_en_a7s": 0,
+   "nucleos_en_a6300": 0,
+   "fraccion": 0.0,
+   "etiqueta_en_a7s": {},
+   "clase": "CONTENIDO NUEVO",
+   "ejemplos": []
+  },
+  {
+   "prefijo": "CAM_UTIL_SENS",
+   "n_a6000": 21,
+   "nucleos_en_a7s": 0,
+   "nucleos_en_a6300": 0,
+   "fraccion": 0.0,
+   "etiqueta_en_a7s": {},
+   "clase": "CONTENIDO NUEVO",
+   "ejemplos": []
+  },
+  {
+   "prefijo": "TP_R",
+   "n_a6000": 18,
+   "nucleos_en_a7s": 2,
+   "nucleos_en_a6300": 2,
+   "fraccion": 0.111,
+   "etiqueta_en_a7s": {
+    "DMMYSIOCOM": 2
+   },
+   "clase": "CONTENIDO NUEVO",
+   "ejemplos": [
+    {
+     "a6000": "[TP_R]: ERR. osal_snd_msg. err=0x%x, L=%d",
+     "a7s": "[DMMYSIOCOM] ERR. osal_snd_msg. err=0x%x, L=%d"
+    },
+    {
+     "a6000": "[TP_R]: ERR. osal_free_msg. err=0x%x, L=%d",
+     "a7s": "[DMMYSIOCOM] ERR. osal_free_msg. err=0x%x, L=%d"
+    }
+   ]
+  },
+  {
+   "prefijo": "CAMERA_IS",
+   "n_a6000": 17,
+   "nucleos_en_a7s": 0,
+   "nucleos_en_a6300": 0,
+   "fraccion": 0.0,
+   "etiqueta_en_a7s": {},
+   "clase": "CONTENIDO NUEVO",
+   "ejemplos": []
+  },
+  {
+   "prefijo": "JPEG",
+   "n_a6000": 17,
+   "nucleos_en_a7s": 4,
+   "nucleos_en_a6300": 4,
+   "fraccion": 0.235,
+   "etiqueta_en_a7s": {
+    "DMMYSIOCOM": 2,
+    "(sin etiqueta)": 1,
+    "ADF": 1
+   },
+   "clase": "PARCIAL",
+   "ejemplos": [
+    {
+     "a6000": "[JPEG]: %s",
+     "a7s": "%s"
+    },
+    {
+     "a6000": "[JPEG]: 0x%x",
+     "a7s": "[ADF] 0x%x"
+    }
+   ]
+  },
+  {
+   "prefijo": "DEPTH",
+   "n_a6000": 16,
+   "nucleos_en_a7s": 0,
+   "nucleos_en_a6300": 0,
+   "fraccion": 0.0,
+   "etiqueta_en_a7s": {},
+   "clase": "CONTENIDO NUEVO",
+   "ejemplos": []
+  },
+  {
+   "prefijo": "JOG",
+   "n_a6000": 14,
+   "nucleos_en_a7s": 0,
+   "nucleos_en_a6300": 0,
+   "fraccion": 0.0,
+   "etiqueta_en_a7s": {},
+   "clase": "CONTENIDO NUEVO",
+   "ejemplos": []
+  },
+  {
+   "prefijo": "ADC_DEBUG",
+   "n_a6000": 14,
+   "nucleos_en_a7s": 0,
+   "nucleos_en_a6300": 0,
+   "fraccion": 0.0,
+   "etiqueta_en_a7s": {},
+   "clase": "CONTENIDO NUEVO",
+   "ejemplos": []
+  },
+  {
+   "prefijo": "LIF_DEBUG",
+   "n_a6000": 13,
+   "nucleos_en_a7s": 0,
+   "nucleos_en_a6300": 0,
+   "fraccion": 0.0,
+   "etiqueta_en_a7s": {},
+   "clase": "CONTENIDO NUEVO",
+   "ejemplos": []
+  },
+  {
+   "prefijo": "DFE",
+   "n_a6000": 11,
+   "nucleos_en_a7s": 11,
+   "nucleos_en_a6300": 9,
+   "fraccion": 1.0,
+   "etiqueta_en_a7s": {
+    "(sin etiqueta)": 10,
+    "DFE": 1
+   },
+   "clase": "ETIQUETADO",
+   "ejemplos": [
+    {
+     "a6000": "[DFE]: Imager::Init On %d",
+     "a7s": "Imager::Init On %d"
+    },
+    {
+     "a6000": "[DFE]: Imager::SyncInitial %d",
+     "a7s": "Imager::SyncInitial %d"
+    }
+   ]
+  },
+  {
+   "prefijo": "PANDA",
+   "n_a6000": 10,
+   "nucleos_en_a7s": 0,
+   "nucleos_en_a6300": 0,
+   "fraccion": 0.0,
+   "etiqueta_en_a7s": {},
+   "clase": "CONTENIDO NUEVO",
+   "ejemplos": []
+  },
+  {
+   "prefijo": "CAMERA_MAIN_FC",
+   "n_a6000": 9,
+   "nucleos_en_a7s": 0,
+   "nucleos_en_a6300": 0,
+   "fraccion": 0.0,
+   "etiqueta_en_a7s": {},
+   "clase": "CONTENIDO NUEVO",
+   "ejemplos": []
+  }
+ ]
+}

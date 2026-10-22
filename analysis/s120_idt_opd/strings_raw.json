@@ -1,0 +1,1376 @@
+{
+ "module": "IDT_OPD",
+ "count": 274,
+ "strings": [
+  {
+   "vaddr": "0x43cf11f9",
+   "off": 8061433,
+   "text": "[IDT_OPD]: SEND MESSAGE alloc ERROR"
+  },
+  {
+   "vaddr": "0x43cf123d",
+   "off": 8061501,
+   "text": "[IDT_OPD]: SEND MESSAGE ERROR"
+  },
+  {
+   "vaddr": "0x43cf1275",
+   "off": 8061557,
+   "text": "[IDT_OPD]: Illegal cap FOPD Call when 1pass %d"
+  },
+  {
+   "vaddr": "0x43cf12cf",
+   "off": 8061647,
+   "text": "[IDT_OPD]: Cap: Unknown aspect %d"
+  },
+  {
+   "vaddr": "0x43cf130f",
+   "off": 8061711,
+   "text": "[IDT_OPD]: Unknown syncMode %d"
+  },
+  {
+   "vaddr": "0x43cf1349",
+   "off": 8061769,
+   "text": "[IDT_OPD]: Illegal Async Call!"
+  },
+  {
+   "vaddr": "0x43cf1383",
+   "off": 8061827,
+   "text": "[IDT_OPD]: Illegal Split cap FOPD Call %d"
+  },
+  {
+   "vaddr": "0x43cf13d3",
+   "off": 8061907,
+   "text": "[IDT_OPD]: Fatal Not Copiled for Split Cap"
+  },
+  {
+   "vaddr": "0x43cf1425",
+   "off": 8061989,
+   "text": "[IDT_OPD]: Illegal Split cap FOPD Call NSX %d"
+  },
+  {
+   "vaddr": "0x43cf147d",
+   "off": 8062077,
+   "text": "[IDT_OPD]: Illegal 2Async Call opdSyncstatus=%d!"
+  },
+  {
+   "vaddr": "0x43cf14db",
+   "off": 8062171,
+   "text": "[IDT_OPD]: WAIT MESSAGE ERR"
+  },
+  {
+   "vaddr": "0x43cf150f",
+   "off": 8062223,
+   "text": "[IDT_OPD]: Can't use sync release CB!"
+  },
+  {
+   "vaddr": "0x43cf1557",
+   "off": 8062295,
+   "text": "[IDT_OPD]: No time for 2imager"
+  },
+  {
+   "vaddr": "0x43cf1591",
+   "off": 8062353,
+   "text": "[IDT_OPD]: Fatal:invalid currpicdat"
+  },
+  {
+   "vaddr": "0x43cf15d5",
+   "off": 8062421,
+   "text": "[IDT_OPD]: CCSemStart ERR tmout %x\n"
+  },
+  {
+   "vaddr": "0x43cf1619",
+   "off": 8062489,
+   "text": "[IDT_OPD]: CCSemStart ERR  %x\n"
+  },
+  {
+   "vaddr": "0x43cf1653",
+   "off": 8062547,
+   "text": "[IDT_OPD]: CCSemStart ASYNC ERR %x\n"
+  },
+  {
+   "vaddr": "0x43cf1697",
+   "off": 8062615,
+   "text": "[IDT_OPD]: ECSemStart ERR tmout %x\n"
+  },
+  {
+   "vaddr": "0x43cf16db",
+   "off": 8062683,
+   "text": "[IDT_OPD]: ECSemStart ERR  %x\n"
+  },
+  {
+   "vaddr": "0x43cf1715",
+   "off": 8062741,
+   "text": "[IDT_OPD]: ECSemStart ASYNC ERR %x\n"
+  },
+  {
+   "vaddr": "0x43cf1759",
+   "off": 8062809,
+   "text": "[IDT_OPD]: CCSemEnd ERR %x\n"
+  },
+  {
+   "vaddr": "0x43cf178d",
+   "off": 8062861,
+   "text": "[IDT_OPD]: ECSemEnd ERR %x\n"
+  },
+  {
+   "vaddr": "0x43cf17c1",
+   "off": 8062913,
+   "text": "[IDT_OPD]: Illegal Split EE FOPD Call %d"
+  },
+  {
+   "vaddr": "0x43cf180f",
+   "off": 8062991,
+   "text": "[IDT_OPD]: Fatal Not Copiled for Split"
+  },
+  {
+   "vaddr": "0x43cf1859",
+   "off": 8063065,
+   "text": "[IDT_OPD]: Split Movie Cannot use AIF! %d"
+  },
+  {
+   "vaddr": "0x43cf18a9",
+   "off": 8063145,
+   "text": "[IDT_OPD]: Split Movie Cannot use Insel! %d"
+  },
+  {
+   "vaddr": "0x43cf18fd",
+   "off": 8063229,
+   "text": "[IDT_OPD]: AF AE1 %d %d %d %d"
+  },
+  {
+   "vaddr": "0x43cf1935",
+   "off": 8063285,
+   "text": "[IDT_OPD]: AF AE2 %d %d %x %d"
+  },
+  {
+   "vaddr": "0x43cf196d",
+   "off": 8063341,
+   "text": "[IDT_OPD]: Split Movie Cannot use AIF!!! %d"
+  },
+  {
+   "vaddr": "0x43cf19c1",
+   "off": 8063425,
+   "text": "[IDT_OPD]: PBL SET_FUNC_ERROR R0 only"
+  },
+  {
+   "vaddr": "0x43cf1a09",
+   "off": 8063497,
+   "text": "[IDT_OPD]: PBL START_ERROR R0 only"
+  },
+  {
+   "vaddr": "0x43cf1a4b",
+   "off": 8063563,
+   "text": "[IDT_OPD]: Split Movie Cannot use Insel!!! %d"
+  },
+  {
+   "vaddr": "0x43cf1aa3",
+   "off": 8063651,
+   "text": "[IDT_OPD]: IDTdriver overflow:%d"
+  },
+  {
+   "vaddr": "0x43cf1ae1",
+   "off": 8063713,
+   "text": "[IDT_OPD]: FRM mode translation error %d %d"
+  },
+  {
+   "vaddr": "0x43cf1b35",
+   "off": 8063797,
+   "text": "[IDT_OPD]: Only vatr is kicked"
+  },
+  {
+   "vaddr": "0x43cf1b6f",
+   "off": 8063855,
+   "text": "[IDT_OPD]: load_delay out of spec: %d"
+  },
+  {
+   "vaddr": "0x43cf1bb7",
+   "off": 8063927,
+   "text": "[IDT_OPD]: Kick IDT skipped"
+  },
+  {
+   "vaddr": "0x43cf1beb",
+   "off": 8063979,
+   "text": "[IDT_OPD]: Unknown Gain mode %d"
+  },
+  {
+   "vaddr": "0x43cf1c27",
+   "off": 8064039,
+   "text": "[IDT_OPD]: AF Gain over3 %x %x"
+  },
+  {
+   "vaddr": "0x43cf1c61",
+   "off": 8064097,
+   "text": "[IDT_OPD]: Unknown Gain mode2 %d"
+  },
+  {
+   "vaddr": "0x43cf1c9f",
+   "off": 8064159,
+   "text": "[IDT_OPD]: Invlid distortion area %d"
+  },
+  {
+   "vaddr": "0x43cf1ce5",
+   "off": 8064229,
+   "text": "[IDT_OPD]: Not valid distortion area %d"
+  },
+  {
+   "vaddr": "0x43cf1d31",
+   "off": 8064305,
+   "text": "[IDT_OPD]: Not support Disp KK monitor\n"
+  },
+  {
+   "vaddr": "0x43cf1d7d",
+   "off": 8064381,
+   "text": "[IDT_OPD]: IE_CCinit pointer is NULL"
+  },
+  {
+   "vaddr": "0x43cf1dc3",
+   "off": 8064451,
+   "text": "[IDT_OPD]: ie_miniraw.adrs Err:%X"
+  },
+  {
+   "vaddr": "0x43cf1e03",
+   "off": 8064515,
+   "text": "[IDT_OPD]: backImgData.adrs Err:%X"
+  },
+  {
+   "vaddr": "0x43cf1e45",
+   "off": 8064581,
+   "text": "[IDT_OPD]: imgmap.adrs Err:%X"
+  },
+  {
+   "vaddr": "0x43cf1e7d",
+   "off": 8064637,
+   "text": "[IDT_OPD]: ie_out.adrs Err:%X"
+  },
+  {
+   "vaddr": "0x43cf1eb5",
+   "off": 8064693,
+   "text": "[IDT_OPD]: refmap.adrs Err:%X"
+  },
+  {
+   "vaddr": "0x43cf1eed",
+   "off": 8064749,
+   "text": "[IDT_OPD]: tar_num Err:%d"
+  },
+  {
+   "vaddr": "0x43cf1f1d",
+   "off": 8064797,
+   "text": "[IDT_OPD]: isSpectRef Err:%d"
+  },
+  {
+   "vaddr": "0x43cf1f53",
+   "off": 8064851,
+   "text": "[IDT_OPD]: isMapOut Err:%d"
+  },
+  {
+   "vaddr": "0x43cf1f85",
+   "off": 8064901,
+   "text": "[IDT_OPD]: r.val.high Err:%d"
+  },
+  {
+   "vaddr": "0x43cf1fbb",
+   "off": 8064955,
+   "text": "[IDT_OPD]: r.val.low Err:%d"
+  },
+  {
+   "vaddr": "0x43cf1fef",
+   "off": 8065007,
+   "text": "[IDT_OPD]: g.val.high Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2025",
+   "off": 8065061,
+   "text": "[IDT_OPD]: g.val.low Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2059",
+   "off": 8065113,
+   "text": "[IDT_OPD]: b.val.high Err:%d"
+  },
+  {
+   "vaddr": "0x43cf208f",
+   "off": 8065167,
+   "text": "[IDT_OPD]: b.val.low Err:%d"
+  },
+  {
+   "vaddr": "0x43cf20c3",
+   "off": 8065219,
+   "text": "[IDT_OPD]: ie_offset Err:%d"
+  },
+  {
+   "vaddr": "0x43cf20f7",
+   "off": 8065271,
+   "text": "[IDT_OPD]: ie_imgwidth Err:%d"
+  },
+  {
+   "vaddr": "0x43cf212f",
+   "off": 8065327,
+   "text": "[IDT_OPD]: ie_imgheight Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2169",
+   "off": 8065385,
+   "text": "[IDT_OPD]: ie_imgaddnum Err:%d"
+  },
+  {
+   "vaddr": "0x43cf21a3",
+   "off": 8065443,
+   "text": "[IDT_OPD]: ie_aspect Err:%d"
+  },
+  {
+   "vaddr": "0x43cf21d7",
+   "off": 8065495,
+   "text": "[IDT_OPD]: idealWidth-1 Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2211",
+   "off": 8065553,
+   "text": "[IDT_OPD]: mask.x_end Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2247",
+   "off": 8065607,
+   "text": "[IDT_OPD]: idealHeight-1 Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2283",
+   "off": 8065667,
+   "text": "[IDT_OPD]: mask.y_end Err:%d"
+  },
+  {
+   "vaddr": "0x43cf22b9",
+   "off": 8065721,
+   "text": "[IDT_OPD]: idealWidth Err:%d"
+  },
+  {
+   "vaddr": "0x43cf22ef",
+   "off": 8065775,
+   "text": "[IDT_OPD]: lc_waku[%d].x_end Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2333",
+   "off": 8065843,
+   "text": "[IDT_OPD]: idealHeight Err:%d"
+  },
+  {
+   "vaddr": "0x43cf236b",
+   "off": 8065899,
+   "text": "[IDT_OPD]: lc_waku[%d].y_end Err:%d"
+  },
+  {
+   "vaddr": "0x43cf23af",
+   "off": 8065967,
+   "text": "[IDT_OPD]: lc_miniraw.adrs Err:%X"
+  },
+  {
+   "vaddr": "0x43cf23ef",
+   "off": 8066031,
+   "text": "[IDT_OPD]: lc_out.adrs Err:%X"
+  },
+  {
+   "vaddr": "0x43cf2427",
+   "off": 8066087,
+   "text": "[IDT_OPD]: lc_offset Err:%d"
+  },
+  {
+   "vaddr": "0x43cf245b",
+   "off": 8066139,
+   "text": "[IDT_OPD]: lc_imgwidth Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2493",
+   "off": 8066195,
+   "text": "[IDT_OPD]: lc_imgheight Err:%d"
+  },
+  {
+   "vaddr": "0x43cf24cd",
+   "off": 8066253,
+   "text": "[IDT_OPD]: lc_imgaddnum Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2507",
+   "off": 8066311,
+   "text": "[IDT_OPD]: lc_aspect Err:%d"
+  },
+  {
+   "vaddr": "0x43cf253b",
+   "off": 8066363,
+   "text": "[IDT_OPD]: LC SEM ERR TMOUT %x\n"
+  },
+  {
+   "vaddr": "0x43cf2577",
+   "off": 8066423,
+   "text": "[IDT_OPD]: LC SEM ERR %x\n"
+  },
+  {
+   "vaddr": "0x43cf25a7",
+   "off": 8066471,
+   "text": "[IDT_OPD]: LC OSAL SEM ERR %x\n"
+  },
+  {
+   "vaddr": "0x43cf2634",
+   "off": 8066612,
+   "text": "[IDT_OPD]: Start MapWidthRC function"
+  },
+  {
+   "vaddr": "0x43cf267a",
+   "off": 8066682,
+   "text": "[IDT_OPD]: leftW, rightW: %d, %d"
+  },
+  {
+   "vaddr": "0x43cf26b8",
+   "off": 8066744,
+   "text": "[IDT_OPD]: Start MapHeightRC function"
+  },
+  {
+   "vaddr": "0x43cf2700",
+   "off": 8066816,
+   "text": "[IDT_OPD]: topH, bottomH: %d, %d"
+  },
+  {
+   "vaddr": "0x43cf274a",
+   "off": 8066890,
+   "text": "[IDT_OPD]: CCinitParam addr null"
+  },
+  {
+   "vaddr": "0x43cf2788",
+   "off": 8066952,
+   "text": "[IDT_OPD]: ECinitParam addr null"
+  },
+  {
+   "vaddr": "0x43cf27c6",
+   "off": 8067014,
+   "text": "[IDT_OPD]: CCsyncParam addr null"
+  },
+  {
+   "vaddr": "0x43cf2804",
+   "off": 8067076,
+   "text": "[IDT_OPD]: ECsyncParam addr null"
+  },
+  {
+   "vaddr": "0x43cf2842",
+   "off": 8067138,
+   "text": "[IDT_OPD]: CCsyncRes ERR :%08X"
+  },
+  {
+   "vaddr": "0x43cf287c",
+   "off": 8067196,
+   "text": "[IDT_OPD]: CCsyncRes addr null"
+  },
+  {
+   "vaddr": "0x43cf28b6",
+   "off": 8067254,
+   "text": "[IDT_OPD]: ECsyncRes ERR :%08X"
+  },
+  {
+   "vaddr": "0x43cf28f0",
+   "off": 8067312,
+   "text": "[IDT_OPD]: ECsyncRes addr null"
+  },
+  {
+   "vaddr": "0x43cf292a",
+   "off": 8067370,
+   "text": "[IDT_OPD]: face_use_cc Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2962",
+   "off": 8067426,
+   "text": "[IDT_OPD]: kido_th[%d].up Err:%d"
+  },
+  {
+   "vaddr": "0x43cf29a0",
+   "off": 8067488,
+   "text": "[IDT_OPD]: kido_th[%d].dn Err:%d"
+  },
+  {
+   "vaddr": "0x43cf29de",
+   "off": 8067550,
+   "text": "[IDT_OPD]: ratio_wak[%d].up Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2a20",
+   "off": 8067616,
+   "text": "[IDT_OPD]: ratio_wak[%d].dn Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2a62",
+   "off": 8067682,
+   "text": "[IDT_OPD]: ratio_wak[%d].rgt Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2aa6",
+   "off": 8067750,
+   "text": "[IDT_OPD]: ratio_wak[%d].lft Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2aea",
+   "off": 8067818,
+   "text": "[IDT_OPD]: sel_waku[%d] Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2b24",
+   "off": 8067876,
+   "text": "[IDT_OPD]: sel_wak Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2b54",
+   "off": 8067924,
+   "text": "[IDT_OPD]: sel_hist Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2b86",
+   "off": 8067974,
+   "text": "[IDT_OPD]: sel_sum Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2bb6",
+   "off": 8068022,
+   "text": "[IDT_OPD]: miniraw.adrs Err:%X"
+  },
+  {
+   "vaddr": "0x43cf2bf0",
+   "off": 8068080,
+   "text": "[IDT_OPD]: shade_map.adrs Err:%X"
+  },
+  {
+   "vaddr": "0x43cf2c2e",
+   "off": 8068142,
+   "text": "[IDT_OPD]: 4cmap.adrs Err:%X"
+  },
+  {
+   "vaddr": "0x43cf2c64",
+   "off": 8068196,
+   "text": "[IDT_OPD]: histmap.adrs Err:%X"
+  },
+  {
+   "vaddr": "0x43cf2c9e",
+   "off": 8068254,
+   "text": "[IDT_OPD]: summap.adrs Err:%X"
+  },
+  {
+   "vaddr": "0x43cf2cd6",
+   "off": 8068310,
+   "text": "[IDT_OPD]: out_opd_cc.adrs Err:%X"
+  },
+  {
+   "vaddr": "0x43cf2d16",
+   "off": 8068374,
+   "text": "[IDT_OPD]: out_opd_ec.adrs Err:%X"
+  },
+  {
+   "vaddr": "0x43cf2d56",
+   "off": 8068438,
+   "text": "[IDT_OPD]: offset Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2d84",
+   "off": 8068484,
+   "text": "[IDT_OPD]: imgwidth Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2db6",
+   "off": 8068534,
+   "text": "[IDT_OPD]: imgheight Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2dea",
+   "off": 8068586,
+   "text": "[IDT_OPD]: imgaddnum Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2e1e",
+   "off": 8068638,
+   "text": "[IDT_OPD]: aspect Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2e4c",
+   "off": 8068684,
+   "text": "[IDT_OPD]: x_size Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2e7a",
+   "off": 8068730,
+   "text": "[IDT_OPD]: y_size Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2ea8",
+   "off": 8068776,
+   "text": "[IDT_OPD]: x.sel Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2ed4",
+   "off": 8068820,
+   "text": "[IDT_OPD]: y.sel Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2f00",
+   "off": 8068864,
+   "text": "[IDT_OPD]: x.span Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2f2e",
+   "off": 8068910,
+   "text": "[IDT_OPD]: y.span Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2f5c",
+   "off": 8068956,
+   "text": "[IDT_OPD]: intn precap Unknown aspect:%d"
+  },
+  {
+   "vaddr": "0x43cf2faa",
+   "off": 8069034,
+   "text": "[IDT_OPD]: intWak[%d].x_end Err:%d"
+  },
+  {
+   "vaddr": "0x43cf2fec",
+   "off": 8069100,
+   "text": "[IDT_OPD]: intWak[%d].y_end Err:%d"
+  },
+  {
+   "vaddr": "0x43cf302e",
+   "off": 8069166,
+   "text": "[IDT_OPD]: histWak[%d].x_end Err:%d"
+  },
+  {
+   "vaddr": "0x43cf3072",
+   "off": 8069234,
+   "text": "[IDT_OPD]: histWak[%d].y_end Err:%d"
+  },
+  {
+   "vaddr": "0x43cf30b6",
+   "off": 8069302,
+   "text": "[IDT_OPD]: intn cap Unknown aspect:%d"
+  },
+  {
+   "vaddr": "0x43cf30fe",
+   "off": 8069374,
+   "text": "[IDT_OPD]: cwaku[%d].x_end Err:%d"
+  },
+  {
+   "vaddr": "0x43cf313e",
+   "off": 8069438,
+   "text": "[IDT_OPD]: cwaku[%d].y_end Err:%d"
+  },
+  {
+   "vaddr": "0x43cf317e",
+   "off": 8069502,
+   "text": "[IDT_OPD]: Out Of spec yet. int calc with face %d num %d"
+  },
+  {
+   "vaddr": "0x43cf31ec",
+   "off": 8069612,
+   "text": "[IDT_OPD]: intn Unknown aspect:%d"
+  },
+  {
+   "vaddr": "0x43cf322c",
+   "off": 8069676,
+   "text": "[IDT_OPD]: CC syncflg set error"
+  },
+  {
+   "vaddr": "0x43cf3268",
+   "off": 8069736,
+   "text": "[IDT_OPD]: EC syncflg set error"
+  },
+  {
+   "vaddr": "0x43cf32a4",
+   "off": 8069796,
+   "text": "[IDT_OPD]: 4cmap aspect error!"
+  },
+  {
+   "vaddr": "0x43cf3306",
+   "off": 8069894,
+   "text": "[IDT_OPD]: GetIDTSA Unknown aspect:%d"
+  },
+  {
+   "vaddr": "0x43cf334e",
+   "off": 8069966,
+   "text": "[IDT_OPD]: AF AE x %d %d %d %d %x"
+  },
+  {
+   "vaddr": "0x43cf338e",
+   "off": 8070030,
+   "text": "[IDT_OPD]: AF AE y %d %d %d %d %x"
+  },
+  {
+   "vaddr": "0x43cf33ce",
+   "off": 8070094,
+   "text": "[IDT_OPD]: calc_inv2 0div %d %d "
+  },
+  {
+   "vaddr": "0x43cf340c",
+   "off": 8070156,
+   "text": "[IDT_OPD]: next is NULL "
+  },
+  {
+   "vaddr": "0x43cf343a",
+   "off": 8070202,
+   "text": "[IDT_OPD]: calc_inv 0div %d %d %d %d"
+  },
+  {
+   "vaddr": "0x43cf3480",
+   "off": 8070272,
+   "text": "[IDT_OPD]: Split Coordinate: Async invalid."
+  },
+  {
+   "vaddr": "0x43cf34d4",
+   "off": 8070356,
+   "text": "[IDT_OPD]: calc SplitIDTSA error %d %d %d %d %d %d."
+  },
+  {
+   "vaddr": "0x43cf3538",
+   "off": 8070456,
+   "text": "[IDT_OPD]: IDTSA Invalid Ch select. %d %d"
+  },
+  {
+   "vaddr": "0x43cf3588",
+   "off": 8070536,
+   "text": "[IDT_OPD]: Invlid distortion area"
+  },
+  {
+   "vaddr": "0x43cf35c8",
+   "off": 8070600,
+   "text": "[IDT_OPD]: Out of Spec:sync FRM_mode: %d %d"
+  },
+  {
+   "vaddr": "0x43cf361c",
+   "off": 8070684,
+   "text": "[IDT_OPD]: sync FRM size h 0ch: %d %d"
+  },
+  {
+   "vaddr": "0x43cf3664",
+   "off": 8070756,
+   "text": "[IDT_OPD]: sync FRM size h 1ch: %d %d"
+  },
+  {
+   "vaddr": "0x43cf36ac",
+   "off": 8070828,
+   "text": "[IDT_OPD]: sync FRM size v: %d %d"
+  },
+  {
+   "vaddr": "0x43cf36ec",
+   "off": 8070892,
+   "text": "[IDT_OPD]: Out of Spec:async FRM_mode: %d %d"
+  },
+  {
+   "vaddr": "0x43cf3742",
+   "off": 8070978,
+   "text": "[IDT_OPD]: async FRM size h 0ch: %d %d"
+  },
+  {
+   "vaddr": "0x43cf378c",
+   "off": 8071052,
+   "text": "[IDT_OPD]: async FRM size h 1ch: %d %d"
+  },
+  {
+   "vaddr": "0x43cf37d6",
+   "off": 8071126,
+   "text": "[IDT_OPD]: async FRM size v: %d %d"
+  },
+  {
+   "vaddr": "0x43cf3818",
+   "off": 8071192,
+   "text": "[IDT_OPD]: unknown vatr aspect %d"
+  },
+  {
+   "vaddr": "0x43cf3858",
+   "off": 8071256,
+   "text": "[IDT_OPD]: DET x-size over %d %d"
+  },
+  {
+   "vaddr": "0x43cf3896",
+   "off": 8071318,
+   "text": "[IDT_OPD]: DET y-size over %d %d"
+  },
+  {
+   "vaddr": "0x43cf38d4",
+   "off": 8071380,
+   "text": "[IDT_OPD]: HIST x size not enough %d"
+  },
+  {
+   "vaddr": "0x43cf391a",
+   "off": 8071450,
+   "text": "[IDT_OPD]: HIST y size not enough %d"
+  },
+  {
+   "vaddr": "0x43cf3960",
+   "off": 8071520,
+   "text": "[IDT_OPD]: CAE x size not enough %d"
+  },
+  {
+   "vaddr": "0x43cf39a4",
+   "off": 8071588,
+   "text": "[IDT_OPD]: CAE y size not enough %d"
+  },
+  {
+   "vaddr": "0x43cf39e8",
+   "off": 8071656,
+   "text": "[IDT_OPD]: gle x-size error %d"
+  },
+  {
+   "vaddr": "0x43cf3a22",
+   "off": 8071714,
+   "text": "[IDT_OPD]: gle y-size error %d %d %d"
+  },
+  {
+   "vaddr": "0x43cf3a68",
+   "off": 8071784,
+   "text": "[IDT_OPD]: gle x-blk-size error %d"
+  },
+  {
+   "vaddr": "0x43cf3aaa",
+   "off": 8071850,
+   "text": "[IDT_OPD]: gle y-blk-size error %d"
+  },
+  {
+   "vaddr": "0x43cf3aec",
+   "off": 8071916,
+   "text": "[IDT_OPD]: gle org error x:%d y:%d"
+  },
+  {
+   "vaddr": "0x43cf3b2e",
+   "off": 8071982,
+   "text": "[IDT_OPD]: gle x-end-point error %d"
+  },
+  {
+   "vaddr": "0x43cf3b72",
+   "off": 8072050,
+   "text": "[IDT_OPD]: gle y-end-point error %d"
+  },
+  {
+   "vaddr": "0x43cf3bb6",
+   "off": 8072118,
+   "text": "[IDT_OPD]: Det1 %d %d %d %d %d"
+  },
+  {
+   "vaddr": "0x43cf3bf0",
+   "off": 8072176,
+   "text": "[IDT_OPD]: Det2 %d %d %d %d in %d %d"
+  },
+  {
+   "vaddr": "0x43cf3c36",
+   "off": 8072246,
+   "text": "[IDT_OPD]: Gle1 %d %d %d %d %d %d"
+  },
+  {
+   "vaddr": "0x43cf3c76",
+   "off": 8072310,
+   "text": "[IDT_OPD]: Gle2 %d %d %d %d in %d %d"
+  },
+  {
+   "vaddr": "0x43cf3cbc",
+   "off": 8072380,
+   "text": "[IDT_OPD]: HIST min:%x max:%x idat:%x cnt:%x "
+  },
+  {
+   "vaddr": "0x43cf3d14",
+   "off": 8072468,
+   "text": "[IDT_OPD]: CAE cnt_h:%x i2dat_h:%x idat_h:%x cnt_l:%x i2dat_l:%x idat_l:%x "
+  },
+  {
+   "vaddr": "0x43cf3da8",
+   "off": 8072616,
+   "text": "[IDT_OPD]: total:%dx%d rcout:xs:%d xe:%d ys:%d ye:%d "
+  },
+  {
+   "vaddr": "0x43cf3e10",
+   "off": 8072720,
+   "text": "[IDT_OPD]: det:xs:%d xe:%d ys:%d ye:%d "
+  },
+  {
+   "vaddr": "0x43cf3e5c",
+   "off": 8072796,
+   "text": "[IDT_OPD]: det x_size  %d %d"
+  },
+  {
+   "vaddr": "0x43cf3e92",
+   "off": 8072850,
+   "text": "[IDT_OPD]: det y_size  %d %d"
+  },
+  {
+   "vaddr": "0x43cf3ec8",
+   "off": 8072904,
+   "text": "[IDT_OPD]: VATR Error det:%x gle:%x"
+  },
+  {
+   "vaddr": "0x43cf3f0c",
+   "off": 8072972,
+   "text": "[IDT_OPD]: VATR vld:%d xs:%f ys:%f xw:%f yw:%f"
+  },
+  {
+   "vaddr": "0x43cf3f66",
+   "off": 8073062,
+   "text": "[IDT_OPD]: VATR width not 8n or height not 2n: %d %d"
+  },
+  {
+   "vaddr": "0x43cf3fcc",
+   "off": 8073164,
+   "text": "[IDT_OPD]: VATR size error: %d %d"
+  },
+  {
+   "vaddr": "0x43cf400c",
+   "off": 8073228,
+   "text": "[IDT_OPD]: VATR unknown rate %d"
+  },
+  {
+   "vaddr": "0x43cf4048",
+   "off": 8073288,
+   "text": "[IDT_OPD]: VATR RAW size error: %d %d"
+  },
+  {
+   "vaddr": "0x43cf4090",
+   "off": 8073360,
+   "text": "[IDT_OPD]: EndMode: Invalid PreLight set."
+  },
+  {
+   "vaddr": "0x43cf40e0",
+   "off": 8073440,
+   "text": "[IDT_OPD]: miniRAW Addr  : %08x"
+  },
+  {
+   "vaddr": "0x43cf411c",
+   "off": 8073500,
+   "text": "[IDT_OPD]: width : %d  "
+  },
+  {
+   "vaddr": "0x43cf4148",
+   "off": 8073544,
+   "text": "[IDT_OPD]: height: %d  "
+  },
+  {
+   "vaddr": "0x43cf4174",
+   "off": 8073588,
+   "text": "[IDT_OPD]: DebugGetInfo extraction failed!!"
+  },
+  {
+   "vaddr": "0x43cf41c8",
+   "off": 8073672,
+   "text": "[IDT_OPD]: CC EC Result Addr  : %08x"
+  },
+  {
+   "vaddr": "0x43cf420e",
+   "off": 8073742,
+   "text": "[IDT_OPD]: size: %d  "
+  },
+  {
+   "vaddr": "0x43cf4251",
+   "off": 8073809,
+   "text": "[IDT_OPD]: DebugInfo extraction failed!!"
+  },
+  {
+   "vaddr": "0x43cf431d",
+   "off": 8074013,
+   "text": "[IDT_OPD]: FRM rate NG %d %d %d"
+  },
+  {
+   "vaddr": "0x43cf4359",
+   "off": 8074073,
+   "text": "[IDT_OPD]: FOPD_rate is not correct! %d"
+  },
+  {
+   "vaddr": "0x43cf43a5",
+   "off": 8074149,
+   "text": "[IDT_OPD]: Invalid AF_pix/clk!%d"
+  },
+  {
+   "vaddr": "0x43cf43e3",
+   "off": 8074211,
+   "text": "[IDT_OPD]: AF or RDRAW can't work 8pix/clk %d"
+  },
+  {
+   "vaddr": "0x43cf443b",
+   "off": 8074299,
+   "text": "[IDT_OPD]: AF_param is not correct! %d %d"
+  },
+  {
+   "vaddr": "0x43cf448b",
+   "off": 8074379,
+   "text": "[IDT_OPD]: AF_forced_param is not correct! %d %d"
+  },
+  {
+   "vaddr": "0x43cf44e9",
+   "off": 8074473,
+   "text": "[IDT_OPD]: AF_param is not correct async! %d %d"
+  },
+  {
+   "vaddr": "0x43cf4545",
+   "off": 8074565,
+   "text": "[IDT_OPD]: 4cmap:%X"
+  },
+  {
+   "vaddr": "0x43cf4569",
+   "off": 8074601,
+   "text": "[IDT_OPD]: hmap:%X"
+  },
+  {
+   "vaddr": "0x43cf458b",
+   "off": 8074635,
+   "text": "[IDT_OPD]: smap:%X"
+  },
+  {
+   "vaddr": "0x43cf45ad",
+   "off": 8074669,
+   "text": "[IDT_OPD]: ccout:%X"
+  },
+  {
+   "vaddr": "0x43cf45d1",
+   "off": 8074705,
+   "text": "[IDT_OPD]: ecout:%X"
+  },
+  {
+   "vaddr": "0x43cf45f5",
+   "off": 8074741,
+   "text": "[IDT_OPD]: shade:%X"
+  },
+  {
+   "vaddr": "0x43cf4619",
+   "off": 8074777,
+   "text": "[IDT_OPD]: input:%X"
+  },
+  {
+   "vaddr": "0x43cf463d",
+   "off": 8074813,
+   "text": "[IDT_OPD]: msain0:%X"
+  },
+  {
+   "vaddr": "0x43cf4663",
+   "off": 8074851,
+   "text": "[IDT_OPD]: msain1:%X"
+  },
+  {
+   "vaddr": "0x43cf4689",
+   "off": 8074889,
+   "text": "[IDT_OPD]: msaout:%X"
+  },
+  {
+   "vaddr": "0x43cf46af",
+   "off": 8074927,
+   "text": "[IDT_OPD]: ieout:%X"
+  },
+  {
+   "vaddr": "0x43cf46d3",
+   "off": 8074963,
+   "text": "[IDT_OPD]: p_img_map:%X"
+  },
+  {
+   "vaddr": "0x43cf46ff",
+   "off": 8075007,
+   "text": "[IDT_OPD]: p_backImgData:%X"
+  },
+  {
+   "vaddr": "0x43cf4733",
+   "off": 8075059,
+   "text": "[IDT_OPD]: ie_in:%X"
+  },
+  {
+   "vaddr": "0x43cf4757",
+   "off": 8075095,
+   "text": "[IDT_OPD]: mapRC_in:%X"
+  },
+  {
+   "vaddr": "0x43cf4781",
+   "off": 8075137,
+   "text": "[IDT_OPD]: lc_out:%X"
+  },
+  {
+   "vaddr": "0x43cf47a7",
+   "off": 8075175,
+   "text": "[IDT_OPD]: lc_in:%X"
+  },
+  {
+   "vaddr": "0x43cf47cb",
+   "off": 8075211,
+   "text": "[IDT_OPD]: refmap:%X"
+  },
+  {
+   "vaddr": "0x43cf47f1",
+   "off": 8075249,
+   "text": "[IDT_OPD]: SGC must change w %d %d\n"
+  },
+  {
+   "vaddr": "0x43cf4835",
+   "off": 8075317,
+   "text": "[IDT_OPD]: SGC must change h %d %d\n"
+  },
+  {
+   "vaddr": "0x43cf4879",
+   "off": 8075385,
+   "text": "[IDT_OPD]: IE_RefMap is NULL"
+  },
+  {
+   "vaddr": "0x43cf48c9",
+   "off": 8075465,
+   "text": "[IDT_OPD]: Can't Get miniRAW Mem"
+  },
+  {
+   "vaddr": "0x43cf4907",
+   "off": 8075527,
+   "text": "[IDT_OPD]: VATR Mem Get: FW param is NULL!"
+  },
+  {
+   "vaddr": "0x43cf4959",
+   "off": 8075609,
+   "text": "[IDT_OPD]: VATR Mem OK %x"
+  },
+  {
+   "vaddr": "0x43cf4989",
+   "off": 8075657,
+   "text": "[IDT_OPD]: VATR Mem NG %d"
+  },
+  {
+   "vaddr": "0x43cf49b9",
+   "off": 8075705,
+   "text": "[IDT_OPD]: VATR Mem Release OK"
+  },
+  {
+   "vaddr": "0x43cf49f3",
+   "off": 8075763,
+   "text": "[IDT_OPD]: VATR Mem Release NG %d"
+  },
+  {
+   "vaddr": "0x43cf4a33",
+   "off": 8075827,
+   "text": "[IDT_OPD]: VATR IsAlloc: FW param is NULL!"
+  },
+  {
+   "vaddr": "0x43cf4a85",
+   "off": 8075909,
+   "text": "[IDT_OPD]: IDT EC_SEM SIG ERR %x\n"
+  },
+  {
+   "vaddr": "0x43cf4ac5",
+   "off": 8075973,
+   "text": "[IDT_OPD]: IDT CC_SEM SIG ERR %x\n"
+  },
+  {
+   "vaddr": "0x43cf4b05",
+   "off": 8076037,
+   "text": "[IDT_OPD]: IDT Get ec_sem error %x %d"
+  },
+  {
+   "vaddr": "0x43cf4b4d",
+   "off": 8076109,
+   "text": "[IDT_OPD]: IDT Get ec_sem time_out %x %d"
+  },
+  {
+   "vaddr": "0x43cf4b9b",
+   "off": 8076187,
+   "text": "[IDT_OPD]: IDT Get cc_sem error %x %d"
+  },
+  {
+   "vaddr": "0x43cf4be3",
+   "off": 8076259,
+   "text": "[IDT_OPD]: IDT Get cc_sem time_out %x %d"
+  },
+  {
+   "vaddr": "0x43cf4c31",
+   "off": 8076337,
+   "text": "[IDT_OPD]: EC overflow\n"
+  },
+  {
+   "vaddr": "0x43cf4c5d",
+   "off": 8076381,
+   "text": "[IDT_OPD]: CC overflow\n"
+  },
+  {
+   "vaddr": "0x43cf4c89",
+   "off": 8076425,
+   "text": "[IDT_OPD]: IDT Get lc_sem %x %d"
+  },
+  {
+   "vaddr": "0x43cf4cc5",
+   "off": 8076485,
+   "text": "[IDT_OPD]: IDT Get lc_sem time_out%x %d"
+  },
+  {
+   "vaddr": "0x43cf4d11",
+   "off": 8076561,
+   "text": "[IDT_OPD]: IDT LC_SEM SIG ERR %x\n"
+  },
+  {
+   "vaddr": "0x43cf4d51",
+   "off": 8076625,
+   "text": "[IDT_OPD]: invalid load_delay:%d"
+  },
+  {
+   "vaddr": "0x43cf4d8f",
+   "off": 8076687,
+   "text": "[IDT_OPD]: invalid load_delay old:%d"
+  },
+  {
+   "vaddr": "0x43cf4dd5",
+   "off": 8076757,
+   "text": "[IDT_OPD]: AF invalid rate %d."
+  },
+  {
+   "vaddr": "0x43cf4e0f",
+   "off": 8076815,
+   "text": "[IDT_OPD]: VATR with 8pix/clk is out of spec yet."
+  },
+  {
+   "vaddr": "0x43cf4e6f",
+   "off": 8076911,
+   "text": "[IDT_OPD]: VATR unknown pix/clk %d"
+  },
+  {
+   "vaddr": "0x43cf4eb1",
+   "off": 8076977,
+   "text": "[IDT_OPD]: FOPD rate Convert NG %d "
+  },
+  {
+   "vaddr": "0x43cf4ef5",
+   "off": 8077045,
+   "text": "[IDT_OPD]: Request Convert NG %d "
+  },
+  {
+   "vaddr": "0x43cf4f35",
+   "off": 8077109,
+   "text": "[IDT_OPD]: SelectAF LC request NG %x %d %d %d"
+  },
+  {
+   "vaddr": "0x43cf4f8d",
+   "off": 8077197,
+   "text": "[IDT_OPD]: Sync rate %d -> %d use:%d mode:%d %d %d"
+  },
+  {
+   "vaddr": "0x43cf4fef",
+   "off": 8077295,
+   "text": "[IDT_OPD]: test %d %d %d %d %d %d %d %d %d %d"
+  },
+  {
+   "vaddr": "0x43cf5047",
+   "off": 8077383,
+   "text": "[IDT_OPD]: Async rate %d -> %d use:%d mode:%d"
+  },
+  {
+   "vaddr": "0x43cf509f",
+   "off": 8077471,
+   "text": "[IDT_OPD]: test2 %d %d %d %d %d %d %d %d"
+  },
+  {
+   "vaddr": "0x43cf50ed",
+   "off": 8077549,
+   "text": "[IDT_OPD]: Illegal FRM mode for image_param %d"
+  },
+  {
+   "vaddr": "0x43cf5147",
+   "off": 8077639,
+   "text": "[IDT_OPD]: Illegal FRM mode for IDTSA %d"
+  },
+  {
+   "vaddr": "0x43cf51b3",
+   "off": 8077747,
+   "text": "[IDT_OPD]: FOPD_MODE error"
+  },
+  {
+   "vaddr": "0x43cf51e5",
+   "off": 8077797,
+   "text": "[IDT_OPD]: mask%x add%x %x %x."
+  },
+  {
+   "vaddr": "0x43cf521f",
+   "off": 8077855,
+   "text": "[IDT_OPD]: async opd valid add:%d mask%x ."
+  },
+  {
+   "vaddr": "0x43cf5271",
+   "off": 8077937,
+   "text": "[IDT_OPD]: capo valid 0size. w:%d h:%d."
+  },
+  {
+   "vaddr": "0x43cf52bd",
+   "off": 8078013,
+   "text": "[IDT_OPD]: capo arc 0size. w:%d h:%d."
+  },
+  {
+   "vaddr": "0x43cf5305",
+   "off": 8078085,
+   "text": "[IDT_OPD]: rc 0size. w:%d h:%d."
+  },
+  {
+   "vaddr": "0x43cf5341",
+   "off": 8078145,
+   "text": "[IDT_OPD]: Pre: Unknown aspect %d."
+  },
+  {
+   "vaddr": "0x43cf5383",
+   "off": 8078211,
+   "text": "[IDT_OPD]: async valid add:%d mask%x ."
+  },
+  {
+   "vaddr": "0x43cf53cd",
+   "off": 8078285,
+   "text": "[IDT_OPD]: FRM 4pix/clk error async. width not 8n."
+  },
+  {
+   "vaddr": "0x43cf542f",
+   "off": 8078383,
+   "text": "[IDT_OPD]: cap valid 0size. w:%d h:%d."
+  },
+  {
+   "vaddr": "0x43cf5479",
+   "off": 8078457,
+   "text": "[IDT_OPD]: cap arc 0size. w:%d h:%d."
+  },
+  {
+   "vaddr": "0x43cf54bf",
+   "off": 8078527,
+   "text": "[IDT_OPD]: cap rc 0size. w:%d h:%d."
+  },
+  {
+   "vaddr": "0x43cf5503",
+   "off": 8078595,
+   "text": "[IDT_OPD]: 4pix/clk error async. width not 8n."
+  },
+  {
+   "vaddr": "0x43cf555d",
+   "off": 8078685,
+   "text": "[IDT_OPD]: Cap: Unknown aspect %d."
+  },
+  {
+   "vaddr": "0x43cf559f",
+   "off": 8078751,
+   "text": "[IDT_OPD]: valid add:%d mask%x ."
+  },
+  {
+   "vaddr": "0x43cf55dd",
+   "off": 8078813,
+   "text": "[IDT_OPD]: FRM width error EE. width not 8n."
+  },
+  {
+   "vaddr": "0x43cf5633",
+   "off": 8078899,
+   "text": "[IDT_OPD]: FRM EE valid 0size. w:%d h:%d."
+  },
+  {
+   "vaddr": "0x43cf5683",
+   "off": 8078979,
+   "text": "[IDT_OPD]: FRM EE arc 0size. w:%d h:%d."
+  },
+  {
+   "vaddr": "0x43cf56cf",
+   "off": 8079055,
+   "text": "[IDT_OPD]: EE rc 0size. w:%d h:%d."
+  },
+  {
+   "vaddr": "0x43cf5711",
+   "off": 8079121,
+   "text": "[IDT_OPD]: 4pix/clk error EE. width not 8n."
+  },
+  {
+   "vaddr": "0x43cf5765",
+   "off": 8079205,
+   "text": "[IDT_OPD]: EE valid 0size. w:%d h:%d."
+  },
+  {
+   "vaddr": "0x43cf57ad",
+   "off": 8079277,
+   "text": "[IDT_OPD]: EE arc 0size. w:%d h:%d."
+  },
+  {
+   "vaddr": "0x43cf57f1",
+   "off": 8079345,
+   "text": "[IDT_OPD]: MovieDepthRate illegal"
+  }
+ ]
+}

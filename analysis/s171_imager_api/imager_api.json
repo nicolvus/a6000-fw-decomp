@@ -1,0 +1,154 @@
+{
+ "milestone": "S171",
+ "titulo": "la API del imager y el canal SteadyShot del objetivo: el A6300 tiene 3 entradas y 1 canal mas",
+ "base_vaddr": "43541000",
+ "firmwares": {
+  "A6000_fw321": {
+   "ruta": "analysis/rea-independent/input/av-cam.bin",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "len": 11427236,
+   "api_imager": [
+    "GetImagerDriveMode",
+    "GetImagerTemperature",
+    "GetImagerTemperatureAD",
+    "GetPrelightImagerDriveMode"
+   ],
+   "SteadyShot": 0,
+   "SteadyShotInfo": 0,
+   "Mount_DividedInfo": 5,
+   "GetImagerStabilizationTime": 0,
+   "SetImagerFrameSize": 0,
+   "SetImagerMode": 0,
+   "SyncUtilityUpm": 0,
+   "IMAGER_DRIVEMODE": 0,
+   "SetImagerFrameSize_fmt": 0
+  },
+  "A7S_fw320": {
+   "ruta": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "len": 11455416,
+   "api_imager": [
+    "GetImagerDriveMode",
+    "GetImagerTemperature",
+    "GetImagerTemperatureAD",
+    "GetPrelightImagerDriveMode"
+   ],
+   "SteadyShot": 0,
+   "SteadyShotInfo": 0,
+   "Mount_DividedInfo": 3,
+   "GetImagerStabilizationTime": 0,
+   "SetImagerFrameSize": 0,
+   "SetImagerMode": 0,
+   "SyncUtilityUpm": 0,
+   "IMAGER_DRIVEMODE": 0,
+   "SetImagerFrameSize_fmt": 0
+  },
+  "A6300_fw201": {
+   "ruta": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+   "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16",
+   "len": 13382836,
+   "api_imager": [
+    "GetImagerDriveMode",
+    "GetImagerStabilizationTime",
+    "GetImagerTemperature",
+    "GetImagerTemperatureAD",
+    "GetPrelightImagerDriveMode",
+    "SetImagerFrameSize",
+    "SetImagerMode"
+   ],
+   "SteadyShot": 11,
+   "SteadyShotInfo": 7,
+   "Mount_DividedInfo": 5,
+   "GetImagerStabilizationTime": 1,
+   "SetImagerFrameSize": 2,
+   "SetImagerMode": 1,
+   "SyncUtilityUpm": 3,
+   "IMAGER_DRIVEMODE": 2,
+   "SetImagerFrameSize_fmt": 1
+  }
+ },
+ "api_imager_comunes": [
+  "GetImagerDriveMode",
+  "GetImagerTemperature",
+  "GetImagerTemperatureAD",
+  "GetPrelightImagerDriveMode"
+ ],
+ "api_imager_solo_a6300": [
+  "GetImagerStabilizationTime",
+  "SetImagerFrameSize",
+  "SetImagerMode"
+ ],
+ "get_imager_stabilization_time": {
+  "cadena": "0x43d9ce7f",
+  "texto": "GetImagerStabilizationTime Request Error",
+  "sitio_pic": {
+   "ldr": "0x43718d02",
+   "pool": "0x43718d14",
+   "valor_pool": "0x00684177",
+   "add": "0x43718d04"
+  },
+  "manejador": "0x43718cd8",
+  "que_hace": "suma los 'count' bytes de la tabla en base+3*indice+0x25a (count en +0x258) y devuelve (suma+2)&0xFF; si count==0 avisa 'Request Error' y devuelve 0",
+  "no_verificado": "que magnitud devuelve (el nombre viene de la tabla de API, no del codigo), que es la tabla de +0x25a y quien la escribe"
+ },
+ "canal_steadyshot_info": {
+  "modulo": "Mount_DividedInfo (5/3/5 en los tres firmware)",
+  "variante": "SteadyShotInfo 0/0/7 (solo A6300)",
+  "cadenas": [
+   {
+    "addr": "0x43da45b1",
+    "sitio": "0x4374eb60",
+    "texto": "[BL]STEADYSHOTINFO_COM_STATE is INIT in VSYNC at Mount_DividedInfo_SteadyShotInfo.cpp %d"
+   },
+   {
+    "addr": "0x43da460a",
+    "sitio": "0x4374ec40",
+    "texto": "[BL]MOUNT_ERR RECEIVE DATA error : %x in CallBack_SteadyShotInfo_Com_1st"
+   },
+   {
+    "addr": "0x43da4653",
+    "sitio": "0x4374ec5c",
+    "texto": "[BL]MOUNT_ERR CHECK RECEIVE DATA ERR CommandId[%d] in CallBack_SteadyShotInfo_Com_1st"
+   },
+   {
+    "addr": "0x43da46aa",
+    "sitio": "0x4374ecf2",
+    "texto": "[BL]MOUNT_ERR RECEIVE DATA SIZE error : %ld in CallBack_SteadyShotInfo_Com_2nd"
+   },
+   {
+    "addr": "0x43da46f9",
+    "sitio": "0x4374ed44",
+    "texto": "[BL]MOUNT_ERR in CallBack_SteadyShotInfo_Com_2nd : the receive data is ..."
+   },
+   {
+    "addr": "0x43da477b",
+    "sitio": "0x4374ed5e",
+    "texto": "[BL]MOUNT_ERR RECEIVE DATA error : %x in CallBack_SteadyShotInfo_Com_2nd"
+   },
+   {
+    "addr": "0x43da47c4",
+    "sitio": "0x4374ed6c",
+    "texto": "[BL]MOUNT_ERR RECEIVE DATA ERR CommandId[%d] in CallBack_SteadyShotInfo_Com_2nd"
+   }
+  ],
+  "que_es": "canal de informacion de estabilizacion del objetivo (SteadyShot) hacia el cuerpo, con dos callbacks (Com_1st y Com_2nd)"
+ },
+ "propiedades_steadyshot_liro_seq": [
+  "CheckSetFrameLockOnSteadyShot 0x43dc5494",
+  "CheckSetSteadyShotAdvancedStill 0x43dca7b7",
+  "CheckSetS1SteadyShotMode 0x43dca8b5",
+  "CheckSetSteadyShotAdvancedMovie 0x43dcabd7"
+ ],
+ "conclusiones": [
+  "la API del imager del A6300 tiene 7 entradas y las de la A6000/A7S solo 4: las 3 extra son GetImagerStabilizationTime, SetImagerFrameSize y SetImagerMode",
+  "GetImagerStabilizationTime esta VIVA en el A6300 (sitio 0x43718d04) y no existe en la A6000 ni en la A7S",
+  "SteadyShot es 0/0/11: el A6300 tiene un canal de informacion de estabilizacion del objetivo (SteadyShotInfo, 0/0/7) que la A6000 no tiene",
+  "el modulo Mount_DividedInfo que lo contiene EXISTE en los tres (5/3/5): lo exclusivo del A6300 es la variante SteadyShotInfo, no el driver de la montura",
+  "la clase Camera::Sync::SyncUtilityUpm con su metodo SetImagerMode(Camera::Imager::IMAGER_DRIVEMODE) y el tipo IMAGER_DRIVEMODE son 0/0/3 y 0/0/2: la A6000 no tiene esa clase de utilidad de sincronizacion del imager",
+  "la A6000 no carece de estabilizacion (tiene el subsistema IS/EIS de S164); lo que le falta es este canal y esta entrada de API",
+  "no cambia S51 (A=NO, B=NO, C=NO): son diferencias de firmware, no de hardware"
+ ],
+ "salvedad": "la comparacion mezcla version de firmware y modelo (A6300 es de otra generacion de plataforma LIRO/CXD)",
+ "efecto_en_S51": "ninguno: S51 sigue A=NO, B=NO, C=NO",
+ "nota_3_nombres_extra": "SetImagerMode aparece dentro de la firma C++ 'void Camera::Sync::SyncUtilityUpm::SetImagerMode(Camera::Imager::IMAGER_DRIVEMODE)' (0x43daf786); SetImagerFrameSize en la traza 'SetImagerFrameSize[%d]' (0x43daccdd); la clase Camera::Sync::SyncUtilityUpm (0/0/3) y el tipo Camera::Imager::IMAGER_DRIVEMODE (0/0/2) no existen en la A6000 ni en la A7S"
+}

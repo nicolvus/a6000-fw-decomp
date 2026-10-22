@@ -1,0 +1,83 @@
+{
+  "milestone": "S142",
+  "firmware_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "base": "0x43541000",
+  "direct_xref_semantics": [
+    "0x437b56b4 loads S and the following code clears 0x148 bytes.",
+    "0x437b59ce loads S, then its caller passes the u16 at S+0xda to 0x4383c638."
+  ],
+  "regions": [
+    {
+      "address": "0x437b56b2",
+      "file_offset": "0x2746b2",
+      "bytes_hex": "0021a0584ff4a47210f2a4e9",
+      "instructions": [
+        {
+          "address": "0x437b56b2",
+          "text": "movs r1, #0"
+        },
+        {
+          "address": "0x437b56b4",
+          "text": "ldr r0, [r4, r2]"
+        },
+        {
+          "address": "0x437b56b6",
+          "text": "mov.w r2, #0x148"
+        },
+        {
+          "address": "0x437b56ba",
+          "text": "blx #0x439c5a04"
+        }
+      ]
+    },
+    {
+      "address": "0x437b59ce",
+      "file_offset": "0x2749ce",
+      "bytes_hex": "e058",
+      "instructions": [
+        {
+          "address": "0x437b59ce",
+          "text": "ldr r0, [r4, r3]"
+        }
+      ]
+    },
+    {
+      "address": "0x43b08748",
+      "file_offset": "0x5c7748",
+      "bytes_hex": "b0f8da0033f574bf",
+      "instructions": [
+        {
+          "address": "0x43b08748",
+          "text": "ldrh.w r0, [r0, #0xda]"
+        },
+        {
+          "address": "0x43b0874c",
+          "text": "b.w #0x4383c638"
+        }
+      ]
+    },
+    {
+      "address": "0x4383c66e",
+      "file_offset": "0x2fb66e",
+      "bytes_hex": "a2f86c55",
+      "instructions": [
+        {
+          "address": "0x4383c66e",
+          "text": "strh.w r5, [r2, #0x56c]"
+        }
+      ]
+    },
+    {
+      "address": "0x4383c6aa",
+      "file_offset": "0x2fb6aa",
+      "bytes_hex": "a2f85c55",
+      "instructions": [
+        {
+          "address": "0x4383c6aa",
+          "text": "strh.w r5, [r2, #0x55c]"
+        }
+      ]
+    }
+  ],
+  "scope_limit": "Only the listed direct references and parameter flow are covered; aliases and pointer-parameter writers remain open."
+}

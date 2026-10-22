@@ -1,0 +1,327 @@
+{
+  "milestone": "S107",
+  "model": "A6000",
+  "firmware": "fw3.21",
+  "base_vaddr": "0x43541000",
+  "library": "Camera::CamCore",
+  "rtti_camera7camcore8rdcimagee": "0x43c906b6",
+  "rtti_camera7camcore13splitrdcimagee": "0x43cb0b94",
+  "count_strings": 37,
+  "vaddr_range": "0x43c905ca → 0x43cebcb2",
+  "resource_stack": {
+    "within_imaging_cap": true,
+    "strings": [
+      {
+        "vaddr": "0x43ca10d1",
+        "text": "[IMAGING_CAP]: ResourceStack)CamCore Release Error!: 0x%02x",
+        "related_to": "CamCore resource release"
+      },
+      {
+        "vaddr": "0x43ca110d",
+        "text": "[IMAGING_CAP]: ResourceStack)rcct_Release err RC: RC_ERR:0x%02x",
+        "related_to": "RC (Resource Control) release"
+      },
+      {
+        "vaddr": "0x43ca11c2",
+        "text": "[IMAGING_CAP]: ResourceStack)Dfe Release Error!: %02x",
+        "related_to": "DFE (Digital Front End) release"
+      },
+      {
+        "vaddr": "0x43ca120f",
+        "text": "[IMAGING_CAP]: ResStack) GetMemIndex Err handle:%x",
+        "related_to": "GetMemIndex error"
+      }
+    ]
+  },
+  "subsystems": {
+    "sgc": {
+      "description": "Sensor Gate Controller: flow type selection and SgcTable lookup",
+      "strings": [
+        {
+          "vaddr": "0x43c905ca",
+          "text": "[CAMCORE]: GetFlowType: No SgcTable. imgmode=%d, cammode=%d",
+          "xref_sites": ["0x436c22b8"],
+          "function": "0x436c227c",
+          "note": "GetFlowType no encuentra SgcTable para imgmode/cammode"
+        },
+        {
+          "vaddr": "0x43c909f7",
+          "text": "[CAMCORE]: No SgcTable. imgmode=%d, cammode=%d, hFlip=%u, vFlip=%u",
+          "xref_sites": ["0x436c4e4e"],
+          "function": "0x436c4e20",
+          "note": "Segunda variante de SgcTable ausente (incluye flips)"
+        }
+      ]
+    },
+    "rdc_pfr": {
+      "description": "RDC (Raw Data Converter) and PFR (Partial Fixed Point Range) processing",
+      "strings": [
+        {
+          "vaddr": "0x43c90846",
+          "text": "[CAMCORE]: [Error] Memory for PFR couldn't be freed. : unit_handle = %x",
+          "xref_sites": ["0x436c38b6"],
+          "function": "0x436c3890",
+          "note": "Liberación de memoria PFR fallida (unit_handle)"
+        },
+        {
+          "vaddr": "0x43c9088e",
+          "text": "[CAMCORE]: [Error] Memory for PFR couldn't be allocated.",
+          "xref_sites": ["0x436c39cc"],
+          "function": "0x436c38e4",
+          "note": "Reserva de memoria PFR fallida"
+        },
+        {
+          "vaddr": "0x43c90ca3",
+          "text": "[CAMCORE]: PFR in width[%d] > 596",
+          "xref_sites": ["0x436c5462"],
+          "function": "0x436c53d8",
+          "note": "PFR: ancho de entrada superior a 596"
+        },
+        {
+          "vaddr": "0x43c9073a",
+          "text": "[CAMCORE]: typeof(rawIn) must be RdcImage.",
+          "xref_sites": ["0x436c2bfc"],
+          "function": "0x436c2b48",
+          "note": "RdcImage: la entrada debe ser RdcImage"
+        },
+        {
+          "vaddr": "0x43c90765",
+          "text": "[CAMCORE]: Cannot read with skipping when 4bit RAW.",
+          "xref_sites": ["0x436c2c70"],
+          "function": "0x436c2b48",
+          "note": "RdcImage: no se puede leer con skipping en RAW de 4 bits"
+        },
+        {
+          "vaddr": "0x43c90799",
+          "text": "[CAMCORE]: typeof(rawOut) must be RdcImage.",
+          "xref_sites": ["0x436c2e42"],
+          "function": "0x436c2d4e",
+          "note": "RdcImage: la salida debe ser RdcImage"
+        },
+        {
+          "vaddr": "0x43c90bad",
+          "text": "[CAMCORE]: AIF%d RDC param error. encType[%d] lcut[%d] rcut[%d]",
+          "xref_sites": ["0x436c51f6"],
+          "function": "0x436c50dc",
+          "note": "AIF: parámetros RDC inválidos (encType/lcut/rcut)"
+        },
+        {
+          "vaddr": "0x43c90bed",
+          "text": "[CAMCORE]: AIF%d RDC none. encType[%d] lcut[%d] rcut[%d]",
+          "xref_sites": ["0x436c5222"],
+          "function": "0x436c50dc",
+          "note": "AIF: RDC desactivado (encType/lcut/rcut)"
+        }
+      ]
+    },
+    "aif": {
+      "description": "AIF (Arterial Image Framework) / DMA configuration for image processing",
+      "strings": [
+        {
+          "vaddr": "0x43c90a96",
+          "text": "[CAMCORE]: AIF%d out[%d] > memsize[%d]",
+          "xref_sites": ["0x436c4fdc"],
+          "function": "0x436c4f6c",
+          "note": "AIF: salida mayor que el tamaño de memoria"
+        },
+        {
+          "vaddr": "0x43c90abd",
+          "text": "[CAMCORE]: AIF%d pbl_aif_set_func error[%d] size[%d] dest[%d] iib[%d] addr[%08x]",
+          "xref_sites": ["0x436c516e"],
+          "function": "0x436c50dc",
+          "note": "AIF: error de pbl_aif_set_func con tamaño/destino/iib/addr"
+        },
+        {
+          "vaddr": "0x43c90bad",
+          "text": "[CAMCORE]: AIF%d RDC param error. encType[%d] lcut[%d] rcut[%d]",
+          "xref_sites": ["0x436c51f6"],
+          "function": "0x436c50dc",
+          "note": "AIF: parámetros RDC inválidos (encType/lcut/rcut)"
+        },
+        {
+          "vaddr": "0x43c90bed",
+          "text": "[CAMCORE]: AIF%d RDC none. encType[%d] lcut[%d] rcut[%d]",
+          "xref_sites": ["0x436c5222"],
+          "function": "0x436c50dc",
+          "note": "AIF: RDC desactivado (encType/lcut/rcut)"
+        },
+        {
+          "vaddr": "0x43c90b2a",
+          "text": "[CAMCORE]: AIF%d Extent count[%d] must be 1 or 2.",
+          "xref_sites": ["0x436c505e"],
+          "function": "0x436c4f6c",
+          "note": "AIF: el número de extents debe ser 1 o 2"
+        },
+        {
+          "vaddr": "0x43c90afa",
+          "text": "[CAMCORE]: AIF%d out[%d] memsize[%d] extent[%d]",
+          "xref_sites": ["0x436c5034"],
+          "function": "0x436c4f6c",
+          "note": "AIF: traza de memoria/extent calculados"
+        },
+        {
+          "vaddr": "0x43c90982",
+          "text": "[CAMCORE]: SplitEEController: Memory Close Error!(VATR)",
+          "xref_sites": ["0x436c45aa"],
+          "function": "0x436c4560",
+          "note": "SplitEEController: error al cerrar memoria (VATR)"
+        }
+      ]
+    },
+    "memory_resources": {
+      "description": "Memory pool management, ResourceBase acquire/release lifecycle",
+      "strings": [
+        {
+          "vaddr": "0x43c908e7",
+          "text": "[CAMCORE]: MemoryPool has no space.",
+          "xref_sites": [
+            "0x436c3e68", "0x436c3e14", "0x436c3f28", "0x436c3f60",
+            "0x436c3f98", "0x436c3fd0", "0x436c4008", "0x436c4040",
+            "0x436c4078", "0x436c40b0", "0x436c40e8", "0x436c4114"
+          ],
+          "note": "MemoryPool sin espacio (11 sitios de llamada)"
+        },
+        {
+          "vaddr": "0x43c90ec5",
+          "text": "[CAMCORE]: ResourceBase::Release was called without acquire. %08x",
+          "xref_sites": ["0x436c6b44"],
+          "function": "0x436c6b3c",
+          "note": "ResourceBase: Release sin acquire previo"
+        }
+      ]
+    },
+    "exlhelper": {
+      "description": "ExlHelper: CamMode/imager parameter conversion utilities",
+      "strings": [
+        {
+          "vaddr": "0x43c90f98",
+          "text": "[CAMCORE]: ExlHelper: Cannot convert CamMode[%d] to ExlMode.",
+          "xref_sites": [],
+          "note": "ExlHelper: CamMode sin conversión a ExlMode (sin xref PIC localizada)"
+        },
+        {
+          "vaddr": "0x43c90fd5",
+          "text": "[CAMCORE]: ExlHelper: Invalid imager_mode_aspect[%d]",
+          "xref_sites": [],
+          "note": "ExlHelper: imager_mode_aspect inválido (sin xref PIC localizada)"
+        },
+        {
+          "vaddr": "0x43c9100a",
+          "text": "[CAMCORE]: ExlHelper: Invalid imager_if_type[%d]",
+          "xref_sites": ["0x436c7d30", "0x436c7d58"],
+          "function": "0x436c7d08",
+          "note": "ExlHelper: imager_if_type inválido"
+        },
+        {
+          "vaddr": "0x43c9103b",
+          "text": "[CAMCORE]: ExlHelper: Invalid imager_physical_coding[%d]",
+          "xref_sites": ["0x436c7d6e"],
+          "function": "0x436c7d08",
+          "note": "ExlHelper: imager_physical_coding inválido"
+        },
+        {
+          "vaddr": "0x43c91074",
+          "text": "[CAMCORE]: ExlHelper: Invalid imager_aspect[%d]",
+          "xref_sites": ["0x436c7dd2"],
+          "function": "0x436c7d08",
+          "note": "ExlHelper: imager_aspect inválido"
+        }
+      ]
+    },
+    "dma_setter": {
+      "description": "DMA channel setter with error handling",
+      "strings": [
+        {
+          "vaddr": "0x43c910a4",
+          "text": "[CAMCORE]: [Setter] DMA Err open [%d]",
+          "xref_sites": ["0x436c9020"],
+          "function": "0x436c900c",
+          "note": "DMA Setter: error al abrir el canal"
+        },
+        {
+          "vaddr": "0x43c910ca",
+          "text": "[CAMCORE]: [Setter] DMAC_CH_NONE",
+          "xref_sites": ["0x436c9066"],
+          "function": "0x436c9050",
+          "note": "DMA Setter: DMAC_CH_NONE"
+        },
+        {
+          "vaddr": "0x43c910eb",
+          "text": "[CAMCORE]: [Setter] listCount = %d",
+          "xref_sites": ["0x436c9082"],
+          "function": "0x436c9050",
+          "note": "DMA Setter: traza de listCount"
+        },
+        {
+          "vaddr": "0x43c9110e",
+          "text": "[CAMCORE]: [Setter] DMA Err status [%d]",
+          "xref_sites": ["0x436c9146"],
+          "function": "0x436c9050",
+          "note": "DMA Setter: error de estado"
+        },
+        {
+          "vaddr": "0x43c91136",
+          "text": "[CAMCORE]: [Setter] DMA Err set_func [%d]",
+          "xref_sites": ["0x436c917e"],
+          "function": "0x436c9050",
+          "note": "DMA Setter: error en set_func"
+        },
+        {
+          "vaddr": "0x43c91160",
+          "text": "[CAMCORE]: [Setter] DMA Err start [%d]",
+          "xref_sites": ["0x436c91bc"],
+          "function": "0x436c9050",
+          "note": "DMA Setter: error al arrancar"
+        }
+      ]
+    },
+    "powersave": {
+      "description": "Power saving / monitor control",
+      "strings": [
+        {
+          "vaddr": "0x43c90f07",
+          "text": "[CAMCORE]: MonPowersave[%d] is already Enabled !",
+          "xref_sites": ["0x436c7450"],
+          "function": "0x436c723c",
+          "note": "MonPowersave ya estaba habilitado"
+        }
+      ]
+    },
+    "defect_correction": {
+      "description": "Sensor defect pixel correction",
+      "strings": [
+        {
+          "vaddr": "0x43cebcb2",
+          "text": "[CAMCORE]: Acl::CAMHEAD_Z1C::setDefectPt return err.",
+          "xref_sites": ["0x439cd7f6"],
+          "function": "0x439cd794",
+          "note": "setDefectPt de CAMHEAD_Z1C devuelve error"
+        },
+        {
+          "vaddr": "0x43cebc93",
+          "text": "!/6;>?[CAMCORE]: loadDefectPos",
+          "xref_sites": [],
+          "note": "loadDefectPos (cadena precedida de bytes binarios; sin xref PIC localizada)"
+        }
+      ]
+    }
+  },
+  "related_libraries": {
+    "imcore": "Camera::CamCore es la librería núcleo; el prefijo [CAMCORE] es exclusivo de A6000 fw3.21",
+    "imaging_cap": "El bloque [IMAGING_CAP] (S106) referencia ResourceStack y gestiona la adquisición/liberación de recursos CamCore durante la captura still",
+    "sa_api": "S84 catalogó 19 familias sa_func_* que interactúan con CamCore para DUALREC, BAYER, DMM y otras operaciones",
+    "dfe": "DFE (Digital Front End) gestionado a través de ResourceStack; strings `ResourceStack)Dfe Release Error!` y `CapMgr) Error! UseRaw_DualRec`",
+    "a7s_fw320": "0 cadenas con prefijo [CAMCORE]; las mismas funcionalidades existen pero sin etiqueta de módulo (A7S fw3.20)"
+  },
+  "differential_a7s": {
+    "a6000_fw321": "37 cadenas con prefijo [CAMCORE], rango 0x43c905ca → 0x43cebcb2",
+    "a7s_fw320": "0 cadenas con prefijo [CAMCORE]; mensajes idénticos sin etiqueta de módulo",
+    "observation": "A7S fw3.20 no tiene el prefijo [CAMCORE]; el firmware A6000 fw3.21 añadió la etiqueta de instrumentación a subsistemas existentes"
+  },
+  "no_verificado_abierto": [
+    "La semántica exacta de SGC (Sensor Gate Controller): NO_VERIFICADO más allá del nombre y las cadenas de fallo de SgcTable",
+    "El formato binario interno de los recursos de la ResourceStack ( estructura de nodos, contadores RC/DFE )",
+    "La relación completa entre ExlHelper y las 37 cadenas CAMCORE (3 strings sin xref PIC localizada)",
+    "El significado de `!/6;>?[CAMCORE]: loadDefectPos` (precedida de bytes binarios sin interpretar)"
+  ]
+}

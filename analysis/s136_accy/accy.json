@@ -1,0 +1,3005 @@
+{
+ "module": "[ACCY]",
+ "model": "A6000 fw3.21",
+ "binary": "analysis/rea-independent/input/av-cam.bin",
+ "vaddr_base": "0x43541000",
+ "xref_rule": "estricta (analysis/s106_imaging_cap/scan_pic_refs_strict.py)",
+ "counters": {
+  "n_strings": 106,
+  "n_referenced": 106,
+  "n_sites": 111,
+  "n_functions": 61,
+  "n_subblocks": 15,
+  "n_classes_rtti": 9,
+  "token_in_a7s": 0,
+  "token_in_a6300": 0
+ },
+ "string_range": [
+  "0x43c24cac",
+  "0x43c26319"
+ ],
+ "code_range": {
+  "trace_core": [
+   "0x43562a08",
+   "0x43566f20"
+  ],
+  "module_helpers": [
+   "0x4356288c",
+   "0x43567060"
+  ],
+  "api_wrapper": [
+   "0x43a3ab00",
+   "0x43a3b300"
+  ]
+ },
+ "subblocks": [
+  {
+   "sub": "HW",
+   "n_strings": 1,
+   "string_range": [
+    "0x43c24cac",
+    "0x43c24cac"
+   ],
+   "n_sites": 1,
+   "site_range": [
+    "0x43562a8c",
+    "0x43562a8c"
+   ],
+   "n_functions": 1,
+   "functions": [
+    "0x43562a08"
+   ],
+   "levels": [
+    "INFO"
+   ]
+  },
+  {
+   "sub": "Main",
+   "n_strings": 9,
+   "string_range": [
+    "0x43c24cca",
+    "0x43c24ee5"
+   ],
+   "n_sites": 9,
+   "site_range": [
+    "0x43562dbc",
+    "0x4356338c"
+   ],
+   "n_functions": 9,
+   "functions": [
+    "0x43562db0",
+    "0x43562e22",
+    "0x43562e54",
+    "0x43563004",
+    "0x435630ac",
+    "0x43563138",
+    "0x435631d2",
+    "0x43563310",
+    "0x43563360"
+   ],
+   "levels": [
+    "DEBUG",
+    "INFO"
+   ]
+  },
+  {
+   "sub": "MAIN",
+   "n_strings": 4,
+   "string_range": [
+    "0x43c24d41",
+    "0x43c24de9"
+   ],
+   "n_sites": 8,
+   "site_range": [
+    "0x43562ec4",
+    "0x43563652"
+   ],
+   "n_functions": 7,
+   "functions": [
+    "0x43562ea4",
+    "0x43562f34",
+    "0x43562f90",
+    "0x43563004",
+    "0x435630ac",
+    "0x43563174",
+    "0x43563360"
+   ],
+   "levels": [
+    "ERR",
+    "INFO"
+   ]
+  },
+  {
+   "sub": "SENSER",
+   "n_strings": 3,
+   "string_range": [
+    "0x43c24f10",
+    "0x43c24f5f"
+   ],
+   "n_sites": 3,
+   "site_range": [
+    "0x43563902",
+    "0x435639b6"
+   ],
+   "n_functions": 1,
+   "functions": [
+    "0x435638ee"
+   ],
+   "levels": [
+    "DEBUG",
+    "ERR"
+   ]
+  },
+  {
+   "sub": "UART",
+   "n_strings": 13,
+   "string_range": [
+    "0x43c24f88",
+    "0x43c251a8"
+   ],
+   "n_sites": 13,
+   "site_range": [
+    "0x43563bb0",
+    "0x43564038"
+   ],
+   "n_functions": 5,
+   "functions": [
+    "0x43563a94",
+    "0x43563bf8",
+    "0x43563de8",
+    "0x43563ef4",
+    "0x43564024"
+   ],
+   "levels": [
+    "ERR",
+    "INFO",
+    "WARN"
+   ]
+  },
+  {
+   "sub": "UTILITY",
+   "n_strings": 2,
+   "string_range": [
+    "0x43c251d1",
+    "0x43c25204"
+   ],
+   "n_sites": 2,
+   "site_range": [
+    "0x435641dc",
+    "0x4356421a"
+   ],
+   "n_functions": 2,
+   "functions": [
+    "0x435641b6",
+    "0x435641ec"
+   ],
+   "levels": [
+    "ERR"
+   ]
+  },
+  {
+   "sub": "FACTORY",
+   "n_strings": 7,
+   "string_range": [
+    "0x43c25237",
+    "0x43c2533d"
+   ],
+   "n_sites": 7,
+   "site_range": [
+    "0x435646d2",
+    "0x4356483a"
+   ],
+   "n_functions": 2,
+   "functions": [
+    "0x435646a4",
+    "0x435647c0"
+   ],
+   "levels": [
+    "DEBUG"
+   ]
+  },
+  {
+   "sub": "HOUSING",
+   "n_strings": 5,
+   "string_range": [
+    "0x43c25380",
+    "0x43c2543c"
+   ],
+   "n_sites": 5,
+   "site_range": [
+    "0x43564ac4",
+    "0x435651a0"
+   ],
+   "n_functions": 5,
+   "functions": [
+    "0x43564ab4",
+    "0x43564c0c",
+    "0x43564ca4",
+    "0x43564d98",
+    "0x43565188"
+   ],
+   "levels": [
+    "INFO"
+   ]
+  },
+  {
+   "sub": "AVOUT",
+   "n_strings": 2,
+   "string_range": [
+    "0x43c2549e",
+    "0x43c254c6"
+   ],
+   "n_sites": 2,
+   "site_range": [
+    "0x43565514",
+    "0x43565558"
+   ],
+   "n_functions": 2,
+   "functions": [
+    "0x43565508",
+    "0x4356554c"
+   ],
+   "levels": [
+    "DEBUG"
+   ]
+  },
+  {
+   "sub": "AVR",
+   "n_strings": 2,
+   "string_range": [
+    "0x43c25502",
+    "0x43c25528"
+   ],
+   "n_sites": 2,
+   "site_range": [
+    "0x4356568c",
+    "0x435656e0"
+   ],
+   "n_functions": 2,
+   "functions": [
+    "0x43565680",
+    "0x435656d4"
+   ],
+   "levels": [
+    "DEBUG"
+   ]
+  },
+  {
+   "sub": "BASE",
+   "n_strings": 7,
+   "string_range": [
+    "0x43c25560",
+    "0x43c256c1"
+   ],
+   "n_sites": 7,
+   "site_range": [
+    "0x4356583c",
+    "0x4356594e"
+   ],
+   "n_functions": 2,
+   "functions": [
+    "0x43565814",
+    "0x435658dc"
+   ],
+   "levels": [
+    "DEBUG",
+    "ERR"
+   ]
+  },
+  {
+   "sub": "HELLO",
+   "n_strings": 16,
+   "string_range": [
+    "0x43c2570d",
+    "0x43c25a7b"
+   ],
+   "n_sites": 16,
+   "site_range": [
+    "0x43565b2c",
+    "0x43565ecc"
+   ],
+   "n_functions": 7,
+   "functions": [
+    "0x43565b14",
+    "0x43565b84",
+    "0x43565ba4",
+    "0x43565be0",
+    "0x43565ce4",
+    "0x43565d90",
+    "0x43565eb8"
+   ],
+   "levels": [
+    "DEBUG",
+    "ERR",
+    "INFO",
+    "WARN"
+   ]
+  },
+  {
+   "sub": "JIRO",
+   "n_strings": 2,
+   "string_range": [
+    "0x43c25aac",
+    "0x43c25ad3"
+   ],
+   "n_sites": 2,
+   "site_range": [
+    "0x43565fdc",
+    "0x43566024"
+   ],
+   "n_functions": 2,
+   "functions": [
+    "0x43565fd0",
+    "0x43566018"
+   ],
+   "levels": [
+    "DEBUG"
+   ]
+  },
+  {
+   "sub": "NULL",
+   "n_strings": 1,
+   "string_range": [
+    "0x43c25b20",
+    "0x43c25b20"
+   ],
+   "n_sites": 1,
+   "site_range": [
+    "0x4356615c",
+    "0x4356615c"
+   ],
+   "n_functions": 1,
+   "functions": [
+    "0x43566150"
+   ],
+   "levels": [
+    "DEBUG"
+   ]
+  },
+  {
+   "sub": "REMOTE",
+   "n_strings": 32,
+   "string_range": [
+    "0x43c25b47",
+    "0x43c26319"
+   ],
+   "n_sites": 33,
+   "site_range": [
+    "0x435662b2",
+    "0x43566ed0"
+   ],
+   "n_functions": 16,
+   "functions": [
+    "0x43566290",
+    "0x435663b8",
+    "0x435664d0",
+    "0x43566558",
+    "0x43566580",
+    "0x435665f8",
+    "0x435668b4",
+    "0x4356692c",
+    "0x43566998",
+    "0x43566a54",
+    "0x43566b2c",
+    "0x43566b54",
+    "0x43566d44",
+    "0x43566d8c",
+    "0x43566e5c",
+    "0x43566ec0"
+   ],
+   "levels": [
+    "DEBUG",
+    "ERR",
+    "INFO",
+    "WARN"
+   ]
+  }
+ ],
+ "strings": [
+  {
+   "vaddr": "0x43c24cac",
+   "text": "[ACCY][INFO][HW]:AD=%d, ID=%d",
+   "n_sites": 1,
+   "sites": [
+    "0x43562a8c"
+   ],
+   "functions": [
+    "0x43562a08"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c24cca",
+   "text": "[ACCY][DEBUG][Main] NotifyAttachedUart(%08X)",
+   "n_sites": 1,
+   "sites": [
+    "0x43562dbc"
+   ],
+   "functions": [
+    "0x43562db0"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c24cf7",
+   "text": "[ACCY][DEBUG][Main] NotifyAttached(%d)",
+   "n_sites": 1,
+   "sites": [
+    "0x43562e24"
+   ],
+   "functions": [
+    "0x43562e22"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c24d1e",
+   "text": "[ACCY][DEBUG][Main] NotifyDetached",
+   "n_sites": 1,
+   "sites": [
+    "0x43562e60"
+   ],
+   "functions": [
+    "0x43562e54"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c24d41",
+   "text": "[ACCY][INFO][MAIN] NotifyUartCommand[%c%c%c...]",
+   "n_sites": 1,
+   "sites": [
+    "0x43562ec4"
+   ],
+   "functions": [
+    "0x43562ea4"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c24d71",
+   "text": "[ACCY][ERR][MAIN]:%d:Uart Send Err",
+   "n_sites": 2,
+   "sites": [
+    "0x43562f00",
+    "0x43562fd8"
+   ],
+   "functions": [
+    "0x43562ea4",
+    "0x43562f90"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c24d94",
+   "text": "[ACCY][INFO][MAIN] NotifyUartResponse[%c%c%c...]",
+   "n_sites": 1,
+   "sites": [
+    "0x43562f56"
+   ],
+   "functions": [
+    "0x43562f34"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c24dc5",
+   "text": "[ACCY][INFO][Main] NotifyApi (%02X)",
+   "n_sites": 1,
+   "sites": [
+    "0x43563020"
+   ],
+   "functions": [
+    "0x43563004"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c24de9",
+   "text": "[ACCY][ERR][MAIN]:%d:Uart Send Err:%08X",
+   "n_sites": 4,
+   "sites": [
+    "0x43563062",
+    "0x43563116",
+    "0x435631b2",
+    "0x43563652"
+   ],
+   "functions": [
+    "0x43563004",
+    "0x435630ac",
+    "0x43563174",
+    "0x43563360"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c24e11",
+   "text": "[ACCY][DEBUG][Main] NotifyUartLoopBackTest (%c%c%c%c%c)",
+   "n_sites": 1,
+   "sites": [
+    "0x435630ea"
+   ],
+   "functions": [
+    "0x435630ac"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c24e49",
+   "text": "[ACCY][DEBUG][Main] NotifyUartLoopBackReply (%c%c%c%c%c)",
+   "n_sites": 1,
+   "sites": [
+    "0x4356315a"
+   ],
+   "functions": [
+    "0x43563138"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c24e82",
+   "text": "[ACCY][DEBUG][Main] Resume Sus-Attached %d, %03X",
+   "n_sites": 1,
+   "sites": [
+    "0x435631e4"
+   ],
+   "functions": [
+    "0x435631d2"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c24eb3",
+   "text": "[ACCY][DEBUG][Main] Suspend Sus-Attached %d, %03X",
+   "n_sites": 1,
+   "sites": [
+    "0x43563324"
+   ],
+   "functions": [
+    "0x43563310"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c24ee5",
+   "text": "[ACCY][DEBUG][Main] **** UMMAIN START ****",
+   "n_sites": 1,
+   "sites": [
+    "0x4356338c"
+   ],
+   "functions": [
+    "0x43563360"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c24f10",
+   "text": "[ACCY][ERR][SENSER] unknown block %04X",
+   "n_sites": 1,
+   "sites": [
+    "0x43563902"
+   ],
+   "functions": [
+    "0x435638ee"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c24f37",
+   "text": "[ACCY][DEBUG][SENSER] Cmd %04X, S1 %02X",
+   "n_sites": 1,
+   "sites": [
+    "0x43563926"
+   ],
+   "functions": [
+    "0x435638ee"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c24f5f",
+   "text": "[ACCY][ERR][SENSER] unknown command %04X",
+   "n_sites": 1,
+   "sites": [
+    "0x435639b6"
+   ],
+   "functions": [
+    "0x435638ee"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c24f88",
+   "text": "[ACCY][INFO][UART]:%d:RECIVE DATA %s",
+   "n_sites": 1,
+   "sites": [
+    "0x43563bb0"
+   ],
+   "functions": [
+    "0x43563a94"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c24fad",
+   "text": "[ACCY][INFO][UART]:%d:AccyUartOpen Ch:%d",
+   "n_sites": 1,
+   "sites": [
+    "0x43563c0e"
+   ],
+   "functions": [
+    "0x43563bf8"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c24fd6",
+   "text": "[ACCY][WARN][UART]:%d:CH:%d UART Open Err:%02X",
+   "n_sites": 1,
+   "sites": [
+    "0x43563cbe"
+   ],
+   "functions": [
+    "0x43563bf8"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25005",
+   "text": "[ACCY][WARN][UART]:%d:CH:%d UART Set Func Err:%02X",
+   "n_sites": 1,
+   "sites": [
+    "0x43563cf8"
+   ],
+   "functions": [
+    "0x43563bf8"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25038",
+   "text": "[ACCY][WARN][UART]:%d:CH:%d UART Rx Start Err:%02X",
+   "n_sites": 1,
+   "sites": [
+    "0x43563d26"
+   ],
+   "functions": [
+    "0x43563bf8"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c2506b",
+   "text": "[ACCY][WARN][UART]:%d:CH:%d UART Tx Start Err:%02X",
+   "n_sites": 1,
+   "sites": [
+    "0x43563d5a"
+   ],
+   "functions": [
+    "0x43563bf8"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c2509e",
+   "text": "[ACCY][INFO][UART]:%d:AccyUartClose Ch:%d",
+   "n_sites": 1,
+   "sites": [
+    "0x43563e00"
+   ],
+   "functions": [
+    "0x43563de8"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c250c8",
+   "text": "[ACCY][WARN][UART]:%d:CH:%d UART Tx Stop Err:%02X",
+   "n_sites": 1,
+   "sites": [
+    "0x43563e34"
+   ],
+   "functions": [
+    "0x43563de8"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c250fa",
+   "text": "[ACCY][WARN][UART]:%d:CH:%d UART Rx Stop Err:%02X",
+   "n_sites": 1,
+   "sites": [
+    "0x43563e5e"
+   ],
+   "functions": [
+    "0x43563de8"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c2512c",
+   "text": "[ACCY][WARN][UART]:%d:AccyUartSend UART FULL",
+   "n_sites": 1,
+   "sites": [
+    "0x43563f22"
+   ],
+   "functions": [
+    "0x43563ef4"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25159",
+   "text": "[ACCY][ERR][UART]:%d:AccyUartSend Size = %d",
+   "n_sites": 1,
+   "sites": [
+    "0x43563f3e"
+   ],
+   "functions": [
+    "0x43563ef4"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25185",
+   "text": "[ACCY][INFO][UART]:%d:SEND DATA %s",
+   "n_sites": 1,
+   "sites": [
+    "0x43563fa4"
+   ],
+   "functions": [
+    "0x43563ef4"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c251a8",
+   "text": "[ACCY][ERR][UART]:%d:IntAccyUartErr = %d",
+   "n_sites": 1,
+   "sites": [
+    "0x43564038"
+   ],
+   "functions": [
+    "0x43564024"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c251d1",
+   "text": "[ACCY][ERR][UTILITY]:%d:ConvNum8ToAscii num = %08X",
+   "n_sites": 1,
+   "sites": [
+    "0x435641dc"
+   ],
+   "functions": [
+    "0x435641b6"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25204",
+   "text": "[ACCY][ERR][UTILITY]:%d:ConvAsciiToNum8 ascii:%08X",
+   "n_sites": 1,
+   "sites": [
+    "0x4356421a"
+   ],
+   "functions": [
+    "0x435641ec"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25237",
+   "text": "[ACCY][DEBUG][FACTORY]:%d:HELLO Attached",
+   "n_sites": 1,
+   "sites": [
+    "0x435646d2"
+   ],
+   "functions": [
+    "0x435646a4"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25260",
+   "text": "[ACCY][DEBUG][FACTORY]:%d:AvOut Attached",
+   "n_sites": 1,
+   "sites": [
+    "0x435646fc"
+   ],
+   "functions": [
+    "0x435646a4"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25289",
+   "text": "[ACCY][DEBUG][FACTORY]:%d:JIRO1.5 Attached",
+   "n_sites": 1,
+   "sites": [
+    "0x4356472a"
+   ],
+   "functions": [
+    "0x435646a4"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c252b4",
+   "text": "[ACCY][DEBUG][FACTORY]:%d:LANC-AVR Attached",
+   "n_sites": 1,
+   "sites": [
+    "0x43564758"
+   ],
+   "functions": [
+    "0x435646a4"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c252e0",
+   "text": "[ACCY][DEBUG][FACTORY]:%d:UNSUPPORTED(%d) Attached",
+   "n_sites": 1,
+   "sites": [
+    "0x43564778"
+   ],
+   "functions": [
+    "0x435646a4"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25313",
+   "text": "[ACCY][DEBUG][FACTORY]:%d:Remote Attached",
+   "n_sites": 1,
+   "sites": [
+    "0x4356480e"
+   ],
+   "functions": [
+    "0x435647c0"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c2533d",
+   "text": "[ACCY][DEBUG][FACTORY]:%d:WaterHousing Attached",
+   "n_sites": 1,
+   "sites": [
+    "0x4356483a"
+   ],
+   "functions": [
+    "0x435647c0"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25380",
+   "text": "[ACCY][INFO][HOUSING]:%d:NotifyAttached",
+   "n_sites": 1,
+   "sites": [
+    "0x43564ac4"
+   ],
+   "functions": [
+    "0x43564ab4"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c253a8",
+   "text": "[ACCY][INFO][HOUSING]:%d:NotifyContinuousAttached",
+   "n_sites": 1,
+   "sites": [
+    "0x43564c22"
+   ],
+   "functions": [
+    "0x43564c0c"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c253da",
+   "text": "[ACCY][INFO][HOUSING]:%d:RestoreInfo...Savedata:%02X %02X",
+   "n_sites": 1,
+   "sites": [
+    "0x43564cc0"
+   ],
+   "functions": [
+    "0x43564ca4"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25414",
+   "text": "[ACCY][INFO][HOUSING]:%d:NotifyDetached",
+   "n_sites": 1,
+   "sites": [
+    "0x43564daa"
+   ],
+   "functions": [
+    "0x43564d98"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c2543c",
+   "text": "[ACCY][INFO][HOUSING]:%d:NotifyUartTimedOut... %d",
+   "n_sites": 1,
+   "sites": [
+    "0x435651a0"
+   ],
+   "functions": [
+    "0x43565188"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c2549e",
+   "text": "[ACCY][DEBUG][AVOUT] NotifyDetached(%d)",
+   "n_sites": 1,
+   "sites": [
+    "0x43565514"
+   ],
+   "functions": [
+    "0x43565508"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c254c6",
+   "text": "[ACCY][DEBUG][AVOUT] NotifyAttached(%d)",
+   "n_sites": 1,
+   "sites": [
+    "0x43565558"
+   ],
+   "functions": [
+    "0x4356554c"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25502",
+   "text": "[ACCY][DEBUG][AVR] NotifyDetached(%d)",
+   "n_sites": 1,
+   "sites": [
+    "0x4356568c"
+   ],
+   "functions": [
+    "0x43565680"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25528",
+   "text": "[ACCY][DEBUG][AVR] NotifyAttached(%d)",
+   "n_sites": 1,
+   "sites": [
+    "0x435656e0"
+   ],
+   "functions": [
+    "0x435656d4"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25560",
+   "text": "[ACCY][ERR][BASE]:%d:NotifyInput...valloc err:%08X",
+   "n_sites": 1,
+   "sites": [
+    "0x4356583c"
+   ],
+   "functions": [
+    "0x43565814"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25593",
+   "text": "[ACCY][DEBUG][BASE]:%d:NotifyInput...KeyCode:%08X, State:%d, INFO:%d",
+   "n_sites": 1,
+   "sites": [
+    "0x43565860"
+   ],
+   "functions": [
+    "0x43565814"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c255d8",
+   "text": "[ACCY][ERR][BASE]:%d:NotifyInput...Send_Msg end err:%08X",
+   "n_sites": 1,
+   "sites": [
+    "0x43565880"
+   ],
+   "functions": [
+    "0x43565814"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25611",
+   "text": "[ACCY][ERR][BASE]:%d:NotifyInput...Send_Msg free err:%08X",
+   "n_sites": 1,
+   "sites": [
+    "0x435658a8"
+   ],
+   "functions": [
+    "0x43565814"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c2564b",
+   "text": "[ACCY][ERR][BASE]:%d:NotifyDial...valloc err:%08X",
+   "n_sites": 1,
+   "sites": [
+    "0x43565902"
+   ],
+   "functions": [
+    "0x435658dc"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c2567d",
+   "text": "[ACCY][DEBUG][BASE]:%d:NotifyDial...KeyCode:%08X, State:%d, INFO:%d",
+   "n_sites": 1,
+   "sites": [
+    "0x43565924"
+   ],
+   "functions": [
+    "0x435658dc"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c256c1",
+   "text": "[ACCY][ERR][BASE]:%d:NotifyDial...Send_Msg end err:%08X",
+   "n_sites": 1,
+   "sites": [
+    "0x4356594e"
+   ],
+   "functions": [
+    "0x435658dc"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c2570d",
+   "text": "[ACCY][INFO][HELLO]:%d:RetrySendCmd...retry_up:%d",
+   "n_sites": 1,
+   "sites": [
+    "0x43565b2c"
+   ],
+   "functions": [
+    "0x43565b14"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c2573f",
+   "text": "[ACCY][ERR][HELLO]%d:Retry SendCmd Buffer Err",
+   "n_sites": 1,
+   "sites": [
+    "0x43565b42"
+   ],
+   "functions": [
+    "0x43565b14"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c2576d",
+   "text": "[ACCY][INFO][HELLO]:%d:State Change To %d",
+   "n_sites": 1,
+   "sites": [
+    "0x43565b98"
+   ],
+   "functions": [
+    "0x43565b84"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25797",
+   "text": "[ACCY][INFO][HELLO]:%d:NotifyDetached...State:%d",
+   "n_sites": 1,
+   "sites": [
+    "0x43565bb6"
+   ],
+   "functions": [
+    "0x43565ba4"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c257c8",
+   "text": "[ACCY][INFO][HELLO]:%d:SendCmd...CMD:%c%c%c%c%c Retry:%d",
+   "n_sites": 1,
+   "sites": [
+    "0x43565c10"
+   ],
+   "functions": [
+    "0x43565be0"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25801",
+   "text": "[ACCY][ERR][HELLO]:%d:SendCmd Buffer Busy Request CMD:%S",
+   "n_sites": 1,
+   "sites": [
+    "0x43565c36"
+   ],
+   "functions": [
+    "0x43565be0"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c2583a",
+   "text": "[ACCY][INFO][HELLO]:%d:NotifyUartTimedOut...RetryCount:%d",
+   "n_sites": 1,
+   "sites": [
+    "0x43565cfa"
+   ],
+   "functions": [
+    "0x43565ce4"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25874",
+   "text": "[ACCY][ERR][HELLO]:%d:HELLO Command Not Execution",
+   "n_sites": 1,
+   "sites": [
+    "0x43565d0e"
+   ],
+   "functions": [
+    "0x43565ce4"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c258a6",
+   "text": "[ACCY][WARN][HELLO]:%d:EventTimeout AISATSU Retryout Count:%d",
+   "n_sites": 1,
+   "sites": [
+    "0x43565d4a"
+   ],
+   "functions": [
+    "0x43565ce4"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c258e4",
+   "text": "[ACCY][INFO][HELLO]:%d:NotifyUartResponse...State:%02X Date:[%02X %02X %02X %02X %02X %02X %02X]",
+   "n_sites": 1,
+   "sites": [
+    "0x43565dc6"
+   ],
+   "functions": [
+    "0x43565d90"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25945",
+   "text": "[ACCY][DEBUG][HELLO]:%d:NotifyUartResponse AISATSU Complete...State:%d",
+   "n_sites": 1,
+   "sites": [
+    "0x43565e20"
+   ],
+   "functions": [
+    "0x43565d90"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c2598c",
+   "text": "[ACCY][INFO][HELLO]:CateId = %08X",
+   "n_sites": 1,
+   "sites": [
+    "0x43565e30"
+   ],
+   "functions": [
+    "0x43565d90"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c259ae",
+   "text": "[ACCY][INFO][HELLO]:%d:NotifyUartResponse...Unmatch State:%d",
+   "n_sites": 1,
+   "sites": [
+    "0x43565e60"
+   ],
+   "functions": [
+    "0x43565d90"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c259eb",
+   "text": "[ACCY][WARN][HELLO]:%d:NotifyUartResponse...Unmatch Response:%02X",
+   "n_sites": 1,
+   "sites": [
+    "0x43565e7a"
+   ],
+   "functions": [
+    "0x43565d90"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25a2d",
+   "text": "[ACCY][WARN][HELLO]:%d:NotifyUartResponse...Unmatch Not Support Category:%02X",
+   "n_sites": 1,
+   "sites": [
+    "0x43565e8c"
+   ],
+   "functions": [
+    "0x43565d90"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25a7b",
+   "text": "[ACCY][INFO][HELLO]:%d:NotifyAttached...State:%d",
+   "n_sites": 1,
+   "sites": [
+    "0x43565ecc"
+   ],
+   "functions": [
+    "0x43565eb8"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25aac",
+   "text": "[ACCY][DEBUG][JIRO] NotifyDetached(%d)",
+   "n_sites": 1,
+   "sites": [
+    "0x43565fdc"
+   ],
+   "functions": [
+    "0x43565fd0"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25ad3",
+   "text": "[ACCY][DEBUG][JIRO] NotifyAttached(%d)",
+   "n_sites": 1,
+   "sites": [
+    "0x43566024"
+   ],
+   "functions": [
+    "0x43566018"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25b20",
+   "text": "[ACCY][DEBUG][NULL] NotifyAttached(%d)",
+   "n_sites": 1,
+   "sites": [
+    "0x4356615c"
+   ],
+   "functions": [
+    "0x43566150"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25b47",
+   "text": "[ACCY][INFO][REMOTE]:%d:NotifyUartCommand...UART CMD:%C%C%C%C%C%C [%02X %02X %02X %02X %02X %02X]",
+   "n_sites": 1,
+   "sites": [
+    "0x435662b2"
+   ],
+   "functions": [
+    "0x43566290"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25ba9",
+   "text": "[ACCY][WARN][REMOTE]:%d:RecvCmd Unknown Category:%02X",
+   "n_sites": 1,
+   "sites": [
+    "0x4356637c"
+   ],
+   "functions": [
+    "0x43566290"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25bdf",
+   "text": "[ACCY][WARN][REMOTE]:%d:EventKey Catwgory:%02X ,Data1:%02X, Data2:%02X",
+   "n_sites": 1,
+   "sites": [
+    "0x43566392"
+   ],
+   "functions": [
+    "0x43566290"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25c26",
+   "text": "[ACCY][INFO][REMOTE]:%d:RetrySendCmd...retry_up:%d",
+   "n_sites": 1,
+   "sites": [
+    "0x435663d0"
+   ],
+   "functions": [
+    "0x435663b8"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25c59",
+   "text": "[ACCY][ERR][REMOTE]:%d:RetrySendCmd Buffer err",
+   "n_sites": 1,
+   "sites": [
+    "0x435663e6"
+   ],
+   "functions": [
+    "0x435663b8"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25c88",
+   "text": "[ACCY][INFO][REMOTE]:%d:SaveInfo...GF:%d SS:%d Freeze:%d Photo:%d Zoom:%d Tally:%d",
+   "n_sites": 1,
+   "sites": [
+    "0x4356650a"
+   ],
+   "functions": [
+    "0x435664d0"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25cdb",
+   "text": "[ACCY][DEBUG][REMOTE]:%d:Zoom State Change To %d Speed:%d",
+   "n_sites": 1,
+   "sites": [
+    "0x4356656e"
+   ],
+   "functions": [
+    "0x43566558"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25d15",
+   "text": "[ACCY][INFO][REMOTE]:%d:RestoreInfo...Savedata:%02X %02X",
+   "n_sites": 1,
+   "sites": [
+    "0x4356659e"
+   ],
+   "functions": [
+    "0x43566580"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25d4e",
+   "text": "[ACCY][INFO][REMOTE]:%d:ExecUartCommand",
+   "n_sites": 1,
+   "sites": [
+    "0x43566612"
+   ],
+   "functions": [
+    "0x435665f8"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25d76",
+   "text": "[ACCY][INFO][REMOTE]:%d:To Input KEY:%08X STATE:%08X INFO:%08X",
+   "n_sites": 1,
+   "sites": [
+    "0x435667ac"
+   ],
+   "functions": [
+    "0x435665f8"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25db5",
+   "text": "[ACCY][INFO][REMOTE]:%d:SendCmd...CMD:%S retry:%d",
+   "n_sites": 1,
+   "sites": [
+    "0x435668d0"
+   ],
+   "functions": [
+    "0x435668b4"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25de7",
+   "text": "[ACCY][ERR][REMOTE]:%d:SendCmd Buffer Busy Request CMD:%S",
+   "n_sites": 1,
+   "sites": [
+    "0x435668f8"
+   ],
+   "functions": [
+    "0x435668b4"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25e21",
+   "text": "[ACCY][INFO][REMOTE]:%d:TallyControlCmd...retry:%d",
+   "n_sites": 1,
+   "sites": [
+    "0x43566940"
+   ],
+   "functions": [
+    "0x4356692c"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25e54",
+   "text": "[ACCY][INFO][REMOTE]:%d:CallForTransaction...Wait Tally Light Response  NextState:%d",
+   "n_sites": 1,
+   "sites": [
+    "0x43566a38"
+   ],
+   "functions": [
+    "0x43566998"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25ea9",
+   "text": "[ACCY][INFO][REMOTE]:%d:NotifyApiRequest...Command:%02X State:%02X CntlState:%d",
+   "n_sites": 1,
+   "sites": [
+    "0x43566a78"
+   ],
+   "functions": [
+    "0x43566a54"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25ef9",
+   "text": "[ACCY][INFO][REMOTE]:%d:NotifyApiRequest...Buffer Busy CntlState:%d",
+   "n_sites": 1,
+   "sites": [
+    "0x43566ace"
+   ],
+   "functions": [
+    "0x43566a54"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25f3d",
+   "text": "[ACCY][INFO][REMOTE]:%d:NotifyApiRequest...Tally Light State:%d  NextState:%d",
+   "n_sites": 1,
+   "sites": [
+    "0x43566aea"
+   ],
+   "functions": [
+    "0x43566a54"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25f8b",
+   "text": "[ACCY][INFO][REMOTE]:%d:NotifyApiRequest...Not Support Command:%02X or State:%02X",
+   "n_sites": 1,
+   "sites": [
+    "0x43566b00"
+   ],
+   "functions": [
+    "0x43566a54"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c25fdd",
+   "text": "[ACCY][INFO][REMOTE]:%d:AccyCmdClr",
+   "n_sites": 1,
+   "sites": [
+    "0x43566b3e"
+   ],
+   "functions": [
+    "0x43566b2c"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c26000",
+   "text": "[ACCY][INFO][REMOTE]:%d:RemoteClose...Spinal:%02X  GF:%02X  SS:%02X  Freeze:%02X  Photo:%02X  Zoom:%02X",
+   "n_sites": 1,
+   "sites": [
+    "0x43566b86"
+   ],
+   "functions": [
+    "0x43566b54"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c26068",
+   "text": "[ACCY][INFO][REMOTE]:%d:GUIDE FRAME OFF  KEY:%08X STATE:%08X  INFO:%08X",
+   "n_sites": 1,
+   "sites": [
+    "0x43566bb2"
+   ],
+   "functions": [
+    "0x43566b54"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c260b0",
+   "text": "[ACCY][INFO][REMOTE]:%d:START STOP OFF  KEY:%08X STATE:%08X  INFO:%08X",
+   "n_sites": 1,
+   "sites": [
+    "0x43566be8"
+   ],
+   "functions": [
+    "0x43566b54"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c260f7",
+   "text": "[ACCY][INFO][REMOTE]:%d:PHOTO FREEZE OFF  KEY:%08X STATE:%08X  INFO:%08X",
+   "n_sites": 1,
+   "sites": [
+    "0x43566c24"
+   ],
+   "functions": [
+    "0x43566b54"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c26140",
+   "text": "[ACCY][INFO][REMOTE]:%d:PHOTO REC OFF  KEY:%08X STATE:%08X  INFO:%08X",
+   "n_sites": 1,
+   "sites": [
+    "0x43566c56"
+   ],
+   "functions": [
+    "0x43566b54"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c26186",
+   "text": "[ACCY][INFO][REMOTE]:%d:ZOOM OFF  KEY:%08X STATE:%08X  INFO:%08X",
+   "n_sites": 2,
+   "sites": [
+    "0x43566c8e",
+    "0x43566cb4"
+   ],
+   "functions": [
+    "0x43566b54"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c261c7",
+   "text": "[ACCY][INFO][REMOTE]:%d:NotifyDetached",
+   "n_sites": 1,
+   "sites": [
+    "0x43566d54"
+   ],
+   "functions": [
+    "0x43566d44"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c261ee",
+   "text": "[ACCY][INFO][REMOTE]:%d:NotifyUartTimedOut...RetryCount:%d",
+   "n_sites": 1,
+   "sites": [
+    "0x43566da2"
+   ],
+   "functions": [
+    "0x43566d8c"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c26229",
+   "text": "[ACCY][ERR][REMOTE]:%d:TimeoutNotify...Command Not Execution",
+   "n_sites": 1,
+   "sites": [
+    "0x43566db8"
+   ],
+   "functions": [
+    "0x43566d8c"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c26266",
+   "text": "[ACCY][DEBUG][REMOTE]:%d:EventTimeout Tally Light TIMEOUT",
+   "n_sites": 1,
+   "sites": [
+    "0x43566e1c"
+   ],
+   "functions": [
+    "0x43566d8c"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c262a0",
+   "text": "[ACCY][INFO][REMOTE]:%d:NotifyUartResponse...Set Tally Light:%02X",
+   "n_sites": 1,
+   "sites": [
+    "0x43566e76"
+   ],
+   "functions": [
+    "0x43566e5c"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c262e2",
+   "text": "[ACCY][DEBUG][REMOTE]:%d:Set Tally Light:%02X State:%d",
+   "n_sites": 1,
+   "sites": [
+    "0x43566eaa"
+   ],
+   "functions": [
+    "0x43566e5c"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  },
+  {
+   "vaddr": "0x43c26319",
+   "text": "[ACCY][INFO][REMOTE]:%d:NotifyAttached",
+   "n_sites": 1,
+   "sites": [
+    "0x43566ed0"
+   ],
+   "functions": [
+    "0x43566ec0"
+   ],
+   "a7s_core_present": false,
+   "a6300_core_present": false
+  }
+ ],
+ "functions": [
+  {
+   "func": "0x43562a08",
+   "n_sites": 1,
+   "strings": [
+    "0x43c24cac"
+   ],
+   "texts": [
+    "[ACCY][INFO][HW]:AD=%d, ID=%d"
+   ],
+   "sites": [
+    "0x43562a8c"
+   ]
+  },
+  {
+   "func": "0x43562db0",
+   "n_sites": 1,
+   "strings": [
+    "0x43c24cca"
+   ],
+   "texts": [
+    "[ACCY][DEBUG][Main] NotifyAttachedUart(%08X)"
+   ],
+   "sites": [
+    "0x43562dbc"
+   ]
+  },
+  {
+   "func": "0x43562e22",
+   "n_sites": 1,
+   "strings": [
+    "0x43c24cf7"
+   ],
+   "texts": [
+    "[ACCY][DEBUG][Main] NotifyAttached(%d)"
+   ],
+   "sites": [
+    "0x43562e24"
+   ]
+  },
+  {
+   "func": "0x43562e54",
+   "n_sites": 1,
+   "strings": [
+    "0x43c24d1e"
+   ],
+   "texts": [
+    "[ACCY][DEBUG][Main] NotifyDetached"
+   ],
+   "sites": [
+    "0x43562e60"
+   ]
+  },
+  {
+   "func": "0x43562ea4",
+   "n_sites": 2,
+   "strings": [
+    "0x43c24d41",
+    "0x43c24d71"
+   ],
+   "texts": [
+    "[ACCY][INFO][MAIN] NotifyUartCommand[%c%c%c...]",
+    "[ACCY][ERR][MAIN]:%d:Uart Send Err"
+   ],
+   "sites": [
+    "0x43562ec4",
+    "0x43562f00"
+   ]
+  },
+  {
+   "func": "0x43562f34",
+   "n_sites": 1,
+   "strings": [
+    "0x43c24d94"
+   ],
+   "texts": [
+    "[ACCY][INFO][MAIN] NotifyUartResponse[%c%c%c...]"
+   ],
+   "sites": [
+    "0x43562f56"
+   ]
+  },
+  {
+   "func": "0x43562f90",
+   "n_sites": 1,
+   "strings": [
+    "0x43c24d71"
+   ],
+   "texts": [
+    "[ACCY][ERR][MAIN]:%d:Uart Send Err"
+   ],
+   "sites": [
+    "0x43562fd8"
+   ]
+  },
+  {
+   "func": "0x43563004",
+   "n_sites": 2,
+   "strings": [
+    "0x43c24dc5",
+    "0x43c24de9"
+   ],
+   "texts": [
+    "[ACCY][INFO][Main] NotifyApi (%02X)",
+    "[ACCY][ERR][MAIN]:%d:Uart Send Err:%08X"
+   ],
+   "sites": [
+    "0x43563020",
+    "0x43563062"
+   ]
+  },
+  {
+   "func": "0x435630ac",
+   "n_sites": 2,
+   "strings": [
+    "0x43c24de9",
+    "0x43c24e11"
+   ],
+   "texts": [
+    "[ACCY][DEBUG][Main] NotifyUartLoopBackTest (%c%c%c%c%c)",
+    "[ACCY][ERR][MAIN]:%d:Uart Send Err:%08X"
+   ],
+   "sites": [
+    "0x435630ea",
+    "0x43563116"
+   ]
+  },
+  {
+   "func": "0x43563138",
+   "n_sites": 1,
+   "strings": [
+    "0x43c24e49"
+   ],
+   "texts": [
+    "[ACCY][DEBUG][Main] NotifyUartLoopBackReply (%c%c%c%c%c)"
+   ],
+   "sites": [
+    "0x4356315a"
+   ]
+  },
+  {
+   "func": "0x43563174",
+   "n_sites": 1,
+   "strings": [
+    "0x43c24de9"
+   ],
+   "texts": [
+    "[ACCY][ERR][MAIN]:%d:Uart Send Err:%08X"
+   ],
+   "sites": [
+    "0x435631b2"
+   ]
+  },
+  {
+   "func": "0x435631d2",
+   "n_sites": 1,
+   "strings": [
+    "0x43c24e82"
+   ],
+   "texts": [
+    "[ACCY][DEBUG][Main] Resume Sus-Attached %d, %03X"
+   ],
+   "sites": [
+    "0x435631e4"
+   ]
+  },
+  {
+   "func": "0x43563310",
+   "n_sites": 1,
+   "strings": [
+    "0x43c24eb3"
+   ],
+   "texts": [
+    "[ACCY][DEBUG][Main] Suspend Sus-Attached %d, %03X"
+   ],
+   "sites": [
+    "0x43563324"
+   ]
+  },
+  {
+   "func": "0x43563360",
+   "n_sites": 2,
+   "strings": [
+    "0x43c24de9",
+    "0x43c24ee5"
+   ],
+   "texts": [
+    "[ACCY][DEBUG][Main] **** UMMAIN START ****",
+    "[ACCY][ERR][MAIN]:%d:Uart Send Err:%08X"
+   ],
+   "sites": [
+    "0x4356338c",
+    "0x43563652"
+   ]
+  },
+  {
+   "func": "0x435638ee",
+   "n_sites": 3,
+   "strings": [
+    "0x43c24f10",
+    "0x43c24f37",
+    "0x43c24f5f"
+   ],
+   "texts": [
+    "[ACCY][ERR][SENSER] unknown block %04X",
+    "[ACCY][DEBUG][SENSER] Cmd %04X, S1 %02X",
+    "[ACCY][ERR][SENSER] unknown command %04X"
+   ],
+   "sites": [
+    "0x43563902",
+    "0x43563926",
+    "0x435639b6"
+   ]
+  },
+  {
+   "func": "0x43563a94",
+   "n_sites": 1,
+   "strings": [
+    "0x43c24f88"
+   ],
+   "texts": [
+    "[ACCY][INFO][UART]:%d:RECIVE DATA %s"
+   ],
+   "sites": [
+    "0x43563bb0"
+   ]
+  },
+  {
+   "func": "0x43563bf8",
+   "n_sites": 5,
+   "strings": [
+    "0x43c24fad",
+    "0x43c24fd6",
+    "0x43c25005",
+    "0x43c25038",
+    "0x43c2506b"
+   ],
+   "texts": [
+    "[ACCY][INFO][UART]:%d:AccyUartOpen Ch:%d",
+    "[ACCY][WARN][UART]:%d:CH:%d UART Open Err:%02X",
+    "[ACCY][WARN][UART]:%d:CH:%d UART Set Func Err:%02X",
+    "[ACCY][WARN][UART]:%d:CH:%d UART Rx Start Err:%02X",
+    "[ACCY][WARN][UART]:%d:CH:%d UART Tx Start Err:%02X"
+   ],
+   "sites": [
+    "0x43563c0e",
+    "0x43563cbe",
+    "0x43563cf8",
+    "0x43563d26",
+    "0x43563d5a"
+   ]
+  },
+  {
+   "func": "0x43563de8",
+   "n_sites": 3,
+   "strings": [
+    "0x43c2509e",
+    "0x43c250c8",
+    "0x43c250fa"
+   ],
+   "texts": [
+    "[ACCY][INFO][UART]:%d:AccyUartClose Ch:%d",
+    "[ACCY][WARN][UART]:%d:CH:%d UART Tx Stop Err:%02X",
+    "[ACCY][WARN][UART]:%d:CH:%d UART Rx Stop Err:%02X"
+   ],
+   "sites": [
+    "0x43563e00",
+    "0x43563e34",
+    "0x43563e5e"
+   ]
+  },
+  {
+   "func": "0x43563ef4",
+   "n_sites": 3,
+   "strings": [
+    "0x43c2512c",
+    "0x43c25159",
+    "0x43c25185"
+   ],
+   "texts": [
+    "[ACCY][WARN][UART]:%d:AccyUartSend UART FULL",
+    "[ACCY][ERR][UART]:%d:AccyUartSend Size = %d",
+    "[ACCY][INFO][UART]:%d:SEND DATA %s"
+   ],
+   "sites": [
+    "0x43563f22",
+    "0x43563f3e",
+    "0x43563fa4"
+   ]
+  },
+  {
+   "func": "0x43564024",
+   "n_sites": 1,
+   "strings": [
+    "0x43c251a8"
+   ],
+   "texts": [
+    "[ACCY][ERR][UART]:%d:IntAccyUartErr = %d"
+   ],
+   "sites": [
+    "0x43564038"
+   ]
+  },
+  {
+   "func": "0x435641b6",
+   "n_sites": 1,
+   "strings": [
+    "0x43c251d1"
+   ],
+   "texts": [
+    "[ACCY][ERR][UTILITY]:%d:ConvNum8ToAscii num = %08X"
+   ],
+   "sites": [
+    "0x435641dc"
+   ]
+  },
+  {
+   "func": "0x435641ec",
+   "n_sites": 1,
+   "strings": [
+    "0x43c25204"
+   ],
+   "texts": [
+    "[ACCY][ERR][UTILITY]:%d:ConvAsciiToNum8 ascii:%08X"
+   ],
+   "sites": [
+    "0x4356421a"
+   ]
+  },
+  {
+   "func": "0x435646a4",
+   "n_sites": 5,
+   "strings": [
+    "0x43c25237",
+    "0x43c25260",
+    "0x43c25289",
+    "0x43c252b4",
+    "0x43c252e0"
+   ],
+   "texts": [
+    "[ACCY][DEBUG][FACTORY]:%d:HELLO Attached",
+    "[ACCY][DEBUG][FACTORY]:%d:AvOut Attached",
+    "[ACCY][DEBUG][FACTORY]:%d:JIRO1.5 Attached",
+    "[ACCY][DEBUG][FACTORY]:%d:LANC-AVR Attached",
+    "[ACCY][DEBUG][FACTORY]:%d:UNSUPPORTED(%d) Attached"
+   ],
+   "sites": [
+    "0x435646d2",
+    "0x435646fc",
+    "0x4356472a",
+    "0x43564758",
+    "0x43564778"
+   ]
+  },
+  {
+   "func": "0x435647c0",
+   "n_sites": 2,
+   "strings": [
+    "0x43c25313",
+    "0x43c2533d"
+   ],
+   "texts": [
+    "[ACCY][DEBUG][FACTORY]:%d:Remote Attached",
+    "[ACCY][DEBUG][FACTORY]:%d:WaterHousing Attached"
+   ],
+   "sites": [
+    "0x4356480e",
+    "0x4356483a"
+   ]
+  },
+  {
+   "func": "0x43564ab4",
+   "n_sites": 1,
+   "strings": [
+    "0x43c25380"
+   ],
+   "texts": [
+    "[ACCY][INFO][HOUSING]:%d:NotifyAttached"
+   ],
+   "sites": [
+    "0x43564ac4"
+   ]
+  },
+  {
+   "func": "0x43564c0c",
+   "n_sites": 1,
+   "strings": [
+    "0x43c253a8"
+   ],
+   "texts": [
+    "[ACCY][INFO][HOUSING]:%d:NotifyContinuousAttached"
+   ],
+   "sites": [
+    "0x43564c22"
+   ]
+  },
+  {
+   "func": "0x43564ca4",
+   "n_sites": 1,
+   "strings": [
+    "0x43c253da"
+   ],
+   "texts": [
+    "[ACCY][INFO][HOUSING]:%d:RestoreInfo...Savedata:%02X %02X"
+   ],
+   "sites": [
+    "0x43564cc0"
+   ]
+  },
+  {
+   "func": "0x43564d98",
+   "n_sites": 1,
+   "strings": [
+    "0x43c25414"
+   ],
+   "texts": [
+    "[ACCY][INFO][HOUSING]:%d:NotifyDetached"
+   ],
+   "sites": [
+    "0x43564daa"
+   ]
+  },
+  {
+   "func": "0x43565188",
+   "n_sites": 1,
+   "strings": [
+    "0x43c2543c"
+   ],
+   "texts": [
+    "[ACCY][INFO][HOUSING]:%d:NotifyUartTimedOut... %d"
+   ],
+   "sites": [
+    "0x435651a0"
+   ]
+  },
+  {
+   "func": "0x43565508",
+   "n_sites": 1,
+   "strings": [
+    "0x43c2549e"
+   ],
+   "texts": [
+    "[ACCY][DEBUG][AVOUT] NotifyDetached(%d)"
+   ],
+   "sites": [
+    "0x43565514"
+   ]
+  },
+  {
+   "func": "0x4356554c",
+   "n_sites": 1,
+   "strings": [
+    "0x43c254c6"
+   ],
+   "texts": [
+    "[ACCY][DEBUG][AVOUT] NotifyAttached(%d)"
+   ],
+   "sites": [
+    "0x43565558"
+   ]
+  },
+  {
+   "func": "0x43565680",
+   "n_sites": 1,
+   "strings": [
+    "0x43c25502"
+   ],
+   "texts": [
+    "[ACCY][DEBUG][AVR] NotifyDetached(%d)"
+   ],
+   "sites": [
+    "0x4356568c"
+   ]
+  },
+  {
+   "func": "0x435656d4",
+   "n_sites": 1,
+   "strings": [
+    "0x43c25528"
+   ],
+   "texts": [
+    "[ACCY][DEBUG][AVR] NotifyAttached(%d)"
+   ],
+   "sites": [
+    "0x435656e0"
+   ]
+  },
+  {
+   "func": "0x43565814",
+   "n_sites": 4,
+   "strings": [
+    "0x43c25560",
+    "0x43c25593",
+    "0x43c255d8",
+    "0x43c25611"
+   ],
+   "texts": [
+    "[ACCY][ERR][BASE]:%d:NotifyInput...valloc err:%08X",
+    "[ACCY][DEBUG][BASE]:%d:NotifyInput...KeyCode:%08X, State:%d, INFO:%d",
+    "[ACCY][ERR][BASE]:%d:NotifyInput...Send_Msg end err:%08X",
+    "[ACCY][ERR][BASE]:%d:NotifyInput...Send_Msg free err:%08X"
+   ],
+   "sites": [
+    "0x4356583c",
+    "0x43565860",
+    "0x43565880",
+    "0x435658a8"
+   ]
+  },
+  {
+   "func": "0x435658dc",
+   "n_sites": 3,
+   "strings": [
+    "0x43c2564b",
+    "0x43c2567d",
+    "0x43c256c1"
+   ],
+   "texts": [
+    "[ACCY][ERR][BASE]:%d:NotifyDial...valloc err:%08X",
+    "[ACCY][DEBUG][BASE]:%d:NotifyDial...KeyCode:%08X, State:%d, INFO:%d",
+    "[ACCY][ERR][BASE]:%d:NotifyDial...Send_Msg end err:%08X"
+   ],
+   "sites": [
+    "0x43565902",
+    "0x43565924",
+    "0x4356594e"
+   ]
+  },
+  {
+   "func": "0x43565b14",
+   "n_sites": 2,
+   "strings": [
+    "0x43c2570d",
+    "0x43c2573f"
+   ],
+   "texts": [
+    "[ACCY][INFO][HELLO]:%d:RetrySendCmd...retry_up:%d",
+    "[ACCY][ERR][HELLO]%d:Retry SendCmd Buffer Err"
+   ],
+   "sites": [
+    "0x43565b2c",
+    "0x43565b42"
+   ]
+  },
+  {
+   "func": "0x43565b84",
+   "n_sites": 1,
+   "strings": [
+    "0x43c2576d"
+   ],
+   "texts": [
+    "[ACCY][INFO][HELLO]:%d:State Change To %d"
+   ],
+   "sites": [
+    "0x43565b98"
+   ]
+  },
+  {
+   "func": "0x43565ba4",
+   "n_sites": 1,
+   "strings": [
+    "0x43c25797"
+   ],
+   "texts": [
+    "[ACCY][INFO][HELLO]:%d:NotifyDetached...State:%d"
+   ],
+   "sites": [
+    "0x43565bb6"
+   ]
+  },
+  {
+   "func": "0x43565be0",
+   "n_sites": 2,
+   "strings": [
+    "0x43c257c8",
+    "0x43c25801"
+   ],
+   "texts": [
+    "[ACCY][INFO][HELLO]:%d:SendCmd...CMD:%c%c%c%c%c Retry:%d",
+    "[ACCY][ERR][HELLO]:%d:SendCmd Buffer Busy Request CMD:%S"
+   ],
+   "sites": [
+    "0x43565c10",
+    "0x43565c36"
+   ]
+  },
+  {
+   "func": "0x43565ce4",
+   "n_sites": 3,
+   "strings": [
+    "0x43c2583a",
+    "0x43c25874",
+    "0x43c258a6"
+   ],
+   "texts": [
+    "[ACCY][INFO][HELLO]:%d:NotifyUartTimedOut...RetryCount:%d",
+    "[ACCY][ERR][HELLO]:%d:HELLO Command Not Execution",
+    "[ACCY][WARN][HELLO]:%d:EventTimeout AISATSU Retryout Count:%d"
+   ],
+   "sites": [
+    "0x43565cfa",
+    "0x43565d0e",
+    "0x43565d4a"
+   ]
+  },
+  {
+   "func": "0x43565d90",
+   "n_sites": 6,
+   "strings": [
+    "0x43c258e4",
+    "0x43c25945",
+    "0x43c2598c",
+    "0x43c259ae",
+    "0x43c259eb",
+    "0x43c25a2d"
+   ],
+   "texts": [
+    "[ACCY][INFO][HELLO]:%d:NotifyUartResponse...State:%02X Date:[%02X %02X %02X %02X %02X %02X %02X]",
+    "[ACCY][DEBUG][HELLO]:%d:NotifyUartResponse AISATSU Complete...State:%d",
+    "[ACCY][INFO][HELLO]:CateId = %08X",
+    "[ACCY][INFO][HELLO]:%d:NotifyUartResponse...Unmatch State:%d",
+    "[ACCY][WARN][HELLO]:%d:NotifyUartResponse...Unmatch Response:%02X",
+    "[ACCY][WARN][HELLO]:%d:NotifyUartResponse...Unmatch Not Support Category:%02X"
+   ],
+   "sites": [
+    "0x43565dc6",
+    "0x43565e20",
+    "0x43565e30",
+    "0x43565e60",
+    "0x43565e7a",
+    "0x43565e8c"
+   ]
+  },
+  {
+   "func": "0x43565eb8",
+   "n_sites": 1,
+   "strings": [
+    "0x43c25a7b"
+   ],
+   "texts": [
+    "[ACCY][INFO][HELLO]:%d:NotifyAttached...State:%d"
+   ],
+   "sites": [
+    "0x43565ecc"
+   ]
+  },
+  {
+   "func": "0x43565fd0",
+   "n_sites": 1,
+   "strings": [
+    "0x43c25aac"
+   ],
+   "texts": [
+    "[ACCY][DEBUG][JIRO] NotifyDetached(%d)"
+   ],
+   "sites": [
+    "0x43565fdc"
+   ]
+  },
+  {
+   "func": "0x43566018",
+   "n_sites": 1,
+   "strings": [
+    "0x43c25ad3"
+   ],
+   "texts": [
+    "[ACCY][DEBUG][JIRO] NotifyAttached(%d)"
+   ],
+   "sites": [
+    "0x43566024"
+   ]
+  },
+  {
+   "func": "0x43566150",
+   "n_sites": 1,
+   "strings": [
+    "0x43c25b20"
+   ],
+   "texts": [
+    "[ACCY][DEBUG][NULL] NotifyAttached(%d)"
+   ],
+   "sites": [
+    "0x4356615c"
+   ]
+  },
+  {
+   "func": "0x43566290",
+   "n_sites": 3,
+   "strings": [
+    "0x43c25b47",
+    "0x43c25ba9",
+    "0x43c25bdf"
+   ],
+   "texts": [
+    "[ACCY][INFO][REMOTE]:%d:NotifyUartCommand...UART CMD:%C%C%C%C%C%C [%02X %02X %02X %02X %02X %02X]",
+    "[ACCY][WARN][REMOTE]:%d:RecvCmd Unknown Category:%02X",
+    "[ACCY][WARN][REMOTE]:%d:EventKey Catwgory:%02X ,Data1:%02X, Data2:%02X"
+   ],
+   "sites": [
+    "0x435662b2",
+    "0x4356637c",
+    "0x43566392"
+   ]
+  },
+  {
+   "func": "0x435663b8",
+   "n_sites": 2,
+   "strings": [
+    "0x43c25c26",
+    "0x43c25c59"
+   ],
+   "texts": [
+    "[ACCY][INFO][REMOTE]:%d:RetrySendCmd...retry_up:%d",
+    "[ACCY][ERR][REMOTE]:%d:RetrySendCmd Buffer err"
+   ],
+   "sites": [
+    "0x435663d0",
+    "0x435663e6"
+   ]
+  },
+  {
+   "func": "0x435664d0",
+   "n_sites": 1,
+   "strings": [
+    "0x43c25c88"
+   ],
+   "texts": [
+    "[ACCY][INFO][REMOTE]:%d:SaveInfo...GF:%d SS:%d Freeze:%d Photo:%d Zoom:%d Tally:%d"
+   ],
+   "sites": [
+    "0x4356650a"
+   ]
+  },
+  {
+   "func": "0x43566558",
+   "n_sites": 1,
+   "strings": [
+    "0x43c25cdb"
+   ],
+   "texts": [
+    "[ACCY][DEBUG][REMOTE]:%d:Zoom State Change To %d Speed:%d"
+   ],
+   "sites": [
+    "0x4356656e"
+   ]
+  },
+  {
+   "func": "0x43566580",
+   "n_sites": 1,
+   "strings": [
+    "0x43c25d15"
+   ],
+   "texts": [
+    "[ACCY][INFO][REMOTE]:%d:RestoreInfo...Savedata:%02X %02X"
+   ],
+   "sites": [
+    "0x4356659e"
+   ]
+  },
+  {
+   "func": "0x435665f8",
+   "n_sites": 2,
+   "strings": [
+    "0x43c25d4e",
+    "0x43c25d76"
+   ],
+   "texts": [
+    "[ACCY][INFO][REMOTE]:%d:ExecUartCommand",
+    "[ACCY][INFO][REMOTE]:%d:To Input KEY:%08X STATE:%08X INFO:%08X"
+   ],
+   "sites": [
+    "0x43566612",
+    "0x435667ac"
+   ]
+  },
+  {
+   "func": "0x435668b4",
+   "n_sites": 2,
+   "strings": [
+    "0x43c25db5",
+    "0x43c25de7"
+   ],
+   "texts": [
+    "[ACCY][INFO][REMOTE]:%d:SendCmd...CMD:%S retry:%d",
+    "[ACCY][ERR][REMOTE]:%d:SendCmd Buffer Busy Request CMD:%S"
+   ],
+   "sites": [
+    "0x435668d0",
+    "0x435668f8"
+   ]
+  },
+  {
+   "func": "0x4356692c",
+   "n_sites": 1,
+   "strings": [
+    "0x43c25e21"
+   ],
+   "texts": [
+    "[ACCY][INFO][REMOTE]:%d:TallyControlCmd...retry:%d"
+   ],
+   "sites": [
+    "0x43566940"
+   ]
+  },
+  {
+   "func": "0x43566998",
+   "n_sites": 1,
+   "strings": [
+    "0x43c25e54"
+   ],
+   "texts": [
+    "[ACCY][INFO][REMOTE]:%d:CallForTransaction...Wait Tally Light Response  NextState:%d"
+   ],
+   "sites": [
+    "0x43566a38"
+   ]
+  },
+  {
+   "func": "0x43566a54",
+   "n_sites": 4,
+   "strings": [
+    "0x43c25ea9",
+    "0x43c25ef9",
+    "0x43c25f3d",
+    "0x43c25f8b"
+   ],
+   "texts": [
+    "[ACCY][INFO][REMOTE]:%d:NotifyApiRequest...Command:%02X State:%02X CntlState:%d",
+    "[ACCY][INFO][REMOTE]:%d:NotifyApiRequest...Buffer Busy CntlState:%d",
+    "[ACCY][INFO][REMOTE]:%d:NotifyApiRequest...Tally Light State:%d  NextState:%d",
+    "[ACCY][INFO][REMOTE]:%d:NotifyApiRequest...Not Support Command:%02X or State:%02X"
+   ],
+   "sites": [
+    "0x43566a78",
+    "0x43566ace",
+    "0x43566aea",
+    "0x43566b00"
+   ]
+  },
+  {
+   "func": "0x43566b2c",
+   "n_sites": 1,
+   "strings": [
+    "0x43c25fdd"
+   ],
+   "texts": [
+    "[ACCY][INFO][REMOTE]:%d:AccyCmdClr"
+   ],
+   "sites": [
+    "0x43566b3e"
+   ]
+  },
+  {
+   "func": "0x43566b54",
+   "n_sites": 7,
+   "strings": [
+    "0x43c26000",
+    "0x43c26068",
+    "0x43c260b0",
+    "0x43c260f7",
+    "0x43c26140",
+    "0x43c26186"
+   ],
+   "texts": [
+    "[ACCY][INFO][REMOTE]:%d:RemoteClose...Spinal:%02X  GF:%02X  SS:%02X  Freeze:%02X  Photo:%02X  Zoom:%02X",
+    "[ACCY][INFO][REMOTE]:%d:GUIDE FRAME OFF  KEY:%08X STATE:%08X  INFO:%08X",
+    "[ACCY][INFO][REMOTE]:%d:START STOP OFF  KEY:%08X STATE:%08X  INFO:%08X",
+    "[ACCY][INFO][REMOTE]:%d:PHOTO FREEZE OFF  KEY:%08X STATE:%08X  INFO:%08X",
+    "[ACCY][INFO][REMOTE]:%d:PHOTO REC OFF  KEY:%08X STATE:%08X  INFO:%08X",
+    "[ACCY][INFO][REMOTE]:%d:ZOOM OFF  KEY:%08X STATE:%08X  INFO:%08X",
+    "[ACCY][INFO][REMOTE]:%d:ZOOM OFF  KEY:%08X STATE:%08X  INFO:%08X"
+   ],
+   "sites": [
+    "0x43566b86",
+    "0x43566bb2",
+    "0x43566be8",
+    "0x43566c24",
+    "0x43566c56",
+    "0x43566c8e",
+    "0x43566cb4"
+   ]
+  },
+  {
+   "func": "0x43566d44",
+   "n_sites": 1,
+   "strings": [
+    "0x43c261c7"
+   ],
+   "texts": [
+    "[ACCY][INFO][REMOTE]:%d:NotifyDetached"
+   ],
+   "sites": [
+    "0x43566d54"
+   ]
+  },
+  {
+   "func": "0x43566d8c",
+   "n_sites": 3,
+   "strings": [
+    "0x43c261ee",
+    "0x43c26229",
+    "0x43c26266"
+   ],
+   "texts": [
+    "[ACCY][INFO][REMOTE]:%d:NotifyUartTimedOut...RetryCount:%d",
+    "[ACCY][ERR][REMOTE]:%d:TimeoutNotify...Command Not Execution",
+    "[ACCY][DEBUG][REMOTE]:%d:EventTimeout Tally Light TIMEOUT"
+   ],
+   "sites": [
+    "0x43566da2",
+    "0x43566db8",
+    "0x43566e1c"
+   ]
+  },
+  {
+   "func": "0x43566e5c",
+   "n_sites": 2,
+   "strings": [
+    "0x43c262a0",
+    "0x43c262e2"
+   ],
+   "texts": [
+    "[ACCY][INFO][REMOTE]:%d:NotifyUartResponse...Set Tally Light:%02X",
+    "[ACCY][DEBUG][REMOTE]:%d:Set Tally Light:%02X State:%d"
+   ],
+   "sites": [
+    "0x43566e76",
+    "0x43566eaa"
+   ]
+  },
+  {
+   "func": "0x43566ec0",
+   "n_sites": 1,
+   "strings": [
+    "0x43c26319"
+   ],
+   "texts": [
+    "[ACCY][INFO][REMOTE]:%d:NotifyAttached"
+   ],
+   "sites": [
+    "0x43566ed0"
+   ]
+  }
+ ],
+ "classes_rtti": [
+  {
+   "name": "AccyUmDeviceBase",
+   "name_vaddr": "0x43c2536d",
+   "typeinfo": "0x43fd7c8c",
+   "kind": "class",
+   "base": null
+  },
+  {
+   "name": "AccyUmDeviceWaterHousing",
+   "name_vaddr": "0x43c2546e",
+   "typeinfo": "0x43fd7d6c",
+   "kind": "si",
+   "base": "AccyUmDeviceBase"
+  },
+  {
+   "name": "AccyUmKeyStatusMgr",
+   "name_vaddr": "0x43c25489",
+   "typeinfo": "0x43fd7d78",
+   "kind": "class",
+   "base": null
+  },
+  {
+   "name": "AccyUmDeviceAvOut",
+   "name_vaddr": "0x43c254ee",
+   "typeinfo": "0x43fd7d80",
+   "kind": "si",
+   "base": "AccyUmDeviceBase"
+  },
+  {
+   "name": "AccyUmDeviceAvr",
+   "name_vaddr": "0x43c2554e",
+   "typeinfo": "0x43fd7d8c",
+   "kind": "si",
+   "base": "AccyUmDeviceBase"
+  },
+  {
+   "name": "AccyUmDeviceHello",
+   "name_vaddr": "0x43c256f9",
+   "typeinfo": "0x43fd7d98",
+   "kind": "si",
+   "base": "AccyUmDeviceBase"
+  },
+  {
+   "name": "AccyUmDeviceJiro",
+   "name_vaddr": "0x43c25afa",
+   "typeinfo": "0x43fd7da4",
+   "kind": "si",
+   "base": "AccyUmDeviceBase"
+  },
+  {
+   "name": "AccyUmDeviceNull",
+   "name_vaddr": "0x43c25b0d",
+   "typeinfo": "0x43fd7db0",
+   "kind": "si",
+   "base": "AccyUmDeviceBase"
+  },
+  {
+   "name": "AccyUmDeviceRemote",
+   "name_vaddr": "0x43c26340",
+   "typeinfo": "0x43fd7dbc",
+   "kind": "si",
+   "base": "AccyUmDeviceBase"
+  }
+ ],
+ "rtti_vtables": {
+  "__class_type_info": "0x43fd04f8",
+  "__si_class_type_info": "0x43fd03d8"
+ },
+ "accessory_types": {
+  "by_id": {
+   "0": "AvOut",
+   "1": "JIRO1.5",
+   "4": "HELLO",
+   "5": "LANC-AVR",
+   "other": "UNSUPPORTED(%d)"
+  },
+  "by_bitmask": {
+   "0x80": "Remote",
+   "0x40": "WaterHousing"
+  },
+  "factory1": "0x435646a4",
+  "factory2": "0x435647c0",
+  "device_factories": {
+   "HELLO": "0x43565ac8",
+   "AvOut": "0x435655a4",
+   "JIRO1.5": "0x43566074",
+   "LANC-AVR": "0x4356573c",
+   "Remote": "0x43566484",
+   "WaterHousing": "0x43564bc0"
+  }
+ },
+ "transport": {
+  "uart": {
+   "open": "0x43563bf8",
+   "close": "0x43563de8",
+   "send": "0x43563ef4",
+   "rx": "0x43563a94"
+  },
+  "osal": {
+   "try_valloc_msg": "0x435612d0",
+   "snd_msg": "0x4356120c",
+   "free_msg": "0x435612ec",
+   "rcv_msg": "0x43561260"
+  },
+  "notify_input": {
+   "func": "0x43565814",
+   "queue_id": "0x030001ee",
+   "msg_layout": "KeyCode@+0x00, ID@+0x04, State@+0x08, INFO@+0x0c"
+  },
+  "notify_dial": {
+   "func": "0x435658dc"
+  }
+ },
+ "remote_keys": {
+  "GUIDE_FRAME_OFF": {
+   "key": "0x0a000009",
+   "str": "0x43c26068",
+   "site": "0x43566bb2"
+  },
+  "START_STOP_OFF": {
+   "key": "0x0a00000d",
+   "str": "0x43c260b0",
+   "site": "0x43566be8"
+  },
+  "PHOTO_FREEZE_OFF": {
+   "key": "0x0a000008",
+   "str": "0x43c260f7",
+   "site": "0x43566c24"
+  },
+  "PHOTO_REC_OFF": {
+   "key": "0x0a00000c",
+   "str": "0x43c26140",
+   "site": "0x43566c56"
+  },
+  "ZOOM_OFF": {
+   "key": "0x0a000011",
+   "str": "0x43c26186",
+   "site": "0x43566c8e"
+  }
+ },
+ "external_callers": {
+  "api_wrapper_block": [
+   "0x43a3ab00",
+   "0x43a3b300"
+  ],
+  "api_wrapper_entry_points": 28,
+  "api_wrapper_call_sites": 57,
+  "callers": {
+   "0x43562068": [
+    "0x435a00f0 [CLK_CTRL]",
+    "0x43639de2 [SDF]",
+    "0x4366bbfe [SYSV][HS]",
+    "0x4367f7c8 [VDF]",
+    "0x436ab9c0 [VEF]",
+    "0x439ad15e [SFRS]",
+    "0x43541b2a [ADF]"
+   ],
+   "0x4356288c": [
+    "0x43a3ac04",
+    "0x43a3ac14",
+    "0x43a3ac56",
+    "0x43a3ac60",
+    "0x43a3ac6a",
+    "0x43a3ae38",
+    "0x43a3ae5c",
+    "0x43a3ae80"
+   ]
+  }
+ },
+ "differential": {
+  "a7s": {
+   "path": "firmware/extracted/a7s-fw320/.../av-cam.bin",
+   "token_ACCY": 0,
+   "full_text_matches": 0,
+   "core_matches": 0,
+   "uart_traces": 0,
+   "rtti_classes_present": [
+    "AccyUmDeviceBase",
+    "AccyUmDeviceWaterHousing",
+    "AccyUmKeyStatusMgr",
+    "AccyUmDeviceAvOut",
+    "AccyUmDeviceAvr",
+    "AccyUmDeviceHello",
+    "AccyUmDeviceJiro",
+    "AccyUmDeviceNull",
+    "AccyUmDeviceRemote",
+    "AccyMiDeviceBase",
+    "AccyMiDeviceLight"
+   ],
+   "rtti_block": "0x43c25a23-0x43c25afc",
+   "api_name_strings": [
+    "accy",
+    "edr",
+    "EnableDummyRecv",
+    "DisableDummyRecv",
+    "SendCommand",
+    "MsSleep",
+    "rx/RxResponse",
+    "rxc/RxCommand",
+    "sq/SetQue",
+    "GetQue"
+   ]
+  },
+  "a6300": {
+   "path": "firmware/extracted/a6300-fw201/.../av-cam.bin",
+   "token_ACCY": 0,
+   "full_text_matches": 0,
+   "core_matches": 0,
+   "uart_traces": 0,
+   "rtti_block": "0x43d0c9a4-0x43d0ca7d"
+  }
+ },
+ "shutter_line": {
+  "shutter_mentions": 0,
+  "keywords_found": [],
+  "closest": "START STOP OFF (0x43c260b0) -> key 0x0a00000d",
+  "verdict": "sin relacion directa con el obturador (electronico o mecanico)"
+ },
+ "source_line_numbers": {
+  "note": "el primer %d de la traza es el numero de linea del fichero fuente; se extrae del `movs/movw r3,#N` que se pasa por la pila antes del `bl` de impresion. Extraccion heuristica (scan_lines.py).",
+  "FACTORY": {
+   "0x435646d2": 183,
+   "0x435646fc": 191,
+   "0x4356472a": 197,
+   "0x43564758": 203,
+   "0x43564778": 209
+  },
+  "UART": {
+   "0x43563c0e": 54,
+   "0x43563cbe": 134,
+   "0x43563cf8": 139,
+   "0x43563d26": 145,
+   "0x43563d5a": 152,
+   "0x43563e00": 164,
+   "0x43563e34": 178,
+   "0x43563e5e": 184,
+   "0x43563f22": 208,
+   "0x43563f3e": 217,
+   "0x43563fa4": 241
+  },
+  "BASE": {
+   "0x4356583c": 45,
+   "0x43565860": 60,
+   "0x43565880": 64,
+   "0x435658a8": 68,
+   "0x43565902": 89,
+   "0x43565924": 99,
+   "0x4356594e": 104
+  },
+  "REMOTE": {
+   "0x43566b86": 233,
+   "0x43566bb2": 239,
+   "0x43566be8": 246,
+   "0x43566c24": 254,
+   "0x43566c8e": 783,
+   "0x43566cb4": 789
+  }
+ },
+ "source_files": {
+  "verified": [],
+  "nota": "ningun nombre de fichero (.cpp/.c/.h) es referenciado por el codigo del modulo: la unica cadena no-[ACCY] referenciada por la region 0x43562a08-0x43567060 es 'Valloc error!' (0x43c24c9e). NO VERIFICADO: los ficheros que implementan el modulo.",
+  "names_rtti_only": [
+   "AccyUmDeviceBase",
+   "AccyUmKeyStatusMgr",
+   "AccyUmDeviceWaterHousing",
+   "AccyUmDeviceAvOut",
+   "AccyUmDeviceAvr",
+   "AccyUmDeviceHello",
+   "AccyUmDeviceJiro",
+   "AccyUmDeviceNull",
+   "AccyUmDeviceRemote"
+  ]
+ }
+}

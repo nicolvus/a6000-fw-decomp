@@ -1,0 +1,1418 @@
+{
+ "token": "[CTRLCORE]",
+ "firmware": "A6000 fw3.21",
+ "bin": "analysis/rea-independent/input/av-cam.bin",
+ "base_vaddr": "0x43541000",
+ "cifras": {
+  "ocurrencias_token": 55,
+  "cadenas": 55,
+  "sitios_pic": 74,
+  "funciones": 16,
+  "regla_pic": "estricta (s106_imaging_cap/scan_pic_refs_strict.py; destino = W + add + 4)"
+ },
+ "verificacion_pic": {
+  "script": "analysis/s137_ctrlcore/verify_sites.py",
+  "sitios": 74,
+  "confirmados": 74,
+  "texto_ok": 74,
+  "metodo": "recalculo independiente: ldr [pc,#imm] del mismo registro + literal + add rX,pc"
+ },
+ "modulos": {
+  "[CDIAG]": 51,
+  "[MCSENS]": 1,
+  "[AMSENS]": 3
+ },
+ "cadenas": [
+  {
+   "vaddr": "0x43c3b82d",
+   "modulo": "[CDIAG]",
+   "texto": "[ERR][CDIAG][CTRLCORE]p_prm is NULL file[%s] func[%s] line[%d]"
+  },
+  {
+   "vaddr": "0x43c3b87b",
+   "modulo": "[CDIAG]",
+   "texto": "[ERR][CDIAG][CTRLCORE]p_prm is NULL"
+  },
+  {
+   "vaddr": "0x43c3b89f",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec DbgDiagAvc HD REC!!"
+  },
+  {
+   "vaddr": "0x43c3b8c9",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec DbgDiagAvc HD DEC!!"
+  },
+  {
+   "vaddr": "0x43c3b8f3",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec DbgDiagAvc SD REC!!"
+  },
+  {
+   "vaddr": "0x43c3b91d",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec DbgDiagAvc SD DEC!!(NotSupport)"
+  },
+  {
+   "vaddr": "0x43c3b953",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]No Support EXEC MODE!!"
+  },
+  {
+   "vaddr": "0x43c3b97b",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]ExecCmd !! ConfirmDoneCodec\n"
+  },
+  {
+   "vaddr": "0x43c3b9a9",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec ConfirmDoneCodec HD REC!!"
+  },
+  {
+   "vaddr": "0x43c3b9d9",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec ConfirmDoneCodec HD DEC!!"
+  },
+  {
+   "vaddr": "0x43c3ba09",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec ConfirmDoneCodec SD REC!!"
+  },
+  {
+   "vaddr": "0x43c3ba39",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec ConfirmDoneCodec SD DEC!!"
+  },
+  {
+   "vaddr": "0x43c3ba69",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]ExecCmd !!\n"
+  },
+  {
+   "vaddr": "0x43c3ba86",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec CmpData HD REC!!"
+  },
+  {
+   "vaddr": "0x43c3baad",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec CmpData HD DEC!!"
+  },
+  {
+   "vaddr": "0x43c3bad4",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec CmpData SD REC!!"
+  },
+  {
+   "vaddr": "0x43c3bafb",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec CmpData SD DEC!!"
+  },
+  {
+   "vaddr": "0x43c3bb22",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec CmpData JPEG ENC!!"
+  },
+  {
+   "vaddr": "0x43c3bb4b",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec CmpData JPEG DEC!!"
+  },
+  {
+   "vaddr": "0x43c3bb74",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec CmpData JPEG ENCDEC!!"
+  },
+  {
+   "vaddr": "0x43c3bba0",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]ExecCmd !! [0x%04X] mode[0x%02X] func[0x%02X]\n"
+  },
+  {
+   "vaddr": "0x43c3bbe0",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec RunCodec HD REC!!"
+  },
+  {
+   "vaddr": "0x43c3bc08",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec RunCodec HD DEC!!"
+  },
+  {
+   "vaddr": "0x43c3bc30",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec RunCodec SD REC!!"
+  },
+  {
+   "vaddr": "0x43c3bc58",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec RunCodec SD DEC!!"
+  },
+  {
+   "vaddr": "0x43c3bc80",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec RunCodec JPG ENC!!"
+  },
+  {
+   "vaddr": "0x43c3bca9",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec RunCodec JPG DEC!!"
+  },
+  {
+   "vaddr": "0x43c3bcd2",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec RunCodec JPG ENCDEC!!"
+  },
+  {
+   "vaddr": "0x43c3bcfe",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec RelMemArea HD REC!!"
+  },
+  {
+   "vaddr": "0x43c3bd28",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec RelMemArea HD DEC!!"
+  },
+  {
+   "vaddr": "0x43c3bd52",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec RelMemArea SD REC!!"
+  },
+  {
+   "vaddr": "0x43c3bd7c",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec RelMemArea SD DEC!!"
+  },
+  {
+   "vaddr": "0x43c3bda6",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec RelMemArea JPEG ENC!!"
+  },
+  {
+   "vaddr": "0x43c3bdd2",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec RelMemArea JPEG DEC!!"
+  },
+  {
+   "vaddr": "0x43c3bdfe",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec RelMemArea JPEG ENCDEC!!"
+  },
+  {
+   "vaddr": "0x43c3be2d",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec SetMemArea HD REC!!"
+  },
+  {
+   "vaddr": "0x43c3be57",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec SetMemArea HD DEC!!"
+  },
+  {
+   "vaddr": "0x43c3be81",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec SetMemArea SD REC!!"
+  },
+  {
+   "vaddr": "0x43c3beab",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec SetMemArea SD DEC!!"
+  },
+  {
+   "vaddr": "0x43c3bed5",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec SetMemArea JPEG ENC!!"
+  },
+  {
+   "vaddr": "0x43c3bf01",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec SetMemArea JPEG DEC!!"
+  },
+  {
+   "vaddr": "0x43c3bf2d",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec SetMemArea JPEG ENCDEC!!"
+  },
+  {
+   "vaddr": "0x43c3bf5c",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]SetDiagMode !!\n"
+  },
+  {
+   "vaddr": "0x43c3bf7d",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE][SET_DIAG_MODE] mode[0x%02X] func[0x%02X]"
+  },
+  {
+   "vaddr": "0x43c3bfc7",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec SetData HD REC!!"
+  },
+  {
+   "vaddr": "0x43c3bfee",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]memIdx[%d] fileId[%02d:%02d] unitHandle[0x%04X] unitType[0x%08X] size[0x%08X]\n"
+  },
+  {
+   "vaddr": "0x43c3c04e",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec SetData HD DEC!!"
+  },
+  {
+   "vaddr": "0x43c3c075",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec SetData SD REC!!"
+  },
+  {
+   "vaddr": "0x43c3c09c",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec SetData SD DEC!!"
+  },
+  {
+   "vaddr": "0x43c3c0c3",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec SetData JPG ENC!!"
+  },
+  {
+   "vaddr": "0x43c3c0eb",
+   "modulo": "[CDIAG]",
+   "texto": "[CDIAG][CTRLCORE]Exec SetData JPG ENCDEC!!"
+  },
+  {
+   "vaddr": "0x43c73649",
+   "modulo": "[MCSENS]",
+   "texto": "[ERR][MCSENS][CTRLCORE]p_prm is NULL file[%s] func[%s] line[%d]"
+  },
+  {
+   "vaddr": "0x43cdb41a",
+   "modulo": "[AMSENS]",
+   "texto": "[ERR][AMSENS][CTRLCORE]p_prm is NULL file[%s] func[%s] line[%d]"
+  },
+  {
+   "vaddr": "0x43cdb46d",
+   "modulo": "[AMSENS]",
+   "texto": "[ERR][AMSENS][CTRLCORE]p_prm is NULL"
+  },
+  {
+   "vaddr": "0x43cdb492",
+   "modulo": "[AMSENS]",
+   "texto": "[AMSENS][CTRLCORE][AVCE][PARAM] adr[0x%08X] size[%d]"
+  }
+ ],
+ "sitios": {
+  "0x43c3b82d": [
+   "0x435a1b72",
+   "0x435a1c22"
+  ],
+  "0x43c3b87b": [
+   "0x435a1bb2",
+   "0x435a1be6"
+  ],
+  "0x43c3b89f": [
+   "0x435a1ca2"
+  ],
+  "0x43c3b8c9": [
+   "0x435a1cbe"
+  ],
+  "0x43c3b8f3": [
+   "0x435a1cc4"
+  ],
+  "0x43c3b91d": [
+   "0x435a1ce2"
+  ],
+  "0x43c3b953": [
+   "0x435a1cee",
+   "0x435a1edc",
+   "0x435a2072",
+   "0x435a21b8",
+   "0x435a230a",
+   "0x435a2782"
+  ],
+  "0x43c3b97b": [
+   "0x435a1d3c"
+  ],
+  "0x43c3b9a9": [
+   "0x435a1d66"
+  ],
+  "0x43c3b9d9": [
+   "0x435a1d7c"
+  ],
+  "0x43c3ba09": [
+   "0x435a1d92"
+  ],
+  "0x43c3ba39": [
+   "0x435a1daa"
+  ],
+  "0x43c3ba69": [
+   "0x435a1e00",
+   "0x435a20dc",
+   "0x435a222e",
+   "0x435a23f6"
+  ],
+  "0x43c3ba86": [
+   "0x435a1e3a"
+  ],
+  "0x43c3baad": [
+   "0x435a1e50"
+  ],
+  "0x43c3bad4": [
+   "0x435a1e68"
+  ],
+  "0x43c3bafb": [
+   "0x435a1e80"
+  ],
+  "0x43c3bb22": [
+   "0x435a1e96"
+  ],
+  "0x43c3bb4b": [
+   "0x435a1eac"
+  ],
+  "0x43c3bb74": [
+   "0x435a1ec2"
+  ],
+  "0x43c3bba0": [
+   "0x435a1f3e"
+  ],
+  "0x43c3bbe0": [
+   "0x435a1f7e"
+  ],
+  "0x43c3bc08": [
+   "0x435a1fa0"
+  ],
+  "0x43c3bc30": [
+   "0x435a1fc6"
+  ],
+  "0x43c3bc58": [
+   "0x435a1fe8"
+  ],
+  "0x43c3bc80": [
+   "0x435a200a"
+  ],
+  "0x43c3bca9": [
+   "0x435a202c"
+  ],
+  "0x43c3bcd2": [
+   "0x435a2066"
+  ],
+  "0x43c3bcfe": [
+   "0x435a2116"
+  ],
+  "0x43c3bd28": [
+   "0x435a212c"
+  ],
+  "0x43c3bd52": [
+   "0x435a2144"
+  ],
+  "0x43c3bd7c": [
+   "0x435a215c"
+  ],
+  "0x43c3bda6": [
+   "0x435a2172"
+  ],
+  "0x43c3bdd2": [
+   "0x435a2188"
+  ],
+  "0x43c3bdfe": [
+   "0x435a219e"
+  ],
+  "0x43c3be2d": [
+   "0x435a2268"
+  ],
+  "0x43c3be57": [
+   "0x435a227e"
+  ],
+  "0x43c3be81": [
+   "0x435a2296"
+  ],
+  "0x43c3beab": [
+   "0x435a22ae"
+  ],
+  "0x43c3bed5": [
+   "0x435a22c4"
+  ],
+  "0x43c3bf01": [
+   "0x435a22da"
+  ],
+  "0x43c3bf2d": [
+   "0x435a22f0"
+  ],
+  "0x43c3bf5c": [
+   "0x435a2364"
+  ],
+  "0x43c3bf7d": [
+   "0x435a23a2"
+  ],
+  "0x43c3bfc7": [
+   "0x435a243c"
+  ],
+  "0x43c3bfee": [
+   "0x435a2498",
+   "0x435a250a",
+   "0x435a2586",
+   "0x435a25fa",
+   "0x435a2664",
+   "0x435a26de",
+   "0x435a2760"
+  ],
+  "0x43c3c04e": [
+   "0x435a24a8"
+  ],
+  "0x43c3c075": [
+   "0x435a2522"
+  ],
+  "0x43c3c09c": [
+   "0x435a2596"
+  ],
+  "0x43c3c0c3": [
+   "0x435a267a",
+   "0x435a26f4"
+  ],
+  "0x43c3c0eb": [
+   "0x435a2776"
+  ],
+  "0x43c73649": [
+   "0x43629c58"
+  ],
+  "0x43cdb41a": [
+   "0x43920bd8"
+  ],
+  "0x43cdb46d": [
+   "0x43920c38",
+   "0x43920ca8"
+  ],
+  "0x43cdb492": [
+   "0x43920c6a",
+   "0x43920cda"
+  ]
+ },
+ "funciones": {
+  "0x435a1b64": {
+   "clase": "CdCtrlCore",
+   "nombre": "SetCompNormal",
+   "firma": "CDIAGER CdCtrlCore::SetCompNormal(OsalResponsePacket*, __uint32_t)",
+   "firma_vaddr": "0x43c3b7a9",
+   "fichero": "cdCtrlCore.cpp",
+   "linea": 701,
+   "evidencia_nombre": "guard_block(file/func/line)",
+   "sitios": [
+    "0x435a1b72"
+   ],
+   "cadenas": [
+    "0x43c3b82d"
+   ],
+   "llamadores_bl": [
+    "0x435a18b8",
+    "0x435a18d6",
+    "0x435a190e",
+    "0x435a1952"
+   ],
+   "n_sitios": 1,
+   "n_cadenas": 1
+  },
+  "0x435a1c14": {
+   "clase": "CdCtrlCore",
+   "nombre": "SetCompDeleteData",
+   "firma": "CDIAGER CdCtrlCore::SetCompDeleteData(OsalResponsePacket*, __uint32_t)",
+   "firma_vaddr": "0x43c3c19c",
+   "fichero": "cdCtrlCore.cpp",
+   "linea": 847,
+   "evidencia_nombre": "guard_block(file/func/line)",
+   "sitios": [
+    "0x435a1c22"
+   ],
+   "cadenas": [
+    "0x43c3b82d"
+   ],
+   "llamadores_bl": [
+    "0x435a192c"
+   ],
+   "n_sitios": 1,
+   "n_cadenas": 1
+  },
+  "0x435a1bac": {
+   "clase": "CdCtrlCore",
+   "nombre": null,
+   "firma": null,
+   "firma_vaddr": null,
+   "fichero": null,
+   "linea": null,
+   "evidencia_nombre": "guard_corto (solo '[ERR][CDIAG][CTRLCORE]p_prm is NULL')",
+   "sitios": [
+    "0x435a1bb2"
+   ],
+   "cadenas": [
+    "0x43c3b87b"
+   ],
+   "llamadores_bl": [
+    "0x435a18c4"
+   ],
+   "n_sitios": 1,
+   "n_cadenas": 1
+  },
+  "0x435a1be0": {
+   "clase": "CdCtrlCore",
+   "nombre": null,
+   "firma": null,
+   "firma_vaddr": null,
+   "fichero": null,
+   "linea": null,
+   "evidencia_nombre": "guard_corto (solo '[ERR][CDIAG][CTRLCORE]p_prm is NULL')",
+   "sitios": [
+    "0x435a1be6"
+   ],
+   "cadenas": [
+    "0x43c3b87b"
+   ],
+   "llamadores_bl": [
+    "0x435a191a"
+   ],
+   "n_sitios": 1,
+   "n_cadenas": 1
+  },
+  "0x435a1c5c": {
+   "clase": "CdCtrlCore",
+   "nombre": "DbgDiagAvc",
+   "firma": "CDIAGER CdCtrlCore::DbgDiagAvc(__uint8_t, __uint8_t, __uint8_t, __uint8_t)",
+   "firma_vaddr": "0x43c3b6df",
+   "fichero": "cdCtrlCore.cpp",
+   "linea": null,
+   "evidencia_nombre": "firma_pic_dentro_de_la_funcion (sitio 0x435a1cf0)",
+   "sitios": [
+    "0x435a1ca2",
+    "0x435a1cbe",
+    "0x435a1cc4",
+    "0x435a1ce2",
+    "0x435a1cee"
+   ],
+   "cadenas": [
+    "0x43c3b89f",
+    "0x43c3b8c9",
+    "0x43c3b8f3",
+    "0x43c3b91d",
+    "0x43c3b953"
+   ],
+   "llamadores_bl": [
+    "0x435a177c"
+   ],
+   "n_sitios": 5,
+   "n_cadenas": 5
+  },
+  "0x435a1de0": {
+   "clase": "CdCtrlCore",
+   "nombre": "CmpData",
+   "firma": "CDIAGER CdCtrlCore::CmpData(__uint8_t, __uint8_t, __uint32_t)",
+   "firma_vaddr": "0x43c3b72a",
+   "fichero": "cdCtrlCore.cpp",
+   "linea": null,
+   "evidencia_nombre": "firma_pic_dentro_de_la_funcion (sitio 0x435a1ede)",
+   "sitios": [
+    "0x435a1edc",
+    "0x435a1e00",
+    "0x435a1e3a",
+    "0x435a1e50",
+    "0x435a1e68",
+    "0x435a1e80",
+    "0x435a1e96",
+    "0x435a1eac",
+    "0x435a1ec2"
+   ],
+   "cadenas": [
+    "0x43c3b953",
+    "0x43c3ba69",
+    "0x43c3ba86",
+    "0x43c3baad",
+    "0x43c3bad4",
+    "0x43c3bafb",
+    "0x43c3bb22",
+    "0x43c3bb4b",
+    "0x43c3bb74"
+   ],
+   "llamadores_bl": [
+    "0x435a16ac"
+   ],
+   "n_sitios": 9,
+   "n_cadenas": 9
+  },
+  "0x435a1f18": {
+   "clase": "CdCtrlCore",
+   "nombre": "RunCodec",
+   "firma": "CDIAGER CdCtrlCore::RunCodec(__uint8_t, __uint8_t, __uint32_t)",
+   "firma_vaddr": "0x43c3c123",
+   "fichero": "cdCtrlCore.cpp",
+   "linea": null,
+   "evidencia_nombre": "firma_pic_dentro_de_la_funcion (sitio 0x435a2074)",
+   "sitios": [
+    "0x435a2072",
+    "0x435a1f3e",
+    "0x435a1f7e",
+    "0x435a1fa0",
+    "0x435a1fc6",
+    "0x435a1fe8",
+    "0x435a200a",
+    "0x435a202c",
+    "0x435a2066"
+   ],
+   "cadenas": [
+    "0x43c3b953",
+    "0x43c3bba0",
+    "0x43c3bbe0",
+    "0x43c3bc08",
+    "0x43c3bc30",
+    "0x43c3bc58",
+    "0x43c3bc80",
+    "0x43c3bca9",
+    "0x43c3bcd2"
+   ],
+   "llamadores_bl": [
+    "0x435a14c2"
+   ],
+   "n_sitios": 9,
+   "n_cadenas": 9
+  },
+  "0x435a20b0": {
+   "clase": "CdCtrlCore",
+   "nombre": "RelMemArea",
+   "firma": "CDIAGER CdCtrlCore::RelMemArea(__uint8_t, __uint8_t, __uint32_t)",
+   "firma_vaddr": "0x43c3b768",
+   "fichero": "cdCtrlCore.cpp",
+   "linea": null,
+   "evidencia_nombre": "firma_pic_dentro_de_la_funcion (sitio 0x435a21ba)",
+   "sitios": [
+    "0x435a21b8",
+    "0x435a20dc",
+    "0x435a2116",
+    "0x435a212c",
+    "0x435a2144",
+    "0x435a215c",
+    "0x435a2172",
+    "0x435a2188",
+    "0x435a219e"
+   ],
+   "cadenas": [
+    "0x43c3b953",
+    "0x43c3ba69",
+    "0x43c3bcfe",
+    "0x43c3bd28",
+    "0x43c3bd52",
+    "0x43c3bd7c",
+    "0x43c3bda6",
+    "0x43c3bdd2",
+    "0x43c3bdfe"
+   ],
+   "llamadores_bl": [
+    "0x435a14a2"
+   ],
+   "n_sitios": 9,
+   "n_cadenas": 9
+  },
+  "0x435a2200": {
+   "clase": "CdCtrlCore",
+   "nombre": "SetMemArea",
+   "firma": "CDIAGER CdCtrlCore::SetMemArea(__uint8_t, __uint8_t, __uint32_t)",
+   "firma_vaddr": "0x43c3b7ec",
+   "fichero": "cdCtrlCore.cpp",
+   "linea": null,
+   "evidencia_nombre": "firma_pic_dentro_de_la_funcion (sitio 0x435a230c)",
+   "sitios": [
+    "0x435a230a",
+    "0x435a222e",
+    "0x435a2268",
+    "0x435a227e",
+    "0x435a2296",
+    "0x435a22ae",
+    "0x435a22c4",
+    "0x435a22da",
+    "0x435a22f0"
+   ],
+   "cadenas": [
+    "0x43c3b953",
+    "0x43c3ba69",
+    "0x43c3be2d",
+    "0x43c3be57",
+    "0x43c3be81",
+    "0x43c3beab",
+    "0x43c3bed5",
+    "0x43c3bf01",
+    "0x43c3bf2d"
+   ],
+   "llamadores_bl": [
+    "0x435a1482"
+   ],
+   "n_sitios": 9,
+   "n_cadenas": 9
+  },
+  "0x435a23b4": {
+   "clase": "CdCtrlCore",
+   "nombre": "SetData",
+   "firma": "CDIAGER CdCtrlCore::SetData(const __uint8_t*, __uint32_t)",
+   "firma_vaddr": "0x43c3c162",
+   "fichero": "cdCtrlCore.cpp",
+   "linea": null,
+   "evidencia_nombre": "guard_block simplificado ('p_info is NULL', file, func)",
+   "sitios": [
+    "0x435a2782",
+    "0x435a23f6",
+    "0x435a243c",
+    "0x435a2498",
+    "0x435a250a",
+    "0x435a2586",
+    "0x435a25fa",
+    "0x435a2664",
+    "0x435a26de",
+    "0x435a2760",
+    "0x435a24a8",
+    "0x435a2522",
+    "0x435a2596",
+    "0x435a267a",
+    "0x435a26f4",
+    "0x435a2776"
+   ],
+   "cadenas": [
+    "0x43c3b953",
+    "0x43c3ba69",
+    "0x43c3bfc7",
+    "0x43c3bfee",
+    "0x43c3c04e",
+    "0x43c3c075",
+    "0x43c3c09c",
+    "0x43c3c0c3",
+    "0x43c3c0eb"
+   ],
+   "llamadores_bl": [
+    "0x435a16c4",
+    "0x435a16f0"
+   ],
+   "n_sitios": 16,
+   "n_cadenas": 9
+  },
+  "0x435a1d1c": {
+   "clase": "CdCtrlCore",
+   "nombre": "ConfirmDoneCodec",
+   "firma": null,
+   "firma_vaddr": null,
+   "fichero": "cdCtrlCore.cpp",
+   "linea": null,
+   "evidencia_nombre": "traza '[CDIAG][CTRLCORE]ExecCmd !! ConfirmDoneCodec'",
+   "sitios": [
+    "0x435a1d3c",
+    "0x435a1d66",
+    "0x435a1d7c",
+    "0x435a1d92",
+    "0x435a1daa"
+   ],
+   "cadenas": [
+    "0x43c3b97b",
+    "0x43c3b9a9",
+    "0x43c3b9d9",
+    "0x43c3ba09",
+    "0x43c3ba39"
+   ],
+   "llamadores_bl": [
+    "0x435a172e"
+   ],
+   "n_sitios": 5,
+   "n_cadenas": 5
+  },
+  "0x435a2354": {
+   "clase": "CdCtrlCore",
+   "nombre": "SetDiagMode",
+   "firma": null,
+   "firma_vaddr": null,
+   "fichero": "cdCtrlCore.cpp",
+   "linea": null,
+   "evidencia_nombre": "trazas '[SET_DIAG_MODE] mode[..] func[..]'",
+   "sitios": [
+    "0x435a2364",
+    "0x435a23a2"
+   ],
+   "cadenas": [
+    "0x43c3bf5c",
+    "0x43c3bf7d"
+   ],
+   "llamadores_bl": [
+    "0x435a1684"
+   ],
+   "n_sitios": 2,
+   "n_cadenas": 2
+  },
+  "0x43629c4c": {
+   "clase": "McSensCtrlCore",
+   "nombre": "SetCompNormal",
+   "firma": "MCSENSERR McSensCtrlCore::SetCompNormal(OsalResponsePacket*, __uint32_t)",
+   "firma_vaddr": "0x43c7369c",
+   "fichero": "mcSensCtrlCore.cpp",
+   "linea": 19,
+   "evidencia_nombre": "guard_block(file/func/line)",
+   "sitios": [
+    "0x43629c58"
+   ],
+   "cadenas": [
+    "0x43c73649"
+   ],
+   "llamadores_bl": [
+    "0x43620044"
+   ],
+   "n_sitios": 1,
+   "n_cadenas": 1
+  },
+  "0x43920bcc": {
+   "clase": "AmSensCtrlCore",
+   "nombre": "SetCompNormal",
+   "firma": "AMSENSERR AmSensCtrlCore::SetCompNormal(OsalResponsePacket*, __uint32_t)",
+   "firma_vaddr": "0x43cdb4c7",
+   "fichero": "amSensCtrlCore.cpp",
+   "linea": 38,
+   "evidencia_nombre": "guard_block(file/func/line)",
+   "sitios": [
+    "0x43920bd8"
+   ],
+   "cadenas": [
+    "0x43cdb41a"
+   ],
+   "llamadores_bl": [
+    "0x4391ad28",
+    "0x4391ad46",
+    "0x4391ad7c",
+    "0x4391ada0"
+   ],
+   "n_sitios": 1,
+   "n_cadenas": 1
+  },
+  "0x43920c2c": {
+   "clase": "AmSensCtrlCore",
+   "nombre": null,
+   "firma": null,
+   "firma_vaddr": null,
+   "fichero": "amSensCtrlCore.cpp",
+   "linea": null,
+   "evidencia_nombre": "traza '[AMSENS][CTRLCORE][AVCE][PARAM] adr[..] size[..]'",
+   "sitios": [
+    "0x43920c38",
+    "0x43920c6a"
+   ],
+   "cadenas": [
+    "0x43cdb46d",
+    "0x43cdb492"
+   ],
+   "llamadores_bl": [
+    "0x4391ad32"
+   ],
+   "n_sitios": 2,
+   "n_cadenas": 2
+  },
+  "0x43920c9c": {
+   "clase": "AmSensCtrlCore",
+   "nombre": null,
+   "firma": null,
+   "firma_vaddr": null,
+   "fichero": "amSensCtrlCore.cpp",
+   "linea": null,
+   "evidencia_nombre": "traza '[AMSENS][CTRLCORE][AVCE][PARAM] adr[..] size[..]'",
+   "sitios": [
+    "0x43920ca8",
+    "0x43920cda"
+   ],
+   "cadenas": [
+    "0x43cdb46d",
+    "0x43cdb492"
+   ],
+   "llamadores_bl": [
+    "0x4391ad86"
+   ],
+   "n_sitios": 2,
+   "n_cadenas": 2
+  }
+ },
+ "rtti": {
+  "CdCtrlCore": {
+   "vaddr": "0x43c3b6e7",
+   "punteros_4B": []
+  },
+  "McSensCtrlCore": {
+   "vaddr": "0x43c4147d",
+   "punteros_4B": []
+  },
+  "McAvCtrlCore": {
+   "vaddr": "0x43c42a70",
+   "punteros_4B": []
+  },
+  "AmSensCtrlCore": {
+   "vaddr": "0x43cdb4d1",
+   "punteros_4B": []
+  }
+ },
+ "ficheros_fuente": {
+  "cdCtrlCore.cpp": "0x43c3b86c",
+  "mcSensCtrlCore.cpp": "0x43c73689",
+  "mcAvCtrlCore.cpp": "0x43c454e8",
+  "amSensCtrlCore.cpp": "0x43cdb45a"
+ },
+ "punteros_4B_a_cadenas": {
+  "0x43c3b82d": [],
+  "0x43c3b87b": [],
+  "0x43c3b89f": [],
+  "0x43c3b8c9": [],
+  "0x43c3b8f3": [],
+  "0x43c3b91d": [],
+  "0x43c3b953": [],
+  "0x43c3b97b": [],
+  "0x43c3b9a9": [],
+  "0x43c3b9d9": [],
+  "0x43c3ba09": [],
+  "0x43c3ba39": [],
+  "0x43c3ba69": [],
+  "0x43c3ba86": [],
+  "0x43c3baad": [],
+  "0x43c3bad4": [],
+  "0x43c3bafb": [],
+  "0x43c3bb22": [],
+  "0x43c3bb4b": [],
+  "0x43c3bb74": [],
+  "0x43c3bba0": [],
+  "0x43c3bbe0": [],
+  "0x43c3bc08": [],
+  "0x43c3bc30": [],
+  "0x43c3bc58": [],
+  "0x43c3bc80": [],
+  "0x43c3bca9": [],
+  "0x43c3bcd2": [],
+  "0x43c3bcfe": [],
+  "0x43c3bd28": [],
+  "0x43c3bd52": [],
+  "0x43c3bd7c": [],
+  "0x43c3bda6": [],
+  "0x43c3bdd2": [],
+  "0x43c3bdfe": [],
+  "0x43c3be2d": [],
+  "0x43c3be57": [],
+  "0x43c3be81": [],
+  "0x43c3beab": [],
+  "0x43c3bed5": [],
+  "0x43c3bf01": [],
+  "0x43c3bf2d": [],
+  "0x43c3bf5c": [],
+  "0x43c3bf7d": [],
+  "0x43c3bfc7": [],
+  "0x43c3bfee": [],
+  "0x43c3c04e": [],
+  "0x43c3c075": [],
+  "0x43c3c09c": [],
+  "0x43c3c0c3": [],
+  "0x43c3c0eb": [],
+  "0x43c73649": [],
+  "0x43cdb41a": [],
+  "0x43cdb46d": [],
+  "0x43cdb492": []
+ },
+ "despachadores": {
+  "CdCtrlIf::ExecCmd": {
+   "vaddr": "0x435a1424",
+   "firma_vaddr": "0x43c3b647",
+   "fichero": "cdCtrlIf.cpp",
+   "fichero_vaddr": "0x43c3b1a8",
+   "guard_linea": 194,
+   "arg": "CdCtrlIf::MSG_SENS_COMMAND*",
+   "tabla": [
+    {
+     "id": 2,
+     "accion": "SetMemArea",
+     "destino": "0x435a2200",
+     "sitio": "0x435a1482"
+    },
+    {
+     "id": 3,
+     "accion": "RelMemArea",
+     "destino": "0x435a20b0",
+     "sitio": "0x435a14a2"
+    },
+    {
+     "id": 17,
+     "accion": "RunCodec",
+     "destino": "0x435a1f18",
+     "sitio": "0x435a14c2"
+    },
+    {
+     "id": "otro",
+     "accion": "log '[ERR][CDIAG][CTRLIF]NOT SUPPORTED -- COMMAND ID...' 0x43c3b238 y return 1",
+     "sitio": "0x435a14d0"
+    }
+   ]
+  },
+  "CdCtrlIf::ExecSensCmd": {
+   "vaddr": "0x435a15e8",
+   "firma_vaddr": "0x43c3b688",
+   "fichero": "cdCtrlIf.cpp",
+   "fichero_vaddr": "0x43c3b1a8",
+   "guard_linea": 65,
+   "arg": "(__uint32_t id, const OsalRequestPacket*, __uint32_t)",
+   "tabla": [
+    {
+     "id": 1,
+     "accion": "SetDiagMode",
+     "destino": "0x435a2354"
+    },
+    {
+     "id": "2/3/0x11",
+     "accion": "envio de trama de 12 B",
+     "destino": "0x435a157c"
+    },
+    {
+     "id": 18,
+     "accion": "CmpData",
+     "destino": "0x435a1de0"
+    },
+    {
+     "id": 33,
+     "sub": "1",
+     "accion": "SetData",
+     "destino": "0x435a23b4"
+    },
+    {
+     "id": 33,
+     "sub": "4",
+     "accion": "SetData",
+     "destino": "0x435a23b4"
+    },
+    {
+     "id": 34,
+     "sub": "1",
+     "accion": "SetData",
+     "destino": "0x435a23b4"
+    },
+    {
+     "id": 50,
+     "accion": "handler 0x43a48d16"
+    },
+    {
+     "id": 51,
+     "accion": "handler 0x43a48cf2"
+    },
+    {
+     "id": 65,
+     "accion": "ConfirmDoneCodec",
+     "destino": "0x435a1d1c"
+    },
+    {
+     "id": 209,
+     "accion": "DbgDiagAvc",
+     "destino": "0x435a1c5c"
+    },
+    {
+     "id": "otro",
+     "accion": "log NOT SUPPORTED y return 1"
+    }
+   ]
+  },
+  "CdCtrlIf::ExecSensComp": {
+   "vaddr": "0x435a17e8",
+   "firma_vaddr": "0x43c3b688",
+   "fichero": "cdCtrlIf.cpp",
+   "fichero_vaddr": "0x43c3b1a8",
+   "guard_linea": 301,
+   "arg": "(__uint32_t id, OsalResponsePacket*, __uint32_t)",
+   "tabla": [
+    {
+     "id": 1,
+     "log": "SENS_SET_DIAG_MODE",
+     "log_vaddr": "0x43c3b518",
+     "accion": "SetCompNormal Cd",
+     "destino": "0x435a1b64"
+    },
+    {
+     "id": 2,
+     "log": "SENS_SET_DATA_AREA",
+     "log_vaddr": "0x43c3b540"
+    },
+    {
+     "id": 3,
+     "log": "SENS_REL_DATA_AREA",
+     "log_vaddr": "0x43c3b568"
+    },
+    {
+     "id": 17,
+     "log": "SENS_RUN_CODEC",
+     "log_vaddr": "0x43c3b590"
+    },
+    {
+     "id": 18,
+     "log": "SENS_CMP_DATA",
+     "log_vaddr": "0x43c3b5b4"
+    },
+    {
+     "id": 33,
+     "log": "SENS_SET_DATA",
+     "log_vaddr": "0x43c3b601",
+     "sub1": [
+      "SetCompNormal 0x435a1b64",
+      "0x435a1bac",
+      "SENS_MODE_PROC_START 0x43c3b37f"
+     ],
+     "sub4": [
+      "SetCompNormal 0x435a1b64",
+      "SENS_MODE_FIN_SEND_DATA 0x43c3b3b2"
+     ]
+    },
+    {
+     "id": 34,
+     "log": "SENS_GET_DATA",
+     "log_vaddr": "0x43c3b624",
+     "sub1": [
+      "SetCompNormal 0x435a1b64",
+      "0x435a1be0",
+      "SENS_MODE_PROC_START 0x43c3b37f"
+     ],
+     "sub16": [
+      "0x435a1c14",
+      "SENS_MODE_FIN_RECV_DATA 0x43c3b433"
+     ]
+    },
+    {
+     "id": 50,
+     "log": "SENS_CNFM_SET_DATA_AREA",
+     "log_vaddr": "0x43c3b497"
+    },
+    {
+     "id": 51,
+     "log": "SENS_CNFM_REL_DATA_AREA",
+     "log_vaddr": "0x43c3b4c4"
+    },
+    {
+     "id": 65,
+     "log": "SENS_CNFM_DONE_CODEC",
+     "log_vaddr": "0x43c3b5d7"
+    },
+    {
+     "id": 209,
+     "log": "SENS_DBG_DIAG_AVC",
+     "log_vaddr": "0x43c3b4f1"
+    },
+    {
+     "id": "otro",
+     "log": "[ERR][CDIAG][CTRLIF]NOT SUPPORTED -- COMMAND ID",
+     "log_vaddr": "0x43c3b238"
+    }
+   ]
+  }
+ },
+ "singleton": {
+  "accesor": "0x435a1b18",
+  "constructor": "0x435a1a68",
+  "bandera": "0x43e4a768",
+  "objeto": "0x43e4a76c",
+  "registro": "0x439b4244",
+  "tabla_registro_base": "0x4401eee4",
+  "offsets_tabla": [
+   "0x6c4c",
+   "0x65e8"
+  ],
+  "llamadores": [
+   "0x435a1472",
+   "0x435a1492",
+   "0x435a14b2",
+   "0x435a1674",
+   "0x435a169c",
+   "0x435a16ba",
+   "0x435a16e6",
+   "0x435a171e",
+   "0x435a1732",
+   "0x435a1748",
+   "0x435a176e",
+   "0x435a18b0",
+   "0x435a18bc",
+   "0x435a18ce",
+   "0x435a1906",
+   "0x435a1912",
+   "0x435a1924",
+   "0x435a194a"
+  ]
+ },
+ "grafo_entrante": {
+  "0x435a121c": {
+   "tipo": "switch por id de mensaje",
+   "llamado_en": "0x435a1382",
+   "bucle": "0x435a136e-0x435a1388",
+   "rama_CdCtrlIf_ExecCmd": "0x435a123e -> b.w 0x435a1424",
+   "rama_0x43a48c40": "0x435a1234 b.w 0x43a48c40",
+   "init_previa": "0x435a13d8 (registro 0x439b4244)"
+  },
+  "CdCtrlIf::ExecSensCmd": {
+   "llamadores_bl": [],
+   "nota": "sin BL directo ni puntero absoluto de 4 B; invocacion indirecta (NO VERIFICADO)"
+  },
+  "CdCtrlIf::ExecSensComp": {
+   "llamadores_bl": [],
+   "nota": "sin BL directo ni puntero absoluto de 4 B; invocacion indirecta (NO VERIFICADO)"
+  }
+ },
+ "diferencial": {
+  "A7S_fw320": {
+   "ocurrencias_token": 55,
+   "textos": 55,
+   "comunes": [
+    "[AMSENS][CTRLCORE][AVCE][PARAM] adr[0x%08X] size[%d]",
+    "[CDIAG][CTRLCORE]Exec CmpData HD DEC!!",
+    "[CDIAG][CTRLCORE]Exec CmpData HD REC!!",
+    "[CDIAG][CTRLCORE]Exec CmpData JPEG DEC!!",
+    "[CDIAG][CTRLCORE]Exec CmpData JPEG ENC!!",
+    "[CDIAG][CTRLCORE]Exec CmpData JPEG ENCDEC!!",
+    "[CDIAG][CTRLCORE]Exec CmpData SD DEC!!",
+    "[CDIAG][CTRLCORE]Exec CmpData SD REC!!",
+    "[CDIAG][CTRLCORE]Exec ConfirmDoneCodec HD DEC!!",
+    "[CDIAG][CTRLCORE]Exec ConfirmDoneCodec HD REC!!",
+    "[CDIAG][CTRLCORE]Exec ConfirmDoneCodec SD DEC!!",
+    "[CDIAG][CTRLCORE]Exec ConfirmDoneCodec SD REC!!",
+    "[CDIAG][CTRLCORE]Exec DbgDiagAvc HD DEC!!",
+    "[CDIAG][CTRLCORE]Exec DbgDiagAvc HD REC!!",
+    "[CDIAG][CTRLCORE]Exec DbgDiagAvc SD DEC!!(NotSupport)",
+    "[CDIAG][CTRLCORE]Exec DbgDiagAvc SD REC!!",
+    "[CDIAG][CTRLCORE]Exec RelMemArea HD DEC!!",
+    "[CDIAG][CTRLCORE]Exec RelMemArea HD REC!!",
+    "[CDIAG][CTRLCORE]Exec RelMemArea JPEG DEC!!",
+    "[CDIAG][CTRLCORE]Exec RelMemArea JPEG ENC!!",
+    "[CDIAG][CTRLCORE]Exec RelMemArea JPEG ENCDEC!!",
+    "[CDIAG][CTRLCORE]Exec RelMemArea SD DEC!!",
+    "[CDIAG][CTRLCORE]Exec RelMemArea SD REC!!",
+    "[CDIAG][CTRLCORE]Exec RunCodec HD DEC!!",
+    "[CDIAG][CTRLCORE]Exec RunCodec HD REC!!",
+    "[CDIAG][CTRLCORE]Exec RunCodec JPG DEC!!",
+    "[CDIAG][CTRLCORE]Exec RunCodec JPG ENC!!",
+    "[CDIAG][CTRLCORE]Exec RunCodec JPG ENCDEC!!",
+    "[CDIAG][CTRLCORE]Exec RunCodec SD DEC!!",
+    "[CDIAG][CTRLCORE]Exec RunCodec SD REC!!",
+    "[CDIAG][CTRLCORE]Exec SetData HD DEC!!",
+    "[CDIAG][CTRLCORE]Exec SetData HD REC!!",
+    "[CDIAG][CTRLCORE]Exec SetData JPG ENC!!",
+    "[CDIAG][CTRLCORE]Exec SetData JPG ENCDEC!!",
+    "[CDIAG][CTRLCORE]Exec SetData SD DEC!!",
+    "[CDIAG][CTRLCORE]Exec SetData SD REC!!",
+    "[CDIAG][CTRLCORE]Exec SetMemArea HD DEC!!",
+    "[CDIAG][CTRLCORE]Exec SetMemArea HD REC!!",
+    "[CDIAG][CTRLCORE]Exec SetMemArea JPEG DEC!!",
+    "[CDIAG][CTRLCORE]Exec SetMemArea JPEG ENC!!",
+    "[CDIAG][CTRLCORE]Exec SetMemArea JPEG ENCDEC!!",
+    "[CDIAG][CTRLCORE]Exec SetMemArea SD DEC!!",
+    "[CDIAG][CTRLCORE]Exec SetMemArea SD REC!!",
+    "[CDIAG][CTRLCORE]ExecCmd !!\n",
+    "[CDIAG][CTRLCORE]ExecCmd !! ConfirmDoneCodec\n",
+    "[CDIAG][CTRLCORE]ExecCmd !! [0x%04X] mode[0x%02X] func[0x%02X]\n",
+    "[CDIAG][CTRLCORE]No Support EXEC MODE!!",
+    "[CDIAG][CTRLCORE]SetDiagMode !!\n",
+    "[CDIAG][CTRLCORE][SET_DIAG_MODE] mode[0x%02X] func[0x%02X]",
+    "[CDIAG][CTRLCORE]memIdx[%d] fileId[%02d:%02d] unitHandle[0x%04X] unitType[0x%08X] size[0x%08X]\n",
+    "[ERR][AMSENS][CTRLCORE]p_prm is NULL",
+    "[ERR][AMSENS][CTRLCORE]p_prm is NULL file[%s] func[%s] line[%d]",
+    "[ERR][CDIAG][CTRLCORE]p_prm is NULL",
+    "[ERR][CDIAG][CTRLCORE]p_prm is NULL file[%s] func[%s] line[%d]",
+    "[ERR][MCSENS][CTRLCORE]p_prm is NULL file[%s] func[%s] line[%d]"
+   ],
+   "solo_a6000": [],
+   "solo_modelo": []
+  },
+  "A6300_fw201": {
+   "ocurrencias_token": 90,
+   "textos": 90,
+   "comunes": [
+    "[AMSENS][CTRLCORE][AVCE][PARAM] adr[0x%08X] size[%d]",
+    "[CDIAG][CTRLCORE]Exec CmpData HD DEC!!",
+    "[CDIAG][CTRLCORE]Exec CmpData HD REC!!",
+    "[CDIAG][CTRLCORE]Exec CmpData JPEG DEC!!",
+    "[CDIAG][CTRLCORE]Exec CmpData JPEG ENC!!",
+    "[CDIAG][CTRLCORE]Exec CmpData JPEG ENCDEC!!",
+    "[CDIAG][CTRLCORE]Exec CmpData SD DEC!!",
+    "[CDIAG][CTRLCORE]Exec CmpData SD REC!!",
+    "[CDIAG][CTRLCORE]Exec ConfirmDoneCodec HD DEC!!",
+    "[CDIAG][CTRLCORE]Exec ConfirmDoneCodec HD REC!!",
+    "[CDIAG][CTRLCORE]Exec ConfirmDoneCodec SD DEC!!",
+    "[CDIAG][CTRLCORE]Exec ConfirmDoneCodec SD REC!!",
+    "[CDIAG][CTRLCORE]Exec DbgDiagAvc HD DEC!!",
+    "[CDIAG][CTRLCORE]Exec DbgDiagAvc HD REC!!",
+    "[CDIAG][CTRLCORE]Exec DbgDiagAvc SD DEC!!(NotSupport)",
+    "[CDIAG][CTRLCORE]Exec DbgDiagAvc SD REC!!",
+    "[CDIAG][CTRLCORE]Exec RelMemArea HD DEC!!",
+    "[CDIAG][CTRLCORE]Exec RelMemArea HD REC!!",
+    "[CDIAG][CTRLCORE]Exec RelMemArea JPEG DEC!!",
+    "[CDIAG][CTRLCORE]Exec RelMemArea JPEG ENC!!",
+    "[CDIAG][CTRLCORE]Exec RelMemArea JPEG ENCDEC!!",
+    "[CDIAG][CTRLCORE]Exec RelMemArea SD DEC!!",
+    "[CDIAG][CTRLCORE]Exec RelMemArea SD REC!!",
+    "[CDIAG][CTRLCORE]Exec RunCodec HD DEC!!",
+    "[CDIAG][CTRLCORE]Exec RunCodec HD REC!!",
+    "[CDIAG][CTRLCORE]Exec RunCodec JPG DEC!!",
+    "[CDIAG][CTRLCORE]Exec RunCodec JPG ENC!!",
+    "[CDIAG][CTRLCORE]Exec RunCodec JPG ENCDEC!!",
+    "[CDIAG][CTRLCORE]Exec RunCodec SD DEC!!",
+    "[CDIAG][CTRLCORE]Exec RunCodec SD REC!!",
+    "[CDIAG][CTRLCORE]Exec SetData HD DEC!!",
+    "[CDIAG][CTRLCORE]Exec SetData HD REC!!",
+    "[CDIAG][CTRLCORE]Exec SetData JPG ENC!!",
+    "[CDIAG][CTRLCORE]Exec SetData JPG ENCDEC!!",
+    "[CDIAG][CTRLCORE]Exec SetData SD DEC!!",
+    "[CDIAG][CTRLCORE]Exec SetData SD REC!!",
+    "[CDIAG][CTRLCORE]Exec SetMemArea HD DEC!!",
+    "[CDIAG][CTRLCORE]Exec SetMemArea HD REC!!",
+    "[CDIAG][CTRLCORE]Exec SetMemArea JPEG DEC!!",
+    "[CDIAG][CTRLCORE]Exec SetMemArea JPEG ENC!!",
+    "[CDIAG][CTRLCORE]Exec SetMemArea JPEG ENCDEC!!",
+    "[CDIAG][CTRLCORE]Exec SetMemArea SD DEC!!",
+    "[CDIAG][CTRLCORE]Exec SetMemArea SD REC!!",
+    "[CDIAG][CTRLCORE]ExecCmd !!\n",
+    "[CDIAG][CTRLCORE]ExecCmd !! ConfirmDoneCodec\n",
+    "[CDIAG][CTRLCORE]ExecCmd !! [0x%04X] mode[0x%02X] func[0x%02X]\n",
+    "[CDIAG][CTRLCORE]No Support EXEC MODE!!",
+    "[CDIAG][CTRLCORE]SetDiagMode !!\n",
+    "[CDIAG][CTRLCORE][SET_DIAG_MODE] mode[0x%02X] func[0x%02X]",
+    "[CDIAG][CTRLCORE]memIdx[%d] fileId[%02d:%02d] unitHandle[0x%04X] unitType[0x%08X] size[0x%08X]\n",
+    "[ERR][AMSENS][CTRLCORE]p_prm is NULL",
+    "[ERR][AMSENS][CTRLCORE]p_prm is NULL file[%s] func[%s] line[%d]",
+    "[ERR][CDIAG][CTRLCORE]p_prm is NULL",
+    "[ERR][CDIAG][CTRLCORE]p_prm is NULL file[%s] func[%s] line[%d]",
+    "[ERR][MCSENS][CTRLCORE]p_prm is NULL file[%s] func[%s] line[%d]"
+   ],
+   "solo_a6000": [],
+   "solo_modelo": [
+    "[CDEXT][CTRLCORE]    unitHandle = 0x%08X, seg.adr = 0x%08X, seg.size = %d",
+    "[CDEXT][CTRLCORE]Data0[0x%02X] Data1[0x%02X]",
+    "[CDEXT][CTRLCORE]Data0[0x%02X] Data1[0x%02X] Data2[0x%02X]",
+    "[CDEXT][CTRLCORE]ExecVideoCodecDiag !!\n",
+    "[CDEXT][CTRLCORE]LoopbackControl !!\n",
+    "[CDEXT][CTRLCORE]MEM AROOC SUCCESS [MEM_UNIT_IN_BUF], unitType = 0x%08X",
+    "[CDEXT][CTRLCORE]MEM AROOC SUCCESS [MEM_UNIT_OUT_BUF], unitType = 0x%08X",
+    "[CDEXT][CTRLCORE]StartVideoCodecDiag !!\n",
+    "[CDEXT][CTRLCORE][EXEC_VIDEODIAG]",
+    "[CDEXT][CTRLCORE][LOOPBACK_CONTROL] device[0x%02X] mode[0x%02X] func[0x%02X] dataType[0x%02X]",
+    "[CDEXT][CTRLCORE][START_VIDEODIAG] MEM AROOC SUCCESS",
+    "[CDEXT][CTRLCORE][START_VIDEODIAG] device[0x%02X] dataType[0x%02X]",
+    "[CDEXT][CTRLCORE][VIDEODIAG] MEM FREE SUCCESS",
+    "[CDIAG][CTRLCORE]Exec CmpData 4K DEC!!",
+    "[CDIAG][CTRLCORE]Exec CmpData 4K REC!!",
+    "[CDIAG][CTRLCORE]Exec ConfirmDoneCodec 4K DEC!!",
+    "[CDIAG][CTRLCORE]Exec ConfirmDoneCodec 4K REC!!",
+    "[CDIAG][CTRLCORE]Exec DbgDiagAvc 4K DEC!!",
+    "[CDIAG][CTRLCORE]Exec DbgDiagAvc 4K REC!!",
+    "[CDIAG][CTRLCORE]Exec RelMemArea 4K DEC!!",
+    "[CDIAG][CTRLCORE]Exec RelMemArea 4K REC!!",
+    "[CDIAG][CTRLCORE]Exec RunCodec 4K DEC!!",
+    "[CDIAG][CTRLCORE]Exec RunCodec 4K REC!!",
+    "[CDIAG][CTRLCORE]Exec SetData 4K DEC!!",
+    "[CDIAG][CTRLCORE]Exec SetData 4K REC!!",
+    "[CDIAG][CTRLCORE]Exec SetMemArea 4K DEC!!",
+    "[CDIAG][CTRLCORE]Exec SetMemArea 4K ENC!!",
+    "[ERR][CDEXT][CTRLCORE]MEM ALLOC COUNT NOT 1 [%d]",
+    "[ERR][CDEXT][CTRLCORE]MEM ALLOC err [0x%08X]",
+    "[ERR][CDEXT][CTRLCORE]MEM ARROC ERROR!! UNIT_IN_BUF",
+    "[ERR][CDEXT][CTRLCORE]MEM ARROC ERROR!! UNIT_OUT_BUF",
+    "[ERR][CDEXT][CTRLCORE]MEM FREE ERROR!! m_memUnit[MEM_UNIT_IN_BUF].unitHandle = 0x%08X",
+    "[ERR][CDEXT][CTRLCORE]MEM FREE ERROR!! m_memUnit[MEM_UNIT_OUT_BUF].unitHandle = 0x%08X",
+    "[ERR][CDEXT][CTRLCORE]MEM FREE err [0x%08X]",
+    "[ERR][CDEXT][CTRLCORE]p_prm is NULL file[%s] func[%s] line[%d]"
+   ]
+  }
+ },
+ "no_verificado": [
+  "nombre de 0x439b4244 (registro de mensaje/clase usado por 0x435a1b18 y 0x435a13d8)",
+  "nombres de 0x435a1bac y 0x435a1be0 (guard corto, sin file/func/line)",
+  "sitio exacto de entrada indirecta a CdCtrlIf::ExecSensCmd (0x435a15e8) y CdCtrlIf::ExecSensComp (0x435a17e8)",
+  "significado funcional de los ids 0x32/0x33 de ExecSensCmd (handlers 0x43a48d16 / 0x43a48cf2)"
+ ],
+ "linea_obturador": "ninguna de las 55 cadenas [CTRLCORE] menciona obturador, disparo, cortinilla, lectura del sensor ni tiempos de exposicion"
+}

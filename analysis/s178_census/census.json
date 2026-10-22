@@ -1,0 +1,4040 @@
+{
+ "milestone": "S178",
+ "titulo": "censo de cobertura de la linea de modulos: 372 etiquetas en la A6000 fw3.21",
+ "base_vaddr": "43541000",
+ "metodo": "patron \\[[A-Z][A-Z0-9_]{1,24}\\] sobre el blob de la A6000 fw3.21; estado de cada cadena por el mapa global de referencias PIC (regla estricta); hitos por el catalogo docs/capture/linea-general-re.md",
+ "recuentos": {
+  "etiquetas": 372,
+  "con_hito": 58,
+  "cubiertas_como_sub_etiqueta": 38,
+  "pendientes_reales": 276,
+  "cubiertas_total": 96,
+  "nota": "'con_hito' = la etiqueta es el sujeto de un hito del catalogo; 'cubiertas_como_sub_etiqueta' = la etiqueta aparece como [X][Y] con X ya decodificado (p. ej. [EIS], [DIST], [STABILIZER] dentro de [CAMERA_IS]; [CTRLCORE] dentro de [SFRA]/[SFRS])",
+  "exclusivas_a6000": 93,
+  "ausentes_en_a6300": 7
+ },
+ "elimina_el_a6300": {
+  "[OSD]": {
+   "a6000": 1,
+   "a7s": 1
+  },
+  "[STK]": {
+   "a6000": 76,
+   "a7s": 76
+  },
+  "[STK_AUTO_SAL]": {
+   "a6000": 3,
+   "a7s": 3
+  },
+  "[STK_COLOR_SIM]": {
+   "a6000": 2,
+   "a7s": 2
+  },
+  "[STK_C_SIM]": {
+   "a6000": 1,
+   "a7s": 1
+  },
+  "[STK_TOUCH_SIM]": {
+   "a6000": 2,
+   "a7s": 2
+  },
+  "[STK_T_SIM]": {
+   "a6000": 1,
+   "a7s": 1
+  }
+ },
+ "pendientes_ordenadas": [
+  {
+   "etiqueta": "[SDF]",
+   "apariciones_token": 477,
+   "a7s": 479,
+   "a6300": 488,
+   "cadenas_referenciadas": 431,
+   "vivas": 431
+  },
+  {
+   "etiqueta": "[ERR]",
+   "apariciones_token": 288,
+   "a7s": 281,
+   "a6300": 655,
+   "cadenas_referenciadas": 28,
+   "vivas": 28
+  },
+  {
+   "etiqueta": "[VDF]",
+   "apariciones_token": 243,
+   "a7s": 162,
+   "a6300": 162,
+   "cadenas_referenciadas": 243,
+   "vivas": 243
+  },
+  {
+   "etiqueta": "[ERROR]",
+   "apariciones_token": 213,
+   "a7s": 213,
+   "a6300": 214,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[BL]",
+   "apariciones_token": 154,
+   "a7s": 75,
+   "a6300": 96,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[VEF]",
+   "apariciones_token": 149,
+   "a7s": 141,
+   "a6300": 144,
+   "cadenas_referenciadas": 146,
+   "vivas": 146
+  },
+  {
+   "etiqueta": "[STK]",
+   "apariciones_token": 76,
+   "a7s": 76,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[TD]",
+   "apariciones_token": 73,
+   "a7s": 73,
+   "a6300": 84,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[FACE]",
+   "apariciones_token": 70,
+   "a7s": 70,
+   "a6300": 70,
+   "cadenas_referenciadas": 68,
+   "vivas": 68
+  },
+  {
+   "etiqueta": "[VIDENCSTAT]",
+   "apariciones_token": 70,
+   "a7s": 70,
+   "a6300": 71,
+   "cadenas_referenciadas": 70,
+   "vivas": 70
+  },
+  {
+   "etiqueta": "[RC]",
+   "apariciones_token": 69,
+   "a7s": 69,
+   "a6300": 71,
+   "cadenas_referenciadas": 63,
+   "vivas": 63
+  },
+  {
+   "etiqueta": "[DEBUG]",
+   "apariciones_token": 67,
+   "a7s": 37,
+   "a6300": 37,
+   "cadenas_referenciadas": 19,
+   "vivas": 19
+  },
+  {
+   "etiqueta": "[GOLFSHOT]",
+   "apariciones_token": 65,
+   "a7s": 65,
+   "a6300": 64,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[WSX]",
+   "apariciones_token": 59,
+   "a7s": 59,
+   "a6300": 59,
+   "cadenas_referenciadas": 59,
+   "vivas": 59
+  },
+  {
+   "etiqueta": "[INFO]",
+   "apariciones_token": 58,
+   "a7s": 1,
+   "a6300": 37,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[RE]",
+   "apariciones_token": 54,
+   "a7s": 53,
+   "a6300": 54,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[INT_ERROR]",
+   "apariciones_token": 53,
+   "a7s": 53,
+   "a6300": 53,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[ENCOUCSTAT]",
+   "apariciones_token": 49,
+   "a7s": 54,
+   "a6300": 68,
+   "cadenas_referenciadas": 49,
+   "vivas": 49
+  },
+  {
+   "etiqueta": "[CONFIG]",
+   "apariciones_token": 47,
+   "a7s": 47,
+   "a6300": 47,
+   "cadenas_referenciadas": 47,
+   "vivas": 47
+  },
+  {
+   "etiqueta": "[BT]",
+   "apariciones_token": 44,
+   "a7s": 44,
+   "a6300": 44,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[CAM_FUNC_MGR]",
+   "apariciones_token": 43,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 42,
+   "vivas": 42
+  },
+  {
+   "etiqueta": "[PNL]",
+   "apariciones_token": 41,
+   "a7s": 41,
+   "a6300": 41,
+   "cadenas_referenciadas": 41,
+   "vivas": 41
+  },
+  {
+   "etiqueta": "[SAN]",
+   "apariciones_token": 35,
+   "a7s": 34,
+   "a6300": 34,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[AUDPINEDTR]",
+   "apariciones_token": 34,
+   "a7s": 34,
+   "a6300": 79,
+   "cadenas_referenciadas": 34,
+   "vivas": 34
+  },
+  {
+   "etiqueta": "[CAM_SCALAR]",
+   "apariciones_token": 34,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 31,
+   "vivas": 31
+  },
+  {
+   "etiqueta": "[REMOTE]",
+   "apariciones_token": 32,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[CTRLIF]",
+   "apariciones_token": 31,
+   "a7s": 31,
+   "a6300": 40,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[DECMODEMGR]",
+   "apariciones_token": 30,
+   "a7s": 30,
+   "a6300": 37,
+   "cadenas_referenciadas": 30,
+   "vivas": 30
+  },
+  {
+   "etiqueta": "[OUT]",
+   "apariciones_token": 29,
+   "a7s": 26,
+   "a6300": 31,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[SYSND]",
+   "apariciones_token": 29,
+   "a7s": 29,
+   "a6300": 29,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[CTRLHDREC]",
+   "apariciones_token": 28,
+   "a7s": 28,
+   "a6300": 28,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[CTRLSDREC]",
+   "apariciones_token": 28,
+   "a7s": 28,
+   "a6300": 28,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[CTRLHDDEC]",
+   "apariciones_token": 27,
+   "a7s": 27,
+   "a6300": 27,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[CTRLSDDEC]",
+   "apariciones_token": 27,
+   "a7s": 27,
+   "a6300": 27,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[AVCDPRMCHK]",
+   "apariciones_token": 26,
+   "a7s": 26,
+   "a6300": 24,
+   "cadenas_referenciadas": 26,
+   "vivas": 26
+  },
+  {
+   "etiqueta": "[DECVIDDISP]",
+   "apariciones_token": 26,
+   "a7s": 26,
+   "a6300": 28,
+   "cadenas_referenciadas": 26,
+   "vivas": 26
+  },
+  {
+   "etiqueta": "[RATECONTROL]",
+   "apariciones_token": 26,
+   "a7s": 26,
+   "a6300": 26,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[ZIMA_AVCD]",
+   "apariciones_token": 26,
+   "a7s": 26,
+   "a6300": 28,
+   "cadenas_referenciadas": 25,
+   "vivas": 25
+  },
+  {
+   "etiqueta": "[MC]",
+   "apariciones_token": 25,
+   "a7s": 25,
+   "a6300": 24,
+   "cadenas_referenciadas": 25,
+   "vivas": 25
+  },
+  {
+   "etiqueta": "[ADJ]",
+   "apariciones_token": 24,
+   "a7s": 24,
+   "a6300": 25,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[DECAUDSPDI]",
+   "apariciones_token": 24,
+   "a7s": 24,
+   "a6300": 24,
+   "cadenas_referenciadas": 24,
+   "vivas": 24
+  },
+  {
+   "etiqueta": "[LRB]",
+   "apariciones_token": 24,
+   "a7s": 24,
+   "a6300": 24,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[PRC]",
+   "apariciones_token": 24,
+   "a7s": 25,
+   "a6300": 25,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[CTRLJPGDEC]",
+   "apariciones_token": 23,
+   "a7s": 23,
+   "a6300": 23,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[CTRLJPGENCDEC]",
+   "apariciones_token": 23,
+   "a7s": 23,
+   "a6300": 23,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[CTRLJPGENC]",
+   "apariciones_token": 23,
+   "a7s": 23,
+   "a6300": 23,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[EXCDCENCMP]",
+   "apariciones_token": 23,
+   "a7s": 23,
+   "a6300": 31,
+   "cadenas_referenciadas": 22,
+   "vivas": 22
+  },
+  {
+   "etiqueta": "[CMP]",
+   "apariciones_token": 22,
+   "a7s": 24,
+   "a6300": 25,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[EXL]",
+   "apariciones_token": 22,
+   "a7s": 22,
+   "a6300": 22,
+   "cadenas_referenciadas": 20,
+   "vivas": 20
+  },
+  {
+   "etiqueta": "[ENCMODEMGR]",
+   "apariciones_token": 21,
+   "a7s": 21,
+   "a6300": 21,
+   "cadenas_referenciadas": 21,
+   "vivas": 21
+  },
+  {
+   "etiqueta": "[LENS_YC]",
+   "apariciones_token": 21,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 21,
+   "vivas": 21
+  },
+  {
+   "etiqueta": "[VIDDECSTAT]",
+   "apariciones_token": 21,
+   "a7s": 21,
+   "a6300": 23,
+   "cadenas_referenciadas": 21,
+   "vivas": 21
+  },
+  {
+   "etiqueta": "[IMAGING_RAW]",
+   "apariciones_token": 20,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 20,
+   "vivas": 20
+  },
+  {
+   "etiqueta": "[SYSV]",
+   "apariciones_token": 20,
+   "a7s": 20,
+   "a6300": 40,
+   "cadenas_referenciadas": 8,
+   "vivas": 8
+  },
+  {
+   "etiqueta": "[EDTSA]",
+   "apariciones_token": 19,
+   "a7s": 19,
+   "a6300": 19,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[PARAM]",
+   "apariciones_token": 19,
+   "a7s": 19,
+   "a6300": 19,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[CAMERA_DSP_APL]",
+   "apariciones_token": 18,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 18,
+   "vivas": 18
+  },
+  {
+   "etiqueta": "[HS]",
+   "apariciones_token": 18,
+   "a7s": 14,
+   "a6300": 14,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[MPGPINSUPL]",
+   "apariciones_token": 18,
+   "a7s": 18,
+   "a6300": 18,
+   "cadenas_referenciadas": 16,
+   "vivas": 16
+  },
+  {
+   "etiqueta": "[MSGIF]",
+   "apariciones_token": 18,
+   "a7s": 18,
+   "a6300": 26,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[NG]",
+   "apariciones_token": 18,
+   "a7s": 13,
+   "a6300": 13,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[OPTION]",
+   "apariciones_token": 18,
+   "a7s": 18,
+   "a6300": 18,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[SFR]",
+   "apariciones_token": 18,
+   "a7s": 22,
+   "a6300": 44,
+   "cadenas_referenciadas": 15,
+   "vivas": 15
+  },
+  {
+   "etiqueta": "[SYS]",
+   "apariciones_token": 18,
+   "a7s": 20,
+   "a6300": 20,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[AUDDECCTRL]",
+   "apariciones_token": 17,
+   "a7s": 17,
+   "a6300": 17,
+   "cadenas_referenciadas": 17,
+   "vivas": 17
+  },
+  {
+   "etiqueta": "[ENCAUDSYNC]",
+   "apariciones_token": 17,
+   "a7s": 17,
+   "a6300": 29,
+   "cadenas_referenciadas": 17,
+   "vivas": 17
+  },
+  {
+   "etiqueta": "[JPEG]",
+   "apariciones_token": 17,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 17,
+   "vivas": 17
+  },
+  {
+   "etiqueta": "[NSX_OPD]",
+   "apariciones_token": 17,
+   "a7s": 17,
+   "a6300": 25,
+   "cadenas_referenciadas": 17,
+   "vivas": 17
+  },
+  {
+   "etiqueta": "[AG]",
+   "apariciones_token": 16,
+   "a7s": 16,
+   "a6300": 16,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[CMPDATA]",
+   "apariciones_token": 16,
+   "a7s": 16,
+   "a6300": 16,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[HELLO]",
+   "apariciones_token": 16,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[PMV]",
+   "apariciones_token": 16,
+   "a7s": 16,
+   "a6300": 16,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[VIDDECZIMA]",
+   "apariciones_token": 16,
+   "a7s": 16,
+   "a6300": 16,
+   "cadenas_referenciadas": 16,
+   "vivas": 16
+  },
+  {
+   "etiqueta": "[WARN]",
+   "apariciones_token": 16,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[SDF_ERR]",
+   "apariciones_token": 15,
+   "a7s": 15,
+   "a6300": 15,
+   "cadenas_referenciadas": 15,
+   "vivas": 15
+  },
+  {
+   "etiqueta": "[WRN]",
+   "apariciones_token": 15,
+   "a7s": 16,
+   "a6300": 18,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[CMDMLTSYNC]",
+   "apariciones_token": 13,
+   "a7s": 13,
+   "a6300": 13,
+   "cadenas_referenciadas": 11,
+   "vivas": 11
+  },
+  {
+   "etiqueta": "[DECAUDSTAT]",
+   "apariciones_token": 13,
+   "a7s": 13,
+   "a6300": 17,
+   "cadenas_referenciadas": 13,
+   "vivas": 13
+  },
+  {
+   "etiqueta": "[SYNCENCSTART]",
+   "apariciones_token": 13,
+   "a7s": 13,
+   "a6300": 13,
+   "cadenas_referenciadas": 13,
+   "vivas": 13
+  },
+  {
+   "etiqueta": "[UART]",
+   "apariciones_token": 13,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[VIDDECCTRL]",
+   "apariciones_token": 13,
+   "a7s": 13,
+   "a6300": 13,
+   "cadenas_referenciadas": 13,
+   "vivas": 13
+  },
+  {
+   "etiqueta": "[VIDENCCTRL]",
+   "apariciones_token": 13,
+   "a7s": 13,
+   "a6300": 13,
+   "cadenas_referenciadas": 13,
+   "vivas": 13
+  },
+  {
+   "etiqueta": "[AUDDECSTAT]",
+   "apariciones_token": 12,
+   "a7s": 12,
+   "a6300": 22,
+   "cadenas_referenciadas": 12,
+   "vivas": 12
+  },
+  {
+   "etiqueta": "[BASE]",
+   "apariciones_token": 12,
+   "a7s": 5,
+   "a6300": 5,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[BIN_BUFFER]",
+   "apariciones_token": 12,
+   "a7s": 12,
+   "a6300": 12,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[SA]",
+   "apariciones_token": 12,
+   "a7s": 12,
+   "a6300": 14,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[BUF]",
+   "apariciones_token": 11,
+   "a7s": 11,
+   "a6300": 11,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[DECVESAUGI]",
+   "apariciones_token": 11,
+   "a7s": 11,
+   "a6300": 14,
+   "cadenas_referenciadas": 11,
+   "vivas": 11
+  },
+  {
+   "etiqueta": "[IRO2G]",
+   "apariciones_token": 11,
+   "a7s": 11,
+   "a6300": 11,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[OK]",
+   "apariciones_token": 11,
+   "a7s": 10,
+   "a6300": 10,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[ATTR]",
+   "apariciones_token": 10,
+   "a7s": 10,
+   "a6300": 10,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[ES_BUFFER]",
+   "apariciones_token": 10,
+   "a7s": 10,
+   "a6300": 10,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[MCCMDSENDR]",
+   "apariciones_token": 10,
+   "a7s": 10,
+   "a6300": 10,
+   "cadenas_referenciadas": 10,
+   "vivas": 10
+  },
+  {
+   "etiqueta": "[MON]",
+   "apariciones_token": 10,
+   "a7s": 10,
+   "a6300": 10,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[AVC]",
+   "apariciones_token": 9,
+   "a7s": 9,
+   "a6300": 9,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[CMD]",
+   "apariciones_token": 9,
+   "a7s": 9,
+   "a6300": 11,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[DETSA]",
+   "apariciones_token": 9,
+   "a7s": 9,
+   "a6300": 9,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[ENCAUDOUCR]",
+   "apariciones_token": 9,
+   "a7s": 9,
+   "a6300": 9,
+   "cadenas_referenciadas": 9,
+   "vivas": 9
+  },
+  {
+   "etiqueta": "[EXCODECENC]",
+   "apariciones_token": 9,
+   "a7s": 9,
+   "a6300": 51,
+   "cadenas_referenciadas": 7,
+   "vivas": 7
+  },
+  {
+   "etiqueta": "[RDY]",
+   "apariciones_token": 9,
+   "a7s": 9,
+   "a6300": 11,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[DECAUDMUTE]",
+   "apariciones_token": 8,
+   "a7s": 8,
+   "a6300": 8,
+   "cadenas_referenciadas": 8,
+   "vivas": 8
+  },
+  {
+   "etiqueta": "[EXCODECDEC]",
+   "apariciones_token": 8,
+   "a7s": 8,
+   "a6300": 12,
+   "cadenas_referenciadas": 8,
+   "vivas": 8
+  },
+  {
+   "etiqueta": "[LC]",
+   "apariciones_token": 8,
+   "a7s": 0,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[PINSEND]",
+   "apariciones_token": 8,
+   "a7s": 10,
+   "a6300": 7,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[ENCOUCUDMG]",
+   "apariciones_token": 7,
+   "a7s": 7,
+   "a6300": 7,
+   "cadenas_referenciadas": 6,
+   "vivas": 6
+  },
+  {
+   "etiqueta": "[FACTORY]",
+   "apariciones_token": 7,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[IMAGING_IMG]",
+   "apariciones_token": 7,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 7,
+   "vivas": 7
+  },
+  {
+   "etiqueta": "[IMME]",
+   "apariciones_token": 7,
+   "a7s": 7,
+   "a6300": 7,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[INIT]",
+   "apariciones_token": 7,
+   "a7s": 7,
+   "a6300": 7,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[MAGIC]",
+   "apariciones_token": 7,
+   "a7s": 7,
+   "a6300": 7,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[NSX_VOT]",
+   "apariciones_token": 7,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 7,
+   "vivas": 7
+  },
+  {
+   "etiqueta": "[AVSCCTLYCC]",
+   "apariciones_token": 6,
+   "a7s": 6,
+   "a6300": 6,
+   "cadenas_referenciadas": 5,
+   "vivas": 5
+  },
+  {
+   "etiqueta": "[CAM_CMD]",
+   "apariciones_token": 6,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 6,
+   "vivas": 6
+  },
+  {
+   "etiqueta": "[DECMODEERR]",
+   "apariciones_token": 6,
+   "a7s": 6,
+   "a6300": 6,
+   "cadenas_referenciadas": 6,
+   "vivas": 6
+  },
+  {
+   "etiqueta": "[EVF]",
+   "apariciones_token": 6,
+   "a7s": 2,
+   "a6300": 2,
+   "cadenas_referenciadas": 6,
+   "vivas": 6
+  },
+  {
+   "etiqueta": "[MOUNT_INFO]",
+   "apariciones_token": 6,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 6,
+   "vivas": 6
+  },
+  {
+   "etiqueta": "[PBX]",
+   "apariciones_token": 6,
+   "a7s": 6,
+   "a6300": 6,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[SND]",
+   "apariciones_token": 6,
+   "a7s": 6,
+   "a6300": 6,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[SYNCSETMODE]",
+   "apariciones_token": 6,
+   "a7s": 6,
+   "a6300": 6,
+   "cadenas_referenciadas": 6,
+   "vivas": 6
+  },
+  {
+   "etiqueta": "[VIDDECPRAM]",
+   "apariciones_token": 6,
+   "a7s": 6,
+   "a6300": 6,
+   "cadenas_referenciadas": 6,
+   "vivas": 6
+  },
+  {
+   "etiqueta": "[CYCLE]",
+   "apariciones_token": 5,
+   "a7s": 5,
+   "a6300": 5,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[ENCMODEERR]",
+   "apariciones_token": 5,
+   "a7s": 5,
+   "a6300": 5,
+   "cadenas_referenciadas": 5,
+   "vivas": 5
+  },
+  {
+   "etiqueta": "[HOUSING]",
+   "apariciones_token": 5,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[IMAGING_RSRC]",
+   "apariciones_token": 5,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 5,
+   "vivas": 5
+  },
+  {
+   "etiqueta": "[INCDCIFCTRL]",
+   "apariciones_token": 5,
+   "a7s": 5,
+   "a6300": 5,
+   "cadenas_referenciadas": 5,
+   "vivas": 5
+  },
+  {
+   "etiqueta": "[MOUNT]",
+   "apariciones_token": 5,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[MOUNT_WARNING]",
+   "apariciones_token": 5,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 5,
+   "vivas": 5
+  },
+  {
+   "etiqueta": "[MPEG2]",
+   "apariciones_token": 5,
+   "a7s": 5,
+   "a6300": 5,
+   "cadenas_referenciadas": 5,
+   "vivas": 5
+  },
+  {
+   "etiqueta": "[SPC]",
+   "apariciones_token": 5,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 5,
+   "vivas": 5
+  },
+  {
+   "etiqueta": "[VSYNC]",
+   "apariciones_token": 5,
+   "a7s": 5,
+   "a6300": 7,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[ZPD]",
+   "apariciones_token": 5,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 5,
+   "vivas": 5
+  },
+  {
+   "etiqueta": "[BKID]",
+   "apariciones_token": 4,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[DECAUDLPCM]",
+   "apariciones_token": 4,
+   "a7s": 4,
+   "a6300": 12,
+   "cadenas_referenciadas": 4,
+   "vivas": 4
+  },
+  {
+   "etiqueta": "[DECSEQCTRL]",
+   "apariciones_token": 4,
+   "a7s": 4,
+   "a6300": 4,
+   "cadenas_referenciadas": 4,
+   "vivas": 4
+  },
+  {
+   "etiqueta": "[DFE_INT]",
+   "apariciones_token": 4,
+   "a7s": 4,
+   "a6300": 4,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[ENCMODESTT]",
+   "apariciones_token": 4,
+   "a7s": 4,
+   "a6300": 4,
+   "cadenas_referenciadas": 4,
+   "vivas": 4
+  },
+  {
+   "etiqueta": "[ENCUSDTMGR]",
+   "apariciones_token": 4,
+   "a7s": 4,
+   "a6300": 4,
+   "cadenas_referenciadas": 4,
+   "vivas": 4
+  },
+  {
+   "etiqueta": "[EXDFSENDER]",
+   "apariciones_token": 4,
+   "a7s": 4,
+   "a6300": 4,
+   "cadenas_referenciadas": 4,
+   "vivas": 4
+  },
+  {
+   "etiqueta": "[FFLSH]",
+   "apariciones_token": 4,
+   "a7s": 4,
+   "a6300": 4,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[LENS_PDR]",
+   "apariciones_token": 4,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 4,
+   "vivas": 4
+  },
+  {
+   "etiqueta": "[MAIN]",
+   "apariciones_token": 4,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[VFX]",
+   "apariciones_token": 4,
+   "a7s": 4,
+   "a6300": 5,
+   "cadenas_referenciadas": 4,
+   "vivas": 4
+  },
+  {
+   "etiqueta": "[AUDIOIP]",
+   "apariciones_token": 3,
+   "a7s": 3,
+   "a6300": 3,
+   "cadenas_referenciadas": 3,
+   "vivas": 3
+  },
+  {
+   "etiqueta": "[AVIO]",
+   "apariciones_token": 3,
+   "a7s": 92,
+   "a6300": 92,
+   "cadenas_referenciadas": 3,
+   "vivas": 3
+  },
+  {
+   "etiqueta": "[AVSCCTLEFCT]",
+   "apariciones_token": 3,
+   "a7s": 3,
+   "a6300": 3,
+   "cadenas_referenciadas": 3,
+   "vivas": 3
+  },
+  {
+   "etiqueta": "[CAMERA_DEVICE]",
+   "apariciones_token": 3,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 3,
+   "vivas": 3
+  },
+  {
+   "etiqueta": "[CCNR_ENCODE]",
+   "apariciones_token": 3,
+   "a7s": 3,
+   "a6300": 4,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[DBG]",
+   "apariciones_token": 3,
+   "a7s": 3,
+   "a6300": 3,
+   "cadenas_referenciadas": 3,
+   "vivas": 3
+  },
+  {
+   "etiqueta": "[DECAUDPAUS]",
+   "apariciones_token": 3,
+   "a7s": 3,
+   "a6300": 3,
+   "cadenas_referenciadas": 3,
+   "vivas": 3
+  },
+  {
+   "etiqueta": "[DET_DIR]",
+   "apariciones_token": 3,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[ENCAUDSTAT]",
+   "apariciones_token": 3,
+   "a7s": 3,
+   "a6300": 3,
+   "cadenas_referenciadas": 3,
+   "vivas": 3
+  },
+  {
+   "etiqueta": "[ENCODE_JPEG_WITH_WORK]",
+   "apariciones_token": 3,
+   "a7s": 3,
+   "a6300": 3,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[LGA]",
+   "apariciones_token": 3,
+   "a7s": 3,
+   "a6300": 3,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[MCBBDLYCLC]",
+   "apariciones_token": 3,
+   "a7s": 3,
+   "a6300": 3,
+   "cadenas_referenciadas": 3,
+   "vivas": 3
+  },
+  {
+   "etiqueta": "[MCIFINFACC]",
+   "apariciones_token": 3,
+   "a7s": 3,
+   "a6300": 3,
+   "cadenas_referenciadas": 3,
+   "vivas": 3
+  },
+  {
+   "etiqueta": "[PANELEVF]",
+   "apariciones_token": 3,
+   "a7s": 3,
+   "a6300": 3,
+   "cadenas_referenciadas": 3,
+   "vivas": 3
+  },
+  {
+   "etiqueta": "[PROC]",
+   "apariciones_token": 3,
+   "a7s": 3,
+   "a6300": 3,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[SENSER]",
+   "apariciones_token": 3,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[SIO]",
+   "apariciones_token": 3,
+   "a7s": 3,
+   "a6300": 3,
+   "cadenas_referenciadas": 3,
+   "vivas": 3
+  },
+  {
+   "etiqueta": "[STABILIZER]",
+   "apariciones_token": 3,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[STK_AUTO_SAL]",
+   "apariciones_token": 3,
+   "a7s": 3,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[STOP]",
+   "apariciones_token": 3,
+   "a7s": 3,
+   "a6300": 3,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[AFNR]",
+   "apariciones_token": 2,
+   "a7s": 2,
+   "a6300": 2,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[AVCMODEMGR]",
+   "apariciones_token": 2,
+   "a7s": 2,
+   "a6300": 2,
+   "cadenas_referenciadas": 2,
+   "vivas": 2
+  },
+  {
+   "etiqueta": "[AVOUT]",
+   "apariciones_token": 2,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[AVR]",
+   "apariciones_token": 2,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[BIN_LIMITER]",
+   "apariciones_token": 2,
+   "a7s": 2,
+   "a6300": 2,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[CBA_FIFO]",
+   "apariciones_token": 2,
+   "a7s": 2,
+   "a6300": 2,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[CORE]",
+   "apariciones_token": 2,
+   "a7s": 2,
+   "a6300": 2,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[DATA]",
+   "apariciones_token": 2,
+   "a7s": 2,
+   "a6300": 2,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[DECAUDSMPL]",
+   "apariciones_token": 2,
+   "a7s": 2,
+   "a6300": 2,
+   "cadenas_referenciadas": 2,
+   "vivas": 2
+  },
+  {
+   "etiqueta": "[DECVIDPARM]",
+   "apariciones_token": 2,
+   "a7s": 2,
+   "a6300": 2,
+   "cadenas_referenciadas": 2,
+   "vivas": 2
+  },
+  {
+   "etiqueta": "[DEC]",
+   "apariciones_token": 2,
+   "a7s": 2,
+   "a6300": 2,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[DMMYSIOCOM]",
+   "apariciones_token": 2,
+   "a7s": 2,
+   "a6300": 2,
+   "cadenas_referenciadas": 2,
+   "vivas": 2
+  },
+  {
+   "etiqueta": "[GS]",
+   "apariciones_token": 2,
+   "a7s": 2,
+   "a6300": 2,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[HDMAC]",
+   "apariciones_token": 2,
+   "a7s": 2,
+   "a6300": 2,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[IMCIF]",
+   "apariciones_token": 2,
+   "a7s": 2,
+   "a6300": 2,
+   "cadenas_referenciadas": 2,
+   "vivas": 2
+  },
+  {
+   "etiqueta": "[IN]",
+   "apariciones_token": 2,
+   "a7s": 0,
+   "a6300": 3,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[JIRO]",
+   "apariciones_token": 2,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[MCUSRDEDT]",
+   "apariciones_token": 2,
+   "a7s": 2,
+   "a6300": 2,
+   "cadenas_referenciadas": 2,
+   "vivas": 2
+  },
+  {
+   "etiqueta": "[MPGPINCONV]",
+   "apariciones_token": 2,
+   "a7s": 2,
+   "a6300": 2,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[NTF]",
+   "apariciones_token": 2,
+   "a7s": 2,
+   "a6300": 2,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[PCPSTATDRM]",
+   "apariciones_token": 2,
+   "a7s": 2,
+   "a6300": 2,
+   "cadenas_referenciadas": 2,
+   "vivas": 2
+  },
+  {
+   "etiqueta": "[PNLEVF]",
+   "apariciones_token": 2,
+   "a7s": 2,
+   "a6300": 2,
+   "cadenas_referenciadas": 2,
+   "vivas": 2
+  },
+  {
+   "etiqueta": "[RCV]",
+   "apariciones_token": 2,
+   "a7s": 2,
+   "a6300": 2,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[STK_COLOR_SIM]",
+   "apariciones_token": 2,
+   "a7s": 2,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[STK_TOUCH_SIM]",
+   "apariciones_token": 2,
+   "a7s": 2,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[STOPG]",
+   "apariciones_token": 2,
+   "a7s": 2,
+   "a6300": 2,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[SYSTEM]",
+   "apariciones_token": 2,
+   "a7s": 2,
+   "a6300": 2,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[TOP]",
+   "apariciones_token": 2,
+   "a7s": 2,
+   "a6300": 2,
+   "cadenas_referenciadas": 2,
+   "vivas": 2
+  },
+  {
+   "etiqueta": "[UTILITY]",
+   "apariciones_token": 2,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[VIDEOCOLOR]",
+   "apariciones_token": 2,
+   "a7s": 2,
+   "a6300": 2,
+   "cadenas_referenciadas": 2,
+   "vivas": 2
+  },
+  {
+   "etiqueta": "[WRAP]",
+   "apariciones_token": 2,
+   "a7s": 2,
+   "a6300": 2,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[ABB]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[ADR]",
+   "apariciones_token": 1,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[ANNOUNCE]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[APL0]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[APL1]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[AVCDECAUDES]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[AVCE]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[AVIF]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[AVSCEVTSND]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[AVSC]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[BBDELAY]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[CAM0]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[CAM1]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[CAMERA_DETECT_FC]",
+   "apariciones_token": 1,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[CCNR]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[CDCCTRL]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[CDCID_HD_CODEC]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[CDCID_SD_CODEC]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[CDM]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[CH_SRC]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[CID]",
+   "apariciones_token": 1,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[CLKCTRL]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[CODE]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[CPU]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[D0]",
+   "apariciones_token": 1,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[D1]",
+   "apariciones_token": 1,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[D2]",
+   "apariciones_token": 1,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[D3]",
+   "apariciones_token": 1,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[D4]",
+   "apariciones_token": 1,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[D5]",
+   "apariciones_token": 1,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[D6]",
+   "apariciones_token": 1,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[D7]",
+   "apariciones_token": 1,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[DAAUGICONV]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 2,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[DDT]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[DECSEQVIF]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[DIRECTCOMMAND]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[DMAC]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[DMM_HANDLE_YCC_FULL]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[DVAUGICONV]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[DVFC]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[ENCAUDLPCM]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[ENCAUDSMPL]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[ENCAUDUTIL]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[EO_SW]",
+   "apariciones_token": 1,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[EXEC]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[FILE_NUM]",
+   "apariciones_token": 1,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[FOPD]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[FSYSMODE]",
+   "apariciones_token": 1,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[FUNC]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[GETPIN]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[GPE]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[HW]",
+   "apariciones_token": 1,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[IN1]",
+   "apariciones_token": 1,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[IN2]",
+   "apariciones_token": 1,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[INF]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[LIF_ERROR]",
+   "apariciones_token": 1,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[MANU]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[MC32BTCNTR]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[MCCOUNTMGR]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[MCMSGPINIF]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[MCMSGSTATE]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[MCS]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 2,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[MODEFLG]",
+   "apariciones_token": 1,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[MODE_CAP]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[MODE_CAP_DRP]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[MODE_CAP_PREREVIEW]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[MODE_CAP_SNR]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[MODE_CAP_SNR_PREREVIEW]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[MODE_SNR_BUS_THROUGH]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[MODIFY1]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[MOJITO_ERROR]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[MPGMSGSEND]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[NOTIFY]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[NULL]",
+   "apariciones_token": 1,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[OSD]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[PCIE]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[PCP0]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[PCP1]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[PCPSTATINI]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[PERI]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[PFHS]",
+   "apariciones_token": 1,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[PRINT]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[RC0]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[RC1]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[RC2]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[RCH]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[RDM]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[REN]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[RESET]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[RING_DIAL]",
+   "apariciones_token": 1,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[SA0]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[SA1]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[SCN]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[SCN_ENCODE]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[SETPIN]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[SET_DIAG_MODE]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 2,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[SE]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[SFR_ERR_NOTREADY]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[SIZE]",
+   "apariciones_token": 1,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[SONLYAUDIO]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[SPC0]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[SPC1]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[SRC0]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[SRC1]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[SRC2]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[SRC3]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[SRC4]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[STAT]",
+   "apariciones_token": 1,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[STK_C_SIM]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[STK_T_SIM]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[SWFLG]",
+   "apariciones_token": 1,
+   "a7s": 0,
+   "a6300": 0,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[SYS_SENSER_CA_PUTS]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[THM]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[TSKCORE]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[TSK]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[VFX0]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[VFX1]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[VIDENCPARAM]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[VIO]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[VPH]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[VPINFO]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 1,
+   "vivas": 1
+  },
+  {
+   "etiqueta": "[WARNING]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[WSX0]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[WSX1]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[ZIMA0]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[ZIMA1]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 1,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  },
+  {
+   "etiqueta": "[ZNR]",
+   "apariciones_token": 1,
+   "a7s": 1,
+   "a6300": 2,
+   "cadenas_referenciadas": 0,
+   "vivas": 0
+  }
+ ],
+ "decodificadas": {
+  "[ACCY]": [
+   "180",
+   "136"
+  ],
+  "[ADC_DEBUG]": [
+   "166"
+  ],
+  "[ADF]": [
+   "100"
+  ],
+  "[AIP]": [
+   "121"
+  ],
+  "[AMSENS]": [
+   "137"
+  ],
+  "[APL]": [
+   "119"
+  ],
+  "[AS]": [
+   "70"
+  ],
+  "[AUGI]": [
+   "117"
+  ],
+  "[CAMCORE]": [
+   "107"
+  ],
+  "[CAMERA_ADJ]": [
+   "173"
+  ],
+  "[CAMERA_IS]": [
+   "70",
+   "164"
+  ],
+  "[CAMERA_MAIN]": [
+   "126",
+   "173"
+  ],
+  "[CAMERA_MAIN_CC]": [
+   "123"
+  ],
+  "[CAMERA_MAIN_FC]": [
+   "138"
+  ],
+  "[CAMERA_MAIN_IM]": [
+   "129"
+  ],
+  "[CAMERA_MAIN_LC]": [
+   "127"
+  ],
+  "[CAMERA_MAIN_SYNC]": [
+   "112",
+   "164"
+  ],
+  "[CAMERA_MAIN_TC]": [
+   "119",
+   "122"
+  ],
+  "[CAMERA_MAIN_YC]": [
+   "110"
+  ],
+  "[CAMERA_SA]": [
+   "108",
+   "119"
+  ],
+  "[CAM_DMM]": [
+   "113"
+  ],
+  "[CAM_FUNC_MGR]": [
+   "177"
+  ],
+  "[CAM_IMAGER]": [
+   "115"
+  ],
+  "[CAM_SCALAR]": [
+   "179"
+  ],
+  "[CAM_UTIL]": [
+   "173"
+  ],
+  "[CAM_UTIL_ADJ]": [
+   "143",
+   "144",
+   "173"
+  ],
+  "[CAM_UTIL_SENS]": [
+   "144",
+   "173"
+  ],
+  "[CDIAG]": [
+   "109",
+   "137"
+  ],
+  "[CLK_CTRL]": [
+   "132"
+  ],
+  "[CTRLCORE]": [
+   "137"
+  ],
+  "[DBGCMD]": [
+   "100"
+  ],
+  "[DEPTH]": [
+   "148"
+  ],
+  "[DFE]": [
+   "130"
+  ],
+  "[DIST]": [
+   "70"
+  ],
+  "[EIS]": [
+   "70"
+  ],
+  "[ENCSEQCTRL]": [
+   "139"
+  ],
+  "[IDT]": [
+   "120"
+  ],
+  "[IDT_OPD]": [
+   "120",
+   "130"
+  ],
+  "[ILLUMI]": [
+   "170"
+  ],
+  "[IMAGING]": [
+   "125"
+  ],
+  "[IMAGING_CAP]": [
+   "107"
+  ],
+  "[IMAGING_REL]": [
+   "125"
+  ],
+  "[JOG]": [
+   "165"
+  ],
+  "[LIF_DEBUG]": [
+   "175"
+  ],
+  "[MCSENS]": [
+   "137"
+  ],
+  "[MOUNT_DEBUG]": [
+   "133"
+  ],
+  "[MOUNT_ERROR]": [
+   "133"
+  ],
+  "[OSD]": [
+   "178"
+  ],
+  "[PANDA]": [
+   "151"
+  ],
+  "[REMOTE]": [
+   "180"
+  ],
+  "[SAD]": [
+   "167"
+  ],
+  "[SFRA]": [
+   "118"
+  ],
+  "[SFRS]": [
+   "116"
+  ],
+  "[STK]": [
+   "178"
+  ],
+  "[TP_R]": [
+   "156"
+  ],
+  "[TRK]": [
+   "71",
+   "111"
+  ],
+  "[VPH_API]": [
+   "131"
+  ]
+ },
+ "salvedad": "el patron captura tambien fragmentos de formato ([D0]-[D7], [IN1], [IN2], [NULL], [SIZE], [STAT], [HW]): 372 es un TECHO, no el numero exacto de modulos",
+ "conclusiones": [
+  "la A6000 fw3.21 tiene 372 etiquetas [XXX] distintas (techo); el catalogo de hitos decodifica 52 y quedan 320 pendientes",
+  "93 etiquetas son EXCLUSIVAS de la A6000 (0 en A7S y 0 en A6300), de las que 52 ya tienen hito",
+  "la familia [STK] (con [STK_AUTO_SAL], [STK_COLOR_SIM], [STK_C_SIM], [STK_TOUCH_SIM], [STK_T_SIM]) y [OSD] existen en A6000 y A7S y DESAPARECEN por completo en el A6300 fw2.01: son funciones de la plataforma antigua (E-mount/pre-LIRO) que la nueva plataforma no arrastra -> control de versionado de PLATAFORMA, no de modelo",
+  "[VDF] tiene 81 apariciones mas en la A6000 (243) que en la A7S y el A6300 (162)",
+  "los candidatos pendientes mas grandes son [SDF] 477, [ERR] 288, [VDF] 243, [ERROR] 213, [BL] 154, [VEF] 149, [STK] 76, [TD] 73, [VIDENCSTAT] 70, [FACE] 70, [RC] 69, [DEBUG] 67, [GOLFSHOT] 65, [WSX] 59, [INFO] 58, [RE] 54, [INT_ERROR] 53, [ENCOUCSTAT] 49, [CONFIG] 47, [BT] 44, [CAM_FUNC_MGR] 43, [PNL] 41, [SAN] 35, [AUDPINEDTR] 34, [CAM_SCALAR] 34, [REMOTE] 32"
+ ],
+ "efecto_en_S51": "ninguno: el censo es de cobertura, no de contenido",
+ "nota_recuentos": "los tres recuentos son una fotografia del momento (el catalogo sigue creciendo en paralelo); el invariante es que con_hito + cubiertas_como_sub_etiqueta + pendientes_reales = 372",
+ "cubiertas_como_sub_etiqueta": {
+  "[INFO]": [
+   "[ACCY]",
+   "[DEPTH]",
+   "[SFRS]"
+  ],
+  "[DEBUG]": [
+   "[ACCY]",
+   "[ADF]",
+   "[DEPTH]",
+   "[SFRS]"
+  ],
+  "[WARN]": [
+   "[ACCY]",
+   "[DEPTH]"
+  ],
+  "[ERR]": [
+   "[ACCY]",
+   "[ADF]",
+   "[SFRA]",
+   "[SFRS]"
+  ],
+  "[INIT]": [
+   "[ADF]"
+  ],
+  "[SYS]": [
+   "[ADF]"
+  ],
+  "[ADJ]": [
+   "[ADF]"
+  ],
+  "[SYSND]": [
+   "[ADF]"
+  ],
+  "[OUT]": [
+   "[ADF]"
+  ],
+  "[CH_SRC]": [
+   "[ADF]"
+  ],
+  "[GS]": [
+   "[ADF]"
+  ],
+  "[SAN]": [
+   "[ADF]"
+  ],
+  "[AFNR]": [
+   "[ADF]"
+  ],
+  "[FACE]": [
+   "[ADF]"
+  ],
+  "[TSK]": [
+   "[CDIAG]"
+  ],
+  "[CTRLIF]": [
+   "[AMSENS]",
+   "[CDIAG]",
+   "[MCSENS]"
+  ],
+  "[CTRLHDDEC]": [
+   "[CDIAG]"
+  ],
+  "[CTRLHDREC]": [
+   "[CDIAG]"
+  ],
+  "[CTRLJPGDEC]": [
+   "[CDIAG]"
+  ],
+  "[CTRLJPGENC]": [
+   "[CDIAG]"
+  ],
+  "[CTRLJPGENCDEC]": [
+   "[CDIAG]"
+  ],
+  "[CTRLSDDEC]": [
+   "[CDIAG]"
+  ],
+  "[CTRLSDREC]": [
+   "[CDIAG]"
+  ],
+  "[CMPDATA]": [
+   "[CDIAG]"
+  ],
+  "[MSGIF]": [
+   "[AMSENS]",
+   "[MCSENS]"
+  ],
+  "[PRINT]": [
+   "[AUGI]"
+  ],
+  "[ERROR]": [
+   "[SFRA]",
+   "[SFRS]"
+  ],
+  "[MOUNT]": [
+   "[CAMERA_IS]"
+  ],
+  "[CMD]": [
+   "[SFRA]",
+   "[SFRS]"
+  ],
+  "[CMP]": [
+   "[SFRA]",
+   "[SFRS]"
+  ],
+  "[BUF]": [
+   "[SFRA]"
+  ],
+  "[RATECONTROL]": [
+   "[SFRA]"
+  ],
+  "[NOTIFY]": [
+   "[SFRA]"
+  ],
+  "[SFR_ERR_NOTREADY]": [
+   "[SFRA]"
+  ],
+  "[WARNING]": [
+   "[SFRA]"
+  ],
+  "[RC]": [
+   "[SFRA]"
+  ],
+  "[PINSEND]": [
+   "[SFRS]"
+  ],
+  "[FUNC]": [
+   "[SFRS]"
+  ]
+ },
+ "pendientes_reales_ordenadas": [
+  {
+   "etiqueta": "[SDF]",
+   "apariciones": 477
+  },
+  {
+   "etiqueta": "[VDF]",
+   "apariciones": 243
+  },
+  {
+   "etiqueta": "[BL]",
+   "apariciones": 154
+  },
+  {
+   "etiqueta": "[VEF]",
+   "apariciones": 149
+  },
+  {
+   "etiqueta": "[TD]",
+   "apariciones": 73
+  },
+  {
+   "etiqueta": "[VIDENCSTAT]",
+   "apariciones": 70
+  },
+  {
+   "etiqueta": "[GOLFSHOT]",
+   "apariciones": 65
+  },
+  {
+   "etiqueta": "[WSX]",
+   "apariciones": 59
+  },
+  {
+   "etiqueta": "[RE]",
+   "apariciones": 54
+  },
+  {
+   "etiqueta": "[INT_ERROR]",
+   "apariciones": 53
+  },
+  {
+   "etiqueta": "[ENCOUCSTAT]",
+   "apariciones": 49
+  },
+  {
+   "etiqueta": "[CONFIG]",
+   "apariciones": 47
+  },
+  {
+   "etiqueta": "[BT]",
+   "apariciones": 44
+  },
+  {
+   "etiqueta": "[PNL]",
+   "apariciones": 41
+  },
+  {
+   "etiqueta": "[AUDPINEDTR]",
+   "apariciones": 34
+  },
+  {
+   "etiqueta": "[DECMODEMGR]",
+   "apariciones": 30
+  },
+  {
+   "etiqueta": "[AVCDPRMCHK]",
+   "apariciones": 26
+  },
+  {
+   "etiqueta": "[DECVIDDISP]",
+   "apariciones": 26
+  },
+  {
+   "etiqueta": "[ZIMA_AVCD]",
+   "apariciones": 26
+  },
+  {
+   "etiqueta": "[MC]",
+   "apariciones": 25
+  },
+  {
+   "etiqueta": "[DECAUDSPDI]",
+   "apariciones": 24
+  },
+  {
+   "etiqueta": "[LRB]",
+   "apariciones": 24
+  },
+  {
+   "etiqueta": "[PRC]",
+   "apariciones": 24
+  },
+  {
+   "etiqueta": "[EXCDCENCMP]",
+   "apariciones": 23
+  },
+  {
+   "etiqueta": "[EXL]",
+   "apariciones": 22
+  },
+  {
+   "etiqueta": "[ENCMODEMGR]",
+   "apariciones": 21
+  },
+  {
+   "etiqueta": "[LENS_YC]",
+   "apariciones": 21
+  },
+  {
+   "etiqueta": "[VIDDECSTAT]",
+   "apariciones": 21
+  },
+  {
+   "etiqueta": "[IMAGING_RAW]",
+   "apariciones": 20
+  },
+  {
+   "etiqueta": "[SYSV]",
+   "apariciones": 20
+  },
+  {
+   "etiqueta": "[EDTSA]",
+   "apariciones": 19
+  },
+  {
+   "etiqueta": "[PARAM]",
+   "apariciones": 19
+  },
+  {
+   "etiqueta": "[CAMERA_DSP_APL]",
+   "apariciones": 18
+  },
+  {
+   "etiqueta": "[HS]",
+   "apariciones": 18
+  },
+  {
+   "etiqueta": "[MPGPINSUPL]",
+   "apariciones": 18
+  },
+  {
+   "etiqueta": "[NG]",
+   "apariciones": 18
+  },
+  {
+   "etiqueta": "[OPTION]",
+   "apariciones": 18
+  },
+  {
+   "etiqueta": "[SFR]",
+   "apariciones": 18
+  },
+  {
+   "etiqueta": "[AUDDECCTRL]",
+   "apariciones": 17
+  },
+  {
+   "etiqueta": "[ENCAUDSYNC]",
+   "apariciones": 17
+  },
+  {
+   "etiqueta": "[JPEG]",
+   "apariciones": 17
+  },
+  {
+   "etiqueta": "[NSX_OPD]",
+   "apariciones": 17
+  },
+  {
+   "etiqueta": "[AG]",
+   "apariciones": 16
+  },
+  {
+   "etiqueta": "[HELLO]",
+   "apariciones": 16
+  },
+  {
+   "etiqueta": "[PMV]",
+   "apariciones": 16
+  },
+  {
+   "etiqueta": "[VIDDECZIMA]",
+   "apariciones": 16
+  },
+  {
+   "etiqueta": "[SDF_ERR]",
+   "apariciones": 15
+  },
+  {
+   "etiqueta": "[WRN]",
+   "apariciones": 15
+  },
+  {
+   "etiqueta": "[CMDMLTSYNC]",
+   "apariciones": 13
+  },
+  {
+   "etiqueta": "[DECAUDSTAT]",
+   "apariciones": 13
+  },
+  {
+   "etiqueta": "[SYNCENCSTART]",
+   "apariciones": 13
+  },
+  {
+   "etiqueta": "[UART]",
+   "apariciones": 13
+  },
+  {
+   "etiqueta": "[VIDDECCTRL]",
+   "apariciones": 13
+  },
+  {
+   "etiqueta": "[VIDENCCTRL]",
+   "apariciones": 13
+  },
+  {
+   "etiqueta": "[AUDDECSTAT]",
+   "apariciones": 12
+  },
+  {
+   "etiqueta": "[BASE]",
+   "apariciones": 12
+  },
+  {
+   "etiqueta": "[BIN_BUFFER]",
+   "apariciones": 12
+  },
+  {
+   "etiqueta": "[SA]",
+   "apariciones": 12
+  },
+  {
+   "etiqueta": "[DECVESAUGI]",
+   "apariciones": 11
+  },
+  {
+   "etiqueta": "[IRO2G]",
+   "apariciones": 11
+  },
+  {
+   "etiqueta": "[OK]",
+   "apariciones": 11
+  },
+  {
+   "etiqueta": "[ATTR]",
+   "apariciones": 10
+  },
+  {
+   "etiqueta": "[ES_BUFFER]",
+   "apariciones": 10
+  },
+  {
+   "etiqueta": "[MCCMDSENDR]",
+   "apariciones": 10
+  },
+  {
+   "etiqueta": "[MON]",
+   "apariciones": 10
+  },
+  {
+   "etiqueta": "[AVC]",
+   "apariciones": 9
+  },
+  {
+   "etiqueta": "[DETSA]",
+   "apariciones": 9
+  },
+  {
+   "etiqueta": "[ENCAUDOUCR]",
+   "apariciones": 9
+  },
+  {
+   "etiqueta": "[EXCODECENC]",
+   "apariciones": 9
+  },
+  {
+   "etiqueta": "[RDY]",
+   "apariciones": 9
+  },
+  {
+   "etiqueta": "[DECAUDMUTE]",
+   "apariciones": 8
+  },
+  {
+   "etiqueta": "[EXCODECDEC]",
+   "apariciones": 8
+  },
+  {
+   "etiqueta": "[LC]",
+   "apariciones": 8
+  },
+  {
+   "etiqueta": "[ENCOUCUDMG]",
+   "apariciones": 7
+  },
+  {
+   "etiqueta": "[FACTORY]",
+   "apariciones": 7
+  },
+  {
+   "etiqueta": "[IMAGING_IMG]",
+   "apariciones": 7
+  },
+  {
+   "etiqueta": "[IMME]",
+   "apariciones": 7
+  },
+  {
+   "etiqueta": "[MAGIC]",
+   "apariciones": 7
+  },
+  {
+   "etiqueta": "[NSX_VOT]",
+   "apariciones": 7
+  },
+  {
+   "etiqueta": "[AVSCCTLYCC]",
+   "apariciones": 6
+  },
+  {
+   "etiqueta": "[CAM_CMD]",
+   "apariciones": 6
+  },
+  {
+   "etiqueta": "[DECMODEERR]",
+   "apariciones": 6
+  },
+  {
+   "etiqueta": "[EVF]",
+   "apariciones": 6
+  },
+  {
+   "etiqueta": "[MOUNT_INFO]",
+   "apariciones": 6
+  },
+  {
+   "etiqueta": "[PBX]",
+   "apariciones": 6
+  },
+  {
+   "etiqueta": "[SND]",
+   "apariciones": 6
+  },
+  {
+   "etiqueta": "[SYNCSETMODE]",
+   "apariciones": 6
+  },
+  {
+   "etiqueta": "[VIDDECPRAM]",
+   "apariciones": 6
+  },
+  {
+   "etiqueta": "[CYCLE]",
+   "apariciones": 5
+  },
+  {
+   "etiqueta": "[ENCMODEERR]",
+   "apariciones": 5
+  },
+  {
+   "etiqueta": "[HOUSING]",
+   "apariciones": 5
+  },
+  {
+   "etiqueta": "[IMAGING_RSRC]",
+   "apariciones": 5
+  },
+  {
+   "etiqueta": "[INCDCIFCTRL]",
+   "apariciones": 5
+  },
+  {
+   "etiqueta": "[MOUNT_WARNING]",
+   "apariciones": 5
+  },
+  {
+   "etiqueta": "[MPEG2]",
+   "apariciones": 5
+  },
+  {
+   "etiqueta": "[SPC]",
+   "apariciones": 5
+  },
+  {
+   "etiqueta": "[VSYNC]",
+   "apariciones": 5
+  },
+  {
+   "etiqueta": "[ZPD]",
+   "apariciones": 5
+  },
+  {
+   "etiqueta": "[BKID]",
+   "apariciones": 4
+  },
+  {
+   "etiqueta": "[DECAUDLPCM]",
+   "apariciones": 4
+  },
+  {
+   "etiqueta": "[DECSEQCTRL]",
+   "apariciones": 4
+  },
+  {
+   "etiqueta": "[DFE_INT]",
+   "apariciones": 4
+  },
+  {
+   "etiqueta": "[ENCMODESTT]",
+   "apariciones": 4
+  },
+  {
+   "etiqueta": "[ENCUSDTMGR]",
+   "apariciones": 4
+  },
+  {
+   "etiqueta": "[EXDFSENDER]",
+   "apariciones": 4
+  },
+  {
+   "etiqueta": "[FFLSH]",
+   "apariciones": 4
+  },
+  {
+   "etiqueta": "[LENS_PDR]",
+   "apariciones": 4
+  },
+  {
+   "etiqueta": "[MAIN]",
+   "apariciones": 4
+  },
+  {
+   "etiqueta": "[VFX]",
+   "apariciones": 4
+  },
+  {
+   "etiqueta": "[AUDIOIP]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[AVIO]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[AVSCCTLEFCT]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[CAMERA_DEVICE]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[CCNR_ENCODE]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[DBG]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[DECAUDPAUS]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[DET_DIR]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[ENCAUDSTAT]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[ENCODE_JPEG_WITH_WORK]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[LGA]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[MCBBDLYCLC]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[MCIFINFACC]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[PANELEVF]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[PROC]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[SENSER]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[SIO]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[STK_AUTO_SAL]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[STOP]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[AVCMODEMGR]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[AVOUT]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[AVR]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[BIN_LIMITER]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[CBA_FIFO]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[CORE]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[DATA]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[DECAUDSMPL]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[DECVIDPARM]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[DEC]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[DMMYSIOCOM]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[HDMAC]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[IMCIF]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[IN]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[JIRO]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[MCUSRDEDT]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[MPGPINCONV]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[NTF]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[PCPSTATDRM]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[PNLEVF]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[RCV]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[STK_COLOR_SIM]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[STK_TOUCH_SIM]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[STOPG]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[SYSTEM]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[TOP]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[UTILITY]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[VIDEOCOLOR]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[WRAP]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[ABB]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[ADR]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[ANNOUNCE]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[APL0]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[APL1]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[AVCDECAUDES]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[AVCE]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[AVIF]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[AVSCEVTSND]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[AVSC]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[BBDELAY]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[CAM0]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[CAM1]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[CAMERA_DETECT_FC]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[CCNR]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[CDCCTRL]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[CDCID_HD_CODEC]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[CDCID_SD_CODEC]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[CDM]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[CID]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[CLKCTRL]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[CODE]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[CPU]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[D0]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[D1]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[D2]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[D3]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[D4]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[D5]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[D6]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[D7]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[DAAUGICONV]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[DDT]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[DECSEQVIF]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[DIRECTCOMMAND]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[DMAC]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[DMM_HANDLE_YCC_FULL]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[DVAUGICONV]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[DVFC]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[ENCAUDLPCM]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[ENCAUDSMPL]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[ENCAUDUTIL]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[EO_SW]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[EXEC]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[FILE_NUM]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[FOPD]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[FSYSMODE]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[GETPIN]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[GPE]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[HW]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[IN1]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[IN2]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[INF]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[LIF_ERROR]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MANU]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MC32BTCNTR]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MCCOUNTMGR]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MCMSGPINIF]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MCMSGSTATE]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MCS]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MODEFLG]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MODE_CAP]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MODE_CAP_DRP]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MODE_CAP_PREREVIEW]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MODE_CAP_SNR]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MODE_CAP_SNR_PREREVIEW]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MODE_SNR_BUS_THROUGH]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MODIFY1]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MOJITO_ERROR]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MPGMSGSEND]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[NULL]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[PCIE]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[PCP0]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[PCP1]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[PCPSTATINI]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[PERI]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[PFHS]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[RC0]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[RC1]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[RC2]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[RCH]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[RDM]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[REN]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[RESET]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[RING_DIAL]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SA0]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SA1]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SCN]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SCN_ENCODE]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SETPIN]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SET_DIAG_MODE]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SE]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SIZE]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SONLYAUDIO]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SPC0]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SPC1]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SRC0]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SRC1]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SRC2]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SRC3]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SRC4]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[STAT]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[STK_C_SIM]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[STK_T_SIM]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SWFLG]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SYS_SENSER_CA_PUTS]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[THM]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[TSKCORE]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[VFX0]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[VFX1]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[VIDENCPARAM]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[VIO]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[VPH]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[VPINFO]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[WSX0]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[WSX1]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[ZIMA0]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[ZIMA1]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[ZNR]",
+   "apariciones": 1
+  }
+ ]
+}

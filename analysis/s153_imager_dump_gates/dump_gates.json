@@ -1,0 +1,117 @@
+{
+  "milestone": "S153",
+  "firmware_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "base": "0x43541000",
+  "gate_bytes": {
+    "offset_3_mask_0x02": {
+      "address": "0x438583b0",
+      "file_offset": "0x3173b0",
+      "bytes_hex": "f37813f0020f08d0",
+      "thumb_instructions": [
+        {
+          "address": "0x438583b0",
+          "text": "ldrb r3, [r6, #3]"
+        },
+        {
+          "address": "0x438583b2",
+          "text": "tst.w r3, #2"
+        },
+        {
+          "address": "0x438583b6",
+          "text": "beq #0x438583ca"
+        }
+      ]
+    },
+    "offset_6_mask_0x20": {
+      "address": "0x438584f0",
+      "file_offset": "0x3174f0",
+      "bytes_hex": "b37913f0200f08d0",
+      "thumb_instructions": [
+        {
+          "address": "0x438584f0",
+          "text": "ldrb r3, [r6, #6]"
+        },
+        {
+          "address": "0x438584f2",
+          "text": "tst.w r3, #0x20"
+        },
+        {
+          "address": "0x438584f6",
+          "text": "beq #0x4385850a"
+        }
+      ]
+    },
+    "state_object_initial_image": {
+      "address": "0x43f72d02",
+      "file_offset": "0xa31d02",
+      "bytes_hex": "0000000000000000",
+      "thumb_instructions": [
+        {
+          "address": "0x43f72d02",
+          "text": "movs r0, r0"
+        },
+        {
+          "address": "0x43f72d04",
+          "text": "movs r0, r0"
+        },
+        {
+          "address": "0x43f72d06",
+          "text": "movs r0, r0"
+        },
+        {
+          "address": "0x43f72d08",
+          "text": "movs r0, r0"
+        }
+      ]
+    }
+  },
+  "rea_xrefs": {
+    "state_base_0x43f72d02": {
+      "evidence_id": "ev_6da432586526f5e685ab773333ad5329a099d92f9018cb8078383eff72d6a2c1",
+      "addresses": [
+        "0x438363e6",
+        "0x4383ac90",
+        "0x4384cb06",
+        "0x4384cb0a",
+        "0x43857f90",
+        "0x43857fb0",
+        "0x43858134",
+        "0x43859954",
+        "0x4385b268",
+        "0x4386001c",
+        "0x43860112",
+        "0x43860506",
+        "0x438d933e",
+        "0x438d9378",
+        "0x43ff3248"
+      ]
+    },
+    "flag_3": {
+      "evidence_id": "ev_2988fcffcf7768198b5e5d25f616294bfa4ee489710012b6f85b06434aabfde4",
+      "read_sites": [
+        "0x43858396",
+        "0x438583b0",
+        "0x438583ca",
+        "0x438583ec",
+        "0x43858406",
+        "0x43858420",
+        "0x4385843a",
+        "0x43858454"
+      ]
+    },
+    "flag_6": {
+      "evidence_id": "ev_7a31d71d07dc687daced9c48fe2a917ae8a24bf330dd09d4cb5d966c77a1669a",
+      "read_sites": [
+        "0x4385846e",
+        "0x43858488",
+        "0x438584a2",
+        "0x438584bc",
+        "0x438584d6",
+        "0x438584f0",
+        "0x4385850a",
+        "0x43858524"
+      ]
+    }
+  },
+  "scope_limit": "Direct flag xrefs are readers in a diagnostic dumper. No writer is proven by this bounded evidence; zero initial bytes and empty writer candidates do not establish runtime state or global absence."
+}

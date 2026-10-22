@@ -1,0 +1,925 @@
+{
+ "milestone": "S104",
+ "model": "A6000",
+ "firmware": "fw3.21",
+ "blob": "analysis/rea-independent/input/av-cam.bin",
+ "base_vaddr": "0x43541000",
+ "address_rule": "vaddr = 0x43541000 + file_offset",
+ "method": "Conteo de tokens [PREFIX] en cadenas imprimibles >=6 bytes (idéntico a S79); localización de cadenas y xrefs PIC ldr/add; verificación de cada dirección contra bytes. Sin ejecutar firmware, sin cámara, sin Ghidra/REA.",
+ "counts": {
+  "ADC_DEBUG": 14,
+  "AVR": 2,
+  "AVOUT": 2,
+  "ADR": 1,
+  "BKID": 4,
+  "CAMCORE": 37
+ },
+ "a7s": {
+  "ADC_DEBUG": null,
+  "AVR": null,
+  "AVOUT": null,
+  "ADR": null,
+  "BKID": null,
+  "CAMCORE": null
+ },
+ "a7s_note": "Ninguno de los seis prefijos existe en el mapa S79 de A7S (fw3.20): son exclusivos de A6000.",
+ "prefixes": {
+  "ADC_DEBUG": {
+   "count": 14,
+   "kind": "módulo de depuración del ADC de LIRO",
+   "summary": "Volcado de los 12 canales del ADC y comandos de servicio del bloque ADC dentro de LIRO.",
+   "strings": [
+    {
+     "vaddr": "0x43ce50dd",
+     "text": "[ADC_DEBUG]: few arg",
+     "xref_sites": [
+      "0x4398eb2a",
+      "0x4398ec86"
+     ],
+     "functions": [
+      "0x4398eb22",
+      "0x4398ec7e"
+     ],
+     "note": "Aviso de argumento inválido (unit_no fuera de rango)."
+    },
+    {
+     "vaddr": "0x43ce50f3",
+     "text": "[ADC_DEBUG]: ADC DATA0  = %04x",
+     "xref_sites": [
+      "0x4398eb68"
+     ],
+     "functions": [
+      "0x4398eb22"
+     ],
+     "note": "Canal 0 del volcado: halfword en [msg+0x6]."
+    },
+    {
+     "vaddr": "0x43ce5113",
+     "text": "[ADC_DEBUG]: ADC DATA1  = %04x",
+     "xref_sites": [
+      "0x4398eb7a"
+     ],
+     "functions": [
+      "0x4398eb22"
+     ],
+     "note": "Canal 1 del volcado: halfword en [msg+0x8]."
+    },
+    {
+     "vaddr": "0x43ce5133",
+     "text": "[ADC_DEBUG]: ADC DATA2  = %04x",
+     "xref_sites": [
+      "0x4398eb8c"
+     ],
+     "functions": [
+      "0x4398eb22"
+     ],
+     "note": "Canal 2 del volcado: halfword en [msg+0xa]."
+    },
+    {
+     "vaddr": "0x43ce5153",
+     "text": "[ADC_DEBUG]: ADC DATA3  = %04x",
+     "xref_sites": [
+      "0x4398eb9e"
+     ],
+     "functions": [
+      "0x4398eb22"
+     ],
+     "note": "Canal 3 del volcado: halfword en [msg+0xc]."
+    },
+    {
+     "vaddr": "0x43ce5173",
+     "text": "[ADC_DEBUG]: ADC DATA4  = %04x",
+     "xref_sites": [
+      "0x4398ebb0"
+     ],
+     "functions": [
+      "0x4398eb22"
+     ],
+     "note": "Canal 4 del volcado: halfword en [msg+0xe]."
+    },
+    {
+     "vaddr": "0x43ce5193",
+     "text": "[ADC_DEBUG]: ADC DATA5  = %04x",
+     "xref_sites": [
+      "0x4398ebc2"
+     ],
+     "functions": [
+      "0x4398eb22"
+     ],
+     "note": "Canal 5 del volcado: halfword en [msg+0x10]."
+    },
+    {
+     "vaddr": "0x43ce51b3",
+     "text": "[ADC_DEBUG]: ADC DATA6  = %04x",
+     "xref_sites": [
+      "0x4398ebd4"
+     ],
+     "functions": [
+      "0x4398eb22"
+     ],
+     "note": "Canal 6 del volcado: halfword en [msg+0x12]."
+    },
+    {
+     "vaddr": "0x43ce51d3",
+     "text": "[ADC_DEBUG]: ADC DATA7  = %04x",
+     "xref_sites": [
+      "0x4398ebe6"
+     ],
+     "functions": [
+      "0x4398eb22"
+     ],
+     "note": "Canal 7 del volcado: halfword en [msg+0x14]."
+    },
+    {
+     "vaddr": "0x43ce51f3",
+     "text": "[ADC_DEBUG]: ADC DATA8  = %04x",
+     "xref_sites": [
+      "0x4398ebf8"
+     ],
+     "functions": [
+      "0x4398eb22"
+     ],
+     "note": "Canal 8 del volcado: halfword en [msg+0x16]."
+    },
+    {
+     "vaddr": "0x43ce5213",
+     "text": "[ADC_DEBUG]: ADC DATA9  = %04x",
+     "xref_sites": [
+      "0x4398ec0a"
+     ],
+     "functions": [
+      "0x4398eb22"
+     ],
+     "note": "Canal 9 del volcado: halfword en [msg+0x18]."
+    },
+    {
+     "vaddr": "0x43ce5233",
+     "text": "[ADC_DEBUG]: ADC DATA10 = %04x",
+     "xref_sites": [
+      "0x4398ec1c"
+     ],
+     "functions": [
+      "0x4398eb22"
+     ],
+     "note": "Canal 10 del volcado: halfword en [msg+0x1a]."
+    },
+    {
+     "vaddr": "0x43ce5253",
+     "text": "[ADC_DEBUG]: ADC DATA11 = %04x",
+     "xref_sites": [
+      "0x4398ec2e"
+     ],
+     "functions": [
+      "0x4398eb22"
+     ],
+     "note": "Canal 11 del volcado: halfword en [msg+0x1c]."
+    },
+    {
+     "vaddr": "0x43ce5273",
+     "text": "[ADC_DEBUG]: ADC DATA = %04x",
+     "xref_sites": [
+      "0x4398eccc"
+     ],
+     "functions": [
+      "0x4398ec7e"
+     ],
+     "note": "Volcado genérico de 2 canales (mensaje de 8 bytes, cabecera 0xfff0)."
+    }
+   ],
+   "interpretation": [
+    "El prefijo pertenece al bloque ADC que LIRO arranca en boot: la cadena `boot_exit_adcliro` (0x43ce5315) y el nombre de tarea `TSK_ADC` (0x43ce5291) están en la misma región, y los comandos `ADC_GET_DATA` (0x43ce529f), `ADC_GET_DATA_ALL` (0x43ce52c5) y `ADC_SET_DATA_ALL` (0x43ce52e5) describen una unidad con `unit_no` y 12 canales `data0..data11`.",
+    "La función 0x4398eb22 valida `unit_no` (`cmp r0,#1` / `bgt`), reserva 0x20 bytes con OSAL (0x435612d0), escribe la cabecera 0xfff1 en [msg] y el canal en [msg+4], envía con 0x43561228 y luego imprime DATA0..DATA11 leyendo 12 halfwords desde [msg+6].",
+    "La función 0x4398ec7e hace lo mismo con cabecera 0xfff0, mensaje de 8 bytes y dos canales; su cadena es el `ADC DATA` genérico 0x43ce5273. El mensaje se libera con OSAL 0x435612ec.",
+    "Los nombres `ADJ_CMD_LIRO_DRIVERS_ADC_LIRO_ADC_*` (0x43ce4fc7-0x43ce507a) son comandos de ajuste de fábrica del mismo bloque; solo cuatro de ellos tienen referencia PIC (GET_DATA_ALL, CHECK_DATA, TEST_MODE, SET_DATA), mientras GET_DATA (0x43ce4fc7) no aparece referenciada."
+   ],
+   "evidence": "VERIFICADO: cadenas y xrefs PIC comprobadas contra bytes; estructura del mensaje y cabeceras verificadas por desensamblado de 0x4398eb22/0x4398ec7e.",
+   "caveats": [
+    "Qué magnitud física mide cada uno de los 12 canales: NO_VERIFICADO (requiere esquema o traza en cámara).",
+    "El significado de la cabecera 0xfff1/0xfff0 se deduce de su posición, no de una tabla de protocolo documentada."
+   ],
+   "related": [
+    {
+     "vaddr": "0x43ce5291",
+     "text": "TSK_ADC",
+     "why": "nombre de la tarea ADC (referenciado en 0x4398ecf0)."
+    },
+    {
+     "vaddr": "0x43ce529f",
+     "text": "ADC_GET_DATA     unit_no ch_no",
+     "why": "comando de lectura de un canal."
+    },
+    {
+     "vaddr": "0x43ce52c5",
+     "text": "ADC_GET_DATA_ALL unit_no",
+     "why": "comando de lectura de los 12 canales."
+    },
+    {
+     "vaddr": "0x43ce52e5",
+     "text": "ADC_SET_DATA_ALL unit_no data0 data1 ... data11",
+     "why": "comando de escritura de los 12 canales."
+    },
+    {
+     "vaddr": "0x43ce5315",
+     "text": "boot_exit_adcliro",
+     "why": "arranque/salida del bloque ADC de LIRO."
+    },
+    {
+     "vaddr": "0x43ce4fc7",
+     "text": "ADJ_CMD_LIRO_DRIVERS_ADC_LIRO_ADC_GET_DATA",
+     "why": "comando ADJ sin xref PIC (los otros cuatro sí la tienen)."
+    }
+   ]
+  },
+  "AVR": {
+   "count": 2,
+   "kind": "clase de accesorio LANC-AVR dentro de ACCY",
+   "summary": "Notificaciones de attach/detach del accesorio LANC-AVR.",
+   "strings": [
+    {
+     "vaddr": "0x43c25502",
+     "text": "[ACCY][DEBUG][AVR] NotifyDetached(%d)",
+     "xref_sites": [
+      "0x43565688"
+     ],
+     "functions": [
+      "0x43565680"
+     ],
+     "note": "Notificación de desacople del accesorio AVR."
+    },
+    {
+     "vaddr": "0x43c25528",
+     "text": "[ACCY][DEBUG][AVR] NotifyAttached(%d)",
+     "xref_sites": [
+      "0x435656dc"
+     ],
+     "functions": [
+      "0x435656d4"
+     ],
+     "note": "Notificación de acople del accesorio AVR."
+    }
+   ],
+   "interpretation": [
+    "Las dos cadenas son `[ACCY][DEBUG][AVR] NotifyDetached(%d)` (0x43c25502) y `NotifyAttached(%d)` (0x43c25528); el prefijo AVR no es un módulo independiente sino una clase de accesorio gestionada por ACCY.",
+    "La evidencia que identifica AVR es el log de fábrica `[ACCY][DEBUG][FACTORY]:%d:LANC-AVR Attached` (0x43c252b4): AVR = LANC-AVR.",
+    "El handler de 0x43565680 (Detached) escribe el GPIO mask 0x2000100 (0x43a3aeda) y configura 0xa000012 con 0x43565814; el de 0x435656d4 (Attached) escribe 0x2000000 y vuelve a configurar 0xa000012."
+   ],
+   "evidence": "VERIFICADO: cadenas, xrefs y máscaras GPIO verificadas por desensamblado de 0x43565680/0x435656d4; identificación LANC-AVR por la cadena de fábrica 0x43c252b4.",
+   "caveats": [
+    "La asignación exacta \"Attached/Detached\" a cada handler se toma de la cadena que cada uno imprime, no de una tabla externa de ACCY."
+   ],
+   "related": [
+    {
+     "vaddr": "0x43c252b4",
+     "text": "[ACCY][DEBUG][FACTORY]:%d:LANC-AVR Attached",
+     "why": "identifica AVR como LANC-AVR."
+    },
+    {
+     "vaddr": "0x43565680",
+     "text": "(handler)",
+     "why": "imprime NotifyDetached y escribe mask 0x2000100."
+    },
+    {
+     "vaddr": "0x435656d4",
+     "text": "(handler)",
+     "why": "imprime NotifyAttached y escribe 0x2000000."
+    }
+   ]
+  },
+  "AVOUT": {
+   "count": 2,
+   "kind": "clase de accesorio AV Out dentro de ACCY",
+   "summary": "Notificaciones de attach/detach de la salida AV (AV Out).",
+   "strings": [
+    {
+     "vaddr": "0x43c2549e",
+     "text": "[ACCY][DEBUG][AVOUT] NotifyDetached(%d)",
+     "xref_sites": [
+      "0x43565510"
+     ],
+     "functions": [
+      "0x43565508"
+     ],
+     "note": "Notificación de desacople de AvOut."
+    },
+    {
+     "vaddr": "0x43c254c6",
+     "text": "[ACCY][DEBUG][AVOUT] NotifyAttached(%d)",
+     "xref_sites": [
+      "0x43565554"
+     ],
+     "functions": [
+      "0x4356554c"
+     ],
+     "note": "Notificación de acople de AvOut."
+    }
+   ],
+   "interpretation": [
+    "Las cadenas son `[ACCY][DEBUG][AVOUT] NotifyDetached(%d)` (0x43c2549e) y `NotifyAttached(%d)` (0x43c254c6), de la misma familia ACCY que AVR.",
+    "El log de fábrica `[ACCY][DEBUG][FACTORY]:%d:AvOut Attached` (0x43c25260) identifica AVOUT = AvOut.",
+    "Los handlers 0x43565508 (Detached) y 0x4356554c (Attached) escriben máscaras GPIO 0x1000100 y 0x1000000 respectivamente (0x43a3aeda) y configuran 0x43565814.",
+    "El dispatcher de ACCY en 0x435646a4 separa los tipos de accesorio: 0 = AVOUT (0x435655a4, mask 0x7000100), 1 = JIRO (0x43566074, mask 0x7000200), 4 = HELLO (0x4356468c, 0x7000000) y 5 = AVR (0x4356573c, 0x7000300); el caso por defecto devuelve NULL/UNSUPPORTED (0x7000400)."
+   ],
+   "evidence": "VERIFICADO: cadenas, xrefs, máscaras GPIO y tabla del dispatcher verificadas contra bytes/desensamblado.",
+   "caveats": [
+    "La función eléctrica concreta de la salida AV (vídeo compuesto, etc.) no se deduce del binario: NO_VERIFICADO."
+   ],
+   "related": [
+    {
+     "vaddr": "0x43c25260",
+     "text": "[ACCY][DEBUG][FACTORY]:%d:AvOut Attached",
+     "why": "identifica AVOUT como AvOut."
+    },
+    {
+     "vaddr": "0x435646a4",
+     "text": "(dispatcher ACCY)",
+     "why": "tipo 0 = AVOUT, 1 = JIRO, 4 = HELLO, 5 = AVR."
+    }
+   ]
+  },
+  "ADR": {
+   "count": 1,
+   "kind": "campo de dirección dentro de un log de CAM_UTIL_SENS",
+   "summary": "Dirección de carga de una petición de apertura de imagen (IM open), no un módulo.",
+   "strings": [
+    {
+     "vaddr": "0x43cce3fa",
+     "text": "[CAM_UTIL_SENS]: >>[FILE_NUM]%x [ADR]%x [SIZE]%x",
+     "xref_sites": [
+      "0x43901e42",
+      "0x4390202a",
+      "0x4390225e",
+      "0x43902492"
+     ],
+     "functions": [
+      "0x43901d50",
+      "0x43902168",
+      "0x43902418"
+     ],
+     "note": "Traza de apertura: FILE_NUM, ADR (dirección) y SIZE."
+    }
+   ],
+   "interpretation": [
+    "`ADR` aparece solo como campo entre corchetes dentro de `[CAM_UTIL_SENS]: >>[FILE_NUM]%x [ADR]%x [SIZE]%x` (0x43cce3fa); no hay ningún otro token `[ADR]` en el firmware.",
+    "La función 0x43901d50 construye el mensaje de apertura: escribe tipo 1 en [msg], file_num en [msg+2], la dirección en [msg+4], el tamaño en [msg+8], flags en [msg+0xc..0xf] y ceros en [msg+0x10]/[msg+0x14]. El log imprime exactamente esos tres campos.",
+    "Por tanto ADR = dirección (load address) del buffer/imagen que se abre, no un subsistema. Las variantes en minúscula `[Adr]` (0x43cce34f, 0x43cce5ce) y los logs de apertura síncrona (0x43cce491+) pertenecen a la misma capa CAM_UTIL_SENS."
+   ],
+   "evidence": "VERIFICADO: cadena única y estructura del mensaje verificadas por desensamblado de 0x43901d50.",
+   "caveats": [
+    "Si la dirección es física, virtual o un handle del gestor de imágenes: NO_VERIFICADO (solo se observa que se transporta como u32 en [msg+4])."
+   ],
+   "related": [
+    {
+     "vaddr": "0x43cce42b",
+     "text": "[CAM_UTIL_SENS]: >>[STAT]%x [FSYSMODE]",
+     "why": "log hermano del mismo emisor."
+    },
+    {
+     "vaddr": "0x43cce34f",
+     "text": "(variante [Adr] minúscula)",
+     "why": "misma capa CAM_UTIL_SENS."
+    }
+   ]
+  },
+  "BKID": {
+   "count": 4,
+   "kind": "identificador de backup (backup ID) en logs de SDF/LIF",
+   "summary": "Callback y registro de cambios de un BKID (backup ID), no un módulo.",
+   "strings": [
+    {
+     "vaddr": "0x43cce1ea",
+     "text": "[CAM_UTIL_SENS]: CB for BKID change [BKID]:%x [Size]:%x",
+     "xref_sites": [
+      "0x43901306"
+     ],
+     "functions": [
+      "0x439012d0"
+     ],
+     "note": "Callback de cambio de BKID con tamaño de datos."
+    },
+    {
+     "vaddr": "0x43cfb04d",
+     "text": "[LIF_DEBUG]:  :[BKID] %x, [DataSize] %x",
+     "xref_sites": [
+      "0x43a1c9f8"
+     ],
+     "functions": [
+      "0x43a1c9d8"
+     ],
+     "note": "Notificación de cambio de BKID y tamaño."
+    },
+    {
+     "vaddr": "0x43cfb09c",
+     "text": "[LIF_DEBUG]: Reg CB func result [BKID]:%x, [Erro]:%x",
+     "xref_sites": [
+      "0x43a1ca68"
+     ],
+     "functions": [
+      "0x43a1ca1e"
+     ],
+     "note": "Resultado de registrar el callback por BKID."
+    },
+    {
+     "vaddr": "0x43cfb1a8",
+     "text": "[LIF_DEBUG]: UnReg CB func result [BKID]:%x, [Erro]:%x",
+     "xref_sites": [
+      "0x43a1cb62"
+     ],
+     "functions": [
+      "0x43a1cb3c"
+     ],
+     "note": "Resultado de anular el callback por BKID."
+    }
+   ],
+   "interpretation": [
+    "Las cuatro cadenas son logs de callback: `CB for BKID change` (0x43cce1ea, CAM_UTIL_SENS), `[BKID] %x, [DataSize] %x` (0x43cfb04d) y los resultados de registrar/anular el callback (0x43cfb09c, 0x43cfb1a8, LIF_DEBUG).",
+    "La evidencia decisiva de que BKID = backup ID está en las cadenas que usan el prefijo como identificador de backup: `[SDF] backupId size (BKID_SDF_QTBL_C)` (0x43c77aeb), `BKID_EVF_CTRL_050/052/054` (0x43c75f34+), `Backup_read(BKID_UPM_BOOT_CIPA_FLAG)` (0x43c82329), `BKID_VDF_CIPA_MEM` (0x43c85632) y `BKID_VDF_SRVC_SET_HISTOGRAM_COMP_FREQ` (0x43c8aafb).",
+    "El patrón es un registro de callbacks por BKID: una capa (LIF/SDF) notifica cambios de un backup ID y CAM_UTIL_SENS ejecuta el callback con el tamaño de datos."
+   ],
+   "evidence": "VERIFICADO: cadenas, xrefs y uso de BKID como identificador de backup en SDF/VDF/UPM verificados contra bytes.",
+   "caveats": [
+    "La lista completa de BKID (qué número corresponde a cada parámetro) no se reconstruye aquí: solo se citan los BKID con nombre propio localizados."
+   ],
+   "related": [
+    {
+     "vaddr": "0x43c77aeb",
+     "text": "[SDF] backupId size (BKID_SDF_QTBL_C) is expected %d byte, but %d.)",
+     "why": "BKID como backup ID en SDF."
+    },
+    {
+     "vaddr": "0x43c82329",
+     "text": "[VDF]Backup_read(BKID_UPM_BOOT_CIPA_FLAG) error %d",
+     "why": "BKID usado con Backup_read."
+    },
+    {
+     "vaddr": "0x43c8aafb",
+     "text": "[VDF] BKID_VDF_SRVC_SET_HISTOGRAM_COMP_FREQ = %d",
+     "why": "BKID con nombre de parámetro VDF."
+    }
+   ]
+  },
+  "CAMCORE": {
+   "count": 37,
+   "kind": "librería del controlador del núcleo de cámara (Camera::CamCore)",
+   "summary": "Errores y trazas internas del core de cámara: tablas SGC, controladores por modo, RDC/PFR, AIF/DMA, recursos, interrupciones, powersave y puntos defectuosos.",
+   "strings": [
+    {
+     "vaddr": "0x43c905ca",
+     "text": "[CAMCORE]: GetFlowType: No SgcTable. imgmode=%d, cammode=%d",
+     "xref_sites": [
+      "0x436c22b8"
+     ],
+     "functions": [
+      "0x436c227c"
+     ],
+     "note": "GetFlowType no encuentra SgcTable para imgmode/cammode."
+    },
+    {
+     "vaddr": "0x43c90606",
+     "text": "[CAMCORE]: Warning! The controller for mode(%d) does not implemented",
+     "xref_sites": [
+      "0x436c24d2"
+     ],
+     "functions": [
+      "0x436c243c"
+     ],
+     "note": "No hay controlador implementado para el modo solicitado."
+    },
+    {
+     "vaddr": "0x43c9070a",
+     "text": "[CAMCORE]: SetCasRMaxRatio parameter error [%d]",
+     "xref_sites": [
+      "0x436c2880"
+     ],
+     "functions": [
+      "0x436c2868"
+     ],
+     "note": "Validación de SetCasRMaxRatio."
+    },
+    {
+     "vaddr": "0x43c9073a",
+     "text": "[CAMCORE]: typeof(rawIn) must be RdcImage.",
+     "xref_sites": [
+      "0x436c2bfc"
+     ],
+     "functions": [
+      "0x436c2b48"
+     ],
+     "note": "RdcImage: la entrada debe ser RdcImage."
+    },
+    {
+     "vaddr": "0x43c90765",
+     "text": "[CAMCORE]: Cannot read with skipping when 4bit RAW.",
+     "xref_sites": [
+      "0x436c2c70"
+     ],
+     "functions": [
+      "0x436c2b48"
+     ],
+     "note": "RdcImage: no se puede leer con skipping en RAW de 4 bits."
+    },
+    {
+     "vaddr": "0x43c90799",
+     "text": "[CAMCORE]: typeof(rawOut) must be RdcImage.",
+     "xref_sites": [
+      "0x436c2e42"
+     ],
+     "functions": [
+      "0x436c2d4e"
+     ],
+     "note": "RdcImage: la salida debe ser RdcImage."
+    },
+    {
+     "vaddr": "0x43c90846",
+     "text": "[CAMCORE]: [Error] Memory for PFR couldn't be freed. : unit_handle = %x",
+     "xref_sites": [
+      "0x436c38b6"
+     ],
+     "functions": [
+      "0x436c3890"
+     ],
+     "note": "Liberación de memoria PFR fallida (unit_handle)."
+    },
+    {
+     "vaddr": "0x43c9088e",
+     "text": "[CAMCORE]: [Error] Memory for PFR couldn't be allocated.",
+     "xref_sites": [
+      "0x436c39cc"
+     ],
+     "functions": [
+      "0x436c38e4"
+     ],
+     "note": "Reserva de memoria PFR fallida."
+    },
+    {
+     "vaddr": "0x43c908e7",
+     "text": "[CAMCORE]: MemoryPool has no space.",
+     "xref_sites": [
+      "0x436c3e68",
+      "0x436c3f28",
+      "0x436c3f60",
+      "0x436c3f98",
+      "0x436c3fd0",
+      "0x436c4008",
+      "0x436c4040",
+      "0x436c4078",
+      "0x436c40b0",
+      "0x436c40e8",
+      "0x436c4120"
+     ],
+     "functions": [
+      "0x436c3e14",
+      "0x436c3f1c",
+      "0x436c3f54",
+      "0x436c3f8c",
+      "0x436c3fc4",
+      "0x436c3ffc",
+      "0x436c4034",
+      "0x436c406c",
+      "0x436c40a4",
+      "0x436c40dc",
+      "0x436c4114"
+     ],
+     "note": "MemoryPool sin espacio (11 sitios de llamada)."
+    },
+    {
+     "vaddr": "0x43c90982",
+     "text": "[CAMCORE]: SplitEEController: Memory Close Error!(VATR)",
+     "xref_sites": [
+      "0x436c45aa"
+     ],
+     "functions": [
+      "0x436c4560"
+     ],
+     "note": "SplitEEController: error al cerrar memoria (VATR)."
+    },
+    {
+     "vaddr": "0x43c909ba",
+     "text": "[CAMCORE]: NOT SUPPORT!",
+     "xref_sites": [
+      "0x436c463c"
+     ],
+     "functions": [
+      "0x436c45d8"
+     ],
+     "note": "Operación no soportada."
+    },
+    {
+     "vaddr": "0x43c909f7",
+     "text": "[CAMCORE]: No SgcTable. imgmode=%d, cammode=%d, hFlip=%u, vFlip=%u",
+     "xref_sites": [
+      "0x436c4e4e"
+     ],
+     "functions": [
+      "0x436c4e20"
+     ],
+     "note": "Segunda variante de SgcTable ausente (incluye flips)."
+    },
+    {
+     "vaddr": "0x43c90a96",
+     "text": "[CAMCORE]: AIF%d out[%d] > memsize[%d]",
+     "xref_sites": [
+      "0x436c4fdc"
+     ],
+     "functions": [
+      "0x436c4f6c"
+     ],
+     "note": "AIF: salida mayor que el tamaño de memoria."
+    },
+    {
+     "vaddr": "0x43c90abd",
+     "text": "[CAMCORE]: Extent size must be just divided into equal size.",
+     "xref_sites": [
+      "0x436c5006"
+     ],
+     "functions": [
+      "0x436c4f6c"
+     ],
+     "note": "AIF: el extent debe dividirse en partes iguales."
+    },
+    {
+     "vaddr": "0x43c90afa",
+     "text": "[CAMCORE]: AIF%d out[%d] memsize[%d] extent[%d]",
+     "xref_sites": [
+      "0x436c5034"
+     ],
+     "functions": [
+      "0x436c4f6c"
+     ],
+     "note": "AIF: traza de memoria/extent calculados."
+    },
+    {
+     "vaddr": "0x43c90b2a",
+     "text": "[CAMCORE]: AIF%d Extent count[%d] must be 1 or 2.",
+     "xref_sites": [
+      "0x436c505e"
+     ],
+     "functions": [
+      "0x436c4f6c"
+     ],
+     "note": "AIF: el número de extents debe ser 1 o 2."
+    },
+    {
+     "vaddr": "0x43c90b5c",
+     "text": "[CAMCORE]: AIF%d pbl_aif_set_func error[%d] size[%d] dest[%d] iib[%d] addr[%08x]",
+     "xref_sites": [
+      "0x436c516e"
+     ],
+     "functions": [
+      "0x436c50dc"
+     ],
+     "note": "AIF: error de pbl_aif_set_func con tamaño/destino/iib/addr."
+    },
+    {
+     "vaddr": "0x43c90bad",
+     "text": "[CAMCORE]: AIF%d RDC param error. encType[%d] lcut[%d] rcut[%d]",
+     "xref_sites": [
+      "0x436c51f6"
+     ],
+     "functions": [
+      "0x436c50dc"
+     ],
+     "note": "AIF: parámetros RDC inválidos (encType/lcut/rcut)."
+    },
+    {
+     "vaddr": "0x43c90bed",
+     "text": "[CAMCORE]: AIF%d RDC none. encType[%d] lcut[%d] rcut[%d]",
+     "xref_sites": [
+      "0x436c5222"
+     ],
+     "functions": [
+      "0x436c50dc"
+     ],
+     "note": "AIF: RDC desactivado (encType/lcut/rcut)."
+    },
+    {
+     "vaddr": "0x43c90ca3",
+     "text": "[CAMCORE]: PFR in width[%d] > 596",
+     "xref_sites": [
+      "0x436c5462"
+     ],
+     "functions": [
+      "0x436c53d8"
+     ],
+     "note": "PFR: ancho de entrada superior a 596."
+    },
+    {
+     "vaddr": "0x43c90e8d",
+     "text": "[CAMCORE]: Interruption::AddStartCallback(%d, %08x) NG.",
+     "xref_sites": [
+      "0x436c63d6",
+      "0x436c657a"
+     ],
+     "functions": [
+      "0x436c63a8",
+      "0x436c6550"
+     ],
+     "note": "Interruption: AddStartCallback rechazado."
+    },
+    {
+     "vaddr": "0x43c90ec5",
+     "text": "[CAMCORE]: ResourceBase::Release was called without acquire. %08x",
+     "xref_sites": [
+      "0x436c6b44"
+     ],
+     "functions": [
+      "0x436c6b3c"
+     ],
+     "note": "ResourceBase: Release sin acquire previo."
+    },
+    {
+     "vaddr": "0x43c90f07",
+     "text": "[CAMCORE]: MonPowersave[%d] is already Enabled !",
+     "xref_sites": [
+      "0x436c7450"
+     ],
+     "functions": [
+      "0x436c723c"
+     ],
+     "note": "MonPowersave ya estaba habilitado."
+    },
+    {
+     "vaddr": "0x43c90f38",
+     "text": "[CAMCORE]: SGC1: Invalid imager_if_type enum %d",
+     "xref_sites": [
+      "0x436c79bc"
+     ],
+     "functions": [
+      "0x436c7950"
+     ],
+     "note": "SGC1: imager_if_type inválido."
+    },
+    {
+     "vaddr": "0x43c90f98",
+     "text": "[CAMCORE]: ExlHelper: Cannot convert CamMode[%d] to ExlMode.",
+     "xref_sites": [],
+     "functions": [],
+     "note": "ExlHelper: CamMode sin conversión a ExlMode (sin xref PIC localizada)."
+    },
+    {
+     "vaddr": "0x43c90fd5",
+     "text": "[CAMCORE]: ExlHelper: Invalid imager_mode_aspect[%d]",
+     "xref_sites": [],
+     "functions": [],
+     "note": "ExlHelper: imager_mode_aspect inválido (sin xref PIC localizada)."
+    },
+    {
+     "vaddr": "0x43c9100a",
+     "text": "[CAMCORE]: ExlHelper: Invalid imager_if_type[%d]",
+     "xref_sites": [
+      "0x436c7d30",
+      "0x436c7d58"
+     ],
+     "functions": [
+      "0x436c7d08"
+     ],
+     "note": "ExlHelper: imager_if_type inválido."
+    },
+    {
+     "vaddr": "0x43c9103b",
+     "text": "[CAMCORE]: ExlHelper: Invalid imager_physical_coding[%d]",
+     "xref_sites": [
+      "0x436c7d6e"
+     ],
+     "functions": [
+      "0x436c7d08"
+     ],
+     "note": "ExlHelper: imager_physical_coding inválido."
+    },
+    {
+     "vaddr": "0x43c91074",
+     "text": "[CAMCORE]: ExlHelper: Invalid imager_aspect[%d]",
+     "xref_sites": [
+      "0x436c7dd2"
+     ],
+     "functions": [
+      "0x436c7d08"
+     ],
+     "note": "ExlHelper: imager_aspect inválido."
+    },
+    {
+     "vaddr": "0x43c910a4",
+     "text": "[CAMCORE]: [Setter] DMA Err open [%d]",
+     "xref_sites": [
+      "0x436c9020"
+     ],
+     "functions": [
+      "0x436c900c"
+     ],
+     "note": "DMA Setter: error al abrir el canal."
+    },
+    {
+     "vaddr": "0x43c910ca",
+     "text": "[CAMCORE]: [Setter] DMAC_CH_NONE",
+     "xref_sites": [
+      "0x436c9066"
+     ],
+     "functions": [
+      "0x436c9050"
+     ],
+     "note": "DMA Setter: DMAC_CH_NONE."
+    },
+    {
+     "vaddr": "0x43c910eb",
+     "text": "[CAMCORE]: [Setter] listCount = %d",
+     "xref_sites": [
+      "0x436c9082"
+     ],
+     "functions": [
+      "0x436c9050"
+     ],
+     "note": "DMA Setter: traza de listCount."
+    },
+    {
+     "vaddr": "0x43c9110e",
+     "text": "[CAMCORE]: [Setter] DMA Err status [%d]",
+     "xref_sites": [
+      "0x436c9146"
+     ],
+     "functions": [
+      "0x436c9050"
+     ],
+     "note": "DMA Setter: error de estado."
+    },
+    {
+     "vaddr": "0x43c91136",
+     "text": "[CAMCORE]: [Setter] DMA Err set_func [%d]",
+     "xref_sites": [
+      "0x436c917e"
+     ],
+     "functions": [
+      "0x436c9050"
+     ],
+     "note": "DMA Setter: error en set_func."
+    },
+    {
+     "vaddr": "0x43c91160",
+     "text": "[CAMCORE]: [Setter] DMA Err start [%d]",
+     "xref_sites": [
+      "0x436c91bc"
+     ],
+     "functions": [
+      "0x436c9050"
+     ],
+     "note": "DMA Setter: error al arrancar."
+    },
+    {
+     "vaddr": "0x43cebc93",
+     "text": "!/6;>?[CAMCORE]: loadDefectPos",
+     "xref_sites": [],
+     "functions": [],
+     "note": "loadDefectPos (cadena precedida de bytes binarios; sin xref PIC localizada)."
+    },
+    {
+     "vaddr": "0x43cebcb2",
+     "text": "[CAMCORE]: Acl::CAMHEAD_Z1C::setDefectPt return err.",
+     "xref_sites": [
+      "0x439cd7f6"
+     ],
+     "functions": [
+      "0x439cd794"
+     ],
+     "note": "setDefectPt de CAMHEAD_Z1C devuelve error."
+    }
+   ],
+   "interpretation": [
+    "CAMCORE es la librería `Camera::CamCore`, no un módulo de log de alto nivel: agrupa la selección de controlador por modo (`GetFlowType`/SgcTable, 0x43c905ca y 0x43c909f7; \"controller for mode\" 0x43c90606), el procesado RDC/PFR (`RdcImage` 0x43c9073a/0x43c90765/0x43c90799, PFR 0x43c90846/0x43c9088e, `PFR in width > 596` 0x43c90ca3) y la configuración AIF (`pbl_aif_set_func`, extents, 0x43c90a96-0x43c90bed).",
+    "También cubre infraestructura: MemoryPool (0x43c908e7, 11 sitios), `ResourceBase::Release` sin acquire (0x43c90ec5), `Interruption::AddStartCallback` (0x43c90e8d), `MonPowersave` (0x43c90f07), ExlHelper (0x43c90f98-0x43c91074) y el setter DMA (0x43c910a4-0x43c91160).",
+    "La cadena final `Acl::CAMHEAD_Z1C::setDefectPt return err.` (0x43cebcb2, función 0x439cd794) conecta CAMCORE con la corrección de puntos defectuosos del sensor (línea S89/IDT); `loadDefectPos` (0x43cebc93) está en la misma región pero sin xref PIC localizada.",
+    "El RTTI `N6Camera7CamCore8RdcImageE` (0x43c906b6) y `N6Camera7CamCore13SplitRdcImageE` (0x43cb0b94) confirman el espacio de nombres Camera::CamCore. La relación con SGC1 se refuerza con `RESOURCE_SGC1` (0x43c9c41e) y `[IMAGING_CAP]: Warning! SGC1 is still running!` (0x43cad24b)."
+   ],
+   "evidence": "VERIFICADO: 37 cadenas y 43 xrefs PIC comprobados contra bytes; nombres de clase confirmados por RTTI.",
+   "caveats": [
+    "Tres cadenas (0x43c90f98, 0x43c90fd5, 0x43cebc93) no tienen xref PIC localizada con el patrón ldr/add; su función contenedora no se afirma.",
+    "La semántica exacta de SGC (Sensor Gate Controller u otra expansión) no está documentada en el binario: NO_VERIFICADO."
+   ],
+   "related": [
+    {
+     "vaddr": "0x43c906b6",
+     "text": "N6Camera7CamCore8RdcImageE",
+     "why": "RTTI que confirma Camera::CamCore::RdcImage."
+    },
+    {
+     "vaddr": "0x43cb0b94",
+     "text": "N6Camera7CamCore13SplitRdcImageE",
+     "why": "RTTI de SplitRdcImage."
+    },
+    {
+     "vaddr": "0x43c9c41e",
+     "text": "RESOURCE_SGC1",
+     "why": "recurso SGC1 usado por CAMCORE."
+    },
+    {
+     "vaddr": "0x43cad24b",
+     "text": "[IMAGING_CAP]: Warning! SGC1 is still running! (%s)",
+     "why": "consumidor de SGC1 en IMAGING_CAP."
+    }
+   ]
+  }
+ },
+ "corrections": [
+  {
+   "about": "S73 (analysis/s73_adj/adjust_cmd_recon.md)",
+   "text": "S73 afirmaba cuatro nombres ADJ de ADC en 0x43ce4ff2-0x43ce507a; en realidad hay cinco cadenas ADJ_CMD_LIRO_DRIVERS_ADC_LIRO_ADC_* (0x43ce4fc7-0x43ce507a) y solo cuatro tienen xref PIC (GET_DATA_ALL, CHECK_DATA, TEST_MODE, SET_DATA); GET_DATA (0x43ce4fc7) no está referenciada."
+  }
+ ]
+}

@@ -1,0 +1,689 @@
+{
+ "milestone": "S129",
+ "module": "[CAMERA_MAIN_IM]",
+ "firmware": "A6000 fw3.21",
+ "binary": "analysis/rea-independent/input/av-cam.bin",
+ "base_vaddr": "0x43541000",
+ "counts": {
+  "strings": 42,
+  "sites": 43,
+  "functions": 10,
+  "unreferenced": 0
+ },
+ "method": {
+  "pic_rule": "regla canónica estricta de analysis/s106_imaging_cap/pic_refs_strict_global.json (ldr rX,[pc,#imm] + add rX,pc, ver analysis/s106_imaging_cap/pic_xref_methodology.md)",
+  "function_attribution": "prólogo Thumb más cercano hacia atrás, corregido a la entrada real cuando la función tiene preámbulo PC-relativo antes del push (0x437b8ed4, 0x437b8fb0, 0x437b9064, 0x437b915c, 0x437b91e8, 0x4386bbec)"
+ },
+ "strings": [
+  {
+   "vaddr": "0x43ca6b32",
+   "text": "[CAMERA_MAIN_IM]: movie thermal diffTemp < 0 :(%d)",
+   "interior": "movie thermal diffTemp < 0 :(%d)",
+   "site": "0x43547394",
+   "func_entry": "0x43547362"
+  },
+  {
+   "vaddr": "0x43ca6b65",
+   "text": "[CAMERA_MAIN_IM]: paramA%f paramB%f diff:%d",
+   "interior": "paramA%f paramB%f diff:%d",
+   "site": "0x43547426",
+   "func_entry": "0x43547362"
+  },
+  {
+   "vaddr": "0x43ca6b91",
+   "text": "[CAMERA_MAIN_IM]: envOld:%d env':%d boot:%d",
+   "interior": "envOld:%d env':%d boot:%d",
+   "site": "0x4354746c",
+   "func_entry": "0x43547362"
+  },
+  {
+   "vaddr": "0x43ca6bbd",
+   "text": "[CAMERA_MAIN_IM]: environmentalTemp:%d",
+   "interior": "environmentalTemp:%d",
+   "site": "0x437b87e0",
+   "func_entry": "0x437b8774"
+  },
+  {
+   "vaddr": "0x43ca6be4",
+   "text": "[CAMERA_MAIN_IM]: movie Table",
+   "interior": "movie Table",
+   "site": "0x437b881c",
+   "func_entry": "0x437b8774"
+  },
+  {
+   "vaddr": "0x43ca6c02",
+   "text": "[CAMERA_MAIN_IM]: bulb Table",
+   "interior": "bulb Table",
+   "site": "0x437b8844",
+   "func_entry": "0x437b8774"
+  },
+  {
+   "vaddr": "0x43ca6c1f",
+   "text": "[CAMERA_MAIN_IM]: still Table",
+   "interior": "still Table",
+   "site": "0x437b8864",
+   "func_entry": "0x437b8774"
+  },
+  {
+   "vaddr": "0x43ca6c3d",
+   "text": "[CAMERA_MAIN_IM]: ISOAuto TH",
+   "interior": "ISOAuto TH",
+   "site": "0x437b88de",
+   "func_entry": "0x437b8774"
+  },
+  {
+   "vaddr": "0x43ca6c5a",
+   "text": "[CAMERA_MAIN_IM]: ISO1 TH",
+   "interior": "ISO1 TH",
+   "site": "0x437b890a",
+   "func_entry": "0x437b8774"
+  },
+  {
+   "vaddr": "0x43ca6c74",
+   "text": "[CAMERA_MAIN_IM]: ISO2 TH",
+   "interior": "ISO2 TH",
+   "site": "0x437b8930",
+   "func_entry": "0x437b8774"
+  },
+  {
+   "vaddr": "0x43ca6c8e",
+   "text": "[CAMERA_MAIN_IM]: ISO3 TH",
+   "interior": "ISO3 TH",
+   "site": "0x437b8950",
+   "func_entry": "0x437b8774"
+  },
+  {
+   "vaddr": "0x43ca6ca8",
+   "text": "[CAMERA_MAIN_IM]: Abs:Tnow=%d shutdownTh=%d cautionTh=%d",
+   "interior": "Abs:Tnow=%d shutdownTh=%d cautionTh=%d",
+   "site": "0x437b8982",
+   "func_entry": "0x437b8774"
+  },
+  {
+   "vaddr": "0x43ca6ce1",
+   "text": "[CAMERA_MAIN_IM]: Abs:THERMAL_SHUTDOWN: %d > %d",
+   "interior": "Abs:THERMAL_SHUTDOWN: %d > %d",
+   "site": "0x437b89b2",
+   "func_entry": "0x437b8774"
+  },
+  {
+   "vaddr": "0x43ca6d11",
+   "text": "[CAMERA_MAIN_IM]: Abs:THERMAL_CAUTION:%d > %d",
+   "interior": "Abs:THERMAL_CAUTION:%d > %d",
+   "site": "0x437b89ea",
+   "func_entry": "0x437b8774"
+  },
+  {
+   "vaddr": "0x43ca6d3f",
+   "text": "[CAMERA_MAIN_IM]: Env:Tnow=%d Tenv=%d envTh=%d shutdownTh=%d cautionTh=%d",
+   "interior": "Env:Tnow=%d Tenv=%d envTh=%d shutdownTh=%d cautionTh=%d",
+   "site": "0x437b8b14",
+   "func_entry": "0x437b8774"
+  },
+  {
+   "vaddr": "0x43ca6d89",
+   "text": "[CAMERA_MAIN_IM]: Env:THERMAL_SHUTDOWN:(%d - %d) > %d",
+   "interior": "Env:THERMAL_SHUTDOWN:(%d - %d) > %d",
+   "site": "0x437b8b74",
+   "func_entry": "0x437b8774"
+  },
+  {
+   "vaddr": "0x43ca6dbf",
+   "text": "[CAMERA_MAIN_IM]: Env:THERMAL_CAUTION:(%d - %d) > %d",
+   "interior": "Env:THERMAL_CAUTION:(%d - %d) > %d",
+   "site": "0x437b8bc6",
+   "func_entry": "0x437b8774"
+  },
+  {
+   "vaddr": "0x43ca6df4",
+   "text": "[CAMERA_MAIN_IM]: send THERMAL_CAUTION on",
+   "interior": "send THERMAL_CAUTION on",
+   "site": "0x437b8c34",
+   "func_entry": "0x437b8774"
+  },
+  {
+   "vaddr": "0x43ca6e1e",
+   "text": "[CAMERA_MAIN_IM]: sendCaution(true) return %d",
+   "interior": "sendCaution(true) return %d",
+   "site": "0x437b8c5c",
+   "func_entry": "0x437b8774"
+  },
+  {
+   "vaddr": "0x43ca6e4c",
+   "text": "[CAMERA_MAIN_IM]: send THERMAL_CAUTION off",
+   "interior": "send THERMAL_CAUTION off",
+   "site": "0x437b8c7a",
+   "func_entry": "0x437b8774"
+  },
+  {
+   "vaddr": "0x43ca6e77",
+   "text": "[CAMERA_MAIN_IM]: sendCaution(false) return %d",
+   "interior": "sendCaution(false) return %d",
+   "site": "0x437b8ca0",
+   "func_entry": "0x437b8774"
+  },
+  {
+   "vaddr": "0x43ca6ea6",
+   "text": "[CAMERA_MAIN_IM]: send THERMAL_SHUTDOWN",
+   "interior": "send THERMAL_SHUTDOWN",
+   "site": "0x437b8cc8",
+   "func_entry": "0x437b8774"
+  },
+  {
+   "vaddr": "0x43ca6ece",
+   "text": "[CAMERA_MAIN_IM]: upm_set_off_factor() return %d",
+   "interior": "upm_set_off_factor() return %d",
+   "site": "0x437b8d1c",
+   "func_entry": "0x437b8774"
+  },
+  {
+   "vaddr": "0x43ca6eff",
+   "text": "[CAMERA_MAIN_IM]: Error : GetImagerTemperature",
+   "interior": "Error : GetImagerTemperature",
+   "site": "0x437b8d38",
+   "func_entry": "0x437b8774"
+  },
+  {
+   "vaddr": "0x43ca6f2e",
+   "text": "[CAMERA_MAIN_IM]: ImCheckThermal setTimer:%x",
+   "interior": "ImCheckThermal setTimer:%x",
+   "site": "0x437b8d68",
+   "func_entry": "0x437b8774"
+  },
+  {
+   "vaddr": "0x43ca6f5b",
+   "text": "[CAMERA_MAIN_IM]: EcGain:%x isoAuto:%x bulb:%x",
+   "interior": "EcGain:%x isoAuto:%x bulb:%x",
+   "site": "0x437b8e8c",
+   "func_entry": "0x437b8e1c"
+  },
+  {
+   "vaddr": "0x43ca6f8a",
+   "text": "[CAMERA_MAIN_IM]: startImagerThermalCheck",
+   "interior": "startImagerThermalCheck",
+   "site": "0x437b8ef4",
+   "func_entry": "0x437b8ed4"
+  },
+  {
+   "vaddr": "0x43ca6fb4",
+   "text": "[CAMERA_MAIN_IM]: StartImThermal allocTimer:%x",
+   "interior": "StartImThermal allocTimer:%x",
+   "site": "0x437b8f2a",
+   "func_entry": "0x437b8ed4"
+  },
+  {
+   "vaddr": "0x43ca6fe3",
+   "text": "[CAMERA_MAIN_IM]: StartImThermal setTimer:%x",
+   "interior": "StartImThermal setTimer:%x",
+   "site": "0x437b8f5c",
+   "func_entry": "0x437b8ed4"
+  },
+  {
+   "vaddr": "0x43ca7010",
+   "text": "[CAMERA_MAIN_IM]: EndImThermal freeTimer:%x",
+   "interior": "EndImThermal freeTimer:%x",
+   "site": "0x437b8fd6",
+   "func_entry": "0x437b8fb0"
+  },
+  {
+   "vaddr": "0x43ca703c",
+   "text": "[CAMERA_MAIN_IM]: endImagerThermalCheck sendCaution(false) return %d",
+   "interior": "endImagerThermalCheck sendCaution(false) return %d",
+   "site": "0x437b9002",
+   "func_entry": "0x437b8fb0"
+  },
+  {
+   "vaddr": "0x43ca7081",
+   "text": "[CAMERA_MAIN_IM]: endImagerThermalCheck",
+   "interior": "endImagerThermalCheck",
+   "site": "0x437b9022",
+   "func_entry": "0x437b8fb0"
+  },
+  {
+   "vaddr": "0x43ca70a9",
+   "text": "[CAMERA_MAIN_IM]: RecStart",
+   "interior": "RecStart",
+   "site": "0x437b908e",
+   "func_entry": "0x437b9064"
+  },
+  {
+   "vaddr": "0x43ca70c4",
+   "text": "[CAMERA_MAIN_IM]: ImStartMovThermal allocTimer:%x",
+   "interior": "ImStartMovThermal allocTimer:%x",
+   "site": "0x437b90ca",
+   "func_entry": "0x437b9064"
+  },
+  {
+   "vaddr": "0x43ca70f6",
+   "text": "[CAMERA_MAIN_IM]: ImStartMovThermal set_timer:%x",
+   "interior": "ImStartMovThermal set_timer:%x",
+   "site": "0x437b90fe",
+   "func_entry": "0x437b9064"
+  },
+  {
+   "vaddr": "0x43ca70f6",
+   "text": "[CAMERA_MAIN_IM]: ImStartMovThermal set_timer:%x",
+   "interior": "ImStartMovThermal set_timer:%x",
+   "site": "0x437b9268",
+   "func_entry": "0x437b91e8"
+  },
+  {
+   "vaddr": "0x43ca7127",
+   "text": "[CAMERA_MAIN_IM]: RecEnd",
+   "interior": "RecEnd",
+   "site": "0x437b9184",
+   "func_entry": "0x437b915c"
+  },
+  {
+   "vaddr": "0x43ca7140",
+   "text": "[CAMERA_MAIN_IM]: ImEndMovThermal freeTimer:%x",
+   "interior": "ImEndMovThermal freeTimer:%x",
+   "site": "0x437b91a8",
+   "func_entry": "0x437b915c"
+  },
+  {
+   "vaddr": "0x43ca716f",
+   "text": "[CAMERA_MAIN_IM]: TimeA ImgTmp:%d",
+   "interior": "TimeA ImgTmp:%d",
+   "site": "0x437b9220",
+   "func_entry": "0x437b91e8"
+  },
+  {
+   "vaddr": "0x43ca7191",
+   "text": "[CAMERA_MAIN_IM]: Err:Timer2Callback",
+   "interior": "Err:Timer2Callback",
+   "site": "0x437b92a0",
+   "func_entry": "0x437b91e8"
+  },
+  {
+   "vaddr": "0x43ca71b6",
+   "text": "[CAMERA_MAIN_IM]: ZitZ1cDriver ch:%d is not exist.",
+   "interior": "ZitZ1cDriver ch:%d is not exist.",
+   "site": "0x437b942e",
+   "func_entry": "0x437b93c0"
+  },
+  {
+   "vaddr": "0x43cb5fc1",
+   "text": "[CAMERA_MAIN_IM]: ZitDdcDriver: Invalid format. [%d][%d]",
+   "interior": "ZitDdcDriver: Invalid format. [%d][%d]",
+   "site": "0x4386bc12",
+   "func_entry": "0x4386bbec"
+  },
+  {
+   "vaddr": "0x43cb5ffa",
+   "text": "[CAMERA_MAIN_IM]: ZitDdcDriver: Invalid numPt. [%d][%d]",
+   "interior": "ZitDdcDriver: Invalid numPt. [%d][%d]",
+   "site": "0x4386bc30",
+   "func_entry": "0x4386bbec"
+  }
+ ],
+ "functions": [
+  {
+   "entry": "0x43547362",
+   "prologue": "0x43547362",
+   "role": "diferencial térmico movie (dos int16 globales)",
+   "n_sites": 3,
+   "sites": [
+    "0x43547394",
+    "0x43547426",
+    "0x4354746c"
+   ],
+   "strings": [
+    "[CAMERA_MAIN_IM]: movie thermal diffTemp < 0 :(%d)",
+    "[CAMERA_MAIN_IM]: paramA%f paramB%f diff:%d",
+    "[CAMERA_MAIN_IM]: envOld:%d env':%d boot:%d"
+   ]
+  },
+  {
+   "entry": "0x437b8774",
+   "prologue": "0x437b8774",
+   "role": "comprobación térmica periódica (tablas movie/bulb/still, Abs/Env)",
+   "n_sites": 22,
+   "sites": [
+    "0x437b87e0",
+    "0x437b881c",
+    "0x437b8844",
+    "0x437b8864",
+    "0x437b88de",
+    "0x437b890a",
+    "0x437b8930",
+    "0x437b8950",
+    "0x437b8982",
+    "0x437b89b2",
+    "0x437b89ea",
+    "0x437b8b14",
+    "0x437b8b74",
+    "0x437b8bc6",
+    "0x437b8c34",
+    "0x437b8c5c",
+    "0x437b8c7a",
+    "0x437b8ca0",
+    "0x437b8cc8",
+    "0x437b8d1c",
+    "0x437b8d38",
+    "0x437b8d68"
+   ],
+   "strings": [
+    "[CAMERA_MAIN_IM]: environmentalTemp:%d",
+    "[CAMERA_MAIN_IM]: movie Table",
+    "[CAMERA_MAIN_IM]: bulb Table",
+    "[CAMERA_MAIN_IM]: still Table",
+    "[CAMERA_MAIN_IM]: ISOAuto TH",
+    "[CAMERA_MAIN_IM]: ISO1 TH",
+    "[CAMERA_MAIN_IM]: ISO2 TH",
+    "[CAMERA_MAIN_IM]: ISO3 TH",
+    "[CAMERA_MAIN_IM]: Abs:Tnow=%d shutdownTh=%d cautionTh=%d",
+    "[CAMERA_MAIN_IM]: Abs:THERMAL_SHUTDOWN: %d > %d",
+    "[CAMERA_MAIN_IM]: Abs:THERMAL_CAUTION:%d > %d",
+    "[CAMERA_MAIN_IM]: Env:Tnow=%d Tenv=%d envTh=%d shutdownTh=%d cautionTh=%d",
+    "[CAMERA_MAIN_IM]: Env:THERMAL_SHUTDOWN:(%d - %d) > %d",
+    "[CAMERA_MAIN_IM]: Env:THERMAL_CAUTION:(%d - %d) > %d",
+    "[CAMERA_MAIN_IM]: send THERMAL_CAUTION on",
+    "[CAMERA_MAIN_IM]: sendCaution(true) return %d",
+    "[CAMERA_MAIN_IM]: send THERMAL_CAUTION off",
+    "[CAMERA_MAIN_IM]: sendCaution(false) return %d",
+    "[CAMERA_MAIN_IM]: send THERMAL_SHUTDOWN",
+    "[CAMERA_MAIN_IM]: upm_set_off_factor() return %d",
+    "[CAMERA_MAIN_IM]: Error : GetImagerTemperature",
+    "[CAMERA_MAIN_IM]: ImCheckThermal setTimer:%x"
+   ]
+  },
+  {
+   "entry": "0x437b8e1c",
+   "prologue": "0x437b8e1c",
+   "role": "instantánea EcGain/isoAuto/bulb por mensaje",
+   "n_sites": 1,
+   "sites": [
+    "0x437b8e8c"
+   ],
+   "strings": [
+    "[CAMERA_MAIN_IM]: EcGain:%x isoAuto:%x bulb:%x"
+   ]
+  },
+  {
+   "entry": "0x437b8ed4",
+   "prologue": "0x437b8ed6",
+   "role": "StartImThermal (alloc+set timer)",
+   "n_sites": 3,
+   "sites": [
+    "0x437b8ef4",
+    "0x437b8f2a",
+    "0x437b8f5c"
+   ],
+   "strings": [
+    "[CAMERA_MAIN_IM]: startImagerThermalCheck",
+    "[CAMERA_MAIN_IM]: StartImThermal allocTimer:%x",
+    "[CAMERA_MAIN_IM]: StartImThermal setTimer:%x"
+   ]
+  },
+  {
+   "entry": "0x437b8fb0",
+   "prologue": "0x437b8fb2",
+   "role": "EndImThermal (free timer + sendCaution(false))",
+   "n_sites": 3,
+   "sites": [
+    "0x437b8fd6",
+    "0x437b9002",
+    "0x437b9022"
+   ],
+   "strings": [
+    "[CAMERA_MAIN_IM]: EndImThermal freeTimer:%x",
+    "[CAMERA_MAIN_IM]: endImagerThermalCheck sendCaution(false) return %d",
+    "[CAMERA_MAIN_IM]: endImagerThermalCheck"
+   ]
+  },
+  {
+   "entry": "0x437b9064",
+   "prologue": "0x437b906a",
+   "role": "RecStart / ImStartMovThermal",
+   "n_sites": 3,
+   "sites": [
+    "0x437b908e",
+    "0x437b90ca",
+    "0x437b90fe"
+   ],
+   "strings": [
+    "[CAMERA_MAIN_IM]: RecStart",
+    "[CAMERA_MAIN_IM]: ImStartMovThermal allocTimer:%x",
+    "[CAMERA_MAIN_IM]: ImStartMovThermal set_timer:%x"
+   ]
+  },
+  {
+   "entry": "0x437b915c",
+   "prologue": "0x437b9162",
+   "role": "RecEnd / ImEndMovThermal (+ Timer2Callback)",
+   "n_sites": 2,
+   "sites": [
+    "0x437b9184",
+    "0x437b91a8"
+   ],
+   "strings": [
+    "[CAMERA_MAIN_IM]: RecEnd",
+    "[CAMERA_MAIN_IM]: ImEndMovThermal freeTimer:%x"
+   ]
+  },
+  {
+   "entry": "0x437b91e8",
+   "prologue": "0x437b91ea",
+   "role": "callback de temporizador (TimeA ImgTmp)",
+   "n_sites": 3,
+   "sites": [
+    "0x437b9220",
+    "0x437b9268",
+    "0x437b92a0"
+   ],
+   "strings": [
+    "[CAMERA_MAIN_IM]: ImStartMovThermal set_timer:%x",
+    "[CAMERA_MAIN_IM]: TimeA ImgTmp:%d",
+    "[CAMERA_MAIN_IM]: Err:Timer2Callback"
+   ]
+  },
+  {
+   "entry": "0x437b93c0",
+   "prologue": "0x437b93c0",
+   "role": "consulta ZitZ1cDriver",
+   "n_sites": 1,
+   "sites": [
+    "0x437b942e"
+   ],
+   "strings": [
+    "[CAMERA_MAIN_IM]: ZitZ1cDriver ch:%d is not exist."
+   ]
+  },
+  {
+   "entry": "0x4386bbec",
+   "prologue": "0x4386bbee",
+   "role": "validación ZitDdcDriver",
+   "n_sites": 2,
+   "sites": [
+    "0x4386bc12",
+    "0x4386bc30"
+   ],
+   "strings": [
+    "[CAMERA_MAIN_IM]: ZitDdcDriver: Invalid format. [%d][%d]",
+    "[CAMERA_MAIN_IM]: ZitDdcDriver: Invalid numPt. [%d][%d]"
+   ]
+  }
+ ],
+ "dispatch": {
+  "function": "0x437b8384",
+  "table": "0x43befc32",
+  "n_entries": 24,
+  "lookup": "id de 16 bits en [ctx+0x10] -> código de sección de 8 bits",
+  "reverse_default": "0xa00 (0x437b8404 mov.w r3,#0xa00)",
+  "entries": [
+   {
+    "id": "0x0a00",
+    "code": "0x00"
+   },
+   {
+    "id": "0x0a10",
+    "code": "0x10"
+   },
+   {
+    "id": "0x0a11",
+    "code": "0x11"
+   },
+   {
+    "id": "0x0a12",
+    "code": "0x12"
+   },
+   {
+    "id": "0x0a13",
+    "code": "0x13"
+   },
+   {
+    "id": "0x0a81",
+    "code": "0x81"
+   },
+   {
+    "id": "0x0a82",
+    "code": "0x82"
+   },
+   {
+    "id": "0x0a83",
+    "code": "0x83"
+   },
+   {
+    "id": "0x0a8a",
+    "code": "0x8a"
+   },
+   {
+    "id": "0x0a8b",
+    "code": "0x8b"
+   },
+   {
+    "id": "0x0a91",
+    "code": "0x91"
+   },
+   {
+    "id": "0x0a92",
+    "code": "0x92"
+   },
+   {
+    "id": "0x0a93",
+    "code": "0x93"
+   },
+   {
+    "id": "0x0a94",
+    "code": "0x94"
+   },
+   {
+    "id": "0x0a95",
+    "code": "0x95"
+   },
+   {
+    "id": "0x0aa1",
+    "code": "0xa1"
+   },
+   {
+    "id": "0x0aa2",
+    "code": "0xa2"
+   },
+   {
+    "id": "0x0aa5",
+    "code": "0xa5"
+   },
+   {
+    "id": "0x0ab3",
+    "code": "0xb3"
+   },
+   {
+    "id": "0x0ab5",
+    "code": "0xb5"
+   },
+   {
+    "id": "0x0af1",
+    "code": "0xf1"
+   },
+   {
+    "id": "0x0aa8",
+    "code": "0xa8"
+   },
+   {
+    "id": "0x0a96",
+    "code": "0x96"
+   },
+   {
+    "id": "0x0a97",
+    "code": "0x97"
+   }
+  ]
+ },
+ "support": {
+  "logger_private": "0x437b85ac",
+  "logger_args": "r0=3 (nivel), r1=0x10, r2=bit de máscara, r3=cadena",
+  "mask_predicate": "0x437b848c",
+  "printf_generic": "0x43902718",
+  "timer_alloc": "0x437b86ac",
+  "timer_set": "0x437b84a8",
+  "timer_free": "0x437b84f0",
+  "osal_snd_msg": "0x43561244",
+  "osal_alloc": "0x4356127c"
+ },
+ "relation_s115": {
+  "imager_ctx_getter": "0x436d6118",
+  "temperature_wrapper": "0x436d648c",
+  "call_sites": [
+   "0x437b877a",
+   "0x437b8780"
+  ],
+  "vtable_slot": "0x6c",
+  "buffer": "float en [sp,#0x34]",
+  "scale": "vmul.f32 por 0x42c80000 (100.0f) + 0.5 -> entero (centésimas)",
+  "name_candidates": [
+   "0x43c932d4 GetImagerTemperatureAD(unsigned short*)",
+   "0x43c936a3 GetImagerTemperature(float*)",
+   "0x43c93773 GetImagerTemperature(unsigned short*)"
+  ],
+  "slot_family": {
+   "0x68": "0x436d6478",
+   "0x6c": "0x436d648c",
+   "0x70": "0x436d64c8 (llamado con buffer ushort: ldrh/strh en 0x438c7994)"
+  }
+ },
+ "relation_s124": {
+  "drive_mode_shifts": "+0 PrevDrv, +4 NowDrv, +6 NextDrv, +9 shut (S124)",
+  "thermal_reads": [
+   "0x437b87f6 ldrb r3,[r4,#6]",
+   "0x437b87fe ldrb r5,[r4,#4]"
+  ],
+  "same_struct": "NO VERIFICADO"
+ },
+ "diff": {
+  "a6000_strings": 42,
+  "a7s_with_prefix": 0,
+  "a6300_with_prefix": 0,
+  "a7s_interior_exact": 34,
+  "a6300_interior_exact": 33,
+  "a7s_interior_missing": [
+   "movie thermal diffTemp < 0 :(%d)",
+   "paramA%f paramB%f diff:%d",
+   "sendCaution(false) return %d",
+   "RecStart",
+   "RecEnd",
+   "TimeA ImgTmp:%d",
+   "Err:Timer2Callback",
+   "ZitDdcDriver: Invalid format. [%d][%d]"
+  ],
+  "a6300_interior_missing": [
+   "movie thermal diffTemp < 0 :(%d)",
+   "paramA%f paramB%f diff:%d",
+   "sendCaution(false) return %d",
+   "EcGain:%x isoAuto:%x bulb:%x",
+   "RecStart",
+   "RecEnd",
+   "TimeA ImgTmp:%d",
+   "Err:Timer2Callback",
+   "ZitDdcDriver: Invalid format. [%d][%d]"
+  ]
+ },
+ "unverified": [
+  "invocación de 0x437b8774: 0 bl, 0 punteros de 32 bits, 0 desplazamientos de 16 bits",
+  "correspondencia exacta del slot 0x6c con el nombre GetImagerTemperature(float*)",
+  "que el contexto leído en 0x437b8774 sea el mismo struct de S124",
+  "significado de los 24 ids del despachador y del código 0x1e0",
+  "quién envía los mensajes 0xa20/0xa21/0xac0",
+  "fichero fuente del módulo (no hay *Thermal*.cpp en el binario)"
+ ]
+}

@@ -1,0 +1,161 @@
+{
+ "milestone": "S173",
+ "titulo": "[CAM_UTIL] (10) y [CAMERA_ADJ] (3): las utilidades compartidas de la familia CAM_UTIL",
+ "base_vaddr": "43541000",
+ "firmwares": {
+  "A6000_fw321": {
+   "ruta": "analysis/rea-independent/input/av-cam.bin",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "len": 11427236,
+   "CAM_UTIL": 10,
+   "CAMERA_ADJ": 3
+  },
+  "A7S_fw320": {
+   "ruta": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "len": 11455416,
+   "CAM_UTIL": 0,
+   "CAMERA_ADJ": 0
+  },
+  "A6300_fw201": {
+   "ruta": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+   "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16",
+   "len": 13382836,
+   "CAM_UTIL": 0,
+   "CAMERA_ADJ": 0
+  }
+ },
+ "cadenas": [
+  {
+   "cadena": "[CAM_UTIL]: DmmMemPool) MemPool Free Err addr:0x%08x [top 0x%08x btm 0x%08x]",
+   "addr": "0x43caaac2",
+   "sitios": [
+    "0x437e3cb8"
+   ],
+   "funcion": "0x437e3c92"
+  },
+  {
+   "cadena": "[CAM_UTIL]: DmmMemPool) Dmm Close Err hdl:0x%04x",
+   "addr": "0x43caab0f",
+   "sitios": [
+    "0x437e3d0e",
+    "0x437e4332"
+   ],
+   "funcion": "0x437e3ce4 / 0x437e4308"
+  },
+  {
+   "cadena": "[CAM_UTIL]: DmmMemPool) Dmm Open Err hdl:0x%04x",
+   "addr": "0x43caab40",
+   "sitios": [
+    "0x437e3dba",
+    "0x437e446e"
+   ],
+   "funcion": "0x437e3d92 / 0x437e4446"
+  },
+  {
+   "cadena": "[CAM_UTIL]: AV DDS Alloc Msg Err:%x",
+   "addr": "0x43ccdca9",
+   "sitios": [
+    "0x43900254"
+   ],
+   "funcion": "0x43900234"
+  },
+  {
+   "cadena": "[CAM_UTIL]: AV DDS SndMsg Err:%x",
+   "addr": "0x43ccdccd",
+   "sitios": [
+    "0x4390029a"
+   ],
+   "funcion": "0x43900234"
+  },
+  {
+   "cadena": "[CAMERA_ADJ]:   Utility Adjust Ctrl OSAL MEM ALLOC Error : %x",
+   "addr": "0x43cce128",
+   "sitios": [
+    "0x43900da6"
+   ],
+   "funcion": "0x43900d54"
+  },
+  {
+   "cadena": "[CAMERA_ADJ]:   Utility MS Mount Start OSAL MEM ALLOC Error : %x",
+   "addr": "0x43cce166",
+   "sitios": [
+    "0x43900e8a"
+   ],
+   "funcion": "0x43900d54"
+  },
+  {
+   "cadena": "[CAMERA_ADJ]:   Utility MS UnMount Start OSAL MEM ALLOC Error : %x",
+   "addr": "0x43cce1a7",
+   "sitios": [
+    "0x43900f6c"
+   ],
+   "funcion": "0x43900f1c"
+  },
+  {
+   "cadena": "[CAM_UTIL]: EvtDrvnTsk) Send Err tid:%d->%d, func:%08x, arg:%x, %x",
+   "addr": "0x43cce282",
+   "sitios": [
+    "0x43901938"
+   ],
+   "funcion": "0x4390178e"
+  },
+  {
+   "cadena": "[CAM_UTIL]: EvtDrvnTsk) Send Err Print Max...",
+   "addr": "0x43cce2c5",
+   "sitios": [
+    "0x43901968"
+   ],
+   "funcion": "0x4390178e"
+  },
+  {
+   "cadena": "[CAM_UTIL]: EvtDrvnTsk) Task tid:%d, func:%08x, arg:%x, %x",
+   "addr": "0x43cce2f3",
+   "sitios": [
+    "0x439019e2"
+   ],
+   "funcion": "0x4390199c"
+  },
+  {
+   "cadena": "[CAM_UTIL]: osal_try_valloc_msg 0x%02x error! %dtimes",
+   "addr": "0x43ccf20c",
+   "sitios": [
+    "0x43904034"
+   ],
+   "funcion": "0x4390400e"
+  },
+  {
+   "cadena": "[CAM_UTIL]: osal_try_valloc_msg 0x%02x error! %dtimes [%08x]",
+   "addr": "0x43ccf242",
+   "sitios": [
+    "0x43904092"
+   ],
+   "funcion": "0x4390400e"
+  }
+ ],
+ "recuentos": {
+  "cadenas": 13,
+  "sitios_pic": 16,
+  "funciones": 13,
+  "muertas": 0,
+  "etiquetas": {
+   "[CAM_UTIL]": 10,
+   "[CAMERA_ADJ]": 3
+  }
+ },
+ "detalle": {
+  "init_0x4390178e": "limpia una tabla de 17 entradas (cmp r2,#0x11) y 22 registros de 0x18 B (0x198/0x18); deja el id de modulo 0xb5 (movs r2,#0xb5) y un contador 5 (subs r2,#0xb0)",
+  "coherencia": "el id 0xb5 es EXACTAMENTE el modulo compartido por [CAM_UTIL_ADJ] (S143) y [CAM_UTIL_SENS] (S144)",
+  "contador_0x4390400e": "reintento con contador: si el bit 0 del byte de estado [r6,#0xfc] esta activo, traza el error (dos trazas) y limpia el bit (bic r3,r3,#1)",
+  "task_0x4390199c": "construye una cadena (0x43b2a10a / 0x43b2a116) y compara el task id con dos entradas de una tabla"
+ },
+ "conclusiones": [
+  "[CAM_UTIL] y [CAMERA_ADJ] NO son un modulo propio: son el rotulo de UTILIDADES COMPARTIDAS por la familia CAM_UTIL (S143/S144) y por el gestor DMM de [CAMERA_MAIN]",
+  "las 13 cadenas estan vivas (0 muertas) con 16 sitios en 13 funciones: 5 en la zona DMM (0x437e3c92-0x437e446e) y 8 en la zona CAM_UTIL (0x43900234-0x43904092), en funciones que S143 y S144 no cubrieron por emitir con otra etiqueta",
+  "la funcion de inicializacion escribe el id de modulo 0xb5, coherente con el modulo 0xb5 compartido por [CAM_UTIL_ADJ] y [CAM_UTIL_SENS] (S144)",
+  "las etiquetas son propias de la fw3.21 de la A6000 (0/0 en A7S y A6300) pero los nombres que avisan (DmmMemPool, AV DDS, Utility MS, EvtDrvnTsk) describen utilidades preexistentes",
+  "negativo: 0 menciones de obturador/sensor/exposicion -> sin efecto en S51"
+ ],
+ "salvedad": "la comparacion mezcla version de firmware y modelo (S130 §4)",
+ "efecto_en_S51": "ninguno: S51 sigue A=NO, B=NO, C=NO"
+}
