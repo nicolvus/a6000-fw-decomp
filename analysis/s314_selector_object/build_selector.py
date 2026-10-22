@@ -67,7 +67,7 @@ def add_pc_sites(blob: bytes, target: int) -> list[dict]:
         rd = h2 & 7
         if (h1 & 0xF800) != 0x4800 or ((h1 >> 8) & 7) != rd:
             continue
-        base = (addr + 4) & ~3
+        base = (addr + 4) & ~1
         lit = base + (h1 & 0xFF) * 4
         if not (0 <= lit - BASE < n - 3):
             continue
@@ -87,7 +87,7 @@ def add_pc_sites(blob: bytes, target: int) -> list[dict]:
             continue
         h3 = struct.unpack_from("<H", blob, off + 4)[0]
         if (h3 & 0xFFF8) == 0x4478 and (h3 & 7) == rt:
-            base = (addr + 8) & ~3
+            base = (addr + 8) & ~1
             if (u32(blob, lit) + base) & 0xFFFFFFFF == target:
                 out.append({"add": f"0x{addr:08x}", "form": "ldr32", "literal": f"0x{lit:08x}"})
     return out
@@ -117,8 +117,8 @@ def call_site(blob: bytes) -> dict:
     call = insns(blob, 0x4354908c, 4)[0]
     ctx_getter = insns(blob, 0x437b38ec, 10)
     literal = u32(blob, 0x437b38f4)
-    ctx = (literal + ((0x437b38ee + 4) & ~3)) & 0xFFFFFFFF
-    assert ctx == 0x43EA709E, hex(ctx)
+    ctx = (literal + ((0x437b38ee + 4) & ~1)) & 0xFFFFFFFF
+    assert ctx == 0x43EA70A0, hex(ctx)
     calls = [f"0x{a:08x}" for a, t in bl_targets(blob) if t == 0x43826D58]
     return {
         "selector_call": call,
@@ -128,10 +128,10 @@ def call_site(blob: bytes) -> dict:
                        "literal_at": "0x437b38f4", "literal": f"0x{literal:08x}",
                        "ctx": f"0x{ctx:08x}"},
         "provenance": {
-            "r0": "[[0x43ea709e] + 0x6c] (carga en 0x4354904e desde r2=[ctx])",
-            "r1": "[[0x43ea70a6] + 0x21c] (carga en 0x43549084; NO es r0)",
-            "r2": "[[0x43ea70a6] + 0x220] (carga en 0x43549088)",
-            "note": "0x43ea70a6 = ctx + 8; ambos son punteros leidos de BSS.",
+            "r0": "[[0x43ea70a0] + 0x6c] (carga en 0x4354904e desde r2=[ctx])",
+            "r1": "[[0x43ea70a8] + 0x21c] (carga en 0x43549084; NO es r0)",
+            "r2": "[[0x43ea70a8] + 0x220] (carga en 0x43549088)",
+            "note": "0x43ea70a8 = ctx + 8; ambos son punteros leidos de BSS.",
         },
     }
 

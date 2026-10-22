@@ -104,10 +104,10 @@ def main() -> None:
     ok(u32(a7, 0x43549088) == 0x2220F8D3, "0x43549088 = ldr.w r2,[r3,#0x220]")
     ok(u16(a7, 0x4354904E) == 0x6ED0, "0x4354904e = ldr r0,[r2,#0x6c]")
     lit = u32(a7, 0x437B38F4)
-    ctx = (lit + ((0x437B38EE + 4) & ~3)) & 0xFFFFFFFF
-    ok(ctx == 0x43EA709E, f"ctx calculado {ctx:#x}")
+    ctx = (lit + ((0x437B38EE + 4) & ~1)) & 0xFFFFFFFF
+    ok(ctx == 0x43EA70A0, f"ctx calculado {ctx:#x}")
     ok(d["call_site"]["ctx_getter"]["ctx"] == f"0x{ctx:08x}", "ctx en JSON")
-    ok(d["call_site"]["provenance"]["r1"].startswith("[[0x43ea70a6] + 0x21c]"),
+    ok(d["call_site"]["provenance"]["r1"].startswith("[[0x43ea70a8] + 0x21c]"),
        "procedencia r1 documentada")
 
     # 3. tabla de decision del selector (constantes de las instrucciones)

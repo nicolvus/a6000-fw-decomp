@@ -33,10 +33,10 @@ class SelectorObject(unittest.TestCase):
         # Es ldr.w r1,[r3,#0x21c], no una carga de r0.
         self.assertEqual(self.u16(0x43549084), 0xF8D3)
         self.assertEqual(self.d["call_site"]["provenance"]["r1"][:19],
-                         "[[0x43ea70a6] + 0x2")
+                         "[[0x43ea70a8] + 0x2")
 
     def test_ctx_address(self):
-        self.assertEqual(self.d["call_site"]["ctx_getter"]["ctx"], "0x43ea709e")
+        self.assertEqual(self.d["call_site"]["ctx_getter"]["ctx"], "0x43ea70a0")
 
     def test_slot64_thunk_is_0x43ad96f8(self):
         self.assertEqual(self.d["vtable_thunks"]["slot_0x64_thunk"]["entry"],

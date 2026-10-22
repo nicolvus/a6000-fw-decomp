@@ -195,40 +195,10 @@
   },
   "tables": {
     "T1": {
-      "computed": 1136388974,
+      "computed": 1136388976,
       "dest": "obj+0x16",
       "callee": "0x436f5f30",
-      "aligned_candidate": "0x43bbeb70",
-      "rows_computed_base": [
-        {
-          "index": 0,
-          "addr": "0x43bbeb6e",
-          "w0": "0x00000000",
-          "w4": "0x01010000",
-          "u32_14": "0x00000000",
-          "u16_18": "0x0000",
-          "u16_1a": "0x03ff"
-        },
-        {
-          "index": 1,
-          "addr": "0x43bbeb8a",
-          "w0": "0x00010000",
-          "w4": "0x01020000",
-          "u32_14": "0x00000000",
-          "u16_18": "0x0000",
-          "u16_1a": "0x03ff"
-        },
-        {
-          "index": 2,
-          "addr": "0x43bbeba6",
-          "w0": "0x00000000",
-          "w4": "0x01010000",
-          "u32_14": "0x00000000",
-          "u16_18": "0x0000",
-          "u16_1a": "0x03ff"
-        }
-      ],
-      "rows_aligned": [
+      "rows": [
         {
           "index": 0,
           "addr": "0x43bbeb70",
@@ -259,40 +229,10 @@
       ]
     },
     "T3": {
-      "computed": 1136389938,
+      "computed": 1136389940,
       "dest": "obj+0xa5",
       "callee": "0x436f6140",
-      "aligned_candidate": "0x43bbef34",
-      "rows_computed_base": [
-        {
-          "index": 0,
-          "addr": "0x43bbef32",
-          "w0": "0x01020000",
-          "w4": "0x00000100",
-          "u32_14": "0x0fff0000",
-          "u16_18": "0x0000",
-          "u16_1a": "0x0004"
-        },
-        {
-          "index": 1,
-          "addr": "0x43bbef4e",
-          "w0": "0x01020000",
-          "w4": "0x00000100",
-          "u32_14": "0x0fff0000",
-          "u16_18": "0x0000",
-          "u16_1a": "0x0004"
-        },
-        {
-          "index": 2,
-          "addr": "0x43bbef6a",
-          "w0": "0x01020000",
-          "w4": "0x00000100",
-          "u32_14": "0x0fff0000",
-          "u16_18": "0x0000",
-          "u16_1a": "0x0004"
-        }
-      ],
-      "rows_aligned": [
+      "rows": [
         {
           "index": 0,
           "addr": "0x43bbef34",
@@ -323,40 +263,10 @@
       ]
     },
     "T2": {
-      "computed": 1136390890,
+      "computed": 1136390892,
       "dest": "obj+0x2e",
       "callee": "0x436f5f30",
-      "aligned_candidate": "0x43bbf2ec",
-      "rows_computed_base": [
-        {
-          "index": 0,
-          "addr": "0x43bbf2ea",
-          "w0": "0x01010000",
-          "w4": "0x00000100",
-          "u32_14": "0x00000000",
-          "u16_18": "0x0000",
-          "u16_1a": "0x0003"
-        },
-        {
-          "index": 1,
-          "addr": "0x43bbf306",
-          "w0": "0x01020000",
-          "w4": "0x00000100",
-          "u32_14": "0x00000000",
-          "u16_18": "0x0000",
-          "u16_1a": "0x0002"
-        },
-        {
-          "index": 2,
-          "addr": "0x43bbf322",
-          "w0": "0x01010000",
-          "w4": "0x00000100",
-          "u32_14": "0x00000000",
-          "u16_18": "0x0000",
-          "u16_1a": "0x0003"
-        }
-      ],
-      "rows_aligned": [
+      "rows": [
         {
           "index": 0,
           "addr": "0x43bbf2ec",
@@ -842,7 +752,7 @@
   "a6000_entry_hits": 0,
   "limits": [
     "Estatico: sin firmware ejecutado, sin camara, sin flasheo.",
-    "La base calculada por add-pc cae 2 B antes de la alineacion natural; ambas lecturas se documentan y la correcta queda NO_VERIFICADA sin runtime.",
+    "La base se calcula con PC = (add + 4) con bit0 a 0 (no alineado a 4): REA/Ghidra usa DAT+0x436f61ae/0x436f61c2/0x436f61d6 y las tablas de enum 1/2 de 0x43ad9162/0x436f2350 confirman la lectura alineada a 2.",
     "No se atribuye el escritor de obj+0x2b4 a esta clase: hay varios str a +0x2b4 en el blob y la identidad del objeto no se puede resolver estaticamente aqui.",
     "La semantica de los campos +0x14/+0x18 y su relacion con el silent siguen NO_VERIFICADAS."
   ]

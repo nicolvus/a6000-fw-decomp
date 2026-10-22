@@ -1,11 +1,12 @@
 # S317 — `obj+0x2b4` indexa tres tablas de `0x1c` B por modo (carril B)
 
 **Resultado en una línea:** el campo `obj+0x2b4` de la clase de S316 se usa como índice
-(`stride 0x1c`) en **tres tablas paralelas** (`T1 0x43bbeb6e`, `T2 0x43bbf2ea`,
-`T3 0x43bbef32`); de cada registro se leen `u32 @+0x14` y `u16 @+0x18` y se aplican a tres
+(`stride 0x1c`) en **tres tablas paralelas** (`T1 0x43bbeb70`, `T2 0x43bbf2ec`,
+`T3 0x43bbef34`); de cada registro se leen `u32 @+0x14` y `u16 @+0x18` y se aplican a tres
 destinos del objeto (`+0x16`, `+0x2e`, `+0xa5`). `T3→T2` dista exactamente **34 filas**.
-La base calculada por `add pc` cae 2 B antes de la alineación natural: la lectura correcta
-queda **NO_VERIFICADA** sin runtime (se documentan ambas). La entrada es **exclusiva A7S**.
+La base se calcula con `PC = (add + 4)` con bit0 a 0 (no alineado a 4); es la lectura
+correcta, confirmada por REA/Ghidra (`DAT+0x436f61ae/0x436f61c2/0x436f61d6`) y por las tablas
+de enum 1/2 que consumen `0x43ad9162`/`0x436f2350`. La entrada es **exclusiva A7S**.
 
 Verificado por bytes: `analysis/s317_mode_tables/` (39 comprobaciones; 6 tests).
 
@@ -33,21 +34,21 @@ Las bases se recalculan desde los literales de `add pc`:
 
 | Tabla | Literal | PC del `add` | Base calculada | Destino |
 |---|---|---|---|---|
-| T1 | `0x436f61ec` = `0x004c89c2` | `0x436f61ac` | `0x43bbeb6e` | `obj+0x16` |
-| T2 | `0x436f61f0` = `0x004c9126` | `0x436f61c4` | `0x43bbf2ea` | `obj+0x2e` |
-| T3 | `0x436f61f4` = `0x004c8d5a` | `0x436f61d8` | `0x43bbef32` | `obj+0xa5` |
+| T1 | `0x436f61ec` = `0x004c89c2` | `0x436f61ac` | `0x43bbeb70` | `obj+0x16` |
+| T2 | `0x436f61f0` = `0x004c9126` | `0x436f61c4` | `0x43bbf2ec` | `obj+0x2e` |
+| T3 | `0x436f61f4` = `0x004c8d5a` | `0x436f61d8` | `0x43bbef34` | `obj+0xa5` |
 
 **Espaciado:** `T3→T2 = 0x3b8 = 34 × 0x1c` (34 filas exactas). `T1→T3 = 0x3c4 =
 34 × 0x1c + 0xc` (34 filas más 12 B de separación). El índice `obj+0x2b4` se mueve, por
 tanto, en el rango de 34 valores por tabla; el límite exacto no se observa estáticamente.
 
-### 2b. Ambigüedad de alineación (NO_VERIFICADO)
+### 2b. Regla de PC y validación (VERIFICADO)
 
-La base calculada (`0x…e6e`, `0x…2ea`, `0x…f32`) es **2 mod 4**. ARMv7 permite `LDR`
-desalineado, así que el código es legal; pero los valores leídos cambian si la tabla real
-empieza en la dirección alineada (`0x…e70`, `0x…2ec`, `0x…f34`). Ambas lecturas quedan en el
-JSON (`rows_computed_base` y `rows_aligned`); **no se elige una** sin runtime. Es el mismo
-patrón de ±2 visto en otras tablas del blob y no se debe "corregir" a ciegas.
+Para `add rX,pc` de 16 bits el valor es `(dirección + 4)` con bit0 a 0, **no** alineado a 4.
+Con la fórmula alineada a 4 se obtendrían `0x…e6e/0x…2ea/0x…f32`, un sesgo de 2 B que además
+produce valores `0x10003…` incompatibles con los consumidores. La lectura correcta
+(`0x…e70/0x…2ec/0x…f34`) da valores 0/1/2, que es lo que comparan `0x436f2350` y `0x43ad9162`.
+REA/Ghidra calcula las mismas bases.
 
 ## 3. Campos leídos (VERIFICADO)
 

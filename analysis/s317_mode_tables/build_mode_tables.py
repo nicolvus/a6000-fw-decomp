@@ -34,9 +34,9 @@ MD = Cs(CS_ARCH_ARM, CS_MODE_THUMB)
 
 ENTRY = 0x436F618C
 TABLES: dict = {
-    "T1": {"computed": 0x43BBEB6E, "dest": "obj+0x16", "callee": "0x436f5f30"},
-    "T3": {"computed": 0x43BBEF32, "dest": "obj+0xa5", "callee": "0x436f6140"},
-    "T2": {"computed": 0x43BBF2EA, "dest": "obj+0x2e", "callee": "0x436f5f30"},
+    "T1": {"computed": 0x43BBEB70, "dest": "obj+0x16", "callee": "0x436f5f30"},
+    "T3": {"computed": 0x43BBEF34, "dest": "obj+0xa5", "callee": "0x436f6140"},
+    "T2": {"computed": 0x43BBF2EC, "dest": "obj+0x2e", "callee": "0x436f5f30"},
 }
 STRIDE = 0x1C
 
@@ -101,7 +101,7 @@ def main() -> None:
             (0x436F61BA, 0x34, 0x436F61C2, "T2"),
             (0x436F61CE, 0x24, 0x436F61D6, "T3")]:
         la = ((ldr + 4) & ~3) + imm
-        pc = (add + 4) & ~3
+        pc = (add + 4) & ~1
         computed[name] = (u32(a7, la) + pc) & 0xFFFFFFFF
     for name, base in computed.items():
         expected = TABLES[name]["computed"]
@@ -109,10 +109,7 @@ def main() -> None:
     tables = {}
     for name, meta in TABLES.items():
         base = meta["computed"]
-        aligned = (base + 3) & ~3
-        tables[name] = {**meta, "aligned_candidate": f"0x{aligned:08x}",
-                        "rows_computed_base": rows(a7, base, 3),
-                        "rows_aligned": rows(a7, aligned, 3)}
+        tables[name] = {**meta, "rows": rows(a7, base, 3)}
     data: dict = {
         "milestone": "S317",
         "title": "obj+0x2b4 indexa tres tablas paralelas de 0x1c B (34 filas)",
@@ -124,16 +121,17 @@ def main() -> None:
                   "fields": {"u32": "+0x14", "u16": "+0x18"},
                   "note": "muls r5,r2,r5 con r2=0x1c en 0x436f61a6"},
         "tables": tables,
-        "spacing": {"T3_to_T2": f"0x{0x43BBF2EA - 0x43BBEF32:03x}",
-                    "T3_to_T2_rows": (0x43BBF2EA - 0x43BBEF32) // STRIDE,
-                    "T1_to_T3": f"0x{0x43BBEF32 - 0x43BBEB6E:03x}",
-                    "T1_to_T3_rows": (0x43BBEF32 - 0x43BBEB6E) / STRIDE},
+        "spacing": {"T3_to_T2": f"0x{0x43BBF2EC - 0x43BBEF34:03x}",
+                    "T3_to_T2_rows": (0x43BBF2EC - 0x43BBEF34) // STRIDE,
+                    "T1_to_T3": f"0x{0x43BBEF34 - 0x43BBEB70:03x}",
+                    "T1_to_T3_rows": (0x43BBEF34 - 0x43BBEB70) / STRIDE},
         "writers_obj_2b4": writers_2b4(a7),
         "a6000_entry_hits": a6.count(a7[ENTRY - BASE:ENTRY - BASE + 24]),
         "limits": [
             "Estatico: sin firmware ejecutado, sin camara, sin flasheo.",
-            ("La base calculada por add-pc cae 2 B antes de la alineacion natural; "
-             "ambas lecturas se documentan y la correcta queda NO_VERIFICADA sin runtime."),
+            ("La base se calcula con PC = (add + 4) con bit0 a 0 (no alineado a 4): "
+             "REA/Ghidra usa DAT+0x436f61ae/0x436f61c2/0x436f61d6 y las tablas de enum 1/2 de "
+             "0x43ad9162/0x436f2350 confirman la lectura alineada a 2."),
             ("No se atribuye el escritor de obj+0x2b4 a esta clase: hay varios str a +0x2b4 "
              "en el blob y la identidad del objeto no se puede resolver estaticamente aqui."),
             "La semantica de los campos +0x14/+0x18 y su relacion con el silent siguen NO_VERIFICADAS.",

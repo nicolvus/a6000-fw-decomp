@@ -57,20 +57,20 @@ def main() -> None:
 
     # tres bases recomputadas desde literales
     for ldr, imm, add, expected in [
-            (0x436F61A2, 0x48, 0x436F61AA, 0x43BBEB6E),
-            (0x436F61BA, 0x34, 0x436F61C2, 0x43BBF2EA),
-            (0x436F61CE, 0x24, 0x436F61D6, 0x43BBEF32)]:
+            (0x436F61A2, 0x48, 0x436F61AA, 0x43BBEB70),
+            (0x436F61BA, 0x34, 0x436F61C2, 0x43BBF2EC),
+            (0x436F61CE, 0x24, 0x436F61D6, 0x43BBEF34)]:
         la = ((ldr + 4) & ~3) + imm
-        base = (u32(a7, la) + ((add + 4) & ~3)) & 0xFFFFFFFF
+        base = (u32(a7, la) + ((add + 4) & ~1)) & 0xFFFFFFFF
         ok(base == expected, f"base {expected:#x} (vista {base:#x})")
-    ok(d["tables"]["T1"]["computed"] == 0x43BBEB6E, "T1")
-    ok(d["tables"]["T2"]["computed"] == 0x43BBF2EA, "T2")
-    ok(d["tables"]["T3"]["computed"] == 0x43BBEF32, "T3")
+    ok(d["tables"]["T1"]["computed"] == 0x43BBEB70, "T1")
+    ok(d["tables"]["T2"]["computed"] == 0x43BBF2EC, "T2")
+    ok(d["tables"]["T3"]["computed"] == 0x43BBEF34, "T3")
 
     # espaciado
-    ok(0x43BBF2EA - 0x43BBEF32 == 34 * 0x1C, "T3->T2 = 34 filas")
+    ok(0x43BBF2EC - 0x43BBEF34 == 34 * 0x1C, "T3->T2 = 34 filas")
     ok(d["spacing"]["T3_to_T2_rows"] == 34, "34 filas en JSON")
-    ok(0x43BBEF32 - 0x43BBEB6E == 0x3C4, "T1->T3 = 0x3c4")
+    ok(0x43BBEF34 - 0x43BBEB70 == 0x3C4, "T1->T3 = 0x3c4")
     ok(d["spacing"]["T1_to_T3"] == "0x3c4", "0x3c4 en JSON")
 
     # campos leidos por la entrada
@@ -80,7 +80,7 @@ def main() -> None:
     # filas documentadas coinciden con el blob
     for name in ("T1", "T2", "T3"):
         table = d["tables"][name]
-        for row in table["rows_computed_base"]:
+        for row in table["rows"]:
             a = int(row["addr"], 16)
             ok(row["u32_14"] == f"0x{u32(a7, a + 0x14):08x}", f"{name} +0x14")
             ok(row["u16_18"] == f"0x{u16(a7, a + 0x18):04x}", f"{name} +0x18")
