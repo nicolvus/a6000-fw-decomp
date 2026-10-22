@@ -61,6 +61,13 @@ def main():
     for e in data["caller_function"]["callers"]:
         check(e)
     assert len(data["caller_function"]["callers"]) == 10
+    for u in data["got_users"]:
+        addr = int(u["site"], 16)
+        assert read(addr).hex() == u["bytes_hex"]
+        assert dis(addr) == u["insn"]
+    assert data["rea"]["dumper_callers"] == ["0x43859710"]
+    assert data["rea"]["slot_0x4401f080_xrefs"] == []
+
     for group in data["level3"].values():
         for e in group:
             check(e)

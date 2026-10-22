@@ -68,11 +68,25 @@ def prologue(blob, addr, limit=0x600):
     return best
 
 
+# REA resolve_containing_procedure (raw305c.jsonl); None = the address falls in a
+# Ghidra body gap (it is still a real call site, verified by bytes).
+REA_CONTAINERS = {
+    0x43859868: 0x43859710, 0x43859892: 0x43859710, 0x438599C6: 0x43859944,
+    0x437B5A20: 0x437B59B8, 0x437B5A38: None, 0x437B5A90: None,
+    0x437B5B20: 0x437B5B14, 0x437B5CC8: 0x437B5B14,
+    0x437B6100: 0x437B5F98, 0x437B6110: 0x437B5F98,
+    0x437B6246: None, 0x43AEF6B4: 0x43AEF67A,
+}
+
+
 def edge(blob, site, mnemonic, target):
     ins = disasm(blob, site)
+    heur = prologue(blob, site)
+    rea = REA_CONTAINERS.get(site)
     return {"site": f"0x{site:08x}", "bytes_hex": read(blob, site).hex(),
             "insn": ins, "kind": mnemonic, "target": f"0x{target:08x}",
-            "container": (f"0x{prologue(blob, site):08x}" if prologue(blob, site) else None)}
+            "container_rea": f"0x{rea:08x}" if rea else None,
+            "container_heuristic": f"0x{heur:08x}" if heur else None}
 
 
 def main():
@@ -86,7 +100,8 @@ def main():
     level1 = callers(blob, {DUMPER})
     level2 = callers(blob, {CALLER})
     level2_edges = [edge(blob, s, m, CALLER) for s, m in level2[CALLER]]
-    containers = {e["container"] for e in level2_edges if e["container"]}
+    containers = {e["container_rea"] or e["container_heuristic"]
+                  for e in level2_edges if (e["container_rea"] or e["container_heuristic"])}
     level3 = callers(blob, {int(c, 16) for c in containers})
 
     data = {
@@ -127,6 +142,19 @@ def main():
                            "insn": disasm(blob, 0x43858390),
                            "why": "no es entrada de función: es el byte +0x58 de FUN_43858338"},
         },
+        "rea": {
+            "dumper_callers": ["0x43859710"],
+            "caller_callers": ["0x437b59b8", "0x437b5b14", "0x437b5f98",
+                               "0x43859944", "0x43aef67a"],
+            "slot_0x4401f080_xrefs": [],
+            "note": "REA no resuelve el slot 0x4401f080 (status undecodable, 0 xrefs); "
+                    "sus usuarios se localizan por bytes (ver got_users).",
+        },
+        "got_users": [
+            {"site": "0x4378bb6c", "insn": "ldr r1, [r5, r2]",
+             "bytes_hex": read(blob, 0x4378BB6C).hex(),
+             "how": "r5 = GOT base 0x4401eee4 (0x4378bb64/68); r2 = 0x19c (pool 0x4378bbf0)"},
+        ],
         "scope_limit": "Solo llamadas directas BL/BLX/B/B.W en 0x43541000..0x43d00000; "
                        "no cubre llamadas indirectas ni alcanzabilidad runtime.",
     }

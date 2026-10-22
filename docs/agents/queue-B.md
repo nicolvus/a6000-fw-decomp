@@ -16,5 +16,5 @@
 
 - DONE S302 (`393472ef`) Drive mode/exposición campo a campo: offsets desplazados (ctx +8, VdNum +0xc, svr_num +0x10), bloque 4→3 palabras; matriz A6000 59×16 vs A7S 69×16 con 34 códigos y mapa modo→columna; modos silent comparten columna con 0x4c/0x4d. Evidencia: `docs/capture/s302-drive-modes.md`, `analysis/s302_drive_modes/compare.json` (4 tests).
 
-- TODO S306 Usuarios del slot GOT `0x4401f080` (xrefs REA) y semántica del bucle de `FUN_43859710`; validar el árbol con `procedure_callers` de REA.
+- DONE S306 (cubierto en S303 rev.3 §2b) Usuarios del slot `0x4401f080`: REA devuelve `undecodable`/0 xrefs (no prueba ausencia); por bytes, `0x4378bb6c` lo carga con `GOT base 0x4401eee4 + 0x19c` y lo pasa a `0x435613e8`. `procedure_callers` valida 1 función para el dumper y 5 para `FUN_43859710`.
  (fix(B): S303 rev.2 arbol real de 0x43ff3200 y callers del dumper)

@@ -1641,4 +1641,4 @@ por entrada (acceso indexado). Dumper `FUN_43858338`: **2** callers directos
 NO_VERIFICADA; usuarios del GOT `0x4401f080` pendientes (S305). [S303](../docs/capture/s303-ref-tree-43ff3200.md),
 `analysis/s303_ref_tree/ref_tree.json` (4 tests).
 
-**Siguiente:** S305, xrefs REA al slot `0x4401f080` + semántica del bucle de `FUN_43859710`.
+Rev.3 añade el contraste con REA: `procedure_callers` confirma 1 función para el dumper y 5 para el caller; el slot `0x4401f080` es **invisible** para REA (`undecodable`, 0 xrefs) y se localiza por bytes en `0x4378bb6c` (`GOT base 0x4401eee4 + 0x19c`), que lo pasa a una ruta de log. 3 sitios caen en huecos de cuerpo de Ghidra. **Siguiente:** desambiguar los 40 `add.w #0x19c` o pasar a los writers del clúster `+0xde..+0xea` de la A7S.
