@@ -2,7 +2,7 @@
 
 ## S157 — lector de snapshot del estado (22-10-2026)
 
-`0x43859954` lee el GOT slot `0x4401f990` y obtiene el puntero `0x43f72d02`; `FUN_43859944` lee `+5`, condicional `+0xf`, vuelca/copía a buffer y escribe un global distinto. No hay stores `+3/+6` en este cuerpo. **Límite local**, no ausencia global. [S157](../docs/capture/s157-imager-state-snapshot.md), JSON/3 tests `analysis/s157_imager_state_snapshot/`.
+`0x43859954` lee el GOT slot `0x4401f990` y obtiene el puntero `0x43f72d02`; `FUN_43859944` lee `+5`, condicional `+0xf`, vuelca/copía a buffer y escribe un global distinto. No hay stores `+3/+6` en este cuerpo. **Límite local**, no ausencia global. [S157](../docs/capture/s157-imager-state-snapshot.md), JSON/3 tests `analysis/s157_imager_state_snapshot/`. Commit publicado: `6d8680c8`.
 
 **Siguiente:** clasificar otro xref a base del estado, especialmente candidatos no cubiertos en S153–S157; seguir stores y alias por evidencia directa.
 
