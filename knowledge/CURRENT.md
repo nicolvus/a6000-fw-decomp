@@ -559,6 +559,20 @@ Los cuatro nombres comunes: `GetImagerDriveMode`, `GetImagerTemperature`, `GetIm
 
 [Informe](../analysis/s172_elec_shutter_a6300/elec_shutter_a6300.md) · [doc](../docs/capture/s172-elec-shutter-a6300.md). Siguiente: qué significan los códigos 3 y 4; la base de datos de la tabla (índice de fila) y quién la escribe; la ruta hasta el driver del obturador.
 
+## S173 — `[CAM_UTIL]` (10) y `[CAMERA_ADJ]` (3): las utilidades compartidas (22-10-2026, línea de RE general)
+
+**VERIFICADO (21 tests, `tests/test_s173_cam_util_labels.py`):** las etiquetas **`[CAM_UTIL]`** (10 cadenas) y **`[CAMERA_ADJ]`** (3) **no son un módulo propio**: son el rótulo de **utilidades compartidas** por la familia `CAM_UTIL` (`[CAM_UTIL_ADJ]` de S143 y `[CAM_UTIL_SENS]` de S144) y por el gestor de memoria **DMM** de `[CAMERA_MAIN]`. `[CAM_UTIL]` **10/0/0** y `[CAMERA_ADJ]` **3/0/0** (A6000/A7S/A6300).
+
+Las **13 cadenas están vivas** (0 muertas) con **16 sitios** (regla estricta) en **13 funciones**: 5 en la zona **DMM** (`0x437e3c92`–`0x437e446e`: `MemPool Free Err`, `Dmm Open/Close Err hdl`) y 8 en la zona **`CAM_UTIL`** (`0x43900234`–`0x43904092`): `AV DDS Alloc/Snd Msg Err`, `Utility Adjust Ctrl` / `Utility MS Mount Start` / `Utility MS UnMount Start` (fallos de reserva OSAL), `EvtDrvnTsk) Send Err` / `Print Max` / `Task tid` (driver de eventos) y el **contador de fallos de `osal_try_valloc_msg`** con reintento (si el bit 0 del byte de estado `[r6,#0xfc]` está activo, traza el error y lo limpia con `bic r3,r3,#1`). Son **funciones que S143 y S144 no cubrían** porque emiten con otra etiqueta.
+
+**Coherencia con S144**: la inicialización `0x4390178e` limpia una tabla de **17 entradas** (`cmp r2,#0x11`) y **22 registros** de 0x18 B (`0x198/0x18`) y escribe el **id de módulo `0xb5`** (`movs r2,#0xb5`) y un contador **5** (`subs r2,#0xb0`) → el **mismo `0xb5`** que S144 identificó como compartido por `[CAM_UTIL_ADJ]` y `[CAM_UTIL_SENS]`.
+
+**Diferencial**: las etiquetas son **propias de la fw3.21** de la A6000 (0/0 en A7S y A6300), pero los **nombres** que avisan (`DmmMemPool`, `AV DDS`, `Utility MS`, `EvtDrvnTsk`) describen **utilidades preexistentes** del framework → otra vez el patrón «se reescribe el logging» (S128/S130).
+
+**Negativo acotado**: 0 menciones de obturador, disparo, sensor, exposición o tiempos → **sin efecto en S51** (A/B/C = NO).
+
+[Informe](../analysis/s173_cam_util_labels/cam_util_labels.md) · [doc](../docs/capture/s173-cam-util-labels.md). Siguiente: qué es «AV DDS» y «Utility MS» (siglas sin desarrollar); la tabla de 17 entradas y los 22 registros de `0x4390178e`; el byte de estado `+0xfc` y su bit 0; por qué la A6000 usa dos etiquetas para el mismo subsistema.
+
 ## S121 — el módulo `[AIP]` (37 trazas): la interfaz de audio con el escalado (21-10-2026, línea de RE general)
 
 **VERIFICADO (97 tests, `tests/test_s121_aip.py`):** 37 cadenas `[AIP]` en `0x43cdd844`–`0x43cdec50`; **16 funciones** y 6 sub-bloques RTTI: `SaWrapper` (8), `SaBackUpCtrl` (12), `SaDriverBase` (4), `LPS` (11), `SaDriverZoomNr` (1), `SetFader` (1). **Callbacks `Ack`/`Comp`/`Err` en tres capas**: SA (`0x43926d1c`/`0x43926de8`, con los predicados `[r1,#1]==0x14`/`0x13`), LPS (`0x4392b16c`/`0x4392b254`) y driver; los errores llevan `errCode`+`errState` (SA) o `ErrCode`+`ErrStatus` (LPS). **Tabla de backup**: **350 entradas de 12 B** en `0x43bd1964` con `{id = 0x10c0000 + n, offset, size}`; `WriteShadow2BakcupArea` vuelca `0x10c` B (`mov.w r0,#0x10c` en `0x4392ab78`) y `SetAudioNrType` publica el **bit 3** de `bkId = 0x10e0000`. Comandos hacia el escalar en `0x4392ac30` (`Cmd`/`Func` + `Zma`/`Ext`/`Mbx`) y `0x4392acb4` (`Cmd`/`Func`/`Unq`). Buffers LPS `0x82`/`0x83`/`0x85` con longitudes `0x2c`/`0x28`/`0x14`; `SetFader` (`0x4355ae98`) divide por 100/20/otro según `[r0,#0x78]`.
