@@ -1,0 +1,9274 @@
+{
+ "milestone": "S120",
+ "module": "IDT_OPD",
+ "modelo": "A6000 fw3.21",
+ "bin": "analysis/rea-independent/input/av-cam.bin",
+ "convencion": "vaddr = 0x43541000 + file_offset",
+ "metodo_referencias": {
+  "escaner_canonico": "analysis/s106_imaging_cap/scan_pic_refs_v2.py (kill analysis)",
+  "nota": "en el script canónico `md.detail` NO está activado, por lo que `_writes_to` siempre devuelve False y la kill analysis es inerte; además `op.reg & 0xF` confunde r1 con r3 (Capstone: ARM_REG_Rn = 66+n). S120 ejecuta además la kill analysis CORREGIDA (detail activo + comparación por nombre de registro).",
+  "barrido_restringido": "analysis/s120_idt_opd/scan_idt_code_pic.py 0x439d0000-0x43a09000 (contiene los 725 sitios)"
+ },
+ "counts": {
+  "trazas_idt_opd": 274,
+  "tokens_idt_opd_en_el_binario": 274,
+  "cadenas_distintas": 274,
+  "rango_min": "0x43cf11f9",
+  "rango_max": "0x43cf57f1",
+  "funciones": 165,
+  "sitios_pic_canonico": 725,
+  "sitios_pic_kill_corregido": 356,
+  "cadenas_con_referencia_canonico": 271,
+  "cadenas_con_referencia_kill_corregido": 271,
+  "cadenas_con_referencia": 271,
+  "cadenas_sin_referencia": 3,
+  "cadenas_sin_referencia_kill_corregido": 3,
+  "gemelos_idt_contiguos": 274,
+  "sub_bloques": 25,
+  "a7s_traces_idt_opd": 0,
+  "a7s_traces_idt": 306,
+  "a7s_comunes_texto": 270,
+  "a7s_solo_a6000": 4,
+  "a7s_solo_a7s": 36,
+  "a6300_traces_idt_opd": 0,
+  "a6300_traces_idt": 382,
+  "a6300_comunes_texto": 270
+ },
+ "subblocks": [
+  {
+   "lo": "0x43cf11f9",
+   "hi": "0x43cf1aa3",
+   "submodule": "driver_canal",
+   "desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "n": 32
+  },
+  {
+   "lo": "0x43cf1aa3",
+   "hi": "0x43cf1d7d",
+   "submodule": "driver_modos",
+   "desc": "Driver: overflow, traducción FRM, VATR-only, load_delay, ganancia, distorsión, display",
+   "n": 11
+  },
+  {
+   "lo": "0x43cf1d7d",
+   "hi": "0x43cf23af",
+   "submodule": "bloque_IE",
+   "desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "n": 28
+  },
+  {
+   "lo": "0x43cf23af",
+   "hi": "0x43cf2634",
+   "submodule": "bloque_LC",
+   "desc": "Bloque LC: lc_miniraw, lc_out, lc_offset, lc_imgwidth/height/addnum, lc_aspect y semáforos",
+   "n": 10
+  },
+  {
+   "lo": "0x43cf2634",
+   "hi": "0x43cf2740",
+   "submodule": "RC_del_mapa",
+   "desc": "MapWidthRC / MapHeightRC: cálculo del rectángulo de recorte del mapa",
+   "n": 4
+  },
+  {
+   "lo": "0x43cf2740",
+   "hi": "0x43cf292a",
+   "submodule": "params_sync",
+   "desc": "Parámetros: CCinitParam (tras una tabla de 11 offsets en 0x43cf2740), ECinitParam, CCsyncParam, ECsyncParam, CCsyncRes, ECsyncRes",
+   "n": 8
+  },
+  {
+   "lo": "0x43cf292a",
+   "hi": "0x43cf2bb6",
+   "submodule": "umbrales_y_regiones",
+   "desc": "umbrales de detección: kido_th, ratio_wak, sel_wak, sel_waku, sel_hist, sel_sum",
+   "n": 11
+  },
+  {
+   "lo": "0x43cf2bb6",
+   "hi": "0x43cf2d56",
+   "submodule": "bloque_MAP",
+   "desc": "Bloque MAP: miniraw, shade_map, 4cmap, histmap, summap, out_opd_cc, out_opd_ec",
+   "n": 7
+  },
+  {
+   "lo": "0x43cf2d56",
+   "hi": "0x43cf2f5c",
+   "submodule": "geometria_MAP",
+   "desc": "Geometría del bloque MAP: offset, imgwidth, imgheight, imgaddnum, aspect, x_size, y_size, x.sel, y.sel, x.span, y.span",
+   "n": 11
+  },
+  {
+   "lo": "0x43cf2f5c",
+   "hi": "0x43cf322c",
+   "submodule": "regiones_integracion",
+   "desc": "Regiones de integración: intn, intWak, histWak, cwaku y límites de spec",
+   "n": 10
+  },
+  {
+   "lo": "0x43cf322c",
+   "hi": "0x43cf3306",
+   "submodule": "sync_y_4cmap",
+   "desc": "Sincronización CC/EC (syncflg) y error de aspecto del 4cmap",
+   "n": 3
+  },
+  {
+   "lo": "0x43cf3306",
+   "hi": "0x43cf3588",
+   "submodule": "IDTSA",
+   "desc": "Captura partida: GetIDTSA, cálculo de SplitIDTSA, Invalid Ch select",
+   "n": 9
+  },
+  {
+   "lo": "0x43cf3588",
+   "hi": "0x43cf37d6",
+   "submodule": "FRM_sync_async",
+   "desc": "Tamaños de lectura FRM en modo síncrono (sync) y asíncrono (async)",
+   "n": 8
+  },
+  {
+   "lo": "0x43cf37d6",
+   "hi": "0x43cf3ec8",
+   "submodule": "DET_HIST_CAE_GLE",
+   "desc": "DET / HIST / CAE / GLE: tamaños, bloques y puntos finales de las regiones de análisis",
+   "n": 25
+  },
+  {
+   "lo": "0x43cf3ec8",
+   "hi": "0x43cf4090",
+   "submodule": "VATR",
+   "desc": "VATR: detector de varianza (det, gle, tamaño, modo, RAW size)",
+   "n": 6
+  },
+  {
+   "lo": "0x43cf4090",
+   "hi": "0x43cf431d",
+   "submodule": "miniRAW_y_debug",
+   "desc": "miniRAW (dirección, tamaño) y extracción de información de depuración",
+   "n": 8
+  },
+  {
+   "lo": "0x43cf431d",
+   "hi": "0x43cf44e9",
+   "submodule": "tasas_y_AF_param",
+   "desc": "Tasas: FRM rate, FOPD rate, parámetros de AF (pix/clk)",
+   "n": 6
+  },
+  {
+   "lo": "0x43cf44e9",
+   "hi": "0x43cf4545",
+   "submodule": "AF_param_async",
+   "desc": "Parámetros de AF en modo asíncrono",
+   "n": 1
+  },
+  {
+   "lo": "0x43cf4545",
+   "hi": "0x43cf47f1",
+   "submodule": "volcado_de_punteros",
+   "desc": "Volcado de los 18 punteros del bloque de mapas (4cmap, hmap, smap, ccout, ecout, shade, input, msain0/1, msaout, ieout, p_img_map, p_backImgData, ie_in, mapRC_in, lc_out, lc_in, refmap)",
+   "n": 18
+  },
+  {
+   "lo": "0x43cf47f1",
+   "hi": "0x43cf4907",
+   "submodule": "SGC_y_RefMap",
+   "desc": "SGC (cambio de ganancia) y IE_RefMap nulo / miniRAW sin memoria",
+   "n": 4
+  },
+  {
+   "lo": "0x43cf4907",
+   "hi": "0x43cf4a85",
+   "submodule": "memoria_VATR",
+   "desc": "Gestión de memoria del VATR (Get / Release / IsAlloc)",
+   "n": 6
+  },
+  {
+   "lo": "0x43cf4a85",
+   "hi": "0x43cf4d51",
+   "submodule": "semforos",
+   "desc": "Semáforos: ec_sem, cc_sem, lc_sem, signals y overflow de EC/CC",
+   "n": 11
+  },
+  {
+   "lo": "0x43cf4d51",
+   "hi": "0x43cf4f35",
+   "submodule": "load_delay_y_pixclk",
+   "desc": "load_delay, límite de pix/clk del VATR, conversión de FOPD rate",
+   "n": 7
+  },
+  {
+   "lo": "0x43cf4f35",
+   "hi": "0x43cf50ed",
+   "submodule": "Request_y_SyncRate",
+   "desc": "Petición de AF/LC, conversión de tasa síncrona y asíncrona",
+   "n": 5
+  },
+  {
+   "lo": "0x43cf50ed",
+   "hi": "0x43cf5811",
+   "submodule": "modos_FRM_y_EE",
+   "desc": "Modos FRM, máscaras, tamaños 0size y camino EE (end-to-end)",
+   "n": 25
+  }
+ ],
+ "strings": [
+  {
+   "vaddr": "0x43cf11f9",
+   "off": 8061433,
+   "text": "[IDT_OPD]: SEND MESSAGE alloc ERROR",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439df712",
+     "func": "0x439df6ec"
+    },
+    {
+     "site": "0x439e10a4",
+     "func": "0x439e108c"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf123d",
+   "off": 8061501,
+   "text": "[IDT_OPD]: SEND MESSAGE ERROR",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439e10ce",
+     "func": "0x439e108c"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf1275",
+   "off": 8061557,
+   "text": "[IDT_OPD]: Illegal cap FOPD Call when 1pass %d",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439e11e4",
+     "func": "0x439e11c0"
+    },
+    {
+     "site": "0x43a07bb6",
+     "func": null
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf12cf",
+   "off": 8061647,
+   "text": "[IDT_OPD]: Cap: Unknown aspect %d",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439e12be",
+     "func": "0x439e11c0"
+    },
+    {
+     "site": "0x439e15ce",
+     "func": "0x439e14a0"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf130f",
+   "off": 8061711,
+   "text": "[IDT_OPD]: Unknown syncMode %d",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439df856",
+     "func": "0x439df808"
+    },
+    {
+     "site": "0x439e13fc",
+     "func": "0x439e11c0"
+    },
+    {
+     "site": "0x439e172e",
+     "func": "0x439e14a0"
+    },
+    {
+     "site": "0x43a08d68",
+     "func": null
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf1349",
+   "off": 8061769,
+   "text": "[IDT_OPD]: Illegal Async Call!",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439df8d8",
+     "func": "0x439df878"
+    },
+    {
+     "site": "0x439e1420",
+     "func": "0x439e11c0"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf1383",
+   "off": 8061827,
+   "text": "[IDT_OPD]: Illegal Split cap FOPD Call %d",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439e14c8",
+     "func": "0x439e14a0"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf13d3",
+   "off": 8061907,
+   "text": "[IDT_OPD]: Fatal Not Copiled for Split Cap",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439dfe24",
+     "func": "0x439dfdf8"
+    },
+    {
+     "site": "0x439e1526",
+     "func": "0x439e14a0"
+    },
+    {
+     "site": "0x43a07d14",
+     "func": null
+    },
+    {
+     "site": "0x43a08e2c",
+     "func": null
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf1425",
+   "off": 8061989,
+   "text": "[IDT_OPD]: Illegal Split cap FOPD Call NSX %d",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439e1652",
+     "func": "0x439e14a0"
+    },
+    {
+     "site": "0x43a07a80",
+     "func": null
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf147d",
+   "off": 8062077,
+   "text": "[IDT_OPD]: Illegal 2Async Call opdSyncstatus=%d!",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439de782",
+     "func": "0x439de63c"
+    },
+    {
+     "site": "0x439e1752",
+     "func": "0x439e14a0"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf14db",
+   "off": 8062171,
+   "text": "[IDT_OPD]: WAIT MESSAGE ERR",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439e1980",
+     "func": "0x439e17e8"
+    },
+    {
+     "site": "0x439e1bc0",
+     "func": "0x439e1a58"
+    },
+    {
+     "site": "0x43a062dc",
+     "func": null
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf150f",
+   "off": 8062223,
+   "text": "[IDT_OPD]: Can't use sync release CB!",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [],
+   "n_refs": 0
+  },
+  {
+   "vaddr": "0x43cf1557",
+   "off": 8062295,
+   "text": "[IDT_OPD]: No time for 2imager",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [],
+   "n_refs": 0
+  },
+  {
+   "vaddr": "0x43cf1591",
+   "off": 8062353,
+   "text": "[IDT_OPD]: Fatal:invalid currpicdat",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439e00a0",
+     "func": "0x439e0098"
+    },
+    {
+     "site": "0x439e2294",
+     "func": "0x439e21c6"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf15d5",
+   "off": 8062421,
+   "text": "[IDT_OPD]: CCSemStart ERR tmout %x\n",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439e2500",
+     "func": "0x439e2496"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf1619",
+   "off": 8062489,
+   "text": "[IDT_OPD]: CCSemStart ERR  %x\n",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439e251e",
+     "func": "0x439e2496"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf1653",
+   "off": 8062547,
+   "text": "[IDT_OPD]: CCSemStart ASYNC ERR %x\n",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439de0f8",
+     "func": "0x439de0b0"
+    },
+    {
+     "site": "0x439e2552",
+     "func": "0x439e2496"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf1697",
+   "off": 8062615,
+   "text": "[IDT_OPD]: ECSemStart ERR tmout %x\n",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439e2614",
+     "func": "0x439e25aa"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf16db",
+   "off": 8062683,
+   "text": "[IDT_OPD]: ECSemStart ERR  %x\n",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439e2632",
+     "func": "0x439e25aa"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf1715",
+   "off": 8062741,
+   "text": "[IDT_OPD]: ECSemStart ASYNC ERR %x\n",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439e15a6",
+     "func": "0x439e14a0"
+    },
+    {
+     "site": "0x439e15c0",
+     "func": "0x439e14a0"
+    },
+    {
+     "site": "0x439e2614",
+     "func": "0x439e25aa"
+    },
+    {
+     "site": "0x439e2666",
+     "func": "0x439e25aa"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf1759",
+   "off": 8062809,
+   "text": "[IDT_OPD]: CCSemEnd ERR %x\n",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439e263e",
+     "func": "0x439e25aa"
+    },
+    {
+     "site": "0x439e270a",
+     "func": "0x439e26be"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf178d",
+   "off": 8062861,
+   "text": "[IDT_OPD]: ECSemEnd ERR %x\n",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439e270a",
+     "func": "0x439e26be"
+    },
+    {
+     "site": "0x439e2792",
+     "func": "0x439e2746"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf17c1",
+   "off": 8062913,
+   "text": "[IDT_OPD]: Illegal Split EE FOPD Call %d",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439e1652",
+     "func": "0x439e14a0"
+    },
+    {
+     "site": "0x439e2ada",
+     "func": "0x439e2a50"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf180f",
+   "off": 8062991,
+   "text": "[IDT_OPD]: Fatal Not Copiled for Split",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439de448",
+     "func": "0x439de408"
+    },
+    {
+     "site": "0x439e2b48",
+     "func": "0x439e2a50"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf1859",
+   "off": 8063065,
+   "text": "[IDT_OPD]: Split Movie Cannot use AIF! %d",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439e2758",
+     "func": "0x439e2746"
+    },
+    {
+     "site": "0x439e2c4a",
+     "func": "0x439e2a50"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf18a9",
+   "off": 8063145,
+   "text": "[IDT_OPD]: Split Movie Cannot use Insel! %d",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439debae",
+     "func": "0x439deb1c"
+    },
+    {
+     "site": "0x439e1980",
+     "func": "0x439e17e8"
+    },
+    {
+     "site": "0x439e2c6c",
+     "func": "0x439e2a50"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf18fd",
+   "off": 8063229,
+   "text": "[IDT_OPD]: AF AE1 %d %d %d %d",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439e2d18",
+     "func": "0x439e2a50"
+    },
+    {
+     "site": "0x439e31da",
+     "func": "0x439e2fd6"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf1935",
+   "off": 8063285,
+   "text": "[IDT_OPD]: AF AE2 %d %d %x %d",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439e2860",
+     "func": "0x439e27ce"
+    },
+    {
+     "site": "0x439e288c",
+     "func": "0x439e27ce"
+    },
+    {
+     "site": "0x439e2d54",
+     "func": "0x439e2a50"
+    },
+    {
+     "site": "0x439e3216",
+     "func": "0x439e2fd6"
+    },
+    {
+     "site": "0x43a060d6",
+     "func": null
+    }
+   ],
+   "n_refs": 5
+  },
+  {
+   "vaddr": "0x43cf196d",
+   "off": 8063341,
+   "text": "[IDT_OPD]: Split Movie Cannot use AIF!!! %d",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439e28be",
+     "func": "0x439e288e"
+    },
+    {
+     "site": "0x439e28c4",
+     "func": "0x439e288e"
+    },
+    {
+     "site": "0x439e2972",
+     "func": "0x439e288e"
+    },
+    {
+     "site": "0x439e2d88",
+     "func": "0x439e2a50"
+    },
+    {
+     "site": "0x439e2db0",
+     "func": "0x439e2a50"
+    },
+    {
+     "site": "0x439e324e",
+     "func": "0x439e2fd6"
+    }
+   ],
+   "n_refs": 6
+  },
+  {
+   "vaddr": "0x43cf19c1",
+   "off": 8063425,
+   "text": "[IDT_OPD]: PBL SET_FUNC_ERROR R0 only",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439ddec8",
+     "func": "0x439dde84"
+    },
+    {
+     "site": "0x439e2972",
+     "func": "0x439e288e"
+    },
+    {
+     "site": "0x439e2e2a",
+     "func": "0x439e2a50"
+    },
+    {
+     "site": "0x439e32d4",
+     "func": "0x439e2fd6"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf1a09",
+   "off": 8063497,
+   "text": "[IDT_OPD]: PBL START_ERROR R0 only",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439e295a",
+     "func": "0x439e288e"
+    },
+    {
+     "site": "0x439e2e48",
+     "func": "0x439e2a50"
+    },
+    {
+     "site": "0x439e32f2",
+     "func": "0x439e2fd6"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf1a4b",
+   "off": 8063563,
+   "text": "[IDT_OPD]: Split Movie Cannot use Insel!!! %d",
+   "submodule": "driver_canal",
+   "submodule_desc": "Mensajes del canal con el gestor de captura (SEND MESSAGE, Cap, FOPD, Split, AF, PBL)",
+   "refs": [
+    {
+     "site": "0x439e2e68",
+     "func": "0x439e2a50"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf1aa3",
+   "off": 8063651,
+   "text": "[IDT_OPD]: IDTdriver overflow:%d",
+   "submodule": "driver_modos",
+   "submodule_desc": "Driver: overflow, traducción FRM, VATR-only, load_delay, ganancia, distorsión, display",
+   "refs": [
+    {
+     "site": "0x439e1bc8",
+     "func": "0x439e1a58"
+    },
+    {
+     "site": "0x439e2188",
+     "func": "0x439e20dc"
+    },
+    {
+     "site": "0x439e29fa",
+     "func": "0x439e29c0"
+    },
+    {
+     "site": "0x439e2f14",
+     "func": "0x439e2a50"
+    },
+    {
+     "site": "0x439e3392",
+     "func": "0x439e2fd6"
+    }
+   ],
+   "n_refs": 5
+  },
+  {
+   "vaddr": "0x43cf1ae1",
+   "off": 8063713,
+   "text": "[IDT_OPD]: FRM mode translation error %d %d",
+   "submodule": "driver_modos",
+   "submodule_desc": "Driver: overflow, traducción FRM, VATR-only, load_delay, ganancia, distorsión, display",
+   "refs": [
+    {
+     "site": "0x439e34a6",
+     "func": "0x439e3488"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf1b35",
+   "off": 8063797,
+   "text": "[IDT_OPD]: Only vatr is kicked",
+   "submodule": "driver_modos",
+   "submodule_desc": "Driver: overflow, traducción FRM, VATR-only, load_delay, ganancia, distorsión, display",
+   "refs": [
+    {
+     "site": "0x439e3424",
+     "func": "0x439e2fd6"
+    },
+    {
+     "site": "0x439e3622",
+     "func": "0x439e34da"
+    },
+    {
+     "site": "0x43a062fe",
+     "func": null
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf1b6f",
+   "off": 8063855,
+   "text": "[IDT_OPD]: load_delay out of spec: %d",
+   "submodule": "driver_modos",
+   "submodule_desc": "Driver: overflow, traducción FRM, VATR-only, load_delay, ganancia, distorsión, display",
+   "refs": [
+    {
+     "site": "0x439e3670",
+     "func": "0x439e34da"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf1bb7",
+   "off": 8063927,
+   "text": "[IDT_OPD]: Kick IDT skipped",
+   "submodule": "driver_modos",
+   "submodule_desc": "Driver: overflow, traducción FRM, VATR-only, load_delay, ganancia, distorsión, display",
+   "refs": [
+    {
+     "site": "0x439e2fd4",
+     "func": "0x439e2a50"
+    },
+    {
+     "site": "0x439e34a6",
+     "func": "0x439e3488"
+    },
+    {
+     "site": "0x439e3920",
+     "func": "0x439e3876"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf1beb",
+   "off": 8063979,
+   "text": "[IDT_OPD]: Unknown Gain mode %d",
+   "submodule": "driver_modos",
+   "submodule_desc": "Driver: overflow, traducción FRM, VATR-only, load_delay, ganancia, distorsión, display",
+   "refs": [
+    {
+     "site": "0x439e402c",
+     "func": "0x439e3f84"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf1c27",
+   "off": 8064039,
+   "text": "[IDT_OPD]: AF Gain over3 %x %x",
+   "submodule": "driver_modos",
+   "submodule_desc": "Driver: overflow, traducción FRM, VATR-only, load_delay, ganancia, distorsión, display",
+   "refs": [
+    {
+     "site": "0x439e292a",
+     "func": "0x439e288e"
+    },
+    {
+     "site": "0x439e41aa",
+     "func": "0x439e410a"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf1c61",
+   "off": 8064097,
+   "text": "[IDT_OPD]: Unknown Gain mode2 %d",
+   "submodule": "driver_modos",
+   "submodule_desc": "Driver: overflow, traducción FRM, VATR-only, load_delay, ganancia, distorsión, display",
+   "refs": [
+    {
+     "site": "0x439e2c54",
+     "func": "0x439e2a50"
+    },
+    {
+     "site": "0x439e3024",
+     "func": "0x439e2fd6"
+    },
+    {
+     "site": "0x439e30d2",
+     "func": "0x439e2fd6"
+    },
+    {
+     "site": "0x439e354a",
+     "func": "0x439e34da"
+    },
+    {
+     "site": "0x439e41d8",
+     "func": "0x439e410a"
+    }
+   ],
+   "n_refs": 5
+  },
+  {
+   "vaddr": "0x43cf1c9f",
+   "off": 8064159,
+   "text": "[IDT_OPD]: Invlid distortion area %d",
+   "submodule": "driver_modos",
+   "submodule_desc": "Driver: overflow, traducción FRM, VATR-only, load_delay, ganancia, distorsión, display",
+   "refs": [
+    {
+     "site": "0x439e4482",
+     "func": "0x439e4328"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf1ce5",
+   "off": 8064229,
+   "text": "[IDT_OPD]: Not valid distortion area %d",
+   "submodule": "driver_modos",
+   "submodule_desc": "Driver: overflow, traducción FRM, VATR-only, load_delay, ganancia, distorsión, display",
+   "refs": [
+    {
+     "site": "0x439e35ce",
+     "func": "0x439e34da"
+    },
+    {
+     "site": "0x439e44aa",
+     "func": "0x439e4328"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf1d31",
+   "off": 8064305,
+   "text": "[IDT_OPD]: Not support Disp KK monitor\n",
+   "submodule": "driver_modos",
+   "submodule_desc": "Driver: overflow, traducción FRM, VATR-only, load_delay, ganancia, distorsión, display",
+   "refs": [
+    {
+     "site": "0x439e3644",
+     "func": "0x439e34da"
+    },
+    {
+     "site": "0x439e5116",
+     "func": "0x439e5038"
+    },
+    {
+     "site": "0x439e5748",
+     "func": "0x439e5664"
+    },
+    {
+     "site": "0x439e6308",
+     "func": "0x439e6224"
+    },
+    {
+     "site": "0x439e6974",
+     "func": "0x439e6884"
+    }
+   ],
+   "n_refs": 5
+  },
+  {
+   "vaddr": "0x43cf1d7d",
+   "off": 8064381,
+   "text": "[IDT_OPD]: IE_CCinit pointer is NULL",
+   "submodule": "bloque_IE",
+   "submodule_desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "refs": [
+    {
+     "site": "0x439e7f0a",
+     "func": "0x439e7ef4"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf1dc3",
+   "off": 8064451,
+   "text": "[IDT_OPD]: ie_miniraw.adrs Err:%X",
+   "submodule": "bloque_IE",
+   "submodule_desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "refs": [
+    {
+     "site": "0x439e38c4",
+     "func": "0x439e3876"
+    },
+    {
+     "site": "0x439e80fe",
+     "func": "0x439e80c8"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf1e03",
+   "off": 8064515,
+   "text": "[IDT_OPD]: backImgData.adrs Err:%X",
+   "submodule": "bloque_IE",
+   "submodule_desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "refs": [
+    {
+     "site": "0x439e2d54",
+     "func": "0x439e2a50"
+    },
+    {
+     "site": "0x439e811a",
+     "func": "0x439e80c8"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf1e45",
+   "off": 8064581,
+   "text": "[IDT_OPD]: imgmap.adrs Err:%X",
+   "submodule": "bloque_IE",
+   "submodule_desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "refs": [
+    {
+     "site": "0x439e2b48",
+     "func": "0x439e2a50"
+    },
+    {
+     "site": "0x439e3734",
+     "func": "0x439e34da"
+    },
+    {
+     "site": "0x439e8136",
+     "func": "0x439e80c8"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf1e7d",
+   "off": 8064637,
+   "text": "[IDT_OPD]: ie_out.adrs Err:%X",
+   "submodule": "bloque_IE",
+   "submodule_desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "refs": [
+    {
+     "site": "0x439e8152",
+     "func": "0x439e80c8"
+    },
+    {
+     "site": "0x439e816e",
+     "func": "0x439e80c8"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf1eb5",
+   "off": 8064693,
+   "text": "[IDT_OPD]: refmap.adrs Err:%X",
+   "submodule": "bloque_IE",
+   "submodule_desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "refs": [
+    {
+     "site": "0x439e32d4",
+     "func": "0x439e2fd6"
+    },
+    {
+     "site": "0x439e816e",
+     "func": "0x439e80c8"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf1eed",
+   "off": 8064749,
+   "text": "[IDT_OPD]: tar_num Err:%d",
+   "submodule": "bloque_IE",
+   "submodule_desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "refs": [
+    {
+     "site": "0x439e38b2",
+     "func": "0x439e3876"
+    },
+    {
+     "site": "0x439e807a",
+     "func": "0x439e7f90"
+    },
+    {
+     "site": "0x439e81aa",
+     "func": "0x439e80c8"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf1f1d",
+   "off": 8064797,
+   "text": "[IDT_OPD]: isSpectRef Err:%d",
+   "submodule": "bloque_IE",
+   "submodule_desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "refs": [
+    {
+     "site": "0x439e2e48",
+     "func": "0x439e2a50"
+    },
+    {
+     "site": "0x439e81e6",
+     "func": "0x439e80c8"
+    },
+    {
+     "site": "0x439e8258",
+     "func": "0x439e80c8"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf1f53",
+   "off": 8064851,
+   "text": "[IDT_OPD]: isMapOut Err:%d",
+   "submodule": "bloque_IE",
+   "submodule_desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "refs": [
+    {
+     "site": "0x439e3392",
+     "func": "0x439e2fd6"
+    },
+    {
+     "site": "0x439e3834",
+     "func": "0x439e37d4"
+    },
+    {
+     "site": "0x439e8202",
+     "func": "0x439e80c8"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf1f85",
+   "off": 8064901,
+   "text": "[IDT_OPD]: r.val.high Err:%d",
+   "submodule": "bloque_IE",
+   "submodule_desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "refs": [
+    {
+     "site": "0x439e339c",
+     "func": "0x439e2fd6"
+    },
+    {
+     "site": "0x439e3874",
+     "func": "0x439e385c"
+    },
+    {
+     "site": "0x439e823c",
+     "func": "0x439e80c8"
+    },
+    {
+     "site": "0x439e8246",
+     "func": "0x439e80c8"
+    },
+    {
+     "site": "0x439e8262",
+     "func": "0x439e80c8"
+    }
+   ],
+   "n_refs": 5
+  },
+  {
+   "vaddr": "0x43cf1fbb",
+   "off": 8064955,
+   "text": "[IDT_OPD]: r.val.low Err:%d",
+   "submodule": "bloque_IE",
+   "submodule_desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "refs": [
+    {
+     "site": "0x439e32d4",
+     "func": "0x439e2fd6"
+    },
+    {
+     "site": "0x439e3424",
+     "func": "0x439e2fd6"
+    },
+    {
+     "site": "0x439e8258",
+     "func": "0x439e80c8"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf1fef",
+   "off": 8065007,
+   "text": "[IDT_OPD]: g.val.high Err:%d",
+   "submodule": "bloque_IE",
+   "submodule_desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "refs": [
+    {
+     "site": "0x439e2494",
+     "func": "0x439e2412"
+    },
+    {
+     "site": "0x439e3432",
+     "func": "0x439e2fd6"
+    },
+    {
+     "site": "0x439e8294",
+     "func": "0x439e80c8"
+    },
+    {
+     "site": "0x439e8312",
+     "func": "0x439e80c8"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf2025",
+   "off": 8065061,
+   "text": "[IDT_OPD]: g.val.low Err:%d",
+   "submodule": "bloque_IE",
+   "submodule_desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "refs": [
+    {
+     "site": "0x439e270a",
+     "func": "0x439e26be"
+    },
+    {
+     "site": "0x439e82b0",
+     "func": "0x439e80c8"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf2059",
+   "off": 8065113,
+   "text": "[IDT_OPD]: b.val.high Err:%d",
+   "submodule": "bloque_IE",
+   "submodule_desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "refs": [
+    {
+     "site": "0x439e3392",
+     "func": "0x439e2fd6"
+    },
+    {
+     "site": "0x439e81e6",
+     "func": "0x439e80c8"
+    },
+    {
+     "site": "0x439e82ec",
+     "func": "0x439e80c8"
+    },
+    {
+     "site": "0x439e8308",
+     "func": "0x439e80c8"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf208f",
+   "off": 8065167,
+   "text": "[IDT_OPD]: b.val.low Err:%d",
+   "submodule": "bloque_IE",
+   "submodule_desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "refs": [
+    {
+     "site": "0x439e8308",
+     "func": "0x439e80c8"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf20c3",
+   "off": 8065219,
+   "text": "[IDT_OPD]: ie_offset Err:%d",
+   "submodule": "bloque_IE",
+   "submodule_desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "refs": [
+    {
+     "site": "0x439e2216",
+     "func": "0x439e21c6"
+    },
+    {
+     "site": "0x439e834e",
+     "func": "0x439e80c8"
+    },
+    {
+     "site": "0x439e838c",
+     "func": "0x439e80c8"
+    },
+    {
+     "site": "0x439e83cc",
+     "func": "0x439e80c8"
+    },
+    {
+     "site": "0x439e8422",
+     "func": "0x439e80c8"
+    }
+   ],
+   "n_refs": 5
+  },
+  {
+   "vaddr": "0x43cf20f7",
+   "off": 8065271,
+   "text": "[IDT_OPD]: ie_imgwidth Err:%d",
+   "submodule": "bloque_IE",
+   "submodule_desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "refs": [
+    {
+     "site": "0x439e304e",
+     "func": "0x439e2fd6"
+    },
+    {
+     "site": "0x439e3bdc",
+     "func": "0x439e3bd8"
+    },
+    {
+     "site": "0x439e836c",
+     "func": "0x439e80c8"
+    },
+    {
+     "site": "0x439e83cc",
+     "func": "0x439e80c8"
+    },
+    {
+     "site": "0x439e83ea",
+     "func": "0x439e80c8"
+    },
+    {
+     "site": "0x439e8440",
+     "func": "0x439e80c8"
+    }
+   ],
+   "n_refs": 6
+  },
+  {
+   "vaddr": "0x43cf212f",
+   "off": 8065327,
+   "text": "[IDT_OPD]: ie_imgheight Err:%d",
+   "submodule": "bloque_IE",
+   "submodule_desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "refs": [
+    {
+     "site": "0x439e354a",
+     "func": "0x439e34da"
+    },
+    {
+     "site": "0x439e838c",
+     "func": "0x439e80c8"
+    },
+    {
+     "site": "0x439e83cc",
+     "func": "0x439e80c8"
+    },
+    {
+     "site": "0x439e8422",
+     "func": "0x439e80c8"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf2169",
+   "off": 8065385,
+   "text": "[IDT_OPD]: ie_imgaddnum Err:%d",
+   "submodule": "bloque_IE",
+   "submodule_desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "refs": [
+    {
+     "site": "0x439e2e50",
+     "func": "0x439e2a50"
+    },
+    {
+     "site": "0x439e8422",
+     "func": "0x439e80c8"
+    },
+    {
+     "site": "0x439e8474",
+     "func": "0x439e80c8"
+    },
+    {
+     "site": "0x439e84b6",
+     "func": "0x439e80c8"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf21a3",
+   "off": 8065443,
+   "text": "[IDT_OPD]: ie_aspect Err:%d",
+   "submodule": "bloque_IE",
+   "submodule_desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "refs": [
+    {
+     "site": "0x439e3a92",
+     "func": "0x439e3a6c"
+    },
+    {
+     "site": "0x439e8440",
+     "func": "0x439e80c8"
+    },
+    {
+     "site": "0x439e8480",
+     "func": "0x439e80c8"
+    },
+    {
+     "site": "0x439e84aa",
+     "func": "0x439e80c8"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf21d7",
+   "off": 8065495,
+   "text": "[IDT_OPD]: idealWidth-1 Err:%d",
+   "submodule": "bloque_IE",
+   "submodule_desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "refs": [
+    {
+     "site": "0x439e8474",
+     "func": "0x439e80c8"
+    },
+    {
+     "site": "0x439e88a2",
+     "func": "0x439e8600"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf2211",
+   "off": 8065553,
+   "text": "[IDT_OPD]: mask.x_end Err:%d",
+   "submodule": "bloque_IE",
+   "submodule_desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "refs": [
+    {
+     "site": "0x439e2f14",
+     "func": "0x439e2a50"
+    },
+    {
+     "site": "0x439e3124",
+     "func": "0x439e2fd6"
+    },
+    {
+     "site": "0x439e354a",
+     "func": "0x439e34da"
+    },
+    {
+     "site": "0x439e84b6",
+     "func": "0x439e80c8"
+    },
+    {
+     "site": "0x439e88d6",
+     "func": "0x439e8600"
+    }
+   ],
+   "n_refs": 5
+  },
+  {
+   "vaddr": "0x43cf2247",
+   "off": 8065607,
+   "text": "[IDT_OPD]: idealHeight-1 Err:%d",
+   "submodule": "bloque_IE",
+   "submodule_desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "refs": [
+    {
+     "site": "0x439e2666",
+     "func": "0x439e25aa"
+    },
+    {
+     "site": "0x439e3686",
+     "func": "0x439e34da"
+    },
+    {
+     "site": "0x439e88f2",
+     "func": "0x439e8600"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf2283",
+   "off": 8065667,
+   "text": "[IDT_OPD]: mask.y_end Err:%d",
+   "submodule": "bloque_IE",
+   "submodule_desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "refs": [
+    {
+     "site": "0x439e2714",
+     "func": "0x439e26be"
+    },
+    {
+     "site": "0x439e31da",
+     "func": "0x439e2fd6"
+    },
+    {
+     "site": "0x439e8926",
+     "func": "0x439e8600"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf22b9",
+   "off": 8065721,
+   "text": "[IDT_OPD]: idealWidth Err:%d",
+   "submodule": "bloque_IE",
+   "submodule_desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "refs": [
+    {
+     "site": "0x439e97a8",
+     "func": "0x439e950e"
+    },
+    {
+     "site": "0x439ef5ce",
+     "func": "0x439ef11a"
+    },
+    {
+     "site": "0x439ef91e",
+     "func": "0x439ef11a"
+    },
+    {
+     "site": "0x439f026c",
+     "func": "0x439efe10"
+    },
+    {
+     "site": "0x439f0680",
+     "func": "0x439efe10"
+    },
+    {
+     "site": "0x439f09ce",
+     "func": "0x439efe10"
+    },
+    {
+     "site": "0x439f0faa",
+     "func": "0x439f0f30"
+    },
+    {
+     "site": "0x439f17c0",
+     "func": "0x439f11a4"
+    },
+    {
+     "site": "0x439f1c86",
+     "func": "0x439f11a4"
+    },
+    {
+     "site": "0x439f2000",
+     "func": "0x439f11a4"
+    }
+   ],
+   "n_refs": 10
+  },
+  {
+   "vaddr": "0x43cf22ef",
+   "off": 8065775,
+   "text": "[IDT_OPD]: lc_waku[%d].x_end Err:%d",
+   "submodule": "bloque_IE",
+   "submodule_desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "refs": [
+    {
+     "site": "0x439e3608",
+     "func": "0x439e34da"
+    },
+    {
+     "site": "0x439e3dd4",
+     "func": "0x439e3d1e"
+    },
+    {
+     "site": "0x439e97e0",
+     "func": "0x439e950e"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf2333",
+   "off": 8065843,
+   "text": "[IDT_OPD]: idealHeight Err:%d",
+   "submodule": "bloque_IE",
+   "submodule_desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "refs": [
+    {
+     "site": "0x439e866e",
+     "func": "0x439e8600"
+    },
+    {
+     "site": "0x439e9806",
+     "func": "0x439e950e"
+    },
+    {
+     "site": "0x439e9814",
+     "func": "0x439e950e"
+    },
+    {
+     "site": "0x439ef614",
+     "func": "0x439ef11a"
+    },
+    {
+     "site": "0x439ef964",
+     "func": "0x439ef11a"
+    },
+    {
+     "site": "0x439f02b2",
+     "func": "0x439efe10"
+    },
+    {
+     "site": "0x439f06c6",
+     "func": "0x439efe10"
+    },
+    {
+     "site": "0x439f0a14",
+     "func": "0x439efe10"
+    },
+    {
+     "site": "0x439f0fec",
+     "func": "0x439f0f30"
+    },
+    {
+     "site": "0x439f1804",
+     "func": "0x439f11a4"
+    },
+    {
+     "site": "0x439f1cca",
+     "func": "0x439f11a4"
+    },
+    {
+     "site": "0x439f2044",
+     "func": "0x439f11a4"
+    }
+   ],
+   "n_refs": 12
+  },
+  {
+   "vaddr": "0x43cf236b",
+   "off": 8065899,
+   "text": "[IDT_OPD]: lc_waku[%d].y_end Err:%d",
+   "submodule": "bloque_IE",
+   "submodule_desc": "Bloque IE (IE_CCinit): punteros (ie_miniraw, backImgData, imgmap, ie_out, refmap) y metadatos (tar_num, isSpectRef, isMapOut, gains r/g/b, offset, tamaño, aspecto)",
+   "refs": [
+    {
+     "site": "0x439e3d30",
+     "func": "0x439e3d1e"
+    },
+    {
+     "site": "0x439e9834",
+     "func": "0x439e950e"
+    },
+    {
+     "site": "0x439e985c",
+     "func": "0x439e950e"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf23af",
+   "off": 8065967,
+   "text": "[IDT_OPD]: lc_miniraw.adrs Err:%X",
+   "submodule": "bloque_LC",
+   "submodule_desc": "Bloque LC: lc_miniraw, lc_out, lc_offset, lc_imgwidth/height/addnum, lc_aspect y semáforos",
+   "refs": [
+    {
+     "site": "0x439e8666",
+     "func": "0x439e8600"
+    },
+    {
+     "site": "0x439e9b46",
+     "func": "0x439e950e"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf23ef",
+   "off": 8066031,
+   "text": "[IDT_OPD]: lc_out.adrs Err:%X",
+   "submodule": "bloque_LC",
+   "submodule_desc": "Bloque LC: lc_miniraw, lc_out, lc_offset, lc_imgwidth/height/addnum, lc_aspect y semáforos",
+   "refs": [
+    {
+     "site": "0x439e3860",
+     "func": "0x439e385c"
+    },
+    {
+     "site": "0x439e8ab4",
+     "func": "0x439e8600"
+    },
+    {
+     "site": "0x439e9b62",
+     "func": "0x439e950e"
+    },
+    {
+     "site": "0x439f0782",
+     "func": "0x439efe10"
+    },
+    {
+     "site": "0x439f18c0",
+     "func": "0x439f11a4"
+    }
+   ],
+   "n_refs": 5
+  },
+  {
+   "vaddr": "0x43cf2427",
+   "off": 8066087,
+   "text": "[IDT_OPD]: lc_offset Err:%d",
+   "submodule": "bloque_LC",
+   "submodule_desc": "Bloque LC: lc_miniraw, lc_out, lc_offset, lc_imgwidth/height/addnum, lc_aspect y semáforos",
+   "refs": [
+    {
+     "site": "0x439e3d08",
+     "func": "0x439e3c8c"
+    },
+    {
+     "site": "0x439e9ba4",
+     "func": "0x439e950e"
+    },
+    {
+     "site": "0x439e9c1e",
+     "func": "0x439e950e"
+    },
+    {
+     "site": "0x439e9c70",
+     "func": "0x439e950e"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf245b",
+   "off": 8066139,
+   "text": "[IDT_OPD]: lc_imgwidth Err:%d",
+   "submodule": "bloque_LC",
+   "submodule_desc": "Bloque LC: lc_miniraw, lc_out, lc_offset, lc_imgwidth/height/addnum, lc_aspect y semáforos",
+   "refs": [
+    {
+     "site": "0x439e38c4",
+     "func": "0x439e3876"
+    },
+    {
+     "site": "0x439e9bc2",
+     "func": "0x439e950e"
+    },
+    {
+     "site": "0x439e9c3c",
+     "func": "0x439e950e"
+    },
+    {
+     "site": "0x439e9c8e",
+     "func": "0x439e950e"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf2493",
+   "off": 8066195,
+   "text": "[IDT_OPD]: lc_imgheight Err:%d",
+   "submodule": "bloque_LC",
+   "submodule_desc": "Bloque LC: lc_miniraw, lc_out, lc_offset, lc_imgwidth/height/addnum, lc_aspect y semáforos",
+   "refs": [
+    {
+     "site": "0x439e3392",
+     "func": "0x439e2fd6"
+    },
+    {
+     "site": "0x439e38b2",
+     "func": "0x439e3876"
+    },
+    {
+     "site": "0x439e9be2",
+     "func": "0x439e950e"
+    },
+    {
+     "site": "0x439e9cca",
+     "func": "0x439e950e"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf24cd",
+   "off": 8066253,
+   "text": "[IDT_OPD]: lc_imgaddnum Err:%d",
+   "submodule": "bloque_LC",
+   "submodule_desc": "Bloque LC: lc_miniraw, lc_out, lc_offset, lc_imgwidth/height/addnum, lc_aspect y semáforos",
+   "refs": [
+    {
+     "site": "0x439e2972",
+     "func": "0x439e288e"
+    },
+    {
+     "site": "0x439e3424",
+     "func": "0x439e2fd6"
+    },
+    {
+     "site": "0x439e38be",
+     "func": "0x439e3876"
+    },
+    {
+     "site": "0x439e8b78",
+     "func": "0x439e8600"
+    },
+    {
+     "site": "0x439e9cbe",
+     "func": "0x439e950e"
+    }
+   ],
+   "n_refs": 5
+  },
+  {
+   "vaddr": "0x43cf2507",
+   "off": 8066311,
+   "text": "[IDT_OPD]: lc_aspect Err:%d",
+   "submodule": "bloque_LC",
+   "submodule_desc": "Bloque LC: lc_miniraw, lc_out, lc_offset, lc_imgwidth/height/addnum, lc_aspect y semáforos",
+   "refs": [
+    {
+     "site": "0x439e3432",
+     "func": "0x439e2fd6"
+    },
+    {
+     "site": "0x439e3928",
+     "func": "0x439e3876"
+    },
+    {
+     "site": "0x439e9cf0",
+     "func": "0x439e950e"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf253b",
+   "off": 8066363,
+   "text": "[IDT_OPD]: LC SEM ERR TMOUT %x\n",
+   "submodule": "bloque_LC",
+   "submodule_desc": "Bloque LC: lc_miniraw, lc_out, lc_offset, lc_imgwidth/height/addnum, lc_aspect y semáforos",
+   "refs": [
+    {
+     "site": "0x439e3874",
+     "func": "0x439e385c"
+    },
+    {
+     "site": "0x439e397a",
+     "func": "0x439e3876"
+    },
+    {
+     "site": "0x439e9c9a",
+     "func": "0x439e950e"
+    },
+    {
+     "site": "0x439e9d2c",
+     "func": "0x439e950e"
+    },
+    {
+     "site": "0x439e9d6e",
+     "func": "0x439e950e"
+    },
+    {
+     "site": "0x439ea08c",
+     "func": "0x439ea04c"
+    }
+   ],
+   "n_refs": 6
+  },
+  {
+   "vaddr": "0x43cf2577",
+   "off": 8066423,
+   "text": "[IDT_OPD]: LC SEM ERR %x\n",
+   "submodule": "bloque_LC",
+   "submodule_desc": "Bloque LC: lc_miniraw, lc_out, lc_offset, lc_imgwidth/height/addnum, lc_aspect y semáforos",
+   "refs": [
+    {
+     "site": "0x439e88d6",
+     "func": "0x439e8600"
+    },
+    {
+     "site": "0x439e9d6e",
+     "func": "0x439e950e"
+    },
+    {
+     "site": "0x439ea0aa",
+     "func": "0x439ea04c"
+    },
+    {
+     "site": "0x439efba8",
+     "func": "0x439ef11a"
+    },
+    {
+     "site": "0x439efbdc",
+     "func": "0x439ef11a"
+    }
+   ],
+   "n_refs": 5
+  },
+  {
+   "vaddr": "0x43cf25a7",
+   "off": 8066471,
+   "text": "[IDT_OPD]: LC OSAL SEM ERR %x\n",
+   "submodule": "bloque_LC",
+   "submodule_desc": "Bloque LC: lc_miniraw, lc_out, lc_offset, lc_imgwidth/height/addnum, lc_aspect y semáforos",
+   "refs": [
+    {
+     "site": "0x439e34a6",
+     "func": "0x439e3488"
+    },
+    {
+     "site": "0x439e9cfc",
+     "func": "0x439e950e"
+    },
+    {
+     "site": "0x439ea0fe",
+     "func": "0x439ea0e6"
+    },
+    {
+     "site": "0x439f1260",
+     "func": "0x439f11a4"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf2634",
+   "off": 8066612,
+   "text": "[IDT_OPD]: Start MapWidthRC function",
+   "submodule": "RC_del_mapa",
+   "submodule_desc": "MapWidthRC / MapHeightRC: cálculo del rectángulo de recorte del mapa",
+   "refs": [
+    {
+     "site": "0x439ea5dc",
+     "func": "0x439ea4ac"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf267a",
+   "off": 8066682,
+   "text": "[IDT_OPD]: leftW, rightW: %d, %d",
+   "submodule": "RC_del_mapa",
+   "submodule_desc": "MapWidthRC / MapHeightRC: cálculo del rectángulo de recorte del mapa",
+   "refs": [
+    {
+     "site": "0x439ea862",
+     "func": "0x439ea4ac"
+    },
+    {
+     "site": "0x439ea8de",
+     "func": "0x439ea4ac"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf26b8",
+   "off": 8066744,
+   "text": "[IDT_OPD]: Start MapHeightRC function",
+   "submodule": "RC_del_mapa",
+   "submodule_desc": "MapWidthRC / MapHeightRC: cálculo del rectángulo de recorte del mapa",
+   "refs": [
+    {
+     "site": "0x439ea94e",
+     "func": "0x439ea4ac"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf2700",
+   "off": 8066816,
+   "text": "[IDT_OPD]: topH, bottomH: %d, %d",
+   "submodule": "RC_del_mapa",
+   "submodule_desc": "MapWidthRC / MapHeightRC: cálculo del rectángulo de recorte del mapa",
+   "refs": [
+    {
+     "site": "0x439eaafa",
+     "func": "0x439ea4ac"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf274a",
+   "off": 8066890,
+   "text": "[IDT_OPD]: CCinitParam addr null",
+   "submodule": "params_sync",
+   "submodule_desc": "Parámetros: CCinitParam (tras una tabla de 11 offsets en 0x43cf2740), ECinitParam, CCsyncParam, ECsyncParam, CCsyncRes, ECsyncRes",
+   "refs": [],
+   "n_refs": 0
+  },
+  {
+   "vaddr": "0x43cf2788",
+   "off": 8066952,
+   "text": "[IDT_OPD]: ECinitParam addr null",
+   "submodule": "params_sync",
+   "submodule_desc": "Parámetros: CCinitParam (tras una tabla de 11 offsets en 0x43cf2740), ECinitParam, CCsyncParam, ECsyncParam, CCsyncRes, ECsyncRes",
+   "refs": [
+    {
+     "site": "0x439ea730",
+     "func": "0x439ea4ac"
+    },
+    {
+     "site": "0x439ec710",
+     "func": "0x439ec6de"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf27c6",
+   "off": 8067014,
+   "text": "[IDT_OPD]: CCsyncParam addr null",
+   "submodule": "params_sync",
+   "submodule_desc": "Parámetros: CCinitParam (tras una tabla de 11 offsets en 0x43cf2740), ECinitParam, CCsyncParam, ECsyncParam, CCsyncRes, ECsyncRes",
+   "refs": [
+    {
+     "site": "0x439ec710",
+     "func": "0x439ec6de"
+    },
+    {
+     "site": "0x439ec784",
+     "func": "0x439ec754"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf2804",
+   "off": 8067076,
+   "text": "[IDT_OPD]: ECsyncParam addr null",
+   "submodule": "params_sync",
+   "submodule_desc": "Parámetros: CCinitParam (tras una tabla de 11 offsets en 0x43cf2740), ECinitParam, CCsyncParam, ECsyncParam, CCsyncRes, ECsyncRes",
+   "refs": [
+    {
+     "site": "0x439ec81a",
+     "func": "0x439ec7ee"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf2842",
+   "off": 8067138,
+   "text": "[IDT_OPD]: CCsyncRes ERR :%08X",
+   "submodule": "params_sync",
+   "submodule_desc": "Parámetros: CCinitParam (tras una tabla de 11 offsets en 0x43cf2740), ECinitParam, CCsyncParam, ECsyncParam, CCsyncRes, ECsyncRes",
+   "refs": [
+    {
+     "site": "0x439eb322",
+     "func": "0x439eb034"
+    },
+    {
+     "site": "0x439ecb8a",
+     "func": "0x439ecb56"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf287c",
+   "off": 8067196,
+   "text": "[IDT_OPD]: CCsyncRes addr null",
+   "submodule": "params_sync",
+   "submodule_desc": "Parámetros: CCinitParam (tras una tabla de 11 offsets en 0x43cf2740), ECinitParam, CCsyncParam, ECsyncParam, CCsyncRes, ECsyncRes",
+   "refs": [
+    {
+     "site": "0x439ea75c",
+     "func": "0x439ea4ac"
+    },
+    {
+     "site": "0x439ecbc2",
+     "func": "0x439ecb56"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf28b6",
+   "off": 8067254,
+   "text": "[IDT_OPD]: ECsyncRes ERR :%08X",
+   "submodule": "params_sync",
+   "submodule_desc": "Parámetros: CCinitParam (tras una tabla de 11 offsets en 0x43cf2740), ECinitParam, CCsyncParam, ECsyncParam, CCsyncRes, ECsyncRes",
+   "refs": [
+    {
+     "site": "0x439ecc7e",
+     "func": "0x439ecc4a"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf28f0",
+   "off": 8067312,
+   "text": "[IDT_OPD]: ECsyncRes addr null",
+   "submodule": "params_sync",
+   "submodule_desc": "Parámetros: CCinitParam (tras una tabla de 11 offsets en 0x43cf2740), ECinitParam, CCsyncParam, ECsyncParam, CCsyncRes, ECsyncRes",
+   "refs": [
+    {
+     "site": "0x439eccb6",
+     "func": "0x439ecc4a"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf292a",
+   "off": 8067370,
+   "text": "[IDT_OPD]: face_use_cc Err:%d",
+   "submodule": "umbrales_y_regiones",
+   "submodule_desc": "umbrales de detección: kido_th, ratio_wak, sel_wak, sel_waku, sel_hist, sel_sum",
+   "refs": [
+    {
+     "site": "0x439ea108",
+     "func": "0x439ea0e6"
+    },
+    {
+     "site": "0x439ee528",
+     "func": "0x439ee4fe"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf2962",
+   "off": 8067426,
+   "text": "[IDT_OPD]: kido_th[%d].up Err:%d",
+   "submodule": "umbrales_y_regiones",
+   "submodule_desc": "umbrales de detección: kido_th, ratio_wak, sel_wak, sel_waku, sel_hist, sel_sum",
+   "refs": [
+    {
+     "site": "0x439ee576",
+     "func": "0x439ee4fe"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf29a0",
+   "off": 8067488,
+   "text": "[IDT_OPD]: kido_th[%d].dn Err:%d",
+   "submodule": "umbrales_y_regiones",
+   "submodule_desc": "umbrales de detección: kido_th, ratio_wak, sel_wak, sel_waku, sel_hist, sel_sum",
+   "refs": [
+    {
+     "site": "0x439ec928",
+     "func": "0x439ec7ee"
+    },
+    {
+     "site": "0x439ee59a",
+     "func": "0x439ee4fe"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf29de",
+   "off": 8067550,
+   "text": "[IDT_OPD]: ratio_wak[%d].up Err:%d",
+   "submodule": "umbrales_y_regiones",
+   "submodule_desc": "umbrales de detección: kido_th, ratio_wak, sel_wak, sel_waku, sel_hist, sel_sum",
+   "refs": [
+    {
+     "site": "0x439ec928",
+     "func": "0x439ec7ee"
+    },
+    {
+     "site": "0x439ee5f8",
+     "func": "0x439ee4fe"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf2a20",
+   "off": 8067616,
+   "text": "[IDT_OPD]: ratio_wak[%d].dn Err:%d",
+   "submodule": "umbrales_y_regiones",
+   "submodule_desc": "umbrales de detección: kido_th, ratio_wak, sel_wak, sel_waku, sel_hist, sel_sum",
+   "refs": [
+    {
+     "site": "0x439ec96a",
+     "func": "0x439ec7ee"
+    },
+    {
+     "site": "0x439ee61e",
+     "func": "0x439ee4fe"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf2a62",
+   "off": 8067682,
+   "text": "[IDT_OPD]: ratio_wak[%d].rgt Err:%d",
+   "submodule": "umbrales_y_regiones",
+   "submodule_desc": "umbrales de detección: kido_th, ratio_wak, sel_wak, sel_waku, sel_hist, sel_sum",
+   "refs": [
+    {
+     "site": "0x439ee642",
+     "func": "0x439ee4fe"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf2aa6",
+   "off": 8067750,
+   "text": "[IDT_OPD]: ratio_wak[%d].lft Err:%d",
+   "submodule": "umbrales_y_regiones",
+   "submodule_desc": "umbrales de detección: kido_th, ratio_wak, sel_wak, sel_waku, sel_hist, sel_sum",
+   "refs": [
+    {
+     "site": "0x439ee666",
+     "func": "0x439ee4fe"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf2aea",
+   "off": 8067818,
+   "text": "[IDT_OPD]: sel_waku[%d] Err:%d",
+   "submodule": "umbrales_y_regiones",
+   "submodule_desc": "umbrales de detección: kido_th, ratio_wak, sel_wak, sel_waku, sel_hist, sel_sum",
+   "refs": [
+    {
+     "site": "0x439ee6bc",
+     "func": "0x439ee4fe"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf2b24",
+   "off": 8067876,
+   "text": "[IDT_OPD]: sel_wak Err:%d",
+   "submodule": "umbrales_y_regiones",
+   "submodule_desc": "umbrales de detección: kido_th, ratio_wak, sel_wak, sel_waku, sel_hist, sel_sum",
+   "refs": [
+    {
+     "site": "0x439ee73e",
+     "func": "0x439ee730"
+    },
+    {
+     "site": "0x439ee76c",
+     "func": "0x439ee730"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf2b54",
+   "off": 8067924,
+   "text": "[IDT_OPD]: sel_hist Err:%d",
+   "submodule": "umbrales_y_regiones",
+   "submodule_desc": "umbrales de detección: kido_th, ratio_wak, sel_wak, sel_waku, sel_hist, sel_sum",
+   "refs": [
+    {
+     "site": "0x439eadea",
+     "func": "0x439ead92"
+    },
+    {
+     "site": "0x439eca9e",
+     "func": "0x439eca7c"
+    },
+    {
+     "site": "0x439ee788",
+     "func": "0x439ee730"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf2b86",
+   "off": 8067974,
+   "text": "[IDT_OPD]: sel_sum Err:%d",
+   "submodule": "umbrales_y_regiones",
+   "submodule_desc": "umbrales de detección: kido_th, ratio_wak, sel_wak, sel_waku, sel_hist, sel_sum",
+   "refs": [
+    {
+     "site": "0x439eadea",
+     "func": "0x439ead92"
+    },
+    {
+     "site": "0x439ee7a4",
+     "func": "0x439ee730"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf2bb6",
+   "off": 8068022,
+   "text": "[IDT_OPD]: miniraw.adrs Err:%X",
+   "submodule": "bloque_MAP",
+   "submodule_desc": "Bloque MAP: miniraw, shade_map, 4cmap, histmap, summap, out_opd_cc, out_opd_ec",
+   "refs": [
+    {
+     "site": "0x439ee788",
+     "func": "0x439ee730"
+    },
+    {
+     "site": "0x439ee82c",
+     "func": "0x439ee7e8"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf2bf0",
+   "off": 8068080,
+   "text": "[IDT_OPD]: shade_map.adrs Err:%X",
+   "submodule": "bloque_MAP",
+   "submodule_desc": "Bloque MAP: miniraw, shade_map, 4cmap, histmap, summap, out_opd_cc, out_opd_ec",
+   "refs": [
+    {
+     "site": "0x439ee84c",
+     "func": "0x439ee7e8"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf2c2e",
+   "off": 8068142,
+   "text": "[IDT_OPD]: 4cmap.adrs Err:%X",
+   "submodule": "bloque_MAP",
+   "submodule_desc": "Bloque MAP: miniraw, shade_map, 4cmap, histmap, summap, out_opd_cc, out_opd_ec",
+   "refs": [
+    {
+     "site": "0x439eae16",
+     "func": "0x439ead92"
+    },
+    {
+     "site": "0x439ee82c",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439ee84c",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439ee86c",
+     "func": "0x439ee7e8"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf2c64",
+   "off": 8068196,
+   "text": "[IDT_OPD]: histmap.adrs Err:%X",
+   "submodule": "bloque_MAP",
+   "submodule_desc": "Bloque MAP: miniraw, shade_map, 4cmap, histmap, summap, out_opd_cc, out_opd_ec",
+   "refs": [
+    {
+     "site": "0x439ed02c",
+     "func": "0x439ecd62"
+    },
+    {
+     "site": "0x439ee88c",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439ee8ac",
+     "func": "0x439ee7e8"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf2c9e",
+   "off": 8068254,
+   "text": "[IDT_OPD]: summap.adrs Err:%X",
+   "submodule": "bloque_MAP",
+   "submodule_desc": "Bloque MAP: miniraw, shade_map, 4cmap, histmap, summap, out_opd_cc, out_opd_ec",
+   "refs": [
+    {
+     "site": "0x439eaf02",
+     "func": "0x439eaecc"
+    },
+    {
+     "site": "0x439ee8ac",
+     "func": "0x439ee7e8"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf2cd6",
+   "off": 8068310,
+   "text": "[IDT_OPD]: out_opd_cc.adrs Err:%X",
+   "submodule": "bloque_MAP",
+   "submodule_desc": "Bloque MAP: miniraw, shade_map, 4cmap, histmap, summap, out_opd_cc, out_opd_ec",
+   "refs": [
+    {
+     "site": "0x439ee8cc",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439ee932",
+     "func": "0x439ee7e8"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf2d16",
+   "off": 8068374,
+   "text": "[IDT_OPD]: out_opd_ec.adrs Err:%X",
+   "submodule": "bloque_MAP",
+   "submodule_desc": "Bloque MAP: miniraw, shade_map, 4cmap, histmap, summap, out_opd_cc, out_opd_ec",
+   "refs": [
+    {
+     "site": "0x439ecc9e",
+     "func": "0x439ecc4a"
+    },
+    {
+     "site": "0x439ee8ec",
+     "func": "0x439ee7e8"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf2d56",
+   "off": 8068438,
+   "text": "[IDT_OPD]: offset Err:%d",
+   "submodule": "geometria_MAP",
+   "submodule_desc": "Geometría del bloque MAP: offset, imgwidth, imgheight, imgaddnum, aspect, x_size, y_size, x.sel, y.sel, x.span, y.span",
+   "refs": [
+    {
+     "site": "0x439eaf3e",
+     "func": "0x439eaecc"
+    },
+    {
+     "site": "0x439ee932",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439ee96a",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439ee9a6",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439ee9f6",
+     "func": "0x439ee7e8"
+    }
+   ],
+   "n_refs": 5
+  },
+  {
+   "vaddr": "0x43cf2d84",
+   "off": 8068484,
+   "text": "[IDT_OPD]: imgwidth Err:%d",
+   "submodule": "geometria_MAP",
+   "submodule_desc": "Geometría del bloque MAP: offset, imgwidth, imgheight, imgaddnum, aspect, x_size, y_size, x.sel, y.sel, x.span, y.span",
+   "refs": [
+    {
+     "site": "0x439ee94e",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439ee9c2",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439eea12",
+     "func": "0x439ee7e8"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf2db6",
+   "off": 8068534,
+   "text": "[IDT_OPD]: imgheight Err:%d",
+   "submodule": "geometria_MAP",
+   "submodule_desc": "Geometría del bloque MAP: offset, imgwidth, imgheight, imgaddnum, aspect, x_size, y_size, x.sel, y.sel, x.span, y.span",
+   "refs": [
+    {
+     "site": "0x439ed0fc",
+     "func": "0x439ecd62"
+    },
+    {
+     "site": "0x439ee96a",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439eea12",
+     "func": "0x439ee7e8"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf2dea",
+   "off": 8068586,
+   "text": "[IDT_OPD]: imgaddnum Err:%d",
+   "submodule": "geometria_MAP",
+   "submodule_desc": "Geometría del bloque MAP: offset, imgwidth, imgheight, imgaddnum, aspect, x_size, y_size, x.sel, y.sel, x.span, y.span",
+   "refs": [
+    {
+     "site": "0x439eea12",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439eea42",
+     "func": "0x439ee7e8"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf2e1e",
+   "off": 8068638,
+   "text": "[IDT_OPD]: aspect Err:%d",
+   "submodule": "geometria_MAP",
+   "submodule_desc": "Geometría del bloque MAP: offset, imgwidth, imgheight, imgaddnum, aspect, x_size, y_size, x.sel, y.sel, x.span, y.span",
+   "refs": [
+    {
+     "site": "0x439eea74",
+     "func": "0x439ee7e8"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf2e4c",
+   "off": 8068684,
+   "text": "[IDT_OPD]: x_size Err:%d",
+   "submodule": "geometria_MAP",
+   "submodule_desc": "Geometría del bloque MAP: offset, imgwidth, imgheight, imgaddnum, aspect, x_size, y_size, x.sel, y.sel, x.span, y.span",
+   "refs": [
+    {
+     "site": "0x439eea42",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439eea74",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439eeaae",
+     "func": "0x439ee7e8"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf2e7a",
+   "off": 8068730,
+   "text": "[IDT_OPD]: y_size Err:%d",
+   "submodule": "geometria_MAP",
+   "submodule_desc": "Geometría del bloque MAP: offset, imgwidth, imgheight, imgaddnum, aspect, x_size, y_size, x.sel, y.sel, x.span, y.span",
+   "refs": [
+    {
+     "site": "0x439eea1c",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439eea74",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439eeaae",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439eeaea",
+     "func": "0x439ee7e8"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf2ea8",
+   "off": 8068776,
+   "text": "[IDT_OPD]: x.sel Err:%d",
+   "submodule": "geometria_MAP",
+   "submodule_desc": "Geometría del bloque MAP: offset, imgwidth, imgheight, imgaddnum, aspect, x_size, y_size, x.sel, y.sel, x.span, y.span",
+   "refs": [
+    {
+     "site": "0x439eeb24",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439eeb88",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439eebea",
+     "func": "0x439ee7e8"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf2ed4",
+   "off": 8068820,
+   "text": "[IDT_OPD]: y.sel Err:%d",
+   "submodule": "geometria_MAP",
+   "submodule_desc": "Geometría del bloque MAP: offset, imgwidth, imgheight, imgaddnum, aspect, x_size, y_size, x.sel, y.sel, x.span, y.span",
+   "refs": [
+    {
+     "site": "0x439eb0bc",
+     "func": "0x439eb034"
+    },
+    {
+     "site": "0x439ece1e",
+     "func": "0x439ecd62"
+    },
+    {
+     "site": "0x439eea7e",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439eeb24",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439eeb40",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439eec50",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439eecb2",
+     "func": "0x439ee7e8"
+    }
+   ],
+   "n_refs": 7
+  },
+  {
+   "vaddr": "0x43cf2f00",
+   "off": 8068864,
+   "text": "[IDT_OPD]: x.span Err:%d",
+   "submodule": "geometria_MAP",
+   "submodule_desc": "Geometría del bloque MAP: offset, imgwidth, imgheight, imgaddnum, aspect, x_size, y_size, x.sel, y.sel, x.span, y.span",
+   "refs": [
+    {
+     "site": "0x439eb162",
+     "func": "0x439eb034"
+    },
+    {
+     "site": "0x439eeba4",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439eec08",
+     "func": "0x439ee7e8"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf2f2e",
+   "off": 8068910,
+   "text": "[IDT_OPD]: y.span Err:%d",
+   "submodule": "geometria_MAP",
+   "submodule_desc": "Geometría del bloque MAP: offset, imgwidth, imgheight, imgaddnum, aspect, x_size, y_size, x.sel, y.sel, x.span, y.span",
+   "refs": [
+    {
+     "site": "0x439eeb24",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439eeba4",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439eec6c",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439eecd0",
+     "func": "0x439ee7e8"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf2f5c",
+   "off": 8068956,
+   "text": "[IDT_OPD]: intn precap Unknown aspect:%d",
+   "submodule": "regiones_integracion",
+   "submodule_desc": "Regiones de integración: intn, intWak, histWak, cwaku y límites de spec",
+   "refs": [
+    {
+     "site": "0x439eeba4",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439eebea",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439ef216",
+     "func": "0x439ef11a"
+    },
+    {
+     "site": "0x439ef2c0",
+     "func": "0x439ef11a"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf2faa",
+   "off": 8069034,
+   "text": "[IDT_OPD]: intWak[%d].x_end Err:%d",
+   "submodule": "regiones_integracion",
+   "submodule_desc": "Regiones de integración: intn, intWak, histWak, cwaku y límites de spec",
+   "refs": [
+    {
+     "site": "0x439eecb2",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439ef5f6",
+     "func": "0x439ef11a"
+    },
+    {
+     "site": "0x439f06a8",
+     "func": "0x439efe10"
+    },
+    {
+     "site": "0x439f0fd2",
+     "func": "0x439f0f30"
+    },
+    {
+     "site": "0x439f1cac",
+     "func": "0x439f11a4"
+    }
+   ],
+   "n_refs": 5
+  },
+  {
+   "vaddr": "0x43cf2fec",
+   "off": 8069100,
+   "text": "[IDT_OPD]: intWak[%d].y_end Err:%d",
+   "submodule": "regiones_integracion",
+   "submodule_desc": "Regiones de integración: intn, intWak, histWak, cwaku y límites de spec",
+   "refs": [
+    {
+     "site": "0x439ed332",
+     "func": "0x439ecd62"
+    },
+    {
+     "site": "0x439eec5a",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439eecbe",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439ef63c",
+     "func": "0x439ef11a"
+    },
+    {
+     "site": "0x439f06f0",
+     "func": "0x439efe10"
+    },
+    {
+     "site": "0x439f1010",
+     "func": "0x439f0f30"
+    },
+    {
+     "site": "0x439f1cf4",
+     "func": "0x439f11a4"
+    }
+   ],
+   "n_refs": 7
+  },
+  {
+   "vaddr": "0x43cf302e",
+   "off": 8069166,
+   "text": "[IDT_OPD]: histWak[%d].x_end Err:%d",
+   "submodule": "regiones_integracion",
+   "submodule_desc": "Regiones de integración: intn, intWak, histWak, cwaku y límites de spec",
+   "refs": [
+    {
+     "site": "0x439eec6c",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439ef946",
+     "func": "0x439ef11a"
+    },
+    {
+     "site": "0x439f09f6",
+     "func": "0x439efe10"
+    },
+    {
+     "site": "0x439f2026",
+     "func": "0x439f11a4"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf3072",
+   "off": 8069234,
+   "text": "[IDT_OPD]: histWak[%d].y_end Err:%d",
+   "submodule": "regiones_integracion",
+   "submodule_desc": "Regiones de integración: intn, intWak, histWak, cwaku y límites de spec",
+   "refs": [
+    {
+     "site": "0x439ef32c",
+     "func": "0x439ef11a"
+    },
+    {
+     "site": "0x439ef98c",
+     "func": "0x439ef11a"
+    },
+    {
+     "site": "0x439f0a26",
+     "func": "0x439efe10"
+    },
+    {
+     "site": "0x439f0a3e",
+     "func": "0x439efe10"
+    },
+    {
+     "site": "0x439f1d7a",
+     "func": "0x439f11a4"
+    },
+    {
+     "site": "0x439f2056",
+     "func": "0x439f11a4"
+    },
+    {
+     "site": "0x439f206e",
+     "func": "0x439f11a4"
+    }
+   ],
+   "n_refs": 7
+  },
+  {
+   "vaddr": "0x43cf30b6",
+   "off": 8069302,
+   "text": "[IDT_OPD]: intn cap Unknown aspect:%d",
+   "submodule": "regiones_integracion",
+   "submodule_desc": "Regiones de integración: intn, intWak, histWak, cwaku y límites de spec",
+   "refs": [
+    {
+     "site": "0x439eec76",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439eff42",
+     "func": "0x439efe10"
+    },
+    {
+     "site": "0x439effea",
+     "func": "0x439efe10"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf30fe",
+   "off": 8069374,
+   "text": "[IDT_OPD]: cwaku[%d].x_end Err:%d",
+   "submodule": "regiones_integracion",
+   "submodule_desc": "Regiones de integración: intn, intWak, histWak, cwaku y límites de spec",
+   "refs": [
+    {
+     "site": "0x439eb360",
+     "func": "0x439eb034"
+    },
+    {
+     "site": "0x439eecb2",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439eecbe",
+     "func": "0x439ee7e8"
+    },
+    {
+     "site": "0x439f0294",
+     "func": "0x439efe10"
+    },
+    {
+     "site": "0x439f17e6",
+     "func": "0x439f11a4"
+    },
+    {
+     "site": "0x439f1e06",
+     "func": "0x439f11a4"
+    }
+   ],
+   "n_refs": 6
+  },
+  {
+   "vaddr": "0x43cf313e",
+   "off": 8069438,
+   "text": "[IDT_OPD]: cwaku[%d].y_end Err:%d",
+   "submodule": "regiones_integracion",
+   "submodule_desc": "Regiones de integración: intn, intWak, histWak, cwaku y límites de spec",
+   "refs": [
+    {
+     "site": "0x439f02dc",
+     "func": "0x439efe10"
+    },
+    {
+     "site": "0x439f182e",
+     "func": "0x439f11a4"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf317e",
+   "off": 8069502,
+   "text": "[IDT_OPD]: Out Of spec yet. int calc with face %d num %d",
+   "submodule": "regiones_integracion",
+   "submodule_desc": "Regiones de integración: intn, intWak, histWak, cwaku y límites de spec",
+   "refs": [
+    {
+     "site": "0x439f0f66",
+     "func": "0x439f0f30"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf31ec",
+   "off": 8069612,
+   "text": "[IDT_OPD]: intn Unknown aspect:%d",
+   "submodule": "regiones_integracion",
+   "submodule_desc": "Regiones de integración: intn, intWak, histWak, cwaku y límites de spec",
+   "refs": [
+    {
+     "site": "0x439f13c4",
+     "func": "0x439f11a4"
+    },
+    {
+     "site": "0x439f14c4",
+     "func": "0x439f11a4"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf322c",
+   "off": 8069676,
+   "text": "[IDT_OPD]: CC syncflg set error",
+   "submodule": "sync_y_4cmap",
+   "submodule_desc": "Sincronización CC/EC (syncflg) y error de aspecto del 4cmap",
+   "refs": [
+    {
+     "site": "0x439f1b3a",
+     "func": "0x439f11a4"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf3268",
+   "off": 8069736,
+   "text": "[IDT_OPD]: EC syncflg set error",
+   "submodule": "sync_y_4cmap",
+   "submodule_desc": "Sincronización CC/EC (syncflg) y error de aspecto del 4cmap",
+   "refs": [
+    {
+     "site": "0x439f2250",
+     "func": "0x439f11a4"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf32a4",
+   "off": 8069796,
+   "text": "[IDT_OPD]: 4cmap aspect error!",
+   "submodule": "sync_y_4cmap",
+   "submodule_desc": "Sincronización CC/EC (syncflg) y error de aspecto del 4cmap",
+   "refs": [
+    {
+     "site": "0x439f2782",
+     "func": "0x439f2768"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf3306",
+   "off": 8069894,
+   "text": "[IDT_OPD]: GetIDTSA Unknown aspect:%d",
+   "submodule": "IDTSA",
+   "submodule_desc": "Captura partida: GetIDTSA, cálculo de SplitIDTSA, Invalid Ch select",
+   "refs": [
+    {
+     "site": "0x439f15de",
+     "func": "0x439f11a4"
+    },
+    {
+     "site": "0x439f3624",
+     "func": "0x439f35f8"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf334e",
+   "off": 8069966,
+   "text": "[IDT_OPD]: AF AE x %d %d %d %d %x",
+   "submodule": "IDTSA",
+   "submodule_desc": "Captura partida: GetIDTSA, cálculo de SplitIDTSA, Invalid Ch select",
+   "refs": [
+    {
+     "site": "0x439f37ba",
+     "func": "0x439f3648"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf338e",
+   "off": 8070030,
+   "text": "[IDT_OPD]: AF AE y %d %d %d %d %x",
+   "submodule": "IDTSA",
+   "submodule_desc": "Captura partida: GetIDTSA, cálculo de SplitIDTSA, Invalid Ch select",
+   "refs": [
+    {
+     "site": "0x439f37f0",
+     "func": "0x439f3648"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf33ce",
+   "off": 8070094,
+   "text": "[IDT_OPD]: calc_inv2 0div %d %d ",
+   "submodule": "IDTSA",
+   "submodule_desc": "Captura partida: GetIDTSA, cálculo de SplitIDTSA, Invalid Ch select",
+   "refs": [
+    {
+     "site": "0x439eab0a",
+     "func": "0x439ea4ac"
+    },
+    {
+     "site": "0x439f13f2",
+     "func": "0x439f11a4"
+    },
+    {
+     "site": "0x439f39d4",
+     "func": "0x439f38fc"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf340c",
+   "off": 8070156,
+   "text": "[IDT_OPD]: next is NULL ",
+   "submodule": "IDTSA",
+   "submodule_desc": "Captura partida: GetIDTSA, cálculo de SplitIDTSA, Invalid Ch select",
+   "refs": [
+    {
+     "site": "0x439f1d04",
+     "func": "0x439f11a4"
+    },
+    {
+     "site": "0x439f39f2",
+     "func": "0x439f38fc"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf343a",
+   "off": 8070202,
+   "text": "[IDT_OPD]: calc_inv 0div %d %d %d %d",
+   "submodule": "IDTSA",
+   "submodule_desc": "Captura partida: GetIDTSA, cálculo de SplitIDTSA, Invalid Ch select",
+   "refs": [
+    {
+     "site": "0x439f145e",
+     "func": "0x439f11a4"
+    },
+    {
+     "site": "0x439f3a22",
+     "func": "0x439f38fc"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf3480",
+   "off": 8070272,
+   "text": "[IDT_OPD]: Split Coordinate: Async invalid.",
+   "submodule": "IDTSA",
+   "submodule_desc": "Captura partida: GetIDTSA, cálculo de SplitIDTSA, Invalid Ch select",
+   "refs": [
+    {
+     "site": "0x439ed848",
+     "func": "0x439ed77e"
+    },
+    {
+     "site": "0x439f470c",
+     "func": "0x439f46f0"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf34d4",
+   "off": 8070356,
+   "text": "[IDT_OPD]: calc SplitIDTSA error %d %d %d %d %d %d.",
+   "submodule": "IDTSA",
+   "submodule_desc": "Captura partida: GetIDTSA, cálculo de SplitIDTSA, Invalid Ch select",
+   "refs": [
+    {
+     "site": "0x439ef216",
+     "func": "0x439ef11a"
+    },
+    {
+     "site": "0x439f4780",
+     "func": "0x439f46f0"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf3538",
+   "off": 8070456,
+   "text": "[IDT_OPD]: IDTSA Invalid Ch select. %d %d",
+   "submodule": "IDTSA",
+   "submodule_desc": "Captura partida: GetIDTSA, cálculo de SplitIDTSA, Invalid Ch select",
+   "refs": [
+    {
+     "site": "0x439efe50",
+     "func": "0x439efe10"
+    },
+    {
+     "site": "0x439f4a00",
+     "func": "0x439f4940"
+    },
+    {
+     "site": "0x439f4a26",
+     "func": "0x439f4940"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf3588",
+   "off": 8070536,
+   "text": "[IDT_OPD]: Invlid distortion area",
+   "submodule": "FRM_sync_async",
+   "submodule_desc": "Tamaños de lectura FRM en modo síncrono (sync) y asíncrono (async)",
+   "refs": [
+    {
+     "site": "0x439ed510",
+     "func": "0x439ed48c"
+    },
+    {
+     "site": "0x439f3b8e",
+     "func": "0x439f3a88"
+    },
+    {
+     "site": "0x439f4a32",
+     "func": "0x439f4940"
+    },
+    {
+     "site": "0x439f4d72",
+     "func": "0x439f4c30"
+    },
+    {
+     "site": "0x439f4d92",
+     "func": "0x439f4c30"
+    },
+    {
+     "site": "0x439f4dba",
+     "func": "0x439f4c30"
+    },
+    {
+     "site": "0x439f4de2",
+     "func": "0x439f4c30"
+    }
+   ],
+   "n_refs": 7
+  },
+  {
+   "vaddr": "0x43cf35c8",
+   "off": 8070600,
+   "text": "[IDT_OPD]: Out of Spec:sync FRM_mode: %d %d",
+   "submodule": "FRM_sync_async",
+   "submodule_desc": "Tamaños de lectura FRM en modo síncrono (sync) y asíncrono (async)",
+   "refs": [
+    {
+     "site": "0x439eb82c",
+     "func": "0x439eb79a"
+    },
+    {
+     "site": "0x439f4e22",
+     "func": "0x439f4c30"
+    },
+    {
+     "site": "0x439f5ce0",
+     "func": "0x439f5c30"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf361c",
+   "off": 8070684,
+   "text": "[IDT_OPD]: sync FRM size h 0ch: %d %d",
+   "submodule": "FRM_sync_async",
+   "submodule_desc": "Tamaños de lectura FRM en modo síncrono (sync) y asíncrono (async)",
+   "refs": [
+    {
+     "site": "0x439f3c22",
+     "func": "0x439f3c1e"
+    },
+    {
+     "site": "0x439f4e06",
+     "func": "0x439f4c30"
+    },
+    {
+     "site": "0x439f5d26",
+     "func": "0x439f5c30"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf3664",
+   "off": 8070756,
+   "text": "[IDT_OPD]: sync FRM size h 1ch: %d %d",
+   "submodule": "FRM_sync_async",
+   "submodule_desc": "Tamaños de lectura FRM en modo síncrono (sync) y asíncrono (async)",
+   "refs": [
+    {
+     "site": "0x439f5d52",
+     "func": "0x439f5c30"
+    },
+    {
+     "site": "0x439f5d5c",
+     "func": "0x439f5c30"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf36ac",
+   "off": 8070828,
+   "text": "[IDT_OPD]: sync FRM size v: %d %d",
+   "submodule": "FRM_sync_async",
+   "submodule_desc": "Tamaños de lectura FRM en modo síncrono (sync) y asíncrono (async)",
+   "refs": [
+    {
+     "site": "0x439f26a4",
+     "func": "0x439f11a4"
+    },
+    {
+     "site": "0x439f3cb2",
+     "func": "0x439f3c1e"
+    },
+    {
+     "site": "0x439f5d7e",
+     "func": "0x439f5c30"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf36ec",
+   "off": 8070892,
+   "text": "[IDT_OPD]: Out of Spec:async FRM_mode: %d %d",
+   "submodule": "FRM_sync_async",
+   "submodule_desc": "Tamaños de lectura FRM en modo síncrono (sync) y asíncrono (async)",
+   "refs": [
+    {
+     "site": "0x439f4f46",
+     "func": "0x439f4ef0"
+    },
+    {
+     "site": "0x439f5ea4",
+     "func": "0x439f5e04"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf3742",
+   "off": 8070978,
+   "text": "[IDT_OPD]: async FRM size h 0ch: %d %d",
+   "submodule": "FRM_sync_async",
+   "submodule_desc": "Tamaños de lectura FRM en modo síncrono (sync) y asíncrono (async)",
+   "refs": [
+    {
+     "site": "0x439f5eea",
+     "func": "0x439f5e04"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf378c",
+   "off": 8071052,
+   "text": "[IDT_OPD]: async FRM size h 1ch: %d %d",
+   "submodule": "FRM_sync_async",
+   "submodule_desc": "Tamaños de lectura FRM en modo síncrono (sync) y asíncrono (async)",
+   "refs": [
+    {
+     "site": "0x439f4fa4",
+     "func": "0x439f4ef0"
+    },
+    {
+     "site": "0x439f5ea4",
+     "func": "0x439f5e04"
+    },
+    {
+     "site": "0x439f5f16",
+     "func": "0x439f5e04"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf37d6",
+   "off": 8071126,
+   "text": "[IDT_OPD]: async FRM size v: %d %d",
+   "submodule": "DET_HIST_CAE_GLE",
+   "submodule_desc": "DET / HIST / CAE / GLE: tamaños, bloques y puntos finales de las regiones de análisis",
+   "refs": [
+    {
+     "site": "0x439f15be",
+     "func": "0x439f11a4"
+    },
+    {
+     "site": "0x439f5f42",
+     "func": "0x439f5e04"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf3818",
+   "off": 8071192,
+   "text": "[IDT_OPD]: unknown vatr aspect %d",
+   "submodule": "DET_HIST_CAE_GLE",
+   "submodule_desc": "DET / HIST / CAE / GLE: tamaños, bloques y puntos finales de las regiones de análisis",
+   "refs": [
+    {
+     "site": "0x439edb60",
+     "func": "0x439ed950"
+    },
+    {
+     "site": "0x439f5eea",
+     "func": "0x439f5e04"
+    },
+    {
+     "site": "0x439f60c6",
+     "func": "0x439f609e"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf3858",
+   "off": 8071256,
+   "text": "[IDT_OPD]: DET x-size over %d %d",
+   "submodule": "DET_HIST_CAE_GLE",
+   "submodule_desc": "DET / HIST / CAE / GLE: tamaños, bloques y puntos finales de las regiones de análisis",
+   "refs": [
+    {
+     "site": "0x439f5f50",
+     "func": "0x439f5e04"
+    },
+    {
+     "site": "0x439f6148",
+     "func": "0x439f6104"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf3896",
+   "off": 8071318,
+   "text": "[IDT_OPD]: DET y-size over %d %d",
+   "submodule": "DET_HIST_CAE_GLE",
+   "submodule_desc": "DET / HIST / CAE / GLE: tamaños, bloques y puntos finales de las regiones de análisis",
+   "refs": [
+    {
+     "site": "0x439f6188",
+     "func": "0x439f6104"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf38d4",
+   "off": 8071380,
+   "text": "[IDT_OPD]: HIST x size not enough %d",
+   "submodule": "DET_HIST_CAE_GLE",
+   "submodule_desc": "DET / HIST / CAE / GLE: tamaños, bloques y puntos finales de las regiones de análisis",
+   "refs": [
+    {
+     "site": "0x439f3ebc",
+     "func": "0x439f3eb8"
+    },
+    {
+     "site": "0x439f61c8",
+     "func": "0x439f6104"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf391a",
+   "off": 8071450,
+   "text": "[IDT_OPD]: HIST y size not enough %d",
+   "submodule": "DET_HIST_CAE_GLE",
+   "submodule_desc": "DET / HIST / CAE / GLE: tamaños, bloques y puntos finales de las regiones de análisis",
+   "refs": [
+    {
+     "site": "0x439f4de2",
+     "func": "0x439f4c30"
+    },
+    {
+     "site": "0x439f4dea",
+     "func": "0x439f4c30"
+    },
+    {
+     "site": "0x439f61c8",
+     "func": "0x439f6104"
+    },
+    {
+     "site": "0x439f620c",
+     "func": "0x439f6104"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf3960",
+   "off": 8071520,
+   "text": "[IDT_OPD]: CAE x size not enough %d",
+   "submodule": "DET_HIST_CAE_GLE",
+   "submodule_desc": "DET / HIST / CAE / GLE: tamaños, bloques y puntos finales de las regiones de análisis",
+   "refs": [
+    {
+     "site": "0x439f6078",
+     "func": "0x439f5fcc"
+    },
+    {
+     "site": "0x439f6250",
+     "func": "0x439f6104"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf39a4",
+   "off": 8071588,
+   "text": "[IDT_OPD]: CAE y size not enough %d",
+   "submodule": "DET_HIST_CAE_GLE",
+   "submodule_desc": "DET / HIST / CAE / GLE: tamaños, bloques y puntos finales de las regiones de análisis",
+   "refs": [
+    {
+     "site": "0x439f6294",
+     "func": "0x439f6104"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf39e8",
+   "off": 8071656,
+   "text": "[IDT_OPD]: gle x-size error %d",
+   "submodule": "DET_HIST_CAE_GLE",
+   "submodule_desc": "DET / HIST / CAE / GLE: tamaños, bloques y puntos finales de las regiones de análisis",
+   "refs": [
+    {
+     "site": "0x439f3e54",
+     "func": "0x439f3e4c"
+    },
+    {
+     "site": "0x439f6338",
+     "func": "0x439f6304"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf3a22",
+   "off": 8071714,
+   "text": "[IDT_OPD]: gle y-size error %d %d %d",
+   "submodule": "DET_HIST_CAE_GLE",
+   "submodule_desc": "DET / HIST / CAE / GLE: tamaños, bloques y puntos finales de las regiones de análisis",
+   "refs": [
+    {
+     "site": "0x439f6380",
+     "func": "0x439f6304"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf3a68",
+   "off": 8071784,
+   "text": "[IDT_OPD]: gle x-blk-size error %d",
+   "submodule": "DET_HIST_CAE_GLE",
+   "submodule_desc": "DET / HIST / CAE / GLE: tamaños, bloques y puntos finales de las regiones de análisis",
+   "refs": [
+    {
+     "site": "0x439f1c40",
+     "func": "0x439f11a4"
+    },
+    {
+     "site": "0x439f61f2",
+     "func": "0x439f6104"
+    },
+    {
+     "site": "0x439f63c0",
+     "func": "0x439f6304"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf3aaa",
+   "off": 8071850,
+   "text": "[IDT_OPD]: gle y-blk-size error %d",
+   "submodule": "DET_HIST_CAE_GLE",
+   "submodule_desc": "DET / HIST / CAE / GLE: tamaños, bloques y puntos finales de las regiones de análisis",
+   "refs": [
+    {
+     "site": "0x439f27b2",
+     "func": "0x439f2768"
+    },
+    {
+     "site": "0x439f6198",
+     "func": "0x439f6104"
+    },
+    {
+     "site": "0x439f63f6",
+     "func": "0x439f6304"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf3aec",
+   "off": 8071916,
+   "text": "[IDT_OPD]: gle org error x:%d y:%d",
+   "submodule": "DET_HIST_CAE_GLE",
+   "submodule_desc": "DET / HIST / CAE / GLE: tamaños, bloques y puntos finales de las regiones de análisis",
+   "refs": [
+    {
+     "site": "0x439f6294",
+     "func": "0x439f6104"
+    },
+    {
+     "site": "0x439f63dc",
+     "func": "0x439f6304"
+    },
+    {
+     "site": "0x439f6430",
+     "func": "0x439f6304"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf3b2e",
+   "off": 8071982,
+   "text": "[IDT_OPD]: gle x-end-point error %d",
+   "submodule": "DET_HIST_CAE_GLE",
+   "submodule_desc": "DET / HIST / CAE / GLE: tamaños, bloques y puntos finales de las regiones de análisis",
+   "refs": [
+    {
+     "site": "0x439f1e06",
+     "func": "0x439f11a4"
+    },
+    {
+     "site": "0x439f4d9a",
+     "func": "0x439f4c30"
+    },
+    {
+     "site": "0x439f4dba",
+     "func": "0x439f4c30"
+    },
+    {
+     "site": "0x439f63dc",
+     "func": "0x439f6304"
+    },
+    {
+     "site": "0x439f646e",
+     "func": "0x439f6304"
+    }
+   ],
+   "n_refs": 5
+  },
+  {
+   "vaddr": "0x43cf3b72",
+   "off": 8072050,
+   "text": "[IDT_OPD]: gle y-end-point error %d",
+   "submodule": "DET_HIST_CAE_GLE",
+   "submodule_desc": "DET / HIST / CAE / GLE: tamaños, bloques y puntos finales de las regiones de análisis",
+   "refs": [
+    {
+     "site": "0x439f64b4",
+     "func": "0x439f6304"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf3bb6",
+   "off": 8072118,
+   "text": "[IDT_OPD]: Det1 %d %d %d %d %d",
+   "submodule": "DET_HIST_CAE_GLE",
+   "submodule_desc": "DET / HIST / CAE / GLE: tamaños, bloques y puntos finales de las regiones de análisis",
+   "refs": [
+    {
+     "site": "0x439f6606",
+     "func": "0x439f65e2"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf3bf0",
+   "off": 8072176,
+   "text": "[IDT_OPD]: Det2 %d %d %d %d in %d %d",
+   "submodule": "DET_HIST_CAE_GLE",
+   "submodule_desc": "DET / HIST / CAE / GLE: tamaños, bloques y puntos finales de las regiones de análisis",
+   "refs": [
+    {
+     "site": "0x439f41f6",
+     "func": "0x439f4110"
+    },
+    {
+     "site": "0x439f663e",
+     "func": "0x439f65e2"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf3c36",
+   "off": 8072246,
+   "text": "[IDT_OPD]: Gle1 %d %d %d %d %d %d",
+   "submodule": "DET_HIST_CAE_GLE",
+   "submodule_desc": "DET / HIST / CAE / GLE: tamaños, bloques y puntos finales de las regiones de análisis",
+   "refs": [
+    {
+     "site": "0x439f63c0",
+     "func": "0x439f6304"
+    },
+    {
+     "site": "0x439f669c",
+     "func": "0x439f6672"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf3c76",
+   "off": 8072310,
+   "text": "[IDT_OPD]: Gle2 %d %d %d %d in %d %d",
+   "submodule": "DET_HIST_CAE_GLE",
+   "submodule_desc": "DET / HIST / CAE / GLE: tamaños, bloques y puntos finales de las regiones de análisis",
+   "refs": [
+    {
+     "site": "0x439f40e2",
+     "func": "0x439f4070"
+    },
+    {
+     "site": "0x439f425e",
+     "func": "0x439f4208"
+    },
+    {
+     "site": "0x439f6380",
+     "func": "0x439f6304"
+    },
+    {
+     "site": "0x439f66ec",
+     "func": "0x439f6672"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf3cbc",
+   "off": 8072380,
+   "text": "[IDT_OPD]: HIST min:%x max:%x idat:%x cnt:%x ",
+   "submodule": "DET_HIST_CAE_GLE",
+   "submodule_desc": "DET / HIST / CAE / GLE: tamaños, bloques y puntos finales de las regiones de análisis",
+   "refs": [
+    {
+     "site": "0x439f674a",
+     "func": "0x439f671c"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf3d14",
+   "off": 8072468,
+   "text": "[IDT_OPD]: CAE cnt_h:%x i2dat_h:%x idat_h:%x cnt_l:%x i2dat_l:%x idat_l:%x ",
+   "submodule": "DET_HIST_CAE_GLE",
+   "submodule_desc": "DET / HIST / CAE / GLE: tamaños, bloques y puntos finales de las regiones de análisis",
+   "refs": [
+    {
+     "site": "0x439f6606",
+     "func": "0x439f65e2"
+    },
+    {
+     "site": "0x439f678c",
+     "func": "0x439f671c"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf3da8",
+   "off": 8072616,
+   "text": "[IDT_OPD]: total:%dx%d rcout:xs:%d xe:%d ys:%d ye:%d ",
+   "submodule": "DET_HIST_CAE_GLE",
+   "submodule_desc": "DET / HIST / CAE / GLE: tamaños, bloques y puntos finales de las regiones de análisis",
+   "refs": [
+    {
+     "site": "0x439f4214",
+     "func": "0x439f4208"
+    },
+    {
+     "site": "0x439f669c",
+     "func": "0x439f6672"
+    },
+    {
+     "site": "0x439f66ec",
+     "func": "0x439f6672"
+    },
+    {
+     "site": "0x439f68b6",
+     "func": "0x439f67c4"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf3e10",
+   "off": 8072720,
+   "text": "[IDT_OPD]: det:xs:%d xe:%d ys:%d ye:%d ",
+   "submodule": "DET_HIST_CAE_GLE",
+   "submodule_desc": "DET / HIST / CAE / GLE: tamaños, bloques y puntos finales de las regiones de análisis",
+   "refs": [
+    {
+     "site": "0x439f52fe",
+     "func": "0x439f5290"
+    },
+    {
+     "site": "0x439f68f6",
+     "func": "0x439f67c4"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf3e5c",
+   "off": 8072796,
+   "text": "[IDT_OPD]: det x_size  %d %d",
+   "submodule": "DET_HIST_CAE_GLE",
+   "submodule_desc": "DET / HIST / CAE / GLE: tamaños, bloques y puntos finales de las regiones de análisis",
+   "refs": [
+    {
+     "site": "0x439f6954",
+     "func": "0x439f67c4"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf3e92",
+   "off": 8072850,
+   "text": "[IDT_OPD]: det y_size  %d %d",
+   "submodule": "DET_HIST_CAE_GLE",
+   "submodule_desc": "DET / HIST / CAE / GLE: tamaños, bloques y puntos finales de las regiones de análisis",
+   "refs": [
+    {
+     "site": "0x439f2056",
+     "func": "0x439f11a4"
+    },
+    {
+     "site": "0x439f67d2",
+     "func": "0x439f67c4"
+    },
+    {
+     "site": "0x439f695e",
+     "func": "0x439f67c4"
+    },
+    {
+     "site": "0x439f69a2",
+     "func": "0x439f67c4"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf3ec8",
+   "off": 8072904,
+   "text": "[IDT_OPD]: VATR Error det:%x gle:%x",
+   "submodule": "VATR",
+   "submodule_desc": "VATR: detector de varianza (det, gle, tamaño, modo, RAW size)",
+   "refs": [
+    {
+     "site": "0x439f6a38",
+     "func": "0x439f67c4"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf3f0c",
+   "off": 8072972,
+   "text": "[IDT_OPD]: VATR vld:%d xs:%f ys:%f xw:%f yw:%f",
+   "submodule": "VATR",
+   "submodule_desc": "VATR: detector de varianza (det, gle, tamaño, modo, RAW size)",
+   "refs": [
+    {
+     "site": "0x439f6b4c",
+     "func": "0x439f67c4"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf3f66",
+   "off": 8073062,
+   "text": "[IDT_OPD]: VATR width not 8n or height not 2n: %d %d",
+   "submodule": "VATR",
+   "submodule_desc": "VATR: detector de varianza (det, gle, tamaño, modo, RAW size)",
+   "refs": [
+    {
+     "site": "0x439f3444",
+     "func": "0x439f3386"
+    },
+    {
+     "site": "0x439f456c",
+     "func": "0x439f456a"
+    },
+    {
+     "site": "0x439f68b6",
+     "func": "0x439f67c4"
+    },
+    {
+     "site": "0x439f7426",
+     "func": "0x439f73cc"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf3fcc",
+   "off": 8073164,
+   "text": "[IDT_OPD]: VATR size error: %d %d",
+   "submodule": "VATR",
+   "submodule_desc": "VATR: detector de varianza (det, gle, tamaño, modo, RAW size)",
+   "refs": [
+    {
+     "site": "0x439f7460",
+     "func": "0x439f73cc"
+    },
+    {
+     "site": "0x439f748c",
+     "func": "0x439f73cc"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf400c",
+   "off": 8073228,
+   "text": "[IDT_OPD]: VATR unknown rate %d",
+   "submodule": "VATR",
+   "submodule_desc": "VATR: detector de varianza (det, gle, tamaño, modo, RAW size)",
+   "refs": [
+    {
+     "site": "0x439f66fa",
+     "func": "0x439f6672"
+    },
+    {
+     "site": "0x439f7572",
+     "func": "0x439f73cc"
+    },
+    {
+     "site": "0x439f766c",
+     "func": "0x439f73cc"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf4048",
+   "off": 8073288,
+   "text": "[IDT_OPD]: VATR RAW size error: %d %d",
+   "submodule": "VATR",
+   "submodule_desc": "VATR: detector de varianza (det, gle, tamaño, modo, RAW size)",
+   "refs": [
+    {
+     "site": "0x439f462e",
+     "func": "0x439f45c0"
+    },
+    {
+     "site": "0x439f67d2",
+     "func": "0x439f67c4"
+    },
+    {
+     "site": "0x439f68f6",
+     "func": "0x439f67c4"
+    },
+    {
+     "site": "0x439f76d4",
+     "func": "0x439f73cc"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf4090",
+   "off": 8073360,
+   "text": "[IDT_OPD]: EndMode: Invalid PreLight set.",
+   "submodule": "miniRAW_y_debug",
+   "submodule_desc": "miniRAW (dirección, tamaño) y extracción de información de depuración",
+   "refs": [
+    {
+     "site": "0x439f77d0",
+     "func": "0x439f7778"
+    },
+    {
+     "site": "0x439f788c",
+     "func": "0x439f786e"
+    },
+    {
+     "site": "0x439f78c8",
+     "func": "0x439f786e"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf40e0",
+   "off": 8073440,
+   "text": "[IDT_OPD]: miniRAW Addr  : %08x",
+   "submodule": "miniRAW_y_debug",
+   "submodule_desc": "miniRAW (dirección, tamaño) y extracción de información de depuración",
+   "refs": [
+    {
+     "site": "0x439f679e",
+     "func": "0x439f671c"
+    },
+    {
+     "site": "0x439f6a38",
+     "func": "0x439f67c4"
+    },
+    {
+     "site": "0x439f7b88",
+     "func": "0x439f7b56"
+    },
+    {
+     "site": "0x439f7cfc",
+     "func": "0x439f7cca"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf411c",
+   "off": 8073500,
+   "text": "[IDT_OPD]: width : %d  ",
+   "submodule": "miniRAW_y_debug",
+   "submodule_desc": "miniRAW (dirección, tamaño) y extracción de información de depuración",
+   "refs": [
+    {
+     "site": "0x439f6a48",
+     "func": "0x439f67c4"
+    },
+    {
+     "site": "0x439f7ba0",
+     "func": "0x439f7b56"
+    },
+    {
+     "site": "0x439f7d14",
+     "func": "0x439f7cca"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf4148",
+   "off": 8073544,
+   "text": "[IDT_OPD]: height: %d  ",
+   "submodule": "miniRAW_y_debug",
+   "submodule_desc": "miniRAW (dirección, tamaño) y extracción de información de depuración",
+   "refs": [
+    {
+     "site": "0x439f6a38",
+     "func": "0x439f67c4"
+    },
+    {
+     "site": "0x439f7bba",
+     "func": "0x439f7b56"
+    },
+    {
+     "site": "0x439f7d2e",
+     "func": "0x439f7cca"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf4174",
+   "off": 8073588,
+   "text": "[IDT_OPD]: DebugGetInfo extraction failed!!",
+   "submodule": "miniRAW_y_debug",
+   "submodule_desc": "miniRAW (dirección, tamaño) y extracción de información de depuración",
+   "refs": [
+    {
+     "site": "0x439f315c",
+     "func": "0x439f30d0"
+    },
+    {
+     "site": "0x439f7c8a",
+     "func": "0x439f7c1c"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf41c8",
+   "off": 8073672,
+   "text": "[IDT_OPD]: CC EC Result Addr  : %08x",
+   "submodule": "miniRAW_y_debug",
+   "submodule_desc": "miniRAW (dirección, tamaño) y extracción de información de depuración",
+   "refs": [
+    {
+     "site": "0x439f31b0",
+     "func": "0x439f30d0"
+    },
+    {
+     "site": "0x439f68b6",
+     "func": "0x439f67c4"
+    },
+    {
+     "site": "0x439f7dec",
+     "func": "0x439f7d92"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf420e",
+   "off": 8073742,
+   "text": "[IDT_OPD]: size: %d  ",
+   "submodule": "miniRAW_y_debug",
+   "submodule_desc": "miniRAW (dirección, tamaño) y extracción de información de depuración",
+   "refs": [
+    {
+     "site": "0x439f7dfc",
+     "func": "0x439f7d92"
+    },
+    {
+     "site": "0x439f7e08",
+     "func": "0x439f7d92"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf4251",
+   "off": 8073809,
+   "text": "[IDT_OPD]: DebugInfo extraction failed!!",
+   "submodule": "miniRAW_y_debug",
+   "submodule_desc": "miniRAW (dirección, tamaño) y extracción de información de depuración",
+   "refs": [
+    {
+     "site": "0x439f7e42",
+     "func": "0x439f7d92"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf431d",
+   "off": 8074013,
+   "text": "[IDT_OPD]: FRM rate NG %d %d %d",
+   "submodule": "tasas_y_AF_param",
+   "submodule_desc": "Tasas: FRM rate, FOPD rate, parámetros de AF (pix/clk)",
+   "refs": [
+    {
+     "site": "0x439f8196",
+     "func": "0x439f8164"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf4359",
+   "off": 8074073,
+   "text": "[IDT_OPD]: FOPD_rate is not correct! %d",
+   "submodule": "tasas_y_AF_param",
+   "submodule_desc": "Tasas: FRM rate, FOPD rate, parámetros de AF (pix/clk)",
+   "refs": [
+    {
+     "site": "0x439f8304",
+     "func": "0x439f82ec"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf43a5",
+   "off": 8074149,
+   "text": "[IDT_OPD]: Invalid AF_pix/clk!%d",
+   "submodule": "tasas_y_AF_param",
+   "submodule_desc": "Tasas: FRM rate, FOPD rate, parámetros de AF (pix/clk)",
+   "refs": [
+    {
+     "site": "0x439f8342",
+     "func": "0x439f832a"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf43e3",
+   "off": 8074211,
+   "text": "[IDT_OPD]: AF or RDRAW can't work 8pix/clk %d",
+   "submodule": "tasas_y_AF_param",
+   "submodule_desc": "Tasas: FRM rate, FOPD rate, parámetros de AF (pix/clk)",
+   "refs": [
+    {
+     "site": "0x439f837e",
+     "func": "0x439f836a"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf443b",
+   "off": 8074299,
+   "text": "[IDT_OPD]: AF_param is not correct! %d %d",
+   "submodule": "tasas_y_AF_param",
+   "submodule_desc": "Tasas: FRM rate, FOPD rate, parámetros de AF (pix/clk)",
+   "refs": [
+    {
+     "site": "0x439f842e",
+     "func": "0x439f836a"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf448b",
+   "off": 8074379,
+   "text": "[IDT_OPD]: AF_forced_param is not correct! %d %d",
+   "submodule": "tasas_y_AF_param",
+   "submodule_desc": "Tasas: FRM rate, FOPD rate, parámetros de AF (pix/clk)",
+   "refs": [
+    {
+     "site": "0x439f8304",
+     "func": "0x439f82ec"
+    },
+    {
+     "site": "0x439f84f8",
+     "func": "0x439f8480"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf44e9",
+   "off": 8074473,
+   "text": "[IDT_OPD]: AF_param is not correct async! %d %d",
+   "submodule": "AF_param_async",
+   "submodule_desc": "Parámetros de AF en modo asíncrono",
+   "refs": [
+    {
+     "site": "0x439f8588",
+     "func": "0x439f8538"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf4545",
+   "off": 8074565,
+   "text": "[IDT_OPD]: 4cmap:%X",
+   "submodule": "volcado_de_punteros",
+   "submodule_desc": "Volcado de los 18 punteros del bloque de mapas (4cmap, hmap, smap, ccout, ecout, shade, input, msain0/1, msaout, ieout, p_img_map, p_backImgData, ie_in, mapRC_in, lc_out, lc_in, refmap)",
+   "refs": [
+    {
+     "site": "0x439f85e6",
+     "func": "0x439f85d4"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf4569",
+   "off": 8074601,
+   "text": "[IDT_OPD]: hmap:%X",
+   "submodule": "volcado_de_punteros",
+   "submodule_desc": "Volcado de los 18 punteros del bloque de mapas (4cmap, hmap, smap, ccout, ecout, shade, input, msain0/1, msaout, ieout, p_img_map, p_backImgData, ie_in, mapRC_in, lc_out, lc_in, refmap)",
+   "refs": [
+    {
+     "site": "0x439f8602",
+     "func": "0x439f85d4"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf458b",
+   "off": 8074635,
+   "text": "[IDT_OPD]: smap:%X",
+   "submodule": "volcado_de_punteros",
+   "submodule_desc": "Volcado de los 18 punteros del bloque de mapas (4cmap, hmap, smap, ccout, ecout, shade, input, msain0/1, msaout, ieout, p_img_map, p_backImgData, ie_in, mapRC_in, lc_out, lc_in, refmap)",
+   "refs": [
+    {
+     "site": "0x439f861e",
+     "func": "0x439f85d4"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf45ad",
+   "off": 8074669,
+   "text": "[IDT_OPD]: ccout:%X",
+   "submodule": "volcado_de_punteros",
+   "submodule_desc": "Volcado de los 18 punteros del bloque de mapas (4cmap, hmap, smap, ccout, ecout, shade, input, msain0/1, msaout, ieout, p_img_map, p_backImgData, ie_in, mapRC_in, lc_out, lc_in, refmap)",
+   "refs": [
+    {
+     "site": "0x439f863a",
+     "func": "0x439f85d4"
+    },
+    {
+     "site": "0x439f8644",
+     "func": "0x439f85d4"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf45d1",
+   "off": 8074705,
+   "text": "[IDT_OPD]: ecout:%X",
+   "submodule": "volcado_de_punteros",
+   "submodule_desc": "Volcado de los 18 punteros del bloque de mapas (4cmap, hmap, smap, ccout, ecout, shade, input, msain0/1, msaout, ieout, p_img_map, p_backImgData, ie_in, mapRC_in, lc_out, lc_in, refmap)",
+   "refs": [
+    {
+     "site": "0x439f8656",
+     "func": "0x439f85d4"
+    },
+    {
+     "site": "0x439f8672",
+     "func": "0x439f85d4"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf45f5",
+   "off": 8074741,
+   "text": "[IDT_OPD]: shade:%X",
+   "submodule": "volcado_de_punteros",
+   "submodule_desc": "Volcado de los 18 punteros del bloque de mapas (4cmap, hmap, smap, ccout, ecout, shade, input, msain0/1, msaout, ieout, p_img_map, p_backImgData, ie_in, mapRC_in, lc_out, lc_in, refmap)",
+   "refs": [
+    {
+     "site": "0x439f8672",
+     "func": "0x439f85d4"
+    },
+    {
+     "site": "0x439f868e",
+     "func": "0x439f85d4"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf4619",
+   "off": 8074777,
+   "text": "[IDT_OPD]: input:%X",
+   "submodule": "volcado_de_punteros",
+   "submodule_desc": "Volcado de los 18 punteros del bloque de mapas (4cmap, hmap, smap, ccout, ecout, shade, input, msain0/1, msaout, ieout, p_img_map, p_backImgData, ie_in, mapRC_in, lc_out, lc_in, refmap)",
+   "refs": [
+    {
+     "site": "0x439f868e",
+     "func": "0x439f85d4"
+    },
+    {
+     "site": "0x439f869c",
+     "func": "0x439f85d4"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf463d",
+   "off": 8074813,
+   "text": "[IDT_OPD]: msain0:%X",
+   "submodule": "volcado_de_punteros",
+   "submodule_desc": "Volcado de los 18 punteros del bloque de mapas (4cmap, hmap, smap, ccout, ecout, shade, input, msain0/1, msaout, ieout, p_img_map, p_backImgData, ie_in, mapRC_in, lc_out, lc_in, refmap)",
+   "refs": [
+    {
+     "site": "0x439f86ae",
+     "func": "0x439f85d4"
+    },
+    {
+     "site": "0x439f86bc",
+     "func": "0x439f85d4"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf4663",
+   "off": 8074851,
+   "text": "[IDT_OPD]: msain1:%X",
+   "submodule": "volcado_de_punteros",
+   "submodule_desc": "Volcado de los 18 punteros del bloque de mapas (4cmap, hmap, smap, ccout, ecout, shade, input, msain0/1, msaout, ieout, p_img_map, p_backImgData, ie_in, mapRC_in, lc_out, lc_in, refmap)",
+   "refs": [
+    {
+     "site": "0x439f85f0",
+     "func": "0x439f85d4"
+    },
+    {
+     "site": "0x439f8656",
+     "func": "0x439f85d4"
+    },
+    {
+     "site": "0x439f86ce",
+     "func": "0x439f85d4"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf4689",
+   "off": 8074889,
+   "text": "[IDT_OPD]: msaout:%X",
+   "submodule": "volcado_de_punteros",
+   "submodule_desc": "Volcado de los 18 punteros del bloque de mapas (4cmap, hmap, smap, ccout, ecout, shade, input, msain0/1, msaout, ieout, p_img_map, p_backImgData, ie_in, mapRC_in, lc_out, lc_in, refmap)",
+   "refs": [
+    {
+     "site": "0x439f86ee",
+     "func": "0x439f85d4"
+    },
+    {
+     "site": "0x439f86fc",
+     "func": "0x439f85d4"
+    },
+    {
+     "site": "0x439f870e",
+     "func": "0x439f85d4"
+    },
+    {
+     "site": "0x439f872a",
+     "func": "0x439f85d4"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf46af",
+   "off": 8074927,
+   "text": "[IDT_OPD]: ieout:%X",
+   "submodule": "volcado_de_punteros",
+   "submodule_desc": "Volcado de los 18 punteros del bloque de mapas (4cmap, hmap, smap, ccout, ecout, shade, input, msain0/1, msaout, ieout, p_img_map, p_backImgData, ie_in, mapRC_in, lc_out, lc_in, refmap)",
+   "refs": [
+    {
+     "site": "0x439f870e",
+     "func": "0x439f85d4"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf46d3",
+   "off": 8074963,
+   "text": "[IDT_OPD]: p_img_map:%X",
+   "submodule": "volcado_de_punteros",
+   "submodule_desc": "Volcado de los 18 punteros del bloque de mapas (4cmap, hmap, smap, ccout, ecout, shade, input, msain0/1, msaout, ieout, p_img_map, p_backImgData, ie_in, mapRC_in, lc_out, lc_in, refmap)",
+   "refs": [
+    {
+     "site": "0x439f854c",
+     "func": "0x439f8538"
+    },
+    {
+     "site": "0x439f8660",
+     "func": "0x439f85d4"
+    },
+    {
+     "site": "0x439f872a",
+     "func": "0x439f85d4"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf46ff",
+   "off": 8075007,
+   "text": "[IDT_OPD]: p_backImgData:%X",
+   "submodule": "volcado_de_punteros",
+   "submodule_desc": "Volcado de los 18 punteros del bloque de mapas (4cmap, hmap, smap, ccout, ecout, shade, input, msain0/1, msaout, ieout, p_img_map, p_backImgData, ie_in, mapRC_in, lc_out, lc_in, refmap)",
+   "refs": [
+    {
+     "site": "0x439f830e",
+     "func": "0x439f82ec"
+    },
+    {
+     "site": "0x439f8746",
+     "func": "0x439f85d4"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf4733",
+   "off": 8075059,
+   "text": "[IDT_OPD]: ie_in:%X",
+   "submodule": "volcado_de_punteros",
+   "submodule_desc": "Volcado de los 18 punteros del bloque de mapas (4cmap, hmap, smap, ccout, ecout, shade, input, msain0/1, msaout, ieout, p_img_map, p_backImgData, ie_in, mapRC_in, lc_out, lc_in, refmap)",
+   "refs": [
+    {
+     "site": "0x439f86ce",
+     "func": "0x439f85d4"
+    },
+    {
+     "site": "0x439f8762",
+     "func": "0x439f85d4"
+    },
+    {
+     "site": "0x439f88fc",
+     "func": "0x439f88e0"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf4757",
+   "off": 8075095,
+   "text": "[IDT_OPD]: mapRC_in:%X",
+   "submodule": "volcado_de_punteros",
+   "submodule_desc": "Volcado de los 18 punteros del bloque de mapas (4cmap, hmap, smap, ccout, ecout, shade, input, msain0/1, msaout, ieout, p_img_map, p_backImgData, ie_in, mapRC_in, lc_out, lc_in, refmap)",
+   "refs": [
+    {
+     "site": "0x439f8782",
+     "func": "0x439f85d4"
+    },
+    {
+     "site": "0x439f87ac",
+     "func": "0x439f85d4"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf4781",
+   "off": 8075137,
+   "text": "[IDT_OPD]: lc_out:%X",
+   "submodule": "volcado_de_punteros",
+   "submodule_desc": "Volcado de los 18 punteros del bloque de mapas (4cmap, hmap, smap, ccout, ecout, shade, input, msain0/1, msaout, ieout, p_img_map, p_backImgData, ie_in, mapRC_in, lc_out, lc_in, refmap)",
+   "refs": [
+    {
+     "site": "0x439f87a2",
+     "func": "0x439f85d4"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf47a7",
+   "off": 8075175,
+   "text": "[IDT_OPD]: lc_in:%X",
+   "submodule": "volcado_de_punteros",
+   "submodule_desc": "Volcado de los 18 punteros del bloque de mapas (4cmap, hmap, smap, ccout, ecout, shade, input, msain0/1, msaout, ieout, p_img_map, p_backImgData, ie_in, mapRC_in, lc_out, lc_in, refmap)",
+   "refs": [
+    {
+     "site": "0x439f8734",
+     "func": "0x439f85d4"
+    },
+    {
+     "site": "0x439f87be",
+     "func": "0x439f85d4"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf47cb",
+   "off": 8075211,
+   "text": "[IDT_OPD]: refmap:%X",
+   "submodule": "volcado_de_punteros",
+   "submodule_desc": "Volcado de los 18 punteros del bloque de mapas (4cmap, hmap, smap, ccout, ecout, shade, input, msain0/1, msaout, ieout, p_img_map, p_backImgData, ie_in, mapRC_in, lc_out, lc_in, refmap)",
+   "refs": [
+    {
+     "site": "0x439f87be",
+     "func": "0x439f85d4"
+    },
+    {
+     "site": "0x439f87de",
+     "func": "0x439f85d4"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf47f1",
+   "off": 8075249,
+   "text": "[IDT_OPD]: SGC must change w %d %d\n",
+   "submodule": "SGC_y_RefMap",
+   "submodule_desc": "SGC (cambio de ganancia) y IE_RefMap nulo / miniRAW sin memoria",
+   "refs": [
+    {
+     "site": "0x439f8d8e",
+     "func": "0x439f8d70"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf4835",
+   "off": 8075317,
+   "text": "[IDT_OPD]: SGC must change h %d %d\n",
+   "submodule": "SGC_y_RefMap",
+   "submodule_desc": "SGC (cambio de ganancia) y IE_RefMap nulo / miniRAW sin memoria",
+   "refs": [
+    {
+     "site": "0x439f869c",
+     "func": "0x439f85d4"
+    },
+    {
+     "site": "0x439f86ae",
+     "func": "0x439f85d4"
+    },
+    {
+     "site": "0x439f87ac",
+     "func": "0x439f85d4"
+    },
+    {
+     "site": "0x439f88b2",
+     "func": "0x439f85d4"
+    },
+    {
+     "site": "0x439f88d6",
+     "func": "0x439f85d4"
+    },
+    {
+     "site": "0x439f8dbc",
+     "func": "0x439f8d70"
+    }
+   ],
+   "n_refs": 6
+  },
+  {
+   "vaddr": "0x43cf4879",
+   "off": 8075385,
+   "text": "[IDT_OPD]: IE_RefMap is NULL",
+   "submodule": "SGC_y_RefMap",
+   "submodule_desc": "SGC (cambio de ganancia) y IE_RefMap nulo / miniRAW sin memoria",
+   "refs": [
+    {
+     "site": "0x439f88ec",
+     "func": "0x439f88e0"
+    },
+    {
+     "site": "0x439f88fe",
+     "func": "0x439f88e0"
+    },
+    {
+     "site": "0x439f90f2",
+     "func": "0x439f8fb0"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf48c9",
+   "off": 8075465,
+   "text": "[IDT_OPD]: Can't Get miniRAW Mem",
+   "submodule": "SGC_y_RefMap",
+   "submodule_desc": "SGC (cambio de ganancia) y IE_RefMap nulo / miniRAW sin memoria",
+   "refs": [
+    {
+     "site": "0x439f9666",
+     "func": "0x439f960c"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf4907",
+   "off": 8075527,
+   "text": "[IDT_OPD]: VATR Mem Get: FW param is NULL!",
+   "submodule": "memoria_VATR",
+   "submodule_desc": "Gestión de memoria del VATR (Get / Release / IsAlloc)",
+   "refs": [
+    {
+     "site": "0x439f9180",
+     "func": "0x439f8fb0"
+    },
+    {
+     "site": "0x439f96be",
+     "func": "0x439f96a0"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf4959",
+   "off": 8075609,
+   "text": "[IDT_OPD]: VATR Mem OK %x",
+   "submodule": "memoria_VATR",
+   "submodule_desc": "Gestión de memoria del VATR (Get / Release / IsAlloc)",
+   "refs": [
+    {
+     "site": "0x439f9708",
+     "func": "0x439f96a0"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf4989",
+   "off": 8075657,
+   "text": "[IDT_OPD]: VATR Mem NG %d",
+   "submodule": "memoria_VATR",
+   "submodule_desc": "Gestión de memoria del VATR (Get / Release / IsAlloc)",
+   "refs": [
+    {
+     "site": "0x439f9726",
+     "func": "0x439f96a0"
+    },
+    {
+     "site": "0x439f974a",
+     "func": "0x439f96a0"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf49b9",
+   "off": 8075705,
+   "text": "[IDT_OPD]: VATR Mem Release OK",
+   "submodule": "memoria_VATR",
+   "submodule_desc": "Gestión de memoria del VATR (Get / Release / IsAlloc)",
+   "refs": [
+    {
+     "site": "0x439f97d8",
+     "func": "0x439f97a4"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf49f3",
+   "off": 8075763,
+   "text": "[IDT_OPD]: VATR Mem Release NG %d",
+   "submodule": "memoria_VATR",
+   "submodule_desc": "Gestión de memoria del VATR (Get / Release / IsAlloc)",
+   "refs": [
+    {
+     "site": "0x439f980e",
+     "func": "0x439f97a4"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf4a33",
+   "off": 8075827,
+   "text": "[IDT_OPD]: VATR IsAlloc: FW param is NULL!",
+   "submodule": "memoria_VATR",
+   "submodule_desc": "Gestión de memoria del VATR (Get / Release / IsAlloc)",
+   "refs": [
+    {
+     "site": "0x439f97f4",
+     "func": "0x439f97a4"
+    },
+    {
+     "site": "0x439f986c",
+     "func": "0x439f9860"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf4a85",
+   "off": 8075909,
+   "text": "[IDT_OPD]: IDT EC_SEM SIG ERR %x\n",
+   "submodule": "semforos",
+   "submodule_desc": "Semáforos: ec_sem, cc_sem, lc_sem, signals y overflow de EC/CC",
+   "refs": [
+    {
+     "site": "0x439f9928",
+     "func": "0x439f9900"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf4ac5",
+   "off": 8075973,
+   "text": "[IDT_OPD]: IDT CC_SEM SIG ERR %x\n",
+   "submodule": "semforos",
+   "submodule_desc": "Semáforos: ec_sem, cc_sem, lc_sem, signals y overflow de EC/CC",
+   "refs": [
+    {
+     "site": "0x439f8b52",
+     "func": "0x439f8a0a"
+    },
+    {
+     "site": "0x439f98c8",
+     "func": "0x439f98b8"
+    },
+    {
+     "site": "0x439f995c",
+     "func": "0x439f9900"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf4b05",
+   "off": 8076037,
+   "text": "[IDT_OPD]: IDT Get ec_sem error %x %d",
+   "submodule": "semforos",
+   "submodule_desc": "Semáforos: ec_sem, cc_sem, lc_sem, signals y overflow de EC/CC",
+   "refs": [
+    {
+     "site": "0x439f999c",
+     "func": "0x439f9900"
+    },
+    {
+     "site": "0x439f99ea",
+     "func": "0x439f999e"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf4b4d",
+   "off": 8076109,
+   "text": "[IDT_OPD]: IDT Get ec_sem time_out %x %d",
+   "submodule": "semforos",
+   "submodule_desc": "Semáforos: ec_sem, cc_sem, lc_sem, signals y overflow de EC/CC",
+   "refs": [
+    {
+     "site": "0x439f8bc2",
+     "func": "0x439f8bbc"
+    },
+    {
+     "site": "0x439f98ec",
+     "func": "0x439f98dc"
+    },
+    {
+     "site": "0x439f9a0a",
+     "func": "0x439f999e"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf4b9b",
+   "off": 8076187,
+   "text": "[IDT_OPD]: IDT Get cc_sem error %x %d",
+   "submodule": "semforos",
+   "submodule_desc": "Semáforos: ec_sem, cc_sem, lc_sem, signals y overflow de EC/CC",
+   "refs": [
+    {
+     "site": "0x439f995c",
+     "func": "0x439f9900"
+    },
+    {
+     "site": "0x439f99ba",
+     "func": "0x439f999e"
+    },
+    {
+     "site": "0x439f9a58",
+     "func": "0x439f999e"
+    },
+    {
+     "site": "0x439f9a7e",
+     "func": "0x439f999e"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf4be3",
+   "off": 8076259,
+   "text": "[IDT_OPD]: IDT Get cc_sem time_out %x %d",
+   "submodule": "semforos",
+   "submodule_desc": "Semáforos: ec_sem, cc_sem, lc_sem, signals y overflow de EC/CC",
+   "refs": [
+    {
+     "site": "0x439f9180",
+     "func": "0x439f8fb0"
+    },
+    {
+     "site": "0x439f9a9e",
+     "func": "0x439f999e"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf4c31",
+   "off": 8076337,
+   "text": "[IDT_OPD]: EC overflow\n",
+   "submodule": "semforos",
+   "submodule_desc": "Semáforos: ec_sem, cc_sem, lc_sem, signals y overflow de EC/CC",
+   "refs": [
+    {
+     "site": "0x439f8c44",
+     "func": "0x439f8bbc"
+    },
+    {
+     "site": "0x439f9a4c",
+     "func": "0x439f999e"
+    },
+    {
+     "site": "0x439f9bca",
+     "func": "0x439f9b70"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf4c5d",
+   "off": 8076381,
+   "text": "[IDT_OPD]: CC overflow\n",
+   "submodule": "semforos",
+   "submodule_desc": "Semáforos: ec_sem, cc_sem, lc_sem, signals y overflow de EC/CC",
+   "refs": [
+    {
+     "site": "0x439f9bf8",
+     "func": "0x439f9b70"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf4c89",
+   "off": 8076425,
+   "text": "[IDT_OPD]: IDT Get lc_sem %x %d",
+   "submodule": "semforos",
+   "submodule_desc": "Semáforos: ec_sem, cc_sem, lc_sem, signals y overflow de EC/CC",
+   "refs": [
+    {
+     "site": "0x439f9a38",
+     "func": "0x439f999e"
+    },
+    {
+     "site": "0x439f9c8e",
+     "func": "0x439f9c36"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf4cc5",
+   "off": 8076485,
+   "text": "[IDT_OPD]: IDT Get lc_sem time_out%x %d",
+   "submodule": "semforos",
+   "submodule_desc": "Semáforos: ec_sem, cc_sem, lc_sem, signals y overflow de EC/CC",
+   "refs": [
+    {
+     "site": "0x439f8cdc",
+     "func": "0x439f8c4e"
+    },
+    {
+     "site": "0x439f9c60",
+     "func": "0x439f9c36"
+    },
+    {
+     "site": "0x439f9cae",
+     "func": "0x439f9c36"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf4d11",
+   "off": 8076561,
+   "text": "[IDT_OPD]: IDT LC_SEM SIG ERR %x\n",
+   "submodule": "semforos",
+   "submodule_desc": "Semáforos: ec_sem, cc_sem, lc_sem, signals y overflow de EC/CC",
+   "refs": [
+    {
+     "site": "0x439f9ac0",
+     "func": "0x439f999e"
+    },
+    {
+     "site": "0x439f9ad2",
+     "func": "0x439f999e"
+    },
+    {
+     "site": "0x439f9d56",
+     "func": "0x439f9d2e"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf4d51",
+   "off": 8076625,
+   "text": "[IDT_OPD]: invalid load_delay:%d",
+   "submodule": "load_delay_y_pixclk",
+   "submodule_desc": "load_delay, límite de pix/clk del VATR, conversión de FOPD rate",
+   "refs": [
+    {
+     "site": "0x439f92d8",
+     "func": "0x439f928c"
+    },
+    {
+     "site": "0x439f9bd2",
+     "func": "0x439f9b70"
+    },
+    {
+     "site": "0x439f9c34",
+     "func": "0x439f9b70"
+    },
+    {
+     "site": "0x439f9d56",
+     "func": "0x439f9d2e"
+    },
+    {
+     "site": "0x439fa0b2",
+     "func": "0x439fa03e"
+    }
+   ],
+   "n_refs": 5
+  },
+  {
+   "vaddr": "0x43cf4d8f",
+   "off": 8076687,
+   "text": "[IDT_OPD]: invalid load_delay old:%d",
+   "submodule": "load_delay_y_pixclk",
+   "submodule_desc": "load_delay, límite de pix/clk del VATR, conversión de FOPD rate",
+   "refs": [
+    {
+     "site": "0x439f9c4a",
+     "func": "0x439f9c36"
+    },
+    {
+     "site": "0x439f9d60",
+     "func": "0x439f9d2e"
+    },
+    {
+     "site": "0x439fa0d6",
+     "func": "0x439fa03e"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf4dd5",
+   "off": 8076757,
+   "text": "[IDT_OPD]: AF invalid rate %d.",
+   "submodule": "load_delay_y_pixclk",
+   "submodule_desc": "load_delay, límite de pix/clk del VATR, conversión de FOPD rate",
+   "refs": [
+    {
+     "site": "0x439f9d60",
+     "func": "0x439f9d2e"
+    },
+    {
+     "site": "0x439fa11c",
+     "func": "0x439fa03e"
+    },
+    {
+     "site": "0x439fa278",
+     "func": "0x439fa25c"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf4e0f",
+   "off": 8076815,
+   "text": "[IDT_OPD]: VATR with 8pix/clk is out of spec yet.",
+   "submodule": "load_delay_y_pixclk",
+   "submodule_desc": "load_delay, límite de pix/clk del VATR, conversión de FOPD rate",
+   "refs": [
+    {
+     "site": "0x439fa2c0",
+     "func": "0x439fa298"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf4e6f",
+   "off": 8076911,
+   "text": "[IDT_OPD]: VATR unknown pix/clk %d",
+   "submodule": "load_delay_y_pixclk",
+   "submodule_desc": "load_delay, límite de pix/clk del VATR, conversión de FOPD rate",
+   "refs": [
+    {
+     "site": "0x439f9c8e",
+     "func": "0x439f9c36"
+    },
+    {
+     "site": "0x439fa2e0",
+     "func": "0x439fa298"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf4eb1",
+   "off": 8076977,
+   "text": "[IDT_OPD]: FOPD rate Convert NG %d ",
+   "submodule": "load_delay_y_pixclk",
+   "submodule_desc": "load_delay, límite de pix/clk del VATR, conversión de FOPD rate",
+   "refs": [
+    {
+     "site": "0x439f9cd0",
+     "func": "0x439f9c36"
+    },
+    {
+     "site": "0x439fa3de",
+     "func": "0x439fa310"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf4ef5",
+   "off": 8077045,
+   "text": "[IDT_OPD]: Request Convert NG %d ",
+   "submodule": "load_delay_y_pixclk",
+   "submodule_desc": "load_delay, límite de pix/clk del VATR, conversión de FOPD rate",
+   "refs": [
+    {
+     "site": "0x439f9dc2",
+     "func": "0x439f9d2e"
+    },
+    {
+     "site": "0x439f9f3a",
+     "func": "0x439f9f16"
+    },
+    {
+     "site": "0x439fa366",
+     "func": "0x439fa310"
+    },
+    {
+     "site": "0x439fa420",
+     "func": "0x439fa310"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf4f35",
+   "off": 8077109,
+   "text": "[IDT_OPD]: SelectAF LC request NG %x %d %d %d",
+   "submodule": "Request_y_SyncRate",
+   "submodule_desc": "Petición de AF/LC, conversión de tasa síncrona y asíncrona",
+   "refs": [
+    {
+     "site": "0x439f9db6",
+     "func": "0x439f9d2e"
+    },
+    {
+     "site": "0x439f9dc2",
+     "func": "0x439f9d2e"
+    },
+    {
+     "site": "0x439f9df2",
+     "func": "0x439f9d2e"
+    },
+    {
+     "site": "0x439f9f3a",
+     "func": "0x439f9f16"
+    },
+    {
+     "site": "0x439fa4bc",
+     "func": "0x439fa310"
+    }
+   ],
+   "n_refs": 5
+  },
+  {
+   "vaddr": "0x43cf4f8d",
+   "off": 8077197,
+   "text": "[IDT_OPD]: Sync rate %d -> %d use:%d mode:%d %d %d",
+   "submodule": "Request_y_SyncRate",
+   "submodule_desc": "Petición de AF/LC, conversión de tasa síncrona y asíncrona",
+   "refs": [
+    {
+     "site": "0x439f9e24",
+     "func": "0x439f9e20"
+    },
+    {
+     "site": "0x439f9e48",
+     "func": "0x439f9e40"
+    },
+    {
+     "site": "0x439fa56c",
+     "func": "0x439fa310"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf4fef",
+   "off": 8077295,
+   "text": "[IDT_OPD]: test %d %d %d %d %d %d %d %d %d %d",
+   "submodule": "Request_y_SyncRate",
+   "submodule_desc": "Petición de AF/LC, conversión de tasa síncrona y asíncrona",
+   "refs": [
+    {
+     "site": "0x439f9ed4",
+     "func": "0x439f9e40"
+    },
+    {
+     "site": "0x439f9f7a",
+     "func": "0x439f9f58"
+    },
+    {
+     "site": "0x439fa5d8",
+     "func": "0x439fa310"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf5047",
+   "off": 8077383,
+   "text": "[IDT_OPD]: Async rate %d -> %d use:%d mode:%d",
+   "submodule": "Request_y_SyncRate",
+   "submodule_desc": "Petición de AF/LC, conversión de tasa síncrona y asíncrona",
+   "refs": [
+    {
+     "site": "0x439fa76e",
+     "func": "0x439fa702"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf509f",
+   "off": 8077471,
+   "text": "[IDT_OPD]: test2 %d %d %d %d %d %d %d %d",
+   "submodule": "Request_y_SyncRate",
+   "submodule_desc": "Petición de AF/LC, conversión de tasa síncrona y asíncrona",
+   "refs": [
+    {
+     "site": "0x439fa7c4",
+     "func": "0x439fa702"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf50ed",
+   "off": 8077549,
+   "text": "[IDT_OPD]: Illegal FRM mode for image_param %d",
+   "submodule": "modos_FRM_y_EE",
+   "submodule_desc": "Modos FRM, máscaras, tamaños 0size y camino EE (end-to-end)",
+   "refs": [
+    {
+     "site": "0x439f9f7a",
+     "func": "0x439f9f58"
+    },
+    {
+     "site": "0x439fa0d6",
+     "func": "0x439fa03e"
+    },
+    {
+     "site": "0x439fa132",
+     "func": "0x439fa03e"
+    },
+    {
+     "site": "0x439fa894",
+     "func": "0x439fa820"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf5147",
+   "off": 8077639,
+   "text": "[IDT_OPD]: Illegal FRM mode for IDTSA %d",
+   "submodule": "modos_FRM_y_EE",
+   "submodule_desc": "Modos FRM, máscaras, tamaños 0size y camino EE (end-to-end)",
+   "refs": [
+    {
+     "site": "0x439f99c0",
+     "func": "0x439f999e"
+    },
+    {
+     "site": "0x439f9f62",
+     "func": "0x439f9f58"
+    },
+    {
+     "site": "0x439fa18c",
+     "func": "0x439fa03e"
+    },
+    {
+     "site": "0x439fa996",
+     "func": "0x439fa924"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf51b3",
+   "off": 8077747,
+   "text": "[IDT_OPD]: FOPD_MODE error",
+   "submodule": "modos_FRM_y_EE",
+   "submodule_desc": "Modos FRM, máscaras, tamaños 0size y camino EE (end-to-end)",
+   "refs": [
+    {
+     "site": "0x439f9a2c",
+     "func": "0x439f999e"
+    },
+    {
+     "site": "0x439fb240",
+     "func": "0x439fb208"
+    },
+    {
+     "site": "0x439fb2e6",
+     "func": "0x439fb2b4"
+    },
+    {
+     "site": "0x439fb362",
+     "func": "0x439fb334"
+    },
+    {
+     "site": "0x439fb3f2",
+     "func": "0x439fb3cc"
+    }
+   ],
+   "n_refs": 5
+  },
+  {
+   "vaddr": "0x43cf51e5",
+   "off": 8077797,
+   "text": "[IDT_OPD]: mask%x add%x %x %x.",
+   "submodule": "modos_FRM_y_EE",
+   "submodule_desc": "Modos FRM, máscaras, tamaños 0size y camino EE (end-to-end)",
+   "refs": [
+    {
+     "site": "0x439fa000",
+     "func": "0x439f9f58"
+    },
+    {
+     "site": "0x439fa180",
+     "func": "0x439fa03e"
+    },
+    {
+     "site": "0x439fa1ce",
+     "func": "0x439fa03e"
+    },
+    {
+     "site": "0x439fa7c4",
+     "func": "0x439fa702"
+    },
+    {
+     "site": "0x439faa34",
+     "func": "0x439faa12"
+    },
+    {
+     "site": "0x439fb570",
+     "func": "0x439fb53c"
+    }
+   ],
+   "n_refs": 6
+  },
+  {
+   "vaddr": "0x43cf521f",
+   "off": 8077855,
+   "text": "[IDT_OPD]: async opd valid add:%d mask%x .",
+   "submodule": "modos_FRM_y_EE",
+   "submodule_desc": "Modos FRM, máscaras, tamaños 0size y camino EE (end-to-end)",
+   "refs": [
+    {
+     "site": "0x439fa1ba",
+     "func": "0x439fa03e"
+    },
+    {
+     "site": "0x439fbc7e",
+     "func": "0x439fbc4e"
+    },
+    {
+     "site": "0x439fbf06",
+     "func": "0x439fbed6"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf5271",
+   "off": 8077937,
+   "text": "[IDT_OPD]: capo valid 0size. w:%d h:%d.",
+   "submodule": "modos_FRM_y_EE",
+   "submodule_desc": "Modos FRM, máscaras, tamaños 0size y camino EE (end-to-end)",
+   "refs": [
+    {
+     "site": "0x439f980e",
+     "func": "0x439f97a4"
+    },
+    {
+     "site": "0x439fa090",
+     "func": "0x439fa03e"
+    },
+    {
+     "site": "0x439fa0f2",
+     "func": "0x439fa03e"
+    },
+    {
+     "site": "0x439fa996",
+     "func": "0x439fa924"
+    },
+    {
+     "site": "0x439fbd36",
+     "func": "0x439fbc4e"
+    },
+    {
+     "site": "0x439fbf58",
+     "func": "0x439fbed6"
+    }
+   ],
+   "n_refs": 6
+  },
+  {
+   "vaddr": "0x43cf52bd",
+   "off": 8078013,
+   "text": "[IDT_OPD]: capo arc 0size. w:%d h:%d.",
+   "submodule": "modos_FRM_y_EE",
+   "submodule_desc": "Modos FRM, máscaras, tamaños 0size y camino EE (end-to-end)",
+   "refs": [
+    {
+     "site": "0x439fa76e",
+     "func": "0x439fa702"
+    },
+    {
+     "site": "0x439fbdde",
+     "func": "0x439fbc4e"
+    },
+    {
+     "site": "0x439fc000",
+     "func": "0x439fbed6"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf5305",
+   "off": 8078085,
+   "text": "[IDT_OPD]: rc 0size. w:%d h:%d.",
+   "submodule": "modos_FRM_y_EE",
+   "submodule_desc": "Modos FRM, máscaras, tamaños 0size y camino EE (end-to-end)",
+   "refs": [
+    {
+     "site": "0x439fa13e",
+     "func": "0x439fa03e"
+    },
+    {
+     "site": "0x439fbe34",
+     "func": "0x439fbc4e"
+    },
+    {
+     "site": "0x439fc056",
+     "func": "0x439fbed6"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf5341",
+   "off": 8078145,
+   "text": "[IDT_OPD]: Pre: Unknown aspect %d.",
+   "submodule": "modos_FRM_y_EE",
+   "submodule_desc": "Modos FRM, máscaras, tamaños 0size y camino EE (end-to-end)",
+   "refs": [
+    {
+     "site": "0x439f98ae",
+     "func": "0x439f9860"
+    },
+    {
+     "site": "0x439fa2ca",
+     "func": "0x439fa298"
+    },
+    {
+     "site": "0x439fb474",
+     "func": "0x439fb3cc"
+    },
+    {
+     "site": "0x439fc13e",
+     "func": "0x439fc0f4"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf5383",
+   "off": 8078211,
+   "text": "[IDT_OPD]: async valid add:%d mask%x .",
+   "submodule": "modos_FRM_y_EE",
+   "submodule_desc": "Modos FRM, máscaras, tamaños 0size y camino EE (end-to-end)",
+   "refs": [
+    {
+     "site": "0x439fac36",
+     "func": "0x439fabe0"
+    },
+    {
+     "site": "0x439fb4b6",
+     "func": "0x439fb490"
+    },
+    {
+     "site": "0x439fc39e",
+     "func": "0x439fc36e"
+    },
+    {
+     "site": "0x439fc65a",
+     "func": "0x439fc62a"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf53cd",
+   "off": 8078285,
+   "text": "[IDT_OPD]: FRM 4pix/clk error async. width not 8n.",
+   "submodule": "modos_FRM_y_EE",
+   "submodule_desc": "Modos FRM, máscaras, tamaños 0size y camino EE (end-to-end)",
+   "refs": [
+    {
+     "site": "0x439fa366",
+     "func": "0x439fa310"
+    },
+    {
+     "site": "0x439fc3da",
+     "func": "0x439fc36e"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf542f",
+   "off": 8078383,
+   "text": "[IDT_OPD]: cap valid 0size. w:%d h:%d.",
+   "submodule": "modos_FRM_y_EE",
+   "submodule_desc": "Modos FRM, máscaras, tamaños 0size y camino EE (end-to-end)",
+   "refs": [
+    {
+     "site": "0x439fa314",
+     "func": "0x439fa310"
+    },
+    {
+     "site": "0x439fc47e",
+     "func": "0x439fc36e"
+    },
+    {
+     "site": "0x439fc6d4",
+     "func": "0x439fc62a"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf5479",
+   "off": 8078457,
+   "text": "[IDT_OPD]: cap arc 0size. w:%d h:%d.",
+   "submodule": "modos_FRM_y_EE",
+   "submodule_desc": "Modos FRM, máscaras, tamaños 0size y camino EE (end-to-end)",
+   "refs": [
+    {
+     "site": "0x439fc526",
+     "func": "0x439fc36e"
+    },
+    {
+     "site": "0x439fc77c",
+     "func": "0x439fc62a"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf54bf",
+   "off": 8078527,
+   "text": "[IDT_OPD]: cap rc 0size. w:%d h:%d.",
+   "submodule": "modos_FRM_y_EE",
+   "submodule_desc": "Modos FRM, máscaras, tamaños 0size y camino EE (end-to-end)",
+   "refs": [
+    {
+     "site": "0x439fc57c",
+     "func": "0x439fc36e"
+    },
+    {
+     "site": "0x439fc7d2",
+     "func": "0x439fc62a"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf5503",
+   "off": 8078595,
+   "text": "[IDT_OPD]: 4pix/clk error async. width not 8n.",
+   "submodule": "modos_FRM_y_EE",
+   "submodule_desc": "Modos FRM, máscaras, tamaños 0size y camino EE (end-to-end)",
+   "refs": [
+    {
+     "site": "0x439fad52",
+     "func": "0x439fabe0"
+    },
+    {
+     "site": "0x439fbf62",
+     "func": "0x439fbed6"
+    },
+    {
+     "site": "0x439fc692",
+     "func": "0x439fc62a"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf555d",
+   "off": 8078685,
+   "text": "[IDT_OPD]: Cap: Unknown aspect %d.",
+   "submodule": "modos_FRM_y_EE",
+   "submodule_desc": "Modos FRM, máscaras, tamaños 0size y camino EE (end-to-end)",
+   "refs": [
+    {
+     "site": "0x439fa42c",
+     "func": "0x439fa310"
+    },
+    {
+     "site": "0x439fb8e8",
+     "func": "0x439fb752"
+    },
+    {
+     "site": "0x439fc062",
+     "func": "0x439fbed6"
+    },
+    {
+     "site": "0x439fc8de",
+     "func": "0x439fc87c"
+    }
+   ],
+   "n_refs": 4
+  },
+  {
+   "vaddr": "0x43cf559f",
+   "off": 8078751,
+   "text": "[IDT_OPD]: valid add:%d mask%x .",
+   "submodule": "modos_FRM_y_EE",
+   "submodule_desc": "Modos FRM, máscaras, tamaños 0size y camino EE (end-to-end)",
+   "refs": [
+    {
+     "site": "0x439fa42c",
+     "func": "0x439fa310"
+    },
+    {
+     "site": "0x439fab26",
+     "func": "0x439faa94"
+    },
+    {
+     "site": "0x439facc4",
+     "func": "0x439fabe0"
+    },
+    {
+     "site": "0x439fc89a",
+     "func": "0x439fc87c"
+    },
+    {
+     "site": "0x439fcb70",
+     "func": "0x439fcb3c"
+    },
+    {
+     "site": "0x439fcdd8",
+     "func": "0x439fcda4"
+    }
+   ],
+   "n_refs": 6
+  },
+  {
+   "vaddr": "0x43cf55dd",
+   "off": 8078813,
+   "text": "[IDT_OPD]: FRM width error EE. width not 8n.",
+   "submodule": "modos_FRM_y_EE",
+   "submodule_desc": "Modos FRM, máscaras, tamaños 0size y camino EE (end-to-end)",
+   "refs": [
+    {
+     "site": "0x439fc10c",
+     "func": "0x439fc0f4"
+    },
+    {
+     "site": "0x439fc3da",
+     "func": "0x439fc36e"
+    },
+    {
+     "site": "0x439fcba4",
+     "func": "0x439fcb3c"
+    }
+   ],
+   "n_refs": 3
+  },
+  {
+   "vaddr": "0x43cf5633",
+   "off": 8078899,
+   "text": "[IDT_OPD]: FRM EE valid 0size. w:%d h:%d.",
+   "submodule": "modos_FRM_y_EE",
+   "submodule_desc": "Modos FRM, máscaras, tamaños 0size y camino EE (end-to-end)",
+   "refs": [
+    {
+     "site": "0x439fcc48",
+     "func": "0x439fcb3c"
+    },
+    {
+     "site": "0x439fd3ca",
+     "func": "0x439fcf9c"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf5683",
+   "off": 8078979,
+   "text": "[IDT_OPD]: FRM EE arc 0size. w:%d h:%d.",
+   "submodule": "modos_FRM_y_EE",
+   "submodule_desc": "Modos FRM, máscaras, tamaños 0size y camino EE (end-to-end)",
+   "refs": [
+    {
+     "site": "0x439fa4bc",
+     "func": "0x439fa310"
+    },
+    {
+     "site": "0x439fcca6",
+     "func": "0x439fcb3c"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf56cf",
+   "off": 8079055,
+   "text": "[IDT_OPD]: EE rc 0size. w:%d h:%d.",
+   "submodule": "modos_FRM_y_EE",
+   "submodule_desc": "Modos FRM, máscaras, tamaños 0size y camino EE (end-to-end)",
+   "refs": [
+    {
+     "site": "0x439fb87e",
+     "func": "0x439fb752"
+    },
+    {
+     "site": "0x439fc3b6",
+     "func": "0x439fc36e"
+    },
+    {
+     "site": "0x439fc412",
+     "func": "0x439fc36e"
+    },
+    {
+     "site": "0x439fc77c",
+     "func": "0x439fc62a"
+    },
+    {
+     "site": "0x439fccf0",
+     "func": "0x439fcb3c"
+    },
+    {
+     "site": "0x439fcef6",
+     "func": "0x439fcda4"
+    }
+   ],
+   "n_refs": 6
+  },
+  {
+   "vaddr": "0x43cf5711",
+   "off": 8079121,
+   "text": "[IDT_OPD]: 4pix/clk error EE. width not 8n.",
+   "submodule": "modos_FRM_y_EE",
+   "submodule_desc": "Modos FRM, máscaras, tamaños 0size y camino EE (end-to-end)",
+   "refs": [
+    {
+     "site": "0x439f9cae",
+     "func": "0x439f9c36"
+    },
+    {
+     "site": "0x439fce10",
+     "func": "0x439fcda4"
+    }
+   ],
+   "n_refs": 2
+  },
+  {
+   "vaddr": "0x43cf5765",
+   "off": 8079205,
+   "text": "[IDT_OPD]: EE valid 0size. w:%d h:%d.",
+   "submodule": "modos_FRM_y_EE",
+   "submodule_desc": "Modos FRM, máscaras, tamaños 0size y camino EE (end-to-end)",
+   "refs": [
+    {
+     "site": "0x439fce52",
+     "func": "0x439fcda4"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf57ad",
+   "off": 8079277,
+   "text": "[IDT_OPD]: EE arc 0size. w:%d h:%d.",
+   "submodule": "modos_FRM_y_EE",
+   "submodule_desc": "Modos FRM, máscaras, tamaños 0size y camino EE (end-to-end)",
+   "refs": [
+    {
+     "site": "0x439fceac",
+     "func": "0x439fcda4"
+    }
+   ],
+   "n_refs": 1
+  },
+  {
+   "vaddr": "0x43cf57f1",
+   "off": 8079345,
+   "text": "[IDT_OPD]: MovieDepthRate illegal",
+   "submodule": "modos_FRM_y_EE",
+   "submodule_desc": "Modos FRM, máscaras, tamaños 0size y camino EE (end-to-end)",
+   "refs": [
+    {
+     "site": "0x439fb040",
+     "func": "0x439fb008"
+    },
+    {
+     "site": "0x439fc542",
+     "func": "0x439fc36e"
+    },
+    {
+     "site": "0x439fcde8",
+     "func": "0x439fcda4"
+    },
+    {
+     "site": "0x439fd018",
+     "func": "0x439fcf9c"
+    },
+    {
+     "site": "0x439fd062",
+     "func": "0x439fcf9c"
+    }
+   ],
+   "n_refs": 5
+  }
+ ],
+ "functions": [
+  {
+   "func": "0x439dde84",
+   "n": 1,
+   "strings": [
+    "0x43cf19c1"
+   ]
+  },
+  {
+   "func": "0x439de0b0",
+   "n": 1,
+   "strings": [
+    "0x43cf1653"
+   ]
+  },
+  {
+   "func": "0x439de408",
+   "n": 1,
+   "strings": [
+    "0x43cf180f"
+   ]
+  },
+  {
+   "func": "0x439de63c",
+   "n": 1,
+   "strings": [
+    "0x43cf147d"
+   ]
+  },
+  {
+   "func": "0x439deb1c",
+   "n": 1,
+   "strings": [
+    "0x43cf18a9"
+   ]
+  },
+  {
+   "func": "0x439df6ec",
+   "n": 1,
+   "strings": [
+    "0x43cf11f9"
+   ]
+  },
+  {
+   "func": "0x439df808",
+   "n": 1,
+   "strings": [
+    "0x43cf130f"
+   ]
+  },
+  {
+   "func": "0x439df878",
+   "n": 1,
+   "strings": [
+    "0x43cf1349"
+   ]
+  },
+  {
+   "func": "0x439dfdf8",
+   "n": 1,
+   "strings": [
+    "0x43cf13d3"
+   ]
+  },
+  {
+   "func": "0x439e0098",
+   "n": 1,
+   "strings": [
+    "0x43cf1591"
+   ]
+  },
+  {
+   "func": "0x439e108c",
+   "n": 2,
+   "strings": [
+    "0x43cf11f9",
+    "0x43cf123d"
+   ]
+  },
+  {
+   "func": "0x439e11c0",
+   "n": 4,
+   "strings": [
+    "0x43cf1275",
+    "0x43cf12cf",
+    "0x43cf130f",
+    "0x43cf1349"
+   ]
+  },
+  {
+   "func": "0x439e14a0",
+   "n": 9,
+   "strings": [
+    "0x43cf12cf",
+    "0x43cf130f",
+    "0x43cf1383",
+    "0x43cf13d3",
+    "0x43cf1425",
+    "0x43cf147d",
+    "0x43cf1715",
+    "0x43cf17c1"
+   ]
+  },
+  {
+   "func": "0x439e17e8",
+   "n": 2,
+   "strings": [
+    "0x43cf14db",
+    "0x43cf18a9"
+   ]
+  },
+  {
+   "func": "0x439e1a58",
+   "n": 2,
+   "strings": [
+    "0x43cf14db",
+    "0x43cf1aa3"
+   ]
+  },
+  {
+   "func": "0x439e20dc",
+   "n": 1,
+   "strings": [
+    "0x43cf1aa3"
+   ]
+  },
+  {
+   "func": "0x439e21c6",
+   "n": 2,
+   "strings": [
+    "0x43cf1591",
+    "0x43cf20c3"
+   ]
+  },
+  {
+   "func": "0x439e2412",
+   "n": 1,
+   "strings": [
+    "0x43cf1fef"
+   ]
+  },
+  {
+   "func": "0x439e2496",
+   "n": 3,
+   "strings": [
+    "0x43cf15d5",
+    "0x43cf1619",
+    "0x43cf1653"
+   ]
+  },
+  {
+   "func": "0x439e25aa",
+   "n": 6,
+   "strings": [
+    "0x43cf1697",
+    "0x43cf16db",
+    "0x43cf1715",
+    "0x43cf1759",
+    "0x43cf2247"
+   ]
+  },
+  {
+   "func": "0x439e26be",
+   "n": 4,
+   "strings": [
+    "0x43cf1759",
+    "0x43cf178d",
+    "0x43cf2025",
+    "0x43cf2283"
+   ]
+  },
+  {
+   "func": "0x439e2746",
+   "n": 2,
+   "strings": [
+    "0x43cf178d",
+    "0x43cf1859"
+   ]
+  },
+  {
+   "func": "0x439e27ce",
+   "n": 2,
+   "strings": [
+    "0x43cf1935"
+   ]
+  },
+  {
+   "func": "0x439e288e",
+   "n": 7,
+   "strings": [
+    "0x43cf196d",
+    "0x43cf19c1",
+    "0x43cf1a09",
+    "0x43cf1c27",
+    "0x43cf24cd"
+   ]
+  },
+  {
+   "func": "0x439e29c0",
+   "n": 1,
+   "strings": [
+    "0x43cf1aa3"
+   ]
+  },
+  {
+   "func": "0x439e2a50",
+   "n": 19,
+   "strings": [
+    "0x43cf17c1",
+    "0x43cf180f",
+    "0x43cf1859",
+    "0x43cf18a9",
+    "0x43cf18fd",
+    "0x43cf1935",
+    "0x43cf196d",
+    "0x43cf19c1",
+    "0x43cf1a09",
+    "0x43cf1a4b",
+    "0x43cf1aa3",
+    "0x43cf1bb7",
+    "0x43cf1c61",
+    "0x43cf1e03",
+    "0x43cf1e45",
+    "0x43cf1f1d",
+    "0x43cf2169",
+    "0x43cf2211"
+   ]
+  },
+  {
+   "func": "0x439e2fd6",
+   "n": 22,
+   "strings": [
+    "0x43cf18fd",
+    "0x43cf1935",
+    "0x43cf196d",
+    "0x43cf19c1",
+    "0x43cf1a09",
+    "0x43cf1aa3",
+    "0x43cf1b35",
+    "0x43cf1c61",
+    "0x43cf1eb5",
+    "0x43cf1f53",
+    "0x43cf1f85",
+    "0x43cf1fbb",
+    "0x43cf1fef",
+    "0x43cf2059",
+    "0x43cf20f7",
+    "0x43cf2211",
+    "0x43cf2283",
+    "0x43cf2493",
+    "0x43cf24cd",
+    "0x43cf2507"
+   ]
+  },
+  {
+   "func": "0x439e3488",
+   "n": 3,
+   "strings": [
+    "0x43cf1ae1",
+    "0x43cf1bb7",
+    "0x43cf25a7"
+   ]
+  },
+  {
+   "func": "0x439e34da",
+   "n": 10,
+   "strings": [
+    "0x43cf1b35",
+    "0x43cf1b6f",
+    "0x43cf1c61",
+    "0x43cf1ce5",
+    "0x43cf1d31",
+    "0x43cf1e45",
+    "0x43cf212f",
+    "0x43cf2211",
+    "0x43cf2247",
+    "0x43cf22ef"
+   ]
+  },
+  {
+   "func": "0x439e37d4",
+   "n": 1,
+   "strings": [
+    "0x43cf1f53"
+   ]
+  },
+  {
+   "func": "0x439e385c",
+   "n": 3,
+   "strings": [
+    "0x43cf1f85",
+    "0x43cf23ef",
+    "0x43cf253b"
+   ]
+  },
+  {
+   "func": "0x439e3876",
+   "n": 8,
+   "strings": [
+    "0x43cf1bb7",
+    "0x43cf1dc3",
+    "0x43cf1eed",
+    "0x43cf245b",
+    "0x43cf2493",
+    "0x43cf24cd",
+    "0x43cf2507",
+    "0x43cf253b"
+   ]
+  },
+  {
+   "func": "0x439e3a6c",
+   "n": 1,
+   "strings": [
+    "0x43cf21a3"
+   ]
+  },
+  {
+   "func": "0x439e3bd8",
+   "n": 1,
+   "strings": [
+    "0x43cf20f7"
+   ]
+  },
+  {
+   "func": "0x439e3c8c",
+   "n": 1,
+   "strings": [
+    "0x43cf2427"
+   ]
+  },
+  {
+   "func": "0x439e3d1e",
+   "n": 2,
+   "strings": [
+    "0x43cf22ef",
+    "0x43cf236b"
+   ]
+  },
+  {
+   "func": "0x439e3f84",
+   "n": 1,
+   "strings": [
+    "0x43cf1beb"
+   ]
+  },
+  {
+   "func": "0x439e410a",
+   "n": 2,
+   "strings": [
+    "0x43cf1c27",
+    "0x43cf1c61"
+   ]
+  },
+  {
+   "func": "0x439e4328",
+   "n": 2,
+   "strings": [
+    "0x43cf1c9f",
+    "0x43cf1ce5"
+   ]
+  },
+  {
+   "func": "0x439e5038",
+   "n": 1,
+   "strings": [
+    "0x43cf1d31"
+   ]
+  },
+  {
+   "func": "0x439e5664",
+   "n": 1,
+   "strings": [
+    "0x43cf1d31"
+   ]
+  },
+  {
+   "func": "0x439e6224",
+   "n": 1,
+   "strings": [
+    "0x43cf1d31"
+   ]
+  },
+  {
+   "func": "0x439e6884",
+   "n": 1,
+   "strings": [
+    "0x43cf1d31"
+   ]
+  },
+  {
+   "func": "0x439e7ef4",
+   "n": 1,
+   "strings": [
+    "0x43cf1d7d"
+   ]
+  },
+  {
+   "func": "0x439e7f90",
+   "n": 1,
+   "strings": [
+    "0x43cf1eed"
+   ]
+  },
+  {
+   "func": "0x439e80c8",
+   "n": 40,
+   "strings": [
+    "0x43cf1dc3",
+    "0x43cf1e03",
+    "0x43cf1e45",
+    "0x43cf1e7d",
+    "0x43cf1eb5",
+    "0x43cf1eed",
+    "0x43cf1f1d",
+    "0x43cf1f53",
+    "0x43cf1f85",
+    "0x43cf1fbb",
+    "0x43cf1fef",
+    "0x43cf2025",
+    "0x43cf2059",
+    "0x43cf208f",
+    "0x43cf20c3",
+    "0x43cf20f7",
+    "0x43cf212f",
+    "0x43cf2169",
+    "0x43cf21a3",
+    "0x43cf21d7",
+    "0x43cf2211"
+   ]
+  },
+  {
+   "func": "0x439e8600",
+   "n": 9,
+   "strings": [
+    "0x43cf21d7",
+    "0x43cf2211",
+    "0x43cf2247",
+    "0x43cf2283",
+    "0x43cf2333",
+    "0x43cf23af",
+    "0x43cf23ef",
+    "0x43cf24cd",
+    "0x43cf2577"
+   ]
+  },
+  {
+   "func": "0x439e950e",
+   "n": 23,
+   "strings": [
+    "0x43cf22b9",
+    "0x43cf22ef",
+    "0x43cf2333",
+    "0x43cf236b",
+    "0x43cf23af",
+    "0x43cf23ef",
+    "0x43cf2427",
+    "0x43cf245b",
+    "0x43cf2493",
+    "0x43cf24cd",
+    "0x43cf2507",
+    "0x43cf253b",
+    "0x43cf2577",
+    "0x43cf25a7"
+   ]
+  },
+  {
+   "func": "0x439ea04c",
+   "n": 2,
+   "strings": [
+    "0x43cf253b",
+    "0x43cf2577"
+   ]
+  },
+  {
+   "func": "0x439ea0e6",
+   "n": 2,
+   "strings": [
+    "0x43cf25a7",
+    "0x43cf292a"
+   ]
+  },
+  {
+   "func": "0x439ea4ac",
+   "n": 8,
+   "strings": [
+    "0x43cf2634",
+    "0x43cf267a",
+    "0x43cf26b8",
+    "0x43cf2700",
+    "0x43cf2788",
+    "0x43cf287c",
+    "0x43cf33ce"
+   ]
+  },
+  {
+   "func": "0x439ead92",
+   "n": 3,
+   "strings": [
+    "0x43cf2b54",
+    "0x43cf2b86",
+    "0x43cf2c2e"
+   ]
+  },
+  {
+   "func": "0x439eaecc",
+   "n": 2,
+   "strings": [
+    "0x43cf2c9e",
+    "0x43cf2d56"
+   ]
+  },
+  {
+   "func": "0x439eb034",
+   "n": 4,
+   "strings": [
+    "0x43cf2842",
+    "0x43cf2ed4",
+    "0x43cf2f00",
+    "0x43cf30fe"
+   ]
+  },
+  {
+   "func": "0x439eb79a",
+   "n": 1,
+   "strings": [
+    "0x43cf35c8"
+   ]
+  },
+  {
+   "func": "0x439ec6de",
+   "n": 2,
+   "strings": [
+    "0x43cf2788",
+    "0x43cf27c6"
+   ]
+  },
+  {
+   "func": "0x439ec754",
+   "n": 1,
+   "strings": [
+    "0x43cf27c6"
+   ]
+  },
+  {
+   "func": "0x439ec7ee",
+   "n": 4,
+   "strings": [
+    "0x43cf2804",
+    "0x43cf29a0",
+    "0x43cf29de",
+    "0x43cf2a20"
+   ]
+  },
+  {
+   "func": "0x439eca7c",
+   "n": 1,
+   "strings": [
+    "0x43cf2b54"
+   ]
+  },
+  {
+   "func": "0x439ecb56",
+   "n": 2,
+   "strings": [
+    "0x43cf2842",
+    "0x43cf287c"
+   ]
+  },
+  {
+   "func": "0x439ecc4a",
+   "n": 3,
+   "strings": [
+    "0x43cf28b6",
+    "0x43cf28f0",
+    "0x43cf2d16"
+   ]
+  },
+  {
+   "func": "0x439ecd62",
+   "n": 4,
+   "strings": [
+    "0x43cf2c64",
+    "0x43cf2db6",
+    "0x43cf2ed4",
+    "0x43cf2fec"
+   ]
+  },
+  {
+   "func": "0x439ed48c",
+   "n": 1,
+   "strings": [
+    "0x43cf3588"
+   ]
+  },
+  {
+   "func": "0x439ed77e",
+   "n": 1,
+   "strings": [
+    "0x43cf3480"
+   ]
+  },
+  {
+   "func": "0x439ed950",
+   "n": 1,
+   "strings": [
+    "0x43cf3818"
+   ]
+  },
+  {
+   "func": "0x439ee4fe",
+   "n": 8,
+   "strings": [
+    "0x43cf292a",
+    "0x43cf2962",
+    "0x43cf29a0",
+    "0x43cf29de",
+    "0x43cf2a20",
+    "0x43cf2a62",
+    "0x43cf2aa6",
+    "0x43cf2aea"
+   ]
+  },
+  {
+   "func": "0x439ee730",
+   "n": 5,
+   "strings": [
+    "0x43cf2b24",
+    "0x43cf2b54",
+    "0x43cf2b86",
+    "0x43cf2bb6"
+   ]
+  },
+  {
+   "func": "0x439ee7e8",
+   "n": 53,
+   "strings": [
+    "0x43cf2bb6",
+    "0x43cf2bf0",
+    "0x43cf2c2e",
+    "0x43cf2c64",
+    "0x43cf2c9e",
+    "0x43cf2cd6",
+    "0x43cf2d16",
+    "0x43cf2d56",
+    "0x43cf2d84",
+    "0x43cf2db6",
+    "0x43cf2dea",
+    "0x43cf2e1e",
+    "0x43cf2e4c",
+    "0x43cf2e7a",
+    "0x43cf2ea8",
+    "0x43cf2ed4",
+    "0x43cf2f00",
+    "0x43cf2f2e",
+    "0x43cf2f5c",
+    "0x43cf2faa",
+    "0x43cf2fec",
+    "0x43cf302e",
+    "0x43cf30b6",
+    "0x43cf30fe"
+   ]
+  },
+  {
+   "func": "0x439ef11a",
+   "n": 14,
+   "strings": [
+    "0x43cf22b9",
+    "0x43cf2333",
+    "0x43cf2577",
+    "0x43cf2f5c",
+    "0x43cf2faa",
+    "0x43cf2fec",
+    "0x43cf302e",
+    "0x43cf3072",
+    "0x43cf34d4"
+   ]
+  },
+  {
+   "func": "0x439efe10",
+   "n": 17,
+   "strings": [
+    "0x43cf22b9",
+    "0x43cf2333",
+    "0x43cf23ef",
+    "0x43cf2faa",
+    "0x43cf2fec",
+    "0x43cf302e",
+    "0x43cf3072",
+    "0x43cf30b6",
+    "0x43cf30fe",
+    "0x43cf313e",
+    "0x43cf3538"
+   ]
+  },
+  {
+   "func": "0x439f0f30",
+   "n": 5,
+   "strings": [
+    "0x43cf22b9",
+    "0x43cf2333",
+    "0x43cf2faa",
+    "0x43cf2fec",
+    "0x43cf317e"
+   ]
+  },
+  {
+   "func": "0x439f11a4",
+   "n": 30,
+   "strings": [
+    "0x43cf22b9",
+    "0x43cf2333",
+    "0x43cf23ef",
+    "0x43cf25a7",
+    "0x43cf2faa",
+    "0x43cf2fec",
+    "0x43cf302e",
+    "0x43cf3072",
+    "0x43cf30fe",
+    "0x43cf313e",
+    "0x43cf31ec",
+    "0x43cf322c",
+    "0x43cf3268",
+    "0x43cf3306",
+    "0x43cf33ce",
+    "0x43cf340c",
+    "0x43cf343a",
+    "0x43cf36ac",
+    "0x43cf37d6",
+    "0x43cf3a68",
+    "0x43cf3b2e",
+    "0x43cf3e92"
+   ]
+  },
+  {
+   "func": "0x439f2768",
+   "n": 2,
+   "strings": [
+    "0x43cf32a4",
+    "0x43cf3aaa"
+   ]
+  },
+  {
+   "func": "0x439f30d0",
+   "n": 2,
+   "strings": [
+    "0x43cf4174",
+    "0x43cf41c8"
+   ]
+  },
+  {
+   "func": "0x439f3386",
+   "n": 1,
+   "strings": [
+    "0x43cf3f66"
+   ]
+  },
+  {
+   "func": "0x439f35f8",
+   "n": 1,
+   "strings": [
+    "0x43cf3306"
+   ]
+  },
+  {
+   "func": "0x439f3648",
+   "n": 2,
+   "strings": [
+    "0x43cf334e",
+    "0x43cf338e"
+   ]
+  },
+  {
+   "func": "0x439f38fc",
+   "n": 3,
+   "strings": [
+    "0x43cf33ce",
+    "0x43cf340c",
+    "0x43cf343a"
+   ]
+  },
+  {
+   "func": "0x439f3a88",
+   "n": 1,
+   "strings": [
+    "0x43cf3588"
+   ]
+  },
+  {
+   "func": "0x439f3c1e",
+   "n": 2,
+   "strings": [
+    "0x43cf361c",
+    "0x43cf36ac"
+   ]
+  },
+  {
+   "func": "0x439f3e4c",
+   "n": 1,
+   "strings": [
+    "0x43cf39e8"
+   ]
+  },
+  {
+   "func": "0x439f3eb8",
+   "n": 1,
+   "strings": [
+    "0x43cf38d4"
+   ]
+  },
+  {
+   "func": "0x439f4070",
+   "n": 1,
+   "strings": [
+    "0x43cf3c76"
+   ]
+  },
+  {
+   "func": "0x439f4110",
+   "n": 1,
+   "strings": [
+    "0x43cf3bf0"
+   ]
+  },
+  {
+   "func": "0x439f4208",
+   "n": 2,
+   "strings": [
+    "0x43cf3c76",
+    "0x43cf3da8"
+   ]
+  },
+  {
+   "func": "0x439f456a",
+   "n": 1,
+   "strings": [
+    "0x43cf3f66"
+   ]
+  },
+  {
+   "func": "0x439f45c0",
+   "n": 1,
+   "strings": [
+    "0x43cf4048"
+   ]
+  },
+  {
+   "func": "0x439f46f0",
+   "n": 2,
+   "strings": [
+    "0x43cf3480",
+    "0x43cf34d4"
+   ]
+  },
+  {
+   "func": "0x439f4940",
+   "n": 3,
+   "strings": [
+    "0x43cf3538",
+    "0x43cf3588"
+   ]
+  },
+  {
+   "func": "0x439f4c30",
+   "n": 10,
+   "strings": [
+    "0x43cf3588",
+    "0x43cf35c8",
+    "0x43cf361c",
+    "0x43cf391a",
+    "0x43cf3b2e"
+   ]
+  },
+  {
+   "func": "0x439f4ef0",
+   "n": 2,
+   "strings": [
+    "0x43cf36ec",
+    "0x43cf378c"
+   ]
+  },
+  {
+   "func": "0x439f5290",
+   "n": 1,
+   "strings": [
+    "0x43cf3e10"
+   ]
+  },
+  {
+   "func": "0x439f5c30",
+   "n": 5,
+   "strings": [
+    "0x43cf35c8",
+    "0x43cf361c",
+    "0x43cf3664",
+    "0x43cf36ac"
+   ]
+  },
+  {
+   "func": "0x439f5e04",
+   "n": 7,
+   "strings": [
+    "0x43cf36ec",
+    "0x43cf3742",
+    "0x43cf378c",
+    "0x43cf37d6",
+    "0x43cf3818",
+    "0x43cf3858"
+   ]
+  },
+  {
+   "func": "0x439f5fcc",
+   "n": 1,
+   "strings": [
+    "0x43cf3960"
+   ]
+  },
+  {
+   "func": "0x439f609e",
+   "n": 1,
+   "strings": [
+    "0x43cf3818"
+   ]
+  },
+  {
+   "func": "0x439f6104",
+   "n": 10,
+   "strings": [
+    "0x43cf3858",
+    "0x43cf3896",
+    "0x43cf38d4",
+    "0x43cf391a",
+    "0x43cf3960",
+    "0x43cf39a4",
+    "0x43cf3a68",
+    "0x43cf3aaa",
+    "0x43cf3aec"
+   ]
+  },
+  {
+   "func": "0x439f6304",
+   "n": 11,
+   "strings": [
+    "0x43cf39e8",
+    "0x43cf3a22",
+    "0x43cf3a68",
+    "0x43cf3aaa",
+    "0x43cf3aec",
+    "0x43cf3b2e",
+    "0x43cf3b72",
+    "0x43cf3c36",
+    "0x43cf3c76"
+   ]
+  },
+  {
+   "func": "0x439f65e2",
+   "n": 3,
+   "strings": [
+    "0x43cf3bb6",
+    "0x43cf3bf0",
+    "0x43cf3d14"
+   ]
+  },
+  {
+   "func": "0x439f6672",
+   "n": 5,
+   "strings": [
+    "0x43cf3c36",
+    "0x43cf3c76",
+    "0x43cf3da8",
+    "0x43cf400c"
+   ]
+  },
+  {
+   "func": "0x439f671c",
+   "n": 3,
+   "strings": [
+    "0x43cf3cbc",
+    "0x43cf3d14",
+    "0x43cf40e0"
+   ]
+  },
+  {
+   "func": "0x439f67c4",
+   "n": 15,
+   "strings": [
+    "0x43cf3da8",
+    "0x43cf3e10",
+    "0x43cf3e5c",
+    "0x43cf3e92",
+    "0x43cf3ec8",
+    "0x43cf3f0c",
+    "0x43cf3f66",
+    "0x43cf4048",
+    "0x43cf40e0",
+    "0x43cf411c",
+    "0x43cf4148",
+    "0x43cf41c8"
+   ]
+  },
+  {
+   "func": "0x439f73cc",
+   "n": 6,
+   "strings": [
+    "0x43cf3f66",
+    "0x43cf3fcc",
+    "0x43cf400c",
+    "0x43cf4048"
+   ]
+  },
+  {
+   "func": "0x439f7778",
+   "n": 1,
+   "strings": [
+    "0x43cf4090"
+   ]
+  },
+  {
+   "func": "0x439f786e",
+   "n": 2,
+   "strings": [
+    "0x43cf4090"
+   ]
+  },
+  {
+   "func": "0x439f7b56",
+   "n": 3,
+   "strings": [
+    "0x43cf40e0",
+    "0x43cf411c",
+    "0x43cf4148"
+   ]
+  },
+  {
+   "func": "0x439f7c1c",
+   "n": 1,
+   "strings": [
+    "0x43cf4174"
+   ]
+  },
+  {
+   "func": "0x439f7cca",
+   "n": 3,
+   "strings": [
+    "0x43cf40e0",
+    "0x43cf411c",
+    "0x43cf4148"
+   ]
+  },
+  {
+   "func": "0x439f7d92",
+   "n": 4,
+   "strings": [
+    "0x43cf41c8",
+    "0x43cf420e",
+    "0x43cf4251"
+   ]
+  },
+  {
+   "func": "0x439f8164",
+   "n": 1,
+   "strings": [
+    "0x43cf431d"
+   ]
+  },
+  {
+   "func": "0x439f82ec",
+   "n": 3,
+   "strings": [
+    "0x43cf4359",
+    "0x43cf448b",
+    "0x43cf46ff"
+   ]
+  },
+  {
+   "func": "0x439f832a",
+   "n": 1,
+   "strings": [
+    "0x43cf43a5"
+   ]
+  },
+  {
+   "func": "0x439f836a",
+   "n": 2,
+   "strings": [
+    "0x43cf43e3",
+    "0x43cf443b"
+   ]
+  },
+  {
+   "func": "0x439f8480",
+   "n": 1,
+   "strings": [
+    "0x43cf448b"
+   ]
+  },
+  {
+   "func": "0x439f8538",
+   "n": 2,
+   "strings": [
+    "0x43cf44e9",
+    "0x43cf46d3"
+   ]
+  },
+  {
+   "func": "0x439f85d4",
+   "n": 38,
+   "strings": [
+    "0x43cf4545",
+    "0x43cf4569",
+    "0x43cf458b",
+    "0x43cf45ad",
+    "0x43cf45d1",
+    "0x43cf45f5",
+    "0x43cf4619",
+    "0x43cf463d",
+    "0x43cf4663",
+    "0x43cf4689",
+    "0x43cf46af",
+    "0x43cf46d3",
+    "0x43cf46ff",
+    "0x43cf4733",
+    "0x43cf4757",
+    "0x43cf4781",
+    "0x43cf47a7",
+    "0x43cf47cb",
+    "0x43cf4835"
+   ]
+  },
+  {
+   "func": "0x439f88e0",
+   "n": 3,
+   "strings": [
+    "0x43cf4733",
+    "0x43cf4879"
+   ]
+  },
+  {
+   "func": "0x439f8a0a",
+   "n": 1,
+   "strings": [
+    "0x43cf4ac5"
+   ]
+  },
+  {
+   "func": "0x439f8bbc",
+   "n": 2,
+   "strings": [
+    "0x43cf4b4d",
+    "0x43cf4c31"
+   ]
+  },
+  {
+   "func": "0x439f8c4e",
+   "n": 1,
+   "strings": [
+    "0x43cf4cc5"
+   ]
+  },
+  {
+   "func": "0x439f8d70",
+   "n": 2,
+   "strings": [
+    "0x43cf47f1",
+    "0x43cf4835"
+   ]
+  },
+  {
+   "func": "0x439f8fb0",
+   "n": 3,
+   "strings": [
+    "0x43cf4879",
+    "0x43cf4907",
+    "0x43cf4be3"
+   ]
+  },
+  {
+   "func": "0x439f928c",
+   "n": 1,
+   "strings": [
+    "0x43cf4d51"
+   ]
+  },
+  {
+   "func": "0x439f960c",
+   "n": 1,
+   "strings": [
+    "0x43cf48c9"
+   ]
+  },
+  {
+   "func": "0x439f96a0",
+   "n": 4,
+   "strings": [
+    "0x43cf4907",
+    "0x43cf4959",
+    "0x43cf4989"
+   ]
+  },
+  {
+   "func": "0x439f97a4",
+   "n": 4,
+   "strings": [
+    "0x43cf49b9",
+    "0x43cf49f3",
+    "0x43cf4a33",
+    "0x43cf5271"
+   ]
+  },
+  {
+   "func": "0x439f9860",
+   "n": 2,
+   "strings": [
+    "0x43cf4a33",
+    "0x43cf5341"
+   ]
+  },
+  {
+   "func": "0x439f98b8",
+   "n": 1,
+   "strings": [
+    "0x43cf4ac5"
+   ]
+  },
+  {
+   "func": "0x439f98dc",
+   "n": 1,
+   "strings": [
+    "0x43cf4b4d"
+   ]
+  },
+  {
+   "func": "0x439f9900",
+   "n": 4,
+   "strings": [
+    "0x43cf4a85",
+    "0x43cf4ac5",
+    "0x43cf4b05",
+    "0x43cf4b9b"
+   ]
+  },
+  {
+   "func": "0x439f999e",
+   "n": 12,
+   "strings": [
+    "0x43cf4b05",
+    "0x43cf4b4d",
+    "0x43cf4b9b",
+    "0x43cf4be3",
+    "0x43cf4c31",
+    "0x43cf4c89",
+    "0x43cf4d11",
+    "0x43cf5147",
+    "0x43cf51b3"
+   ]
+  },
+  {
+   "func": "0x439f9b70",
+   "n": 4,
+   "strings": [
+    "0x43cf4c31",
+    "0x43cf4c5d",
+    "0x43cf4d51"
+   ]
+  },
+  {
+   "func": "0x439f9c36",
+   "n": 7,
+   "strings": [
+    "0x43cf4c89",
+    "0x43cf4cc5",
+    "0x43cf4d8f",
+    "0x43cf4e6f",
+    "0x43cf4eb1",
+    "0x43cf5711"
+   ]
+  },
+  {
+   "func": "0x439f9d2e",
+   "n": 8,
+   "strings": [
+    "0x43cf4d11",
+    "0x43cf4d51",
+    "0x43cf4d8f",
+    "0x43cf4dd5",
+    "0x43cf4ef5",
+    "0x43cf4f35"
+   ]
+  },
+  {
+   "func": "0x439f9e20",
+   "n": 1,
+   "strings": [
+    "0x43cf4f8d"
+   ]
+  },
+  {
+   "func": "0x439f9e40",
+   "n": 2,
+   "strings": [
+    "0x43cf4f8d",
+    "0x43cf4fef"
+   ]
+  },
+  {
+   "func": "0x439f9f16",
+   "n": 2,
+   "strings": [
+    "0x43cf4ef5",
+    "0x43cf4f35"
+   ]
+  },
+  {
+   "func": "0x439f9f58",
+   "n": 4,
+   "strings": [
+    "0x43cf4fef",
+    "0x43cf50ed",
+    "0x43cf5147",
+    "0x43cf51e5"
+   ]
+  },
+  {
+   "func": "0x439fa03e",
+   "n": 12,
+   "strings": [
+    "0x43cf4d51",
+    "0x43cf4d8f",
+    "0x43cf4dd5",
+    "0x43cf50ed",
+    "0x43cf5147",
+    "0x43cf51e5",
+    "0x43cf521f",
+    "0x43cf5271",
+    "0x43cf5305"
+   ]
+  },
+  {
+   "func": "0x439fa25c",
+   "n": 1,
+   "strings": [
+    "0x43cf4dd5"
+   ]
+  },
+  {
+   "func": "0x439fa298",
+   "n": 3,
+   "strings": [
+    "0x43cf4e0f",
+    "0x43cf4e6f",
+    "0x43cf5341"
+   ]
+  },
+  {
+   "func": "0x439fa310",
+   "n": 11,
+   "strings": [
+    "0x43cf4eb1",
+    "0x43cf4ef5",
+    "0x43cf4f35",
+    "0x43cf4f8d",
+    "0x43cf4fef",
+    "0x43cf53cd",
+    "0x43cf542f",
+    "0x43cf555d",
+    "0x43cf559f",
+    "0x43cf5683"
+   ]
+  },
+  {
+   "func": "0x439fa702",
+   "n": 4,
+   "strings": [
+    "0x43cf5047",
+    "0x43cf509f",
+    "0x43cf51e5",
+    "0x43cf52bd"
+   ]
+  },
+  {
+   "func": "0x439fa820",
+   "n": 1,
+   "strings": [
+    "0x43cf50ed"
+   ]
+  },
+  {
+   "func": "0x439fa924",
+   "n": 2,
+   "strings": [
+    "0x43cf5147",
+    "0x43cf5271"
+   ]
+  },
+  {
+   "func": "0x439faa12",
+   "n": 1,
+   "strings": [
+    "0x43cf51e5"
+   ]
+  },
+  {
+   "func": "0x439faa94",
+   "n": 1,
+   "strings": [
+    "0x43cf559f"
+   ]
+  },
+  {
+   "func": "0x439fabe0",
+   "n": 3,
+   "strings": [
+    "0x43cf5383",
+    "0x43cf5503",
+    "0x43cf559f"
+   ]
+  },
+  {
+   "func": "0x439fb008",
+   "n": 1,
+   "strings": [
+    "0x43cf57f1"
+   ]
+  },
+  {
+   "func": "0x439fb208",
+   "n": 1,
+   "strings": [
+    "0x43cf51b3"
+   ]
+  },
+  {
+   "func": "0x439fb2b4",
+   "n": 1,
+   "strings": [
+    "0x43cf51b3"
+   ]
+  },
+  {
+   "func": "0x439fb334",
+   "n": 1,
+   "strings": [
+    "0x43cf51b3"
+   ]
+  },
+  {
+   "func": "0x439fb3cc",
+   "n": 2,
+   "strings": [
+    "0x43cf51b3",
+    "0x43cf5341"
+   ]
+  },
+  {
+   "func": "0x439fb490",
+   "n": 1,
+   "strings": [
+    "0x43cf5383"
+   ]
+  },
+  {
+   "func": "0x439fb53c",
+   "n": 1,
+   "strings": [
+    "0x43cf51e5"
+   ]
+  },
+  {
+   "func": "0x439fb752",
+   "n": 2,
+   "strings": [
+    "0x43cf555d",
+    "0x43cf56cf"
+   ]
+  },
+  {
+   "func": "0x439fbc4e",
+   "n": 4,
+   "strings": [
+    "0x43cf521f",
+    "0x43cf5271",
+    "0x43cf52bd",
+    "0x43cf5305"
+   ]
+  },
+  {
+   "func": "0x439fbed6",
+   "n": 6,
+   "strings": [
+    "0x43cf521f",
+    "0x43cf5271",
+    "0x43cf52bd",
+    "0x43cf5305",
+    "0x43cf5503",
+    "0x43cf555d"
+   ]
+  },
+  {
+   "func": "0x439fc0f4",
+   "n": 2,
+   "strings": [
+    "0x43cf5341",
+    "0x43cf55dd"
+   ]
+  },
+  {
+   "func": "0x439fc36e",
+   "n": 9,
+   "strings": [
+    "0x43cf5383",
+    "0x43cf53cd",
+    "0x43cf542f",
+    "0x43cf5479",
+    "0x43cf54bf",
+    "0x43cf55dd",
+    "0x43cf56cf",
+    "0x43cf57f1"
+   ]
+  },
+  {
+   "func": "0x439fc62a",
+   "n": 6,
+   "strings": [
+    "0x43cf5383",
+    "0x43cf542f",
+    "0x43cf5479",
+    "0x43cf54bf",
+    "0x43cf5503",
+    "0x43cf56cf"
+   ]
+  },
+  {
+   "func": "0x439fc87c",
+   "n": 2,
+   "strings": [
+    "0x43cf555d",
+    "0x43cf559f"
+   ]
+  },
+  {
+   "func": "0x439fcb3c",
+   "n": 5,
+   "strings": [
+    "0x43cf559f",
+    "0x43cf55dd",
+    "0x43cf5633",
+    "0x43cf5683",
+    "0x43cf56cf"
+   ]
+  },
+  {
+   "func": "0x439fcda4",
+   "n": 6,
+   "strings": [
+    "0x43cf559f",
+    "0x43cf56cf",
+    "0x43cf5711",
+    "0x43cf5765",
+    "0x43cf57ad",
+    "0x43cf57f1"
+   ]
+  },
+  {
+   "func": "0x439fcf9c",
+   "n": 3,
+   "strings": [
+    "0x43cf5633",
+    "0x43cf57f1"
+   ]
+  }
+ ],
+ "gemelos_idt": [
+  {
+   "idt_opd": "0x43cf11f9",
+   "idt": "0x43cf121d",
+   "core": ": SEND MESSAGE alloc ERROR"
+  },
+  {
+   "idt_opd": "0x43cf123d",
+   "idt": "0x43cf125b",
+   "core": ": SEND MESSAGE ERROR"
+  },
+  {
+   "idt_opd": "0x43cf1275",
+   "idt": "0x43cf12a4",
+   "core": ": Illegal cap FOPD Call when 1pass %d"
+  },
+  {
+   "idt_opd": "0x43cf12cf",
+   "idt": "0x43cf12f1",
+   "core": ": Cap: Unknown aspect %d"
+  },
+  {
+   "idt_opd": "0x43cf130f",
+   "idt": "0x43cf132e",
+   "core": ": Unknown syncMode %d"
+  },
+  {
+   "idt_opd": "0x43cf1349",
+   "idt": "0x43cf1368",
+   "core": ": Illegal Async Call!"
+  },
+  {
+   "idt_opd": "0x43cf1383",
+   "idt": "0x43cf13ad",
+   "core": ": Illegal Split cap FOPD Call %d"
+  },
+  {
+   "idt_opd": "0x43cf13d3",
+   "idt": "0x43cf13fe",
+   "core": ": Fatal Not Copiled for Split Cap"
+  },
+  {
+   "idt_opd": "0x43cf1425",
+   "idt": "0x43cf1453",
+   "core": ": Illegal Split cap FOPD Call NSX %d"
+  },
+  {
+   "idt_opd": "0x43cf147d",
+   "idt": "0x43cf14ae",
+   "core": ": Illegal 2Async Call opdSyncstatus=%d!"
+  },
+  {
+   "idt_opd": "0x43cf14db",
+   "idt": "0x43cf14f7",
+   "core": ": WAIT MESSAGE ERR"
+  },
+  {
+   "idt_opd": "0x43cf150f",
+   "idt": "0x43cf1535",
+   "core": ": Can't use sync release CB!"
+  },
+  {
+   "idt_opd": "0x43cf1557",
+   "idt": "0x43cf1576",
+   "core": ": No time for 2imager"
+  },
+  {
+   "idt_opd": "0x43cf1591",
+   "idt": "0x43cf15b5",
+   "core": ": Fatal:invalid currpicdat"
+  },
+  {
+   "idt_opd": "0x43cf15d5",
+   "idt": "0x43cf15f9",
+   "core": ": CCSemStart ERR tmout %x\n"
+  },
+  {
+   "idt_opd": "0x43cf1619",
+   "idt": "0x43cf1638",
+   "core": ": CCSemStart ERR  %x\n"
+  },
+  {
+   "idt_opd": "0x43cf1653",
+   "idt": "0x43cf1677",
+   "core": ": CCSemStart ASYNC ERR %x\n"
+  },
+  {
+   "idt_opd": "0x43cf1697",
+   "idt": "0x43cf16bb",
+   "core": ": ECSemStart ERR tmout %x\n"
+  },
+  {
+   "idt_opd": "0x43cf16db",
+   "idt": "0x43cf16fa",
+   "core": ": ECSemStart ERR  %x\n"
+  },
+  {
+   "idt_opd": "0x43cf1715",
+   "idt": "0x43cf1739",
+   "core": ": ECSemStart ASYNC ERR %x\n"
+  },
+  {
+   "idt_opd": "0x43cf1759",
+   "idt": "0x43cf1775",
+   "core": ": CCSemEnd ERR %x\n"
+  },
+  {
+   "idt_opd": "0x43cf178d",
+   "idt": "0x43cf17a9",
+   "core": ": ECSemEnd ERR %x\n"
+  },
+  {
+   "idt_opd": "0x43cf17c1",
+   "idt": "0x43cf17ea",
+   "core": ": Illegal Split EE FOPD Call %d"
+  },
+  {
+   "idt_opd": "0x43cf180f",
+   "idt": "0x43cf1836",
+   "core": ": Fatal Not Copiled for Split"
+  },
+  {
+   "idt_opd": "0x43cf1859",
+   "idt": "0x43cf1883",
+   "core": ": Split Movie Cannot use AIF! %d"
+  },
+  {
+   "idt_opd": "0x43cf18a9",
+   "idt": "0x43cf18d5",
+   "core": ": Split Movie Cannot use Insel! %d"
+  },
+  {
+   "idt_opd": "0x43cf18fd",
+   "idt": "0x43cf191b",
+   "core": ": AF AE1 %d %d %d %d"
+  },
+  {
+   "idt_opd": "0x43cf1935",
+   "idt": "0x43cf1953",
+   "core": ": AF AE2 %d %d %x %d"
+  },
+  {
+   "idt_opd": "0x43cf196d",
+   "idt": "0x43cf1999",
+   "core": ": Split Movie Cannot use AIF!!! %d"
+  },
+  {
+   "idt_opd": "0x43cf19c1",
+   "idt": "0x43cf19e7",
+   "core": ": PBL SET_FUNC_ERROR R0 only"
+  },
+  {
+   "idt_opd": "0x43cf1a09",
+   "idt": "0x43cf1a2c",
+   "core": ": PBL START_ERROR R0 only"
+  },
+  {
+   "idt_opd": "0x43cf1a4b",
+   "idt": "0x43cf1a79",
+   "core": ": Split Movie Cannot use Insel!!! %d"
+  },
+  {
+   "idt_opd": "0x43cf1aa3",
+   "idt": "0x43cf1ac4",
+   "core": ": IDTdriver overflow:%d"
+  },
+  {
+   "idt_opd": "0x43cf1ae1",
+   "idt": "0x43cf1b0d",
+   "core": ": FRM mode translation error %d %d"
+  },
+  {
+   "idt_opd": "0x43cf1b35",
+   "idt": "0x43cf1b54",
+   "core": ": Only vatr is kicked"
+  },
+  {
+   "idt_opd": "0x43cf1b6f",
+   "idt": "0x43cf1b95",
+   "core": ": load_delay out of spec: %d"
+  },
+  {
+   "idt_opd": "0x43cf1bb7",
+   "idt": "0x43cf1bd3",
+   "core": ": Kick IDT skipped"
+  },
+  {
+   "idt_opd": "0x43cf1beb",
+   "idt": "0x43cf1c0b",
+   "core": ": Unknown Gain mode %d"
+  },
+  {
+   "idt_opd": "0x43cf1c27",
+   "idt": "0x43cf1c46",
+   "core": ": AF Gain over3 %x %x"
+  },
+  {
+   "idt_opd": "0x43cf1c61",
+   "idt": "0x43cf1c82",
+   "core": ": Unknown Gain mode2 %d"
+  },
+  {
+   "idt_opd": "0x43cf1c9f",
+   "idt": "0x43cf1cc4",
+   "core": ": Invlid distortion area %d"
+  },
+  {
+   "idt_opd": "0x43cf1ce5",
+   "idt": "0x43cf1d0d",
+   "core": ": Not valid distortion area %d"
+  },
+  {
+   "idt_opd": "0x43cf1d31",
+   "idt": "0x43cf1d59",
+   "core": ": Not support Disp KK monitor\n"
+  },
+  {
+   "idt_opd": "0x43cf1d7d",
+   "idt": "0x43cf1da2",
+   "core": ": IE_CCinit pointer is NULL"
+  },
+  {
+   "idt_opd": "0x43cf1dc3",
+   "idt": "0x43cf1de5",
+   "core": ": ie_miniraw.adrs Err:%X"
+  },
+  {
+   "idt_opd": "0x43cf1e03",
+   "idt": "0x43cf1e26",
+   "core": ": backImgData.adrs Err:%X"
+  },
+  {
+   "idt_opd": "0x43cf1e45",
+   "idt": "0x43cf1e63",
+   "core": ": imgmap.adrs Err:%X"
+  },
+  {
+   "idt_opd": "0x43cf1e7d",
+   "idt": "0x43cf1e9b",
+   "core": ": ie_out.adrs Err:%X"
+  },
+  {
+   "idt_opd": "0x43cf1eb5",
+   "idt": "0x43cf1ed3",
+   "core": ": refmap.adrs Err:%X"
+  },
+  {
+   "idt_opd": "0x43cf1eed",
+   "idt": "0x43cf1f07",
+   "core": ": tar_num Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf1f1d",
+   "idt": "0x43cf1f3a",
+   "core": ": isSpectRef Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf1f53",
+   "idt": "0x43cf1f6e",
+   "core": ": isMapOut Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf1f85",
+   "idt": "0x43cf1fa2",
+   "core": ": r.val.high Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf1fbb",
+   "idt": "0x43cf1fd7",
+   "core": ": r.val.low Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf1fef",
+   "idt": "0x43cf200c",
+   "core": ": g.val.high Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2025",
+   "idt": "0x43cf2041",
+   "core": ": g.val.low Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2059",
+   "idt": "0x43cf2076",
+   "core": ": b.val.high Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf208f",
+   "idt": "0x43cf20ab",
+   "core": ": b.val.low Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf20c3",
+   "idt": "0x43cf20df",
+   "core": ": ie_offset Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf20f7",
+   "idt": "0x43cf2115",
+   "core": ": ie_imgwidth Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf212f",
+   "idt": "0x43cf214e",
+   "core": ": ie_imgheight Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2169",
+   "idt": "0x43cf2188",
+   "core": ": ie_imgaddnum Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf21a3",
+   "idt": "0x43cf21bf",
+   "core": ": ie_aspect Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf21d7",
+   "idt": "0x43cf21f6",
+   "core": ": idealWidth-1 Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2211",
+   "idt": "0x43cf222e",
+   "core": ": mask.x_end Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2247",
+   "idt": "0x43cf2267",
+   "core": ": idealHeight-1 Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2283",
+   "idt": "0x43cf22a0",
+   "core": ": mask.y_end Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf22b9",
+   "idt": "0x43cf22d6",
+   "core": ": idealWidth Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf22ef",
+   "idt": "0x43cf2313",
+   "core": ": lc_waku[%d].x_end Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2333",
+   "idt": "0x43cf2351",
+   "core": ": idealHeight Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf236b",
+   "idt": "0x43cf238f",
+   "core": ": lc_waku[%d].y_end Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf23af",
+   "idt": "0x43cf23d1",
+   "core": ": lc_miniraw.adrs Err:%X"
+  },
+  {
+   "idt_opd": "0x43cf23ef",
+   "idt": "0x43cf240d",
+   "core": ": lc_out.adrs Err:%X"
+  },
+  {
+   "idt_opd": "0x43cf2427",
+   "idt": "0x43cf2443",
+   "core": ": lc_offset Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf245b",
+   "idt": "0x43cf2479",
+   "core": ": lc_imgwidth Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2493",
+   "idt": "0x43cf24b2",
+   "core": ": lc_imgheight Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf24cd",
+   "idt": "0x43cf24ec",
+   "core": ": lc_imgaddnum Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2507",
+   "idt": "0x43cf2523",
+   "core": ": lc_aspect Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf253b",
+   "idt": "0x43cf255b",
+   "core": ": LC SEM ERR TMOUT %x\n"
+  },
+  {
+   "idt_opd": "0x43cf2577",
+   "idt": "0x43cf2591",
+   "core": ": LC SEM ERR %x\n"
+  },
+  {
+   "idt_opd": "0x43cf25a7",
+   "idt": "0x43cf25c6",
+   "core": ": LC OSAL SEM ERR %x\n"
+  },
+  {
+   "idt_opd": "0x43cf2634",
+   "idt": "0x43cf2659",
+   "core": ": Start MapWidthRC function"
+  },
+  {
+   "idt_opd": "0x43cf267a",
+   "idt": "0x43cf269b",
+   "core": ": leftW, rightW: %d, %d"
+  },
+  {
+   "idt_opd": "0x43cf26b8",
+   "idt": "0x43cf26de",
+   "core": ": Start MapHeightRC function"
+  },
+  {
+   "idt_opd": "0x43cf2700",
+   "idt": "0x43cf2721",
+   "core": ": topH, bottomH: %d, %d"
+  },
+  {
+   "idt_opd": "0x43cf274a",
+   "idt": "0x43cf276b",
+   "core": ": CCinitParam addr null"
+  },
+  {
+   "idt_opd": "0x43cf2788",
+   "idt": "0x43cf27a9",
+   "core": ": ECinitParam addr null"
+  },
+  {
+   "idt_opd": "0x43cf27c6",
+   "idt": "0x43cf27e7",
+   "core": ": CCsyncParam addr null"
+  },
+  {
+   "idt_opd": "0x43cf2804",
+   "idt": "0x43cf2825",
+   "core": ": ECsyncParam addr null"
+  },
+  {
+   "idt_opd": "0x43cf2842",
+   "idt": "0x43cf2861",
+   "core": ": CCsyncRes ERR :%08X"
+  },
+  {
+   "idt_opd": "0x43cf287c",
+   "idt": "0x43cf289b",
+   "core": ": CCsyncRes addr null"
+  },
+  {
+   "idt_opd": "0x43cf28b6",
+   "idt": "0x43cf28d5",
+   "core": ": ECsyncRes ERR :%08X"
+  },
+  {
+   "idt_opd": "0x43cf28f0",
+   "idt": "0x43cf290f",
+   "core": ": ECsyncRes addr null"
+  },
+  {
+   "idt_opd": "0x43cf292a",
+   "idt": "0x43cf2948",
+   "core": ": face_use_cc Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2962",
+   "idt": "0x43cf2983",
+   "core": ": kido_th[%d].up Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf29a0",
+   "idt": "0x43cf29c1",
+   "core": ": kido_th[%d].dn Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf29de",
+   "idt": "0x43cf2a01",
+   "core": ": ratio_wak[%d].up Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2a20",
+   "idt": "0x43cf2a43",
+   "core": ": ratio_wak[%d].dn Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2a62",
+   "idt": "0x43cf2a86",
+   "core": ": ratio_wak[%d].rgt Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2aa6",
+   "idt": "0x43cf2aca",
+   "core": ": ratio_wak[%d].lft Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2aea",
+   "idt": "0x43cf2b09",
+   "core": ": sel_waku[%d] Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2b24",
+   "idt": "0x43cf2b3e",
+   "core": ": sel_wak Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2b54",
+   "idt": "0x43cf2b6f",
+   "core": ": sel_hist Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2b86",
+   "idt": "0x43cf2ba0",
+   "core": ": sel_sum Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2bb6",
+   "idt": "0x43cf2bd5",
+   "core": ": miniraw.adrs Err:%X"
+  },
+  {
+   "idt_opd": "0x43cf2bf0",
+   "idt": "0x43cf2c11",
+   "core": ": shade_map.adrs Err:%X"
+  },
+  {
+   "idt_opd": "0x43cf2c2e",
+   "idt": "0x43cf2c4b",
+   "core": ": 4cmap.adrs Err:%X"
+  },
+  {
+   "idt_opd": "0x43cf2c64",
+   "idt": "0x43cf2c83",
+   "core": ": histmap.adrs Err:%X"
+  },
+  {
+   "idt_opd": "0x43cf2c9e",
+   "idt": "0x43cf2cbc",
+   "core": ": summap.adrs Err:%X"
+  },
+  {
+   "idt_opd": "0x43cf2cd6",
+   "idt": "0x43cf2cf8",
+   "core": ": out_opd_cc.adrs Err:%X"
+  },
+  {
+   "idt_opd": "0x43cf2d16",
+   "idt": "0x43cf2d38",
+   "core": ": out_opd_ec.adrs Err:%X"
+  },
+  {
+   "idt_opd": "0x43cf2d56",
+   "idt": "0x43cf2d6f",
+   "core": ": offset Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2d84",
+   "idt": "0x43cf2d9f",
+   "core": ": imgwidth Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2db6",
+   "idt": "0x43cf2dd2",
+   "core": ": imgheight Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2dea",
+   "idt": "0x43cf2e06",
+   "core": ": imgaddnum Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2e1e",
+   "idt": "0x43cf2e37",
+   "core": ": aspect Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2e4c",
+   "idt": "0x43cf2e65",
+   "core": ": x_size Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2e7a",
+   "idt": "0x43cf2e93",
+   "core": ": y_size Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2ea8",
+   "idt": "0x43cf2ec0",
+   "core": ": x.sel Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2ed4",
+   "idt": "0x43cf2eec",
+   "core": ": y.sel Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2f00",
+   "idt": "0x43cf2f19",
+   "core": ": x.span Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2f2e",
+   "idt": "0x43cf2f47",
+   "core": ": y.span Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2f5c",
+   "idt": "0x43cf2f85",
+   "core": ": intn precap Unknown aspect:%d"
+  },
+  {
+   "idt_opd": "0x43cf2faa",
+   "idt": "0x43cf2fcd",
+   "core": ": intWak[%d].x_end Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf2fec",
+   "idt": "0x43cf300f",
+   "core": ": intWak[%d].y_end Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf302e",
+   "idt": "0x43cf3052",
+   "core": ": histWak[%d].x_end Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf3072",
+   "idt": "0x43cf3096",
+   "core": ": histWak[%d].y_end Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf30b6",
+   "idt": "0x43cf30dc",
+   "core": ": intn cap Unknown aspect:%d"
+  },
+  {
+   "idt_opd": "0x43cf30fe",
+   "idt": "0x43cf3120",
+   "core": ": cwaku[%d].x_end Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf313e",
+   "idt": "0x43cf3160",
+   "core": ": cwaku[%d].y_end Err:%d"
+  },
+  {
+   "idt_opd": "0x43cf317e",
+   "idt": "0x43cf31b7",
+   "core": ": Out Of spec yet. int calc with face %d num %d"
+  },
+  {
+   "idt_opd": "0x43cf31ec",
+   "idt": "0x43cf320e",
+   "core": ": intn Unknown aspect:%d"
+  },
+  {
+   "idt_opd": "0x43cf322c",
+   "idt": "0x43cf324c",
+   "core": ": CC syncflg set error"
+  },
+  {
+   "idt_opd": "0x43cf3268",
+   "idt": "0x43cf3288",
+   "core": ": EC syncflg set error"
+  },
+  {
+   "idt_opd": "0x43cf32a4",
+   "idt": "0x43cf32c3",
+   "core": ": 4cmap aspect error!"
+  },
+  {
+   "idt_opd": "0x43cf3306",
+   "idt": "0x43cf332c",
+   "core": ": GetIDTSA Unknown aspect:%d"
+  },
+  {
+   "idt_opd": "0x43cf334e",
+   "idt": "0x43cf3370",
+   "core": ": AF AE x %d %d %d %d %x"
+  },
+  {
+   "idt_opd": "0x43cf338e",
+   "idt": "0x43cf33b0",
+   "core": ": AF AE y %d %d %d %d %x"
+  },
+  {
+   "idt_opd": "0x43cf33ce",
+   "idt": "0x43cf33ef",
+   "core": ": calc_inv2 0div %d %d "
+  },
+  {
+   "idt_opd": "0x43cf340c",
+   "idt": "0x43cf3425",
+   "core": ": next is NULL "
+  },
+  {
+   "idt_opd": "0x43cf343a",
+   "idt": "0x43cf345f",
+   "core": ": calc_inv 0div %d %d %d %d"
+  },
+  {
+   "idt_opd": "0x43cf3480",
+   "idt": "0x43cf34ac",
+   "core": ": Split Coordinate: Async invalid."
+  },
+  {
+   "idt_opd": "0x43cf34d4",
+   "idt": "0x43cf3508",
+   "core": ": calc SplitIDTSA error %d %d %d %d %d %d."
+  },
+  {
+   "idt_opd": "0x43cf3538",
+   "idt": "0x43cf3562",
+   "core": ": IDTSA Invalid Ch select. %d %d"
+  },
+  {
+   "idt_opd": "0x43cf3588",
+   "idt": "0x43cf35aa",
+   "core": ": Invlid distortion area"
+  },
+  {
+   "idt_opd": "0x43cf35c8",
+   "idt": "0x43cf35f4",
+   "core": ": Out of Spec:sync FRM_mode: %d %d"
+  },
+  {
+   "idt_opd": "0x43cf361c",
+   "idt": "0x43cf3642",
+   "core": ": sync FRM size h 0ch: %d %d"
+  },
+  {
+   "idt_opd": "0x43cf3664",
+   "idt": "0x43cf368a",
+   "core": ": sync FRM size h 1ch: %d %d"
+  },
+  {
+   "idt_opd": "0x43cf36ac",
+   "idt": "0x43cf36ce",
+   "core": ": sync FRM size v: %d %d"
+  },
+  {
+   "idt_opd": "0x43cf36ec",
+   "idt": "0x43cf3719",
+   "core": ": Out of Spec:async FRM_mode: %d %d"
+  },
+  {
+   "idt_opd": "0x43cf3742",
+   "idt": "0x43cf3769",
+   "core": ": async FRM size h 0ch: %d %d"
+  },
+  {
+   "idt_opd": "0x43cf378c",
+   "idt": "0x43cf37b3",
+   "core": ": async FRM size h 1ch: %d %d"
+  },
+  {
+   "idt_opd": "0x43cf37d6",
+   "idt": "0x43cf37f9",
+   "core": ": async FRM size v: %d %d"
+  },
+  {
+   "idt_opd": "0x43cf3818",
+   "idt": "0x43cf383a",
+   "core": ": unknown vatr aspect %d"
+  },
+  {
+   "idt_opd": "0x43cf3858",
+   "idt": "0x43cf3879",
+   "core": ": DET x-size over %d %d"
+  },
+  {
+   "idt_opd": "0x43cf3896",
+   "idt": "0x43cf38b7",
+   "core": ": DET y-size over %d %d"
+  },
+  {
+   "idt_opd": "0x43cf38d4",
+   "idt": "0x43cf38f9",
+   "core": ": HIST x size not enough %d"
+  },
+  {
+   "idt_opd": "0x43cf391a",
+   "idt": "0x43cf393f",
+   "core": ": HIST y size not enough %d"
+  },
+  {
+   "idt_opd": "0x43cf3960",
+   "idt": "0x43cf3984",
+   "core": ": CAE x size not enough %d"
+  },
+  {
+   "idt_opd": "0x43cf39a4",
+   "idt": "0x43cf39c8",
+   "core": ": CAE y size not enough %d"
+  },
+  {
+   "idt_opd": "0x43cf39e8",
+   "idt": "0x43cf3a07",
+   "core": ": gle x-size error %d"
+  },
+  {
+   "idt_opd": "0x43cf3a22",
+   "idt": "0x43cf3a47",
+   "core": ": gle y-size error %d %d %d"
+  },
+  {
+   "idt_opd": "0x43cf3a68",
+   "idt": "0x43cf3a8b",
+   "core": ": gle x-blk-size error %d"
+  },
+  {
+   "idt_opd": "0x43cf3aaa",
+   "idt": "0x43cf3acd",
+   "core": ": gle y-blk-size error %d"
+  },
+  {
+   "idt_opd": "0x43cf3aec",
+   "idt": "0x43cf3b0f",
+   "core": ": gle org error x:%d y:%d"
+  },
+  {
+   "idt_opd": "0x43cf3b2e",
+   "idt": "0x43cf3b52",
+   "core": ": gle x-end-point error %d"
+  },
+  {
+   "idt_opd": "0x43cf3b72",
+   "idt": "0x43cf3b96",
+   "core": ": gle y-end-point error %d"
+  },
+  {
+   "idt_opd": "0x43cf3bb6",
+   "idt": "0x43cf3bd5",
+   "core": ": Det1 %d %d %d %d %d"
+  },
+  {
+   "idt_opd": "0x43cf3bf0",
+   "idt": "0x43cf3c15",
+   "core": ": Det2 %d %d %d %d in %d %d"
+  },
+  {
+   "idt_opd": "0x43cf3c36",
+   "idt": "0x43cf3c58",
+   "core": ": Gle1 %d %d %d %d %d %d"
+  },
+  {
+   "idt_opd": "0x43cf3c76",
+   "idt": "0x43cf3c9b",
+   "core": ": Gle2 %d %d %d %d in %d %d"
+  },
+  {
+   "idt_opd": "0x43cf3cbc",
+   "idt": "0x43cf3cea",
+   "core": ": HIST min:%x max:%x idat:%x cnt:%x "
+  },
+  {
+   "idt_opd": "0x43cf3d14",
+   "idt": "0x43cf3d60",
+   "core": ": CAE cnt_h:%x i2dat_h:%x idat_h:%x cnt_l:%x i2dat_l:%x idat_l:%x "
+  },
+  {
+   "idt_opd": "0x43cf3da8",
+   "idt": "0x43cf3dde",
+   "core": ": total:%dx%d rcout:xs:%d xe:%d ys:%d ye:%d "
+  },
+  {
+   "idt_opd": "0x43cf3e10",
+   "idt": "0x43cf3e38",
+   "core": ": det:xs:%d xe:%d ys:%d ye:%d "
+  },
+  {
+   "idt_opd": "0x43cf3e5c",
+   "idt": "0x43cf3e79",
+   "core": ": det x_size  %d %d"
+  },
+  {
+   "idt_opd": "0x43cf3e92",
+   "idt": "0x43cf3eaf",
+   "core": ": det y_size  %d %d"
+  },
+  {
+   "idt_opd": "0x43cf3ec8",
+   "idt": "0x43cf3eec",
+   "core": ": VATR Error det:%x gle:%x"
+  },
+  {
+   "idt_opd": "0x43cf3f0c",
+   "idt": "0x43cf3f3b",
+   "core": ": VATR vld:%d xs:%f ys:%f xw:%f yw:%f"
+  },
+  {
+   "idt_opd": "0x43cf3f66",
+   "idt": "0x43cf3f9b",
+   "core": ": VATR width not 8n or height not 2n: %d %d"
+  },
+  {
+   "idt_opd": "0x43cf3fcc",
+   "idt": "0x43cf3fee",
+   "core": ": VATR size error: %d %d"
+  },
+  {
+   "idt_opd": "0x43cf400c",
+   "idt": "0x43cf402c",
+   "core": ": VATR unknown rate %d"
+  },
+  {
+   "idt_opd": "0x43cf4048",
+   "idt": "0x43cf406e",
+   "core": ": VATR RAW size error: %d %d"
+  },
+  {
+   "idt_opd": "0x43cf4090",
+   "idt": "0x43cf40ba",
+   "core": ": EndMode: Invalid PreLight set."
+  },
+  {
+   "idt_opd": "0x43cf40e0",
+   "idt": "0x43cf4100",
+   "core": ": miniRAW Addr  : %08x"
+  },
+  {
+   "idt_opd": "0x43cf411c",
+   "idt": "0x43cf4134",
+   "core": ": width : %d  "
+  },
+  {
+   "idt_opd": "0x43cf4148",
+   "idt": "0x43cf4160",
+   "core": ": height: %d  "
+  },
+  {
+   "idt_opd": "0x43cf4174",
+   "idt": "0x43cf41a0",
+   "core": ": DebugGetInfo extraction failed!!"
+  },
+  {
+   "idt_opd": "0x43cf41c8",
+   "idt": "0x43cf41ed",
+   "core": ": CC EC Result Addr  : %08x"
+  },
+  {
+   "idt_opd": "0x43cf420e",
+   "idt": "0x43cf4224",
+   "core": ": size: %d  "
+  },
+  {
+   "idt_opd": "0x43cf4251",
+   "idt": "0x43cf427a",
+   "core": ": DebugInfo extraction failed!!"
+  },
+  {
+   "idt_opd": "0x43cf431d",
+   "idt": "0x43cf433d",
+   "core": ": FRM rate NG %d %d %d"
+  },
+  {
+   "idt_opd": "0x43cf4359",
+   "idt": "0x43cf4381",
+   "core": ": FOPD_rate is not correct! %d"
+  },
+  {
+   "idt_opd": "0x43cf43a5",
+   "idt": "0x43cf43c6",
+   "core": ": Invalid AF_pix/clk!%d"
+  },
+  {
+   "idt_opd": "0x43cf43e3",
+   "idt": "0x43cf4411",
+   "core": ": AF or RDRAW can't work 8pix/clk %d"
+  },
+  {
+   "idt_opd": "0x43cf443b",
+   "idt": "0x43cf4465",
+   "core": ": AF_param is not correct! %d %d"
+  },
+  {
+   "idt_opd": "0x43cf448b",
+   "idt": "0x43cf44bc",
+   "core": ": AF_forced_param is not correct! %d %d"
+  },
+  {
+   "idt_opd": "0x43cf44e9",
+   "idt": "0x43cf4519",
+   "core": ": AF_param is not correct async! %d %d"
+  },
+  {
+   "idt_opd": "0x43cf4545",
+   "idt": "0x43cf4559",
+   "core": ": 4cmap:%X"
+  },
+  {
+   "idt_opd": "0x43cf4569",
+   "idt": "0x43cf457c",
+   "core": ": hmap:%X"
+  },
+  {
+   "idt_opd": "0x43cf458b",
+   "idt": "0x43cf459e",
+   "core": ": smap:%X"
+  },
+  {
+   "idt_opd": "0x43cf45ad",
+   "idt": "0x43cf45c1",
+   "core": ": ccout:%X"
+  },
+  {
+   "idt_opd": "0x43cf45d1",
+   "idt": "0x43cf45e5",
+   "core": ": ecout:%X"
+  },
+  {
+   "idt_opd": "0x43cf45f5",
+   "idt": "0x43cf4609",
+   "core": ": shade:%X"
+  },
+  {
+   "idt_opd": "0x43cf4619",
+   "idt": "0x43cf462d",
+   "core": ": input:%X"
+  },
+  {
+   "idt_opd": "0x43cf463d",
+   "idt": "0x43cf4652",
+   "core": ": msain0:%X"
+  },
+  {
+   "idt_opd": "0x43cf4663",
+   "idt": "0x43cf4678",
+   "core": ": msain1:%X"
+  },
+  {
+   "idt_opd": "0x43cf4689",
+   "idt": "0x43cf469e",
+   "core": ": msaout:%X"
+  },
+  {
+   "idt_opd": "0x43cf46af",
+   "idt": "0x43cf46c3",
+   "core": ": ieout:%X"
+  },
+  {
+   "idt_opd": "0x43cf46d3",
+   "idt": "0x43cf46eb",
+   "core": ": p_img_map:%X"
+  },
+  {
+   "idt_opd": "0x43cf46ff",
+   "idt": "0x43cf471b",
+   "core": ": p_backImgData:%X"
+  },
+  {
+   "idt_opd": "0x43cf4733",
+   "idt": "0x43cf4747",
+   "core": ": ie_in:%X"
+  },
+  {
+   "idt_opd": "0x43cf4757",
+   "idt": "0x43cf476e",
+   "core": ": mapRC_in:%X"
+  },
+  {
+   "idt_opd": "0x43cf4781",
+   "idt": "0x43cf4796",
+   "core": ": lc_out:%X"
+  },
+  {
+   "idt_opd": "0x43cf47a7",
+   "idt": "0x43cf47bb",
+   "core": ": lc_in:%X"
+  },
+  {
+   "idt_opd": "0x43cf47cb",
+   "idt": "0x43cf47e0",
+   "core": ": refmap:%X"
+  },
+  {
+   "idt_opd": "0x43cf47f1",
+   "idt": "0x43cf4815",
+   "core": ": SGC must change w %d %d\n"
+  },
+  {
+   "idt_opd": "0x43cf4835",
+   "idt": "0x43cf4859",
+   "core": ": SGC must change h %d %d\n"
+  },
+  {
+   "idt_opd": "0x43cf4879",
+   "idt": "0x43cf4896",
+   "core": ": IE_RefMap is NULL"
+  },
+  {
+   "idt_opd": "0x43cf48c9",
+   "idt": "0x43cf48ea",
+   "core": ": Can't Get miniRAW Mem"
+  },
+  {
+   "idt_opd": "0x43cf4907",
+   "idt": "0x43cf4932",
+   "core": ": VATR Mem Get: FW param is NULL!"
+  },
+  {
+   "idt_opd": "0x43cf4959",
+   "idt": "0x43cf4973",
+   "core": ": VATR Mem OK %x"
+  },
+  {
+   "idt_opd": "0x43cf4989",
+   "idt": "0x43cf49a3",
+   "core": ": VATR Mem NG %d"
+  },
+  {
+   "idt_opd": "0x43cf49b9",
+   "idt": "0x43cf49d8",
+   "core": ": VATR Mem Release OK"
+  },
+  {
+   "idt_opd": "0x43cf49f3",
+   "idt": "0x43cf4a15",
+   "core": ": VATR Mem Release NG %d"
+  },
+  {
+   "idt_opd": "0x43cf4a33",
+   "idt": "0x43cf4a5e",
+   "core": ": VATR IsAlloc: FW param is NULL!"
+  },
+  {
+   "idt_opd": "0x43cf4a85",
+   "idt": "0x43cf4aa7",
+   "core": ": IDT EC_SEM SIG ERR %x\n"
+  },
+  {
+   "idt_opd": "0x43cf4ac5",
+   "idt": "0x43cf4ae7",
+   "core": ": IDT CC_SEM SIG ERR %x\n"
+  },
+  {
+   "idt_opd": "0x43cf4b05",
+   "idt": "0x43cf4b2b",
+   "core": ": IDT Get ec_sem error %x %d"
+  },
+  {
+   "idt_opd": "0x43cf4b4d",
+   "idt": "0x43cf4b76",
+   "core": ": IDT Get ec_sem time_out %x %d"
+  },
+  {
+   "idt_opd": "0x43cf4b9b",
+   "idt": "0x43cf4bc1",
+   "core": ": IDT Get cc_sem error %x %d"
+  },
+  {
+   "idt_opd": "0x43cf4be3",
+   "idt": "0x43cf4c0c",
+   "core": ": IDT Get cc_sem time_out %x %d"
+  },
+  {
+   "idt_opd": "0x43cf4c31",
+   "idt": "0x43cf4c49",
+   "core": ": EC overflow\n"
+  },
+  {
+   "idt_opd": "0x43cf4c5d",
+   "idt": "0x43cf4c75",
+   "core": ": CC overflow\n"
+  },
+  {
+   "idt_opd": "0x43cf4c89",
+   "idt": "0x43cf4ca9",
+   "core": ": IDT Get lc_sem %x %d"
+  },
+  {
+   "idt_opd": "0x43cf4cc5",
+   "idt": "0x43cf4ced",
+   "core": ": IDT Get lc_sem time_out%x %d"
+  },
+  {
+   "idt_opd": "0x43cf4d11",
+   "idt": "0x43cf4d33",
+   "core": ": IDT LC_SEM SIG ERR %x\n"
+  },
+  {
+   "idt_opd": "0x43cf4d51",
+   "idt": "0x43cf4d72",
+   "core": ": invalid load_delay:%d"
+  },
+  {
+   "idt_opd": "0x43cf4d8f",
+   "idt": "0x43cf4db4",
+   "core": ": invalid load_delay old:%d"
+  },
+  {
+   "idt_opd": "0x43cf4dd5",
+   "idt": "0x43cf4df4",
+   "core": ": AF invalid rate %d."
+  },
+  {
+   "idt_opd": "0x43cf4e0f",
+   "idt": "0x43cf4e41",
+   "core": ": VATR with 8pix/clk is out of spec yet."
+  },
+  {
+   "idt_opd": "0x43cf4e6f",
+   "idt": "0x43cf4e92",
+   "core": ": VATR unknown pix/clk %d"
+  },
+  {
+   "idt_opd": "0x43cf4eb1",
+   "idt": "0x43cf4ed5",
+   "core": ": FOPD rate Convert NG %d "
+  },
+  {
+   "idt_opd": "0x43cf4ef5",
+   "idt": "0x43cf4f17",
+   "core": ": Request Convert NG %d "
+  },
+  {
+   "idt_opd": "0x43cf4f35",
+   "idt": "0x43cf4f63",
+   "core": ": SelectAF LC request NG %x %d %d %d"
+  },
+  {
+   "idt_opd": "0x43cf4f8d",
+   "idt": "0x43cf4fc0",
+   "core": ": Sync rate %d -> %d use:%d mode:%d %d %d"
+  },
+  {
+   "idt_opd": "0x43cf4fef",
+   "idt": "0x43cf501d",
+   "core": ": test %d %d %d %d %d %d %d %d %d %d"
+  },
+  {
+   "idt_opd": "0x43cf5047",
+   "idt": "0x43cf5075",
+   "core": ": Async rate %d -> %d use:%d mode:%d"
+  },
+  {
+   "idt_opd": "0x43cf509f",
+   "idt": "0x43cf50c8",
+   "core": ": test2 %d %d %d %d %d %d %d %d"
+  },
+  {
+   "idt_opd": "0x43cf50ed",
+   "idt": "0x43cf511c",
+   "core": ": Illegal FRM mode for image_param %d"
+  },
+  {
+   "idt_opd": "0x43cf5147",
+   "idt": "0x43cf5170",
+   "core": ": Illegal FRM mode for IDTSA %d"
+  },
+  {
+   "idt_opd": "0x43cf51b3",
+   "idt": "0x43cf51ce",
+   "core": ": FOPD_MODE error"
+  },
+  {
+   "idt_opd": "0x43cf51e5",
+   "idt": "0x43cf5204",
+   "core": ": mask%x add%x %x %x."
+  },
+  {
+   "idt_opd": "0x43cf521f",
+   "idt": "0x43cf524a",
+   "core": ": async opd valid add:%d mask%x ."
+  },
+  {
+   "idt_opd": "0x43cf5271",
+   "idt": "0x43cf5299",
+   "core": ": capo valid 0size. w:%d h:%d."
+  },
+  {
+   "idt_opd": "0x43cf52bd",
+   "idt": "0x43cf52e3",
+   "core": ": capo arc 0size. w:%d h:%d."
+  },
+  {
+   "idt_opd": "0x43cf5305",
+   "idt": "0x43cf5325",
+   "core": ": rc 0size. w:%d h:%d."
+  },
+  {
+   "idt_opd": "0x43cf5341",
+   "idt": "0x43cf5364",
+   "core": ": Pre: Unknown aspect %d."
+  },
+  {
+   "idt_opd": "0x43cf5383",
+   "idt": "0x43cf53aa",
+   "core": ": async valid add:%d mask%x ."
+  },
+  {
+   "idt_opd": "0x43cf53cd",
+   "idt": "0x43cf5400",
+   "core": ": FRM 4pix/clk error async. width not 8n."
+  },
+  {
+   "idt_opd": "0x43cf542f",
+   "idt": "0x43cf5456",
+   "core": ": cap valid 0size. w:%d h:%d."
+  },
+  {
+   "idt_opd": "0x43cf5479",
+   "idt": "0x43cf549e",
+   "core": ": cap arc 0size. w:%d h:%d."
+  },
+  {
+   "idt_opd": "0x43cf54bf",
+   "idt": "0x43cf54e3",
+   "core": ": cap rc 0size. w:%d h:%d."
+  },
+  {
+   "idt_opd": "0x43cf5503",
+   "idt": "0x43cf5532",
+   "core": ": 4pix/clk error async. width not 8n."
+  },
+  {
+   "idt_opd": "0x43cf555d",
+   "idt": "0x43cf5580",
+   "core": ": Cap: Unknown aspect %d."
+  },
+  {
+   "idt_opd": "0x43cf559f",
+   "idt": "0x43cf55c0",
+   "core": ": valid add:%d mask%x ."
+  },
+  {
+   "idt_opd": "0x43cf55dd",
+   "idt": "0x43cf560a",
+   "core": ": FRM width error EE. width not 8n."
+  },
+  {
+   "idt_opd": "0x43cf5633",
+   "idt": "0x43cf565d",
+   "core": ": FRM EE valid 0size. w:%d h:%d."
+  },
+  {
+   "idt_opd": "0x43cf5683",
+   "idt": "0x43cf56ab",
+   "core": ": FRM EE arc 0size. w:%d h:%d."
+  },
+  {
+   "idt_opd": "0x43cf56cf",
+   "idt": "0x43cf56f2",
+   "core": ": EE rc 0size. w:%d h:%d."
+  },
+  {
+   "idt_opd": "0x43cf5711",
+   "idt": "0x43cf573d",
+   "core": ": 4pix/clk error EE. width not 8n."
+  },
+  {
+   "idt_opd": "0x43cf5765",
+   "idt": "0x43cf578b",
+   "core": ": EE valid 0size. w:%d h:%d."
+  },
+  {
+   "idt_opd": "0x43cf57ad",
+   "idt": "0x43cf57d1",
+   "core": ": EE arc 0size. w:%d h:%d."
+  },
+  {
+   "idt_opd": "0x43cf57f1",
+   "idt": "0x43cf5813",
+   "core": ": MovieDepthRate illegal"
+  }
+ ],
+ "sin_referencia": [
+  "0x43cf150f",
+  "0x43cf1557",
+  "0x43cf274a"
+ ],
+ "sin_referencia_kill_corregido": [
+  "0x43cf150f",
+  "0x43cf1557",
+  "0x43cf274a"
+ ],
+ "estructuras": {
+  "IE": {
+   "descripcion": "bloque IE (IE_CCinit) validado en 0x439e80c8; base = puntero recibido como arg0 (r0)",
+   "funcion": "0x439e80c8",
+   "campos": [
+    {
+     "offset": "0x00",
+     "tipo": "u16",
+     "campo": "tar_num"
+    },
+    {
+     "offset": "0x0c",
+     "tipo": "u8",
+     "campo": "isSpectRef"
+    },
+    {
+     "offset": "0x0d",
+     "tipo": "u8",
+     "campo": "isMapOut"
+    },
+    {
+     "offset": "0x10",
+     "tipo": "u32",
+     "campo": "refmap (adrs)"
+    },
+    {
+     "offset": "0x16",
+     "tipo": "u16",
+     "campo": "r.val.high"
+    },
+    {
+     "offset": "0x18",
+     "tipo": "u16",
+     "campo": "r.val.low"
+    },
+    {
+     "offset": "0x1c",
+     "tipo": "u16",
+     "campo": "g.val.high"
+    },
+    {
+     "offset": "0x1e",
+     "tipo": "u16",
+     "campo": "g.val.low"
+    },
+    {
+     "offset": "0x22",
+     "tipo": "u16",
+     "campo": "b.val.high"
+    },
+    {
+     "offset": "0x24",
+     "tipo": "u16",
+     "campo": "b.val.low"
+    },
+    {
+     "offset": "0x54",
+     "tipo": "u32",
+     "campo": "ie_miniraw (adrs)"
+    },
+    {
+     "offset": "0x58",
+     "tipo": "u32",
+     "campo": "ie_offset"
+    },
+    {
+     "offset": "0x5c",
+     "tipo": "u16",
+     "campo": "ie_imgwidth"
+    },
+    {
+     "offset": "0x5e",
+     "tipo": "u16",
+     "campo": "ie_imgheight"
+    },
+    {
+     "offset": "0x60",
+     "tipo": "u16",
+     "campo": "ie_imgaddnum"
+    },
+    {
+     "offset": "0x62",
+     "tipo": "u16",
+     "campo": "ie_aspect"
+    },
+    {
+     "offset": "0x70",
+     "tipo": "u32",
+     "campo": "ie_out (adrs)"
+    },
+    {
+     "offset": "0x74",
+     "tipo": "u32",
+     "campo": "imgmap (adrs)"
+    },
+    {
+     "offset": "0x78",
+     "tipo": "u32",
+     "campo": "backImgData (adrs)"
+    }
+   ]
+  },
+  "MAP": {
+   "descripcion": "bloque MAP validado en 0x439ee7e8 (arg0 = puntero al bloque); los mismos offsets se ven en el volcado 0x439f85d4 (base global 0x43f41b30)",
+   "funcion": "0x439ee7e8",
+   "campos": [
+    {
+     "offset": "0x0c",
+     "tipo": "u32",
+     "campo": "miniraw (adrs)"
+    },
+    {
+     "offset": "0x10",
+     "tipo": "u32",
+     "campo": "offset"
+    },
+    {
+     "offset": "0x14",
+     "tipo": "u16",
+     "campo": "imgwidth"
+    },
+    {
+     "offset": "0x16",
+     "tipo": "u16",
+     "campo": "imgheight"
+    },
+    {
+     "offset": "0x18",
+     "tipo": "u16",
+     "campo": "imgaddnum"
+    },
+    {
+     "offset": "0x1a",
+     "tipo": "u16",
+     "campo": "aspect"
+    },
+    {
+     "offset": "0x28",
+     "tipo": "u8",
+     "campo": "x_size"
+    },
+    {
+     "offset": "0x29",
+     "tipo": "u8",
+     "campo": "y_size"
+    },
+    {
+     "offset": "0x2a",
+     "tipo": "u16",
+     "campo": "x.sel"
+    },
+    {
+     "offset": "0x2c",
+     "tipo": "u16",
+     "campo": "x.span"
+    },
+    {
+     "offset": "0x2e",
+     "tipo": "u16",
+     "campo": "y.sel"
+    },
+    {
+     "offset": "0x30",
+     "tipo": "u16",
+     "campo": "y.span"
+    },
+    {
+     "offset": "0x38",
+     "tipo": "u32",
+     "campo": "shade_map (adrs)"
+    },
+    {
+     "offset": "0x3c",
+     "tipo": "u32",
+     "campo": "4cmap (adrs)"
+    },
+    {
+     "offset": "0x40",
+     "tipo": "u32",
+     "campo": "histmap (adrs)"
+    },
+    {
+     "offset": "0x44",
+     "tipo": "u32",
+     "campo": "summap (adrs)"
+    },
+    {
+     "offset": "0x48",
+     "tipo": "u32",
+     "campo": "out_opd_cc (adrs)"
+    },
+    {
+     "offset": "0x4c",
+     "tipo": "u32",
+     "campo": "out_opd_ec (adrs)"
+    },
+    {
+     "offset": "0x54",
+     "tipo": "u32",
+     "campo": "input (adrs)"
+    }
+   ]
+  },
+  "punteros": {
+   "descripcion": "volcado de punteros 0x439f85d4: 18 punteros repartidos en 3 bloques y 4 globales sueltos",
+   "funcion": "0x439f85d4",
+   "bloques": [
+    {
+     "base": "0x43f41b30",
+     "campos": [
+      {
+       "offset": "0x38",
+       "nombre": "shade"
+      },
+      {
+       "offset": "0x3c",
+       "nombre": "4cmap"
+      },
+      {
+       "offset": "0x40",
+       "nombre": "hmap"
+      },
+      {
+       "offset": "0x44",
+       "nombre": "smap"
+      },
+      {
+       "offset": "0x48",
+       "nombre": "ccout"
+      },
+      {
+       "offset": "0x4c",
+       "nombre": "ecout"
+      },
+      {
+       "offset": "0x54",
+       "nombre": "input"
+      }
+     ]
+    },
+    {
+     "base": "0x43f41cbc",
+     "campos": [
+      {
+       "offset": "0x28",
+       "nombre": "ieout"
+      },
+      {
+       "offset": "0x2c",
+       "nombre": "p_img_map"
+      },
+      {
+       "offset": "0x30",
+       "nombre": "p_backImgData"
+      },
+      {
+       "offset": "0x38",
+       "nombre": "ie_in"
+      }
+     ]
+    },
+    {
+     "base": "0x43f418a8",
+     "campos": [
+      {
+       "offset": "0x28",
+       "nombre": "lc_out"
+      },
+      {
+       "offset": "0x30",
+       "nombre": "lc_in"
+      }
+     ]
+    }
+   ],
+   "globales": [
+    {
+     "addr": "0x43f41bbc",
+     "nombre": "msain0"
+    },
+    {
+     "addr": "0x43f41ef0",
+     "nombre": "msain1"
+    },
+    {
+     "addr": "0x43f41ad8",
+     "nombre": "msaout"
+    },
+    {
+     "addr": "0x43f41f14",
+     "nombre": "mapRC_in"
+    },
+    {
+     "addr": "0x43f4189c",
+     "nombre": "refmap"
+    }
+   ]
+  }
+ },
+ "diferencial": {
+  "a7s_fw320": {
+   "traces_idt_opd": 0,
+   "traces_idt": 306,
+   "comunes": 270,
+   "solo_a6000": [
+    ": Sync rate %d -> %d use:%d mode:%d %d %d",
+    ": det:xs:%d xe:%d ys:%d ye:%d ",
+    ": test %d %d %d %d %d %d %d %d %d %d",
+    ": test2 %d %d %d %d %d %d %d %d"
+   ],
+   "solo_a7s": [
+    {
+     "vaddr": "0x43ce89b2",
+     "core": ": ## Error : MemMgrWrapper::Close()"
+    },
+    {
+     "vaddr": "0x43ce8962",
+     "core": ": ## Error : MemMgrWrapper::Free()"
+    },
+    {
+     "vaddr": "0x43ce898a",
+     "core": ": ## Error : MemMgrWrapper::Open()"
+    },
+    {
+     "vaddr": "0x43ce9e23",
+     "core": ": ## Error : No Space to shift"
+    },
+    {
+     "vaddr": "0x43ce7b24",
+     "core": ": AF_param not correct! %d %d"
+    },
+    {
+     "vaddr": "0x43ce7d75",
+     "core": ": Can't Get Work Mem"
+    },
+    {
+     "vaddr": "0x43ce81de",
+     "core": ": Cannot Get CapWork MEM"
+    },
+    {
+     "vaddr": "0x43ce893e",
+     "core": ": IDT : Init NG : address = %x"
+    },
+    {
+     "vaddr": "0x43ce73fe",
+     "core": ": IDT Async FOPD Sem Get error %x %x %d"
+    },
+    {
+     "vaddr": "0x43ce742b",
+     "core": ": IDT Async FOPD Sem Rel error %x %x"
+    },
+    {
+     "vaddr": "0x43ce749e",
+     "core": ": KICK FOPD %d %d"
+    },
+    {
+     "vaddr": "0x43ce8055",
+     "core": ": LC force prohibited"
+    },
+    {
+     "vaddr": "0x43cec6cd",
+     "core": ": NSX BackUp check."
+    },
+    {
+     "vaddr": "0x43cec5e1",
+     "core": ": PBL AIF_START ERROR. R0."
+    },
+    {
+     "vaddr": "0x43cec581",
+     "core": ": PBL AIF_START ERROR. W0."
+    },
+    {
+     "vaddr": "0x43cec5a1",
+     "core": ": PBL AIF_START ERROR. W1."
+    },
+    {
+     "vaddr": "0x43cec5c1",
+     "core": ": PBL AIF_START ERROR. W2."
+    },
+    {
+     "vaddr": "0x43cec441",
+     "core": ": PBL SET_FUNC ERROR. R0."
+    },
+    {
+     "vaddr": "0x43cec47f",
+     "core": ": PBL SET_FUNC ERROR. W0."
+    },
+    {
+     "vaddr": "0x43cec4bd",
+     "core": ": PBL SET_FUNC ERROR. W1."
+    },
+    {
+     "vaddr": "0x43cec543",
+     "core": ": PBL SET_FUNC ERROR. W2."
+    },
+    {
+     "vaddr": "0x43cec460",
+     "core": ": PBL SET_LOOP ERROR. R0."
+    },
+    {
+     "vaddr": "0x43cec49e",
+     "core": ": PBL SET_LOOP ERROR. W0."
+    },
+    {
+     "vaddr": "0x43cec4dc",
+     "core": ": PBL SET_LOOP ERROR. W1."
+    },
+    {
+     "vaddr": "0x43cec562",
+     "core": ": PBL SET_LOOP ERROR. W2."
+    },
+    {
+     "vaddr": "0x43ce7b47",
+     "core": ": RDRAW can't work 8pix/clk %d"
+    },
+    {
+     "vaddr": "0x43ce7b6b",
+     "core": ": RDRAW_param not correct! %d %d"
+    },
+    {
+     "vaddr": "0x43ce80d8",
+     "core": ": Sync rate %d -> %d, %d use:%d mode:%d %d %d"
+    },
+    {
+     "vaddr": "0x43cec525",
+     "core": ": Unknown VATR aspect %d"
+    },
+    {
+     "vaddr": "0x43ce680f",
+     "core": ": addres: %x size: %d"
+    },
+    {
+     "vaddr": "0x43ce8809",
+     "core": ": arc_target:xs:%d xe:%d ys:%d ye:%d "
+    },
+    {
+     "vaddr": "0x43cec6a9",
+     "core": ": calc_miniraw cycle err %d %d"
+    },
+    {
+     "vaddr": "0x43ce87df",
+     "core": ": det:xs:%d xe:%d ys:%d ye:%d fix %d"
+    },
+    {
+     "vaddr": "0x43ce810b",
+     "core": ": test %d %d %d / %d %d %d %d %d %d %d %d"
+    },
+    {
+     "vaddr": "0x43ce8164",
+     "core": ": test2 %d %d / %d %d %d %d %d %d %d"
+    },
+    {
+     "vaddr": "0x43ca86c8",
+     "core": "r0:%02X r1:%02X r2:%02X w0:%02X  [FOPD]r0:%02X w0:%02X w1:%02X w2:%02X  [PRC]r0:%02X w0:%02X"
+    }
+   ]
+  },
+  "a6300_fw201": {
+   "traces_idt_opd": 0,
+   "traces_idt": 382,
+   "comunes": 270,
+   "solo_a6000": [
+    ": Sync rate %d -> %d use:%d mode:%d %d %d",
+    ": det:xs:%d xe:%d ys:%d ye:%d ",
+    ": test %d %d %d %d %d %d %d %d %d %d",
+    ": test2 %d %d %d %d %d %d %d %d"
+   ]
+  }
+ }
+}

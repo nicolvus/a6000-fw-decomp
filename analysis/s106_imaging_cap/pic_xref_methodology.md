@@ -39,8 +39,31 @@ que **el número de referencias dependa de la regla**:
 | regla | qué hace | sesgo | script |
 |---|---|---|---|
 | **estricta** *(canónica)* | empareja cada `add` con el `ldr` **más cercano** del mismo registro (ventana 4 KB) | puede **perder** referencias (cuando el `ldr` válido no es el más cercano) | `analysis/s106_imaging_cap/scan_pic_refs_strict.py` |
-| kill analysis | como la anterior, pero descarta el par si alguien escribe el registro entre `ldr` y `add` | mejora la cobertura, pero sigue attributing de más | `analysis/s106_imaging_cap/scan_pic_refs_v2.py` |
+| kill analysis | como la anterior, pero descarta el par si alguien escribe el registro entre `ldr` y `add` | con la implementación **corregida** (ver §3.1) coincide con la estricta en el conjunto de cadenas y en los sitios verificados | `analysis/s106_imaging_cap/scan_pic_refs_v2.py` |
 | **ancha** | prueba **todos** los `ldr` del registro en 4 KB | **inventa** referencias | `analysis/s106_imaging_cap/scan_pic_refs.py` (v1) |
+
+### 3.1 Un bug de la kill analysis (encontrado por S120) y su corrección
+
+`scan_pic_refs_v2.py` **no mataba nada**: no tenía `md.detail = True` (con `detail` apagado,
+`ins.operands` lanza `CsError` y la función devolvía siempre `False`) y además mapeaba los
+registros con `op.reg & 0xF`, que en Capstone es inválido (`ARM_REG_R0 = 66`, así que
+`& 0xF` confunde r1 con r3). Corregido (detail activado + mapeo explícito
+`_reg_index`), la kill analysis da:
+
+| módulo | cadenas | referenciadas (estricta) | referenciadas (kill corregida) | sitios (kill corregida) |
+|---|---|---|---|---|
+| `[IMAGING_CAP]` | 697 | 690 | 690 | 996 |
+| `[CAMERA_MAIN_YC]` | 968 | 954 | 954 | 1 090 |
+| `[SFRA]` | 100 | 100 | 100 | **118** (= verdad medida a mano) |
+| `[AIP]` | 37 | 37 | 37 | **37** (= verdad medida a mano) |
+| `[TRK]` | 215 | 213 | 213 | **288** (= recuento del subagente) |
+| `[IDT_OPD]` | 273 | 271 | 271 | 356 |
+
+→ **la kill analysis corregida coincide con la regla estricta** en el conjunto de cadenas
+referenciadas y en los recuentos de sitios de los módulos con verdad medida; lo que hace es
+**eliminar los sitios falsos** de las reglas más laxas (327 en `[IDT_OPD]`). La regla canónica
+sigue siendo la estricta por simplicidad, y la kill analysis corregida queda como la
+herramienta de **auditoría** (cuántos sitios son espurios).
 
 ## 3. Calibración con dos casos verificados a mano
 
