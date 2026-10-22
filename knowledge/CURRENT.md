@@ -1703,3 +1703,15 @@ A7S añade selector silent y bloque de tiempos. [S311](../docs/capture/s311-a600
 
 **Siguiente:** S312 identificar el objeto/vtable del selector (`vtable+0x64`) o cerrar el carril
 con la síntesis A7S↔A6000.
+
+## S312 — consumidores del cluster A7S: todo código exclusivo (22-10-2026, agente B)
+
+Los 7 sitios de lectura de `+0xae/+0xde..+0xea` están en 6 funciones (`0x438477a0`,
+`0x43861a58`, `0x438625a0`, `0x438642f0`, `0x438645bc`, `0x43864cb0`), todas con **0
+coincidencias** de 24 B en la A6000. El cluster se produce en el bloque de tiempos (S307) y se
+consume en configuración/volcado, todo A7S. Cuadro consolidado S300–S312 en el informe.
+[S312](../docs/capture/s312-cluster-consumers.md), `analysis/s312_cluster_consumers/consumers.json`
+(3 tests).
+
+**Siguiente:** resolver el objeto/vtable del selector (slot 0x64, S310) o pasar a la síntesis
+pública A7S↔A6000 (S313) con el estado actual del carril.
