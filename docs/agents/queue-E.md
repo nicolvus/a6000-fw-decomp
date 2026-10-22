@@ -5,6 +5,6 @@ Tema: decodificación de módulos exclusivos de la A6000 fw3.21 (0 en A7S y A630
 - DONE S600 Decodificar `[CAM_FUNC_MGR]` (43 trazas): exclusiva A6000. Ficheros fuente, funciones, estructuras. <3cd9ae4d>
 - DONE S601 Decodificar `[CAM_SCALAR]` (34 trazas): exclusiva A6000. <47cabc1d>
 - DONE S602 Decodificar `[REMOTE]` (32 trazas): exclusiva A6000. <fef184c8>
-- TODO S603 Decodificar `[CAMERA_DSP_APL]`.
+- DONE S603 Decodificar `[CAMERA_DSP_APL]`. <97785948>
 - TODO S604 Decodificar `[LENS_YC]` y `[IMAGING_RAW]`.
 - TODO S605 Al vaciar, regenerar la cola con los siguientes módulos pendientes del censo S178 (priorizar exclusivos A6000).
