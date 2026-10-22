@@ -645,6 +645,24 @@ Los 6 del A6300: `SetApertureSTFForLiro`, `SetAutoDualRecModeForLiro`, `SetExpan
 
 [Informe](../analysis/s178_census/census.md) · [doc](../docs/capture/s178-census.md). Siguiente: elegir las siguientes etiquetas por **valor** (las que hablan de disparo, lectura del sensor o tiempos: `[VDF]`, `[RC]`, `[EIS]`, `[STABILIZER]`, `[ZPD]`) y no solo por tamaño.
 
+## S177 — el módulo `[CAM_FUNC_MGR]` (43 trazas): el gestor de funciones de cámara (22-10-2026, línea de RE general)
+
+**VERIFICADO (31 tests / 1024 subtests, `tests/test_s177_cam_func_mgr.py`):** 43 cadenas `[CAM_FUNC_MGR]` en la A6000 fw3.21 entre `0x43ca12af` y `0x43cb02f1`; **0** en la A7S fw3.20 y el A6300 fw2.01. **57 sitios** (regla estricta; coincide 57=57 con el mapa global) en **25 funciones**, con los **57/57 pares PIC verificados a mano**; **1 cadena muerta**: `Pseudo AF Stop %d` `0x43cb02f1`.
+
+**Qué es**: la etiqueta de traza del namespace C++ **`Camera::Function`** (RTTI `N6Camera8Function…`, **18 clases idénticas en las tres fw**): un **gestor/despachador de funciones de cámara** que enruta peticiones/respuestas entre 4 clientes (`CamUser`, `CameraBackGround`, `Release`, `CamMain`) y las traduce al bus inter-LSI mediante el puente **`LRBridge`**.
+
+**Tabla de 65 funciones** en `0x43ff17b8` (paso 12 B): `{const char *origin; const char *name; u32 id;}` — comprobado directamente: `[0] "UNKNOWN" id=0`, `[1] "REQ_MOVIE" id=1`, `[2] "REQ_MOVIE_REC" id=2`, `[3] "REQ_STILL_EE" id=3`, `[4] "REQ_PB" id=4`; `origin` vale 0 en el fichero (se inicializa en runtime, `0x43787d88`).
+
+**Despachador `0x43805930`** (`Function/LRBridge.cpp`): tipo de mensaje u16 en `[msg+2]`, `sub.w r2,r3,#0x3000` (`0x4380599a`), `cmp r2,#0x30` (`0x4380599e`) y **`tbb` de 49 entradas** (`0x438059a2`) → **tipos de bus `0x3000`–`0x3030`**. Los **12 `type_id`** del puente salen de las comparaciones en `0x43805ec0`–`0x43806126` (`REQ_APP_SND`, `APP`, `APP_CMP`, `REQ_V2ND_SND`, `V2ND`, `V2ND_CMP`, `REQ_VSYNC_CUST_SND`, `VSYNC_CUST`, `VSYNC_CUST_CMP`, `REQ_FSPSUM_SND`, `FSPSUM`, `FSPSUM_CMP`); cada rama se habilita con un bit de máscara en `[obj+0x41]`; campos impresos: `type_id` (`[msg+0]`), `from_lsi` (`[msg+1]`), `req_seq_id` (u16 en `[msg+2]`).
+
+**Firma mecánica del rewrite de logging (verificada a mano)**: las **43/43** cadenas tienen **gemelo exacto en `vaddr+16`** — el prefijo `"[CAM_FUNC_MGR]: "` ocupa exactamente **16 B** y se antepone al literal original, que **queda intacto**: no se reescribe la cadena, se antepone una copia.
+
+**Es cambio de logging, no de código**: los **textos interiores** están presentes **43/43** en la A7S y **42/43** en el A6300 (la A7S solo tiene la traza *vieja* en `0x437ac63e` → `bl 0x438f7114`; el A6300 en `0x437f621e` → `bl 0x43986518`), y la **tabla de 65 funciones no existe en el A6300** (`REPLY_` **0**, `MSG_NONE` **0**, `FUNC <= ` **0**; en la A6000 27 / 1 / 4).
+
+**Negativo acotado**: 0 de `shutter`/`silent`/`curtain`/`electro`/`mech`/`expos`/`iso`/`apert`/`sensor`/`shut`/`svd`/`frame` en las 43 trazas. Gestiona órdenes de alto nivel (`REQ_CAPTURE_START/END`, `REQ_AF_START/STOP`, `REQ_AE_START/STOP`…) pero **no baja al nivel del obturador**; el `unretract` `0x43cb027c` es del obturador **mecánico** → **sin efecto en S51** (A/B/C = NO).
+
+[Informe](../analysis/s177_cam_func_mgr/cam_func_mgr.md) · [doc](../docs/capture/s177-cam-func-mgr.md). Siguiente: la relación entre el `id` de la tabla de 65 funciones y los tipos de bus `0x3000`–`0x3030` (dos espacios de ids distintos); la lista de LSIs; la semántica de `APP`/`V2ND`/`FSPSUM`/`VSYNC_CUST`.
+
 ## S121 — el módulo `[AIP]` (37 trazas): la interfaz de audio con el escalado (21-10-2026, línea de RE general)
 
 **VERIFICADO (97 tests, `tests/test_s121_aip.py`):** 37 cadenas `[AIP]` en `0x43cdd844`–`0x43cdec50`; **16 funciones** y 6 sub-bloques RTTI: `SaWrapper` (8), `SaBackUpCtrl` (12), `SaDriverBase` (4), `LPS` (11), `SaDriverZoomNr` (1), `SetFader` (1). **Callbacks `Ack`/`Comp`/`Err` en tres capas**: SA (`0x43926d1c`/`0x43926de8`, con los predicados `[r1,#1]==0x14`/`0x13`), LPS (`0x4392b16c`/`0x4392b254`) y driver; los errores llevan `errCode`+`errState` (SA) o `ErrCode`+`ErrStatus` (LPS). **Tabla de backup**: **350 entradas de 12 B** en `0x43bd1964` con `{id = 0x10c0000 + n, offset, size}`; `WriteShadow2BakcupArea` vuelca `0x10c` B (`mov.w r0,#0x10c` en `0x4392ab78`) y `SetAudioNrType` publica el **bit 3** de `bkId = 0x10e0000`. Comandos hacia el escalar en `0x4392ac30` (`Cmd`/`Func` + `Zma`/`Ext`/`Mbx`) y `0x4392acb4` (`Cmd`/`Func`/`Unq`). Buffers LPS `0x82`/`0x83`/`0x85` con longitudes `0x2c`/`0x28`/`0x14`; `SetFader` (`0x4355ae98`) divide por 100/20/otro según `[r0,#0x78]`.

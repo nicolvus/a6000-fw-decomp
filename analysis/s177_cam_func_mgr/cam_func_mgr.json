@@ -1,0 +1,4391 @@
+{
+ "hito": "S177",
+ "modulo": "[CAM_FUNC_MGR]",
+ "base_vaddr": "0x43541000",
+ "firmwares": {
+  "A6000_fw321": "analysis/rea-independent/input/av-cam.bin",
+  "A7S_fw320": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+  "A6300_fw201": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin"
+ },
+ "contadores": {
+  "n_cadenas_A6000": 43,
+  "n_ocurrencias_token_A6000": 43,
+  "n_ocurrencias_token_A7S": 0,
+  "n_ocurrencias_token_A6300": 0,
+  "rango_cadenas": [
+   "0x43ca12af",
+   "0x43cb02f1"
+  ],
+  "n_sitios_pic_regla_estricta": 57,
+  "n_funciones_emisoras": 25,
+  "n_cadenas_muertas": 1,
+  "cadenas_muertas": [
+   "0x43cb02f1"
+  ],
+  "n_pares_pic_verificados_a_mano": 57,
+  "n_pares_pic_sin_reuso_registro": 57,
+  "n_con_gemelo_exacto_en_mas16": 43,
+  "longitud_prefijo_bytes": 16,
+  "n_nucleos_en_A7S": 43,
+  "n_nucleos_en_A6300": 42,
+  "n_sitios_con_doble_instrumentacion": 36,
+  "n_clases_rtti_Camera_Function": 18,
+  "n_clases_rtti_Camera_Function_A7S": 18,
+  "n_clases_rtti_Camera_Function_A6300": 18,
+  "n_entradas_tabla_funciones": 65,
+  "module_id_log": 3,
+  "level_log": 13
+ },
+ "cadenas": [
+  {
+   "vaddr": "0x43ca12af",
+   "texto": "[CAM_FUNC_MGR]: CAPCON WARNING! FILE:%s LINE=%d func:%s param=%x %x %x",
+   "sitios": [
+    "0x43787bc4"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43ca12f6",
+   "texto": "[CAM_FUNC_MGR]: SyncProcMargin[usec] HS0:%u HS1:%u HS2:%u HS3@CPU2:%u HS3@CPU0(IDT):%u HS3@CPU3(RCH):%u VDDrive:%u VDPost:%u",
+   "sitios": [
+    "0x43787c48"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caefe8",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d",
+   "sitios": [
+    "0x43801ac6",
+    "0x43801b1e",
+    "0x43801d02",
+    "0x43801d58",
+    "0x43805890",
+    "0x438058e8",
+    "0x438061e6",
+    "0x4380623e",
+    "0x43806422",
+    "0x4380647a",
+    "0x438064ea",
+    "0x43806542"
+   ],
+   "n_sitios": 12
+  },
+  {
+   "vaddr": "0x43caf036",
+   "texto": "[CAM_FUNC_MGR]: SetCapMode:Invalid CapMode[0x%x: %d: %d: %d: %d]",
+   "sitios": [
+    "0x43803edc"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caf077",
+   "texto": "[CAM_FUNC_MGR]: receive[%d,%d] before comp[%d,%d] (QUEUEING)",
+   "sitios": [
+    "0x43803ff0"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caf0b4",
+   "texto": "[CAM_FUNC_MGR]: receive[%d,%d] before comp[%d,%d] (FAILED)",
+   "sitios": [
+    "0x4380401e"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caf136",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! osalErr:0x%04x %s : %d",
+   "sitios": [
+    "0x438056d2",
+    "0x4380579c",
+    "0x438057c8",
+    "0x43805820"
+   ],
+   "n_sitios": 4
+  },
+  {
+   "vaddr": "0x43caf17d",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! LSI_NUM_TYPE:0x%04x %s : %d",
+   "sitios": [
+    "0x43805736"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caf1b3",
+   "texto": "[CAM_FUNC_MGR]: UNKNOWN EID !!! type:[0x%02x] %s : %d",
+   "sitios": [
+    "0x43805a6c"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caf1e9",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! type:[0x%02x] %s : %d",
+   "sitios": [
+    "0x43805ab2"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caf219",
+   "texto": "[CAM_FUNC_MGR]: [LRB]REQ_APP_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "sitios": [
+    "0x43805ed6"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caf26f",
+   "texto": "[CAM_FUNC_MGR]: [LRB]APP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "sitios": [
+    "0x43805f0a"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caf2bd",
+   "texto": "[CAM_FUNC_MGR]: [LRB]APP_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "sitios": [
+    "0x43805f40"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caf30f",
+   "texto": "[CAM_FUNC_MGR]: [LRB]REQ_VSYNC_CUST_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+   "sitios": [
+    "0x43805f7a"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caf37e",
+   "texto": "[CAM_FUNC_MGR]: [LRB]VSYNC_CUST Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+   "sitios": [
+    "0x43805fb8"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caf3e5",
+   "texto": "[CAM_FUNC_MGR]: [LRB]VSYNC_CUST_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+   "sitios": [
+    "0x43805ff6"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caf450",
+   "texto": "[CAM_FUNC_MGR]: [LRB]REQ_V2ND_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "sitios": [
+    "0x4380602e"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caf4a7",
+   "texto": "[CAM_FUNC_MGR]: [LRB]V2ND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "sitios": [
+    "0x43806064"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caf4f6",
+   "texto": "[CAM_FUNC_MGR]: [LRB]V2ND_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "sitios": [
+    "0x4380609a"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caf549",
+   "texto": "[CAM_FUNC_MGR]: [LRB]REQ_FSPSUM_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "sitios": [
+    "0x438060d0"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caf5a2",
+   "texto": "[CAM_FUNC_MGR]: [LRB]FSPSUM Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "sitios": [
+    "0x43806106"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caf5f3",
+   "texto": "[CAM_FUNC_MGR]: [LRB]FSPSUM_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "sitios": [
+    "0x4380613c"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caf648",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! LRBridge SndV2ndLatchCmp. %s : %d",
+   "sitios": [
+    "0x438065ce",
+    "0x4380663a"
+   ],
+   "n_sitios": 2
+  },
+  {
+   "vaddr": "0x43caf684",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! LRBridge SndApp2Cmp. %s : %d",
+   "sitios": [
+    "0x438066a6"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caf6bb",
+   "texto": "[CAM_FUNC_MGR]: [LRB]REQ_APP_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "sitios": [
+    "0x43806702"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caf711",
+   "texto": "[CAM_FUNC_MGR]: [LRB]APP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "sitios": [
+    "0x43806736"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caf75f",
+   "texto": "[CAM_FUNC_MGR]: [LRB]APP_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "sitios": [
+    "0x4380676c"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caf7b1",
+   "texto": "[CAM_FUNC_MGR]: [LRB]REQ_VSYNC_CUST_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+   "sitios": [
+    "0x438067a6"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caf820",
+   "texto": "[CAM_FUNC_MGR]: [LRB]VSYNC_CUST Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+   "sitios": [
+    "0x438067e4"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caf887",
+   "texto": "[CAM_FUNC_MGR]: [LRB]VSYNC_CUST_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+   "sitios": [
+    "0x43806822"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caf8f2",
+   "texto": "[CAM_FUNC_MGR]: [LRB]REQ_V2ND_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "sitios": [
+    "0x4380685a"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caf949",
+   "texto": "[CAM_FUNC_MGR]: [LRB]V2ND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "sitios": [
+    "0x43806890"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caf998",
+   "texto": "[CAM_FUNC_MGR]: [LRB]V2ND_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "sitios": [
+    "0x438068c6"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43caf9eb",
+   "texto": "[CAM_FUNC_MGR]: [LRB]REQ_FSPSUM_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "sitios": [
+    "0x438068fc"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43cafa44",
+   "texto": "[CAM_FUNC_MGR]: [LRB]FSPSUM Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "sitios": [
+    "0x43806932"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43cafa95",
+   "texto": "[CAM_FUNC_MGR]: [LRB]FSPSUM_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "sitios": [
+    "0x43806968"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43cb009b",
+   "texto": "[CAM_FUNC_MGR]: Unexpected ExpFocusTransition : message [%x] timing [%d]",
+   "sitios": [
+    "0x4380953c"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43cb010a",
+   "texto": "[CAM_FUNC_MGR]: Unexpected SleepTransition : message [%x] timing [%d]",
+   "sitios": [
+    "0x438096c0"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43cb0150",
+   "texto": "[CAM_FUNC_MGR]: unknown message in Imager Sleep Process: %x",
+   "sitios": [
+    "0x438097c6"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43cb027c",
+   "texto": "[CAM_FUNC_MGR]: #### Execute unretract command!!",
+   "sitios": [
+    "0x43809c86"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43cb02ad",
+   "texto": "[CAM_FUNC_MGR]: IsNeedScanAf (%d)",
+   "sitios": [
+    "0x43809d20"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43cb02cf",
+   "texto": "[CAM_FUNC_MGR]: IsNeedAe     (%d)",
+   "sitios": [
+    "0x43809d42"
+   ],
+   "n_sitios": 1
+  },
+  {
+   "vaddr": "0x43cb02f1",
+   "texto": "[CAM_FUNC_MGR]: Pseudo AF Stop %d",
+   "sitios": [],
+   "n_sitios": 0
+  }
+ ],
+ "funciones": [
+  {
+   "func": "0x43787b70",
+   "n_sitios": 1,
+   "sitios": [
+    "0x43787bc4"
+   ],
+   "cadenas": [
+    "0x43ca12af"
+   ],
+   "textos": [
+    "[CAM_FUNC_MGR]: CAPCON WARNING! FILE:%s LINE=%d func:%s param=%x %x %x"
+   ],
+   "fichero_fuente": "api/capcon_api_cam.cpp",
+   "wrapper_traza": "0x43787ac4"
+  },
+  {
+   "func": "0x43787c0e",
+   "n_sitios": 1,
+   "sitios": [
+    "0x43787c48"
+   ],
+   "cadenas": [
+    "0x43ca12f6"
+   ],
+   "textos": [
+    "[CAM_FUNC_MGR]: SyncProcMargin[usec] HS0:%u HS1:%u HS2:%u HS3@CPU2:%u HS3@CPU0(IDT):%u HS3@CPU3(RCH):%u VDDrive:%u VDPost:%u"
+   ],
+   "fichero_fuente": "api/capcon_api_cam.cpp",
+   "wrapper_traza": "0x43787ac4"
+  },
+  {
+   "func": "0x43801a1c",
+   "n_sitios": 2,
+   "sitios": [
+    "0x43801ac6",
+    "0x43801b1e"
+   ],
+   "cadenas": [
+    "0x43caefe8"
+   ],
+   "textos": [
+    "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d"
+   ],
+   "fichero_fuente": "Function/FunctionNotify.cpp",
+   "wrapper_traza": "0x4380196c"
+  },
+  {
+   "func": "0x43801c48",
+   "n_sitios": 2,
+   "sitios": [
+    "0x43801d02",
+    "0x43801d58"
+   ],
+   "cadenas": [
+    "0x43caefe8"
+   ],
+   "textos": [
+    "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d"
+   ],
+   "fichero_fuente": "Function/FunctionNotify.cpp",
+   "wrapper_traza": "0x4380196c"
+  },
+  {
+   "func": "0x43803e2c",
+   "n_sitios": 1,
+   "sitios": [
+    "0x43803edc"
+   ],
+   "cadenas": [
+    "0x43caf036"
+   ],
+   "textos": [
+    "[CAM_FUNC_MGR]: SetCapMode:Invalid CapMode[0x%x: %d: %d: %d: %d]"
+   ],
+   "fichero_fuente": "Function/FunctionSetParam.cpp",
+   "wrapper_traza": "0x43803d80"
+  },
+  {
+   "func": "0x43803fb8",
+   "n_sitios": 2,
+   "sitios": [
+    "0x43803ff0",
+    "0x4380401e"
+   ],
+   "cadenas": [
+    "0x43caf077",
+    "0x43caf0b4"
+   ],
+   "textos": [
+    "[CAM_FUNC_MGR]: receive[%d,%d] before comp[%d,%d] (FAILED)",
+    "[CAM_FUNC_MGR]: receive[%d,%d] before comp[%d,%d] (QUEUEING)"
+   ],
+   "fichero_fuente": "Function/FunctionSetParam.cpp",
+   "wrapper_traza": "0x43803d80"
+  },
+  {
+   "func": "0x438056b4",
+   "n_sitios": 1,
+   "sitios": [
+    "0x438056d2"
+   ],
+   "cadenas": [
+    "0x43caf136"
+   ],
+   "textos": [
+    "[CAM_FUNC_MGR]: ERROR !!! osalErr:0x%04x %s : %d"
+   ],
+   "fichero_fuente": "Function/LRBridge.cpp",
+   "wrapper_traza": "0x43805604"
+  },
+  {
+   "func": "0x43805708",
+   "n_sitios": 1,
+   "sitios": [
+    "0x43805736"
+   ],
+   "cadenas": [
+    "0x43caf17d"
+   ],
+   "textos": [
+    "[CAM_FUNC_MGR]: ERROR !!! LSI_NUM_TYPE:0x%04x %s : %d"
+   ],
+   "fichero_fuente": "Function/LRBridge.cpp",
+   "wrapper_traza": "0x43805604"
+  },
+  {
+   "func": "0x4380577c",
+   "n_sitios": 2,
+   "sitios": [
+    "0x4380579c",
+    "0x438057c8"
+   ],
+   "cadenas": [
+    "0x43caf136"
+   ],
+   "textos": [
+    "[CAM_FUNC_MGR]: ERROR !!! osalErr:0x%04x %s : %d"
+   ],
+   "fichero_fuente": "Function/LRBridge.cpp",
+   "wrapper_traza": "0x43805604"
+  },
+  {
+   "func": "0x43805808",
+   "n_sitios": 1,
+   "sitios": [
+    "0x43805820"
+   ],
+   "cadenas": [
+    "0x43caf136"
+   ],
+   "textos": [
+    "[CAM_FUNC_MGR]: ERROR !!! osalErr:0x%04x %s : %d"
+   ],
+   "fichero_fuente": "Function/LRBridge.cpp",
+   "wrapper_traza": "0x43805604"
+  },
+  {
+   "func": "0x43805870",
+   "n_sitios": 2,
+   "sitios": [
+    "0x43805890",
+    "0x438058e8"
+   ],
+   "cadenas": [
+    "0x43caefe8"
+   ],
+   "textos": [
+    "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d"
+   ],
+   "fichero_fuente": "Function/LRBridge.cpp",
+   "wrapper_traza": "0x43805604"
+  },
+  {
+   "func": "0x43805930",
+   "n_sitios": 2,
+   "sitios": [
+    "0x43805a6c",
+    "0x43805ab2"
+   ],
+   "cadenas": [
+    "0x43caf1b3",
+    "0x43caf1e9"
+   ],
+   "textos": [
+    "[CAM_FUNC_MGR]: ERROR !!! type:[0x%02x] %s : %d",
+    "[CAM_FUNC_MGR]: UNKNOWN EID !!! type:[0x%02x] %s : %d"
+   ],
+   "fichero_fuente": "Function/LRBridge.cpp",
+   "wrapper_traza": "0x43805604"
+  },
+  {
+   "func": "0x43805ea8",
+   "n_sitios": 12,
+   "sitios": [
+    "0x43805ed6",
+    "0x43805f0a",
+    "0x43805f40",
+    "0x43805f7a",
+    "0x43805fb8",
+    "0x43805ff6",
+    "0x4380602e",
+    "0x43806064",
+    "0x4380609a",
+    "0x438060d0",
+    "0x43806106",
+    "0x4380613c"
+   ],
+   "cadenas": [
+    "0x43caf219",
+    "0x43caf26f",
+    "0x43caf2bd",
+    "0x43caf30f",
+    "0x43caf37e",
+    "0x43caf3e5",
+    "0x43caf450",
+    "0x43caf4a7",
+    "0x43caf4f6",
+    "0x43caf549",
+    "0x43caf5a2",
+    "0x43caf5f3"
+   ],
+   "textos": [
+    "[CAM_FUNC_MGR]: [LRB]APP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "[CAM_FUNC_MGR]: [LRB]APP_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "[CAM_FUNC_MGR]: [LRB]FSPSUM Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "[CAM_FUNC_MGR]: [LRB]FSPSUM_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "[CAM_FUNC_MGR]: [LRB]REQ_APP_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "[CAM_FUNC_MGR]: [LRB]REQ_FSPSUM_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "[CAM_FUNC_MGR]: [LRB]REQ_V2ND_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "[CAM_FUNC_MGR]: [LRB]REQ_VSYNC_CUST_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+    "[CAM_FUNC_MGR]: [LRB]V2ND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "[CAM_FUNC_MGR]: [LRB]V2ND_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "[CAM_FUNC_MGR]: [LRB]VSYNC_CUST Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+    "[CAM_FUNC_MGR]: [LRB]VSYNC_CUST_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x"
+   ],
+   "fichero_fuente": "Function/LRBridge.cpp",
+   "wrapper_traza": "0x43805604"
+  },
+  {
+   "func": "0x438061c4",
+   "n_sitios": 2,
+   "sitios": [
+    "0x438061e6",
+    "0x4380623e"
+   ],
+   "cadenas": [
+    "0x43caefe8"
+   ],
+   "textos": [
+    "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d"
+   ],
+   "fichero_fuente": "Function/LRBridge.cpp",
+   "wrapper_traza": "0x43805604"
+  },
+  {
+   "func": "0x43806400",
+   "n_sitios": 2,
+   "sitios": [
+    "0x43806422",
+    "0x4380647a"
+   ],
+   "cadenas": [
+    "0x43caefe8"
+   ],
+   "textos": [
+    "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d"
+   ],
+   "fichero_fuente": "Function/LRBridge.cpp",
+   "wrapper_traza": "0x43805604"
+  },
+  {
+   "func": "0x438064c8",
+   "n_sitios": 2,
+   "sitios": [
+    "0x438064ea",
+    "0x43806542"
+   ],
+   "cadenas": [
+    "0x43caefe8"
+   ],
+   "textos": [
+    "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d"
+   ],
+   "fichero_fuente": "Function/LRBridge.cpp",
+   "wrapper_traza": "0x43805604"
+  },
+  {
+   "func": "0x43806590",
+   "n_sitios": 1,
+   "sitios": [
+    "0x438065ce"
+   ],
+   "cadenas": [
+    "0x43caf648"
+   ],
+   "textos": [
+    "[CAM_FUNC_MGR]: ERROR !!! LRBridge SndV2ndLatchCmp. %s : %d"
+   ],
+   "fichero_fuente": "Function/LRBridge.cpp",
+   "wrapper_traza": "0x43805604"
+  },
+  {
+   "func": "0x438065fc",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4380663a"
+   ],
+   "cadenas": [
+    "0x43caf648"
+   ],
+   "textos": [
+    "[CAM_FUNC_MGR]: ERROR !!! LRBridge SndV2ndLatchCmp. %s : %d"
+   ],
+   "fichero_fuente": "Function/LRBridge.cpp",
+   "wrapper_traza": "0x43805604"
+  },
+  {
+   "func": "0x43806668",
+   "n_sitios": 1,
+   "sitios": [
+    "0x438066a6"
+   ],
+   "cadenas": [
+    "0x43caf684"
+   ],
+   "textos": [
+    "[CAM_FUNC_MGR]: ERROR !!! LRBridge SndApp2Cmp. %s : %d"
+   ],
+   "fichero_fuente": "Function/LRBridge.cpp",
+   "wrapper_traza": "0x43805604"
+  },
+  {
+   "func": "0x438066d4",
+   "n_sitios": 12,
+   "sitios": [
+    "0x43806702",
+    "0x43806736",
+    "0x4380676c",
+    "0x438067a6",
+    "0x438067e4",
+    "0x43806822",
+    "0x4380685a",
+    "0x43806890",
+    "0x438068c6",
+    "0x438068fc",
+    "0x43806932",
+    "0x43806968"
+   ],
+   "cadenas": [
+    "0x43caf6bb",
+    "0x43caf711",
+    "0x43caf75f",
+    "0x43caf7b1",
+    "0x43caf820",
+    "0x43caf887",
+    "0x43caf8f2",
+    "0x43caf949",
+    "0x43caf998",
+    "0x43caf9eb",
+    "0x43cafa44",
+    "0x43cafa95"
+   ],
+   "textos": [
+    "[CAM_FUNC_MGR]: [LRB]APP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "[CAM_FUNC_MGR]: [LRB]APP_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "[CAM_FUNC_MGR]: [LRB]FSPSUM Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "[CAM_FUNC_MGR]: [LRB]FSPSUM_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "[CAM_FUNC_MGR]: [LRB]REQ_APP_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "[CAM_FUNC_MGR]: [LRB]REQ_FSPSUM_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "[CAM_FUNC_MGR]: [LRB]REQ_V2ND_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "[CAM_FUNC_MGR]: [LRB]REQ_VSYNC_CUST_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+    "[CAM_FUNC_MGR]: [LRB]V2ND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "[CAM_FUNC_MGR]: [LRB]V2ND_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "[CAM_FUNC_MGR]: [LRB]VSYNC_CUST Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+    "[CAM_FUNC_MGR]: [LRB]VSYNC_CUST_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x"
+   ],
+   "fichero_fuente": "Function/LRBridge.cpp",
+   "wrapper_traza": "0x43805604"
+  },
+  {
+   "func": "0x4380952a",
+   "n_sitios": 1,
+   "sitios": [
+    "0x4380953c"
+   ],
+   "cadenas": [
+    "0x43cb009b"
+   ],
+   "textos": [
+    "[CAM_FUNC_MGR]: Unexpected ExpFocusTransition : message [%x] timing [%d]"
+   ],
+   "fichero_fuente": "api/capcon_api_businessif.cpp",
+   "wrapper_traza": "0x4380947c"
+  },
+  {
+   "func": "0x438096ae",
+   "n_sitios": 1,
+   "sitios": [
+    "0x438096c0"
+   ],
+   "cadenas": [
+    "0x43cb010a"
+   ],
+   "textos": [
+    "[CAM_FUNC_MGR]: Unexpected SleepTransition : message [%x] timing [%d]"
+   ],
+   "fichero_fuente": "api/capcon_api_businessif.cpp",
+   "wrapper_traza": "0x43809600"
+  },
+  {
+   "func": "0x43809714",
+   "n_sitios": 1,
+   "sitios": [
+    "0x438097c6"
+   ],
+   "cadenas": [
+    "0x43cb0150"
+   ],
+   "textos": [
+    "[CAM_FUNC_MGR]: unknown message in Imager Sleep Process: %x"
+   ],
+   "fichero_fuente": "api/capcon_api_businessif.cpp",
+   "wrapper_traza": "0x43809600"
+  },
+  {
+   "func": "0x43809c24",
+   "n_sitios": 1,
+   "sitios": [
+    "0x43809c86"
+   ],
+   "cadenas": [
+    "0x43cb027c"
+   ],
+   "textos": [
+    "[CAM_FUNC_MGR]: #### Execute unretract command!!"
+   ],
+   "fichero_fuente": "wrapper/CamMain.cpp",
+   "wrapper_traza": "0x43809a64"
+  },
+  {
+   "func": "0x43809ce8",
+   "n_sitios": 2,
+   "sitios": [
+    "0x43809d20",
+    "0x43809d42"
+   ],
+   "cadenas": [
+    "0x43cb02ad",
+    "0x43cb02cf"
+   ],
+   "textos": [
+    "[CAM_FUNC_MGR]: IsNeedAe     (%d)",
+    "[CAM_FUNC_MGR]: IsNeedScanAf (%d)"
+   ],
+   "fichero_fuente": "wrapper/CamMain.cpp",
+   "wrapper_traza": "0x43809a64"
+  }
+ ],
+ "tabla_funciones": {
+  "base": "0x43ff17b8",
+  "stride": 12,
+  "entradas": [
+   {
+    "k": 0,
+    "slot": "0x43ff17b8",
+    "nombre": "UNKNOWN",
+    "id": 0,
+    "id_hex": "0x0",
+    "origin": "???         ",
+    "origin_ptr": "0x43ff17b8"
+   },
+   {
+    "k": 1,
+    "slot": "0x43ff17c4",
+    "nombre": "REQ_MOVIE",
+    "id": 1,
+    "id_hex": "0x1",
+    "origin": "FUNC <= USER",
+    "origin_ptr": "0x43ff17c4"
+   },
+   {
+    "k": 2,
+    "slot": "0x43ff17d0",
+    "nombre": "REQ_MOVIE_REC",
+    "id": 2,
+    "id_hex": "0x2",
+    "origin": "FUNC <= USER",
+    "origin_ptr": "0x43ff17d0"
+   },
+   {
+    "k": 3,
+    "slot": "0x43ff17dc",
+    "nombre": "REQ_STILL_EE",
+    "id": 3,
+    "id_hex": "0x3",
+    "origin": "FUNC <= USER",
+    "origin_ptr": "0x43ff17dc"
+   },
+   {
+    "k": 4,
+    "slot": "0x43ff17e8",
+    "nombre": "REQ_PB",
+    "id": 4,
+    "id_hex": "0x4",
+    "origin": "FUNC <= BG  ",
+    "origin_ptr": "0x43ff17e8"
+   },
+   {
+    "k": 5,
+    "slot": "0x43ff17f4",
+    "nombre": "REQ_HOLD",
+    "id": 5,
+    "id_hex": "0x5",
+    "origin": "FUNC <= BG  ",
+    "origin_ptr": "0x43ff17f4"
+   },
+   {
+    "k": 6,
+    "slot": "0x43ff1800",
+    "nombre": "REQ_HS_EE",
+    "id": 6,
+    "id_hex": "0x6",
+    "origin": "FUNC <= USER",
+    "origin_ptr": "0x43ff1800"
+   },
+   {
+    "k": 7,
+    "slot": "0x43ff180c",
+    "nombre": "REQ_HS_PLAY",
+    "id": 7,
+    "id_hex": "0x7",
+    "origin": "FUNC <= USER",
+    "origin_ptr": "0x43ff180c"
+   },
+   {
+    "k": 8,
+    "slot": "0x43ff1818",
+    "nombre": "REQ_PANORAMA_EE",
+    "id": 8,
+    "id_hex": "0x8",
+    "origin": "FUNC <= USER",
+    "origin_ptr": "0x43ff1818"
+   },
+   {
+    "k": 9,
+    "slot": "0x43ff1824",
+    "nombre": "REQ_POWER_OFF",
+    "id": 9,
+    "id_hex": "0x9",
+    "origin": "FUNC <= BG  ",
+    "origin_ptr": "0x43ff1824"
+   },
+   {
+    "k": 10,
+    "slot": "0x43ff1830",
+    "nombre": "REQ_CUSTOM_WB",
+    "id": 10,
+    "id_hex": "0xa",
+    "origin": "FUNC <= USER",
+    "origin_ptr": "0x43ff1830"
+   },
+   {
+    "k": 11,
+    "slot": "0x43ff183c",
+    "nombre": "REQ_GOLF_EE",
+    "id": 11,
+    "id_hex": "0xb",
+    "origin": "FUNC <= USER",
+    "origin_ptr": "0x43ff183c"
+   },
+   {
+    "k": 12,
+    "slot": "0x43ff1848",
+    "nombre": "REQ_GOLF_SOUND_DET_END",
+    "id": 12,
+    "id_hex": "0xc",
+    "origin": "FUNC <= USER",
+    "origin_ptr": "0x43ff1848"
+   },
+   {
+    "k": 13,
+    "slot": "0x43ff1854",
+    "nombre": "REQ_GOLF_PLAY",
+    "id": 13,
+    "id_hex": "0xd",
+    "origin": "FUNC <= USER",
+    "origin_ptr": "0x43ff1854"
+   },
+   {
+    "k": 14,
+    "slot": "0x43ff1860",
+    "nombre": "REQ_TOUCH_SCAN",
+    "id": 33025,
+    "id_hex": "0x8101",
+    "origin": "FUNC <= USER",
+    "origin_ptr": "0x43ff1860"
+   },
+   {
+    "k": 15,
+    "slot": "0x43ff186c",
+    "nombre": "REQ_TOUCH_NOSCAN",
+    "id": 17,
+    "id_hex": "0x11",
+    "origin": "FUNC <= USER",
+    "origin_ptr": "0x43ff186c"
+   },
+   {
+    "k": 16,
+    "slot": "0x43ff1878",
+    "nombre": "REQ_DUALREC_DEV",
+    "id": 14,
+    "id_hex": "0xe",
+    "origin": "FUNC <= USER",
+    "origin_ptr": "0x43ff1878"
+   },
+   {
+    "k": 17,
+    "slot": "0x43ff1884",
+    "nombre": "REQ_MOVIE_EO",
+    "id": 33024,
+    "id_hex": "0x8100",
+    "origin": "FUNC <= USER",
+    "origin_ptr": "0x43ff1884"
+   },
+   {
+    "k": 18,
+    "slot": "0x43ff1890",
+    "nombre": "REQ_BB_OUT",
+    "id": 15,
+    "id_hex": "0xf",
+    "origin": "FUNC <= USER",
+    "origin_ptr": "0x43ff1890"
+   },
+   {
+    "k": 19,
+    "slot": "0x43ff189c",
+    "nombre": "REQ_CLEANING",
+    "id": 32768,
+    "id_hex": "0x8000",
+    "origin": "FUNC <= USER",
+    "origin_ptr": "0x43ff189c"
+   },
+   {
+    "k": 20,
+    "slot": "0x43ff18a8",
+    "nombre": "RAW_CONT_CAP_CANCEL",
+    "id": 16,
+    "id_hex": "0x10",
+    "origin": "FUNC <= USER",
+    "origin_ptr": "0x43ff18a8"
+   },
+   {
+    "k": 21,
+    "slot": "0x43ff18b4",
+    "nombre": "REQ_AUTO_BB",
+    "id": 22,
+    "id_hex": "0x16",
+    "origin": "FUNC <= USER",
+    "origin_ptr": "0x43ff18b4"
+   },
+   {
+    "k": 22,
+    "slot": "0x43ff18c0",
+    "nombre": "REQ_SHS_EE",
+    "id": 23,
+    "id_hex": "0x17",
+    "origin": "FUNC <= USER",
+    "origin_ptr": "0x43ff18c0"
+   },
+   {
+    "k": 23,
+    "slot": "0x43ff18cc",
+    "nombre": "REQ_SHS_REC",
+    "id": 24,
+    "id_hex": "0x18",
+    "origin": "FUNC <= USER",
+    "origin_ptr": "0x43ff18cc"
+   },
+   {
+    "k": 24,
+    "slot": "0x43ff18d8",
+    "nombre": "REQ_FELOCK_ON",
+    "id": 25,
+    "id_hex": "0x19",
+    "origin": "FUNC <= USER",
+    "origin_ptr": "0x43ff18d8"
+   },
+   {
+    "k": 25,
+    "slot": "0x43ff18e4",
+    "nombre": "REQ_FELOCK_OFF",
+    "id": 33026,
+    "id_hex": "0x8102",
+    "origin": "FUNC <= USER",
+    "origin_ptr": "0x43ff18e4"
+   },
+   {
+    "k": 26,
+    "slot": "0x43ff18f0",
+    "nombre": "REQ_PREVIEW_MODE",
+    "id": 18,
+    "id_hex": "0x12",
+    "origin": "FUNC <= USER",
+    "origin_ptr": "0x43ff18f0"
+   },
+   {
+    "k": 27,
+    "slot": "0x43ff18fc",
+    "nombre": "REQ_EXP_FOCUSED_ON",
+    "id": 19,
+    "id_hex": "0x13",
+    "origin": "FUNC <= USER",
+    "origin_ptr": "0x43ff18fc"
+   },
+   {
+    "k": 28,
+    "slot": "0x43ff1908",
+    "nombre": "REQ_EXP_FOCUSED_OFF",
+    "id": 21,
+    "id_hex": "0x15",
+    "origin": "FUNC <= USER",
+    "origin_ptr": "0x43ff1908"
+   },
+   {
+    "k": 29,
+    "slot": "0x43ff1914",
+    "nombre": "REQ_BKF_AF",
+    "id": 256,
+    "id_hex": "0x100",
+    "origin": "FUNC <= USER",
+    "origin_ptr": "0x43ff1914"
+   },
+   {
+    "k": 30,
+    "slot": "0x43ff1920",
+    "nombre": "REQ_CAPTURE_START",
+    "id": 257,
+    "id_hex": "0x101",
+    "origin": "FUNC <= REL ",
+    "origin_ptr": "0x43ff1920"
+   },
+   {
+    "k": 31,
+    "slot": "0x43ff192c",
+    "nombre": "REQ_CAPTURE_END",
+    "id": 258,
+    "id_hex": "0x102",
+    "origin": "FUNC <= REL ",
+    "origin_ptr": "0x43ff192c"
+   },
+   {
+    "k": 32,
+    "slot": "0x43ff1938",
+    "nombre": "REQ_AF_START",
+    "id": 259,
+    "id_hex": "0x103",
+    "origin": "FUNC <= REL ",
+    "origin_ptr": "0x43ff1938"
+   },
+   {
+    "k": 33,
+    "slot": "0x43ff1944",
+    "nombre": "REQ_AF_STOP",
+    "id": 33537,
+    "id_hex": "0x8301",
+    "origin": "FUNC <= REL ",
+    "origin_ptr": "0x43ff1944"
+   },
+   {
+    "k": 34,
+    "slot": "0x43ff1950",
+    "nombre": "REQ_AE_START",
+    "id": 33538,
+    "id_hex": "0x8302",
+    "origin": "FUNC <= REL ",
+    "origin_ptr": "0x43ff1950"
+   },
+   {
+    "k": 35,
+    "slot": "0x43ff195c",
+    "nombre": "REQ_AE_STOP",
+    "id": 260,
+    "id_hex": "0x104",
+    "origin": "FUNC <= REL ",
+    "origin_ptr": "0x43ff195c"
+   },
+   {
+    "k": 36,
+    "slot": "0x43ff1968",
+    "nombre": "REQ_AF_CHANGE",
+    "id": 768,
+    "id_hex": "0x300",
+    "origin": "FUNC <= REL ",
+    "origin_ptr": "0x43ff1968"
+   },
+   {
+    "k": 37,
+    "slot": "0x43ff1974",
+    "nombre": "REPLY_MOVIE",
+    "id": 769,
+    "id_hex": "0x301",
+    "origin": "FUNC <= CAM ",
+    "origin_ptr": "0x43ff1974"
+   },
+   {
+    "k": 38,
+    "slot": "0x43ff1980",
+    "nombre": "REPLY_MOVIE_REC",
+    "id": 770,
+    "id_hex": "0x302",
+    "origin": "FUNC <= CAM ",
+    "origin_ptr": "0x43ff1980"
+   },
+   {
+    "k": 39,
+    "slot": "0x43ff198c",
+    "nombre": "REPLY_STILL_EE",
+    "id": 771,
+    "id_hex": "0x303",
+    "origin": "FUNC <= CAM ",
+    "origin_ptr": "0x43ff198c"
+   },
+   {
+    "k": 40,
+    "slot": "0x43ff1998",
+    "nombre": "REPLY_PB",
+    "id": 772,
+    "id_hex": "0x304",
+    "origin": "FUNC <= CAM ",
+    "origin_ptr": "0x43ff1998"
+   },
+   {
+    "k": 41,
+    "slot": "0x43ff19a4",
+    "nombre": "REPLY_HOLD",
+    "id": 773,
+    "id_hex": "0x305",
+    "origin": "FUNC <= CAM ",
+    "origin_ptr": "0x43ff19a4"
+   },
+   {
+    "k": 42,
+    "slot": "0x43ff19b0",
+    "nombre": "REPLY_HS_EE",
+    "id": 774,
+    "id_hex": "0x306",
+    "origin": "FUNC <= CAM ",
+    "origin_ptr": "0x43ff19b0"
+   },
+   {
+    "k": 43,
+    "slot": "0x43ff19bc",
+    "nombre": "REPLY_HS_PLAY",
+    "id": 775,
+    "id_hex": "0x307",
+    "origin": "FUNC <= CAM ",
+    "origin_ptr": "0x43ff19bc"
+   },
+   {
+    "k": 44,
+    "slot": "0x43ff19c8",
+    "nombre": "REPLY_PANORAMA_EE",
+    "id": 776,
+    "id_hex": "0x308",
+    "origin": "FUNC <= CAM ",
+    "origin_ptr": "0x43ff19c8"
+   },
+   {
+    "k": 45,
+    "slot": "0x43ff19d4",
+    "nombre": "REPLY_POWER_OFF",
+    "id": 777,
+    "id_hex": "0x309",
+    "origin": "FUNC <= CAM ",
+    "origin_ptr": "0x43ff19d4"
+   },
+   {
+    "k": 46,
+    "slot": "0x43ff19e0",
+    "nombre": "REPLY_CUSTOM_WB",
+    "id": 778,
+    "id_hex": "0x30a",
+    "origin": "FUNC <= CAM ",
+    "origin_ptr": "0x43ff19e0"
+   },
+   {
+    "k": 47,
+    "slot": "0x43ff19ec",
+    "nombre": "REPLY_GOLF_EE",
+    "id": 779,
+    "id_hex": "0x30b",
+    "origin": "FUNC <= CAM ",
+    "origin_ptr": "0x43ff19ec"
+   },
+   {
+    "k": 48,
+    "slot": "0x43ff19f8",
+    "nombre": "REPLY_GOLF_SOUND_DET_END",
+    "id": 780,
+    "id_hex": "0x30c",
+    "origin": "FUNC <= CAM ",
+    "origin_ptr": "0x43ff19f8"
+   },
+   {
+    "k": 49,
+    "slot": "0x43ff1a04",
+    "nombre": "REPLY_GOLF_PLAY",
+    "id": 782,
+    "id_hex": "0x30e",
+    "origin": "FUNC <= CAM ",
+    "origin_ptr": "0x43ff1a04"
+   },
+   {
+    "k": 50,
+    "slot": "0x43ff1a10",
+    "nombre": "REPLY_PRELIGHT",
+    "id": 784,
+    "id_hex": "0x310",
+    "origin": "FUNC <= CAM ",
+    "origin_ptr": "0x43ff1a10"
+   },
+   {
+    "k": 51,
+    "slot": "0x43ff1a1c",
+    "nombre": "REPLY_SCANAF",
+    "id": 785,
+    "id_hex": "0x311",
+    "origin": "FUNC <= CAM ",
+    "origin_ptr": "0x43ff1a1c"
+   },
+   {
+    "k": 52,
+    "slot": "0x43ff1a28",
+    "nombre": "REPLY_S1",
+    "id": 786,
+    "id_hex": "0x312",
+    "origin": "FUNC <= CAM ",
+    "origin_ptr": "0x43ff1a28"
+   },
+   {
+    "k": 53,
+    "slot": "0x43ff1a34",
+    "nombre": "REPLY_TOUCH_SCAN_1",
+    "id": 787,
+    "id_hex": "0x313",
+    "origin": "FUNC <= CAM ",
+    "origin_ptr": "0x43ff1a34"
+   },
+   {
+    "k": 54,
+    "slot": "0x43ff1a40",
+    "nombre": "REPLY_TOUCH_SCAN_2",
+    "id": 788,
+    "id_hex": "0x314",
+    "origin": "FUNC <= CAM ",
+    "origin_ptr": "0x43ff1a40"
+   },
+   {
+    "k": 55,
+    "slot": "0x43ff1a4c",
+    "nombre": "REPLY_TOUCH_SCAN_3",
+    "id": 790,
+    "id_hex": "0x316",
+    "origin": "FUNC <= CAM ",
+    "origin_ptr": "0x43ff1a4c"
+   },
+   {
+    "k": 56,
+    "slot": "0x43ff1a58",
+    "nombre": "REPLY_DUALREC_DEV",
+    "id": 793,
+    "id_hex": "0x319",
+    "origin": "FUNC <= CAM ",
+    "origin_ptr": "0x43ff1a58"
+   },
+   {
+    "k": 57,
+    "slot": "0x43ff1a64",
+    "nombre": "REPLY_MOVIE_EO",
+    "id": 798,
+    "id_hex": "0x31e",
+    "origin": "FUNC <= CAM ",
+    "origin_ptr": "0x43ff1a64"
+   },
+   {
+    "k": 58,
+    "slot": "0x43ff1a70",
+    "nombre": "REPLY_AUTO_BB",
+    "id": 806,
+    "id_hex": "0x326",
+    "origin": "FUNC <= CAM ",
+    "origin_ptr": "0x43ff1a70"
+   },
+   {
+    "k": 59,
+    "slot": "0x43ff1a7c",
+    "nombre": "REPLY_SHS_EE",
+    "id": 807,
+    "id_hex": "0x327",
+    "origin": "FUNC <= CAM ",
+    "origin_ptr": "0x43ff1a7c"
+   },
+   {
+    "k": 60,
+    "slot": "0x43ff1a88",
+    "nombre": "REPLY_SHS_REC",
+    "id": 808,
+    "id_hex": "0x328",
+    "origin": "FUNC <= CAM ",
+    "origin_ptr": "0x43ff1a88"
+   },
+   {
+    "k": 61,
+    "slot": "0x43ff1a94",
+    "nombre": "REPLY_FE_LOCK",
+    "id": 4095,
+    "id_hex": "0xfff",
+    "origin": "FUNC <= CAM ",
+    "origin_ptr": "0x43ff1a94"
+   },
+   {
+    "k": 62,
+    "slot": "0x43ff1aa0",
+    "nombre": "REPLY_ERR",
+    "id": 809,
+    "id_hex": "0x329",
+    "origin": "FUNC <= CAM ",
+    "origin_ptr": "0x43ff1aa0"
+   },
+   {
+    "k": 63,
+    "slot": "0x43ff1aac",
+    "nombre": "REPLY_FACE_DET_OFF",
+    "id": 3840,
+    "id_hex": "0xf00",
+    "origin": "FUNC <= CAM ",
+    "origin_ptr": "0x43ff1aac"
+   },
+   {
+    "k": 64,
+    "slot": "0x43ff1ab8",
+    "nombre": "MSG_NONE",
+    "id": 16,
+    "id_hex": "0x10",
+    "origin": "???         ",
+    "origin_ptr": "0x43ff1ab8"
+   }
+  ]
+ },
+ "pic_verificado": [
+  {
+   "sitio": "0x43787bc4",
+   "reg": 3,
+   "ldr": "0x43787bbc",
+   "pool": "0x43787bfc",
+   "W": "0x5196e7",
+   "dest": "0x43ca12af",
+   "texto": "[CAM_FUNC_MGR]: CAPCON WARNING! FILE:%s LINE=%d func:%s param=%x %x %x",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43787c48",
+   "reg": 3,
+   "ldr": "0x43787c46",
+   "pool": "0x43787c8c",
+   "W": "0x5196aa",
+   "dest": "0x43ca12f6",
+   "texto": "[CAM_FUNC_MGR]: SyncProcMargin[usec] HS0:%u HS1:%u HS2:%u HS3@CPU2:%u HS3@CPU0(IDT):%u HS3@CPU3(RCH):%u VDDrive:%u VDPost:%u",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43801ac6",
+   "reg": 3,
+   "ldr": "0x43801abc",
+   "pool": "0x43801c28",
+   "W": "0x4ad51e",
+   "dest": "0x43caefe8",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43801b1e",
+   "reg": 3,
+   "ldr": "0x43801b14",
+   "pool": "0x43801c34",
+   "W": "0x4ad4c6",
+   "dest": "0x43caefe8",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43801d02",
+   "reg": 3,
+   "ldr": "0x43801cf8",
+   "pool": "0x43801f1c",
+   "W": "0x4ad2e2",
+   "dest": "0x43caefe8",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43801d58",
+   "reg": 3,
+   "ldr": "0x43801d4e",
+   "pool": "0x43801f28",
+   "W": "0x4ad28c",
+   "dest": "0x43caefe8",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43803edc",
+   "reg": 3,
+   "ldr": "0x43803ed8",
+   "pool": "0x43803fa8",
+   "W": "0x4ab156",
+   "dest": "0x43caf036",
+   "texto": "[CAM_FUNC_MGR]: SetCapMode:Invalid CapMode[0x%x: %d: %d: %d: %d]",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43803ff0",
+   "reg": 3,
+   "ldr": "0x43803fee",
+   "pool": "0x43804048",
+   "W": "0x4ab083",
+   "dest": "0x43caf077",
+   "texto": "[CAM_FUNC_MGR]: receive[%d,%d] before comp[%d,%d] (QUEUEING)",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x4380401e",
+   "reg": 3,
+   "ldr": "0x4380401c",
+   "pool": "0x43804050",
+   "W": "0x4ab092",
+   "dest": "0x43caf0b4",
+   "texto": "[CAM_FUNC_MGR]: receive[%d,%d] before comp[%d,%d] (FAILED)",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x438056d2",
+   "reg": 3,
+   "ldr": "0x438056c8",
+   "pool": "0x438056fc",
+   "W": "0x4a9a60",
+   "dest": "0x43caf136",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! osalErr:0x%04x %s : %d",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43805736",
+   "reg": 3,
+   "ldr": "0x4380572a",
+   "pool": "0x43805770",
+   "W": "0x4a9a43",
+   "dest": "0x43caf17d",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! LSI_NUM_TYPE:0x%04x %s : %d",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x4380579c",
+   "reg": 3,
+   "ldr": "0x43805792",
+   "pool": "0x438057f0",
+   "W": "0x4a9996",
+   "dest": "0x43caf136",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! osalErr:0x%04x %s : %d",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x438057c8",
+   "reg": 3,
+   "ldr": "0x438057be",
+   "pool": "0x438057fc",
+   "W": "0x4a996a",
+   "dest": "0x43caf136",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! osalErr:0x%04x %s : %d",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43805820",
+   "reg": 3,
+   "ldr": "0x43805816",
+   "pool": "0x43805848",
+   "W": "0x4a9912",
+   "dest": "0x43caf136",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! osalErr:0x%04x %s : %d",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43805890",
+   "reg": 3,
+   "ldr": "0x43805886",
+   "pool": "0x43805918",
+   "W": "0x4a9754",
+   "dest": "0x43caefe8",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x438058e8",
+   "reg": 3,
+   "ldr": "0x438058de",
+   "pool": "0x43805924",
+   "W": "0x4a96fc",
+   "dest": "0x43caefe8",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43805a6c",
+   "reg": 3,
+   "ldr": "0x43805a68",
+   "pool": "0x43805ae8",
+   "W": "0x4a9743",
+   "dest": "0x43caf1b3",
+   "texto": "[CAM_FUNC_MGR]: UNKNOWN EID !!! type:[0x%02x] %s : %d",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43805ab2",
+   "reg": 3,
+   "ldr": "0x43805aa8",
+   "pool": "0x43805af8",
+   "W": "0x4a9733",
+   "dest": "0x43caf1e9",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! type:[0x%02x] %s : %d",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43805ed6",
+   "reg": 3,
+   "ldr": "0x43805ed4",
+   "pool": "0x43806164",
+   "W": "0x4a933f",
+   "dest": "0x43caf219",
+   "texto": "[CAM_FUNC_MGR]: [LRB]REQ_APP_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43805f0a",
+   "reg": 3,
+   "ldr": "0x43805f08",
+   "pool": "0x4380616c",
+   "W": "0x4a9361",
+   "dest": "0x43caf26f",
+   "texto": "[CAM_FUNC_MGR]: [LRB]APP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43805f40",
+   "reg": 3,
+   "ldr": "0x43805f3e",
+   "pool": "0x43806174",
+   "W": "0x4a9379",
+   "dest": "0x43caf2bd",
+   "texto": "[CAM_FUNC_MGR]: [LRB]APP_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43805f7a",
+   "reg": 3,
+   "ldr": "0x43805f78",
+   "pool": "0x4380617c",
+   "W": "0x4a9391",
+   "dest": "0x43caf30f",
+   "texto": "[CAM_FUNC_MGR]: [LRB]REQ_VSYNC_CUST_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43805fb8",
+   "reg": 3,
+   "ldr": "0x43805fb6",
+   "pool": "0x43806184",
+   "W": "0x4a93c2",
+   "dest": "0x43caf37e",
+   "texto": "[CAM_FUNC_MGR]: [LRB]VSYNC_CUST Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43805ff6",
+   "reg": 3,
+   "ldr": "0x43805ff4",
+   "pool": "0x4380618c",
+   "W": "0x4a93eb",
+   "dest": "0x43caf3e5",
+   "texto": "[CAM_FUNC_MGR]: [LRB]VSYNC_CUST_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x4380602e",
+   "reg": 3,
+   "ldr": "0x4380602c",
+   "pool": "0x43806194",
+   "W": "0x4a941e",
+   "dest": "0x43caf450",
+   "texto": "[CAM_FUNC_MGR]: [LRB]REQ_V2ND_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43806064",
+   "reg": 3,
+   "ldr": "0x43806062",
+   "pool": "0x4380619c",
+   "W": "0x4a943f",
+   "dest": "0x43caf4a7",
+   "texto": "[CAM_FUNC_MGR]: [LRB]V2ND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x4380609a",
+   "reg": 3,
+   "ldr": "0x43806098",
+   "pool": "0x438061a4",
+   "W": "0x4a9458",
+   "dest": "0x43caf4f6",
+   "texto": "[CAM_FUNC_MGR]: [LRB]V2ND_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x438060d0",
+   "reg": 3,
+   "ldr": "0x438060ce",
+   "pool": "0x438061ac",
+   "W": "0x4a9475",
+   "dest": "0x43caf549",
+   "texto": "[CAM_FUNC_MGR]: [LRB]REQ_FSPSUM_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43806106",
+   "reg": 3,
+   "ldr": "0x43806104",
+   "pool": "0x438061b4",
+   "W": "0x4a9498",
+   "dest": "0x43caf5a2",
+   "texto": "[CAM_FUNC_MGR]: [LRB]FSPSUM Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x4380613c",
+   "reg": 3,
+   "ldr": "0x4380613a",
+   "pool": "0x438061bc",
+   "W": "0x4a94b3",
+   "dest": "0x43caf5f3",
+   "texto": "[CAM_FUNC_MGR]: [LRB]FSPSUM_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x438061e6",
+   "reg": 3,
+   "ldr": "0x438061dc",
+   "pool": "0x43806270",
+   "W": "0x4a8dfe",
+   "dest": "0x43caefe8",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x4380623e",
+   "reg": 3,
+   "ldr": "0x43806234",
+   "pool": "0x4380627c",
+   "W": "0x4a8da6",
+   "dest": "0x43caefe8",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43806422",
+   "reg": 3,
+   "ldr": "0x43806418",
+   "pool": "0x438064b0",
+   "W": "0x4a8bc2",
+   "dest": "0x43caefe8",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x4380647a",
+   "reg": 3,
+   "ldr": "0x43806470",
+   "pool": "0x438064bc",
+   "W": "0x4a8b6a",
+   "dest": "0x43caefe8",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x438064ea",
+   "reg": 3,
+   "ldr": "0x438064e0",
+   "pool": "0x43806578",
+   "W": "0x4a8afa",
+   "dest": "0x43caefe8",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43806542",
+   "reg": 3,
+   "ldr": "0x43806538",
+   "pool": "0x43806584",
+   "W": "0x4a8aa2",
+   "dest": "0x43caefe8",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x438065ce",
+   "reg": 3,
+   "ldr": "0x438065c4",
+   "pool": "0x438065f0",
+   "W": "0x4a9076",
+   "dest": "0x43caf648",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! LRBridge SndV2ndLatchCmp. %s : %d",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x4380663a",
+   "reg": 3,
+   "ldr": "0x43806630",
+   "pool": "0x4380665c",
+   "W": "0x4a900a",
+   "dest": "0x43caf648",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! LRBridge SndV2ndLatchCmp. %s : %d",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x438066a6",
+   "reg": 3,
+   "ldr": "0x4380669c",
+   "pool": "0x438066c8",
+   "W": "0x4a8fda",
+   "dest": "0x43caf684",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! LRBridge SndApp2Cmp. %s : %d",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43806702",
+   "reg": 3,
+   "ldr": "0x43806700",
+   "pool": "0x43806990",
+   "W": "0x4a8fb5",
+   "dest": "0x43caf6bb",
+   "texto": "[CAM_FUNC_MGR]: [LRB]REQ_APP_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43806736",
+   "reg": 3,
+   "ldr": "0x43806734",
+   "pool": "0x43806998",
+   "W": "0x4a8fd7",
+   "dest": "0x43caf711",
+   "texto": "[CAM_FUNC_MGR]: [LRB]APP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x4380676c",
+   "reg": 3,
+   "ldr": "0x4380676a",
+   "pool": "0x438069a0",
+   "W": "0x4a8fef",
+   "dest": "0x43caf75f",
+   "texto": "[CAM_FUNC_MGR]: [LRB]APP_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x438067a6",
+   "reg": 3,
+   "ldr": "0x438067a4",
+   "pool": "0x438069a8",
+   "W": "0x4a9007",
+   "dest": "0x43caf7b1",
+   "texto": "[CAM_FUNC_MGR]: [LRB]REQ_VSYNC_CUST_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x438067e4",
+   "reg": 3,
+   "ldr": "0x438067e2",
+   "pool": "0x438069b0",
+   "W": "0x4a9038",
+   "dest": "0x43caf820",
+   "texto": "[CAM_FUNC_MGR]: [LRB]VSYNC_CUST Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43806822",
+   "reg": 3,
+   "ldr": "0x43806820",
+   "pool": "0x438069b8",
+   "W": "0x4a9061",
+   "dest": "0x43caf887",
+   "texto": "[CAM_FUNC_MGR]: [LRB]VSYNC_CUST_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x4380685a",
+   "reg": 3,
+   "ldr": "0x43806858",
+   "pool": "0x438069c0",
+   "W": "0x4a9094",
+   "dest": "0x43caf8f2",
+   "texto": "[CAM_FUNC_MGR]: [LRB]REQ_V2ND_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43806890",
+   "reg": 3,
+   "ldr": "0x4380688e",
+   "pool": "0x438069c8",
+   "W": "0x4a90b5",
+   "dest": "0x43caf949",
+   "texto": "[CAM_FUNC_MGR]: [LRB]V2ND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x438068c6",
+   "reg": 3,
+   "ldr": "0x438068c4",
+   "pool": "0x438069d0",
+   "W": "0x4a90ce",
+   "dest": "0x43caf998",
+   "texto": "[CAM_FUNC_MGR]: [LRB]V2ND_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x438068fc",
+   "reg": 3,
+   "ldr": "0x438068fa",
+   "pool": "0x438069d8",
+   "W": "0x4a90eb",
+   "dest": "0x43caf9eb",
+   "texto": "[CAM_FUNC_MGR]: [LRB]REQ_FSPSUM_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43806932",
+   "reg": 3,
+   "ldr": "0x43806930",
+   "pool": "0x438069e0",
+   "W": "0x4a910e",
+   "dest": "0x43cafa44",
+   "texto": "[CAM_FUNC_MGR]: [LRB]FSPSUM Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43806968",
+   "reg": 3,
+   "ldr": "0x43806966",
+   "pool": "0x438069e8",
+   "W": "0x4a9129",
+   "dest": "0x43cafa95",
+   "texto": "[CAM_FUNC_MGR]: [LRB]FSPSUM_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x4380953c",
+   "reg": 3,
+   "ldr": "0x43809534",
+   "pool": "0x43809554",
+   "W": "0x4a6b5b",
+   "dest": "0x43cb009b",
+   "texto": "[CAM_FUNC_MGR]: Unexpected ExpFocusTransition : message [%x] timing [%d]",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x438096c0",
+   "reg": 3,
+   "ldr": "0x438096b8",
+   "pool": "0x438096d8",
+   "W": "0x4a6a46",
+   "dest": "0x43cb010a",
+   "texto": "[CAM_FUNC_MGR]: Unexpected SleepTransition : message [%x] timing [%d]",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x438097c6",
+   "reg": 3,
+   "ldr": "0x438097c0",
+   "pool": "0x438097dc",
+   "W": "0x4a6986",
+   "dest": "0x43cb0150",
+   "texto": "[CAM_FUNC_MGR]: unknown message in Imager Sleep Process: %x",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43809c86",
+   "reg": 3,
+   "ldr": "0x43809c7e",
+   "pool": "0x43809cd8",
+   "W": "0x4a65f2",
+   "dest": "0x43cb027c",
+   "texto": "[CAM_FUNC_MGR]: #### Execute unretract command!!",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43809d20",
+   "reg": 3,
+   "ldr": "0x43809d1a",
+   "pool": "0x43809d74",
+   "W": "0x4a6589",
+   "dest": "0x43cb02ad",
+   "texto": "[CAM_FUNC_MGR]: IsNeedScanAf (%d)",
+   "flag": "ok",
+   "entre_medio": []
+  },
+  {
+   "sitio": "0x43809d42",
+   "reg": 3,
+   "ldr": "0x43809d3c",
+   "pool": "0x43809d7c",
+   "W": "0x4a6589",
+   "dest": "0x43cb02cf",
+   "texto": "[CAM_FUNC_MGR]: IsNeedAe     (%d)",
+   "flag": "ok",
+   "entre_medio": []
+  }
+ ],
+ "doble_instrumentacion": {
+  "sitios": [
+   {
+    "sitio": "0x43787bc4",
+    "string": "0x43ca12af",
+    "texto": "[CAM_FUNC_MGR]: CAPCON WARNING! FILE:%s LINE=%d func:%s param=%x %x %x",
+    "bl_nuevo": [
+     "0x43787bd0",
+     "0x43787ac4"
+    ],
+    "log_viejo": [
+     "0x43787c78",
+     "0x43ca1306",
+     "SyncProcMargin[usec] HS0:%u HS1:%u HS2:%u HS3@CPU2:%u HS3@CPU0(IDT):%u HS3@CPU3(RCH):%u VDDrive:%u VDPost:%u"
+    ],
+    "dual": false
+   },
+   {
+    "sitio": "0x43787c48",
+    "string": "0x43ca12f6",
+    "texto": "[CAM_FUNC_MGR]: SyncProcMargin[usec] HS0:%u HS1:%u HS2:%u HS3@CPU2:%u HS3@CPU0(IDT):%u HS3@CPU3(RCH):%u VDDrive:%u VDPost:%u",
+    "bl_nuevo": [
+     "0x43787c4a",
+     "0x43787ac4"
+    ],
+    "log_viejo": [
+     "0x43787c78",
+     "0x43ca1306",
+     "SyncProcMargin[usec] HS0:%u HS1:%u HS2:%u HS3@CPU2:%u HS3@CPU0(IDT):%u HS3@CPU3(RCH):%u VDDrive:%u VDPost:%u"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x43801ac6",
+    "string": "0x43caefe8",
+    "texto": "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d",
+    "bl_nuevo": [
+     "0x43801ad4",
+     "0x4380196c"
+    ],
+    "log_viejo": [
+     "0x43801ae0",
+     "0x43ca3c34",
+     "ERROR !!! osal_err:0x%04x %s : %d"
+    ],
+    "dual": false
+   },
+   {
+    "sitio": "0x43801b1e",
+    "string": "0x43caefe8",
+    "texto": "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d",
+    "bl_nuevo": [
+     "0x43801b28",
+     "0x4380196c"
+    ],
+    "log_viejo": [
+     "0x43801b34",
+     "0x43ca3c34",
+     "ERROR !!! osal_err:0x%04x %s : %d"
+    ],
+    "dual": false
+   },
+   {
+    "sitio": "0x43801d02",
+    "string": "0x43caefe8",
+    "texto": "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d",
+    "bl_nuevo": [
+     "0x43801d10",
+     "0x4380196c"
+    ],
+    "log_viejo": [
+     "0x43801d1c",
+     "0x43ca3c34",
+     "ERROR !!! osal_err:0x%04x %s : %d"
+    ],
+    "dual": false
+   },
+   {
+    "sitio": "0x43801d58",
+    "string": "0x43caefe8",
+    "texto": "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d",
+    "bl_nuevo": [
+     "0x43801d64",
+     "0x4380196c"
+    ],
+    "log_viejo": [
+     "0x43801d70",
+     "0x43ca3c34",
+     "ERROR !!! osal_err:0x%04x %s : %d"
+    ],
+    "dual": false
+   },
+   {
+    "sitio": "0x43803edc",
+    "string": "0x43caf036",
+    "texto": "[CAM_FUNC_MGR]: SetCapMode:Invalid CapMode[0x%x: %d: %d: %d: %d]",
+    "bl_nuevo": [
+     "0x43803ede",
+     "0x43803d80"
+    ],
+    "log_viejo": [
+     "0x43803f04",
+     "0x43caf046",
+     "SetCapMode:Invalid CapMode[0x%x: %d: %d: %d: %d]"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x43803ff0",
+    "string": "0x43caf077",
+    "texto": "[CAM_FUNC_MGR]: receive[%d,%d] before comp[%d,%d] (QUEUEING)",
+    "bl_nuevo": [
+     "0x43803ff2",
+     "0x43803d80"
+    ],
+    "log_viejo": [
+     "0x43803ffe",
+     "0x43caf087",
+     "receive[%d,%d] before comp[%d,%d] (QUEUEING)"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x4380401e",
+    "string": "0x43caf0b4",
+    "texto": "[CAM_FUNC_MGR]: receive[%d,%d] before comp[%d,%d] (FAILED)",
+    "bl_nuevo": [
+     "0x43804020",
+     "0x43803d80"
+    ],
+    "log_viejo": [
+     "0x4380402c",
+     "0x43caf0c4",
+     "receive[%d,%d] before comp[%d,%d] (FAILED)"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x438056d2",
+    "string": "0x43caf136",
+    "texto": "[CAM_FUNC_MGR]: ERROR !!! osalErr:0x%04x %s : %d",
+    "bl_nuevo": [
+     "0x438056de",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x4380574e",
+     "0x43caf18d",
+     "ERROR !!! LSI_NUM_TYPE:0x%04x %s : %d"
+    ],
+    "dual": false
+   },
+   {
+    "sitio": "0x43805736",
+    "string": "0x43caf17d",
+    "texto": "[CAM_FUNC_MGR]: ERROR !!! LSI_NUM_TYPE:0x%04x %s : %d",
+    "bl_nuevo": [
+     "0x43805742",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x4380574e",
+     "0x43caf18d",
+     "ERROR !!! LSI_NUM_TYPE:0x%04x %s : %d"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x4380579c",
+    "string": "0x43caf136",
+    "texto": "[CAM_FUNC_MGR]: ERROR !!! osalErr:0x%04x %s : %d",
+    "bl_nuevo": [
+     "0x438057a8",
+     "0x43805604"
+    ],
+    "log_viejo": null,
+    "dual": false
+   },
+   {
+    "sitio": "0x438057c8",
+    "string": "0x43caf136",
+    "texto": "[CAM_FUNC_MGR]: ERROR !!! osalErr:0x%04x %s : %d",
+    "bl_nuevo": [
+     "0x438057d4",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x438058aa",
+     "0x43ca3c34",
+     "ERROR !!! osal_err:0x%04x %s : %d"
+    ],
+    "dual": false
+   },
+   {
+    "sitio": "0x43805820",
+    "string": "0x43caf136",
+    "texto": "[CAM_FUNC_MGR]: ERROR !!! osalErr:0x%04x %s : %d",
+    "bl_nuevo": [
+     "0x4380582c",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x438058aa",
+     "0x43ca3c34",
+     "ERROR !!! osal_err:0x%04x %s : %d"
+    ],
+    "dual": false
+   },
+   {
+    "sitio": "0x43805890",
+    "string": "0x43caefe8",
+    "texto": "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d",
+    "bl_nuevo": [
+     "0x4380589e",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x438058aa",
+     "0x43ca3c34",
+     "ERROR !!! osal_err:0x%04x %s : %d"
+    ],
+    "dual": false
+   },
+   {
+    "sitio": "0x438058e8",
+    "string": "0x43caefe8",
+    "texto": "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d",
+    "bl_nuevo": [
+     "0x438058f2",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x438058fe",
+     "0x43ca3c34",
+     "ERROR !!! osal_err:0x%04x %s : %d"
+    ],
+    "dual": false
+   },
+   {
+    "sitio": "0x43805a6c",
+    "string": "0x43caf1b3",
+    "texto": "[CAM_FUNC_MGR]: UNKNOWN EID !!! type:[0x%02x] %s : %d",
+    "bl_nuevo": [
+     "0x43805a70",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x43805a7c",
+     "0x43caf1c3",
+     "UNKNOWN EID !!! type:[0x%02x] %s : %d"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x43805ab2",
+    "string": "0x43caf1e9",
+    "texto": "[CAM_FUNC_MGR]: ERROR !!! type:[0x%02x] %s : %d",
+    "bl_nuevo": [
+     "0x43805aba",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x43805ac4",
+     "0x43caf1f9",
+     "ERROR !!! type:[0x%02x] %s : %d"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x43805ed6",
+    "string": "0x43caf219",
+    "texto": "[CAM_FUNC_MGR]: [LRB]REQ_APP_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "bl_nuevo": [
+     "0x43805ed8",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x43805ee0",
+     "0x43caf229",
+     "[LRB]REQ_APP_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x43805f0a",
+    "string": "0x43caf26f",
+    "texto": "[CAM_FUNC_MGR]: [LRB]APP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "bl_nuevo": [
+     "0x43805f0c",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x43805f14",
+     "0x43caf27f",
+     "[LRB]APP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x43805f40",
+    "string": "0x43caf2bd",
+    "texto": "[CAM_FUNC_MGR]: [LRB]APP_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "bl_nuevo": [
+     "0x43805f42",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x43805f4a",
+     "0x43caf2cd",
+     "[LRB]APP_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x43805f7a",
+    "string": "0x43caf30f",
+    "texto": "[CAM_FUNC_MGR]: [LRB]REQ_VSYNC_CUST_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+    "bl_nuevo": [
+     "0x43805f7c",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x43805f8c",
+     "0x43caf31f",
+     "[LRB]REQ_VSYNC_CUST_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x43805fb8",
+    "string": "0x43caf37e",
+    "texto": "[CAM_FUNC_MGR]: [LRB]VSYNC_CUST Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+    "bl_nuevo": [
+     "0x43805fba",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x43805fca",
+     "0x43caf38e",
+     "[LRB]VSYNC_CUST Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x43805ff6",
+    "string": "0x43caf3e5",
+    "texto": "[CAM_FUNC_MGR]: [LRB]VSYNC_CUST_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+    "bl_nuevo": [
+     "0x43805ff8",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x43806008",
+     "0x43caf3f5",
+     "[LRB]VSYNC_CUST_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x4380602e",
+    "string": "0x43caf450",
+    "texto": "[CAM_FUNC_MGR]: [LRB]REQ_V2ND_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "bl_nuevo": [
+     "0x43806030",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x43806038",
+     "0x43caf460",
+     "[LRB]REQ_V2ND_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x43806064",
+    "string": "0x43caf4a7",
+    "texto": "[CAM_FUNC_MGR]: [LRB]V2ND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "bl_nuevo": [
+     "0x43806066",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x4380606e",
+     "0x43caf4b7",
+     "[LRB]V2ND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x4380609a",
+    "string": "0x43caf4f6",
+    "texto": "[CAM_FUNC_MGR]: [LRB]V2ND_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "bl_nuevo": [
+     "0x4380609c",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x438060a4",
+     "0x43caf506",
+     "[LRB]V2ND_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x438060d0",
+    "string": "0x43caf549",
+    "texto": "[CAM_FUNC_MGR]: [LRB]REQ_FSPSUM_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "bl_nuevo": [
+     "0x438060d2",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x438060da",
+     "0x43caf559",
+     "[LRB]REQ_FSPSUM_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x43806106",
+    "string": "0x43caf5a2",
+    "texto": "[CAM_FUNC_MGR]: [LRB]FSPSUM Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "bl_nuevo": [
+     "0x43806108",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x43806110",
+     "0x43caf5b2",
+     "[LRB]FSPSUM Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x4380613c",
+    "string": "0x43caf5f3",
+    "texto": "[CAM_FUNC_MGR]: [LRB]FSPSUM_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "bl_nuevo": [
+     "0x4380613e",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x43806200",
+     "0x43ca3c34",
+     "ERROR !!! osal_err:0x%04x %s : %d"
+    ],
+    "dual": false
+   },
+   {
+    "sitio": "0x438061e6",
+    "string": "0x43caefe8",
+    "texto": "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d",
+    "bl_nuevo": [
+     "0x438061f4",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x43806200",
+     "0x43ca3c34",
+     "ERROR !!! osal_err:0x%04x %s : %d"
+    ],
+    "dual": false
+   },
+   {
+    "sitio": "0x4380623e",
+    "string": "0x43caefe8",
+    "texto": "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d",
+    "bl_nuevo": [
+     "0x43806248",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x43806254",
+     "0x43ca3c34",
+     "ERROR !!! osal_err:0x%04x %s : %d"
+    ],
+    "dual": false
+   },
+   {
+    "sitio": "0x43806422",
+    "string": "0x43caefe8",
+    "texto": "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d",
+    "bl_nuevo": [
+     "0x43806430",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x4380643c",
+     "0x43ca3c34",
+     "ERROR !!! osal_err:0x%04x %s : %d"
+    ],
+    "dual": false
+   },
+   {
+    "sitio": "0x4380647a",
+    "string": "0x43caefe8",
+    "texto": "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d",
+    "bl_nuevo": [
+     "0x43806484",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x43806490",
+     "0x43ca3c34",
+     "ERROR !!! osal_err:0x%04x %s : %d"
+    ],
+    "dual": false
+   },
+   {
+    "sitio": "0x438064ea",
+    "string": "0x43caefe8",
+    "texto": "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d",
+    "bl_nuevo": [
+     "0x438064f8",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x43806504",
+     "0x43ca3c34",
+     "ERROR !!! osal_err:0x%04x %s : %d"
+    ],
+    "dual": false
+   },
+   {
+    "sitio": "0x43806542",
+    "string": "0x43caefe8",
+    "texto": "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d",
+    "bl_nuevo": [
+     "0x4380654c",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x43806558",
+     "0x43ca3c34",
+     "ERROR !!! osal_err:0x%04x %s : %d"
+    ],
+    "dual": false
+   },
+   {
+    "sitio": "0x438065ce",
+    "string": "0x43caf648",
+    "texto": "[CAM_FUNC_MGR]: ERROR !!! LRBridge SndV2ndLatchCmp. %s : %d",
+    "bl_nuevo": [
+     "0x438065da",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x438065e4",
+     "0x43caf658",
+     "ERROR !!! LRBridge SndV2ndLatchCmp. %s : %d"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x4380663a",
+    "string": "0x43caf648",
+    "texto": "[CAM_FUNC_MGR]: ERROR !!! LRBridge SndV2ndLatchCmp. %s : %d",
+    "bl_nuevo": [
+     "0x43806646",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x43806650",
+     "0x43caf658",
+     "ERROR !!! LRBridge SndV2ndLatchCmp. %s : %d"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x438066a6",
+    "string": "0x43caf684",
+    "texto": "[CAM_FUNC_MGR]: ERROR !!! LRBridge SndApp2Cmp. %s : %d",
+    "bl_nuevo": [
+     "0x438066b2",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x438066bc",
+     "0x43caf694",
+     "ERROR !!! LRBridge SndApp2Cmp. %s : %d"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x43806702",
+    "string": "0x43caf6bb",
+    "texto": "[CAM_FUNC_MGR]: [LRB]REQ_APP_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "bl_nuevo": [
+     "0x43806704",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x4380670c",
+     "0x43caf6cb",
+     "[LRB]REQ_APP_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x43806736",
+    "string": "0x43caf711",
+    "texto": "[CAM_FUNC_MGR]: [LRB]APP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "bl_nuevo": [
+     "0x43806738",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x43806740",
+     "0x43caf721",
+     "[LRB]APP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x4380676c",
+    "string": "0x43caf75f",
+    "texto": "[CAM_FUNC_MGR]: [LRB]APP_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "bl_nuevo": [
+     "0x4380676e",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x43806776",
+     "0x43caf76f",
+     "[LRB]APP_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x438067a6",
+    "string": "0x43caf7b1",
+    "texto": "[CAM_FUNC_MGR]: [LRB]REQ_VSYNC_CUST_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+    "bl_nuevo": [
+     "0x438067a8",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x438067b8",
+     "0x43caf7c1",
+     "[LRB]REQ_VSYNC_CUST_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x438067e4",
+    "string": "0x43caf820",
+    "texto": "[CAM_FUNC_MGR]: [LRB]VSYNC_CUST Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+    "bl_nuevo": [
+     "0x438067e6",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x438067f6",
+     "0x43caf830",
+     "[LRB]VSYNC_CUST Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x43806822",
+    "string": "0x43caf887",
+    "texto": "[CAM_FUNC_MGR]: [LRB]VSYNC_CUST_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+    "bl_nuevo": [
+     "0x43806824",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x43806834",
+     "0x43caf897",
+     "[LRB]VSYNC_CUST_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x4380685a",
+    "string": "0x43caf8f2",
+    "texto": "[CAM_FUNC_MGR]: [LRB]REQ_V2ND_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "bl_nuevo": [
+     "0x4380685c",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x43806864",
+     "0x43caf902",
+     "[LRB]REQ_V2ND_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x43806890",
+    "string": "0x43caf949",
+    "texto": "[CAM_FUNC_MGR]: [LRB]V2ND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "bl_nuevo": [
+     "0x43806892",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x4380689a",
+     "0x43caf959",
+     "[LRB]V2ND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x438068c6",
+    "string": "0x43caf998",
+    "texto": "[CAM_FUNC_MGR]: [LRB]V2ND_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "bl_nuevo": [
+     "0x438068c8",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x438068d0",
+     "0x43caf9a8",
+     "[LRB]V2ND_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x438068fc",
+    "string": "0x43caf9eb",
+    "texto": "[CAM_FUNC_MGR]: [LRB]REQ_FSPSUM_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "bl_nuevo": [
+     "0x438068fe",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x43806906",
+     "0x43caf9fb",
+     "[LRB]REQ_FSPSUM_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x43806932",
+    "string": "0x43cafa44",
+    "texto": "[CAM_FUNC_MGR]: [LRB]FSPSUM Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "bl_nuevo": [
+     "0x43806934",
+     "0x43805604"
+    ],
+    "log_viejo": [
+     "0x4380693c",
+     "0x43cafa54",
+     "[LRB]FSPSUM Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x43806968",
+    "string": "0x43cafa95",
+    "texto": "[CAM_FUNC_MGR]: [LRB]FSPSUM_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "bl_nuevo": [
+     "0x4380696a",
+     "0x43805604"
+    ],
+    "log_viejo": null,
+    "dual": false
+   },
+   {
+    "sitio": "0x4380953c",
+    "string": "0x43cb009b",
+    "texto": "[CAM_FUNC_MGR]: Unexpected ExpFocusTransition : message [%x] timing [%d]",
+    "bl_nuevo": [
+     "0x4380953e",
+     "0x4380947c"
+    ],
+    "log_viejo": null,
+    "dual": false
+   },
+   {
+    "sitio": "0x438096c0",
+    "string": "0x43cb010a",
+    "texto": "[CAM_FUNC_MGR]: Unexpected SleepTransition : message [%x] timing [%d]",
+    "bl_nuevo": [
+     "0x438096c2",
+     "0x43809600"
+    ],
+    "log_viejo": null,
+    "dual": false
+   },
+   {
+    "sitio": "0x438097c6",
+    "string": "0x43cb0150",
+    "texto": "[CAM_FUNC_MGR]: unknown message in Imager Sleep Process: %x",
+    "bl_nuevo": [
+     "0x438097c8",
+     "0x43809600"
+    ],
+    "log_viejo": [
+     "0x438097d0",
+     "0x43cb0160",
+     "unknown message in Imager Sleep Process: %x"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x43809c86",
+    "string": "0x43cb027c",
+    "texto": "[CAM_FUNC_MGR]: #### Execute unretract command!!",
+    "bl_nuevo": [
+     "0x43809c8c",
+     "0x43809a64"
+    ],
+    "log_viejo": [
+     "0x43809c92",
+     "0x43cb028c",
+     "#### Execute unretract command!!"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x43809d20",
+    "string": "0x43cb02ad",
+    "texto": "[CAM_FUNC_MGR]: IsNeedScanAf (%d)",
+    "bl_nuevo": [
+     "0x43809d26",
+     "0x43809a64"
+    ],
+    "log_viejo": [
+     "0x43809d32",
+     "0x43cb02bd",
+     "IsNeedScanAf (%d)"
+    ],
+    "dual": true
+   },
+   {
+    "sitio": "0x43809d42",
+    "string": "0x43cb02cf",
+    "texto": "[CAM_FUNC_MGR]: IsNeedAe     (%d)",
+    "bl_nuevo": [
+     "0x43809d48",
+     "0x43809a64"
+    ],
+    "log_viejo": [
+     "0x43809d54",
+     "0x43cb02df",
+     "IsNeedAe     (%d)"
+    ],
+    "dual": true
+   }
+  ],
+  "n_dual": 36,
+  "wrappers": {
+   "0x43787ac4": 2,
+   "0x4380196c": 4,
+   "0x43803d80": 3,
+   "0x43805604": 42,
+   "0x4380947c": 1,
+   "0x43809600": 2,
+   "0x43809a64": 3
+  }
+ },
+ "marcadores": {
+  "A6000_fw321": {
+   "rtti": [
+    {
+     "texto": "N6Camera8Function18ExecStateTransBaseE",
+     "vaddr": "0x43cafc36"
+    },
+    {
+     "texto": "N6Camera8Function16CapconEventQueueE",
+     "vaddr": "0x43cafc5d"
+    },
+    {
+     "texto": "N6Camera8Function15EventDispatcherE",
+     "vaddr": "0x43cafc82"
+    },
+    {
+     "texto": "N6Camera8Function12EventHandlerE",
+     "vaddr": "0x43cafccd"
+    },
+    {
+     "texto": "N6Camera8Function11ExecHandlerE",
+     "vaddr": "0x43cafcee"
+    },
+    {
+     "texto": "N6Camera8Function15ExecModeHandlerE",
+     "vaddr": "0x43cafd0e"
+    },
+    {
+     "texto": "N6Camera8Function18ExecReleaseHandlerE",
+     "vaddr": "0x43cafdd8"
+    },
+    {
+     "texto": "N6Camera8Function10HandleInfoE",
+     "vaddr": "0x43cafdff"
+    },
+    {
+     "texto": "N6Camera8Function12ReplyHandlerE",
+     "vaddr": "0x43cb001c"
+    },
+    {
+     "texto": "N6Camera8Function11SendChannelE",
+     "vaddr": "0x43cb003d"
+    },
+    {
+     "texto": "N6Camera8Function17ExecExpFocusTransE",
+     "vaddr": "0x43cb00e4"
+    },
+    {
+     "texto": "N6Camera8Function14ExecSleepTransE",
+     "vaddr": "0x43cb018c"
+    },
+    {
+     "texto": "N6Camera8Function7CamMainE",
+     "vaddr": "0x43cb021d"
+    },
+    {
+     "texto": "N6Camera8Function7CamUserE",
+     "vaddr": "0x43cb0313"
+    },
+    {
+     "texto": "N6Camera8Function16CameraBackGroundE",
+     "vaddr": "0x43cb03a6"
+    },
+    {
+     "texto": "N6Camera8Function4FaceE",
+     "vaddr": "0x43cb03cb"
+    },
+    {
+     "texto": "N6Camera8Function7ReleaseE",
+     "vaddr": "0x43cb03f4"
+    },
+    {
+     "texto": "N6Camera8Function15ExecHandlerBaseE",
+     "vaddr": "0x43ccabb4"
+    }
+   ],
+   "paths": [
+    {
+     "texto": "api/capcon_api_cam.cpp",
+     "vaddr": "0x43ca124e"
+    },
+    {
+     "texto": "Function/FunctionMessage.cpp",
+     "vaddr": "0x43caeef6"
+    },
+    {
+     "texto": "Function/FunctionNotify.cpp",
+     "vaddr": "0x43caf01a"
+    },
+    {
+     "texto": "Function/FunctionSetParam.cpp",
+     "vaddr": "0x43caf0ef"
+    },
+    {
+     "texto": "Function/LRBridge.cpp",
+     "vaddr": "0x43caf167"
+    },
+    {
+     "texto": "api/capcon_api_businessif.cpp",
+     "vaddr": "0x43cb0072"
+    },
+    {
+     "texto": "tsk/tsk_capcon_sequence.cpp",
+     "vaddr": "0x43cb01c3"
+    },
+    {
+     "texto": "tsk/tsk_rawdev_sequence.cpp",
+     "vaddr": "0x43cb01f3"
+    },
+    {
+     "texto": "wrapper/CamMain.cpp",
+     "vaddr": "0x43cb0268"
+    },
+    {
+     "texto": "wrapper/CamUser.cpp",
+     "vaddr": "0x43cb032e"
+    },
+    {
+     "texto": "wrapper/CameraBackGround.cpp",
+     "vaddr": "0x43cb0389"
+    },
+    {
+     "texto": "wrapper/Face.cpp",
+     "vaddr": "0x43cb03e3"
+    },
+    {
+     "texto": "tsk/tskAvcAudioModule.cpp",
+     "vaddr": "0x43cd1ee4"
+    }
+   ],
+   "capcon": [
+    {
+     "texto": "CapControllerE",
+     "vaddr": "0x43c9065d"
+    },
+    {
+     "texto": "CapControllerE",
+     "vaddr": "0x43c90922"
+    },
+    {
+     "texto": "CapconReply",
+     "vaddr": "0x43ca1242"
+    },
+    {
+     "texto": "capcon_api_cam",
+     "vaddr": "0x43ca1252"
+    },
+    {
+     "texto": "CAPCON",
+     "vaddr": "0x43ca1265"
+    },
+    {
+     "texto": "CAPCON",
+     "vaddr": "0x43ca12bf"
+    },
+    {
+     "texto": "CapconEventQueueE",
+     "vaddr": "0x43cafc70"
+    },
+    {
+     "texto": "capcon_api_businessif",
+     "vaddr": "0x43cb0076"
+    },
+    {
+     "texto": "CapconExec",
+     "vaddr": "0x43cb0090"
+    },
+    {
+     "texto": "capcon_sequence",
+     "vaddr": "0x43cb01b3"
+    },
+    {
+     "texto": "capcon_sequence",
+     "vaddr": "0x43cb01cb"
+    }
+   ],
+   "n_capcon": 11
+  },
+  "A7S_fw320": {
+   "rtti": [
+    {
+     "texto": "N6Camera8Function18ExecStateTransBaseE",
+     "vaddr": "0x43ca65d9"
+    },
+    {
+     "texto": "N6Camera8Function15EventDispatcherE",
+     "vaddr": "0x43ca6600"
+    },
+    {
+     "texto": "N6Camera8Function12EventHandlerE",
+     "vaddr": "0x43ca664b"
+    },
+    {
+     "texto": "N6Camera8Function11ExecHandlerE",
+     "vaddr": "0x43ca666c"
+    },
+    {
+     "texto": "N6Camera8Function15ExecModeHandlerE",
+     "vaddr": "0x43ca668c"
+    },
+    {
+     "texto": "N6Camera8Function18ExecReleaseHandlerE",
+     "vaddr": "0x43ca6747"
+    },
+    {
+     "texto": "N6Camera8Function10HandleInfoE",
+     "vaddr": "0x43ca676e"
+    },
+    {
+     "texto": "N6Camera8Function12ReplyHandlerE",
+     "vaddr": "0x43ca6b7b"
+    },
+    {
+     "texto": "N6Camera8Function11SendChannelE",
+     "vaddr": "0x43ca6b9c"
+    },
+    {
+     "texto": "N6Camera8Function17ExecExpFocusTransE",
+     "vaddr": "0x43ca6c0a"
+    },
+    {
+     "texto": "N6Camera8Function14ExecSleepTransE",
+     "vaddr": "0x43ca6c92"
+    },
+    {
+     "texto": "N6Camera8Function16CameraBackGroundE",
+     "vaddr": "0x43ca6cef"
+    },
+    {
+     "texto": "N6Camera8Function7CamMainE",
+     "vaddr": "0x43ca6d22"
+    },
+    {
+     "texto": "N6Camera8Function7CamUserE",
+     "vaddr": "0x43ca6dd8"
+    },
+    {
+     "texto": "N6Camera8Function4FaceE",
+     "vaddr": "0x43ca6e1c"
+    },
+    {
+     "texto": "N6Camera8Function7ReleaseE",
+     "vaddr": "0x43ca6e45"
+    },
+    {
+     "texto": "N6Camera8Function16CapconEventQueueE",
+     "vaddr": "0x43cb1fc2"
+    },
+    {
+     "texto": "N6Camera8Function15ExecHandlerBaseE",
+     "vaddr": "0x43cb1fe7"
+    }
+   ],
+   "paths": [
+    {
+     "texto": "api/capcon_api_cam.cpp",
+     "vaddr": "0x43ca64d4"
+    },
+    {
+     "texto": "wrapper/CameraBackGround.cpp",
+     "vaddr": "0x43ca6cd2"
+    },
+    {
+     "texto": "wrapper/CamMain.cpp",
+     "vaddr": "0x43ca6d6d"
+    },
+    {
+     "texto": "wrapper/CamUser.cpp",
+     "vaddr": "0x43ca6df3"
+    },
+    {
+     "texto": "wrapper/Face.cpp",
+     "vaddr": "0x43ca6e34"
+    },
+    {
+     "texto": "api/capcon_api_businessif.cpp",
+     "vaddr": "0x43cb1f99"
+    },
+    {
+     "texto": "tsk/tsk_capcon_sequence.cpp",
+     "vaddr": "0x43cb21a0"
+    },
+    {
+     "texto": "tsk/tsk_rawdev_sequence.cpp",
+     "vaddr": "0x43cb21d0"
+    },
+    {
+     "texto": "tsk/tskAvcAudioModule.cpp",
+     "vaddr": "0x43cc86ff"
+    }
+   ],
+   "capcon": [
+    {
+     "texto": "CapControllerE",
+     "vaddr": "0x43c99711"
+    },
+    {
+     "texto": "CapControllerE",
+     "vaddr": "0x43c99989"
+    },
+    {
+     "texto": "CapconReply",
+     "vaddr": "0x43ca64c8"
+    },
+    {
+     "texto": "capcon_api_cam",
+     "vaddr": "0x43ca64d8"
+    },
+    {
+     "texto": "CAPCON",
+     "vaddr": "0x43ca64eb"
+    },
+    {
+     "texto": "CAPCON",
+     "vaddr": "0x43ca6535"
+    },
+    {
+     "texto": "capcon_api_businessif",
+     "vaddr": "0x43cb1f9d"
+    },
+    {
+     "texto": "CapconExec",
+     "vaddr": "0x43cb1fb7"
+    },
+    {
+     "texto": "CapconEventQueueE",
+     "vaddr": "0x43cb1fd5"
+    },
+    {
+     "texto": "capcon_sequence",
+     "vaddr": "0x43cb2190"
+    },
+    {
+     "texto": "capcon_sequence",
+     "vaddr": "0x43cb21a8"
+    }
+   ],
+   "n_capcon": 11
+  },
+  "A6300_fw201": {
+   "rtti": [
+    {
+     "texto": "N6Camera8Function18ExecStateTransBaseE",
+     "vaddr": "0x43daadb4"
+    },
+    {
+     "texto": "N6Camera8Function15EventDispatcherE",
+     "vaddr": "0x43daaddb"
+    },
+    {
+     "texto": "N6Camera8Function12EventHandlerE",
+     "vaddr": "0x43daae26"
+    },
+    {
+     "texto": "N6Camera8Function11ExecHandlerE",
+     "vaddr": "0x43daae47"
+    },
+    {
+     "texto": "N6Camera8Function15ExecModeHandlerE",
+     "vaddr": "0x43daae67"
+    },
+    {
+     "texto": "N6Camera8Function18ExecReleaseHandlerE",
+     "vaddr": "0x43daaf22"
+    },
+    {
+     "texto": "N6Camera8Function10HandleInfoE",
+     "vaddr": "0x43daaf49"
+    },
+    {
+     "texto": "N6Camera8Function12ReplyHandlerE",
+     "vaddr": "0x43daaf81"
+    },
+    {
+     "texto": "N6Camera8Function11SendChannelE",
+     "vaddr": "0x43daafa2"
+    },
+    {
+     "texto": "N6Camera8Function17ExecExpFocusTransE",
+     "vaddr": "0x43dab010"
+    },
+    {
+     "texto": "N6Camera8Function14ExecSleepTransE",
+     "vaddr": "0x43dab098"
+    },
+    {
+     "texto": "N6Camera8Function16CameraBackGroundE",
+     "vaddr": "0x43dab0f5"
+    },
+    {
+     "texto": "N6Camera8Function7CamMainE",
+     "vaddr": "0x43dab128"
+    },
+    {
+     "texto": "N6Camera8Function7CamUserE",
+     "vaddr": "0x43dab1ce"
+    },
+    {
+     "texto": "N6Camera8Function4FaceE",
+     "vaddr": "0x43dab212"
+    },
+    {
+     "texto": "N6Camera8Function7ReleaseE",
+     "vaddr": "0x43dab23b"
+    },
+    {
+     "texto": "N6Camera8Function16CapconEventQueueE",
+     "vaddr": "0x43dc4f89"
+    },
+    {
+     "texto": "N6Camera8Function15ExecHandlerBaseE",
+     "vaddr": "0x43dc4fae"
+    }
+   ],
+   "paths": [
+    {
+     "texto": "api/capcon_api_cam.cpp",
+     "vaddr": "0x43daacaf"
+    },
+    {
+     "texto": "wrapper/CameraBackGround.cpp",
+     "vaddr": "0x43dab0d8"
+    },
+    {
+     "texto": "wrapper/CamMain.cpp",
+     "vaddr": "0x43dab175"
+    },
+    {
+     "texto": "wrapper/CamUser.cpp",
+     "vaddr": "0x43dab1e9"
+    },
+    {
+     "texto": "wrapper/Face.cpp",
+     "vaddr": "0x43dab22a"
+    },
+    {
+     "texto": "api/capcon_api_businessif.cpp",
+     "vaddr": "0x43dc4f60"
+    },
+    {
+     "texto": "tsk/tsk_capcon_sequence.cpp",
+     "vaddr": "0x43dc5167"
+    },
+    {
+     "texto": "tsk/tsk_rawdev_sequence.cpp",
+     "vaddr": "0x43dc5197"
+    },
+    {
+     "texto": "tsk/tskAvcAudioModule.cpp",
+     "vaddr": "0x43de309a"
+    }
+   ],
+   "capcon": [
+    {
+     "texto": "CapControllerE",
+     "vaddr": "0x43d9969a"
+    },
+    {
+     "texto": "CapControllerE",
+     "vaddr": "0x43d999c0"
+    },
+    {
+     "texto": "CapControllerE",
+     "vaddr": "0x43d99b2b"
+    },
+    {
+     "texto": "CapControllerE",
+     "vaddr": "0x43d99b55"
+    },
+    {
+     "texto": "CapconReply",
+     "vaddr": "0x43daaca3"
+    },
+    {
+     "texto": "capcon_api_cam",
+     "vaddr": "0x43daacb3"
+    },
+    {
+     "texto": "CAPCON",
+     "vaddr": "0x43daacc6"
+    },
+    {
+     "texto": "CAPCON",
+     "vaddr": "0x43daad10"
+    },
+    {
+     "texto": "capcon_api_businessif",
+     "vaddr": "0x43dc4f64"
+    },
+    {
+     "texto": "CapconExec",
+     "vaddr": "0x43dc4f7e"
+    },
+    {
+     "texto": "CapconEventQueueE",
+     "vaddr": "0x43dc4f9c"
+    },
+    {
+     "texto": "capcon_sequence",
+     "vaddr": "0x43dc5157"
+    },
+    {
+     "texto": "capcon_sequence",
+     "vaddr": "0x43dc516f"
+    }
+   ],
+   "n_capcon": 13
+  }
+ },
+ "diferencial_nucleos": [
+  {
+   "vaddr": "0x43ca12af",
+   "texto": "[CAM_FUNC_MGR]: CAPCON WARNING! FILE:%s LINE=%d func:%s param=%x %x %x",
+   "nucleo": "CAPCON WARNING! FILE:%s LINE=%d func:%s param=%x %x %x",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca6535"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43daad10"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43ca12f6",
+   "texto": "[CAM_FUNC_MGR]: SyncProcMargin[usec] HS0:%u HS1:%u HS2:%u HS3@CPU2:%u HS3@CPU0(IDT):%u HS3@CPU3(RCH):%u VDDrive:%u VDPost:%u",
+   "nucleo": "SyncProcMargin[usec] HS0:%u HS1:%u HS2:%u HS3@CPU2:%u HS3@CPU0(IDT):%u HS3@CPU3(RCH):%u VDDrive:%u VDPost:%u",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca656c"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43daad47"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caefe8",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! osal_err:0x%04x %s : %d",
+   "nucleo": "ERROR !!! osal_err:0x%04x %s : %d",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca2d5d"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43da6f4d"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf036",
+   "texto": "[CAM_FUNC_MGR]: SetCapMode:Invalid CapMode[0x%x: %d: %d: %d: %d]",
+   "nucleo": "SetCapMode:Invalid CapMode[0x%x: %d: %d: %d: %d]",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca6fe5"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dacd27"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf077",
+   "texto": "[CAM_FUNC_MGR]: receive[%d,%d] before comp[%d,%d] (QUEUEING)",
+   "nucleo": "receive[%d,%d] before comp[%d,%d] (QUEUEING)",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca7016"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43daca0b"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf0b4",
+   "texto": "[CAM_FUNC_MGR]: receive[%d,%d] before comp[%d,%d] (FAILED)",
+   "nucleo": "receive[%d,%d] before comp[%d,%d] (FAILED)",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca7043"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43daca38"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf136",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! osalErr:0x%04x %s : %d",
+   "nucleo": "ERROR !!! osalErr:0x%04x %s : %d",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca706e"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43daceb5"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf17d",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! LSI_NUM_TYPE:0x%04x %s : %d",
+   "nucleo": "ERROR !!! LSI_NUM_TYPE:0x%04x %s : %d",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca709c"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dacee3"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf1b3",
+   "texto": "[CAM_FUNC_MGR]: UNKNOWN EID !!! type:[0x%02x] %s : %d",
+   "nucleo": "UNKNOWN EID !!! type:[0x%02x] %s : %d",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca70c2"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dacf09"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf1e9",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! type:[0x%02x] %s : %d",
+   "nucleo": "ERROR !!! type:[0x%02x] %s : %d",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca70e8"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dacf2f"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf219",
+   "texto": "[CAM_FUNC_MGR]: [LRB]REQ_APP_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "nucleo": "[LRB]REQ_APP_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca7108"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dacf4f"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf26f",
+   "texto": "[CAM_FUNC_MGR]: [LRB]APP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "nucleo": "[LRB]APP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca714e"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dacf95"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf2bd",
+   "texto": "[CAM_FUNC_MGR]: [LRB]APP_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "nucleo": "[LRB]APP_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca718c"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dacfd3"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf30f",
+   "texto": "[CAM_FUNC_MGR]: [LRB]REQ_VSYNC_CUST_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+   "nucleo": "[LRB]REQ_VSYNC_CUST_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca71ce"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dad015"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf37e",
+   "texto": "[CAM_FUNC_MGR]: [LRB]VSYNC_CUST Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+   "nucleo": "[LRB]VSYNC_CUST Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca722d"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dad074"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf3e5",
+   "texto": "[CAM_FUNC_MGR]: [LRB]VSYNC_CUST_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+   "nucleo": "[LRB]VSYNC_CUST_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca7284"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dad0cb"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf450",
+   "texto": "[CAM_FUNC_MGR]: [LRB]REQ_V2ND_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "nucleo": "[LRB]REQ_V2ND_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca72df"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dad126"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf4a7",
+   "texto": "[CAM_FUNC_MGR]: [LRB]V2ND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "nucleo": "[LRB]V2ND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca7326"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dad16d"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf4f6",
+   "texto": "[CAM_FUNC_MGR]: [LRB]V2ND_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "nucleo": "[LRB]V2ND_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca7365"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dad1ac"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf549",
+   "texto": "[CAM_FUNC_MGR]: [LRB]REQ_FSPSUM_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "nucleo": "[LRB]REQ_FSPSUM_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca73a8"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dad1ef"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf5a2",
+   "texto": "[CAM_FUNC_MGR]: [LRB]FSPSUM Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "nucleo": "[LRB]FSPSUM Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca73f1"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dad238"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf5f3",
+   "texto": "[CAM_FUNC_MGR]: [LRB]FSPSUM_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "nucleo": "[LRB]FSPSUM_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca7432"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dad279"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf648",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! LRBridge SndV2ndLatchCmp. %s : %d",
+   "nucleo": "ERROR !!! LRBridge SndV2ndLatchCmp. %s : %d",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca7477"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dad2be"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf684",
+   "texto": "[CAM_FUNC_MGR]: ERROR !!! LRBridge SndApp2Cmp. %s : %d",
+   "nucleo": "ERROR !!! LRBridge SndApp2Cmp. %s : %d",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca74a3"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dad2ea"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf6bb",
+   "texto": "[CAM_FUNC_MGR]: [LRB]REQ_APP_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "nucleo": "[LRB]REQ_APP_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca74ca"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dad311"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf711",
+   "texto": "[CAM_FUNC_MGR]: [LRB]APP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "nucleo": "[LRB]APP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca7510"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dad357"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf75f",
+   "texto": "[CAM_FUNC_MGR]: [LRB]APP_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "nucleo": "[LRB]APP_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca754e"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dad395"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf7b1",
+   "texto": "[CAM_FUNC_MGR]: [LRB]REQ_VSYNC_CUST_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+   "nucleo": "[LRB]REQ_VSYNC_CUST_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca7590"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dad3d7"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf820",
+   "texto": "[CAM_FUNC_MGR]: [LRB]VSYNC_CUST Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+   "nucleo": "[LRB]VSYNC_CUST Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca75ef"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dad436"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf887",
+   "texto": "[CAM_FUNC_MGR]: [LRB]VSYNC_CUST_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+   "nucleo": "[LRB]VSYNC_CUST_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x vsync_type:0x%02x",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca7646"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dad48d"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf8f2",
+   "texto": "[CAM_FUNC_MGR]: [LRB]REQ_V2ND_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "nucleo": "[LRB]REQ_V2ND_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca76a1"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dad4e8"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf949",
+   "texto": "[CAM_FUNC_MGR]: [LRB]V2ND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "nucleo": "[LRB]V2ND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca76e8"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dad52f"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf998",
+   "texto": "[CAM_FUNC_MGR]: [LRB]V2ND_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "nucleo": "[LRB]V2ND_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca7727"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dad56e"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43caf9eb",
+   "texto": "[CAM_FUNC_MGR]: [LRB]REQ_FSPSUM_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "nucleo": "[LRB]REQ_FSPSUM_SND Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca776a"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dad5b1"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43cafa44",
+   "texto": "[CAM_FUNC_MGR]: [LRB]FSPSUM Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "nucleo": "[LRB]FSPSUM Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca77b3"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dad5fa"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43cafa95",
+   "texto": "[CAM_FUNC_MGR]: [LRB]FSPSUM_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "nucleo": "[LRB]FSPSUM_CMP Rsv type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca77f4"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dad63b"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43cb009b",
+   "texto": "[CAM_FUNC_MGR]: Unexpected ExpFocusTransition : message [%x] timing [%d]",
+   "nucleo": "Unexpected ExpFocusTransition : message [%x] timing [%d]",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca6bd1"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43daafd7"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43cb010a",
+   "texto": "[CAM_FUNC_MGR]: Unexpected SleepTransition : message [%x] timing [%d]",
+   "nucleo": "Unexpected SleepTransition : message [%x] timing [%d]",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca6c30"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dab036"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43cb0150",
+   "texto": "[CAM_FUNC_MGR]: unknown message in Imager Sleep Process: %x",
+   "nucleo": "unknown message in Imager Sleep Process: %x",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca6c66"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dab06c"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43cb027c",
+   "texto": "[CAM_FUNC_MGR]: #### Execute unretract command!!",
+   "nucleo": "#### Execute unretract command!!",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca6d81"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dab189"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43cb02ad",
+   "texto": "[CAM_FUNC_MGR]: IsNeedScanAf (%d)",
+   "nucleo": "IsNeedScanAf (%d)",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca6da2"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dab1aa"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43cb02cf",
+   "texto": "[CAM_FUNC_MGR]: IsNeedAe     (%d)",
+   "nucleo": "IsNeedAe     (%d)",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca6db4"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [
+    {
+     "vaddr": "0x43dab1bc"
+    }
+   ],
+   "A6300_fw201_n": 1
+  },
+  {
+   "vaddr": "0x43cb02f1",
+   "texto": "[CAM_FUNC_MGR]: Pseudo AF Stop %d",
+   "nucleo": "Pseudo AF Stop %d",
+   "A7S_fw320": [
+    {
+     "vaddr": "0x43ca6dc6"
+    }
+   ],
+   "A7S_fw320_n": 1,
+   "A6300_fw201": [],
+   "A6300_fw201_n": 0
+  }
+ ],
+ "clases_rtti": [
+  {
+   "texto": "N6Camera8Function18ExecStateTransBaseE",
+   "vaddr": "0x43cafc36"
+  },
+  {
+   "texto": "N6Camera8Function16CapconEventQueueE",
+   "vaddr": "0x43cafc5d"
+  },
+  {
+   "texto": "N6Camera8Function15EventDispatcherE",
+   "vaddr": "0x43cafc82"
+  },
+  {
+   "texto": "N6Camera8Function12EventHandlerE",
+   "vaddr": "0x43cafccd"
+  },
+  {
+   "texto": "N6Camera8Function11ExecHandlerE",
+   "vaddr": "0x43cafcee"
+  },
+  {
+   "texto": "N6Camera8Function15ExecModeHandlerE",
+   "vaddr": "0x43cafd0e"
+  },
+  {
+   "texto": "N6Camera8Function18ExecReleaseHandlerE",
+   "vaddr": "0x43cafdd8"
+  },
+  {
+   "texto": "N6Camera8Function10HandleInfoE",
+   "vaddr": "0x43cafdff"
+  },
+  {
+   "texto": "N6Camera8Function12ReplyHandlerE",
+   "vaddr": "0x43cb001c"
+  },
+  {
+   "texto": "N6Camera8Function11SendChannelE",
+   "vaddr": "0x43cb003d"
+  },
+  {
+   "texto": "N6Camera8Function17ExecExpFocusTransE",
+   "vaddr": "0x43cb00e4"
+  },
+  {
+   "texto": "N6Camera8Function14ExecSleepTransE",
+   "vaddr": "0x43cb018c"
+  },
+  {
+   "texto": "N6Camera8Function7CamMainE",
+   "vaddr": "0x43cb021d"
+  },
+  {
+   "texto": "N6Camera8Function7CamUserE",
+   "vaddr": "0x43cb0313"
+  },
+  {
+   "texto": "N6Camera8Function16CameraBackGroundE",
+   "vaddr": "0x43cb03a6"
+  },
+  {
+   "texto": "N6Camera8Function4FaceE",
+   "vaddr": "0x43cb03cb"
+  },
+  {
+   "texto": "N6Camera8Function7ReleaseE",
+   "vaddr": "0x43cb03f4"
+  },
+  {
+   "texto": "N6Camera8Function15ExecHandlerBaseE",
+   "vaddr": "0x43ccabb4"
+  }
+ ],
+ "ficheros_fuente": [
+  {
+   "texto": "api/capcon_api_cam.cpp",
+   "vaddr": "0x43ca124e"
+  },
+  {
+   "texto": "Function/FunctionMessage.cpp",
+   "vaddr": "0x43caeef6"
+  },
+  {
+   "texto": "Function/FunctionNotify.cpp",
+   "vaddr": "0x43caf01a"
+  },
+  {
+   "texto": "Function/FunctionSetParam.cpp",
+   "vaddr": "0x43caf0ef"
+  },
+  {
+   "texto": "Function/LRBridge.cpp",
+   "vaddr": "0x43caf167"
+  },
+  {
+   "texto": "api/capcon_api_businessif.cpp",
+   "vaddr": "0x43cb0072"
+  },
+  {
+   "texto": "tsk/tsk_capcon_sequence.cpp",
+   "vaddr": "0x43cb01c3"
+  },
+  {
+   "texto": "tsk/tsk_rawdev_sequence.cpp",
+   "vaddr": "0x43cb01f3"
+  },
+  {
+   "texto": "wrapper/CamMain.cpp",
+   "vaddr": "0x43cb0268"
+  },
+  {
+   "texto": "wrapper/CamUser.cpp",
+   "vaddr": "0x43cb032e"
+  },
+  {
+   "texto": "wrapper/CameraBackGround.cpp",
+   "vaddr": "0x43cb0389"
+  },
+  {
+   "texto": "wrapper/Face.cpp",
+   "vaddr": "0x43cb03e3"
+  },
+  {
+   "texto": "EventDispatcher.cpp",
+   "vaddr": "0x43cafca6"
+  },
+  {
+   "texto": "ExecModeHandler.cpp",
+   "vaddr": "0x43cafd3f"
+  },
+  {
+   "texto": "ExecReleaseHandler.cpp",
+   "vaddr": "0x43cafda7"
+  },
+  {
+   "texto": "RawDevHandler.cpp",
+   "vaddr": "0x43cafed5"
+  },
+  {
+   "texto": "ReplyHandler.cpp",
+   "vaddr": "0x43cb000b"
+  },
+  {
+   "texto": "SendChannel.cpp",
+   "vaddr": "0x43cb005d"
+  }
+ ],
+ "lrb_type_ids": {
+  "0": "REQ_APP_SND",
+  "1": "APP",
+  "2": "APP_CMP",
+  "3": "REQ_V2ND_SND",
+  "4": "V2ND",
+  "5": "V2ND_CMP",
+  "6": "REQ_VSYNC_CUST_SND",
+  "7": "VSYNC_CUST",
+  "8": "VSYNC_CUST_CMP",
+  "9": "REQ_FSPSUM_SND",
+  "10": "FSPSUM",
+  "11": "FSPSUM_CMP"
+ },
+ "lrb_type_ids_evidencia": {
+  "REQ_APP_SND": "0x43805ec0 (cbz type_id==0)",
+  "APP": "0x43805ef6 (cmp r2,#1)",
+  "APP_CMP": "0x43805f2a (cmp r3,#2)",
+  "REQ_V2ND_SND": "0x4380601a (cmp r0,#3)",
+  "V2ND": "0x4380604e (cmp r3,#4)",
+  "V2ND_CMP": "0x43806084 (cmp r3,#5)",
+  "REQ_VSYNC_CUST_SND": "0x43805f60 (cmp r3,#6)",
+  "VSYNC_CUST": "0x43805f9e (cmp r3,#7)",
+  "VSYNC_CUST_CMP": "0x43805fdc (cmp r3,#8)",
+  "REQ_FSPSUM_SND": "0x438060ba (cmp r3,#9)",
+  "FSPSUM": "0x438060f0 (cmp r3,#0xa)",
+  "FSPSUM_CMP": "0x43806126 (cmp r3,#0xb)"
+ },
+ "equivalentes_otras_fw": {
+  "LRB_Snd_funcion": {
+   "A6000": "0x43805ea8",
+   "A7S": "0x437ac620",
+   "A6300": "0x437f6200"
+  },
+  "traza_LRB_antigua": {
+   "A6000": "0x43902718",
+   "A7S": "0x438f7114",
+   "A6300": "0x43986518"
+  },
+  "init_tabla_funciones": {
+   "A6000": "0x43787d88",
+   "A7S": "0x437a43c4"
+  },
+  "tabla_funciones_base": {
+   "A6000": "0x43ff17b8",
+   "A7S": "0x43ff65d4",
+   "A6300": null
+  },
+  "cadena_LRB_ejemplo": {
+   "A6000": "0x43caf219",
+   "A7S": "0x43ca7108",
+   "A6300": "0x43dacf4f"
+  }
+ },
+ "tabla_funciones_otras_fw": {
+  "A7S": {
+   "base": "0x43ff65d4",
+   "n": 65,
+   "id\u00e9ntica": true,
+   "excepci\u00f3n": "campo id de MSG_NONE: 0x10 (A6000) vs 0x43fd2020 (A7S)"
+  },
+  "A6300": {
+   "base": null,
+   "n": 0,
+   "id\u00e9ntica": false,
+   "nota": "0 apariciones de REPLY_/MSG_NONE/RAW_CONT_CAP_CANCEL/FUNC <= "
+  }
+ },
+ "origenes_tabla": {
+  "FUNC <= USER": 26,
+  "FUNC <= BG  ": 3,
+  "FUNC <= REL ": 7,
+  "FUNC <= CAM ": 27,
+  "???         ": 2
+ }
+}
