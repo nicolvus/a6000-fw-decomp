@@ -59,6 +59,15 @@ def test_catalogo_y_pendientes_suman_el_total_de_etiquetas(etiquetas):
     dec = {s for s in etiquetas if s in cat}
     assert len(dec) >= 52
     assert len(dec) + (len(etiquetas) - len(dec)) == 372
+    # las sub-etiquetas de un modulo ya decodificado tambien cuentan como cubiertas
+    import re as _re
+    sub = {}
+    for mm in _re.finditer(rb"\[([A-Z][A-Z0-9_]{1,24})\]\[([A-Z][A-Z0-9_]{1,24})\]",
+                           open(A6000, "rb").read()):
+        sub.setdefault("[" + mm.group(2).decode() + "]", set()).add("[" + mm.group(1).decode() + "]")
+    cub = {s for s, parents in sub.items() if any(p in dec for p in parents)}
+    assert len(cub) >= 40
+    assert len(dec) + len(cub) + (len(etiquetas) - len(dec) - len(cub)) == 372
     # las 52 de la fotografia inicial siguen decodificadas
     for s in ("[SAD]", "[ILLUMI]", "[TP_R]", "[CAMERA_IS]", "[JOG]", "[LIF_DEBUG]", "[CAM_UTIL]"):
         assert s in dec
@@ -99,17 +108,19 @@ def test_json_del_hito_consistente():
     assert r["etiquetas"] == 372
     assert r["exclusivas_a6000"] == 93
     assert r["ausentes_en_a6300"] == 7
-    assert r["con_hito"] + r["pendientes"] == 372
+    assert r["con_hito"] + r["cubiertas_como_sub_etiqueta"] + r["pendientes_reales"] == 372
     assert r["con_hito"] >= 52
+    assert r["cubiertas_total"] == r["con_hito"] + r["cubiertas_como_sub_etiqueta"]
+    assert r["pendientes_reales"] >= 250
     assert len(j["elimina_el_a6300"]) == 7
     assert "[STK]" in j["elimina_el_a6300"]
     assert "[OSD]" in j["elimina_el_a6300"]
-    # las pendientes estan ordenadas por tamaño
-    pend = j["pendientes_ordenadas"]
+    # las pendientes reales estan ordenadas por tamaño
+    pend = j["pendientes_reales_ordenadas"]
     assert pend[0]["etiqueta"] == "[SDF]"
-    assert pend[0]["apariciones_token"] == 477
-    assert [p["apariciones_token"] for p in pend] == sorted(
-        [p["apariciones_token"] for p in pend], reverse=True)
+    assert pend[0]["apariciones"] == 477
+    assert [p["apariciones"] for p in pend] == sorted(
+        [p["apariciones"] for p in pend], reverse=True)
 
 
 def test_detalle_por_etiqueta_consistente(etiquetas):

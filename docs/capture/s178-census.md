@@ -9,11 +9,19 @@ Censo completo de las etiquetas `[XXX]` de la A6000 fw3.21, para saber cuánto q
 
 | magnitud | valor |
 |---|---|
-| etiquetas distintas en la A6000 fw3.21 | **372** (techo) |
-| con hito de decodificación en el catálogo | **52** |
-| **pendientes** | **320** |
-| **exclusivas de la A6000** (0 en A7S y 0 en A6300) | **93** |
-| presentes en A6000/A7S pero **ausentes en el A6300** | **7** |
+| etiquetas distintas `[XXX]` en la A6000 fw3.21 | **372** (techo) |
+| etiquetas **con hito de decodificación** propio | **58** |
+| etiquetas **cubiertas como sub-etiqueta** de un módulo ya decodificado (`[X][Y]` con `X` decodificado) | **38** |
+| **pendientes reales** | **276** |
+| **cobertura total** (hito + sub-etiqueta) | **96/372** = **25.81 %** |
+| etiquetas **exclusivas de la A6000** (0 en A7S y 0 en A6300) | **93** |
+| etiquetas presentes en A6000/A7S pero **ausentes en el A6300** | **7** |
+
+**Corrección**: el recuento original daba como pendientes sub-etiquetas ya cubiertas por el hito
+de su módulo padre (`[EIS]`, `[DIST]`, `[STABILIZER]` dentro de `[CAMERA_IS]`; `[CTRLCORE]`
+dentro de `[SFRA]`/`[SFRS]`). Con el criterio correcto (hito propio **o** sub-etiqueta de un
+módulo decodificado, sin doble conteo) la cobertura es **96/372** y los pendientes reales son
+**276**.
 
 **La familia `[STK]`** (`[STK_AUTO_SAL]`, `[STK_COLOR_SIM]`, `[STK_C_SIM]`, `[STK_TOUCH_SIM]`,
 `[STK_T_SIM]`) **y `[OSD]`** existen en la A6000 y en la A7S y **desaparecen por completo en el

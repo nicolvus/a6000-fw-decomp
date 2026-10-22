@@ -5,8 +5,11 @@
  "metodo": "patron \\[[A-Z][A-Z0-9_]{1,24}\\] sobre el blob de la A6000 fw3.21; estado de cada cadena por el mapa global de referencias PIC (regla estricta); hitos por el catalogo docs/capture/linea-general-re.md",
  "recuentos": {
   "etiquetas": 372,
-  "con_hito": 57,
-  "pendientes": 315,
+  "con_hito": 58,
+  "cubiertas_como_sub_etiqueta": 38,
+  "pendientes_reales": 276,
+  "cubiertas_total": 96,
+  "nota": "'con_hito' = la etiqueta es el sujeto de un hito del catalogo; 'cubiertas_como_sub_etiqueta' = la etiqueta aparece como [X][Y] con X ya decodificado (p. ej. [EIS], [DIST], [STABILIZER] dentro de [CAMERA_IS]; [CTRLCORE] dentro de [SFRA]/[SFRS])",
   "exclusivas_a6000": 93,
   "ausentes_en_a6300": 7
  },
@@ -2796,5 +2799,1242 @@
   "los candidatos pendientes mas grandes son [SDF] 477, [ERR] 288, [VDF] 243, [ERROR] 213, [BL] 154, [VEF] 149, [STK] 76, [TD] 73, [VIDENCSTAT] 70, [FACE] 70, [RC] 69, [DEBUG] 67, [GOLFSHOT] 65, [WSX] 59, [INFO] 58, [RE] 54, [INT_ERROR] 53, [ENCOUCSTAT] 49, [CONFIG] 47, [BT] 44, [CAM_FUNC_MGR] 43, [PNL] 41, [SAN] 35, [AUDPINEDTR] 34, [CAM_SCALAR] 34, [REMOTE] 32"
  ],
  "efecto_en_S51": "ninguno: el censo es de cobertura, no de contenido",
- "nota_recuentos": "los recuentos 'con_hito' y 'pendientes' son una FOTOGRAFIA del momento del censo (el catalogo sigue creciendo en paralelo); el invariante es que suman 372"
+ "nota_recuentos": "los tres recuentos son una fotografia del momento (el catalogo sigue creciendo en paralelo); el invariante es que con_hito + cubiertas_como_sub_etiqueta + pendientes_reales = 372",
+ "cubiertas_como_sub_etiqueta": {
+  "[INFO]": [
+   "[ACCY]",
+   "[DEPTH]",
+   "[SFRS]"
+  ],
+  "[DEBUG]": [
+   "[ACCY]",
+   "[ADF]",
+   "[DEPTH]",
+   "[SFRS]"
+  ],
+  "[WARN]": [
+   "[ACCY]",
+   "[DEPTH]"
+  ],
+  "[ERR]": [
+   "[ACCY]",
+   "[ADF]",
+   "[SFRA]",
+   "[SFRS]"
+  ],
+  "[INIT]": [
+   "[ADF]"
+  ],
+  "[SYS]": [
+   "[ADF]"
+  ],
+  "[ADJ]": [
+   "[ADF]"
+  ],
+  "[SYSND]": [
+   "[ADF]"
+  ],
+  "[OUT]": [
+   "[ADF]"
+  ],
+  "[CH_SRC]": [
+   "[ADF]"
+  ],
+  "[GS]": [
+   "[ADF]"
+  ],
+  "[SAN]": [
+   "[ADF]"
+  ],
+  "[AFNR]": [
+   "[ADF]"
+  ],
+  "[FACE]": [
+   "[ADF]"
+  ],
+  "[TSK]": [
+   "[CDIAG]"
+  ],
+  "[CTRLIF]": [
+   "[AMSENS]",
+   "[CDIAG]",
+   "[MCSENS]"
+  ],
+  "[CTRLHDDEC]": [
+   "[CDIAG]"
+  ],
+  "[CTRLHDREC]": [
+   "[CDIAG]"
+  ],
+  "[CTRLJPGDEC]": [
+   "[CDIAG]"
+  ],
+  "[CTRLJPGENC]": [
+   "[CDIAG]"
+  ],
+  "[CTRLJPGENCDEC]": [
+   "[CDIAG]"
+  ],
+  "[CTRLSDDEC]": [
+   "[CDIAG]"
+  ],
+  "[CTRLSDREC]": [
+   "[CDIAG]"
+  ],
+  "[CMPDATA]": [
+   "[CDIAG]"
+  ],
+  "[MSGIF]": [
+   "[AMSENS]",
+   "[MCSENS]"
+  ],
+  "[PRINT]": [
+   "[AUGI]"
+  ],
+  "[ERROR]": [
+   "[SFRA]",
+   "[SFRS]"
+  ],
+  "[MOUNT]": [
+   "[CAMERA_IS]"
+  ],
+  "[CMD]": [
+   "[SFRA]",
+   "[SFRS]"
+  ],
+  "[CMP]": [
+   "[SFRA]",
+   "[SFRS]"
+  ],
+  "[BUF]": [
+   "[SFRA]"
+  ],
+  "[RATECONTROL]": [
+   "[SFRA]"
+  ],
+  "[NOTIFY]": [
+   "[SFRA]"
+  ],
+  "[SFR_ERR_NOTREADY]": [
+   "[SFRA]"
+  ],
+  "[WARNING]": [
+   "[SFRA]"
+  ],
+  "[RC]": [
+   "[SFRA]"
+  ],
+  "[PINSEND]": [
+   "[SFRS]"
+  ],
+  "[FUNC]": [
+   "[SFRS]"
+  ]
+ },
+ "pendientes_reales_ordenadas": [
+  {
+   "etiqueta": "[SDF]",
+   "apariciones": 477
+  },
+  {
+   "etiqueta": "[VDF]",
+   "apariciones": 243
+  },
+  {
+   "etiqueta": "[BL]",
+   "apariciones": 154
+  },
+  {
+   "etiqueta": "[VEF]",
+   "apariciones": 149
+  },
+  {
+   "etiqueta": "[TD]",
+   "apariciones": 73
+  },
+  {
+   "etiqueta": "[VIDENCSTAT]",
+   "apariciones": 70
+  },
+  {
+   "etiqueta": "[GOLFSHOT]",
+   "apariciones": 65
+  },
+  {
+   "etiqueta": "[WSX]",
+   "apariciones": 59
+  },
+  {
+   "etiqueta": "[RE]",
+   "apariciones": 54
+  },
+  {
+   "etiqueta": "[INT_ERROR]",
+   "apariciones": 53
+  },
+  {
+   "etiqueta": "[ENCOUCSTAT]",
+   "apariciones": 49
+  },
+  {
+   "etiqueta": "[CONFIG]",
+   "apariciones": 47
+  },
+  {
+   "etiqueta": "[BT]",
+   "apariciones": 44
+  },
+  {
+   "etiqueta": "[PNL]",
+   "apariciones": 41
+  },
+  {
+   "etiqueta": "[AUDPINEDTR]",
+   "apariciones": 34
+  },
+  {
+   "etiqueta": "[DECMODEMGR]",
+   "apariciones": 30
+  },
+  {
+   "etiqueta": "[AVCDPRMCHK]",
+   "apariciones": 26
+  },
+  {
+   "etiqueta": "[DECVIDDISP]",
+   "apariciones": 26
+  },
+  {
+   "etiqueta": "[ZIMA_AVCD]",
+   "apariciones": 26
+  },
+  {
+   "etiqueta": "[MC]",
+   "apariciones": 25
+  },
+  {
+   "etiqueta": "[DECAUDSPDI]",
+   "apariciones": 24
+  },
+  {
+   "etiqueta": "[LRB]",
+   "apariciones": 24
+  },
+  {
+   "etiqueta": "[PRC]",
+   "apariciones": 24
+  },
+  {
+   "etiqueta": "[EXCDCENCMP]",
+   "apariciones": 23
+  },
+  {
+   "etiqueta": "[EXL]",
+   "apariciones": 22
+  },
+  {
+   "etiqueta": "[ENCMODEMGR]",
+   "apariciones": 21
+  },
+  {
+   "etiqueta": "[LENS_YC]",
+   "apariciones": 21
+  },
+  {
+   "etiqueta": "[VIDDECSTAT]",
+   "apariciones": 21
+  },
+  {
+   "etiqueta": "[IMAGING_RAW]",
+   "apariciones": 20
+  },
+  {
+   "etiqueta": "[SYSV]",
+   "apariciones": 20
+  },
+  {
+   "etiqueta": "[EDTSA]",
+   "apariciones": 19
+  },
+  {
+   "etiqueta": "[PARAM]",
+   "apariciones": 19
+  },
+  {
+   "etiqueta": "[CAMERA_DSP_APL]",
+   "apariciones": 18
+  },
+  {
+   "etiqueta": "[HS]",
+   "apariciones": 18
+  },
+  {
+   "etiqueta": "[MPGPINSUPL]",
+   "apariciones": 18
+  },
+  {
+   "etiqueta": "[NG]",
+   "apariciones": 18
+  },
+  {
+   "etiqueta": "[OPTION]",
+   "apariciones": 18
+  },
+  {
+   "etiqueta": "[SFR]",
+   "apariciones": 18
+  },
+  {
+   "etiqueta": "[AUDDECCTRL]",
+   "apariciones": 17
+  },
+  {
+   "etiqueta": "[ENCAUDSYNC]",
+   "apariciones": 17
+  },
+  {
+   "etiqueta": "[JPEG]",
+   "apariciones": 17
+  },
+  {
+   "etiqueta": "[NSX_OPD]",
+   "apariciones": 17
+  },
+  {
+   "etiqueta": "[AG]",
+   "apariciones": 16
+  },
+  {
+   "etiqueta": "[HELLO]",
+   "apariciones": 16
+  },
+  {
+   "etiqueta": "[PMV]",
+   "apariciones": 16
+  },
+  {
+   "etiqueta": "[VIDDECZIMA]",
+   "apariciones": 16
+  },
+  {
+   "etiqueta": "[SDF_ERR]",
+   "apariciones": 15
+  },
+  {
+   "etiqueta": "[WRN]",
+   "apariciones": 15
+  },
+  {
+   "etiqueta": "[CMDMLTSYNC]",
+   "apariciones": 13
+  },
+  {
+   "etiqueta": "[DECAUDSTAT]",
+   "apariciones": 13
+  },
+  {
+   "etiqueta": "[SYNCENCSTART]",
+   "apariciones": 13
+  },
+  {
+   "etiqueta": "[UART]",
+   "apariciones": 13
+  },
+  {
+   "etiqueta": "[VIDDECCTRL]",
+   "apariciones": 13
+  },
+  {
+   "etiqueta": "[VIDENCCTRL]",
+   "apariciones": 13
+  },
+  {
+   "etiqueta": "[AUDDECSTAT]",
+   "apariciones": 12
+  },
+  {
+   "etiqueta": "[BASE]",
+   "apariciones": 12
+  },
+  {
+   "etiqueta": "[BIN_BUFFER]",
+   "apariciones": 12
+  },
+  {
+   "etiqueta": "[SA]",
+   "apariciones": 12
+  },
+  {
+   "etiqueta": "[DECVESAUGI]",
+   "apariciones": 11
+  },
+  {
+   "etiqueta": "[IRO2G]",
+   "apariciones": 11
+  },
+  {
+   "etiqueta": "[OK]",
+   "apariciones": 11
+  },
+  {
+   "etiqueta": "[ATTR]",
+   "apariciones": 10
+  },
+  {
+   "etiqueta": "[ES_BUFFER]",
+   "apariciones": 10
+  },
+  {
+   "etiqueta": "[MCCMDSENDR]",
+   "apariciones": 10
+  },
+  {
+   "etiqueta": "[MON]",
+   "apariciones": 10
+  },
+  {
+   "etiqueta": "[AVC]",
+   "apariciones": 9
+  },
+  {
+   "etiqueta": "[DETSA]",
+   "apariciones": 9
+  },
+  {
+   "etiqueta": "[ENCAUDOUCR]",
+   "apariciones": 9
+  },
+  {
+   "etiqueta": "[EXCODECENC]",
+   "apariciones": 9
+  },
+  {
+   "etiqueta": "[RDY]",
+   "apariciones": 9
+  },
+  {
+   "etiqueta": "[DECAUDMUTE]",
+   "apariciones": 8
+  },
+  {
+   "etiqueta": "[EXCODECDEC]",
+   "apariciones": 8
+  },
+  {
+   "etiqueta": "[LC]",
+   "apariciones": 8
+  },
+  {
+   "etiqueta": "[ENCOUCUDMG]",
+   "apariciones": 7
+  },
+  {
+   "etiqueta": "[FACTORY]",
+   "apariciones": 7
+  },
+  {
+   "etiqueta": "[IMAGING_IMG]",
+   "apariciones": 7
+  },
+  {
+   "etiqueta": "[IMME]",
+   "apariciones": 7
+  },
+  {
+   "etiqueta": "[MAGIC]",
+   "apariciones": 7
+  },
+  {
+   "etiqueta": "[NSX_VOT]",
+   "apariciones": 7
+  },
+  {
+   "etiqueta": "[AVSCCTLYCC]",
+   "apariciones": 6
+  },
+  {
+   "etiqueta": "[CAM_CMD]",
+   "apariciones": 6
+  },
+  {
+   "etiqueta": "[DECMODEERR]",
+   "apariciones": 6
+  },
+  {
+   "etiqueta": "[EVF]",
+   "apariciones": 6
+  },
+  {
+   "etiqueta": "[MOUNT_INFO]",
+   "apariciones": 6
+  },
+  {
+   "etiqueta": "[PBX]",
+   "apariciones": 6
+  },
+  {
+   "etiqueta": "[SND]",
+   "apariciones": 6
+  },
+  {
+   "etiqueta": "[SYNCSETMODE]",
+   "apariciones": 6
+  },
+  {
+   "etiqueta": "[VIDDECPRAM]",
+   "apariciones": 6
+  },
+  {
+   "etiqueta": "[CYCLE]",
+   "apariciones": 5
+  },
+  {
+   "etiqueta": "[ENCMODEERR]",
+   "apariciones": 5
+  },
+  {
+   "etiqueta": "[HOUSING]",
+   "apariciones": 5
+  },
+  {
+   "etiqueta": "[IMAGING_RSRC]",
+   "apariciones": 5
+  },
+  {
+   "etiqueta": "[INCDCIFCTRL]",
+   "apariciones": 5
+  },
+  {
+   "etiqueta": "[MOUNT_WARNING]",
+   "apariciones": 5
+  },
+  {
+   "etiqueta": "[MPEG2]",
+   "apariciones": 5
+  },
+  {
+   "etiqueta": "[SPC]",
+   "apariciones": 5
+  },
+  {
+   "etiqueta": "[VSYNC]",
+   "apariciones": 5
+  },
+  {
+   "etiqueta": "[ZPD]",
+   "apariciones": 5
+  },
+  {
+   "etiqueta": "[BKID]",
+   "apariciones": 4
+  },
+  {
+   "etiqueta": "[DECAUDLPCM]",
+   "apariciones": 4
+  },
+  {
+   "etiqueta": "[DECSEQCTRL]",
+   "apariciones": 4
+  },
+  {
+   "etiqueta": "[DFE_INT]",
+   "apariciones": 4
+  },
+  {
+   "etiqueta": "[ENCMODESTT]",
+   "apariciones": 4
+  },
+  {
+   "etiqueta": "[ENCUSDTMGR]",
+   "apariciones": 4
+  },
+  {
+   "etiqueta": "[EXDFSENDER]",
+   "apariciones": 4
+  },
+  {
+   "etiqueta": "[FFLSH]",
+   "apariciones": 4
+  },
+  {
+   "etiqueta": "[LENS_PDR]",
+   "apariciones": 4
+  },
+  {
+   "etiqueta": "[MAIN]",
+   "apariciones": 4
+  },
+  {
+   "etiqueta": "[VFX]",
+   "apariciones": 4
+  },
+  {
+   "etiqueta": "[AUDIOIP]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[AVIO]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[AVSCCTLEFCT]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[CAMERA_DEVICE]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[CCNR_ENCODE]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[DBG]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[DECAUDPAUS]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[DET_DIR]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[ENCAUDSTAT]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[ENCODE_JPEG_WITH_WORK]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[LGA]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[MCBBDLYCLC]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[MCIFINFACC]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[PANELEVF]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[PROC]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[SENSER]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[SIO]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[STK_AUTO_SAL]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[STOP]",
+   "apariciones": 3
+  },
+  {
+   "etiqueta": "[AVCMODEMGR]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[AVOUT]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[AVR]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[BIN_LIMITER]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[CBA_FIFO]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[CORE]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[DATA]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[DECAUDSMPL]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[DECVIDPARM]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[DEC]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[DMMYSIOCOM]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[HDMAC]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[IMCIF]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[IN]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[JIRO]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[MCUSRDEDT]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[MPGPINCONV]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[NTF]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[PCPSTATDRM]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[PNLEVF]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[RCV]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[STK_COLOR_SIM]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[STK_TOUCH_SIM]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[STOPG]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[SYSTEM]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[TOP]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[UTILITY]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[VIDEOCOLOR]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[WRAP]",
+   "apariciones": 2
+  },
+  {
+   "etiqueta": "[ABB]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[ADR]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[ANNOUNCE]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[APL0]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[APL1]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[AVCDECAUDES]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[AVCE]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[AVIF]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[AVSCEVTSND]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[AVSC]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[BBDELAY]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[CAM0]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[CAM1]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[CAMERA_DETECT_FC]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[CCNR]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[CDCCTRL]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[CDCID_HD_CODEC]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[CDCID_SD_CODEC]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[CDM]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[CID]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[CLKCTRL]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[CODE]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[CPU]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[D0]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[D1]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[D2]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[D3]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[D4]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[D5]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[D6]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[D7]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[DAAUGICONV]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[DDT]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[DECSEQVIF]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[DIRECTCOMMAND]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[DMAC]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[DMM_HANDLE_YCC_FULL]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[DVAUGICONV]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[DVFC]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[ENCAUDLPCM]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[ENCAUDSMPL]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[ENCAUDUTIL]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[EO_SW]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[EXEC]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[FILE_NUM]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[FOPD]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[FSYSMODE]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[GETPIN]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[GPE]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[HW]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[IN1]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[IN2]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[INF]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[LIF_ERROR]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MANU]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MC32BTCNTR]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MCCOUNTMGR]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MCMSGPINIF]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MCMSGSTATE]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MCS]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MODEFLG]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MODE_CAP]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MODE_CAP_DRP]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MODE_CAP_PREREVIEW]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MODE_CAP_SNR]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MODE_CAP_SNR_PREREVIEW]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MODE_SNR_BUS_THROUGH]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MODIFY1]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MOJITO_ERROR]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[MPGMSGSEND]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[NULL]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[PCIE]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[PCP0]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[PCP1]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[PCPSTATINI]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[PERI]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[PFHS]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[RC0]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[RC1]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[RC2]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[RCH]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[RDM]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[REN]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[RESET]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[RING_DIAL]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SA0]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SA1]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SCN]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SCN_ENCODE]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SETPIN]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SET_DIAG_MODE]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SE]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SIZE]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SONLYAUDIO]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SPC0]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SPC1]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SRC0]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SRC1]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SRC2]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SRC3]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SRC4]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[STAT]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[STK_C_SIM]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[STK_T_SIM]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SWFLG]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[SYS_SENSER_CA_PUTS]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[THM]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[TSKCORE]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[VFX0]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[VFX1]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[VIDENCPARAM]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[VIO]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[VPH]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[VPINFO]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[WSX0]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[WSX1]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[ZIMA0]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[ZIMA1]",
+   "apariciones": 1
+  },
+  {
+   "etiqueta": "[ZNR]",
+   "apariciones": 1
+  }
+ ]
 }
