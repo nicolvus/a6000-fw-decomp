@@ -32,6 +32,8 @@ def test_public_session_index_has_real_sources() -> None:
     svg = (ROOT / "site/progress/progress.svg").read_text(encoding="utf-8")
     assert page.count('class="cell m-') == coverage["total"]
     assert page.count('class="cell m-hito"') + page.count('class="cell m-sub"') == coverage["covered"]
+    assert "Prioridad de investigación" in page and page.count('class="prio"') == 30
+    assert "mando a distancia" in page  # nombre del hito S180 tomado del catálogo
     assert svg.count("<rect") == 1 + coverage["total"] + data["latest_number"] + data["physical_tests"]["total"]
 
     prefix = "/nicolvus/a6000-fw-decomp/blob/main/"
