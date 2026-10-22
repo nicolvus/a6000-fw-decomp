@@ -1,5 +1,11 @@
 # Estado actual — léeme primero
 
+## S149 — cierre parcial de helpers de filas G (22-10-2026)
+
+Se verificó el cierre del loop por instrucciones: el writer `0x4383c9dc` **itera cuatro veces** (contador 4, stride `0x10`, back-edge), no solo una; stores por fila en `0,4,6,0xa,0xc,0xe`. Los cuatro helpers auditados no escriben `+0x2c..+0x6b` ni el hueco +8/+9. **Limitado** a estos cuerpos/gates, no excluye otros writers. Evidencias y test reproducible: [S149](../docs/capture/s149-imager-row-helpers.md), `analysis/s149_imager_row_helpers/row_helper_stores.json` (3 tests). S51 sin cambios.
+
+**Siguiente:** decidir una pregunta IMX210 independiente para cerrar el consumidor de filas/valores modo; buscar escritores alternos de `+0x34/+0x35` con evidencia positiva, sin asumir que el silencio de estos helpers es ausencia global.
+
 ## S147 — escritor parcial de filas G (22-10-2026)
 
 **VERIFICADO:** `0x437b5f00` forma `G+0x224` y prepara la llamada a `0x4383bf2c`; éste llama a `0x4383c9dc`, cuyo loop usa stride `0x10` durante cuatro iteraciones y escribe offsets relativos `0,4,6,0xa,0xc,0xe` en cada fila desde `+0x2c`. No escribe `+8/+9` **en ese loop**. REA evidence/páginas y bytes: [S147](../docs/capture/s147-imager-g-rows.md), `analysis/s147_imager_g_rows/g_rows.json` (3 tests). Commit publicado: `ffdba84b`.

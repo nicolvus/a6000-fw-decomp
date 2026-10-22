@@ -17,13 +17,14 @@ recuperación y pipeline de captura. El obturador electrónico es un
 
 | fecha | sesión | alcance | hitos |
 |---|---|---|---|
-| **22-10-2026** | **sesión actual**: línea de RE general por módulos + línea del obturador electrónico | continuación IMX210 S140–S147; mapa de registros, límite de REA y escritor parcial de filas G; control positivo ElecShutter A6300 (S135) | S140–S147 |
+| **22-10-2026** | **sesión actual**: línea de RE general por módulos + línea del obturador electrónico | continuación IMX210 S140–S149; mapa, cobertura REA, filas G y auditoría de helpers; control positivo ElecShutter A6300 (S135) | S140–S149 |
 | 20-10-2026 | transporte IMX210, SetMode/SetExposure emulados, inyección PMCA, montura E-mount | 50 commits | S54–S66 |
 | 19-10-2026 | base de la RE general y de la línea del obturador (payload, VD, callbacks, tabla PIC) | 5 commits | S16–S53 |
 | 18-10-2026 | sistema de conocimiento: indexación FTS5, grafo de conocimiento, CLI + servidor MCP, skills, benchmarks y **checkpoints de sesión** (`knowledge/checkpoints/`) | 5 checkpoints | — |
 
 ## Fases recientes (más nuevas primero)
 Cada enlace lleva a su informe; el resumen de hallazgos está en el [catálogo](docs/capture/linea-general-re.md) y en el [historial](docs/history/README-historial-2026-10-21.md).
+- [S149: helpers del builder y hueco `+8/+9` de las filas G](docs/capture/s149-imager-row-helpers.md): se corrige una interpretación inicial de este hito: `0x4383c9dc` sí hace cuatro iteraciones (`count=4`, stride `0x10`) y escribe las cuatro filas; ninguno de los cuatro helpers auditados escribe campos de fila `+8/+9`. **Parcial:** solo esa ruta y gates; otros escritores no excluidos. [Script](analysis/s149_imager_row_helpers/verify_helper_stores.py) · 3 tests.
 - [S147: campos escritos en las cuatro filas del banco G](docs/capture/s147-imager-g-rows.md): REA/bytes siguen `G+0x224` desde `0x437b5f00` hasta `0x4383bf2c`/`0x4383c9dc`; el loop cubre cuatro filas de 16 B desde `+0x2c` y escribe campos relativos `0,4,6,0xa,0xc,0xe`. **Parcial:** `+8/+9`, otras escrituras, modo y semántica física siguen sin atribución. [Script](analysis/s147_imager_g_rows/verify_g_rows.py) · 3 tests.
 - [S146: límite de seeding de procedimientos en REA](docs/capture/s146-rea-seed-limit.md): `file-offset:` mapea VA, pero `procedure_pseudo_code` exige un procedimiento ya observado y no siembra código; las otras consultas de procedimiento rechazan ese selector. Se corrige el offset del caller: `0x437b617e → 0x27517e`, no `0x27617e`. **Limitación de cobertura, no ausencia.** [Script](analysis/s146_rea_seed_capability/verify_offsets.py) · 3 tests.
 - [S145: el staging IMX210 está en un hueco de cobertura REA](docs/capture/s145-imager-code-gap.md): REA reconoce el setter de 8 B en `0x43843a38` y delimita `0x43843a44` como no analizado; los bytes confirman prólogo candidato y `BL` visible desde `0x437b61d2`, cuyo caller tampoco está analizado. **No prueba ejecución ni ausencia**; siguiente acción es sembrar las dos entradas Thumb observadas en REA. [Script](analysis/s145_imager_unanalyzed_code/verify_code_gap.py) · 3 tests.

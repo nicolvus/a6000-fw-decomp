@@ -17,6 +17,7 @@ hardware. Se conservan todas las evidencias anteriores en sus rutas originales.
 - [S145: límite de cobertura REA junto al staging IMX210](../../docs/capture/s145-imager-code-gap.md).
 - [S146: REA no permite sembrar procedimientos fuera del análisis](../../docs/capture/s146-rea-seed-limit.md).
 - [S147: recorrido parcial de las filas de 16 B del banco G](../../docs/capture/s147-imager-g-rows.md).
+- [S149: auditoría de los helpers y offsets aún no escritos dentro de cada fila](../../docs/capture/s149-imager-row-helpers.md).
 - [Comparación entre modelos](../../docs/comparative-analysis.md).
 - [Límites de hardware pendientes](../../docs/hardware-limitations.md).
 
