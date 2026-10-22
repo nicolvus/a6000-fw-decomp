@@ -257,3 +257,17 @@ Tests: `tests/test_s138_camera_main_fc.py`.
    `wrapper/Face.cpp` → **camino distinto**, lo que evita un falso positivo de correlación.
 4. **13 sitios PIC** en 7 funciones, recalculados a mano por el subagente (`verify_sites.py`,
    13/13) → coherente con la regla estricta canónica.
+
+### Detalle final del subagente (22-10-2026, incorporado en la revisión)
+
+- **Funciones emisoras (7)**: `0x437b7200`, `0x437b74a4`, `0x437b7778`, `0x437b7844`, `0x437b7d6c`,
+  `0x437b7ea0`, `0x437b81f0`; **`0x437b7778` es la única sin referencia entrante** (la baja del
+  temporizador OSAL).
+- **API exportada por thunks** `0x43aef72e` / `0x43aef72e+4` / `0x43aef72e+8` (`0x43aef72e/32/36`).
+- **Disparo táctil**: su API de respuesta existe y está cableada por `wrapper/Face.cpp` →
+  **`FC/Api/fc_api_tracking.cpp`** `0x43cefa43` → camino **distinto** del `0x3011`.
+- **Sigla**: base textual = namespace `Camera::FC` (28 cadenas) y árbol `FC/**/*.cpp` (99 ficheros);
+  no se desarrolla más.
+- **NO VERIFICADO (final)**: fichero fuente del propio módulo; si `0x437b7778` se invoca desde otro
+  binario; el flag `lc` (`[ctx+0xdf]`); el destinatario de los mensajes OSAL; la semántica de
+  `face_on`/`obj_on`; si el camino táctil del FC *debía* enlazar con `0x3011`.
