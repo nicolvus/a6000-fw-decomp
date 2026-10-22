@@ -46,3 +46,9 @@
 
 - BACKLOG S319 Cerrar la frontera del `ctx` `0x43ea70a0`: buscar en módulos hermanos (`liro.ko`, `libObj.so`) el escritor de `[ctx]`/`[ctx+8]`.
 - BACKLOG S320 Identificar la tabla de 68 filas `0x43fee5ac` y su relación con los drive modes (S302).
+
+- DONE S318 Constructor paramétrico `0x436f3fc0(obj,idx)`: mismo vptr `0x43fce050`, tabla `0x43bbe1cc` indexada con `idx` (4 B), mapeo `0x43ad9162` (`1→0x10`, `2→0x40`, otro→1) en `obj+0x2dc`. Único llamador `0x436f2a8a` con `idx=0`; tabla homogénea solo hasta el índice 6 (desde 7 empaqueta dos `u16`), rango válido NO_VERIFICADO. 0 firmas en A6000. REA confirmó pseudo-código y `xrefs(0x4402ac80)` = `0x436f27be`,`0x436f3fda`. Evidencia: `docs/capture/s318-ctor-mode.md`, `analysis/s318_ctor_mode/ctor_mode.json` (24 comprobaciones, 6 tests).
+
+- TODO S319 Cerrar la frontera del `ctx` `0x43ea70a0` (corregido +2): buscar en módulos hermanos (`liro.ko`, `libObj.so`) el escritor de `[ctx]`/`[ctx+8]` o documentar la ausencia con barrido de literales en esos binarios.
+
+- BACKLOG S320 Identificar la tabla de 68 filas `0x43fee5ac` y su relación con los drive modes (S302).

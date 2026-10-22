@@ -82,6 +82,7 @@ S314 corrige la premisa del slot `0x64`: en `0x43549084` se carga `r1` (`[ctx+8]
 S315 localiza el consumidor `0x436f44c4(obj,modo,lista)`: aplica tres listas NULL-terminated — L95 (95 registros, modo 2), L5 (5, modo 0) y L1 (1, modo 2) — resueltas por getter/GOT (`0x436f4588`→`0x4402c940`, `0x44025ec0`, `0x440292b0`). L5 no es subconjunto de L95 y el consumidor es exclusivo A7S. [`docs/capture/s315-register-lists.md`](docs/capture/s315-register-lists.md).
 S316 identifica la clase dueña de las listas: constructor `0x436f27b4`, vtable `0x43fce050` (45 entradas, metadata `0x43fce048`), métodos de listas en `+0x38`/`+0x44` y wrapper `0x43ad9840` en `+0x04`; exclusiva A7S. [`docs/capture/s316-class-vtable.md`](docs/capture/s316-class-vtable.md).
 S317: `obj+0x2b4` indexa tres tablas paralelas de stride `0x1c` (T1 `0x43bbeb70`, T2 `0x43bbf2ec`, T3 `0x43bbef34`; campos `+0x14`/`+0x18`), con 34 filas entre T3 y T2; bases confirmadas por REA/Ghidra y entrada exclusiva A7S. [`docs/capture/s317-mode-tables.md`](docs/capture/s317-mode-tables.md).
+S318 identifica el constructor paramétrico `0x436f3fc0(obj,idx)` (misma vtable), la tabla `0x43bbe1cc` y el mapeo `1→0x10`/`2→0x40` de `0x43ad9162`; único llamador con `idx=0` y rango válido NO_VERIFICADO. REA confirma el pseudo-código y el segundo usuario del slot GOT `0x4402ac80`. [`docs/capture/s318-ctor-mode.md`](docs/capture/s318-ctor-mode.md).
 
 ### Fase del agente E — módulos exclusivos A6000 (S600+)
 

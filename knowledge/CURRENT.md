@@ -1792,3 +1792,17 @@ escritor de `+0x2b4`, semántica de campos y enlace con el silent. S51 sin cambi
 [S317](../docs/capture/s317-mode-tables.md), `analysis/s317_mode_tables/mode_tables.json`.
 
 **Siguiente:** S318, alineación/rango de las tablas y escritor de `+0x2b4` (REA).
+
+## S318 — constructor paramétrico y tabla de modo (22-10-2026, agente B)
+
+**VERIFICADO (bytes + REA; 24 comprobaciones, 6 tests):** la clase de S316 tiene un segundo
+constructor `0x436f3fc0(obj,idx)` que fija el mismo vptr `0x43fce050`, lee `tabla[idx]` de
+`0x43bbe1cc` y la pasa a `0x43ad9162(obj+0x2dc,0,8,8,valor)`, que mapea `1→0x10`, `2→0x40`,
+otro→`1` en `obj+0x08` y el doble en `+0x0c`. Único llamador directo `0x436f2a8a` con `idx=0`.
+La tabla es homogénea (códigos 0/1/2) solo hasta el índice 6; desde 7 empaqueta dos `u16`
+(p. ej. `0x01ec0000`), por lo que el rango válido queda **NO_VERIFICADO**. 0 firmas en la A6000.
+REA: pseudo-código del constructor y `xrefs(0x4402ac80)` = `0x436f27be`,`0x436f3fda`. S51 sin
+cambios. [S318](../docs/capture/s318-ctor-mode.md), `analysis/s318_ctor_mode/ctor_mode.json`.
+
+**Siguiente:** S319, frontera del `ctx` `0x43ea70a0` (escritor de `[ctx]`/`[ctx+8]` en módulos
+hermanos).
