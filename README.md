@@ -20,17 +20,19 @@ Proyecto de ingeniería inversa del firmware **Sony A6000 (fw 3.21)**, con foco 
 - **Módulos “contenido nuevo” (S130):** **100%** (**17/17**) cerrados.
 - **Obturador completamente electrónico:** [S51](docs/capture/s51-decision.md) mantiene la decisión de no parchear; [P1–P8](docs/capture/physical-test-plan.md) siguen sin ejecutarse.
 
-<progress value="96" max="372"></progress>
+![progreso](docs/progress/progress.svg)
+
+<sub>Cada cuadrado es una etiqueta de módulo, una sesión o una prueba física (verde = hecho, verde claro = sub-etiqueta cubierta, gris = pendiente, ámbar = cancelada). Pasa el ratón en la [página](https://nicolvus.github.io/a6000-fw-decomp/progress/) para ver cada etiqueta.</sub>
 
 Fuente de métricas: [`analysis/s178_census/census.md`](analysis/s178_census/census.md).
 
 ### Visualización en GitHub Pages
 
-- Tablero de avance en cuadrados: <https://nicolvus.github.io/a6000-fw-decomp/progress/>
+- Tablero de avance en cuadrados (módulos, sesiones y pruebas físicas, estilo [AnyPS5](https://boykopovar.github.io/AnyPS5/progress.html)): <https://nicolvus.github.io/a6000-fw-decomp/progress/>
 - Índice de sesiones y verificador Sx: <https://nicolvus.github.io/a6000-fw-decomp/> (generado desde los informes versionados).
 
 El flujo [Pages](.github/workflows/pages.yml) publica solo `site/`; el generador
-`scripts/build_pages_status.py` actualiza el índice y conserva la cuadrícula de `docs/progress/`.
+`scripts/build_pages_status.py` actualiza el índice y genera `docs/progress/index.html` y `progress.svg`.
 
 ## Objetivo técnico vigente
 
