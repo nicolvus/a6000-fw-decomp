@@ -9,3 +9,4 @@
 - S311: comparación simétrica de la configuración: 2 writers A6000 exclusivos, 2 compartidos. Siguiente: S312 objeto/vtable o síntesis final.
 - S312: los 6 consumidores del cluster A7S son código exclusivo (0 hits en A6000); cuadro consolidado S300–S312.
 - S313: síntesis del carril B con 16 hallazgos verificados y 5 preguntas abiertas; S304/S305 marcadas supersedidas. Carril en estado publicable.
+- S314: corrige la premisa del slot `0x64` y mide la tabla de registros. En `0x43549084` se carga `r1` (`[ctx+8]+0x21c`); el thunk del slot `0x64` es `0x43ad96f8`; `0x43ad9704` va a `0x43ad9ada` (`vtable+0x24`). `ctx=0x43ea709e` sin escritor estático. Tabla `0x43fee3f8` = 95 registros de 6 B (no 19), terminador `0x43fee574`; A6000 sin el par `+0x21c/+0x220`. Siguiente: S315, lista→formateador y comparación con la tabla A6000.
