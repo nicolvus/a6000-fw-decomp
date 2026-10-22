@@ -89,7 +89,7 @@
 - Resultado PARCIAL: instrucciones verifican lecturas/tst/beq en `0x438583b0`/`0x438584f0`; xrefs exactas a ambos bytes son solo los lectores del dispatcher. El estado está a cero en la imagen. No hay escritor reproducible ni valor runtime confirmado; no se declara ausencia global.
 - Evidence: función/cuerpo `ev_74804f459247fbbe0d22d0b1e7e58bba3e8ee690e33a1b6d20ffacc7020ba7fc`; refs byte+3 `ev_2988fcffcf7768198b5e5d25f616294bfa4ee489710012b6f85b06434aabfde4`; byte+6 `ev_7a31d71d07dc687daced9c48fe2a917ae8a24bf330dd09d4cb5d966c77a1669a`; BSS bytes `ev_498f8dc63dab90ff677e302176e0737dcbb3d54be6fc4bc97ad00cafe4ce158d`.
 - Artefactos: `analysis/s153_imager_dump_gates/{verify_gates.py,dump_gates.json}`, `tests/test_s153_imager_dump_gates.py`, `docs/capture/s153-imager-dump-gates.md`.
-- Pruebas: unittest 3/3 PASS; pendiente suite, commit/push.
+- Pruebas: unittest S153 3/3 PASS; suite S140–S153 + knowledge 97/97 PASS; `git diff --check` PASS. Commit `7ce7f329` publicado en `origin/main`.
 - Siguiente: inspeccionar consumidores/copiadores del bloque state `0x43f72d02` para detectar escrituras estructuradas a +3/+6; no equiparar xrefs vacíos con ausencia.
 
 Checkpoint persistente. Actualizar al terminar cada etapa, antes de continuar
