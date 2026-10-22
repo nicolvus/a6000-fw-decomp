@@ -106,6 +106,8 @@ S157 añade otra clasificación local: `0x43859954` carga `0x43f72d02` desde GOT
 
 S158 clasifica `0x4385b268`: `FUN_4385b234` carga el puntero GOT del estado y lo derrama a stack; lee +0x26/+0x28/+0x29 y escribe otros destinos, no +3/+6 en este cuerpo. Sigue sin cerrar otros escritores. [Informe S158](capture/s158-imager-state-ref.md).
 
+S159 clasifica `0x4386001c` como otro spill a stack en `FUN_4385fff0`; el cuerpo lee `+0/+0x1c/+0xa2` y escribe a otros destinos, no a +3/+6 en este procedimiento. No es una conclusión global. [Informe S159](capture/s159-imager-state-spill.md).
+
 Proyecto abierto: hay piezas reales y reutilizables, pero **ninguna captura silenciosa
 completa validada**; no está demostrada la capacidad ni la imposibilidad de fotografía
 totalmente electrónica a resolución completa.
