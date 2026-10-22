@@ -6,70 +6,45 @@ Para el historial íntegro de sesiones ver `docs/history/` y las correcciones co
 en [docs/CORRECTIONS.md](CORRECTIONS.md) (generado del grafo, no editar a mano).
 Para preguntas abiertas ver [docs/OPEN-QUESTIONS.md](OPEN-QUESTIONS.md).
 
-## Avance S138–S164 (22-10-2026) — siete módulos más de la línea de RE general
+## Avance S138–S169 (22-10-2026) — línea de RE general y controles positivos del obturador
 
-**Línea de RE general** (catálogo con 96 hitos: [docs/capture/linea-general-re.md](capture/linea-general-re.md)).
-Siete hitos nuevos decodificados con bytes y tests propios: `[CAMERA_MAIN_FC]` (S138),
-`[CAM_UTIL_ADJ]` (S143), `[CAM_UTIL_SENS]` (S144), `[DEPTH]` (S148), `[PANDA]` (S151), `[TP_R]` (S156)
-y `[CAMERA_IS]` (S164).
+**Línea de RE general** (catálogo con 100 hitos: [docs/capture/linea-general-re.md](capture/linea-general-re.md)).
+Nueve hitos nuevos decodificados con bytes y tests propios: `[CAMERA_MAIN_FC]` (S138),
+`[CAM_UTIL_ADJ]` (S143), `[CAM_UTIL_SENS]` (S144), `[DEPTH]` (S148), `[PANDA]` (S151), `[TP_R]` (S156),
+`[CAMERA_IS]` (S164), `[JOG]` (S165), `[ADC_DEBUG]` (S166).
 
-**Patrón consolidado:** en los siete, la **etiqueta de módulo es propia de la fw3.21** pero la
-**funcionalidad ya existía** en la A7S fw3.20 o el A6300 fw2.01 → la fw3.21 de la A6000 **reescribe
-el logging, no el firmware** (conclusión de S128/S130, ahora con 7 ejemplos más). Casos notables:
+**Patrón consolidado**: en los siete módulos de trazas, la **etiqueta de módulo es propia de la
+fw3.21** pero la **funcionalidad ya existía** en la A7S fw3.20 o el A6300 fw2.01 → la fw3.21 de
+la A6000 **reescribe el logging, no el firmware** (conclusión de S128/S130, con 7 ejemplos más).
+Casos notables: `[CAM_UTIL_ADJ]`/`[CAM_UTIL_SENS]` son **el mismo par** (dependencia cruzada
+`0x43900c9c`, `0x439012fa`/`0x43901302`; ids OSAL compartidos) y escriben **calibración en la RAM
+del sensor** (51 comandos «Sens» en `0x43fe858c`); `[DEPTH]` sale a la **EXIF** (tags `0x5001`/`0x5002`);
+`[TP_R]` es un **reporter** y **corrige un falso positivo de S130** (plantillas OSAL ≠ mismo código);
+`[CAMERA_IS]` es **la capa que aplica la estabilización** (17/17 pares PIC verificados → **valida el
+mapa de S70**) y su infraestructura RC es **común a los tres**; `[JOG]` es la **fuente de eventos de
+la rueda** (el A6300 sustituye `JogVGrip` por `JogCaif`); `[ADC_DEBUG]` es el **volcado del driver
+LIRO ADC** y **corrige una lectura de S164** (el «ADC» del giroscopio no es ese servicio).
 
-- `[CAM_UTIL_ADJ]`/`[CAM_UTIL_SENS]`: **el mismo par** (dependencia cruzada `0x43900c9c`,
-  `0x439012fa`/`0x43901302`; ids OSAL compartidos `0x008f0139`/`0x008f013a`, módulo `0xb5`), la
-  **escritura de calibración en la RAM del sensor** con **51 comandos «Sens»** en `0x43fe858c` y
-  **1 de 3 operaciones implementada** en la tabla de despacho `0x440121f8`.
-- `[DEPTH]`: la clase `DepthGaugeMain` ya está en los tres firmware; su consumidor real es la
-  **EXIF** (tags `0x5001`/`0x5002`).
-- `[TP_R]`: **reporter** de un framework de mensajes; la tabla de comandos y el registro `tp` ya
-  existían (silenciosos) en los tres → **corrige un falso positivo de S130** (los «textos comunes»
-  con `[DMMYSIOCOM]` son plantillas OSAL genéricas).
-- `[CAMERA_IS]`: **la capa que aplica la estabilización** (recurso RC, giroscopio por ADC,
-  corrección de distorsión, sincronía con `LENS_MOUNT` y `[CAMERA_MAIN_SYNC]`); 17/17 pares PIC
-  verificados a mano → **valida el mapa de S70**; la infraestructura RC es **común a los tres**.
+**S168 — la cadena de *rolling shutter* del A6300 está MUERTA.** `position num in rolling is strange %d`
+(`0x43d9fe03`) tiene **0 referencias de código** (regla estricta, punteros absolutos, pares
+`movw`/`movt` y un método inverso independiente); de las 5 cadenas de su banda, **4 sí están
+referenciadas** (el único código vivo es el cálculo de ancho del **número de posición del VD**,
+`0x4372914c`). **Corrige** el colateral de S164: la cadena del A6300 **no** demuestra que ese
+firmware implemente *rolling shutter*.
 
-**Línea del obturador electrónico**: sin cambios. Los siete módulos son **negativos acotados**
-(0 menciones de obturador, lectura del sensor o tiempos de exposición) → **S51 se mantiene:
-A=NO, B=NO, C=NO**. Colateral verificado: `rolling` aparece **0** en la A6000 fw3.21 y la A7S
-fw3.20 y **1** en el A6300 fw2.01 (`position num in rolling is strange %d` `0x43d9fe03`, junto a
-`position num in vd is strange %d` `0x43d9fde2`) → el concepto de *rolling shutter* **existe en el
-A6300 y no en la A6000/A7S**; la ausencia estática **no** demuestra incapacidad del hardware, así que
-**S51 no cambia** y el plan de pruebas físicas (P1–P8) sigue **pendiente de autorización**.
+**S169 — la API de *drive* del A6300 no existe en la A6000.** El A6300 fw2.01 tiene una **capa de
+validación de parámetros de cámara** (`LiroSeq`) con **201 propiedades** `CheckSet*` y **370**
+comprobaciones `ParamCheckErr`, entre ellas los **parámetros de obturador** `sc_ShutDrive` (`+0x1dd`),
+`uc_ShutDriveMode` (`+0x1dc`), **`front_eshutter`** (`+0x23c`), **`SilentShutterMode`** (`+0x264`),
+**`shutterType`** (`+0x268`), `ul_ShutLowLimit`, `sc_IrisDrive`, `uc_IrisDriveMode`, `sc_ExposureDrive`.
+**La A6000 fw3.21 y la A7S fw3.20 tienen 0/0 de todo eso** → **no falta la traza, falta el parámetro**.
+Refuerza **S135** con evidencia de **parámetros en runtime**, no solo de configuración del HAL.
+Matiz: la A6000 **sí** tiene el módulo LiroSeq (2 trazas) y el `drive_mode` del imager (S134).
 
-## Avance S137 (21-10-2026) — estado vigente de la línea de RE general y del obturador
-
-**Línea de RE general** (catálogo con 69 hitos: [docs/capture/linea-general-re.md](capture/linea-general-re.md)):
-la fw3.21 de la A6000 **reescribe el logging, no el firmware**. El mapa de etiquetado (S128, 98 prefijos
-comparados texto a texto contra la A7S fw3.20) da **58 módulos idénticos, 18 "renombrados"** (la A7S tiene
-los mismos mensajes **sin etiqueta de módulo**), 2 parciales y 20 propios; y al buscar el **núcleo** de
-los mensajes (S130) solo **2 de esos 20** son un cambio de etiqueta (`[IDT_OPD]` → `[IDT]`, `[DFE]`),
-1 es parcial y **17 tienen contenido que no está en la A7S ni en el A6300**. Módulos decodificados con
-bytes en esta sesión: `[IMAGING_CAP]` (S106), `[CAMERA_MAIN_YC]` (S110), `[TRK]` (S111),
-`[CAMERA_MAIN_SYNC]` (S112), `[CAM_DMM]` (S113), secciones (S114), `[CAM_IMAGER]` (S115), `[SFRS]` (S116),
-`[AUGI]` (S117), `[SFRA]` (S118), `[APL]` (S119), `[IDT_OPD]` (S120), `[AIP]` (S121),
-`[CAMERA_MAIN_TC]` (S122), `[CAMERA_MAIN_CC]` (S123), `[IDT_OPD]` (S120), `[CAMERA_MAIN]` (S126),
-`[CAMERA_MAIN_LC]` (S127), `[IMAGING_REL]`/`[IMAGING]` (S125), `[CAMERA_MAIN_IM]` (S129),
-`[VPH_API]` (S131), `[CLK_CTRL]` (S132), `[MOUNT_DEBUG]` (S133), `[CTRLCORE]` (S137), `[ACCY]` (S136).
-
-**Línea del obturador electrónico**: el hito **S135** añade un **control positivo**. El A6300 fw2.01
-**sí** tiene un subsistema de obturador electrónico en su HAL (`av-cam.bin`): `ElecShutter/EC_ElecShutter_Main.cpp`
-`0x43dcfa41`, `EC_NonlinearElecShutter_MechShutterTable.cpp` `0x43dcfa65`, tabla de velocidades no lineales
-`0x43dcfa9e` y los ajustes `SilentShutterMode` `0x43dc9a14`, `shutterType` `0x43dca61f`, `front_eshutter`
-`0x43dc821d`. La **A6000 fw3.21 y la A7S fw3.20 tienen 0** de todo eso — y la ausencia en la A6000 es
-**selectiva**: sí conserva el motor de exposición `EC` (`EC::EcTagData` `0x43ca91ce`, `api_EC_GetApolloLapNum`
-`0x43caa193`), lo que falta es **exactamente** la sub-rama `ElecShutter/`. Sus 15 apariciones de `shutter`
-son del **obturador mecánico** (silenciador `VDF::ShutterMuteOffExecutor` `0x43c851d8`,
-`[SFRS][PINSEND] shutter mute thru` `0x43ce956e`, `[VPH_API]<shutter_mute_param>` `0x43ce3634`).
-Además S134 mostró que la relación `shut`→`svd` del imager es **aritmética, no tabulada**
-(`svd_esperado = (svd==9 ? 1 : shut) * svr_num − 1`), lo que **descarta** la hipótesis de tabla de
-parámetros por `drive_mode`.
-
-**S51 se mantiene: A=NO, B=NO, C=NO.** La ausencia estática de un módulo en el HAL **no** demuestra
-incapacidad del hardware: solo que esta fw3.21 no lo implementa. El plan de pruebas físicas
-(P1–P8, [capture/physical-test-plan.md](capture/physical-test-plan.md)) sigue **pendiente de autorización**
-y ninguna prueba se ha ejecutado.
+**S51 se mantiene: A=NO, B=NO, C=NO.** Todos estos hallazgos son **sobre el firmware**: la ausencia
+estática de un módulo, una cadena o un parámetro **no** demuestra incapacidad del hardware. El plan
+de pruebas físicas (P1–P8, [capture/physical-test-plan.md](capture/physical-test-plan.md)) sigue
+**pendiente de autorización** y ninguna prueba se ha ejecutado.
 
 ## Avance IMX210 S140–S155 (22-10-2026)
 
