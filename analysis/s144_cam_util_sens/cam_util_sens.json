@@ -1,0 +1,2628 @@
+{
+ "milestone": "S144",
+ "modulo": "[CAM_UTIL_SENS]",
+ "firmware": "A6000 fw3.21",
+ "convencion": "vaddr = 0x43541000 + file_offset",
+ "regla_pic": "estricta (canonica) - analysis/s106_imaging_cap/scan_pic_refs_strict.py",
+ "banda_codigo": [
+  "0x43901000",
+  "0x43902610"
+ ],
+ "contadores": {
+  "cadenas": 21,
+  "cadenas_con_referencia": 21,
+  "sitios": 39,
+  "funciones": 5,
+  "cadenas_en_banda_del_modulo": 47
+ },
+ "cadenas": [
+  {
+   "vaddr": "0x43cce1ea",
+   "offset": "0x0078d1ea",
+   "text": "[CAM_UTIL_SENS]: CB for BKID change [BKID]:%x [Size]:%x",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x4390130e",
+     "ldr": "0x43901306",
+     "pool": "0x003cced8",
+     "dest": "0x43cce1ea"
+    }
+   ],
+   "func": "0x439012d0"
+  },
+  {
+   "vaddr": "0x43cce222",
+   "offset": "0x0078d222",
+   "text": "[CAM_UTIL_SENS]:                    [SWFLG]:%x",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43901326",
+     "ldr": "0x43901324",
+     "pool": "0x003ccef8",
+     "dest": "0x43cce222"
+    }
+   ],
+   "func": "0x439012d0"
+  },
+  {
+   "vaddr": "0x43cce251",
+   "offset": "0x0078d251",
+   "text": "[CAM_UTIL_SENS]:                    [MODEFLG]:%x",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x4390133a",
+     "ldr": "0x43901338",
+     "pool": "0x003ccf13",
+     "dest": "0x43cce251"
+    }
+   ],
+   "func": "0x439012d0"
+  },
+  {
+   "vaddr": "0x43cce322",
+   "offset": "0x0078d322",
+   "text": "[CAM_UTIL_SENS]:   Debug IM ASync Open start",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43901d7c",
+     "ldr": "0x43901d78",
+     "pool": "0x006a0fa1",
+     "dest": "0x43cce322"
+    }
+   ],
+   "func": "0x43901d50"
+  },
+  {
+   "vaddr": "0x43cce34f",
+   "offset": "0x0078d34f",
+   "text": "[CAM_UTIL_SENS]: [FileNum]%04x [Adr]%x [Size]%x",
+   "n_sites": 2,
+   "sites": [
+    {
+     "site": "0x43901d90",
+     "ldr": "0x43901d88",
+     "pool": "0x003cc5bb",
+     "dest": "0x43cce34f"
+    },
+    {
+     "site": "0x43901f18",
+     "ldr": "0x43901f10",
+     "pool": "0x003cc433",
+     "dest": "0x43cce34f"
+    }
+   ],
+   "func": "0x43901d50"
+  },
+  {
+   "vaddr": "0x43cce37f",
+   "offset": "0x0078d37f",
+   "text": "[CAM_UTIL_SENS]: [Flg]%04x [MountSTAT]%04x [FsysMode]%04x",
+   "n_sites": 3,
+   "sites": [
+    {
+     "site": "0x43901db0",
+     "ldr": "0x43901dae",
+     "pool": "0x003cc5cb",
+     "dest": "0x43cce37f"
+    },
+    {
+     "site": "0x43901f36",
+     "ldr": "0x43901f34",
+     "pool": "0x003cc445",
+     "dest": "0x43cce37f"
+    },
+    {
+     "site": "0x439021c0",
+     "ldr": "0x439021be",
+     "pool": "0x003cc1bb",
+     "dest": "0x43cce37f"
+    }
+   ],
+   "func": "0x43901d50"
+  },
+  {
+   "vaddr": "0x43cce3b9",
+   "offset": "0x0078d3b9",
+   "text": "[CAM_UTIL_SENS]:   Debug IM ASync Open OSAL MEM ALLOC Error : %x",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43901e06",
+     "ldr": "0x43901dfc",
+     "pool": "0x003cc5af",
+     "dest": "0x43cce3b9"
+    }
+   ],
+   "func": "0x43901d50"
+  },
+  {
+   "vaddr": "0x43cce3fa",
+   "offset": "0x0078d3fa",
+   "text": "[CAM_UTIL_SENS]: >>[FILE_NUM]%x [ADR]%x [SIZE]%x",
+   "n_sites": 4,
+   "sites": [
+    {
+     "site": "0x43901e48",
+     "ldr": "0x43901e42",
+     "pool": "0x003cc5ae",
+     "dest": "0x43cce3fa"
+    },
+    {
+     "site": "0x43902030",
+     "ldr": "0x4390202a",
+     "pool": "0x003cc3c6",
+     "dest": "0x43cce3fa"
+    },
+    {
+     "site": "0x43902264",
+     "ldr": "0x4390225e",
+     "pool": "0x003cc192",
+     "dest": "0x43cce3fa"
+    },
+    {
+     "site": "0x43902498",
+     "ldr": "0x43902492",
+     "pool": "0x003cbf5e",
+     "dest": "0x43cce3fa"
+    }
+   ],
+   "func": "0x43901d50"
+  },
+  {
+   "vaddr": "0x43cce42b",
+   "offset": "0x0078d42b",
+   "text": "[CAM_UTIL_SENS]: >>[STAT]%x [FSYSMODE]",
+   "n_sites": 4,
+   "sites": [
+    {
+     "site": "0x43901e6a",
+     "ldr": "0x43901e68",
+     "pool": "0x003cc5bd",
+     "dest": "0x43cce42b"
+    },
+    {
+     "site": "0x4390204e",
+     "ldr": "0x4390204c",
+     "pool": "0x003cc3d9",
+     "dest": "0x43cce42b"
+    },
+    {
+     "site": "0x43902286",
+     "ldr": "0x43902284",
+     "pool": "0x003cc1a1",
+     "dest": "0x43cce42b"
+    },
+    {
+     "site": "0x439024c6",
+     "ldr": "0x439024c4",
+     "pool": "0x003cbf61",
+     "dest": "0x43cce42b"
+    }
+   ],
+   "func": "0x43901d50"
+  },
+  {
+   "vaddr": "0x43cce452",
+   "offset": "0x0078d452",
+   "text": "[CAM_UTIL_SENS]:   Debug IM ASync Open end [ErrInfo]%x [Flg]%x",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43901eca",
+     "ldr": "0x43901ec8",
+     "pool": "0x003cc584",
+     "dest": "0x43cce452"
+    }
+   ],
+   "func": "0x43901d50"
+  },
+  {
+   "vaddr": "0x43cce491",
+   "offset": "0x0078d491",
+   "text": "[CAM_UTIL_SENS]:   Debug IM Sync Open start",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43901f04",
+     "ldr": "0x43901f00",
+     "pool": "0x006a0e19",
+     "dest": "0x43cce491"
+    }
+   ],
+   "func": "0x43901d50"
+  },
+  {
+   "vaddr": "0x43cce4bd",
+   "offset": "0x0078d4bd",
+   "text": "[CAM_UTIL_SENS]:  Debug IM Sync Open OSAL MEM ALLOC Error : %x",
+   "n_sites": 2,
+   "sites": [
+    {
+     "site": "0x43901f8c",
+     "ldr": "0x43901f82",
+     "pool": "0x003cc52d",
+     "dest": "0x43cce4bd"
+    },
+    {
+     "site": "0x43902450",
+     "ldr": "0x43902446",
+     "pool": "0x003cc069",
+     "dest": "0x43cce4bd"
+    }
+   ],
+   "func": "0x43901d50"
+  },
+  {
+   "vaddr": "0x43cce4fc",
+   "offset": "0x0078d4fc",
+   "text": "[CAM_UTIL_SENS]:   >> [SndMsgErrInfo]%x",
+   "n_sites": 3,
+   "sites": [
+    {
+     "site": "0x43902094",
+     "ldr": "0x4390208a",
+     "pool": "0x003cc464",
+     "dest": "0x43cce4fc"
+    },
+    {
+     "site": "0x439022c6",
+     "ldr": "0x439022bc",
+     "pool": "0x003cc232",
+     "dest": "0x43cce4fc"
+    },
+    {
+     "site": "0x4390250c",
+     "ldr": "0x43902502",
+     "pool": "0x003cbfec",
+     "dest": "0x43cce4fc"
+    }
+   ],
+   "func": "0x43901d50"
+  },
+  {
+   "vaddr": "0x43cce524",
+   "offset": "0x0078d524",
+   "text": "[CAM_UTIL_SENS]:   >> [RcvMsgErr]%x",
+   "n_sites": 3,
+   "sites": [
+    {
+     "site": "0x439020b6",
+     "ldr": "0x439020ae",
+     "pool": "0x003cc46a",
+     "dest": "0x43cce524"
+    },
+    {
+     "site": "0x439022e8",
+     "ldr": "0x439022e0",
+     "pool": "0x003cc238",
+     "dest": "0x43cce524"
+    },
+    {
+     "site": "0x4390252e",
+     "ldr": "0x43902526",
+     "pool": "0x003cbff2",
+     "dest": "0x43cce524"
+    }
+   ],
+   "func": "0x43901d50"
+  },
+  {
+   "vaddr": "0x43cce548",
+   "offset": "0x0078d548",
+   "text": "[CAM_UTIL_SENS]:   >> Recieve UnKnown Msg [CID]%x",
+   "n_sites": 3,
+   "sites": [
+    {
+     "site": "0x439020e0",
+     "ldr": "0x439020da",
+     "pool": "0x003cc464",
+     "dest": "0x43cce548"
+    },
+    {
+     "site": "0x43902312",
+     "ldr": "0x4390230c",
+     "pool": "0x003cc232",
+     "dest": "0x43cce548"
+    },
+    {
+     "site": "0x43902558",
+     "ldr": "0x43902552",
+     "pool": "0x003cbfec",
+     "dest": "0x43cce548"
+    }
+   ],
+   "func": "0x43901d50"
+  },
+  {
+   "vaddr": "0x43cce57a",
+   "offset": "0x0078d57a",
+   "text": "[CAM_UTIL_SENS]:   Debug IM Sync Open end[Flg]%x",
+   "n_sites": 3,
+   "sites": [
+    {
+     "site": "0x43902118",
+     "ldr": "0x43902116",
+     "pool": "0x003cc45e",
+     "dest": "0x43cce57a"
+    },
+    {
+     "site": "0x4390234a",
+     "ldr": "0x43902348",
+     "pool": "0x003cc22c",
+     "dest": "0x43cce57a"
+    },
+    {
+     "site": "0x43902590",
+     "ldr": "0x4390258e",
+     "pool": "0x003cbfe6",
+     "dest": "0x43cce57a"
+    }
+   ],
+   "func": "0x43901d50"
+  },
+  {
+   "vaddr": "0x43cce5ab",
+   "offset": "0x0078d5ab",
+   "text": "[CAM_UTIL_SENS]: SET FILE NUM Func",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43902180",
+     "ldr": "0x4390217e",
+     "pool": "0x006a0b9b",
+     "dest": "0x43cce5ab"
+    }
+   ],
+   "func": "0x43902168"
+  },
+  {
+   "vaddr": "0x43cce5ce",
+   "offset": "0x0078d5ce",
+   "text": "[CAM_UTIL_SENS]: [FileNum]%02x [Adr]%x [Size]%x",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x43902198",
+     "ldr": "0x43902190",
+     "pool": "0x003cc432",
+     "dest": "0x43cce5ce"
+    }
+   ],
+   "func": "0x43902168"
+  },
+  {
+   "vaddr": "0x43cce5fe",
+   "offset": "0x0078d5fe",
+   "text": "[CAM_UTIL_SENS]:   SET FILE NUM Func OSAL MEM ALLOC Error : %x",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x4390220e",
+     "ldr": "0x43902204",
+     "pool": "0x003cc3ec",
+     "dest": "0x43cce5fe"
+    }
+   ],
+   "func": "0x43902168"
+  },
+  {
+   "vaddr": "0x43cce63d",
+   "offset": "0x0078d63d",
+   "text": "[CAM_UTIL_SENS]: UTIL MS Mgr) Call CB [Flg]%x",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x439023d8",
+     "ldr": "0x439023d6",
+     "pool": "0x003cc261",
+     "dest": "0x43cce63d"
+    }
+   ],
+   "func": "0x439023b8"
+  },
+  {
+   "vaddr": "0x43cce66b",
+   "offset": "0x0078d66b",
+   "text": "[CAM_UTIL_SENS]: UTIL MS Mgr) ## CALL BACK NULL Error!!! ##[Flg]%x",
+   "n_sites": 1,
+   "sites": [
+    {
+     "site": "0x439023f0",
+     "ldr": "0x439023ea",
+     "pool": "0x003cc277",
+     "dest": "0x43cce66b"
+    }
+   ],
+   "func": "0x439023b8"
+  }
+ ],
+ "funciones": [
+  {
+   "func": "0x439012d0",
+   "nombre": "CB for BKID change (callback de cambio de bloque del sensor)",
+   "n_sitios": 3,
+   "trazas": [
+    {
+     "site": "0x4390130e",
+     "vaddr": "0x43cce1ea",
+     "text": "[CAM_UTIL_SENS]: CB for BKID change [BKID]:%x [Size]:%x"
+    },
+    {
+     "site": "0x43901326",
+     "vaddr": "0x43cce222",
+     "text": "[CAM_UTIL_SENS]:                    [SWFLG]:%x"
+    },
+    {
+     "site": "0x4390133a",
+     "vaddr": "0x43cce251",
+     "text": "[CAM_UTIL_SENS]:                    [MODEFLG]:%x"
+    }
+   ],
+   "vaddr_fin_estimado": "0x43901380",
+   "llamadas": [
+    {
+     "site": "0x439012da",
+     "tipo": "bl",
+     "dest": "0x43561394"
+    },
+    {
+     "site": "0x439012fa",
+     "tipo": "bl",
+     "dest": "0x43900e30"
+    },
+    {
+     "site": "0x439012fe",
+     "tipo": "bl16",
+     "dest": "0x43901306"
+    },
+    {
+     "site": "0x43901302",
+     "tipo": "bl",
+     "dest": "0x43900f18"
+    },
+    {
+     "site": "0x43901314",
+     "tipo": "bl",
+     "dest": "0x43901150"
+    },
+    {
+     "site": "0x43901328",
+     "tipo": "bl",
+     "dest": "0x43901150"
+    },
+    {
+     "site": "0x4390133c",
+     "tipo": "bl",
+     "dest": "0x43901150"
+    },
+    {
+     "site": "0x43901348",
+     "tipo": "bl",
+     "dest": "0x4390129c"
+    },
+    {
+     "site": "0x43901356",
+     "tipo": "bl",
+     "dest": "0x4390129c"
+    },
+    {
+     "site": "0x4390135c",
+     "tipo": "bl",
+     "dest": "0x43901274"
+    }
+   ],
+   "destinos_unicos": [
+    "0x43561394",
+    "0x43900e30",
+    "0x43900f18",
+    "0x43901150",
+    "0x43901274",
+    "0x4390129c",
+    "0x43901306"
+   ]
+  },
+  {
+   "func": "0x43901d50",
+   "nombre": "Debug IM ASync Open (apertura de fichero en la memoria interna)",
+   "n_sitios": 17,
+   "trazas": [
+    {
+     "site": "0x43901d7c",
+     "vaddr": "0x43cce322",
+     "text": "[CAM_UTIL_SENS]:   Debug IM ASync Open start"
+    },
+    {
+     "site": "0x43901d90",
+     "vaddr": "0x43cce34f",
+     "text": "[CAM_UTIL_SENS]: [FileNum]%04x [Adr]%x [Size]%x"
+    },
+    {
+     "site": "0x43901f18",
+     "vaddr": "0x43cce34f",
+     "text": "[CAM_UTIL_SENS]: [FileNum]%04x [Adr]%x [Size]%x"
+    },
+    {
+     "site": "0x43901db0",
+     "vaddr": "0x43cce37f",
+     "text": "[CAM_UTIL_SENS]: [Flg]%04x [MountSTAT]%04x [FsysMode]%04x"
+    },
+    {
+     "site": "0x43901f36",
+     "vaddr": "0x43cce37f",
+     "text": "[CAM_UTIL_SENS]: [Flg]%04x [MountSTAT]%04x [FsysMode]%04x"
+    },
+    {
+     "site": "0x43901e06",
+     "vaddr": "0x43cce3b9",
+     "text": "[CAM_UTIL_SENS]:   Debug IM ASync Open OSAL MEM ALLOC Error : %x"
+    },
+    {
+     "site": "0x43901e48",
+     "vaddr": "0x43cce3fa",
+     "text": "[CAM_UTIL_SENS]: >>[FILE_NUM]%x [ADR]%x [SIZE]%x"
+    },
+    {
+     "site": "0x43902030",
+     "vaddr": "0x43cce3fa",
+     "text": "[CAM_UTIL_SENS]: >>[FILE_NUM]%x [ADR]%x [SIZE]%x"
+    },
+    {
+     "site": "0x43901e6a",
+     "vaddr": "0x43cce42b",
+     "text": "[CAM_UTIL_SENS]: >>[STAT]%x [FSYSMODE]"
+    },
+    {
+     "site": "0x4390204e",
+     "vaddr": "0x43cce42b",
+     "text": "[CAM_UTIL_SENS]: >>[STAT]%x [FSYSMODE]"
+    },
+    {
+     "site": "0x43901eca",
+     "vaddr": "0x43cce452",
+     "text": "[CAM_UTIL_SENS]:   Debug IM ASync Open end [ErrInfo]%x [Flg]%x"
+    },
+    {
+     "site": "0x43901f04",
+     "vaddr": "0x43cce491",
+     "text": "[CAM_UTIL_SENS]:   Debug IM Sync Open start"
+    },
+    {
+     "site": "0x43901f8c",
+     "vaddr": "0x43cce4bd",
+     "text": "[CAM_UTIL_SENS]:  Debug IM Sync Open OSAL MEM ALLOC Error : %x"
+    },
+    {
+     "site": "0x43902094",
+     "vaddr": "0x43cce4fc",
+     "text": "[CAM_UTIL_SENS]:   >> [SndMsgErrInfo]%x"
+    },
+    {
+     "site": "0x439020b6",
+     "vaddr": "0x43cce524",
+     "text": "[CAM_UTIL_SENS]:   >> [RcvMsgErr]%x"
+    },
+    {
+     "site": "0x439020e0",
+     "vaddr": "0x43cce548",
+     "text": "[CAM_UTIL_SENS]:   >> Recieve UnKnown Msg [CID]%x"
+    },
+    {
+     "site": "0x43902118",
+     "vaddr": "0x43cce57a",
+     "text": "[CAM_UTIL_SENS]:   Debug IM Sync Open end[Flg]%x"
+    }
+   ],
+   "vaddr_fin_estimado": "0x43902168",
+   "llamadas": [
+    {
+     "site": "0x43901d70",
+     "tipo": "bl",
+     "dest": "0x43900ff8"
+    },
+    {
+     "site": "0x43901d84",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x43901d96",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x43901db2",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x43901dbe",
+     "tipo": "bl",
+     "dest": "0x43901ccc"
+    },
+    {
+     "site": "0x43901dc4",
+     "tipo": "bl",
+     "dest": "0x43901ca0"
+    },
+    {
+     "site": "0x43901dca",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x43901dd0",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x43901dde",
+     "tipo": "bl",
+     "dest": "0x43901ccc"
+    },
+    {
+     "site": "0x43901df0",
+     "tipo": "bl",
+     "dest": "0x435612d0"
+    },
+    {
+     "site": "0x43901e08",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x43901e14",
+     "tipo": "bl16",
+     "dest": "0x43901ee4"
+    },
+    {
+     "site": "0x43901e1a",
+     "tipo": "bl",
+     "dest": "0x43b2a18e"
+    },
+    {
+     "site": "0x43901e56",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x43901e6c",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x43901e72",
+     "tipo": "bl",
+     "dest": "0x43901ca0"
+    },
+    {
+     "site": "0x43901e78",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x43901e7e",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x43901e8a",
+     "tipo": "bl",
+     "dest": "0x43901ccc"
+    },
+    {
+     "site": "0x43901e90",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x43901e96",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x43901e9e",
+     "tipo": "bl",
+     "dest": "0x4356120c"
+    },
+    {
+     "site": "0x43901eaa",
+     "tipo": "bl16",
+     "dest": "0x43901eb0"
+    },
+    {
+     "site": "0x43901eb2",
+     "tipo": "bl16",
+     "dest": "0x43901eb8"
+    },
+    {
+     "site": "0x43901ecc",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x43901ed8",
+     "tipo": "bl",
+     "dest": "0x43901ccc"
+    },
+    {
+     "site": "0x43901ee4",
+     "tipo": "bl",
+     "dest": "0x43901ccc"
+    },
+    {
+     "site": "0x43901eea",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x43901ef6",
+     "tipo": "bl16",
+     "dest": "0x4390213c"
+    },
+    {
+     "site": "0x43901ef8",
+     "tipo": "bl",
+     "dest": "0x43900ff8"
+    },
+    {
+     "site": "0x43901f0c",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x43901f1e",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x43901f38",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x43901f44",
+     "tipo": "bl",
+     "dest": "0x43901ccc"
+    },
+    {
+     "site": "0x43901f4a",
+     "tipo": "bl",
+     "dest": "0x43901ca0"
+    },
+    {
+     "site": "0x43901f50",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x43901f56",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x43901f64",
+     "tipo": "bl",
+     "dest": "0x43901ccc"
+    },
+    {
+     "site": "0x43901f78",
+     "tipo": "bl",
+     "dest": "0x435612d0"
+    },
+    {
+     "site": "0x43901f8e",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x43901f9a",
+     "tipo": "bl",
+     "dest": "0x43901ccc"
+    },
+    {
+     "site": "0x43901fa0",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x43901fa4",
+     "tipo": "bl16",
+     "dest": "0x4390213c"
+    },
+    {
+     "site": "0x43901ffa",
+     "tipo": "bl",
+     "dest": "0x43561324"
+    },
+    {
+     "site": "0x43902000",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x43902008",
+     "tipo": "bl",
+     "dest": "0x43b2a18e"
+    },
+    {
+     "site": "0x4390203a",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x43902050",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x43902056",
+     "tipo": "bl",
+     "dest": "0x43901ca0"
+    },
+    {
+     "site": "0x4390205c",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x43902062",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x4390206e",
+     "tipo": "bl",
+     "dest": "0x43901ccc"
+    },
+    {
+     "site": "0x43902074",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x4390207a",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x43902082",
+     "tipo": "bl",
+     "dest": "0x4356120c"
+    },
+    {
+     "site": "0x43902096",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x4390209c",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x439020a6",
+     "tipo": "bl",
+     "dest": "0x43561260"
+    },
+    {
+     "site": "0x439020ba",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x439020c6",
+     "tipo": "bl",
+     "dest": "0x43901ccc"
+    },
+    {
+     "site": "0x439020cc",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x439020e2",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x439020ea",
+     "tipo": "bl",
+     "dest": "0x435612ec"
+    },
+    {
+     "site": "0x439020f8",
+     "tipo": "bl16",
+     "dest": "0x439020fe"
+    },
+    {
+     "site": "0x43902108",
+     "tipo": "bl",
+     "dest": "0x43561324"
+    },
+    {
+     "site": "0x4390211a",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x43902126",
+     "tipo": "bl",
+     "dest": "0x43901ccc"
+    },
+    {
+     "site": "0x43902132",
+     "tipo": "bl",
+     "dest": "0x43901ccc"
+    },
+    {
+     "site": "0x43902136",
+     "tipo": "bl16",
+     "dest": "0x4390213c"
+    }
+   ],
+   "destinos_unicos": [
+    "0x4356120c",
+    "0x43561260",
+    "0x435612d0",
+    "0x435612ec",
+    "0x43561324",
+    "0x43900ff8",
+    "0x43901b7c",
+    "0x43901ca0",
+    "0x43901ccc",
+    "0x43901d00",
+    "0x43901eb0",
+    "0x43901eb8",
+    "0x43901ee4",
+    "0x439020fe",
+    "0x4390213c",
+    "0x43b2a18e"
+   ]
+  },
+  {
+   "func": "0x43902168",
+   "nombre": "SET FILE NUM Func (asignacion de numero de fichero/adr/tamano)",
+   "n_sitios": 10,
+   "trazas": [
+    {
+     "site": "0x439021c0",
+     "vaddr": "0x43cce37f",
+     "text": "[CAM_UTIL_SENS]: [Flg]%04x [MountSTAT]%04x [FsysMode]%04x"
+    },
+    {
+     "site": "0x43902264",
+     "vaddr": "0x43cce3fa",
+     "text": "[CAM_UTIL_SENS]: >>[FILE_NUM]%x [ADR]%x [SIZE]%x"
+    },
+    {
+     "site": "0x43902286",
+     "vaddr": "0x43cce42b",
+     "text": "[CAM_UTIL_SENS]: >>[STAT]%x [FSYSMODE]"
+    },
+    {
+     "site": "0x439022c6",
+     "vaddr": "0x43cce4fc",
+     "text": "[CAM_UTIL_SENS]:   >> [SndMsgErrInfo]%x"
+    },
+    {
+     "site": "0x439022e8",
+     "vaddr": "0x43cce524",
+     "text": "[CAM_UTIL_SENS]:   >> [RcvMsgErr]%x"
+    },
+    {
+     "site": "0x43902312",
+     "vaddr": "0x43cce548",
+     "text": "[CAM_UTIL_SENS]:   >> Recieve UnKnown Msg [CID]%x"
+    },
+    {
+     "site": "0x4390234a",
+     "vaddr": "0x43cce57a",
+     "text": "[CAM_UTIL_SENS]:   Debug IM Sync Open end[Flg]%x"
+    },
+    {
+     "site": "0x43902180",
+     "vaddr": "0x43cce5ab",
+     "text": "[CAM_UTIL_SENS]: SET FILE NUM Func"
+    },
+    {
+     "site": "0x43902198",
+     "vaddr": "0x43cce5ce",
+     "text": "[CAM_UTIL_SENS]: [FileNum]%02x [Adr]%x [Size]%x"
+    },
+    {
+     "site": "0x4390220e",
+     "vaddr": "0x43cce5fe",
+     "text": "[CAM_UTIL_SENS]:   SET FILE NUM Func OSAL MEM ALLOC Error : %x"
+    }
+   ],
+   "vaddr_fin_estimado": "0x439023b8",
+   "llamadas": [
+    {
+     "site": "0x43902174",
+     "tipo": "bl",
+     "dest": "0x43900ff8"
+    },
+    {
+     "site": "0x4390218c",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x439021a2",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x439021c2",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x439021ce",
+     "tipo": "bl",
+     "dest": "0x43901ccc"
+    },
+    {
+     "site": "0x439021d4",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x439021da",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x439021e8",
+     "tipo": "bl",
+     "dest": "0x43901ccc"
+    },
+    {
+     "site": "0x439021fc",
+     "tipo": "bl",
+     "dest": "0x435612d0"
+    },
+    {
+     "site": "0x43902210",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x4390221c",
+     "tipo": "bl",
+     "dest": "0x43901ccc"
+    },
+    {
+     "site": "0x43902222",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x43902226",
+     "tipo": "bl16",
+     "dest": "0x4390236e"
+    },
+    {
+     "site": "0x4390222e",
+     "tipo": "bl",
+     "dest": "0x43561324"
+    },
+    {
+     "site": "0x43902234",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x4390223c",
+     "tipo": "bl",
+     "dest": "0x43b2a18e"
+    },
+    {
+     "site": "0x43902272",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x43902288",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x4390228e",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x43902294",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x439022a0",
+     "tipo": "bl",
+     "dest": "0x43901ccc"
+    },
+    {
+     "site": "0x439022a6",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x439022ac",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x439022b4",
+     "tipo": "bl",
+     "dest": "0x4356120c"
+    },
+    {
+     "site": "0x439022c8",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x439022ce",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x439022d8",
+     "tipo": "bl",
+     "dest": "0x43561260"
+    },
+    {
+     "site": "0x439022ec",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x439022f8",
+     "tipo": "bl",
+     "dest": "0x43901ccc"
+    },
+    {
+     "site": "0x439022fe",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x43902314",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x4390231c",
+     "tipo": "bl",
+     "dest": "0x435612ec"
+    },
+    {
+     "site": "0x4390232a",
+     "tipo": "bl16",
+     "dest": "0x43902330"
+    },
+    {
+     "site": "0x4390233a",
+     "tipo": "bl",
+     "dest": "0x43561324"
+    },
+    {
+     "site": "0x4390234c",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x43902358",
+     "tipo": "bl",
+     "dest": "0x43901ccc"
+    },
+    {
+     "site": "0x43902364",
+     "tipo": "bl",
+     "dest": "0x43901ccc"
+    },
+    {
+     "site": "0x43902368",
+     "tipo": "bl16",
+     "dest": "0x4390236e"
+    }
+   ],
+   "destinos_unicos": [
+    "0x4356120c",
+    "0x43561260",
+    "0x435612d0",
+    "0x435612ec",
+    "0x43561324",
+    "0x43900ff8",
+    "0x43901b7c",
+    "0x43901ccc",
+    "0x43901d00",
+    "0x43902330",
+    "0x4390236e",
+    "0x43b2a18e"
+   ]
+  },
+  {
+   "func": "0x439023b8",
+   "nombre": "UTIL MS Mgr) Call CB (invocacion del callback del gestor MS)",
+   "n_sitios": 2,
+   "trazas": [
+    {
+     "site": "0x439023d8",
+     "vaddr": "0x43cce63d",
+     "text": "[CAM_UTIL_SENS]: UTIL MS Mgr) Call CB [Flg]%x"
+    },
+    {
+     "site": "0x439023f0",
+     "vaddr": "0x43cce66b",
+     "text": "[CAM_UTIL_SENS]: UTIL MS Mgr) ## CALL BACK NULL Error!!! ##[Flg]%x"
+    }
+   ],
+   "vaddr_fin_estimado": "0x43902418",
+   "llamadas": [
+    {
+     "site": "0x439023da",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x439023e4",
+     "tipo": "bl16",
+     "dest": "0x439023fc"
+    },
+    {
+     "site": "0x439023f2",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    }
+   ],
+   "destinos_unicos": [
+    "0x43901b7c",
+    "0x439023fc"
+   ]
+  },
+  {
+   "func": "0x43902418",
+   "nombre": "Debug IM Sync Open (variante sincrona de la apertura)",
+   "n_sitios": 7,
+   "trazas": [
+    {
+     "site": "0x43902498",
+     "vaddr": "0x43cce3fa",
+     "text": "[CAM_UTIL_SENS]: >>[FILE_NUM]%x [ADR]%x [SIZE]%x"
+    },
+    {
+     "site": "0x439024c6",
+     "vaddr": "0x43cce42b",
+     "text": "[CAM_UTIL_SENS]: >>[STAT]%x [FSYSMODE]"
+    },
+    {
+     "site": "0x43902450",
+     "vaddr": "0x43cce4bd",
+     "text": "[CAM_UTIL_SENS]:  Debug IM Sync Open OSAL MEM ALLOC Error : %x"
+    },
+    {
+     "site": "0x4390250c",
+     "vaddr": "0x43cce4fc",
+     "text": "[CAM_UTIL_SENS]:   >> [SndMsgErrInfo]%x"
+    },
+    {
+     "site": "0x4390252e",
+     "vaddr": "0x43cce524",
+     "text": "[CAM_UTIL_SENS]:   >> [RcvMsgErr]%x"
+    },
+    {
+     "site": "0x43902558",
+     "vaddr": "0x43cce548",
+     "text": "[CAM_UTIL_SENS]:   >> Recieve UnKnown Msg [CID]%x"
+    },
+    {
+     "site": "0x43902590",
+     "vaddr": "0x43cce57a",
+     "text": "[CAM_UTIL_SENS]:   Debug IM Sync Open end[Flg]%x"
+    }
+   ],
+   "vaddr_fin_estimado": "0x43902604",
+   "llamadas": [
+    {
+     "site": "0x43902424",
+     "tipo": "bl",
+     "dest": "0x43900ff8"
+    },
+    {
+     "site": "0x43902432",
+     "tipo": "bl",
+     "dest": "0x43901ccc"
+    },
+    {
+     "site": "0x4390243e",
+     "tipo": "bl",
+     "dest": "0x435612d0"
+    },
+    {
+     "site": "0x43902452",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x4390245e",
+     "tipo": "bl",
+     "dest": "0x43901ccc"
+    },
+    {
+     "site": "0x43902464",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x43902468",
+     "tipo": "bl16",
+     "dest": "0x439025ae"
+    },
+    {
+     "site": "0x43902470",
+     "tipo": "bl",
+     "dest": "0x43561324"
+    },
+    {
+     "site": "0x43902476",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x4390247e",
+     "tipo": "bl",
+     "dest": "0x43b2a18e"
+    },
+    {
+     "site": "0x439024b2",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x439024c8",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x439024ce",
+     "tipo": "bl",
+     "dest": "0x43901ca0"
+    },
+    {
+     "site": "0x439024d4",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x439024da",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x439024e6",
+     "tipo": "bl",
+     "dest": "0x43901ccc"
+    },
+    {
+     "site": "0x439024ec",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x439024f2",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x439024fa",
+     "tipo": "bl",
+     "dest": "0x4356120c"
+    },
+    {
+     "site": "0x4390250e",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x43902514",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x4390251e",
+     "tipo": "bl",
+     "dest": "0x43561260"
+    },
+    {
+     "site": "0x43902532",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x4390253e",
+     "tipo": "bl",
+     "dest": "0x43901ccc"
+    },
+    {
+     "site": "0x43902544",
+     "tipo": "bl",
+     "dest": "0x43901d00"
+    },
+    {
+     "site": "0x4390255a",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x43902562",
+     "tipo": "bl",
+     "dest": "0x435612ec"
+    },
+    {
+     "site": "0x43902570",
+     "tipo": "bl16",
+     "dest": "0x43902576"
+    },
+    {
+     "site": "0x43902580",
+     "tipo": "bl",
+     "dest": "0x43561324"
+    },
+    {
+     "site": "0x43902592",
+     "tipo": "bl",
+     "dest": "0x43901b7c"
+    },
+    {
+     "site": "0x4390259e",
+     "tipo": "bl",
+     "dest": "0x43901ccc"
+    },
+    {
+     "site": "0x439025aa",
+     "tipo": "bl",
+     "dest": "0x43901ccc"
+    }
+   ],
+   "destinos_unicos": [
+    "0x4356120c",
+    "0x43561260",
+    "0x435612d0",
+    "0x435612ec",
+    "0x43561324",
+    "0x43900ff8",
+    "0x43901b7c",
+    "0x43901ca0",
+    "0x43901ccc",
+    "0x43901d00",
+    "0x43902576",
+    "0x439025ae",
+    "0x43b2a18e"
+   ]
+  }
+ ],
+ "llamantes": {
+  "0x439012d0": {
+   "n_llamadas_bl": 0,
+   "llamadas_bl": [],
+   "punteros_absolutos_4B": [
+    "0x44022d84"
+   ]
+  },
+  "0x43901d50": {
+   "n_llamadas_bl": 17,
+   "llamadas_bl": [
+    {
+     "site": "0x4376bf92",
+     "tipo": "bl"
+    },
+    {
+     "site": "0x43783136",
+     "tipo": "bl"
+    },
+    {
+     "site": "0x437ee214",
+     "tipo": "bl"
+    },
+    {
+     "site": "0x4387375c",
+     "tipo": "bl"
+    },
+    {
+     "site": "0x43873b5c",
+     "tipo": "bl"
+    },
+    {
+     "site": "0x43873b96",
+     "tipo": "bl"
+    },
+    {
+     "site": "0x43873bec",
+     "tipo": "bl"
+    },
+    {
+     "site": "0x43873c0c",
+     "tipo": "bl"
+    },
+    {
+     "site": "0x43873c3a",
+     "tipo": "bl"
+    },
+    {
+     "site": "0x4387883c",
+     "tipo": "bl"
+    },
+    {
+     "site": "0x4387888a",
+     "tipo": "bl"
+    },
+    {
+     "site": "0x438b834a",
+     "tipo": "bl"
+    },
+    {
+     "site": "0x439f7bda",
+     "tipo": "bl"
+    },
+    {
+     "site": "0x439f7c7c",
+     "tipo": "bl"
+    },
+    {
+     "site": "0x439f7d4e",
+     "tipo": "bl"
+    },
+    {
+     "site": "0x439f7e34",
+     "tipo": "bl"
+    },
+    {
+     "site": "0x43b723b8",
+     "tipo": "bl"
+    }
+   ],
+   "punteros_absolutos_4B": []
+  },
+  "0x43902168": {
+   "n_llamadas_bl": 4,
+   "llamadas_bl": [
+    {
+     "site": "0x43782644",
+     "tipo": "bl"
+    },
+    {
+     "site": "0x43782650",
+     "tipo": "bl"
+    },
+    {
+     "site": "0x43782904",
+     "tipo": "bl"
+    },
+    {
+     "site": "0x4382cea2",
+     "tipo": "bl"
+    }
+   ],
+   "punteros_absolutos_4B": []
+  },
+  "0x439023b8": {
+   "n_llamadas_bl": 1,
+   "llamadas_bl": [
+    {
+     "site": "0x43900c9c",
+     "tipo": "bl"
+    }
+   ],
+   "punteros_absolutos_4B": []
+  },
+  "0x43902418": {
+   "n_llamadas_bl": 1,
+   "llamadas_bl": [
+    {
+     "site": "0x437894dc",
+     "tipo": "bl"
+    }
+   ],
+   "punteros_absolutos_4B": []
+  }
+ },
+ "ayudantes": [
+  {
+   "vaddr": "0x43900e30",
+   "rol": "[CAMERA_ADJ] Utility MS Mount Start (usado por el CB de BKID)"
+  },
+  {
+   "vaddr": "0x43900f18",
+   "rol": "[CAMERA_ADJ] Utility MS UnMount Start (usado por el CB de BKID)"
+  },
+  {
+   "vaddr": "0x43900ff8",
+   "rol": "getFlg: devuelve un byte global (el 'Flg'/'MountSTAT' de las trazas)"
+  },
+  {
+   "vaddr": "0x439010dc",
+   "rol": "setter de parametro (usado por 0x43901380)"
+  },
+  {
+   "vaddr": "0x43901150",
+   "rol": "log [CAM_UTIL_SENS] (formato + varargs -> mensaje OSAL)"
+  },
+  {
+   "vaddr": "0x43901274",
+   "rol": "setParam16: escribe un valor en el bloque de parametros global"
+  },
+  {
+   "vaddr": "0x4390129c",
+   "rol": "setParam4: escribe 4 bytes en el bloque de parametros global"
+  },
+  {
+   "vaddr": "0x43901380",
+   "rol": "seleccion de una entrada de una tabla global (indice r0)"
+  },
+  {
+   "vaddr": "0x43901b7c",
+   "rol": "log [CAM_UTIL_SENS] (2.a copia del ayudante de log)"
+  },
+  {
+   "vaddr": "0x43901c04",
+   "rol": "envia el mensaje OSAL con la plantilla de 12 B"
+  },
+  {
+   "vaddr": "0x43901ca0",
+   "rol": "setParam16b: escribe u16 en +8 y 0 en +0xa del bloque global"
+  },
+  {
+   "vaddr": "0x43901ccc",
+   "rol": "setParam4b: escribe 4 bytes (+8,+9,+0xa,+0xb) del bloque global"
+  },
+  {
+   "vaddr": "0x43901d00",
+   "rol": "setParam32: escribe un u32 en +8 del bloque global"
+  }
+ ],
+ "cadenas_referenciadas_en_banda": [
+  {
+   "dest": "0x43900c45",
+   "text": "",
+   "n_sites": 1,
+   "sites": [
+    "0x439010a6"
+   ]
+  },
+  {
+   "dest": "0x439010f1",
+   "text": "",
+   "n_sites": 1,
+   "sites": [
+    "0x43901462"
+   ]
+  },
+  {
+   "dest": "0x43cce1ea",
+   "text": "[CAM_UTIL_SENS]: CB for BKID change [BKID]:%x [Size]:%x",
+   "n_sites": 1,
+   "sites": [
+    "0x4390130e"
+   ]
+  },
+  {
+   "dest": "0x43cce222",
+   "text": "[CAM_UTIL_SENS]:                    [SWFLG]:%x",
+   "n_sites": 1,
+   "sites": [
+    "0x43901326"
+   ]
+  },
+  {
+   "dest": "0x43cce251",
+   "text": "[CAM_UTIL_SENS]:                    [MODEFLG]:%x",
+   "n_sites": 1,
+   "sites": [
+    "0x4390133a"
+   ]
+  },
+  {
+   "dest": "0x43cce282",
+   "text": "[CAM_UTIL]: EvtDrvnTsk) Send Err tid:%d->%d, func:%08x, arg:%x, %x",
+   "n_sites": 1,
+   "sites": [
+    "0x43901938"
+   ]
+  },
+  {
+   "dest": "0x43cce28e",
+   "text": "EvtDrvnTsk) Send Err tid:%d->%d, func:%08x, arg:%x, %x",
+   "n_sites": 1,
+   "sites": [
+    "0x43901944"
+   ]
+  },
+  {
+   "dest": "0x43cce2c5",
+   "text": "[CAM_UTIL]: EvtDrvnTsk) Send Err Print Max...",
+   "n_sites": 1,
+   "sites": [
+    "0x43901968"
+   ]
+  },
+  {
+   "dest": "0x43cce2d1",
+   "text": "EvtDrvnTsk) Send Err Print Max...",
+   "n_sites": 1,
+   "sites": [
+    "0x43901970"
+   ]
+  },
+  {
+   "dest": "0x43cce2f3",
+   "text": "[CAM_UTIL]: Task tid:%d, func:%08x, arg:%x, %x",
+   "n_sites": 1,
+   "sites": [
+    "0x439019e2"
+   ]
+  },
+  {
+   "dest": "0x43cce2ff",
+   "text": "Task tid:%d, func:%08x, arg:%x, %x",
+   "n_sites": 1,
+   "sites": [
+    "0x439019f0"
+   ]
+  },
+  {
+   "dest": "0x43cce322",
+   "text": "[CAM_UTIL_SENS]:   Debug IM ASync Open start",
+   "n_sites": 1,
+   "sites": [
+    "0x43901d7c"
+   ]
+  },
+  {
+   "dest": "0x43cce34f",
+   "text": "[CAM_UTIL_SENS]: [FileNum]%04x [Adr]%x [Size]%x",
+   "n_sites": 2,
+   "sites": [
+    "0x43901d90",
+    "0x43901f18"
+   ]
+  },
+  {
+   "dest": "0x43cce37f",
+   "text": "[CAM_UTIL_SENS]: [Flg]%04x [MountSTAT]%04x [FsysMode]%04x",
+   "n_sites": 3,
+   "sites": [
+    "0x43901db0",
+    "0x43901f36",
+    "0x439021c0"
+   ]
+  },
+  {
+   "dest": "0x43cce3b9",
+   "text": "[CAM_UTIL_SENS]:   Debug IM ASync Open OSAL MEM ALLOC Error : %x",
+   "n_sites": 1,
+   "sites": [
+    "0x43901e06"
+   ]
+  },
+  {
+   "dest": "0x43cce3fa",
+   "text": "[CAM_UTIL_SENS]: >>[FILE_NUM]%x [ADR]%x [SIZE]%x",
+   "n_sites": 4,
+   "sites": [
+    "0x43901e48",
+    "0x43902030",
+    "0x43902264",
+    "0x43902498"
+   ]
+  },
+  {
+   "dest": "0x43cce42b",
+   "text": "[CAM_UTIL_SENS]: >>[STAT]%x [FSYSMODE]",
+   "n_sites": 4,
+   "sites": [
+    "0x43901e6a",
+    "0x4390204e",
+    "0x43902286",
+    "0x439024c6"
+   ]
+  },
+  {
+   "dest": "0x43cce452",
+   "text": "[CAM_UTIL_SENS]:   Debug IM ASync Open end [ErrInfo]%x [Flg]%x",
+   "n_sites": 1,
+   "sites": [
+    "0x43901eca"
+   ]
+  },
+  {
+   "dest": "0x43cce491",
+   "text": "[CAM_UTIL_SENS]:   Debug IM Sync Open start",
+   "n_sites": 1,
+   "sites": [
+    "0x43901f04"
+   ]
+  },
+  {
+   "dest": "0x43cce4bd",
+   "text": "[CAM_UTIL_SENS]:  Debug IM Sync Open OSAL MEM ALLOC Error : %x",
+   "n_sites": 2,
+   "sites": [
+    "0x43901f8c",
+    "0x43902450"
+   ]
+  },
+  {
+   "dest": "0x43cce4fc",
+   "text": "[CAM_UTIL_SENS]:   >> [SndMsgErrInfo]%x",
+   "n_sites": 3,
+   "sites": [
+    "0x43902094",
+    "0x439022c6",
+    "0x4390250c"
+   ]
+  },
+  {
+   "dest": "0x43cce524",
+   "text": "[CAM_UTIL_SENS]:   >> [RcvMsgErr]%x",
+   "n_sites": 3,
+   "sites": [
+    "0x439020b6",
+    "0x439022e8",
+    "0x4390252e"
+   ]
+  },
+  {
+   "dest": "0x43cce548",
+   "text": "[CAM_UTIL_SENS]:   >> Recieve UnKnown Msg [CID]%x",
+   "n_sites": 3,
+   "sites": [
+    "0x439020e0",
+    "0x43902312",
+    "0x43902558"
+   ]
+  },
+  {
+   "dest": "0x43cce57a",
+   "text": "[CAM_UTIL_SENS]:   Debug IM Sync Open end[Flg]%x",
+   "n_sites": 3,
+   "sites": [
+    "0x43902118",
+    "0x4390234a",
+    "0x43902590"
+   ]
+  },
+  {
+   "dest": "0x43cce5ab",
+   "text": "[CAM_UTIL_SENS]: SET FILE NUM Func",
+   "n_sites": 1,
+   "sites": [
+    "0x43902180"
+   ]
+  },
+  {
+   "dest": "0x43cce5ce",
+   "text": "[CAM_UTIL_SENS]: [FileNum]%02x [Adr]%x [Size]%x",
+   "n_sites": 1,
+   "sites": [
+    "0x43902198"
+   ]
+  },
+  {
+   "dest": "0x43cce5fe",
+   "text": "[CAM_UTIL_SENS]:   SET FILE NUM Func OSAL MEM ALLOC Error : %x",
+   "n_sites": 1,
+   "sites": [
+    "0x4390220e"
+   ]
+  },
+  {
+   "dest": "0x43cce63d",
+   "text": "[CAM_UTIL_SENS]: UTIL MS Mgr) Call CB [Flg]%x",
+   "n_sites": 1,
+   "sites": [
+    "0x439023d8"
+   ]
+  },
+  {
+   "dest": "0x43cce66b",
+   "text": "[CAM_UTIL_SENS]: UTIL MS Mgr) ## CALL BACK NULL Error!!! ##[Flg]%x",
+   "n_sites": 1,
+   "sites": [
+    "0x439023f0"
+   ]
+  },
+  {
+   "dest": "0x43f04dd0",
+   "text": "",
+   "n_sites": 6,
+   "sites": [
+    "0x4390095e",
+    "0x439009cc",
+    "0x439009f6",
+    "0x43900c20",
+    "0x43900dfe",
+    "0x43901078"
+   ]
+  },
+  {
+   "dest": "0x43f04ddc",
+   "text": "",
+   "n_sites": 1,
+   "sites": [
+    "0x439010be"
+   ]
+  },
+  {
+   "dest": "0x43f04de0",
+   "text": "",
+   "n_sites": 2,
+   "sites": [
+    "0x43900d5a",
+    "0x439010b2"
+   ]
+  },
+  {
+   "dest": "0x43f04df8",
+   "text": "",
+   "n_sites": 2,
+   "sites": [
+    "0x43900d6e",
+    "0x4390106e"
+   ]
+  },
+  {
+   "dest": "0x43f04dfc",
+   "text": "",
+   "n_sites": 3,
+   "sites": [
+    "0x439007be",
+    "0x43900d7e",
+    "0x439010bc"
+   ]
+  },
+  {
+   "dest": "0x43f04e04",
+   "text": "",
+   "n_sites": 2,
+   "sites": [
+    "0x439013c0",
+    "0x4390146e"
+   ]
+  },
+  {
+   "dest": "0x43f04e1c",
+   "text": "",
+   "n_sites": 2,
+   "sites": [
+    "0x439013da",
+    "0x43901444"
+   ]
+  },
+  {
+   "dest": "0x43f04e20",
+   "text": "",
+   "n_sites": 5,
+   "sites": [
+    "0x439010e0",
+    "0x4390120a",
+    "0x43901278",
+    "0x439012a2",
+    "0x43901408"
+   ]
+  },
+  {
+   "dest": "0x43f062bc",
+   "text": "",
+   "n_sites": 1,
+   "sites": [
+    "0x439017d8"
+   ]
+  },
+  {
+   "dest": "0x43f062c8",
+   "text": "",
+   "n_sites": 5,
+   "sites": [
+    "0x43901c36",
+    "0x43901ca6",
+    "0x43901cd2",
+    "0x43901d04",
+    "0x43901d34"
+   ]
+  },
+  {
+   "dest": "0x43f062d4",
+   "text": "",
+   "n_sites": 3,
+   "sites": [
+    "0x43901d3e",
+    "0x43901ef0",
+    "0x439023c4"
+   ]
+  },
+  {
+   "dest": "0x43fa29f0",
+   "text": "",
+   "n_sites": 10,
+   "sites": [
+    "0x43900cb6",
+    "0x43900cf0",
+    "0x43900d66",
+    "0x43900e4c",
+    "0x43900ee6",
+    "0x43900f34",
+    "0x43900fc4",
+    "0x43900ffa",
+    "0x43901020",
+    "0x4390105a"
+   ]
+  },
+  {
+   "dest": "0x43fa2d0a",
+   "text": "",
+   "n_sites": 4,
+   "sites": [
+    "0x43901498",
+    "0x43901652",
+    "0x4390176c",
+    "0x4390177c"
+   ]
+  },
+  {
+   "dest": "0x43fa2d0b",
+   "text": "",
+   "n_sites": 1,
+   "sites": [
+    "0x4390179e"
+   ]
+  },
+  {
+   "dest": "0x43fa2d0e",
+   "text": "",
+   "n_sites": 1,
+   "sites": [
+    "0x439017a6"
+   ]
+  },
+  {
+   "dest": "0x43fa2d22",
+   "text": "",
+   "n_sites": 2,
+   "sites": [
+    "0x43901908",
+    "0x43901952"
+   ]
+  },
+  {
+   "dest": "0x43fa2d23",
+   "text": "",
+   "n_sites": 9,
+   "sites": [
+    "0x43901d2e",
+    "0x43901d7e",
+    "0x43901ec0",
+    "0x43901f06",
+    "0x43902106",
+    "0x43902184",
+    "0x43902338",
+    "0x439023be",
+    "0x4390257e"
+   ]
+  },
+  {
+   "dest": "0x4401eee4",
+   "text": "",
+   "n_sites": 13012,
+   "sites": [
+    "0x4354357e",
+    "0x435438bc",
+    "0x43544352",
+    "0x43544436",
+    "0x43544952",
+    "0x435454d2",
+    "0x43545cde",
+    "0x43546222",
+    "0x43546580",
+    "0x435469ba",
+    "0x43546d00",
+    "0x43547126",
+    "0x43547374",
+    "0x435474fc",
+    "0x43547c3a",
+    "0x43547f5a",
+    "0x43548180",
+    "0x43548486",
+    "0x43548df4",
+    "0x43548e38"
+   ]
+  }
+ ],
+ "globales_banda": [
+  {
+   "add": "0x43901cd2",
+   "ldr": "0x43901cce",
+   "base": "0x43f062c8",
+   "rol": "bloque de parametros del modulo (SENS): lo usan 0x43901ccc/0x43901ca0/0x43901d00 (y es la plantilla de 12 B del mensaje)"
+  },
+  {
+   "add": "0x43900ffa",
+   "ldr": "0x43900ff8",
+   "base": "0x43fa29f0",
+   "rol": "byte global 'MountSTAT'/'STAT' (lo devuelve 0x43900ff8)"
+  },
+  {
+   "add": "0x43901d7e",
+   "ldr": "0x43901d78",
+   "base": "0x43fa2d23",
+   "rol": "byte global 'Flg' (lo leen las trazas '[Flg]%04x')"
+  },
+  {
+   "add": "0x439023be",
+   "ldr": "0x439023bc",
+   "base": "0x43fa2d23",
+   "rol": "el mismo byte 'Flg' (lo pone a 0 'UTIL MS Mgr) Call CB')"
+  },
+  {
+   "add": "0x439023c4",
+   "ldr": "0x439023c2",
+   "base": "0x43f062d4",
+   "rol": "puntero al callback del gestor MS (invocado con blx r3)"
+  },
+  {
+   "add": "0x43901d5e",
+   "ldr": "0x43901d56",
+   "base": "0x4401eee4",
+   "rol": "base de la tabla de objetos 'sl' de 0x43901d50"
+  },
+  {
+   "add": "0x439012e4",
+   "ldr": "0x439012de",
+   "base": "0x4401eee4",
+   "rol": "base del objeto global copiado en el CB de BKID (0x439012d0)"
+  }
+ ],
+ "vecindario_0x43900000_0x43910000": {
+  "(sin etiqueta)": {
+   "n_cadenas": 274,
+   "funciones": [
+    "0x43900234",
+    "0x439002cc",
+    "0x43900380",
+    "0x43900460",
+    "0x4390053c",
+    "0x439007b0",
+    "0x4390092c",
+    "0x43900a24",
+    "0x43900c44",
+    "0x43900d54",
+    "0x439010a0",
+    "0x439010dc",
+    "0x439013be",
+    "0x4390145c",
+    "0x43901480",
+    "0x4390178e",
+    "0x439018b0",
+    "0x4390199c",
+    "0x43901c04",
+    "0x43901ccc",
+    "0x439026f8",
+    "0x43902a34",
+    "0x43902c2c",
+    "0x43902df8",
+    "0x43902fbc",
+    "0x43903118",
+    "0x43903280",
+    "0x43903414",
+    "0x43903558",
+    "0x439035e0",
+    "0x4390366c",
+    "0x43903720",
+    "0x439037c0",
+    "0x43903b80",
+    "0x43903d5c",
+    "0x4390400e",
+    "0x4390406c",
+    "0x439041ee",
+    "0x439044b8",
+    "0x43904544",
+    "0x43904590",
+    "0x439046d0",
+    "0x43904874",
+    "0x43904aa0",
+    "0x43904ab4",
+    "0x43904be8",
+    "0x43904c4a",
+    "0x43905362",
+    "0x43905430",
+    "0x43906a22",
+    "0x43906ab6",
+    "0x43906ad2",
+    "0x43906b06",
+    "0x43906be4",
+    "0x43906c04",
+    "0x43906fee",
+    "0x439074c0",
+    "0x43907b24",
+    "0x43907bc6",
+    "0x43907f54",
+    "0x43908244",
+    "0x439082c0",
+    "0x43908308",
+    "0x43908434",
+    "0x43908460",
+    "0x43908474",
+    "0x43908564",
+    "0x43908d5c",
+    "0x439093a4",
+    "0x43909ad8",
+    "0x43909b34",
+    "0x43909b88",
+    "0x43909bdc",
+    "0x43909f7c",
+    "0x4390a128",
+    "0x4390a164",
+    "0x4390a244",
+    "0x4390af54",
+    "0x4390b004",
+    "0x4390b090",
+    "0x4390b104",
+    "0x4390b1e0",
+    "0x4390b4a0",
+    "0x4390c198",
+    "0x4390c3cc",
+    "0x4390c4e0",
+    "0x4390c5fe",
+    "0x4390cbc4",
+    "0x4390dc04",
+    "0x4390ddc6",
+    "0x4390ddee",
+    "0x4390df1e",
+    "0x4390e050",
+    "0x4390e0a8",
+    "0x4390e0fc",
+    "0x4390e1a4",
+    "0x4390e210",
+    "0x4390e2a8",
+    "0x4390e514",
+    "0x4390e5b8",
+    "0x4390e68c",
+    "0x4390e720",
+    "0x4390e7d4",
+    "0x4390e95c",
+    "0x4390eae4",
+    "0x4390ed94",
+    "0x4390efd4",
+    "0x4390f058",
+    "0x4390f094",
+    "0x4390f14e",
+    "0x4390f274",
+    "0x4390f418",
+    "0x4390f468",
+    "0x4390f4d4",
+    "0x4390f628",
+    "0x4390f7fc",
+    "0x4390f858",
+    "0x4390fd88",
+    "0x4390ffd8"
+   ]
+  },
+  "CAM_DMM": {
+   "n_cadenas": 54,
+   "funciones": [
+    "0x43902a34",
+    "0x43902c2c",
+    "0x43902df8",
+    "0x43902fbc",
+    "0x43903118",
+    "0x43903280",
+    "0x43903414",
+    "0x43903558",
+    "0x439035e0",
+    "0x4390366c",
+    "0x43903720",
+    "0x439037c0",
+    "0x43903b80",
+    "0x43903d5c"
+   ]
+  },
+  "CAM_UTIL_ADJ": {
+   "n_cadenas": 22,
+   "funciones": [
+    "0x439007b0",
+    "0x43900a24",
+    "0x43900c44"
+   ]
+  },
+  "CAM_UTIL_SENS": {
+   "n_cadenas": 21,
+   "funciones": [
+    "0x439012d0",
+    "0x43901d50",
+    "0x43902168",
+    "0x439023b8"
+   ]
+  },
+  "CAM_UTIL": {
+   "n_cadenas": 7,
+   "funciones": [
+    "0x43900234",
+    "0x439018b0",
+    "0x4390199c",
+    "0x4390400e",
+    "0x4390406c"
+   ]
+  },
+  "ZPD": {
+   "n_cadenas": 5,
+   "funciones": [
+    "0x43904ab4",
+    "0x43904be8",
+    "0x43904c90",
+    "0x43904cfc"
+   ]
+  },
+  "CAMERA_ADJ": {
+   "n_cadenas": 3,
+   "funciones": [
+    "0x43900d54",
+    "0x43900e30",
+    "0x43900f1c"
+   ]
+  }
+ },
+ "cadenas_sens_por_firmware": {
+  "a6000_fw321": [
+   "Sens:BkWrPoffAsync",
+   "Sens:BkWrPoffAsync Err",
+   "Sens:BkWrPoffAsync End",
+   "Sens:BkSyncCb",
+   "Sens:BkSyncCb busy",
+   "Sens:BkSyncCb writing",
+   "Sens:BkSyncCb Tgt NULL",
+   "Sens:BkWrSync",
+   "Sens:BkWrSync NoBk",
+   "Sens:BkWrSync Attr Err",
+   "Sens:BkWrSync size err",
+   "Sens:BkSyncCb snd err",
+   "Sens:BkSyncCb res err",
+   "Sens:BkSyncCb CAIF",
+   "Sens:AdjCmd CAIF",
+   "Sens:Invalid block",
+   "Sens:Invalid code",
+   "Sens:Invalid offset",
+   "Sens:Invalid size",
+   "Sens:Read only",
+   "Sens:Write only",
+   "Sens:no buf",
+   "Sens:RAM Write",
+   "Sens:RAM Read",
+   "Sens:AdjCmd DwnCamera",
+   "Sens:System error",
+   "Sens:DwnCamera Done"
+  ],
+  "a7s_fw320": [
+   "Sens:BkWrPoffAsync",
+   "Sens:BkWrPoffAsync Err",
+   "Sens:BkWrPoffAsync End",
+   "Sens:BkSyncCb",
+   "Sens:BkSyncCb busy",
+   "Sens:BkSyncCb writing",
+   "Sens:BkSyncCb Tgt NULL",
+   "Sens:BkWrSync",
+   "Sens:BkWrSync NoBk",
+   "Sens:BkWrSync Attr Err",
+   "Sens:BkWrSync size err",
+   "Sens:BkSyncCb snd err",
+   "Sens:BkSyncCb res err",
+   "Sens:BkSyncCb CAIF",
+   "Sens:AdjCmd CAIF",
+   "Sens:Invalid block",
+   "Sens:Invalid code",
+   "Sens:Invalid offset",
+   "Sens:Invalid size",
+   "Sens:Read only",
+   "Sens:Write only",
+   "Sens:no buf",
+   "Sens:RAM Write",
+   "Sens:RAM Read",
+   "Sens:AdjCmd DwnCamera",
+   "Sens:System error",
+   "Sens:DwnCamera Done"
+  ],
+  "a6300_fw201": [
+   "Sens:BkWrPoffAsync",
+   "Sens:BkWrPoffAsync Err",
+   "Sens:BkWrPoffAsync End",
+   "Sens:BkSyncCb",
+   "Sens:BkSyncCb busy",
+   "Sens:BkSyncCb writing",
+   "Sens:BkSyncCb Tgt NULL",
+   "Sens:BkWrSync",
+   "Sens:BkWrSync NoBk",
+   "Sens:BkWrSync Attr Err",
+   "Sens:BkWrSync size err",
+   "Sens:BkSyncCb snd err",
+   "Sens:BkSyncCb res err",
+   "Sens:BkSyncCb CAIF",
+   "Sens:AdjCmd CAIF",
+   "Sens:Invalid block",
+   "Sens:Invalid code",
+   "Sens:Invalid offset",
+   "Sens:Invalid size",
+   "Sens:Read only",
+   "Sens:Write only",
+   "Sens:no buf",
+   "Sens:RAM Write",
+   "Sens:RAM Read",
+   "Sens:AdjCmd DwnCamera",
+   "Sens:System error",
+   "Sens:DwnCamera Done"
+  ]
+ },
+ "ficheros_fuente_referenciados_en_banda": [],
+ "negativo_obturador_iris_iso": {},
+ "diferencial": {
+  "n_cadenas_a6000": 21,
+  "n_ocurrencias_a6000": 21,
+  "n_cadenas_a7s": 0,
+  "n_cadenas_a6300": 0,
+  "interiores_presentes_a7s": 0,
+  "interiores_presentes_a6300": 0,
+  "interiores": [
+   "CB for BKID change [BKID]:%x [Size]:%x",
+   "[SWFLG]:%x",
+   "[MODEFLG]:%x",
+   "Debug IM ASync Open start",
+   "[FileNum]%04x [Adr]%x [Size]%x",
+   "[Flg]%04x [MountSTAT]%04x [FsysMode]%04x",
+   "Debug IM ASync Open OSAL MEM ALLOC Error : %x",
+   ">>[FILE_NUM]%x [ADR]%x [SIZE]%x",
+   ">>[STAT]%x [FSYSMODE]",
+   "Debug IM ASync Open end [ErrInfo]%x [Flg]%x",
+   "Debug IM Sync Open start",
+   "Debug IM Sync Open OSAL MEM ALLOC Error : %x",
+   ">> [SndMsgErrInfo]%x",
+   ">> [RcvMsgErr]%x",
+   ">> Recieve UnKnown Msg [CID]%x",
+   "Debug IM Sync Open end[Flg]%x",
+   "SET FILE NUM Func",
+   "[FileNum]%02x [Adr]%x [Size]%x",
+   "SET FILE NUM Func OSAL MEM ALLOC Error : %x",
+   "UTIL MS Mgr) Call CB [Flg]%x",
+   "UTIL MS Mgr) ## CALL BACK NULL Error!!! ##[Flg]%x"
+  ],
+  "marcas_auxiliares": {
+   "[CAM_UTIL_SENS]": {
+    "a6000": 21,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "[CAM_UTIL_ADJ]": {
+    "a6000": 22,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "[CAM_UTIL]": {
+    "a6000": 10,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "[CAMERA_ADJ]": {
+    "a6000": 3,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "UTIL MS Mgr": {
+    "a6000": 2,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "Debug IM ASync Open": {
+    "a6000": 3,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "Debug IM Sync Open": {
+    "a6000": 3,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "SET FILE NUM": {
+    "a6000": 2,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "SWFLG": {
+    "a6000": 1,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "MODEFLG": {
+    "a6000": 1,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "FileNum": {
+    "a6000": 2,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "MountSTAT": {
+    "a6000": 1,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "FsysMode": {
+    "a6000": 1,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "CALL BACK NULL": {
+    "a6000": 1,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "CB for BKID change": {
+    "a6000": 1,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "cam_util_debug_file_write": {
+    "a6000": 3,
+    "a7s": 2,
+    "a6300": 2
+   },
+   "MemAreaMSDebug": {
+    "a6000": 4,
+    "a7s": 4,
+    "a6300": 10
+   },
+   "MS_Writer": {
+    "a6000": 1,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "WiriteMsDebug": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "BKID": {
+    "a6000": 28,
+    "a7s": 23,
+    "a6300": 22
+   },
+   "Sens:": {
+    "a6000": 27,
+    "a7s": 27,
+    "a6300": 27
+   },
+   "SensRamAcs": {
+    "a6000": 2,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "Senser RAM Access": {
+    "a6000": 1,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "tsk_cam_adjctrl": {
+    "a6000": 3,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "cam_adjcmd_handle_cb": {
+    "a6000": 1,
+    "a7s": 0,
+    "a6300": 0
+   }
+  }
+ }
+}
