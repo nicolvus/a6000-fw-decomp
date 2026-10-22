@@ -35,10 +35,9 @@ y un pool literal, pero no se convierte por ello en función confirmada.
 Una búsqueda de procedimientos no modelados y xrefs vacíos caracteriza solo
 la cobertura del análisis. En particular no prueba ausencia del código, que un
 camino se ejecute, ni que el `BL` sea llamado en una captura real. El siguiente
-paso útil y acotado es sembrar **solo** las entradas Thumb observadas
-`0x437b617e` y `0x43843a44` en REA y recuperar `procedure_info` más referencias
-salientes; para el caller de `0x437b617e`, rastrear referencias a tablas/callbacks.
-Después se puede seguir la transferencia a S y buscar el store a `S[0]`.
+paso útil y acotado se evaluó en S146: la superficie REA actual no puede
+sembrar funciones. El seguimiento pendiente debe usar recorrido estático
+reproducible de los bytes, sin presentar la falta de CFG como ausencia de código.
 No se atribuye significado eléctrico ni se modifica S51.
 
 ```sh
