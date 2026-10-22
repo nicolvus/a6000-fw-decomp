@@ -6,6 +6,8 @@
 
 - DONE S302 Tablas de drive mode/exposición (S124, S134, S140) A7S vs A6000 campo a campo. **Evidencia**: `docs/capture/s302-drive-mode-exposure-tables.md`. Hallazgos: 11 filas (4 idénticos, 7 distintos); A6000 sin modos Silent (0x4e/0x4f), sin selector tipo==2, fórmula svd aritmética vs columnas estáticas A7S.
 
+- DONE S304 REA/Ghidra: callers de `FUN_43858338` (dumper gates S153) y código que carga GOT `0x4401f080` (tabla `0x43ff3200`). **Evidencia**: `docs/capture/s304-rea-dumper-callers.md`. Hallazgos: dumper en 0x438581e8 lee gates state+3/state+6, caller único FUN_43858390 con 13 callsites en bucle; GOT 0x4401f080 acceso vía literal pool (sin xrefs REA); writers gates NO_VERIFICADOS.
+
 - TODO S301 Mismo barrido en A7S fw3.20; tabla de diferencias.
 
-- TODO S304 REA/Ghidra: callers de `FUN_43858338` (dumper gates S153) y código que carga GOT `0x4401f080` (tabla `0x43ff3200`).
+- TODO S305 Analizar `FUN_43858390` por tramos (REA `file-offset`) para entender bucle principal; buscar literal pool `0x4401f080` (Ghidra `findReferencesTo`).
