@@ -1,5 +1,11 @@
 # Estado actual — léeme primero
 
+## S157 — lector de snapshot del estado (22-10-2026)
+
+`0x43859954` lee el GOT slot `0x4401f990` y obtiene el puntero `0x43f72d02`; `FUN_43859944` lee `+5`, condicional `+0xf`, vuelca/copía a buffer y escribe un global distinto. No hay stores `+3/+6` en este cuerpo. **Límite local**, no ausencia global. [S157](../docs/capture/s157-imager-state-snapshot.md), JSON/3 tests `analysis/s157_imager_state_snapshot/`.
+
+**Siguiente:** clasificar otro xref a base del estado, especialmente candidatos no cubiertos en S153–S157; seguir stores y alias por evidencia directa.
+
 ## S155 — tres referencias más al estado de gates (22-10-2026)
 
 REA/bytes: `0x43857f90` y `0x43857fb0` cargan el byte `+0` y devuelven predicados; `0x43858134` carga el puntero GOT pero solo lee campos `+4` y `+0x1c`, almacenando en otros objetos. No se observa write a gates `+3/+6` **en estos cuerpos**. No es ausencia global. [S155](../docs/capture/s155-imager-state-readers.md), reproducción `analysis/s155_imager_state_readers/state_readers.json` (3 tests). Commit publicado: `d0888afd`.

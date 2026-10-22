@@ -110,6 +110,15 @@
 - Pruebas: unittest S155 3/3 PASS; suite S140–S155 + knowledge 103/103 PASS; `git diff --check` PASS. Commit `d0888afd` publicado en `origin/main`.
 - Siguiente: clasificar un próximo xref restante, manteniendo alcance local.
 
+## Investigación S157 — accesores de snapshot del estado
+
+- Pregunta: clasificar `0x43859954` y determinar stores a gates en el procedimiento contenedor.
+- Resultado PARCIAL: instrucción `ldr r2,[r4,r3]` carga base del objeto desde GOT; edge a base es PARAM, no write. Procedimiento lee +5/+0xf y escribe a otros destinos, sin stores a +3/+6 en ese cuerpo.
+- Evidencia REA: función `ev_ec6f97762141815f395c4f95495973ab27f5327ae5c1aab1c33e5f7593780ece`, refs `ev_34d9295f6218a4ff16b071ff3c48aabd51ee2f8280c09aeb46d5ca2e438bfc4d`, slot `ev_a2be1dc38d7278043336827bd87c0991eeccbd13742659906de531563db077dd`.
+- Artefactos: `analysis/s157_imager_state_snapshot/{verify_snapshot_ref.py,snapshot_ref.json}`, `tests/test_s157_imager_state_snapshot.py`, `docs/capture/s157-imager-state-snapshot.md`.
+- Pruebas: unittest 3/3 PASS; falta suite/commit/push.
+- Siguiente: inspeccionar otro xref al estado, distinguiendo base-pointer loads de field writes.
+
 Checkpoint persistente. Actualizar al terminar cada etapa, antes de continuar
 con la siguiente. No reescribir historial: añadir entradas nuevas.
 
