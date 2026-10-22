@@ -107,7 +107,7 @@
 - Resultado: dos readers de `+0` como predicados; el tercero carga la base desde GOT y lee +4/+1c, stores a otras estructuras. Ninguno escribe +3/+6 dentro de su procedimiento. Sin conclusión global.
 - Evidencia REA: funciones `ev_50ec9a795fdeee1871d4df7045a9bc37b0e30b6187a21faef21c2d7d3fd3734a`, `ev_671901b96f062bf27c18b5a5db2b60b04f8131fde5cb02090e128ff818624502`, `ev_b38e559657d05b6ab4a57389988c5f11f0adae407c47ecaa4e30cd3bfccd740c`; refs tipadas `ev_9975507315e3e9ae8b0b12ed371553fbde517212c7deab61373a08b5fdd07e0c`, `ev_8af01bde84b54dc562aa3f33aacbc80ffbc8e7e2ca7f89e26e51b8143ca3dd92`, `ev_8e30d1b8e05356a533217a31f3da3ec92df520c6aa1e9eb79cca3dbd31c18132`.
 - Artefactos: `analysis/s155_imager_state_readers/{verify_state_readers.py,state_readers.json}`, `tests/test_s155_imager_state_readers.py`, `docs/capture/s155-imager-state-readers.md`.
-- Pruebas: unittest 3/3 PASS; falta suite/commit/push.
+- Pruebas: unittest S155 3/3 PASS; suite S140–S155 + knowledge 103/103 PASS; `git diff --check` PASS. Commit `d0888afd` publicado en `origin/main`.
 - Siguiente: clasificar un próximo xref restante, manteniendo alcance local.
 
 Checkpoint persistente. Actualizar al terminar cada etapa, antes de continuar
