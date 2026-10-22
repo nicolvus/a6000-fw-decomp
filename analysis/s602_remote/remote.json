@@ -1,0 +1,101 @@
+{
+  "session": "S602",
+  "module": "[REMOTE] (bajo [ACCY])",
+  "firmware": "A6000 fw3.21",
+  "exclusivity": "A6000-only (0 in A7S fw3.20, 0 in A6300 fw2.01)",
+  "string_count": {
+    "rea_unique": 30,
+    "strings_total": 32
+  },
+  "strings": [
+    {"address": "0x43c25b9f", "value": "[ACCY][INFO][REMOTE]:%d:NotifyUartCommand...UART CMD:%C%C%C%C%C%C [%02X %02X %02X %02X %02X %02X]"},
+    {"address": "0x43c25c01", "value": "[ACCY][WARN][REMOTE]:%d:RecvCmd Unknown Category:%02X"},
+    {"address": "0x43c25c37", "value": "[ACCY][WARN][REMOTE]:%d:EventKey Catwgory:%02X ,Data1:%02X, Data2:%02X"},
+    {"address": "0x43c25c7e", "value": "[ACCY][INFO][REMOTE]:%d:RetrySendCmd...retry_up:%d"},
+    {"address": "0x43c25cb1", "value": "[ACCY][ERR][REMOTE]:%d:RetrySendCmd Buffer err"},
+    {"address": "0x43c25ce0", "value": "[ACCY][INFO][REMOTE]:%d:SaveInfo...GF:%d SS:%d Freeze:%d Photo:%d Zoom:%d Tally:%d"},
+    {"address": "0x43c25d33", "value": "[ACCY][DEBUG][REMOTE]:%d:Zoom State Change To %d Speed:%d"},
+    {"address": "0x43c25d6d", "value": "[ACCY][INFO][REMOTE]:%d:RestoreInfo...Savedata:%02X %02X"},
+    {"address": "0x43c25da6", "value": "[ACCY][INFO][REMOTE]:%d:ExecUartCommand"},
+    {"address": "0x43c25dce", "value": "[ACCY][INFO][REMOTE]:%d:To Input KEY:%08X STATE:%08X INFO:%08X"},
+    {"address": "0x43c25e0d", "value": "[ACCY][INFO][REMOTE]:%d:SendCmd...CMD:%S retry:%d"},
+    {"address": "0x43c25e3f", "value": "[ACCY][ERR][REMOTE]:%d:SendCmd Buffer Busy Request CMD:%S"},
+    {"address": "0x43c25e79", "value": "[ACCY][INFO][REMOTE]:%d:TallyControlCmd...retry:%d"},
+    {"address": "0x43c25eac", "value": "[ACCY][INFO][REMOTE]:%d:CallForTransaction...Wait Tally Light Response  NextState:%d"},
+    {"address": "0x43c25f01", "value": "[ACCY][INFO][REMOTE]:%d:NotifyApiRequest...Command:%02X State:%02X CntlState:%d"},
+    {"address": "0x43c25f51", "value": "[ACCY][INFO][REMOTE]:%d:NotifyApiRequest...Buffer Busy CntlState:%d"},
+    {"address": "0x43c25f95", "value": "[ACCY][INFO][REMOTE]:%d:NotifyApiRequest...Tally Light State:%d  NextState:%d"},
+    {"address": "0x43c25fe3", "value": "[ACCY][INFO][REMOTE]:%d:NotifyApiRequest...Not Support Command:%02X or State:%02X"},
+    {"address": "0x43c26035", "value": "[ACCY][INFO][REMOTE]:%d:AccyCmdClr"},
+    {"address": "0x43c26058", "value": "[ACCY][INFO][REMOTE]:%d:RemoteClose...Spinal:%02X  GF:%02X  SS:%02X  Freeze:%02X  Photo:%02X  Zoom:%02X"},
+    {"address": "0x43c260c0", "value": "[ACCY][INFO][REMOTE]:%d:GUIDE FRAME OFF  KEY:%08X STATE:%08X  INFO:%08X"},
+    {"address": "0x43c26108", "value": "[ACCY][INFO][REMOTE]:%d:START STOP OFF  KEY:%08X STATE:%08X  INFO:%08X"},
+    {"address": "0x43c2614f", "value": "[ACCY][INFO][REMOTE]:%d:PHOTO FREEZE OFF  KEY:%08X STATE:%08X  INFO:%08X"},
+    {"address": "0x43c26198", "value": "[ACCY][INFO][REMOTE]:%d:PHOTO REC OFF  KEY:%08X STATE:%08X  INFO:%08X"},
+    {"address": "0x43c261de", "value": "[ACCY][INFO][REMOTE]:%d:ZOOM OFF  KEY:%08X STATE:%08X  INFO:%08X"},
+    {"address": "0x43c2621f", "value": "[ACCY][INFO][REMOTE]:%d:NotifyDetached"},
+    {"address": "0x43c26246", "value": "[ACCY][INFO][REMOTE]:%d:NotifyUartTimedOut...RetryCount:%d"},
+    {"address": "0x43c26281", "value": "[ACCY][ERR][REMOTE]:%d:TimeoutNotify...Command Not Execution"},
+    {"address": "0x43c262be", "value": "[ACCY][DEBUG][REMOTE]:%d:EventTimeout Tally Light TIMEOUT"},
+    {"address": "0x43c262f8", "value": "[ACCY][INFO][REMOTE]:%d:NotifyUartResponse...Set Tally Light:%02X"},
+    {"address": "0x43c2633a", "value": "[ACCY][DEBUG][REMOTE]:%d:Set Tally Light:%02X State:%d"},
+    {"address": "0x43c26371", "value": "[ACCY][INFO][REMOTE]:%d:NotifyAttached"}
+  ],
+  "additional_remote_strings": [
+    {"address": "0x43bd6100", "value": "Object is remote"},
+    {"address": "0x43bd6214", "value": "Remote address changed"},
+    {"address": "0x43bd66b8", "value": "Remote I/O error"},
+    {"address": "0x43c2536b", "value": "[ACCY][DEBUG][FACTORY]:%d:Remote Attached"},
+    {"address": "0x43c26398", "value": "18AccyUmDeviceRemote"},
+    {"address": "0x43ca53cf", "value": "[IMAGING_REL]: remote capture cancel due to camuser's release lock"}
+  ],
+  "xrefs": {
+    "0x43c25ce0": ["0x43566562"],
+    "0x43c25e0d": ["0x43566928"],
+    "0x43c25e3f": ["0x43566950"],
+    "0x43c25e79": ["0x43566998"],
+    "0x43c26035": ["0x43566b96"],
+    "0x43c262be": ["0x43566e74"]
+  },
+  "emitting_functions": {
+    "0x43566528": "SaveInfo - encodes GF/SS/Freeze/Photo/Zoom/Tally state into param_2 buffer",
+    "0x43566984": "SendCmd / TallyControlCmd / CallForTransaction - builds UART command buffer (0x25 0x37 0x36 + state + 0x30 0x2a), calls FUN_43a3b2a0, handles retry/buffer busy",
+    "0x43566b84": "AccyCmdClr - clears state at param_1+0x14, +0x18, +0x1c",
+    "0x4356623c": "Common logger (0x5d = logging level?) used by all above"
+  },
+  "uart_protocol": {
+    "header": "0x25 0x37 0x36 ('%76')",
+    "state_byte": "param_1+0x41: 1->'1', 2->'2', 3->'3', default->'0'",
+    "terminator": "0x30 0x2a ('0*')",
+    "commands": {
+      "NotifyUartCommand": "6-byte UART CMD",
+      "TallyControlCmd": "Tally Light control with retry",
+      "CallForTransaction": "Wait Tally Light Response",
+      "NotifyApiRequest": "Command/State/CntlState",
+      "AccyCmdClr": "Clear command",
+      "RemoteClose": "Spinal/GF/SS/Freeze/Photo/Zoom state dump"
+    },
+    "events": {
+      "NotifyAttached": "Remote attached",
+      "NotifyDetached": "Remote detached",
+      "NotifyUartResponse": "Set Tally Light response",
+      "NotifyUartTimedOut": "UART timeout with retry count",
+      "EventTimeout": "Tally Light TIMEOUT"
+    }
+  },
+  "state_fields": {
+    "GF": "Guide Frame",
+    "SS": "Start Stop",
+    "Freeze": "Photo Freeze",
+    "Photo": "Photo Rec",
+    "Zoom": "Zoom",
+    "Tally": "Tally Light"
+  },
+  "differential": {
+    "A7S_fw320": "0 strings with [REMOTE] prefix, module absent",
+    "A6300_fw201": "0 strings with [REMOTE] prefix, module absent"
+  },
+  "evidence": "REA search_strings + xrefs on av-cam.bin (SHA256: b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9); strings -a on all three firmwares",
+  "verdict": "VERIFICADO",
+  "limitations": "Solo 6 de 30 cadenas tienen xrefs directos; las demás pueden usar referencias computadas o tabla de punteros. Ghidra decompiló funciones en 0x43566xxx (ARM); funciones en 0x43c25xxx (donde están las cadenas) no analizadas. Nombres de archivo fuente no recuperados. Semántica UART/Tally inferida de formato de trazas. No runtime verification."
+}
