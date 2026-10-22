@@ -17,7 +17,7 @@ recuperación y pipeline de captura. El obturador electrónico es un
 
 | fecha | sesión | alcance | hitos |
 |---|---|---|---|
-| **22-10-2026** | **sesión actual**: línea de RE general por módulos + línea del obturador electrónico | continuación IMX210 S140–S163; mapa, filas G, volcado gap y clasificación de xrefs del estado; control positivo ElecShutter A6300 (S135) | S140–S163 |
+| **22-10-2026** | **sesión actual**: línea de RE general por módulos + línea del obturador electrónico | continuación IMX210 S140–S163 (mapa, filas G, volcado gap, clasificación de xrefs del estado); control positivo ElecShutter A6300 (S135); **siete módulos más de la línea de RE general** decodificados con bytes y tests propios: `[CAMERA_MAIN_FC]` (S138), `[CAM_UTIL_ADJ]` (S143), `[CAM_UTIL_SENS]` (S144), `[DEPTH]` (S148), `[PANDA]` (S151), `[TP_R]` (S156) y `[CAMERA_IS]` (S164) → **patrón consolidado: la fw3.21 reescribe el logging, no el firmware** | S135, S138, S140–S164 |
 | 20-10-2026 | transporte IMX210, SetMode/SetExposure emulados, inyección PMCA, montura E-mount | 50 commits | S54–S66 |
 | 19-10-2026 | base de la RE general y de la línea del obturador (payload, VD, callbacks, tabla PIC) | 5 commits | S16–S53 |
 | 18-10-2026 | sistema de conocimiento: indexación FTS5, grafo de conocimiento, CLI + servidor MCP, skills, benchmarks y **checkpoints de sesión** (`knowledge/checkpoints/`) | 5 checkpoints | — |
