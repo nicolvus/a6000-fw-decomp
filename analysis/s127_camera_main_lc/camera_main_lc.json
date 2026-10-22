@@ -1,0 +1,2068 @@
+{
+ "hit": "S127",
+ "trace_tag": "[CAMERA_MAIN_LC]",
+ "namespace": "Camera::LC (probado por RTTI; LC sin expandir en el firmware)",
+ "binary": "analysis/rea-independent/input/av-cam.bin (A6000 fw3.21)",
+ "vaddr_rule": "vaddr = 0x43541000 + file_offset",
+ "xref_rule": "estricta (analysis/s106_imaging_cap/scan_pic_refs_strict.py; mapa global pic_refs_strict_global.json)",
+ "counts": {
+  "strings": 72,
+  "sites": 78,
+  "functions": 37,
+  "unreferenced": 1,
+  "string_blocks": [
+   {
+    "range": [
+     "0x43c9c6f6",
+     "0x43c9d646"
+    ],
+    "strings": 32,
+    "sites": 37,
+    "site_range": [
+     "0x43545f52",
+     "0x437bc800"
+    ],
+    "functions_touched": 22,
+    "functions_by_first_site": 19
+   },
+   {
+    "range": [
+     "0x43ca71fa",
+     "0x43ca7e0b"
+    ],
+    "strings": 40,
+    "sites": 41,
+    "site_range": [
+     "0x437bbc24",
+     "0x437ceb92"
+    ],
+    "functions_touched": 18,
+    "functions_by_first_site": 18
+   }
+  ]
+ },
+ "unreferenced": [
+  {
+   "vaddr": "0x43c9c779",
+   "text": "[CAMERA_MAIN_LC]: [ERROR!!] lc_Movie_DM_AF_Util_getBufferAddr()"
+  }
+ ],
+ "sub_blocks": [
+  {
+   "id": "dm_af_movie",
+   "name": "DM AF movie: buffers y memoria de trabajo",
+   "functions": [
+    "0x4373c788",
+    "0x4373c7c0",
+    "0x4373c7f8",
+    "0x4373c838",
+    "0x4373c914",
+    "0x4373c986",
+    "0x4373c9b0",
+    "0x4373ca58",
+    "0x4373ca9c"
+   ],
+   "strings_first_site": 14,
+   "string_vaddr_range": [
+    "0x43c9c6f6",
+    "0x43c9ca37"
+   ],
+   "site_range": [
+    "0x4373c7ae",
+    "0x4373cb4c"
+   ],
+   "note": "Errores de adquisición/liberación de miniRAW, resizedY, saIf, ESRAM/DDR_Bank y MMU del AF de vídeo. Incluye la cadena sin referencia 0x43c9c779."
+  },
+  {
+   "id": "lc_af_scan",
+   "name": "lc_AF_Scan",
+   "functions": [
+    "0x4373f45c"
+   ],
+   "strings_first_site": 2,
+   "string_vaddr_range": [
+    "0x43c9cb6f",
+    "0x43c9cb8b"
+   ],
+   "site_range": [
+    "0x4373f630",
+    "0x4373f7e0"
+   ],
+   "note": "Emite LOWCON!!! (dos sitios) y ERROR!!!!! : %d in lc_AF_Scan.cpp."
+  },
+  {
+   "id": "scan_predict",
+   "name": "Volcado de scan/predict",
+   "functions": [
+    "0x43545cd0"
+   ],
+   "strings_first_site": 7,
+   "string_vaddr_range": [
+    "0x43c9ced2",
+    "0x43c9d03e"
+   ],
+   "site_range": [
+    "0x43545f52",
+    "0x4354612a"
+   ],
+   "note": "Vuelca posiciones de scan, df, ympc, id, F number y el resumen DIR (scanless/kinbou/partial)."
+  },
+  {
+   "id": "lc_hybrid_af",
+   "name": "lc_HybridAF",
+   "functions": [
+    "0x43754be0"
+   ],
+   "strings_first_site": 2,
+   "string_vaddr_range": [
+    "0x43c9d05d",
+    "0x43c9d0d5"
+   ],
+   "site_range": [
+    "0x43754e20",
+    "0x4375536e"
+   ],
+   "note": "Emite fno is %d fno y scanless manymode is undefined ... lc_HybridAF.cpp %d."
+  },
+  {
+   "id": "lc_send_message",
+   "name": "LC_SendMessage",
+   "functions": [
+    "0x43765ad2"
+   ],
+   "strings_first_site": 2,
+   "string_vaddr_range": [
+    "0x43c9d3df",
+    "0x43c9d419"
+   ],
+   "site_range": [
+    "0x437663e8",
+    "0x43766408"
+   ],
+   "note": "Errores de osal_valloc_msg / osal_snd_msg."
+  },
+  {
+   "id": "ms_writer",
+   "name": "MS_Writer",
+   "functions": [
+    "0x4376bf64"
+   ],
+   "strings_first_site": 1,
+   "string_vaddr_range": [
+    "0x43c9d45c",
+    "0x43c9d45c"
+   ],
+   "site_range": [
+    "0x4376bfb6",
+    "0x4376bfb6"
+   ],
+   "note": "MS_Writer: disable addr! memmapID: %d."
+  },
+  {
+   "id": "housing",
+   "name": "Límites de housing",
+   "functions": [
+    "0x4376cce0",
+    "0x4376cd44"
+   ],
+   "strings_first_site": 2,
+   "string_vaddr_range": [
+    "0x43c9d498",
+    "0x43c9d4d4"
+   ],
+   "site_range": [
+    "0x4376cd04",
+    "0x4376cd84"
+   ],
+   "note": "Avisos de límite de housing (water housing / far limit)."
+  },
+  {
+   "id": "osal",
+   "name": "Errores OSAL",
+   "functions": [
+    "0x437770dc",
+    "0x437771a0",
+    "0x43777fec"
+   ],
+   "strings_first_site": 2,
+   "string_vaddr_range": [
+    "0x43c9d60c",
+    "0x43c9d646"
+   ],
+   "site_range": [
+    "0x4377710e",
+    "0x4377803c"
+   ],
+   "note": "osal_ercord error (dos funciones) y MSS_reload."
+  },
+  {
+   "id": "rlog",
+   "name": "rlog del DM AF",
+   "functions": [
+    "0x437bbbe6",
+    "0x437bbc42",
+    "0x437bbc72",
+    "0x437bbea0",
+    "0x437bc0ce",
+    "0x437bc21c"
+   ],
+   "strings_first_site": 10,
+   "string_vaddr_range": [
+    "0x43ca71fa",
+    "0x43ca743d"
+   ],
+   "site_range": [
+    "0x437bbc24",
+    "0x437bc264"
+   ],
+   "note": "Direcciones del log, LUMI_COEF_CALC/ITR_NUM_CALC/END_SYNC_INFO, watkao1 y errores de reenvío."
+  },
+  {
+   "id": "dm_af_still",
+   "name": "DM AF still: buffers y memoria de trabajo",
+   "functions": [
+    "0x437bc4b8",
+    "0x437bc52c",
+    "0x437bc588",
+    "0x437bc66a",
+    "0x437bc694",
+    "0x437bc73e",
+    "0x437bc84c"
+   ],
+   "strings_first_site": 10,
+   "string_vaddr_range": [
+    "0x43ca7493",
+    "0x43ca76b0"
+   ],
+   "site_range": [
+    "0x437bc4dc",
+    "0x437bc85e"
+   ],
+   "note": "Misma familia que el bloque movie, para Still; comparte 3 mensajes con movie."
+  },
+  {
+   "id": "zpd_result",
+   "name": "LC_GetZpdResultInfo: volcado del resultado ZPD",
+   "functions": [
+    "0x437c1e48"
+   ],
+   "strings_first_site": 10,
+   "string_vaddr_range": [
+    "0x43ca7732",
+    "0x43ca78b6"
+   ],
+   "site_range": [
+    "0x437c1e6e",
+    "0x437c1f2e"
+   ],
+   "note": "10 lecturas del struct ZPD y 10 líneas de traza; 'LC_GetZpdResultInfo:Error' si el gate falla."
+  },
+  {
+   "id": "mlog",
+   "name": "Control de captura mlog",
+   "functions": [
+    "0x437cd06c"
+   ],
+   "strings_first_site": 3,
+   "string_vaddr_range": [
+    "0x43ca7a14",
+    "0x43ca7a94"
+   ],
+   "site_range": [
+    "0x437cd19c",
+    "0x437cd22e"
+   ],
+   "note": "osal_record_pro / osal_capstop / osal_capstart."
+  },
+  {
+   "id": "zpd_hybrid_movie",
+   "name": "zpd_HybridMovieAF",
+   "functions": [
+    "0x437cde1c",
+    "0x437ce2a0",
+    "0x437ceae2"
+   ],
+   "strings_first_site": 7,
+   "string_vaddr_range": [
+    "0x43ca7d26",
+    "0x43ca7e0b"
+   ],
+   "site_range": [
+    "0x437cde58",
+    "0x437ceb92"
+   ],
+   "note": "reset, Start/End y volcado buffer[0..3]."
+  }
+ ],
+ "zpd": {
+  "dump_function": "0x437c1e48",
+  "caller": "0x439d9d82",
+  "prologue": "push {r0,r1,r2,r4,r5,r6,r7,lr}",
+  "gate": "ldrb.w r3,[rX,#0xc0] en 0x437c1e5a + tst.w r3,#2 en 0x437c1e5e; beq en 0x437c1e64",
+  "string_sites": [
+   "0x437c1e6e",
+   "0x437c1e86",
+   "0x437c1ea0",
+   "0x437c1eba",
+   "0x437c1ece",
+   "0x437c1ee2",
+   "0x437c1ef6",
+   "0x437c1f0a",
+   "0x437c1f1e",
+   "0x437c1f2e"
+  ],
+  "read_sites": [
+   "0x437c1e7a",
+   "0x437c1e8c",
+   "0x437c1e98",
+   "0x437c1ea6",
+   "0x437c1eb2",
+   "0x437c1ec0",
+   "0x437c1ed4",
+   "0x437c1ee8",
+   "0x437c1efc",
+   "0x437c1f10"
+  ],
+  "full_count_source": "primer argumento (r7), no [r4]",
+  "layout": [
+   {
+    "offset": "[r4]+0x00",
+    "field": "buffer_user_id",
+    "printed": "buffer_user_id=%04x"
+   },
+   {
+    "offset": "+0x3c4",
+    "field": "zpd_flags",
+    "printed": "area[60].zpd_flags=%d, area[60].defocus=%d"
+   },
+   {
+    "offset": "+0x3c8",
+    "field": "defocus",
+    "printed": "area[60].zpd_flags=%d, area[60].defocus=%d"
+   },
+   {
+    "offset": "+0x3cc",
+    "field": "selected_ym",
+    "printed": "area[60].selected_ym=%d, area[60].selected_contrast=%d"
+   },
+   {
+    "offset": "+0x3d0",
+    "field": "selected_contrast",
+    "printed": "area[60].selected_ym=%d, area[60].selected_contrast=%d"
+   },
+   {
+    "offset": "+0xce4",
+    "field": "base_defocus",
+    "printed": "base_defocus=%d"
+   },
+   {
+    "offset": "+0xce8",
+    "field": "zaf_now_shut_cycle",
+    "printed": "zaf_now_shut_cycle=%d"
+   },
+   {
+    "offset": "+0xcec",
+    "field": "iris_cur",
+    "printed": "iris_cur=%d"
+   },
+   {
+    "offset": "+0xcf0",
+    "field": "select_area (byte)",
+    "printed": "select_area=0x%02x"
+   },
+   {
+    "offset": "+0xcf1",
+    "field": "mario_use_ng_flag (byte)",
+    "printed": "mario_use_ng_flag=%d"
+   }
+  ]
+ },
+ "links_s126": [
+  {
+   "from": "0x43738ec0",
+   "trace": "[CAMERA_MAIN]: calibration_fc_pos...",
+   "calls": [
+    "0x4373c7f8",
+    "0x4373c11c",
+    "0x43738e14",
+    "0x43902718"
+   ]
+  },
+  {
+   "from": "0x43739488",
+   "trace": "[CAMERA_MAIN]: Calibration start",
+   "calls": [
+    "0x4373c478",
+    "0x4373c4e4",
+    "0x4373c558",
+    "0x4373c8e8"
+   ]
+  },
+  {
+   "from": "0x43754be0",
+   "trace": "[CAMERA_MAIN]: NOT_DETECT from ZPD MODULE in spite of ZpdPreEnable. lc_HybridAF.cpp %d (0x43c9d07e)",
+   "calls": []
+  }
+ ],
+ "sources": [
+  {
+   "name": "lc_AF_Scan.cpp",
+   "vaddr": "0x43c9cbb0"
+  },
+  {
+   "name": "Spinal.cpp",
+   "vaddr": "0x43c9c54f"
+  },
+  {
+   "name": "lc_wrap_upm.cpp",
+   "vaddr": "0x43c9d685"
+  },
+  {
+   "name": "6StillContrastAF/lc_PreReadAF.cpp",
+   "vaddr": "0x43ca793f"
+  },
+  {
+   "name": "lc_BracketAF.cpp",
+   "vaddr": "0x43ca79ba"
+  },
+  {
+   "name": "Capture/zpd_capture_sequence.cpp",
+   "vaddr": "0x43cb6145"
+  },
+  {
+   "name": "Capture/zpd_capture_async_cmd.cpp",
+   "vaddr": "0x43ccd52b"
+  }
+ ],
+ "other_strings": [
+  {
+   "vaddr": "0x43c9c55d",
+   "text": "LC_MovieAF Sta"
+  },
+  {
+   "vaddr": "0x43c9c56c",
+   "text": "LC_MovieAF End"
+  },
+  {
+   "vaddr": "0x43c9cc64",
+   "text": "LC_near_1st"
+  },
+  {
+   "vaddr": "0x43c9cc70",
+   "text": "LC_move_peak"
+  },
+  {
+   "vaddr": "0x43c9d51e",
+   "text": "LC_EXTRAFILE"
+  },
+  {
+   "vaddr": "0x43c9d636",
+   "text": "LC_Com:%2X"
+  },
+  {
+   "vaddr": "0x43ca71e9",
+   "text": "LC_DEPTH_MAP_LOG"
+  },
+  {
+   "vaddr": "0x43ca79cb",
+   "text": "LC_req_pipi"
+  },
+  {
+   "vaddr": "0x43ca7a7d",
+   "text": "/mnt/lc_mslog_%04x.dat"
+  },
+  {
+   "vaddr": "0x43c9d07e",
+   "text": "[CAMERA_MAIN]: NOT_DETECT from ZPD MODULE in spite of ZpdPreEnable. lc_HybridAF.cpp %d"
+  }
+ ],
+ "details": [
+  "lc_HybridAF.cpp %d recibe la linea 0x25d (movw r3,#0x25d en 0x43755360).",
+  "ERROR!!!!! : %d in lc_AF_Scan.cpp recibe la linea 0x108b (movw r3,#0x108b en 0x4373f7d2).",
+  "LOWCON!!! se emite tras contador > 0xa (cmp r2,#0xa en 0x4373f624 y 0x4373f7ba).",
+  "fno se lee de [ctx+0x202] en 0x43754e0e."
+ ],
+ "differential": {
+  "a6000_strings": 72,
+  "a7s_with_prefix": 0,
+  "a6300_with_prefix": 0,
+  "a7s_interior_exact": 0,
+  "a6300_interior_exact": 0,
+  "nuance": "'************' (0x43c9d03e) no existe como cadena independiente en A7S/A6300; alli aparece solo como cola o relleno de otras cadenas (p.ej. [FUNC]****************, **********pre_time...). No es una traza LC reutilizada.",
+  "a7s_without_tag": [
+   "lc_HybridAF.cpp (1)",
+   "lc_PreReadAF.cpp (1)",
+   "lc_BracketAF.cpp (1)",
+   "fc_pos (3)",
+   "MarioAfc (9)",
+   "zpd_ (1, LC_GetZpdResultInfo)"
+  ],
+  "a7s_absent": [
+   "zpd_HybridMovieAF",
+   "LOWCON",
+   "watkao",
+   "lc_AF_Scan.cpp",
+   "kinbou",
+   "yosoku",
+   "scanless",
+   "lc_DM_AF_Util",
+   "lc_Movie_DM_AF_Util",
+   "MEM_UNIT_TYPE_CAM_RAW_DM_AFWORK",
+   "lc_wrap_upm.cpp"
+  ],
+  "a6300_without_tag": [
+   "LC_GetZpdResultInfo (2)",
+   "zpd_ (10)",
+   "MarioAfc (10)",
+   "fc_pos (1)",
+   "lc_BracketAF.cpp (1)"
+  ]
+ },
+ "unverified": [
+  "LC no esta expandido en el firmware; solo esta probado como namespace Camera::LC por RTTI.",
+  "CPaf, Mario, Gpma, MaInToOut, watkao, kinbou, yosoku, mario_use_ng_flag no estan expandidos.",
+  "No se ha identificado el fichero fuente de los helpers lc_Movie_DM_AF_Util / lc_DM_AF_Util ni de 0x43545cd0, 0x43765ad2, 0x4376bf64, 0x4376cce0, 0x4376cd44, 0x437770dc, 0x437771a0, 0x43777fec, 0x437cd06c, 0x437cde1c, 0x437ce2a0, 0x437ceae2.",
+  "La ausencia de bl directo no prueba llamada por puntero; solo 'sin bl directo medido'.",
+  "El bloque no emite ninguna traza de calibracion optica de lente: la calibracion fc_pos es de S126 y solo llama a helpers de memoria/af."
+ ],
+ "main_agent_review": [],
+ "strings": [
+  {
+   "vaddr": "0x43c9c6f6",
+   "text": "[CAMERA_MAIN_LC]: [ERROR!!] lc_Movie_DM_AF_Util_getMiniRawAddr()",
+   "sites": [
+    {
+     "site": "0x4373c7ae",
+     "func": "0x4373c788"
+    }
+   ],
+   "funcs": [
+    "0x4373c788"
+   ]
+  },
+  {
+   "vaddr": "0x43c9c737",
+   "text": "[CAMERA_MAIN_LC]: [ERROR!!] lc_Movie_DM_AF_Util_getResizedYAddr()",
+   "sites": [
+    {
+     "site": "0x4373c7e4",
+     "func": "0x4373c7c0"
+    }
+   ],
+   "funcs": [
+    "0x4373c7c0"
+   ]
+  },
+  {
+   "vaddr": "0x43c9c779",
+   "text": "[CAMERA_MAIN_LC]: [ERROR!!] lc_Movie_DM_AF_Util_getBufferAddr()",
+   "sites": [],
+   "funcs": []
+  },
+  {
+   "vaddr": "0x43c9c7b9",
+   "text": "[CAMERA_MAIN_LC]: [ERROR!!] lc_Movie_DM_AF_Util_getSaIfAddr()",
+   "sites": [
+    {
+     "site": "0x4373c822",
+     "func": "0x4373c7f8"
+    }
+   ],
+   "funcs": [
+    "0x4373c7f8"
+   ]
+  },
+  {
+   "vaddr": "0x43c9c7f7",
+   "text": "[CAMERA_MAIN_LC]: [LC] MMU param CloseFree Err (unit_hndl:0x%x)",
+   "sites": [
+    {
+     "site": "0x4373c8ac",
+     "func": "0x4373c838"
+    },
+    {
+     "site": "0x437bc5e2",
+     "func": "0x437bc588"
+    }
+   ],
+   "funcs": [
+    "0x4373c838",
+    "0x437bc588"
+   ]
+  },
+  {
+   "vaddr": "0x43c9c837",
+   "text": "[CAMERA_MAIN_LC]: ESRAM Acquisition failed",
+   "sites": [
+    {
+     "site": "0x4373c93c",
+     "func": "0x4373c914"
+    }
+   ],
+   "funcs": [
+    "0x4373c914"
+   ]
+  },
+  {
+   "vaddr": "0x43c9c862",
+   "text": "[CAMERA_MAIN_LC]: [NG] MEM_UNIT_TYPE_CAM_RAW_DM_AFWORK_E not expected size. size: %08X\n",
+   "sites": [
+    {
+     "site": "0x4373c958",
+     "func": "0x4373c914"
+    },
+    {
+     "site": "0x437bc800",
+     "func": "0x437bc73e"
+    }
+   ],
+   "funcs": [
+    "0x4373c914",
+    "0x437bc73e"
+   ]
+  },
+  {
+   "vaddr": "0x43c9c8ba",
+   "text": "[CAMERA_MAIN_LC]: [LC] Movie DM AF cannot get miniRAW Stored memhandle",
+   "sites": [
+    {
+     "site": "0x4373c99e",
+     "func": "0x4373c986"
+    }
+   ],
+   "funcs": [
+    "0x4373c986"
+   ]
+  },
+  {
+   "vaddr": "0x43c9c901",
+   "text": "[CAMERA_MAIN_LC]: [LC] lc_Movie_DM_AF_Util_allocWorkMemAreaBank MmuMakeParamAll Err %d",
+   "sites": [
+    {
+     "site": "0x4373c9ee",
+     "func": "0x4373c9b0"
+    }
+   ],
+   "funcs": [
+    "0x4373c9b0"
+   ]
+  },
+  {
+   "vaddr": "0x43c9c958",
+   "text": "[CAMERA_MAIN_LC]: [LC] MMU param open Err (unit_hndl:0x%x)",
+   "sites": [
+    {
+     "site": "0x4373ca16",
+     "func": "0x4373c9b0"
+    },
+    {
+     "site": "0x437bc6fa",
+     "func": "0x437bc694"
+    }
+   ],
+   "funcs": [
+    "0x4373c9b0",
+    "0x437bc694"
+   ]
+  },
+  {
+   "vaddr": "0x43c9c993",
+   "text": "[CAMERA_MAIN_LC]: [LC] Movie DM AF mmu_start_phys_adrs is zero error.",
+   "sites": [
+    {
+     "site": "0x4373ca6a",
+     "func": "0x4373ca58"
+    }
+   ],
+   "funcs": [
+    "0x4373ca58"
+   ]
+  },
+  {
+   "vaddr": "0x43c9c9d9",
+   "text": "[CAMERA_MAIN_LC]: DDR_Bank Acquisition failed",
+   "sites": [
+    {
+     "site": "0x4373cad0",
+     "func": "0x4373ca9c"
+    }
+   ],
+   "funcs": [
+    "0x4373ca9c"
+   ]
+  },
+  {
+   "vaddr": "0x43c9ca07",
+   "text": "[CAMERA_MAIN_LC]: ESRAM_Bank Acquisition failed",
+   "sites": [
+    {
+     "site": "0x4373caf2",
+     "func": "0x4373ca9c"
+    }
+   ],
+   "funcs": [
+    "0x4373ca9c"
+   ]
+  },
+  {
+   "vaddr": "0x43c9ca37",
+   "text": "[CAMERA_MAIN_LC]: [NG] Memory for bank is not expected size. size: %08X\n",
+   "sites": [
+    {
+     "site": "0x4373cb12",
+     "func": "0x4373ca9c"
+    },
+    {
+     "site": "0x4373cb4c",
+     "func": "0x4373ca9c"
+    }
+   ],
+   "funcs": [
+    "0x4373ca9c"
+   ]
+  },
+  {
+   "vaddr": "0x43c9cb6f",
+   "text": "[CAMERA_MAIN_LC]: LOWCON!!!",
+   "sites": [
+    {
+     "site": "0x4373f630",
+     "func": "0x4373f45c"
+    },
+    {
+     "site": "0x4373f7c8",
+     "func": "0x4373f45c"
+    }
+   ],
+   "funcs": [
+    "0x4373f45c"
+   ]
+  },
+  {
+   "vaddr": "0x43c9cb8b",
+   "text": "[CAMERA_MAIN_LC]: ERROR!!!!! : %d in lc_AF_Scan.cpp",
+   "sites": [
+    {
+     "site": "0x4373f7e0",
+     "func": "0x4373f45c"
+    }
+   ],
+   "funcs": [
+    "0x4373f45c"
+   ]
+  },
+  {
+   "vaddr": "0x43c9ced2",
+   "text": "[CAMERA_MAIN_LC]: pre position: %d yosoku ; %d yosoku ; [%d - %d] repdf : %10.3f use : %derr_est : %10.3f",
+   "sites": [
+    {
+     "site": "0x43545f52",
+     "func": "0x43545cd0"
+    }
+   ],
+   "funcs": [
+    "0x43545cd0"
+   ]
+  },
+  {
+   "vaddr": "0x43c9cf3c",
+   "text": "[CAMERA_MAIN_LC]:  DIR [%d] scanless[%d %d] kinbou[%d] partial[%d] direction[%d]",
+   "sites": [
+    {
+     "site": "0x43545f7c",
+     "func": "0x43545cd0"
+    }
+   ],
+   "funcs": [
+    "0x43545cd0"
+   ]
+  },
+  {
+   "vaddr": "0x43c9cf8d",
+   "text": "[CAMERA_MAIN_LC]: F number %d",
+   "sites": [
+    {
+     "site": "0x43545f92",
+     "func": "0x43545cd0"
+    }
+   ],
+   "funcs": [
+    "0x43545cd0"
+   ]
+  },
+  {
+   "vaddr": "0x43c9cfab",
+   "text": "[CAMERA_MAIN_LC]: [df][ympc] [%10.3f][%d] [%10.3f][%d] [%10.3f][%d]",
+   "sites": [
+    {
+     "site": "0x43545f5e",
+     "func": "0x43545cd0"
+    }
+   ],
+   "funcs": [
+    "0x43545cd0"
+   ]
+  },
+  {
+   "vaddr": "0x43c9cfef",
+   "text": "[CAMERA_MAIN_LC]: id : %ld",
+   "sites": [
+    {
+     "site": "0x4354607c",
+     "func": "0x43545cd0"
+    }
+   ],
+   "funcs": [
+    "0x43545cd0"
+   ]
+  },
+  {
+   "vaddr": "0x43c9d00a",
+   "text": "[CAMERA_MAIN_LC]: [df%d] [%10.3f] [%10.3f] [%10.3f]",
+   "sites": [
+    {
+     "site": "0x4354605c",
+     "func": "0x43545cd0"
+    }
+   ],
+   "funcs": [
+    "0x43545cd0"
+   ]
+  },
+  {
+   "vaddr": "0x43c9d03e",
+   "text": "[CAMERA_MAIN_LC]: ************",
+   "sites": [
+    {
+     "site": "0x4354612a",
+     "func": "0x43545cd0"
+    }
+   ],
+   "funcs": [
+    "0x43545cd0"
+   ]
+  },
+  {
+   "vaddr": "0x43c9d05d",
+   "text": "[CAMERA_MAIN_LC]: fno is %d fno ",
+   "sites": [
+    {
+     "site": "0x43754e20",
+     "func": "0x43754be0"
+    }
+   ],
+   "funcs": [
+    "0x43754be0"
+   ]
+  },
+  {
+   "vaddr": "0x43c9d0d5",
+   "text": "[CAMERA_MAIN_LC]: scanless manymode is undefined. lc_HybridAF.cpp %d",
+   "sites": [
+    {
+     "site": "0x4375536e",
+     "func": "0x43754be0"
+    }
+   ],
+   "funcs": [
+    "0x43754be0"
+   ]
+  },
+  {
+   "vaddr": "0x43c9d3df",
+   "text": "[CAMERA_MAIN_LC]: LC_SendMessage: osal_valloc_msg error!\n",
+   "sites": [
+    {
+     "site": "0x437663e8",
+     "func": "0x43765ad2"
+    }
+   ],
+   "funcs": [
+    "0x43765ad2"
+   ]
+  },
+  {
+   "vaddr": "0x43c9d419",
+   "text": "[CAMERA_MAIN_LC]: LC_SendMessage: osal_snd_msg error!\n",
+   "sites": [
+    {
+     "site": "0x43766408",
+     "func": "0x43765ad2"
+    }
+   ],
+   "funcs": [
+    "0x43765ad2"
+   ]
+  },
+  {
+   "vaddr": "0x43c9d45c",
+   "text": "[CAMERA_MAIN_LC]: MS_Writer: disable addr! memmapID: %d",
+   "sites": [
+    {
+     "site": "0x4376bfb6",
+     "func": "0x4376bf64"
+    }
+   ],
+   "funcs": [
+    "0x4376bf64"
+   ]
+  },
+  {
+   "vaddr": "0x43c9d498",
+   "text": "[CAMERA_MAIN_LC]: water housing limit size over err %d > %d",
+   "sites": [
+    {
+     "site": "0x4376cd04",
+     "func": "0x4376cce0"
+    }
+   ],
+   "funcs": [
+    "0x4376cce0"
+   ]
+  },
+  {
+   "vaddr": "0x43c9d4d4",
+   "text": "[CAMERA_MAIN_LC]: NG : housing limit is over far limit........",
+   "sites": [
+    {
+     "site": "0x4376cd84",
+     "func": "0x4376cd44"
+    }
+   ],
+   "funcs": [
+    "0x4376cd44"
+   ]
+  },
+  {
+   "vaddr": "0x43c9d60c",
+   "text": "[CAMERA_MAIN_LC]: osal_ercord error",
+   "sites": [
+    {
+     "site": "0x4377710e",
+     "func": "0x437770dc"
+    },
+    {
+     "site": "0x4377728a",
+     "func": "0x437771a0"
+    }
+   ],
+   "funcs": [
+    "0x437770dc",
+    "0x437771a0"
+   ]
+  },
+  {
+   "vaddr": "0x43c9d646",
+   "text": "[CAMERA_MAIN_LC]: ERROR !!! MSS_reload osal_err:0x%04x %s : %d",
+   "sites": [
+    {
+     "site": "0x4377803c",
+     "func": "0x43777fec"
+    }
+   ],
+   "funcs": [
+    "0x43777fec"
+   ]
+  },
+  {
+   "vaddr": "0x43ca71fa",
+   "text": "[CAMERA_MAIN_LC]: [ERROR!!] local_getLogDataSeqAddr. us_idx: %d, enableLogFieldNum: %d",
+   "sites": [
+    {
+     "site": "0x437bbc24",
+     "func": "0x437bbbe6"
+    }
+   ],
+   "funcs": [
+    "0x437bbbe6"
+   ]
+  },
+  {
+   "vaddr": "0x43ca7251",
+   "text": "[CAMERA_MAIN_LC]: [ERROR!!] local_getLogDataHeadAddr",
+   "sites": [
+    {
+     "site": "0x437bbc5c",
+     "func": "0x437bbc42"
+    }
+   ],
+   "funcs": [
+    "0x437bbc42"
+   ]
+  },
+  {
+   "vaddr": "0x43ca7286",
+   "text": "[CAMERA_MAIN_LC]: [ERROR!!] local_getLogDataMainAddr",
+   "sites": [
+    {
+     "site": "0x437bbc8c",
+     "func": "0x437bbc72"
+    }
+   ],
+   "funcs": [
+    "0x437bbc72"
+   ]
+  },
+  {
+   "vaddr": "0x43ca72bb",
+   "text": "[CAMERA_MAIN_LC]:   LUMI_COEF_CALC! us_syncPreInfoFinishedNum: %d, us_resizedYIdx: %d, outAddr: %d",
+   "sites": [
+    {
+     "site": "0x437bbf56",
+     "func": "0x437bbea0"
+    }
+   ],
+   "funcs": [
+    "0x437bbea0"
+   ]
+  },
+  {
+   "vaddr": "0x43ca731e",
+   "text": "[CAMERA_MAIN_LC]:     ITR_NUM_CALC! idx(center): %d, coreFinishedNum: %d, times: %d",
+   "sites": [
+    {
+     "site": "0x437bbfda",
+     "func": "0x437bbea0"
+    }
+   ],
+   "funcs": [
+    "0x437bbea0"
+   ]
+  },
+  {
+   "vaddr": "0x43ca7372",
+   "text": "[CAMERA_MAIN_LC]: watkao1",
+   "sites": [
+    {
+     "site": "0x437bc006",
+     "func": "0x437bbea0"
+    }
+   ],
+   "funcs": [
+    "0x437bbea0"
+   ]
+  },
+  {
+   "vaddr": "0x43ca738c",
+   "text": "[CAMERA_MAIN_LC]:     END_SYNC_INFO! idx(center): %d, coreFinishedNum: %d, times: %d",
+   "sites": [
+    {
+     "site": "0x437bc080",
+     "func": "0x437bbea0"
+    }
+   ],
+   "funcs": [
+    "0x437bbea0"
+   ]
+  },
+  {
+   "vaddr": "0x43ca73e1",
+   "text": "[CAMERA_MAIN_LC]: [ERROR!] DM_AF rlog forward Error!!",
+   "sites": [
+    {
+     "site": "0x437bc18a",
+     "func": "0x437bc0ce"
+    }
+   ],
+   "funcs": [
+    "0x437bc0ce"
+   ]
+  },
+  {
+   "vaddr": "0x43ca7417",
+   "text": "[CAMERA_MAIN_LC]: LOG_FIELD_NO_EMPTY!",
+   "sites": [
+    {
+     "site": "0x437bc246",
+     "func": "0x437bc21c"
+    }
+   ],
+   "funcs": [
+    "0x437bc21c"
+   ]
+  },
+  {
+   "vaddr": "0x43ca743d",
+   "text": "[CAMERA_MAIN_LC]: LOG_FIELD_UPDATED! idx: %d",
+   "sites": [
+    {
+     "site": "0x437bc264",
+     "func": "0x437bc21c"
+    }
+   ],
+   "funcs": [
+    "0x437bc21c"
+   ]
+  },
+  {
+   "vaddr": "0x43ca7493",
+   "text": "[CAMERA_MAIN_LC]: [ERROR!!] lc_DM_AF_Util_getMiniRawAddr()",
+   "sites": [
+    {
+     "site": "0x437bc4dc",
+     "func": "0x437bc4b8"
+    }
+   ],
+   "funcs": [
+    "0x437bc4b8"
+   ]
+  },
+  {
+   "vaddr": "0x43ca74ce",
+   "text": "[CAMERA_MAIN_LC]: [ERROR!!] lc_DM_AF_Util_getSaIfAddr()",
+   "sites": [
+    {
+     "site": "0x437bc572",
+     "func": "0x437bc52c"
+    }
+   ],
+   "funcs": [
+    "0x437bc52c"
+   ]
+  },
+  {
+   "vaddr": "0x43ca7506",
+   "text": "[CAMERA_MAIN_LC]: [ERR] Free st_miniRawRes",
+   "sites": [
+    {
+     "site": "0x437bc5f2",
+     "func": "0x437bc588"
+    }
+   ],
+   "funcs": [
+    "0x437bc588"
+   ]
+  },
+  {
+   "vaddr": "0x43ca7531",
+   "text": "[CAMERA_MAIN_LC]: [ERR] Free st_saWorkRes",
+   "sites": [
+    {
+     "site": "0x437bc626",
+     "func": "0x437bc588"
+    }
+   ],
+   "funcs": [
+    "0x437bc588"
+   ]
+  },
+  {
+   "vaddr": "0x43ca755b",
+   "text": "[CAMERA_MAIN_LC]: [LC] Still DM AF cannot get DDR memhandle",
+   "sites": [
+    {
+     "site": "0x437bc682",
+     "func": "0x437bc66a"
+    }
+   ],
+   "funcs": [
+    "0x437bc66a"
+   ]
+  },
+  {
+   "vaddr": "0x43ca7597",
+   "text": "[CAMERA_MAIN_LC]: [LC] lc_DM_AF_Util_allocWorkMemArea_ddr MmuMakeParamAll Err %d",
+   "sites": [
+    {
+     "site": "0x437bc6d2",
+     "func": "0x437bc694"
+    }
+   ],
+   "funcs": [
+    "0x437bc694"
+   ]
+  },
+  {
+   "vaddr": "0x43ca75e8",
+   "text": "[CAMERA_MAIN_LC]: [NG] MEM_UNIT_TYPE_CAM_RAW_DM_AFWORK\n",
+   "sites": [
+    {
+     "site": "0x437bc778",
+     "func": "0x437bc73e"
+    }
+   ],
+   "funcs": [
+    "0x437bc73e"
+   ]
+  },
+  {
+   "vaddr": "0x43ca7620",
+   "text": "[CAMERA_MAIN_LC]: [NG] MEM_UNIT_TYPE_CAM_RAW_DM_AFWORK not expected size. size: %08X\n",
+   "sites": [
+    {
+     "site": "0x437bc790",
+     "func": "0x437bc73e"
+    },
+    {
+     "site": "0x437bc7b0",
+     "func": "0x437bc73e"
+    }
+   ],
+   "funcs": [
+    "0x437bc73e"
+   ]
+  },
+  {
+   "vaddr": "0x43ca7676",
+   "text": "[CAMERA_MAIN_LC]: [NG] MEM_UNIT_TYPE_CAM_RAW_DM_AFWORK_E\n",
+   "sites": [
+    {
+     "site": "0x437bc7e6",
+     "func": "0x437bc73e"
+    }
+   ],
+   "funcs": [
+    "0x437bc73e"
+   ]
+  },
+  {
+   "vaddr": "0x43ca76b0",
+   "text": "[CAMERA_MAIN_LC]: [LC] Still DM AF mmu_start_phys_adrs is zero error.",
+   "sites": [
+    {
+     "site": "0x437bc85e",
+     "func": "0x437bc84c"
+    }
+   ],
+   "funcs": [
+    "0x437bc84c"
+   ]
+  },
+  {
+   "vaddr": "0x43ca7732",
+   "text": "[CAMERA_MAIN_LC]: full_count:0x%04x",
+   "sites": [
+    {
+     "site": "0x437c1e6e",
+     "func": "0x437c1e48"
+    }
+   ],
+   "funcs": [
+    "0x437c1e48"
+   ]
+  },
+  {
+   "vaddr": "0x43ca7756",
+   "text": "[CAMERA_MAIN_LC]: buffer_user_id=%04x",
+   "sites": [
+    {
+     "site": "0x437c1e86",
+     "func": "0x437c1e48"
+    }
+   ],
+   "funcs": [
+    "0x437c1e48"
+   ]
+  },
+  {
+   "vaddr": "0x43ca777c",
+   "text": "[CAMERA_MAIN_LC]: area[60].zpd_flags=%d, area[60].defocus=%d",
+   "sites": [
+    {
+     "site": "0x437c1ea0",
+     "func": "0x437c1e48"
+    }
+   ],
+   "funcs": [
+    "0x437c1e48"
+   ]
+  },
+  {
+   "vaddr": "0x43ca77b9",
+   "text": "[CAMERA_MAIN_LC]: area[60].selected_ym=%d, area[60].selected_contrast=%d",
+   "sites": [
+    {
+     "site": "0x437c1eba",
+     "func": "0x437c1e48"
+    }
+   ],
+   "funcs": [
+    "0x437c1e48"
+   ]
+  },
+  {
+   "vaddr": "0x43ca7802",
+   "text": "[CAMERA_MAIN_LC]: base_defocus=%d",
+   "sites": [
+    {
+     "site": "0x437c1ece",
+     "func": "0x437c1e48"
+    }
+   ],
+   "funcs": [
+    "0x437c1e48"
+   ]
+  },
+  {
+   "vaddr": "0x43ca7824",
+   "text": "[CAMERA_MAIN_LC]: zaf_now_shut_cycle=%d",
+   "sites": [
+    {
+     "site": "0x437c1ee2",
+     "func": "0x437c1e48"
+    }
+   ],
+   "funcs": [
+    "0x437c1e48"
+   ]
+  },
+  {
+   "vaddr": "0x43ca784c",
+   "text": "[CAMERA_MAIN_LC]: iris_cur=%d",
+   "sites": [
+    {
+     "site": "0x437c1ef6",
+     "func": "0x437c1e48"
+    }
+   ],
+   "funcs": [
+    "0x437c1e48"
+   ]
+  },
+  {
+   "vaddr": "0x43ca786a",
+   "text": "[CAMERA_MAIN_LC]: select_area=0x%02x",
+   "sites": [
+    {
+     "site": "0x437c1f0a",
+     "func": "0x437c1e48"
+    }
+   ],
+   "funcs": [
+    "0x437c1e48"
+   ]
+  },
+  {
+   "vaddr": "0x43ca788f",
+   "text": "[CAMERA_MAIN_LC]: mario_use_ng_flag=%d",
+   "sites": [
+    {
+     "site": "0x437c1f1e",
+     "func": "0x437c1e48"
+    }
+   ],
+   "funcs": [
+    "0x437c1e48"
+   ]
+  },
+  {
+   "vaddr": "0x43ca78b6",
+   "text": "[CAMERA_MAIN_LC]: LC_GetZpdResultInfo:Error",
+   "sites": [
+    {
+     "site": "0x437c1f2e",
+     "func": "0x437c1e48"
+    }
+   ],
+   "funcs": [
+    "0x437c1e48"
+   ]
+  },
+  {
+   "vaddr": "0x43ca7a14",
+   "text": "[CAMERA_MAIN_LC]: osal_record_pro error! osal_err=%d\n",
+   "sites": [
+    {
+     "site": "0x437cd19c",
+     "func": "0x437cd06c"
+    }
+   ],
+   "funcs": [
+    "0x437cd06c"
+   ]
+  },
+  {
+   "vaddr": "0x43ca7a4a",
+   "text": "[CAMERA_MAIN_LC]: osal_capstop error! osal_err=%d\n",
+   "sites": [
+    {
+     "site": "0x437cd1c2",
+     "func": "0x437cd06c"
+    }
+   ],
+   "funcs": [
+    "0x437cd06c"
+   ]
+  },
+  {
+   "vaddr": "0x43ca7a94",
+   "text": "[CAMERA_MAIN_LC]: osal_capstart error! osal_err=%d\n",
+   "sites": [
+    {
+     "site": "0x437cd22e",
+     "func": "0x437cd06c"
+    }
+   ],
+   "funcs": [
+    "0x437cd06c"
+   ]
+  },
+  {
+   "vaddr": "0x43ca7d26",
+   "text": "[CAMERA_MAIN_LC]: zpd_HybridMovieAF_reset",
+   "sites": [
+    {
+     "site": "0x437cde58",
+     "func": "0x437cde1c"
+    }
+   ],
+   "funcs": [
+    "0x437cde1c"
+   ]
+  },
+  {
+   "vaddr": "0x43ca7d50",
+   "text": "[CAMERA_MAIN_LC]: zpd_HybridMovieAF Start",
+   "sites": [
+    {
+     "site": "0x437ce2c4",
+     "func": "0x437ce2a0"
+    }
+   ],
+   "funcs": [
+    "0x437ce2a0"
+   ]
+  },
+  {
+   "vaddr": "0x43ca7d7a",
+   "text": "[CAMERA_MAIN_LC]: zpd_HybridMovieAF End",
+   "sites": [
+    {
+     "site": "0x437ce560",
+     "func": "0x437ce2a0"
+    }
+   ],
+   "funcs": [
+    "0x437ce2a0"
+   ]
+  },
+  {
+   "vaddr": "0x43ca7da2",
+   "text": "[CAMERA_MAIN_LC]: buffer[0]=0x%04x",
+   "sites": [
+    {
+     "site": "0x437ceb52",
+     "func": "0x437ceae2"
+    }
+   ],
+   "funcs": [
+    "0x437ceae2"
+   ]
+  },
+  {
+   "vaddr": "0x43ca7dc5",
+   "text": "[CAMERA_MAIN_LC]: buffer[1]=0x%04x",
+   "sites": [
+    {
+     "site": "0x437ceb66",
+     "func": "0x437ceae2"
+    }
+   ],
+   "funcs": [
+    "0x437ceae2"
+   ]
+  },
+  {
+   "vaddr": "0x43ca7de8",
+   "text": "[CAMERA_MAIN_LC]: buffer[2]=0x%04x",
+   "sites": [
+    {
+     "site": "0x437ceb80",
+     "func": "0x437ceae2"
+    }
+   ],
+   "funcs": [
+    "0x437ceae2"
+   ]
+  },
+  {
+   "vaddr": "0x43ca7e0b",
+   "text": "[CAMERA_MAIN_LC]: buffer[3]=0x%04x",
+   "sites": [
+    {
+     "site": "0x437ceb92",
+     "func": "0x437ceae2"
+    }
+   ],
+   "funcs": [
+    "0x437ceae2"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "vaddr": "0x43545cd0",
+   "site_count": 7,
+   "sites": [
+    "0x43545f52",
+    "0x43545f7c",
+    "0x43545f92",
+    "0x43545f5e",
+    "0x4354607c",
+    "0x4354605c",
+    "0x4354612a"
+   ],
+   "string_vaddrs": [
+    "0x43c9ced2",
+    "0x43c9cf3c",
+    "0x43c9cf8d",
+    "0x43c9cfab",
+    "0x43c9cfef",
+    "0x43c9d00a",
+    "0x43c9d03e"
+   ],
+   "sub_block": "scan_predict",
+   "bl_callers": [
+    "0x4374a93c"
+   ],
+   "note": "Volcado de scan/predict; llamado justo después de bl 0x43754be0 en 0x4374a938."
+  },
+  {
+   "vaddr": "0x4373c788",
+   "site_count": 1,
+   "sites": [
+    "0x4373c7ae"
+   ],
+   "string_vaddrs": [
+    "0x43c9c6f6"
+   ],
+   "sub_block": "dm_af_movie",
+   "bl_callers": [],
+   "note": "Helper movie: getMiniRawAddr (mensaje de error)."
+  },
+  {
+   "vaddr": "0x4373c7c0",
+   "site_count": 1,
+   "sites": [
+    "0x4373c7e4"
+   ],
+   "string_vaddrs": [
+    "0x43c9c737"
+   ],
+   "sub_block": "dm_af_movie",
+   "bl_callers": [],
+   "note": "Helper movie: getResizedYAddr (mensaje de error)."
+  },
+  {
+   "vaddr": "0x4373c7f8",
+   "site_count": 1,
+   "sites": [
+    "0x4373c822"
+   ],
+   "string_vaddrs": [
+    "0x43c9c7b9"
+   ],
+   "sub_block": "dm_af_movie",
+   "bl_callers": [],
+   "note": "Helper movie: getSaIfAddr; lo llama calibration_fc_pos 0x43738ec0 (S126)."
+  },
+  {
+   "vaddr": "0x4373c838",
+   "site_count": 1,
+   "sites": [
+    "0x4373c8ac"
+   ],
+   "string_vaddrs": [
+    "0x43c9c7f7"
+   ],
+   "sub_block": "dm_af_movie",
+   "bl_callers": [],
+   "note": "Cierre/liberación de MMU (movie)."
+  },
+  {
+   "vaddr": "0x4373c914",
+   "site_count": 2,
+   "sites": [
+    "0x4373c93c",
+    "0x4373c958"
+   ],
+   "string_vaddrs": [
+    "0x43c9c837",
+    "0x43c9c862"
+   ],
+   "sub_block": "dm_af_movie",
+   "bl_callers": [],
+   "note": "Adquisición ESRAM y comprobación de tamaño de MEM_UNIT_TYPE_CAM_RAW_DM_AFWORK_E."
+  },
+  {
+   "vaddr": "0x4373c986",
+   "site_count": 1,
+   "sites": [
+    "0x4373c99e"
+   ],
+   "string_vaddrs": [
+    "0x43c9c8ba"
+   ],
+   "sub_block": "dm_af_movie",
+   "bl_callers": [],
+   "note": "Fallo al obtener el memhandle de miniRAW (movie)."
+  },
+  {
+   "vaddr": "0x4373c9b0",
+   "site_count": 2,
+   "sites": [
+    "0x4373c9ee",
+    "0x4373ca16"
+   ],
+   "string_vaddrs": [
+    "0x43c9c901",
+    "0x43c9c958"
+   ],
+   "sub_block": "dm_af_movie",
+   "bl_callers": [],
+   "note": "allocWorkMemAreaBank / MmuMakeParamAll y apertura de MMU (movie)."
+  },
+  {
+   "vaddr": "0x4373ca58",
+   "site_count": 1,
+   "sites": [
+    "0x4373ca6a"
+   ],
+   "string_vaddrs": [
+    "0x43c9c993"
+   ],
+   "sub_block": "dm_af_movie",
+   "bl_callers": [],
+   "note": "mmu_start_phys_adrs == 0 (movie)."
+  },
+  {
+   "vaddr": "0x4373ca9c",
+   "site_count": 4,
+   "sites": [
+    "0x4373cad0",
+    "0x4373caf2",
+    "0x4373cb12",
+    "0x4373cb4c"
+   ],
+   "string_vaddrs": [
+    "0x43c9c9d9",
+    "0x43c9ca07",
+    "0x43c9ca37"
+   ],
+   "sub_block": "dm_af_movie",
+   "bl_callers": [],
+   "note": "Adquisición de DDR_Bank/ESRAM_Bank y tamaño de banco."
+  },
+  {
+   "vaddr": "0x4373f45c",
+   "site_count": 3,
+   "sites": [
+    "0x4373f630",
+    "0x4373f7c8",
+    "0x4373f7e0"
+   ],
+   "string_vaddrs": [
+    "0x43c9cb6f",
+    "0x43c9cb8b"
+   ],
+   "sub_block": "lc_af_scan",
+   "bl_callers": [
+    "0x4373fbec",
+    "0x4373fea0"
+   ],
+   "note": "lc_AF_Scan: LOWCON!!! y ERROR!!!!! : %d in lc_AF_Scan.cpp (línea 0x108b)."
+  },
+  {
+   "vaddr": "0x43754be0",
+   "site_count": 2,
+   "sites": [
+    "0x43754e20",
+    "0x4375536e"
+   ],
+   "string_vaddrs": [
+    "0x43c9d05d",
+    "0x43c9d0d5"
+   ],
+   "sub_block": "lc_hybrid_af",
+   "bl_callers": [
+    "0x4373f51c",
+    "0x4373f6b6",
+    "0x4374a938",
+    "0x4376d830"
+   ],
+   "note": "lc_HybridAF: fno leído de [ctx+0x202] en 0x43754e0e; línea 0x25d en 0x43755360."
+  },
+  {
+   "vaddr": "0x43765ad2",
+   "site_count": 2,
+   "sites": [
+    "0x437663e8",
+    "0x43766408"
+   ],
+   "string_vaddrs": [
+    "0x43c9d3df",
+    "0x43c9d419"
+   ],
+   "sub_block": "lc_send_message",
+   "bl_callers": [],
+   "note": "LC_SendMessage: fallo de osal_valloc_msg/osal_snd_msg."
+  },
+  {
+   "vaddr": "0x4376bf64",
+   "site_count": 1,
+   "sites": [
+    "0x4376bfb6"
+   ],
+   "string_vaddrs": [
+    "0x43c9d45c"
+   ],
+   "sub_block": "ms_writer",
+   "bl_callers": [],
+   "note": "MS_Writer: dirección deshabilitada (memmapID)."
+  },
+  {
+   "vaddr": "0x4376cce0",
+   "site_count": 1,
+   "sites": [
+    "0x4376cd04"
+   ],
+   "string_vaddrs": [
+    "0x43c9d498"
+   ],
+   "sub_block": "housing",
+   "bl_callers": [],
+   "note": "Límite de housing (water housing) superado."
+  },
+  {
+   "vaddr": "0x4376cd44",
+   "site_count": 1,
+   "sites": [
+    "0x4376cd84"
+   ],
+   "string_vaddrs": [
+    "0x43c9d4d4"
+   ],
+   "sub_block": "housing",
+   "bl_callers": [],
+   "note": "Límite de housing por el lado lejano."
+  },
+  {
+   "vaddr": "0x437770dc",
+   "site_count": 1,
+   "sites": [
+    "0x4377710e"
+   ],
+   "string_vaddrs": [
+    "0x43c9d60c"
+   ],
+   "sub_block": "osal",
+   "bl_callers": [],
+   "note": "osal_ercord error (primera función)."
+  },
+  {
+   "vaddr": "0x437771a0",
+   "site_count": 1,
+   "sites": [
+    "0x4377728a"
+   ],
+   "string_vaddrs": [
+    "0x43c9d60c"
+   ],
+   "sub_block": "osal",
+   "bl_callers": [],
+   "note": "osal_ercord error (segunda función)."
+  },
+  {
+   "vaddr": "0x43777fec",
+   "site_count": 1,
+   "sites": [
+    "0x4377803c"
+   ],
+   "string_vaddrs": [
+    "0x43c9d646"
+   ],
+   "sub_block": "osal",
+   "bl_callers": [],
+   "note": "MSS_reload con osal_err."
+  },
+  {
+   "vaddr": "0x437bbbe6",
+   "site_count": 1,
+   "sites": [
+    "0x437bbc24"
+   ],
+   "string_vaddrs": [
+    "0x43ca71fa"
+   ],
+   "sub_block": "rlog",
+   "bl_callers": [],
+   "note": "rlog: dirección de secuencia del log."
+  },
+  {
+   "vaddr": "0x437bbc42",
+   "site_count": 1,
+   "sites": [
+    "0x437bbc5c"
+   ],
+   "string_vaddrs": [
+    "0x43ca7251"
+   ],
+   "sub_block": "rlog",
+   "bl_callers": [],
+   "note": "rlog: dirección de cabecera del log."
+  },
+  {
+   "vaddr": "0x437bbc72",
+   "site_count": 1,
+   "sites": [
+    "0x437bbc8c"
+   ],
+   "string_vaddrs": [
+    "0x43ca7286"
+   ],
+   "sub_block": "rlog",
+   "bl_callers": [],
+   "note": "rlog: dirección principal del log."
+  },
+  {
+   "vaddr": "0x437bbea0",
+   "site_count": 4,
+   "sites": [
+    "0x437bbf56",
+    "0x437bbfda",
+    "0x437bc006",
+    "0x437bc080"
+   ],
+   "string_vaddrs": [
+    "0x43ca72bb",
+    "0x43ca731e",
+    "0x43ca7372",
+    "0x43ca738c"
+   ],
+   "sub_block": "rlog",
+   "bl_callers": [],
+   "note": "rlog: LUMI_COEF_CALC, ITR_NUM_CALC, watkao1 y END_SYNC_INFO."
+  },
+  {
+   "vaddr": "0x437bc0ce",
+   "site_count": 1,
+   "sites": [
+    "0x437bc18a"
+   ],
+   "string_vaddrs": [
+    "0x43ca73e1"
+   ],
+   "sub_block": "rlog",
+   "bl_callers": [],
+   "note": "rlog: error de reenvío del DM AF."
+  },
+  {
+   "vaddr": "0x437bc21c",
+   "site_count": 2,
+   "sites": [
+    "0x437bc246",
+    "0x437bc264"
+   ],
+   "string_vaddrs": [
+    "0x43ca7417",
+    "0x43ca743d"
+   ],
+   "sub_block": "rlog",
+   "bl_callers": [],
+   "note": "rlog: LOG_FIELD_NO_EMPTY / LOG_FIELD_UPDATED."
+  },
+  {
+   "vaddr": "0x437bc4b8",
+   "site_count": 1,
+   "sites": [
+    "0x437bc4dc"
+   ],
+   "string_vaddrs": [
+    "0x43ca7493"
+   ],
+   "sub_block": "dm_af_still",
+   "bl_callers": [],
+   "note": "Helper still: getMiniRawAddr."
+  },
+  {
+   "vaddr": "0x437bc52c",
+   "site_count": 1,
+   "sites": [
+    "0x437bc572"
+   ],
+   "string_vaddrs": [
+    "0x43ca74ce"
+   ],
+   "sub_block": "dm_af_still",
+   "bl_callers": [],
+   "note": "Helper still: getSaIfAddr."
+  },
+  {
+   "vaddr": "0x437bc588",
+   "site_count": 3,
+   "sites": [
+    "0x437bc5e2",
+    "0x437bc5f2",
+    "0x437bc626"
+   ],
+   "string_vaddrs": [
+    "0x43c9c7f7",
+    "0x43ca7506",
+    "0x43ca7531"
+   ],
+   "sub_block": "dm_af_still",
+   "bl_callers": [],
+   "note": "Liberación de st_miniRawRes/st_saWorkRes y cierre de MMU (still)."
+  },
+  {
+   "vaddr": "0x437bc66a",
+   "site_count": 1,
+   "sites": [
+    "0x437bc682"
+   ],
+   "string_vaddrs": [
+    "0x43ca755b"
+   ],
+   "sub_block": "dm_af_still",
+   "bl_callers": [],
+   "note": "Fallo al obtener el memhandle DDR (still)."
+  },
+  {
+   "vaddr": "0x437bc694",
+   "site_count": 2,
+   "sites": [
+    "0x437bc6fa",
+    "0x437bc6d2"
+   ],
+   "string_vaddrs": [
+    "0x43c9c958",
+    "0x43ca7597"
+   ],
+   "sub_block": "dm_af_still",
+   "bl_callers": [],
+   "note": "allocWorkMemArea_ddr / MmuMakeParamAll y apertura de MMU (still)."
+  },
+  {
+   "vaddr": "0x437bc73e",
+   "site_count": 5,
+   "sites": [
+    "0x437bc800",
+    "0x437bc778",
+    "0x437bc790",
+    "0x437bc7b0",
+    "0x437bc7e6"
+   ],
+   "string_vaddrs": [
+    "0x43c9c862",
+    "0x43ca75e8",
+    "0x43ca7620",
+    "0x43ca7676"
+   ],
+   "sub_block": "dm_af_still",
+   "bl_callers": [],
+   "note": "Comprobaciones de tamaño MEM_UNIT_TYPE_CAM_RAW_DM_AFWORK(_E) (still)."
+  },
+  {
+   "vaddr": "0x437bc84c",
+   "site_count": 1,
+   "sites": [
+    "0x437bc85e"
+   ],
+   "string_vaddrs": [
+    "0x43ca76b0"
+   ],
+   "sub_block": "dm_af_still",
+   "bl_callers": [],
+   "note": "mmu_start_phys_adrs == 0 (still)."
+  },
+  {
+   "vaddr": "0x437c1e48",
+   "site_count": 10,
+   "sites": [
+    "0x437c1e6e",
+    "0x437c1e86",
+    "0x437c1ea0",
+    "0x437c1eba",
+    "0x437c1ece",
+    "0x437c1ee2",
+    "0x437c1ef6",
+    "0x437c1f0a",
+    "0x437c1f1e",
+    "0x437c1f2e"
+   ],
+   "string_vaddrs": [
+    "0x43ca7732",
+    "0x43ca7756",
+    "0x43ca777c",
+    "0x43ca77b9",
+    "0x43ca7802",
+    "0x43ca7824",
+    "0x43ca784c",
+    "0x43ca786a",
+    "0x43ca788f",
+    "0x43ca78b6"
+   ],
+   "sub_block": "zpd_result",
+   "bl_callers": [
+    "0x439d9d82"
+   ],
+   "note": "LC_GetZpdResultInfo: volcado del struct ZPD; llamado desde 0x439d9d82."
+  },
+  {
+   "vaddr": "0x437cd06c",
+   "site_count": 3,
+   "sites": [
+    "0x437cd19c",
+    "0x437cd1c2",
+    "0x437cd22e"
+   ],
+   "string_vaddrs": [
+    "0x43ca7a14",
+    "0x43ca7a4a",
+    "0x43ca7a94"
+   ],
+   "sub_block": "mlog",
+   "bl_callers": [],
+   "note": "Control de captura mlog (record_pro/capstop/capstart)."
+  },
+  {
+   "vaddr": "0x437cde1c",
+   "site_count": 1,
+   "sites": [
+    "0x437cde58"
+   ],
+   "string_vaddrs": [
+    "0x43ca7d26"
+   ],
+   "sub_block": "zpd_hybrid_movie",
+   "bl_callers": [
+    "0x437ce2ce"
+   ],
+   "note": "zpd_HybridMovieAF_reset; llamado desde 0x437ce2ce."
+  },
+  {
+   "vaddr": "0x437ce2a0",
+   "site_count": 2,
+   "sites": [
+    "0x437ce2c4",
+    "0x437ce560"
+   ],
+   "string_vaddrs": [
+    "0x43ca7d50",
+    "0x43ca7d7a"
+   ],
+   "sub_block": "zpd_hybrid_movie",
+   "bl_callers": [],
+   "note": "zpd_HybridMovieAF Start/End; sin bl directo medido."
+  },
+  {
+   "vaddr": "0x437ceae2",
+   "site_count": 4,
+   "sites": [
+    "0x437ceb52",
+    "0x437ceb66",
+    "0x437ceb80",
+    "0x437ceb92"
+   ],
+   "string_vaddrs": [
+    "0x43ca7da2",
+    "0x43ca7dc5",
+    "0x43ca7de8",
+    "0x43ca7e0b"
+   ],
+   "sub_block": "zpd_hybrid_movie",
+   "bl_callers": [],
+   "note": "Volcado buffer[0..3]; sin bl directo medido."
+  }
+ ]
+}
