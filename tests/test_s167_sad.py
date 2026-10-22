@@ -125,11 +125,23 @@ def test_total_cadenas_sad():
 
 
 def test_rango_bloque_sad():
-    """Las 45 cadenas están en un bloque contiguo de .rodata."""
+    """Las 45 cadenas ocupan 3 bloques separados, no uno contiguo."""
     addrs = sorted(a for a, _ in CADENAS)
     assert addrs[0] == 0x43ce546b
     assert addrs[-1] == 0x43ce59c1
-    # el bloque no contiene otras cadenas [X] intercaladas
+    # bloque A: 3 cadenas, hueco de 256 B (tabla de indices), bloque B: 3 cadenas,
+    # hueco de 51 B (cola + 3 cadenas SA), bloque C: 39 cadenas
+    assert addrs[0] == 0x43ce546b and addrs[2] == 0x43ce54a5
+    assert addrs[3] == 0x43ce55bc and addrs[5] == 0x43ce55fa
+    assert addrs[6] == 0x43ce564c and addrs[-1] == 0x43ce59c1
+    # el hueco A->B (256 B) no contiene ninguna cadena [SAD]
+    hueco = B[0x43ce54bc - BASE:0x43ce55bc - BASE]
+    assert b"[SAD]" not in hueco
+    # el hueco B->C (51 B) contiene la cola de tabla y las 3 cadenas SA, no [SAD]
+    hueco2 = B[0x43ce5619 - BASE:0x43ce564c - BASE]
+    assert b"[SAD]" not in hueco2
+    assert b"SA_PREINSTALLED_PRG:" in hueco2
+    # dentro del rango total no hay otros prefijos de modulo intercalados
     for m in re.finditer(rb"\[[A-Z][A-Z0-9_]{1,24}\]", B[0x43ce546b - BASE:0x43ce59c1 - BASE]):
         assert m.group() == b"[SAD]"
 
@@ -280,20 +292,27 @@ def test_cadenas_sa_comunes_presentes_en_los_tres(vaddr, texto):
     assert texto.encode() in A63_B
 
 
-def test_tabla_de_datos_truncada_por_las_trazas_sad():
-    """Los 27 bytes de prefijo de la tabla A7S/A6300 estan en la A6000, y a
-    partir de ahi la A6000 intercala las cadenas [SAD]."""
-    prefijo = bytes.fromhex(
+def test_tabla_de_datos_intercalada_por_las_trazas_sad():
+    """La cabecera de 27 B y la tabla de 25 indices sobreviven intactas en la A6000,
+    pero las cadenas [SAD] se han intercalado en dos huecos (3 bloques)."""
+    cabecera = bytes.fromhex(
         "000101010001010204088383830483838307070707070707070707")
-    assert len(prefijo) == 27
-    # A6000: el prefijo esta en 0x43ce5445 y la primera cadena [SAD] en 0x43ce546b
-    assert bytes_at(0x43ce5445, 27) == prefijo
-    assert cstr(0x43ce546b).startswith("[SAD] ")
-    # A7S: el mismo prefijo seguido del resto de la tabla (sin cadenas [SAD])
-    assert A7S_B[0x43cda6ef - BASE:0x43cda6ef - BASE + 27] == prefijo
+    assert len(cabecera) == 27
+    # cabecera IDENTICA en los tres firmware
+    assert bytes_at(0x43ce5445, 27) == cabecera            # A6000
+    assert A7S_B[0x43cda6ef - BASE:0x43cda6ef - BASE + 27] == cabecera   # A7S
+    assert A63_B[0x43df89bc - BASE:0x43df89bc - BASE + 27] == cabecera   # A6300
+    # la tabla de 25 indices (0x03..0x1b) embebida en un mar de 0x1c es IDENTICA
+    seq6 = [x for x in B[0x43ce54bc - BASE:0x43ce55bc - BASE] if x != 0x1C]
+    seq7 = [x for x in A7S_B[0x43cda716 - BASE:0x43cda816 - BASE] if x != 0x1C]
+    assert seq6 == seq7 == list(range(0x03, 0x1C))
+    # y las cadenas [SAD] están intercaladas en los dos huecos
+    assert cstr(0x43ce546b).startswith("[SAD] ")     # bloque A, antes de la tabla
+    assert cstr(0x43ce55bc).startswith("[SAD] ")     # bloque B, tras la tabla
+    assert cstr(0x43ce564c).startswith("[SAD] ")     # bloque C, tras las cadenas SA
+    # la A7S/A6300 no tienen ninguna cadena [SAD] en ese tramo
     assert b"[SAD]" not in A7S_B[0x43cda6ef - BASE:0x43cda81c - BASE]
-    # A6300: idem
-    assert A63_B[0x43df89bc - BASE:0x43df89bc - BASE + 27] == prefijo
+    assert b"[SAD]" not in A63_B[0x43df89bc - BASE:0x43df8960 - BASE]
 
 
 # ------------------------------------------------- negativo obturador
@@ -344,6 +363,33 @@ def test_rtti_y_ficheros_vecinos_del_bloque_scalarinfra():
 
 
 # ---------------------------------------------------------- artefactos
+def test_cadena_peg_dec_muerta():
+    """'PEG_DEC' (0x43ce5644) es una subcadena muerta: 0 referencias PIC y 0
+    punteros embebidos. El ldr de 0x439a11ac NO apunta a ella."""
+    assert cstr(0x43ce5640) == "SA_JPEG_DEC"
+    assert cstr(0x43ce5644) == "PEG_DEC"
+    gm = json.load(open("analysis/s106_imaging_cap/pic_refs_strict_global.json"))
+    assert hex(0x43ce5644) not in gm
+    import struct as _s
+    assert _s.pack("<I", 0x43ce5644) not in B
+    # el ldr de 0x439a11ac resuelve a '[SAD] DbgPrt CmdRcv' (0x43ce564c)
+    pool = 0x439a1594
+    w = u32(pool)
+    assert (w + (0x439a11b4 + 4)) & 0xFFFFFFFF == 0x43ce564c
+    assert cstr(0x43ce564c) == "[SAD] DbgPrt CmdRcv"
+
+
+def test_impresor_propio_del_modulo():
+    """El impresor 0x439a10f0 es propio de [SAD]: id 0x93, tamaño 0x9a y
+    reserva con osal_try_valloc_msg 0x435612d0."""
+    # movs r2, #0x9a  (tamaño del mensaje)  -> 9a 22
+    assert bytes_at(0x439a110a, 2) == bytes.fromhex("9a22")
+    # bl 0x435612d0 -> osal_try_valloc_msg   -> c0 f7 df f0
+    assert bytes_at(0x439a110e, 4) == bytes.fromhex("c0f7dff0")
+    # el llamador pasa r0 = 0x93 (id de mensaje) -> 93 20
+    assert bytes_at(0x439a11ae, 2) == bytes.fromhex("9320")
+
+
 def test_json_estructurado_consistente():
     """sad.json reflects the same figures as the bytes."""
     j = json.load(open(os.path.join(HERE, "sad.json")))

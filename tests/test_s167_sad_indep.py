@@ -142,6 +142,30 @@ class TestS167SadIndependiente(unittest.TestCase):
         self.assertEqual(cstr(0x43ce5634), "SA_JPEG_ENC")
         self.assertEqual(cstr(0x43ce5640), "SA_JPEG_DEC")
 
+    def test_tabla_del_driver_SA_intercalada_por_las_trazas_SAD(self):
+        """La cabecera de 27 B y la tabla de 25 indices de la tabla del driver SA
+        sobreviven intactas en la A6000, pero las 44 cadenas [SAD] se han
+        intercalado en dos huecos (por eso el bloque se parte en 3)."""
+        cabecera = bytes.fromhex(
+            "000101010001010204088383830483838307070707070707070707")
+        self.assertEqual(len(cabecera), 27)
+        # cabecera IDENTICA en los tres firmware
+        self.assertEqual(B[0x43ce5445 - BASE:0x43ce5445 - BASE + 27], cabecera)
+        self.assertEqual(A7[0x43cda6ef - BASE:0x43cda6ef - BASE + 27], cabecera)
+        self.assertEqual(A63[0x43df89bc - BASE:0x43df89bc - BASE + 27], cabecera)
+        # tabla de 25 indices (0x03..0x1b) embebida en un mar de 0x1c: IDENTICA
+        seq6 = [x for x in B[0x43ce54bc - BASE:0x43ce55bc - BASE] if x != 0x1C]
+        seq7 = [x for x in A7[0x43cda716 - BASE:0x43cda816 - BASE] if x != 0x1C]
+        self.assertEqual(seq6, seq7)
+        self.assertEqual(seq6, list(range(0x03, 0x1C)))
+        # las cadenas [SAD] estan en los dos huecos
+        self.assertTrue(cstr(0x43ce546b).startswith("[SAD] "))   # bloque A
+        self.assertTrue(cstr(0x43ce55bc).startswith("[SAD] "))   # bloque B
+        self.assertTrue(cstr(0x43ce564c).startswith("[SAD] "))   # bloque C
+        # y los otros dos firmware no tienen ninguna en ese tramo
+        self.assertNotIn(b"[SAD]", A7[0x43cda6ef - BASE:0x43cda81c - BASE])
+        self.assertNotIn(b"[SAD]", A63[0x43df89bc - BASE:0x43df8960 - BASE])
+
     # ------------------------------------------------- sitios y emisores
     def test_49_sitios_en_5_funciones(self):
         cad = sad_strings(B)

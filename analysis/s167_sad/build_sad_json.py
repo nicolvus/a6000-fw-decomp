@@ -202,17 +202,29 @@ def main():
         "diferencial": dif,
         "diferencial_estructural": {
             "hallazgo": ("La tabla de bytes que en la A7S/A6300 ocupa el hueco entre "
-                         "`ZMA0V1.0SA5_V1.0` y `SA_PREINSTALLED_PRG:` esta TRUNCADA en la "
-                         "A6000: los primeros 27 bytes son identicos y a partir de ahi "
-                         "la A6000 intercala las 44 cadenas [SAD]. Es decir, las trazas "
-                         "[SAD] se han insertado en el hueco que en los otros dos "
-                         "firmwares ocupa esa tabla de datos."),
+                         "`ZMA0V1.0SA5_V1.0` y `SA_PREINSTALLED_PRG:` esta INTERCALADA "
+                         "en la A6000 con las 44 cadenas [SAD]: la cabecera de 27 B y "
+                         "la tabla de 25 indices (0x03..0x1b) sobreviven intactas, "
+                         "pero las trazas se han insertado en dos huecos, partiendo "
+                         "el bloque en 3 (A: 3 cadenas, B: 3 cadenas, C: 39 cadenas)."),
             "tabla_A7S": hex(0x43cda6ef),
-            "tabla_A7S_len": 300,
-            "prefijo_identico_A6000": hex(0x43ce5445),
-            "prefijo_identico_len": 27,
-            "primera_cadena_SAD": hex(0x43ce546b),
             "tabla_A6300": hex(0x43df89bc),
+            "cabecera_27B_identica_en_los_tres": {
+                "A6000": hex(0x43ce5445),
+                "A7S": hex(0x43cda6ef),
+                "A6300": hex(0x43df89bc),
+                "bytes": ("000101010001010204088383830483838307070707070707070707"),
+            },
+            "tabla_indices_25_identica": {
+                "A6000": hex(0x43ce54bc),
+                "A7S": hex(0x43cda716),
+                "bytes_no_0x1c": [hex(x) for x in range(0x03, 0x1C)],
+            },
+            "bloques_de_cadenas_SAD": {
+                "A_handles": [hex(0x43ce546b), hex(0x43ce54bb), 3],
+                "B_hdr_err": [hex(0x43ce55bc), hex(0x43ce5618), 3],
+                "C_dbgprt": [hex(0x43ce564c), hex(0x43ce59d1), 39],
+            },
         },
         "interes_para_la_linea_del_obturador": {
             "menciona_obturacion": False,
@@ -227,6 +239,64 @@ def main():
                      "aparece 'Jpg' en 4 mensajes, pero como indice de cola FIFO "
                      "(JpgNrm/JpgSrt = indices normal/sort de JPEG), no como captura. "
                      "Sin efecto en S51 (A/B/C = NO)."),
+        },
+        "verif_adicional": {
+            "canal_de_log_propio": {
+                "impresor": hex(0x439a10f0),
+                "id_mensaje": "0x93 (147)",
+                "tamano_mensaje": "0x9a",
+                "reserva": "osal_try_valloc_msg 0x435612d0",
+                "nota": ("impresor propio del modulo, distinto del logger global "
+                         "0x435ab880 que usan [SFRA]/[SFRS]"),
+            },
+            "direcciones_de_datos_de_los_emisores": {
+                "tabla_handles_255_u16": {
+                    "vaddr": hex(0x43f84bfe),
+                    "como": ("ldr r3,[pc,#0xb8] en 0x43998574 + add r3,pc en "
+                             "0x4399857a; fin = base+0x1fe"),
+                },
+                "tabla_handles_32_u16": {
+                    "vaddr": hex(0x43f85932),
+                    "como": ("ldr r3,[pc,#0x98] en 0x43998598 + add r3,pc en "
+                             "0x4399859a; fin = base+0x40"),
+                },
+                "contador_u32_alloc_cnt": {
+                    "vaddr": hex(0x43f31368),
+                    "como": "ldr r3,[pc,#0x80] en 0x439985b6 + add r3,pc en 0x439985b8",
+                },
+                "contador_u16_same_hndl_get_cnt": {
+                    "vaddr": hex(0x43f84bfc),
+                    "como": "ldr r3,[pc,#0x70] en 0x439985ca + add r3,pc en 0x439985d0",
+                },
+            },
+            "tabla_de_versiones_sa": {
+                "vaddr_ini": hex(0x43ce5402),
+                "entradas": ["SA0_V1.0|SA5_V1.0", "ZMA1V1.0|SA5_V1.0",
+                             "SA1_V1.0|SA5_V1.0", "ZMA0V1.0|SA5_V1.0"],
+                "comparacion_16_bytes": hex(0x43993128),
+                "globales_runtime": [hex(0x43f2ef7c), hex(0x43f2ef6e),
+                                     hex(0x43f2ef5c), hex(0x43f2ef8c)],
+            },
+            "anclas_de_codigo_para_el_diferencial": {
+                "nota": ("sitios PIC de las mismas cadenas del driver SA en los tres "
+                         "firmwares: el bloque de codigo es el mismo modulo pero "
+                         "distinto codigo (crece en la fw3.21 de la A6000)"),
+                "[SIO]osal_valloc_msg": {"A6000": hex(0x43990414), "A7S": hex(0x4397df30),
+                                         "A6300": hex(0x43a24b68)},
+                "SA_PREINSTALLED_PRG:": {"A6000": hex(0x4399ee6a), "A7S": hex(0x4398c8cc),
+                                          "A6300": hex(0x43a2accc)},
+                "ScalarInfraAsyncMain.cpp": {"A6000": hex(0x439a18d6), "A7S": hex(0x4398f122),
+                                             "A6300": hex(0x43a387fa)},
+            },
+            "cadena_PEG_DEC_muerta": {
+                "vaddr": hex(0x43ce5644),
+                "texto": "PEG_DEC",
+                "nota": ("subcadena de 'SA_JPEG_DEC' (0x43ce5640) + 4. 0 referencias PIC "
+                         "y 0 punteros embebidos de 4 B: es una cadena MUERTA. El "
+                         "ldr r3,[pc,#0x3e4] de 0x439a11ac apunta al pool 0x439a1594 "
+                         "(W=0x344494) y con el add r3,pc de 0x439a11b4 el destino es "
+                         "0x43ce564c ('[SAD] DbgPrt CmdRcv'), NO 0x43ce5644."),
+            },
         },
         "abierto_no_verificado": [
             "sigla 'SAD' sin expansion textual: NO VERIFICADO (no se inventa)",
