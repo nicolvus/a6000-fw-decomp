@@ -1,0 +1,233 @@
+{
+ "module": "CAMERA_MAIN_CC",
+ "stages": [
+  {
+   "method": "ExtractCaptureData()",
+   "stage_func": "0x43aeb2ae",
+   "state": {
+    "insn": "0x43aeb2b4 strb r5, [r3, #0xb]",
+    "r2_inmediato": null,
+    "ctx": [
+     "0x43aeb2ae ldr r3, [r0, #8]",
+     "0x43aeb2b0 push {r4, r5, r6, lr}",
+     "0x43aeb2b2 movs r5, #0"
+    ]
+   }
+  },
+  {
+   "method": "CaptureInit()",
+   "stage_func": "0x43aeb2ec",
+   "state": {
+    "insn": "0x43aeb2f4 strb r2, [r3, #0xb]",
+    "r2_inmediato": "r2, #1",
+    "ctx": [
+     "0x43aeb2ec ldr r3, [r0, #8]",
+     "0x43aeb2ee movs r2, #1",
+     "0x43aeb2f0 push {r4, lr}",
+     "0x43aeb2f2 mov r4, r0"
+    ]
+   }
+  },
+  {
+   "method": "SetReadImageParam()",
+   "stage_func": "0x43aeb324",
+   "state": {
+    "insn": "0x43aeb32c strb r2, [r3, #0xb]",
+    "r2_inmediato": "r2, #2",
+    "ctx": [
+     "0x43aeb324 ldr r3, [r0, #8]",
+     "0x43aeb326 movs r2, #2",
+     "0x43aeb328 push {r4, r5, r6, lr}",
+     "0x43aeb32a mov r4, r0"
+    ]
+   }
+  },
+  {
+   "method": "SetNRParam()",
+   "stage_func": "0x43aeb358",
+   "state": {
+    "insn": "0x43aeb360 strb r2, [r3, #0xb]",
+    "r2_inmediato": "r2, #3",
+    "ctx": [
+     "0x43aeb358 ldr r3, [r0, #8]",
+     "0x43aeb35a movs r2, #3",
+     "0x43aeb35c push {r4, r5, r6, lr}",
+     "0x43aeb35e mov r4, r0"
+    ]
+   }
+  },
+  {
+   "method": "SetOPDParam()",
+   "stage_func": "0x43aeb3a6",
+   "state": {
+    "insn": "0x43aeb3ae strb r2, [r3, #0xb]",
+    "r2_inmediato": "r2, #4",
+    "ctx": [
+     "0x43aeb3a6 ldr r3, [r0, #8]",
+     "0x43aeb3a8 movs r2, #4",
+     "0x43aeb3aa push {r4, r5, r6, lr}",
+     "0x43aeb3ac mov r4, r0"
+    ]
+   }
+  },
+  {
+   "method": "AfterOPDAfterNR()",
+   "stage_func": "0x43aeb3f8",
+   "state": {
+    "insn": "0x43aeb400 strb r2, [r3, #0xb]",
+    "r2_inmediato": "r2, #5",
+    "ctx": [
+     "0x43aeb3f8 ldr r3, [r0, #8]",
+     "0x43aeb3fa movs r2, #5",
+     "0x43aeb3fc push {r4, r5, r6, lr}",
+     "0x43aeb3fe mov r4, r0"
+    ]
+   }
+  },
+  {
+   "method": "SetDevelopParam()",
+   "stage_func": "0x437a1314",
+   "state": {
+    "insn": "0x437a131c strb r2, [r3, #0xb]",
+    "r2_inmediato": "r2, #6",
+    "ctx": [
+     "0x437a1314 ldr r3, [r0, #8]",
+     "0x437a1316 movs r2, #6",
+     "0x437a1318 push {r4, r5, r6, lr}",
+     "0x437a131a mov r4, r0"
+    ]
+   }
+  },
+  {
+   "method": "SetDevDetectDevelopParam()",
+   "stage_func": "0x43aeb472",
+   "state": {
+    "insn": "0x43aeb47a strb r2, [r3, #0xb]",
+    "r2_inmediato": "r2, #8",
+    "ctx": [
+     "0x43aeb472 ldr r3, [r0, #8]",
+     "0x43aeb474 movs r2, #8",
+     "0x43aeb476 push {r4, r5, r6, lr}",
+     "0x43aeb478 mov r4, r0"
+    ]
+   }
+  },
+  {
+   "method": "DetectYC()",
+   "stage_func": "0x43aeb4ca",
+   "state": {
+    "insn": "0x43aeb4d2 strb r2, [r3, #0xb]",
+    "r2_inmediato": "r2, #0",
+    "ctx": [
+     "0x43aeb4ca ldr r3, [r0, #8]",
+     "0x43aeb4cc movs r2, #0",
+     "0x43aeb4ce push {r4, r5, r6, lr}",
+     "0x43aeb4d0 sub sp, #0x18"
+    ]
+   }
+  },
+  {
+   "method": "SetDualRecParam()",
+   "stage_func": "0x43aeb50e",
+   "state": {
+    "insn": "0x43aeb516 strb r2, [r3, #0xb]",
+    "r2_inmediato": "r2, #7",
+    "ctx": [
+     "0x43aeb50e ldr r3, [r0, #8]",
+     "0x43aeb510 movs r2, #7",
+     "0x43aeb512 push {r4, r5, r6, lr}",
+     "0x43aeb514 mov r4, r0"
+    ]
+   }
+  },
+  {
+   "method": "SetDAEParam()",
+   "stage_func": "0x43aeb564",
+   "state": {
+    "insn": "0x43aeb570 strb r2, [r3, #0xb]",
+    "r2_inmediato": "r2, #6",
+    "ctx": [
+     "0x43aeb568 ldr r3, [r0, #8]",
+     "0x43aeb56a movs r2, #6",
+     "0x43aeb56c push {r4, r5, r6, lr}",
+     "0x43aeb56e mov r4, r0"
+    ]
+   }
+  },
+  {
+   "method": "SetSACCParam()",
+   "stage_func": "0x43aeb568",
+   "state": {
+    "insn": "0x43aeb570 strb r2, [r3, #0xb]",
+    "r2_inmediato": "r2, #6",
+    "ctx": [
+     "0x43aeb568 ldr r3, [r0, #8]",
+     "0x43aeb56a movs r2, #6",
+     "0x43aeb56c push {r4, r5, r6, lr}",
+     "0x43aeb56e mov r4, r0"
+    ]
+   }
+  },
+  {
+   "method": "WriteExifMakernote()",
+   "stage_func": "0x43aeb5a6",
+   "state": {
+    "insn": "0x43aeb5ae strb r2, [r3, #0xb]",
+    "r2_inmediato": "r2, #9",
+    "ctx": [
+     "0x43aeb5a6 ldr r3, [r0, #8]",
+     "0x43aeb5a8 movs r2, #9",
+     "0x43aeb5aa push {r4, lr}",
+     "0x43aeb5ac mov r4, r0"
+    ]
+   }
+  },
+  {
+   "method": "SetPlayRawDevDetectDevelop",
+   "stage_func": "0x43aeb5ca",
+   "state": {
+    "insn": "0x43aeb5d2 strb r2, [r3, #0xb]",
+    "r2_inmediato": "r2, #8",
+    "ctx": [
+     "0x43aeb5ca ldr r3, [r0, #8]",
+     "0x43aeb5cc movs r2, #8",
+     "0x43aeb5ce push {r4, lr}",
+     "0x43aeb5d0 mov r4, r0"
+    ]
+   }
+  },
+  {
+   "method": "SetPlayRawDevelopParam()",
+   "stage_func": "0x43aeb5e8",
+   "state": {
+    "insn": "0x43aeb5f0 strb r2, [r3, #0xb]",
+    "r2_inmediato": "r2, #6",
+    "ctx": [
+     "0x43aeb5e8 ldr r3, [r0, #8]",
+     "0x43aeb5ea movs r2, #6",
+     "0x43aeb5ec push {r4, lr}",
+     "0x43aeb5ee mov r4, r0"
+    ]
+   }
+  },
+  {
+   "method": "SetReviewDevelopParam()",
+   "stage_func": "0x43aeb606",
+   "state": {
+    "insn": "0x43aeb60e strb r2, [r3, #0xb]",
+    "r2_inmediato": "r2, #0xb",
+    "ctx": [
+     "0x43aeb606 ldr r3, [r0, #8]",
+     "0x43aeb608 movs r2, #0xb",
+     "0x43aeb60a push {r4, r5, r6, lr}",
+     "0x43aeb60c mov r4, r0"
+    ]
+   }
+  },
+  {
+   "method": "WriteSACCMakerNote()",
+   "stage_func": "0x437a16a4",
+   "state": null
+  }
+ ]
+}
