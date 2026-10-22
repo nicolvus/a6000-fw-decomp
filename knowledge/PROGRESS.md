@@ -43,7 +43,7 @@
 - Resultado: `procedure_pseudo_code` mapea offset y falla explícitamente si no hay procedimiento; `procedure_info`, `procedure_assembly`, `analyze_function` rechazan ese selector; no hay herramienta de crear procedimiento/entry en la sesión actual. No se mutó sesión ni artefacto.
 - Evidencia: error de cobertura `ev_ea22a2182a4e3d23312394b402b358789ae6a158f2c91f4dd012453fd50de7ed`; mapeo staging `ev_adf4d88907eb3ff81fba796af3f1ddac9680ffe4aded30e67aa18febd79e3417`; caller real `ev_26bca5083b40a7c16bcf21eec1635a774c20532c95739f7acd57aa3649d06ad7`; offset equivocado `0x27617e` → `0x437b717e`, procedimiento no relacionado `ev_b0d6874334a9baa4823bb7b150b77290a5434ef146c37fcd58858065b1babd63`.
 - Artefactos: `analysis/s146_rea_seed_capability/{verify_offsets.py,rea_seed_capability.json}`, `tests/test_s146_rea_seed_capability.py`, `docs/capture/s146-rea-seed-limit.md`.
-- Pruebas: unittest 3/3 PASS; pendiente suite, commit/push.
+- Pruebas: unittest S146 3/3 PASS; suite S140–S146 + knowledge 82/82 PASS; `git diff --check` PASS. Commit `0a865472` publicado en `origin/main`.
 - Siguiente: recorrido estático de bytes con `read_bytes` REA para localizar stores/gates, o mover a otra pregunta independiente; no repetir `file-offset:` como seeding.
 
 Checkpoint persistente. Actualizar al terminar cada etapa, antes de continuar

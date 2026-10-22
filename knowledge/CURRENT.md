@@ -2,7 +2,7 @@
 
 ## S146 — límite de seeding REA y offset corregido (22-10-2026)
 
-REA acepta `file-offset:` solo para resolver un procedimiento ya existente; no ofrece creación/seeding de función en el proveedor activo. `0x43843a44` mapea a `0x302a44` pero pseudocode falla por `no procedure`; `0x437b617e` corresponde a `0x27517e` (el offset `0x27617e` fue error de coordenada y mapea a otra VA). **La cobertura limitada no prueba ausencia.** [Informe](../docs/capture/s146-rea-seed-limit.md), reproducción `analysis/s146_rea_seed_capability/rea_seed_capability.json` (3 tests).
+REA acepta `file-offset:` solo para resolver un procedimiento ya existente; no ofrece creación/seeding de función en el proveedor activo. `0x43843a44` mapea a `0x302a44` pero pseudocode falla por `no procedure`; `0x437b617e` corresponde a `0x27517e` (el offset `0x27617e` fue error de coordenada y mapea a otra VA). **La cobertura limitada no prueba ausencia.** [Informe](../docs/capture/s146-rea-seed-limit.md), reproducción `analysis/s146_rea_seed_capability/rea_seed_capability.json` (3 tests). Commit publicado: `0a865472`.
 
 **S145 se conserva** como observación de bytes; su sugerencia de sembrar se reemplaza por recorrido estático reproducible. Siguiente: delimitar código Thumb mediante `read_bytes` REA y contrastar stores/gates sin afirmar CFG completo; si no cierra, pasar a otra pregunta IMX210 independiente.
 
