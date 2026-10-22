@@ -1,9 +1,19 @@
 # Estado actual — léeme primero
 
 Resumen operativo breve. Para el historial completo de decisiones, ver `knowledge/PROGRESS.md`.
-Para restricciones del proyecto (sin firmware ejecutado, sin flasheo, sin `git push`), ver `docs/STATE.md`.
+Para restricciones del proyecto (sin firmware ejecutado, sin flasheo) ver `docs/STATE.md`; el usuario
+ha instruido explícitamente subir cada hito terminado a `origin/main`.
 
 [Plan de pruebas físicas pendientes](../docs/capture/physical-test-plan.md) (P1–P8, ninguna ejecutada; requieren tu autorización).
+
+**Sesión actual (21-10-2026)**: línea de RE general por módulos de trazas + línea del obturador
+electrónico. Lo último: **S137** (`[CTRLCORE]`), **S136** (`[ACCY]`), **S135** (control positivo:
+el A6300 tiene `ElecShutter/` y la A6000/A7S **no**), **S134** (la relación `shut`→`svd` es
+aritmética, no tabulada), **S133** (`[MOUNT_DEBUG]`), **S132** (`[CLK_CTRL]`), **S131** (`[VPH_API]`),
+**S130** (los 20 módulos "nuevos"), **S129** (`[CAMERA_MAIN_IM]`), **S128** (mapa de etiquetado de la
+fw3.21), **S127** (`[CAMERA_MAIN_LC]`), **S126** (`[CAMERA_MAIN]`), **S125** (`[IMAGING_REL]`/
+`[IMAGING]`). **S51 A=NO, B=NO, C=NO** (sin cambios). Catálogo: 69 hitos en
+[docs/capture/linea-general-re.md](../docs/capture/linea-general-re.md). Sesiones: [README](../README.md).
 
 ## S109 — el módulo `[CDIAG]` (270 trazas): el banco de diagnóstico del códec (21-10-2026, línea de RE general)
 

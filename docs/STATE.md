@@ -6,6 +6,39 @@ Para el historial íntegro de sesiones ver `docs/history/` y las correcciones co
 en [docs/CORRECTIONS.md](CORRECTIONS.md) (generado del grafo, no editar a mano).
 Para preguntas abiertas ver [docs/OPEN-QUESTIONS.md](OPEN-QUESTIONS.md).
 
+## Avance S137 (21-10-2026) — estado vigente de la línea de RE general y del obturador
+
+**Línea de RE general** (catálogo con 69 hitos: [docs/capture/linea-general-re.md](capture/linea-general-re.md)):
+la fw3.21 de la A6000 **reescribe el logging, no el firmware**. El mapa de etiquetado (S128, 98 prefijos
+comparados texto a texto contra la A7S fw3.20) da **58 módulos idénticos, 18 "renombrados"** (la A7S tiene
+los mismos mensajes **sin etiqueta de módulo**), 2 parciales y 20 propios; y al buscar el **núcleo** de
+los mensajes (S130) solo **2 de esos 20** son un cambio de etiqueta (`[IDT_OPD]` → `[IDT]`, `[DFE]`),
+1 es parcial y **17 tienen contenido que no está en la A7S ni en el A6300**. Módulos decodificados con
+bytes en esta sesión: `[IMAGING_CAP]` (S106), `[CAMERA_MAIN_YC]` (S110), `[TRK]` (S111),
+`[CAMERA_MAIN_SYNC]` (S112), `[CAM_DMM]` (S113), secciones (S114), `[CAM_IMAGER]` (S115), `[SFRS]` (S116),
+`[AUGI]` (S117), `[SFRA]` (S118), `[APL]` (S119), `[IDT_OPD]` (S120), `[AIP]` (S121),
+`[CAMERA_MAIN_TC]` (S122), `[CAMERA_MAIN_CC]` (S123), `[IDT_OPD]` (S120), `[CAMERA_MAIN]` (S126),
+`[CAMERA_MAIN_LC]` (S127), `[IMAGING_REL]`/`[IMAGING]` (S125), `[CAMERA_MAIN_IM]` (S129),
+`[VPH_API]` (S131), `[CLK_CTRL]` (S132), `[MOUNT_DEBUG]` (S133), `[CTRLCORE]` (S137), `[ACCY]` (S136).
+
+**Línea del obturador electrónico**: el hito **S135** añade un **control positivo**. El A6300 fw2.01
+**sí** tiene un subsistema de obturador electrónico en su HAL (`av-cam.bin`): `ElecShutter/EC_ElecShutter_Main.cpp`
+`0x43dcfa41`, `EC_NonlinearElecShutter_MechShutterTable.cpp` `0x43dcfa65`, tabla de velocidades no lineales
+`0x43dcfa9e` y los ajustes `SilentShutterMode` `0x43dc9a14`, `shutterType` `0x43dca61f`, `front_eshutter`
+`0x43dc821d`. La **A6000 fw3.21 y la A7S fw3.20 tienen 0** de todo eso — y la ausencia en la A6000 es
+**selectiva**: sí conserva el motor de exposición `EC` (`EC::EcTagData` `0x43ca91ce`, `api_EC_GetApolloLapNum`
+`0x43caa193`), lo que falta es **exactamente** la sub-rama `ElecShutter/`. Sus 15 apariciones de `shutter`
+son del **obturador mecánico** (silenciador `VDF::ShutterMuteOffExecutor` `0x43c851d8`,
+`[SFRS][PINSEND] shutter mute thru` `0x43ce956e`, `[VPH_API]<shutter_mute_param>` `0x43ce3634`).
+Además S134 mostró que la relación `shut`→`svd` del imager es **aritmética, no tabulada**
+(`svd_esperado = (svd==9 ? 1 : shut) * svr_num − 1`), lo que **descarta** la hipótesis de tabla de
+parámetros por `drive_mode`.
+
+**S51 se mantiene: A=NO, B=NO, C=NO.** La ausencia estática de un módulo en el HAL **no** demuestra
+incapacidad del hardware: solo que esta fw3.21 no lo implementa. El plan de pruebas físicas
+(P1–P8, [capture/physical-test-plan.md](capture/physical-test-plan.md)) sigue **pendiente de autorización**
+y ninguna prueba se ha ejecutado.
+
 ## Avance S62 (20-10-2026)
 
 Mecanismo de PMCA identificado y contrastado con el firmware 3.21: `updatershell` inyecta un fdat propio (cramfs con `libupdaterbody`, header de 0x30 B por modelo, guard CRC + modelo/región/versión **sin firma**; CXD90014) que el updater ejecuta y expone un shell USB `0x23`; `serviceshell` (senser, HASP) da terminal, backup `0x603`, ficheros y memoria. `bk w 0x003e0005` escribe la propiedad BK4 `modelName` (subsistema `0x3e`/índice 5, 16 B, attr solo-lectura) en el almacén `/setting` (`nflasha2`), no una dirección de código; el preset de fábrica la trae como `ILCE-6000` (verificado). El cambio a `ILCE-6001` está reportado pero su efecto «shell mode» queda **NO VERIFICADO**: la cadena no existe en el firmware. S51 **A=NO, B=NO, C=NO**. [Documento](capture/s62-pmca-injection.md) · [matriz](../analysis/s62-evidence-matrix.json).
@@ -111,10 +144,25 @@ Canónica para Codex y Claude Code; `AGENTS.md`/`CLAUDE.md` solo la resumen. No 
 ## Restricciones activas
 
 - No se ha ejecutado firmware en hardware real; no se ha flasheado ninguna cámara.
+- **Git**: el usuario ha instruido explícitamente (21-10-2026) **subir cada hito terminado a
+  `origin/main`**; sigue vigente la prohibición de subir firmware, de tocar la cámara y de flashear.
+  Los hitos se commitean **por ruta** (nunca `git add -A`) y el repositorio se compacta con
+  `git gc` (`gc.auto=512`).
 - Ningún resultado estático se ha convertido en demostración física sin evidencia adicional explícita.
 - EFCS/SilentShutter: hay opciones de software y transporte identificados; **no** hay control físico demostrado ni finalización electrónica de exposición confirmada.
 
-## Próximos pasos de investigación (vigentes al 17-10-2026)
+## Próximos pasos de investigación (vigentes al 21-10-2026)
+
+1. **Línea del obturador**: ejecutar el plan de pruebas físicas P0–P2 y P7 (requiere autorización
+   explícita del usuario); en estático, seguir el destino de las etapas de captura
+   (`0x4385a630`, `0x438e67dc`, `0x43b2335e`) hasta el origen del valor que gobierna el tipo de
+   mecanismo (`[G+0x808]&7`, S101).
+2. **Línea general**: seguir con los módulos "de contenido nuevo" que quedan sin decodificar
+   (`[DEPTH]`, `[PANDA]`, `[CAM_UTIL_ADJ]`, `[CAM_UTIL_SENS]`, `[TP_R]`, `[CAMERA_IS]`, `[JOG]`,
+   `[ADC_DEBUG]`, `[LIF_DEBUG]`, `[CAMERA_MAIN_FC]`) y cerrar las preguntas abiertas de S134
+   (quién escribe `svr_num`/`VdNum`; el bloque de modo por `drive_mode`).
+
+### Próximos pasos (histórico al 17-10-2026)
 
 Ver tabla "Flujos incompletos" en [estado-y-viabilidad-2026-10-17.md](../docs/estado-y-viabilidad-2026-10-17.md):
 botón físico → orden de cortinas (falta tabla de teclas y puente InfraInput),
