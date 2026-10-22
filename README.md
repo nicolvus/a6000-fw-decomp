@@ -41,6 +41,10 @@ El flujo [Pages](.github/workflows/pages.yml) publica solo `site/`; el generador
 
 Completado: comparación de registros y tiempos de lectura/exposición IMX235 (A7S fw3.20) vs IMX210 (A6000 fw3.21), una tabla por subsistema (`docs/capture/s201-imx210-imx235-registers.md`, `s202-imx210-imx235-timing.md`, `s204-clasificacion-final.md`). La A7S implementa el obturador silencioso por **drive mode** (`tipo==2` → modos `0x4e`/`0x4f`, selector `0x43826d58`) y su tabla de timings, no por `CheckSet*` de LiroSeq (0/0 en ambos) ni por mensaje `…ForLiro` (rechazado en ambos). La A6000 no tiene modos de lectura silenciosa equivalentes. **S51 sin cambios (A=NO, B=NO, C=NO).**
 
+## Fase del agente D — módulos de línea general (S500+)
+
+S500 cerrado: módulo `[VDF]` (visor/display) — 243 cadenas en A6000 vs 162 en A7S/A6300; 81 exclusivas de la A6000 concentran la ruta QFHD/4K, el índice EO y el paralaje EVF. 78 funciones contenedoras y 298 xrefs. Informe `docs/capture/s500-vdf.md`, tests `tests/test_s500_vdf.py` (5 verdes). S501+ pendientes en `docs/agents/queue-D.md`.
+
 ## Objetivo técnico vigente
 
 Responder con evidencia estática si la A6000 puede soportar captura totalmente electrónica a resolución completa, separando siempre:
