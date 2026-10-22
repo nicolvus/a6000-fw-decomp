@@ -1,0 +1,893 @@
+{
+ "milestone": "S128",
+ "modulos": [
+  {
+   "prefijo": "ADF",
+   "n_a6000": 1220,
+   "usa_prefijo_en_a7s": 1269,
+   "comunes_sin_prefijo": 1218,
+   "fraccion": 0.998,
+   "clase": "IGUAL",
+   "ejemplo": "[ADF]BootInit"
+  },
+  {
+   "prefijo": "CAMERA_MAIN_YC",
+   "n_a6000": 968,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 958,
+   "fraccion": 0.99,
+   "clase": "RENOMBRADO",
+   "ejemplo": "[CAMERA_MAIN_YC]: ---api_YC_CaptureRawReadExecuteClp---"
+  },
+  {
+   "prefijo": "IMAGING_CAP",
+   "n_a6000": 697,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 678,
+   "fraccion": 0.973,
+   "clase": "RENOMBRADO",
+   "ejemplo": "[IMAGING_CAP]: EnterCapturing %d"
+  },
+  {
+   "prefijo": "SDF",
+   "n_a6000": 477,
+   "usa_prefijo_en_a7s": 479,
+   "comunes_sin_prefijo": 477,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[SDF][ERROR] [%s][%d] %s() DataflowInfraErrorCode = %#x "
+  },
+  {
+   "prefijo": "CAMERA_MAIN_SYNC",
+   "n_a6000": 428,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 412,
+   "fraccion": 0.963,
+   "clase": "RENOMBRADO",
+   "ejemplo": "[CAMERA_MAIN_SYNC]: SyncResMgr::Lock    (%-22s) cnt(%2d)"
+  },
+  {
+   "prefijo": "CAM_IMAGER",
+   "n_a6000": 371,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 179,
+   "fraccion": 0.482,
+   "clase": "PARCIAL",
+   "ejemplo": "[CAM_IMAGER]: SetIntDisable: Unknown P2S Channel !!"
+  },
+  {
+   "prefijo": "IDT",
+   "n_a6000": 297,
+   "usa_prefijo_en_a7s": 305,
+   "comunes_sin_prefijo": 292,
+   "fraccion": 0.983,
+   "clase": "IGUAL",
+   "ejemplo": "[IDT]: SEND MESSAGE alloc ERROR"
+  },
+  {
+   "prefijo": "IDT_OPD",
+   "n_a6000": 273,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 0,
+   "fraccion": 0.0,
+   "clase": "NUEVO/PROPIO",
+   "ejemplo": "[IDT_OPD]: SEND MESSAGE alloc ERROR"
+  },
+  {
+   "prefijo": "CDIAG",
+   "n_a6000": 255,
+   "usa_prefijo_en_a7s": 255,
+   "comunes_sin_prefijo": 255,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[CDIAG][TSK]act_tsk"
+  },
+  {
+   "prefijo": "VDF",
+   "n_a6000": 243,
+   "usa_prefijo_en_a7s": 162,
+   "comunes_sin_prefijo": 162,
+   "fraccion": 0.667,
+   "clase": "IGUAL",
+   "ejemplo": "[VDF]SusRes: Backup_write_vsize(%x) error%d"
+  },
+  {
+   "prefijo": "CAMERA_SA",
+   "n_a6000": 231,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 228,
+   "fraccion": 0.987,
+   "clase": "RENOMBRADO",
+   "ejemplo": "[CAMERA_SA]: Open Error"
+  },
+  {
+   "prefijo": "TRK",
+   "n_a6000": 215,
+   "usa_prefijo_en_a7s": 215,
+   "comunes_sin_prefijo": 215,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[TRK]: [CAM INIT] Message Alloc Error"
+  },
+  {
+   "prefijo": "VEF",
+   "n_a6000": 149,
+   "usa_prefijo_en_a7s": 141,
+   "comunes_sin_prefijo": 141,
+   "fraccion": 0.946,
+   "clase": "IGUAL",
+   "ejemplo": "[VEF]Recieve CpuSelectComp"
+  },
+  {
+   "prefijo": "CAMERA_MAIN",
+   "n_a6000": 134,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 97,
+   "fraccion": 0.724,
+   "clase": "RENOMBRADO",
+   "ejemplo": "[CAMERA_MAIN]: calibration_fc_pos:%d getFcPos(suc_ref_index_target):%d getFcPos(suc_ref_index_target + 1):%d"
+  },
+  {
+   "prefijo": "MOUNT_DEBUG",
+   "n_a6000": 132,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 0,
+   "fraccion": 0.0,
+   "clase": "NUEVO/PROPIO",
+   "ejemplo": "[MOUNT_DEBUG]: [BL]SYNC SEND SET ID(%d):CB(0x%8x)"
+  },
+  {
+   "prefijo": "CAMERA_MAIN_TC",
+   "n_a6000": 125,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 122,
+   "fraccion": 0.976,
+   "clase": "RENOMBRADO",
+   "ejemplo": "[CAMERA_MAIN_TC]: TC:APL:Err: LmtGyroVect Denom=0 %d %d %d %d"
+  },
+  {
+   "prefijo": "IMAGING",
+   "n_a6000": 120,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 115,
+   "fraccion": 0.958,
+   "clase": "RENOMBRADO",
+   "ejemplo": "[IMAGING]: FATAL! %s:%d"
+  },
+  {
+   "prefijo": "SFRS",
+   "n_a6000": 117,
+   "usa_prefijo_en_a7s": 151,
+   "comunes_sin_prefijo": 117,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[SFRS]RC_CALLBACK result:0x%x"
+  },
+  {
+   "prefijo": "ACCY",
+   "n_a6000": 106,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 0,
+   "fraccion": 0.0,
+   "clase": "NUEVO/PROPIO",
+   "ejemplo": "[ACCY][INFO][HW]:AD=%d, ID=%d"
+  },
+  {
+   "prefijo": "VPH_API",
+   "n_a6000": 106,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 0,
+   "fraccion": 0.0,
+   "clase": "NUEVO/PROPIO",
+   "ejemplo": "[VPH_API]<mode>"
+  },
+  {
+   "prefijo": "SFRA",
+   "n_a6000": 100,
+   "usa_prefijo_en_a7s": 100,
+   "comunes_sin_prefijo": 100,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[SFRA][CMD] ***GET_INFO***"
+  },
+  {
+   "prefijo": "MOUNT_ERROR",
+   "n_a6000": 80,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 78,
+   "fraccion": 0.975,
+   "clase": "RENOMBRADO",
+   "ejemplo": "[MOUNT_ERROR]: [MCS]addCmdDataList data times overflow"
+  },
+  {
+   "prefijo": "CAMERA_MAIN_LC",
+   "n_a6000": 72,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 0,
+   "fraccion": 0.0,
+   "clase": "NUEVO/PROPIO",
+   "ejemplo": "[CAMERA_MAIN_LC]: [ERROR!!] lc_Movie_DM_AF_Util_getMiniRawAddr()"
+  },
+  {
+   "prefijo": "VIDENCSTAT",
+   "n_a6000": 70,
+   "usa_prefijo_en_a7s": 70,
+   "comunes_sin_prefijo": 70,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[VIDENCSTAT]Err!!! File:%s, Func:%s() ,Line:%d "
+  },
+  {
+   "prefijo": "FACE",
+   "n_a6000": 68,
+   "usa_prefijo_en_a7s": 68,
+   "comunes_sin_prefijo": 68,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[FACE]: [BASE] Init State Error %d"
+  },
+  {
+   "prefijo": "CLK_CTRL",
+   "n_a6000": 66,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 0,
+   "fraccion": 0.0,
+   "clase": "NUEVO/PROPIO",
+   "ejemplo": "[CLK_CTRL]: Call:ddl_clkctrl_get_clk_chg_enable(0x0%x),ret=0x%0x"
+  },
+  {
+   "prefijo": "RC",
+   "n_a6000": 65,
+   "usa_prefijo_en_a7s": 65,
+   "comunes_sin_prefijo": 65,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[RC]backupId(%x)"
+  },
+  {
+   "prefijo": "WSX",
+   "n_a6000": 59,
+   "usa_prefijo_en_a7s": 59,
+   "comunes_sin_prefijo": 59,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[WSX]Err!!! File:%s, Func:%s() ,Line:%d "
+  },
+  {
+   "prefijo": "CAM_DMM",
+   "n_a6000": 54,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 26,
+   "fraccion": 0.481,
+   "clase": "PARCIAL",
+   "ejemplo": "[CAM_DMM]: AllocNew: ERR_DMM_RET_CODE!: %d, %x, %x, %x"
+  },
+  {
+   "prefijo": "ENCOUCSTAT",
+   "n_a6000": 49,
+   "usa_prefijo_en_a7s": 54,
+   "comunes_sin_prefijo": 49,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[ENCOUCSTAT]MSG SET ERROR: File:%s, Func:%s() ,Line:%d "
+  },
+  {
+   "prefijo": "CAMERA_MAIN_CC",
+   "n_a6000": 49,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 47,
+   "fraccion": 0.959,
+   "clase": "RENOMBRADO",
+   "ejemplo": "[CAMERA_MAIN_CC]: ExtractCaptureData()       [CapMode:%d] [ExposureID:%d] [ContID:%d] [FrameID:%d]"
+  },
+  {
+   "prefijo": "CONFIG",
+   "n_a6000": 47,
+   "usa_prefijo_en_a7s": 47,
+   "comunes_sin_prefijo": 47,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[CONFIG] ----------------------------------"
+  },
+  {
+   "prefijo": "ENCSEQCTRL",
+   "n_a6000": 46,
+   "usa_prefijo_en_a7s": 46,
+   "comunes_sin_prefijo": 46,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[ENCSEQCTRL]File:%s, Func:%s() ,Line:%d "
+  },
+  {
+   "prefijo": "SAD",
+   "n_a6000": 45,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 0,
+   "fraccion": 0.0,
+   "clase": "NUEVO/PROPIO",
+   "ejemplo": "[SAD] Same Unit Handle Get"
+  },
+  {
+   "prefijo": "CAM_FUNC_MGR",
+   "n_a6000": 43,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 43,
+   "fraccion": 1.0,
+   "clase": "RENOMBRADO",
+   "ejemplo": "[CAM_FUNC_MGR]: CAPCON WARNING! FILE:%s LINE=%d func:%s param=%x %x %x"
+  },
+  {
+   "prefijo": "CAMERA_MAIN_IM",
+   "n_a6000": 42,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 35,
+   "fraccion": 0.833,
+   "clase": "RENOMBRADO",
+   "ejemplo": "[CAMERA_MAIN_IM]: movie thermal diffTemp < 0 :(%d)"
+  },
+  {
+   "prefijo": "PNL",
+   "n_a6000": 41,
+   "usa_prefijo_en_a7s": 41,
+   "comunes_sin_prefijo": 37,
+   "fraccion": 0.902,
+   "clase": "IGUAL",
+   "ejemplo": "[PNL]Backup_read() error %d"
+  },
+  {
+   "prefijo": "AIP",
+   "n_a6000": 37,
+   "usa_prefijo_en_a7s": 37,
+   "comunes_sin_prefijo": 37,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[AIP]SA OpenConfigCb Ack"
+  },
+  {
+   "prefijo": "CAMCORE",
+   "n_a6000": 36,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 35,
+   "fraccion": 0.972,
+   "clase": "RENOMBRADO",
+   "ejemplo": "[CAMCORE]: GetFlowType: No SgcTable. imgmode=%d, cammode=%d"
+  },
+  {
+   "prefijo": "ILLUMI",
+   "n_a6000": 34,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 0,
+   "fraccion": 0.0,
+   "clase": "NUEVO/PROPIO",
+   "ejemplo": "[ILLUMI]ADJ BLOCK ERROR"
+  },
+  {
+   "prefijo": "AUDPINEDTR",
+   "n_a6000": 34,
+   "usa_prefijo_en_a7s": 34,
+   "comunes_sin_prefijo": 34,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[AUDPINEDTR][%s][%s()][%d][ERR] DataflowInfraSender::SendASync %x "
+  },
+  {
+   "prefijo": "CAM_SCALAR",
+   "n_a6000": 34,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 33,
+   "fraccion": 0.971,
+   "clase": "RENOMBRADO",
+   "ejemplo": "[CAM_SCALAR]: HAPI Manager:Recieve error"
+  },
+  {
+   "prefijo": "IMAGING_REL",
+   "n_a6000": 31,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 30,
+   "fraccion": 0.968,
+   "clase": "RENOMBRADO",
+   "ejemplo": "[IMAGING_REL]: Spinal) osal_free_timer: err %x"
+  },
+  {
+   "prefijo": "DECMODEMGR",
+   "n_a6000": 30,
+   "usa_prefijo_en_a7s": 30,
+   "comunes_sin_prefijo": 30,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[DECMODEMGR]SetState = %x "
+  },
+  {
+   "prefijo": "ERR",
+   "n_a6000": 29,
+   "usa_prefijo_en_a7s": 29,
+   "comunes_sin_prefijo": 29,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[ERR][CDIAG][TSKCORE]DataflowInfraMsgErr [0x%08X]"
+  },
+  {
+   "prefijo": "DECVIDDISP",
+   "n_a6000": 26,
+   "usa_prefijo_en_a7s": 26,
+   "comunes_sin_prefijo": 26,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[DECVIDDISP]File:%s, Func:%s() ,Line:%d "
+  },
+  {
+   "prefijo": "AUGI",
+   "n_a6000": 26,
+   "usa_prefijo_en_a7s": 26,
+   "comunes_sin_prefijo": 26,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[AUGI][PRINT] size[%d] %s"
+  },
+  {
+   "prefijo": "AVCDPRMCHK",
+   "n_a6000": 26,
+   "usa_prefijo_en_a7s": 26,
+   "comunes_sin_prefijo": 26,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[AVCDPRMCHK]File:%s, Func:%s(), Line:%d error AudOutPort=%3x"
+  },
+  {
+   "prefijo": "ZIMA_AVCD",
+   "n_a6000": 26,
+   "usa_prefijo_en_a7s": 26,
+   "comunes_sin_prefijo": 26,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[ZIMA_AVCD][FL IF] %s(ch_num:%u ch_id:%u)"
+  },
+  {
+   "prefijo": "MC",
+   "n_a6000": 25,
+   "usa_prefijo_en_a7s": 25,
+   "comunes_sin_prefijo": 25,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[MC][WRN]"
+  },
+  {
+   "prefijo": "DECAUDSPDI",
+   "n_a6000": 24,
+   "usa_prefijo_en_a7s": 24,
+   "comunes_sin_prefijo": 24,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[DECAUDSPDI]File:%s, Func:%s() ,Line:%d "
+  },
+  {
+   "prefijo": "PRC",
+   "n_a6000": 23,
+   "usa_prefijo_en_a7s": 24,
+   "comunes_sin_prefijo": 23,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[PRC]SetPath"
+  },
+  {
+   "prefijo": "EXCDCENCMP",
+   "n_a6000": 23,
+   "usa_prefijo_en_a7s": 23,
+   "comunes_sin_prefijo": 23,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[EXCDCENCMP]SetSeqParamforNtsc [SetSeq] idx[%d] MaxNd[%d] MaxN[%d] MaxM[%d] M3s[%d]"
+  },
+  {
+   "prefijo": "EXL",
+   "n_a6000": 22,
+   "usa_prefijo_en_a7s": 22,
+   "comunes_sin_prefijo": 22,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[EXL]: Error: cas sampling_xe >6007"
+  },
+  {
+   "prefijo": "CAM_UTIL_ADJ",
+   "n_a6000": 22,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 0,
+   "fraccion": 0.0,
+   "clase": "NUEVO/PROPIO",
+   "ejemplo": "[CAM_UTIL_ADJ]:  -- Table Write"
+  },
+  {
+   "prefijo": "ENCMODEMGR",
+   "n_a6000": 21,
+   "usa_prefijo_en_a7s": 21,
+   "comunes_sin_prefijo": 21,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[ENCMODEMGR]SetState = %x "
+  },
+  {
+   "prefijo": "LENS_YC",
+   "n_a6000": 21,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 21,
+   "fraccion": 1.0,
+   "clase": "RENOMBRADO",
+   "ejemplo": "[LENS_YC]: %s: Open error (0x%x)"
+  },
+  {
+   "prefijo": "CAM_UTIL_SENS",
+   "n_a6000": 21,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 0,
+   "fraccion": 0.0,
+   "clase": "NUEVO/PROPIO",
+   "ejemplo": "[CAM_UTIL_SENS]: CB for BKID change [BKID]:%x [Size]:%x"
+  },
+  {
+   "prefijo": "VIDDECSTAT",
+   "n_a6000": 21,
+   "usa_prefijo_en_a7s": 21,
+   "comunes_sin_prefijo": 21,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[VIDDECSTAT]Err!!! File:%s, Func:%s() ,Line:%d "
+  },
+  {
+   "prefijo": "IMAGING_RAW",
+   "n_a6000": 20,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 20,
+   "fraccion": 1.0,
+   "clase": "RENOMBRADO",
+   "ejemplo": "[IMAGING_RAW]: RawMemMgr) DisableSetMode_Unlock Multiple call count:%d"
+  },
+  {
+   "prefijo": "DEBUG",
+   "n_a6000": 19,
+   "usa_prefijo_en_a7s": 19,
+   "comunes_sin_prefijo": 19,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[DEBUG] Cannot open clk. Please try again."
+  },
+  {
+   "prefijo": "TP_R",
+   "n_a6000": 18,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 0,
+   "fraccion": 0.0,
+   "clase": "NUEVO/PROPIO",
+   "ejemplo": "[TP_R]: ERR. osal_try_valloc_msg. err=0x%x, L=%d"
+  },
+  {
+   "prefijo": "CAMERA_DSP_APL",
+   "n_a6000": 18,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 18,
+   "fraccion": 1.0,
+   "clase": "RENOMBRADO",
+   "ejemplo": "[CAMERA_DSP_APL]: [Error] cannot free reference memory"
+  },
+  {
+   "prefijo": "MPGPINSUPL",
+   "n_a6000": 18,
+   "usa_prefijo_en_a7s": 18,
+   "comunes_sin_prefijo": 18,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[MPGPINSUPL]Change FrameRate %x->%x, VfcSub = %x "
+  },
+  {
+   "prefijo": "ENCAUDSYNC",
+   "n_a6000": 17,
+   "usa_prefijo_en_a7s": 17,
+   "comunes_sin_prefijo": 17,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[ENCAUDSYNC]File:%s, Func:%s() ,Line:%d "
+  },
+  {
+   "prefijo": "NSX_OPD",
+   "n_a6000": 17,
+   "usa_prefijo_en_a7s": 17,
+   "comunes_sin_prefijo": 17,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[NSX_OPD]: FOPD_AIF_R0_ERROR:%x"
+  },
+  {
+   "prefijo": "CAMERA_IS",
+   "n_a6000": 17,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 0,
+   "fraccion": 0.0,
+   "clase": "NUEVO/PROPIO",
+   "ejemplo": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountExpStartCB (%x)"
+  },
+  {
+   "prefijo": "AUDDECCTRL",
+   "n_a6000": 17,
+   "usa_prefijo_en_a7s": 17,
+   "comunes_sin_prefijo": 17,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[AUDDECCTRL]ChangeState %08x -> %08x"
+  },
+  {
+   "prefijo": "JPEG",
+   "n_a6000": 17,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 0,
+   "fraccion": 0.0,
+   "clase": "NUEVO/PROPIO",
+   "ejemplo": "[JPEG]: [cbJpegDebugClose] err : %d"
+  },
+  {
+   "prefijo": "SFR",
+   "n_a6000": 17,
+   "usa_prefijo_en_a7s": 21,
+   "comunes_sin_prefijo": 17,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[SFR]Recieve CpuSelectComp"
+  },
+  {
+   "prefijo": "DEPTH",
+   "n_a6000": 16,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 0,
+   "fraccion": 0.0,
+   "clase": "NUEVO/PROPIO",
+   "ejemplo": "[DEPTH][INFO]Regist Dummy Receiver 0x %08X"
+  },
+  {
+   "prefijo": "VIDDECZIMA",
+   "n_a6000": 16,
+   "usa_prefijo_en_a7s": 16,
+   "comunes_sin_prefijo": 16,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[VIDDECZIMA]Err!!! File:%s, Func:%s() ,Line:%d "
+  },
+  {
+   "prefijo": "SYS",
+   "n_a6000": 15,
+   "usa_prefijo_en_a7s": 17,
+   "comunes_sin_prefijo": 15,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[SYS]GetMemMgrComm"
+  },
+  {
+   "prefijo": "SDF_ERR",
+   "n_a6000": 15,
+   "usa_prefijo_en_a7s": 15,
+   "comunes_sin_prefijo": 15,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[SDF_ERR] bigger_value.ptm_32==PTM_SECOND_ZONE"
+  },
+  {
+   "prefijo": "JOG",
+   "n_a6000": 14,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 0,
+   "fraccion": 0.0,
+   "clase": "NUEVO/PROPIO",
+   "ejemplo": "[JOG]JogMain::%s:%d"
+  },
+  {
+   "prefijo": "ADC_DEBUG",
+   "n_a6000": 14,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 0,
+   "fraccion": 0.0,
+   "clase": "NUEVO/PROPIO",
+   "ejemplo": "[ADC_DEBUG]: few arg"
+  },
+  {
+   "prefijo": "DECAUDSTAT",
+   "n_a6000": 13,
+   "usa_prefijo_en_a7s": 13,
+   "comunes_sin_prefijo": 13,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[DECAUDSTAT][MC LPCM]STREAM END "
+  },
+  {
+   "prefijo": "CMDMLTSYNC",
+   "n_a6000": 13,
+   "usa_prefijo_en_a7s": 13,
+   "comunes_sin_prefijo": 13,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[CMDMLTSYNC][%s][%s()][%d] Error Occur. "
+  },
+  {
+   "prefijo": "SYNCENCSTART",
+   "n_a6000": 13,
+   "usa_prefijo_en_a7s": 13,
+   "comunes_sin_prefijo": 13,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[SYNCENCSTART]wai semaphore error, Err:%d, File:%s, Func:%s() ,Line:%d "
+  },
+  {
+   "prefijo": "VIDDECCTRL",
+   "n_a6000": 13,
+   "usa_prefijo_en_a7s": 13,
+   "comunes_sin_prefijo": 13,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[VIDDECCTRL]Err!!! File:%s, Func:%s() ,Line:%d "
+  },
+  {
+   "prefijo": "VIDENCCTRL",
+   "n_a6000": 13,
+   "usa_prefijo_en_a7s": 13,
+   "comunes_sin_prefijo": 13,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[VIDENCCTRL]ChangeState %08x -> %08x"
+  },
+  {
+   "prefijo": "LIF_DEBUG",
+   "n_a6000": 13,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 0,
+   "fraccion": 0.0,
+   "clase": "NUEVO/PROPIO",
+   "ejemplo": "[LIF_DEBUG]: Finish BK CB "
+  },
+  {
+   "prefijo": "AMSENS",
+   "n_a6000": 12,
+   "usa_prefijo_en_a7s": 12,
+   "comunes_sin_prefijo": 12,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[AMSENS][MSGIF]cmdMode[0x%08X] cmd[0x%08X] mode[0x%08X] [%s]"
+  },
+  {
+   "prefijo": "AUDDECSTAT",
+   "n_a6000": 12,
+   "usa_prefijo_en_a7s": 12,
+   "comunes_sin_prefijo": 12,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[AUDDECSTAT]AllocAaugiBuffArea Err "
+  },
+  {
+   "prefijo": "SA",
+   "n_a6000": 12,
+   "usa_prefijo_en_a7s": 12,
+   "comunes_sin_prefijo": 12,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[SA][ZNR] timingVfc INVALID tV[0] %x tV[1] %x tV[2] %x "
+  },
+  {
+   "prefijo": "OUT",
+   "n_a6000": 11,
+   "usa_prefijo_en_a7s": 11,
+   "comunes_sin_prefijo": 11,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[OUT]SetOutput"
+  },
+  {
+   "prefijo": "DECVESAUGI",
+   "n_a6000": 11,
+   "usa_prefijo_en_a7s": 11,
+   "comunes_sin_prefijo": 11,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[DECVESAUGI]SetWp Range Error Augi new=%d, cur=%d"
+  },
+  {
+   "prefijo": "DFE",
+   "n_a6000": 11,
+   "usa_prefijo_en_a7s": 5,
+   "comunes_sin_prefijo": 0,
+   "fraccion": 0.0,
+   "clase": "NUEVO/PROPIO",
+   "ejemplo": "[DFE]: Imager::Init On %d"
+  },
+  {
+   "prefijo": "MCCMDSENDR",
+   "n_a6000": 10,
+   "usa_prefijo_en_a7s": 10,
+   "comunes_sin_prefijo": 10,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[MCCMDSENDR]GetCmdInfo Errrr!!!!"
+  },
+  {
+   "prefijo": "PANDA",
+   "n_a6000": 10,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 0,
+   "fraccion": 0.0,
+   "clase": "NUEVO/PROPIO",
+   "ejemplo": "[PANDA]: Panda_SendMessage: Pre1 osal_valloc_msg error!"
+  },
+  {
+   "prefijo": "CAM_UTIL",
+   "n_a6000": 10,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 10,
+   "fraccion": 1.0,
+   "clase": "RENOMBRADO",
+   "ejemplo": "[CAM_UTIL]: DmmMemPool) MemPool Free Err addr:0x%08x [top 0x%08x btm 0x%08x]"
+  },
+  {
+   "prefijo": "ENCAUDOUCR",
+   "n_a6000": 9,
+   "usa_prefijo_en_a7s": 9,
+   "comunes_sin_prefijo": 9,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[ENCAUDOUCR]File:%s, Func:%s() ,Line:%d "
+  },
+  {
+   "prefijo": "EXCODECENC",
+   "n_a6000": 9,
+   "usa_prefijo_en_a7s": 9,
+   "comunes_sin_prefijo": 9,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[EXCODECENC][ERR]Invalid Target Audio Format %x"
+  },
+  {
+   "prefijo": "CAMERA_MAIN_FC",
+   "n_a6000": 9,
+   "usa_prefijo_en_a7s": 0,
+   "comunes_sin_prefijo": 0,
+   "fraccion": 0.0,
+   "clase": "NUEVO/PROPIO",
+   "ejemplo": "[CAMERA_MAIN_FC]: Eye data is invalid, but lc flag is true."
+  },
+  {
+   "prefijo": "MCSENS",
+   "n_a6000": 8,
+   "usa_prefijo_en_a7s": 8,
+   "comunes_sin_prefijo": 8,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[MCSENS][MSGIF]Callback!! [%s]"
+  },
+  {
+   "prefijo": "DECAUDMUTE",
+   "n_a6000": 8,
+   "usa_prefijo_en_a7s": 8,
+   "comunes_sin_prefijo": 8,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[DECAUDMUTE]N:LPCM StopAdr = %x StopSample = %x ,"
+  },
+  {
+   "prefijo": "EXCODECDEC",
+   "n_a6000": 8,
+   "usa_prefijo_en_a7s": 8,
+   "comunes_sin_prefijo": 8,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[EXCODECDEC]%s fmt %d now %d --> set %d (%d)"
+  },
+  {
+   "prefijo": "SYSV",
+   "n_a6000": 8,
+   "usa_prefijo_en_a7s": 8,
+   "comunes_sin_prefijo": 8,
+   "fraccion": 1.0,
+   "clase": "IGUAL",
+   "ejemplo": "[SYSV] osal_valloc_msg %x, i=%d, sysv_msg[i]=0x%x "
+  }
+ ],
+ "counts": {
+  "IGUAL": 58,
+  "RENOMBRADO": 18,
+  "PARCIAL": 2,
+  "NUEVO/PROPIO": 20
+ }
+}
