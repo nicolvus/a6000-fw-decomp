@@ -573,6 +573,28 @@ Las **13 cadenas están vivas** (0 muertas) con **16 sitios** (regla estricta) e
 
 [Informe](../analysis/s173_cam_util_labels/cam_util_labels.md) · [doc](../docs/capture/s173-cam-util-labels.md). Siguiente: qué es «AV DDS» y «Utility MS» (siglas sin desarrollar); la tabla de 17 entradas y los 22 registros de `0x4390178e`; el byte de estado `+0xfc` y su bit 0; por qué la A6000 usa dos etiquetas para el mismo subsistema.
 
+## S174 — el API de mensajes «…ForLiro» del `libObj.so`: 216/221/240 nombres, 0/0/6 soportados (22-10-2026, línea de RE general)
+
+**VERIFICADO (17 tests, `tests/test_s174_forliro_api.py`):** el conversor de mensajes `CamMsgConv` de la capa *camera-user* (`libObj.so`) conoce **216 / 221 / 240** nombres de mensaje `…ForLiro` (A6000 fw3.21 / A7S fw3.20 / A6300 fw2.01) y **soporta 0 / 0 / 6**:
+
+| firmware | nombres `…ForLiro` | en mensajes de **SOPORTE** | en mensajes de **RECHAZO** |
+|---|---|---|---|
+| A6000 fw3.21 | **216** | **0** | 216 |
+| A7S fw3.20 | **221** | **0** | 221 |
+| A6300 fw2.01 | **240** | **6** | 234 |
+
+Los 6 del A6300: `SetApertureSTFForLiro`, `SetAutoDualRecModeForLiro`, `SetExpandFocusAfModeForLiro`, `SetMountAdapterFocusTypeForLiro`, `SetPowerStatusForLiro` y `SetVolpfModeForLiro` — **ninguno del obturador**. El A6300 añade **25** nombres `…ForLiro` (incluido **`SetShutterTypeForLiro`**, 0/0/1) y la A6000 añade **1** (`SetStepzoomModeForLiro`); la A7S añade 5 respecto de la A6000.
+
+**Advertencia metodológica (lo más importante del hito)**: en la A6000 y la A7S, **los 216 y 221 nombres `…ForLiro` aparecen TODOS dentro de mensajes de RECHAZO** (`… <Nombre> NON SUPPORTED MsgID[0x%04x]…`; el de soporte es `… <Nombre> SUPPORTED MsgID…`). La clasificación es **exacta** (el nombre va seguido literalmente de ` NON SUPPORTED MsgID` / ` SUPPORTED MsgID`), no por proximidad. → **La presencia del nombre NO prueba soporte**: `SetSilentShutterModeForLiro`, `SetShutDriveForLiro`, `SetShutDriveModeForLiro`, `SetShutLowLimitForLiro`, `SetFrontEShutterModeForLiro`, `SetIrisDriveForLiro`, `SetDriveModeForLiro` y `SetMovieAutoSlowshutModeForLiro` **están** en el `libObj.so` de la A6000 **y están rechazados**.
+
+**Coherencia con S169**: el mensaje (capa *camera-user*, `libObj.so`) y el parámetro (capa LiroSeq de `av-cam.bin`) **concuerdan** — solo el A6300 tiene el mensaje `SetShutterTypeForLiro` **y** el campo `shutterType` (+`sc_ShutDrive`, `front_eshutter`, `SilentShutterMode`).
+
+**Regla que deja este hito**: **la presencia de una cadena no prueba una funcionalidad**. Tres casos ya en el repo: la cadena del *rolling shutter* del A6300 **muerta** (S168), el bloque de 128 bytes de `0x43dcfa9e` **sin referencias** (S172) y ahora los nombres `…ForLiro` de la A6000 **todos rechazados**. Antes de afirmar que una cámara «tiene» algo por el nombre de su cadena, hay que comprobar que el nombre **se usa**.
+
+**Efecto en S51: NINGUNO — S51 sigue A=NO, B=NO, C=NO.** El `libObj.so` es una capa de *mensajería*, no una implementación; la ausencia estática no demuestra incapacidad del hardware.
+
+[Informe](../analysis/s174_forliro_api/forliro_api.md) · [doc](../docs/capture/s174-forliro-api.md). Siguiente: por qué el `CamMsgConv` de la A6000 y la A7S no soporta ninguno (¿otra ruta de conversión?); qué ganan exactamente los 6 del A6300; si los mensajes rechazados se envían por otra vía (tabla `MsgID` → manejador).
+
 ## S121 — el módulo `[AIP]` (37 trazas): la interfaz de audio con el escalado (21-10-2026, línea de RE general)
 
 **VERIFICADO (97 tests, `tests/test_s121_aip.py`):** 37 cadenas `[AIP]` en `0x43cdd844`–`0x43cdec50`; **16 funciones** y 6 sub-bloques RTTI: `SaWrapper` (8), `SaBackUpCtrl` (12), `SaDriverBase` (4), `LPS` (11), `SaDriverZoomNr` (1), `SetFader` (1). **Callbacks `Ack`/`Comp`/`Err` en tres capas**: SA (`0x43926d1c`/`0x43926de8`, con los predicados `[r1,#1]==0x14`/`0x13`), LPS (`0x4392b16c`/`0x4392b254`) y driver; los errores llevan `errCode`+`errState` (SA) o `ErrCode`+`ErrStatus` (LPS). **Tabla de backup**: **350 entradas de 12 B** en `0x43bd1964` con `{id = 0x10c0000 + n, offset, size}`; `WriteShadow2BakcupArea` vuelca `0x10c` B (`mov.w r0,#0x10c` en `0x4392ab78`) y `SetAudioNrType` publica el **bit 3** de `bkId = 0x10e0000`. Comandos hacia el escalar en `0x4392ac30` (`Cmd`/`Func` + `Zma`/`Ext`/`Mbx`) y `0x4392acb4` (`Cmd`/`Func`/`Unq`). Buffers LPS `0x82`/`0x83`/`0x85` con longitudes `0x2c`/`0x28`/`0x14`; `SetFader` (`0x4355ae98`) divide por 100/20/otro según `[r0,#0x78]`.
