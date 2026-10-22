@@ -101,3 +101,12 @@ A6000 `b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9`.
 
 **Límite global:** análisis estático; sin firmware ejecutado, sin cámara, sin flasheo y sin
 pruebas físicas.
+
+---
+
+## Addendum S318
+
+La tabla `0x43bbe1cc` que indexa `obj+0x2b4` en `0x436f4546` es la misma que usa el
+constructor paramétrico `0x436f3fc0` (S318). Ambos consumidores coinciden en que los índices
+0..6 son códigos 0/1/2; desde el índice 7 la palabra empaqueta dos `u16` y la interpretación
+como código queda **NO_VERIFICADA**.

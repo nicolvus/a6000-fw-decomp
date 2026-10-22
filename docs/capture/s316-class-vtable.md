@@ -118,3 +118,12 @@ A6000 `b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9`.
 
 **Límite global:** análisis estático; sin firmware ejecutado, sin cámara, sin flasheo y sin
 pruebas físicas.
+
+---
+
+## Addendum S318
+
+El constructor `0x436f27b4` documentado aquí es la **variante ligera**. La clase tiene además
+un **constructor paramétrico `0x436f3fc0(obj, idx)`** que fija el mismo vptr `0x43fce050`,
+inicializa `obj+0x2dc` a partir de la tabla `0x43bbe1cc` y se registra desde `0x436f2a7c`
+(`idx=0`). Evidencia: `docs/capture/s318-ctor-mode.md`.
