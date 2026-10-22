@@ -62,7 +62,7 @@
 - Helpers/gates auditados: `0x4383b790`, `0x4383bfd4`, `0x43b08786` si `[G+0x50]==2`, `0x4383c818` si `[GOT+0xca]==1`. No tienen stores en `+0x2c..+0x6b`; S149 acota que no existen en esos cuerpos, no globalmente.
 - Evidencia del loop: `read_function_instructions` `ev_05541f7fa796e9902a584d283765f42028aa618772a3ece2a2b2e519b172211b`; pseudocode page 1/2 y cada dossier/helper en S149 report. Los bytes `0x4383c9ec`, `0x4383cbfa`, `0x4383cbbe` se reproducen desde el blob.
 - Artefactos: `analysis/s149_imager_row_helpers/{verify_helper_stores.py,row_helper_stores.json}`, `tests/test_s149_imager_row_helpers.py`, `docs/capture/s149-imager-row-helpers.md`.
-- Pruebas: unittest 3/3 PASS; falta suite, commit/push.
+- Pruebas: unittest S149 3/3 PASS; suite S140–S149 + knowledge 88/88 PASS; `git diff --check` PASS. Commit `c4193a2a` publicado en `origin/main`.
 - Siguiente: búsqueda de writers alternos de los bytes `G+0x234/+0x235` (hueco relativo +8/+9 del primer row), con REA/bytes y sin inferir ausencia por scans vacíos.
 
 Checkpoint persistente. Actualizar al terminar cada etapa, antes de continuar
