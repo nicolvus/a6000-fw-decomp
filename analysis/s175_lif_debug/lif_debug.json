@@ -1,0 +1,159 @@
+{
+ "milestone": "S175",
+ "titulo": "el modulo [LIF_DEBUG] (13 trazas): el diagnostico del sensor de luz de la camara",
+ "base_vaddr": "43541000",
+ "firmwares": {
+  "A6000_fw321": {
+   "ruta": "analysis/rea-independent/input/av-cam.bin",
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "len": 11427236,
+   "LIF_DEBUG": 13,
+   "LIF": 64,
+   "BKID": 28,
+   "SENSER": 12,
+   "cam_lif_senser_copy_bk2shadow": 1,
+   "cam_lif_senser_copy_shadow2bk": 1
+  },
+  "A7S_fw320": {
+   "ruta": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "len": 11455416,
+   "LIF_DEBUG": 0,
+   "LIF": 43,
+   "BKID": 23,
+   "SENSER": 7,
+   "cam_lif_senser_copy_bk2shadow": 0,
+   "cam_lif_senser_copy_shadow2bk": 0
+  },
+  "A6300_fw201": {
+   "ruta": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+   "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16",
+   "len": 13382836,
+   "LIF_DEBUG": 0,
+   "LIF": 81,
+   "BKID": 22,
+   "SENSER": 8,
+   "cam_lif_senser_copy_bk2shadow": 0,
+   "cam_lif_senser_copy_shadow2bk": 0
+  }
+ },
+ "cadenas": [
+  {
+   "cadena": "[LIF_DEBUG]: Finish BK CB ",
+   "addr": "43cfb032",
+   "sitios": []
+  },
+  {
+   "cadena": "[LIF_DEBUG]:  :[BKID] %x, [DataSize] %x",
+   "addr": "43cfb04d",
+   "sitios": []
+  },
+  {
+   "cadena": "[LIF_DEBUG]: Start CAM LIF SENSER Init",
+   "addr": "43cfb075",
+   "sitios": []
+  },
+  {
+   "cadena": "[LIF_DEBUG]: Reg CB func result [BKID]:%x, [Erro]:%x",
+   "addr": "43cfb09c",
+   "sitios": []
+  },
+  {
+   "cadena": "[LIF_DEBUG]:  ::[Count]:%x",
+   "addr": "43cfb0d1",
+   "sitios": []
+  },
+  {
+   "cadena": "[LIF_DEBUG]:  ::[HandleValue]:%x",
+   "addr": "43cfb0ec",
+   "sitios": []
+  },
+  {
+   "cadena": "[LIF_DEBUG]: Finish Reg CB func ",
+   "addr": "43cfb10d",
+   "sitios": []
+  },
+  {
+   "cadena": "[LIF_DEBUG]: Finish BK2Shadow @cam_lif_senser_copy_bk2shadow",
+   "addr": "43cfb12e",
+   "sitios": []
+  },
+  {
+   "cadena": "[LIF_DEBUG]: Finish Shadow2BK @cam_lif_senser_copy_shadow2bk",
+   "addr": "43cfb16b",
+   "sitios": []
+  },
+  {
+   "cadena": "[LIF_DEBUG]: UnReg CB func result [BKID]:%x, [Erro]:%x",
+   "addr": "43cfb1a8",
+   "sitios": []
+  },
+  {
+   "cadena": "[LIF_DEBUG]:  ::[HandlerValue]:%x",
+   "addr": "43cfb1df",
+   "sitios": []
+  },
+  {
+   "cadena": "[LIF_DEBUG]: Finish UnReg CB func ",
+   "addr": "43cfb201",
+   "sitios": []
+  },
+  {
+   "cadena": "[LIF_DEBUG]: CAM LIF Subsystem backup close",
+   "addr": "43cfb224",
+   "sitios": []
+  }
+ ],
+ "recuentos": {
+  "cadenas": 13,
+  "sitios_pic": 14,
+  "funciones": 3,
+  "muertas": 0,
+  "logger_propio": "0x43a1c92c (id 0x125)"
+ },
+ "funciones": [
+  {
+   "dir": "0x43a1c9d8",
+   "sitios": 8,
+   "que_hace": "callback de backup: fin del CB y [BKID]/[DataSize]"
+  },
+  {
+   "dir": "0x43a1ca18",
+   "nombre_texto": "cam_lif_senser_copy_bk2shadow",
+   "sitios": 5,
+   "que_hace": "copia backup->shadow: recorre 2 elementos (cmp r7,#2 en 0x43a1caa2), copia con bl 0x435614d0 y cierra con bl 0x435613e8"
+  },
+  {
+   "dir": "0x43a1cb0c",
+   "sitios": 1,
+   "que_hace": "fin del registro del callback de backup"
+  },
+  {
+   "dir": "0x43a1cb3c",
+   "nombre_texto": "cam_lif_senser_copy_shadow2bk",
+   "sitios": 5,
+   "que_hace": "copia shadow->backup: 2 elementos (cmp r4,#2 en 0x43a1cb9c), copia con bl 0x435614ec"
+  }
+ ],
+ "logger": {
+  "dir": "0x43a1c92c",
+  "id_categoria": "0x125",
+  "sub_id": 0,
+  "nivel": 3,
+  "tamano_mensaje": "0x9a",
+  "valloc": "0x435612d0",
+  "format": "0x439c5a04",
+  "send": "0x43561244",
+  "nota": "canal de log PROPIO, no el logger global 0x435ab880 de [SFRA]/[SFRS]"
+ },
+ "conclusiones": [
+  "[LIF_DEBUG] es la traza de diagnostico del subsistema de sensor de luz de la camara (CAM LIF SENSER): init, callbacks de backup (BK/BKID) y copias 'shadow'",
+  "las 13 cadenas estan vivas con 14 sitios en 3 funciones contiguas (0x43a1c9d8, 0x43a1cb0c, 0x43a1cb3c) y logger propio con id 0x125",
+  "los nombres cam_lif_senser_copy_bk2shadow / cam_lif_senser_copy_shadow2bk aparecen SOLO dentro de las trazas (0 como simbolo independiente): son texto literal",
+  "el mecanismo es una copia de seguridad bidireccional entre el estado 'shadow' y el 'BK', de 2 elementos",
+  "el subsistema de sensor de luz EXISTE en los tres firmware (LIF 64/43/81, BKID 28/23/22, SENSER 12/7/8): lo propio de la fw3.21 de la A6000 es la etiqueta y los dos nombres de funcion escritos como texto",
+  "negativo: 0 menciones de obturador/sensor/exposicion -> sin efecto en S51"
+ ],
+ "salvedad": "la comparacion mezcla version de firmware y modelo (S130 §4)",
+ "efecto_en_S51": "ninguno: S51 sigue A=NO, B=NO, C=NO"
+}
