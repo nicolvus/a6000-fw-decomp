@@ -41,6 +41,32 @@ Las dos llamadas están en `FUN_43859710` (`push.w {r4,r5,r6,r7,r8,lr}` en
 El escaneo es exhaustivo para llamadas **directas**; no hay ninguna otra `BL/B.W` a
 `0x43858338` en 8,2 MB de código.
 
+## 2b. Contraste con REA y usuarios del slot GOT `0x4401f080`
+
+REA confirma a nivel de función lo anterior: `procedure_callers(0x43858338)` devuelve
+**una** función (`0x43859710`) con dos sitios de llamada, y
+`procedure_callers(0x43859710)` devuelve **cinco** funciones (`0x437b59b8`,
+`0x437b5b14`, `0x437b5f98`, `0x43859944`, `0x43aef67a`). Tres de mis diez sitios
+(`0x437b5a38`, `0x437b5a90`, `0x437b6246`) caen en **huecos de cuerpo de Ghidra**
+(`resolve_containing_procedure` = «not in procedure»), pero los bytes confirman que son
+`bl`/`b.w` reales; por eso la tabla conserva las dos columnas: `container_rea` y
+`container_heuristic`.
+
+**El slot `0x4401f080` es invisible para REA:** `xrefs` y `inspect_native_instruction`
+devuelven vacío y `status = undecodable`. Eso **no** prueba ausencia. Por bytes, el slot
+se carga en **`0x4378bb6c`** (`ldr r1,[r5,r2]`), donde `r5` es la base GOT `0x4401eee4`
+(`0x4378bb64` + `add r5,pc` en `0x4378bb68`, comprobado con los literales del pool) y `r2`
+vale `0x19c` (pool `0x4378bbf0`). `0x4401eee4 + 0x19c = 0x4401f080`. El valor cargado se
+pasa como argumento a `0x435613e8` (junto a una cadena), es decir una ruta de
+diagnóstico/log que recibe la base de la tabla, no un indexador.
+
+Barrido complementario: solo **5** sitios en todo el código cargan el literal `0x19c`
+como offset (`0x4378bb66`, `0x4378bd6c`, `0x4378bfe2`, `0x4378c290`, `0x4378c404`, todos
+en la misma región `0x4378xx`). Los `add.w rX,#0x19c` (40 sitios) son en su mayoría
+offsets de estructura, no de GOT; distinguirlos exige seguir la base de cada función y
+queda **NO_VERIFICADO**. Conclusión: **un** usuario demostrado por bytes, sin prueba de
+que sea el único.
+
 ## 3. Callers de `FUN_43859710`: 10 sitios en 7 funciones
 
 | Sitio | Instrucción | Tipo | Función contenedora |
@@ -106,9 +132,9 @@ es `ldrb r3,[r6,#3]` en `0x438583b0` (bytes `f3 78`), verificada en S300 y S301.
   (heurística), no símbolos de Ghidra.
 - Alcanzabilidad **runtime** de una captura: `NO_VERIFICADO`. Que exista un camino
   estático no prueba que se ejecute al disparar.
-- Los usuarios del slot GOT `0x4401f080` siguen **NO_VERIFICADOS** en esta revisión: la
-  consulta de xrefs requiere REA y se deja como paso siguiente (el único literal de la
-  base está en el slot, así que cualquier usuario debe cargarlo por suma al base GOT).
+- Los usuarios del slot GOT `0x4401f080`: **1 demostrado** (`0x4378bb6c`); REA no los ve
+  (slot undecodable) y los 40 `add.w #0x19c` no se han desambiguado uno a uno. No se
+  afirma que sea el único usuario.
 - Sin firmware ejecutado, sin cámara, sin flasheo. S51 no cambia.
 
 ```sh

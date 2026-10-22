@@ -28,7 +28,7 @@ class RefTree(unittest.TestCase):
     def test_dumper_has_two_direct_callers_in_one_function(self):
         callers = self.data["dumper"]["direct_callers"]
         self.assertEqual({c["site"] for c in callers}, {"0x43859868", "0x43859892"})
-        self.assertEqual({c["container"] for c in callers}, {"0x43859710"})
+        self.assertEqual({c["container_rea"] for c in callers}, {"0x43859710"})
         self.assertTrue(self.data["dumper"]["prologue_insn"].startswith("push"))
 
     def test_caller_function_has_ten_sites(self):
