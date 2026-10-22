@@ -22,6 +22,8 @@ Proyecto de ingeniería inversa del firmware **Sony A6000 (fw 3.21)**, con foco 
 [![sesiones](https://img.shields.io/endpoint?url=https://nicolvus.github.io/a6000-fw-decomp/badge-sesiones.json)](https://nicolvus.github.io/a6000-fw-decomp/progress/)
 [![pruebas](https://img.shields.io/endpoint?url=https://nicolvus.github.io/a6000-fw-decomp/badge-pruebas.json)](https://nicolvus.github.io/a6000-fw-decomp/progress/)
 
+![progreso](https://nicolvus.github.io/a6000-fw-decomp/progress/progress.svg)
+
 <sub>GitHub no permite incrustar páginas en el README: los badges se leen de Pages y se actualizan con cada despliegue; el tablero completo (cuadrados, familias, prioridades) está en la [página de progreso](https://nicolvus.github.io/a6000-fw-decomp/progress/).</sub>
 
 Fuente de métricas: [`analysis/s178_census/census.md`](analysis/s178_census/census.md).
@@ -32,7 +34,7 @@ Fuente de métricas: [`analysis/s178_census/census.md`](analysis/s178_census/cen
 - Índice de sesiones y verificador Sx: <https://nicolvus.github.io/a6000-fw-decomp/> (generado desde los informes versionados).
 
 El flujo [Pages](.github/workflows/pages.yml) publica solo `site/`; el generador
-`scripts/build_pages_status.py` actualiza el índice y genera `docs/progress/index.html` y los badges `site/badge-*.json`.
+`scripts/build_pages_status.py` actualiza el índice y genera `docs/progress/index.html` y los badges `site/badge-*.json` y `progress.svg` (solo en Pages).
 
 ## Objetivo técnico vigente
 

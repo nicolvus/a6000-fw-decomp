@@ -79,6 +79,18 @@ def groups(data: dict) -> list[tuple[str, str, list[tuple[str, str]]]]:
     ]
 
 
+def render_svg(grids) -> str:
+    out, y = [], 0
+    for title, _, cells in grids:
+        out.append(f'<text x="4" y="{y + 21}" font-family="sans-serif" font-size="16" fill="#fff">{escape(title)}</text>')
+        for i, (cls, tooltip) in enumerate(cells):
+            x, row = 1 + (i % COLS) * 16, y + 31 + (i // COLS) * 16
+            out.append(f'<rect x="{x}" y="{row}" width="14" height="14" rx="2" fill="{FILL[cls]}"><title>{escape(tooltip)}</title></rect>')
+        y += 31 + -(-len(cells) // COLS) * 16 + 14
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 {y}" width="1000" height="{y}">'
+            f'<rect width="1000" height="{y}" fill="#0d1117"/>\n' + "\n".join(out) + "\n</svg>\n")
+
+
 def render_html(grids, data: dict) -> str:
     cov = data["module_coverage"]
     detail = json.loads(DETAIL.read_text(encoding="utf-8"))
@@ -203,6 +215,7 @@ def main() -> None:
     grids = groups(data)
     src_dir = ROOT / "docs" / "progress"
     (src_dir / "index.html").write_text(render_html(grids, data), encoding="utf-8")
+    (ROOT / "site" / "progress" / "progress.svg").write_text(render_svg(grids), encoding="utf-8")  # solo en Pages, no versionado
     shutil.copyfile(src_dir / "index.html", ROOT / "site" / "progress" / "index.html")
     # Shields "endpoint" JSON: README badges read these from Pages, so they follow every deploy.
     cov, tests = data["module_coverage"], data["physical_tests"]
