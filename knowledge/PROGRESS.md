@@ -27,6 +27,16 @@
 - Pruebas: unittest S142 3/3; suite S140–S142 + knowledge 76/76 PASS; `git diff --check` PASS. Commit `bf199b15` publicado en `origin/main`.
 - Siguiente: REA para recuperar coordenada de procedimiento Thumb de staging `0x43843a44` y seguir el store al selector.
 
+## Investigación S145 — gap de procedimiento en el staging
+
+- Objetivo: determinar si REA asigna un procedimiento a `0x43843a44` y si hay caller alternativo con entry observable.
+- REA Evidence: `resolve_containing_procedure(0x43843a38)` → `FUN_43843a38` `ev_5c7ff69e20724a19d3273ec66911ffab44d75d2d245c9f19b102447a114121b6`; `0x43843a44` → `not_in_procedure` `ev_ea22a2182a4e3d23312394b402b358789ae6a158f2c91f4dd012453fd50de7ed`; caller/callsite fuera de procedimiento `ev_1a8bf1980c534d35a1e20f267840577c270f73f4cd59c18c6df98299d631737a`/`ev_bf964a553c23c814671cdfb6585c400508017bf07914746b9f4ab0cb1b420ac1`.
+- Bytes REA corroborados: prólogo `ev_1341f2fcb0c98ed30d51646e21fd980c2c7fdd917c14493817665a26e707173a`; BL `ev_51665d015dc585c586b3ef325ee488b0a7dbe64ea0c74cf3f7519e63649a6336`; staging candidate `ev_f6cf7574b2e3b18fcec3ebf5f5fc14bbfd36049e3fdc90b9ac37a20541919ebb`.
+- Resultado PARCIAL: bytes demuestran una llamada codificada, no ejecución. El código candidato queda en zona no representada por funciones REA, así que no hay pseudocódigo/call graph para el store a S[0].
+- Artefactos: `analysis/s145_imager_unanalyzed_code/{verify_code_gap.py,code_gap.json}`, `tests/test_s145_imager_unanalyzed_code.py`, `docs/capture/s145-imager-code-gap.md`.
+- Pruebas: unittest 3/3 PASS; falta suite, commit/push.
+- Siguiente: entradas Thumb en REA para `0x437b617e` y `0x43843a44`; observar refs del caller hacia callback/tabla y stores de S.
+
 Checkpoint persistente. Actualizar al terminar cada etapa, antes de continuar
 con la siguiente. No reescribir historial: añadir entradas nuevas.
 
