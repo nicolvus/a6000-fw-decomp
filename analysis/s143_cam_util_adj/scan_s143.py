@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""S140 — módulo `[CAM_UTIL_ADJ]` (22 trazas) del firmware A6000 fw3.21.
+"""S143 — módulo `[CAM_UTIL_ADJ]` (22 trazas) del firmware A6000 fw3.21.
 
 Recalcula de forma independiente:
   * las 22 cadenas `[CAM_UTIL_ADJ]` y sus direcciones,
@@ -13,7 +13,7 @@ Recalcula de forma independiente:
 Convención: vaddr = 0x43541000 + file_offset (A6000 fw3.21).
 Para A7S/A6300 la convención de vaddr NO está verificada: se reporta el offset.
 
-Salida: analysis/s140_cam_util_adj/cam_util_adj.json
+Salida: analysis/s143_cam_util_adj/cam_util_adj.json
 """
 import bisect
 import json
@@ -348,7 +348,7 @@ def main():
                 "a6300_fw201": sens_strings(A6300)}
 
     out = {
-        "milestone": "S140",
+        "milestone": "S143",
         "modulo": "[CAM_UTIL_ADJ]",
         "firmware": "A6000 fw3.21",
         "convencion": "vaddr = 0x43541000 + file_offset",
@@ -376,7 +376,7 @@ def main():
             {"vaddr": "0x43B2A0B8", "rol": "stub de respuesta 'no soportado'"},
         ],
     }
-    dest = os.path.join(REPO, "analysis/s140_cam_util_adj/cam_util_adj.json")
+    dest = os.path.join(REPO, "analysis/s143_cam_util_adj/cam_util_adj.json")
     with open(dest, "w") as fh:
         json.dump(out, fh, indent=1, ensure_ascii=False)
     print(f"cadenas={len(cadenas)} sitios={out['contadores']['sitios']} "
