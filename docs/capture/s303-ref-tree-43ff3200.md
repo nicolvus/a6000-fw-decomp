@@ -1,131 +1,118 @@
-# S303 — Árbol de referencias de `0x43ff3200` y callers de `FUN_43858338`
+# S303 — Árbol de referencias de la tabla `0x43ff3200` y callers del dumper de gates
 
-> Hito **Agente B (S300+)** — Imager: estado, drive modes y gates.
-> Análisis estático de `av-cam.bin` A6000 fw3.21 (SHA `b60c845c...56bb9`), base `0x43541000`.
-> Complementa: S153 (gates `[obj+3]&2` / `[obj+6]&0x20`), S176 (tabla `0x43ff3200`), S300 (barrido xrefs estado).
+Cuarta sesión del carril B (rev.2). Resuelve los dos pendientes de S176/S153 con un
+método **exhaustivo y byte-verificable**: escaneo de todas las codificaciones Thumb
+`BL/BLX/B/B.W` del rango de código (`0x43541000..0x43d00000`) y re-decodificación de
+cada borde. Sustituye la rev.1 de este informe, que dejaba los callers como pendientes
+y contaba 60 entradas en la tabla.
 
----
+## 1. La tabla `0x43ff3200` tiene 148 entradas, no 60
 
-## 1. Tabla `0x43ff3200` (S176)
-
-**Dirección**: `0x43ff3200` (file offset `0xab2200`), en región de datos (`.data`/`.bss` boundary).
-
-**Contenido**: 240 bytes = 60 entradas de 4 bytes (punteros). Primeras entradas:
-
-| Offset | Puntero | Tipo / Nota |
+| Dato | Valor | Verificación |
 |---|---|---|
-| +0x00 | `0x43e964a4` | Código/estructura |
-| +0x04 | `0x43f78dd2` | BSS (estado-related) |
-| +0x08 | `0x43f6ba62` | BSS |
-| +0x0c | `0x43f72c02` | **Cerca de estado `0x43f72d02`** |
-| +0x40 | `0x43f76a92` | BSS |
-| +0x44 | `0x43e95a50` | Código/estructura |
-| +0x48 | **`0x43f72d02`** | **ESTADO IMAGER (objeto principal S300)** |
-| +0x4c | `0x43e973b0` | Código/estructura |
+| Base | `0x43ff3200` | literal en el slot GOT `0x4401f080` |
+| Entradas | **148** | recorrido hasta el primer valor fuera del rango de punteros |
+| Terminador | `0x43ff3450` | siguiente palabra ya no es puntero |
+| Rango de destinos | `0x43e95950`..`0x43f9a322` | todos en BSS/datos, ninguno en código |
+| Únicos | 148 de 148 | sin duplicados |
+| Entrada del estado | índice **18** → **`0x43ff3248`** → `0x43f72d02` | lectura directa |
+| Literales absolutos de la base | **1**: `0x4401f080` (slot GOT) | búsqueda de bytes |
 
-**Clave**: La entrada en **+0x48** apunta directamente al **objeto estado del imager** (`0x43f72d02`), confirmando que esta tabla es un directorio de objetos/estructuras del subsistema imager.
+La rev.1 se detuvo en 60 entradas (240 B) porque el recorrido se cortó en la primera
+zona con ceros; el vector sigue hasta `0x43ff3450`. Los destinos son objetos BSS
+inicialmente a cero (16 B verificados en varios), es decir un **directorio de objetos**,
+no una tabla de parámetros.
 
----
+**Por qué no hay xrefs por entrada:** el código carga la base desde el slot y indexa con
+`base + 4·i`; no existen literales de las entradas individuales. La consulta de S300 a
+`0x43ff3248` devuelve 0 referencias y eso **no** significa que nadie la use: significa
+que el acceso es indexado. Los usuarios, por tanto, son los que cargan el slot
+`0x4401f080` (siguiente apartado).
 
-## 2. Referencias a la tabla `0x43ff3200`
+## 2. Callers del dumper `FUN_43858338`: dos, no trece
 
-| Método | Resultado |
-|---|---|
-| Literal `0x43ff3200` en binario | **1 ocurrencia** en `0x4401f080` (GOT slot) |
-| GOT slot `0x4401f080` | Contiene `0x43ff3200` como primera entrada |
-| Xrefs directas a GOT slot `0x4401f080` | **0** (ningún código carga este GOT slot directamente) |
-| Xrefs a entradas individuales de la tabla | Pendiente (cada entrada es un puntero distinto) |
+| Sitio | Instrucción | Tipo | Función contenedora |
+|---|---|---|---|
+| `0x43859868` | `bl #0x43858338` | bl | `0x43859710` |
+| `0x43859892` | `bl #0x43858338` | bl | `0x43859710` |
 
-**Interpretación**: La tabla se accede **indirectamente** mediante su GOT slot `0x4401f080`. El código que usa la tabla debe:
-1. Cargar el GOT slot `0x4401f080` → obtiene dirección base `0x43ff3200`
-2. Indexar con offset para leer entradas individuales
+Las dos llamadas están en `FUN_43859710` (`push.w {r4,r5,r6,r7,r8,lr}` en
+`0x43859710`), separadas por el `bl 0x43857f88` que consulta el predicado del gate `+0`.
+El escaneo es exhaustivo para llamadas **directas**; no hay ninguna otra `BL/B.W` a
+`0x43858338` en 8,2 MB de código.
 
-**Pendiente**: Identificar qué funciones cargan `0x4401f080` (requiere análisis de código con REA/Ghidra para seguir LDR literal + ADD).
+## 3. Callers de `FUN_43859710`: 10 sitios en 7 funciones
 
----
+| Sitio | Instrucción | Tipo | Función contenedora |
+|---|---|---|---|
+| `0x437b5a20` | `b.w #0x43859710` | b.w | `0x437b59b8` |
+| `0x437b5a38` | `bl #0x43859710` | bl | `0x437b5a30` |
+| `0x437b5a90` | `b.w #0x43859710` | b.w | `0x437b5a30` |
+| `0x437b5b20` | `bl #0x43859710` | bl | `0x437b5b14` |
+| `0x437b5cc8` | `bl #0x43859710` | bl | `0x437b5b14` |
+| `0x437b6100` | `bl #0x43859710` | bl | `0x437b5f98` |
+| `0x437b6110` | `bl #0x43859710` | bl | `0x437b5f98` |
+| `0x437b6246` | `bl #0x43859710` | bl | `0x437b617e` |
+| `0x438599c6` | `b.w #0x43859710` | b.w | `0x43859944` |
+| `0x43aef6b4` | `b.w #0x43859710` | b.w | `0x43aef67a` |
 
-## 3. Función `FUN_43858338` (Dumper con gates, S153)
+`FUN_43859710` es el bucle de volcado de estado (S157 lo llama «snapshot»), no un
+manejador de captura: lee `+5/+0x1f/+1/+2/+0x24/+0x2e`, llama al dumper y escribe
+contadores. Destaca que **`FUN_43859944`** (el lector de snapshot de S157) lo invoca por
+cola (`b.w 0x438599c6`), y que `FUN_43859944` tiene a su vez **35 llamadas directas**
+(medidas en este barrido), lo que lo convierte en el nodo más conectado del árbol.
 
-**Dirección**: `0x43858338` (Thumb, base `0x43541000`).
+## 4. Tercer nivel (resumen)
 
-**Hallazgos S153**:
-- Lee gates `[obj+3]&2` y `[obj+6]&0x20` para habilitar líneas del dumper
-- Los xrefs directos a esos bytes son **solo lecturas**
-- Bytes BSS iniciales a cero
-- **Escritor/valor runtime NO_VERIFICADOS**
+| Función | Callers directos |
+|---|---:|
+| `0x437b59b8` | 1 (`0x43aef4d8`) |
+| `0x437b5a30` | 1 (`0x437b4dd8`) |
+| `0x437b5b14` | 1 (`0x437b4e10`) |
+| `0x437b5f98` | 1 (`0x43aef4b2`) |
+| `0x437b617e` | **0** (solo alcanzable por vía indirecta o no alcanzable) |
+| `0x43859944` | **35** |
+| `0x43aef67a` | 1 (`0x43aef4fa`) |
 
-**Búsqueda de callers (BL a `0x43858338`)**:
-- Literal `0x43858338` en binario: **0 ocurrencias**
-- En Thumb, BL usa encoding PC-relativo, no literal absoluto
-- **Pendiente**: Análisis con REA/Ghidra para listar callers reales
+Que `0x437b617e` no tenga llamadas directas es un resultado **negativo local**: puede
+entrarse por puntero de función, tabla o cola. No se concluye inalcanzabilidad.
 
----
+## 5. Corrección de las direcciones de la rev.1 / S304
 
-## 4. Árbol de referencias reconstruido (parcial)
+La revisión anterior publicó `FUN_438581e8` como dumper y `FUN_43858390` como su caller
+único con 13 llamadas. Ambas direcciones son **entradas reales + 0x58**:
 
-```
-0x4401f080 (GOT slot)
-    └─► 0x43ff3200 (Tabla 60 punteros)
-            ├─► +0x00: 0x43e964a4
-            ├─► +0x04: 0x43f78dd2
-            ├─► ...
-            ├─► +0x48: 0x43f72d02  ◄── OBJETO ESTADO IMAGER (S300)
-            └─► ...
+| Dirección publicada | Bytes | Decodificación | Qué es en realidad |
+|---|---|---|---|
+| `0x438581e8` | `1ca0b8f5` | `adr r0, #0x70` | interior de `FUN_43858190` (prólogo en `0x43858190`) |
+| `0x43858390` | `4b467844` | `mov r3, sb` | interior de `FUN_43858338` (prólogo `push.w` en `0x43858338`) |
 
-0x43f72d02 (Estado imager)
-    ├─► +0x00: byte open flag (writer: FUN_4383abec @ 0x4383ac90, S160)
-    ├─► +0x03: gate [obj+3]&2 (lector: FUN_43858338, S153) — WRITER NO_VERIFICADO
-    ├─► +0x06: gate [obj+6]&0x20 (lector: FUN_43858338, S153) — WRITER NO_VERIFICADO
-    ├─► +0x1c: halfword (lectores: FUN_438d9318/6c, FUN_438d939c, S162/S163)
-    ├─► +0x26, +0x28, +0x29: (lector: FUN_4384b268, S161)
-    ├─► +0x30..+0x37: (lector: FUN_43859944, S157)
-    └─► +0xa2: (lector: FUN_4385fff0, S159)
+`0x43858190 + 0x58 = 0x438581e8` y `0x43858338 + 0x58 = 0x43858390`: es el mismo sesgo
+sistemático que ya se corrigió en S300. Las «13 llamadas» de la rev.1 son instrucciones
+internas del propio dumper desplazadas, no llamadas. La comprobación decisiva es que
+`0x43858338` decodifica como `push.w {r4,r5,r6,r7,r8,sb,sl,lr}` y `0x43858390` como
+`mov r3, sb` (mitad de una instrucción anterior).
 
-FUN_43858338 (Dumper gates, S153)
-    ├─► Lee [obj+3]&2
-    ├─► Lee [obj+6]&0x20
-    └─► Callers: **NO IDENTIFICADOS ESTÁTICAMENTE** (requiere REA/Ghidra)
-```
+También se corrige la afirmación de que el gate `+3` se lee en `state+4`: la instrucción
+es `ldrb r3,[r6,#3]` en `0x438583b0` (bytes `f3 78`), verificada en S300 y S301.
 
----
+## 6. Límites
 
-## 5. Limitaciones y trabajo pendiente
-
-| Item | Estado | Acción requerida |
-|---|---|---|
-| Callers de `FUN_43858338` | **NO_VERIFICADO** | REA `procedure_callees` o Ghidra xrefs a `0x43858338` |
-| Código que carga GOT `0x4401f080` | **NO_VERIFICADO** | REA xrefs a `0x4401f080` o análisis de LDR literal |
-| Consumidores de entradas individuales tabla `0x43ff3200` | **NO_VERIFICADO** | Seguir cada puntero de la tabla |
-| Escritores de gates `state+3` / `state+6` | **NO_VERIFICADO** | Búsqueda de stores con offset 3/6 + análisis dinámico |
-| Significado físico gates | **NO_VERIFICADO** | Requiere datasheet IMX210 o traza física |
-
----
-
-## 6. Conclusión para S300/S303
-
-- La tabla `0x43ff3200` **contiene una referencia directa al objeto estado imager** (`0x43f72d02` en offset +0x48), validando que es un directorio central del subsistema imager.
-- El acceso a la tabla es **indirecto vía GOT** (`0x4401f080`), lo que explica por qué REA no encontró xrefs directas al objeto estado desde esta tabla.
-- Los **callers del dumper `FUN_43858338`** (que lee los gates `+3`/`+6`) **no se han identificado estáticamente** — son el eslabón faltante para entender cuándo y cómo se evalúan los gates.
-- Los **writers de los gates `state+3` y `state+6`** siguen sin identificarse (coherente con S153 y S300).
-
-**Próximo paso recomendado (S304)**: Usar REA/Ghidra para:
-1. `procedure_callees` de `0x43858338` → callers del dumper
-2. `xrefs` a `0x4401f080` → código que accede a la tabla `0x43ff3200`
-3. `analyze_function` en candidatos que cargan el GOT slot
-
----
-
-## Artefactos
-
-- `analysis/s300_state_xref_sweep/xrefs_classified.json` — xrefs clasificados al estado
-- `docs/capture/s300-state-xref-sweep.md` — informe S300
-- `docs/capture/s303-ref-tree-43ff3200.md` — este informe
-
----
-
-## Tests
+- Solo llamadas **directas** `BL/BLX/B/B.W`; no cubre llamadas por registro, punteros en
+  tablas, ni retornos.
+- Rango escaneado `0x43541000..0x43d00000` (todo el código observado); más allá solo hay
+  datos.
+- Las funciones contenedoras del nivel 2/3 son **INFERENCIA** por prólogo más cercano
+  (heurística), no símbolos de Ghidra.
+- Alcanzabilidad **runtime** de una captura: `NO_VERIFICADO`. Que exista un camino
+  estático no prueba que se ejecute al disparar.
+- Los usuarios del slot GOT `0x4401f080` siguen **NO_VERIFICADOS** en esta revisión: la
+  consulta de xrefs requiere REA y se deja como paso siguiente (el único literal de la
+  base está en el slot, así que cualquier usuario debe cargarlo por suma al base GOT).
+- Sin firmware ejecutado, sin cámara, sin flasheo. S51 no cambia.
 
 ```sh
-python3 -m pytest analysis/s300_state_xref_sweep/test_s300_state_xref_sweep.py -v
-# 7 tests passed
+python3 analysis/s303_ref_tree/build_tree.py
+python3 analysis/s303_ref_tree/verify_tree.py
+python3 -m unittest tests.test_s303_ref_tree -v
 ```
