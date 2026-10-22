@@ -2,7 +2,7 @@
 
 ## S155 — tres referencias más al estado de gates (22-10-2026)
 
-REA/bytes: `0x43857f90` y `0x43857fb0` cargan el byte `+0` y devuelven predicados; `0x43858134` carga el puntero GOT pero solo lee campos `+4` y `+0x1c`, almacenando en otros objetos. No se observa write a gates `+3/+6` **en estos cuerpos**. No es ausencia global. [S155](../docs/capture/s155-imager-state-readers.md), reproducción `analysis/s155_imager_state_readers/state_readers.json` (3 tests).
+REA/bytes: `0x43857f90` y `0x43857fb0` cargan el byte `+0` y devuelven predicados; `0x43858134` carga el puntero GOT pero solo lee campos `+4` y `+0x1c`, almacenando en otros objetos. No se observa write a gates `+3/+6` **en estos cuerpos**. No es ausencia global. [S155](../docs/capture/s155-imager-state-readers.md), reproducción `analysis/s155_imager_state_readers/state_readers.json` (3 tests). Commit publicado: `d0888afd`.
 
 **Siguiente:** elegir un xref restante a `0x43f72d02` (p. ej. `0x43859954`/`0x4385b268`) y clasificar su dataflow/store por evidencia, uno o un grupo acotado.
 
