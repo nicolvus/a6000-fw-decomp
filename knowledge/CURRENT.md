@@ -79,6 +79,14 @@ Para restricciones del proyecto (sin firmware ejecutado, sin flasheo, sin `git p
 
 [Informe](../analysis/s122_camera_main_tc/camera_main_tc.md) · [doc](../docs/capture/s122-camera-main-tc.md). Siguiente: por qué se pierden sitios en la A7S/A6300 (idx 2, 32, 108); llamadas por puntero a `0x438786c4`/`0x43879204`/`0x438792dc`/`0x4387938e`; significado de TC/DDT/DIST/ARC/Gmv/Lmv; el pipeline interno de calibración, DIST, DDT y SMART ZOOM.
 
+## S128 — el mapa de etiquetado de la fw3.21 (21-10-2026, línea de RE general)
+
+**VERIFICADO (6 tests, `tests/test_s128_label_map.py`):** comparación **texto a texto** de los 98 prefijos de módulo con ≥ 8 cadenas entre la A6000 fw3.21 y la A7S fw3.20: **58 IGUAL** (la A7S usa el mismo prefijo y los textos coinciden), **18 RENOMBRADO** (la A7S **no** usa ese prefijo pero los textos coinciden: la fw3.21 **añadió la etiqueta**), 2 PARCIAL y 20 NUEVO/PROPIO. Los 18 renombrados: `[CAMERA_MAIN_YC]` (958/968), `[IMAGING_CAP]` (678/697), `[CAMERA_MAIN_SYNC]` (412/428), `[CAMERA_SA]` (228/231), `[CAMERA_MAIN]` (97/134), `[CAMERA_MAIN_TC]` (122/125), `[IMAGING]` (115/120), `[MOUNT_ERROR]` (78/80).
+
+**Conclusión transversal**: la fw3.21 de la A6000 **no reescribe el firmware: reescribe el logging** — confirma, de forma transversal, lo medido hito a hito (S106 `[IMAGING_CAP]`, S119 `[APL]` dentro de `[CAMERA_SA]`, S120 `[IDT_OPD]`, S122 `[CAMERA_MAIN_TC]`, S126 `[CAMERA_MAIN]`). El único módulo con **cambio de contenido real y grande** es `[CAM_IMAGER]` (179/371 = 0.48; S124) y `[SFRS]` va al revés (117 en la A6000 frente a 151 en la A7S, S116).
+
+[Informe](../analysis/s128_label_map/label_map.md) · [doc](../docs/capture/s128-label-map.md). Siguiente: comprobar uno por uno los 20 "NUEVO/PROPIO" (contenido nuevo o etiqueta distinta en la A7S).
+
 ## S121 — el módulo `[AIP]` (37 trazas): la interfaz de audio con el escalado (21-10-2026, línea de RE general)
 
 **VERIFICADO (97 tests, `tests/test_s121_aip.py`):** 37 cadenas `[AIP]` en `0x43cdd844`–`0x43cdec50`; **16 funciones** y 6 sub-bloques RTTI: `SaWrapper` (8), `SaBackUpCtrl` (12), `SaDriverBase` (4), `LPS` (11), `SaDriverZoomNr` (1), `SetFader` (1). **Callbacks `Ack`/`Comp`/`Err` en tres capas**: SA (`0x43926d1c`/`0x43926de8`, con los predicados `[r1,#1]==0x14`/`0x13`), LPS (`0x4392b16c`/`0x4392b254`) y driver; los errores llevan `errCode`+`errState` (SA) o `ErrCode`+`ErrStatus` (LPS). **Tabla de backup**: **350 entradas de 12 B** en `0x43bd1964` con `{id = 0x10c0000 + n, offset, size}`; `WriteShadow2BakcupArea` vuelca `0x10c` B (`mov.w r0,#0x10c` en `0x4392ab78`) y `SetAudioNrType` publica el **bit 3** de `bkId = 0x10e0000`. Comandos hacia el escalar en `0x4392ac30` (`Cmd`/`Func` + `Zma`/`Ext`/`Mbx`) y `0x4392acb4` (`Cmd`/`Func`/`Unq`). Buffers LPS `0x82`/`0x83`/`0x85` con longitudes `0x2c`/`0x28`/`0x14`; `SetFader` (`0x4355ae98`) divide por 100/20/otro según `[r0,#0x78]`.
