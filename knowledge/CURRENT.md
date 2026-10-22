@@ -171,6 +171,16 @@ Para restricciones del proyecto (sin firmware ejecutado, sin flasheo, sin `git p
 
 [Informe](../analysis/s133_mount_debug/mount_debug.md) · [doc](../docs/capture/s133-mount-debug.md). Siguiente: atribución de módulo de los puentes `0x4377e0e8` y `0x437d24c8`; el consumidor de `osal_snd_msg`; la semántica de los códigos `CS_*`/`PowerSeq` y de los estados 0-2.
 
+## S137 — `[CTRLCORE]`: la sub-etiqueta del núcleo de control de códec (21-10-2026, línea de RE general)
+
+**VERIFICADO (54 tests, `tests/test_s137_ctrlcore.py`):** 55 cadenas con el token `[CTRLCORE]` entre `0x43c3b82d` y `0x43cdb492`, **74 sitios PIC** (regla estricta) en **16 funciones** emisoras, **74/74 recalculados de forma independiente** por `analysis/s137_ctrlcore/verify_sites.py` (`ldr` del mismo registro → literal → `destino = W + add + 4`). **Corrección de la premisa del hito**: `[CTRLCORE]` **no es un módulo de primer nivel**, es una **sub-etiqueta de segundo nivel** (como `[APL]` dentro de `[CAMERA_SA]`, S119): `[CDIAG][CTRLCORE]` (51, clase `CdCtrlCore`), `[MCSENS][CTRLCORE]` (1, `McSensCtrlCore`) y `[AMSENS][CTRLCORE]` (3, `AmSensCtrlCore`). Capas: `CdCtrlIf` despacha y `*CtrlCore` ejecuta, con `ExecCmd` (comandos `MSG_SENS_COMMAND` `0x435a1424`), `ExecSensCmd` (`0x435a15e8`) y `ExecSensComp` (`0x435a17e8`); ficheros `cdCtrlCore.cpp` `0x43c3b86c`, `mcSensCtrlCore.cpp` `0x43c73689`, `amSensCtrlCore.cpp` `0x43cdb45a`, `mcAvCtrlCore.cpp` `0x43c454e8`.
+
+**Diferencial**: A7S fw3.20 con **55/55** cadenas idénticas (mismas operaciones y ficheros); A6300 fw2.01 con **90** = las 55 comunes + 14 `[CDIAG][CTRLCORE] … 4K` + 21 `[CDEXT][CTRLCORE]` (`CdExtCtrlCore` **no existe** en la A6000).
+
+**Negativo acotado**: ninguna de las 55 cadenas menciona obturador, disparo, cortinilla ni lectura del sensor → **sin efecto en S51**.
+
+[Informe](../analysis/s137_ctrlcore/ctrlcore.md) · [doc](../docs/capture/s137-ctrlcore.md). Siguiente: nombre de `0x439b4244` (registro de mensaje/clase); los ids `0x32`/`0x33` de `ExecSensCmd`; la entrada indirecta a `ExecSensCmd`/`ExecSensComp`.
+
 ## S121 — el módulo `[AIP]` (37 trazas): la interfaz de audio con el escalado (21-10-2026, línea de RE general)
 
 **VERIFICADO (97 tests, `tests/test_s121_aip.py`):** 37 cadenas `[AIP]` en `0x43cdd844`–`0x43cdec50`; **16 funciones** y 6 sub-bloques RTTI: `SaWrapper` (8), `SaBackUpCtrl` (12), `SaDriverBase` (4), `LPS` (11), `SaDriverZoomNr` (1), `SetFader` (1). **Callbacks `Ack`/`Comp`/`Err` en tres capas**: SA (`0x43926d1c`/`0x43926de8`, con los predicados `[r1,#1]==0x14`/`0x13`), LPS (`0x4392b16c`/`0x4392b254`) y driver; los errores llevan `errCode`+`errState` (SA) o `ErrCode`+`ErrStatus` (LPS). **Tabla de backup**: **350 entradas de 12 B** en `0x43bd1964` con `{id = 0x10c0000 + n, offset, size}`; `WriteShadow2BakcupArea` vuelca `0x10c` B (`mov.w r0,#0x10c` en `0x4392ab78`) y `SetAudioNrType` publica el **bit 3** de `bkId = 0x10e0000`. Comandos hacia el escalar en `0x4392ac30` (`Cmd`/`Func` + `Zma`/`Ext`/`Mbx`) y `0x4392acb4` (`Cmd`/`Func`/`Unq`). Buffers LPS `0x82`/`0x83`/`0x85` con longitudes `0x2c`/`0x28`/`0x14`; `SetFader` (`0x4355ae98`) divide por 100/20/otro según `[r0,#0x78]`.
