@@ -1806,3 +1806,18 @@ cambios. [S318](../docs/capture/s318-ctor-mode.md), `analysis/s318_ctor_mode/cto
 
 **Siguiente:** S319, frontera del `ctx` `0x43ea70a0` (escritor de `[ctx]`/`[ctx+8]` en módulos
 hermanos).
+
+## S319 — frontera del ctx (22-10-2026, agente B)
+
+**VERIFICADO (bytes; 16 comprobaciones, 5 tests):** el `ctx` corregido es **`0x43ea70a0`**
+(+2 respecto de S314 por la regla `PC=(add+4)` con bit0 a 0; REA lo confirma:
+`DAT_437b38f4 + 0x437b38f2`). Hay **40** sitios `ldr/add pc` a `ctx`: 31 lectura, 1 store a
+`ctx+0x44` (`0x437b5d4a`), 3 pasos como argumento y 5 indirectos; **ninguno** escribe `[ctx]`
+ni `[ctx+8]`. Cero literales absolutos de `0x43ea70a0`/`0x43ea70a8` en `av-cam` y en los
+`kmod/*` y `lib/*` del firmware A7S. **NO_VERIFICADO:** el escritor puede estar en una función
+que recibe `ctx` (candidatos `0x437c7b0c`→`0x437c83e8`, `0x437ca5c8`) o ir por memoria
+compartida/OSAL; la ausencia de literales no prueba ausencia. S51 sin cambios.
+[S319](../docs/capture/s319-ctx-boundary.md), `analysis/s319_ctx_boundary/ctx_boundary.json`.
+
+**Siguiente:** S320, seguir los candidatos que reciben `ctx` o cerrar con un barrido de
+`memcpy`/`stm` con destino `ctx`.
