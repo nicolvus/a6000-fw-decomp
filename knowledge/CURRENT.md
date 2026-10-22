@@ -1660,7 +1660,7 @@ seguir `0x4354908c` (caller del selector) para cerrar el flujo del modo silent.
 ## S308 — flujo del selector silent y entrada del bloque de tiempos (22-10-2026, agente B)
 
 El resultado del selector `0x43826d58` se guarda en `[sp+0x2c]` (`0x43549098`) y se pasa a
-`0x43ad9704` (`0x435490c4`), un constructor/despachador de mensajes: **no** va directo al bloque
+`0x43ad9704` (`0x435490c4`), un **thunk de llamada virtual** (S310: `vtable+0x64`): **no** va directo al bloque
 de tiempos. El bloque es `FUN_438645bc` (S307 decía `…be`: corregido) con **un** caller directo,
 `0x43861be4` (ruta de configuración: buffer 0x70 B + variante 1/2). Solo hay 4 punteros a
 `0x43864xxx` y ninguno apunta al bloque. El enlace silent→tiempos sigue **NO_VERIFICADO**; el
@@ -1681,3 +1681,14 @@ funciones, S300). Límite: no descarta una reescritura equivalente. [S309](../do
 
 **Siguiente:** comparar la ruta de configuración propia de la A6000 (writers de `+0x02`) o el
 consumidor del mensaje de `0x43ad96fa`.
+
+## S310 — `0x43ad9704` es un thunk de llamada virtual (22-10-2026, agente B)
+
+`0x43ad96fa`/`0x43ad9704` son thunks `obj->vtable[slot](...)`; la familia contigua usa slots
+`0x64, 0x94, 0x58, 0x74, 0x40, 0x18`. El modo silent se pasa como argumento de una llamada
+virtual (`vtable+0x64`), no a un “mensaje”. El consumidor real depende del objeto/vtable y queda
+**NO_VERIFICADO**; corrige la descripción de S308. [S310](../docs/capture/s310-vtable-thunk.md),
+`analysis/s310_vtable_thunk/thunk.json` (3 tests).
+
+**Siguiente:** identificar el objeto/vtable de `r0` en `0x43549084` (constructor o RTTI) para
+resolver el slot 0x64, o cerrar el carril con el estado actual.

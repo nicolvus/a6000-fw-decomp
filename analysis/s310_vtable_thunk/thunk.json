@@ -1,0 +1,83 @@
+{
+  "milestone": "S310",
+  "title": "0x43ad9704 es un thunk de llamada virtual (vtable+0x64)",
+  "firmware": {
+    "name": "av-cam.bin (A7S fw3.20)",
+    "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+  },
+  "base": "0x43541000",
+  "thunks": [
+    {
+      "entry": "0x43ad96fa",
+      "bytes_hex": "08b503685b6e984708bd10b5",
+      "insn": [
+        "push {r3, lr}",
+        "ldr r3, [r0]",
+        "ldr r3, [r3, #0x64]",
+        "blx r3"
+      ],
+      "vtable_slot": "0x64"
+    },
+    {
+      "entry": "0x43ad9712",
+      "bytes_hex": "006808b50368d3f894309847",
+      "insn": [
+        "ldr r0, [r0]",
+        "push {r3, lr}",
+        "ldr r3, [r0]",
+        "ldr.w r3, [r3, #0x94]"
+      ],
+      "vtable_slot": "0x94"
+    },
+    {
+      "entry": "0x43ad9720",
+      "bytes_hex": "006808b503689b6d984708bd",
+      "insn": [
+        "ldr r0, [r0]",
+        "push {r3, lr}",
+        "ldr r3, [r0]",
+        "ldr r3, [r3, #0x58]"
+      ],
+      "vtable_slot": "0x58"
+    },
+    {
+      "entry": "0x43ad972c",
+      "bytes_hex": "006808b503685b6f984708bd",
+      "insn": [
+        "ldr r0, [r0]",
+        "push {r3, lr}",
+        "ldr r3, [r0]",
+        "ldr r3, [r3, #0x74]"
+      ],
+      "vtable_slot": "0x74"
+    },
+    {
+      "entry": "0x43ad9744",
+      "bytes_hex": "006808b503681b6c984708bd",
+      "insn": [
+        "ldr r0, [r0]",
+        "push {r3, lr}",
+        "ldr r3, [r0]",
+        "ldr r3, [r3, #0x40]"
+      ],
+      "vtable_slot": "0x40"
+    },
+    {
+      "entry": "0x43ad9750",
+      "bytes_hex": "006808b503689b69984708bd",
+      "insn": [
+        "ldr r0, [r0]",
+        "push {r3, lr}",
+        "ldr r3, [r0]",
+        "ldr r3, [r3, #0x18]"
+      ],
+      "vtable_slot": "0x18"
+    }
+  ],
+  "selector_result_path": {
+    "stored": "0x43549098 str r0,[sp,#0x2c]",
+    "passed_to": "0x435490c4 bl 0x43ad9704",
+    "semantics": "llamada virtual obj->vtable[0x64](...)"
+  },
+  "scope_limit": "La identidad del objeto/vtable no se resuelve aqu\u00ed; el consumidor del modo 0x4e/0x4f queda NO_VERIFICADO."
+}

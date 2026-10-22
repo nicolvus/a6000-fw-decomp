@@ -5,3 +5,4 @@
 - S307: `+0xde` y `+0xe6/+0xe8/+0xea` se escriben desde funciones ausentes en la A6000 (firma 24 B, 0 hits); `FUN_438645be` entra por vía indirecta. Siguiente: S308, entrada indirecta y flujo desde `0x4354908c`.
 - S308: flujo silent → mensaje (`0x43ad9704`), no al bloque de tiempos; entrada correcta `0x438645bc` con caller `0x43861be4`. Siguiente: S309, consumidor de la estructura del mensaje.
 - S309: 7/7 funciones de la cadena silent/config con 0 coincidencias (24 B) en A6000 → código ausente. Siguiente: S310 consumidor del mensaje; S311 ruta de config propia de la A6000.
+- S310: `0x43ad9704` es thunk virtual (vtable+0x64). Consumidor del modo no resuelto. Siguiente: S312 identificar objeto/vtable.
