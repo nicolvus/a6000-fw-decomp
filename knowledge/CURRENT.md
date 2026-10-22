@@ -1715,3 +1715,14 @@ consume en configuración/volcado, todo A7S. Cuadro consolidado S300–S312 en e
 
 **Siguiente:** resolver el objeto/vtable del selector (slot 0x64, S310) o pasar a la síntesis
 pública A7S↔A6000 (S313) con el estado actual del carril.
+
+## S313 — síntesis del carril B (22-10-2026, agente B)
+
+Consolida S300–S312 con 16 afirmaciones verificadas y sus artefactos. Conclusión: el silent de la
+A7S no va por los gates ni por la matriz de registros; va por selector de drive mode
+(`tipo==2`→`0x4e/0x4f`) y un subsistema de tiempos/configuración exclusivo. Abierto: objeto/vtable
+del slot `0x64`, tabla `0x43fee3f8`, si el modo llega al bloque por valor, y semántica física.
+Incluye la nota de las sesiones paralelas S304/S305 supersedidas (+0x58). S51 sin cambios.
+[S313](../docs/capture/s313-synthesis-carril-b.md) (4 tests de consistencia).
+
+**Siguiente:** S314 resolver el objeto/vtable de `0x43549084` o la tabla `0x43fee3f8`.

@@ -8,3 +8,4 @@
 - S310: `0x43ad9704` es thunk virtual (vtable+0x64). Consumidor del modo no resuelto. Siguiente: S312 identificar objeto/vtable.
 - S311: comparación simétrica de la configuración: 2 writers A6000 exclusivos, 2 compartidos. Siguiente: S312 objeto/vtable o síntesis final.
 - S312: los 6 consumidores del cluster A7S son código exclusivo (0 hits en A6000); cuadro consolidado S300–S312.
+- S313: síntesis del carril B con 16 hallazgos verificados y 5 preguntas abiertas; S304/S305 marcadas supersedidas. Carril en estado publicable.
