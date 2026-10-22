@@ -13,13 +13,13 @@ Proyecto de ingeniería inversa del firmware **Sony A6000 (fw 3.21)**, con foco 
 
 ## Avance total
 
-![linea-general](https://img.shields.io/badge/línea_general-14.78%25-yellow)
+![linea-general](https://img.shields.io/badge/línea_general-15.05%25-yellow)
 ![modulos-nuevos](https://img.shields.io/badge/módulos_nuevos-100%25-brightgreen)
 
-- **Línea general de módulos:** **14.78%** (**55/372**) decodificados.
+- **Línea general de módulos:** **15.05%** (**56/372**) decodificados.
 - **Módulos “contenido nuevo” (S130):** **100%** (**17/17**) cerrados.
 
-<progress value="55" max="372"></progress>
+<progress value="56" max="372"></progress>
 
 Fuente de métricas: [`analysis/s178_census/census.md`](analysis/s178_census/census.md).
 
