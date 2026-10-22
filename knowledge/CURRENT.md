@@ -1642,3 +1642,17 @@ NO_VERIFICADA; usuarios del GOT `0x4401f080` pendientes (S305). [S303](../docs/c
 `analysis/s303_ref_tree/ref_tree.json` (4 tests).
 
 Rev.3 añade el contraste con REA: `procedure_callers` confirma 1 función para el dumper y 5 para el caller; el slot `0x4401f080` es **invisible** para REA (`undecodable`, 0 xrefs) y se localiza por bytes en `0x4378bb6c` (`GOT base 0x4401eee4 + 0x19c`), que lo pasa a una ruta de log. 3 sitios caen en huecos de cuerpo de Ghidra. **Siguiente:** desambiguar los 40 `add.w #0x19c` o pasar a los writers del clúster `+0xde..+0xea` de la A7S.
+
+## S307 — el cluster A7S `+0xde`/`+0xe6..+0xea` está en código ausente en la A6000 (22-10-2026, agente B)
+
+Firmas de 24 B alrededor de cada store: `+0xde` (`0x4386521a`) y `+0xe6/+0xe8/+0xea`
+(`0x438643a6/b2/bc`) dan **0 coincidencias** en la A6000; dos escritores de `+0x02`
+(`FUN_4385352c`, `FUN_4385a384`) también. Los stores a `+0x00` y uno de `+0x02` sí existen en la
+A6000. `FUN_438645be` (lee `+0xae`×1000, llama a los escritores) no tiene llamadas directas ni
+literal de puntero → entrada indirecta; alcanzabilidad NO_VERIFICADA. El selector silent
+`0x43826d58` solo tiene 2 callers (`0x4354908c`, `0x43826df2`) y ninguno llama a este bloque: la
+conexión modo→tiempos queda NO_VERIFICADA. [S307](../docs/capture/s307-a7s-only-writers.md),
+`analysis/s307_a7s_writers/writers.json` (4 tests).
+
+**Siguiente:** identificar la entrada indirecta de `FUN_438645be` (tabla de punteros/estructura) o
+seguir `0x4354908c` (caller del selector) para cerrar el flujo del modo silent.
