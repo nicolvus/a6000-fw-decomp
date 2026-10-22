@@ -2,90 +2,38 @@
 
 Ingeniería inversa de hardware y firmware de la Sony A6000 (fw 3.21): arquitectura, arranque,
 recuperación y pipeline de captura. El obturador electrónico es un
-[subproyecto](projects/electronic-shutter/README.md). Sin firmware ejecutado, sin cámara, sin flasheo.
+[subproyecto](projects/electronic-shutter/README.md). No se ejecutó firmware ni se flasheó la cámara;
+las pruebas históricas sobre la cámara están documentadas en S64.
 
-## Dónde mirar primero
+## Estado en una mirada
 
-- Estado operativo breve: [knowledge/CURRENT.md](knowledge/CURRENT.md) · restricciones: [docs/STATE.md](docs/STATE.md) · continuidad: [CONTEXT.md](CONTEXT.md).
-- Historial completo de fases: [knowledge/PROGRESS.md](knowledge/PROGRESS.md).
-- Catálogo de la línea de RE general (27 hitos): [docs/capture/linea-general-re.md](docs/capture/linea-general-re.md).
-- Resultados y viabilidad: [docs/findings.md](docs/findings.md), [docs/feasibility-report.md](docs/feasibility-report.md).
-- README histórico íntegro (S19–S100, antes de esta reorganización): [docs/history/README-historial-2026-10-21.md](docs/history/README-historial-2026-10-21.md).
+| Área | Estado | Fuente |
+|---|---|---|
+| Obturador totalmente electrónico | No demostrado; decisión vigente: **no parchear** | [S51](docs/capture/s51-decision.md), [S101](docs/capture/s101-conclusions.md) |
+| Pruebas físicas P1–P8 | **0 de 8** ejecutadas según el plan | [Plan de pruebas](docs/capture/physical-test-plan.md) |
+| Última sesión documentada | **S102**, menú principal | [Informe S102](docs/capture/s102-menu-principal.md) |
 
-## Fases recientes (más nuevas primero)
+Los números Sx identifican sesiones de investigación, no una escala de porcentaje completado.
+[GitHub Pages](https://nicolvus.github.io/a6000-fw-decomp/) ofrecerá, tras activarlo, un índice público y un
+verificador para localizar informes por número de sesión. El índice se genera con
+`scripts/build_pages_status.py` a partir de documentos versionados; si no encuentra
+una sesión, eso no significa que no exista.
 
-Cada enlace lleva a su informe; el resumen de hallazgos está en el [catálogo](docs/capture/linea-general-re.md) y en el [historial](docs/history/README-historial-2026-10-21.md).
+## Navegación por tema
 
-- [S102: menú principal (botón MENU), cadena de carga y apertura](docs/capture/s102-menu-principal.md): `libObj.so` → `viewUnified2.so` (registro de ~150 vistas, índices = `Vn` del log real) → `viewUnified3..8`; vistas BASE_MENU/GLOBAL_MENU/SETTINGMENUX/FNMENU; `DefRootView::ActionOpen*` es el árbitro de arranque, no la tecla MENU; evento de MENU sin demostrar. Anexos: [APK por función](analysis/apk-por-funcion/README.md), [decompilación de apps](analysis/decomp-apk/README.md).
-- [S101: selector del tipo de mecanismo y consumidores de los campos de ajuste (A6000 vs A7S)](docs/capture/s101-conclusions.md): `+0x238`/`+0x280` solo se escriben; Darwin nunca fija el tipo (3 lectores, 0 escritores en A6000/A7S/A6300); selector A6000 `0x4379316a` sobre `[G+0x808]&7` (por defecto tipo 0) frente al de A7S por el byte `+0x7a`; plan de pruebas físicas pendientes. S51 se mantiene.
-- [S100: el contrato de comandos del ADF (firmware) ↔ `AdfCh` (userland)](analysis/s100_adf_contract/adf_command_contract.md)
-- [S98: `libBizFw.so` — el orquestador userland y el puente con el ADF](analysis/s98_bizfw/bizfw_bridge.md)
-- [S99: la arquitectura del userland — las capas de `libObj.so`](analysis/s99_userland/userland_architecture.md)
-- [S97: sincronización audio/vídeo del codificador](analysis/s97_encsync/encoder_sync.md)
-- [S94: la API HAPI de la app remota](analysis/s94_hapi/hapi_api.md)
-- [S96: modos de captura — `drive_mode`, `CapMode` y la tabla 69 → 14 ShdMode](analysis/s96_modes/capture_modes.md)
-- [S92: la base de datos de medios — SceneInfo, MovieFile e índice](analysis/s92_mediadb/media_database.md)
-- [S95: los ficheros que la cámara lee y escribe](analysis/s95_files/file_inventory.md)
-- [S90: reproducción de vídeo — PlayArranger, VFC y VDISP](analysis/s90_playback/playback.md)
-- [S93: el bus de mensajes OSAL del userland](analysis/s93_osal_bus/osal_message_bus.md)
-- [S87: almacenamiento, sistema de archivos y tarjeta](analysis/s87_storage/storage_filesystem.md)
-- [S91: submódulos del framework ADF (ADJ, SYSND, GS, FACE, AFNR, CH_SRC)](analysis/s91_adf/adf_submodules.md)
-- [S82: AutoFraming y las etapas de control del pipeline](analysis/s82_autoframing/autoframing_stages.md)
-- [S88: GOLFSHOT (disparo de golf por sonido) y MOTIONSHOT](analysis/s88_shotmodes/golfshot_motionshot.md)
-- [S89: el módulo `IDT`/`IDT_OPD` — mapas del imager, FOPD e IDTSA](analysis/s89_idt/idt_opd_maps.md)
-- [S77: Creative Style y balance de blancos](analysis/s77_pp/picture_profile_creative_style.md)
-- [S86: el subsistema del visor — `VDF` (marco de display) y `VEF` (visor electrónico)](analysis/s86_vdf_vef/vdf_vef_viewfinder.md)
-- [S85: `CLK_CTRL` (control de reloj) y `VPH_API` (API del vídeo del visor)](analysis/s85_clk_vph/clk_ctrl_vph_api.md)
-- [S72: wireless y transferencia remota (WLAN / PlayMem / "Camera on Demand")](analysis/s72_wlan/wlan_playmem.md)
-- [S84: el API del motor de imagen (SA) — catálogo de `sa_func_*`](analysis/s84_sa_api/sa_api_catalogue.md)
-- [S83: los módulos "menores" del firmware, decodificados](analysis/s83_modules/minor_modules.md)
-- [S81: ADF — framework de arranque, MSGQ, MMGR y comandos DBGCMD](analysis/s81_adf/adf_framework.md)
-- [S71: subsistema de detección de caras y objetos (FC/FRC)](analysis/s71_frc/frc_subsystem.md)
-- [S80: ZIT — corrección de defectos del sensor (DDC) en el imager](analysis/s80_zit/zit_defect_correction.md)
-- [S79: mapa de módulos del firmware por prefijos de log](analysis/s79_modules/module_map.md)
-- [S78: parámetros `apc_*` del motor de imagen YC](analysis/s78_apc/yc_apc_params.md)
-- [S76: pipeline de captura (etapas `Stage_*`) y motor de imagen](analysis/s76_stages/stage_pipeline.md)
-- [S75: ZPD (zone plate detection) — calibración del sensor con datos de la lente](analysis/s75_zpd/zpd_subsystem.md)
-- [S73/S74: protocolo de ajuste de fábrica `ADJ_CMD` (panel/EVF/OLED) y `ContrastPlus`](analysis/s73_adj/adjust_cmd_recon.md)
-- [S70: reconocimiento del subsistema EIS/gyro](analysis/s70_is/is_gyro_recon.md)
-- [S68: gestión de batería, energía y carga (NP-FW50)](docs/capture/s68-battery-power.md)
-- [S69: subsistema de audio de la A6000 (línea general)](docs/capture/s69-audio-subsystem.md)
-- [S66: montura de lente E-mount (línea general, sin relación con SilentShutter)](docs/capture/s66-lens-mount.md)
-- [S64: prueba en cámara de SilentShutter](docs/capture/s64-silent-ram-nvram-test.md)
-- [S62: PMCA — inyección de código, service shell y la propiedad `modelName`](docs/capture/s62-pmca-injection.md)
-- [S61: origen de los parámetros IMX210 y flujo de mensajes](docs/capture/s61-conclusions.md)
-- [S60: emisor de mensajes IMX210 y receptores A7S](docs/capture/s60-conclusions.md)
-- [S59: validación cruzada Claude + GPT-6.1 Sol](docs/capture/s59-conclusions.md)
-- [S58: productores AE y configuración efectiva A7S Silent](docs/capture/s58-conclusions.md)
-- [S57: semántica de ID1/SSB/svd-shd-spl, Silent IMX235, XPI y sincronía P2S](docs/capture/s57-conclusions.md)
-- [S56: transporte de registros del IMX210 (IDs = direcciones 16 bit, P2S/DFE0), CISIF = receptor](docs/capture/s56-conclusions.md)
-- [S55: origen de los pares GPIO (base de backup BK4), A7S vs A6000](docs/capture/s55-conclusions.md)
-- [S54: P4C, tipo de mecanismo 0 y sincronización BIONZ](docs/capture/s54-conclusions.md)
-- [S53: parser CAIF de Darwin, A7S vs A6000](docs/capture/s53-conclusions.md)
-- [S52: mecanismo Silent Shooting A7S y viabilidad en A6000](docs/capture/s52-parallel-conclusions.md)
-- [S51: decisión SÍ/NO sobre exposición totalmente electrónica](docs/capture/s51-decision.md)
-- [S50: conclusiones conjuntas Claude + Codex](docs/capture/s50-parallel-conclusions.md)
-- [S49: productor de configuración de captura](docs/capture/s49-capture-config-producer.md)
-- [S48: proveedor del servicio de registro `+0x1ec`](docs/capture/s48-service-table-provider.md)
-- [S47: entrada del payload y orden de C](docs/capture/s47-payload-producer-and-order.md)
-- [S46: base VD y escritor del contexto](docs/capture/s46-vd-base-and-context-identity.md)
-- [S45: contexto y consumidor real del timing IMX210](docs/capture/s45-context-identity-and-physical-closure.md)
-- [S44: consumidor de registros y tabla de modos](docs/capture/s44-register-consumer-mode-table.md)
-- [S43: tabla PIC y códigos de modo IMX210](docs/capture/s43-exposure-mmio-and-lock-codes.md)
-- [S42: identidad de la llamada de exposición](docs/capture/s42-exposure-call-identity.md)
-- [S41: productores de mensajes y snapshots](docs/capture/s41-message-origin-imx210.md)
-- [S40: origen del contexto de modo](docs/capture/s40-context-origin-imx210.md)
-- [S39: enum de imagen y discriminador APL](docs/capture/s39-image-format-apl.md)
-- [S38: frontera DMM/OSAL en av-cam](docs/capture/s38-dmm-osal-static-frontier.md)
-- [S37: definidor DMM en libmprctrl](docs/capture/s37-libmprctrl-dmm-extents.md)
-- [S36: memoria de libInfraScalarMpr](docs/capture/s36-libinfra-scalar-mpr-memory.md)
-- [S35: objetos DFE y frontera estática APL/IRQ](docs/capture/s35-dfe-objects-static-frontier.md)
-- [S34: APL/DMA frente a VD e interrupciones](docs/capture/s34-apl-dma-vd-interrupts.md)
-- [S33: origen de los handles YC](docs/capture/s33-yc-rendezvous-producer.md)
-- [S32: callbacks VD y SyncYCout](docs/capture/s32-vd-callbacks-sync-ycout.md)
-- [S31: subsistema CAMERA_MAIN_SYNC/DFECore](docs/capture/s31-camera-main-sync-strings.md)
-- [S30: receptor y retorno de EncodeStill](docs/capture/s30-pipelines-capture-encode.md)
+- **Estado y decisiones:** [estado operativo](knowledge/CURRENT.md) · [restricciones](docs/STATE.md) · [S51, decisión sobre el parche](docs/capture/s51-decision.md) · [viabilidad](docs/feasibility-report.md).
+- **Obturador y captura:** [subproyecto](projects/electronic-shutter/README.md) · [S101, selector de mecanismo](docs/capture/s101-conclusions.md) · [pruebas P1–P8](docs/capture/physical-test-plan.md) · [índice de captura](docs/capture/README.md).
+- **Ingeniería inversa general:** [catálogo de hitos](docs/capture/linea-general-re.md) · [S102, menú](docs/capture/s102-menu-principal.md) · [S100, contrato ADF](analysis/s100_adf_contract/adf_command_contract.md) · [S99, userland](analysis/s99_userland/userland_architecture.md).
+- **Historial:** [README anterior S19–S100](docs/history/README-historial-2026-10-21.md) · [progreso completo](knowledge/PROGRESS.md) · [continuidad](CONTEXT.md).
 
+## GitHub Pages
+
+El sitio está en `site/`; el flujo `.github/workflows/pages.yml` genera
+`site/status.json` y publica **solo** esa carpeta al actualizar `main`.
+Para activarlo en GitHub: **Settings → Pages → Build and deployment → GitHub Actions**.
+La publicación requiere push explícito; este repositorio no incluye firmware en el sitio.
+El verificador muestra el informe localizado, sin atribuir «completado» ni
+capacidad física a una sesión.
 
 ## Agentes (Claude Code, Codex/ChatGPT, DeepSeek Harness)
 
@@ -104,6 +52,7 @@ Entorno: `python scripts/agent/check_env.py`.
 | `tests/` | Un test por hito + utilidades |
 | `scripts/` | Herramientas, conocimiento (`scripts/knowledge/`), agente |
 | `knowledge/` | Estado (`CURRENT.md`), progreso e índices derivados |
+| `site/` | GitHub Pages: portada, verificador e índice público de sesiones |
 | `src/` | Inventario, atlas, LIRO |
 | `tools/`, `reports/`, `references/`, `research/`, `work/` | REA/Ghidra, informes, fuentes públicas, notas |
 | `firmware/` | Firmware Sony original/extraído (en `.gitignore`, no se publica) |
@@ -147,14 +96,16 @@ un proyecto persistente de Ghidra ni garantizan evitar una nueva importación.
 
 ## Validación
 
-Veintiséis pruebas correctas; ruff y mypy sin avisos en `src tests`. TDD aplicado
-a inventario, atlas, símbolos versionados, roles ELF y agregación de
-dependencias, referencias Thumb y extracción LIRO. Registro actual:
+La suite está en `tests/`; ejecutar las pruebas pertinentes antes de reutilizar
+un hito. El trabajo inicial aplicó TDD a inventario, atlas, símbolos versionados,
+roles ELF, dependencias, referencias Thumb y extracción LIRO. Registro histórico:
 reports/shutter-validation.md; registro previo: reports/atlas-validation.md. Dos archivos
 auxiliares del DMG no legibles se registran como errores; el payload y el
 firmware están inventariados y los 679 ELF se analizaron sin errores.
 
-Repositorio Git inicializado y publicado en `github.com/nicolvus/a6000-fw-decomp` (rama `main`); desde S54 cada fase se commitea y se sube. `firmware/` está en `.gitignore`: los artefactos de firmware no se publican. Inicialmente no se instalaron paquetes. Después, el usuario autorizó hacer funcionar REA: se instaló REA localmente y se extrajeron Ghidra/JDK portables. No se ejecutaron programas del firmware.
+Repositorio publicado en `github.com/nicolvus/a6000-fw-decomp` (rama `main`).
+`firmware/` está en `.gitignore`: los artefactos de firmware no se publican.
+REA, Ghidra y JDK están instalados localmente; no se ejecutaron programas del firmware.
 
 ## REA operativo
 

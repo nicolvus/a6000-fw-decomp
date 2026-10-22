@@ -1,6 +1,6 @@
 # Continuidad
 
-Estado vigente: **S62** (20-10-2026), [PMCA: inyección, service shell y `modelName`](docs/capture/s62-pmca-injection.md), [checkpoint](knowledge/CURRENT.md). El mecanismo de PMCA y la propiedad BK4 `modelName` quedan verificados; el efecto «shell mode» de `ILCE-6001` no. S51 permanece. Las sesiones descritas a continuación son antecedentes.
+Última sesión documentada: **S102** (21-10-2026), [menú principal](docs/capture/s102-menu-principal.md). El estado operativo y los hitos posteriores a este resumen están en [knowledge/CURRENT.md](knowledge/CURRENT.md); la decisión sobre el obturador permanece en [S51](docs/capture/s51-decision.md). Las sesiones descritas a continuación son antecedentes.
 
 Versión breve (18-10-2026). El historial íntegro de sesiones S1–S27 (y este mismo
 archivo antes de reducirse) está preservado sin cambios en

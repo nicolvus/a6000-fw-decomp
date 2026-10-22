@@ -5,6 +5,10 @@ documento canónico donde está comprobada, con su rango de líneas cuando aplic
 Para el historial íntegro de sesiones ver `docs/history/` y las correcciones completas
 en [docs/CORRECTIONS.md](CORRECTIONS.md) (generado del grafo, no editar a mano).
 Para preguntas abiertas ver [docs/OPEN-QUESTIONS.md](OPEN-QUESTIONS.md).
+Última sesión documentada: [S102, menú principal](capture/s102-menu-principal.md).
+Para el estado operativo actualizado, ver [knowledge/CURRENT.md](../knowledge/CURRENT.md);
+para el obturador, la decisión [S51](capture/s51-decision.md) y el
+[plan de ocho pruebas físicas pendientes](capture/physical-test-plan.md).
 
 ## Avance S62 (20-10-2026)
 
