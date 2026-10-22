@@ -83,6 +83,7 @@ S315 localiza el consumidor `0x436f44c4(obj,modo,lista)`: aplica tres listas NUL
 S316 identifica la clase dueña de las listas: constructor `0x436f27b4`, vtable `0x43fce050` (45 entradas, metadata `0x43fce048`), métodos de listas en `+0x38`/`+0x44` y wrapper `0x43ad9840` en `+0x04`; exclusiva A7S. [`docs/capture/s316-class-vtable.md`](docs/capture/s316-class-vtable.md).
 S317: `obj+0x2b4` indexa tres tablas paralelas de stride `0x1c` (T1 `0x43bbeb70`, T2 `0x43bbf2ec`, T3 `0x43bbef34`; campos `+0x14`/`+0x18`), con 34 filas entre T3 y T2; bases confirmadas por REA/Ghidra y entrada exclusiva A7S. [`docs/capture/s317-mode-tables.md`](docs/capture/s317-mode-tables.md).
 S318 identifica el constructor paramétrico `0x436f3fc0(obj,idx)` (misma vtable), la tabla `0x43bbe1cc` y el mapeo `1→0x10`/`2→0x40` de `0x43ad9162`; único llamador con `idx=0` y rango válido NO_VERIFICADO. REA confirma el pseudo-código y el segundo usuario del slot GOT `0x4402ac80`. [`docs/capture/s318-ctor-mode.md`](docs/capture/s318-ctor-mode.md).
+S319 cierra la frontera estática del `ctx 0x43ea70a0`: 40 sitios, ninguno escribe `[ctx]`/`[ctx+8]`, y 0 literales absolutos en `av-cam` y en `kmod/*`/`lib/*`; veredicto NO_VERIFICADO con candidatos `0x437c7b0c`/`0x437ca5c8`. [`docs/capture/s319-ctx-boundary.md`](docs/capture/s319-ctx-boundary.md).
 
 ### Fase del agente E — módulos exclusivos A6000 (S600+)
 

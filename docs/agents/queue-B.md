@@ -52,3 +52,9 @@
 - TODO S319 Cerrar la frontera del `ctx` `0x43ea70a0` (corregido +2): buscar en módulos hermanos (`liro.ko`, `libObj.so`) el escritor de `[ctx]`/`[ctx+8]` o documentar la ausencia con barrido de literales en esos binarios.
 
 - BACKLOG S320 Identificar la tabla de 68 filas `0x43fee5ac` y su relación con los drive modes (S302).
+
+- DONE S319 Frontera del `ctx 0x43ea70a0` (corregido +2): 40 sitios `ldr/add pc` (31 lectura, 1 store a `+0x44`, 3 arg, 5 indirectos), **0 stores a `[ctx]`/`[ctx+8]`**; 0 literales absolutos en `av-cam` y en `kmod/*`/`lib/*`. Veredicto **NO_VERIFICADO** (la ausencia no prueba ausencia cross-module; candidatos `0x437c7b0c`/`0x437ca5c8`). Evidencia: `docs/capture/s319-ctx-boundary.md`, `analysis/s319_ctx_boundary/ctx_boundary.json` (16 comprobaciones, 5 tests).
+
+- TODO S320 Seguir los candidatos que reciben `ctx` como argumento (`0x437c7b0c`→`0x437c83e8`, `0x437ca5c8`) para localizar el escritor de `[ctx]`/`[ctx+8]`, o cerrar la frontera con un barrido de `memcpy`/`stm` con destino `ctx` en todo el blob.
+
+- BACKLOG S321 Identificar la tabla de 68 filas `0x43fee5ac` y su relación con los drive modes (S302).
