@@ -23,9 +23,9 @@ Proyecto de ingeniería inversa del firmware **Sony A6000 (fw 3.21)**, con foco 
 
 Fuente de métricas: [`analysis/s178_census/census.md`](analysis/s178_census/census.md).
 
-### Referencia visual (estilo AnyPS5)
+### Visualización en GitHub Pages
 
-![Referencia visual de avance](https://github.com/user-attachments/assets/7ff07a64-1b69-49f9-a804-e2e5304f5fba)
+- Tablero de avance en cuadrados: <https://nicolvus.github.io/a6000-fw-decomp/progress/>
 
 ## Objetivo técnico vigente
 
