@@ -25,16 +25,16 @@ def test_public_session_index_has_real_sources() -> None:
     assert data["physical_tests"]["total"] == 8
     coverage = data["module_coverage"]
     assert coverage["covered"] + coverage["pending"] == coverage["total"]
-    for name in ("index.html", "progress.svg"):
-        assert (ROOT / "site/progress" / name).read_bytes() == (ROOT / "docs/progress" / name).read_bytes()
+    assert (ROOT / "site/progress/index.html").read_bytes() == (ROOT / "docs/progress/index.html").read_bytes()
+    assert not (ROOT / "site/progress/progress.svg").exists()
+    badge = json.loads((ROOT / "site/badge-modulos.json").read_text(encoding="utf-8"))
+    assert badge["schemaVersion"] == 1 and f"{coverage['covered']}/{coverage['total']}" in badge["message"]
 
     page = (ROOT / "site/progress/index.html").read_text(encoding="utf-8")
-    svg = (ROOT / "site/progress/progress.svg").read_text(encoding="utf-8")
     assert page.count('class="cell m-') == coverage["total"]
     assert page.count('class="cell m-hito"') + page.count('class="cell m-sub"') == coverage["covered"]
     assert "Prioridad de investigación" in page and page.count('class="prio"') == 30
     assert "mando a distancia" in page  # nombre del hito S180 tomado del catálogo
-    assert svg.count("<rect") == 1 + coverage["total"] + data["latest_number"] + data["physical_tests"]["total"]
 
     prefix = "/nicolvus/a6000-fw-decomp/blob/main/"
     for item in sessions:
