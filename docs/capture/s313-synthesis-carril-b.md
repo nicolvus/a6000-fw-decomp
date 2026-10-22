@@ -74,3 +74,13 @@ python3 -m unittest tests.test_s300_state_xref_sweep tests.test_s301_a7s_state_x
 
 **Límite global:** todo es análisis estático de los blobs; sin firmware ejecutado, sin
 cámara, sin flasheo y sin pruebas físicas.
+
+---
+
+## Actualización posterior (S314)
+
+La pregunta abierta «¿Qué contiene la tabla de tiempos `0x43fee3f8` (19 filas)?» queda
+**corregida por S314** (`docs/capture/s314-selector-object.md`): en la A7S `0x43fee3f8` es un
+array terminado en NULL de **95** punteros a registros de 6 B (`u8 dev | u8 0 | u16 reg |
+u8 data | u8 0`), no una tabla de 19 filas; en la A6000 la misma VA pertenece a otra tabla.
+También se corrige que el thunk del slot `0x64` es `0x43ad96f8` (no `0x43ad9704`).

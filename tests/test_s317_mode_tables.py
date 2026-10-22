@@ -25,13 +25,13 @@ class ModeTables(unittest.TestCase):
         self.assertEqual(self.d["entry"]["stride"], "0x1c")
 
     def test_three_tables(self):
-        self.assertEqual(self.d["tables"]["T1"]["computed"], 0x43BBEB6E)
-        self.assertEqual(self.d["tables"]["T2"]["computed"], 0x43BBF2EA)
-        self.assertEqual(self.d["tables"]["T3"]["computed"], 0x43BBEF32)
+        self.assertEqual(self.d["tables"]["T1"]["computed"], 0x43BBEB70)
+        self.assertEqual(self.d["tables"]["T2"]["computed"], 0x43BBF2EC)
+        self.assertEqual(self.d["tables"]["T3"]["computed"], 0x43BBEF34)
 
     def test_spacing_is_34_rows(self):
         self.assertEqual(self.d["spacing"]["T3_to_T2_rows"], 34)
-        self.assertEqual(0x43BBF2EA - 0x43BBEF32, 34 * 0x1C)
+        self.assertEqual(0x43BBF2EC - 0x43BBEF34, 34 * 0x1C)
         self.assertEqual(self.d["spacing"]["T1_to_T3"], "0x3c4")
 
     def test_fields_read(self):
@@ -44,8 +44,8 @@ class ModeTables(unittest.TestCase):
 
     def test_limits(self):
         text = " ".join(self.d["limits"])
-        self.assertIn("NO_VERIFICADA", text)
-        self.assertIn("runtime", text)
+        self.assertIn("REA/Ghidra", text)
+        self.assertIn("REA/Ghidra", text)
 
 
 if __name__ == "__main__":

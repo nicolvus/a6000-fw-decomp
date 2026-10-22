@@ -19,7 +19,7 @@
 - DONE S306 (cubierto en S303 rev.3 §2b) Usuarios del slot `0x4401f080`: REA devuelve `undecodable`/0 xrefs (no prueba ausencia); por bytes, `0x4378bb6c` lo carga con `GOT base 0x4401eee4 + 0x19c` y lo pasa a `0x435613e8`. `procedure_callers` valida 1 función para el dumper y 5 para `FUN_43859710`.
  (fix(B): S303 rev.2 arbol real de 0x43ff3200 y callers del dumper)
 
-- DONE S314 Procedencia real del selector y tabla `0x43fee3f8`: en `0x43549084` se carga **`r1`** (`[ctx+8]+0x21c`), no `r0`; el thunk del slot `0x64` es `0x43ad96f8` (no `0x43ad9704`, que va a `0x43ad9ada` y usa `vtable+0x24`). `ctx=0x43ea709e` (getter `0x437b38ec`), sin escritor estático de `[ctx]`/`[ctx+8]`. Selector: `c==2 && b∈{0,1}` → `0x4e/0x4f`. Tabla `0x43fee3f8`: **95** registros de 6 B (`dev|0|reg:u16|data:u8|0`, 94×`0x81`, 1×`0x83`), terminador `0x43fee574`; la cifra «19 filas» no es reproducible. A6000: 0 apariciones del par `+0x21c/+0x220` y otra tabla en la misma VA (71 punteros, terminador `0x43fee41c`). Evidencia: `docs/capture/s314-selector-object.md`, `analysis/s314_selector_object/selector.json` (58 comprobaciones de `verify_selector.py`, 10 tests).
+- DONE S314 Procedencia real del selector y tabla `0x43fee3f8`: en `0x43549084` se carga **`r1`** (`[ctx+8]+0x21c`), no `r0`; el thunk del slot `0x64` es `0x43ad96f8` (no `0x43ad9704`, que va a `0x43ad9ada` y usa `vtable+0x24`). `ctx=0x43ea70a0` (getter `0x437b38ec`), sin escritor estático de `[ctx]`/`[ctx+8]`. Selector: `c==2 && b∈{0,1}` → `0x4e/0x4f`. Tabla `0x43fee3f8`: **95** registros de 6 B (`dev|0|reg:u16|data:u8|0`, 94×`0x81`, 1×`0x83`), terminador `0x43fee574`; la cifra «19 filas» no es reproducible. A6000: 0 apariciones del par `+0x21c/+0x220` y otra tabla en la misma VA (71 punteros, terminador `0x43fee41c`). Evidencia: `docs/capture/s314-selector-object.md`, `analysis/s314_selector_object/selector.json` (58 comprobaciones de `verify_selector.py`, 10 tests).
 
 - TODO S315 Seguir la lista de 95 registros hasta el formateador: callers/reachability de `0x436f44c4` y `0x436f25f0` (registro→trama), comparar con la tabla A6000 de 71 entradas (`0x43fee300..0x43fee418`) y decidir si el modo silent usa una lista distinta (p. ej. la de `0x43fee578`/`0x43fee590`).
 
@@ -38,11 +38,11 @@
 - TODO S317 Identificar la tabla indexada por `obj+0x2b4` (`ldr r0,[r3,r2,lsl#2]` en `0x436f4546`) y comprobar si es la tabla de 34 códigos de S302 (`0x43fee370`) o la de 68 filas de `0x43fee5ac`; después, quién escribe `+0x1b0/+0x1ac` (`0x11`) para cerrar la selección de modo.
 
 - BACKLOG S318 Resolver constructor/vtable de `[0x43e8dd98]` (objeto de `0x43ad9704`) o documentar la frontera cross-module.
-- BACKLOG S319 Cerrar la frontera del `ctx` `0x43ea709e`: buscar en módulos hermanos (`liro.ko`, `libObj.so`) el escritor de `[ctx]`/`[ctx+8]`.
+- BACKLOG S319 Cerrar la frontera del `ctx` `0x43ea70a0`: buscar en módulos hermanos (`liro.ko`, `libObj.so`) el escritor de `[ctx]`/`[ctx+8]`.
 
-- DONE S317 `obj+0x2b4` indexa **tres tablas paralelas** de stride `0x1c` (`0x436f618c`): T1 `0x43bbeb6e` (→`obj+0x16`), T2 `0x43bbf2ea` (→`obj+0x2e`), T3 `0x43bbef32` (→`obj+0xa5`); campos `u32 +0x14`, `u16 +0x18`; `T3→T2 = 34` filas exactas, `T1→T3 = 0x3c4`. Base calculada 2 mod 4 → lectura alineada vs desalineada **NO_VERIFICADA**. 111 sitios `str [#0x2b4]` no atribuibles; entrada exclusiva A7S. Evidencia: `docs/capture/s317-mode-tables.md`, `analysis/s317_mode_tables/mode_tables.json` (39 comprobaciones, 6 tests).
+- DONE S317 `obj+0x2b4` indexa **tres tablas paralelas** de stride `0x1c` (`0x436f618c`): T1 `0x43bbeb70` (→`obj+0x16`), T2 `0x43bbf2ec` (→`obj+0x2e`), T3 `0x43bbef34` (→`obj+0xa5`); campos `u32 +0x14`, `u16 +0x18`; `T3→T2 = 34` filas exactas, `T1→T3 = 0x3c4`. Base calculada con PC=(add+4) bit0=0 (REA/Ghidra y tablas de enum 1/2 confirman la lectura). 111 sitios `str [#0x2b4]` no atribuibles; entrada exclusiva A7S. Evidencia: `docs/capture/s317-mode-tables.md`, `analysis/s317_mode_tables/mode_tables.json` (39 comprobaciones, 6 tests).
 
-- TODO S318 Resolver la alineación real y el rango de las tablas de `+0x2b4` con REA/Ghidra (tipos de datos en `0x43bbeb6e..`) y buscar el escritor de `+0x2b4` para esta clase (xrefs al campo desde métodos propios).
+- TODO S318 Resolver la alineación real y el rango de las tablas de `+0x2b4` con REA/Ghidra (tipos de datos en `0x43bbeb70..`) y buscar el escritor de `+0x2b4` para esta clase (xrefs al campo desde métodos propios).
 
-- BACKLOG S319 Cerrar la frontera del `ctx` `0x43ea709e`: buscar en módulos hermanos (`liro.ko`, `libObj.so`) el escritor de `[ctx]`/`[ctx+8]`.
+- BACKLOG S319 Cerrar la frontera del `ctx` `0x43ea70a0`: buscar en módulos hermanos (`liro.ko`, `libObj.so`) el escritor de `[ctx]`/`[ctx+8]`.
 - BACKLOG S320 Identificar la tabla de 68 filas `0x43fee5ac` y su relación con los drive modes (S302).

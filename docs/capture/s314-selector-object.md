@@ -25,11 +25,16 @@ La llamada al selector está en `0x4354908c`, no en `0x43549084`:
 
 ```
 0x437b38ec  ldr r0, [pc, #4]      ; literal en 0x437b38f4 = 0x006f37ae
-0x437b38ee  add r0, pc            ; PC = 0x437b38f0
-0x437b38f0  bx lr                 ; r0 = 0x43ea709e
+0x437b38ee  add r0, pc            ; PC = (0x437b38ee + 4) con bit0 a 0 = 0x437b38f2
+0x437b38f0  bx lr                 ; r0 = 0x006f37ae + 0x437b38f2 = 0x43ea70a0
 ```
 
-`ctx = 0x43ea709e` vive en BSS; `[ctx]` y `[ctx+8] = 0x43ea70a6` son **punteros** que el
+**Regla de PC (verificada):** para `add rX,pc` de 16 bits el valor es `(dirección + 4)` con
+bit0 a 0, **no** alineado a 4. Con alineado a 4 se obtendría `0x43ea709e`, que es un sesgo de
+2 B; REA/Ghidra calcula `DAT_437b38f4 + 0x437b38f2` y confirma `0x43ea70a0`. Este sesgo se
+corrigió también en S317.
+
+`ctx = 0x43ea70a0` vive en BSS; `[ctx]` y `[ctx+8] = 0x43ea70a8` son **punteros** que el
 blob deja a cero. La función que contiene la llamada (`0x43548c70`) recibe además `this` en
 `r0` y lee `this+0xd78`, `this+0xd70`, `this+0x3e8`, etc.; es otra clase distinta del `ctx`.
 
@@ -76,7 +81,7 @@ Por tanto el modo silent (`0x4e`/`0x4f`) se elige con **`c == 2` y `b ∈ {0,1}`
 * Se leen en 88 sitios del blob A7S (barrido `ldr/add pc`, formas de 16 y 32 bits); los
   campos de `[ctx+8]` usados son `+0x18c, +0x21c, +0x220, +0x494, +0x56c, +0x570, +0x7b8,
   +0x7cc, +0xc0, +0xc8`.
-* **No se localiza un `str` estático** a `0x43ea709e` ni a `0x43ea70a6` en `av-cam.bin`
+* **No se localiza un `str` estático** a `0x43ea70a0` ni a `0x43ea70a8` en `av-cam.bin`
   (ni directo ni por `add pc`). Tampoco hay literales absolutos con esas direcciones.
   La inicialización parece cruzar módulo o hacerse por una copia no visible como store.
 * Consecuencia: la **identidad de clase y el vtable** de esos dos objetos queda

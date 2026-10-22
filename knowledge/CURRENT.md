@@ -1732,7 +1732,7 @@ Incluye la nota de las sesiones paralelas S304/S305 supersedidas (+0x58). S51 si
 **VERIFICADO (bytes + Capstone; 58 comprobaciones, 10 tests):** la premisa «objeto/vtable de `r0`
 en `0x43549084`» era incorrecta: en `0x43549084` se carga **`r1`** (`ldr.w r1,[r3,#0x21c]` con
 `r3=[ctx+8]`), `r2` en `0x43549088` (`+0x220`) y el selector `0x43826d58` se llama en `0x4354908c`
-con `r0=[[ctx]]+0x6c`, `ctx=0x43ea709e` (getter `0x437b38ec`). El thunk del **slot `0x64`** es
+con `r0=[[ctx]]+0x6c`, `ctx=0x43ea70a0` (getter `0x437b38ec`). El thunk del **slot `0x64`** es
 `0x43ad96f8`; `0x43ad9704` desreferencia y salta a `0x43ad9ada`, que usa `vtable+0x24` dos veces
 (corrige S310/S313). Tabla de decisión del selector: `a==5→0x0c`, `a==0x1b→0x35`, `c==2` y
 `b∈{0,1}→0x4e/0x4f`, `c!=2` y `b==2→0x17`, resto `0x0b`; **el silent se elige con `c==2`**.
@@ -1783,7 +1783,7 @@ instanciador runtime, enlace con el silent. S51 sin cambios.
 
 **VERIFICADO (bytes; 39 comprobaciones, 6 tests):** `0x436f618c(obj,idx,modo)` usa `idx` con
 stride `0x1c` (`movs r2,#0x1c` en `0x436f61a4`, `muls` en `0x436f61a6`) sobre tres tablas paralelas:
-T1 `0x43bbeb6e` (destino `obj+0x16`), T2 `0x43bbf2ea` (`obj+0x2e`), T3 `0x43bbef32` (`obj+0xa5`).
+T1 `0x43bbeb70` (destino `obj+0x16`), T2 `0x43bbf2ec` (`obj+0x2e`), T3 `0x43bbef34` (`obj+0xa5`).
 Lee `u32 @+0x14` y `u16 @+0x18`. `T3→T2 = 0x3b8 = 34 × 0x1c` (34 filas); `T1→T3 = 0x3c4`
 (34 filas + 12 B). La base calculada por `add pc` es 2 mod 4: lectura desalineada legal pero la
 alineación real queda **NO_VERIFICADA** (se documentan ambas). **111** sitios `str [#0x2b4]` no
