@@ -1629,3 +1629,16 @@ con `0x4c/0x4d`; discrepancia con S204 marcada para re-verificar (no se edita CO
 
 **Siguiente:** S303, árbol de referencias de la tabla `0x43ff3200` y alcanzabilidad de callers de
 `FUN_43858338`.
+
+## S303 — árbol de la tabla 0x43ff3200 y callers del dumper (22-10-2026, agente B, rev.2)
+
+Tabla `0x43ff3200`: **148** punteros únicos a objetos BSS (no 60), terminador `0x43ff3450`,
+estado en índice 18 (`0x43ff3248`). Único literal de la base: slot GOT `0x4401f080`. Sin xrefs
+por entrada (acceso indexado). Dumper `FUN_43858338`: **2** callers directos
+(`0x43859868`/`0x43859892` en `FUN_43859710`); éste recibe 10 llamadas de 7 funciones y
+`FUN_43859944` tiene 35. `0x437b617e` sin callers directos (negativo local). **Corrige** el sesgo
++0x58 de S303rev1/S304 (`0x438581e8`/`0x43858390` no son entradas). Alcanzabilidad runtime
+NO_VERIFICADA; usuarios del GOT `0x4401f080` pendientes (S305). [S303](../docs/capture/s303-ref-tree-43ff3200.md),
+`analysis/s303_ref_tree/ref_tree.json` (4 tests).
+
+**Siguiente:** S305, xrefs REA al slot `0x4401f080` + semántica del bucle de `FUN_43859710`.

@@ -2,12 +2,19 @@
 
 - DONE S300 Barrido único de xrefs a `0x43f72d02` (GOT `0x4401f990`) en A6000: total, tabla clasificada (spill/lectura/escritura/propagación) en `analysis/s300_state_xref_sweep/`; veredicto sobre writers de `+3`/`+6`. **Evidencia**: `docs/capture/s300-state-xref-sweep.md`, `analysis/s300_state_xref_sweep/xrefs_classified.json`, 7 tests verdes.
 
-- DONE S303 Árbol de referencias de `0x43ff3200` (pendiente de S176) y alcanzabilidad de callers de `FUN_43858338`. **Evidencia**: `docs/capture/s303-ref-tree-43ff3200.md`. Hallazgos: tabla contiene puntero a estado en +0x48; acceso vía GOT `0x4401f080`; callers de dumper NO_VERIFICADOS.
+- DONE S303 (rev.2) Árbol de referencias de `0x43ff3200`: **148** entradas (no 60), terminador `0x43ff3450`, estado en índice 18; único literal de la base en GOT `0x4401f080`. Callers del dumper: **2** (`0x43859868`/`0x43859892` en `FUN_43859710`), 10 callers de éste en 7 funciones, `FUN_43859944` con 35. Corrige el sesgo +0x58 de S303rev1/S304. Evidencia: `docs/capture/s303-ref-tree-43ff3200.md`, `analysis/s303_ref_tree/ref_tree.json` (4 tests).
 
-- DONE S302 Tablas de drive mode/exposición (S124, S134, S140) A7S vs A6000 campo a campo. **Evidencia**: `docs/capture/s302-drive-mode-exposure-tables.md`. Hallazgos: 11 filas (4 idénticos, 7 distintos); A6000 sin modos Silent (0x4e/0x4f), sin selector tipo==2, fórmula svd aritmética vs columnas estáticas A7S.
+- SUPERSEDED S302 (rev.1 por otro proceso) `docs/capture/s302-drive-mode-exposure-tables.md`: reemplazado por la rev.2 `docs/capture/s302-drive-modes.md`, que aporta offsets verificados y la matriz 59/69 filas.
 
-- DONE S304 REA/Ghidra: callers de `FUN_43858338` (dumper gates S153) y código que carga GOT `0x4401f080` (tabla `0x43ff3200`). **Evidencia**: `docs/capture/s304-rea-dumper-callers.md`. Hallazgos: dumper en 0x438581e8 lee gates state+3/state+6, caller único FUN_43858390 con 13 callsites en bucle; GOT 0x4401f080 acceso vía literal pool (sin xrefs REA); writers gates NO_VERIFICADOS.
+- SUPERSEDED S304 (rev.1) por S303 rev.2: `0x438581e8` y `0x43858390` son entradas reales +0x58 (interiores de `FUN_43858190` y `FUN_43858338`), y las «13 llamadas» son instrucciones internas. Ver §5 de `docs/capture/s303-ref-tree-43ff3200.md`.
 
-- TODO S301 Mismo barrido en A7S fw3.20; tabla de diferencias.
+- DONE S300 (rev.2 `b2f5ff12`) barrido completo y corregido (ver arriba).
 
-- TODO S305 Analizar `FUN_43858390` por tramos (REA `file-offset`) para entender bucle principal; buscar literal pool `0x4401f080` (Ghidra `findReferencesTo`). **Evidencia**: `docs/capture/s305-fun43858390-literal-pool.md` — S305 en progreso.
+- TODO S305 (rev.1, superseded) Analizar `FUN_43858390` por tramos y buscar el literal pool `0x4401f080`. **SUPERSEDED**: la base `0x43858390` es `FUN_43858338+0x58` (no es una función); ver S303 rev.2 §5. El literal del slot ya está localizado (`0x4401f080` → `0x43ff3200`).
+
+- DONE S301 (`ef9ec487`) Barrido A7S fw3.20: estado `0x43f7bce6`, 79 sitios, gates idénticos sin escritores; A7S escribe `+0xde`/`+0xe6`/`+0xe8`/`+0xea` y lee 11 campos que la A6000 no. Evidencia: `docs/capture/s301-a7s-state-xref-sweep.md`, `analysis/s301_a7s_state_xref_sweep/state_xref_sweep.json` (4 tests).
+
+- DONE S302 (`393472ef`) Drive mode/exposición campo a campo: offsets desplazados (ctx +8, VdNum +0xc, svr_num +0x10), bloque 4→3 palabras; matriz A6000 59×16 vs A7S 69×16 con 34 códigos y mapa modo→columna; modos silent comparten columna con 0x4c/0x4d. Evidencia: `docs/capture/s302-drive-modes.md`, `analysis/s302_drive_modes/compare.json` (4 tests).
+
+- TODO S306 Usuarios del slot GOT `0x4401f080` (xrefs REA) y semántica del bucle de `FUN_43859710`; validar el árbol con `procedure_callers` de REA.
+ (fix(B): S303 rev.2 arbol real de 0x43ff3200 y callers del dumper)

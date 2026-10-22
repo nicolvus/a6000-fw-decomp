@@ -1,0 +1,482 @@
+{
+  "milestone": "S303",
+  "title": "\u00e1rbol de referencias de la tabla 0x43ff3200 y callers del dumper de gates",
+  "firmware": {
+    "name": "av-cam.bin (A6000 fw3.21)",
+    "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
+  },
+  "base": "0x43541000",
+  "table": {
+    "base": "0x43ff3200",
+    "entries": 148,
+    "terminator": "0x43ff3450",
+    "unique": true,
+    "min": "0x43e95950",
+    "max": "0x43f9a322",
+    "state_index": 18,
+    "state_entry": "0x43ff3248",
+    "all_entries_are_bss_objects": true,
+    "got_slot": {
+      "address": "0x4401f080",
+      "value": "0x43ff3200"
+    }
+  },
+  "dumper": {
+    "entry": "0x43858338",
+    "prologue_hex": "2de9f047",
+    "prologue_insn": "push.w {r4, r5, r6, r7, r8, sb, sl, lr}",
+    "direct_callers": [
+      {
+        "site": "0x43859868",
+        "bytes_hex": "fef766fd",
+        "insn": "bl #0x43858338",
+        "kind": "bl",
+        "target": "0x43858338",
+        "container": "0x43859710"
+      },
+      {
+        "site": "0x43859892",
+        "bytes_hex": "fef751fd",
+        "insn": "bl #0x43858338",
+        "kind": "bl",
+        "target": "0x43858338",
+        "container": "0x43859710"
+      }
+    ]
+  },
+  "caller_function": {
+    "entry": "0x43859710",
+    "prologue_hex": "2de9f041",
+    "prologue_insn": "push.w {r4, r5, r6, r7, r8, lr}",
+    "callers": [
+      {
+        "site": "0x437b5a20",
+        "bytes_hex": "a3f076be",
+        "insn": "b.w #0x43859710",
+        "kind": "b.w",
+        "target": "0x43859710",
+        "container": "0x437b59b8"
+      },
+      {
+        "site": "0x437b5a38",
+        "bytes_hex": "a3f06afe",
+        "insn": "bl #0x43859710",
+        "kind": "bl",
+        "target": "0x43859710",
+        "container": "0x437b5a30"
+      },
+      {
+        "site": "0x437b5a90",
+        "bytes_hex": "a3f03ebe",
+        "insn": "b.w #0x43859710",
+        "kind": "b.w",
+        "target": "0x43859710",
+        "container": "0x437b5a30"
+      },
+      {
+        "site": "0x437b5b20",
+        "bytes_hex": "a3f0f6fd",
+        "insn": "bl #0x43859710",
+        "kind": "bl",
+        "target": "0x43859710",
+        "container": "0x437b5b14"
+      },
+      {
+        "site": "0x437b5cc8",
+        "bytes_hex": "a3f022fd",
+        "insn": "bl #0x43859710",
+        "kind": "bl",
+        "target": "0x43859710",
+        "container": "0x437b5b14"
+      },
+      {
+        "site": "0x437b6100",
+        "bytes_hex": "a3f006fb",
+        "insn": "bl #0x43859710",
+        "kind": "bl",
+        "target": "0x43859710",
+        "container": "0x437b5f98"
+      },
+      {
+        "site": "0x437b6110",
+        "bytes_hex": "a3f0fefa",
+        "insn": "bl #0x43859710",
+        "kind": "bl",
+        "target": "0x43859710",
+        "container": "0x437b5f98"
+      },
+      {
+        "site": "0x437b6246",
+        "bytes_hex": "a3f063fa",
+        "insn": "bl #0x43859710",
+        "kind": "bl",
+        "target": "0x43859710",
+        "container": "0x437b617e"
+      },
+      {
+        "site": "0x438599c6",
+        "bytes_hex": "fff7a3be",
+        "insn": "b.w #0x43859710",
+        "kind": "b.w",
+        "target": "0x43859710",
+        "container": "0x43859944"
+      },
+      {
+        "site": "0x43aef6b4",
+        "bytes_hex": "6af52cb8",
+        "insn": "b.w #0x43859710",
+        "kind": "b.w",
+        "target": "0x43859710",
+        "container": "0x43aef67a"
+      }
+    ]
+  },
+  "level3": {
+    "0x43859944": [
+      {
+        "site": "0x437b24ee",
+        "bytes_hex": "a7f029ba",
+        "insn": "b.w #0x43859944",
+        "kind": "b.w",
+        "target": "0x43859944",
+        "container": "0x437b21b8"
+      },
+      {
+        "site": "0x437b2574",
+        "bytes_hex": "a7f0e6b9",
+        "insn": "b.w #0x43859944",
+        "kind": "b.w",
+        "target": "0x43859944",
+        "container": "0x437b252c"
+      },
+      {
+        "site": "0x437b278a",
+        "bytes_hex": "a7f0dbf8",
+        "insn": "bl #0x43859944",
+        "kind": "bl",
+        "target": "0x43859944",
+        "container": "0x437b2584"
+      },
+      {
+        "site": "0x437b2ac0",
+        "bytes_hex": "a6f040ff",
+        "insn": "bl #0x43859944",
+        "kind": "bl",
+        "target": "0x43859944",
+        "container": "0x437b27b8"
+      },
+      {
+        "site": "0x437b2d30",
+        "bytes_hex": "a6f008be",
+        "insn": "b.w #0x43859944",
+        "kind": "b.w",
+        "target": "0x43859944",
+        "container": "0x437b2ae0"
+      },
+      {
+        "site": "0x437b2e1a",
+        "bytes_hex": "a6f093bd",
+        "insn": "b.w #0x43859944",
+        "kind": "b.w",
+        "target": "0x43859944",
+        "container": "0x437b2d60"
+      },
+      {
+        "site": "0x437b3978",
+        "bytes_hex": "a5f0e4bf",
+        "insn": "b.w #0x43859944",
+        "kind": "b.w",
+        "target": "0x43859944",
+        "container": "0x437b3860"
+      },
+      {
+        "site": "0x437b3cc8",
+        "bytes_hex": "a5f03cbe",
+        "insn": "b.w #0x43859944",
+        "kind": "b.w",
+        "target": "0x43859944",
+        "container": "0x437b3b08"
+      },
+      {
+        "site": "0x437b4318",
+        "bytes_hex": "a5f014bb",
+        "insn": "b.w #0x43859944",
+        "kind": "b.w",
+        "target": "0x43859944",
+        "container": "0x437b41fc"
+      },
+      {
+        "site": "0x437b4cba",
+        "bytes_hex": "a4f043fe",
+        "insn": "bl #0x43859944",
+        "kind": "bl",
+        "target": "0x43859944",
+        "container": null
+      },
+      {
+        "site": "0x4383fe00",
+        "bytes_hex": "19f0a0bd",
+        "insn": "b.w #0x43859944",
+        "kind": "b.w",
+        "target": "0x43859944",
+        "container": "0x4383fd6c"
+      },
+      {
+        "site": "0x43840028",
+        "bytes_hex": "19f08cfc",
+        "insn": "bl #0x43859944",
+        "kind": "bl",
+        "target": "0x43859944",
+        "container": "0x4383fe10"
+      },
+      {
+        "site": "0x43840300",
+        "bytes_hex": "19f020bb",
+        "insn": "b.w #0x43859944",
+        "kind": "b.w",
+        "target": "0x43859944",
+        "container": "0x43840150"
+      },
+      {
+        "site": "0x438403be",
+        "bytes_hex": "19f0c1fa",
+        "insn": "bl #0x43859944",
+        "kind": "bl",
+        "target": "0x43859944",
+        "container": "0x4384031c"
+      },
+      {
+        "site": "0x43840784",
+        "bytes_hex": "19f0deb8",
+        "insn": "b.w #0x43859944",
+        "kind": "b.w",
+        "target": "0x43859944",
+        "container": "0x438403e4"
+      },
+      {
+        "site": "0x4384086c",
+        "bytes_hex": "19f06ab8",
+        "insn": "b.w #0x43859944",
+        "kind": "b.w",
+        "target": "0x43859944",
+        "container": "0x438407a0"
+      },
+      {
+        "site": "0x43840ec8",
+        "bytes_hex": "18f03cbd",
+        "insn": "b.w #0x43859944",
+        "kind": "b.w",
+        "target": "0x43859944",
+        "container": "0x4384095c"
+      },
+      {
+        "site": "0x43841a8e",
+        "bytes_hex": "17f059ff",
+        "insn": "bl #0x43859944",
+        "kind": "bl",
+        "target": "0x43859944",
+        "container": null
+      },
+      {
+        "site": "0x438697a0",
+        "bytes_hex": "f0f7d0b8",
+        "insn": "b.w #0x43859944",
+        "kind": "b.w",
+        "target": "0x43859944",
+        "container": "0x4386973c"
+      },
+      {
+        "site": "0x43869804",
+        "bytes_hex": "f0f79eb8",
+        "insn": "b.w #0x43859944",
+        "kind": "b.w",
+        "target": "0x43859944",
+        "container": "0x438697b2"
+      },
+      {
+        "site": "0x438698e8",
+        "bytes_hex": "f0f72cf8",
+        "insn": "bl #0x43859944",
+        "kind": "bl",
+        "target": "0x43859944",
+        "container": "0x43869810"
+      },
+      {
+        "site": "0x438699d6",
+        "bytes_hex": "eff7b5ff",
+        "insn": "bl #0x43859944",
+        "kind": "bl",
+        "target": "0x43859944",
+        "container": "0x438698fc"
+      },
+      {
+        "site": "0x43869b10",
+        "bytes_hex": "eff718bf",
+        "insn": "b.w #0x43859944",
+        "kind": "b.w",
+        "target": "0x43859944",
+        "container": "0x43869ada"
+      },
+      {
+        "site": "0x43869cbc",
+        "bytes_hex": "eff742fe",
+        "insn": "bl #0x43859944",
+        "kind": "bl",
+        "target": "0x43859944",
+        "container": "0x43869b1c"
+      },
+      {
+        "site": "0x4386a584",
+        "bytes_hex": "eff7deb9",
+        "insn": "b.w #0x43859944",
+        "kind": "b.w",
+        "target": "0x43859944",
+        "container": null
+      },
+      {
+        "site": "0x4386b430",
+        "bytes_hex": "eef788fa",
+        "insn": "bl #0x43859944",
+        "kind": "bl",
+        "target": "0x43859944",
+        "container": null
+      },
+      {
+        "site": "0x43aef266",
+        "bytes_hex": "6af56dbb",
+        "insn": "b.w #0x43859944",
+        "kind": "b.w",
+        "target": "0x43859944",
+        "container": "0x43aef250"
+      },
+      {
+        "site": "0x43b08f1c",
+        "bytes_hex": "50f512bd",
+        "insn": "b.w #0x43859944",
+        "kind": "b.w",
+        "target": "0x43859944",
+        "container": "0x43b08eb8"
+      },
+      {
+        "site": "0x43b0bf50",
+        "bytes_hex": "4df5f8bc",
+        "insn": "b.w #0x43859944",
+        "kind": "b.w",
+        "target": "0x43859944",
+        "container": "0x43b0bf32"
+      },
+      {
+        "site": "0x43b0c006",
+        "bytes_hex": "4df59dbc",
+        "insn": "b.w #0x43859944",
+        "kind": "b.w",
+        "target": "0x43859944",
+        "container": "0x43b0bf7e"
+      },
+      {
+        "site": "0x43b0c032",
+        "bytes_hex": "4df587bc",
+        "insn": "b.w #0x43859944",
+        "kind": "b.w",
+        "target": "0x43859944",
+        "container": "0x43b0c00a"
+      },
+      {
+        "site": "0x43b0c08c",
+        "bytes_hex": "4df55abc",
+        "insn": "b.w #0x43859944",
+        "kind": "b.w",
+        "target": "0x43859944",
+        "container": "0x43b0c038"
+      },
+      {
+        "site": "0x43b0c0bc",
+        "bytes_hex": "4df542bc",
+        "insn": "b.w #0x43859944",
+        "kind": "b.w",
+        "target": "0x43859944",
+        "container": "0x43b0c092"
+      },
+      {
+        "site": "0x43b0c144",
+        "bytes_hex": "4df5febb",
+        "insn": "b.w #0x43859944",
+        "kind": "b.w",
+        "target": "0x43859944",
+        "container": "0x43b0c11c"
+      },
+      {
+        "site": "0x43b0c152",
+        "bytes_hex": "4df5f7bb",
+        "insn": "b.w #0x43859944",
+        "kind": "b.w",
+        "target": "0x43859944",
+        "container": "0x43b0c11c"
+      }
+    ],
+    "0x437b59b8": [
+      {
+        "site": "0x43aef4d8",
+        "bytes_hex": "c6f46efa",
+        "insn": "bl #0x437b59b8",
+        "kind": "bl",
+        "target": "0x437b59b8",
+        "container": "0x43aef4ca"
+      }
+    ],
+    "0x437b5a30": [
+      {
+        "site": "0x437b4dd8",
+        "bytes_hex": "00f02afe",
+        "insn": "bl #0x437b5a30",
+        "kind": "bl",
+        "target": "0x437b5a30",
+        "container": "0x437b4dbe"
+      }
+    ],
+    "0x437b5b14": [
+      {
+        "site": "0x437b4e10",
+        "bytes_hex": "00f080fe",
+        "insn": "bl #0x437b5b14",
+        "kind": "bl",
+        "target": "0x437b5b14",
+        "container": "0x437b4df6"
+      }
+    ],
+    "0x437b5f98": [
+      {
+        "site": "0x43aef4b2",
+        "bytes_hex": "c6f471fd",
+        "insn": "bl #0x437b5f98",
+        "kind": "bl",
+        "target": "0x437b5f98",
+        "container": "0x43aef444"
+      }
+    ],
+    "0x43aef67a": [
+      {
+        "site": "0x43aef4fa",
+        "bytes_hex": "00f0bef8",
+        "insn": "bl #0x43aef67a",
+        "kind": "bl",
+        "target": "0x43aef67a",
+        "container": "0x43aef4e8"
+      }
+    ],
+    "0x437b617e": []
+  },
+  "corrections": {
+    "0x438581e8": {
+      "bytes_hex": "1ca0b8f5",
+      "insn": "adr r0, #0x70",
+      "why": "no es entrada de funci\u00f3n: cae dentro de FUN_43858190"
+    },
+    "0x43858390": {
+      "bytes_hex": "4b467844",
+      "insn": "mov r3, sb",
+      "why": "no es entrada de funci\u00f3n: es el byte +0x58 de FUN_43858338"
+    }
+  },
+  "scope_limit": "Solo llamadas directas BL/BLX/B/B.W en 0x43541000..0x43d00000; no cubre llamadas indirectas ni alcanzabilidad runtime."
+}
