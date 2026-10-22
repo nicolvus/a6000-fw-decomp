@@ -79,7 +79,19 @@ Detection», «Shot Assist Detection» ni ninguna otra: ninguna tiene respaldo e
 
 Todas en `.rodata` de `av-cam.bin`, bloque contiguo `0x43ce546b`–`0x43ce59c1`.
 
-### 3.1 Bloque «HANDLE / ALLOC» (6) — gestión de handles de unidad y DMM
+### 3.1 Las 45 cadenas NO forman un bloque contiguo
+
+Están repartidas en **3 bloques** separados por material ajeno al módulo:
+
+| bloque | rango | nº | contenido |
+|---|---|---|---|
+| **A** | `0x43ce546b`–`0x43ce54bb` | 3 | handles de unidad |
+| *(hueco)* | `0x43ce54bc`–`0x43ce55bb` | 256 B | tabla de índices `0x03`–`0x1b` con relleno `0x1c` (ajena a `[SAD]`) |
+| **B** | `0x43ce55bc`–`0x43ce5618` | 3 | errores de cabecera SA |
+| *(hueco)* | `0x43ce5619`–`0x43ce564b` | 51 B | cola de tabla + `SA_PREINSTALLED_PRG:` `0x43ce561f`, `SA_JPEG_ENC` `0x43ce5634`, `SA_JPEG_DEC` `0x43ce5640` |
+| **C** | `0x43ce564c`–`0x43ce59d1` | 39 | volcados de depuración |
+
+### 3.2 Bloque «HANDLE / ALLOC» (6) — gestión de handles de unidad y DMM
 
 | vaddr | texto | sitios PIC |
 |---|---|---|
@@ -90,7 +102,7 @@ Todas en `.rodata` de `av-cam.bin`, bloque contiguo `0x43ce546b`–`0x43ce59c1`.
 | `0x43ce5976` | `[SAD] SameHandleGetCnt=0x%08x` | `0x439a154e` |
 | `0x43ce5994` | `[SAD] Alloc all Cnt=0x%08x` | `0x439a1562` |
 
-### 3.2 Bloque «SA_HDR_ERR» (3) — error de cabecera de programa SA
+### 3.3 Bloque «SA_HDR_ERR» (3) — error de cabecera de programa SA
 
 | vaddr | texto | sitios PIC |
 |---|---|---|
@@ -98,13 +110,13 @@ Todas en `.rodata` de `av-cam.bin`, bloque contiguo `0x43ce546b`–`0x43ce59c1`.
 | `0x43ce55db` | `[SAD] !!! NmlSaPrg Hdr Err !!!` | `0x4399d5d8` |
 | `0x43ce55fa` | `[SAD] !!! RsdSaPrg Hdr Err !!!` | `0x4399d6ac` |
 
-### 3.3 Bloque «DBGPRT_CMD» (1) — recepción del comando de depuración
+### 3.4 Bloque «DBGPRT_CMD» (1) — recepción del comando de depuración
 
 | vaddr | texto | sitios PIC |
 |---|---|---|
 | `0x43ce564c` | `[SAD] DbgPrt CmdRcv` | `0x439a11b4` |
 
-### 3.4 Bloque «CFG_STATE» (4) — volcado del estado de configuración
+### 3.5 Bloque «CFG_STATE» (4) — volcado del estado de configuración
 
 | vaddr | texto | sitios PIC |
 |---|---|---|
@@ -113,7 +125,7 @@ Todas en `.rodata` de `av-cam.bin`, bloque contiguo `0x43ce546b`–`0x43ce59c1`.
 | `0x43ce5689` | `[SAD] ----------------` | `0x439a1208`, `0x439a1290` |
 | `0x43ce56a0` | `[SAD] ZmCfg=0x%08x` | `0x439a121c` |
 
-### 3.5 Bloque «FIFO» (10) — estado y datos de la FIFO de JPEG
+### 3.6 Bloque «FIFO» (10) — estado y datos de la FIFO de JPEG
 
 | vaddr | texto | sitios PIC |
 |---|---|---|
@@ -128,7 +140,7 @@ Todas en `.rodata` de `av-cam.bin`, bloque contiguo `0x43ce546b`–`0x43ce59c1`.
 | `0x43ce5762` | `[SAD] JpgNrmIndex=0x%02x` | `0x439a1354` |
 | `0x43ce577b` | `[SAD] JpgSrtIndex=0x%02x` | `0x439a136e` |
 
-### 3.6 Bloque «FIFO» (cont.) — índices y tamaño
+### 3.7 Bloque «FIFO» (cont.) — índices y tamaño
 
 | vaddr | texto | sitios PIC |
 |---|---|---|
@@ -138,7 +150,7 @@ Todas en `.rodata` de `av-cam.bin`, bloque contiguo `0x43ce546b`–`0x43ce59c1`.
 | `0x43ce57d9` | `[SAD] ---------------` | `0x439a13d0`, `0x439a1474` |
 | `0x43ce57ef` | `[SAD] Fifo=0x%08x` | `0x439a13e6` |
 
-### 3.7 Bloque «CALCTIME» (8) — tiempos de cálculo
+### 3.8 Bloque «CALCTIME» (8) — tiempos de cálculo
 
 | vaddr | texto | sitios PIC |
 |---|---|---|
@@ -151,7 +163,7 @@ Todas en `.rodata` de `av-cam.bin`, bloque contiguo `0x43ce546b`–`0x43ce59c1`.
 | `0x43ce58a6` | `[SAD] Data=0x%08x` | `0x439a1498` |
 | `0x43ce58b8` | `[SAD] = End =` | `0x439a14aa` |
 
-### 3.8 Bloque «SA_PROG_HDR» / «DDS_DATA_ADD» (6)
+### 3.9 Bloque «SA_PROG_HDR» / «DDS_DATA_ADD» (6)
 
 | vaddr | texto | sitios PIC |
 |---|---|---|
@@ -162,7 +174,7 @@ Todas en `.rodata` de `av-cam.bin`, bloque contiguo `0x43ce546b`–`0x43ce59c1`.
 | `0x43ce591e` | `[SAD] Data=0x%08x 0x%08x 0x%08x 0x%08x` | `0x439a151e` |
 | `0x43ce5945` | `[SAD] SaProgHdr OK` | `0x439a1532` |
 
-### 3.9 Bloque «SELCODE» (2) — errores de código de selección
+### 3.10 Bloque «SELCODE» (2) — errores de código de selección
 
 | vaddr | texto | sitios PIC |
 |---|---|---|
@@ -281,9 +293,10 @@ cuyos ficheros vecinos son:
 | `ScalarInfraSequenceSa.cpp` | `0x43ce6c15` | `0x439a4024`…`0x439a45f2` |
 | `ScalarInfraSequenceSaStage.cpp` | `0x43ce6e16` | `0x439a47a0`…`0x439a4de2` |
 
-Además, el texto `[SAD]` es **contiguo** en `.rodata** a `N15NS_SCALAR_INFRA21ScalarInfraSequenceIfE`
-(`0x43ce59d2`) y a `ScalarInfraAsyncMain.cpp` (`0x43ce59fd`), lo que sitúa el módulo
-dentro del mismo conjunto de objetos que el módulo `[SFRA]` (S118).
+Además, el **bloque C** de las cadenas `[SAD]` termina en `0x43ce59d1`, justo antes de
+`N15NS_SCALAR_INFRA21ScalarInfraSequenceIfE` (`0x43ce59d2`) y de
+`ScalarInfraAsyncMain.cpp` (`0x43ce59fd`), lo que sitúa el módulo dentro del mismo
+conjunto de objetos que el módulo `[SFRA]` (S118).
 
 ---
 
@@ -291,7 +304,7 @@ dentro del mismo conjunto de objetos que el módulo `[SFRA]` (S118).
 
 | módulo | relación con `[SAD]` | evidencia |
 |---|---|---|
-| **`[SFRA]`** (S118) | **El más fuerte.** `[SFRA]` = `NS_SCALAR_INFRA`; el bloque `[SAD]` es contiguo a sus cadenas RTTI y de ficheros en `.rodata` (`0x43ce59d2`, `0x43ce59fd`) y su código está en la misma zona (`0x4399xxxx`). Además `ScalarInfraSequenceSa.cpp` (`0x43ce6c15`) y `ScalarInfraSequenceSaStage.cpp` (`0x43ce6e16`) son los ficheros vecinos de las funciones SAD. | `0x43ce59d2`, `0x43ce59fd`, `0x43ce6c15`, `0x43ce6e16` |
+| **`[SFRA]`** (S118) | **El más fuerte.** `[SFRA]` = `NS_SCALAR_INFRA`; el **bloque C** de las cadenas `[SAD]` termina justo antes de sus cadenas RTTI y de ficheros en `.rodata` (`0x43ce59d2`, `0x43ce59fd`) y su código está en la misma zona (`0x4399xxxx`). Además `ScalarInfraSequenceSa.cpp` (`0x43ce6c15`) y `ScalarInfraSequenceSaStage.cpp` (`0x43ce6e16`) son los ficheros vecinos de las funciones SAD. | `0x43ce59d2`, `0x43ce59fd`, `0x43ce6c15`, `0x43ce6e16` |
 | **`[SFRS]`** (S116) | Comparte subsistema y zona (`[SFRS]` = `0x439a0000`–`0x439c0000`; las funciones SAD están en `0x43998578`–`0x439a119c`, justo antes). `SFRS` gestiona `SET_SA_NOTIFY`/`GET_SA_RESULT` — la misma familia SA. | `analysis/s116_sfrs/sfrs.md` |
 | **`[CAMERA_SA]`** (S108) / **`sa_func_*`** (S84) | El driver del SA (`Camera::SaFuncDrv`) **no** emite trazas `[SAD]`: el `[SAD]` es la capa de *diagnóstico* del subsistema, no la de invocación de funciones. No hay solapamiento de cadenas. | `analysis/s108_camera_sa/camera_sa.md` |
 | **`[AIP]`** (S121) | `SaWrapper`/`SaDriverBase`/`SaDriverZoomNr` (`0x43cdd839`, `0x43cde8f1`, `0x43cdda06`) son **otro** SA (el de audio). No comparten cadenas con `[SAD]`. | `analysis/s121_aip/aip.md` |
@@ -333,24 +346,36 @@ de la A6000 añade es la **instrumentación `[SAD]`** (44 mensajes de diagnósti
 ### 7.3 Hallazgo estructural diferencial (bytes)
 
 En la A7S y el A6300 hay una **tabla de 300 bytes** entre `ZMA0V1.0SA5_V1.0` y
-`SA_PREINSTALLED_PRG:`:
+`SA_PREINSTALLED_PRG:`. Su estructura (verificada byte a byte):
 
-- A7S: `0x43cda6ef` (300 B; los primeros 27 B = `00 01 01 01 00 01 01 02 04 08 83 83 83 04 83 83 83 07 07 07 07 07 07 07 07 07`, el resto `0x1c` y un epílogo `…00 01 02 00 01 02`)
-- A6300: `0x43df89bc` (mismos 27 B iniciales)
+- **cabecera de 27 B** `00 01 01 01 00 01 01 02 04 08 83 83 83 04 83 83 83 07 07 07 07 07 07 07 07 07`
+  → **idéntica en los tres firmware** (A6000 en `0x43ce5445`, A7S en `0x43cda6ef`,
+  A6300 en `0x43df89bc`);
+- **cola de 9 B** `04 03 02 03 02 07 83 07 01` + separador;
+- **tabla de 25 índices** `0x03 0x04 … 0x1b` embebidos en un mar de `0x1c` (231 bytes `0x1c`);
+- **cola final** `00 01 02 00 01 02`.
 
-En la **A6000** esa misma tabla está **truncada**: los **27 primeros bytes son
-idénticos** (`0x43ce5445`–`0x43ce5460`) y a partir de ahí se intercalan las
-**44 cadenas `[SAD]`** (`0x43ce546b`–`0x43ce59c1`), tras las cuales la tabla se
-interrumpe (`0x43ce59c8` → `…e l C o d e E r r` → `N15NS_SCALAR_INFRA21ScalarInfraSequenceIfE`).
+En la **A6000** la estructura es la misma pero **las 44 cadenas `[SAD]` están
+intercaladas en dos puntos**:
 
-→ **Interpretación**: las trazas `[SAD]` se han insertado en el hueco que en los
-otros dos firmwares ocupa esa tabla de datos de configuración (27 B de prefijo +
-tabla de longitudes `0x1c` = 28). Es decir, **la fw3.21 de la A6000 sustituye /
-reordena esa tabla de datos para meter la instrumentación de diagnóstico**. La
-tabla completa ya no existe en la A6000 (0 coincidencias del bloque de 300 B).
+| región | A7S | A6000 |
+|---|---|---|
+| tras la cabecera de 27 B | `07 07 07` + cola de 9 B | cola de 9 B (`04 03 02 03 02 07 83 07 01`) + `00` |
+| … | tabla de índices `0x03..0x1b` en mar de `0x1c` (256 B) | **3 cadenas `[SAD]`** (`0x43ce546b`–`0x43ce54bb`) + **la MISMA tabla de índices** (`0x43ce54bc`–`0x43ce55bb`) |
+| … | cola `00 01 02 00 01 02` | **3 cadenas `[SAD]`** (`0x43ce55bc`–`0x43ce5618`) + cola `00 01 02 00 01 02` (`0x43ce5619`) |
+| … | `SA_PREINSTALLED_PRG:` etc. | `SA_PREINSTALLED_PRG:` etc. (`0x43ce561f`) |
+| … | (nada) | **39 cadenas `[SAD]`** (`0x43ce564c`–`0x43ce59d1`) |
 
-Esto **reforza** que `[SAD]` es instrumentación *propia de la fw3.21 de la A6000*
-insertada en el subsistema SA, y **no** un módulo preexistente reetiquetado.
+**Verificación**: la secuencia de 25 índices no-`0x1c` de la A6000
+(`0x43ce54bc`–`0x43ce55bb`) es **byte a byte idéntica** a la de la A7S
+(`0x43cda716`–`0x43cda816`): `03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 14 15 16 17 18 19 1a 1b`.
+
+→ **Interpretación**: la fw3.21 de la A6000 ha **insertado las 44 cadenas `[SAD]` en
+dos huecos** de esa tabla de datos (desplazando 3 bytes de cabecera y partiendo el
+bloque en dos). La tabla de índices y la cabecera sobreviven intactas; lo nuevo es
+la instrumentación de diagnóstico. Esto **confirma** que `[SAD]` es material **propio
+de la fw3.21 de la A6000**, insertado en el subsistema SA, y **no** un módulo
+preexistente reetiquetado.
 
 ---
 
@@ -395,9 +420,11 @@ JPEG normal, `JpgSrt` = índice JPEG sort), NO capturas ni lectura de sensor.
    y sus mensajes asignados; la **semántica funcional** de cada subcomando (qué triggers
    lo emiten, quién los envía) es NO VERIFICADA. El mensaje entrante se recibe por la cola
    OSAL (`osal_rcv_msg` `0x43561260`, llamada en `0x4399b136` con id `0x101`).
-6. **¿Existe código equivalente sin etiqueta en A7S/A6300?** — NO VERIFICADO. No se ha
-   localizado código homólogo: la tabla de datos truncada (§7.3) sugiere que allí no
-   había nada que «desetiquetar».
+6. **¿Existe código equivalente sin etiqueta en A7S/A6300?** — NO VERIFICADO en cuanto al
+   código; lo verificado es que **no existen** las cadenas ni el mensaje `0x9548`, y que las
+   direcciones homónimas de la A7S contienen otra cosa (§11.5). La intercalación de las
+   trazas en la tabla del driver SA (§7.3) sugiere que allí no había nada que
+   «desetiquetar», pero eso es una inferencia, no una medición.
 7. **`ZmCfg` / `SaCfg`** — NO VERIFICADO qué registers/flags representan (el volcado de
    `CfgStatePrt` lee un array de 0x5c/4 = 23 words, `0x439a120e`–`0x439a1224`).
 
@@ -463,19 +490,30 @@ distintos: `[SAD]` es una biblioteca propia, no una etiqueta más del `[SFRA]`.
 
 `0x43ce5402`–`0x43ce5445` (4 entradas × 16 bytes + NUL, dos campos de 8):
 `SA0_V1.0|SA5_V1.0`, `ZMA1V1.0|SA5_V1.0`, `SA1_V1.0|SA5_V1.0`, `ZMA0V1.0|SA5_V1.0`.
-El código compara **16 bytes byte a byte** (`ldrb`/`cmp` en `0x43993128`–`0x4399315e`)
-contra tres globales en ejecución: `0x43f2ef58`, `0x43f2ef68`, `0x43f2ef78`
+El código compara **16 bytes byte a byte** (`ldrb`/`cmp`/`cmp r3,#0x10` en
+`0x43993128`–`0x43993196`) contra cuatro globales en ejecución
+(`0x43f2ef7c`, `0x43f2ef6e`, `0x43f2ef5c`, `0x43f2ef8c`, resueltos de los pools
+`0x439931b4`–`0x439931cc`)
 → componentes **SA0, SA1, SA5, ZMA0, ZMA1**, todos `V1.0`.
 
 ### 11.4 Direcciones de datos de los emisores
 
-| dirección | contenido |
-|---|---|
-| `0x43f85932` | tabla de 32 *u16* (handles) que recorre `0x43998578` |
-| `0x43f84bfe` | tabla de 255 *u16* (handles) que recorre `0x43998578` |
-| `0x43f84bfc`, `0x43f84bf4`, `0x43f31368`, `0x43f31364` | contadores (`same hndl get_cnt`, `alloc_cnt`) |
-| `0x43e211c8` | byte "informar **una sola vez**" **compartido** por los tres validadores de cabecera |
-| `0x43ce5644` | puntero embebido = `"PEG_DEC"` = `SA_JPEG_DEC` + 4 (comparación del nombre de programa en `0x439a11ac`) |
+Resueltas de los pools de literales de `0x43998578` (no de una búsqueda de bytes sueltos):
+
+| dirección | contenido | cómo se resuelve |
+|---|---|---|
+| `0x43f84bfe` | tabla de **255** *u16* (handles) que recorre `0x43998578` | `ldr r3,[pc,#0xb8]` `0x43998574` + `add r3,pc` `0x4399857a`; fin = base+`0x1fe` |
+| `0x43f85932` | tabla de **32** *u16* (handles) que recorre `0x43998578` | `ldr r3,[pc,#0x98]` `0x43998598` + `add r3,pc` `0x4399859a`; fin = base+`0x40` |
+| `0x43f31368` | contador u32 (`alloc_cnt`) | `ldr r3,[pc,#0x80]` `0x439985b6` + `add r3,pc` `0x439985b8` |
+| `0x43f84bfc` | contador u16 (`same hndl get_cnt`) | `ldr r3,[pc,#0x70]` `0x439985ca` + `add r3,pc` `0x439985d0` |
+
+**NO VERIFICADO / retirado**: un puntero embebido `"PEG_DEC"` (= `SA_JPEG_DEC`+4) en
+`0x43ce5644` con sitio en `0x439a11ac`. **Comprobado y FALSO**: el `ldr r3,[pc,#0x3e4]`
+de `0x439a11ac` lee el pool `0x439a1594` = `0x344494`, y con el `add r3,pc` de
+`0x439a11b4` el destino es **`0x43ce564c`** = `[SAD] DbgPrt CmdRcv` (no `0x43ce5644`).
+La cadena `"PEG_DEC"` de `0x43ce5644` **no tiene ninguna referencia PIC** (0 sitios) y
+no hay puntero embebido de 4 B a ella en el binario → es una subcadena muerta de
+`SA_JPEG_DEC`.
 
 ### 11.5 Refuerzo del diferencial con anclas de **código**
 
@@ -486,9 +524,19 @@ contra tres globales en ejecución: `0x43f2ef58`, `0x43f2ef68`, `0x43f2ef78`
 | `ScalarInfraAsyncMain.cpp` | `0x439a18d6` | `0x4398f122` | `0x43a387fa` |
 
 Desplazamiento A6000−A7S: `0x124E4` (1.ª ancla) → `0x1259E` (2.ª) → `0x127B4` (3.ª): el
-bloque **crece** a lo largo de la zona. El código equivalente en la A7S
-(`0x4398ecd0` ↔ `0x439a11b4`, `0x43986100` ↔ `0x43998578`) es **otro código** (verificado
-desensamblando), no el mismo sin trazas.
+bloque **crece** a lo largo de la zona.
+
+**En la A7S no existe código equivalente a los emisores de `[SAD]`**: no hay ninguna
+cadena `DbgPrt`/`CfgStatePrt`/`FifoStatePrt`/`SaProgHdr`/`Same Unit Handle Get` (0
+apariciones), ni el mensaje `0x9548`. Las direcciones de la A7S que se citan a
+continuación contienen **código de otra cosa** (verificado desensamblando), por lo
+que **no se puede** afirmar que allí esté «el mismo módulo sin trazas»: lo único
+verificable es que **la función de volcado no existe** en la A7S.
+
+| dirección A7S | contenido real (desensamblado) |
+|---|---|
+| `0x4398ecd0` | `bne`/`cmp r4,#9`/`movs r0,#0xc3` → rama de error con `bl 0x4398190c` (otro módulo) |
+| `0x43986100` | `push {r4,lr}` + `ldrb r3,[r0]` + `cmp r3,#0x5c` → comprobación de un byte, sin barrido de tabla de handles |
 
 ### 11.6 Refuerzo del §5 (ficheros)
 
@@ -506,39 +554,37 @@ biblioteca `[SAD]` **no está embebido**: NO VERIFICADO (reforza §5).
 
 ---
 
-## Revisión del agente principal
-
-*(vacío)*
-
----
-
 ## Revisión del agente principal (22-10-2026)
 
-**Verificado y aceptado (121 tests: 104 del hito + 17 de verificación independiente):**
+**Verificado y aceptado (124 tests: 106 del hito + 18 de verificación independiente):**
 
-1. **Recuento y rango**: 45 apariciones del token `[SAD]` en la A6000 fw3.21 entre `0x43ce546b`
-   y `0x43ce59c1` (44 con mensaje + el token suelto); **0** en la A7S fw3.20 y el A6300 fw2.01 →
-   comprobado con `bytes.count()`.
-2. **Estructura**: **49 sitios** (regla estricta) en **5 funciones** emisoras (`0x43998578` con 3,
-   `0x4399d464`/`0x4399d528`/`0x4399d618` con 1 cada una y el despachador `0x439a119c` con **43**);
-   **0 cadenas sin referencia**. Los **49 pares PIC se verificaron a mano (49/49)** y la
-   reimplementación del escáner del subagente reproduce el mapa canónico del repo **con 0
-   discrepancias** (17 525 destinos).
-3. **Sigla sin desarrollar (correcto)**: `SAD` aparece 45 veces = solo las 45 trazas; `SAD_`,
-   `_SAD`, `Sad[A-Za-z]` = 0; los 11 `SaD` son del subsistema de **audio** (`SaDriverBase`
-   `0x43cde8f1`, `SaDriverZoomNr` `0x43cdda06`); 0 nombres de fichero con `sad`/`SaD`; y **0**
-   apariciones de `[SAD]` en los **148 `.so`** de la fw3.21 → **la sigla se deja sin desarrollar**
-   (no se propone «SA Debug» ni «Scene Auto Detection»: no tienen respaldo en los bytes).
-4. **Base textual del módulo (común a los tres)**: `ScalarInfraSequenceSa` **10/10/10**,
+1. **Recuento y rango**: 45 apariciones del token `[SAD]` en la A6000 fw3.21 entre `0x43ce546b` y
+   `0x43ce59d1` (44 con mensaje + el token suelto `[SAD] ` `0x43ce56b3`); **0** en la A7S fw3.20 y el
+   A6300 fw2.01 → comprobado con `bytes.count()`.
+2. **Estructura**: **49 sitios** (regla estricta) en **5 emisores** — `0x439a119c` (43, el
+   despachador), `0x43998578` (3), `0x4399d464`/`0x4399d528`/`0x4399d618` (1 cada uno) — y **0**
+   cadenas sin referencia. Los **49 pares PIC se verificaron a mano (49/49)** y la
+   reimplementación del escáner reproduce el mapa canónico del repo (17 525 destinos) con **0
+   discrepancias**.
+3. **No son un bloque contiguo**: son **3 bloques** (3 + 3 + 39) separados por una tabla de
+   índices ajena y por las 3 cadenas `SA_*`.
+4. **Sigla sin desarrollar (correcto)**: `SAD` = 45 apariciones = solo las 45 trazas; `SAD_`,
+   `_SAD`, `Sad[A-Za-z]` = 0; el único RTTI con «sad» es `exec_sadone` de `NS_SCALAR_INFRA`, que
+   no es el módulo; **0** apariciones de `[SAD]` en los **148 `.so`** de la fw3.21 → la sigla **se
+   deja sin desarrollar** (no se propone «SA Debug» ni «Scene Auto Detection»).
+5. **Base textual del driver (común a los tres)**: `ScalarInfraSequenceSa` **10/10/10**,
    `ScalarInfraSequenceSa.cpp` **1/1/1**, `ScalarInfraSequenceSaStage.cpp` **1/1/1**,
    `SaStageAutoexec_sadone` **1/1/1**, `SA_JPEG_DEC` **1/1/1** → la **biblioteca SA es común**;
-   lo propio de la fw3.21 es la **instrumentación** (`[SAD]` 45/0/0 y `SaProgHdr` **2/0/0**).
-5. **Negativo acotado**: 0 de `shutter`/`silent`/`obtur`/`expos`/`imager`/`sensor`/`readout`/
-   `drive`/`brack`/`sweep`/`interval`/`still`/`movie`/`focus`/`aperture`/`iso` en las 45 cadenas;
-   las 4 apariciones de `Jpg` son **índices de la FIFO** (`JpgNrm` `0x43ce5724`, `JpgSrt`
-   `0x43ce5738`) → **sin efecto en S51**.
-6. **Colateral con valor**: la sgla `SAD` es el **nombre del driver de secuencia escalonada**
-   (`ScalarInfraSequenceSa`), y su despachador de volcado (`0x439a119c`) escribe en los
-   **handles de `[CAM_DMM]`** (`0x43f85932`, `0x43f84bfe`) → es el punto de volcado del
-   acelerador escalar, no un módulo de captura. Útil para no confundirlo con un subsistema de
-   imagen.
+   lo propio de la fw3.21 es la **instrumentación** (`[SAD]` 45/0/0).
+6. **Hallazgo de bytes**: la cabecera de 27 B y la tabla de 25 índices `0x03`–`0x1b` del driver SA
+   son **byte a byte idénticas** en los tres firmware, pero en la A6000 las 44 trazas están
+   **intercaladas** en ellas → la instrumentación se insertó *dentro* del driver SA.
+7. **Negativo acotado**: 0 de `shutter`/`silent`/`expos`/`imager`/`sensor`/`readout`…; las 4
+   apariciones de `Jpg` son **índices de cola FIFO** → **sin efecto en S51**.
+
+**Corrección aceptada (el subagente retiró una afirmación de su primera versión):** el puntero
+embebido `"PEG_DEC"` en `0x43ce5644` **no existe**. El `ldr r3,[pc,#0x3e4]` de `0x439a11ac`
+resuelve al pool `0x439a1594` (`W=0x344494`) y, con el `add r3,pc` de `0x439a11b4`, el destino es
+`0x43ce564c` = **`[SAD] DbgPrt CmdRcv`**. `"PEG_DEC"` es una **cadena muerta** (0 referencias PIC
+y 0 punteros de 4 B). Verificado a mano en esta revisión.
+
