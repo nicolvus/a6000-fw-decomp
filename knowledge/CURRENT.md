@@ -1,5 +1,11 @@
 # Estado actual — léeme primero
 
+## S176 — dos lectores más del state IMX210 (22-10-2026)
+
+REA/bytes clasifican `0x4386140a` como load del state pointer seguido por lectura de `state+0xac` en `0x43861410`; si el byte es cero, la cola usa default 6. `0x438693ec` carga el mismo pointer y el bloque lee bytes `+0x30..+0x37`, copiando ceros/defaults a un objeto distinto apuntado por `r6`. No hay store a state ni a gates `+3/+6` en esos dos procedimientos. **Límite local:** campos estáticos cero no determinan runtime, y no se concluye ausencia global. [S176](../docs/capture/s176-imager-state-readers.md), reproducción `analysis/s176_imager_state_readers/state_readers.json` (3 tests).
+
+**Siguiente:** clasificar el próximo xref no resuelto del state pointer con REA typed refs y bytes; considerar el árbol de referencias de la tabla `0x43ff3200` como investigación separada, porque xrefs exactas al vector/GOT base no fueron observadas.
+
 ## S163 — tercer lector del estado (22-10-2026)
 
 `FUN_438d939c` lee `state+0x1c` (halfword) y `+0x1e` (byte); defaults 3/4 si los campos valen cero. Construye un mensaje y almacena resultados a otros globals, no a estado/gates dentro de este cuerpo. **Notificación es INFERENCIA; runtime no probado.** [S163](../docs/capture/s163-imager-state-event-reader.md), JSON/3 tests en `analysis/s163_imager_state_event_reader/`. Commit publicado `ff5bbb98`.
@@ -612,6 +618,18 @@ Los 6 del A6300: `SetApertureSTFForLiro`, `SetAutoDualRecModeForLiro`, `SetExpan
 **Negativo acotado**: 0 menciones de obturador, disparo, lectura del sensor, exposición o tiempos → **sin efecto en S51** (A/B/C = NO).
 
 [Informe](../analysis/s175_lif_debug/lif_debug.md) · [doc](../docs/capture/s175-lif-debug.md). Siguiente: qué es el «BK» (backup) y quién registra los *callbacks*; por qué solo 2 elementos; los ids `0x125`/`0x93`/`0xa1` y los helpers `0x435613e8`/`0x435614d0`/`0x435614ec`.
+
+## S170 — el módulo `[ILLUMI]` (34 trazas): el subsistema de iluminación (22-10-2026, línea de RE general)
+
+**VERIFICADO (30 tests, `tests/test_s170_illumi.py`):** 34 cadenas `[ILLUMI]` en la A6000 fw3.21 entre `0x43c40570` y `0x43c40ddc` (bloque contiguo); **0** en la A7S fw3.20 y el A6300 fw2.01. **52 sitios** (regla estricta) en **25 funciones** emisoras, **0 cadenas muertas**, con los **52 pares PIC verificados a mano (52/52)** y sin reuso de registro.
+
+**Corrige la inferencia de S130/S165**: el **subsistema de iluminación es COMÚN a las tres fw** — las cuatro clases RTTI `IllumiDev`, `IllumiAd`, `IllumiCam`, `IllumiRPR0400` existen en las tres con la misma jerarquía, y el acceso al chip es el mismo: `ReadDevice` con dirección `0x39` y registros `0x46` (GetAD) / `0x41` (PollingDevice) en `0x435adffe`/`0x435ae060` (A6000), `0x435afee0`/`0x435affd0` (A7S) y `0x435b0cd0`/`0x435b0dc0` (A6300), con los mismos ids OSAL (`0x520250` bus del dispositivo, `0x720018` ADC LIRO, `0x7a0020` cola de eventos) y los mismos *backup ids* (`0x133003c`/`0x133003d`). Lo **propio de la fw3.21 de la A6000 es la instrumentación**: las 34 trazas `[ILLUMI]` y las **20** cadenas `__PRETTY_FUNCTION__` (`IllumiDiag`, `IllumiGain`, `IllumiLevel`, `IllumiAd`, `IllumiCam`, `IllumiRPR0400`), **0** en la A7S y el A6300.
+
+**Coherencia**: el **id de módulo de traza es `0x133`** (307) — primer argumento de todas las llamadas de log (`movw r0,#0x133`, p. ej. `0x435acdf2`) — y es el prefijo de sus ids OSAL/backup (`0x133003c`, `0x133003d`, `0x13303ba` cola sync de `IllumiDiag`, `0x13303be` de `IllumiCam`). Mismo patrón que el id `0xb5` de la familia `CAM_UTIL` (S173) y el `0x93` de `[TP_R]` (S156).
+
+**Negativo acotado**: 0 de `shutter`/`curtain`/`expos`/`iso`/`apert`/`frame`/`capture`/`photo`/`sensor`/`compens` en las 34 trazas; los 2 `read` son `ReadDevice`/`Backup_read` (**registros del chip de luz**, no del sensor de imagen) y los 5 `sync` son colas OSAL síncronas. El «gain» es la **ganancia del amplificador del sensor de luz** (seleccionada con dos GPIO en `SetGainMode` `0x435aca80`), no la ganancia de imagen → **sin efecto en S51** (A/B/C = NO).
+
+[Informe](../analysis/s170_illumi/illumi.md) · [doc](../docs/capture/s170-illumi.md). Siguiente: qué magnitud física mide el chip `RPR0400` y cómo se usa su lectura (auto-ganancia, filtrado, corrección); la semántica de los 6 subcomandos ADJ de `IllumiDiag`; por qué el módulo emite un evento `key_code` (mismo patrón que `[JOG]`, S165).
 
 ## S121 — el módulo `[AIP]` (37 trazas): la interfaz de audio con el escalado (21-10-2026, línea de RE general)
 
