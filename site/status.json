@@ -1,0 +1,447 @@
+{
+  "generated_from": "Documentos versionados en docs/capture/ y analysis/",
+  "latest": "S102",
+  "documented_count": 85,
+  "sessions": [
+    {
+      "id": "S102",
+      "title": "S102 — Menú principal (botón MENU): cadena de carga y apertura",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s102-menu-principal.md"
+    },
+    {
+      "id": "S101",
+      "title": "S101 — selector del tipo de mecanismo y consumidores de los campos de ajuste (A6000 vs A7S) — 21-10-2026",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s101-conclusions.md"
+    },
+    {
+      "id": "S100",
+      "title": "S100 — El contrato de comandos del ADF: 90 comandos de depuración y el canal `AdfCh` del userland",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s100_adf_contract/adf_command_contract.md"
+    },
+    {
+      "id": "S99",
+      "title": "S99 — La arquitectura del userland: las capas de `libObj.so`",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s99_userland/userland_architecture.md"
+    },
+    {
+      "id": "S98",
+      "title": "S98 — `libBizFw.so`: el orquestador userland y el puente con el framework ADF",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s98_bizfw/bizfw_bridge.md"
+    },
+    {
+      "id": "S97",
+      "title": "S97 — Audio/Video Encoder Synchronization (A6000 fw3.21)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s97_encsync/encoder_sync.md"
+    },
+    {
+      "id": "S96",
+      "title": "S96 — Modos de captura: `drive_mode`, `CapMode` y la tabla de 69 → 14 ShdMode",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s96_modes/capture_modes.md"
+    },
+    {
+      "id": "S95",
+      "title": "S95 — Los ficheros que la cámara lee y escribe: parámetros SPICA/PSF/DFE y trazas en RAM disk",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s95_files/file_inventory.md"
+    },
+    {
+      "id": "S94",
+      "title": "S94 — HAPI API Analysis (libHapiLib.so, fw3.21)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s94_hapi/hapi_api.md"
+    },
+    {
+      "id": "S93",
+      "title": "S93 — El bus de mensajes OSAL del userland: 16 grupos (GID) y 13 colas (LID)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s93_osal_bus/osal_message_bus.md"
+    },
+    {
+      "id": "S92",
+      "title": "S92 — Base de datos de medios de la cámara: SceneInfo, MovieFileManager, Index/ y modelo de \"contenidos\" (A6000 fw3.21)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s92_mediadb/media_database.md"
+    },
+    {
+      "id": "S91",
+      "title": "S91 — Los submódulos del framework ADF: ADJ, SYSND, GS, FACE, AFNR y CH_SRC",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s91_adf/adf_submodules.md"
+    },
+    {
+      "id": "S90",
+      "title": "S90 — Reproducción y visor de fotos (fw3.21)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s90_playback/playback.md"
+    },
+    {
+      "id": "S89",
+      "title": "S89 — El módulo `IDT`/`IDT_OPD`: mapas de parámetros del imager, FOPD e IDTSA",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s89_idt/idt_opd_maps.md"
+    },
+    {
+      "id": "S88",
+      "title": "S88 — GOLFSHOT (disparo de golf por análisis de sonido) y MOTIONSHOT",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s88_shotmodes/golfshot_motionshot.md"
+    },
+    {
+      "id": "S87",
+      "title": "S87 — Almacenamiento, sistema de archivos y tarjeta de memoria (A6000 fw3.21)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s87_storage/storage_filesystem.md"
+    },
+    {
+      "id": "S86",
+      "title": "S86 — El subsistema del visor: `VDF` (marco de display) y `VEF` (visor electrónico)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s86_vdf_vef/vdf_vef_viewfinder.md"
+    },
+    {
+      "id": "S85",
+      "title": "S85 — `CLK_CTRL` (control de reloj) y `VPH_API` (API del procesado de vídeo del visor)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s85_clk_vph/clk_ctrl_vph_api.md"
+    },
+    {
+      "id": "S84",
+      "title": "S84 — El API del motor de imagen (SA): catálogo de `sa_func_*` con sus firmas C++ (A6000 fw3.21)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s84_sa_api/sa_api_catalogue.md"
+    },
+    {
+      "id": "S83",
+      "title": "S83 — Los módulos \"menores\" del firmware, decodificados (A6000 fw3.21)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s83_modules/minor_modules.md"
+    },
+    {
+      "id": "S82",
+      "title": "S82 — AutoFraming y las etapas de control del pipeline de captura (A6000 fw3.21)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s82_autoframing/autoframing_stages.md"
+    },
+    {
+      "id": "S81",
+      "title": "S81 — ADF: el framework de arranque, colas de mensajes y gestor de memoria del firmware",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s81_adf/adf_framework.md"
+    },
+    {
+      "id": "S80",
+      "title": "S80 — ZIT: corrección de defectos del sensor (DDC) en el imager (A6000 fw3.21)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s80_zit/zit_defect_correction.md"
+    },
+    {
+      "id": "S79",
+      "title": "S79 — Mapa de módulos del firmware `av-cam.bin` por prefijos de log (A6000 fw3.21)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s79_modules/module_map.md"
+    },
+    {
+      "id": "S78",
+      "title": "S78 — El espacio de parámetros `apc_*` del motor de imagen YC (A6000 fw3.21)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s78_apc/yc_apc_params.md"
+    },
+    {
+      "id": "S77",
+      "title": "S77 — Creative Style y balance de blancos en la A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s77_pp/picture_profile_creative_style.md"
+    },
+    {
+      "id": "S76",
+      "title": "S76 — Etapas del procesado de captura (`Stage_*`) y funciones SA asociadas",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s76_stages/stage_pipeline.md"
+    },
+    {
+      "id": "S75",
+      "title": "S75 — ZPD (Zone Plate Detection): calibración del sensor con datos de la lente",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s75_zpd/zpd_subsystem.md"
+    },
+    {
+      "id": "S74",
+      "title": "S74 — ADJ_CMD (informe conjunto S73/S74)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s73_adj/adjust_cmd_recon.md"
+    },
+    {
+      "id": "S73",
+      "title": "S73 (reconocimiento) — Protocolo de ajuste de fábrica `ADJ_CMD` (panel/EVF/OLED) y calibraciones",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s73_adj/adjust_cmd_recon.md"
+    },
+    {
+      "id": "S72",
+      "title": "S72 — Wireless y transferencia remota (WLAN / PlayMem / \"Camera on Demand\") en la A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s72_wlan/wlan_playmem.md"
+    },
+    {
+      "id": "S71",
+      "title": "S71 — Subsistema de detección de caras y objetos (FC/FRC) de la A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s71_frc/frc_subsystem.md"
+    },
+    {
+      "id": "S70",
+      "title": "S70 (reconocimiento) — EIS/gyro: estabilización y calibración por lente",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s70_is/is_gyro_recon.md"
+    },
+    {
+      "id": "S69",
+      "title": "S69 — Subsistema de audio de la Sony A6000 (fw3.21)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s69-audio-subsystem.md"
+    },
+    {
+      "id": "S68",
+      "title": "S68 — Gestión de batería, alimentación y carga (NP-FW50) en la A6000",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s68-battery-power.md"
+    },
+    {
+      "id": "S66",
+      "title": "S66 — Montura de lente E-mount en la A6000 (línea general de ingeniería inversa)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s66-lens-mount.md"
+    },
+    {
+      "id": "S65",
+      "title": "S65 — NVRAM antes / durante / después del incidente (2026-10-20)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s65-nvram-incident-diff.md"
+    },
+    {
+      "id": "S64",
+      "title": "S64 — prueba en cámara: SilentShutter en RAM, NVRAM y consumidores",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s64-silent-ram-nvram-test.md"
+    },
+    {
+      "id": "S62",
+      "title": "S62 — PMCA: inyección de código, service shell y la propiedad `modelName` (ILCE-6001)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s62-pmca-injection.md"
+    },
+    {
+      "id": "S61",
+      "title": "S61 — conclusiones: origen de los parámetros IMX210 (A6000)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s61-conclusions.md"
+    },
+    {
+      "id": "S60",
+      "title": "S60 — conclusiones (Claude Sonnet 5.5 + GPT-6 Sol)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s60-conclusions.md"
+    },
+    {
+      "id": "S59",
+      "title": "S59 — Investigación colaborativa Claude + GPT-6.1 Sol",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s59-conclusions.md"
+    },
+    {
+      "id": "S58",
+      "title": "S58 — Cálculo AE y configuración efectiva A7S Silent",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s58-conclusions.md"
+    },
+    {
+      "id": "S57",
+      "title": "S57 — Conclusiones (Claude, 20-10-2026)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s57-conclusions.md"
+    },
+    {
+      "id": "S56",
+      "title": "S56 — Conclusiones (Claude, 20-10-2026)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s56-conclusions.md"
+    },
+    {
+      "id": "S55",
+      "title": "S55 — Conclusiones (20-10-2026)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s55-conclusions.md"
+    },
+    {
+      "id": "S54",
+      "title": "S54 — Conclusiones (20-10-2026)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s54-conclusions.md"
+    },
+    {
+      "id": "S53",
+      "title": "S53 — Conclusiones (19-10-2026)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s53-conclusions.md"
+    },
+    {
+      "id": "S52",
+      "title": "S52 — Conclusiones de la investigación paralela Claude + Codex (19-10-2026)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s52-parallel-conclusions.md"
+    },
+    {
+      "id": "S51",
+      "title": "S51 Codex — T2 y T3",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s51-codex-t2-t3.md"
+    },
+    {
+      "id": "S50",
+      "title": "S50 — conclusiones conjuntas (Claude + Codex, investigación paralela)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s50-parallel-conclusions.md"
+    },
+    {
+      "id": "S49",
+      "title": "S49 — productor de configuración de captura: servicio `0x301d7`, clave `0xce`, campos `+0x1c/+0x1e`",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s49-capture-config-producer.md"
+    },
+    {
+      "id": "S48",
+      "title": "S48 — proveedor del servicio de registro `+0x1ec` y paquete `0x301d7`",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s48-service-table-provider.md"
+    },
+    {
+      "id": "S47",
+      "title": "S47 — entrada del payload y orden de actualización de C",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s47-payload-producer-and-order.md"
+    },
+    {
+      "id": "S46",
+      "title": "S46 — base VD e identidad de los escritores de contexto",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s46-vd-base-and-context-identity.md"
+    },
+    {
+      "id": "S45",
+      "title": "S45 — identidad del contexto y cierre físico pendiente",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s45-context-identity-and-physical-closure.md"
+    },
+    {
+      "id": "S44",
+      "title": "S44 — consumidor de registros y tabla de modos IMX210",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s44-register-consumer-mode-table.md"
+    },
+    {
+      "id": "S43",
+      "title": "S43 — tabla PIC de exposición y revisión de códigos de modo IMX210",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s43-exposure-mmio-and-lock-codes.md"
+    },
+    {
+      "id": "S42",
+      "title": "S42 — identidad de SetExposure, productores de control y límite de exposición IMX210",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s42-exposure-call-identity.md"
+    },
+    {
+      "id": "S41",
+      "title": "S41 — productores de mensajes, snapshots y valores de modo IMX210",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s41-message-origin-imx210.md"
+    },
+    {
+      "id": "S40",
+      "title": "S40 — origen de context[0]+0x24/+0x48/+0x458 y frontera IMX210",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s40-context-origin-imx210.md"
+    },
+    {
+      "id": "S39",
+      "title": "S39 — enum de imagen: discriminador APL y origen configurable",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s39-image-format-apl.md"
+    },
+    {
+      "id": "S38",
+      "title": "S38 — DMM/OSAL y frontera de resolución en av-cam",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s38-dmm-osal-static-frontier.md"
+    },
+    {
+      "id": "S37",
+      "title": "S37 — libmprctrl: definidor DMM, extents y límite físico YC",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s37-libmprctrl-dmm-extents.md"
+    },
+    {
+      "id": "S36",
+      "title": "S36 — libInfraScalarMpr: memoria SysV y frontera DMM",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s36-libinfra-scalar-mpr-memory.md"
+    },
+    {
+      "id": "S35",
+      "title": "S35 — Objetos DFE y frontera estática APL/IRQ (18-10-2026)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s35-dfe-objects-static-frontier.md"
+    },
+    {
+      "id": "S34",
+      "title": "S34 — APL/DMA, fases VD y frontera de interrupción (18-10-2026)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s34-apl-dma-vd-interrupts.md"
+    },
+    {
+      "id": "S33",
+      "title": "S33 — productor de referencias YC y frontera Rendezvous (18-10-2026)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s33-yc-rendezvous-producer.md"
+    },
+    {
+      "id": "S32",
+      "title": "S32 — callbacks VD y contrato parcial de SyncYCout (18-10-2026)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s32-vd-callbacks-sync-ycout.md"
+    },
+    {
+      "id": "S31",
+      "title": "S31 — subsistema CAMERA_MAIN_SYNC/DFECore: cadenas no exploradas (18-10-2026)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s31-camera-main-sync-strings.md"
+    },
+    {
+      "id": "S30",
+      "title": "S30 — captura, origen YC y cierre de EncodeStill",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s30-pipelines-capture-encode.md"
+    },
+    {
+      "id": "S29",
+      "title": "S29 — WriteStill: entrada, escritura, retorno y cierre",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s29-writestill-end-to-end.md"
+    },
+    {
+      "id": "S28",
+      "title": "S28 — receptor OSAL, propietarios y contrato de conexión YC",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s28-osal-pin-contract-closure.md"
+    },
+    {
+      "id": "S27",
+      "title": "S27 — recableado de `State_IntelligentActivePostProcess`",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s27-effect-postprocess-rewire.md"
+    },
+    {
+      "id": "S26",
+      "title": "S26 — seis microprocesos cerrados alrededor de `Camera.YC0`",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s26-five-static-microprocesses.md"
+    },
+    {
+      "id": "S25",
+      "title": "S25 — límite estático del registro Dataflow para `0x50004`",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s25-dataflow-pin-registry-limit.md"
+    },
+    {
+      "id": "S24",
+      "title": "S24 — Camera.YC0 → endpoint Dataflow de ObjEffect",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s24-camera-yc0-effect-endpoint.md"
+    },
+    {
+      "id": "S23",
+      "title": "S23 — frontera Dataflow de los pines YC de ObjCamera",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s23-yc-pin-dataflow-boundary.md"
+    },
+    {
+      "id": "S22",
+      "title": "S22 — sensor nuevo → descriptor YC consumible por StillRecorder",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s22-sensor-to-yc.md"
+    },
+    {
+      "id": "S21",
+      "title": "S21 (Claude): pulsación del disparador → orden de movimiento de cortinas",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s21-claude-button-to-shutter-order.md"
+    },
+    {
+      "id": "S20",
+      "title": "Veredicto continuo Claude — Sesión 20 (investigación directa, sin Codex)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s20-claude-autonomous-verdict.md"
+    },
+    {
+      "id": "S19",
+      "title": "S19-07 — CBID_ENCODE_STILL receiver investigation",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s19-07-cbid-encodestill-receiver.md"
+    },
+    {
+      "id": "S18",
+      "title": "Hilo Claude A — sesión 18: Connect(), vtables LifeCycle y filas dinámicas del selector LIRO",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s18-claude-a-lifecycle.md"
+    },
+    {
+      "id": "S17",
+      "title": "Comparación de arquitecturas A / E / P (sesión 17)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s17-a-e-p-architecture-comparison.md"
+    },
+    {
+      "id": "S16",
+      "title": "Sesión 16 (Claude, hilo principal, sin subagentes) — Escritor del modo 1, auditoría de topología y exclusión interna de ObjEffect",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s16-claude-effect-control.md"
+    }
+  ],
+  "exceptions": {
+    "S67": {
+      "label": "Cancelada; el tema de AF se asignó a S63.",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/linea-general-re.md"
+    }
+  },
+  "physical_tests": {
+    "done": 0,
+    "total": 8,
+    "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/physical-test-plan.md"
+  },
+  "decision": {
+    "label": "No parchear: evidencia insuficiente",
+    "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s51-decision.md"
+  }
+}
