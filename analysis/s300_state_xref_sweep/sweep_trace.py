@@ -17,6 +17,10 @@ HERE = Path(__file__).resolve().parent
 RAW = ["raw1.jsonl", "raw2.jsonl", "raw3.jsonl"]
 LOAD = {"ldr", "ldrb", "ldrh", "ldrsb", "ldrsh", "ldrd"}
 MOVE = {"mov", "movs", "movw", "add", "adds", "addw", "sub", "subs", "adr", "and", "orr", "lsl", "lsr"}
+# mnemonics that write their first operand (str/stm/cmp/tst do not)
+DST = MOVE | {"ldr", "ldrb", "ldrh", "ldrsb", "ldrsh", "ldrd", "mul", "mla", "eor", "bic",
+              "mvn", "uxth", "sxth", "uxtb", "sxtb", "rev", "clz", "asr", "ror", "rsb",
+              "neg", "abs", "it"}
 
 
 def norm(m):
@@ -85,7 +89,7 @@ def walk(insns, site, limit=70):
                             "access": "call", "regs": live})
         # taint update
         dst_ops = [o.strip() for o in ins.op_str.split(",")]
-        dst = dst_ops[0] if dst_ops and dst_ops[0] in REGS else None
+        dst = dst_ops[0] if dst_ops and dst_ops[0] in REGS and norm(ins.mnemonic) in DST else None
         srcs = dst_ops[1:] if dst else []
         if dst:
             was = dst in tainted
