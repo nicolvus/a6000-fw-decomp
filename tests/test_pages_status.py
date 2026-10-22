@@ -26,7 +26,8 @@ def test_public_session_index_has_real_sources() -> None:
     coverage = data["module_coverage"]
     assert coverage["covered"] + coverage["pending"] == coverage["total"]
     assert (ROOT / "site/progress/index.html").read_bytes() == (ROOT / "docs/progress/index.html").read_bytes()
-    assert not (ROOT / "site/progress/progress.svg").exists()
+    svg = (ROOT / "site/progress/progress.svg").read_text(encoding="utf-8")
+    assert svg.count("<rect") == 1 + coverage["total"] + data["latest_number"] + data["physical_tests"]["total"]
     badge = json.loads((ROOT / "site/badge-modulos.json").read_text(encoding="utf-8"))
     assert badge["schemaVersion"] == 1 and f"{coverage['covered']}/{coverage['total']}" in badge["message"]
 
