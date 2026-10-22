@@ -5,7 +5,7 @@ selector `0x43826d58` con el código de modo que devuelve, y (b) cómo se entra 
 de tiempos que escribe `+0xde`/`+0xe6..+0xea` (S307).
 
 **Resultado:** el código de modo Silent (`0x4e/0x4f`) se guarda en pila y se pasa a
-`0x43ad9704`, un constructor/despachador de mensajes: **no** va directo al bloque de
+`0x43ad9704`, un **thunk de llamada virtual** (S310): **no** va directo al bloque de
 tiempos. El bloque de tiempos tiene **un único caller directo**, `0x43861be4`, dentro de
 una ruta de configuración. El enlace silent→tiempos sigue **NO_VERIFICADO**.
 
@@ -21,8 +21,8 @@ En el call site `0x4354908c` (función de configuración grande, en `0x4354xxxx`
 | `0x43549098` | `str r0,[sp,#0x2c]` | guarda el código de modo |
 | `0x435490c4` | `bl 0x43ad9704` | lo pasa al constructor/despachador |
 
-Es decir, el modo (`0x4e/0x4f` cuando `tipo==2`) entra en una **estructura de mensaje**
-junto con otros campos, no en una llamada al bloque de tiempos.
+Es decir, el modo (`0x4e/0x4f` cuando `tipo==2`) entra como argumento de una **llamada
+virtual** (`obj->vtable[0x64]`, ver S310), no en una llamada al bloque de tiempos.
 
 ## 2. Entrada del bloque de tiempos (corrección de S307)
 
