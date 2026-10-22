@@ -6,6 +6,38 @@ Para el historial íntegro de sesiones ver `docs/history/` y las correcciones co
 en [docs/CORRECTIONS.md](CORRECTIONS.md) (generado del grafo, no editar a mano).
 Para preguntas abiertas ver [docs/OPEN-QUESTIONS.md](OPEN-QUESTIONS.md).
 
+## Avance S138–S164 (22-10-2026) — siete módulos más de la línea de RE general
+
+**Línea de RE general** (catálogo con 96 hitos: [docs/capture/linea-general-re.md](capture/linea-general-re.md)).
+Siete hitos nuevos decodificados con bytes y tests propios: `[CAMERA_MAIN_FC]` (S138),
+`[CAM_UTIL_ADJ]` (S143), `[CAM_UTIL_SENS]` (S144), `[DEPTH]` (S148), `[PANDA]` (S151), `[TP_R]` (S156)
+y `[CAMERA_IS]` (S164).
+
+**Patrón consolidado:** en los siete, la **etiqueta de módulo es propia de la fw3.21** pero la
+**funcionalidad ya existía** en la A7S fw3.20 o el A6300 fw2.01 → la fw3.21 de la A6000 **reescribe
+el logging, no el firmware** (conclusión de S128/S130, ahora con 7 ejemplos más). Casos notables:
+
+- `[CAM_UTIL_ADJ]`/`[CAM_UTIL_SENS]`: **el mismo par** (dependencia cruzada `0x43900c9c`,
+  `0x439012fa`/`0x43901302`; ids OSAL compartidos `0x008f0139`/`0x008f013a`, módulo `0xb5`), la
+  **escritura de calibración en la RAM del sensor** con **51 comandos «Sens»** en `0x43fe858c` y
+  **1 de 3 operaciones implementada** en la tabla de despacho `0x440121f8`.
+- `[DEPTH]`: la clase `DepthGaugeMain` ya está en los tres firmware; su consumidor real es la
+  **EXIF** (tags `0x5001`/`0x5002`).
+- `[TP_R]`: **reporter** de un framework de mensajes; la tabla de comandos y el registro `tp` ya
+  existían (silenciosos) en los tres → **corrige un falso positivo de S130** (los «textos comunes»
+  con `[DMMYSIOCOM]` son plantillas OSAL genéricas).
+- `[CAMERA_IS]`: **la capa que aplica la estabilización** (recurso RC, giroscopio por ADC,
+  corrección de distorsión, sincronía con `LENS_MOUNT` y `[CAMERA_MAIN_SYNC]`); 17/17 pares PIC
+  verificados a mano → **valida el mapa de S70**; la infraestructura RC es **común a los tres**.
+
+**Línea del obturador electrónico**: sin cambios. Los siete módulos son **negativos acotados**
+(0 menciones de obturador, lectura del sensor o tiempos de exposición) → **S51 se mantiene:
+A=NO, B=NO, C=NO**. Colateral verificado: `rolling` aparece **0** en la A6000 fw3.21 y la A7S
+fw3.20 y **1** en el A6300 fw2.01 (`position num in rolling is strange %d` `0x43d9fe03`, junto a
+`position num in vd is strange %d` `0x43d9fde2`) → el concepto de *rolling shutter* **existe en el
+A6300 y no en la A6000/A7S**; la ausencia estática **no** demuestra incapacidad del hardware, así que
+**S51 no cambia** y el plan de pruebas físicas (P1–P8) sigue **pendiente de autorización**.
+
 ## Avance S137 (21-10-2026) — estado vigente de la línea de RE general y del obturador
 
 **Línea de RE general** (catálogo con 69 hitos: [docs/capture/linea-general-re.md](capture/linea-general-re.md)):

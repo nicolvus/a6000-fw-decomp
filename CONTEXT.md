@@ -1,7 +1,8 @@
 # Continuidad
 
-Estado vigente: **S137** (21-10-2026) — línea de RE general por módulos de trazas y control positivo
-del obturador electrónico, [knowledge/CURRENT.md](knowledge/CURRENT.md) ·
+Estado vigente: **S164** (22-10-2026) — línea de RE general por módulos de trazas (hitos S138–S164
+integrados: `[CAMERA_MAIN_FC]`, `[CAM_UTIL_ADJ]`, `[CAM_UTIL_SENS]`, `[DEPTH]`, `[PANDA]`, `[TP_R]`,
+`[CAMERA_IS]`) y control positivo del obturador electrónico, [knowledge/CURRENT.md](knowledge/CURRENT.md) ·
 [catálogo de la línea general](docs/capture/linea-general-re.md) ·
 [estado y restricciones](docs/STATE.md). S51 **permanece (A=NO, B=NO, C=NO)**. Las sesiones descritas a
 continuación son antecedentes.
@@ -18,6 +19,54 @@ Correcciones y preguntas abiertas (generadas del grafo de conocimiento):
 Este archivo conserva solo las sesiones más recientes (investigación activa).
 No acumular aquí el historial completo de nuevo: cada sesión cerrada se traslada
 a `docs/history/` y se referencia desde `docs/STATE.md`/`docs/CORRECTIONS.md`.
+
+## S138–S164 — siete módulos más de la línea de RE general (22-10-2026)
+
+**VERIFICADO (cada hito con sus propios tests de bytes):**
+
+- **S138 `[CAMERA_MAIN_FC]`** (9 trazas `0x43ca6944`–`0x43ca6aec`): el glue `CAMERA_MAIN` →
+  `Camera::FC`. La sigla **tiene base textual** (namespace C++ `Camera::FC`: 45 apariciones de
+  `Camera::FC::` y 101 de `FC/` en **los tres** firmware) → lo propio de la fw3.21 es el
+  *logging* del glue. **No participa en la cadena de disparo táctil `0x3011`** (ninguna de sus
+  8 funciones la llama); tiene API propia (`ReplyForTouchShutter`, cableada por `wrapper/Face.cpp`
+  → `FC/Api/fc_api_tracking.cpp` `0x43cefa43`).
+- **S143 `[CAM_UTIL_ADJ]`** (22 trazas `0x43ccdcee`–`0x43cce0f2`): la **escritura de calibración en
+  la RAM del sensor**; 22 sitios en 3 funciones, tabla de despacho `0x440121f8` (**1 de 3
+  operaciones implementada**) y **51 comandos «Sens»** de 12 B en `0x43fe858c`. La etiqueta es
+  propia de la fw3.21 pero la **capa «Sens» es común a los tres** → instrumentación, no función.
+  Colateral: la convención `vaddr = 0x43541000 + offset` **también vale** para A7S y A6300.
+- **S144 `[CAM_UTIL_SENS]`** (21 trazas `0x43cce1ea`–`0x43cce66b`): módulo **hermano** del anterior;
+  **dependencia cruzada verificada** (`0x43900c9c`, `0x439012fa`/`0x43901302`) e **ids OSAL
+  compartidos** → mismo par. `cam_util_debug_file_write` (`0x43901d50`, 17 llamadas) **vuelca imagen
+  (RAW/YC) en la memoria del sensor**.
+- **S148 `[DEPTH]`** (16 trazas `0x43c249ec`–`0x43c24c73`): la clase `DepthGaugeMain` (**ya en los
+  tres firmware**) con 6 comandos en `0x43fd7c30` y GID `0x018b04dc`; su consumidor real es la
+  **EXIF** (`CS_ExifMakerNote.cpp` `0x43cc56dc` → tags **0x5001** = `(valueDepth*10 : 1000)` y
+  **0x5002** = estado).
+- **S151 `[PANDA]`** (10 trazas `0x43c9a599`–`0x43c9a7c8`): gestor de mensajes del **drive de
+  iris**; 7 colas OSAL y GID `0x00740017`; "Panda" tiene base textual (`Panda_SendMessage`,
+  `uc_PandaADErrorOpen` `0x43c99267`) pero **no es un módulo de logging registrado**; el código
+  **ya existía en los tres firmware** → lo nuevo es el logging.
+- **S156 `[TP_R]`** (18 trazas `0x43c80f23`–`0x43c812f3`): **reporter de un framework de mensajes**
+  (confirma S151; recuentos estricto **43/0/0**); la tabla de comandos DDL `0x43fe3f28` y el
+  registro `tp` **ya existían en los tres** (silenciosos) → la fw3.21 añade 15 trazas. **Corrige un
+  falso positivo de S130**: los 2 «textos comunes» con `[DMMYSIOCOM]` son **plantillas OSAL
+  genéricas**, no el mismo código.
+- **S164 `[CAMERA_IS]`** (17 trazas `0x43c98da6`–`0x43c9a426`): **la capa que aplica la
+  estabilización** (recurso RC `rcct_SetStblzPower`/`GridH`, giroscopio por ADC, corrección de
+  distorsión, sincronía con `LENS_MOUNT` y `[CAMERA_MAIN_SYNC]`); **17/17 pares PIC verificados a
+  mano → valida el mapa de S70**. La **infraestructura RC es común a los tres** → lo nuevo es la
+  capa de cámara.
+
+**Patrón que se repite (reforzado):** en los siete hitos, la **etiqueta de módulo es propia de la
+fw3.21** pero la **funcionalidad ya existía** en la A7S/A6300 → la fw3.21 de la A6000 **reescribe
+el logging, no el firmware** (conclusión de S128/S130, ahora con 7 ejemplos más).
+
+**Colateral con valor para la línea del obturador (verificado):** `rolling` aparece **0** en la
+A6000 fw3.21 y la A7S fw3.20, y **1** en el A6300 fw2.01 (`position num in rolling is strange %d`
+`0x43d9fe03`, junto a `position num in vd is strange %d` `0x43d9fde2`) → el concepto de *rolling
+shutter* **existe en el A6300 y no en la A6000/A7S**. **No cambia S51** (A/B/C = NO): la ausencia
+estática de una cadena no demuestra incapacidad del hardware.
 
 ## S137 — control positivo del obturador electrónico y mapa de etiquetado (21-10-2026)
 
