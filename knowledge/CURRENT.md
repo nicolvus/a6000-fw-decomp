@@ -469,6 +469,33 @@ fw3.21), **S127** (`[CAMERA_MAIN_LC]`), **S126** (`[CAMERA_MAIN]`), **S125** (`[
 
 [Informe](../analysis/s168_a6300_rolling/rolling.md) · [doc](../docs/capture/s168-a6300-rolling.md). Siguiente: `GetImagerStabilizationTime` del A6300 (`0x43d9ce7f`, viva pero no analizada); qué comandos RC son `SetRoll`/`SetDistRoll`; el global de los 9 valores AD de `RollAD`.
 
+## S169 — control positivo del obturador electrónico: la API de **drive** del A6300 (22-10-2026, línea de RE general)
+
+**VERIFICADO (32 tests, `tests/test_s169_drive_api.py`):** el **A6300 fw2.01** tiene una **capa de validación de parámetros de cámara** (`LiroSeq`) con **201 propiedades** `CheckSet*` y **370 comprobaciones** `LiroSeq ParamCheckErr@%s[campo] cur:%d req:%d`. Entre ellas, los **parámetros de obturador** (nombre de campo + offset en el bloque de parámetros + sitio del `add`):
+
+| propiedad | campo | offset | sitio |
+|---|---|---|---|
+| `CheckSetShutDrive` | **`sc_ShutDrive`** | `+0x1dd` | `0x438c51c0` |
+| `CheckSetShutDriveMode` | **`uc_ShutDriveMode`** | `+0x1dc` | `0x438c6842` |
+| `CheckSetFrontEshutter` | **`front_eshutter`** | `+0x23c` | `0x438c6e1e` |
+| `CheckSetSilentShutterMode` | **`SilentShutterMode`** | `+0x264` | `0x438c81da` |
+| `CheckSetShutterType` | **`shutterType`** | `+0x268` | `0x438c8b52` |
+| `CheckSetShutLowLimit` | `ul_ShutLowLimit` | `+0x248` | `0x438c7ba4` |
+| `CheckSetIrisDrive` / `CheckSetIrisDriveMode` | `sc_IrisDrive` / `uc_IrisDriveMode` | `+0x1d1` / `+0x1d0` | `0x438c55a2` / `0x438c680e` |
+| `CheckSetManualExposureDrive` | `sc_ExposureDrive` | `+0x1ac` | `0x438c5d14` |
+
+**La A6000 fw3.21 y la A7S fw3.20 tienen 0 de todo eso**: `CheckSet*` **0/0/201**, `ParamCheckErr` **0/0/370**, `sc_ShutDrive` **0/0/1**, `front_eshutter` **0/0/1**, `SilentShutterMode` **0/0/2**, `shutterType` **0/0/1** → **no falta la traza, falta el parámetro**: la fw3.21 de la A6000 **no expone ningún parámetro de obturador electrónico**.
+
+**Patrón verificado a mano** (3 casos): `ldrsb.w r2,[r0,#0x1dd]` (valor actual) vs `ldrsb.w r3,[r4,#8]` (solicitado) → si difieren, `ldr`+`add` al mensaje y a la etiqueta y `b.w 0x43986518` (traza). Los **201 nombres están vivos** (1 referencia PIC cada uno) y se despachan desde la región contigua `0x438c4ade`–`0x438c8c76` (390 sitios), **en el orden del bloque de parámetros**.
+
+**Matiz**: la A6000 **sí** tiene el módulo LiroSeq (2 trazas: `[CAMERA_MAIN]: LiroSequencerMovieFileFormat : %d` `0x43ca3b3a`, `[CAMERA_MAIN]: LiroSequencer cannot read IRIS_DIAL_POS ::: %d` `0x43ccadbf`) y **sí** tiene `drive_mode` (el del imager de S134, 10 apariciones) → no le falta el subsistema, le falta **esta capa de validación de parámetros**.
+
+**Salvedad** (S130 §4): la comparación mezcla versión de firmware y modelo (el A6300 es de otra generación de plataforma, LIRO/CXD).
+
+**Efecto en S51: NINGUNO — S51 sigue A=NO, B=NO, C=NO.** El hallazgo dice que la fw3.21 de la A6000 no expone parámetros de obturador electrónico, no que su hardware sea incapaz; la ausencia estática no demuestra incapacidad del hardware y sigue faltando la prueba física.
+
+[Informe](../analysis/s169_drive_api/drive_api.md) · [doc](../docs/capture/s169-drive-api-a6300.md). Herramientas reutilizables: `scan_all_refs.py` (mapa global PIC de un blob parametrizado: A6300 **20 001** destinos, A7S **16 638**, A6000 17 525 ya existente) y `pair_checkset.py` (**387** pares propiedad↔campo con offset y sitio). Siguiente: qué valores toman `shutterType`/`SilentShutterMode`/`front_eshutter` en runtime y quién los escribe; la ruta de `sc_ShutDrive` hasta el driver del obturador.
+
 ## S121 — el módulo `[AIP]` (37 trazas): la interfaz de audio con el escalado (21-10-2026, línea de RE general)
 
 **VERIFICADO (97 tests, `tests/test_s121_aip.py`):** 37 cadenas `[AIP]` en `0x43cdd844`–`0x43cdec50`; **16 funciones** y 6 sub-bloques RTTI: `SaWrapper` (8), `SaBackUpCtrl` (12), `SaDriverBase` (4), `LPS` (11), `SaDriverZoomNr` (1), `SetFader` (1). **Callbacks `Ack`/`Comp`/`Err` en tres capas**: SA (`0x43926d1c`/`0x43926de8`, con los predicados `[r1,#1]==0x14`/`0x13`), LPS (`0x4392b16c`/`0x4392b254`) y driver; los errores llevan `errCode`+`errState` (SA) o `ErrCode`+`ErrStatus` (LPS). **Tabla de backup**: **350 entradas de 12 B** en `0x43bd1964` con `{id = 0x10c0000 + n, offset, size}`; `WriteShadow2BakcupArea` vuelca `0x10c` B (`mov.w r0,#0x10c` en `0x4392ab78`) y `SetAudioNrType` publica el **bit 3** de `bkId = 0x10e0000`. Comandos hacia el escalar en `0x4392ac30` (`Cmd`/`Func` + `Zma`/`Ext`/`Mbx`) y `0x4392acb4` (`Cmd`/`Func`/`Unq`). Buffers LPS `0x82`/`0x83`/`0x85` con longitudes `0x2c`/`0x28`/`0x14`; `SetFader` (`0x4355ae98`) divide por 100/20/otro según `[r0,#0x78]`.
