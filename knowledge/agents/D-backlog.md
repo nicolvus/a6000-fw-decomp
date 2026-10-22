@@ -15,6 +15,6 @@ Tema distinto de A (sensor/driver), B (imager estado) y C (ruta de control): dec
 - S510 [RE] (54 trazas) DONE 51a8d3fa
 - S511 [INT_ERROR] (53 trazas) DONE 93cc54d4
 - S512 [ENCOUCSTAT] (49 trazas) DONE f016266c
-- S513 [CONFIG] (47 trazas)
+- S513 [CONFIG] (47 trazas) DONE 3ee87e6d
 - S514 [BT] (44 trazas)
 - regenerar al vaciar
