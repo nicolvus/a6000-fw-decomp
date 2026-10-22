@@ -1589,3 +1589,16 @@ electrónica en Sony A6000 — reutilizando las evidencias existentes.
 ## Siguiente acción sugerida
 
 Ver "Próximo paso exacto" al final de `knowledge/PROGRESS.md`.
+
+## S300 — barrido único de xrefs al state IMX210 (22-10-2026, agente B)
+
+67 sitios únicos (15 xrefs a `0x43f72d02` + 42 al slot GOT `0x4401f990` + 16 lecturas de gates):
+55 lectura, 6 escritura, 3 spill, 2 propagación, 1 dato. **Ningún escritor de `+3`/`+6`**; los gates
+se leen como bitfield de 7 bits + signo en `FUN_43858338` (8 lectores cada uno). Únicos stores:
+`+0x00` (`0x4383ac90`) y `+0x02` (4 instrucciones en `FUN_43833ff8`/`FUN_4383ace0`/`FUN_4383b2dc`).
+Solo dos literales absolutos con el puntero en todo el blob: `0x4401f990` y `0x43ff3248`. Corrige el
+sesgo +0x58 de la rev.1 (commit `75f5fa28`) y deja S176 como no reutilizable (artefactos ausentes).
+[S300](../docs/capture/s300-state-xref-sweep.md), `analysis/s300_state_xref_sweep/state_xref_sweep.json`
+(4 tests + 7 del test previo). Límite: estático, sin runtime/DMA/índice dinámico.
+
+**Siguiente:** S301, mismo barrido en la A7S fw3.20 y tabla de diferencias.

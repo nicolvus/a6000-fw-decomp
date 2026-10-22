@@ -5,22 +5,141 @@
   "state_object": "0x43f72d02",
   "got_slot": "0x4401f990",
   "xrefs_total": 15,
+  "note": "direcciones corregidas en S300 (rev.2): la rev.1 tenía un sesgo +0x58 en todas las direcciones",
   "classified": [
-    {"addr": "0x4383643e", "func": "FUN_438363cc", "type": "GOT_load + field_read", "fields": ["+0x38..+0x3b"], "evidence": "S154"},
-    {"addr": "0x4383ace8", "func": "FUN_4383abec", "type": "write_state+0", "fields": ["+0"], "evidence": "S160"},
-    {"addr": "0x4384cb5e", "func": "FUN_4384b268", "type": "stack_spill", "fields": [], "evidence": "S161"},
-    {"addr": "0x4384cb62", "func": "FUN_4384b268", "type": "field_read", "fields": ["+0x26", "+0x28", "+0x29"], "evidence": "S161"},
-    {"addr": "0x43857fe8", "func": "0x43857f90", "type": "read_state+0_predicate", "fields": ["+0"], "evidence": "S155"},
-    {"addr": "0x43858008", "func": "0x43857fb0", "type": "read_state+0_predicate", "fields": ["+0"], "evidence": "S155"},
-    {"addr": "0x4385818c", "func": "0x43858134", "type": "field_read", "fields": ["+4", "+0x1c"], "evidence": "S155"},
-    {"addr": "0x438599ac", "func": "FUN_43859944", "type": "snapshot_reader", "fields": ["+5", "+0xf"], "evidence": "S157"},
-    {"addr": "0x4385b2c0", "func": "FUN_4385b234", "type": "stack_spill", "fields": [], "evidence": "S158"},
-    {"addr": "0x43860074", "func": "FUN_4385fff0", "type": "stack_spill + field_read", "fields": ["+0", "+0x1c", "+0xa2"], "evidence": "S159"},
-    {"addr": "0x4386016a", "func": "FUN_4385fff0", "type": "field_read + other_stores", "fields": ["various"], "evidence": "S159"},
-    {"addr": "0x4386055e", "func": "FUN_4385fff0", "type": "field_read + other_stores", "fields": ["various"], "evidence": "S159"},
-    {"addr": "0x438d9396", "func": "FUN_438d939c", "type": "field_read", "fields": ["+0x1c", "+0x1e"], "evidence": "S163"},
-    {"addr": "0x438d93d0", "func": "FUN_438d9318/6c", "type": "field_read", "fields": ["+0x1c"], "evidence": "S162"},
-    {"addr": "0x43ff32a0", "func": "data_table_0x43ff3200", "type": "data_reference", "fields": [], "evidence": "S176"}
+    {
+      "addr": "0x438363e6",
+      "func": "0x438363cc",
+      "type": "field_read",
+      "fields": [
+        "+0x38",
+        "+0x39",
+        "+0x3a",
+        "+0x3b"
+      ],
+      "evidence": "S154"
+    },
+    {
+      "addr": "0x4383ac90",
+      "func": "0x4383abec",
+      "type": "write_state+0",
+      "fields": [],
+      "evidence": "S160"
+    },
+    {
+      "addr": "0x4384cb06",
+      "func": "0x4384b268",
+      "type": "got_load",
+      "fields": [],
+      "evidence": "S161"
+    },
+    {
+      "addr": "0x4384cb0a",
+      "func": "0x4384b268",
+      "type": "stack_spill",
+      "fields": [
+        "+0x42",
+        "+0xa5"
+      ],
+      "evidence": "S161"
+    },
+    {
+      "addr": "0x43857f90",
+      "func": "0x43857f88",
+      "type": "field_read",
+      "fields": [
+        "+0"
+      ],
+      "evidence": "S155"
+    },
+    {
+      "addr": "0x43857fb0",
+      "func": "0x43857fa8",
+      "type": "field_read",
+      "fields": [
+        "+0"
+      ],
+      "evidence": "S155"
+    },
+    {
+      "addr": "0x43858134",
+      "func": "0x4385812c",
+      "type": "field_read",
+      "fields": [
+        "+0x04"
+      ],
+      "evidence": "S155"
+    },
+    {
+      "addr": "0x43859954",
+      "func": "0x43859944",
+      "type": "field_read",
+      "fields": [
+        "+0x05",
+        "+0x0f"
+      ],
+      "evidence": "S157"
+    },
+    {
+      "addr": "0x4385b268",
+      "func": "0x4385b234",
+      "type": "stack_spill",
+      "fields": [
+        "+0x26",
+        "+0x29"
+      ],
+      "evidence": "S158"
+    },
+    {
+      "addr": "0x4386001c",
+      "func": "0x4385fff0",
+      "type": "stack_spill",
+      "fields": [],
+      "evidence": "S159"
+    },
+    {
+      "addr": "0x43860112",
+      "func": "0x4385fff0",
+      "type": "field_read",
+      "fields": [
+        "+0xa2"
+      ],
+      "evidence": "S159"
+    },
+    {
+      "addr": "0x43860506",
+      "func": "0x4385fff0",
+      "type": "field_read",
+      "fields": [
+        "+0xa2"
+      ],
+      "evidence": "S159"
+    },
+    {
+      "addr": "0x438d933e",
+      "func": "0x438d9318",
+      "type": "field_read",
+      "fields": [
+        "+0x1c"
+      ],
+      "evidence": "S162"
+    },
+    {
+      "addr": "0x438d9378",
+      "func": "0x438d936c",
+      "type": "field_read",
+      "fields": [
+        "+0x1c"
+      ],
+      "evidence": "S162"
+    },
+    {
+      "addr": "0x43ff3248",
+      "func": "—",
+      "type": "data_reference",
+      "fields": [],
+      "evidence": "S176"
+    }
   ],
   "gates_writers": {
     "state_plus_3": "NO_ENCONTRADO",
