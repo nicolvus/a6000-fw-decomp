@@ -17,13 +17,14 @@ recuperación y pipeline de captura. El obturador electrónico es un
 
 | fecha | sesión | alcance | hitos |
 |---|---|---|---|
-| **22-10-2026** | **sesión actual**: línea de RE general por módulos + línea del obturador electrónico | continuación IMX210 S140–S154; mapa, filas G, lectura diagnóstica del gap y gates del volcado; control positivo ElecShutter A6300 (S135) | S140–S154 |
+| **22-10-2026** | **sesión actual**: línea de RE general por módulos + línea del obturador electrónico | continuación IMX210 S140–S155; mapa, filas G, volcado gap y clasificación incremental de xrefs del estado; control positivo ElecShutter A6300 (S135) | S140–S155 |
 | 20-10-2026 | transporte IMX210, SetMode/SetExposure emulados, inyección PMCA, montura E-mount | 50 commits | S54–S66 |
 | 19-10-2026 | base de la RE general y de la línea del obturador (payload, VD, callbacks, tabla PIC) | 5 commits | S16–S53 |
 | 18-10-2026 | sistema de conocimiento: indexación FTS5, grafo de conocimiento, CLI + servidor MCP, skills, benchmarks y **checkpoints de sesión** (`knowledge/checkpoints/`) | 5 checkpoints | — |
 
 ## Fases recientes (más nuevas primero)
 Cada enlace lleva a su informe; el resumen de hallazgos está en el [catálogo](docs/capture/linea-general-re.md) y en el [historial](docs/history/README-historial-2026-10-21.md).
+- [S155: tres xrefs del estado son lectores/accesores](docs/capture/s155-imager-state-readers.md): `0x43857f90/0x43857fb0` leen `+0` como predicados y `0x43858134` carga puntero y lee `+4/+0x1c`; ninguno escribe `+3/+6` en esos cuerpos. **No es ausencia global de escritores.** [Script](analysis/s155_imager_state_readers/verify_state_readers.py) · 3 tests.
 - [S154: clasificar el xref `0x438363e6` al objeto de flags](docs/capture/s154-imager-state-ref.md): es un load del slot GOT `0x4401f990` que devuelve el puntero `0x43f72d02`, no un store; el procedimiento lee `+0x38..+0x3b` y escribe otros objetos/buffer. No toca `+3/+6` **en esta función**; no cierra writers globales. [Script](analysis/s154_imager_state_ref/verify_state_ref.py) · 3 tests.
 - [S153: flags de lectura del volcado gap](docs/capture/s153-imager-dump-gates.md): REA/bytes confirman los gates `+3 & 2` y `+6 & 0x20` en el dumper de descriptores; refs directas solo leen los bits y el estado estático es cero. **No hay escritor/valor runtime confirmado**; no prueba ausencia global ni camino de captura. [Script](analysis/s153_imager_dump_gates/verify_gates.py) · 3 tests.
 - [S152: descriptores de diagnóstico leen el byte `G+0x278`](docs/capture/s152-imager-gap-descriptor-read.md): dos tablas de registros contienen `{id=0x30,size=1,addr=0x43eb0850}`; `FUN_43858338` puede seleccionar el copiador raw que lee ese byte y lo vuelca al buffer. Los gates runtime siguen **PARCIALES**, no hay escritura ni efecto físico demostrado. [Script](analysis/s152_imager_descriptor_reads/verify_descriptor_reads.py) · 3 tests.

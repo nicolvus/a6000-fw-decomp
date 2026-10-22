@@ -1,5 +1,11 @@
 # Estado actual — léeme primero
 
+## S155 — tres referencias más al estado de gates (22-10-2026)
+
+REA/bytes: `0x43857f90` y `0x43857fb0` cargan el byte `+0` y devuelven predicados; `0x43858134` carga el puntero GOT pero solo lee campos `+4` y `+0x1c`, almacenando en otros objetos. No se observa write a gates `+3/+6` **en estos cuerpos**. No es ausencia global. [S155](../docs/capture/s155-imager-state-readers.md), reproducción `analysis/s155_imager_state_readers/state_readers.json` (3 tests).
+
+**Siguiente:** elegir un xref restante a `0x43f72d02` (p. ej. `0x43859954`/`0x4385b268`) y clasificar su dataflow/store por evidencia, uno o un grupo acotado.
+
 ## S154 — referencia del estado desde `0x438363e6` (22-10-2026)
 
 `FUN_438363cc` en `0x438363e6` carga el valor del slot `0x4401f990` (`0x43f72d02`); el edge al objeto es DATA y el READ efectivo es al GOT slot. Este procedimiento lee otros campos +0x38..+0x3b y no escribe +3/+6; sus stores van a otros objetos/buffers. **Acotado a esta función**; no prueba ausencia de otros writers. [S154](../docs/capture/s154-imager-state-ref.md), JSON y 3 tests en `analysis/s154_imager_state_ref/`. Commit publicado: `9030811f`.
