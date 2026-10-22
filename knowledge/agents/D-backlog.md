@@ -16,5 +16,7 @@ Tema distinto de A (sensor/driver), B (imager estado) y C (ruta de control): dec
 - S511 [INT_ERROR] (53 trazas) DONE 93cc54d4
 - S512 [ENCOUCSTAT] (49 trazas) DONE f016266c
 - S513 [CONFIG] (47 trazas) DONE 3ee87e6d
-- S514 [BT] (44 trazas)
+- S514 [BT] (44 trazas) DONE fc0fe2a4
+- S515 [BL] backlight montura (154 trazas)
+- S516 [PNL] panel (41 trazas)
 - regenerar al vaciar
