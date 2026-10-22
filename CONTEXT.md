@@ -1,9 +1,11 @@
 # Continuidad
 
-Estado vigente: **S169** (22-10-2026) — línea de RE general por módulos de trazas (S138–S166,
-S168–S169) y **dos controles positivos sobre el obturador electrónico** (S168: la cadena de
-*rolling shutter* del A6300 está **muerta**; S169: la API de *drive* del A6300 —`sc_ShutDrive`,
-`front_eshutter`, `SilentShutterMode`, `shutterType`— **no existe** en la A6000 ni en la A7S), [knowledge/CURRENT.md](knowledge/CURRENT.md) ·
+Estado vigente: **S174** (22-10-2026) — línea de RE general por módulos de trazas (S138–S174) y
+**cinco controles positivos sobre el obturador electrónico** (S168 cadena muerta; S169 la API de
+*drive* del A6300 —`sc_ShutDrive`, `front_eshutter`, `SilentShutterMode`, `shutterType`— **no
+existe** en la A6000 ni en la A7S; S171 canal «SteadyShot»; S172 qué hace `ElecShutter/`; S174 el
+API `…ForLiro`: 0/0/6 soportados) más una **regla metodológica**: *la presencia de una cadena no
+prueba una funcionalidad*, [knowledge/CURRENT.md](knowledge/CURRENT.md) ·
 [catálogo de la línea general](docs/capture/linea-general-re.md) ·
 [estado y restricciones](docs/STATE.md). S51 **permanece (A=NO, B=NO, C=NO)**. Las sesiones descritas a
 continuación son antecedentes.
@@ -20,6 +22,32 @@ Correcciones y preguntas abiertas (generadas del grafo de conocimiento):
 Este archivo conserva solo las sesiones más recientes (investigación activa).
 No acumular aquí el historial completo de nuevo: cada sesión cerrada se traslada
 a `docs/history/` y se referencia desde `docs/STATE.md`/`docs/CORRECTIONS.md`.
+
+## S170–S174 — cinco controles positivos sobre el obturador y una regla metodológica (22-10-2026)
+
+* **S168** — `position num in rolling is strange %d` (`0x43d9fe03`, A6300) tiene **0 referencias
+  de código** → **cadena muerta**; **corrige** el colateral de S164.
+* **S169** — el A6300 tiene una capa de validación de parámetros de cámara (`LiroSeq`, **201**
+  propiedades `CheckSet*`, **370** comprobaciones) con parámetros de obturador `sc_ShutDrive`
+  (`+0x1dd`), `uc_ShutDriveMode` (`+0x1dc`), **`front_eshutter`** (`+0x23c`),
+  **`SilentShutterMode`** (`+0x264`), **`shutterType`** (`+0x268`); la A6000 y la A7S tienen
+  **0/0** → **falta el parámetro, no solo la traza**.
+* **S171** — API del imager **4/4/7** (el A6300 añade `GetImagerStabilizationTime`, viva en
+  `0x43718d04`, y la clase `Camera::Sync::SyncUtilityUpm` **0/0/3** con el tipo `IMAGER_DRIVEMODE`
+  **0/0/2**) y **canal «SteadyShot» del objetivo** (`SteadyShotInfo` **0/0/7**).
+* **S172** — `ElecShutter/` **caracterizado**: `EC_ElecShutter_Main.cpp` (`0x4391d67c`) devuelve un
+  **código de modo de obturador** (`0x80`→3, `0x100`→4) y
+  `EC_NonlinearElecShutter_MechShutterTable.cpp` implementa la **equivalencia no lineal
+  electrónica/mecánica**; **corrige a S135** (los 128 bytes de `0x43dcfa9e` no tienen referencias).
+* **S174** — el conversor `CamMsgConv` del `libObj.so` conoce **216/221/240** nombres `…ForLiro` y
+  **soporta 0/0/6**; en la A6000 y la A7S **todos** están en la lista de **rechazo**.
+
+**Regla metodológica**: **la presencia de una cadena no prueba una funcionalidad** (cadena muerta de
+S168, bloque sin referencias de S172, nombres `…ForLiro` rechazados de S174).
+
+**Efecto en S51: NINGUNO — sigue A=NO, B=NO, C=NO.** Son hallazgos **sobre el firmware**: la
+ausencia estática de un módulo, una cadena o un parámetro no demuestra incapacidad del hardware; la
+prueba física sigue pendiente de autorización.
 
 ## S168–S169 — dos controles positivos sobre el obturador electrónico (22-10-2026)
 
