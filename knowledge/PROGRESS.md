@@ -15,7 +15,7 @@
 - REA `0x43b0893c`: `ev_b376d03662f3edddb3c528e4fa223070270ef09dbc71e5ef8ccc7d012e05857b`; caller `0x43b08750`: `ev_b1bd068317fa32b2167455cc5189065e7d50b48f6e99b20ffde5dd250cfd3513`; constructor `0x43849fb8`: `ev_158664de14075207b8688292074cd88ef3ba64d4e12caeac876ffc695254c9f9`.
 - Resultado PARCIAL: bytes confirman `S[0]`→`S+4+16·índice`→copia 16 B a `S+0xc4`; `0x43849fb8` copia las 4 palabras a la salida. `0x43843a44` no quedó resuelto por REA; eso no es evidencia de ausencia. Stores, gates y cadena G→S siguen abiertos.
 - Artefactos: `analysis/s141_imager_row_trace/{verify_instructions.py,row_trace.json}`, `tests/test_s141_imager_row_trace.py`, `docs/capture/s141-imager-row-copy.md`.
-- Pruebas: 3/3 unittest PASS; pendiente registrar/publicar commit.
+- Pruebas: 3/3 unittest PASS, suite S140+S141+knowledge 73/73 PASS; `git diff --check` PASS. Commit `47147952` publicado en `origin/main`.
 - Siguiente: localizar una coordenada Thumb aceptada por REA para el código candidato `0x43843a44`; seguir únicamente stores de `S[0]` y transferencias G→S, con contraste de bytes.
 
 Checkpoint persistente. Actualizar al terminar cada etapa, antes de continuar
