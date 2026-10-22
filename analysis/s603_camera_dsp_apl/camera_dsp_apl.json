@@ -1,0 +1,79 @@
+{
+  "session": "S603",
+  "module": "[CAMERA_DSP_APL]",
+  "firmware": "A6000 fw3.21",
+  "exclusivity": "A6000-only (0 in A7S fw3.20, 0 in A6300 fw2.01)",
+  "string_count": {
+    "rea_unique": 18,
+    "strings_total": 18
+  },
+  "strings": [
+    {"address": "0x43c901da", "value": "[CAMERA_DSP_APL]: [Error] cannot free reference memory"},
+    {"address": "0x43c90211", "value": "[CAMERA_DSP_APL]: [Error] MemOpen (%X)"},
+    {"address": "0x43c90238", "value": "[CAMERA_DSP_APL]: [Error] sapl_mov_stop - TIMEOUT"},
+    {"address": "0x43c9026a", "value": "[CAMERA_DSP_APL]: [Error] sapl_SetDmaAddrTar - MEMORY_TARGET"},
+    {"address": "0x43c902a7", "value": "[CAMERA_DSP_APL]: [Error] sapl_SetDmaAddrMEOut - MEMORY_MEPRIVATE"},
+    {"address": "0x43c902e9", "value": "[CAMERA_DSP_APL]: [Error] sapl_SetDmaAddrMEOut - MEMORY_MEPRIVATE 4K2K CORE1"},
+    {"address": "0x43c90336", "value": "[CAMERA_DSP_APL]: [Error] sapl_SetDmaAddrOut - FMT_SRC_REF0_ADDR is NULL"},
+    {"address": "0x43c9037f", "value": "[CAMERA_DSP_APL]: [Error] sapl_SetDmaAddrMBLOut - MEMORY_MARBLEOUT"},
+    {"address": "0x43c903c2", "value": "[CAMERA_DSP_APL]: [Error] sapl_SetDmaAddrMBLOut - MEMORY_MEPRIVATE 4K2K CORE1"},
+    {"address": "0x43c90410", "value": "[CAMERA_DSP_APL]: [Error] sapl_SetDmaAddrOut - HME_COPY_SRC_ADDR is NULL"},
+    {"address": "0x43c90459", "value": "[CAMERA_DSP_APL]: [Error] sapl_SetDmaAddrParamBuffer - MEMORY_ESRAM"},
+    {"address": "0x43c904af", "value": "[CAMERA_DSP_APL]: [Error] APL Small eSRAM Alloc (%X)"},
+    {"address": "0x43c904e4", "value": "[CAMERA_DSP_APL]: [Error] APL LGR eSRAM Alloc (%X)"},
+    {"address": "0x43c90517", "value": "[CAMERA_DSP_APL]: [Error] APL Small eSRAM Free (%X)"},
+    {"address": "0x43c9054b", "value": "[CAMERA_DSP_APL]: [Error] APL LgrDl eSRAM Free (%X)"},
+    {"address": "0x43c9057f", "value": "[CAMERA_DSP_APL]: [Error] APL Base DDR Free (%X)"},
+    {"address": "0x43c905b0", "value": "[CAMERA_DSP_APL]: [Error] APL TAR DDR Free (%X)"},
+    {"address": "0x43c905e0", "value": "[CAMERA_DSP_APL]: [APL Driver] IIB stop Timeout No=%x, IIB_STT=%x"}
+  ],
+  "xrefs": {
+    "0x43c901da": ["0x436bd858"],
+    "0x43c90211": ["0x436bd8ce", "0x436be696", "0x436be8fc"],
+    "0x43c90238": ["0x43a30000"],
+    "0x43c9026a": ["0x436be60c"],
+    "0x43c902a7": ["0x436be6e0", "0x436be784"],
+    "0x43c902e9": ["0x436be71a", "0x436be7ba"],
+    "0x43c90336": ["0x436be84e"],
+    "0x43c9037f": ["0x436be948"],
+    "0x43c903c2": ["0x436be978"],
+    "0x43c90410": ["0x436be9ec"],
+    "0x43c90459": ["0x436bea4c", "0x436beaae"],
+    "0x43c904af": ["0x436bf1dc"],
+    "0x43c904e4": ["0x436bf22c"],
+    "0x43c90517": [],
+    "0x43c9054b": [],
+    "0x43c9057f": ["0x436bf5a0", "0x436bf61a"],
+    "0x43c905b0": ["0x436bf764", "0x436bf7c6"],
+    "0x43c905e0": []
+  },
+  "emitting_functions": {
+    "0x436bd830": "FUN_436bd830 - reference memory free (calls FUN_436bf3b8, FUN_436bf5e0, FUN_436bf494)",
+    "0x436bd88c": "FUN_436bd88c - DMA address setup (param_1==3: 0x60000000; else: FUN_439032d8, FUN_43a3aa0c)",
+    "0x43a2ff90": "FUN_43a2ff90 (at 0x43a30000) - sapl_mov_stop TIMEOUT handler (200 retries, FUN_436c14f8, FUN_436c201c, FUN_43acb378)",
+    "0x436be5ac": "FUN_436be5ac - MAIN APL DRIVER FUNCTION (very large, ~600 lines) — multiple entry points: 0x436be60c, 0x436be696, 0x436be6e0, 0x436be71a, 0x436be784, 0x436be7ba, 0x436be84e, 0x436be948, 0x436be978, 0x436be9ec, 0x436bea4c, 0x436beaae. Handles: MemOpen, DMA addr setup (Tar, MEOut, MBLOut, ParamBuffer), eSRAM/DDR alloc/free, IIB stop timeout. Uses FUN_436bd88c, FUN_436bd2a4, FUN_436bd2cc, FUN_43902e50, FUN_43a3aa0c, FUN_436bf6d4, FUN_436bf51c, FUN_436bf4f0, FUN_436bf548, FUN_436bf840, FUN_436bf870, FUN_436bf424, FUN_436bf484.",
+    "0x436bf1dc": "APL Small eSRAM Alloc error handler",
+    "0x436bf22c": "APL LGR eSRAM Alloc error handler",
+    "0x436bf5a0": "APL Base DDR Free error handler",
+    "0x436bf61a": "APL Base DDR Free (alt)",
+    "0x436bf764": "APL TAR DDR Free error handler",
+    "0x436bf7c6": "APL TAR DDR Free (alt)"
+  },
+  "key_subsystems": {
+    "SAPL": "Sony APL (Application) - sapl_mov_stop, sapl_SetDmaAddr*",
+    "Memory_types": "MEMORY_TARGET, MEMORY_MEPRIVATE, MEMORY_MARBLEOUT, MEMORY_ESRAM, DDR (Base/TAR), eSRAM (Small/LGR/LgrDl)",
+    "DMA": "SetDmaAddrTar, SetDmaAddrMEOut, SetDmaAddrMBLOut, SetDmaAddrOut, SetDmaAddrParamBuffer",
+    "IIB": "Image Input Block - IIB stop Timeout, IIB_STT register",
+    "4K2K": "4K/2K video support (CORE1)",
+    "HME": "High Efficiency Motion Estimation - HME_COPY_SRC_ADDR",
+    "MARBLE": "MARBLEOUT memory",
+    "FMT": "Format - FMT_SRC_REF0_ADDR"
+  },
+  "differential": {
+    "A7S_fw320": "0 strings, module absent",
+    "A6300_fw201": "0 strings, module absent"
+  },
+  "evidence": "REA search_strings + xrefs + procedure_pseudo_code on av-cam.bin (SHA256: b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9); strings -a on all three firmwares",
+  "verdict": "VERIFICADO",
+  "limitations": "Función principal FUN_436be5ac es muy grande (~600 líneas) con múltiples entry points; Ghidra la muestra como la misma función en direcciones distintas. Nombres de archivo fuente no recuperados. Semántica SAPL/IIB/HME/MARBLE inferida de trazas. No runtime verification."
+}
