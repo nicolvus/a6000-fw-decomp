@@ -2,7 +2,7 @@
 
 ## S153 — gates lectores del volcado del gap (22-10-2026)
 
-REA/bytes verifican los gates en `FUN_43858338`: `[obj+3]&2` y `[obj+6]&0x20` habilitan líneas del dumper; los xrefs directos a esos bytes son lecturas y los bytes BSS iniciales están a cero. **Escritor/valor runtime NO_VERIFICADOS**; no prueba ausencia global ni ejecución en una foto. [Informe](../docs/capture/s153-imager-dump-gates.md), `analysis/s153_imager_dump_gates/dump_gates.json` (3 tests).
+REA/bytes verifican los gates en `FUN_43858338`: `[obj+3]&2` y `[obj+6]&0x20` habilitan líneas del dumper; los xrefs directos a esos bytes son lecturas y los bytes BSS iniciales están a cero. **Escritor/valor runtime NO_VERIFICADOS**; no prueba ausencia global ni ejecución en una foto. [Informe](../docs/capture/s153-imager-dump-gates.md), `analysis/s153_imager_dump_gates/dump_gates.json` (3 tests). Commit publicado: `7ce7f329`.
 
 **Siguiente:** seguir refs al bloque de estado `0x43f72d02` buscando copias estructuradas a +3/+6, distinguiendo base-pointer stores de inicialización `+0/+2`; si no se resuelve, mover a otra ruta estática independiente. No hacer pruebas físicas.
 
