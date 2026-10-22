@@ -399,6 +399,20 @@ fw3.21), **S127** (`[CAMERA_MAIN_LC]`), **S126** (`[CAMERA_MAIN]`), **S125** (`[
 
 [Informe](../analysis/s151_panda/panda.md) · [doc](../docs/capture/s151-panda.md). Siguiente: qué significan Pre/Post/Async; los ids de cola `0x00f9xxxx`; el GID `0x00740017`; el id de log `0x16`; el papel de `0x00910042`; el receptor final del log.
 
+## S156 — el módulo `[TP_R]` (18 trazas): el reporter de un framework de mensajes (22-10-2026, línea de RE general)
+
+**VERIFICADO (19 tests, `tests/test_s156_tp_r.py`):** 18 cadenas `[TP_R]` en la A6000 fw3.21 entre `0x43c80f23` y `0x43c812f3`: **14 vivas** (20 sitios PIC en 8 funciones emisoras) + **4 muertas**; además **3** con la etiqueta antigua `[TP R]`, todas muertas → 21 cadenas con el token. Funciones: `0x4366c388`/`0x4366c568`/`0x4366c624` (errores OSAL), `boot_exit_tp` `0x4366c6e8`, bucle de recepción `0x4366c840`, `0x4366c978`, despachador `0x4366ca92`, `boot_init_tp` `0x4366caf4` (llamados desde `0x43a464dc` id 135 y `0x43a4670c` id 134). Módulo: código `0x4366c2a4`–`0x4366cd38` (18 funciones); **tabla de comandos DDL** `0x43fe3f28` (`start`, `set_mode`, `print_xy`, `dds_on`, `dds_off`) registrada con el nombre **`tp`** en `0x4366cae8`; colas OSAL: log `0x008f0139`, eventos `0x005c011c`, control `0x01010227`.
+
+**Confirma S151**: el reporter `0x4366c300` (`push {r3}` … `movs r2,#0x9a` → `osal_try_valloc_msg` → `vsnprintf` → `osal_snd_msg`) es **miembro de la familia**; recuentos estricto 43/0/0 (reproduce S151) y laxo 561/0/2 → el conteo con regla estricta es el canónico.
+
+**Corrección de S130 (falso positivo)**: los 2 "textos comunes" entre `[TP_R]` y `[DMMYSIOCOM]` son las **plantillas OSAL** `ERR. osal_snd_msg…`/`ERR. osal_free_msg…`; en la A7S están en `0x43c73764`/`0x43c73792` (ref. `0x4362cc7a`) y en el A6300 en `0x43d7296b`/`0x43d72999`, mientras que en la A6000 ese módulo sigue intacto en `0x43c72e7d`/`0x43c72eab` (ref. `0x43628a5e`/`0x43628a80`) → **código distinto**: falso positivo textual (el texto es genérico de OSAL).
+
+**Diferencial**: A7S 3 cadenas `[TP R]` y A6300 4, **0 vivas**; la tabla de comandos y el registro `tp` existen en los tres (`0x43fe3f28` / `0x43fe54d0` / `0x441a59c0`) → el módulo ya existía **silencioso** y la fw3.21 **añade 15 trazas**.
+
+**Negativo acotado**: la única coincidencia del barrido es `read` en `[TP_R]: ERR. read size error` (tamaño leído por una llamada OSAL) → **sin efecto en S51**.
+
+[Informe](../analysis/s156_tp_r/tp_r.md) · [doc](../docs/capture/s156-tp-r.md). Siguiente: siglas "TP" y "DDS" (sin desarrollar); `<Water>` y `ex_status`/`ex_info`; el consumidor de los eventos de la cola `0x005c011c`; los nombres exactos de `0x43561244`/`0x4356127c`/`0x435613b0`.
+
 ## S121 — el módulo `[AIP]` (37 trazas): la interfaz de audio con el escalado (21-10-2026, línea de RE general)
 
 **VERIFICADO (97 tests, `tests/test_s121_aip.py`):** 37 cadenas `[AIP]` en `0x43cdd844`–`0x43cdec50`; **16 funciones** y 6 sub-bloques RTTI: `SaWrapper` (8), `SaBackUpCtrl` (12), `SaDriverBase` (4), `LPS` (11), `SaDriverZoomNr` (1), `SetFader` (1). **Callbacks `Ack`/`Comp`/`Err` en tres capas**: SA (`0x43926d1c`/`0x43926de8`, con los predicados `[r1,#1]==0x14`/`0x13`), LPS (`0x4392b16c`/`0x4392b254`) y driver; los errores llevan `errCode`+`errState` (SA) o `ErrCode`+`ErrStatus` (LPS). **Tabla de backup**: **350 entradas de 12 B** en `0x43bd1964` con `{id = 0x10c0000 + n, offset, size}`; `WriteShadow2BakcupArea` vuelca `0x10c` B (`mov.w r0,#0x10c` en `0x4392ab78`) y `SetAudioNrType` publica el **bit 3** de `bkId = 0x10e0000`. Comandos hacia el escalar en `0x4392ac30` (`Cmd`/`Func` + `Zma`/`Ext`/`Mbx`) y `0x4392acb4` (`Cmd`/`Func`/`Unq`). Buffers LPS `0x82`/`0x83`/`0x85` con longitudes `0x2c`/`0x28`/`0x14`; `SetFader` (`0x4355ae98`) divide por 100/20/otro según `[r0,#0x78]`.
