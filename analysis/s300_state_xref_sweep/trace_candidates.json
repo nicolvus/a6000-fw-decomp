@@ -308,6 +308,12 @@
    {
     "insn": "ldr.w r3, [r8, r3]",
     "address": "0x4384cb06"
+   },
+   {
+    "insn": "ldrb.w r3, [r3, #0x40]",
+    "address": "0x4384cb12",
+    "access": "read",
+    "offset": "0x40"
    }
   ]
  },
@@ -1382,6 +1388,14 @@
    {
     "insn": "bl #0x439cbf2c",
     "address": "0x438601a8",
+    "access": "call",
+    "regs": [
+     "r1"
+    ]
+   },
+   {
+    "insn": "bl #0x437284b4",
+    "address": "0x438601d0",
     "access": "call",
     "regs": [
      "r1"

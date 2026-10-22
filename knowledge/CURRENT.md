@@ -1593,7 +1593,7 @@ Ver "Próximo paso exacto" al final de `knowledge/PROGRESS.md`.
 ## S300 — barrido único de xrefs al state IMX210 (22-10-2026, agente B)
 
 67 sitios únicos (15 xrefs a `0x43f72d02` + 42 al slot GOT `0x4401f990` + 16 lecturas de gates):
-55 lectura, 6 escritura, 3 spill, 2 propagación, 1 dato. **Ningún escritor de `+3`/`+6`**; los gates
+56 lectura, 6 escritura, 3 spill, 1 propagación, 1 dato. **Ningún escritor de `+3`/`+6`**; los gates
 se leen como bitfield de 7 bits + signo en `FUN_43858338` (8 lectores cada uno). Únicos stores:
 `+0x00` (`0x4383ac90`) y `+0x02` (4 instrucciones en `FUN_43833ff8`/`FUN_4383ace0`/`FUN_4383b2dc`).
 Solo dos literales absolutos con el puntero en todo el blob: `0x4401f990` y `0x43ff3248`. Corrige el

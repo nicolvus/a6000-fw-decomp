@@ -409,8 +409,15 @@
       },
       "insn": "ldr.w r3, [r8, r3]",
       "bytes_hex": "58f80330",
-      "class": "propagaci\u00f3n",
-      "accesses": [],
+      "class": "lectura",
+      "accesses": [
+        {
+          "address": "0x4384cb12",
+          "insn": "ldrb.w r3, [r3, #0x40]",
+          "kind": "read",
+          "offset": 64
+        }
+      ],
       "note": "carga el puntero desde el slot GOT; el acceso real ocurre tras el spill"
     },
     {
@@ -1914,10 +1921,10 @@
   ],
   "counts": {
     "total_sites": 67,
-    "lectura": 55,
+    "lectura": 56,
     "escritura": 6,
-    "propagaci\u00f3n": 2,
     "spill": 3,
+    "propagaci\u00f3n": 1,
     "dato": 1
   },
   "gates": {

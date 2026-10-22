@@ -63,4 +63,4 @@ La versión extensa anterior del README se conserva en:
 
 ### Fase del agente B — imager: estado y gates (S300–S399)
 
-S300 cierra el barrido único de xrefs al objeto de estado del IMX210 (`0x43f72d02`, slot GOT `0x4401f990`): 67 sitios clasificados (55 lectura, 6 escritura, 3 spill, 2 propagación, 1 dato), **cero escritores de los gates `+3`/`+6`** (8 lectores de cada uno en el dumper `FUN_43858338`) y únicos stores a `+0x00`/`+0x02`. Corrige el sesgo +0x58 de la rev.1. [`docs/capture/s300-state-xref-sweep.md`](docs/capture/s300-state-xref-sweep.md).
+S300 cierra el barrido único de xrefs al objeto de estado del IMX210 (`0x43f72d02`, slot GOT `0x4401f990`): 67 sitios clasificados (56 lectura, 6 escritura, 3 spill, 1 propagación, 1 dato), **cero escritores de los gates `+3`/`+6`** (8 lectores de cada uno en el dumper `FUN_43858338`) y únicos stores a `+0x00`/`+0x02`. Corrige el sesgo +0x58 de la rev.1. [`docs/capture/s300-state-xref-sweep.md`](docs/capture/s300-state-xref-sweep.md).

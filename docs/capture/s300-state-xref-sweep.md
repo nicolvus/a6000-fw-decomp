@@ -46,8 +46,8 @@ puntero y la que lo desreferencia son contiguas: `0x438363e6`, `0x4384cb06`,
 `0x43858134`, `0x43859954`, `0x438d933e`, `0x438d9378`. La unión coincide exactamente
 con los 67 sitios de la tabla (comprobado en `verify_sweep.py`).
 
-Clases: **55 lectura**, **6 escritura** (5 instrucciones distintas), **3 spill**,
-**2 propagación** (carga sin desreferencia en el sitio) y **1 dato** (tabla).
+Clases: **56 lectura**, **6 escritura** (5 instrucciones distintas), **3 spill**,
+**1 propagación** (carga sin desreferencia en el sitio) y **1 dato** (tabla).
 
 ## 3. Escritores: solo `+0x00` y `+0x02`
 
@@ -111,7 +111,7 @@ hay escape a otro objeto/global en estos cuerpos.
 | `0x4383f0d2` | `0x4383f0c8` | `ldr r5, [r3, r2]` | lectura | +0x22, +0x20 | lee +0x22, +0x20 |
 | `0x4383f1e0` | `0x4383f17c` | `ldr r3, [r5, r3]` | lectura | +0x22 | lee +0x22 |
 | `0x438475b8` | `0x43844e80` | `ldr r0, [r6, r0]` | lectura | +0x7f | lee +0x7f |
-| `0x4384cb06` | `0x4384b268` | `ldr.w r3, [r8, r3]` | propagación | — | propaga |
+| `0x4384cb06` | `0x4384b268` | `ldr.w r3, [r8, r3]` | lectura | +0x40 | lee +0x40 |
 | `0x4384cb0a` | `0x4384b268` | `str r3, [sp, #0x20]` | spill | +0x42, +0xa5 | spill a stack; lecturas tras recarga: +0x42, +0xa5 |
 | `0x4384f7e4` | `0x4384d8bc` | `ldr r3, [r7, r3]` | lectura | +0x48 | lee +0x48 |
 | `0x43857f8e` | `0x43857f88` | `ldr r3, [r3, r2]` | lectura | +0x00 | lee +0x00 |
