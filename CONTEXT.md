@@ -1,8 +1,9 @@
 # Continuidad
 
-Estado vigente: **S164** (22-10-2026) — línea de RE general por módulos de trazas (hitos S138–S164
-integrados: `[CAMERA_MAIN_FC]`, `[CAM_UTIL_ADJ]`, `[CAM_UTIL_SENS]`, `[DEPTH]`, `[PANDA]`, `[TP_R]`,
-`[CAMERA_IS]`) y control positivo del obturador electrónico, [knowledge/CURRENT.md](knowledge/CURRENT.md) ·
+Estado vigente: **S169** (22-10-2026) — línea de RE general por módulos de trazas (S138–S166,
+S168–S169) y **dos controles positivos sobre el obturador electrónico** (S168: la cadena de
+*rolling shutter* del A6300 está **muerta**; S169: la API de *drive* del A6300 —`sc_ShutDrive`,
+`front_eshutter`, `SilentShutterMode`, `shutterType`— **no existe** en la A6000 ni en la A7S), [knowledge/CURRENT.md](knowledge/CURRENT.md) ·
 [catálogo de la línea general](docs/capture/linea-general-re.md) ·
 [estado y restricciones](docs/STATE.md). S51 **permanece (A=NO, B=NO, C=NO)**. Las sesiones descritas a
 continuación son antecedentes.
@@ -19,6 +20,26 @@ Correcciones y preguntas abiertas (generadas del grafo de conocimiento):
 Este archivo conserva solo las sesiones más recientes (investigación activa).
 No acumular aquí el historial completo de nuevo: cada sesión cerrada se traslada
 a `docs/history/` y se referencia desde `docs/STATE.md`/`docs/CORRECTIONS.md`.
+
+## S168–S169 — dos controles positivos sobre el obturador electrónico (22-10-2026)
+
+**S168 (cadena muerta):** `position num in rolling is strange %d` (`0x43d9fe03`, A6300 fw2.01)
+tiene **0 referencias de código** (regla estricta, punteros absolutos, pares `movw`/`movt` y un
+método inverso independiente); de las 5 cadenas de su banda, **4 están referenciadas** → es una
+**cadena muerta** y **no** demuestra que el A6300 implemente *rolling shutter*. **Corrige** el
+colateral de la revisión de S164.
+
+**S169 (control positivo del parámetro):** el A6300 fw2.01 tiene una **capa de validación de
+parámetros de cámara** (`LiroSeq`) con **201** propiedades `CheckSet*` y **370** comprobaciones
+`ParamCheckErr`, con parámetros de obturador **`sc_ShutDrive`** (`+0x1dd`), **`uc_ShutDriveMode`**
+(`+0x1dc`), **`front_eshutter`** (`+0x23c`), **`SilentShutterMode`** (`+0x264`),
+**`shutterType`** (`+0x268`), `ul_ShutLowLimit`, `sc_IrisDrive`, `uc_IrisDriveMode`,
+`sc_ExposureDrive`. La **A6000 fw3.21 y la A7S fw3.20 tienen 0/0** → **falta el parámetro, no
+solo la traza**. Refuerza S135 con evidencia de **parámetros en runtime**.
+
+**Efecto en S51: NINGUNO — sigue A=NO, B=NO, C=NO.** Son hallazgos **sobre el firmware**: la
+ausencia estática de un parámetro no demuestra incapacidad del hardware; la prueba física sigue
+pendiente de autorización.
 
 ## S138–S164 — siete módulos más de la línea de RE general (22-10-2026)
 
