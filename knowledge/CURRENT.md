@@ -105,6 +105,16 @@ Para restricciones del proyecto (sin firmware ejecutado, sin flasheo, sin `git p
 
 [Informe](../analysis/s130_new_modules/new_modules.md) · [doc](../docs/capture/s130-new-modules.md). Siguiente: qué son `[ACCY]`, `[VPH_API]`, `[CLK_CTRL]`, `[DEPTH]`, `[PANDA]` (sin desarrollar siglas); quién consume la API nueva de silenciador.
 
+## S127 — el módulo `[CAMERA_MAIN_LC]` (72 trazas): AF, ZPD y DM AF (21-10-2026, línea de RE general)
+
+**VERIFICADO (22 tests, `tests/test_s127_camera_main_lc.py`):** 72 cadenas `[CAMERA_MAIN_LC]` entre `0x43c9c6f6` y `0x43ca7e0b`; **78 sitios PIC** (regla estricta) en **37 funciones** y **1 cadena muerta** (`0x43c9c779`). **Corrección de la premisa del hito**: el módulo **no calibra la lente** — es la capa de **AF + ZPD + DM AF** (`Camera::LC` probado por RTTI; sigla **sin desarrollar**). Puente con el ZPD (S75): `LC_GetZpdResultInfo` (cadena `0x43ca78c8`, **función** `0x437c1e48`, prólogo `0xb5f7`), con gate `ldrb.w [rX,#0xc0]` + `tst.w #2` + `beq`, 10 lecturas de campo y 10 trazas; `full_count` es el primer argumento. Reparto real 32/40 (37/41 sitios) en 13 sub-bloques.
+
+**Diferencial**: A7S fw3.20 y A6300 fw2.01 con **0** prefijos y **0/72** mensajes interiores coincidentes → material **propio de la A6000 fw3.21** (con la salvedad versión/modelo de S130 §4).
+
+**Sin efecto en S51** (A/B/C = NO).
+
+[Informe](../analysis/s127_camera_main_lc/camera_main_lc.md) · [doc](../docs/capture/s127-camera-main-lc.md). Siguiente: el layout completo del resultado ZPD; qué consume `LC_GetZpdResultInfo`; el significado de `lc_Movie_DM_AF_Util_*`.
+
 ## S121 — el módulo `[AIP]` (37 trazas): la interfaz de audio con el escalado (21-10-2026, línea de RE general)
 
 **VERIFICADO (97 tests, `tests/test_s121_aip.py`):** 37 cadenas `[AIP]` en `0x43cdd844`–`0x43cdec50`; **16 funciones** y 6 sub-bloques RTTI: `SaWrapper` (8), `SaBackUpCtrl` (12), `SaDriverBase` (4), `LPS` (11), `SaDriverZoomNr` (1), `SetFader` (1). **Callbacks `Ack`/`Comp`/`Err` en tres capas**: SA (`0x43926d1c`/`0x43926de8`, con los predicados `[r1,#1]==0x14`/`0x13`), LPS (`0x4392b16c`/`0x4392b254`) y driver; los errores llevan `errCode`+`errState` (SA) o `ErrCode`+`ErrStatus` (LPS). **Tabla de backup**: **350 entradas de 12 B** en `0x43bd1964` con `{id = 0x10c0000 + n, offset, size}`; `WriteShadow2BakcupArea` vuelca `0x10c` B (`mov.w r0,#0x10c` en `0x4392ab78`) y `SetAudioNrType` publica el **bit 3** de `bkId = 0x10e0000`. Comandos hacia el escalar en `0x4392ac30` (`Cmd`/`Func` + `Zma`/`Ext`/`Mbx`) y `0x4392acb4` (`Cmd`/`Func`/`Unq`). Buffers LPS `0x82`/`0x83`/`0x85` con longitudes `0x2c`/`0x28`/`0x14`; `SetFader` (`0x4355ae98`) divide por 100/20/otro según `[r0,#0x78]`.
