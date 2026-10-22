@@ -23,10 +23,10 @@ Referencia base: S153-S176 (lectores/escritores estado IMX210), S124 (parámetro
 - [ ] Tabla de diferencias A7S vs A6000
 
 ### S302 — Tablas de drive mode/exposición A7S vs A6000
-- [ ] Campos S124 (`shut`, `svd`, `shd`, `spl`, `sint`, `gs`, `epdsel`) por drive_mode
-- [ ] Fórmula svd S134 (`0x4381106c`) en ambos
-- [ ] Vector registros IMX210 `0x43fe995c` vs A7S `0x43fee370`/`0x43fee598`
-- [ ] Tabla comparativa campo a campo
+- [x] Campos S124 (`shut`, `svd`, `shd`, `spl`, `sint`, `gs`, `epdsel`) por drive_mode
+- [x] Fórmula svd S134 (`0x4381106c`) en ambos
+- [x] Vector registros IMX210 `0x43fe995c` vs A7S `0x43fee370`/`0x43fee598`
+- [x] Tabla comparativa campo a campo → **Hecho en `docs/capture/s302-drive-mode-exposure-tables.md`**
 
 ### S303 — Árbol referencias `0x43ff3200` y callers `FUN_43858338`
 - [x] Seguir referencias de tabla `0x43ff3200` → **contiene puntero a estado 0x43f72d02 en +0x48**; acceso vía GOT `0x4401f080`
