@@ -2,7 +2,7 @@
 
 ## S141 — selección de fila IMX210, origen sin cerrar (21-10-2026)
 
-**PARCIAL:** REA `0x43b0893c` + bytes Thumb verifican `S[0]` como selector, fila en `S+4+16·S[0]` y copia de 16 bytes a `S+0xc4`; `0x43849fb8` consume esa fila al construir exposición. **NO_VERIFICADO:** quién escribe `S[0]`, condiciones de staging y origen G+`0x224`; REA no reconoció `0x43843a44`, consulta vacía no prueba ausencia. Evidencias y reproducción: [S141](../docs/capture/s141-imager-row-copy.md), `analysis/s141_imager_row_trace/row_trace.json`; 3 tests.
+**PARCIAL:** REA `0x43b0893c` + bytes Thumb verifican `S[0]` como selector, fila en `S+4+16·S[0]` y copia de 16 bytes a `S+0xc4`; `0x43849fb8` consume esa fila al construir exposición. **NO_VERIFICADO:** quién escribe `S[0]`, condiciones de staging y origen G+`0x224`; REA no reconoció `0x43843a44`, consulta vacía no prueba ausencia. Evidencias y reproducción: [S141](../docs/capture/s141-imager-row-copy.md), `analysis/s141_imager_row_trace/row_trace.json`; 3 tests. Commit publicado: `47147952`.
 
 **Siguiente:** obtener una dirección Thumb que REA admita para el código referido como `0x43843a44` y seguir evidencia positiva del store a `S[0]` / copia G→S. No nueva Ghidra. No semántica física ni cambio de S51.
 
