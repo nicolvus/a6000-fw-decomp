@@ -77,4 +77,6 @@
 
 - DONE S325 `0x43c9c5b5` es `posicion->columna` de **34** entradas (no `modo->columna` de 82): `0x43ada284` devuelve el **indice** en el `u32[34]` de `0x43fee370` y el accesor lo usa como indice del mapa. `0x4e`->col **12**, `0x4f`->**13**, `0x4c`/`0x4d`->**5**; la matriz **si distingue** silent (14 y 11 registros). **SUPERSEDE** el «columna 1 / no distingue» de S302/S321. Evidencia: `docs/capture/s325-position-map.md`, `analysis/s325_position_map/position_map.json` (41 comprobaciones, 7 tests).
 
-- TODO S326 Buscar la tabla de 34 columnas de S202/S204 y medir si los tiempos/registros de `0x4e`/`0x4f` difieren de `0x4c`/`0x4d` en ella; si no aparece, cerrar con barrido de strides 34-38 sobre la region de tablas de modo.
+- DONE S326 La tabla de «34» de S202/S204 es **T2** (`0x43bbf2ec`, 34 filas de `0x1c`, una por modo), no 34 columnas. `0x4c`/`0x4d`: `+0x14=0x3ff`, `+0x18=2`; `0x4e`: `+0x14=0` (1 campo); `0x4f`: `+0x14=0`, `+0x18=3` (2 campos). Igualdades `0x4e≡0x51`, `0x4f≡0x50`, `0x4c≡0x4d`. `0x3ff` solo en `{0x13,0x1f,0x4c,0x4d}` y `3` solo en `{0x0b,0x35,0x4f,0x50}` → no es firma silent. S204 parcialmente reproducido. Evidencia: `docs/capture/s326-t2-fingerprint.md`, `analysis/s326_t2_fingerprint/t2_silent_fingerprint.json` (45 comprobaciones, 7 tests).
+
+- TODO S327 Identificar el escritor de `obj+0x2b4` (indice de fila de T1/T2/T3) para cerrar la correspondencia fila↔posición de modo, hoy INFERENCIA.
