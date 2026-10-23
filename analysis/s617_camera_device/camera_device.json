@@ -1,0 +1,21 @@
+{
+  "module": "CAMERA_DEVICE/DET_DIR",
+  "traces": 3,
+  "trace_strings": [
+    {"vaddr": "0x43cf72a6", "text": "[CAMERA_DEVICE][DET_DIR][osal_alloc_timer] %x"},
+    {"vaddr": "0x43cf72d4", "text": "[CAMERA_DEVICE][DET_DIR][osal_set_timer] %x"},
+    {"vaddr": "0x43cf7300", "text": "[CAMERA_DEVICE][DET_DIR][osal_free_timer] %x"}
+  ],
+  "prefix_length": 24,
+  "prefix": "[CAMERA_DEVICE][DET_DIR]",
+  "parent_prefix": "[CAMERA_DEVICE]",
+  "sub_prefix": "[DET_DIR]",
+  "differential": {
+    "a6000_fw321": {"token_count": 3, "prefixes": ["[CAMERA_DEVICE][DET_DIR]"]},
+    "a7s_fw320": {"token_count": 0, "core_strings_count": 3, "prefixes": ["Spinal", "CapMgr", "TRK"]},
+    "a6300_fw201": {"token_count": 0, "core_strings_count": 3, "prefixes": ["CapMgr", "TRK"]}
+  },
+  "shutter_line": "NEGATIVO ACOTADO",
+  "logger_dual": true,
+  "global_logger": "0x43902718"
+}

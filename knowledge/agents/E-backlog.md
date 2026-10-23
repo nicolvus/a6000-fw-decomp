@@ -19,7 +19,7 @@ Tema distinto de A/B/C: decodificación de módulos exclusivos de la A6000 fw3.2
 - S614 [ZPD] (5 trazas) → DONE (S614)
 - S615 [CAMERA_IS][EIS] (4 trazas) → DONE (S615)
 - S616 [LENS_PDR] (4 trazas) → DONE (S616)
-- S617 [CAMERA_DEVICE] (3 trazas)
+- S617 [CAMERA_DEVICE] (3 trazas) → DONE (S617)
 - S618 [DET_DIR] (3 trazas)
 - S619 [SENSER] (3 trazas)
 - S620 [STABILIZER] (3 trazas)

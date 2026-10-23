@@ -2585,3 +2585,14 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 - Artefactos: `docs/capture/s616-lens_pdr.md`, `analysis/s616_lens_pdr/`, `tests/test_s616_lens_pdr.py` (pendiente).
 - Verificación: censos exactos, commit Conventional + push origin HEAD:main.
 - Siguiente: S617 `[CAMERA_DEVICE]` (3 trazas).
+
+## Investigación S617 — `[CAMERA_DEVICE][DET_DIR]` (agente E, Nemotron 3 Ultra Free)
+
+- Objetivo: decodificar el submódulo de traza `[CAMERA_DEVICE][DET_DIR]` (3 trazas) exclusivo de la A6000 fw3.21.
+- REA Evidence: strings `[CAMERA_DEVICE][DET_DIR]` en `0x43cf72a6`–`0x43cf7300` (3 cadenas, triple prefijo).
+- Resultado: 3 trazas confirmadas con prefijo `[CAMERA_DEVICE][DET_DIR]` (24 B); `osal_alloc/set/free_timer`; logger dual (nuevo `[CAMERA_DEVICE][DET_DIR]` + viejo global `0x43902718`); prefijo fijo 24 B.
+- Diferencial: A6000 fw3.21=3 `[CAMERA_DEVICE][DET_DIR]` tokens; A7S/A6300=0 (3 núcleos con prefijos `Spinal`/`CapMgr`/`TRK` / `CapMgr`/`TRK`).
+- Línea del obturador: NEGATIVO ACOTADO (0 coincidencias).
+- Artefactos: `docs/capture/s617-camera_device.md`, `analysis/s617_camera_device/`, `tests/test_s617_camera_device.py` (pendiente).
+- Verificación: censos exactos, commit Conventional + push origin HEAD:main.
+- Siguiente: S618 `[DET_DIR]` (3 trazas).
