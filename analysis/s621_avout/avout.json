@@ -1,0 +1,21 @@
+{
+  "module": "AVOUT",
+  "traces": 2,
+  "trace_strings": [
+    {"vaddr": "0x43c254f6", "text": "[ACCY][DEBUG][AVOUT] NotifyDetached(%d)"},
+    {"vaddr": "0x43c2551e", "text": "[ACCY][DEBUG][AVOUT] NotifyAttached(%d)"}
+  ],
+  "prefix_length": 21,
+  "prefix": "[ACCY][DEBUG][AVOUT]",
+  "parent_prefix": "[ACCY]",
+  "level_prefix": "[DEBUG]",
+  "sub_prefix": "[AVOUT]",
+  "differential": {
+    "a6000_fw321": {"token_count": 2, "prefixes": ["[ACCY][DEBUG][AVOUT]"]},
+    "a7s_fw320": {"token_count": 0, "related_strings": ["17AccyUmDeviceAvOut"]},
+    "a6300_fw201": {"token_count": 0, "related_strings": ["17AccyUmDeviceAvOut"]}
+  },
+  "shutter_line": "NEGATIVO ACOTADO",
+  "logger_dual": true,
+  "global_logger": "0x43902718"
+}
