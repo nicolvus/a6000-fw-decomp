@@ -1,5 +1,7 @@
 # S600 — módulo `[CAM_FUNC_MGR]` (43 trazas): exclusivo de A6000 fw3.21
 
+**Auditoría 23-10-2026:** la exclusividad verificada es la del prefijo de traza en los tres binarios comparados. No demuestra ausencia de código equivalente en otro modelo ni identifica por sí sola un módulo nuevo. Los tests corregidos leen los archivos reales y ya no convierten un error de ruta en cero coincidencias.
+
 **Estado: VERIFICADO** — 36 cadenas únicas (REA `search_strings`) / 43 ocurrencias totales (`strings -a`) con el prefijo `[CAM_FUNC_MGR]` en la A6000 fw3.21; **0 en A7S fw3.20** y **0 en A6300 fw2.01** (búsqueda literal en los tres `av-cam.bin`).
 
 ---

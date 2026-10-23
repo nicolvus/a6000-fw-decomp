@@ -111,14 +111,17 @@ def test_json_del_hito_consistente():
     assert r["con_hito"] + r["cubiertas_como_sub_etiqueta"] + r["pendientes_reales"] == 372
     assert r["con_hito"] >= 52
     assert r["cubiertas_total"] == r["con_hito"] + r["cubiertas_como_sub_etiqueta"]
-    assert r["pendientes_reales"] >= 250
+    with open(os.path.join(ANA, "census_detalle.json"), encoding="utf-8") as fh:
+        detail = json.load(fh)
+    assert r["con_hito"] == sum(x["estado"] == "hito" for x in detail.values())
+    assert r["cubiertas_como_sub_etiqueta"] == sum(x["estado"] == "sub-etiqueta" for x in detail.values())
+    assert r["pendientes_reales"] == sum(x["estado"] == "pendiente" for x in detail.values())
     assert len(j["elimina_el_a6300"]) == 7
     assert "[STK]" in j["elimina_el_a6300"]
     assert "[OSD]" in j["elimina_el_a6300"]
     # las pendientes reales estan ordenadas por tamaño
     pend = j["pendientes_reales_ordenadas"]
-    assert pend[0]["etiqueta"] == "[SDF]"
-    assert pend[0]["apariciones"] == 477
+    assert {p["etiqueta"] for p in pend} == {k for k, v in detail.items() if v["estado"] == "pendiente"}
     assert [p["apariciones"] for p in pend] == sorted(
         [p["apariciones"] for p in pend], reverse=True)
 

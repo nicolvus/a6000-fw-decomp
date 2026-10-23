@@ -1,7 +1,9 @@
-#!/usr/bin/env python3
-"""Resuelve imports/exports clave de libObj.so y mapea .plt->nombre por orden de entrada."""
-import struct, json
+"""Resuelve imports/exports y enlaza las instrucciones PLT con relocaciones GOT."""
+import json
+import struct
 from pathlib import Path
+
+from elf_plt import resolve_plt
 
 BASE = Path("/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter")
 PATH = BASE / "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libObj.so"
@@ -65,18 +67,12 @@ for s in def_func:
 rplt = secs[".rel.plt"]
 nrel = rplt["size"] // 8
 plt_base = secs[".plt"]["addr"]; plt_size = secs[".plt"]["size"]
-nplt = plt_size // 16   # Thumb-2 stubs de 16 B
-print(f"\n=== .plt mapeo ===")
-print(f".rel.plt entradas={nrel}  .plt entradas={nplt}  plt_base=0x{plt_base:08x}")
-
-plt_map = {}
-for k in range(min(nrel, nplt)):
-    o = rplt["off"] + k * 8
-    r_offset, r_info = struct.unpack_from("<II", data, o)
-    sym_idx = r_info >> 8
-    sym_name = symbols[sym_idx]["name"] if sym_idx < len(symbols) else f"<sym{sym_idx}>"
-    plt_va = plt_base + k * 16
-    plt_map[plt_va] = sym_name
+got_map = {}
+for k in range(nrel):
+    r_offset, r_info = struct.unpack_from("<II", data, rplt["off"] + k * 8)
+    got_map[r_offset] = symbols[r_info >> 8]["name"]
+plt_map = resolve_plt(data, plt_base, secs[".plt"]["off"], plt_size, got_map)
+print(f"Relocaciones GOT={nrel}; entradas PLT ARM/Thumb={len(plt_map)}")
 
 # Ver funciones clave en .plt
 print("\n=== Entradas .plt para funciones clave ===")

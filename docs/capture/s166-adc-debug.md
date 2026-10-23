@@ -56,5 +56,5 @@ Sin fichero fuente ni clase RTTI embebidos para el driver; qué sensor hay detr�
 canal (la numeración llega en runtime desde parámetros `0x43561508`; sólo se conoce el
 nombre `CNF_ADC_CH_EVF_TEMP`); cómo se registra `int_ADC_Handler` (`0x4378d444`, 0
 llamadas `bl` y 0 punteros absolutos); alcance real de los comandos ADJ en runtime.
-[Informe](../analysis/s166_adc_debug/adc_debug.md) · JSON `analysis/s166_adc_debug/adc_debug.json`
+[Informe](../../analysis/s166_adc_debug/adc_debug.md) · JSON `analysis/s166_adc_debug/adc_debug.json`
 · tests `tests/test_s166_adc_debug.py`.

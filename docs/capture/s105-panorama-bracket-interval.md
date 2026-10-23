@@ -41,5 +41,5 @@ campo de 2 bits en `+0x265` · clase de `Camera::LC` de las dos funciones de bra
 **Método:** estático sobre bytes (sin ejecutar firmware, sin cámara, sin flasheo). Las cadenas se
 referencian con `ldr [pc]`+`add pc` (no hay punteros absolutos): el test re-deriva cada referencia cruzada.
 
-[Informe](../analysis/s105_panorama/panorama_bracket_interval.md) ·
-[JSON](../analysis/s105_panorama/panorama_bracket_interval.json) · Test: `tests/test_s105_panorama.py`
+[Informe](../../analysis/s105_panorama/panorama_bracket_interval.md) ·
+[JSON](../../analysis/s105_panorama/panorama_bracket_interval.json) · Test: `tests/test_s105_panorama.py`

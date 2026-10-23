@@ -67,5 +67,5 @@ concepto en ese firmware. **No cambia S51** (A=NO, B=NO, C=NO) ni S135 (control 
 subsistema `ElecShutter/` en el HAL del A6300, que es independiente de esta cadena); de hecho
 **debilita** un argumento potencial.
 
-Informe: [analysis/s168_a6300_rolling/rolling.md](../analysis/s168_a6300_rolling/rolling.md) ·
+Informe: [analysis/s168_a6300_rolling/rolling.md](../../analysis/s168_a6300_rolling/rolling.md) ·
 test: `tests/test_s168_a6300_rolling.py` (16 tests).

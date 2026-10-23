@@ -27,7 +27,7 @@ class TestS619SENSER(unittest.TestCase):
                           f"Trace missing SENSER prefix: {ts['text']}")
 
     def test_prefix_lengths(self):
-        self.assertEqual(self.data['prefix_lengths'], [20, 21])
+        self.assertEqual(self.data['prefix_lengths'], [19, 21])
         self.assertEqual(self.data['prefixes'], ['[ACCY][ERR][SENSER]', '[ACCY][DEBUG][SENSER]'])
 
     def test_differential_a6000(self):

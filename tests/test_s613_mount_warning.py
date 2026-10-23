@@ -22,7 +22,7 @@ class TestS613MOUNTWARNING(unittest.TestCase):
                           f"Trace missing prefix: {ts['text']}")
 
     def test_prefix_length(self):
-        self.assertEqual(self.data['prefix_length'], 16)
+        self.assertEqual(self.data['prefix_length'], 17)
         self.assertEqual(self.data['prefix'], '[MOUNT_WARNING]: ')
 
     def test_differential_a6000(self):

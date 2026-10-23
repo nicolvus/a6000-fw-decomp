@@ -55,4 +55,4 @@ semántica de los valores de la tabla O/U Crank; los 6 ids sin nombre; quién cr
 objeto (0 punteros absolutos de 4 B a sus métodos); qué es exactamente `VFC`; qué es
 `m_beginEncCompTime`; sentido de `ReviseNum`.
 
-[Informe](../analysis/s139_encseqctrl/encseqctrl.md) · [datos](../analysis/s139_encseqctrl/encseqctrl.json).
+[Informe](../../analysis/s139_encseqctrl/encseqctrl.md) · [datos](../../analysis/s139_encseqctrl/encseqctrl.json).

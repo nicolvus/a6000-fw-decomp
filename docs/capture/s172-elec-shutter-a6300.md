@@ -38,5 +38,5 @@ del módulo `ElecShutter/`, sus ficheros y sus ajustes) **se mantiene**.
 **Efecto en S51: NINGUNO — S51 sigue A=NO, B=NO, C=NO.** La ausencia del módulo en la fw3.21 de
 la A6000 no demuestra incapacidad del hardware.
 
-Informe: [analysis/s172_elec_shutter_a6300/elec_shutter_a6300.md](../analysis/s172_elec_shutter_a6300/elec_shutter_a6300.md) ·
+Informe: [analysis/s172_elec_shutter_a6300/elec_shutter_a6300.md](../../analysis/s172_elec_shutter_a6300/elec_shutter_a6300.md) ·
 test: `tests/test_s172_elec_shutter_a6300.py` (15 tests).

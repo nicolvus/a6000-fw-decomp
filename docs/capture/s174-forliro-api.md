@@ -41,5 +41,5 @@ A6000 añade **1** (`SetStepzoomModeForLiro`).
 
 **Efecto en S51: NINGUNO — S51 sigue A=NO, B=NO, C=NO.**
 
-Informe: [analysis/s174_forliro_api/forliro_api.md](../analysis/s174_forliro_api/forliro_api.md) ·
+Informe: [analysis/s174_forliro_api/forliro_api.md](../../analysis/s174_forliro_api/forliro_api.md) ·
 test: `tests/test_s174_forliro_api.py` (17 tests).

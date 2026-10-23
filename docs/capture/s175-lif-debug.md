@@ -38,5 +38,5 @@ nombres escritos como texto: otra vez «se reescribe el logging, no el firmware�
 **Para la línea del obturador**: negativo acotado (0 menciones de obturador, disparo, lectura del
 sensor o exposición) → **sin efecto en S51** (A/B/C = NO).
 
-Informe: [analysis/s175_lif_debug/lif_debug.md](../analysis/s175_lif_debug/lif_debug.md) ·
+Informe: [analysis/s175_lif_debug/lif_debug.md](../../analysis/s175_lif_debug/lif_debug.md) ·
 test: `tests/test_s175_lif_debug.py` (11 tests).

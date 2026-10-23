@@ -1,6 +1,8 @@
 # S617 — `[CAMERA_DEVICE][DET_DIR]`: módulo de timers de dispositivo de cámara exclusivo de la A6000 fw3.21
 
-**3 trazas · 3 sitios (regla PIC estricta) · ~1 función emisora · 0 muertas.** Detalle + datos: `analysis/s617_camera_device/` (pendiente) / `.json` (pendiente).
+**Auditoría 23-10-2026:** direcciones de las cadenas corregidas contra coincidencias únicas en `av-cam.bin` (base `0x43541000`). Las longitudes canónicas están en el JSON corregido. La duplicación del logger, los límites de funciones y la equivalencia entre modelos no quedan demostrados por presencia de cadenas; esas afirmaciones históricas siguen NO_VERIFICADO.
+
+**3 trazas · 3 sitios (regla PIC estricta) · ~1 función emisora · 0 muertas.** Detalle + datos: [JSON](../../analysis/s617_camera_device/camera_device.json).
 
 ## Qué es
 
@@ -9,9 +11,9 @@
 ## Las 3 trazas (vaddr → texto corto)
 
 ```
-0x43cf72a6 [CAMERA_DEVICE][DET_DIR][osal_alloc_timer] %x
-0x43cf72d4 [CAMERA_DEVICE][DET_DIR][osal_set_timer] %x
-0x43cf7300 [CAMERA_DEVICE][DET_DIR][osal_free_timer] %x
+0x43cf724e [CAMERA_DEVICE][DET_DIR][osal_alloc_timer] %x
+0x43cf727c [CAMERA_DEVICE][DET_DIR][osal_set_timer] %x
+0x43cf72a8 [CAMERA_DEVICE][DET_DIR][osal_free_timer] %x
 ```
 
 ## Hallazgos con dirección
@@ -28,7 +30,7 @@
 |---|---|---|---|
 | token `[CAMERA_DEVICE][DET_DIR]` | **3** | **0** | **0** |
 | núcleos `osal_*_timer` | 3/3 con prefijo `[CAMERA_DEVICE][DET_DIR]` | **3** (prefijos `Spinal`/`CapMgr`/`TRK`) | **3** (prefijos `CapMgr`/`TRK`) |
-| código equivalente (`osal_*_timer`) | `0x43cf72a6`… | **sí** | **sí** |
+| código equivalente (`osal_*_timer`) | `0x43cf724e`… | **sí** | **sí** |
 
 → **Cambio de *logging*, no de código.** La API de timers OSAL para detección **existe igual** en los tres firmware (mismas 3 funciones `osal_alloc/set/free_timer`). Lo propio de la fw3.21 de la A6000 son **las 3 trazas con prefijo `[CAMERA_DEVICE][DET_DIR]`** y la **duplicación** con logger global `0x43902718`. A7S usa prefijos `Spinal`/`CapMgr`/`TRK`; A6300 usa `CapMgr`/`TRK`.
 
@@ -40,7 +42,7 @@
 
 ## Verificación
 
-- 3/3 cadenas `[CAMERA_DEVICE][DET_DIR]` confirmadas en `0x43cf72a6`–`0x43cf7300`.
+- 3/3 cadenas `[CAMERA_DEVICE][DET_DIR]` confirmadas en `0x43cf724e`–`0x43cf72a8`.
 - 3/3 núcleos `osal_*_timer` idénticos en A7S (prefijos `Spinal`/`CapMgr`/`TRK`) y A6300 (prefijos `CapMgr`/`TRK`).
 - 0/0 en A7S y A6300 para token `[CAMERA_DEVICE][DET_DIR]`.
-- Scripts: `analysis/s617_camera_device/` (pendiente) · Tests: `tests/test_s617_camera_device.py` (pendiente).
+- Scripts: `analysis/s617_camera_device/` (pendiente) · Tests: `tests/test_s617_camera_device.py`.

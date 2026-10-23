@@ -1,6 +1,8 @@
 # S609 — `[CAMERA_IS][DIST]`: submódulo de corrección de distorsión exclusivo de la A6000 fw3.21
 
-**5 trazas · 5 sitios (regla PIC estricta) · ~2 funciones emisoras · 0 muertas.** Detalle + datos: `analysis/s609_dist/` (pendiente) / `.json` (pendiente).
+**Auditoría 23-10-2026:** direcciones de las cadenas corregidas contra coincidencias únicas en `av-cam.bin` (base `0x43541000`). Las longitudes canónicas están en el JSON corregido. La duplicación del logger, los límites de funciones y la equivalencia entre modelos no quedan demostrados por presencia de cadenas; esas afirmaciones históricas siguen NO_VERIFICADO.
+
+**5 trazas · 5 sitios (regla PIC estricta) · ~2 funciones emisoras · 0 muertas.** Detalle + datos: [JSON](../../analysis/s609_dist/dist.json).
 
 ## Qué es
 
@@ -9,16 +11,16 @@
 ## Las 5 trazas (vaddr → texto corto)
 
 ```
-0x43c98e75 [CAMERA_IS][DIST]: ERR:MakeDistCorPrm prm=null
-0x43c98ea5 [CAMERA_IS][DIST]: ERR:CnvPosInvDistCorr prm=null
-0x43c98ed8 [CAMERA_IS][DIST]: ERR:CnvPosInvDistCorr prm=inv1 (%d, %d)
-0x43c98f14 [CAMERA_IS][DIST]: WRN:CnvPosInvDistCorr prm=inv2 (%d, %d)
-0x43c98f51 [CAMERA_IS][DIST]: ERR:MakeDistRawAppliTag prm=null
+0x43c98e1d [CAMERA_IS][DIST]: ERR:MakeDistCorPrm prm=null
+0x43c98e4d [CAMERA_IS][DIST]: ERR:CnvPosInvDistCorr prm=null
+0x43c98e80 [CAMERA_IS][DIST]: ERR:CnvPosInvDistCorr prm=inv1 (%d, %d)
+0x43c98ebc [CAMERA_IS][DIST]: WRN:CnvPosInvDistCorr prm=inv2 (%d, %d)
+0x43c98ef9 [CAMERA_IS][DIST]: ERR:MakeDistRawAppliTag prm=null
 ```
 
 ## Hallazgos con dirección
 
-- **Doble prefijo jerárquico**: `[CAMERA_IS][DIST]: ` — prefijo padre `[CAMERA_IS]: ` (módulo IS) + sub-prefijo `[DIST]: ` (submódulo distorsión). Longitud total: 18 B (`[CAMERA_IS][DIST]: `).
+- **Doble prefijo jerárquico**: `[CAMERA_IS][DIST]: ` — prefijo padre `[CAMERA_IS]: ` (módulo IS) + sub-prefijo `[DIST]: ` (submódulo distorsión). Longitud total: 19 B (`[CAMERA_IS][DIST]: `).
 - **Funciones de parámetros de distorsión**: `MakeDistCorPrm` (crear parámetros de corrección), `CnvPosInvDistCorr` (convertir posición con corrección inversa de distorsión), `MakeDistRawAppliTag` (crear tag de aplicación RAW de distorsión).
 - **Validación de punteros nulos**: 4/5 trazas validan `prm=null` (parámetro nulo) — patrón defensivo.
 - **Niveles de severidad**: 4 `ERR` + 1 `WRN` (warning para `prm=inv2`).
@@ -38,7 +40,7 @@
 
 → **Submódulo *nuevo* en traza y código.** El subsistema de corrección de distorsión DIST **no existe en A7S/A6300** (ni en traza ni con esas funciones `MakeDistCorPrm`, `CnvPosInvDistCorr`, `MakeDistRawAppliTag`). A7S/A6300 tienen strings sueltas de estabilizador/gyro (`imageStabilizer`, `GyroStitScl`, `LmtGyroVect`) pero **sin módulo CAMERA_IS estructurado ni submódulo DIST**. La fw3.21 de la A6000 **introduce** el módulo CAMERA_IS completo con sus 4 sub-módulos (MOUNT, DIST, AS, EIS).
 
-**Longitud del prefijo jerárquico fija:** 18 B (`[CAMERA_IS][DIST]: `) → no variable.
+**Longitud del prefijo jerárquico fija:** 19 B (`[CAMERA_IS][DIST]: `) → no variable.
 
 ## Línea del obturador: NEGATIVO ACOTADO
 
@@ -46,6 +48,6 @@
 
 ## Verificación
 
-- 5/5 cadenas `[CAMERA_IS][DIST]: ` confirmadas en `0x43c98e75`–`0x43c98f51`.
+- 5/5 cadenas `[CAMERA_IS][DIST]: ` confirmadas en `0x43c98e1d`–`0x43c98ef9`.
 - 0/0 en A7S y A6300 para token `[CAMERA_IS][DIST]` y `[CAMERA_IS]`.
-- Scripts: `analysis/s609_dist/` (pendiente) · Tests: `tests/test_s609_dist.py` (pendiente).
+- Scripts: `analysis/s609_dist/` (pendiente) · Tests: `tests/test_s609_dist.py`.

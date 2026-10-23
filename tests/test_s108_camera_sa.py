@@ -1,12 +1,14 @@
 """Tests S108 — módulo [CAMERA_SA] (231 trazas)."""
+from pathlib import Path
+
 import pytest
 
 BASE_VADDR = 0x43541000
-AV_CAM_PATH = "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/analysis/rea-independent/input/av-cam.bin"
+AV_CAM_PATH = Path(__file__).resolve().parents[1] / "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin"
 
 
 def _read_and_extract():
-    data = open(AV_CAM_PATH, "rb").read()
+    data = AV_CAM_PATH.read_bytes()
     pattern = b"[CAMERA_SA]"
     pos = 0
     vaddr_to_text = {}

@@ -69,5 +69,5 @@ estática no demuestra incapacidad del hardware: sigue faltando la prueba físic
 | `analysis/s169_drive_api/scan_all_refs.py` | mapa global de referencias PIC (regla estricta) de un blob parametrizado → `pic_refs_strict_a6300.json` (**20 001** destinos) y `pic_refs_strict_a7s.json` (**16 638**); el de la A6000 ya existía (17 525). |
 | `analysis/s169_drive_api/pair_checkset.py` | empareja cada `CheckSet*` con su mensaje `ParamCheckErr` → `checkset_pairs.json` (**387 pares** con campo, offset y sitio). |
 
-Informe: [analysis/s169_drive_api/drive_api.md](../analysis/s169_drive_api/drive_api.md) ·
+Informe: [analysis/s169_drive_api/drive_api.md](../../analysis/s169_drive_api/drive_api.md) ·
 test: `tests/test_s169_drive_api.py` (32 tests).

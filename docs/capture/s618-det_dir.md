@@ -1,6 +1,8 @@
 # S618 — `[DET_DIR]`: submódulo de directorio de detección (idéntico a CAMERA_DEVICE)
 
-**3 trazas · 3 sitios (regla PIC estricta) · 0 muertas.** Detalle + datos: `analysis/s618_det_dir/` (pendiente) / `.json` (pendiente).
+**Auditoría 23-10-2026:** alias de S617, sin trazas independientes; direcciones de las cadenas compartidas corregidas contra coincidencias únicas en `av-cam.bin` (base `0x43541000`). Las longitudes canónicas están en el JSON corregido. La duplicación del logger, los límites de funciones y la equivalencia entre modelos no quedan demostrados por presencia de cadenas; esas afirmaciones históricas siguen NO_VERIFICADO.
+
+**3 trazas · 3 sitios (regla PIC estricta) · 0 muertas.** Detalle + datos: [JSON](../../analysis/s618_det_dir/det_dir.json).
 
 ## Qué es
 
@@ -9,9 +11,9 @@
 ## Las 3 trazas (idénticas a S617)
 
 ```
-0x43cf72a6 [CAMERA_DEVICE][DET_DIR][osal_alloc_timer] %x
-0x43cf72d4 [CAMERA_DEVICE][DET_DIR][osal_set_timer] %x
-0x43cf7300 [CAMERA_DEVICE][DET_DIR][osal_free_timer] %x
+0x43cf724e [CAMERA_DEVICE][DET_DIR][osal_alloc_timer] %x
+0x43cf727c [CAMERA_DEVICE][DET_DIR][osal_set_timer] %x
+0x43cf72a8 [CAMERA_DEVICE][DET_DIR][osal_free_timer] %x
 ```
 
 ## Hallazgos con dirección
@@ -38,4 +40,4 @@
 
 - 0/0 trazas `[DET_DIR]: ` standalone en A6000/A7S/A6300.
 - 3/3 trazas `[CAMERA_DEVICE][DET_DIR]` confirmadas en A6000 (idénticas a S617).
-- Scripts: `analysis/s618_det_dir/` (pendiente) · Tests: `tests/test_s618_det_dir.py` (pendiente).
+- Scripts: `analysis/s618_det_dir/` (pendiente) · Tests: `tests/test_s618_det_dir.py`.

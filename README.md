@@ -1,5 +1,9 @@
 # Sony A6000 Firmware Reverse Engineering
 
+## Auditoría vigente (23-10-2026)
+
+[Resultados, correcciones y límites](docs/auditoria-2026-10-23.md): errores de destinos BL, encodings S384, 94 direcciones de trazas y 21 longitudes corregidos; triaje automático reabierto. Censo documental sincronizado (133/372); 21 pruebas físicas propuestas. La equivalencia A7S y las afirmaciones de logger dual siguen pendientes.
+
 Proyecto de ingeniería inversa del firmware **Sony A6000 (fw 3.21)**, con foco en la línea de captura y el obturador electrónico.
 
 > Restricciones activas: sin ejecutar firmware en cámara, sin flasheo y sin pruebas físicas no autorizadas.
@@ -9,7 +13,7 @@ Proyecto de ingeniería inversa del firmware **Sony A6000 (fw 3.21)**, con foco 
 - **Resumen operativo:** [`knowledge/CURRENT.md`](knowledge/CURRENT.md)
 - **Estado de investigación y reglas:** [`docs/STATE.md`](docs/STATE.md)
 - **Historial de fases:** [`knowledge/PROGRESS.md`](knowledge/PROGRESS.md)
-- **Agentes autónomos y triaje S400:** [`docs/agentes-opencode.md`](docs/agentes-opencode.md), [`analysis/s400_open_questions_triage/`](analysis/s400_open_questions_triage/README.md) (273 filas: 69 correcciones aplicadas, 204 falsos positivos, 0 vigentes)
+- **Agentes autónomos y triaje S400:** [`docs/agentes-opencode.md`](docs/agentes-opencode.md), [`analysis/s400_open_questions_triage/`](analysis/s400_open_questions_triage/README.md) (clasificaciones automáticas reabiertas para revisión manual)
 - **Catálogo de hitos técnicos:** [`docs/capture/linea-general-re.md`](docs/capture/linea-general-re.md)
 
 ## Avance total
@@ -132,17 +136,17 @@ S347 responde a S342: el segundo campo `0x000d` de la tabla no es un dato por id
 
 S348 identifica el callback que el consumidor A del ODL entrega por cada id: **no es un manejador de datos, es un adaptador de `memcpy`**. El puntero (Thumb) apunta a un *shim* de 12 B idéntico en los tres modelos (`push; mov r4,r1; mov r0,r3; mov r1,r2; mov r2,r4; pop; b.w`) con semántica `memcpy(dst=arg4, src=arg3, len=arg2)`, que salta por un veneer `bx pc` a una implementación **ARM** de `memcpy` (huella `e92d4001/e2522004/ba000020/e210c003`: A7S `0x439b3918`, A6000 `0x439c5320`, A6300 `0x43a60384`). Cada shim tiene **un solo usuario**: el bucle de la tabla (A7S `0x43705702`, A6000 `0x436eb2e2`, A6300 `0x43734bee`). Como el único tamaño por entrada es el `13` de la mitad alta de la palabra de especificación, el servicio copia **13 B** hacia el buffer del consumidor: INFERENCIA ALTA, porque la llamada vive en la interfaz importada. [`docs/capture/s348-odl-callback.md`](docs/capture/s348-odl-callback.md).
 
-S380 mapa de `libObj.so` A6000 fw3.21: 26 secciones, 1387 imports func / 1771 exports func, .plt con 1914 entradas (1914 resueltas por `.rel.plt`), .rel.plt con 2420 entradas. `RecordStill::Execute` en 0x90b248 (Thumb-2, `push.w`), `ObjStillRecorder_*` exports en 0x913901–0x91395d. `libObj.so` es capa camera-user (UI, mensajes MWF, dataflow infra, still image) que `av-cam.bin` no tiene. [`docs/capture/s380-libobj-a6000-map.md`](docs/capture/s380-libobj-a6000-map.md).
+S380: `libObj.so` A6000 fw3.21 tiene 26 secciones, 1387 imports FUNC y 1771 exports FUNC. PLT corregido: 2420 cuerpos ARM + 391 veneers Thumb; relocaciones GOT separadas de entradas PLT. [Informe](docs/capture/s380-libobj-a6000-map.md).
 
-S381 despacho de mensajes en `libObj.so` A6000: `SendAndRecv` (0x000e0f24), `queueMsg`/`Enqueue` (0x000db8c4), `RcvMsg` (0x000dd4a4), `osal_reg_msg_queue_cb` (0x000dd804), `osal_reg_sync_msg_queue_cb` (0x000dd3b4), `ObjPin::Send` (0x000df9b4). **0 BL directo** a entradas `.plt` de `osal_*` (llamadas vía GOT indirecto, sin resolver estáticamente). 0 xrefs a `RecordStill::Execute` (llamada vía puntero de función). [`docs/capture/s381-libobj-a6000-dispatch.md`](docs/capture/s381-libobj-a6000-dispatch.md).
+S381: despacho corregido mediante resolución PLT → GOT. Hay 83/53 candidatos BL/BLX a los registradores de callback síncrono/asíncrono; recuperar el registro de `0x40193` sigue pendiente. [Informe](docs/capture/s381-libobj-a6000-dispatch.md).
 
-S382 llamadores de RecordStill::Execute (0x90b248) en libObj.so A6000: 1 llamador BL directo (0x7484dc); 2 sitios con `bl #0x90b248` dentro de funciones contenedoras 0x90de2c (llamada desde 0x755af8) y 0x91631e (sin llamador BL directo, vía puntero de función). Ambos pasan (r0=this, r1=ObjMsg*). [`docs/capture/s382-recordstill-callers.md`](docs/capture/s382-recordstill-callers.md).
+S382: dos sitios BL confirmados hacia `RecordStill::Execute`: `0x90de2e` y `0x91634e`. Los supuestos llamadores `0x7484dc` y `0x755af8` eran artefactos de recalcular un destino absoluto. Límites de función y despacho indirecto NO_VERIFICADO. [Informe](docs/capture/s382-recordstill-callers.md).
 
 S383 mensajes `…ForLiro` y SilentShutter en `libObj.so` A6000: los 5 nombres del obturador (`SetSilentShutterModeForLiro`, `SetShutDriveForLiro`, `SetFrontEShutterModeForLiro`, `SetIrisDriveForLiro`, `SetDriveModeForLiro`) están **rechazados** (NON SUPPORTED). `SetShutterTypeForLiro` **no está** en A6000 (solo A6300). Sin efecto en S51. [`docs/capture/s383-forliro-silentlibobj.md`](docs/capture/s383-forliro-silentlibobj.md).
 
-S384 búsqueda del ID de cola `0x40193` (C2 receptor): 0 word LE `0x00040193` en `.rodata`/`.data` (9 apariciones en `.text` son falsos positivos de instrucción Thumb-2), 0 Thumb `movw #0x0193`/`movt #0x0040`, 0 ARM `movw`/`movt`, 0 string "40193". Mismo resultado en A7S y A6300. **No localizado estáticamente.** [`docs/capture/s384-queue-id-0x40193-search.md`](docs/capture/s384-queue-id-0x40193-search.md).
+S384: negativo acotado en `.rodata`/`.data` A6000/A7S y ASCII para `0x40193`; los encodings MOVW/MOVT históricos eran incorrectos. El origen del ID sigue NO_VERIFICADO. [Informe](docs/capture/s384-queue-id-0x40193-search.md).
 
-S385 diff `libObj.so` A6000 fw3.21 ↔ A7S fw3.20 (contraste A6300 fw2.01): A6000 es 1.25 MB más grande; entry point +0x3880 en A7S; exports clave mismos nombres, direcciones distintas (offsets no constantes); imports de mensajería idénticos; NEEDED libs idénticas (17). `RecordStill::Execute` no localizado en A7S. `0x40193` ausente en ambos. [`docs/capture/s385-libobj-a6000-vs-a7s-diff.md`](docs/capture/s385-libobj-a6000-vs-a7s-diff.md).
+S385: métricas ELF A6000/A7S comparadas; `RecordStill::Execute` en A7S NO_VERIFICADO, con referencias a cadenas recuperadas para continuar. No se demuestra ausencia de función ni del ID `0x40193`. [Informe](docs/capture/s385-libobj-a6000-vs-a7s-diff.md).
 
 ## Agente C — ruta de control: configuración → LIRO → imager (S401+)
 

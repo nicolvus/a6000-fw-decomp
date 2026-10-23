@@ -1,6 +1,8 @@
 # S624 — `[UTILITY]`: módulo de utilidades de conversión exclusivo de la A6000 fw3.21
 
-**2 trazas · 2 sitios (regla PIC estricta) · ~1 función emisora · 0 muertas.** Detalle + datos: `analysis/s624_utility/` (pendiente) / `.json` (pendiente).
+**Auditoría 23-10-2026:** direcciones de las cadenas corregidas contra coincidencias únicas en `av-cam.bin` (base `0x43541000`). Las longitudes canónicas están en el JSON corregido. La duplicación del logger, los límites de funciones y la equivalencia entre modelos no quedan demostrados por presencia de cadenas; esas afirmaciones históricas siguen NO_VERIFICADO.
+
+**2 trazas · 2 sitios (regla PIC estricta) · ~1 función emisora · 0 muertas.** Detalle + datos: [JSON](../../analysis/s624_utility/utility.json).
 
 ## Qué es
 
@@ -9,16 +11,16 @@
 ## Las 2 trazas (vaddr → texto corto)
 
 ```
-0x43c25229 [ACCY][ERR][UTILITY]:%d:ConvNum8ToAscii num = %08X
-0x43c2525c [ACCY][ERR][UTILITY]:%d:ConvAsciiToNum8 ascii:%08X
+0x43c251d1 [ACCY][ERR][UTILITY]:%d:ConvNum8ToAscii num = %08X
+0x43c25204 [ACCY][ERR][UTILITY]:%d:ConvAsciiToNum8 ascii:%08X
 ```
 
 ## Hallazgos con dirección
 
-- **Triple prefijo jerárquico**: `[ACCY][ERR][UTILITY]` — módulo padre `ACCY` (accesorio) + nivel `ERR` + sub-módulo `UTILITY` (utilidades). Longitud total: 19 B (`[ACCY][ERR][UTILITY]`).
+- **Triple prefijo jerárquico**: `[ACCY][ERR][UTILITY]` — módulo padre `ACCY` (accesorio) + nivel `ERR` + sub-módulo `UTILITY` (utilidades). Longitud total: 20 B (`[ACCY][ERR][UTILITY]`).
 - **Funciones de conversión**: 2 trazas `ERR` — `ConvNum8ToAscii` (convertir número de 8 bits a ASCII) y `ConvAsciiToNum8` (convertir ASCII a número de 8 bits), ambas con código de error (`%d`) y valor hexadecimal (`%08X`).
 - **Logger dual (patrón S177/S179/S603–S623)**: la fw3.21 **duplica** la traza: nueva con prefijo `[ACCY][ERR][UTILITY]` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
-- **Prefijo fijo**: 19 B (`[ACCY][ERR][UTILITY]`) → fijo (ambas trazas son nivel ERR).
+- **Prefijo fijo**: 20 B (`[ACCY][ERR][UTILITY]`) → fijo (ambas trazas son nivel ERR).
 
 ## Diferencial A6000 fw3.21 vs A7S fw3.20 vs A6300 fw2.01
 
@@ -27,11 +29,11 @@
 | token `[ACCY][ERR][UTILITY]` | **2** | **0** | **0** |
 | núcleos sin prefijo (`ConvNum8ToAscii`, `ConvAsciiToNum8`) | 0/2 como literal autónomo | **0** | **0** |
 | strings relacionadas UTILITY A7S | 0 | **20+** (prefijos `VDF`, `Utility`, `SFRA`, `CaptureUtility*`, etc.) | **20+** (similares) |
-| código equivalente (conversión numérica) | `0x43c25229`… | **sí** | **sí** |
+| código equivalente (conversión numérica) | `0x43c251d1`… | **sí** | **sí** |
 
 → **Módulo *nuevo* en traza ACCY, código preexistente.** Las funciones de conversión `ConvNum8ToAscii` y `ConvAsciiToNum8` **existen en los tres firmware** (mismas funcionalidades de utilidad). Lo propio de la fw3.21 de la A6000 son **las 2 trazas con prefijo `[ACCY][ERR][UTILITY]`** y la **duplicación** con logger global `0x43902718`. A7S/A6300 tienen 20+ strings relacionadas con utilidades pero con prefijos dispersos (`VDF`, `Utility`, `SFRA`, `CaptureUtility*`, etc.).
 
-**Longitud del prefijo fija:** 19 B (`[ACCY][ERR][UTILITY]`) → fijo (ambas trazas son nivel ERR).
+**Longitud del prefijo fija:** 20 B (`[ACCY][ERR][UTILITY]`) → fijo (ambas trazas son nivel ERR).
 
 ## Línea del obturador: NEGATIVO ACOTADO
 
@@ -39,6 +41,6 @@
 
 ## Verificación
 
-- 2/2 cadenas `[ACCY][ERR][UTILITY]` confirmadas en `0x43c25229`–`0x43c2525c`.
+- 2/2 cadenas `[ACCY][ERR][UTILITY]` confirmadas en `0x43c251d1`–`0x43c25204`.
 - 0/0 en A7S y A6300 para token `[ACCY][ERR][UTILITY]`; 20+ strings UTILITY relacionadas en A7S/A6300 con prefijos dispersos.
-- Scripts: `analysis/s624_utility/` (pendiente) · Tests: `tests/test_s624_utility.py` (pendiente).
+- Scripts: `analysis/s624_utility/` (pendiente) · Tests: `tests/test_s624_utility.py`.

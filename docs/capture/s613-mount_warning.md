@@ -1,6 +1,8 @@
 # S613 — `[MOUNT_WARNING]`: módulo de advertencias de montura exclusivo de la A6000 fw3.21
 
-**5 trazas · 5 sitios (regla PIC estricta) · ~3 funciones emisoras · 0 muertas.** Detalle + datos: `analysis/s613_mount_warning/` (pendiente) / `.json` (pendiente).
+**Auditoría 23-10-2026:** direcciones de las cadenas corregidas contra coincidencias únicas en `av-cam.bin` (base `0x43541000`). Las longitudes canónicas están en el JSON corregido. La duplicación del logger, los límites de funciones y la equivalencia entre modelos no quedan demostrados por presencia de cadenas; esas afirmaciones históricas siguen NO_VERIFICADO.
+
+**5 trazas · 5 sitios (regla PIC estricta) · ~3 funciones emisoras · 0 muertas.** Detalle + datos: [JSON](../../analysis/s613_mount_warning/mount_warning.json).
 
 ## Qué es
 
@@ -9,11 +11,11 @@
 ## Las 5 trazas (vaddr → texto corto)
 
 ```
-0x43c956e9 [MOUNT_WARNING]: [MOUNT AM]NO MEMBER CHECK_DATA:%d
-0x43c9571c [MOUNT_WARNING]: [MOUNT AM]NO MEMBER ERR_INFO:%d
-0x43c97154 [MOUNT_WARNING]: [BL]LIF Command : Illegal Command Received!!! : cmd=%04X
-0x43c978b0 [MOUNT_WARNING]: [MOUNT DRV]NO MEMBER PWR_MODE:%d
-0x43c9876c [MOUNT_WARNING]: [BL]cam_cmd change!! reason=%03x now=%03x (0xC05:PB 0xC06:POFF)
+0x43c95691 [MOUNT_WARNING]: [MOUNT AM]NO MEMBER CHECK_DATA:%d
+0x43c956c4 [MOUNT_WARNING]: [MOUNT AM]NO MEMBER ERR_INFO:%d
+0x43c970fc [MOUNT_WARNING]: [BL]LIF Command : Illegal Command Received!!! : cmd=%04X
+0x43c97858 [MOUNT_WARNING]: [MOUNT DRV]NO MEMBER PWR_MODE:%d
+0x43c98714 [MOUNT_WARNING]: [BL]cam_cmd change!! reason=%03x now=%03x (0xC05:PB 0xC06:POFF)
 ```
 
 ## Hallazgos con dirección
@@ -32,11 +34,11 @@
 | token `[MOUNT_WARNING]` | **5** | **0** | **0** |
 | núcleos sin prefijo (`NO MEMBER CHECK_DATA`, `Illegal Command`, `cam_cmd change`, `NO MEMBER PWR_MODE`) | 0/5 como literal autónomo | **0** | **0** |
 | strings relacionadas montura A7S | 0 | **70+** (`[BL]MOUNT_*`, `Mount: `, etc.) | **70+** |
-| código equivalente (AM/DRV/BL/LIF) | `0x43c956e9`… | **parcial (BL mount/LIF)** | **parcial (BL mount/LIF)** |
+| código equivalente (AM/DRV/BL/LIF) | `0x43c95691`… | **parcial (BL mount/LIF)** | **parcial (BL mount/LIF)** |
 
 → **Módulo *nuevo* en traza y código.** El gestor de advertencias de montura **no existe en A7S/A6300** (ni en traza ni con esas funciones `NO MEMBER CHECK_DATA/ERR_INFO/PWR_MODE`, `Illegal Command`, `cam_cmd change`). A7S/A6300 tienen un subsistema de montura BL (`[BL]MOUNT_*`, `Mount: `) pero **sin módulo WARNING estructurado ni sub-módulos AM/DRV**. La fw3.21 de la A6000 **introduce** el módulo MOUNT_WARNING con sub-módulos AM, DRV y BL/LIF.
 
-**Longitud del prefijo fija:** 16 B (`[MOUNT_WARNING]: `) → no variable.
+**Longitud del prefijo fija:** 17 B (`[MOUNT_WARNING]: `) → no variable.
 
 ## Línea del obturador: NEGATIVO ACOTADO
 
@@ -44,6 +46,6 @@
 
 ## Verificación
 
-- 5/5 cadenas `[MOUNT_WARNING]: ` confirmadas en `0x43c956e9`–`0x43c9876c`.
+- 5/5 cadenas `[MOUNT_WARNING]: ` confirmadas en `0x43c95691`–`0x43c98714`.
 - 0/0 en A7S y A6300 para token `[MOUNT_WARNING]`.
-- Scripts: `analysis/s613_mount_warning/` (pendiente) · Tests: `tests/test_s613_mount_warning.py` (pendiente).
+- Scripts: `analysis/s613_mount_warning/` (pendiente) · Tests: `tests/test_s613_mount_warning.py`.

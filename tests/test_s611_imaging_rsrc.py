@@ -33,7 +33,7 @@ class TestS611IMAGINGRSRC(unittest.TestCase):
                            f"Composite mismatch: {ts['text']} != {expected}")
 
     def test_prefix_lengths(self):
-        self.assertEqual(self.data['prefix_length'], 18)
+        self.assertEqual(self.data['prefix_length'], 16)
         self.assertEqual(self.data['prefix'], '[IMAGING_RSRC]: ')
         self.assertEqual(self.data['core_prefix_length'], 9)
         self.assertEqual(self.data['core_prefix'], '[GOLFSHOT]')

@@ -1,6 +1,8 @@
 # S615 — `[CAMERA_IS][EIS]`: submódulo de estabilización electrónica de imagen (EIS) exclusivo de la A6000 fw3.21
 
-**4 trazas · 4 sitios (regla PIC estricta) · ~2 funciones emisoras · 0 muertas.** Detalle + datos: `analysis/s615_eis/` (pendiente) / `.json` (pendiente).
+**Auditoría 23-10-2026:** direcciones de las cadenas corregidas contra coincidencias únicas en `av-cam.bin` (base `0x43541000`). Las longitudes canónicas están en el JSON corregido. La duplicación del logger, los límites de funciones y la equivalencia entre modelos no quedan demostrados por presencia de cadenas; esas afirmaciones históricas siguen NO_VERIFICADO.
+
+**4 trazas · 4 sitios (regla PIC estricta) · ~2 funciones emisoras · 0 muertas.** Detalle + datos: [JSON](../../analysis/s615_eis/eis.json).
 
 ## Qué es
 
@@ -9,15 +11,15 @@
 ## Las 4 trazas (vaddr → texto corto)
 
 ```
-0x43c9a30a [CAMERA_IS][EIS]: error:0x%02x rcct_SetStblzPower error!
-0x43c9a343 [CAMERA_IS][EIS]: error:0x%02x rcct_SetStblzGridH error!
-0x43c9a37c [CAMERA_IS][EIS]: GyroAD[p],GyroAD[y], %d, %d
-0x43c9a3aa [CAMERA_IS][EIS]: %x, %d, %d
+0x43c9a2b2 [CAMERA_IS][EIS]: error:0x%02x rcct_SetStblzPower error!
+0x43c9a2eb [CAMERA_IS][EIS]: error:0x%02x rcct_SetStblzGridH error!
+0x43c9a324 [CAMERA_IS][EIS]: GyroAD[p],GyroAD[y], %d, %d
+0x43c9a352 [CAMERA_IS][EIS]: %x, %d, %d
 ```
 
 ## Hallazgos con dirección
 
-- **Doble prefijo jerárquico**: `[CAMERA_IS][EIS]:` — prefijo padre `[CAMERA_IS]:` (módulo IS) + sub-prefijo `[EIS]:` (submódulo EIS). Longitud total: 19 B (`[CAMERA_IS][EIS]:`).
+- **Doble prefijo jerárquico**: `[CAMERA_IS][EIS]:` — prefijo padre `[CAMERA_IS]:` (módulo IS) + sub-prefijo `[EIS]:` (submódulo EIS). Longitud total: 17 B (`[CAMERA_IS][EIS]:`).
 - **Control de potencia**: `rcct_SetStblzPower` — configuración de potencia de estabilización (error con código hex).
 - **Configuración de grid**: `rcct_SetStblzGridH` — configuración de grid horizontal de estabilización (error con código hex).
 - **Datos de giroscopio**: `GyroAD[p],GyroAD[y]` — lectura de giroscopio en ejes pitch (p) e yaw (y) con valores decimales.
@@ -37,7 +39,7 @@
 
 → **Submódulo *nuevo* en traza, código preexistente.** Las funciones EIS (`rcct_SetStblzPower/GridH`, `GyroAD`) **existen en A7S/A6300** (mismas strings núcleo) pero **sin el prefijo `[CAMERA_IS][EIS]: `**. A7S usa prefijo `[GOLFSHOT]` o sin prefijo; A6300 solo strings sueltas. La fw3.21 de la A6000 **añade prefijo `[CAMERA_IS][EIS]: `** y **duplica** la traza (nueva con logger de módulo + vieja intacta con logger global `0x43902718`).
 
-**Longitud del prefijo jerárquico fija:** 19 B (`[CAMERA_IS][EIS]:`) → no variable.
+**Longitud del prefijo jerárquico fija:** 17 B (`[CAMERA_IS][EIS]:`) → no variable.
 
 ## Línea del obturador: NEGATIVO ACOTADO
 
@@ -45,6 +47,6 @@
 
 ## Verificación
 
-- 4/4 cadenas `[CAMERA_IS][EIS]:` confirmadas en `0x43c9a30a`–`0x43c9a3aa`.
+- 4/4 cadenas `[CAMERA_IS][EIS]:` confirmadas en `0x43c9a2b2`–`0x43c9a352`.
 - 0/0 en A7S y A6300 para token `[CAMERA_IS][EIS]`; 2-4 núcleos idénticos en A7S/A6300 sin prefijo.
-- Scripts: `analysis/s615_eis/` (pendiente) · Tests: `tests/test_s615_eis.py` (pendiente).
+- Scripts: `analysis/s615_eis/` (pendiente) · Tests: `tests/test_s615_eis.py`.

@@ -22,7 +22,7 @@ class TestS625ADR(unittest.TestCase):
                           f"Trace missing [ADR] token: {ts['text']}")
 
     def test_prefix_length(self):
-        self.assertEqual(self.data['prefix_length'], 4)
+        self.assertEqual(self.data['prefix_length'], 5)
         self.assertEqual(self.data['prefix'], '[ADR]')
 
     def test_differential_a6000(self):

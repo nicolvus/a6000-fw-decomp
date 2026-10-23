@@ -73,4 +73,4 @@ que decide.
 y su ausencia en la A6000 fw3.21 y la A7S fw3.20, con los ajustes `SilentShutterMode` /
 `shutterType` / `front_eshutter`. **S51 no cambia** (A=NO, B=NO, C=NO).
 
-Detalle: [S172](../analysis/s172_elec_shutter_a6300/elec_shutter_a6300.md).
+Detalle: [S172](../../analysis/s172_elec_shutter_a6300/elec_shutter_a6300.md).

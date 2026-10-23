@@ -3,8 +3,8 @@
 > Línea de ingeniería inversa **general**. Bytes de `analysis/rea-independent/input/av-cam.bin`;
 > convención **vaddr = 0x43541000 + file_offset**. Regla de referencias: la **estricta**
 > (canónica, `analysis/s106_imaging_cap/scan_pic_refs_strict.py`).
-> Informe: [`analysis/s136_accy/accy.md`](../analysis/s136_accy/accy.md) · Datos:
-> [`accy.json`](../analysis/s136_accy/accy.json) · Tests: [`tests/test_s136_accy.py`](../tests/test_s136_accy.py) (16)
+> Informe: [`analysis/s136_accy/accy.md`](../../analysis/s136_accy/accy.md) · Datos:
+> [`accy.json`](../../analysis/s136_accy/accy.json) · Tests: [`tests/test_s136_accy.py`](../tests/test_s136_accy.py) (16)
 
 ## Cifras (VERIFICADO)
 

@@ -8,7 +8,7 @@
 | Entry point | 0x000e2b70 | 0x000e5ff0 | +0x3880 | 0x000f40b0 |
 | .text VA | 0x000e2b70 | 0x000e5ff0 | +0x3880 | 0x000f40b0 |
 | .text size | 0xae6a1c (11.4 MB) | 0x9eec50 (10.4 MB) | -0xfd3cc | 0xaa6af8 |
-| .plt entries | 1914 | 1927 | +13 | 1991 |
+| .rel.plt relocaciones (no dividir .plt por 16) | 2420 | 2437 | +17 | 2519 |
 | .rel.plt entries | 2420 | 2437 | +17 | 2519 |
 | .dynsym símbolos | 3617 | 3650 | +33 | 3764 |
 | UND func (imports) | 1387 | 1389 | +2 | 1431 |
@@ -63,7 +63,13 @@ Los mismos símbolos de mensajería aparecen como imports UND en ambos:
 
 **Idéntico conjunto** en A6000 y A7S. **VERIFICADO**.
 
-## 5. RecordStill::Execute — localización en A7S (RECONCILIADO)
+## 5. RecordStill::Execute — localización en A7S (NO_VERIFICADO)
+
+**Auditoría 23-10-2026:** la falta de patrones de prólogo o MOVW/MOVT no demuestra ausencia de función ni flags de compilación distintos. `movt #1` tampoco es la mitad alta de `0x100f`. La comparación funcional está pendiente.
+
+Referencias PC-relativas recuperadas con `scripts/elf_string_xrefs.py` sobre la A7S: cadena ` RecordStill : ` en `0xcb6f2b`, referencia `0x847e26`; cadena `RecordStill ` en `0xcb7bbb`, referencias `0x847f4e`, `0x847f60`, `0x847fd6`, `0x847fe8`, `0x848018`, `0x84803a`. Son puntos de partida; aún no identifican por sí solos `Execute`.
+
+La tabla `.ARM.exidx` agrupa esos sitios en **`0x847e1c..0x84814c`**; se confirma el prólogo Thumb `push.w {r4-r8,sb,sl,lr}; sub.w sp,sp,#0x358`. A6000 agrupa `Execute` en `0x90b248..0x90c088`, con stack `0xb04`. Hay una candidata A7S concreta para comparar, pero estas diferencias y las cadenas compartidas no prueban todavía identidad de método.
 
 | | A6000 fw3.21 | A7S fw3.20 |
 |---|---|---|
@@ -72,13 +78,15 @@ Los mismos símbolos de mensajería aparecen como imports UND en ambos:
 | movt #0x0001 (parte alta) | N/A | **0 sitios** en .text |
 | Patrón push.w+sub.w sp,#0xb00 | Presente en 0x90b248 | **0 sitios** en .text |
 | ObjMsg 0x3500/0x3002 | No hay movw directo | Pendiente |
-| Xrefs directos | 0 | Pendiente |
+| Sitios BL confirmados | 0x90de2e y 0x91634e | Pendiente |
 
-**Conclusión de la reconciliación:** RecordStill::Execute no se pudo localizar en A7S fw3.20 usando los mismos patrones que en A6000 (`movw #0x100f`, `movt #0x0001`, prólogo `push.w`+`sub.w sp,#0xb00`). Esto sugiere que el código de A7S fue compilado con diferentes flags o que la función tiene una estructura distinta. Requiere búsqueda adicional (por ejemplo, localizar `ObjStillRecorder` en A7S — export en 0x00856c27 — y examinar sus métodos, o buscar xrefs entrantes a la función equivalente).
+**Conclusión vigente:** identificación en A7S NO_VERIFICADO. Los patrones negativos históricos no permiten atribuir una causa al compilador. Continuar desde las referencias a cadenas recuperadas.
 
-**VERIFICADO:** barrido de bytes completo de .text de A7S (10.4 MB) con capstone.
+**Límite:** los tests de S385 verifican métricas y presencia de nombres; no identifican `RecordStill::Execute` en A7S.
 
 ## 6. Búsqueda del ID de cola `0x40193` (C2 receptor)
+
+**Tabla histórica invalidada para MOVW/MOVT:** ver S384. Solo se conservan como vigentes los negativos acotados de datos y ASCII reproducidos; estas cifras no demuestran ausencia del ID.
 
 | Patrón | A6000 fw3.21 | A7S fw3.20 |
 |---|---|---|
@@ -99,14 +107,14 @@ Los mismos símbolos de mensajería aparecen como imports UND en ambos:
 |---|---|---|
 | Tamaño del binario | DISTINTO | A6000 es 1.25 MB más grande que A7S |
 | Entry point / .text base | DISTINTO | +0x3880 en A7S |
-| .plt / .rel.plt entries | DISTINTO | A7S tiene +13/+17 entradas |
+| .rel.plt relocaciones | DISTINTO | A7S tiene +17; número de entradas PLT debe resolver cuerpos y veneers |
 | Símbolos definidos | DISTINTO | A7S tiene +18 exports |
 | Exports clave (nombres) | IDÉNTICO | Mismo conjunto de 21 símbolos de still/image |
 | Imports clave (nombres) | IDÉNTICO | Mismo conjunto de imports de mensajería |
 | NEEDED libs | IDÉNTICO | Las mismas 17 librerías |
 | Direcciones de exports | DISTINTO | Offsets no constantes (layout diferente) |
-| RecordStill::Execute | AUSENTE en A7S (pendiente) | No localizado aún en A7S |
-| ID de cola 0x40193 | AUSENTE en ambos (0 sitios) | No encontrado estáticamente en A6000 |
+| RecordStill::Execute | NO_VERIFICADO en A7S | No identificado por referencias a cadenas todavía |
+| ID de cola 0x40193 | NO_VERIFICADO | Negativo acotado en datos; patrones MOVW/MOVT históricos inválidos, ver S384 |
 
 ## 8. Bloqueos
 
@@ -114,8 +122,8 @@ Los mismos símbolos de mensajería aparecen como imports UND en ambos:
 |---|---|
 | RecordStill::Execute en A7S | Requiere desensamblado capstone de 10 MB .text |
 | Búsqueda 0x40193 en A7S | Requiere barrido de bytes en .rodata de A7S |
-| Quién llama a RecordStill::Execute (ambos) | 0 xrefs estáticos, requiere REA dinámico |
-| Quién registra callback de cola 0x40193 | 0 BL a osal_* .plt, requiere REA dinámico |
+| Quién llama a RecordStill::Execute (ambos) | A6000: dos sitios BL confirmados; recuperar funciones y equivalencia A7S está pendiente |
+| Quién registra callback de cola 0x40193 | PLT y llamadas estáticas recuperados en S381; falta seguir argumentos hasta ese ID |
 
 **Documentado en knowledge/agents/NEEDS-HUMAN.md**
 

@@ -22,7 +22,7 @@ class TestS621AVOUT(unittest.TestCase):
                           f"Trace missing prefix: {ts['text']}")
 
     def test_prefix_length(self):
-        self.assertEqual(self.data['prefix_length'], 21)
+        self.assertEqual(self.data['prefix_length'], 20)
         self.assertEqual(self.data['prefix'], '[ACCY][DEBUG][AVOUT]')
 
     def test_differential_a6000(self):

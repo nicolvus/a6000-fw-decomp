@@ -1,7 +1,9 @@
-#!/usr/bin/env python3
 """Mapa de libObj.so (A6000 fw3.21): secciones, imports, exports, .plt->nombre."""
-import struct, sys, json
+import json
+import struct
 from pathlib import Path
+
+from elf_plt import resolve_plt
 
 PATH = Path("/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/"
             "firmware/extracted/fw321/firmware.tar_unpacked/"
@@ -79,26 +81,19 @@ for s in funcs_def[:60]:
 # .rel.plt -> mapear PLT offset a nombre
 rplt_off = secs_by_name[".rel.plt"]["off"]; rplt_size = secs_by_name[".rel.plt"]["size"]; rplt_entsize = secs_by_name[".rel.plt"]["entsize"]
 nrel = rplt_size // rplt_entsize
-plt_map = {}   # va (plt slot) -> nombre sym
+got_map = {}   # r_offset identifica el slot GOT, no una entrada PLT
 for k in range(nrel):
     o = rplt_off + k * rplt_entsize
     r_offset, r_info = struct.unpack_from("<II", data, o)
     sym_idx = r_info >> 8
     if sym_idx < len(symbols):
-        plt_map[r_offset] = symbols[sym_idx]["name"]
+        got_map[r_offset] = symbols[sym_idx]["name"]
 
 print(f"\n=== .rel.plt: {nrel} entradas ===")
 plt_base = secs_by_name[".plt"]["addr"]   # .plt addr = 0x0db3c4
 plt_size = secs_by_name[".plt"]["size"]
-# Cada entrada de .plt mide 16 B (Thumb-2 stub). r_offset apunta al GOT slot o a la entrada .plt.
-# Listamos direcciones .plt con nombre resuelto.
-resolved = 0
-for k in range(plt_size // 16):
-    va = plt_base + k * 16
-    nom = plt_map.get(va)
-    if nom:
-        resolved += 1
-print(f"Entradas .plt resueltas por .rel.plt (r_offset==va del .plt): {resolved} / {plt_size//16}")
+plt_map = resolve_plt(data, plt_base, secs_by_name[".plt"]["off"], plt_size, got_map)
+print(f"Entradas PLT resueltas (ARM y veneers Thumb): {len(plt_map)}")
 
 # Guardar JSON
 out = {
@@ -112,6 +107,7 @@ out = {
     "plt_size": plt_size,
     "imports_func": [{"name": s["name"]} for s in funcs_und],
     "exports_func": [{"name": s["name"], "value": s["value"], "size": s["size"]} for s in funcs_def],
+    "got_map": {hex(k): v for k, v in got_map.items()},
     "plt_map": {hex(k): v for k, v in plt_map.items()},
 }
 Path("analysis/s380_libobj_map/map.json").write_text(json.dumps(out, indent=1))

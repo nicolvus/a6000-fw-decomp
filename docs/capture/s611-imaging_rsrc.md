@@ -1,6 +1,8 @@
 # S611 — `[IMAGING_RSRC]`: módulo de recursos de imagen (GOLFSHOT) exclusivo de la A6000 fw3.21
 
-**5 trazas · 5 sitios (regla PIC estricta) · ~2 funciones emisoras · 0 muertas.** Detalle + datos: `analysis/s611_imaging_rsrc/` (pendiente) / `.json` (pendiente).
+**Auditoría 23-10-2026:** direcciones de las cadenas corregidas contra coincidencias únicas en `av-cam.bin` (base `0x43541000`). Las longitudes canónicas están en el JSON corregido. La duplicación del logger, los límites de funciones y la equivalencia entre modelos no quedan demostrados por presencia de cadenas; esas afirmaciones históricas siguen NO_VERIFICADO.
+
+**5 trazas · 5 sitios (regla PIC estricta) · ~2 funciones emisoras · 0 muertas.** Detalle + datos: [JSON](../../analysis/s611_imaging_rsrc/imaging_rsrc.json).
 
 ## Qué es
 
@@ -9,11 +11,11 @@
 ## Las 5 trazas (vaddr → texto corto)
 
 ```
-0x43ca4987 [IMAGING_RSRC]: [GOLFSHOT]SA_LPF Exec[%02d] Err: sa_err[0x%x] intfct[0x%x] mbox1[%x]
-0x43ca49dc [IMAGING_RSRC]: [GOLFSHOT]SA_BGEST Exec Err: sa_err[0x%x] intfct[0x%x] mbox1[%x]
-0x43ca4a2d [IMAGING_RSRC]: [GOLFSHOT]SA_SSP Exec[%03d] Err: sa_err[0x%x] intfct[0x%x] mbox1[%x]
-0x43ca4a82 [IMAGING_RSRC]: [GOLFSHOT] correctSndDetResult(WARNING): Corrected Value is Out of SoundDetBuff
-0x43ca4ae2 [IMAGING_RSRC]: [GOLFSHOT]vfc2indx: Shot Timing Transform Error
+0x43ca492f [IMAGING_RSRC]: [GOLFSHOT]SA_LPF Exec[%02d] Err: sa_err[0x%x] intfct[0x%x] mbox1[%x]
+0x43ca4984 [IMAGING_RSRC]: [GOLFSHOT]SA_BGEST Exec Err: sa_err[0x%x] intfct[0x%x] mbox1[%x]
+0x43ca49d5 [IMAGING_RSRC]: [GOLFSHOT]SA_SSP Exec[%03d] Err: sa_err[0x%x] intfct[0x%x] mbox1[%x]
+0x43ca4a2a [IMAGING_RSRC]: [GOLFSHOT] correctSndDetResult(WARNING): Corrected Value is Out of SoundDetBuff
+0x43ca4a8a [IMAGING_RSRC]: [GOLFSHOT]vfc2indx: Shot Timing Transform Error
 ```
 
 ## Hallazgos con dirección
@@ -48,7 +50,7 @@
 
 ## Verificación
 
-- 5/5 cadenas `[IMAGING_RSRC]: [GOLFSHOT]...` confirmadas en `0x43ca4987`–`0x43ca4ae2`.
+- 5/5 cadenas `[IMAGING_RSRC]: [GOLFSHOT]...` confirmadas en `0x43ca492f`–`0x43ca4a8a`.
 - 5/5 gemelos `[GOLFSHOT]...` confirmados en A7S fw3.20 y A6300 fw2.01 (mismo núcleo).
 - 0/0 en A7S y A6300 para token `[IMAGING_RSRC]`.
-- Scripts: `analysis/s611_imaging_rsrc/` (pendiente) · Tests: `tests/test_s611_imaging_rsrc.py` (pendiente).
+- Scripts: `analysis/s611_imaging_rsrc/` (pendiente) · Tests: `tests/test_s611_imaging_rsrc.py`.

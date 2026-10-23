@@ -34,7 +34,7 @@ class TestS606NSXVOT(unittest.TestCase):
                            f"Core mismatch: '{core_nsx}' != '{core_trk}'")
 
     def test_prefix_length(self):
-        self.assertEqual(self.data['prefix_length'], 10)
+        self.assertEqual(self.data['prefix_length'], 11)
         self.assertEqual(self.data['prefix'], '[NSX_VOT]: ')
         self.assertEqual(self.data['twin_prefix_length'], 6)
         self.assertEqual(self.data['twin_prefix'], '[TRK]: ')
