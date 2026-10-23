@@ -1,5 +1,13 @@
 # Estado actual — léeme primero
 
+## S335 — la capa de máscaras es MMIO, no P2S (22-10-2026)
+
+- Los nueve accesores `0x436f82b0/82a0/8290/82c0/82d0/8314/8300/82e8/8324` cargan un literal absoluto y leen/escriben: **`0xf292b000` (lectura), `0xf292b004` (12 bits), `0xf292b008` (12 bits / `0x1000` / `0x10000`) y `0xfc02a00c` (RMW de 12 bits con `bfi #0,#0xc` y `bfc #0xc,#1`)**.
+- La hipótesis P2S de S334 queda **descartada**: el camino `modo → matriz/T → pares → máscara u16` termina en MMIO directa.
+- La A6000 tiene la misma capa (`0x436dbdf8..0x436dbe8c`, mismos literales, mismos conteos 1/2/3/4) → diferencia en datos, no en acceso.
+- Semántica del bloque `0xf292b000` y de `0xfc02a00c`: **NO_VERIFICADA** (sin datasheet).
+- Tests: `tests/test_s335_mmio_layer.py` (8) y 60 comprobaciones. S51 sin cambios.
+
 ## S334 — los pares se colapsan en máscaras u16; `w0` es código de operación (22-10-2026)
 
 - Los 12 pares `(flag, byte)` de `obj+0x16`/`+0xa5` **no llevan valores**: el byte es un **índice de bit**. `0x43ada370` hace `1<<byte` y OR solo si el flag≠0 → máscara `u16` en `obj+0x68`; `0x43ada402` guarda en un destino (`obj+0xf8`, op 1). Bucle `0..0x18` paso 2.

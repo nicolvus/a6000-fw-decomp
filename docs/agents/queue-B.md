@@ -114,3 +114,8 @@
 - TODO S335 Resolver la capa de acceso `0x436f8290/82a0/82d0/82e8/8300/8314/8324` y `0x43dc02e0`: ¿son MMIO, sombra de registros o buffer de trama? Es el último eslabón entre el modo y el sensor.
 - TODO S336 Explicar `w4` (`0x01000101`/`0x01000102`/`0x01000001`) de las filas T.
 - TODO S337 Identificar el consumidor de `u16[69]` en `0x43fef404` (valores 1..78).
+
+- DONE S335 La capa de acceso es **MMIO directa**: `0x436f82b0` lee `0xf292b000`; `0x436f82a0`/`0x436f8290` escriben 12 bits en `0xf292b004`/`0xf292b008`; `0x436f82c0` escribe `0x1000` y `0x436f82d0` `0x10000`; `0x436f8314/8300/82e8/8324` hacen RMW de 12 bits y del bit 12 sobre `0xfc02a00c`. La A6000 repite la capa en `0x436dbdf8..0x436dbe8c`. Se descarta la hipótesis P2S de S334. Evidencia: `docs/capture/s335-mmio-layer.md`, `analysis/s335_mmio_layer/mmio_layer.json` (60 comprobaciones, 8 tests).
+- TODO S336 Explicar `w4` (`0x01000101`/`0x01000102`/`0x01000001`) de las filas T.
+- TODO S337 Identificar el consumidor de `u16[69]` en `0x43fef404` (valores 1..78).
+- TODO S338 Buscar el bloque `0xf292b000` en la documentación del repo (S56/S115/S208) para identificar si es CISIF/DFE/P2S; si no aparece, dejarlo NO_VERIFICADO.
