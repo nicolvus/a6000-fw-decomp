@@ -1,0 +1,21 @@
+{
+  "module": "AVR",
+  "traces": 2,
+  "trace_strings": [
+    {"vaddr": "0x43c2555a", "text": "[ACCY][DEBUG][AVR] NotifyDetached(%d)"},
+    {"vaddr": "0x43c25580", "text": "[ACCY][DEBUG][AVR] NotifyAttached(%d)"}
+  ],
+  "prefix_length": 19,
+  "prefix": "[ACCY][DEBUG][AVR]",
+  "parent_prefix": "[ACCY]",
+  "level_prefix": "[DEBUG]",
+  "sub_prefix": "[AVR]",
+  "differential": {
+    "a6000_fw321": {"token_count": 2, "prefixes": ["[ACCY][DEBUG][AVR]"]},
+    "a7s_fw320": {"token_count": 0, "related_strings": ["15AccyUmDeviceAvr", "20AVRendezvousNotifier", "31AfterReformAVRendezvousNotifier", "27AVRendezvousNotifyDecorator", "strmEng/strmEngDec/AVRendezvousWaiter.cpp", "[PanelEvf]vom4 avrTemp:%d"]},
+    "a6300_fw201": {"token_count": 0, "related_strings": ["15AccyUmDeviceAvr", "20AVRendezvousNotifier", "31AfterReformAVRendezvousNotifier", "27AVRendezvousNotifyDecorator", "strmEng/strmEngDec/AVRendezvousWaiter.cpp", "[PanelEvf]vom4 avrTemp:%d"]}
+  },
+  "shutter_line": "NEGATIVO ACOTADO",
+  "logger_dual": true,
+  "global_logger": "0x43902718"
+}
