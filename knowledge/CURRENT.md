@@ -1,5 +1,25 @@
 # Estado actual — léeme primero
 
+## S500–S515 — cobertura del censo de módulos (22-10-2026)
+
+Todos los módulos del censo S178 (372 etiquetas) están ahora cubiertos:
+- **S500** `[VDF]` (visor) · **S501** `[STK]` (stack) · **S502** `[EIS]` (estabilización) · **S503** `[ZPD]` (zone plate) · **S504** `[STABILIZER]` · **S505** `[VEF]` (visor efectos) · **S506** `[TD]` (codec seq) · **S507** `[VIDENCSTAT]` (estado encoder) · **S508** `[GOLFSHOT]` · **S509** `[WSX]` · **S510** `[RE]` (remote engine) · **S511** `[INT_ERROR]` (SDF error interno) · **S512** `[ENCOUCSTAT]` (estado codificador) · **S513** `[CONFIG]` (volcado memoria) · **S514** `[BT]` (background tracking) · **S515** `[AUDPINEDTR]` (dataflow infra sender audio)
+- Ninguno relacionado con el obturador electrónico. S51 sigue A=NO, B=NO, C=NO.
+- Tests: `tests/test_s5*.py` (229 tests, todos PASS).
+
+## C2 — dispatcher 0x43807f4c referenciado en vtable (22-10-2026)
+
+- El dispatcher de dominio C2 `0x43807f4c` (Thumb `0x43807f4d`) está referenciado como puntero de función en tabla/vtable en `0x43fcd3e0` (tabla base `0x43fcd3a0`).
+- No hay BL directo ni literal a la tabla; el llamador del dispatcher sigue sin localizarse estáticamente.
+- Receptor de cola `0x40193` no localizado (sin literal, sin movw/movt, sin BL a osal_rcv_msg).
+- Doc: `docs/capture/shutter-trigger-chain-0x3011.md`, `analysis/rea-independent/out/C2_CHAIN_ANALYSIS.md`.
+
+## S134 — svr_num/VdNum writers no localizados (22-10-2026)
+
+- `svr_num` = u8 en `[sl+0x14e]`, `VdNum` = u16 en `[sl+0xcc]`, donde `sl = [estado+8]`.
+- Escritores no localizados estáticamente (sin literales de dirección, sin BL a singleton `0x4378f9b4`).
+- Doc: `docs/capture/s134-svrnum-vdnum-status.md`.
+
 ## S176 — dos lectores más del state IMX210 (22-10-2026)
 
 REA/bytes clasifican `0x4386140a` como load del state pointer seguido por lectura de `state+0xac` en `0x43861410`; si el byte es cero, la cola usa default 6. `0x438693ec` carga el mismo pointer y el bloque lee bytes `+0x30..+0x37`, copiando ceros/defaults a un objeto distinto apuntado por `r6`. No hay store a state ni a gates `+3/+6` en esos dos procedimientos. **Límite local:** campos estáticos cero no determinan runtime, y no se concluye ausencia global. [S176](../docs/capture/s176-imager-state-readers.md), reproducción `analysis/s176_imager_state_readers/state_readers.json` (3 tests).
@@ -1916,6 +1936,20 @@ cambios. [S327](../docs/capture/s327-row-index-writer.md),
 
 **Siguiente:** S323 (matriz dinámica `0x43e8de00`, puerta `sub`) o buscar una instancia
 construida con `idx ≠ 0` (dinámica u otro módulo) para reabrir T1/T2/T3.
+## S328 — la segunda matriz está vacía y su bucle no ejecuta (22-10-2026, agente B)
+
+**VERIFICADO (28 comprobaciones, 6 tests):** el slot `0x44026088` (A7S) / `0x44026694`
+(A6000) contiene el puntero `0x43e8de00` / `0x43e80160`; ambas tablas están **a cero** y su
+primera palabra (cabecera/terminador del bucle) es 0. El offset que resuelve el slot
+(`0x1b48` / `0x77b0`) aparece en **un solo sitio** por firmware (el propio segundo bucle del
+accesor) y el valor del slot solo se referencia a sí mismo. **Con el blob tal cual el segundo
+bucle no ejecuta y no escribe nada**; su activación requiere un productor runtime (otro
+módulo, DMA) → **NO_VERIFICADO**. S51 sin cambios.
+[S328](../docs/capture/s328-second-matrix.md), `analysis/s328_second_matrix/second_matrix.json`.
+
+**Siguiente:** buscar una instancia construida con `idx ≠ 0` (S328 no aplica) o pasar a la
+línea de tiempos del A7S (S202 §3) para ver si algún modo silent cambia el tiempo de lectura.
+
 
 
 

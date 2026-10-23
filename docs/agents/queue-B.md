@@ -71,7 +71,7 @@
 
 - DONE S322 Trama A7S byte-alineada `81|03|device|address8|data8`; 1200/1200 tramas de 12 escenarios S58 reproducen los registros, una trama por registro. `0x43ad9666` devuelve 0/1/2 (éxito/rechazo/sin espacio); modo 2 conserva formato y solo reintenta. Evidencia: `docs/capture/s322-frame-format.md`, `analysis/s322_frame_format/frame_format.json` (1282 comprobaciones, 6 tests).
 
-- TODO S323 Auditar productor y alcanzabilidad de la matriz dinámica `0x43e8de00` (slot `0x44026088`, puerta `obj+0x2b0`) hallada en S321.
+- DONE S323/S328 La segunda matriz (slot `0x44026088` A7S / `0x44026694` A6000) apunta a una tabla **a cero** (`0x43e8de00`/`0x43e80160`); su offset solo lo usa el bucle del accesor y no hay store estatico. Primera palabra 0 = terminador → **el segundo bucle no ejecuta**. Productor runtime (otro modulo/DMA) NO_VERIFICADO. Evidencia: `docs/capture/s328-second-matrix.md`, `analysis/s328_second_matrix/second_matrix.json` (28 comprobaciones, 6 tests).
 
 - DONE S324 `0x43fee370` es `u32[34]` (136 B, termina en L95); «29/30» de S204 = posiciones del array, no columnas. Ningún par de columnas de la matriz difiere en 1 registro (mínimo 2) → «1 registro (0x000c/0x000a)» no reproducible; la tabla de 34 columnas queda NO_VERIFICADA. Setter de modo/sub = slot 8: A7S `0x436f3b44` (1..0x51, modo→+0x1ac, sub→+0x2b0) y A6000 `0x436d6b50` (1..**0x47** → rechaza `0x4e`/`0x4f`, modo→+0x170, sub→+0x266); la puerta de la segunda matriz es el `sub`. Evidencia: `docs/capture/s324-columns-audit.md`, `analysis/s324_columns_audit/columns_audit.json` (53 comprobaciones, 8 tests).
 
