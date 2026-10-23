@@ -2574,3 +2574,14 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 - Artefactos: `docs/capture/s615-eis.md`, `analysis/s615_eis/`, `tests/test_s615_eis.py` (pendiente).
 - Verificación: censos exactos, commit Conventional + push origin HEAD:main.
 - Siguiente: S616 `[LENS_PDR]` (4 trazas).
+
+## Investigación S616 — `[LENS_PDR]` (agente E, Nemotron 3 Ultra Free)
+
+- Objetivo: decodificar el módulo de traza `[LENS_PDR]` (4 trazas) exclusivo de la A6000 fw3.21.
+- REA Evidence: strings `[LENS_PDR]:` en `0x43c9a822`–`0x43c9a8ba` (4 cadenas).
+- Resultado: 4 trazas confirmadas con prefijo `[LENS_PDR]:` (11 B); `BonoboDSP_Send` (Data latch failed genérico/ch0/ch1), `BonoboDSP_Rcv` (paritycheck_error); logger dual (nuevo `[LENS_PDR]:` + viejo global `0x43902718`); prefijo fijo 11 B.
+- Diferencial: A6000 fw3.21=4 `[LENS_PDR]` tokens; A7S/A6300=0 (4 núcleos idénticos sin prefijo).
+- Línea del obturador: NEGATIVO ACOTADO (0 coincidencias).
+- Artefactos: `docs/capture/s616-lens_pdr.md`, `analysis/s616_lens_pdr/`, `tests/test_s616_lens_pdr.py` (pendiente).
+- Verificación: censos exactos, commit Conventional + push origin HEAD:main.
+- Siguiente: S617 `[CAMERA_DEVICE]` (3 trazas).
