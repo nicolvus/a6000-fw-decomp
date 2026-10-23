@@ -2460,6 +2460,31 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 - Línea del obturador: NEGATIVO ACOTADO (0 coincidencias).
 - Artefactos: `docs/capture/s607-cam_cmd.md`, `analysis/s607_cam_cmd/`, `tests/test_s607_cam_cmd.py` (pendiente).
 - Verificación: censos exactos, commit Conventional + push origin HEAD:main.
+
+## Investigación S500–S515 — cobertura restante del censo de módulos (sesión Codex, 22-10-2026)
+
+- Objetivo: cubrir los módulos grandes sin hito del censo S178: `[SDF]`, `[ERR]`, `[ERROR]`, `[TD]`, `[DEBUG]`, `[INFO]`, `[RE]`, `[INT_ERROR]`, `[CONFIG]`, `[AUDPINEDTR]`, y etiquetas exclusivas pequeñas restantes.
+- Resultado: **ninguno es módulo independiente relacionado con el obturador**:
+  - `[ERR]` = sub-etiqueta de `[ACCY]` (S136) y `[ADF]` (S81) — nivel de severidad, no módulo.
+  - `[ERROR]` = sub-etiqueta de `[SDF]` (S103) — nivel de severidad, no módulo.
+  - `[TD]` = S506 (dentro de `[CodecSeq]`).
+  - `[DEBUG]` = sub-etiqueta de `[ACCY]`, `[ADF]`, `[DEPTH]` (S148) + 3 strings de reloj (CLK).
+  - `[INFO]` = sub-etiqueta de `[ACCY]`, `[DEPTH]` (S148).
+  - `[RE]` = S510 (dentro de `[VDF]`/`[VEF]`, S86).
+  - `[INT_ERROR]` = S511 (macro de error SDF, S103).
+  - `[CONFIG]` = S513 (volcado de áreas de trabajo, independiente pero ajeno al obturador).
+  - `[AUDPINEDTR]` = S515 (dataflow infra sender audio, independiente pero ajeno al obturador).
+  - Etiquetas exclusivas pequeñas: `[JPEG]`→S605, `[LENS_YC]`+`[IMAGING_RAW]`→S604, `[CAMERA_DSP_APL]`→S603, `[NSX_VOT]`→S606, `[CAM_CMD]`→S607, `[MOUNT_INFO]`→S608 (pendiente), `[DIST]`→dentro de `[CAMERA_IS]` (S164), `[HOUSING]`→dentro de `[ACCY]` (S136), `[MOUNT]`→dentro de `[CAMERA_IS]` (S164), `[MOUNT_WARNING]`→pendiente, `[LENS_PDR]`→DSP lens, `[CAMERA_DEVICE]`→timer OSAL, `[AVOUT]`/`[AVR]`/`[JIRO]`/`[UTILITY]`→accesorios ACCY, `[ADR]`→campo de dirección, `[CAMERA_DETECT_FC]`→1 traza, `[EO_SW]`/`[FILE_NUM]`/`[FSYSMODE]`/`[RING_DIAL]`→1 traza cada uno.
+- C2 mailbox `0x40193`: dispatcher `0x43807f4c` referenciado como puntero de función en vtable `0x43fcd3e0` (tabla base `0x43fcd3a0`); llamador del dispatcher y receptor de la cola no localizados estáticamente (sin literal `0x40193`, sin movw/movt, sin BL directo).
+- S134 svr_num/VdNum: lectores localizados en `0x4381106c` (`svr_num`=`[sl+0x14e]`, `VdNum`=`[sl+0xcc]` donde `sl=[estado+8]`); escritores no localizados estáticamente.
+- Doc: `docs/capture/s500-vdf.md` a `s515-audpinedtr.md`, `shutter-trigger-chain-0x3011.md`, `s134-svrnum-vdnum-status.md`, `analysis/rea-independent/out/C2_CHAIN_ANALYSIS.md`.
+- Tests: `tests/test_s50*.py` y `tests/test_s51*.py` (todos PASS).
+- Verificación: censos exactos.
+
+## Investigación S608 — `[MOUNT_INFO]` (agente E, Nemotron 3 Ultra Free)
+
+- Objetivo: decodificar el módulo de traza `[MOUNT_INFO]` (6 trazas) exclusivo de la A6000 fw3.21.
+- Estado: pendiente (siguiente en la cola de Agente E).
 - Siguiente: S608 `[MOUNT_INFO]` (6 trazas).
 
 ## Investigación S608 — `[MOUNT_INFO]` (agente E, Nemotron 3 Ultra Free)
