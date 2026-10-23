@@ -134,3 +134,8 @@
 - TODO S337 Identificar el consumidor de `u16[69]` en `0x43fef404` (valores 1..78).
 - TODO S339 Identificar `0xf292b000..8` (bloques 0xf292x000 de 4 KB).
 - TODO S341 Identificar los canales `0xf3122xxx` y `0xfc0a3xxx/4xxx` de S340 (¿sensores de temperatura, ADC, posición?) buscando sus otros lectores y las cadenas asociadas.
+
+- DONE S337 `0x43fef404` no es una tabla de tiempos: es una tabla de 69 entradas `{u16 código (0x01..0x64), u16 0x000d}` precedida de 169 palabras `0x43f9c622`, sin ninguna referencia literal → falso positivo del barrido de S329. Evidencia: `docs/capture/s337-fef404-table.md`, `analysis/s337_fef404_table/fef404_table.json` (12 comprobaciones, 7 tests).
+- TODO S339 Identificar `0xf292b000..8` (bloques 0xf292x000 de 4 KB).
+- TODO S341 Identificar los canales `0xf3122xxx`/`0xfc0a3xxx/4xxx` de S340.
+- BACKLOG S342 Buscar consumidores de la tabla `{código,0x000d}` por puntero calculado (0x43f9c6xx) antes de cerrarla del todo.
