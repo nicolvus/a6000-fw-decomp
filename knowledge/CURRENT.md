@@ -1,5 +1,12 @@
 # Estado actual — léeme primero
 
+## S343–S617 — puesta al día del repo (22-10-2026)
+
+- **Agente B (S300–S342):** gates `+3/+6` del IMX210 idénticos a la A7S y sin escritor (S300/S301); la A7S añade selector de modo y subsistema de tiempos ausentes en la A6000 (S307–S312); cadena `modo → matriz 69/59 filas → T1/T2/T3 → pares (flag,bit) → máscara u16 → MMIO DFE/CISIF` (S329–S341); `0x43fef404` es una tabla de ids de `Camera::Lens::ODL`, no de tiempos (S342). Síntesis en S341.
+- **Agente C (S401–S402):** handler LIRO `0x40e3` ausente en la A7S y `…ForLiro` rechazado en ambos; mapeo a P1–P8 (P5 crítica). Sin pruebas ejecutadas.
+- **Agentes D/E (S500–S515, S600–S617):** módulos de trazas decodificados (D: `[VDF]`…`[AUDPINEDTR]`; E: `[CAM_FUNC_MGR]`…`[CAMERA_DEVICE][DET_DIR]`), todos sin efecto en S51. Informes `docs/capture/s5xx-*.md`/`s6xx-*.md`.
+- **S51 sin cambios.** Orden del README: un bloque por agente (A, B, C, D, E).
+
 ## S342 — `0x43fef404` tiene dos consumidores: ids de `Camera::Lens::ODL` (22-10-2026)
 
 - **Corrige el alcance de S337**: «0 referencias» era cierto solo para literales absolutos. Con bases PIC (`ldr`+`add pc`) hay **dos** consumidores: `0x437056f8`/`0x437056fc` (función `0x437056ec`) y `0x43705754`/`0x43705756` (función `0x43705748`), ambos con base `0x43fef404`.

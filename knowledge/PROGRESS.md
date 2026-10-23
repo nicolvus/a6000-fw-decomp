@@ -2596,3 +2596,8 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 - Artefactos: `docs/capture/s617-camera_device.md`, `analysis/s617_camera_device/`, `tests/test_s617_camera_device.py` (pendiente).
 - Verificación: censos exactos, commit Conventional + push origin HEAD:main.
 - Siguiente: S618 `[DET_DIR]` (3 trazas).
+
+
+## S343–S617 — puesta al día de carriles (22-10-2026)
+
+Resumen de lo añadido desde S300: agente B S300–S342 (gates sin escritor, cadena modo→MMIO, ODL en `0x43fef404`), agente C S401–S402 (ruta de control y mapeo a P1–P8), agentes D/E S500–S515 y S600–S617 (módulos de trazas). Detalle en `knowledge/CURRENT.md` y en los informes `docs/capture/`. README reordenado por agente. S51 sin cambios.
