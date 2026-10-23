@@ -22,7 +22,7 @@ Tema distinto de A/B/C: decodificación de módulos exclusivos de la A6000 fw3.2
 - S617 [CAMERA_DEVICE] (3 trazas) → DONE (S617)
 - S618 [DET_DIR] (3 trazas, idéntico a S617) → DONE (S618)
 - S619 [SENSER] (3 trazas) → DONE (S619)
-- S620 [STABILIZER] (3 trazas)
+- S620 [STABILIZER] (3 trazas) → DONE (S620)
 - S621 [AVOUT] (2 trazas)
 - S622 [AVR] (2 trazas)
 - S623 [JIRO] (2 trazas)
