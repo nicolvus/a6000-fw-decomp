@@ -2695,3 +2695,14 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 - Artefactos: `docs/capture/s626-camera_detect_fc.md`, `analysis/s626_camera_detect_fc/`, `tests/test_s626_camera_detect_fc.py` (pendiente).
 - Verificación: censos exactos, commit Conventional + push origin HEAD:main.
 - Siguiente: S627 `[EO_SW]` (1 traza).
+
+## Investigación S627 — `[EO_SW]` (agente E, Nemotron 3 Ultra Free)
+
+- Objetivo: decodificar el módulo de traza `[EO_SW]` (1 traza) exclusivo de la A6000 fw3.21.
+- REA Evidence: string `[EO_SW] Port=%d, Bit=%d, Data=%d` en `0x43c37b98` (1 cadena).
+- Resultado: 1 traza confirmada con prefijo `[EO_SW]` (8 B); `Port`, `Bit`, `Data`; logger dual (nuevo `[EO_SW]` + viejo global `0x43902718`); prefijo fijo 8 B.
+- Diferencial: A6000 fw3.21=1 `[EO_SW]` token; A7S/A6300=0 (sin EO_SW; strings sueltas switch/port/bit).
+- Línea del obturador: NEGATIVO ACOTADO (0 coincidencias).
+- Artefactos: `docs/capture/s627-eo_sw.md`, `analysis/s627_eo_sw/`, `tests/test_s627_eo_sw.py` (pendiente).
+- Verificación: censos exactos, commit Conventional + push origin HEAD:main.
+- Siguiente: S628 `[FILE_NUM]` (1 traza).
