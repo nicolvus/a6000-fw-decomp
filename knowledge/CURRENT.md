@@ -1,5 +1,12 @@
 # Estado actual — léeme primero
 
+## S339 — `0xf292b000..8`: interfaz de 3 registros, identidad NO_VERIFICADA (22-10-2026)
+
+- 6 literales del bloque en el A7S (1/2/3) y **todos** dentro de los accesores `0x436f8290..0x436f82e4`; ningún otro código lo toca. A6000: mismos literales y sitios.
+- Interfaz: `+0` lectura, `+4`/`+8` escritura, 12 bits, controles `0x1000`/`0x10000`.
+- Ventana `0xf292x000` (4 KB): bloques 2000/4000/7000/9000/a000/b000/c000/d000/f000; vecinos documentados GPIO `0xf2910000` y DSP de lente `0xf292d000`.
+- `0xf292b000` no aparece en la documentación → identidad/función **NO_VERIFICADA**. Tests: `tests/test_s339_block_f292b.py` (7) y 29 comprobaciones.
+
 ## S337 — `0x43fef404` no es una tabla de tiempos (22-10-2026)
 
 - Es una tabla de **69 entradas de 4 B** `{u16 código (0x01..0x64), u16 0x000d}`, terminada en `0x43fef518`, precedida de 169 palabras `0x43f9c622`.
