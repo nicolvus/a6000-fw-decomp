@@ -7,6 +7,12 @@
 - **Agentes D/E (S500–S515, S600–S617):** módulos de trazas decodificados (D: `[VDF]`…`[AUDPINEDTR]`; E: `[CAM_FUNC_MGR]`…`[CAMERA_DEVICE][DET_DIR]`), todos sin efecto en S51. Informes `docs/capture/s5xx-*.md`/`s6xx-*.md`.
 - **S51 sin cambios.** Orden del README: un bloque por agente (A, B, C, D, E).
 
+## S344 — tablas selectoras de `0x436f6240`: [0,1,4] y [6,5,4] (22-10-2026)
+
+- `0x436f6240` elige entre `0x43bbeb64 = [0,1,4]` (fin de T1) y `0x43bbef28 = [6,5,4]` (inicio tras T1) según `row[5]`; índice `row[4]` (≤2) o `row[6]` (≤1). Envoltorio `0x436f6278(idx)` con límite `0x21` y stride `0x1c`.
+- Filas reales: 32/34 modos A7S dan 1 y solo `0x37`/`0x38` dan 4; los 13 modos A6000 dan 1. `0x37`/`0x38` no son silent.
+- **0 llamadores estáticos** (ni `bl` ni literal) → significado del valor NO_VERIFICADO. Tests: 7 y 29 comprobaciones.
+
 ## S343 — la copia de 20 B de la fila T configura los seis bloques de canal (22-10-2026)
 
 - Cadena cerrada: `0x436f5f7c` (copia 20 B, parchea `+5`/`+7`) → `0x43ada310` (añade 12 pares → bloque de **44 B**) → `0x43ada480` (`[obj+4]` = id de canal 0..5, `[obj+8]` = nº de flags, 5 manejadores).
