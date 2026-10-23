@@ -1,5 +1,12 @@
 # Estado actual — léeme primero
 
+## S341 — síntesis del carril B con 27 cifras verificadas (22-10-2026)
+
+- Cadena completa: `modo → posición → matriz (69/59 filas) + T1/T2/T3 (w0 selector, +4/+5/+6 selectores, +0x14 descriptor, +0x18 máscara) → pares (flag, bit) → máscara u16 → MMIO DFE/CISIF (0xfc02a00c) / 0xf292b000`.
+- Correcciones asumidas: mapa `0x43c9c5b5` = posición→columna; matriz sí distingue silent (14/11 registros); bases T2/T3 `0x43bbf2e8`/`0x43bbef30`; fila = posición de modo y `obj+0x2b4` = flag; pares = índices de bit; destino MMIO, no P2S; `w0` = selector de canal MMIO.
+- Abiertas: canales `0xf3122xxx`/`0xfc0a3xxx`, bloque `0xf292b000`, semántica física de máscaras, efecto runtime, consumidor de `0x43fef404`.
+- Verificación: `analysis/s341_synthesis_b2/verify_synthesis.py` (27 cifras). S51 sin cambios.
+
 ## S339 — `0xf292b000..8`: interfaz de 3 registros, identidad NO_VERIFICADA (22-10-2026)
 
 - 6 literales del bloque en el A7S (1/2/3) y **todos** dentro de los accesores `0x436f8290..0x436f82e4`; ningún otro código lo toca. A6000: mismos literales y sitios.

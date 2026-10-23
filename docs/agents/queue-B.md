@@ -146,3 +146,5 @@
 - DONE S339 `0xf292b000..8` acotado: 6 literales en el A7S y todos en los accesores `0x436f8290..0x436f82e4`; interfaz de 3 registros (lectura `+0`, escritura `+4`/`+8`), 12 bits, controles `0x1000`/`0x10000`; idéntica en A6000. Ventana `0xf292x000` con vecinos GPIO `0xf2910000` y DSP de lente `0xf292d000`. Identidad **NO_VERIFICADA**. Evidencia: `docs/capture/s339-block-f292b.md`, `analysis/s339_block_f292b/block_f292b.json` (29 comprobaciones, 7 tests).
 - TODO S341 Identificar los canales `0xf3122xxx`/`0xfc0a3xxx/4xxx` de S340 (¿ADC, temperatura, posición?).
 - TODO S342 Buscar consumidores de `0x43fef404` por puntero calculado (zona `0x43f9c6xx`).
+
+- DONE S341 Síntesis del carril (S314–S340) en `docs/capture/s341-synthesis-b2.md`: cadena completa, 15 cifras clave, 7 correcciones asumidas y 5 preguntas abiertas con el experimento que las cerraría. Verificación: `analysis/s341_synthesis_b2/verify_synthesis.py` (27 cifras comprobadas contra los JSON de S321–S340).
