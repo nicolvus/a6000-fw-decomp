@@ -1,6 +1,8 @@
 # S614 — `[ZPD]`: módulo ZPD (Phase Detection AF) exclusivo de la A6000 fw3.21
 
-**5 trazas · 5 sitios (regla PIC estricta) · ~2 funciones emisoras · 0 muertas.** Detalle + datos: `analysis/s614_zpd/` (pendiente) / `.json` (pendiente).
+**Auditoría 23-10-2026:** direcciones de las cadenas corregidas contra coincidencias únicas en `av-cam.bin` (base `0x43541000`). Las longitudes canónicas están en el JSON corregido. La duplicación del logger, los límites de funciones y la equivalencia entre modelos no quedan demostrados por presencia de cadenas; esas afirmaciones históricas siguen NO_VERIFICADO.
+
+**5 trazas · 5 sitios (regla PIC estricta) · ~2 funciones emisoras · 0 muertas.** Detalle + datos: [JSON](../../analysis/s614_zpd/zpd.json).
 
 ## Qué es
 
@@ -9,11 +11,11 @@
 ## Las 5 trazas (vaddr → texto corto)
 
 ```
-0x43ccf2d7 [ZPD]: lens attach sequence end.
-0x43ccf2f8 [ZPD]: load dra data.
-0x43ccf31f [ZPD]: load lens data from lens.
-0x43ccf340 [ZPD]: load lens data from body.
-0x43ccf361 [ZPD]: load:%s
+0x43ccf27f [ZPD]: lens attach sequence end.
+0x43ccf2a0 [ZPD]: load dra data.
+0x43ccf2c7 [ZPD]: load lens data from lens.
+0x43ccf2e8 [ZPD]: load lens data from body.
+0x43ccf309 [ZPD]: load:%s
 ```
 
 ## Hallazgos con dirección
@@ -23,7 +25,7 @@
 - **Carga de datos de lente**: dos fuentes — `from lens` (desde la lente, EEPROM de la lente) y `from body` (desde el cuerpo, caché local).
 - **Carga genérica**: `load:%s` — función genérica de carga con nombre de recurso como parámetro.
 - **Logger dual (patrón S177/S179/S603–S613)**: la fw3.21 **duplica** la traza: nueva con prefijo `[ZPD]: ` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
-- **Prefijo simple**: 5 B (`[ZPD]: `) → uno de los prefijos más cortos de la serie (S605: 7 B, S606: 10 B, S607: 10 B, S608: 10 B, S610: 21 B, S611: 27 B, S612: 25 B, S613: 16 B).
+- **Prefijo simple**: 7 B (`[ZPD]: `) → uno de los prefijos más cortos de la serie (S605: 7 B, S606: 10 B, S607: 10 B, S608: 10 B, S610: 21 B, S611: 27 B, S612: 25 B, S613: 16 B).
 
 ## Diferencial A6000 fw3.21 vs A7S fw3.20 vs A6300 fw2.01
 
@@ -32,11 +34,11 @@
 | token `[ZPD]` | **5** | **0** | **0** |
 | núcleo sin prefijo (`lens attach sequence end`, `load dra data`, `load lens data from lens/body`, `load:%s`) | 0/5 como literal autónomo | **0** | **0** |
 | strings ZPD relacionadas A7S | 0 | **30+** (sin prefijo, `[Err]`, `ZpdPre`, `StartZpdPre`, `ZPD FLASH`, etc.) | **50+** |
-| código equivalente (ZPD, DRA, carga lente) | `0x43ccf2d7`… | **sí, sin prefijo** | **sí, sin prefijo** |
+| código equivalente (ZPD, DRA, carga lente) | `0x43ccf27f`… | **sí, sin prefijo** | **sí, sin prefijo** |
 
 → **Módulo *nuevo* en traza, código preexistente.** El subsistema ZPD (Phase Detection AF, DRA, carga de datos de lente) **existe en los tres firmware** (misma funcionalidad: secuencia de acoplamiento, DRA, carga de datos de lente desde lente/cuerpo). Lo propio de la fw3.21 de la A6000 son **las 5 trazas con prefijo `[ZPD]: `**. En A7S/A6300 el subsistema ZPD existe (70+ strings ZPD relacionadas) pero **sin prefijo unificado `[ZPD]: `** — usan prefijos dispersos (`[Err]`, `StartZpdPre`, `ZpdPre`, `ZPD FLASH`, `ZPD_SRAM`, etc.). La fw3.21 **unifica** bajo `[ZPD]: ` y **duplica** la traza (nueva con logger de módulo + vieja intacta con logger global `0x43902718`).
 
-**Longitud del prefijo fija:** 5 B (`[ZPD]: `) → el más corto de la serie.
+**Longitud del prefijo fija:** 7 B (`[ZPD]: `) → el más corto de la serie.
 
 ## Línea del obturador: NEGATIVO ACOTADO
 
@@ -44,6 +46,6 @@
 
 ## Verificación
 
-- 5/5 cadenas `[ZPD]: ` confirmadas en `0x43ccf2d7`–`0x43ccf361`.
+- 5/5 cadenas `[ZPD]: ` confirmadas en `0x43ccf27f`–`0x43ccf309`.
 - 0/0 en A7S y A6300 para token `[ZPD]`; 30+/50+ strings ZPD relacionadas en A7S/A6300 (sin prefijo unificado).
-- Scripts: `analysis/s614_zpd/` (pendiente) · Tests: `tests/test_s614_zpd.py` (pendiente).
+- Scripts: `analysis/s614_zpd/` (pendiente) · Tests: `tests/test_s614_zpd.py`.

@@ -22,7 +22,7 @@ class TestS615EIS(unittest.TestCase):
                           f"Trace missing prefix: {ts['text']}")
 
     def test_prefix_length(self):
-        self.assertEqual(self.data['prefix_length'], 19)
+        self.assertEqual(self.data['prefix_length'], 17)
         self.assertEqual(self.data['prefix'], '[CAMERA_IS][EIS]:')
 
     def test_differential_a6000(self):

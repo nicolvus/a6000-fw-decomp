@@ -43,5 +43,5 @@ A6300 (162); las pendientes más grandes son `[SDF]` (477), `[ERR]` (288), `[VDF
 **Efecto en S51: NINGUNO — S51 sigue A=NO, B=NO, C=NO.** El censo es de cobertura, no de
 contenido.
 
-Informe: [analysis/s178_census/census.md](../analysis/s178_census/census.md) ·
+Informe: [analysis/s178_census/census.md](../../analysis/s178_census/census.md) ·
 test: `tests/test_s178_census.py` (8 tests).

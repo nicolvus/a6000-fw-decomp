@@ -2711,3 +2711,6 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 ## S343–S627 — puesta al día (23-10-2026)
 
 B S343–S348, libObj.so S380–S385, módulos D S515 y E S618–S627, cierre de pendientes y plan físico 2. Censo 133/372. Detalle en `knowledge/CURRENT.md`. S51 sin cambios.
+# Auditoría 23-10-2026
+
+Base remota `f4dc7062`, cuenta `nicolvus`, pull sin cambios y árbol inicial limpio. [Informe completo](../docs/auditoria-2026-10-23.md). Corregidos destinos BL S382, negativos inválidos S384, 94 direcciones y 21 longitudes S605–S627, JSON S68, enlaces relativos y censo detallado; Pages incluye P1–P21. Reabiertas 141 clasificaciones automáticas. Verificación contra bytes con regresiones nuevas y mantenimiento del conocimiento; sin pruebas físicas ni push. Los apartados anteriores de cada sesión se conservan como historia.

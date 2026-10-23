@@ -53,5 +53,5 @@ código equivalente en A7S/A6300; fichero fuente (ningún `.cpp`/`.h` referencia
 
 **Revisión del agente principal**: (vacío).
 
-[Informe](../analysis/s144_cam_util_sens/cam_util_sens.md) · [datos](../analysis/s144_cam_util_sens/cam_util_sens.json)
+[Informe](../../analysis/s144_cam_util_sens/cam_util_sens.md) · [datos](../../analysis/s144_cam_util_sens/cam_util_sens.json)
 · 22 tests (`tests/test_s144_cam_util_sens.py`).

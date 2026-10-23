@@ -207,7 +207,13 @@ def main() -> None:
                 "source": REPO + "docs/capture/linea-general-re.md",
             }
         },
-        "physical_tests": {"done": 0, "total": 8, "source": REPO + "docs/capture/physical-test-plan.md"},
+        "physical_tests": {
+            "done": 0, "total": 21,
+            "source": REPO + "docs/capture/physical-test-plan.md",
+            "sources": [REPO + "docs/capture/" + name for name in (
+                "physical-test-plan.md", "s402-physical-test-mapping.md", "physical-test-plan-2.md",
+            )],
+        },
         "decision": {"label": "No parchear: evidencia insuficiente", "source": REPO + "docs/capture/s51-decision.md"},
     }
     OUTPUT.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

@@ -41,6 +41,6 @@ ningún nombre de fichero); significado de `Pre1/Pre2/Post1/Post2/Async`; ids de
 `0x00f9xxxx`; GID `0x00740017`; id de log `0x16`; papel de `0x00910042`; cola de datos que
 recibe los mensajes de lente; equivalente A6300 de `F4/F5/F6`.
 
-[Informe](../analysis/s151_panda/panda.md) · [datos](../analysis/s151_panda/panda.json).
+[Informe](../../analysis/s151_panda/panda.md) · [datos](../../analysis/s151_panda/panda.json).
 Siguiente: decodificar los ids de cola y el GID `0x00740017`; averiguar qué tarea consume
 los 5 canales y qué significan "pre"/"post"/"async" en la lente.

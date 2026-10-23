@@ -1,4 +1,4 @@
-# Plan de pruebas físicas 2 (P13–P20) — lecturas nuevas a partir de S329–S343
+# Plan de pruebas físicas 2 (P13–P21) — lecturas nuevas a partir de S329–S343
 
 Estado: **ninguna se ha ejecutado**. Complementa [physical-test-plan.md](physical-test-plan.md) (P1–P8) y las propuestas P9–P12 de [S402](s402-physical-test-mapping.md). Todas son **de solo lectura** salvo P21 (opcional, riesgo medio-alto). Reglas comunes: las de `physical-test-plan.md` §0 (backup NVRAM antes, solo RAM, disparo remoto, parar ante reinicio).
 

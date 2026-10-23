@@ -1,5 +1,7 @@
 # S380 — Mapa de libObj.so (A6000 fw3.21)
 
+**Auditoría 23-10-2026:** el conteo 1914 y los mapas por stride fijo eran incorrectos. Prevalece el método PLT → GOT corregido de §4; el JSON regenerado separa ambas direcciones. Las métricas de símbolos y secciones se conservan.
+
 **Archivo:** `firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libObj.so`
 **Idéntico a:** `analysis/camera-extract/usr/lib/libObj.so` (17 436 172 B)
 **Formato:** ELF32 ARM, DYN (PIE), stripped, base 0x0
@@ -99,26 +101,26 @@ Muestra de relevantes para obturador / still / imagen:
 
 ## 4. .plt → nombre (primeras entradas resueltas via .rel.plt)
 
-.rel.plt tiene 2420 entradas; .plt tiene 1914 entradas (stubs de 16 B cada una, Thumb-2). Las primeras 1914 entradas de .rel.plt mapean 1:1 a las entradas .plt. Las restantes 506 rel.plt no tienen entrada .plt (resolución directa al GOT).
+.rel.plt tiene 2420 relocaciones R_ARM_JUMP_SLOT hacia GOT. Auditoría 23-10-2026: se retira la división por 16 y el mapeo por orden. El PLT contiene **2420 cuerpos ARM de 12 B** y **391 veneers Thumb de 4 B**, además del encabezado de 20 B: `2420*12 + 391*4 + 20 = 30624`. El resolutor sigue las instrucciones hasta el slot GOT; `map.json` separa `got_map` de `plt_map` (2811 direcciones de entrada ARM/Thumb).
 
 Entradas .plt relevantes para mensajería:
 
 | .plt VA | Símbolo |
 |---|---|
-| 0x000db8c4 | `_ZN3MWF11ObjMsgQueue7EnqueueEPKNS_6ObjMsgE` (queueMsg) |
-| 0x000dbeb4 | `_ZN3MWF10ObjMsgList6GetMsgEi` |
-| 0x000dc144 | `_ZN12SequenceBase15ReceiveResponseEPN3MWF6ObjMsgE` |
-| 0x000dd3b4 | `osal_reg_sync_msg_queue_cb` |
-| 0x000dd4a4 | `_ZN3UFW11MsgReceiver6RcvMsgEPjPPN3MWF6ObjMsgE` (RcvMsg) |
-| 0x000dd804 | `osal_reg_msg_queue_cb` |
-| 0x000de934 | `_ZN3MWF13ObjActiveBase10PostAppMsgEPKNS_6ObjMsgE` |
-| 0x000de914 | `_ZN5AVBIZ8UNIVERSE7BizUtil9GetObjMsgEPN3MWF6ObjMsgEjPj` |
-| 0x000df194 | `_ZN3MWF6ObjMsgC1Ev` |
-| 0x000df224 | `_ZN3MWF6ObjMsgC1Ejj` |
-| 0x000df9b4 | `_ZN3MWF6ObjPin4SendEjPNS_6ObjMsgE` |
-| 0x000e0f24 | `_ZN3MWF12EventWrapper11SendAndRecvEPviS1_i` (SendAndRecv) |
-| 0x000e13a4 | `osal_snd_sync_msg` |
-| 0x000e2ae4 | `_ZN12SequenceBase11SetRcvMsgIdEi` |
+| 0x000db7c8 | `_ZN3MWF11ObjMsgQueue7EnqueueEPKNS_6ObjMsgE` (queueMsg) |
+| 0x000dbc8c | `_ZN3MWF10ObjMsgList6GetMsgEi` |
+| 0x000dbe90 | `_ZN12SequenceBase15ReceiveResponseEPN3MWF6ObjMsgE` |
+| 0x000dccfc / 0x000dcd00 | `osal_reg_sync_msg_queue_cb` |
+| 0x000dcdbc | `_ZN3UFW11MsgReceiver6RcvMsgEPjPPN3MWF6ObjMsgE` (RcvMsg) |
+| 0x000dd064 / 0x000dd068 | `osal_reg_msg_queue_cb` |
+| 0x000dde10 | `_ZN3MWF13ObjActiveBase10PostAppMsgEPKNS_6ObjMsgE` |
+| 0x000dddf8 | `_ZN5AVBIZ8UNIVERSE7BizUtil9GetObjMsgEPN3MWF6ObjMsgEjPj` |
+| 0x000de4cc | `_ZN3MWF6ObjMsgC1Ev` |
+| 0x000de540 | `_ZN3MWF6ObjMsgC1Ejj` |
+| 0x000deb30 | `_ZN3MWF6ObjPin4SendEjPNS_6ObjMsgE` |
+| 0x000dfc0c | `_ZN3MWF12EventWrapper11SendAndRecvEPviS1_i` (SendAndRecv) |
+| 0x000dff8c / 0x000dff90 | `osal_snd_sync_msg` |
+| 0x000e1210 | `_ZN12SequenceBase11SetRcvMsgIdEi` |
 
 ## 5. Qué trae libObj.so que av-cam.bin no tiene
 
@@ -138,9 +140,9 @@ av-cam.bin contiene el núcleo de cámara en tiempo real (IMX210, obturador, exp
 
 ## 6. Estado del daemon REA para libObj.so
 
-**NO DISPONIBLE.** Ghidra no puede analizar el ELF PIE de 17 MB con dependencias faltantes (libInfraFsys.so, libmprctrl.so, libMWF.so, etc.). El socket `run/libobj.sock` existe pero no responde. Todas las consultas REA sobre libObj.so fallan.
+**Auditoría 23-10-2026:** REA abrió el ELF correctamente. La consulta de instrucción expiró tras 300 s y la sesión se cerró. No se demuestra imposibilidad de analizarlo ni se mantiene un bloqueo humano basado en dependencias faltantes.
 
-**Alternativa usada:** readelf + objdump + capstone (análisis estático puro). **Límite:** sin decompilación, sin xrefs automáticos, sin resolución de nombres de .plt para las 506 rel.plt sin entrada .plt.
+**Alternativa usada:** bytes, readelf, Capstone y decodificación Thumb compartida. Las 2420 relocaciones GOT y las 2811 direcciones de entrada PLT ARM/Thumb están resueltas; se retira la supuesta ausencia de 506 entradas. Identidad funcional y flujo siguen requiriendo análisis.
 
 ---
 

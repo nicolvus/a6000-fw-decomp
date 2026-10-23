@@ -64,4 +64,4 @@ Fichero fuente del módulo (ninguna traza cita un `.cpp`); si `0x437b7778` se in
 binario del paquete de firmware; significado del flag `lc`; destinatario de los mensajes OSAL
 (temporizador, `BatteryInfo`); si el camino táctil del FC debía enlazar con `0x3011`.
 
-[Informe](../analysis/s138_camera_main_fc/camera_main_fc.md) · [JSON](../analysis/s138_camera_main_fc/camera_main_fc.json)
+[Informe](../../analysis/s138_camera_main_fc/camera_main_fc.md) · [JSON](../../analysis/s138_camera_main_fc/camera_main_fc.json)

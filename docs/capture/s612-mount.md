@@ -1,6 +1,8 @@
 # S612 — `[CAMERA_IS][MOUNT]`: submódulo de montura IS exclusivo de la A6000 fw3.21
 
-**5 trazas · 5 sitios (regla PIC estricta) · ~2 funciones emisoras · 0 muertas.** Detalle + datos: `analysis/s612_mount/` (pendiente) / `.json` (pendiente).
+**Auditoría 23-10-2026:** direcciones de las cadenas corregidas contra coincidencias únicas en `av-cam.bin` (base `0x43541000`). Las longitudes canónicas están en el JSON corregido. La duplicación del logger, los límites de funciones y la equivalencia entre modelos no quedan demostrados por presencia de cadenas; esas afirmaciones históricas siguen NO_VERIFICADO.
+
+**5 trazas · 5 sitios (regla PIC estricta) · ~2 funciones emisoras · 0 muertas.** Detalle + datos: [JSON](../../analysis/s612_mount/mount.json).
 
 ## Qué es
 
@@ -9,16 +11,16 @@
 ## Las 5 trazas (vaddr → texto corto)
 
 ```
-0x43c98dfe [CAMERA_IS][MOUNT]: [Error] IS_LensMountExpStartCB (%x)
-0x43c98e36 [CAMERA_IS][MOUNT]: [Error] IS_LensMountExpStartCB - checkData
-0x43c9a3ff [CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyroCB (%x)
-0x43c9a43b [CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyroCB - checkData
-0x43c9a47e [CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyro (%x)
+0x43c98da6 [CAMERA_IS][MOUNT]: [Error] IS_LensMountExpStartCB (%x)
+0x43c98dde [CAMERA_IS][MOUNT]: [Error] IS_LensMountExpStartCB - checkData
+0x43c9a3a7 [CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyroCB (%x)
+0x43c9a3e3 [CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyroCB - checkData
+0x43c9a426 [CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyro (%x)
 ```
 
 ## Hallazgos con dirección
 
-- **Doble prefijo jerárquico**: `[CAMERA_IS][MOUNT]: [Error]` — prefijo padre `[CAMERA_IS]: ` (módulo IS) + sub-prefijo `[MOUNT]: ` (submódulo montura) + nivel `[Error]`. Longitud total: 25 B (`[CAMERA_IS][MOUNT]: [Error] `).
+- **Doble prefijo jerárquico**: `[CAMERA_IS][MOUNT]: [Error]` — prefijo padre `[CAMERA_IS]: ` (módulo IS) + sub-prefijo `[MOUNT]: ` (submódulo montura) + nivel `[Error]`. Longitud total: 28 B (`[CAMERA_IS][MOUNT]: [Error] `).
 - **Callbacks de montura IS**: 2 callbacks principales:
   - `IS_LensMountExpStartCB` — callback de inicio de exposición para montura IS (con validación `checkData`)
   - `IS_LensMountPanoramaGyroCB` / `IS_LensMountPanoramaGyro` — callback de giroscopio para panorama IS (con validación `checkData`)
@@ -35,11 +37,11 @@
 | token `[CAMERA_IS]` (padre) | **~17** | **0** | **0** |
 | núcleo sin prefijo (`IS_LensMountExpStartCB`, `IS_LensMountPanoramaGyroCB`, `IS_LensMountPanoramaGyro`) | 0/5 como literal autónomo | **0** | **0** |
 | strings relacionadas montura A7S | 0 | **70+** (`[BL]MOUNT_*`, `Mount: `, etc.) | **70+** |
-| código equivalente (IS/MOUNT) | `0x43c98dfe`… | **parcial (BL mount)** | **parcial (BL mount)** |
+| código equivalente (IS/MOUNT) | `0x43c98da6`… | **parcial (BL mount)** | **parcial (BL mount)** |
 
 → **Submódulo *nuevo* en traza y código.** El submódulo de montura para IS **no existe en A7S/A6300** (ni en traza ni con esas funciones `IS_LensMountExpStartCB`, `IS_LensMountPanoramaGyroCB`, `IS_LensMountPanoramaGyro`). A7S/A6300 tienen un subsistema de montura BL (`[BL]MOUNT_*`, `Mount: `) pero **sin integración en módulo IS estructurado**. La fw3.21 de la A6000 **introduce** el submódulo MOUNT dentro de CAMERA_IS.
 
-**Longitud del prefijo jerárquico fija:** 25 B (`[CAMERA_IS][MOUNT]: [Error] `) → no variable.
+**Longitud del prefijo jerárquico fija:** 28 B (`[CAMERA_IS][MOUNT]: [Error] `) → no variable.
 
 ## Línea del obturador: NEGATIVO ACOTADO
 
@@ -47,6 +49,6 @@
 
 ## Verificación
 
-- 5/5 cadenas `[CAMERA_IS][MOUNT]: [Error]` confirmadas en `0x43c98dfe`–`0x43c9a47e`.
+- 5/5 cadenas `[CAMERA_IS][MOUNT]: [Error]` confirmadas en `0x43c98da6`–`0x43c9a426`.
 - 0/0 en A7S y A6300 para token `[CAMERA_IS][MOUNT]`.
-- Scripts: `analysis/s612_mount/` (pendiente) · Tests: `tests/test_s612_mount.py` (pendiente).
+- Scripts: `analysis/s612_mount/` (pendiente) · Tests: `tests/test_s612_mount.py`.

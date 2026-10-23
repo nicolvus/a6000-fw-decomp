@@ -36,5 +36,5 @@ el **módulo `0xb5`** que S144 identificó como compartido por `[CAM_UTIL_ADJ]` 
 **Negativo verificado**: 0 menciones de obturador, disparo, sensor, exposición o tiempos de
 exposición → **sin efecto en S51** (A/B/C = NO).
 
-Informe: [analysis/s173_cam_util_labels/cam_util_labels.md](../analysis/s173_cam_util_labels/cam_util_labels.md) ·
+Informe: [analysis/s173_cam_util_labels/cam_util_labels.md](../../analysis/s173_cam_util_labels/cam_util_labels.md) ·
 test: `tests/test_s173_cam_util_labels.py` (21 tests).

@@ -2608,13 +2608,18 @@
  "decodificadas": {
   "[ACCY]": [
    "180",
-   "136"
+   "136",
+   "602",
+   "610"
   ],
   "[ADC_DEBUG]": [
    "166"
   ],
   "[ADF]": [
    "100"
+  ],
+  "[ADR]": [
+   "625"
   ],
   "[AIP]": [
    "121"
@@ -2628,8 +2633,24 @@
   "[AS]": [
    "70"
   ],
+  "[AUDPINEDTR]": [
+   "515"
+  ],
   "[AUGI]": [
    "117"
+  ],
+  "[AVOUT]": [
+   "621"
+  ],
+  "[AVR]": [
+   "622"
+  ],
+  "[BL]": [
+   "186"
+  ],
+  "[BT]": [
+   "182",
+   "514"
   ],
   "[CAMCORE]": [
    "107"
@@ -2637,9 +2658,22 @@
   "[CAMERA_ADJ]": [
    "173"
   ],
+  "[CAMERA_DETECT_FC]": [
+   "626"
+  ],
+  "[CAMERA_DEVICE]": [
+   "617"
+  ],
+  "[CAMERA_DSP_APL]": [
+   "603"
+  ],
   "[CAMERA_IS]": [
    "70",
-   "164"
+   "164",
+   "178",
+   "609",
+   "612",
+   "615"
   ],
   "[CAMERA_MAIN]": [
    "126",
@@ -2672,17 +2706,22 @@
    "108",
    "119"
   ],
+  "[CAM_CMD]": [
+   "607"
+  ],
   "[CAM_DMM]": [
    "113"
   ],
   "[CAM_FUNC_MGR]": [
-   "177"
+   "177",
+   "600"
   ],
   "[CAM_IMAGER]": [
    "115"
   ],
   "[CAM_SCALAR]": [
-   "179"
+   "179",
+   "601"
   ],
   "[CAM_UTIL]": [
    "173"
@@ -2703,6 +2742,10 @@
   "[CLK_CTRL]": [
    "132"
   ],
+  "[CONFIG]": [
+   "183",
+   "513"
+  ],
   "[CTRLCORE]": [
    "137"
   ],
@@ -2712,17 +2755,37 @@
   "[DEPTH]": [
    "148"
   ],
+  "[DET_DIR]": [
+   "617",
+   "618"
+  ],
   "[DFE]": [
    "130"
   ],
   "[DIST]": [
-   "70"
+   "70",
+   "178",
+   "609"
   ],
   "[EIS]": [
-   "70"
+   "70",
+   "178",
+   "502",
+   "615"
+  ],
+  "[ENCOUCSTAT]": [
+   "195",
+   "512"
   ],
   "[ENCSEQCTRL]": [
    "139"
+  ],
+  "[EO_SW]": [
+   "627"
+  ],
+  "[GOLFSHOT]": [
+   "191",
+   "508"
   ],
   "[IDT]": [
    "120"
@@ -2740,11 +2803,33 @@
   "[IMAGING_CAP]": [
    "107"
   ],
+  "[IMAGING_RAW]": [
+   "604"
+  ],
   "[IMAGING_REL]": [
    "125"
   ],
+  "[IMAGING_RSRC]": [
+   "611"
+  ],
+  "[INT_ERROR]": [
+   "193",
+   "511"
+  ],
+  "[JIRO]": [
+   "623"
+  ],
   "[JOG]": [
    "165"
+  ],
+  "[JPEG]": [
+   "605"
+  ],
+  "[LENS_PDR]": [
+   "616"
+  ],
+  "[LENS_YC]": [
+   "604"
   ],
   "[LIF_DEBUG]": [
    "175"
@@ -2758,17 +2843,40 @@
   "[MOUNT_ERROR]": [
    "133"
   ],
+  "[MOUNT_INFO]": [
+   "608"
+  ],
+  "[MOUNT_WARNING]": [
+   "613"
+  ],
+  "[NSX_VOT]": [
+   "606"
+  ],
   "[OSD]": [
    "178"
   ],
   "[PANDA]": [
    "151"
   ],
+  "[PNL]": [
+   "194"
+  ],
   "[REMOTE]": [
-   "180"
+   "180",
+   "602"
+  ],
+  "[RE]": [
+   "184",
+   "510"
   ],
   "[SAD]": [
    "167"
+  ],
+  "[SDF]": [
+   "197"
+  ],
+  "[SENSER]": [
+   "619"
   ],
   "[SFRA]": [
    "118"
@@ -2776,8 +2884,19 @@
   "[SFRS]": [
    "116"
   ],
+  "[STABILIZER]": [
+   "178",
+   "504",
+   "620"
+  ],
   "[STK]": [
-   "178"
+   "178",
+   "192",
+   "501"
+  ],
+  "[TD]": [
+   "187",
+   "506"
   ],
   "[TP_R]": [
    "156"
@@ -2786,8 +2905,30 @@
    "71",
    "111"
   ],
+  "[UTILITY]": [
+   "624"
+  ],
+  "[VDF]": [
+   "200",
+   "500"
+  ],
+  "[VEF]": [
+   "196",
+   "505"
+  ],
+  "[VIDENCSTAT]": [
+   "507"
+  ],
   "[VPH_API]": [
    "131"
+  ],
+  "[WSX]": [
+   "190",
+   "509"
+  ],
+  "[ZPD]": [
+   "503",
+   "614"
   ]
  },
  "salvedad": "el patron captura tambien fragmentos de formato ([D0]-[D7], [IN1], [IN2], [NULL], [SIZE], [STAT], [HW]): 372 es un TECHO, no el numero exacto de modulos",
@@ -2801,64 +2942,28 @@
  "efecto_en_S51": "ninguno: el censo es de cobertura, no de contenido",
  "nota_recuentos": "los tres recuentos son una fotografia del momento (el catalogo sigue creciendo en paralelo); el invariante es que con_hito + cubiertas_como_sub_etiqueta + pendientes_reales = 372",
  "cubiertas_como_sub_etiqueta": {
-  "[INFO]": [
-   "[ACCY]",
-   "[DEPTH]",
-   "[SFRS]"
-  ],
-  "[DEBUG]": [
-   "[ACCY]",
-   "[ADF]",
-   "[DEPTH]",
-   "[SFRS]"
-  ],
-  "[WARN]": [
-   "[ACCY]",
-   "[DEPTH]"
-  ],
-  "[ERR]": [
-   "[ACCY]",
-   "[ADF]",
-   "[SFRA]",
-   "[SFRS]"
-  ],
-  "[INIT]": [
-   "[ADF]"
-  ],
-  "[SYS]": [
-   "[ADF]"
-  ],
   "[ADJ]": [
-   "[ADF]"
-  ],
-  "[SYSND]": [
-   "[ADF]"
-  ],
-  "[OUT]": [
-   "[ADF]"
-  ],
-  "[CH_SRC]": [
-   "[ADF]"
-  ],
-  "[GS]": [
-   "[ADF]"
-  ],
-  "[SAN]": [
    "[ADF]"
   ],
   "[AFNR]": [
    "[ADF]"
   ],
-  "[FACE]": [
+  "[BUF]": [
+   "[SFRA]"
+  ],
+  "[CH_SRC]": [
    "[ADF]"
   ],
-  "[TSK]": [
+  "[CMD]": [
+   "[SFRA]",
+   "[SFRS]"
+  ],
+  "[CMPDATA]": [
    "[CDIAG]"
   ],
-  "[CTRLIF]": [
-   "[AMSENS]",
-   "[CDIAG]",
-   "[MCSENS]"
+  "[CMP]": [
+   "[SFRA]",
+   "[SFRS]"
   ],
   "[CTRLHDDEC]": [
    "[CDIAG]"
@@ -2866,13 +2971,18 @@
   "[CTRLHDREC]": [
    "[CDIAG]"
   ],
+  "[CTRLIF]": [
+   "[AMSENS]",
+   "[CDIAG]",
+   "[MCSENS]"
+  ],
   "[CTRLJPGDEC]": [
    "[CDIAG]"
   ],
-  "[CTRLJPGENC]": [
+  "[CTRLJPGENCDEC]": [
    "[CDIAG]"
   ],
-  "[CTRLJPGENCDEC]": [
+  "[CTRLJPGENC]": [
    "[CDIAG]"
   ],
   "[CTRLSDDEC]": [
@@ -2881,57 +2991,88 @@
   "[CTRLSDREC]": [
    "[CDIAG]"
   ],
-  "[CMPDATA]": [
-   "[CDIAG]"
-  ],
-  "[MSGIF]": [
-   "[AMSENS]",
-   "[MCSENS]"
-  ],
-  "[PRINT]": [
-   "[AUGI]"
+  "[DEBUG]": [
+   "[ACCY]",
+   "[ADF]",
+   "[DEPTH]",
+   "[SFRS]"
   ],
   "[ERROR]": [
    "[SFRA]",
    "[SFRS]"
   ],
+  "[ERR]": [
+   "[ACCY]",
+   "[ADF]",
+   "[SFRA]",
+   "[SFRS]"
+  ],
+  "[FACE]": [
+   "[ADF]"
+  ],
+  "[FUNC]": [
+   "[SFRS]"
+  ],
+  "[GS]": [
+   "[ADF]"
+  ],
+  "[HOUSING]": [
+   "[ACCY]"
+  ],
+  "[INFO]": [
+   "[ACCY]",
+   "[DEPTH]",
+   "[SFRS]"
+  ],
+  "[INIT]": [
+   "[ADF]"
+  ],
   "[MOUNT]": [
    "[CAMERA_IS]"
   ],
-  "[CMD]": [
-   "[SFRA]",
-   "[SFRS]"
-  ],
-  "[CMP]": [
-   "[SFRA]",
-   "[SFRS]"
-  ],
-  "[BUF]": [
-   "[SFRA]"
-  ],
-  "[RATECONTROL]": [
-   "[SFRA]"
+  "[MSGIF]": [
+   "[AMSENS]",
+   "[MCSENS]"
   ],
   "[NOTIFY]": [
    "[SFRA]"
   ],
-  "[SFR_ERR_NOTREADY]": [
-   "[SFRA]"
+  "[OUT]": [
+   "[ADF]"
   ],
-  "[WARNING]": [
+  "[PINSEND]": [
+   "[SFRS]"
+  ],
+  "[PRINT]": [
+   "[AUGI]"
+  ],
+  "[RATECONTROL]": [
    "[SFRA]"
   ],
   "[RC]": [
    "[SFRA]"
   ],
-  "[PINSEND]": [
-   "[SFRS]"
+  "[SAN]": [
+   "[ADF]"
   ],
-  "[FUNC]": [
-   "[SFRS]"
+  "[SFR_ERR_NOTREADY]": [
+   "[SFRA]"
   ],
-  "[DET_DIR]": [
-   "[CAMERA_DEVICE]"
+  "[SYSND]": [
+   "[ADF]"
+  ],
+  "[SYS]": [
+   "[ADF]"
+  ],
+  "[TSK]": [
+   "[CDIAG]"
+  ],
+  "[WARNING]": [
+   "[SFRA]"
+  ],
+  "[WARN]": [
+   "[ACCY]",
+   "[DEPTH]"
   ]
  },
  "pendientes_reales_ordenadas": [

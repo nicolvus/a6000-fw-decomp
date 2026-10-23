@@ -1,6 +1,8 @@
 # S606 — `[NSX_VOT]`: módulo de traza timer/alarma exclusivo de la A6000 fw3.21
 
-**7 trazas · 14 sitios (regla PIC estricta: 7 pares gemelos) · ~2 funciones emisoras · 0 muertas.** Detalle + datos: `analysis/s606_nsx_vot/` (pendiente) / `.json` (pendiente).
+**Auditoría 23-10-2026:** direcciones de las cadenas corregidas contra coincidencias únicas en `av-cam.bin` (base `0x43541000`). Las longitudes canónicas están en el JSON corregido. La duplicación del logger, los límites de funciones y la equivalencia entre modelos no quedan demostrados por presencia de cadenas; esas afirmaciones históricas siguen NO_VERIFICADO.
+
+**7 trazas · 14 sitios (regla PIC estricta: 7 pares gemelos) · ~2 funciones emisoras · 0 muertas.** Detalle + datos: [JSON](../../analysis/s606_nsx_vot/nsx_vot.json).
 
 ## Qué es
 
@@ -9,13 +11,13 @@
 ## Las 7 trazas (vaddr → texto corto; gemelo `[TRK]: ` en `vaddr+Δ`)
 
 ```
-0x43cfdb76 [NSX_VOT]: almhdl : bt stop error: %d          → gemelo 0x43cfdb9c (+0x26)
-0x43cfdbbe [NSX_VOT]: osal_alloc_timer(): %d               → gemelo 0x43cfdbe0 (+0x22)
-0x43cfdbfe [NSX_VOT]: osal_alloc_timer(): handle alloc again!! → gemelo 0x43cfdc32 (+0x34)
-0x43cfdc62 [NSX_VOT]: osal_free_timer(): handle NULL!!     → gemelo 0x43cfdc8e (+0x2c)
-0x43cfdcb6 [NSX_VOT]: osal_free_timer(): %d                → gemelo 0x43cfdcd7 (+0x21)
-0x43cfdcf4 [NSX_VOT]: osal_set_timer(): %d                 → gemelo 0x43cfdd14 (+0x20)
-0x43cfdd30 [NSX_VOT]: osal_can_timer(): %d                 → gemelo 0x43cfdd50 (+0x20)
+0x43cfdb1e [NSX_VOT]: almhdl : bt stop error: %d          → gemelo 0x43cfdb9c (+0x26)
+0x43cfdb66 [NSX_VOT]: osal_alloc_timer(): %d               → gemelo 0x43cfdbe0 (+0x22)
+0x43cfdba6 [NSX_VOT]: osal_alloc_timer(): handle alloc again!! → gemelo 0x43cfdc32 (+0x34)
+0x43cfdc0a [NSX_VOT]: osal_free_timer(): handle NULL!!     → gemelo 0x43cfdc8e (+0x2c)
+0x43cfdc5e [NSX_VOT]: osal_free_timer(): %d                → gemelo 0x43cfdcd7 (+0x21)
+0x43cfdc9c [NSX_VOT]: osal_set_timer(): %d                 → gemelo 0x43cfdd14 (+0x20)
+0x43cfdcd8 [NSX_VOT]: osal_can_timer(): %d                 → gemelo 0x43cfdd50 (+0x20)
 ```
 
 ## Hallazgos con dirección
@@ -23,7 +25,7 @@
 - **Pares gemelos exactos**: cada traza `[NSX_VOT]: ` tiene su gemelo `[TRK]: ` a distancia fija (20–52 bytes), confirmando **duplicación de traza** (logger de módulo nuevo + logger global viejo), patrón idéntico a S177/S179/S603/S604/S605.
 - **Función `almhdl`**: manejador de alarma/bluetooth (`bt stop error`) + API timer OSAL (`alloc/free/set/can`).
 - **Logger dual**: la fw3.21 emite **ambas** trazas (nueva con prefijo `[NSX_VOT]: ` + vieja con prefijo `[TRK]: `). El logger global `[TRK]: ` ya existe en A7S/A6300 (ver diferencial).
-- **Longitud del prefijo**: 10 B (`[NSX_VOT]: `) → fija, no se ajusta al nivel/mensaje.
+- **Longitud del prefijo**: 11 B (`[NSX_VOT]: `) → fija, no se ajusta al nivel/mensaje.
 - **Estructura**: capa fina sobre `osal_*_timer()`; `almhdl` sugiere manejador de alarma con Bluetooth.
 
 ## Diferencial A6000 fw3.21 vs A7S fw3.20 vs A6300 fw2.01
@@ -38,7 +40,7 @@
 
 → **Cambio de *logging*, no de código.** El gestor de timers/alarmas **existe igual** en los tres firmware (mismas 7 cadenas núcleo, mismas funciones `osal_*_timer`, mismo `almhdl`). Lo propio de la fw3.21 de la A6000 son **las 7 trazas con prefijo `[NSX_VOT]: `** y la **duplicación** con logger global `[TRK]: ` (que ya es el prefijo usado en A7S/A6300). A7S/A6300 usan `[TRK]: ` como prefijo principal y `[CapMgr]` para variantes.
 
-**Longitud del prefijo fija:** 10 B (`[NSX_VOT]: `) → no variable (igual que S605).
+**Longitud del prefijo fija:** 11 B (`[NSX_VOT]: `) → no variable (igual que S605).
 
 ## Línea del obturador: NEGATIVO ACOTADO
 
@@ -46,7 +48,7 @@
 
 ## Verificación
 
-- 7/7 cadenas `[NSX_VOT]: ` confirmadas en `0x43cfdb76`–`0x43cfdd30`.
+- 7/7 cadenas `[NSX_VOT]: ` confirmadas en `0x43cfdb1e`–`0x43cfdcd8`.
 - 7/7 gemelos `[TRK]: ` confirmados en `0x43cfdb9c`–`0x43cfdd50` (distancias +20 a +52 bytes).
 - 0/0 en A7S y A6300 para token `[NSX_VOT]`; 7/7 para `[TRK]` (mismo núcleo).
-- Scripts: `analysis/s606_nsx_vot/` (pendiente) · Tests: `tests/test_s606_nsx_vot.py` (pendiente).
+- Scripts: `analysis/s606_nsx_vot/` (pendiente) · Tests: `tests/test_s606_nsx_vot.py`.

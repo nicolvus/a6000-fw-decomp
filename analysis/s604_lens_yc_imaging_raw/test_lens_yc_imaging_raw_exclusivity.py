@@ -4,15 +4,17 @@ VERIFICADO: 22 trace strings with prefix [LENS_YC] exist in A6000 fw3.21.
 VERIFICADO: 18 trace strings with prefix [IMAGING_RAW] exist in A6000 fw3.21.
 VERIFICADO: 0 such strings in A7S fw3.20.
 VERIFICADO: 0 such strings in A6300 fw2.01.
-CONCLUSION: Both modules are exclusive to A6000 fw3.21.
+CONCLUSION: Both trace prefixes are exclusive to A6000 fw3.21.
 """
 
-import subprocess
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
 
 FIRMWARES = {
-    "A6000_fw321": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
-    "A7S_fw320": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
-    "A6300_fw201": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+    "A6000_fw321": ROOT / "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+    "A7S_fw320": ROOT / "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+    "A6300_fw201": ROOT / "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
 }
 
 PATTERNS = {
@@ -21,9 +23,8 @@ PATTERNS = {
 }
 
 
-def count_pattern(bin_path: str, pattern: bytes) -> int:
-    result = subprocess.run(["strings", "-a", bin_path], check=False, capture_output=True)
-    return result.stdout.count(pattern)
+def count_pattern(bin_path: Path, pattern: bytes) -> int:
+    return bin_path.read_bytes().count(pattern)
 
 
 def test_exclusivity():

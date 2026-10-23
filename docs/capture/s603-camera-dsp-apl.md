@@ -1,6 +1,8 @@
 # S603 — `[CAMERA_DSP_APL]`: el driver APL de cámara (DSP) — etiqueta nueva de la fw3.21
 
-**18 trazas · 22 sitios (regla PIC estricta) · ~6 funciones emisoras · 0 muertas.** Detalle + datos: `analysis/s603_camera_dsp_apl/` (pendiente) / `.json` (pendiente).
+**Auditoría 23-10-2026:** la exclusividad verificada es la del prefijo de traza en los tres binarios comparados. No demuestra ausencia de código equivalente en otro modelo ni identifica por sí sola un módulo nuevo. Los tests corregidos leen los archivos reales y ya no convierten un error de ruta en cero coincidencias.
+
+**18 trazas · 22 sitios (regla PIC estricta) · ~6 funciones emisoras · 0 muertas.** Detalle + datos: [JSON](../../analysis/s603_camera_dsp_apl/camera_dsp_apl.json).
 
 ## Qué es
 
@@ -59,4 +61,4 @@
 ## Verificación
 
 - 22/22 pares PIC verificados a mano (pool, `destino = literal + (add+4)`, sin reuso de registro).
-- Scripts: `analysis/s603_camera_dsp_apl/` (pendiente) · Tests: `tests/test_s603_camera_dsp_apl.py` (pendiente).
+- Scripts: `analysis/s603_camera_dsp_apl/` (pendiente) · Tests: `tests/test_s603_camera_dsp_apl.py`.

@@ -1,5 +1,7 @@
 # S604 — `[LENS_YC]` y `[IMAGING_RAW]`: dos módulos exclusivos de traza de la A6000 fw3.21
 
+**Auditoría 23-10-2026:** la exclusividad verificada es la del prefijo de traza en los tres binarios comparados. No demuestra ausencia de código equivalente en otro modelo ni identifica por sí sola un módulo nuevo. Los tests corregidos leen los archivos reales y ya no convierten un error de ruta en cero coincidencias.
+
 > **Nota:** ambos módulos son **exclusivos de la A6000 en traza** (token `[XXX]` 0/0 en A7S y A6300), pero el **código subyacente existe en los tres** firmware. El patrón es idéntico a S177/S179/S603: **cambio de logging, no de código**.
 
 ---
@@ -120,4 +122,4 @@
 - `[LENS_YC]`: 21/21 cadenas con gemelo exacto en `+10` (prefijo 10 B), 0 punteros absolutos.
 - `[IMAGING_RAW]`: 20/20 cadenas con gemelo exacto en `+14` (prefijo 14 B), 0 punteros absolutos.
 - Ambos: **0/0 en A7S y A6300 para el token**, **21/21 y 20/20 para el núcleo**.
-- Scripts: `analysis/s604_lens_yc_imaging_raw/` (pendiente) · Tests: `tests/test_s604_lens_yc_imaging_raw.py` (pendiente).
+- Scripts: `analysis/s604_lens_yc_imaging_raw/` (pendiente) · Tests: `tests/test_s604_lens_yc_imaging_raw.py`.

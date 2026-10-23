@@ -1,6 +1,8 @@
 # S608 — `[MOUNT_INFO]`: módulo de traza de montura/bootloader exclusivo de la A6000 fw3.21
 
-**6 trazas · 6 sitios (regla PIC estricta) · ~2 funciones emisoras · 0 muertas.** Detalle + datos: `analysis/s608_mount_info/` (pendiente) / `.json` (pendiente).
+**Auditoría 23-10-2026:** direcciones de las cadenas corregidas contra coincidencias únicas en `av-cam.bin` (base `0x43541000`). Las longitudes canónicas están en el JSON corregido. La duplicación del logger, los límites de funciones y la equivalencia entre modelos no quedan demostrados por presencia de cadenas; esas afirmaciones históricas siguen NO_VERIFICADO.
+
+**6 trazas · 6 sitios (regla PIC estricta) · ~2 funciones emisoras · 0 muertas.** Detalle + datos: [JSON](../../analysis/s608_mount_info/mount_info.json).
 
 ## Qué es
 
@@ -9,12 +11,12 @@
 ## Las 6 trazas (vaddr → texto corto)
 
 ```
-0x43c9711f [MOUNT_INFO]: [BL]LIF Command Change : 0x%X >>> 0x%X
-0x43c98259 [MOUNT_INFO]: [BL]UUD CallBack : MSGID_GET_VERSION
-0x43c9828c [MOUNT_INFO]: [BL]UUD CallBack : MSGID_GET_FORCE_FIRMUP
-0x43c982c4 [MOUNT_INFO]: [BL]UUD CallBack : MSGID_FIRM_UP_REQ
-0x43c982f7 [MOUNT_INFO]: [BL]UUD CallBack : MSGID_PREPARE_UPDATE
-0x43c9832d [MOUNT_INFO]: [BL]UUD CallBack : MSGID_UNPLUG_USB
+0x43c970c7 [MOUNT_INFO]: [BL]LIF Command Change : 0x%X >>> 0x%X
+0x43c98201 [MOUNT_INFO]: [BL]UUD CallBack : MSGID_GET_VERSION
+0x43c98234 [MOUNT_INFO]: [BL]UUD CallBack : MSGID_GET_FORCE_FIRMUP
+0x43c9826c [MOUNT_INFO]: [BL]UUD CallBack : MSGID_FIRM_UP_REQ
+0x43c9829f [MOUNT_INFO]: [BL]UUD CallBack : MSGID_PREPARE_UPDATE
+0x43c982d5 [MOUNT_INFO]: [BL]UUD CallBack : MSGID_UNPLUG_USB
 ```
 
 ## Hallazgos con dirección
@@ -28,7 +30,7 @@
   - `MSGID_PREPARE_UPDATE` — preparación de actualización
   - `MSGID_UNPLUG_USB` — desconexión USB
 - **Logger dual (patrón S177/S179/S603–S607)**: la fw3.21 **duplica** la traza: nueva con prefijo `[MOUNT_INFO]: ` (logger de módulo) + vieja con prefijo `[BL] ` vía logger global `0x43902718` (idéntico a S177/S179/S603–S607). El string original en A7S/A6300 ya tiene `[BL] `.
-- **Longitud del prefijo**: 12 B (`[MOUNT_INFO]: `) + 4 B (`[BL] `) = 16 B totales → el prefijo compuesto más largo de la serie.
+- **Longitud del prefijo**: 14 B (`[MOUNT_INFO]: `) + 4 B (`[BL] `) = 16 B totales → el prefijo compuesto más largo de la serie.
 - **Estructura BL**: el subsistema `[BL]` en A7S/A6300 tiene 70+ trazas (errores de firmware update, sync, async, VSYNC, mount error, lens error, power seq, etc.). La fw3.21 **añade capa `[MOUNT_INFO]: `** a 6 strings específicas de LIF/UUD.
 
 ## Diferencial A6000 fw3.21 vs A7S fw3.20 vs A6300 fw2.01
@@ -50,6 +52,6 @@
 
 ## Verificación
 
-- 6/6 cadenas `[MOUNT_INFO]: [BL]...` confirmadas en `0x43c9711f`–`0x43c9832d`.
+- 6/6 cadenas `[MOUNT_INFO]: [BL]...` confirmadas en `0x43c970c7`–`0x43c982d5`.
 - 0/0 en A7S y A6300 para token `[MOUNT_INFO]`; 70+ `[BL]` en A7S/A6300 (strings distintos).
-- Scripts: `analysis/s608_mount_info/` (pendiente) · Tests: `tests/test_s608_mount_info.py` (pendiente).
+- Scripts: `analysis/s608_mount_info/` (pendiente) · Tests: `tests/test_s608_mount_info.py`.

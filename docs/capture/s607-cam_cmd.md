@@ -1,6 +1,8 @@
 # S607 — `[CAM_CMD]`: módulo de traza de comandos de cámara exclusivo de la A6000 fw3.21
 
-**6 trazas · 6 sitios (regla PIC estricta) · ~3 funciones emisoras · 0 muertas.** Detalle + datos: `analysis/s607_cam_cmd/` (pendiente) / `.json` (pendiente).
+**Auditoría 23-10-2026:** direcciones de las cadenas corregidas contra coincidencias únicas en `av-cam.bin` (base `0x43541000`). Las longitudes canónicas están en el JSON corregido. La duplicación del logger, los límites de funciones y la equivalencia entre modelos no quedan demostrados por presencia de cadenas; esas afirmaciones históricas siguen NO_VERIFICADO.
+
+**6 trazas · 6 sitios (regla PIC estricta) · ~3 funciones emisoras · 0 muertas.** Detalle + datos: [JSON](../../analysis/s607_cam_cmd/cam_cmd.json).
 
 ## Qué es
 
@@ -9,12 +11,12 @@
 ## Las 6 trazas (vaddr → texto corto)
 
 ```
-0x43cbed10 [CAM_CMD]: Warning! Now rocessing... req[%d]
-0x43cbed3d [CAM_CMD]: Error! Can't Transfer Request cur_state[%d] req[%d]
-0x43cbed7d [CAM_CMD]: Error! s_path_selector SetupTable cur_state[%d] req[%d]
-0x43cbedc1 [CAM_CMD]: Error! s_request is NULL!
-0x43cbede6 [CAM_CMD]: Error! s_mode_sequencer SetupTable [%d]->[%d]
-0x43cbee20 [CAM_CMD]: Error! CheckReturnAllModlueResponse
+0x43caeb10 [CAM_CMD]: Warning! Now rocessing... req[%d]
+0x43caeb3d [CAM_CMD]: Error! Can't Transfer Request cur_state[%d] req[%d]
+0x43caeb7d [CAM_CMD]: Error! s_path_selector SetupTable cur_state[%d] req[%d]
+0x43caebc1 [CAM_CMD]: Error! s_request is NULL!
+0x43caebe6 [CAM_CMD]: Error! s_mode_sequencer SetupTable [%d]->[%d]
+0x43caec20 [CAM_CMD]: Error! CheckReturnAllModlueResponse
 ```
 
 ## Hallazgos con dirección
@@ -25,7 +27,7 @@
 - **Mode sequencer**: `SetupTable` para transiciones `[%d]->[%d]`; error si configuración inválida.
 - **Validaciones**: `s_request` NULL check; `CheckReturnAllModlueResponse` (typo: "Modlue" → "Module").
 - **Logger dual (patrón S177/S179/S603/S604/S605/S606)**: la fw3.21 **duplica** la traza: nueva con prefijo `[CAM_CMD]: ` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`. Ejemplo: en offset `+0x2c` carga string con prefijo y en `+0x32` llama `bl 0x43902718` con string original.
-- **Longitud del prefijo**: 10 B (`[CAM_CMD]: `) → fija (igual que S605/S606).
+- **Longitud del prefijo**: 11 B (`[CAM_CMD]: `) → fija (igual que S605/S606).
 - **Typo**: "Modlue" en "Module" — presente en los tres firmware.
 
 ## Diferencial A6000 fw3.21 vs A7S fw3.20 vs A6300 fw2.01
@@ -39,7 +41,7 @@
 
 → **Cambio de *logging*, no de código.** El gestor de comandos Capcon **existe igual** en los tres firmware (mismas 6 cadenas núcleo, mismas variables `s_path_selector`, `s_mode_sequencer`, `s_request`, mismo typo "Modlue"). Lo propio de la fw3.21 de la A6000 son **las 6 trazas con prefijo `[CAM_CMD]: `** y la **duplicación** con logger global `0x43902718`. En A7S/A6300 las 6 cadenas existen **sin prefijo** (inician directamente con "Warning!" / "Error!").
 
-**Longitud del prefijo fija:** 10 B (`[CAM_CMD]: `) → no variable.
+**Longitud del prefijo fija:** 11 B (`[CAM_CMD]: `) → no variable.
 
 ## Línea del obturador: NEGATIVO ACOTADO
 
@@ -47,7 +49,7 @@
 
 ## Verificación
 
-- 6/6 cadenas `[CAM_CMD]: ` confirmadas en `0x43cbed10`–`0x43cbee20`.
+- 6/6 cadenas `[CAM_CMD]: ` confirmadas en `0x43caeb10`–`0x43caec20`.
 - 6/6 núcleos idénticos en A7S fw3.20 (`0x770e9b`–`0x770f74`) y A6300 fw2.01 (mismos offsets relativos).
 - 0/0 en A7S y A6300 para token `[CAM_CMD]`.
-- Scripts: `analysis/s607_cam_cmd/` (pendiente) · Tests: `tests/test_s607_cam_cmd.py` (pendiente).
+- Scripts: `analysis/s607_cam_cmd/` (pendiente) · Tests: `tests/test_s607_cam_cmd.py`.

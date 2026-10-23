@@ -96,5 +96,5 @@ siglas `AS`/`DIST`; significado de las `u16` `ctx+0xbd8`/`ctx+0xbda`; destino f�
 `SetStblzGridH`; formato binario completo de `FILE_IS_%04x.dat`; tabla de registro de los
 callbacks (no hay punteros absolutos a las 4 funciones sin llamadores `bl`).
 
-Informe completo: [`analysis/s164_camera_is/camera_is.md`](../analysis/s164_camera_is/camera_is.md) ·
+Informe completo: [`analysis/s164_camera_is/camera_is.md`](../../analysis/s164_camera_is/camera_is.md) ·
 Datos: `analysis/s164_camera_is/camera_is.json` · Tests: `tests/test_s164_camera_is.py`.

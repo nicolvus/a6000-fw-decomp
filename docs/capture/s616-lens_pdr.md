@@ -1,6 +1,8 @@
 # S616 — `[LENS_PDR]`: módulo de comunicación PDR de lente exclusivo de la A6000 fw3.21
 
-**4 trazas · 4 sitios (regla PIC estricta) · ~2 funciones emisoras · 0 muertas.** Detalle + datos: `analysis/s616_lens_pdr/` (pendiente) / `.json` (pendiente).
+**Auditoría 23-10-2026:** direcciones de las cadenas corregidas contra coincidencias únicas en `av-cam.bin` (base `0x43541000`). Las longitudes canónicas están en el JSON corregido. La duplicación del logger, los límites de funciones y la equivalencia entre modelos no quedan demostrados por presencia de cadenas; esas afirmaciones históricas siguen NO_VERIFICADO.
+
+**4 trazas · 4 sitios (regla PIC estricta) · ~2 funciones emisoras · 0 muertas.** Detalle + datos: [JSON](../../analysis/s616_lens_pdr/lens_pdr.json).
 
 ## Qué es
 
@@ -9,10 +11,10 @@
 ## Las 4 trazas (vaddr → texto corto)
 
 ```
-0x43c9a822 [LENS_PDR]: BonoboDSP_Send: Data latch failed!
-0x43c9a852 [LENS_PDR]: BonoboDSP_Send:[ch0]Data latch failed!
-0x43c9a886 [LENS_PDR]: BonoboDSP_Send:[ch1]Data latch failed!
-0x43c9a8ba [LENS_PDR]: BonoboDSP_Rcv: paritycheck_error!
+0x43c9a7ca [LENS_PDR]: BonoboDSP_Send: Data latch failed!
+0x43c9a7fa [LENS_PDR]: BonoboDSP_Send:[ch0]Data latch failed!
+0x43c9a82e [LENS_PDR]: BonoboDSP_Send:[ch1]Data latch failed!
+0x43c9a862 [LENS_PDR]: BonoboDSP_Rcv: paritycheck_error!
 ```
 
 ## Hallazgos con dirección
@@ -24,7 +26,7 @@
   - Canal 1: `BonoboDSP_Send:[ch1]Data latch failed!`
 - **Recepción (Rcv)**: 1 traza de error de paridad — `BonoboDSP_Rcv: paritycheck_error!` — error de checksum/paridad en recepción.
 - **Logger dual (patrón S177/S179/S603–S615)**: la fw3.21 **duplica** la traza: nueva con prefijo `[LENS_PDR]: ` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
-- **Longitud del prefijo**: 11 B (`[LENS_PDR]: `) → fija.
+- **Longitud del prefijo**: 12 B (`[LENS_PDR]: `) → fija.
 
 ## Diferencial A6000 fw3.21 vs A7S fw3.20 vs A6300 fw2.01
 
@@ -33,11 +35,11 @@
 | token `[LENS_PDR]` | **4** | **0** | **0** |
 | núcleo sin prefijo (`BonoboDSP_Send/Rcv`, `Data latch failed`, `paritycheck_error`) | 0/4 como literal autónomo | **4/4** (idénticos) | **4/4** (idénticos) |
 | prefijo alternativo A7S/A6300 | 0 | **ninguno** (strings sueltas) | **ninguno** (strings sueltas) |
-| código equivalente (BonoboDSP) | `0x43c9a822`… | **sí** | **sí** |
+| código equivalente (BonoboDSP) | `0x43c9a7ca`… | **sí** | **sí** |
 
 → **Cambio de *logging*, no de código.** El DSP "Bonobo" de comunicación de lente **existe igual** en los tres firmware (mismas 4 cadenas núcleo, mismas funciones `BonoboDSP_Send/Rcv`, mismos errores `Data latch failed` y `paritycheck_error`). Lo propio de la fw3.21 de la A6000 son **las 4 trazas con prefijo `[LENS_PDR]: `**. La fw3.21 **duplica** la traza (nueva con logger de módulo + vieja intacta con logger global `0x43902718`).
 
-**Longitud del prefijo fija:** 11 B (`[LENS_PDR]: `) → fija, no variable.
+**Longitud del prefijo fija:** 12 B (`[LENS_PDR]: `) → fija, no variable.
 
 ## Línea del obturador: NEGATIVO ACOTADO
 
@@ -45,7 +47,7 @@
 
 ## Verificación
 
-- 4/4 cadenas `[LENS_PDR]: ` confirmadas en `0x43c9a822`–`0x43c9a8ba`.
+- 4/4 cadenas `[LENS_PDR]: ` confirmadas en `0x43c9a7ca`–`0x43c9a862`.
 - 4/4 núcleos idénticos en A7S fw3.20 y A6300 fw2.01 (sin prefijo).
 - 0/0 en A7S y A6300 para token `[LENS_PDR]`.
-- Scripts: `analysis/s616_lens_pdr/` (pendiente) · Tests: `tests/test_s616_lens_pdr.py` (pendiente).
+- Scripts: `analysis/s616_lens_pdr/` (pendiente) · Tests: `tests/test_s616_lens_pdr.py`.

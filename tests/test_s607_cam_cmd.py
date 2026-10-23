@@ -22,7 +22,7 @@ class TestS607CAMCMD(unittest.TestCase):
                           f"Trace missing prefix: {ts['text']}")
 
     def test_prefix_length(self):
-        self.assertEqual(self.data['prefix_length'], 10)
+        self.assertEqual(self.data['prefix_length'], 11)
         self.assertEqual(self.data['prefix'], '[CAM_CMD]: ')
 
     def test_differential_a6000(self):

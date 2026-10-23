@@ -2,6 +2,16 @@
 
 ## 1. Patrones buscados en libObj.so (A6000 fw3.21, A7S fw3.20, A6300 fw2.01)
 
+**AUDITORÍA 23-10-2026 — tabla y encodings históricos invalidados.** Los patrones Thumb publicados no codifican las instrucciones indicadas. `0x40193` requiere mitad alta **4**, no `0x40`. Además, el test reutilizaba el offset `.data` A6000 en la A7S. Las tablas siguientes se conservan como registro del método fallido; sus ceros de MOVW/MOVT no son evidencia de ausencia.
+
+Resultados reproducidos desde las secciones de cada ELF: cero palabras `93 01 04 00` en `.rodata`/`.data` de A6000 y A7S y cero cadenas ASCII `40193`. `.data` A7S está en offset `0xefb9e0`, tamaño `0x736a0`; A6000 en `0x102d320`, tamaño `0x73588`.
+
+El encoding correcto `40 f2 93 13` es `movw r3,#0x193` y existe en ambos binarios (A6000, por ejemplo, `0x14ccde`). `c0 f2 04 00` es `movt r0,#4`. Un barrido por máscaras de halfwords de `.text` detecta **60/44** candidatos Thumb MOVW #0x193 en A6000/A7S; son candidatos estáticos, no 60/44 construcciones del ID completo. Falta análisis de flujo y modos ARM/Thumb para identificar su uso. La A6300 no se reverificó en esta auditoría.
+
+**Conclusión vigente: NO_VERIFICADO** el origen del ID y el registro del callback. Los negativos de datos son acotados; no se exige cámara para continuar el análisis estático.
+
+## Registro histórico (no usar como prueba)
+
 | Patrón | Encoding | A6000 | A7S | A6300 |
 |---|---|---|---|---|
 | Word LE 0x00040193 | `93 01 04 00` | 9 sitios* | 11 sitios* | 12 sitios* |

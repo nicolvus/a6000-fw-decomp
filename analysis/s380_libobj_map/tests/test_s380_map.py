@@ -44,7 +44,8 @@ def test_plt_section():
         if i == 9:  # .plt
             assert addr == 0x000db3c4
             assert size == 0x0077a0
-            assert size % 16 == 0  # stubs de 16 B
+            # Cabecera de 20 B y veneer Thumb del primer cuerpo ARM.
+            assert data[offset + 20:offset + 24] == bytes.fromhex('78 47 c0 46')
             return
     raise AssertionError(".plt no encontrado")
 

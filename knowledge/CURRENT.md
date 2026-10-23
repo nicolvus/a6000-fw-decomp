@@ -1,21 +1,25 @@
 # Estado actual — léeme primero
 
+## Auditoría 23-10-2026 — prevalece sobre los resúmenes históricos siguientes
+
+[Informe](../docs/auditoria-2026-10-23.md). Retirados los falsos llamadores `0x7484dc`/`0x755af8`; confirmados BL `0x90de2e`/`0x91634e`. S384: encodings históricos incorrectos; origen de `0x40193` NO_VERIFICADO. A7S: referencias a cadenas recuperadas, identidad de Execute pendiente. Corregidas 94 direcciones de trazas y 21 longitudes en los módulos recientes; duplicación de logger y equivalencia funcional no demostradas por cadenas. Reabiertas 141 clasificaciones automáticas de triaje; nuevas filas requieren revisión manual. Censo detallado sincronizado a 94 hitos + 39 subetiquetas = 133/372. Pages incluye P1–P21; estos planes siguen sin ejecutar.
+
 ## S343–S627 — puesta al día (23-10-2026)
 
 - **B (S343–S348):** cadena de copia fila T → bloque de 44 B → canal 0..5 (178 escritores); la escritura de máscara es equivalente en A7S y A6000 (la diferencia es de datos); `0x43fef404` es la tabla de ids de `Camera::Lens::ODL` con `0x000d` constante (13 en las 138 entradas de los tres modelos) y callback tipo `memcpy`. S349+ en curso.
-- **libObj.so (S380–S385):** mapa de la A6000 (26 secciones, `.plt` 1914), despacho de mensajes, `RecordStill::Execute` (0x90b248, Thumb-2) con llamadores BL en `0x90de2e` y `0x91634e`, `…ForLiro` rechazados, ID de cola `0x40193` sin literal en ARM ni Thumb (negativo acotado) y diff A6000↔A7S.
+- **libObj.so (S380–S385):** mapa de la A6000 (26 secciones, PLT corregido a 2420 cuerpos ARM + 391 veneers Thumb), despacho de mensajes, `RecordStill::Execute` (0x90b248, Thumb-2) con llamadores BL en `0x90de2e` y `0x91634e`, `…ForLiro` rechazados, ID de cola `0x40193` sin palabra en .rodata/.data A6000/A7S; el negativo histórico MOVW/MOVT era inválido y diff A6000↔A7S.
 - **Pendientes cerrados (`docs/capture/PENDIENTES_FINALES.md`):** C2 `0x40193`, tabla `0x43edccf8`, DCF/SFRA y `svr_num`/`VdNum` documentados; los bloqueos requieren trazado dinámico o pruebas físicas.
 - **Pruebas físicas:** nuevo [plan 2 (P13–P21)](../docs/capture/physical-test-plan-2.md), todas de solo lectura salvo P21; ninguna ejecutada.
 - **Línea general:** censo recontado a **133/372 (35.75 %)**, 239 pendientes; E llega a S627, D a S515. S51 sin cambios.
 
 ## S380–S385 — libObj.so A6000 vs A7S (22-10-2026)
 
-- **S380** Mapa de `libObj.so` A6000: 26 secciones, 1387 imports func, 1771 exports func, .plt 1914 entradas, .rel.plt 2420. `RecordStill::Execute` en 0x90b248 (Thumb-2). `ObjStillRecorder_*` en 0x913901–0x91395d. [`docs/capture/s380-libobj-a6000-map.md`]
-- **S381** Despacho de mensajes: `SendAndRecv` 0x000e0f24, `queueMsg` 0x000db8c4, `RcvMsg` 0x000dd4a4, `osal_reg_msg_queue_cb` 0x000dd804, `osal_reg_sync_msg_queue_cb` 0x000dd3b4, `ObjPin::Send` 0x000df9b4. 0 BL directo a `.plt` de `osal_*`. 0 xrefs a `RecordStill::Execute`. [`docs/capture/s381-libobj-a6000-dispatch.md`]
+- **S380** Mapa ELF A6000: 26 secciones, 1387 imports FUNC, 1771 exports FUNC, 2420 relocaciones GOT. PLT: 2420 cuerpos ARM + 391 veneers Thumb; 1914 era una división incorrecta por 16. Ver `docs/capture/s380-libobj-a6000-map.md`.
+- **S381** Mapeo PLT corregido por instrucciones/GOT: 83/53 candidatos hacia registradores síncrono/asíncrono. Dos sitios BL hacia Execute confirmados. Origen de `0x40193` pendiente. Ver `docs/capture/s381-libobj-a6000-dispatch.md`.
 - **S383** `…ForLiro` en `libObj.so` A6000: 5 nombres de obturador rechazados (NON SUPPORTED). `SetShutterTypeForLiro` ausente (solo A6300). Sin efecto en S51. [`docs/capture/s383-forliro-silentlibobj.md`]
-- **S384** ID de cola `0x40193`: 0 word LE en `.rodata`/`.data`, 0 `movw`/`movt` para construirlo, 0 string. Ausente en A6000, A7S y A6300. No localizado estáticamente. [`docs/capture/s384-queue-id-0x40193-search.md`]
-- **S382** Llamadores de RecordStill::Execute (0x90b248): 1 BL directo (0x7484dc); 2 sitios con `bl #0x90b248` en funciones contenedoras 0x90de2c (desde 0x755af8) y 0x91631e (vía puntero de función). Ambos pasan (r0=this, r1=ObjMsg*). [`docs/capture/s382-recordstill-callers.md`]
-- **S385** Diff `libObj.so` A6000 vs A7S: A6000 +1.25 MB, entry +0x3880 en A7S, exports mismos nombres direcciones distintas, imports idénticos, NEEDED idénticas (17). RecordStill::Execute NO localizado en A7S (0 `movw #0x100f`, 0 `movt #0x0001`). [`docs/capture/s385-libobj-a6000-vs-a7s-diff.md`]
+- **S384** Cero palabras LE del ID `0x40193` en `.rodata`/`.data` de A6000/A7S y cero cadenas ASCII. Encodings históricos MOVW/MOVT invalidados; sí existe `movw #0x193`. Origen del ID NO_VERIFICADO. Ver `docs/capture/s384-queue-id-0x40193-search.md`.
+- **S382** Dos sitios BL confirmados: `0x90de2e` y `0x91634e`. Retirados los falsos llamadores `0x7484dc` y `0x755af8`; límites de funciones y despacho indirecto NO_VERIFICADO. Ver `docs/capture/s382-recordstill-callers.md`.
+- **S385** Métricas ELF comparadas; equivalencia de `RecordStill::Execute` en A7S NO_VERIFICADO. Referencias a cadenas recuperadas en `0x847e26` y `0x847f4e`–`0x84803a`; no prueban todavía su identidad. Ver `docs/capture/s385-libobj-a6000-vs-a7s-diff.md`.
 
 **24 tests PASS** en `analysis/s380_libobj_map/tests/`.
 
@@ -206,7 +210,7 @@ Todos los módulos del censo S178 (372 etiquetas) están ahora cubiertos:
 
 - El dispatcher de dominio C2 `0x43807f4c` (Thumb `0x43807f4d`) está referenciado como puntero de función en tabla/vtable en `0x43fcd3e0` (tabla base `0x43fcd3a0`).
 - No hay BL directo ni literal a la tabla; el llamador del dispatcher sigue sin localizarse estáticamente.
-- Receptor de cola `0x40193` no localizado (sin literal, sin movw/movt, sin BL a osal_rcv_msg).
+- Receptor de cola `0x40193` NO_VERIFICADO. Auditoría: se retiran los negativos históricos de MOVW/MOVT y PLT; seguir los candidatos estáticos recuperados en S381.
 - Doc: `docs/capture/shutter-trigger-chain-0x3011.md`, `analysis/rea-independent/out/C2_CHAIN_ANALYSIS.md`.
 
 ## S134 — svr_num/VdNum writers no localizados (22-10-2026)
@@ -217,7 +221,7 @@ Todos los módulos del censo S178 (372 etiquetas) están ahora cubiertos:
 
 ## S176 — dos lectores más del state IMX210 (22-10-2026)
 
-REA/bytes clasifican `0x4386140a` como load del state pointer seguido por lectura de `state+0xac` en `0x43861410`; si el byte es cero, la cola usa default 6. `0x438693ec` carga el mismo pointer y el bloque lee bytes `+0x30..+0x37`, copiando ceros/defaults a un objeto distinto apuntado por `r6`. No hay store a state ni a gates `+3/+6` en esos dos procedimientos. **Límite local:** campos estáticos cero no determinan runtime, y no se concluye ausencia global. [S176](../docs/capture/s176-imager-state-readers.md), reproducción `analysis/s176_imager_state_readers/state_readers.json` (3 tests).
+REA/bytes clasifican `0x4386140a` como load del state pointer seguido por lectura de `state+0xac` en `0x43861410`; si el byte es cero, la cola usa default 6. `0x438693ec` carga el mismo pointer y el bloque lee bytes `+0x30..+0x37`, copiando ceros/defaults a un objeto distinto apuntado por `r6`. No hay store a state ni a gates `+3/+6` en esos dos procedimientos. **Límite local:** campos estáticos cero no determinan runtime, y no se concluye ausencia global. S176 (informe independiente ausente; evidencia en `analysis/s176_imager_state_readers/state_readers.json`), reproducción `analysis/s176_imager_state_readers/state_readers.json` (3 tests).
 
 **Siguiente:** clasificar el próximo xref no resuelto del state pointer con REA typed refs y bytes; considerar el árbol de referencias de la tabla `0x43ff3200` como investigación separada, porque xrefs exactas al vector/GOT base no fueron observadas.
 
@@ -582,7 +586,7 @@ fw3.21), **S127** (`[CAMERA_MAIN_LC]`), **S126** (`[CAMERA_MAIN]`), **S125** (`[
 
 **Colateral reutilizable**: la convención **vaddr = 0x43541000 + offset** también vale para la A7S fw3.20 y el A6300 fw2.01 (verificado con los punteros de la tabla `Sens`) → confirmado con otro par de blobs.
 
-[Informe](../analysis/s140_cam_util_adj/cam_util_adj.md) · [doc](../docs/capture/s140-cam-util-adj.md). Siguiente: qué `Module ID` corresponde a iris/ISO/shutter/WB; los ids OSAL `0x008f013a` y la plantilla `0x43c04d70`; los índices 0 y 2 de la tabla de despacho; el módulo `[CAMERA_ADJ]`.
+[Informe](../analysis/s143_cam_util_adj/cam_util_adj.md) · [doc](../docs/capture/s143-cam-util-adj.md). Siguiente: qué `Module ID` corresponde a iris/ISO/shutter/WB; los ids OSAL `0x008f013a` y la plantilla `0x43c04d70`; los índices 0 y 2 de la tabla de despacho; el módulo `[CAMERA_ADJ]`.
 
 ## S144 — el módulo `[CAM_UTIL_SENS]` (21 trazas): la interfaz de ajuste hacia el sensor (22-10-2026, línea de RE general)
 

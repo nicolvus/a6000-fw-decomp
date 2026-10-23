@@ -22,7 +22,7 @@ class TestS614ZPD(unittest.TestCase):
                           f"Trace missing prefix: {ts['text']}")
 
     def test_prefix_length(self):
-        self.assertEqual(self.data['prefix_length'], 5)
+        self.assertEqual(self.data['prefix_length'], 7)
         self.assertEqual(self.data['prefix'], '[ZPD]: ')
 
     def test_differential_a6000(self):

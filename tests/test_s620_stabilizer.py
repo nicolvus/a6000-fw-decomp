@@ -22,7 +22,7 @@ class TestS620STABILIZER(unittest.TestCase):
                           f"Trace missing prefix: {ts['text']}")
 
     def test_prefix_length(self):
-        self.assertEqual(self.data['prefix_length'], 30)
+        self.assertEqual(self.data['prefix_length'], 33)
         self.assertEqual(self.data['prefix'], '[CAMERA_IS][AS]: [STABILIZER][AS]')
 
     def test_differential_a6000(self):

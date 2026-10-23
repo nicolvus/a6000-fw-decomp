@@ -1,5 +1,9 @@
 # Continuidad
 
+## Auditoría 23-10-2026
+
+Consultar [el informe vigente](docs/auditoria-2026-10-23.md) antes de reutilizar S382/S384/S385 o S605–S627: se corrigieron destinos, encodings, direcciones de trazas y longitudes. Las clasificaciones automáticas de S400 vuelven a revisión; la cobertura del censo mide etiquetas documentadas, no capacidades verificadas. Los párrafos históricos siguientes conservan su fecha y alcance.
+
 Estado vigente: **S174** (22-10-2026) — línea de RE general por módulos de trazas (S138–S174) y
 **cinco controles positivos sobre el obturador electrónico** (S168 cadena muerta; S169 la API de
 *drive* del A6300 —`sc_ShutDrive`, `front_eshutter`, `SilentShutterMode`, `shutterType`— **no

@@ -1,5 +1,9 @@
 # Estado vigente — Sony A6000 reverse engineering
 
+## Auditoría 23-10-2026
+
+[Resultados y pendientes](auditoria-2026-10-23.md): corregidos destinos BL S382, encodings S384, direcciones de 94 trazas, 21 longitudes y censo detallado. Triaje automático reabierto; equivalencia A7S, flujo `0x40193` y logger dual siguen NO_VERIFICADO. Las cadenas prueban presencia textual; el censo de 133/372 mide documentación de etiquetas. P1–P21 propuestas, sin nuevas pruebas físicas. Esta actualización prevalece sobre los resúmenes históricos siguientes.
+
 Documento breve de orientación. No reemplaza las fuentes: cada afirmación enlaza al
 documento canónico donde está comprobada, con su rango de líneas cuando aplica.
 Para el historial íntegro de sesiones ver `docs/history/` y las correcciones completas

@@ -33,7 +33,7 @@ class TestS608MOUNTINFO(unittest.TestCase):
                            f"Composite mismatch: {ts['text']} != {expected}")
 
     def test_prefix_lengths(self):
-        self.assertEqual(self.data['prefix_length'], 12)
+        self.assertEqual(self.data['prefix_length'], 14)
         self.assertEqual(self.data['prefix'], '[MOUNT_INFO]: ')
         self.assertEqual(self.data['core_prefix_length'], 3)
         self.assertEqual(self.data['core_prefix'], '[BL]')

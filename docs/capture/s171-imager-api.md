@@ -48,5 +48,5 @@ objetivo** y la entrada de API `GetImagerStabilizationTime`.
 **Efecto en S51: NINGUNO — S51 sigue A=NO, B=NO, C=NO.** Son diferencias de **firmware**; la
 ausencia estática de una API no demuestra incapacidad del hardware.
 
-Informe: [analysis/s171_imager_api/imager_api.md](../analysis/s171_imager_api/imager_api.md) ·
+Informe: [analysis/s171_imager_api/imager_api.md](../../analysis/s171_imager_api/imager_api.md) ·
 test: `tests/test_s171_imager_api.py` (20 tests).

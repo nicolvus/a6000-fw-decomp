@@ -56,5 +56,5 @@ Los **66 núcleos de mensaje no existen** en la A7S fw3.20 ni en el A6300 fw2.01
 pero los tres firmwares comparten **las mismas 14 entradas de API DDL**, el mismo nombre
 `ClkCtrl` y los mismos mensajes `init_cam_clkctrl` / `Current clock is …`: el
 **subsistema es común**; lo nuevo en la fw3.21 es la **instrumentación** (trazas).
-Detalle: [informe](../analysis/s132_clk_ctrl/clk_ctrl.md) · datos: `clk_ctrl.json`,
+Detalle: [informe](../../analysis/s132_clk_ctrl/clk_ctrl.md) · datos: `clk_ctrl.json`,
 `callers.json` (en `analysis/s132_clk_ctrl/`).
