@@ -2662,3 +2662,14 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 - Artefactos: `docs/capture/s623-jiro.md`, `analysis/s623_jiro/`, `tests/test_s623_jiro.py` (pendiente).
 - Verificación: censos exactos, commit Conventional + push origin HEAD:main.
 - Siguiente: S624 `[UTILITY]` (2 trazas).
+
+## Investigación S624 — `[UTILITY]` (agente E, Nemotron 3 Ultra Free)
+
+- Objetivo: decodificar el módulo de traza `[UTILITY]` (2 trazas) exclusivo de la A6000 fw3.21.
+- REA Evidence: strings `[ACCY][ERR][UTILITY]` en `0x43c25229`–`0x43c2525c` (2 cadenas, prefijo ERR).
+- Resultado: 2 trazas confirmadas con prefijo `[ACCY][ERR][UTILITY]` (19 B); `ConvNum8ToAscii`, `ConvAsciiToNum8`; logger dual (nuevo `[ACCY][ERR][UTILITY]` + viejo global `0x43902718`); prefijo fijo 19 B.
+- Diferencial: A6000 fw3.21=2 `[ACCY][ERR][UTILITY]` tokens; A7S/A6300=0 (sin prefijo ACCY/UTILITY; 20+ strings UTILITY con prefijos VDF/Utility/SFRA).
+- Línea del obturador: NEGATIVO ACOTADO (0 coincidencias).
+- Artefactos: `docs/capture/s624-utility.md`, `analysis/s624_utility/`, `tests/test_s624_utility.py` (pendiente).
+- Verificación: censos exactos, commit Conventional + push origin HEAD:main.
+- Siguiente: S625 `[ADR]` (1 traza).

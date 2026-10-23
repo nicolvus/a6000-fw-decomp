@@ -1,0 +1,21 @@
+{
+  "module": "UTILITY",
+  "traces": 2,
+  "trace_strings": [
+    {"vaddr": "0x43c25229", "text": "[ACCY][ERR][UTILITY]:%d:ConvNum8ToAscii num = %08X"},
+    {"vaddr": "0x43c2525c", "text": "[ACCY][ERR][UTILITY]:%d:ConvAsciiToNum8 ascii:%08X"}
+  ],
+  "prefix_length": 19,
+  "prefix": "[ACCY][ERR][UTILITY]",
+  "parent_prefix": "[ACCY]",
+  "level_prefix": "[ERR]",
+  "sub_prefix": "[UTILITY]",
+  "differential": {
+    "a6000_fw321": {"token_count": 2, "prefixes": ["[ACCY][ERR][UTILITY]"]},
+    "a7s_fw320": {"token_count": 0, "related_strings_count": 20},
+    "a6300_fw201": {"token_count": 0, "related_strings_count": 20}
+  },
+  "shutter_line": "NEGATIVO ACOTADO",
+  "logger_dual": true,
+  "global_logger": "0x43902718"
+}
