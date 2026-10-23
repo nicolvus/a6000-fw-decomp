@@ -2541,3 +2541,14 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 - Artefactos: `docs/capture/s612-mount.md`, `analysis/s612_mount/`, `tests/test_s612_mount.py` (pendiente).
 - Verificación: censos exactos, commit Conventional + push origin HEAD:main.
 - Siguiente: S613 `[MOUNT_WARNING]` (5 trazas).
+
+## Investigación S613 — `[MOUNT_WARNING]` (agente E, Nemotron 3 Ultra Free)
+
+- Objetivo: decodificar el módulo de traza `[MOUNT_WARNING]` (5 trazas) exclusivo de la A6000 fw3.21.
+- REA Evidence: strings `[MOUNT_WARNING]: ` en `0x43c956e9`–`0x43c9876c` (5 cadenas, sub-prefijos AM/DRV/BL).
+- Resultado: 5 trazas confirmadas con prefijo `[MOUNT_WARNING]: ` (16 B); sub-módulos AM (CHECK_DATA, ERR_INFO), DRV (PWR_MODE), BL (LIF Illegal Command, cam_cmd change); logger dual (nuevo `[MOUNT_WARNING]: ` + viejo global `0x43902718`); prefijo fijo 16 B.
+- Diferencial: A6000 fw3.21=5 `[MOUNT_WARNING]` tokens; A7S/A6300=0 (sin MOUNT_WARNING; solo BL mount strings sueltas).
+- Línea del obturador: NEGATIVO ACOTADO (0 coincidencias).
+- Artefactos: `docs/capture/s613-mount_warning.md`, `analysis/s613_mount_warning/`, `tests/test_s613_mount_warning.py` (pendiente).
+- Verificación: censos exactos, commit Conventional + push origin HEAD:main.
+- Siguiente: S614 `[ZPD]` (5 trazas).
