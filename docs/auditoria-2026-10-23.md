@@ -12,11 +12,11 @@ Revisión estructural de todos los Python, JSON y Markdown versionados; pruebas 
 |---|---|---|
 | RECHAZO | S382: `0x7484dc` llama a `RecordStill::Execute` | Bytes `99 f5 ea e0` = `blx #0xe16b4`, dentro de PLT. El test aplicaba PC + inmediato × 2 a un destino ya absoluto. Retirado y reemplazado por regresión exacta. |
 | RECHAZO | S382: `0x755af8` llama a `0x90de2c` | Bytes `86 f5 4e e3` = `blx #0xdc198`, también PLT. Retirado; `0x90de2c` no queda demostrado como entrada de función. |
-| ACEPTO | Dos sitios BL hacia `0x90b248` | `0x90de2e`: `fd f7 0b fa`; `0x91634e`: `f4 f7 7b ff`. Las ventanas confirman llamadas; no prueban exhaustividad ni límites de función. |
+| ACEPTO | Dos sitios BL hacia `0x90b248` | `0x90de2e`: `fd f7 0b fa`; `0x91634e`: `f4 f7 7b ff`. Contenedores por unwind/prólogos: `0x90d7e8..0x90e148` y `0x9162d0..0x91647c`. Exhaustividad no demostrada; ver [contrato](capture/recordstill-contract-audit-2026-10-23.md). |
 | RECHAZO | S380/S381: PLT de 1914 entradas, por índice × 16; cero llamadas a registradores OSAL | El ELF tiene 2420 cuerpos ARM de 12 B y 391 veneers Thumb. Los `r_offset` son GOT; se resuelven los cuerpos hasta GOT y se regeneran ambos mapas. El barrido recupera 83/53 candidatos a los registradores síncrono/asíncrono. Corregidos tres scripts, añadida regresión y retirado el supuesto bloqueo dinámico. |
 | RECHAZO | S384: cero MOVW #0x193, MOVT #0x40 para construir el ID | Encodings Thumb incorrectos y mitad alta equivocada: `0x40193 >> 16 = 4`. `40 f2 93 13` es MOVW r3,#0x193 y existe. Corregidos informe y tests. |
 | ACEPTO | Negativo acotado para datos de `0x40193` | Sin palabra LE en `.rodata`/`.data` de A6000 y A7S; sin cadena ASCII. Corregido `.data` A7S: offset `0xefb9e0`, tamaño `0x736a0`, distinto de A6000. No demuestra ausencia del ID en flujo de código. |
-| DUDOSO | Identificación de `RecordStill::Execute` en A7S | NO_VERIFICADO. Referencias PC-relativas: `0xcb6f2b` → `0x847e26`; `0xcb7bbb` → seis sitios `0x847f4e`…`0x84803a`. `.ARM.exidx` agrupa esos sitios en la candidata `0x847e1c..0x84814c`, prólogo Thumb y stack `0x358`, distinto del A6000. Falta comparar el contrato y el cuerpo para demostrar identidad de método. |
+| RECHAZO | A7S `0x847e1c` equivale a A6000 `0x90b248` | [Contrato y bytes](capture/recordstill-contract-audit-2026-10-23.md): son RecordStill y RecordImage, respectivamente. Parejas correctas: A6000 `0x908afc` ↔ A7S `0x847e1c`; A6000 `0x90b248` ↔ A7S `0x84a568`. Nombres internos, ABI y llamada anidada; equivalencia de todos los callees NO_VERIFICADO. |
 | RECHAZO | Direcciones publicadas de 94 trazas S605–S627 | Las 94 cadenas existen una sola vez; ninguna estaba en su dirección declarada. Corregidos 22 JSON y las direcciones coincidentes de sus informes desde `base + offset`. Regresión nueva contra bytes reales. |
 | RECHAZO | Longitudes de prefijos en 21 JSON | Recalculadas desde la cadena literal; tests anteriores copiaban constantes equivocadas. Actualizadas sus expectativas y añadida validación contra los datos. |
 | RECHAZO | Triaje automático equivale a revisión | Se reabren 141 clasificaciones automáticas como VIGENTE (pendiente de revisión). Se conservan 132 clasificaciones manuales anteriores, sin reafirmar su exactitud. Nuevas filas quedan pendientes; dos regresiones fallan antes del arreglo y pasan después. |
@@ -47,7 +47,7 @@ Revisión estructural de todos los Python, JSON y Markdown versionados; pruebas 
 
 ## Pendiente verificable
 
-1. Completar la identificación por cadenas/funciones de `RecordStill::Execute` A7S y los límites de los dos sitios A6000.
+1. Recuperar el consumidor indirecto de los 25 punteros Thumb a `0x90d7e8` y contrastar semántica de callees A6000/A7S. Identidad estructural y límites de los dos sitios A6000 ya resueltos en la [auditoría de contrato](capture/recordstill-contract-audit-2026-10-23.md).
 2. Rehacer el análisis de flujo del ID `0x40193`; el barrido histórico no justifica declararlo agotado ni exigir cámara.
 3. Revisar manualmente las clasificaciones automáticas reabiertas y las atribuciones de logger dual/equivalencia de código de los módulos recientes.
 4. Validar los esquemas de evidencia no cubiertos por `trace_strings`; un test que solo relee un JSON no certifica sus direcciones ni interpretaciones.

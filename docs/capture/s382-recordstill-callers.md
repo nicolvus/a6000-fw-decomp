@@ -1,8 +1,8 @@
-# S382 — Quién llama a RecordStill::Execute (0x90b248) en libObj.so A6000 fw3.21
+# S382 — Llamadores de RecordImage (0x90b248), antigua etiqueta RecordStill::Execute
 
 ## 1. Resumen
 
-**RecordStill::Execute** está en `0x0090b248` (Thumb-2). Corrección de auditoría (23-10-2026): `0x7484dc` y `0x755af8` eran falsos llamadores por recalcular el destino absoluto que entrega Capstone.
+**Corrección de contrato (23-10-2026):** `0x0090b248` se identifica internamente como **RecordImage**, no se ha demostrado el nombre C++ `RecordStill::Execute`. Ver [comparación completa de contratos y bytes](recordstill-contract-audit-2026-10-23.md). `0x7484dc` y `0x755af8` eran falsos llamadores por recalcular el destino absoluto que entrega Capstone.
 
 | Llamador (BL) | Dirección | Notas |
 |---|---|---|
@@ -12,8 +12,8 @@ Además, se encontraron **dos sitios dentro de funciones que contienen `bl #0x90
 
 | Dirección | Función contenedora | Llamador de la función contenedora |
 |---|---|---|
-| `0x0090de2e` | Límite de función NO_VERIFICADO; `0x0090de2c` es un bloque | NO_VERIFICADO; `0x755af8` no llama aquí |
-| `0x91634e` | Límite de función `0x0091631e` NO_VERIFICADO | NO_VERIFICADO; no se demuestra despacho indirecto |
+| `0x0090de2e` | `0x90d7e8..0x90e148` (unwind + prólogo) | 25 punteros Thumb al contenedor; consumidor indirecto NO_VERIFICADO |
+| `0x91634e` | `0x9162d0..0x91647c` (unwind + prólogo) | NO_VERIFICADO; `0x91631e` es tabla TBB |
 
 ## 2. Detalles de los llamadores
 
@@ -25,36 +25,36 @@ Resultado real de los bytes `99 f5 ea e0`:
 0x007484dc: blx        #0xe16b4    ← PLT, no RecordStill::Execute
 ```
 
-### 0x90de2e → RecordStill::Execute (dentro de 0x90de2c)
+### 0x90de2e → RecordImage (dentro de 0x90d7e8)
 
 Bloque `0x0090de2c` (Thumb-2). `0x755af8` contiene `86 f5 4e e3`, un `blx #0xdc198` a PLT, no una llamada a este bloque. Cuerpo local:
 
 ```
 0x0090de2c: mov        r1, r6          ← argumento r1 = r6
-0x0090de2e: bl         #0x90b248       ← llama a RecordStill::Execute (r0=r4, r1=r6)
+0x0090de2e: bl         #0x90b248       ← RecordImage (r0=r4, r1=r6)
 0x0090de32: b          #0x90e022
 ```
 
-El bloque mueve `r6` a `r1`; los tipos de `r0` y `r1` son inferencias. Un bloque no demuestra el comienzo de una función ni su convención de llamada.
+La entrada `0x90d7e8` preserva `r0` en `r6` y `r1` en `r4`; consulta `GetMessageId(r6)`. `0x90de2a` prepara `r0=r4`; `0x90de2c` prepara `r1=r6`. Objeto y mensaje son tipos inferidos del uso. El bloque no es el comienzo de función.
 
-### 0x91634e → RecordStill::Execute (dentro de 0x91631e)
+### 0x91634e → RecordImage (dentro de 0x9162d0)
 
-Bloque dentro de la candidata `0x0091631e` (Thumb-2). Su entrada y despacho vía puntero/vtable siguen **NO_VERIFICADO**. Cuerpo:
+Entrada `0x9162d0` corroborada por prólogo y `.ARM.exidx`. Preserva `r0` en `r4`, `r1` en `r6`. `0x916316` es TBB; `0x91631e` pertenece a su tabla de 13 bytes, no es código. El caso `GetMessageId == 0x10000005` conduce al bloque:
 
 ```
 0x0091634a: mov        r0, r4          ← r0 = r4 (objeto)
 0x0091634c: mov        r1, r6          ← r1 = r6 (mensaje)
-0x0091634e: bl         #0x90b248       ← llama a RecordStill::Execute
+0x0091634e: bl         #0x90b248       ← RecordImage
 0x00916352: b          #0x9163f0
 ```
 
-## 3. Argumentos de RecordStill::Execute
+## 3. Argumentos de RecordImage
 
 En ambos sitios llamadores, el patrón de argumentos es consistente:
 - `r0` = puntero al objeto (`this`, tipo `ObjStillRecorder*` o similar)
 - `r1` = puntero al `ObjMsg*` recibido
 
-Esto concuerda con el prólogo de RecordStill::Execute:
+Esto concuerda con el prólogo de RecordImage:
 ```
 0x0090b248: push.w   {r4, r5, r6, r7, r8, sb, sl, fp, lr}
 0x0090b24c: sub.w    sp, sp, #0xb00
@@ -65,15 +65,13 @@ Esto concuerda con el prólogo de RecordStill::Execute:
 
 ## 4. Método de búsqueda
 
-La auditoría decodifica ventanas exactas con Capstone y contrasta los bytes. Sus operandos inmediatos BL/BLX ya son direcciones absolutas: **no** aplicar `address + 4 + imm * 2`. Se retiran las cifras históricas del barrido porque procedían del cálculo erróneo. Los dos sitios BL quedan confirmados; la exhaustividad y los límites de sus funciones no quedan demostrados por estas ventanas.
+La auditoría contrasta Capstone con LLVM y bytes. Los operandos inmediatos BL/BLX ya son direcciones absolutas: **no** aplicar `address + 4 + imm * 2`. Los límites proceden de PREL31, prólogos y flujo local, no de las ventanas aisladas. La exhaustividad de llamadas sigue sin demostrarse.
 
-## 5. Estado de A7S (pendiente de reconciliar, ver S385)
+Hay 25 punteros `0x90d7e9` en `.data.rel.ro`, VA `0x101ef18..0x101f158`, stride `0x18`, con relocaciones R_ARM_RELATIVE. Son evidencia positiva de posibles callbacks al contenedor; falta recuperar el consumidor BX/BLX. Los negativos de palabras `0x90b248/249` y `0x9162d0/d1` en PT_LOAD no prueban ausencia de despacho indirecto.
 
-En A7S fw3.20:
-- `movw #0x100f`: **0 sitios** en `.text` (vs 1 en A6000 en 0x90b2a4)
-- `movt #0x0001` no es la parte alta de `0x100f` (es cero); ese patrón no identifica esta función.
-- RecordStill::Execute: **no localizado** en A7S
-- Requiere referencias PC-relativas a sus cadenas y recuperación de la función; ver S385. La ausencia de prólogo no prueba ausencia de función.
+## 5. A7S: comparación reconciliada
+
+La candidata A7S `0x847e1c..0x84814c` es RecordStill, con cinco entradas ABI; su pareja estructural A6000 es `0x908afc..0x908e2c`. RecordImage A6000 `0x90b248..0x90c088` tiene pareja A7S `0x84a568..0x84b3a8`, que sí contiene `movw r1,#0x100f` en `0x84a5c4`. En ambos modelos RecordImage llama al helper RecordStill. Equivalencia de todos los callees y ejecución física NO_VERIFICADO. Ver [S385](s385-libobj-a6000-vs-a7s-diff.md).
 
 ---
 
