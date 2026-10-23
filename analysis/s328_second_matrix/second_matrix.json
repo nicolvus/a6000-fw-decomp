@@ -1,0 +1,59 @@
+{
+  "milestone": "S328",
+  "title": "La segunda matriz no tiene productor estatico y su bucle no ejecuta con el blob tal cual",
+  "base": "0x43541000",
+  "firmware": {
+    "a7s_fw320": {
+      "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+      "size": 11455416
+    },
+    "a6000_fw321": {
+      "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+      "size": 11427236
+    }
+  },
+  "cases": {
+    "a7s_fw320": {
+      "slot": "0x44026088",
+      "slot_base": "0x44024540",
+      "offset_le": "0x1b48",
+      "slot_value": "0x43e8de00",
+      "offset_sites": [
+        "0x436f394e"
+      ],
+      "expected_site": "0x436f394e",
+      "slot_value_refs": [
+        "0x44026088"
+      ],
+      "table_nonzero_bytes_64": 0,
+      "table_first_word": "0x00000000"
+    },
+    "a6000_fw321": {
+      "slot": "0x44026694",
+      "slot_base": "0x4401eee4",
+      "offset_le": "0x77b0",
+      "slot_value": "0x43e80160",
+      "offset_sites": [
+        "0x436d65a0"
+      ],
+      "expected_site": "0x436d65a0",
+      "slot_value_refs": [
+        "0x44026694"
+      ],
+      "table_nonzero_bytes_64": 0,
+      "table_first_word": "0x00000000"
+    }
+  },
+  "verdict": {
+    "static_producer": false,
+    "loop_executes_on_blob": false,
+    "gate": "sub != 0 (S324)",
+    "sub_effect": "NO_VERIFICADO",
+    "s51": "sin cambios (A=NO, B=NO, C=NO)"
+  },
+  "scope_limit": [
+    "Solo lectura estatica; sin runtime, camara ni flasheo.",
+    "La tabla podria llenarse en runtime desde otro modulo, por DMA o por una inicializacion no visible en av-cam: no se descarta.",
+    "No se interpreta el contenido futuro de la segunda matriz ni su efecto sobre los modos con sub != 0."
+  ]
+}
