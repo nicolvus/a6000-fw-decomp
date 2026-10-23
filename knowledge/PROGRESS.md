@@ -2618,3 +2618,14 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 - Artefactos: `docs/capture/s619-senser.md`, `analysis/s619_senser/`, `tests/test_s619_senser.py` (pendiente).
 - Verificación: censos exactos, commit Conventional + push origin HEAD:main.
 - Siguiente: S620 `[STABILIZER]` (3 trazas).
+
+## Investigación S620 — `[STABILIZER]` (agente E, Nemotron 3 Ultra Free)
+
+- Objetivo: decodificar el submódulo de traza `[STABILIZER]` (3 trazas) exclusivo de la A6000 fw3.21.
+- REA Evidence: strings `[CAMERA_IS][AS]: [STABILIZER][AS]` en `0x43c9a24b`–`0x43c9a2c3` (3 cadenas, cuádruple prefijo).
+- Resultado: 3 trazas confirmadas con prefijo `[CAMERA_IS][AS]: [STABILIZER][AS]` (30 B); `osal_reg_sync_msg_queue_cb`, `upm_get_hcrn_ura`, `osal_unreg_sync_msg_queue_cb`; logger dual (nuevo `[CAMERA_IS][AS]: [STABILIZER][AS]` + viejo global `0x43902718`); prefijo cuádruple 30 B.
+- Diferencial: A6000 fw3.21=3 `[STABILIZER]` tokens; A7S/A6300=0 (sin STABILIZER; 4 strings estabilizador sueltas).
+- Línea del obturador: NEGATIVO ACOTADO (0 coincidencias).
+- Artefactos: `docs/capture/s620-stabilizer.md`, `analysis/s620_stabilizer/`, `tests/test_s620_stabilizer.py` (pendiente).
+- Verificación: censos exactos, commit Conventional + push origin HEAD:main.
+- Siguiente: S621 `[LENS_PDR]` (4 trazas).
