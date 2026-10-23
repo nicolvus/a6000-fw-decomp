@@ -2706,3 +2706,8 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 - Artefactos: `docs/capture/s627-eo_sw.md`, `analysis/s627_eo_sw/`, `tests/test_s627_eo_sw.py` (pendiente).
 - Verificación: censos exactos, commit Conventional + push origin HEAD:main.
 - Siguiente: S628 `[FILE_NUM]` (1 traza).
+
+
+## S343–S627 — puesta al día (23-10-2026)
+
+B S343–S348, libObj.so S380–S385, módulos D S515 y E S618–S627, cierre de pendientes y plan físico 2. Censo 133/372. Detalle en `knowledge/CURRENT.md`. S51 sin cambios.
