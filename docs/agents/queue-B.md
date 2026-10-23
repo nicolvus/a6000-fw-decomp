@@ -82,3 +82,11 @@
 - DONE S327 Solo hay dos escritores de `obj+0x2b4`: el constructor base lo pone a 0 y el **constructor parametrico** `0x436f3fc0(obj,idx)` guarda su argumento (`0x436f40fe`, `r6=r1`). Unico llamador estatico con **idx=0** → se lee la fila 0 de T1/T2/T3. 9 lectores, ninguno derivado de un codigo de modo → la correspondencia fila<->modo de S326 queda **NO_VERIFICADA** y las filas 29/30 no son alcanzables por esta via. Evidencia: `docs/capture/s327-row-index-writer.md`, `analysis/s327_row_index_writer/row_index_writer.json` (24 comprobaciones, 6 tests).
 
 - TODO S328 Buscar una instancia construida con `idx != 0` (constructor `0x436f3fc0` por puntero, tabla de factorias o modulo hermano) para decidir si T1/T2/T3 llegan a indexarse por modo.
+
+- CHECKPOINT S321–S328 (2026-10-22): corregido el mapa de columnas (`0x43c9c5b5` = posición→columna, 34 entradas) y la tabla «de 34» (T2, 34 filas); cerrada la segunda matriz (vacía, sin productor estático) y el índice `obj+0x2b4` (argumento del constructor, 0). 100/100 tests del carril (S314–S328) verdes.
+
+- TODO S329 Localizar la tabla de **tiempos** por modo del A7S (S202 §3) y comprobar si `0x4e`/`0x4f` difieren de `0x4c`/`0x4d`; si no aparece, cerrar la pregunta con barrido de la región de tablas de modo.
+- TODO S330 Buscar una instancia de `0x436f3fc0` con `idx != 0` (tabla de factorías, puntero o módulo hermano) para decidir si T1/T2/T3 llegan a indexarse por modo.
+- TODO S331 Rastrear el productor runtime de la segunda matriz (escrituras a `0x43e8de00`/`0x43e80160`, posible DMA u otro módulo de `liro.ko`/`libObj.so`).
+- TODO S332 Interpretar los campos de T2 (`+0x14`: `0x3ff`/0; `+0x18`: 2/3) siguiendo sus lectores en `0x436f618c` y el consumidor de `obj+0x16/+0x2e/+0xa5`.
+- TODO S333 Contrastar el vocabulario de modos: A6000 acepta `1..0x47` (13 códigos) y A7S `1..0x51` (34); mapear los 13 códigos de la A6000 y ver si alguno es «silent-like» en su matriz de 59 filas.
