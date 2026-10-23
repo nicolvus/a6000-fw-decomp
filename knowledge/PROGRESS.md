@@ -2606,4 +2606,15 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 - Línea del obturador: NEGATIVO ACOTADO (0 coincidencias).
 - Artefactos: `docs/capture/s618-det_dir.md` (informe), `analysis/s618_det_dir/` (pendiente), `tests/test_s618_det_dir.py` (pendiente).
 - Verificación: censos exactos, commit Conventional + push origin HEAD:main.
-- Siguiente: S619 `[IMAGING_RSRC]` (5 trazas).
+- Siguiente: S619 `[SENSER]` (3 trazas).
+
+## Investigación S619 — `[SENSER]` (agente E, Nemotron 3 Ultra Free)
+
+- Objetivo: decodificar el módulo de traza `[SENSER]` (3 trazas) exclusivo de la A6000 fw3.21.
+- REA Evidence: strings `[ACCY][ERR/DEBUG][SENSER]` en `0x43c24f68`–`0x43c24fb7` (3 cadenas, prefijos ERR/DEBUG).
+- Resultado: 3 trazas confirmadas con prefijos `[ACCY][ERR/DEBUG][SENSER]` (20–21 B); `unknown block`, `unknown command`, `Cmd %04X S1 %02X`; logger dual (nuevo `[ACCY][ERR/DEBUG][SENSER]` + viejo global `0x43902718`); prefijo variable 20–21 B.
+- Diferencial: A6000 fw3.21=3 `[ACCY][ERR/DEBUG][SENSER]` tokens; A7S/A6300=0 (sin prefijo ACCY/SENSER; 20+ strings senser con prefijos ADF/ADJ/SYS_SENSER).
+- Línea del obturador: NEGATIVO ACOTADO (0 coincidencias).
+- Artefactos: `docs/capture/s619-senser.md`, `analysis/s619_senser/`, `tests/test_s619_senser.py` (pendiente).
+- Verificación: censos exactos, commit Conventional + push origin HEAD:main.
+- Siguiente: S620 `[STABILIZER]` (3 trazas).
