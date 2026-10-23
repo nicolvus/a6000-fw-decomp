@@ -79,4 +79,6 @@
 
 - DONE S326 La tabla de «34» de S202/S204 es **T2** (`0x43bbf2ec`, 34 filas de `0x1c`, una por modo), no 34 columnas. `0x4c`/`0x4d`: `+0x14=0x3ff`, `+0x18=2`; `0x4e`: `+0x14=0` (1 campo); `0x4f`: `+0x14=0`, `+0x18=3` (2 campos). Igualdades `0x4e≡0x51`, `0x4f≡0x50`, `0x4c≡0x4d`. `0x3ff` solo en `{0x13,0x1f,0x4c,0x4d}` y `3` solo en `{0x0b,0x35,0x4f,0x50}` → no es firma silent. S204 parcialmente reproducido. Evidencia: `docs/capture/s326-t2-fingerprint.md`, `analysis/s326_t2_fingerprint/t2_silent_fingerprint.json` (45 comprobaciones, 7 tests).
 
-- TODO S327 Identificar el escritor de `obj+0x2b4` (indice de fila de T1/T2/T3) para cerrar la correspondencia fila↔posición de modo, hoy INFERENCIA.
+- DONE S327 Solo hay dos escritores de `obj+0x2b4`: el constructor base lo pone a 0 y el **constructor parametrico** `0x436f3fc0(obj,idx)` guarda su argumento (`0x436f40fe`, `r6=r1`). Unico llamador estatico con **idx=0** → se lee la fila 0 de T1/T2/T3. 9 lectores, ninguno derivado de un codigo de modo → la correspondencia fila<->modo de S326 queda **NO_VERIFICADA** y las filas 29/30 no son alcanzables por esta via. Evidencia: `docs/capture/s327-row-index-writer.md`, `analysis/s327_row_index_writer/row_index_writer.json` (24 comprobaciones, 6 tests).
+
+- TODO S328 Buscar una instancia construida con `idx != 0` (constructor `0x436f3fc0` por puntero, tabla de factorias o modulo hermano) para decidir si T1/T2/T3 llegan a indexarse por modo.
