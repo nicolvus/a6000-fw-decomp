@@ -1,3 +1,5 @@
+> **Corrección (S331)**: `obj+0x2b4` **no** es el índice de fila de T1/T2/T3. Los dos llamadores pasan como `r1` la **posición del modo** (índice de la búsqueda lineal `0x43ada284`) y `obj+0x2b4` como `r2`, que solo decide una llamada de log. Por tanto el veredicto «solo se aplica la fila 0» de esta sesión queda **REFUTADO**; el hallazgo del singleton (flag = 0) sigue vigente. Ver [`docs/capture/s331-consumer-signature.md`](s331-consumer-signature.md).
+
 # S330 — Instancias del constructor `0x436f3fc0` (carril B)
 
 22-10-2026. Carril B. Sesión S330. **Solo lectura estática de los blobs; sin firmware en ejecución, sin cámara, sin flasheo.**
@@ -7,6 +9,8 @@
 ¿Existe alguna instancia del constructor paramétrico `0x436f3fc0(obj, idx)` con `idx != 0`? Si no existe, las filas 1..33 de T1/T2/T3 no son alcanzables por código estático y la correspondencia fila↔modo queda sin soporte.
 
 ## Veredicto
+
+> **Estado**: las filas 2 y 3 de la tabla de abajo quedan refutadas por S331; se conservan como registro del error y de la evidencia que lo corrigió.
 
 | Afirmación | Clasificación | Evidencia |
 |---|---|---|
