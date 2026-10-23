@@ -1,5 +1,12 @@
 # Estado actual — léeme primero
 
+## S330 — una sola instancia del constructor, con idx = 0 (22-10-2026)
+
+- Único `BL` a `0x436f3fc0` en todo el blob: `0x436f2a8a`, precedido de `movs r1,#0` → `idx = 0` constante. Sin literales de la dirección (ni `…c0` ni `…c1`) y sin slot en la vtable `0x43fce050`.
+- La llamada está en una **factoría singleton** (`0x436f2a7c..0x436f2aaa`): construye, registra (`0x439a2794`) y publica el objeto en el slot `0x440245cc → 0x43e8d994`. La factoría no tiene `BL` directo (entrada por tabla/init: NO_VERIFICADA).
+- Consecuencia: `obj+0x2b4 = 0` siempre → T1/T2/T3 solo aportan la **fila 0** (modo `0x0b`); las diferencias por modo que S326 midió en T2 **no se aplican** por esta vía.
+- Tests: `tests/test_s330_ctor_instances.py` (8) y 21 comprobaciones de verificación. S51 sin cambios.
+
 ## S329 — no hay tabla de tiempos por modo en el A7S (22-10-2026)
 
 - Las estructuras por modo del A7S fw3.20 son: lista `u32[34]` (`0x43fee370`), mapa posición→columna (`0x43c9c5b5`), matriz de 69 filas (`0x43fee598`, un registro de sensor por fila) y tres tablas T de `34 × 0x1c` (`0x43bbeb70`, `0x43bbf2e8`, `0x43bbef30`) cuyas filas son **(índice a 2 descriptores, máscara de 12 bits)**. **Ninguna contiene tiempos.**
