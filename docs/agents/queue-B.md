@@ -129,3 +129,8 @@
 - TODO S337 Identificar el consumidor de `u16[69]` en `0x43fef404` (valores 1..78).
 - TODO S339 Identificar `0xf292b000..8` (bloques 0xf292x000 de 4 KB; vecinos documentados: GPIO 0xf2910000, DSP de lente 0xf292d000).
 - TODO S340 Resolver `0x43ada4d8` → `0x436f74c0` (qué hace con `w0`) y el significado de los selectores `+4/+5/+6` de `0x436f6240`.
+
+- DONE S340 `w0` = selector de registro MMIO: `0x43ada4d8`→`0x436f74c0` (`tbb` de 6 casos; bases `0xf3122300/2200/3300/3200` y `0xfc0a3100/4100`, offset `+0x30` en 4 y `+0x24` en 2). `0x436f605c` suma las lecturas de T1 y T2. Por modo T1∈{0,1}, T2∈{2,3}; `0x50`/`0x51` usan (1,3). Qué mide cada canal: NO_VERIFICADO. Evidencia: `docs/capture/s340-w0-selector.md`, `analysis/s340_w0_selector/w0_selector.json` (57 comprobaciones, 8 tests).
+- TODO S337 Identificar el consumidor de `u16[69]` en `0x43fef404` (valores 1..78).
+- TODO S339 Identificar `0xf292b000..8` (bloques 0xf292x000 de 4 KB).
+- TODO S341 Identificar los canales `0xf3122xxx` y `0xfc0a3xxx/4xxx` de S340 (¿sensores de temperatura, ADC, posición?) buscando sus otros lectores y las cadenas asociadas.

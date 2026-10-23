@@ -1,5 +1,12 @@
 # Estado actual — léeme primero
 
+## S340 — `w0` es un selector de registro MMIO (22-10-2026)
+
+- `0x43ada4d8` → `0x436f74c0`: `cmp r1,#5` + `tbb [pc,r1]` (6 casos, tabla `03 06 09 0c 0f 12`); cada rama lee `[base+0x30]` o `[base+0x24]` de `0xf3122300/2200/3300/3200` y `0xfc0a3100/4100`.
+- `0x436f605c` lee `w0` de T1 y T2, llama a `0x43ada4d8` con cada uno y **suma** (u16). Por modo: T1 ∈{0,1}, T2 ∈{2,3}, T3=4; solo `0x50`/`0x51` usan (1,3).
+- Corrige S334: `w0` no es un «código de operación», es un selector de canal.
+- Qué mide cada canal: NO_VERIFICADO. Tests: `tests/test_s340_w0_selector.py` (8) y 57 comprobaciones.
+
 ## S336 — mapa completo de consumidores de T1/T2/T3 (22-10-2026)
 
 - 13 referencias PIC en 7 funciones; **5** leen campos de fila: `0x436f5eac` (w0), `0x436f5f7c` (copia `+0x00..+0x13`, parchea `+5`/`+7`, → `0x43ada310`), `0x436f605c` (suma `0x43ada4d8(w0 T1/T2)`), `0x436f618c` (`+0x14`/`+0x18`), `0x436f6278`→`0x436f6240` (bytes `+4/+5/+6` como selectores de dos tablas de punteros).
