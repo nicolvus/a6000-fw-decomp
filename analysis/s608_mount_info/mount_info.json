@@ -1,0 +1,25 @@
+{
+  "module": "MOUNT_INFO",
+  "traces": 6,
+  "trace_strings": [
+    {"vaddr": "0x43c9711f", "text": "[MOUNT_INFO]: [BL]LIF Command Change : 0x%X >>> 0x%X", "core_text": "[BL]LIF Command Change : 0x%X >>> 0x%X"},
+    {"vaddr": "0x43c98259", "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_GET_VERSION", "core_text": "[BL]UUD CallBack : MSGID_GET_VERSION"},
+    {"vaddr": "0x43c9828c", "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_GET_FORCE_FIRMUP", "core_text": "[BL]UUD CallBack : MSGID_GET_FORCE_FIRMUP"},
+    {"vaddr": "0x43c982c4", "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_FIRM_UP_REQ", "core_text": "[BL]UUD CallBack : MSGID_FIRM_UP_REQ"},
+    {"vaddr": "0x43c982f7", "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_PREPARE_UPDATE", "core_text": "[BL]UUD CallBack : MSGID_PREPARE_UPDATE"},
+    {"vaddr": "0x43c9832d", "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_UNPLUG_USB", "core_text": "[BL]UUD CallBack : MSGID_UNPLUG_USB"}
+  ],
+  "prefix_length": 12,
+  "prefix": "[MOUNT_INFO]: ",
+  "core_prefix": "[BL]",
+  "core_prefix_length": 3,
+  "composite_prefix_length": 15,
+  "differential": {
+    "a6000_fw321": {"mount_info_token_count": 6, "bl_token_count": 6, "prefixes": ["[MOUNT_INFO]: ", "[BL] "]},
+    "a7s_fw320": {"mount_info_token_count": 0, "bl_token_count": 70, "prefixes": ["[BL] "]},
+    "a6300_fw201": {"mount_info_token_count": 0, "bl_token_count": 70, "prefixes": ["[BL] "]}
+  },
+  "shutter_line": "NEGATIVO ACOTADO",
+  "logger_dual": true,
+  "global_logger": "0x43902718"
+}
