@@ -1,5 +1,13 @@
 # Estado actual — léeme primero
 
+## S333 — vocabulario de modos: 13 A6000 vs 34 A7S, 7 vs 15 vectores (22-10-2026)
+
+- Listas: A6000 `0x43fea070` (13) y A7S `0x43fee370` (34). **12 compartidos**; `0x2f` solo A6000; **22 solo A7S** (`0x08,0x13,0x1f,0x30..0x38,0x3f,0x44,0x45,0x46,0x4c..0x51`).
+- Columnas: en la A6000 la columna **es** la posición del modo (sin mapa); en el A7S el mapa `0x43c9c5b5` traduce posición→columna 0..14.
+- Vectores distintos: A6000 **7** de 13 (alias `{0x05,0x07,0x10,0x18,0x19,0x1a}`, `{0x0b,0x2f}`); A7S **15** de 34 (12 grupos, p. ej. `{0x4c,0x4d}~{0x32,0x33,0x34}`, `{0x4e,0x50}`, `{0x4f,0x51}`).
+- Los silent **no** tienen configuración de registro exclusiva: su diferencia medida está en la máscara de T2 (S329/S331). S51 sin cambios.
+- Tests: `tests/test_s333_mode_vocabulary.py` (9) y 20 comprobaciones.
+
 ## S332 — el mecanismo por modo es compartido con el A6000 (22-10-2026)
 
 - A6000: setter `0x436d6b50` (límite `0x47`) → búsqueda `0x43ad9438` sobre **13** códigos (`0x43fea070`) → índice a `obj+0x17c` → matriz (slot 40 `0x436d6570`) → `0x436d8e6c(obj+0x18, posición, flag)` con flag `obj+0x26c`.
