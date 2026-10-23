@@ -1,0 +1,269 @@
+{
+  "milestone": "S345",
+  "title": "la aplicacion de la mascara (0x436f822c) es comun a A7S y A6000 y no esta condicionada por el modo dentro del tramo",
+  "base": "0x43541000",
+  "firmware": {
+    "a7s_fw320": {
+      "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+      "size": 11455416
+    },
+    "a6000_fw321": {
+      "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+      "size": 11427236
+    }
+  },
+  "a7s": {
+    "apply_span": {
+      "start": "0x436f4476",
+      "end": "0x436f449c",
+      "code": [
+        {
+          "address": "0x436f4476",
+          "bytes": "d4f8b422",
+          "insn": "ldr.w r2, [r4, #0x2b4]"
+        },
+        {
+          "address": "0x436f447a",
+          "bytes": "0646",
+          "insn": "mov r6, r0"
+        },
+        {
+          "address": "0x436f447c",
+          "bytes": "2846",
+          "insn": "mov r0, r5"
+        },
+        {
+          "address": "0x436f447e",
+          "bytes": "3146",
+          "insn": "mov r1, r6"
+        },
+        {
+          "address": "0x436f4480",
+          "bytes": "01f084fe",
+          "insn": "bl #0x436f618c"
+        },
+        {
+          "address": "0x436f4484",
+          "bytes": "2846",
+          "insn": "mov r0, r5"
+        },
+        {
+          "address": "0x436f4486",
+          "bytes": "3146",
+          "insn": "mov r1, r6"
+        },
+        {
+          "address": "0x436f4488",
+          "bytes": "d4f8b422",
+          "insn": "ldr.w r2, [r4, #0x2b4]"
+        },
+        {
+          "address": "0x436f448c",
+          "bytes": "01f0b4fe",
+          "insn": "bl #0x436f61f8"
+        },
+        {
+          "address": "0x436f4490",
+          "bytes": "3146",
+          "insn": "mov r1, r6"
+        },
+        {
+          "address": "0x436f4492",
+          "bytes": "d4f8b422",
+          "insn": "ldr.w r2, [r4, #0x2b4]"
+        },
+        {
+          "address": "0x436f4496",
+          "bytes": "2846",
+          "insn": "mov r0, r5"
+        },
+        {
+          "address": "0x436f4498",
+          "bytes": "01f008fe",
+          "insn": "bl #0x436f60ac"
+        }
+      ],
+      "branches": [],
+      "calls": [
+        "bl #0x436f618c",
+        "bl #0x436f61f8",
+        "bl #0x436f60ac"
+      ]
+    },
+    "second_site": {
+      "start": "0x436f5ae8",
+      "end": "0x436f5b10",
+      "code": [
+        {
+          "address": "0x436f5ae8",
+          "bytes": "9847",
+          "insn": "blx r3"
+        },
+        {
+          "address": "0x436f5aea",
+          "bytes": "2046",
+          "insn": "mov r0, r4"
+        },
+        {
+          "address": "0x436f5aec",
+          "bytes": "e4f330f8",
+          "insn": "bl #0x43ad9b50"
+        },
+        {
+          "address": "0x436f5af0",
+          "bytes": "40b1",
+          "insn": "cbz r0, #0x436f5b04"
+        },
+        {
+          "address": "0x436f5af2",
+          "bytes": "04f11c00",
+          "insn": "add.w r0, r4, #0x1c"
+        },
+        {
+          "address": "0x436f5af6",
+          "bytes": "94f8b911",
+          "insn": "ldrb.w r1, [r4, #0x1b9]"
+        },
+        {
+          "address": "0x436f5afa",
+          "bytes": "d4f8b422",
+          "insn": "ldr.w r2, [r4, #0x2b4]"
+        },
+        {
+          "address": "0x436f5afe",
+          "bytes": "00f07bfb",
+          "insn": "bl #0x436f61f8"
+        },
+        {
+          "address": "0x436f5b02",
+          "bytes": "07e0",
+          "insn": "b #0x436f5b14"
+        },
+        {
+          "address": "0x436f5b04",
+          "bytes": "d4f8b031",
+          "insn": "ldr.w r3, [r4, #0x1b0]"
+        },
+        {
+          "address": "0x436f5b08",
+          "bytes": "112b",
+          "insn": "cmp r3, #0x11"
+        },
+        {
+          "address": "0x436f5b0a",
+          "bytes": "03d1",
+          "insn": "bne #0x436f5b14"
+        },
+        {
+          "address": "0x436f5b0c",
+          "bytes": "04f11c00",
+          "insn": "add.w r0, r4, #0x1c"
+        }
+      ],
+      "gate": "0x43ad9b50(obj) != 0",
+      "gate_caller": "0x436f5aec"
+    },
+    "mask_writer": "0x436f822c",
+    "mask_writer_callers": [
+      "0x43ada370",
+      "0x43ada402"
+    ],
+    "op0_tail": "0x43ada3a0 b.w #0x436f822c",
+    "op1_tail": "0x43ada42c b.w #0x436f822c"
+  },
+  "a6000": {
+    "apply_span": {
+      "start": "0x436d8f46",
+      "end": "0x436d8f6e",
+      "code": [
+        {
+          "address": "0x436d8f46",
+          "bytes": "2046",
+          "insn": "mov r0, r4"
+        },
+        {
+          "address": "0x436d8f48",
+          "bytes": "04f11401",
+          "insn": "add.w r1, r4, #0x14"
+        },
+        {
+          "address": "0x436d8f4c",
+          "bytes": "00f0c4f2",
+          "insn": "bl #0x43ad94d8"
+        },
+        {
+          "address": "0x436d8f50",
+          "bytes": "2046",
+          "insn": "mov r0, r4"
+        },
+        {
+          "address": "0x436d8f52",
+          "bytes": "3146",
+          "insn": "mov r1, r6"
+        },
+        {
+          "address": "0x436d8f54",
+          "bytes": "2a46",
+          "insn": "mov r2, r5"
+        },
+        {
+          "address": "0x436d8f56",
+          "bytes": "fff73ffe",
+          "insn": "bl #0x436d8bd8"
+        },
+        {
+          "address": "0x436d8f5a",
+          "bytes": "2046",
+          "insn": "mov r0, r4"
+        },
+        {
+          "address": "0x436d8f5c",
+          "bytes": "04f1a101",
+          "insn": "add.w r1, r4, #0xa1"
+        },
+        {
+          "address": "0x436d8f60",
+          "bytes": "04f1d402",
+          "insn": "add.w r2, r4, #0xd4"
+        },
+        {
+          "address": "0x436d8f64",
+          "bytes": "0123",
+          "insn": "movs r3, #1"
+        },
+        {
+          "address": "0x436d8f66",
+          "bytes": "bde87040",
+          "insn": "pop.w {r4, r5, r6, lr}"
+        },
+        {
+          "address": "0x436d8f6a",
+          "bytes": "00f0d2b2",
+          "insn": "b.w #0x43ad9512"
+        }
+      ],
+      "branches": [],
+      "calls": [
+        "bl #0x43ad94d8",
+        "bl #0x436d8bd8"
+      ]
+    },
+    "op0": "0x43ad94d8 (equivalente de 0x43ada370)",
+    "op1": "0x43ad9512 (equivalente de 0x43ada402, tail-call)",
+    "mask_writer_equivalent": "NO_VERIFICADO (el tail de 0x43ad9512 no se sigue aqui)"
+  },
+  "verdicts": {
+    "mask_application_mode_gated_in_span": false,
+    "same_two_ops_in_both_models": true,
+    "a7s_extra_silent_only_path": false,
+    "difference_is_data_not_reachability": true,
+    "s51": "sin cambios (A=NO, B=NO, C=NO)"
+  },
+  "limits": [
+    "Solo lectura estatica; sin runtime, camara ni flasheo.",
+    "«No condicionada por el modo dentro del tramo» se refiere al tramo rectilineo medido; la alcanzabilidad de la funcion que lo contiene no se ha probado hasta el origen.",
+    "El equivalente del escritor de mascara en la A6000 no se sigue: solo se verifica que las dos operaciones (op 0 y op 1) estan presentes.",
+    "La puerta 0x43ad9b50 del segundo sitio del A7S no se ha identificado.",
+    "S51 (A/B/C) no cambia."
+  ]
+}
