@@ -1,0 +1,111 @@
+{
+  "milestone": "S339",
+  "title": "0xf292b000..8: interfaz de 3 registros usada solo por la capa de mascaras; identidad NO_VERIFICADA",
+  "base": "0x43541000",
+  "firmware": {
+    "a7s_fw320": {
+      "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+      "size": 11455416
+    },
+    "a6000_fw321": {
+      "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+      "size": 11427236
+    }
+  },
+  "registers": [
+    "0xf292b000",
+    "0xf292b004",
+    "0xf292b008"
+  ],
+  "literal_sites": {
+    "0xf292b000": {
+      "a7s": [
+        "0x436f82bc"
+      ],
+      "a6000": [
+        "0x436dbe18"
+      ]
+    },
+    "0xf292b004": {
+      "a7s": [
+        "0x436f82ac",
+        "0x436f82e4"
+      ],
+      "a6000": [
+        "0x436dbe08",
+        "0x436dbe40"
+      ]
+    },
+    "0xf292b008": {
+      "a7s": [
+        "0x436f829c",
+        "0x436f82cc",
+        "0x436f82e0"
+      ],
+      "a6000": [
+        "0x436dbdf8",
+        "0x436dbe28",
+        "0x436dbe3c"
+      ]
+    }
+  },
+  "all_sites_in_accessors": true,
+  "accessors": [
+    "0x436f82b0",
+    "0x436f82a0",
+    "0x436f8290",
+    "0x436f82c0",
+    "0x436f82d0"
+  ],
+  "interface": {
+    "registers": 3,
+    "offsets": [
+      "+0x0",
+      "+0x4",
+      "+0x8"
+    ],
+    "field_width": "12 bits",
+    "control_values": [
+      "0x1000",
+      "0x10000"
+    ]
+  },
+  "window_0xf292x000": {
+    "a7s": {
+      "0xf2922000": 1,
+      "0xf2924000": 7,
+      "0xf2929000": 3,
+      "0xf292a000": 5,
+      "0xf292b000": 6,
+      "0xf292c000": 1,
+      "0xf292d000": 1,
+      "0xf292f000": 14
+    },
+    "a6000": {
+      "0xf2923000": 1,
+      "0xf2924000": 6,
+      "0xf2927000": 1,
+      "0xf2929000": 2,
+      "0xf292a000": 2,
+      "0xf292b000": 8,
+      "0xf292d000": 1,
+      "0xf292f000": 13
+    }
+  },
+  "known_neighbours": {
+    "0xf2910000": "GPIO BIONZ (S54/S55)",
+    "0xf292d000": "DSP de lente (S66)"
+  },
+  "verdicts": {
+    "identity": "NO_VERIFICADO",
+    "only_mask_layer_uses_it": true,
+    "documented_in_repo": false,
+    "same_sites_in_both_models": true
+  },
+  "limits": [
+    "Solo lectura estatica; sin runtime, camara ni flasheo.",
+    "El bloque no aparece en la documentacion del repo ni en ningun simbolo; no se afirma que sea sensor, P2S, ADC ni GPIO.",
+    "Los vecinos 0xf2910000 (GPIO) y 0xf292d000 (DSP de lente) estan documentados, pero no implican la funcion de 0xf292b000.",
+    "S51 (A/B/C) no cambia."
+  ]
+}
