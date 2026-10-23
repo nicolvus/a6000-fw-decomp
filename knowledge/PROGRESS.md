@@ -2628,4 +2628,15 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 - Línea del obturador: NEGATIVO ACOTADO (0 coincidencias).
 - Artefactos: `docs/capture/s620-stabilizer.md`, `analysis/s620_stabilizer/`, `tests/test_s620_stabilizer.py` (pendiente).
 - Verificación: censos exactos, commit Conventional + push origin HEAD:main.
-- Siguiente: S621 `[LENS_PDR]` (4 trazas).
+- Siguiente: S621 `[AVOUT]` (2 trazas).
+
+## Investigación S621 — `[AVOUT]` (agente E, Nemotron 3 Ultra Free)
+
+- Objetivo: decodificar el módulo de traza `[AVOUT]` (2 trazas) exclusivo de la A6000 fw3.21.
+- REA Evidence: strings `[ACCY][DEBUG][AVOUT]` en `0x43c254f6`–`0x43c2551e` (2 cadenas, prefijo DEBUG).
+- Resultado: 2 trazas confirmadas con prefijo `[ACCY][DEBUG][AVOUT]` (21 B); `NotifyAttached`, `NotifyDetached`; logger dual (nuevo `[ACCY][DEBUG][AVOUT]` + viejo global `0x43902718`); prefijo fijo 21 B.
+- Diferencial: A6000 fw3.21=2 `[ACCY][DEBUG][AVOUT]` tokens; A7S/A6300=0 (1 string `AccyUmDeviceAvOut` sin prefijo ACCY).
+- Línea del obturador: NEGATIVO ACOTADO (0 coincidencias).
+- Artefactos: `docs/capture/s621-avout.md`, `analysis/s621_avout/`, `tests/test_s621_avout.py` (pendiente).
+- Verificación: censos exactos, commit Conventional + push origin HEAD:main.
+- Siguiente: S622 `[AVR]` (2 trazas).
