@@ -43,8 +43,8 @@ Después ambos llaman a `0x43ad931c` y a `0x43ad9666` con `(sp+4, r5, r6)`.
 0x436f2628  bl 0x438f7114       ; log si sigue ocupado
 ```
 
-`0x43ad9666` es el constructor de trama; delega en `0x436f2554` y `0x43ad9628` (no se
-decodifica aquí el contenido byte a byte).
+`0x43ad9666` es el constructor de trama; delega en `0x436f2554` y `0x43ad9628`. S322
+decodifica después su contenido byte a byte como `81|03|device|address8|data8`.
 
 ## 3. Contraste A7S ↔ A6000 (VERIFICADO)
 
@@ -56,8 +56,9 @@ exclusivo A7S.
 
 * **VERIFICADO:** misma trama, mismo formateador; modo 2 añade un reintento con
   `0x43ad92e6` y log.
-* **NO_VERIFICADO:** el contenido exacto de la trama, el significado de «ocupado» (`r0==2`) y
-  el enlace de `modo 2` con el silent shutter. S51 sin cambios.
+* **VERIFICADO por S322:** contenido de la trama `81|03|device|address8|data8`.
+* **NO_VERIFICADO:** el significado físico de «ocupado» (`r0==2`) y el enlace de `modo 2`
+  con el silent shutter. S51 sin cambios.
 
 ---
 
