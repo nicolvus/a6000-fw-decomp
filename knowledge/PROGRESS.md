@@ -2595,9 +2595,15 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 - Línea del obturador: NEGATIVO ACOTADO (0 coincidencias).
 - Artefactos: `docs/capture/s617-camera_device.md`, `analysis/s617_camera_device/`, `tests/test_s617_camera_device.py` (pendiente).
 - Verificación: censos exactos, commit Conventional + push origin HEAD:main.
-- Siguiente: S618 `[DET_DIR]` (3 trazas).
+- Siguiente: S618 `[DET_DIR]` (3 trazas, idéntico a S617).
 
+## Investigación S618 — `[DET_DIR]` (agente E, Nemotron 3 Ultra Free)
 
-## S343–S617 — puesta al día de carriles (22-10-2026)
-
-Resumen de lo añadido desde S300: agente B S300–S342 (gates sin escritor, cadena modo→MMIO, ODL en `0x43fef404`), agente C S401–S402 (ruta de control y mapeo a P1–P8), agentes D/E S500–S515 y S600–S617 (módulos de trazas). Detalle en `knowledge/CURRENT.md` y en los informes `docs/capture/`. README reordenado por agente. S51 sin cambios.
+- Objetivo: decodificar el módulo de traza `[DET_DIR]` (3 trazas) exclusivo de la A6000 fw3.21.
+- REA Evidence: strings `[DET_DIR]` — **0 trazas standalone**; 3 trazas son idénticas a `[CAMERA_DEVICE][DET_DIR]` (S617).
+- Resultado: 0 trazas independientes con prefijo `[DET_DIR]:`; 3 trazas idénticas a S617 (`[CAMERA_DEVICE][DET_DIR]`).
+- Diferencial: A6000 fw3.21=0 `[DET_DIR]` standalone tokens; A7S/A6300=0.
+- Línea del obturador: NEGATIVO ACOTADO (0 coincidencias).
+- Artefactos: `docs/capture/s618-det_dir.md` (informe), `analysis/s618_det_dir/` (pendiente), `tests/test_s618_det_dir.py` (pendiente).
+- Verificación: censos exactos, commit Conventional + push origin HEAD:main.
+- Siguiente: S619 `[IMAGING_RSRC]` (5 trazas).
