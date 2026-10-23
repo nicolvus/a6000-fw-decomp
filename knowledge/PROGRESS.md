@@ -2496,4 +2496,15 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 - Línea del obturador: NEGATIVO ACOTADO (0 coincidencias).
 - Artefactos: `docs/capture/s608-mount_info.md`, `analysis/s608_mount_info/`, `tests/test_s608_mount_info.py` (pendiente).
 - Verificación: censos exactos, commit Conventional + push origin HEAD:main.
-- Siguiente: S609 `[DIST]` (5 trazas).
+- Siguiente: S609 `[CAMERA_IS][DIST]` (5 trazas).
+
+## Investigación S609 — `[CAMERA_IS][DIST]` (agente E, Nemotron 3 Ultra Free)
+
+- Objetivo: decodificar el submódulo de traza `[CAMERA_IS][DIST]` (5 trazas) exclusivo de la A6000 fw3.21.
+- REA Evidence: strings `[CAMERA_IS][DIST]: ` en `0x43c98e75`–`0x43c98f51` (5 cadenas, doble prefijo jerárquico).
+- Resultado: 5 trazas confirmadas con prefijo `[CAMERA_IS][DIST]: ` (18 B); funciones `MakeDistCorPrm`, `CnvPosInvDistCorr` (inv1/inv2), `MakeDistRawAppliTag`; validación `prm=null` (4/5); logger dual (nuevo `[CAMERA_IS][DIST]: ` + viejo global `0x43902718`); prefijo fijo 18 B.
+- Diferencial: A6000 fw3.21=5 `[CAMERA_IS][DIST]` tokens + ~14 `[CAMERA_IS]` padre; A7S/A6300=0 (sin módulo CAMERA_IS ni DIST; solo strings sueltas estabilizador/gyro).
+- Línea del obturador: NEGATIVO ACOTADO (0 coincidencias).
+- Artefactos: `docs/capture/s609-dist.md`, `analysis/s609_dist/`, `tests/test_s609_dist.py` (pendiente).
+- Verificación: censos exactos, commit Conventional + push origin HEAD:main.
+- Siguiente: S610 `[HOUSING]` (5 trazas).
