@@ -2461,3 +2461,14 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 - Artefactos: `docs/capture/s607-cam_cmd.md`, `analysis/s607_cam_cmd/`, `tests/test_s607_cam_cmd.py` (pendiente).
 - Verificación: censos exactos, commit Conventional + push origin HEAD:main.
 - Siguiente: S608 `[MOUNT_INFO]` (6 trazas).
+
+## Investigación S608 — `[MOUNT_INFO]` (agente E, Nemotron 3 Ultra Free)
+
+- Objetivo: decodificar el módulo de traza `[MOUNT_INFO]` (6 trazas) exclusivo de la A6000 fw3.21.
+- REA Evidence: strings `[MOUNT_INFO]: [BL]...` en `0x43c9711f`–`0x43c9832d` (6 cadenas, doble prefijo).
+- Resultado: 6 trazas confirmadas con doble prefijo (`[MOUNT_INFO]: ` + `[BL] `); LIF Command Change + 5 UUD CallBacks (GET_VERSION, GET_FORCE_FIRMUP, FIRM_UP_REQ, PREPARE_UPDATE, UNPLUG_USB); logger dual (nuevo `[MOUNT_INFO]: ` + viejo `[BL] ` + global `0x43902718`); prefijo compuesto 16 B.
+- Diferencial: A6000 fw3.21=6 `[MOUNT_INFO]` + 6 `[BL]` dobles; A7S fw3.20=0 `[MOUNT_INFO]`, 70+ `[BL]` (strings distintos); A6300 fw2.01=0 `[MOUNT_INFO]`, 70+ `[BL]` (strings distintos).
+- Línea del obturador: NEGATIVO ACOTADO (0 coincidencias).
+- Artefactos: `docs/capture/s608-mount_info.md`, `analysis/s608_mount_info/`, `tests/test_s608_mount_info.py` (pendiente).
+- Verificación: censos exactos, commit Conventional + push origin HEAD:main.
+- Siguiente: S609 `[DIST]` (5 trazas).
