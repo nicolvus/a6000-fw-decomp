@@ -7,7 +7,7 @@ Tema distinto de A/B/C: decodificación de módulos exclusivos de la A6000 fw3.2
 - S602 [REMOTE] (32 trazas) → DONE (S180)
 - S603 [CAMERA_DSP_APL] (18 trazas) → DONE (S603)
 - S604 [LENS_YC] (21 trazas), [IMAGING_RAW] (20 trazas) → DONE (S604)
-- S605 [JPEG] (17 trazas)
+- S605 [JPEG] (17 trazas) → DONE (S605)
 - S606 [NSX_VOT] (7 trazas)
 - S607 [CAM_CMD] (6 trazas)
 - S608 [MOUNT_INFO] (6 trazas)

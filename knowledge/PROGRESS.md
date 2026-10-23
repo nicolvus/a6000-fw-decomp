@@ -571,6 +571,17 @@ bug reproducido en el docstring/comentario del propio código.
   datos). Ahora aclara explícitamente que la ausencia de correcciones registradas NO
   demuestra vigencia.
 - Tests de contradicción/corrección parcial/referencia histórica: ya existían
+
+## Investigación S605 — `[JPEG]` (agente E, Nemotron 3 Ultra Free)
+
+- Objetivo: decodificar el módulo de traza `[JPEG]` (17 trazas) exclusivo de la A6000 fw3.21.
+- REA Evidence: strings `[JPEG]: ` en `0x43ce06ea`–`0x43ce094f` (17 cadenas); símbolos `dgi_jpeg_*` / `src/dgi_jpeg_*.c` en `0x43cdf178`–`0x43ce09af` (35+ cadenas).
+- Resultado: 17 trazas confirmadas; funciones `cbJpegDebugOpen/Close`, `f_sa_dummy_send_msg` (Start/error_status/Comp), `f_2open` (NormalOpen/SortOpen/TanzOpen), `f_2close` (unique_id/NormalClose/SortClose); logger dual (nuevo `[JPEG]: ` + viejo sin prefijo vía `0x43902718`); prefijo fijo 7 B.
+- Diferencial: token `[JPEG]` = 17 en A6000 fw3.21, 0 en A7S fw3.20, 0 en A6300 fw2.01; A7S/A6300 usan prefijos `[ddl_jpeg_open/close]`, `[CDIAG][CTRLJPG*]`. Código JPEG DGI preexistente, solo cambio de logging.
+- Línea del obturador: NEGATIVO ACOTADO (0 coincidencias).
+- Artefactos: `docs/capture/s605-jpeg.md` (informe), `analysis/s605_jpeg/` (pendiente), `tests/test_s605_jpeg.py` (pendiente).
+- Verificación: censos exactos, commit Conventional + push origin HEAD:main.
+- Siguiente: S606 `[NSX_VOT]` (7 trazas).
   parcialmente en `test_build_graph.py` (resolución de sesión, no auto-contaminación);
   se añadieron los de ambigüedad de nombre y candidata-vs-verificada arriba. No se
   amplió a un conjunto de "contradicciones narrativas" más allá de lo que el grafo
