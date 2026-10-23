@@ -1,0 +1,243 @@
+{
+  "milestone": "S327",
+  "title": "obj+0x2b4 guarda el indice del constructor parametrico (0), no una posicion de modo",
+  "base": "0x43541000",
+  "firmware": {
+    "a7s_fw320": {
+      "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+      "size": 11455416
+    },
+    "a6000_fw321": {
+      "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+      "size": 11427236
+    }
+  },
+  "stores": [
+    {
+      "address": "0x436f2d74",
+      "insn": "str.w r3, [r4, #0x2b4]"
+    },
+    {
+      "address": "0x436f40fe",
+      "insn": "str.w r6, [r4, #0x2b4]"
+    }
+  ],
+  "loads": [
+    {
+      "address": "0x436f3ad0",
+      "insn": "ldr.w r2, [r4, #0x2b4]"
+    },
+    {
+      "address": "0x436f3b2c",
+      "insn": "ldr.w r2, [r4, #0x2b4]"
+    },
+    {
+      "address": "0x436f3bde",
+      "insn": "ldr.w r2, [r4, #0x2b4]"
+    },
+    {
+      "address": "0x436f3f56",
+      "insn": "ldr.w r2, [r5, #0x2b4]"
+    },
+    {
+      "address": "0x436f4476",
+      "insn": "ldr.w r2, [r4, #0x2b4]"
+    },
+    {
+      "address": "0x436f4488",
+      "insn": "ldr.w r2, [r4, #0x2b4]"
+    },
+    {
+      "address": "0x436f4492",
+      "insn": "ldr.w r2, [r4, #0x2b4]"
+    },
+    {
+      "address": "0x436f4546",
+      "insn": "ldr.w r2, [r4, #0x2b4]"
+    },
+    {
+      "address": "0x436f5afa",
+      "insn": "ldr.w r2, [r4, #0x2b4]"
+    }
+  ],
+  "store_count": 2,
+  "load_count": 9,
+  "parametric_ctor": {
+    "function": "0x436f3fc0",
+    "signature": "(obj, idx)",
+    "entry": [
+      {
+        "address": "0x436f3fc0",
+        "bytes": "f0b5",
+        "insn": "push {r4, r5, r6, r7, lr}"
+      },
+      {
+        "address": "0x436f3fc2",
+        "bytes": "8db0",
+        "insn": "sub sp, #0x34"
+      },
+      {
+        "address": "0x436f3fc4",
+        "bytes": "594d",
+        "insn": "ldr r5, [pc, #0x164]"
+      },
+      {
+        "address": "0x436f3fc6",
+        "bytes": "0446",
+        "insn": "mov r4, r0"
+      },
+      {
+        "address": "0x436f3fc8",
+        "bytes": "0e46",
+        "insn": "mov r6, r1"
+      },
+      {
+        "address": "0x436f3fca",
+        "bytes": "fef7bbfe",
+        "insn": "bl #0x436f2d44"
+      },
+      {
+        "address": "0x436f3fce",
+        "bytes": "584b",
+        "insn": "ldr r3, [pc, #0x160]"
+      },
+      {
+        "address": "0x436f3fd0",
+        "bytes": "7d44",
+        "insn": "add r5, pc"
+      },
+      {
+        "address": "0x436f3fd2",
+        "bytes": "0822",
+        "insn": "movs r2, #8"
+      }
+    ],
+    "tail": [
+      {
+        "address": "0x436f40f8",
+        "bytes": "2046",
+        "insn": "mov r0, r4"
+      },
+      {
+        "address": "0x436f40fa",
+        "bytes": "84f89033",
+        "insn": "strb.w r3, [r4, #0x390]"
+      },
+      {
+        "address": "0x436f40fe",
+        "bytes": "c4f8b462",
+        "insn": "str.w r6, [r4, #0x2b4]"
+      }
+    ],
+    "idx_register": "r6 = r1",
+    "field": "+0x2b4"
+  },
+  "base_ctor_zero_init": {
+    "function": "0x436f2d44",
+    "instructions": [
+      {
+        "address": "0x436f2d62",
+        "bytes": "0023",
+        "insn": "movs r3, #0"
+      },
+      {
+        "address": "0x436f2d64",
+        "bytes": "2046",
+        "insn": "mov r0, r4"
+      },
+      {
+        "address": "0x436f2d66",
+        "bytes": "1a46",
+        "insn": "mov r2, r3"
+      },
+      {
+        "address": "0x436f2d68",
+        "bytes": "84f8b032",
+        "insn": "strb.w r3, [r4, #0x2b0]"
+      },
+      {
+        "address": "0x436f2d6c",
+        "bytes": "84f8b132",
+        "insn": "strb.w r3, [r4, #0x2b1]"
+      },
+      {
+        "address": "0x436f2d70",
+        "bytes": "84f8b232",
+        "insn": "strb.w r3, [r4, #0x2b2]"
+      },
+      {
+        "address": "0x436f2d74",
+        "bytes": "c4f8b432",
+        "insn": "str.w r3, [r4, #0x2b4]"
+      }
+    ]
+  },
+  "caller": {
+    "function": "0x436f2a7c",
+    "instructions": [
+      {
+        "address": "0x436f2a7c",
+        "bytes": "70b5",
+        "insn": "push {r4, r5, r6, lr}"
+      },
+      {
+        "address": "0x436f2a7e",
+        "bytes": "0021",
+        "insn": "movs r1, #0"
+      },
+      {
+        "address": "0x436f2a80",
+        "bytes": "0a4c",
+        "insn": "ldr r4, [pc, #0x28]"
+      },
+      {
+        "address": "0x436f2a82",
+        "bytes": "0b4b",
+        "insn": "ldr r3, [pc, #0x2c]"
+      },
+      {
+        "address": "0x436f2a84",
+        "bytes": "7c44",
+        "insn": "add r4, pc"
+      },
+      {
+        "address": "0x436f2a86",
+        "bytes": "e558",
+        "insn": "ldr r5, [r4, r3]"
+      },
+      {
+        "address": "0x436f2a88",
+        "bytes": "2846",
+        "insn": "mov r0, r5"
+      },
+      {
+        "address": "0x436f2a8a",
+        "bytes": "01f099fa",
+        "insn": "bl #0x436f3fc0"
+      },
+      {
+        "address": "0x436f2a8e",
+        "bytes": "094b",
+        "insn": "ldr r3, [pc, #0x24]"
+      }
+    ],
+    "idx_value": 0,
+    "site": "0x436f2a8a"
+  },
+  "verdict": {
+    "field_semantics": "indice de construccion (parametro idx)",
+    "visible_instance_idx": 0,
+    "rows_reached": [
+      0
+    ],
+    "s326_row_mode_mapping": "NO_VERIFICADO / sin soporte en este escritor",
+    "silent_rows_29_30_reachable": false
+  },
+  "scope_limit": [
+    "Solo lectura estatica; sin runtime, camara ni flasheo.",
+    "El constructor parametrico podria invocarse de forma dinamica con otro idx (tabla de punteros o modulo externo): no se descarta, solo consta un llamador estatico con idx=0.",
+    "No se interpreta el indice de construccion: no se afirma que seleccione un modo, un canal ni una variante de lectura.",
+    "S326 conserva sus mediciones de T2; solo su emparejamiento fila<->modo queda sin soporte.",
+    "S51 (A/B/C) no cambia."
+  ]
+}

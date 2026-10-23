@@ -1902,6 +1902,21 @@ cambios. [S326](../docs/capture/s326-t2-fingerprint.md),
 
 **Siguiente:** S323 (matriz dinámica `0x43e8de00`, puerta `sub`) o identificar el escritor
 de `obj+0x2b4` para cerrar la correspondencia fila↔modo.
+## S327 — `obj+0x2b4` es el índice del constructor, no la posición de modo (22-10-2026, agente B)
+
+**VERIFICADO (24 comprobaciones, 6 tests):** solo hay **dos** escritores de `obj+0x2b4`:
+el constructor base lo pone a 0 (`0x436f2d74`) y el **constructor paramétrico**
+`0x436f3fc0(obj,idx)` guarda su argumento al final (`0x436f40fe`, `r6 = r1` desde
+`0x436f3fc8`). El único llamador estático (`0x436f2a8a`) hace `movs r1,#0` → **idx = 0**.
+Hay 9 lectores del campo y ninguno lo deriva de un código de modo. **Consecuencia:** en la
+instancia visible T1/T2/T3 se leen en la **fila 0**; la correspondencia fila↔modo de S326
+queda **NO_VERIFICADA** y las filas 29/30 de T2 no son alcanzables por esta vía. S51 sin
+cambios. [S327](../docs/capture/s327-row-index-writer.md),
+`analysis/s327_row_index_writer/row_index_writer.json`.
+
+**Siguiente:** S323 (matriz dinámica `0x43e8de00`, puerta `sub`) o buscar una instancia
+construida con `idx ≠ 0` (dinámica u otro módulo) para reabrir T1/T2/T3.
+
 
 
 
