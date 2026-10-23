@@ -1,5 +1,12 @@
 # Estado actual — léeme primero
 
+## S332 — el mecanismo por modo es compartido con el A6000 (22-10-2026)
+
+- A6000: setter `0x436d6b50` (límite `0x47`) → búsqueda `0x43ad9438` sobre **13** códigos (`0x43fea070`) → índice a `obj+0x17c` → matriz (slot 40 `0x436d6570`) → `0x436d8e6c(obj+0x18, posición, flag)` con flag `obj+0x26c`.
+- Consumidor `0x436d8e6c`: stride `0x1c`, lee `+0x14` (descriptor) y `+0x18` (máscara), rellena **dos** bloques (`obj+0x14` con ventana `ip+0x20`, `obj+0xa1` con `ip+0x60`). Tablas `0x43bc20dc`/`0x43bc2248` (13 filas, gap `0x16c`), descriptores compartidos en `0x43c949a7` (3 filas: identidad, permutación, `1,1,1,1,0,…`).
+- Comparación: 13 vs 34 modos; 2 vs 3 tablas; descriptores usados `{0}` vs `{0,1}`; máscaras `{0xf00,0xfff}` (0 ceros) vs 8 valores con 30 ceros; sin `0x4e`/`0x4f` en la A6000.
+- Tests: `tests/test_s332_a6000_tables.py` (11) y 343 comprobaciones. S51 sin cambios.
+
 ## S331 — la fila de T es la posición del modo; `obj+0x2b4` es un flag (22-10-2026)
 
 - **Corrige S317/S327/S330.** El consumidor `0x436f618c` recibe `(obj, posición_modo, flag)`: `mov r5,r1` + `muls r5,r2,r5` (stride `0x1c`) fijan la fila con `r1`; `r2` solo se compara con `#1` para una llamada de log antes de reutilizarse como stride.
