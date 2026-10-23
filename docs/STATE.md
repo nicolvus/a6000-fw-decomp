@@ -1,5 +1,9 @@
 # Estado vigente — Sony A6000 reverse engineering
 
+## Contrato RecordStill / RecordImage — 23-10-2026
+
+[Comparación por contrato, cuerpo, cadenas y bytes](capture/recordstill-contract-audit-2026-10-23.md): A6000 `0x90b248` es RecordImage por sus diagnósticos; antigua etiqueta C++ `RecordStill::Execute` no demostrada. Pareja A7S `0x84a568`. A7S `0x847e1c` es RecordStill, pareja A6000 `0x908afc`, llamado desde RecordImage en ambos. Los dos contenedores A6000 se delimitan con unwind/prólogos; `0x91631e` es tabla TBB. Se recuperan 25 punteros Thumb candidatos a callback hacia `0x90d7e8`, sin consumidor BX/BLX demostrado. 42 tests S380. Equivalencia física y origen `0x40193` NO_VERIFICADO; S51 sin cambios. Prevalece sobre los resúmenes históricos siguientes.
+
 ## Auditoría 23-10-2026
 
 [Resultados y pendientes](auditoria-2026-10-23.md): corregidos destinos BL S382, encodings S384, direcciones de 94 trazas, 21 longitudes y censo detallado. Triaje automático reabierto; equivalencia A7S, flujo `0x40193` y logger dual siguen NO_VERIFICADO. Las cadenas prueban presencia textual; el censo de 133/372 mide documentación de etiquetas. P1–P21 propuestas, sin nuevas pruebas físicas. Esta actualización prevalece sobre los resúmenes históricos siguientes.

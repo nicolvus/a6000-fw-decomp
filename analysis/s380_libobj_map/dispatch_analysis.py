@@ -1,4 +1,4 @@
-"""S380/S381: RecordStill::Execute cuerpo + xrefs; .plt osal_* y sus llamadores."""
+"""S380/S381: RecordImage cuerpo + xrefs; .plt osal_* y sus llamadores."""
 import struct
 import sys
 from pathlib import Path
@@ -34,16 +34,16 @@ def disasm_range(start, end):
             a += 2
     return out
 
-# --- 1. Cuerpo de RecordStill::Execute en 0x90b248 ---
+# --- 1. RecordImage (antigua etiqueta no demostrada RecordStill::Execute) ---
 print("=" * 70)
-print("RecordStill::Execute @ 0x90b248 (cuerpo, 0x90b248..0x90b400)")
+print("RecordImage @ 0x90b248 (ventana, 0x90b248..0x90b400)")
 print("=" * 70)
 for addr, mnem, op, size in disasm_range(0x90b248, 0x90b400):
     print(f"0x{addr:08x}: {mnem:<10} {op}")
 
-# --- 2. Buscar xrefs (BL/BLX) a 0x90b248 en todo libObj.so ---
+# --- 2. Buscar candidatos BL/BLX a RecordImage en todo libObj.so ---
 print("\n" + "=" * 70)
-print("Xrefs BL/BLX a 0x90b248 (RecordStill::Execute) en libObj.so")
+print("Candidatos BL/BLX a 0x90b248 (RecordImage) en libObj.so")
 print("=" * 70)
 TARGET = 0x90b248
 xrefs = [address for address, _ in thumb_callers(data, {TARGET})]
@@ -102,7 +102,7 @@ for va, nom in sorted(osal_plt.items()):
 
 # Buscar llamadores de cada entrada osal_ plt
 print("\n=== Llamadores (BL/BLX) a cada entrada .plt osal_* ===")
-call_sites = {}
+call_sites: dict[int, list[int]] = {}
 for address, target in thumb_callers(data, set(osal_plt)):
     call_sites.setdefault(target, []).append(address)
 for plt_va, nom in sorted(osal_plt.items()):

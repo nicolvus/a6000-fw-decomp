@@ -97,7 +97,7 @@ Muestra de relevantes para obturador / still / imagen:
 | 0x00574065 | 54 | `FS_init` |
 | 0x00565191 | 144 | `FSS_init` |
 
-**RecordStill::Execute NO es export** (no aparece en .dynsym definido). Está en 0x0090b248 (ver S382).
+**Corrección 23-10-2026:** `0x0090b248` no es export y sus diagnósticos dicen **RecordImage**. La etiqueta histórica `RecordStill::Execute` no está demostrada. RecordStill A6000 está en `0x908afc`; ver [auditoría de contrato](recordstill-contract-audit-2026-10-23.md) y [S382](s382-recordstill-callers.md).
 
 ## 4. .plt → nombre (primeras entradas resueltas via .rel.plt)
 
@@ -130,7 +130,7 @@ libObj.so es la capa **camera-user** (usuario). Contiene que av-cam.bin (firmwar
 2. **Sistema de mensajes objeto:** `MWF::ObjMsg`, `MWF::ObjMsgQueue`, `MWF::ObjMsgList`, `MWF::ObjActiveBase`, `MWF::ObjIf`, `MWF::ObjPin`, `MWF::EventSender`, `MWF::EventReceiver`, `MWF::EventWrapper` — infraestructura de paso de mensajes entre objetos.
 3. **Dataflow infra:** `DataflowInfraCh`, `DataflowInfraSender`, `DataflowInfraReceiver`, `DataflowInfraMsg`, `INFRA_GET_PIN`, `INFRA_CONNECT_PIN`, `INFRA_DISCONNECT_PIN` — canales de datos entre módulos (incluyendo YC/pin para SFRA).
 4. **Pin system:** `ObjPin::Send`, `ObjPin::Create`, `UPinCmdHandler` — envío de comandos por pin (relevante para tarea F: entrega de YC a SFRA).
-5. **Still image objects:** `ObjStillRecorder`, `InfraStillPool`, `UtilStillSize` — grabación y gestión de imágenes fijas (relevante para tarea E: RecordStill::Execute).
+5. **Still image objects:** `ObjStillRecorder`, `InfraStillPool`, `UtilStillSize` — grabación y gestión de imágenes fijas (RecordImage y su helper RecordStill).
 6. **State manager:** `StateMgr::ChangeState` — máquina de estados.
 7. **Gestión de archivos/archivo:** `FS_init`, `FSS_init`, `Backup_write`, `Backup_reg_cb` — sistema de archivos y backup.
 

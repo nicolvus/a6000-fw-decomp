@@ -63,26 +63,22 @@ Los mismos símbolos de mensajería aparecen como imports UND en ambos:
 
 **Idéntico conjunto** en A6000 y A7S. **VERIFICADO**.
 
-## 5. RecordStill::Execute — localización en A7S (NO_VERIFICADO)
+## 5. Contratos distintos: RecordStill y RecordImage
 
-**Auditoría 23-10-2026:** la falta de patrones de prólogo o MOVW/MOVT no demuestra ausencia de función ni flags de compilación distintos. `movt #1` tampoco es la mitad alta de `0x100f`. La comparación funcional está pendiente.
+**Corrección 23-10-2026:** se rechaza comparar A7S `0x847e1c` con A6000 `0x90b248` como el mismo método. El segundo se identifica internamente como **RecordImage**; la etiqueta C++ histórica `RecordStill::Execute` no está demostrada. El [informe de contrato](recordstill-contract-audit-2026-10-23.md) detalla bytes, referencias, límites, ABI y llamadores.
 
-Referencias PC-relativas recuperadas con `scripts/elf_string_xrefs.py` sobre la A7S: cadena ` RecordStill : ` en `0xcb6f2b`, referencia `0x847e26`; cadena `RecordStill ` en `0xcb7bbb`, referencias `0x847f4e`, `0x847f60`, `0x847fd6`, `0x847fe8`, `0x848018`, `0x84803a`. Son puntos de partida; aún no identifican por sí solos `Execute`.
-
-La tabla `.ARM.exidx` agrupa esos sitios en **`0x847e1c..0x84814c`**; se confirma el prólogo Thumb `push.w {r4-r8,sb,sl,lr}; sub.w sp,sp,#0x358`. A6000 agrupa `Execute` en `0x90b248..0x90c088`, con stack `0xb04`. Hay una candidata A7S concreta para comparar, pero estas diferencias y las cadenas compartidas no prueban todavía identidad de método.
-
-| | A6000 fw3.21 | A7S fw3.20 |
+| Contexto | A6000 fw3.21 | A7S fw3.20 |
 |---|---|---|
-| Dirección | 0x0090b248 | **NO LOCALIZADA** |
-| content-info | 0x100f (`movw r1,#0x100f` en 0x90b2a4) | `movw #0x100f`: **0 sitios** en .text |
-| movt #0x0001 (parte alta) | N/A | **0 sitios** en .text |
-| Patrón push.w+sub.w sp,#0xb00 | Presente en 0x90b248 | **0 sitios** en .text |
-| ObjMsg 0x3500/0x3002 | No hay movw directo | Pendiente |
-| Sitios BL confirmados | 0x90de2e y 0x91634e | Pendiente |
+| RecordStill, cinco entradas ABI | `0x908afc..0x908e2c` | `0x847e1c..0x84814c` |
+| RecordImage, objeto y mensaje | `0x90b248..0x90c088` | `0x84a568..0x84b3a8` |
+| `AddParam(0x100f)` en RecordImage | MOVW `0x90b2a4`, llamada `0x90b2aa` | MOVW `0x84a5c4`, llamada `0x84a5ca` |
+| RecordImage llama a RecordStill | `0x90bbdc → 0x908afc` | `0x84aefc → 0x847e1c` |
 
-**Conclusión vigente:** identificación en A7S NO_VERIFICADO. Los patrones negativos históricos no permiten atribuir una causa al compilador. Continuar desde las referencias a cadenas recuperadas.
+Las parejas se apoyan en cadenas PC-relativas, ABI, cuerpos y relación llamador/callee. RecordStill tiene 260 instrucciones de igual disposición; las diferencias de código se limitan a 43 llamadas relocalizadas y seis números de diagnóstico (+9). Esto no demuestra equivalencia de todos los callees ni del comportamiento físico.
 
-**Límite:** los tests de S385 verifican métricas y presencia de nombres; no identifican `RecordStill::Execute` en A7S.
+Se retiran los negativos históricos «cero MOVW 0x100f» y «cero prólogos de stack 0xb00» en A7S: `0x84a568` y `0x84a5c4` son contraejemplos verificados con LLVM y bytes. Los intervalos unwind contienen también pools; A7S `0x848104..0x84814c` es pool tras el retorno, no código.
+
+Regresiones de contrato y límites: `analysis/s380_libobj_map/tests/test_recordimage_contract.py`. Los tests originales de métricas no bastaban para identificar métodos.
 
 ## 6. Búsqueda del ID de cola `0x40193` (C2 receptor)
 
@@ -113,16 +109,16 @@ La tabla `.ARM.exidx` agrupa esos sitios en **`0x847e1c..0x84814c`**; se confirm
 | Imports clave (nombres) | IDÉNTICO | Mismo conjunto de imports de mensajería |
 | NEEDED libs | IDÉNTICO | Las mismas 17 librerías |
 | Direcciones de exports | DISTINTO | Offsets no constantes (layout diferente) |
-| RecordStill::Execute | NO_VERIFICADO en A7S | No identificado por referencias a cadenas todavía |
+| RecordStill / RecordImage | Parejas estructurales recuperadas | Cadenas, ABI y llamada anidada; equivalencia de todos los callees NO_VERIFICADO |
 | ID de cola 0x40193 | NO_VERIFICADO | Negativo acotado en datos; patrones MOVW/MOVT históricos inválidos, ver S384 |
 
 ## 8. Bloqueos
 
 | Ítem | Por qué |
 |---|---|
-| RecordStill::Execute en A7S | Requiere desensamblado capstone de 10 MB .text |
+| Equivalencia de ejecución A6000/A7S | Parejas estáticas identificadas; falta validar semántica de callees y comportamiento físico |
 | Búsqueda 0x40193 en A7S | Requiere barrido de bytes en .rodata de A7S |
-| Quién llama a RecordStill::Execute (ambos) | A6000: dos sitios BL confirmados; recuperar funciones y equivalencia A7S está pendiente |
+| Despacho indirecto A6000 | Dos contenedores recuperados; 25 punteros Thumb al primero. Consumidor BX/BLX y exhaustividad NO_VERIFICADO |
 | Quién registra callback de cola 0x40193 | PLT y llamadas estáticas recuperados en S381; falta seguir argumentos hasta ese ID |
 
 **Documentado en knowledge/agents/NEEDS-HUMAN.md**

@@ -1,5 +1,9 @@
 # Estado actual — léeme primero
 
+## Contrato RecordStill / RecordImage — 23-10-2026
+
+[Informe](../docs/capture/recordstill-contract-audit-2026-10-23.md): la etiqueta `RecordStill::Execute` de A6000 `0x90b248` no está demostrada; sus diagnósticos dicen **RecordImage**, pareja A7S `0x84a568`. A7S `0x847e1c` corresponde estructuralmente a A6000 `0x908afc` (RecordStill, cinco entradas ABI). RecordImage llama a RecordStill en ambos modelos. Los negativos A7S de MOVW `0x100f` y stack `0xb00` eran falsos. Límites de los dos llamadores A6000 recuperados; `0x91631e` es tabla TBB. 25 punteros Thumb al contenedor `0x90d7e8`; consumidor BX/BLX y ejecución física NO_VERIFICADO. 42 tests S380 PASS. Esta corrección prevalece sobre los resúmenes históricos siguientes.
+
 ## Auditoría 23-10-2026 — prevalece sobre los resúmenes históricos siguientes
 
 [Informe](../docs/auditoria-2026-10-23.md). Retirados los falsos llamadores `0x7484dc`/`0x755af8`; confirmados BL `0x90de2e`/`0x91634e`. S384: encodings históricos incorrectos; origen de `0x40193` NO_VERIFICADO. A7S: referencias a cadenas recuperadas, identidad de Execute pendiente. Corregidas 94 direcciones de trazas y 21 longitudes en los módulos recientes; duplicación de logger y equivalencia funcional no demostradas por cadenas. Reabiertas 141 clasificaciones automáticas de triaje; nuevas filas requieren revisión manual. Censo detallado sincronizado a 94 hitos + 39 subetiquetas = 133/372. Pages incluye P1–P21; estos planes siguen sin ejecutar.
@@ -18,10 +22,10 @@
 - **S381** Mapeo PLT corregido por instrucciones/GOT: 83/53 candidatos hacia registradores síncrono/asíncrono. Dos sitios BL hacia Execute confirmados. Origen de `0x40193` pendiente. Ver `docs/capture/s381-libobj-a6000-dispatch.md`.
 - **S383** `…ForLiro` en `libObj.so` A6000: 5 nombres de obturador rechazados (NON SUPPORTED). `SetShutterTypeForLiro` ausente (solo A6300). Sin efecto en S51. [`docs/capture/s383-forliro-silentlibobj.md`]
 - **S384** Cero palabras LE del ID `0x40193` en `.rodata`/`.data` de A6000/A7S y cero cadenas ASCII. Encodings históricos MOVW/MOVT invalidados; sí existe `movw #0x193`. Origen del ID NO_VERIFICADO. Ver `docs/capture/s384-queue-id-0x40193-search.md`.
-- **S382** Dos sitios BL confirmados: `0x90de2e` y `0x91634e`. Retirados los falsos llamadores `0x7484dc` y `0x755af8`; límites de funciones y despacho indirecto NO_VERIFICADO. Ver `docs/capture/s382-recordstill-callers.md`.
-- **S385** Métricas ELF comparadas; equivalencia de `RecordStill::Execute` en A7S NO_VERIFICADO. Referencias a cadenas recuperadas en `0x847e26` y `0x847f4e`–`0x84803a`; no prueban todavía su identidad. Ver `docs/capture/s385-libobj-a6000-vs-a7s-diff.md`.
+- **S382** Dos BL a RecordImage: `0x90de2e` y `0x91634e`, contenedores `0x90d7e8..0x90e148` y `0x9162d0..0x91647c`. 25 punteros Thumb al primero; consumidor indirecto NO_VERIFICADO. Ver `docs/capture/s382-recordstill-callers.md`.
+- **S385** Parejas RecordStill/RecordImage A6000↔A7S recuperadas por contrato/cuerpo/cadenas; equivalencia de todos los callees NO_VERIFICADO. Ver `docs/capture/s385-libobj-a6000-vs-a7s-diff.md`.
 
-**24 tests PASS** en `analysis/s380_libobj_map/tests/`.
+**42 tests PASS** en `analysis/s380_libobj_map/tests/`.
 
 ---
 

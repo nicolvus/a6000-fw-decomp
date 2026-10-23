@@ -2,7 +2,7 @@
 
 ## Auditoría vigente (23-10-2026)
 
-[Resultados, correcciones y límites](docs/auditoria-2026-10-23.md): errores de destinos BL, encodings S384, 94 direcciones de trazas y 21 longitudes corregidos; triaje automático reabierto. Censo documental sincronizado (133/372); 21 pruebas físicas propuestas. La equivalencia A7S y las afirmaciones de logger dual siguen pendientes.
+[Resultados, correcciones y límites](docs/auditoria-2026-10-23.md): errores de destinos BL, encodings S384, 94 direcciones de trazas y 21 longitudes corregidos; triaje automático reabierto. Censo documental sincronizado (133/372); 21 pruebas físicas propuestas. [Contrato RecordStill/RecordImage](docs/capture/recordstill-contract-audit-2026-10-23.md): corregida la etiqueta de `0x90b248`, recuperadas las parejas A6000/A7S, límites de llamadores y 25 punteros Thumb candidatos a callback. Equivalencia de ejecución y logger dual siguen pendientes.
 
 Proyecto de ingeniería inversa del firmware **Sony A6000 (fw 3.21)**, con foco en la línea de captura y el obturador electrónico.
 
