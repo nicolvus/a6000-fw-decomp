@@ -2562,4 +2562,15 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 - Línea del obturador: NEGATIVO ACOTADO (0 coincidencias).
 - Artefactos: `docs/capture/s614-zpd.md`, `analysis/s614_zpd/`, `tests/test_s614_zpd.py` (pendiente).
 - Verificación: censos exactos, commit Conventional + push origin HEAD:main.
-- Siguiente: S615 `[EIS]` (4 trazas).
+- Siguiente: S615 `[CAMERA_IS][EIS]` (4 trazas).
+
+## Investigación S615 — `[CAMERA_IS][EIS]` (agente E, Nemotron 3 Ultra Free)
+
+- Objetivo: decodificar el submódulo de traza `[CAMERA_IS][EIS]` (4 trazas) exclusivo de la A6000 fw3.21.
+- REA Evidence: strings `[CAMERA_IS][EIS]:` en `0x43c9a30a`–`0x43c9a3aa` (4 cadenas, doble prefijo).
+- Resultado: 4 trazas confirmadas con prefijo `[CAMERA_IS][EIS]:` (19 B); `rcct_SetStblzPower`, `rcct_SetStblzGridH`, `GyroAD[p/y]`, datos genéricos; logger dual (nuevo `[CAMERA_IS][EIS]:` + viejo global `0x43902718`); prefijo fijo 19 B.
+- Diferencial: A6000 fw3.21=4 `[CAMERA_IS][EIS]` tokens; A7S fw3.20=0 (núcleos con `[GOLFSHOT]`/sin prefijo); A6300 fw2.01=0 (2 núcleos sin prefijo).
+- Línea del obturador: NEGATIVO ACOTADO (0 coincidencias).
+- Artefactos: `docs/capture/s615-eis.md`, `analysis/s615_eis/`, `tests/test_s615_eis.py` (pendiente).
+- Verificación: censos exactos, commit Conventional + push origin HEAD:main.
+- Siguiente: S616 `[LENS_PDR]` (4 trazas).
