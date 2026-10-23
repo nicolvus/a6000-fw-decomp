@@ -9,6 +9,13 @@ Para el estado operativo actualizado, ver [knowledge/CURRENT.md](../knowledge/CU
 para el obturador, la decisión [S51](capture/s51-decision.md) y el
 [plan de ocho pruebas físicas pendientes](capture/physical-test-plan.md).
 
+## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos
+
+- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).
+- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.
+- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.
+- Decisión [S51](capture/s51-decision.md) sin cambios; P1–P8 siguen sin ejecutarse.
+
 ## Avance S138–S174 (22-10-2026) — línea de RE general, controles positivos del obturador y una regla metodológica
 
 **Línea de RE general** (catálogo con 105 hitos: [docs/capture/linea-general-re.md](capture/linea-general-re.md)).
