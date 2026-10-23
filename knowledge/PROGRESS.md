@@ -2651,3 +2651,14 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 - Artefactos: `docs/capture/s622-avr.md`, `analysis/s622_avr/`, `tests/test_s622_avr.py` (pendiente).
 - Verificación: censos exactos, commit Conventional + push origin HEAD:main.
 - Siguiente: S623 `[JIRO]` (2 trazas).
+
+## Investigación S623 — `[JIRO]` (agente E, Nemotron 3 Ultra Free)
+
+- Objetivo: decodificar el módulo de traza `[JIRO]` (2 trazas) exclusivo de la A6000 fw3.21.
+- REA Evidence: strings `[ACCY][DEBUG][JIRO]` en `0x43c25b04`–`0x43c25b2b` (2 cadenas, prefijo DEBUG).
+- Resultado: 2 trazas confirmadas con prefijo `[ACCY][DEBUG][JIRO]` (20 B); `NotifyAttached`, `NotifyDetached`; logger dual (nuevo `[ACCY][DEBUG][JIRO]` + viejo global `0x43902718`); prefijo fijo 20 B.
+- Diferencial: A6000 fw3.21=2 `[ACCY][DEBUG][JIRO]` tokens; A7S/A6300=0 (1 string `16AccyUmDeviceJiro` sin prefijo ACCY).
+- Línea del obturador: NEGATIVO ACOTADO (0 coincidencias).
+- Artefactos: `docs/capture/s623-jiro.md`, `analysis/s623_jiro/`, `tests/test_s623_jiro.py` (pendiente).
+- Verificación: censos exactos, commit Conventional + push origin HEAD:main.
+- Siguiente: S624 `[UTILITY]` (2 trazas).
