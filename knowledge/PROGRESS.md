@@ -2508,3 +2508,14 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 - Artefactos: `docs/capture/s609-dist.md`, `analysis/s609_dist/`, `tests/test_s609_dist.py` (pendiente).
 - Verificación: censos exactos, commit Conventional + push origin HEAD:main.
 - Siguiente: S610 `[HOUSING]` (5 trazas).
+
+## Investigación S610 — `[ACCY][INFO][HOUSING]` (agente E, Nemotron 3 Ultra Free)
+
+- Objetivo: decodificar el módulo de traza `[ACCY][INFO][HOUSING]` (5 trazas) exclusivo de la A6000 fw3.21.
+- REA Evidence: strings `[ACCY][INFO][HOUSING]: ` en `0x43c253d8`–`0x43c25494` (5 cadenas, triple prefijo).
+- Resultado: 5 trazas confirmadas con prefijo `[ACCY][INFO][HOUSING]: ` (21 B); notificaciones `Attached/ContinuousAttached/Detached/UartTimedOut`, `RestoreInfo`; logger dual (nuevo triple prefijo + viejo global `0x43902718`); prefijo fijo 21 B.
+- Diferencial: A6000 fw3.21=5 `[ACCY][INFO][HOUSING]` tokens; A7S fw3.20=0 (solo `24AccyUmDeviceWaterHousing` suelta), A6300 fw2.01=0.
+- Línea del obturador: NEGATIVO ACOTADO (0 coincidencias).
+- Artefactos: `docs/capture/s610-housing.md`, `analysis/s610_housing/`, `tests/test_s610_housing.py` (pendiente).
+- Verificación: censos exactos, commit Conventional + push origin HEAD:main.
+- Siguiente: S611 `[IMAGING_RSRC]` (5 trazas).

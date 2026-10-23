@@ -12,7 +12,7 @@ Tema distinto de A/B/C: decodificación de módulos exclusivos de la A6000 fw3.2
 - S607 [CAM_CMD] (6 trazas) → DONE (S607)
 - S608 [MOUNT_INFO] (6 trazas) → DONE (S608)
 - S609 [CAMERA_IS][DIST] (5 trazas) → DONE (S609)
-- S610 [HOUSING] (5 trazas)
+- S610 [ACCY][INFO][HOUSING] (5 trazas) → DONE (S610)
 - S611 [IMAGING_RSRC] (5 trazas)
 - S612 [MOUNT] (5 trazas)
 - S613 [MOUNT_WARNING] (5 trazas)

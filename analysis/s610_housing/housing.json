@@ -1,0 +1,24 @@
+{
+  "module": "ACCY/INFO/HOUSING",
+  "traces": 5,
+  "trace_strings": [
+    {"vaddr": "0x43c253d8", "text": "[ACCY][INFO][HOUSING]:%d:NotifyAttached"},
+    {"vaddr": "0x43c25400", "text": "[ACCY][INFO][HOUSING]:%d:NotifyContinuousAttached"},
+    {"vaddr": "0x43c25432", "text": "[ACCY][INFO][HOUSING]:%d:RestoreInfo...Savedata:%02X %02X"},
+    {"vaddr": "0x43c2546c", "text": "[ACCY][INFO][HOUSING]:%d:NotifyDetached"},
+    {"vaddr": "0x43c25494", "text": "[ACCY][INFO][HOUSING]:%d:NotifyUartTimedOut... %d"}
+  ],
+  "prefix_length": 21,
+  "prefix": "[ACCY][INFO][HOUSING]:",
+  "parent_prefix": "[ACCY]",
+  "level_prefix": "[INFO]",
+  "sub_prefix": "[HOUSING]",
+  "differential": {
+    "a6000_fw321": {"token_count": 5, "prefixes": ["[ACCY][INFO][HOUSING]:"]},
+    "a7s_fw320": {"token_count": 0, "related_strings": ["24AccyUmDeviceWaterHousing"]},
+    "a6300_fw201": {"token_count": 0, "related_strings": []}
+  },
+  "shutter_line": "NEGATIVO ACOTADO",
+  "logger_dual": true,
+  "global_logger": "0x43902718"
+}
