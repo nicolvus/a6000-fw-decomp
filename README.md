@@ -86,6 +86,7 @@ S318 identifica el constructor paramétrico `0x436f3fc0(obj,idx)` (misma vtable)
 S319 cierra la frontera estática del `ctx 0x43ea70a0`: 40 sitios, ninguno escribe `[ctx]`/`[ctx+8]`, y 0 literales absolutos en `av-cam` y en `kmod/*`/`lib/*`; veredicto NO_VERIFICADO con candidatos `0x437c7b0c`/`0x437ca5c8`. [`docs/capture/s319-ctx-boundary.md`](docs/capture/s319-ctx-boundary.md).
 S320 demuestra que los dos aplicadores de listas usan la misma trama y el mismo formateador: el modo 2 solo añade un reintento tras `0x43ad92e6` si `r0==2`. El modo elige la lista, no la codificación. [`docs/capture/s320-frame-retry.md`](docs/capture/s320-frame-retry.md).
 S321 corrige la supuesta tabla de 68 filas: `0x43fee5ac` es la fila 1 de una matriz A7S de 69 filas desde `0x43fee598`; `0x436f3928` selecciona un byte por el mapa de modos y lo escribe en cada registro. Los códigos `0x4e`/`0x4f` comparten columna con otros modos, sin semántica física demostrada. [`docs/capture/s321-matrix-rows.md`](docs/capture/s321-matrix-rows.md).
+S322 decodifica `0x43ad9666`: cada registro A7S produce `81|03|device|address8|data8`; 12 escenarios previos confirman 1200/1200 tramas y una trama por registro. El modo 2 conserva la codificación y solo añade el reintento de S320. [`docs/capture/s322-frame-format.md`](docs/capture/s322-frame-format.md).
 
 ### Fase del agente E — módulos exclusivos A6000 (S600+)
 

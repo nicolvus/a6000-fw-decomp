@@ -1853,3 +1853,17 @@ REA: `xrefs(0x43fee5ac) = 0x436f3942` (interior del bucle) y no reconoce la entr
 `analysis/s321_matrix_rows/matrix_rows.json`.
 
 **Siguiente:** S322, decodificar la trama `0x43ad9666`→`0x43ad9628`/`0x436f2554`.
+
+## S322 — formato de trama A7S (22-10-2026, agente B)
+
+**VERIFICADO (REA + bytes; 1282 comprobaciones, 6 tests):** `0x43ad9666` consulta capacidad
+con `0x436f2554` y delega en `0x43ad9628`, que usa `0x43ad9536`/`0x43ad95a6`. En el camino
+byte-alineado de los registros S315/S321 cada registro produce
+`81|03|device|address8|data8`; longitud `3` cubre dispositivo, dirección y dato. Las tramas
+se concatenan y cada transmisión P2S termina en `00`. La evidencia previa de S58 confirma
+1200/1200 tramas en 12 escenarios, una por registro. Contrato: `0=éxito`, `1=rechazo`,
+`2=sin espacio`; este último activa el reintento de S320. Modo 2 no altera la codificación.
+**NO_VERIFICADO:** semántica eléctrica/física y vínculo modo 2↔silent. S51 sin cambios.
+[S322](../docs/capture/s322-frame-format.md), `analysis/s322_frame_format/frame_format.json`.
+
+**Siguiente:** auditar el productor/alcanzabilidad de la matriz dinámica `0x43e8de00` de S321.
