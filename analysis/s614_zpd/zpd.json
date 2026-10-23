@@ -1,0 +1,21 @@
+{
+  "module": "ZPD",
+  "traces": 5,
+  "trace_strings": [
+    {"vaddr": "0x43ccf2d7", "text": "[ZPD]: lens attach sequence end."},
+    {"vaddr": "0x43ccf2f8", "text": "[ZPD]: load dra data."},
+    {"vaddr": "0x43ccf31f", "text": "[ZPD]: load lens data from lens."},
+    {"vaddr": "0x43ccf340", "text": "[ZPD]: load lens data from body."},
+    {"vaddr": "0x43ccf361", "text": "[ZPD]: load:%s"}
+  ],
+  "prefix_length": 5,
+  "prefix": "[ZPD]: ",
+  "differential": {
+    "a6000_fw321": {"token_count": 5, "prefixes": ["[ZPD]: "]},
+    "a7s_fw320": {"token_count": 0, "related_strings_count": 30},
+    "a6300_fw201": {"token_count": 0, "related_strings_count": 50}
+  },
+  "shutter_line": "NEGATIVO ACOTADO",
+  "logger_dual": true,
+  "global_logger": "0x43902718"
+}
