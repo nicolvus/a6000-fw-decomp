@@ -1,0 +1,21 @@
+{
+  "module": "JIRO",
+  "traces": 2,
+  "trace_strings": [
+    {"vaddr": "0x43c25b04", "text": "[ACCY][DEBUG][JIRO] NotifyDetached(%d)", "level": "DEBUG"},
+    {"vaddr": "0x43c25b2b", "text": "[ACCY][DEBUG][JIRO] NotifyAttached(%d)", "level": "DEBUG"}
+  ],
+  "prefix_length": 20,
+  "prefix": "[ACCY][DEBUG][JIRO]",
+  "parent_prefix": "[ACCY]",
+  "level_prefix": "[DEBUG]",
+  "sub_prefix": "[JIRO]",
+  "differential": {
+    "a6000_fw321": {"token_count": 2, "prefixes": ["[ACCY][DEBUG][JIRO]"]},
+    "a7s_fw320": {"token_count": 0, "related_strings": ["16AccyUmDeviceJiro"]},
+    "a6300_fw201": {"token_count": 0, "related_strings": ["16AccyUmDeviceJiro"]}
+  },
+  "shutter_line": "NEGATIVO ACOTADO",
+  "logger_dual": true,
+  "global_logger": "0x43902718"
+}

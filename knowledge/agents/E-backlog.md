@@ -25,7 +25,7 @@ Tema distinto de A/B/C: decodificación de módulos exclusivos de la A6000 fw3.2
 - S620 [STABILIZER] (3 trazas) → DONE (S620)
 - S621 [AVOUT] (2 trazas) → DONE (S621)
 - S622 [AVR] (2 trazas) → DONE (S622)
-- S623 [JIRO] (2 trazas)
+- S623 [JIRO] (2 trazas) → DONE (S623)
 - S624 [UTILITY] (2 trazas)
 - S625 [ADR] (1 traza)
 - S626 [CAMERA_DETECT_FC] (1 traza)
