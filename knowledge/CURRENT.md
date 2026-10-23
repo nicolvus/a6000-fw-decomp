@@ -1871,6 +1871,23 @@ NO_VERIFICADO). S51 sin cambios. [S324](../docs/capture/s324-columns-audit.md),
 
 **Siguiente:** S323 (matriz dinámica `0x43e8de00`) o localizar la tabla de 34 columnas que
 S204 pudo medir.
+## S325 — el mapa de columnas es posición→columna (22-10-2026, agente B)
+
+**VERIFICADO (41 comprobaciones, 7 tests):** `0x43ada284` es una búsqueda lineal que
+devuelve el **índice** del valor (o `0xff`); el setter llama con `r3=0x22` sobre el
+`u32[34]` de `0x43fee370` y pasa ese índice (`0..33`) al accesor del slot 40, que hace
+`ldrb r1,[0x43c9c5b5,r1]`. Por tanto `0x43c9c5b5` es **`posición→columna` de 34 entradas**
+(todas ≤14; los 48 B siguientes son otra tabla periódica de 10). **Corrige** S302/S321:
+`0x4e` (pos 29) → columna **12** y `0x4f` (30) → **13**, frente a `0x4c`/`0x4d` (27/28) →
+**5**. La matriz **sí distingue** el modo silent: `0x4e` vs `0x4c` difiere en **14**
+registros y `0x4f` vs `0x4d` en **11** (`0x50`/`0x51` comparten 12/13). Sigue sin
+reproducirse el «1 registro» de S204, y su tabla de 34 columnas sigue NO_VERIFICADA.
+S51 sin cambios. [S325](../docs/capture/s325-position-map.md),
+`analysis/s325_position_map/position_map.json`.
+
+**Siguiente:** buscar la tabla de 34 columnas (S202/S204) y medir si los tiempos de `0x4e`/
+`0x4f` difieren; alternativamente S323 (matriz dinámica `0x43e8de00`).
+
 
 
 ## S322 — formato de trama A7S (22-10-2026, agente B)
