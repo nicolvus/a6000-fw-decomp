@@ -2429,3 +2429,24 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 - Cola regenerada con **26 módulos pendientes** (S605–S630) ordenados por tamaño: `[JPEG]` 17, `[NSX_VOT]` 7, `[CAM_CMD]`/`[MOUNT_INFO]` 6, `[DIST]`/`[HOUSING]`/`[IMAGING_RSRC]`/`[MOUNT]`/`[MOUNT_WARNING]`/`[ZPD]` 5, etc. Ficheros: `docs/agents/queue-E.md`, `knowledge/agents/E-backlog.md`.
 - Tests: `python -m pytest tests/knowledge -q` 67/67 PASS; grafo estable 1455 entidades / 2879 relaciones; `git diff --check` PASS.
 - Próximo paso exacto: **S605** `[JPEG]` (17 trazas) — buscar strings, xrefs, diferencial A7S/A6300, logging rewrite, clase RTTI/estructura, verificación obturador.
+
+## Investigación S605 — `[JPEG]` (agente E, Nemotron 3 Ultra Free)
+
+- Objetivo: decodificar el módulo de traza `[JPEG]` (17 trazas) exclusivo de la A6000 fw3.21.
+- REA Evidence: strings `[JPEG]: ` en `0x43ce06ea`–`0x43ce094f` (17 cadenas); símbolos `dgi_jpeg_*` / `src/dgi_jpeg_*.c` en `0x43cdf178`–`0x43ce09af` (35+ cadenas).
+- Resultado: 17 trazas confirmadas; funciones `cbJpegDebugOpen/Close`, `f_sa_dummy_send_msg`, `f_2open` (Normal/Sort/Tanz), `f_2close` (Normal/Sort); logger dual (nuevo `[JPEG]: ` + viejo global `0x43902718`); prefijo fijo 7 B.
+- Diferencial: A6000 fw3.21=17 `[JPEG]` tokens; A7S fw3.20=0, A6300 fw2.01=0 (usan `[ddl_jpeg_*]`, `[CDIAG][CTRLJPG*]`).
+- Línea del obturador: NEGATIVO ACOTADO (0 coincidencias).
+- Artefactos: `docs/capture/s605-jpeg.md`, `analysis/s605_jpeg/`, `tests/test_s605_jpeg.py` (12/12 PASS).
+- Verificación: censos exactos, commit Conventional + push origin HEAD:main.
+
+## Investigación S606 — `[NSX_VOT]` (agente E, Nemotron 3 Ultra Free)
+
+- Objetivo: decodificar el módulo de traza `[NSX_VOT]` (7 trazas) exclusivo de la A6000 fw3.21.
+- REA Evidence: strings `[NSX_VOT]: ` en `0x43cfdb76`–`0x43cfdd30` (7 cadenas); gemelos `[TRK]: ` en `0x43cfdb9c`–`0x43cfdd50` (7 cadenas).
+- Resultado: 7 trazas confirmadas con gemelos exactos; funciones `almhdl` (bt stop error) + API `osal_*_timer()`; logger dual (nuevo `[NSX_VOT]: ` + viejo `[TRK]: `); prefijo fijo 10 B.
+- Diferencial: A6000 fw3.21=7 `[NSX_VOT]` tokens + 7 `[TRK]` gemelos; A7S fw3.20=0 `[NSX_VOT]`, 7 `[TRK]` (mismo núcleo); A6300 fw2.01=0 `[NSX_VOT]`, 7 `[TRK]` (mismo núcleo).
+- Línea del obturador: NEGATIVO ACOTADO (0 coincidencias).
+- Artefactos: `docs/capture/s606-nsx_vot.md`, `analysis/s606_nsx_vot/`, `tests/test_s606_nsx_vot.py` (pendiente).
+- Verificación: censos exactos, commit Conventional + push origin HEAD:main.
+- Siguiente: S607 `[CAM_CMD]` (6 trazas).
