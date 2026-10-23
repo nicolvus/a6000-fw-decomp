@@ -8,7 +8,7 @@
 
 - **B (S343–S348):** cadena de copia fila T → bloque de 44 B → canal 0..5 (178 escritores); la escritura de máscara es equivalente en A7S y A6000 (la diferencia es de datos); `0x43fef404` es la tabla de ids de `Camera::Lens::ODL` con `0x000d` constante (13 en las 138 entradas de los tres modelos) y callback tipo `memcpy`. S349+ en curso.
 - **libObj.so (S380–S385):** mapa de la A6000 (26 secciones, PLT corregido a 2420 cuerpos ARM + 391 veneers Thumb), despacho de mensajes, `RecordStill::Execute` (0x90b248, Thumb-2) con llamadores BL en `0x90de2e` y `0x91634e`, `…ForLiro` rechazados, ID de cola `0x40193` sin palabra en .rodata/.data A6000/A7S; el negativo histórico MOVW/MOVT era inválido y diff A6000↔A7S.
-- **Pendientes cerrados (`docs/capture/PENDIENTES_FINALES.md`):** C2 `0x40193`, tabla `0x43edccf8`, DCF/SFRA y `svr_num`/`VdNum` documentados; los bloqueos requieren trazado dinámico o pruebas físicas.
+- **Antecedente histórico (`docs/capture/PENDIENTES_FINALES.md`):** sus secciones 2–4 están superadas por la auditoría; `0x40193` sigue pendiente de análisis estático. Tabla `0x43edccf8`, DCF/SFRA y `svr_num`/`VdNum` tienen informes previos que deben contrastarse con sus evidencias antes de declararlos cerrados.
 - **Pruebas físicas:** nuevo [plan 2 (P13–P21)](../docs/capture/physical-test-plan-2.md), todas de solo lectura salvo P21; ninguna ejecutada.
 - **Línea general:** censo recontado a **133/372 (35.75 %)**, 239 pendientes; E llega a S627, D a S515. S51 sin cambios.
 

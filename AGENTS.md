@@ -13,8 +13,11 @@ el detalle de cómo se llegó al estado actual.
 Después de editar cualquier `.md` indexado: corre `knowledge-maintenance`.
 Antes de reutilizar un hallazgo: corre `contradiction-audit` (puede estar corregido/superado).
 
-Restricciones del proyecto: sin firmware ejecutado, sin cámara, sin flasheo,
-sin `git push` salvo instrucción explícita. Detalle completo en `docs/STATE.md`.
+Restricciones del proyecto: sin firmware ejecutado, sin cámara, sin flasheo.
+Al terminar cada cambio versionable: validar, crear un commit convencional y subirlo
+a `origin/main` con la cuenta `nicolvus`, sin pedir nueva confirmación. La instrucción
+del usuario del 23-10-2026 autoriza esta publicación habitual; no incluir firmware
+ni archivos ignorados. Detalle completo en `docs/STATE.md`.
 
 Ingeniería inversa del firmware: **REA primero** (MCP `rea`: funciones, xrefs, llamadas, decompilación,
 `trace_native_values`) y Ghidra histórico `silent-liro.gpr` (readOnly) como respaldo cuando REA no
