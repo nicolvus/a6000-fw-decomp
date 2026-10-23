@@ -1,0 +1,131 @@
+{
+  "milestone": "S346",
+  "title": "el array .bss 0x43e906f4 no tiene escritor estatico: se rellena por la vtable del servicio ([global+0x14]+0x2c8/+0x2cc)",
+  "base": "0x43541000",
+  "firmware": {
+    "a7s_fw320": {
+      "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+      "size": 11455416
+    },
+    "a6000_fw321": {
+      "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+      "size": 11427236
+    }
+  },
+  "a7s": {
+    "array": "0x43e906f4",
+    "array_is_zero_in_image": true,
+    "occurrences_of_array_literal": 1,
+    "slot": "0x44026240",
+    "slot_value": "0x43e906f4",
+    "slot_offset_from_got": "0x00001d00",
+    "slot_refs": [
+      "0x43705716",
+      "0x4370575e"
+    ],
+    "pic_bases_to_array": [],
+    "thunks": {
+      "0x4355f790": [
+        {
+          "address": "0x4355f790",
+          "bytes": "08b5",
+          "insn": "push {r3, lr}"
+        },
+        {
+          "address": "0x4355f792",
+          "bytes": "044b",
+          "insn": "ldr r3, [pc, #0x10]"
+        },
+        {
+          "address": "0x4355f794",
+          "bytes": "044a",
+          "insn": "ldr r2, [pc, #0x10]"
+        },
+        {
+          "address": "0x4355f796",
+          "bytes": "7b44",
+          "insn": "add r3, pc"
+        },
+        {
+          "address": "0x4355f798",
+          "bytes": "9b58",
+          "insn": "ldr r3, [r3, r2]"
+        },
+        {
+          "address": "0x4355f79a",
+          "bytes": "5b69",
+          "insn": "ldr r3, [r3, #0x14]"
+        },
+        {
+          "address": "0x4355f79c",
+          "bytes": "d3f8c832",
+          "insn": "ldr.w r3, [r3, #0x2c8]"
+        }
+      ],
+      "0x4355f7ac": [
+        {
+          "address": "0x4355f7ac",
+          "bytes": "08b5",
+          "insn": "push {r3, lr}"
+        },
+        {
+          "address": "0x4355f7ae",
+          "bytes": "044b",
+          "insn": "ldr r3, [pc, #0x10]"
+        },
+        {
+          "address": "0x4355f7b0",
+          "bytes": "044a",
+          "insn": "ldr r2, [pc, #0x10]"
+        },
+        {
+          "address": "0x4355f7b2",
+          "bytes": "7b44",
+          "insn": "add r3, pc"
+        },
+        {
+          "address": "0x4355f7b4",
+          "bytes": "9b58",
+          "insn": "ldr r3, [r3, r2]"
+        },
+        {
+          "address": "0x4355f7b6",
+          "bytes": "5b69",
+          "insn": "ldr r3, [r3, #0x14]"
+        },
+        {
+          "address": "0x4355f7b8",
+          "bytes": "d3f8cc32",
+          "insn": "ldr.w r3, [r3, #0x2cc]"
+        }
+      ]
+    },
+    "vtable_slots": {
+      "0x4355f790": "0x2c8",
+      "0x4355f7ac": "0x2cc"
+    }
+  },
+  "a6000": {
+    "array": "0x43e8197c",
+    "slot": "0x44020730",
+    "slot_value": "0x43e8197c",
+    "slot_offset_from_got": "0x0000184c",
+    "slot_refs": [
+      "0x436eb2f6",
+      "0x436eb33e"
+    ]
+  },
+  "verdicts": {
+    "static_writer": false,
+    "slot_reference_count_a7s": 2,
+    "references_are_s342_consumers": true,
+    "producer": "servicio invocado por los thunks (vtable +0x2c8/+0x2cc)",
+    "producer_identity": "NO_VERIFICADO"
+  },
+  "limits": [
+    "Solo lectura estatica; sin runtime, camara ni flasheo.",
+    "Un array en `.bss` puede llenarse en runtime sin dejar rastro estatico: el negativo es sobre escritores con literal/slot, no sobre el hardware.",
+    "Los thunks 0x4355f790/0x4355f7ac son envoltorios: el cuerpo real esta en la vtable de runtime, que no es estatica.",
+    "S51 (A/B/C) no cambia."
+  ]
+}
