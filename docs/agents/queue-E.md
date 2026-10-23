@@ -28,7 +28,7 @@ Tema: decodificación de módulos exclusivos de la A6000 fw3.21 (0 en A7S y A630
 - DONE S623 Decodificar `[JIRO]` (2 trazas): exclusiva A6000. → S623
 - DONE S624 Decodificar `[UTILITY]` (2 trazas): exclusiva A6000. → S624
 - DONE S625 Decodificar `[ADR]` (1 traza): exclusiva A6000. → S625
-- TODO S626 Decodificar `[CAMERA_DETECT_FC]` (1 traza): exclusiva A6000.
+- DONE S626 Decodificar `[CAMERA_DETECT_FC]` (1 traza): exclusiva A6000. → S626
 - TODO S627 Decodificar `[EO_SW]` (1 traza): exclusiva A6000.
 - TODO S628 Decodificar `[FILE_NUM]` (1 traza): exclusiva A6000.
 - TODO S629 Decodificar `[FSYSMODE]` (1 traza): exclusiva A6000.
