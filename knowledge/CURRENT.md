@@ -1,5 +1,12 @@
 # Estado actual — léeme primero
 
+## S336 — mapa completo de consumidores de T1/T2/T3 (22-10-2026)
+
+- 13 referencias PIC en 7 funciones; **5** leen campos de fila: `0x436f5eac` (w0), `0x436f5f7c` (copia `+0x00..+0x13`, parchea `+5`/`+7`, → `0x43ada310`), `0x436f605c` (suma `0x43ada4d8(w0 T1/T2)`), `0x436f618c` (`+0x14`/`+0x18`), `0x436f6278`→`0x436f6240` (bytes `+4/+5/+6` como selectores de dos tablas de punteros).
+- **Corrige S331/S334**: «22 B por fila sin leer» vale solo para `0x436f618c`.
+- `w0` no es solo código de operación: también se pasa a `0x43ada4d8` y se suma. Significado de `w0` y `+4/+5/+6`: NO_VERIFICADO.
+- Tests: `tests/test_s336_table_consumers.py` (9) y 47 comprobaciones. S51 sin cambios.
+
 ## S338 — el bloque de destino es DFE/CISIF (22-10-2026)
 
 - `0xfc02a00c` = cuarto DWORD del bloque **`0xfc02a000`**. Literales del bloque en ambos modelos (A7S `0x436f2034/44`; A6000 `0x436d2cbc/78`); getter `base+8` en `0x436f2014`/`0x436d2c9c` y writer en `0x436f202c`/`0x436d2cb4`.
