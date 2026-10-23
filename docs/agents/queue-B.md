@@ -139,3 +139,6 @@
 - TODO S339 Identificar `0xf292b000..8` (bloques 0xf292x000 de 4 KB).
 - TODO S341 Identificar los canales `0xf3122xxx`/`0xfc0a3xxx/4xxx` de S340.
 - BACKLOG S342 Buscar consumidores de la tabla `{código,0x000d}` por puntero calculado (0x43f9c6xx) antes de cerrarla del todo.
+
+- CHECKPOINT S329–S340 (2026-10-22): 11 sesiones publicadas; 152 tests del carril verdes; ruff limpio. Cadena del carril cerrada de extremo a extremo: `modo → matriz 69 filas (slot 40) + T1/T2/T3 (descriptor+máscara) → pares (flag,bit) → máscara u16 → MMIO DFE/CISIF (0xfc02a00c) y bloque 0xf292b000`. Correcciones: bases T2/T3 `0x43bbf2e8`/`0x43bbef30`; fila = posición de modo; `obj+0x2b4` = flag de log; pares = índice de bit; destino DFE/CISIF; `w0` = selector de canal MMIO.
+- HANDOFF para el sucesor (modelo `deepseek/deepseek-flash#high`, agente general, foreground): continuar en S339/S341/S342 con el mismo protocolo (artefacto → verify → tests → informe → README/CURRENT/queue/outbox → index_docs + build_graph → commit + push). No tocar otros carriles ni `docs/CORRECTIONS.md`/`docs/OPEN-QUESTIONS.md`. Antes de reutilizar S326/S327/S330 recordar que están **corregidas** por S329/S331. Verificar con capstone que toda dirección sea prólogo real: los sesgos `add pc` (+4 bit0=0) y las bases +4 ya causaron errores en este carril.
