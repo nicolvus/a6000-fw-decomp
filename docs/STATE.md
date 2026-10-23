@@ -16,6 +16,10 @@ para el obturador, la decisión [S51](capture/s51-decision.md) y el
 - **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.
 - Decisión [S51](capture/s51-decision.md) sin cambios; P1–P8 siguen sin ejecutarse.
 
+## Avance S343–S627 (23-10-2026)
+
+Mecanismo por modo (B): idéntico en código entre A7S y A6000, la diferencia está en los datos (matriz 69/59 filas, T1/T2/T3, 34/13 modos). `libObj.so` (S380–S385): mapeado, sin efecto en S51. Cobertura de módulos al 35.75 % (133/372) por D y E. Decisión [S51](capture/s51-decision.md) sin cambios; P1–P8 y [P13–P21](capture/physical-test-plan-2.md) sin ejecutar.
+
 ## Avance S138–S174 (22-10-2026) — línea de RE general, controles positivos del obturador y una regla metodológica
 
 **Línea de RE general** (catálogo con 105 hitos: [docs/capture/linea-general-re.md](capture/linea-general-re.md)).

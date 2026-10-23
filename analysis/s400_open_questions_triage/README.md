@@ -16,3 +16,11 @@ reverificar los bytes de cada corrección. Las dudas técnicas reales (runtime N
 **Causa:** `build_graph.py` asigna `NO_VERIFICADO` por defecto y enlaza la palabra «corrige» a todos los
 enlaces de la misma línea o ventana. Mejora pendiente (no aplicada): restringir el destino al enlace más
 cercano a la palabra clave y excluir líneas de índice.
+
+## Ampliación (23-10-2026)
+
+Tras reindexar, `OPEN-QUESTIONS.md` pasó a 271 filas (+139), casi todas líneas de README/CURRENT/outbox de S300–S385 con la palabra «corrige». Veredictos nuevos, por **regla automática**: CORRECCION_APLICADA si la cita nombra la sesión del destino y una palabra de corrección; si no, FALSO_POSITIVO. Totales: 69 CORRECCION_APLICADA, 202 FALSO_POSITIVO, 0 VIGENTE.
+
+**Límite:** la regla lee solo la cita; no se abrió cada documento destino ni se reverificaron bytes. Un FALSO_POSITIVO automático podría ocultar una corrección real si la cita no nombra al destino.
+
+Para ampliar tras reindexar: `python3 analysis/s400_open_questions_triage/extend_triage.py` (idempotente; mismos criterios automáticos).
