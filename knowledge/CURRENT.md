@@ -1,6 +1,14 @@
 # Estado actual — léeme primero
 
-## S330 — una sola instancia del constructor, con idx = 0 (22-10-2026)
+## S331 — la fila de T es la posición del modo; `obj+0x2b4` es un flag (22-10-2026)
+
+- **Corrige S317/S327/S330.** El consumidor `0x436f618c` recibe `(obj, posición_modo, flag)`: `mov r5,r1` + `muls r5,r2,r5` (stride `0x1c`) fijan la fila con `r1`; `r2` solo se compara con `#1` para una llamada de log antes de reutilizarse como stride.
+- Los dos llamadores (`0x436f3be2` en el setter, `0x436f4480`) pasan como `r1` el índice que devuelve la búsqueda lineal `0x43ada284` (0..33 o `0xff`) y como `r2` `[obj+0x2b4]`.
+- `0x436f61f8` y `0x436f60ac` son hermanos con la misma firma y se invocan seguidos al cambiar de modo.
+- La huella silent está en **T2**: `0x4c`/`0x4d` (pos. 27/28) máscara `0x3ff`; `0x4e`/`0x4f` (29/30) máscara 0. T1 y T3 idénticas entre esos cuatro. `0x4e`/`0x4f` vs `0x50`/`0x51` difieren en `w0` (`0x02` vs `0x03`).
+- **S330 refutado** en su veredicto «solo fila 0»; el singleton sigue vigente con flag 0 (sin log). S51 sin cambios.
+
+## S330 — una sola instancia del constructor, con idx = 0 (22-10-2026) — **parcialmente refutado por S331**
 
 - Único `BL` a `0x436f3fc0` en todo el blob: `0x436f2a8a`, precedido de `movs r1,#0` → `idx = 0` constante. Sin literales de la dirección (ni `…c0` ni `…c1`) y sin slot en la vtable `0x43fce050`.
 - La llamada está en una **factoría singleton** (`0x436f2a7c..0x436f2aaa`): construye, registra (`0x439a2794`) y publica el objeto en el slot `0x440245cc → 0x43e8d994`. La factoría no tiene `BL` directo (entrada por tabla/init: NO_VERIFICADA).

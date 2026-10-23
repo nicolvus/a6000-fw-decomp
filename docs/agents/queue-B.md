@@ -101,3 +101,7 @@
 - TODO S330 (vigente) Buscar una instancia de `0x436f3fc0` con `idx != 0` (tabla de factorías, puntero o módulo hermano) para decidir si T1/T2/T3 llegan a indexarse por modo.
 
 - DONE S330 Único `BL` a `0x436f3fc0` (`0x436f2a8a`) con `movs r1,#0` → `idx=0` constante; sin literales ni slot de vtable; la llamada está en una **factoría singleton** (`0x436f2a7c`) que publica el objeto en `0x440245cc → 0x43e8d994` y no tiene `BL` directo. `obj+0x2b4 = 0` siempre → T1/T2/T3 solo aportan la fila 0 (modo `0x0b`); la huella por modo de S326 no se aplica por esta vía. Evidencia: `docs/capture/s330-ctor-instances.md`, `analysis/s330_ctor_instances/ctor_instances.json` (21 comprobaciones, 8 tests).
+
+- DONE S331 **Corrige S317/S327/S330**: la firma real es `0x436f618c(obj, posicion_modo, flag)`. `mov r5,r1` + `muls r5,r2,r5` (stride 0x1c) y los dos llamadores (`0x436f3be2`, `0x436f4480`) prueban que la fila es la **posición del modo** (índice de `0x43ada284`); `obj+0x2b4` es un **flag de log** (`cmp r2,#1`). Hermanos `0x436f61f8`/`0x436f60ac` con la misma firma. Huella silent en **T2**: máscara `0x3ff` para `0x4c`/`0x4d` y 0 para `0x4e`/`0x4f`; T1/T3 idénticas. Evidencia: `docs/capture/s331-consumer-signature.md`, `analysis/s331_consumer_signature/consumer_signature.json` (157 comprobaciones, 10 tests).
+- SUPERSEDED (parcial) S330 El veredicto «solo se aplica la fila 0» es **falso** (S331). El singleton existe y `obj+0x2b4` vale 0, pero eso solo desactiva un log.
+- SUPERSEDED (parcial) S327 `obj+0x2b4` no es el índice de fila; es el flag del tercer argumento.
