@@ -1,5 +1,13 @@
 # PENDIENTES FINALES — estado de cierre (22-10-2026, corregido)
 
+> **Corrección del 23-10-2026:** las secciones 2–4 conservan conclusiones históricas
+> superadas. La búsqueda MOVW/MOVT de `0x40193` era inválida y el flujo del ID
+> sigue pendiente de análisis estático; `libObj.so` sí contiene el código local de
+> `RecordStill::Execute` y llamadas candidatas a registradores OSAL. El censo
+> vigente es 133/372 etiquetas documentadas, con 239 pendientes. Véase la
+> [auditoría actual](../auditoria-2026-10-23.md) y S380–S385 antes de reutilizar
+> cualquier conclusión de esas secciones.
+
 ## 1. B — canales MMIO CONFIRMADOS en av-cam.bin (corrige informe previo)
 
 **VERIFICADO:** Los canales MMIO de B SÍ están en av-cam.bin del A6000 fw3.21:
