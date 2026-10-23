@@ -1,0 +1,24 @@
+{
+  "module": "CAMERA_IS/MOUNT",
+  "traces": 5,
+  "trace_strings": [
+    {"vaddr": "0x43c98dfe", "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountExpStartCB (%x)"},
+    {"vaddr": "0x43c98e36", "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountExpStartCB - checkData"},
+    {"vaddr": "0x43c9a3ff", "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyroCB (%x)"},
+    {"vaddr": "0x43c9a43b", "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyroCB - checkData"},
+    {"vaddr": "0x43c9a47e", "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyro (%x)"}
+  ],
+  "prefix_length": 25,
+  "prefix": "[CAMERA_IS][MOUNT]: [Error] ",
+  "parent_prefix": "[CAMERA_IS]",
+  "sub_prefix": "[MOUNT]",
+  "level_prefix": "[Error]",
+  "differential": {
+    "a6000_fw321": {"token_count": 5, "prefixes": ["[CAMERA_IS][MOUNT]: [Error] "]},
+    "a7s_fw320": {"token_count": 0, "related_prefixes": ["[BL]MOUNT", "Mount: "]},
+    "a6300_fw201": {"token_count": 0, "related_prefixes": ["[BL]MOUNT", "Mount: "]}
+  },
+  "shutter_line": "NEGATIVO ACOTADO",
+  "logger_dual": true,
+  "global_logger": "0x43902718"
+}
