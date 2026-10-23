@@ -1,5 +1,12 @@
 # Estado actual — léeme primero
 
+## S338 — el bloque de destino es DFE/CISIF (22-10-2026)
+
+- `0xfc02a00c` = cuarto DWORD del bloque **`0xfc02a000`**. Literales del bloque en ambos modelos (A7S `0x436f2034/44`; A6000 `0x436d2cbc/78`); getter `base+8` en `0x436f2014`/`0x436d2c9c` y writer en `0x436f202c`/`0x436d2cb4`.
+- Identidad **DFE** (INFERENCIA ALTA): `FUN_436d1c98` del mapa Ghidra del repo (`DFE_INIT_Start`) hace `_DAT_fc02a008 |= 8`; cadenas `DFECore` en ambos. Receptor **CISIF** por S56-B (mismas tablas y mismo colapso de 12 pares).
+- Cadena cerrada: `modo → matriz/T → pares (flag,bit) → máscara u16 → registro DFE/CISIF`; la RAM P2S (`0xfc088300`) no se toca. `0xf292b000` NO_VERIFICADO.
+- Tests: `tests/test_s338_block_identity.py` (9) y 218 comprobaciones. S51 sin cambios.
+
 ## S335 — la capa de máscaras es MMIO, no P2S (22-10-2026)
 
 - Los nueve accesores `0x436f82b0/82a0/8290/82c0/82d0/8314/8300/82e8/8324` cargan un literal absoluto y leen/escriben: **`0xf292b000` (lectura), `0xf292b004` (12 bits), `0xf292b008` (12 bits / `0x1000` / `0x10000`) y `0xfc02a00c` (RMW de 12 bits con `bfi #0,#0xc` y `bfc #0xc,#1`)**.

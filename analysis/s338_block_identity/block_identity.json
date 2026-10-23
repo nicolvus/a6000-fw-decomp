@@ -1,0 +1,496 @@
+{
+  "milestone": "S338",
+  "title": "Las mascaras del carril B acaban en el bloque DFE/CISIF (0xfc02a000); 0xf292b000 sigue sin identificar",
+  "base": "0x43541000",
+  "firmware": {
+    "a7s_fw320": {
+      "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+      "size": 11455416
+    },
+    "a6000_fw321": {
+      "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+      "size": 11427236
+    }
+  },
+  "dfe_block": {
+    "base": "0xfc02a000",
+    "register": "0xfc02a00c",
+    "literal_sites": {
+      "a7s": [
+        "0x436f2034",
+        "0x436f2044"
+      ],
+      "a6000": [
+        "0x436d2cbc",
+        "0x436d2d78"
+      ]
+    },
+    "a7s_code": {
+      "getter_base_plus_8": {
+        "address": "0x436f2014",
+        "disasm": [
+          {
+            "address": "0x436f2014",
+            "bytes": "034b",
+            "insn": "ldr r3, [pc, #0xc]"
+          },
+          {
+            "address": "0x436f2016",
+            "bytes": "044a",
+            "insn": "ldr r2, [pc, #0x10]"
+          },
+          {
+            "address": "0x436f2018",
+            "bytes": "7b44",
+            "insn": "add r3, pc"
+          },
+          {
+            "address": "0x436f201a",
+            "bytes": "9b58",
+            "insn": "ldr r3, [r3, r2]"
+          },
+          {
+            "address": "0x436f201c",
+            "bytes": "0833",
+            "insn": "adds r3, #8"
+          },
+          {
+            "address": "0x436f201e",
+            "bytes": "0360",
+            "insn": "str r3, [r0]"
+          },
+          {
+            "address": "0x436f2020",
+            "bytes": "7047",
+            "insn": "bx lr"
+          },
+          {
+            "address": "0x436f2022",
+            "bytes": "00bf",
+            "insn": "nop"
+          },
+          {
+            "address": "0x436f2024",
+            "bytes": "2425",
+            "insn": "movs r5, #0x24"
+          },
+          {
+            "address": "0x436f2026",
+            "bytes": "9300",
+            "insn": "lsls r3, r2, #2"
+          },
+          {
+            "address": "0x436f2028",
+            "bytes": "6443",
+            "insn": "muls r4, r4, r4"
+          },
+          {
+            "address": "0x436f202a",
+            "bytes": "0000",
+            "insn": "movs r0, r0"
+          },
+          {
+            "address": "0x436f202c",
+            "bytes": "014b",
+            "insn": "ldr r3, [pc, #4]"
+          },
+          {
+            "address": "0x436f202e",
+            "bytes": "1860",
+            "insn": "str r0, [r3]"
+          }
+        ]
+      },
+      "writer_base": {
+        "address": "0x436f202c",
+        "disasm": [
+          {
+            "address": "0x436f202c",
+            "bytes": "014b",
+            "insn": "ldr r3, [pc, #4]"
+          },
+          {
+            "address": "0x436f202e",
+            "bytes": "1860",
+            "insn": "str r0, [r3]"
+          },
+          {
+            "address": "0x436f2030",
+            "bytes": "7047",
+            "insn": "bx lr"
+          },
+          {
+            "address": "0x436f2032",
+            "bytes": "00bf",
+            "insn": "nop"
+          },
+          {
+            "address": "0x436f2034",
+            "bytes": "00a0",
+            "insn": "adr r0, #0"
+          }
+        ]
+      }
+    },
+    "a6000_code": {
+      "getter_base_plus_8": {
+        "address": "0x436d2c9c",
+        "disasm": [
+          {
+            "address": "0x436d2c9c",
+            "bytes": "034b",
+            "insn": "ldr r3, [pc, #0xc]"
+          },
+          {
+            "address": "0x436d2c9e",
+            "bytes": "044a",
+            "insn": "ldr r2, [pc, #0x10]"
+          },
+          {
+            "address": "0x436d2ca0",
+            "bytes": "7b44",
+            "insn": "add r3, pc"
+          },
+          {
+            "address": "0x436d2ca2",
+            "bytes": "9b58",
+            "insn": "ldr r3, [r3, r2]"
+          },
+          {
+            "address": "0x436d2ca4",
+            "bytes": "0833",
+            "insn": "adds r3, #8"
+          },
+          {
+            "address": "0x436d2ca6",
+            "bytes": "0360",
+            "insn": "str r3, [r0]"
+          },
+          {
+            "address": "0x436d2ca8",
+            "bytes": "7047",
+            "insn": "bx lr"
+          },
+          {
+            "address": "0x436d2caa",
+            "bytes": "00bf",
+            "insn": "nop"
+          },
+          {
+            "address": "0x436d2cac",
+            "bytes": "40c2",
+            "insn": "stm r2!, {r6}"
+          },
+          {
+            "address": "0x436d2cae",
+            "bytes": "9400",
+            "insn": "lsls r4, r2, #2"
+          },
+          {
+            "address": "0x436d2cb0",
+            "bytes": "7838",
+            "insn": "subs r0, #0x78"
+          },
+          {
+            "address": "0x436d2cb2",
+            "bytes": "0000",
+            "insn": "movs r0, r0"
+          },
+          {
+            "address": "0x436d2cb4",
+            "bytes": "014b",
+            "insn": "ldr r3, [pc, #4]"
+          },
+          {
+            "address": "0x436d2cb6",
+            "bytes": "1860",
+            "insn": "str r0, [r3]"
+          }
+        ]
+      },
+      "writer_base": {
+        "address": "0x436d2cb4",
+        "disasm": [
+          {
+            "address": "0x436d2cb4",
+            "bytes": "014b",
+            "insn": "ldr r3, [pc, #4]"
+          },
+          {
+            "address": "0x436d2cb6",
+            "bytes": "1860",
+            "insn": "str r0, [r3]"
+          },
+          {
+            "address": "0x436d2cb8",
+            "bytes": "7047",
+            "insn": "bx lr"
+          },
+          {
+            "address": "0x436d2cba",
+            "bytes": "00bf",
+            "insn": "nop"
+          },
+          {
+            "address": "0x436d2cbc",
+            "bytes": "00a0",
+            "insn": "adr r0, #0"
+          }
+        ]
+      }
+    }
+  },
+  "strings": {
+    "DFE_INIT_Start": {
+      "a7s": [],
+      "a6000": []
+    },
+    "DFECore": {
+      "a7s": [
+        "0x43c9add2",
+        "0x43c9adee",
+        "0x43c9af5c",
+        "0x43c9af7b",
+        "0x43c9b1b1",
+        "0x43c9b1d3",
+        "0x43c9b1ef",
+        "0x43c9b4fd",
+        "0x43c9b594",
+        "0x43c9b634",
+        "0x43c9b64b",
+        "0x43c9b665",
+        "0x43c9b6db",
+        "0x43c9b6fd",
+        "0x43c9b740",
+        "0x43c9b778",
+        "0x43c9b796",
+        "0x43c9b7d7",
+        "0x43c9b815",
+        "0x43c9ba7d",
+        "0x43c9bb2e",
+        "0x43ca9570"
+      ],
+      "a6000": [
+        "0x43c916d2",
+        "0x43c916f9",
+        "0x43c91727",
+        "0x43c91752",
+        "0x43c91782",
+        "0x43c917b9",
+        "0x43c917f9",
+        "0x43c91832",
+        "0x43c91876",
+        "0x43c918ad",
+        "0x43c918ed",
+        "0x43c91926",
+        "0x43c9196a",
+        "0x43c919a4",
+        "0x43c919e1",
+        "0x43c91a1d",
+        "0x43c91a5e",
+        "0x43c91a98",
+        "0x43c91ad5",
+        "0x43c91b11",
+        "0x43c91b52",
+        "0x43c91b8c",
+        "0x43c91bc9",
+        "0x43c91c05",
+        "0x43c91c46",
+        "0x43c91c80",
+        "0x43c91cbd",
+        "0x43c91cf9",
+        "0x43c91d3a",
+        "0x43c91d57",
+        "0x43c91d73",
+        "0x43c91dac",
+        "0x43c91ddc",
+        "0x43c91e76",
+        "0x43c91ea0",
+        "0x43c91ed4",
+        "0x43c91f08",
+        "0x43c91f39",
+        "0x43c91f6f",
+        "0x43c91f92",
+        "0x43c91fd6",
+        "0x43c91ff1",
+        "0x43c92014",
+        "0x43c92047",
+        "0x43c9208b",
+        "0x43c920bf",
+        "0x43c920e2",
+        "0x43c92118",
+        "0x43c9214a",
+        "0x43c9217c",
+        "0x43c921a3",
+        "0x43c921c5",
+        "0x43c921f6",
+        "0x43c92212",
+        "0x43c92229",
+        "0x43c9226b",
+        "0x43c922b8",
+        "0x43c92305",
+        "0x43c92359",
+        "0x43c923b7",
+        "0x43c923d6",
+        "0x43c923ec",
+        "0x43c9242e",
+        "0x43c9247b",
+        "0x43c924d0",
+        "0x43c924f2",
+        "0x43c9250e",
+        "0x43c9251c",
+        "0x43c92541",
+        "0x43c92571",
+        "0x43c925a4",
+        "0x43c92609",
+        "0x43c9261a",
+        "0x43c92649",
+        "0x43c92670",
+        "0x43c9269d",
+        "0x43c926ac",
+        "0x43c926e3",
+        "0x43c92706",
+        "0x43c92720",
+        "0x43c92737",
+        "0x43c92753",
+        "0x43c9278a",
+        "0x43c92798",
+        "0x43c927cd",
+        "0x43c927e7",
+        "0x43c9281f",
+        "0x43c92858",
+        "0x43c92897",
+        "0x43c928d9",
+        "0x43c9290e",
+        "0x43c9295a",
+        "0x43c9296d",
+        "0x43c929a1",
+        "0x43c929bf",
+        "0x43c929d6",
+        "0x43c92a0b",
+        "0x43c92a1c",
+        "0x43c92a54",
+        "0x43c92a6d",
+        "0x43c92a8a",
+        "0x43c92ac6",
+        "0x43c92aeb",
+        "0x43c92b2e",
+        "0x43c92b60",
+        "0x43c92b83",
+        "0x43c92bad",
+        "0x43c92bdf",
+        "0x43c92c11",
+        "0x43c92c39",
+        "0x43c92c60",
+        "0x43c92ca0",
+        "0x43c92cef",
+        "0x43c92d21",
+        "0x43c92d88",
+        "0x43c92db4",
+        "0x43c92de4",
+        "0x43c92e05",
+        "0x43c92e1e",
+        "0x43c92e3c",
+        "0x43c92e5b",
+        "0x43c92e7f",
+        "0x43c92ea4",
+        "0x43c92ee0",
+        "0x43c92f14",
+        "0x43c92f5a",
+        "0x43cb424e",
+        "0x43cf7404",
+        "0x43cf7428",
+        "0x43cf744a",
+        "0x43cf747c",
+        "0x43cf74ae",
+        "0x43cf74d4",
+        "0x43cf74fb",
+        "0x43cf751c",
+        "0x43cf753d",
+        "0x43cf7558",
+        "0x43cf7590",
+        "0x43cf75a0",
+        "0x43cf75c8",
+        "0x43cf75ef",
+        "0x43cf7641",
+        "0x43cfe33d"
+      ]
+    },
+    "SIFSyncCode": {
+      "a7s": [
+        "0x43c9c65f",
+        "0x43c9cd7c",
+        "0x43c9ceec"
+      ],
+      "a6000": [
+        "0x43c93ad0",
+        "0x43c94128",
+        "0x43c945ab",
+        "0x43c945f4"
+      ]
+    },
+    "SIF SetSyncCode": {
+      "a7s": [
+        "0x43c9d3a9"
+      ],
+      "a6000": [
+        "0x43c94e63",
+        "0x43c94ea0",
+        "0x43c94edf"
+      ]
+    },
+    "CISIF": {
+      "a7s": [
+        "0x43c9cebc",
+        "0x43c9ceea",
+        "0x43c9cfbf"
+      ],
+      "a6000": [
+        "0x43c9452c",
+        "0x43c9456d",
+        "0x43c945a9",
+        "0x43c945f2",
+        "0x43c947d3",
+        "0x43c9481d"
+      ]
+    },
+    "Synccode": {
+      "a7s": [],
+      "a6000": [
+        "0x43c94e7c",
+        "0x43c94ebb"
+      ]
+    }
+  },
+  "repo_evidence": {
+    "ghidra_map": "analysis/ghidra/efcs-dfe-base-map.json",
+    "ghidra_snippet": "_Start_43c925a3);\\n  FUN_43ad72a8();\\n  FUN_43ad72c2(param_1,param_2);\\n  FUN_43ad73c2();\\n  FUN_43ad727e(0xfc000000,1);\\n  FUN_43ad728c(0xfc000000,1);\\n  _DAT_fc02a008 = _DAT_fc02a008 & 0xfffffff7 | ",
+    "s56_doc": "docs/capture/s56-cisif-dfe-controller.md",
+    "s56_lines": [
+      "**Pregunta:** ¿CISIF es el bus de configuración del IMX210? **No.** `ImagerCommon::SetCISIFRequest` (`0x436d8c94`, cadena `0x43c9450d`), `GetCISIFSyncCodeRequest` y `Update_CISIFConnectParam` (`0x436d8e86`) copian una petición de `0x1c` B por modo (tablas `0x43bc20dc`, `0x43bc2248`), recorren 12 pares (carril, bit) → máscaras de 16 bit (`0x43ad9478`/`0x43ad94d8`/`0x43ad9512`) y las entregan a `0x436daf88`/`0x436dbd64`; las cadenas `SIF SetSyncCode: Serial/Parallel Synccode` y `SIFSyncCode` (log de Execute) lo sitúan en el **receptor** (mapa de 12 carriles sub-LVDS y códigos de sincronía). Los llamadores del formateador P2S (`0x436d5e04`: solo `0x436d761c`, `0x43ad92b6`) no tocan CISIF. **H56-2 refutada como formulada:** el transporte de registros es **P2S(DFE0)** (`0xfc088300`), no CISIF."
+    ]
+  },
+  "unknown_block": {
+    "base": "0xf292b000",
+    "status": "NO_VERIFICADO",
+    "note": "unico vecino documentado en 0xf292xxxx: DSP de lente 0xf292d000 (S66)"
+  },
+  "verdicts": {
+    "dfe_register": "0xfc02a00c pertenece al bloque 0xfc02a000",
+    "dfe_block_identification": "INFERENCIA ALTA (mapa Ghidra + S56-B + cadenas CISIF en ambos firmwares)",
+    "block_is_cisif_receiver": true,
+    "p2s_transport_affected": false,
+    "unknown_block_identified": false
+  },
+  "corrections": [
+    "S334 dejo como INFERENCIA que las mascaras acabaran en una trama P2S; se descarta: el destino es un registro del bloque DFE/CISIF.",
+    "El par de tablas 0x43bc20dc/0x43bc2248 de S332 es el mismo que S56-B documento como CISIF (sync codes / carriles), no una tabla de exposicion."
+  ],
+  "limits": [
+    "Solo lectura estatica; sin runtime, camara ni flasheo.",
+    "La identificacion DFE/CISIF se apoya en el mapa Ghidra del repo y en S56-B (evidencia derivada), ademas de las cadenas presentes en ambos blobs; no hay datasheet del bloque 0xfc02a000.",
+    "0xf292b000 no se ha identificado.",
+    "No se asigna significado fisico a los bits del registro.",
+    "S51 (A/B/C) no cambia."
+  ]
+}

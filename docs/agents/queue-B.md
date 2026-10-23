@@ -119,3 +119,8 @@
 - TODO S336 Explicar `w4` (`0x01000101`/`0x01000102`/`0x01000001`) de las filas T.
 - TODO S337 Identificar el consumidor de `u16[69]` en `0x43fef404` (valores 1..78).
 - TODO S338 Buscar el bloque `0xf292b000` en la documentación del repo (S56/S115/S208) para identificar si es CISIF/DFE/P2S; si no aparece, dejarlo NO_VERIFICADO.
+
+- DONE S338 `0xfc02a00c` pertenece al bloque **`0xfc02a000`** (DFE; literal en ambos modelos, getter `base+8` en `0x436f2014`/`0x436d2c9c`, `_DAT_fc02a008|=8` en `DFE_INIT_Start` del mapa Ghidra del repo) y el receptor es **CISIF** (S56-B: mismas tablas y mismo colapso de 12 pares). La cadena `modo→matriz/T→pares→máscara` termina en un registro DFE/CISIF, no en la RAM P2S. `0xf292b000` NO_VERIFICADO. Evidencia: `docs/capture/s338-block-identity.md`, `analysis/s338_block_identity/block_identity.json` (218 comprobaciones, 9 tests).
+- TODO S336 Explicar `w4` (`0x01000101`/`0x01000102`/`0x01000001`) de las filas T.
+- TODO S337 Identificar el consumidor de `u16[69]` en `0x43fef404` (valores 1..78).
+- TODO S339 Identificar `0xf292b000..8`: buscar sus literales/lectores en el resto del blob y comparar con los bloques documentados (`0xf2910000` GPIO, `0xf292d000` DSP de lente).
