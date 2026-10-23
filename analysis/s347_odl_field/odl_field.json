@@ -1,0 +1,791 @@
+{
+  "milestone": "S347",
+  "title": "el campo 0x000d de la tabla ODL es la constante 13 del camino de carga (no un dato por id) y la lista A6000 es la A7S filtrada a id<=0x4e",
+  "base": "0x43541000",
+  "firmware": {
+    "a7s_fw320": {
+      "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+      "size": 11455416
+    },
+    "a6000_fw321": {
+      "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+      "size": 11427236
+    },
+    "a6300_fw201": {
+      "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16",
+      "size": 13382836
+    }
+  },
+  "models": {
+    "a7s_fw320": {
+      "table": {
+        "address": "0x43fef404",
+        "entries": 69,
+        "end": "0x43fef518",
+        "second_fields": [
+          13
+        ],
+        "second_constant": true,
+        "ids": [
+          70,
+          78,
+          15,
+          46,
+          47,
+          49,
+          20,
+          21,
+          23,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          71,
+          72,
+          73,
+          25,
+          26,
+          27,
+          38,
+          77,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          39,
+          40,
+          55,
+          61,
+          58,
+          59,
+          60,
+          62,
+          57,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          63,
+          100,
+          74,
+          76,
+          64,
+          69,
+          75
+        ],
+        "ids_unique": 69,
+        "ids_range": [
+          1,
+          100
+        ]
+      },
+      "consumers": {
+        "A": {
+          "function": "0x437056ec",
+          "closed_loop": {
+            "insn": {
+              "address": "0x43705724",
+              "bytes": "452f",
+              "insn": "cmp r7, #0x45"
+            },
+            "imm": 69,
+            "step": 1,
+            "iterations": 69
+          }
+        },
+        "B": {
+          "function": "0x43705748",
+          "closed_loop": {
+            "insn": {
+              "address": "0x4370576a",
+              "bytes": "b5f58a7f",
+              "insn": "cmp.w r5, #0x114"
+            },
+            "imm": 276,
+            "step": 4,
+            "iterations": 69
+          },
+          "alloc_first_arg": {
+            "address": "0x4370574a",
+            "bytes": "0d20",
+            "insn": "movs r0, #0xd"
+          },
+          "alloc_value": 13
+        }
+      },
+      "load_path": {
+        "function": "0x4373d52c",
+        "init": {
+          "channel": 2,
+          "size": 13,
+          "size_insn": {
+            "address": "0x4373d532",
+            "bytes": "0d22",
+            "insn": "movs r2, #0xd"
+          },
+          "call_insn": {
+            "address": "0x4373d538",
+            "bytes": "a3f3fbfe",
+            "insn": "bl #0x43ae1332"
+          },
+          "init_function": "#0x43ae1332"
+        },
+        "header_capacity": {
+          "value": 24,
+          "insn": {
+            "address": "0x4373d544",
+            "bytes": "1823",
+            "insn": "movs r3, #0x18"
+          }
+        },
+        "builder": {
+          "address": "0x4373d554",
+          "insn": {
+            "address": "0x4373d554",
+            "bytes": "0123",
+            "insn": "movs r3, #1"
+          }
+        },
+        "id_store": {
+          "address": "0x4373d560",
+          "bytes": "4482",
+          "insn": "strh r4, [r0, #0x12]"
+        },
+        "offset_store": {
+          "address": "0x4373d56a",
+          "bytes": "4361",
+          "insn": "str r3, [r0, #0x14]"
+        },
+        "message_prologue_20b": "01230380438003714ff0ff334482836001330374"
+      },
+      "config_persistence": {
+        "write": {
+          "address": "0x437051e6",
+          "bytes": "a3f88046",
+          "insn": "strh.w r4, [r3, #0x680]"
+        },
+        "read": {
+          "address": "0x43705248",
+          "bytes": "b3f88056",
+          "insn": "ldrh.w r5, [r3, #0x680]"
+        },
+        "config_id_write": {
+          "address": "0x437051cc",
+          "bytes": "40f20240",
+          "insn": "movw r0, #0x402"
+        },
+        "config_id_read": {
+          "address": "0x4370522c",
+          "bytes": "40f20240",
+          "insn": "movw r0, #0x402"
+        }
+      },
+      "companion": {
+        "address": "0x43fef520",
+        "first": [
+          "0x43f6e108",
+          "0x43f6e328",
+          "0x43f9ce1e",
+          "0x43f9c7fd",
+          "0x43f6dca8",
+          "0x43f6de08"
+        ],
+        "targets_zero_in_image": true,
+        "count": 69
+      },
+      "bss_array": {
+        "address": "0x43e906f4",
+        "zero_in_image": true,
+        "count": 69
+      }
+    },
+    "a6000_fw321": {
+      "table": {
+        "address": "0x43feae1c",
+        "entries": 47,
+        "end": "0x43feaed8",
+        "second_fields": [
+          13
+        ],
+        "second_constant": true,
+        "ids": [
+          70,
+          78,
+          15,
+          46,
+          47,
+          49,
+          20,
+          21,
+          23,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          71,
+          72,
+          73,
+          25,
+          26,
+          27,
+          38,
+          77,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          39,
+          40,
+          55,
+          61,
+          58,
+          59,
+          60,
+          62,
+          57,
+          63,
+          74,
+          76,
+          64,
+          69,
+          75
+        ],
+        "ids_unique": 47,
+        "ids_range": [
+          1,
+          78
+        ]
+      },
+      "consumers": {
+        "A": {
+          "function": "0x436eb2cc",
+          "closed_loop": {
+            "insn": {
+              "address": "0x436eb304",
+              "bytes": "2f2f",
+              "insn": "cmp r7, #0x2f"
+            },
+            "imm": 47,
+            "step": 1,
+            "iterations": 47
+          }
+        },
+        "B": {
+          "function": "0x436eb328",
+          "closed_loop": {
+            "insn": {
+              "address": "0x436eb34a",
+              "bytes": "bc2d",
+              "insn": "cmp r5, #0xbc"
+            },
+            "imm": 188,
+            "step": 4,
+            "iterations": 47
+          },
+          "alloc_first_arg": {
+            "address": "0x436eb32a",
+            "bytes": "0d20",
+            "insn": "movs r0, #0xd"
+          },
+          "alloc_value": 13
+        }
+      },
+      "load_path": {
+        "function": "0x43721b9c",
+        "init": {
+          "channel": 2,
+          "size": 13,
+          "size_insn": {
+            "address": "0x43721ba2",
+            "bytes": "0d22",
+            "insn": "movs r2, #0xd"
+          },
+          "call_insn": {
+            "address": "0x43721ba8",
+            "bytes": "bef3b7fd",
+            "insn": "bl #0x43ae071a"
+          },
+          "init_function": "#0x43ae071a"
+        },
+        "header_capacity": {
+          "value": 24,
+          "insn": {
+            "address": "0x43721bb4",
+            "bytes": "1823",
+            "insn": "movs r3, #0x18"
+          }
+        },
+        "builder": {
+          "address": "0x43721bc4",
+          "insn": {
+            "address": "0x43721bc4",
+            "bytes": "0123",
+            "insn": "movs r3, #1"
+          }
+        },
+        "id_store": {
+          "address": "0x43721bd0",
+          "bytes": "4482",
+          "insn": "strh r4, [r0, #0x12]"
+        },
+        "offset_store": {
+          "address": "0x43721bda",
+          "bytes": "4361",
+          "insn": "str r3, [r0, #0x14]"
+        },
+        "message_prologue_20b": "01230380438003714ff0ff334482836001330374"
+      },
+      "config_persistence": {
+        "write": {
+          "address": "0x436fda42",
+          "bytes": "a3f88066",
+          "insn": "strh.w r6, [r3, #0x680]"
+        },
+        "read": {
+          "address": "0x436fdad4",
+          "bytes": "b3f88066",
+          "insn": "ldrh.w r6, [r3, #0x680]"
+        },
+        "config_id_write": {
+          "address": "0x436fda3c",
+          "bytes": "40f20240",
+          "insn": "movw r0, #0x402"
+        },
+        "config_id_read": {
+          "address": "0x436fdab4",
+          "bytes": "40f20240",
+          "insn": "movw r0, #0x402"
+        }
+      },
+      "companion": {
+        "address": "0x43fead58",
+        "first": [
+          "0x43f6250e",
+          "0x43f6272e",
+          "0x43f92f24",
+          "0x43f92bc3",
+          "0x43f620ae",
+          "0x43f6220e"
+        ],
+        "targets_zero_in_image": true,
+        "count": 47
+      },
+      "bss_array": {
+        "address": "0x43e8197c",
+        "zero_in_image": true,
+        "count": 47
+      }
+    },
+    "a6300_fw201": {
+      "table": {
+        "address": "0x441b0b1c",
+        "entries": 69,
+        "end": "0x441b0c30",
+        "second_fields": [
+          13
+        ],
+        "second_constant": true,
+        "ids": [
+          70,
+          78,
+          15,
+          46,
+          47,
+          49,
+          20,
+          21,
+          23,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          71,
+          72,
+          73,
+          25,
+          26,
+          27,
+          38,
+          77,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          39,
+          40,
+          55,
+          61,
+          58,
+          59,
+          60,
+          62,
+          57,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          63,
+          100,
+          74,
+          76,
+          64,
+          69,
+          75
+        ],
+        "ids_unique": 69,
+        "ids_range": [
+          1,
+          100
+        ]
+      },
+      "consumers": {
+        "A": {
+          "function": "0x43734bd8",
+          "closed_loop": {
+            "insn": {
+              "address": "0x43734c10",
+              "bytes": "452f",
+              "insn": "cmp r7, #0x45"
+            },
+            "imm": 69,
+            "step": 1,
+            "iterations": 69
+          }
+        },
+        "B": {
+          "function": "0x43734c34",
+          "closed_loop": {
+            "insn": {
+              "address": "0x43734c56",
+              "bytes": "b5f58a7f",
+              "insn": "cmp.w r5, #0x114"
+            },
+            "imm": 276,
+            "step": 4,
+            "iterations": 69
+          },
+          "alloc_first_arg": {
+            "address": "0x43734c36",
+            "bytes": "0d20",
+            "insn": "movs r0, #0xd"
+          },
+          "alloc_value": 13
+        }
+      },
+      "load_path": {
+        "function": "0x4373b934",
+        "init": {
+          "channel": 2,
+          "size": 13,
+          "size_insn": {
+            "address": "0x4373b93a",
+            "bytes": "0d22",
+            "insn": "movs r2, #0xd"
+          },
+          "call_insn": {
+            "address": "0x4373b940",
+            "bytes": "54f088f3",
+            "insn": "bl #0x43b90054"
+          },
+          "init_function": "#0x43b90054"
+        },
+        "header_capacity": {
+          "value": 24,
+          "insn": {
+            "address": "0x4373b94c",
+            "bytes": "1823",
+            "insn": "movs r3, #0x18"
+          }
+        },
+        "builder": {
+          "address": "0x4373b95c",
+          "insn": {
+            "address": "0x4373b95c",
+            "bytes": "0123",
+            "insn": "movs r3, #1"
+          }
+        },
+        "id_store": {
+          "address": "0x4373b968",
+          "bytes": "4482",
+          "insn": "strh r4, [r0, #0x12]"
+        },
+        "offset_store": {
+          "address": "0x4373b972",
+          "bytes": "4361",
+          "insn": "str r3, [r0, #0x14]"
+        },
+        "message_prologue_20b": "01230380438003714ff0ff334482836001330374"
+      },
+      "config_persistence": {
+        "write": {
+          "address": "0x437346d2",
+          "bytes": "a3f88046",
+          "insn": "strh.w r4, [r3, #0x680]"
+        },
+        "read": {
+          "address": "0x43734734",
+          "bytes": "b3f88056",
+          "insn": "ldrh.w r5, [r3, #0x680]"
+        },
+        "config_id_write": {
+          "address": "0x437346b8",
+          "bytes": "40f20240",
+          "insn": "movw r0, #0x402"
+        },
+        "config_id_read": {
+          "address": "0x43734718",
+          "bytes": "40f20240",
+          "insn": "movw r0, #0x402"
+        }
+      },
+      "companion": {
+        "address": "0x441b0c38",
+        "first": [
+          "0x44107d64",
+          "0x44107f84",
+          "0x44149492",
+          "0x44148e71",
+          "0x44107904",
+          "0x44107a64"
+        ],
+        "targets_zero_in_image": true,
+        "count": 69
+      },
+      "bss_array": {
+        "address": "0x43fffbc4",
+        "zero_in_image": true,
+        "count": 69
+      }
+    }
+  },
+  "cross_model": {
+    "entries": {
+      "a7s_fw320": 69,
+      "a6000_fw321": 47,
+      "a6300_fw201": 69
+    },
+    "second_field": {
+      "a7s_fw320": [
+        "0x000d"
+      ],
+      "a6000_fw321": [
+        "0x000d"
+      ],
+      "a6300_fw201": [
+        "0x000d"
+      ]
+    },
+    "a6000_equals_a7s_filtered_le_0x4e": true,
+    "a6300_equals_a7s": true,
+    "shared_prefix_entries": 41,
+    "a6000_missing": [
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100
+    ],
+    "a6000_missing_count": 22,
+    "loop_iterations": {
+      "a7s_fw320": 69,
+      "a6000_fw321": 47,
+      "a6300_fw201": 69
+    }
+  },
+  "field_meaning": {
+    "value": 13,
+    "constant_in_all_entries": true,
+    "same_value_in_load_path": {
+      "a7s_fw320": 13,
+      "a6000_fw321": 13,
+      "a6300_fw201": 13
+    },
+    "same_value_in_group_alloc": {
+      "a7s_fw320": 13,
+      "a6000_fw321": 13,
+      "a6300_fw201": 13
+    },
+    "header_capacity": {
+      "a7s_fw320": 24,
+      "a6000_fw321": 24,
+      "a6300_fw201": 24
+    },
+    "message_prologue_identical": true,
+    "runtime_length_call_sites": {
+      "example": "0x438f7fdc ldrh.w r2,[sp,#0x4c] -> 0x438f7fe2 bl 0x43ae1332",
+      "insn": {
+        "address": "0x438f7fdc",
+        "bytes": "bdf84c20",
+        "insn": "ldrh.w r2, [sp, #0x4c]"
+      },
+      "call": {
+        "address": "0x438f7fe2",
+        "bytes": "e9f1a6f9",
+        "insn": "bl #0x43ae1332"
+      }
+    },
+    "other_capacities": [
+      "0x5",
+      "0x3",
+      "0x13b",
+      "0xb6",
+      "0xbc"
+    ],
+    "homonym": "en la A6000 `movs r0,#0xd` aparece tambien como id de modulo del logger (0x437219f8 = log(0xd, 3, 1, fmt)); no confundir con el tamano del camino de carga"
+  },
+  "lens_aberration_file": {
+    "sizes": {
+      "a7s_fw320": 161766,
+      "a6000_fw321": 161766,
+      "a6300_fw201": 161766
+    },
+    "sha256": {
+      "a7s_fw320": "40d17dbba34f0a31d281db4b487ece12b9d518838faa26afca5f7fdb83d3062e",
+      "a6000_fw321": "40d17dbba34f0a31d281db4b487ece12b9d518838faa26afca5f7fdb83d3062e",
+      "a6300_fw201": "40d17dbba34f0a31d281db4b487ece12b9d518838faa26afca5f7fdb83d3062e"
+    },
+    "identical_across_models": true,
+    "max_consecutive_pairs_with_second_0x000d": 1,
+    "contains_a7s_id_list": false,
+    "header": "4949000120008000",
+    "directory_entries": 32
+  },
+  "negatives": {
+    "absolute_literal_refs_to_table": {
+      "a7s_fw320": 0,
+      "a6000_fw321": 0,
+      "a6300_fw201": 0
+    },
+    "pic_bases_to_table": {
+      "a7s_fw320": [
+        "0x437056f8",
+        "0x43705754"
+      ],
+      "a6000_fw321": [
+        "0x436eb2d8",
+        "0x436eb334"
+      ],
+      "a6300_fw201": [
+        "0x43734be4",
+        "0x43734c40"
+      ]
+    },
+    "mode_codes_intersect_ids_a7s": [
+      1,
+      3,
+      5,
+      7,
+      8,
+      15,
+      25,
+      26,
+      31,
+      49,
+      55,
+      63,
+      69,
+      70,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81
+    ]
+  },
+  "verdicts": {
+    "second_field_is_per_id_data": false,
+    "second_field_is_constant_13": true,
+    "same_13_in_load_path_all_models": true,
+    "same_13_in_group_alloc_all_models": true,
+    "13_equals_message_header_size": false,
+    "id_is_u16_at_message_offset_0x12": true,
+    "a6000_ids_are_a7s_subset_in_order": true,
+    "a6000_equals_a7s_filtered_le_0x4e": true,
+    "a6300_equals_a7s": true,
+    "lensbin_identical_across_models": true,
+    "ids_index_the_lensbin_file": false,
+    "semantic_of_13": "INFERENCIA ALTA: tamano en bytes del bloque de datos de aberracion que el ODL mueve por id"
+  },
+  "limits": [
+    "Solo lectura estatica; sin runtime, camara ni flasheo.",
+    "El destino real de los 13 B (peticion o respuesta) no se puede decidir sin runtime: el mensaje se envia por la interfaz importada (slot 0x2b0/0x2c8/0x2cc), cuyo cuerpo vive en otro modulo.",
+    "Que 13 sean 'bytes del bloque de aberracion' es INFERENCIA: lo verificado es que el valor se usa como capacidad del bloque que se adjunta al mensaje (13) y que la cabecera es 24.",
+    "El contenido fisico de cada bloque y el motivo de que la A6000 no pida los ids 0x4f..0x64 quedan NO_VERIFICADOS.",
+    "REA/Ghidra comparten motor: su acuerdo no es independencia; manda el byte.",
+    "S51 (A/B/C) no cambia: el modulo ODL es de aberracion del objetivo, no del obturador."
+  ]
+}
