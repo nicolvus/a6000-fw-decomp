@@ -1,0 +1,18 @@
+{
+  "module": "ADR",
+  "traces": 1,
+  "trace_strings": [
+    {"vaddr": "0x43cce452", "text": "[CAM_UTIL_SENS]: >>[FILE_NUM]%x [ADR]%x [SIZE]%x"}
+  ],
+  "prefix_length": 4,
+  "prefix": "[ADR]",
+  "parent_prefix": "[CAM_UTIL_SENS]",
+  "differential": {
+    "a6000_fw321": {"token_count": 1, "prefixes": ["[CAM_UTIL_SENS]: >>[FILE_NUM]%x [ADR]%x [SIZE]%x"]},
+    "a7s_fw320": {"token_count": 0, "related_strings_count": 50},
+    "a6300_fw201": {"token_count": 0, "related_strings_count": 50}
+  },
+  "shutter_line": "NEGATIVO ACOTADO",
+  "logger_dual": true,
+  "global_logger": "0x43902718"
+}

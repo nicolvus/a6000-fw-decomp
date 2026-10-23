@@ -2673,3 +2673,14 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 - Artefactos: `docs/capture/s624-utility.md`, `analysis/s624_utility/`, `tests/test_s624_utility.py` (pendiente).
 - Verificación: censos exactos, commit Conventional + push origin HEAD:main.
 - Siguiente: S625 `[ADR]` (1 traza).
+
+## Investigación S625 — `[ADR]` (agente E, Nemotron 3 Ultra Free)
+
+- Objetivo: decodificar el módulo de traza `[ADR]` (1 traza) exclusivo de la A6000 fw3.21.
+- REA Evidence: string `[CAM_UTIL_SENS]: >>[FILE_NUM]%x [ADR]%x [SIZE]%x` en `0x43cce452` (1 cadena, token ADR embebido).
+- Resultado: 1 traza confirmada con token `[ADR]` embebido en `[CAM_UTIL_SENS]` (prefijo compuesto 24 B); `FILE_NUM`, `ADR`, `SIZE`; logger dual (nuevo `[CAM_UTIL_SENS]` + viejo global `0x43902718`); token ADR embebido 4 B.
+- Diferencial: A6000 fw3.21=1 `[ADR]` embebido; A7S/A6300=0 (sin token ADR en CAM_UTIL_SENS; 50+ strings Adr/adr sueltas).
+- Línea del obturador: NEGATIVO ACOTADO (0 coincidencias).
+- Artefactos: `docs/capture/s625-adr.md`, `analysis/s625_adr/`, `tests/test_s625_adr.py` (pendiente).
+- Verificación: censos exactos, commit Conventional + push origin HEAD:main.
+- Siguiente: S626 `[CAMERA_DETECT_FC]` (1 traza).
