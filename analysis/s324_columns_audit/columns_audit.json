@@ -1,0 +1,1173 @@
+{
+  "milestone": "S324",
+  "title": "Auditoria de la contradiccion S202/S204 (34 columnas) vs S302/S321 (15 columnas)",
+  "base": "0x43541000",
+  "firmware": {
+    "a7s_fw320": {
+      "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+      "size": 11455416
+    },
+    "a6000_fw321": {
+      "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+      "size": 11427236
+    }
+  },
+  "mode_array": {
+    "addr": "0x43fee370",
+    "kind": "u32[34]",
+    "bytes": 136,
+    "end": "0x43fee3f8",
+    "next_object": "0x43fee3f8",
+    "codes": [
+      "0x0b",
+      "0x37",
+      "0x35",
+      "0x38",
+      "0x13",
+      "0x1f",
+      "0x05",
+      "0x18",
+      "0x10",
+      "0x1a",
+      "0x07",
+      "0x19",
+      "0x32",
+      "0x34",
+      "0x33",
+      "0x46",
+      "0x01",
+      "0x30",
+      "0x03",
+      "0x31",
+      "0x0a",
+      "0x36",
+      "0x0f",
+      "0x12",
+      "0x3f",
+      "0x44",
+      "0x45",
+      "0x4c",
+      "0x4d",
+      "0x4e",
+      "0x4f",
+      "0x50",
+      "0x51",
+      "0x08"
+    ],
+    "matches_s302_byte_list": true,
+    "high_bytes_all_zero": true,
+    "index_of_0x4e": 29,
+    "index_of_0x4f": 30,
+    "index_of_0x4c": 27,
+    "index_of_0x4d": 28,
+    "literal_refs": [
+      "lit@0x44027230"
+    ]
+  },
+  "slot": {
+    "addr": "0x44027230",
+    "value": "0x43fee370",
+    "slot_base": "0x44024540",
+    "offset_le": "0x2cf0",
+    "offset_le_sites": [
+      "0x43543888",
+      "0x43543b9e",
+      "0x436f39b4",
+      "0x436f3b12",
+      "0x436f3bb4",
+      "0x436f403a",
+      "0x436f4468"
+    ]
+  },
+  "setter_a7s": {
+    "function": "0x436f3b44",
+    "vtable_slot": 8,
+    "vtable_entry": "0x436f3b45",
+    "instructions": [
+      {
+        "address": "0x436f3b44",
+        "bytes": "73b5",
+        "insn": "push {r0, r1, r4, r5, r6, lr}"
+      },
+      {
+        "address": "0x436f3b46",
+        "bytes": "0446",
+        "insn": "mov r4, r0"
+      },
+      {
+        "address": "0x436f3b48",
+        "bytes": "4c4e",
+        "insn": "ldr r6, [pc, #0x130]"
+      },
+      {
+        "address": "0x436f3b4a",
+        "bytes": "0b68",
+        "insn": "ldr r3, [r1]"
+      },
+      {
+        "address": "0x436f3b4c",
+        "bytes": "7e44",
+        "insn": "add r6, pc"
+      },
+      {
+        "address": "0x436f3b4e",
+        "bytes": "002b",
+        "insn": "cmp r3, #0"
+      },
+      {
+        "address": "0x436f3b50",
+        "bytes": "00f09080",
+        "insn": "beq.w #0x436f3c74"
+      },
+      {
+        "address": "0x436f3b54",
+        "bytes": "512b",
+        "insn": "cmp r3, #0x51"
+      },
+      {
+        "address": "0x436f3b56",
+        "bytes": "00f38d80",
+        "insn": "bgt.w #0x436f3c74"
+      },
+      {
+        "address": "0x436f3b5a",
+        "bytes": "c0f8ac31",
+        "insn": "str.w r3, [r0, #0x1ac]"
+      },
+      {
+        "address": "0x436f3b5e",
+        "bytes": "0979",
+        "insn": "ldrb r1, [r1, #4]"
+      },
+      {
+        "address": "0x436f3b60",
+        "bytes": "0129",
+        "insn": "cmp r1, #1"
+      },
+      {
+        "address": "0x436f3b62",
+        "bytes": "80f8b012",
+        "insn": "strb.w r1, [r0, #0x2b0]"
+      },
+      {
+        "address": "0x436f3b66",
+        "bytes": "06d9",
+        "insn": "bls #0x436f3b76"
+      },
+      {
+        "address": "0x436f3b68",
+        "bytes": "4548",
+        "insn": "ldr r0, [pc, #0x114]"
+      },
+      {
+        "address": "0x436f3b6a",
+        "bytes": "7844",
+        "insn": "add r0, pc"
+      },
+      {
+        "address": "0x436f3b6c",
+        "bytes": "03f2d2fa",
+        "insn": "bl #0x438f7114"
+      },
+      {
+        "address": "0x436f3b70",
+        "bytes": "0023",
+        "insn": "movs r3, #0"
+      },
+      {
+        "address": "0x436f3b72",
+        "bytes": "84f8b032",
+        "insn": "strb.w r3, [r4, #0x2b0]"
+      },
+      {
+        "address": "0x436f3b76",
+        "bytes": "d4f8ac11",
+        "insn": "ldr.w r1, [r4, #0x1ac]"
+      },
+      {
+        "address": "0x436f3b7a",
+        "bytes": "d4f8b031",
+        "insn": "ldr.w r3, [r4, #0x1b0]"
+      },
+      {
+        "address": "0x436f3b7e",
+        "bytes": "8b42",
+        "insn": "cmp r3, r1"
+      },
+      {
+        "address": "0x436f3b80",
+        "bytes": "18d0",
+        "insn": "beq #0x436f3bb4"
+      },
+      {
+        "address": "0x436f3b82",
+        "bytes": "404a",
+        "insn": "ldr r2, [pc, #0x100]"
+      }
+    ],
+    "mode_field": "+0x1ac",
+    "sub_field": "+0x2b0",
+    "mode_max": 81,
+    "mode_min": 1,
+    "sub_max": 1
+  },
+  "setter_a6000": {
+    "function": "0x436d6b50",
+    "vtable_slot": 8,
+    "vtable_entry": "0x436d6b51",
+    "instructions": [
+      {
+        "address": "0x436d6b50",
+        "bytes": "4e4b",
+        "insn": "ldr r3, [pc, #0x138]"
+      },
+      {
+        "address": "0x436d6b52",
+        "bytes": "0a68",
+        "insn": "ldr r2, [r1]"
+      },
+      {
+        "address": "0x436d6b54",
+        "bytes": "70b5",
+        "insn": "push {r4, r5, r6, lr}"
+      },
+      {
+        "address": "0x436d6b56",
+        "bytes": "7b44",
+        "insn": "add r3, pc"
+      },
+      {
+        "address": "0x436d6b58",
+        "bytes": "86b0",
+        "insn": "sub sp, #0x18"
+      },
+      {
+        "address": "0x436d6b5a",
+        "bytes": "0446",
+        "insn": "mov r4, r0"
+      },
+      {
+        "address": "0x436d6b5c",
+        "bytes": "002a",
+        "insn": "cmp r2, #0"
+      },
+      {
+        "address": "0x436d6b5e",
+        "bytes": "00f09080",
+        "insn": "beq.w #0x436d6c82"
+      },
+      {
+        "address": "0x436d6b62",
+        "bytes": "472a",
+        "insn": "cmp r2, #0x47"
+      },
+      {
+        "address": "0x436d6b64",
+        "bytes": "00f38d80",
+        "insn": "bgt.w #0x436d6c82"
+      },
+      {
+        "address": "0x436d6b68",
+        "bytes": "c0f87021",
+        "insn": "str.w r2, [r0, #0x170]"
+      },
+      {
+        "address": "0x436d6b6c",
+        "bytes": "0979",
+        "insn": "ldrb r1, [r1, #4]"
+      },
+      {
+        "address": "0x436d6b6e",
+        "bytes": "0129",
+        "insn": "cmp r1, #1"
+      },
+      {
+        "address": "0x436d6b70",
+        "bytes": "80f86612",
+        "insn": "strb.w r1, [r0, #0x266]"
+      },
+      {
+        "address": "0x436d6b74",
+        "bytes": "02d9",
+        "insn": "bls #0x436d6b7c"
+      },
+      {
+        "address": "0x436d6b76",
+        "bytes": "0021",
+        "insn": "movs r1, #0"
+      },
+      {
+        "address": "0x436d6b78",
+        "bytes": "80f86612",
+        "insn": "strb.w r1, [r0, #0x266]"
+      },
+      {
+        "address": "0x436d6b7c",
+        "bytes": "4449",
+        "insn": "ldr r1, [pc, #0x110]"
+      },
+      {
+        "address": "0x436d6b7e",
+        "bytes": "5958",
+        "insn": "ldr r1, [r3, r1]"
+      },
+      {
+        "address": "0x436d6b80",
+        "bytes": "91f87c10",
+        "insn": "ldrb.w r1, [r1, #0x7c]"
+      },
+      {
+        "address": "0x436d6b84",
+        "bytes": "ff29",
+        "insn": "cmp r1, #0xff"
+      },
+      {
+        "address": "0x436d6b86",
+        "bytes": "4349",
+        "insn": "ldr r1, [pc, #0x10c]"
+      },
+      {
+        "address": "0x436d6b88",
+        "bytes": "5e58",
+        "insn": "ldr r6, [r3, r1]"
+      },
+      {
+        "address": "0x436d6b8a",
+        "bytes": "0ed0",
+        "insn": "beq #0x436d6baa"
+      },
+      {
+        "address": "0x436d6b8c",
+        "bytes": "112a",
+        "insn": "cmp r2, #0x11"
+      },
+      {
+        "address": "0x436d6b8e",
+        "bytes": "0cd1",
+        "insn": "bne #0x436d6baa"
+      }
+    ],
+    "mode_field": "+0x170",
+    "sub_field": "+0x266",
+    "mode_max": 71,
+    "mode_min": 1,
+    "sub_max": 1
+  },
+  "column_census": {
+    "columns": 15,
+    "registers": 69,
+    "pairs": 105,
+    "min_count": 2,
+    "min_pair": {
+      "cols": [
+        7,
+        9
+      ],
+      "count": 2,
+      "diffs": [
+        {
+          "reg": 0,
+          "a": 148,
+          "b": 164
+        },
+        {
+          "reg": 14,
+          "a": 32,
+          "b": 16
+        }
+      ]
+    },
+    "pairs_with_one_diff": 0,
+    "pairs_with_two_or_less": [
+      {
+        "cols": [
+          7,
+          9
+        ],
+        "count": 2,
+        "diffs": [
+          {
+            "reg": 0,
+            "a": 148,
+            "b": 164
+          },
+          {
+            "reg": 14,
+            "a": 32,
+            "b": 16
+          }
+        ]
+      }
+    ],
+    "all_pairs": [
+      {
+        "cols": [
+          7,
+          9
+        ],
+        "count": 2
+      },
+      {
+        "cols": [
+          11,
+          14
+        ],
+        "count": 3
+      },
+      {
+        "cols": [
+          0,
+          1
+        ],
+        "count": 4
+      },
+      {
+        "cols": [
+          8,
+          10
+        ],
+        "count": 4
+      },
+      {
+        "cols": [
+          12,
+          13
+        ],
+        "count": 4
+      },
+      {
+        "cols": [
+          7,
+          8
+        ],
+        "count": 5
+      },
+      {
+        "cols": [
+          7,
+          10
+        ],
+        "count": 6
+      },
+      {
+        "cols": [
+          9,
+          10
+        ],
+        "count": 6
+      },
+      {
+        "cols": [
+          8,
+          9
+        ],
+        "count": 7
+      },
+      {
+        "cols": [
+          0,
+          2
+        ],
+        "count": 9
+      },
+      {
+        "cols": [
+          1,
+          2
+        ],
+        "count": 9
+      },
+      {
+        "cols": [
+          5,
+          13
+        ],
+        "count": 11
+      },
+      {
+        "cols": [
+          3,
+          12
+        ],
+        "count": 12
+      },
+      {
+        "cols": [
+          3,
+          13
+        ],
+        "count": 12
+      },
+      {
+        "cols": [
+          7,
+          12
+        ],
+        "count": 12
+      },
+      {
+        "cols": [
+          9,
+          12
+        ],
+        "count": 12
+      },
+      {
+        "cols": [
+          6,
+          11
+        ],
+        "count": 13
+      },
+      {
+        "cols": [
+          3,
+          5
+        ],
+        "count": 14
+      },
+      {
+        "cols": [
+          5,
+          12
+        ],
+        "count": 14
+      },
+      {
+        "cols": [
+          6,
+          14
+        ],
+        "count": 14
+      },
+      {
+        "cols": [
+          3,
+          7
+        ],
+        "count": 16
+      },
+      {
+        "cols": [
+          3,
+          8
+        ],
+        "count": 16
+      },
+      {
+        "cols": [
+          3,
+          10
+        ],
+        "count": 16
+      },
+      {
+        "cols": [
+          7,
+          13
+        ],
+        "count": 16
+      },
+      {
+        "cols": [
+          8,
+          13
+        ],
+        "count": 16
+      },
+      {
+        "cols": [
+          9,
+          13
+        ],
+        "count": 16
+      },
+      {
+        "cols": [
+          10,
+          13
+        ],
+        "count": 16
+      },
+      {
+        "cols": [
+          3,
+          9
+        ],
+        "count": 17
+      },
+      {
+        "cols": [
+          8,
+          12
+        ],
+        "count": 17
+      },
+      {
+        "cols": [
+          10,
+          12
+        ],
+        "count": 17
+      },
+      {
+        "cols": [
+          4,
+          5
+        ],
+        "count": 20
+      },
+      {
+        "cols": [
+          5,
+          8
+        ],
+        "count": 20
+      },
+      {
+        "cols": [
+          5,
+          10
+        ],
+        "count": 20
+      },
+      {
+        "cols": [
+          3,
+          4
+        ],
+        "count": 21
+      },
+      {
+        "cols": [
+          4,
+          7
+        ],
+        "count": 21
+      },
+      {
+        "cols": [
+          4,
+          8
+        ],
+        "count": 21
+      },
+      {
+        "cols": [
+          4,
+          9
+        ],
+        "count": 21
+      },
+      {
+        "cols": [
+          4,
+          10
+        ],
+        "count": 21
+      },
+      {
+        "cols": [
+          4,
+          12
+        ],
+        "count": 21
+      },
+      {
+        "cols": [
+          4,
+          13
+        ],
+        "count": 21
+      },
+      {
+        "cols": [
+          5,
+          7
+        ],
+        "count": 21
+      },
+      {
+        "cols": [
+          5,
+          9
+        ],
+        "count": 21
+      },
+      {
+        "cols": [
+          9,
+          14
+        ],
+        "count": 36
+      },
+      {
+        "cols": [
+          7,
+          14
+        ],
+        "count": 37
+      },
+      {
+        "cols": [
+          7,
+          11
+        ],
+        "count": 38
+      },
+      {
+        "cols": [
+          9,
+          11
+        ],
+        "count": 38
+      },
+      {
+        "cols": [
+          4,
+          6
+        ],
+        "count": 42
+      },
+      {
+        "cols": [
+          8,
+          14
+        ],
+        "count": 42
+      },
+      {
+        "cols": [
+          10,
+          14
+        ],
+        "count": 42
+      },
+      {
+        "cols": [
+          8,
+          11
+        ],
+        "count": 43
+      },
+      {
+        "cols": [
+          10,
+          11
+        ],
+        "count": 43
+      },
+      {
+        "cols": [
+          5,
+          6
+        ],
+        "count": 44
+      },
+      {
+        "cols": [
+          11,
+          12
+        ],
+        "count": 44
+      },
+      {
+        "cols": [
+          0,
+          12
+        ],
+        "count": 45
+      },
+      {
+        "cols": [
+          1,
+          13
+        ],
+        "count": 45
+      },
+      {
+        "cols": [
+          6,
+          13
+        ],
+        "count": 45
+      },
+      {
+        "cols": [
+          12,
+          14
+        ],
+        "count": 45
+      },
+      {
+        "cols": [
+          4,
+          11
+        ],
+        "count": 46
+      },
+      {
+        "cols": [
+          6,
+          8
+        ],
+        "count": 46
+      },
+      {
+        "cols": [
+          6,
+          10
+        ],
+        "count": 46
+      },
+      {
+        "cols": [
+          2,
+          3
+        ],
+        "count": 47
+      },
+      {
+        "cols": [
+          3,
+          6
+        ],
+        "count": 47
+      },
+      {
+        "cols": [
+          4,
+          14
+        ],
+        "count": 47
+      },
+      {
+        "cols": [
+          6,
+          7
+        ],
+        "count": 47
+      },
+      {
+        "cols": [
+          6,
+          9
+        ],
+        "count": 47
+      },
+      {
+        "cols": [
+          0,
+          13
+        ],
+        "count": 48
+      },
+      {
+        "cols": [
+          1,
+          12
+        ],
+        "count": 48
+      },
+      {
+        "cols": [
+          3,
+          11
+        ],
+        "count": 48
+      },
+      {
+        "cols": [
+          3,
+          14
+        ],
+        "count": 48
+      },
+      {
+        "cols": [
+          6,
+          12
+        ],
+        "count": 48
+      },
+      {
+        "cols": [
+          11,
+          13
+        ],
+        "count": 48
+      },
+      {
+        "cols": [
+          2,
+          5
+        ],
+        "count": 49
+      },
+      {
+        "cols": [
+          13,
+          14
+        ],
+        "count": 49
+      },
+      {
+        "cols": [
+          1,
+          5
+        ],
+        "count": 50
+      },
+      {
+        "cols": [
+          2,
+          13
+        ],
+        "count": 50
+      },
+      {
+        "cols": [
+          5,
+          11
+        ],
+        "count": 50
+      },
+      {
+        "cols": [
+          0,
+          3
+        ],
+        "count": 51
+      },
+      {
+        "cols": [
+          2,
+          12
+        ],
+        "count": 51
+      },
+      {
+        "cols": [
+          5,
+          14
+        ],
+        "count": 51
+      },
+      {
+        "cols": [
+          0,
+          5
+        ],
+        "count": 52
+      },
+      {
+        "cols": [
+          0,
+          7
+        ],
+        "count": 52
+      },
+      {
+        "cols": [
+          0,
+          9
+        ],
+        "count": 52
+      },
+      {
+        "cols": [
+          1,
+          3
+        ],
+        "count": 52
+      },
+      {
+        "cols": [
+          2,
+          10
+        ],
+        "count": 52
+      },
+      {
+        "cols": [
+          2,
+          8
+        ],
+        "count": 53
+      },
+      {
+        "cols": [
+          2,
+          7
+        ],
+        "count": 54
+      },
+      {
+        "cols": [
+          2,
+          9
+        ],
+        "count": 54
+      },
+      {
+        "cols": [
+          0,
+          11
+        ],
+        "count": 55
+      },
+      {
+        "cols": [
+          1,
+          7
+        ],
+        "count": 55
+      },
+      {
+        "cols": [
+          1,
+          9
+        ],
+        "count": 55
+      },
+      {
+        "cols": [
+          0,
+          8
+        ],
+        "count": 56
+      },
+      {
+        "cols": [
+          0,
+          10
+        ],
+        "count": 56
+      },
+      {
+        "cols": [
+          0,
+          14
+        ],
+        "count": 56
+      },
+      {
+        "cols": [
+          1,
+          8
+        ],
+        "count": 56
+      },
+      {
+        "cols": [
+          1,
+          10
+        ],
+        "count": 56
+      },
+      {
+        "cols": [
+          2,
+          4
+        ],
+        "count": 57
+      },
+      {
+        "cols": [
+          2,
+          6
+        ],
+        "count": 57
+      },
+      {
+        "cols": [
+          2,
+          11
+        ],
+        "count": 57
+      },
+      {
+        "cols": [
+          1,
+          6
+        ],
+        "count": 58
+      },
+      {
+        "cols": [
+          1,
+          11
+        ],
+        "count": 58
+      },
+      {
+        "cols": [
+          2,
+          14
+        ],
+        "count": 58
+      },
+      {
+        "cols": [
+          0,
+          4
+        ],
+        "count": 59
+      },
+      {
+        "cols": [
+          1,
+          14
+        ],
+        "count": 59
+      },
+      {
+        "cols": [
+          0,
+          6
+        ],
+        "count": 60
+      },
+      {
+        "cols": [
+          1,
+          4
+        ],
+        "count": 60
+      }
+    ]
+  },
+  "column_claim_s204": {
+    "claimed_columns": 34,
+    "claimed_silent_columns": [
+      29,
+      30
+    ],
+    "claimed_single_register_diff": [
+      "0x000c",
+      "0x000a"
+    ],
+    "reproducible_with_this_matrix": false,
+    "reason": "15 columnas utiles (col 15 siempre 0); ningun par difiere en un solo registro y cada aplicacion escribe los 69 registros"
+  },
+  "consumer_34": {
+    "function": "0x436f365c",
+    "stores_slot_plus_8_at": "struct+0x00",
+    "message_builder": "0x436f36ac",
+    "message_fields_read": 16,
+    "note": "el array u32[34] se entrega como (0x43fee378) y el constructor de mensaje copia 16 campos: no se observa una fila de 34 columnas"
+  },
+  "verdict": {
+    "s204_34_columns": "NO_VERIFICADO / no reproducible en esta sesion",
+    "s204_single_register_diff": "NO_VERIFICADO / incompatible con la matriz de 16 columnas",
+    "a6000_rejects_0x4e_0x4f": "VERIFICADO (limite 0x47 en el setter)",
+    "second_matrix_gate_is_sub": "INFERENCIA fuerte (setter slot 8); runtime NO_VERIFICADO",
+    "s51": "sin cambios (A=NO, B=NO, C=NO)"
+  },
+  "scope_limit": [
+    "Solo lectura estatica; sin runtime, camara ni flasheo.",
+    "No se localiza la tabla de 34 columnas que S204 pudo medir: su existencia y contenido quedan NO_VERIFICADOS.",
+    "No se afirma que 0x4e/0x4f no tengan diferencias de temporizacion en otra tabla; solo que esta matriz no las distingue.",
+    "S51 (A/B/C) no cambia."
+  ]
+}

@@ -1853,6 +1853,25 @@ REA: `xrefs(0x43fee5ac) = 0x436f3942` (interior del bucle) y no reconoce la entr
 `analysis/s321_matrix_rows/matrix_rows.json`.
 
 **Siguiente:** S322, decodificar la trama `0x43ad9666`→`0x43ad9628`/`0x436f2554`.
+## S324 — auditoría «34 columnas» vs «15 columnas» (22-10-2026, agente B)
+
+**VERIFICADO (53 comprobaciones, 8 tests):** `0x43fee370` es un **`u32[34]`** de 136 B
+(`0x4c/0x4d/0x4e/0x4f` en las posiciones 27/28/29/30) que termina justo en L95 y solo se
+referencia por su slot `0x44027230` (`0x44024540 + 0x2cf0`, 7 sitios, 5 en la clase de
+S316). El «columnas 29/30» de S204 son **posiciones** en ese array, no columnas de la
+matriz de 16 B. En la matriz, **ningún** par de columnas difiere en un solo registro
+(mínimo 2: `0x00` y `0x0e`) y cada aplicación escribe los 69 registros → la afirmación
+«1 registro (`0x000c`/`0x000a`)» **no es reproducible**; la tabla de 34 columnas queda
+**NO_VERIFICADA**. Setter de modo/sub (slot 8 de la vtable): A7S `0x436f3b44` admite
+`1..0x51`, guarda modo en `+0x1ac` y **`sub` en `+0x2b0`** (clamp >1→0); A6000
+`0x436d6b50` corta en **`0x47`** (rechaza `0x4e`/`0x4f`), modo en `+0x170` y `sub` en
+`+0x266`. La puerta de la segunda matriz es el campo `sub` (**INFERENCIA**; runtime
+NO_VERIFICADO). S51 sin cambios. [S324](../docs/capture/s324-columns-audit.md),
+`analysis/s324_columns_audit/columns_audit.json`.
+
+**Siguiente:** S323 (matriz dinámica `0x43e8de00`) o localizar la tabla de 34 columnas que
+S204 pudo medir.
+
 
 ## S322 — formato de trama A7S (22-10-2026, agente B)
 
