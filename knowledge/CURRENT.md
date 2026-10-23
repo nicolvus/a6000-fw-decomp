@@ -1,5 +1,17 @@
 # Estado actual — léeme primero
 
+## S380–S385 — libObj.so A6000 vs A7S (22-10-2026)
+
+- **S380** Mapa de `libObj.so` A6000: 26 secciones, 1387 imports func, 1771 exports func, .plt 1914 entradas, .rel.plt 2420. `RecordStill::Execute` en 0x90b248 (Thumb-2). `ObjStillRecorder_*` en 0x913901–0x91395d. [`docs/capture/s380-libobj-a6000-map.md`]
+- **S381** Despacho de mensajes: `SendAndRecv` 0x000e0f24, `queueMsg` 0x000db8c4, `RcvMsg` 0x000dd4a4, `osal_reg_msg_queue_cb` 0x000dd804, `osal_reg_sync_msg_queue_cb` 0x000dd3b4, `ObjPin::Send` 0x000df9b4. 0 BL directo a `.plt` de `osal_*`. 0 xrefs a `RecordStill::Execute`. [`docs/capture/s381-libobj-a6000-dispatch.md`]
+- **S383** `…ForLiro` en `libObj.so` A6000: 5 nombres de obturador rechazados (NON SUPPORTED). `SetShutterTypeForLiro` ausente (solo A6300). Sin efecto en S51. [`docs/capture/s383-forliro-silentlibobj.md`]
+- **S384** ID de cola `0x40193`: 0 word LE en `.rodata`/`.data`, 0 `movw`/`movt` para construirlo, 0 string. Ausente en A6000, A7S y A6300. No localizado estáticamente. [`docs/capture/s384-queue-id-0x40193-search.md`]
+- **S385** Diff `libObj.so` A6000 vs A7S: A6000 +1.25 MB, entry +0x3880 en A7S, exports mismos nombres direcciones distintas, imports idénticos, NEEDED idénticas (17). [`docs/capture/s385-libobj-a6000-vs-a7s-diff.md`]
+
+**24 tests PASS** en `analysis/s380_libobj_map/tests/`.
+
+---
+
 ## S343–S617 — puesta al día del repo (22-10-2026)
 
 - **Agente B (S300–S342):** gates `+3/+6` del IMX210 idénticos a la A7S y sin escritor (S300/S301); la A7S añade selector de modo y subsistema de tiempos ausentes en la A6000 (S307–S312); cadena `modo → matriz 69/59 filas → T1/T2/T3 → pares (flag,bit) → máscara u16 → MMIO DFE/CISIF` (S329–S341); `0x43fef404` es una tabla de ids de `Camera::Lens::ODL`, no de tiempos (S342). Síntesis en S341.
