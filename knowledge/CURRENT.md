@@ -7,6 +7,28 @@
 - **Agentes D/E (S500–S515, S600–S617):** módulos de trazas decodificados (D: `[VDF]`…`[AUDPINEDTR]`; E: `[CAM_FUNC_MGR]`…`[CAMERA_DEVICE][DET_DIR]`), todos sin efecto en S51. Informes `docs/capture/s5xx-*.md`/`s6xx-*.md`.
 - **S51 sin cambios.** Orden del README: un bloque por agente (A, B, C, D, E).
 
+## S347 — `0x000d` es la constante 13 del camino de carga y la lista A6000 es la A7S filtrada (22-10-2026)
+
+- `0x000d` vale **13 en las 138 entradas** (69/47/69) de los tres modelos: **no** es un dato
+  por id. El mismo `0x0d` es el tamaño que recibe el inicializador del camino de carga
+  (pareja `0221 0d22`, única por modelo: A7S `0x4373d532`, A6000 `0x43721ba2`,
+  A6300 `0x4373b93a`) y el primer argumento del allocador de la tabla completa (slot `+0x2b0`).
+  La **cabecera** del mensaje es `0x18` (24 B, `movs r3,#0x18` justo después): 13 ≠ cabecera.
+- El id viaja en el `u16 +0x12` del mensaje ODL; el prólogo de 20 B del constructor es
+  **idéntico** en los tres modelos (A7S `0x4373d554`, A6000 `0x43721bc4`, A6300 `0x4373b95c`),
+  con `timeout=-1`, `prg_id=0`, `usr_unq_id=0` y `offset=0`.
+- **Relación funcional:** `A6000 = [x for x in A7S if x <= 0x4e]` (mismo orden, prefijo común
+  41); faltan **exactamente** `0x4f..0x64` (22 ids). `A6300 == A7S`. Los bucles cierran con
+  69/47/69.
+- `lensbin_lensproperty/LensAberrationData.bin` existe en los tres y es **byte a byte
+  idéntico** (`sha256 40d17dbb…`, 161766 B); no contiene la tabla `{id,0x000d}` (máx. 1 par) ni
+  la lista de ids → la lista es **código**.
+- Aviso: en la A6000 `movs r0,#0xd` aparece también como **id de módulo del logger**
+  (`0x437219f8` = `log(0xd,3,1,fmt)`); no confundir con el tamaño. 20 códigos de drive mode
+  coinciden numéricamente con ids, pero la tabla no se indexa por modo (S342). S51 sin cambios.
+- Evidencia: `docs/capture/s347-odl-field.md`, `analysis/s347_odl_field/odl_field.json`
+  (595 comprobaciones de `verify_odl_field.py`, 9 tests).
+
 ## S346 — el array `.bss` `0x43e906f4` no tiene escritor estático (22-10-2026)
 
 - Un solo literal del array (slot GOT `0x44026240`) y solo dos referencias al slot (`0x43705716`, `0x4370575e`), ambas de los consumidores de S342. 0 bases PIC al array.
