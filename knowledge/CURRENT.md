@@ -7,6 +7,13 @@
 - **Agentes D/E (S500–S515, S600–S617):** módulos de trazas decodificados (D: `[VDF]`…`[AUDPINEDTR]`; E: `[CAM_FUNC_MGR]`…`[CAMERA_DEVICE][DET_DIR]`), todos sin efecto en S51. Informes `docs/capture/s5xx-*.md`/`s6xx-*.md`.
 - **S51 sin cambios.** Orden del README: un bloque por agente (A, B, C, D, E).
 
+## S343 — la copia de 20 B de la fila T configura los seis bloques de canal (22-10-2026)
+
+- Cadena cerrada: `0x436f5f7c` (copia 20 B, parchea `+5`/`+7`) → `0x43ada310` (añade 12 pares → bloque de **44 B**) → `0x43ada480` (`[obj+4]` = id de canal 0..5, `[obj+8]` = nº de flags, 5 manejadores).
+- `0x436f6710` (tbh 6) descompone los bytes impares de la fila en nibbles; `0x436f7480` (tbb 6) escribe **1 bit por canal** (`0x28`/`0x20` bit 0). Los seis bloques son exactamente los de `w0` (S340): `0xf3122300/2200/3300/3200`, `0xfc0a3100/4100`.
+- Capa de **178** escritores de campo (A7S/A6300) y **177** (A6000): el único campo ausente en la A6000 es `0xfc0a3100+0xc` bit 24. No toca `0xfc02a00c` (DFE) ni `0xfc088300` (P2S) → ruta independiente de las máscaras.
+- Semántica física de los canales: NO_VERIFICADO. Tests: `tests/test_s343_row_copy_chain.py` (11) y 45 comprobaciones.
+
 ## S342 — `0x43fef404` tiene dos consumidores: ids de `Camera::Lens::ODL` (22-10-2026)
 
 - **Corrige el alcance de S337**: «0 referencias» era cierto solo para literales absolutos. Con bases PIC (`ldr`+`add pc`) hay **dos** consumidores: `0x437056f8`/`0x437056fc` (función `0x437056ec`) y `0x43705754`/`0x43705756` (función `0x43705748`), ambos con base `0x43fef404`.
