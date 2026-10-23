@@ -6,7 +6,8 @@
 - **S381** Despacho de mensajes: `SendAndRecv` 0x000e0f24, `queueMsg` 0x000db8c4, `RcvMsg` 0x000dd4a4, `osal_reg_msg_queue_cb` 0x000dd804, `osal_reg_sync_msg_queue_cb` 0x000dd3b4, `ObjPin::Send` 0x000df9b4. 0 BL directo a `.plt` de `osal_*`. 0 xrefs a `RecordStill::Execute`. [`docs/capture/s381-libobj-a6000-dispatch.md`]
 - **S383** `…ForLiro` en `libObj.so` A6000: 5 nombres de obturador rechazados (NON SUPPORTED). `SetShutterTypeForLiro` ausente (solo A6300). Sin efecto en S51. [`docs/capture/s383-forliro-silentlibobj.md`]
 - **S384** ID de cola `0x40193`: 0 word LE en `.rodata`/`.data`, 0 `movw`/`movt` para construirlo, 0 string. Ausente en A6000, A7S y A6300. No localizado estáticamente. [`docs/capture/s384-queue-id-0x40193-search.md`]
-- **S385** Diff `libObj.so` A6000 vs A7S: A6000 +1.25 MB, entry +0x3880 en A7S, exports mismos nombres direcciones distintas, imports idénticos, NEEDED idénticas (17). [`docs/capture/s385-libobj-a6000-vs-a7s-diff.md`]
+- **S382** Llamadores de RecordStill::Execute (0x90b248): 1 BL directo (0x7484dc); 2 sitios con `bl #0x90b248` en funciones contenedoras 0x90de2c (desde 0x755af8) y 0x91631e (vía puntero de función). Ambos pasan (r0=this, r1=ObjMsg*). [`docs/capture/s382-recordstill-callers.md`]
+- **S385** Diff `libObj.so` A6000 vs A7S: A6000 +1.25 MB, entry +0x3880 en A7S, exports mismos nombres direcciones distintas, imports idénticos, NEEDED idénticas (17). RecordStill::Execute NO localizado en A7S (0 `movw #0x100f`, 0 `movt #0x0001`). [`docs/capture/s385-libobj-a6000-vs-a7s-diff.md`]
 
 **24 tests PASS** en `analysis/s380_libobj_map/tests/`.
 

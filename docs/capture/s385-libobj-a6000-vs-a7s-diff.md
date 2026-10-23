@@ -63,16 +63,20 @@ Los mismos símbolos de mensajería aparecen como imports UND en ambos:
 
 **Idéntico conjunto** en A6000 y A7S. **VERIFICADO**.
 
-## 5. RecordStill::Execute — localización en A7S pendiente
+## 5. RecordStill::Execute — localización en A7S (RECONCILIADO)
 
 | | A6000 fw3.21 | A7S fw3.20 |
 |---|---|---|
 | Dirección | 0x0090b248 | **NO LOCALIZADA** |
-| content-info | 0x100f (`movw r1,#0x100f` en 0x90b2a4) | Pendiente |
+| content-info | 0x100f (`movw r1,#0x100f` en 0x90b2a4) | `movw #0x100f`: **0 sitios** en .text |
+| movt #0x0001 (parte alta) | N/A | **0 sitios** en .text |
+| Patrón push.w+sub.w sp,#0xb00 | Presente en 0x90b248 | **0 sitios** en .text |
 | ObjMsg 0x3500/0x3002 | No hay movw directo | Pendiente |
 | Xrefs directos | 0 | Pendiente |
 
-**Acción requerida:** Buscar `movw r1,#0x100f` (Thumb-2) en .text de A7S para localizar RecordStill::Execute. Requiere capstone sobre 10 MB de .text.
+**Conclusión de la reconciliación:** RecordStill::Execute no se pudo localizar en A7S fw3.20 usando los mismos patrones que en A6000 (`movw #0x100f`, `movt #0x0001`, prólogo `push.w`+`sub.w sp,#0xb00`). Esto sugiere que el código de A7S fue compilado con diferentes flags o que la función tiene una estructura distinta. Requiere búsqueda adicional (por ejemplo, localizar `ObjStillRecorder` en A7S — export en 0x00856c27 — y examinar sus métodos, o buscar xrefs entrantes a la función equivalente).
+
+**VERIFICADO:** barrido de bytes completo de .text de A7S (10.4 MB) con capstone.
 
 ## 6. Búsqueda del ID de cola `0x40193` (C2 receptor)
 
