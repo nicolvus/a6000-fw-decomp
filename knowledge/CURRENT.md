@@ -1,5 +1,12 @@
 # Estado actual — léeme primero
 
+## S337 — `0x43fef404` no es una tabla de tiempos (22-10-2026)
+
+- Es una tabla de **69 entradas de 4 B** `{u16 código (0x01..0x64), u16 0x000d}`, terminada en `0x43fef518`, precedida de 169 palabras `0x43f9c622`.
+- La vista `u16[69]` de S329 cruzaba dos estructuras (34 apariciones de `0x000d`) → **falso positivo** del barrido; la conclusión de S329 (sin tabla de tiempos) no cambia.
+- **0 referencias literales** a `0x43fef404`: sin consumidor estático (negativo acotado).
+- Tests: `tests/test_s337_fef404_table.py` (7) y 12 comprobaciones. S51 sin cambios.
+
 ## S340 — `w0` es un selector de registro MMIO (22-10-2026)
 
 - `0x43ada4d8` → `0x436f74c0`: `cmp r1,#5` + `tbb [pc,r1]` (6 casos, tabla `03 06 09 0c 0f 12`); cada rama lee `[base+0x30]` o `[base+0x24]` de `0xf3122300/2200/3300/3200` y `0xfc0a3100/4100`.
