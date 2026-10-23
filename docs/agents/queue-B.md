@@ -86,7 +86,16 @@
 - CHECKPOINT S321–S328 (2026-10-22): corregido el mapa de columnas (`0x43c9c5b5` = posición→columna, 34 entradas) y la tabla «de 34» (T2, 34 filas); cerrada la segunda matriz (vacía, sin productor estático) y el índice `obj+0x2b4` (argumento del constructor, 0). 100/100 tests del carril (S314–S328) verdes.
 
 - TODO S329 Localizar la tabla de **tiempos** por modo del A7S (S202 §3) y comprobar si `0x4e`/`0x4f` difieren de `0x4c`/`0x4d`; si no aparece, cerrar la pregunta con barrido de la región de tablas de modo.
+
+- DONE S329 **No existe tabla de tiempos por modo en el A7S.** Estructuras por modo: lista `u32[34]`, mapa posición→columna, matriz de 69 filas (valores de registro) y T1/T2/T3 `34×0x1c` = `(índice a 2 descriptores, máscara de 12 bits)`. Único consumidor `0x436f618c`: lee solo `+0x14` (índice, `mla 12*r2`) y `+0x18` (máscara, `asrs`); 22 B por fila sin leer. **Corrige S317/S326**: T2 `0x43bbf2e8` y T3 `0x43bbef30` (4 B menos), índice ∈{0,1} y `T3→T2 = 34×0x1c`; caen `0x4e≡0x51`/`0x4f≡0x50`. Matriz: `0x4e`/`0x4c` = 14 registros, `0x4f`/`0x4d` = 11, `0x4c≡0x4d`, sin valor exclusivo de silent. Barrido de dos regiones: 0 tablas de tiempos referenciadas. Evidencia: `docs/capture/s329-mode-timing-tables.md`, `analysis/s329_mode_timing_tables/mode_timing.json` (1202 comprobaciones, 13 tests).
 - TODO S330 Buscar una instancia de `0x436f3fc0` con `idx != 0` (tabla de factorías, puntero o módulo hermano) para decidir si T1/T2/T3 llegan a indexarse por modo.
 - TODO S331 Rastrear el productor runtime de la segunda matriz (escrituras a `0x43e8de00`/`0x43e80160`, posible DMA u otro módulo de `liro.ko`/`libObj.so`).
 - TODO S332 Interpretar los campos de T2 (`+0x14`: `0x3ff`/0; `+0x18`: 2/3) siguiendo sus lectores en `0x436f618c` y el consumidor de `obj+0x16/+0x2e/+0xa5`.
 - TODO S333 Contrastar el vocabulario de modos: A6000 acepta `1..0x47` (13 códigos) y A7S `1..0x51` (34); mapear los 13 códigos de la A6000 y ver si alguno es «silent-like» en su matriz de 59 filas.
+
+- SUPERSEDED (parcial) S326 Las bases de T2/T3 eran 4 B altas (`0x43bbf2ec`/`0x43bbef34`); las correctas son `0x43bbf2e8`/`0x43bbef30`, con lo que el «campo +0x14» que S326 leyó era en realidad `+0x10` (ceros) y el `+0x18` era el índice. Las igualdades `0x4e≡0x51` y `0x4f≡0x50` **no se sostienen** (difieren en `w0`: `0x02` vs `0x03`). `0x4c≡0x4d` sí se mantiene. Ver S329.
+- TODO S334 Identificar quién consume los bloques `obj+0x16`, `obj+0x2e` y `obj+0xa5` (12 pares flag/valor que escribe `0x436f618c`) y si llegan a la trama P2S `81|03|dev|addr|data` o a otro mensaje.
+- TODO S335 Caracterizar el objeto `0x43dc02e0` (`ip = *(0x44024808)`): ventanas `+0x20` y `+0x60`, qué offsets usan las 12 entradas de la tabla B y quién escribe esas ventanas.
+- TODO S336 Explicar `w0` (2/3/4/1) y `w4` (`0x01000101`/`0x01000102`) de las filas T1/T2/T3: ¿contadores, flags empaquetados o ids de bloque?
+- TODO S337 Identificar el consumidor del único candidato estricto del barrido: `u16[69]` en `0x43fef404` (valores 1..78).
+- TODO S330 (vigente) Buscar una instancia de `0x436f3fc0` con `idx != 0` (tabla de factorías, puntero o módulo hermano) para decidir si T1/T2/T3 llegan a indexarse por modo.
