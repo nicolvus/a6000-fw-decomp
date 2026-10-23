@@ -2519,3 +2519,14 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 - Artefactos: `docs/capture/s610-housing.md`, `analysis/s610_housing/`, `tests/test_s610_housing.py` (pendiente).
 - Verificación: censos exactos, commit Conventional + push origin HEAD:main.
 - Siguiente: S611 `[IMAGING_RSRC]` (5 trazas).
+
+## Investigación S611 — `[IMAGING_RSRC]` (agente E, Nemotron 3 Ultra Free)
+
+- Objetivo: decodificar el módulo de traza `[IMAGING_RSRC]` (5 trazas) exclusivo de la A6000 fw3.21.
+- REA Evidence: strings `[IMAGING_RSRC]: [GOLFSHOT]...` en `0x43ca4987`–`0x43ca4ae2` (5 cadenas, doble prefijo).
+- Resultado: 5 trazas confirmadas con doble prefijo `[IMAGING_RSRC]: [GOLFSHOT]`; SA_LPF, SA_BGEST, SA_SSP, correctSndDetResult, vfc2indx; logger dual (nuevo `[IMAGING_RSRC]: ` + viejo `[GOLFSHOT]` + global `0x43902718`); prefijo compuesto 29 B.
+- Diferencial: A6000 fw3.21=5 `[IMAGING_RSRC]` + 5 `[GOLFSHOT]` dobles; A7S/A6300=0 `[IMAGING_RSRC]`, 5 `[GOLFSHOT]` (mismo núcleo).
+- Línea del obturador: NEGATIVO ACOTADO (0 coincidencias).
+- Artefactos: `docs/capture/s611-imaging_rsrc.md`, `analysis/s611_imaging_rsrc/`, `tests/test_s611_imaging_rsrc.py` (pendiente).
+- Verificación: censos exactos, commit Conventional + push origin HEAD:main.
+- Siguiente: S612 `[MOUNT]` (5 trazas).
