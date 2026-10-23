@@ -43,3 +43,4 @@
 - S343: la copia de fila T configura los seis bloques de canal (`w0` de S340) con 178 escritores de campo; la A6000 solo difiere en `0xfc0a3100+0xc` bit 24. Siguiente exacto: S344 (tablas de punteros de `0x436f6240`).
 - S344: `0x436f6240` selecciona [0,1,4]/[6,5,4] por `row[5]`; 32/34 A7S = 1, `0x37`/`0x38` = 4; sin llamador estático. Siguiente exacto: S345 (alcanzabilidad estática de `0x436f822c` por modo, A7S vs A6000).
 - S345: la máscara se aplica en ambos modelos en tramos rectilíneos equivalentes; sin camino silent exclusivo. Siguiente exacto: S346 (productor del array `.bss` `0x43e906f4`, consumidor B de S342).
+- S346: `0x43e906f4` no tiene productor estático; lo llena el servicio de la vtable (`+0x2c8`/`+0x2cc`). Siguiente exacto: S347 (campo `0x000d` e ids de la tabla de S342 en el módulo ODL).
