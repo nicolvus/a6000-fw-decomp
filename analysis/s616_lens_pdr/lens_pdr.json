@@ -1,0 +1,20 @@
+{
+  "module": "LENS_PDR",
+  "traces": 4,
+  "trace_strings": [
+    {"vaddr": "0x43c9a822", "text": "[LENS_PDR]: BonoboDSP_Send: Data latch failed!"},
+    {"vaddr": "0x43c9a852", "text": "[LENS_PDR]: BonoboDSP_Send:[ch0]Data latch failed!"},
+    {"vaddr": "0x43c9a886", "text": "[LENS_PDR]: BonoboDSP_Send:[ch1]Data latch failed!"},
+    {"vaddr": "0x43c9a8ba", "text": "[LENS_PDR]: BonoboDSP_Rcv: paritycheck_error!"}
+  ],
+  "prefix_length": 11,
+  "prefix": "[LENS_PDR]: ",
+  "differential": {
+    "a6000_fw321": {"token_count": 4, "prefixes": ["[LENS_PDR]: "]},
+    "a7s_fw320": {"token_count": 0, "core_strings_count": 4},
+    "a6300_fw201": {"token_count": 0, "core_strings_count": 4}
+  },
+  "shutter_line": "NEGATIVO ACOTADO",
+  "logger_dual": true,
+  "global_logger": "0x43902718"
+}

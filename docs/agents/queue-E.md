@@ -18,7 +18,7 @@ Tema: decodificación de módulos exclusivos de la A6000 fw3.21 (0 en A7S y A630
 - DONE S613 Decodificar `[MOUNT_WARNING]` (5 trazas): exclusiva A6000. → S613
 - DONE S614 Decodificar `[ZPD]` (5 trazas): exclusiva A6000. → S614
 - DONE S615 Decodificar `[EIS]` (4 trazas): exclusiva A6000. → S615
-- TODO S616 Decodificar `[LENS_PDR]` (4 trazas): exclusiva A6000.
+- DONE S616 Decodificar `[LENS_PDR]` (4 trazas): exclusiva A6000. → S616
 - TODO S617 Decodificar `[CAMERA_DEVICE]` (3 trazas): exclusiva A6000.
 - TODO S618 Decodificar `[DET_DIR]` (3 trazas): exclusiva A6000.
 - TODO S619 Decodificar `[SENSER]` (3 trazas): exclusiva A6000.
