@@ -124,3 +124,8 @@
 - TODO S336 Explicar `w4` (`0x01000101`/`0x01000102`/`0x01000001`) de las filas T.
 - TODO S337 Identificar el consumidor de `u16[69]` en `0x43fef404` (valores 1..78).
 - TODO S339 Identificar `0xf292b000..8`: buscar sus literales/lectores en el resto del blob y comparar con los bloques documentados (`0xf2910000` GPIO, `0xf292d000` DSP de lente).
+
+- DONE S336 13 referencias PIC a T1/T2/T3/B en 7 funciones; 5 leen campos de fila: `0x436f5eac` (w0), `0x436f5f7c` (copia `+0x00..+0x13`, parchea `+5`/`+7` según `[estado+0x18]&1`, → `0x43ada310`), `0x436f605c` (suma `0x43ada4d8(w0)` de T1 y T2), `0x436f618c` (`+0x14`/`+0x18`), `0x436f6278`→`0x436f6240` (`+4/+5/+6` como selectores). Corrige el «22 B sin leer» de S331/S334 (solo válido para `0x436f618c`). Evidencia: `docs/capture/s336-table-consumers.md`, `analysis/s336_table_consumers/table_consumers.json` (47 comprobaciones, 9 tests).
+- TODO S337 Identificar el consumidor de `u16[69]` en `0x43fef404` (valores 1..78).
+- TODO S339 Identificar `0xf292b000..8` (bloques 0xf292x000 de 4 KB; vecinos documentados: GPIO 0xf2910000, DSP de lente 0xf292d000).
+- TODO S340 Resolver `0x43ada4d8` → `0x436f74c0` (qué hace con `w0`) y el significado de los selectores `+4/+5/+6` de `0x436f6240`.
