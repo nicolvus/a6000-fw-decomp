@@ -99,3 +99,5 @@
 - TODO S336 Explicar `w0` (2/3/4/1) y `w4` (`0x01000101`/`0x01000102`) de las filas T1/T2/T3: ¿contadores, flags empaquetados o ids de bloque?
 - TODO S337 Identificar el consumidor del único candidato estricto del barrido: `u16[69]` en `0x43fef404` (valores 1..78).
 - TODO S330 (vigente) Buscar una instancia de `0x436f3fc0` con `idx != 0` (tabla de factorías, puntero o módulo hermano) para decidir si T1/T2/T3 llegan a indexarse por modo.
+
+- DONE S330 Único `BL` a `0x436f3fc0` (`0x436f2a8a`) con `movs r1,#0` → `idx=0` constante; sin literales ni slot de vtable; la llamada está en una **factoría singleton** (`0x436f2a7c`) que publica el objeto en `0x440245cc → 0x43e8d994` y no tiene `BL` directo. `obj+0x2b4 = 0` siempre → T1/T2/T3 solo aportan la fila 0 (modo `0x0b`); la huella por modo de S326 no se aplica por esta vía. Evidencia: `docs/capture/s330-ctor-instances.md`, `analysis/s330_ctor_instances/ctor_instances.json` (21 comprobaciones, 8 tests).
