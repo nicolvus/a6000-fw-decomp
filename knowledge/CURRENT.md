@@ -7,6 +7,12 @@
 - **Agentes D/E (S500–S515, S600–S617):** módulos de trazas decodificados (D: `[VDF]`…`[AUDPINEDTR]`; E: `[CAM_FUNC_MGR]`…`[CAMERA_DEVICE][DET_DIR]`), todos sin efecto en S51. Informes `docs/capture/s5xx-*.md`/`s6xx-*.md`.
 - **S51 sin cambios.** Orden del README: un bloque por agente (A, B, C, D, E).
 
+## S345 — la máscara se aplica igual en todos los modos y en ambos modelos (22-10-2026)
+
+- A7S: tramo rectilíneo `0x436f4476..0x436f449c` → `0x436f618c` + `0x436f61f8` (op 0) + `0x436f60ac` (op 1); op 0 `43ada3a0 b.w 0x436f822c`, op 1 `43ada42c b.w 0x436f822c`. Segundo sitio `0x436f5afe` con puerta `0x43ad9b50(obj) != 0`.
+- A6000: `0x436d8f46..0x436d8f6e` con las mismas dos operaciones (`0x43ad94d8` op 0, `b.w 0x43ad9512` op 1); cuerpos reutilizados byte a byte.
+- **No hay camino de máscara exclusivo de silent**: la aplicación no está condicionada por el modo dentro del tramo; la diferencia es de datos. S51 sin cambios. Tests: 6 y 18 comprobaciones.
+
 ## S344 — tablas selectoras de `0x436f6240`: [0,1,4] y [6,5,4] (22-10-2026)
 
 - `0x436f6240` elige entre `0x43bbeb64 = [0,1,4]` (fin de T1) y `0x43bbef28 = [6,5,4]` (inicio tras T1) según `row[5]`; índice `row[4]` (≤2) o `row[6]` (≤1). Envoltorio `0x436f6278(idx)` con límite `0x21` y stride `0x1c`.
