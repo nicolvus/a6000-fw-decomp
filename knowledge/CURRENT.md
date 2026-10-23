@@ -1,5 +1,14 @@
 # Estado actual — léeme primero
 
+## S329 — no hay tabla de tiempos por modo en el A7S (22-10-2026)
+
+- Las estructuras por modo del A7S fw3.20 son: lista `u32[34]` (`0x43fee370`), mapa posición→columna (`0x43c9c5b5`), matriz de 69 filas (`0x43fee598`, un registro de sensor por fila) y tres tablas T de `34 × 0x1c` (`0x43bbeb70`, `0x43bbf2e8`, `0x43bbef30`) cuyas filas son **(índice a 2 descriptores, máscara de 12 bits)**. **Ninguna contiene tiempos.**
+- Único consumidor de T1/T2/T3: `0x436f618c`, que lee solo `+0x14` (índice para `mla 12*r2`) y `+0x18` (máscara); los otros 22 B de cada fila no los lee nadie. La tabla de descriptores `0x43c9d09b` tiene **2 filas** (identidad y permutación) y va seguida de la cadena `GCS2RxLink.SetInitParam…`.
+- **Corrección**: S317/S326 usaron `0x43bbf2ec`/`0x43bbef34` (4 B altas). Con las bases del código, el índice vale 0 o 1 y `T3→T2 = 34 × 0x1c`; con las antiguas valía `0x3ff`/`0xf0`/`0x1f8`/`0xfff`, fuera de rango. Se cae `0x4e≡0x51` y `0x4f≡0x50` de S326.
+- Matriz de 69 filas: `0x4e`/`0x4f` difieren de `0x4c`/`0x4d` en **14** y **11** registros; `0x4c≡0x4d`; 16 columnas únicas; **ningún** valor de registro exclusivo de silent (la diferencia es la combinación). «1 registro (0x000c/0x000a)» de S201/S204 sigue sin reproducirse.
+- Barrido de `0x43bbd000..0x43bc0000` y `0x43fee000..0x43ff0000`: 0 arrays de 34/69 tiempos referenciados (el único candidato estricto, `0x43fef404`, son índices 1..78).
+- Tests: `tests/test_s329_mode_timing.py` (13 tests) y `verify_mode_timing.py` (1202 comprobaciones). S51 sin cambios.
+
 ## S500–S515 — cobertura del censo de módulos (22-10-2026)
 
 Todos los módulos del censo S178 (372 etiquetas) están ahora cubiertos:
