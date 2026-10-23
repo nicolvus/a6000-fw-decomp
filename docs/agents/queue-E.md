@@ -13,7 +13,7 @@ Tema: decodificación de módulos exclusivos de la A6000 fw3.21 (0 en A7S y A630
 - DONE S608 Decodificar `[MOUNT_INFO]` (6 trazas): exclusiva A6000. → S608
 - DONE S609 Decodificar `[CAMERA_IS][DIST]` (5 trazas): exclusiva A6000. → S609
 - DONE S610 Decodificar `[HOUSING]` (5 trazas): exclusiva A6000. → S610
-- TODO S611 Decodificar `[IMAGING_RSRC]` (5 trazas): exclusiva A6000.
+- DONE S611 Decodificar `[IMAGING_RSRC]` (5 trazas): exclusiva A6000. → S611
 - TODO S612 Decodificar `[MOUNT]` (5 trazas): exclusiva A6000.
 - TODO S613 Decodificar `[MOUNT_WARNING]` (5 trazas): exclusiva A6000.
 - TODO S614 Decodificar `[ZPD]` (5 trazas): exclusiva A6000.
