@@ -1887,6 +1887,22 @@ S51 sin cambios. [S325](../docs/capture/s325-position-map.md),
 
 **Siguiente:** buscar la tabla de 34 columnas (S202/S204) y medir si los tiempos de `0x4e`/
 `0x4f` difieren; alternativamente S323 (matriz dinámica `0x43e8de00`).
+## S326 — la tabla de «34» es T2 (34 filas) y no aísla el modo silent (22-10-2026, agente B)
+
+**VERIFICADO (45 comprobaciones, 7 tests):** la tabla de «34 columnas» de S202/S204 es
+**T2** (`0x43bbf2ec`, stride `0x1c`, **34 filas**), contigua a T3; T1/T3 son constantes en
+el rango 27..32. Con el orden de `0x43fee370`, `0x4c`/`0x4d` llevan `+0x14 = 0x3ff` y
+`+0x18 = 2`; `0x4e` baja `+0x14` a 0 (**1** campo de diferencia) y `0x4f` además sube
+`+0x18` a 3 (**2** campos). Igualdades exactas: **`0x4e ≡ 0x51`**, **`0x4f ≡ 0x50`**,
+`0x4c ≡ 0x4d`. Los valores **no** son firma silent: `0x3ff` solo en `{0x13,0x1f,0x4c,0x4d}`
+y `3` solo en `{0x0b,0x35,0x4f,0x50}`. S204 queda **parcialmente reproducido** (estructura
+sí; etiquetas `0x000c`/`0x000a` no). **INFERENCIA:** fila ↔ posición de modo. S51 sin
+cambios. [S326](../docs/capture/s326-t2-fingerprint.md),
+`analysis/s326_t2_fingerprint/t2_silent_fingerprint.json`.
+
+**Siguiente:** S323 (matriz dinámica `0x43e8de00`, puerta `sub`) o identificar el escritor
+de `obj+0x2b4` para cerrar la correspondencia fila↔modo.
+
 
 
 
