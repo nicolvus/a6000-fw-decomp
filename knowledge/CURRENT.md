@@ -7,6 +7,22 @@
 - **Agentes D/E (S500–S515, S600–S617):** módulos de trazas decodificados (D: `[VDF]`…`[AUDPINEDTR]`; E: `[CAM_FUNC_MGR]`…`[CAMERA_DEVICE][DET_DIR]`), todos sin efecto en S51. Informes `docs/capture/s5xx-*.md`/`s6xx-*.md`.
 - **S51 sin cambios.** Orden del README: un bloque por agente (A, B, C, D, E).
 
+## S348 — el callback por entrada del ODL es un adaptador de `memcpy` (22-10-2026)
+
+- El segundo campo de la terna que el consumidor A entrega al servicio (`{palabra, callback,
+  item_i}`) es un **shim de `memcpy`** idéntico en los tres modelos
+  (`10b50c46184611462246` + `pop.w` + `b.w`): `memcpy(dst=arg4, src=arg3, len=arg2)`.
+- El shim salta por un veneer `bx pc`+`nop` a código **ARM**: la `memcpy` clásica (huella
+  `e92d4001/e2522004/ba000020/e210c003`) en A7S `0x439b3918`, A6000 `0x439c5320`,
+  A6300 `0x43a60384` (veneers `0x43b7a028`/`0x43b7f878`/`0x43c44c18`).
+- Cada shim tiene **un solo usuario** (el bucle de la tabla): A7S `0x43705702`,
+  A6000 `0x436eb2e2`, A6300 `0x43734bee`; 0 literales absolutos.
+- **INFERENCIA ALTA:** el servicio copia **13 B** hacia el buffer del consumidor (único tamaño
+  por entrada = mitad alta de la palabra, S347). **NO_VERIFICADO:** la llamada (vive en la
+  interfaz importada, slots `+0x2b0/+0x2c8/+0x2cc`).
+- Evidencia: `docs/capture/s348-odl-callback.md`, `analysis/s348_odl_callback/odl_callback.json`
+  (87 comprobaciones, 6 tests). S51 sin cambios.
+
 ## S347 — `0x000d` es la constante 13 del camino de carga y la lista A6000 es la A7S filtrada (22-10-2026)
 
 - `0x000d` vale **13 en las 138 entradas** (69/47/69) de los tres modelos: **no** es un dato
