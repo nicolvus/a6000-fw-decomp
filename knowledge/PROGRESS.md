@@ -2552,3 +2552,14 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 - Artefactos: `docs/capture/s613-mount_warning.md`, `analysis/s613_mount_warning/`, `tests/test_s613_mount_warning.py` (pendiente).
 - Verificación: censos exactos, commit Conventional + push origin HEAD:main.
 - Siguiente: S614 `[ZPD]` (5 trazas).
+
+## Investigación S614 — `[ZPD]` (agente E, Nemotron 3 Ultra Free)
+
+- Objetivo: decodificar el módulo de traza `[ZPD]` (5 trazas) exclusivo de la A6000 fw3.21.
+- REA Evidence: strings `[ZPD]: ` en `0x43ccf2d7`–`0x43ccf361` (5 cadenas).
+- Resultado: 5 trazas confirmadas con prefijo `[ZPD]: ` (5 B); `lens attach sequence end`, `load dra data`, `load lens data from lens/body`, `load:%s`; logger dual (nuevo `[ZPD]: ` + viejo global `0x43902718`); prefijo fijo 5 B.
+- Diferencial: A6000 fw3.21=5 `[ZPD]` tokens; A7S fw3.20=0, A6300 fw2.01=0 (sin prefijo `[ZPD]: `; 30+/50+ strings ZPD relacionadas con prefijos dispersos).
+- Línea del obturador: NEGATIVO ACOTADO (0 coincidencias).
+- Artefactos: `docs/capture/s614-zpd.md`, `analysis/s614_zpd/`, `tests/test_s614_zpd.py` (pendiente).
+- Verificación: censos exactos, commit Conventional + push origin HEAD:main.
+- Siguiente: S615 `[EIS]` (4 trazas).

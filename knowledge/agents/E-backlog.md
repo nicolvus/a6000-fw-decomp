@@ -16,7 +16,7 @@ Tema distinto de A/B/C: decodificación de módulos exclusivos de la A6000 fw3.2
 - S611 [IMAGING_RSRC] (5 trazas) → DONE (S611)
 - S612 [CAMERA_IS][MOUNT] (5 trazas) → DONE (S612)
 - S613 [MOUNT_WARNING] (5 trazas) → DONE (S613)
-- S614 [ZPD] (5 trazas)
+- S614 [ZPD] (5 trazas) → DONE (S614)
 - S615 [EIS] (4 trazas)
 - S616 [LENS_PDR] (4 trazas)
 - S617 [CAMERA_DEVICE] (3 trazas)
