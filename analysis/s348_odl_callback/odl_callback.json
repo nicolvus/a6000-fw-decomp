@@ -1,0 +1,387 @@
+{
+  "milestone": "S348",
+  "title": "el callback por entrada del ODL es un adaptador de memcpy con un solo usuario; el unico tamano por entrada es el 13 de la palabra de tabla",
+  "base": "0x43541000",
+  "firmware": {
+    "a7s_fw320": {
+      "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+      "size": 11455416
+    },
+    "a6000_fw321": {
+      "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+      "size": 11427236
+    },
+    "a6300_fw201": {
+      "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16",
+      "size": 13382836
+    }
+  },
+  "models": {
+    "a7s_fw320": {
+      "callback_pointer": "0x43adb6e1",
+      "shim": {
+        "entry": "0x43adb6e0",
+        "bytes": "10b50c46184611462246",
+        "code": [
+          {
+            "address": "0x43adb6e0",
+            "bytes": "10b5",
+            "insn": "push {r4, lr}"
+          },
+          {
+            "address": "0x43adb6e2",
+            "bytes": "0c46",
+            "insn": "mov r4, r1"
+          },
+          {
+            "address": "0x43adb6e4",
+            "bytes": "1846",
+            "insn": "mov r0, r3"
+          },
+          {
+            "address": "0x43adb6e6",
+            "bytes": "1146",
+            "insn": "mov r1, r2"
+          },
+          {
+            "address": "0x43adb6e8",
+            "bytes": "2246",
+            "insn": "mov r2, r4"
+          },
+          {
+            "address": "0x43adb6ea",
+            "bytes": "bde81040",
+            "insn": "pop.w {r4, lr}"
+          },
+          {
+            "address": "0x43adb6ee",
+            "bytes": "9ef09bbc",
+            "insn": "b.w #0x43b7a028"
+          }
+        ],
+        "semantics": "memcpy(dst=arg4, src=arg3, len=arg2)"
+      },
+      "veneer": {
+        "address": "0x43b7a028",
+        "bytes": "7847c04639e6f8ea7847c046",
+        "arm_branch_at": "0x43b7a02c",
+        "arm_target": "0x439b3918"
+      },
+      "memcpy": {
+        "address": "0x439b3918",
+        "fingerprint": [
+          "0xe92d4001",
+          "0xe2522004",
+          "0xba000020",
+          "0xe210c003"
+        ],
+        "first_instructions": [
+          {
+            "address": "0x439b3918",
+            "bytes": "01402de9",
+            "insn": "push {r0, lr}"
+          },
+          {
+            "address": "0x439b391c",
+            "bytes": "042052e2",
+            "insn": "subs r2, r2, #4"
+          },
+          {
+            "address": "0x439b3920",
+            "bytes": "200000ba",
+            "insn": "blt #0x439b39a8"
+          },
+          {
+            "address": "0x439b3924",
+            "bytes": "03c010e2",
+            "insn": "ands ip, r0, #3"
+          },
+          {
+            "address": "0x439b3928",
+            "bytes": "2800001a",
+            "insn": "bne #0x439b39d0"
+          },
+          {
+            "address": "0x439b392c",
+            "bytes": "03c011e2",
+            "insn": "ands ip, r1, #3"
+          },
+          {
+            "address": "0x439b3930",
+            "bytes": "3200001a",
+            "insn": "bne #0x439b3a00"
+          },
+          {
+            "address": "0x439b3934",
+            "bytes": "082052e2",
+            "insn": "subs r2, r2, #8"
+          }
+        ]
+      },
+      "users": [
+        "0x43705702"
+      ],
+      "spec_word": {
+        "first_entry": "0x000d0046",
+        "high_half": 13,
+        "low_half_id": 70
+      }
+    },
+    "a6000_fw321": {
+      "callback_pointer": "0x43ada547",
+      "shim": {
+        "entry": "0x43ada546",
+        "bytes": "10b50c46184611462246",
+        "code": [
+          {
+            "address": "0x43ada546",
+            "bytes": "10b5",
+            "insn": "push {r4, lr}"
+          },
+          {
+            "address": "0x43ada548",
+            "bytes": "0c46",
+            "insn": "mov r4, r1"
+          },
+          {
+            "address": "0x43ada54a",
+            "bytes": "1846",
+            "insn": "mov r0, r3"
+          },
+          {
+            "address": "0x43ada54c",
+            "bytes": "1146",
+            "insn": "mov r1, r2"
+          },
+          {
+            "address": "0x43ada54e",
+            "bytes": "2246",
+            "insn": "mov r2, r4"
+          },
+          {
+            "address": "0x43ada550",
+            "bytes": "bde81040",
+            "insn": "pop.w {r4, lr}"
+          },
+          {
+            "address": "0x43ada554",
+            "bytes": "a5f090b9",
+            "insn": "b.w #0x43b7f878"
+          }
+        ],
+        "semantics": "memcpy(dst=arg4, src=arg3, len=arg2)"
+      },
+      "veneer": {
+        "address": "0x43b7f878",
+        "bytes": "7847c046a716f9ea7847c046",
+        "arm_branch_at": "0x43b7f87c",
+        "arm_target": "0x439c5320"
+      },
+      "memcpy": {
+        "address": "0x439c5320",
+        "fingerprint": [
+          "0xe92d4001",
+          "0xe2522004",
+          "0xba000020",
+          "0xe210c003"
+        ],
+        "first_instructions": [
+          {
+            "address": "0x439c5320",
+            "bytes": "01402de9",
+            "insn": "push {r0, lr}"
+          },
+          {
+            "address": "0x439c5324",
+            "bytes": "042052e2",
+            "insn": "subs r2, r2, #4"
+          },
+          {
+            "address": "0x439c5328",
+            "bytes": "200000ba",
+            "insn": "blt #0x439c53b0"
+          },
+          {
+            "address": "0x439c532c",
+            "bytes": "03c010e2",
+            "insn": "ands ip, r0, #3"
+          },
+          {
+            "address": "0x439c5330",
+            "bytes": "2800001a",
+            "insn": "bne #0x439c53d8"
+          },
+          {
+            "address": "0x439c5334",
+            "bytes": "03c011e2",
+            "insn": "ands ip, r1, #3"
+          },
+          {
+            "address": "0x439c5338",
+            "bytes": "3200001a",
+            "insn": "bne #0x439c5408"
+          },
+          {
+            "address": "0x439c533c",
+            "bytes": "082052e2",
+            "insn": "subs r2, r2, #8"
+          }
+        ]
+      },
+      "users": [
+        "0x436eb2e2"
+      ],
+      "spec_word": {
+        "first_entry": "0x000d0046",
+        "high_half": 13,
+        "low_half_id": 70
+      }
+    },
+    "a6300_fw201": {
+      "callback_pointer": "0x43b9199f",
+      "shim": {
+        "entry": "0x43b9199e",
+        "bytes": "10b50c46184611462246",
+        "code": [
+          {
+            "address": "0x43b9199e",
+            "bytes": "10b5",
+            "insn": "push {r4, lr}"
+          },
+          {
+            "address": "0x43b919a0",
+            "bytes": "0c46",
+            "insn": "mov r4, r1"
+          },
+          {
+            "address": "0x43b919a2",
+            "bytes": "1846",
+            "insn": "mov r0, r3"
+          },
+          {
+            "address": "0x43b919a4",
+            "bytes": "1146",
+            "insn": "mov r1, r2"
+          },
+          {
+            "address": "0x43b919a6",
+            "bytes": "2246",
+            "insn": "mov r2, r4"
+          },
+          {
+            "address": "0x43b919a8",
+            "bytes": "bde81040",
+            "insn": "pop.w {r4, lr}"
+          },
+          {
+            "address": "0x43b919ac",
+            "bytes": "b3f034b9",
+            "insn": "b.w #0x43c44c18"
+          }
+        ],
+        "semantics": "memcpy(dst=arg4, src=arg3, len=arg2)"
+      },
+      "veneer": {
+        "address": "0x43c44c18",
+        "bytes": "7847c046d86df8ea7847c046",
+        "arm_branch_at": "0x43c44c1c",
+        "arm_target": "0x43a60384"
+      },
+      "memcpy": {
+        "address": "0x43a60384",
+        "fingerprint": [
+          "0xe92d4001",
+          "0xe2522004",
+          "0xba000020",
+          "0xe210c003"
+        ],
+        "first_instructions": [
+          {
+            "address": "0x43a60384",
+            "bytes": "01402de9",
+            "insn": "push {r0, lr}"
+          },
+          {
+            "address": "0x43a60388",
+            "bytes": "042052e2",
+            "insn": "subs r2, r2, #4"
+          },
+          {
+            "address": "0x43a6038c",
+            "bytes": "200000ba",
+            "insn": "blt #0x43a60414"
+          },
+          {
+            "address": "0x43a60390",
+            "bytes": "03c010e2",
+            "insn": "ands ip, r0, #3"
+          },
+          {
+            "address": "0x43a60394",
+            "bytes": "2800001a",
+            "insn": "bne #0x43a6043c"
+          },
+          {
+            "address": "0x43a60398",
+            "bytes": "03c011e2",
+            "insn": "ands ip, r1, #3"
+          },
+          {
+            "address": "0x43a6039c",
+            "bytes": "3200001a",
+            "insn": "bne #0x43a6046c"
+          },
+          {
+            "address": "0x43a603a0",
+            "bytes": "082052e2",
+            "insn": "subs r2, r2, #8"
+          }
+        ]
+      },
+      "users": [
+        "0x43734bee"
+      ],
+      "spec_word": {
+        "first_entry": "0x000d0046",
+        "high_half": 13,
+        "low_half_id": 70
+      }
+    }
+  },
+  "cross_model": {
+    "shim_bytes_identical": true,
+    "memcpy_fingerprint_identical": true,
+    "shim_users": {
+      "a7s_fw320": [
+        "0x43705702"
+      ],
+      "a6000_fw321": [
+        "0x436eb2e2"
+      ],
+      "a6300_fw201": [
+        "0x43734bee"
+      ]
+    },
+    "every_shim_has_one_user": true,
+    "high_half_of_spec_word": {
+      "a7s_fw320": 13,
+      "a6000_fw321": 13,
+      "a6300_fw201": 13
+    }
+  },
+  "verdicts": {
+    "callback_is_memcpy_adapter": true,
+    "callback_is_data_specific": false,
+    "callback_shared_with_other_services": false,
+    "copy_length_available_per_entry": 13,
+    "direction": "INFERENCIA ALTA: el servicio copia el bloque recibido hacia el buffer del consumidor (dst = 4. argumento del adaptador)",
+    "call_site_visible": false
+  },
+  "limits": [
+    "Solo lectura estatica; sin runtime, camara ni flasheo.",
+    "El cuerpo del servicio que invoca al callback esta en la interfaz importada (slots +0x2b0/+0x2c8/+0x2cc): no se ve la llamada ni sus argumentos.",
+    "Que el tamano sea 13 y no otro se apoya en S347 (unico valor por entrada) y en que el adaptador copia exactamente `len` bytes; no se observa el argumento.",
+    "La implementacion ARM es la `memcpy` clasica por huella de instrucciones, no por simbolo: no hay tabla de simbolos en el blob.",
+    "S51 (A/B/C) no cambia: sigue siendo aberracion de objetivo, no obturador."
+  ]
+}
