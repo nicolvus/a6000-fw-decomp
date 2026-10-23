@@ -1,0 +1,19 @@
+{
+  "module": "SENSER",
+  "traces": 3,
+  "trace_strings": [
+    {"vaddr": "0x43c24f68", "text": "[ACCY][ERR][SENSER] unknown block %04X", "level": "ERR"},
+    {"vaddr": "0x43c24f8f", "text": "[ACCY][DEBUG][SENSER] Cmd %04X, S1 %02X", "level": "DEBUG"},
+    {"vaddr": "0x43c24fb7", "text": "[ACCY][ERR][SENSER] unknown command %04X", "level": "ERR"}
+  ],
+  "prefix_lengths": [20, 21],
+  "prefixes": ["[ACCY][ERR][SENSER]", "[ACCY][DEBUG][SENSER]"],
+  "differential": {
+    "a6000_fw321": {"token_count": 3, "prefixes": ["[ACCY][ERR][SENSER]", "[ACCY][DEBUG][SENSER]"]},
+    "a7s_fw320": {"token_count": 0, "related_strings_count": 20, "prefixes": ["[ADF][ADJ]", "[SYS_SENSER_CA_PUTS]", "<SACC_Debug>"]},
+    "a6300_fw201": {"token_count": 0, "related_strings_count": 20, "prefixes": ["[ADF][ADJ]", "[SYS_SENSER_CA_PUTS]", "<SACC_Debug>"]}
+  },
+  "shutter_line": "NEGATIVO ACOTADO",
+  "logger_dual": true,
+  "global_logger": "0x43902718"
+}
