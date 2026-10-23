@@ -1833,3 +1833,23 @@ A6000. **NO_VERIFICADO:** contenido exacto de la trama y enlace con el silent. S
 [S320](../docs/capture/s320-frame-retry.md), `analysis/s320_frame_retry/frames.json`.
 
 **Siguiente:** S321, tabla de 68 filas `0x43fee5ac` y su relación con los drive modes.
+
+## S321 — matriz real de 69 filas y consumidor por modo (22-10-2026, agente B)
+
+**VERIFICADO (bytes; 138 comprobaciones, 14 tests):** `0x43fee5ac` es la **fila 1** (no la
+base) de la matriz A7S de **69** filas que comienza en `0x43fee598`; corrige el recuento 68
+de S314. Cada fila es `{u32 destino; u8 valores[16]}` y el campo de 4 B es el **destino de la
+escritura**: `0x436f3928` (vtable `0x43fce050`, slot `+0xa0`) hace
+`*(u8*)destino = valores[mapa[modo]]` con el mapa `0x43c9c5b5` (82 B, columnas 0..14, la 15
+sin uso). Los 69 destinos son el byte `data` (registro+4) de 69 de los **98** registros
+contiguos de 6 B `{dev,0,reg,data,0}` del pool `0x44021ec2..0x44022108` (97×`0x81`, 1×`0x83`);
+29 no se tocan. 66 destinos están en L95 y 3 solo en L5. A6000: misma clase (vtable
+`0x43fcc090`, 45 entradas), slot 40 `0x436d6570`, matriz `0x43fe9b74` (59 filas), registros de
+**4 B** `{reg:u16,data,0}` y **sin** mapa. `0x4e` y `0x4f` usan la columna 1, compartida con
+otros 35 códigos: no hay columna silent exclusiva.
+**NO_VERIFICADO:** contenido/productor de la matriz dinámica `0x43e8de00` y semántica física.
+REA: `xrefs(0x43fee5ac) = 0x436f3942` (interior del bucle) y no reconoce la entrada Thumb
+`0x436f3928`. S51 sin cambios. [S321](../docs/capture/s321-matrix-rows.md),
+`analysis/s321_matrix_rows/matrix_rows.json`.
+
+**Siguiente:** S322, decodificar la trama `0x43ad9666`→`0x43ad9628`/`0x436f2554`.
