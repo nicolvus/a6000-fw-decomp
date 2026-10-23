@@ -1,0 +1,752 @@
+{
+  "milestone": "S325",
+  "title": "El mapa de columnas 0x43c9c5b5 se indexa por posicion (34 entradas), no por codigo de modo: 0x4e -> columna 12 y 0x4f -> 13",
+  "base": "0x43541000",
+  "firmware": {
+    "a7s_fw320": {
+      "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+      "size": 11455416
+    },
+    "a6000_fw321": {
+      "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+      "size": 11427236
+    }
+  },
+  "helper": {
+    "function": "0x43ada284",
+    "instructions": [
+      {
+        "address": "0x43ada284",
+        "bytes": "10b5",
+        "insn": "push {r4, lr}"
+      },
+      {
+        "address": "0x43ada286",
+        "bytes": "0020",
+        "insn": "movs r0, #0"
+      },
+      {
+        "address": "0x43ada288",
+        "bytes": "06e0",
+        "insn": "b #0x43ada298"
+      },
+      {
+        "address": "0x43ada28a",
+        "bytes": "52f8044b",
+        "insn": "ldr r4, [r2], #4"
+      },
+      {
+        "address": "0x43ada28e",
+        "bytes": "a142",
+        "insn": "cmp r1, r4"
+      },
+      {
+        "address": "0x43ada290",
+        "bytes": "01d1",
+        "insn": "bne #0x43ada296"
+      },
+      {
+        "address": "0x43ada292",
+        "bytes": "c0b2",
+        "insn": "uxtb r0, r0"
+      },
+      {
+        "address": "0x43ada294",
+        "bytes": "10bd",
+        "insn": "pop {r4, pc}"
+      },
+      {
+        "address": "0x43ada296",
+        "bytes": "0130",
+        "insn": "adds r0, #1"
+      },
+      {
+        "address": "0x43ada298",
+        "bytes": "9842",
+        "insn": "cmp r0, r3"
+      },
+      {
+        "address": "0x43ada29a",
+        "bytes": "f6d3",
+        "insn": "blo #0x43ada28a"
+      },
+      {
+        "address": "0x43ada29c",
+        "bytes": "ff20",
+        "insn": "movs r0, #0xff"
+      },
+      {
+        "address": "0x43ada29e",
+        "bytes": "10bd",
+        "insn": "pop {r4, pc}"
+      }
+    ],
+    "semantics": "busqueda lineal sobre u32[]: devuelve indice (0..r3-1) o 0xff",
+    "returns_index": true
+  },
+  "mode_array": {
+    "addr": "0x43fee370",
+    "count": 34,
+    "codes": [
+      "0x0b",
+      "0x37",
+      "0x35",
+      "0x38",
+      "0x13",
+      "0x1f",
+      "0x05",
+      "0x18",
+      "0x10",
+      "0x1a",
+      "0x07",
+      "0x19",
+      "0x32",
+      "0x34",
+      "0x33",
+      "0x46",
+      "0x01",
+      "0x30",
+      "0x03",
+      "0x31",
+      "0x0a",
+      "0x36",
+      "0x0f",
+      "0x12",
+      "0x3f",
+      "0x44",
+      "0x45",
+      "0x4c",
+      "0x4d",
+      "0x4e",
+      "0x4f",
+      "0x50",
+      "0x51",
+      "0x08"
+    ]
+  },
+  "map": {
+    "addr": "0x43c9c5b5",
+    "entries_used": 34,
+    "values": [
+      0,
+      0,
+      1,
+      1,
+      3,
+      3,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      5,
+      5,
+      5,
+      6,
+      9,
+      10,
+      7,
+      8,
+      11,
+      11,
+      2,
+      9,
+      10,
+      7,
+      8,
+      5,
+      5,
+      12,
+      13,
+      12,
+      13,
+      14
+    ],
+    "all_le_14": true,
+    "tail_48_not_part_of_map": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0
+    ],
+    "tail_is_periodic": true,
+    "tail_period": 10
+  },
+  "call_chain": {
+    "setter": "0x436f3b44",
+    "instructions": [
+      {
+        "address": "0x436f3ba8",
+        "bytes": "0128",
+        "insn": "cmp r0, #1"
+      },
+      {
+        "address": "0x436f3baa",
+        "bytes": "18bf",
+        "insn": "it ne"
+      },
+      {
+        "address": "0x436f3bac",
+        "bytes": "d2f89030",
+        "insn": "ldrne.w r3, [r2, #0x90]"
+      },
+      {
+        "address": "0x436f3bb0",
+        "bytes": "c4f8f433",
+        "insn": "str.w r3, [r4, #0x3f4]"
+      },
+      {
+        "address": "0x436f3bb4",
+        "bytes": "344b",
+        "insn": "ldr r3, [pc, #0xd0]"
+      },
+      {
+        "address": "0x436f3bb6",
+        "bytes": "04f11c05",
+        "insn": "add.w r5, r4, #0x1c"
+      },
+      {
+        "address": "0x436f3bba",
+        "bytes": "2846",
+        "insn": "mov r0, r5"
+      },
+      {
+        "address": "0x436f3bbc",
+        "bytes": "f258",
+        "insn": "ldr r2, [r6, r3]"
+      },
+      {
+        "address": "0x436f3bbe",
+        "bytes": "2223",
+        "insn": "movs r3, #0x22"
+      },
+      {
+        "address": "0x436f3bc0",
+        "bytes": "e6f360fb",
+        "insn": "bl #0x43ada284"
+      },
+      {
+        "address": "0x436f3bc4",
+        "bytes": "ff28",
+        "insn": "cmp r0, #0xff"
+      },
+      {
+        "address": "0x436f3bc6",
+        "bytes": "0146",
+        "insn": "mov r1, r0"
+      },
+      {
+        "address": "0x436f3bc8",
+        "bytes": "84f8b801",
+        "insn": "strb.w r0, [r4, #0x1b8]"
+      },
+      {
+        "address": "0x436f3bcc",
+        "bytes": "54d0",
+        "insn": "beq #0x436f3c78"
+      },
+      {
+        "address": "0x436f3bce",
+        "bytes": "2368",
+        "insn": "ldr r3, [r4]"
+      },
+      {
+        "address": "0x436f3bd0",
+        "bytes": "2046",
+        "insn": "mov r0, r4"
+      },
+      {
+        "address": "0x436f3bd2",
+        "bytes": "d3f8a030",
+        "insn": "ldr.w r3, [r3, #0xa0]"
+      },
+      {
+        "address": "0x436f3bd6",
+        "bytes": "9847",
+        "insn": "blx r3"
+      }
+    ],
+    "key_looked_up": 68,
+    "count_register": 34,
+    "index_stored_at": "+0x1b8",
+    "index_passed_as_r1_to_slot40": true
+  },
+  "accessor": {
+    "function": "0x436f3928",
+    "map_load": "ldrb r1,[r2,r1] con r2=0x43c9c5b5",
+    "column_source": "r1 = posicion (0..33)"
+  },
+  "mapping": [
+    {
+      "position": 0,
+      "code": "0x0b",
+      "column": 0
+    },
+    {
+      "position": 1,
+      "code": "0x37",
+      "column": 0
+    },
+    {
+      "position": 2,
+      "code": "0x35",
+      "column": 1
+    },
+    {
+      "position": 3,
+      "code": "0x38",
+      "column": 1
+    },
+    {
+      "position": 4,
+      "code": "0x13",
+      "column": 3
+    },
+    {
+      "position": 5,
+      "code": "0x1f",
+      "column": 3
+    },
+    {
+      "position": 6,
+      "code": "0x05",
+      "column": 4
+    },
+    {
+      "position": 7,
+      "code": "0x18",
+      "column": 4
+    },
+    {
+      "position": 8,
+      "code": "0x10",
+      "column": 4
+    },
+    {
+      "position": 9,
+      "code": "0x1a",
+      "column": 4
+    },
+    {
+      "position": 10,
+      "code": "0x07",
+      "column": 4
+    },
+    {
+      "position": 11,
+      "code": "0x19",
+      "column": 4
+    },
+    {
+      "position": 12,
+      "code": "0x32",
+      "column": 5
+    },
+    {
+      "position": 13,
+      "code": "0x34",
+      "column": 5
+    },
+    {
+      "position": 14,
+      "code": "0x33",
+      "column": 5
+    },
+    {
+      "position": 15,
+      "code": "0x46",
+      "column": 6
+    },
+    {
+      "position": 16,
+      "code": "0x01",
+      "column": 9
+    },
+    {
+      "position": 17,
+      "code": "0x30",
+      "column": 10
+    },
+    {
+      "position": 18,
+      "code": "0x03",
+      "column": 7
+    },
+    {
+      "position": 19,
+      "code": "0x31",
+      "column": 8
+    },
+    {
+      "position": 20,
+      "code": "0x0a",
+      "column": 11
+    },
+    {
+      "position": 21,
+      "code": "0x36",
+      "column": 11
+    },
+    {
+      "position": 22,
+      "code": "0x0f",
+      "column": 2
+    },
+    {
+      "position": 23,
+      "code": "0x12",
+      "column": 9
+    },
+    {
+      "position": 24,
+      "code": "0x3f",
+      "column": 10
+    },
+    {
+      "position": 25,
+      "code": "0x44",
+      "column": 7
+    },
+    {
+      "position": 26,
+      "code": "0x45",
+      "column": 8
+    },
+    {
+      "position": 27,
+      "code": "0x4c",
+      "column": 5
+    },
+    {
+      "position": 28,
+      "code": "0x4d",
+      "column": 5
+    },
+    {
+      "position": 29,
+      "code": "0x4e",
+      "column": 12
+    },
+    {
+      "position": 30,
+      "code": "0x4f",
+      "column": 13
+    },
+    {
+      "position": 31,
+      "code": "0x50",
+      "column": 12
+    },
+    {
+      "position": 32,
+      "code": "0x51",
+      "column": 13
+    },
+    {
+      "position": 33,
+      "code": "0x08",
+      "column": 14
+    }
+  ],
+  "silent": {
+    "0x4c": {
+      "code": "0x4c",
+      "position": 27,
+      "column": 5
+    },
+    "0x4d": {
+      "code": "0x4d",
+      "position": 28,
+      "column": 5
+    },
+    "0x4e": {
+      "code": "0x4e",
+      "position": 29,
+      "column": 12
+    },
+    "0x4f": {
+      "code": "0x4f",
+      "position": 30,
+      "column": 13
+    },
+    "0x50": {
+      "code": "0x50",
+      "position": 31,
+      "column": 12
+    },
+    "0x51": {
+      "code": "0x51",
+      "position": 32,
+      "column": 13
+    }
+  },
+  "diffs_vs_mechanical": {
+    "0x4e_vs_0x4c": {
+      "count": 14,
+      "regs": [
+        "0x01",
+        "0x08",
+        "0x09",
+        "0x0a",
+        "0x0b",
+        "0x0c",
+        "0x11",
+        "0x1f",
+        "0x28",
+        "0x3c",
+        "0x50",
+        "0x51",
+        "0x55",
+        "0x9a"
+      ],
+      "detail": [
+        {
+          "row": 1,
+          "reg": 1,
+          "a": 0,
+          "b": 1
+        },
+        {
+          "row": 2,
+          "reg": 8,
+          "a": 0,
+          "b": 146
+        },
+        {
+          "row": 3,
+          "reg": 9,
+          "a": 0,
+          "b": 2
+        },
+        {
+          "row": 4,
+          "reg": 10,
+          "a": 0,
+          "b": 22
+        },
+        {
+          "row": 5,
+          "reg": 11,
+          "a": 0,
+          "b": 3
+        },
+        {
+          "row": 6,
+          "reg": 12,
+          "a": 100,
+          "b": 10
+        },
+        {
+          "row": 8,
+          "reg": 17,
+          "a": 3,
+          "b": 0
+        },
+        {
+          "row": 14,
+          "reg": 31,
+          "a": 12,
+          "b": 8
+        },
+        {
+          "row": 15,
+          "reg": 40,
+          "a": 1,
+          "b": 41
+        },
+        {
+          "row": 32,
+          "reg": 60,
+          "a": 40,
+          "b": 27
+        },
+        {
+          "row": 44,
+          "reg": 80,
+          "a": 28,
+          "b": 120
+        },
+        {
+          "row": 45,
+          "reg": 81,
+          "a": 2,
+          "b": 3
+        },
+        {
+          "row": 47,
+          "reg": 85,
+          "a": 208,
+          "b": 232
+        },
+        {
+          "row": 63,
+          "reg": 154,
+          "a": 170,
+          "b": 133
+        }
+      ]
+    },
+    "0x4f_vs_0x4d": {
+      "count": 11,
+      "regs": [
+        "0x08",
+        "0x0a",
+        "0x0c",
+        "0x11",
+        "0x1f",
+        "0x28",
+        "0x3c",
+        "0x50",
+        "0x51",
+        "0x55",
+        "0x9a"
+      ],
+      "detail": [
+        {
+          "row": 2,
+          "reg": 8,
+          "a": 0,
+          "b": 146
+        },
+        {
+          "row": 4,
+          "reg": 10,
+          "a": 168,
+          "b": 22
+        },
+        {
+          "row": 6,
+          "reg": 12,
+          "a": 100,
+          "b": 10
+        },
+        {
+          "row": 8,
+          "reg": 17,
+          "a": 3,
+          "b": 0
+        },
+        {
+          "row": 14,
+          "reg": 31,
+          "a": 12,
+          "b": 8
+        },
+        {
+          "row": 15,
+          "reg": 40,
+          "a": 1,
+          "b": 41
+        },
+        {
+          "row": 32,
+          "reg": 60,
+          "a": 40,
+          "b": 27
+        },
+        {
+          "row": 44,
+          "reg": 80,
+          "a": 28,
+          "b": 120
+        },
+        {
+          "row": 45,
+          "reg": 81,
+          "a": 2,
+          "b": 3
+        },
+        {
+          "row": 47,
+          "reg": 85,
+          "a": 208,
+          "b": 232
+        },
+        {
+          "row": 63,
+          "reg": 154,
+          "a": 170,
+          "b": 133
+        }
+      ]
+    },
+    "0x4e_vs_0x4f": {
+      "count": 4
+    }
+  },
+  "pairs_share_column": {
+    "col12_positions": [
+      29,
+      31
+    ],
+    "col13_positions": [
+      30,
+      32
+    ]
+  },
+  "corrections": [
+    {
+      "supersedes": "S321 §4 y S302 §3 (mapa modo->columna)",
+      "correct": "el mapa es posicion->columna con 34 entradas; 0x4e/0x4f usan las columnas 12/13, no la 1"
+    },
+    {
+      "supersedes": "S321 (no hay columna que distinga silent)",
+      "correct": "las columnas 12/13 son distintas de la 5 de 0x4c/0x4d; la matriz SI distingue el modo silent (14 y 11 registros)"
+    },
+    {
+      "kept": "S321 (recuento 69 filas, destino de escritura, pool de 98 registros, A6000 sin mapa) sigue vigente"
+    }
+  ],
+  "scope_limit": [
+    "Solo lectura estatica; sin runtime, camara ni flasheo.",
+    "No se atribuye significado fisico a los registros ni a sus valores; solo se constata que difieren.",
+    "No se verifica que la ruta del setter sea la unica que aplica la matriz: hay otros llamadores del slot 40 no atribuidos.",
+    "La tabla de 34 columnas de S202/S204 sigue NO_VERIFICADA.",
+    "S51 (A/B/C) no cambia."
+  ]
+}
