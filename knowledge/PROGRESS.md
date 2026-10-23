@@ -2450,3 +2450,14 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 - Artefactos: `docs/capture/s606-nsx_vot.md`, `analysis/s606_nsx_vot/`, `tests/test_s606_nsx_vot.py` (pendiente).
 - Verificación: censos exactos, commit Conventional + push origin HEAD:main.
 - Siguiente: S607 `[CAM_CMD]` (6 trazas).
+
+## Investigación S607 — `[CAM_CMD]` (agente E, Nemotron 3 Ultra Free)
+
+- Objetivo: decodificar el módulo de traza `[CAM_CMD]` (6 trazas) exclusivo de la A6000 fw3.21.
+- REA Evidence: strings `[CAM_CMD]: ` en `0x43cbed10`–`0x43cbee20` (6 cadenas).
+- Resultado: 6 trazas confirmadas; funciones de máquina de estados Capcon (s_path_selector, s_mode_sequencer, s_request); logger dual (nuevo `[CAM_CMD]: ` + viejo global `0x43902718`); prefijo fijo 10 B; typo "Modlue".
+- Diferencial: A6000 fw3.21=6 `[CAM_CMD]` tokens; A7S fw3.20=0, A6300 fw2.01=0 (mismo núcleo sin prefijo).
+- Línea del obturador: NEGATIVO ACOTADO (0 coincidencias).
+- Artefactos: `docs/capture/s607-cam_cmd.md`, `analysis/s607_cam_cmd/`, `tests/test_s607_cam_cmd.py` (pendiente).
+- Verificación: censos exactos, commit Conventional + push origin HEAD:main.
+- Siguiente: S608 `[MOUNT_INFO]` (6 trazas).

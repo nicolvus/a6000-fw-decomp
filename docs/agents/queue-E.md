@@ -9,7 +9,7 @@ Tema: decodificación de módulos exclusivos de la A6000 fw3.21 (0 en A7S y A630
 - DONE S604 Decodificar `[LENS_YC]` y `[IMAGING_RAW]`. → S604 (21+20 trazas, Camera::Lens+ODL / RawMemMgr, logging rewrite)
 - DONE S605 Decodificar `[JPEG]` (17 trazas): exclusiva A6000. → S605
 - DONE S606 Decodificar `[NSX_VOT]` (7 trazas): exclusiva A6000. → S606
-- TODO S607 Decodificar `[CAM_CMD]` (6 trazas): exclusiva A6000.
+- DONE S607 Decodificar `[CAM_CMD]` (6 trazas): exclusiva A6000. → S607
 - TODO S608 Decodificar `[MOUNT_INFO]` (6 trazas): exclusiva A6000.
 - TODO S609 Decodificar `[DIST]` (5 trazas): exclusiva A6000.
 - TODO S610 Decodificar `[HOUSING]` (5 trazas): exclusiva A6000.
