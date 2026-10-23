@@ -1,9 +1,534 @@
 {
   "generated_from": "Documentos versionados en docs/capture/ y analysis/",
-  "latest": "S180",
-  "documented_count": 162,
-  "latest_number": 180,
+  "latest": "S617",
+  "documented_count": 267,
+  "latest_number": 617,
   "sessions": [
+    {
+      "id": "S617",
+      "title": "S617 — `[CAMERA_DEVICE][DET_DIR]`: módulo de timers de dispositivo de cámara exclusivo de la A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s617-camera_device.md"
+    },
+    {
+      "id": "S616",
+      "title": "S616 — `[LENS_PDR]`: módulo de comunicación PDR de lente exclusivo de la A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s616-lens_pdr.md"
+    },
+    {
+      "id": "S615",
+      "title": "S615 — `[CAMERA_IS][EIS]`: submódulo de estabilización electrónica de imagen (EIS) exclusivo de la A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s615-eis.md"
+    },
+    {
+      "id": "S614",
+      "title": "S614 — `[ZPD]`: módulo ZPD (Phase Detection AF) exclusivo de la A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s614-zpd.md"
+    },
+    {
+      "id": "S613",
+      "title": "S613 — `[MOUNT_WARNING]`: módulo de advertencias de montura exclusivo de la A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s613-mount_warning.md"
+    },
+    {
+      "id": "S612",
+      "title": "S612 — `[CAMERA_IS][MOUNT]`: submódulo de montura IS exclusivo de la A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s612-mount.md"
+    },
+    {
+      "id": "S611",
+      "title": "S611 — `[IMAGING_RSRC]`: módulo de recursos de imagen (GOLFSHOT) exclusivo de la A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s611-imaging_rsrc.md"
+    },
+    {
+      "id": "S610",
+      "title": "S610 — `[ACCY][INFO][HOUSING]`: módulo de carcasa/accesorio acuático exclusivo de la A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s610-housing.md"
+    },
+    {
+      "id": "S609",
+      "title": "S609 — `[CAMERA_IS][DIST]`: submódulo de corrección de distorsión exclusivo de la A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s609-dist.md"
+    },
+    {
+      "id": "S608",
+      "title": "S608 — `[MOUNT_INFO]`: módulo de traza de montura/bootloader exclusivo de la A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s608-mount_info.md"
+    },
+    {
+      "id": "S607",
+      "title": "S607 — `[CAM_CMD]`: módulo de traza de comandos de cámara exclusivo de la A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s607-cam_cmd.md"
+    },
+    {
+      "id": "S606",
+      "title": "S606 — `[NSX_VOT]`: módulo de traza timer/alarma exclusivo de la A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s606-nsx_vot.md"
+    },
+    {
+      "id": "S605",
+      "title": "S605 — `[JPEG]`: módulo de traza JPEG exclusivo de la A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s605-jpeg.md"
+    },
+    {
+      "id": "S604",
+      "title": "S604 — `[LENS_YC]` y `[IMAGING_RAW]`: dos módulos exclusivos de traza de la A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s604-lens-yc-imaging-raw.md"
+    },
+    {
+      "id": "S603",
+      "title": "S603 — `[CAMERA_DSP_APL]`: el driver APL de cámara (DSP) — etiqueta nueva de la fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s603-camera-dsp-apl.md"
+    },
+    {
+      "id": "S602",
+      "title": "S602 — módulo `[REMOTE]` (bajo `[ACCY]`) (32 trazas): exclusivo de A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s602-remote.md"
+    },
+    {
+      "id": "S601",
+      "title": "S601 — módulo `[CAM_SCALAR]` (34 trazas): exclusivo de A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s601-cam-scalar.md"
+    },
+    {
+      "id": "S600",
+      "title": "S600 — módulo `[CAM_FUNC_MGR]` (43 trazas): exclusivo de A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s600-cam-func-mgr.md"
+    },
+    {
+      "id": "S515",
+      "title": "S515 — subetiqueta `[AUDPINEDTR]` (dataflow infra sender, línea general)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s515-audpinedtr.md"
+    },
+    {
+      "id": "S514",
+      "title": "S514 — subetiqueta `[BT]` (tracking background, línea general)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s514-bt.md"
+    },
+    {
+      "id": "S513",
+      "title": "S513 — módulo `[CONFIG]` (volcado de configuración, línea general)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s513-config.md"
+    },
+    {
+      "id": "S512",
+      "title": "S512 — módulo `[ENCOUCSTAT]` (estado del codificador (couc), línea general)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s512-encoucstat.md"
+    },
+    {
+      "id": "S511",
+      "title": "S511 — subetiqueta `[INT_ERROR]` (errores internos del SDF, línea general)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s511-int-error.md"
+    },
+    {
+      "id": "S510",
+      "title": "S510 — subetiqueta `[RE]` (remote engine, línea general)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s510-re.md"
+    },
+    {
+      "id": "S509",
+      "title": "S509 — módulo `[WSX]` (BSFS / sistema de archivos binario, línea general)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s509-wsx.md"
+    },
+    {
+      "id": "S508",
+      "title": "S508 — módulo `[GOLFSHOT]` (detección de golpe de golf, línea general)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s508-golfshot.md"
+    },
+    {
+      "id": "S507",
+      "title": "S507 — módulo `[VIDENCSTAT]` (estado del codificador de vídeo, línea general)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s507-videncstat.md"
+    },
+    {
+      "id": "S506",
+      "title": "S506 — módulo `[TD]` (codec transcode/decode, línea general)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s506-td.md"
+    },
+    {
+      "id": "S505",
+      "title": "S505 — módulo `[VEF]` (efectos/mapas del visor, línea general)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s505-vef.md"
+    },
+    {
+      "id": "S504",
+      "title": "S504 — módulo `[STABILIZER]` (estabilización, línea general)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s504-stabilizer.md"
+    },
+    {
+      "id": "S503",
+      "title": "S503 — módulo `[ZPD]` (zero point detection / AF, línea general)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s503-zpd.md"
+    },
+    {
+      "id": "S502",
+      "title": "S502 — módulo `[EIS]` (estabilización electrónica, línea general)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s502-eis.md"
+    },
+    {
+      "id": "S501",
+      "title": "S501 — módulo `[STK]` (saliency/tracking, línea general)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s501-stk.md"
+    },
+    {
+      "id": "S500",
+      "title": "S500 — módulo `[VDF]` (línea general, visor/display)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s500-vdf.md"
+    },
+    {
+      "id": "S402",
+      "title": "S402 — Mapeo de diferencias A7S vs A6000 a pruebas físicas (P1–P8)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s402-physical-test-mapping.md"
+    },
+    {
+      "id": "S401",
+      "title": "S401 — Ruta de control SilentShutter en A7S fw3.20 vs A6000 fw3.21: configuración → LIRO → imager",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s401-a7s-silent-control-path.md"
+    },
+    {
+      "id": "S400",
+      "title": "S400 — triaje de `docs/OPEN-QUESTIONS.md` (22-10-2026)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s400_open_questions_triage/README.md"
+    },
+    {
+      "id": "S342",
+      "title": "S342 — `0x43fef404` sí tiene consumidores: es la tabla de ids de `Camera::Lens::ODL`",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s342-fef404-consumers.md"
+    },
+    {
+      "id": "S341",
+      "title": "S341 — Síntesis del carril B: la cadena modo→registro y sus correcciones (S314–S340)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s341-synthesis-b2.md"
+    },
+    {
+      "id": "S340",
+      "title": "S340 — `w0` es un selector de registro MMIO (carril B)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s340-w0-selector.md"
+    },
+    {
+      "id": "S339",
+      "title": "S339 — Qué se puede afirmar de `0xf292b000..8` (carril B)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s339-block-f292b.md"
+    },
+    {
+      "id": "S338",
+      "title": "S338 — El bloque de destino es DFE/CISIF (carril B)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s338-block-identity.md"
+    },
+    {
+      "id": "S337",
+      "title": "S337 — `0x43fef404` no es una tabla de tiempos (carril B)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s337-fef404-table.md"
+    },
+    {
+      "id": "S336",
+      "title": "S336 — Mapa completo de consumidores de T1/T2/T3 (carril B)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s336-table-consumers.md"
+    },
+    {
+      "id": "S335",
+      "title": "S335 — La capa de máscaras termina en MMIO (carril B)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s335-mmio-layer.md"
+    },
+    {
+      "id": "S334",
+      "title": "S334 — Los 12 pares se colapsan en máscaras `u16` (carril B)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s334-pair-dataflow.md"
+    },
+    {
+      "id": "S333",
+      "title": "S333 — Vocabulario de modos y columnas de matriz: A6000 vs A7S (carril B)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s333-mode-vocabulary.md"
+    },
+    {
+      "id": "S332",
+      "title": "S332 — El mecanismo por modo del A6000 frente al A7S (carril B)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s332-a6000-tables.md"
+    },
+    {
+      "id": "S331",
+      "title": "S331 — La fila de T1/T2/T3 es la posición del modo (corrige S317/S327/S330) (carril B)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s331-consumer-signature.md"
+    },
+    {
+      "id": "S330",
+      "title": "S330 — Instancias del constructor `0x436f3fc0` (carril B)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s330-ctor-instances.md"
+    },
+    {
+      "id": "S329",
+      "title": "S329 — ¿Hay una tabla de tiempos por modo en el A7S? (carril B)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s329-mode-timing-tables.md"
+    },
+    {
+      "id": "S328",
+      "title": "S328 — La segunda matriz no tiene productor estático y su bucle no ejecuta",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s328-second-matrix.md"
+    },
+    {
+      "id": "S327",
+      "title": "S327 — `obj+0x2b4` es el índice del constructor paramétrico, no una posición de modo",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s327-row-index-writer.md"
+    },
+    {
+      "id": "S326",
+      "title": "S326 — La tabla de «34 columnas» de S202/S204 es T2 (34 filas): huella de `0x4e`/`0x4f`",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s326-t2-fingerprint.md"
+    },
+    {
+      "id": "S325",
+      "title": "S325 — El mapa de columnas se indexa por **posición**, no por código de modo",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s325-position-map.md"
+    },
+    {
+      "id": "S324",
+      "title": "S324 — Auditoría de la contradicción «34 columnas» (S202/S204) vs «15 columnas» (S302/S321)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s324-columns-audit.md"
+    },
+    {
+      "id": "S322",
+      "title": "S322 — trama A7S del formateador `0x43ad9666`",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s322-frame-format.md"
+    },
+    {
+      "id": "S321",
+      "title": "S321 — la «tabla de 68 filas» de `0x43fee5ac` es la fila 1 de la matriz de 69 filas de `0x43fee598`",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s321-matrix-rows.md"
+    },
+    {
+      "id": "S320",
+      "title": "S320 — Modo 2 no cambia la trama: reintenta el mismo formateador (carril B)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s320-frame-retry.md"
+    },
+    {
+      "id": "S319",
+      "title": "S319 — Frontera estática del `ctx 0x43ea70a0` (carril B)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s319-ctx-boundary.md"
+    },
+    {
+      "id": "S318",
+      "title": "S318 — Constructor paramétrico `0x436f3fc0`, tabla `0x43bbe1cc` y mapeo `0x43ad9162` (carril B)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s318-ctor-mode.md"
+    },
+    {
+      "id": "S317",
+      "title": "S317 — `obj+0x2b4` indexa tres tablas de `0x1c` B por modo (carril B)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s317-mode-tables.md"
+    },
+    {
+      "id": "S316",
+      "title": "S316 — Clase dueña de las listas: constructor, vtable y slots `+0x38`/`+0x44` (carril B)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s316-class-vtable.md"
+    },
+    {
+      "id": "S315",
+      "title": "S315 — Tres listas de registros aplicadas por `0x436f44c4` (carril B)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s315-register-lists.md"
+    },
+    {
+      "id": "S314",
+      "title": "S314 — Procedencia real del selector silent y tabla `0x43fee3f8` (carril B)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s314-selector-object.md"
+    },
+    {
+      "id": "S313",
+      "title": "S313 — Síntesis del carril B: qué distingue el silent shutter de la A7S (estado actual)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s313-synthesis-carril-b.md"
+    },
+    {
+      "id": "S312",
+      "title": "S312 — Todos los consumidores del cluster A7S `+0xae`/`+0xde..+0xea` son código A7S",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s312-cluster-consumers.md"
+    },
+    {
+      "id": "S311",
+      "title": "S311 — La ruta de configuración de la A6000 también es código propio",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s311-a6000-config.md"
+    },
+    {
+      "id": "S310",
+      "title": "S310 — `0x43ad9704` es un thunk de llamada virtual, no un constructor de mensajes",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s310-vtable-thunk.md"
+    },
+    {
+      "id": "S309",
+      "title": "S309 — La cadena silent/config de la A7S no aparece en la A6000",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s309-chain-presence.md"
+    },
+    {
+      "id": "S308",
+      "title": "S308 — A dónde va el modo Silent y cómo entra el bloque de tiempos",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s308-silent-flow.md"
+    },
+    {
+      "id": "S307",
+      "title": "S307 — Las escrituras A7S de `+0xde` y `+0xe6..+0xea` están en código que la A6000 no tiene",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s307-a7s-only-writers.md"
+    },
+    {
+      "id": "S305",
+      "title": "S305 — Análisis de `FUN_43858390` (caller dumper) y búsqueda literal pool `0x4401f080`",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s305-fun43858390-literal-pool.md"
+    },
+    {
+      "id": "S304",
+      "title": "S304 — REA/Ghidra: callers de `FUN_43858338` (dumper gates) y código que carga GOT `0x4401f080`",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s304-rea-dumper-callers.md"
+    },
+    {
+      "id": "S303",
+      "title": "S303 — Árbol de referencias de la tabla `0x43ff3200` y callers del dumper de gates",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s303-ref-tree-43ff3200.md"
+    },
+    {
+      "id": "S302",
+      "title": "S302 — Tablas de drive mode / exposición: A7S (IMX235) vs A6000 (IMX210) campo a campo",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s302-drive-mode-exposure-tables.md"
+    },
+    {
+      "id": "S301",
+      "title": "S301 — mismo barrido en la A7S fw3.20 y diferencias con la A6000",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s301-a7s-state-xref-sweep.md"
+    },
+    {
+      "id": "S300",
+      "title": "S300 — barrido único de xrefs al objeto de estado del IMX210 (A6000 fw3.21)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s300-state-xref-sweep.md"
+    },
+    {
+      "id": "S208",
+      "title": "S208 — Transporte P2S y formato de trama: A6000 (IMX210) vs A7S (IMX235)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s208-p2s-transport.md"
+    },
+    {
+      "id": "S207",
+      "title": "S207 — Fin de integración / segunda cortina electrónica: A7S (IMX235) vs IMX210 (A6000)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s207-imx235-end-of-integration.md"
+    },
+    {
+      "id": "S206",
+      "title": "S206 — Tabla completa de registros: IMX210 (A6000 fw3.21) vs IMX235 (A7S fw3.20)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s206-imx210-imx235-full-table.md"
+    },
+    {
+      "id": "S205",
+      "title": "S205 — Escritor de `S[0]` y origen del bloque de modo IMX210 (G+0x224)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s205-imager-s0-writer.md"
+    },
+    {
+      "id": "S204",
+      "title": "S204 — Clasificación final: A7S (IMX235) vs A6000 (IMX210) — obturador electrónico",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s204-clasificacion-final.md"
+    },
+    {
+      "id": "S202",
+      "title": "S202 — Tiempos de lectura y exposición: IMX210 (A6000 fw3.21) vs IMX235 (A7S fw3.20)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s202-imx210-imx235-timing.md"
+    },
+    {
+      "id": "S201",
+      "title": "S201 — Comparación de registros por subsistema: IMX210 (A6000 fw3.21) vs IMX235 (A7S fw3.20)",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s201-imx210-imx235-registers.md"
+    },
+    {
+      "id": "S200",
+      "title": "S200 — el módulo `[VDF]` (243 trazas): 81 mensajes nuevos en la A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s200-vdf.md"
+    },
+    {
+      "id": "S199",
+      "title": "S199 — el módulo `[ERROR]` (213 trazas): etiqueta nueva de la fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s199-error.md"
+    },
+    {
+      "id": "S198",
+      "title": "S198 — el módulo `[ERR]` (288 trazas): 43 mensajes nuevos en la A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s198-err.md"
+    },
+    {
+      "id": "S197",
+      "title": "S197 — el módulo `[SDF]` (477 trazas): 11 mensajes extra en el A6300",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s197-sdf.md"
+    },
+    {
+      "id": "S196",
+      "title": "S196 — el módulo `[VEF]` (149 trazas): 8 mensajes nuevos en la A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s196-vef.md"
+    },
+    {
+      "id": "S195",
+      "title": "S195 — el módulo `[ENCOUCSTAT]` (49 trazas): 21 mensajes extra en el A6300",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s195-encoucstat.md"
+    },
+    {
+      "id": "S194",
+      "title": "S194 — el módulo `[PNL]` (41 trazas): 4 mensajes exclusivos por firmware",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s194-pnl.md"
+    },
+    {
+      "id": "S193",
+      "title": "S193 — el módulo `[INT_ERROR]` (53 trazas): etiqueta nueva de la fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s193-int-error.md"
+    },
+    {
+      "id": "S192",
+      "title": "S192 — el módulo `[STK]` (76 trazas): plataforma antigua, ausente en el A6300",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s192-stk.md"
+    },
+    {
+      "id": "S191",
+      "title": "S191 — el módulo `[GOLFSHOT]` (65 trazas): sub-etiqueta con prefijo adicional en la A6000",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s191-golfshot.md"
+    },
+    {
+      "id": "S190",
+      "title": "S190 — el módulo `[WSX]` (59 trazas): etiqueta nueva de la fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s190-wsx.md"
+    },
+    {
+      "id": "S189",
+      "title": "S189 — el módulo `[DEBUG]` (67 trazas): 32 mensajes nuevos en la A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s189-debug.md"
+    },
+    {
+      "id": "S188",
+      "title": "S188 — el módulo `[RC]` (69 trazas): etiqueta nueva de la fw3.21, con 2 mensajes extra en el A6300",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s188-rc.md"
+    },
+    {
+      "id": "S187",
+      "title": "S187 — el módulo `[TD]` (73 trazas): etiqueta nueva de la fw3.21, con 11 mensajes extra en el A6300",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s187-td.md"
+    },
+    {
+      "id": "S186",
+      "title": "S186 — el módulo `[BL]` (154 trazas): contenido distinto en cada firmware",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s186-bl.md"
+    },
+    {
+      "id": "S185",
+      "title": "S185 — el módulo `[INFO]` (58 trazas): contenido propio de la A6000 fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s185-info.md"
+    },
+    {
+      "id": "S184",
+      "title": "S184 — el módulo `[RE]` (54 trazas): etiqueta nueva de la fw3.21, con un mensaje exclusivo",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s184-re.md"
+    },
+    {
+      "id": "S183",
+      "title": "S183 — el módulo `[CONFIG]` (47 trazas): etiqueta nueva de la fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s183-config.md"
+    },
+    {
+      "id": "S182",
+      "title": "S182 — el módulo `[BT]` (44 trazas): etiqueta nueva de la fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s182-bt.md"
+    },
+    {
+      "id": "S181",
+      "title": "S181 — el módulo `[FACE]` (70 trazas): etiqueta nueva de la fw3.21",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s181-face.md"
+    },
     {
       "id": "S180",
       "title": "S180 — `[REMOTE]`: el mando a distancia (sub-bloque de `[ACCY]`) — etiqueta nueva de la fw3.21",
@@ -816,10 +1341,10 @@
     }
   ],
   "module_coverage": {
-    "covered": 96,
+    "covered": 125,
     "total": 372,
-    "pending": 276,
-    "percent": "25.81",
+    "pending": 247,
+    "percent": "33.60",
     "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s178_census/census.md"
   },
   "exceptions": {

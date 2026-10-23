@@ -14,7 +14,7 @@ Proyecto de ingeniería inversa del firmware **Sony A6000 (fw 3.21)**, con foco 
 
 ## Avance total
 
-- **Línea general de módulos:** **25.81%** (**96/372**) cubiertos — **58** con hito propio y **38** como sub-etiqueta de un módulo ya decodificado; **276 pendientes reales**.
+- **Línea general de módulos:** **33.60%** (**125/372**) cubiertos — **86** con hito propio y **39** como sub-etiqueta de un módulo ya decodificado; **247 pendientes reales** (recontado tras S179–S200, S500–S515 y S600–S617).
 - **Módulos “contenido nuevo” (S130):** **100%** (**17/17**) cerrados.
 - **Obturador completamente electrónico:** [S51](docs/capture/s51-decision.md) mantiene la decisión de no parchear; [P1–P8](docs/capture/physical-test-plan.md) siguen sin ejecutarse.
 
