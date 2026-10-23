@@ -2530,3 +2530,14 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 - Artefactos: `docs/capture/s611-imaging_rsrc.md`, `analysis/s611_imaging_rsrc/`, `tests/test_s611_imaging_rsrc.py` (pendiente).
 - Verificación: censos exactos, commit Conventional + push origin HEAD:main.
 - Siguiente: S612 `[MOUNT]` (5 trazas).
+
+## Investigación S612 — `[CAMERA_IS][MOUNT]` (agente E, Nemotron 3 Ultra Free)
+
+- Objetivo: decodificar el submódulo de traza `[CAMERA_IS][MOUNT]` (5 trazas) exclusivo de la A6000 fw3.21.
+- REA Evidence: strings `[CAMERA_IS][MOUNT]: [Error]` en `0x43c98dfe`–`0x43c9a47e` (5 cadenas, triple prefijo).
+- Resultado: 5 trazas confirmadas con prefijo `[CAMERA_IS][MOUNT]: [Error] ` (25 B); callbacks `IS_LensMountExpStartCB` (con checkData), `IS_LensMountPanoramaGyroCB`/`IS_LensMountPanoramaGyro` (con checkData); logger dual (nuevo `[CAMERA_IS][MOUNT]: [Error] ` + viejo global `0x43902718`); prefijo fijo 25 B.
+- Diferencial: A6000 fw3.21=5 `[CAMERA_IS][MOUNT]` tokens; A7S/A6300=0 (sin CAMERA_IS/MOUNT; solo BL mount strings sueltas).
+- Línea del obturador: NEGATIVO ACOTADO (0 coincidencias).
+- Artefactos: `docs/capture/s612-mount.md`, `analysis/s612_mount/`, `tests/test_s612_mount.py` (pendiente).
+- Verificación: censos exactos, commit Conventional + push origin HEAD:main.
+- Siguiente: S613 `[MOUNT_WARNING]` (5 trazas).
