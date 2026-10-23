@@ -1,5 +1,13 @@
 # Estado actual — léeme primero
 
+## S342 — `0x43fef404` tiene dos consumidores: ids de `Camera::Lens::ODL` (22-10-2026)
+
+- **Corrige el alcance de S337**: «0 referencias» era cierto solo para literales absolutos. Con bases PIC (`ldr`+`add pc`) hay **dos** consumidores: `0x437056f8`/`0x437056fc` (función `0x437056ec`) y `0x43705754`/`0x43705756` (función `0x43705748`), ambos con base `0x43fef404`.
+- La tabla (69 × `{u16 id, u16 0x000d}`) va precedida de un **array de 256 punteros** `0x43fef004..0x43fef404` (169 de ellos el run `0x43f9c622` que midió S337) y seguida, tras 8 B, de un **array de 69 punteros** `0x43fef520` (slot GOT `0x44028c78`); todo apunta a `.bss` (`0x43d58231..0x43fb2ba0`).
+- Los dos consumidores iteran **69** veces (`cmp r7,#0x45`; `cmp.w r5,#0x114` con paso 4) y se invocan desde el init de **`Camera::Lens::ODL`** (`bl` en `0x4373d0b4`/`0x4373d2f2`; cadenas `Camera::Lens::ODL…`, `Initialize(UPM_BOOT_FACTOR*)`).
+- Cross-model: **69** (A7S) / **47** (A6000) / **69** (A6300); ids A6000 = subconjunto estricto (faltan `0x4f..0x64`), A6300 = lista A7S. El bucle siempre coincide con el número de entradas. Semántica de `0x000d` y de los ids: NO_VERIFICADO.
+- **No** es tabla de tiempos y no se indexa por modo (los 69 registros de la matriz son `0x81`/`0x83`): S329 se mantiene. Tests: `tests/test_s342_fef404_consumers.py` (11) y 60 comprobaciones.
+
 ## S341 — síntesis del carril B con 27 cifras verificadas (22-10-2026)
 
 - Cadena completa: `modo → posición → matriz (69/59 filas) + T1/T2/T3 (w0 selector, +4/+5/+6 selectores, +0x14 descriptor, +0x18 máscara) → pares (flag, bit) → máscara u16 → MMIO DFE/CISIF (0xfc02a00c) / 0xf292b000`.
