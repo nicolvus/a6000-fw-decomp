@@ -1,5 +1,13 @@
 # Estado actual — léeme primero
 
+## S334 — los pares se colapsan en máscaras u16; `w0` es código de operación (22-10-2026)
+
+- Los 12 pares `(flag, byte)` de `obj+0x16`/`+0xa5` **no llevan valores**: el byte es un **índice de bit**. `0x43ada370` hace `1<<byte` y OR solo si el flag≠0 → máscara `u16` en `obj+0x68`; `0x43ada402` guarda en un destino (`obj+0xf8`, op 1). Bucle `0..0x18` paso 2.
+- `0x436f61f8` colapsa `obj+0x16`→`obj+0x68` y `obj+0xa5`→`obj+0xf8`; `0x436f60ac` aplica `obj+0x68` con op 0.
+- `0x436f5eac` lee el `w0` de T1/T2 por fila y lo usa como código de operación (`0x436f6660`): T1∈{0,1}, T2∈{2,3}, T3=4. `0x436f822c` aplica la máscara con `~valor ^ máscara` (op 0/1) o solo traza.
+- Silent: `0x4c`..`0x4f` comparten op (0,2) y solo difieren en la máscara de T2 (`0x3ff` vs 0); `0x50`/`0x51` usan (1,3).
+- Tests: `tests/test_s334_pair_dataflow.py` (9) y 111 comprobaciones. Capa `0x436f82xx` NO_VERIFICADA. S51 sin cambios.
+
 ## S333 — vocabulario de modos: 13 A6000 vs 34 A7S, 7 vs 15 vectores (22-10-2026)
 
 - Listas: A6000 `0x43fea070` (13) y A7S `0x43fee370` (34). **12 compartidos**; `0x2f` solo A6000; **22 solo A7S** (`0x08,0x13,0x1f,0x30..0x38,0x3f,0x44,0x45,0x46,0x4c..0x51`).
