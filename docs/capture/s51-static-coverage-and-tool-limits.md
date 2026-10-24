@@ -13,7 +13,7 @@ ejecutó firmware ni se hicieron pruebas físicas.
 | Configuración IMX210 A6000 | `SetMode=0x436d62e4`, `SetExposure=0x436d6320`, `SetRead=0x436d6398`, llamadas en `0x438c79bc/79fc/7a40` ([S51](s51-decision.md)); transporte P2S con bytes y [Unicorn](s56-imx210-register-transport.md). | Correspondencia eléctrica de ID1/100/101, significado de drive modes y fin de integración por filas. La emulación no aporta semántica del sensor. |
 | Temporización/modelo A7S | [S58](s58-imx235-full-emulation.md) ejecutó cuatro métodos y el transporte, bajo objeto sintético y stubs declarados. | No equivale a inicialización/captura real, ni valida por sí misma la A6000. Constructor, callbacks y respuesta eléctrica quedan fuera. |
 | 2ª cortina | S51/T3 sigue `0x43b5e2b0 → 0x4398f9a4`, con guardas `captura+0x74f` y `0x43ae7648`: ninguna guarda configurable demostrada para omitirla. | Traducción física banco/bit `0xf2910048`→P4E y rutas alternativas de fin de exposición; no inferir imposibilidad del hardware. |
-| Mensaje `0x40193` | [Informe de cola](queue-40193-flow-2026-10-23.md): construcción, 16 B OSAL, receptor `0x4381d16c`, descriptor `0x43ea048c` e inicializador `0x4379e93c` verificados; fila 189 de 372 punteros Thumb. | Consumidor de arranque del descriptor, registro del callback concreto en Linux y enlace Linux↔LIRO siguen `NO_VERIFICADO`. |
+| Mensaje `0x40193` | [Informe de cola](queue-40193-flow-2026-10-23.md): construcción, 16 B OSAL, receptor `0x4381d16c`, descriptor `0x43ea048c` e inicializador `0x4379e93c` verificados. La entrada de cabecera LIRO llega al bucle `0x4356082c`, que llama la fila 189 de 372. | Consumidor del descriptor, registro del callback concreto en Linux y enlace Linux↔LIRO siguen `NO_VERIFICADO`; tampoco se observó invocación real de la entrada de cabecera. |
 | Foto fija Linux | [Auditoría de contrato](recordstill-contract-audit-2026-10-23.md): A6000 `0x90b248` es RecordImage; `0x908afc` corresponde a RecordStill; `StateMgr::CallFunc` consume `call_fn` indirecto. | Activación de la entrada concreta durante disparo, correspondencia completa con A7S y vínculo con `0x40193`. |
 | Ruta YC/archivo | [Tareas de investigación](RESEARCH_TASKS.md) y [puente SFRA–MPR](sfra-mpr-buffer-bridge.md) delimitan formatos, pin `0x2a` y propiedad de buffers. | Creador de `0x2a` en disparo, alcanzabilidad de los escritores de modo 1, formato YC y ciclo terminal de propiedad. No hay cadena íntegra sensor→archivo demostrada. |
 
@@ -43,7 +43,7 @@ ejecutó firmware ni se hicieron pruebas físicas.
 
 ## Cola de trabajo antes de cualquier prueba física
 
-1. Resolver las tres aristas abiertas de `0x40193` con llamadas, tablas de
+1. Resolver las tres aristas abiertas del descriptor y transporte de `0x40193` con llamadas, tablas de
    punteros y registro OSAL; mantener negativas acotadas a las regiones
    examinadas.
 2. Seguir las entradas indirectas de RecordImage/RecordStill y la ruta de

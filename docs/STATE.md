@@ -17,6 +17,9 @@ receptor LIRO `0x4381d16c` verificados. Inicializador `0x4379e93c` instala su
 puntero en descriptor `0x43ea048c` (campo+0x14=`0x46`). El inicializador ocupa
 la fila 189 de una tabla contigua de 372 punteros Thumb. NO_VERIFICADO: consumidor de
 arranque del descriptor, registro callback OSAL Linux y enlace Linux↔LIRO.
+El consumidor de la **tabla de inicializadores** sí se recuperó: entrada de
+cabecera LIRO `0x4354101c` → `0x4356082c` → 372 llamadas indirectas,
+incluida la fila 189. No se observó ejecución real de esa entrada.
 Prevalece sobre pendientes históricos; S51 sin cambios.
 
 ## Contrato RecordStill / RecordImage — actualizado 24-10-2026

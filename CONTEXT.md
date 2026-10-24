@@ -4,15 +4,18 @@
 
 [Auditoría](docs/capture/S605-S627_tabla_hallazgos.md): corrige la validación original; 263 tests pasaban pese a siete direcciones gemelas falsas, 13 textos sin bytes finales y cinco longitudes adicionales incorrectas. Corregidos los 23 JSON e informes y 21 verificadores individuales obsoletos. Se verifican 94 trazas, siete gemelas, 11 núcleos y metadatos. El logger dual de S611 está verificado estáticamente para cinco trazas; las otras 22 fichas, equivalencias, recuentos differential y ausencia funcional de relación con el obturador siguen NO_VERIFICADO. S51 sin cambios. Ampliación S605–S627: diez marcadores `level`/`sub_prefix` verificados; S625 corregido a prefijo `[CAM_UTIL_SENS]: ` (17 B). Quedan **68 de 69** afirmaciones de logger dual/equivalencias sin verificar. [Auditoría](docs/capture/S605-S627_tabla_hallazgos.md).
 
-## Cola 0x40193 — 23-10-2026
+## Cola 0x40193 — actualizado 24-10-2026
 
 [Trazado y límites](docs/capture/queue-40193-flow-2026-10-23.md): S384 actualizado.
 Nueve literales `.text` A6000 con LDR; transporte por registros y copia de 16 B
 hasta `osal_snd_msg`. Receptor LIRO `0x4381d16c`, tabla de 35 filas en
 `0x44000174`. Inicializador `0x4379e93c` instala su puntero en descriptor
 `0x43ea048c` (campo+0x14=`0x46`). Pendientes: consumidor de arranque de ese descriptor,
-registro callback OSAL Linux y enlace de transporte Linux↔LIRO. Análisis estático
-abierto; 53 tests S380 PASS; S51 sin cambios. Prevalece sobre pendientes históricos.
+registro callback OSAL Linux y enlace de transporte Linux↔LIRO. La entrada de
+cabecera LIRO `0x4354101c` llega al bucle `0x4356082c`, que consume la tabla
+de 372 inicializadores y llama su fila 189 (`0x4379e93d`). No se observó
+ejecución real de la cabecera. Análisis estático abierto; S51 sin cambios.
+Prevalece sobre pendientes históricos.
 
 ## Contrato RecordStill / RecordImage — actualizado 24-10-2026
 

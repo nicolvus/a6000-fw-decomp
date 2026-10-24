@@ -1,8 +1,9 @@
 # PENDIENTES FINALES — estado de cierre (22-10-2026, corregido)
 
-> **Actualización 23-10-2026:** [trazado de 0x40193](queue-40193-flow-2026-10-23.md).
+> **Actualización 24-10-2026:** [trazado de 0x40193](queue-40193-flow-2026-10-23.md).
 > Se verifican literales en `.text`, emisores, receptor LIRO `0x4381d16c` e
-> instalador `0x4379e93c`. Pendientes: arranque del descriptor `0x43ea048c`,
+> instalador `0x4379e93c`. La entrada de cabecera LIRO alcanza el bucle de 372
+> inicializadores `0x4356082c`. Pendientes: consumidor del descriptor `0x43ea048c`,
 > callback OSAL Linux y enlace Linux↔LIRO. El supuesto bloqueo estático de §2
 > y los «nueve falsos positivos» de §3 quedan invalidados.
 
@@ -10,7 +11,7 @@
 > superadas. La búsqueda MOVW/MOVT de `0x40193` era inválida y el flujo del ID
 > sigue pendiente de análisis estático; `libObj.so` sí contiene el código local de
 > `RecordStill::Execute` y llamadas candidatas a registradores OSAL. El censo
-> vigente es 133/372 etiquetas documentadas, con 239 pendientes. Véase la
+> vigente es 133/372 etiquetas documentadas, con 226 pendientes y 13 descartadas. Véase la
 > [auditoría actual](../auditoria-2026-10-23.md) y S380–S385 antes de reutilizar
 > cualquier conclusión de esas secciones.
 

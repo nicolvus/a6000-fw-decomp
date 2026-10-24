@@ -27,8 +27,11 @@ mensaje-4. Receptor LIRO `0x4381d16c`, tabla `0x44000174` (35×12 B).
 `0x4379e93c` instala puntero Thumb `0x4381d16d` desde GOT `0x4401f564`
 en descriptor `0x43ea048c`, campo+0x14=`0x46`. El inicializador ocupa la fila 189
 de una tabla contigua de 372 punteros Thumb. Pendientes concretos: consumidor de
-arranque del descriptor, callback OSAL Linux y enlace Linux↔LIRO. El origen por
-literal y el instalador ya se conocen; el análisis estático no está agotado.
+arranque del descriptor, callback OSAL Linux y enlace Linux↔LIRO. El consumidor
+de la **tabla de inicializadores** ya está verificado: cabecera LIRO
+`0x4354101c` → `0x43541078` → `0x43a3a98c` → `0x4356082c`, cuyo bucle llama
+las 372 entradas. La ejecución real de la cabecera no se ha observado. El origen
+por literal y el instalador ya se conocen; el análisis estático no está agotado.
 S51 sin cambios. Prevalece sobre resúmenes históricos siguientes.
 
 ## Contrato RecordStill / RecordImage — actualizado 24-10-2026

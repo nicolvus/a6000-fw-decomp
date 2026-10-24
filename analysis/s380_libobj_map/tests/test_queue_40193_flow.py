@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 import pytest
-from capstone import CS_ARCH_ARM, CS_MODE_THUMB, Cs
+from capstone import CS_ARCH_ARM, CS_MODE_ARM, CS_MODE_THUMB, Cs
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -44,6 +44,33 @@ def test_receiver_initializer_in_contiguous_thumb_pointer_table(avcam):
     assert pointers[189] == 0x4379E93D
     assert all(pointer & 1 and AV_BASE <= pointer - 1 < end for pointer in pointers)
     assert av_word(avcam, end) == 0
+
+
+def test_liro_header_reaches_initializer_table_consumer(avcam):
+    assert av_word(avcam, 0x4354101C) == 0x43541078
+    arm_call = next(Cs(CS_ARCH_ARM, CS_MODE_ARM).disasm(
+        avcam[0x7C:0x80], 0x4354107C, count=1,
+    ))
+    assert (arm_call.mnemonic, arm_call.op_str) == ("blx", "#0x43a3a98c")
+    assert (av_instruction(avcam, 0x43A3A998).mnemonic,
+            av_instruction(avcam, 0x43A3A998).op_str) == (
+                "bl", "#0x4356082c",
+            )
+
+    got_base = (av_word(avcam, 0x435608A4) + 0x4356083E) & 0xFFFFFFFF
+    assert got_base == 0x4401EEE4
+    start_slot = got_base + av_word(avcam, 0x435608B8)
+    end_slot = got_base + av_word(avcam, 0x435608B4)
+    start, end = av_word(avcam, start_slot), av_word(avcam, end_slot)
+    assert (start_slot, end_slot) == (0x440206D8, 0x440200B4)
+    assert (start, end, (end - start) // 4) == (0x43B7F8A8, 0x43B7FE78, 372)
+    assert [av_instruction(avcam, address).mnemonic for address in (
+        0x4356086C, 0x43560870, 0x43560872, 0x43560874,
+        0x43560878, 0x43560882, 0x43560888,
+    )] == ["ldr", "ldr", "subs", "asrs", "ldr", "blx", "blo"]
+    assert av_instruction(avcam, 0x43560882).op_str == "r3"
+    assert av_instruction(avcam, 0x43560888).op_str == "#0x43560878"
+    assert av_word(avcam, start + 189 * 4) == 0x4379E93D
 
 
 def test_literal_load_pc_alignment_and_negative_displacement():
