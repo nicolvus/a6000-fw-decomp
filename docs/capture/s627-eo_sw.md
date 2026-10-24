@@ -18,7 +18,7 @@
 
 - **Triple prefijo**: `[EO_SW]` — módulo switch EO. Longitud: 7 B (`[EO_SW]`).
 - **Parámetros de puerto**: `Port=%d, Bit=%d, Data=%d` — puerto, bit y dato (probablemente estado del switch: on/off, posición, etc.).
-- **Logger dual (patrón S177/S179/S603–S626)**: la fw3.21 **duplica** la traza: nueva con prefijo `[EO_SW]` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
+- **Logger dual (patrón S177/S179/S603–S626)**: la fw3.21 **afirma duplicar** la traza (NO_VERIFICADO - requiere xrefs/REA): nueva con prefijo `[EO_SW]` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
 - **Prefijo fijo**: 7 B (`[EO_SW]`) → fijo.
 
 ## Diferencial A6000 fw3.21 vs A7S fw3.20 vs A6300 fw2.01
@@ -28,9 +28,9 @@
 | token `[EO_SW]` | **1** | **0** | **0** |
 | núcleo sin prefijo (`Port=%d, Bit=%d, Data=%d`) | 0/1 como literal autónomo | **0** | **0** |
 | strings relacionadas switch/port/bit | 0 | **pocas** | **pocas** |
-| código equivalente (switch port/bit) | `0x43c37b40`… | **parcial** | **parcial** |
+| código equivalente (NO_VERIFICADO - requiere comparación de instrucciones) (switch port/bit) | `0x43c37b40`… | **parcial** | **parcial** |
 
-→ **Módulo *nuevo* en traza, código preexistente.** El manejo de switches puerto/bit **existe en los tres firmware** (funcionalidad de GPIO/puerto) pero **sin el módulo EO_SW estructurado ni prefijo `[EO_SW]`**. La fw3.21 de la A6000 **introduce** el módulo EO_SW con logging formateado y **duplica** la traza (nueva con logger de módulo + vieja con logger global `0x43902718`).
+→ **Módulo *nuevo* en traza, código preexistente.** El manejo de switches puerto/bit **existe** (NO_VERIFICADO - requiere análisis de A7S/A6300) en los tres firmware (funcionalidad de GPIO/puerto) pero **sin el módulo EO_SW estructurado ni prefijo `[EO_SW]`**. La fw3.21 de la A6000 **introduce** el módulo EO_SW con logging formateado y **duplica** la traza (nueva con logger de módulo + vieja con logger global `0x43902718`).
 
 **Longitud del prefijo fija:** 7 B (`[EO_SW]`) → fijo.
 

@@ -2,33 +2,230 @@
   "module": "JPEG",
   "traces": 17,
   "trace_strings": [
-    {"vaddr": "0x43ce0692", "text": "[JPEG]: [cbJpegDebugClose] err : %d"},
-    {"vaddr": "0x43ce06b6", "text": "[JPEG]: [cbJpegDebugOpen] err : %d"},
-    {"vaddr": "0x43ce06d9", "text": "[JPEG]: [cbJpegDebugOpen] uid : 0x%x"},
-    {"vaddr": "0x43ce0704", "text": "[JPEG]: %s"},
-    {"vaddr": "0x43ce070f", "text": "[JPEG]: 0x%x"},
-    {"vaddr": "0x43ce071c", "text": "[JPEG]: [f_sa_dummy_send_msg] Start"},
-    {"vaddr": "0x43ce0740", "text": "[JPEG]: ERR. osal_try_valloc_msg. err=0x%x, L=%d"},
-    {"vaddr": "0x43ce0771", "text": "[JPEG]: [f_sa_dummy_send_msg] error_status = %d, unique_id = %d"},
-    {"vaddr": "0x43ce07b1", "text": "[JPEG]: ERR. osal_snd_msg. err=0x%x, L=%d"},
-    {"vaddr": "0x43ce07db", "text": "[JPEG]: ERR. osal_free_msg. err=0x%x, L=%d"},
-    {"vaddr": "0x43ce0806", "text": "[JPEG]: [f_sa_dummy_send_msg] Comp"},
-    {"vaddr": "0x43ce0829", "text": "[JPEG]: [f_2open][NormalOpen] jpegErr : %d"},
-    {"vaddr": "0x43ce0854", "text": "[JPEG]: [f_2open][SortOpen] jpegErr : %d"},
-    {"vaddr": "0x43ce087d", "text": "[JPEG]: [f_2open][TanzOpen] jpegErr : %d"},
-    {"vaddr": "0x43ce08a6", "text": "[JPEG]: [f_2close] unique_id : 0x%x"},
-    {"vaddr": "0x43ce08ca", "text": "[JPEG]: [f_2close][NormalClose] jpegErr : %d"},
-    {"vaddr": "0x43ce08f7", "text": "[JPEG]: [f_2close][SortClose] jpegErr : %d"}
+    {
+      "vaddr": "0x43ce0692",
+      "text": "[JPEG]: [cbJpegDebugClose] err : %d"
+    },
+    {
+      "vaddr": "0x43ce06b6",
+      "text": "[JPEG]: [cbJpegDebugOpen] err : %d"
+    },
+    {
+      "vaddr": "0x43ce06d9",
+      "text": "[JPEG]: [cbJpegDebugOpen] uid : 0x%x"
+    },
+    {
+      "vaddr": "0x43ce0704",
+      "text": "[JPEG]: %s"
+    },
+    {
+      "vaddr": "0x43ce070f",
+      "text": "[JPEG]: 0x%x"
+    },
+    {
+      "vaddr": "0x43ce071c",
+      "text": "[JPEG]: [f_sa_dummy_send_msg] Start"
+    },
+    {
+      "vaddr": "0x43ce0740",
+      "text": "[JPEG]: ERR. osal_try_valloc_msg. err=0x%x, L=%d"
+    },
+    {
+      "vaddr": "0x43ce0771",
+      "text": "[JPEG]: [f_sa_dummy_send_msg] error_status = %d, unique_id = %d"
+    },
+    {
+      "vaddr": "0x43ce07b1",
+      "text": "[JPEG]: ERR. osal_snd_msg. err=0x%x, L=%d"
+    },
+    {
+      "vaddr": "0x43ce07db",
+      "text": "[JPEG]: ERR. osal_free_msg. err=0x%x, L=%d"
+    },
+    {
+      "vaddr": "0x43ce0806",
+      "text": "[JPEG]: [f_sa_dummy_send_msg] Comp"
+    },
+    {
+      "vaddr": "0x43ce0829",
+      "text": "[JPEG]: [f_2open][NormalOpen] jpegErr : %d"
+    },
+    {
+      "vaddr": "0x43ce0854",
+      "text": "[JPEG]: [f_2open][SortOpen] jpegErr : %d"
+    },
+    {
+      "vaddr": "0x43ce087d",
+      "text": "[JPEG]: [f_2open][TanzOpen] jpegErr : %d"
+    },
+    {
+      "vaddr": "0x43ce08a6",
+      "text": "[JPEG]: [f_2close] unique_id : 0x%x"
+    },
+    {
+      "vaddr": "0x43ce08ca",
+      "text": "[JPEG]: [f_2close][NormalClose] jpegErr : %d"
+    },
+    {
+      "vaddr": "0x43ce08f7",
+      "text": "[JPEG]: [f_2close][SortClose] jpegErr : %d"
+    }
   ],
   "dgi_jpeg_symbols": 35,
   "prefix_length": 8,
   "prefix": "[JPEG]: ",
   "differential": {
-    "a6000_fw321": {"token_count": 17, "prefixes": ["[JPEG]: "]},
-    "a7s_fw320": {"token_count": 0, "prefixes": ["[ddl_jpeg_open]", "[ddl_jpeg_close]", "[CDIAG][CTRLJPGDEC]", "[CDIAG][CTRLJPGENC]", "[CDIAG][CTRLJPGENCDEC]"]},
-    "a6300_fw201": {"token_count": 0, "prefixes": ["[ddl_jpeg_open]", "[ddl_jpeg_close]", "[CDIAG][CTRLJPGDEC]", "[CDIAG][CTRLJPGENC]", "[CDIAG][CTRLJPGENCDEC]"]}
+    "a6000_fw321": {
+      "token_count": 17,
+      "prefixes": [
+        "[JPEG]: "
+      ]
+    },
+    "a7s_fw320": {
+      "token_count": 0,
+      "prefixes": [
+        "[ddl_jpeg_open]",
+        "[ddl_jpeg_close]",
+        "[CDIAG][CTRLJPGDEC]",
+        "[CDIAG][CTRLJPGENC]",
+        "[CDIAG][CTRLJPGENCDEC]"
+      ]
+    },
+    "a6300_fw201": {
+      "token_count": 0,
+      "prefixes": [
+        "[ddl_jpeg_open]",
+        "[ddl_jpeg_close]",
+        "[CDIAG][CTRLJPGDEC]",
+        "[CDIAG][CTRLJPGENC]",
+        "[CDIAG][CTRLJPGENCDEC]"
+      ]
+    }
   },
   "shutter_line": "NEGATIVO ACOTADO",
   "logger_dual": true,
-  "global_logger": "0x43902718"
+  "global_logger": "0x43902718",
+  "verification_status": {
+    "trace_strings": {
+      "verified": true,
+      "count_ok": 17,
+      "count_total": 17,
+      "basis": "lectura directa de bytes en av-cam.bin (base 0x43541000)",
+      "details": [
+        {
+          "vaddr": "0x43ce0692",
+          "ok": true,
+          "text": "[JPEG]: [cbJpegDebugClose] err : %d"
+        },
+        {
+          "vaddr": "0x43ce06b6",
+          "ok": true,
+          "text": "[JPEG]: [cbJpegDebugOpen] err : %d"
+        },
+        {
+          "vaddr": "0x43ce06d9",
+          "ok": true,
+          "text": "[JPEG]: [cbJpegDebugOpen] uid : 0x%x"
+        },
+        {
+          "vaddr": "0x43ce0704",
+          "ok": true,
+          "text": "[JPEG]: %s"
+        },
+        {
+          "vaddr": "0x43ce070f",
+          "ok": true,
+          "text": "[JPEG]: 0x%x"
+        },
+        {
+          "vaddr": "0x43ce071c",
+          "ok": true,
+          "text": "[JPEG]: [f_sa_dummy_send_msg] Start"
+        },
+        {
+          "vaddr": "0x43ce0740",
+          "ok": true,
+          "text": "[JPEG]: ERR. osal_try_valloc_msg. err=0x%x, L=%d"
+        },
+        {
+          "vaddr": "0x43ce0771",
+          "ok": true,
+          "text": "[JPEG]: [f_sa_dummy_send_msg] error_status = %d, u"
+        },
+        {
+          "vaddr": "0x43ce07b1",
+          "ok": true,
+          "text": "[JPEG]: ERR. osal_snd_msg. err=0x%x, L=%d"
+        },
+        {
+          "vaddr": "0x43ce07db",
+          "ok": true,
+          "text": "[JPEG]: ERR. osal_free_msg. err=0x%x, L=%d"
+        },
+        {
+          "vaddr": "0x43ce0806",
+          "ok": true,
+          "text": "[JPEG]: [f_sa_dummy_send_msg] Comp"
+        },
+        {
+          "vaddr": "0x43ce0829",
+          "ok": true,
+          "text": "[JPEG]: [f_2open][NormalOpen] jpegErr : %d"
+        },
+        {
+          "vaddr": "0x43ce0854",
+          "ok": true,
+          "text": "[JPEG]: [f_2open][SortOpen] jpegErr : %d"
+        },
+        {
+          "vaddr": "0x43ce087d",
+          "ok": true,
+          "text": "[JPEG]: [f_2open][TanzOpen] jpegErr : %d"
+        },
+        {
+          "vaddr": "0x43ce08a6",
+          "ok": true,
+          "text": "[JPEG]: [f_2close] unique_id : 0x%x"
+        },
+        {
+          "vaddr": "0x43ce08ca",
+          "ok": true,
+          "text": "[JPEG]: [f_2close][NormalClose] jpegErr : %d"
+        },
+        {
+          "vaddr": "0x43ce08f7",
+          "ok": true,
+          "text": "[JPEG]: [f_2close][SortClose] jpegErr : %d"
+        }
+      ]
+    },
+    "logger_dual": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere xrefs/REA sobre instrucciones BL al logger global; la presencia de cadenas no demuestra duplicación",
+      "global_logger": "0x43902718",
+      "global_logger_verified": true,
+      "global_logger_msg": "code @0x3c1718"
+    },
+    "equivalencia_funcional": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere análisis de A7S fw3.20 y A6300 fw2.01; presencia de cadenas núcleo no demuestra equivalencia de código"
+    },
+    "equivalencia_codigo": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere comparación de instrucciones (disassembly/xrefs) entre modelos"
+    },
+    "linea_obturador": {
+      "claimed": true,
+      "verified": true,
+      "status": "VERIFICADO",
+      "basis": "búsqueda de palabras clave del obturador únicamente en cadenas de traza del módulo",
+      "keywords_found_in_traces": []
+    }
+  }
 }

@@ -24,7 +24,7 @@
 - **Configuración de grid**: `rcct_SetStblzGridH` — configuración de grid horizontal de estabilización (error con código hex).
 - **Datos de giroscopio**: `GyroAD[p],GyroAD[y]` — lectura de giroscopio en ejes pitch (p) e yaw (y) con valores decimales.
 - **Datos genéricos**: `%x, %d, %d` — traza genérica con hex + 2 decimales.
-- **Logger dual (patrón S177/S179/S603–S614)**: la fw3.21 **duplica** la traza: nueva con prefijo `[CAMERA_IS][EIS]:` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
+- **Logger dual (patrón S177/S179/S603–S614)**: la fw3.21 **afirma duplicar** la traza (NO_VERIFICADO - requiere xrefs/REA): nueva con prefijo `[CAMERA_IS][EIS]:` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
 - **Estructura CAMERA_IS**: el módulo `[CAMERA_IS]` en fw3.21 tiene 4 sub-módulos visibles: `[MOUNT]` (5 trazas), `[DIST]` (5 trazas), `[AS]` (3 trazas), `[EIS]` (4 trazas) — total ~17 trazas bajo CAMERA_IS.
 - **Función `rcct_*`**: API de control de estabilización (rcct = Real-time Camera Control/Tracking?).
 

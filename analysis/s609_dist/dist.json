@@ -2,22 +2,117 @@
   "module": "CAMERA_IS/DIST",
   "traces": 5,
   "trace_strings": [
-    {"vaddr": "0x43c98e1d", "text": "[CAMERA_IS][DIST]: ERR:MakeDistCorPrm prm=null"},
-    {"vaddr": "0x43c98e4d", "text": "[CAMERA_IS][DIST]: ERR:CnvPosInvDistCorr prm=null"},
-    {"vaddr": "0x43c98e80", "text": "[CAMERA_IS][DIST]: ERR:CnvPosInvDistCorr prm=inv1 (%d, %d)"},
-    {"vaddr": "0x43c98ebc", "text": "[CAMERA_IS][DIST]: WRN:CnvPosInvDistCorr prm=inv2 (%d, %d)"},
-    {"vaddr": "0x43c98ef9", "text": "[CAMERA_IS][DIST]: ERR:MakeDistRawAppliTag prm=null"}
+    {
+      "vaddr": "0x43c98e1d",
+      "text": "[CAMERA_IS][DIST]: ERR:MakeDistCorPrm prm=null"
+    },
+    {
+      "vaddr": "0x43c98e4d",
+      "text": "[CAMERA_IS][DIST]: ERR:CnvPosInvDistCorr prm=null"
+    },
+    {
+      "vaddr": "0x43c98e80",
+      "text": "[CAMERA_IS][DIST]: ERR:CnvPosInvDistCorr prm=inv1 (%d, %d)"
+    },
+    {
+      "vaddr": "0x43c98ebc",
+      "text": "[CAMERA_IS][DIST]: WRN:CnvPosInvDistCorr prm=inv2 (%d, %d)"
+    },
+    {
+      "vaddr": "0x43c98ef9",
+      "text": "[CAMERA_IS][DIST]: ERR:MakeDistRawAppliTag prm=null"
+    }
   ],
   "prefix_length": 19,
   "prefix": "[CAMERA_IS][DIST]: ",
   "parent_prefix": "[CAMERA_IS]",
   "sub_prefix": "[DIST]",
   "differential": {
-    "a6000_fw321": {"token_count": 5, "parent_token_count": 14, "prefixes": ["[CAMERA_IS][DIST]: ", "[CAMERA_IS][MOUNT]: ", "[CAMERA_IS][AS]: ", "[CAMERA_IS][EIS]: "]},
-    "a7s_fw320": {"token_count": 0, "parent_token_count": 0, "prefixes": []},
-    "a6300_fw201": {"token_count": 0, "parent_token_count": 0, "prefixes": []}
+    "a6000_fw321": {
+      "token_count": 5,
+      "parent_token_count": 14,
+      "prefixes": [
+        "[CAMERA_IS][DIST]: ",
+        "[CAMERA_IS][MOUNT]: ",
+        "[CAMERA_IS][AS]: ",
+        "[CAMERA_IS][EIS]: "
+      ]
+    },
+    "a7s_fw320": {
+      "token_count": 0,
+      "parent_token_count": 0,
+      "prefixes": []
+    },
+    "a6300_fw201": {
+      "token_count": 0,
+      "parent_token_count": 0,
+      "prefixes": []
+    }
   },
   "shutter_line": "NEGATIVO ACOTADO",
   "logger_dual": true,
-  "global_logger": "0x43902718"
+  "global_logger": "0x43902718",
+  "verification_status": {
+    "trace_strings": {
+      "verified": true,
+      "count_ok": 5,
+      "count_total": 5,
+      "basis": "lectura directa de bytes en av-cam.bin (base 0x43541000)",
+      "details": [
+        {
+          "vaddr": "0x43c98e1d",
+          "ok": true,
+          "text": "[CAMERA_IS][DIST]: ERR:MakeDistCorPrm prm=null"
+        },
+        {
+          "vaddr": "0x43c98e4d",
+          "ok": true,
+          "text": "[CAMERA_IS][DIST]: ERR:CnvPosInvDistCorr prm=null"
+        },
+        {
+          "vaddr": "0x43c98e80",
+          "ok": true,
+          "text": "[CAMERA_IS][DIST]: ERR:CnvPosInvDistCorr prm=inv1 "
+        },
+        {
+          "vaddr": "0x43c98ebc",
+          "ok": true,
+          "text": "[CAMERA_IS][DIST]: WRN:CnvPosInvDistCorr prm=inv2 "
+        },
+        {
+          "vaddr": "0x43c98ef9",
+          "ok": true,
+          "text": "[CAMERA_IS][DIST]: ERR:MakeDistRawAppliTag prm=nul"
+        }
+      ]
+    },
+    "logger_dual": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere xrefs/REA sobre instrucciones BL al logger global; la presencia de cadenas no demuestra duplicación",
+      "global_logger": "0x43902718",
+      "global_logger_verified": true,
+      "global_logger_msg": "code @0x3c1718"
+    },
+    "equivalencia_funcional": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere análisis de A7S fw3.20 y A6300 fw2.01; presencia de cadenas núcleo no demuestra equivalencia de código"
+    },
+    "equivalencia_codigo": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere comparación de instrucciones (disassembly/xrefs) entre modelos"
+    },
+    "linea_obturador": {
+      "claimed": true,
+      "verified": true,
+      "status": "VERIFICADO",
+      "basis": "búsqueda de palabras clave del obturador únicamente en cadenas de traza del módulo",
+      "keywords_found_in_traces": []
+    }
+  }
 }

@@ -21,7 +21,7 @@
 - **Triple prefijo jerárquico**: `[CAMERA_IS][AS]: [STABILIZER][AS]` — módulo padre `CAMERA_IS` + sub-módulo `AS` (Auto-Stabilization?) + sub-sub-módulo `STABILIZER`. Longitud total: 33 B (`[CAMERA_IS][AS]: [STABILIZER][AS]`).
 - **Operaciones de cola de mensajes OSAL**: 2 trazas — `osal_reg_sync_msg_queue_cb` (registrar callback de cola sincrónica) y `osal_unreg_sync_msg_queue_cb` (desregistrar callback).
 - **UPM (Unified Power Management?)**: `upm_get_hcrn_ura` — obtener URA (Unified Resource Allocator?) de HCRN (Hardware Control Resource Node?).
-- **Logger dual (patrón S177/S179/S603–S619)**: la fw3.21 **duplica** la traza: nueva con prefijo `[CAMERA_IS][AS]: [STABILIZER][AS]` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
+- **Logger dual (patrón S177/S179/S603–S619)**: la fw3.21 **afirma duplicar** la traza (NO_VERIFICADO - requiere xrefs/REA): nueva con prefijo `[CAMERA_IS][AS]: [STABILIZER][AS]` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
 - **Prefijo cuádruple jerárquico**: `[CAMERA_IS][AS]: [STABILIZER][AS]` — 4 niveles. Longitud total: 33 B.
 
 ## Diferencial A6000 fw3.21 vs A7S fw3.20 vs A6300 fw2.01
@@ -31,7 +31,7 @@
 | token `[STABILIZER]` con prefijo CAMERA_IS | **3** | **0** | **0** |
 | núcleos sin prefijo (`osal_reg_sync_msg_queue_cb`, `upm_get_hcrn_ura`, `osal_unreg_sync_msg_queue_cb`) | 0/3 como literal autónomo | **0** | **0** |
 | strings estabilizador relacionadas A7S | 0 | **4** (`recInfo.imageStabilizerValid`, `recInfo.imageStabilizer`, `camInfo.imageStabilizerValid`, `camInfo.imageStabilizer`) | **4** (iguales) |
-| código equivalente (estabilizador) | `0x43c9a1f3`… | **parcial** | **parcial** |
+| código equivalente (NO_VERIFICADO - requiere comparación de instrucciones) (estabilizador) | `0x43c9a1f3`… | **parcial** | **parcial** |
 
 → **Submódulo *nuevo* en traza, código preexistente.** El estabilizador **existe en A7S/A6300** (strings `imageStabilizerValid`, `imageStabilizer`) pero **sin el submódulo STABILIZER estructurado ni prefijo `[CAMERA_IS][AS]: [STABILIZER][AS]`**. La fw3.21 de la A6000 **introduce** el submódulo STABILIZER con prefijo cuádruple y **duplica** la traza (nueva con logger de módulo + vieja con logger global `0x43902718`).
 

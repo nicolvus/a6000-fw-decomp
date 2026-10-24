@@ -2,18 +2,111 @@
   "module": "SENSER",
   "traces": 3,
   "trace_strings": [
-    {"vaddr": "0x43c24f10", "text": "[ACCY][ERR][SENSER] unknown block %04X", "level": "ERR"},
-    {"vaddr": "0x43c24f37", "text": "[ACCY][DEBUG][SENSER] Cmd %04X, S1 %02X", "level": "DEBUG"},
-    {"vaddr": "0x43c24f5f", "text": "[ACCY][ERR][SENSER] unknown command %04X", "level": "ERR"}
+    {
+      "vaddr": "0x43c24f10",
+      "text": "[ACCY][ERR][SENSER] unknown block %04X",
+      "level": "ERR"
+    },
+    {
+      "vaddr": "0x43c24f37",
+      "text": "[ACCY][DEBUG][SENSER] Cmd %04X, S1 %02X",
+      "level": "DEBUG"
+    },
+    {
+      "vaddr": "0x43c24f5f",
+      "text": "[ACCY][ERR][SENSER] unknown command %04X",
+      "level": "ERR"
+    }
   ],
-  "prefix_lengths": [19, 21],
-  "prefixes": ["[ACCY][ERR][SENSER]", "[ACCY][DEBUG][SENSER]"],
+  "prefix_lengths": [
+    19,
+    21
+  ],
+  "prefixes": [
+    "[ACCY][ERR][SENSER]",
+    "[ACCY][DEBUG][SENSER]"
+  ],
   "differential": {
-    "a6000_fw321": {"token_count": 3, "prefixes": ["[ACCY][ERR][SENSER]", "[ACCY][DEBUG][SENSER]"]},
-    "a7s_fw320": {"token_count": 0, "related_strings_count": 20, "prefixes": ["[ADF][ADJ]", "[SYS_SENSER_CA_PUTS]", "<SACC_Debug>"]},
-    "a6300_fw201": {"token_count": 0, "related_strings_count": 20, "prefixes": ["[ADF][ADJ]", "[SYS_SENSER_CA_PUTS]", "<SACC_Debug>"]}
+    "a6000_fw321": {
+      "token_count": 3,
+      "prefixes": [
+        "[ACCY][ERR][SENSER]",
+        "[ACCY][DEBUG][SENSER]"
+      ]
+    },
+    "a7s_fw320": {
+      "token_count": 0,
+      "related_strings_count": 20,
+      "prefixes": [
+        "[ADF][ADJ]",
+        "[SYS_SENSER_CA_PUTS]",
+        "<SACC_Debug>"
+      ]
+    },
+    "a6300_fw201": {
+      "token_count": 0,
+      "related_strings_count": 20,
+      "prefixes": [
+        "[ADF][ADJ]",
+        "[SYS_SENSER_CA_PUTS]",
+        "<SACC_Debug>"
+      ]
+    }
   },
   "shutter_line": "NEGATIVO ACOTADO",
   "logger_dual": true,
-  "global_logger": "0x43902718"
+  "global_logger": "0x43902718",
+  "verification_status": {
+    "trace_strings": {
+      "verified": true,
+      "count_ok": 3,
+      "count_total": 3,
+      "basis": "lectura directa de bytes en av-cam.bin (base 0x43541000)",
+      "details": [
+        {
+          "vaddr": "0x43c24f10",
+          "ok": true,
+          "text": "[ACCY][ERR][SENSER] unknown block %04X"
+        },
+        {
+          "vaddr": "0x43c24f37",
+          "ok": true,
+          "text": "[ACCY][DEBUG][SENSER] Cmd %04X, S1 %02X"
+        },
+        {
+          "vaddr": "0x43c24f5f",
+          "ok": true,
+          "text": "[ACCY][ERR][SENSER] unknown command %04X"
+        }
+      ]
+    },
+    "logger_dual": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere xrefs/REA sobre instrucciones BL al logger global; la presencia de cadenas no demuestra duplicación",
+      "global_logger": "0x43902718",
+      "global_logger_verified": true,
+      "global_logger_msg": "code @0x3c1718"
+    },
+    "equivalencia_funcional": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere análisis de A7S fw3.20 y A6300 fw2.01; presencia de cadenas núcleo no demuestra equivalencia de código"
+    },
+    "equivalencia_codigo": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere comparación de instrucciones (disassembly/xrefs) entre modelos"
+    },
+    "linea_obturador": {
+      "claimed": true,
+      "verified": true,
+      "status": "VERIFICADO",
+      "basis": "búsqueda de palabras clave del obturador únicamente en cadenas de traza del módulo",
+      "keywords_found_in_traces": []
+    }
+  }
 }

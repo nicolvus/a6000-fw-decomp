@@ -2,22 +2,123 @@
   "module": "CAM_CMD",
   "traces": 6,
   "trace_strings": [
-    {"vaddr": "0x43caeb10", "text": "[CAM_CMD]: Warning! Now rocessing... req[%d]"},
-    {"vaddr": "0x43caeb3d", "text": "[CAM_CMD]: Error! Can't Transfer Request cur_state[%d] req[%d]"},
-    {"vaddr": "0x43caeb7d", "text": "[CAM_CMD]: Error! s_path_selector SetupTable cur_state[%d] req[%d]"},
-    {"vaddr": "0x43caebc1", "text": "[CAM_CMD]: Error! s_request is NULL!"},
-    {"vaddr": "0x43caebe6", "text": "[CAM_CMD]: Error! s_mode_sequencer SetupTable [%d]->[%d]"},
-    {"vaddr": "0x43caec20", "text": "[CAM_CMD]: Error! CheckReturnAllModlueResponse"}
+    {
+      "vaddr": "0x43caeb10",
+      "text": "[CAM_CMD]: Warning! Now rocessing... req[%d]"
+    },
+    {
+      "vaddr": "0x43caeb3d",
+      "text": "[CAM_CMD]: Error! Can't Transfer Request cur_state[%d] req[%d]"
+    },
+    {
+      "vaddr": "0x43caeb7d",
+      "text": "[CAM_CMD]: Error! s_path_selector SetupTable cur_state[%d] req[%d]"
+    },
+    {
+      "vaddr": "0x43caebc1",
+      "text": "[CAM_CMD]: Error! s_request is NULL!"
+    },
+    {
+      "vaddr": "0x43caebe6",
+      "text": "[CAM_CMD]: Error! s_mode_sequencer SetupTable [%d]->[%d]"
+    },
+    {
+      "vaddr": "0x43caec20",
+      "text": "[CAM_CMD]: Error! CheckReturnAllModlueResponse"
+    }
   ],
   "prefix_length": 11,
   "prefix": "[CAM_CMD]: ",
   "differential": {
-    "a6000_fw321": {"token_count": 6, "prefixes": ["[CAM_CMD]: "]},
-    "a7s_fw320": {"token_count": 0, "prefixes": ["(sin prefijo)"]},
-    "a6300_fw201": {"token_count": 0, "prefixes": ["(sin prefijo)"]}
+    "a6000_fw321": {
+      "token_count": 6,
+      "prefixes": [
+        "[CAM_CMD]: "
+      ]
+    },
+    "a7s_fw320": {
+      "token_count": 0,
+      "prefixes": [
+        "(sin prefijo)"
+      ]
+    },
+    "a6300_fw201": {
+      "token_count": 0,
+      "prefixes": [
+        "(sin prefijo)"
+      ]
+    }
   },
   "shutter_line": "NEGATIVO ACOTADO",
   "logger_dual": true,
   "global_logger": "0x43902718",
-  "typo": "Modlue -> Module"
+  "typo": "Modlue -> Module",
+  "verification_status": {
+    "trace_strings": {
+      "verified": true,
+      "count_ok": 6,
+      "count_total": 6,
+      "basis": "lectura directa de bytes en av-cam.bin (base 0x43541000)",
+      "details": [
+        {
+          "vaddr": "0x43caeb10",
+          "ok": true,
+          "text": "[CAM_CMD]: Warning! Now rocessing... req[%d]"
+        },
+        {
+          "vaddr": "0x43caeb3d",
+          "ok": true,
+          "text": "[CAM_CMD]: Error! Can't Transfer Request cur_state"
+        },
+        {
+          "vaddr": "0x43caeb7d",
+          "ok": true,
+          "text": "[CAM_CMD]: Error! s_path_selector SetupTable cur_s"
+        },
+        {
+          "vaddr": "0x43caebc1",
+          "ok": true,
+          "text": "[CAM_CMD]: Error! s_request is NULL!"
+        },
+        {
+          "vaddr": "0x43caebe6",
+          "ok": true,
+          "text": "[CAM_CMD]: Error! s_mode_sequencer SetupTable [%d]"
+        },
+        {
+          "vaddr": "0x43caec20",
+          "ok": true,
+          "text": "[CAM_CMD]: Error! CheckReturnAllModlueResponse"
+        }
+      ]
+    },
+    "logger_dual": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere xrefs/REA sobre instrucciones BL al logger global; la presencia de cadenas no demuestra duplicación",
+      "global_logger": "0x43902718",
+      "global_logger_verified": true,
+      "global_logger_msg": "code @0x3c1718"
+    },
+    "equivalencia_funcional": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere análisis de A7S fw3.20 y A6300 fw2.01; presencia de cadenas núcleo no demuestra equivalencia de código"
+    },
+    "equivalencia_codigo": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere comparación de instrucciones (disassembly/xrefs) entre modelos"
+    },
+    "linea_obturador": {
+      "claimed": true,
+      "verified": true,
+      "status": "VERIFICADO",
+      "basis": "búsqueda de palabras clave del obturador únicamente en cadenas de traza del módulo",
+      "keywords_found_in_traces": []
+    }
+  }
 }

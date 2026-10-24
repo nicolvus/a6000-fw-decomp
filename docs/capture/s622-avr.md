@@ -19,7 +19,7 @@
 
 - **Triple prefijo jerárquico**: `[ACCY][DEBUG][AVR]` — módulo padre `ACCY` (accesorio) + nivel `DEBUG` + clase de accesorio `AVR`. Longitud total: 18 B (`[ACCY][DEBUG][AVR]`).
 - **Notificaciones de conexión**: 2 trazas `DEBUG` — `NotifyAttached(%d)` (conectado) y `NotifyDetached(%d)` (desconectado), ambas con parámetro numérico (`%d`, probablemente ID de dispositivo o handle).
-- **Logger dual (patrón S177/S179/S603–S621)**: la fw3.21 **duplica** la traza: nueva con prefijo `[ACCY][DEBUG][AVR]` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
+- **Logger dual (patrón S177/S179/S603–S621)**: la fw3.21 **afirma duplicar** la traza (NO_VERIFICADO - requiere xrefs/REA): nueva con prefijo `[ACCY][DEBUG][AVR]` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
 - **Prefijo fijo**: 18 B (`[ACCY][DEBUG][AVR]`) → fijo (ambas trazas son nivel DEBUG).
 - **Estructura ACCY**: en fw3.21 aparece como módulo con sub-módulos `HOUSING` (S610), `SENSER` (S619), `AVOUT` (S621), `AVR` (S622).
 
@@ -30,7 +30,7 @@
 | token `[ACCY][DEBUG][AVR]` | **2** | **0** | **0** |
 | núcleos sin prefijo (`NotifyAttached`, `NotifyDetached`) | 0/2 como literal autónomo | **0** | **0** |
 | strings relacionadas A7S (`AccyUmDeviceAvr`, `AVRendezvous*`) | 0 | **6+** | **6+** |
-| código equivalente (AVRendezvous, etc.) | `0x43c25502`… | **sí** | **sí** |
+| código equivalente (NO_VERIFICADO - requiere comparación de instrucciones) (AVRendezvous, etc.) | `0x43c25502`… | **sí** | **sí** |
 
 **NO_VERIFICADO:** la equivalencia con `AVRendezvous*` y la duplicación del logger no se deducen de los nombres. El diferencial de cadenas no demuestra equivalencia de código.
 

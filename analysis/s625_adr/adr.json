@@ -2,17 +2,74 @@
   "module": "ADR",
   "traces": 1,
   "trace_strings": [
-    {"vaddr": "0x43cce3fa", "text": "[CAM_UTIL_SENS]: >>[FILE_NUM]%x [ADR]%x [SIZE]%x"}
+    {
+      "vaddr": "0x43cce3fa",
+      "text": "[CAM_UTIL_SENS]: >>[FILE_NUM]%x [ADR]%x [SIZE]%x"
+    }
   ],
   "prefix_length": 5,
   "prefix": "[ADR]",
   "parent_prefix": "[CAM_UTIL_SENS]",
   "differential": {
-    "a6000_fw321": {"token_count": 1, "prefixes": ["[CAM_UTIL_SENS]: >>[FILE_NUM]%x [ADR]%x [SIZE]%x"]},
-    "a7s_fw320": {"token_count": 0, "related_strings_count": 50},
-    "a6300_fw201": {"token_count": 0, "related_strings_count": 50}
+    "a6000_fw321": {
+      "token_count": 1,
+      "prefixes": [
+        "[CAM_UTIL_SENS]: >>[FILE_NUM]%x [ADR]%x [SIZE]%x"
+      ]
+    },
+    "a7s_fw320": {
+      "token_count": 0,
+      "related_strings_count": 50
+    },
+    "a6300_fw201": {
+      "token_count": 0,
+      "related_strings_count": 50
+    }
   },
   "shutter_line": "NEGATIVO ACOTADO",
   "logger_dual": true,
-  "global_logger": "0x43902718"
+  "global_logger": "0x43902718",
+  "verification_status": {
+    "trace_strings": {
+      "verified": true,
+      "count_ok": 1,
+      "count_total": 1,
+      "basis": "lectura directa de bytes en av-cam.bin (base 0x43541000)",
+      "details": [
+        {
+          "vaddr": "0x43cce3fa",
+          "ok": true,
+          "text": "[CAM_UTIL_SENS]: >>[FILE_NUM]%x [ADR]%x [SIZE]%x"
+        }
+      ]
+    },
+    "logger_dual": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere xrefs/REA sobre instrucciones BL al logger global; la presencia de cadenas no demuestra duplicación",
+      "global_logger": "0x43902718",
+      "global_logger_verified": true,
+      "global_logger_msg": "code @0x3c1718"
+    },
+    "equivalencia_funcional": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere análisis de A7S fw3.20 y A6300 fw2.01; presencia de cadenas núcleo no demuestra equivalencia de código"
+    },
+    "equivalencia_codigo": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere comparación de instrucciones (disassembly/xrefs) entre modelos"
+    },
+    "linea_obturador": {
+      "claimed": true,
+      "verified": true,
+      "status": "VERIFICADO",
+      "basis": "búsqueda de palabras clave del obturador únicamente en cadenas de traza del módulo",
+      "keywords_found_in_traces": []
+    }
+  }
 }

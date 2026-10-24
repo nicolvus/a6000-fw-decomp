@@ -24,7 +24,7 @@
 - **Ciclo de vida del accesorio**: 4 notificaciones de estado — `Attached` (conectado), `ContinuousAttached` (conectado continuo), `Detached` (desconectado), `UartTimedOut` (timeout UART).
 - **Restauración de datos**: `RestoreInfo...Savedata:%02X %02X` — recuperación de datos guardados (2 bytes) al reconectar.
 - **Timeout UART**: `NotifyUartTimedOut... %d` — detección de timeout en comunicación serie con la carcasa.
-- **Logger dual (patrón S177/S179/S603–S609)**: la fw3.21 **duplica** la traza: nueva con prefijo `[ACCY][INFO][HOUSING]: ` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
+- **Logger dual (patrón S177/S179/S603–S609)**: la fw3.21 **afirma duplicar** la traza (NO_VERIFICADO - requiere xrefs/REA): nueva con prefijo `[ACCY][INFO][HOUSING]: ` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
 - **Módulo ACCY**: en fw3.21 aparece por primera vez como módulo estructurado con sub-módulo `HOUSING` (y posiblemente otros). En A7S solo existe `24AccyUmDeviceWaterHousing` (string suelta sin prefijo).
 
 ## Diferencial A6000 fw3.21 vs A7S fw3.20 vs A6300 fw2.01
@@ -35,7 +35,7 @@
 | token `[ACCY]` (padre) | **5** | **0** | **0** |
 | núcleo sin prefijo (`NotifyAttached`, `NotifyDetached`, `RestoreInfo`, `NotifyUartTimedOut`) | 0/5 como literal autónomo | **0** | **0** |
 | string relacionada `WaterHousing` | 0 | **1** (`24AccyUmDeviceWaterHousing`) | **0** |
-| código equivalente (HOUSING/UART) | `0x43c25380`… | **parcial** | **parcial** |
+| código equivalente (NO_VERIFICADO - requiere comparación de instrucciones) (HOUSING/UART) | `0x43c25380`… | **parcial** | **parcial** |
 
 → **Módulo *nuevo* en traza y código.** El gestor de carcasa acuática **no existe en A7S/A6300** (ni en traza ni con esas funciones `NotifyAttached/Detached/ContinuousAttached/RestoreInfo/UartTimedOut`). A7S solo tiene una string suelta `24AccyUmDeviceWaterHousing` sin prefijo ni estructura. La fw3.21 de la A6000 **introduce** el módulo ACCY con sub-módulo HOUSING completo.
 

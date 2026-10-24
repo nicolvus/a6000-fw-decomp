@@ -28,7 +28,7 @@
 - **Validación de recursos**: `sa_err`, `intfct`, `mbox1` — error codes, interface, mailbox.
 - **Sound Detection**: `correctSndDetResult` — corrección de detección de sonido (WARNING si valor fuera de buffer).
 - **Timing Transform**: `vfc2indx` — conversión de VFC (Vertical Frame Counter) a índice de disparo; error de transform de timing.
-- **Logger dual (patrón S177/S179/S603–S610)**: la fw3.21 **duplica** la traza: nueva con prefijo `[IMAGING_RSRC]: ` + vieja con prefijo `[GOLFSHOT]` vía logger global `0x43902718`.
+- **Logger dual (patrón S177/S179/S603–S610)**: la fw3.21 **afirma duplicar** la traza (NO_VERIFICADO - requiere xrefs/REA): nueva con prefijo `[IMAGING_RSRC]: ` + vieja con prefijo `[GOLFSHOT]` vía logger global `0x43902718`.
 - **Estructura GOLFSHOT**: en A7S/A6300 existen 70+ trazas `[GOLFSHOT]` + `[ADF]SAN` para secuencia completa (start/stop/analyze, LPF/BGEST/SSP, ALOCK_ERR, FREE_ERR, ADF_START/STOP/ANALYZE, Seq._HSPre/HSEnd/GolfBgest/GolfSsp). La fw3.21 **añade capa `[IMAGING_RSRC]: `** a 5 strings específicas de recursos SA.
 
 ## Diferencial A6000 fw3.21 vs A7S fw3.20 vs A6300 fw2.01
@@ -38,9 +38,9 @@
 | token `[IMAGING_RSRC]` | **5** | **0** | **0** |
 | token `[GOLFSHOT]` (mismo núcleo) | **5** (doble prefijo) | **5** | **5** |
 | núcleos idénticos (`SA_LPF`, `SA_BGEST`, `SA_SSP`, `correctSndDetResult`, `vfc2indx`) | 5/5 con doble prefijo | **5/5** (prefijo `[GOLFSHOT]`) | **5/5** (prefijo `[GOLFSHOT]`) |
-| código equivalente (SA_LPF/BGEST/SSP, vfc2indx) | `0x43ca49xx`… | **sí** | **sí** |
+| código equivalente (NO_VERIFICADO - requiere comparación de instrucciones) (SA_LPF/BGEST/SSP, vfc2indx) | `0x43ca49xx`… | **sí** | **sí** |
 
-→ **Cambio de *logging*, no de código.** El pipeline GOLFSHOT SA (LPF/BGEST/SSP) **existe igual** en los tres firmware (mismas 5 cadenas núcleo, mismas funciones SA). Lo propio de la fw3.21 de la A6000 son **las 5 trazas con prefijo `[IMAGING_RSRC]: `** y la **duplicación** con logger global (prefijo `[GOLFSHOT]` intacto en A7S/A6300).
+→ **Cambio de *logging*, no de código.** El pipeline GOLFSHOT SA (LPF/BGEST/SSP) **existe** (NO_VERIFICADO - requiere análisis de A7S/A6300) en los tres firmware (mismas 5 cadenas núcleo (presencia de strings; equivalencia de código NO_VERIFICADO), mismas funciones SA). Lo propio de la fw3.21 de la A6000 son (NO_VERIFICADO - requiere xrefs/REA para confirmar duplicación de logger) **las 5 trazas con prefijo `[IMAGING_RSRC]: `** y la **duplicación** con logger global (prefijo `[GOLFSHOT]` intacto en A7S/A6300).
 
 **Longitud del prefijo compuesto fija:** 29 B (`[IMAGING_RSRC]: [GOLFSHOT]`) → no variable.
 

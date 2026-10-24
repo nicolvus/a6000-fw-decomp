@@ -19,7 +19,7 @@
 
 - **Triple prefijo jerárquico**: `[ACCY][ERR][UTILITY]` — módulo padre `ACCY` (accesorio) + nivel `ERR` + sub-módulo `UTILITY` (utilidades). Longitud total: 20 B (`[ACCY][ERR][UTILITY]`).
 - **Funciones de conversión**: 2 trazas `ERR` — `ConvNum8ToAscii` (convertir número de 8 bits a ASCII) y `ConvAsciiToNum8` (convertir ASCII a número de 8 bits), ambas con código de error (`%d`) y valor hexadecimal (`%08X`).
-- **Logger dual (patrón S177/S179/S603–S623)**: la fw3.21 **duplica** la traza: nueva con prefijo `[ACCY][ERR][UTILITY]` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
+- **Logger dual (patrón S177/S179/S603–S623)**: la fw3.21 **afirma duplicar** la traza (NO_VERIFICADO - requiere xrefs/REA): nueva con prefijo `[ACCY][ERR][UTILITY]` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
 - **Prefijo fijo**: 20 B (`[ACCY][ERR][UTILITY]`) → fijo (ambas trazas son nivel ERR).
 
 ## Diferencial A6000 fw3.21 vs A7S fw3.20 vs A6300 fw2.01
@@ -29,9 +29,9 @@
 | token `[ACCY][ERR][UTILITY]` | **2** | **0** | **0** |
 | núcleos sin prefijo (`ConvNum8ToAscii`, `ConvAsciiToNum8`) | 0/2 como literal autónomo | **0** | **0** |
 | strings relacionadas UTILITY A7S | 0 | **20+** (prefijos `VDF`, `Utility`, `SFRA`, `CaptureUtility*`, etc.) | **20+** (similares) |
-| código equivalente (conversión numérica) | `0x43c251d1`… | **sí** | **sí** |
+| código equivalente (NO_VERIFICADO - requiere comparación de instrucciones) (conversión numérica) | `0x43c251d1`… | **sí** | **sí** |
 
-→ **Módulo *nuevo* en traza ACCY, código preexistente.** Las funciones de conversión `ConvNum8ToAscii` y `ConvAsciiToNum8` **existen en los tres firmware** (mismas funcionalidades de utilidad). Lo propio de la fw3.21 de la A6000 son **las 2 trazas con prefijo `[ACCY][ERR][UTILITY]`** y la **duplicación** con logger global `0x43902718`. A7S/A6300 tienen 20+ strings relacionadas con utilidades pero con prefijos dispersos (`VDF`, `Utility`, `SFRA`, `CaptureUtility*`, etc.).
+→ **Módulo *nuevo* en traza ACCY, código preexistente.** Las funciones de conversión `ConvNum8ToAscii` y `ConvAsciiToNum8` **existen en los tres firmware** (mismas funcionalidades de utilidad). Lo propio de la fw3.21 de la A6000 son (NO_VERIFICADO - requiere xrefs/REA para confirmar duplicación de logger) **las 2 trazas con prefijo `[ACCY][ERR][UTILITY]`** y la **duplicación** con logger global `0x43902718`. A7S/A6300 tienen 20+ strings relacionadas con utilidades pero con prefijos dispersos (`VDF`, `Utility`, `SFRA`, `CaptureUtility*`, etc.).
 
 **Longitud del prefijo fija:** 20 B (`[ACCY][ERR][UTILITY]`) → fijo (ambas trazas son nivel ERR).
 

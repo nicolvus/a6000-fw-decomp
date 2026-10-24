@@ -18,7 +18,7 @@
 
 - **Prefijo compuesto**: `[CAM_UTIL_SENS]: >>[FILE_NUM]%x [ADR]%x [SIZE]%x` — módulo `CAM_UTIL_SENS` (Camera Utility Sensor) reporta número de archivo, dirección y tamaño. Longitud del token `[ADR]` dentro del mensaje: 5 B (`[ADR]`).
 - **Estructura de datos**: reporta `FILE_NUM` (número de archivo), `ADR` (dirección), `SIZE` (tamaño) — típico de logging de operaciones de archivo/memoria.
-- **Logger dual (patrón S177/S179/S603–S624)**: la fw3.21 **duplica** la traza: nueva con prefijo `[CAM_UTIL_SENS]: >>[FILE_NUM]%x [ADR]%x [SIZE]%x` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
+- **Logger dual (patrón S177/S179/S603–S624)**: la fw3.21 **afirma duplicar** la traza (NO_VERIFICADO - requiere xrefs/REA): nueva con prefijo `[CAM_UTIL_SENS]: >>[FILE_NUM]%x [ADR]%x [SIZE]%x` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
 - **Prefijo compuesto**: el token `[ADR]` aparece dentro de un mensaje mayor, no como prefijo standalone.
 
 ## Diferencial A6000 fw3.21 vs A7S fw3.20 vs A6300 fw2.01
@@ -28,9 +28,9 @@
 | token `[ADR]` standalone | **0** | **0** | **0** |
 | token `[ADR]` dentro de mensaje `CAM_UTIL_SENS` | **1** | **0** | **0** |
 | strings relacionadas A7S (`ADR` suelto) | 0 | **50+** (`[ADF]...Adr`, `StartAdr`, `StopAdr`, `dataAdr`, `buffAdr`, etc.) | **50+** (similares) |
-| código equivalente (CAM_UTIL_SENS) | `0x43cce3fa`… | **parcial** | **parcial** |
+| código equivalente (NO_VERIFICADO - requiere comparación de instrucciones) (CAM_UTIL_SENS) | `0x43cce3fa`… | **parcial** | **parcial** |
 
-→ **Token *nuevo* en traza, código preexistente.** El token `[ADR]` dentro de mensajes de `CAM_UTIL_SENS` **no existe en A7S/A6300** (usan `Adr`, `adrs`, `Adr` sueltos sin brackets). Lo propio de la fw3.21 de la A6000 es **la traza con token `[ADR]` explícito** dentro del mensaje de `CAM_UTIL_SENS`. La fw3.21 **duplica** la traza (nueva con logger de módulo + vieja con logger global `0x43902718`).
+→ **Token *nuevo* en traza, código preexistente.** El token `[ADR]` dentro de mensajes de `CAM_UTIL_SENS` **no existe en A7S/A6300** (usan `Adr`, `adrs`, `Adr` sueltos sin brackets). Lo propio de la fw3.21 de la A6000 es **la traza con token `[ADR]` explícito** dentro del mensaje de `CAM_UTIL_SENS`. La fw3.21 **afirma duplicar** la traza (NO_VERIFICADO - requiere xrefs/REA) (nueva con logger de módulo + vieja con logger global `0x43902718`).
 
 ## Línea del obturador: NEGATIVO ACOTADO
 

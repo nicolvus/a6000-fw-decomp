@@ -2,11 +2,26 @@
   "module": "ACCY/INFO/HOUSING",
   "traces": 5,
   "trace_strings": [
-    {"vaddr": "0x43c25380", "text": "[ACCY][INFO][HOUSING]:%d:NotifyAttached"},
-    {"vaddr": "0x43c253a8", "text": "[ACCY][INFO][HOUSING]:%d:NotifyContinuousAttached"},
-    {"vaddr": "0x43c253da", "text": "[ACCY][INFO][HOUSING]:%d:RestoreInfo...Savedata:%02X %02X"},
-    {"vaddr": "0x43c25414", "text": "[ACCY][INFO][HOUSING]:%d:NotifyDetached"},
-    {"vaddr": "0x43c2543c", "text": "[ACCY][INFO][HOUSING]:%d:NotifyUartTimedOut... %d"}
+    {
+      "vaddr": "0x43c25380",
+      "text": "[ACCY][INFO][HOUSING]:%d:NotifyAttached"
+    },
+    {
+      "vaddr": "0x43c253a8",
+      "text": "[ACCY][INFO][HOUSING]:%d:NotifyContinuousAttached"
+    },
+    {
+      "vaddr": "0x43c253da",
+      "text": "[ACCY][INFO][HOUSING]:%d:RestoreInfo...Savedata:%02X %02X"
+    },
+    {
+      "vaddr": "0x43c25414",
+      "text": "[ACCY][INFO][HOUSING]:%d:NotifyDetached"
+    },
+    {
+      "vaddr": "0x43c2543c",
+      "text": "[ACCY][INFO][HOUSING]:%d:NotifyUartTimedOut... %d"
+    }
   ],
   "prefix_length": 22,
   "prefix": "[ACCY][INFO][HOUSING]:",
@@ -14,11 +29,87 @@
   "level_prefix": "[INFO]",
   "sub_prefix": "[HOUSING]",
   "differential": {
-    "a6000_fw321": {"token_count": 5, "prefixes": ["[ACCY][INFO][HOUSING]:"]},
-    "a7s_fw320": {"token_count": 0, "related_strings": ["24AccyUmDeviceWaterHousing"]},
-    "a6300_fw201": {"token_count": 0, "related_strings": []}
+    "a6000_fw321": {
+      "token_count": 5,
+      "prefixes": [
+        "[ACCY][INFO][HOUSING]:"
+      ]
+    },
+    "a7s_fw320": {
+      "token_count": 0,
+      "related_strings": [
+        "24AccyUmDeviceWaterHousing"
+      ]
+    },
+    "a6300_fw201": {
+      "token_count": 0,
+      "related_strings": []
+    }
   },
   "shutter_line": "NEGATIVO ACOTADO",
   "logger_dual": true,
-  "global_logger": "0x43902718"
+  "global_logger": "0x43902718",
+  "verification_status": {
+    "trace_strings": {
+      "verified": true,
+      "count_ok": 5,
+      "count_total": 5,
+      "basis": "lectura directa de bytes en av-cam.bin (base 0x43541000)",
+      "details": [
+        {
+          "vaddr": "0x43c25380",
+          "ok": true,
+          "text": "[ACCY][INFO][HOUSING]:%d:NotifyAttached"
+        },
+        {
+          "vaddr": "0x43c253a8",
+          "ok": true,
+          "text": "[ACCY][INFO][HOUSING]:%d:NotifyContinuousAttached"
+        },
+        {
+          "vaddr": "0x43c253da",
+          "ok": true,
+          "text": "[ACCY][INFO][HOUSING]:%d:RestoreInfo...Savedata:%0"
+        },
+        {
+          "vaddr": "0x43c25414",
+          "ok": true,
+          "text": "[ACCY][INFO][HOUSING]:%d:NotifyDetached"
+        },
+        {
+          "vaddr": "0x43c2543c",
+          "ok": true,
+          "text": "[ACCY][INFO][HOUSING]:%d:NotifyUartTimedOut... %d"
+        }
+      ]
+    },
+    "logger_dual": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere xrefs/REA sobre instrucciones BL al logger global; la presencia de cadenas no demuestra duplicación",
+      "global_logger": "0x43902718",
+      "global_logger_verified": true,
+      "global_logger_msg": "code @0x3c1718"
+    },
+    "equivalencia_funcional": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere análisis de A7S fw3.20 y A6300 fw2.01; presencia de cadenas núcleo no demuestra equivalencia de código"
+    },
+    "equivalencia_codigo": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere comparación de instrucciones (disassembly/xrefs) entre modelos"
+    },
+    "linea_obturador": {
+      "claimed": true,
+      "verified": true,
+      "status": "VERIFICADO",
+      "basis": "búsqueda de palabras clave del obturador únicamente en cadenas de traza del módulo",
+      "keywords_found_in_traces": []
+    }
+  }
 }

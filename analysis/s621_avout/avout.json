@@ -2,8 +2,14 @@
   "module": "AVOUT",
   "traces": 2,
   "trace_strings": [
-    {"vaddr": "0x43c2549e", "text": "[ACCY][DEBUG][AVOUT] NotifyDetached(%d)"},
-    {"vaddr": "0x43c254c6", "text": "[ACCY][DEBUG][AVOUT] NotifyAttached(%d)"}
+    {
+      "vaddr": "0x43c2549e",
+      "text": "[ACCY][DEBUG][AVOUT] NotifyDetached(%d)"
+    },
+    {
+      "vaddr": "0x43c254c6",
+      "text": "[ACCY][DEBUG][AVOUT] NotifyAttached(%d)"
+    }
   ],
   "prefix_length": 20,
   "prefix": "[ACCY][DEBUG][AVOUT]",
@@ -11,11 +17,74 @@
   "level_prefix": "[DEBUG]",
   "sub_prefix": "[AVOUT]",
   "differential": {
-    "a6000_fw321": {"token_count": 2, "prefixes": ["[ACCY][DEBUG][AVOUT]"]},
-    "a7s_fw320": {"token_count": 0, "related_strings": ["17AccyUmDeviceAvOut"]},
-    "a6300_fw201": {"token_count": 0, "related_strings": ["17AccyUmDeviceAvOut"]}
+    "a6000_fw321": {
+      "token_count": 2,
+      "prefixes": [
+        "[ACCY][DEBUG][AVOUT]"
+      ]
+    },
+    "a7s_fw320": {
+      "token_count": 0,
+      "related_strings": [
+        "17AccyUmDeviceAvOut"
+      ]
+    },
+    "a6300_fw201": {
+      "token_count": 0,
+      "related_strings": [
+        "17AccyUmDeviceAvOut"
+      ]
+    }
   },
   "shutter_line": "NEGATIVO ACOTADO",
   "logger_dual": true,
-  "global_logger": "0x43902718"
+  "global_logger": "0x43902718",
+  "verification_status": {
+    "trace_strings": {
+      "verified": true,
+      "count_ok": 2,
+      "count_total": 2,
+      "basis": "lectura directa de bytes en av-cam.bin (base 0x43541000)",
+      "details": [
+        {
+          "vaddr": "0x43c2549e",
+          "ok": true,
+          "text": "[ACCY][DEBUG][AVOUT] NotifyDetached(%d)"
+        },
+        {
+          "vaddr": "0x43c254c6",
+          "ok": true,
+          "text": "[ACCY][DEBUG][AVOUT] NotifyAttached(%d)"
+        }
+      ]
+    },
+    "logger_dual": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere xrefs/REA sobre instrucciones BL al logger global; la presencia de cadenas no demuestra duplicación",
+      "global_logger": "0x43902718",
+      "global_logger_verified": true,
+      "global_logger_msg": "code @0x3c1718"
+    },
+    "equivalencia_funcional": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere análisis de A7S fw3.20 y A6300 fw2.01; presencia de cadenas núcleo no demuestra equivalencia de código"
+    },
+    "equivalencia_codigo": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere comparación de instrucciones (disassembly/xrefs) entre modelos"
+    },
+    "linea_obturador": {
+      "claimed": true,
+      "verified": true,
+      "status": "VERIFICADO",
+      "basis": "búsqueda de palabras clave del obturador únicamente en cadenas de traza del módulo",
+      "keywords_found_in_traces": []
+    }
+  }
 }

@@ -2,24 +2,160 @@
   "module": "NSX_VOT",
   "traces": 7,
   "trace_strings": [
-    {"vaddr": "0x43cfdb1e", "text": "[NSX_VOT]: almhdl : bt stop error: %d", "twin_vaddr": "0x43cfdb9c", "twin_text": "[TRK]: almhdl : bt stop error: %d", "delta": 38},
-    {"vaddr": "0x43cfdb66", "text": "[NSX_VOT]: osal_alloc_timer(): %d", "twin_vaddr": "0x43cfdbe0", "twin_text": "[TRK]: osal_alloc_timer(): %d", "delta": 34},
-    {"vaddr": "0x43cfdba6", "text": "[NSX_VOT]: osal_alloc_timer(): handle alloc again!!", "twin_vaddr": "0x43cfdc32", "twin_text": "[TRK]: osal_alloc_timer(): handle alloc again!!", "delta": 52},
-    {"vaddr": "0x43cfdc0a", "text": "[NSX_VOT]: osal_free_timer(): handle NULL!!", "twin_vaddr": "0x43cfdc8e", "twin_text": "[TRK]: osal_free_timer(): handle NULL!!", "delta": 44},
-    {"vaddr": "0x43cfdc5e", "text": "[NSX_VOT]: osal_free_timer(): %d", "twin_vaddr": "0x43cfdcd7", "twin_text": "[TRK]: osal_free_timer(): %d", "delta": 33},
-    {"vaddr": "0x43cfdc9c", "text": "[NSX_VOT]: osal_set_timer(): %d", "twin_vaddr": "0x43cfdd14", "twin_text": "[TRK]: osal_set_timer(): %d", "delta": 32},
-    {"vaddr": "0x43cfdcd8", "text": "[NSX_VOT]: osal_can_timer(): %d", "twin_vaddr": "0x43cfdd50", "twin_text": "[TRK]: osal_can_timer(): %d", "delta": 32}
+    {
+      "vaddr": "0x43cfdb1e",
+      "text": "[NSX_VOT]: almhdl : bt stop error: %d",
+      "twin_vaddr": "0x43cfdb9c",
+      "twin_text": "[TRK]: almhdl : bt stop error: %d",
+      "delta": 38
+    },
+    {
+      "vaddr": "0x43cfdb66",
+      "text": "[NSX_VOT]: osal_alloc_timer(): %d",
+      "twin_vaddr": "0x43cfdbe0",
+      "twin_text": "[TRK]: osal_alloc_timer(): %d",
+      "delta": 34
+    },
+    {
+      "vaddr": "0x43cfdba6",
+      "text": "[NSX_VOT]: osal_alloc_timer(): handle alloc again!!",
+      "twin_vaddr": "0x43cfdc32",
+      "twin_text": "[TRK]: osal_alloc_timer(): handle alloc again!!",
+      "delta": 52
+    },
+    {
+      "vaddr": "0x43cfdc0a",
+      "text": "[NSX_VOT]: osal_free_timer(): handle NULL!!",
+      "twin_vaddr": "0x43cfdc8e",
+      "twin_text": "[TRK]: osal_free_timer(): handle NULL!!",
+      "delta": 44
+    },
+    {
+      "vaddr": "0x43cfdc5e",
+      "text": "[NSX_VOT]: osal_free_timer(): %d",
+      "twin_vaddr": "0x43cfdcd7",
+      "twin_text": "[TRK]: osal_free_timer(): %d",
+      "delta": 33
+    },
+    {
+      "vaddr": "0x43cfdc9c",
+      "text": "[NSX_VOT]: osal_set_timer(): %d",
+      "twin_vaddr": "0x43cfdd14",
+      "twin_text": "[TRK]: osal_set_timer(): %d",
+      "delta": 32
+    },
+    {
+      "vaddr": "0x43cfdcd8",
+      "text": "[NSX_VOT]: osal_can_timer(): %d",
+      "twin_vaddr": "0x43cfdd50",
+      "twin_text": "[TRK]: osal_can_timer(): %d",
+      "delta": 32
+    }
   ],
   "prefix_length": 11,
   "prefix": "[NSX_VOT]: ",
   "twin_prefix": "[TRK]: ",
   "twin_prefix_length": 6,
   "differential": {
-    "a6000_fw321": {"nsx_vot_token_count": 7, "trk_token_count": 7, "prefixes": ["[NSX_VOT]: ", "[TRK]: "]},
-    "a7s_fw320": {"nsx_vot_token_count": 0, "trk_token_count": 7, "prefixes": ["[TRK]: ", "[CapMgr]"]},
-    "a6300_fw201": {"nsx_vot_token_count": 0, "trk_token_count": 7, "prefixes": ["[TRK]: ", "[CapMgr]"]}
+    "a6000_fw321": {
+      "nsx_vot_token_count": 7,
+      "trk_token_count": 7,
+      "prefixes": [
+        "[NSX_VOT]: ",
+        "[TRK]: "
+      ]
+    },
+    "a7s_fw320": {
+      "nsx_vot_token_count": 0,
+      "trk_token_count": 7,
+      "prefixes": [
+        "[TRK]: ",
+        "[CapMgr]"
+      ]
+    },
+    "a6300_fw201": {
+      "nsx_vot_token_count": 0,
+      "trk_token_count": 7,
+      "prefixes": [
+        "[TRK]: ",
+        "[CapMgr]"
+      ]
+    }
   },
   "shutter_line": "NEGATIVO ACOTADO",
   "logger_dual": true,
-  "global_logger": "0x43902718"
+  "global_logger": "0x43902718",
+  "verification_status": {
+    "trace_strings": {
+      "verified": true,
+      "count_ok": 7,
+      "count_total": 7,
+      "basis": "lectura directa de bytes en av-cam.bin (base 0x43541000)",
+      "details": [
+        {
+          "vaddr": "0x43cfdb1e",
+          "ok": true,
+          "text": "[NSX_VOT]: almhdl : bt stop error: %d"
+        },
+        {
+          "vaddr": "0x43cfdb66",
+          "ok": true,
+          "text": "[NSX_VOT]: osal_alloc_timer(): %d"
+        },
+        {
+          "vaddr": "0x43cfdba6",
+          "ok": true,
+          "text": "[NSX_VOT]: osal_alloc_timer(): handle alloc again!"
+        },
+        {
+          "vaddr": "0x43cfdc0a",
+          "ok": true,
+          "text": "[NSX_VOT]: osal_free_timer(): handle NULL!!"
+        },
+        {
+          "vaddr": "0x43cfdc5e",
+          "ok": true,
+          "text": "[NSX_VOT]: osal_free_timer(): %d"
+        },
+        {
+          "vaddr": "0x43cfdc9c",
+          "ok": true,
+          "text": "[NSX_VOT]: osal_set_timer(): %d"
+        },
+        {
+          "vaddr": "0x43cfdcd8",
+          "ok": true,
+          "text": "[NSX_VOT]: osal_can_timer(): %d"
+        }
+      ]
+    },
+    "logger_dual": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere xrefs/REA sobre instrucciones BL al logger global; la presencia de cadenas no demuestra duplicación",
+      "global_logger": "0x43902718",
+      "global_logger_verified": true,
+      "global_logger_msg": "code @0x3c1718"
+    },
+    "equivalencia_funcional": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere análisis de A7S fw3.20 y A6300 fw2.01; presencia de cadenas núcleo no demuestra equivalencia de código"
+    },
+    "equivalencia_codigo": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere comparación de instrucciones (disassembly/xrefs) entre modelos"
+    },
+    "linea_obturador": {
+      "claimed": true,
+      "verified": true,
+      "status": "VERIFICADO",
+      "basis": "búsqueda de palabras clave del obturador únicamente en cadenas de traza del módulo",
+      "keywords_found_in_traces": []
+    }
+  }
 }

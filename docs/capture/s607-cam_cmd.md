@@ -26,7 +26,7 @@
 - **Path selector**: `SetupTable` indexado por `cur_state` y `req`; error si configuración inválida.
 - **Mode sequencer**: `SetupTable` para transiciones `[%d]->[%d]`; error si configuración inválida.
 - **Validaciones**: `s_request` NULL check; `CheckReturnAllModlueResponse` (typo: "Modlue" → "Module").
-- **Logger dual (patrón S177/S179/S603/S604/S605/S606)**: la fw3.21 **duplica** la traza: nueva con prefijo `[CAM_CMD]: ` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`. Ejemplo: en offset `+0x2c` carga string con prefijo y en `+0x32` llama `bl 0x43902718` con string original.
+- **Logger dual (patrón S177/S179/S603/S604/S605/S606)**: la fw3.21 **afirma duplicar** la traza (NO_VERIFICADO - requiere xrefs/REA): nueva con prefijo `[CAM_CMD]: ` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`. Ejemplo: en offset `+0x2c` carga string con prefijo y en `+0x32` llama `bl 0x43902718` con string original.
 - **Longitud del prefijo**: 11 B (`[CAM_CMD]: `) → fija (igual que S605/S606).
 - **Typo**: "Modlue" en "Module" — presente en los tres firmware.
 
@@ -37,9 +37,9 @@
 | token `[CAM_CMD]` | **6** | **0** | **0** |
 | núcleo sin prefijo (`Warning! Now rocessing...`, `Error! Can't Transfer...`, etc.) | 0/6 como literal autónomo | **6/6** (sin prefijo) | **6/6** (sin prefijo) |
 | prefijo alternativo A7S (`[CAMERA_MAIN_FC]`, `[CAM_UTIL]`, etc.) | 0 | **otros módulos** | **otros módulos** |
-| código equivalente (Capcon, s_path_selector, s_mode_sequencer) | `0x43cbdxxx`… | **sí** | **sí** |
+| código equivalente (NO_VERIFICADO - requiere comparación de instrucciones) (Capcon, s_path_selector, s_mode_sequencer) | `0x43cbdxxx`… | **sí** | **sí** |
 
-→ **Cambio de *logging*, no de código.** El gestor de comandos Capcon **existe igual** en los tres firmware (mismas 6 cadenas núcleo, mismas variables `s_path_selector`, `s_mode_sequencer`, `s_request`, mismo typo "Modlue"). Lo propio de la fw3.21 de la A6000 son **las 6 trazas con prefijo `[CAM_CMD]: `** y la **duplicación** con logger global `0x43902718`. En A7S/A6300 las 6 cadenas existen **sin prefijo** (inician directamente con "Warning!" / "Error!").
+→ **Cambio de *logging*, no de código.** El gestor de comandos Capcon **existe** (NO_VERIFICADO - requiere análisis de A7S/A6300) en los tres firmware (mismas 6 cadenas núcleo (presencia de strings; equivalencia de código NO_VERIFICADO), mismas variables `s_path_selector`, `s_mode_sequencer`, `s_request`, mismo typo "Modlue"). Lo propio de la fw3.21 de la A6000 son (NO_VERIFICADO - requiere xrefs/REA para confirmar duplicación de logger) **las 6 trazas con prefijo `[CAM_CMD]: `** y la **duplicación** con logger global `0x43902718`. En A7S/A6300 las 6 cadenas existen **sin prefijo** (inician directamente con "Warning!" / "Error!").
 
 **Longitud del prefijo fija:** 11 B (`[CAM_CMD]: `) → no variable.
 
