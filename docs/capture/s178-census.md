@@ -38,6 +38,19 @@ de referencias a su cadena contenedora.
 
 ## Cola abierta y límites
 
+### Examen puntual de `[SFR]` — 24-10-2026
+
+La cadena `0x43ce757f` (`[SFR]Recieve CpuSelectComp`) aparece en un bloque
+condicionado: `0x439a63a0` compara el valor de pila con `0x00ff0481` (pool
+`0x439a64d4`), `0x439a63a6` salta si no coincide y `0x439a63a8..ac` carga
+la cadena por PIC y llama a `0x435aba80`. Se contrastaron las instrucciones
+Thumb y las palabras del pool con el `av-cam.bin` original (SHA-256
+`b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9`).
+El proyecto Ghidra histórico no creó una función que abarque ese sitio; por
+ello no se infiere contrato de `0x435aba80`, alcance de la rama ni relación
+con `[SFRA]`/`[SFRS]`. Sigue `ACEPTO` como candidato y **pendiente de
+decodificación**; el censo 133/372 no cambia.
+
 La [lista explícita](../../analysis/s178_census/pendientes.md) incluye las 226 pendientes,
 las 13 descartadas y su motivo. De las abiertas, cuatro se aceptan como candidatas y
 222 siguen NO_VERIFICADO: dos examinadas y 220 sin revisión individual de instrucciones.

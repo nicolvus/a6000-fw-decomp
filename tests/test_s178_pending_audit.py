@@ -100,6 +100,18 @@ def test_decisive_pic_edges_against_original_bytes():
         assert (add + 4 + word) & 0xFFFFFFFF == int(edge["cadena"], 16)
 
 
+def test_sfr_log_branch_against_original_bytes():
+    data = (ROOT / audit.BINARY).read_bytes()
+    def at(address: int, size: int) -> bytes:
+        return data[address - audit.BASE:address - audit.BASE + size]
+
+    assert at(0x439a63a2, 2).hex() == "9342"  # cmp r3, r2
+    assert at(0x439a63a6, 2).hex() == "04d1"  # bne: salta la traza
+    assert at(0x439a63a8, 8).hex() == "5f48784405f468fa"
+    assert int.from_bytes(at(0x439a64d4, 4), "little") == 0x00FF0481
+    assert int.from_bytes(at(0x439a6528, 4), "little") + 0x439a63ae == 0x43ce757f
+
+
 def test_rejections_are_format_fields_in_every_occurrence():
     saved = audit.build(ROOT)
     for row in saved["etiquetas"]:
