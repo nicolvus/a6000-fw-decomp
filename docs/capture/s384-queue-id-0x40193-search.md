@@ -1,5 +1,11 @@
 # S384 — Búsqueda del ID de cola `0x40193` (C2 receptor) en ARM y Thumb
 
+**INFORME VIGENTE 23-10-2026:** [trazado verificado del ID](queue-40193-flow-2026-10-23.md).
+Los nueve words A6000 de `.text` sí tienen cargas LDR desde pool; su
+desensamblado lineal no permite descartarlos. Se identifican receptor e
+instalador de su puntero en av-cam. Las secciones históricas siguientes
+conservan errores explícitamente invalidados; no usarlas como conclusión vigente.
+
 ## 1. Patrones buscados en libObj.so (A6000 fw3.21, A7S fw3.20, A6300 fw2.01)
 
 **AUDITORÍA 23-10-2026 — tabla y encodings históricos invalidados.** Los patrones Thumb publicados no codifican las instrucciones indicadas. `0x40193` requiere mitad alta **4**, no `0x40`. Además, el test reutilizaba el offset `.data` A6000 en la A7S. Las tablas siguientes se conservan como registro del método fallido; sus ceros de MOVW/MOVT no son evidencia de ausencia.
@@ -26,7 +32,7 @@ El encoding correcto `40 f2 93 13` es `movw r3,#0x193` y existe en ambos binario
 
 **Conclusión:** No se encontró `0x40193` como dato inmediato, literal, o string en ningún binario.
 
-## 2. ARM vs Thumb — cobertura
+## 2. ARM vs Thumb — encodings históricos INVALIDADOS
 
 **Thumb-2 MOVW/MOVT para 0x40193:**
 - `movw Rd, #0x0193`: buscar `hw1 = 0xF240 | (s<<10) | imm10`, `hw2 = 0xF800 | imm11` con imm16 = 0x0193
@@ -51,7 +57,7 @@ También se verificó:
 - `ldr rX,[pc,#imm]` + `add rX,pc` con literal 0x00040193 en el pool: 0 sitios en .rodata
 - Construcciones `mov`+`lsl`/`orr` para formar 0x40193: no buscadas exhaustivamente (requiere análisis de flujo)
 
-## 4. Conclusión S384
+## 4. Conclusión histórica S384 — INVALIDADA
 
 **El ID de cola `0x40193` no se localiza estáticamente** en libObj.so de ningún modelo. Mecanismos posibles (no verificables estáticamente):
 1. ID pasado como argumento de función (registro, no literal)

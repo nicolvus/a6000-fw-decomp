@@ -1,5 +1,22 @@
 # Progreso — sistema de conocimiento Sony A6000
 
+## Investigación 0x40193 — seguimiento S384 (23-10-2026)
+
+- [Evidencia y límites](../docs/capture/queue-40193-flow-2026-10-23.md): nueve
+  pools `.text` A6000 cargados por LDR, cuatro emisores con copia de 16 B,
+  RPC av-cam de 12 B, receptor `0x4381d16c` y tabla de 35 filas verificados.
+- Instalador `0x4379e93c`: GOT `0x4401f564` → temporal+8 → copia de 20 B a
+  descriptor `0x43ea048c`, campo+0x14=`0x46`. Esto no prueba registro OSAL Linux.
+- Pruebas: 124 tests PASS (53 S380 + 71 conocimiento); ruff/mypy de Python tocado PASS; LLVM
+  confirma las ventanas decisivas y la vista ELF contiene el mismo `.text` que
+  el av-cam original. REA: apertura libObj interrumpida por watchdog; primera
+  sesión av-cam lista tras 467 s pero perdida al reanudar. Reapertura completada,
+  22 consultas exportadas; trazas constructor/copia/RPC sin truncamiento. REA
+  confirma GOT/store/BL pero no define el instalador ni el receptor como funciones.
+  Bindings y destinos indirectos OSAL pendientes. Sesión cerrada tras el hito.
+- Próximo paso exacto: seguir consumidor de `0x43b7fb9c` y descriptor `0x43ea048c` hasta arranque,
+  y separar callback OSAL Linux/enlace Linux↔LIRO de la instalación LIRO probada.
+
 ## Investigación S140 — mapa de registros IMX210
 
 - Objetivo acotado: enumerar el vector `0x43fe995c` y revisar los dos rangos de filas de 16 bytes sin asignar semántica física.

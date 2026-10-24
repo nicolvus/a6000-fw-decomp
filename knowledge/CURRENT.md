@@ -1,5 +1,17 @@
 # Estado actual — léeme primero
 
+## Cola 0x40193 — 23-10-2026
+
+[Informe](../docs/capture/queue-40193-flow-2026-10-23.md), S384 actualizado:
+los nueve words `.text` A6000 sí tienen cargas LDR desde pools. Cuatro cuerpos
+conservan destino en r5 y copian 16 B antes de `osal_snd_msg`; reply-to va en
+mensaje-4. Receptor LIRO `0x4381d16c`, tabla `0x44000174` (35×12 B).
+`0x4379e93c` instala puntero Thumb `0x4381d16d` desde GOT `0x4401f564`
+en descriptor `0x43ea048c`, campo+0x14=`0x46`. Pendientes concretos: consumidor de
+arranque del descriptor, callback OSAL Linux y enlace Linux↔LIRO. El origen por
+literal y el instalador ya se conocen; el análisis estático no está agotado.
+53 tests S380 PASS; S51 sin cambios. Prevalece sobre resúmenes históricos siguientes.
+
 ## Contrato RecordStill / RecordImage — 23-10-2026
 
 [Informe](../docs/capture/recordstill-contract-audit-2026-10-23.md): la etiqueta `RecordStill::Execute` de A6000 `0x90b248` no está demostrada; sus diagnósticos dicen **RecordImage**, pareja A7S `0x84a568`. A7S `0x847e1c` corresponde estructuralmente a A6000 `0x908afc` (RecordStill, cinco entradas ABI). RecordImage llama a RecordStill en ambos modelos. Los negativos A7S de MOVW `0x100f` y stack `0xb00` eran falsos. Límites de los dos llamadores A6000 recuperados; `0x91631e` es tabla TBB. 25 punteros Thumb al contenedor `0x90d7e8`; consumidor BX/BLX y ejecución física NO_VERIFICADO. 42 tests S380 PASS. Esta corrección prevalece sobre los resúmenes históricos siguientes.
