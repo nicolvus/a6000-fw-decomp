@@ -108,7 +108,8 @@ def test_json_del_hito_consistente():
     assert r["etiquetas"] == 372
     assert r["exclusivas_a6000"] == 93
     assert r["ausentes_en_a6300"] == 7
-    assert r["con_hito"] + r["cubiertas_como_sub_etiqueta"] + r["pendientes_reales"] == 372
+    assert (r["con_hito"] + r["cubiertas_como_sub_etiqueta"]
+            + r["pendientes_reales"] + r["descartadas_no_modulo"]) == 372
     assert r["con_hito"] >= 52
     assert r["cubiertas_total"] == r["con_hito"] + r["cubiertas_como_sub_etiqueta"]
     with open(os.path.join(ANA, "census_detalle.json"), encoding="utf-8") as fh:
