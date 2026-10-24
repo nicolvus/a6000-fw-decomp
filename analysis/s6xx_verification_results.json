@@ -414,9 +414,100 @@
         "scope": "datos y deltas; no prueba emisión ni logger dual"
       },
       "core_strings": {
-        "verified": false,
-        "count_total": 0,
-        "details": [],
+        "verified": true,
+        "count_total": 6,
+        "details": [
+          {
+            "vaddr": "0x43caeb1b",
+            "ok": true,
+            "matches_by_firmware": {
+              "a6000_fw321": [
+                "0x43caeb1b"
+              ],
+              "a7s_fw320": [
+                "0x43cb1e9b"
+              ],
+              "a6300_fw201": [
+                "0x43dc4e45"
+              ]
+            }
+          },
+          {
+            "vaddr": "0x43caeb48",
+            "ok": true,
+            "matches_by_firmware": {
+              "a6000_fw321": [
+                "0x43caeb48"
+              ],
+              "a7s_fw320": [
+                "0x43cb1ebd"
+              ],
+              "a6300_fw201": [
+                "0x43dc4e67"
+              ]
+            }
+          },
+          {
+            "vaddr": "0x43caeb88",
+            "ok": true,
+            "matches_by_firmware": {
+              "a6000_fw321": [
+                "0x43caeb88"
+              ],
+              "a7s_fw320": [
+                "0x43cb1ef2"
+              ],
+              "a6300_fw201": [
+                "0x43dc4e9c"
+              ]
+            }
+          },
+          {
+            "vaddr": "0x43caebcc",
+            "ok": true,
+            "matches_by_firmware": {
+              "a6000_fw321": [
+                "0x43caebcc"
+              ],
+              "a7s_fw320": [
+                "0x43cb1f2b"
+              ],
+              "a6300_fw201": [
+                "0x43dc4ed5"
+              ]
+            }
+          },
+          {
+            "vaddr": "0x43caebf1",
+            "ok": true,
+            "matches_by_firmware": {
+              "a6000_fw321": [
+                "0x43caebf1"
+              ],
+              "a7s_fw320": [
+                "0x43cb1f45"
+              ],
+              "a6300_fw201": [
+                "0x43dc4eef"
+              ]
+            }
+          },
+          {
+            "vaddr": "0x43caec2b",
+            "ok": true,
+            "matches_by_firmware": {
+              "a6000_fw321": [
+                "0x43caec2b"
+              ],
+              "a7s_fw320": [
+                "0x43cb1f74"
+              ],
+              "a6300_fw201": [
+                "0x43dc4f1e"
+              ]
+            }
+          }
+        ],
         "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
       },
       "metadata": {
@@ -430,13 +521,13 @@
         "scope": "marcadores ASCII en trazas NUL; no nivel efectivo ni funciones emisoras"
       },
       "logger_dual": {
-        "verified": false,
-        "status": "NO_VERIFICADO",
-        "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+        "verified": true,
+        "status": "VERIFICADO_ESTATICO",
+        "reason": "rutas de envío y logger verificadas por instrucciones en todas las trazas",
         "claimed": true,
         "global_logger": "0x43902718",
-        "global_logger_verified": false,
-        "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+        "global_logger_verified": true,
+        "global_logger_msg": "llamada estática a 0x43902718 con sufijo de cada traza",
         "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
       },
       "equivalencia_funcional": {

@@ -6,10 +6,11 @@ Este informe corrige [la validación anterior, commit 9e1a4055](https://github.c
 Sus 263 pruebas pasan, pero no acreditan todas sus conclusiones. Las nuevas regresiones
 reprodujeron siete fallos antes de corregir datos y estados.
 
-**Actualización 24-10-2026:** S611 sí tiene dos rutas de emisión demostradas
-estáticamente para sus cinco trazas. Las tablas históricas de esta auditoría que
-dejan logger dual pendiente para las 23 fichas quedan corregidas solo para S611;
-las otras 22 y todas las equivalencias funcionales/de código siguen abiertas.
+**Actualización 24-10-2026:** S607 y S611 tienen dos rutas de emisión
+demostradas estáticamente para sus seis y cinco trazas, respectivamente.
+Las tablas históricas que dejan logger dual pendiente para las 23 fichas
+quedan corregidas para estas dos; las otras 21 y todas las equivalencias
+funcionales/de código siguen abiertas. No se observó ejecución real.
 
 | Afirmación o hallazgo | Decisión | Evidencia y corrección |
 |---|---|---|
@@ -37,7 +38,7 @@ en [resultados reproducibles](../../analysis/s6xx_verification_results.json).
   `0x43cfdc7f`, `0x43cfdcbc`, `0x43cfdcf8`.
   Deltas desde las principales: **38, 34, 52, 44, 33, 32, 32 B**.
   La primera dirección antigua, `0x43cfdb9c`, apuntaba a `mer(): %d`, no a la gemela.
-- S608 y S611: **11 núcleos** comprobados como sufijos NUL de las cadenas A6000.
+- S607, S608 y S611: **17 núcleos** comprobados como sufijos NUL de las cadenas A6000.
   Las coincidencias A7S/A6300 constan con direcciones por núcleo; una coincidencia
   textual no es equivalencia funcional ni prueba un literal autónomo.
 - `0x43902718`, offset `0x3c1718`: bytes `0fb4 0021 30b5 a3b0` decodifican
@@ -58,10 +59,10 @@ en [resultados reproducibles](../../analysis/s6xx_verification_results.json).
 ### Ampliación de la auditoría de afirmaciones (23-10-2026)
 
 Revisadas individualmente las 23 fichas S605–S627: de 69 afirmaciones de logger dual,
-equivalencia funcional y equivalencia de código, **68 permanecen NO_VERIFICADO**.
-S611 acredita dos rutas estáticas para sus cinco trazas con cargas, llamadas y
-flujo contrastados en [su informe](s611-imaging_rsrc.md); no prueba ejecución real.
-Los demás JSON conservan `verified=false` y el motivo. No se ha probado que
+equivalencia funcional y equivalencia de código, **67 permanecen NO_VERIFICADO**.
+[S607](s607-cam_cmd.md) y [S611](s611-imaging_rsrc.md) acreditan dos rutas
+estáticas para sus seis y cinco trazas con cargas y llamadas contrastadas;
+no prueban ejecución real. Los demás JSON conservan `verified=false` y el motivo. No se ha probado que
 esas afirmaciones sean falsas.
 REA MCP devolvió `target_unavailable`; se consultó su exportación histórica citada arriba
 y se contrastaron nuevamente los bytes con Capstone: prólogo `0x43902718` y

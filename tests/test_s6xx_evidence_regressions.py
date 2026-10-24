@@ -61,7 +61,7 @@ def test_no_functional_negative_from_keywords():
 def test_no_positive_logger_claim_without_instructions():
     for session, j in MODULES.items():
         status = j["verification_status"]["logger_dual"]
-        if session == 611:
+        if session in {607, 611}:
             assert j["logger_dual"] is True
             assert status["verified"] is True
             assert status["global_logger_verified"] is True

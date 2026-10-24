@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Unit tests for S607 CAM_CMD module analysis."""
 import json
 import unittest
@@ -40,8 +39,7 @@ class TestS607CAMCMD(unittest.TestCase):
     def test_logger_dual(self):
         vs = self.data.get('verification_status', {})
         ld = vs.get('logger_dual', {})
-        self.assertEqual(ld.get('status'), 'NO_VERIFICADO',
-                         'logger_dual no es NO_VERIFICADO')
+        self.assertEqual(ld.get('status'), 'VERIFICADO_ESTATICO')
 
     def test_global_logger(self):
         self.assertEqual(self.data['global_logger'], "0x43902718")

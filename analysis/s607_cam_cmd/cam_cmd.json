@@ -4,27 +4,33 @@
   "trace_strings": [
     {
       "vaddr": "0x43caeb10",
-      "text": "[CAM_CMD]: Warning! Now rocessing... req[%d]"
+      "text": "[CAM_CMD]: Warning! Now rocessing... req[%d]",
+      "core_text": "Warning! Now rocessing... req[%d]"
     },
     {
       "vaddr": "0x43caeb3d",
-      "text": "[CAM_CMD]: Error! Can't Transfer Request cur_state[%d] req[%d]\n"
+      "text": "[CAM_CMD]: Error! Can't Transfer Request cur_state[%d] req[%d]\n",
+      "core_text": "Error! Can't Transfer Request cur_state[%d] req[%d]\n"
     },
     {
       "vaddr": "0x43caeb7d",
-      "text": "[CAM_CMD]: Error! s_path_selector SetupTable cur_state[%d] req[%d]\n"
+      "text": "[CAM_CMD]: Error! s_path_selector SetupTable cur_state[%d] req[%d]\n",
+      "core_text": "Error! s_path_selector SetupTable cur_state[%d] req[%d]\n"
     },
     {
       "vaddr": "0x43caebc1",
-      "text": "[CAM_CMD]: Error! s_request is NULL!"
+      "text": "[CAM_CMD]: Error! s_request is NULL!",
+      "core_text": "Error! s_request is NULL!"
     },
     {
       "vaddr": "0x43caebe6",
-      "text": "[CAM_CMD]: Error! s_mode_sequencer SetupTable [%d]->[%d]\n"
+      "text": "[CAM_CMD]: Error! s_mode_sequencer SetupTable [%d]->[%d]\n",
+      "core_text": "Error! s_mode_sequencer SetupTable [%d]->[%d]\n"
     },
     {
       "vaddr": "0x43caec20",
-      "text": "[CAM_CMD]: Error! CheckReturnAllModlueResponse\n"
+      "text": "[CAM_CMD]: Error! CheckReturnAllModlueResponse\n",
+      "core_text": "Error! CheckReturnAllModlueResponse\n"
     }
   ],
   "prefix_length": 11,
@@ -50,7 +56,7 @@
     }
   },
   "shutter_line": "NEGATIVO ACOTADO",
-  "logger_dual": null,
+  "logger_dual": true,
   "global_logger": "0x43902718",
   "typo": "Modlue -> Module",
   "verification_status": {
@@ -94,9 +100,100 @@
       "scope": "datos y deltas; no prueba emisión ni logger dual"
     },
     "core_strings": {
-      "verified": false,
-      "count_total": 0,
-      "details": [],
+      "verified": true,
+      "count_total": 6,
+      "details": [
+        {
+          "vaddr": "0x43caeb1b",
+          "ok": true,
+          "matches_by_firmware": {
+            "a6000_fw321": [
+              "0x43caeb1b"
+            ],
+            "a7s_fw320": [
+              "0x43cb1e9b"
+            ],
+            "a6300_fw201": [
+              "0x43dc4e45"
+            ]
+          }
+        },
+        {
+          "vaddr": "0x43caeb48",
+          "ok": true,
+          "matches_by_firmware": {
+            "a6000_fw321": [
+              "0x43caeb48"
+            ],
+            "a7s_fw320": [
+              "0x43cb1ebd"
+            ],
+            "a6300_fw201": [
+              "0x43dc4e67"
+            ]
+          }
+        },
+        {
+          "vaddr": "0x43caeb88",
+          "ok": true,
+          "matches_by_firmware": {
+            "a6000_fw321": [
+              "0x43caeb88"
+            ],
+            "a7s_fw320": [
+              "0x43cb1ef2"
+            ],
+            "a6300_fw201": [
+              "0x43dc4e9c"
+            ]
+          }
+        },
+        {
+          "vaddr": "0x43caebcc",
+          "ok": true,
+          "matches_by_firmware": {
+            "a6000_fw321": [
+              "0x43caebcc"
+            ],
+            "a7s_fw320": [
+              "0x43cb1f2b"
+            ],
+            "a6300_fw201": [
+              "0x43dc4ed5"
+            ]
+          }
+        },
+        {
+          "vaddr": "0x43caebf1",
+          "ok": true,
+          "matches_by_firmware": {
+            "a6000_fw321": [
+              "0x43caebf1"
+            ],
+            "a7s_fw320": [
+              "0x43cb1f45"
+            ],
+            "a6300_fw201": [
+              "0x43dc4eef"
+            ]
+          }
+        },
+        {
+          "vaddr": "0x43caec2b",
+          "ok": true,
+          "matches_by_firmware": {
+            "a6000_fw321": [
+              "0x43caec2b"
+            ],
+            "a7s_fw320": [
+              "0x43cb1f74"
+            ],
+            "a6300_fw201": [
+              "0x43dc4f1e"
+            ]
+          }
+        }
+      ],
       "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
     },
     "metadata": {
@@ -110,13 +207,13 @@
       "scope": "marcadores ASCII en trazas NUL; no nivel efectivo ni funciones emisoras"
     },
     "logger_dual": {
-      "verified": false,
-      "status": "NO_VERIFICADO",
-      "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+      "verified": true,
+      "status": "VERIFICADO_ESTATICO",
+      "reason": "rutas de envío y logger verificadas por instrucciones en todas las trazas",
       "claimed": true,
       "global_logger": "0x43902718",
-      "global_logger_verified": false,
-      "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+      "global_logger_verified": true,
+      "global_logger_msg": "llamada estática a 0x43902718 con sufijo de cada traza",
       "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
     },
     "equivalencia_funcional": {
@@ -162,5 +259,67 @@
         "typo"
       ]
     }
-  }
+  },
+  "logger_paths": [
+    {
+      "trace": "0x43caeb10",
+      "local_load": "0x437fc368",
+      "local_add": "0x437fc372",
+      "local_call": "0x437fc374",
+      "global_load": "0x437fc378",
+      "global_add": "0x437fc37c",
+      "global_call": "0x437fc37e",
+      "local_target": "0x437fc0d4"
+    },
+    {
+      "trace": "0x43caeb3d",
+      "local_load": "0x437fc3be",
+      "local_add": "0x437fc3c0",
+      "local_call": "0x437fc3c2",
+      "global_load": "0x437fc3c6",
+      "global_add": "0x437fc3cc",
+      "global_call": "0x437fc3d4",
+      "local_target": "0x437fc0d4"
+    },
+    {
+      "trace": "0x43caeb7d",
+      "local_load": "0x437fc438",
+      "local_add": "0x437fc43a",
+      "local_call": "0x437fc43c",
+      "global_load": "0x437fc440",
+      "global_add": "0x437fc444",
+      "global_call": "0x437fc448",
+      "local_target": "0x437fc0d4"
+    },
+    {
+      "trace": "0x43caebc1",
+      "local_load": "0x437fc45e",
+      "local_add": "0x437fc466",
+      "local_call": "0x437fc468",
+      "global_load": "0x437fc46c",
+      "global_add": "0x437fc46e",
+      "global_call": "0x437fc476",
+      "local_target": "0x437fc0d4"
+    },
+    {
+      "trace": "0x43caebe6",
+      "local_load": "0x437fc4de",
+      "local_add": "0x437fc4e0",
+      "local_call": "0x437fc4e2",
+      "global_load": "0x437fc4e6",
+      "global_add": "0x437fc4ea",
+      "global_call": "0x437fc4ee",
+      "local_target": "0x437fc0d4"
+    },
+    {
+      "trace": "0x43caec20",
+      "local_load": "0x437fc762",
+      "local_add": "0x437fc76a",
+      "local_call": "0x437fc76c",
+      "global_load": "0x437fc770",
+      "global_add": "0x437fc772",
+      "global_call": "0x437fc774",
+      "local_target": "0x437fc6a0"
+    }
+  ]
 }

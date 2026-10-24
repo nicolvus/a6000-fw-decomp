@@ -48,7 +48,7 @@ class S6xxFirmwareVerification(unittest.TestCase):
                 "linea_obturador", "differential", "other_claims",
             ):
                 evidence = data["verification_status"][category]
-                if category == "logger_dual" and data["module"] == "IMAGING_RSRC":
+                if category == "logger_dual" and data["module"] in {"CAM_CMD", "IMAGING_RSRC"}:
                     self.assertEqual(evidence["status"], "VERIFICADO_ESTATICO")
                     self.assertTrue(evidence["verified"])
                 else:
@@ -115,6 +115,13 @@ class S6xxFirmwareVerification(unittest.TestCase):
         self.assertTrue(VERIFY.verify_module(data, self.blobs)["logger_dual"]["verified"])
         corrupted = copy.deepcopy(data)
         corrupted["logger_paths"][0]["local_call"] = "0x4379a364"
+        self.assertFalse(VERIFY.verify_module(corrupted, self.blobs)["logger_dual"]["verified"])
+
+    def test_s607_dual_logger_paths_are_verified_from_instructions(self):
+        data = next(d for p, d in self.modules.items() if p.parent.name.startswith("s607"))
+        self.assertTrue(VERIFY.verify_module(data, self.blobs)["logger_dual"]["verified"])
+        corrupted = copy.deepcopy(data)
+        corrupted["logger_paths"][0]["global_call"] = "0x437fc380"
         self.assertFalse(VERIFY.verify_module(corrupted, self.blobs)["logger_dual"]["verified"])
 
     def test_cli_rejects_saved_positive_claims_without_evidence(self):

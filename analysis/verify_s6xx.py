@@ -86,10 +86,11 @@ def verify_logger_paths(data, blob):
         global_text = pic_address(path["global_load"], path["global_add"], "r0")
         local_call = instruction(path["local_call"])
         global_call = instruction(path["global_call"])
+        local_target = path.get("local_target", "0x4379a274").replace("0x", "#0x")
         if (local != address or global_text != address + len(data["prefix"].encode("ascii"))
                 or trace.get("core_text") != trace["text"].removeprefix(data["prefix"])
                 or not local_call or local_call.mnemonic != "bl"
-                or local_call.op_str != "#0x4379a274"
+                or local_call.op_str != local_target
                 or not global_call or global_call.mnemonic not in {"bl", "b.w"}
                 or global_call.op_str != data["global_logger"].replace("0x", "#0x")):
             return False
@@ -292,7 +293,7 @@ def main():
         total = sum(r["verification_status"]["trace_strings"]["count_ok"] for r in results)
         twins = sum(r["verification_status"]["twin_strings"]["count_ok"] for r in results)
         print(f"{len(results)} fichas; {total} trazas; {twins} gemelas; errores: {failures}")
-        print("Logger dual S611: VERIFICADO_ESTATICO; resto y equivalencias: NO_VERIFICADO")
+        print("Logger dual S607/S611: VERIFICADO_ESTATICO; resto y equivalencias: NO_VERIFICADO")
     return bool(failures)
 
 
