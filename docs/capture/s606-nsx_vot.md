@@ -36,9 +36,9 @@
 | token `[TRK]` (mismo núcleo) | **7** (gemelos) | **7** | **7** |
 | prefijo alternativo A7S (`[CapMgr]` para alloc/set/free) | 0 | **3** | **3** |
 | núcleo sin prefijo (`almhdl...`, `osal_*_timer...`) | 0/7 como literal autónomo | **7/7** (con `[TRK]: `) | **7/7** (con `[TRK]: `) |
-| código equivalente (`osal_*_timer`, `almhdl`) | `0x43cfdxxx`… | **sí** | **sí** |
+| código equivalente (NO_VERIFICADO - requiere comparación de instrucciones) (`osal_*_timer`, `almhdl`) | `0x43cfdxxx`… | **sí** | **sí** |
 
-→ **Cambio de *logging*, no de código.** El gestor de timers/alarmas **existe igual** en los tres firmware (mismas 7 cadenas núcleo, mismas funciones `osal_*_timer`, mismo `almhdl`). Lo propio de la fw3.21 de la A6000 son **las 7 trazas con prefijo `[NSX_VOT]: `** y la **duplicación** con logger global `[TRK]: ` (que ya es el prefijo usado en A7S/A6300). A7S/A6300 usan `[TRK]: ` como prefijo principal y `[CapMgr]` para variantes.
+→ **Cambio de *logging*, no de código.** El gestor de timers/alarmas **existe** (NO_VERIFICADO - requiere análisis de A7S/A6300) en los tres firmware (mismas 7 cadenas núcleo (presencia de strings; equivalencia de código NO_VERIFICADO), mismas funciones `osal_*_timer`, mismo `almhdl`). Lo propio de la fw3.21 de la A6000 son (NO_VERIFICADO - requiere xrefs/REA para confirmar duplicación de logger) **las 7 trazas con prefijo `[NSX_VOT]: `** y la **duplicación** con logger global `[TRK]: ` (que ya es el prefijo usado en A7S/A6300). A7S/A6300 usan `[TRK]: ` como prefijo principal y `[CapMgr]` para variantes.
 
 **Longitud del prefijo fija:** 11 B (`[NSX_VOT]: `) → no variable (igual que S605).
 

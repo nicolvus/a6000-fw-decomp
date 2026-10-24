@@ -2,21 +2,125 @@
   "module": "MOUNT_WARNING",
   "traces": 5,
   "trace_strings": [
-    {"vaddr": "0x43c95691", "text": "[MOUNT_WARNING]: [MOUNT AM]NO MEMBER CHECK_DATA:%d", "sub_prefix": "[MOUNT AM]"},
-    {"vaddr": "0x43c956c4", "text": "[MOUNT_WARNING]: [MOUNT AM]NO MEMBER ERR_INFO:%d", "sub_prefix": "[MOUNT AM]"},
-    {"vaddr": "0x43c970fc", "text": "[MOUNT_WARNING]: [BL]LIF Command : Illegal Command Received!!! : cmd=%04X", "sub_prefix": "[BL]"},
-    {"vaddr": "0x43c97858", "text": "[MOUNT_WARNING]: [MOUNT DRV]NO MEMBER PWR_MODE:%d", "sub_prefix": "[MOUNT DRV]"},
-    {"vaddr": "0x43c98714", "text": "[MOUNT_WARNING]: [BL]cam_cmd change!! reason=%03x now=%03x (0xC05:PB 0xC06:POFF)", "sub_prefix": "[BL]"}
+    {
+      "vaddr": "0x43c95691",
+      "text": "[MOUNT_WARNING]: [MOUNT AM]NO MEMBER CHECK_DATA:%d",
+      "sub_prefix": "[MOUNT AM]"
+    },
+    {
+      "vaddr": "0x43c956c4",
+      "text": "[MOUNT_WARNING]: [MOUNT AM]NO MEMBER ERR_INFO:%d",
+      "sub_prefix": "[MOUNT AM]"
+    },
+    {
+      "vaddr": "0x43c970fc",
+      "text": "[MOUNT_WARNING]: [BL]LIF Command : Illegal Command Received!!! : cmd=%04X",
+      "sub_prefix": "[BL]"
+    },
+    {
+      "vaddr": "0x43c97858",
+      "text": "[MOUNT_WARNING]: [MOUNT DRV]NO MEMBER PWR_MODE:%d",
+      "sub_prefix": "[MOUNT DRV]"
+    },
+    {
+      "vaddr": "0x43c98714",
+      "text": "[MOUNT_WARNING]: [BL]cam_cmd change!! reason=%03x now=%03x (0xC05:PB 0xC06:POFF)",
+      "sub_prefix": "[BL]"
+    }
   ],
   "prefix_length": 17,
   "prefix": "[MOUNT_WARNING]: ",
-  "sub_prefixes": ["[MOUNT AM]", "[MOUNT DRV]", "[BL]"],
+  "sub_prefixes": [
+    "[MOUNT AM]",
+    "[MOUNT DRV]",
+    "[BL]"
+  ],
   "differential": {
-    "a6000_fw321": {"token_count": 5, "prefixes": ["[MOUNT_WARNING]: "]},
-    "a7s_fw320": {"token_count": 0, "related_prefixes": ["[BL]MOUNT", "Mount: "]},
-    "a6300_fw201": {"token_count": 0, "related_prefixes": ["[BL]MOUNT", "Mount: "]}
+    "a6000_fw321": {
+      "token_count": 5,
+      "prefixes": [
+        "[MOUNT_WARNING]: "
+      ]
+    },
+    "a7s_fw320": {
+      "token_count": 0,
+      "related_prefixes": [
+        "[BL]MOUNT",
+        "Mount: "
+      ]
+    },
+    "a6300_fw201": {
+      "token_count": 0,
+      "related_prefixes": [
+        "[BL]MOUNT",
+        "Mount: "
+      ]
+    }
   },
   "shutter_line": "NEGATIVO ACOTADO",
   "logger_dual": true,
-  "global_logger": "0x43902718"
+  "global_logger": "0x43902718",
+  "verification_status": {
+    "trace_strings": {
+      "verified": true,
+      "count_ok": 5,
+      "count_total": 5,
+      "basis": "lectura directa de bytes en av-cam.bin (base 0x43541000)",
+      "details": [
+        {
+          "vaddr": "0x43c95691",
+          "ok": true,
+          "text": "[MOUNT_WARNING]: [MOUNT AM]NO MEMBER CHECK_DATA:%d"
+        },
+        {
+          "vaddr": "0x43c956c4",
+          "ok": true,
+          "text": "[MOUNT_WARNING]: [MOUNT AM]NO MEMBER ERR_INFO:%d"
+        },
+        {
+          "vaddr": "0x43c970fc",
+          "ok": true,
+          "text": "[MOUNT_WARNING]: [BL]LIF Command : Illegal Command"
+        },
+        {
+          "vaddr": "0x43c97858",
+          "ok": true,
+          "text": "[MOUNT_WARNING]: [MOUNT DRV]NO MEMBER PWR_MODE:%d"
+        },
+        {
+          "vaddr": "0x43c98714",
+          "ok": true,
+          "text": "[MOUNT_WARNING]: [BL]cam_cmd change!! reason=%03x "
+        }
+      ]
+    },
+    "logger_dual": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere xrefs/REA sobre instrucciones BL al logger global; la presencia de cadenas no demuestra duplicación",
+      "global_logger": "0x43902718",
+      "global_logger_verified": true,
+      "global_logger_msg": "code @0x3c1718"
+    },
+    "equivalencia_funcional": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere análisis de A7S fw3.20 y A6300 fw2.01; presencia de cadenas núcleo no demuestra equivalencia de código"
+    },
+    "equivalencia_codigo": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere comparación de instrucciones (disassembly/xrefs) entre modelos"
+    },
+    "linea_obturador": {
+      "claimed": true,
+      "verified": true,
+      "status": "VERIFICADO",
+      "basis": "búsqueda de palabras clave del obturador únicamente en cadenas de traza del módulo",
+      "keywords_found_in_traces": []
+    }
+  }
 }

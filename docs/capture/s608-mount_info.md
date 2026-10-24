@@ -29,7 +29,7 @@
   - `MSGID_FIRM_UP_REQ` — petición de actualización de firmware
   - `MSGID_PREPARE_UPDATE` — preparación de actualización
   - `MSGID_UNPLUG_USB` — desconexión USB
-- **Logger dual (patrón S177/S179/S603–S607)**: la fw3.21 **duplica** la traza: nueva con prefijo `[MOUNT_INFO]: ` (logger de módulo) + vieja con prefijo `[BL] ` vía logger global `0x43902718` (idéntico a S177/S179/S603–S607). El string original en A7S/A6300 ya tiene `[BL] `.
+- **Logger dual (patrón S177/S179/S603–S607)**: la fw3.21 **afirma duplicar** la traza (NO_VERIFICADO - requiere xrefs/REA): nueva con prefijo `[MOUNT_INFO]: ` (logger de módulo) + vieja con prefijo `[BL] ` vía logger global `0x43902718` (idéntico a S177/S179/S603–S607). El string original en A7S/A6300 ya tiene `[BL] `.
 - **Longitud del prefijo**: 14 B (`[MOUNT_INFO]: `) + 4 B (`[BL] `) = 16 B totales → el prefijo compuesto más largo de la serie.
 - **Estructura BL**: el subsistema `[BL]` en A7S/A6300 tiene 70+ trazas (errores de firmware update, sync, async, VSYNC, mount error, lens error, power seq, etc.). La fw3.21 **añade capa `[MOUNT_INFO]: `** a 6 strings específicas de LIF/UUD.
 
@@ -40,9 +40,9 @@
 | token `[MOUNT_INFO]` | **6** | **0** | **0** |
 | token `[BL]` (mismo núcleo) | **6** (doble prefijo) | **70+** | **70+** |
 | núcleo `[BL]LIF Command Change...` / `[BL]UUD CallBack...` | 6/6 con doble prefijo | **0/6** (strings distintos) | **0/6** (strings distintos) |
-| código equivalente (BL/LIF/UUD) | `0x43c97xxx`… | **sí, otro conjunto** | **sí, otro conjunto** |
+| código equivalente (NO_VERIFICADO - requiere comparación de instrucciones) (BL/LIF/UUD) | `0x43c97xxx`… | **sí, otro conjunto** | **sí, otro conjunto** |
 
-→ **Capa de logging *nueva* sobre subsistema preexistente.** El subsistema BL/LIF/UUD **existe en los tres firmware** (comunicación montura/bootloader, firmware update, lentes), pero la fw3.21 de la A6000 **añade una nueva etiqueta `[MOUNT_INFO]: `** a 6 strings específicas de LIF/UUD y **duplica** la traza (nueva con logger de módulo + vieja con logger global `[BL] ` + `0x43902718`). Los strings `[BL]LIF...` y `[BL]UUD...` **no existen en A7S/A6300** (el BL allí tiene otros 70+ mensajes distintos).
+→ **Capa de logging *nueva* sobre subsistema preexistente.** El subsistema BL/LIF/UUD **existe** (NO_VERIFICADO - requiere análisis de A7S/A6300) en los tres firmware (comunicación montura/bootloader, firmware update, lentes), pero la fw3.21 de la A6000 **añade una nueva etiqueta `[MOUNT_INFO]: `** a 6 strings específicas de LIF/UUD y **duplica** la traza (nueva con logger de módulo + vieja con logger global `[BL] ` + `0x43902718`). Los strings `[BL]LIF...` y `[BL]UUD...` **no existen en A7S/A6300** (el BL allí tiene otros 70+ mensajes distintos).
 
 **Longitud del prefijo compuesto:** 16 B (`[MOUNT_INFO]: [BL] `) → fijo, no variable.
 

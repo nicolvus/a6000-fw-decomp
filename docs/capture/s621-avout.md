@@ -19,7 +19,7 @@
 
 - **Triple prefijo jerárquico**: `[ACCY][DEBUG][AVOUT]` — módulo padre `ACCY` (accesorio) + nivel `DEBUG` + sub-módulo `AVOUT` (salida AV). Longitud total: 20 B (`[ACCY][DEBUG][AVOUT]`).
 - **Notificaciones de conexión**: 2 trazas `DEBUG` — `NotifyAttached(%d)` (conectado) y `NotifyDetached(%d)` (desconectado), ambas con parámetro numérico (`%d`, probablemente ID de dispositivo o handle).
-- **Logger dual (patrón S177/S179/S603–S620)**: la fw3.21 **duplica** la traza: nueva con prefijo `[ACCY][DEBUG][AVOUT]` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
+- **Logger dual (patrón S177/S179/S603–S620)**: la fw3.21 **afirma duplicar** la traza (NO_VERIFICADO - requiere xrefs/REA): nueva con prefijo `[ACCY][DEBUG][AVOUT]` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
 - **Prefijo fijo**: 20 B (`[ACCY][DEBUG][AVOUT]`) → fijo (ambas trazas son nivel DEBUG).
 - **Estructura ACCY**: en fw3.21 aparece como módulo con sub-módulos `HOUSING` (S610), `SENSER` (S619), y `AVOUT` (S621).
 
@@ -30,9 +30,9 @@
 | token `[ACCY][DEBUG][AVOUT]` | **2** | **0** | **0** |
 | núcleos sin prefijo (`NotifyAttached`, `NotifyDetached`) | 0/2 como literal autónomo | **0** | **0** |
 | strings relacionadas A7S (`AccyUmDeviceAvOut`) | 0 | **1** | **1** |
-| código equivalente (AVOUT) | `0x43c2549e`… | **parcial** | **parcial** |
+| código equivalente (NO_VERIFICADO - requiere comparación de instrucciones) (AVOUT) | `0x43c2549e`… | **parcial** | **parcial** |
 
-→ **Módulo *nuevo* en traza ACCY, código preexistente.** La funcionalidad de salida AV (AVOUT) **existe en los tres firmware** (string `AccyUmDeviceAvOut` en A7S/A6300). Lo propio de la fw3.21 de la A6000 son **las 2 trazas con prefijo `[ACCY][DEBUG][AVOUT]`** y la **duplicación** con logger global `0x43902718`. A7S/A6300 solo tienen la string suelta `17AccyUmDeviceAvOut` sin prefijo ni trazas de notificación.
+→ **Módulo *nuevo* en traza ACCY, código preexistente.** La funcionalidad de salida AV (AVOUT) **existe** (NO_VERIFICADO - requiere análisis de A7S/A6300) en los tres firmware (string `AccyUmDeviceAvOut` en A7S/A6300). Lo propio de la fw3.21 de la A6000 son (NO_VERIFICADO - requiere xrefs/REA para confirmar duplicación de logger) **las 2 trazas con prefijo `[ACCY][DEBUG][AVOUT]`** y la **duplicación** con logger global `0x43902718`. A7S/A6300 solo tienen la string suelta `17AccyUmDeviceAvOut` sin prefijo ni trazas de notificación.
 
 **Longitud del prefijo fija:** 20 B (`[ACCY][DEBUG][AVOUT]`) → fijo (ambas trazas son nivel DEBUG).
 

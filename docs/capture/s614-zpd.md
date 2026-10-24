@@ -24,7 +24,7 @@
 - **Carga de datos DRA**: `load dra data` — carga de datos DRA (Defect Reduction Algorithm / algoritmo de reducción de defectos) para corrección de píxeles defectuosos.
 - **Carga de datos de lente**: dos fuentes — `from lens` (desde la lente, EEPROM de la lente) y `from body` (desde el cuerpo, caché local).
 - **Carga genérica**: `load:%s` — función genérica de carga con nombre de recurso como parámetro.
-- **Logger dual (patrón S177/S179/S603–S613)**: la fw3.21 **duplica** la traza: nueva con prefijo `[ZPD]: ` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
+- **Logger dual (patrón S177/S179/S603–S613)**: la fw3.21 **afirma duplicar** la traza (NO_VERIFICADO - requiere xrefs/REA): nueva con prefijo `[ZPD]: ` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
 - **Prefijo simple**: 7 B (`[ZPD]: `) → uno de los prefijos más cortos de la serie (S605: 7 B, S606: 10 B, S607: 10 B, S608: 10 B, S610: 21 B, S611: 27 B, S612: 25 B, S613: 16 B).
 
 ## Diferencial A6000 fw3.21 vs A7S fw3.20 vs A6300 fw2.01
@@ -34,9 +34,9 @@
 | token `[ZPD]` | **5** | **0** | **0** |
 | núcleo sin prefijo (`lens attach sequence end`, `load dra data`, `load lens data from lens/body`, `load:%s`) | 0/5 como literal autónomo | **0** | **0** |
 | strings ZPD relacionadas A7S | 0 | **30+** (sin prefijo, `[Err]`, `ZpdPre`, `StartZpdPre`, `ZPD FLASH`, etc.) | **50+** |
-| código equivalente (ZPD, DRA, carga lente) | `0x43ccf27f`… | **sí, sin prefijo** | **sí, sin prefijo** |
+| código equivalente (NO_VERIFICADO - requiere comparación de instrucciones) (ZPD, DRA, carga lente) | `0x43ccf27f`… | **sí, sin prefijo** | **sí, sin prefijo** |
 
-→ **Módulo *nuevo* en traza, código preexistente.** El subsistema ZPD (Phase Detection AF, DRA, carga de datos de lente) **existe en los tres firmware** (misma funcionalidad: secuencia de acoplamiento, DRA, carga de datos de lente desde lente/cuerpo). Lo propio de la fw3.21 de la A6000 son **las 5 trazas con prefijo `[ZPD]: `**. En A7S/A6300 el subsistema ZPD existe (70+ strings ZPD relacionadas) pero **sin prefijo unificado `[ZPD]: `** — usan prefijos dispersos (`[Err]`, `StartZpdPre`, `ZpdPre`, `ZPD FLASH`, `ZPD_SRAM`, etc.). La fw3.21 **unifica** bajo `[ZPD]: ` y **duplica** la traza (nueva con logger de módulo + vieja intacta con logger global `0x43902718`).
+→ **Módulo *nuevo* en traza, código preexistente.** El subsistema ZPD (Phase Detection AF, DRA, carga de datos de lente) **existe** (NO_VERIFICADO - requiere análisis de A7S/A6300) en los tres firmware (misma funcionalidad: secuencia de acoplamiento, DRA, carga de datos de lente desde lente/cuerpo). Lo propio de la fw3.21 de la A6000 son (NO_VERIFICADO - requiere xrefs/REA para confirmar duplicación de logger) **las 5 trazas con prefijo `[ZPD]: `**. En A7S/A6300 el subsistema ZPD existe (70+ strings ZPD relacionadas) pero **sin prefijo unificado `[ZPD]: `** — usan prefijos dispersos (`[Err]`, `StartZpdPre`, `ZpdPre`, `ZPD FLASH`, `ZPD_SRAM`, etc.). La fw3.21 **unifica** bajo `[ZPD]: ` y **duplica** la traza (nueva con logger de módulo + vieja intacta con logger global `0x43902718`).
 
 **Longitud del prefijo fija:** 7 B (`[ZPD]: `) → el más corto de la serie.
 

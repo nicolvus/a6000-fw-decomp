@@ -25,7 +25,7 @@
   - Canal 0: `BonoboDSP_Send:[ch0]Data latch failed!`
   - Canal 1: `BonoboDSP_Send:[ch1]Data latch failed!`
 - **Recepción (Rcv)**: 1 traza de error de paridad — `BonoboDSP_Rcv: paritycheck_error!` — error de checksum/paridad en recepción.
-- **Logger dual (patrón S177/S179/S603–S615)**: la fw3.21 **duplica** la traza: nueva con prefijo `[LENS_PDR]: ` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
+- **Logger dual (patrón S177/S179/S603–S615)**: la fw3.21 **afirma duplicar** la traza (NO_VERIFICADO - requiere xrefs/REA): nueva con prefijo `[LENS_PDR]: ` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
 - **Longitud del prefijo**: 12 B (`[LENS_PDR]: `) → fija.
 
 ## Diferencial A6000 fw3.21 vs A7S fw3.20 vs A6300 fw2.01
@@ -35,9 +35,9 @@
 | token `[LENS_PDR]` | **4** | **0** | **0** |
 | núcleo sin prefijo (`BonoboDSP_Send/Rcv`, `Data latch failed`, `paritycheck_error`) | 0/4 como literal autónomo | **4/4** (idénticos) | **4/4** (idénticos) |
 | prefijo alternativo A7S/A6300 | 0 | **ninguno** (strings sueltas) | **ninguno** (strings sueltas) |
-| código equivalente (BonoboDSP) | `0x43c9a7ca`… | **sí** | **sí** |
+| código equivalente (NO_VERIFICADO - requiere comparación de instrucciones) (BonoboDSP) | `0x43c9a7ca`… | **sí** | **sí** |
 
-→ **Cambio de *logging*, no de código.** El DSP "Bonobo" de comunicación de lente **existe igual** en los tres firmware (mismas 4 cadenas núcleo, mismas funciones `BonoboDSP_Send/Rcv`, mismos errores `Data latch failed` y `paritycheck_error`). Lo propio de la fw3.21 de la A6000 son **las 4 trazas con prefijo `[LENS_PDR]: `**. La fw3.21 **duplica** la traza (nueva con logger de módulo + vieja intacta con logger global `0x43902718`).
+→ **Cambio de *logging*, no de código.** El DSP "Bonobo" de comunicación de lente **existe** (NO_VERIFICADO - requiere análisis de A7S/A6300) en los tres firmware (mismas 4 cadenas núcleo (presencia de strings; equivalencia de código NO_VERIFICADO), mismas funciones `BonoboDSP_Send/Rcv`, mismos errores `Data latch failed` y `paritycheck_error`). Lo propio de la fw3.21 de la A6000 son (NO_VERIFICADO - requiere xrefs/REA para confirmar duplicación de logger) **las 4 trazas con prefijo `[LENS_PDR]: `**. La fw3.21 **afirma duplicar** la traza (NO_VERIFICADO - requiere xrefs/REA) (nueva con logger de módulo + vieja intacta con logger global `0x43902718`).
 
 **Longitud del prefijo fija:** 12 B (`[LENS_PDR]: `) → fija, no variable.
 

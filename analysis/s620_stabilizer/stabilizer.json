@@ -2,20 +2,93 @@
   "module": "STABILIZER",
   "traces": 3,
   "trace_strings": [
-    {"vaddr": "0x43c9a1f3", "text": "[CAMERA_IS][AS]: [STABILIZER][AS][osal_reg_sync_msg_queue_cb] %x"},
-    {"vaddr": "0x43c9a234", "text": "[CAMERA_IS][AS]: [STABILIZER][AS][upm_get_hcrn_ura] %x"},
-    {"vaddr": "0x43c9a26b", "text": "[CAMERA_IS][AS]: [STABILIZER][AS][osal_unreg_sync_msg_queue_cb] %x"}
+    {
+      "vaddr": "0x43c9a1f3",
+      "text": "[CAMERA_IS][AS]: [STABILIZER][AS][osal_reg_sync_msg_queue_cb] %x"
+    },
+    {
+      "vaddr": "0x43c9a234",
+      "text": "[CAMERA_IS][AS]: [STABILIZER][AS][upm_get_hcrn_ura] %x"
+    },
+    {
+      "vaddr": "0x43c9a26b",
+      "text": "[CAMERA_IS][AS]: [STABILIZER][AS][osal_unreg_sync_msg_queue_cb] %x"
+    }
   ],
   "prefix_length": 33,
   "prefix": "[CAMERA_IS][AS]: [STABILIZER][AS]",
   "parent_prefix": "[CAMERA_IS][AS]",
   "sub_prefix": "[STABILIZER]",
   "differential": {
-    "a6000_fw321": {"token_count": 3, "prefixes": ["[CAMERA_IS][AS]: [STABILIZER][AS]"]},
-    "a7s_fw320": {"token_count": 0, "related_strings_count": 4},
-    "a6300_fw201": {"token_count": 0, "related_strings_count": 4}
+    "a6000_fw321": {
+      "token_count": 3,
+      "prefixes": [
+        "[CAMERA_IS][AS]: [STABILIZER][AS]"
+      ]
+    },
+    "a7s_fw320": {
+      "token_count": 0,
+      "related_strings_count": 4
+    },
+    "a6300_fw201": {
+      "token_count": 0,
+      "related_strings_count": 4
+    }
   },
   "shutter_line": "NEGATIVO ACOTADO",
   "logger_dual": true,
-  "global_logger": "0x43902718"
+  "global_logger": "0x43902718",
+  "verification_status": {
+    "trace_strings": {
+      "verified": true,
+      "count_ok": 3,
+      "count_total": 3,
+      "basis": "lectura directa de bytes en av-cam.bin (base 0x43541000)",
+      "details": [
+        {
+          "vaddr": "0x43c9a1f3",
+          "ok": true,
+          "text": "[CAMERA_IS][AS]: [STABILIZER][AS][osal_reg_sync_ms"
+        },
+        {
+          "vaddr": "0x43c9a234",
+          "ok": true,
+          "text": "[CAMERA_IS][AS]: [STABILIZER][AS][upm_get_hcrn_ura"
+        },
+        {
+          "vaddr": "0x43c9a26b",
+          "ok": true,
+          "text": "[CAMERA_IS][AS]: [STABILIZER][AS][osal_unreg_sync_"
+        }
+      ]
+    },
+    "logger_dual": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere xrefs/REA sobre instrucciones BL al logger global; la presencia de cadenas no demuestra duplicación",
+      "global_logger": "0x43902718",
+      "global_logger_verified": true,
+      "global_logger_msg": "code @0x3c1718"
+    },
+    "equivalencia_funcional": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere análisis de A7S fw3.20 y A6300 fw2.01; presencia de cadenas núcleo no demuestra equivalencia de código"
+    },
+    "equivalencia_codigo": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere comparación de instrucciones (disassembly/xrefs) entre modelos"
+    },
+    "linea_obturador": {
+      "claimed": true,
+      "verified": true,
+      "status": "VERIFICADO",
+      "basis": "búsqueda de palabras clave del obturador únicamente en cadenas de traza del módulo",
+      "keywords_found_in_traces": []
+    }
+  }
 }

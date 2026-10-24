@@ -26,7 +26,7 @@
   - `IS_LensMountPanoramaGyroCB` / `IS_LensMountPanoramaGyro` — callback de giroscopio para panorama IS (con validación `checkData`)
 - **Validación de datos**: `checkData` — verificación de integridad de datos del callback.
 - **Nivel de severidad**: 5/5 `Error` — todas las trazas son de error.
-- **Logger dual (patrón S177/S179/S603–S611)**: la fw3.21 **duplica** la traza: nueva con prefijo `[CAMERA_IS][MOUNT]: [Error] ` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
+- **Logger dual (patrón S177/S179/S603–S611)**: la fw3.21 **afirma duplicar** la traza (NO_VERIFICADO - requiere xrefs/REA): nueva con prefijo `[CAMERA_IS][MOUNT]: [Error] ` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
 - **Estructura CAMERA_IS**: el módulo `[CAMERA_IS]` en fw3.21 tiene 4 sub-módulos visibles: `[MOUNT]` (5 trazas), `[DIST]` (5 trazas), `[AS]` (3 trazas), `[EIS]` (4 trazas) — total ~17 trazas bajo CAMERA_IS.
 
 ## Diferencial A6000 fw3.21 vs A7S fw3.20 vs A6300 fw2.01
@@ -37,7 +37,7 @@
 | token `[CAMERA_IS]` (padre) | **~17** | **0** | **0** |
 | núcleo sin prefijo (`IS_LensMountExpStartCB`, `IS_LensMountPanoramaGyroCB`, `IS_LensMountPanoramaGyro`) | 0/5 como literal autónomo | **0** | **0** |
 | strings relacionadas montura A7S | 0 | **70+** (`[BL]MOUNT_*`, `Mount: `, etc.) | **70+** |
-| código equivalente (IS/MOUNT) | `0x43c98da6`… | **parcial (BL mount)** | **parcial (BL mount)** |
+| código equivalente (NO_VERIFICADO - requiere comparación de instrucciones) (IS/MOUNT) | `0x43c98da6`… | **parcial (BL mount)** | **parcial (BL mount)** |
 
 → **Submódulo *nuevo* en traza y código.** El submódulo de montura para IS **no existe en A7S/A6300** (ni en traza ni con esas funciones `IS_LensMountExpStartCB`, `IS_LensMountPanoramaGyroCB`, `IS_LensMountPanoramaGyro`). A7S/A6300 tienen un subsistema de montura BL (`[BL]MOUNT_*`, `Mount: `) pero **sin integración en módulo IS estructurado**. La fw3.21 de la A6000 **introduce** el submódulo MOUNT dentro de CAMERA_IS.
 

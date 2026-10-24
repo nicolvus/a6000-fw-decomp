@@ -21,7 +21,7 @@
 - **Triple prefijo jerárquico**: `[ACCY][ERR/DEBUG][SENSER]` — módulo padre `ACCY` (accesorio) + nivel `ERR`/`DEBUG` + sub-módulo `SENSER` (sensor). Longitud total variable: 19 B (`[ACCY][ERR][SENSER]`) / 21 B (`[ACCY][DEBUG][SENSER]`).
 - **Manejo de errores**: 2 trazas `ERR` — `unknown block %04X` (bloque desconocido) y `unknown command %04X` (comando desconocido).
 - **Debug**: 1 traza `DEBUG` — `Cmd %04X, S1 %02X` (comando recibido + estado S1).
-- **Logger dual (patrón S177/S179/S603–S618)**: la fw3.21 **duplica** la traza: nueva con prefijo `[ACCY][ERR/DEBUG][SENSER]` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
+- **Logger dual (patrón S177/S179/S603–S618)**: la fw3.21 **afirma duplicar** la traza (NO_VERIFICADO - requiere xrefs/REA): nueva con prefijo `[ACCY][ERR/DEBUG][SENSER]` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
 - **Prefijos variables**: 19 B (`[ACCY][ERR][SENSER]`) / 21 B (`[ACCY][DEBUG][SENSER]`) → no fijos (depende del nivel ERR/DEBUG).
 - **Estructura ACCY**: en fw3.21 aparece como módulo con sub-módulo `SENSER` (y `HOUSING` en S610).
 
@@ -32,9 +32,9 @@
 | token `[SENSER]` con prefijo ACCY | **3** | **0** | **0** |
 | núcleos sin prefijo ACCY (`unknown block`, `unknown command`, `Cmd %04X`) | 0/3 como literal autónomo | **0** | **0** |
 | strings relacionadas A7S (`AdfSenserCtrl`, `MCSENSERR`, `Senser`, etc.) | 0 | **20+** (prefijos `[ADF][ADJ]`, `[SYS_SENSER_CA_PUTS]`, `<SACC_Debug>`) | **20+** (prefijos `[ADF][ADJ]`, `[SYS_SENSER_CA_PUTS]`, `<SACC_Debug>`) |
-| código equivalente (SenserCtrl, SenserPacket, etc.) | `0x43c24f10`… | **sí** | **sí** |
+| código equivalente (NO_VERIFICADO - requiere comparación de instrucciones) (SenserCtrl, SenserPacket, etc.) | `0x43c24f10`… | **sí** | **sí** |
 
-→ **Módulo *nuevo* en traza ACCY, código preexistente.** El controlador de sensor (SenserCtrl, SenserPacket, SenserDiag, etc.) **existe en los tres firmware** (misma funcionalidad: comandos de audio/sensor, SetParam, diagnóstico). Lo propio de la fw3.21 de la A6000 son **las 3 trazas con prefijo `[ACCY][ERR/DEBUG][SENSER]`** y la **duplicación** con logger global `0x43902718`. A7S/A6300 usan prefijos `[ADF][ADJ]`, `[SYS_SENSER_CA_PUTS]`, `<SACC_Debug>` para el mismo código SenserCtrl.
+→ **Módulo *nuevo* en traza ACCY, código preexistente.** El controlador de sensor (SenserCtrl, SenserPacket, SenserDiag, etc.) **existe** (NO_VERIFICADO - requiere análisis de A7S/A6300) en los tres firmware (misma funcionalidad: comandos de audio/sensor, SetParam, diagnóstico). Lo propio de la fw3.21 de la A6000 son (NO_VERIFICADO - requiere xrefs/REA para confirmar duplicación de logger) **las 3 trazas con prefijo `[ACCY][ERR/DEBUG][SENSER]`** y la **duplicación** con logger global `0x43902718`. A7S/A6300 usan prefijos `[ADF][ADJ]`, `[SYS_SENSER_CA_PUTS]`, `<SACC_Debug>` para el mismo código SenserCtrl.
 
 **Longitud del prefijo variable:** 20–21 B (`[ACCY][ERR][SENSER]` / `[ACCY][DEBUG][SENSER]`) → no fija (depende del nivel ERR/DEBUG).
 

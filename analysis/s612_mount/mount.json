@@ -2,11 +2,26 @@
   "module": "CAMERA_IS/MOUNT",
   "traces": 5,
   "trace_strings": [
-    {"vaddr": "0x43c98da6", "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountExpStartCB (%x)"},
-    {"vaddr": "0x43c98dde", "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountExpStartCB - checkData"},
-    {"vaddr": "0x43c9a3a7", "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyroCB (%x)"},
-    {"vaddr": "0x43c9a3e3", "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyroCB - checkData"},
-    {"vaddr": "0x43c9a426", "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyro (%x)"}
+    {
+      "vaddr": "0x43c98da6",
+      "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountExpStartCB (%x)"
+    },
+    {
+      "vaddr": "0x43c98dde",
+      "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountExpStartCB - checkData"
+    },
+    {
+      "vaddr": "0x43c9a3a7",
+      "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyroCB (%x)"
+    },
+    {
+      "vaddr": "0x43c9a3e3",
+      "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyroCB - checkData"
+    },
+    {
+      "vaddr": "0x43c9a426",
+      "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyro (%x)"
+    }
   ],
   "prefix_length": 28,
   "prefix": "[CAMERA_IS][MOUNT]: [Error] ",
@@ -14,11 +29,91 @@
   "sub_prefix": "[MOUNT]",
   "level_prefix": "[Error]",
   "differential": {
-    "a6000_fw321": {"token_count": 5, "prefixes": ["[CAMERA_IS][MOUNT]: [Error] "]},
-    "a7s_fw320": {"token_count": 0, "related_prefixes": ["[BL]MOUNT", "Mount: "]},
-    "a6300_fw201": {"token_count": 0, "related_prefixes": ["[BL]MOUNT", "Mount: "]}
+    "a6000_fw321": {
+      "token_count": 5,
+      "prefixes": [
+        "[CAMERA_IS][MOUNT]: [Error] "
+      ]
+    },
+    "a7s_fw320": {
+      "token_count": 0,
+      "related_prefixes": [
+        "[BL]MOUNT",
+        "Mount: "
+      ]
+    },
+    "a6300_fw201": {
+      "token_count": 0,
+      "related_prefixes": [
+        "[BL]MOUNT",
+        "Mount: "
+      ]
+    }
   },
   "shutter_line": "NEGATIVO ACOTADO",
   "logger_dual": true,
-  "global_logger": "0x43902718"
+  "global_logger": "0x43902718",
+  "verification_status": {
+    "trace_strings": {
+      "verified": true,
+      "count_ok": 5,
+      "count_total": 5,
+      "basis": "lectura directa de bytes en av-cam.bin (base 0x43541000)",
+      "details": [
+        {
+          "vaddr": "0x43c98da6",
+          "ok": true,
+          "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountExpStartCB"
+        },
+        {
+          "vaddr": "0x43c98dde",
+          "ok": true,
+          "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountExpStartCB"
+        },
+        {
+          "vaddr": "0x43c9a3a7",
+          "ok": true,
+          "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGy"
+        },
+        {
+          "vaddr": "0x43c9a3e3",
+          "ok": true,
+          "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGy"
+        },
+        {
+          "vaddr": "0x43c9a426",
+          "ok": true,
+          "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGy"
+        }
+      ]
+    },
+    "logger_dual": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere xrefs/REA sobre instrucciones BL al logger global; la presencia de cadenas no demuestra duplicación",
+      "global_logger": "0x43902718",
+      "global_logger_verified": true,
+      "global_logger_msg": "code @0x3c1718"
+    },
+    "equivalencia_funcional": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere análisis de A7S fw3.20 y A6300 fw2.01; presencia de cadenas núcleo no demuestra equivalencia de código"
+    },
+    "equivalencia_codigo": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere comparación de instrucciones (disassembly/xrefs) entre modelos"
+    },
+    "linea_obturador": {
+      "claimed": true,
+      "verified": true,
+      "status": "VERIFICADO",
+      "basis": "búsqueda de palabras clave del obturador únicamente en cadenas de traza del módulo",
+      "keywords_found_in_traces": []
+    }
+  }
 }

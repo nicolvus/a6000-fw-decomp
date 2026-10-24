@@ -2,12 +2,36 @@
   "module": "MOUNT_INFO",
   "traces": 6,
   "trace_strings": [
-    {"vaddr": "0x43c970c7", "text": "[MOUNT_INFO]: [BL]LIF Command Change : 0x%X >>> 0x%X", "core_text": "[BL]LIF Command Change : 0x%X >>> 0x%X"},
-    {"vaddr": "0x43c98201", "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_GET_VERSION", "core_text": "[BL]UUD CallBack : MSGID_GET_VERSION"},
-    {"vaddr": "0x43c98234", "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_GET_FORCE_FIRMUP", "core_text": "[BL]UUD CallBack : MSGID_GET_FORCE_FIRMUP"},
-    {"vaddr": "0x43c9826c", "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_FIRM_UP_REQ", "core_text": "[BL]UUD CallBack : MSGID_FIRM_UP_REQ"},
-    {"vaddr": "0x43c9829f", "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_PREPARE_UPDATE", "core_text": "[BL]UUD CallBack : MSGID_PREPARE_UPDATE"},
-    {"vaddr": "0x43c982d5", "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_UNPLUG_USB", "core_text": "[BL]UUD CallBack : MSGID_UNPLUG_USB"}
+    {
+      "vaddr": "0x43c970c7",
+      "text": "[MOUNT_INFO]: [BL]LIF Command Change : 0x%X >>> 0x%X",
+      "core_text": "[BL]LIF Command Change : 0x%X >>> 0x%X"
+    },
+    {
+      "vaddr": "0x43c98201",
+      "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_GET_VERSION",
+      "core_text": "[BL]UUD CallBack : MSGID_GET_VERSION"
+    },
+    {
+      "vaddr": "0x43c98234",
+      "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_GET_FORCE_FIRMUP",
+      "core_text": "[BL]UUD CallBack : MSGID_GET_FORCE_FIRMUP"
+    },
+    {
+      "vaddr": "0x43c9826c",
+      "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_FIRM_UP_REQ",
+      "core_text": "[BL]UUD CallBack : MSGID_FIRM_UP_REQ"
+    },
+    {
+      "vaddr": "0x43c9829f",
+      "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_PREPARE_UPDATE",
+      "core_text": "[BL]UUD CallBack : MSGID_PREPARE_UPDATE"
+    },
+    {
+      "vaddr": "0x43c982d5",
+      "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_UNPLUG_USB",
+      "core_text": "[BL]UUD CallBack : MSGID_UNPLUG_USB"
+    }
   ],
   "prefix_length": 14,
   "prefix": "[MOUNT_INFO]: ",
@@ -15,11 +39,98 @@
   "core_prefix_length": 3,
   "composite_prefix_length": 15,
   "differential": {
-    "a6000_fw321": {"mount_info_token_count": 6, "bl_token_count": 6, "prefixes": ["[MOUNT_INFO]: ", "[BL] "]},
-    "a7s_fw320": {"mount_info_token_count": 0, "bl_token_count": 70, "prefixes": ["[BL] "]},
-    "a6300_fw201": {"mount_info_token_count": 0, "bl_token_count": 70, "prefixes": ["[BL] "]}
+    "a6000_fw321": {
+      "mount_info_token_count": 6,
+      "bl_token_count": 6,
+      "prefixes": [
+        "[MOUNT_INFO]: ",
+        "[BL] "
+      ]
+    },
+    "a7s_fw320": {
+      "mount_info_token_count": 0,
+      "bl_token_count": 70,
+      "prefixes": [
+        "[BL] "
+      ]
+    },
+    "a6300_fw201": {
+      "mount_info_token_count": 0,
+      "bl_token_count": 70,
+      "prefixes": [
+        "[BL] "
+      ]
+    }
   },
   "shutter_line": "NEGATIVO ACOTADO",
   "logger_dual": true,
-  "global_logger": "0x43902718"
+  "global_logger": "0x43902718",
+  "verification_status": {
+    "trace_strings": {
+      "verified": true,
+      "count_ok": 6,
+      "count_total": 6,
+      "basis": "lectura directa de bytes en av-cam.bin (base 0x43541000)",
+      "details": [
+        {
+          "vaddr": "0x43c970c7",
+          "ok": true,
+          "text": "[MOUNT_INFO]: [BL]LIF Command Change : 0x%X >>> 0x"
+        },
+        {
+          "vaddr": "0x43c98201",
+          "ok": true,
+          "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_GET_VERSION"
+        },
+        {
+          "vaddr": "0x43c98234",
+          "ok": true,
+          "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_GET_FORCE_F"
+        },
+        {
+          "vaddr": "0x43c9826c",
+          "ok": true,
+          "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_FIRM_UP_REQ"
+        },
+        {
+          "vaddr": "0x43c9829f",
+          "ok": true,
+          "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_PREPARE_UPD"
+        },
+        {
+          "vaddr": "0x43c982d5",
+          "ok": true,
+          "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_UNPLUG_USB"
+        }
+      ]
+    },
+    "logger_dual": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere xrefs/REA sobre instrucciones BL al logger global; la presencia de cadenas no demuestra duplicación",
+      "global_logger": "0x43902718",
+      "global_logger_verified": true,
+      "global_logger_msg": "code @0x3c1718"
+    },
+    "equivalencia_funcional": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere análisis de A7S fw3.20 y A6300 fw2.01; presencia de cadenas núcleo no demuestra equivalencia de código"
+    },
+    "equivalencia_codigo": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere comparación de instrucciones (disassembly/xrefs) entre modelos"
+    },
+    "linea_obturador": {
+      "claimed": true,
+      "verified": true,
+      "status": "VERIFICADO",
+      "basis": "búsqueda de palabras clave del obturador únicamente en cadenas de traza del módulo",
+      "keywords_found_in_traces": []
+    }
+  }
 }

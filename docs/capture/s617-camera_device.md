@@ -20,7 +20,7 @@
 
 - **Triple prefijo jerárquico**: `[CAMERA_DEVICE][DET_DIR]` — módulo padre `CAMERA_DEVICE` + sub-módulo `DET_DIR`. Longitud total: 24 B (`[CAMERA_DEVICE][DET_DIR]`).
 - **API de timers OSAL**: 3 operaciones básicas — `alloc` (asignar), `set` (configurar), `free` (liberar). Cada una emite el código de retorno/error en hex (`%x`).
-- **Logger dual (patrón S177/S179/S603–S616)**: la fw3.21 **duplica** la traza: nueva con prefijo `[CAMERA_DEVICE][DET_DIR]` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
+- **Logger dual (patrón S177/S179/S603–S616)**: la fw3.21 **afirma duplicar** la traza (NO_VERIFICADO - requiere xrefs/REA): nueva con prefijo `[CAMERA_DEVICE][DET_DIR]` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
 - **Estructura CAMERA_DEVICE**: en fw3.21 aparece como módulo con sub-módulo `DET_DIR` para gestión de timers de detección.
 - **Prefijo fijo**: 24 B (`[CAMERA_DEVICE][DET_DIR]`) → no variable.
 
@@ -30,9 +30,9 @@
 |---|---|---|---|
 | token `[CAMERA_DEVICE][DET_DIR]` | **3** | **0** | **0** |
 | núcleos `osal_*_timer` | 3/3 con prefijo `[CAMERA_DEVICE][DET_DIR]` | **3** (prefijos `Spinal`/`CapMgr`/`TRK`) | **3** (prefijos `CapMgr`/`TRK`) |
-| código equivalente (`osal_*_timer`) | `0x43cf724e`… | **sí** | **sí** |
+| código equivalente (NO_VERIFICADO - requiere comparación de instrucciones) (`osal_*_timer`) | `0x43cf724e`… | **sí** | **sí** |
 
-→ **Cambio de *logging*, no de código.** La API de timers OSAL para detección **existe igual** en los tres firmware (mismas 3 funciones `osal_alloc/set/free_timer`). Lo propio de la fw3.21 de la A6000 son **las 3 trazas con prefijo `[CAMERA_DEVICE][DET_DIR]`** y la **duplicación** con logger global `0x43902718`. A7S usa prefijos `Spinal`/`CapMgr`/`TRK`; A6300 usa `CapMgr`/`TRK`.
+→ **Cambio de *logging*, no de código.** La API de timers OSAL para detección **existe** (NO_VERIFICADO - requiere análisis de A7S/A6300) en los tres firmware (mismas 3 funciones `osal_alloc/set/free_timer`). Lo propio de la fw3.21 de la A6000 son (NO_VERIFICADO - requiere xrefs/REA para confirmar duplicación de logger) **las 3 trazas con prefijo `[CAMERA_DEVICE][DET_DIR]`** y la **duplicación** con logger global `0x43902718`. A7S usa prefijos `Spinal`/`CapMgr`/`TRK`; A6300 usa `CapMgr`/`TRK`.
 
 **Longitud del prefijo jerárquico fija:** 24 B (`[CAMERA_DEVICE][DET_DIR]`) → no variable.
 

@@ -2,11 +2,31 @@
   "module": "IMAGING_RSRC",
   "traces": 5,
   "trace_strings": [
-    {"vaddr": "0x43ca492f", "text": "[IMAGING_RSRC]: [GOLFSHOT]SA_LPF Exec[%02d] Err: sa_err[0x%x] intfct[0x%x] mbox1[%x]", "core_text": "[GOLFSHOT]SA_LPF Exec[%02d] Err: sa_err[0x%x] intfct[0x%x] mbox1[%x]"},
-    {"vaddr": "0x43ca4984", "text": "[IMAGING_RSRC]: [GOLFSHOT]SA_BGEST Exec Err: sa_err[0x%x] intfct[0x%x] mbox1[%x]", "core_text": "[GOLFSHOT]SA_BGEST Exec Err: sa_err[0x%x] intfct[0x%x] mbox1[%x]"},
-    {"vaddr": "0x43ca49d5", "text": "[IMAGING_RSRC]: [GOLFSHOT]SA_SSP Exec[%03d] Err: sa_err[0x%x] intfct[0x%x] mbox1[%x]", "core_text": "[GOLFSHOT]SA_SSP Exec[%03d] Err: sa_err[0x%x] intfct[0x%x] mbox1[%x]"},
-    {"vaddr": "0x43ca4a2a", "text": "[IMAGING_RSRC]: [GOLFSHOT] correctSndDetResult(WARNING): Corrected Value is Out of SoundDetBuff", "core_text": "[GOLFSHOT] correctSndDetResult(WARNING): Corrected Value is Out of SoundDetBuff"},
-    {"vaddr": "0x43ca4a8a", "text": "[IMAGING_RSRC]: [GOLFSHOT]vfc2indx: Shot Timing Transform Error", "core_text": "[GOLFSHOT]vfc2indx: Shot Timing Transform Error"}
+    {
+      "vaddr": "0x43ca492f",
+      "text": "[IMAGING_RSRC]: [GOLFSHOT]SA_LPF Exec[%02d] Err: sa_err[0x%x] intfct[0x%x] mbox1[%x]",
+      "core_text": "[GOLFSHOT]SA_LPF Exec[%02d] Err: sa_err[0x%x] intfct[0x%x] mbox1[%x]"
+    },
+    {
+      "vaddr": "0x43ca4984",
+      "text": "[IMAGING_RSRC]: [GOLFSHOT]SA_BGEST Exec Err: sa_err[0x%x] intfct[0x%x] mbox1[%x]",
+      "core_text": "[GOLFSHOT]SA_BGEST Exec Err: sa_err[0x%x] intfct[0x%x] mbox1[%x]"
+    },
+    {
+      "vaddr": "0x43ca49d5",
+      "text": "[IMAGING_RSRC]: [GOLFSHOT]SA_SSP Exec[%03d] Err: sa_err[0x%x] intfct[0x%x] mbox1[%x]",
+      "core_text": "[GOLFSHOT]SA_SSP Exec[%03d] Err: sa_err[0x%x] intfct[0x%x] mbox1[%x]"
+    },
+    {
+      "vaddr": "0x43ca4a2a",
+      "text": "[IMAGING_RSRC]: [GOLFSHOT] correctSndDetResult(WARNING): Corrected Value is Out of SoundDetBuff",
+      "core_text": "[GOLFSHOT] correctSndDetResult(WARNING): Corrected Value is Out of SoundDetBuff"
+    },
+    {
+      "vaddr": "0x43ca4a8a",
+      "text": "[IMAGING_RSRC]: [GOLFSHOT]vfc2indx: Shot Timing Transform Error",
+      "core_text": "[GOLFSHOT]vfc2indx: Shot Timing Transform Error"
+    }
   ],
   "prefix_length": 16,
   "prefix": "[IMAGING_RSRC]: ",
@@ -14,11 +34,93 @@
   "core_prefix_length": 9,
   "composite_prefix_length": 27,
   "differential": {
-    "a6000_fw321": {"imaging_rsrc_token_count": 5, "golfshot_token_count": 5, "prefixes": ["[IMAGING_RSRC]: ", "[GOLFSHOT]"]},
-    "a7s_fw320": {"imaging_rsrc_token_count": 0, "golfshot_token_count": 5, "prefixes": ["[GOLFSHOT]"]},
-    "a6300_fw201": {"imaging_rsrc_token_count": 0, "golfshot_token_count": 5, "prefixes": ["[GOLFSHOT]"]}
+    "a6000_fw321": {
+      "imaging_rsrc_token_count": 5,
+      "golfshot_token_count": 5,
+      "prefixes": [
+        "[IMAGING_RSRC]: ",
+        "[GOLFSHOT]"
+      ]
+    },
+    "a7s_fw320": {
+      "imaging_rsrc_token_count": 0,
+      "golfshot_token_count": 5,
+      "prefixes": [
+        "[GOLFSHOT]"
+      ]
+    },
+    "a6300_fw201": {
+      "imaging_rsrc_token_count": 0,
+      "golfshot_token_count": 5,
+      "prefixes": [
+        "[GOLFSHOT]"
+      ]
+    }
   },
   "shutter_line": "NEGATIVO ACOTADO",
   "logger_dual": true,
-  "global_logger": "0x43902718"
+  "global_logger": "0x43902718",
+  "verification_status": {
+    "trace_strings": {
+      "verified": true,
+      "count_ok": 5,
+      "count_total": 5,
+      "basis": "lectura directa de bytes en av-cam.bin (base 0x43541000)",
+      "details": [
+        {
+          "vaddr": "0x43ca492f",
+          "ok": true,
+          "text": "[IMAGING_RSRC]: [GOLFSHOT]SA_LPF Exec[%02d] Err: s"
+        },
+        {
+          "vaddr": "0x43ca4984",
+          "ok": true,
+          "text": "[IMAGING_RSRC]: [GOLFSHOT]SA_BGEST Exec Err: sa_er"
+        },
+        {
+          "vaddr": "0x43ca49d5",
+          "ok": true,
+          "text": "[IMAGING_RSRC]: [GOLFSHOT]SA_SSP Exec[%03d] Err: s"
+        },
+        {
+          "vaddr": "0x43ca4a2a",
+          "ok": true,
+          "text": "[IMAGING_RSRC]: [GOLFSHOT] correctSndDetResult(WAR"
+        },
+        {
+          "vaddr": "0x43ca4a8a",
+          "ok": true,
+          "text": "[IMAGING_RSRC]: [GOLFSHOT]vfc2indx: Shot Timing Tr"
+        }
+      ]
+    },
+    "logger_dual": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere xrefs/REA sobre instrucciones BL al logger global; la presencia de cadenas no demuestra duplicación",
+      "global_logger": "0x43902718",
+      "global_logger_verified": true,
+      "global_logger_msg": "code @0x3c1718"
+    },
+    "equivalencia_funcional": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere análisis de A7S fw3.20 y A6300 fw2.01; presencia de cadenas núcleo no demuestra equivalencia de código"
+    },
+    "equivalencia_codigo": {
+      "claimed": true,
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "requiere comparación de instrucciones (disassembly/xrefs) entre modelos"
+    },
+    "linea_obturador": {
+      "claimed": true,
+      "verified": true,
+      "status": "VERIFICADO",
+      "basis": "búsqueda de palabras clave del obturador únicamente en cadenas de traza del módulo",
+      "keywords_found_in_traces": []
+    }
+  }
 }

@@ -38,7 +38,10 @@ class TestS613MOUNTWARNING(unittest.TestCase):
         self.assertEqual(self.data['shutter_line'], "NEGATIVO ACOTADO")
 
     def test_logger_dual(self):
-        self.assertTrue(self.data['logger_dual'])
+        vs = self.data.get('verification_status', {})
+        ld = vs.get('logger_dual', {})
+        self.assertEqual(ld.get('status'), 'NO_VERIFICADO',
+                         'logger_dual no es NO_VERIFICADO')
 
     def test_global_logger(self):
         self.assertEqual(self.data['global_logger'], "0x43902718")

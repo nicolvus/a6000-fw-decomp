@@ -17,7 +17,7 @@
 ## Hallazgos con dirección
 
 - **Formato de logging estructurado**: `%s @%s L%d` — función/archivo (`%s`), línea (`@%s`), número de línea (`L%d`).
-- **Logger dual (patrón S177/S179/S603–S625)**: la fw3.21 **duplica** la traza: nueva con prefijo `[CAMERA_DETECT_FC]: ` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
+- **Logger dual (patrón S177/S179/S603–S625)**: la fw3.21 **afirma duplicar** la traza (NO_VERIFICADO - requiere xrefs/REA): nueva con prefijo `[CAMERA_DETECT_FC]: ` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
 - **Prefijo fijo**: 20 B (`[CAMERA_DETECT_FC]: `) → fijo.
 
 ## Diferencial A6000 fw3.21 vs A7S fw3.20 vs A6300 fw2.01
@@ -27,7 +27,7 @@
 | token `[CAMERA_DETECT_FC]` | **1** | **0** | **0** |
 | núcleo sin prefijo (`%s @%s L%d`) | 0/1 como literal autónomo | **0** | **0** |
 | strings relacionadas detección cámara | 0 | **pocas** | **pocas** |
-| código equivalente | `0x43cf02c9`… | **parcial** | **parcial** |
+| código equivalente (NO_VERIFICADO - requiere comparación de instrucciones) | `0x43cf02c9`… | **parcial** | **parcial** |
 
 → **Módulo *nuevo* en traza, código preexistente.** El mecanismo de detección de cámara **existe en A7S/A6300** (strings genéricas de detección) pero **sin el submódulo estructurado `CAMERA_DETECT_FC` con logging formateado**. La fw3.21 de la A6000 **introduce** el módulo con logging formateado y **duplica** la traza (nueva con logger de módulo + vieja con logger global `0x43902718`).
 
