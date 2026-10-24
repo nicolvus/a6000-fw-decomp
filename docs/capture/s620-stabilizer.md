@@ -1,48 +1,39 @@
-# S620 — `[STABILIZER]`: submódulo de estabilizador exclusivo de la A6000 fw3.21
+# S620 — STABILIZER: evidencia de cadenas
 
-**Auditoría 23-10-2026:** direcciones de las cadenas corregidas contra coincidencias únicas en `av-cam.bin` (base `0x43541000`). Las longitudes canónicas están en el JSON corregido. La duplicación del logger, los límites de funciones y la equivalencia entre modelos no quedan demostrados por presencia de cadenas; esas afirmaciones históricas siguen NO_VERIFICADO.
+**Auditoría de la validación de OpenCode — 23-10-2026.** Este informe corrige las conclusiones históricas de S620. La presencia de texto no demuestra funciones, llamadas ni equivalencia entre modelos.
 
-**3 trazas · 3 sitios (regla PIC estricta) · ~2 funciones emisoras · 0 muertas.** Detalle + datos: [JSON](../../analysis/s620_stabilizer/stabilizer.json).
+Datos: [stabilizer.json](../../analysis/s620_stabilizer/stabilizer.json). Auditoría conjunta: [hallazgos S605–S627](S605-S627_tabla_hallazgos.md).
 
-## Qué es
+## Evidencia comprobada
 
-`[STABILIZER]` es la etiqueta de traza que la fw3.21 de la A6000 antepone a 3 mensajes del **submódulo de estabilizador (AS = Anti-Shake / Auto-Stabilization?)** dentro del módulo **CAMERA_IS**. La sigla **SÍ tiene base textual**: `STABILIZER` → **STABILIZER** (estabilizador); `AS` → **A**nti-**S**hake / **A**uto-**S**tabilization / **A**ctive **S**tabilization.
+3 cadenas principales verificadas contra A6000 fw3.21, base `0x43541000`, incluidos espacios, saltos de línea y NUL. Las direcciones son virtuales. El texto se muestra escapado como JSON.
 
-## Las 3 trazas (vaddr → texto corto)
+| Dirección | Texto |
+|---|---|
+| `0x43c9a1f3` | `"[CAMERA_IS][AS]: [STABILIZER][AS][osal_reg_sync_msg_queue_cb] %x"` |
+| `0x43c9a234` | `"[CAMERA_IS][AS]: [STABILIZER][AS][upm_get_hcrn_ura] %x"` |
+| `0x43c9a26b` | `"[CAMERA_IS][AS]: [STABILIZER][AS][osal_unreg_sync_msg_queue_cb] %x"` |
 
+Longitudes declaradas comprobadas como bytes ASCII: `{"prefix_length": 33}`.
+
+## Afirmaciones pendientes
+
+| Afirmación | Estado y evidencia necesaria |
+|---|---|
+| Logger dual | NO_VERIFICADO: faltan cargas de argumentos, llamadas y flujo que acrediten las dos emisiones. |
+| Equivalencia funcional A7S/A6300 | NO_VERIFICADO: faltan contratos, entradas/salidas y callees comparados. |
+| Equivalencia de código | NO_VERIFICADO: faltan cuerpos e instrucciones comparados entre modelos. |
+| Ausencia de relación con el obturador | NO_VERIFICADO: el texto no excluye una ruta funcional. |
+| Recuentos y semántica de differential | NO_VERIFICADO: los recuentos históricos carecen de criterio de selección reproducible. |
+| Funciones emisoras, sitios, trazas muertas y significado de nombres | NO_VERIFICADO: requieren referencias e instrucciones propias. |
+
+El campo `logger_dual=null` significa desconocido. `shutter_line=NEGATIVO ACOTADO` es una etiqueta histórica de triaje léxico; su estado funcional es NO_VERIFICADO. Este lote no cambia la decisión S51.
+
+## Reproducción
+
+```bash
+.venv/bin/python analysis/verify_s6xx.py
+.venv/bin/python -m pytest -q tests/test_s60[5-9]_*.py tests/test_s61[0-9]_*.py tests/test_s62[0-7]_*.py tests/test_s6xx*.py
 ```
-0x43c9a1f3 [CAMERA_IS][AS]: [STABILIZER][AS][osal_reg_sync_msg_queue_cb] %x
-0x43c9a234 [CAMERA_IS][AS]: [STABILIZER][AS][upm_get_hcrn_ura] %x
-0x43c9a26b [CAMERA_IS][AS]: [STABILIZER][AS][osal_unreg_sync_msg_queue_cb] %x
-```
 
-## Hallazgos con dirección
-
-- **Triple prefijo jerárquico**: `[CAMERA_IS][AS]: [STABILIZER][AS]` — módulo padre `CAMERA_IS` + sub-módulo `AS` (Auto-Stabilization?) + sub-sub-módulo `STABILIZER`. Longitud total: 33 B (`[CAMERA_IS][AS]: [STABILIZER][AS]`).
-- **Operaciones de cola de mensajes OSAL**: 2 trazas — `osal_reg_sync_msg_queue_cb` (registrar callback de cola sincrónica) y `osal_unreg_sync_msg_queue_cb` (desregistrar callback).
-- **UPM (Unified Power Management?)**: `upm_get_hcrn_ura` — obtener URA (Unified Resource Allocator?) de HCRN (Hardware Control Resource Node?).
-- **Logger dual (patrón S177/S179/S603–S619)**: la fw3.21 **afirma duplicar** la traza (NO_VERIFICADO - requiere xrefs/REA): nueva con prefijo `[CAMERA_IS][AS]: [STABILIZER][AS]` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
-- **Prefijo cuádruple jerárquico**: `[CAMERA_IS][AS]: [STABILIZER][AS]` — 4 niveles. Longitud total: 33 B.
-
-## Diferencial A6000 fw3.21 vs A7S fw3.20 vs A6300 fw2.01
-
-| | A6000 fw3.21 | A7S fw3.20 | A6300 fw2.01 |
-|---|---|---|---|
-| token `[STABILIZER]` con prefijo CAMERA_IS | **3** | **0** | **0** |
-| núcleos sin prefijo (`osal_reg_sync_msg_queue_cb`, `upm_get_hcrn_ura`, `osal_unreg_sync_msg_queue_cb`) | 0/3 como literal autónomo | **0** | **0** |
-| strings estabilizador relacionadas A7S | 0 | **4** (`recInfo.imageStabilizerValid`, `recInfo.imageStabilizer`, `camInfo.imageStabilizerValid`, `camInfo.imageStabilizer`) | **4** (iguales) |
-| código equivalente (NO_VERIFICADO - requiere comparación de instrucciones) (estabilizador) | `0x43c9a1f3`… | **parcial** | **parcial** |
-
-→ **Submódulo *nuevo* en traza, código preexistente.** El estabilizador **existe en A7S/A6300** (strings `imageStabilizerValid`, `imageStabilizer`) pero **sin el submódulo STABILIZER estructurado ni prefijo `[CAMERA_IS][AS]: [STABILIZER][AS]`**. La fw3.21 de la A6000 **introduce** el submódulo STABILIZER con prefijo cuádruple y **duplica** la traza (nueva con logger de módulo + vieja con logger global `0x43902718`).
-
-**Longitud del prefijo cuádruple fija:** 33 B (`[CAMERA_IS][AS]: [STABILIZER][AS]`) → no variable.
-
-## Línea del obturador: NEGATIVO ACOTADO
-
-0 coincidencias de `shutter`/`silent`/`curtain`/`electro`/`mech`/`obtur`/`sensor`/`readout`/`imager`/`iso`/`apert`/`expos`/`brack`/`drive`/`release`/`flash`/`sync`/`vsync`/`capture`/`shot`/`still`/`movie`/`focus`/`svd`/`shd`/`spl`/`frame`. El módulo gestiona **callbacks OSAL y UPM para estabilizador**, no el obturador per se. → **S51 (A/B/C = NO) se mantiene.**
-
-## Verificación
-
-- 3/3 cadenas `[CAMERA_IS][AS]: [STABILIZER][AS]` confirmadas en `0x43c9a1f3`–`0x43c9a26b`.
-- 0/0 en A7S y A6300 para token `[STABILIZER]` con prefijo CAMERA_IS; 4 strings estabilizador relacionadas en A7S/A6300 sin prefijo estructurado.
-- Scripts: `analysis/s620_stabilizer/` (pendiente) · Tests: `tests/test_s620_stabilizer.py`.
+El JSON de resultados incluye rutas, tamaños y SHA-256 de los tres firmwares. Los campos adicionales no sustentados tienen cobertura explícita NO_VERIFICADO; las comprobaciones de esquema individuales no sustituyen la lectura del firmware.

@@ -15,7 +15,7 @@ def main():
         assert ts['text'].startswith('[ZPD]: '), f"Missing prefix: {ts['text']}"
     
     # Verify prefix length
-    assert data['prefix_length'] == 5, f"Prefix length mismatch: {data['prefix_length']} != 5"
+    assert data['prefix_length'] == 7, f"Prefix length mismatch: {data['prefix_length']} != 7"
     assert data['prefix'] == '[ZPD]: '
     
     # Verify differential

@@ -15,7 +15,7 @@ def main():
         assert '[ADR]' in ts['text'], f"Missing [ADR] token: {ts['text']}"
     
     # Verify prefix length
-    assert data['prefix_length'] == 4, f"Prefix length mismatch: {data['prefix_length']} != 4"
+    assert data['prefix_length'] == 5, f"Prefix length mismatch: {data['prefix_length']} != 5"
     assert data['prefix'] == '[ADR]'
     
     # Verify differential

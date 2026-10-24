@@ -15,7 +15,7 @@ def main():
         assert ts['text'].startswith('[CAM_CMD]: '), f"Missing prefix: {ts['text']}"
     
     # Verify prefix length
-    assert data['prefix_length'] == 10, f"Prefix length mismatch: {data['prefix_length']} != 10"
+    assert data['prefix_length'] == 11, f"Prefix length mismatch: {data['prefix_length']} != 11"
     assert data['prefix'] == '[CAM_CMD]: '
     
     # Verify differential

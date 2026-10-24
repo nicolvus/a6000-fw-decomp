@@ -1,908 +1,2875 @@
 [
   {
     "module": "JPEG",
-    "dir": "s605_jpeg",
     "json": "analysis/s605_jpeg/jpeg.json",
-    "strings_total": 17,
-    "strings_ok": 17,
-    "strings_verified": true,
-    "logger_dual_claimed": true,
-    "logger_dual_verified": false,
-    "logger_global": "0x43902718",
-    "logger_global_verified": true,
-    "logger_global_msg": "code @0x3c1718",
-    "equiv_func_verified": false,
-    "equiv_code_verified": false,
-    "shutter_verified": true,
-    "shutter_found_in_traces": [],
-    "string_details": [
-      {
-        "vaddr": "0x43ce0692",
-        "ok": true,
-        "text": "[JPEG]: [cbJpegDebugClose] err : %d"
+    "firmware": {
+      "a6000_fw321": {
+        "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11427236,
+        "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
       },
-      {
-        "vaddr": "0x43ce06b6",
-        "ok": true,
-        "text": "[JPEG]: [cbJpegDebugOpen] err : %d"
+      "a7s_fw320": {
+        "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11455416,
+        "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
       },
-      {
-        "vaddr": "0x43ce06d9",
-        "ok": true,
-        "text": "[JPEG]: [cbJpegDebugOpen] uid : 0x%x"
-      },
-      {
-        "vaddr": "0x43ce0704",
-        "ok": true,
-        "text": "[JPEG]: %s"
-      },
-      {
-        "vaddr": "0x43ce070f",
-        "ok": true,
-        "text": "[JPEG]: 0x%x"
-      },
-      {
-        "vaddr": "0x43ce071c",
-        "ok": true,
-        "text": "[JPEG]: [f_sa_dummy_send_msg] Start"
-      },
-      {
-        "vaddr": "0x43ce0740",
-        "ok": true,
-        "text": "[JPEG]: ERR. osal_try_valloc_msg. err=0x%x, L=%d"
-      },
-      {
-        "vaddr": "0x43ce0771",
-        "ok": true,
-        "text": "[JPEG]: [f_sa_dummy_send_msg] error_status = %d, u"
-      },
-      {
-        "vaddr": "0x43ce07b1",
-        "ok": true,
-        "text": "[JPEG]: ERR. osal_snd_msg. err=0x%x, L=%d"
-      },
-      {
-        "vaddr": "0x43ce07db",
-        "ok": true,
-        "text": "[JPEG]: ERR. osal_free_msg. err=0x%x, L=%d"
-      },
-      {
-        "vaddr": "0x43ce0806",
-        "ok": true,
-        "text": "[JPEG]: [f_sa_dummy_send_msg] Comp"
-      },
-      {
-        "vaddr": "0x43ce0829",
-        "ok": true,
-        "text": "[JPEG]: [f_2open][NormalOpen] jpegErr : %d"
-      },
-      {
-        "vaddr": "0x43ce0854",
-        "ok": true,
-        "text": "[JPEG]: [f_2open][SortOpen] jpegErr : %d"
-      },
-      {
-        "vaddr": "0x43ce087d",
-        "ok": true,
-        "text": "[JPEG]: [f_2open][TanzOpen] jpegErr : %d"
-      },
-      {
-        "vaddr": "0x43ce08a6",
-        "ok": true,
-        "text": "[JPEG]: [f_2close] unique_id : 0x%x"
-      },
-      {
-        "vaddr": "0x43ce08ca",
-        "ok": true,
-        "text": "[JPEG]: [f_2close][NormalClose] jpegErr : %d"
-      },
-      {
-        "vaddr": "0x43ce08f7",
-        "ok": true,
-        "text": "[JPEG]: [f_2close][SortClose] jpegErr : %d"
+      "a6300_fw201": {
+        "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 13382836,
+        "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16"
       }
-    ]
+    },
+    "verification_status": {
+      "trace_strings": {
+        "verified": true,
+        "count_ok": 17,
+        "count_total": 17,
+        "basis": "bytes ASCII exactos + NUL; base 0x43541000; sin rstrip",
+        "details": [
+          {
+            "vaddr": "0x43ce0692",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43ce06b6",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43ce06d9",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43ce0704",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43ce070f",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43ce071c",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43ce0740",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43ce0771",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43ce07b1",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43ce07db",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43ce0806",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43ce0829",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43ce0854",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43ce087d",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43ce08a6",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43ce08ca",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43ce08f7",
+            "ok": true
+          }
+        ]
+      },
+      "twin_strings": {
+        "verified": false,
+        "count_ok": 0,
+        "count_total": 0,
+        "details": [],
+        "scope": "datos y deltas; no prueba emisión ni logger dual"
+      },
+      "core_strings": {
+        "verified": false,
+        "count_total": 0,
+        "details": [],
+        "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
+      },
+      "metadata": {
+        "verified": true,
+        "errors": []
+      },
+      "logger_dual": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+        "claimed": true,
+        "global_logger": "0x43902718",
+        "global_logger_verified": false,
+        "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+        "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
+      },
+      "equivalencia_funcional": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin contratos, entradas, salidas y callees comparados"
+      },
+      "equivalencia_codigo": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin comparación de cuerpos/instrucciones entre modelos"
+      },
+      "linea_obturador": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "un negativo léxico, incluso vacío, no prueba ausencia de una ruta de obturador"
+      },
+      "differential": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "recuentos históricos sin criterio de selección reproducible",
+        "fields": {
+          "a6000_fw321": [
+            "token_count",
+            "prefixes"
+          ],
+          "a7s_fw320": [
+            "token_count",
+            "prefixes"
+          ],
+          "a6300_fw201": [
+            "token_count",
+            "prefixes"
+          ]
+        }
+      },
+      "other_claims": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "símbolos, semántica, sitios emisores y funciones requieren evidencia propia",
+        "fields": [
+          "dgi_jpeg_symbols"
+        ]
+      }
+    }
   },
   {
     "module": "NSX_VOT",
-    "dir": "s606_nsx_vot",
     "json": "analysis/s606_nsx_vot/nsx_vot.json",
-    "strings_total": 7,
-    "strings_ok": 7,
-    "strings_verified": true,
-    "logger_dual_claimed": true,
-    "logger_dual_verified": false,
-    "logger_global": "0x43902718",
-    "logger_global_verified": true,
-    "logger_global_msg": "code @0x3c1718",
-    "equiv_func_verified": false,
-    "equiv_code_verified": false,
-    "shutter_verified": true,
-    "shutter_found_in_traces": [],
-    "string_details": [
-      {
-        "vaddr": "0x43cfdb1e",
-        "ok": true,
-        "text": "[NSX_VOT]: almhdl : bt stop error: %d"
+    "firmware": {
+      "a6000_fw321": {
+        "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11427236,
+        "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
       },
-      {
-        "vaddr": "0x43cfdb66",
-        "ok": true,
-        "text": "[NSX_VOT]: osal_alloc_timer(): %d"
+      "a7s_fw320": {
+        "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11455416,
+        "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
       },
-      {
-        "vaddr": "0x43cfdba6",
-        "ok": true,
-        "text": "[NSX_VOT]: osal_alloc_timer(): handle alloc again!"
-      },
-      {
-        "vaddr": "0x43cfdc0a",
-        "ok": true,
-        "text": "[NSX_VOT]: osal_free_timer(): handle NULL!!"
-      },
-      {
-        "vaddr": "0x43cfdc5e",
-        "ok": true,
-        "text": "[NSX_VOT]: osal_free_timer(): %d"
-      },
-      {
-        "vaddr": "0x43cfdc9c",
-        "ok": true,
-        "text": "[NSX_VOT]: osal_set_timer(): %d"
-      },
-      {
-        "vaddr": "0x43cfdcd8",
-        "ok": true,
-        "text": "[NSX_VOT]: osal_can_timer(): %d"
+      "a6300_fw201": {
+        "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 13382836,
+        "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16"
       }
-    ]
+    },
+    "verification_status": {
+      "trace_strings": {
+        "verified": true,
+        "count_ok": 7,
+        "count_total": 7,
+        "basis": "bytes ASCII exactos + NUL; base 0x43541000; sin rstrip",
+        "details": [
+          {
+            "vaddr": "0x43cfdb1e",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43cfdb66",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43cfdba6",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43cfdc0a",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43cfdc5e",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43cfdc9c",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43cfdcd8",
+            "ok": true
+          }
+        ]
+      },
+      "twin_strings": {
+        "verified": true,
+        "count_ok": 7,
+        "count_total": 7,
+        "details": [
+          {
+            "vaddr": "0x43cfdb44",
+            "ok": true,
+            "delta_ok": true,
+            "core_ok": true
+          },
+          {
+            "vaddr": "0x43cfdb88",
+            "ok": true,
+            "delta_ok": true,
+            "core_ok": true
+          },
+          {
+            "vaddr": "0x43cfdbda",
+            "ok": true,
+            "delta_ok": true,
+            "core_ok": true
+          },
+          {
+            "vaddr": "0x43cfdc36",
+            "ok": true,
+            "delta_ok": true,
+            "core_ok": true
+          },
+          {
+            "vaddr": "0x43cfdc7f",
+            "ok": true,
+            "delta_ok": true,
+            "core_ok": true
+          },
+          {
+            "vaddr": "0x43cfdcbc",
+            "ok": true,
+            "delta_ok": true,
+            "core_ok": true
+          },
+          {
+            "vaddr": "0x43cfdcf8",
+            "ok": true,
+            "delta_ok": true,
+            "core_ok": true
+          }
+        ],
+        "scope": "datos y deltas; no prueba emisión ni logger dual"
+      },
+      "core_strings": {
+        "verified": false,
+        "count_total": 0,
+        "details": [],
+        "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
+      },
+      "metadata": {
+        "verified": true,
+        "errors": []
+      },
+      "logger_dual": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+        "claimed": true,
+        "global_logger": "0x43902718",
+        "global_logger_verified": false,
+        "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+        "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
+      },
+      "equivalencia_funcional": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin contratos, entradas, salidas y callees comparados"
+      },
+      "equivalencia_codigo": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin comparación de cuerpos/instrucciones entre modelos"
+      },
+      "linea_obturador": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "un negativo léxico, incluso vacío, no prueba ausencia de una ruta de obturador"
+      },
+      "differential": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "recuentos históricos sin criterio de selección reproducible",
+        "fields": {
+          "a6000_fw321": [
+            "nsx_vot_token_count",
+            "trk_token_count",
+            "prefixes"
+          ],
+          "a7s_fw320": [
+            "nsx_vot_token_count",
+            "trk_token_count",
+            "prefixes"
+          ],
+          "a6300_fw201": [
+            "nsx_vot_token_count",
+            "trk_token_count",
+            "prefixes"
+          ]
+        }
+      },
+      "other_claims": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "símbolos, semántica, sitios emisores y funciones requieren evidencia propia",
+        "fields": []
+      }
+    }
   },
   {
     "module": "CAM_CMD",
-    "dir": "s607_cam_cmd",
     "json": "analysis/s607_cam_cmd/cam_cmd.json",
-    "strings_total": 6,
-    "strings_ok": 6,
-    "strings_verified": true,
-    "logger_dual_claimed": true,
-    "logger_dual_verified": false,
-    "logger_global": "0x43902718",
-    "logger_global_verified": true,
-    "logger_global_msg": "code @0x3c1718",
-    "equiv_func_verified": false,
-    "equiv_code_verified": false,
-    "shutter_verified": true,
-    "shutter_found_in_traces": [],
-    "string_details": [
-      {
-        "vaddr": "0x43caeb10",
-        "ok": true,
-        "text": "[CAM_CMD]: Warning! Now rocessing... req[%d]"
+    "firmware": {
+      "a6000_fw321": {
+        "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11427236,
+        "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
       },
-      {
-        "vaddr": "0x43caeb3d",
-        "ok": true,
-        "text": "[CAM_CMD]: Error! Can't Transfer Request cur_state"
+      "a7s_fw320": {
+        "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11455416,
+        "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
       },
-      {
-        "vaddr": "0x43caeb7d",
-        "ok": true,
-        "text": "[CAM_CMD]: Error! s_path_selector SetupTable cur_s"
-      },
-      {
-        "vaddr": "0x43caebc1",
-        "ok": true,
-        "text": "[CAM_CMD]: Error! s_request is NULL!"
-      },
-      {
-        "vaddr": "0x43caebe6",
-        "ok": true,
-        "text": "[CAM_CMD]: Error! s_mode_sequencer SetupTable [%d]"
-      },
-      {
-        "vaddr": "0x43caec20",
-        "ok": true,
-        "text": "[CAM_CMD]: Error! CheckReturnAllModlueResponse"
+      "a6300_fw201": {
+        "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 13382836,
+        "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16"
       }
-    ]
+    },
+    "verification_status": {
+      "trace_strings": {
+        "verified": true,
+        "count_ok": 6,
+        "count_total": 6,
+        "basis": "bytes ASCII exactos + NUL; base 0x43541000; sin rstrip",
+        "details": [
+          {
+            "vaddr": "0x43caeb10",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43caeb3d",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43caeb7d",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43caebc1",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43caebe6",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43caec20",
+            "ok": true
+          }
+        ]
+      },
+      "twin_strings": {
+        "verified": false,
+        "count_ok": 0,
+        "count_total": 0,
+        "details": [],
+        "scope": "datos y deltas; no prueba emisión ni logger dual"
+      },
+      "core_strings": {
+        "verified": false,
+        "count_total": 0,
+        "details": [],
+        "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
+      },
+      "metadata": {
+        "verified": true,
+        "errors": []
+      },
+      "logger_dual": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+        "claimed": true,
+        "global_logger": "0x43902718",
+        "global_logger_verified": false,
+        "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+        "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
+      },
+      "equivalencia_funcional": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin contratos, entradas, salidas y callees comparados"
+      },
+      "equivalencia_codigo": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin comparación de cuerpos/instrucciones entre modelos"
+      },
+      "linea_obturador": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "un negativo léxico, incluso vacío, no prueba ausencia de una ruta de obturador"
+      },
+      "differential": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "recuentos históricos sin criterio de selección reproducible",
+        "fields": {
+          "a6000_fw321": [
+            "token_count",
+            "prefixes"
+          ],
+          "a7s_fw320": [
+            "token_count",
+            "prefixes"
+          ],
+          "a6300_fw201": [
+            "token_count",
+            "prefixes"
+          ]
+        }
+      },
+      "other_claims": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "símbolos, semántica, sitios emisores y funciones requieren evidencia propia",
+        "fields": [
+          "typo"
+        ]
+      }
+    }
   },
   {
     "module": "MOUNT_INFO",
-    "dir": "s608_mount_info",
     "json": "analysis/s608_mount_info/mount_info.json",
-    "strings_total": 6,
-    "strings_ok": 6,
-    "strings_verified": true,
-    "logger_dual_claimed": true,
-    "logger_dual_verified": false,
-    "logger_global": "0x43902718",
-    "logger_global_verified": true,
-    "logger_global_msg": "code @0x3c1718",
-    "equiv_func_verified": false,
-    "equiv_code_verified": false,
-    "shutter_verified": true,
-    "shutter_found_in_traces": [],
-    "string_details": [
-      {
-        "vaddr": "0x43c970c7",
-        "ok": true,
-        "text": "[MOUNT_INFO]: [BL]LIF Command Change : 0x%X >>> 0x"
+    "firmware": {
+      "a6000_fw321": {
+        "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11427236,
+        "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
       },
-      {
-        "vaddr": "0x43c98201",
-        "ok": true,
-        "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_GET_VERSION"
+      "a7s_fw320": {
+        "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11455416,
+        "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
       },
-      {
-        "vaddr": "0x43c98234",
-        "ok": true,
-        "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_GET_FORCE_F"
-      },
-      {
-        "vaddr": "0x43c9826c",
-        "ok": true,
-        "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_FIRM_UP_REQ"
-      },
-      {
-        "vaddr": "0x43c9829f",
-        "ok": true,
-        "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_PREPARE_UPD"
-      },
-      {
-        "vaddr": "0x43c982d5",
-        "ok": true,
-        "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_UNPLUG_USB"
+      "a6300_fw201": {
+        "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 13382836,
+        "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16"
       }
-    ]
+    },
+    "verification_status": {
+      "trace_strings": {
+        "verified": true,
+        "count_ok": 6,
+        "count_total": 6,
+        "basis": "bytes ASCII exactos + NUL; base 0x43541000; sin rstrip",
+        "details": [
+          {
+            "vaddr": "0x43c970c7",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c98201",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c98234",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c9826c",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c9829f",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c982d5",
+            "ok": true
+          }
+        ]
+      },
+      "twin_strings": {
+        "verified": false,
+        "count_ok": 0,
+        "count_total": 0,
+        "details": [],
+        "scope": "datos y deltas; no prueba emisión ni logger dual"
+      },
+      "core_strings": {
+        "verified": true,
+        "count_total": 6,
+        "details": [
+          {
+            "vaddr": "0x43c970d5",
+            "ok": true,
+            "matches_by_firmware": {
+              "a6000_fw321": [
+                "0x43c970d5"
+              ],
+              "a7s_fw320": [],
+              "a6300_fw201": []
+            }
+          },
+          {
+            "vaddr": "0x43c9820f",
+            "ok": true,
+            "matches_by_firmware": {
+              "a6000_fw321": [
+                "0x43c9820f"
+              ],
+              "a7s_fw320": [],
+              "a6300_fw201": []
+            }
+          },
+          {
+            "vaddr": "0x43c98242",
+            "ok": true,
+            "matches_by_firmware": {
+              "a6000_fw321": [
+                "0x43c98242"
+              ],
+              "a7s_fw320": [],
+              "a6300_fw201": []
+            }
+          },
+          {
+            "vaddr": "0x43c9827a",
+            "ok": true,
+            "matches_by_firmware": {
+              "a6000_fw321": [
+                "0x43c9827a"
+              ],
+              "a7s_fw320": [],
+              "a6300_fw201": []
+            }
+          },
+          {
+            "vaddr": "0x43c982ad",
+            "ok": true,
+            "matches_by_firmware": {
+              "a6000_fw321": [
+                "0x43c982ad"
+              ],
+              "a7s_fw320": [],
+              "a6300_fw201": []
+            }
+          },
+          {
+            "vaddr": "0x43c982e3",
+            "ok": true,
+            "matches_by_firmware": {
+              "a6000_fw321": [
+                "0x43c982e3"
+              ],
+              "a7s_fw320": [],
+              "a6300_fw201": []
+            }
+          }
+        ],
+        "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
+      },
+      "metadata": {
+        "verified": true,
+        "errors": []
+      },
+      "logger_dual": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+        "claimed": true,
+        "global_logger": "0x43902718",
+        "global_logger_verified": false,
+        "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+        "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
+      },
+      "equivalencia_funcional": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin contratos, entradas, salidas y callees comparados"
+      },
+      "equivalencia_codigo": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin comparación de cuerpos/instrucciones entre modelos"
+      },
+      "linea_obturador": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "un negativo léxico, incluso vacío, no prueba ausencia de una ruta de obturador"
+      },
+      "differential": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "recuentos históricos sin criterio de selección reproducible",
+        "fields": {
+          "a6000_fw321": [
+            "mount_info_token_count",
+            "bl_token_count",
+            "prefixes"
+          ],
+          "a7s_fw320": [
+            "mount_info_token_count",
+            "bl_token_count",
+            "prefixes"
+          ],
+          "a6300_fw201": [
+            "mount_info_token_count",
+            "bl_token_count",
+            "prefixes"
+          ]
+        }
+      },
+      "other_claims": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "símbolos, semántica, sitios emisores y funciones requieren evidencia propia",
+        "fields": []
+      }
+    }
   },
   {
     "module": "CAMERA_IS/DIST",
-    "dir": "s609_dist",
     "json": "analysis/s609_dist/dist.json",
-    "strings_total": 5,
-    "strings_ok": 5,
-    "strings_verified": true,
-    "logger_dual_claimed": true,
-    "logger_dual_verified": false,
-    "logger_global": "0x43902718",
-    "logger_global_verified": true,
-    "logger_global_msg": "code @0x3c1718",
-    "equiv_func_verified": false,
-    "equiv_code_verified": false,
-    "shutter_verified": true,
-    "shutter_found_in_traces": [],
-    "string_details": [
-      {
-        "vaddr": "0x43c98e1d",
-        "ok": true,
-        "text": "[CAMERA_IS][DIST]: ERR:MakeDistCorPrm prm=null"
+    "firmware": {
+      "a6000_fw321": {
+        "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11427236,
+        "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
       },
-      {
-        "vaddr": "0x43c98e4d",
-        "ok": true,
-        "text": "[CAMERA_IS][DIST]: ERR:CnvPosInvDistCorr prm=null"
+      "a7s_fw320": {
+        "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11455416,
+        "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
       },
-      {
-        "vaddr": "0x43c98e80",
-        "ok": true,
-        "text": "[CAMERA_IS][DIST]: ERR:CnvPosInvDistCorr prm=inv1 "
-      },
-      {
-        "vaddr": "0x43c98ebc",
-        "ok": true,
-        "text": "[CAMERA_IS][DIST]: WRN:CnvPosInvDistCorr prm=inv2 "
-      },
-      {
-        "vaddr": "0x43c98ef9",
-        "ok": true,
-        "text": "[CAMERA_IS][DIST]: ERR:MakeDistRawAppliTag prm=nul"
+      "a6300_fw201": {
+        "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 13382836,
+        "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16"
       }
-    ]
+    },
+    "verification_status": {
+      "trace_strings": {
+        "verified": true,
+        "count_ok": 5,
+        "count_total": 5,
+        "basis": "bytes ASCII exactos + NUL; base 0x43541000; sin rstrip",
+        "details": [
+          {
+            "vaddr": "0x43c98e1d",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c98e4d",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c98e80",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c98ebc",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c98ef9",
+            "ok": true
+          }
+        ]
+      },
+      "twin_strings": {
+        "verified": false,
+        "count_ok": 0,
+        "count_total": 0,
+        "details": [],
+        "scope": "datos y deltas; no prueba emisión ni logger dual"
+      },
+      "core_strings": {
+        "verified": false,
+        "count_total": 0,
+        "details": [],
+        "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
+      },
+      "metadata": {
+        "verified": true,
+        "errors": []
+      },
+      "logger_dual": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+        "claimed": true,
+        "global_logger": "0x43902718",
+        "global_logger_verified": false,
+        "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+        "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
+      },
+      "equivalencia_funcional": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin contratos, entradas, salidas y callees comparados"
+      },
+      "equivalencia_codigo": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin comparación de cuerpos/instrucciones entre modelos"
+      },
+      "linea_obturador": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "un negativo léxico, incluso vacío, no prueba ausencia de una ruta de obturador"
+      },
+      "differential": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "recuentos históricos sin criterio de selección reproducible",
+        "fields": {
+          "a6000_fw321": [
+            "token_count",
+            "parent_token_count",
+            "prefixes"
+          ],
+          "a7s_fw320": [
+            "token_count",
+            "parent_token_count",
+            "prefixes"
+          ],
+          "a6300_fw201": [
+            "token_count",
+            "parent_token_count",
+            "prefixes"
+          ]
+        }
+      },
+      "other_claims": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "símbolos, semántica, sitios emisores y funciones requieren evidencia propia",
+        "fields": [
+          "parent_prefix",
+          "sub_prefix"
+        ]
+      }
+    }
   },
   {
     "module": "ACCY/INFO/HOUSING",
-    "dir": "s610_housing",
     "json": "analysis/s610_housing/housing.json",
-    "strings_total": 5,
-    "strings_ok": 5,
-    "strings_verified": true,
-    "logger_dual_claimed": true,
-    "logger_dual_verified": false,
-    "logger_global": "0x43902718",
-    "logger_global_verified": true,
-    "logger_global_msg": "code @0x3c1718",
-    "equiv_func_verified": false,
-    "equiv_code_verified": false,
-    "shutter_verified": true,
-    "shutter_found_in_traces": [],
-    "string_details": [
-      {
-        "vaddr": "0x43c25380",
-        "ok": true,
-        "text": "[ACCY][INFO][HOUSING]:%d:NotifyAttached"
+    "firmware": {
+      "a6000_fw321": {
+        "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11427236,
+        "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
       },
-      {
-        "vaddr": "0x43c253a8",
-        "ok": true,
-        "text": "[ACCY][INFO][HOUSING]:%d:NotifyContinuousAttached"
+      "a7s_fw320": {
+        "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11455416,
+        "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
       },
-      {
-        "vaddr": "0x43c253da",
-        "ok": true,
-        "text": "[ACCY][INFO][HOUSING]:%d:RestoreInfo...Savedata:%0"
-      },
-      {
-        "vaddr": "0x43c25414",
-        "ok": true,
-        "text": "[ACCY][INFO][HOUSING]:%d:NotifyDetached"
-      },
-      {
-        "vaddr": "0x43c2543c",
-        "ok": true,
-        "text": "[ACCY][INFO][HOUSING]:%d:NotifyUartTimedOut... %d"
+      "a6300_fw201": {
+        "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 13382836,
+        "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16"
       }
-    ]
+    },
+    "verification_status": {
+      "trace_strings": {
+        "verified": true,
+        "count_ok": 5,
+        "count_total": 5,
+        "basis": "bytes ASCII exactos + NUL; base 0x43541000; sin rstrip",
+        "details": [
+          {
+            "vaddr": "0x43c25380",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c253a8",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c253da",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c25414",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c2543c",
+            "ok": true
+          }
+        ]
+      },
+      "twin_strings": {
+        "verified": false,
+        "count_ok": 0,
+        "count_total": 0,
+        "details": [],
+        "scope": "datos y deltas; no prueba emisión ni logger dual"
+      },
+      "core_strings": {
+        "verified": false,
+        "count_total": 0,
+        "details": [],
+        "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
+      },
+      "metadata": {
+        "verified": true,
+        "errors": []
+      },
+      "logger_dual": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+        "claimed": true,
+        "global_logger": "0x43902718",
+        "global_logger_verified": false,
+        "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+        "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
+      },
+      "equivalencia_funcional": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin contratos, entradas, salidas y callees comparados"
+      },
+      "equivalencia_codigo": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin comparación de cuerpos/instrucciones entre modelos"
+      },
+      "linea_obturador": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "un negativo léxico, incluso vacío, no prueba ausencia de una ruta de obturador"
+      },
+      "differential": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "recuentos históricos sin criterio de selección reproducible",
+        "fields": {
+          "a6000_fw321": [
+            "token_count",
+            "prefixes"
+          ],
+          "a7s_fw320": [
+            "token_count",
+            "related_strings"
+          ],
+          "a6300_fw201": [
+            "token_count",
+            "related_strings"
+          ]
+        }
+      },
+      "other_claims": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "símbolos, semántica, sitios emisores y funciones requieren evidencia propia",
+        "fields": [
+          "parent_prefix",
+          "level_prefix",
+          "sub_prefix"
+        ]
+      }
+    }
   },
   {
     "module": "IMAGING_RSRC",
-    "dir": "s611_imaging_rsrc",
     "json": "analysis/s611_imaging_rsrc/imaging_rsrc.json",
-    "strings_total": 5,
-    "strings_ok": 5,
-    "strings_verified": true,
-    "logger_dual_claimed": true,
-    "logger_dual_verified": false,
-    "logger_global": "0x43902718",
-    "logger_global_verified": true,
-    "logger_global_msg": "code @0x3c1718",
-    "equiv_func_verified": false,
-    "equiv_code_verified": false,
-    "shutter_verified": true,
-    "shutter_found_in_traces": [],
-    "string_details": [
-      {
-        "vaddr": "0x43ca492f",
-        "ok": true,
-        "text": "[IMAGING_RSRC]: [GOLFSHOT]SA_LPF Exec[%02d] Err: s"
+    "firmware": {
+      "a6000_fw321": {
+        "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11427236,
+        "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
       },
-      {
-        "vaddr": "0x43ca4984",
-        "ok": true,
-        "text": "[IMAGING_RSRC]: [GOLFSHOT]SA_BGEST Exec Err: sa_er"
+      "a7s_fw320": {
+        "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11455416,
+        "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
       },
-      {
-        "vaddr": "0x43ca49d5",
-        "ok": true,
-        "text": "[IMAGING_RSRC]: [GOLFSHOT]SA_SSP Exec[%03d] Err: s"
-      },
-      {
-        "vaddr": "0x43ca4a2a",
-        "ok": true,
-        "text": "[IMAGING_RSRC]: [GOLFSHOT] correctSndDetResult(WAR"
-      },
-      {
-        "vaddr": "0x43ca4a8a",
-        "ok": true,
-        "text": "[IMAGING_RSRC]: [GOLFSHOT]vfc2indx: Shot Timing Tr"
+      "a6300_fw201": {
+        "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 13382836,
+        "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16"
       }
-    ]
+    },
+    "verification_status": {
+      "trace_strings": {
+        "verified": true,
+        "count_ok": 5,
+        "count_total": 5,
+        "basis": "bytes ASCII exactos + NUL; base 0x43541000; sin rstrip",
+        "details": [
+          {
+            "vaddr": "0x43ca492f",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43ca4984",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43ca49d5",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43ca4a2a",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43ca4a8a",
+            "ok": true
+          }
+        ]
+      },
+      "twin_strings": {
+        "verified": false,
+        "count_ok": 0,
+        "count_total": 0,
+        "details": [],
+        "scope": "datos y deltas; no prueba emisión ni logger dual"
+      },
+      "core_strings": {
+        "verified": true,
+        "count_total": 5,
+        "details": [
+          {
+            "vaddr": "0x43ca493f",
+            "ok": true,
+            "matches_by_firmware": {
+              "a6000_fw321": [
+                "0x43ca493f"
+              ],
+              "a7s_fw320": [
+                "0x43ca9dfa"
+              ],
+              "a6300_fw201": [
+                "0x43db05a8"
+              ]
+            }
+          },
+          {
+            "vaddr": "0x43ca4994",
+            "ok": true,
+            "matches_by_firmware": {
+              "a6000_fw321": [
+                "0x43ca4994"
+              ],
+              "a7s_fw320": [
+                "0x43ca9e3f"
+              ],
+              "a6300_fw201": [
+                "0x43db05ed"
+              ]
+            }
+          },
+          {
+            "vaddr": "0x43ca49e5",
+            "ok": true,
+            "matches_by_firmware": {
+              "a6000_fw321": [
+                "0x43ca49e5"
+              ],
+              "a7s_fw320": [
+                "0x43ca9e80"
+              ],
+              "a6300_fw201": [
+                "0x43db062e"
+              ]
+            }
+          },
+          {
+            "vaddr": "0x43ca4a3a",
+            "ok": true,
+            "matches_by_firmware": {
+              "a6000_fw321": [
+                "0x43ca4a3a"
+              ],
+              "a7s_fw320": [
+                "0x43ca9ec5"
+              ],
+              "a6300_fw201": []
+            }
+          },
+          {
+            "vaddr": "0x43ca4a9a",
+            "ok": true,
+            "matches_by_firmware": {
+              "a6000_fw321": [
+                "0x43ca4a9a"
+              ],
+              "a7s_fw320": [
+                "0x43ca9f15"
+              ],
+              "a6300_fw201": [
+                "0x43db0673"
+              ]
+            }
+          }
+        ],
+        "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
+      },
+      "metadata": {
+        "verified": true,
+        "errors": []
+      },
+      "logger_dual": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+        "claimed": true,
+        "global_logger": "0x43902718",
+        "global_logger_verified": false,
+        "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+        "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
+      },
+      "equivalencia_funcional": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin contratos, entradas, salidas y callees comparados"
+      },
+      "equivalencia_codigo": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin comparación de cuerpos/instrucciones entre modelos"
+      },
+      "linea_obturador": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "un negativo léxico, incluso vacío, no prueba ausencia de una ruta de obturador"
+      },
+      "differential": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "recuentos históricos sin criterio de selección reproducible",
+        "fields": {
+          "a6000_fw321": [
+            "imaging_rsrc_token_count",
+            "golfshot_token_count",
+            "prefixes"
+          ],
+          "a7s_fw320": [
+            "imaging_rsrc_token_count",
+            "golfshot_token_count",
+            "prefixes"
+          ],
+          "a6300_fw201": [
+            "imaging_rsrc_token_count",
+            "golfshot_token_count",
+            "prefixes"
+          ]
+        }
+      },
+      "other_claims": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "símbolos, semántica, sitios emisores y funciones requieren evidencia propia",
+        "fields": []
+      }
+    }
   },
   {
     "module": "CAMERA_IS/MOUNT",
-    "dir": "s612_mount",
     "json": "analysis/s612_mount/mount.json",
-    "strings_total": 5,
-    "strings_ok": 5,
-    "strings_verified": true,
-    "logger_dual_claimed": true,
-    "logger_dual_verified": false,
-    "logger_global": "0x43902718",
-    "logger_global_verified": true,
-    "logger_global_msg": "code @0x3c1718",
-    "equiv_func_verified": false,
-    "equiv_code_verified": false,
-    "shutter_verified": true,
-    "shutter_found_in_traces": [],
-    "string_details": [
-      {
-        "vaddr": "0x43c98da6",
-        "ok": true,
-        "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountExpStartCB"
+    "firmware": {
+      "a6000_fw321": {
+        "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11427236,
+        "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
       },
-      {
-        "vaddr": "0x43c98dde",
-        "ok": true,
-        "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountExpStartCB"
+      "a7s_fw320": {
+        "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11455416,
+        "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
       },
-      {
-        "vaddr": "0x43c9a3a7",
-        "ok": true,
-        "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGy"
-      },
-      {
-        "vaddr": "0x43c9a3e3",
-        "ok": true,
-        "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGy"
-      },
-      {
-        "vaddr": "0x43c9a426",
-        "ok": true,
-        "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGy"
+      "a6300_fw201": {
+        "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 13382836,
+        "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16"
       }
-    ]
+    },
+    "verification_status": {
+      "trace_strings": {
+        "verified": true,
+        "count_ok": 5,
+        "count_total": 5,
+        "basis": "bytes ASCII exactos + NUL; base 0x43541000; sin rstrip",
+        "details": [
+          {
+            "vaddr": "0x43c98da6",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c98dde",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c9a3a7",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c9a3e3",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c9a426",
+            "ok": true
+          }
+        ]
+      },
+      "twin_strings": {
+        "verified": false,
+        "count_ok": 0,
+        "count_total": 0,
+        "details": [],
+        "scope": "datos y deltas; no prueba emisión ni logger dual"
+      },
+      "core_strings": {
+        "verified": false,
+        "count_total": 0,
+        "details": [],
+        "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
+      },
+      "metadata": {
+        "verified": true,
+        "errors": []
+      },
+      "logger_dual": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+        "claimed": true,
+        "global_logger": "0x43902718",
+        "global_logger_verified": false,
+        "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+        "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
+      },
+      "equivalencia_funcional": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin contratos, entradas, salidas y callees comparados"
+      },
+      "equivalencia_codigo": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin comparación de cuerpos/instrucciones entre modelos"
+      },
+      "linea_obturador": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "un negativo léxico, incluso vacío, no prueba ausencia de una ruta de obturador"
+      },
+      "differential": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "recuentos históricos sin criterio de selección reproducible",
+        "fields": {
+          "a6000_fw321": [
+            "token_count",
+            "prefixes"
+          ],
+          "a7s_fw320": [
+            "token_count",
+            "related_prefixes"
+          ],
+          "a6300_fw201": [
+            "token_count",
+            "related_prefixes"
+          ]
+        }
+      },
+      "other_claims": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "símbolos, semántica, sitios emisores y funciones requieren evidencia propia",
+        "fields": [
+          "parent_prefix",
+          "sub_prefix",
+          "level_prefix"
+        ]
+      }
+    }
   },
   {
     "module": "MOUNT_WARNING",
-    "dir": "s613_mount_warning",
     "json": "analysis/s613_mount_warning/mount_warning.json",
-    "strings_total": 5,
-    "strings_ok": 5,
-    "strings_verified": true,
-    "logger_dual_claimed": true,
-    "logger_dual_verified": false,
-    "logger_global": "0x43902718",
-    "logger_global_verified": true,
-    "logger_global_msg": "code @0x3c1718",
-    "equiv_func_verified": false,
-    "equiv_code_verified": false,
-    "shutter_verified": true,
-    "shutter_found_in_traces": [],
-    "string_details": [
-      {
-        "vaddr": "0x43c95691",
-        "ok": true,
-        "text": "[MOUNT_WARNING]: [MOUNT AM]NO MEMBER CHECK_DATA:%d"
+    "firmware": {
+      "a6000_fw321": {
+        "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11427236,
+        "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
       },
-      {
-        "vaddr": "0x43c956c4",
-        "ok": true,
-        "text": "[MOUNT_WARNING]: [MOUNT AM]NO MEMBER ERR_INFO:%d"
+      "a7s_fw320": {
+        "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11455416,
+        "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
       },
-      {
-        "vaddr": "0x43c970fc",
-        "ok": true,
-        "text": "[MOUNT_WARNING]: [BL]LIF Command : Illegal Command"
-      },
-      {
-        "vaddr": "0x43c97858",
-        "ok": true,
-        "text": "[MOUNT_WARNING]: [MOUNT DRV]NO MEMBER PWR_MODE:%d"
-      },
-      {
-        "vaddr": "0x43c98714",
-        "ok": true,
-        "text": "[MOUNT_WARNING]: [BL]cam_cmd change!! reason=%03x "
+      "a6300_fw201": {
+        "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 13382836,
+        "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16"
       }
-    ]
+    },
+    "verification_status": {
+      "trace_strings": {
+        "verified": true,
+        "count_ok": 5,
+        "count_total": 5,
+        "basis": "bytes ASCII exactos + NUL; base 0x43541000; sin rstrip",
+        "details": [
+          {
+            "vaddr": "0x43c95691",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c956c4",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c970fc",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c97858",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c98714",
+            "ok": true
+          }
+        ]
+      },
+      "twin_strings": {
+        "verified": false,
+        "count_ok": 0,
+        "count_total": 0,
+        "details": [],
+        "scope": "datos y deltas; no prueba emisión ni logger dual"
+      },
+      "core_strings": {
+        "verified": false,
+        "count_total": 0,
+        "details": [],
+        "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
+      },
+      "metadata": {
+        "verified": true,
+        "errors": []
+      },
+      "logger_dual": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+        "claimed": true,
+        "global_logger": "0x43902718",
+        "global_logger_verified": false,
+        "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+        "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
+      },
+      "equivalencia_funcional": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin contratos, entradas, salidas y callees comparados"
+      },
+      "equivalencia_codigo": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin comparación de cuerpos/instrucciones entre modelos"
+      },
+      "linea_obturador": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "un negativo léxico, incluso vacío, no prueba ausencia de una ruta de obturador"
+      },
+      "differential": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "recuentos históricos sin criterio de selección reproducible",
+        "fields": {
+          "a6000_fw321": [
+            "token_count",
+            "prefixes"
+          ],
+          "a7s_fw320": [
+            "token_count",
+            "related_prefixes"
+          ],
+          "a6300_fw201": [
+            "token_count",
+            "related_prefixes"
+          ]
+        }
+      },
+      "other_claims": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "símbolos, semántica, sitios emisores y funciones requieren evidencia propia",
+        "fields": [
+          "sub_prefixes"
+        ]
+      }
+    }
   },
   {
     "module": "ZPD",
-    "dir": "s614_zpd",
     "json": "analysis/s614_zpd/zpd.json",
-    "strings_total": 5,
-    "strings_ok": 5,
-    "strings_verified": true,
-    "logger_dual_claimed": true,
-    "logger_dual_verified": false,
-    "logger_global": "0x43902718",
-    "logger_global_verified": true,
-    "logger_global_msg": "code @0x3c1718",
-    "equiv_func_verified": false,
-    "equiv_code_verified": false,
-    "shutter_verified": true,
-    "shutter_found_in_traces": [],
-    "string_details": [
-      {
-        "vaddr": "0x43ccf27f",
-        "ok": true,
-        "text": "[ZPD]: lens attach sequence end."
+    "firmware": {
+      "a6000_fw321": {
+        "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11427236,
+        "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
       },
-      {
-        "vaddr": "0x43ccf2a0",
-        "ok": true,
-        "text": "[ZPD]: load dra data."
+      "a7s_fw320": {
+        "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11455416,
+        "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
       },
-      {
-        "vaddr": "0x43ccf2c7",
-        "ok": true,
-        "text": "[ZPD]: load lens data from lens."
-      },
-      {
-        "vaddr": "0x43ccf2e8",
-        "ok": true,
-        "text": "[ZPD]: load lens data from body."
-      },
-      {
-        "vaddr": "0x43ccf309",
-        "ok": true,
-        "text": "[ZPD]: load:%s"
+      "a6300_fw201": {
+        "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 13382836,
+        "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16"
       }
-    ]
+    },
+    "verification_status": {
+      "trace_strings": {
+        "verified": true,
+        "count_ok": 5,
+        "count_total": 5,
+        "basis": "bytes ASCII exactos + NUL; base 0x43541000; sin rstrip",
+        "details": [
+          {
+            "vaddr": "0x43ccf27f",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43ccf2a0",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43ccf2c7",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43ccf2e8",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43ccf309",
+            "ok": true
+          }
+        ]
+      },
+      "twin_strings": {
+        "verified": false,
+        "count_ok": 0,
+        "count_total": 0,
+        "details": [],
+        "scope": "datos y deltas; no prueba emisión ni logger dual"
+      },
+      "core_strings": {
+        "verified": false,
+        "count_total": 0,
+        "details": [],
+        "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
+      },
+      "metadata": {
+        "verified": true,
+        "errors": []
+      },
+      "logger_dual": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+        "claimed": true,
+        "global_logger": "0x43902718",
+        "global_logger_verified": false,
+        "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+        "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
+      },
+      "equivalencia_funcional": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin contratos, entradas, salidas y callees comparados"
+      },
+      "equivalencia_codigo": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin comparación de cuerpos/instrucciones entre modelos"
+      },
+      "linea_obturador": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "un negativo léxico, incluso vacío, no prueba ausencia de una ruta de obturador"
+      },
+      "differential": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "recuentos históricos sin criterio de selección reproducible",
+        "fields": {
+          "a6000_fw321": [
+            "token_count",
+            "prefixes"
+          ],
+          "a7s_fw320": [
+            "token_count",
+            "related_strings_count"
+          ],
+          "a6300_fw201": [
+            "token_count",
+            "related_strings_count"
+          ]
+        }
+      },
+      "other_claims": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "símbolos, semántica, sitios emisores y funciones requieren evidencia propia",
+        "fields": []
+      }
+    }
   },
   {
     "module": "CAMERA_IS/EIS",
-    "dir": "s615_eis",
     "json": "analysis/s615_eis/eis.json",
-    "strings_total": 4,
-    "strings_ok": 4,
-    "strings_verified": true,
-    "logger_dual_claimed": true,
-    "logger_dual_verified": false,
-    "logger_global": "0x43902718",
-    "logger_global_verified": true,
-    "logger_global_msg": "code @0x3c1718",
-    "equiv_func_verified": false,
-    "equiv_code_verified": false,
-    "shutter_verified": true,
-    "shutter_found_in_traces": [],
-    "string_details": [
-      {
-        "vaddr": "0x43c9a2b2",
-        "ok": true,
-        "text": "[CAMERA_IS][EIS]: error:0x%02x rcct_SetStblzPower "
+    "firmware": {
+      "a6000_fw321": {
+        "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11427236,
+        "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
       },
-      {
-        "vaddr": "0x43c9a2eb",
-        "ok": true,
-        "text": "[CAMERA_IS][EIS]: error:0x%02x rcct_SetStblzGridH "
+      "a7s_fw320": {
+        "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11455416,
+        "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
       },
-      {
-        "vaddr": "0x43c9a324",
-        "ok": true,
-        "text": "[CAMERA_IS][EIS]: GyroAD[p],GyroAD[y], %d, %d"
-      },
-      {
-        "vaddr": "0x43c9a352",
-        "ok": true,
-        "text": "[CAMERA_IS][EIS]: %x, %d, %d"
+      "a6300_fw201": {
+        "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 13382836,
+        "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16"
       }
-    ]
+    },
+    "verification_status": {
+      "trace_strings": {
+        "verified": true,
+        "count_ok": 4,
+        "count_total": 4,
+        "basis": "bytes ASCII exactos + NUL; base 0x43541000; sin rstrip",
+        "details": [
+          {
+            "vaddr": "0x43c9a2b2",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c9a2eb",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c9a324",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c9a352",
+            "ok": true
+          }
+        ]
+      },
+      "twin_strings": {
+        "verified": false,
+        "count_ok": 0,
+        "count_total": 0,
+        "details": [],
+        "scope": "datos y deltas; no prueba emisión ni logger dual"
+      },
+      "core_strings": {
+        "verified": false,
+        "count_total": 0,
+        "details": [],
+        "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
+      },
+      "metadata": {
+        "verified": true,
+        "errors": []
+      },
+      "logger_dual": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+        "claimed": true,
+        "global_logger": "0x43902718",
+        "global_logger_verified": false,
+        "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+        "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
+      },
+      "equivalencia_funcional": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin contratos, entradas, salidas y callees comparados"
+      },
+      "equivalencia_codigo": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin comparación de cuerpos/instrucciones entre modelos"
+      },
+      "linea_obturador": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "un negativo léxico, incluso vacío, no prueba ausencia de una ruta de obturador"
+      },
+      "differential": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "recuentos históricos sin criterio de selección reproducible",
+        "fields": {
+          "a6000_fw321": [
+            "token_count",
+            "prefixes"
+          ],
+          "a7s_fw320": [
+            "token_count",
+            "core_strings_count"
+          ],
+          "a6300_fw201": [
+            "token_count",
+            "core_strings_count"
+          ]
+        }
+      },
+      "other_claims": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "símbolos, semántica, sitios emisores y funciones requieren evidencia propia",
+        "fields": [
+          "parent_prefix",
+          "sub_prefix"
+        ]
+      }
+    }
   },
   {
     "module": "LENS_PDR",
-    "dir": "s616_lens_pdr",
     "json": "analysis/s616_lens_pdr/lens_pdr.json",
-    "strings_total": 4,
-    "strings_ok": 4,
-    "strings_verified": true,
-    "logger_dual_claimed": true,
-    "logger_dual_verified": false,
-    "logger_global": "0x43902718",
-    "logger_global_verified": true,
-    "logger_global_msg": "code @0x3c1718",
-    "equiv_func_verified": false,
-    "equiv_code_verified": false,
-    "shutter_verified": true,
-    "shutter_found_in_traces": [],
-    "string_details": [
-      {
-        "vaddr": "0x43c9a7ca",
-        "ok": true,
-        "text": "[LENS_PDR]: BonoboDSP_Send: Data latch failed!"
+    "firmware": {
+      "a6000_fw321": {
+        "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11427236,
+        "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
       },
-      {
-        "vaddr": "0x43c9a7fa",
-        "ok": true,
-        "text": "[LENS_PDR]: BonoboDSP_Send:[ch0]Data latch failed!"
+      "a7s_fw320": {
+        "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11455416,
+        "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
       },
-      {
-        "vaddr": "0x43c9a82e",
-        "ok": true,
-        "text": "[LENS_PDR]: BonoboDSP_Send:[ch1]Data latch failed!"
-      },
-      {
-        "vaddr": "0x43c9a862",
-        "ok": true,
-        "text": "[LENS_PDR]: BonoboDSP_Rcv: paritycheck_error!"
+      "a6300_fw201": {
+        "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 13382836,
+        "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16"
       }
-    ]
+    },
+    "verification_status": {
+      "trace_strings": {
+        "verified": true,
+        "count_ok": 4,
+        "count_total": 4,
+        "basis": "bytes ASCII exactos + NUL; base 0x43541000; sin rstrip",
+        "details": [
+          {
+            "vaddr": "0x43c9a7ca",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c9a7fa",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c9a82e",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c9a862",
+            "ok": true
+          }
+        ]
+      },
+      "twin_strings": {
+        "verified": false,
+        "count_ok": 0,
+        "count_total": 0,
+        "details": [],
+        "scope": "datos y deltas; no prueba emisión ni logger dual"
+      },
+      "core_strings": {
+        "verified": false,
+        "count_total": 0,
+        "details": [],
+        "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
+      },
+      "metadata": {
+        "verified": true,
+        "errors": []
+      },
+      "logger_dual": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+        "claimed": true,
+        "global_logger": "0x43902718",
+        "global_logger_verified": false,
+        "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+        "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
+      },
+      "equivalencia_funcional": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin contratos, entradas, salidas y callees comparados"
+      },
+      "equivalencia_codigo": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin comparación de cuerpos/instrucciones entre modelos"
+      },
+      "linea_obturador": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "un negativo léxico, incluso vacío, no prueba ausencia de una ruta de obturador"
+      },
+      "differential": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "recuentos históricos sin criterio de selección reproducible",
+        "fields": {
+          "a6000_fw321": [
+            "token_count",
+            "prefixes"
+          ],
+          "a7s_fw320": [
+            "token_count",
+            "core_strings_count"
+          ],
+          "a6300_fw201": [
+            "token_count",
+            "core_strings_count"
+          ]
+        }
+      },
+      "other_claims": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "símbolos, semántica, sitios emisores y funciones requieren evidencia propia",
+        "fields": []
+      }
+    }
   },
   {
     "module": "CAMERA_DEVICE/DET_DIR",
-    "dir": "s617_camera_device",
     "json": "analysis/s617_camera_device/camera_device.json",
-    "strings_total": 3,
-    "strings_ok": 3,
-    "strings_verified": true,
-    "logger_dual_claimed": true,
-    "logger_dual_verified": false,
-    "logger_global": "0x43902718",
-    "logger_global_verified": true,
-    "logger_global_msg": "code @0x3c1718",
-    "equiv_func_verified": false,
-    "equiv_code_verified": false,
-    "shutter_verified": true,
-    "shutter_found_in_traces": [],
-    "string_details": [
-      {
-        "vaddr": "0x43cf724e",
-        "ok": true,
-        "text": "[CAMERA_DEVICE][DET_DIR][osal_alloc_timer] %x"
+    "firmware": {
+      "a6000_fw321": {
+        "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11427236,
+        "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
       },
-      {
-        "vaddr": "0x43cf727c",
-        "ok": true,
-        "text": "[CAMERA_DEVICE][DET_DIR][osal_set_timer] %x"
+      "a7s_fw320": {
+        "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11455416,
+        "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
       },
-      {
-        "vaddr": "0x43cf72a8",
-        "ok": true,
-        "text": "[CAMERA_DEVICE][DET_DIR][osal_free_timer] %x"
+      "a6300_fw201": {
+        "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 13382836,
+        "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16"
       }
-    ]
+    },
+    "verification_status": {
+      "trace_strings": {
+        "verified": true,
+        "count_ok": 3,
+        "count_total": 3,
+        "basis": "bytes ASCII exactos + NUL; base 0x43541000; sin rstrip",
+        "details": [
+          {
+            "vaddr": "0x43cf724e",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43cf727c",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43cf72a8",
+            "ok": true
+          }
+        ]
+      },
+      "twin_strings": {
+        "verified": false,
+        "count_ok": 0,
+        "count_total": 0,
+        "details": [],
+        "scope": "datos y deltas; no prueba emisión ni logger dual"
+      },
+      "core_strings": {
+        "verified": false,
+        "count_total": 0,
+        "details": [],
+        "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
+      },
+      "metadata": {
+        "verified": true,
+        "errors": []
+      },
+      "logger_dual": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+        "claimed": true,
+        "global_logger": "0x43902718",
+        "global_logger_verified": false,
+        "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+        "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
+      },
+      "equivalencia_funcional": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin contratos, entradas, salidas y callees comparados"
+      },
+      "equivalencia_codigo": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin comparación de cuerpos/instrucciones entre modelos"
+      },
+      "linea_obturador": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "un negativo léxico, incluso vacío, no prueba ausencia de una ruta de obturador"
+      },
+      "differential": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "recuentos históricos sin criterio de selección reproducible",
+        "fields": {
+          "a6000_fw321": [
+            "token_count",
+            "prefixes"
+          ],
+          "a7s_fw320": [
+            "token_count",
+            "core_strings_count",
+            "prefixes"
+          ],
+          "a6300_fw201": [
+            "token_count",
+            "core_strings_count",
+            "prefixes"
+          ]
+        }
+      },
+      "other_claims": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "símbolos, semántica, sitios emisores y funciones requieren evidencia propia",
+        "fields": [
+          "parent_prefix",
+          "sub_prefix"
+        ]
+      }
+    }
   },
   {
     "module": "DET_DIR",
-    "dir": "s618_det_dir",
     "json": "analysis/s618_det_dir/det_dir.json",
-    "strings_total": 0,
-    "strings_ok": 0,
-    "strings_verified": false,
-    "logger_dual_claimed": false,
-    "logger_dual_verified": false,
-    "logger_global": null,
-    "logger_global_verified": false,
-    "logger_global_msg": "no_global_logger",
-    "equiv_func_verified": false,
-    "equiv_code_verified": false,
-    "shutter_verified": true,
-    "shutter_found_in_traces": [],
-    "string_details": []
+    "firmware": {
+      "a6000_fw321": {
+        "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11427236,
+        "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
+      },
+      "a7s_fw320": {
+        "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11455416,
+        "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+      },
+      "a6300_fw201": {
+        "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 13382836,
+        "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16"
+      }
+    },
+    "verification_status": {
+      "trace_strings": {
+        "verified": false,
+        "count_ok": 0,
+        "count_total": 0,
+        "basis": "bytes ASCII exactos + NUL; base 0x43541000; sin rstrip",
+        "details": []
+      },
+      "twin_strings": {
+        "verified": false,
+        "count_ok": 0,
+        "count_total": 0,
+        "details": [],
+        "scope": "datos y deltas; no prueba emisión ni logger dual"
+      },
+      "core_strings": {
+        "verified": false,
+        "count_total": 0,
+        "details": [],
+        "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
+      },
+      "metadata": {
+        "verified": true,
+        "errors": []
+      },
+      "logger_dual": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+        "claimed": false,
+        "global_logger": null,
+        "global_logger_verified": false,
+        "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+        "bytes_hex": null
+      },
+      "equivalencia_funcional": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin contratos, entradas, salidas y callees comparados"
+      },
+      "equivalencia_codigo": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin comparación de cuerpos/instrucciones entre modelos"
+      },
+      "linea_obturador": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "un negativo léxico, incluso vacío, no prueba ausencia de una ruta de obturador"
+      },
+      "differential": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "recuentos históricos sin criterio de selección reproducible",
+        "fields": {
+          "a6000_fw321": [
+            "standalone_token_count"
+          ],
+          "a7s_fw320": [
+            "standalone_token_count"
+          ],
+          "a6300_fw201": [
+            "standalone_token_count"
+          ]
+        }
+      },
+      "other_claims": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "símbolos, semántica, sitios emisores y funciones requieren evidencia propia",
+        "fields": [
+          "note",
+          "related_module"
+        ]
+      }
+    }
   },
   {
     "module": "SENSER",
-    "dir": "s619_senser",
     "json": "analysis/s619_senser/senser.json",
-    "strings_total": 3,
-    "strings_ok": 3,
-    "strings_verified": true,
-    "logger_dual_claimed": true,
-    "logger_dual_verified": false,
-    "logger_global": "0x43902718",
-    "logger_global_verified": true,
-    "logger_global_msg": "code @0x3c1718",
-    "equiv_func_verified": false,
-    "equiv_code_verified": false,
-    "shutter_verified": true,
-    "shutter_found_in_traces": [],
-    "string_details": [
-      {
-        "vaddr": "0x43c24f10",
-        "ok": true,
-        "text": "[ACCY][ERR][SENSER] unknown block %04X"
+    "firmware": {
+      "a6000_fw321": {
+        "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11427236,
+        "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
       },
-      {
-        "vaddr": "0x43c24f37",
-        "ok": true,
-        "text": "[ACCY][DEBUG][SENSER] Cmd %04X, S1 %02X"
+      "a7s_fw320": {
+        "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11455416,
+        "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
       },
-      {
-        "vaddr": "0x43c24f5f",
-        "ok": true,
-        "text": "[ACCY][ERR][SENSER] unknown command %04X"
+      "a6300_fw201": {
+        "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 13382836,
+        "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16"
       }
-    ]
+    },
+    "verification_status": {
+      "trace_strings": {
+        "verified": true,
+        "count_ok": 3,
+        "count_total": 3,
+        "basis": "bytes ASCII exactos + NUL; base 0x43541000; sin rstrip",
+        "details": [
+          {
+            "vaddr": "0x43c24f10",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c24f37",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c24f5f",
+            "ok": true
+          }
+        ]
+      },
+      "twin_strings": {
+        "verified": false,
+        "count_ok": 0,
+        "count_total": 0,
+        "details": [],
+        "scope": "datos y deltas; no prueba emisión ni logger dual"
+      },
+      "core_strings": {
+        "verified": false,
+        "count_total": 0,
+        "details": [],
+        "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
+      },
+      "metadata": {
+        "verified": true,
+        "errors": []
+      },
+      "logger_dual": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+        "claimed": true,
+        "global_logger": "0x43902718",
+        "global_logger_verified": false,
+        "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+        "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
+      },
+      "equivalencia_funcional": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin contratos, entradas, salidas y callees comparados"
+      },
+      "equivalencia_codigo": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin comparación de cuerpos/instrucciones entre modelos"
+      },
+      "linea_obturador": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "un negativo léxico, incluso vacío, no prueba ausencia de una ruta de obturador"
+      },
+      "differential": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "recuentos históricos sin criterio de selección reproducible",
+        "fields": {
+          "a6000_fw321": [
+            "token_count",
+            "prefixes"
+          ],
+          "a7s_fw320": [
+            "token_count",
+            "related_strings_count",
+            "prefixes"
+          ],
+          "a6300_fw201": [
+            "token_count",
+            "related_strings_count",
+            "prefixes"
+          ]
+        }
+      },
+      "other_claims": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "símbolos, semántica, sitios emisores y funciones requieren evidencia propia",
+        "fields": []
+      }
+    }
   },
   {
     "module": "STABILIZER",
-    "dir": "s620_stabilizer",
     "json": "analysis/s620_stabilizer/stabilizer.json",
-    "strings_total": 3,
-    "strings_ok": 3,
-    "strings_verified": true,
-    "logger_dual_claimed": true,
-    "logger_dual_verified": false,
-    "logger_global": "0x43902718",
-    "logger_global_verified": true,
-    "logger_global_msg": "code @0x3c1718",
-    "equiv_func_verified": false,
-    "equiv_code_verified": false,
-    "shutter_verified": true,
-    "shutter_found_in_traces": [],
-    "string_details": [
-      {
-        "vaddr": "0x43c9a1f3",
-        "ok": true,
-        "text": "[CAMERA_IS][AS]: [STABILIZER][AS][osal_reg_sync_ms"
+    "firmware": {
+      "a6000_fw321": {
+        "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11427236,
+        "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
       },
-      {
-        "vaddr": "0x43c9a234",
-        "ok": true,
-        "text": "[CAMERA_IS][AS]: [STABILIZER][AS][upm_get_hcrn_ura"
+      "a7s_fw320": {
+        "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11455416,
+        "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
       },
-      {
-        "vaddr": "0x43c9a26b",
-        "ok": true,
-        "text": "[CAMERA_IS][AS]: [STABILIZER][AS][osal_unreg_sync_"
+      "a6300_fw201": {
+        "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 13382836,
+        "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16"
       }
-    ]
+    },
+    "verification_status": {
+      "trace_strings": {
+        "verified": true,
+        "count_ok": 3,
+        "count_total": 3,
+        "basis": "bytes ASCII exactos + NUL; base 0x43541000; sin rstrip",
+        "details": [
+          {
+            "vaddr": "0x43c9a1f3",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c9a234",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c9a26b",
+            "ok": true
+          }
+        ]
+      },
+      "twin_strings": {
+        "verified": false,
+        "count_ok": 0,
+        "count_total": 0,
+        "details": [],
+        "scope": "datos y deltas; no prueba emisión ni logger dual"
+      },
+      "core_strings": {
+        "verified": false,
+        "count_total": 0,
+        "details": [],
+        "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
+      },
+      "metadata": {
+        "verified": true,
+        "errors": []
+      },
+      "logger_dual": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+        "claimed": true,
+        "global_logger": "0x43902718",
+        "global_logger_verified": false,
+        "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+        "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
+      },
+      "equivalencia_funcional": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin contratos, entradas, salidas y callees comparados"
+      },
+      "equivalencia_codigo": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin comparación de cuerpos/instrucciones entre modelos"
+      },
+      "linea_obturador": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "un negativo léxico, incluso vacío, no prueba ausencia de una ruta de obturador"
+      },
+      "differential": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "recuentos históricos sin criterio de selección reproducible",
+        "fields": {
+          "a6000_fw321": [
+            "token_count",
+            "prefixes"
+          ],
+          "a7s_fw320": [
+            "token_count",
+            "related_strings_count"
+          ],
+          "a6300_fw201": [
+            "token_count",
+            "related_strings_count"
+          ]
+        }
+      },
+      "other_claims": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "símbolos, semántica, sitios emisores y funciones requieren evidencia propia",
+        "fields": [
+          "parent_prefix",
+          "sub_prefix"
+        ]
+      }
+    }
   },
   {
     "module": "AVOUT",
-    "dir": "s621_avout",
     "json": "analysis/s621_avout/avout.json",
-    "strings_total": 2,
-    "strings_ok": 2,
-    "strings_verified": true,
-    "logger_dual_claimed": true,
-    "logger_dual_verified": false,
-    "logger_global": "0x43902718",
-    "logger_global_verified": true,
-    "logger_global_msg": "code @0x3c1718",
-    "equiv_func_verified": false,
-    "equiv_code_verified": false,
-    "shutter_verified": true,
-    "shutter_found_in_traces": [],
-    "string_details": [
-      {
-        "vaddr": "0x43c2549e",
-        "ok": true,
-        "text": "[ACCY][DEBUG][AVOUT] NotifyDetached(%d)"
+    "firmware": {
+      "a6000_fw321": {
+        "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11427236,
+        "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
       },
-      {
-        "vaddr": "0x43c254c6",
-        "ok": true,
-        "text": "[ACCY][DEBUG][AVOUT] NotifyAttached(%d)"
+      "a7s_fw320": {
+        "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11455416,
+        "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+      },
+      "a6300_fw201": {
+        "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 13382836,
+        "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16"
       }
-    ]
+    },
+    "verification_status": {
+      "trace_strings": {
+        "verified": true,
+        "count_ok": 2,
+        "count_total": 2,
+        "basis": "bytes ASCII exactos + NUL; base 0x43541000; sin rstrip",
+        "details": [
+          {
+            "vaddr": "0x43c2549e",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c254c6",
+            "ok": true
+          }
+        ]
+      },
+      "twin_strings": {
+        "verified": false,
+        "count_ok": 0,
+        "count_total": 0,
+        "details": [],
+        "scope": "datos y deltas; no prueba emisión ni logger dual"
+      },
+      "core_strings": {
+        "verified": false,
+        "count_total": 0,
+        "details": [],
+        "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
+      },
+      "metadata": {
+        "verified": true,
+        "errors": []
+      },
+      "logger_dual": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+        "claimed": true,
+        "global_logger": "0x43902718",
+        "global_logger_verified": false,
+        "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+        "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
+      },
+      "equivalencia_funcional": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin contratos, entradas, salidas y callees comparados"
+      },
+      "equivalencia_codigo": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin comparación de cuerpos/instrucciones entre modelos"
+      },
+      "linea_obturador": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "un negativo léxico, incluso vacío, no prueba ausencia de una ruta de obturador"
+      },
+      "differential": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "recuentos históricos sin criterio de selección reproducible",
+        "fields": {
+          "a6000_fw321": [
+            "token_count",
+            "prefixes"
+          ],
+          "a7s_fw320": [
+            "token_count",
+            "related_strings"
+          ],
+          "a6300_fw201": [
+            "token_count",
+            "related_strings"
+          ]
+        }
+      },
+      "other_claims": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "símbolos, semántica, sitios emisores y funciones requieren evidencia propia",
+        "fields": [
+          "parent_prefix",
+          "level_prefix",
+          "sub_prefix"
+        ]
+      }
+    }
   },
   {
     "module": "AVR",
-    "dir": "s622_avr",
     "json": "analysis/s622_avr/avr.json",
-    "strings_total": 2,
-    "strings_ok": 2,
-    "strings_verified": true,
-    "logger_dual_claimed": true,
-    "logger_dual_verified": false,
-    "logger_global": "0x43902718",
-    "logger_global_verified": true,
-    "logger_global_msg": "code @0x3c1718",
-    "equiv_func_verified": false,
-    "equiv_code_verified": false,
-    "shutter_verified": true,
-    "shutter_found_in_traces": [],
-    "string_details": [
-      {
-        "vaddr": "0x43c25502",
-        "ok": true,
-        "text": "[ACCY][DEBUG][AVR] NotifyDetached(%d)"
+    "firmware": {
+      "a6000_fw321": {
+        "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11427236,
+        "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
       },
-      {
-        "vaddr": "0x43c25528",
-        "ok": true,
-        "text": "[ACCY][DEBUG][AVR] NotifyAttached(%d)"
+      "a7s_fw320": {
+        "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11455416,
+        "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+      },
+      "a6300_fw201": {
+        "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 13382836,
+        "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16"
       }
-    ]
+    },
+    "verification_status": {
+      "trace_strings": {
+        "verified": true,
+        "count_ok": 2,
+        "count_total": 2,
+        "basis": "bytes ASCII exactos + NUL; base 0x43541000; sin rstrip",
+        "details": [
+          {
+            "vaddr": "0x43c25502",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c25528",
+            "ok": true
+          }
+        ]
+      },
+      "twin_strings": {
+        "verified": false,
+        "count_ok": 0,
+        "count_total": 0,
+        "details": [],
+        "scope": "datos y deltas; no prueba emisión ni logger dual"
+      },
+      "core_strings": {
+        "verified": false,
+        "count_total": 0,
+        "details": [],
+        "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
+      },
+      "metadata": {
+        "verified": true,
+        "errors": []
+      },
+      "logger_dual": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+        "claimed": true,
+        "global_logger": "0x43902718",
+        "global_logger_verified": false,
+        "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+        "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
+      },
+      "equivalencia_funcional": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin contratos, entradas, salidas y callees comparados"
+      },
+      "equivalencia_codigo": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin comparación de cuerpos/instrucciones entre modelos"
+      },
+      "linea_obturador": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "un negativo léxico, incluso vacío, no prueba ausencia de una ruta de obturador"
+      },
+      "differential": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "recuentos históricos sin criterio de selección reproducible",
+        "fields": {
+          "a6000_fw321": [
+            "token_count",
+            "prefixes"
+          ],
+          "a7s_fw320": [
+            "token_count",
+            "related_strings"
+          ],
+          "a6300_fw201": [
+            "token_count",
+            "related_strings"
+          ]
+        }
+      },
+      "other_claims": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "símbolos, semántica, sitios emisores y funciones requieren evidencia propia",
+        "fields": [
+          "parent_prefix",
+          "level_prefix",
+          "sub_prefix"
+        ]
+      }
+    }
   },
   {
     "module": "JIRO",
-    "dir": "s623_jiro",
     "json": "analysis/s623_jiro/jiro.json",
-    "strings_total": 2,
-    "strings_ok": 2,
-    "strings_verified": true,
-    "logger_dual_claimed": true,
-    "logger_dual_verified": false,
-    "logger_global": "0x43902718",
-    "logger_global_verified": true,
-    "logger_global_msg": "code @0x3c1718",
-    "equiv_func_verified": false,
-    "equiv_code_verified": false,
-    "shutter_verified": true,
-    "shutter_found_in_traces": [],
-    "string_details": [
-      {
-        "vaddr": "0x43c25aac",
-        "ok": true,
-        "text": "[ACCY][DEBUG][JIRO] NotifyDetached(%d)"
+    "firmware": {
+      "a6000_fw321": {
+        "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11427236,
+        "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
       },
-      {
-        "vaddr": "0x43c25ad3",
-        "ok": true,
-        "text": "[ACCY][DEBUG][JIRO] NotifyAttached(%d)"
+      "a7s_fw320": {
+        "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11455416,
+        "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+      },
+      "a6300_fw201": {
+        "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 13382836,
+        "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16"
       }
-    ]
+    },
+    "verification_status": {
+      "trace_strings": {
+        "verified": true,
+        "count_ok": 2,
+        "count_total": 2,
+        "basis": "bytes ASCII exactos + NUL; base 0x43541000; sin rstrip",
+        "details": [
+          {
+            "vaddr": "0x43c25aac",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c25ad3",
+            "ok": true
+          }
+        ]
+      },
+      "twin_strings": {
+        "verified": false,
+        "count_ok": 0,
+        "count_total": 0,
+        "details": [],
+        "scope": "datos y deltas; no prueba emisión ni logger dual"
+      },
+      "core_strings": {
+        "verified": false,
+        "count_total": 0,
+        "details": [],
+        "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
+      },
+      "metadata": {
+        "verified": true,
+        "errors": []
+      },
+      "logger_dual": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+        "claimed": true,
+        "global_logger": "0x43902718",
+        "global_logger_verified": false,
+        "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+        "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
+      },
+      "equivalencia_funcional": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin contratos, entradas, salidas y callees comparados"
+      },
+      "equivalencia_codigo": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin comparación de cuerpos/instrucciones entre modelos"
+      },
+      "linea_obturador": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "un negativo léxico, incluso vacío, no prueba ausencia de una ruta de obturador"
+      },
+      "differential": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "recuentos históricos sin criterio de selección reproducible",
+        "fields": {
+          "a6000_fw321": [
+            "token_count",
+            "prefixes"
+          ],
+          "a7s_fw320": [
+            "token_count",
+            "related_strings"
+          ],
+          "a6300_fw201": [
+            "token_count",
+            "related_strings"
+          ]
+        }
+      },
+      "other_claims": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "símbolos, semántica, sitios emisores y funciones requieren evidencia propia",
+        "fields": [
+          "parent_prefix",
+          "level_prefix",
+          "sub_prefix"
+        ]
+      }
+    }
   },
   {
     "module": "UTILITY",
-    "dir": "s624_utility",
     "json": "analysis/s624_utility/utility.json",
-    "strings_total": 2,
-    "strings_ok": 2,
-    "strings_verified": true,
-    "logger_dual_claimed": true,
-    "logger_dual_verified": false,
-    "logger_global": "0x43902718",
-    "logger_global_verified": true,
-    "logger_global_msg": "code @0x3c1718",
-    "equiv_func_verified": false,
-    "equiv_code_verified": false,
-    "shutter_verified": true,
-    "shutter_found_in_traces": [],
-    "string_details": [
-      {
-        "vaddr": "0x43c251d1",
-        "ok": true,
-        "text": "[ACCY][ERR][UTILITY]:%d:ConvNum8ToAscii num = %08X"
+    "firmware": {
+      "a6000_fw321": {
+        "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11427236,
+        "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
       },
-      {
-        "vaddr": "0x43c25204",
-        "ok": true,
-        "text": "[ACCY][ERR][UTILITY]:%d:ConvAsciiToNum8 ascii:%08X"
+      "a7s_fw320": {
+        "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11455416,
+        "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+      },
+      "a6300_fw201": {
+        "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 13382836,
+        "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16"
       }
-    ]
+    },
+    "verification_status": {
+      "trace_strings": {
+        "verified": true,
+        "count_ok": 2,
+        "count_total": 2,
+        "basis": "bytes ASCII exactos + NUL; base 0x43541000; sin rstrip",
+        "details": [
+          {
+            "vaddr": "0x43c251d1",
+            "ok": true
+          },
+          {
+            "vaddr": "0x43c25204",
+            "ok": true
+          }
+        ]
+      },
+      "twin_strings": {
+        "verified": false,
+        "count_ok": 0,
+        "count_total": 0,
+        "details": [],
+        "scope": "datos y deltas; no prueba emisión ni logger dual"
+      },
+      "core_strings": {
+        "verified": false,
+        "count_total": 0,
+        "details": [],
+        "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
+      },
+      "metadata": {
+        "verified": true,
+        "errors": []
+      },
+      "logger_dual": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+        "claimed": true,
+        "global_logger": "0x43902718",
+        "global_logger_verified": false,
+        "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+        "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
+      },
+      "equivalencia_funcional": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin contratos, entradas, salidas y callees comparados"
+      },
+      "equivalencia_codigo": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin comparación de cuerpos/instrucciones entre modelos"
+      },
+      "linea_obturador": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "un negativo léxico, incluso vacío, no prueba ausencia de una ruta de obturador"
+      },
+      "differential": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "recuentos históricos sin criterio de selección reproducible",
+        "fields": {
+          "a6000_fw321": [
+            "token_count",
+            "prefixes"
+          ],
+          "a7s_fw320": [
+            "token_count",
+            "related_strings_count"
+          ],
+          "a6300_fw201": [
+            "token_count",
+            "related_strings_count"
+          ]
+        }
+      },
+      "other_claims": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "símbolos, semántica, sitios emisores y funciones requieren evidencia propia",
+        "fields": [
+          "parent_prefix",
+          "level_prefix",
+          "sub_prefix"
+        ]
+      }
+    }
   },
   {
     "module": "ADR",
-    "dir": "s625_adr",
     "json": "analysis/s625_adr/adr.json",
-    "strings_total": 1,
-    "strings_ok": 1,
-    "strings_verified": true,
-    "logger_dual_claimed": true,
-    "logger_dual_verified": false,
-    "logger_global": "0x43902718",
-    "logger_global_verified": true,
-    "logger_global_msg": "code @0x3c1718",
-    "equiv_func_verified": false,
-    "equiv_code_verified": false,
-    "shutter_verified": true,
-    "shutter_found_in_traces": [],
-    "string_details": [
-      {
-        "vaddr": "0x43cce3fa",
-        "ok": true,
-        "text": "[CAM_UTIL_SENS]: >>[FILE_NUM]%x [ADR]%x [SIZE]%x"
+    "firmware": {
+      "a6000_fw321": {
+        "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11427236,
+        "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
+      },
+      "a7s_fw320": {
+        "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11455416,
+        "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+      },
+      "a6300_fw201": {
+        "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 13382836,
+        "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16"
       }
-    ]
+    },
+    "verification_status": {
+      "trace_strings": {
+        "verified": true,
+        "count_ok": 1,
+        "count_total": 1,
+        "basis": "bytes ASCII exactos + NUL; base 0x43541000; sin rstrip",
+        "details": [
+          {
+            "vaddr": "0x43cce3fa",
+            "ok": true
+          }
+        ]
+      },
+      "twin_strings": {
+        "verified": false,
+        "count_ok": 0,
+        "count_total": 0,
+        "details": [],
+        "scope": "datos y deltas; no prueba emisión ni logger dual"
+      },
+      "core_strings": {
+        "verified": false,
+        "count_total": 0,
+        "details": [],
+        "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
+      },
+      "metadata": {
+        "verified": true,
+        "errors": []
+      },
+      "logger_dual": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+        "claimed": true,
+        "global_logger": "0x43902718",
+        "global_logger_verified": false,
+        "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+        "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
+      },
+      "equivalencia_funcional": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin contratos, entradas, salidas y callees comparados"
+      },
+      "equivalencia_codigo": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin comparación de cuerpos/instrucciones entre modelos"
+      },
+      "linea_obturador": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "un negativo léxico, incluso vacío, no prueba ausencia de una ruta de obturador"
+      },
+      "differential": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "recuentos históricos sin criterio de selección reproducible",
+        "fields": {
+          "a6000_fw321": [
+            "token_count",
+            "prefixes"
+          ],
+          "a7s_fw320": [
+            "token_count",
+            "related_strings_count"
+          ],
+          "a6300_fw201": [
+            "token_count",
+            "related_strings_count"
+          ]
+        }
+      },
+      "other_claims": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "símbolos, semántica, sitios emisores y funciones requieren evidencia propia",
+        "fields": [
+          "parent_prefix"
+        ]
+      }
+    }
   },
   {
     "module": "CAMERA_DETECT_FC",
-    "dir": "s626_camera_detect_fc",
     "json": "analysis/s626_camera_detect_fc/camera_detect_fc.json",
-    "strings_total": 1,
-    "strings_ok": 1,
-    "strings_verified": true,
-    "logger_dual_claimed": true,
-    "logger_dual_verified": false,
-    "logger_global": "0x43902718",
-    "logger_global_verified": true,
-    "logger_global_msg": "code @0x3c1718",
-    "equiv_func_verified": false,
-    "equiv_code_verified": false,
-    "shutter_verified": true,
-    "shutter_found_in_traces": [],
-    "string_details": [
-      {
-        "vaddr": "0x43cf02c9",
-        "ok": true,
-        "text": "[CAMERA_DETECT_FC]: %s @%s L%d"
+    "firmware": {
+      "a6000_fw321": {
+        "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11427236,
+        "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
+      },
+      "a7s_fw320": {
+        "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11455416,
+        "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+      },
+      "a6300_fw201": {
+        "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 13382836,
+        "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16"
       }
-    ]
+    },
+    "verification_status": {
+      "trace_strings": {
+        "verified": true,
+        "count_ok": 1,
+        "count_total": 1,
+        "basis": "bytes ASCII exactos + NUL; base 0x43541000; sin rstrip",
+        "details": [
+          {
+            "vaddr": "0x43cf02c9",
+            "ok": true
+          }
+        ]
+      },
+      "twin_strings": {
+        "verified": false,
+        "count_ok": 0,
+        "count_total": 0,
+        "details": [],
+        "scope": "datos y deltas; no prueba emisión ni logger dual"
+      },
+      "core_strings": {
+        "verified": false,
+        "count_total": 0,
+        "details": [],
+        "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
+      },
+      "metadata": {
+        "verified": true,
+        "errors": []
+      },
+      "logger_dual": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+        "claimed": true,
+        "global_logger": "0x43902718",
+        "global_logger_verified": false,
+        "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+        "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
+      },
+      "equivalencia_funcional": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin contratos, entradas, salidas y callees comparados"
+      },
+      "equivalencia_codigo": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin comparación de cuerpos/instrucciones entre modelos"
+      },
+      "linea_obturador": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "un negativo léxico, incluso vacío, no prueba ausencia de una ruta de obturador"
+      },
+      "differential": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "recuentos históricos sin criterio de selección reproducible",
+        "fields": {
+          "a6000_fw321": [
+            "token_count",
+            "prefixes"
+          ],
+          "a7s_fw320": [
+            "token_count",
+            "related_strings"
+          ],
+          "a6300_fw201": [
+            "token_count",
+            "related_strings"
+          ]
+        }
+      },
+      "other_claims": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "símbolos, semántica, sitios emisores y funciones requieren evidencia propia",
+        "fields": []
+      }
+    }
   },
   {
     "module": "EO_SW",
-    "dir": "s627_eo_sw",
     "json": "analysis/s627_eo_sw/eo_sw.json",
-    "strings_total": 1,
-    "strings_ok": 1,
-    "strings_verified": true,
-    "logger_dual_claimed": true,
-    "logger_dual_verified": false,
-    "logger_global": "0x43902718",
-    "logger_global_verified": true,
-    "logger_global_msg": "code @0x3c1718",
-    "equiv_func_verified": false,
-    "equiv_code_verified": false,
-    "shutter_verified": true,
-    "shutter_found_in_traces": [],
-    "string_details": [
-      {
-        "vaddr": "0x43c37b40",
-        "ok": true,
-        "text": "[EO_SW] Port=%d, Bit=%d, Data=%d"
+    "firmware": {
+      "a6000_fw321": {
+        "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11427236,
+        "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
+      },
+      "a7s_fw320": {
+        "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 11455416,
+        "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e"
+      },
+      "a6300_fw201": {
+        "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+        "size": 13382836,
+        "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16"
       }
-    ]
+    },
+    "verification_status": {
+      "trace_strings": {
+        "verified": true,
+        "count_ok": 1,
+        "count_total": 1,
+        "basis": "bytes ASCII exactos + NUL; base 0x43541000; sin rstrip",
+        "details": [
+          {
+            "vaddr": "0x43c37b40",
+            "ok": true
+          }
+        ]
+      },
+      "twin_strings": {
+        "verified": false,
+        "count_ok": 0,
+        "count_total": 0,
+        "details": [],
+        "scope": "datos y deltas; no prueba emisión ni logger dual"
+      },
+      "core_strings": {
+        "verified": false,
+        "count_total": 0,
+        "details": [],
+        "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
+      },
+      "metadata": {
+        "verified": true,
+        "errors": []
+      },
+      "logger_dual": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+        "claimed": true,
+        "global_logger": "0x43902718",
+        "global_logger_verified": false,
+        "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+        "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
+      },
+      "equivalencia_funcional": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin contratos, entradas, salidas y callees comparados"
+      },
+      "equivalencia_codigo": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "sin comparación de cuerpos/instrucciones entre modelos"
+      },
+      "linea_obturador": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "un negativo léxico, incluso vacío, no prueba ausencia de una ruta de obturador"
+      },
+      "differential": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "recuentos históricos sin criterio de selección reproducible",
+        "fields": {
+          "a6000_fw321": [
+            "token_count",
+            "prefixes"
+          ],
+          "a7s_fw320": [
+            "token_count",
+            "related_strings_count"
+          ],
+          "a6300_fw201": [
+            "token_count",
+            "related_strings_count"
+          ]
+        }
+      },
+      "other_claims": {
+        "verified": false,
+        "status": "NO_VERIFICADO",
+        "reason": "símbolos, semántica, sitios emisores y funciones requieren evidencia propia",
+        "fields": []
+      }
+    }
   }
 ]

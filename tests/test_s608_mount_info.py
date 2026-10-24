@@ -35,9 +35,9 @@ class TestS608MOUNTINFO(unittest.TestCase):
     def test_prefix_lengths(self):
         self.assertEqual(self.data['prefix_length'], 14)
         self.assertEqual(self.data['prefix'], '[MOUNT_INFO]: ')
-        self.assertEqual(self.data['core_prefix_length'], 3)
+        self.assertEqual(self.data['core_prefix_length'], 4)
         self.assertEqual(self.data['core_prefix'], '[BL]')
-        self.assertEqual(self.data['composite_prefix_length'], 15)
+        self.assertEqual(self.data['composite_prefix_length'], 18)
 
     def test_differential_a6000(self):
         self.assertEqual(self.data['differential']['a6000_fw321']['mount_info_token_count'], 6)

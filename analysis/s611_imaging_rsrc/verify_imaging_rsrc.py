@@ -20,11 +20,11 @@ def main():
         assert ts['text'] == expected, f"Composite mismatch: {ts['text']} != {expected}"
     
     # Verify prefix lengths
-    assert data['prefix_length'] == 18, f"Prefix length mismatch: {data['prefix_length']} != 18"
+    assert data['prefix_length'] == 16, f"Prefix length mismatch: {data['prefix_length']} != 16"
     assert data['prefix'] == '[IMAGING_RSRC]: '
-    assert data['core_prefix_length'] == 9, f"Core prefix length mismatch: {data['core_prefix_length']} != 9"
+    assert data['core_prefix_length'] == 10, f"Core prefix length mismatch: {data['core_prefix_length']} != 10"
     assert data['core_prefix'] == '[GOLFSHOT]'
-    assert data['composite_prefix_length'] == 27, f"Composite prefix length mismatch: {data['composite_prefix_length']} != 27"
+    assert data['composite_prefix_length'] == 26, f"Composite prefix length mismatch: {data['composite_prefix_length']} != 26"
     
     # Verify differential
     assert data['differential']['a6000_fw321']['imaging_rsrc_token_count'] == 5

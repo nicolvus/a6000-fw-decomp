@@ -1,43 +1,38 @@
-# S618 — `[DET_DIR]`: submódulo de directorio de detección (idéntico a CAMERA_DEVICE)
+# S618 — DET_DIR: evidencia de cadenas
 
-**Auditoría 23-10-2026:** alias de S617, sin trazas independientes; direcciones de las cadenas compartidas corregidas contra coincidencias únicas en `av-cam.bin` (base `0x43541000`). Las longitudes canónicas están en el JSON corregido. La duplicación del logger, los límites de funciones y la equivalencia entre modelos no quedan demostrados por presencia de cadenas; esas afirmaciones históricas siguen NO_VERIFICADO.
+**Auditoría de la validación de OpenCode — 23-10-2026.** Este informe corrige las conclusiones históricas de S618. La presencia de texto no demuestra funciones, llamadas ni equivalencia entre modelos.
 
-**3 trazas · 3 sitios (regla PIC estricta) · 0 muertas.** Detalle + datos: [JSON](../../analysis/s618_det_dir/det_dir.json).
+Datos: [det_dir.json](../../analysis/s618_det_dir/det_dir.json). Auditoría conjunta: [hallazgos S605–S627](S605-S627_tabla_hallazgos.md).
 
-## Qué es
+## Evidencia comprobada
 
-`[DET_DIR]` es la etiqueta de traza que la fw3.21 de la A6000 antepone a mensajes del **directorio de detección (DETection DIRectory)**. Sin embargo, **no existen trazas independientes con prefijo `[DET_DIR]: `** — las 3 trazas listadas en el censo son **idénticas** a las de `[CAMERA_DEVICE][DET_DIR]` (S617), ya que DET_DIR es un sub-módulo de CAMERA_DEVICE.
+0 cadenas principales verificadas contra A6000 fw3.21, base `0x43541000`, incluidos espacios, saltos de línea y NUL. Las direcciones son virtuales. El texto se muestra escapado como JSON.
 
-## Las 3 trazas (idénticas a S617)
+| Dirección | Texto |
+|---|---|
 
+Sin trazas propias. La ausencia de un prefijo autónomo no demuestra ausencia de código ni identidad funcional. S618 es una subetiqueta documental de S617; un módulo independiente sigue NO_VERIFICADO.
+
+Longitudes declaradas comprobadas como bytes ASCII: `{"prefix_length": 0}`.
+
+## Afirmaciones pendientes
+
+| Afirmación | Estado y evidencia necesaria |
+|---|---|
+| Logger dual | NO_VERIFICADO: faltan cargas de argumentos, llamadas y flujo que acrediten las dos emisiones. |
+| Equivalencia funcional A7S/A6300 | NO_VERIFICADO: faltan contratos, entradas/salidas y callees comparados. |
+| Equivalencia de código | NO_VERIFICADO: faltan cuerpos e instrucciones comparados entre modelos. |
+| Ausencia de relación con el obturador | NO_VERIFICADO: el texto no excluye una ruta funcional. |
+| Recuentos y semántica de differential | NO_VERIFICADO: los recuentos históricos carecen de criterio de selección reproducible. |
+| Funciones emisoras, sitios, trazas muertas y significado de nombres | NO_VERIFICADO: requieren referencias e instrucciones propias. |
+
+El campo `logger_dual=null` significa desconocido. `shutter_line=NEGATIVO ACOTADO` es una etiqueta histórica de triaje léxico; su estado funcional es NO_VERIFICADO. Este lote no cambia la decisión S51.
+
+## Reproducción
+
+```bash
+.venv/bin/python analysis/verify_s6xx.py
+.venv/bin/python -m pytest -q tests/test_s60[5-9]_*.py tests/test_s61[0-9]_*.py tests/test_s62[0-7]_*.py tests/test_s6xx*.py
 ```
-0x43cf724e [CAMERA_DEVICE][DET_DIR][osal_alloc_timer] %x
-0x43cf727c [CAMERA_DEVICE][DET_DIR][osal_set_timer] %x
-0x43cf72a8 [CAMERA_DEVICE][DET_DIR][osal_free_timer] %x
-```
 
-## Hallazgos con dirección
-
-- **Sin trazas independientes**: no existen cadenas con prefijo `[DET_DIR]: ` standalone — todas las trazas de detección están bajo el prefijo compuesto `[CAMERA_DEVICE][DET_DIR]`.
-- **Sub-módulo de CAMERA_DEVICE**: DET_DIR es un sub-módulo de CAMERA_DEVICE (S617), no un módulo independiente.
-- **Mismas 3 trazas**: `osal_alloc_timer`, `osal_set_timer`, `osal_free_timer` con prefijo `[CAMERA_DEVICE][DET_DIR]` (24 B).
-
-## Diferencial A6000 fw3.21 vs A7S fw3.20 vs A6300 fw2.01
-
-| | A6000 fw3.21 | A7S fw3.20 | A6300 fw2.01 |
-|---|---|---|---|
-| token `[DET_DIR]` standalone | **0** | **0** | **0** |
-| token `[CAMERA_DEVICE][DET_DIR]` | **3** | **0** | **0** |
-| núcleos `osal_*_timer` | 3 con prefijo compuesto | 3 (prefijos `Spinal`/`CapMgr`/`TRK`) | 3 (prefijos `CapMgr`/`TRK`) |
-
-→ **Sin trazas independientes**. El módulo DET_DIR **no tiene trazas propias** — todas sus trazas están bajo el prefijo compuesto `[CAMERA_DEVICE][DET_DIR]` (S617). El censo de 3 trazas para DET_DIR es **idéntico** al de CAMERA_DEVICE/DET_DIR (S617).
-
-## Línea del obturador: NEGATIVO ACOTADO
-
-0 coincidencias de `shutter`/`silent`/`curtain`/`electro`/`mech`/`obtur`/`sensor`/`readout`/`imager`/`iso`/`apert`/`expos`/`brack`/`drive`/`release`/`flash`/`sync`/`vsync`/`capture`/`shot`/`still`/`movie`/`focus`/`svd`/`shd`/`spl`/`frame`. → **S51 (A/B/C = NO) se mantiene.**
-
-## Verificación
-
-- 0/0 trazas `[DET_DIR]: ` standalone en A6000/A7S/A6300.
-- 3/3 trazas `[CAMERA_DEVICE][DET_DIR]` confirmadas en A6000 (idénticas a S617).
-- Scripts: `analysis/s618_det_dir/` (pendiente) · Tests: `tests/test_s618_det_dir.py`.
+El JSON de resultados incluye rutas, tamaños y SHA-256 de los tres firmwares. Los campos adicionales no sustentados tienen cobertura explícita NO_VERIFICADO; las comprobaciones de esquema individuales no sustituyen la lectura del firmware.

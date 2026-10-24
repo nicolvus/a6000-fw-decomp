@@ -1,55 +1,42 @@
-# S607 — `[CAM_CMD]`: módulo de traza de comandos de cámara exclusivo de la A6000 fw3.21
+# S607 — CAM_CMD: evidencia de cadenas
 
-**Auditoría 23-10-2026:** direcciones de las cadenas corregidas contra coincidencias únicas en `av-cam.bin` (base `0x43541000`). Las longitudes canónicas están en el JSON corregido. La duplicación del logger, los límites de funciones y la equivalencia entre modelos no quedan demostrados por presencia de cadenas; esas afirmaciones históricas siguen NO_VERIFICADO.
+**Auditoría de la validación de OpenCode — 23-10-2026.** Este informe corrige las conclusiones históricas de S607. La presencia de texto no demuestra funciones, llamadas ni equivalencia entre modelos.
 
-**6 trazas · 6 sitios (regla PIC estricta) · ~3 funciones emisoras · 0 muertas.** Detalle + datos: [JSON](../../analysis/s607_cam_cmd/cam_cmd.json).
+Datos: [cam_cmd.json](../../analysis/s607_cam_cmd/cam_cmd.json). Auditoría conjunta: [hallazgos S605–S627](S605-S627_tabla_hallazgos.md).
 
-## Qué es
+## Evidencia comprobada
 
-`[CAM_CMD]` es la etiqueta de traza que la fw3.21 de la A6000 antepone a 6 mensajes del **gestor de comandos de cámara (Capcon / Camera::Function)** que procesa la cola de eventos/comandos, transiciones de estado, path selector y mode sequencer. La sigla **SÍ tiene base textual**: `CAM` → cámara; `CMD` → **C**o**M**man**D** (comando). El módulo subyacente es `Capcon` / `CapconExec` / `Camera::Function::CapconEventQueue` / `ExecHandlerBase` (ver RTTI en A7S).
+6 cadenas principales verificadas contra A6000 fw3.21, base `0x43541000`, incluidos espacios, saltos de línea y NUL. Las direcciones son virtuales. El texto se muestra escapado como JSON.
 
-## Las 6 trazas (vaddr → texto corto)
+| Dirección | Texto |
+|---|---|
+| `0x43caeb10` | `"[CAM_CMD]: Warning! Now rocessing... req[%d]"` |
+| `0x43caeb3d` | `"[CAM_CMD]: Error! Can't Transfer Request cur_state[%d] req[%d]\n"` |
+| `0x43caeb7d` | `"[CAM_CMD]: Error! s_path_selector SetupTable cur_state[%d] req[%d]\n"` |
+| `0x43caebc1` | `"[CAM_CMD]: Error! s_request is NULL!"` |
+| `0x43caebe6` | `"[CAM_CMD]: Error! s_mode_sequencer SetupTable [%d]->[%d]\n"` |
+| `0x43caec20` | `"[CAM_CMD]: Error! CheckReturnAllModlueResponse\n"` |
 
+Longitudes declaradas comprobadas como bytes ASCII: `{"prefix_length": 11}`.
+
+## Afirmaciones pendientes
+
+| Afirmación | Estado y evidencia necesaria |
+|---|---|
+| Logger dual | NO_VERIFICADO: faltan cargas de argumentos, llamadas y flujo que acrediten las dos emisiones. |
+| Equivalencia funcional A7S/A6300 | NO_VERIFICADO: faltan contratos, entradas/salidas y callees comparados. |
+| Equivalencia de código | NO_VERIFICADO: faltan cuerpos e instrucciones comparados entre modelos. |
+| Ausencia de relación con el obturador | NO_VERIFICADO: el texto no excluye una ruta funcional. |
+| Recuentos y semántica de differential | NO_VERIFICADO: los recuentos históricos carecen de criterio de selección reproducible. |
+| Funciones emisoras, sitios, trazas muertas y significado de nombres | NO_VERIFICADO: requieren referencias e instrucciones propias. |
+
+El campo `logger_dual=null` significa desconocido. `shutter_line=NEGATIVO ACOTADO` es una etiqueta histórica de triaje léxico; su estado funcional es NO_VERIFICADO. Este lote no cambia la decisión S51.
+
+## Reproducción
+
+```bash
+.venv/bin/python analysis/verify_s6xx.py
+.venv/bin/python -m pytest -q tests/test_s60[5-9]_*.py tests/test_s61[0-9]_*.py tests/test_s62[0-7]_*.py tests/test_s6xx*.py
 ```
-0x43caeb10 [CAM_CMD]: Warning! Now rocessing... req[%d]
-0x43caeb3d [CAM_CMD]: Error! Can't Transfer Request cur_state[%d] req[%d]
-0x43caeb7d [CAM_CMD]: Error! s_path_selector SetupTable cur_state[%d] req[%d]
-0x43caebc1 [CAM_CMD]: Error! s_request is NULL!
-0x43caebe6 [CAM_CMD]: Error! s_mode_sequencer SetupTable [%d]->[%d]
-0x43caec20 [CAM_CMD]: Error! CheckReturnAllModlueResponse
-```
 
-## Hallazgos con dirección
-
-- **Función principal**: máquina de estados de comandos (`cur_state`, `req`) con validaciones de transferencia, path selector y mode sequencer.
-- **Variables de estado**: `s_path_selector` (tabla de setup por estado), `s_mode_sequencer` (tabla de setup por transición), `s_request` (puntero a petición actual).
-- **Path selector**: `SetupTable` indexado por `cur_state` y `req`; error si configuración inválida.
-- **Mode sequencer**: `SetupTable` para transiciones `[%d]->[%d]`; error si configuración inválida.
-- **Validaciones**: `s_request` NULL check; `CheckReturnAllModlueResponse` (typo: "Modlue" → "Module").
-- **Logger dual (patrón S177/S179/S603/S604/S605/S606)**: la fw3.21 **afirma duplicar** la traza (NO_VERIFICADO - requiere xrefs/REA): nueva con prefijo `[CAM_CMD]: ` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`. Ejemplo: en offset `+0x2c` carga string con prefijo y en `+0x32` llama `bl 0x43902718` con string original.
-- **Longitud del prefijo**: 11 B (`[CAM_CMD]: `) → fija (igual que S605/S606).
-- **Typo**: "Modlue" en "Module" — presente en los tres firmware.
-
-## Diferencial A6000 fw3.21 vs A7S fw3.20 vs A6300 fw2.01
-
-| | A6000 fw3.21 | A7S fw3.20 | A6300 fw2.01 |
-|---|---|---|---|
-| token `[CAM_CMD]` | **6** | **0** | **0** |
-| núcleo sin prefijo (`Warning! Now rocessing...`, `Error! Can't Transfer...`, etc.) | 0/6 como literal autónomo | **6/6** (sin prefijo) | **6/6** (sin prefijo) |
-| prefijo alternativo A7S (`[CAMERA_MAIN_FC]`, `[CAM_UTIL]`, etc.) | 0 | **otros módulos** | **otros módulos** |
-| código equivalente (NO_VERIFICADO - requiere comparación de instrucciones) (Capcon, s_path_selector, s_mode_sequencer) | `0x43cbdxxx`… | **sí** | **sí** |
-
-→ **Cambio de *logging*, no de código.** El gestor de comandos Capcon **existe** (NO_VERIFICADO - requiere análisis de A7S/A6300) en los tres firmware (mismas 6 cadenas núcleo (presencia de strings; equivalencia de código NO_VERIFICADO), mismas variables `s_path_selector`, `s_mode_sequencer`, `s_request`, mismo typo "Modlue"). Lo propio de la fw3.21 de la A6000 son (NO_VERIFICADO - requiere xrefs/REA para confirmar duplicación de logger) **las 6 trazas con prefijo `[CAM_CMD]: `** y la **duplicación** con logger global `0x43902718`. En A7S/A6300 las 6 cadenas existen **sin prefijo** (inician directamente con "Warning!" / "Error!").
-
-**Longitud del prefijo fija:** 11 B (`[CAM_CMD]: `) → no variable.
-
-## Línea del obturador: NEGATIVO ACOTADO
-
-0 coincidencias de `shutter`/`silent`/`curtain`/`electro`/`mech`/`obtur`/`sensor`/`readout`/`imager`/`iso`/`apert`/`expos`/`brack`/`drive`/`release`/`flash`/`sync`/`vsync`/`capture`/`shot`/`still`/`movie`/`focus`/`svd`/`shd`/`spl`/`frame`. El módulo gestiona **cola de comandos y transiciones de estado de captura**, no el obturador. → **S51 (A/B/C = NO) se mantiene.**
-
-## Verificación
-
-- 6/6 cadenas `[CAM_CMD]: ` confirmadas en `0x43caeb10`–`0x43caec20`.
-- 6/6 núcleos idénticos en A7S fw3.20 (`0x770e9b`–`0x770f74`) y A6300 fw2.01 (mismos offsets relativos).
-- 0/0 en A7S y A6300 para token `[CAM_CMD]`.
-- Scripts: `analysis/s607_cam_cmd/` (pendiente) · Tests: `tests/test_s607_cam_cmd.py`.
+El JSON de resultados incluye rutas, tamaños y SHA-256 de los tres firmwares. Los campos adicionales no sustentados tienen cobertura explícita NO_VERIFICADO; las comprobaciones de esquema individuales no sustituyen la lectura del firmware.

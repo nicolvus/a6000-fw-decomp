@@ -16,7 +16,7 @@ def main():
         assert ts['text'].startswith('[ACCY][ERR][SENSER]') or ts['text'].startswith('[ACCY][DEBUG][SENSER]'), f"Missing SENSER prefix: {ts['text']}"
     
     # Verify prefix lengths
-    assert data['prefix_lengths'] == [20, 21], f"Prefix lengths mismatch: {data['prefix_lengths']}"
+    assert data['prefix_lengths'] == [19, 21], f"Prefix lengths mismatch: {data['prefix_lengths']}"
     assert data['prefixes'] == ['[ACCY][ERR][SENSER]', '[ACCY][DEBUG][SENSER]']
     
     # Verify differential

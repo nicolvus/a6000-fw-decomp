@@ -5,49 +5,49 @@
     {
       "vaddr": "0x43cfdb1e",
       "text": "[NSX_VOT]: almhdl : bt stop error: %d",
-      "twin_vaddr": "0x43cfdb9c",
+      "twin_vaddr": "0x43cfdb44",
       "twin_text": "[TRK]: almhdl : bt stop error: %d",
       "delta": 38
     },
     {
       "vaddr": "0x43cfdb66",
       "text": "[NSX_VOT]: osal_alloc_timer(): %d",
-      "twin_vaddr": "0x43cfdbe0",
+      "twin_vaddr": "0x43cfdb88",
       "twin_text": "[TRK]: osal_alloc_timer(): %d",
       "delta": 34
     },
     {
       "vaddr": "0x43cfdba6",
       "text": "[NSX_VOT]: osal_alloc_timer(): handle alloc again!!",
-      "twin_vaddr": "0x43cfdc32",
+      "twin_vaddr": "0x43cfdbda",
       "twin_text": "[TRK]: osal_alloc_timer(): handle alloc again!!",
       "delta": 52
     },
     {
       "vaddr": "0x43cfdc0a",
       "text": "[NSX_VOT]: osal_free_timer(): handle NULL!!",
-      "twin_vaddr": "0x43cfdc8e",
+      "twin_vaddr": "0x43cfdc36",
       "twin_text": "[TRK]: osal_free_timer(): handle NULL!!",
       "delta": 44
     },
     {
       "vaddr": "0x43cfdc5e",
       "text": "[NSX_VOT]: osal_free_timer(): %d",
-      "twin_vaddr": "0x43cfdcd7",
+      "twin_vaddr": "0x43cfdc7f",
       "twin_text": "[TRK]: osal_free_timer(): %d",
       "delta": 33
     },
     {
       "vaddr": "0x43cfdc9c",
       "text": "[NSX_VOT]: osal_set_timer(): %d",
-      "twin_vaddr": "0x43cfdd14",
+      "twin_vaddr": "0x43cfdcbc",
       "twin_text": "[TRK]: osal_set_timer(): %d",
       "delta": 32
     },
     {
       "vaddr": "0x43cfdcd8",
       "text": "[NSX_VOT]: osal_can_timer(): %d",
-      "twin_vaddr": "0x43cfdd50",
+      "twin_vaddr": "0x43cfdcf8",
       "twin_text": "[TRK]: osal_can_timer(): %d",
       "delta": 32
     }
@@ -55,7 +55,7 @@
   "prefix_length": 11,
   "prefix": "[NSX_VOT]: ",
   "twin_prefix": "[TRK]: ",
-  "twin_prefix_length": 6,
+  "twin_prefix_length": 7,
   "differential": {
     "a6000_fw321": {
       "nsx_vot_token_count": 7,
@@ -83,79 +83,157 @@
     }
   },
   "shutter_line": "NEGATIVO ACOTADO",
-  "logger_dual": true,
+  "logger_dual": null,
   "global_logger": "0x43902718",
   "verification_status": {
     "trace_strings": {
       "verified": true,
       "count_ok": 7,
       "count_total": 7,
-      "basis": "lectura directa de bytes en av-cam.bin (base 0x43541000)",
+      "basis": "bytes ASCII exactos + NUL; base 0x43541000; sin rstrip",
       "details": [
         {
           "vaddr": "0x43cfdb1e",
-          "ok": true,
-          "text": "[NSX_VOT]: almhdl : bt stop error: %d"
+          "ok": true
         },
         {
           "vaddr": "0x43cfdb66",
-          "ok": true,
-          "text": "[NSX_VOT]: osal_alloc_timer(): %d"
+          "ok": true
         },
         {
           "vaddr": "0x43cfdba6",
-          "ok": true,
-          "text": "[NSX_VOT]: osal_alloc_timer(): handle alloc again!"
+          "ok": true
         },
         {
           "vaddr": "0x43cfdc0a",
-          "ok": true,
-          "text": "[NSX_VOT]: osal_free_timer(): handle NULL!!"
+          "ok": true
         },
         {
           "vaddr": "0x43cfdc5e",
-          "ok": true,
-          "text": "[NSX_VOT]: osal_free_timer(): %d"
+          "ok": true
         },
         {
           "vaddr": "0x43cfdc9c",
-          "ok": true,
-          "text": "[NSX_VOT]: osal_set_timer(): %d"
+          "ok": true
         },
         {
           "vaddr": "0x43cfdcd8",
-          "ok": true,
-          "text": "[NSX_VOT]: osal_can_timer(): %d"
+          "ok": true
         }
       ]
     },
+    "twin_strings": {
+      "verified": true,
+      "count_ok": 7,
+      "count_total": 7,
+      "details": [
+        {
+          "vaddr": "0x43cfdb44",
+          "ok": true,
+          "delta_ok": true,
+          "core_ok": true
+        },
+        {
+          "vaddr": "0x43cfdb88",
+          "ok": true,
+          "delta_ok": true,
+          "core_ok": true
+        },
+        {
+          "vaddr": "0x43cfdbda",
+          "ok": true,
+          "delta_ok": true,
+          "core_ok": true
+        },
+        {
+          "vaddr": "0x43cfdc36",
+          "ok": true,
+          "delta_ok": true,
+          "core_ok": true
+        },
+        {
+          "vaddr": "0x43cfdc7f",
+          "ok": true,
+          "delta_ok": true,
+          "core_ok": true
+        },
+        {
+          "vaddr": "0x43cfdcbc",
+          "ok": true,
+          "delta_ok": true,
+          "core_ok": true
+        },
+        {
+          "vaddr": "0x43cfdcf8",
+          "ok": true,
+          "delta_ok": true,
+          "core_ok": true
+        }
+      ],
+      "scope": "datos y deltas; no prueba emisión ni logger dual"
+    },
+    "core_strings": {
+      "verified": false,
+      "count_total": 0,
+      "details": [],
+      "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
+    },
+    "metadata": {
+      "verified": true,
+      "errors": []
+    },
     "logger_dual": {
-      "claimed": true,
       "verified": false,
       "status": "NO_VERIFICADO",
-      "reason": "requiere xrefs/REA sobre instrucciones BL al logger global; la presencia de cadenas no demuestra duplicación",
+      "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+      "claimed": true,
       "global_logger": "0x43902718",
-      "global_logger_verified": true,
-      "global_logger_msg": "code @0x3c1718"
+      "global_logger_verified": false,
+      "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+      "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
     },
     "equivalencia_funcional": {
-      "claimed": true,
       "verified": false,
       "status": "NO_VERIFICADO",
-      "reason": "requiere análisis de A7S fw3.20 y A6300 fw2.01; presencia de cadenas núcleo no demuestra equivalencia de código"
+      "reason": "sin contratos, entradas, salidas y callees comparados"
     },
     "equivalencia_codigo": {
-      "claimed": true,
       "verified": false,
       "status": "NO_VERIFICADO",
-      "reason": "requiere comparación de instrucciones (disassembly/xrefs) entre modelos"
+      "reason": "sin comparación de cuerpos/instrucciones entre modelos"
     },
     "linea_obturador": {
-      "claimed": true,
-      "verified": true,
-      "status": "VERIFICADO",
-      "basis": "búsqueda de palabras clave del obturador únicamente en cadenas de traza del módulo",
-      "keywords_found_in_traces": []
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "un negativo léxico, incluso vacío, no prueba ausencia de una ruta de obturador"
+    },
+    "differential": {
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "recuentos históricos sin criterio de selección reproducible",
+      "fields": {
+        "a6000_fw321": [
+          "nsx_vot_token_count",
+          "trk_token_count",
+          "prefixes"
+        ],
+        "a7s_fw320": [
+          "nsx_vot_token_count",
+          "trk_token_count",
+          "prefixes"
+        ],
+        "a6300_fw201": [
+          "nsx_vot_token_count",
+          "trk_token_count",
+          "prefixes"
+        ]
+      }
+    },
+    "other_claims": {
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "símbolos, semántica, sitios emisores y funciones requieren evidencia propia",
+      "fields": []
     }
   }
 }

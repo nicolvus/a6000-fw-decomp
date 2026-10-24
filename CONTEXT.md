@@ -1,5 +1,9 @@
 # Continuidad
 
+## Revisión de OpenCode S605–S627 — 23-10-2026
+
+[Auditoría](docs/capture/S605-S627_tabla_hallazgos.md): corrige la validación original; 263 tests pasaban pese a siete direcciones gemelas falsas, 13 textos sin bytes finales y cinco longitudes adicionales incorrectas. Corregidos los 23 JSON e informes y 21 verificadores individuales obsoletos. Se verifican 94 trazas, siete gemelas, 11 núcleos y metadatos. Logger dual, equivalencias, recuentos differential y ausencia funcional de relación con el obturador: NO_VERIFICADO. S51 sin cambios.
+
 ## Cola 0x40193 — 23-10-2026
 
 [Trazado y límites](docs/capture/queue-40193-flow-2026-10-23.md): S384 actualizado.

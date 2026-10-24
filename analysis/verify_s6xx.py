@@ -1,195 +1,196 @@
-#!/usr/bin/env python3
-"""Verificación detallada S605–S627: cadenas, logger dual, equivalencia, obturador.
-
-Corrige el problema de búsqueda del obturador: solo busca en las cadenas de
-traza del módulo, no en todo el binario.
-"""
+"""Auditoría estática S605–S627. No ejecuta firmware ni modifica archivos."""
+import argparse
+import hashlib
 import json
-import struct
+import sys
 from pathlib import Path
 
-FW_A6000 = Path(
-    "firmware/extracted/fw321/firmware.tar_unpacked/"
-    "0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin"
-)
+ROOT = Path(__file__).resolve().parents[1]
 BASE = 0x43541000
-
-data = FW_A6000.read_bytes()
-fw_size = len(data)
-
-
-def vaddr_to_offset(vaddr: int):
-    off = vaddr - BASE
-    if off < 0 or off >= fw_size:
-        return None
-    return off
+SUFFIX = "firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin"
+FIRMWARE = {
+    "a6000_fw321": ROOT / "firmware/extracted/fw321" / SUFFIX,
+    "a7s_fw320": ROOT / "firmware/extracted/a7s-fw320/payload" / SUFFIX,
+    "a6300_fw201": ROOT / "firmware/extracted/a6300-fw201/payload" / SUFFIX,
+}
 
 
-def read_cstring(off: int):
-    if off is None:
-        return None
-    try:
-        end = data.index(b"\x00", off)
-        return data[off:end].decode("ascii", errors="replace")
-    except ValueError:
-        return None
+def module_files():
+    return sorted(
+        p for p in (ROOT / "analysis").glob("s6[0-2][0-9]_*/*.json")
+        if 605 <= int(p.parent.name[1:4]) <= 627
+    )
 
 
-def norm(s: str):
-    """Normaliza para comparación: elimina trailing whitespace."""
-    if s is None:
-        return None
-    return s.rstrip()
+def check_string(blob, address, text):
+    """Compara todos los bytes, incluido NUL, sin normalizar espacios."""
+    off = int(address, 16) - BASE
+    expected = text.encode("ascii") + b"\0"
+    return off >= 0 and blob[off:off + len(expected)] == expected
 
 
-json_dirs = sorted(
-    d for d in Path("analysis").glob("s6[0-2][0-9]_*")
-    if 605 <= int(d.name[1:4]) <= 627
-)
+def occurrences(blob, text):
+    """Direcciones de coincidencias exactas de texto terminado en NUL."""
+    needle = text.encode("ascii") + b"\0"
+    offsets = []
+    off = 0
+    while (off := blob.find(needle, off)) != -1:
+        offsets.append(hex(BASE + off))
+        off += 1
+    return offsets
 
-results = []
 
-for jd in json_dirs:
-    json_files = list(jd.glob("*.json"))
-    if not json_files:
-        continue
-    jp = json_files[0]
-    with open(jp) as f:
-        jdata = json.load(f)
+def pending(reason):
+    return {"verified": False, "status": "NO_VERIFICADO", "reason": reason}
 
-    module_name = jdata.get("module", jd.name)
-    trace_strings = jdata.get("trace_strings", [])
-    logger_dual = jdata.get("logger_dual", False)
-    global_logger = jdata.get("global_logger", None)
-    prefix = jdata.get("prefix", "")
 
-    # --- 1. Verificar cadenas ---
-    strings_ok = 0
-    strings_total = len(trace_strings)
-    string_details = []
-    for ts in trace_strings:
-        vaddr = int(ts["vaddr"], 16) if isinstance(ts["vaddr"], str) else ts["vaddr"]
-        expected = norm(ts["text"])
-        off = vaddr_to_offset(vaddr)
-        found = norm(read_cstring(off))
-        if found is not None and found == expected:
-            strings_ok += 1
-            string_details.append({"vaddr": ts["vaddr"], "ok": True, "text": expected[:50] if expected else ""})
-        else:
-            string_details.append({
-                "vaddr": ts["vaddr"],
-                "ok": False,
-                "expected": expected[:50] if expected else "",
-                "found": found[:50] if found else "NOT_FOUND",
-            })
-
-    strings_verified = strings_ok == strings_total and strings_total > 0
-
-    # --- 2. Línea del obturador: buscar SOLO en las cadenas de traza del módulo ---
-    # Usar límites de palabra (\b) para evitar coincidencias parciales.
-    # Falsos positivos conocidos (documentados):
-    #   - "shot" en "Shot Timing Transform" (S611) = contexto de ráfaga GOLFSHOT, no obturador
-    #   - "sync" en "osal_reg_sync_msg_queue_cb" (S620) = registro sincrónico, no vsync
-    import re
-    shutter_patterns = [
-        r"\bshutter\b", r"\bsilent\b", r"\bcurtain\b", r"\belectro\b", r"\bmech\b",
-        r"\bobtur\b", r"\bsensor\b", r"\breadout\b", r"\bimager\b", r"\biso\b",
-        r"\bapert\b", r"\bexpos\b", r"\bbrack\b", r"\bdrive\b", r"\brelease\b",
-        r"\bflash\b", r"\bvsync\b", r"\bcapture\b", r"\bstill\b", r"\bmovie\b",
-        r"\bfocus\b", r"\bsvd\b", r"\bshd\b", r"\bspl\b", r"\bframe\b",
+def verify_module(data, blobs):
+    blob = blobs["a6000_fw321"]
+    traces = data["trace_strings"]
+    details = [
+        {"vaddr": t["vaddr"], "ok": check_string(blob, t["vaddr"], t["text"])}
+        for t in traces
     ]
-    # "shot" y "sync" se excluyen de los patrones por falsos positivos conocidos
-    # (ver comentario arriba). Se añaden solo como contexto si aparecen con palabras
-    # claramente de obturador.
-    shutter_found_in_traces = []
-    for ts in trace_strings:
-        text = ts["text"].lower()
-        for pat in shutter_patterns:
-            if re.search(pat, text) and pat not in shutter_found_in_traces:
-                shutter_found_in_traces.append(pat)
+    twins = [
+        {
+            "vaddr": t["twin_vaddr"],
+            "ok": check_string(blob, t["twin_vaddr"], t["twin_text"]),
+            "delta_ok": int(t["twin_vaddr"], 16) - int(t["vaddr"], 16) == t["delta"],
+            "core_ok": t["text"].removeprefix(data["prefix"])
+            == t["twin_text"].removeprefix(data["twin_prefix"]),
+        }
+        for t in traces if "twin_vaddr" in t
+    ]
+    cores = []
+    for t in traces:
+        if "core_text" in t:
+            address = hex(int(t["vaddr"], 16) + len(data["prefix"].encode("ascii")))
+            cores.append({
+                "vaddr": address,
+                "ok": t["text"] == data["prefix"] + t["core_text"]
+                and check_string(blob, address, t["core_text"]),
+                "matches_by_firmware": {
+                    model: occurrences(raw, t["core_text"]) for model, raw in blobs.items()
+                },
+            })
+    metadata_errors = []
+    if data["traces"] != len(traces):
+        metadata_errors.append("traces")
+    for name in ("prefix", "twin_prefix", "core_prefix"):
+        if name in data and data[name + "_length"] != len(data[name].encode("ascii")):
+            metadata_errors.append(name + "_length")
+    if "composite_prefix_length" in data:
+        size = len((data["prefix"] + data["core_prefix"]).encode("ascii"))
+        if data["composite_prefix_length"] != size:
+            metadata_errors.append("composite_prefix_length")
+    if "prefix_lengths" in data and data["prefix_lengths"] != [
+        len(p.encode("ascii")) for p in data["prefixes"]
+    ]:
+        metadata_errors.append("prefix_lengths")
+    logger = data.get("global_logger")
+    off = int(logger, 16) - BASE if logger else -1
+    logger_bytes = blob[off:off + 24].hex() if 0 <= off < len(blob) else None
+    status = {
+        "trace_strings": {
+            "verified": bool(details) and all(d["ok"] for d in details),
+            "count_ok": sum(d["ok"] for d in details),
+            "count_total": len(details),
+            "basis": "bytes ASCII exactos + NUL; base 0x43541000; sin rstrip",
+            "details": details,
+        },
+        "twin_strings": {
+            "verified": bool(twins) and all(
+                d["ok"] and d["delta_ok"] and d["core_ok"] for d in twins
+            ),
+            "count_ok": sum(d["ok"] and d["delta_ok"] and d["core_ok"] for d in twins),
+            "count_total": len(twins),
+            "details": twins,
+            "scope": "datos y deltas; no prueba emisión ni logger dual",
+        },
+        "core_strings": {
+            "verified": bool(cores) and all(d["ok"] for d in cores),
+            "count_total": len(cores),
+            "details": cores,
+            "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional",
+        },
+        "metadata": {"verified": not metadata_errors, "errors": metadata_errors},
+        "logger_dual": {
+            **pending("faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones"),
+            "claimed": bool(logger),
+            "global_logger": logger,
+            "global_logger_verified": False,
+            "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+            "bytes_hex": logger_bytes,
+        },
+        "equivalencia_funcional": pending("sin contratos, entradas, salidas y callees comparados"),
+        "equivalencia_codigo": pending("sin comparación de cuerpos/instrucciones entre modelos"),
+        "linea_obturador": pending(
+            "un negativo léxico, incluso vacío, no prueba ausencia de una ruta de obturador"
+        ),
+        "differential": {
+            **pending("recuentos históricos sin criterio de selección reproducible"),
+            "fields": {
+                model: list(fields) for model, fields in data["differential"].items()
+            },
+        },
+        "other_claims": {
+            **pending("símbolos, semántica, sitios emisores y funciones requieren evidencia propia"),
+            "fields": [
+                k for k in data
+                if k not in {
+                    "verification_status", "trace_strings", "differential", "module",
+                    "traces", "prefix", "prefix_length", "twin_prefix", "twin_prefix_length",
+                    "core_prefix", "core_prefix_length", "composite_prefix_length",
+                    "prefixes", "prefix_lengths", "logger_dual", "global_logger", "shutter_line",
+                }
+            ],
+        },
+    }
+    return status
 
-    shutter_verified = len(shutter_found_in_traces) == 0
 
-    # --- 3. Logger global ---
-    logger_ok = False
-    logger_msg = "no_global_logger"
-    if global_logger:
-        lg = global_logger
-        if isinstance(lg, str):
-            try:
-                lg_int = int(lg, 16)
-            except ValueError:
-                lg_int = None
-        else:
-            lg_int = lg
-        if lg_int:
-            off = vaddr_to_offset(lg_int)
-            if off is not None:
-                b = data[off:off + 4]
-                if b != b"\x00\x00\x00\x00" and b != b"\xff\xff\xff\xff":
-                    logger_ok = True
-                    logger_msg = f"code @0x{off:06x}"
-                else:
-                    logger_msg = "zero_or_fill"
-            else:
-                logger_msg = "out_of_range"
+def audit():
+    blobs = {model: path.read_bytes() for model, path in FIRMWARE.items()}
+    fingerprints = {
+        model: {"path": str(FIRMWARE[model].relative_to(ROOT)),
+                "size": len(blob), "sha256": hashlib.sha256(blob).hexdigest()}
+        for model, blob in blobs.items()
+    }
+    results = []
+    for path in module_files():
+        data = json.loads(path.read_text())
+        results.append({
+            "module": data["module"], "json": str(path.relative_to(ROOT)),
+            "firmware": fingerprints, "verification_status": verify_module(data, blobs),
+        })
+    if len(results) != 23 or len({r["json"][10:13] for r in results}) != 23:
+        raise ValueError("Inventario S605–S627 incompleto o duplicado")
+    return results
 
-    results.append({
-        "module": module_name,
-        "dir": jd.name,
-        "json": str(jp),
-        "strings_total": strings_total,
-        "strings_ok": strings_ok,
-        "strings_verified": strings_verified,
-        "logger_dual_claimed": logger_dual,
-        "logger_dual_verified": False,  # NV: requiere xrefs/REA
-        "logger_global": global_logger,
-        "logger_global_verified": logger_ok,
-        "logger_global_msg": logger_msg,
-        "equiv_func_verified": False,   # NV: requiere A7S/A6300
-        "equiv_code_verified": False,   # NV: requiere comparación de instrucciones
-        "shutter_verified": shutter_verified,
-        "shutter_found_in_traces": shutter_found_in_traces,
-        "string_details": string_details,
-    })
 
-# Guardar resultados
-out = Path("analysis/s6xx_verification_results.json")
-with open(out, "w") as f:
-    json.dump(results, f, indent=2, ensure_ascii=False)
-
-# Tabla
-print("=" * 110)
-print("TABLA DE HALLAZGOS S605–S627")
-print("=" * 110)
-print(f"{'Módulo':<24} {'Cadenas':<14} {'LoggerDual':<14} {'EquivFunc':<14} {'EquivCode':<14} {'Obturador':<12}")
-print("-" * 110)
-for r in results:
-    s = "V" if r["strings_verified"] else "X"
-    ld = "NV"
-    ef = "NV"
-    ec = "NV"
-    sh = "V" if r["shutter_verified"] else "X"
-    print(f"{r['module']:<24} {s:<14} {ld:<14} {ef:<14} {ec:<14} {sh:<12}")
-
-print()
-print("Leyenda: V = Verificado contra firmware, X = Rechazado (no coincide), NV = NO_VERIFICADO")
-print()
-print("Detalle por módulo:")
-for r in results:
-    print(f"\n--- {r['module']} ---")
-    print(f"  Cadenas: {r['strings_ok']}/{r['strings_total']} verificadas")
-    for sd in r["string_details"]:
-        if not sd["ok"]:
-            print(f"    FALLA: {sd['vaddr']} esperado='{sd.get('expected','?')}' encontrado='{sd.get('found','?')}'")
-    print(f"  Logger dual: reclamado={r['logger_dual_claimed']}, verificado=NV (requiere xrefs/REA)")
-    print(f"  Logger global: {r['logger_global_msg']}")
-    print(f"  Equivalencia funcional: NV (requiere A7S/A6300)")
-    print(f"  Equivalencia de código: NV (requiere comparación de instrucciones)")
-    if r["shutter_verified"]:
-        shutter_msg = "VERIFICADO (0 kw en trazas)"
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--json", action="store_true", help="emitir evidencia JSON a stdout")
+    args = parser.parse_args()
+    results = audit()
+    failures = []
+    for result in results:
+        status = result["verification_status"]
+        for category in ("trace_strings", "twin_strings", "core_strings"):
+            evidence = status[category]
+            if evidence["count_total"] and not evidence["verified"]:
+                failures.append(result["module"] + ":" + category)
+        if not status["metadata"]["verified"]:
+            failures.append(result["module"] + ":metadata")
+    if args.json:
+        print(json.dumps(results, indent=2, ensure_ascii=False))
     else:
-        shutter_msg = f'RECHAZADO: {r["shutter_found_in_traces"]}'
-    print(f"  Línea del obturador: {shutter_msg}")
+        total = sum(r["verification_status"]["trace_strings"]["count_ok"] for r in results)
+        twins = sum(r["verification_status"]["twin_strings"]["count_ok"] for r in results)
+        print(f"{len(results)} fichas; {total} trazas; {twins} gemelas; errores: {failures}")
+        print("Logger dual, equivalencias y ausencia funcional del obturador: NO_VERIFICADO")
+    return bool(failures)
 
-print(f"\nResultados guardados en {out}")
+
+if __name__ == "__main__":
+    sys.exit(main())

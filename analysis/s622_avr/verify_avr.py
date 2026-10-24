@@ -15,7 +15,7 @@ def main():
         assert ts['text'].startswith('[ACCY][DEBUG][AVR]'), f"Missing prefix: {ts['text']}"
     
     # Verify prefix length
-    assert data['prefix_length'] == 19, f"Prefix length mismatch: {data['prefix_length']} != 19"
+    assert data['prefix_length'] == 18, f"Prefix length mismatch: {data['prefix_length']} != 18"
     assert data['prefix'] == '[ACCY][DEBUG][AVR]'
     
     # Verify differential

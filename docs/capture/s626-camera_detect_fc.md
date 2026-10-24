@@ -1,44 +1,37 @@
-# S626 — `[CAMERA_DETECT_FC]`: módulo de detección de cámara (Focus Camera) exclusivo de la A6000 fw3.21
+# S626 — CAMERA_DETECT_FC: evidencia de cadenas
 
-**Auditoría 23-10-2026:** direcciones de las cadenas corregidas contra coincidencias únicas en `av-cam.bin` (base `0x43541000`). Las longitudes canónicas están en el JSON corregido. La duplicación del logger, los límites de funciones y la equivalencia entre modelos no quedan demostrados por presencia de cadenas; esas afirmaciones históricas siguen NO_VERIFICADO.
+**Auditoría de la validación de OpenCode — 23-10-2026.** Este informe corrige las conclusiones históricas de S626. La presencia de texto no demuestra funciones, llamadas ni equivalencia entre modelos.
 
-**1 traza · 1 sitio (regla PIC estricta) · ~1 función emisora · 0 muertas.** Detalle + datos: [JSON](../../analysis/s626_camera_detect_fc/camera_detect_fc.json).
+Datos: [camera_detect_fc.json](../../analysis/s626_camera_detect_fc/camera_detect_fc.json). Auditoría conjunta: [hallazgos S605–S627](S605-S627_tabla_hallazgos.md).
 
-## Qué es
+## Evidencia comprobada
 
-`[CAMERA_DETECT_FC]` es la etiqueta de traza que la fw3.21 de la A6000 antepone a 1 mensaje del **módulo de detección de cámara (Focus Camera / FC)**. La sigla **SÍ tiene base textual**: `CAMERA_DETECT_FC` → **CAMERA** (cámara) **DETECT** (detección) **FC** (Focus Camera / Full Camera?).
+1 cadenas principales verificadas contra A6000 fw3.21, base `0x43541000`, incluidos espacios, saltos de línea y NUL. Las direcciones son virtuales. El texto se muestra escapado como JSON.
 
-## La traza (vaddr → texto corto)
+| Dirección | Texto |
+|---|---|
+| `0x43cf02c9` | `"[CAMERA_DETECT_FC]: %s @%s L%d"` |
 
+Longitudes declaradas comprobadas como bytes ASCII: `{"prefix_length": 20}`.
+
+## Afirmaciones pendientes
+
+| Afirmación | Estado y evidencia necesaria |
+|---|---|
+| Logger dual | NO_VERIFICADO: faltan cargas de argumentos, llamadas y flujo que acrediten las dos emisiones. |
+| Equivalencia funcional A7S/A6300 | NO_VERIFICADO: faltan contratos, entradas/salidas y callees comparados. |
+| Equivalencia de código | NO_VERIFICADO: faltan cuerpos e instrucciones comparados entre modelos. |
+| Ausencia de relación con el obturador | NO_VERIFICADO: el texto no excluye una ruta funcional. |
+| Recuentos y semántica de differential | NO_VERIFICADO: los recuentos históricos carecen de criterio de selección reproducible. |
+| Funciones emisoras, sitios, trazas muertas y significado de nombres | NO_VERIFICADO: requieren referencias e instrucciones propias. |
+
+El campo `logger_dual=null` significa desconocido. `shutter_line=NEGATIVO ACOTADO` es una etiqueta histórica de triaje léxico; su estado funcional es NO_VERIFICADO. Este lote no cambia la decisión S51.
+
+## Reproducción
+
+```bash
+.venv/bin/python analysis/verify_s6xx.py
+.venv/bin/python -m pytest -q tests/test_s60[5-9]_*.py tests/test_s61[0-9]_*.py tests/test_s62[0-7]_*.py tests/test_s6xx*.py
 ```
-0x43cf02c9 [CAMERA_DETECT_FC]: %s @%s L%d
-```
 
-## Hallazgos con dirección
-
-- **Formato de logging estructurado**: `%s @%s L%d` — función/archivo (`%s`), línea (`@%s`), número de línea (`L%d`).
-- **Logger dual (patrón S177/S179/S603–S625)**: la fw3.21 **afirma duplicar** la traza (NO_VERIFICADO - requiere xrefs/REA): nueva con prefijo `[CAMERA_DETECT_FC]: ` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
-- **Prefijo fijo**: 20 B (`[CAMERA_DETECT_FC]: `) → fijo.
-
-## Diferencial A6000 fw3.21 vs A7S fw3.20 vs A6300 fw2.01
-
-| | A6000 fw3.21 | A7S fw3.20 | A6300 fw2.01 |
-|---|---|---|---|
-| token `[CAMERA_DETECT_FC]` | **1** | **0** | **0** |
-| núcleo sin prefijo (`%s @%s L%d`) | 0/1 como literal autónomo | **0** | **0** |
-| strings relacionadas detección cámara | 0 | **pocas** | **pocas** |
-| código equivalente (NO_VERIFICADO - requiere comparación de instrucciones) | `0x43cf02c9`… | **parcial** | **parcial** |
-
-→ **Módulo *nuevo* en traza, código preexistente.** El mecanismo de detección de cámara **existe en A7S/A6300** (strings genéricas de detección) pero **sin el submódulo estructurado `CAMERA_DETECT_FC` con logging formateado**. La fw3.21 de la A6000 **introduce** el módulo con logging formateado y **duplica** la traza (nueva con logger de módulo + vieja con logger global `0x43902718`).
-
-**Longitud del prefijo fija:** 20 B (`[CAMERA_DETECT_FC]: `) → fijo.
-
-## Línea del obturador: NEGATIVO ACOTADO
-
-0 coincidencias de `shutter`/`silent`/`curtain`/`electro`/`mech`/`obtur`/`sensor`/`readout`/`imager`/`iso`/`apert`/`expos`/`brack`/`drive`/`release`/`flash`/`sync`/`vsync`/`capture`/`shot`/`still`/`movie`/`focus`/`svd`/`shd`/`spl`/`frame`. El módulo gestiona **detección de cámara (logging estructurado)**, no el obturador per se. → **S51 (A/B/C = NO) se mantiene.**
-
-## Verificación
-
-- 1/1 cadena `[CAMERA_DETECT_FC]:` confirmada en `0x43cf02c9`.
-- 0/0 en A7S y A6300 para token `[CAMERA_DETECT_FC]`.
-- Scripts: `analysis/s626_camera_detect_fc/` (pendiente) · Tests: `tests/test_s626_camera_detect_fc.py`.
+El JSON de resultados incluye rutas, tamaños y SHA-256 de los tres firmwares. Los campos adicionales no sustentados tienen cobertura explícita NO_VERIFICADO; las comprobaciones de esquema individuales no sustituyen la lectura del firmware.
