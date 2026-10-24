@@ -14,9 +14,9 @@ hasta `osal_snd_msg`. Receptor LIRO `0x4381d16c`, tabla de 35 filas en
 registro callback OSAL Linux y enlace de transporte Linux↔LIRO. Análisis estático
 abierto; 53 tests S380 PASS; S51 sin cambios. Prevalece sobre pendientes históricos.
 
-## Contrato RecordStill / RecordImage — 23-10-2026
+## Contrato RecordStill / RecordImage — actualizado 24-10-2026
 
-[Auditoría](docs/capture/recordstill-contract-audit-2026-10-23.md): A6000 `0x90b248` se identifica como **RecordImage**, no hay símbolo C++ que demuestre la antigua etiqueta `RecordStill::Execute`. Su pareja A7S es `0x84a568`; la candidata A7S `0x847e1c` es RecordStill, pareja de A6000 `0x908afc`. Ambos RecordImage llaman al helper RecordStill. Retirados negativos A7S de MOVW `0x100f` y prólogo `0xb00`. Llamadores A6000: `0x90de2e` pertenece a `0x90d7e8..0x90e148`; `0x91634e`, a `0x9162d0..0x91647c`; `0x91631e` es tabla TBB. Hay 25 palabras Thumb `0x90d7e9` con R_ARM_RELATIVE; consumidor indirecto/runtime NO_VERIFICADO. Suite S380: 42 tests. Prevalece sobre nombres y pendientes históricos siguientes; S51 sin cambios.
+[Auditoría](docs/capture/recordstill-contract-audit-2026-10-23.md): A6000 `0x90b248` se identifica como **RecordImage**, no hay símbolo C++ que demuestre la antigua etiqueta `RecordStill::Execute`. Su pareja A7S es `0x84a568`; la candidata A7S `0x847e1c` es RecordStill, pareja de A6000 `0x908afc`. Ambos RecordImage llaman al helper RecordStill. Retirados negativos A7S de MOVW `0x100f` y prólogo `0xb00`. Llamadores A6000: `0x90de2e` pertenece a `0x90d7e8..0x90e148`; `0x91634e`, a `0x9162d0..0x91647c`; `0x91631e` es tabla TBB. Las 25 palabras Thumb `0x90d7e9` forman `call_fn` de `StateMgr::_FuncEntry`; `StateMgr::CallFunc` las consume en `libmprctrl.so:0x1cef2`. Activación runtime NO_VERIFICADO. Prevalece sobre nombres y pendientes históricos siguientes; S51 sin cambios.
 
 ## Auditoría 23-10-2026
 

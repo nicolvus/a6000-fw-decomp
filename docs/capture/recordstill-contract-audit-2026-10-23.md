@@ -108,13 +108,29 @@ El significado objeto/mensaje se infiere del uso (`GetMessageId` y campos de obj
 El índice procede de `GetMessageId - 0x10000003`, limitado a `0xc`.
 Para `0x10000005`, índice 2, `0x91631a + 2*0x12 = 0x91633e` conduce al BL.
 
-**Hecho positivo:** hay 25 palabras `0x0090d7e9` (bit Thumb incluido) en
-`.data.rel.ro`, VA `0x101ef18 + n*0x18`, `n=0..24`, hasta `0x101f158`.
-Todas tienen relocación `R_ARM_RELATIVE` (23). La primera pertenece al registro
-`[0x10000003,0x907ba1,0x90d7e9,0x907c95,1,0]`; el último empieza por `0x3002`.
-Son candidatos concretos a callback/despacho hacia el primer contenedor.
-El sitio consumidor BX/BLX de estos registros y su activación runtime siguen
-**NO_VERIFICADO**; no se afirma una vtable ni un enlace directo desde la tabla a RecordImage.
+**ACEPTO el consumidor indirecto.** La tabla `StateMgr::_FuncEntry` empieza en
+`0x101ef0c` y ocupa `0x258` bytes: 25 filas de `0x18` bytes. Sus campos son
+`{estado_actual, id_mensaje, check_fn, call_fn, next_state_fn, estado_siguiente}`.
+Las 25 palabras `call_fn` son `0x90d7e9` (bit Thumb incluido), en
+`0x101ef18 + n*0x18`, `n=0..24`, con relocación `R_ARM_RELATIVE` (23).
+La primera fila es `[0,0x10000003,0x907ba1,0x90d7e9,0x907c95,1]`;
+la fila 22, en `0x101f11c`, es para estado 2 y mensaje `0x10000005`.
+
+En `libObj.so`, `0x91776e/0x91777a` resuelven la base `0x101ef0c`;
+`0x917770` fija tamaño `0x258`, `0x91777c` llama a `memcpy` y
+`0x917782/0x917786` pasan 25 filas a `StateMgr::AddEntry`. El gestor se
+guarda en `ObjStillRecorder+0x8c` (`0x917774`). La entrada de objeto
+`0x916650` llama a `0x919908` (`0x916676`); el manejador obtiene el ID del
+mensaje y llama a `StateMgr::ChangeState` con el gestor (`0x919bd4/0x919bdc`).
+
+En `libmprctrl.so`, `StateMgr::ChangeState` (`0x1cf18`) recorre filas de
+`0x18` bytes, compara estado e ID (`0x1cf52..0x1cf62`), ejecuta `check_fn`
+si existe y pasa la fila a `StateMgr::CallFunc` (`0x1cf7e`). Este último
+lee `call_fn` en `fila+0xc` (`0x1ceea`) y hace **`blx r3` en `0x1cef2`**.
+Así queda demostrado el consumo de los 25 punteros hacia `0x90d7e8`, cuyo
+BL interior `0x90de2e` alcanza RecordImage para el caso `0x10000005`.
+La activación concreta en una cámara y los estados observados en ejecución
+siguen **NO_VERIFICADO**; el flujo estático no acredita ejecución física.
 
 **Negativos acotados:** no aparecen las palabras exactas `0x90b248/0x90b249`
 ni `0x9162d0/0x9162d1` en PT_LOAD respaldado por archivo. Eso no excluye
@@ -136,12 +152,16 @@ El reintento local con JDK existente se cerró durante autoanálisis tras más d
 diez minutos; no aportó un dossier utilizable. Ambas sesiones se cerraron.
 Los contratos y límites aquí afirmados proceden del contraste estático siguiente,
 no de una decompilación REA que no se obtuvo. Sin instalaciones.
+En esta ampliación, REA abrió `libObj.so` pero la consulta de segmentos superó
+300 s; se contrastaron directamente `libObj.so` y el símbolo exportado
+`StateMgr::CallFunc` de `libmprctrl.so` con bytes y dos decodificadores.
 El contraste decisivo usa bytes, PREL31 y LLVM `llvm-objdump --triple=thumbv7-linux-gnueabi`,
 con Capstone como segundo decodificador. No se cuenta REA/Ghidra como motores independientes.
 
 Regresiones: `analysis/s380_libobj_map/tests/test_recordimage_contract.py`;
 lector reproducible: `analysis/s380_libobj_map/recordimage_audit.py`.
-La suite S380 completa pasa **42 tests**; con conocimiento, **113 tests PASS**.
+La suite S380 completa pasa **54 tests**; los 33 tests relevantes de índice,
+grafo y exportación también pasan.
 Ruff y mypy pasan en los cuatro Python tocados; mypy de `src` pasa.
 Los 397 avisos Ruff de `src/tests` están en archivos no modificados.
 Los antiguos tests de ventanas dejan

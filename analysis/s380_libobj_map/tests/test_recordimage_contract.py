@@ -82,6 +82,31 @@ def test_indirect_dispatch_evidence_is_positive_and_scoped():
     assert all(relocations[va] == 23 for va in hits)  # R_ARM_RELATIVE.
 
 
+def test_statemgr_consumes_recordimage_callback_table():
+    obj = Elf32(LIBRARIES["A6000"])
+    mgr = Elf32(LIBRARIES["A6000"].with_name("libmprctrl.so"))
+    start = 0x101EF0C
+    rows = [[obj.u32(start + i * 0x18 + j * 4) for j in range(6)] for i in range(25)]
+    assert len(rows) * 0x18 == 0x258
+    assert all(row[3] == 0x90D7E9 for row in rows)
+    assert rows[0] == [0, 0x10000003, 0x907BA1, 0x90D7E9, 0x907C95, 1]
+    assert rows[22][:2] == [2, 0x10000005]
+    assert obj.instruction(0x91776E).op_str == "r1, [pc, #0x178]"
+    assert (obj.u32(0x9178E8) + 0x91777E) & 0xFFFFFFFF == start
+    assert obj.instruction(0x917770).op_str == "r2, #0x258"
+    assert obj.instruction(0x91777C).op_str == "#0xe0964"  # memcpy
+    assert obj.instruction(0x917782).op_str == "r1, #0x19"
+    assert obj.instruction(0x917786).op_str == "#0xdc4ec"  # AddEntry
+    assert obj.instruction(0x916676).op_str == "#0x919908"
+    assert obj.instruction(0x919BD4).op_str == "r0, [r4, #0x8c]"
+    assert obj.instruction(0x919BDC).op_str == "#0xe027c"  # ChangeState
+    assert mgr.instruction(0x1CF74).op_str == "r3, [r6, #0xc]"
+    assert mgr.instruction(0x1CF7E).op_str == "#0xea24"  # CallFunc
+    assert mgr.instruction(0x1CEEA).op_str == "r3, [r1, #0xc]"
+    assert mgr.instruction(0x1CEF2).mnemonic == "blx"
+    assert mgr.instruction(0x1CEF2).op_str == "r3"
+
+
 def test_actual_counterparts_and_nested_call():
     a, b = (Elf32(LIBRARIES[model]) for model in ["A6000", "A7S"])
     assert a.unwind_span(0x908AFC) == (0x908AFC, 0x908E2C)
