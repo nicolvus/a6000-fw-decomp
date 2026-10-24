@@ -15,7 +15,7 @@ def main():
         assert ts['text'].startswith('[LENS_PDR]: '), f"Missing prefix: {ts['text']}"
     
     # Verify prefix length
-    assert data['prefix_length'] == 11, f"Prefix length mismatch: {data['prefix_length']} != 11"
+    assert data['prefix_length'] == 12, f"Prefix length mismatch: {data['prefix_length']} != 12"
     assert data['prefix'] == '[LENS_PDR]: '
     
     # Verify differential

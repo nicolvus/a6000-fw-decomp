@@ -15,7 +15,7 @@ def main():
         assert ts['text'].startswith('[CAMERA_IS][MOUNT]: [Error] '), f"Missing prefix: {ts['text']}"
     
     # Verify prefix length
-    assert data['prefix_length'] == 25, f"Prefix length mismatch: {data['prefix_length']} != 25"
+    assert data['prefix_length'] == 28, f"Prefix length mismatch: {data['prefix_length']} != 28"
     assert data['prefix'] == '[CAMERA_IS][MOUNT]: [Error] '
     
     # Verify differential

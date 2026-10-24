@@ -51,69 +51,107 @@
     }
   },
   "shutter_line": "NEGATIVO ACOTADO",
-  "logger_dual": true,
+  "logger_dual": null,
   "global_logger": "0x43902718",
   "verification_status": {
     "trace_strings": {
       "verified": true,
       "count_ok": 5,
       "count_total": 5,
-      "basis": "lectura directa de bytes en av-cam.bin (base 0x43541000)",
+      "basis": "bytes ASCII exactos + NUL; base 0x43541000; sin rstrip",
       "details": [
         {
           "vaddr": "0x43c98da6",
-          "ok": true,
-          "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountExpStartCB"
+          "ok": true
         },
         {
           "vaddr": "0x43c98dde",
-          "ok": true,
-          "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountExpStartCB"
+          "ok": true
         },
         {
           "vaddr": "0x43c9a3a7",
-          "ok": true,
-          "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGy"
+          "ok": true
         },
         {
           "vaddr": "0x43c9a3e3",
-          "ok": true,
-          "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGy"
+          "ok": true
         },
         {
           "vaddr": "0x43c9a426",
-          "ok": true,
-          "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGy"
+          "ok": true
         }
       ]
     },
+    "twin_strings": {
+      "verified": false,
+      "count_ok": 0,
+      "count_total": 0,
+      "details": [],
+      "scope": "datos y deltas; no prueba emisión ni logger dual"
+    },
+    "core_strings": {
+      "verified": false,
+      "count_total": 0,
+      "details": [],
+      "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
+    },
+    "metadata": {
+      "verified": true,
+      "errors": []
+    },
     "logger_dual": {
-      "claimed": true,
       "verified": false,
       "status": "NO_VERIFICADO",
-      "reason": "requiere xrefs/REA sobre instrucciones BL al logger global; la presencia de cadenas no demuestra duplicación",
+      "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+      "claimed": true,
       "global_logger": "0x43902718",
-      "global_logger_verified": true,
-      "global_logger_msg": "code @0x3c1718"
+      "global_logger_verified": false,
+      "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+      "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
     },
     "equivalencia_funcional": {
-      "claimed": true,
       "verified": false,
       "status": "NO_VERIFICADO",
-      "reason": "requiere análisis de A7S fw3.20 y A6300 fw2.01; presencia de cadenas núcleo no demuestra equivalencia de código"
+      "reason": "sin contratos, entradas, salidas y callees comparados"
     },
     "equivalencia_codigo": {
-      "claimed": true,
       "verified": false,
       "status": "NO_VERIFICADO",
-      "reason": "requiere comparación de instrucciones (disassembly/xrefs) entre modelos"
+      "reason": "sin comparación de cuerpos/instrucciones entre modelos"
     },
     "linea_obturador": {
-      "claimed": true,
-      "verified": true,
-      "status": "VERIFICADO",
-      "basis": "búsqueda de palabras clave del obturador únicamente en cadenas de traza del módulo",
-      "keywords_found_in_traces": []
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "un negativo léxico, incluso vacío, no prueba ausencia de una ruta de obturador"
+    },
+    "differential": {
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "recuentos históricos sin criterio de selección reproducible",
+      "fields": {
+        "a6000_fw321": [
+          "token_count",
+          "prefixes"
+        ],
+        "a7s_fw320": [
+          "token_count",
+          "related_prefixes"
+        ],
+        "a6300_fw201": [
+          "token_count",
+          "related_prefixes"
+        ]
+      }
+    },
+    "other_claims": {
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "símbolos, semántica, sitios emisores y funciones requieren evidencia propia",
+      "fields": [
+        "parent_prefix",
+        "sub_prefix",
+        "level_prefix"
+      ]
     }
   }
 }

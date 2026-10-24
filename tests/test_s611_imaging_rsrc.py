@@ -35,9 +35,9 @@ class TestS611IMAGINGRSRC(unittest.TestCase):
     def test_prefix_lengths(self):
         self.assertEqual(self.data['prefix_length'], 16)
         self.assertEqual(self.data['prefix'], '[IMAGING_RSRC]: ')
-        self.assertEqual(self.data['core_prefix_length'], 9)
+        self.assertEqual(self.data['core_prefix_length'], 10)
         self.assertEqual(self.data['core_prefix'], '[GOLFSHOT]')
-        self.assertEqual(self.data['composite_prefix_length'], 27)
+        self.assertEqual(self.data['composite_prefix_length'], 26)
 
     def test_differential_a6000(self):
         self.assertEqual(self.data['differential']['a6000_fw321']['imaging_rsrc_token_count'], 5)

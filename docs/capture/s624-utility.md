@@ -1,46 +1,38 @@
-# S624 — `[UTILITY]`: módulo de utilidades de conversión exclusivo de la A6000 fw3.21
+# S624 — UTILITY: evidencia de cadenas
 
-**Auditoría 23-10-2026:** direcciones de las cadenas corregidas contra coincidencias únicas en `av-cam.bin` (base `0x43541000`). Las longitudes canónicas están en el JSON corregido. La duplicación del logger, los límites de funciones y la equivalencia entre modelos no quedan demostrados por presencia de cadenas; esas afirmaciones históricas siguen NO_VERIFICADO.
+**Auditoría de la validación de OpenCode — 23-10-2026.** Este informe corrige las conclusiones históricas de S624. La presencia de texto no demuestra funciones, llamadas ni equivalencia entre modelos.
 
-**2 trazas · 2 sitios (regla PIC estricta) · ~1 función emisora · 0 muertas.** Detalle + datos: [JSON](../../analysis/s624_utility/utility.json).
+Datos: [utility.json](../../analysis/s624_utility/utility.json). Auditoría conjunta: [hallazgos S605–S627](S605-S627_tabla_hallazgos.md).
 
-## Qué es
+## Evidencia comprobada
 
-`[UTILITY]` es la etiqueta de traza que la fw3.21 de la A6000 antepone a 2 mensajes del **módulo de utilidades de conversión numérica** dentro del módulo ACCY (Accesorio). La sigla **SÍ tiene base textual**: `UTILITY` → **UTILITY** (utilidades/herramientas); `ACCY` → **ACC**essor**Y** (accesorio); `ERR` → nivel **ERR**or.
+2 cadenas principales verificadas contra A6000 fw3.21, base `0x43541000`, incluidos espacios, saltos de línea y NUL. Las direcciones son virtuales. El texto se muestra escapado como JSON.
 
-## Las 2 trazas (vaddr → texto corto)
+| Dirección | Texto |
+|---|---|
+| `0x43c251d1` | `"[ACCY][ERR][UTILITY]:%d:ConvNum8ToAscii num = %08X"` |
+| `0x43c25204` | `"[ACCY][ERR][UTILITY]:%d:ConvAsciiToNum8 ascii:%08X"` |
 
+Longitudes declaradas comprobadas como bytes ASCII: `{"prefix_length": 20}`.
+
+## Afirmaciones pendientes
+
+| Afirmación | Estado y evidencia necesaria |
+|---|---|
+| Logger dual | NO_VERIFICADO: faltan cargas de argumentos, llamadas y flujo que acrediten las dos emisiones. |
+| Equivalencia funcional A7S/A6300 | NO_VERIFICADO: faltan contratos, entradas/salidas y callees comparados. |
+| Equivalencia de código | NO_VERIFICADO: faltan cuerpos e instrucciones comparados entre modelos. |
+| Ausencia de relación con el obturador | NO_VERIFICADO: el texto no excluye una ruta funcional. |
+| Recuentos y semántica de differential | NO_VERIFICADO: los recuentos históricos carecen de criterio de selección reproducible. |
+| Funciones emisoras, sitios, trazas muertas y significado de nombres | NO_VERIFICADO: requieren referencias e instrucciones propias. |
+
+El campo `logger_dual=null` significa desconocido. `shutter_line=NEGATIVO ACOTADO` es una etiqueta histórica de triaje léxico; su estado funcional es NO_VERIFICADO. Este lote no cambia la decisión S51.
+
+## Reproducción
+
+```bash
+.venv/bin/python analysis/verify_s6xx.py
+.venv/bin/python -m pytest -q tests/test_s60[5-9]_*.py tests/test_s61[0-9]_*.py tests/test_s62[0-7]_*.py tests/test_s6xx*.py
 ```
-0x43c251d1 [ACCY][ERR][UTILITY]:%d:ConvNum8ToAscii num = %08X
-0x43c25204 [ACCY][ERR][UTILITY]:%d:ConvAsciiToNum8 ascii:%08X
-```
 
-## Hallazgos con dirección
-
-- **Triple prefijo jerárquico**: `[ACCY][ERR][UTILITY]` — módulo padre `ACCY` (accesorio) + nivel `ERR` + sub-módulo `UTILITY` (utilidades). Longitud total: 20 B (`[ACCY][ERR][UTILITY]`).
-- **Funciones de conversión**: 2 trazas `ERR` — `ConvNum8ToAscii` (convertir número de 8 bits a ASCII) y `ConvAsciiToNum8` (convertir ASCII a número de 8 bits), ambas con código de error (`%d`) y valor hexadecimal (`%08X`).
-- **Logger dual (patrón S177/S179/S603–S623)**: la fw3.21 **afirma duplicar** la traza (NO_VERIFICADO - requiere xrefs/REA): nueva con prefijo `[ACCY][ERR][UTILITY]` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
-- **Prefijo fijo**: 20 B (`[ACCY][ERR][UTILITY]`) → fijo (ambas trazas son nivel ERR).
-
-## Diferencial A6000 fw3.21 vs A7S fw3.20 vs A6300 fw2.01
-
-| | A6000 fw3.21 | A7S fw3.20 | A6300 fw2.01 |
-|---|---|---|---|
-| token `[ACCY][ERR][UTILITY]` | **2** | **0** | **0** |
-| núcleos sin prefijo (`ConvNum8ToAscii`, `ConvAsciiToNum8`) | 0/2 como literal autónomo | **0** | **0** |
-| strings relacionadas UTILITY A7S | 0 | **20+** (prefijos `VDF`, `Utility`, `SFRA`, `CaptureUtility*`, etc.) | **20+** (similares) |
-| código equivalente (NO_VERIFICADO - requiere comparación de instrucciones) (conversión numérica) | `0x43c251d1`… | **sí** | **sí** |
-
-→ **Módulo *nuevo* en traza ACCY, código preexistente.** Las funciones de conversión `ConvNum8ToAscii` y `ConvAsciiToNum8` **existen en los tres firmware** (mismas funcionalidades de utilidad). Lo propio de la fw3.21 de la A6000 son (NO_VERIFICADO - requiere xrefs/REA para confirmar duplicación de logger) **las 2 trazas con prefijo `[ACCY][ERR][UTILITY]`** y la **duplicación** con logger global `0x43902718`. A7S/A6300 tienen 20+ strings relacionadas con utilidades pero con prefijos dispersos (`VDF`, `Utility`, `SFRA`, `CaptureUtility*`, etc.).
-
-**Longitud del prefijo fija:** 20 B (`[ACCY][ERR][UTILITY]`) → fijo (ambas trazas son nivel ERR).
-
-## Línea del obturador: NEGATIVO ACOTADO
-
-0 coincidencias de `shutter`/`silent`/`curtain`/`electro`/`mech`/`obtur`/`sensor`/`readout`/`imager`/`iso`/`apert`/`expos`/`brack`/`drive`/`release`/`flash`/`sync`/`vsync`/`capture`/`shot`/`still`/`movie`/`focus`/`svd`/`shd`/`spl`/`frame`. El módulo gestiona **utilidades de conversión numérica (8-bit ↔ ASCII)**, no el obturador. → **S51 (A/B/C = NO) se mantiene.**
-
-## Verificación
-
-- 2/2 cadenas `[ACCY][ERR][UTILITY]` confirmadas en `0x43c251d1`–`0x43c25204`.
-- 0/0 en A7S y A6300 para token `[ACCY][ERR][UTILITY]`; 20+ strings UTILITY relacionadas en A7S/A6300 con prefijos dispersos.
-- Scripts: `analysis/s624_utility/` (pendiente) · Tests: `tests/test_s624_utility.py`.
+El JSON de resultados incluye rutas, tamaños y SHA-256 de los tres firmwares. Los campos adicionales no sustentados tienen cobertura explícita NO_VERIFICADO; las comprobaciones de esquema individuales no sustituyen la lectura del firmware.

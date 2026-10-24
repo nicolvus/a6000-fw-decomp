@@ -28,15 +28,15 @@ class TestS606NSXVOT(unittest.TestCase):
 
     def test_core_text_matches(self):
         for ts in self.data['trace_strings']:
-            core_nsx = ts['text'][10:]  # after "[NSX_VOT]: "
-            core_trk = ts['twin_text'][6:]  # after "[TRK]: "
+            core_nsx = ts['text'].removeprefix(self.data['prefix'])
+            core_trk = ts['twin_text'].removeprefix(self.data['twin_prefix'])
             self.assertEqual(core_nsx, core_trk,
                            f"Core mismatch: '{core_nsx}' != '{core_trk}'")
 
     def test_prefix_length(self):
         self.assertEqual(self.data['prefix_length'], 11)
         self.assertEqual(self.data['prefix'], '[NSX_VOT]: ')
-        self.assertEqual(self.data['twin_prefix_length'], 6)
+        self.assertEqual(self.data['twin_prefix_length'], 7)
         self.assertEqual(self.data['twin_prefix'], '[TRK]: ')
 
     def test_differential_a6000(self):

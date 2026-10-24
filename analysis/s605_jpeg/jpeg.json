@@ -103,129 +103,153 @@
     }
   },
   "shutter_line": "NEGATIVO ACOTADO",
-  "logger_dual": true,
+  "logger_dual": null,
   "global_logger": "0x43902718",
   "verification_status": {
     "trace_strings": {
       "verified": true,
       "count_ok": 17,
       "count_total": 17,
-      "basis": "lectura directa de bytes en av-cam.bin (base 0x43541000)",
+      "basis": "bytes ASCII exactos + NUL; base 0x43541000; sin rstrip",
       "details": [
         {
           "vaddr": "0x43ce0692",
-          "ok": true,
-          "text": "[JPEG]: [cbJpegDebugClose] err : %d"
+          "ok": true
         },
         {
           "vaddr": "0x43ce06b6",
-          "ok": true,
-          "text": "[JPEG]: [cbJpegDebugOpen] err : %d"
+          "ok": true
         },
         {
           "vaddr": "0x43ce06d9",
-          "ok": true,
-          "text": "[JPEG]: [cbJpegDebugOpen] uid : 0x%x"
+          "ok": true
         },
         {
           "vaddr": "0x43ce0704",
-          "ok": true,
-          "text": "[JPEG]: %s"
+          "ok": true
         },
         {
           "vaddr": "0x43ce070f",
-          "ok": true,
-          "text": "[JPEG]: 0x%x"
+          "ok": true
         },
         {
           "vaddr": "0x43ce071c",
-          "ok": true,
-          "text": "[JPEG]: [f_sa_dummy_send_msg] Start"
+          "ok": true
         },
         {
           "vaddr": "0x43ce0740",
-          "ok": true,
-          "text": "[JPEG]: ERR. osal_try_valloc_msg. err=0x%x, L=%d"
+          "ok": true
         },
         {
           "vaddr": "0x43ce0771",
-          "ok": true,
-          "text": "[JPEG]: [f_sa_dummy_send_msg] error_status = %d, u"
+          "ok": true
         },
         {
           "vaddr": "0x43ce07b1",
-          "ok": true,
-          "text": "[JPEG]: ERR. osal_snd_msg. err=0x%x, L=%d"
+          "ok": true
         },
         {
           "vaddr": "0x43ce07db",
-          "ok": true,
-          "text": "[JPEG]: ERR. osal_free_msg. err=0x%x, L=%d"
+          "ok": true
         },
         {
           "vaddr": "0x43ce0806",
-          "ok": true,
-          "text": "[JPEG]: [f_sa_dummy_send_msg] Comp"
+          "ok": true
         },
         {
           "vaddr": "0x43ce0829",
-          "ok": true,
-          "text": "[JPEG]: [f_2open][NormalOpen] jpegErr : %d"
+          "ok": true
         },
         {
           "vaddr": "0x43ce0854",
-          "ok": true,
-          "text": "[JPEG]: [f_2open][SortOpen] jpegErr : %d"
+          "ok": true
         },
         {
           "vaddr": "0x43ce087d",
-          "ok": true,
-          "text": "[JPEG]: [f_2open][TanzOpen] jpegErr : %d"
+          "ok": true
         },
         {
           "vaddr": "0x43ce08a6",
-          "ok": true,
-          "text": "[JPEG]: [f_2close] unique_id : 0x%x"
+          "ok": true
         },
         {
           "vaddr": "0x43ce08ca",
-          "ok": true,
-          "text": "[JPEG]: [f_2close][NormalClose] jpegErr : %d"
+          "ok": true
         },
         {
           "vaddr": "0x43ce08f7",
-          "ok": true,
-          "text": "[JPEG]: [f_2close][SortClose] jpegErr : %d"
+          "ok": true
         }
       ]
     },
+    "twin_strings": {
+      "verified": false,
+      "count_ok": 0,
+      "count_total": 0,
+      "details": [],
+      "scope": "datos y deltas; no prueba emisión ni logger dual"
+    },
+    "core_strings": {
+      "verified": false,
+      "count_total": 0,
+      "details": [],
+      "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
+    },
+    "metadata": {
+      "verified": true,
+      "errors": []
+    },
     "logger_dual": {
-      "claimed": true,
       "verified": false,
       "status": "NO_VERIFICADO",
-      "reason": "requiere xrefs/REA sobre instrucciones BL al logger global; la presencia de cadenas no demuestra duplicación",
+      "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+      "claimed": true,
       "global_logger": "0x43902718",
-      "global_logger_verified": true,
-      "global_logger_msg": "code @0x3c1718"
+      "global_logger_verified": false,
+      "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+      "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
     },
     "equivalencia_funcional": {
-      "claimed": true,
       "verified": false,
       "status": "NO_VERIFICADO",
-      "reason": "requiere análisis de A7S fw3.20 y A6300 fw2.01; presencia de cadenas núcleo no demuestra equivalencia de código"
+      "reason": "sin contratos, entradas, salidas y callees comparados"
     },
     "equivalencia_codigo": {
-      "claimed": true,
       "verified": false,
       "status": "NO_VERIFICADO",
-      "reason": "requiere comparación de instrucciones (disassembly/xrefs) entre modelos"
+      "reason": "sin comparación de cuerpos/instrucciones entre modelos"
     },
     "linea_obturador": {
-      "claimed": true,
-      "verified": true,
-      "status": "VERIFICADO",
-      "basis": "búsqueda de palabras clave del obturador únicamente en cadenas de traza del módulo",
-      "keywords_found_in_traces": []
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "un negativo léxico, incluso vacío, no prueba ausencia de una ruta de obturador"
+    },
+    "differential": {
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "recuentos históricos sin criterio de selección reproducible",
+      "fields": {
+        "a6000_fw321": [
+          "token_count",
+          "prefixes"
+        ],
+        "a7s_fw320": [
+          "token_count",
+          "prefixes"
+        ],
+        "a6300_fw201": [
+          "token_count",
+          "prefixes"
+        ]
+      }
+    },
+    "other_claims": {
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "símbolos, semántica, sitios emisores y funciones requieren evidencia propia",
+      "fields": [
+        "dgi_jpeg_symbols"
+      ]
     }
   }
 }

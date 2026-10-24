@@ -16,14 +16,14 @@ def main():
         # Verify twin has [TRK]: prefix
         assert ts['twin_text'].startswith('[TRK]: '), f"Twin missing prefix: {ts['twin_text']}"
         # Verify core text matches (after prefix)
-        core_nsx = ts['text'][10:]  # after "[NSX_VOT]: "
-        core_trk = ts['twin_text'][6:]  # after "[TRK]: "
+        core_nsx = ts['text'].removeprefix(data['prefix'])  # after "[NSX_VOT]: "
+        core_trk = ts['twin_text'].removeprefix(data['twin_prefix'])  # after "[TRK]: "
         assert core_nsx == core_trk, f"Core mismatch: '{core_nsx}' != '{core_trk}'"
     
     # Verify prefix lengths
-    assert data['prefix_length'] == 10, f"Prefix length mismatch: {data['prefix_length']} != 10"
+    assert data['prefix_length'] == 11, f"Prefix length mismatch: {data['prefix_length']} != 11"
     assert data['prefix'] == '[NSX_VOT]: '
-    assert data['twin_prefix_length'] == 6, f"Twin prefix length mismatch: {data['twin_prefix_length']} != 6"
+    assert data['twin_prefix_length'] == 7, f"Twin prefix length mismatch: {data['twin_prefix_length']} != 7"
     assert data['twin_prefix'] == '[TRK]: '
     
     # Verify differential

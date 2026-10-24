@@ -2,6 +2,8 @@
 
 ## Auditoría vigente (23-10-2026)
 
+[Revisión de la validación S605–S627](docs/capture/S605-S627_tabla_hallazgos.md): las 263 pruebas originales ocultaban siete direcciones gemelas erróneas, 13 textos truncados y cinco longitudes adicionales incorrectas. Corregidos JSON, informes y verificadores; 94 trazas y siete gemelas comprobadas con bytes exactos. Logger dual, equivalencias y ausencia funcional de relación con el obturador siguen NO_VERIFICADO.
+
 [Resultados, correcciones y límites](docs/auditoria-2026-10-23.md): errores de destinos BL, encodings S384, 94 direcciones de trazas y 21 longitudes corregidos; triaje automático reabierto. Censo documental sincronizado (133/372); 21 pruebas físicas propuestas. [Contrato RecordStill/RecordImage](docs/capture/recordstill-contract-audit-2026-10-23.md): corregida la etiqueta de `0x90b248`, recuperadas las parejas A6000/A7S, límites de llamadores y 25 punteros Thumb candidatos a callback. Equivalencia de ejecución y logger dual siguen pendientes.
 
 Proyecto de ingeniería inversa del firmware **Sony A6000 (fw 3.21)**, con foco en la línea de captura y el obturador electrónico.

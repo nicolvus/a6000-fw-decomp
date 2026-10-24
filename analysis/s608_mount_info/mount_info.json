@@ -36,8 +36,8 @@
   "prefix_length": 14,
   "prefix": "[MOUNT_INFO]: ",
   "core_prefix": "[BL]",
-  "core_prefix_length": 3,
-  "composite_prefix_length": 15,
+  "core_prefix_length": 4,
+  "composite_prefix_length": 18,
   "differential": {
     "a6000_fw321": {
       "mount_info_token_count": 6,
@@ -63,74 +63,177 @@
     }
   },
   "shutter_line": "NEGATIVO ACOTADO",
-  "logger_dual": true,
+  "logger_dual": null,
   "global_logger": "0x43902718",
   "verification_status": {
     "trace_strings": {
       "verified": true,
       "count_ok": 6,
       "count_total": 6,
-      "basis": "lectura directa de bytes en av-cam.bin (base 0x43541000)",
+      "basis": "bytes ASCII exactos + NUL; base 0x43541000; sin rstrip",
       "details": [
         {
           "vaddr": "0x43c970c7",
-          "ok": true,
-          "text": "[MOUNT_INFO]: [BL]LIF Command Change : 0x%X >>> 0x"
+          "ok": true
         },
         {
           "vaddr": "0x43c98201",
-          "ok": true,
-          "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_GET_VERSION"
+          "ok": true
         },
         {
           "vaddr": "0x43c98234",
-          "ok": true,
-          "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_GET_FORCE_F"
+          "ok": true
         },
         {
           "vaddr": "0x43c9826c",
-          "ok": true,
-          "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_FIRM_UP_REQ"
+          "ok": true
         },
         {
           "vaddr": "0x43c9829f",
-          "ok": true,
-          "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_PREPARE_UPD"
+          "ok": true
         },
         {
           "vaddr": "0x43c982d5",
-          "ok": true,
-          "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_UNPLUG_USB"
+          "ok": true
         }
       ]
     },
+    "twin_strings": {
+      "verified": false,
+      "count_ok": 0,
+      "count_total": 0,
+      "details": [],
+      "scope": "datos y deltas; no prueba emisión ni logger dual"
+    },
+    "core_strings": {
+      "verified": true,
+      "count_total": 6,
+      "details": [
+        {
+          "vaddr": "0x43c970d5",
+          "ok": true,
+          "matches_by_firmware": {
+            "a6000_fw321": [
+              "0x43c970d5"
+            ],
+            "a7s_fw320": [],
+            "a6300_fw201": []
+          }
+        },
+        {
+          "vaddr": "0x43c9820f",
+          "ok": true,
+          "matches_by_firmware": {
+            "a6000_fw321": [
+              "0x43c9820f"
+            ],
+            "a7s_fw320": [],
+            "a6300_fw201": []
+          }
+        },
+        {
+          "vaddr": "0x43c98242",
+          "ok": true,
+          "matches_by_firmware": {
+            "a6000_fw321": [
+              "0x43c98242"
+            ],
+            "a7s_fw320": [],
+            "a6300_fw201": []
+          }
+        },
+        {
+          "vaddr": "0x43c9827a",
+          "ok": true,
+          "matches_by_firmware": {
+            "a6000_fw321": [
+              "0x43c9827a"
+            ],
+            "a7s_fw320": [],
+            "a6300_fw201": []
+          }
+        },
+        {
+          "vaddr": "0x43c982ad",
+          "ok": true,
+          "matches_by_firmware": {
+            "a6000_fw321": [
+              "0x43c982ad"
+            ],
+            "a7s_fw320": [],
+            "a6300_fw201": []
+          }
+        },
+        {
+          "vaddr": "0x43c982e3",
+          "ok": true,
+          "matches_by_firmware": {
+            "a6000_fw321": [
+              "0x43c982e3"
+            ],
+            "a7s_fw320": [],
+            "a6300_fw201": []
+          }
+        }
+      ],
+      "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
+    },
+    "metadata": {
+      "verified": true,
+      "errors": []
+    },
     "logger_dual": {
-      "claimed": true,
       "verified": false,
       "status": "NO_VERIFICADO",
-      "reason": "requiere xrefs/REA sobre instrucciones BL al logger global; la presencia de cadenas no demuestra duplicación",
+      "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+      "claimed": true,
       "global_logger": "0x43902718",
-      "global_logger_verified": true,
-      "global_logger_msg": "code @0x3c1718"
+      "global_logger_verified": false,
+      "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+      "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
     },
     "equivalencia_funcional": {
-      "claimed": true,
       "verified": false,
       "status": "NO_VERIFICADO",
-      "reason": "requiere análisis de A7S fw3.20 y A6300 fw2.01; presencia de cadenas núcleo no demuestra equivalencia de código"
+      "reason": "sin contratos, entradas, salidas y callees comparados"
     },
     "equivalencia_codigo": {
-      "claimed": true,
       "verified": false,
       "status": "NO_VERIFICADO",
-      "reason": "requiere comparación de instrucciones (disassembly/xrefs) entre modelos"
+      "reason": "sin comparación de cuerpos/instrucciones entre modelos"
     },
     "linea_obturador": {
-      "claimed": true,
-      "verified": true,
-      "status": "VERIFICADO",
-      "basis": "búsqueda de palabras clave del obturador únicamente en cadenas de traza del módulo",
-      "keywords_found_in_traces": []
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "un negativo léxico, incluso vacío, no prueba ausencia de una ruta de obturador"
+    },
+    "differential": {
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "recuentos históricos sin criterio de selección reproducible",
+      "fields": {
+        "a6000_fw321": [
+          "mount_info_token_count",
+          "bl_token_count",
+          "prefixes"
+        ],
+        "a7s_fw320": [
+          "mount_info_token_count",
+          "bl_token_count",
+          "prefixes"
+        ],
+        "a6300_fw201": [
+          "mount_info_token_count",
+          "bl_token_count",
+          "prefixes"
+        ]
+      }
+    },
+    "other_claims": {
+      "verified": false,
+      "status": "NO_VERIFICADO",
+      "reason": "símbolos, semántica, sitios emisores y funciones requieren evidencia propia",
+      "fields": []
     }
   }
 }

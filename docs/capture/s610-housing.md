@@ -1,52 +1,41 @@
-# S610 — `[ACCY][INFO][HOUSING]`: módulo de carcasa/accesorio acuático exclusivo de la A6000 fw3.21
+# S610 — ACCY/INFO/HOUSING: evidencia de cadenas
 
-**Auditoría 23-10-2026:** direcciones de las cadenas corregidas contra coincidencias únicas en `av-cam.bin` (base `0x43541000`). Las longitudes canónicas están en el JSON corregido. La duplicación del logger, los límites de funciones y la equivalencia entre modelos no quedan demostrados por presencia de cadenas; esas afirmaciones históricas siguen NO_VERIFICADO.
+**Auditoría de la validación de OpenCode — 23-10-2026.** Este informe corrige las conclusiones históricas de S610. La presencia de texto no demuestra funciones, llamadas ni equivalencia entre modelos.
 
-**5 trazas · 5 sitios (regla PIC estricta) · ~2 funciones emisoras · 0 muertas.** Detalle + datos: [JSON](../../analysis/s610_housing/housing.json).
+Datos: [housing.json](../../analysis/s610_housing/housing.json). Auditoría conjunta: [hallazgos S605–S627](S605-S627_tabla_hallazgos.md).
 
-## Qué es
+## Evidencia comprobada
 
-`[ACCY][INFO][HOUSING]` es la etiqueta de traza que la fw3.21 de la A6000 antepone a 5 mensajes del **gestor de carcasa acuática / accesorio de buceo (Water Housing)** dentro del módulo **ACCY** (Accesorio). La sigla **SÍ tiene base textual**: `ACCY` → **ACC**essor**Y** (accesorio); `INFO` → nivel informativo; `HOUSING` → **carcasa** / **caja estanca** / **water housing** (accesorio para fotografía subacuática).
+5 cadenas principales verificadas contra A6000 fw3.21, base `0x43541000`, incluidos espacios, saltos de línea y NUL. Las direcciones son virtuales. El texto se muestra escapado como JSON.
 
-## Las 5 trazas (vaddr → texto corto)
+| Dirección | Texto |
+|---|---|
+| `0x43c25380` | `"[ACCY][INFO][HOUSING]:%d:NotifyAttached"` |
+| `0x43c253a8` | `"[ACCY][INFO][HOUSING]:%d:NotifyContinuousAttached"` |
+| `0x43c253da` | `"[ACCY][INFO][HOUSING]:%d:RestoreInfo...Savedata:%02X %02X"` |
+| `0x43c25414` | `"[ACCY][INFO][HOUSING]:%d:NotifyDetached"` |
+| `0x43c2543c` | `"[ACCY][INFO][HOUSING]:%d:NotifyUartTimedOut... %d"` |
 
+Longitudes declaradas comprobadas como bytes ASCII: `{"prefix_length": 22}`.
+
+## Afirmaciones pendientes
+
+| Afirmación | Estado y evidencia necesaria |
+|---|---|
+| Logger dual | NO_VERIFICADO: faltan cargas de argumentos, llamadas y flujo que acrediten las dos emisiones. |
+| Equivalencia funcional A7S/A6300 | NO_VERIFICADO: faltan contratos, entradas/salidas y callees comparados. |
+| Equivalencia de código | NO_VERIFICADO: faltan cuerpos e instrucciones comparados entre modelos. |
+| Ausencia de relación con el obturador | NO_VERIFICADO: el texto no excluye una ruta funcional. |
+| Recuentos y semántica de differential | NO_VERIFICADO: los recuentos históricos carecen de criterio de selección reproducible. |
+| Funciones emisoras, sitios, trazas muertas y significado de nombres | NO_VERIFICADO: requieren referencias e instrucciones propias. |
+
+El campo `logger_dual=null` significa desconocido. `shutter_line=NEGATIVO ACOTADO` es una etiqueta histórica de triaje léxico; su estado funcional es NO_VERIFICADO. Este lote no cambia la decisión S51.
+
+## Reproducción
+
+```bash
+.venv/bin/python analysis/verify_s6xx.py
+.venv/bin/python -m pytest -q tests/test_s60[5-9]_*.py tests/test_s61[0-9]_*.py tests/test_s62[0-7]_*.py tests/test_s6xx*.py
 ```
-0x43c25380 [ACCY][INFO][HOUSING]:%d:NotifyAttached
-0x43c253a8 [ACCY][INFO][HOUSING]:%d:NotifyContinuousAttached
-0x43c253da [ACCY][INFO][HOUSING]:%d:RestoreInfo...Savedata:%02X %02X
-0x43c25414 [ACCY][INFO][HOUSING]:%d:NotifyDetached
-0x43c2543c [ACCY][INFO][HOUSING]:%d:NotifyUartTimedOut... %d
-```
 
-## Hallazgos con dirección
-
-- **Triple prefijo jerárquico**: `[ACCY][INFO][HOUSING]:` — módulo padre `ACCY` (accesorio) + nivel `INFO` + sub-módulo `HOUSING` (carcasa acuática). Longitud total: 22 B (`[ACCY][INFO][HOUSING]:`) → el prefijo más largo de la serie.
-- **Ciclo de vida del accesorio**: 4 notificaciones de estado — `Attached` (conectado), `ContinuousAttached` (conectado continuo), `Detached` (desconectado), `UartTimedOut` (timeout UART).
-- **Restauración de datos**: `RestoreInfo...Savedata:%02X %02X` — recuperación de datos guardados (2 bytes) al reconectar.
-- **Timeout UART**: `NotifyUartTimedOut... %d` — detección de timeout en comunicación serie con la carcasa.
-- **Logger dual (patrón S177/S179/S603–S609)**: la fw3.21 **afirma duplicar** la traza (NO_VERIFICADO - requiere xrefs/REA): nueva con prefijo `[ACCY][INFO][HOUSING]: ` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
-- **Módulo ACCY**: en fw3.21 aparece por primera vez como módulo estructurado con sub-módulo `HOUSING` (y posiblemente otros). En A7S solo existe `24AccyUmDeviceWaterHousing` (string suelta sin prefijo).
-
-## Diferencial A6000 fw3.21 vs A7S fw3.20 vs A6300 fw2.01
-
-| | A6000 fw3.21 | A7S fw3.20 | A6300 fw2.01 |
-|---|---|---|---|
-| token `[ACCY][INFO][HOUSING]` | **5** | **0** | **0** |
-| token `[ACCY]` (padre) | **5** | **0** | **0** |
-| núcleo sin prefijo (`NotifyAttached`, `NotifyDetached`, `RestoreInfo`, `NotifyUartTimedOut`) | 0/5 como literal autónomo | **0** | **0** |
-| string relacionada `WaterHousing` | 0 | **1** (`24AccyUmDeviceWaterHousing`) | **0** |
-| código equivalente (NO_VERIFICADO - requiere comparación de instrucciones) (HOUSING/UART) | `0x43c25380`… | **parcial** | **parcial** |
-
-→ **Módulo *nuevo* en traza y código.** El gestor de carcasa acuática **no existe en A7S/A6300** (ni en traza ni con esas funciones `NotifyAttached/Detached/ContinuousAttached/RestoreInfo/UartTimedOut`). A7S solo tiene una string suelta `24AccyUmDeviceWaterHousing` sin prefijo ni estructura. La fw3.21 de la A6000 **introduce** el módulo ACCY con sub-módulo HOUSING completo.
-
-**Longitud del prefijo jerárquico fija:** 22 B (`[ACCY][INFO][HOUSING]:`) → no variable.
-
-## Línea del obturador: NEGATIVO ACOTADO
-
-0 coincidencias de `shutter`/`silent`/`curtain`/`electro`/`mech`/`obtur`/`sensor`/`readout`/`imager`/`iso`/`apert`/`expos`/`brack`/`drive`/`release`/`flash`/`sync`/`vsync`/`capture`/`shot`/`still`/`movie`/`focus`/`svd`/`shd`/`spl`/`frame`. El módulo gestiona **detección y comunicación con carcasa acuática (accesorio)**, no el obturador. → **S51 (A/B/C = NO) se mantiene.**
-
-## Verificación
-
-- 5/5 cadenas `[ACCY][INFO][HOUSING]: ` confirmadas en `0x43c25380`–`0x43c2543c`.
-- 0/0 en A7S y A6300 para token `[ACCY][INFO][HOUSING]` y `[ACCY]`.
-- Scripts: `analysis/s610_housing/` (pendiente) · Tests: `tests/test_s610_housing.py`.
+El JSON de resultados incluye rutas, tamaños y SHA-256 de los tres firmwares. Los campos adicionales no sustentados tienen cobertura explícita NO_VERIFICADO; las comprobaciones de esquema individuales no sustituyen la lectura del firmware.

@@ -1,48 +1,39 @@
-# S617 — `[CAMERA_DEVICE][DET_DIR]`: módulo de timers de dispositivo de cámara exclusivo de la A6000 fw3.21
+# S617 — CAMERA_DEVICE/DET_DIR: evidencia de cadenas
 
-**Auditoría 23-10-2026:** direcciones de las cadenas corregidas contra coincidencias únicas en `av-cam.bin` (base `0x43541000`). Las longitudes canónicas están en el JSON corregido. La duplicación del logger, los límites de funciones y la equivalencia entre modelos no quedan demostrados por presencia de cadenas; esas afirmaciones históricas siguen NO_VERIFICADO.
+**Auditoría de la validación de OpenCode — 23-10-2026.** Este informe corrige las conclusiones históricas de S617. La presencia de texto no demuestra funciones, llamadas ni equivalencia entre modelos.
 
-**3 trazas · 3 sitios (regla PIC estricta) · ~1 función emisora · 0 muertas.** Detalle + datos: [JSON](../../analysis/s617_camera_device/camera_device.json).
+Datos: [camera_device.json](../../analysis/s617_camera_device/camera_device.json). Auditoría conjunta: [hallazgos S605–S627](S605-S627_tabla_hallazgos.md).
 
-## Qué es
+## Evidencia comprobada
 
-`[CAMERA_DEVICE][DET_DIR]` es la etiqueta de traza que la fw3.21 de la A6000 antepone a 3 mensajes del **módulo de dispositivo de cámara (CAMERA_DEVICE) con sub-módulo de directorio de detección (DET_DIR)** que valida operaciones de timer OSAL (alloc/set/free). La sigla **SÍ tiene base textual**: `CAMERA_DEVICE` → dispositivo de cámara; `DET_DIR` → **DET**ection **DIR**ectory / **DET**ector **DIR**ectory (directorio de detección); `osal_*_timer` → **OSAL** (Operating System Abstraction Layer) timer API.
+3 cadenas principales verificadas contra A6000 fw3.21, base `0x43541000`, incluidos espacios, saltos de línea y NUL. Las direcciones son virtuales. El texto se muestra escapado como JSON.
 
-## Las 3 trazas (vaddr → texto corto)
+| Dirección | Texto |
+|---|---|
+| `0x43cf724e` | `"[CAMERA_DEVICE][DET_DIR][osal_alloc_timer] %x"` |
+| `0x43cf727c` | `"[CAMERA_DEVICE][DET_DIR][osal_set_timer] %x"` |
+| `0x43cf72a8` | `"[CAMERA_DEVICE][DET_DIR][osal_free_timer] %x"` |
 
+Longitudes declaradas comprobadas como bytes ASCII: `{"prefix_length": 24}`.
+
+## Afirmaciones pendientes
+
+| Afirmación | Estado y evidencia necesaria |
+|---|---|
+| Logger dual | NO_VERIFICADO: faltan cargas de argumentos, llamadas y flujo que acrediten las dos emisiones. |
+| Equivalencia funcional A7S/A6300 | NO_VERIFICADO: faltan contratos, entradas/salidas y callees comparados. |
+| Equivalencia de código | NO_VERIFICADO: faltan cuerpos e instrucciones comparados entre modelos. |
+| Ausencia de relación con el obturador | NO_VERIFICADO: el texto no excluye una ruta funcional. |
+| Recuentos y semántica de differential | NO_VERIFICADO: los recuentos históricos carecen de criterio de selección reproducible. |
+| Funciones emisoras, sitios, trazas muertas y significado de nombres | NO_VERIFICADO: requieren referencias e instrucciones propias. |
+
+El campo `logger_dual=null` significa desconocido. `shutter_line=NEGATIVO ACOTADO` es una etiqueta histórica de triaje léxico; su estado funcional es NO_VERIFICADO. Este lote no cambia la decisión S51.
+
+## Reproducción
+
+```bash
+.venv/bin/python analysis/verify_s6xx.py
+.venv/bin/python -m pytest -q tests/test_s60[5-9]_*.py tests/test_s61[0-9]_*.py tests/test_s62[0-7]_*.py tests/test_s6xx*.py
 ```
-0x43cf724e [CAMERA_DEVICE][DET_DIR][osal_alloc_timer] %x
-0x43cf727c [CAMERA_DEVICE][DET_DIR][osal_set_timer] %x
-0x43cf72a8 [CAMERA_DEVICE][DET_DIR][osal_free_timer] %x
-```
 
-## Hallazgos con dirección
-
-- **Triple prefijo jerárquico**: `[CAMERA_DEVICE][DET_DIR]` — módulo padre `CAMERA_DEVICE` + sub-módulo `DET_DIR`. Longitud total: 24 B (`[CAMERA_DEVICE][DET_DIR]`).
-- **API de timers OSAL**: 3 operaciones básicas — `alloc` (asignar), `set` (configurar), `free` (liberar). Cada una emite el código de retorno/error en hex (`%x`).
-- **Logger dual (patrón S177/S179/S603–S616)**: la fw3.21 **afirma duplicar** la traza (NO_VERIFICADO - requiere xrefs/REA): nueva con prefijo `[CAMERA_DEVICE][DET_DIR]` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
-- **Estructura CAMERA_DEVICE**: en fw3.21 aparece como módulo con sub-módulo `DET_DIR` para gestión de timers de detección.
-- **Prefijo fijo**: 24 B (`[CAMERA_DEVICE][DET_DIR]`) → no variable.
-
-## Diferencial A6000 fw3.21 vs A7S fw3.20 vs A6300 fw2.01
-
-| | A6000 fw3.21 | A7S fw3.20 | A6300 fw2.01 |
-|---|---|---|---|
-| token `[CAMERA_DEVICE][DET_DIR]` | **3** | **0** | **0** |
-| núcleos `osal_*_timer` | 3/3 con prefijo `[CAMERA_DEVICE][DET_DIR]` | **3** (prefijos `Spinal`/`CapMgr`/`TRK`) | **3** (prefijos `CapMgr`/`TRK`) |
-| código equivalente (NO_VERIFICADO - requiere comparación de instrucciones) (`osal_*_timer`) | `0x43cf724e`… | **sí** | **sí** |
-
-→ **Cambio de *logging*, no de código.** La API de timers OSAL para detección **existe** (NO_VERIFICADO - requiere análisis de A7S/A6300) en los tres firmware (mismas 3 funciones `osal_alloc/set/free_timer`). Lo propio de la fw3.21 de la A6000 son (NO_VERIFICADO - requiere xrefs/REA para confirmar duplicación de logger) **las 3 trazas con prefijo `[CAMERA_DEVICE][DET_DIR]`** y la **duplicación** con logger global `0x43902718`. A7S usa prefijos `Spinal`/`CapMgr`/`TRK`; A6300 usa `CapMgr`/`TRK`.
-
-**Longitud del prefijo jerárquico fija:** 24 B (`[CAMERA_DEVICE][DET_DIR]`) → no variable.
-
-## Línea del obturador: NEGATIVO ACOTADO
-
-0 coincidencias de `shutter`/`silent`/`curtain`/`electro`/`mech`/`obtur`/`sensor`/`readout`/`imager`/`iso`/`apert`/`expos`/`brack`/`drive`/`release`/`flash`/`sync`/`vsync`/`capture`/`shot`/`still`/`movie`/`focus`/`svd`/`shd`/`spl`/`frame`. El módulo gestiona **timers OSAL para directorio de detección**, no el obturador. → **S51 (A/B/C = NO) se mantiene.**
-
-## Verificación
-
-- 3/3 cadenas `[CAMERA_DEVICE][DET_DIR]` confirmadas en `0x43cf724e`–`0x43cf72a8`.
-- 3/3 núcleos `osal_*_timer` idénticos en A7S (prefijos `Spinal`/`CapMgr`/`TRK`) y A6300 (prefijos `CapMgr`/`TRK`).
-- 0/0 en A7S y A6300 para token `[CAMERA_DEVICE][DET_DIR]`.
-- Scripts: `analysis/s617_camera_device/` (pendiente) · Tests: `tests/test_s617_camera_device.py`.
+El JSON de resultados incluye rutas, tamaños y SHA-256 de los tres firmwares. Los campos adicionales no sustentados tienen cobertura explícita NO_VERIFICADO; las comprobaciones de esquema individuales no sustituyen la lectura del firmware.

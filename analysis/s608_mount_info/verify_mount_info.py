@@ -20,11 +20,11 @@ def main():
         assert ts['text'] == expected, f"Composite mismatch: {ts['text']} != {expected}"
     
     # Verify prefix lengths
-    assert data['prefix_length'] == 12, f"Prefix length mismatch: {data['prefix_length']} != 12"
+    assert data['prefix_length'] == 14, f"Prefix length mismatch: {data['prefix_length']} != 14"
     assert data['prefix'] == '[MOUNT_INFO]: '
-    assert data['core_prefix_length'] == 3, f"Core prefix length mismatch: {data['core_prefix_length']} != 3"
+    assert data['core_prefix_length'] == 4, f"Core prefix length mismatch: {data['core_prefix_length']} != 4"
     assert data['core_prefix'] == '[BL]'
-    assert data['composite_prefix_length'] == 15, f"Composite prefix length mismatch: {data['composite_prefix_length']} != 15"
+    assert data['composite_prefix_length'] == 18, f"Composite prefix length mismatch: {data['composite_prefix_length']} != 18"
     
     # Verify differential
     assert data['differential']['a6000_fw321']['mount_info_token_count'] == 6

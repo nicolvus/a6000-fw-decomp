@@ -1,51 +1,41 @@
-# S614 — `[ZPD]`: módulo ZPD (Phase Detection AF) exclusivo de la A6000 fw3.21
+# S614 — ZPD: evidencia de cadenas
 
-**Auditoría 23-10-2026:** direcciones de las cadenas corregidas contra coincidencias únicas en `av-cam.bin` (base `0x43541000`). Las longitudes canónicas están en el JSON corregido. La duplicación del logger, los límites de funciones y la equivalencia entre modelos no quedan demostrados por presencia de cadenas; esas afirmaciones históricas siguen NO_VERIFICADO.
+**Auditoría de la validación de OpenCode — 23-10-2026.** Este informe corrige las conclusiones históricas de S614. La presencia de texto no demuestra funciones, llamadas ni equivalencia entre modelos.
 
-**5 trazas · 5 sitios (regla PIC estricta) · ~2 funciones emisoras · 0 muertas.** Detalle + datos: [JSON](../../analysis/s614_zpd/zpd.json).
+Datos: [zpd.json](../../analysis/s614_zpd/zpd.json). Auditoría conjunta: [hallazgos S605–S627](S605-S627_tabla_hallazgos.md).
 
-## Qué es
+## Evidencia comprobada
 
-`[ZPD]` es la etiqueta de traza que la fw3.21 de la A6000 antepone a 5 mensajes del **módulo ZPD (Zone Phase Detection / Phase Detection AF)** que gestiona la secuencia de acoplamiento de lente, carga de datos DRA (Defect Reduction Algorithm?), y carga de datos de lente desde la lente o desde el cuerpo. La sigla **SÍ tiene base textual**: `ZPD` → **Z**one **P**hase **D**etection / **Z** **P**hase **D**etection AF (enfoque automático por detección de fase zonal).
+5 cadenas principales verificadas contra A6000 fw3.21, base `0x43541000`, incluidos espacios, saltos de línea y NUL. Las direcciones son virtuales. El texto se muestra escapado como JSON.
 
-## Las 5 trazas (vaddr → texto corto)
+| Dirección | Texto |
+|---|---|
+| `0x43ccf27f` | `"[ZPD]: lens attach sequence end."` |
+| `0x43ccf2a0` | `"[ZPD]: load dra data."` |
+| `0x43ccf2c7` | `"[ZPD]: load lens data from lens."` |
+| `0x43ccf2e8` | `"[ZPD]: load lens data from body."` |
+| `0x43ccf309` | `"[ZPD]: load:%s"` |
 
+Longitudes declaradas comprobadas como bytes ASCII: `{"prefix_length": 7}`.
+
+## Afirmaciones pendientes
+
+| Afirmación | Estado y evidencia necesaria |
+|---|---|
+| Logger dual | NO_VERIFICADO: faltan cargas de argumentos, llamadas y flujo que acrediten las dos emisiones. |
+| Equivalencia funcional A7S/A6300 | NO_VERIFICADO: faltan contratos, entradas/salidas y callees comparados. |
+| Equivalencia de código | NO_VERIFICADO: faltan cuerpos e instrucciones comparados entre modelos. |
+| Ausencia de relación con el obturador | NO_VERIFICADO: el texto no excluye una ruta funcional. |
+| Recuentos y semántica de differential | NO_VERIFICADO: los recuentos históricos carecen de criterio de selección reproducible. |
+| Funciones emisoras, sitios, trazas muertas y significado de nombres | NO_VERIFICADO: requieren referencias e instrucciones propias. |
+
+El campo `logger_dual=null` significa desconocido. `shutter_line=NEGATIVO ACOTADO` es una etiqueta histórica de triaje léxico; su estado funcional es NO_VERIFICADO. Este lote no cambia la decisión S51.
+
+## Reproducción
+
+```bash
+.venv/bin/python analysis/verify_s6xx.py
+.venv/bin/python -m pytest -q tests/test_s60[5-9]_*.py tests/test_s61[0-9]_*.py tests/test_s62[0-7]_*.py tests/test_s6xx*.py
 ```
-0x43ccf27f [ZPD]: lens attach sequence end.
-0x43ccf2a0 [ZPD]: load dra data.
-0x43ccf2c7 [ZPD]: load lens data from lens.
-0x43ccf2e8 [ZPD]: load lens data from body.
-0x43ccf309 [ZPD]: load:%s
-```
 
-## Hallazgos con dirección
-
-- **Secuencia de acoplamiento**: `lens attach sequence end` — finalización de la secuencia de acoplamiento de lente (comunicación montura-cuerpo).
-- **Carga de datos DRA**: `load dra data` — carga de datos DRA (Defect Reduction Algorithm / algoritmo de reducción de defectos) para corrección de píxeles defectuosos.
-- **Carga de datos de lente**: dos fuentes — `from lens` (desde la lente, EEPROM de la lente) y `from body` (desde el cuerpo, caché local).
-- **Carga genérica**: `load:%s` — función genérica de carga con nombre de recurso como parámetro.
-- **Logger dual (patrón S177/S179/S603–S613)**: la fw3.21 **afirma duplicar** la traza (NO_VERIFICADO - requiere xrefs/REA): nueva con prefijo `[ZPD]: ` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
-- **Prefijo simple**: 7 B (`[ZPD]: `) → uno de los prefijos más cortos de la serie (S605: 7 B, S606: 10 B, S607: 10 B, S608: 10 B, S610: 21 B, S611: 27 B, S612: 25 B, S613: 16 B).
-
-## Diferencial A6000 fw3.21 vs A7S fw3.20 vs A6300 fw2.01
-
-| | A6000 fw3.21 | A7S fw3.20 | A6300 fw2.01 |
-|---|---|---|---|
-| token `[ZPD]` | **5** | **0** | **0** |
-| núcleo sin prefijo (`lens attach sequence end`, `load dra data`, `load lens data from lens/body`, `load:%s`) | 0/5 como literal autónomo | **0** | **0** |
-| strings ZPD relacionadas A7S | 0 | **30+** (sin prefijo, `[Err]`, `ZpdPre`, `StartZpdPre`, `ZPD FLASH`, etc.) | **50+** |
-| código equivalente (NO_VERIFICADO - requiere comparación de instrucciones) (ZPD, DRA, carga lente) | `0x43ccf27f`… | **sí, sin prefijo** | **sí, sin prefijo** |
-
-→ **Módulo *nuevo* en traza, código preexistente.** El subsistema ZPD (Phase Detection AF, DRA, carga de datos de lente) **existe** (NO_VERIFICADO - requiere análisis de A7S/A6300) en los tres firmware (misma funcionalidad: secuencia de acoplamiento, DRA, carga de datos de lente desde lente/cuerpo). Lo propio de la fw3.21 de la A6000 son (NO_VERIFICADO - requiere xrefs/REA para confirmar duplicación de logger) **las 5 trazas con prefijo `[ZPD]: `**. En A7S/A6300 el subsistema ZPD existe (70+ strings ZPD relacionadas) pero **sin prefijo unificado `[ZPD]: `** — usan prefijos dispersos (`[Err]`, `StartZpdPre`, `ZpdPre`, `ZPD FLASH`, `ZPD_SRAM`, etc.). La fw3.21 **unifica** bajo `[ZPD]: ` y **duplica** la traza (nueva con logger de módulo + vieja intacta con logger global `0x43902718`).
-
-**Longitud del prefijo fija:** 7 B (`[ZPD]: `) → el más corto de la serie.
-
-## Línea del obturador: NEGATIVO ACOTADO
-
-0 coincidencias de `shutter`/`silent`/`curtain`/`electro`/`mech`/`obtur`/`sensor`/`readout`/`imager`/`iso`/`apert`/`expos`/`brack`/`drive`/`release`/`flash`/`sync`/`vsync`/`capture`/`shot`/`still`/`movie`/`focus`/`svd`/`shd`/`spl`/`frame`. El módulo gestiona **AF por detección de fase y carga de datos de lente/DRA**, no el obturador. → **S51 (A/B/C = NO) se mantiene.**
-
-## Verificación
-
-- 5/5 cadenas `[ZPD]: ` confirmadas en `0x43ccf27f`–`0x43ccf309`.
-- 0/0 en A7S y A6300 para token `[ZPD]`; 30+/50+ strings ZPD relacionadas en A7S/A6300 (sin prefijo unificado).
-- Scripts: `analysis/s614_zpd/` (pendiente) · Tests: `tests/test_s614_zpd.py`.
+El JSON de resultados incluye rutas, tamaños y SHA-256 de los tres firmwares. Los campos adicionales no sustentados tienen cobertura explícita NO_VERIFICADO; las comprobaciones de esquema individuales no sustituyen la lectura del firmware.

@@ -1,47 +1,38 @@
-# S621 — `[AVOUT]`: módulo de salida AV (Audio/Video Output) exclusivo de la A6000 fw3.21
+# S621 — AVOUT: evidencia de cadenas
 
-**Auditoría 23-10-2026:** direcciones de las cadenas corregidas contra coincidencias únicas en `av-cam.bin` (base `0x43541000`). Las longitudes canónicas están en el JSON corregido. La duplicación del logger, los límites de funciones y la equivalencia entre modelos no quedan demostrados por presencia de cadenas; esas afirmaciones históricas siguen NO_VERIFICADO.
+**Auditoría de la validación de OpenCode — 23-10-2026.** Este informe corrige las conclusiones históricas de S621. La presencia de texto no demuestra funciones, llamadas ni equivalencia entre modelos.
 
-**2 trazas · 2 sitios (regla PIC estricta) · ~1 función emisora · 0 muertas.** Detalle + datos: [JSON](../../analysis/s621_avout/avout.json).
+Datos: [avout.json](../../analysis/s621_avout/avout.json). Auditoría conjunta: [hallazgos S605–S627](S605-S627_tabla_hallazgos.md).
 
-## Qué es
+## Evidencia comprobada
 
-`[AVOUT]` es la etiqueta de traza que la fw3.21 de la A6000 antepone a 2 mensajes del **módulo de salida AV (Audio/Video Output)** dentro del módulo ACCY (Accesorio). La sigla **SÍ tiene base textual**: `AV` → **A**udio **V**ideo; `OUT` → **OUT**put (salida); `AVOUT` → **AV Out** (salida de audio/video, probablemente para HDMI/monitor externo).
+2 cadenas principales verificadas contra A6000 fw3.21, base `0x43541000`, incluidos espacios, saltos de línea y NUL. Las direcciones son virtuales. El texto se muestra escapado como JSON.
 
-## Las 2 trazas (vaddr → texto corto)
+| Dirección | Texto |
+|---|---|
+| `0x43c2549e` | `"[ACCY][DEBUG][AVOUT] NotifyDetached(%d)"` |
+| `0x43c254c6` | `"[ACCY][DEBUG][AVOUT] NotifyAttached(%d)"` |
 
+Longitudes declaradas comprobadas como bytes ASCII: `{"prefix_length": 20}`.
+
+## Afirmaciones pendientes
+
+| Afirmación | Estado y evidencia necesaria |
+|---|---|
+| Logger dual | NO_VERIFICADO: faltan cargas de argumentos, llamadas y flujo que acrediten las dos emisiones. |
+| Equivalencia funcional A7S/A6300 | NO_VERIFICADO: faltan contratos, entradas/salidas y callees comparados. |
+| Equivalencia de código | NO_VERIFICADO: faltan cuerpos e instrucciones comparados entre modelos. |
+| Ausencia de relación con el obturador | NO_VERIFICADO: el texto no excluye una ruta funcional. |
+| Recuentos y semántica de differential | NO_VERIFICADO: los recuentos históricos carecen de criterio de selección reproducible. |
+| Funciones emisoras, sitios, trazas muertas y significado de nombres | NO_VERIFICADO: requieren referencias e instrucciones propias. |
+
+El campo `logger_dual=null` significa desconocido. `shutter_line=NEGATIVO ACOTADO` es una etiqueta histórica de triaje léxico; su estado funcional es NO_VERIFICADO. Este lote no cambia la decisión S51.
+
+## Reproducción
+
+```bash
+.venv/bin/python analysis/verify_s6xx.py
+.venv/bin/python -m pytest -q tests/test_s60[5-9]_*.py tests/test_s61[0-9]_*.py tests/test_s62[0-7]_*.py tests/test_s6xx*.py
 ```
-0x43c2549e [ACCY][DEBUG][AVOUT] NotifyDetached(%d)
-0x43c254c6 [ACCY][DEBUG][AVOUT] NotifyAttached(%d)
-```
 
-## Hallazgos con dirección
-
-- **Triple prefijo jerárquico**: `[ACCY][DEBUG][AVOUT]` — módulo padre `ACCY` (accesorio) + nivel `DEBUG` + sub-módulo `AVOUT` (salida AV). Longitud total: 20 B (`[ACCY][DEBUG][AVOUT]`).
-- **Notificaciones de conexión**: 2 trazas `DEBUG` — `NotifyAttached(%d)` (conectado) y `NotifyDetached(%d)` (desconectado), ambas con parámetro numérico (`%d`, probablemente ID de dispositivo o handle).
-- **Logger dual (patrón S177/S179/S603–S620)**: la fw3.21 **afirma duplicar** la traza (NO_VERIFICADO - requiere xrefs/REA): nueva con prefijo `[ACCY][DEBUG][AVOUT]` (logger de módulo) + vieja sin prefijo vía logger global `0x43902718`.
-- **Prefijo fijo**: 20 B (`[ACCY][DEBUG][AVOUT]`) → fijo (ambas trazas son nivel DEBUG).
-- **Estructura ACCY**: en fw3.21 aparece como módulo con sub-módulos `HOUSING` (S610), `SENSER` (S619), y `AVOUT` (S621).
-
-## Diferencial A6000 fw3.21 vs A7S fw3.20 vs A6300 fw2.01
-
-| | A6000 fw3.21 | A7S fw3.20 | A6300 fw2.01 |
-|---|---|---|---|
-| token `[ACCY][DEBUG][AVOUT]` | **2** | **0** | **0** |
-| núcleos sin prefijo (`NotifyAttached`, `NotifyDetached`) | 0/2 como literal autónomo | **0** | **0** |
-| strings relacionadas A7S (`AccyUmDeviceAvOut`) | 0 | **1** | **1** |
-| código equivalente (NO_VERIFICADO - requiere comparación de instrucciones) (AVOUT) | `0x43c2549e`… | **parcial** | **parcial** |
-
-→ **Módulo *nuevo* en traza ACCY, código preexistente.** La funcionalidad de salida AV (AVOUT) **existe** (NO_VERIFICADO - requiere análisis de A7S/A6300) en los tres firmware (string `AccyUmDeviceAvOut` en A7S/A6300). Lo propio de la fw3.21 de la A6000 son (NO_VERIFICADO - requiere xrefs/REA para confirmar duplicación de logger) **las 2 trazas con prefijo `[ACCY][DEBUG][AVOUT]`** y la **duplicación** con logger global `0x43902718`. A7S/A6300 solo tienen la string suelta `17AccyUmDeviceAvOut` sin prefijo ni trazas de notificación.
-
-**Longitud del prefijo fija:** 20 B (`[ACCY][DEBUG][AVOUT]`) → fijo (ambas trazas son nivel DEBUG).
-
-## Línea del obturador: NEGATIVO ACOTADO
-
-0 coincidencias de `shutter`/`silent`/`curtain`/`electro`/`mech`/`obtur`/`sensor`/`readout`/`imager`/`iso`/`apert`/`expos`/`brack`/`drive`/`release`/`flash`/`sync`/`vsync`/`capture`/`shot`/`still`/`movie`/`focus`/`svd`/`shd`/`spl`/`frame`. El módulo gestiona **notificaciones de conexión/desconexión de salida AV (HDMI/monitor externo)**, no el obturador. → **S51 (A/B/C = NO) se mantiene.**
-
-## Verificación
-
-- 2/2 cadenas `[ACCY][DEBUG][AVOUT]` confirmadas en `0x43c2549e`–`0x43c254c6`.
-- 0/0 en A7S y A6300 para token `[ACCY][DEBUG][AVOUT]`; 1 string relacionada (`AccyUmDeviceAvOut`) en A7S/A6300 sin prefijo ACCY.
-- Scripts: `analysis/s621_avout/` (pendiente) · Tests: `tests/test_s621_avout.py`.
+El JSON de resultados incluye rutas, tamaños y SHA-256 de los tres firmwares. Los campos adicionales no sustentados tienen cobertura explícita NO_VERIFICADO; las comprobaciones de esquema individuales no sustituyen la lectura del firmware.

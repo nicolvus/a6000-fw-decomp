@@ -15,7 +15,7 @@ def main():
         assert ts['text'].startswith('[JPEG]: '), f"Missing prefix: {ts['text']}"
     
     # Verify prefix length
-    assert data['prefix_length'] == 7, f"Prefix length mismatch: {data['prefix_length']} != 7"
+    assert data['prefix_length'] == 8, f"Prefix length mismatch: {data['prefix_length']} != 8"
     
     # Verify differential
     assert data['differential']['a6000_fw321']['token_count'] == 17
