@@ -9,6 +9,10 @@ pendientes. Dos relaciones antiguas se resolvieron mediante bytes originales:
 `0x4379cb2e` usa la cadena de `0x43ca519f`, contrastados con bytes originales.
 Esto no certifica las seis listas VD ni ejecución física.
 
+Las **79 pruebas de conocimiento** pasan: 73 dentro del aislamiento y las seis
+del protocolo MCP fuera de él. Dentro del sandbox, la primera llamada MCP se
+bloquea por el ejecutor; fuera termina en menos de un segundo.
+
 Cinco filas adicionales proceden del cambio de contexto de una cita de
 `CONTEXT.md`: dos aristas de procedencia invertida se descartan y tres
 relaciones con módulos S605/S625/S627 conservan `VIGENTE`. No son cinco
