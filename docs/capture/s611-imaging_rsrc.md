@@ -34,14 +34,23 @@ Longitudes declaradas comprobadas como bytes ASCII: `{"prefix_length": 16, "core
 
 | Afirmación | Estado y evidencia necesaria |
 |---|---|
-| Logger dual | NO_VERIFICADO: faltan cargas de argumentos, llamadas y flujo que acrediten las dos emisiones. |
+| Logger dual | VERIFICADO_ESTATICO para las cinco trazas: la ruta con prefijo llama a `0x4379a274` y la ruta sin prefijo a `0x43902718`; ejecución real NO_VERIFICADO. |
 | Equivalencia funcional A7S/A6300 | NO_VERIFICADO: faltan contratos, entradas/salidas y callees comparados. |
 | Equivalencia de código | NO_VERIFICADO: faltan cuerpos e instrucciones comparados entre modelos. |
 | Ausencia de relación con el obturador | NO_VERIFICADO: el texto no excluye una ruta funcional. |
 | Recuentos y semántica de differential | NO_VERIFICADO: los recuentos históricos carecen de criterio de selección reproducible. |
 | Funciones emisoras, sitios, trazas muertas y significado de nombres | NO_VERIFICADO: requieren referencias e instrucciones propias. |
 
-El campo `logger_dual=null` significa desconocido. `shutter_line=NEGATIVO ACOTADO` es una etiqueta histórica de triaje léxico; su estado funcional es NO_VERIFICADO. Este lote no cambia la decisión S51.
+Las cinco parejas de cargas PC-relativas, sus llamadas y el salto compartido de la primera
+traza se comprueban contra bytes de `av-cam.bin` en `analysis/verify_s6xx.py`.
+La primera usa `0x4379a35e/0x4379a360 → 0x4379a362` y
+`0x4379a370/0x4379a374 → 0x4379a3e4`; `0x4379a376` une los bloques.
+El emisor local `0x4379a274` construye y envía un mensaje con
+`0x4356120c` (`0x4379a308`); las otras cuatro parejas se enumeran en
+`logger_paths` del JSON. Esto acredita **dos rutas estáticas** por traza,
+no que ambas se ejecuten en una cámara ni que tengan la misma entrega final.
+`shutter_line=NEGATIVO ACOTADO` sigue siendo una etiqueta histórica de triaje
+léxico; su estado funcional es NO_VERIFICADO. S51 no cambia.
 
 ## Reproducción
 

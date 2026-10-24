@@ -2,8 +2,12 @@
 import argparse
 import hashlib
 import json
+import re
+import struct
 import sys
 from pathlib import Path
+
+from capstone import CS_ARCH_ARM, CS_MODE_THUMB, Cs
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = 0x43541000
@@ -44,6 +48,58 @@ def pending(reason):
     return {"verified": False, "status": "NO_VERIFICADO", "reason": reason}
 
 
+def verify_logger_paths(data, blob):
+    """Comprueba dos rutas estáticas por traza contra instrucciones del firmware."""
+    paths = data.get("logger_paths", [])
+    if not paths or len(paths) != len(data["trace_strings"]):
+        return False
+    decoder = Cs(CS_ARCH_ARM, CS_MODE_THUMB)
+
+    def instruction(address):
+        offset = int(address, 16) - BASE
+        if offset < 0 or offset + 4 > len(blob):
+            return None
+        return next(decoder.disasm(blob[offset:offset + 4], BASE + offset, count=1), None)
+
+    def pic_address(load_address, add_address, expected_register):
+        load, add = instruction(load_address), instruction(add_address)
+        if not load or not add:
+            return None
+        match = re.fullmatch(rf"{expected_register}, \[pc, #0x([0-9a-f]+)\]", load.op_str)
+        if load.mnemonic != "ldr" or not match or add.mnemonic != "add":
+            return None
+        if add.op_str != f"{expected_register}, pc":
+            return None
+        pool = ((load.address + 4) & ~3) + int(match[1], 16)
+        offset = pool - BASE
+        if offset < 0 or offset + 4 > len(blob):
+            return None
+        return (struct.unpack_from("<I", blob, offset)[0] + add.address + 4) & 0xFFFFFFFF
+
+    traces = {t["vaddr"]: t for t in data["trace_strings"]}
+    if set(traces) != {p["trace"] for p in paths}:
+        return False
+    for path in paths:
+        trace = traces[path["trace"]]
+        address = int(path["trace"], 16)
+        local = pic_address(path["local_load"], path["local_add"], "r3")
+        global_text = pic_address(path["global_load"], path["global_add"], "r0")
+        local_call = instruction(path["local_call"])
+        global_call = instruction(path["global_call"])
+        if (local != address or global_text != address + len(data["prefix"].encode("ascii"))
+                or trace.get("core_text") != trace["text"].removeprefix(data["prefix"])
+                or not local_call or local_call.mnemonic != "bl"
+                or local_call.op_str != "#0x4379a274"
+                or not global_call or global_call.mnemonic not in {"bl", "b.w"}
+                or global_call.op_str != data["global_logger"].replace("0x", "#0x")):
+            return False
+        if "bridge" in path:
+            bridge = instruction(path["bridge"])
+            if not bridge or bridge.mnemonic != "b" or bridge.op_str != "#0x4379a3de":
+                return False
+    return True
+
+
 def verify_module(data, blobs):
     blob = blobs["a6000_fw321"]
     traces = data["trace_strings"]
@@ -76,8 +132,9 @@ def verify_module(data, blobs):
         })
         if unknown:
             unknown_trace_fields.append({"vaddr": t["vaddr"], "fields": unknown})
-    if data.get("logger_dual") is not None:
-        metadata_errors.append("logger_dual: requiere evidencia de flujo; usar null")
+    logger_verified = verify_logger_paths(data, blob)
+    if (data.get("logger_dual") is not None or logger_verified) and data.get("logger_dual") is not logger_verified:
+        metadata_errors.append("logger_dual: requiere evidencia de flujo validada")
     details = [
         {"vaddr": t["vaddr"], "ok": check_string(blob, t["vaddr"], t["text"])}
         for t in traces
@@ -151,11 +208,17 @@ def verify_module(data, blobs):
             "scope": "marcadores ASCII en trazas NUL; no nivel efectivo ni funciones emisoras",
         },
         "logger_dual": {
-            **pending("faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones"),
+            **({"verified": True, "status": "VERIFICADO_ESTATICO",
+                "reason": "rutas de envío y logger verificadas por instrucciones en todas las trazas"}
+               if logger_verified else pending(
+                   "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones")),
             "claimed": bool(logger),
             "global_logger": logger,
-            "global_logger_verified": False,
-            "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+            "global_logger_verified": logger_verified,
+            "global_logger_msg": (
+                "llamada estática a 0x43902718 con sufijo de cada traza"
+                if logger_verified else "bytes no demuestran identidad de logger ni duplicación"
+            ),
             "bytes_hex": logger_bytes,
         },
         "equivalencia_funcional": pending("sin contratos, entradas, salidas y callees comparados"),
@@ -178,7 +241,8 @@ def verify_module(data, blobs):
                     "verification_status", "trace_strings", "differential", "module",
                     "traces", "prefix", "prefix_length", "twin_prefix", "twin_prefix_length",
                     "core_prefix", "core_prefix_length", "composite_prefix_length",
-                    "prefixes", "prefix_lengths", "logger_dual", "global_logger", "shutter_line",
+                    "prefixes", "prefix_lengths", "logger_dual", "logger_paths",
+                    "global_logger", "shutter_line",
                 }
             ],
         },
@@ -228,7 +292,7 @@ def main():
         total = sum(r["verification_status"]["trace_strings"]["count_ok"] for r in results)
         twins = sum(r["verification_status"]["twin_strings"]["count_ok"] for r in results)
         print(f"{len(results)} fichas; {total} trazas; {twins} gemelas; errores: {failures}")
-        print("Logger dual, equivalencias y ausencia funcional del obturador: NO_VERIFICADO")
+        print("Logger dual S611: VERIFICADO_ESTATICO; resto y equivalencias: NO_VERIFICADO")
     return bool(failures)
 
 

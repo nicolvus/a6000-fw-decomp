@@ -47,8 +47,13 @@ class S6xxFirmwareVerification(unittest.TestCase):
                 "logger_dual", "equivalencia_funcional", "equivalencia_codigo",
                 "linea_obturador", "differential", "other_claims",
             ):
-                self.assertEqual(data["verification_status"][category]["status"], "NO_VERIFICADO")
-                self.assertFalse(data["verification_status"][category]["verified"])
+                evidence = data["verification_status"][category]
+                if category == "logger_dual" and data["module"] == "IMAGING_RSRC":
+                    self.assertEqual(evidence["status"], "VERIFICADO_ESTATICO")
+                    self.assertTrue(evidence["verified"])
+                else:
+                    self.assertEqual(evidence["status"], "NO_VERIFICADO")
+                    self.assertFalse(evidence["verified"])
 
     def test_whitespace_corruption_is_rejected(self):
         data = copy.deepcopy(next(d for p, d in self.modules.items() if p.parent.name.startswith("s607")))
@@ -104,6 +109,13 @@ class S6xxFirmwareVerification(unittest.TestCase):
         data = copy.deepcopy(next(iter(self.modules.values())))
         data["logger_dual"] = True
         self.assertFalse(VERIFY.verify_module(data, self.blobs)["metadata"]["verified"])
+
+    def test_s611_dual_logger_paths_are_verified_from_instructions(self):
+        data = next(d for p, d in self.modules.items() if p.parent.name.startswith("s611"))
+        self.assertTrue(VERIFY.verify_module(data, self.blobs)["logger_dual"]["verified"])
+        corrupted = copy.deepcopy(data)
+        corrupted["logger_paths"][0]["local_call"] = "0x4379a364"
+        self.assertFalse(VERIFY.verify_module(corrupted, self.blobs)["logger_dual"]["verified"])
 
     def test_cli_rejects_saved_positive_claims_without_evidence(self):
         data = copy.deepcopy(next(iter(self.modules.values())))

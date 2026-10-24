@@ -9,7 +9,7 @@ def main():
     for result in results:
         path = ROOT / result["json"]
         data = json.loads(path.read_text())
-        if "logger_dual" in data:
+        if "logger_dual" in data and not data.get("logger_paths"):
             data["logger_dual"] = None  # desconocido, no falso ni demostrado
         data["verification_status"] = result["verification_status"]
         path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n")
