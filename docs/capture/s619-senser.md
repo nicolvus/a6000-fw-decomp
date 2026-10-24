@@ -16,6 +16,8 @@ Datos: [senser.json](../../analysis/s619_senser/senser.json). Auditoría conjunt
 
 Longitudes declaradas comprobadas como bytes ASCII: `{"prefix_lengths": [19, 21]}`.
 
+CORRECCIÓN de cobertura: Tres campos `level` contrastados como marcadores ASCII `[ERR]`/`[DEBUG]` dentro de las trazas NUL; direcciones en `verification_status.trace_annotations`. No acredita el nivel efectivo del logger.
+
 ## Afirmaciones pendientes
 
 | Afirmación | Estado y evidencia necesaria |

@@ -47,6 +47,37 @@ def pending(reason):
 def verify_module(data, blobs):
     blob = blobs["a6000_fw321"]
     traces = data["trace_strings"]
+    metadata_errors = []
+    annotations = []
+    unknown_trace_fields = []
+    prefixes = data.get("prefixes", [data.get("prefix", "")])
+    for t in traces:
+        if not any(p and t["text"].startswith(p) for p in prefixes):
+            metadata_errors.append(t["vaddr"] + ":prefix")
+        twin_fields = {"twin_vaddr", "twin_text", "delta"}
+        if twin_fields.intersection(t) and not twin_fields.issubset(t):
+            metadata_errors.append(t["vaddr"] + ":twin_schema")
+        for field in ("sub_prefix", "level"):
+            if field not in t:
+                continue
+            # Solo acredita el marcador textual, nunca nivel efectivo ni flujo.
+            tag = t[field] if field == "sub_prefix" else "[" + t[field] + "]"
+            offset = t["text"].find(tag)
+            address = hex(int(t["vaddr"], 16) + max(offset, 0))
+            annotations.append({
+                "vaddr": address, "field": field, "text": tag,
+                "ok": offset >= 0 and check_string(blob, t["vaddr"], t["text"]),
+            })
+            if field == "sub_prefix" and tag not in data.get("sub_prefixes", []):
+                metadata_errors.append(t["vaddr"] + ":sub_prefixes")
+        unknown = sorted(set(t) - {
+            "text", "vaddr", "twin_vaddr", "twin_text", "delta", "core_text",
+            "sub_prefix", "level",
+        })
+        if unknown:
+            unknown_trace_fields.append({"vaddr": t["vaddr"], "fields": unknown})
+    if data.get("logger_dual") is not None:
+        metadata_errors.append("logger_dual: requiere evidencia de flujo; usar null")
     details = [
         {"vaddr": t["vaddr"], "ok": check_string(blob, t["vaddr"], t["text"])}
         for t in traces
@@ -59,7 +90,7 @@ def verify_module(data, blobs):
             "core_ok": t["text"].removeprefix(data["prefix"])
             == t["twin_text"].removeprefix(data["twin_prefix"]),
         }
-        for t in traces if "twin_vaddr" in t
+        for t in traces if {"twin_vaddr", "twin_text", "delta"}.issubset(t)
     ]
     cores = []
     for t in traces:
@@ -73,7 +104,6 @@ def verify_module(data, blobs):
                     model: occurrences(raw, t["core_text"]) for model, raw in blobs.items()
                 },
             })
-    metadata_errors = []
     if data["traces"] != len(traces):
         metadata_errors.append("traces")
     for name in ("prefix", "twin_prefix", "core_prefix"):
@@ -114,6 +144,12 @@ def verify_module(data, blobs):
             "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional",
         },
         "metadata": {"verified": not metadata_errors, "errors": metadata_errors},
+        "trace_annotations": {
+            "verified": bool(annotations) and all(d["ok"] for d in annotations),
+            "count_total": len(annotations),
+            "details": annotations,
+            "scope": "marcadores ASCII en trazas NUL; no nivel efectivo ni funciones emisoras",
+        },
         "logger_dual": {
             **pending("faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones"),
             "claimed": bool(logger),
@@ -135,6 +171,7 @@ def verify_module(data, blobs):
         },
         "other_claims": {
             **pending("símbolos, semántica, sitios emisores y funciones requieren evidencia propia"),
+            "trace_fields": unknown_trace_fields,
             "fields": [
                 k for k in data
                 if k not in {
@@ -176,12 +213,15 @@ def main():
     failures = []
     for result in results:
         status = result["verification_status"]
-        for category in ("trace_strings", "twin_strings", "core_strings"):
+        for category in ("trace_strings", "twin_strings", "core_strings", "trace_annotations"):
             evidence = status[category]
             if evidence["count_total"] and not evidence["verified"]:
                 failures.append(result["module"] + ":" + category)
         if not status["metadata"]["verified"]:
             failures.append(result["module"] + ":metadata")
+        saved = json.loads((ROOT / result["json"]).read_text())["verification_status"]
+        if saved != status:
+            failures.append(result["module"] + ":verification_status obsoleto o sin evidencia")
     if args.json:
         print(json.dumps(results, indent=2, ensure_ascii=False))
     else:
