@@ -1,0 +1,615 @@
+{
+ "fecha": "2026-10-23",
+ "revision_destinos": "4e41b6ee46776db027fd74c62fa4c5a2decdf4e0",
+ "validacion": {
+  "conocimiento": "78 tests PASS, incluidos 11 de triaje; MCP ejecutado fuera del aislamiento tras bloqueo de su ejecutor dentro del sandbox",
+  "evidencia_estatica": "127 tests S114/S156/S166/S168/S172/S329/S331/S336/S342 + 6 del auditor S28 + 53 S380: 186 PASS",
+  "s50": "SHA-256 del binario, 103 instrucciones LLVM de callback-dispatch/callback-count-copy y 12 punteros en cuatro listas contrastados con bytes originales",
+  "lint_tipos": "Ruff y Mypy con --explicit-package-bases: sin avisos en los dos Python modificados",
+  "indice": "Dos reconstrucciones con 1455 entidades y 3066 relaciones; 299 relaciones abiertas, sin cambio de contenido en los derivados"
+ },
+ "alcance": "446 filas revisadas: 392 iniciales (132 decisiones previas, 207 pendientes del encargo y 53 pendientes añadidas después) más 54 entradas del índice actual de 299 relaciones, frente a las 264 del encargo. Revisión de relaciones documentales y evidencia estática; no prueba de ejecución física. Las filas idénticas de distintas revisiones conservan sus identidades históricas.",
+ "casos": {
+  "indice": {
+   "veredicto": "FALSO_POSITIVO",
+   "razon": "El marcador presenta un índice, título o catálogo de fuentes. No afirma que el documento fuente corrija al destino; se descarta solo esta arista, no las correcciones contenidas en los documentos.",
+   "evidencias": []
+  },
+  "adyacencia": {
+   "veredicto": "FALSO_POSITIVO",
+   "razon": "La corrección concreta de la cita tiene otro sujeto. Este destino aparece en una fila o párrafo vecino, como siguiente tarea, evidencia del hito o intervalo de sesiones; el contexto completo no dirige la corrección hacia él.",
+   "evidencias": []
+  },
+  "procedencia-invertida": {
+   "veredicto": "FALSO_POSITIVO",
+   "razon": "El destino es la fuente de la rectificación, no el documento rectificado por esta cita. El texto remite al informe que aporta la evidencia o incorpora su actualización. La arista CORRECTS/SUPERSEDES en este sentido invierte la procedencia; no se niega la corrección técnica.",
+   "evidencias": []
+  },
+  "confirma": {
+   "veredicto": "FALSO_POSITIVO",
+   "razon": "El autor confirma o reutiliza un resultado del destino (S130/S128, o el sesgo ya corregido en S300); la rectificación que describe afecta a otra lectura. Confirmar un antecedente no es corregirlo.",
+   "evidencias": []
+  },
+  "negacion": {
+   "veredicto": "FALSO_POSITIVO",
+   "razon": "La fuente dice que no obtuvo correcciones registradas, que la relación no prueba una corrección o que se mantiene el resultado. Es una limitación de búsqueda o una negación explícita, no una rectificación del destino.",
+   "evidencias": []
+  },
+  "dominio": {
+   "veredicto": "FALSO_POSITIVO",
+   "razon": "Corrección se usa para metadatos Ghidra o una operación sobre un parámetro de captura, no para rectificar el informe destino. El enlace vecino solo amplía el recorrido técnico.",
+   "evidencias": []
+  },
+  "sesion-equivocada": {
+   "veredicto": "FALSO_POSITIVO",
+   "razon": "El párrafo S105 §9 identifica su antecedente como analysis/s101_sdf/sdf_module.md y docs/capture/s101-sdf.md (CCNR/SDF). El destino s101-conclusions.md es el selector mecánico, otra investigación con el mismo número. No se traslada una corrección entre sesiones homónimas.",
+   "evidencias": []
+  },
+  "meta-automatizacion": {
+   "veredicto": "FALSO_POSITIVO",
+   "razon": "El README histórico describe una regla automática y reconoce que no abrió cada destino ni reverificó bytes. Los números S300–S385 delimitan el lote, no una corrección técnica de estos destinos.",
+   "evidencias": []
+  },
+  "resultado-tests": {
+   "veredicto": "FALSO_POSITIVO",
+   "razon": "La línea informa cuántos tests S380–S385 pasaron y limita su alcance. No rectifica por sí misma ni S380 ni S385; los informes técnicos correctores están citados en otras relaciones.",
+   "evidencias": []
+  },
+  "rolling": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "S168 retira la inferencia de S164: la mera cadena rolling de 0x43d9fe03 no demuestra implementación. El JSON conserva listas PIC e inversa vacías, con control positivo VD 0x43729166; la batería estática reproduce el alcance. Se acepta esta retirada, no una prueba universal de ausencia de código o hardware.",
+   "evidencias": [
+    {
+     "archivo": "analysis/s168_a6300_rolling/rolling.json",
+     "localizador": "refs_pic_estricta_A6300",
+     "cita": "{\"0x43d9fe03_position_num_in_rolling\": [], \"0x43d9fde2_position_num_in_vd\": [\"0x43729166\"]}",
+     "sha256": "254c265d5ba7239cfeb9e3066e43edaddb184d1b5817a592e523ddbc13edabde"
+    },
+    {
+     "archivo": "analysis/s168_a6300_rolling/rolling.json",
+     "localizador": "refs_metodo_inverso_A6300",
+     "cita": "{\"0x43d9fe03_position_num_in_rolling\": [], \"0x43d9fde2_position_num_in_vd\": [\"0x43729166\"]}",
+     "sha256": "254c265d5ba7239cfeb9e3066e43edaddb184d1b5817a592e523ddbc13edabde"
+    },
+    {
+     "archivo": "docs/capture/s164-camera-is.md",
+     "localizador": "73:90",
+     "cita": "\n**Negativo verificado**: 0 menciones de obturador/lectura/`rolling` en las 17 trazas, y **0\napariciones de `rolling` y `readout` en toda la A6000 fw3.21** (0 también en la A7S). Lo\núnico enlazado con el disparo: el callback **`IS_LensMountExpStartCB`** (exposición empezada)\ny la programación de la **rejilla del EIS desde `Sync_EndExpose`** (`0x43702dac` llamado en\n`0x4354a97c`, en `[CAMERA_MAIN_SYNC]`). Dos datos diferenciales fuera del módulo: el\n**A6300** tiene la API **`GetImagerStabilizationTime`** (`0x43d9ce7f`) y el texto\n**`position num in rolling is strange %d`** (`0x43d9fe03`), **ambos ausentes** en la A6000\nfw3.21 y en la A7S fw3.20.\n\n> **Corrección (S168, 22-10-2026)**: el texto del *rolling* del A6300 es una **cadena MUERTA**\n> (0 referencias de código, 0 punteros absolutos, 0 pares `movw`/`movt`; control cruzado con un\n> método inverso independiente) → **no** demuestra que el A6300 fw2.01 implemente *rolling\n> shutter*. `GetImagerStabilizationTime` sí es una API viva, pero **no se ha analizado** aquí.\n> El único código vivo de esa banda de `.rodata` es el cálculo de ancho del **número de posición\n> del VD** (`0x4372914c`). Ver `analysis/s168_a6300_rolling/`.\n>\n> **S51 (A/B/C = NO) se mantiene.**",
+     "sha256": "30c63579e62df9b1205044465a30386d65e2f0dbd4f82836a39861b317e8b9d3"
+    },
+    {
+     "archivo": "tests/test_s168_a6300_rolling.py",
+     "localizador": "1:18",
+     "cita": "\"\"\"Tests de S168 — control positivo del «rolling shutter» del A6300 (cadena muerta).\n\nTodos los tests comprueban **bytes reales**: si cambia una dirección, un texto o un\ncontador, el test falla.\n\nConvenio del repo: `vaddr = 0x43541000 + file_offset` (válido también para la A7S fw3.20\ny el A6300 fw2.01).\n\"\"\"\nimport json\nimport os\nimport struct\n\nimport pytest\n\nBASE = 0x43541000\nROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))\nA6000 = os.path.join(ROOT, \"analysis/rea-independent/input/av-cam.bin\")\nA7S = os.path.join(ROOT, \"firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/\"",
+     "sha256": "cb9ec0e63bc63abb27f15ddacf869a55c3bb215a5830fee2acdc6aa20db260bd"
+    }
+   ]
+  },
+  "tabla-128": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "S172 retira la identificación de los 128 B de 0x43dcfa9e como tabla de velocidades: ausencia en el mapa PIC contrastado y de punteros absolutos; la tabla consumida tiene filas de 32 bits. S135 contiene la advertencia posterior. No se convierte el negativo acotado en ausencia universal ni se prueba semántica física.",
+   "evidencias": [
+    {
+     "archivo": "analysis/s172_elec_shutter_a6300/elec_shutter_a6300.json",
+     "localizador": "correccion_a_s135",
+     "cita": "{\"que_decia_s135\": \"el bloque de 128 bytes en 0x43dcfa9e es la tabla de indices de velocidad de obtenuracion\", \"verificacion\": \"ese bloque NO tiene ninguna referencia PIC (no esta en pic_refs_strict_a6300.json) ni puntero absoluto de 4 B, y es una tabla byte->byte NO decreciente (54 54, 60 60, 66 66, 6a 6a, 6e 6e, 71 71, 74 74, 77 77, 7b 7b, 7d 7d, 7f 7f), mas compatible con una tabla de caracteres imprimibles\", \"conclusion\": \"la identificacion de S135 NO esta verificada y queda corregida; la tabla real se indexa POR FILA con 32 bits por entrada. Lo que S135 acertó (existencia del modulo ElecShutter/, sus ficheros y sus ajustes) se mantiene\"}",
+     "sha256": "e5e1ca6b41a676ac4c94fcd14ae698e48ba9260342cfdd91dee8c5c2788022de"
+    },
+    {
+     "archivo": "docs/capture/s135-elec-shutter.md",
+     "localizador": "57:72",
+     "cita": "## Corrección posterior (hito S172, 22-10-2026)\n\n1. **El bloque de 128 bytes en `0x43dcfa9e` NO es una tabla de velocidad de obturación.**\n   Verificado: **0 referencias PIC** (no está en el mapa global del A6300) y **0 punteros\n   absolutos de 4 B**; además es una tabla byte→byte **no decreciente** (`54 54`, `60 60`,\n   `66 66`, `6a 6a`, `6e 6e`, `71 71`, `74 74`, `77 77`, `7b 7b`, `7d 7d`, `7f 7f`), más\n   compatible con una tabla de **caracteres imprimibles**. La tabla real de velocidades se\n   indexa **por fila, con 32 bits por entrada**, y la consume el código de\n   `EC_NonlinearElecShutter_MechShutterTable.cpp`.\n2. **El módulo ha sido localizado y caracterizado** (S172): `EC_ElecShutter_Main.cpp`\n   (`0x4391d67c`) devuelve un **código de modo de obturador** (`0x80` → 3, `0x100` → 4) y\n   `EC_NonlinearElecShutter_MechShutterTable.cpp` implementa la **equivalencia no lineal entre\n   velocidad electrónica y mecánica** (interpolación por tramos con escalas 10000/1000 y\n   búsqueda en punto fijo 16.16 con escala `0x8000`).\n\n**Lo que S135 acertó se mantiene**: la existencia del módulo `ElecShutter/` en el A6300 fw2.01",
+     "sha256": "d4443e757e2a67a80f42f3873bfdce54a5ffe4c72923319ae7d41c1b82c98606"
+    },
+    {
+     "archivo": "tests/test_s172_elec_shutter_a6300.py",
+     "localizador": "139:159",
+     "cita": "    assert any(mn.startswith(\"lsl.w\") and \"lr, lr, r2\" in op for mn, op in ops)\n\n\n# --------------------------------------------------------------------------\n# 4) Corrección a S135: el bloque de 128 bytes no está referenciado\n# --------------------------------------------------------------------------\n\ndef test_el_bloque_de_128_bytes_no_tiene_referencias(mapa, a6300):\n    clave = \"0x43dcfa9e\"\n    assert clave not in mapa, \"el bloque no deberia tener referencias PIC\"\n    pat = struct.pack(\"<I\", 0x43DCFA9E)\n    assert a6300.count(pat) == 0, \"no deberia haber punteros absolutos\"\n\n\ndef test_el_bloque_es_una_tabla_byte_a_byte_no_decreciente(a6300):\n    off = 0x43DCFA9E - BASE\n    tab = a6300[off:off + 128]\n    assert len(tab) == 128\n    assert list(tab[:4]) == [0, 1, 3, 4]\n    assert tab == bytes(sorted(tab)), \"deberia ser no decreciente\"\n    # valores repetidos (indicio de tabla de caracteres)",
+     "sha256": "cd5daf922fc4b8386460c0f58381b88a750a2bb60081046ac0441b38d77ad2c1"
+    }
+   ]
+  },
+  "dataflow-copia": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "S28 distingue solicitud de 20 B de respuesta copiada de 32 B (dos LDM/STM a150c8..d2), y reply+1c -> out+1c. Las notas iniciales de S23/S25 incorporan la rectificación; las copias históricas también contienen la misma corrección explícita. Los seis checks del auditor sobre bibliotecas originales pasan.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/s28-osal-pin-contract-closure.md",
+     "localizador": "119:135",
+     "cita": "Esto asigna semántica a los cuatro valores mediante su consumidor, no por\nparecido con una estructura gráfica.\n\n**ACEPTO:** GET usa una petición de 20 B y una respuesta de **32 B**:\n\n| Offset de respuesta | Contenido |\n|---|---|\n| `+0..+7` | Cabecera `{0x1000,0x8000,0x20,2}` |\n| `+8/+0xc/+0x10/+0x14` | Categoría, dirección, índice, endpoint OSAL |\n| `+0x18` | Estado del pin |\n| `+0x1c` | Resultado firmado: 0 si encontrado, `-0x20` si ausente |\n\nCorrecciones a S23/S25: `0xa14f88` copia **ocho palabras/32 B**, comprobadas\npor dos pares LDM/STM en `0xa150c8..0xa150d2`; no copia 20 B.\n`infraGetPin` conserva `response+0x1c → out+0x1c`; la afirmación histórica\n`response+0x20 → out+0x1c` era incorrecta. La respuesta no contiene un\npuntero DMM, callback, geometría o formato de imagen.",
+     "sha256": "bfd35d341a1ae5f3ed153dd355995370da67fd05856c704c4c666240813f7b71"
+    },
+    {
+     "archivo": "docs/capture/s23-yc-pin-dataflow-boundary.md",
+     "localizador": "1:9",
+     "cita": "# S23 — frontera Dataflow de los pines YC de ObjCamera\n\nActualización S28: [receptor y contrato resueltos](s28-osal-pin-contract-closure.md).\nEl helper envía 20 B pero copia **32 B** de respuesta; los cuatro enteros son\npropiedades del pin remoto que se usan en REQUEST_CONNECT, no campos gráficos.\nEsta corrección prevalece sobre las descripciones históricas siguientes.\n\nFecha: 2026-10-17. Alcance: `libObj.so` de A6000 FW 3.21, sólo lectura\nestática. SHA-256 comprobado: `8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a`.",
+     "sha256": "e8609d131a32824965b282727a040a2fbb7f5f1d47f24c9011224bd02a41f75b"
+    },
+    {
+     "archivo": "docs/capture/s25-dataflow-pin-registry-limit.md",
+     "localizador": "1:9",
+     "cita": "# S25 — límite estático del registro Dataflow para `0x50004`\n\nActualización S28: [registro y receptor identificados](s28-osal-pin-contract-closure.md).\nInfraImaging construye los cinco pines estáticamente y sirve la cola en\n`0x4379744c`. La copia correcta es `reply+0x1c → out+0x1c`, dentro de 32 B.\nEste cierre supera el límite histórico y corrige el offset descrito abajo.\n\nFecha: 2026-10-17. Análisis estático de `libBizFw.so` y `libObj.so` de A6000\nFW 3.21.",
+     "sha256": "f30b611bc8c30935798539e703bea4e345a09953467a80e9803cdfa047d70458"
+    },
+    {
+     "archivo": "analysis/session22/evidence/s28_dataflow_contract_audit.py",
+     "localizador": "1:60",
+     "cita": "\"\"\"Contrasta registros y contratos Dataflow contra el firmware original.\"\"\"\n\nfrom __future__ import annotations\n\nimport hashlib\nimport json\nimport struct\nimport subprocess\nimport unittest\nfrom pathlib import Path\nfrom typing import ClassVar\n\nROOT = Path(__file__).resolve().parents[3]\nIMAGE = ROOT / \"firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev\"\nBASE = 0x43541000\nEVIDENCE = Path(__file__).resolve().parent\n\n\ndef disassemble(path: Path, start: int, stop: int) -> str:\n    return subprocess.check_output(\n        [\"llvm-objdump\", \"-d\", \"--triple=thumbv7-linux-gnueabi\",\n         f\"--start-address={start:#x}\", f\"--stop-address={stop:#x}\", str(path)],\n        text=True,\n    )\n\n\ndef function(filename: str, entry: str) -> str:\n    data = json.loads((EVIDENCE / filename).read_text())\n    rows = data if isinstance(data, list) else data[\"functions\"]\n    return next(row[\"pseudo_code\"] for row in rows if row.get(\"entry\") == entry)\n\n\nclass DataflowContractAudit(unittest.TestCase):\n    av: ClassVar[bytes]\n    lib: ClassVar[Path]\n\n    @classmethod\n    def setUpClass(cls) -> None:\n        cls.av = (IMAGE / \"nflasha3_unpacked_unpacked/av-cam.bin\").read_bytes()\n        cls.lib = IMAGE / \"nflasha15_unpacked_unpacked/lib\"\n\n    def test_original_identity(self) -> None:\n        expected = {\n            \"libObj.so\": \"8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a\",\n            \"libBizFw.so\": \"5065aa52ac05d3a7de24945a2c7be65c18394b7c9e02ab605476a0afa8fb8a8e\",\n            \"dataflowInfraFramework.so\": \"05c0dbb49c9a9519cda65a911a1b5837bb772383a9a181e96468f7b75f5b687b\",\n        }\n        self.assertEqual(hashlib.sha256(self.av).hexdigest(),\n                         \"b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9\")\n        for name, digest in expected.items():\n            self.assertEqual(hashlib.sha256((self.lib / name).read_bytes()).hexdigest(), digest)\n\n    def test_3_osal_receiver(self) -> None:\n        framework = self.lib / \"dataflowInfraFramework.so\"\n        send = disassemble(framework, 0x1BC70, 0x1BD18)\n        receive = disassemble(framework, 0x1B968, 0x1BA64)\n        self.assertIn(\"osal_snd_msg@plt\", send)\n        self.assertIn(\"osal_rcv_msg_tmo@plt\", receive)\n        handler = function(\"s28-osal-callers.json\", \"4379744c\")\n        for text in (\"0x50004,auStack_1b0,0xffffffff\", \"sStack_a0 != 0x1000\",",
+     "sha256": "ee6c0e76d80d81950b300782bdb78dd81f9cb4db7f3775c551769ab756e75030"
+    }
+   ]
+  },
+  "dataflow-receptor": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "S28 sustituye el pendiente de alta/receptor 0x50004 en S23–S27: InfraImaging registra y atiende, y las conexiones VEF/ScalarInfra están identificadas. Los destinos conservan avisos al inicio. El cierre se limita al registro/contrato, sin cerrar productor sensor/DMA ni raster YC.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/s28-osal-pin-contract-closure.md",
+     "localizador": "1:45",
+     "cita": "# S28 — receptor OSAL, propietarios y contrato de conexión YC\n\nFecha: 2026-10-17. A6000 3.21; análisis local estático, sin cámara ni instalaciones.\nOrden de investigación: 3 → 1 → 2 → 4. Los cuatro puntos quedan resueltos en\nsu alcance de mensajería y compatibilidad de contratos. No se acredita una\ncaptura electrónica funcional.\n\n## 3. Receptor OSAL identificado\n\n**ACEPTO:** `libBizFw.so:0x33348` y `0x33470` delegan en\n`DataflowInfraSender::SendASync` y `DataflowInfraReceiver::ReceiveASync`,\nrespectivamente. Sus implementaciones están en `dataflowInfraFramework.so`:\n\n| Paso | Dirección ELF | Comportamiento comprobado |\n|---|---|---|\n| Envío | `0x1bc70`, llamada `0x1bcde` | Reserva mensaje OSAL, copia el payload desde `DataflowInfraMsg+0x10`, añade origen y llama `osal_snd_msg(destination, message)` |\n| Recepción | `0x1b968` | Llama `osal_rcv_msg_tmo`, obtiene tamaño/origen, copia el mensaje y libera el bloque OSAL |\n| Receptor de Imaging | av-cam `0x4379744c` | Bucle `ReceiveASync(0x50004, ..., UINT32_MAX)`; diagnóstico `InfraImaging.cpp` |\n| Dispatcher | misma función | Opcode `u16 +0 = 0x1000`; suboperación `u16 +2` |\n\nEl binario LIRO contiene su implementación de recepción en `0x435a9f4c`;\nllama al wrapper OSAL `0x43561260`, que despacha por la interfaz instalada\nen `DAT_440205c0+0x14`, slot `0x1e0`. La arquitectura Linux/LIRO y\n`osal_uipc.ko` se documentó en S20. Aquí la identidad del consumidor se\ndemuestra por su propia espera sobre `0x50004`; no se deduce del nombre\ndel objeto que emite la petición.\n\nSuboperaciones recuperadas: `0` GET, `1` REQUEST_CONNECT,\n`2` REQUEST_DISCONNECT, `0x100` CONNECT, `0x101` DISCONNECT,\n`0x8100` CONNECT_COMP y `0x8101` DISCONNECT_COMP. GET responde con\n`0x8000`. El dispatcher busca por tres campos, no por una dirección de callback.\nSi no encuentra el pin, responde `-0x20`; no inventa un descriptor.\n\n## 1. Quién registra y sirve `0x00050004`\n\n**ACEPTO:** el propietario efectivo es **InfraImaging**, en `av-cam.bin`.\nObjEffect es un cliente que modifica conexiones; no es el propietario de\nla cola por aparecer en el llamador de `infraGetPin`.\n\n`0x43797c34` construye cinco `DataflowInfraPin` mediante `0x435a97f0`.\nSu tabla de punteros está en `0x43ff3714`; el GOT\n`[0x44025f2c] = 0x43ff3714` permite al receptor recorrerlos.\n\n| Objeto pin | Propiedades ROM | Tupla `{categoría, dirección, índice, OSAL}` |\n|---|---|---|",
+     "sha256": "bfd35d341a1ae5f3ed153dd355995370da67fd05856c704c4c666240813f7b71"
+    },
+    {
+     "archivo": "docs/capture/s27-effect-postprocess-rewire.md",
+     "localizador": "1:9",
+     "cita": "# S27 — recableado de `State_IntelligentActivePostProcess`\n\nActualización S28: [semántica y registro resueltos](s28-osal-pin-contract-closure.md).\nLa transición conecta VEF YC salida 0/2 con InfraImaging YC entrada 0/1,\ntras desconectar VEF salida 0/2 y ScalarInfra salida 0/1.\nEl registro y receptor descritos como pendientes abajo ya están identificados.\n\nFecha: 2026-10-17. Análisis estático de `libObj.so` y `libBizFw.so` de A6000\nFW 3.21. Este avance no cierra la ruta sensor → YC.",
+     "sha256": "ac1090078009d30332bbd303405e0c0fba8b2e2db72285c757d7fe7fbca48487"
+    },
+    {
+     "archivo": "analysis/session22/evidence/s28_dataflow_contract_audit.py",
+     "localizador": "1:60",
+     "cita": "\"\"\"Contrasta registros y contratos Dataflow contra el firmware original.\"\"\"\n\nfrom __future__ import annotations\n\nimport hashlib\nimport json\nimport struct\nimport subprocess\nimport unittest\nfrom pathlib import Path\nfrom typing import ClassVar\n\nROOT = Path(__file__).resolve().parents[3]\nIMAGE = ROOT / \"firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev\"\nBASE = 0x43541000\nEVIDENCE = Path(__file__).resolve().parent\n\n\ndef disassemble(path: Path, start: int, stop: int) -> str:\n    return subprocess.check_output(\n        [\"llvm-objdump\", \"-d\", \"--triple=thumbv7-linux-gnueabi\",\n         f\"--start-address={start:#x}\", f\"--stop-address={stop:#x}\", str(path)],\n        text=True,\n    )\n\n\ndef function(filename: str, entry: str) -> str:\n    data = json.loads((EVIDENCE / filename).read_text())\n    rows = data if isinstance(data, list) else data[\"functions\"]\n    return next(row[\"pseudo_code\"] for row in rows if row.get(\"entry\") == entry)\n\n\nclass DataflowContractAudit(unittest.TestCase):\n    av: ClassVar[bytes]\n    lib: ClassVar[Path]\n\n    @classmethod\n    def setUpClass(cls) -> None:\n        cls.av = (IMAGE / \"nflasha3_unpacked_unpacked/av-cam.bin\").read_bytes()\n        cls.lib = IMAGE / \"nflasha15_unpacked_unpacked/lib\"\n\n    def test_original_identity(self) -> None:\n        expected = {\n            \"libObj.so\": \"8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a\",\n            \"libBizFw.so\": \"5065aa52ac05d3a7de24945a2c7be65c18394b7c9e02ab605476a0afa8fb8a8e\",\n            \"dataflowInfraFramework.so\": \"05c0dbb49c9a9519cda65a911a1b5837bb772383a9a181e96468f7b75f5b687b\",\n        }\n        self.assertEqual(hashlib.sha256(self.av).hexdigest(),\n                         \"b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9\")\n        for name, digest in expected.items():\n            self.assertEqual(hashlib.sha256((self.lib / name).read_bytes()).hexdigest(), digest)\n\n    def test_3_osal_receiver(self) -> None:\n        framework = self.lib / \"dataflowInfraFramework.so\"\n        send = disassemble(framework, 0x1BC70, 0x1BD18)\n        receive = disassemble(framework, 0x1B968, 0x1BA64)\n        self.assertIn(\"osal_snd_msg@plt\", send)\n        self.assertIn(\"osal_rcv_msg_tmo@plt\", receive)\n        handler = function(\"s28-osal-callers.json\", \"4379744c\")\n        for text in (\"0x50004,auStack_1b0,0xffffffff\", \"sStack_a0 != 0x1000\",",
+     "sha256": "ee6c0e76d80d81950b300782bdb78dd81f9cb4db7f3775c551769ab756e75030"
+    }
+   ]
+  },
+  "prelight": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "S114 corrige el pendiente de S106: id 1 llama a CapturePrelight_Selector; 0 y 6 siguen sin nombre y SequenceFilter es auxiliar. section_map conserva llamadas/selecciones por id, y la prueba estática pasa. No se inventa nombre para los dos ids restantes.",
+   "evidencias": [
+    {
+     "archivo": "analysis/s114_sections/section_map.json",
+     "localizador": "sections",
+     "cita": "[{\"id\": 0, \"handler\": \"0x437eabfc\", \"n_calls\": 2, \"propia\": [], \"llama_a_selector\": [], \"calls\": [\"0x43ae75dc\", \"0x43ae76ca\"]}, {\"id\": 1, \"handler\": \"0x437eb144\", \"n_calls\": 11, \"propia\": [], \"llama_a_selector\": [[\"CapturePrelight_Selector.cpp\", \"0x437eb07c\"]], \"calls\": [\"0x4356120c\", \"0x43561244\", \"0x435612d0\", \"0x435612ec\", \"0x43783e30\", \"0x437eb07c\", \"0x439c5004\", \"0x439c5a04\", \"0x43ae75dc\", \"0x43ae76ca\", \"0x43afb46a\"]}, {\"id\": 2, \"handler\": \"0x437ea8cc\", \"n_calls\": 12, \"propia\": [\"CaptureExposure_Selector.cpp\"], \"llama_a_selector\": [], \"calls\": [\"0x4356120c\", \"0x43561244\", \"0x435612d0\", \"0x435612ec\", \"0x43783e30\", \"0x437ea820\", \"0x43902718\", \"0x439c5004\", \"0x439c5a04\", \"0x43ae75dc\", \"0x43ae7648\", \"0x43ae76ca\"]}, {\"id\": 3, \"handler\": \"0x437eb24c\", \"n_calls\": 13, \"propia\": [\"CaptureRead_Selector.cpp\"], \"llama_a_selector\": [], \"calls\": [\"0x4356120c\", \"0x43561244\", \"0x435612d0\", \"0x435612ec\", \"0x43783e30\", \"0x437eb1a0\", \"0x43902718\", \"0x439c5004\", \"0x439c5a04\", \"0x43a12b58\", \"0x43ae75dc\", \"0x43ae7648\", \"0x43ae76ca\"]}, {\"id\": 4, \"handler\": \"0x437e9d78\", \"n_calls\": 15, \"propia\": [\"CaptureAfterRead_Selector.cpp\"], \"llama_a_selector\": [[\"CaptureAfterRead_Selector.cpp\", \"0x437e9d2c\"]], \"calls\": [\"0x4356120c\", \"0x43561244\", \"0x435612d0\", \"0x435612ec\", \"0x43783e30\", \"0x437e9c80\", \"0x437e9d2c\", \"0x43902718\", \"0x439c5004\", \"0x439c5a04\", \"0x43ae75dc\", \"0x43ae7648\", \"0x43ae76ca\", \"0x43afdede\", \"0x43afdeee\"]}, {\"id\": 5, \"handler\": \"0x437ea178\", \"n_calls\": 11, \"propia\": [\"CaptureDevEntry_Selector.cpp\"], \"llama_a_selector\": [], \"calls\": [\"0x4356120c\", \"0x43561244\", \"0x435612d0\", \"0x435612ec\", \"0x43783e30\", \"0x437ea0cc\", \"0x43902718\", \"0x439c5004\", \"0x439c5a04\", \"0x43ae75dc\", \"0x43ae76ca\"]}, {\"id\": 6, \"handler\": \"0x437eaa5c\", \"n_calls\": 9, \"propia\": [], \"llama_a_selector\": [], \"calls\": [\"0x4356120c\", \"0x43561244\", \"0x435612d0\", \"0x435612ec\", \"0x43783e30\", \"0x439c5004\", \"0x439c5a04\", \"0x43ae75dc\", \"0x43ae76ca\"]}, {\"id\": 7, \"handler\": \"0x437ea034\", \"n_calls\": 11, \"propia\": [\"CaptureCorrectRaw_Selector.cpp\"], \"llama_a_selector\": [], \"calls\": [\"0x4356120c\", \"0x43561244\", \"0x435612d0\", \"0x435612ec\", \"0x43783e30\", \"0x437e9f88\", \"0x43902718\", \"0x439c5004\", \"0x439c5a04\", \"0x43ae75dc\", \"0x43ae76ca\"]}, {\"id\": 8, \"handler\": \"0x437eaf38\", \"n_calls\": 11, \"propia\": [\"CaptureOpdBeforeNR_Selector.cpp\"], \"llama_a_selector\": [], \"calls\": [\"0x4356120c\", \"0x43561244\", \"0x435612d0\", \"0x435612ec\", \"0x43783e30\", \"0x437eae8c\", \"0x43902718\", \"0x439c5004\", \"0x439c5a04\", \"0x43ae75dc\", \"0x43ae76ca\"]}, {\"id\": 9, \"handler\": \"0x437ea410\", \"n_calls\": 11, \"propia\": [\"CaptureDevelop_Selector.cpp\"], \"llama_a_selector\": [], \"calls\": [\"0x4356120c\", \"0x43561244\", \"0x435612d0\", \"0x435612ec\", \"0x43783e30\", \"0x437ea364\", \"0x43902718\", \"0x439c5004\", \"0x439c5a04\", \"0x43ae75dc\", \"0x43ae76ca\"]}, {\"id\": 10, \"handler\": \"0x437ead4c\", \"n_calls\": 14, \"propia\": [\"CaptureMarble_Selector.cpp\"], \"llama_a_selector\": [], \"calls\": [\"0x4356120c\", \"0x43561244\", \"0x435612d0\", \"0x435612ec\", \"0x43783e30\", \"0x437eaca0\", \"0x43902718\", \"0x439c5004\", \"0x439c5a04\", \"0x43ae75dc\", \"0x43ae75fc\", \"0x43ae7602\", \"0x43ae7608\", \"0x43ae76ca\"]}, {\"id\": 11, \"handler\": \"0x437eab64\", \"n_calls\": 5, \"propia\": [\"CaptureFeatureEffect_Selector.cpp\"], \"llama_a_selector\": [], \"calls\": [\"0x43783e30\", \"0x437eaab8\", \"0x43902718\", \"0x43ae75dc\", \"0x43ae76ca\"]}, {\"id\": 12, \"handler\": \"0x437e9a70\", \"n_calls\": 12, \"propia\": [\"CaptureAfterEffect_Selector.cpp\"], \"llama_a_selector\": [], \"calls\": [\"0x4356120c\", \"0x43561244\", \"0x435612d0\", \"0x435612ec\", \"0x43783e30\", \"0x437e99c4\", \"0x43902718\", \"0x439c5004\", \"0x439c5a04\", \"0x43ae75dc\", \"0x43ae75fc\", \"0x43ae76ca\"]}, {\"id\": 13, \"handler\": \"0x437ea724\", \"n_calls\": 12, \"propia\": [\"CaptureEncode_Selector.cpp\"], \"llama_a_selector\": [], \"calls\": [\"0x4356120c\", \"0x43561244\", \"0x435612d0\", \"0x435612ec\", \"0x43783e30\", \"0x437ea678\", \"0x43902718\", \"0x439c5004\", \"0x439c5a04\", \"0x43ae75dc\", \"0x43ae75fc\", \"0x43ae76ca\"]}, {\"id\": 14, \"handler\": \"0x437e9be8\", \"n_calls\": 11, \"propia\": [\"CaptureAfterEnc_Selector.cpp\"], \"llama_a_selector\": [], \"calls\": [\"0x4356120c\", \"0x43561244\", \"0x435612d0\", \"0x435612ec\", \"0x43783e30\", \"0x437e9b3c\", \"0x43902718\", \"0x439c5004\", \"0x439c5a04\", \"0x43ae75dc\", \"0x43ae76ca\"]}, {\"id\": 15, \"handler\": \"0x437eb470\", \"n_calls\": 5, \"propia\": [\"CaptureSortJpeg_Selector.cpp\"], \"llama_a_selector\": [], \"calls\": [\"0x43783e30\", \"0x437eb3c4\", \"0x43902718\", \"0x43ae75dc\", \"0x43ae76ca\"]}, {\"id\": 16, \"handler\": \"0x437ea2bc\", \"n_calls\": 11, \"propia\": [\"CaptureDevExit_Selector.cpp\"], \"llama_a_selector\": [], \"calls\": [\"0x4356120c\", \"0x43561244\", \"0x435612d0\", \"0x435612ec\", \"0x43783e30\", \"0x437ea210\", \"0x43902718\", \"0x439c5004\", \"0x439c5a04\", \"0x43ae75dc\", \"0x43ae76ca\"]}]",
+     "sha256": "6906176ca72ed9ae975da01e815d0e369916a2d1cd636e8a7d0eb3cdb254637c"
+    },
+    {
+     "archivo": "analysis/s114_sections/section_engine.md",
+     "localizador": "83:103",
+     "cita": "## 6. Corrección de S106\n\nS106 dejó escrito: \"los ids `0x00`, `0x01` y `0x06` no [registran nombre] y\n`CapturePrelight`/`SequenceFilter` se referencian fuera de la tabla → asignación id↔etapa\ncompleta NO VERIFICADA\". Con este hito:\n\n- `0x01` **sí** es **Prelight** (por llamada directa a su selector);\n- `0x00` y `0x06` siguen **sin nombre** en el firmware, pero su estructura queda caracterizada\n  (§4);\n- `CapturePrelight` y `SequenceFilter` son **selectores auxiliares**, no secciones de la tabla.\n\n## 7. Verificaciones hechas\n\n| afirmación | cómo se comprueba |\n|---|---|\n| 17 entradas `{id, manejador}` en `0x43ff8fb4` | lectura directa de los pares u32 |\n| 14 manejadores con nombre propio | referencia PIC de su `*_Selector.cpp` + prólogos |\n| `0x01` = Prelight | `bl` desde `0x437eb144` a `0x437eb07c`, que registra `CapturePrelight_Selector.cpp` |\n| `0x00` y `0x06` sin nombre | ninguna de sus trazas registra un `*_Selector.cpp` |\n| 5 nombres los registra código fuera de la tabla | mapa completo de referencias (8 funciones) |\n",
+     "sha256": "633e67d4670c3139e9d541bf32254173a8e112ac3004bf6e66a02abc35d3668e"
+    },
+    {
+     "archivo": "docs/capture/s106-imaging-cap.md",
+     "localizador": "1:15",
+     "cita": "# S106 — `IMAGING_CAP`: el gestor de captura still de la A6000\n\n**Hito de la línea de ingeniería inversa general** (no afecta a la decisión del obturador\nelectrónico: S51 sigue con A/B/C = NO).\n\nInforme completo: [analysis/s106_imaging_cap/imaging_cap_architecture.md](../../analysis/s106_imaging_cap/imaging_cap_architecture.md) ·\nDatos: `imaging_cap_architecture.json` · Test: `tests/test_s106_imaging_cap.py` (18 tests).\n\n## Hallazgo central\n\n`[IMAGING_CAP]` es el **módulo de trazas del gestor de captura *still*** de la cámara: 697\ncadenas en `0x43c9b335`–`0x43ccab72`, en 11 bloques. No es el pipeline de vídeo ni el\nobturador: **0 apariciones** de `shutter`/`silent`/`EFCS`/`curtain`/`mechan` en sus 697\ncadenas.\n",
+     "sha256": "8d53e8cd60d329680a92e473a4eb8d3e4850cacc334b3f4e7eef29d3b2c40205"
+    }
+   ]
+  },
+  "plantillas-osal": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "La coincidencia de las dos plantillas ERR. osal_snd_msg/free_msg no identifica TP_R con DMMYSIOCOM: direcciones y funciones distintas, y DMMYSIOCOM permanece en A6000. Se acepta solo esa corrección de S130 respaldada por el artefacto y tests; reporter/panel táctil y equivalencia global no se recertifican.",
+   "evidencias": [
+    {
+     "archivo": "analysis/s156_tp_r/tp_r.md",
+     "localizador": "238:246",
+     "cita": "4. **Corrección importante de S130 (falso positivo detectado)**: los 2 \"textos comunes\" de S130\n   entre `[TP_R]` y `[DMMYSIOCOM]` son las **plantillas OSAL** `ERR. osal_snd_msg…` /\n   `ERR. osal_free_msg…`; en la A7S están en `0x43c73764`/`0x43c73792` (ref. `0x4362cc7a`) y en el\n   A6300 en `0x43d7296b`/`0x43d72999`, mientras que en la A6000 el módulo sigue intacto en\n   `0x43c72e7d`/`0x43c72eab` (ref. `0x43628a5e`/`0x43628a80`) → **código distinto**, luego\n   **falso positivo textual** (el texto es genérico de OSAL, no identidad de módulo).\n5. **Diferencial**: la tabla de comandos y el registro `tp` existen en los tres firmware\n   (`0x43fe3f28` / `0x43fe54d0` / `0x441a59c0`) → el módulo existía **silencioso** y la fw3.21\n   **añade 15 trazas** nuevas.",
+     "sha256": "1083e2e4c54dd4894f91650fce08ae6198baf78638a2540078ca7a7d62eb8002"
+    },
+    {
+     "archivo": "docs/capture/s156-tp-r.md",
+     "localizador": "25:37",
+     "cita": "en `analysis/s156_tp_r/tp_r.md` §4.\n## Relación con S151 y con `[DMMYSIOCOM]`\n* **S151 CONFIRMADO**: las trazas no salen por `printf` sino por `0x4366c300`\n  (`push {r3}` → `movs r2,#0x9a` → `osal_try_valloc_msg` → `vsnprintf` →\n  `osal_snd_msg`), **miembro de la familia de reporters**, con el **GID de log\n  `0x008f0139`**, el mismo que `[PANDA]`, `[ACCY]`, `[CAM_UTIL_*]` y `[CAMERA_MAIN_FC]`;\n  recuentos estricto **43 / 0 / 0** (A6000/A7S/A6300, reproduce S151) y laxo\n  **561 / 0 / 2**.\n* **`[DMMYSIOCOM]` NO es el mismo código**: los 2 \"textos comunes\" que S130 encontró\n  son las plantillas OSAL `ERR. osal_snd_msg…` / `ERR. osal_free_msg…`, que en la A7S\n  (`0x43c73764`/`0x43c73792`) y el A6300 (`0x43d7296b`/`0x43d72999`) están bajo\n  `[DMMYSIOCOM]`, módulo que **sigue intacto en la A6000** (`0x43c72e7d`/`0x43c72eab`,\n  ref. `0x43628a5e`/`0x43628a80`); código en zonas distintas (DMM `0x43628xxx`; TP",
+     "sha256": "51f03a376335e597240aea2e89e9ef801a6ec3d76514381a3159a04e52728715"
+    },
+    {
+     "archivo": "analysis/s156_tp_r/tp_r.json",
+     "localizador": "diferencial",
+     "cita": "{\"A7S\": {\"n_cadenas\": 3, \"cadenas\": [{\"addr\": \"0x43c838e4\", \"text\": \"[TP R] debug_num = %02x\", \"pic_refs\": [], \"abs_ptrs\": [], \"viva\": false}, {\"addr\": \"0x43c838fc\", \"text\": \"[TP R] <Water> key_code=%08x, xy=%08x, status=%08x, ex_status=%08x, ex_info=%08x\", \"pic_refs\": [], \"abs_ptrs\": [], \"viva\": false}, {\"addr\": \"0x43c8394d\", \"text\": \"[TP R] key_code=%08x, xy=%08x, status=%08x, ex_status=%08x, ex_info=%08x\", \"pic_refs\": [], \"abs_ptrs\": [], \"viva\": false}]}, \"A6300\": {\"n_cadenas\": 4, \"cadenas\": [{\"addr\": \"0x43d8337f\", \"text\": \"[TP R] debug_num = %02x\", \"pic_refs\": [], \"abs_ptrs\": [], \"viva\": false}, {\"addr\": \"0x43d83397\", \"text\": \"[TP R] <Water> key_code=%08x, xy=%08x, status=%08x, ex_status=%08x, ex_info=%08x\", \"pic_refs\": [], \"abs_ptrs\": [], \"viva\": false}, {\"addr\": \"0x43d833e8\", \"text\": \"[TP R] key_code=%08x, xy=%08x, status=%08x, ex_info=%08x\", \"pic_refs\": [], \"abs_ptrs\": [], \"viva\": false}, {\"addr\": \"0x43d83421\", \"text\": \"[TP R] key_code=%08x, xy=%08x, status=%08x, ex_status=%08x, ex_info=%08x\", \"pic_refs\": [], \"abs_ptrs\": [], \"viva\": false}]}, \"nucleos_por_etiqueta\": {\"A7S\": {\"ERR. osal_snd_msg. err=0x%x, L=%d\": [{\"addr\": \"0x43c73764\", \"text\": \"[DMMYSIOCOM]ERR. osal_snd_msg. err=0x%x, L=%d\"}], \"[TP R] debug_num = %02x\": [{\"addr\": \"0x43c838e4\", \"text\": \"[TP R] debug_num = %02x\"}], \"ERR. osal_free_msg. err=0x%x, L=%d\": [{\"addr\": \"0x43c73792\", \"text\": \"[DMMYSIOCOM]ERR. osal_free_msg. err=0x%x, L=%d\"}], \"[TP R] <Water> key_code=%08x, xy=%08x, status=%08x, ex_status=%08x, ex_info=%08x\": [{\"addr\": \"0x43c838fc\", \"text\": \"[TP R] <Water> key_code=%08x, xy=%08x, status=%08x, ex_status=%08x, ex_info=%08x\"}], \"[TP R] key_code=%08x, xy=%08x, status=%08x, ex_status=%08x, ex_info=%08x\": [{\"addr\": \"0x43c8394d\", \"text\": \"[TP R] key_code=%08x, xy=%08x, status=%08x, ex_status=%08x, ex_info=%08x\"}]}, \"A6300\": {\"ERR. osal_snd_msg. err=0x%x, L=%d\": [{\"addr\": \"0x43d7296b\", \"text\": \"[DMMYSIOCOM]ERR. osal_snd_msg. err=0x%x, L=%d\"}], \"[TP R] debug_num = %02x\": [{\"addr\": \"0x43d8337f\", \"text\": \"[TP R] debug_num = %02x\"}], \"ERR. osal_free_msg. err=0x%x, L=%d\": [{\"addr\": \"0x43d72999\", \"text\": \"[DMMYSIOCOM]ERR. osal_free_msg. err=0x%x, L=%d\"}], \"[TP R] <Water> key_code=%08x, xy=%08x, status=%08x, ex_status=%08x, ex_info=%08x\": [{\"addr\": \"0x43d83397\", \"text\": \"[TP R] <Water> key_code=%08x, xy=%08x, status=%08x, ex_status=%08x, ex_info=%08x\"}], \"[TP R] key_code=%08x, xy=%08x, status=%08x, ex_status=%08x, ex_info=%08x\": [{\"addr\": \"0x43d83421\", \"text\": \"[TP R] key_code=%08x, xy=%08x, status=%08x, ex_status=%08x, ex_info=%08x\"}]}}}",
+     "sha256": "7781e1e5aa378988618c9b4e169bdf3f25cd80bbfaed7e6ec8b3caf4d6b12a72"
+    }
+   ]
+  },
+  "adc": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "S166 limita la lectura ADC de S164: el acceso GyroAD a constantes no demuestra uso del servicio LIRO 0x720018. Las regiones examinadas y sus llamadas están delimitadas, con evidencia estática y tests. No se infiere independencia universal de todo el subsistema.",
+   "evidencias": [
+    {
+     "archivo": "analysis/s166_adc_debug/adc_debug.md",
+     "localizador": "400:408",
+     "cita": "4. **Corrección de una lectura posible de S164 (importante)**: el «acceso ADC» del giroscopio\n   de `[CAMERA_IS]` **NO** es el servicio LIRO ADC — la región del estabilizador hace **0** y\n   **1** llamadas al helper genérico `0x43561228` y **ninguna** con el handle `0x720018`; el\n   lector de `GyroAD` lee una **tabla de constantes** en `0x43bdc0a6`. Son dos mecanismos\n   distintos que comparten la palabra \"ADC\" → la hipótesis de S164 de que el giroscopio usa el\n   servicio LIRO ADC **queda descartada**.\n5. **Aportación a la línea del obturador (verificada)**: el ADC participa en la\n   **sincronización temporal de la secuencia HS** (`HS_Main` `0x4378fef4` → `SendToADCTask`\n   `0x4378d3b4`, espera de bandera con `ADC flg timeout` `0x43ca30fd`) y en la **medida de",
+     "sha256": "52d9cf3a6b088adbb1d1213e5ae7334702c5209d292504ed9fbd457c7d40f7c4"
+    },
+    {
+     "archivo": "docs/capture/s166-adc-debug.md",
+     "localizador": "24:30",
+     "cita": "## Relación con `[CAMERA_IS]` (S164): **NO es el mismo servicio**\nEl giroscopio del IS **no** usa el driver LIRO ADC: en las dos regiones de código del IS\n(`0x436e8000`–`0x43708000`, `0x4371d000`–`0x43721000`) hay **0 y 1** llamadas al servicio\ny **ninguna** con el handle `0x720018`. El \"acceso ADC\" del giroscopio (`0x436eace0`) lee\nuna **tabla de constantes en .rodata** (`0x43bdc0a6`) y aplica las tablas de calibración\n`0x43be6336`/`0x43be6518`.\n## Diferencial",
+     "sha256": "99153e772577178699beaa85dd4388bc0f2ae0d57cc622697fa8a0d20bd293b4"
+    },
+    {
+     "archivo": "tests/test_s166_adc_debug.py",
+     "localizador": "1:25",
+     "cita": "\"\"\"Tests for S166 — el módulo `[ADC_DEBUG]` (14 trazas) de la A6000 fw3.21.\n\nTests de **bytes reales**: cada comprobación lee el binario en la dirección exacta y\ncomprueba el contenido (texto, semiword Thumb, palabra del pool de literales o destino\nde un `bl`), de modo que si cambia una dirección, una cadena o una instrucción, el test\nfalla.  Nada de comparaciones tautológicas contra el propio JSON del hito.\n\nReferencia canónica: analysis/s166_adc_debug/adc_debug.md y adc_debug.json.\n\"\"\"\n\nimport pathlib\nimport re\nimport struct\n\nfrom capstone import CS_ARCH_ARM, CS_MODE_THUMB, Cs\n\nROOT = pathlib.Path(__file__).resolve().parents[1]\nBASE = 0x43541000\nBIN = \"analysis/rea-independent/input/av-cam.bin\"\nA7S = (\n    \"firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/\"\n    \"0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin\"\n)\nA6300 = (\n    \"firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/\"",
+     "sha256": "818b9d82aa7c4524ccf6d5cedc9cf2c3ba33281f0956c8ba358b1a1649a0b38f"
+    }
+   ]
+  },
+  "callbacks": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "La copia row+8 -> obj+260 y el bucle cursor<cantidad seguido de lista[cursor*4]/BLX prueban que 1/2/3/6 cuentan callbacks; no son clases de captura S49. Se cotejaron LLVM callback-dispatch/callback-count-copy y listas del auditor. No se reafirma alcanzabilidad de todos los callbacks ni modalidad física.",
+   "evidencias": [
+    {
+     "archivo": "analysis/s50/codex/llvm-evidence.json",
+     "localizador": "callback-dispatch",
+     "cita": "{\"command\": [\"llvm-objdump\", \"-D\", \"--triple=thumbv7-none-eabi\", \"--adjust-vma=0x43541000\", \"--start-address=0x2992d8\", \"--stop-address=0x299378\", \"/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/analysis/rea-independent/run/av-cam-view.elf\"], \"stdout\": \"\\n/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/analysis/rea-independent/run/av-cam-view.elf:\\tfile format elf32-littlearm\\n\\nDisassembly of section .text:\\n\\n43541000 <_binary_input_av_cam_bin_start>:\\n437da2d8: b570         \\tpush\\t{r4, r5, r6, lr}\\n437da2da: 460e         \\tmov\\tr6, r1\\n437da2dc: 4d1d         \\tldr\\tr5, [pc, #0x74]         @ 0x299354 <_binary_input_av_cam_bin_start+0x299354>\\n437da2de: 4604         \\tmov\\tr4, r0\\n437da2e0: f8d0 125c    \\tldr.w\\tr1, [r0, #0x25c]\\n437da2e4: 447d         \\tadd\\tr5, pc\\n437da2e6: 2900         \\tcmp\\tr1, #0x0\\n437da2e8: d033         \\tbeq\\t0x437da352 <_binary_input_av_cam_bin_start+0x299352> @ imm = #0x66\\n437da2ea: f8d0 3258    \\tldr.w\\tr3, [r0, #0x258]\\n437da2ee: 2b00         \\tcmp\\tr3, #0x0\\n437da2f0: db2f         \\tblt\\t0x437da352 <_binary_input_av_cam_bin_start+0x299352> @ imm = #0x5e\\n437da2f2: f8d0 0260    \\tldr.w\\tr0, [r0, #0x260]\\n437da2f6: 4283         \\tcmp\\tr3, r0\\n437da2f8: da2b         \\tbge\\t0x437da352 <_binary_input_av_cam_bin_start+0x299352> @ imm = #0x56\\n437da2fa: 8820         \\tldrh\\tr0, [r4]\\n437da2fc: f851 3023    \\tldr.w\\tr3, [r1, r3, lsl #2]\\n437da300: 4611         \\tmov\\tr1, r2\\n437da302: 6010         \\tstr\\tr0, [r2]\\n437da304: 8860         \\tldrh\\tr0, [r4, #0x2]\\n437da306: 6050         \\tstr\\tr0, [r2, #0x4]\\n437da308: 1d20         \\tadds\\tr0, r4, #0x4\\n437da30a: 6090         \\tstr\\tr0, [r2, #0x8]\\n437da30c: f504 7096    \\tadd.w\\tr0, r4, #0x12c\\n437da310: 6110         \\tstr\\tr0, [r2, #0x10]\\n437da312: 4630         \\tmov\\tr0, r6\\n437da314: 4798         \\tblx\\tr3\\n437da316: b928         \\tcbnz\\tr0, 0x437da324 <_binary_input_av_cam_bin_start+0x299324> @ imm = #0xa\\n437da318: f8d4 3258    \\tldr.w\\tr3, [r4, #0x258]\\n437da31c: 3301         \\tadds\\tr3, #0x1\\n437da31e: f8c4 3258    \\tstr.w\\tr3, [r4, #0x258]\\n437da322: bd70         \\tpop\\t{r4, r5, r6, pc}\\n437da324: 2802         \\tcmp\\tr0, #0x2\\n437da326: d114         \\tbne\\t0x437da352 <_binary_input_av_cam_bin_start+0x299352> @ imm = #0x28\\n437da328: 4620         \\tmov\\tr0, r4\\n437da32a: f31c fa99    \\tbl\\t0x43af6860 <_binary_input_av_cam_bin_start+0x5b5860> @ imm = #0x31c532\\n437da32e: 6d33         \\tldr\\tr3, [r6, #0x50]\\n437da330: f504 7094    \\tadd.w\\tr0, r4, #0x128\\n437da334: 68db         \\tldr\\tr3, [r3, #0xc]\\n437da336: f8c4 3128    \\tstr.w\\tr3, [r4, #0x128]\\n437da33a: f7af fe85    \\tbl\\t0x4378a048 <_binary_input_av_cam_bin_start+0x249048> @ imm = #-0x502f6\\n437da33e: 4b06         \\tldr\\tr3, [pc, #0x18]         @ 0x299358 <_binary_input_av_cam_bin_start+0x299358>\\n437da340: 58eb         \\tldr\\tr3, [r5, r3]\\n437da342: f893 308d    \\tldrb.w\\tr3, [r3, #0x8d]\\n437da346: b123         \\tcbz\\tr3, 0x437da352 <_binary_input_av_cam_bin_start+0x299352> @ imm = #0x8\\n437da348: 6830         \\tldr\\tr0, [r6]\\n437da34a: e8bd 4070    \\tpop.w\\t{r4, r5, r6, lr}\\n437da34e: f321 b8b2    \\tb.w\\t0x43afb4b6 <_binary_input_av_cam_bin_start+0x5ba4b6> @ imm = #0x321164\\n437da352: bd70         \\tpop\\t{r4, r5, r6, pc}\\n437da354: 4bfc         \\tldr\\tr3, [pc, #0x3f0]        @ 0x299748 <_binary_input_av_cam_bin_start+0x299748>\\n437da356: 0084         \\tlsls\\tr4, r0, #0x2\\n437da358: 6588         \\tstr\\tr0, [r1, #0x58]\\n437da35a: 0000         \\tmovs\\tr0, r0\\n437da35c: 6b42         \\tldr\\tr2, [r0, #0x34]\\n437da35e: b570         \\tpush\\t{r4, r5, r6, lr}\\n437da360: 4604         \\tmov\\tr4, r0\\n437da362: f892 279d    \\tldrb.w\\tr2, [r2, #0x79d]\\n437da366: 460d         \\tmov\\tr5, r1\\n437da368: 4b0b         \\tldr\\tr3, [pc, #0x2c]         @ 0x299398 <_binary_input_av_cam_bin_start+0x299398>\\n437da36a: 2a01         \\tcmp\\tr2, #0x1\\n437da36c: 447b         \\tadd\\tr3, pc\\n437da36e: d00b         \\tbeq\\t0x437da388 <_binary_input_av_cam_bin_start+0x299388> @ imm = #0x16\\n437da370: 4a0a         \\tldr\\tr2, [pc, #0x28]         @ 0x29939c <_binary_input_av_cam_bin_start+0x29939c>\\n437da372: 589b         \\tldr\\tr3, [r3, r2]\\n437da374: 7b5b         \\tldrb\\tr3, [r3, #0xd]\\n437da376: f013 0f10    \\ttst.w\\tr3, #0x10\\n\", \"stderr\": \"\"}",
+     "sha256": "ed0046cd17ff7fe9fb0e3f72804cb97860020f359350c1df72a343d763633bec"
+    },
+    {
+     "archivo": "analysis/s50/codex/llvm-evidence.json",
+     "localizador": "callback-count-copy",
+     "cita": "{\"command\": [\"llvm-objdump\", \"-D\", \"--triple=thumbv7-none-eabi\", \"--adjust-vma=0x43541000\", \"--start-address=0x5b5870\", \"--stop-address=0x5b58d0\", \"/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/analysis/rea-independent/run/av-cam-view.elf\"], \"stdout\": \"\\n/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/analysis/rea-independent/run/av-cam-view.elf:\\tfile format elf32-littlearm\\n\\nDisassembly of section .text:\\n\\n43541000 <_binary_input_av_cam_bin_start>:\\n43af6870: b570         \\tpush\\t{r4, r5, r6, lr}\\n43af6872: 2500         \\tmovs\\tr5, #0x0\\n43af6874: 462c         \\tmov\\tr4, r5\\n43af6876: e005         \\tb\\t0x43af6884 <_binary_input_av_cam_bin_start+0x5b5884> @ imm = #0xa\\n43af6878: 880e         \\tldrh\\tr6, [r1]\\n43af687a: 3501         \\tadds\\tr5, #0x1\\n43af687c: 429e         \\tcmp\\tr6, r3\\n43af687e: bf08         \\tit\\teq\\n43af6880: 460c         \\tmoveq\\tr4, r1\\n43af6882: 310c         \\tadds\\tr1, #0xc\\n43af6884: 4295         \\tcmp\\tr5, r2\\n43af6886: dbf7         \\tblt\\t0x43af6878 <_binary_input_av_cam_bin_start+0x5b5878> @ imm = #-0x12\\n43af6888: b914         \\tcbnz\\tr4, 0x43af6890 <_binary_input_av_cam_bin_start+0x5b5890> @ imm = #0x4\\n43af688a: f8c0 4128    \\tstr.w\\tr4, [r0, #0x128]\\n43af688e: e003         \\tb\\t0x43af6898 <_binary_input_av_cam_bin_start+0x5b5898> @ imm = #0x6\\n43af6890: 6863         \\tldr\\tr3, [r4, #0x4]\\n43af6892: b93b         \\tcbnz\\tr3, 0x43af68a4 <_binary_input_av_cam_bin_start+0x5b58a4> @ imm = #0xe\\n43af6894: f8c0 3128    \\tstr.w\\tr3, [r0, #0x128]\\n43af6898: f500 7094    \\tadd.w\\tr0, r0, #0x128\\n43af689c: e8bd 4070    \\tpop.w\\t{r4, r5, r6, lr}\\n43af68a0: f493 bbd2    \\tb.w\\t0x4378a048 <_binary_input_av_cam_bin_start+0x249048> @ imm = #-0x36c85c\\n43af68a4: f8c0 325c    \\tstr.w\\tr3, [r0, #0x25c]\\n43af68a8: 68a3         \\tldr\\tr3, [r4, #0x8]\\n43af68aa: f8c0 3260    \\tstr.w\\tr3, [r0, #0x260]\\n43af68ae: bd70         \\tpop\\t{r4, r5, r6, pc}\\n43af68b0: 2000         \\tmovs\\tr0, #0x0\\n43af68b2: b508         \\tpush\\t{r3, lr}\\n43af68b4: f4e4 f8c6    \\tbl\\t0x437daa44 <_binary_input_av_cam_bin_start+0x299a44> @ imm = #-0x31be74\\n43af68b8: 2000         \\tmovs\\tr0, #0x0\\n43af68ba: bd08         \\tpop\\t{r3, pc}\\n43af68bc: b508         \\tpush\\t{r3, lr}\\n43af68be: 2000         \\tmovs\\tr0, #0x0\\n43af68c0: 2305         \\tmovs\\tr3, #0x5\\n43af68c2: f8c1 30ac    \\tstr.w\\tr3, [r1, #0xac]\\n43af68c6: f4e4 f8bd    \\tbl\\t0x437daa44 <_binary_input_av_cam_bin_start+0x299a44> @ imm = #-0x31be86\\n43af68ca: 2000         \\tmovs\\tr0, #0x0\\n43af68cc: bd08         \\tpop\\t{r3, pc}\\n43af68ce: 6e83         \\tldr\\tr3, [r0, #0x68]\\n\", \"stderr\": \"\"}",
+     "sha256": "ed0046cd17ff7fe9fb0e3f72804cb97860020f359350c1df72a343d763633bec"
+    },
+    {
+     "archivo": "analysis/s50/codex/audit-result.json",
+     "localizador": "callback_lists",
+     "cita": "[{\"key\": \"0xba\", \"slot\": \"0x43ff73d4\", \"count\": 6, \"callbacks\": [\"0x43af7543\", \"0x43af7555\", \"0x437dae1d\", \"0x43af7559\", \"0x43af758f\", \"0x43af7593\"]}, {\"key\": \"0xb7\", \"slot\": \"0x43ff7424\", \"count\": 3, \"callbacks\": [\"0x43af7733\", \"0x43af7745\", \"0x43af774d\"]}, {\"key\": \"0xb8\", \"slot\": \"0x43ff769c\", \"count\": 2, \"callbacks\": [\"0x43af8ccb\", \"0x43af8ce5\"]}, {\"key\": \"0xce\", \"slot\": \"0x43ff7414\", \"count\": 1, \"callbacks\": [\"0x437dad79\"]}]",
+     "sha256": "0b9492e97a21947d3052a87df6019ff75659ada6c4f3a22fcad6a36fedaf9abc"
+    },
+    {
+     "archivo": "docs/capture/s49-capture-config-producer.md",
+     "localizador": "19:30",
+     "cita": "   usa la tabla grande `0x2d0a4` (1065 registros, `0x429`) en `TransactionStart`.\n2. **Clave `0xce` = `S_IMAGER_CURTAINMODE`.** 223 de las 224 claves de la tabla de handlers de `av-cam.bin` en\n   `0x43ff23b0` (S47) tienen nombre en esa tabla; `0xce`→handler `0x43789709`. Prefijos: `S_` ajustar/fijar, `A_` ajuste,\n   `C_` comprobar, `G_` general (convención leída de los nombres, no de documentación).\n3. **Callbacks VD_Pre de la familia de obturador** (`analysis/s49/rows2.json`, filas de 12 B `{clave, slot, clase}`):\n   `0xce` slot `0x43ff7414`→`0x437dad79`; `0xed S_SHUT_MIN_MANU` →`0x437dadad`; `0xb7 A_NONLINEAR_ELEC_SHUT`→`0x43af7733`;\n   `0xba A_MK_SHUT_BLAG_CHK`; `0x3f/0x4d A_MK_SHUT_N/O`; `0xb5 A_MK_SHUT_DSLR`. El callback de `0xce` y el de `0xed`\n   leen el mismo par `(u16 a, u16 b)` del payload: `a≠0 → flag=1` y el valor `b` (`0xce`: `C+0x94=1, C+0x95=b&0xff`;\n   `0xed`: `C+0xa0=1, C+0x9e=b`). Los callbacks `A_*` escriben en `C+0x60` el **id del comando de ajuste activo**\n   (37 stores `str rX,[r1,#0x60]`: `0x3f,0x4d,0xb5,0xb7,0xba`…) y `0xb7` pone a 1 `C+0xbc/+0x10a/+0x114`.\n   Conclusión: `+0x1c/+0x1e` = `(habilitar, valor)` de un comando de ajuste/servicio.\n4. **Productor del paquete (userland).** `libsencore.so`: `SubsystemCommunicationCommand::TransactionStart` (`0x25fc8`)",
+     "sha256": "c26bb7e4cfc8f73f071a0d645dd0fa17ddac664da13769cc40d91b0d0527bcf3"
+    }
+   ]
+  },
+  "bases-t": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "S329 corrige las bases T2/T3 de S317/S326 a 43bbf2e8/43bbef30: ADD PC real y lectura de campo se habían confundido, diferencia 4 B. La comprobación estática de tablas pasa. Esto no reafirma el negativo universal sobre tiempos ni el único consumidor/22 B sin leer, limitado después por S336.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/s329-mode-timing-tables.md",
+     "localizador": "52:65",
+     "cita": "## 3. Corrección: las bases de S317/S326 están 4 B altas\n\nS317 tomó como `add` las direcciones `0x436f61c2` (T2) y `0x436f61d6` (T3), que son las **lecturas de campo** (`ldrh r1,[r3,#0x18]`), no los `add r3,pc` reales (`0x436f61be` y `0x436f61d2`). Resultado:\n\n| Tabla | Base del código | Base de S317 | Índices con la base del código | Índices con la de S317 |\n|---|---|---|---|---|\n| T1 | `0x43bbeb70` | `0x43bbeb70` | `{0}` | `{0}` |\n| T2 | `0x43bbf2e8` | `0x43bbf2ec` | `{0}` | `{0, 0x3ff}` |\n| T3 | `0x43bbef30` | `0x43bbef34` | `{0, 1}` | `{0xf0, 0x1f8, 0xfff}` |\n\nCon las bases de S317 el «índice» cae fuera de las 2 filas de B; con las del código encaja exactamente y **T3→T2 = 0x3b8 = 34 × 0x1c**. Entre T1 y T3 quedan 8 B (`06 00 00 00 05 00 00 00`).\n\nEl sesgo se recalibró contra cadenas conocidas: de los pares `ldr rD,[pc,#imm]` + `add rD,pc`, **10 370** destinos son el inicio de una cadena solo con `PC=(add+4)` bit0 a 0 y **6** solo con `PC` alineado a 4 → se mantiene el sesgo vigente del carril. (Los 6 casos son `add` de otro idioma, p. ej. `ADR`; se listan en el JSON.)\n",
+     "sha256": "773d615c28021b522cf2fdecb6917b889efc70993c9e3cb138e62b49dcfe8602"
+    },
+    {
+     "archivo": "analysis/s329_mode_timing_tables/verify_mode_timing.py",
+     "localizador": "1:25",
+     "cita": "#!/usr/bin/env python3\n\"\"\"S329 - verificacion independiente de `mode_timing.json` contra los bytes.\n\nRe-decodifica TODO desde los blobs con rutas de codigo distintas a las del\n``build``: el literal PIC se obtiene del operando de capstone (no enmascarando\nel halfword) y el sesgo del ``add rX,pc`` se aplica como ``(addr+4)&~1``.\n\nUso: ``.venv/bin/python analysis/s329_mode_timing_tables/verify_mode_timing.py``\nDevuelve 0 si todas las comprobaciones pasan.\n\"\"\"\nfrom __future__ import annotations\n\nimport hashlib\nimport json\nimport struct\nfrom pathlib import Path\nfrom typing import Any\n\nfrom capstone import CS_ARCH_ARM, CS_MODE_THUMB, Cs\n\nBASE = 0x43541000\nHERE = Path(__file__).resolve().parent\nROOT = HERE.parents[1]\nA7S = ROOT / (\"firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/\"\n              \"0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin\")",
+     "sha256": "477d4b034dc952eb92b71611090432630f6461fff5789df47dc28493430a93d0"
+    },
+    {
+     "archivo": "docs/capture/s317-mode-tables.md",
+     "localizador": "1:14",
+     "cita": "# S317 — `obj+0x2b4` indexa tres tablas de `0x1c` B por modo (carril B)\n\n**Resultado en una línea:** el campo `obj+0x2b4` de la clase de S316 se usa como índice\n(`stride 0x1c`) en **tres tablas paralelas** (`T1 0x43bbeb70`, `T2 0x43bbf2ec`,\n`T3 0x43bbef34`); de cada registro se leen `u32 @+0x14` y `u16 @+0x18` y se aplican a tres\ndestinos del objeto (`+0x16`, `+0x2e`, `+0xa5`). `T3→T2` dista exactamente **34 filas**.\nLa base se calcula con `PC = (add + 4)` con bit0 a 0 (no alineado a 4); es la lectura\ncorrecta, confirmada por REA/Ghidra (`DAT+0x436f61ae/0x436f61c2/0x436f61d6`) y por las tablas\nde enum 1/2 que consumen `0x43ad9162`/`0x436f2350`. La entrada es **exclusiva A7S**.\n\nVerificado por bytes: `analysis/s317_mode_tables/` (39 comprobaciones; 6 tests).\n\n---\n",
+     "sha256": "4bedd4aa6492c27df764e8657fc6ebbf717e2a53fd158a8431cb2dfd50d76cf2"
+    },
+    {
+     "archivo": "docs/capture/s326-t2-fingerprint.md",
+     "localizador": "1:14",
+     "cita": "# S326 — La tabla de «34 columnas» de S202/S204 es T2 (34 filas): huella de `0x4e`/`0x4f`\n\nTrigésimo sexta sesión del carril B. Cierra la búsqueda abierta por S324: la tabla de\n«34 columnas» que S202/S204 midieron **existe**, pero es una tabla de **34 filas** (una\npor modo), no de 34 columnas: es **T2** (`0x43bbf2ec`, stride `0x1c`), ya medida por S317\ncomo una de las tres tablas paralelas indexadas por `obj+0x2b4`.\n\n**Resultado:** en T2, `0x4c`/`0x4d` llevan `+0x14 = 0x3ff` y `+0x18 = 2`; `0x4e` lleva\n`+0x14 = 0` (un solo campo de diferencia) y `0x4f` lleva `+0x14 = 0` **y** `+0x18 = 3`.\nSe reproducen las igualdades exactas `0x4e ≡ 0x51`, `0x4f ≡ 0x50` y `0x4c ≡ 0x4d`. Pero\n**ninguno de los dos campos es exclusivo del modo silent**: `0x3ff` agrupa\n`{0x13, 0x1f, 0x4c, 0x4d}` y `3` agrupa `{0x0b, 0x35, 0x4f, 0x50}`.\n\n---",
+     "sha256": "8592e2ae677b3937cba6a1347da6681e067234cb8ca0fed2d878edebe7d30f58"
+    }
+   ]
+  },
+  "firma-t": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "S331 corrige la inferencia solo-fila-0 de S317/S327/S330: ambos callers pasan posición en r1 y flag obj+2b4 en r2; el consumidor preserva r1 y reutiliza r2 como stride tras el log. consumer_signature y tests contrastan instrucciones. El singleton sigue válido; ejecución y efecto físico siguen pendientes.",
+   "evidencias": [
+    {
+     "archivo": "analysis/s331_consumer_signature/consumer_signature.json",
+     "localizador": "consumer",
+     "cita": "{\"address\": \"0x436f618c\", \"disasm\": [{\"address\": \"0x436f618c\", \"bytes\": \"ff29\", \"insn\": \"cmp r1, #0xff\"}, {\"address\": \"0x436f618e\", \"bytes\": \"70b5\", \"insn\": \"push {r4, r5, r6, lr}\"}, {\"address\": \"0x436f6190\", \"bytes\": \"0446\", \"insn\": \"mov r4, r0\"}, {\"address\": \"0x436f6192\", \"bytes\": \"0d46\", \"insn\": \"mov r5, r1\"}, {\"address\": \"0x436f6194\", \"bytes\": \"27d0\", \"insn\": \"beq #0x436f61e6\"}, {\"address\": \"0x436f6196\", \"bytes\": \"012a\", \"insn\": \"cmp r2, #1\"}, {\"address\": \"0x436f6198\", \"bytes\": \"03d1\", \"insn\": \"bne #0x436f61a2\"}, {\"address\": \"0x436f619a\", \"bytes\": \"1348\", \"insn\": \"ldr r0, [pc, #0x4c]\"}, {\"address\": \"0x436f619c\", \"bytes\": \"7844\", \"insn\": \"add r0, pc\"}, {\"address\": \"0x436f619e\", \"bytes\": \"00f2b9ff\", \"insn\": \"bl #0x438f7114\"}, {\"address\": \"0x436f61a2\", \"bytes\": \"124b\", \"insn\": \"ldr r3, [pc, #0x48]\"}, {\"address\": \"0x436f61a4\", \"bytes\": \"1c22\", \"insn\": \"movs r2, #0x1c\"}, {\"address\": \"0x436f61a6\", \"bytes\": \"5543\", \"insn\": \"muls r5, r2, r5\"}, {\"address\": \"0x436f61a8\", \"bytes\": \"2046\", \"insn\": \"mov r0, r4\"}, {\"address\": \"0x436f61aa\", \"bytes\": \"7b44\", \"insn\": \"add r3, pc\"}], \"row_index_source\": \"r1\", \"mov_r5_r1\": true, \"stride_muls\": \"muls r5, r2, r5\", \"flag_cmp\": \"cmp r2, #1\", \"flag_effect\": \"si flag==1 llama a 0x438f7114 (log)\", \"signature\": \"0x436f618c(obj, posicion_modo, flag)\"}",
+     "sha256": "c3332de7e6b133910da431b75115ade5ac953396e4923d617ea8f0bcb0163a70"
+    },
+    {
+     "archivo": "docs/capture/s331-consumer-signature.md",
+     "localizador": "45:75",
+     "cita": "\n```\n0x436f3bc0: bl 0x43ada284       ; índice del código de modo en u32[34]\n0x436f3bc6: mov r1, r0\n0x436f3bc8: strb.w r0, [r4, #0x1b8]\n...\n0x436f3bce: ldr r3, [r4]\n0x436f3bd2: ldr.w r3, [r3, #0xa0]   ; slot 40 = 0x436f3928 (matriz de registros)\n0x436f3bd6: blx r3\n0x436f3bd8: mov r0, r5              ; r5 = obj+0x1c\n0x436f3bda: ldrb.w r1, [r4, #0x1b8] ; r1 = posición del modo\n0x436f3bde: ldr.w r2, [r4, #0x2b4]  ; r2 = flag\n0x436f3be2: bl 0x436f618c\n```\n\nSegundo llamador (`0x436f4472`):\n\n```\n0x436f4472: bl 0x43ada284\n0x436f4476: ldr.w r2, [r4, #0x2b4]  ; flag\n0x436f447a: mov r6, r0              ; índice\n0x436f447e: mov r1, r6\n0x436f4480: bl 0x436f618c\n0x436f4486: mov r1, r6\n0x436f4488: ldr.w r2, [r4, #0x2b4]\n0x436f448c: bl 0x436f61f8           ; hermano\n0x436f4492: ldr.w r2, [r4, #0x2b4]\n0x436f4498: bl 0x436f60ac           ; hermano\n```\n\nLos tres aplicadores comparten `(obj, posición, flag)` y se invocan seguidos al cambiar de modo.",
+     "sha256": "01354aab8bffd12983617e54e44d03e28fa5496adb06eb4b5190c441f078d901"
+    },
+    {
+     "archivo": "docs/capture/s330-ctor-instances.md",
+     "localizador": "1:18",
+     "cita": "> **Corrección (S331)**: `obj+0x2b4` **no** es el índice de fila de T1/T2/T3. Los dos llamadores pasan como `r1` la **posición del modo** (índice de la búsqueda lineal `0x43ada284`) y `obj+0x2b4` como `r2`, que solo decide una llamada de log. Por tanto el veredicto «solo se aplica la fila 0» de esta sesión queda **REFUTADO**; el hallazgo del singleton (flag = 0) sigue vigente. Ver [`docs/capture/s331-consumer-signature.md`](s331-consumer-signature.md).\n\n# S330 — Instancias del constructor `0x436f3fc0` (carril B)\n\n22-10-2026. Carril B. Sesión S330. **Solo lectura estática de los blobs; sin firmware en ejecución, sin cámara, sin flasheo.**\n\n## Pregunta\n\n¿Existe alguna instancia del constructor paramétrico `0x436f3fc0(obj, idx)` con `idx != 0`? Si no existe, las filas 1..33 de T1/T2/T3 no son alcanzables por código estático y la correspondencia fila↔modo queda sin soporte.\n\n## Veredicto\n\n> **Estado**: las filas 2 y 3 de la tabla de abajo quedan refutadas por S331; se conservan como registro del error y de la evidencia que lo corrigió.\n\n| Afirmación | Clasificación | Evidencia |\n|---|---|---|\n| Solo hay **un** `BL` al constructor en todo el blob, en `0x436f2a8a` | **VERIFICADO** | Barrido de todos los `BL`/`BLX` (`0xF000…`/`0xD000…`): 1 coincidencia; re-verificado con capstone |\n| El `idx` de esa llamada es una **constante 0** (`movs r1,#0` en `0x436f2a7e`) | **VERIFICADO** | Desensamblado del bloque |",
+     "sha256": "1315147990043c6cb4de453369dcd964f657ac2a665f25d18c7ce9a985c399d2"
+    },
+    {
+     "archivo": "docs/capture/s327-row-index-writer.md",
+     "localizador": "1:14",
+     "cita": "# S327 — `obj+0x2b4` es el índice del constructor paramétrico, no una posición de modo\n\nTrigésimo séptima sesión del carril B. Cierra el TODO abierto por S326: ¿quién escribe\n`obj+0x2b4`, el índice con el que S317 leyó las tres tablas T1/T2/T3?\n\n**Resultado:** hay **dos** escritores y **ninguno** deriva el valor de un código de modo:\n\n1. `0x436f2d74` (`str.w r3,[r4,#0x2b4]` con `r3 = 0`): inicialización en el constructor\n   base `0x436f2d44`.\n2. `0x436f40fe` (`str.w r6,[r4,#0x2b4]`): final del **constructor paramétrico**\n   `0x436f3fc0(obj, idx)`, donde `r6 = r1` desde la entrada (`0x436f3fc8`).\n\nSu único llamador estático (`0x436f2a8a`) hace `movs r1,#0` → **idx = 0**. En la única\ninstancia visible, `obj+0x2b4 = 0`, de modo que T1/T2/T3 se leen en la **fila 0**.",
+     "sha256": "cc893aaa347c9ce38a9110431ef255ca4ecfcd9ffe8bdee96090423a0ea49531"
+    }
+   ]
+  },
+  "lectores-t": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "S336 limita el negativo de S331/S334: otros consumidores sí leen/copían campos distintos de +14/+18. El mapa y las pruebas estáticas enumeran cinco consumidores de campos; los 22 B sin leer solo describen 436f618c. No se prueba la semántica física de esos campos.",
+   "evidencias": [
+    {
+     "archivo": "analysis/s336_table_consumers/table_consumers.json",
+     "localizador": "corrections",
+     "cita": "[\"S331 y S334 afirmaron que 22 B de cada fila no los lee nadie; es cierto solo para 0x436f618c. 0x436f5f7c copia +0x00..+0x13 y 0x436f6240 lee +4/+5/+6.\", \"El 'codigo de operacion' w0 no solo se compara con 1/2/3: tambien se pasa a 0x43ada4d8 y se suman los de T1 y T2 (0x436f605c).\"]",
+     "sha256": "7be085c88763bd958b910a5b4a6a8e333c506bb6521b697a812dc29bd7201b4b"
+    },
+    {
+     "archivo": "docs/capture/s336-table-consumers.md",
+     "localizador": "1:35",
+     "cita": "# S336 — Mapa completo de consumidores de T1/T2/T3 (carril B)\n\n22-10-2026. Carril B. Sesión S336. **Solo lectura estática; sin firmware en ejecución, sin cámara, sin flasheo.**\n\n## Pregunta\n\nS331/S334 afirmaron que de cada fila de 28 B el código solo lee `+0x14` y `+0x18` (22 B sin leer). ¿Es cierto para todas las tablas o solo para un consumidor?\n\n## Veredicto\n\n| Afirmación | Clasificación | Evidencia |\n|---|---|---|\n| Las cuatro tablas (T1, T2, T3 y B) tienen **13 referencias PIC** en **7 funciones** | **VERIFICADO** | Barrido exhaustivo `ldr rD,[pc,#imm]` + `add rD,pc` → base |\n| **Cinco** de esas funciones leen campos de la **fila**: `op_code_w0`, `copy_row_patch`, `sum_w0`, `index_and_mask`, `row_selectors_entry` | **VERIFICADO** | Reparto 2/3/2/3/1 referencias |\n| «Solo `+0x14` y `+0x18`» vale **únicamente** para `0x436f618c` | **VERIFICADO** | `0x436f5f7c` copia `+0x00..+0x13`; `0x436f6240` lee `+4/+5/+6` |\n| `0x436f5f7c` copia 20 B de la fila, parchea `+5`/`+7` si `[estado+0x18]&1` y los pasa a `0x43ada310` | **VERIFICADO** | `ldm.w lr!,{r0-r3}` + `ldr.w r3,[lr]`; `ldrb r3,[r7,#0x18]`; `strb.w r3,[sp,#0xb]`; `bl 0x43ada310` |\n| `0x436f6240` usa los bytes `+4/+5/+6` de la fila para elegir un puntero de una de dos tablas | **VERIFICADO** | `ldrb r3,[r0,#5]`, `ldrb r2,[r0,#6]`, `ldrb r2,[r0,#4]`, `ldr.w r0,[r3,r2,lsl#2]` |\n| `0x436f605c` suma `0x43ada4d8(w0 de T1) + 0x43ada4d8(w0 de T2)` | **VERIFICADO** | Dos `ldr r1,[r3,r5]`, dos `bl 0x43ada4d8`, `adds r0,r0,r6`, `uxth` |\n| El **significado** de `w0` y de `+4/+5/+6` | **NO_VERIFICADO** | `0x43ada4d8 → 0x436f74c0` sin resolver |\n\n**S51 no cambia (A = NO, B = NO, C = NO).**\n\n## 1. Las 13 referencias\n\n| Tabla | Sitio (`ldr`) | Función | Campos |\n|---|---|---|---|\n| T1 | `0x436f5ebe` | `op_code_w0` | `w0` |\n| T2 | `0x436f5ee8` | `op_code_w0` | `w0` |\n| B | `0x436f5f48` | `mask_helper_1` | — (descriptor) |\n| T1 | `0x436f5f98` | `copy_row_patch` | `+0x00..+0x13` |\n| T2 | `0x436f5fd6` | `copy_row_patch` | `+0x00..+0x13` |\n| T3 | `0x436f600e` | `copy_row_patch` | `+0x00..+0x13` |\n| T1 | `0x436f6072` | `sum_w0` | `w0` |\n| T2 | `0x436f6084` | `sum_w0` | `w0` |\n| B | `0x436f6158` | `mask_helper_3` | — (descriptor) |",
+     "sha256": "b803c21acd2098fcc4d7e6c23690ce56ad20cb94c940bab2b782ba687a53e93a"
+    },
+    {
+     "archivo": "docs/capture/s331-consumer-signature.md",
+     "localizador": "1:22",
+     "cita": "# S331 — La fila de T1/T2/T3 es la posición del modo (corrige S317/S327/S330) (carril B)\n\n22-10-2026. Carril B. Sesión S331. **Solo lectura estática; sin firmware en ejecución, sin cámara, sin flasheo.**\n\n## Por qué esta sesión\n\nS317 etiquetó `0x436f618c` como `(obj, idx, modo)`; S327 y S330 leyeron `obj+0x2b4` como **índice de fila** de T1/T2/T3 y concluyeron que solo se aplicaba la fila 0. Al revisar los **dos llamadores** con seguimiento de registros, la firma real es otra.\n\n## Veredicto\n\n| Afirmación | Clasificación | Evidencia |\n|---|---|---|\n| La fila de T1/T2/T3 la elige **r1 = posición del modo** (0..33) en `0x43fee370` | **VERIFICADO** | `mov r5,r1` + `muls r5,r2,r5` (r2=`0x1c`) en el consumidor; ambos llamadores pasan el índice de la búsqueda lineal |\n| `obj+0x2b4` es un **flag de log**, no el índice de fila | **VERIFICADO** | Es `r2`; el consumidor hace `cmp r2,#1` y solo entonces llama a `0x438f7114`; después reutiliza `r2` como stride |\n| `0x436f618c` y sus hermanos `0x436f61f8`/`0x436f60ac` comparten firma `(obj, posición, flag)` | **VERIFICADO** | Mismo prólogo `cmp r1,#0xff` + `mov r4,r0` + `mov r5/r8,r1` + `mov r6/r7,r2` |\n| La búsqueda `0x43ada284` devuelve el índice (0..n−1) o `0xff` | **VERIFICADO** | `movs r0,#0`; `adds r0,#1`; `movs r0,#0xff` al agotar |\n| **S327 queda refutado** en su lectura: el escritor de `obj+0x2b4` guarda el flag | **VERIFICADO** | Ver arriba |\n| **S330 queda refutado**: T1/T2/T3 sí se aplican por modo | **VERIFICADO** | El índice no es `obj+0x2b4` |\n| La diferencia silent en las tablas T es la **máscara de T2** (`0x3ff` → 0) | **VERIFICADO** | T2 `0x4c`/`0x4d` mask `0x3ff`; `0x4e`/`0x4f` mask 0; T1 y T3 idénticas |\n| Que la máscara seleccione campos de un mensaje P2S | **INFERENCIA** | Los descriptores B solo dan offsets dentro de `0x43dc02e0` |\n\n**S51 no cambia (A = NO, B = NO, C = NO).**",
+     "sha256": "01354aab8bffd12983617e54e44d03e28fa5496adb06eb4b5190c441f078d901"
+    },
+    {
+     "archivo": "docs/capture/s334-pair-dataflow.md",
+     "localizador": "1:20",
+     "cita": "# S334 — Los 12 pares se colapsan en máscaras `u16` (carril B)\n\n22-10-2026. Carril B. Sesión S334. **Solo lectura estática; sin firmware en ejecución, sin cámara, sin flasheo.**\n\n## Pregunta\n\nS331 dejó tres bloques de 12 pares `(flag, byte)` en `obj+0x16`, `obj+0x2e` y `obj+0xa5`. ¿Qué los consume y qué representan?\n\n## Veredicto\n\n| Afirmación | Clasificación | Evidencia |\n|---|---|---|\n| El segundo byte del par **no es un offset de estado**: es un **índice de bit** | **VERIFICADO** | `0x43ada370`: `ldrb r4,[r1,r2]` (flag), `ldrb r4,[r4,#1]`, `lsls.w r4, r5(=1), r4`, `orrs`, `uxth` |\n| Los 12 pares se **colapsan en una máscara `u16`** | **VERIFICADO** | Bucle `r2 = 0,2,…,0x16` (`cmp r2,#0x18`); resultado en `obj+0x68` (`strh.w r0,[r3,#0x68]`) |\n| Variante con destino: `0x43ada402(obj, pares, dst, op)` guarda la máscara en `[dst]` | **VERIFICADO** | `strh r5,[r2]` y tail `0x436f822c` |\n| `0x436f61f8` colapsa `obj+0x16 → obj+0x68` y `obj+0xa5 → obj+0xf8` (op 1) | **VERIFICADO** | `add.w r1,r4,#0x16` + `bl 0x43ada370`; `#0xa5`/`#0xf8`/`r3=1` + `b 0x43ada402` |\n| `0x436f60ac` aplica la máscara de `obj+0x68` con op 0 | **VERIFICADO** | `add.w r1,r4,#0x68`, `movs r2,#0`, `bl 0x436f81b4` |\n| El `w0` de T1/T2 es un **código de operación** (T1: 0/1, T2: 2/3) | **VERIFICADO** | `0x436f5eac`: `muls r2,r5,#0x1c`, `ldr r2,[r3,r2]`, `cmp r2,#1` / `cmp r1,#2` / `cmp r1,#3` |\n| `0x436f822c` aplica la máscara (lectura, `~valor ^ máscara`, escritura) | **VERIFICADO (forma)** | `bl 0x436f82b0` / `0x436f8314`, `mvns`, `eors`, `uxth`, `bl 0x436f82a0` |\n| Qué hay detrás de `0x436f8290/82a0/82d0/82e8/8300/8314/8324` (¿MMIO? ¿P2S?) | **NO_VERIFICADO** | No resuelto en esta sesión |",
+     "sha256": "55566b0ecf932c6c0f26d936ecb06ed01004ba8643e05c76f68c1c1cb327f141"
+    }
+   ]
+  },
+  "odl": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "S342 supera la búsqueda literal de S337 y el pendiente nº4 de S341: dos consumidores PIC en init ODL, no cero usuarios. Artefacto y pruebas contrastan bases, tablas y loops. Se mantiene que no es tabla de tiempos; productor runtime/semántica no se cierra.",
+   "evidencias": [
+    {
+     "archivo": "analysis/s342_fef404_consumers/fef404_consumers.json",
+     "localizador": "verdicts",
+     "cita": "{\"is_timing_table\": false, \"has_static_consumers\": true, \"consumer_count_per_model\": 2, \"loop_iterations_equal_entry_count\": true, \"indexed_by_drive_mode\": false, \"written_at_runtime_in_image\": false, \"subsystem\": \"Camera::Lens::ODL (INFERENCIA ALTA)\", \"s337_literal_negative\": \"correcto pero incompleto (PIC por add pc)\", \"s329_negative\": \"se mantiene\"}",
+     "sha256": "58e326cb183bfb1e1f09f0641b39b22be111d2205e09cd690d2def9c4b53bd36"
+    },
+    {
+     "archivo": "docs/capture/s342-fef404-consumers.md",
+     "localizador": "1:35",
+     "cita": "# S342 — `0x43fef404` sí tiene consumidores: es la tabla de ids de `Camera::Lens::ODL`\n\n22-10-2026. Carril B. Sesión S342. **Solo lectura estática; sin firmware en ejecución, sin cámara, sin flasheo.**\n\n## Pregunta\n\nS337 cerró `0x43fef404` con un negativo **acotado a literales absolutos** («0 referencias literales»). S341 dejó abierta la pregunta «consumidor de `0x43fef404`». ¿Existe un consumidor que llegue por **puntero calculado** (base PIC `ldr rX,[pc,#imm]` + `add rX,pc`)?\n\n## Veredicto\n\n| Afirmación | Clasificación | Evidencia |\n|---|---|---|\n| `0x43fef404` es una tabla de **69** entradas de 4 B `{u16 id, u16 0x000d}` que termina en `0x43fef518` | **VERIFICADO** | 69 pares; segundo campo `0x000d` en las 69 |\n| Tiene **dos** consumidores estáticos por base PIC: `0x437056f8`/`0x437056fc` y `0x43705754`/`0x43705756` | **VERIFICADO** | base calculada `0x43fef404` en ambos; 0 literales absolutos (S337 se mantiene para literales) |\n| Los dos consumidores iteran **exactamente 69** veces (`cmp r7,#0x45`; `cmp.w r5,#0x114` con paso 4) | **VERIFICADO** | `0x43705724` / `0x4370576a` |\n| Va acompañada de un array de **69 punteros** en `0x43fef520` (slot GOT `0x44028c78`) | **VERIFICADO** | valor del slot y 69 dwords; sin base PIC directa al array |\n| Los 69 punteros y el array de 256 entradas anterior apuntan a una región **`.bss`** de 2,47 MB a cero en la imagen | **VERIFICADO** | run de ceros `0x43d58231..0x43fb2ba0` |\n| Los consumidores se invocan desde el init de **`Camera::Lens::ODL`** | **VERIFICADO** (llamadores + cadenas) | `bl` en `0x4373d0b4`/`0x4373d2f2`, cadenas `Camera::Lens::ODL…`, `Camera::Lens::Initialize(UPM_BOOT_FACTOR*)` |\n| La tabla es un registro de **ids de datos de aberración del objetivo** (id → buffer) | **INFERENCIA (alta)** | ids + punteros a `.bss` + módulo ODL; no hay símbolo que lo nombre |\n| Es una tabla de tiempos | **NO** (refuta el candidato de S329) | sin valores temporales, sin índice por modo, sin escrituras |\n| Significado del campo `0x000d` y de cada id | **NO_VERIFICADO** | constante 13 en las 69 entradas; sin consumidor que lo interprete |\n\n**S51 no cambia (A = NO, B = NO, C = NO).**\n\n## Detalle\n\n### 1. La tabla y su vecindario (A7S fw3.20)\n\n```\n43fef004  ef03e943 22c6f943 22c6f943 22c6f943   <- array de 256 punteros (empieza aquí)\n...\n43fef3f0  22c6f943 22c6f943 22c6f943 22c6f943\n43fef400  22c6f943 46000d00 4e000d00 0f000d00   <- fin del array + tabla {id,0x000d}\n43fef410  2e000d00 2f000d00 31000d00 14000d00\n...",
+     "sha256": "c13f9103cf25aa37475a0c78dca6642f95faf0d8be4d367152d24e9294c9e7c1"
+    },
+    {
+     "archivo": "docs/capture/s341-synthesis-b2.md",
+     "localizador": "55:80",
+     "cita": "\n| Pregunta | Estado | Qué haría falta |\n|---|---|---|\n| Qué mide cada canal `0xf3122200/2300/3200/3300`, `0xfc0a3100/4100` | NO_VERIFICADO | datasheet del SoC o traza de sus valores en runtime |\n| Qué bloque es `0xf292b000..8` | NO_VERIFICADO | datasheet/símbolos; solo la capa de máscaras lo usa |\n| Semántica física de las máscaras (bits 0..11 + bit 12) | NO_VERIFICADO | datasheet del DFE/CISIF |\n| Efecto real del cambio de máscara T2 en los modos silent | NO_VERIFICADO | ejecución/traza (prohibida en este proyecto sin autorización) |\n| Consumidor indirecto de `0x43fef404` | NO_VERIFICADO | rastreo de punteros `0x43f9c6xx` |\n\n## Límites\n\n- Todo el carril es estático: sin firmware en ejecución, sin cámara, sin flasheo.\n- Las identificaciones DFE/CISIF son INFERENCIA ALTA (mapa Ghidra del repo + S56-B + cadenas), no datasheet.\n- S51 (A/B/C) no cambia: nada de lo medido demuestra obturador electrónico a resolución completa en la A6000.\n\n## Reproducción\n\n```bash\n.venv/bin/python analysis/s341_synthesis_b2/verify_synthesis.py   # 27 cifras\n```\n\n## Siguiente\n\nS341 deja el carril en estado publicable. Prioridades propuestas: (1) identificar los canales de `w0` con la documentación del SoC si aparece; (2) rastrear punteros `0x43f9c6xx` para `0x43fef404`; (3) comparar el efecto de las máscaras T2 entre A6000 y A7S para los modos equivalentes (`0x0b` vs `0x0b`).",
+     "sha256": "51d14998994e2805ce5b3013bd2ecf70187f9bc88725a2e742a3864c10ba2f5c"
+    },
+    {
+     "archivo": "docs/capture/s337-fef404-table.md",
+     "localizador": "1:20",
+     "cita": "# S337 — `0x43fef404` no es una tabla de tiempos (carril B)\n\n22-10-2026. Carril B. Sesión S337. **Solo lectura estática; sin firmware en ejecución, sin cámara, sin flasheo.**\n\n## Pregunta\n\nS329 marcó `0x43fef404` como el único candidato estricto del barrido (un `u16[69]` con valores 1..78 en la región de tablas de modo). ¿Es una tabla de tiempos?\n\n## Veredicto\n\n| Afirmación | Clasificación | Evidencia |\n|---|---|---|\n| `0x43fef404` es una tabla de **69 entradas de 4 B** `{u16 código, u16 0x000d}` | **VERIFICADO** | 69 pares con el segundo campo siempre `0x000d`; termina en `0x43fef518` |\n| **No** es un `u16[69]` de tiempos: la vista `u16` mezcla códigos y el valor constante `0x000d` | **VERIFICADO** | 34 apariciones de `0x000d` en la vista de 69 `u16`; el «array» de S329 cruzaba la estructura |\n| Va precedida de **169** palabras de 32 bits `0x43f9c622` (punteros a la zona `0x43f9c6xx`) | **VERIFICADO** | Ristra contigua antes de la tabla |\n| **No tiene consumidor estático**: 0 literales de `0x43fef404` en el blob | **VERIFICADO (negativo acotado)** | Búsqueda de bytes |\n| Códigos de la tabla: `0x01`..`0x64` (69 valores) | **VERIFICADO** | Campo 1 de cada entrada |\n| Que los códigos sean ids de registro (coinciden 69 entradas con las 69 filas de la matriz) | **INFERENCIA (baja)** | Coincidencia numérica; sin consumidor que lo demuestre |\n\n**S51 no cambia (A = NO, B = NO, C = NO).**",
+     "sha256": "164a1cbf4018f62d58dbfb0b31ed5893fecababd1902eb6030f9d9aed5e1742b"
+    }
+   ]
+  },
+  "contrato-recordimage": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "El informe de contrato distingue RecordImage 90b248 de RecordStill 908afc y sus parejas A7S, retira los negativos MOVW/stack y delimita los BL. Se cotejan bibliotecas originales mediante los tests de contrato. S382/S385 incorporan las advertencias. Consumidor BX/BLX, equivalencia funcional y ejecución física siguen pendientes.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/recordstill-contract-audit-2026-10-23.md",
+     "localizador": "21:43",
+     "cita": "## Contrato y cuerpo contrastados\n\n| Aspecto | A7S `0x847e1c` | A6000 `0x90b248` |\n|---|---|---|\n| Traza de entrada | ` RecordStill :` | ` RecordImage :` |\n| Nombre en diagnósticos | `RecordStill` | `RecordImage` |\n| Reserva local de stack | `0x358` (+ `0x20` guardado) | `0xb04` (+ `0x24` guardado) |\n| Entradas utilizadas | `r0`, `r1`, `r2`, `r3`, palabra en SP de entrada | objeto en `r0`, mensaje en `r1`; no usa `r2/r3` entrantes antes de redefinirlos |\n| Operación inicial | `GetParam` de `0x1001`, `0x1002`, `0x100e`, después `0x1007/0x1006` | helper `0x910e1c`; si éxito, crea Struct de `0x28` bytes y `AddParam(0x100f)` |\n| Operación posterior | conversión de fechas, metadatos, llamada `0x83c9a0` y limpieza | prepara captura/Exif y llama a su helper RecordStill en `0x90bbdc` |\n| Retorno normal | `r0=r5` en `0x8480f8`, antes del epílogo | `r0=r5` en `0x90beaa`, antes del epílogo |\n\n**Hechos de ABI:** en A7S `0x847e32: 92 46` preserva `r2` en `sl`;\n`0x847e34: 98 46` preserva `r3` en `r8`;\n`0x847e36: d7 f8 70 93` carga `sb,[r7,#0x370]`.\nComo `r7=SP_actual+8` y el marco total mide `0x378`, esa carga consume\nel quinto argumento desde el SP de entrada. Los tipos exactos de los argumentos\n3–5 siguen siendo inferencias; no se inventa una firma C++.\n\nEn A6000 `0x90b2a4: 41 f2 0f 01` es `movw r1,#0x100f`;\n`0x90b2aa` llama a `MWF::ObjMsg::AddParam` por PLT `0xe01a8`.\nLa diferencia de contratos se apoya en flujo de registros y llamadas, además de cadenas.\nEl retorno transmite un resultado de software; no demuestra persistencia física",
+     "sha256": "f1aac5de09ed7e62be1ee93b1bb824933b3794e4efd8eb38f35529ca7a046046"
+    },
+    {
+     "archivo": "docs/capture/s382-recordstill-callers.md",
+     "localizador": "1:15",
+     "cita": "# S382 — Llamadores de RecordImage (0x90b248), antigua etiqueta RecordStill::Execute\n\n## 1. Resumen\n\n**Corrección de contrato (23-10-2026):** `0x0090b248` se identifica internamente como **RecordImage**, no se ha demostrado el nombre C++ `RecordStill::Execute`. Ver [comparación completa de contratos y bytes](recordstill-contract-audit-2026-10-23.md). `0x7484dc` y `0x755af8` eran falsos llamadores por recalcular el destino absoluto que entrega Capstone.\n\n| Llamador (BL) | Dirección | Notas |\n|---|---|---|\n| BLX a PLT `0x000e16b4` | `0x007484dc` | Retirado: no llama a `RecordStill::Execute` |\n\nAdemás, se encontraron **dos sitios dentro de funciones que contienen `bl #0x90b248`**:\n\n| Dirección | Función contenedora | Llamador de la función contenedora |\n|---|---|---|\n| `0x0090de2e` | `0x90d7e8..0x90e148` (unwind + prólogo) | 25 punteros Thumb al contenedor; consumidor indirecto NO_VERIFICADO |",
+     "sha256": "86c691b1b978cd7a320ac66b0616017a9561e24fdc7a107a59861097738e4176"
+    },
+    {
+     "archivo": "docs/capture/s385-libobj-a6000-vs-a7s-diff.md",
+     "localizador": "66:80",
+     "cita": "## 5. Contratos distintos: RecordStill y RecordImage\n\n**Corrección 23-10-2026:** se rechaza comparar A7S `0x847e1c` con A6000 `0x90b248` como el mismo método. El segundo se identifica internamente como **RecordImage**; la etiqueta C++ histórica `RecordStill::Execute` no está demostrada. El [informe de contrato](recordstill-contract-audit-2026-10-23.md) detalla bytes, referencias, límites, ABI y llamadores.\n\n| Contexto | A6000 fw3.21 | A7S fw3.20 |\n|---|---|---|\n| RecordStill, cinco entradas ABI | `0x908afc..0x908e2c` | `0x847e1c..0x84814c` |\n| RecordImage, objeto y mensaje | `0x90b248..0x90c088` | `0x84a568..0x84b3a8` |\n| `AddParam(0x100f)` en RecordImage | MOVW `0x90b2a4`, llamada `0x90b2aa` | MOVW `0x84a5c4`, llamada `0x84a5ca` |\n| RecordImage llama a RecordStill | `0x90bbdc → 0x908afc` | `0x84aefc → 0x847e1c` |\n\nLas parejas se apoyan en cadenas PC-relativas, ABI, cuerpos y relación llamador/callee. RecordStill tiene 260 instrucciones de igual disposición; las diferencias de código se limitan a 43 llamadas relocalizadas y seis números de diagnóstico (+9). Esto no demuestra equivalencia de todos los callees ni del comportamiento físico.\n\nSe retiran los negativos históricos «cero MOVW 0x100f» y «cero prólogos de stack 0xb00» en A7S: `0x84a568` y `0x84a5c4` son contraejemplos verificados con LLVM y bytes. Los intervalos unwind contienen también pools; A7S `0x848104..0x84814c` es pool tras el retorno, no código.\n",
+     "sha256": "4156217e53d0d321f8e5696f34cf6be259f9ddeb5437f1bb522030c7c8d553e5"
+    },
+    {
+     "archivo": "analysis/s380_libobj_map/tests/test_recordimage_contract.py",
+     "localizador": "1:40",
+     "cita": "\"\"\"Regresiones de identidad, ABI, límites y punteros; solo lectura del firmware.\"\"\"\n\nimport sys\nfrom pathlib import Path\n\nimport pytest\n\nsys.path.insert(0, str(Path(__file__).resolve().parents[1]))\nfrom recordimage_audit import LIBRARIES, Elf32\n\n\n@pytest.fixture(scope=\"module\", params=LIBRARIES)\ndef image(request):\n    return request.param, Elf32(LIBRARIES[request.param])\n\n\ndef test_unwind_intervals_and_real_entries(image):\n    model, elf = image\n    if model == \"A7S\":\n        assert elf.unwind_span(0x84803A) == (0x847E1C, 0x84814C)\n        assert elf.read(0x847E1C, 8).hex() == \"2de9f047adf5567d\"\n        assert elf.read(0x848100, 4).hex() == \"bde8f087\"\n        assert elf.read(0x84814C, 4).hex() == \"2de9f041\"\n    else:\n        assert elf.unwind_span(0x90B248) == (0x90B248, 0x90C088)\n        assert elf.unwind_span(0x90DE2E) == (0x90D7E8, 0x90E148)\n        assert elf.unwind_span(0x91634E) == (0x9162D0, 0x91647C)\n        assert elf.read(0x91631A, 13).hex() == \"076d121d6d27326d6d3d6d4f61\"\n        assert elf.instruction(0x916316).mnemonic == \"tbb\"\n\n\ndef test_identity_from_resolved_pc_relative_strings(image):\n    model, elf = image\n    if model == \"A7S\":\n        assert elf.pc_string(0x847E26, 0x847E30) == (0xCB6F2B, \" RecordStill :\")\n        for load, add in [(0x847F4E, 0x847F52), (0x847F60, 0x847F64),\n                          (0x847FD6, 0x847FDA), (0x847FE8, 0x847FEC),\n                          (0x848018, 0x84801C), (0x84803A, 0x84803E)]:\n            assert elf.pc_string(load, add) == (0xCB7BBB, \"RecordStill\")\n    else:",
+     "sha256": "0572820f28e788ada2fa442235575c68c0c42fb4e75654228d7fd07cf4d9f8ce"
+    }
+   ]
+  },
+  "cola": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "Se acepta la corrección acotada de S384: encodings retirados y cargas LDR desde pools .text recuperadas. No equivale a cerrar la cola: arranque del descriptor, callback Linux y enlace Linux-LIRO siguen pendientes. Las pruebas estáticas S380 contrastan instrucciones, pools y flujo.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/queue-40193-flow-2026-10-23.md",
+     "localizador": "1:30",
+     "cita": "# Cola 0x40193: construcción, transporte, consumo e instalación\n\n23-10-2026. **VERIFICADO:** corrige [S384](s384-queue-id-0x40193-search.md): los nueve\nliterales A6000 de `.text` tienen cargas LDR; no son falsos positivos por\ndesensamblar sus bytes como instrucciones. El análisis estático no está agotado.\nDirecciones libObj: VA ELF, sin el sesgo REA/Ghidra `+0x10000`.\nav-cam: base `0x43541000`. Sin ejecutar firmware ni usar cámara.\n\n## Construcción y pools\n\n**VERIFICADO contra instrucciones y bytes:** `0x40193` se materializa completo\ndesde literal pool; no necesita una pareja MOVW/MOVT. Encodings correctos\nThumb para r0: `40 f2 93 10` / `c0 f2 04 00`; ARM:\n`93 01 00 e3` / `04 00 40 e3`. Mitad alta **4**, no `0x40`.\nLos 60/44 candidatos Thumb MOVW #0x193 A6000/A7S no son construcciones del ID.\n\n| A6000: LDR a r1 | Pool con `0x40193` | Uso siguiente |\n|---|---|---|\n| `0xadaf84` | `0xadb084` | `0xa1b198`: guarda r1 en objeto+4 |\n| `0xaf929e`, `0xaf9caa` | `0xaf92d0`, `0xaf9ce0` | `0xaf5104 → 0xaf503c` |\n| `0xaf9312`, `0xaf9d6a` | `0xaf9344`, `0xaf9da0` | `0xaf52ac` |\n| `0xaf9382`, `0xaf9d0a` | `0xaf93b4`, `0xaf9d40` | `0xaf51d8` |\n| `0xaf93f2`, `0xaf9dca` | `0xaf9424`, `0xaf9e00` | `0xaf5380` |\n\n**9 palabras y 9 cargas candidatas A6000**, comprobadas con Capstone.\nA7S: 9 cargas a pools en `.text`: `0xa0f2ae`, `0xa2a576`, `0xa2a5d6`,\n`0xa2a636`, `0xa2a696`, `0xa30f42`, `0xa30fb6`, `0xa31026`, `0xa31096`.\nEl censo A7S de palabras en segmentos con bytes devuelve 11: las otras dos\nno se clasifican como cargas ni se descartan solo por su sección.\nSe mantienen los negativos acotados de S384: cero palabras del ID en",
+     "sha256": "19a8cfe9b891dda733e9d47ffdd45b7f8cbb853fd6a4f18ef55fd80563b53513"
+    },
+    {
+     "archivo": "docs/capture/s384-queue-id-0x40193-search.md",
+     "localizador": "1:28",
+     "cita": "# S384 — Búsqueda del ID de cola `0x40193` (C2 receptor) en ARM y Thumb\n\n**INFORME VIGENTE 23-10-2026:** [trazado verificado del ID](queue-40193-flow-2026-10-23.md).\nLos nueve words A6000 de `.text` sí tienen cargas LDR desde pool; su\ndesensamblado lineal no permite descartarlos. Se identifican receptor e\ninstalador de su puntero en av-cam. Las secciones históricas siguientes\nconservan errores explícitamente invalidados; no usarlas como conclusión vigente.\n\n## 1. Patrones buscados en libObj.so (A6000 fw3.21, A7S fw3.20, A6300 fw2.01)\n\n**AUDITORÍA 23-10-2026 — tabla y encodings históricos invalidados.** Los patrones Thumb publicados no codifican las instrucciones indicadas. `0x40193` requiere mitad alta **4**, no `0x40`. Además, el test reutilizaba el offset `.data` A6000 en la A7S. Las tablas siguientes se conservan como registro del método fallido; sus ceros de MOVW/MOVT no son evidencia de ausencia.\n\nResultados reproducidos desde las secciones de cada ELF: cero palabras `93 01 04 00` en `.rodata`/`.data` de A6000 y A7S y cero cadenas ASCII `40193`. `.data` A7S está en offset `0xefb9e0`, tamaño `0x736a0`; A6000 en `0x102d320`, tamaño `0x73588`.\n\nEl encoding correcto `40 f2 93 13` es `movw r3,#0x193` y existe en ambos binarios (A6000, por ejemplo, `0x14ccde`). `c0 f2 04 00` es `movt r0,#4`. Un barrido por máscaras de halfwords de `.text` detecta **60/44** candidatos Thumb MOVW #0x193 en A6000/A7S; son candidatos estáticos, no 60/44 construcciones del ID completo. Falta análisis de flujo y modos ARM/Thumb para identificar su uso. La A6300 no se reverificó en esta auditoría.\n\n**Conclusión vigente: NO_VERIFICADO** el origen del ID y el registro del callback. Los negativos de datos son acotados; no se exige cámara para continuar el análisis estático.\n\n## Registro histórico (no usar como prueba)\n\n| Patrón | Encoding | A6000 | A7S | A6300 |\n|---|---|---|---|---|\n| Word LE 0x00040193 | `93 01 04 00` | 9 sitios* | 11 sitios* | 12 sitios* |\n| Half LE 0x0193 | `93 01` | 2840 sitios | 2418 sitios | 2827 sitios |\n| Thumb movw #0x0193 | `?? F2 93 F9` | 0 sitios | 0 sitios | 0 sitios |\n| Thumb movt #0x0040 | `?? C2 40 F8` | 0 sitios | 0 sitios | 1 sitio |\n| ARM movw #0x0193 | `93 01 00 E3` | 0 sitios | 0 sitios | 0 sitios |\n| ARM movt #0x0040 | `40 00 40 E3` | 0 sitios | 0 sitios | 1 sitio |",
+     "sha256": "fdf364086713db10c8e30fc00a18f7280d407d24773654be0574129c2049eec9"
+    },
+    {
+     "archivo": "analysis/s380_libobj_map/tests/test_queue_40193_flow.py",
+     "localizador": "1:35",
+     "cita": "\"\"\"Regresiones de S384: un literal en .text no es un falso positivo.\"\"\"\n\nimport hashlib\nimport struct\nimport sys\nfrom pathlib import Path\n\nimport pytest\nfrom capstone import CS_ARCH_ARM, CS_MODE_THUMB, Cs\n\nsys.path.insert(0, str(Path(__file__).resolve().parents[1]))\n\nfrom queue_40193_flow import literal_loads, mov_halves\nfrom recordimage_audit import LIBRARIES, Elf32\n\nAV_BASE = 0x43541000\n\n\n@pytest.fixture(scope=\"module\")\ndef avcam():\n    root = Path(__file__).resolve().parents[3]\n    data = (root / \"firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/\"\n            \"nflasha3_unpacked_unpacked/av-cam.bin\").read_bytes()\n    assert hashlib.sha256(data).hexdigest() == (\n        \"b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9\"\n    )\n    return data\n\n\ndef av_instruction(data, address):\n    return next(Cs(CS_ARCH_ARM, CS_MODE_THUMB).disasm(\n        data[address - AV_BASE:address - AV_BASE + 4], address, count=1,\n    ))\n\n",
+     "sha256": "366f2c49faea78618772c18dba4710fdf60935872abc1aa7dee1e9078a9b23d4"
+    }
+   ]
+  },
+  "pendiente-pic": {
+   "veredicto": "VIGENTE",
+   "razon": "Fuente S116 y destino describen la rectificación del borrador PIC (117/131); el anterior falso positivo no basta. Falta cotejar aquí el mapa completo original y los sitios/falsos pares del borrador para certificar su aplicación.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/s116-sfrs.md",
+     "localizador": "49:56",
+     "cita": "## Corrección metodológica\n\nEl PC de este firmware se resuelve **sin alinear**: `destino = palabra_literal + (addr_add + 4)`.\nLa variante alineada cae 2 bytes antes del inicio de la cadena (`0x43ce8cdc` = `'E'`). Además el\n`ldr` debe ser el **inmediato anterior del mismo registro** (≤ 0x20 B) y el barrido debe respetar\nlas fronteras Thumb de 32 bits. Con esas tres reglas: 117/117 cadenas y 131/131 sitios\natribuidos.\n",
+     "sha256": "cba7743b871d472789eb78fd7c7d3121dd91bcbb75173825afd98ab1a580d080"
+    }
+   ]
+  },
+  "pendiente-illumi": {
+   "veredicto": "VIGENTE",
+   "razon": "La fuente formula una corrección real de la lectura de S130, pero mismas RTTI/nombres no bastan para demostrar mismo código y función en tres modelos. No se reafirma la equivalencia ni la conclusión técnica sin seguimiento de llamadas y consumidores originales.",
+   "evidencias": [
+    {
+     "archivo": "analysis/s170_illumi/illumi.md",
+     "localizador": "38:41",
+     "cita": "**Conclusión principal (corrige la lectura superficial de S130):** el *subsistema* de\niluminación **existe en las tres fw** (mismas clases RTTI, mismo código de acceso al\ndispositivo); lo **propio de la fw3.21 de la A6000 es la instrumentación** (las 34 trazas\n`[ILLUMI]` + las 20 cadenas `__PRETTY_FUNCTION__`). Ver §6.",
+     "sha256": "e5117f0fcd6f4215252472d1d1eb84d17b92ff4d8bde5b7cf474bc58e79691fe"
+    },
+    {
+     "archivo": "docs/capture/s130-new-modules.md",
+     "localizador": "1:15",
+     "cita": "# S130 — los 20 módulos \"NUEVO/PROPIO\": ¿contenido nuevo o solo otra etiqueta?\n\n**Hito de la línea de ingeniería inversa general**: cierra la pregunta abierta por S128.\n\nInforme: [analysis/s130_new_modules/new_modules.md](../../analysis/s130_new_modules/new_modules.md) ·\nDatos: `new_modules.json` · Test: `tests/test_s130_new_modules.py`.\n\n## Método\n\nPara cada prefijo `NUEVO/PROPIO` de S128 se extrae el **núcleo** de cada mensaje (lo que sigue a\n`\"[PREFIX]: \"`) y se busca como subcadena en la A7S fw3.20 y el A6300 fw2.01, anotando con qué\netiqueta aparece allí.\n\n## Resultado\n",
+     "sha256": "6ee8d126ce3f4e8b73d5056418dd1418d12ab13a7389436e4847bd3d321eb25f"
+    }
+   ]
+  },
+  "pendiente-code-gap": {
+   "veredicto": "VIGENTE",
+   "razon": "S146 sí corrige el offset de un caller atribuido en S145; no es descartable por estar en una tabla. Se conserva pendiente el contraste con el export REA y bytes de ese caller, sin usar el fallo de seeding como ausencia de código.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/s145-imager-code-gap.md",
+     "localizador": "1:18",
+     "cita": "# S145 — el staging IMX210 existe en un hueco de cobertura REA\n\n**Resultado PARCIAL:** REA delimita un procedimiento de 8 bytes inmediatamente\nantes de `0x43843a44`, pero no incluye la dirección candidata ni el callsite\nentrante en ningún procedimiento observado. Los bytes Thumb sí contienen un\nprólogo plausible en `0x43843a44` y un `BL` visible desde otro bloque no\nanalizado en `0x437b61d2`. Esto justifica una consulta futura con entradas\nexplícitas en la sesión REA; no prueba ejecución, store a `S[0]` ni contenido\nde filas runtime.\n\n## Observaciones REA\n\n- `resolve_containing_procedure(0x43843a38)` → `FUN_43843a38`, cuerpo\n  `0x43843a38..0x43843a3f`, Evidence\n  `ev_5c7ff69e20724a19d3273ec66911ffab44d75d2d245c9f19b102447a114121b6`.\n- `resolve_containing_procedure(0x43843a44)` → `not_in_procedure`, Evidence\n  `ev_ea22a2182a4e3d23312394b402b358789ae6a158f2c91f4dd012453fd50de7ed`.\n- El caller candidato `0x437b617e` y el callsite `0x437b61d2` también están",
+     "sha256": "8ab3976e06e29ff56dcb934725a1bc1743e6dfc80c074656e453e2ff7bfcec92"
+    }
+   ]
+  },
+  "pendiente-s32": {
+   "veredicto": "VIGENTE",
+   "razon": "S32 corrige explícitamente S31 (despacho/thunk y sitio del overflow). La corrección textual existe, pero no se revalidaron aquí los exports originales de las seis listas ni el nuevo log; se retira la certificación anterior.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/s32-vd-callbacks-sync-ycout.md",
+     "localizador": "12:25",
+     "cita": "## Resultado y corrección de S31\n\n**CORRECCIÓN de [S31](s31-camera-main-sync-strings.md):** `0x43ad6034` contiene\ncódigo de despacho, no una tabla de callbacks. Sus destinos para las listas VD\nse resuelven mediante un adaptador adicional. El log «YC out window overflow»\nestá en `0x4379bb90`, callsite `0x4379cb2e`, no en `0x435a9928`.\nLa rama YC transporta parámetros **y referencias a memoria compartida**;\nno se puede reducir a contadores. Sigue sin cerrarse un descriptor de píxeles\ncon dirección/pitch/formato ni un fin de DMA.\n\nEvidencia estructurada y todos los callsites:\n[`s32-findings.json`](../../analysis/ghidra/s32-findings.json).\nPseudocódigo íntegro y ensamblador de las funciones solicitadas:\n[`s32-final-verified.c`](../../analysis/ghidra/s32-final-verified.c) y",
+     "sha256": "b66ba51d53ca578038422448865245730806245c0781ed419af295731f41a91c"
+    },
+    {
+     "archivo": "docs/capture/s31-camera-main-sync-strings.md",
+     "localizador": "110:118",
+     "cita": "## Siguiente paso recomendado\n\n**Actualización S32:** este paso se realizó en\n[S32 — callbacks VD y SyncYCout](s32-vd-callbacks-sync-ycout.md).\nCORRECCIÓN: `0x43ad6034` es código de despacho y `0x43ad6052` su thunk;\nlas listas y seis destinos concretos ya están resueltos. El log de ventana YC\nestá en `0x4379bb90`, callsite `0x4379cb2e`, no en `0x435a9928`.\nLa rama ampliada referencia handles DMM compartidos mediante `0x4379b44c`,\npero todavía no identifica un contrato completo de píxeles/pitch/formato/fin DMA.",
+     "sha256": "cad254e4463f5e1c8fd2e4aa7343df02ffffd8e95ae3604f6566775fdef30d60"
+    }
+   ]
+  },
+  "pendiente-s42": {
+   "veredicto": "VIGENTE",
+   "razon": "S42 separa wrapper 436d6320 y backend virtual 436d6f6c de S41. Se confirma la relación textual; falta cotejar aquí el objeto/vtable y bytes de los exports originales para reafirmar la identidad técnica.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/s42-exposure-call-identity.md",
+     "localizador": "34:45",
+     "cita": "## VERIFICADO — CORRECCIÓN de S41: wrapper y método virtual distintos\n\nCorrige la nomenclatura ambigua de [S41](s41-message-origin-imx210.md),\nsecciones «propagación de valores» y «Línea C»: `0x436d6320` es el **wrapper\nde despacho de exposición**; `0x436d6f6c` es el **método del backend instalado\npor la factoría IMX210**. No son alias, thunk de salto fijo ni entradas\ndesplazadas del mismo cuerpo. Existe una llamada **virtual**, no un BL directo.\nLa atribución ya no depende de cadenas próximas a RTTI.\n\n| Instrucciones / datos exactos | Resultado |\n|---|---|\n| `436d6320 push {r0,r1,r4,lr}`; `436d6322 cbnz r1,436d6344` | Argumento de exposición nulo toma diagnóstico y retorna 1; ruta no nula continúa |",
+     "sha256": "7fcea238eadd836150308820a394888fa27535b1047835753656a279e0fd7d8c"
+    },
+    {
+     "archivo": "docs/capture/s41-message-origin-imx210.md",
+     "localizador": "1:20",
+     "cita": "# S41 — productores de mensajes, snapshots y valores de modo IMX210\n\n18-10-2026. **PARCIAL:** productores internos de `4000/4036`, transporte\ny productores de snapshots recuperados. Origen último de `3023`, resolución\ndel destino con bit 31 y enlace de sus valores a integración física pendientes.\nLa frontera de implementación OSAL activa una comprobación de Línea C;\nno se declara agotamiento universal de las líneas A/B.\n\n## VERIFICADO — método e integridad\n\nSolo `analysis/ghidra/silent-liro.gpr`, programa `av-cam.bin`, con\n`-readOnly -noanalysis`. Sin crear funciones, tipos, referencias ni guardar\nel programa. `S41Export.java` y `S41Scan.java` consultan memoria/listado;\nla primera exportación reutiliza `S39Export.java` (su comentario identifica\nel exportador). Cada ejecución comprueba el SHA y todos los bytes cargados.\n\nSHA-256 esperado antes/después:\n`b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9`.\nTambién se contrastan los manifiestos persistentes S38 del `.gpr/.rep`.\nSin firmware ejecutado, cámara, flasheo, instalaciones ni push.",
+     "sha256": "c599ea898c3b85db1617566e10b5174167f7125637fef2c3774cc10454a75513"
+    }
+   ]
+  },
+  "pendiente-orden": {
+   "veredicto": "VIGENTE",
+   "razon": "S47 supera el pendiente de orden de S46 bajo la condición de que el callback se ejecute en esa invocación. No se ha reproducido aquí el flujo completo en las ramas originales; no se recertifica un orden universal.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/s47-payload-producer-and-order.md",
+     "localizador": "100:118",
+     "cita": "## VERIFICADO — orden y rango exactos de la copia\n\n**ACEPTO:** el callback, cuando se ejecuta en esta invocación de VD_Pre, escribe\n**ANTES** de la copia. S47 supera el pendiente de orden de\n[S46](s46-vd-base-and-context-identity.md); no refuta su propagación por orden.\n\n| Operación | Direcciones y rango |\n|---|---|\n| Despacho síncrono | `0x43792f9c`; dentro, stores de `0x437dad78`; retorno antes de `0x43792fa0`. |\n| Argumentos raíz | `0x43794086` construye destino `0x43e99514`; `0x43794092`, origen `0x43e9b548`. `r0=destino`, `r1=origen` en `0x43794096`. |\n| Subcopia C en `0x43ae8faa` | `0x43ae9094/0x43ae909a` parten de raíz+`0x1e40`; `0x43ae90c8/0x43ae90cc` suman `0x2c`; `0x43ae90be` fija `0x1a4`; llamada memcpy en `0x43ae90ce`. |\n| Origen C | `[0x43e9d3b4,0x43e9d558)`; campos `0x43e9d448/0x43e9d449` están dentro, offsets `0x94/0x95 < 0x1a4`. |\n| Destino C | `[0x43e9b380,0x43e9b524)`; los campos llegan a `0x43e9b414/0x43e9b415`. |\n| Copia posterior | `0x4379409e` llama a `0x43ae8eae` después de retornar `0x43ae8faa`. No es el sitio de la subcopia `0x1a4`. |\n\nLa prueba no se basa solo en comparar direcciones: en el CFG exportado,\n`0x43794096` es alcanzable desde `0x43792a0c`, deja de serlo al retirar\n`0x43792f9c`, y desde `0x4379409a` no se alcanza de nuevo `0x43792f9c`.\nLas aristas TBB están incluidas. Esto prueba dominancia/orden local, sin prometer",
+     "sha256": "1ea1a42a23f4f29681195d274b0ba8b0e1a16c844bba66d841d50224e99b79dc"
+    },
+    {
+     "archivo": "docs/capture/s46-vd-base-and-context-identity.md",
+     "localizador": "1:15",
+     "cita": "# S46 — base VD e identidad de los escritores de contexto\n\nSesión 18-10-2026; continuación puntual de [S45](s45-context-identity-and-physical-closure.md).\nSolo investigación estática de los dos objetivos pedidos. No se reabren OSAL\nbit31, diagnóstico AF, consumidor de registros ni virtual+0xa8.\n\n## VERIFICADO — método y evidencia\n\nFirmware `av-cam.bin`, ORIL (firma en `0x43541004`), base lógica `0x43541000`.\nNo es ELF; no se aplicó un modelo de relocaciones ELF. La base VD se resuelve\npor una asignación explícita de inicialización, sin necesitar hipotetizar un\nloader que rellene ese slot. Esto no caracteriza todo el formato ORIL.\nSHA-256 esperado: `b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9`.\nProyecto `analysis/ghidra/silent-liro.gpr`, siempre `-readOnly -noanalysis`;\nsin guardar, crear funciones ni ejecutar firmware. S41Export compara todo el",
+     "sha256": "69ada0971d1ec32323a705952ffd494f3548bb797d6970d901d3634aed4f9c9c"
+    }
+   ]
+  },
+  "pendiente-s58": {
+   "veredicto": "VIGENTE",
+   "razon": "La cita describe una rectificación concreta (matriz S57, identidad SetRead/AGC o alias del objeto clk S58). No es un falso positivo por estar en una tabla. Falta reproducir/cotejar la evidencia original de escenarios y consumidores dentro de su cobertura; no se ejecuta firmware ni se infiere semántica física.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/s58-a7s-silent-effective-diff.md",
+     "localizador": "1:16",
+     "cita": "# S58-D/E — Diferencias Silent efectivas y petición de ganancia\n\n20-10-2026. Fuente: ejecución original A7S 3.20 con [cobertura y stubs](s58-imx235-full-emulation.md). Datos completos, por dispositivo, etapa y orden: `analysis/s58/out/a7s_effective_diff.json` y `a7s_scenarios.json`.\n\n## Corrección de la comparación S57\n\n**CORRECCIÓN (VERIFICADO) de [s57-imx235-silent-register-diff.md](s57-imx235-silent-register-diff.md):** paso real 0x14 B, 69 filas y selección indirecta de 15 columnas para 34 modos. SetMode emulado reproduce las 69 filas para los seis modos. Los pares 0x000C 0x20→0x10 y 0x000A 0x02→0x01 de S57 procedían de interpretar 35 filas de 40 B con 34 columnas directas.\n\n| Comparación | Columna SetMode | Último valor transmitido, bus completo |\n|---|---:|---:|\n| 0x4c→0x4e | 14 registros | 14 |\n| 0x4d→0x4f | 11 | 11 |\n| 0x4e→0x4f | 4 | 4 |\n| 0x4c→0x4d | 0 | 0 para las entradas ensayadas |\n| 0x0b→0x4e | 45 | **43** |\n| 0x0b→0x35 | 4 | 4 |",
+     "sha256": "fad881da78734d69c9aad523f1b76b0b37422d4e5239fda2cc9c46894eedc972"
+    },
+    {
+     "archivo": "docs/capture/s58-conclusions.md",
+     "localizador": "13:19",
+     "cita": "- **ACEPTO** productor AE numérico: 600/600 descomposiciones y 300/300 filas coinciden con instrucciones originales en Unicorn. Tv y M siguen como entradas externas no recuperadas.\n- **ACEPTO** SetExposure A7S=0x436f4168 y SetRead=0x436f4a94: vtable y ejecución independiente. **CORRECCIÓN VERIFICADA de [S57-B](s57-ssb-pulse-analysis.md)**: el umbral 0x1000 es de SetRead/AGC, no exposición.\n- **ACEPTO** matriz IMX235 69 filas de 0x14 B, 15 columnas usadas, selección indirecta de 34 modos. **CORRECCIÓN VERIFICADA de [S57-D](s57-imx235-silent-register-diff.md)**: 0x4c→0x4e difiere en 14 registros, 0x4d→0x4f en 11; los cuatro registros entre Silent son 01/09/0a/0b.\n- **RECHAZO** igualdad universal productor/validador host del borrador S58: VdNum>1 tiene expresiones distintas; contraejemplo sintético con productor real documentado en [unidades](s58-imx210-timing-units.md).\n- **RECHAZO** contar solo 99 escrituras totales: el parser inicial ignoraba DEV=0x83. Son 100, conservando dispositivo y orden; nuevo test evita la pérdida silenciosa.\n- **ACEPTO** petición de ganancia→bit4 de 0x81:0x5f en `0x436f459c`, probada aisladamente en foto y Silent; no demuestra finalización de integración.\n- **RECHAZO** convertir ausencia de comando final en prueba de autonomía: S58 no emula un evento final posterior A7S.",
+     "sha256": "f30af24822540d562db8165cd4c210294c9db331acc54c6a1a54ac8605122c8e"
+    },
+    {
+     "archivo": "docs/capture/s59-sol.md",
+     "localizador": "26:31",
+     "cita": "| SOL-05 | `0x437aad72..0x437aae0a` dentro de `0x437aa65c`: carga `input+0xb4`, `cbz`; doce LDRH/STRH | Selector cero produce 24 B cero en `X8+0x13c..0x153`; selector no cero copia los doce u16 de SOL-01. | VERIFICADO / alta | Ejecutado segmento original con registros/stack inicializados explícitamente, selectores 0/1/2; no equivale a ejecutar toda la función con objetos reales. `test_consumer_zero_or_override`. |\n| SOL-06 | `0x4383d18c`: P+`0x4c0 → X+0x5c`; `0x4383d232..25a`: P+`0x4c4..0x4f3 → X+0x60..0x8f` | Snapshot original conserva palabra clk y 48 B de M, probado con marcadores distintos. | VERIFICADO / alta | Verifica alias y transferencia, no el origen físico de los valores. `test_snapshot_does_not_confuse_histogram_object`. |\n| SOL-07 | `0x437b5b68..6e`: GOT+`0x7ad0 → stack+0x18`; `0x43844e80` reserva `0x88` B; `0x438479ce/d0`: carga stack+`0xa0` y llama `0x438667e0` | Primer argumento del escritor de histogramas=`0x43eb121c`, mientras entrada AE P de la misma llamada=`0x43eaee84` (GOT+`0xcb0`). Son objetos diferentes. | VERIFICADO / alta | CORRECCIÓN de la atribución de clk en [S58-A §5](s58-ae-timing-producers.md): un mismo offset `+0x4c0` no demuestra alias. Bloque del llamador ejecutado hasta antes del BL; aritmética del frame y sitio consumidor contrastados contra bytes. `test_histogram_writer_has_a_different_object`. |\n| SOL-08 | `0x437aab3c`: LDRH de `param_2[0xd]+0x16`; `0x437aab48..52`: resta `0x3000`, BIC con ASR31, STRH a `X8+0xcc` | `VdNum=max(0,raw_u16−0x3000)`, rango local `0..0xcfff`. Para raw=`0xb000` produce `0x8000`, negativo si luego se usa LDRSH. | VERIFICADO / alta | No hay límite signed16 en este segmento; no prueba que el productor del raw permita todo el rango. Siete casos de borde ejecutados. `test_vdnum_constructor_range_is_not_a_signed_range`. |\n| SOL-09 | Productor `0x4383c9dc`; segmento host `0x438110be..0x4381112a` | Comparación ejecutando ambos códigos: con modo productor=0, f=0, estado host=0 y N≥VdNum, coincidencias para VdNum=1 o svr=1 y discrepancias fuera de esos subdominios. | VERIFICADO / alta para esta campaña | No ejecuta el envío completo del host ni demuestra alcanzabilidad. `test_synthetic_compatibility_boundaries`; JSON conserva los 42 casos. |\n| SOL-10 | `0x438069f0`, casos 4 y 10 con `obj+0x568=2`; `0x43b00d94` | REA y bytes: copia 80 B del payload+4 o payload+0x590 a obj+0xd64. En combinación con SOL-03, los 24 B solicitados proceden de payload+0x20 o payload+0x5ac. | PARCIAL / alta para el flujo estático | Se recupera procedencia del escritor; no el emisor ni payload real. No se emuló íntegro el despachador. Publicación llamada desde `0x43792f62`, bajo guarda, con raíz retenida de `0x43792a30`. |",
+     "sha256": "e1707b434d51517a58503a7512a0aa38cbd533a063fba8ebde105ea3ea1a9b46"
+    }
+   ]
+  },
+  "pendiente-revision-propia": {
+   "veredicto": "VIGENTE",
+   "razon": "Hay una rectificación o síntesis identificable, pero la cita no permite certificar todo su alcance frente a la versión original del destino. Persisten lecturas históricas superadas (sesgo, columna, firma, slot o número de lectores). Se exige el export/bytes y la revisión concreta afectada; ni el título, ni mencionar la sesión, ni tests de otros hitos cierran esta fila.",
+   "evidencias": []
+  },
+  "pendiente-w0": {
+   "veredicto": "VIGENTE",
+   "razon": "La síntesis mezcla correcciones acumuladas y fuentes de evidencia. No hay soporte suficiente en esta cita para atribuir todo lo resumido a este destino concreto; faltan contraste del consumidor w0 y/o delimitación de la afirmación original. Se mantiene pendiente en lugar de cerrar por proximidad.",
+   "evidencias": []
+  },
+  "pendiente-s204": {
+   "veredicto": "VIGENTE",
+   "razon": "S302 declara una discrepancia a re-verificar y niega corregir S204 allí. El mapa de columnas de S302 fue corregido después por S325; sin contrastar cuál tabla midió S204 no puede descartarse la contradicción ni cerrar su interpretación.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/s302-drive-modes.md",
+     "localizador": "90:99",
+     "cita": "| `0x51` | 0 |\n\n**Hallazgo:** para **este** accesor, los modos Silent `0x4e`/`0x4f` usan la **misma\ncolumna (1)** que `0x4c`/`0x4d`. Es decir, la matriz de registros no distingue el modo\nsilencioso: los cuatro modos producen el mismo conjunto de valores de registro. Esto\n**discrepa** de la frase de S204 «sus filas de registro difieren mínimamente de\n`0x4c`/`0x4d` (1 registro cada una: `0x000c` y `0x000a`)». No se corrige S204 aquí\n(regla del carril), pero queda como **contradicción a re-verificar**: si S204 midió otra\ntabla (p. ej. la de timings), ambas pueden ser ciertas; si midió esta, el dato es\nincorrecto. Lo que sí queda VERIFICADO es el byte del mapa.",
+     "sha256": "05f7f3ff78fe835f63cfdddc2b64f8ab09f0f6763bfff767853445d783e0d2a9"
+    },
+    {
+     "archivo": "docs/capture/s204-clasificacion-final.md",
+     "localizador": "1:20",
+     "cita": "# S204 — Clasificación final: A7S (IMX235) vs A6000 (IMX210) — obturador electrónico\n\n22-10-2026. Agente A (sensor y driver), sesión S204 (rango S200–S299). Síntesis de S200–S202.\n\n## Cuadro de clasificación final\n\n| Subsistema / campo | Clasificación | Qué tiene la A7S (IMX235) | Qué tiene la A6000 (IMX210) | Estado en A6000 |\n|---|---|---|---|---|\n| Modos de lectura | DISTINTO | 34 modos, incl. `0x4e`/`0x4f` Silent (índices 29, 30) | 13 modos; `SetMode` rechaza `0x4e`/`0x4f` | Ausente |\n| Selector de modo / drive mode | DISTINTO | `0x43826d58(modo,sub,tipo)`: `tipo==2`→`0x4e`/`0x4f` | `SetMode` carga columna de matriz por modo | Ausente (no hay `tipo`) |\n| CheckSet* LiroSeq (obturador) | IDÉNTICO | 0/0 (S169 vigente) | 0/0 (S169 vigente) | Ausente (como la A7S) |\n| Mensaje a Liro (…ForLiro) | IDÉNTICO | Rechazado; sin `SetShutterTypeForLiro` | Rechazado; sin `SetShutterTypeForLiro` | Ausente (como la A7S) |\n| Registros de tiempo | DISTINTO | Columnas estáticas por modo de lectura | svd/shd/spl en ID3–ID8 (sombra) | Diferente esquema |\n| Fórmula svd | DISTINTO | No recuperada | `svd = n·svr_num − 1` (0x4381106c) | No aplica |\n| Espejo condicional 0x144–0x149 | DISTINTO | No equivalente recuperado | Sí, si `[G+0x7f]≠0xFF` | No aplica |\n| Tiempo de lectura (24 MP) | DISTINTO | No recuperado | ≈ 4176 líneas ≈ 66,8 ms (cálculo) | No aplica |\n| Fin de integración | IDÉNTICO | No hay comando de \"fin de integración\" | No hay reescritura al terminar | NO_VERIFICADO (ambos) |\n| Transporte P2S / CISIF | IDÉNTICO | Mismo hardware P2S (DFE0) | Mismo hardware P2S (DFE0) | Idéntico |\n| Strobe SSB | DISTINTO | Bit `0x10` byte +4 de registro (`[O+0x3d7]`) | Bit 3 del dato ID1, dos veces (1,0) | Diferente |\n| ShutMode | DISTINTO | ShutMode 2 no soportado; codificación distinta | ShutMode 0–4; en captura solo 0 y 1 | Diferente |",
+     "sha256": "9e051195fe9a629c72135c3ccb2822cd18b907c149eac5c95e6051f822431b01"
+    },
+    {
+     "archivo": "docs/capture/s325-position-map.md",
+     "localizador": "1:15",
+     "cita": "# S325 — El mapa de columnas se indexa por **posición**, no por código de modo\n\nTrigésimo quinta sesión del carril B. **Corrige** la interpretación del mapa\n`0x43c9c5b5` que hicieron S302 y S321 y, con ella, el veredicto «la matriz no distingue\nel modo silent».\n\n**Resultado:** `0x43c9c5b5` es una tabla **`posición -> columna` de 34 entradas**, no un\nmapa `modo -> columna` de 82. El accesor recibe una **posición** (0..33) obtenida por una\nbúsqueda lineal del código de modo en el array `u32[34]` de `0x43fee370`. Consecuencia\ndirecta: `0x4e` (posición 29) usa la **columna 12** y `0x4f` (posición 30) la **columna\n13**, mientras que `0x4c`/`0x4d` (27/28) usan la **columna 5** → **la matriz sí distingue\nel modo silent** (14 y 11 registros distintos).\n\n---\n",
+     "sha256": "7918857114e7d7fa0071989502c3543fcf8b76c127c09dc3d5382397743639ab"
+    }
+   ]
+  },
+  "pendiente-605-627": {
+   "veredicto": "VIGENTE",
+   "razon": "La fuente resume 23 módulos y afirma correcciones de bytes/esquema; también conserva pendientes logger dual y equivalencias. No se certifica una corrección global de S625/S627 solo por la mención/rango de sesiones. Hace falta delimitar las afirmaciones afectadas y contrastar cada artefacto original.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/s625-adr.md",
+     "localizador": "1:18",
+     "cita": "# S625 — ADR: evidencia de cadenas\n\n**Auditoría de la validación de OpenCode — 23-10-2026.** Este informe corrige las conclusiones históricas de S625. La presencia de texto no demuestra funciones, llamadas ni equivalencia entre modelos.\n\nDatos: [adr.json](../../analysis/s625_adr/adr.json). Auditoría conjunta: [hallazgos S605–S627](S605-S627_tabla_hallazgos.md).\n\n## Evidencia comprobada\n\n1 cadenas principales verificadas contra A6000 fw3.21, base `0x43541000`, incluidos espacios, saltos de línea y NUL. Las direcciones son virtuales. El texto se muestra escapado como JSON.\n\n| Dirección | Texto |\n|---|---|\n| `0x43cce3fa` | `\"[CAM_UTIL_SENS]: >>[FILE_NUM]%x [ADR]%x [SIZE]%x\"` |\n\nCORRECCIÓN de esquema: `[ADR]` es un marcador interno a `0x43cce418`, no el prefijo de esta cadena. El prefijo real en `0x43cce3fa` es `[CAM_UTIL_SENS]: ` (17 bytes); JSON, test y verificador individual actualizados. Esto solo acredita texto, no una función ADR independiente.\n\n## Afirmaciones pendientes\n",
+     "sha256": "995edce2c392087536404eb6ec267307229236da2a680ec4fc072a6a30b20dd3"
+    },
+    {
+     "archivo": "docs/capture/s627-eo_sw.md",
+     "localizador": "1:18",
+     "cita": "# S627 — EO_SW: evidencia de cadenas\n\n**Auditoría de la validación de OpenCode — 23-10-2026.** Este informe corrige las conclusiones históricas de S627. La presencia de texto no demuestra funciones, llamadas ni equivalencia entre modelos.\n\nDatos: [eo_sw.json](../../analysis/s627_eo_sw/eo_sw.json). Auditoría conjunta: [hallazgos S605–S627](S605-S627_tabla_hallazgos.md).\n\n## Evidencia comprobada\n\n1 cadenas principales verificadas contra A6000 fw3.21, base `0x43541000`, incluidos espacios, saltos de línea y NUL. Las direcciones son virtuales. El texto se muestra escapado como JSON.\n\n| Dirección | Texto |\n|---|---|\n| `0x43c37b40` | `\"[EO_SW] Port=%d, Bit=%d, Data=%d\"` |\n\nLongitudes declaradas comprobadas como bytes ASCII: `{\"prefix_length\": 7}`.\n\n## Afirmaciones pendientes\n",
+     "sha256": "3d64c6b6b7ed0d8dd8f555c003919a4175db70fa4ab561d99b77c9b6467c1c50"
+    }
+   ]
+  }
+ }
+}
