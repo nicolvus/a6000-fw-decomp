@@ -25,10 +25,11 @@ los nueve words `.text` A6000 sí tienen cargas LDR desde pools. Cuatro cuerpos
 conservan destino en r5 y copian 16 B antes de `osal_snd_msg`; reply-to va en
 mensaje-4. Receptor LIRO `0x4381d16c`, tabla `0x44000174` (35×12 B).
 `0x4379e93c` instala puntero Thumb `0x4381d16d` desde GOT `0x4401f564`
-en descriptor `0x43ea048c`, campo+0x14=`0x46`. Pendientes concretos: consumidor de
+en descriptor `0x43ea048c`, campo+0x14=`0x46`. El inicializador ocupa la fila 189
+de una tabla contigua de 372 punteros Thumb. Pendientes concretos: consumidor de
 arranque del descriptor, callback OSAL Linux y enlace Linux↔LIRO. El origen por
 literal y el instalador ya se conocen; el análisis estático no está agotado.
-53 tests S380 PASS; S51 sin cambios. Prevalece sobre resúmenes históricos siguientes.
+S51 sin cambios. Prevalece sobre resúmenes históricos siguientes.
 
 ## Contrato RecordStill / RecordImage — actualizado 24-10-2026
 

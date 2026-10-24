@@ -37,6 +37,15 @@ def av_word(data, address):
     return struct.unpack_from("<I", data, address - AV_BASE)[0]
 
 
+def test_receiver_initializer_in_contiguous_thumb_pointer_table(avcam):
+    start, end = 0x43B7F8A8, 0x43B7FE78
+    pointers = [av_word(avcam, address) for address in range(start, end, 4)]
+    assert len(pointers) == 372
+    assert pointers[189] == 0x4379E93D
+    assert all(pointer & 1 and AV_BASE <= pointer - 1 < end for pointer in pointers)
+    assert av_word(avcam, end) == 0
+
+
 def test_literal_load_pc_alignment_and_negative_displacement():
     # Thumb T1, T2 positivo y negativo; PC se alinea a cuatro bytes.
     data = bytes.fromhex("00 49 df f8 04 20 5f f8 04 30")
