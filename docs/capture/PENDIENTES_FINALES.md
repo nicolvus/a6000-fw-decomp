@@ -39,41 +39,42 @@ Cada función usa `bfi` (bit field insert) sobre el valor leído del MMIO, confi
 
 **Efecto en S51:** Ninguno directo. Los canales MMIO existen pero no demuestran una ruta de exposición totalmente electrónica.
 
-## 2. C2 receptor de cola `0x40193` — conclusión histórica INVALIDADA
+## 2. Cola `0x40193` — consumo comprobado; instalación incompleta
 
-**Hecho:**
-- No hay literal `0x40193` (word LE) en av-cam.bin (0 sitios)
-- No hay `movw #0x0193` + `movt #0x0040` consecutivos (0 sitios)
-- No hay BL a `osal_reg_msg_queue_cb` (0x43c9a215) desde fuera de OSAL
-- No hay BL a `osal_rcv_msg` (0x43561260) desde fuera de OSAL
-- `trace_call_path` y `trace_native_values` de REA no encontraron camino desde RelMgr `0x4379eba0` hasta `0x43809ed8`
+En `av-cam.bin`, `0x4381d16c` recibe de `0x40193`, consulta una tabla de
+35 comandos y despacha el handler correspondiente. El inicializador
+`0x4379e93c` instala su puntero en un descriptor; la entrada de cabecera LIRO
+alcanza el bucle que llama ese inicializador. En `libObj.so` hay nueve palabras
+del ID en `.text` usadas por cargas LDR, cuatro wrappers de envío y un
+adaptador OSAL local. Véase el [flujo verificado](queue-40193-flow-2026-10-23.md).
 
-**Conclusión:** El receptor de la cola `0x40193` usa un mecanismo completamente indirecto (registro dinámico de callback, ID de buzón compuesto, o tabla no accesible estáticamente). **Requiere trazado dinámico (prueba física P1 autorizada) o REA con `trace_native_values` desde el punto de envío en RelMgr.**
+**Pendiente:** consumidor del descriptor `0x43ea048c`, invocación concreta del
+registrador OSAL con `0x40193` y enlace completo Linux↔LIRO. La ausencia de
+MOVW/MOVT en un barrido no descarta cargas desde literal pool.
 
-## 3. libObj.so — ANÁLISIS SUPERFICIAL
+## 3. `libObj.so` — identidad de RecordImage y RecordStill
 
-**Archivo:** `firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libObj.so` (17MB, ELF32 ARM, stripped, PIE)
+El `0x90b248` ELF de `libObj.so` se identifica como **RecordImage**, no como
+`RecordStill::Execute`; `RecordStill` es un helper local llamado desde aquel.
+La equivalencia histórica con A7S `0x847e1c` está rechazada por comparar dos
+niveles distintos del flujo. El [contrato auditado](recordstill-contract-audit-2026-10-23.md)
+documenta las parejas y los límites. La presencia de los emisores de `0x40193`
+no resuelve por sí sola la ejecución efectiva de la captura electrónica.
 
-**Hallazgos:**
-- Todos los símbolos son UND (importados desde MprIf, MWF). No hay definición local de `RecordStill::Execute`.
-- `RecordStill::Execute` (0x90b248 en av-cam.bin) está en libObj.so, fuera del alcance de av-cam.bin.
-- 0x40193: 9 sitios, todos falsos positivos (`lsls r3,r2,#6` = `0x0193` opcode)
-- 0xf292b000: 16 sitios, todos falsos positivos (`movs r0,r0` = NOP)
-- 0xf3122xxx, 0xfc0a3xxx: 0 sitios
+## 4. Cobertura documental de módulos
 
-**Conclusión:** libObj.so no contiene el receptor C2 ni los canales MMIO de B como literales directos. El análisis de libObj.so requiere Ghidra/REA con símbolos, no solo búsqueda de bytes.
-
-## 4. Cobertura de módulos (33.6% → 247 pendientes)
-
-**D:** continúa con cola de módulos (tareas D-02/D-03 pendientes: desensamblar casos 1, 4+ de fila 8 de tabla 0x43edccf8)
-**E:** [SENSER], [STABILIZER], [AVOUT] — no tocados, el agente E los cubre
-**S500-S515:** completados (64 tests PASS, 15 skipped)
+El censo vigente tiene **133/372** etiquetas documentadas, **226 pendientes**
+y **13 descartadas**; no mide funciones o capacidades verificadas. Consultar
+el [censo detallado](../../analysis/s178_census/) antes de asignar nuevas tareas.
 
 ## 5. Decisión S51 — SIN CAMBIOS
 
 **A=NO, B=NO, C=NO.** Ningún hallazgo de esta sesión altera la decisión. Los canales MMIO de B existen pero no demuestran una ruta de exposición totalmente electrónica.
 
-## 6. Pruebas físicas P1-P8 (requieren autorización de usuario)
+## 6. Pruebas físicas P1-P8 (diferidas)
+
+Son propuestas históricas. La decisión del usuario del 24-10-2026 difiere toda
+prueba física hasta completar la decompilación o ingeniería inversa necesaria.
 
 | Prueba | Objetivo | Riesgo |
 |--------|----------|--------|
@@ -81,7 +82,7 @@ Cada función usa `bfi` (bit field insert) sobre el valor leído del MMIO, confi
 | P2 | Forzar `0x808`=1 sin disparar | Bajo-medio |
 | P7 | Prueba objetiva (hélice/LED) | Medio |
 
-## Archivos generados/actualizados esta sesión
+## Archivos generados/actualizados en la sesión histórica del 22-10-2026
 
 - `docs/capture/PENDIENTES_FINALES.md` (este documento, corregido)
 - `docs/capture/shutter-trigger-chain-0x3011.md` (C2 chain, actualizado)
@@ -94,4 +95,4 @@ Cada función usa `bfi` (bit field insert) sobre el valor leído del MMIO, confi
 - `analysis/rea-independent/out/c2_handlers_0x43808100.txt` (handlers dispatcher)
 - `analysis/rea-independent/out/c2_handlers2_0x43808400.txt` (handlers adicionales)
 
-Sesión cerrada. Todo verificado contra bytes/instrucciones.
+Las conclusiones vigentes y sus límites están en las secciones 2–6 anteriores.
