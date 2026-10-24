@@ -1,8 +1,17 @@
 # S400 — revisión manual de relaciones documentales
 
+**Actualización 24-10-2026:** el índice tiene 300 relaciones: 61 rectificaciones
+documentales respaldadas, 193 aristas descartadas y **46 pendientes**. El historial
+contiene 455 filas: 103 respaldadas, 280 descartadas y 72 pendientes. Se cotejaron
+nueve citas nuevas con la revisión Git; seis quedaron clasificadas y tres siguen
+pendientes. Dos relaciones antiguas se resolvieron mediante bytes originales:
+`0x43ad6034` es un despachador con `BLX r3`, y el callsite del log de overflow
+`0x4379cb2e` usa la cadena de `0x43ca519f`, contrastados con bytes originales.
+Esto no certifica las seis listas VD ni ejecución física.
+
 Revisión del 23-10-2026. El encargo abarca 207 filas `VIGENTE` y las 132 decisiones anteriores: **339 filas**, de las cuales quedan 63 pendientes, 75 con rectificación respaldada y 201 aristas descartadas. Al iniciar esta revisión ya había **392 filas**; el índice adicional había pasado de las 264 relaciones del encargo a **299**. Se examinaron también las 53 filas posteriores y las 54 entradas adicionales del índice actual.
 
-Resultado sobre **446 filas históricas revisadas**:
+Resultado histórico sobre **446 filas revisadas el 23-10-2026**:
 
 | Veredicto | Filas históricas | Relaciones del índice actual |
 |---|---:|---:|

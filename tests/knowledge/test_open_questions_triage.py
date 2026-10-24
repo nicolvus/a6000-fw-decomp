@@ -30,6 +30,25 @@ def test_verdicts_are_known() -> None:
     assert verdicts <= {"CORRECCION_APLICADA", "FALSO_POSITIVO", "VIGENTE"}
 
 
+def test_s32_rectification_uses_original_firmware_bytes() -> None:
+    from capstone import CS_ARCH_ARM, CS_MODE_THUMB, Cs
+
+    base = 0x43541000
+    blob = (ROOT / "firmware/extracted/fw321/firmware.tar_unpacked/"
+            "0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin").read_bytes()
+    decoder = Cs(CS_ARCH_ARM, CS_MODE_THUMB)
+
+    def instruction(address: int):
+        return next(decoder.disasm(blob[address-base:address-base+4], address, count=1))
+
+    assert instruction(0x43AD6034).mnemonic == "push"
+    assert instruction(0x43AD604E).op_str == "r3"  # BLX del despachador.
+    assert instruction(0x4379CB2E).op_str == "#0x43902718"
+    pool = int.from_bytes(blob[0x4379CDCC-base:0x4379CDD0-base], "little")
+    assert (pool + 0x4379CB30) & 0xFFFFFFFF == 0x43CA519F
+    assert blob[0x43CA519F-base:].startswith(b"VD_Sequence: YC out window overflow ")
+
+
 def test_current_index_matches_full_citations_contexts_and_relation_types() -> None:
     rows = json.loads(TRIAGE.read_text(encoding="utf-8"))
     seen = {extend_triage.identity(row) for row in rows}

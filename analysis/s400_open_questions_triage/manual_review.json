@@ -1,5 +1,5 @@
 {
- "fecha": "2026-10-23",
+ "fecha": "2026-10-24",
  "revision_destinos": "4e41b6ee46776db027fd74c62fa4c5a2decdf4e0",
  "validacion": {
   "conocimiento": "78 tests PASS, incluidos 11 de triaje; MCP ejecutado fuera del aislamiento tras bloqueo de su ejecutor dentro del sandbox",
@@ -8,7 +8,7 @@
   "lint_tipos": "Ruff y Mypy con --explicit-package-bases: sin avisos en los dos Python modificados",
   "indice": "Dos reconstrucciones con 1455 entidades y 3066 relaciones; 299 relaciones abiertas, sin cambio de contenido en los derivados"
  },
- "alcance": "446 filas revisadas: 392 iniciales (132 decisiones previas, 207 pendientes del encargo y 53 pendientes añadidas después) más 54 entradas del índice actual de 299 relaciones, frente a las 264 del encargo. Revisión de relaciones documentales y evidencia estática; no prueba de ejecución física. Las filas idénticas de distintas revisiones conservan sus identidades históricas.",
+ "alcance": "455 filas históricas: 446 revisadas inicialmente y nueve aristas generadas por nuevas citas. De estas nueve, seis se clasificaron contra la revisión Git y tres siguen pendientes. Dos relaciones antiguas S32→S31 se reclasificaron con instrucciones y cadenas originales. Revisión de relaciones documentales y evidencia estática; no prueba de ejecución física. Las filas idénticas de distintas revisiones conservan sus identidades históricas. Evidencia de RecordImage y cola sincronizada tras los informes nuevos.",
  "casos": {
   "indice": {
    "veredicto": "FALSO_POSITIVO",
@@ -393,13 +393,13 @@
      "archivo": "docs/capture/recordstill-contract-audit-2026-10-23.md",
      "localizador": "21:43",
      "cita": "## Contrato y cuerpo contrastados\n\n| Aspecto | A7S `0x847e1c` | A6000 `0x90b248` |\n|---|---|---|\n| Traza de entrada | ` RecordStill :` | ` RecordImage :` |\n| Nombre en diagnósticos | `RecordStill` | `RecordImage` |\n| Reserva local de stack | `0x358` (+ `0x20` guardado) | `0xb04` (+ `0x24` guardado) |\n| Entradas utilizadas | `r0`, `r1`, `r2`, `r3`, palabra en SP de entrada | objeto en `r0`, mensaje en `r1`; no usa `r2/r3` entrantes antes de redefinirlos |\n| Operación inicial | `GetParam` de `0x1001`, `0x1002`, `0x100e`, después `0x1007/0x1006` | helper `0x910e1c`; si éxito, crea Struct de `0x28` bytes y `AddParam(0x100f)` |\n| Operación posterior | conversión de fechas, metadatos, llamada `0x83c9a0` y limpieza | prepara captura/Exif y llama a su helper RecordStill en `0x90bbdc` |\n| Retorno normal | `r0=r5` en `0x8480f8`, antes del epílogo | `r0=r5` en `0x90beaa`, antes del epílogo |\n\n**Hechos de ABI:** en A7S `0x847e32: 92 46` preserva `r2` en `sl`;\n`0x847e34: 98 46` preserva `r3` en `r8`;\n`0x847e36: d7 f8 70 93` carga `sb,[r7,#0x370]`.\nComo `r7=SP_actual+8` y el marco total mide `0x378`, esa carga consume\nel quinto argumento desde el SP de entrada. Los tipos exactos de los argumentos\n3–5 siguen siendo inferencias; no se inventa una firma C++.\n\nEn A6000 `0x90b2a4: 41 f2 0f 01` es `movw r1,#0x100f`;\n`0x90b2aa` llama a `MWF::ObjMsg::AddParam` por PLT `0xe01a8`.\nLa diferencia de contratos se apoya en flujo de registros y llamadas, además de cadenas.\nEl retorno transmite un resultado de software; no demuestra persistencia física",
-     "sha256": "f1aac5de09ed7e62be1ee93b1bb824933b3794e4efd8eb38f35529ca7a046046"
+     "sha256": "2445f8d2cc22ed1b4f5a9ee60d4f61d51c505737c764538ed746c964a6aff601"
     },
     {
      "archivo": "docs/capture/s382-recordstill-callers.md",
      "localizador": "1:15",
-     "cita": "# S382 — Llamadores de RecordImage (0x90b248), antigua etiqueta RecordStill::Execute\n\n## 1. Resumen\n\n**Corrección de contrato (23-10-2026):** `0x0090b248` se identifica internamente como **RecordImage**, no se ha demostrado el nombre C++ `RecordStill::Execute`. Ver [comparación completa de contratos y bytes](recordstill-contract-audit-2026-10-23.md). `0x7484dc` y `0x755af8` eran falsos llamadores por recalcular el destino absoluto que entrega Capstone.\n\n| Llamador (BL) | Dirección | Notas |\n|---|---|---|\n| BLX a PLT `0x000e16b4` | `0x007484dc` | Retirado: no llama a `RecordStill::Execute` |\n\nAdemás, se encontraron **dos sitios dentro de funciones que contienen `bl #0x90b248`**:\n\n| Dirección | Función contenedora | Llamador de la función contenedora |\n|---|---|---|\n| `0x0090de2e` | `0x90d7e8..0x90e148` (unwind + prólogo) | 25 punteros Thumb al contenedor; consumidor indirecto NO_VERIFICADO |",
-     "sha256": "86c691b1b978cd7a320ac66b0616017a9561e24fdc7a107a59861097738e4176"
+     "cita": "# S382 — Llamadores de RecordImage (0x90b248), antigua etiqueta RecordStill::Execute\n\n## 1. Resumen\n\n**Corrección de contrato (23-10-2026):** `0x0090b248` se identifica internamente como **RecordImage**, no se ha demostrado el nombre C++ `RecordStill::Execute`. Ver [comparación completa de contratos y bytes](recordstill-contract-audit-2026-10-23.md). `0x7484dc` y `0x755af8` eran falsos llamadores por recalcular el destino absoluto que entrega Capstone.\n\n| Llamador (BL) | Dirección | Notas |\n|---|---|---|\n| BLX a PLT `0x000e16b4` | `0x007484dc` | Retirado: no llama a `RecordStill::Execute` |\n\nAdemás, se encontraron **dos sitios dentro de funciones que contienen `bl #0x90b248`**:\n\n| Dirección | Función contenedora | Llamador de la función contenedora |\n|---|---|---|\n| `0x0090de2e` | `0x90d7e8..0x90e148` (unwind + prólogo) | 25 punteros Thumb consumidos por `StateMgr::CallFunc` |",
+     "sha256": "4b737b92d96c897c909571fb3e1f18b7bfbbf3c88eac5ce2106525ec101473d1"
     },
     {
      "archivo": "docs/capture/s385-libobj-a6000-vs-a7s-diff.md",
@@ -411,7 +411,7 @@
      "archivo": "analysis/s380_libobj_map/tests/test_recordimage_contract.py",
      "localizador": "1:40",
      "cita": "\"\"\"Regresiones de identidad, ABI, límites y punteros; solo lectura del firmware.\"\"\"\n\nimport sys\nfrom pathlib import Path\n\nimport pytest\n\nsys.path.insert(0, str(Path(__file__).resolve().parents[1]))\nfrom recordimage_audit import LIBRARIES, Elf32\n\n\n@pytest.fixture(scope=\"module\", params=LIBRARIES)\ndef image(request):\n    return request.param, Elf32(LIBRARIES[request.param])\n\n\ndef test_unwind_intervals_and_real_entries(image):\n    model, elf = image\n    if model == \"A7S\":\n        assert elf.unwind_span(0x84803A) == (0x847E1C, 0x84814C)\n        assert elf.read(0x847E1C, 8).hex() == \"2de9f047adf5567d\"\n        assert elf.read(0x848100, 4).hex() == \"bde8f087\"\n        assert elf.read(0x84814C, 4).hex() == \"2de9f041\"\n    else:\n        assert elf.unwind_span(0x90B248) == (0x90B248, 0x90C088)\n        assert elf.unwind_span(0x90DE2E) == (0x90D7E8, 0x90E148)\n        assert elf.unwind_span(0x91634E) == (0x9162D0, 0x91647C)\n        assert elf.read(0x91631A, 13).hex() == \"076d121d6d27326d6d3d6d4f61\"\n        assert elf.instruction(0x916316).mnemonic == \"tbb\"\n\n\ndef test_identity_from_resolved_pc_relative_strings(image):\n    model, elf = image\n    if model == \"A7S\":\n        assert elf.pc_string(0x847E26, 0x847E30) == (0xCB6F2B, \" RecordStill :\")\n        for load, add in [(0x847F4E, 0x847F52), (0x847F60, 0x847F64),\n                          (0x847FD6, 0x847FDA), (0x847FE8, 0x847FEC),\n                          (0x848018, 0x84801C), (0x84803A, 0x84803E)]:\n            assert elf.pc_string(load, add) == (0xCB7BBB, \"RecordStill\")\n    else:",
-     "sha256": "0572820f28e788ada2fa442235575c68c0c42fb4e75654228d7fd07cf4d9f8ce"
+     "sha256": "fd435ad83d4717d32cbceba9b605a76a8c59b699e6d170c54fde7f1072fb9aee"
     }
    ]
   },
@@ -423,7 +423,7 @@
      "archivo": "docs/capture/queue-40193-flow-2026-10-23.md",
      "localizador": "1:30",
      "cita": "# Cola 0x40193: construcción, transporte, consumo e instalación\n\n23-10-2026. **VERIFICADO:** corrige [S384](s384-queue-id-0x40193-search.md): los nueve\nliterales A6000 de `.text` tienen cargas LDR; no son falsos positivos por\ndesensamblar sus bytes como instrucciones. El análisis estático no está agotado.\nDirecciones libObj: VA ELF, sin el sesgo REA/Ghidra `+0x10000`.\nav-cam: base `0x43541000`. Sin ejecutar firmware ni usar cámara.\n\n## Construcción y pools\n\n**VERIFICADO contra instrucciones y bytes:** `0x40193` se materializa completo\ndesde literal pool; no necesita una pareja MOVW/MOVT. Encodings correctos\nThumb para r0: `40 f2 93 10` / `c0 f2 04 00`; ARM:\n`93 01 00 e3` / `04 00 40 e3`. Mitad alta **4**, no `0x40`.\nLos 60/44 candidatos Thumb MOVW #0x193 A6000/A7S no son construcciones del ID.\n\n| A6000: LDR a r1 | Pool con `0x40193` | Uso siguiente |\n|---|---|---|\n| `0xadaf84` | `0xadb084` | `0xa1b198`: guarda r1 en objeto+4 |\n| `0xaf929e`, `0xaf9caa` | `0xaf92d0`, `0xaf9ce0` | `0xaf5104 → 0xaf503c` |\n| `0xaf9312`, `0xaf9d6a` | `0xaf9344`, `0xaf9da0` | `0xaf52ac` |\n| `0xaf9382`, `0xaf9d0a` | `0xaf93b4`, `0xaf9d40` | `0xaf51d8` |\n| `0xaf93f2`, `0xaf9dca` | `0xaf9424`, `0xaf9e00` | `0xaf5380` |\n\n**9 palabras y 9 cargas candidatas A6000**, comprobadas con Capstone.\nA7S: 9 cargas a pools en `.text`: `0xa0f2ae`, `0xa2a576`, `0xa2a5d6`,\n`0xa2a636`, `0xa2a696`, `0xa30f42`, `0xa30fb6`, `0xa31026`, `0xa31096`.\nEl censo A7S de palabras en segmentos con bytes devuelve 11: las otras dos\nno se clasifican como cargas ni se descartan solo por su sección.\nSe mantienen los negativos acotados de S384: cero palabras del ID en",
-     "sha256": "19a8cfe9b891dda733e9d47ffdd45b7f8cbb853fd6a4f18ef55fd80563b53513"
+     "sha256": "4ac55cdb2549c518c1f7e42197eb1499a823a0bbfa03524a30d4ce75854e034f"
     },
     {
      "archivo": "docs/capture/s384-queue-id-0x40193-search.md",
@@ -435,7 +435,7 @@
      "archivo": "analysis/s380_libobj_map/tests/test_queue_40193_flow.py",
      "localizador": "1:35",
      "cita": "\"\"\"Regresiones de S384: un literal en .text no es un falso positivo.\"\"\"\n\nimport hashlib\nimport struct\nimport sys\nfrom pathlib import Path\n\nimport pytest\nfrom capstone import CS_ARCH_ARM, CS_MODE_THUMB, Cs\n\nsys.path.insert(0, str(Path(__file__).resolve().parents[1]))\n\nfrom queue_40193_flow import literal_loads, mov_halves\nfrom recordimage_audit import LIBRARIES, Elf32\n\nAV_BASE = 0x43541000\n\n\n@pytest.fixture(scope=\"module\")\ndef avcam():\n    root = Path(__file__).resolve().parents[3]\n    data = (root / \"firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/\"\n            \"nflasha3_unpacked_unpacked/av-cam.bin\").read_bytes()\n    assert hashlib.sha256(data).hexdigest() == (\n        \"b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9\"\n    )\n    return data\n\n\ndef av_instruction(data, address):\n    return next(Cs(CS_ARCH_ARM, CS_MODE_THUMB).disasm(\n        data[address - AV_BASE:address - AV_BASE + 4], address, count=1,\n    ))\n\n",
-     "sha256": "366f2c49faea78618772c18dba4710fdf60935872abc1aa7dee1e9078a9b23d4"
+     "sha256": "ab0de2d533ce77901a204a9bba6640e0e700dad58ca699c369aa6a9ac4cd42e2"
     }
    ]
   },
@@ -608,6 +608,24 @@
      "localizador": "1:18",
      "cita": "# S627 — EO_SW: evidencia de cadenas\n\n**Auditoría de la validación de OpenCode — 23-10-2026.** Este informe corrige las conclusiones históricas de S627. La presencia de texto no demuestra funciones, llamadas ni equivalencia entre modelos.\n\nDatos: [eo_sw.json](../../analysis/s627_eo_sw/eo_sw.json). Auditoría conjunta: [hallazgos S605–S627](S605-S627_tabla_hallazgos.md).\n\n## Evidencia comprobada\n\n1 cadenas principales verificadas contra A6000 fw3.21, base `0x43541000`, incluidos espacios, saltos de línea y NUL. Las direcciones son virtuales. El texto se muestra escapado como JSON.\n\n| Dirección | Texto |\n|---|---|\n| `0x43c37b40` | `\"[EO_SW] Port=%d, Bit=%d, Data=%d\"` |\n\nLongitudes declaradas comprobadas como bytes ASCII: `{\"prefix_length\": 7}`.\n\n## Afirmaciones pendientes\n",
      "sha256": "3d64c6b6b7ed0d8dd8f555c003919a4175db70fa4ab561d99b77c9b6467c1c50"
+    }
+   ]
+  },
+  "s32-s31-codigo-y-log": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "S32 corrige dos atribuciones de S31 dentro del alcance comprobado: 0x43ad6034 es despacho con BLX r3, y 0x4379cb2e registra el log de overflow cuya cadena resuelve a 0x43ca519f. No se certifican aquí ejecución real ni las seis listas VD.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/s32-vd-callbacks-sync-ycout.md",
+     "localizador": "14:20",
+     "cita": "**CORRECCIÓN de [S31](s31-camera-main-sync-strings.md):** `0x43ad6034` contiene\ncódigo de despacho, no una tabla de callbacks. Sus destinos para las listas VD\nse resuelven mediante un adaptador adicional. El log «YC out window overflow»\nestá en `0x4379bb90`, callsite `0x4379cb2e`, no en `0x435a9928`.\nLa rama YC transporta parámetros **y referencias a memoria compartida**;\nno se puede reducir a contadores. Sigue sin cerrarse un descriptor de píxeles\ncon dirección/pitch/formato ni un fin de DMA.",
+     "sha256": "b66ba51d53ca578038422448865245730806245c0781ed419af295731f41a91c"
+    },
+    {
+     "archivo": "tests/knowledge/test_open_questions_triage.py",
+     "localizador": "33:49",
+     "cita": "def test_s32_rectification_uses_original_firmware_bytes() -> None:\n    from capstone import CS_ARCH_ARM, CS_MODE_THUMB, Cs\n\n    base = 0x43541000\n    blob = (ROOT / \"firmware/extracted/fw321/firmware.tar_unpacked/\"\n            \"0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin\").read_bytes()\n    decoder = Cs(CS_ARCH_ARM, CS_MODE_THUMB)\n\n    def instruction(address: int):\n        return next(decoder.disasm(blob[address-base:address-base+4], address, count=1))\n\n    assert instruction(0x43AD6034).mnemonic == \"push\"\n    assert instruction(0x43AD604E).op_str == \"r3\"  # BLX del despachador.\n    assert instruction(0x4379CB2E).op_str == \"#0x43902718\"\n    pool = int.from_bytes(blob[0x4379CDCC-base:0x4379CDD0-base], \"little\")\n    assert (pool + 0x4379CB30) & 0xFFFFFFFF == 0x43CA519F\n    assert blob[0x43CA519F-base:].startswith(b\"VD_Sequence: YC out window overflow \")",
+     "sha256": "213622740b649381ee633be16e4f2b8a867fbeedf49759f17f9c53802456857c"
     }
    ]
   }

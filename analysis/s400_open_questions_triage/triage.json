@@ -541,7 +541,7 @@
   "contexto": "mismo par** (dependencia cruzada `0x43900c9c`, `0x439012fa`/`0x43901302`; id de módulo `0xb5`) y escriben\n**calibración en la RAM del sensor** (51 comandos «Sens» en `0x43fe858c`); `[DEPTH]` sale a la **EXIF** (tags\n`0x5001`/`0x5002`); `[TP_R]` es un **reporter** y **corrige un falso positivo de S130**; `[CAMERA_IS]` es **la\ncapa que aplica la estabilización** (17/17 pares PIC a mano → **valida el mapa de S70**); `[JOG]` es la **fuente\nde eventos de la rueda** (el A6300 sustituye `JogVGrip` por `JogCaif`); `[ADC_DEBUG]` es el **volcado del driver",
   "revision_manual": "plantillas-osal",
   "destino_cita": "# S130 — los 20 módulos \"NUEVO/PROPIO\": ¿contenido nuevo o solo otra etiqueta?\n\n**Hito de la línea de ingeniería inversa general**: cierra la pregunta abierta por S128.\n\nInforme: [analysis/s130_new_modules/new_modules.md](../../analysis/s130_new_modules/new_modules.md) ·\nDatos: `new_modules.json` · Test: `tests/test_s130_new_modules.py`.\n\n## Método\n\nPara cada prefijo `NUEVO/PROPIO` de S128 se extrae el **núcleo** de cada mensaje (lo que sigue a\n`\"[PREFIX]: \"`) y se busca como subcadena en la A7S fw3.20 y el A6300 fw2.01, anotando con qué\netiqueta aparece allí.",
-  "fuente_actual": "docs/STATE.md:52"
+  "fuente_actual": "docs/STATE.md:53"
  },
  {
   "fuente": "docs/STATE.md:27",
@@ -557,7 +557,7 @@
   "contexto": "capa que aplica la estabilización** (17/17 pares PIC a mano → **valida el mapa de S70**); `[JOG]` es la **fuente\nde eventos de la rueda** (el A6300 sustituye `JogVGrip` por `JogCaif`); `[ADC_DEBUG]` es el **volcado del driver\nLIRO ADC** y **corrige una lectura de S164**; `[SAD]` es el **diagnóstico de la biblioteca «SA»** con la sigla\n**sin base textual** (sin desarrollar).",
   "revision_manual": "adc",
   "destino_cita": "# S164 — el módulo `[CAMERA_IS]` (17 trazas): la capa de estabilización de imagen de la cámara\n\n> Línea de RE general. Solo bytes (A6000 fw3.21; comparación con A7S fw3.20 y A6300 fw2.01).\n> `vaddr = 0x43541000 + file_offset`. Referencias: regla **estricta** (canónica del repo).\n\n## Veredicto\n\n**`[CAMERA_IS]` es la capa de estabilización de imagen (IS) de la cámara**, con **4 sub-capas**:\n`MOUNT` (5 trazas), `DIST` (5), `AS` (3), `EIS` (4). **17 cadenas, 21 sitios PIC, 13 funciones,\n17/17 referenciadas (0 muertas), 7 envoltorios de traza.**\n\n## Cifras",
-  "fuente_actual": "docs/STATE.md:55"
+  "fuente_actual": "docs/STATE.md:56"
  },
  {
   "fuente": "docs/STATE.md:35",
@@ -573,7 +573,7 @@
   "contexto": "código** (regla estricta, punteros absolutos, pares `movw`/`movt` y un método inverso independiente) → **cadena\n  muerta**; de las 5 de su banda, 4 sí lo están (el único código vivo es el cálculo de ancho del **número de\n  posición del VD**, `0x4372914c`). **Corrige** el colateral de S164.\n* **S169** — el A6300 tiene una **capa de validación de parámetros de cámara** (`LiroSeq`) con **201** propiedades\n  `CheckSet*` y **370** comprobaciones, con parámetros de obturador `sc_ShutDrive` (`+0x1dd`), `uc_ShutDriveMode`",
   "revision_manual": "rolling",
   "destino_cita": "# S164 — el módulo `[CAMERA_IS]` (17 trazas): la capa de estabilización de imagen de la cámara\n\n> Línea de RE general. Solo bytes (A6000 fw3.21; comparación con A7S fw3.20 y A6300 fw2.01).\n> `vaddr = 0x43541000 + file_offset`. Referencias: regla **estricta** (canónica del repo).\n\n## Veredicto\n\n**`[CAMERA_IS]` es la capa de estabilización de imagen (IS) de la cámara**, con **4 sub-capas**:\n`MOUNT` (5 trazas), `DIST` (5), `AS` (3), `EIS` (4). **17 cadenas, 21 sitios PIC, 13 funciones,\n17/17 referenciadas (0 muertas), 7 envoltorios de traza.**\n\n## Cifras",
-  "fuente_actual": "docs/STATE.md:63"
+  "fuente_actual": "docs/STATE.md:64"
  },
  {
   "fuente": "docs/STATE.md:49",
@@ -589,7 +589,7 @@
   "contexto": "(`0x80`→3, `0x100`→4) y `EC_NonlinearElecShutter_MechShutterTable.cpp` implementa la **equivalencia no lineal\n  electrónica/mecánica** (32 bits por fila, escalas 10000/1000 y punto fijo 16.16 con escala `0x8000`).\n  **Corrige a S135**: los 128 bytes de `0x43dcfa9e` **no tienen ninguna referencia de código**.\n* **S174** — el conversor `CamMsgConv` del `libObj.so` conoce **216/221/240** nombres `…ForLiro` y **soporta\n  0/0/6**; en la A6000 y la A7S **todos** están en la lista de **rechazo**.",
   "revision_manual": "tabla-128",
   "destino_cita": "# S135 — el subsistema `ElecShutter` del A6300 como control positivo\n\n**Hito de la línea de ingeniería inversa general** con relevancia directa para la **línea del\nobturador electrónico**.\n\nInforme: [analysis/s135_elec_shutter/elec_shutter_scan.md](../../analysis/s135_elec_shutter/elec_shutter_scan.md) ·\nDatos: `elec_shutter_scan.json` · Test: `tests/test_s135_elec_shutter.py`.\n\n## Hallazgo central\n\nBuscando en los tres `av-cam.bin` disponibles las huellas de un subsistema de **obturador\nelectrónico**, aparece una asimetría inequívoca:",
-  "fuente_actual": "docs/STATE.md:77"
+  "fuente_actual": "docs/STATE.md:78"
  },
  {
   "fuente": "docs/STATE.md:145",
@@ -605,7 +605,7 @@
   "contexto": "## Hallazgos corregidos con impacto en todo lo posterior (no reusar versiones previas)\n\n| Tema | Corrección vigente | Fuente |\n|---|---|---|\n| Darwin — base ROM | La base es `0x4200`, NO `0`. No reusar punteros absolutos de proyectos Ghidra antiguos a6000/a6300-darwin (se conservan solo como análisis fallido). | [CONTEXT.md:354](../CONTEXT.md#L354), [darwin-shutter-entrypoints.md:1](capture/darwin-shutter-entrypoints.md) |",
   "revision_manual": "indice",
   "destino_cita": "# Darwin: entradas verificadas para investigar el obturador\n\nContinuación vigente: [máquina de estados, notificaciones y control](darwin-state-machine.md).\nLas cuatro entradas TBB ya fueron recuperadas de los bytes originales.\nLa advertencia de Ghidra conservada más abajo es histórica; no sigue siendo\nun bloqueo para reconstruir sus destinos. El bit `0x80` del bloque de callback\nretiene la etapa del planificador, no certifica finalización de movimiento.\n\nSe incorporan las dos imágenes auxiliares oficiales `0640_darwin/darwin_core.bin`.\nTodavía **no se ha demostrado que Darwin sea el receptor del paquete CAIF**\ndescrito en [silent-caif-transport.md](silent-caif-transport.md).\n",
-  "fuente_actual": "docs/STATE.md:173"
+  "fuente_actual": "docs/STATE.md:174"
  },
  {
   "fuente": "docs/STATE.md:145",
@@ -621,7 +621,7 @@
   "contexto": "## Hallazgos corregidos con impacto en todo lo posterior (no reusar versiones previas)\n\n| Tema | Corrección vigente | Fuente |\n|---|---|---|\n| Darwin — base ROM | La base es `0x4200`, NO `0`. No reusar punteros absolutos de proyectos Ghidra antiguos a6000/a6300-darwin (se conservan solo como análisis fallido). | [CONTEXT.md:354](../CONTEXT.md#L354), [darwin-shutter-entrypoints.md:1](capture/darwin-shutter-entrypoints.md) |",
   "revision_manual": "indice",
   "destino_cita": "# Continuidad\n\n## Revisión de OpenCode S605–S627 — 23-10-2026\n\n[Auditoría](docs/capture/S605-S627_tabla_hallazgos.md): corrige la validación original; 263 tests pasaban pese a siete direcciones gemelas falsas, 13 textos sin bytes finales y cinco longitudes adicionales incorrectas. Corregidos los 23 JSON e informes y 21 verificadores individuales obsoletos. Se verifican 94 trazas, siete gemelas, 11 núcleos y metadatos. Logger dual, equivalencias, recuentos differential y ausencia funcional de relación con el obturador: NO_VERIFICADO. S51 sin cambios. Ampliación S605–S627: diez marcadores `level`/`sub_prefix` verificados; S625 corregido a prefijo `[CAM_UTIL_SENS]: ` (17 B). Nuevas regresiones rechazan esquemas incompletos y estados positivos sin evidencia. Las 69 afirmaciones de logger dual/equivalencias siguen NO_VERIFICADO. [Auditoría](docs/capture/S605-S627_tabla_hallazgos.md).\n\n## Cola 0x40193 — 23-10-2026\n\n[Trazado y límites](docs/capture/queue-40193-flow-2026-10-23.md): S384 actualizado.\nNueve literales `.text` A6000 con LDR; transporte por registros y copia de 16 B\nhasta `osal_snd_msg`. Receptor LIRO `0x4381d16c`, tabla de 35 filas en\n`0x44000174`. Inicializador `0x4379e93c` instala su puntero en descriptor",
-  "fuente_actual": "docs/STATE.md:173"
+  "fuente_actual": "docs/STATE.md:174"
  },
  {
   "fuente": "docs/capture/README.md:28",
@@ -1307,14 +1307,14 @@
   "destino": "docs/capture/s31-camera-main-sync-strings.md",
   "tipo": "CORRECTS",
   "status_grafo": "CONFLICTO_PENDIENTE",
-  "veredicto": "VIGENTE",
-  "motivo": "S32 corrige explícitamente S31 (despacho/thunk y sitio del overflow). La corrección textual existe, pero no se revalidaron aquí los exports originales de las seis listas ni el nuevo log; se retira la certificación anterior.",
+  "veredicto": "CORRECCION_APLICADA",
+  "motivo": "S32 corrige dos atribuciones de S31 dentro del alcance comprobado: 0x43ad6034 es despacho con BLX r3, y 0x4379cb2e registra el log de overflow cuya cadena resuelve a 0x43ca519f. No se certifican aquí ejecución real ni las seis listas VD.",
   "veredicto_anterior": "CORRECCION_APLICADA",
   "motivo_anterior": "corrección real y ya documentada en la fuente; el status abierto es el valor por defecto del extractor (la línea no usa vocabulario de status)",
   "revision_fuente": "9edc21988fc38139193c95e7a22cbf9f4159da15",
   "cita": "## Resultado y corrección de S31",
   "contexto": "no se parcheó ningún byte ni se guardó el proyecto. Sin cámara ni firmware ejecutado.\n\n## Resultado y corrección de S31\n\n**CORRECCIÓN de [S31](s31-camera-main-sync-strings.md):** `0x43ad6034` contiene",
-  "revision_manual": "pendiente-s32",
+  "revision_manual": "s32-s31-codigo-y-log",
   "destino_cita": "# S31 — subsistema CAMERA_MAIN_SYNC/DFECore: cadenas no exploradas (18-10-2026)\n\nFirmware ILCE-6000 3.21, `av-cam.bin`, SHA-256\n`b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9`. Hallazgo\npor búsqueda literal de cadenas (`strings`), no decompilación todavía.\nBase lógica de análisis `0x43541000` (ver E016); VA aproximada = base +\noffset de archivo para una imagen plana.\n\n## Motivación\n\nLas sesiones S16–S30 (ver `s22-sensor-to-yc.md`, `s30-pipelines-capture-encode.md`)\nbuscaron el productor sensor/DMA del YC y el fin electrónico de exposición",
   "fuente_actual": "docs/capture/s32-vd-callbacks-sync-ycout.md:12"
  },
@@ -1323,14 +1323,14 @@
   "destino": "docs/capture/s31-camera-main-sync-strings.md",
   "tipo": "CORRECTS",
   "status_grafo": "NO_VERIFICADO",
-  "veredicto": "VIGENTE",
-  "motivo": "S32 corrige explícitamente S31 (despacho/thunk y sitio del overflow). La corrección textual existe, pero no se revalidaron aquí los exports originales de las seis listas ni el nuevo log; se retira la certificación anterior.",
+  "veredicto": "CORRECCION_APLICADA",
+  "motivo": "S32 corrige dos atribuciones de S31 dentro del alcance comprobado: 0x43ad6034 es despacho con BLX r3, y 0x4379cb2e registra el log de overflow cuya cadena resuelve a 0x43ca519f. No se certifican aquí ejecución real ni las seis listas VD.",
   "veredicto_anterior": "CORRECCION_APLICADA",
   "motivo_anterior": "corrección real y ya documentada en la fuente; el status abierto es el valor por defecto del extractor (la línea no usa vocabulario de status)",
   "revision_fuente": "9edc21988fc38139193c95e7a22cbf9f4159da15",
   "cita": "**CORRECCIÓN de [S31](s31-camera-main-sync-strings.md):** `0x43ad6034` contiene",
   "contexto": "## Resultado y corrección de S31\n\n**CORRECCIÓN de [S31](s31-camera-main-sync-strings.md):** `0x43ad6034` contiene\ncódigo de despacho, no una tabla de callbacks. Sus destinos para las listas VD\nse resuelven mediante un adaptador adicional. El log «YC out window overflow»",
-  "revision_manual": "pendiente-s32",
+  "revision_manual": "s32-s31-codigo-y-log",
   "destino_cita": "# S31 — subsistema CAMERA_MAIN_SYNC/DFECore: cadenas no exploradas (18-10-2026)\n\nFirmware ILCE-6000 3.21, `av-cam.bin`, SHA-256\n`b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9`. Hallazgo\npor búsqueda literal de cadenas (`strings`), no decompilación todavía.\nBase lógica de análisis `0x43541000` (ver E016); VA aproximada = base +\noffset de archivo para una imagen plana.\n\n## Motivación\n\nLas sesiones S16–S30 (ver `s22-sensor-to-yc.md`, `s30-pipelines-capture-encode.md`)\nbuscaron el productor sensor/DMA del YC y el fin electrónico de exposición",
   "fuente_actual": "docs/capture/s32-vd-callbacks-sync-ycout.md:14"
  },
@@ -2831,7 +2831,7 @@
   "contexto": "## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos\n\n- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).\n- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.\n- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.",
   "revision_manual": "adyacencia",
   "destino_cita": "# S301 — mismo barrido en la A7S fw3.20 y diferencias con la A6000\n\nSegunda sesión del carril B. Repite el barrido de S300 sobre el `av-cam.bin` de la **A7S\nfw3.20** (SHA `b857d338…5103e`) para comparar el estado del imager y los gates `+3`/`+6`.\nLa A7S es la cámara de la misma generación que **sí** tiene obturador silencioso, así que\ncualquier diferencia de estado es candidata a explicar esa función.\n\n**Resultado:** los gates `+3`/`+6` son **idénticos** en ambas cámaras (mismo dumper,\nmismas máscaras, 8 lecturas cada uno, cero escritores), por lo que **no** son el\nmecanismo del silent shutter. La diferencia está en el resto del estado: la A7S tiene\n**11 campos que la A6000 no lee** y **4 escrituras que la A6000 no tiene**, concentradas\nen el clúster `+0xde..+0xea` y en `+0xae`.",
-  "fuente_actual": "docs/STATE.md:31"
+  "fuente_actual": "docs/STATE.md:32"
  },
  {
   "fuente": "docs/STATE.md:14",
@@ -2847,7 +2847,7 @@
   "contexto": "## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos\n\n- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).\n- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.\n- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.",
   "revision_manual": "pendiente-revision-propia",
   "destino_cita": "# S329 — ¿Hay una tabla de tiempos por modo en el A7S? (carril B)\n\n22-10-2026. Carril B (imager: estado, drive modes y gates). Sesión S329. **Solo investigación estática: sin ejecutar firmware, sin cámara, sin flasheo.** Autoridad = bytes de `av-cam.bin` (A7S fw3.20 `b857d338…`, A6000 fw3.21 `b60c845c…`), no REA.\n\n## Pregunta\n\nLa cola pedía: «localizar la tabla de **tiempos** por modo del A7S (S202 §3) y comprobar si `0x4e`/`0x4f` difieren de `0x4c`/`0x4d`; si no aparece, cerrar la pregunta con un barrido de la región de tablas de modo».\n\n## Veredicto\n\n| Afirmación | Clasificación | Evidencia |\n|---|---|---|",
-  "fuente_actual": "docs/STATE.md:31"
+  "fuente_actual": "docs/STATE.md:32"
  },
  {
   "fuente": "docs/STATE.md:14",
@@ -2863,7 +2863,7 @@
   "contexto": "## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos\n\n- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).\n- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.\n- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.",
   "revision_manual": "adyacencia",
   "destino_cita": "# S300 — barrido único de xrefs al objeto de estado del IMX210 (A6000 fw3.21)\n\nCarril B, primera sesión. Pregunta: **¿existe algún escritor de los gates `+3`/`+6` del\nobjeto de estado `0x43f72d02`?** En vez de seguir clasificando xrefs de uno en uno\n(S153–S176), esta sesión hace **un solo barrido** de las dos vías de acceso (dirección\ndel objeto y slot GOT `0x4401f990`), resuelve la función contenedora de cada sitio y\ntraza localmente el uso del puntero cargado.\n\n**Veredicto (VERIFICADO, límite estático):** ninguno de los 67 sitios escribe `+3` ni\n`+6`. Los únicos stores son a `+0x00` (1 instrucción) y `+0x02` (4 instrucciones).\nLos gates tienen 8 lecturas cada uno y **cero** escrituras tipadas. No se observa\nindexación dinámica, copia de bloque ni escape del puntero en los cuerpos barridos.",
-  "fuente_actual": "docs/STATE.md:31"
+  "fuente_actual": "docs/STATE.md:32"
  },
  {
   "fuente": "docs/STATE.md:14",
@@ -2879,7 +2879,7 @@
   "contexto": "## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos\n\n- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).\n- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.\n- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.",
   "revision_manual": "pendiente-revision-propia",
   "destino_cita": "# S341 — Síntesis del carril B: la cadena modo→registro y sus correcciones (S314–S340)\n\n22-10-2026. Sesión de consolidación del carril B. **No introduce hallazgos nuevos**: cada cifra remite a su JSON y está comprobada por `analysis/s341_synthesis_b2/verify_synthesis.py` (27 cifras). Sustituye a `docs/capture/s313-synthesis-carril-b.md` en lo que quedó corregido.\n\n## 1. La cadena, de extremo a extremo\n\n```\nmodo (código)  →  posición en la lista u32[34]          (A7S)  /  u32[13] (A6000)\n  →  matriz de registros (slot 40): 69 vs 59 filas, 15 vs 13 columnas\n  →  tablas T1/T2/T3: (w0 selector, +4/+5/+6 selectores, +0x14 descriptor, +0x18 máscara)\n  →  12 pares (flag, índice de bit) → máscara u16 (obj+0x68 / obj+0xf8)\n  →  0x436f822c aplica ~valor ^ máscara",
-  "fuente_actual": "docs/STATE.md:31"
+  "fuente_actual": "docs/STATE.md:32"
  },
  {
   "fuente": "docs/STATE.md:14",
@@ -2895,7 +2895,7 @@
   "contexto": "## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos\n\n- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).\n- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.\n- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.",
   "revision_manual": "adyacencia",
   "destino_cita": "# S342 — `0x43fef404` sí tiene consumidores: es la tabla de ids de `Camera::Lens::ODL`\n\n22-10-2026. Carril B. Sesión S342. **Solo lectura estática; sin firmware en ejecución, sin cámara, sin flasheo.**\n\n## Pregunta\n\nS337 cerró `0x43fef404` con un negativo **acotado a literales absolutos** («0 referencias literales»). S341 dejó abierta la pregunta «consumidor de `0x43fef404`». ¿Existe un consumidor que llegue por **puntero calculado** (base PIC `ldr rX,[pc,#imm]` + `add rX,pc`)?\n\n## Veredicto\n\n| Afirmación | Clasificación | Evidencia |\n|---|---|---|",
-  "fuente_actual": "docs/STATE.md:31"
+  "fuente_actual": "docs/STATE.md:32"
  },
  {
   "fuente": "docs/STATE.md:14",
@@ -2911,7 +2911,7 @@
   "contexto": "## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos\n\n- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).\n- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.\n- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.",
   "revision_manual": "adyacencia",
   "destino_cita": "# S312 — Todos los consumidores del cluster A7S `+0xae`/`+0xde..+0xea` son código A7S\n\nDécima sesión del carril B. S301/S307 localizaron las escrituras exclusivas de la A7S.\nEsta sesión cierra el círculo: **quién lee** ese cluster y si ese código existe en la A6000.\n\n**Resultado:** los seis sitios de lectura del cluster están en **seis funciones, todas con 0\ncoincidencias** de sus primeros 24 bytes en la A6000. El cluster y sus consumidores forman\nun subsistema exclusivo de la A7S.\n\n## Consumidores\n\n| Sitio | Función | Campos | Veces en A6000 |",
-  "fuente_actual": "docs/STATE.md:31"
+  "fuente_actual": "docs/STATE.md:32"
  },
  {
   "fuente": "docs/STATE.md:14",
@@ -2927,7 +2927,7 @@
   "contexto": "## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos\n\n- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).\n- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.\n- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.",
   "revision_manual": "adyacencia",
   "destino_cita": "# S307 — Las escrituras A7S de `+0xde` y `+0xe6..+0xea` están en código que la A6000 no tiene\n\nQuinta sesión del carril B. S301 encontró que la A7S escribe en su estado cuatro campos que\nla A6000 no escribe: `+0xde` y el trío `+0xe6/+0xe8/+0xea`. Esta sesión responde **de dónde\nsalen** y si ese código existe en la A6000.\n\n**Resultado:** las tres instrucciones del trío y la de `+0xde` pertenecen a funciones cuya\nsecuencia de store (24 B alrededor) **no aparece en la A6000** (0 coincidencias). Dos\nescritores de `+0x02` también son exclusivos de la A7S; en cambio los de `+0x00` y uno de\n`+0x02` sí tienen gemelo en la A6000. Es decir, la A7S añade un bloque de código de\nparámetros/tiempos que la A6000 no tiene.\n",
-  "fuente_actual": "docs/STATE.md:31"
+  "fuente_actual": "docs/STATE.md:32"
  },
  {
   "fuente": "docs/STATE.md:35",
@@ -2943,7 +2943,7 @@
   "contexto": "mismo par** (dependencia cruzada `0x43900c9c`, `0x439012fa`/`0x43901302`; id de módulo `0xb5`) y escriben\n**calibración en la RAM del sensor** (51 comandos «Sens» en `0x43fe858c`); `[DEPTH]` sale a la **EXIF** (tags\n`0x5001`/`0x5002`); `[TP_R]` es un **reporter** y **corrige un falso positivo de S130**; `[CAMERA_IS]` es **la\ncapa que aplica la estabilización** (17/17 pares PIC a mano → **valida el mapa de S70**); `[JOG]` es la **fuente\nde eventos de la rueda** (el A6300 sustituye `JogVGrip` por `JogCaif`); `[ADC_DEBUG]` es el **volcado del driver",
   "revision_manual": "plantillas-osal",
   "destino_cita": "# S130 — los 20 módulos \"NUEVO/PROPIO\": ¿contenido nuevo o solo otra etiqueta?\n\n**Hito de la línea de ingeniería inversa general**: cierra la pregunta abierta por S128.\n\nInforme: [analysis/s130_new_modules/new_modules.md](../../analysis/s130_new_modules/new_modules.md) ·\nDatos: `new_modules.json` · Test: `tests/test_s130_new_modules.py`.\n\n## Método\n\nPara cada prefijo `NUEVO/PROPIO` de S128 se extrae el **núcleo** de cada mensaje (lo que sigue a\n`\"[PREFIX]: \"`) y se busca como subcadena en la A7S fw3.20 y el A6300 fw2.01, anotando con qué\netiqueta aparece allí.",
-  "fuente_actual": "docs/STATE.md:52"
+  "fuente_actual": "docs/STATE.md:53"
  },
  {
   "fuente": "docs/STATE.md:38",
@@ -2959,7 +2959,7 @@
   "contexto": "capa que aplica la estabilización** (17/17 pares PIC a mano → **valida el mapa de S70**); `[JOG]` es la **fuente\nde eventos de la rueda** (el A6300 sustituye `JogVGrip` por `JogCaif`); `[ADC_DEBUG]` es el **volcado del driver\nLIRO ADC** y **corrige una lectura de S164**; `[SAD]` es el **diagnóstico de la biblioteca «SA»** con la sigla\n**sin base textual** (sin desarrollar).",
   "revision_manual": "adc",
   "destino_cita": "# S164 — el módulo `[CAMERA_IS]` (17 trazas): la capa de estabilización de imagen de la cámara\n\n> Línea de RE general. Solo bytes (A6000 fw3.21; comparación con A7S fw3.20 y A6300 fw2.01).\n> `vaddr = 0x43541000 + file_offset`. Referencias: regla **estricta** (canónica del repo).\n\n## Veredicto\n\n**`[CAMERA_IS]` es la capa de estabilización de imagen (IS) de la cámara**, con **4 sub-capas**:\n`MOUNT` (5 trazas), `DIST` (5), `AS` (3), `EIS` (4). **17 cadenas, 21 sitios PIC, 13 funciones,\n17/17 referenciadas (0 muertas), 7 envoltorios de traza.**\n\n## Cifras",
-  "fuente_actual": "docs/STATE.md:55"
+  "fuente_actual": "docs/STATE.md:56"
  },
  {
   "fuente": "docs/STATE.md:46",
@@ -2975,7 +2975,7 @@
   "contexto": "código** (regla estricta, punteros absolutos, pares `movw`/`movt` y un método inverso independiente) → **cadena\n  muerta**; de las 5 de su banda, 4 sí lo están (el único código vivo es el cálculo de ancho del **número de\n  posición del VD**, `0x4372914c`). **Corrige** el colateral de S164.\n* **S169** — el A6300 tiene una **capa de validación de parámetros de cámara** (`LiroSeq`) con **201** propiedades\n  `CheckSet*` y **370** comprobaciones, con parámetros de obturador `sc_ShutDrive` (`+0x1dd`), `uc_ShutDriveMode`",
   "revision_manual": "rolling",
   "destino_cita": "# S164 — el módulo `[CAMERA_IS]` (17 trazas): la capa de estabilización de imagen de la cámara\n\n> Línea de RE general. Solo bytes (A6000 fw3.21; comparación con A7S fw3.20 y A6300 fw2.01).\n> `vaddr = 0x43541000 + file_offset`. Referencias: regla **estricta** (canónica del repo).\n\n## Veredicto\n\n**`[CAMERA_IS]` es la capa de estabilización de imagen (IS) de la cámara**, con **4 sub-capas**:\n`MOUNT` (5 trazas), `DIST` (5), `AS` (3), `EIS` (4). **17 cadenas, 21 sitios PIC, 13 funciones,\n17/17 referenciadas (0 muertas), 7 envoltorios de traza.**\n\n## Cifras",
-  "fuente_actual": "docs/STATE.md:63"
+  "fuente_actual": "docs/STATE.md:64"
  },
  {
   "fuente": "docs/STATE.md:60",
@@ -2991,7 +2991,7 @@
   "contexto": "(`0x80`→3, `0x100`→4) y `EC_NonlinearElecShutter_MechShutterTable.cpp` implementa la **equivalencia no lineal\n  electrónica/mecánica** (32 bits por fila, escalas 10000/1000 y punto fijo 16.16 con escala `0x8000`).\n  **Corrige a S135**: los 128 bytes de `0x43dcfa9e` **no tienen ninguna referencia de código**.\n* **S174** — el conversor `CamMsgConv` del `libObj.so` conoce **216/221/240** nombres `…ForLiro` y **soporta\n  0/0/6**; en la A6000 y la A7S **todos** están en la lista de **rechazo**.",
   "revision_manual": "tabla-128",
   "destino_cita": "# S135 — el subsistema `ElecShutter` del A6300 como control positivo\n\n**Hito de la línea de ingeniería inversa general** con relevancia directa para la **línea del\nobturador electrónico**.\n\nInforme: [analysis/s135_elec_shutter/elec_shutter_scan.md](../../analysis/s135_elec_shutter/elec_shutter_scan.md) ·\nDatos: `elec_shutter_scan.json` · Test: `tests/test_s135_elec_shutter.py`.\n\n## Hallazgo central\n\nBuscando en los tres `av-cam.bin` disponibles las huellas de un subsistema de **obturador\nelectrónico**, aparece una asimetría inequívoca:",
-  "fuente_actual": "docs/STATE.md:77"
+  "fuente_actual": "docs/STATE.md:78"
  },
  {
   "fuente": "docs/STATE.md:156",
@@ -3007,7 +3007,7 @@
   "contexto": "## Hallazgos corregidos con impacto en todo lo posterior (no reusar versiones previas)\n\n| Tema | Corrección vigente | Fuente |\n|---|---|---|\n| Darwin — base ROM | La base es `0x4200`, NO `0`. No reusar punteros absolutos de proyectos Ghidra antiguos a6000/a6300-darwin (se conservan solo como análisis fallido). | [CONTEXT.md:354](../CONTEXT.md#L354), [darwin-shutter-entrypoints.md:1](capture/darwin-shutter-entrypoints.md) |",
   "revision_manual": "indice",
   "destino_cita": "# Continuidad\n\n## Revisión de OpenCode S605–S627 — 23-10-2026\n\n[Auditoría](docs/capture/S605-S627_tabla_hallazgos.md): corrige la validación original; 263 tests pasaban pese a siete direcciones gemelas falsas, 13 textos sin bytes finales y cinco longitudes adicionales incorrectas. Corregidos los 23 JSON e informes y 21 verificadores individuales obsoletos. Se verifican 94 trazas, siete gemelas, 11 núcleos y metadatos. Logger dual, equivalencias, recuentos differential y ausencia funcional de relación con el obturador: NO_VERIFICADO. S51 sin cambios. Ampliación S605–S627: diez marcadores `level`/`sub_prefix` verificados; S625 corregido a prefijo `[CAM_UTIL_SENS]: ` (17 B). Nuevas regresiones rechazan esquemas incompletos y estados positivos sin evidencia. Las 69 afirmaciones de logger dual/equivalencias siguen NO_VERIFICADO. [Auditoría](docs/capture/S605-S627_tabla_hallazgos.md).\n\n## Cola 0x40193 — 23-10-2026\n\n[Trazado y límites](docs/capture/queue-40193-flow-2026-10-23.md): S384 actualizado.\nNueve literales `.text` A6000 con LDR; transporte por registros y copia de 16 B\nhasta `osal_snd_msg`. Receptor LIRO `0x4381d16c`, tabla de 35 filas en\n`0x44000174`. Inicializador `0x4379e93c` instala su puntero en descriptor",
-  "fuente_actual": "docs/STATE.md:173"
+  "fuente_actual": "docs/STATE.md:174"
  },
  {
   "fuente": "docs/STATE.md:156",
@@ -3023,7 +3023,7 @@
   "contexto": "## Hallazgos corregidos con impacto en todo lo posterior (no reusar versiones previas)\n\n| Tema | Corrección vigente | Fuente |\n|---|---|---|\n| Darwin — base ROM | La base es `0x4200`, NO `0`. No reusar punteros absolutos de proyectos Ghidra antiguos a6000/a6300-darwin (se conservan solo como análisis fallido). | [CONTEXT.md:354](../CONTEXT.md#L354), [darwin-shutter-entrypoints.md:1](capture/darwin-shutter-entrypoints.md) |",
   "revision_manual": "indice",
   "destino_cita": "# Darwin: entradas verificadas para investigar el obturador\n\nContinuación vigente: [máquina de estados, notificaciones y control](darwin-state-machine.md).\nLas cuatro entradas TBB ya fueron recuperadas de los bytes originales.\nLa advertencia de Ghidra conservada más abajo es histórica; no sigue siendo\nun bloqueo para reconstruir sus destinos. El bit `0x80` del bloque de callback\nretiene la etapa del planificador, no certifica finalización de movimiento.\n\nSe incorporan las dos imágenes auxiliares oficiales `0640_darwin/darwin_core.bin`.\nTodavía **no se ha demostrado que Darwin sea el receptor del paquete CAIF**\ndescrito en [silent-caif-transport.md](silent-caif-transport.md).\n",
-  "fuente_actual": "docs/STATE.md:173"
+  "fuente_actual": "docs/STATE.md:174"
  },
  {
   "fuente": "docs/agents/outbox-B.md:20",
@@ -5163,7 +5163,7 @@
   "contexto": "## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos\n\n- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).\n- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.\n- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.",
   "revision_manual": "pendiente-revision-propia",
   "destino_cita": "# S329 — ¿Hay una tabla de tiempos por modo en el A7S? (carril B)\n\n22-10-2026. Carril B (imager: estado, drive modes y gates). Sesión S329. **Solo investigación estática: sin ejecutar firmware, sin cámara, sin flasheo.** Autoridad = bytes de `av-cam.bin` (A7S fw3.20 `b857d338…`, A6000 fw3.21 `b60c845c…`), no REA.\n\n## Pregunta\n\nLa cola pedía: «localizar la tabla de **tiempos** por modo del A7S (S202 §3) y comprobar si `0x4e`/`0x4f` difieren de `0x4c`/`0x4d`; si no aparece, cerrar la pregunta con un barrido de la región de tablas de modo».\n\n## Veredicto\n\n| Afirmación | Clasificación | Evidencia |\n|---|---|---|",
-  "fuente_actual": "docs/STATE.md:31"
+  "fuente_actual": "docs/STATE.md:32"
  },
  {
   "fuente": "docs/STATE.md:18",
@@ -5179,7 +5179,7 @@
   "contexto": "## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos\n\n- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).\n- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.\n- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.",
   "revision_manual": "adyacencia",
   "destino_cita": "# S342 — `0x43fef404` sí tiene consumidores: es la tabla de ids de `Camera::Lens::ODL`\n\n22-10-2026. Carril B. Sesión S342. **Solo lectura estática; sin firmware en ejecución, sin cámara, sin flasheo.**\n\n## Pregunta\n\nS337 cerró `0x43fef404` con un negativo **acotado a literales absolutos** («0 referencias literales»). S341 dejó abierta la pregunta «consumidor de `0x43fef404`». ¿Existe un consumidor que llegue por **puntero calculado** (base PIC `ldr rX,[pc,#imm]` + `add rX,pc`)?\n\n## Veredicto\n\n| Afirmación | Clasificación | Evidencia |\n|---|---|---|",
-  "fuente_actual": "docs/STATE.md:31"
+  "fuente_actual": "docs/STATE.md:32"
  },
  {
   "fuente": "docs/STATE.md:18",
@@ -5195,7 +5195,7 @@
   "contexto": "## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos\n\n- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).\n- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.\n- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.",
   "revision_manual": "adyacencia",
   "destino_cita": "# S300 — barrido único de xrefs al objeto de estado del IMX210 (A6000 fw3.21)\n\nCarril B, primera sesión. Pregunta: **¿existe algún escritor de los gates `+3`/`+6` del\nobjeto de estado `0x43f72d02`?** En vez de seguir clasificando xrefs de uno en uno\n(S153–S176), esta sesión hace **un solo barrido** de las dos vías de acceso (dirección\ndel objeto y slot GOT `0x4401f990`), resuelve la función contenedora de cada sitio y\ntraza localmente el uso del puntero cargado.\n\n**Veredicto (VERIFICADO, límite estático):** ninguno de los 67 sitios escribe `+3` ni\n`+6`. Los únicos stores son a `+0x00` (1 instrucción) y `+0x02` (4 instrucciones).\nLos gates tienen 8 lecturas cada uno y **cero** escrituras tipadas. No se observa\nindexación dinámica, copia de bloque ni escape del puntero en los cuerpos barridos.",
-  "fuente_actual": "docs/STATE.md:31"
+  "fuente_actual": "docs/STATE.md:32"
  },
  {
   "fuente": "docs/STATE.md:18",
@@ -5211,7 +5211,7 @@
   "contexto": "## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos\n\n- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).\n- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.\n- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.",
   "revision_manual": "pendiente-revision-propia",
   "destino_cita": "# S341 — Síntesis del carril B: la cadena modo→registro y sus correcciones (S314–S340)\n\n22-10-2026. Sesión de consolidación del carril B. **No introduce hallazgos nuevos**: cada cifra remite a su JSON y está comprobada por `analysis/s341_synthesis_b2/verify_synthesis.py` (27 cifras). Sustituye a `docs/capture/s313-synthesis-carril-b.md` en lo que quedó corregido.\n\n## 1. La cadena, de extremo a extremo\n\n```\nmodo (código)  →  posición en la lista u32[34]          (A7S)  /  u32[13] (A6000)\n  →  matriz de registros (slot 40): 69 vs 59 filas, 15 vs 13 columnas\n  →  tablas T1/T2/T3: (w0 selector, +4/+5/+6 selectores, +0x14 descriptor, +0x18 máscara)\n  →  12 pares (flag, índice de bit) → máscara u16 (obj+0x68 / obj+0xf8)\n  →  0x436f822c aplica ~valor ^ máscara",
-  "fuente_actual": "docs/STATE.md:31"
+  "fuente_actual": "docs/STATE.md:32"
  },
  {
   "fuente": "docs/STATE.md:18",
@@ -5227,7 +5227,7 @@
   "contexto": "## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos\n\n- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).\n- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.\n- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.",
   "revision_manual": "adyacencia",
   "destino_cita": "# S307 — Las escrituras A7S de `+0xde` y `+0xe6..+0xea` están en código que la A6000 no tiene\n\nQuinta sesión del carril B. S301 encontró que la A7S escribe en su estado cuatro campos que\nla A6000 no escribe: `+0xde` y el trío `+0xe6/+0xe8/+0xea`. Esta sesión responde **de dónde\nsalen** y si ese código existe en la A6000.\n\n**Resultado:** las tres instrucciones del trío y la de `+0xde` pertenecen a funciones cuya\nsecuencia de store (24 B alrededor) **no aparece en la A6000** (0 coincidencias). Dos\nescritores de `+0x02` también son exclusivos de la A7S; en cambio los de `+0x00` y uno de\n`+0x02` sí tienen gemelo en la A6000. Es decir, la A7S añade un bloque de código de\nparámetros/tiempos que la A6000 no tiene.\n",
-  "fuente_actual": "docs/STATE.md:31"
+  "fuente_actual": "docs/STATE.md:32"
  },
  {
   "fuente": "docs/STATE.md:18",
@@ -5243,7 +5243,7 @@
   "contexto": "## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos\n\n- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).\n- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.\n- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.",
   "revision_manual": "adyacencia",
   "destino_cita": "# S301 — mismo barrido en la A7S fw3.20 y diferencias con la A6000\n\nSegunda sesión del carril B. Repite el barrido de S300 sobre el `av-cam.bin` de la **A7S\nfw3.20** (SHA `b857d338…5103e`) para comparar el estado del imager y los gates `+3`/`+6`.\nLa A7S es la cámara de la misma generación que **sí** tiene obturador silencioso, así que\ncualquier diferencia de estado es candidata a explicar esa función.\n\n**Resultado:** los gates `+3`/`+6` son **idénticos** en ambas cámaras (mismo dumper,\nmismas máscaras, 8 lecturas cada uno, cero escritores), por lo que **no** son el\nmecanismo del silent shutter. La diferencia está en el resto del estado: la A7S tiene\n**11 campos que la A6000 no lee** y **4 escrituras que la A6000 no tiene**, concentradas\nen el clúster `+0xde..+0xea` y en `+0xae`.",
-  "fuente_actual": "docs/STATE.md:31"
+  "fuente_actual": "docs/STATE.md:32"
  },
  {
   "fuente": "docs/STATE.md:18",
@@ -5259,7 +5259,7 @@
   "contexto": "## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos\n\n- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).\n- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.\n- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.",
   "revision_manual": "adyacencia",
   "destino_cita": "# S312 — Todos los consumidores del cluster A7S `+0xae`/`+0xde..+0xea` son código A7S\n\nDécima sesión del carril B. S301/S307 localizaron las escrituras exclusivas de la A7S.\nEsta sesión cierra el círculo: **quién lee** ese cluster y si ese código existe en la A6000.\n\n**Resultado:** los seis sitios de lectura del cluster están en **seis funciones, todas con 0\ncoincidencias** de sus primeros 24 bytes en la A6000. El cluster y sus consumidores forman\nun subsistema exclusivo de la A7S.\n\n## Consumidores\n\n| Sitio | Función | Campos | Veces en A6000 |",
-  "fuente_actual": "docs/STATE.md:31"
+  "fuente_actual": "docs/STATE.md:32"
  },
  {
   "fuente": "docs/STATE.md:39",
@@ -5275,7 +5275,7 @@
   "contexto": "mismo par** (dependencia cruzada `0x43900c9c`, `0x439012fa`/`0x43901302`; id de módulo `0xb5`) y escriben\n**calibración en la RAM del sensor** (51 comandos «Sens» en `0x43fe858c`); `[DEPTH]` sale a la **EXIF** (tags\n`0x5001`/`0x5002`); `[TP_R]` es un **reporter** y **corrige un falso positivo de S130**; `[CAMERA_IS]` es **la\ncapa que aplica la estabilización** (17/17 pares PIC a mano → **valida el mapa de S70**); `[JOG]` es la **fuente\nde eventos de la rueda** (el A6300 sustituye `JogVGrip` por `JogCaif`); `[ADC_DEBUG]` es el **volcado del driver",
   "revision_manual": "plantillas-osal",
   "destino_cita": "# S130 — los 20 módulos \"NUEVO/PROPIO\": ¿contenido nuevo o solo otra etiqueta?\n\n**Hito de la línea de ingeniería inversa general**: cierra la pregunta abierta por S128.\n\nInforme: [analysis/s130_new_modules/new_modules.md](../../analysis/s130_new_modules/new_modules.md) ·\nDatos: `new_modules.json` · Test: `tests/test_s130_new_modules.py`.\n\n## Método\n\nPara cada prefijo `NUEVO/PROPIO` de S128 se extrae el **núcleo** de cada mensaje (lo que sigue a\n`\"[PREFIX]: \"`) y se busca como subcadena en la A7S fw3.20 y el A6300 fw2.01, anotando con qué\netiqueta aparece allí.",
-  "fuente_actual": "docs/STATE.md:52"
+  "fuente_actual": "docs/STATE.md:53"
  },
  {
   "fuente": "docs/STATE.md:42",
@@ -5291,7 +5291,7 @@
   "contexto": "capa que aplica la estabilización** (17/17 pares PIC a mano → **valida el mapa de S70**); `[JOG]` es la **fuente\nde eventos de la rueda** (el A6300 sustituye `JogVGrip` por `JogCaif`); `[ADC_DEBUG]` es el **volcado del driver\nLIRO ADC** y **corrige una lectura de S164**; `[SAD]` es el **diagnóstico de la biblioteca «SA»** con la sigla\n**sin base textual** (sin desarrollar).",
   "revision_manual": "adc",
   "destino_cita": "# S164 — el módulo `[CAMERA_IS]` (17 trazas): la capa de estabilización de imagen de la cámara\n\n> Línea de RE general. Solo bytes (A6000 fw3.21; comparación con A7S fw3.20 y A6300 fw2.01).\n> `vaddr = 0x43541000 + file_offset`. Referencias: regla **estricta** (canónica del repo).\n\n## Veredicto\n\n**`[CAMERA_IS]` es la capa de estabilización de imagen (IS) de la cámara**, con **4 sub-capas**:\n`MOUNT` (5 trazas), `DIST` (5), `AS` (3), `EIS` (4). **17 cadenas, 21 sitios PIC, 13 funciones,\n17/17 referenciadas (0 muertas), 7 envoltorios de traza.**\n\n## Cifras",
-  "fuente_actual": "docs/STATE.md:55"
+  "fuente_actual": "docs/STATE.md:56"
  },
  {
   "fuente": "docs/STATE.md:50",
@@ -5307,7 +5307,7 @@
   "contexto": "código** (regla estricta, punteros absolutos, pares `movw`/`movt` y un método inverso independiente) → **cadena\n  muerta**; de las 5 de su banda, 4 sí lo están (el único código vivo es el cálculo de ancho del **número de\n  posición del VD**, `0x4372914c`). **Corrige** el colateral de S164.\n* **S169** — el A6300 tiene una **capa de validación de parámetros de cámara** (`LiroSeq`) con **201** propiedades\n  `CheckSet*` y **370** comprobaciones, con parámetros de obturador `sc_ShutDrive` (`+0x1dd`), `uc_ShutDriveMode`",
   "revision_manual": "rolling",
   "destino_cita": "# S164 — el módulo `[CAMERA_IS]` (17 trazas): la capa de estabilización de imagen de la cámara\n\n> Línea de RE general. Solo bytes (A6000 fw3.21; comparación con A7S fw3.20 y A6300 fw2.01).\n> `vaddr = 0x43541000 + file_offset`. Referencias: regla **estricta** (canónica del repo).\n\n## Veredicto\n\n**`[CAMERA_IS]` es la capa de estabilización de imagen (IS) de la cámara**, con **4 sub-capas**:\n`MOUNT` (5 trazas), `DIST` (5), `AS` (3), `EIS` (4). **17 cadenas, 21 sitios PIC, 13 funciones,\n17/17 referenciadas (0 muertas), 7 envoltorios de traza.**\n\n## Cifras",
-  "fuente_actual": "docs/STATE.md:63"
+  "fuente_actual": "docs/STATE.md:64"
  },
  {
   "fuente": "docs/STATE.md:64",
@@ -5323,7 +5323,7 @@
   "contexto": "(`0x80`→3, `0x100`→4) y `EC_NonlinearElecShutter_MechShutterTable.cpp` implementa la **equivalencia no lineal\n  electrónica/mecánica** (32 bits por fila, escalas 10000/1000 y punto fijo 16.16 con escala `0x8000`).\n  **Corrige a S135**: los 128 bytes de `0x43dcfa9e` **no tienen ninguna referencia de código**.\n* **S174** — el conversor `CamMsgConv` del `libObj.so` conoce **216/221/240** nombres `…ForLiro` y **soporta\n  0/0/6**; en la A6000 y la A7S **todos** están en la lista de **rechazo**.",
   "revision_manual": "tabla-128",
   "destino_cita": "# S135 — el subsistema `ElecShutter` del A6300 como control positivo\n\n**Hito de la línea de ingeniería inversa general** con relevancia directa para la **línea del\nobturador electrónico**.\n\nInforme: [analysis/s135_elec_shutter/elec_shutter_scan.md](../../analysis/s135_elec_shutter/elec_shutter_scan.md) ·\nDatos: `elec_shutter_scan.json` · Test: `tests/test_s135_elec_shutter.py`.\n\n## Hallazgo central\n\nBuscando en los tres `av-cam.bin` disponibles las huellas de un subsistema de **obturador\nelectrónico**, aparece una asimetría inequívoca:",
-  "fuente_actual": "docs/STATE.md:77"
+  "fuente_actual": "docs/STATE.md:78"
  },
  {
   "fuente": "docs/STATE.md:160",
@@ -5339,7 +5339,7 @@
   "contexto": "## Hallazgos corregidos con impacto en todo lo posterior (no reusar versiones previas)\n\n| Tema | Corrección vigente | Fuente |\n|---|---|---|\n| Darwin — base ROM | La base es `0x4200`, NO `0`. No reusar punteros absolutos de proyectos Ghidra antiguos a6000/a6300-darwin (se conservan solo como análisis fallido). | [CONTEXT.md:354](../CONTEXT.md#L354), [darwin-shutter-entrypoints.md:1](capture/darwin-shutter-entrypoints.md) |",
   "revision_manual": "indice",
   "destino_cita": "# Darwin: entradas verificadas para investigar el obturador\n\nContinuación vigente: [máquina de estados, notificaciones y control](darwin-state-machine.md).\nLas cuatro entradas TBB ya fueron recuperadas de los bytes originales.\nLa advertencia de Ghidra conservada más abajo es histórica; no sigue siendo\nun bloqueo para reconstruir sus destinos. El bit `0x80` del bloque de callback\nretiene la etapa del planificador, no certifica finalización de movimiento.\n\nSe incorporan las dos imágenes auxiliares oficiales `0640_darwin/darwin_core.bin`.\nTodavía **no se ha demostrado que Darwin sea el receptor del paquete CAIF**\ndescrito en [silent-caif-transport.md](silent-caif-transport.md).\n",
-  "fuente_actual": "docs/STATE.md:173"
+  "fuente_actual": "docs/STATE.md:174"
  },
  {
   "fuente": "docs/STATE.md:160",
@@ -5355,7 +5355,7 @@
   "contexto": "## Hallazgos corregidos con impacto en todo lo posterior (no reusar versiones previas)\n\n| Tema | Corrección vigente | Fuente |\n|---|---|---|\n| Darwin — base ROM | La base es `0x4200`, NO `0`. No reusar punteros absolutos de proyectos Ghidra antiguos a6000/a6300-darwin (se conservan solo como análisis fallido). | [CONTEXT.md:354](../CONTEXT.md#L354), [darwin-shutter-entrypoints.md:1](capture/darwin-shutter-entrypoints.md) |",
   "revision_manual": "indice",
   "destino_cita": "# Continuidad\n\n## Revisión de OpenCode S605–S627 — 23-10-2026\n\n[Auditoría](docs/capture/S605-S627_tabla_hallazgos.md): corrige la validación original; 263 tests pasaban pese a siete direcciones gemelas falsas, 13 textos sin bytes finales y cinco longitudes adicionales incorrectas. Corregidos los 23 JSON e informes y 21 verificadores individuales obsoletos. Se verifican 94 trazas, siete gemelas, 11 núcleos y metadatos. Logger dual, equivalencias, recuentos differential y ausencia funcional de relación con el obturador: NO_VERIFICADO. S51 sin cambios. Ampliación S605–S627: diez marcadores `level`/`sub_prefix` verificados; S625 corregido a prefijo `[CAM_UTIL_SENS]: ` (17 B). Nuevas regresiones rechazan esquemas incompletos y estados positivos sin evidencia. Las 69 afirmaciones de logger dual/equivalencias siguen NO_VERIFICADO. [Auditoría](docs/capture/S605-S627_tabla_hallazgos.md).\n\n## Cola 0x40193 — 23-10-2026\n\n[Trazado y límites](docs/capture/queue-40193-flow-2026-10-23.md): S384 actualizado.\nNueve literales `.text` A6000 con LDR; transporte por registros y copia de 16 B\nhasta `osal_snd_msg`. Receptor LIRO `0x4381d16c`, tabla de 35 filas en\n`0x44000174`. Inicializador `0x4379e93c` instala su puntero en descriptor",
-  "fuente_actual": "docs/STATE.md:173"
+  "fuente_actual": "docs/STATE.md:174"
  },
  {
   "fuente": "docs/auditoria-2026-10-23.md:35",
@@ -5546,7 +5546,7 @@
   "contexto": "## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos\n\n- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).\n- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.\n- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.",
   "revision_manual": "pendiente-revision-propia",
   "destino_cita": "# S341 — Síntesis del carril B: la cadena modo→registro y sus correcciones (S314–S340)\n\n22-10-2026. Sesión de consolidación del carril B. **No introduce hallazgos nuevos**: cada cifra remite a su JSON y está comprobada por `analysis/s341_synthesis_b2/verify_synthesis.py` (27 cifras). Sustituye a `docs/capture/s313-synthesis-carril-b.md` en lo que quedó corregido.\n\n## 1. La cadena, de extremo a extremo\n\n```\nmodo (código)  →  posición en la lista u32[34]          (A7S)  /  u32[13] (A6000)\n  →  matriz de registros (slot 40): 69 vs 59 filas, 15 vs 13 columnas\n  →  tablas T1/T2/T3: (w0 selector, +4/+5/+6 selectores, +0x14 descriptor, +0x18 máscara)\n  →  12 pares (flag, índice de bit) → máscara u16 (obj+0x68 / obj+0xf8)\n  →  0x436f822c aplica ~valor ^ máscara",
-  "fuente_actual": "docs/STATE.md:31"
+  "fuente_actual": "docs/STATE.md:32"
  },
  {
   "fuente": "docs/STATE.md:22",
@@ -5562,7 +5562,7 @@
   "contexto": "## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos\n\n- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).\n- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.\n- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.",
   "revision_manual": "adyacencia",
   "destino_cita": "# S342 — `0x43fef404` sí tiene consumidores: es la tabla de ids de `Camera::Lens::ODL`\n\n22-10-2026. Carril B. Sesión S342. **Solo lectura estática; sin firmware en ejecución, sin cámara, sin flasheo.**\n\n## Pregunta\n\nS337 cerró `0x43fef404` con un negativo **acotado a literales absolutos** («0 referencias literales»). S341 dejó abierta la pregunta «consumidor de `0x43fef404`». ¿Existe un consumidor que llegue por **puntero calculado** (base PIC `ldr rX,[pc,#imm]` + `add rX,pc`)?\n\n## Veredicto\n\n| Afirmación | Clasificación | Evidencia |\n|---|---|---|",
-  "fuente_actual": "docs/STATE.md:31"
+  "fuente_actual": "docs/STATE.md:32"
  },
  {
   "fuente": "docs/STATE.md:22",
@@ -5578,7 +5578,7 @@
   "contexto": "## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos\n\n- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).\n- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.\n- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.",
   "revision_manual": "adyacencia",
   "destino_cita": "# S301 — mismo barrido en la A7S fw3.20 y diferencias con la A6000\n\nSegunda sesión del carril B. Repite el barrido de S300 sobre el `av-cam.bin` de la **A7S\nfw3.20** (SHA `b857d338…5103e`) para comparar el estado del imager y los gates `+3`/`+6`.\nLa A7S es la cámara de la misma generación que **sí** tiene obturador silencioso, así que\ncualquier diferencia de estado es candidata a explicar esa función.\n\n**Resultado:** los gates `+3`/`+6` son **idénticos** en ambas cámaras (mismo dumper,\nmismas máscaras, 8 lecturas cada uno, cero escritores), por lo que **no** son el\nmecanismo del silent shutter. La diferencia está en el resto del estado: la A7S tiene\n**11 campos que la A6000 no lee** y **4 escrituras que la A6000 no tiene**, concentradas\nen el clúster `+0xde..+0xea` y en `+0xae`.",
-  "fuente_actual": "docs/STATE.md:31"
+  "fuente_actual": "docs/STATE.md:32"
  },
  {
   "fuente": "docs/STATE.md:22",
@@ -5594,7 +5594,7 @@
   "contexto": "## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos\n\n- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).\n- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.\n- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.",
   "revision_manual": "adyacencia",
   "destino_cita": "# S307 — Las escrituras A7S de `+0xde` y `+0xe6..+0xea` están en código que la A6000 no tiene\n\nQuinta sesión del carril B. S301 encontró que la A7S escribe en su estado cuatro campos que\nla A6000 no escribe: `+0xde` y el trío `+0xe6/+0xe8/+0xea`. Esta sesión responde **de dónde\nsalen** y si ese código existe en la A6000.\n\n**Resultado:** las tres instrucciones del trío y la de `+0xde` pertenecen a funciones cuya\nsecuencia de store (24 B alrededor) **no aparece en la A6000** (0 coincidencias). Dos\nescritores de `+0x02` también son exclusivos de la A7S; en cambio los de `+0x00` y uno de\n`+0x02` sí tienen gemelo en la A6000. Es decir, la A7S añade un bloque de código de\nparámetros/tiempos que la A6000 no tiene.\n",
-  "fuente_actual": "docs/STATE.md:31"
+  "fuente_actual": "docs/STATE.md:32"
  },
  {
   "fuente": "docs/STATE.md:22",
@@ -5610,7 +5610,7 @@
   "contexto": "## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos\n\n- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).\n- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.\n- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.",
   "revision_manual": "adyacencia",
   "destino_cita": "# S312 — Todos los consumidores del cluster A7S `+0xae`/`+0xde..+0xea` son código A7S\n\nDécima sesión del carril B. S301/S307 localizaron las escrituras exclusivas de la A7S.\nEsta sesión cierra el círculo: **quién lee** ese cluster y si ese código existe en la A6000.\n\n**Resultado:** los seis sitios de lectura del cluster están en **seis funciones, todas con 0\ncoincidencias** de sus primeros 24 bytes en la A6000. El cluster y sus consumidores forman\nun subsistema exclusivo de la A7S.\n\n## Consumidores\n\n| Sitio | Función | Campos | Veces en A6000 |",
-  "fuente_actual": "docs/STATE.md:31"
+  "fuente_actual": "docs/STATE.md:32"
  },
  {
   "fuente": "docs/STATE.md:22",
@@ -5626,7 +5626,7 @@
   "contexto": "## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos\n\n- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).\n- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.\n- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.",
   "revision_manual": "pendiente-revision-propia",
   "destino_cita": "# S329 — ¿Hay una tabla de tiempos por modo en el A7S? (carril B)\n\n22-10-2026. Carril B (imager: estado, drive modes y gates). Sesión S329. **Solo investigación estática: sin ejecutar firmware, sin cámara, sin flasheo.** Autoridad = bytes de `av-cam.bin` (A7S fw3.20 `b857d338…`, A6000 fw3.21 `b60c845c…`), no REA.\n\n## Pregunta\n\nLa cola pedía: «localizar la tabla de **tiempos** por modo del A7S (S202 §3) y comprobar si `0x4e`/`0x4f` difieren de `0x4c`/`0x4d`; si no aparece, cerrar la pregunta con un barrido de la región de tablas de modo».\n\n## Veredicto\n\n| Afirmación | Clasificación | Evidencia |\n|---|---|---|",
-  "fuente_actual": "docs/STATE.md:31"
+  "fuente_actual": "docs/STATE.md:32"
  },
  {
   "fuente": "docs/STATE.md:22",
@@ -5642,7 +5642,7 @@
   "contexto": "## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos\n\n- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).\n- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.\n- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.",
   "revision_manual": "adyacencia",
   "destino_cita": "# S300 — barrido único de xrefs al objeto de estado del IMX210 (A6000 fw3.21)\n\nCarril B, primera sesión. Pregunta: **¿existe algún escritor de los gates `+3`/`+6` del\nobjeto de estado `0x43f72d02`?** En vez de seguir clasificando xrefs de uno en uno\n(S153–S176), esta sesión hace **un solo barrido** de las dos vías de acceso (dirección\ndel objeto y slot GOT `0x4401f990`), resuelve la función contenedora de cada sitio y\ntraza localmente el uso del puntero cargado.\n\n**Veredicto (VERIFICADO, límite estático):** ninguno de los 67 sitios escribe `+3` ni\n`+6`. Los únicos stores son a `+0x00` (1 instrucción) y `+0x02` (4 instrucciones).\nLos gates tienen 8 lecturas cada uno y **cero** escrituras tipadas. No se observa\nindexación dinámica, copia de bloque ni escape del puntero en los cuerpos barridos.",
-  "fuente_actual": "docs/STATE.md:31"
+  "fuente_actual": "docs/STATE.md:32"
  },
  {
   "fuente": "docs/STATE.md:43",
@@ -5658,7 +5658,7 @@
   "contexto": "mismo par** (dependencia cruzada `0x43900c9c`, `0x439012fa`/`0x43901302`; id de módulo `0xb5`) y escriben\n**calibración en la RAM del sensor** (51 comandos «Sens» en `0x43fe858c`); `[DEPTH]` sale a la **EXIF** (tags\n`0x5001`/`0x5002`); `[TP_R]` es un **reporter** y **corrige un falso positivo de S130**; `[CAMERA_IS]` es **la\ncapa que aplica la estabilización** (17/17 pares PIC a mano → **valida el mapa de S70**); `[JOG]` es la **fuente\nde eventos de la rueda** (el A6300 sustituye `JogVGrip` por `JogCaif`); `[ADC_DEBUG]` es el **volcado del driver",
   "revision_manual": "plantillas-osal",
   "destino_cita": "# S130 — los 20 módulos \"NUEVO/PROPIO\": ¿contenido nuevo o solo otra etiqueta?\n\n**Hito de la línea de ingeniería inversa general**: cierra la pregunta abierta por S128.\n\nInforme: [analysis/s130_new_modules/new_modules.md](../../analysis/s130_new_modules/new_modules.md) ·\nDatos: `new_modules.json` · Test: `tests/test_s130_new_modules.py`.\n\n## Método\n\nPara cada prefijo `NUEVO/PROPIO` de S128 se extrae el **núcleo** de cada mensaje (lo que sigue a\n`\"[PREFIX]: \"`) y se busca como subcadena en la A7S fw3.20 y el A6300 fw2.01, anotando con qué\netiqueta aparece allí.",
-  "fuente_actual": "docs/STATE.md:52"
+  "fuente_actual": "docs/STATE.md:53"
  },
  {
   "fuente": "docs/STATE.md:54",
@@ -5674,7 +5674,7 @@
   "contexto": "código** (regla estricta, punteros absolutos, pares `movw`/`movt` y un método inverso independiente) → **cadena\n  muerta**; de las 5 de su banda, 4 sí lo están (el único código vivo es el cálculo de ancho del **número de\n  posición del VD**, `0x4372914c`). **Corrige** el colateral de S164.\n* **S169** — el A6300 tiene una **capa de validación de parámetros de cámara** (`LiroSeq`) con **201** propiedades\n  `CheckSet*` y **370** comprobaciones, con parámetros de obturador `sc_ShutDrive` (`+0x1dd`), `uc_ShutDriveMode`",
   "revision_manual": "rolling",
   "destino_cita": "# S164 — el módulo `[CAMERA_IS]` (17 trazas): la capa de estabilización de imagen de la cámara\n\n> Línea de RE general. Solo bytes (A6000 fw3.21; comparación con A7S fw3.20 y A6300 fw2.01).\n> `vaddr = 0x43541000 + file_offset`. Referencias: regla **estricta** (canónica del repo).\n\n## Veredicto\n\n**`[CAMERA_IS]` es la capa de estabilización de imagen (IS) de la cámara**, con **4 sub-capas**:\n`MOUNT` (5 trazas), `DIST` (5), `AS` (3), `EIS` (4). **17 cadenas, 21 sitios PIC, 13 funciones,\n17/17 referenciadas (0 muertas), 7 envoltorios de traza.**\n\n## Cifras",
-  "fuente_actual": "docs/STATE.md:63"
+  "fuente_actual": "docs/STATE.md:64"
  },
  {
   "fuente": "docs/STATE.md:68",
@@ -5690,7 +5690,7 @@
   "contexto": "(`0x80`→3, `0x100`→4) y `EC_NonlinearElecShutter_MechShutterTable.cpp` implementa la **equivalencia no lineal\n  electrónica/mecánica** (32 bits por fila, escalas 10000/1000 y punto fijo 16.16 con escala `0x8000`).\n  **Corrige a S135**: los 128 bytes de `0x43dcfa9e` **no tienen ninguna referencia de código**.\n* **S174** — el conversor `CamMsgConv` del `libObj.so` conoce **216/221/240** nombres `…ForLiro` y **soporta\n  0/0/6**; en la A6000 y la A7S **todos** están en la lista de **rechazo**.",
   "revision_manual": "tabla-128",
   "destino_cita": "# S135 — el subsistema `ElecShutter` del A6300 como control positivo\n\n**Hito de la línea de ingeniería inversa general** con relevancia directa para la **línea del\nobturador electrónico**.\n\nInforme: [analysis/s135_elec_shutter/elec_shutter_scan.md](../../analysis/s135_elec_shutter/elec_shutter_scan.md) ·\nDatos: `elec_shutter_scan.json` · Test: `tests/test_s135_elec_shutter.py`.\n\n## Hallazgo central\n\nBuscando en los tres `av-cam.bin` disponibles las huellas de un subsistema de **obturador\nelectrónico**, aparece una asimetría inequívoca:",
-  "fuente_actual": "docs/STATE.md:77"
+  "fuente_actual": "docs/STATE.md:78"
  },
  {
   "fuente": "docs/STATE.md:164",
@@ -5706,7 +5706,7 @@
   "contexto": "## Hallazgos corregidos con impacto en todo lo posterior (no reusar versiones previas)\n\n| Tema | Corrección vigente | Fuente |\n|---|---|---|\n| Darwin — base ROM | La base es `0x4200`, NO `0`. No reusar punteros absolutos de proyectos Ghidra antiguos a6000/a6300-darwin (se conservan solo como análisis fallido). | [CONTEXT.md:354](../CONTEXT.md#L354), [darwin-shutter-entrypoints.md:1](capture/darwin-shutter-entrypoints.md) |",
   "revision_manual": "indice",
   "destino_cita": "# Darwin: entradas verificadas para investigar el obturador\n\nContinuación vigente: [máquina de estados, notificaciones y control](darwin-state-machine.md).\nLas cuatro entradas TBB ya fueron recuperadas de los bytes originales.\nLa advertencia de Ghidra conservada más abajo es histórica; no sigue siendo\nun bloqueo para reconstruir sus destinos. El bit `0x80` del bloque de callback\nretiene la etapa del planificador, no certifica finalización de movimiento.\n\nSe incorporan las dos imágenes auxiliares oficiales `0640_darwin/darwin_core.bin`.\nTodavía **no se ha demostrado que Darwin sea el receptor del paquete CAIF**\ndescrito en [silent-caif-transport.md](silent-caif-transport.md).\n",
-  "fuente_actual": "docs/STATE.md:173"
+  "fuente_actual": "docs/STATE.md:174"
  },
  {
   "fuente": "docs/STATE.md:164",
@@ -5722,7 +5722,7 @@
   "contexto": "## Hallazgos corregidos con impacto en todo lo posterior (no reusar versiones previas)\n\n| Tema | Corrección vigente | Fuente |\n|---|---|---|\n| Darwin — base ROM | La base es `0x4200`, NO `0`. No reusar punteros absolutos de proyectos Ghidra antiguos a6000/a6300-darwin (se conservan solo como análisis fallido). | [CONTEXT.md:354](../CONTEXT.md#L354), [darwin-shutter-entrypoints.md:1](capture/darwin-shutter-entrypoints.md) |",
   "revision_manual": "indice",
   "destino_cita": "# Continuidad\n\n## Revisión de OpenCode S605–S627 — 23-10-2026\n\n[Auditoría](docs/capture/S605-S627_tabla_hallazgos.md): corrige la validación original; 263 tests pasaban pese a siete direcciones gemelas falsas, 13 textos sin bytes finales y cinco longitudes adicionales incorrectas. Corregidos los 23 JSON e informes y 21 verificadores individuales obsoletos. Se verifican 94 trazas, siete gemelas, 11 núcleos y metadatos. Logger dual, equivalencias, recuentos differential y ausencia funcional de relación con el obturador: NO_VERIFICADO. S51 sin cambios. Ampliación S605–S627: diez marcadores `level`/`sub_prefix` verificados; S625 corregido a prefijo `[CAM_UTIL_SENS]: ` (17 B). Nuevas regresiones rechazan esquemas incompletos y estados positivos sin evidencia. Las 69 afirmaciones de logger dual/equivalencias siguen NO_VERIFICADO. [Auditoría](docs/capture/S605-S627_tabla_hallazgos.md).\n\n## Cola 0x40193 — 23-10-2026\n\n[Trazado y límites](docs/capture/queue-40193-flow-2026-10-23.md): S384 actualizado.\nNueve literales `.text` A6000 con LDR; transporte por registros y copia de 16 B\nhasta `osal_snd_msg`. Receptor LIRO `0x4381d16c`, tabla de 35 filas en\n`0x44000174`. Inicializador `0x4379e93c` instala su puntero en descriptor",
-  "fuente_actual": "docs/STATE.md:173"
+  "fuente_actual": "docs/STATE.md:174"
  },
  {
   "fuente": "docs/capture/recordstill-contract-audit-2026-10-23.md:11",
@@ -6008,7 +6008,7 @@
   "contexto": "## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos\n\n- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).\n- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.\n- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.",
   "revision_manual": "adyacencia",
   "destino_cita": "# S307 — Las escrituras A7S de `+0xde` y `+0xe6..+0xea` están en código que la A6000 no tiene\n\nQuinta sesión del carril B. S301 encontró que la A7S escribe en su estado cuatro campos que\nla A6000 no escribe: `+0xde` y el trío `+0xe6/+0xe8/+0xea`. Esta sesión responde **de dónde\nsalen** y si ese código existe en la A6000.\n\n**Resultado:** las tres instrucciones del trío y la de `+0xde` pertenecen a funciones cuya\nsecuencia de store (24 B alrededor) **no aparece en la A6000** (0 coincidencias). Dos\nescritores de `+0x02` también son exclusivos de la A7S; en cambio los de `+0x00` y uno de\n`+0x02` sí tienen gemelo en la A6000. Es decir, la A7S añade un bloque de código de\nparámetros/tiempos que la A6000 no tiene.\n",
-  "fuente_actual": "docs/STATE.md:31"
+  "fuente_actual": "docs/STATE.md:32"
  },
  {
   "fuente": "docs/STATE.md:31",
@@ -6024,7 +6024,7 @@
   "contexto": "## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos\n\n- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).\n- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.\n- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.",
   "revision_manual": "pendiente-revision-propia",
   "destino_cita": "# S341 — Síntesis del carril B: la cadena modo→registro y sus correcciones (S314–S340)\n\n22-10-2026. Sesión de consolidación del carril B. **No introduce hallazgos nuevos**: cada cifra remite a su JSON y está comprobada por `analysis/s341_synthesis_b2/verify_synthesis.py` (27 cifras). Sustituye a `docs/capture/s313-synthesis-carril-b.md` en lo que quedó corregido.\n\n## 1. La cadena, de extremo a extremo\n\n```\nmodo (código)  →  posición en la lista u32[34]          (A7S)  /  u32[13] (A6000)\n  →  matriz de registros (slot 40): 69 vs 59 filas, 15 vs 13 columnas\n  →  tablas T1/T2/T3: (w0 selector, +4/+5/+6 selectores, +0x14 descriptor, +0x18 máscara)\n  →  12 pares (flag, índice de bit) → máscara u16 (obj+0x68 / obj+0xf8)\n  →  0x436f822c aplica ~valor ^ máscara",
-  "fuente_actual": "docs/STATE.md:31"
+  "fuente_actual": "docs/STATE.md:32"
  },
  {
   "fuente": "docs/STATE.md:31",
@@ -6040,7 +6040,7 @@
   "contexto": "## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos\n\n- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).\n- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.\n- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.",
   "revision_manual": "pendiente-revision-propia",
   "destino_cita": "# S329 — ¿Hay una tabla de tiempos por modo en el A7S? (carril B)\n\n22-10-2026. Carril B (imager: estado, drive modes y gates). Sesión S329. **Solo investigación estática: sin ejecutar firmware, sin cámara, sin flasheo.** Autoridad = bytes de `av-cam.bin` (A7S fw3.20 `b857d338…`, A6000 fw3.21 `b60c845c…`), no REA.\n\n## Pregunta\n\nLa cola pedía: «localizar la tabla de **tiempos** por modo del A7S (S202 §3) y comprobar si `0x4e`/`0x4f` difieren de `0x4c`/`0x4d`; si no aparece, cerrar la pregunta con un barrido de la región de tablas de modo».\n\n## Veredicto\n\n| Afirmación | Clasificación | Evidencia |\n|---|---|---|",
-  "fuente_actual": "docs/STATE.md:31"
+  "fuente_actual": "docs/STATE.md:32"
  },
  {
   "fuente": "docs/STATE.md:31",
@@ -6056,7 +6056,7 @@
   "contexto": "## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos\n\n- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).\n- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.\n- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.",
   "revision_manual": "adyacencia",
   "destino_cita": "# S312 — Todos los consumidores del cluster A7S `+0xae`/`+0xde..+0xea` son código A7S\n\nDécima sesión del carril B. S301/S307 localizaron las escrituras exclusivas de la A7S.\nEsta sesión cierra el círculo: **quién lee** ese cluster y si ese código existe en la A6000.\n\n**Resultado:** los seis sitios de lectura del cluster están en **seis funciones, todas con 0\ncoincidencias** de sus primeros 24 bytes en la A6000. El cluster y sus consumidores forman\nun subsistema exclusivo de la A7S.\n\n## Consumidores\n\n| Sitio | Función | Campos | Veces en A6000 |",
-  "fuente_actual": "docs/STATE.md:31"
+  "fuente_actual": "docs/STATE.md:32"
  },
  {
   "fuente": "docs/STATE.md:31",
@@ -6072,7 +6072,7 @@
   "contexto": "## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos\n\n- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).\n- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.\n- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.",
   "revision_manual": "adyacencia",
   "destino_cita": "# S342 — `0x43fef404` sí tiene consumidores: es la tabla de ids de `Camera::Lens::ODL`\n\n22-10-2026. Carril B. Sesión S342. **Solo lectura estática; sin firmware en ejecución, sin cámara, sin flasheo.**\n\n## Pregunta\n\nS337 cerró `0x43fef404` con un negativo **acotado a literales absolutos** («0 referencias literales»). S341 dejó abierta la pregunta «consumidor de `0x43fef404`». ¿Existe un consumidor que llegue por **puntero calculado** (base PIC `ldr rX,[pc,#imm]` + `add rX,pc`)?\n\n## Veredicto\n\n| Afirmación | Clasificación | Evidencia |\n|---|---|---|",
-  "fuente_actual": "docs/STATE.md:31"
+  "fuente_actual": "docs/STATE.md:32"
  },
  {
   "fuente": "docs/STATE.md:31",
@@ -6088,7 +6088,7 @@
   "contexto": "## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos\n\n- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).\n- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.\n- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.",
   "revision_manual": "adyacencia",
   "destino_cita": "# S300 — barrido único de xrefs al objeto de estado del IMX210 (A6000 fw3.21)\n\nCarril B, primera sesión. Pregunta: **¿existe algún escritor de los gates `+3`/`+6` del\nobjeto de estado `0x43f72d02`?** En vez de seguir clasificando xrefs de uno en uno\n(S153–S176), esta sesión hace **un solo barrido** de las dos vías de acceso (dirección\ndel objeto y slot GOT `0x4401f990`), resuelve la función contenedora de cada sitio y\ntraza localmente el uso del puntero cargado.\n\n**Veredicto (VERIFICADO, límite estático):** ninguno de los 67 sitios escribe `+3` ni\n`+6`. Los únicos stores son a `+0x00` (1 instrucción) y `+0x02` (4 instrucciones).\nLos gates tienen 8 lecturas cada uno y **cero** escrituras tipadas. No se observa\nindexación dinámica, copia de bloque ni escape del puntero en los cuerpos barridos.",
-  "fuente_actual": "docs/STATE.md:31"
+  "fuente_actual": "docs/STATE.md:32"
  },
  {
   "fuente": "docs/STATE.md:31",
@@ -6104,7 +6104,7 @@
   "contexto": "## Avance S300–S617 (22-10-2026) — carriles de agentes autónomos\n\n- **B (S300–S342):** el estado IMX210 `0x43f72d02` y su equivalente A7S `0x43f7bce6` tienen gates `+3/+6` idénticos y **sin escritor** (S300/S301) → no son el mecanismo silent. La A7S tiene código de selector/tiempos ausente en la A6000 (S307–S312); el mecanismo por modo (matriz, T1/T2/T3, máscara u16, MMIO DFE/CISIF `0xfc02a00c`) existe en ambos con datos distintos (S329–S341). Corrige varias lecturas previas (bases T2/T3, `obj+0x2b4`, `w0`); `0x43fef404` no es tabla de tiempos (S342).\n- **C (S401–S402):** ruta de control `SilentShutter`: handler LIRO `0x40e3` ausente en A7S; `…ForLiro` rechazado en ambos; diferencias mapeadas a P1–P8.\n- **D/E (S500–S515, S600–S617):** cobertura de módulos de trazas; sin efecto en el obturador.",
   "revision_manual": "adyacencia",
   "destino_cita": "# S301 — mismo barrido en la A7S fw3.20 y diferencias con la A6000\n\nSegunda sesión del carril B. Repite el barrido de S300 sobre el `av-cam.bin` de la **A7S\nfw3.20** (SHA `b857d338…5103e`) para comparar el estado del imager y los gates `+3`/`+6`.\nLa A7S es la cámara de la misma generación que **sí** tiene obturador silencioso, así que\ncualquier diferencia de estado es candidata a explicar esa función.\n\n**Resultado:** los gates `+3`/`+6` son **idénticos** en ambas cámaras (mismo dumper,\nmismas máscaras, 8 lecturas cada uno, cero escritores), por lo que **no** son el\nmecanismo del silent shutter. La diferencia está en el resto del estado: la A7S tiene\n**11 campos que la A6000 no lee** y **4 escrituras que la A6000 no tiene**, concentradas\nen el clúster `+0xde..+0xea` y en `+0xae`.",
-  "fuente_actual": "docs/STATE.md:31"
+  "fuente_actual": "docs/STATE.md:32"
  },
  {
   "fuente": "docs/STATE.md:52",
@@ -6120,7 +6120,7 @@
   "contexto": "mismo par** (dependencia cruzada `0x43900c9c`, `0x439012fa`/`0x43901302`; id de módulo `0xb5`) y escriben\n**calibración en la RAM del sensor** (51 comandos «Sens» en `0x43fe858c`); `[DEPTH]` sale a la **EXIF** (tags\n`0x5001`/`0x5002`); `[TP_R]` es un **reporter** y **corrige un falso positivo de S130**; `[CAMERA_IS]` es **la\ncapa que aplica la estabilización** (17/17 pares PIC a mano → **valida el mapa de S70**); `[JOG]` es la **fuente\nde eventos de la rueda** (el A6300 sustituye `JogVGrip` por `JogCaif`); `[ADC_DEBUG]` es el **volcado del driver",
   "revision_manual": "plantillas-osal",
   "destino_cita": "# S130 — los 20 módulos \"NUEVO/PROPIO\": ¿contenido nuevo o solo otra etiqueta?\n\n**Hito de la línea de ingeniería inversa general**: cierra la pregunta abierta por S128.\n\nInforme: [analysis/s130_new_modules/new_modules.md](../../analysis/s130_new_modules/new_modules.md) ·\nDatos: `new_modules.json` · Test: `tests/test_s130_new_modules.py`.\n\n## Método\n\nPara cada prefijo `NUEVO/PROPIO` de S128 se extrae el **núcleo** de cada mensaje (lo que sigue a\n`\"[PREFIX]: \"`) y se busca como subcadena en la A7S fw3.20 y el A6300 fw2.01, anotando con qué\netiqueta aparece allí.",
-  "fuente_actual": "docs/STATE.md:52"
+  "fuente_actual": "docs/STATE.md:53"
  },
  {
   "fuente": "docs/STATE.md:55",
@@ -6136,7 +6136,7 @@
   "contexto": "capa que aplica la estabilización** (17/17 pares PIC a mano → **valida el mapa de S70**); `[JOG]` es la **fuente\nde eventos de la rueda** (el A6300 sustituye `JogVGrip` por `JogCaif`); `[ADC_DEBUG]` es el **volcado del driver\nLIRO ADC** y **corrige una lectura de S164**; `[SAD]` es el **diagnóstico de la biblioteca «SA»** con la sigla\n**sin base textual** (sin desarrollar).",
   "revision_manual": "adc",
   "destino_cita": "# S164 — el módulo `[CAMERA_IS]` (17 trazas): la capa de estabilización de imagen de la cámara\n\n> Línea de RE general. Solo bytes (A6000 fw3.21; comparación con A7S fw3.20 y A6300 fw2.01).\n> `vaddr = 0x43541000 + file_offset`. Referencias: regla **estricta** (canónica del repo).\n\n## Veredicto\n\n**`[CAMERA_IS]` es la capa de estabilización de imagen (IS) de la cámara**, con **4 sub-capas**:\n`MOUNT` (5 trazas), `DIST` (5), `AS` (3), `EIS` (4). **17 cadenas, 21 sitios PIC, 13 funciones,\n17/17 referenciadas (0 muertas), 7 envoltorios de traza.**\n\n## Cifras",
-  "fuente_actual": "docs/STATE.md:55"
+  "fuente_actual": "docs/STATE.md:56"
  },
  {
   "fuente": "docs/STATE.md:63",
@@ -6152,7 +6152,7 @@
   "contexto": "código** (regla estricta, punteros absolutos, pares `movw`/`movt` y un método inverso independiente) → **cadena\n  muerta**; de las 5 de su banda, 4 sí lo están (el único código vivo es el cálculo de ancho del **número de\n  posición del VD**, `0x4372914c`). **Corrige** el colateral de S164.\n* **S169** — el A6300 tiene una **capa de validación de parámetros de cámara** (`LiroSeq`) con **201** propiedades\n  `CheckSet*` y **370** comprobaciones, con parámetros de obturador `sc_ShutDrive` (`+0x1dd`), `uc_ShutDriveMode`",
   "revision_manual": "rolling",
   "destino_cita": "# S164 — el módulo `[CAMERA_IS]` (17 trazas): la capa de estabilización de imagen de la cámara\n\n> Línea de RE general. Solo bytes (A6000 fw3.21; comparación con A7S fw3.20 y A6300 fw2.01).\n> `vaddr = 0x43541000 + file_offset`. Referencias: regla **estricta** (canónica del repo).\n\n## Veredicto\n\n**`[CAMERA_IS]` es la capa de estabilización de imagen (IS) de la cámara**, con **4 sub-capas**:\n`MOUNT` (5 trazas), `DIST` (5), `AS` (3), `EIS` (4). **17 cadenas, 21 sitios PIC, 13 funciones,\n17/17 referenciadas (0 muertas), 7 envoltorios de traza.**\n\n## Cifras",
-  "fuente_actual": "docs/STATE.md:63"
+  "fuente_actual": "docs/STATE.md:64"
  },
  {
   "fuente": "docs/STATE.md:77",
@@ -6168,7 +6168,7 @@
   "contexto": "(`0x80`→3, `0x100`→4) y `EC_NonlinearElecShutter_MechShutterTable.cpp` implementa la **equivalencia no lineal\n  electrónica/mecánica** (32 bits por fila, escalas 10000/1000 y punto fijo 16.16 con escala `0x8000`).\n  **Corrige a S135**: los 128 bytes de `0x43dcfa9e` **no tienen ninguna referencia de código**.\n* **S174** — el conversor `CamMsgConv` del `libObj.so` conoce **216/221/240** nombres `…ForLiro` y **soporta\n  0/0/6**; en la A6000 y la A7S **todos** están en la lista de **rechazo**.",
   "revision_manual": "tabla-128",
   "destino_cita": "# S135 — el subsistema `ElecShutter` del A6300 como control positivo\n\n**Hito de la línea de ingeniería inversa general** con relevancia directa para la **línea del\nobturador electrónico**.\n\nInforme: [analysis/s135_elec_shutter/elec_shutter_scan.md](../../analysis/s135_elec_shutter/elec_shutter_scan.md) ·\nDatos: `elec_shutter_scan.json` · Test: `tests/test_s135_elec_shutter.py`.\n\n## Hallazgo central\n\nBuscando en los tres `av-cam.bin` disponibles las huellas de un subsistema de **obturador\nelectrónico**, aparece una asimetría inequívoca:",
-  "fuente_actual": "docs/STATE.md:77"
+  "fuente_actual": "docs/STATE.md:78"
  },
  {
   "fuente": "docs/STATE.md:173",
@@ -6184,7 +6184,7 @@
   "contexto": "## Hallazgos corregidos con impacto en todo lo posterior (no reusar versiones previas)\n\n| Tema | Corrección vigente | Fuente |\n|---|---|---|\n| Darwin — base ROM | La base es `0x4200`, NO `0`. No reusar punteros absolutos de proyectos Ghidra antiguos a6000/a6300-darwin (se conservan solo como análisis fallido). | [CONTEXT.md:354](../CONTEXT.md#L354), [darwin-shutter-entrypoints.md:1](capture/darwin-shutter-entrypoints.md) |",
   "revision_manual": "indice",
   "destino_cita": "# Darwin: entradas verificadas para investigar el obturador\n\nContinuación vigente: [máquina de estados, notificaciones y control](darwin-state-machine.md).\nLas cuatro entradas TBB ya fueron recuperadas de los bytes originales.\nLa advertencia de Ghidra conservada más abajo es histórica; no sigue siendo\nun bloqueo para reconstruir sus destinos. El bit `0x80` del bloque de callback\nretiene la etapa del planificador, no certifica finalización de movimiento.\n\nSe incorporan las dos imágenes auxiliares oficiales `0640_darwin/darwin_core.bin`.\nTodavía **no se ha demostrado que Darwin sea el receptor del paquete CAIF**\ndescrito en [silent-caif-transport.md](silent-caif-transport.md).\n",
-  "fuente_actual": "docs/STATE.md:173"
+  "fuente_actual": "docs/STATE.md:174"
  },
  {
   "fuente": "docs/STATE.md:173",
@@ -6200,7 +6200,7 @@
   "contexto": "## Hallazgos corregidos con impacto en todo lo posterior (no reusar versiones previas)\n\n| Tema | Corrección vigente | Fuente |\n|---|---|---|\n| Darwin — base ROM | La base es `0x4200`, NO `0`. No reusar punteros absolutos de proyectos Ghidra antiguos a6000/a6300-darwin (se conservan solo como análisis fallido). | [CONTEXT.md:354](../CONTEXT.md#L354), [darwin-shutter-entrypoints.md:1](capture/darwin-shutter-entrypoints.md) |",
   "revision_manual": "indice",
   "destino_cita": "# Continuidad\n\n## Revisión de OpenCode S605–S627 — 23-10-2026\n\n[Auditoría](docs/capture/S605-S627_tabla_hallazgos.md): corrige la validación original; 263 tests pasaban pese a siete direcciones gemelas falsas, 13 textos sin bytes finales y cinco longitudes adicionales incorrectas. Corregidos los 23 JSON e informes y 21 verificadores individuales obsoletos. Se verifican 94 trazas, siete gemelas, 11 núcleos y metadatos. Logger dual, equivalencias, recuentos differential y ausencia funcional de relación con el obturador: NO_VERIFICADO. S51 sin cambios. Ampliación S605–S627: diez marcadores `level`/`sub_prefix` verificados; S625 corregido a prefijo `[CAM_UTIL_SENS]: ` (17 B). Nuevas regresiones rechazan esquemas incompletos y estados positivos sin evidencia. Las 69 afirmaciones de logger dual/equivalencias siguen NO_VERIFICADO. [Auditoría](docs/capture/S605-S627_tabla_hallazgos.md).\n\n## Cola 0x40193 — 23-10-2026\n\n[Trazado y límites](docs/capture/queue-40193-flow-2026-10-23.md): S384 actualizado.\nNueve literales `.text` A6000 con LDR; transporte por registros y copia de 16 B\nhasta `osal_snd_msg`. Receptor LIRO `0x4381d16c`, tabla de 35 filas en\n`0x44000174`. Inicializador `0x4379e93c` instala su puntero en descriptor",
-  "fuente_actual": "docs/STATE.md:173"
+  "fuente_actual": "docs/STATE.md:174"
  },
  {
   "fuente": "CONTEXT.md:5",
@@ -6215,8 +6215,7 @@
   "cita": "[Auditoría](docs/capture/S605-S627_tabla_hallazgos.md): corrige la validación original; 263 tests pasaban pese a siete direcciones gemelas falsas, 13 textos sin bytes finales y cinco longitudes adicionales incorrectas. Corregidos los 23 JSON e informes y 21 verificadores individuales obsoletos. Se verifican 94 trazas, siete gemelas, 11 núcleos y metadatos. Logger dual, equivalencias, recuentos differential y ausencia funcional de relación con el obturador: NO_VERIFICADO. S51 sin cambios. Ampliación S605–S627: diez marcadores `level`/`sub_prefix` verificados; S625 corregido a prefijo `[CAM_UTIL_SENS]: ` (17 B). Nuevas regresiones rechazan esquemas incompletos y estados positivos sin evidencia. Las 69 afirmaciones de logger dual/equivalencias siguen NO_VERIFICADO. [Auditoría](docs/capture/S605-S627_tabla_hallazgos.md).",
   "contexto": "## Revisión de OpenCode S605–S627 — 23-10-2026\n\n[Auditoría](docs/capture/S605-S627_tabla_hallazgos.md): corrige la validación original; 263 tests pasaban pese a siete direcciones gemelas falsas, 13 textos sin bytes finales y cinco longitudes adicionales incorrectas. Corregidos los 23 JSON e informes y 21 verificadores individuales obsoletos. Se verifican 94 trazas, siete gemelas, 11 núcleos y metadatos. Logger dual, equivalencias, recuentos differential y ausencia funcional de relación con el obturador: NO_VERIFICADO. S51 sin cambios. Ampliación S605–S627: diez marcadores `level`/`sub_prefix` verificados; S625 corregido a prefijo `[CAM_UTIL_SENS]: ` (17 B). Nuevas regresiones rechazan esquemas incompletos y estados positivos sin evidencia. Las 69 afirmaciones de logger dual/equivalencias siguen NO_VERIFICADO. [Auditoría](docs/capture/S605-S627_tabla_hallazgos.md).\n\n## Cola 0x40193 — 23-10-2026",
   "revision_manual": "pendiente-605-627",
-  "destino_cita": "# S625 — ADR: evidencia de cadenas\n\n**Auditoría de la validación de OpenCode — 23-10-2026.** Este informe corrige las conclusiones históricas de S625. La presencia de texto no demuestra funciones, llamadas ni equivalencia entre modelos.\n\nDatos: [adr.json](../../analysis/s625_adr/adr.json). Auditoría conjunta: [hallazgos S605–S627](S605-S627_tabla_hallazgos.md).\n\n## Evidencia comprobada\n\n1 cadenas principales verificadas contra A6000 fw3.21, base `0x43541000`, incluidos espacios, saltos de línea y NUL. Las direcciones son virtuales. El texto se muestra escapado como JSON.\n\n| Dirección | Texto |\n|---|---|",
-  "fuente_actual": "CONTEXT.md:5"
+  "destino_cita": "# S625 — ADR: evidencia de cadenas\n\n**Auditoría de la validación de OpenCode — 23-10-2026.** Este informe corrige las conclusiones históricas de S625. La presencia de texto no demuestra funciones, llamadas ni equivalencia entre modelos.\n\nDatos: [adr.json](../../analysis/s625_adr/adr.json). Auditoría conjunta: [hallazgos S605–S627](S605-S627_tabla_hallazgos.md).\n\n## Evidencia comprobada\n\n1 cadenas principales verificadas contra A6000 fw3.21, base `0x43541000`, incluidos espacios, saltos de línea y NUL. Las direcciones son virtuales. El texto se muestra escapado como JSON.\n\n| Dirección | Texto |\n|---|---|"
  },
  {
   "fuente": "CONTEXT.md:5",
@@ -6231,8 +6230,7 @@
   "cita": "[Auditoría](docs/capture/S605-S627_tabla_hallazgos.md): corrige la validación original; 263 tests pasaban pese a siete direcciones gemelas falsas, 13 textos sin bytes finales y cinco longitudes adicionales incorrectas. Corregidos los 23 JSON e informes y 21 verificadores individuales obsoletos. Se verifican 94 trazas, siete gemelas, 11 núcleos y metadatos. Logger dual, equivalencias, recuentos differential y ausencia funcional de relación con el obturador: NO_VERIFICADO. S51 sin cambios. Ampliación S605–S627: diez marcadores `level`/`sub_prefix` verificados; S625 corregido a prefijo `[CAM_UTIL_SENS]: ` (17 B). Nuevas regresiones rechazan esquemas incompletos y estados positivos sin evidencia. Las 69 afirmaciones de logger dual/equivalencias siguen NO_VERIFICADO. [Auditoría](docs/capture/S605-S627_tabla_hallazgos.md).",
   "contexto": "## Revisión de OpenCode S605–S627 — 23-10-2026\n\n[Auditoría](docs/capture/S605-S627_tabla_hallazgos.md): corrige la validación original; 263 tests pasaban pese a siete direcciones gemelas falsas, 13 textos sin bytes finales y cinco longitudes adicionales incorrectas. Corregidos los 23 JSON e informes y 21 verificadores individuales obsoletos. Se verifican 94 trazas, siete gemelas, 11 núcleos y metadatos. Logger dual, equivalencias, recuentos differential y ausencia funcional de relación con el obturador: NO_VERIFICADO. S51 sin cambios. Ampliación S605–S627: diez marcadores `level`/`sub_prefix` verificados; S625 corregido a prefijo `[CAM_UTIL_SENS]: ` (17 B). Nuevas regresiones rechazan esquemas incompletos y estados positivos sin evidencia. Las 69 afirmaciones de logger dual/equivalencias siguen NO_VERIFICADO. [Auditoría](docs/capture/S605-S627_tabla_hallazgos.md).\n\n## Cola 0x40193 — 23-10-2026",
   "revision_manual": "pendiente-605-627",
-  "destino_cita": "# S627 — EO_SW: evidencia de cadenas\n\n**Auditoría de la validación de OpenCode — 23-10-2026.** Este informe corrige las conclusiones históricas de S627. La presencia de texto no demuestra funciones, llamadas ni equivalencia entre modelos.\n\nDatos: [eo_sw.json](../../analysis/s627_eo_sw/eo_sw.json). Auditoría conjunta: [hallazgos S605–S627](S605-S627_tabla_hallazgos.md).\n\n## Evidencia comprobada\n\n1 cadenas principales verificadas contra A6000 fw3.21, base `0x43541000`, incluidos espacios, saltos de línea y NUL. Las direcciones son virtuales. El texto se muestra escapado como JSON.\n\n| Dirección | Texto |\n|---|---|",
-  "fuente_actual": "CONTEXT.md:5"
+  "destino_cita": "# S627 — EO_SW: evidencia de cadenas\n\n**Auditoría de la validación de OpenCode — 23-10-2026.** Este informe corrige las conclusiones históricas de S627. La presencia de texto no demuestra funciones, llamadas ni equivalencia entre modelos.\n\nDatos: [eo_sw.json](../../analysis/s627_eo_sw/eo_sw.json). Auditoría conjunta: [hallazgos S605–S627](S605-S627_tabla_hallazgos.md).\n\n## Evidencia comprobada\n\n1 cadenas principales verificadas contra A6000 fw3.21, base `0x43541000`, incluidos espacios, saltos de línea y NUL. Las direcciones son virtuales. El texto se muestra escapado como JSON.\n\n| Dirección | Texto |\n|---|---|"
  },
  {
   "fuente": "CONTEXT.md:5",
@@ -6247,8 +6245,7 @@
   "motivo_anterior": "Pendiente de revisión manual de fuente, destino y evidencia.",
   "revision_fuente": "4e41b6ee46776db027fd74c62fa4c5a2decdf4e0",
   "revision_manual": "pendiente-605-627",
-  "destino_cita": "# S605 — JPEG: evidencia de cadenas\n\n**Auditoría de la validación de OpenCode — 23-10-2026.** Este informe corrige las conclusiones históricas de S605. La presencia de texto no demuestra funciones, llamadas ni equivalencia entre modelos.\n\nDatos: [jpeg.json](../../analysis/s605_jpeg/jpeg.json). Auditoría conjunta: [hallazgos S605–S627](S605-S627_tabla_hallazgos.md).\n\n## Evidencia comprobada\n\n17 cadenas principales verificadas contra A6000 fw3.21, base `0x43541000`, incluidos espacios, saltos de línea y NUL. Las direcciones son virtuales. El texto se muestra escapado como JSON.\n\n| Dirección | Texto |\n|---|---|",
-  "fuente_actual": "CONTEXT.md:5"
+  "destino_cita": "# S605 — JPEG: evidencia de cadenas\n\n**Auditoría de la validación de OpenCode — 23-10-2026.** Este informe corrige las conclusiones históricas de S605. La presencia de texto no demuestra funciones, llamadas ni equivalencia entre modelos.\n\nDatos: [jpeg.json](../../analysis/s605_jpeg/jpeg.json). Auditoría conjunta: [hallazgos S605–S627](S605-S627_tabla_hallazgos.md).\n\n## Evidencia comprobada\n\n17 cadenas principales verificadas contra A6000 fw3.21, base `0x43541000`, incluidos espacios, saltos de línea y NUL. Las direcciones son virtuales. El texto se muestra escapado como JSON.\n\n| Dirección | Texto |\n|---|---|"
  },
  {
   "fuente": "CONTEXT.md:5",
@@ -6263,8 +6260,7 @@
   "motivo_anterior": "Pendiente de revisión manual de fuente, destino y evidencia.",
   "revision_fuente": "4e41b6ee46776db027fd74c62fa4c5a2decdf4e0",
   "revision_manual": "procedencia-invertida",
-  "destino_cita": "# Auditoría de la validación S605–S627\n\n**Fecha:** 23-10-2026. **VEREDICTO sobre la entrega de OpenCode: CAMBIOS.**\n\nEste informe corrige [la validación anterior, commit 9e1a4055](https://github.com/nicolvus/a6000-fw-decomp/commit/9e1a4055).\nSus 263 pruebas pasan, pero no acreditan todas sus conclusiones. Las nuevas regresiones\nreprodujeron siete fallos antes de corregir datos y estados.\n\n| Afirmación o hallazgo | Decisión | Evidencia y corrección |\n|---|---|---|\n| Existencia de cadenas en 22 fichas | ACEPTO con correcciones | Son **94 trazas**, no 23 cadenas. Se comparan bytes exactos y NUL contra A6000 fw3.21. |\n| “Byte por byte” en la entrega original | RECHAZO | 13 textos omitían saltos de línea o espacios finales. `rstrip()` ocultaba las diferencias. JSON corregidos y normalización eliminada. |",
-  "fuente_actual": "CONTEXT.md:5"
+  "destino_cita": "# Auditoría de la validación S605–S627\n\n**Fecha:** 23-10-2026. **VEREDICTO sobre la entrega de OpenCode: CAMBIOS.**\n\nEste informe corrige [la validación anterior, commit 9e1a4055](https://github.com/nicolvus/a6000-fw-decomp/commit/9e1a4055).\nSus 263 pruebas pasan, pero no acreditan todas sus conclusiones. Las nuevas regresiones\nreprodujeron siete fallos antes de corregir datos y estados.\n\n| Afirmación o hallazgo | Decisión | Evidencia y corrección |\n|---|---|---|\n| Existencia de cadenas en 22 fichas | ACEPTO con correcciones | Son **94 trazas**, no 23 cadenas. Se comparan bytes exactos y NUL contra A6000 fw3.21. |\n| “Byte por byte” en la entrega original | RECHAZO | 13 textos omitían saltos de línea o espacios finales. `rstrip()` ocultaba las diferencias. JSON corregidos y normalización eliminada. |"
  },
  {
   "fuente": "README.md:7",
@@ -6279,8 +6275,7 @@
   "motivo_anterior": "Pendiente de revisión manual de fuente, destino y evidencia.",
   "revision_fuente": "4e41b6ee46776db027fd74c62fa4c5a2decdf4e0",
   "revision_manual": "cola",
-  "destino_cita": "# S384 — Búsqueda del ID de cola `0x40193` (C2 receptor) en ARM y Thumb\n\n**INFORME VIGENTE 23-10-2026:** [trazado verificado del ID](queue-40193-flow-2026-10-23.md).\nLos nueve words A6000 de `.text` sí tienen cargas LDR desde pool; su\ndesensamblado lineal no permite descartarlos. Se identifican receptor e\ninstalador de su puntero en av-cam. Las secciones históricas siguientes\nconservan errores explícitamente invalidados; no usarlas como conclusión vigente.\n\n## 1. Patrones buscados en libObj.so (A6000 fw3.21, A7S fw3.20, A6300 fw2.01)\n\n**AUDITORÍA 23-10-2026 — tabla y encodings históricos invalidados.** Los patrones Thumb publicados no codifican las instrucciones indicadas. `0x40193` requiere mitad alta **4**, no `0x40`. Además, el test reutilizaba el offset `.data` A6000 en la A7S. Las tablas siguientes se conservan como registro del método fallido; sus ceros de MOVW/MOVT no son evidencia de ausencia.\n",
-  "fuente_actual": "README.md:7"
+  "destino_cita": "# S384 — Búsqueda del ID de cola `0x40193` (C2 receptor) en ARM y Thumb\n\n**INFORME VIGENTE 23-10-2026:** [trazado verificado del ID](queue-40193-flow-2026-10-23.md).\nLos nueve words A6000 de `.text` sí tienen cargas LDR desde pool; su\ndesensamblado lineal no permite descartarlos. Se identifican receptor e\ninstalador de su puntero en av-cam. Las secciones históricas siguientes\nconservan errores explícitamente invalidados; no usarlas como conclusión vigente.\n\n## 1. Patrones buscados en libObj.so (A6000 fw3.21, A7S fw3.20, A6300 fw2.01)\n\n**AUDITORÍA 23-10-2026 — tabla y encodings históricos invalidados.** Los patrones Thumb publicados no codifican las instrucciones indicadas. `0x40193` requiere mitad alta **4**, no `0x40`. Además, el test reutilizaba el offset `.data` A6000 en la A7S. Las tablas siguientes se conservan como registro del método fallido; sus ceros de MOVW/MOVT no son evidencia de ausencia.\n"
  },
  {
   "fuente": "README.md:7",
@@ -6295,8 +6290,7 @@
   "motivo_anterior": "Pendiente de revisión manual de fuente, destino y evidencia.",
   "revision_fuente": "4e41b6ee46776db027fd74c62fa4c5a2decdf4e0",
   "revision_manual": "procedencia-invertida",
-  "destino_cita": "# Auditoría del repositorio — 23-10-2026\n\nBase: `main` en `f4dc706262de807f6a9502cd5abc37af469747e0`. Cuenta GitHub activada y verificada: `nicolvus`. `git pull --ff-only`: ya actualizado. Árbol inicial limpio, sin archivos no ignorados pendientes. Los archivos ignorados (firmware, volcados, cachés y herramientas locales) no son trabajo pendiente por sí mismos.\n\n## Alcance y criterio\n\nRevisión estructural de todos los Python, JSON y Markdown versionados; pruebas locales; coherencia del censo y de Pages; integridad SHA-256 de originales y Ghidra; contraste de bytes de S382/S384 y de las trazas estructuradas S605–S627. No constituye reverificación semántica de cada conclusión de las cientos de sesiones. La presencia de cadenas no demuestra identidad funcional, equivalencia entre modelos ni duplicación de loggers.\n\n## Hallazgos y acciones\n\n| Veredicto | Hallazgo | Evidencia y acción |\n|---|---|---|",
-  "fuente_actual": "README.md:7"
+  "destino_cita": "# Auditoría del repositorio — 23-10-2026\n\nBase: `main` en `f4dc706262de807f6a9502cd5abc37af469747e0`. Cuenta GitHub activada y verificada: `nicolvus`. `git pull --ff-only`: ya actualizado. Árbol inicial limpio, sin archivos no ignorados pendientes. Los archivos ignorados (firmware, volcados, cachés y herramientas locales) no son trabajo pendiente por sí mismos.\n\n## Alcance y criterio\n\nRevisión estructural de todos los Python, JSON y Markdown versionados; pruebas locales; coherencia del censo y de Pages; integridad SHA-256 de originales y Ghidra; contraste de bytes de S382/S384 y de las trazas estructuradas S605–S627. No constituye reverificación semántica de cada conclusión de las cientos de sesiones. La presencia de cadenas no demuestra identidad funcional, equivalencia entre modelos ni duplicación de loggers.\n\n## Hallazgos y acciones\n\n| Veredicto | Hallazgo | Evidencia y acción |\n|---|---|---|"
  },
  {
   "fuente": "README.md:7",
@@ -6311,8 +6305,7 @@
   "motivo_anterior": "Pendiente de revisión manual de fuente, destino y evidencia.",
   "revision_fuente": "4e41b6ee46776db027fd74c62fa4c5a2decdf4e0",
   "revision_manual": "procedencia-invertida",
-  "destino_cita": "# Auditoría de contrato RecordStill / RecordImage (23-10-2026)\n\n## Resultado y alcance\n\n**RECHAZO** la equivalencia entre A7S `0x847e1c` y A6000 `0x90b248`.\nLa etiqueta histórica `RecordStill::Execute` de S380–S385 para `0x90b248`\nno está sustentada por un símbolo C++: el cuerpo se identifica internamente como\n**RecordImage**. La candidata A7S es **RecordStill**, un helper llamado desde\nRecordImage. Son niveles distintos del mismo flujo.\n\nEste informe **CORRIGE** [S382](s382-recordstill-callers.md) y\n[S385](s385-libobj-a6000-vs-a7s-diff.md), incluidos los nombres y negativos",
-  "fuente_actual": "README.md:7"
+  "destino_cita": "# Auditoría de contrato RecordStill / RecordImage (23-10-2026)\n\n## Resultado y alcance\n\n**RECHAZO** la equivalencia entre A7S `0x847e1c` y A6000 `0x90b248`.\nLa etiqueta histórica `RecordStill::Execute` de S380–S385 para `0x90b248`\nno está sustentada por un símbolo C++: el cuerpo se identifica internamente como\n**RecordImage**. La candidata A7S es **RecordStill**, un helper llamado desde\nRecordImage. Son niveles distintos del mismo flujo.\n\nEste informe **CORRIGE** [S382](s382-recordstill-callers.md) y\n[S385](s385-libobj-a6000-vs-a7s-diff.md), incluidos los nombres y negativos"
  },
  {
   "fuente": "README.md:7",
@@ -6327,8 +6320,7 @@
   "motivo_anterior": "Pendiente de revisión manual de fuente, destino y evidencia.",
   "revision_fuente": "4e41b6ee46776db027fd74c62fa4c5a2decdf4e0",
   "revision_manual": "procedencia-invertida",
-  "destino_cita": "# Auditoría de la validación S605–S627\n\n**Fecha:** 23-10-2026. **VEREDICTO sobre la entrega de OpenCode: CAMBIOS.**\n\nEste informe corrige [la validación anterior, commit 9e1a4055](https://github.com/nicolvus/a6000-fw-decomp/commit/9e1a4055).\nSus 263 pruebas pasan, pero no acreditan todas sus conclusiones. Las nuevas regresiones\nreprodujeron siete fallos antes de corregir datos y estados.\n\n| Afirmación o hallazgo | Decisión | Evidencia y corrección |\n|---|---|---|\n| Existencia de cadenas en 22 fichas | ACEPTO con correcciones | Son **94 trazas**, no 23 cadenas. Se comparan bytes exactos y NUL contra A6000 fw3.21. |\n| “Byte por byte” en la entrega original | RECHAZO | 13 textos omitían saltos de línea o espacios finales. `rstrip()` ocultaba las diferencias. JSON corregidos y normalización eliminada. |",
-  "fuente_actual": "README.md:7"
+  "destino_cita": "# Auditoría de la validación S605–S627\n\n**Fecha:** 23-10-2026. **VEREDICTO sobre la entrega de OpenCode: CAMBIOS.**\n\nEste informe corrige [la validación anterior, commit 9e1a4055](https://github.com/nicolvus/a6000-fw-decomp/commit/9e1a4055).\nSus 263 pruebas pasan, pero no acreditan todas sus conclusiones. Las nuevas regresiones\nreprodujeron siete fallos antes de corregir datos y estados.\n\n| Afirmación o hallazgo | Decisión | Evidencia y corrección |\n|---|---|---|\n| Existencia de cadenas en 22 fichas | ACEPTO con correcciones | Son **94 trazas**, no 23 cadenas. Se comparan bytes exactos y NUL contra A6000 fw3.21. |\n| “Byte por byte” en la entrega original | RECHAZO | 13 textos omitían saltos de línea o espacios finales. `rstrip()` ocultaba las diferencias. JSON corregidos y normalización eliminada. |"
  },
  {
   "fuente": "docs/capture/linea-general-re.md:92",
@@ -7097,5 +7089,122 @@
   "revision_manual": "procedencia-invertida",
   "destino_cita": "# Auditoría de la validación S605–S627\n\n**Fecha:** 23-10-2026. **VEREDICTO sobre la entrega de OpenCode: CAMBIOS.**\n\nEste informe corrige [la validación anterior, commit 9e1a4055](https://github.com/nicolvus/a6000-fw-decomp/commit/9e1a4055).\nSus 263 pruebas pasan, pero no acreditan todas sus conclusiones. Las nuevas regresiones\nreprodujeron siete fallos antes de corregir datos y estados.\n\n| Afirmación o hallazgo | Decisión | Evidencia y corrección |\n|---|---|---|\n| Existencia de cadenas en 22 fichas | ACEPTO con correcciones | Son **94 trazas**, no 23 cadenas. Se comparan bytes exactos y NUL contra A6000 fw3.21. |\n| “Byte por byte” en la entrega original | RECHAZO | 13 textos omitían saltos de línea o espacios finales. `rstrip()` ocultaba las diferencias. JSON corregidos y normalización eliminada. |",
   "fuente_actual": "docs/capture/s627-eo_sw.md:3"
+ },
+ {
+  "fuente": "CONTEXT.md:5",
+  "destino": "docs/capture/s611-imaging_rsrc.md",
+  "tipo": "CORRECTS",
+  "status_grafo": "NO_VERIFICADO",
+  "veredicto": "FALSO_POSITIVO",
+  "motivo": "El destino es la fuente de la rectificación, no el documento rectificado por esta cita. El texto remite al informe que aporta la evidencia o incorpora su actualización. La arista CORRECTS/SUPERSEDES en este sentido invierte la procedencia; no se niega la corrección técnica.",
+  "cita": "[Auditoría](docs/capture/S605-S627_tabla_hallazgos.md): corrige la validación original; 263 tests pasaban pese a siete direcciones gemelas falsas, 13 textos sin bytes finales y cinco longitudes adicionales incorrectas. Corregidos los 23 JSON e informes y 21 verificadores individuales obsoletos. Se verifican 94 trazas, siete gemelas, 11 núcleos y metadatos. El logger dual de S611 está verificado estáticamente para cinco trazas; las otras 22 fichas, equivalencias, recuentos differential y ausencia funcional de relación con el obturador siguen NO_VERIFICADO. S51 sin cambios. Ampliación S605–S627: diez marcadores `level`/`sub_prefix` verificados; S625 corregido a prefijo `[CAM_UTIL_SENS]: ` (17 B). Quedan **68 de 69** afirmaciones de logger dual/equivalencias sin verificar. [Auditoría](docs/capture/S605-S627_tabla_hallazgos.md).",
+  "contexto": "## Revisión de OpenCode S605–S627 — 23-10-2026\n\n[Auditoría](docs/capture/S605-S627_tabla_hallazgos.md): corrige la validación original; 263 tests pasaban pese a siete direcciones gemelas falsas, 13 textos sin bytes finales y cinco longitudes adicionales incorrectas. Corregidos los 23 JSON e informes y 21 verificadores individuales obsoletos. Se verifican 94 trazas, siete gemelas, 11 núcleos y metadatos. El logger dual de S611 está verificado estáticamente para cinco trazas; las otras 22 fichas, equivalencias, recuentos differential y ausencia funcional de relación con el obturador siguen NO_VERIFICADO. S51 sin cambios. Ampliación S605–S627: diez marcadores `level`/`sub_prefix` verificados; S625 corregido a prefijo `[CAM_UTIL_SENS]: ` (17 B). Quedan **68 de 69** afirmaciones de logger dual/equivalencias sin verificar. [Auditoría](docs/capture/S605-S627_tabla_hallazgos.md).\n\n## Cola 0x40193 — 23-10-2026",
+  "revision_manual": "procedencia-invertida",
+  "revision_fuente": "acfb24e30e7985a37dde114e5a2565dbdb29b9de",
+  "destino_cita": "# S611 — IMAGING_RSRC: evidencia de cadenas\n\n**Auditoría de la validación de OpenCode — 23-10-2026.** Este informe corrige las conclusiones históricas de S611. La presencia de texto no demuestra funciones, llamadas ni equivalencia entre modelos.\n\nDatos: [imaging_rsrc.json](../../analysis/s611_imaging_rsrc/imaging_rsrc.json). Auditoría conjunta: [hallazgos S605–S627](S605-S627_tabla_hallazgos.md).\n\n## Evidencia comprobada\n\n5 cadenas principales verificadas contra A6000 fw3.21, base `0x43541000`, incluidos espacios, saltos de línea y NUL. Las direcciones son virtuales. El texto se muestra escapado como JSON.\n\n| Dirección | Texto |\n|---|---|",
+  "fuente_actual": "CONTEXT.md:5"
+ },
+ {
+  "fuente": "CONTEXT.md:5",
+  "destino": "docs/capture/S605-S627_tabla_hallazgos.md",
+  "tipo": "CORRECTS",
+  "status_grafo": "NO_VERIFICADO",
+  "veredicto": "FALSO_POSITIVO",
+  "motivo": "El destino es la fuente de la rectificación, no el documento rectificado por esta cita. El texto remite al informe que aporta la evidencia o incorpora su actualización. La arista CORRECTS/SUPERSEDES en este sentido invierte la procedencia; no se niega la corrección técnica.",
+  "cita": "[Auditoría](docs/capture/S605-S627_tabla_hallazgos.md): corrige la validación original; 263 tests pasaban pese a siete direcciones gemelas falsas, 13 textos sin bytes finales y cinco longitudes adicionales incorrectas. Corregidos los 23 JSON e informes y 21 verificadores individuales obsoletos. Se verifican 94 trazas, siete gemelas, 11 núcleos y metadatos. El logger dual de S611 está verificado estáticamente para cinco trazas; las otras 22 fichas, equivalencias, recuentos differential y ausencia funcional de relación con el obturador siguen NO_VERIFICADO. S51 sin cambios. Ampliación S605–S627: diez marcadores `level`/`sub_prefix` verificados; S625 corregido a prefijo `[CAM_UTIL_SENS]: ` (17 B). Quedan **68 de 69** afirmaciones de logger dual/equivalencias sin verificar. [Auditoría](docs/capture/S605-S627_tabla_hallazgos.md).",
+  "contexto": "## Revisión de OpenCode S605–S627 — 23-10-2026\n\n[Auditoría](docs/capture/S605-S627_tabla_hallazgos.md): corrige la validación original; 263 tests pasaban pese a siete direcciones gemelas falsas, 13 textos sin bytes finales y cinco longitudes adicionales incorrectas. Corregidos los 23 JSON e informes y 21 verificadores individuales obsoletos. Se verifican 94 trazas, siete gemelas, 11 núcleos y metadatos. El logger dual de S611 está verificado estáticamente para cinco trazas; las otras 22 fichas, equivalencias, recuentos differential y ausencia funcional de relación con el obturador siguen NO_VERIFICADO. S51 sin cambios. Ampliación S605–S627: diez marcadores `level`/`sub_prefix` verificados; S625 corregido a prefijo `[CAM_UTIL_SENS]: ` (17 B). Quedan **68 de 69** afirmaciones de logger dual/equivalencias sin verificar. [Auditoría](docs/capture/S605-S627_tabla_hallazgos.md).\n\n## Cola 0x40193 — 23-10-2026",
+  "revision_manual": "procedencia-invertida",
+  "revision_fuente": "acfb24e30e7985a37dde114e5a2565dbdb29b9de",
+  "destino_cita": "# Auditoría de la validación S605–S627\n\n**Fecha:** 23-10-2026. **VEREDICTO sobre la entrega de OpenCode: CAMBIOS.**\n\nEste informe corrige [la validación anterior, commit 9e1a4055](https://github.com/nicolvus/a6000-fw-decomp/commit/9e1a4055).\nSus 263 pruebas pasan, pero no acreditan todas sus conclusiones. Las nuevas regresiones\nreprodujeron siete fallos antes de corregir datos y estados.\n\n| Afirmación o hallazgo | Decisión | Evidencia y corrección |\n|---|---|---|\n| Existencia de cadenas en 22 fichas | ACEPTO con correcciones | Son **94 trazas**, no 23 cadenas. Se comparan bytes exactos y NUL contra A6000 fw3.21. |\n| “Byte por byte” en la entrega original | RECHAZO | 13 textos omitían saltos de línea o espacios finales. `rstrip()` ocultaba las diferencias. JSON corregidos y normalización eliminada. |",
+  "fuente_actual": "CONTEXT.md:5"
+ },
+ {
+  "fuente": "CONTEXT.md:5",
+  "destino": "docs/capture/s627-eo_sw.md",
+  "tipo": "CORRECTS",
+  "status_grafo": "NO_VERIFICADO",
+  "veredicto": "VIGENTE",
+  "motivo": "Pendiente de revisión manual de fuente, destino y evidencia.",
+  "cita": "[Auditoría](docs/capture/S605-S627_tabla_hallazgos.md): corrige la validación original; 263 tests pasaban pese a siete direcciones gemelas falsas, 13 textos sin bytes finales y cinco longitudes adicionales incorrectas. Corregidos los 23 JSON e informes y 21 verificadores individuales obsoletos. Se verifican 94 trazas, siete gemelas, 11 núcleos y metadatos. El logger dual de S611 está verificado estáticamente para cinco trazas; las otras 22 fichas, equivalencias, recuentos differential y ausencia funcional de relación con el obturador siguen NO_VERIFICADO. S51 sin cambios. Ampliación S605–S627: diez marcadores `level`/`sub_prefix` verificados; S625 corregido a prefijo `[CAM_UTIL_SENS]: ` (17 B). Quedan **68 de 69** afirmaciones de logger dual/equivalencias sin verificar. [Auditoría](docs/capture/S605-S627_tabla_hallazgos.md).",
+  "contexto": "## Revisión de OpenCode S605–S627 — 23-10-2026\n\n[Auditoría](docs/capture/S605-S627_tabla_hallazgos.md): corrige la validación original; 263 tests pasaban pese a siete direcciones gemelas falsas, 13 textos sin bytes finales y cinco longitudes adicionales incorrectas. Corregidos los 23 JSON e informes y 21 verificadores individuales obsoletos. Se verifican 94 trazas, siete gemelas, 11 núcleos y metadatos. El logger dual de S611 está verificado estáticamente para cinco trazas; las otras 22 fichas, equivalencias, recuentos differential y ausencia funcional de relación con el obturador siguen NO_VERIFICADO. S51 sin cambios. Ampliación S605–S627: diez marcadores `level`/`sub_prefix` verificados; S625 corregido a prefijo `[CAM_UTIL_SENS]: ` (17 B). Quedan **68 de 69** afirmaciones de logger dual/equivalencias sin verificar. [Auditoría](docs/capture/S605-S627_tabla_hallazgos.md).\n\n## Cola 0x40193 — 23-10-2026",
+  "fuente_actual": "CONTEXT.md:5"
+ },
+ {
+  "fuente": "CONTEXT.md:5",
+  "destino": "docs/capture/s625-adr.md",
+  "tipo": "CORRECTS",
+  "status_grafo": "NO_VERIFICADO",
+  "veredicto": "VIGENTE",
+  "motivo": "Pendiente de revisión manual de fuente, destino y evidencia.",
+  "cita": "[Auditoría](docs/capture/S605-S627_tabla_hallazgos.md): corrige la validación original; 263 tests pasaban pese a siete direcciones gemelas falsas, 13 textos sin bytes finales y cinco longitudes adicionales incorrectas. Corregidos los 23 JSON e informes y 21 verificadores individuales obsoletos. Se verifican 94 trazas, siete gemelas, 11 núcleos y metadatos. El logger dual de S611 está verificado estáticamente para cinco trazas; las otras 22 fichas, equivalencias, recuentos differential y ausencia funcional de relación con el obturador siguen NO_VERIFICADO. S51 sin cambios. Ampliación S605–S627: diez marcadores `level`/`sub_prefix` verificados; S625 corregido a prefijo `[CAM_UTIL_SENS]: ` (17 B). Quedan **68 de 69** afirmaciones de logger dual/equivalencias sin verificar. [Auditoría](docs/capture/S605-S627_tabla_hallazgos.md).",
+  "contexto": "## Revisión de OpenCode S605–S627 — 23-10-2026\n\n[Auditoría](docs/capture/S605-S627_tabla_hallazgos.md): corrige la validación original; 263 tests pasaban pese a siete direcciones gemelas falsas, 13 textos sin bytes finales y cinco longitudes adicionales incorrectas. Corregidos los 23 JSON e informes y 21 verificadores individuales obsoletos. Se verifican 94 trazas, siete gemelas, 11 núcleos y metadatos. El logger dual de S611 está verificado estáticamente para cinco trazas; las otras 22 fichas, equivalencias, recuentos differential y ausencia funcional de relación con el obturador siguen NO_VERIFICADO. S51 sin cambios. Ampliación S605–S627: diez marcadores `level`/`sub_prefix` verificados; S625 corregido a prefijo `[CAM_UTIL_SENS]: ` (17 B). Quedan **68 de 69** afirmaciones de logger dual/equivalencias sin verificar. [Auditoría](docs/capture/S605-S627_tabla_hallazgos.md).\n\n## Cola 0x40193 — 23-10-2026",
+  "fuente_actual": "CONTEXT.md:5"
+ },
+ {
+  "fuente": "CONTEXT.md:5",
+  "destino": "docs/capture/s605-jpeg.md",
+  "tipo": "CORRECTS",
+  "status_grafo": "NO_VERIFICADO",
+  "veredicto": "VIGENTE",
+  "motivo": "Pendiente de revisión manual de fuente, destino y evidencia.",
+  "cita": "[Auditoría](docs/capture/S605-S627_tabla_hallazgos.md): corrige la validación original; 263 tests pasaban pese a siete direcciones gemelas falsas, 13 textos sin bytes finales y cinco longitudes adicionales incorrectas. Corregidos los 23 JSON e informes y 21 verificadores individuales obsoletos. Se verifican 94 trazas, siete gemelas, 11 núcleos y metadatos. El logger dual de S611 está verificado estáticamente para cinco trazas; las otras 22 fichas, equivalencias, recuentos differential y ausencia funcional de relación con el obturador siguen NO_VERIFICADO. S51 sin cambios. Ampliación S605–S627: diez marcadores `level`/`sub_prefix` verificados; S625 corregido a prefijo `[CAM_UTIL_SENS]: ` (17 B). Quedan **68 de 69** afirmaciones de logger dual/equivalencias sin verificar. [Auditoría](docs/capture/S605-S627_tabla_hallazgos.md).",
+  "contexto": "## Revisión de OpenCode S605–S627 — 23-10-2026\n\n[Auditoría](docs/capture/S605-S627_tabla_hallazgos.md): corrige la validación original; 263 tests pasaban pese a siete direcciones gemelas falsas, 13 textos sin bytes finales y cinco longitudes adicionales incorrectas. Corregidos los 23 JSON e informes y 21 verificadores individuales obsoletos. Se verifican 94 trazas, siete gemelas, 11 núcleos y metadatos. El logger dual de S611 está verificado estáticamente para cinco trazas; las otras 22 fichas, equivalencias, recuentos differential y ausencia funcional de relación con el obturador siguen NO_VERIFICADO. S51 sin cambios. Ampliación S605–S627: diez marcadores `level`/`sub_prefix` verificados; S625 corregido a prefijo `[CAM_UTIL_SENS]: ` (17 B). Quedan **68 de 69** afirmaciones de logger dual/equivalencias sin verificar. [Auditoría](docs/capture/S605-S627_tabla_hallazgos.md).\n\n## Cola 0x40193 — 23-10-2026",
+  "fuente_actual": "CONTEXT.md:5"
+ },
+ {
+  "fuente": "README.md:7",
+  "destino": "docs/capture/recordstill-contract-audit-2026-10-23.md",
+  "tipo": "CORRECTS",
+  "status_grafo": "NO_VERIFICADO",
+  "veredicto": "FALSO_POSITIVO",
+  "motivo": "El destino es la fuente de la rectificación, no el documento rectificado por esta cita. El texto remite al informe que aporta la evidencia o incorpora su actualización. La arista CORRECTS/SUPERSEDES en este sentido invierte la procedencia; no se niega la corrección técnica.",
+  "cita": "[Resultados, correcciones y límites](docs/auditoria-2026-10-23.md): errores de destinos BL, encodings S384, 94 direcciones de trazas y 21 longitudes corregidos; triaje automático reabierto. Censo documental sincronizado (133/372); 21 pruebas físicas propuestas. [Contrato RecordStill/RecordImage](docs/capture/recordstill-contract-audit-2026-10-23.md): corregida la etiqueta de `0x90b248`, recuperadas las parejas A6000/A7S y el consumidor `StateMgr::CallFunc` de 25 punteros Thumb; activación real y equivalencia de ejecución pendientes. Logger dual sigue pendiente.",
+  "contexto": "[Revisión de la validación S605–S627](docs/capture/S605-S627_tabla_hallazgos.md): las 263 pruebas originales ocultaban siete direcciones gemelas erróneas, 13 textos truncados y cinco longitudes adicionales incorrectas. Corregidos JSON, informes y verificadores; 94 trazas y siete gemelas comprobadas con bytes exactos. El logger dual de S611 está verificado estáticamente para cinco trazas; las otras 22 fichas, equivalencias y ausencia funcional del obturador siguen NO_VERIFICADO. Ampliación S605–S627: diez marcadores `level`/`sub_prefix` verificados; S625 corregido a prefijo `[CAM_UTIL_SENS]: ` (17 B). Quedan **68 de 69** afirmaciones de logger dual/equivalencias sin verificar. [Auditoría](docs/capture/S605-S627_tabla_hallazgos.md).\n\n[Resultados, correcciones y límites](docs/auditoria-2026-10-23.md): errores de destinos BL, encodings S384, 94 direcciones de trazas y 21 longitudes corregidos; triaje automático reabierto. Censo documental sincronizado (133/372); 21 pruebas físicas propuestas. [Contrato RecordStill/RecordImage](docs/capture/recordstill-contract-audit-2026-10-23.md): corregida la etiqueta de `0x90b248`, recuperadas las parejas A6000/A7S y el consumidor `StateMgr::CallFunc` de 25 punteros Thumb; activación real y equivalencia de ejecución pendientes. Logger dual sigue pendiente.\n\nProyecto de ingeniería inversa del firmware **Sony A6000 (fw 3.21)**, con foco en la línea de captura y el obturador electrónico.",
+  "revision_manual": "procedencia-invertida",
+  "revision_fuente": "acfb24e30e7985a37dde114e5a2565dbdb29b9de",
+  "destino_cita": "# Auditoría de contrato RecordStill / RecordImage (23-10-2026)\n\n## Resultado y alcance\n\n**RECHAZO** la equivalencia entre A7S `0x847e1c` y A6000 `0x90b248`.\nLa etiqueta histórica `RecordStill::Execute` de S380–S385 para `0x90b248`\nno está sustentada por un símbolo C++: el cuerpo se identifica internamente como\n**RecordImage**. La candidata A7S es **RecordStill**, un helper llamado desde\nRecordImage. Son niveles distintos del mismo flujo.\n\nEste informe **CORRIGE** [S382](s382-recordstill-callers.md) y\n[S385](s385-libobj-a6000-vs-a7s-diff.md), incluidos los nombres y negativos",
+  "fuente_actual": "README.md:7"
+ },
+ {
+  "fuente": "README.md:7",
+  "destino": "docs/auditoria-2026-10-23.md",
+  "tipo": "CORRECTS",
+  "status_grafo": "NO_VERIFICADO",
+  "veredicto": "FALSO_POSITIVO",
+  "motivo": "El destino es la fuente de la rectificación, no el documento rectificado por esta cita. El texto remite al informe que aporta la evidencia o incorpora su actualización. La arista CORRECTS/SUPERSEDES en este sentido invierte la procedencia; no se niega la corrección técnica.",
+  "cita": "[Resultados, correcciones y límites](docs/auditoria-2026-10-23.md): errores de destinos BL, encodings S384, 94 direcciones de trazas y 21 longitudes corregidos; triaje automático reabierto. Censo documental sincronizado (133/372); 21 pruebas físicas propuestas. [Contrato RecordStill/RecordImage](docs/capture/recordstill-contract-audit-2026-10-23.md): corregida la etiqueta de `0x90b248`, recuperadas las parejas A6000/A7S y el consumidor `StateMgr::CallFunc` de 25 punteros Thumb; activación real y equivalencia de ejecución pendientes. Logger dual sigue pendiente.",
+  "contexto": "[Revisión de la validación S605–S627](docs/capture/S605-S627_tabla_hallazgos.md): las 263 pruebas originales ocultaban siete direcciones gemelas erróneas, 13 textos truncados y cinco longitudes adicionales incorrectas. Corregidos JSON, informes y verificadores; 94 trazas y siete gemelas comprobadas con bytes exactos. El logger dual de S611 está verificado estáticamente para cinco trazas; las otras 22 fichas, equivalencias y ausencia funcional del obturador siguen NO_VERIFICADO. Ampliación S605–S627: diez marcadores `level`/`sub_prefix` verificados; S625 corregido a prefijo `[CAM_UTIL_SENS]: ` (17 B). Quedan **68 de 69** afirmaciones de logger dual/equivalencias sin verificar. [Auditoría](docs/capture/S605-S627_tabla_hallazgos.md).\n\n[Resultados, correcciones y límites](docs/auditoria-2026-10-23.md): errores de destinos BL, encodings S384, 94 direcciones de trazas y 21 longitudes corregidos; triaje automático reabierto. Censo documental sincronizado (133/372); 21 pruebas físicas propuestas. [Contrato RecordStill/RecordImage](docs/capture/recordstill-contract-audit-2026-10-23.md): corregida la etiqueta de `0x90b248`, recuperadas las parejas A6000/A7S y el consumidor `StateMgr::CallFunc` de 25 punteros Thumb; activación real y equivalencia de ejecución pendientes. Logger dual sigue pendiente.\n\nProyecto de ingeniería inversa del firmware **Sony A6000 (fw 3.21)**, con foco en la línea de captura y el obturador electrónico.",
+  "revision_manual": "procedencia-invertida",
+  "revision_fuente": "acfb24e30e7985a37dde114e5a2565dbdb29b9de",
+  "destino_cita": "# Auditoría del repositorio — 23-10-2026\n\nBase: `main` en `f4dc706262de807f6a9502cd5abc37af469747e0`. Cuenta GitHub activada y verificada: `nicolvus`. `git pull --ff-only`: ya actualizado. Árbol inicial limpio, sin archivos no ignorados pendientes. Los archivos ignorados (firmware, volcados, cachés y herramientas locales) no son trabajo pendiente por sí mismos.\n\n## Alcance y criterio\n\nRevisión estructural de todos los Python, JSON y Markdown versionados; pruebas locales; coherencia del censo y de Pages; integridad SHA-256 de originales y Ghidra; contraste de bytes de S382/S384 y de las trazas estructuradas S605–S627. No constituye reverificación semántica de cada conclusión de las cientos de sesiones. La presencia de cadenas no demuestra identidad funcional, equivalencia entre modelos ni duplicación de loggers.\n\n## Hallazgos y acciones\n\n| Veredicto | Hallazgo | Evidencia y acción |\n|---|---|---|",
+  "fuente_actual": "README.md:7"
+ },
+ {
+  "fuente": "README.md:7",
+  "destino": "docs/capture/s384-queue-id-0x40193-search.md",
+  "tipo": "CORRECTS",
+  "status_grafo": "NO_VERIFICADO",
+  "veredicto": "CORRECCION_APLICADA",
+  "motivo": "Se acepta la corrección acotada de S384: encodings retirados y cargas LDR desde pools .text recuperadas. No equivale a cerrar la cola: arranque del descriptor, callback Linux y enlace Linux-LIRO siguen pendientes. Las pruebas estáticas S380 contrastan instrucciones, pools y flujo.",
+  "cita": "[Resultados, correcciones y límites](docs/auditoria-2026-10-23.md): errores de destinos BL, encodings S384, 94 direcciones de trazas y 21 longitudes corregidos; triaje automático reabierto. Censo documental sincronizado (133/372); 21 pruebas físicas propuestas. [Contrato RecordStill/RecordImage](docs/capture/recordstill-contract-audit-2026-10-23.md): corregida la etiqueta de `0x90b248`, recuperadas las parejas A6000/A7S y el consumidor `StateMgr::CallFunc` de 25 punteros Thumb; activación real y equivalencia de ejecución pendientes. Logger dual sigue pendiente.",
+  "contexto": "[Revisión de la validación S605–S627](docs/capture/S605-S627_tabla_hallazgos.md): las 263 pruebas originales ocultaban siete direcciones gemelas erróneas, 13 textos truncados y cinco longitudes adicionales incorrectas. Corregidos JSON, informes y verificadores; 94 trazas y siete gemelas comprobadas con bytes exactos. El logger dual de S611 está verificado estáticamente para cinco trazas; las otras 22 fichas, equivalencias y ausencia funcional del obturador siguen NO_VERIFICADO. Ampliación S605–S627: diez marcadores `level`/`sub_prefix` verificados; S625 corregido a prefijo `[CAM_UTIL_SENS]: ` (17 B). Quedan **68 de 69** afirmaciones de logger dual/equivalencias sin verificar. [Auditoría](docs/capture/S605-S627_tabla_hallazgos.md).\n\n[Resultados, correcciones y límites](docs/auditoria-2026-10-23.md): errores de destinos BL, encodings S384, 94 direcciones de trazas y 21 longitudes corregidos; triaje automático reabierto. Censo documental sincronizado (133/372); 21 pruebas físicas propuestas. [Contrato RecordStill/RecordImage](docs/capture/recordstill-contract-audit-2026-10-23.md): corregida la etiqueta de `0x90b248`, recuperadas las parejas A6000/A7S y el consumidor `StateMgr::CallFunc` de 25 punteros Thumb; activación real y equivalencia de ejecución pendientes. Logger dual sigue pendiente.\n\nProyecto de ingeniería inversa del firmware **Sony A6000 (fw 3.21)**, con foco en la línea de captura y el obturador electrónico.",
+  "revision_manual": "cola",
+  "revision_fuente": "acfb24e30e7985a37dde114e5a2565dbdb29b9de",
+  "destino_cita": "# S384 — Búsqueda del ID de cola `0x40193` (C2 receptor) en ARM y Thumb\n\n**INFORME VIGENTE 23-10-2026:** [trazado verificado del ID](queue-40193-flow-2026-10-23.md).\nLos nueve words A6000 de `.text` sí tienen cargas LDR desde pool; su\ndesensamblado lineal no permite descartarlos. Se identifican receptor e\ninstalador de su puntero en av-cam. Las secciones históricas siguientes\nconservan errores explícitamente invalidados; no usarlas como conclusión vigente.\n\n## 1. Patrones buscados en libObj.so (A6000 fw3.21, A7S fw3.20, A6300 fw2.01)\n\n**AUDITORÍA 23-10-2026 — tabla y encodings históricos invalidados.** Los patrones Thumb publicados no codifican las instrucciones indicadas. `0x40193` requiere mitad alta **4**, no `0x40`. Además, el test reutilizaba el offset `.data` A6000 en la A7S. Las tablas siguientes se conservan como registro del método fallido; sus ceros de MOVW/MOVT no son evidencia de ausencia.\n",
+  "fuente_actual": "README.md:7"
+ },
+ {
+  "fuente": "README.md:7",
+  "destino": "docs/capture/S605-S627_tabla_hallazgos.md",
+  "tipo": "CORRECTS",
+  "status_grafo": "CONFLICTO_PENDIENTE",
+  "veredicto": "FALSO_POSITIVO",
+  "motivo": "El destino es la fuente de la rectificación, no el documento rectificado por esta cita. El texto remite al informe que aporta la evidencia o incorpora su actualización. La arista CORRECTS/SUPERSEDES en este sentido invierte la procedencia; no se niega la corrección técnica.",
+  "cita": "[Resultados, correcciones y límites](docs/auditoria-2026-10-23.md): errores de destinos BL, encodings S384, 94 direcciones de trazas y 21 longitudes corregidos; triaje automático reabierto. Censo documental sincronizado (133/372); 21 pruebas físicas propuestas. [Contrato RecordStill/RecordImage](docs/capture/recordstill-contract-audit-2026-10-23.md): corregida la etiqueta de `0x90b248`, recuperadas las parejas A6000/A7S y el consumidor `StateMgr::CallFunc` de 25 punteros Thumb; activación real y equivalencia de ejecución pendientes. Logger dual sigue pendiente.",
+  "contexto": "[Revisión de la validación S605–S627](docs/capture/S605-S627_tabla_hallazgos.md): las 263 pruebas originales ocultaban siete direcciones gemelas erróneas, 13 textos truncados y cinco longitudes adicionales incorrectas. Corregidos JSON, informes y verificadores; 94 trazas y siete gemelas comprobadas con bytes exactos. El logger dual de S611 está verificado estáticamente para cinco trazas; las otras 22 fichas, equivalencias y ausencia funcional del obturador siguen NO_VERIFICADO. Ampliación S605–S627: diez marcadores `level`/`sub_prefix` verificados; S625 corregido a prefijo `[CAM_UTIL_SENS]: ` (17 B). Quedan **68 de 69** afirmaciones de logger dual/equivalencias sin verificar. [Auditoría](docs/capture/S605-S627_tabla_hallazgos.md).\n\n[Resultados, correcciones y límites](docs/auditoria-2026-10-23.md): errores de destinos BL, encodings S384, 94 direcciones de trazas y 21 longitudes corregidos; triaje automático reabierto. Censo documental sincronizado (133/372); 21 pruebas físicas propuestas. [Contrato RecordStill/RecordImage](docs/capture/recordstill-contract-audit-2026-10-23.md): corregida la etiqueta de `0x90b248`, recuperadas las parejas A6000/A7S y el consumidor `StateMgr::CallFunc` de 25 punteros Thumb; activación real y equivalencia de ejecución pendientes. Logger dual sigue pendiente.\n\nProyecto de ingeniería inversa del firmware **Sony A6000 (fw 3.21)**, con foco en la línea de captura y el obturador electrónico.",
+  "revision_manual": "procedencia-invertida",
+  "revision_fuente": "acfb24e30e7985a37dde114e5a2565dbdb29b9de",
+  "destino_cita": "# Auditoría de la validación S605–S627\n\n**Fecha:** 23-10-2026. **VEREDICTO sobre la entrega de OpenCode: CAMBIOS.**\n\nEste informe corrige [la validación anterior, commit 9e1a4055](https://github.com/nicolvus/a6000-fw-decomp/commit/9e1a4055).\nSus 263 pruebas pasan, pero no acreditan todas sus conclusiones. Las nuevas regresiones\nreprodujeron siete fallos antes de corregir datos y estados.\n\n| Afirmación o hallazgo | Decisión | Evidencia y corrección |\n|---|---|---|\n| Existencia de cadenas en 22 fichas | ACEPTO con correcciones | Son **94 trazas**, no 23 cadenas. Se comparan bytes exactos y NUL contra A6000 fw3.21. |\n| “Byte por byte” en la entrega original | RECHAZO | 13 textos omitían saltos de línea o espacios finales. `rstrip()` ocultaba las diferencias. JSON corregidos y normalización eliminada. |",
+  "fuente_actual": "README.md:7"
  }
 ]
