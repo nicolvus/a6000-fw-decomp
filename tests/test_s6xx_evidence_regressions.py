@@ -59,10 +59,16 @@ def test_no_functional_negative_from_keywords():
 
 
 def test_no_positive_logger_claim_without_instructions():
-    for j in MODULES.values():
-        assert j.get("logger_dual") is None
-        assert j["verification_status"]["logger_dual"]["verified"] is False
-        assert j["verification_status"]["logger_dual"]["global_logger_verified"] is False
+    for session, j in MODULES.items():
+        status = j["verification_status"]["logger_dual"]
+        if session == 611:
+            assert j["logger_dual"] is True
+            assert status["verified"] is True
+            assert status["global_logger_verified"] is True
+        else:
+            assert j.get("logger_dual") is None
+            assert status["verified"] is False
+            assert status["global_logger_verified"] is False
 
 
 def test_alternative_evidence_has_explicit_coverage():

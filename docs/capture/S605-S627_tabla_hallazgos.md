@@ -6,6 +6,11 @@ Este informe corrige [la validación anterior, commit 9e1a4055](https://github.c
 Sus 263 pruebas pasan, pero no acreditan todas sus conclusiones. Las nuevas regresiones
 reprodujeron siete fallos antes de corregir datos y estados.
 
+**Actualización 24-10-2026:** S611 sí tiene dos rutas de emisión demostradas
+estáticamente para sus cinco trazas. Las tablas históricas de esta auditoría que
+dejan logger dual pendiente para las 23 fichas quedan corregidas solo para S611;
+las otras 22 y todas las equivalencias funcionales/de código siguen abiertas.
+
 | Afirmación o hallazgo | Decisión | Evidencia y corrección |
 |---|---|---|
 | Existencia de cadenas en 22 fichas | ACEPTO con correcciones | Son **94 trazas**, no 23 cadenas. Se comparan bytes exactos y NUL contra A6000 fw3.21. |
@@ -52,10 +57,12 @@ en [resultados reproducibles](../../analysis/s6xx_verification_results.json).
 
 ### Ampliación de la auditoría de afirmaciones (23-10-2026)
 
-Revisadas individualmente las 23 fichas S605–S627: **69 afirmaciones** de logger dual,
-equivalencia funcional y equivalencia de código permanecen **NO_VERIFICADO**
-(tres por ficha). Cada informe conserva su tabla de evidencia que falta; cada JSON
-conserva `verified=false` y el motivo. No se ha probado que esas afirmaciones sean falsas.
+Revisadas individualmente las 23 fichas S605–S627: de 69 afirmaciones de logger dual,
+equivalencia funcional y equivalencia de código, **68 permanecen NO_VERIFICADO**.
+S611 acredita dos rutas estáticas para sus cinco trazas con cargas, llamadas y
+flujo contrastados en [su informe](s611-imaging_rsrc.md); no prueba ejecución real.
+Los demás JSON conservan `verified=false` y el motivo. No se ha probado que
+esas afirmaciones sean falsas.
 REA MCP devolvió `target_unavailable`; se consultó su exportación histórica citada arriba
 y se contrastaron nuevamente los bytes con Capstone: prólogo `0x43902718` y
 `23f173fe` en `0x437dea2e`, `bl #0x43902718`. Esa llamada no identifica emisores del lote.
@@ -77,7 +84,8 @@ campos desconocidos, flag de logger y estados positivos guardados.
 
 Cada JSON incluye estado para trazas, gemelas, núcleos, metadatos, logger,
 equivalencias, obturador, esquema `differential` y otros campos.
-`logger_dual=null` significa desconocido. La etiqueta histórica
+`logger_dual=null` significa desconocido salvo S611, que tiene evidencia
+estática y `logger_dual=true`. La etiqueta histórica
 `shutter_line=NEGATIVO ACOTADO` no acredita ausencia funcional.
 
 Los recuentos `token_count`, `related_strings_count`, `dgi_jpeg_symbols`,

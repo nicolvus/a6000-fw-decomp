@@ -1090,13 +1090,13 @@
         "scope": "marcadores ASCII en trazas NUL; no nivel efectivo ni funciones emisoras"
       },
       "logger_dual": {
-        "verified": false,
-        "status": "NO_VERIFICADO",
-        "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+        "verified": true,
+        "status": "VERIFICADO_ESTATICO",
+        "reason": "rutas de envío y logger verificadas por instrucciones en todas las trazas",
         "claimed": true,
         "global_logger": "0x43902718",
-        "global_logger_verified": false,
-        "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+        "global_logger_verified": true,
+        "global_logger_msg": "llamada estática a 0x43902718 con sufijo de cada traza",
         "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
       },
       "equivalencia_funcional": {

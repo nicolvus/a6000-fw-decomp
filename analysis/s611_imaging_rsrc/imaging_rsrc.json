@@ -58,8 +58,56 @@
     }
   },
   "shutter_line": "NEGATIVO ACOTADO",
-  "logger_dual": null,
+  "logger_dual": true,
   "global_logger": "0x43902718",
+  "logger_paths": [
+    {
+      "trace": "0x43ca492f",
+      "local_load": "0x4379a35e",
+      "local_add": "0x4379a360",
+      "local_call": "0x4379a362",
+      "global_load": "0x4379a370",
+      "global_add": "0x4379a374",
+      "bridge": "0x4379a376",
+      "global_call": "0x4379a3e4"
+    },
+    {
+      "trace": "0x43ca4984",
+      "local_load": "0x4379a38e",
+      "local_add": "0x4379a392",
+      "local_call": "0x4379a394",
+      "global_load": "0x4379a398",
+      "global_add": "0x4379a39e",
+      "global_call": "0x4379a3a8"
+    },
+    {
+      "trace": "0x43ca49d5",
+      "local_load": "0x4379a3c6",
+      "local_add": "0x4379a3c8",
+      "local_call": "0x4379a3ca",
+      "global_load": "0x4379a3d8",
+      "global_add": "0x4379a3dc",
+      "global_call": "0x4379a3e4"
+    },
+    {
+      "trace": "0x43ca4a2a",
+      "local_load": "0x4379a550",
+      "local_add": "0x4379a556",
+      "local_call": "0x4379a55e",
+      "global_load": "0x4379a562",
+      "global_add": "0x4379a564",
+      "global_call": "0x4379a5aa"
+    },
+    {
+      "trace": "0x43ca4a8a",
+      "local_load": "0x4379a62c",
+      "local_add": "0x4379a634",
+      "local_call": "0x4379a636",
+      "global_load": "0x4379a63a",
+      "global_add": "0x4379a63c",
+      "global_call": "0x4379a63e"
+    }
+  ],
   "verification_status": {
     "trace_strings": {
       "verified": true,
@@ -187,13 +235,13 @@
       "scope": "marcadores ASCII en trazas NUL; no nivel efectivo ni funciones emisoras"
     },
     "logger_dual": {
-      "verified": false,
-      "status": "NO_VERIFICADO",
-      "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+      "verified": true,
+      "status": "VERIFICADO_ESTATICO",
+      "reason": "rutas de envío y logger verificadas por instrucciones en todas las trazas",
       "claimed": true,
       "global_logger": "0x43902718",
-      "global_logger_verified": false,
-      "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+      "global_logger_verified": true,
+      "global_logger_msg": "llamada estática a 0x43902718 con sufijo de cada traza",
       "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
     },
     "equivalencia_funcional": {
