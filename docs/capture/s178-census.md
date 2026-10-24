@@ -1,47 +1,96 @@
-# S178 — censo de cobertura de la línea de módulos
+# S178 — censo de etiquetas y auditoría de candidatas
 
-> Hito de la **línea de RE general**. Solo bytes: A6000 fw3.21, con A7S fw3.20 y A6300 fw2.01
-> como comparación.
+Revisión del 23-10-2026. Corrige los recuentos históricos de este informe:
+58 hitos + 38 subetiquetas y 276 pendientes estaban desactualizados.
+El detalle al empezar contenía 94 hitos + 39 subetiquetas y 239 pendientes,
+coincidiendo con la [auditoría vigente](../auditoria-2026-10-23.md), fila del censo.
+La cobertura es documental; no demuestra funciones ni equivalencia entre modelos.
 
-## Veredicto
+| Magnitud | Antes | Después |
+|---|---:|---:|
+| Tokens distintos `[XXX]` A6000 fw3.21 | 372 | 372 |
+| Con hito documental | 94 | 94 |
+| Subetiquetas documentadas | 39 | 39 |
+| Cobertura documental | 133/372 (35.75 %) | 133/372 (35.75 %) |
+| Pendientes de investigación | 239 | 226 |
+| Fragmentos descartados como módulos | 0 | 13 |
 
-Censo completo de las etiquetas `[XXX]` de la A6000 fw3.21, para saber cuánto queda:
+**133 + 226 + 13 = 372**. Descartar no aumenta cobertura.
+372 es el denominador histórico de tokens, no un número demostrado de módulos.
+Las 93 etiquetas exclusivas de A6000 y las siete ausentes en A6300 no cambian.
 
-| magnitud | valor |
-|---|---|
-| etiquetas distintas `[XXX]` en la A6000 fw3.21 | **372** (techo) |
-| etiquetas **con hito de decodificación** propio | **58** |
-| etiquetas **cubiertas como sub-etiqueta** de un módulo ya decodificado (`[X][Y]` con `X` decodificado) | **38** |
-| **pendientes reales** | **276** |
-| **cobertura total** (hito + sub-etiqueta) | **96/372** = **25.81 %** |
-| etiquetas **exclusivas de la A6000** (0 en A7S y 0 en A6300) | **93** |
-| etiquetas presentes en A6000/A7S pero **ausentes en el A6300** | **7** |
+## Decisiones y pruebas
 
-**Corrección**: el recuento original daba como pendientes sub-etiquetas ya cubiertas por el hito
-de su módulo padre (`[EIS]`, `[DIST]`, `[STABILIZER]` dentro de `[CAMERA_IS]`; `[CTRLCORE]`
-dentro de `[SFRA]`/`[SFRS]`). Con el criterio correcto (hito propio **o** sub-etiqueta de un
-módulo decodificado, sin doble conteo) la cobertura es **96/372** y los pendientes reales son
-**276**.
+| Veredicto | Etiquetas | Evidencia exacta |
+|---|---|---|
+| RECHAZO | `[MODE_CAP]`, `[MODE_CAP_DRP]`, `[MODE_CAP_PREREVIEW]`, `[MODE_CAP_SNR]`, `[MODE_CAP_SNR_PREREVIEW]` | Sufijos de diagnósticos `[IMAGING_CAP]: CamCore … Error!`; cadenas `0x43cada50`, `0x43cad970`, `0x43cad9df`, `0x43cadab6`, `0x43cadb9d`; ADD PC `0x437f5d48`, `0x437f5c32`, `0x437f5cb8`, `0x437f5f20`, `0x437f61d2`. |
+| RECHAZO | `[D0]`–`[D7]` | Campos `:%04x` de `[CAM_UTIL_ADJ]`; cadenas `0x43ccde70` / `0x43ccdeae`; ADD PC `0x43900abc` / `0x43900ae2`. |
+| ACEPTO como candidatas; siguen pendientes | `[IMAGING_IMG]`, `[SFR]`, `[EXL]`, `[DECMODEMGR]` | Prefijos de trazas con referencias verificadas: `0x43cb4355` ← `0x4381bac8`; `0x43ce757f` ← `0x439a63aa`; `0x43c911ab` ← `0x436c95cc`; `0x43c45f77` ← `0x435c9186`. No se demuestra un módulo funcional completo. |
+| NO_VERIFICADO tras examen | `[NULL]`, `[HW]` | Marcadores anidados en `[ACCY]`, cadenas `0x43c25b20` / `0x43c24cac`; no se distingue categoría de logger, campo o submódulo. |
 
-**La familia `[STK]`** (`[STK_AUTO_SAL]`, `[STK_COLOR_SIM]`, `[STK_C_SIM]`, `[STK_TOUCH_SIM]`,
-`[STK_T_SIM]`) **y `[OSD]`** existen en la A6000 y en la A7S y **desaparecen por completo en el
-A6300 fw2.01**: son funciones de la **plataforma antigua** (E-mount / pre-LIRO) que la nueva
-plataforma no arrastra → control de **versionado de plataforma**, no de modelo (la A7S de 2016
-comparte plataforma con la A6000; el A6300 de 2019 es de otra).
+Fuentes: [decisiones individuales](../../analysis/s178_census/decisiones_auditoria.json),
+[bytes LDR/ADD y pools](../../analysis/s178_census/evidencia_bytes.json) y
+[ocurrencias y referencias completas](../../analysis/s178_census/pendientes_auditados.json).
+Cada ocurrencia conserva dirección del token, cadena contenedora, offset, texto hasta NUL
+y referencias PIC candidatas. SHA-256 de entradas en el inventario.
+Los ceros históricos de cadenas referenciadas de los sufijos no significan ausencia
+de referencias a su cadena contenedora.
 
-Otros datos del censo: `[VDF]` tiene **81 apariciones más** en la A6000 (243) que en la A7S y el
-A6300 (162); las pendientes más grandes son `[SDF]` (477), `[ERR]` (288), `[VDF]` (243),
-`[ERROR]` (213), `[BL]` (154), `[VEF]` (149), `[STK]` (76), `[TD]` (73), `[VIDENCSTAT]` (70),
-`[FACE]` (70), `[RC]` (69), `[DEBUG]` (67), `[GOLFSHOT]` (65), `[WSX]` (59), `[INFO]` (58),
-`[RE]` (54), `[INT_ERROR]` (53), `[ENCOUCSTAT]` (49), `[CONFIG]` (47), `[BT]` (44),
-`[CAM_FUNC_MGR]` (43, exclusiva), `[PNL]` (41), `[SAN]` (35), `[AUDPINEDTR]` (34),
-`[CAM_SCALAR]` (34, exclusiva), `[REMOTE]` (32, exclusiva).
+## Cola abierta y límites
 
-**Salvedad**: el patrón de extracción también captura fragmentos de formato (`[D0]`–`[D7]`,
-`[IN1]`, `[NULL]`, `[SIZE]`, `[STAT]`, `[HW]`), así que **372 es un techo**.
+La [lista explícita](../../analysis/s178_census/pendientes.md) incluye las 226 pendientes,
+las 13 descartadas y su motivo. De las abiertas, cuatro se aceptan como candidatas y
+222 siguen NO_VERIFICADO: dos examinadas y 220 sin revisión individual de instrucciones.
+Ninguna se promueve por aparecer en otro informe. `[SFR]` no se equipara a `[SFRA]`/`[SFRS]`.
 
-**Efecto en S51: NINGUNO — S51 sigue A=NO, B=NO, C=NO.** El censo es de cobertura, no de
-contenido.
+Orden reproducible: captura/sensor, sincronización/visor, resto; dentro de cada grupo,
+cadenas contenedoras distintas con PIC candidato, recontadas, descendentes y etiqueta.
+141 etiquetas difieren del contador histórico de cadenas que empiezan con el token:
+por ejemplo `[SFR]` tiene 16 contenedoras con PIC candidato frente a 15 del censo,
+y los cinco sufijos de modo tienen una cada uno frente a cero. Ambas métricas se
+conservan separadas; estas diferencias no cambian cobertura ni prueban módulos.
+Es una prioridad léxica manual, no una
+relación funcional demostrada con el obturador. `[IMAGING_IMG]`, `[EXL]` y `[SFR]`
+preceden a `[DECMODEMGR]` (30 cadenas históricas).
 
-Informe: [analysis/s178_census/census.md](../../analysis/s178_census/census.md) ·
-test: `tests/test_s178_census.py` (8 tests).
+REA primero: `analyze_function(0x437f5d48)` sobre el original agotó el límite MCP de 300 s.
+Un timeout no prueba ausencia de función. El contraste decisivo usa Thumb de LLVM y bytes:
+`cadena = (word_pool + ADD_PC + 4) & 0xffffffff`. El respaldo histórico se conserva aparte;
+límites inferidos y pseudocódigo no sustituyen las instrucciones.
+El [respaldo Ghidra de solo lectura](../../analysis/s178_census/funciones_historicas.json)
+recupera los contenedores `0x437f5a04` (cinco sufijos de modo), `0x43900a24`
+(campos D0–D7), `0x4381ba9c` (traza Image::Clone), `0x436c95b4` (traza EXL) y
+`0x435c9124` (SetState). El sitio `0x439a63aa` de `[SFR]` no tiene función
+existente en ese proyecto; no se sembró una entrada arbitraria.
+[Registro de intento REA y consultas de respaldo](../../analysis/s178_census/rea_intento.json).
+Las [instrucciones LLVM](../../analysis/s178_census/llvm_instrucciones.json) conservan
+los comandos y offsets; se suma `0x43541000` para obtener direcciones virtuales.
+La sección `.text` de la vista ELF se comparó completa y es idéntica al original.
+El [contexto S400](../../analysis/s400_open_questions_triage/README.md) se consultó para
+separar cobertura, clasificación y relaciones documentales; no se rehízo su triaje.
+
+**S51 sin cambios.** Sin ejecutar firmware, cámara ni flasheo. La ausencia de una ruta
+de obturador completamente electrónico sigue NO_VERIFICADO para estas candidatas.
+
+```sh
+.venv/bin/python analysis/s178_census/audit_pending.py
+.venv/bin/python -m pytest tests/test_s178_census.py tests/test_s178_pending_audit.py tests/test_pages_status.py -q
+```
+
+El generador no cambia decisiones ni cobertura: regenera inventario y lista desde
+los bytes, el mapa PIC histórico, el detalle y las decisiones revisadas.
+
+## Validación final — 24-10-2026
+
+- **95 pruebas pasan**: censo, inventario, bytes/pools, Pages y conocimiento, incluido MCP.
+  El transporte de la prueba MCP se ejecutó fuera del aislamiento tras bloquearse dentro.
+- Ruff/Mypy sin avisos nuevos. Se mantienen el SIM115 previo del test histórico y
+  seis diagnósticos previos de Mypy en el cierre de `build_pages_status.py`; no se alteraron esas líneas.
+  Los Python nuevos y los demás archivos comprobados pasan sin avisos.
+- Mantenimiento completo del conocimiento: **1460 entidades y 3071 relaciones**
+  en ambas reconstrucciones; derivados regenerados. Ninguna decisión S400 modificada.
+- SHA-256 de firmware, `silent-liro` y directorio Ghidra coinciden con sus manifiestos finales.
+  La vista ELF usada por LLVM contiene exactamente los bytes del original.
+
+**VEREDICTO: APROBADO.** Se aprueba el inventario y los cambios respaldados;
+las 226 investigaciones abiertas conservan sus límites explícitos.

@@ -1,5 +1,19 @@
 # Estado actual — léeme primero
 
+## Censo de etiquetas pendientes — 23-10-2026
+
+[Auditoría S178](../docs/capture/s178-census.md): recalculado el estado inicial
+94 hitos + 39 subetiquetas + 239 pendientes = 372. Descartados como módulos
+cinco sufijos `[MODE_CAP…]` y ocho campos `[D0]`–`[D7]`, con cadenas, referencias
+PIC, LDR/ADD, pools y bytes contrastados. Quedan **226 pendientes + 13 descartadas**;
+cobertura documental **133/372**, sin cambio. Cuatro candidatas aceptadas
+(`[IMAGING_IMG]`, `[SFR]`, `[EXL]`, `[DECMODEMGR]`) siguen pendientes; 222
+NO_VERIFICADO (dos examinadas, 220 sin revisión individual). Inventario completo
+en `analysis/s178_census/pendientes.md` y `pendientes_auditados.json`.
+REA agotó 300 s; cinco funciones históricas recuperadas en readOnly/noanalysis,
+sin función existente para el sitio `[SFR]`. Esto no prueba ausencia.
+Prevalece sobre las cifras históricas del censo siguientes. S51 sin cambios.
+
 ## Revisión de la validación S605–S627 — 23-10-2026
 
 [Auditoría de OpenCode](../docs/capture/S605-S627_tabla_hallazgos.md): las 263 pruebas originales pasaban, pero siete direcciones gemelas eran falsas; 13 textos omitían bytes finales y cinco longitudes adicionales eran erróneas. Corregidos JSON e informes, prueba común y 21 verificadores individuales. Verificados 94 textos principales, siete gemelas, 11 núcleos y metadatos. Logger dual, equivalencias, recuentos differential y ausencia funcional del obturador siguen NO_VERIFICADO. S618 es subetiqueta documental de S617, sin demostrar identidad funcional. Prevalece sobre la validación anterior; S51 sin cambios. Ampliación S605–S627: diez marcadores `level`/`sub_prefix` verificados; S625 corregido a prefijo `[CAM_UTIL_SENS]: ` (17 B). Nuevas regresiones rechazan esquemas incompletos y estados positivos sin evidencia. Las 69 afirmaciones de logger dual/equivalencias siguen NO_VERIFICADO. [Auditoría](../docs/capture/S605-S627_tabla_hallazgos.md).

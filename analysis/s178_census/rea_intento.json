@@ -1,0 +1,24 @@
+{
+  "fecha_local": "2026-10-23",
+  "baseline_git": "76d15b79d5a401334974bda5abc55a4a33e2b736",
+  "baseline_detalle_sha256": "83556eab971cc89928b35d73ae9e6ab50c0885b889e5a6730a1e1a0316a181f1",
+  "open_binary": {
+    "path": "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/analysis/rea-independent/input/av-cam.bin",
+    "format": "raw-binary",
+    "architecture": "arm",
+    "entry_point": "0x43541000",
+    "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
+  },
+  "consulta": {"tool": "analyze_function", "procedure": "0x437f5d48"},
+  "resultado": "NO_VERIFICADO",
+  "error_observado": "timed out awaiting tools/call after 300s",
+  "limite": "Sin dossier REA recibido. No prueba ausencia ni invalida las funciones históricas. No se ejecutó firmware.",
+  "respaldo": {
+    "proyecto": "analysis/ghidra/silent-liro.gpr",
+    "opciones": ["-readOnly", "-noanalysis"],
+    "script": "analysis/ghidra/QuerySilentLiro.java",
+    "consultas_existentes": ["@0x437f5d48", "@0x43900abc", "@0x4381bac8", "@0x439a63aa", "@0x436c95cc", "@0x435c9186"],
+    "salida": "analysis/s178_census/funciones_historicas.json",
+    "resultado": "Cinco cuerpos decompilados; 0x439a63aa sin función existente. El envoltorio ghidra_dec.sh falla al imprimir esa fila sin entry, después de guardar correctamente el JSON completo."
+  }
+}

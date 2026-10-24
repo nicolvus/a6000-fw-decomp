@@ -27,8 +27,9 @@ COLS = 62
 CATALOG = ROOT / "docs" / "capture" / "linea-general-re.md"
 TOP = 30
 FILL = {"m-hito": COLORS["hito"], "m-sub": COLORS["sub"], "m-todo": COLORS["todo"], "s-ok": COLORS["ok"],
-        "s-cancel": COLORS["cancel"], "s-todo": COLORS["todo"], "t-todo": COLORS["todo"]}
-KIND = {"hito": "m-hito", "sub-etiqueta": "m-sub", "pendiente": "m-todo"}
+        "s-cancel": COLORS["cancel"], "s-todo": COLORS["todo"], "t-todo": COLORS["todo"],
+        "m-rejected": "#6e7681"}
+KIND = {"hito": "m-hito", "sub-etiqueta": "m-sub", "pendiente": "m-todo", "no-modulo": "m-rejected"}
 
 
 def topics() -> dict[str, str]:
@@ -102,7 +103,7 @@ def render_html(grids, data: dict) -> str:
 
     fam_rows = ""
     for fam, items in families(detail):
-        n = sum(i["estado"] != "pendiente" for _, i in items)
+        n = sum(i["estado"] in {"hito", "sub-etiqueta"} for _, i in items)
         cells = [(KIND[i["estado"]], tip(k, i, names)) for k, i in items]
         fam_rows += (f'<tr><td>{escape(fam)}</td><td class="sq">{squares(cells)}</td>'
                      f"<td>{n}</td><td>{len(items)}</td><td>{round(100 * n / len(items))}%</td></tr>")
@@ -134,7 +135,8 @@ td:nth-child(n+3):not(:last-child),td:last-child,th:nth-child(n+3){{text-align:r
 .legend span{{display:inline-block;width:12px;height:12px;border-radius:2px;margin:0 4px 0 12px}}
 @media(max-width:600px){{.grid{{grid-template-columns:repeat(31,1fr)}}}}</style></head><body>
 <h1>Progreso</h1>
-<p class="legend"><span class="m-hito"></span>módulo con hito<span class="m-sub"></span>sub-etiqueta cubierta<span class="m-todo"></span>pendiente / sin informe / sin ejecutar<span class="s-cancel"></span>cancelada</p>
+<p class="legend"><span class="m-hito"></span>módulo con hito<span class="m-sub"></span>sub-etiqueta cubierta<span class="m-todo"></span>pendiente / sin informe / sin ejecutar<span class="m-rejected"></span>fragmento descartado<span class="s-cancel"></span>cancelada</p>
+<p>{cov['pending']} etiquetas pendientes; {cov['excluded']} fragmentos descartados como módulos. Descartar no aumenta cobertura.</p>
 <h2>Módulos por familia — {cov['percent']}% ({cov['covered']}/{cov['total']})*</h2>
 <table><tr><th>Familia</th><th>Etiquetas</th><th>Cubiertas</th><th>Total</th><th>%</th></tr>{fam_rows}</table>
 <h2>Prioridad de investigación (top {TOP} pendientes)</h2>
@@ -187,8 +189,10 @@ def main() -> None:
     if not coverage or not pending:
         raise ValueError("No se pudo leer la cobertura de S178")
     covered, total, percent = coverage.groups()
-    if int(covered) + int(pending.group(1)) != int(total):
-        raise ValueError("El censo S178 no suma cobertura y pendientes")
+    detail = json.loads(DETAIL.read_text(encoding="utf-8"))
+    excluded = sum(i["estado"] == "no-modulo" for i in detail.values())
+    if int(covered) + int(pending.group(1)) + excluded != int(total):
+        raise ValueError("El censo S178 no suma cobertura, pendientes y descartadas")
 
     data = {
         "generated_from": "Documentos versionados en docs/capture/ y analysis/",
@@ -198,7 +202,7 @@ def main() -> None:
         "sessions": sessions,
         "module_coverage": {
             "covered": int(covered), "total": int(total),
-            "pending": int(pending.group(1)), "percent": percent,
+            "pending": int(pending.group(1)), "excluded": excluded, "percent": percent,
             "source": REPO + "analysis/s178_census/census.md",
         },
         "exceptions": {
