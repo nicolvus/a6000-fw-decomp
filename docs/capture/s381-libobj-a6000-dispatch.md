@@ -19,7 +19,7 @@ El barrido Thumb de `.text`, con `scripts/elf_thumb_callers.py`, recupera **83 c
 
 ## RecordImage (antigua etiqueta RecordStill::Execute)
 
-Dos sitios BL a `0x90b248`: `0x90de2e` y `0x91634e`, dentro de `0x90d7e8..0x90e148` y `0x9162d0..0x91647c`. Ver [S382](s382-recordstill-callers.md) y [contratos](recordstill-contract-audit-2026-10-23.md). Hay 25 punteros Thumb `0x90d7e9` con relocaciones R_ARM_RELATIVE, candidatos a callbacks al primer contenedor; su consumidor indirecto sigue NO_VERIFICADO. Una consulta vacía o la falta de literales pares no prueban ausencia de despacho. Los negativos históricos sobre MOVW #0x3500/#0x3002 usaban encodings incorrectos y quedan retirados.
+Dos sitios BL a `0x90b248`: `0x90de2e` y `0x91634e`, dentro de `0x90d7e8..0x90e148` y `0x9162d0..0x91647c`. Ver [S382](s382-recordstill-callers.md) y [contratos](recordstill-contract-audit-2026-10-23.md). Los 25 punteros Thumb `0x90d7e9` son `call_fn` de una tabla `StateMgr::_FuncEntry`; `StateMgr::CallFunc` los consume mediante `blx r3` en `libmprctrl.so:0x1cef2`, tras comparar estado e ID de mensaje. La activación runtime sigue NO_VERIFICADO. Una consulta vacía o la falta de literales pares no prueban ausencia de despacho. Los negativos históricos sobre MOVW #0x3500/#0x3002 usaban encodings incorrectos y quedan retirados.
 
 ## Pendiente
 

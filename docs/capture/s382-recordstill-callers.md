@@ -12,7 +12,7 @@ Además, se encontraron **dos sitios dentro de funciones que contienen `bl #0x90
 
 | Dirección | Función contenedora | Llamador de la función contenedora |
 |---|---|---|
-| `0x0090de2e` | `0x90d7e8..0x90e148` (unwind + prólogo) | 25 punteros Thumb al contenedor; consumidor indirecto NO_VERIFICADO |
+| `0x0090de2e` | `0x90d7e8..0x90e148` (unwind + prólogo) | 25 punteros Thumb consumidos por `StateMgr::CallFunc` |
 | `0x91634e` | `0x9162d0..0x91647c` (unwind + prólogo) | NO_VERIFICADO; `0x91631e` es tabla TBB |
 
 ## 2. Detalles de los llamadores
@@ -67,7 +67,7 @@ Esto concuerda con el prólogo de RecordImage:
 
 La auditoría contrasta Capstone con LLVM y bytes. Los operandos inmediatos BL/BLX ya son direcciones absolutas: **no** aplicar `address + 4 + imm * 2`. Los límites proceden de PREL31, prólogos y flujo local, no de las ventanas aisladas. La exhaustividad de llamadas sigue sin demostrarse.
 
-Hay 25 punteros `0x90d7e9` en `.data.rel.ro`, VA `0x101ef18..0x101f158`, stride `0x18`, con relocaciones R_ARM_RELATIVE. Son evidencia positiva de posibles callbacks al contenedor; falta recuperar el consumidor BX/BLX. Los negativos de palabras `0x90b248/249` y `0x9162d0/d1` en PT_LOAD no prueban ausencia de despacho indirecto.
+Hay 25 punteros `0x90d7e9` en `.data.rel.ro`, VA `0x101ef18..0x101f158`, stride `0x18`, con relocaciones R_ARM_RELATIVE. Son el campo `call_fn` de 25 filas `StateMgr::_FuncEntry` iniciadas en `0x101ef0c`. `ObjStillRecorder` registra esas filas mediante `StateMgr::AddEntry`; su manejador llama a `ChangeState` y `StateMgr::CallFunc` lee `fila+0xc` antes de `blx r3` en `libmprctrl.so:0x1cef2`. La fila 22 exige estado 2 e ID `0x10000005`; su activación runtime sigue NO_VERIFICADO. Detalle y prueba: [auditoría de contrato](recordstill-contract-audit-2026-10-23.md). Los negativos de palabras `0x90b248/249` y `0x9162d0/d1` en PT_LOAD no prueban ausencia de despacho indirecto.
 
 ## 5. A7S: comparación reconciliada
 
