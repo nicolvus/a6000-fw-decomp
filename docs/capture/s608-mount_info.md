@@ -32,6 +32,21 @@ Cada núcleo coincide con el sufijo NUL de la cadena A6000. Estas son las coinci
 
 Longitudes declaradas comprobadas como bytes ASCII: `{"prefix_length": 14, "core_prefix_length": 4, "composite_prefix_length": 18}`.
 
+**Ampliación estática 24-10-2026.** Una búsqueda PIC seguida de lectura de
+instrucciones originales encuentra una carga del texto prefijado por cada una
+de las seis trazas. La primera (`0x43c970c7`) se forma en `0x436e2e48/50`
+y llama a `0x436e03b0` desde `0x436e2e52`. Las otras cinco forman sus
+direcciones en `0x436fe64a`, `0x436fe672`, `0x436fe726`, `0x436fe80c` y
+`0x436fe842`; todas llegan a la llamada `0x436fe844 → 0x436fe410`.
+Este último formatea un mensaje y lo envía por `0x4356120c`; no es por sí
+solo una segunda llamada a `0x43902718`. Por ejemplo, la llamada global
+`0x436fe63c` usa otro texto, `0x43c97fc3` (`[BL]GetLensVersion Error`).
+La búsqueda PIC no encontró una carga independiente de los seis sufijos,
+pero ese negativo se limita al método y no descarta otras construcciones.
+Por ello logger dual sigue **NO_VERIFICADO**. REA `xrefs` excedió 300 s en
+el binario original; los resultados anteriores se comprobaron con Capstone
+contra los bytes, sin ejecutar el firmware.
+
 ## Afirmaciones pendientes
 
 | Afirmación | Estado y evidencia necesaria |
