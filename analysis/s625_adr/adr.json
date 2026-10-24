@@ -7,8 +7,8 @@
       "text": "[CAM_UTIL_SENS]: >>[FILE_NUM]%x [ADR]%x [SIZE]%x"
     }
   ],
-  "prefix_length": 5,
-  "prefix": "[ADR]",
+  "prefix_length": 17,
+  "prefix": "[CAM_UTIL_SENS]: ",
   "parent_prefix": "[CAM_UTIL_SENS]",
   "differential": {
     "a6000_fw321": {
@@ -59,6 +59,12 @@
       "verified": true,
       "errors": []
     },
+    "trace_annotations": {
+      "verified": false,
+      "count_total": 0,
+      "details": [],
+      "scope": "marcadores ASCII en trazas NUL; no nivel efectivo ni funciones emisoras"
+    },
     "logger_dual": {
       "verified": false,
       "status": "NO_VERIFICADO",
@@ -107,6 +113,7 @@
       "verified": false,
       "status": "NO_VERIFICADO",
       "reason": "símbolos, semántica, sitios emisores y funciones requieren evidencia propia",
+      "trace_fields": [],
       "fields": [
         "parent_prefix"
       ]

@@ -2,7 +2,7 @@
 
 ## Revisión de la validación S605–S627 — 23-10-2026
 
-[Auditoría de OpenCode](../docs/capture/S605-S627_tabla_hallazgos.md): las 263 pruebas originales pasaban, pero siete direcciones gemelas eran falsas; 13 textos omitían bytes finales y cinco longitudes adicionales eran erróneas. Corregidos JSON e informes, prueba común y 21 verificadores individuales. Verificados 94 textos principales, siete gemelas, 11 núcleos y metadatos. Logger dual, equivalencias, recuentos differential y ausencia funcional del obturador siguen NO_VERIFICADO. S618 es subetiqueta documental de S617, sin demostrar identidad funcional. Prevalece sobre la validación anterior; S51 sin cambios.
+[Auditoría de OpenCode](../docs/capture/S605-S627_tabla_hallazgos.md): las 263 pruebas originales pasaban, pero siete direcciones gemelas eran falsas; 13 textos omitían bytes finales y cinco longitudes adicionales eran erróneas. Corregidos JSON e informes, prueba común y 21 verificadores individuales. Verificados 94 textos principales, siete gemelas, 11 núcleos y metadatos. Logger dual, equivalencias, recuentos differential y ausencia funcional del obturador siguen NO_VERIFICADO. S618 es subetiqueta documental de S617, sin demostrar identidad funcional. Prevalece sobre la validación anterior; S51 sin cambios. Ampliación S605–S627: diez marcadores `level`/`sub_prefix` verificados; S625 corregido a prefijo `[CAM_UTIL_SENS]: ` (17 B). Nuevas regresiones rechazan esquemas incompletos y estados positivos sin evidencia. Las 69 afirmaciones de logger dual/equivalencias siguen NO_VERIFICADO. [Auditoría](../docs/capture/S605-S627_tabla_hallazgos.md).
 
 ## Cola 0x40193 — 23-10-2026
 

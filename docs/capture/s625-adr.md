@@ -12,7 +12,7 @@ Datos: [adr.json](../../analysis/s625_adr/adr.json). Auditoría conjunta: [halla
 |---|---|
 | `0x43cce3fa` | `"[CAM_UTIL_SENS]: >>[FILE_NUM]%x [ADR]%x [SIZE]%x"` |
 
-Longitudes declaradas comprobadas como bytes ASCII: `{"prefix_length": 5}`.
+CORRECCIÓN de esquema: `[ADR]` es un marcador interno a `0x43cce418`, no el prefijo de esta cadena. El prefijo real en `0x43cce3fa` es `[CAM_UTIL_SENS]: ` (17 bytes); JSON, test y verificador individual actualizados. Esto solo acredita texto, no una función ADR independiente.
 
 ## Afirmaciones pendientes
 

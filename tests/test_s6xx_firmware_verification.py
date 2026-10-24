@@ -4,6 +4,7 @@ import importlib.util
 import json
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location("verify_s6xx", ROOT / "analysis/verify_s6xx.py")
@@ -69,6 +70,55 @@ class S6xxFirmwareVerification(unittest.TestCase):
         data = copy.deepcopy(next(d for p, d in self.modules.items() if p.parent.name.startswith("s608")))
         data["trace_strings"][0]["core_text"] += "corrupt"
         self.assertFalse(VERIFY.verify_module(data, self.blobs)["core_strings"]["verified"])
+
+    def test_trace_annotations_match_firmware(self):
+        for session, field, value in ((613, "sub_prefix", "[WRONG]"), (619, "level", "DEBUG")):
+            data = copy.deepcopy(next(
+                d for p, d in self.modules.items() if p.parent.name.startswith(f"s{session}")
+            ))
+            data["trace_strings"][0][field] = value
+            status = VERIFY.verify_module(data, self.blobs)
+            self.assertFalse(status["trace_annotations"]["verified"])
+
+    def test_unknown_trace_fields_are_pending(self):
+        data = copy.deepcopy(next(iter(self.modules.values())))
+        data["trace_strings"][0]["emitter"] = "0x43902718"
+        status = VERIFY.verify_module(data, self.blobs)
+        self.assertEqual(status["other_claims"]["trace_fields"], [
+            {"vaddr": data["trace_strings"][0]["vaddr"], "fields": ["emitter"]}
+        ])
+
+    def test_wrong_prefix_with_same_length_is_rejected(self):
+        data = copy.deepcopy(next(iter(self.modules.values())))
+        data["prefix"] = "X" * len(data["prefix"])
+        self.assertFalse(VERIFY.verify_module(data, self.blobs)["metadata"]["verified"])
+
+    def test_incomplete_twin_schema_is_rejected(self):
+        data = copy.deepcopy(next(
+            d for p, d in self.modules.items() if p.parent.name.startswith("s606")
+        ))
+        del data["trace_strings"][0]["twin_vaddr"]
+        self.assertFalse(VERIFY.verify_module(data, self.blobs)["metadata"]["verified"])
+
+    def test_positive_logger_flag_is_rejected(self):
+        data = copy.deepcopy(next(iter(self.modules.values())))
+        data["logger_dual"] = True
+        self.assertFalse(VERIFY.verify_module(data, self.blobs)["metadata"]["verified"])
+
+    def test_cli_rejects_saved_positive_claims_without_evidence(self):
+        data = copy.deepcopy(next(iter(self.modules.values())))
+        result = {"module": data["module"], "json": "unused.json",
+                  "verification_status": VERIFY.verify_module(data, self.blobs)}
+        for category in ("logger_dual", "equivalencia_funcional", "equivalencia_codigo"):
+            with self.subTest(category=category):
+                changed = copy.deepcopy(data)
+                changed["verification_status"][category] = {
+                    "verified": True, "status": "VERIFICADO"
+                }
+                with patch.object(VERIFY, "audit", return_value=[result]), \
+                        patch.object(Path, "read_text", return_value=json.dumps(changed)), \
+                        patch("sys.argv", ["verify_s6xx"]):
+                    self.assertTrue(VERIFY.main())
 
     def test_data_bytes_do_not_prove_logger_code(self):
         data = copy.deepcopy(next(iter(self.modules.values())))

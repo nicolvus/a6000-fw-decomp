@@ -18,6 +18,8 @@ Datos: [mount_warning.json](../../analysis/s613_mount_warning/mount_warning.json
 
 Longitudes declaradas comprobadas como bytes ASCII: `{"prefix_length": 17}`.
 
+CORRECCIÓN de cobertura: Cinco campos `sub_prefix` contrastados como marcadores ASCII dentro de las trazas NUL; direcciones en `verification_status.trace_annotations`. La pertenencia a `sub_prefixes` también se valida.
+
 ## Afirmaciones pendientes
 
 | Afirmación | Estado y evidencia necesaria |

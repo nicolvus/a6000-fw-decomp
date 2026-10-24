@@ -15,8 +15,9 @@ def main():
         assert '[ADR]' in ts['text'], f"Missing [ADR] token: {ts['text']}"
     
     # Verify prefix length
-    assert data['prefix_length'] == 5, f"Prefix length mismatch: {data['prefix_length']} != 5"
-    assert data['prefix'] == '[ADR]'
+    assert data['prefix_length'] == len(data['prefix'].encode('ascii'))
+    assert data['prefix'] == '[CAM_UTIL_SENS]: '
+    assert all(ts['text'].startswith(data['prefix']) for ts in data['trace_strings'])
     
     # Verify differential
     assert data['differential']['a6000_fw321']['token_count'] == 1

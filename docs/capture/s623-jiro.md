@@ -15,6 +15,8 @@ Datos: [jiro.json](../../analysis/s623_jiro/jiro.json). Auditoría conjunta: [ha
 
 Longitudes declaradas comprobadas como bytes ASCII: `{"prefix_length": 19}`.
 
+CORRECCIÓN de cobertura: Dos campos `level` contrastados como marcadores ASCII `[DEBUG]` dentro de las trazas NUL; direcciones en `verification_status.trace_annotations`. No acredita el nivel efectivo del logger.
+
 ## Afirmaciones pendientes
 
 | Afirmación | Estado y evidencia necesaria |

@@ -50,6 +50,31 @@ en [resultados reproducibles](../../analysis/s6xx_verification_results.json).
 
 ## Cobertura y límites
 
+### Ampliación de la auditoría de afirmaciones (23-10-2026)
+
+Revisadas individualmente las 23 fichas S605–S627: **69 afirmaciones** de logger dual,
+equivalencia funcional y equivalencia de código permanecen **NO_VERIFICADO**
+(tres por ficha). Cada informe conserva su tabla de evidencia que falta; cada JSON
+conserva `verified=false` y el motivo. No se ha probado que esas afirmaciones sean falsas.
+REA MCP devolvió `target_unavailable`; se consultó su exportación histórica citada arriba
+y se contrastaron nuevamente los bytes con Capstone: prólogo `0x43902718` y
+`23f173fe` en `0x437dea2e`, `bl #0x43902718`. Esa llamada no identifica emisores del lote.
+
+| Hallazgo adicional | Decisión | Evidencia y alcance |
+|---|---|---|
+| Campos `sub_prefix` / `level` omitidos por el verificador | ACEPTO corregido | Diez marcadores: cinco S613, tres S619 y dos S623. `trace_annotations` registra dirección, campo y bytes del marcador dentro de cada cadena NUL. Acredita texto; nivel efectivo y emisor siguen NO_VERIFICADO. |
+| S625: `[ADR]` como prefijo de 5 B | RECHAZO | Es un marcador interno en `0x43cce418`; el inicio `0x43cce3fa` contiene `[CAM_UTIL_SENS]: `, 17 B. Corregidos JSON, test, verificador e informe. |
+| Aceptar un prefijo por su longitud | RECHAZO | Ahora debe coincidir con el inicio real de cada traza; mutarlo sin variar longitud produce error. |
+| Gemelas con campos omitidos | RECHAZO | `twin_vaddr`, `twin_text` y `delta` deben estar juntos; una gemela incompleta ya no desaparece silenciosamente del chequeo. |
+| Declarar logger o equivalencias verificadas sin evidencia | RECHAZO | El comando falla si los estados guardados difieren del cálculo; un `logger_dual` distinto de `null` también falla. |
+| Campos por traza desconocidos | PENDIENTE / NO_VERIFICADO | Se enumeran en `other_claims.trace_fields`; ya no quedan fuera del inventario. |
+| `differential`, parentesco de módulos, símbolos y semántica | PENDIENTE / NO_VERIFICADO | Se conservan valores históricos con estado explícito, sin criterio reproducible ni referencias/instrucciones que los conviertan en hechos funcionales. |
+
+Seis regresiones nuevas fallaron contra la implementación anterior (cinco antes de
+editar y las seis reproducidas después contra el código de HEAD anterior).
+Cubren mutaciones de nivel, subprefijo, prefijo de igual longitud, gemela incompleta,
+campos desconocidos, flag de logger y estados positivos guardados.
+
 Cada JSON incluye estado para trazas, gemelas, núcleos, metadatos, logger,
 equivalencias, obturador, esquema `differential` y otros campos.
 `logger_dual=null` significa desconocido. La etiqueta histórica
@@ -80,6 +105,11 @@ El actualizador recalcula desde firmware, sin confiar en resultados guardados
 obsoletos. Los antiguos scripts `fix_s6xx_*.py` son migraciones históricas y no
 forman parte del procedimiento de validación.
 
-Validación final: **275 tests y 92 subtests PASS; 23/23 verificadores individuales PASS**.
+Validación anterior: **275 tests y 92 subtests PASS; 23/23 verificadores individuales PASS**.
+Validación de esta ampliación: **281 tests y 95 subtests PASS; 23/23 verificadores individuales PASS**.
+Verificador común sin errores; Ruff y mypy sin avisos en los cuatro archivos de auditoría.
+Suite de conocimiento: 70/71 PASS. El fallo de cobertura de triaje ya existía en HEAD:
+77 pares fuente/destino sin registrar. Las dos preguntas nuevas de esta ampliación
+se registran como pendientes de revisión manual; el atraso histórico queda fuera del cambio.
 Ruff: cero avisos nuevos en los 28 archivos Python afectados (54 previos, conservados).
 Ruff y mypy sin avisos en el verificador común, el actualizador y las dos suites nuevas/corregidas.
