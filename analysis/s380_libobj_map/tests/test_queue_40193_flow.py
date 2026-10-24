@@ -225,3 +225,8 @@ def test_descriptor_is_passed_to_indirect_service_dispatch(avcam):
     }
     assert {address: av_instruction(avcam, address).op_str
             for address in expected} == expected
+    got = (av_word(avcam, 0x43560BC4) + 0x43560BBA) & 0xFFFFFFFF
+    slot = got + av_word(avcam, 0x43560BC8)
+    table = av_word(avcam, av_word(avcam, slot) + 0x14)
+    assert (got, slot, table) == (0x4401EEE4, 0x440205C0, 0x435410B4)
+    assert av_word(avcam, table + 0x3C) == 0  # Destino no fijado en esta imagen.

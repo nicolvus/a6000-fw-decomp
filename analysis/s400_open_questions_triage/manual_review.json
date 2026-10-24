@@ -423,7 +423,7 @@
      "archivo": "docs/capture/queue-40193-flow-2026-10-23.md",
      "localizador": "1:30",
      "cita": "# Cola 0x40193: construcción, transporte, consumo e instalación\n\n23-10-2026. **VERIFICADO:** corrige [S384](s384-queue-id-0x40193-search.md): los nueve\nliterales A6000 de `.text` tienen cargas LDR; no son falsos positivos por\ndesensamblar sus bytes como instrucciones. El análisis estático no está agotado.\nDirecciones libObj: VA ELF, sin el sesgo REA/Ghidra `+0x10000`.\nav-cam: base `0x43541000`. Sin ejecutar firmware ni usar cámara.\n\n## Construcción y pools\n\n**VERIFICADO contra instrucciones y bytes:** `0x40193` se materializa completo\ndesde literal pool; no necesita una pareja MOVW/MOVT. Encodings correctos\nThumb para r0: `40 f2 93 10` / `c0 f2 04 00`; ARM:\n`93 01 00 e3` / `04 00 40 e3`. Mitad alta **4**, no `0x40`.\nLos 60/44 candidatos Thumb MOVW #0x193 A6000/A7S no son construcciones del ID.\n\n| A6000: LDR a r1 | Pool con `0x40193` | Uso siguiente |\n|---|---|---|\n| `0xadaf84` | `0xadb084` | `0xa1b198`: guarda r1 en objeto+4 |\n| `0xaf929e`, `0xaf9caa` | `0xaf92d0`, `0xaf9ce0` | `0xaf5104 → 0xaf503c` |\n| `0xaf9312`, `0xaf9d6a` | `0xaf9344`, `0xaf9da0` | `0xaf52ac` |\n| `0xaf9382`, `0xaf9d0a` | `0xaf93b4`, `0xaf9d40` | `0xaf51d8` |\n| `0xaf93f2`, `0xaf9dca` | `0xaf9424`, `0xaf9e00` | `0xaf5380` |\n\n**9 palabras y 9 cargas candidatas A6000**, comprobadas con Capstone.\nA7S: 9 cargas a pools en `.text`: `0xa0f2ae`, `0xa2a576`, `0xa2a5d6`,\n`0xa2a636`, `0xa2a696`, `0xa30f42`, `0xa30fb6`, `0xa31026`, `0xa31096`.\nEl censo A7S de palabras en segmentos con bytes devuelve 11: las otras dos\nno se clasifican como cargas ni se descartan solo por su sección.\nSe mantienen los negativos acotados de S384: cero palabras del ID en",
-     "sha256": "a93529c3c7917a4dccd083fcb577be960dd27e2cccc11abf130d748374d3423f"
+     "sha256": "7cfc7578866b2ce1edaaf456c9f8c6edd3e8f991194631c03ef26e2b0493a8ef"
     },
     {
      "archivo": "docs/capture/s384-queue-id-0x40193-search.md",
@@ -435,7 +435,7 @@
      "archivo": "analysis/s380_libobj_map/tests/test_queue_40193_flow.py",
      "localizador": "40:46",
      "cita": "def test_receiver_initializer_in_contiguous_thumb_pointer_table(avcam):\n    start, end = 0x43B7F8A8, 0x43B7FE78\n    pointers = [av_word(avcam, address) for address in range(start, end, 4)]\n    assert len(pointers) == 372\n    assert pointers[189] == 0x4379E93D\n    assert all(pointer & 1 and AV_BASE <= pointer - 1 < end for pointer in pointers)\n    assert av_word(avcam, end) == 0",
-     "sha256": "7ee37d8cb630b2e7f07c7ce28f8a1f041e4b529e9a27547b2f4629551a7d341a"
+     "sha256": "90489b5c58b5a9b2bd067794dee2b42bff4e7fda9bfbb60b9a7bb90692815d2d"
     }
    ]
   },
