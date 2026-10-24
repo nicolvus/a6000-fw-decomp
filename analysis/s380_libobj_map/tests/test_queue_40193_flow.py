@@ -202,3 +202,26 @@ def test_initializer_copies_worker_pointer_into_descriptor(avcam):
         0x43ACABEE: "r3, [r0, #8]", 0x43ACABF0: "r3",
     }
     assert {a: av_instruction(avcam, a).op_str for a in expected} == expected
+
+
+def test_descriptor_is_passed_to_indirect_service_dispatch(avcam):
+    # Una segunda función consume el descriptor ya instalado, sin probar que
+    # el servicio invoque después el callback ni que Linux registre 0x40193.
+    load, add = 0x4379E912, 0x4379E914
+    assert av_instruction(avcam, load).op_str == "r0, [pc, #0x20]"
+    assert av_instruction(avcam, add).op_str == "r0, pc"
+    pool = ((load + 4) & ~3) + 0x20
+    assert (av_word(avcam, pool) + add + 4) & 0xFFFFFFFF == 0x43EA048C
+    expected = {
+        0x437880CA: "#0x4379e8f4",
+        0x4379E916: "#0x43b2a162",
+        0x43B2A162: "r1, r0",
+        0x43B2A164: "r0, [r0, #0x14]",
+        0x43B2A168: "#0x43560bb0",
+        0x43560BB8: "r3, [r3, r2]",
+        0x43560BBA: "r3, [r3, #0x14]",
+        0x43560BBC: "r3, [r3, #0x3c]",
+        0x43560BBE: "r3",
+    }
+    assert {address: av_instruction(avcam, address).op_str
+            for address in expected} == expected

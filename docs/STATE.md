@@ -15,8 +15,10 @@ la ingeniería inversa necesaria. S51 A/B/C permanece NO.
 literales `.text` con LDR en ambos modelos, transporte de 16 B hasta OSAL y
 receptor LIRO `0x4381d16c` verificados. Inicializador `0x4379e93c` instala su
 puntero en descriptor `0x43ea048c` (campo+0x14=`0x46`). El inicializador ocupa
-la fila 189 de una tabla contigua de 372 punteros Thumb. NO_VERIFICADO: consumidor de
-arranque del descriptor, registro callback OSAL Linux y enlace Linux↔LIRO.
+la fila 189 de una tabla contigua de 372 punteros Thumb. `0x4379e8f4`
+consume el descriptor mediante `0x43b2a162 → 0x43560bb0`, que entrega
+`0x46` y el descriptor a un servicio indirecto. NO_VERIFICADO: destino y efecto
+de ese servicio, registro callback OSAL Linux y enlace Linux↔LIRO.
 El consumidor de la **tabla de inicializadores** sí se recuperó: entrada de
 cabecera LIRO `0x4354101c` → `0x4356082c` → 372 llamadas indirectas,
 incluida la fila 189. No se observó ejecución real de esa entrada.

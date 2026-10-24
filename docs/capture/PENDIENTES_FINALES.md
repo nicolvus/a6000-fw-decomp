@@ -3,8 +3,9 @@
 > **Actualización 24-10-2026:** [trazado de 0x40193](queue-40193-flow-2026-10-23.md).
 > Se verifican literales en `.text`, emisores, receptor LIRO `0x4381d16c` e
 > instalador `0x4379e93c`. La entrada de cabecera LIRO alcanza el bucle de 372
-> inicializadores `0x4356082c`. Pendientes: consumidor del descriptor `0x43ea048c`,
-> callback OSAL Linux y enlace Linux↔LIRO. El supuesto bloqueo estático de §2
+> inicializadores `0x4356082c`. `0x4379e8f4 → 0x43b2a162 → 0x43560bb0`
+> consume el descriptor `0x43ea048c`. Pendientes: destino/efecto del servicio
+> indirecto, callback OSAL Linux y enlace Linux↔LIRO. El supuesto bloqueo estático de §2
 > y los «nueve falsos positivos» de §3 quedan invalidados.
 
 > **Corrección del 23-10-2026:** las secciones 2–4 conservan conclusiones históricas
@@ -48,8 +49,9 @@ alcanza el bucle que llama ese inicializador. En `libObj.so` hay nueve palabras
 del ID en `.text` usadas por cargas LDR, cuatro wrappers de envío y un
 adaptador OSAL local. Véase el [flujo verificado](queue-40193-flow-2026-10-23.md).
 
-**Pendiente:** consumidor del descriptor `0x43ea048c`, invocación concreta del
-registrador OSAL con `0x40193` y enlace completo Linux↔LIRO. La ausencia de
+**Pendiente:** destino y efecto del servicio indirecto que recibe el descriptor,
+invocación concreta del registrador OSAL con `0x40193` y enlace completo
+Linux↔LIRO. La ausencia de
 MOVW/MOVT en un barrido no descarta cargas desde literal pool.
 
 ## 3. `libObj.so` — identidad de RecordImage y RecordStill

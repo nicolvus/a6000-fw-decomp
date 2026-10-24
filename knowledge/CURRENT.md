@@ -26,8 +26,10 @@ conservan destino en r5 y copian 16 B antes de `osal_snd_msg`; reply-to va en
 mensaje-4. Receptor LIRO `0x4381d16c`, tabla `0x44000174` (35×12 B).
 `0x4379e93c` instala puntero Thumb `0x4381d16d` desde GOT `0x4401f564`
 en descriptor `0x43ea048c`, campo+0x14=`0x46`. El inicializador ocupa la fila 189
-de una tabla contigua de 372 punteros Thumb. Pendientes concretos: consumidor de
-arranque del descriptor, callback OSAL Linux y enlace Linux↔LIRO. El consumidor
+de una tabla contigua de 372 punteros Thumb. `0x437880ca → 0x4379e8f4`
+consume el descriptor por `0x43b2a162 → 0x43560bb0`: pasa `0x46` y el
+descriptor al método indirecto `+0x3c`. Pendientes concretos: identidad y
+efecto de ese servicio, callback OSAL Linux y enlace Linux↔LIRO. El consumidor
 de la **tabla de inicializadores** ya está verificado: cabecera LIRO
 `0x4354101c` → `0x43541078` → `0x43a3a98c` → `0x4356082c`, cuyo bucle llama
 las 372 entradas. La ejecución real de la cabecera no se ha observado. El origen

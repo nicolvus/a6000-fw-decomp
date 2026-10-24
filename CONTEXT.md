@@ -10,8 +10,9 @@
 Nueve literales `.text` A6000 con LDR; transporte por registros y copia de 16 B
 hasta `osal_snd_msg`. Receptor LIRO `0x4381d16c`, tabla de 35 filas en
 `0x44000174`. Inicializador `0x4379e93c` instala su puntero en descriptor
-`0x43ea048c` (campo+0x14=`0x46`). Pendientes: consumidor de arranque de ese descriptor,
-registro callback OSAL Linux y enlace de transporte Linux↔LIRO. La entrada de
+`0x43ea048c` (campo+0x14=`0x46`). `0x4379e8f4 → 0x43b2a162 → 0x43560bb0`
+consume el descriptor y pasa `0x46` a un servicio indirecto. Pendientes: efecto
+del servicio, registro callback OSAL Linux y enlace de transporte Linux↔LIRO. La entrada de
 cabecera LIRO `0x4354101c` llega al bucle `0x4356082c`, que consume la tabla
 de 372 inicializadores y llama su fila 189 (`0x4379e93d`). No se observó
 ejecución real de la cabecera. Análisis estático abierto; S51 sin cambios.
