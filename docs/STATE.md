@@ -5,9 +5,10 @@
 [Informe vigente](capture/queue-40193-flow-2026-10-23.md), S384 actualizado:
 literales `.text` con LDR en ambos modelos, transporte de 16 B hasta OSAL y
 receptor LIRO `0x4381d16c` verificados. Inicializador `0x4379e93c` instala su
-puntero en descriptor `0x43ea048c` (campo+0x14=`0x46`). NO_VERIFICADO: consumidor de
+puntero en descriptor `0x43ea048c` (campo+0x14=`0x46`). El inicializador ocupa
+la fila 189 de una tabla contigua de 372 punteros Thumb. NO_VERIFICADO: consumidor de
 arranque del descriptor, registro callback OSAL Linux y enlace Linux↔LIRO.
-53 tests S380 PASS. Prevalece sobre pendientes históricos; S51 sin cambios.
+Prevalece sobre pendientes históricos; S51 sin cambios.
 
 ## Contrato RecordStill / RecordImage — actualizado 24-10-2026
 
