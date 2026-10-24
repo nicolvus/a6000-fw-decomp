@@ -59,9 +59,13 @@ reafirma). Un flag de serie que omita la 2ª cortina en foto fija (T3). Asignar 
 3. Enlace banco/bit `0xf2910048` → P4E (`2ND_CURTAIN_MG`): PARCIAL. No cambia la decisión.
 
 ## Decisión operativa
-**Detener el desarrollo del parche** y no abrir otra sesión estática larga: ninguna prueba estática accesible puede
-cambiar A o B, porque lo que falta es la semántica eléctrica del sensor. La única prueba que puede cambiar la
-decisión es la **traza pasiva autorizada** (bloqueador 2) o el datasheet (bloqueador 1). Retomar solo con uno de los dos.
+**Detener el desarrollo del parche.** Esta fue la regla de parada del hito S51 del
+19-10-2026, no una prohibición de continuar la ingeniería inversa estática.
+La [matriz vigente de cobertura](s51-static-coverage-and-tool-limits.md) delimita
+los cuerpos y enlaces todavía abiertos. El usuario pospuso toda prueba física
+hasta completar la descompilación/ingeniería inversa necesaria. La semántica
+eléctrica del sensor sigue sin demostrarse; no se eleva A ni B por ampliar
+solo la cobertura de código.
 
 ## Recursos e integridad
 - Claude: unos 45 min de trabajo. Codex: unos 6 min de reloj (su informe dice «~55 min»; no cuadra con el log).

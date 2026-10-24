@@ -21,6 +21,7 @@ Proyecto de ingeniería inversa del firmware **Sony A6000 (fw 3.21)**, con foco 
 ## Avance total
 
 - **Censo documental de etiquetas:** **35.75%** (**133/372**) cubiertas — **94** con hito propio y **39** como subetiqueta; **226 pendientes y 13 fragmentos descartados como módulos**. La [auditoría S178](docs/capture/s178-census.md) acepta cuatro candidatas sin cerrar su decodificación y mantiene 222 NO_VERIFICADO. Descartar no aumenta cobertura.
+- **Cobertura de la ruta del obturador:** [matriz de descompilación y límites REA/Unicorn](docs/capture/s51-static-coverage-and-tool-limits.md). Persisten enlaces y cuerpos sin reconstruir; se posponen todas las pruebas físicas hasta completar la ingeniería inversa necesaria.
 - **Módulos “contenido nuevo” (S130):** **100%** (**17/17**) cerrados.
 - **Obturador completamente electrónico:** [S51](docs/capture/s51-decision.md) mantiene la decisión de no parchear; [P1–P8](docs/capture/physical-test-plan.md) y [P13–P21](docs/capture/physical-test-plan-2.md) siguen sin ejecutarse.
 

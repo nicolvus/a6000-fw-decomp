@@ -1,5 +1,14 @@
 # Estado vigente — Sony A6000 reverse engineering
 
+## Cobertura estática antes de pruebas físicas — 24-10-2026
+
+[Matriz de rutas y límites REA/Unicorn](capture/s51-static-coverage-and-tool-limits.md):
+la descompilación de la cadena de disparo sigue incompleta (registro Linux de
+`0x40193`, activación de RecordImage/RecordStill, productor de modo 1 y pin
+`0x2a`, semántica IMX210). El censo 133/372 mide documentación, no código
+recuperado. Por instrucción del usuario, ninguna prueba física hasta cerrar
+la ingeniería inversa necesaria. S51 A/B/C permanece NO.
+
 ## Cola 0x40193 — 23-10-2026
 
 [Informe vigente](capture/queue-40193-flow-2026-10-23.md), S384 actualizado:
