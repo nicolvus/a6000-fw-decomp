@@ -15,7 +15,7 @@ Proyecto de ingeniería inversa del firmware **Sony A6000 (fw 3.21)**, con foco 
 - **Resumen operativo:** [`knowledge/CURRENT.md`](knowledge/CURRENT.md)
 - **Estado de investigación y reglas:** [`docs/STATE.md`](docs/STATE.md)
 - **Historial de fases:** [`knowledge/PROGRESS.md`](knowledge/PROGRESS.md)
-- **Agentes autónomos y triaje S400:** [`docs/agentes-opencode.md`](docs/agentes-opencode.md), [`analysis/s400_open_questions_triage/`](analysis/s400_open_questions_triage/README.md) (clasificaciones automáticas reabiertas para revisión manual)
+- **Agentes autónomos y triaje S400:** [`docs/agentes-opencode.md`](docs/agentes-opencode.md), [`revisión manual y evidencia S400`](analysis/s400_open_questions_triage/README.md) (446 filas históricas revisadas; 71 pendientes; 37 decisiones anteriores revisadas)
 - **Catálogo de hitos técnicos:** [`docs/capture/linea-general-re.md`](docs/capture/linea-general-re.md)
 
 ## Avance total
