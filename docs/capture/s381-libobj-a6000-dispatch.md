@@ -23,7 +23,7 @@ Dos sitios BL a `0x90b248`: `0x90de2e` y `0x91634e`, dentro de `0x90d7e8..0x90e1
 
 ## Pendiente
 
-El registro concreto de la cola `0x40193` sigue NO_VERIFICADO: hay referencias estáticas al registrador para investigar. No se declara agotada esa vía ni se exige cámara para continuar. Las funciones de los objetos, la tabla de despacho y la identidad de sus argumentos requieren análisis de flujo; los nombres de imports por sí solos no cierran esos contratos.
+El callback OSAL Linux de `0x40193` sigue NO_VERIFICADO. [El trazado posterior](queue-40193-flow-2026-10-23.md) sí verifica literales LDR, cuatro emisores, receptor LIRO e inicializador `0x4379e93c` que instala su puntero en descriptor `0x43ea048c`. Pendientes: consumidor de arranque de ese descriptor y enlace Linux↔LIRO. Las xrefs al registrador OSAL no demuestran sus argumentos; el análisis estático sigue abierto.
 
 ## Reproducción
 

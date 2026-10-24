@@ -1,5 +1,11 @@
 # PENDIENTES FINALES — estado de cierre (22-10-2026, corregido)
 
+> **Actualización 23-10-2026:** [trazado de 0x40193](queue-40193-flow-2026-10-23.md).
+> Se verifican literales en `.text`, emisores, receptor LIRO `0x4381d16c` e
+> instalador `0x4379e93c`. Pendientes: arranque del descriptor `0x43ea048c`,
+> callback OSAL Linux y enlace Linux↔LIRO. El supuesto bloqueo estático de §2
+> y los «nueve falsos positivos» de §3 quedan invalidados.
+
 > **Corrección del 23-10-2026:** las secciones 2–4 conservan conclusiones históricas
 > superadas. La búsqueda MOVW/MOVT de `0x40193` era inválida y el flujo del ID
 > sigue pendiente de análisis estático; `libObj.so` sí contiene el código local de
@@ -32,7 +38,7 @@ Cada función usa `bfi` (bit field insert) sobre el valor leído del MMIO, confi
 
 **Efecto en S51:** Ninguno directo. Los canales MMIO existen pero no demuestran una ruta de exposición totalmente electrónica.
 
-## 2. C2 receptor de cola `0x40193` — BLOQUEADO estáticamente (confirmado)
+## 2. C2 receptor de cola `0x40193` — conclusión histórica INVALIDADA
 
 **Hecho:**
 - No hay literal `0x40193` (word LE) en av-cam.bin (0 sitios)

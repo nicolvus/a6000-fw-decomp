@@ -1,5 +1,14 @@
 # Estado vigente — Sony A6000 reverse engineering
 
+## Cola 0x40193 — 23-10-2026
+
+[Informe vigente](capture/queue-40193-flow-2026-10-23.md), S384 actualizado:
+literales `.text` con LDR en ambos modelos, transporte de 16 B hasta OSAL y
+receptor LIRO `0x4381d16c` verificados. Inicializador `0x4379e93c` instala su
+puntero en descriptor `0x43ea048c` (campo+0x14=`0x46`). NO_VERIFICADO: consumidor de
+arranque del descriptor, registro callback OSAL Linux y enlace Linux↔LIRO.
+53 tests S380 PASS. Prevalece sobre pendientes históricos; S51 sin cambios.
+
 ## Contrato RecordStill / RecordImage — 23-10-2026
 
 [Comparación por contrato, cuerpo, cadenas y bytes](capture/recordstill-contract-audit-2026-10-23.md): A6000 `0x90b248` es RecordImage por sus diagnósticos; antigua etiqueta C++ `RecordStill::Execute` no demostrada. Pareja A7S `0x84a568`. A7S `0x847e1c` es RecordStill, pareja A6000 `0x908afc`, llamado desde RecordImage en ambos. Los dos contenedores A6000 se delimitan con unwind/prólogos; `0x91631e` es tabla TBB. Se recuperan 25 punteros Thumb candidatos a callback hacia `0x90d7e8`, sin consumidor BX/BLX demostrado. 42 tests S380. Equivalencia física y origen `0x40193` NO_VERIFICADO; S51 sin cambios. Prevalece sobre los resúmenes históricos siguientes.

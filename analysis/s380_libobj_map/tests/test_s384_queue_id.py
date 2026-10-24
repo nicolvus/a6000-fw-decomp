@@ -14,7 +14,7 @@ A7S = Path("/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/"
            "0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libObj.so")
 
 def test_no_word_40193_in_rodata_data():
-    """No hay word LE 0x00040193 en .rodata ni .data (solo falsos positivos en .text)."""
+    """Negativo acotado: .text sí contiene pools literales del ID."""
     pat = struct.pack('<I', 0x00040193)
     for path in [A6000, A7S]:
         data = path.read_bytes()
@@ -24,7 +24,7 @@ def test_no_word_40193_in_rodata_data():
             assert data.find(pat, off, off + size) == -1, \
                 f"word 0x40193 en datos de {path}"
 
-def test_no_movw_movt_40193():
+def test_correct_movw_0193_is_present():
     """Regresión: el encoding correcto de movw r3,#0x193 sí está presente."""
     md = Cs(CS_ARCH_ARM, CS_MODE_THUMB)
     md.detail = True
@@ -51,7 +51,7 @@ def test_no_string_40193():
         assert data.find(b'40193') == -1, f"string '40193' en {path}"
 
 def test_word40193_only_in_text():
-    """Los word LE 0x40193 que aparecen están solo en .text (falsos positivos de instrucción)."""
+    """Censo A6000: .text incluye datos; no clasificar el pool como código."""
     data = A6000.read_bytes()
     pat = struct.pack('<I', 0x00040193)
     pos = 0
@@ -72,7 +72,7 @@ def test_word40193_only_in_text():
 
 if __name__ == "__main__":
     test_no_word_40193_in_rodata_data(); print("PASS test_no_word_40193_in_rodata_data")
-    test_no_movw_movt_40193(); print("PASS test_no_movw_movt_40193")
+    test_correct_movw_0193_is_present(); print("PASS test_correct_movw_0193_is_present")
     test_no_string_40193(); print("PASS test_no_string_40193")
     test_word40193_only_in_text(); print("PASS test_word40193_only_in_text")
     print("\nTodos los tests S384 PASS")
