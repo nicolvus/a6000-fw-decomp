@@ -6,7 +6,8 @@
   `0x10000005` con dos constructores; cola `0x40193` (comandos `0x4042–0x4045`); Backup `0x3000b` 256 B, gates 0;
   A7S Silent: UI → LIRO `0x40e3` (**existe en A7S**, corrige S401) → `+0x250` → bit `0x20`; modos de obturación del
   driver IMX210 0–4 e IMX235 0,1,3,4. §9: G de A7S coincide en `+0x250/+0x56c/+0x570`; A6000 `+0x238` sin lector en `av-cam`;
-  emisor `ObjMsg(0x3a49,0x3026)` = `0x659cb0`. Pendientes que quedan: ver §Límites del informe.
+  emisor `ObjMsg(0x3a49,0x3026)` = `0x659cb0` (acción 13 de `ModelScalarPb`; `0x3026` = `SequenceRecordStillImageCmd`);
+  modos `+8` de `0x40193` = índices de tabla de estado. Pendientes que quedan: ver §Límites del informe.
 
 **Leer este bloque como entrada vigente.** El resto del archivo acumula
 instantáneas históricas; sus «siguientes», estados DOING y cifras de tests

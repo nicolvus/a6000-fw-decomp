@@ -83,6 +83,46 @@ def emitter_3026() -> dict:
     return {"constructores": dict(hits), "llamadores": callers}
 
 
+def _word(lib, va: int) -> int:
+    return struct.unpack("<I", lib.e.read(va, 4))[0]
+
+
+def _literal(lib, pc: int, offset: int) -> int:
+    """Valor del literal de `ldr rX, [pc, #offset]` situado en `pc`."""
+    return _word(lib, ((pc + 4) & ~3) + offset)
+
+
+def sequence_class_3026() -> dict:
+    """Clase que la factoría `0x3a9a80` asocia al id 0x3026: creador `0x3a7978` → constructor → typeinfo."""
+    lib = fw.Lib("A6000")
+    creator = _word(lib, (_literal(lib, 0x3A9684, 0x10) + 0x3A968C + 4 + _literal(lib, 0x3A9688, 0x10)) & 0xFFFFFFFF) & ~1
+    got = (_literal(lib, 0x3D3134, 0x38) + 0x3D313E + 4 + _literal(lib, 0x3D313C, 0x34)) & 0xFFFFFFFF
+    typeinfo = _word(lib, _word(lib, got) + 4)
+    offset = lib.e.offset(_word(lib, typeinfo + 4))
+    name = lib.e.data[offset:lib.e.data.index(b"\0", offset)].decode()
+    return {"creador": hex(creator), "constructor": "0x3d3130", "typeinfo": name}
+
+
+def pb_action_events() -> dict:
+    """Eventos del estado 4 de `ModelScalarPb` que llevan a la acción 13 y estado/acción 6 de `ModelPbCap`."""
+    lib = fw.Lib("A6000")
+    pool = {a: _literal(lib, a, o) for a, o in [
+        (0x65BA78, 0x88), (0x65BA84, 0x80), (0x65BA8C, 0x7C), (0x65BA90, 0x7C), (0x65BA96, 0x7C), (0x65BA9E, 0x78),
+        (0x65BAA4, 0x74), (0x65BAAA, 0x74)]}
+    entry = lib.e.read(0x613182, 6)
+    return {
+        "ModelScalarPb_estado4_accion13": {
+            "locales": ["0x4", "0x109"],
+            "mensajes": [hex(pool[a]) for a in (0x65BA84, 0x65BA90, 0x65BA9E)],
+            "accion13": "0x65bd0a -> 0x65bc38 -> 0x65b0bc (emisor 0x659cb0)",
+        },
+        "ModelPbCap_accion6": {
+            "estado_de_entrada": [i for i, b in enumerate(entry) if 0x613182 + 2 * b == 0x6131B2],
+            "transicion": "estado 2, evento local 2, guardia 0x61320c -> estado 5 (0x61343a)",
+        },
+    }
+
+
 def main() -> None:
     a7s = writers_and_readers("A7S", [0x250, 0x56C, 0x570])
     a6000 = writers_and_readers("A6000", [0x238])
@@ -91,6 +131,8 @@ def main() -> None:
         "A7S_G_0x43ea1d84": a7s,
         "A6000_G_0x43edf684": a6000,
         "emisor_ObjMsg_cat_0x3026": emitters,
+        "secuencia_0x3026": sequence_class_3026(),
+        "eventos_Pb": pb_action_events(),
     }
     OUT.write_text(json.dumps(result, ensure_ascii=False, indent=1), encoding="utf-8")
     print(json.dumps(result, ensure_ascii=False)[:1500])

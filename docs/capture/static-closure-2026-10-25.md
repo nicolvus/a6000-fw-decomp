@@ -169,21 +169,47 @@ Código y datos: `analysis/s402_static_closure/followup_blocks.py` → `followup
   entrada por salto desde `0x65bc40`) al recibir el evento `0x109` (directo) o `4` (tras condiciones). El mismo manejador
   consume `0x35001004`, `0x35003002` y `0x3a494026`. Los otros sitios con la constante son lecturas de parámetro
   (`0x6ce880`/`0x40b8e0` con id `0x3026`, en `0x7867c6`, `0x7a901a`, `0x424544`), `AddParam(0x3026)` en `0x8afd3a`, el
-  registro de fábrica `0x3a9b80` y un `case` en `0x19e076`: ninguno emite. **No se probó** que `(0x3a49, 0x3026)` sea el
-  mensaje que inicia `SequenceRecordStillImageCmd`; es el único productor con ese id.
+  registro de fábrica `0x3a9b80` y un `case` en `0x19e076`: ninguno emite. El id `0x3026` sí pertenece a `SequenceRecordStillImageCmd` (ver abajo); **no se probó** en ejecución que este mensaje
+  la inicie. Es el único productor con ese id.
+- **Modos `+8` de la cola `0x40193` (estructura, sin semántica):** el manejador `0x4379e47c` sustituye el modo por `0x15` si
+  coincide con el byte global `+0xd2`, lo registra (`0x43901a8c`) y lo pasa como campo `+0x10` a `0x4379d838`. Allí el
+  tipo 3/4 (`0x4379dbd0`) lo trata como **índice** (comparaciones con `0x10`, `0x2`, `0x13`) y `0x43aea210(obj, i, v)` guarda
+  `obj[0x20+i]=v`: una tabla de bytes de estado por modo. Los códigos `4/5/6/0xa/0xb/0xc/0x14/0x15` son índices de esa
+  tabla, no valores de registro; su nombre/efecto sigue sin observarse.
 - **`params[+9]` de `SetExposure`:** `0x436d6f6c` (entrada de vtable `0x43fcc0b8`, slot `+0x2c`). El slot `+0x2c` lo
   comparten más de cien llamadas virtuales de otras clases y en los siete llamadores con estructura en pila
   (`0x43564608`, `0x4358ff04`, `0x435906c2`, `0x4361017e`, `0x436963d4`, `0x438228cc`, `0x439b1a6a`) no hay `strb` directo a
-  `[sp,#N+9]`; el origen de ese byte exige resolver el tipo del objeto receptor. Sin cambios.
-- **Acción 6 de `ModelPbCap`:** el evento de UI que la dispara no se localizó (los eventos `4`/`0x109` anteriores son de
-  otro módulo y no se relacionan con ella).
+  `[sp,#N+9]`; el origen de ese byte exige resolver el tipo del objeto receptor. Un segundo barrido (escritores `strb [x,#9]` junto a
+  `strh [x,#4]`/`[x,#6]` con una llamada al slot `+0x2c` a menos de 120 instrucciones) dio 10 candidatos, todos falsos
+  (empaquetado para otros drivers `0x43b7a…`/`0x43b6…`). `SetExposure` lee `[r1]`, `[r1+4]`, `[r1+6]` (u16) y `[r1+9]` (u8, 5
+  casos 0–4). Origen sigue sin cerrar.
+- **Acción 6 de `ModelPbCap` y acción 13 de `ModelScalarPb` (cadena completa, 25-10-2026):**
+  - El id `0x3026` de la factoría `0x3a9a80` (`movw r1,#0x3026` en `0x3a9b80`) se registra con el creador `0x3a7978`
+    (`new 0x6c`; constructor `0x3d3130`, base `SequenceBase`), cuyo typeinfo es
+    **`OBJSCALAR::SequenceRecordStillImageCmd`**. El id `0x3026` está, por tanto, ligado a esa secuencia por bytes.
+  - `0x65bc7c` es el `UFsm::Action(idx)` (slot 17, `+0x44`) de `ModelScalarPb` (typeinfo `13ModelScalarPb`, vtable
+    `0x1013140`): `tbh` de 20 casos; el índice **13** salta a `0x65bc38` → `0x65b0bc` → emisor `0x659cb0`.
+  - La transición (slot 16, `0x65b9cc`) fija la acción 13 solo en el **estado 4**, con los eventos locales `4` y
+    `0x109` o los mensajes `0x35001004`, `0x35003002` y `0x3a494026` (los tres están en el filtro de eventos de
+    `ModelScalarPb`, `0x65b898`). Nadie llama al slot `+0x14` de `ModelScalarPb` con `r1=13`: la acción solo sale de esta
+    tabla.
+  - En `ModelPbCap`, la acción 6 es la acción de **entrada del estado 5** (tabla `tbb` de `0x613170`), y ese estado se
+    alcanza desde el **estado 2** con el evento local `2` si la guardia `0x61320c` es verdadera (`0x61343a`). La guardia
+    consulta `ObjMsg(0x3500,0x2001)` por `IssueCommandSync` y lee el parámetro `0x1000`.
+  - Los eventos locales (`2`, `4`, `0x109`) son enteros pequeños que `0x131fd2` obtiene del id de evento tras el filtro;
+    no se identificó en `libObj` quién los inyecta (no hay `DispatchEvent` con esas constantes en las clases AVBIZ).
 - **REA/`libObj.so`:** sin cambios; se mantiene Capstone. **Triaje:** las seis candidatas nuevas de S402 siguen
   `VIGENTE` sin cierre; la revisión manual exige el protocolo con hashes de `manual_review.json` (no se improvisó).
 
 ## Límites que permanecen (no son pendientes estáticos nuevos)
 
-- Quién activa la acción 6 de `ModelPbCap` y si `(0x3a49, 0x3026)` inicia `SequenceRecordStillImageCmd`.
-- Significado de los códigos de modo `+8` de la cola `0x40193` y recepción en ejecución.
+- Quién inyecta los eventos locales `2` (`ModelPbCap`) y `4`/`0x109` (`ModelScalarPb`), y si (0x3a49, 0x3026) crea la
+  secuencia: el id → clase está probado por bytes; el envío efectivo en ejecución no.
+- Nombre y efecto de cada índice de modo `+8` de la cola `0x40193` (solo se probó que es un índice de tabla de estado).
 - Escritura `S[0]=&G` en A7S (evidencia estructural reforzada, no asignación) y lector del byte A6000 `+0x238` (no existe en `av-cam`).
 - Origen de `params[+9]` en `SetExposure` y significado eléctrico de los bits de modo (sin hojas de datos).
+- Revisión manual de las filas `VIGENTE` nuevas del triaje: el protocolo fija `revision_destinos`; los documentos de S402 no
+  existen en esa revisión, así que cerrarlas exige una nueva campaña de auditoría, no un cambio local.
+- REA sobre `libObj.so`: no se repitió (servidor cerrado a petición; la primera consulta tardó más de 1700 s). Todo lo anterior
+  usa Capstone y bytes originales.
 - Acción real de Darwin sobre las bobinas; todo lo físico. P1–P21 y S51 A/B/C=NO sin cambios.

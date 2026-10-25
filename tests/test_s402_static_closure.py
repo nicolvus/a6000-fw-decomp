@@ -172,3 +172,15 @@ def test_followup_settings_block_and_message_emitter():
     emitter = followup_blocks.emitter_3026()
     assert emitter["constructores"] == {"0x659cb0": [{"site": "0x659cdc", "cat": "0x3a49"}]}
     assert emitter["llamadores"] == ["0x65b1fe", "0x65b270"]
+
+
+def test_sequence_3026_is_record_still_image_and_pb_triggers():
+    import followup_blocks
+
+    assert followup_blocks.sequence_class_3026() == {
+        "creador": "0x3a7978", "constructor": "0x3d3130", "typeinfo": "N9OBJSCALAR27SequenceRecordStillImageCmdE"}
+    events = followup_blocks.pb_action_events()
+    pb = events["ModelScalarPb_estado4_accion13"]
+    assert pb["locales"] == ["0x4", "0x109"]
+    assert pb["mensajes"] == ["0x35001004", "0x35003002", "0x3a494026"]
+    assert events["ModelPbCap_accion6"]["estado_de_entrada"] == [5]
