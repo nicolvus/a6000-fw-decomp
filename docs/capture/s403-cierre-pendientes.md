@@ -24,8 +24,8 @@ Código y datos: [analysis/s403_pendientes/](../../analysis/s403_pendientes/). P
 | E4 | NO_VERIFICADO | PARCIAL | Tabla booleana por modo y máscaras de `0x4379d37a`. |
 | E5 | PARCIAL | CERRADO | Ausencia acotada del lector `+0x238` (A6000) y del almacén `[S+0]` (A7S). |
 | E6 | NO_VERIFICADO | BLOQUEADO | Darwin está fuera de `av-cam`. |
-| E7 | ABIERTO | ABIERTO | Sin avance. |
-| E8 | ABIERTO | PARCIAL | Los dos lectores del estado `0x43f72d02` enlazados con funciones llamadoras. |
+| E7 | ABIERTO | CERRADO | Los 14 sitios que acceden al objeto por el slot solo leen; el único productor es el callback de copia de Backup. |
+| E8 | ABIERTO | PARCIAL | Los dos lectores S176 enlazados con llamadores; el objeto tiene 14 sitios de lectura. |
 | E9 | PARCIAL | BLOQUEADO | La semántica eléctrica exige D5. |
 | E10, E11 | — | sin cambio | Sin avance estático nuevo. |
 | E12 | ABIERTO | PARCIAL | Buzón `0x0110027c`: 13 sitios emisores, ningún receptor por literal. |
@@ -106,7 +106,13 @@ almacén del manejador `0x40e3` (`0x438032dc`); no hay lector. A7S, 73 anclas a 
 palabra absoluta con `S` ni `G` en la imagen. Ausencia acotada a las anclas PIC con ventana de 16 instrucciones; un acceso con base
 calculada de otra forma no se descarta. Se cierra con ese límite.
 
-### E8 — lectores del estado `0x43f72d02`
+### E7 y E8 — objeto de configuración `0x43f72d02` (Backup `0x3000b`)
+Barrido de todas las cargas del slot GOT `0x4401f990` (`0x4401eee4`+`0xaac`): **14 sitios**, no los dos de S176, que leen 18 desplazamientos distintos
+(`+0x0/1/2/4/5`, `+0xf`, `+0x1c/1e/1f`, `+0x22/24`, `+0x2e`, `+0x39/3a/3b`, `+0x51`, `+0xa3`, `+0xac`) y **ninguno escribe**. Por esa vía el contenido
+solo lo produce el callback de copia de Backup (S305, 256 B, §4 de S402), así que E7 queda cerrado en lo estático; los valores efectivos de una
+cámara concreta solo existen en ejecución. Detalle por sitio en `static_findings.json` (clave `E7`).
+
+Lectores de E8 (los dos de S176):
 Cadenas de llamadores (BL/B.W comprobados): lector 1 `0x43861400` ← `0x437b5e70` ← `0x43aef444` ← `0x4379210c`; lector 2 `0x438690dc` ←
 `0x43844e80` ← `0x437b5b14`, la rutina que S42 usa como origen del bloque `B=0x43eae270` (copiado a `G`, la entrada del selector). El lector 2 está,
 por tanto, en la ruta de parámetros de captura; la activación efectiva sigue sin observarse.
@@ -116,9 +122,9 @@ por tanto, en la ruta de parámetros de captura; la activación efectiva sigue s
 aparece **13** veces, todas en pools de emisores (13 pares reserva/envío; 9 en funciones que REA reconoce); no existe `movw/movt` con ella. El receptor no
 referencia el buzón por literal, así que se identifica por el registro de tareas, no localizado. Sigue PARCIAL.
 
-### Sin avance: E1, E6, E7, E9, E10, E11, E13
+### Sin avance: E1, E6, E9, E10, E11, E13
 E1 y E10 conservan su límite (ver [S402](static-closure-2026-10-25.md)). E6, E9, E11 y E13 dependen de traza en bus, hojas de datos o
-traducción banco/bit del hardware. E7 (productores y valores efectivos del Backup `0x3000b`) no se retomó.
+traducción banco/bit del hardware.
 
 ## Pendientes nuevos
 

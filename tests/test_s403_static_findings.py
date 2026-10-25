@@ -44,6 +44,14 @@ def test_e5_bounded_absence():
     assert e5["a7s_anclas_a_S"] == 73 and e5["a7s_stores_en_S0"] == []
 
 
+def test_e7_slot_sites_only_read():
+    e7 = load("static_findings.json")["E7"]
+    assert e7["slot"] == "0x4401f990" and len(e7["sitios"]) == 14
+    accesses = [a for site in e7["sitios"] for a in site["accesos"]]
+    assert accesses and not any(a["insn"].startswith("str") for a in accesses)
+    assert len({a["disp"] for a in accesses}) == 18
+
+
 def test_e8_reader_chains_have_call_sites():
     e8 = load("static_findings.json")["E8"]
     for chain in e8.values():

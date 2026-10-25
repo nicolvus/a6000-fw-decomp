@@ -10,6 +10,7 @@ from pathlib import Path
 
 import pic
 from capstone import CS_ARCH_ARM, CS_MODE_THUMB, Cs
+from capstone.arm import ARM_OP_MEM
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "analysis/s402_static_closure"))
@@ -38,6 +39,38 @@ def anchored_access(blob: bytes, target: int, pattern: str, window: int = 16) ->
             if i.op_str.startswith(reg + ",") and i.mnemonic in ("ldr", "mov", "movs", "add", "adds"):
                 break
     return len(refs), hits
+
+
+def slot_sites(blob: bytes) -> list[dict]:
+    """Sitios que cargan el slot GOT `0x4401f990` (GOT `0x4401eee4` + `0xaac`) y los accesos de campo posteriores al objeto `0x43f72d02`."""
+    got = 0x4401EEE4
+    anchors = {r["add"] for r in pic.pic_refs(blob) if r["target"] == got}
+    detail = Cs(CS_ARCH_ARM, CS_MODE_THUMB)
+    detail.detail = True
+    out = []
+    for i in range(0, len(blob) - 1, 2):
+        h = struct.unpack_from("<H", blob, i)[0]
+        if h & 0xF800 != 0x4800:
+            continue
+        a = B + i
+        pool = ((a + 4) & ~3) + (h & 0xFF) * 4 - B
+        if pool + 4 > len(blob) or struct.unpack_from("<I", blob, pool)[0] != 0xAAC:
+            continue
+        reg = (h >> 8) & 7
+        if not any(a - 30 <= x <= a + 30 for x in anchors):
+            continue
+        ins = list(detail.disasm(blob[a - B:a - B + 160], a, count=40))
+        k = next((k for k, x in enumerate(ins[1:10], 1) if x.mnemonic.startswith("ldr") and re.search(rf"\br{reg}\]", x.op_str)), None)
+        if k is None:
+            continue
+        ptr, acc = ins[k].op_str.split(",")[0], []
+        for x in ins[k + 1:k + 30]:
+            if x.mnemonic.startswith(("ldr", "str")):
+                acc += [(x.mnemonic, op.mem.disp) for op in x.operands if op.type == ARM_OP_MEM and x.reg_name(op.mem.base) == ptr]
+            if x.op_str.startswith(ptr + ",") and not x.mnemonic.startswith(("str", "cmp")):
+                break  # el registro deja de ser el puntero (incluye `ldr rP,[rP,#d]`, ya registrado arriba)
+        out.append({"sitio": hex(a), "accesos": [{"insn": m, "disp": hex(d)} for m, d in acc]})
+    return out
 
 
 def edges(blob: bytes, pairs: list[tuple[int, int]]) -> list[dict]:
@@ -79,7 +112,8 @@ def main() -> None:
     nS, hS = anchored_access(a7, 0x43EA70A0, r"^(r\d+), \[{reg}(, #0)?\]$")
     e5 = {"a6000_anclas_a_G": n6, "a6000_accesos_0x238": h6, "a7s_anclas_a_S": nS,
           "a7s_stores_en_S0": [h for h in hS if h["insn"].startswith("str")]}
-    res = {"E2": e2, "E4": e4, "E5": e5, "E8": e8, "E12": e12}
+    e7 = {"slot": "0x4401f990", "objeto": "0x43f72d02", "sitios": slot_sites(blob)}
+    res = {"E2": e2, "E4": e4, "E5": e5, "E7": e7, "E8": e8, "E12": e12}
     OUT.write_text(json.dumps(res, indent=1) + "\n")
     print(json.dumps(res)[:2200])
 

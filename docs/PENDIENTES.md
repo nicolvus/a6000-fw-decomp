@@ -36,8 +36,7 @@ por esos índices.
 | E3 | PARCIAL | `params[+9]` de SetExposure (IMX210): cinco sitios de llamada y sus escritores identificados (valores 0, 1 y 4 por constante); los valores 2 y 3 sin constante directa (ver E14) | Origen de 2/3 resuelto o declarado de ejecución | [S403](capture/s403-cierre-pendientes.md) §E3 |
 | E4 | PARCIAL | Modos `+8` de `0x40193`: hay tabla booleana `0x43ca530e` y clasificador por máscara en `0x4379d378`, pero los códigos de los ocho wrappers (`0xc/0xb/0x14/0xa`, `0x6/0x5/0xa/0x4`) no están todos en 0–10; sin nombre por modo | Tabla índice → estado nombrada | [S403](capture/s403-cierre-pendientes.md) §E4, [cierre S402 §9](capture/static-closure-2026-10-25.md) |
 | E6 | BLOQUEADO | Cadena CAIF → Darwin → LIRO/imager: el MCU Darwin queda fuera de `av-cam` | Solo con traza del bus o volcado de Darwin (ver F4) | [C-backlog](../knowledge/agents/C-backlog.md) |
-| E7 | ABIERTO | Backup `0x3000b`: tamaño (256 B) y defaults resueltos; faltan productores anteriores de los campos y valores efectivos | Productores localizados; valores efectivos solo en ejecución | [B-backlog](../knowledge/agents/B-backlog.md) |
-| E8 | PARCIAL | Estado `0x43f72d02`: los dos lectores S176 tienen cadena de llamadores; el lector 2 cuelga de `0x437b5b14` (origen del bloque `B` de captura, S42). Falta activación efectiva y efecto de los campos | Activación solo en ejecución | [S403](capture/s403-cierre-pendientes.md) §E8 |
+| E8 | PARCIAL | Estado `0x43f72d02`: 14 sitios lo leen por el slot (S176 solo contaba 2) y ninguno escribe; los dos lectores S176 tienen cadena de llamadores; el lector 2 cuelga de `0x437b5b14` (origen del bloque `B` de captura, S42). Falta activación efectiva y efecto de los campos | Activación solo en ejecución | [S403](capture/s403-cierre-pendientes.md) §E8 |
 | E9 | BLOQUEADO | Correspondencia funcional de los 112 registros IMX210/IMX235 restantes y mecanismo de fin de integración: la semántica eléctrica exige hoja de datos (ver D5) | Documento legítimo aportado por el usuario | [A-backlog](../knowledge/agents/A-backlog.md) |
 | E10 | ABIERTO | Ruta YC → archivo: productor de modo 1, creador del pin `0x2a` en disparo, formato YC y propiedad del buffer | Ciclo terminal de buffers demostrado | [matriz S51](capture/s51-static-coverage-and-tool-limits.md) |
 | E11 | PARCIAL | Segunda cortina: enlace banco/bit `0xf2910048` → P4E y rutas alternativas de fin de exposición | Traducción física verificada | [S51](capture/s51-decision.md) |
@@ -88,6 +87,7 @@ Sin pendientes abiertos (C1–C4 cerrados el 25-10-2026, ver «Cerradas»).
 | C3 | 25-10-2026 | mypy sin errores en `scripts/knowledge` y `tests/knowledge` (21 archivos): aserciones de tipo y `mypy.ini` para `capstone` | [S403](capture/s403-cierre-pendientes.md) |
 | C4 | 25-10-2026 | Suite integral ejecutada completa: 3521 aprobadas, 35 omitidas, 0 fallos, 529 s | [S403](capture/s403-cierre-pendientes.md) |
 | D2 | 25-10-2026 | Módulos S515 `[BL]`, S516 `[PNL]`, S628 `[FILE_NUM]`, S629 `[FSYSMODE]`, S630 `[RING_DIAL]`: informe y 8 pruebas | [informe](capture/s515-s516-s628-s630-modulos.md) |
+| E7 | 25-10-2026 | Backup `0x3000b`: 14 sitios acceden al objeto `0x43f72d02` por el slot y solo leen; el productor es el callback de copia (S305); valores efectivos solo en ejecución | [S403 §E7](capture/s403-cierre-pendientes.md) |
 | E5 | 25-10-2026 | Ausencia acotada del lector `+0x238` (A6000, 262 anclas) y del almacén `[S+0]` (A7S, 73 anclas); límite: anclas PIC con ventana de 16 instrucciones | [S403 §E5](capture/s403-cierre-pendientes.md) |
 | — | 25-10-2026 | Id de modelo estático (`@M0EF`, `@M030`) y ocho emisores = autopublicaciones; E1 queda `NO_VERIFICADO` por exclusión, no por falta de búsqueda | `dd3a8212` |
 | — | 25-10-2026 | Revisión manual de las 44 filas `VIGENTE` sin revisar del triaje | `dd3a8212` |
@@ -99,4 +99,4 @@ Sin pendientes abiertos (C1–C4 cerrados el 25-10-2026, ver «Cerradas»).
 | Fecha | Cambio |
 |---|---|
 | 25-10-2026 | Creación a partir de la revisión integral del repo: 13 pendientes estáticos, 5 documentales, 4 de entorno, 6 físicos, 2 de respaldo. |
-| 25-10-2026 | S403: cerrados C1–C4, D2 y E5; avanzados D1, D3, E2, E3, E4, E8, E12; reclasificados E6, E9 y E13 como BLOQUEADO; nuevos E14, E15 y D6. |
+| 25-10-2026 | S403: cerrados C1–C4, D2, E5 y E7; avanzados D1, D3, E2, E3, E4, E8, E12; reclasificados E6, E9 y E13 como BLOQUEADO; nuevos E14, E15 y D6. |
