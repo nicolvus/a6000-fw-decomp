@@ -1,5 +1,10 @@
 # Auditoría de pendientes y sincronización — 24-10-2026
 
+Revisión parcial previa. Para el alcance integral posterior, evidencia faltante
+S176, rectificación de S207 y backlogs sincronizados, consultar la
+[auditoría integral](repo-audit-2026-10-24.md). Los contadores de relaciones de
+esta instantánea no se deben asumir invariables tras reindexar nuevos textos.
+
 Alcance: contrastar la lista comunicada al usuario con inventarios, resultados
 de verificadores, triaje y evidencia técnica vigente. No es una nueva
 decompilación integral ni una observación de cámara. `NO_VERIFICADO` expresa

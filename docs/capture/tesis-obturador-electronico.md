@@ -135,20 +135,26 @@ flowchart TD
 
 ---
 
-## 10. Veredicto final
+## 10. Veredicto revisado — 24-10-2026
 
-> **La A6000 fw3.21 no implementa obturador silencioso/electrónico completo** por ausencia de tres eslabones firmware que **sí** tiene la A7S fw3.20 en la misma plataforma (Darwin MCU FM3 MB9AF004BGL):
+> No se ha demostrado una ruta completa de obturador silencioso/electrónico en
+> A6000 fw3.21. Las diferencias estáticas documentadas con A7S no prueban por
+> sí solas imposibilidad del hardware ni ausencia universal de otra ruta:
 >
 > 1. **CAIF**: bit `0x20` en `pkt[+0x12]` no construido.
 > 2. **Darwin**: predicado `no_silent` y rama reposición coherente ausentes.
 > 3. **Imager**: driver IMX210 sin modo electrónico identificado (selector 0–4 sin semántica física).
 >
-> **El hardware (IMX210 + Darwin FM3) no se ha demostrado incapaz**, pero la integración firmware **no existe** en fw3.21. Cualquier implementación requeriría:
-> - Modificar `av-cam.bin` (CAIF) — riesgo medio, reversible en RAM.
-> - **Flashear Darwin MCU** (parser + predicado + reposición) — **riesgo alto, irreversible** (fw mismo versión rechazado).
-> - Identificar/implementar modo electrónico IMX210 — **requiere datasheet o traza pasiva bus sensor (P9)**.
+> **El hardware (IMX210 + Darwin FM3) no se ha demostrado incapaz.** Tampoco
+> se ha demostrado que una implementación requiera necesariamente flashear
+> Darwin: eso dependía de la ruta hipotética considerada. Identificar el
+> mecanismo IMX210 y completar los enlaces estáticos siguen abiertos.
 >
-> **Sin autorización para P5/P3/P7/P9 y sin datasheet IMX210, la investigación estática se da por agotada**. El punto pendiente queda acotado: **prueba física P5 (bus CAIF) es la única que puede confirmar/refutar la capacidad latente de A6000 sin flashear MCU**.
+> El análisis estático **no está agotado**: persisten aristas de `0x40193`,
+> activación RecordImage/RecordStill, productor CAIF y ruta IMX210/YC/cortina.
+> P5 no es una prueba única demostrada de capacidad latente; observar CAIF no
+> certifica por sí solo exposición ni calidad de imagen. P1–P21 siguen diferidas
+> por instrucción del usuario. Ver [cola auditada](repo-audit-2026-10-24.md).
 
 ---
 

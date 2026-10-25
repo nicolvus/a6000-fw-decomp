@@ -94,7 +94,7 @@ Clasificación: **DISTINTO** (arquitectura de selección de modo distinta; A7S u
 - `analysis/s205_imager_s0_writer/test_s205_s0_writer.py` (5 pruebas de bytes, en `analysis/`)
 - `analysis/s205_imager_s0_writer/s0_writer_bytes.py` (análisis de staging)
 - `analysis/s205_imager_s0_writer/s0_writer_deep.py` (barrido GOT/literales)
-- `tests/test_s205_imager_s0_writer.py` (a crear)
+- `tests/test_s205_imager_s0_writer.py` (existente)
 - `docs/capture/s205-imager-s0-writer.md` (este informe)
 
 ## Siguiente (S206)

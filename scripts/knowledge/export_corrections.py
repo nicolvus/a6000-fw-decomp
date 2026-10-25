@@ -8,6 +8,7 @@ Uso: python3 scripts/knowledge/export_corrections.py [--db RUTA]
 
 import argparse
 import sqlite3
+from html import escape
 from pathlib import Path
 
 from _paths import find_root
@@ -20,7 +21,8 @@ HEADER = """# {label}
 > **Generado automáticamente** por `scripts/knowledge/export_corrections.py` desde el
 > grafo de conocimiento (`entities`/`relations` en `.knowledge-cache/knowledge.sqlite`).
 > No editar a mano: reindexar con `index_docs.py` + `build_graph.py` y volver a ejecutar
-> este script. Cada fila conserva su fuente exacta (archivo:línea) y cita textual.
+> este script. Cada fila conserva su fuente exacta (archivo:línea) y un fragmento
+> de cita textual de hasta 160 caracteres, mostrado como texto literal.
 
 """
 
@@ -38,7 +40,7 @@ def export_corrections(conn: sqlite3.Connection, out: Path) -> int:
     lines.append("| Tipo | Status | Corrige/supera a | Fuente | Evidencia |")
     lines.append("|---|---|---|---|---|")
     for type_, status, src, dst, source_path, line_start, line_end, evidence in rows:
-        quote = evidence.strip().replace("\n", " ").replace("|", "\\|")[:160]
+        quote = _quote(evidence)
         lines.append(
             f"| {type_} | {status} | [{dst}]({_rel(dst)}) | "
             f"[{source_path}:{line_start}]({_rel(source_path)}) | {quote} |"
@@ -58,18 +60,27 @@ def export_open_questions(conn: sqlite3.Connection, out: Path) -> int:
         "ORDER BY source_path, line_start"
     ).fetchall()
     lines = [HEADER.format(label="Preguntas abiertas (relaciones NO_VERIFICADO / CONFLICTO_PENDIENTE)")]
-    lines.append(f"Total: {len(rows)} relación(es) del grafo con status realmente abierto "
-                  "(no secciones que solo mencionan la palabra en prosa).\n")
+    lines.append(f"Total: {len(rows)} relación(es) del grafo con status abierto. "
+                  "Son candidatas automáticas, no tareas confirmadas ni un contador de trabajo restante. "
+                  "Consultar el [triaje manual](../analysis/s400_open_questions_triage/README.md) "
+                  "y la [auditoría vigente](capture/repo-audit-2026-10-24.md).\n")
     lines.append("| Afecta a | Tipo | Status | Fuente | Evidencia |")
     lines.append("|---|---|---|---|---|")
     for dst, type_, status, source_path, line_start, evidence in rows:
-        quote = evidence.strip().replace("\n", " ").replace("|", "\\|")[:160]
+        quote = _quote(evidence)
         lines.append(
             f"| [{dst}]({_rel(dst)}) | {type_} | {status} | "
             f"[{source_path}:{line_start}]({_rel(source_path)}) | {quote} |"
         )
     out.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return len(rows)
+
+
+def _quote(evidence: str) -> str:
+    """La cita es texto: sus enlaces relativos no pertenecen al documento generado."""
+    quote = escape(evidence.strip().replace("\n", " ")[:160], quote=False)
+    return (quote.replace("`", "&#96;").replace("[", "&#91;")
+            .replace("]", "&#93;").replace("|", "\\|"))
 
 
 def _rel(path: str) -> str:

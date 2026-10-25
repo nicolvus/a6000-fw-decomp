@@ -48,9 +48,13 @@ Los formateadores A7S en `0x43ad94fe` y `0x43ad9666` están presentes en el blob
 - `analysis/s208_p2s_transport/p2s_transport.py` (generador)
 - `analysis/s208_p2s_transport/p2s_transport.json` (hallazgos)
 - `analysis/s208_p2s_transport/test_s208_p2s.py` (3 pruebas de bytes)
-- `tests/test_s208_p2s_transport.py` (a crear)
+- `tests/test_s208_p2s_transport.py` (existente)
 - `docs/capture/s208-p2s-transport.md` (este informe)
 
 ## Siguiente
 
-Tras S208, el backlog principal del Agente A (S200–S299) queda vacío sin cámara. El único ítem derivado requiere datasheet IMX210/IMX235 o traza pasiva CIS0+XPI+VD (anotado en `knowledge/agents/NEEDS-HUMAN.md`, requiere autorización física).
+Los entregables S200–S208 están publicados. Quedan preguntas de semántica
+funcional y fin de integración que S206/S207 no resuelven; el backlog no está
+vacío. Buscar datasheets es trabajo documental y no requiere cámara. Las trazas
+físicas siguen diferidas; ver [backlog A](../../knowledge/agents/A-backlog.md)
+y [cola auditada](repo-audit-2026-10-24.md).

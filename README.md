@@ -1,5 +1,14 @@
 # Sony A6000 Firmware Reverse Engineering
 
+## Auditoría integral y cola vigente — 24-10-2026
+
+[Informe de auditoría, evidencia faltante y pendientes](docs/capture/repo-audit-2026-10-24.md).
+S206/S207 y S301 ya tienen entregables; su existencia no cierra la semántica
+del sensor. S176 carece de los artefactos anunciados. La cola técnica sigue
+en `0x40193`, activación RecordImage/RecordStill, IMX210/YC/cortina y productor
+CAIF. Los índices automáticos y la cobertura documental no miden trabajo
+funcional completado. Las secciones anteriores en fecha se leen como historial.
+
 ## Auditoría vigente (23-10-2026)
 
 [Revisión de la validación S605–S627](docs/capture/S605-S627_tabla_hallazgos.md): las 263 pruebas originales ocultaban siete direcciones gemelas erróneas, 13 textos truncados y cinco longitudes adicionales incorrectas. Corregidos JSON, informes y verificadores; 94 trazas y siete gemelas comprobadas con bytes exactos. El logger dual de S607/S611/S616 está verificado estáticamente para seis/cinco/cuatro trazas; las otras 20 fichas, equivalencias y ausencia funcional del obturador siguen NO_VERIFICADO. Ampliación S605–S627: diez marcadores `level`/`sub_prefix` verificados; S625 corregido a prefijo `[CAM_UTIL_SENS]: ` (17 B). Quedan **66 de 69** afirmaciones de logger dual/equivalencias sin verificar. [Auditoría](docs/capture/S605-S627_tabla_hallazgos.md).
@@ -15,15 +24,15 @@ Proyecto de ingeniería inversa del firmware **Sony A6000 (fw 3.21)**, con foco 
 - **Resumen operativo:** [`knowledge/CURRENT.md`](knowledge/CURRENT.md)
 - **Estado de investigación y reglas:** [`docs/STATE.md`](docs/STATE.md)
 - **Historial de fases:** [`knowledge/PROGRESS.md`](knowledge/PROGRESS.md)
-- **Agentes autónomos y triaje S400:** [`docs/agentes-opencode.md`](docs/agentes-opencode.md), [`revisión manual y evidencia S400`](analysis/s400_open_questions_triage/README.md) (483 filas históricas; 48 relaciones vigentes pendientes; 37 decisiones anteriores revisadas)
+- **Agentes autónomos y triaje S400:** [`docs/agentes-opencode.md`](docs/agentes-opencode.md), [`revisión manual y evidencia S400`](analysis/s400_open_questions_triage/README.md). El índice generado distingue relaciones candidatas de tareas técnicas; sus contadores cambian al reindexar.
 - **Catálogo de hitos técnicos:** [`docs/capture/linea-general-re.md`](docs/capture/linea-general-re.md)
 
 ## Avance total
 
 - **Censo documental de etiquetas:** **35.75%** (**133/372**) cubiertas — **94** con hito propio y **39** como subetiqueta; **226 pendientes y 13 fragmentos descartados como módulos**. La [auditoría S178](docs/capture/s178-census.md) acepta cuatro candidatas sin cerrar su decodificación y mantiene 222 NO_VERIFICADO. Descartar no aumenta cobertura.
 - **Cobertura de la ruta del obturador:** [matriz de descompilación y límites REA/Unicorn](docs/capture/s51-static-coverage-and-tool-limits.md). Persisten enlaces y cuerpos sin reconstruir; se posponen todas las pruebas físicas hasta completar la ingeniería inversa necesaria.
-- **Módulos “contenido nuevo” (S130):** **100%** (**17/17**) cerrados.
-- **Obturador completamente electrónico:** [S51](docs/capture/s51-decision.md) mantiene la decisión de no parchear; [P1–P8](docs/capture/physical-test-plan.md) y [P13–P21](docs/capture/physical-test-plan-2.md) siguen sin ejecutarse.
+- **Etiquetas de “contenido nuevo” (S130):** **17/17 con informe**; no acredita cierre funcional ni equivalencia de todo su código.
+- **Obturador completamente electrónico:** [S51](docs/capture/s51-decision.md) mantiene la decisión de no parchear; [P1–P8](docs/capture/physical-test-plan.md), [P9–P12](docs/capture/s402-physical-test-mapping.md) y [P13–P21](docs/capture/physical-test-plan-2.md) siguen sin ejecutarse.
 
 [![módulos](https://img.shields.io/endpoint?url=https://nicolvus.github.io/a6000-fw-decomp/badge-modulos.json)](https://nicolvus.github.io/a6000-fw-decomp/progress/)
 [![sesiones](https://img.shields.io/endpoint?url=https://nicolvus.github.io/a6000-fw-decomp/badge-sesiones.json)](https://nicolvus.github.io/a6000-fw-decomp/progress/)

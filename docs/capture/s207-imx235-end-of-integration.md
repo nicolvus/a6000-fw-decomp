@@ -4,12 +4,16 @@
 
 ## Veredicto resumen
 
-| Preguesta | Estado | Veredicto |
+| Pregunta | Estado | Veredicto |
 |---|---|---|
-| ¿A7S/IMX235 tiene registro de fin de integración que falte al IMX210? | **NO** | Ninguno encontrado en matriz ni código (S57-D D.6 vigente). |
-| ¿A7S/IMX235 tiene mecanismo de segunda cortina electrónica? | **NO** | Sin cadenas de segunda cortina/final de integración en av-cam.bin A7S. |
-| ¿IMX210 tiene equivalente? | **NO** | Tampoco lo tiene (paralelismo). |
-| Clasificación | **IDÉNTICO** | Ambos carecen de operación de fin de integración identificada (NO_VERIFICADO si el sensor la hace internamente). |
+| ¿A7S/IMX235 tiene registro de fin de integración que falte al IMX210? | **NO_VERIFICADO** | La lista de direcciones no identifica la semántica eléctrica ni permite probar una ausencia. |
+| ¿Cómo termina la integración en A7S/IMX235? | **NO_VERIFICADO** | El negativo de las siete cadenas buscadas no identifica ni descarta el mecanismo. |
+| ¿IMX210 tiene equivalente? | **NO_VERIFICADO** | Falta correspondencia funcional; no se deduce del paralelismo de negativos textuales. |
+| Clasificación funcional | **NO_VERIFICADO** | No hay base para declarar identidad ni ausencia de mecanismos. |
+
+Rectificación de alcance del 24-10-2026: los anteriores «NO» e «IDÉNTICO»
+excedían la evidencia. El JSON y su generador conservan `null` para la
+semántica desconocida. [Auditoría](repo-audit-2026-10-24.md).
 
 ## Evidencia de bytes (S207)
 
@@ -29,35 +33,42 @@ Barrido de bytes en av-cam.bin de ambos modelos. No aparecen como cadenas C (seg
 
 Secuencias cortas de 3 bytes (`eoi`, `eos`, `curtain`) aparecen por coincidencia en código ejecutable de **ambos** modelos (falso positivo, no son cadenas C legibles).
 
-### 2. Matriz IMX235 sin registro de fin de integración (VERIFICADO)
+### 2. Matriz IMX235: direcciones observadas, semántica pendiente
 
-La matriz IMX235 (`0x43fee598`) tiene 35 registros, direcciones `0x0000`–`0x00CF`. Ninguna dirección ni columna está dedicada a "fin de integración" o "segunda cortina" (S57-D D.6 vigente). Los modos Silent `0x4e`/`0x4f` difieren de `0x4c`/`0x4d` solo en 1 registro cada uno (`0x000c` y `0x000a`), sin comando de fin de integración.
+La matriz IMX235 (`0x43fee598`) contiene 35 direcciones (`0x0000`–`0x00CF`).
+El barrido no les asigna significado eléctrico. La comparación histórica
+identifica cambios en `0x000c` y `0x000a`; no demuestra que ninguna de esas
+escrituras configure o termine la integración. S207 no verifica de nuevo
+todos los consumidores de la matriz.
 
 ### 3. ExposureTimerEnd! no reescribe registros (S57-F, vigente)
 
-`ExposureTimerEnd!` (`0x438c893a`) no reescribe ningún registro del sensor ni emite SSB/Execute. El firmware no gestiona el fin de integración por registros.
+Según el alcance histórico de S57-F, `ExposureTimerEnd!` (`0x438c893a`) no
+reescribe registros del sensor ni emite SSB/Execute en el cuerpo examinado.
+Eso no demuestra que el resto del firmware o el sensor carezca de ese efecto.
+El generador S207 hereda esta afirmación; no vuelve a analizar ese cuerpo.
 
 ## Comparación A7S vs A6000 en este punto
 
 | Aspecto | IMX235 (A7S) | IMX210 (A6000) | Clasificación |
 |---|---|---|---|
-| Registro de fin de integración | ausente | ausente | **IDÉNTICO** |
-| Mecanismo de segunda cortina electrónica | ausente | ausente | **IDÉNTICO** |
+| Registro de fin de integración | no identificado | no identificado | **NO_VERIFICADO** |
+| Mecanismo de segunda cortina electrónica | sin reconstruir aquí | sin reconstruir aquí | **NO_VERIFICADO** |
 | Cadenas de fin de integración en firmware | ausentes | ausentes | **IDÉNTICO** |
-| Operación de fin de integración identificada | NO (ambos) | NO (ambos) | **IDÉNTICO (NO_VERIFICADO si el sensor la hace internamente)** |
+| Operación de fin de integración identificada por S207 | ninguna | ninguna | No prueba equivalencia funcional |
 
 ## Límites
 
 - Sin datasheet IMX210/IMX235: no se puede confirmar ni refutar que el sensor cierre la integración internamente por temporización programada al inicio (hipótesis H57-9).
 - Sin cámara: no se observa el fin real de integración ni la señal XPI/CIS0_SCK/SI.
-- Una consulta vacía de REA no prueba ausencia: la ausencia de cadenas y registros se confirmó con barrido de bytes, no solo con falta de xrefs.
+- Una consulta vacía de REA no prueba ausencia. El barrido confirma ausencia de los textos buscados; no ausencia de registros con una función eléctrica determinada.
 
 ## Artefactos
 
 - `analysis/s207_imx235_end_of_integration/full_eoi.py` (generador)
 - `analysis/s207_imx235_end_of_integration/full_eoi.json` (hallazgos)
 - `analysis/s207_imx235_end_of_integration/test_s207_eoi.py` (3 pruebas de bytes)
-- `tests/test_s207_imx235_end_of_integration.py` (a crear)
+- `tests/test_s207_imx235_end_of_integration.py` (existente; valida datos y límites, no semántica eléctrica)
 - `docs/capture/s207-imx235-end-of-integration.md` (este informe)
 
 ## Siguiente (S208)

@@ -1,5 +1,10 @@
 # PENDIENTES FINALES — estado de cierre (22-10-2026, corregido)
 
+Este es un informe histórico de alcance parcial, no una lista integral ni una
+declaración de que la investigación esté cerrada. La [cola vigente y evidencia
+faltante](repo-audit-2026-10-24.md) incluye las preguntas técnicas, S176 y los
+límites de los censos y del triaje.
+
 > **Actualización 24-10-2026:** [trazado de 0x40193](queue-40193-flow-2026-10-23.md).
 > Se verifican literales en `.text`, emisores, receptor LIRO `0x4381d16c` e
 > instalador `0x4379e93c`. La entrada de cabecera LIRO alcanza el bucle de 372

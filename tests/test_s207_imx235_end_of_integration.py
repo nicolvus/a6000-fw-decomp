@@ -2,7 +2,7 @@
 
 Comprueba que full_eoi.json (generado por analysis/s207_imx235_end_of_integration/full_eoi.py)
 contiene: sin cadenas largas de fin de integración en A7S/A6000, 35 registros IMX235,
-y la conclusión de que ambos carecen de operación de fin de integración identificada.
+y el límite: los negativos textuales no resuelven la semántica eléctrica.
 """
 import json
 import unittest
@@ -23,14 +23,15 @@ class S207EOI(unittest.TestCase):
     def test_imx235_register_count(self):
         self.assertEqual(self.t['imx235_registers'], 35)
 
-    def test_no_dedicated_eoi_register(self):
-        self.assertFalse(self.t['imx235_has_eoi_dedicated_register'])
+    def test_register_semantics_remain_unknown(self):
+        self.assertIsNone(self.t['imx235_has_eoi_dedicated_register'])
+        self.assertEqual(self.t['eoi_mechanism_status'], 'NO_VERIFICADO')
 
     def test_exposure_timer_end_no_rewrite(self):
         self.assertTrue(self.t['exposure_timer_end_no_register_rewrite'])
 
     def test_conclusion_present(self):
-        self.assertIn('No hay registro ni mecanismo', self.t['conclusion'])
+        self.assertNotIn('No hay registro ni mecanismo', self.t['conclusion'])
         self.assertIn('NO_VERIFICADO', self.t['conclusion'])
 
     def test_sha256_present(self):

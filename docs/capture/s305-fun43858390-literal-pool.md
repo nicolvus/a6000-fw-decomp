@@ -9,12 +9,12 @@
 
 **Dirección**: `0x43858390` (Thumb, 3948 bytes, **no contiguo** — 4 rangos: `0x43858390–0x438583a5`, `0x438583b0–0x43858f03`, `0x4385922c–0x438594e3`, `0x43859578–0x438596c1`; span 4914 bytes).
 
-**Prologue**: `push {r0,r1,r2,r4,r5,r6,r7,r8,r9,r10,r11,lr}` (Thumb, 12 registros + lr).
+**Prologue**: `push {r0,r1,r2,r4,r5,r6,r7,r8,r9,r10,r11,lr}` (Thumb, 12 registros en total, incluido lr).
 
 **Patrón de llamadas al dumper** (13 sites en rango `0x43858922–0x43858b80`):
-- Llamadas distribuidas cada ~0x10-0x20 bytes → **bucle de procesamiento**
-- Cada iteración: prepara argumentos → `bl FUN_438581e8`
-- 13 iteraciones observadas → coincide con número de "líneas" o "bloques" procesados
+- Trece sitios estáticos de llamada a `FUN_438581e8`.
+- Preparación de argumentos antes de esas llamadas; flujo completo pendiente.
+- No son trece iteraciones observadas: no se ejecutó el firmware ni se demostró aquí un bucle.
 
 **Función no analizada completamente** por REA (pseudocode excede buffer). Pendiente análisis por tramos.
 
@@ -62,7 +62,7 @@
 
 ---
 
-## 5. Tests sugeridos para S305
+## 5. Esquemas de tests pendientes para S305 (no ejecutables)
 
 ```python
 def test_fun_43858390_calls_dumper_13_times():
@@ -76,7 +76,7 @@ def test_got_0x4401f080_literal_pool():
     pass
 
 def test_fun_43858390_loop_structure():
-    """Verificar estructura de bucle con 13 iteraciones."""
+    """Resolver flujo de control; 13 sitios de llamada no prueban 13 iteraciones."""
     pass
 ```
 

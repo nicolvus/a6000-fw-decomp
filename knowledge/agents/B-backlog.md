@@ -1,50 +1,24 @@
-# Backlog del Agente B — Imager: estado, drive modes y gates (S300+)
+# Backlog B — imager, estado y gates (S300–S399)
 
-Sesiones asignadas: S300–S399. Un tema = una sesión. Estado: TODO | DOING | DONE <hash> | BLOCKED <causa>.
+Auditado el 24-10-2026. Una casilla completada acredita el entregable indicado;
+no convierte en hecho una conclusión marcada NO_VERIFICADO. Los resultados
+negativos se limitan a los sitios examinados. [Auditoría vigente](../../docs/capture/repo-audit-2026-10-24.md).
 
-Referencia base: S153-S176 (lectores/escritores estado IMX210), S124 (parámetros exposición por drive_mode), S134 (fórmula svd), S140 (vector registros IMX210), S176 (lectores state+0xac, state+0x30-0x37), CURRENT.md § S153-S176.
+## Entregables existentes
 
-## Ítems
+- [x] S300 — [Barrido A6000](../../docs/capture/s300-state-xref-sweep.md): 67 sitios (56 lecturas, 6 escrituras, 3 spills, 1 propagación, 1 dato). La cifra inicial de 15 xrefs estaba superada. No se identifican escritores de gates `+3/+6` en este conjunto.
+- [x] S301 — [Barrido A7S y comparación](../../docs/capture/s301-a7s-state-xref-sweep.md): 79 sitios; estado candidato `0x43f7bce6`, GOT `0x440251e4`. El barrido y la tabla comparativa ya están publicados.
+- [x] S302 — [Tablas de exposición](../../docs/capture/s302-drive-mode-exposure-tables.md), fórmula de S134 y vectores de registros comparados.
+- [x] S303 — [Árbol de referencias](../../docs/capture/s303-ref-tree-43ff3200.md). La falta inicial de llamadores no es un resultado de ausencia; S304 añade un llamador.
+- [x] S304 — [Informe del dumper y llamador](../../docs/capture/s304-rea-dumper-callers.md). Se elimina la copia duplicada de esta sección. Los 13 sitios de llamada no prueban 13 iteraciones de un bucle.
+- [x] S305 — [Informe parcial publicado](../../docs/capture/s305-fun43858390-literal-pool.md). Publicación completada; análisis completo pendiente.
+- [x] S306–S348 — Informes posteriores en el [README](../../README.md) y sus fuentes. La existencia del informe no cierra todos sus límites.
 
-### S300 — Barrido xrefs a `0x43f72d02` (GOT `0x4401f990`) en A6000
-- [x] 1. Encontrar todas las xrefs (REA + bytes) al GOT slot `0x4401f990` y al objeto `0x43f72d02` → 15 xrefs
-- [x] 2. Clasificar cada xref: spill stack / lectura campo / escritura campo / propagación puntero / otra
-- [x] 3. Enfocarse en writers a `+3` y `+6` (gates de S153) → **NO ENCONTRADOS**
-- [x] 4. Tabla en `analysis/s300_state_xref_sweep/xrefs_classified.json`
-- [x] 5. Informe `docs/capture/s300-state-xref-sweep.md` con veredicto sobre writers de gates
-- [x] 6. Tests reproducibles en `analysis/s300_state_xref_sweep/test_s300_state_xref_sweep.py` (7 verdes)
+## Preguntas que permanecen abiertas
 
-### S301 — Barrido xrefs a estado imager en A7S fw3.20
-- [ ] Mismo barrido en A7S (objeto equivalente al `0x43f72d02`)
-- [ ] Tabla de diferencias A7S vs A6000
+- [ ] Completar el análisis por tramos de `FUN_43858390` y demostrar su flujo de control y argumentos; S305 sigue parcial.
+- [ ] Demostrar el acceso al GOT `0x4401f080` y al objeto `0x43ff3200`, con instrucciones y pools; no dar por cerrado un acceso solo porque exista el slot.
+- [ ] Identificar escritores de `state+3/+6` o acotar su procedencia por puntero, copia o productor externo. Los barridos S300/S301 no prueban ausencia global.
+- [ ] Resolver los límites del carril B (servicio ODL y significado físico de registros) con evidencia estática; consultar la [matriz S51](../../docs/capture/s51-static-coverage-and-tool-limits.md).
 
-### S302 — Tablas de drive mode/exposición A7S vs A6000
-- [x] Campos S124 (`shut`, `svd`, `shd`, `spl`, `sint`, `gs`, `epdsel`) por drive_mode
-- [x] Fórmula svd S134 (`0x4381106c`) en ambos
-- [x] Vector registros IMX210 `0x43fe995c` vs A7S `0x43fee370`/`0x43fee598`
-- [x] Tabla comparativa campo a campo → **Hecho en `docs/capture/s302-drive-mode-exposure-tables.md`**
-
-### S303 — Árbol referencias `0x43ff3200` y callers `FUN_43858338`
-- [x] Seguir referencias de tabla `0x43ff3200` → **contiene puntero a estado 0x43f72d02 en +0x48**; acceso vía GOT `0x4401f080`
-- [x] Analizar callers de `FUN_43858338` → **NO IDENTIFICADOS ESTÁTICAMENTE** (requiere REA/Ghidra xrefs)
-- [x] Documentado en `docs/capture/s303-ref-tree-43ff3200.md`
-
-### S304 — REA/Ghidra: callers de `FUN_43858338` (dumper gates S153) y código que carga GOT `0x4401f080`
-- [x] Analizar callers de `FUN_43858338` (dumper gates) → **Único caller: `FUN_43858390` con 13 callsites**
-- [x] Analizar dumper `FUN_438581e8` (dirección real) → **Lee gates `state+3`/`state+6` (vía offsets estructura), no escribe**
-- [x] Código que carga GOT `0x4401f080` → **NO_VERIFICADO** (acceso vía literal pool, REA no expone xrefs)
-- [x] Escritores de gates `state+3`/`state+6` → **NO_VERIFICADO** (dumper solo lee)
-- [x] Documentado en `docs/capture/s304-rea-dumper-callers.md`
-
-### S304 — REA/Ghidra: callers de `FUN_43858338` (dumper gates S153) y código que carga GOT `0x4401f080`
-- [x] Analizar callers de `FUN_43858338` (dumper gates) → **Único caller: `FUN_43858390` con 13 callsites**
-- [x] Analizar dumper `FUN_438581e8` (dirección real) → **Lee gates `state+3`/`state+6` (vía offsets estructura), no escribe**
-- [x] Código que carga GOT `0x4401f080` → **NO_VERIFICADO** (acceso vía literal pool, REA no expone xrefs)
-- [x] Escritores de gates `state+3`/`state+6` → **NO_VERIFICADO** (dumper solo lee)
-- [x] Documentado en `docs/capture/s304-rea-dumper-callers.md`
-
-### S305 — Análisis `FUN_43858390` + búsqueda literal pool `0x4401f080`
-- [ ] Analizar `FUN_43858390` por tramos (REA `file-offset`) → entender bucle principal
-- [ ] Buscar literal pool `0x4401f080` (Ghidra `findReferencesTo(DAT_4401f080)`)
-- [ ] Identificar escritores de gates `state+3`/`state+6` (xrefs a `0x43f72d05`/`0x43f72d08`)
-- [ ] Documentar en `docs/capture/s305-fun43858390-literal-pool.md`
+Sin ejecución de firmware, cámara ni flasheo. Las pruebas físicas siguen diferidas.

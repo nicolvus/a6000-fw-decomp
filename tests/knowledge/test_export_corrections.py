@@ -34,7 +34,7 @@ class ExportCorrectionsTest(unittest.TestCase):
             "# Resultado original\n\nNO_VERIFICADO: falta confirmar el banco B.\n"
         )
         (self.proj / "docs" / "capture" / "new.md").write_text(
-            "# Resultado nuevo\n\nCORRECCIÓN: corrige [lo anterior](old.md).\n"
+            "# Resultado nuevo\n\nCORRECCIÓN: corrige [lo anterior](old.md). Campo `[campo]`.\n"
         )
         self.run_script(INDEX_SCRIPT)
         self.run_script(GRAPH_SCRIPT)
@@ -47,9 +47,14 @@ class ExportCorrectionsTest(unittest.TestCase):
         self.assertIn("old.md", corrections)
         self.assertIn("new.md", corrections)
         self.assertIn("CORRECTS", corrections)
+        # La cita viene de otro directorio: no debe crear un enlace relativo nuevo.
+        self.assertNotIn("[lo anterior](old.md)", corrections)
+        self.assertIn("&#91;lo anterior&#93;(old.md)", corrections)
+        self.assertIn("&#96;&#91;campo&#93;&#96;", corrections)
 
         open_questions = (self.proj / "docs" / "OPEN-QUESTIONS.md").read_text()
         self.assertIn("old.md", open_questions)
+        self.assertNotIn("[lo anterior](old.md)", open_questions)
 
     def test_open_questions_ignores_sections_that_only_mention_the_word(self):
         # Antes export_open_questions buscaba por texto libre NO_VERIFICADO/CONFLICTO_PENDIENTE

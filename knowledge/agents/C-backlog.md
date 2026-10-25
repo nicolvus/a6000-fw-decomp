@@ -1,6 +1,7 @@
 # Backlog Agente C — Ruta de control: configuración → LIRO → imager (S401+)
 
-Estado: DOING (S401 en progreso, S402-S403 pendientes)
+Estado auditado 24-10-2026: informes S401/S402 y tesis publicados. La ruta
+completa de control sigue parcial; las pruebas propuestas no se han ejecutado.
 
 ## Ítems
 
@@ -8,10 +9,10 @@ Estado: DOING (S401 en progreso, S402-S403 pendientes)
 - [x] 1. Identificar en A7S fw3.20 el handler LIRO para SilentShutter (equivalente a 0x40e3 en A6000) → **NO EXISTE en tabla de despacho LIRO A7S**
 - [x] 2. Comparar tabla de despacho LIRO A7S vs A6000 → **A7S no tiene cmd 0x40e3; A6000 lo tiene pero rechazado en libObj.so (S174)**
 - [x] 3. Darwin MCU: A7S tiene predicado `no_silent` (`pkt[+0x12]&0x20`) y rama "sin mecanismo"; A6000 tiene tipo 0 similar pero sin `no_silent` (S53, S54)
-- [x] 4. CAIF packet: A7S/A6300 ponen bit 0x20 en `pkt[+0x12]` para Silent; A6000 NO lo pone (silent-caif-transport.md)
+- [ ] 4. CAIF packet: demostrar el constructor A7S/A6300 que escribe el bit `0x20` en `pkt[+0x12]`. En A7S sigue siendo INFERENCIA; la interpretación de Darwin no demuestra el productor.
 - [x] 5. Documentar diferencias 1-8 con etiquetas VERIFICADO/INFERENCIA/NO_VERIFICADO → **Hecho en s401-a7s-silent-control-path.md**
-- [x] 6. Localizar en A7S constructor CAIF evento 1 y condición bit 0x20 → **Pendiente (requiere P5/P10 físico)**; documentado como INFERENCIA
-- [x] 7. Rastrear propagación CAIF → Darwin → LIRO/imager → **Parcial (Darwin verificado; enlace LIRO/imager NO_VERIFICADO)**
+- [ ] 6. Localizar en A7S constructor CAIF evento 1 y condición bit `0x20`: pendiente de investigación estática. P5/P10 son propuestas diferidas, no un requisito demostrado para buscar el constructor.
+- [ ] 7. Completar propagación CAIF → Darwin → LIRO/imager: parcial; enlace LIRO/imager NO_VERIFICADO.
 
 ### S402 — Mapear diferencias a pruebas físicas (physical-test-plan.md P1–P8)
 - [x] Para cada diferencia hallada en S401, indicar cuál prueba la confirmaría/refutaría → **Hecho en s402-physical-test-mapping.md**
@@ -28,7 +29,7 @@ Ver `docs/capture/s401-a7s-silent-control-path.md` y `docs/capture/s402-physical
 
 | # | Diferencia | A7S | A6000 | Etiqueta |
 |---|---|---|---|---|
-| 1 | Handler LIRO 0x40e3 | Ausente | Presente (inútil) | VERIFICADO |
+| 1 | Handler LIRO 0x40e3 | Sin entrada en la tabla examinada | Entrada presente; ForLiro rechazado | Resultado estático acotado; no prueba inutilidad global |
 | 2 | libObj.so ForLiro | 221 rechazados | 216 rechazados | VERIFICADO |
 | 3 | Darwin no_silent | Sí (bit 0x20) | No | VERIFICADO |
 | 4 | Darwin sin mecanismo | Sí + reposición | Tipo 0 (sin reposición) | VERIFICADO |

@@ -74,7 +74,7 @@ def groups(data: dict) -> list[tuple[str, str, list[tuple[str, str]]]]:
     tests = [("t-todo", f"P{n}: sin ejecutar") for n in range(1, data["physical_tests"]["total"] + 1)]
     cov = data["module_coverage"]
     return [
-        (f"Módulos de la fw 3.21*: {cov['percent']}% ({cov['covered']}/{cov['total']})", "modules", modules),
+        (f"Cobertura documental de etiquetas*: {cov['percent']}% ({cov['covered']}/{cov['total']})", "modules", modules),
         (f"Sesiones documentadas: {len(done)}/{data['latest_number']}", "sessions", sessions),
         (f"Pruebas físicas: {data['physical_tests']['done']}/{data['physical_tests']['total']}", "tests", tests),
     ]
@@ -137,12 +137,16 @@ td:nth-child(n+3):not(:last-child),td:last-child,th:nth-child(n+3){{text-align:r
 <h1>Progreso</h1>
 <p class="legend"><span class="m-hito"></span>módulo con hito<span class="m-sub"></span>sub-etiqueta cubierta<span class="m-todo"></span>pendiente / sin informe / sin ejecutar<span class="m-rejected"></span>fragmento descartado<span class="s-cancel"></span>cancelada</p>
 <p>{cov['pending']} etiquetas pendientes; {cov['excluded']} fragmentos descartados como módulos. Descartar no aumenta cobertura.</p>
-<h2>Módulos por familia — {cov['percent']}% ({cov['covered']}/{cov['total']})*</h2>
+<p>Cobertura documental de etiquetas: no mide código descompilado ni funciones verificadas.
+<a href="{REPO}docs/capture/repo-audit-2026-10-24.md">Auditoría y pendientes vigentes</a>.
+Las pruebas físicas siguen diferidas hasta completar la ingeniería inversa necesaria.</p>
+<h2>Etiquetas por familia — {cov['percent']}% ({cov['covered']}/{cov['total']})*</h2>
 <table><tr><th>Familia</th><th>Etiquetas</th><th>Cubiertas</th><th>Total</th><th>%</th></tr>{fam_rows}</table>
-<h2>Prioridad de investigación (top {TOP} pendientes)</h2>
-<p>Ordenadas por cadenas de texto referenciadas en el firmware de la A6000: más cadenas = más código por descifrar.</p>
+<h2>Etiquetas pendientes (top {TOP} por cadenas referenciadas)</h2>
+<p>Orden documental por cadenas con referencias candidatas; no demuestra volumen de código,
+prioridad técnica ni relación con el obturador. La cola técnica está en la auditoría.</p>
 <table><tr><th>#</th><th>Etiqueta</th><th>Cadenas</th><th>Apariciones</th><th>Presencia</th></tr>{prio}</table>
-<h2>Módulos decodificados</h2>
+<h2>Etiquetas con informe propio</h2>
 <table><tr><th>Etiqueta</th><th>Nombre</th><th>Hitos</th></tr>{done_rows}</table>
 {other}
 <p>*Censo <a href="{cov['source']}">S178</a>; pasa el ratón por un cuadrado para ver su etiqueta. Nombres tomados del
@@ -194,7 +198,7 @@ def main() -> None:
     if int(covered) + int(pending.group(1)) + excluded != int(total):
         raise ValueError("El censo S178 no suma cobertura, pendientes y descartadas")
 
-    data = {
+    data: dict = {
         "generated_from": "Documentos versionados en docs/capture/ y analysis/",
         "latest": sessions[0]["id"] if sessions else None,
         "documented_count": len(sessions),

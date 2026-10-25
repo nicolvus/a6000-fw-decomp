@@ -36,7 +36,11 @@ def test_public_session_index_has_real_sources() -> None:
     assert page.count('class="cell m-') == coverage["total"]
     assert page.count('class="cell m-hito"') + page.count('class="cell m-sub"') == coverage["covered"]
     assert page.count('class="cell m-rejected"') == coverage["excluded"]
-    assert "Prioridad de investigación" in page and page.count('class="prio"') == 30
+    assert "Etiquetas pendientes" in page and page.count('class="prio"') == 30
+    assert "más cadenas = más código" not in page
+    assert "Cobertura documental" in page
+    assert "Módulos decodificados" not in page
+    assert "repo-audit-2026-10-24.md" in page
     assert "mando a distancia" in page  # nombre del hito S180 tomado del catálogo
 
     prefix = "/nicolvus/a6000-fw-decomp/blob/main/"

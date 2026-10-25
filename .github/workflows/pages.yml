@@ -10,6 +10,7 @@ name: Publicar estado
       - 'docs/capture/**'
       - 'docs/progress/**'
       - 'analysis/**/*.md'
+      - 'analysis/s178_census/census_detalle.json'
   schedule:
     - cron: '17 6 * * *'  # diario; ~1 min/ejecución, muy por debajo de la cuota gratuita
   workflow_dispatch:

@@ -1,5 +1,26 @@
 # Estado actual — léeme primero
 
+## Estado operativo auditado — 24-10-2026
+
+**Leer este bloque como entrada vigente.** El resto del archivo acumula
+instantáneas históricas; sus «siguientes», estados DOING y cifras de tests
+no describen por sí solos el trabajo actual.
+
+- [Auditoría integral y cola](../docs/capture/repo-audit-2026-10-24.md): `0x40193`
+  (servicio indirecto, OSAL Linux y transporte), activación RecordImage/RecordStill,
+  IMX210/YC/archivo/cortina, flujo S305 y productor CAIF siguen abiertos.
+- S206/S207 y S301 tienen informes y tests existentes. La correspondencia
+  funcional profunda sigue pendiente; S207 no demuestra ausencia de un mecanismo
+  de fin de integración. Su JSON/generador declaran NO_VERIFICADO.
+- S176: informe, directorio de análisis y test anunciados no están en el árbol
+  ni en el historial disponible. Recuperar evidencia antes de certificarlo.
+- Censo reproducido: 94 hitos + 39 subetiquetas + 226 pendientes + 13 descartadas
+  = 372; cobertura documental 133/372. S605–S627: 94 trazas y siete gemelas
+  verificadas; 66 afirmaciones sin verificar. No mide código descompilado.
+- [Backlogs A/B/C y elementos diferidos](agents/NEEDS-HUMAN.md) actualizados.
+  P1–P21 sin ejecutar y diferidas hasta terminar la ingeniería inversa necesaria.
+  S51 A/B/C=NO; sin parche ni pruebas físicas.
+
 ## Censo de etiquetas pendientes — 23-10-2026
 
 [Auditoría S178](../docs/capture/s178-census.md): recalculado el estado inicial
@@ -57,7 +78,7 @@ S51 sin cambios. Prevalece sobre resúmenes históricos siguientes.
 - **S380** Mapa ELF A6000: 26 secciones, 1387 imports FUNC, 1771 exports FUNC, 2420 relocaciones GOT. PLT: 2420 cuerpos ARM + 391 veneers Thumb; 1914 era una división incorrecta por 16. Ver `docs/capture/s380-libobj-a6000-map.md`.
 - **S381** Mapeo PLT corregido por instrucciones/GOT: 83/53 candidatos hacia registradores síncrono/asíncrono. Dos sitios BL hacia RecordImage confirmados. El registro OSAL Linux de `0x40193` sigue pendiente. Ver `docs/capture/s381-libobj-a6000-dispatch.md`.
 - **S383** `…ForLiro` en `libObj.so` A6000: 5 nombres de obturador rechazados (NON SUPPORTED). `SetShutterTypeForLiro` ausente (solo A6300). Sin efecto en S51. [`docs/capture/s383-forliro-silentlibobj.md`]
-- **S384** Cero palabras LE del ID `0x40193` en `.rodata`/`.data` de A6000/A7S y cero cadenas ASCII. Encodings históricos MOVW/MOVT invalidados; sí existe `movw #0x193`. Origen del ID NO_VERIFICADO. Ver `docs/capture/s384-queue-id-0x40193-search.md`.
+- **S384** Cero palabras LE del ID `0x40193` en `.rodata`/`.data` de A6000/A7S y cero cadenas ASCII. Encodings históricos MOVW/MOVT invalidados; los literales cargados desde `.text` sí construyen el ID. Registro OSAL Linux y transporte pendientes; ver `docs/capture/s384-queue-id-0x40193-search.md` y el trazado posterior de la cola.
 - **S382** Dos BL a RecordImage: `0x90de2e` y `0x91634e`, contenedores `0x90d7e8..0x90e148` y `0x9162d0..0x91647c`. 25 punteros Thumb al primero; consumidor indirecto demostrado en `StateMgr::CallFunc`. Ver `docs/capture/s382-recordstill-callers.md`.
 - **S385** Parejas RecordStill/RecordImage A6000↔A7S recuperadas por contrato/cuerpo/cadenas; equivalencia de todos los callees NO_VERIFICADO. Ver `docs/capture/s385-libobj-a6000-vs-a7s-diff.md`.
 
@@ -260,6 +281,10 @@ Todos los módulos del censo S178 (372 etiquetas) están ahora cubiertos:
 - Doc: `docs/capture/s134-svrnum-vdnum-status.md`.
 
 ## S176 — dos lectores más del state IMX210 (22-10-2026)
+
+**Límite de auditoría 24-10-2026:** no están disponibles los artefactos, informe
+ni test anunciados en esta sección. El resumen siguiente queda sin certificar;
+no tratarlo como evidencia reproducida ni como hito cerrado.
 
 REA/bytes clasifican `0x4386140a` como load del state pointer seguido por lectura de `state+0xac` en `0x43861410`; si el byte es cero, la cola usa default 6. `0x438693ec` carga el mismo pointer y el bloque lee bytes `+0x30..+0x37`, copiando ceros/defaults a un objeto distinto apuntado por `r6`. No hay store a state ni a gates `+3/+6` en esos dos procedimientos. **Límite local:** campos estáticos cero no determinan runtime, y no se concluye ausencia global. S176 (informe independiente ausente; evidencia en `analysis/s176_imager_state_readers/state_readers.json`), reproducción `analysis/s176_imager_state_readers/state_readers.json` (3 tests).
 
@@ -1943,7 +1968,7 @@ consumidor del mensaje de `0x43ad96fa`.
 
 ## S310 — `0x43ad9704` es un thunk de llamada virtual (22-10-2026, agente B)
 
-`0x43ad96fa`/`0x43ad9704` son thunks `obj->vtable[slot](...)`; la familia contigua usa slots
+`0x43ad96fa`/`0x43ad9704` son thunks de llamada a `obj->vtable[slot]`; la familia contigua usa slots
 `0x64, 0x94, 0x58, 0x74, 0x40, 0x18`. El modo silent se pasa como argumento de una llamada
 virtual (`vtable+0x64`), no a un “mensaje”. El consumidor real depende del objeto/vtable y queda
 **NO_VERIFICADO**; corrige la descripción de S308. [S310](../docs/capture/s310-vtable-thunk.md),

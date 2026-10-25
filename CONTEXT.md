@@ -1,5 +1,16 @@
 # Continuidad
 
+## Auditoría integral — 24-10-2026
+
+Referencia de esta revisión: [informe y cola técnica](docs/capture/repo-audit-2026-10-24.md).
+Backlogs A/B/C y NEEDS-HUMAN sincronizados por entregables y límites: S206/S207
+y S301 publicados, S305 parcial, productor CAIF y propagación abiertos. S207
+no prueba ausencia de fin de integración; JSON/generador lo dejan NO_VERIFICADO.
+Faltan los artefactos anunciados de S176. Cobertura 133/372 documental, 226
+etiquetas pendientes, 66 afirmaciones S605–S627 sin prueba; no sumar relaciones
+automáticas como tareas. P1–P21 diferidas, S51 A/B/C=NO. Las secciones de fechas
+anteriores conservan contexto histórico, no sustituyen esta cola.
+
 ## Revisión de OpenCode S605–S627 — 23-10-2026
 
 [Auditoría](docs/capture/S605-S627_tabla_hallazgos.md): corrige la validación original; 263 tests pasaban pese a siete direcciones gemelas falsas, 13 textos sin bytes finales y cinco longitudes adicionales incorrectas. Corregidos los 23 JSON e informes y 21 verificadores individuales obsoletos. Se verifican 94 trazas, siete gemelas, 21 núcleos y metadatos. El logger dual de S607/S611/S616 está verificado estáticamente para seis/cinco/cuatro trazas; las otras 20 fichas, equivalencias, recuentos differential y ausencia funcional de relación con el obturador siguen NO_VERIFICADO. S51 sin cambios. Ampliación S605–S627: diez marcadores `level`/`sub_prefix` verificados; S625 corregido a prefijo `[CAM_UTIL_SENS]: ` (17 B). Quedan **66 de 69** afirmaciones de logger dual/equivalencias sin verificar. [Auditoría](docs/capture/S605-S627_tabla_hallazgos.md).

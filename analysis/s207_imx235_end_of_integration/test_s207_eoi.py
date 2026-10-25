@@ -9,8 +9,8 @@ Hechos de bytes (no se ejecuta firmware):
       hasta rastrear todo el dataflow (brecha documentada S57-F).
   H2: No hay cadenas de segunda cortina / fin de integración como palabras
       NUL-terminadas en av-cam.bin A7S. -> VERIFICADO (bytes).
-  H3: La matriz IMX235 no tiene registro dedicado a "fin de integración"
-      (S57-D D.6 vigente). -> VERIFICADO (bytes de matriz).
+  H3: La semántica de fin de integración de los registros de la matriz
+      permanece NO_VERIFICADO: los bytes no proporcionan nombres funcionales.
 """
 import json
 import unittest
@@ -24,7 +24,7 @@ B = 0x43541000
 EOI_STRINGS_LONG = [b'second curtain', b'2nd curtain', b'shutter close',
                     b'integration end', b'end of integration',
                     b'finish integration', b'curtain close']
-EOI_STRINGS_SHORT = []  # eliminadas: falsos positivos de 3-7 bytes en código ejecutable
+EOI_STRINGS_SHORT: list[bytes] = []  # falsos positivos de 3-7 bytes en código
 
 
 def _c_string_present(d, s):

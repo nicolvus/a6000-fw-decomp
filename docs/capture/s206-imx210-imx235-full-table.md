@@ -59,7 +59,7 @@
 - `analysis/s206_imx210_imx235_full_table/full_table.json` — tabla completa (119 entradas, con ID, dato, subsistema, clasificación).
 - `analysis/s206_imx210_imx235_full_table/full_table.py` (generador).
 - `analysis/s206_imx210_imx235_full_table/test_s206_full_table.py` (3 pruebas de bytes).
-- `tests/test_s206_imx210_imx235_full_table.py` (a crear).
+- `tests/test_s206_imx210_imx235_full_table.py` (existente).
 - `docs/capture/s206-imx210-imx235-full-table.md` (este informe).
 
 ## Siguiente (S207)

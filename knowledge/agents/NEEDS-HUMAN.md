@@ -1,13 +1,15 @@
-# NEEDS-HUMAN — elementos que requieren cámara o decisión humana
+# Elementos diferidos y trabajo estático restante
 
-| Ítem | Sesión | Por qué requiere humano/cámara | Estado |
-|---|---|---|---|
-| Prueba P1: observar `0x83e9bd50` (G+0x808) en cambios de menú | S384/S51 | Requiere cámara física A6000 + autorización de usuario | BLOCKED |
-| Prueba P7: prueba objetiva (hélice/LED) para obturador electrónico | S384/S51 | Requiere cámara física A6000 + autorización de usuario | BLOCKED |
-| Pruebas P2–P8 del physical-test-plan | S384/S51 | Requieren cámara física A6000 + autorización de usuario | BLOCKED |
-| Análisis REA de libObj.so | S380–S383 | La apertura funciona; la consulta exacta expiró a los 300 s. Sesión cerrada tras la auditoría | PENDIENTE LOCAL; no se ha demostrado que requiera humano |
-| Quién llama a RecordStill::Execute (0x90b248) | S381/S382 | Dos sitios BL confirmados; los supuestos llamadores 0x7484dc y 0x755af8 eran falsos | PENDIENTE ESTÁTICO; no requiere humano por ahora |
-| Registro y arranque de cola `0x40193` | S384 corregido | [Receptor e instalador recuperados](../../docs/capture/queue-40193-flow-2026-10-23.md): `0x4379e93c` instala `0x4381d16d` en descriptor `0x43ea048c`/campo+0x14=`0x46`. Falta consumidor de arranque, callback OSAL Linux y enlace Linux↔LIRO | PENDIENTE ESTÁTICO; no requiere humano por ahora |
-| Escritores de `svr_num`/`VdNum` (S134) | S134 | No localizados estáticamente (relleno por copia de struct en runtime) | BLOCKED |
+Actualizado el 24-10-2026. [Cola y límites vigentes](../../docs/capture/repo-audit-2026-10-24.md).
 
-Ninguna prueba física ha sido ejecutada. S51 sigue A=NO, B=NO, C=NO sin cambios.
+| Elemento | Estado y alcance |
+|---|---|
+| P1–P21 | Propuestas sin ejecutar. Todas diferidas por instrucción del usuario hasta completar la ingeniería inversa necesaria; no solo pendientes de autorización. P0 es preparación. |
+| Apertura/análisis REA de `libObj.so` | Trabajo local. Un timeout previo no demuestra que haga falta intervención humana. Reutilizar primero evidencia exportada. |
+| RecordImage `0x90b248` y RecordStill `0x908afc` | Identidades y consumidor de 25 `call_fn` recuperados en la [auditoría de contrato](../../docs/capture/recordstill-contract-audit-2026-10-23.md). Restan activación de la entrada concreta, callees y enlace con `0x40193`; trabajo estático. |
+| Cola `0x40193` | [Instalador y consumidor de arranque conocidos](../../docs/capture/queue-40193-flow-2026-10-23.md). Restan servicio indirecto `+0x3c`, callback OSAL Linux y transporte Linux↔LIRO. No está bloqueado por cámara. |
+| Escritores de `svr_num`/`VdNum`, `S[0]` y gates | Procedencia no cerrada en el alcance documentado. No está demostrado que solo se pueda resolver en cámara; continuar estáticamente según la matriz S51. |
+| Semántica eléctrica IMX210/IMX235 | Buscar datasheets/evidencia documental. Si la evidencia estática no permite cerrar un punto, registrar el límite antes de proponer observación física. |
+
+Ninguna prueba P1–P21 ejecutada en estos planes; S64 es un antecedente distinto.
+S51 sigue A=NO, B=NO, C=NO.

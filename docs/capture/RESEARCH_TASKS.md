@@ -1,5 +1,10 @@
 # RESEARCH_TASKS — registro de coordinación (mantiene solo el coordinador)
 
+**Registro histórico, no backlog vigente.** Las filas OPEN/NO ENTREGADO de
+cada ronda reflejan su fecha y pueden tener resolución en rondas posteriores.
+Para decidir qué retomar, usar la [cola auditada del 24-10-2026](repo-audit-2026-10-24.md).
+Por ejemplo, D se entregó en ronda 3 y el receptor LIRO `0x40193` ya está localizado.
+
 ## Estado vigente S30 (17-10-2026)
 
 - Captura nueva sin cortinas: pendiente; la ruta fija demostrada usa CAIF/Darwin.

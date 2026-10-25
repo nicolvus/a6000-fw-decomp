@@ -1,5 +1,15 @@
 # Estado vigente — Sony A6000 reverse engineering
 
+## Auditoría integral y pendientes — 24-10-2026
+
+[Referencia vigente de esta revisión](capture/repo-audit-2026-10-24.md): backlogs
+sincronizados, S207 sin prueba de semántica eléctrica y S176 sin artefactos
+disponibles. Cola técnica: `0x40193` (tres aristas restantes), activación de
+RecordImage/RecordStill, IMX210/YC/archivo/cortina, S305 y productor CAIF.
+Los 133/372 son cobertura documental; las relaciones automáticas no son tareas
+independientes. P1–P21 siguen diferidas. S51 A/B/C=NO. Los resúmenes de fechas
+anteriores no reemplazan este estado ni los límites de las fuentes.
+
 ## Cobertura estática antes de pruebas físicas — 24-10-2026
 
 [Matriz de rutas y límites REA/Unicorn](capture/s51-static-coverage-and-tool-limits.md):

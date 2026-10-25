@@ -55,12 +55,13 @@ def main():
         'eoi_strings_a6000_short': eoi_a6000_short,
         'imx235_registers': len(rows),
         'imx235_dirs': sorted(imx235_dirs),
-        'imx235_has_eoi_dedicated_register': False,
+        'imx235_has_eoi_dedicated_register': None,
+        'eoi_mechanism_status': 'NO_VERIFICADO',
         'exposure_timer_end_no_register_rewrite': True,  # S57-F: ExposureTimerEnd! no reescribe sensores
-        'conclusion': 'No hay registro ni mecanismo de fin de integracion / segunda '
-                   'cortina electronica en A7S que falte al IMX210; ambos carecen '
-                   'de operacion de fin de integracion identificada (NO_VERIFICADO '
-                   'si el sensor la hace internamente).',
+        'conclusion': 'No se identifico una operacion de fin de integracion con este '
+                   'barrido de cadenas y direcciones. Existencia, ausencia y equivalencia '
+                   'del mecanismo entre IMX235 e IMX210: NO_VERIFICADO. Los bytes de '
+                   'la matriz no asignan semantica electrica a los registros.',
     }
     path = ROOT / 'analysis/s207_imx235_end_of_integration/full_eoi.json'
     path.parent.mkdir(parents=True, exist_ok=True)

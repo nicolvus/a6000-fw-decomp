@@ -1,5 +1,15 @@
 # Progreso — sistema de conocimiento Sony A6000
 
+## Auditoría de documentación y pendientes — 24-10-2026
+
+[Informe integral](../docs/capture/repo-audit-2026-10-24.md): inventarios y backlogs
+sincronizados; se retira la certeza funcional de S207, se registra evidencia
+faltante de S176 y se reparan enlaces del archivo histórico y de los derivados.
+Las listas de «pendiente» de las fases siguientes son instantáneas: fases
+12.4–12.10 tienen avances posteriores y no deben reabrirse enteras por leer un
+resumen anterior. Persisten límites de extracción semántica y preguntas técnicas
+indicadas en el informe; no se certifica todo el grafo por sus contadores.
+
 ## Investigación 0x40193 — seguimiento S384 (23-10-2026)
 
 - [Evidencia y límites](../docs/capture/queue-40193-flow-2026-10-23.md): nueve
@@ -14,8 +24,9 @@
   22 consultas exportadas; trazas constructor/copia/RPC sin truncamiento. REA
   confirma GOT/store/BL pero no define el instalador ni el receptor como funciones.
   Bindings y destinos indirectos OSAL pendientes. Sesión cerrada tras el hito.
-- Próximo paso exacto: seguir consumidor de `0x43b7fb9c` y descriptor `0x43ea048c` hasta arranque,
-  y separar callback OSAL Linux/enlace Linux↔LIRO de la instalación LIRO probada.
+- Actualización 24-10-2026: el consumidor del descriptor y el bucle de arranque
+  ya están recuperados. Restan destino/efecto del servicio indirecto `+0x3c`,
+  callback OSAL Linux y transporte Linux↔LIRO, según el trazado enlazado.
 
 ## Investigación S140 — mapa de registros IMX210
 

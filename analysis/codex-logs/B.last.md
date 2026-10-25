@@ -1,1 +1,1 @@
-[docs/capture/sfra-mpr-buffer-bridge.md](docs/capture/sfra-mpr-buffer-bridge.md) — B-01–B-05 documentados: estructuras, propiedad DMM, corrección sobre EXIF y copia teórica; compatibilidad final con MPR aún NO VERIFICADA.
+[docs/capture/sfra-mpr-buffer-bridge.md](../../docs/capture/sfra-mpr-buffer-bridge.md) — B-01–B-05 documentados: estructuras, propiedad DMM, corrección sobre EXIF y copia teórica; compatibilidad final con MPR aún NO VERIFICADA.
