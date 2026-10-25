@@ -130,3 +130,27 @@ una por sus cadenas de depuración: `PowerOn`/`PowerOff` (6/7), `SetMode` (8), `
 - **S301:** el volcador de estado de A7S `0x437e0974` y el de A6000 `0x43858338` son estructuralmente idénticos
   (1599/1599 instrucciones; solo difieren offsets GOT), de modo que las diferencias de S301 están en los lectores, no
   en el volcador.
+
+## 8. REA sobre `libObj.so`
+
+Se abrieron tres sesiones únicas con `session_daemon.py`: `av-cam` A7S (listo a los 852 s), `av-cam` A6000 (823 s) y
+`libObj.so` A6000 (900 s, `provider_id=ghidra`, ELF autodetectado). Resultado:
+
+- `av-cam` A7S/A6000: consultas `xrefs` y `procedure_pseudo_code` operativas; confirmaron los llamadores de `0x4379ec04`
+  (`0x437b6f74`, `0x43813e94`), el constructor CAIF A7S (offsets `0x76c`/`0x12`/`0x0d`) y que el constructor A6000
+  `0x43841070` no lee ningún selector Silent.
+- `libObj.so`: la apertura **no falla** (la sesión llegó a «lista»), pero la primera consulta
+  (`resolve_containing_procedure`) superó los **1700 s** del cliente sin responder. Es la limitación ya registrada
+  (consultas de 300 s en S178/S380) y confirma que no hace falta intervención humana: el trabajo sobre `libObj.so` se
+  hizo con Capstone/LLVM sobre los bytes originales, con el índice de inicios por `.ARM.exidx`, PLT por relocaciones y
+  resolución de RTTI/vtables (`analysis/s402_static_closure/fw.py`). Esa ruta reproducible sustituye a REA aquí; una
+  consulta vacía o sin respuesta de REA no prueba ausencia.
+- Sesiones cerradas al terminar; el log compartido de REA no se versiona.
+
+## Límites que permanecen (no son pendientes estáticos nuevos)
+
+- Quién emite la secuencia `0x3026` y el evento de UI de PbCap que dispara la acción 6.
+- Significado de los códigos de modo `+8` de la cola `0x40193` y recepción en ejecución.
+- Escritura `S[0]=&G` en A7S (identidad de los bloques de ajustes) y consumidor del byte A6000 `+0x238`.
+- Llamador que fija `params[+9]` en `SetExposure` y significado eléctrico de los bits de modo (sin hojas de datos).
+- Acción real de Darwin sobre las bobinas; todo lo físico. P1–P21 y S51 A/B/C=NO sin cambios.
