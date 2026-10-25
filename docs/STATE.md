@@ -287,3 +287,5 @@ del propio sistema de conocimiento (fases completadas/pendientes).
 
 Auditoría vigente de la lista de pendientes:
 [sincronización del 24-10-2026](capture/pending-sync-audit-2026-10-24.md).
+
+Pendientes por cerrar: [PENDIENTES.md](PENDIENTES.md); se actualiza en cada tarea y cada hallazgo nuevo se añade allí.

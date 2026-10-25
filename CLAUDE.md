@@ -27,3 +27,5 @@ REA y Ghidra comparten motor; verifica lo decisivo contra bytes/instrucciones. R
 
 Cuenta GitHub: el usuario de este repo es `nicolvus`. Antes de cualquier operación contra `origin`
 (push, fetch, `gh`), ejecuta `gh auth switch -u nicolvus` y confirma con `gh auth status` que está activa.
+
+Pendientes: `docs/PENDIENTES.md` es el índice maestro de lo que falta. Regla permanente: toda tarea que se haga, descarte o reabra actualiza ese documento en el mismo commit, y todo pendiente nuevo que se descubra se añade allí (ID nuevo, origen y criterio de cierre). No se cierra una fase sin revisarlo.

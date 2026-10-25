@@ -2250,3 +2250,5 @@ se concatenan y cada transmisión P2S termina en `00`. La evidencia previa de S5
 [S322](../docs/capture/s322-frame-format.md), `analysis/s322_frame_format/frame_format.json`.
 
 **Siguiente:** auditar el productor/alcanzabilidad de la matriz dinámica `0x43e8de00` de S321.
+
+Pendientes por cerrar: [docs/PENDIENTES.md](../docs/PENDIENTES.md) (índice maestro; actualizar en cada tarea y añadir lo que se descubra).

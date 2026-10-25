@@ -224,3 +224,7 @@ La versión extensa anterior del README se conserva en:
 
 Auditoría vigente de la lista de pendientes:
 [sincronización del 24-10-2026](docs/capture/pending-sync-audit-2026-10-24.md).
+
+## Pendientes
+
+Lo que falta por cerrar está en [`docs/PENDIENTES.md`](docs/PENDIENTES.md), índice maestro que se actualiza en cada tarea.
