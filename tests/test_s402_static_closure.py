@@ -184,3 +184,15 @@ def test_sequence_3026_is_record_still_image_and_pb_triggers():
     assert pb["locales"] == ["0x4", "0x109"]
     assert pb["mensajes"] == ["0x35001004", "0x35003002", "0x3a494026"]
     assert events["ModelPbCap_accion6"]["estado_de_entrada"] == [5]
+
+
+def test_local_event_posts_and_message_constructors():
+    import followup_blocks
+
+    pb = followup_blocks.local_posts_in(0x659000, 0x65F000)
+    assert pb["0x109"] == ["0x65a8a4"] and pb["0x106"] == ["0x65bf58"]
+    assert "0x4" not in pb and "0x2" not in pb
+    cap = followup_blocks.local_posts_in(0x613000, 0x615000)
+    assert sorted(cap) == ["0x1", "0x7", "0x9"]
+    assert followup_blocks.message_constructors() == {
+        "0x3002": ["0x611748", "0x65a204"], "0x1004": ["0x65a56c", "0x65df04"], "0x4026": ["0x659de4"]}

@@ -123,6 +123,54 @@ def pb_action_events() -> dict:
     }
 
 
+IMM = re.compile(r"r\d+, #(0x[0-9a-f]+|\d+)$")
+MOVES = ("movs", "mov.w", "movw", "mov")
+# Constructor de id (0x120168) y envoltorios que lo llaman; valor = registro con el evento local.
+POSTERS = {0x120168: "r2", 0x420630: "r1", 0x420656: "r1", 0x132230: "r1", 0x131eb0: "r1", 0x131f28: "r2", 0x131f76: "r2"}
+MESSAGE_CATEGORY = {0x1004: 0x3500, 0x3002: 0x3500, 0x4026: 0x3A49}
+
+
+def _imm(operands: str, reg: str = "") -> int | None:
+    """Inmediato de `rN, #imm` (si se indica `reg`, solo para ese registro)."""
+    match = IMM.match(operands)
+    return int(match[1], 0) if match and operands.startswith(f"{reg}") else None
+
+
+def _code(lib) -> list:
+    """Instrucciones de .text de libObj; shortcut: se descarta lo posterior a 0x700000 (datos), válido solo para A6000 fw3.21."""
+    text = lib.e.sections[".text"]
+    decoder = Cs(CS_ARCH_ARM, CS_MODE_THUMB)
+    decoder.skipdata = True
+    return [i for i in decoder.disasm_lite(lib.e.read(text[3], text[5]), text[3]) if i[0] < 0x700000]
+
+
+def local_posts_in(low: int, high: int) -> dict:
+    """Funciones de [low, high) que publican un evento local inmediato (id = 0x12000000 + modelo<<12 + local)."""
+    lib = fw.Lib("A6000")
+    ins = _code(lib)
+    found: dict = defaultdict(set)
+    for i, (a, _, m, o) in enumerate(ins):
+        reg = POSTERS.get(int(o[1:], 16)) if low <= a < high and m in ("bl", "blx", "b.w") and o.startswith("#") else None
+        imm = next((_imm(x[3], f"{reg},") for x in reversed(ins[max(0, i - 12):i])
+                    if reg and x[2] in MOVES and _imm(x[3], f"{reg},") is not None), None)
+        if imm is not None:
+            found[hex(imm)].add(hex(lib.fstart(a)))
+    return {k: sorted(v) for k, v in sorted(found.items(), key=lambda kv: int(kv[0], 16))}
+
+
+def message_constructors() -> dict:
+    """Funciones que cargan a la vez la categoría y el id de los mensajes 0x35001004, 0x35003002 y 0x3a494026."""
+    lib = fw.Lib("A6000")
+    ins = _code(lib)
+    found: dict = defaultdict(set)
+    for i, (a, _, m, o) in enumerate(ins):
+        message = _imm(o) if m in MOVES else None
+        if message in MESSAGE_CATEGORY and any(
+                x[2] in MOVES and _imm(x[3]) == MESSAGE_CATEGORY[message] for x in ins[max(0, i - 8):i + 8]):
+            found[hex(message)].add(hex(lib.fstart(a)))
+    return {k: sorted(v) for k, v in found.items()}
+
+
 def main() -> None:
     a7s = writers_and_readers("A7S", [0x250, 0x56C, 0x570])
     a6000 = writers_and_readers("A6000", [0x238])
@@ -133,6 +181,9 @@ def main() -> None:
         "emisor_ObjMsg_cat_0x3026": emitters,
         "secuencia_0x3026": sequence_class_3026(),
         "eventos_Pb": pb_action_events(),
+        "eventos_locales_Pb": local_posts_in(0x659000, 0x65F000),
+        "eventos_locales_PbCap": local_posts_in(0x613000, 0x615000),
+        "constructores_de_mensaje": message_constructors(),
     }
     OUT.write_text(json.dumps(result, ensure_ascii=False, indent=1), encoding="utf-8")
     print(json.dumps(result, ensure_ascii=False)[:1500])

@@ -9,7 +9,7 @@ Backup `0x3000b` = 256 B con gates `+3`/`+6` = 0; **A7S Silent: UI → LIRO `0x4
 `0x40e3` **sí existe en la A7S** (corrige S401). Ambos drivers de imager conmutan modos de obturación 0–4 (A6000) / 0,1,3,4
 (A7S). **Seguimiento (§9):** el bloque G de A7S coincide en tres desplazamientos escritor/lector (`+0x250/+0x56c/+0x570`);
 el byte A6000 `+0x238` no tiene lector en `av-cam`; único emisor `ObjMsg(0x3a49,0x3026)` = `0x659cb0` (acción 13 de `ModelScalarPb`, estado 4; el id `0x3026` es
-`SequenceRecordStillImageCmd`; acción 6 de `ModelPbCap` = entrada del estado 5); los modos `+8` de `0x40193` son índices de tabla de estado. S51 A/B/C=NO; sin parche ni pruebas físicas.
+`SequenceRecordStillImageCmd`; acción 6 de `ModelPbCap` = entrada del estado 5); los modos `+8` de `0x40193` son índices de tabla de estado (llamadores `CExecSeq`/`CEventDispatcher`, ruta de sonrisa). Segunda pasada con REA: el local `0x109` lo auto-publica `ModelScalarPb` (`0x65a8a4`); el `4` de Pb y el `2` de PbCap no los publica su clase (emisor cruzado = dato de ejecución). S51 A/B/C=NO; sin parche ni pruebas físicas.
 
 ## Captura: seguimiento de los cinco pendientes — 25-10-2026
 

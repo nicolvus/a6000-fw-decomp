@@ -175,7 +175,9 @@ Código y datos: `analysis/s402_static_closure/followup_blocks.py` → `followup
   coincide con el byte global `+0xd2`, lo registra (`0x43901a8c`) y lo pasa como campo `+0x10` a `0x4379d838`. Allí el
   tipo 3/4 (`0x4379dbd0`) lo trata como **índice** (comparaciones con `0x10`, `0x2`, `0x13`) y `0x43aea210(obj, i, v)` guarda
   `obj[0x20+i]=v`: una tabla de bytes de estado por modo. Los códigos `4/5/6/0xa/0xb/0xc/0x14/0x15` son índices de esa
-  tabla, no valores de registro; su nombre/efecto sigue sin observarse.
+  tabla, no valores de registro; su nombre/efecto sigue sin observarse. Segunda pasada: los llamadores de los ocho envoltorios
+  son métodos de `CExecSeq` y `CEventDispatcher`, y las únicas cadenas de esas funciones son `smile_seq.cpp` y `matrix_02_02`
+  (secuencia de detección, no la ruta del obturador).
 - **`params[+9]` de `SetExposure`:** `0x436d6f6c` (entrada de vtable `0x43fcc0b8`, slot `+0x2c`). El slot `+0x2c` lo
   comparten más de cien llamadas virtuales de otras clases y en los siete llamadores con estructura en pila
   (`0x43564608`, `0x4358ff04`, `0x435906c2`, `0x4361017e`, `0x436963d4`, `0x438228cc`, `0x439b1a6a`) no hay `strb` directo a
@@ -183,6 +185,11 @@ Código y datos: `analysis/s402_static_closure/followup_blocks.py` → `followup
   `strh [x,#4]`/`[x,#6]` con una llamada al slot `+0x2c` a menos de 120 instrucciones) dio 10 candidatos, todos falsos
   (empaquetado para otros drivers `0x43b7a…`/`0x43b6…`). `SetExposure` lee `[r1]`, `[r1+4]`, `[r1+6]` (u16) y `[r1+9]` (u8, 5
   casos 0–4). Origen sigue sin cerrar.
+  - Segunda pasada: dos de los siete llamadores (`0x4358ff04`, `0x435906c2`) rellenan un búfer de `0x50` bytes puesto a cero
+    con el slot `+0x1c` del propio objeto (`r1=0`, `r2=búfer`) y lo pasan al slot `+0x2c`; el slot `+0x1c` del IMX210
+    (`0x436d6ca0`) es una rutina de pines, no un getter, así que esos dos llamadores son de otra clase. `0x4361017e` usa otra
+    convención (`r1=sp+0xa4`, `r2=sp+0xa0`). Sin el tipo del receptor (dato de ejecución) el origen de `params[+9]` no es
+    determinable estáticamente.
 - **Acción 6 de `ModelPbCap` y acción 13 de `ModelScalarPb` (cadena completa, 25-10-2026):**
   - El id `0x3026` de la factoría `0x3a9a80` (`movw r1,#0x3026` en `0x3a9b80`) se registra con el creador `0x3a7978`
     (`new 0x6c`; constructor `0x3d3130`, base `SequenceBase`), cuyo typeinfo es
@@ -196,20 +203,40 @@ Código y datos: `analysis/s402_static_closure/followup_blocks.py` → `followup
   - En `ModelPbCap`, la acción 6 es la acción de **entrada del estado 5** (tabla `tbb` de `0x613170`), y ese estado se
     alcanza desde el **estado 2** con el evento local `2` si la guardia `0x61320c` es verdadera (`0x61343a`). La guardia
     consulta `ObjMsg(0x3500,0x2001)` por `IssueCommandSync` y lee el parámetro `0x1000`.
-  - Los eventos locales (`2`, `4`, `0x109`) son enteros pequeños que `0x131fd2` obtiene del id de evento tras el filtro;
-    no se identificó en `libObj` quién los inyecta (no hay `DispatchEvent` con esas constantes en las clases AVBIZ).
-- **REA/`libObj.so`:** sin cambios; se mantiene Capstone. **Triaje:** las seis candidatas nuevas de S402 siguen
+  - Los eventos locales (`2`, `4`, `0x109`) son enteros pequeños que `0x131fd2` obtiene del id de evento tras el filtro.
+- **Quién publica los eventos locales (REA + Capstone, 25-10-2026, segunda pasada):** REA (Ghidra 12.1.4, base `+0x10000`,
+  sha256 `8e8a937a…`) se reabrió sobre `libObj.so` A6000 y respondió en segundos. `0x131fd2` solo convierte: si
+  `id & ~0xfff == 0x12000000 + (modelo<<12)` devuelve `id - base` (modelo = `this+0x18`, `0x11cf18`), así que un local es
+  `0x12000000 + modelo<<12 + local`, construido por `0x120168` (`r0`=base, `r1`=modelo, `r2`=local). Los envoltorios
+  (`0x420630`/`0x420656`, `0x132230`, `0x131eb0`, `0x131f28`/`0x131f76`) publican siempre al modelo de su propio `this`.
+  - **`0x109` lo publica el propio `ModelScalarPb`:** el método `0x65a8a4` (llamado en `0x65b1f2` desde el manejador
+    `0x65b0bc` al procesar el evento `4`, rama con `0x65a892` verdadera) publica `0x10a` y después `0x109` con carga
+    `{r6, 0xb4, 0}` (`0x65a95e`). Con `0x109` el manejador llega a `0x659cb0` (emisor de `ObjMsg(0x3a49,0x3026)`, `0x65b270`);
+    con `4` y `0x65a892` falsa llega a `0x659cb0` directamente (`0x65b1fe`). Los demás locales de Pb son `1` (init), `0x101`–`0x104`,
+    `0x106` (`0x65bf58`) y `0x10a`; `4` y `2` no los publica ningún método de `ModelScalarPb`.
+  - **`ModelPbCap`:** sus métodos solo publican `1`, `7` y `9` (`0x613e3c`, `0x613718`, `0x6135dc`); el local `2` no sale de la
+    clase. El único método con local `2` cercano (`0x611ec4`, acción 1 de la clase con vtable `0x10123b4`) publica a su propio
+    modelo, no a PbCap.
+  - **Mensajes:** las únicas construcciones `ObjMsg(cat,id)` de `0x35001004`, `0x35003002` y `0x3a494026` son consultas dentro del
+    propio manejador (`0x65a56c`, `0x65a204`, `0x659de4`) y de `0x65df04`/`0x611748`; los tres valores de 32 bits solo figuran
+    en receptores de `libObj` y no aparecen en ningún otro de los 320 ELF del firmware ni en `av-cam.bin`.
+  - **Cerrado como no determinable estáticamente:** quién publica el local `4` a `ModelScalarPb` y el `2` a `ModelPbCap`, y quién
+    envía esos tres mensajes. Quedan solo emisores cruzados con el modelo destino en registro (`0x4ae6ac`, `0x50fb42`,
+    `0x5e2f20`, `0x699ba4` para `2`; `0x5a760c`, `0x5a7c54`, `0x621440`, `0x6b2690` para `4`); el número de modelo de cada clase lo
+    asigna el gestor que las carga por nombre (`Model*ToInstance` solo figura en `.dynsym`), es dato de ejecución.
+- **REA/`libObj.so`:** reabierto en la segunda pasada (ver arriba). **Triaje:** las seis candidatas nuevas de S402 siguen
   `VIGENTE` sin cierre; la revisión manual exige el protocolo con hashes de `manual_review.json` (no se improvisó).
 
 ## Límites que permanecen (no son pendientes estáticos nuevos)
 
-- Quién inyecta los eventos locales `2` (`ModelPbCap`) y `4`/`0x109` (`ModelScalarPb`), y si (0x3a49, 0x3026) crea la
-  secuencia: el id → clase está probado por bytes; el envío efectivo en ejecución no.
+- Quién publica el local `4` a `ModelScalarPb` y el `2` a `ModelPbCap` (el `0x109` es auto-envío probado) y quién envía los
+  tres mensajes: el modelo destino de los emisores cruzados es dato de ejecución; si `(0x3a49, 0x3026)` crea la secuencia, el
+  id → clase está probado por bytes y el envío efectivo no.
 - Nombre y efecto de cada índice de modo `+8` de la cola `0x40193` (solo se probó que es un índice de tabla de estado).
 - Escritura `S[0]=&G` en A7S (evidencia estructural reforzada, no asignación) y lector del byte A6000 `+0x238` (no existe en `av-cam`).
 - Origen de `params[+9]` en `SetExposure` y significado eléctrico de los bits de modo (sin hojas de datos).
 - Revisión manual de las filas `VIGENTE` nuevas del triaje: el protocolo fija `revision_destinos`; los documentos de S402 no
   existen en esa revisión, así que cerrarlas exige una nueva campaña de auditoría, no un cambio local.
-- REA sobre `libObj.so`: no se repitió (servidor cerrado a petición; la primera consulta tardó más de 1700 s). Todo lo anterior
-  usa Capstone y bytes originales.
+- REA sobre `libObj.so`: reabierto el 25-10-2026 (consultas en segundos); las conclusiones se verificaron con Capstone sobre los
+  bytes originales. Código: `local_posts_in` y `message_constructors` en `followup_blocks.py`.
 - Acción real de Darwin sobre las bobinas; todo lo físico. P1–P21 y S51 A/B/C=NO sin cambios.
