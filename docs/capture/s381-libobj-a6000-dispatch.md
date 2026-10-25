@@ -23,7 +23,7 @@ Dos sitios BL a `0x90b248`: `0x90de2e` y `0x91634e`, dentro de `0x90d7e8..0x90e1
 
 ## Pendiente
 
-El callback OSAL Linux de `0x40193` sigue NO_VERIFICADO. [El trazado posterior](queue-40193-flow-2026-10-23.md) sí verifica literales LDR, cuatro emisores, receptor LIRO e inicializador `0x4379e93c` que instala su puntero en descriptor `0x43ea048c`. Pendientes: consumidor de arranque de ese descriptor y enlace Linux↔LIRO. Las xrefs al registrador OSAL no demuestran sus argumentos; el análisis estático sigue abierto.
+El callback OSAL Linux de `0x40193` sigue NO_VERIFICADO. [El trazado posterior](queue-40193-flow-2026-10-23.md) verifica literales LDR, cuatro emisores, receptor LIRO e inicializador `0x4379e93c` que instala su puntero en descriptor `0x43ea048c`. También se verificaron el consumidor estático del descriptor (`0x4379e8f4 → 0x43b2a162 → 0x43560bb0`) y el bucle de arranque que llama la fila 189 de 372 inicializadores. Pendientes: destino y efecto del servicio indirecto, registro OSAL Linux y enlace Linux↔LIRO. Las xrefs al registrador OSAL no demuestran sus argumentos; el análisis estático sigue abierto.
 
 ## Reproducción
 

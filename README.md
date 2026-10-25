@@ -8,7 +8,7 @@
 
 Proyecto de ingeniería inversa del firmware **Sony A6000 (fw 3.21)**, con foco en la línea de captura y el obturador electrónico.
 
-> Restricciones activas: sin ejecutar firmware en cámara, sin flasheo y sin pruebas físicas no autorizadas.
+> Restricciones activas: sin ejecutar firmware en cámara ni flashear; ninguna prueba física hasta terminar la ingeniería inversa necesaria de la cadena de captura.
 
 ## Estado rápido
 
@@ -143,13 +143,13 @@ S380: `libObj.so` A6000 fw3.21 tiene 26 secciones, 1387 imports FUNC y 1771 expo
 
 S381: despacho corregido mediante resolución PLT → GOT. Hay 83/53 candidatos BL/BLX a los registradores de callback síncrono/asíncrono; recuperar el registro de `0x40193` sigue pendiente. [Informe](docs/capture/s381-libobj-a6000-dispatch.md).
 
-S382: dos sitios BL confirmados hacia `RecordStill::Execute`: `0x90de2e` y `0x91634e`. Los supuestos llamadores `0x7484dc` y `0x755af8` eran artefactos de recalcular un destino absoluto. Límites de función y despacho indirecto NO_VERIFICADO. [Informe](docs/capture/s382-recordstill-callers.md).
+S382: dos sitios BL confirmados hacia **RecordImage** (`0x90b248`): `0x90de2e` y `0x91634e`. Los supuestos llamadores `0x7484dc` y `0x755af8` eran artefactos de recalcular un destino absoluto. Los límites de los dos contenedores y el consumidor indirecto `StateMgr::CallFunc` se recuperaron después; su activación real sigue NO_VERIFICADO. [Informe](docs/capture/s382-recordstill-callers.md).
 
 S383 mensajes `…ForLiro` y SilentShutter en `libObj.so` A6000: los 5 nombres del obturador (`SetSilentShutterModeForLiro`, `SetShutDriveForLiro`, `SetFrontEShutterModeForLiro`, `SetIrisDriveForLiro`, `SetDriveModeForLiro`) están **rechazados** (NON SUPPORTED). `SetShutterTypeForLiro` **no está** en A6000 (solo A6300). Sin efecto en S51. [`docs/capture/s383-forliro-silentlibobj.md`](docs/capture/s383-forliro-silentlibobj.md).
 
 S384 corregido: **9 literales `.text` A6000 con LDR**, transporte de 16 B hasta `osal_snd_msg` y receptor LIRO `0x4381d16c` verificados. `0x4379e93c` instala su puntero en descriptor `0x43ea048c` (campo+0x14=`0x46`). El bucle `0x4356082c`, alcanzable desde una entrada de cabecera LIRO, consume los 372 inicializadores e incluye `0x4379e93c`. `0x4379e8f4 → 0x43b2a162 → 0x43560bb0` consume el descriptor. Pendientes: efecto del servicio indirecto, callback OSAL Linux y enlace Linux↔LIRO. [Informe y evidencia](docs/capture/queue-40193-flow-2026-10-23.md).
 
-S385: métricas ELF A6000/A7S comparadas; `RecordStill::Execute` en A7S NO_VERIFICADO, con referencias a cadenas recuperadas para continuar. No se demuestra ausencia de función ni del ID `0x40193`. [Informe](docs/capture/s385-libobj-a6000-vs-a7s-diff.md).
+S385: métricas ELF A6000/A7S comparadas. Las parejas RecordStill `0x908afc`/`0x847e1c` y RecordImage `0x90b248`/`0x84a568` se identificaron por contrato y bytes; la equivalencia de todos sus callees y la activación real siguen NO_VERIFICADO. [Informe](docs/capture/s385-libobj-a6000-vs-a7s-diff.md) · [contrato actualizado](docs/capture/recordstill-contract-audit-2026-10-23.md).
 
 ## Agente C — ruta de control: configuración → LIRO → imager (S401+)
 
@@ -199,3 +199,6 @@ Responder con evidencia estática si la A6000 puede soportar captura totalmente 
 
 La versión extensa anterior del README se conserva en:
 [`docs/history/README-historial-2026-10-21.md`](docs/history/README-historial-2026-10-21.md)
+
+Auditoría vigente de la lista de pendientes:
+[sincronización del 24-10-2026](docs/capture/pending-sync-audit-2026-10-24.md).

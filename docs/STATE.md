@@ -269,3 +269,6 @@ python3 scripts/knowledge/search.py claim docs/capture/<doc>.md   # qué lo corr
 
 Ver [knowledge/PROGRESS.md](../knowledge/PROGRESS.md) para el estado de implementación
 del propio sistema de conocimiento (fases completadas/pendientes).
+
+Auditoría vigente de la lista de pendientes:
+[sincronización del 24-10-2026](capture/pending-sync-audit-2026-10-24.md).

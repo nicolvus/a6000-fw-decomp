@@ -86,16 +86,21 @@ Regresiones de contrato y límites: `analysis/s380_libobj_map/tests/test_recordi
 
 | Patrón | A6000 fw3.21 | A7S fw3.20 |
 |---|---|---|
-| Word LE 0x00040193 (`93 01 04 00`) en .rodata | 0 sitios | Pendiente |
+| Word LE 0x00040193 (`93 01 04 00`) en .rodata | 0 sitios | 0 sitios (S384) |
 | Word LE 0x00000193 (`93 01 00 00`) en .rodata | 0 sitios | Pendiente |
 | Thumb movw #0x0193 (`46 F2 93 F9`) | 0 sitios | Pendiente |
 | Thumb movt #0x0040 (`41 C2 40 F8`) | 0 sitios | Pendiente |
 | ARM movw #0x0193 (`E3000193`) | 0 sitios | Pendiente |
 | ARM movt #0x0040 (`E3400040`) | 0 sitios | Pendiente |
-| String ASCII "40193" | 0 sitios | Pendiente |
+| String ASCII "40193" | 0 sitios | 0 sitios (S384) |
 
-**A6000: 0 sitios en todos los patrones** (VERIFICADO por barrido de bytes).
-**A7S: pendiente** — requiere el mismo barrido.
+**A6000: cero coincidencias de los patrones históricos de la tabla**; los
+MOVW/MOVT allí no codifican lo que afirmaban y no prueban ausencia del ID.
+**A7S: actualizado por S384** — cero palabras LE del ID completo en
+`.rodata`/`.data` y cero cadenas ASCII `40193`; los patrones MOVW/MOVT de la
+tabla son inválidos y no establecen un negativo de código. El flujo A6000
+de emisión y recepción se documenta en
+[el trazado posterior](queue-40193-flow-2026-10-23.md).
 
 ## 7. Clasificación de diferencias
 
@@ -110,15 +115,15 @@ Regresiones de contrato y límites: `analysis/s380_libobj_map/tests/test_recordi
 | NEEDED libs | IDÉNTICO | Las mismas 17 librerías |
 | Direcciones de exports | DISTINTO | Offsets no constantes (layout diferente) |
 | RecordStill / RecordImage | Parejas estructurales recuperadas | Cadenas, ABI y llamada anidada; equivalencia de todos los callees NO_VERIFICADO |
-| ID de cola 0x40193 | NO_VERIFICADO | Negativo acotado en datos; patrones MOVW/MOVT históricos inválidos, ver S384 |
+| ID de cola 0x40193 | PARCIAL | Emisión/recepción A6000 y consumidor estático del descriptor demostrados después; registro OSAL Linux y enlace Linux↔LIRO NO_VERIFICADO, ver S384 y trazado posterior |
 
 ## 8. Bloqueos
 
 | Ítem | Por qué |
 |---|---|
 | Equivalencia de ejecución A6000/A7S | Parejas estáticas identificadas; falta validar semántica de callees y comportamiento físico |
-| Búsqueda 0x40193 en A7S | Requiere barrido de bytes en .rodata de A7S |
-| Despacho indirecto A6000 | Dos contenedores recuperados; 25 punteros Thumb al primero. Consumidor BX/BLX y exhaustividad NO_VERIFICADO |
+| Flujo 0x40193 en A7S | El negativo de datos ya se midió; la correspondencia funcional de envío/recepción A7S no está demostrada |
+| Despacho indirecto A6000 | Dos contenedores recuperados; 25 punteros Thumb al primero y consumidor `StateMgr::CallFunc` demostrados. Activación concreta y exhaustividad NO_VERIFICADO |
 | Quién registra callback de cola 0x40193 | PLT y llamadas estáticas recuperados en S381; falta seguir argumentos hasta ese ID |
 
 **Documentado en knowledge/agents/NEEDS-HUMAN.md**

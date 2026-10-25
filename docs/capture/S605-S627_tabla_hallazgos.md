@@ -74,7 +74,7 @@ y se contrastaron nuevamente los bytes con Capstone: prólogo `0x43902718` y
 | S625: `[ADR]` como prefijo de 5 B | RECHAZO | Es un marcador interno en `0x43cce418`; el inicio `0x43cce3fa` contiene `[CAM_UTIL_SENS]: `, 17 B. Corregidos JSON, test, verificador e informe. |
 | Aceptar un prefijo por su longitud | RECHAZO | Ahora debe coincidir con el inicio real de cada traza; mutarlo sin variar longitud produce error. |
 | Gemelas con campos omitidos | RECHAZO | `twin_vaddr`, `twin_text` y `delta` deben estar juntos; una gemela incompleta ya no desaparece silenciosamente del chequeo. |
-| Declarar logger o equivalencias verificadas sin evidencia | RECHAZO | El comando falla si los estados guardados difieren del cálculo; un `logger_dual` distinto de `null` también falla. |
+| Declarar logger o equivalencias verificadas sin evidencia | RECHAZO | El comando falla si los estados guardados difieren del cálculo; `logger_dual=true` exige rutas de emisión validadas. |
 | Campos por traza desconocidos | PENDIENTE / NO_VERIFICADO | Se enumeran en `other_claims.trace_fields`; ya no quedan fuera del inventario. |
 | `differential`, parentesco de módulos, símbolos y semántica | PENDIENTE / NO_VERIFICADO | Se conservan valores históricos con estado explícito, sin criterio reproducible ni referencias/instrucciones que los conviertan en hechos funcionales. |
 
@@ -85,7 +85,7 @@ campos desconocidos, flag de logger y estados positivos guardados.
 
 Cada JSON incluye estado para trazas, gemelas, núcleos, metadatos, logger,
 equivalencias, obturador, esquema `differential` y otros campos.
-`logger_dual=null` significa desconocido salvo S611, que tiene evidencia
+`logger_dual=null` significa desconocido salvo S607, S611 y S616, que tienen evidencia
 estática y `logger_dual=true`. La etiqueta histórica
 `shutter_line=NEGATIVO ACOTADO` no acredita ausencia funcional.
 
