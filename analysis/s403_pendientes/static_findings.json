@@ -1,0 +1,116 @@
+{
+ "E2": {
+  "check": "0x907ba0",
+  "pool": "0x907c74",
+  "id_comparado": "0x10000003",
+  "fila_de_estado_mensaje": "0x10000005",
+  "devuelve_1_para_la_fila": true,
+  "ldr": [
+   "ldr r3, [pc, #0xa4]"
+  ]
+ },
+ "E4": {
+  "tabla": "0x43ca530e",
+  "bytes_0_10": [
+   0,
+   0,
+   1,
+   1,
+   0,
+   1,
+   1,
+   1,
+   1,
+   1,
+   0
+  ],
+  "mascara_1": "ands r1, r3, #0x708",
+  "mascara_0": "ands r5, r3, #0xf3",
+  "mascara_2": "tst.w r3, #4",
+  "limite": "cmp r1, #0xa"
+ },
+ "E5": {
+  "a6000_anclas_a_G": 262,
+  "a6000_accesos_0x238": [
+   {
+    "ancla": "0x438032da",
+    "addr": "0x438032dc",
+    "insn": "str.w r2, [r3, #0x238]"
+   }
+  ],
+  "a7s_anclas_a_S": 73,
+  "a7s_stores_en_S0": []
+ },
+ "E8": {
+  "lector1": [
+   {
+    "callee": "0x43861400",
+    "caller": "0x437b5e70",
+    "sitios": [
+     "0x437b5f6c"
+    ]
+   },
+   {
+    "callee": "0x437b5e70",
+    "caller": "0x43aef444",
+    "sitios": [
+     "0x43aef466"
+    ]
+   },
+   {
+    "callee": "0x43aef444",
+    "caller": "0x4379210c",
+    "sitios": [
+     "0x43792438"
+    ]
+   }
+  ],
+  "lector2": [
+   {
+    "callee": "0x438690dc",
+    "caller": "0x43844e80",
+    "sitios": [
+     "0x4384736c"
+    ]
+   },
+   {
+    "callee": "0x43844e80",
+    "caller": "0x437b5b14",
+    "sitios": [
+     "0x437b5ba4"
+    ]
+   }
+  ]
+ },
+ "E12": {
+  "buzon": "0x0110027c",
+  "palabras_de_pool": [
+   "0x436bc8d0",
+   "0x436e6c4c",
+   "0x437067f8",
+   "0x4376538c",
+   "0x4377e490",
+   "0x437b03c4",
+   "0x437c15e8",
+   "0x437cf858",
+   "0x437d066c",
+   "0x4383f8f4",
+   "0x43849fb4",
+   "0x4385ec8c",
+   "0x43987418"
+  ],
+  "emisor": "0x437b0390",
+  "mensaje": {
+   "len": 20,
+   "tipo": 3,
+   "sub": 34
+  },
+  "movw_movt": 0,
+  "stores": [
+   "movs r3, #3",
+   "strh r3, [r1]",
+   "movs r3, #0x22",
+   "strh r3, [r1, #6]"
+  ]
+ }
+}

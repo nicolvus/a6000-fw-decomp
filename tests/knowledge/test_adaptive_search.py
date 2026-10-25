@@ -14,6 +14,7 @@ SEARCH_SCRIPT = ROOT / "scripts" / "knowledge" / "search.py"
 
 sys.path.insert(0, str(ROOT / "scripts" / "knowledge"))  # search.py hace `from _paths import find_root`
 spec = importlib.util.spec_from_file_location("search", SEARCH_SCRIPT)
+assert spec and spec.loader
 search = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(search)
 

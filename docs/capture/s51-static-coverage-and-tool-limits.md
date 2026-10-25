@@ -62,3 +62,7 @@ La regla vigente del usuario pospone **todas** las pruebas físicas hasta
 terminar la descompilación/ingeniería inversa necesaria de esta ruta. La
 matriz documenta trabajo pendiente; no autoriza parche ni cambia las tres
 respuestas NO de [S51](s51-decision.md).
+
+**Actualización 25-10-2026 (C1 de [PENDIENTES](../PENDIENTES.md)):** `unicorn 2.1.4` quedó instalado en `.venv` y los ocho módulos
+de prueba que no se colectaban (S56–S61) pasan: 315 pruebas, 36 subpruebas. La suite integral (`tests/`) se ejecutó completa:
+3521 aprobadas, 35 omitidas (firmware o herramienta ausentes en esa prueba), 0 fallos, 529 s. El bloqueo descrito arriba ya no existe.

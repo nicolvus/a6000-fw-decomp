@@ -1,0 +1,2708 @@
+{
+ "firmware": {
+  "a6000_fw321": {
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+   "size": 11427236
+  },
+  "a7s_fw320": {
+   "sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+   "size": 11455416
+  },
+  "a6300_fw201": {
+   "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16",
+   "size": 13382836
+  }
+ },
+ "modules": {
+  "S515": {
+   "tag": "[BL]",
+   "counts": {
+    "a6000_fw321": 154,
+    "a7s_fw320": 75,
+    "a6300_fw201": 96
+   },
+   "only_a6000_vs_a7s": 79,
+   "only_a6000_vs_a6300": 84,
+   "a6000_strings": [
+    {
+     "vaddr": "0x43c9645a",
+     "text": "\u000e[MOUNT_ERROR]: [BL]SEND AREA ALLOCATE",
+     "pic_refs": [
+      {
+       "add": "0x436e0498",
+       "interior": 1,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e04a0",
+       "interior": 16,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c9648d",
+     "text": "[MOUNT_DEBUG]: [BL]SYNC SEND SET ID(%d):CB(0x%8x)",
+     "pic_refs": [
+      {
+       "add": "0x436e0dcc",
+       "interior": 0,
+       "call": "0x436e03b0"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c964bf",
+     "text": "[MOUNT_ERROR]: [BL]SYNC ERR TX DATA SIZE=0",
+     "pic_refs": [
+      {
+       "add": "0x436e0e26",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e0e2e",
+       "interior": 15,
+       "call": "0x436e03b0"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c964ea",
+     "text": "[MOUNT_ERROR]: [BL]SYNC NO DATA",
+     "pic_refs": [
+      {
+       "add": "0x436e0e3c",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e0e44",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c96564",
+     "text": "[MOUNT_DEBUG]: [BL]QUEUE_DATA_REMAINDER",
+     "pic_refs": [
+      {
+       "add": "0x436e0f10",
+       "interior": 0,
+       "call": "0x436e03b0"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c96626",
+     "text": "[MOUNT_DEBUG]: [BL]SYNC SEND ID(%d):CB(0x%8x)",
+     "pic_refs": [
+      {
+       "add": "0x436e12d2",
+       "interior": 0,
+       "call": "0x436e03b0"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c96654",
+     "text": "[MOUNT_ERROR]: [BL]SYNC QUE OVERFLOW",
+     "pic_refs": [
+      {
+       "add": "0x436e12f8",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e1300",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c96679",
+     "text": "[MOUNT_DEBUG]: [BL]ASYNC SEND ID(%d):CB(0x%8x)",
+     "pic_refs": [
+      {
+       "add": "0x436e13d2",
+       "interior": 0,
+       "call": "0x436e03b0"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c966a8",
+     "text": "[MOUNT_DEBUG]: [BL]Wait_BL_ASYNC",
+     "pic_refs": [
+      {
+       "add": "0x436e13fa",
+       "interior": 0,
+       "call": "0x436e03b0"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c966ee",
+     "text": "[MOUNT_ERROR]: [BL]ASYNC ERR MAKE SEND DATA",
+     "pic_refs": [
+      {
+       "add": "0x436e144c",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e1454",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c9671a",
+     "text": "[MOUNT_ERROR]: [BL]ASYNC ERR Mount_Controller.cpp %d lines",
+     "pic_refs": [
+      {
+       "add": "0x436e146a",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e147a",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c9678b",
+     "text": "[MOUNT_DEBUG]: [BL]LENS DETACH REMAIN CB(%d)",
+     "pic_refs": [
+      {
+       "add": "0x436e169a",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e16de",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e1718",
+       "interior": 0,
+       "call": "0x436e03b0"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c967b8",
+     "text": "[MOUNT_ERROR]: [BL]VSYNC ERR Informations1 VD Rap Detect",
+     "pic_refs": [
+      {
+       "add": "0x436e1794",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e179c",
+       "interior": 15,
+       "call": "0x436e03b0"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c967f1",
+     "text": "[MOUNT_ERROR]: [BL]VSYNC ERR Informations1 Violation of rule : now_time=%d",
+     "pic_refs": [
+      {
+       "add": "0x436e17c2",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e17ca",
+       "interior": 15,
+       "call": null
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c9683c",
+     "text": "[MOUNT_ERROR]: [BL]VSYNC ERR Informations2 VD Rap Detect",
+     "pic_refs": [
+      {
+       "add": "0x436e1804",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e180c",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c96875",
+     "text": "[MOUNT_ERROR]: [BL]VSYNC ERR Informations2 Violation of rule : now_time=%d",
+     "pic_refs": [
+      {
+       "add": "0x436e1838",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e1840",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c968c0",
+     "text": "[MOUNT_ERROR]: [BL]VSYNC ERR PACKET NUM OVER(%d)",
+     "pic_refs": [
+      {
+       "add": "0x436e1880",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e188c",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c968f1",
+     "text": "[MOUNT_ERROR]: [BL]DATA SEND ERR QUE_NONE",
+     "pic_refs": [
+      {
+       "add": "0x436e1934",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e193c",
+       "interior": 15,
+       "call": "0x436e096c"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c9691b",
+     "text": "[MOUNT_ERROR]: [BL]DATA SEND ERR B_SENDING",
+     "pic_refs": [
+      {
+       "add": "0x436e1952",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e195a",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c96946",
+     "text": "[MOUNT_DEBUG]: [BL]DRV_SEND[%d]",
+     "pic_refs": [
+      {
+       "add": "0x436e1a40",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e1ab0",
+       "interior": 0,
+       "call": "0x436e03b0"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c96966",
+     "text": "[MOUNT_ERROR]: [BL]CHECK_SENDDATA_ERR[%d]",
+     "pic_refs": [
+      {
+       "add": "0x436e1ad8",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e1ae4",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c96b93",
+     "text": "[MOUNT_ERROR]: [BL]state:%02Xh, code:%02Xh",
+     "pic_refs": [
+      {
+       "add": "0x436e244c",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e245e",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c96bbe",
+     "text": "[MOUNT_ERROR]: [BL]CommState/LensState %02X%02X",
+     "pic_refs": [
+      {
+       "add": "0x436e247c",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e248a",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c96bee",
+     "text": "[MOUNT_ERROR]: [BL]PowMode/PowSeq      %02X%02X",
+     "pic_refs": [
+      {
+       "add": "0x436e2496",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e24aa",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c96c1e",
+     "text": "[MOUNT_ERROR]: [BL]LC T.O. Cnt         %04X",
+     "pic_refs": [
+      {
+       "add": "0x436e24b6",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e24c8",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c96c4a",
+     "text": "[MOUNT_ERROR]: [BL]VsyncErrCnt         %04X",
+     "pic_refs": [
+      {
+       "add": "0x436e24d4",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e24e6",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c96c76",
+     "text": "[MOUNT_ERROR]: [BL]LIFState/Err        %02X%02X",
+     "pic_refs": [
+      {
+       "add": "0x436e2506",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e251c",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c96ca6",
+     "text": "[MOUNT_ERROR]: [BL]LensErr             %02X%02X",
+     "pic_refs": [
+      {
+       "add": "0x436e253c",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e2552",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c96cd6",
+     "text": "[MOUNT_ERROR]: [BL]LensTransErrCnt     %04X",
+     "pic_refs": [
+      {
+       "add": "0x436e255e",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e2570",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c96d02",
+     "text": "[MOUNT_ERROR]: [BL]MakeData/SendData   %02X%02X",
+     "pic_refs": [
+      {
+       "add": "0x436e2580",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e259a",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c96d32",
+     "text": "[MOUNT_ERROR]: [BL]SendType/SameAdrs   %02X%02X",
+     "pic_refs": [
+      {
+       "add": "0x436e25b2",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e25be",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c96d62",
+     "text": "[MOUNT_ERROR]: [BL]ErrCntQueSync       %04X",
+     "pic_refs": [
+      {
+       "add": "0x436e25d2",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e25dc",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c96d8e",
+     "text": "[MOUNT_ERROR]: [BL]ErrCntQueVsync      %04X",
+     "pic_refs": [
+      {
+       "add": "0x436e25f0",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e25fa",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c96dba",
+     "text": "[MOUNT_ERROR]: [BL]SYNC TIMEOUT",
+     "pic_refs": []
+    },
+    {
+     "vaddr": "0x43c96dda",
+     "text": "[MOUNT_ERROR]: [BL]HEADER_NG",
+     "pic_refs": []
+    },
+    {
+     "vaddr": "0x43c96df7",
+     "text": "[MOUNT_ERROR]: [BL]FOOTER_NG",
+     "pic_refs": []
+    },
+    {
+     "vaddr": "0x43c96e14",
+     "text": "[MOUNT_ERROR]: [BL]CHECKSUM_NG",
+     "pic_refs": []
+    },
+    {
+     "vaddr": "0x43c96e33",
+     "text": "[MOUNT_ERROR]: [BL]DATASIZE_NG",
+     "pic_refs": []
+    },
+    {
+     "vaddr": "0x43c96e52",
+     "text": "[MOUNT_ERROR]: [BL]COMMTYPE_NG_0",
+     "pic_refs": []
+    },
+    {
+     "vaddr": "0x43c96ec7",
+     "text": "[MOUNT_ERROR]: [BL]MOUNT_ERR_DATASIZE OVER ANALYSE_NG:ID = %02Xh size [%d][%d]",
+     "pic_refs": [
+      {
+       "add": "0x436e2940",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e294c",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c96f16",
+     "text": "[MOUNT_ERROR]: [BL]MOUNT_ERR_ANALYSE_NG:ID = %02Xh",
+     "pic_refs": [
+      {
+       "add": "0x436e2984",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e2992",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c96f49",
+     "text": "[MOUNT_DEBUG]: [BL]SYNC RECIVE ID(%d):CB(0x%8x)",
+     "pic_refs": [
+      {
+       "add": "0x436e29fe",
+       "interior": 0,
+       "call": "0x436e03b0"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c96fba",
+     "text": "[MOUNT_DEBUG]: [BL]ASYNC RECIVE ID(%d):CB(0x%8x)",
+     "pic_refs": [
+      {
+       "add": "0x436e2ae2",
+       "interior": 0,
+       "call": "0x436e03b0"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97045",
+     "text": "[MOUNT_ERROR]: [BL]CAM_INFO2_RCV_WAIT_TIMEOUT_ERR[Timer=%d(ms)][ErrCnt=%d]",
+     "pic_refs": [
+      {
+       "add": "0x436e2dca",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e2dd4",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97090",
+     "text": "[MOUNT_ERROR]: [BL]CAM_INFO2_RCV_WAIT_TWAI_ERR ercd=%d",
+     "pic_refs": [
+      {
+       "add": "0x436e2dea",
+       "interior": 0,
+       "call": "0x436e03b0"
+      },
+      {
+       "add": "0x436e2df4",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c970c7",
+     "text": "[MOUNT_INFO]: [BL]LIF Command Change : 0x%X >>> 0x%X",
+     "pic_refs": [
+      {
+       "add": "0x436e2e50",
+       "interior": 0,
+       "call": "0x436e03b0"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c970fc",
+     "text": "[MOUNT_WARNING]: [BL]LIF Command : Illegal Command Received!!! : cmd=%04X",
+     "pic_refs": [
+      {
+       "add": "0x436e2f1e",
+       "interior": 0,
+       "call": "0x436e03b0"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97161",
+     "text": "[MOUNT_DEBUG]: [BL]osal_capstart Ret=%04x",
+     "pic_refs": [
+      {
+       "add": "0x436e3550",
+       "interior": 0,
+       "call": "0x436e03b0"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c9718b",
+     "text": "[MOUNT_DEBUG]: [BL]osal_capstop Ret=%04x",
+     "pic_refs": [
+      {
+       "add": "0x436e3586",
+       "interior": 0,
+       "call": "0x436e03b0"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97277",
+     "text": "[MOUNT_ERROR]: [BL]ASYNC ERR : MAKE UNKNOWN COMMAND [%d]",
+     "pic_refs": [
+      {
+       "add": "0x436e3a56",
+       "interior": 0,
+       "call": "0x436e3914"
+      },
+      {
+       "add": "0x436e3a60",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c972b0",
+     "text": "[MOUNT_ERROR]: [BL]ASYNC ERR : MakeDividedInfoCmdError [UNKNOWN Data : %d]",
+     "pic_refs": [
+      {
+       "add": "0x436e3a76",
+       "interior": 0,
+       "call": "0x436e3914"
+      },
+      {
+       "add": "0x436e3a80",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c972fb",
+     "text": "[MOUNT_ERROR]: [BL]ECLIPSE_COM_STATE is INIT in VSYNC at Mount_DividedInfo.cpp %d",
+     "pic_refs": [
+      {
+       "add": "0x436e3b82",
+       "interior": 0,
+       "call": "0x436e3914"
+      },
+      {
+       "add": "0x436e3b8e",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c9734d",
+     "text": "[MOUNT_DEBUG]: [BL]EclipseDataComState [%d] => [%d]",
+     "pic_refs": [
+      {
+       "add": "0x436e3be0",
+       "interior": 0,
+       "call": "0x436e3914"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97381",
+     "text": "[MOUNT_ERROR]: [BL]MOUNT_ERR RECEIVE DATA SIZE error : %ld in CallBack_Eclipse_Com_2nd",
+     "pic_refs": [
+      {
+       "add": "0x436e3c66",
+       "interior": 0,
+       "call": "0x436e3914"
+      },
+      {
+       "add": "0x436e3c76",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c973d8",
+     "text": "[MOUNT_DEBUG]: [BL]ASYNC RECIVE CallBack_Eclipse_Com_2nd. Current_data_count / Max_count [%d  / %d]",
+     "pic_refs": [
+      {
+       "add": "0x436e3cea",
+       "interior": 0,
+       "call": "0x436e3914"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c9743c",
+     "text": "[MOUNT_ERROR]: [BL]MOUNT_ERR in CallBack_Eclipse_Com_2nd : the receive data is not different from request data : receive[%d] request[%d] ",
+     "pic_refs": [
+      {
+       "add": "0x436e3d02",
+       "interior": 0,
+       "call": "0x436e3914"
+      },
+      {
+       "add": "0x436e3d14",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c974c6",
+     "text": "[MOUNT_ERROR]: [BL]MOUNT_ERR RECEIVE DATA error : %x in CallBack_Eclipse_Com_2nd",
+     "pic_refs": [
+      {
+       "add": "0x436e3d40",
+       "interior": 0,
+       "call": "0x436e3914"
+      },
+      {
+       "add": "0x436e3d4e",
+       "interior": 15,
+       "call": "0x436e3914"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97517",
+     "text": "[MOUNT_ERROR]: [BL]MOUNT_ERR RECEIVE DATA ERR CommandId[%d] in CallBack_Eclipse_Com_2nd",
+     "pic_refs": [
+      {
+       "add": "0x436e3d5e",
+       "interior": 0,
+       "call": "0x436e3914"
+      },
+      {
+       "add": "0x436e3d68",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c975b7",
+     "text": "[MOUNT_DEBUG]: [BL]ASYNC RECIVE CallBack_Eclipse_Com_1st. Max_data_count [%d]",
+     "pic_refs": [
+      {
+       "add": "0x436e3e82",
+       "interior": 0,
+       "call": "0x436e3914"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97605",
+     "text": "[MOUNT_ERROR]: [BL]MOUNT_ERR RECEIVE DATA error : %x in CallBack_Eclipse_Com_1st",
+     "pic_refs": [
+      {
+       "add": "0x436e3e94",
+       "interior": 0,
+       "call": "0x436e3914"
+      },
+      {
+       "add": "0x436e3ea0",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97656",
+     "text": "[MOUNT_ERROR]: [BL]MOUNT_ERR  CHECK RECEIVE DATA ERR CommandId[%d] in CallBack_Eclipse_Com_1st",
+     "pic_refs": [
+      {
+       "add": "0x436e3ec2",
+       "interior": 0,
+       "call": "0x436e3914"
+      },
+      {
+       "add": "0x436e3ecc",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c976b5",
+     "text": "[MOUNT_DEBUG]: [BL]ZPD change EclipseDataComState from STANDBY to START",
+     "pic_refs": [
+      {
+       "add": "0x436e3f2c",
+       "interior": 0,
+       "call": "0x436e3914"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c976fd",
+     "text": "[MOUNT_DEBUG]: [BL]EclipseDataComState [%d] => [%d] in Mount_InitializeEclipseComState",
+     "pic_refs": [
+      {
+       "add": "0x436e3f60",
+       "interior": 0,
+       "call": "0x436e3914"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c9788a",
+     "text": "[MOUNT_DEBUG]: [BL]MOUNT_CA_REQ_RECEIVE_1ST:%d",
+     "pic_refs": [
+      {
+       "add": "0x436e42d2",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c978b9",
+     "text": "[MOUNT_DEBUG]: [BL]LENS_POWER_OFF",
+     "pic_refs": [
+      {
+       "add": "0x436e4378",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c9795f",
+     "text": "[MOUNT_DEBUG]: [BL]SYSTEM_HZ:%d",
+     "pic_refs": [
+      {
+       "add": "0x436e4528",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c979a0",
+     "text": "[MOUNT_DEBUG]: [BL]CAM CmdStatus:%04X",
+     "pic_refs": [
+      {
+       "add": "0x436e45f2",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c979c6",
+     "text": "[MOUNT_DEBUG]: [BL]Mount_ChkCamCmdState RetVal:%d",
+     "pic_refs": [
+      {
+       "add": "0x436e4602",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97a16",
+     "text": "[MOUNT_DEBUG]: [BL]LENS_SLEEP MODE:%d",
+     "pic_refs": [
+      {
+       "add": "0x436e478c",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97a3c",
+     "text": "[MOUNT_DEBUG]: [BL]PowerSeq -> MOUNT_POWER_SEQ_PB",
+     "pic_refs": [
+      {
+       "add": "0x436e47d2",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97a6e",
+     "text": "[MOUNT_DEBUG]: [BL]PowerSeq -> MOUNT_POWER_SEQ_STANDBY",
+     "pic_refs": [
+      {
+       "add": "0x436e47e0",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97ac6",
+     "text": "[MOUNT_DEBUG]: [BL][HS]CS_HIGH",
+     "pic_refs": [
+      {
+       "add": "0x436e4938",
+       "interior": 0,
+       "call": "0x436e41e4"
+      },
+      {
+       "add": "0x436e4da2",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97ae5",
+     "text": "[MOUNT_DEBUG]: [BL][HS]DATA_HIGH",
+     "pic_refs": [
+      {
+       "add": "0x436e497a",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97b06",
+     "text": "[MOUNT_DEBUG]: [BL][HS]CS_LOW",
+     "pic_refs": [
+      {
+       "add": "0x436e49ba",
+       "interior": 0,
+       "call": "0x436e41e4"
+      },
+      {
+       "add": "0x436e4dea",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97b24",
+     "text": "[MOUNT_DEBUG]: [BL][HS]COMPLETE",
+     "pic_refs": [
+      {
+       "add": "0x436e49f6",
+       "interior": 0,
+       "call": "0x436e41e4"
+      },
+      {
+       "add": "0x436e4e20",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97b44",
+     "text": "[MOUNT_ERROR]: [BL][HS]POWER SEQ TIME OUT",
+     "pic_refs": [
+      {
+       "add": "0x436e4a26",
+       "interior": 0,
+       "call": "0x436e41e4"
+      },
+      {
+       "add": "0x436e4e4c",
+       "interior": 0,
+       "call": "0x436e41e4"
+      },
+      {
+       "add": "0x436e4a32",
+       "interior": 15,
+       "call": "0x43902718"
+      },
+      {
+       "add": "0x436e4e58",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97b6e",
+     "text": "[MOUNT_DEBUG]: [BL]OFF_SEQ_COMP",
+     "pic_refs": [
+      {
+       "add": "0x436e4ab0",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97b8e",
+     "text": "[MOUNT_ERROR]: [BL][HS]POWER OFF SEQ TIME OUT",
+     "pic_refs": [
+      {
+       "add": "0x436e4ae2",
+       "interior": 0,
+       "call": "0x436e41e4"
+      },
+      {
+       "add": "0x436e4aec",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97cbf",
+     "text": "[MOUNT_ERROR]: [BL]LENS FIRMERR",
+     "pic_refs": [
+      {
+       "add": "0x436e4d12",
+       "interior": 0,
+       "call": "0x436e41e4"
+      },
+      {
+       "add": "0x436e4d1a",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97cdf",
+     "text": "[MOUNT_ERROR]: [BL]LENS UNKNOWN",
+     "pic_refs": [
+      {
+       "add": "0x436e4d2c",
+       "interior": 0,
+       "call": "0x436e41e4"
+      },
+      {
+       "add": "0x436e4d36",
+       "interior": 15,
+       "call": "0x43902718"
+      },
+      {
+       "add": "0x437dc01e",
+       "interior": 24,
+       "call": null
+      },
+      {
+       "add": "0x43a11ba0",
+       "interior": 24,
+       "call": null
+      },
+      {
+       "add": "0x43a11cca",
+       "interior": 24,
+       "call": null
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97cff",
+     "text": "[MOUNT_DEBUG]: [BL]LENS_POWER_4.8V",
+     "pic_refs": [
+      {
+       "add": "0x436e4f00",
+       "interior": 0,
+       "call": "0x436e07a0"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97d22",
+     "text": "[MOUNT_DEBUG]: [BL]LENS_POWER_UNREG",
+     "pic_refs": [
+      {
+       "add": "0x436e4f38",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97d46",
+     "text": "[MOUNT_ERROR]: [BL]LENS_TYPE_UNKNOWN",
+     "pic_refs": [
+      {
+       "add": "0x436e4f4c",
+       "interior": 0,
+       "call": "0x436e41e4"
+      },
+      {
+       "add": "0x436e4f54",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97d6b",
+     "text": "[MOUNT_ERROR]: [BL]SYNC START UP INFO ERR",
+     "pic_refs": [
+      {
+       "add": "0x436e4fe6",
+       "interior": 0,
+       "call": "0x436e41e4"
+      },
+      {
+       "add": "0x436e4fee",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97e20",
+     "text": "[MOUNT_DEBUG]: [BL]WarmBoot:%d",
+     "pic_refs": [
+      {
+       "add": "0x436e5348",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97e3f",
+     "text": "[MOUNT_ERROR]: [BL]BACKUP OVERFLOW:%dbyte (MAX:%dbyte)",
+     "pic_refs": [
+      {
+       "add": "0x436e53a8",
+       "interior": 0,
+       "call": "0x436e41e4"
+      },
+      {
+       "add": "0x436e53b6",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97e76",
+     "text": "[MOUNT_ERROR]: [BL]LensFirmUpdateResult : Illegal Error Code = %d",
+     "pic_refs": [
+      {
+       "add": "0x436e5472",
+       "interior": 0,
+       "call": "0x436e41e4"
+      },
+      {
+       "add": "0x436fea24",
+       "interior": 0,
+       "call": "0x436fe410"
+      },
+      {
+       "add": "0x436e547c",
+       "interior": 15,
+       "call": "0x43902718"
+      },
+      {
+       "add": "0x436fea2e",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97f39",
+     "text": "[MOUNT_DEBUG]: [BL]UPDATE times %d",
+     "pic_refs": [
+      {
+       "add": "0x436e5552",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97f5c",
+     "text": "[MOUNT_DEBUG]: [BL]UPDATE %d",
+     "pic_refs": [
+      {
+       "add": "0x436e556a",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97f79",
+     "text": "[MOUNT_ERROR]: [BL]GetLensVersion Error : ERRCD_FIRM_ERROR",
+     "pic_refs": [
+      {
+       "add": "0x436fe5ea",
+       "interior": 0,
+       "call": "0x436fe410"
+      },
+      {
+       "add": "0x436fe5f2",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97fb4",
+     "text": "[MOUNT_ERROR]: [BL]GetLensVersion Error : ERRCD_LENS_UNMOUNT",
+     "pic_refs": [
+      {
+       "add": "0x436fe632",
+       "interior": 0,
+       "call": "0x436fe410"
+      },
+      {
+       "add": "0x436fe63a",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c97ff1",
+     "text": "[MOUNT_ERROR]: [BL]FirmUpReq Error : ERRCD_FIRMUP_BUSY",
+     "pic_refs": [
+      {
+       "add": "0x436fe6b6",
+       "interior": 0,
+       "call": "0x436fe410"
+      },
+      {
+       "add": "0x436fe6be",
+       "interior": 15,
+       "call": "0x436e8328"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c98028",
+     "text": "[MOUNT_ERROR]: [BL]FirmUpReq Error : ERRCD_PARAM_ERROR",
+     "pic_refs": [
+      {
+       "add": "0x436fe696",
+       "interior": 0,
+       "call": "0x436fe410"
+      },
+      {
+       "add": "0x436fe69e",
+       "interior": 15,
+       "call": "0x436fe410"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c9805f",
+     "text": "[MOUNT_DEBUG]: [BL]PREPARE UPDATE REQ RCV",
+     "pic_refs": [
+      {
+       "add": "0x436fe740",
+       "interior": 0,
+       "call": "0x436fe410"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c98089",
+     "text": "[MOUNT_DEBUG]: [BL]PREPARE UPDATE OK",
+     "pic_refs": [
+      {
+       "add": "0x436fe75a",
+       "interior": 0,
+       "call": "0x436fe410"
+      },
+      {
+       "add": "0x436fe7f8",
+       "interior": 0,
+       "call": "0x436fe410"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c980ae",
+     "text": "[MOUNT_DEBUG]: [BL]PREPARE UPDATE NG",
+     "pic_refs": [
+      {
+       "add": "0x436fe780",
+       "interior": 0,
+       "call": "0x436fe410"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c980d3",
+     "text": "[MOUNT_DEBUG]: [BL]PREPARE UPDATE WAIT",
+     "pic_refs": [
+      {
+       "add": "0x436fe890",
+       "interior": 0,
+       "call": "0x436fe410"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c980fa",
+     "text": "[MOUNT_ERROR]: [BL]OSAL SLEEP UPDATE (%+hd)",
+     "pic_refs": [
+      {
+       "add": "0x436fe79a",
+       "interior": 0,
+       "call": "0x436fe410"
+      },
+      {
+       "add": "0x436fe7a6",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c98126",
+     "text": "[MOUNT_ERROR]: [BL]PREPARE UPDATE TIME_OUT",
+     "pic_refs": [
+      {
+       "add": "0x436fe7c6",
+       "interior": 0,
+       "call": "0x436fe410"
+      },
+      {
+       "add": "0x436fe7ce",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c98151",
+     "text": "[MOUNT_DEBUG]: [BL]PREPARE UPDATE CHECK OK",
+     "pic_refs": [
+      {
+       "add": "0x436e55fe",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c9817c",
+     "text": "[MOUNT_DEBUG]: [BL]PREPARE UPDATE CHECK NG",
+     "pic_refs": [
+      {
+       "add": "0x436e560e",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c981a7",
+     "text": "[MOUNT_DEBUG]: [BL]PREPARE UPDATE CHECK NG LENS_NONE",
+     "pic_refs": [
+      {
+       "add": "0x436e561c",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c981dc",
+     "text": "[MOUNT_DEBUG]: [BL]UPDATE UNPLUG USB",
+     "pic_refs": [
+      {
+       "add": "0x436fe830",
+       "interior": 0,
+       "call": "0x436fe410"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c98201",
+     "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_GET_VERSION",
+     "pic_refs": [
+      {
+       "add": "0x436fe64a",
+       "interior": 0,
+       "call": "0x436fe4c0"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c98234",
+     "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_GET_FORCE_FIRMUP",
+     "pic_refs": [
+      {
+       "add": "0x436fe672",
+       "interior": 0,
+       "call": "0x436fe410"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c9826c",
+     "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_FIRM_UP_REQ",
+     "pic_refs": [
+      {
+       "add": "0x436fe726",
+       "interior": 0,
+       "call": "0x436e8328"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c9829f",
+     "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_PREPARE_UPDATE",
+     "pic_refs": [
+      {
+       "add": "0x436fe80c",
+       "interior": 0,
+       "call": "0x436e8328"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c982d5",
+     "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_UNPLUG_USB",
+     "pic_refs": [
+      {
+       "add": "0x436fe842",
+       "interior": 0,
+       "call": "0x436fe410"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c98307",
+     "text": "[MOUNT_ERROR]: [BL]UUD CallBack : meg_id illegal : meg_id=%d",
+     "pic_refs": [
+      {
+       "add": "0x436fe856",
+       "interior": 0,
+       "call": "0x436fe410"
+      },
+      {
+       "add": "0x436fe860",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c98344",
+     "text": "[MOUNT_ERROR]: [BL]MOUNT_ERR_CAP_RESTART:start_cnt = %d, end_cnt = %d",
+     "pic_refs": [
+      {
+       "add": "0x436e57dc",
+       "interior": 0,
+       "call": "0x436e41e4"
+      },
+      {
+       "add": "0x436e57e6",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c9838a",
+     "text": "[MOUNT_ERROR]: [BL]MOUNT_ERR_CAPSTART:start_cnt = %d, end_cnt = %d",
+     "pic_refs": [
+      {
+       "add": "0x436e5964",
+       "interior": 0,
+       "call": "0x436e41e4"
+      },
+      {
+       "add": "0x436e5a24",
+       "interior": 0,
+       "call": "0x436e41e4"
+      },
+      {
+       "add": "0x436e596e",
+       "interior": 15,
+       "call": "0x43902718"
+      },
+      {
+       "add": "0x436e5a2e",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c983cd",
+     "text": "[MOUNT_DEBUG]: [BL]CHG FREQ, %d, %d, %d",
+     "pic_refs": [
+      {
+       "add": "0x436e5b7e",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c98439",
+     "text": "[MOUNT_ERROR]: [BL]MOUNT_CA_REQ_CLOSED",
+     "pic_refs": [
+      {
+       "add": "0x436e5fb2",
+       "interior": 0,
+       "call": "0x436e41e4"
+      },
+      {
+       "add": "0x436e5fba",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c98460",
+     "text": "[MOUNT_DEBUG]: [BL]LOGIC_POWER:%d",
+     "pic_refs": [
+      {
+       "add": "0x436e6046",
+       "interior": 0,
+       "call": "0x436e41e4"
+      },
+      {
+       "add": "0x436e60a2",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c98482",
+     "text": "[MOUNT_ERROR]: [BL]CA LOGIC POWER RES ERR",
+     "pic_refs": [
+      {
+       "add": "0x436e60ca",
+       "interior": 0,
+       "call": "0x436e41e4"
+      },
+      {
+       "add": "0x436e60d2",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c984ef",
+     "text": "[MOUNT_ERROR]: [BL]DETACH RETRY count:%d debug:%d",
+     "pic_refs": []
+    },
+    {
+     "vaddr": "0x43c98540",
+     "text": "[MOUNT_DEBUG]: [BL]UART_HZ 750:%d 1500%d",
+     "pic_refs": []
+    },
+    {
+     "vaddr": "0x43c98569",
+     "text": "[MOUNT_ERROR]: [BL][L->B]UART_HZ NG",
+     "pic_refs": []
+    },
+    {
+     "vaddr": "0x43c9858d",
+     "text": "[MOUNT_DEBUG]: [BL]UART_HS_COMPLETE NO_WAIT",
+     "pic_refs": []
+    },
+    {
+     "vaddr": "0x43c985b9",
+     "text": "[MOUNT_DEBUG]: [BL]UART_HS_COMPLETE",
+     "pic_refs": []
+    },
+    {
+     "vaddr": "0x43c986b6",
+     "text": "[MOUNT_DEBUG]: [BL]POWEROFF_HANDSHAKE_END",
+     "pic_refs": [
+      {
+       "add": "0x436e6cf8",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c986e0",
+     "text": "[MOUNT_ERROR]: [BL]POWEROFF_HANDSHAKE_TIMEOUT_ERROR",
+     "pic_refs": [
+      {
+       "add": "0x436e6d10",
+       "interior": 0,
+       "call": "0x436e41e4"
+      },
+      {
+       "add": "0x436e6d18",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c98714",
+     "text": "[MOUNT_WARNING]: [BL]cam_cmd change!! reason=%03x now=%03x (0xC05:PB 0xC06:POFF)",
+     "pic_refs": [
+      {
+       "add": "0x436e6d48",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c98781",
+     "text": "[MOUNT_DEBUG]: [BL]DETACH_1",
+     "pic_refs": [
+      {
+       "add": "0x436e6dba",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c987b8",
+     "text": "[MOUNT_DEBUG]: [BL]DETACH_2",
+     "pic_refs": [
+      {
+       "add": "0x436e6e08",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c987f0",
+     "text": "[MOUNT_DEBUG]: [BL]LOGIC_OFF",
+     "pic_refs": [
+      {
+       "add": "0x436e6fa0",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c9880d",
+     "text": "[MOUNT_DEBUG]: [BL]LOGIC_OFF_COMP",
+     "pic_refs": [
+      {
+       "add": "0x436e6fd4",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c9882f",
+     "text": "[MOUNT_DEBUG]: [BL]LOGIC_ON",
+     "pic_refs": [
+      {
+       "add": "0x436e6ff0",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c9884b",
+     "text": "[MOUNT_DEBUG]: [BL]LOGIC_ON_COMP",
+     "pic_refs": [
+      {
+       "add": "0x436e702e",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c9888b",
+     "text": "[MOUNT_DEBUG]: [BL]LOGIC_OFF2",
+     "pic_refs": [
+      {
+       "add": "0x436e71b6",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c988a9",
+     "text": "[MOUNT_DEBUG]: [BL]LOGIC_OFF_COMP2",
+     "pic_refs": [
+      {
+       "add": "0x436e71e8",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c988f4",
+     "text": "[MOUNT_DEBUG]: [BL]WAIT CHGFREQ1",
+     "pic_refs": [
+      {
+       "add": "0x436e73b0",
+       "interior": 0,
+       "call": "0x436e41e4"
+      },
+      {
+       "add": "0x436e7482",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c98915",
+     "text": "[MOUNT_DEBUG]: [BL]WAIT CHGFREQ2",
+     "pic_refs": [
+      {
+       "add": "0x436e73d0",
+       "interior": 0,
+       "call": "0x436e41e4"
+      },
+      {
+       "add": "0x436e74a4",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c98936",
+     "text": "[MOUNT_DEBUG]: [BL]WAIT NEXTVD",
+     "pic_refs": [
+      {
+       "add": "0x436e73f6",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c98955",
+     "text": "[MOUNT_ERROR]: [BL]FREQ Now:%d, Send:%d",
+     "pic_refs": [
+      {
+       "add": "0x436e7410",
+       "interior": 0,
+       "call": "0x436e41e4"
+      },
+      {
+       "add": "0x436e741a",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c9897d",
+     "text": "[MOUNT_DEBUG]: [BL]STANDBY",
+     "pic_refs": []
+    },
+    {
+     "vaddr": "0x43c989b7",
+     "text": "[MOUNT_ERROR]: [BL]POWEROFF_ERROR_HANDSHAKE_END",
+     "pic_refs": []
+    },
+    {
+     "vaddr": "0x43c98a3d",
+     "text": "[MOUNT_ERROR]: [BL]FORCE LENS DETACH count:%d debug:%d",
+     "pic_refs": [
+      {
+       "add": "0x436e7958",
+       "interior": 0,
+       "call": "0x436e41e4"
+      },
+      {
+       "add": "0x436e7968",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c98a74",
+     "text": "[MOUNT_ERROR]: [BL]LastLensError %02X%02X",
+     "pic_refs": [
+      {
+       "add": "0x436e7988",
+       "interior": 0,
+       "call": "0x436e41e4"
+      },
+      {
+       "add": "0x436e799e",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c98a9e",
+     "text": "[MOUNT_DEBUG]: [BL]POWER PARAM mode:%d, main_seq:%d, hs_seq: %d",
+     "pic_refs": [
+      {
+       "add": "0x436e7a38",
+       "interior": 0,
+       "call": "0x436e41e4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c98b58",
+     "text": "[MOUNT_DEBUG]: [BL] TSK_LIF is called by %d",
+     "pic_refs": [
+      {
+       "add": "0x436e7cb8",
+       "interior": 0,
+       "call": "0x436e7bec"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c98b84",
+     "text": "[MOUNT_ERROR]: [BL]Wait_BL_ASYNC_RCV (%+hd)",
+     "pic_refs": [
+      {
+       "add": "0x436e8230",
+       "interior": 0,
+       "call": "0x436e808c"
+      },
+      {
+       "add": "0x436e823c",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c98bb0",
+     "text": "[MOUNT_DEBUG]: [BL]CHG FHButton old=%d new=%d",
+     "pic_refs": [
+      {
+       "add": "0x436e888c",
+       "interior": 0,
+       "call": "0x436e808c"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c98bde",
+     "text": "[MOUNT_DEBUG]: [BL]LensOpChg old=%d new=%d",
+     "pic_refs": [
+      {
+       "add": "0x436e89aa",
+       "interior": 0,
+       "call": "0x436e808c"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c98c09",
+     "text": "[MOUNT_DEBUG]: [BL]LensOpState old=%d new=%d",
+     "pic_refs": [
+      {
+       "add": "0x436e8a8e",
+       "interior": 0,
+       "call": "0x436e808c"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c98c36",
+     "text": "[MOUNT_DEBUG]: [BL]CHG PzMzButton old=%d new=%d",
+     "pic_refs": [
+      {
+       "add": "0x436e97d6",
+       "interior": 0,
+       "call": "0x436e808c"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c98c66",
+     "text": "[MOUNT_DEBUG]: [BL]BL_ASYNC_RCV_BYTE_CB",
+     "pic_refs": [
+      {
+       "add": "0x436e9d56",
+       "interior": 0,
+       "call": "0x436e9c70"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c98c8e",
+     "text": "[MOUNT_DEBUG]: [BL]BL_ASYNC_RCV_PAGE_CB",
+     "pic_refs": [
+      {
+       "add": "0x436e9db2",
+       "interior": 0,
+       "call": "0x436e9c70"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c9a09f",
+     "text": "[MOUNT_ERROR]: [BL]FirmUp Error : CAIF CASND LUPDT_INFO",
+     "pic_refs": [
+      {
+       "add": "0x436fe0c0",
+       "interior": 0,
+       "call": "0x436fdfc4"
+      },
+      {
+       "add": "0x436fe0c8",
+       "interior": 15,
+       "call": null
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c9a0d7",
+     "text": "[MOUNT_ERROR]: [BL]FirmUp Error : CAIF CASND LUPDT_DATA",
+     "pic_refs": [
+      {
+       "add": "0x436fe11e",
+       "interior": 0,
+       "call": "0x436fdfc4"
+      },
+      {
+       "add": "0x436fe126",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c9a10f",
+     "text": "[MOUNT_DEBUG]: [BL]CHG LENS REMOVE DET old=%d new=%d",
+     "pic_refs": [
+      {
+       "add": "0x436fe196",
+       "interior": 0,
+       "call": "0x436fdfc4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c9a144",
+     "text": "[MOUNT_ERROR]: [BL]FirmUpReq Error : CAIF REQ ERROR",
+     "pic_refs": [
+      {
+       "add": "0x436fe70e",
+       "interior": 0,
+       "call": "0x436fe410"
+      },
+      {
+       "add": "0x436fe716",
+       "interior": 15,
+       "call": "0x43902718"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c9a178",
+     "text": "[MOUNT_ERROR]: [BL]GetLensVersion Error : ERRCD_FIRMUP_UNSUPPORT",
+     "pic_refs": [
+      {
+       "add": "0x436fe876",
+       "interior": 0,
+       "call": "0x436fe410"
+      },
+      {
+       "add": "0x436fe87e",
+       "interior": 15,
+       "call": "0x436fe410"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c9a1b9",
+     "text": "[MOUNT_ERROR]: [BL]LensFirmUpdateResult : Error Code = %d",
+     "pic_refs": [
+      {
+       "add": "0x436fea0a",
+       "interior": 0,
+       "call": "0x436fe410"
+      },
+      {
+       "add": "0x436fea14",
+       "interior": 15,
+       "call": "0x436fe410"
+      }
+     ]
+    }
+   ],
+   "with_pic_ref": 141
+  },
+  "S516": {
+   "tag": "[PNL]",
+   "counts": {
+    "a6000_fw321": 41,
+    "a7s_fw320": 41,
+    "a6300_fw201": 41
+   },
+   "only_a6000_vs_a7s": 4,
+   "only_a6000_vs_a6300": 4,
+   "a6000_strings": [
+    {
+     "vaddr": "0x43c76138",
+     "text": "[PNL]Backup_read() error %d\n",
+     "pic_refs": [
+      {
+       "add": "0x4362ebe8",
+       "interior": 0,
+       "call": "0x435ab880"
+      },
+      {
+       "add": "0x4362d8a0",
+       "interior": 5,
+       "call": "0x435ab880"
+      },
+      {
+       "add": "0x4362d8a6",
+       "interior": 5,
+       "call": "0x435ab880"
+      },
+      {
+       "add": "0x4362d94c",
+       "interior": 5,
+       "call": "0x435ab880"
+      },
+      {
+       "add": "0x4362e4c0",
+       "interior": 5,
+       "call": "0x435ab880"
+      },
+      {
+       "add": "0x4362e4f8",
+       "interior": 5,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c76155",
+     "text": "[PNL]Backup_read() b_id %08X\n",
+     "pic_refs": [
+      {
+       "add": "0x4362ebf2",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c76185",
+     "text": "[PNL]cmd_set_conf_dev = %d ",
+     "pic_refs": [
+      {
+       "add": "0x4362ec92",
+       "interior": 0,
+       "call": "0x435ab880"
+      },
+      {
+       "add": "0x4362ecd6",
+       "interior": 0,
+       "call": "0x435ab880"
+      },
+      {
+       "add": "0x4362ed0a",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c761a1",
+     "text": "[PNL]cmd_set_conf_rev = %d ",
+     "pic_refs": [
+      {
+       "add": "0x4362ec9c",
+       "interior": 0,
+       "call": "0x435ab880"
+      },
+      {
+       "add": "0x4362ece0",
+       "interior": 0,
+       "call": "0x435ab880"
+      },
+      {
+       "add": "0x4362ed14",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c761bd",
+     "text": "[PNL]cmd_set_conf_cb_NULL ",
+     "pic_refs": [
+      {
+       "add": "0x4362eca4",
+       "interior": 0,
+       "call": "0x43a8a732"
+      },
+      {
+       "add": "0x4362ed1c",
+       "interior": 0,
+       "call": "0x43a8a3f4"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c761d8",
+     "text": "[PNL]cmd_set_conf_id = %d ",
+     "pic_refs": [
+      {
+       "add": "0x4362eccc",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c761f3",
+     "text": "[PNL]cmd_set_conf_cb = %d ",
+     "pic_refs": [
+      {
+       "add": "0x4362ecea",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c7620e",
+     "text": "[PNL]cmd_set_conf_INSEQ_ERR ",
+     "pic_refs": [
+      {
+       "add": "0x4362ed38",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c7622b",
+     "text": "[PNL][%s] same level callback : %p",
+     "pic_refs": [
+      {
+       "add": "0x4362edb2",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c7624e",
+     "text": "[PNL][%s] sysv_conf.lcd_set_brightness.callback is not executed yet!",
+     "pic_refs": [
+      {
+       "add": "0x4362edfc",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c7661f",
+     "text": "[PNL][%s] slope comp callback : %p",
+     "pic_refs": [
+      {
+       "add": "0x436319bc",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c76642",
+     "text": "[PNL] SHIFT_V_L = %d ",
+     "pic_refs": [
+      {
+       "add": "0x43631e5a",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c76658",
+     "text": "[PNL] SHIFT_V_R = %d ",
+     "pic_refs": [
+      {
+       "add": "0x43631e90",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c7666e",
+     "text": "[PNL] SHIFT_H_L = %d ",
+     "pic_refs": [
+      {
+       "add": "0x43631ecc",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c76684",
+     "text": "[PNL] SHIFT_H_R = %d ",
+     "pic_refs": [
+      {
+       "add": "0x43631f02",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c766aa",
+     "text": "[PNL]Start output log",
+     "pic_refs": [
+      {
+       "add": "0x43632142",
+       "interior": 0,
+       "call": "0x4362f310"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c766d6",
+     "text": "[PNL]tx_num=%d",
+     "pic_refs": [
+      {
+       "add": "0x43632214",
+       "interior": 0,
+       "call": "0x4362f310"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c766e5",
+     "text": "[PNL] %02x:%02x %02x:%02x - %02x:%02x %02x:%02x",
+     "pic_refs": [
+      {
+       "add": "0x4363224a",
+       "interior": 0,
+       "call": "0x4362f310"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c76715",
+     "text": "[PNL]End output log",
+     "pic_refs": [
+      {
+       "add": "0x4363226e",
+       "interior": 0,
+       "call": null
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c767f6",
+     "text": "[PNL]panel_out_set_dev = %d ",
+     "pic_refs": [
+      {
+       "add": "0x43634644",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c76813",
+     "text": "[PNL]panel_out_set_rev = %d ",
+     "pic_refs": [
+      {
+       "add": "0x4363464e",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c76830",
+     "text": "[PNL]panel_out_set_cb = %d ",
+     "pic_refs": [
+      {
+       "add": "0x43634658",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c7684c",
+     "text": "[PNL]BLON_PNL_OFF ",
+     "pic_refs": [
+      {
+       "add": "0x4363477c",
+       "interior": 0,
+       "call": "0x435ab880"
+      },
+      {
+       "add": "0x43634808",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c7685f",
+     "text": "[PNL]panel_set_backlight = %d ",
+     "pic_refs": [
+      {
+       "add": "0x43634788",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c7687e",
+     "text": "[PNL]panel_set_backlight_vph = %d ",
+     "pic_refs": [
+      {
+       "add": "0x4363481a",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c768a1",
+     "text": "[PNL]V_SHIFT_DATA = %d ",
+     "pic_refs": [
+      {
+       "add": "0x43634886",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c768b9",
+     "text": "[PNL]H_SHIFT_DATA = %d ",
+     "pic_refs": [
+      {
+       "add": "0x4363489e",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c77544",
+     "text": "[PNL] oled panel device soft rst on",
+     "pic_refs": [
+      {
+       "add": "0x43637178",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c77568",
+     "text": "[PNL] oled panel device soft rst off",
+     "pic_refs": [
+      {
+       "add": "0x436371c4",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c7758d",
+     "text": "[PNL]sequence_off_cb_ERR_CLK_PS_OK",
+     "pic_refs": [
+      {
+       "add": "0x436372b4",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c775b0",
+     "text": "[PNL]sequence_off_cb_NULL_ERR",
+     "pic_refs": [
+      {
+       "add": "0x436372ba",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c775ce",
+     "text": "[PNL]handler_panel_lcd_cb_ERR_OK",
+     "pic_refs": [
+      {
+       "add": "0x4363740a",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c775ef",
+     "text": "[PNL]handler_panel_lcd_cb_NULL_ERR",
+     "pic_refs": [
+      {
+       "add": "0x4363742e",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c77612",
+     "text": "[PNL]handler_panel_off_ERR_OK",
+     "pic_refs": [
+      {
+       "add": "0x43637492",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c77630",
+     "text": "[PNL]handler_panel_off_NULL_ERR",
+     "pic_refs": [
+      {
+       "add": "0x43637498",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c77708",
+     "text": "[PNL] Send EvfTempInfoNotify Brt:0x%x Disp:0x%x Temp:0x%x",
+     "pic_refs": [
+      {
+       "add": "0x436379b4",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c7774e",
+     "text": "[PNL] Temperature rise : %d > %d",
+     "pic_refs": [
+      {
+       "add": "0x43637ac6",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c7776f",
+     "text": "[PNL] Temperature drop : %d < %d",
+     "pic_refs": [
+      {
+       "add": "0x43637af0",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c77790",
+     "text": "[PNL] There is no temperature change : %d == %d",
+     "pic_refs": [
+      {
+       "add": "0x43637b18",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c7780b",
+     "text": "[PNL]handler_panel_evf_cb_ERR_OK",
+     "pic_refs": [
+      {
+       "add": "0x43638210",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    },
+    {
+     "vaddr": "0x43c7782c",
+     "text": "[PNL]handler_panel_evf_cb_NULL_ERR",
+     "pic_refs": [
+      {
+       "add": "0x43638216",
+       "interior": 0,
+       "call": "0x435ab880"
+      }
+     ]
+    }
+   ],
+   "with_pic_ref": 41
+  },
+  "S628": {
+   "tag": "[FILE_NUM]",
+   "counts": {
+    "a6000_fw321": 1,
+    "a7s_fw320": 0,
+    "a6300_fw201": 0
+   },
+   "only_a6000_vs_a7s": 1,
+   "only_a6000_vs_a6300": 1,
+   "a6000_strings": [
+    {
+     "vaddr": "0x43cce3fa",
+     "text": "[CAM_UTIL_SENS]: >>[FILE_NUM]%x [ADR]%x [SIZE]%x",
+     "pic_refs": [
+      {
+       "add": "0x43901e48",
+       "interior": 0,
+       "call": "0x43901b7c"
+      },
+      {
+       "add": "0x43902030",
+       "interior": 0,
+       "call": "0x43901b7c"
+      },
+      {
+       "add": "0x43902264",
+       "interior": 0,
+       "call": "0x43901b7c"
+      },
+      {
+       "add": "0x43902498",
+       "interior": 0,
+       "call": "0x43901b7c"
+      }
+     ]
+    }
+   ],
+   "with_pic_ref": 1
+  },
+  "S629": {
+   "tag": "[FSYSMODE]",
+   "counts": {
+    "a6000_fw321": 1,
+    "a7s_fw320": 0,
+    "a6300_fw201": 0
+   },
+   "only_a6000_vs_a7s": 1,
+   "only_a6000_vs_a6300": 1,
+   "a6000_strings": [
+    {
+     "vaddr": "0x43cce42b",
+     "text": "[CAM_UTIL_SENS]: >>[STAT]%x [FSYSMODE]",
+     "pic_refs": [
+      {
+       "add": "0x43901e6a",
+       "interior": 0,
+       "call": "0x43901b7c"
+      },
+      {
+       "add": "0x4390204e",
+       "interior": 0,
+       "call": "0x43901b7c"
+      },
+      {
+       "add": "0x43902286",
+       "interior": 0,
+       "call": "0x43901b7c"
+      },
+      {
+       "add": "0x439024c6",
+       "interior": 0,
+       "call": "0x43901b7c"
+      }
+     ]
+    }
+   ],
+   "with_pic_ref": 1
+  },
+  "S630": {
+   "tag": "[RING_DIAL]",
+   "counts": {
+    "a6000_fw321": 1,
+    "a7s_fw320": 0,
+    "a6300_fw201": 0
+   },
+   "only_a6000_vs_a7s": 1,
+   "only_a6000_vs_a6300": 1,
+   "a6000_strings": [
+    {
+     "vaddr": "0x43c916bc",
+     "text": "[RING_DIAL] LED : %d",
+     "pic_refs": [
+      {
+       "add": "0x436ceed8",
+       "interior": 0,
+       "call": "0x436cedac"
+      },
+      {
+       "add": "0x43a0c9f8",
+       "interior": 0,
+       "call": "0x43a0c8fc"
+      }
+     ]
+    }
+   ],
+   "with_pic_ref": 1
+  }
+ }
+}

@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[2]
 PATHS_SCRIPT = ROOT / "scripts" / "knowledge" / "_paths.py"
 
 spec = importlib.util.spec_from_file_location("_paths", PATHS_SCRIPT)
+assert spec and spec.loader
 _paths = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(_paths)
 

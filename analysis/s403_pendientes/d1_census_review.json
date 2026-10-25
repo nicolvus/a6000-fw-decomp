@@ -1,0 +1,4329 @@
+{
+ "resumen": {
+  "total": 226,
+  "por_clase": {
+   "modulo_propio": 101,
+   "subetiqueta": 118,
+   "mixto": 1,
+   "campo_de_formato": 6
+  },
+  "solo_a6000": 21,
+  "con_lexico_captura": [
+   "[ENCMODEMGR]",
+   "[ENCAUDSYNC]",
+   "[AG]",
+   "[ENCOUCUDMG]",
+   "[PBX]",
+   "[IN]",
+   "[IN1]",
+   "[IN2]"
+  ]
+ },
+ "etiquetas": [
+  {
+   "etiqueta": "[EXL]",
+   "prioridad": 0,
+   "veredicto_censo": "ACEPTO",
+   "ocurrencias": 22,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 20,
+   "recuento_bytes": {
+    "a6000": 22,
+    "a7s": 22,
+    "a6300": 22
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[EXL]: Error: cas sampling_xe >6007",
+    "[EXL]: ERR:: @initCamdcv :@pic_hxep >= pic_hblock ",
+    "[EXL]: ERR:: @calCamdcvTanz : hphase_end<=0 "
+   ]
+  },
+  {
+   "etiqueta": "[SFR]",
+   "prioridad": 0,
+   "veredicto_censo": "ACEPTO",
+   "ocurrencias": 18,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 0.94,
+   "con_ref_pic": 16,
+   "recuento_bytes": {
+    "a6000": 18,
+    "a7s": 22,
+    "a6300": 44
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[SFR]Recieve CpuSelectComp",
+    "[SFR] rc result error:%x",
+    "[SFR] reply_osal_id=%#x, mirror_osal_id=%#x"
+   ]
+  },
+  {
+   "etiqueta": "[IMAGING_IMG]",
+   "prioridad": 0,
+   "veredicto_censo": "ACEPTO",
+   "ocurrencias": 7,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 7,
+   "recuento_bytes": {
+    "a6000": 7,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[IMAGING_IMG]: Image::Clone Image NULL %d",
+    "[IMAGING_IMG]: Image NULL log end",
+    "[IMAGING_IMG]: Image::Clone ImageParam NULL %d"
+   ]
+  },
+  {
+   "etiqueta": "[SYS_SENSER_CA_PUTS]",
+   "prioridad": 0,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 0,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[SYS_SENSER_CA_PUTS]"
+   ]
+  },
+  {
+   "etiqueta": "[SDF_ERR]",
+   "prioridad": 1,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 15,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 15,
+   "recuento_bytes": {
+    "a6000": 15,
+    "a7s": 15,
+    "a6300": 15
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[SDF_ERR] bigger_value.ptm_32==PTM_SECOND_ZONE\n",
+    "[SDF_ERR] smaller_value.ptm_32==PTM_FIRST_ZONE\n",
+    "[SDF_ERR] interval_ptm over 10[sec]\n"
+   ]
+  },
+  {
+   "etiqueta": "[CMDMLTSYNC]",
+   "prioridad": 1,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 13,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 11,
+   "recuento_bytes": {
+    "a6000": 13,
+    "a7s": 13,
+    "a6300": 13
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CMDMLTSYNC][%s][%s()][%d] Error Occur. \n",
+    "[CMDMLTSYNC][%s][%s()][%d] Error. coreSyncErr=%d \n",
+    "[CMDMLTSYNC]MultiSyncExeMsg time=%x evtId=%x \n"
+   ]
+  },
+  {
+   "etiqueta": "[SYNCENCSTART]",
+   "prioridad": 1,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 13,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 13,
+   "recuento_bytes": {
+    "a6000": 13,
+    "a7s": 13,
+    "a6300": 13
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[SYNCENCSTART]wai semaphore error, Err:%d, File:%s, Func:%s() ,Line:%d \n",
+    "[SYNCENCSTART]sig semaphore error, Err:%d, File:%s, Func:%s() ,Line:%d \n",
+    "[SYNCENCSTART]MC[%d] comes later, encStartTime for Thumbnail:[%d]\n"
+   ]
+  },
+  {
+   "etiqueta": "[EVF]",
+   "prioridad": 1,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 6,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 6,
+   "recuento_bytes": {
+    "a6000": 6,
+    "a7s": 2,
+    "a6300": 2
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[EVF]Set PS:%d",
+    "[EVF]disp_evf_set_oled_orbit Addres:%x  SetData:%x \n",
+    "[EVF]Start output log"
+   ]
+  },
+  {
+   "etiqueta": "[SYNCSETMODE]",
+   "prioridad": 1,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 6,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 6,
+   "recuento_bytes": {
+    "a6000": 6,
+    "a7s": 6,
+    "a6300": 6
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[SYNCSETMODE]MC0:%d, MC1:%d (0:Zima 1:Beaune 2:NONE)\n",
+    "[SYNCSETMODE]Err!!! No Corresponding HW,File:%s, Func:%s() ,Line:%d \n",
+    "[SYNCSETMODE]ReExecuteSetMode\n"
+   ]
+  },
+  {
+   "etiqueta": "[VSYNC]",
+   "prioridad": 1,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 5,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 4,
+   "recuento_bytes": {
+    "a6000": 5,
+    "a7s": 5,
+    "a6300": 7
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CDIAG][CTRLHDDEC][VSYNC] RUN CODEC INIT",
+    "[CDIAG][CTRLHDREC][VSYNC] RUN CODEC INIT",
+    "[CDIAG][CTRLJPGENCDEC][VSYNC] RUN CODEC INIT"
+   ]
+  },
+  {
+   "etiqueta": "[PANELEVF]",
+   "prioridad": 1,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 3,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 3,
+   "recuento_bytes": {
+    "a6000": 3,
+    "a7s": 3,
+    "a6300": 3
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[PANELEVF] ADJ  senserData %x ",
+    "[PANELEVF] ADJ masked caldac %x ",
+    "[PANELEVF] ADJ reg caldac before set %x "
+   ]
+  },
+  {
+   "etiqueta": "[PNLEVF]",
+   "prioridad": 1,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 2,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 2,
+   "recuento_bytes": {
+    "a6000": 2,
+    "a7s": 2,
+    "a6300": 2
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[PNLEVF]sio[ %d ]=%02X ",
+    "[PNLEVF]ADJ BLOCK ERROR"
+   ]
+  },
+  {
+   "etiqueta": "[DECMODEMGR]",
+   "prioridad": 2,
+   "veredicto_censo": "ACEPTO",
+   "ocurrencias": 30,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 30,
+   "recuento_bytes": {
+    "a6000": 30,
+    "a7s": 30,
+    "a6300": 37
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[DECMODEMGR]SetState = %x \n",
+    "[DECMODEMGR]File:%s, Func:%s() ,Line:%d \n",
+    "[DECMODEMGR]File:%s, Func:%s(), Line:%d, Err = %x \n"
+   ]
+  },
+  {
+   "etiqueta": "[AVCDPRMCHK]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 26,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 26,
+   "recuento_bytes": {
+    "a6000": 26,
+    "a7s": 26,
+    "a6300": 24
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[AVCDPRMCHK]File:%s, Func:%s(), Line:%d error AudOutPort=%3x\n",
+    "[AVCDPRMCHK]File:%s, Func:%s(), Line:%d error AudCodecTy=%#x AudOutPort=%#x\n",
+    "[AVCDPRMCHK]File:%s, Func:%s(), Line:%d error CenterDisp=%#x\n"
+   ]
+  },
+  {
+   "etiqueta": "[DECVIDDISP]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 26,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 26,
+   "recuento_bytes": {
+    "a6000": 26,
+    "a7s": 26,
+    "a6300": 28
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[DECVIDDISP]File:%s, Func:%s() ,Line:%d \n",
+    "[DECVIDDISP]PCP_INITIALIZE_COMP err = 0x%x \n",
+    "[DECVIDDISP]PCP_SET_COMP err = 0x%x \n"
+   ]
+  },
+  {
+   "etiqueta": "[ZIMA_AVCD]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 26,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 25,
+   "recuento_bytes": {
+    "a6000": 26,
+    "a7s": 26,
+    "a6300": 28
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[ZIMA_AVCD][FL IF] %s(ch_num:%u ch_id:%u)\n",
+    "[ZIMA_AVCD][ERR]Ret %s() = 0x%08x\n",
+    "[ZIMA_AVCD][FL IF] %s()\n"
+   ]
+  },
+  {
+   "etiqueta": "[MC]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 25,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 25,
+   "recuento_bytes": {
+    "a6000": 25,
+    "a7s": 25,
+    "a6300": 24
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[MC][WRN]",
+    "[MC][ERR]",
+    "[MC]m_defaultColor  :%#x\n"
+   ]
+  },
+  {
+   "etiqueta": "[DECAUDSPDI]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 24,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 24,
+   "recuento_bytes": {
+    "a6000": 24,
+    "a7s": 24,
+    "a6300": 24
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[DECAUDSPDI]File:%s, Func:%s() ,Line:%d \n",
+    "[DECAUDSPDI]TransferStop: StopPts = %x, CurrentStc = %x \n",
+    "[DECAUDSPDI]TransferStart: StartVfc = %x \n"
+   ]
+  },
+  {
+   "etiqueta": "[LRB]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 24,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 24,
+   "recuento_bytes": {
+    "a6000": 24,
+    "a7s": 24,
+    "a6300": 24
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAM_FUNC_MGR]: [LRB]REQ_APP_SND Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "[CAM_FUNC_MGR]: [LRB]APP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x",
+    "[CAM_FUNC_MGR]: [LRB]APP_CMP Snd type_id:0x%02x from_lsi:0x%02x req_seq_id:0x%02x"
+   ]
+  },
+  {
+   "etiqueta": "[PRC]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 24,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 0.96,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 24,
+    "a7s": 25,
+    "a6300": 25
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[PRC]SetPath",
+    "[PRC]SetMixRatio",
+    "[PRC]GetMixRatio"
+   ]
+  },
+  {
+   "etiqueta": "[EXCDCENCMP]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 23,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 22,
+   "recuento_bytes": {
+    "a6000": 23,
+    "a7s": 23,
+    "a6300": 31
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[EXCDCENCMP]SetSeqParamforNtsc [SetSeq] idx[%d] MaxNd[%d] MaxN[%d] MaxM[%d] M3s[%d]\n",
+    "[EXCDCENCMP]force_bitrate = %dMbps\n",
+    "[EXCDCENCMP][1920x1080 50p][ActEnc] VInType[0x%02X]\n"
+   ]
+  },
+  {
+   "etiqueta": "[ENCMODEMGR]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 21,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 21,
+   "recuento_bytes": {
+    "a6000": 21,
+    "a7s": 21,
+    "a6300": 21
+   },
+   "lexico_captura": [
+    "capture"
+   ],
+   "ejemplos": [
+    "[ENCMODEMGR]SetState = %x \n",
+    "[ENCMODEMGR]File:%s, Func:%s() ,Line:%d \n",
+    "[ENCMODEMGR]RecordCodecIfCmd: CmdCode:%x, CmdTime:%x, ExecTime:%x ,CurrentRefTime =%x \n"
+   ]
+  },
+  {
+   "etiqueta": "[VIDDECSTAT]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 21,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 21,
+   "recuento_bytes": {
+    "a6000": 21,
+    "a7s": 21,
+    "a6300": 23
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[VIDDECSTAT]Err!!! File:%s, Func:%s() ,Line:%d \n",
+    "[VIDDECSTAT]Err!!! Picture Format Changed %x->%x \n",
+    "[VIDDECSTAT]WRN: ProcReleasePicture Index Not Found \n"
+   ]
+  },
+  {
+   "etiqueta": "[SYSV]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 20,
+   "clase": "mixto",
+   "fraccion_inicio_propio": 0.4,
+   "con_ref_pic": 20,
+   "recuento_bytes": {
+    "a6000": 20,
+    "a7s": 20,
+    "a6300": 40
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "DEBUG:[SYSV][HS]:[ERR] osal_try_valloc_msg %x \n",
+    "DEBUG:[SYSV][HS]:[ERR] osal_set_msg_pri %x \n",
+    "DEBUG:[SYSV][HS]:register: osal_snd_msg %x \n"
+   ]
+  },
+  {
+   "etiqueta": "[EDTSA]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 19,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 18,
+   "recuento_bytes": {
+    "a6000": 19,
+    "a7s": 19,
+    "a6300": 19
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[TRK]: [EDTSA] Message Alloc Error",
+    "[TRK]: [EDTSA] Stop Message Alloc Error",
+    "[TRK]: [EDTSA] SA Param Error"
+   ]
+  },
+  {
+   "etiqueta": "[PARAM]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 19,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 19,
+   "recuento_bytes": {
+    "a6000": 19,
+    "a7s": 19,
+    "a6300": 19
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[AMSENS][CTRLCORE][AVCE][PARAM] adr[0x%08X] size[%d]",
+    "[%s][PARAM]:       input_picture_width                           = %d\n",
+    "[%s][PARAM]:       input_picture_height                          = %d\n"
+   ]
+  },
+  {
+   "etiqueta": "[HS]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 18,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 18,
+   "recuento_bytes": {
+    "a6000": 18,
+    "a7s": 14,
+    "a6300": 14
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "DEBUG:[SYSV][HS]:[ERR] osal_try_valloc_msg %x \n",
+    "DEBUG:[SYSV][HS]:[ERR] osal_set_msg_pri %x \n",
+    "DEBUG:[SYSV][HS]:register: osal_snd_msg %x \n"
+   ]
+  },
+  {
+   "etiqueta": "[MPGPINSUPL]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 18,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 16,
+   "recuento_bytes": {
+    "a6000": 18,
+    "a7s": 18,
+    "a6300": 18
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[MPGPINSUPL]Change FrameRate %x->%x, VfcSub = %x \n",
+    "[MPGPINSUPL]Current Clk Unknown : File:%s, Func:%s() ,Line:%d \n",
+    "[MPGPINSUPL]Mem Open Err: File:%s, Func:%s() ,Line:%d \n"
+   ]
+  },
+  {
+   "etiqueta": "[NG]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 18,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 18,
+   "recuento_bytes": {
+    "a6000": 18,
+    "a7s": 13,
+    "a6300": 13
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[ddl_jpeg_open][NG] mode : %d",
+    "[ddl_jpeg_open][NG] err  : %d",
+    "[ddl_jpeg_open][NG] TIME OUT"
+   ]
+  },
+  {
+   "etiqueta": "[OPTION]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 18,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 18,
+   "recuento_bytes": {
+    "a6000": 18,
+    "a7s": 18,
+    "a6300": 18
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[SFRA][RATECONTROL][OPTION]  invalid keyCode(0x%08x)",
+    "[SFRA][RATECONTROL][OPTION]  keyCode           =0x%08x",
+    "[SFRA][RATECONTROL][OPTION]  en_iqscaleInit    =%d"
+   ]
+  },
+  {
+   "etiqueta": "[AUDDECCTRL]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 17,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 17,
+   "recuento_bytes": {
+    "a6000": 17,
+    "a7s": 17,
+    "a6300": 17
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[AUDDECCTRL]ChangeState %08x -> %08x\n",
+    "[AUDDECCTRL]MSGID_SYSV : Current State = %x \n",
+    "[AUDDECCTRL]MSGID_AVC_DEC_AUDIO_ALLOC_WORK \n"
+   ]
+  },
+  {
+   "etiqueta": "[ENCAUDSYNC]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 17,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 17,
+   "recuento_bytes": {
+    "a6000": 17,
+    "a7s": 17,
+    "a6300": 29
+   },
+   "lexico_captura": [
+    "silent"
+   ],
+   "ejemplos": [
+    "[ENCAUDSYNC]File:%s, Func:%s() ,Line:%d \n",
+    "[ENCAUDSYNC][ERR]AC3 PCM BUFF CH NUM, File:%s, Func:%s() ,Line:%d \n",
+    "[ENCAUDSYNC][ERR]AC3 ENCODE CH NUM, File:%s, Func:%s() ,Line:%d \n"
+   ]
+  },
+  {
+   "etiqueta": "[NSX_OPD]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 17,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 17,
+   "recuento_bytes": {
+    "a6000": 17,
+    "a7s": 17,
+    "a6300": 25
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[NSX_OPD]: FOPD_AIF_R0_ERROR:%x",
+    "[NSX_OPD]: FOPD_AIF_W0_ERROR:%x",
+    "[NSX_OPD]: FOPD_AIF_W1_ERROR:%x"
+   ]
+  },
+  {
+   "etiqueta": "[AG]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 16,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 12,
+   "recuento_bytes": {
+    "a6000": 16,
+    "a7s": 16,
+    "a6300": 16
+   },
+   "lexico_captura": [
+    "silent"
+   ],
+   "ejemplos": [
+    "[ADF][SAN][AG][ERR] vfc Timing aStart %x aEnd %x\n",
+    "[ADF][SAN][AG][ERR] vfc Timing aStartV %x stopV %x\n",
+    "[ADF][SAN][AG] Change vfc Timing aEndV %x stopV %x\n"
+   ]
+  },
+  {
+   "etiqueta": "[HELLO]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 16,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 16,
+   "recuento_bytes": {
+    "a6000": 16,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[ACCY][INFO][HELLO]:%d:RetrySendCmd...retry_up:%d",
+    "[ACCY][ERR][HELLO]%d:Retry SendCmd Buffer Err",
+    "[ACCY][INFO][HELLO]:%d:State Change To %d"
+   ]
+  },
+  {
+   "etiqueta": "[PMV]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 16,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 16,
+   "recuento_bytes": {
+    "a6000": 16,
+    "a7s": 16,
+    "a6300": 16
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[TRK]: [PMV] Message Alloc Error",
+    "[TRK]: [PMV] Stop Message Alloc Error",
+    "[TRK]: [PMV] Unexpected Interruption : %d"
+   ]
+  },
+  {
+   "etiqueta": "[VIDDECZIMA]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 16,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 16,
+   "recuento_bytes": {
+    "a6000": 16,
+    "a7s": 16,
+    "a6300": 16
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[VIDDECZIMA]Err!!! File:%s, Func:%s() ,Line:%d \n",
+    "[VIDDECZIMA]FreeWorkMemory \n",
+    "[VIDDECZIMA]AllocWorkMemory \n"
+   ]
+  },
+  {
+   "etiqueta": "[WRN]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 15,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 15,
+   "recuento_bytes": {
+    "a6000": 15,
+    "a7s": 16,
+    "a6300": 18
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[MC][WRN]",
+    "[EXCODECENC][WRN][%d][%s] bbDelay is force revised %d->%d\n",
+    "[AUDPINEDTR][WRN] Lpcm Main IS_NULL_ERR : File:%s, Func:%s() ,Line:%d\n"
+   ]
+  },
+  {
+   "etiqueta": "[DECAUDSTAT]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 13,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 13,
+   "recuento_bytes": {
+    "a6000": 13,
+    "a7s": 13,
+    "a6300": 17
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[DECAUDSTAT][MC LPCM]STREAM END \n",
+    "[DECAUDSTAT][ERR] %s, %d, Invalid replyId !!!!\n",
+    "[DECAUDSTAT]WRN:RECOVER \n"
+   ]
+  },
+  {
+   "etiqueta": "[UART]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 13,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 13,
+   "recuento_bytes": {
+    "a6000": 13,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[ACCY][INFO][UART]:%d:RECIVE DATA %s",
+    "[ACCY][INFO][UART]:%d:AccyUartOpen Ch:%d",
+    "[ACCY][WARN][UART]:%d:CH:%d UART Open Err:%02X"
+   ]
+  },
+  {
+   "etiqueta": "[VIDDECCTRL]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 13,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 13,
+   "recuento_bytes": {
+    "a6000": 13,
+    "a7s": 13,
+    "a6300": 13
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[VIDDECCTRL]Err!!! File:%s, Func:%s() ,Line:%d \n",
+    "[VIDDECCTRL]ChangeState %08x -> %08x\n",
+    "[VIDDECCTRL]MSGID_AVC_DEC_VIDEO_OPEN \n"
+   ]
+  },
+  {
+   "etiqueta": "[VIDENCCTRL]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 13,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 13,
+   "recuento_bytes": {
+    "a6000": 13,
+    "a7s": 13,
+    "a6300": 13
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[VIDENCCTRL]ChangeState %08x -> %08x\n",
+    "[VIDENCCTRL]Err!!! File:%s, Func:%s() ,Line:%d \n",
+    "[VIDENCCTRL]MSGID_AVC_ENC_VIDEO_OPEN \n"
+   ]
+  },
+  {
+   "etiqueta": "[AUDDECSTAT]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 12,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 12,
+   "recuento_bytes": {
+    "a6000": 12,
+    "a7s": 12,
+    "a6300": 22
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[AUDDECSTAT]AllocAaugiBuffArea Err \n",
+    "[AUDDECSTAT]AllocAaugiBuffArea Align Err \n",
+    "[AUDDECSTAT]AllocAaugiBuffArea Size Err \n"
+   ]
+  },
+  {
+   "etiqueta": "[BASE]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 12,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 12,
+   "recuento_bytes": {
+    "a6000": 12,
+    "a7s": 5,
+    "a6300": 5
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[ACCY][ERR][BASE]:%d:NotifyInput...valloc err:%08X",
+    "[ACCY][DEBUG][BASE]:%d:NotifyInput...KeyCode:%08X, State:%d, INFO:%d",
+    "[ACCY][ERR][BASE]:%d:NotifyInput...Send_Msg end err:%08X"
+   ]
+  },
+  {
+   "etiqueta": "[BIN_BUFFER]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 12,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 12,
+   "recuento_bytes": {
+    "a6000": 12,
+    "a7s": 12,
+    "a6300": 12
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[%s][BIN_BUFFER]:  bin_buffer_head                               = %08X\n",
+    "[%s][BIN_BUFFER]:  bin_buffer_tail                               = %08X\n",
+    "[%s][BIN_BUFFER]:  bin_buffer_byte_size                          = %08X\n"
+   ]
+  },
+  {
+   "etiqueta": "[SA]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 12,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 12,
+    "a7s": 12,
+    "a6300": 14
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[SA][ZNR] timingVfc INVALID tV[0] %x tV[1] %x tV[2] %x \n",
+    "[SA]SetZoomNrPreset",
+    "[SA]ZoomNr ChangeBackup"
+   ]
+  },
+  {
+   "etiqueta": "[DECVESAUGI]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 11,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 11,
+   "recuento_bytes": {
+    "a6000": 11,
+    "a7s": 11,
+    "a6300": 14
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[DECVESAUGI]SetWp Range Error Augi new=%d, cur=%d\n",
+    "[DECVESAUGI]SetWp Range Error Augi new=%d, size=%d\n",
+    "[DECVESAUGI]SetWp Range Error Augi new=%d, curRp=%d, curWp=%d\n"
+   ]
+  },
+  {
+   "etiqueta": "[IRO2G]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 11,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 11,
+   "recuento_bytes": {
+    "a6000": 11,
+    "a7s": 11,
+    "a6300": 11
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[TRK]: [IRO2G] Message Alloc Error",
+    "[TRK]: [IRO2G] Stop Message Alloc Error",
+    "[TRK]: [IRO2G] Unexpected Interruption : %d"
+   ]
+  },
+  {
+   "etiqueta": "[OK]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 11,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 10,
+   "recuento_bytes": {
+    "a6000": 11,
+    "a7s": 10,
+    "a6300": 10
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[ddl_jpeg_open][OK] mode : %d",
+    "[IMAGING]: [seq_panoramaResize][OK] effectImage OK : %s:%d",
+    "[IMAGING]: [seq_panoramaParallelStitch][OK] StitchProc ALL OK : %s:%d"
+   ]
+  },
+  {
+   "etiqueta": "[ATTR]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 10,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 10,
+   "recuento_bytes": {
+    "a6000": 10,
+    "a7s": 10,
+    "a6300": 10
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[FACE]: [ATTR] Message Alloc Error",
+    "[FACE]: [ATTR] INIT STAT Error : %d",
+    "[FACE]: [ATTR] Total Queue Over Flow %d"
+   ]
+  },
+  {
+   "etiqueta": "[ES_BUFFER]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 10,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 10,
+   "recuento_bytes": {
+    "a6000": 10,
+    "a7s": 10,
+    "a6300": 10
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[%s][ES_BUFFER]:   es_buffer_head                                = %08X\n",
+    "[%s][ES_BUFFER]:   es_buffer_tail                                = %08X\n",
+    "[%s][ES_BUFFER]:   es_buffer_byte_size                           = %08X\n"
+   ]
+  },
+  {
+   "etiqueta": "[MCCMDSENDR]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 10,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 10,
+   "recuento_bytes": {
+    "a6000": 10,
+    "a7s": 10,
+    "a6300": 10
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[MCCMDSENDR]GetCmdInfo Errrr!!!!",
+    "[MCCMDSENDR]Registered Command UserDataReport regNum[%d] sendNum[%d]\n",
+    "[MCCMDSENDR]SendErrExceptionCmd: ErrCode = %x \n"
+   ]
+  },
+  {
+   "etiqueta": "[MON]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 10,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 10,
+   "recuento_bytes": {
+    "a6000": 10,
+    "a7s": 10,
+    "a6300": 10
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[FACE]: [MON] Message Alloc Error",
+    "[FACE]: [MON] Init Param Error : %d",
+    "[FACE]: [MON] PART State Error : %d"
+   ]
+  },
+  {
+   "etiqueta": "[AVC]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 9,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 9,
+   "recuento_bytes": {
+    "a6000": 9,
+    "a7s": 9,
+    "a6300": 9
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[VIDDECZIMA]DEBUG:[AVC] pictureId                          = 0x%x \n",
+    "[VIDDECZIMA]DEBUG:[AVC] pictureParam->picRingBuffAdr       = 0x%x \n",
+    "[VIDDECZIMA]DEBUG:[AVC] pictureParam->picRingBuffSize      = 0x%x \n"
+   ]
+  },
+  {
+   "etiqueta": "[DETSA]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 9,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 9,
+   "recuento_bytes": {
+    "a6000": 9,
+    "a7s": 9,
+    "a6300": 9
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[TRK]: [DETSA] Message Alloc Error",
+    "[TRK]: [DETSA] CB is NULL",
+    "[TRK]: [DETSA] Unexpected Interruption : %d"
+   ]
+  },
+  {
+   "etiqueta": "[ENCAUDOUCR]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 9,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 9,
+   "recuento_bytes": {
+    "a6000": 9,
+    "a7s": 9,
+    "a6300": 9
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[ENCAUDOUCR]File:%s, Func:%s() ,Line:%d \n",
+    "[ENCAUDOUCR]IsOuCrank = %x, Sampling = %x,FrameRate = %x ImagingRate = %d \n",
+    "[ENCAUDOUCR]TermEnc(vfc24:%x,vfc32:%x,cnt:%x):NormalTerm = %x ,OuCrankTerm = %x, GopNum = "
+   ]
+  },
+  {
+   "etiqueta": "[EXCODECENC]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 9,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 7,
+   "recuento_bytes": {
+    "a6000": 9,
+    "a7s": 9,
+    "a6300": 51
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[EXCODECENC][ERR]Invalid Target Audio Format %x\n",
+    "[EXCODECENC]%s %d\n",
+    "[EXCODECENC][ERR]wai semaphore error, Err:%d, File:%s, Func:%s() ,Line:%d \n"
+   ]
+  },
+  {
+   "etiqueta": "[RDY]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 9,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 9,
+   "recuento_bytes": {
+    "a6000": 9,
+    "a7s": 9,
+    "a6300": 11
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[VIDDECSTAT][RDY]DecoderMode Unknown \n",
+    "[VIDDECSTAT][RDY]Err!!! File:%s, Func:%s() ,Line:%d \n",
+    "[VIDDECSTAT][RDY]ChangeSubState %08x -> %08x\n"
+   ]
+  },
+  {
+   "etiqueta": "[DECAUDMUTE]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 8,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 8,
+   "recuento_bytes": {
+    "a6000": 8,
+    "a7s": 8,
+    "a6300": 8
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[DECAUDMUTE]N:LPCM StopAdr = %x StopSample = %x ,\n",
+    "[DECAUDMUTE]WRN: MuteOnTimeInfo:%x,MuteOffTimeInfo=%x,TopPauseOffset=%x->0 \n",
+    "[DECAUDMUTE]MuteOnTimeInfo:%x,MuteOffTimeInfo=%x,TopPauseOffset=%x \n"
+   ]
+  },
+  {
+   "etiqueta": "[EXCODECDEC]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 8,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 8,
+   "recuento_bytes": {
+    "a6000": 8,
+    "a7s": 8,
+    "a6300": 12
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[EXCODECDEC]%s fmt %d now %d --> set %d (%d)\n",
+    "[EXCODECDEC][ERR][%s][%d]VideoMode:%d\n",
+    "[EXCODECDEC]%s %d\n"
+   ]
+  },
+  {
+   "etiqueta": "[LC]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 8,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 8,
+   "recuento_bytes": {
+    "a6000": 8,
+    "a7s": 0,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_LC]: [LC] MMU param CloseFree Err (unit_hndl:0x%x)",
+    "[CAMERA_MAIN_LC]: [LC] Movie DM AF cannot get miniRAW Stored memhandle",
+    "[CAMERA_MAIN_LC]: [LC] lc_Movie_DM_AF_Util_allocWorkMemAreaBank MmuMakeParamAll Err %d"
+   ]
+  },
+  {
+   "etiqueta": "[ENCOUCUDMG]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 7,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 6,
+   "recuento_bytes": {
+    "a6000": 7,
+    "a7s": 7,
+    "a6300": 7
+   },
+   "lexico_captura": [
+    "shut"
+   ],
+   "ejemplos": [
+    "[ENCOUCUDMG]BUG : File:%s, Func:%s() ,Line:%d \n",
+    "[ENCOUCUDMG]WRN : File:%s, Func:%s() ,Line:%d \n",
+    "[ENCOUCUDMG]BUG : File:%s, Func:%s(), Line:%d index = %x, state = %x \n"
+   ]
+  },
+  {
+   "etiqueta": "[FACTORY]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 7,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 7,
+   "recuento_bytes": {
+    "a6000": 7,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[ACCY][DEBUG][FACTORY]:%d:HELLO Attached",
+    "[ACCY][DEBUG][FACTORY]:%d:AvOut Attached",
+    "[ACCY][DEBUG][FACTORY]:%d:JIRO1.5 Attached"
+   ]
+  },
+  {
+   "etiqueta": "[IMME]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 7,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 7,
+   "recuento_bytes": {
+    "a6000": 7,
+    "a7s": 7,
+    "a6300": 7
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[FACE]: [IMME] Message Alloc Error",
+    "[FACE]: [IMME] Init State Error %d",
+    "[FACE]: [IMME] Imme State Error %d"
+   ]
+  },
+  {
+   "etiqueta": "[MAGIC]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 7,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 0,
+   "recuento_bytes": {
+    "a6000": 7,
+    "a7s": 7,
+    "a6300": 7
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[MAGIC]SetiVoice [0:OFF, 1:ON]",
+    "[MAGIC]SetMyvoiceCanceling [0:OFF, 1:ON]",
+    "[MAGIC]SetPremiumCloserVoice [0:OFF, 1:ON]"
+   ]
+  },
+  {
+   "etiqueta": "[AVSCCTLYCC]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 6,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 0.83,
+   "con_ref_pic": 6,
+   "recuento_bytes": {
+    "a6000": 6,
+    "a7s": 6,
+    "a6300": 6
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "``p[AVSCCTLYCC]FaceInit Tx:%d Ty:%d\n",
+    "[AVSCCTLYCC]Power Score = %x \n",
+    "[AVSCCTLYCC]File:%s, Func:%s() ,Line:%d \n"
+   ]
+  },
+  {
+   "etiqueta": "[DECMODEERR]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 6,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 6,
+   "recuento_bytes": {
+    "a6000": 6,
+    "a7s": 6,
+    "a6300": 6
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[DECMODEERR]FatalError: File:%s, Func:%s(), Line:%d, Err = %x \n",
+    "[DECMODEERR]Recovery InactCmd Execute \n",
+    "[DECMODEERR]Recovery Error: File:%s, Func:%s(), Line:%d, Err = %x \n"
+   ]
+  },
+  {
+   "etiqueta": "[PBX]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 6,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 6,
+   "recuento_bytes": {
+    "a6000": 6,
+    "a7s": 6,
+    "a6300": 6
+   },
+   "lexico_captura": [
+    "expos"
+   ],
+   "ejemplos": [
+    "[CAMERA_MAIN_YC]: [PBX] PbxMode          = 0x%x",
+    "[CAMERA_MAIN_YC]: [PBX] uc_byhxl_mode    = 0x%x",
+    "[CAMERA_MAIN_YC]: [PBX] exposure_id      = 0x%x"
+   ]
+  },
+  {
+   "etiqueta": "[SND]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 6,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 0,
+   "recuento_bytes": {
+    "a6000": 6,
+    "a7s": 6,
+    "a6300": 6
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[SND]SystemSoundSetPath",
+    "[SND]SystemSoundSetTable",
+    "[SND]SystemSoundRequest"
+   ]
+  },
+  {
+   "etiqueta": "[VIDDECPRAM]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 6,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 6,
+   "recuento_bytes": {
+    "a6000": 6,
+    "a7s": 6,
+    "a6300": 6
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[VIDDECPRAM]PictureFormat = %x \n",
+    "[VIDDECPRAM]Current Clk[%d]\n",
+    "[VIDDECPRAM]WRN:FrameRate is unknown!!\n"
+   ]
+  },
+  {
+   "etiqueta": "[CYCLE]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 5,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 5,
+   "recuento_bytes": {
+    "a6000": 5,
+    "a7s": 5,
+    "a6300": 5
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[%s][CYCLE]:       overall                                       = %d\n",
+    "[%s][CYCLE]:       es_done                                       = %d\n",
+    "[%s][CYCLE]:       slice                                         = %d\n"
+   ]
+  },
+  {
+   "etiqueta": "[ENCMODEERR]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 5,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 5,
+   "recuento_bytes": {
+    "a6000": 5,
+    "a7s": 5,
+    "a6300": 5
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[ENCMODEERR]During  Recovery: Ignore Term Enc \n",
+    "[ENCMODEERR]FatalError: File:%s, Func:%s(), Line:%d, Err = %x \n",
+    "[ENCMODEERR]Recovery TermCmd Execute \n"
+   ]
+  },
+  {
+   "etiqueta": "[INCDCIFCTRL]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 5,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 5,
+   "recuento_bytes": {
+    "a6000": 5,
+    "a7s": 5,
+    "a6300": 5
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[INCDCIFCTRL][ERR][%s][%s]Invalid replyId !!!!\n",
+    "[INCDCIFCTRL][ERR][%s][%s]fail to set data flow infra message err:0x%x\n",
+    "[INCDCIFCTRL]increment refCounter %d, if 1 MPG_CODEC TASK registered\n"
+   ]
+  },
+  {
+   "etiqueta": "[MPEG2]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 5,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 5,
+   "recuento_bytes": {
+    "a6000": 5,
+    "a7s": 5,
+    "a6300": 5
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[MPEG2]MID_REGISTER_ID_COMP ERR \n",
+    "[MPEG2]MID_REGISTER_ID_COMP OK \n",
+    "[MPEG2]MID_UNREGISTER_ID_COMP OK \n"
+   ]
+  },
+  {
+   "etiqueta": "[SPC]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 5,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 5,
+   "recuento_bytes": {
+    "a6000": 5,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[SPC][%08X] %02X %08X %08X %08X %08X %08X",
+    "[SPC][%08X] %02X %08X %08X %08X %08X",
+    "[SPC][%08X] %02X %08X %08X %08X"
+   ]
+  },
+  {
+   "etiqueta": "[BKID]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 4,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 4,
+   "recuento_bytes": {
+    "a6000": 4,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAM_UTIL_SENS]: CB for BKID change [BKID]:%x [Size]:%x",
+    "[LIF_DEBUG]:  :[BKID] %x, [DataSize] %x",
+    "[LIF_DEBUG]: Reg CB func result [BKID]:%x, [Erro]:%x"
+   ]
+  },
+  {
+   "etiqueta": "[DECAUDLPCM]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 4,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 4,
+   "recuento_bytes": {
+    "a6000": 4,
+    "a7s": 4,
+    "a6300": 12
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[DECAUDLPCM]Transfer Stop:StopRemainDataSize = %x \n",
+    "[DECAUDLPCM]TransferStart:StartAdr = %x \n",
+    "[DECAUDLPCM]Send Non Data \n"
+   ]
+  },
+  {
+   "etiqueta": "[DECSEQCTRL]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 4,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 4,
+   "recuento_bytes": {
+    "a6000": 4,
+    "a7s": 4,
+    "a6300": 4
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[DECSEQCTRL]File:%s, Func:%s(), Line:%d, err:%#x \n",
+    "[DECSEQCTRL]File:%s, Func:%s() ,Line:%d \n",
+    "[DECSEQCTRL]File:%s, Func:%s(), Line:%d chipMode=%#x\n"
+   ]
+  },
+  {
+   "etiqueta": "[DFE_INT]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 4,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 4,
+   "recuento_bytes": {
+    "a6000": 4,
+    "a7s": 4,
+    "a6300": 4
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[DFECore]: [Err][DFE_INT] NOT SUPPORT\n",
+    "[DFECore]: [Err][DFE_INT] already set int %d\n",
+    "[DFECore]: [Err][DFE_INT] NOT SUPPORT int\n"
+   ]
+  },
+  {
+   "etiqueta": "[ENCMODESTT]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 4,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 4,
+   "recuento_bytes": {
+    "a6000": 4,
+    "a7s": 4,
+    "a6300": 4
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[ENCMODESTT]ExecCodecIfTermEnc() OK!!",
+    "[ENCMODESTT]File:%s, Func:%s() ,Line:%d, err:0x%x,m_subState 0x%x->0x%x\n",
+    "[ENCMODESTT]File:%s, Func:%s() ,Line:%d, err:0x%x,m_subState 0x%x\n"
+   ]
+  },
+  {
+   "etiqueta": "[ENCUSDTMGR]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 4,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 4,
+   "recuento_bytes": {
+    "a6000": 4,
+    "a7s": 4,
+    "a6300": 4
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[ENCUSDTMGR]UserData OverFlow \n",
+    "[ENCUSDTMGR]UserData Align Error = %x : File:%s, Func:%s() ,Line:%d \n",
+    "[ENCUSDTMGR]MDPack Size is over. \n"
+   ]
+  },
+  {
+   "etiqueta": "[EXDFSENDER]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 4,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 4,
+   "recuento_bytes": {
+    "a6000": 4,
+    "a7s": 4,
+    "a6300": 4
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[EXDFSENDER]osal_valloc_msg err = %x \n",
+    "[EXDFSENDER]osal_set_msg_pri err = %x \n",
+    "[EXDFSENDER]osal_snd_msg err = %x \n"
+   ]
+  },
+  {
+   "etiqueta": "[FFLSH]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 4,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 4,
+   "recuento_bytes": {
+    "a6000": 4,
+    "a7s": 4,
+    "a6300": 4
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[VIDDECSTAT][FFLSH]Flushing -> Initialized \n",
+    "[VIDDECSTAT][FFLSH]Ignore Flush Picture \n",
+    "[VIDDECSTAT][FFLSH]Err!!! File:%s, Func:%s() ,Line:%d \n"
+   ]
+  },
+  {
+   "etiqueta": "[MAIN]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 4,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 4,
+   "recuento_bytes": {
+    "a6000": 4,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[ACCY][INFO][MAIN] NotifyUartCommand[%c%c%c...]",
+    "[ACCY][ERR][MAIN]:%d:Uart Send Err",
+    "[ACCY][INFO][MAIN] NotifyUartResponse[%c%c%c...]"
+   ]
+  },
+  {
+   "etiqueta": "[VFX]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 4,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 4,
+   "recuento_bytes": {
+    "a6000": 4,
+    "a7s": 4,
+    "a6300": 5
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[VFX][Debug]ddl_VfxEffectTransferStart REGISTER_SET_CANCEL !! %d, %d, %d",
+    "[VFX][Debug]ddl_VfxEffectTransferStart ERR_REQ_OVERFLOW Error!!(%d) 0x%x",
+    "[VFX][Debug]ddl_VfxEffectTransferStart ddls_VfxCheckState Error!! 0x%x, %d, %d"
+   ]
+  },
+  {
+   "etiqueta": "[AUDIOIP]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 3,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 3,
+   "recuento_bytes": {
+    "a6000": 3,
+    "a7s": 3,
+    "a6300": 3
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[AUDIOIP]GetInstance Err %x\n",
+    "[AUDIOIP]SaDriverFactory Err %x\n",
+    "[AUDIOIP]DUMMY EXE \n"
+   ]
+  },
+  {
+   "etiqueta": "[AVIO]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 3,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 3,
+   "recuento_bytes": {
+    "a6000": 3,
+    "a7s": 92,
+    "a6300": 92
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[AVIO][sio_hibiki]SIO ch:0x%x, CS port:0x%x, CS bit:0x%x, inv:0x%x, csomod:0x%x",
+    "[AVIO][acl_hibiki]HIBIKI Register:",
+    "[AVIO][acl_hibiki]HIBIKI2 Register:"
+   ]
+  },
+  {
+   "etiqueta": "[AVSCCTLEFCT]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 3,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 3,
+   "recuento_bytes": {
+    "a6000": 3,
+    "a7s": 3,
+    "a6300": 3
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[AVSCCTLEFCT]Effect Info is Invalid : adr[0x%08x] size[0x%08x]\n",
+    "[AVSCCTLEFCT]Colorbar OFF(0)/ON(1) : [%d] vType[%d]\n",
+    "[AVSCCTLEFCT]Init Colorbar OFF(0) [%d]\n"
+   ]
+  },
+  {
+   "etiqueta": "[CCNR_ENCODE]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 3,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 3,
+   "recuento_bytes": {
+    "a6000": 3,
+    "a7s": 3,
+    "a6300": 4
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[SDF][CCNR_ENCODE] jpegOverLimit (...going to ENCODE RETRY)\n",
+    "[SDF][CCNR_ENCODE] SDF_RECMODE_OPAL_DUAL_REC\n",
+    "[SDF][CCNR_ENCODE] SDF_RECMODE_STILL_REC\n"
+   ]
+  },
+  {
+   "etiqueta": "[DBG]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 3,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 3,
+   "recuento_bytes": {
+    "a6000": 3,
+    "a7s": 3,
+    "a6300": 3
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[DBG] complementary A.PI Sync added.\n",
+    "[DBG] Overwrite! %s.Info:%d %s\n",
+    "[DBG] Overwrite! %s.PI:%d %s\n"
+   ]
+  },
+  {
+   "etiqueta": "[DECAUDPAUS]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 3,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 3,
+   "recuento_bytes": {
+    "a6000": 3,
+    "a7s": 3,
+    "a6300": 3
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[DECAUDPAUS]Ignore Mute Cmd(%x) \n",
+    "[DECAUDPAUS]PauseReleaseSample = %x, CurrentSample = %x, BaseSample = %x, ResumeAdr = %x \n",
+    "[DECAUDPAUS]P:LPCM StopAdr = %x StopSample = %x ,\n"
+   ]
+  },
+  {
+   "etiqueta": "[ENCAUDSTAT]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 3,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 3,
+   "recuento_bytes": {
+    "a6000": 3,
+    "a7s": 3,
+    "a6300": 3
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[ENCAUDSTAT]File:%s, Func:%s() ,Line:%d \n",
+    "[ENCAUDSTAT]WriteAugi : AUGI FLAG END \n",
+    "[ENCAUDSTAT][AUDIO INFO] Pts = 0x%08x EndFlug = 0x%02x, Num Au = %x \n"
+   ]
+  },
+  {
+   "etiqueta": "[ENCODE_JPEG_WITH_WORK]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 3,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 3,
+   "recuento_bytes": {
+    "a6000": 3,
+    "a7s": 3,
+    "a6300": 3
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[SDF][ENCODE_JPEG_WITH_WORK] qParam : %d\n",
+    "[SDF][ENCODE_JPEG_WITH_WORK] ResizeWorkArea is acquired from UnitHandle \n",
+    "[SDF][ENCODE_JPEG_WITH_WORK] ResizeWorkArea is acquired inside SDF\n"
+   ]
+  },
+  {
+   "etiqueta": "[LGA]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 3,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 3,
+   "recuento_bytes": {
+    "a6000": 3,
+    "a7s": 3,
+    "a6300": 3
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_YC]: %s: [LGA][Async]GetDfeDrvParamFull error: 0x%x",
+    "[CAMERA_MAIN_YC]: %s: [LGA][Async]GetDfeDrvParam error: 0x%x",
+    "[CAMERA_MAIN_YC]: %s: [LGA][Sync]GetDfeDrvParam error: 0x%x"
+   ]
+  },
+  {
+   "etiqueta": "[MCBBDLYCLC]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 3,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 3,
+   "recuento_bytes": {
+    "a6000": 3,
+    "a7s": 3,
+    "a6300": 3
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[MCBBDLYCLC][yc]create:0x%08x,exp:0x%02x,expDly:0x%02x,transS:0x%08x,transT:0x%02x\n",
+    "[MCBBDLYCLC][audio]create:0x%08x,createsample:0x%2x,trans:0x%08x,period:0x%02x,sample:0x%0",
+    "[MCBBDLYCLC]bbDly:%d,vDly:%d,aDly:%d VSD %5d \n"
+   ]
+  },
+  {
+   "etiqueta": "[MCIFINFACC]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 3,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 3,
+   "recuento_bytes": {
+    "a6000": 3,
+    "a7s": 3,
+    "a6300": 3
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[MCIFINFACC][WRN][%s][%d],%d,%d,%d,%d,%d,%d,\n",
+    "[MCIFINFACC][WRN][%s][%d]widx:%d,ridx:%d,max:%d\n",
+    "[MCIFINFACC][WRN][%s][%d]pre_idx:%d,cur_idx:%d,count:%d\n"
+   ]
+  },
+  {
+   "etiqueta": "[PROC]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 3,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 3,
+   "recuento_bytes": {
+    "a6000": 3,
+    "a7s": 3,
+    "a6300": 3
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[ADF][ADF][PROC][ERR]CALC_EE_DLY_V MIN_ERR: (MaxV,MinV,Calc,Set) = ( %X, %X, %X, %X )",
+    "[ADF][ADF][PROC][ERR]CALC_EE_DLY_V MAX_ERR: (MaxV,MinV,Calc,Set) = ( %X, %X, %X, %X )",
+    "[ADF][ADF][PROC][ERR]CALC_EE_DLY_V MIN_ERR : (MaxV,MinV) = ( %X, %X )"
+   ]
+  },
+  {
+   "etiqueta": "[SIO]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 3,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 3,
+   "recuento_bytes": {
+    "a6000": 3,
+    "a7s": 3,
+    "a6300": 3
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[SIO]osal_valloc_msg %08x",
+    "[SIO] osal_snd_msg %x",
+    "[SIO] osal_free_msg %x"
+   ]
+  },
+  {
+   "etiqueta": "[STK_AUTO_SAL]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 3,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 3,
+   "recuento_bytes": {
+    "a6000": 3,
+    "a7s": 3,
+    "a6300": 0
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[TRK]: [STK_AUTO_SAL] CAM_MODE_CLOSE",
+    "[TRK]: [STK_AUTO_SAL] CORE2 RESOURCE CONTENTION : %d",
+    "[TRK]: [STK_AUTO_SAL] MEMORY ALLOC ERROR"
+   ]
+  },
+  {
+   "etiqueta": "[STOP]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 3,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 3,
+   "recuento_bytes": {
+    "a6000": 3,
+    "a7s": 3,
+    "a6300": 3
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[FACE]: [STOP] Init Stat Error : %d",
+    "[FACE]: [STOP] TIME OUT %d",
+    "[FACE]: [STOP] Mem Free Error %d"
+   ]
+  },
+  {
+   "etiqueta": "[AVCMODEMGR]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 2,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 2,
+   "recuento_bytes": {
+    "a6000": 2,
+    "a7s": 2,
+    "a6300": 2
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[AVCMODEMGR]File:%s, Func:%s() ,Line:%d \n",
+    "[AVCMODEMGR][UseCase] %d \n"
+   ]
+  },
+  {
+   "etiqueta": "[BIN_LIMITER]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 2,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 2,
+   "recuento_bytes": {
+    "a6000": 2,
+    "a7s": 2,
+    "a6300": 2
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[%s][BIN_LIMITER]: limited                                       = %d\n",
+    "[%s][BIN_LIMITER]: latest_limited                                = %d\n"
+   ]
+  },
+  {
+   "etiqueta": "[CBA_FIFO]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 2,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 2,
+   "recuento_bytes": {
+    "a6000": 2,
+    "a7s": 2,
+    "a6300": 2
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[%s][CBA_FIFO]:    cba_command_queue_size                        = %d\n",
+    "[%s][CBA_FIFO]:    cba_command_queue_using_num                   = %d\n"
+   ]
+  },
+  {
+   "etiqueta": "[CORE]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 2,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 2,
+   "recuento_bytes": {
+    "a6000": 2,
+    "a7s": 2,
+    "a6300": 2
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[ERR][AMSENS][CORE]NOT SUPPORTED(SENS_SET_DATA) -- MODE ID [0x%08X] [%s]\n",
+    "[ERR][AMSENS][CORE]NOT SUPPORTED -- COMMAND ID [0x%08X] [%s]\n"
+   ]
+  },
+  {
+   "etiqueta": "[DATA]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 2,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 2,
+   "recuento_bytes": {
+    "a6000": 2,
+    "a7s": 2,
+    "a6300": 2
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[FACE]: [DATA] TIME OUT %d",
+    "[FACE]: [DATA] SA Return Error %08x"
+   ]
+  },
+  {
+   "etiqueta": "[DECAUDSMPL]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 2,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 2,
+   "recuento_bytes": {
+    "a6000": 2,
+    "a7s": 2,
+    "a6300": 2
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[DECAUDSMPL][AUDIO INFO]Output Term = %x \n",
+    "[DECAUDSMPL][AUDIO INFO]startSample = %x, sampleOffset = %x, remainSample = %x \n"
+   ]
+  },
+  {
+   "etiqueta": "[DECVIDPARM]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 2,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 2,
+   "recuento_bytes": {
+    "a6000": 2,
+    "a7s": 2,
+    "a6300": 2
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[DECVIDPARM][%s][%s][%d] vOutSync=%#x\n",
+    "[DECVIDPARM]Set Unknown FrameRate !!! \n"
+   ]
+  },
+  {
+   "etiqueta": "[DEC]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 2,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 0.5,
+   "con_ref_pic": 2,
+   "recuento_bytes": {
+    "a6000": 2,
+    "a7s": 2,
+    "a6300": 2
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[ADF][SAN][STOPG] stopVfc %d[DEC] stopRP %x \n",
+    "[DEC]\n"
+   ]
+  },
+  {
+   "etiqueta": "[DMMYSIOCOM]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 2,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 2,
+   "recuento_bytes": {
+    "a6000": 2,
+    "a7s": 2,
+    "a6300": 2
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[DMMYSIOCOM]ERR. osal_snd_msg. err=0x%x, L=%d",
+    "[DMMYSIOCOM]ERR. osal_free_msg. err=0x%x, L=%d"
+   ]
+  },
+  {
+   "etiqueta": "[HDMAC]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 2,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 2,
+   "recuento_bytes": {
+    "a6000": 2,
+    "a7s": 2,
+    "a6300": 2
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[DFECore]: [Err][HDMAC] CallbackDMA Not Supported ch %d\n",
+    "[DFECore]: [Err][HDMAC] SetIntFactor Not Supported ch %d\n"
+   ]
+  },
+  {
+   "etiqueta": "[IMCIF]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 2,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 2,
+   "recuento_bytes": {
+    "a6000": 2,
+    "a7s": 2,
+    "a6300": 2
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[IMCIF][ERR] %s, %d, Invalid notifyId !!!!\n",
+    "[IMCIF][ERR] %s, %d, Invalid replyId !!!!\n"
+   ]
+  },
+  {
+   "etiqueta": "[IN]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 2,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 2,
+   "recuento_bytes": {
+    "a6000": 2,
+    "a7s": 0,
+    "a6300": 3
+   },
+   "lexico_captura": [
+    "imager"
+   ],
+   "ejemplos": [
+    "[CAM_IMAGER]:       [IN] Adrs:%08x / ProcNum:%04x  [OUT] Adrs:%08x / Num%04x",
+    "[CAM_IMAGER]: ZIT ConvZ1c: ProcInfo  [IN] Adrs:%08x / Num:%04x"
+   ]
+  },
+  {
+   "etiqueta": "[MCUSRDEDT]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 2,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 2,
+   "recuento_bytes": {
+    "a6000": 2,
+    "a7s": 2,
+    "a6300": 2
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[MCUSRDEDT]%s() Invalid UserDataAdr %x\n",
+    "[MCUSRDEDT]%s() Invalid UserDataNum %x\n"
+   ]
+  },
+  {
+   "etiqueta": "[MPGPINCONV]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 2,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 2,
+    "a7s": 2,
+    "a6300": 2
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[MPGPINCONV]Err!!! File:%s, Func:%s() ,Line:%d \n",
+    "[MPGPINCONV]ConvertFieldData: PIN_YC_DATA_CONTENT_PROGRESSIVE \n"
+   ]
+  },
+  {
+   "etiqueta": "[NTF]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 2,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 2,
+   "recuento_bytes": {
+    "a6000": 2,
+    "a7s": 2,
+    "a6300": 2
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[AUDPINEDTR][NTF] Main Recv Data Non \n",
+    "[AUDPINEDTR][NTF] Sub Recv Data Non \n"
+   ]
+  },
+  {
+   "etiqueta": "[PCPSTATDRM]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 2,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 2,
+   "recuento_bytes": {
+    "a6000": 2,
+    "a7s": 2,
+    "a6300": 2
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[PCPSTATDRM]Err!!! File:%s, Func:%s() ,Line:%d \n",
+    "[PCPSTATDRM]IIB NUM = %x \n"
+   ]
+  },
+  {
+   "etiqueta": "[RCV]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 2,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 2,
+   "recuento_bytes": {
+    "a6000": 2,
+    "a7s": 2,
+    "a6300": 2
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[SDF][RCV]  MSG ID: %s REQ ID: %d",
+    "[IMAGING_CAP]: [RC LOG][RCV]ProcessOverExecute: current_bit[0x%x] request_bit[0x%x]"
+   ]
+  },
+  {
+   "etiqueta": "[STK_COLOR_SIM]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 2,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 2,
+   "recuento_bytes": {
+    "a6000": 2,
+    "a7s": 2,
+    "a6300": 0
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[TRK]: [STK_COLOR_SIM] CAM_MODE_CLOSE",
+    "[TRK]: [STK_COLOR_SIM] CORE2 RESOURCE CONTENTION : %d"
+   ]
+  },
+  {
+   "etiqueta": "[STK_TOUCH_SIM]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 2,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 2,
+   "recuento_bytes": {
+    "a6000": 2,
+    "a7s": 2,
+    "a6300": 0
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[TRK]: [STK_TOUCH_SIM] CAM_MODE_CLOSE",
+    "[TRK]: [STK_TOUCH_SIM] CORE2 RESOURCE CONTENTION : %d"
+   ]
+  },
+  {
+   "etiqueta": "[STOPG]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 2,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 2,
+   "recuento_bytes": {
+    "a6000": 2,
+    "a7s": 2,
+    "a6300": 2
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[ADF][SAN][STOPG] stopVfc %d[DEC] stopRP %x \n",
+    "[ADF][SAN][STOPG]stopWaitVfc %x : %x -> %x\n"
+   ]
+  },
+  {
+   "etiqueta": "[SYSTEM]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 2,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 0,
+   "recuento_bytes": {
+    "a6000": 2,
+    "a7s": 2,
+    "a6300": 2
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[SYSTEM]GetExecTime",
+    "[SYSTEM]ClearExecTime"
+   ]
+  },
+  {
+   "etiqueta": "[TOP]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 2,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 2,
+   "recuento_bytes": {
+    "a6000": 2,
+    "a7s": 2,
+    "a6300": 2
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[TOP]: mmu error detected!:0x%x",
+    "[TOP]: MESSAGE RECEIVE ERROR"
+   ]
+  },
+  {
+   "etiqueta": "[VIDEOCOLOR]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 2,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 2,
+   "recuento_bytes": {
+    "a6000": 2,
+    "a7s": 2,
+    "a6300": 2
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[VIDEOCOLOR]SetDefaultColor = %x\n",
+    "[VIDEOCOLOR]File:%s, Func:%s() ,Line:%d \n"
+   ]
+  },
+  {
+   "etiqueta": "[WRAP]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 2,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 0,
+   "recuento_bytes": {
+    "a6000": 2,
+    "a7s": 2,
+    "a6300": 2
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[WRAP]SetMicConfig",
+    "[WRAP]SetMode"
+   ]
+  },
+  {
+   "etiqueta": "[ABB]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [VIO]r0:%02X r1:%02X w0:%02X w1:%02X  [GPE]r0:%02X w0:%02X  [ABB]r0:%0"
+   ]
+  },
+  {
+   "etiqueta": "[ANNOUNCE]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[BGM       ][%s][%s()][%d][ANNOUNCE] not read id=%d adr=%#x\n"
+   ]
+  },
+  {
+   "etiqueta": "[APL0]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [APL0]r0:%02X r1:%02X r2:%02X w0:%02X w1:%02X w2:%02X  [APL1]r0:%02X r"
+   ]
+  },
+  {
+   "etiqueta": "[APL1]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [APL0]r0:%02X r1:%02X r2:%02X w0:%02X w1:%02X w2:%02X  [APL1]r0:%02X r"
+   ]
+  },
+  {
+   "etiqueta": "[AVCDECAUDES]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[AVCDECAUDES][ERR] %s, %d, Invalid replyId !!!!\n"
+   ]
+  },
+  {
+   "etiqueta": "[AVCE]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[AMSENS][CTRLCORE][AVCE][PARAM] adr[0x%08X] size[%d]"
+   ]
+  },
+  {
+   "etiqueta": "[AVIF]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[AVIF]"
+   ]
+  },
+  {
+   "etiqueta": "[AVSCEVTSND]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[AVSCEVTSND]Unable send mbf ID=%x \n"
+   ]
+  },
+  {
+   "etiqueta": "[AVSC]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[AVSC]"
+   ]
+  },
+  {
+   "etiqueta": "[BBDELAY]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[EXCODECENC][BBDELAY]Final BBDelay After Adjustment to BEAUNE is %d\n"
+   ]
+  },
+  {
+   "etiqueta": "[CAM0]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [CAM0]r0:%02X r1:%02X r2:%02X w0:%02X w1:%02X w2:%02X  [CAM1]r0:%02X r"
+   ]
+  },
+  {
+   "etiqueta": "[CAM1]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [CAM0]r0:%02X r1:%02X r2:%02X w0:%02X w1:%02X w2:%02X  [CAM1]r0:%02X r"
+   ]
+  },
+  {
+   "etiqueta": "[CCNR]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[SDF][CCNR] Timeout! (...going to whole module RETRY)"
+   ]
+  },
+  {
+   "etiqueta": "[CDCCTRL]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CDCCTRL][MODIFY1]EffectDiff = %x,EffectVfc = %x,EffectVfcSendNow = %x \n"
+   ]
+  },
+  {
+   "etiqueta": "[CDCID_HD_CODEC]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "cdcId -> [CDCID_HD_CODEC]\n"
+   ]
+  },
+  {
+   "etiqueta": "[CDCID_SD_CODEC]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "cdcId -> [CDCID_SD_CODEC]\n"
+   ]
+  },
+  {
+   "etiqueta": "[CDM]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[IMAGING_CAP]: %s BoksBase[CDM] err"
+   ]
+  },
+  {
+   "etiqueta": "[CID]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "campo_de_formato",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAM_UTIL_SENS]:   >> Recieve UnKnown Msg [CID]%x"
+   ]
+  },
+  {
+   "etiqueta": "[CLKCTRL]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[SONLYAUDIO][CLKCTRL] clkNow=%d, clkNext=%d, timing=%d\n"
+   ]
+  },
+  {
+   "etiqueta": "[CODE]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "campo_de_formato",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN]: >>[EC_00toOF][CODE]: %x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x"
+   ]
+  },
+  {
+   "etiqueta": "[CPU]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [CPU]r0:%02X r1:%02X w0:%02X w1:%02X  [DMAC]r0:%02X w0:%02X  [PERI]r0:"
+   ]
+  },
+  {
+   "etiqueta": "[DAAUGICONV]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 2
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[DAAUGICONV]%d %d %10d %d %10llu %10d %8d %2d\n"
+   ]
+  },
+  {
+   "etiqueta": "[DDT]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [DDT]r0:%02X"
+   ]
+  },
+  {
+   "etiqueta": "[DECSEQVIF]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[DECSEQVIF]SetSeqInstance = %x \n"
+   ]
+  },
+  {
+   "etiqueta": "[DIRECTCOMMAND]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[DIRECTCOMMAND] [%d] argv[%s]"
+   ]
+  },
+  {
+   "etiqueta": "[DMAC]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [CPU]r0:%02X r1:%02X w0:%02X w1:%02X  [DMAC]r0:%02X w0:%02X  [PERI]r0:"
+   ]
+  },
+  {
+   "etiqueta": "[DMM_HANDLE_YCC_FULL]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAM_SCALAR]: %s: dmm_handle[DMM_HANDLE_YCC_FULL] error"
+   ]
+  },
+  {
+   "etiqueta": "[DVAUGICONV]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[DVAUGICONV]%d %d %10d %d %10llu %10d %8d %2d\n"
+   ]
+  },
+  {
+   "etiqueta": "[DVFC]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[DVFC]PTM Reverse\n"
+   ]
+  },
+  {
+   "etiqueta": "[ENCAUDLPCM]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[ENCAUDLPCM]File:%s, Func:%s() ,Line:%d \n"
+   ]
+  },
+  {
+   "etiqueta": "[ENCAUDSMPL]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[ENCAUDSMPL]FrameRate Unknown... \n"
+   ]
+  },
+  {
+   "etiqueta": "[ENCAUDUTIL]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[ENCAUDUTIL]Freq1 = %d, Freq2 = %d, Sample = %d, Ch = %x ,FrameRate = %x \n"
+   ]
+  },
+  {
+   "etiqueta": "[EXEC]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[SDF][EXEC] MSG ID: %s REQ ID: %d"
+   ]
+  },
+  {
+   "etiqueta": "[FILE_NUM]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "campo_de_formato",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAM_UTIL_SENS]: >>[FILE_NUM]%x [ADR]%x [SIZE]%x"
+   ]
+  },
+  {
+   "etiqueta": "[FOPD]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [IDT]r0:%02X r1:%02X r2:%02X w0:%02X  [FOPD]r0:%02X w0:%02X w1:%02X w2"
+   ]
+  },
+  {
+   "etiqueta": "[FSYSMODE]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAM_UTIL_SENS]: >>[STAT]%x [FSYSMODE]"
+   ]
+  },
+  {
+   "etiqueta": "[GETPIN]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[SFRS][DEBUG][GETPIN] ReqYccAsap(true): file=%s line=%d"
+   ]
+  },
+  {
+   "etiqueta": "[GPE]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [VIO]r0:%02X r1:%02X w0:%02X w1:%02X  [GPE]r0:%02X w0:%02X  [ABB]r0:%0"
+   ]
+  },
+  {
+   "etiqueta": "[HW]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[ACCY][INFO][HW]:AD=%d, ID=%d"
+   ]
+  },
+  {
+   "etiqueta": "[IN1]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "lexico_captura": [
+    "imager"
+   ],
+   "ejemplos": [
+    "[CAM_IMAGER]: ZIT Merge:Info ch%01x [IN1] Adrs:%08x / Num:%04x [IN2] Adrs:%08x / Num:%04x "
+   ]
+  },
+  {
+   "etiqueta": "[IN2]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "lexico_captura": [
+    "imager"
+   ],
+   "ejemplos": [
+    "[CAM_IMAGER]: ZIT Merge:Info ch%01x [IN1] Adrs:%08x / Num:%04x [IN2] Adrs:%08x / Num:%04x "
+   ]
+  },
+  {
+   "etiqueta": "[INF]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[MC][INF]CM [%d]->[%d]\n"
+   ]
+  },
+  {
+   "etiqueta": "[LIF_ERROR]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[LIF_ERROR]: [StartDmacTXD] open:%d, set:%d, start:%d"
+   ]
+  },
+  {
+   "etiqueta": "[MANU]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "campo_de_formato",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN]: >>[EC_30to3F][MANU]: %x,%x,%x,%x,%x,%x,%x,%x,%x,%x,%x"
+   ]
+  },
+  {
+   "etiqueta": "[MC32BTCNTR]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[MC32BTCNTR]INPUT VFC INVALID: vfc:%x,currentCount:%x \n"
+   ]
+  },
+  {
+   "etiqueta": "[MCCOUNTMGR]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[MCCOUNTMGR]File:%s, Func:%s() ,Line:%d \n"
+   ]
+  },
+  {
+   "etiqueta": "[MCMSGPINIF]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[MCMSGPINIF][%s][%s()][%d]cid:%#x \n"
+   ]
+  },
+  {
+   "etiqueta": "[MCMSGSTATE]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[MCMSGSTATE][%d]state:%#x->%#x\n"
+   ]
+  },
+  {
+   "etiqueta": "[MCS]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 2
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[MOUNT_ERROR]: [MCS]addCmdDataList data times overflow\n"
+   ]
+  },
+  {
+   "etiqueta": "[MODEFLG]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAM_UTIL_SENS]:                    [MODEFLG]:%x"
+   ]
+  },
+  {
+   "etiqueta": "[MODE_SNR_BUS_THROUGH]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[IMAGING_CAP]: CamCore Aquire Error!: %02x[MODE_SNR_BUS_THROUGH]"
+   ]
+  },
+  {
+   "etiqueta": "[MODIFY1]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CDCCTRL][MODIFY1]EffectDiff = %x,EffectVfc = %x,EffectVfcSendNow = %x \n"
+   ]
+  },
+  {
+   "etiqueta": "[MOJITO_ERROR]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[MOJITO_ERROR]:              error_type                                    = %s\n"
+   ]
+  },
+  {
+   "etiqueta": "[MPGMSGSEND]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[MPGMSGSEND][%s][%s()][%d] Error=%d \n"
+   ]
+  },
+  {
+   "etiqueta": "[NULL]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[ACCY][DEBUG][NULL] NotifyAttached(%d)"
+   ]
+  },
+  {
+   "etiqueta": "[PCIE]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [CPU]r0:%02X r1:%02X w0:%02X w1:%02X  [DMAC]r0:%02X w0:%02X  [PERI]r0:"
+   ]
+  },
+  {
+   "etiqueta": "[PCP0]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [PCP0]r0:%02X w0:%02X  [PCP1]r0:%02X w0:%02X  [WSX0]r0:%02X w0:%02X  ["
+   ]
+  },
+  {
+   "etiqueta": "[PCP1]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [PCP0]r0:%02X w0:%02X  [PCP1]r0:%02X w0:%02X  [WSX0]r0:%02X w0:%02X  ["
+   ]
+  },
+  {
+   "etiqueta": "[PCPSTATINI]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[PCPSTATINI]Err!!! File:%s, Func:%s() ,Line:%d \n"
+   ]
+  },
+  {
+   "etiqueta": "[PERI]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [CPU]r0:%02X r1:%02X w0:%02X w1:%02X  [DMAC]r0:%02X w0:%02X  [PERI]r0:"
+   ]
+  },
+  {
+   "etiqueta": "[PFHS]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 0,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "ALVUJ@BMWVKACNXWLBDOYXMCEPZYNDFQ[ZOEGR\\[PFHS]\\QGIÿ^]RHJU_ÿÿÿKV`_TJLWa`UKMXbaVLNYcbWMOZdcXN"
+   ]
+  },
+  {
+   "etiqueta": "[RC0]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [RC0]r0:%02X r1:%02X w0:%02X w1:%02X  [RC1]r0:%02X r1:%02X w0:%02X w1:"
+   ]
+  },
+  {
+   "etiqueta": "[RC1]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [RC0]r0:%02X r1:%02X w0:%02X w1:%02X  [RC1]r0:%02X r1:%02X w0:%02X w1:"
+   ]
+  },
+  {
+   "etiqueta": "[RC2]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [RC0]r0:%02X r1:%02X w0:%02X w1:%02X  [RC1]r0:%02X r1:%02X w0:%02X w1:"
+   ]
+  },
+  {
+   "etiqueta": "[RCH]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[IMAGING_CAP]: [RC LOG][RCH]ProcessOverExecute: current_bit[0x%x] request_bit[0x%x]"
+   ]
+  },
+  {
+   "etiqueta": "[RDM]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[IMAGING_CAP]: %s BoksBase[RDM] err"
+   ]
+  },
+  {
+   "etiqueta": "[REN]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[IMAGING_CAP]: %s BoksBase[REN] err"
+   ]
+  },
+  {
+   "etiqueta": "[RESET]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[EXCDCENCMP][RESET][SetSeq] idx[%d] Tick[%d] MaxNd[%d] MaxN[%d] M3s[%d]\n"
+   ]
+  },
+  {
+   "etiqueta": "[RING_DIAL]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[RING_DIAL] LED : %d"
+   ]
+  },
+  {
+   "etiqueta": "[SA0]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [SA0]r0:%02X r1:%02X w0:%02X  [SA1]r0:%02X r1:%02X w0:%02X"
+   ]
+  },
+  {
+   "etiqueta": "[SA1]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [SA0]r0:%02X r1:%02X w0:%02X  [SA1]r0:%02X r1:%02X w0:%02X"
+   ]
+  },
+  {
+   "etiqueta": "[SCN]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[IMAGING_CAP]: EncodeJpeg [SCN] ERR"
+   ]
+  },
+  {
+   "etiqueta": "[SCN_ENCODE]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[SDF][SCN_ENCODE] Jpeg Timeout! (...going to whole module RETRY)\n"
+   ]
+  },
+  {
+   "etiqueta": "[SETPIN]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[SFRS][DEBUG][SETPIN] YccOut(false): file=%s line=%d"
+   ]
+  },
+  {
+   "etiqueta": "[SET_DIAG_MODE]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 2
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CDIAG][CTRLCORE][SET_DIAG_MODE] mode[0x%02X] func[0x%02X]"
+   ]
+  },
+  {
+   "etiqueta": "[SE]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[SE]index = %d\n"
+   ]
+  },
+  {
+   "etiqueta": "[SIZE]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "campo_de_formato",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAM_UTIL_SENS]: >>[FILE_NUM]%x [ADR]%x [SIZE]%x"
+   ]
+  },
+  {
+   "etiqueta": "[SONLYAUDIO]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[SONLYAUDIO][CLKCTRL] clkNow=%d, clkNext=%d, timing=%d\n"
+   ]
+  },
+  {
+   "etiqueta": "[SPC0]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [SPC0]r0:%02X r1:%02X w0:%02X  [SPC1]r0:%02X r1:%02X w0:%02X"
+   ]
+  },
+  {
+   "etiqueta": "[SPC1]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [SPC0]r0:%02X r1:%02X w0:%02X  [SPC1]r0:%02X r1:%02X w0:%02X"
+   ]
+  },
+  {
+   "etiqueta": "[SRC0]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [SRC0]r0:%02X w0:%02X  [SRC1]r0:%02X w0:%02X  [SRC2]r0:%02X w0:%02X  ["
+   ]
+  },
+  {
+   "etiqueta": "[SRC1]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [SRC0]r0:%02X w0:%02X  [SRC1]r0:%02X w0:%02X  [SRC2]r0:%02X w0:%02X  ["
+   ]
+  },
+  {
+   "etiqueta": "[SRC2]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [SRC0]r0:%02X w0:%02X  [SRC1]r0:%02X w0:%02X  [SRC2]r0:%02X w0:%02X  ["
+   ]
+  },
+  {
+   "etiqueta": "[SRC3]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [SRC0]r0:%02X w0:%02X  [SRC1]r0:%02X w0:%02X  [SRC2]r0:%02X w0:%02X  ["
+   ]
+  },
+  {
+   "etiqueta": "[SRC4]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [SRC0]r0:%02X w0:%02X  [SRC1]r0:%02X w0:%02X  [SRC2]r0:%02X w0:%02X  ["
+   ]
+  },
+  {
+   "etiqueta": "[STAT]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "campo_de_formato",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAM_UTIL_SENS]: >>[STAT]%x [FSYSMODE]"
+   ]
+  },
+  {
+   "etiqueta": "[STK_C_SIM]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 0
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[TRK]: [STK_C_SIM] MEMORY ALLOC ERROR"
+   ]
+  },
+  {
+   "etiqueta": "[STK_T_SIM]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 0
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[TRK]: [STK_T_SIM] MEMORY ALLOC ERROR"
+   ]
+  },
+  {
+   "etiqueta": "[SWFLG]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 0,
+    "a6300": 0
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAM_UTIL_SENS]:                    [SWFLG]:%x"
+   ]
+  },
+  {
+   "etiqueta": "[THM]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[IMAGING_CAP]: EncodeJpeg [THM] ERR"
+   ]
+  },
+  {
+   "etiqueta": "[TSKCORE]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[ERR][CDIAG][TSKCORE]DataflowInfraMsgErr [0x%08X]"
+   ]
+  },
+  {
+   "etiqueta": "[VFX0]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [VFX0]r0:%02X r1:%02X r2:%02X w0:%02X w1:%02X  [VFX1]r0:%02X r1:%02X r"
+   ]
+  },
+  {
+   "etiqueta": "[VFX1]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [VFX0]r0:%02X r1:%02X r2:%02X w0:%02X w1:%02X  [VFX1]r0:%02X r1:%02X r"
+   ]
+  },
+  {
+   "etiqueta": "[VIDENCPARAM]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[VIDENCPARAM]PICTURE_DATA_FULL : Err!!! File:%s, Func:%s() ,Line:%d \n"
+   ]
+  },
+  {
+   "etiqueta": "[VIO]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [VIO]r0:%02X r1:%02X w0:%02X w1:%02X  [GPE]r0:%02X w0:%02X  [ABB]r0:%0"
+   ]
+  },
+  {
+   "etiqueta": "[VPH]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [VPH]r0:%02X r1:%02X r2:%02X r3:%02X r4:%02X r5:%02X r6:%02X w0:%02X"
+   ]
+  },
+  {
+   "etiqueta": "[VPINFO]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "modulo_propio",
+   "fraccion_inicio_propio": 1.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[VPINFO]"
+   ]
+  },
+  {
+   "etiqueta": "[WSX0]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [PCP0]r0:%02X w0:%02X  [PCP1]r0:%02X w0:%02X  [WSX0]r0:%02X w0:%02X  ["
+   ]
+  },
+  {
+   "etiqueta": "[WSX1]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [PCP0]r0:%02X w0:%02X  [PCP1]r0:%02X w0:%02X  [WSX0]r0:%02X w0:%02X  ["
+   ]
+  },
+  {
+   "etiqueta": "[ZIMA0]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [ZIMA0]r0:%02X r1:%02X w0:%02X w1:%02X  [ZIMA1]r0:%02X r1:%02X r2:%02X"
+   ]
+  },
+  {
+   "etiqueta": "[ZIMA1]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 1
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[CAMERA_MAIN_SYNC]: [ZIMA0]r0:%02X r1:%02X w0:%02X w1:%02X  [ZIMA1]r0:%02X r1:%02X r2:%02X"
+   ]
+  },
+  {
+   "etiqueta": "[ZNR]",
+   "prioridad": 2,
+   "veredicto_censo": "NO_VERIFICADO",
+   "ocurrencias": 1,
+   "clase": "subetiqueta",
+   "fraccion_inicio_propio": 0.0,
+   "con_ref_pic": 1,
+   "recuento_bytes": {
+    "a6000": 1,
+    "a7s": 1,
+    "a6300": 2
+   },
+   "lexico_captura": [],
+   "ejemplos": [
+    "[SA][ZNR] timingVfc INVALID tV[0] %x tV[1] %x tV[2] %x \n"
+   ]
+  }
+ ]
+}

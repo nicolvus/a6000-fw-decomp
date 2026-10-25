@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "scripts" / "knowledge"))
 
 spec = importlib.util.spec_from_file_location("mcp_server", ROOT / "scripts" / "knowledge" / "mcp_server.py")
+assert spec and spec.loader
 mcp_server = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(mcp_server)
 

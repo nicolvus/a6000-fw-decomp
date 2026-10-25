@@ -32,37 +32,34 @@ por esos índices.
 | ID | Estado | Pendiente | Criterio de cierre / límite | Fuente |
 |---|---|---|---|---|
 | E1 | NO_VERIFICADO | Quién publica el local 4 a `ModelScalarPb` (`0x120EF004`), el 2 a `ModelPbCap` (`0x12030002`) y los mensajes `0x35001004`, `0x35003002`, `0x3a494026` | Ningún código de `libObj` construye esos ids; el emisor, si existe, es de datos o de ejecución. Reabrir solo si aparece un llamador que pase `@M0EF` o `@M030` a `0x12d780` | [cierre S402 §8](capture/static-closure-2026-10-25.md) |
-| E2 | ABIERTO | Activación real de RecordImage/RecordStill en un disparo: condiciones del check `0x907ba0` y productor externo de `0x10000005` (los dos constructores conocidos no son envíos externos) | Cadena disparo → mensaje → estado 2 demostrada por código, o declarada de ejecución | [seguimiento](capture/capture-static-followup-2026-10-25.md) |
-| E3 | ABIERTO | Origen de `params[+9]` en `SetExposure` (IMX210): el llamador de `SetExposure` no se trazó; relación con Silent | Llamador y origen del valor identificados | [cierre S402 §6](capture/static-closure-2026-10-25.md) |
-| E4 | NO_VERIFICADO | Nombre y efecto de cada modo `+8` de la cola `0x40193` (solo se sabe que es un índice de tabla de estado) | Tabla índice → estado nombrada | [cierre S402 §9](capture/static-closure-2026-10-25.md) |
-| E5 | PARCIAL | `S[0]=&G` en A7S (evidencia estructural, no asignación) y lector del byte A6000 `+0x238` (no existe en `av-cam`) | Escritor/lector localizado o ausencia acotada | [S205](capture/s205-imager-s0-writer.md) |
-| E6 | NO_VERIFICADO | Cadena CAIF → Darwin → LIRO/imager: el MCU Darwin queda fuera de `av-cam` | Solo con traza del bus o volcado de Darwin (ver F4) | [C-backlog](../knowledge/agents/C-backlog.md) |
+| E2 | PARCIAL | Activación real de RecordImage/RecordStill: el check `0x907ba0` no condiciona la fila `0x10000005` (solo rechaza mensaje nulo o `0x10000003` con búsqueda fallida). Falta el productor externo de `0x10000005` (los dos constructores conocidos no son envíos externos) | Cadena disparo → mensaje → estado 2 demostrada por código, o declarada de ejecución | [S403](capture/s403-cierre-pendientes.md) §E2, [seguimiento](capture/capture-static-followup-2026-10-25.md) |
+| E3 | PARCIAL | `params[+9]` de SetExposure (IMX210): cinco sitios de llamada y sus escritores identificados (valores 0, 1 y 4 por constante); los valores 2 y 3 sin constante directa (ver E14) | Origen de 2/3 resuelto o declarado de ejecución | [S403](capture/s403-cierre-pendientes.md) §E3 |
+| E4 | PARCIAL | Modos `+8` de `0x40193`: hay tabla booleana `0x43ca530e` y clasificador por máscara en `0x4379d378`, pero los códigos de los ocho wrappers (`0xc/0xb/0x14/0xa`, `0x6/0x5/0xa/0x4`) no están todos en 0–10; sin nombre por modo | Tabla índice → estado nombrada | [S403](capture/s403-cierre-pendientes.md) §E4, [cierre S402 §9](capture/static-closure-2026-10-25.md) |
+| E6 | BLOQUEADO | Cadena CAIF → Darwin → LIRO/imager: el MCU Darwin queda fuera de `av-cam` | Solo con traza del bus o volcado de Darwin (ver F4) | [C-backlog](../knowledge/agents/C-backlog.md) |
 | E7 | ABIERTO | Backup `0x3000b`: tamaño (256 B) y defaults resueltos; faltan productores anteriores de los campos y valores efectivos | Productores localizados; valores efectivos solo en ejecución | [B-backlog](../knowledge/agents/B-backlog.md) |
-| E8 | ABIERTO | Estado `0x43f72d02`: condiciones de invocación y efecto de los campos; S176 acredita lectores, no activación | Lectores enlazados a una ruta de captura | [B-backlog](../knowledge/agents/B-backlog.md) |
-| E9 | PARCIAL | Correspondencia funcional de los 112 registros IMX210/IMX235 restantes y mecanismo de fin de integración | Equivalencia funcional por registro; la semántica eléctrica exige hoja de datos (ver D5) | [A-backlog](../knowledge/agents/A-backlog.md) |
+| E8 | PARCIAL | Estado `0x43f72d02`: los dos lectores S176 tienen cadena de llamadores; el lector 2 cuelga de `0x437b5b14` (origen del bloque `B` de captura, S42). Falta activación efectiva y efecto de los campos | Activación solo en ejecución | [S403](capture/s403-cierre-pendientes.md) §E8 |
+| E9 | BLOQUEADO | Correspondencia funcional de los 112 registros IMX210/IMX235 restantes y mecanismo de fin de integración: la semántica eléctrica exige hoja de datos (ver D5) | Documento legítimo aportado por el usuario | [A-backlog](../knowledge/agents/A-backlog.md) |
 | E10 | ABIERTO | Ruta YC → archivo: productor de modo 1, creador del pin `0x2a` en disparo, formato YC y propiedad del buffer | Ciclo terminal de buffers demostrado | [matriz S51](capture/s51-static-coverage-and-tool-limits.md) |
 | E11 | PARCIAL | Segunda cortina: enlace banco/bit `0xf2910048` → P4E y rutas alternativas de fin de exposición | Traducción física verificada | [S51](capture/s51-decision.md) |
-| E12 | ABIERTO | Receptores del mensaje de `0x437b0390` y entradas indirectas de `CURTAINMODE` | Receptores identificados | [matriz S51](capture/s51-static-coverage-and-tool-limits.md) |
-| E13 | ABIERTO | Servicio ODL del carril B y significado físico de sus registros MMIO (`0xf292b000..8`, canales `w0`) | Identidad de los bloques con evidencia estática | [B-backlog](../knowledge/agents/B-backlog.md) |
+| E12 | PARCIAL | Mensaje de `0x437b0390` (tipo 3, subtipo `0x22`, buzón `0x0110027c`): 13 emisores y ningún receptor por literal; entradas indirectas de `CURTAINMODE` sin seguir | Receptor localizado por registro de tareas (E15) | [S403](capture/s403-cierre-pendientes.md) §E12, [matriz S51](capture/s51-static-coverage-and-tool-limits.md) |
+| E13 | BLOQUEADO | Servicio ODL del carril B y significado físico de sus registros MMIO (`0xf292b000..8`, canales `w0`): sin hoja de datos ni símbolos | Documento externo o prueba física | [S335](capture/s335-mmio-layer.md), [B-backlog](../knowledge/agents/B-backlog.md) |
+| E14 | ABIERTO | Origen de los valores 2 y 3 de `params[+9]`: 14 `str`/`strh` con desplazamiento `0x654` (tipo de objeto sin confirmar) y el campo `[r4+0x1fc]` de `0x4381106c` | Escritores clasificados por tipo de objeto, o valores 2/3 declarados sin productor | [S403](capture/s403-cierre-pendientes.md) §E3 |
+| E15 | ABIERTO | Receptor del buzón `0x0110027c` por el registro de tareas (no por literal) | Tarea receptora identificada | [S403](capture/s403-cierre-pendientes.md) §E12 |
 
 ## B. Documental y de calidad
 
 | ID | Estado | Pendiente | Criterio de cierre / límite | Fuente |
 |---|---|---|---|---|
-| D1 | ABIERTO | Censo de etiquetas: 226 pendientes (4 `ACEPTO` sin decodificar: `[EXL]`, `[SFR]`, `[IMAGING_IMG]`, `[DECMODEMGR]`; 222 `NO_VERIFICADO`) de 372. Mide documentación, no código; no son todas prerrequisito de S51 | Revisión individual por etiqueta, priorizando captura/sensor (prioridad 0–1) | [censo](../analysis/s178_census/pendientes.md) |
-| D2 | ABIERTO | Colas de módulos sin hacer: D `[BL]` (S515), `[PNL]` (S516); E `[FILE_NUM]` (S628), `[FSYSMODE]` (S629), `[RING_DIAL]` (S630) | Informe y test por módulo | [D-backlog](../knowledge/agents/D-backlog.md), [E-backlog](../knowledge/agents/E-backlog.md) |
-| D3 | ABIERTO | 66 de 69 afirmaciones S605–S627 sin verificar: 20 de logger dual y 46 de equivalencia (3 verificadas estáticamente) | Cotejo módulo a módulo contra bytes | [auditoría](capture/S605-S627_tabla_hallazgos.md) |
+| D1 | PARCIAL | Censo: 226 etiquetas revisadas de forma léxico-estructural (101 módulo propio, 118 subetiqueta, 6 campo de formato, 1 mixta); 4 `ACEPTO` decodificadas por texto. Los veredictos del censo no cambian; la función real de las 222 `NO_VERIFICADO` exige leer instrucciones | Una etiqueta se reabre solo si un hallazgo de captura la enlaza por código | [S403 D1](capture/s403-censo-revision.md), [censo](../analysis/s178_census/pendientes.md) |
+| D3 | PARCIAL | Afirmaciones S605–S627: logger dual de 19 fichas sin respaldo estático (3 verificadas); equivalencia de código refutada en 10 rutinas comparadas (4 fichas); 7 trazas con homólogo sin rutina resuelta y 77 sin homólogo textual (ver D6) | Cotejo de las rutinas restantes contra bytes; la equivalencia funcional no se decide solo con código | [S403](capture/s403-cierre-pendientes.md) §D3, [auditoría](capture/S605-S627_tabla_hallazgos.md) |
 | D4 | PARCIAL | Triaje S400: 518 filas, todas con revisión manual (322 `FALSO_POSITIVO`, 110 con rectificación respaldada, 86 `VIGENTE`). Las `VIGENTE` están razonadas, no certificadas | Cada `VIGENTE` pasa a respaldada o descartada al cerrar D3 o su historial | [triaje](../analysis/s400_open_questions_triage/README.md) |
 | D5 | BLOQUEADO | Hojas de datos IMX210/IMX235 (mapa de registros, semántica de modos) | Documento legítimo aportado por el usuario; no existe público | [S51](capture/s51-decision.md) |
+| D6 | ABIERTO | Equivalencia S605–S627: 7 trazas con homólogo en A7S cuya rutina REA no resolvió (Thumb sembradas) y 77 sin homólogo textual | Rutinas ubicadas con Capstone y comparadas, o declaradas sin homólogo | [S403](capture/s403-cierre-pendientes.md) §D3 |
 
 ## C. Entorno y código
 
-| ID | Estado | Pendiente | Criterio de cierre / límite | Fuente |
-|---|---|---|---|---|
-| C1 | ABIERTO | `unicorn` no está instalado: 8 módulos de test no se colectan (S56, S57, S58, S59 Claude/Sol, S60 Claude/Sol, S61). Instalarlo está permitido y no se hizo | Instalar en `.venv` y reejecutar; documentar el resultado real | [auditoría 24-10](capture/repo-audit-2026-10-24.md) |
-| C2 | ABIERTO | `tests/knowledge/test_mcp_server.py` falla en la colección (ya fallaba antes de los últimos cambios) | Causa diagnosticada y test colectable | sin re-verificar su causa |
-| C3 | ABIERTO | mypy: 5 errores en 3 archivos (uno por stubs de `capstone`). Deuda previa, sin tocar | Stubs o `ignore` justificado | sesión 25-10-2026 |
-| C4 | ABIERTO | La suite integral (3375 pruebas recopiladas) nunca se ejecutó completa; solo hay subconjuntos aprobados | Ejecución completa documentada, con tiempo y fallos | [auditoría 24-10](capture/repo-audit-2026-10-24.md) |
+Sin pendientes abiertos (C1–C4 cerrados el 25-10-2026, ver «Cerradas»).
+
 
 ## D. Físico (diferido por instrucción del usuario hasta cerrar la ingeniería inversa necesaria)
 
@@ -86,6 +83,12 @@ por esos índices.
 
 | ID | Fecha | Qué se cerró | Evidencia |
 |---|---|---|---|
+| C1 | 25-10-2026 | `unicorn 2.1.4` instalado en `.venv`; los 8 módulos S56–S61 se colectan y pasan (315 pruebas, 36 subpruebas) | [S403](capture/s403-cierre-pendientes.md) |
+| C2 | 25-10-2026 | `tests/knowledge/test_mcp_server.py` colecta y pasa (6) con el `.venv`; el fallo era del entorno sin `mcp` | [S403](capture/s403-cierre-pendientes.md) |
+| C3 | 25-10-2026 | mypy sin errores en `scripts/knowledge` y `tests/knowledge` (21 archivos): aserciones de tipo y `mypy.ini` para `capstone` | [S403](capture/s403-cierre-pendientes.md) |
+| C4 | 25-10-2026 | Suite integral ejecutada completa: 3521 aprobadas, 35 omitidas, 0 fallos, 529 s | [S403](capture/s403-cierre-pendientes.md) |
+| D2 | 25-10-2026 | Módulos S515 `[BL]`, S516 `[PNL]`, S628 `[FILE_NUM]`, S629 `[FSYSMODE]`, S630 `[RING_DIAL]`: informe y 8 pruebas | [informe](capture/s515-s516-s628-s630-modulos.md) |
+| E5 | 25-10-2026 | Ausencia acotada del lector `+0x238` (A6000, 262 anclas) y del almacén `[S+0]` (A7S, 73 anclas); límite: anclas PIC con ventana de 16 instrucciones | [S403 §E5](capture/s403-cierre-pendientes.md) |
 | — | 25-10-2026 | Id de modelo estático (`@M0EF`, `@M030`) y ocho emisores = autopublicaciones; E1 queda `NO_VERIFICADO` por exclusión, no por falta de búsqueda | `dd3a8212` |
 | — | 25-10-2026 | Revisión manual de las 44 filas `VIGENTE` sin revisar del triaje | `dd3a8212` |
 | — | 25-10-2026 | RecordStill/RecordImage A6000≡A7S (25 + 174 pares, solo cambian líneas de log) | [cierre S402 §2](capture/static-closure-2026-10-25.md) |
@@ -96,3 +99,4 @@ por esos índices.
 | Fecha | Cambio |
 |---|---|
 | 25-10-2026 | Creación a partir de la revisión integral del repo: 13 pendientes estáticos, 5 documentales, 4 de entorno, 6 físicos, 2 de respaldo. |
+| 25-10-2026 | S403: cerrados C1–C4, D2 y E5; avanzados D1, D3, E2, E3, E4, E8, E12; reclasificados E6, E9 y E13 como BLOQUEADO; nuevos E14, E15 y D6. |

@@ -228,3 +228,5 @@ Auditoría vigente de la lista de pendientes:
 ## Pendientes
 
 Lo que falta por cerrar está en [`docs/PENDIENTES.md`](docs/PENDIENTES.md), índice maestro que se actualiza en cada tarea.
+
+Último cierre (S403, 25-10-2026): entorno completo (suite integral 3521 aprobadas, mypy limpio, `unicorn` instalado), módulos S515/S516/S628–S630, revisión del censo y avances estáticos (E2, E3, E4, E5, E8, E12); detalle en [`docs/capture/s403-cierre-pendientes.md`](docs/capture/s403-cierre-pendientes.md).

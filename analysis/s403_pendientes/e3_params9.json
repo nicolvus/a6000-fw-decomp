@@ -1,0 +1,115 @@
+{
+ "wrapper": "0x436d6320",
+ "sitios_de_llamada": [
+  "0x438c79fc",
+  "0x438c830c",
+  "0x438c8824",
+  "0x438cc894",
+  "0x43ae937c"
+ ],
+ "sitios_esperados_ok": true,
+ "escritores_strb_disp_0x655": [
+  {
+   "addr": "0x4389cc28",
+   "insn": "strb.w r2, [r3, #0x655]"
+  },
+  {
+   "addr": "0x438c79e2",
+   "insn": "strb.w r3, [r4, #0x655]"
+  },
+  {
+   "addr": "0x438c82bc",
+   "insn": "strb.w r3, [r4, #0x655]"
+  },
+  {
+   "addr": "0x438c87f0",
+   "insn": "strb.w sb, [r4, #0x655]"
+  }
+ ],
+ "escritores_clasificados": {
+  "0x438c82bc": {
+   "insn_ok": true,
+   "valor": "0",
+   "nota": "r3=0 si la clase de modelo 0x43a12c64 vale 2 o 3; +0 del bloque = 2"
+  },
+  "0x438c79e2": {
+   "insn_ok": true,
+   "valor": "4",
+   "nota": "r3=0 y `adds r3,#4`; bloque a cero salvo +9; llama al wrapper con r2=0"
+  },
+  "0x438c87f0": {
+   "insn_ok": true,
+   "valor": "1",
+   "nota": "sb=1 (`mov.w sb,#1` en 0x438c87e6); bloque a cero salvo +9"
+  }
+ },
+ "bloque_en_pila_ok": true,
+ "copia_a_otro_objeto": {
+  "addr": "0x4389cc28",
+  "insn": "strb.w r2, [r3, #0x655]"
+ },
+ "constantes_directas_en_sitios_de_llamada": [
+  0,
+  1,
+  4
+ ],
+ "escritores_anchos_en_0x654": [
+  {
+   "addr": "0x435c116c",
+   "insn": "str.w r3, [r4, #0x654]"
+  },
+  {
+   "addr": "0x4364af66",
+   "insn": "str.w r7, [r6, #0x654]"
+  },
+  {
+   "addr": "0x4364afc8",
+   "insn": "str.w r7, [r6, #0x654]"
+  },
+  {
+   "addr": "0x4364c27e",
+   "insn": "str.w r0, [r5, #0x654]"
+  },
+  {
+   "addr": "0x437d83ee",
+   "insn": "str.w r3, [r4, #0x654]"
+  },
+  {
+   "addr": "0x437d952c",
+   "insn": "str.w r3, [r4, #0x654]"
+  },
+  {
+   "addr": "0x438551f4",
+   "insn": "strh.w r2, [r4, #0x654]"
+  },
+  {
+   "addr": "0x43855206",
+   "insn": "strh.w r8, [r4, #0x654]"
+  },
+  {
+   "addr": "0x438691ba",
+   "insn": "strh.w r3, [r6, #0x654]"
+  },
+  {
+   "addr": "0x43869248",
+   "insn": "strh.w r2, [r6, #0x654]"
+  },
+  {
+   "addr": "0x43a471ec",
+   "insn": "str.w r1, [r0, #0x654]"
+  },
+  {
+   "addr": "0x43b0b8ac",
+   "insn": "strh.w r3, [r0, #0x654]"
+  },
+  {
+   "addr": "0x43b1414a",
+   "insn": "str.w r3, [r4, #0x654]"
+  },
+  {
+   "addr": "0x43b14866",
+   "insn": "str.w r2, [r4, #0x654]"
+  }
+ ],
+ "valores_2_y_3": "sin constante directa; origen posible solo por los escritores anchos o copias de bloque (no resuelto)"
+}
