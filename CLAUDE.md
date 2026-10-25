@@ -24,3 +24,6 @@ prueba ausencia. `av-cam.bin` tarda ~8 min en frío: reutiliza/abre UNA sesión 
 `analysis/rea-independent/bin/session_daemon.py` + `q.py`, consulta por lotes y ciérrala al acabar el hito.
 REA y Ghidra comparten motor; verifica lo decisivo contra bytes/instrucciones. Reglas completas:
 `docs/STATE.md` § "Política de ingeniería inversa". Foco: obturador electrónico.
+
+Cuenta GitHub: el usuario de este repo es `nicolvus`. Antes de cualquier operación contra `origin`
+(push, fetch, `gh`), ejecuta `gh auth switch -u nicolvus` y confirma con `gh auth status` que está activa.

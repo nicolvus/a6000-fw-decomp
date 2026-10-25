@@ -2,6 +2,10 @@
 
 Alcance: análisis estático de `libObj.so` fw 3.21. Direcciones ELF (Ghidra = ELF + 0x10000). Datos estructurados en `analysis/encodestill-command-flow.json`.
 
+> **Actualización S402 (25-10-2026):** existe un segundo constructor `ObjMsg(0x3500,0x10000005)` en `0x90868a` (función
+> `0x908500`), alcanzado desde el despachador `0x9162d0` con `0x1000000f`, generado a su vez por
+> `ObjScalar::SequenceRecordStillImageCmd` (secuencia `0x3026`). Ver [cierre S402](static-closure-2026-10-25.md) §1.
+
 ## Resultado central
 
 **No existe un remitente externo de `0x10000005`.** La orden `MSGID_RECORD_IMAGE_CALL` la crea `ObjStillRecorder` *a sí mismo* cuando su pin YC recibe un `PlayData`. Lo que pone en marcha todo es otra orden, `MSGID_RECORD_IMAGE_CMD` (categoría `0x3500`, id `0x3001`, parámetro `0x1005` = modo), que emiten **modelos de UI de reproducción y edición** (`ModelPbCap`, `ModelPaint`) o la consola de mantenimiento.

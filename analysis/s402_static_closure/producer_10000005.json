@@ -1,0 +1,198 @@
+{
+ "state_row": {
+  "state": "0x2",
+  "message": "0x10000005",
+  "check": "0x907ba1",
+  "call": "0x90d7e9",
+  "next_state_function": "0x907c95",
+  "next_state": "0x1"
+ },
+ "sites_loading_message": [
+  {
+   "load": "0x189988",
+   "function": "0x1898a8",
+   "register": "r3",
+   "category_r1": null,
+   "calls_nearby": [
+    "",
+    ""
+   ]
+  },
+  {
+   "load": "0x18b920",
+   "function": "0x18b8e4",
+   "register": "r2",
+   "category_r1": null,
+   "calls_nearby": [
+    ""
+   ]
+  },
+  {
+   "load": "0x7c970c",
+   "function": "0x7c9664",
+   "register": "r2",
+   "category_r1": null,
+   "calls_nearby": [
+    ""
+   ]
+  },
+  {
+   "load": "0x838e66",
+   "function": "0x8382f8",
+   "register": "r2",
+   "category_r1": "0x3700",
+   "calls_nearby": [
+    "",
+    "_ZN3MWF6ObjMsgC1Ejj"
+   ]
+  },
+  {
+   "load": "0x84fe12",
+   "function": "0x84df18",
+   "register": "r1",
+   "category_r1": null,
+   "calls_nearby": [
+    "",
+    ""
+   ]
+  },
+  {
+   "load": "0x8881b4",
+   "function": "0x887f4c",
+   "register": "r1",
+   "category_r1": null,
+   "calls_nearby": [
+    "_ZN3MWF6StructC1EPKvii",
+    "_ZN3MWF6ObjMsg8AddParamEjPKNS_5ParamE"
+   ]
+  },
+  {
+   "load": "0x88b2cc",
+   "function": "0x88b29c",
+   "register": "r1",
+   "category_r1": null,
+   "calls_nearby": [
+    "_ZNK3MWF6ObjMsg8GetParamEjNS_5Param4TypeE"
+   ]
+  },
+  {
+   "load": "0x907cb8",
+   "function": "0x907c94",
+   "register": "r3",
+   "category_r1": null,
+   "calls_nearby": []
+  },
+  {
+   "load": "0x90868a",
+   "function": "0x908500",
+   "register": "r2",
+   "category_r1": "0x3500",
+   "calls_nearby": [
+    "_ZN3MWF6ObjMsgC1Ejj"
+   ]
+  },
+  {
+   "load": "0x919f4a",
+   "function": "0x919ca0",
+   "register": "r2",
+   "category_r1": "0x3500",
+   "calls_nearby": [
+    "",
+    "_ZN3MWF6ObjMsgC1Ejj"
+   ]
+  },
+  {
+   "load": "0x91a91e",
+   "function": "0x91a0f4",
+   "register": "r1",
+   "category_r1": null,
+   "calls_nearby": [
+    "_ZN3MWF6ObjMsgC1Ejj",
+    "_ZN3MWF6ObjMsg8AddParamEjPKNS_5ParamE"
+   ]
+  },
+  {
+   "load": "0x91c214",
+   "function": "0x91c1c8",
+   "register": "r2",
+   "category_r1": "0x3a48",
+   "calls_nearby": [
+    "",
+    "_ZN3MWF6ObjMsgC1Ejj"
+   ]
+  }
+ ],
+ "constructors_in_category_0x3500": [
+  {
+   "load": "0x90868a",
+   "function": "0x908500",
+   "register": "r2",
+   "category_r1": "0x3500",
+   "calls_nearby": [
+    "_ZN3MWF6ObjMsgC1Ejj"
+   ]
+  },
+  {
+   "load": "0x919f4a",
+   "function": "0x919ca0",
+   "register": "r2",
+   "category_r1": "0x3500",
+   "calls_nearby": [
+    "",
+    "_ZN3MWF6ObjMsgC1Ejj"
+   ]
+  }
+ ],
+ "handler_0x919ca0_branch_0x1003": [
+  "0x919f1c blx #0xe0a68",
+  "0x919f20 movw r3, #0x1003",
+  "0x919f24 cmp r0, r3",
+  "0x919f26 bne #0x919ffa",
+  "0x919f28 mov r0, r6",
+  "0x919f2a blx #0xe0a68",
+  "0x919f2e mov.w r3, #0x11e",
+  "0x919f32 mov.w r1, #0x3000",
+  "0x919f36 str r3, [sp, #4]",
+  "0x919f38 mov.w r2, #0x100",
+  "0x919f3c uxtb r3, r5",
+  "0x919f3e str r0, [sp]",
+  "0x919f40 movs r0, #0x11",
+  "0x919f42 bl #0x9197d4",
+  "0x919f46 mov.w r1, #0x3500",
+  "0x919f4a ldr r2, [pc, #0x16c]",
+  "0x919f4c add.w r0, r7, #0x2c",
+  "0x919f50 blx #0xde540",
+  "0x919f54 add.w r0, r7, #0x2c",
+  "0x919f58 ldr r1, [pc, #0x158]",
+  "0x919f5a mov r2, r6"
+ ],
+ "pbcap": {
+  "action_dispatcher": "0x61414c",
+  "vtable_slot_word": "0x61414d",
+  "tbh_entry_6_target": "0x6141a0",
+  "stub": "pop.w {r7, lr}",
+  "body_head": [
+   "0x6137b0 push {r4, r5, r7, lr}",
+   "0x6137b2 sub sp, #0x18",
+   "0x6137b4 mov r5, r0",
+   "0x6137b6 add r7, sp, #0x10",
+   "0x6137b8 movs r0, #8",
+   "0x6137ba blx #0xdc100",
+   "0x6137be mov.w r1, #0x3500",
+   "0x6137c2 movw r2, #0x3001",
+   "0x6137c6 mov r4, r0",
+   "0x6137c8 blx #0xde540",
+   "0x6137cc movs r1, #0",
+   "0x6137ce mov r0, r7",
+   "0x6137d0 blx #0xe16b4",
+   "0x6137d4 mov r0, r4",
+   "0x6137d6 movw r1, #0x1005",
+   "0x6137da mov r2, r7",
+   "0x6137dc blx #0xe01a8",
+   "0x6137e0 mov r0, r7",
+   "0x6137e2 blx #0xdc198",
+   "0x6137e6 mov r1, r4"
+  ]
+ },
+ "limits": "Se verifica la creaci\u00f3n local y la cadena de interfaz PbCap->RecordImage; el evento de UI que dispara la transici\u00f3n de ModelPbCap con la acci\u00f3n 6 y el productor del PlayData siguen documentados en S13/S14 (ObjEffect pin YC 1) sin observaci\u00f3n f\u00edsica."
+}

@@ -1,0 +1,53 @@
+{
+ "selector_function": "0x4379ec04",
+ "table": {
+  "address": "0x43bc1658",
+  "entries": [
+   0,
+   2
+  ]
+ },
+ "debug_force_flag": {
+  "address": "0x43ea3182",
+  "effect": "si distinto de 0: registra el tipo 2 y devuelve 2"
+ },
+ "log_string": {
+  "address": "0x43ca4b6b",
+  "text": "SET Silent Shutter Type: %d\n"
+ },
+ "setting_singleton": "0x43ea70a0",
+ "callers": {
+  "0x43813e94": "root+0x78c = F(**S+0x250, ctx); si 2 -> root+0x748 = 1",
+  "0x437b6f74": "ctx2+0x7e8 = F(**S+0x250, ctx)"
+ },
+ "input_field": "S[0]+0x250 (u32; 0 o 1 -> 0 o 2)",
+ "liro_command": {
+  "a7s_row": {
+   "address": "0x43ff79e4",
+   "cmd": "0x40e3",
+   "handler": "0x437a9cb1"
+  },
+  "a6000_row": {
+   "address": "0x43fffc60",
+   "cmd": "0x40e3",
+   "handler": "0x438032d5"
+  },
+  "a7s_handler_writes": "0x43ea1fd4 = byte comando+8 (bloque G 0x43ea1d84)",
+  "settings_block_G": "0x43ea1d84",
+  "init_defaults": "0x437aae44 pone G+0x250 = 0"
+ },
+ "libobj_a7s": {
+  "instruction_mismatches": {},
+  "strings_present": {
+   "N7CamUser28SequenceSetSilentShutterModeE": true,
+   "MSGID_SET_SILENT_SHUTTER_MODE_CMD": true,
+   "VALUEID_SILENT_SHUTTER_ON": true,
+   "VALUEID_SILENT_SHUTTER_OFF": true,
+   "PARAMID_SILENT_SHUTTER_MODE": true
+  }
+ },
+ "instruction_mismatches": {},
+ "a6000_has_silent_type_string": false,
+ "a7s_has_silent_type_string": true,
+ "limits": "Falta la escritura S[0] = &G (identidad estricta entre el bloque que escribe 0x40e3 y el que lee el contexto ra\u00edz): solo hay evidencia estructural (mismas disposiciones +0x250/+0x580 en el mismo cl\u00faster). El selector admite {0->0, 1->2} y el override de depuraci\u00f3n."
+}

@@ -1,5 +1,14 @@
 # Sony A6000 Firmware Reverse Engineering
 
+## S402 — cierre estático de ocho pendientes de ingeniería inversa — 25-10-2026
+
+[Informe](docs/capture/static-closure-2026-10-25.md), [código y datos](analysis/s402_static_closure/) y
+[pruebas](tests/test_s402_static_closure.py). RecordStill/RecordImage A6000≡A7S (199 pares, solo cambian líneas de log);
+`0x10000005` tiene dos constructores (PlayData y secuencia `0x3026`); cola `0x40193`: cuatro comandos y 53 llamadores;
+Backup `0x3000b` = 256 B con gates `+3`/`+6` = 0; **A7S Silent: UI → LIRO `0x40e3` → `+0x250` → bit `0x20`**, y el manejador
+`0x40e3` **sí existe en la A7S** (corrige S401). Ambos drivers de imager conmutan modos de obturación 0–4 (A6000) / 0,1,3,4
+(A7S). S51 A/B/C=NO; sin parche ni pruebas físicas.
+
 ## Captura: seguimiento de los cinco pendientes — 25-10-2026
 
 [Resultados y cola restante](docs/capture/capture-static-followup-2026-10-25.md):
@@ -164,7 +173,7 @@ S385: métricas ELF A6000/A7S comparadas. Las parejas RecordStill `0x908afc`/`0x
 
 ## Agente C — ruta de control: configuración → LIRO → imager (S401+)
 
-S401 compara la ruta `SilentShutter` A7S fw3.20 vs A6000 fw3.21: el handler LIRO `0x40e3` está **ausente** en la tabla de 220 comandos de la A7S y presente en la A6000 (`0x438032d5`); `…ForLiro` está rechazado (0 soportados) en ambos. [`docs/capture/s401-a7s-silent-control-path.md`](docs/capture/s401-a7s-silent-control-path.md).
+S401 compara la ruta `SilentShutter` A7S fw3.20 vs A6000 fw3.21: el handler LIRO `0x40e3` está en la tabla de la A6000 (`0x438032d5`) **y también en la de la A7S** (fila `0x43ff79e4` → `0x437a9cb1`; S401 lo buscó en la VA de la A6000, corregido en S402); `…ForLiro` está rechazado (0 soportados) en ambos. [`docs/capture/s401-a7s-silent-control-path.md`](docs/capture/s401-a7s-silent-control-path.md).
 
 S402 mapea cada diferencia a las pruebas físicas P1–P8 (P5, analizador lógico del bus CAIF/Darwin, es la crítica para el bit `no_silent` `0x20` solo visto en la A7S) y propone pruebas nuevas; solo redactado, nada ejecutado. [`docs/capture/s402-physical-test-mapping.md`](docs/capture/s402-physical-test-mapping.md).
 

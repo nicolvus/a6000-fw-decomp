@@ -7,13 +7,17 @@
 **Actualización 25-10-2026:** constructor A7S y condición del bit `0x20`
 resueltos por REA e instrucciones. [Contrato y límites](capture-static-followup-2026-10-25.md).
 
+> **Corrección S402 (25-10-2026):** la diferencia 1 es errónea. La tabla de A7S está en `0x43ff79a8..0x43ff7b04` y contiene
+> `{0x40e3, 0, 0x437a9cb1}`; el manejador guarda el byte `+8` en el bloque de ajustes `+0x250`, que `0x4379ec04` convierte
+> en el selector Silent. Ver [cierre S402](static-closure-2026-10-25.md) §5.
+
 ---
 
 ## Resumen de hallazgos
 
 | # | Diferencia | A7S fw3.20 | A6000 fw3.21 | Evidencia | Etiqueta |
 |---|---|---|---|---|---|
-| 1 | Handler LIRO `0x40e3` (SilentShutter) | **Ausente** en tabla de 220 comandos | Presente en offset `0xabec60` → handler `0x438032d5` (Thumb) | Bytes tabla `0x43fff30c` | **VERIFICADO** |
+| 1 | Handler LIRO `0x40e3` (SilentShutter) | ~~Ausente~~ **Presente** (`0x43ff79e4` → `0x437a9cb1`, corrección S402); antes: ausente en tabla de 220 comandos leída en la VA de A6000 | Presente en offset `0xabec60` → handler `0x438032d5` (Thumb) | Bytes tabla `0x43fff30c` | **VERIFICADO** |
 | 2 | Mensajes `...ForLiro` en `libObj.so` | 221 nombres, **0 soportados** (todos `NON SUPPORTED`) | 216 nombres, **0 soportados** (todos `NON SUPPORTED`) | S174 | **VERIFICADO** |
 | 3 | Parser Darwin: bit Silent `pkt[+0x12]&0x20` | **Extrae y usa** → `no_silent` en `S+0xd0.b5` | **No extrae**; no hay predicado `no_silent` | S53, S54, darwin-state-machine.md | **VERIFICADO** |
 | 4 | Rama "sin mecanismo" Darwin | Sí: omite P4D/P4E/ADC, solo P4C + temporización | Tipo 0: similar pero **sin control de cortinas en reposición** | S54, darwin-state-machine.md | **VERIFICADO** |

@@ -1,0 +1,597 @@
+{
+ "classes": {
+  "A6000": "Camera::Imager::IMX210::C_ImagerCtrl_IMX210",
+  "A7S": "Camera::Imager::IMX235::C_ImagerCtrl_IMX235"
+ },
+ "slots": [
+  {
+   "slot": 0,
+   "role": null,
+   "A6000": "0x436d60e4",
+   "A7S": "0x436f27b4",
+   "len": [
+    14,
+    14
+   ],
+   "identical": false,
+   "ratio": 0.86,
+   "A6000_strings": [],
+   "A7S_strings": []
+  },
+  {
+   "slot": 1,
+   "role": null,
+   "A6000": "0x43ad9042",
+   "A7S": "0x43ad9840",
+   "len": [
+    7,
+    7
+   ],
+   "identical": true,
+   "ratio": 1.0,
+   "A6000_strings": [],
+   "A7S_strings": []
+  },
+  {
+   "slot": 2,
+   "role": null,
+   "A6000": "0x436d66a4",
+   "A7S": "0x436f3f28",
+   "len": [
+    44,
+    44
+   ],
+   "identical": false,
+   "ratio": 0.59,
+   "A6000_strings": [],
+   "A7S_strings": []
+  },
+  {
+   "slot": 3,
+   "role": null,
+   "A6000": "0x436d6660",
+   "A7S": "0x436f3ee4",
+   "len": [
+    19,
+    18
+   ],
+   "identical": false,
+   "ratio": 0.7,
+   "A6000_strings": [],
+   "A7S_strings": []
+  },
+  {
+   "slot": 4,
+   "role": null,
+   "A6000": "0x436d8ff4",
+   "A7S": "0x436f2af4",
+   "len": [
+    20,
+    20
+   ],
+   "identical": false,
+   "ratio": 0.8,
+   "A6000_strings": [],
+   "A7S_strings": []
+  },
+  {
+   "slot": 5,
+   "role": "SetDFERegData (no soportado)",
+   "A6000": "0x436d92b4",
+   "A7S": "0x436f2ae0",
+   "len": [
+    14,
+    6
+   ],
+   "identical": false,
+   "ratio": 0.5,
+   "A6000_strings": [
+    "[CAM_IMAGER]: [0480]S_DFE_REG_DATA is not supported ! ",
+    "[0480]S_DFE_REG_DATA is not supported ! "
+   ],
+   "A7S_strings": [
+    "[0480]S_DFE_REG_DATA is not supported ! "
+   ]
+  },
+  {
+   "slot": 6,
+   "role": "PowerOn",
+   "A6000": "0x436d6ca0",
+   "A7S": "0x436f3db8",
+   "len": [
+    221,
+    99
+   ],
+   "identical": false,
+   "ratio": 0.27,
+   "A6000_strings": [
+    "[CAM_IMAGER]: PowerOn",
+    "[CAM_IMAGER]: PowerOn TimerOpenError!!",
+    "PowerOn TimerOpenError!!",
+    "[CAM_IMAGER]: PowerOn Wait No.00 TimerError!!"
+   ],
+   "A7S_strings": [
+    "PowerOn TimerOpenError!!",
+    "PowerOn Wait No.00 TimerError!!",
+    "PowerOn Wait No.01 TimerError!!",
+    "PowerOn Wait No.02 TimerError!!"
+   ]
+  },
+  {
+   "slot": 7,
+   "role": "PowerOff",
+   "A6000": "0x436d77cc",
+   "A7S": "0x436f3c98",
+   "len": [
+    164,
+    100
+   ],
+   "identical": false,
+   "ratio": 0.45,
+   "A6000_strings": [
+    "[CAM_IMAGER]: PowerOff",
+    "[CAM_IMAGER]: PowerOff TimerOpenError!!",
+    "PowerOff TimerOpenError!!",
+    "[CAM_IMAGER]: PowerOff Wait CP TimerError!!"
+   ],
+   "A7S_strings": [
+    "PowerOff Wait No.07 TimerError!!",
+    "PowerOff Wait No.04 TimerError!!",
+    "PowerOff Wait No.05 TimerError!!",
+    "PowerOff Wait No.06 TimerError!!"
+   ]
+  },
+  {
+   "slot": 8,
+   "role": "SetMode",
+   "A6000": "0x436d6b50",
+   "A7S": "0x436f3b44",
+   "len": [
+    117,
+    109
+   ],
+   "identical": false,
+   "ratio": 0.29,
+   "A6000_strings": [
+    "[CAM_IMAGER]: SetMode : [PrevDrv:%2d] [NowDrv:%2d] [NextDrv:%2d] [ntpal:%01x]"
+   ],
+   "A7S_strings": [
+    "SetMode:NTPAL = %d.",
+    "@SetMode MAKERNOTE WRITE INHIBIT STATE",
+    "Change ImagerMode. [NowDriveMode:%02x] [NextDriveMode:%02x] [ntpal:%01x]",
+    "SetMode. [NowDriveMode:%02x] [NextDriveMode:%02x] [ntpal:%01x]"
+   ]
+  },
+  {
+   "slot": 9,
+   "role": "GetParam/GetModeParam",
+   "A6000": "0x436d96b8",
+   "A7S": "0x436f3464",
+   "len": [
+    137,
+    118
+   ],
+   "identical": false,
+   "ratio": 0.65,
+   "A6000_strings": [
+    "[CAM_IMAGER]: Invalid GetModeParam Error!! [drive_mode:%02x]",
+    "[CAM_IMAGER]: GetParam:NTPAL boot=%d now=%d",
+    "GetParam:NTPAL boot=%d now=%d"
+   ],
+   "A7S_strings": [
+    "GetParam:NTPAL boot=%d now=%d"
+   ]
+  },
+  {
+   "slot": 10,
+   "role": "SetExposure",
+   "A6000": "0x436d6f6c",
+   "A7S": "0x436f4168",
+   "len": [
+    467,
+    200
+   ],
+   "identical": false,
+   "ratio": 0.08,
+   "A6000_strings": [
+    "[CAM_IMAGER]: Invalid SetExposure Error!! [drive_mode:%2d]",
+    "[CAM_IMAGER]: SetExps : [PrevDrv:%2d] [NowDrv:%2d] [NextDrv:%2d] [svd:%02x] [shd:%02x] [spl:%02x] [shut:%01x]"
+   ],
+   "A7S_strings": [
+    "SetExposure:SHR = %d.",
+    "@SetExposure MAKERNOTE WRITE INHIBIT STATE",
+    "ShutMode:%d is not supported.",
+    "Change ImagerMode. [NowDriveMode:%02x] [NextDriveMode:%02x] [svd:%02x] [shd:%02x] [spl:%02x] [shut:%01x]"
+   ]
+  },
+  {
+   "slot": 11,
+   "role": "SetExposureZ",
+   "A6000": "0x436d67e4",
+   "A7S": "0x43ad9854",
+   "len": [
+    164,
+    2
+   ],
+   "identical": false,
+   "ratio": 0.0,
+   "A6000_strings": [
+    "[CAM_IMAGER]: Invalid SetExposure Error!! [drive_mode:%2d]",
+    "[CAM_IMAGER]: SetExpsZ: [PrevDrv:%2d] [NowDrv:%2d] [NextDrv:%2d] [svrz:%02x] [shrz:%02x] [splz:%02x] [epd:%02d] [epdsel:%02d]"
+   ],
+   "A7S_strings": []
+  },
+  {
+   "slot": 12,
+   "role": "SetRead",
+   "A6000": "0x436d7e08",
+   "A7S": "0x436f4a94",
+   "len": [
+    182,
+    718
+   ],
+   "identical": false,
+   "ratio": 0.11,
+   "A6000_strings": [
+    "[CAM_IMAGER]: Invalid SetRead Error!! [drive_mode:%2d]",
+    "[CAM_IMAGER]: SetRead : [PrevDrv:%2d] [NowDrv:%2d] [NextDrv:%2d] [AGainCont_EC:%02x] [AGainCont:%02x] [AGainDrv:%02x]"
+   ],
+   "A7S_strings": [
+    "ImagerCtrl::SetRead() | minus gain setting. [NextDriveMode:%02x][RecvAGC:%02x][SetAGC:%02x]",
+    "SetRead AD Error. [imager_enob:%02x]",
+    "Change ImagerMode. [Now:%02xh][Next:%02xh][AGCont:%02x][AGDrv:%02x][MCov:%01x][imgVolt:%01x][ReadExec:%01x]",
+    "Read. [Now:%02xh][Next:%02xh][AGCont:%02x][AGDrv:%02x][MCov:%01x][imgVolt:%01x][ReadExec:%01x]"
+   ]
+  },
+  {
+   "slot": 13,
+   "role": "SetReadZ",
+   "A6000": "0x436d74b8",
+   "A7S": "0x43ad9858",
+   "len": [
+    111,
+    2
+   ],
+   "identical": false,
+   "ratio": 0.0,
+   "A6000_strings": [
+    "[CAM_IMAGER]: Invalid SetRead Error!! [drive_mode:%2d]",
+    "[CAM_IMAGER]: SetReadZ: [PrevDrv:%2d] [NowDrv:%2d] [NextDrv:%2d] [AGainContZ:%02x] [AGainDrvZ:%02x]"
+   ],
+   "A7S_strings": []
+  },
+  {
+   "slot": 14,
+   "role": "Execute (cambio de modo)",
+   "A6000": "0x436d839c",
+   "A7S": "0x436f5a14",
+   "len": [
+    238,
+    160
+   ],
+   "identical": false,
+   "ratio": 0.34,
+   "A6000_strings": [
+    "[CAM_IMAGER]: Execute : [PrevDrv:%2d] [NowDrv:%2d] [NextDrv:%2d] [SSBRK_ON:%01x] [SLEEP_ON:%01x]",
+    "[CAM_IMAGER]: Execute. [PrevDrv:%2d] [NowDrv:%2d] [NextDrv:%2d] [SSBRK_ON:%01x] [SIFSyncCode:%02x]",
+    "[CAM_IMAGER]: Execute1:pre%02dnow%02dnext%02d ssb%01x read%dz%d svr%02dz%02d",
+    "Execute1:pre%02dnow%02dnext%02d ssb%01x read%dz%d svr%02dz%02d"
+   ],
+   "A7S_strings": [
+    "Change ImagerMode. [NowDriveMode:%02x] [NextDriveMode:%02x] [SSBRK_ON:%01x]",
+    "Execute. [NowDriveMode:%02x] [NextDriveMode:%02x] [SSBRK_ON:%01x] [SIFSyncCode:%02x]"
+   ]
+  },
+  {
+   "slot": 15,
+   "role": "Execute(0)",
+   "A6000": "0x436d6a34",
+   "A7S": "0x436f3a40",
+   "len": [
+    98,
+    33
+   ],
+   "identical": false,
+   "ratio": 0.2,
+   "A6000_strings": [
+    "[CAM_IMAGER]: Invalid Execute Error!! [drive_mode:%2d]",
+    "[CAM_IMAGER]: Execute(0) [NowDriveMode:%2d] [SIFSyncCode:%02x]",
+    "[CAM_IMAGER]: Execute0:pre%02dnow%02dnext%02d ssb%01x read%dz%d svr%02dz%02d",
+    "Execute0:pre%02dnow%02dnext%02d ssb%01x read%dz%d svr%02dz%02d"
+   ],
+   "A7S_strings": [
+    "C_ImagerCtrl::Execute(0) [NowDriveMode:%02x] [SIFSyncCode:%02x]"
+   ]
+  },
+  {
+   "slot": 16,
+   "role": "c\u00e1lculo de par\u00e1metros",
+   "A6000": "0x43ad9246",
+   "A7S": "0x436f35c0",
+   "len": [
+    10,
+    36
+   ],
+   "identical": false,
+   "ratio": 0.17,
+   "A6000_strings": [],
+   "A7S_strings": [
+    "Param Calc Start",
+    "Param Calc Finish"
+   ]
+  },
+  {
+   "slot": 17,
+   "role": "Execute_sleep",
+   "A6000": "0x436d7bc8",
+   "A7S": "0x436f53f4",
+   "len": [
+    21,
+    21
+   ],
+   "identical": false,
+   "ratio": 0.48,
+   "A6000_strings": [
+    "[CAM_IMAGER]: Execute_sleep: %d"
+   ],
+   "A7S_strings": [
+    "Execute_sleep: %d"
+   ]
+  },
+  {
+   "slot": 18,
+   "role": null,
+   "A6000": "0x43ad9232",
+   "A7S": "0x43ad9e74",
+   "len": [
+    5,
+    5
+   ],
+   "identical": false,
+   "ratio": 0.8,
+   "A6000_strings": [],
+   "A7S_strings": []
+  },
+  {
+   "slot": 19,
+   "role": "GetTransModeState",
+   "A6000": "0x436d92e0",
+   "A7S": "0x43ad98ca",
+   "len": [
+    70,
+    58
+   ],
+   "identical": false,
+   "ratio": 0.36,
+   "A6000_strings": [
+    "[CAM_IMAGER]: GetTransModeState DriveMode Error!! [src_drive_mode:%02x] [dest_drive_mode:%02x] "
+   ],
+   "A7S_strings": []
+  },
+  {
+   "slot": 20,
+   "role": null,
+   "A6000": "0x436d6548",
+   "A7S": "0x436f3900",
+   "len": [
+    7,
+    7
+   ],
+   "identical": true,
+   "ratio": 1.0,
+   "A6000_strings": [],
+   "A7S_strings": []
+  },
+  {
+   "slot": 21,
+   "role": null,
+   "A6000": "0x43ad920e",
+   "A7S": "0x43ad9e50",
+   "len": [
+    12,
+    12
+   ],
+   "identical": false,
+   "ratio": 0.67,
+   "A6000_strings": [],
+   "A7S_strings": []
+  },
+  {
+   "slot": 22,
+   "role": null,
+   "A6000": "0x436d655c",
+   "A7S": "0x436f3914",
+   "len": [
+    5,
+    5
+   ],
+   "identical": false,
+   "ratio": 0.8,
+   "A6000_strings": [],
+   "A7S_strings": []
+  },
+  {
+   "slot": 23,
+   "role": "AsyncInitial",
+   "A6000": "0x436d7678",
+   "A7S": "0x436f4420",
+   "len": [
+    115,
+    56
+   ],
+   "identical": false,
+   "ratio": 0.49,
+   "A6000_strings": [
+    "[CAM_IMAGER]: AsyncInitial",
+    "[CAM_IMAGER]: AsyncInitial: WaitTimer OpenError ",
+    "AsyncInitial: WaitTimer OpenError ",
+    "[CAM_IMAGER]: AsyncInitial: WaitTimer StartError "
+   ],
+   "A7S_strings": []
+  },
+  {
+   "slot": 24,
+   "role": "SyncInitial",
+   "A6000": "0x436d926c",
+   "A7S": "0x436f2ac0",
+   "len": [
+    11,
+    3
+   ],
+   "identical": false,
+   "ratio": 0.43,
+   "A6000_strings": [
+    "[CAM_IMAGER]: Invalid Call!! SyncInitial() is UNNECESSARY...",
+    "Invalid Call!! SyncInitial() is UNNECESSARY..."
+   ],
+   "A7S_strings": [
+    "Invalid Call!! SyncInitial() is UNNECESSARY..."
+   ]
+  },
+  {
+   "slot": 25,
+   "role": null,
+   "A6000": "0x436d661c",
+   "A7S": "0x436f3974",
+   "len": [
+    26,
+    81
+   ],
+   "identical": false,
+   "ratio": 0.22,
+   "A6000_strings": [],
+   "A7S_strings": []
+  },
+  {
+   "slot": 26,
+   "role": null,
+   "A6000": "0x43ad91c6",
+   "A7S": "0x43ad9e08",
+   "len": [
+    21,
+    21
+   ],
+   "identical": true,
+   "ratio": 1.0,
+   "A6000_strings": [],
+   "A7S_strings": []
+  },
+  {
+   "slot": 27,
+   "role": null,
+   "A6000": "0x435434a8",
+   "A7S": "0x435437b8",
+   "len": [
+    45,
+    45
+   ],
+   "identical": true,
+   "ratio": 1.0,
+   "A6000_strings": [],
+   "A7S_strings": []
+  },
+  {
+   "slot": 28,
+   "role": null,
+   "A6000": "0x436d6638",
+   "A7S": "0x436f3a98",
+   "len": [
+    13,
+    13
+   ],
+   "identical": true,
+   "ratio": 1.0,
+   "A6000_strings": [],
+   "A7S_strings": []
+  },
+  {
+   "slot": 29,
+   "role": null,
+   "A6000": "0x43ad9202",
+   "A7S": "0x43ad9e44",
+   "len": [
+    2,
+    2
+   ],
+   "identical": false,
+   "ratio": 0.5,
+   "A6000_strings": [],
+   "A7S_strings": []
+  },
+  {
+   "slot": 30,
+   "role": null,
+   "A6000": "0x43ad9208",
+   "A7S": "0x43ad9e4a",
+   "len": [
+    2,
+    2
+   ],
+   "identical": false,
+   "ratio": 0.5,
+   "A6000_strings": [],
+   "A7S_strings": []
+  },
+  {
+   "slot": 31,
+   "role": null,
+   "A6000": "0x43ad95a8",
+   "A7S": "0x43ad98a4",
+   "len": [
+    2,
+    2
+   ],
+   "identical": true,
+   "ratio": 1.0,
+   "A6000_strings": [],
+   "A7S_strings": []
+  },
+  {
+   "slot": 32,
+   "role": null,
+   "A6000": "0x43ad95ac",
+   "A7S": "0x43ad98a8",
+   "len": [
+    2,
+    2
+   ],
+   "identical": true,
+   "ratio": 1.0,
+   "A6000_strings": [],
+   "A7S_strings": []
+  },
+  {
+   "slot": 33,
+   "role": null,
+   "A6000": "0x43ad95b0",
+   "A7S": "0x43ad98ac",
+   "len": [
+    7,
+    7
+   ],
+   "identical": true,
+   "ratio": 1.0,
+   "A6000_strings": [],
+   "A7S_strings": []
+  }
+ ],
+ "state_dumper": {
+  "len": [
+   1599,
+   1599
+  ],
+  "differing_items": 7,
+  "only_got_offsets": true
+ },
+ "identical_slots": [
+  1,
+  20,
+  26,
+  27,
+  28,
+  31,
+  32,
+  33
+ ],
+ "limits": "Ranuras emparejadas por \u00edndice (misma jerarqu\u00eda C_ImagerCtrl); los roles proceden de cadenas de depuraci\u00f3n. Una ranura distinta no implica funci\u00f3n el\u00e9ctrica distinta, ni una id\u00e9ntica el mismo efecto en el sensor."
+}

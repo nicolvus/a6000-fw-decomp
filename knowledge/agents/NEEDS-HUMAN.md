@@ -1,6 +1,6 @@
 # Elementos diferidos y trabajo estático restante
 
-Actualizado el 25-10-2026. [Cola y límites vigentes](../../docs/capture/capture-static-followup-2026-10-25.md).
+Actualizado el 25-10-2026 (cierre estático [S402](../../docs/capture/static-closure-2026-10-25.md): los ocho elementos estáticos de abajo quedan resueltos o con límite explícito). [Cola y límites vigentes](../../docs/capture/capture-static-followup-2026-10-25.md).
 
 | Elemento | Estado y alcance |
 |---|---|

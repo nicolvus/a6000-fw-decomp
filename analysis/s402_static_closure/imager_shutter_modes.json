@@ -1,0 +1,160 @@
+{
+ "limits": "Significado el\u00e9ctrico de los bits (registros sombra +2 / +4) NO_VERIFICADO.",
+ "A6000": {
+  "tbb": "0x436d70c6",
+  "param_load": "ldrb.w sb, [r1, #9]",
+  "param_load_ok": true,
+  "case_targets": [
+   "0x436d70d0",
+   "0x436d70e0",
+   "0x436d7114",
+   "0x436d717a",
+   "0x436d71ae"
+  ],
+  "case_heads": {
+   "0": [
+    "ldrb r2, [r3, #2]",
+    "bfc r2, #2, #1",
+    "strb r2, [r3, #2]",
+    "ldrb r2, [r3, #2]",
+    "bfc r2, #7, #1",
+    "b #0x436d71bc",
+    "ldrb r2, [r3, #2]",
+    "orr r2, r2, #4",
+    "strb r2, [r3, #2]",
+    "ldrb r2, [r3, #2]"
+   ],
+   "1": [
+    "ldrb r2, [r3, #2]",
+    "orr r2, r2, #4",
+    "strb r2, [r3, #2]",
+    "ldrb r2, [r3, #2]",
+    "orr r2, r2, #0x80",
+    "strb r2, [r3, #2]",
+    "ldrb r2, [r3, #2]",
+    "bfc r2, #4, #1",
+    "strb r2, [r3, #2]",
+    "ldrb r2, [r3, #2]"
+   ],
+   "2": [
+    "ldrb r2, [r3, #2]",
+    "orr r2, r2, #4",
+    "strb r2, [r3, #2]",
+    "ldrb r2, [r3, #2]",
+    "orr r2, r2, #0x80",
+    "strb r2, [r3, #2]",
+    "ldrb r2, [r3, #2]",
+    "orr r2, r2, #0x10",
+    "strb r2, [r3, #2]",
+    "ldrb r2, [r3, #2]"
+   ],
+   "3": [
+    "ldrb r2, [r3, #2]",
+    "orr r2, r2, #4",
+    "strb r2, [r3, #2]",
+    "ldrb r2, [r3, #2]",
+    "orr r2, r2, #0x80",
+    "strb r2, [r3, #2]",
+    "ldrb r2, [r3, #2]",
+    "orr r2, r2, #0x10",
+    "strb r2, [r3, #2]",
+    "ldrb r2, [r3, #2]"
+   ],
+   "4": [
+    "ldrb r2, [r3, #2]",
+    "bfc r2, #2, #1",
+    "strb r2, [r3, #2]",
+    "ldrb r2, [r3, #2]",
+    "orr r2, r2, #0x80",
+    "strb r2, [r3, #2]",
+    "ldrb r2, [r3, #2]",
+    "bfc r2, #4, #1",
+    "strb r2, [r3, #2]",
+    "ldrb r2, [r3, #2]"
+   ]
+  },
+  "case2_sets_bits": [
+   "orr r2, r2, #4",
+   "orr r2, r2, #0x80",
+   "orr r2, r2, #0x10"
+  ]
+ },
+ "A7S": {
+  "tbb": "0x436f4242",
+  "param_load": "ldrb.w r6, [sl, #9]",
+  "param_load_ok": true,
+  "case_targets": [
+   "0x436f424c",
+   "0x436f425c",
+   "0x436f42fc",
+   "0x436f4290",
+   "0x436f42c4"
+  ],
+  "case_heads": {
+   "0": [
+    "ldrb r1, [r3, #4]",
+    "bfc r1, #2, #1",
+    "strb r1, [r3, #4]",
+    "ldrb r1, [r3, #4]",
+    "bfc r1, #6, #1",
+    "b #0x436f42d2",
+    "ldrb r1, [r3, #4]",
+    "orr r1, r1, #4",
+    "strb r1, [r3, #4]",
+    "ldrb r1, [r3, #4]"
+   ],
+   "1": [
+    "ldrb r1, [r3, #4]",
+    "orr r1, r1, #4",
+    "strb r1, [r3, #4]",
+    "ldrb r1, [r3, #4]",
+    "bfc r1, #6, #1",
+    "strb r1, [r3, #4]",
+    "ldrb r1, [r3, #4]",
+    "bfc r1, #4, #1",
+    "strb r1, [r3, #4]",
+    "ldrb r3, [r2, #4]"
+   ],
+   "2": [
+    "ldr r0, [pc, #0xb4]",
+    "mov r1, r6",
+    "add r0, pc",
+    "bl #0x438f7114",
+    "movs r0, #1",
+    "b #0x436f437c",
+    "add.w r5, r4, #0x13c",
+    "movs r3, #0",
+    "mov r0, r5",
+    "str r3, [sp, #4]"
+   ],
+   "3": [
+    "ldrb r1, [r3, #4]",
+    "orr r1, r1, #4",
+    "strb r1, [r3, #4]",
+    "ldrb r1, [r3, #4]",
+    "bfc r1, #6, #1",
+    "strb r1, [r3, #4]",
+    "ldrb r1, [r3, #4]",
+    "orr r1, r1, #0x10",
+    "strb r1, [r3, #4]",
+    "ldrb r3, [r2, #4]"
+   ],
+   "4": [
+    "ldrb r1, [r3, #4]",
+    "bfc r1, #2, #1",
+    "strb r1, [r3, #4]",
+    "ldrb r1, [r3, #4]",
+    "orr r1, r1, #0x40",
+    "strb r1, [r3, #4]",
+    "ldrb r1, [r3, #4]",
+    "bfc r1, #4, #1",
+    "strb r1, [r3, #4]",
+    "ldrb r3, [r2, #4]"
+   ]
+  },
+  "case2_strings": [
+   "ShutMode:%d is not supported."
+  ],
+  "case2_unsupported": true
+ }
+}

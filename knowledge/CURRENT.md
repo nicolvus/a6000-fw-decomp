@@ -2,6 +2,11 @@
 
 ## Estado operativo vigente — 25-10-2026
 
+- [Cierre estático S402](../docs/capture/static-closure-2026-10-25.md): RecordStill/RecordImage A6000≡A7S;
+  `0x10000005` con dos constructores; cola `0x40193` (comandos `0x4042–0x4045`); Backup `0x3000b` 256 B, gates 0;
+  A7S Silent: UI → LIRO `0x40e3` (**existe en A7S**, corrige S401) → `+0x250` → bit `0x20`; modos de obturación del
+  driver IMX210 0–4 e IMX235 0,1,3,4. Pendientes que quedan: ver §Límites del informe.
+
 **Leer este bloque como entrada vigente.** El resto del archivo acumula
 instantáneas históricas; sus «siguientes», estados DOING y cifras de tests
 no describen por sí solos el trabajo actual.
