@@ -220,23 +220,34 @@ Código y datos: `analysis/s402_static_closure/followup_blocks.py` → `followup
   - **Mensajes:** las únicas construcciones `ObjMsg(cat,id)` de `0x35001004`, `0x35003002` y `0x3a494026` son consultas dentro del
     propio manejador (`0x65a56c`, `0x65a204`, `0x659de4`) y de `0x65df04`/`0x611748`; los tres valores de 32 bits solo figuran
     en receptores de `libObj` y no aparecen en ningún otro de los 320 ELF del firmware ni en `av-cam.bin`.
-  - **Cerrado como no determinable estáticamente:** quién publica el local `4` a `ModelScalarPb` y el `2` a `ModelPbCap`, y quién
-    envía esos tres mensajes. Quedan solo emisores cruzados con el modelo destino en registro (`0x4ae6ac`, `0x50fb42`,
-    `0x5e2f20`, `0x699ba4` para `2`; `0x5a760c`, `0x5a7c54`, `0x621440`, `0x6b2690` para `4`); el número de modelo de cada clase lo
-    asigna el gestor que las carga por nombre (`Model*ToInstance` solo figura en `.dynsym`), es dato de ejecución.
-- **REA/`libObj.so`:** reabierto en la segunda pasada (ver arriba). **Triaje:** las seis candidatas nuevas de S402 siguen
-  `VIGENTE` sin cierre; la revisión manual exige el protocolo con hashes de `manual_review.json` (no se improvisó).
+  - **Número de modelo estático (corrige la afirmación anterior de que era dato de ejecución):** `0x401f78` registra cada módulo con
+    `IdSoTable::add(id, so, símbolo)` y la tabla `@Mnnn` de `libObj`; `IdGenerator::Get` (`0x12d670`) decodifica los tres dígitos
+    hexadecimales. `@M0EF` = `modelScalarPb.so` y `@M030` = `modelPbCap.so`, así que los ids completos son `0x120EF004` (Pb, local `4`)
+    y `0x12030002` (PbCap, local `2`).
+  - **Ningún código de `libObj` los construye:** de 392 sitios de `0x420630`/`0x420656`/`0x120168`, todos toman el modelo de
+    `this+0x18` (`0x10cf18`) salvo siete funciones del propio marco con local variable (`0x120190`, `0x12d780`, `0x41c724`,
+    `0x41c7d8`, `0x41c88c`, `0x41d010`, `0x420630`). Los ocho emisores inmediatos son autopublicaciones de otras clases (vtable):
+    local `2` → `ModelCamera` (`0x4ae6ac`), `ModelDaNeutral` (`0x50fb42`), `ModelMediaMap` (`0x5e2f20`), `ModelStillRec`
+    (`0x699ba4`); local `4` → `ModelJetImport` (`0x5a760c`), `ModelJetMass` (`0x5a7c54`), `ModelRecPbNeutral` (`0x621440`),
+    `ModelUsbAuto` (`0x6b2690`). Ninguno publica a Pb ni a PbCap.
+  - **Ausencias comprobadas:** `@M0EF` y `@M030` solo figuran en las tablas de carga (`0x401f78`, `0x4503c4`) y en ningún otro archivo
+    del firmware; `0x120EF004` y `0x12030002` no existen como literales de `libObj`, ni como `movw/movt`; el único `0x30` inmediato junto a un
+    publicador (`0x5fe2e6`) es un local, no un modelo. `0x12d780` (11 llamadores del marco, `0xf31e8`–`0x137550`) convierte un
+    nombre `@M…` en id y es la única vía cruzada restante; ningún llamador pasa `@M0EF` ni `@M030`.
+  - **Veredicto:** sin emisor estático de esos dos locales ni de los tres mensajes en `libObj`; cualquier emisor sería de datos o de
+    ejecución (nombre por la consola `0x12d780`) y no se puede nombrar sin cámara. Queda `NO_VERIFICADO` por exclusión, no por falta de búsqueda.
+- **REA/`libObj.so`:** reabierto en la segunda y tercera pasada. **Triaje:** las 44 filas `VIGENTE` sin revisión manual (incluidas las
+  seis de S402) se revisaron una a una el 25-10-2026; ver `analysis/s400_open_questions_triage/README.md`.
 
 ## Límites que permanecen (no son pendientes estáticos nuevos)
 
-- Quién publica el local `4` a `ModelScalarPb` y el `2` a `ModelPbCap` (el `0x109` es auto-envío probado) y quién envía los
-  tres mensajes: el modelo destino de los emisores cruzados es dato de ejecución; si `(0x3a49, 0x3026)` crea la secuencia, el
-  id → clase está probado por bytes y el envío efectivo no.
+- Quién publica el local `4` a `ModelScalarPb` (`0x120EF004`) y el `2` a `ModelPbCap` (`0x12030002`) y quién envía los tres
+  mensajes: ningún código de `libObj` los construye (solo `0x12d780` por nombre, sin llamadores que usen estos módulos); el emisor,
+  si existe, es de datos o de ejecución. Si `(0x3a49, 0x3026)` crea la secuencia, el id → clase está probado por bytes y el envío no.
 - Nombre y efecto de cada índice de modo `+8` de la cola `0x40193` (solo se probó que es un índice de tabla de estado).
 - Escritura `S[0]=&G` en A7S (evidencia estructural reforzada, no asignación) y lector del byte A6000 `+0x238` (no existe en `av-cam`).
 - Origen de `params[+9]` en `SetExposure` y significado eléctrico de los bits de modo (sin hojas de datos).
-- Revisión manual de las filas `VIGENTE` nuevas del triaje: el protocolo fija `revision_destinos`; los documentos de S402 no
-  existen en esa revisión, así que cerrarlas exige una nueva campaña de auditoría, no un cambio local.
+- Triaje: las 44 filas sin revisión manual quedaron revisadas; 11 siguen `VIGENTE` con caso razonado (auditoría S605–S627 y historial S58/S60).
 - REA sobre `libObj.so`: reabierto el 25-10-2026 (consultas en segundos); las conclusiones se verificaron con Capstone sobre los
-  bytes originales. Código: `local_posts_in` y `message_constructors` en `followup_blocks.py`.
+  bytes originales. Código: `local_posts_in`, `message_constructors`, `model_ids`, `explicit_model_posts` y `self_emitter_owners` en `followup_blocks.py`.
 - Acción real de Darwin sobre las bobinas; todo lo físico. P1–P21 y S51 A/B/C=NO sin cambios.

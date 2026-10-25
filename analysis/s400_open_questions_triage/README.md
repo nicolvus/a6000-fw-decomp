@@ -1,5 +1,7 @@
 # S400 — revisión manual de relaciones documentales
 
+**Revisión del 25-10-2026 (44 filas restantes):** las 44 filas sin revisión manual se revisaron una a una. El índice tiene 335 candidatas: 50 pendientes, 221 aristas descartadas y 64 rectificaciones respaldadas; el historial tiene 518 filas (86 pendientes, 322 descartadas, 110 respaldadas). Cinco filas pasan a `CORRECCION_APLICADA` (el comando `0x40e3` de la tabla de A7S, con hash del JSON), 28 se descartan (índice, adyacencia, dominio, procedencia invertida) y 11 conservan `VIGENTE` con caso razonado. Las filas posteriores a `revision_destinos` fijan su propia `revision_destino`. No es una certificación física.
+
 **Estado del 25-10-2026:** 329 relaciones candidatas en el índice: 75 pendientes,
 193 aristas descartadas y 61 rectificaciones respaldadas. Historial: 510 filas
 (111 pendientes, 294 descartadas, 105 respaldadas). Se revisaron los dos casos

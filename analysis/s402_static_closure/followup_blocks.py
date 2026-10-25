@@ -10,6 +10,7 @@ from collections import defaultdict
 from pathlib import Path
 
 import fw
+import queue_commands
 import rawfw
 from capstone import CS_ARCH_ARM, CS_MODE_THUMB, Cs
 
@@ -171,6 +172,39 @@ def message_constructors() -> dict:
     return {k: sorted(v) for k, v in found.items()}
 
 
+MODEL_ENTRY = re.compile(rb"@M([0-9A-F]{3})\0model(\w+)\.so\0")
+SELF_POSTERS = (0x420630, 0x420656, 0x120168)
+MODEL_GETTER = "#0x10cf18"  # devuelve this+0x18, el número de modelo propio
+SELF_EMITTERS = {2: [0x4AE6AC, 0x50FB42, 0x5E2F20, 0x699BA4], 4: [0x5A760C, 0x5A7C54, 0x621440, 0x6B2690]}
+
+
+def model_ids() -> dict:
+    """Tabla `@Mnnn` → módulo; `IdGenerator::Get` (0x12d670) decodifica esos tres dígitos como el número de modelo."""
+    return {m[2].decode(): int(m[1], 16) for m in MODEL_ENTRY.finditer(fw.Lib("A6000").e.data)}
+
+
+def explicit_model_posts() -> list:
+    """Funciones que publican un evento sin tomar el modelo de `this+0x18` (única vía cruzada posible)."""
+    lib = fw.Lib("A6000")
+    ins = _code(lib)
+    return sorted({hex(lib.fstart(a)) for i, (a, _, m, o) in enumerate(ins)
+                   if m in ("bl", "blx", "b.w") and o.startswith("#") and int(o[1:], 16) in SELF_POSTERS
+                   and not any(x[2] in ("bl", "blx") and x[3] == MODEL_GETTER for x in ins[max(0, i - 12):i])})
+
+
+def self_emitter_owners() -> dict:
+    """Clase propietaria (vtable) de cada emisor inmediato del local 2 y del 4: publica a su propio modelo."""
+    lib = fw.Lib("A6000")
+    ins = _code(lib)
+    owners: dict = {}
+    for local, functions in SELF_EMITTERS.items():
+        for function in functions:
+            callers = {lib.fstart(a) for a, _, m, o in ins if m in ("bl", "blx", "b.w") and o == f"#{hex(function)}"}
+            owners.setdefault(str(local), set()).update(
+                queue_commands.vtable_class(lib, slot) for caller in callers for slot in lib.e.word_hits(caller | 1))
+    return {k: sorted(v) for k, v in owners.items()}
+
+
 def main() -> None:
     a7s = writers_and_readers("A7S", [0x250, 0x56C, 0x570])
     a6000 = writers_and_readers("A6000", [0x238])
@@ -184,6 +218,9 @@ def main() -> None:
         "eventos_locales_Pb": local_posts_in(0x659000, 0x65F000),
         "eventos_locales_PbCap": local_posts_in(0x613000, 0x615000),
         "constructores_de_mensaje": message_constructors(),
+        "ids_de_modelo": {k: hex(v) for k, v in model_ids().items() if k in ("ScalarPb", "PbCap")},
+        "publicadores_con_modelo_explicito": explicit_model_posts(),
+        "propietarios_emisores_locales_2_4": self_emitter_owners(),
     }
     OUT.write_text(json.dumps(result, ensure_ascii=False, indent=1), encoding="utf-8")
     print(json.dumps(result, ensure_ascii=False)[:1500])

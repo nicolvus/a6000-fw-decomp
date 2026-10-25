@@ -6,9 +6,9 @@
   "evidencia_estatica": "217 PASS en la selección ampliada de conocimiento/Pages/contratos/analysis, incluidos 23 tests nuevos; más 6 MCP. No equivale a suite integral ni ejecución física.",
   "s50": "SHA-256 del binario, 103 instrucciones LLVM de callback-dispatch/callback-count-copy y 12 punteros en cuatro listas contrastados con bytes originales",
   "lint_tipos": "Ruff y Mypy sin avisos en los ocho archivos Python nuevos",
-  "indice": "Dos reconstrucciones estables: 1461 entidades, 3104 relaciones; 329 relaciones candidatas en OPEN-QUESTIONS (25-10-2026)"
+  "indice": "Dos reconstrucciones estables: 1461 entidades, 3104 relaciones; 329 relaciones candidatas en OPEN-QUESTIONS (25-10-2026); revisión manual de las 44 filas restantes el 25-10-2026"
  },
- "alcance": "510 filas históricas: 111 pendientes, 294 aristas descartadas y 105 rectificaciones respaldadas. Índice actual: 329 candidatas, 75 pendientes, 193 descartadas y 61 respaldadas. El 25-10-2026 se revisaron de nuevo los casos contrato-recordimage y cola con citas y hashes actuales; cuatro candidatas nuevas quedan VIGENTE, sin cierre automático. Las identidades históricas conservan sus revisiones Git originales. No se certifica semántica física por estas clasificaciones.",
+ "alcance": "518 filas históricas. El 25-10-2026 se revisaron una a una las 44 filas que seguían sin revisión manual: 5 rectificaciones respaldadas (S402 sobre S401), 9 pendientes de la auditoría S605–S627 y 2 del historial S58/S60 conservan VIGENTE con caso razonado, y 28 aristas se descartan (índice, adyacencia, dominio y procedencia invertida). Las filas posteriores a la revisión de destinos fijan su propia revisión en `revision_destino`. No se certifica semántica física por estas clasificaciones.",
  "casos": {
   "indice": {
    "veredicto": "FALSO_POSITIVO",
@@ -643,9 +643,37 @@
      "archivo": "tests/knowledge/test_open_questions_triage.py",
      "localizador": "33:49",
      "cita": "def test_s32_rectification_uses_original_firmware_bytes() -> None:\n    from capstone import CS_ARCH_ARM, CS_MODE_THUMB, Cs\n\n    base = 0x43541000\n    blob = (ROOT / \"firmware/extracted/fw321/firmware.tar_unpacked/\"\n            \"0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin\").read_bytes()\n    decoder = Cs(CS_ARCH_ARM, CS_MODE_THUMB)\n\n    def instruction(address: int):\n        return next(decoder.disasm(blob[address-base:address-base+4], address, count=1))\n\n    assert instruction(0x43AD6034).mnemonic == \"push\"\n    assert instruction(0x43AD604E).op_str == \"r3\"  # BLX del despachador.\n    assert instruction(0x4379CB2E).op_str == \"#0x43902718\"\n    pool = int.from_bytes(blob[0x4379CDCC-base:0x4379CDD0-base], \"little\")\n    assert (pool + 0x4379CB30) & 0xFFFFFFFF == 0x43CA519F\n    assert blob[0x43CA519F-base:].startswith(b\"VD_Sequence: YC out window overflow \")",
-     "sha256": "213622740b649381ee633be16e4f2b8a867fbeedf49759f17f9c53802456857c"
+     "sha256": "5e3a6b3564aabf10c53fb2a19006a718d2cdda591d02d508b5eb82d042e5b137"
     }
    ]
+  },
+  "pendiente-auditoria-605-627": {
+   "veredicto": "VIGENTE",
+   "evidencias": [],
+   "razon": "La cita resume la auditoría S605–S627 y afirma una corrección global de la validación original. El destino es un módulo del rango, pero la cita no delimita qué afirmaciones de su informe rectifica. No se certifica ni se descarta; falta cotejar módulo por módulo la tabla de hallazgos con los JSON e informes originales."
+  },
+  "pendiente-historial-s58-s60": {
+   "veredicto": "VIGENTE",
+   "evidencias": [],
+   "razon": "El README histórico atribuye a S59 la corrección de tramas y base P2S de S58 y a S61 la corrección TBH de S60-Sol. Los destinos s58-conclusions y s60-conclusions no incorporan aviso de esas rectificaciones y aquí no se reprodujo la evidencia original. La corrección existe en el texto; no se certifica su alcance sobre este destino."
+  },
+  "silent-40e3-a7s": {
+   "veredicto": "CORRECCION_APLICADA",
+   "evidencias": [
+    {
+     "archivo": "analysis/s402_static_closure/a7s_silent_selector.json",
+     "localizador": "liro_command",
+     "cita": "{\"a7s_row\": {\"address\": \"0x43ff79e4\", \"cmd\": \"0x40e3\", \"handler\": \"0x437a9cb1\"}, \"a6000_row\": {\"address\": \"0x43fffc60\", \"cmd\": \"0x40e3\", \"handler\": \"0x438032d5\"}, \"a7s_handler_writes\": \"0x43ea1fd4 = byte comando+8 (bloque G 0x43ea1d84)\", \"settings_block_G\": \"0x43ea1d84\", \"init_defaults\": \"0x437aae44 pone G+0x250 = 0\"}",
+     "sha256": "285a82fa563c97a741fe08d933e6748a7dcf02ba7d375207523146ebb6f3f18d"
+    },
+    {
+     "archivo": "analysis/s402_static_closure/a7s_silent_selector.json",
+     "localizador": "libobj_a7s",
+     "cita": "{\"instruction_mismatches\": {}, \"strings_present\": {\"N7CamUser28SequenceSetSilentShutterModeE\": true, \"MSGID_SET_SILENT_SHUTTER_MODE_CMD\": true, \"VALUEID_SILENT_SHUTTER_ON\": true, \"VALUEID_SILENT_SHUTTER_OFF\": true, \"PARAMID_SILENT_SHUTTER_MODE\": true}}",
+     "sha256": "285a82fa563c97a741fe08d933e6748a7dcf02ba7d375207523146ebb6f3f18d"
+    }
+   ],
+   "razon": "S402 retira la diferencia 1 de S401: el comando 0x40e3 sí está en la tabla de despacho de A7S (fila 0x43ff79e4, manejador 0x437a9cb1, comprobada en los bytes de av-cam-a7s.bin) y SequenceSetSilentShutterMode existe en el libObj de A7S. S401 incorpora el aviso en la cabecera y en la fila 1. El texto lista los campos como {0x40e3, 0, 0x437a9cb1}, pero en los bytes el orden es comando, manejador, ajuste. El cierre se limita al despacho y a la presencia del comando; la escritura S[0]=&G sigue sin asignación y no se prueba ejecución física."
   }
  }
 }

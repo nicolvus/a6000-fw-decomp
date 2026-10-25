@@ -196,3 +196,15 @@ def test_local_event_posts_and_message_constructors():
     assert sorted(cap) == ["0x1", "0x7", "0x9"]
     assert followup_blocks.message_constructors() == {
         "0x3002": ["0x611748", "0x65a204"], "0x1004": ["0x65a56c", "0x65df04"], "0x4026": ["0x659de4"]}
+
+
+def test_model_ids_and_only_self_emitters_for_local_2_and_4():
+    import followup_blocks
+
+    ids = followup_blocks.model_ids()
+    assert (ids["ScalarPb"], ids["PbCap"]) == (0xEF, 0x30)
+    assert followup_blocks.explicit_model_posts() == [
+        "0x120190", "0x12d780", "0x41c724", "0x41c7d8", "0x41c88c", "0x41d010", "0x420630"]
+    assert followup_blocks.self_emitter_owners() == {
+        "2": ["ModelCamera", "ModelDaNeutral", "ModelMediaMap", "ModelStillRec"],
+        "4": ["ModelJetImport", "ModelJetMass", "ModelRecPbNeutral", "ModelUsbAuto"]}

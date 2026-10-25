@@ -202,7 +202,7 @@ def test_manual_review_preserves_original_sources_and_decisions() -> None:
         assert lines[index] == row["cita"]
         assert "\n".join(lines[max(0, index - 2):index + 3]).strip() == row["contexto"]
         assert row["destino_cita"] == "\n".join(
-            _snapshot(audit["revision_destinos"], row["destino"])[:12],
+            _snapshot(row.get("revision_destino", audit["revision_destinos"]), row["destino"])[:12],
         )
         if row["veredicto"] == "CORRECCION_APLICADA":
             assert case["evidencias"], row["fuente"]

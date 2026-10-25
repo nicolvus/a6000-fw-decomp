@@ -8,7 +8,7 @@
   driver IMX210 0–4 e IMX235 0,1,3,4. §9: G de A7S coincide en `+0x250/+0x56c/+0x570`; A6000 `+0x238` sin lector en `av-cam`;
   emisor `ObjMsg(0x3a49,0x3026)` = `0x659cb0` (acción 13 de `ModelScalarPb`; `0x3026` = `SequenceRecordStillImageCmd`);
   modos `+8` de `0x40193` = índices de tabla de estado (llamadores `CExecSeq`/`CEventDispatcher`). Segunda pasada REA: local
-  `0x109` auto-publicado por `ModelScalarPb` (`0x65a8a4`); el `4` de Pb y el `2` de PbCap no los publica su clase. Pendientes que quedan: ver §Límites del informe.
+  `0x109` auto-publicado por `ModelScalarPb` (`0x65a8a4`); el `4` de Pb y el `2` de PbCap no los publica su clase ni código alguno de `libObj` (modelo estático: `@M0EF` = ScalarPb, `@M030` = PbCap). Triaje S400: 44 filas revisadas a mano (11 `VIGENTE` razonadas). Pendientes que quedan: ver §Límites del informe.
 
 **Leer este bloque como entrada vigente.** El resto del archivo acumula
 instantáneas históricas; sus «siguientes», estados DOING y cifras de tests
