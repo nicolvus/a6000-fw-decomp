@@ -147,10 +147,43 @@ Se abrieron tres sesiones únicas con `session_daemon.py`: `av-cam` A7S (listo a
   consulta vacía o sin respuesta de REA no prueba ausencia.
 - Sesiones cerradas al terminar; el log compartido de REA no se versiona.
 
+## 9. Seguimiento de los límites 1–5 (25-10-2026)
+
+Código y datos: `analysis/s402_static_closure/followup_blocks.py` → `followup_blocks.json` (prueba
+`test_followup_settings_block_and_message_emitter`). Solo bytes originales y Capstone.
+
+- **`S[0]` ≡ G en A7S, evidencia más fuerte (sigue sin ser la asignación):** el mismo bloque G (`0x43ea1d84`) recibe por
+  los manejadores LIRO contiguos las escrituras `+0x250` (`0x437a9cb8`), `+0x56c` (`0x437aada2`) y `+0x570`
+  (`0x437aadba`), y los tres desplazamientos se leen por doble indirección `ldr r3,[S]; ldr rN,[r3,#off]` (`+0x250`:
+  `0x43813e90`; `+0x56c`: `0x4354eb30`; `+0x570`: `0x4354eb48`). Tres desplazamientos coincidentes escritor/lector hacen
+  muy improbable una coincidencia, pero la escritura `S[0]=&G` no aparece: `S` es el objeto `0x43ea70a0` (getter
+  `0x437b38ec`) y ninguna de las cuatro anclas PIC directas de `S` guarda en `[S+0]`.
+- **Consumidor del byte A6000 `+0x238`: no encontrado.** Tres métodos sobre `av-cam.bin` A6000: (1) ancla PIC exacta de
+  `0x43edf684` con `+0x238`: solo el escritor `0x438032dc`; (2) anclas hasta 0x700 B antes de `+0x238`: ninguna; (3)
+  doble indirección `+0x238`: `0x43abb770` es una llamada virtual (`blx` de slot de vtable, no un dato) y `0x4370e994`
+  lee `ldrb [p+0x238]` de otro bloque (puntero global `0x43e86414`, fijado vía `0x43716f18`/`0x4370ff8c` desde el global `0x43e85214`; lee
+  bytes separados `+0x238/+0x239/+0x241`; no se demuestra relación con G). Con
+  A7S el lector existe (`0x43813e90`); en A6000 el ajuste se guarda y nadie lo lee en `av-cam`.
+- **Emisor del mensaje `ObjMsg(0x3a49, 0x3026)`:** una sola construcción en `libObj` A6000, `0x659cb0` (`0x659cdc`), con
+  parámetro `0x2001` = valor de `r4`. La llama el manejador de mensajes `0x65b0bc` (llamadas `0x65b1fe`, `0x65b270`;
+  entrada por salto desde `0x65bc40`) al recibir el evento `0x109` (directo) o `4` (tras condiciones). El mismo manejador
+  consume `0x35001004`, `0x35003002` y `0x3a494026`. Los otros sitios con la constante son lecturas de parámetro
+  (`0x6ce880`/`0x40b8e0` con id `0x3026`, en `0x7867c6`, `0x7a901a`, `0x424544`), `AddParam(0x3026)` en `0x8afd3a`, el
+  registro de fábrica `0x3a9b80` y un `case` en `0x19e076`: ninguno emite. **No se probó** que `(0x3a49, 0x3026)` sea el
+  mensaje que inicia `SequenceRecordStillImageCmd`; es el único productor con ese id.
+- **`params[+9]` de `SetExposure`:** `0x436d6f6c` (entrada de vtable `0x43fcc0b8`, slot `+0x2c`). El slot `+0x2c` lo
+  comparten más de cien llamadas virtuales de otras clases y en los siete llamadores con estructura en pila
+  (`0x43564608`, `0x4358ff04`, `0x435906c2`, `0x4361017e`, `0x436963d4`, `0x438228cc`, `0x439b1a6a`) no hay `strb` directo a
+  `[sp,#N+9]`; el origen de ese byte exige resolver el tipo del objeto receptor. Sin cambios.
+- **Acción 6 de `ModelPbCap`:** el evento de UI que la dispara no se localizó (los eventos `4`/`0x109` anteriores son de
+  otro módulo y no se relacionan con ella).
+- **REA/`libObj.so`:** sin cambios; se mantiene Capstone. **Triaje:** las seis candidatas nuevas de S402 siguen
+  `VIGENTE` sin cierre; la revisión manual exige el protocolo con hashes de `manual_review.json` (no se improvisó).
+
 ## Límites que permanecen (no son pendientes estáticos nuevos)
 
-- Quién emite la secuencia `0x3026` y el evento de UI de PbCap que dispara la acción 6.
+- Quién activa la acción 6 de `ModelPbCap` y si `(0x3a49, 0x3026)` inicia `SequenceRecordStillImageCmd`.
 - Significado de los códigos de modo `+8` de la cola `0x40193` y recepción en ejecución.
-- Escritura `S[0]=&G` en A7S (identidad de los bloques de ajustes) y consumidor del byte A6000 `+0x238`.
-- Llamador que fija `params[+9]` en `SetExposure` y significado eléctrico de los bits de modo (sin hojas de datos).
+- Escritura `S[0]=&G` en A7S (evidencia estructural reforzada, no asignación) y lector del byte A6000 `+0x238` (no existe en `av-cam`).
+- Origen de `params[+9]` en `SetExposure` y significado eléctrico de los bits de modo (sin hojas de datos).
 - Acción real de Darwin sobre las bobinas; todo lo físico. P1–P21 y S51 A/B/C=NO sin cambios.

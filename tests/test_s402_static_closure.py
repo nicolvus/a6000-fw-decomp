@@ -157,3 +157,18 @@ def test_state_dumpers_differ_only_in_got_offsets():
 
     dumper = imager_vtable.state_dumper()
     assert dumper["len"] == [1599, 1599] and dumper["only_got_offsets"]
+
+
+def test_followup_settings_block_and_message_emitter():
+    import followup_blocks
+
+    a7s = followup_blocks.writers_and_readers("A7S", [0x250, 0x56C, 0x570])
+    assert "0x43813e90" in a7s["0x250"]["double_indirect_reads"]  # F(*(*S+0x250)) de 0x43813d90
+    assert a7s["0x56c"]["anchor_stores"] and a7s["0x570"]["anchor_stores"]  # misma G escribe las tres
+    assert "0x4354eb48" in a7s["0x570"]["double_indirect_reads"]
+    a6000 = followup_blocks.writers_and_readers("A6000", [0x238])
+    assert a6000["0x238"]["anchor_stores"] == ["0x438032dc"]
+    assert a6000["0x238"]["double_indirect_reads"] == ["0x4370e994", "0x43abb770"]
+    emitter = followup_blocks.emitter_3026()
+    assert emitter["constructores"] == {"0x659cb0": [{"site": "0x659cdc", "cat": "0x3a49"}]}
+    assert emitter["llamadores"] == ["0x65b1fe", "0x65b270"]

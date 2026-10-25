@@ -7,7 +7,8 @@
 `0x10000005` tiene dos constructores (PlayData y secuencia `0x3026`); cola `0x40193`: cuatro comandos y 53 llamadores;
 Backup `0x3000b` = 256 B con gates `+3`/`+6` = 0; **A7S Silent: UI → LIRO `0x40e3` → `+0x250` → bit `0x20`**, y el manejador
 `0x40e3` **sí existe en la A7S** (corrige S401). Ambos drivers de imager conmutan modos de obturación 0–4 (A6000) / 0,1,3,4
-(A7S). S51 A/B/C=NO; sin parche ni pruebas físicas.
+(A7S). **Seguimiento (§9):** el bloque G de A7S coincide en tres desplazamientos escritor/lector (`+0x250/+0x56c/+0x570`);
+el byte A6000 `+0x238` no tiene lector en `av-cam`; único emisor `ObjMsg(0x3a49,0x3026)` = `0x659cb0`. S51 A/B/C=NO; sin parche ni pruebas físicas.
 
 ## Captura: seguimiento de los cinco pendientes — 25-10-2026
 
