@@ -4,19 +4,23 @@
   "trace_strings": [
     {
       "vaddr": "0x43c9a7ca",
-      "text": "[LENS_PDR]: BonoboDSP_Send: Data latch failed!\n"
+      "text": "[LENS_PDR]: BonoboDSP_Send: Data latch failed!\n",
+      "core_text": "BonoboDSP_Send: Data latch failed!\n"
     },
     {
       "vaddr": "0x43c9a7fa",
-      "text": "[LENS_PDR]: BonoboDSP_Send:[ch0]Data latch failed!\n"
+      "text": "[LENS_PDR]: BonoboDSP_Send:[ch0]Data latch failed!\n",
+      "core_text": "BonoboDSP_Send:[ch0]Data latch failed!\n"
     },
     {
       "vaddr": "0x43c9a82e",
-      "text": "[LENS_PDR]: BonoboDSP_Send:[ch1]Data latch failed!\n"
+      "text": "[LENS_PDR]: BonoboDSP_Send:[ch1]Data latch failed!\n",
+      "core_text": "BonoboDSP_Send:[ch1]Data latch failed!\n"
     },
     {
       "vaddr": "0x43c9a862",
-      "text": "[LENS_PDR]: BonoboDSP_Rcv: paritycheck_error!\n"
+      "text": "[LENS_PDR]: BonoboDSP_Rcv: paritycheck_error!\n",
+      "core_text": "BonoboDSP_Rcv: paritycheck_error!\n"
     }
   ],
   "prefix_length": 12,
@@ -38,7 +42,7 @@
     }
   },
   "shutter_line": "NEGATIVO ACOTADO",
-  "logger_dual": null,
+  "logger_dual": true,
   "global_logger": "0x43902718",
   "verification_status": {
     "trace_strings": {
@@ -73,9 +77,70 @@
       "scope": "datos y deltas; no prueba emisión ni logger dual"
     },
     "core_strings": {
-      "verified": false,
-      "count_total": 0,
-      "details": [],
+      "verified": true,
+      "count_total": 4,
+      "details": [
+        {
+          "vaddr": "0x43c9a7d6",
+          "ok": true,
+          "matches_by_firmware": {
+            "a6000_fw321": [
+              "0x43c9a7d6"
+            ],
+            "a7s_fw320": [
+              "0x43ca167b"
+            ],
+            "a6300_fw201": [
+              "0x43da0aaa"
+            ]
+          }
+        },
+        {
+          "vaddr": "0x43c9a806",
+          "ok": true,
+          "matches_by_firmware": {
+            "a6000_fw321": [
+              "0x43c9a806"
+            ],
+            "a7s_fw320": [
+              "0x43ca169f"
+            ],
+            "a6300_fw201": [
+              "0x43da0ace"
+            ]
+          }
+        },
+        {
+          "vaddr": "0x43c9a83a",
+          "ok": true,
+          "matches_by_firmware": {
+            "a6000_fw321": [
+              "0x43c9a83a"
+            ],
+            "a7s_fw320": [
+              "0x43ca16c7"
+            ],
+            "a6300_fw201": [
+              "0x43da0af6"
+            ]
+          }
+        },
+        {
+          "vaddr": "0x43c9a86e",
+          "ok": true,
+          "matches_by_firmware": {
+            "a6000_fw321": [
+              "0x43c9a86e"
+            ],
+            "a7s_fw320": [
+              "0x43ca16ef"
+            ],
+            "a6300_fw201": [
+              "0x43da0b1e"
+            ]
+          }
+        }
+      ],
       "scope": "sufijos NUL en A6000 y coincidencias por modelo; no equivalencia funcional"
     },
     "metadata": {
@@ -89,13 +154,13 @@
       "scope": "marcadores ASCII en trazas NUL; no nivel efectivo ni funciones emisoras"
     },
     "logger_dual": {
-      "verified": false,
-      "status": "NO_VERIFICADO",
-      "reason": "faltan cadenas de carga/llamada y flujo que demuestren ambas emisiones",
+      "verified": true,
+      "status": "VERIFICADO_ESTATICO",
+      "reason": "rutas de envío y logger verificadas por instrucciones en todas las trazas",
       "claimed": true,
       "global_logger": "0x43902718",
-      "global_logger_verified": false,
-      "global_logger_msg": "bytes no demuestran identidad de logger ni duplicación",
+      "global_logger_verified": true,
+      "global_logger_msg": "llamada estática a 0x43902718 con sufijo de cada traza",
       "bytes_hex": "0fb4002130b5a3b026ac8122684654f8045bc3f06ce98121"
     },
     "equivalencia_funcional": {
@@ -139,5 +204,47 @@
       "trace_fields": [],
       "fields": []
     }
-  }
+  },
+  "logger_paths": [
+    {
+      "local_load": "0x43708a54",
+      "local_add": "0x43708a5c",
+      "local_call": "0x43708a5e",
+      "global_load": "0x43708a62",
+      "global_add": "0x43708a64",
+      "global_call": "0x43708a6a",
+      "trace": "0x43c9a7ca",
+      "local_target": "0x437085b0"
+    },
+    {
+      "local_load": "0x43708b70",
+      "local_add": "0x43708b78",
+      "local_call": "0x43708b7a",
+      "global_load": "0x43708b7e",
+      "global_add": "0x43708b80",
+      "global_call": "0x43708b82",
+      "trace": "0x43c9a7fa",
+      "local_target": "0x437085b0"
+    },
+    {
+      "local_load": "0x43708bde",
+      "local_add": "0x43708be6",
+      "local_call": "0x43708be8",
+      "global_load": "0x43708bec",
+      "global_add": "0x43708bee",
+      "global_call": "0x43708bf0",
+      "trace": "0x43c9a82e",
+      "local_target": "0x437085b0"
+    },
+    {
+      "local_load": "0x43708c1c",
+      "local_add": "0x43708c22",
+      "local_call": "0x43708c28",
+      "global_load": "0x43708c2c",
+      "global_add": "0x43708c2e",
+      "global_call": "0x43708c30",
+      "trace": "0x43c9a862",
+      "local_target": "0x437085b0"
+    }
+  ]
 }

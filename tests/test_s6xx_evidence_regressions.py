@@ -61,7 +61,7 @@ def test_no_functional_negative_from_keywords():
 def test_no_positive_logger_claim_without_instructions():
     for session, j in MODULES.items():
         status = j["verification_status"]["logger_dual"]
-        if session in {607, 611}:
+        if session in {607, 611, 616}:
             assert j["logger_dual"] is True
             assert status["verified"] is True
             assert status["global_logger_verified"] is True
@@ -77,7 +77,7 @@ def test_alternative_evidence_has_explicit_coverage():
         assert status["differential"]["status"] == "NO_VERIFICADO"
         assert status["metadata"]["verified"] is True
     assert MODULES[606]["verification_status"]["twin_strings"]["count_ok"] == 7
-    for session in (608, 611):
+    for session in (608, 611, 616):
         assert MODULES[session]["verification_status"]["core_strings"]["verified"] is True
 
 

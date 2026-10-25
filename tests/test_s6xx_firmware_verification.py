@@ -48,7 +48,7 @@ class S6xxFirmwareVerification(unittest.TestCase):
                 "linea_obturador", "differential", "other_claims",
             ):
                 evidence = data["verification_status"][category]
-                if category == "logger_dual" and data["module"] in {"CAM_CMD", "IMAGING_RSRC"}:
+                if category == "logger_dual" and data["module"] in {"CAM_CMD", "IMAGING_RSRC", "LENS_PDR"}:
                     self.assertEqual(evidence["status"], "VERIFICADO_ESTATICO")
                     self.assertTrue(evidence["verified"])
                 else:
@@ -122,6 +122,20 @@ class S6xxFirmwareVerification(unittest.TestCase):
         self.assertTrue(VERIFY.verify_module(data, self.blobs)["logger_dual"]["verified"])
         corrupted = copy.deepcopy(data)
         corrupted["logger_paths"][0]["global_call"] = "0x437fc380"
+        self.assertFalse(VERIFY.verify_module(corrupted, self.blobs)["logger_dual"]["verified"])
+
+    def test_s616_dual_logger_paths_are_verified_from_instructions(self):
+        data = next(d for p, d in self.modules.items() if p.parent.name.startswith("s616"))
+        self.assertTrue(VERIFY.verify_module(data, self.blobs)["logger_dual"]["verified"])
+        blob = self.blobs["a6000_fw321"]
+        decoder = VERIFY.Cs(VERIFY.CS_ARCH_ARM, VERIFY.CS_MODE_THUMB)
+        for address, target in ((0x43708616, "#0x439c5004"),
+                                (0x43708642, "#0x4356120c")):
+            off = address - VERIFY.BASE
+            call = next(decoder.disasm(blob[off:off + 4], address, count=1))
+            self.assertEqual((call.mnemonic, call.op_str), ("bl", target))
+        corrupted = copy.deepcopy(data)
+        corrupted["logger_paths"][0]["local_call"] = "0x43708a60"
         self.assertFalse(VERIFY.verify_module(corrupted, self.blobs)["logger_dual"]["verified"])
 
     def test_cli_rejects_saved_positive_claims_without_evidence(self):

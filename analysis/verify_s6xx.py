@@ -293,7 +293,7 @@ def main():
         total = sum(r["verification_status"]["trace_strings"]["count_ok"] for r in results)
         twins = sum(r["verification_status"]["twin_strings"]["count_ok"] for r in results)
         print(f"{len(results)} fichas; {total} trazas; {twins} gemelas; errores: {failures}")
-        print("Logger dual S607/S611: VERIFICADO_ESTATICO; resto y equivalencias: NO_VERIFICADO")
+        print("Logger dual S607/S611/S616: VERIFICADO_ESTATICO; resto y equivalencias: NO_VERIFICADO")
     return bool(failures)
 
 

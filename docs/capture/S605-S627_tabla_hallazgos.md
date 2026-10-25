@@ -6,10 +6,10 @@ Este informe corrige [la validación anterior, commit 9e1a4055](https://github.c
 Sus 263 pruebas pasan, pero no acreditan todas sus conclusiones. Las nuevas regresiones
 reprodujeron siete fallos antes de corregir datos y estados.
 
-**Actualización 24-10-2026:** S607 y S611 tienen dos rutas de emisión
-demostradas estáticamente para sus seis y cinco trazas, respectivamente.
+**Actualización 24-10-2026:** S607, S611 y S616 tienen dos rutas de emisión
+demostradas estáticamente para sus seis, cinco y cuatro trazas, respectivamente.
 Las tablas históricas que dejan logger dual pendiente para las 23 fichas
-quedan corregidas para estas dos; las otras 21 y todas las equivalencias
+quedan corregidas para estas tres; las otras 20 y todas las equivalencias
 funcionales/de código siguen abiertas. No se observó ejecución real.
 
 | Afirmación o hallazgo | Decisión | Evidencia y corrección |
@@ -20,7 +20,7 @@ funcionales/de código siguen abiertas. No se observó ejecución real.
 | Longitudes de prefijo | RECHAZO original; ACEPTO corregidas | Cinco campos adicionales incorrectos: S606 gemelo 7 B; S608 núcleo 4 B y compuesto 18 B; S611 núcleo 10 B y compuesto 26 B. |
 | Esquemas fuera de `text/vaddr` | ACEPTO cobertura corregida | Se verifican `twin_text/twin_vaddr/delta`, `core_text`, longitudes y cantidad de trazas. Los recuentos `differential` y otras afirmaciones quedan explícitamente NO_VERIFICADO. |
 | “Logger global es código porque no es cero/FF” | RECHAZO del método | Ese test también aceptaba una cadena ASCII. Se conserva la lectura de bytes sin elevarla a identidad funcional. Hay instrucciones verificadas, descritas abajo. |
-| Logger dual y equivalencias funcional/de código | ACEPTO dejarlas pendientes | **NO_VERIFICADO** para las 23 fichas. Falta evidencia específica de cargas, llamadas, flujo y comparación entre modelos. No se han demostrado falsos. |
+| Logger dual y equivalencias funcional/de código | ACEPTO el alcance revisado | Logger dual **VERIFICADO_ESTATICO** en S607/S611/S616; las otras 20 fichas y las 46 equivalencias siguen **NO_VERIFICADO**. No se han demostrado falsos. |
 | “Línea del obturador negativa VERIFICADO” | RECHAZO | Cero palabras clave, o una lista vacía, no excluye una ruta funcional. Las 23 fichas pasan a **NO_VERIFICADO**. |
 | S618 como módulo independiente | RECHAZO como clasificación documental | No tiene trazas propias; remite a S617. Esto no demuestra ausencia de código independiente ni identidad funcional. |
 | “Todo funciona: 263/263 PASS” | RECHAZO como validación completa | Los 263 tests sí pasan, pero **21/23 verificadores individuales fallaban** por longitudes obsoletas. Corregidos; ahora pasan los 23. |
@@ -38,7 +38,7 @@ en [resultados reproducibles](../../analysis/s6xx_verification_results.json).
   `0x43cfdc7f`, `0x43cfdcbc`, `0x43cfdcf8`.
   Deltas desde las principales: **38, 34, 52, 44, 33, 32, 32 B**.
   La primera dirección antigua, `0x43cfdb9c`, apuntaba a `mer(): %d`, no a la gemela.
-- S607, S608 y S611: **17 núcleos** comprobados como sufijos NUL de las cadenas A6000.
+- S607, S608, S611 y S616: **21 núcleos** comprobados como sufijos NUL de las cadenas A6000.
   Las coincidencias A7S/A6300 constan con direcciones por núcleo; una coincidencia
   textual no es equivalencia funcional ni prueba un literal autónomo.
 - `0x43902718`, offset `0x3c1718`: bytes `0fb4 0021 30b5 a3b0` decodifican
@@ -59,9 +59,9 @@ en [resultados reproducibles](../../analysis/s6xx_verification_results.json).
 ### Ampliación de la auditoría de afirmaciones (23-10-2026)
 
 Revisadas individualmente las 23 fichas S605–S627: de 69 afirmaciones de logger dual,
-equivalencia funcional y equivalencia de código, **67 permanecen NO_VERIFICADO**.
-[S607](s607-cam_cmd.md) y [S611](s611-imaging_rsrc.md) acreditan dos rutas
-estáticas para sus seis y cinco trazas con cargas y llamadas contrastadas;
+equivalencia funcional y equivalencia de código, **66 permanecen NO_VERIFICADO**.
+[S607](s607-cam_cmd.md), [S611](s611-imaging_rsrc.md) y [S616](s616-lens_pdr.md)
+acreditan dos rutas estáticas para sus seis, cinco y cuatro trazas con cargas y llamadas contrastadas;
 no prueban ejecución real. Los demás JSON conservan `verified=false` y el motivo. No se ha probado que
 esas afirmaciones sean falsas.
 REA MCP devolvió `target_unavailable`; se consultó su exportación histórica citada arriba
