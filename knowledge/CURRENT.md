@@ -1,19 +1,29 @@
 # Estado actual — léeme primero
 
-## Estado operativo auditado — 24-10-2026
+## Estado operativo vigente — 25-10-2026
 
 **Leer este bloque como entrada vigente.** El resto del archivo acumula
 instantáneas históricas; sus «siguientes», estados DOING y cifras de tests
 no describen por sí solos el trabajo actual.
 
-- [Auditoría integral y cola](../docs/capture/repo-audit-2026-10-24.md): `0x40193`
-  (servicio indirecto, OSAL Linux y transporte), activación RecordImage/RecordStill,
-  IMX210/YC/archivo/cortina, flujo S305 y productor CAIF siguen abiertos.
+- [Seguimiento de los cinco puntos](../docs/capture/capture-static-followup-2026-10-25.md):
+  `sta_tsk` y transporte OSAL de `0x40193` identificados estáticamente; recepción
+  LIRO bloqueante, sin requerir callback Linux específico. RecordStill: 43 llamadas
+  mapeadas (20 importadas, 23 locales en ocho parejas); activación real abierta.
+- S205: slot GOT `0x44020c9c → S=0x43eb35d0`; staging escribe S[0] desde
+  `u8(*(ctx+0x20)+1)` y copia G→S con selector 3. S305: la vieja entrada era
+  interior +0x58, trece llamadas invalidadas; tabla148/fila18 → Backup0x3000b,
+  estado0x43f72d02, callback de copia y Backup_read localizados.
+- A7S CAIF: constructor `0x43862e24`, bit0x20 si selector `C+0x76c == 2` en
+  ruta normal; mismo campo `root+0x78c` para modos0x4e/0x4f. Origen UI y entrega abiertos.
 - S206/S207 y S301 tienen informes y tests existentes. La correspondencia
   funcional profunda sigue pendiente; S207 no demuestra ausencia de un mecanismo
   de fin de integración. Su JSON/generador declaran NO_VERIFICADO.
-- S176: informe, directorio de análisis y test anunciados no están en el árbol
-  ni en el historial disponible. Recuperar evidencia antes de certificarlo.
+- S176 reproducido con informe, auditor, datos y siete tests nuevos; primer lector
+  con default6 en su bloque terminal, segundo con ocho anulaciones a cero.
+  No se recuperaron los artefactos históricos; se reconstruyó la evidencia.
+- Cola restante: productor de mensaje0x10000005, cuerpos locales de RecordStill,
+  tamaño/datos Backup, origen UI/entrega CAIF y enlaces IMX210/YC/archivo/cortina.
 - Censo reproducido: 94 hitos + 39 subetiquetas + 226 pendientes + 13 descartadas
   = 372; cobertura documental 133/372. S605–S627: 94 trazas y siete gemelas
   verificadas; 66 afirmaciones sin verificar. No mide código descompilado.

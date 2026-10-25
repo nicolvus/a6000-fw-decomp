@@ -1,0 +1,17 @@
+{
+  "source_sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+  "constructor": "0x43862e24",
+  "caller": "0x4382822c",
+  "payload_store": "0x438632b4",
+  "payload": "*(root+0x4ae8)+0x40 (when nonnull)",
+  "capture_selector": "root+0x78c == (root+0x20)+0x76c",
+  "normal_bit_0x20_condition": "selector == 2",
+  "normal_byte": "32 * (selector == 2) + (other_flag == 1)",
+  "diagnostic_override": 1,
+  "limits": "Normal path requires enabled payload and zero diagnostic override. Sensor-mode selection has earlier bypasses and later overrides.",
+  "sensor_modes": [
+    "0x4e",
+    "0x4f"
+  ],
+  "physical_delivery": "NO_VERIFICADO"
+}

@@ -1,0 +1,81 @@
+{
+  "method": "LLVM Thumb on ELF views whose entire .text equals original firmware; no execution",
+  "llvm_version": "LLVM (http://llvm.org/):",
+  "checks": [
+    {
+      "name": "s176-reader1",
+      "model": "A6000",
+      "source_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+      "llvm_instructions": [
+        "4386140a: 58d3         \tldr\tr3, [r2, r3]",
+        "43861410: f893 20ac    \tldrb.w\tr2, [r3, #0xac]",
+        "43861414: f09d bc10    \tb.w\t0x438fec38 <_binary_firmware_extracted_fw321_firmware_tar_unpacked_0700_part_image_dev_nflasha3_unpacked_unpacked_av_cam_bin_start+0x3bdc38> @ imm = #0x9d820"
+      ]
+    },
+    {
+      "name": "s176-reader2",
+      "model": "A6000",
+      "source_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+      "llvm_instructions": [
+        "438693ee: f893 2030    \tldrb.w\tr2, [r3, #0x30]",
+        "438693f2: b90a         \tcbnz\tr2, 0x438693f8 <_binary_firmware_extracted_fw321_firmware_tar_unpacked_0700_part_image_dev_nflasha3_unpacked_unpacked_av_cam_bin_start+0x3283f8> @ imm = #0x2",
+        "43869434: f893 3037    \tldrb.w\tr3, [r3, #0x37]"
+      ]
+    },
+    {
+      "name": "s176-default",
+      "model": "A6000",
+      "source_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+      "llvm_instructions": [
+        "438fec6c: f1b8 0f00    \tcmp.w\tr8, #0x0",
+        "438fec70: bf14         \tite\tne",
+        "438fec74: 2206         \tmoveq\tr2, #0x6",
+        "438fec7c: 601a         \tstr\tr2, [r3]"
+      ]
+    },
+    {
+      "name": "s205-caller",
+      "model": "A6000",
+      "source_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+      "llvm_instructions": [
+        "437b61b4: 9700         \tstr\tr7, [sp]",
+        "437b61c8: f502 7209    \tadd.w\tr2, r2, #0x224",
+        "437b61d2: f08d fc37    \tbl\t0x43843a44 <_binary_firmware_extracted_fw321_firmware_tar_unpacked_0700_part_image_dev_nflasha3_unpacked_unpacked_av_cam_bin_start+0x302a44> @ imm = #0x8d86e"
+      ]
+    },
+    {
+      "name": "s205-writer",
+      "model": "A6000",
+      "source_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+      "llvm_instructions": [
+        "43843a4a: 6a03         \tldr\tr3, [r0, #0x20]",
+        "43843a54: 785b         \tldrb\tr3, [r3, #0x1]",
+        "43843a5e: 7023         \tstrb\tr3, [r4]"
+      ]
+    },
+    {
+      "name": "s205-copy",
+      "model": "A6000",
+      "source_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+      "llvm_instructions": [
+        "43843af2: f107 032c    \tadd.w\tr3, r7, #0x2c",
+        "43843b00: cb0f         \tldm\tr3, {r0, r1, r2, r3}",
+        "43843b02: e88e 000f    \tstm.w\tlr, {r0, r1, r2, r3}",
+        "43843b34: d1dd         \tbne\t0x43843af2 <_binary_firmware_extracted_fw321_firmware_tar_unpacked_0700_part_image_dev_nflasha3_unpacked_unpacked_av_cam_bin_start+0x302af2> @ imm = #-0x46"
+      ]
+    },
+    {
+      "name": "a7s-caif",
+      "model": "A7S",
+      "source_sha256": "b857d33879d610abd185148d676de7ea0f753af3a08389994e788d617925103e",
+      "llvm_instructions": [
+        "4386329a: f8d6 276c    \tldr.w\tr2, [r6, #0x76c]",
+        "4386329e: f1a2 0102    \tsub.w\tr1, r2, #0x2",
+        "438632a2: 424a         \trsbs\tr2, r1, #0",
+        "438632a4: eb42 0201    \tadc.w\tr2, r2, r1",
+        "438632ac: 0152         \tlsls\tr2, r2, #0x5",
+        "438632b4: 74a2         \tstrb\tr2, [r4, #0x12]"
+      ]
+    }
+  ]
+}

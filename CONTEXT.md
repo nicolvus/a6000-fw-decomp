@@ -1,15 +1,20 @@
 # Continuidad
 
-## Auditoría integral — 24-10-2026
+## Captura: cinco pendientes investigados — 25-10-2026
 
-Referencia de esta revisión: [informe y cola técnica](docs/capture/repo-audit-2026-10-24.md).
-Backlogs A/B/C y NEEDS-HUMAN sincronizados por entregables y límites: S206/S207
-y S301 publicados, S305 parcial, productor CAIF y propagación abiertos. S207
-no prueba ausencia de fin de integración; JSON/generador lo dejan NO_VERIFICADO.
-Faltan los artefactos anunciados de S176. Cobertura 133/372 documental, 226
-etiquetas pendientes, 66 afirmaciones S605–S627 sin prueba; no sumar relaciones
-automáticas como tareas. P1–P21 diferidas, S51 A/B/C=NO. Las secciones de fechas
-anteriores conservan contexto histórico, no sustituyen esta cola.
+[Informe y evidencia](docs/capture/capture-static-followup-2026-10-25.md).
+LIRO +0x3c = `sta_tsk` (tarea 0x46); `libosal_uipc.so` → ioctl 0x80000004 →
+OSAL kernel → recepción bloqueante LIRO. No exigir callback Linux específico
+para esta ruta. RecordStill: 43 llamadas, 20 importaciones iguales y 23 locales
+en ocho parejas candidatas; estado 2/mensaje 0x10000005 localizado estáticamente.
+S205: slot 0x44020c9c → S, store S[0] en 0x43843a5e; copia G→S con selector 3.
+S305: 0x43858390 era interior +0x58; trece llamadas inválidas. Tabla148/fila18
+→ estado0x43f72d02/Backup0x3000b, callbackmemcpy y Backup_read localizados.
+A7S CAIF: constructor0x43862e24; selector root+0x78c produce bit0x20 en ruta
+normal y alimenta modos0x4e/0x4f. S176 reproducido con siete tests nuevos.
+Restan productor del mensaje, cuerpos locales, datos Backup, origen UI/entrega
+CAIF y aristas IMX210/YC/archivo/cortina. P1–P21 diferidas, S51 A/B/C=NO.
+Los resúmenes anteriores son históricos y no sustituyen este estado.
 
 ## Revisión de OpenCode S605–S627 — 23-10-2026
 

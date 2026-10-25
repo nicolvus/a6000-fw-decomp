@@ -1,6 +1,10 @@
 # S384 — Búsqueda del ID de cola `0x40193` (C2 receptor) en ARM y Thumb
 
 **INFORME VIGENTE 23-10-2026:** [trazado verificado del ID](queue-40193-flow-2026-10-23.md).
+
+**Actualización 25-10-2026:** [servicio y transporte estáticos identificados](capture-static-followup-2026-10-25.md).
+El receptor LIRO espera con `osal_rcv_msg_tmo`; no requiere callback Linux
+específico. El servicio del descriptor es `sta_tsk(0x46,descriptor)`.
 Los nueve words A6000 de `.text` sí tienen cargas LDR desde pool; su
 desensamblado lineal no permite descartarlos. Se identifican receptor e
 instalador de su puntero en av-cam. Las secciones históricas siguientes
@@ -14,7 +18,9 @@ Resultados reproducidos desde las secciones de cada ELF: cero palabras `93 01 04
 
 El encoding correcto `40 f2 93 13` es `movw r3,#0x193` y existe en ambos binarios (A6000, por ejemplo, `0x14ccde`). `c0 f2 04 00` es `movt r0,#4`. Un barrido por máscaras de halfwords de `.text` detecta **60/44** candidatos Thumb MOVW #0x193 en A6000/A7S; son candidatos estáticos, no 60/44 construcciones del ID completo. Falta análisis de flujo y modos ARM/Thumb para identificar su uso. La A6300 no se reverificó en esta auditoría.
 
-**Conclusión vigente: NO_VERIFICADO** el origen del ID y el registro del callback. Los negativos de datos son acotados; no se exige cámara para continuar el análisis estático.
+**Conclusión vigente:** origen por literales, receptor, instalador, arranque
+estático y transporte userland/ioctl/OSAL kernel identificados. Los negativos
+de datos son acotados. No se observó activación real ni se demuestra captura física.
 
 ## Registro histórico (no usar como prueba)
 

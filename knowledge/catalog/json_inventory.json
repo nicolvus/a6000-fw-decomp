@@ -18777,6 +18777,14 @@
    "signature": "dict::base_vaddr,cadenas,conclusiones,efecto_en_S51,firmwares,funciones,logger,milestone,recuentos,salvedad,titulo"
   },
   {
+   "path": "analysis/s176_imager_state_readers/readers.json",
+   "size": 2388,
+   "sha256": "e0b145ac7d437a804873b15936cfbb5b4dd1a9d6efb909fb6083a864f8f778e6",
+   "shape": "dict",
+   "item_count": 1,
+   "signature": "dict::first_reader_default,got_base,got_slot,method,physical_semantics,single_read,source_sha256,state,zero_overrides"
+  },
+  {
    "path": "analysis/s177_cam_func_mgr/cam_func_mgr.json",
    "size": 97821,
    "sha256": "abb5ae7a71f954f0386253aee4d1a26331a9da9d35b2e4ac5158ef63623e0b51",
@@ -19337,6 +19345,30 @@
    "signature": "dict::agent,date,end_of_integration,imx210_readout_lines,imx210_readout_ms,imx210_sha256,imx210_svd_formula,imx210_time_registers,imx235_modes,imx235_sha256,imx235_silent_columns,imx235_time_registers,phase,units"
   },
   {
+   "path": "analysis/s205_imager_s0_writer/staging_caller_followup.json",
+   "size": 2012,
+   "sha256": "d0b72bf1aecb79b7d2299d7c08fec25bff703e72733ce7a0f6185e58dc1aad4a",
+   "shape": "dict",
+   "item_count": 1,
+   "signature": "dict::constant_memory_assumption,firmware_profile,functions,method,source_sha256,source_size"
+  },
+  {
+   "path": "analysis/s205_imager_s0_writer/staging_contract.json",
+   "size": 494,
+   "sha256": "297ead1f75d9c2384a64cfb253e4092728f8837c5f99e5d9d50f872e4d95bafc",
+   "shape": "dict",
+   "item_count": 1,
+   "signature": "dict::caller,electronic_end_of_integration,rows,selector_store,source,source_sha256,staging,state,state_slot"
+  },
+  {
+   "path": "analysis/s205_imager_s0_writer/staging_followup.json",
+   "size": 13845,
+   "sha256": "4f38882dae99703498139dc68f784f3f2299bd8ed702bcc40add884d76b1886a",
+   "shape": "dict",
+   "item_count": 1,
+   "signature": "dict::constant_memory_assumption,firmware_profile,functions,method,source_sha256,source_size"
+  },
+  {
    "path": "analysis/s206_imx210_imx235_full_table/full_table.json",
    "size": 32623,
    "sha256": "a6563ec5417058598c2ed59b27d996834ce5106143b38cccb18be9358c25d8e4",
@@ -19817,6 +19849,22 @@
    "signature": "dict::base,cross_model,firmware,limits,milestone,models,title,verdicts"
   },
   {
+   "path": "analysis/s380_libobj_map/followup_audit.json",
+   "size": 16605,
+   "sha256": "0b0b9176ae50d7bac083c924f617f3c38f33fbcc0985c9c595b8dcc2417ffb4a",
+   "shape": "dict",
+   "item_count": 1,
+   "signature": "dict::backup_state,liro_api,recordstill,uipc_route"
+  },
+  {
+   "path": "analysis/s380_libobj_map/followup_llvm.json",
+   "size": 3529,
+   "sha256": "5cf9e289cb366f5dd74cbf0e6b1098dbb000dc112722aa3faceccd4da96b8e79",
+   "shape": "dict",
+   "item_count": 1,
+   "signature": "dict::checks,llvm_version,method"
+  },
+  {
    "path": "analysis/s380_libobj_map/got_to_name.json",
    "size": 142015,
    "sha256": "47114c52a667e0898f9c560000c1e9715e6aba963af1c7f7cb178fa25e976feb",
@@ -19890,19 +19938,35 @@
   },
   {
    "path": "analysis/s400_open_questions_triage/manual_review.json",
-   "size": 115570,
-   "sha256": "dda7cbfa25af3f9bd2b0384a9f9d4cd95aa55fcf6bd9dd84f90231123a6943ea",
+   "size": 130486,
+   "sha256": "de28b57293f7fd1665fc07cab53317b8fbd84bd7243a265573f81604a1609ad8",
    "shape": "dict",
    "item_count": 1,
    "signature": "dict::alcance,casos,fecha,revision_destinos,validacion"
   },
   {
    "path": "analysis/s400_open_questions_triage/triage.json",
-   "size": 1523584,
-   "sha256": "ad69dae11cd8047ef2a9a9c3ef95df28300e7b308eac0bcf8eb4526008e9eaa8",
+   "size": 1527195,
+   "sha256": "0c1e860ac01c648ed348a5379e982fb5da4923db7f3e4cc1c230d3ea7f1e852c",
    "shape": "list_of_dict_variant",
-   "item_count": 506,
+   "item_count": 510,
    "signature": "list_of_dict_variant::cita,contexto,destino,destino_cita,fuente,fuente_actual,motivo,motivo_anterior,revision_fuente,revision_manual,status_grafo,tipo,veredicto,veredicto_anterior"
+  },
+  {
+   "path": "analysis/s401_a7s_caif/caif_contract.json",
+   "size": 659,
+   "sha256": "67007f1aac5b1fb411875aca1bf896bd46837a30730a777176815a750918ec96",
+   "shape": "dict",
+   "item_count": 1,
+   "signature": "dict::caller,capture_selector,constructor,diagnostic_override,limits,normal_bit_0x20_condition,normal_byte,payload,payload_store,physical_delivery,sensor_modes,source_sha256"
+  },
+  {
+   "path": "analysis/s401_a7s_caif/rea_evidence.json",
+   "size": 213772,
+   "sha256": "7733365e2a2d2f2243626a6f1eb6374a0504934170939a73350c1007d890d62b",
+   "shape": "list_of_dict",
+   "item_count": 7,
+   "signature": "list_of_dict::args,evidence,tool"
   },
   {
    "path": "analysis/s49/rows.json",
@@ -24379,8 +24443,8 @@
     "constant_memory_assumption": "str",
     "functions": "list"
    },
-   "count": 255,
-   "total_size": 2692045,
+   "count": 257,
+   "total_size": 2707902,
    "sample_paths": [
     "analysis/ghidra/a6000-all-exposure-sequences.json",
     "analysis/ghidra/a6000-caif-channel-and-wire-format.json",
@@ -353139,6 +353203,38 @@
    ],
    "has_evidence_hint": false
   },
+  "dict::first_reader_default,got_base,got_slot,method,physical_semantics,single_read,source_sha256,state,zero_overrides": {
+   "signature": "dict::first_reader_default,got_base,got_slot,method,physical_semantics,single_read,source_sha256,state,zero_overrides",
+   "shape": "dict",
+   "keys": [
+    "first_reader_default",
+    "got_base",
+    "got_slot",
+    "method",
+    "physical_semantics",
+    "single_read",
+    "source_sha256",
+    "state",
+    "zero_overrides"
+   ],
+   "key_types": {
+    "source_sha256": "str",
+    "method": "str",
+    "got_base": "str",
+    "got_slot": "str",
+    "state": "str",
+    "single_read": "dict",
+    "first_reader_default": "dict",
+    "zero_overrides": "list",
+    "physical_semantics": "str"
+   },
+   "count": 1,
+   "total_size": 2388,
+   "sample_paths": [
+    "analysis/s176_imager_state_readers/readers.json"
+   ],
+   "has_evidence_hint": false
+  },
   "dict::base_vaddr,cadenas,clases_rtti,contadores,diferencial_nucleos,doble_instrumentacion,equivalentes_otras_fw,ficheros_fuente,firmwares,funciones,hito,lrb_type_ids,lrb_type_ids_evidencia,marcadores,modulo,origenes_tabla,pic_verificado,tabla_funciones,tabla_funciones_otras_fw": {
    "signature": "dict::base_vaddr,cadenas,clases_rtti,contadores,diferencial_nucleos,doble_instrumentacion,equivalentes_otras_fw,ficheros_fuente,firmwares,funciones,hito,lrb_type_ids,lrb_type_ids_evidencia,marcadores,modulo,origenes_tabla,pic_verificado,tabla_funciones,tabla_funciones_otras_fw",
    "shape": "dict",
@@ -355534,6 +355630,38 @@
    ],
    "has_evidence_hint": false
   },
+  "dict::caller,electronic_end_of_integration,rows,selector_store,source,source_sha256,staging,state,state_slot": {
+   "signature": "dict::caller,electronic_end_of_integration,rows,selector_store,source,source_sha256,staging,state,state_slot",
+   "shape": "dict",
+   "keys": [
+    "caller",
+    "electronic_end_of_integration",
+    "rows",
+    "selector_store",
+    "source",
+    "source_sha256",
+    "staging",
+    "state",
+    "state_slot"
+   ],
+   "key_types": {
+    "source_sha256": "str",
+    "caller": "str",
+    "staging": "str",
+    "state": "str",
+    "state_slot": "str",
+    "selector_store": "str",
+    "source": "str",
+    "rows": "dict",
+    "electronic_end_of_integration": "str"
+   },
+   "count": 1,
+   "total_size": 494,
+   "sample_paths": [
+    "analysis/s205_imager_s0_writer/staging_contract.json"
+   ],
+   "has_evidence_hint": false
+  },
   "dict::agent,date,imx210_registers,imx210_sha256,imx235_modes,imx235_registers,imx235_sha256,phase,registros,resumen": {
    "signature": "dict::agent,date,imx210_registers,imx210_sha256,imx235_modes,imx235_registers,imx235_sha256,phase,registros,resumen",
    "shape": "dict",
@@ -357429,6 +357557,48 @@
    "total_size": 10380,
    "sample_paths": [
     "analysis/s348_odl_callback/odl_callback.json"
+   ],
+   "has_evidence_hint": false
+  },
+  "dict::backup_state,liro_api,recordstill,uipc_route": {
+   "signature": "dict::backup_state,liro_api,recordstill,uipc_route",
+   "shape": "dict",
+   "keys": [
+    "backup_state",
+    "liro_api",
+    "recordstill",
+    "uipc_route"
+   ],
+   "key_types": {
+    "liro_api": "dict",
+    "recordstill": "dict",
+    "backup_state": "dict",
+    "uipc_route": "dict"
+   },
+   "count": 1,
+   "total_size": 16605,
+   "sample_paths": [
+    "analysis/s380_libobj_map/followup_audit.json"
+   ],
+   "has_evidence_hint": false
+  },
+  "dict::checks,llvm_version,method": {
+   "signature": "dict::checks,llvm_version,method",
+   "shape": "dict",
+   "keys": [
+    "checks",
+    "llvm_version",
+    "method"
+   ],
+   "key_types": {
+    "method": "str",
+    "llvm_version": "str",
+    "checks": "list"
+   },
+   "count": 1,
+   "total_size": 3529,
+   "sample_paths": [
+    "analysis/s380_libobj_map/followup_llvm.json"
    ],
    "has_evidence_hint": false
   },
@@ -362388,7 +362558,7 @@
     "casos": "dict"
    },
    "count": 1,
-   "total_size": 115570,
+   "total_size": 130486,
    "sample_paths": [
     "analysis/s400_open_questions_triage/manual_review.json"
    ],
@@ -362458,9 +362628,73 @@
     ]
    },
    "count": 1,
-   "total_size": 1523584,
+   "total_size": 1527195,
    "sample_paths": [
     "analysis/s400_open_questions_triage/triage.json"
+   ],
+   "has_evidence_hint": false
+  },
+  "dict::caller,capture_selector,constructor,diagnostic_override,limits,normal_bit_0x20_condition,normal_byte,payload,payload_store,physical_delivery,sensor_modes,source_sha256": {
+   "signature": "dict::caller,capture_selector,constructor,diagnostic_override,limits,normal_bit_0x20_condition,normal_byte,payload,payload_store,physical_delivery,sensor_modes,source_sha256",
+   "shape": "dict",
+   "keys": [
+    "caller",
+    "capture_selector",
+    "constructor",
+    "diagnostic_override",
+    "limits",
+    "normal_bit_0x20_condition",
+    "normal_byte",
+    "payload",
+    "payload_store",
+    "physical_delivery",
+    "sensor_modes",
+    "source_sha256"
+   ],
+   "key_types": {
+    "source_sha256": "str",
+    "constructor": "str",
+    "caller": "str",
+    "payload_store": "str",
+    "payload": "str",
+    "capture_selector": "str",
+    "normal_bit_0x20_condition": "str",
+    "normal_byte": "str",
+    "diagnostic_override": "int",
+    "limits": "str",
+    "sensor_modes": "list",
+    "physical_delivery": "str"
+   },
+   "count": 1,
+   "total_size": 659,
+   "sample_paths": [
+    "analysis/s401_a7s_caif/caif_contract.json"
+   ],
+   "has_evidence_hint": false
+  },
+  "list_of_dict::args,evidence,tool": {
+   "signature": "list_of_dict::args,evidence,tool",
+   "shape": "list_of_dict",
+   "keys": [
+    "args",
+    "evidence",
+    "tool"
+   ],
+   "key_types": {
+    "tool": [
+     "str"
+    ],
+    "args": [
+     "dict"
+    ],
+    "evidence": [
+     "dict"
+    ]
+   },
+   "count": 1,
+   "total_size": 213772,
+   "sample_paths": [
+    "analysis/s401_a7s_caif/rea_evidence.json"
    ],
    "has_evidence_hint": false
   },

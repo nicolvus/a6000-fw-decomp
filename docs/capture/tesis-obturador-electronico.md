@@ -4,6 +4,10 @@
 > Basada en: `s401-a7s-silent-control-path.md`, `s402-physical-test-mapping.md`, `silent-shutter-status.md` (E015–E019, S174), `s53-darwin-a7s-a6000-comparison.md`, `s54-mechanism-type-zero.md`, `darwin-state-machine.md`, `silent-caif-transport.md`, `s171-imager-api.md`, `s169-drive-api-a6300.md`, `physical-test-plan.md`.
 > Fecha: 22-10-2026. Firmware A6000 3.21 (SHA `b60c845c...56bb9`), A7S 3.20 (SHA `b857d338...5103e`).
 
+**Actualización 25-10-2026:** el productor CAIF A7S está localizado en
+`0x43862e24`; condición normal `C+0x76c == 2`, con override diagnóstico.
+Ver [seguimiento y límites](capture-static-followup-2026-10-25.md).
+
 ---
 
 ## 1. Hipótesis principal
@@ -24,7 +28,7 @@
 |---|---|---|---|---|---|
 | 1 | **UI / libObj.so** | Menú SilentShutter; mensaje 0x768e **rechazado** | Menú SilentShutter; mensaje 0x768e **rechazado** | S174, E015 | VERIFICADO |
 | 2 | **LIRO dispatcher** | **Sin handler 0x40e3** (220 cmds) | Handler 0x40e3 en `0x438032d4` (escribe estado +0x238) | Bytes tabla `0x43fff30c` | VERIFICADO |
-| 3 | **CAIF evento 1** | **Inferido**: pone bit 0x20 en `pkt[+0x12]` | `0x43841070`: **no pone bit 0x20** (solo 0/1) | silent-caif-transport.md | A6000=VERIFICADO, A7S=INFERENCIA |
+| 3 | **Payload CAIF** | `0x43862e24`: bit 0x20 si selector 2 en ruta normal; override escribe 1 | `0x43841070`: solo 0/1 en el campo examinado | [Contrato](../../analysis/s401_a7s_caif/caif_contract.json) | VERIFICADO estático; entrega abierta |
 | 4 | **Darwin parser** | Extrae bit 0x20 → `no_silent` en `S+0xd0.b5` | **No extrae** bit 0x20 | S53, S54 | VERIFICADO |
 | 5 | **Darwin rama sin meca** | `no_silent=0`: omite P4D/P4E/ADC, **reposición acciona bobinas** (`no_silent=1`) | Tipo 0: omite P4D/P4E/ADC, **reposición NO acciona bobinas** | S54, darwin-state-machine.md | VERIFICADO |
 | 6 | **Driver imager** | IMX235: APIs `GetImagerStabilizationTime`, `SetImagerFrameSize`, `SetImagerMode`, `SteadyShotInfo` | IMX210: **sin** esas APIs; solo 4 comunes | s171-imager-api.md, E017/E018 | VERIFICADO |
@@ -151,7 +155,7 @@ flowchart TD
 > mecanismo IMX210 y completar los enlaces estáticos siguen abiertos.
 >
 > El análisis estático **no está agotado**: persisten aristas de `0x40193`,
-> activación RecordImage/RecordStill, productor CAIF y ruta IMX210/YC/cortina.
+> activación RecordImage/RecordStill, origen UI/entrega CAIF y ruta IMX210/YC/cortina.
 > P5 no es una prueba única demostrada de capacidad latente; observar CAIF no
 > certifica por sí solo exposición ni calidad de imagen. P1–P21 siguen diferidas
 > por instrucción del usuario. Ver [cola auditada](repo-audit-2026-10-24.md).

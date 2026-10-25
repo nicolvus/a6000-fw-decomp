@@ -1,0 +1,93 @@
+{
+  "source_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "method": "PIC pools + decoded Thumb loads/branches/stores; static only",
+  "got_base": "0x4401eee4",
+  "got_slot": "0x4401f990",
+  "state": "0x43f72d02",
+  "single_read": {
+    "site": "0x43861410",
+    "offset": "0xac"
+  },
+  "first_reader_default": {
+    "input_offset": "0xac",
+    "zero_replacement": 6,
+    "instruction": "0x438fec74",
+    "destination": "0x43f04cec",
+    "condition": "first-reader initialization path and state[0xac] == 0"
+  },
+  "zero_overrides": [
+    {
+      "load": "0x438693ee",
+      "branch": "0x438693f2",
+      "store": "0x438693f4",
+      "state_offset": "0x30",
+      "destination_offset": "0x664",
+      "value": 0,
+      "condition": "state_byte == 0"
+    },
+    {
+      "load": "0x438693f8",
+      "branch": "0x438693fc",
+      "store": "0x438693fe",
+      "state_offset": "0x31",
+      "destination_offset": "0x66c",
+      "value": 0,
+      "condition": "state_byte == 0"
+    },
+    {
+      "load": "0x43869402",
+      "branch": "0x43869406",
+      "store": "0x43869408",
+      "state_offset": "0x32",
+      "destination_offset": "0x674",
+      "value": 0,
+      "condition": "state_byte == 0"
+    },
+    {
+      "load": "0x4386940c",
+      "branch": "0x43869410",
+      "store": "0x43869412",
+      "state_offset": "0x33",
+      "destination_offset": "0x67c",
+      "value": 0,
+      "condition": "state_byte == 0"
+    },
+    {
+      "load": "0x43869416",
+      "branch": "0x4386941a",
+      "store": "0x4386941c",
+      "state_offset": "0x34",
+      "destination_offset": "0x684",
+      "value": 0,
+      "condition": "state_byte == 0"
+    },
+    {
+      "load": "0x43869420",
+      "branch": "0x43869424",
+      "store": "0x43869426",
+      "state_offset": "0x35",
+      "destination_offset": "0x68c",
+      "value": 0,
+      "condition": "state_byte == 0"
+    },
+    {
+      "load": "0x4386942a",
+      "branch": "0x4386942e",
+      "store": "0x43869430",
+      "state_offset": "0x36",
+      "destination_offset": "0x690",
+      "value": 0,
+      "condition": "state_byte == 0"
+    },
+    {
+      "load": "0x43869434",
+      "branch": "0x43869438",
+      "store": "0x4386943a",
+      "state_offset": "0x37",
+      "destination_offset": "0x694",
+      "value": 0,
+      "condition": "state_byte == 0"
+    }
+  ],
+  "physical_semantics": "NO_VERIFICADO"
+}

@@ -4,6 +4,9 @@
 > Análisis estático de `av-cam.bin` A7S fw3.20 (SHA `b857d338...5103e`) y A6000 fw3.21 (SHA `b60c845c...56bb9`), base lógica `0x43541000`.
 > Complementa: [silent-shutter-status.md](silent-shutter-status.md) (E015–E019), [S174](s174-forliro-api.md), [S53](s53-darwin-a7s-a6000-comparison.md), [S54](s54-mechanism-type-zero.md), [silent-caif-transport.md](silent-caif-transport.md), [darwin-state-machine.md](darwin-state-machine.md).
 
+**Actualización 25-10-2026:** constructor A7S y condición del bit `0x20`
+resueltos por REA e instrucciones. [Contrato y límites](capture-static-followup-2026-10-25.md).
+
 ---
 
 ## Resumen de hallazgos
@@ -14,7 +17,7 @@
 | 2 | Mensajes `...ForLiro` en `libObj.so` | 221 nombres, **0 soportados** (todos `NON SUPPORTED`) | 216 nombres, **0 soportados** (todos `NON SUPPORTED`) | S174 | **VERIFICADO** |
 | 3 | Parser Darwin: bit Silent `pkt[+0x12]&0x20` | **Extrae y usa** → `no_silent` en `S+0xd0.b5` | **No extrae**; no hay predicado `no_silent` | S53, S54, darwin-state-machine.md | **VERIFICADO** |
 | 4 | Rama "sin mecanismo" Darwin | Sí: omite P4D/P4E/ADC, solo P4C + temporización | Tipo 0: similar pero **sin control de cortinas en reposición** | S54, darwin-state-machine.md | **VERIFICADO** |
-| 5 | Construcción paquete CAIF evento 1 | **INFERIDO**: debe poner bit `0x20` en `pkt[+0x12]` (Darwin lo consume) | `0x43841070`: escribe **solo 0 o 1** en `pkt[+0x12]`; **no pone bit `0x20`** | silent-caif-transport.md | A6000=**VERIFICADO**, A7S=**INFERENCIA** |
+| 5 | Construcción payload CAIF | `0x43862e24`: pone bit `0x20` cuando `C+0x76c == 2` en ruta normal; override diagnóstico escribe 1 | `0x43841070`: escribe **solo 0 o 1** en el campo examinado | [Verificador](../../analysis/s401_a7s_caif/verify_caif.py) | **VERIFICADO estático**; entrega física abierta |
 | 6 | Sensor / driver imager | IMX235 (RTTI `Camera::Imager::IMX235::...`) | IMX210 (RTTI `Camera::Imager::IMX210::C_ImagerCtrl_IMX210`) | E017, s171-imager-api.md | **VERIFICADO** |
 | 7 | API imager (`Get/Set*Imager*`) | 4 nombres comunes + `GetImagerStabilizationTime`, `SetImagerFrameSize`, `SetImagerMode` | 4 nombres comunes **sin** los 3 anteriores | s171-imager-api.md | **VERIFICADO** |
 | 8 | Capa `LiroSeq` validación parámetros | **Ausente** (0 `CheckSet*`, 0 `ParamCheckErr`) | **Ausente** (igual que A7S) | S169 | **VERIFICADO** |
@@ -91,9 +94,18 @@ Los nombres de obturador en A6000 y A7S (`SetSilentShutterModeForLiro`, `SetShut
 
 - **A6300** `0x4391a6f4`: `pkt[+0x12] |= 0x20` si `*(captura+0x804) == 2` (selector Silent). Longitud paquete: 31 bytes (`0x1f`).
 - **A6000** `0x43841070`: `pkt[+0x12] = 0 o 1` (según otro indicador); **nunca pone bit `0x20`**. Longitud paquete: 22 bytes (`0x16`).
-- **A7S**: **No localizada aún** la función equivalente. **INFERENCIA**: debe poner bit `0x20` en `pkt[+0x12]` porque Darwin A7S lo consume (Diferencia 3). La longitud del paquete A7S no se ha medido.
+- **A7S**: función equivalente **`0x43862e24`**, caller `0x4382822c`. El quinto argumento apunta a `*(root+0x4ae8)+0x40` cuando existe el objeto. `C=root+0x20`; `0x4386329a..438632b4` construye `pkt[0x12]=32*(u32(C+0x76c)==2)+(otro_flag==1)` en la ruta normal. Una anulación diagnóstica toma la rama `0x43863398` y escribe 1. La longitud efectivamente transmitida sigue sin medirse.
 
-**Pendiente**: Localizar en A7S `av-cam.bin` la función constructora del evento CAIF 1 y verificar la condición que activa bit `0x20`.
+El mismo campo `root+0x78c` se pasa en r2 al selector `0x43826d58`
+(`0x43826dee/df2`), que para valor 2 elige `0x4e/0x4f`, con sus bypasses
+y overrides. [Evidencia REA](../../analysis/s401_a7s_caif/rea_evidence.json),
+[resultado reproducible](../../analysis/s401_a7s_caif/caif_contract.json) y
+[regresiones](../../tests/test_s401_a7s_caif.py). El patrón SUB/RSBS/ADC
+normaliza la comparación a 0/1 antes del desplazamiento de cinco bits.
+
+**Pendiente**: productor UI del selector, condiciones efectivas del envío,
+longitud transmitida y propagación hasta Darwin/imager. El código del
+constructor no demuestra que el paquete se haya emitido en una captura real.
 
 ---
 
@@ -138,19 +150,18 @@ Los nombres de obturador en A6000 y A7S (`SetSilentShutterModeForLiro`, `SetShut
 
 ```mermaid
 flowchart TD
-  A[UI: SilentShutter On/Off] --> B[libObj.so: pvt_ActionSetSilentShutterMode]
-  B --> C[Mensaje 0x768e / parámetro 0x9983 → RECHAZADO en libObj.so]
-  C -. no pasa a LIRO .-> D[¿Cómo llega a CAIF?]
-  D --> E[Construcción paquete CAIF evento 1: bit 0x20 en pkt[+0x12]]
-  E --> F[Darwin: parser extrae bit → no_silent=0]
+  A[UI: SilentShutter On/Off] -. productor no verificado .-> B[Selector root+0x78c]
+  B --> D[Constructor 0x43862e24: selector 2 en ruta normal]
+  D --> E[Payload: bit 0x20 en offset 0x12]
+  E -. entrega física no observada .-> F[Darwin: parser extrae bit y no_silent=0]
   F --> G[Rama sin mecanismo: P4C + temporización, sin P4D/P4E/ADC]
   G --> H[LIRO/imager IMX235: SetExposure/SetRead modo electrónico]
   H -. enlace no verificado .-> I[Fin integración electrónico / lectura completa]
 ```
 
 **Puntos no verificados (NO_VERIFICADO)**:
-1. Cómo la selección UI llega a la construcción CAIF (salto en `C → E`)
-2. Qué condición en `av-cam.bin` A7S activa bit `0x20` (equivalente a `*(captura+0x804)==2` en A6300)
+1. Cómo la selección UI produce `root+0x78c` y cuándo se transmite el payload.
+2. Entrega efectiva y longitud del paquete A7S; la condición numérica del productor ya está verificada.
 3. Enlace Darwin → LIRO/imager para modo de exposición electrónico
 4. Significado físico de los registros IMX235 programados en modo Silent
 
@@ -202,16 +213,9 @@ with open('firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_
 
 ## Siguientes pasos (S401 continuado)
 
-1. **Localizar constructor CAIF evento 1 en A7S**: buscar equivalente a `0x43841070` (A6000) / `0x4391a6f4` (A6300) mediante:
-   - Xrefs a cola OSAL `0x740017` (CAIF device queue, ver silent-caif-transport.md)
-   - Patrones de escritura en offset `+0x12` de buffer
-   - Comparación estructural con A6000/A6300
-
-2. **Identificar condición de bit Silent**: en A6300 es `*(captura+0x804)==2`; en A7S buscar campo equivalente en estructura de captura.
-
-3. **Rastrear desde condición hasta configuración UI**: ¿qué escribe en ese campo? ¿Mensaje 0x768e? ¿Otra vía?
-
-4. **Comparar driver imager**: `SetExposure`/`SetRead` IMX235 vs IMX210 — ¿qué modo/registros programa cada uno para exposición electrónica?
+1. Seguir el productor de `root+0x78c` hasta la configuración UI; constructor y condición ya se conocen.
+2. Seguir el propietario de `*(root+0x4ae8)+0x40` hasta el envío para medir longitud y condiciones estáticas de entrega.
+3. Completar propagación Darwin/imager y semántica IMX235/IMX210. P1–P21 siguen diferidas.
 
 ---
 

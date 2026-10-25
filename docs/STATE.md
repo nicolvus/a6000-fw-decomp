@@ -1,14 +1,19 @@
 # Estado vigente — Sony A6000 reverse engineering
 
-## Auditoría integral y pendientes — 24-10-2026
+## Captura: estado vigente — 25-10-2026
 
-[Referencia vigente de esta revisión](capture/repo-audit-2026-10-24.md): backlogs
-sincronizados, S207 sin prueba de semántica eléctrica y S176 sin artefactos
-disponibles. Cola técnica: `0x40193` (tres aristas restantes), activación de
-RecordImage/RecordStill, IMX210/YC/archivo/cortina, S305 y productor CAIF.
-Los 133/372 son cobertura documental; las relaciones automáticas no son tareas
-independientes. P1–P21 siguen diferidas. S51 A/B/C=NO. Los resúmenes de fechas
-anteriores no reemplazan este estado ni los límites de las fuentes.
+[Seguimiento y evidencia de los cinco puntos](capture/capture-static-followup-2026-10-25.md):
+servicio LIRO +0x3c = `sta_tsk` y transporte userland/ioctl/OSAL kernel
+identificados; consumidor LIRO usa recepción bloqueante. Mapeadas 43 llamadas
+de RecordStill; entrada estado2/mensaje0x10000005. S205: escritor S[0] y G→S
+resueltos estáticamente. S305 original inválido por sesgo+0x58; tabla148/fila18
+enlazada con Backup0x3000b, callback de copia y Backup_read. Constructor CAIF
+A7S y condición del bit0x20 localizados. S176 reproducido con entregables nuevos.
+Restan productor del mensaje, equivalencia de ocho parejas locales, datos
+efectivos Backup, origen UI/entrega CAIF y aristas IMX210/YC/archivo/cortina.
+Los 133/372 miden documentación; P1–P21 diferidas y S51 A/B/C=NO. No se
+ejecutó firmware ni se validó captura física. Las secciones anteriores en fecha
+son históricas; sus pendientes pueden estar superados por este bloque.
 
 ## Cobertura estática antes de pruebas físicas — 24-10-2026
 

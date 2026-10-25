@@ -1,5 +1,11 @@
 # S304 — REA/Ghidra: callers de `FUN_43858338` (dumper gates) y código que carga GOT `0x4401f080`
 
+**Informe histórico superado:** las direcciones interiores con sesgo +0x58
+y las trece llamadas de este texto fueron invalidadas en
+[S303 rev.3](s303-ref-tree-43ff3200.md). [S305 actualizado](s305-fun43858390-literal-pool.md)
+recoge las entradas correctas y los consumidores Backup verificados el 25-10-2026.
+Las afirmaciones siguientes se conservan como antecedente, no como estado vigente.
+
 > Hito **Agente B (S300+)** — Imager: estado, drive modes y gates.
 > Análisis con REA/Ghidra 12.1.4 sobre `av-cam.bin` A6000 fw3.21 (SHA `b60c845c...56bb9`), base `0x43541000`.
 > Complementa: S153 (gates), S300 (xrefs estado), S303 (árbol referencias `0x43ff3200`).

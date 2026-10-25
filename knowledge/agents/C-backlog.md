@@ -1,6 +1,6 @@
 # Backlog Agente C — Ruta de control: configuración → LIRO → imager (S401+)
 
-Estado auditado 24-10-2026: informes S401/S402 y tesis publicados. La ruta
+Estado actualizado 25-10-2026: informes S401/S402 y tesis publicados. La ruta
 completa de control sigue parcial; las pruebas propuestas no se han ejecutado.
 
 ## Ítems
@@ -9,9 +9,9 @@ completa de control sigue parcial; las pruebas propuestas no se han ejecutado.
 - [x] 1. Identificar en A7S fw3.20 el handler LIRO para SilentShutter (equivalente a 0x40e3 en A6000) → **NO EXISTE en tabla de despacho LIRO A7S**
 - [x] 2. Comparar tabla de despacho LIRO A7S vs A6000 → **A7S no tiene cmd 0x40e3; A6000 lo tiene pero rechazado en libObj.so (S174)**
 - [x] 3. Darwin MCU: A7S tiene predicado `no_silent` (`pkt[+0x12]&0x20`) y rama "sin mecanismo"; A6000 tiene tipo 0 similar pero sin `no_silent` (S53, S54)
-- [ ] 4. CAIF packet: demostrar el constructor A7S/A6300 que escribe el bit `0x20` en `pkt[+0x12]`. En A7S sigue siendo INFERENCIA; la interpretación de Darwin no demuestra el productor.
+- [x] 4. Productor CAIF A7S: `0x43862e24`, store `0x438632b4`; bit `0x20` si `C+0x76c == 2` en ruta normal. Ver [contrato por bytes](../../analysis/s401_a7s_caif/caif_contract.json). La rama diagnóstica escribe 1 y no añade ese bit.
 - [x] 5. Documentar diferencias 1-8 con etiquetas VERIFICADO/INFERENCIA/NO_VERIFICADO → **Hecho en s401-a7s-silent-control-path.md**
-- [ ] 6. Localizar en A7S constructor CAIF evento 1 y condición bit `0x20`: pendiente de investigación estática. P5/P10 son propuestas diferidas, no un requisito demostrado para buscar el constructor.
+- [x] 6. Localizar constructor equivalente y condición: caller `0x4382822c`, salida `*(root+0x4ae8)+0x40`, selector `root+0x78c`; éste también alimenta `0x43826d58` para modos `0x4e/0x4f`. Longitud transmitida y ejecución real siguen sin verificar.
 - [ ] 7. Completar propagación CAIF → Darwin → LIRO/imager: parcial; enlace LIRO/imager NO_VERIFICADO.
 
 ### S402 — Mapear diferencias a pruebas físicas (physical-test-plan.md P1–P8)
@@ -33,7 +33,7 @@ Ver `docs/capture/s401-a7s-silent-control-path.md` y `docs/capture/s402-physical
 | 2 | libObj.so ForLiro | 221 rechazados | 216 rechazados | VERIFICADO |
 | 3 | Darwin no_silent | Sí (bit 0x20) | No | VERIFICADO |
 | 4 | Darwin sin mecanismo | Sí + reposición | Tipo 0 (sin reposición) | VERIFICADO |
-| 5 | CAIF bit 0x20 | Inferido Sí | No (solo 0/1) | A6000=VERIFICADO, A7S=INFERENCIA |
+| 5 | CAIF bit 0x20 | Productor localizado; selector 2 en ruta normal | Solo 0/1 en el constructor examinado | VERIFICADO estático; entrega física abierta |
 | 6 | Sensor/imager | IMX235 + APIs extra | IMX210 base | VERIFICADO |
 | 7 | API imager común | 4 + 3 extra | 4 | VERIFICADO |
 | 8 | LiroSeq CheckSet* | Ausente | Ausente | VERIFICADO |

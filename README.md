@@ -1,13 +1,15 @@
 # Sony A6000 Firmware Reverse Engineering
 
-## Auditoría integral y cola vigente — 24-10-2026
+## Captura: seguimiento de los cinco pendientes — 25-10-2026
 
-[Informe de auditoría, evidencia faltante y pendientes](docs/capture/repo-audit-2026-10-24.md).
-S206/S207 y S301 ya tienen entregables; su existencia no cierra la semántica
-del sensor. S176 carece de los artefactos anunciados. La cola técnica sigue
-en `0x40193`, activación RecordImage/RecordStill, IMX210/YC/cortina y productor
-CAIF. Los índices automáticos y la cobertura documental no miden trabajo
-funcional completado. Las secciones anteriores en fecha se leen como historial.
+[Resultados y cola restante](docs/capture/capture-static-followup-2026-10-25.md):
+servicio `sta_tsk` y transporte OSAL de `0x40193` resueltos estáticamente;
+43 llamadas de RecordStill mapeadas; escritor `S[0]`, banco G→S y copia
+Backup localizados; productor CAIF A7S verificado; S176 reproducido con datos
+y tests nuevos. Restan activación de captura, cuerpos locales, contenido de
+Backup y enlaces IMX210/YC/archivo/cortina. S51 A/B/C=NO, sin parche ni pruebas
+físicas. [Auditoría documental anterior](docs/capture/repo-audit-2026-10-24.md).
+Los índices y la cobertura documental no miden funcionamiento demostrado.
 
 ## Auditoría vigente (23-10-2026)
 

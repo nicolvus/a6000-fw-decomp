@@ -1,5 +1,10 @@
 # Auditoría integral de documentación y pendientes — 24-10-2026
 
+**Seguimiento 25-10-2026:** la [investigación de los cinco pendientes](capture-static-followup-2026-10-25.md)
+resuelve servicio/transporte OSAL, escritor S[0] y productor CAIF A7S,
+reproduce S176 y retira el falso pendiente S305. Este informe conserva los
+hallazgos de la auditoría del día 24; para la cola técnica actual usar el seguimiento.
+
 Este documento es la referencia de esta revisión. Los informes históricos
 conservan el alcance de su fecha; una casilla completada, un test verde o una
 cadena presente no certifican toda la conclusión técnica de una sesión.

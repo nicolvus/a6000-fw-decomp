@@ -115,7 +115,7 @@ de emisión y recepción se documenta en
 | NEEDED libs | IDÉNTICO | Las mismas 17 librerías |
 | Direcciones de exports | DISTINTO | Offsets no constantes (layout diferente) |
 | RecordStill / RecordImage | Parejas estructurales recuperadas | Cadenas, ABI y llamada anidada; equivalencia de todos los callees NO_VERIFICADO |
-| ID de cola 0x40193 | PARCIAL | Emisión/recepción A6000 y consumidor estático del descriptor demostrados después; registro OSAL Linux y enlace Linux↔LIRO NO_VERIFICADO, ver S384 y trazado posterior |
+| ID de cola 0x40193 | Ruta estática identificada | Emisión/recepción, descriptor, servicio `sta_tsk` y transporte userland/ioctl/OSAL kernel verificados en el [seguimiento](capture-static-followup-2026-10-25.md). Activación real no observada. |
 
 ## 8. Bloqueos
 

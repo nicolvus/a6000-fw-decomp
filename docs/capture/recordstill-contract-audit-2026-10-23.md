@@ -1,5 +1,10 @@
 # Auditoría de contrato RecordStill / RecordImage (23-10-2026)
 
+**Seguimiento 25-10-2026:** [43 llamadas de RecordStill y entrada estática concreta](capture-static-followup-2026-10-25.md).
+20 llamadas resuelven a las mismas importaciones; 23 llamadas locales forman
+ocho parejas candidatas. La activación durante un disparo y equivalencia
+completa de los destinos locales siguen abiertas.
+
 ## Resultado y alcance
 
 **RECHAZO** la equivalencia entre A7S `0x847e1c` y A6000 `0x90b248`.

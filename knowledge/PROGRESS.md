@@ -1,5 +1,18 @@
 # Progreso — sistema de conocimiento Sony A6000
 
+## Checkpoint de captura — 25-10-2026
+
+[Cinco puntos investigados](../docs/capture/capture-static-followup-2026-10-25.md):
+API `sta_tsk`/transporte OSAL, 43 llamadas RecordStill, escritor S[0] y G→S,
+consumidores Backup y productor CAIF A7S verificados estáticamente; S176
+reproducido. S305 anterior invalidado por sesgo+0x58. Los contratos nuevos
+tienen tests y auditores de bytes; no certifican ejecución física ni cambian S51.
+
+Próximo paso exacto: seguir el productor de `0x10000005` hasta la entrada de
+estado2 de `StateMgr` y la invocación `0x90de2e → RecordImage`; para el estado
+del imager, localizar tamaño/contenido de Backup `0x3000b` antes de atribuir
+valores a gates +3/+6. Detalle y demás aristas en el informe enlazado.
+
 ## Auditoría de documentación y pendientes — 24-10-2026
 
 [Informe integral](../docs/capture/repo-audit-2026-10-24.md): inventarios y backlogs

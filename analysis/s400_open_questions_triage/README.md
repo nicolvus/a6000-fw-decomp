@@ -1,5 +1,12 @@
 # S400 — revisión manual de relaciones documentales
 
+**Estado del 25-10-2026:** 329 relaciones candidatas en el índice: 75 pendientes,
+193 aristas descartadas y 61 rectificaciones respaldadas. Historial: 510 filas
+(111 pendientes, 294 descartadas, 105 respaldadas). Se revisaron los dos casos
+manuales afectados por el [seguimiento de captura](../../docs/capture/capture-static-followup-2026-10-25.md),
+con nuevas citas y hashes; las cuatro candidatas añadidas conservan `VIGENTE`
+hasta revisión manual. Los contadores siguientes son instantáneas históricas.
+
 **Auditoría integral del 24-10-2026:** después de reparar rutas documentales,
 el índice contiene 325 candidatas: 71 pendientes, 193 aristas descartadas y
 61 rectificaciones respaldadas. Hay 506 filas históricas (107 pendientes,

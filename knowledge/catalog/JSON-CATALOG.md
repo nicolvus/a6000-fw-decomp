@@ -1,6 +1,6 @@
 # Catálogo de formatos JSON bajo analysis/ (generado, no editar a mano)
 
-Total archivos: 2982. Familias (firmas estructurales) distintas: 537.
+Total archivos: 2990. Familias (firmas estructurales) distintas: 543.
 Inválidos/no legibles: 0. Vacíos: 12.
 
 Una firma agrupa por FORMA (claves+tipos), no por significado: dos familias con claves parecidas pueden representar cosas distintas; revisar `sample_paths` antes de asumir equivalencia semántica.
@@ -11,7 +11,7 @@ Una firma agrupa por FORMA (claves+tipos), no por significado: dos familias con 
 |---|---|---|---|---|---|
 | 641 | 9193290 | no | dict | class, diagnostics, elf_type, exports, imports, kernel_module, machine, needed, runpath, soname | `analysis/elf-cache/0c3931ebc996851a9fa4f838bb4f9640d8a165c78b1047d564274bff7b7105a6-002a27abd9ab4b0f1345a002cc768834a2e8f0578dd2b7b6e222ae01bd6810c7.json` |
 | 641 | 9208695 | no | dict | class, diagnostics, elf_type, exports, imports, interpreter, kernel_module, machine, needed, runpath, soname | `analysis/elf-cache/6870c19293b708bdd4649acf1a0c60c9d8c3b792f3d8e94e8f638c32d19e2a8d-002a27abd9ab4b0f1345a002cc768834a2e8f0578dd2b7b6e222ae01bd6810c7.json` |
-| 255 | 2692045 | no | dict | constant_memory_assumption, firmware_profile, functions, method, source_sha256, source_size | `analysis/ghidra/a6000-all-exposure-sequences.json` |
+| 257 | 2707902 | no | dict | constant_memory_assumption, firmware_profile, functions, method, source_sha256, source_size | `analysis/ghidra/a6000-all-exposure-sequences.json` |
 | 118 | 665087 | no | list_of_dict | entry, pseudo_code, status | `analysis/ghidra/branch-claude-effect-parser.json` |
 | 97 | 7192017 | SÍ | dict | functions, sha256 | `analysis/ghidra/s40-snapshots.json` |
 | 89 | 365628 | no | dict | functions, language, method, rom_base, source_sha256 | `analysis/ghidra/a6000-darwin-adc-phase-notification.json` |
@@ -341,6 +341,7 @@ Una firma agrupa por FORMA (claves+tipos), no por significado: dos familias con 
 | 1 | 5008 | no | dict | base_vaddr, cadenas, conclusiones, detalle, efecto_en_S51, firmwares, milestone, recuentos, salvedad, titulo | `analysis/s173_cam_util_labels/cam_util_labels.json` |
 | 1 | 48257 | no | dict | capa, conclusiones, efecto_en_S51, familia_del_obturador, firmwares, milestone, regla_metodologica, salvedad, solo_en_a6000, solo_en_a6300, solo_en_a7s_vs_a6000, soportados_por_a6300 … | `analysis/s174_forliro_api/forliro_api.json` |
 | 1 | 4788 | no | dict | base_vaddr, cadenas, conclusiones, efecto_en_S51, firmwares, funciones, logger, milestone, recuentos, salvedad, titulo | `analysis/s175_lif_debug/lif_debug.json` |
+| 1 | 2388 | no | dict | first_reader_default, got_base, got_slot, method, physical_semantics, single_read, source_sha256, state, zero_overrides | `analysis/s176_imager_state_readers/readers.json` |
 | 1 | 97821 | no | dict | base_vaddr, cadenas, clases_rtti, contadores, diferencial_nucleos, doble_instrumentacion, equivalentes_otras_fw, ficheros_fuente, firmwares, funciones, hito, lrb_type_ids … | `analysis/s177_cam_func_mgr/cam_func_mgr.json` |
 | 1 | 17126 | no | dict | filas, marcadores, nucleos_encontrados | `analysis/s177_cam_func_mgr/cfm_diff.json` |
 | 1 | 19240 | no | dict | n_dual, sitios, wrappers | `analysis/s177_cam_func_mgr/cfm_dual_log.json` |
@@ -378,6 +379,7 @@ Una firma agrupa por FORMA (claves+tipos), no por significado: dos familias con 
 | 1 | 6830 | no | dict | abs_ptrs, negativo, twins | `analysis/s180_remote/verify.json` |
 | 1 | 6425 | no | dict | agent, date, imx210_registers, imx210_sha256, imx235_modes, imx235_registers, imx235_sha256, phase, subsystems | `analysis/s201_imx210_imx235_registers/compare.json` |
 | 1 | 1601 | no | dict | agent, date, end_of_integration, imx210_readout_lines, imx210_readout_ms, imx210_sha256, imx210_svd_formula, imx210_time_registers, imx235_modes, imx235_sha256, imx235_silent_columns, imx235_time_registers … | `analysis/s202_imx210_imx235_timing/timing.json` |
+| 1 | 494 | no | dict | caller, electronic_end_of_integration, rows, selector_store, source, source_sha256, staging, state, state_slot | `analysis/s205_imager_s0_writer/staging_contract.json` |
 | 1 | 32623 | no | dict | agent, date, imx210_registers, imx210_sha256, imx235_modes, imx235_registers, imx235_sha256, phase, registros, resumen | `analysis/s206_imx210_imx235_full_table/full_table.json` |
 | 1 | 1041 | no | dict | agent, conclusion, date, eoi_mechanism_status, eoi_strings_a6000_long, eoi_strings_a6000_short, eoi_strings_a7s_long, eoi_strings_a7s_short, exposure_timer_end_no_register_rewrite, imx210_sha256, imx235_dirs, imx235_has_eoi_dedicated_register … | `analysis/s207_imx235_end_of_integration/full_eoi.json` |
 | 1 | 753 | no | dict | a6000_channel_table_p2s, a6000_p2s_formatter_0x81, a7s_channel_table_p2s, a7s_no_extra_byte, a7s_p2s_formatters, agent, conclusion, date, imx210_sha256, imx235_sha256, phase | `analysis/s208_p2s_transport/p2s_transport.json` |
@@ -423,12 +425,16 @@ Una firma agrupa por FORMA (claves+tipos), no por significado: dos familias con 
 | 1 | 12289 | SÍ | dict | a6000, base, callers, firmware, function, limits, milestone, per_mode_a6000, per_mode_a7s, tables, title, verdicts | `analysis/s344_selector_tables/selector_tables.json` |
 | 1 | 17919 | no | dict | base, cross_model, field_meaning, firmware, lens_aberration_file, limits, milestone, models, negatives, title, verdicts | `analysis/s347_odl_field/odl_field.json` |
 | 1 | 10380 | no | dict | base, cross_model, firmware, limits, milestone, models, title, verdicts | `analysis/s348_odl_callback/odl_callback.json` |
+| 1 | 16605 | no | dict | backup_state, liro_api, recordstill, uipc_route | `analysis/s380_libobj_map/followup_audit.json` |
+| 1 | 3529 | no | dict | checks, llvm_version, method | `analysis/s380_libobj_map/followup_llvm.json` |
 | 1 | 142015 | no | dict | 0x102cbdc, 0x102cbe0, 0x102cbe4, 0x102cbe8, 0x102cbec, 0x102cbf0, 0x102cbf4, 0x102cbf8, 0x102cbfc, 0x102cc00, 0x102cc04, 0x102cc08 … | `analysis/s380_libobj_map/got_to_name.json` |
 | 1 | 192209 | no | dict | exports_key, imports_key, n_exports_func, n_imports_func, plt_map, plt_map_count | `analysis/s380_libobj_map/key_symbols.json` |
 | 1 | 566337 | no | dict | exports_func, got_map, imports_func, n_defined_func, n_dynsym, n_rel_plt, n_und_func, n_und_obj, plt_base, plt_map, plt_size, sections | `analysis/s380_libobj_map/map.json` |
 | 1 | 5071 | no | dict | attempts, date, interpretation | `analysis/s380_libobj_map/rea_recordstill_coverage.json` |
-| 1 | 115570 | no | dict | alcance, casos, fecha, revision_destinos, validacion | `analysis/s400_open_questions_triage/manual_review.json` |
-| 1 | 1523584 | no | list_of_dict_variant | cita, contexto, destino, destino_cita, fuente, fuente_actual, motivo, motivo_anterior, revision_fuente, revision_manual, status_grafo, tipo … | `analysis/s400_open_questions_triage/triage.json` |
+| 1 | 130486 | no | dict | alcance, casos, fecha, revision_destinos, validacion | `analysis/s400_open_questions_triage/manual_review.json` |
+| 1 | 1527195 | no | list_of_dict_variant | cita, contexto, destino, destino_cita, fuente, fuente_actual, motivo, motivo_anterior, revision_fuente, revision_manual, status_grafo, tipo … | `analysis/s400_open_questions_triage/triage.json` |
+| 1 | 659 | no | dict | caller, capture_selector, constructor, diagnostic_override, limits, normal_bit_0x20_condition, normal_byte, payload, payload_store, physical_delivery, sensor_modes, source_sha256 | `analysis/s401_a7s_caif/caif_contract.json` |
+| 1 | 213772 | no | list_of_dict | args, evidence, tool | `analysis/s401_a7s_caif/rea_evidence.json` |
 | 1 | 11230 | SÍ | dict | batch_items, callback_lists, geometry_row, historical_functions, metrics, mismatches, protected_files, rea_byte_reads, sha256, stage_diag, tbb_destinations | `analysis/s50/codex/audit-result.json` |
 | 1 | 93557 | no | dict | callback-count-copy, callback-dispatch, capture-cancel, copy-field, curtain-request, descriptor-init, error-flags, exposure-getter, exposure-selector, exposure-switch, init-table, initial-request … | `analysis/s50/codex/llvm-evidence.json` |
 | 1 | 12428 | no | dict | common_a6000_a7s, common_strings, counts, exclusive_a6000_strings, exclusive_a6000_vs_a6300, exclusive_a6000_vs_a7s | `analysis/s500_vdf/vdf_compare.json` |
