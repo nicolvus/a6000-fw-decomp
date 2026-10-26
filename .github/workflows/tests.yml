@@ -20,10 +20,10 @@ jobs:
         with:
           python-version: '3.14'
       - name: Dependencias
-        run: pip install -r knowledge/requirements.txt -r knowledge/requirements-dev.txt capstone pyelftools numpy
+        run: pip install -r knowledge/requirements-ci.txt pyelftools numpy
       - name: Índice de conocimiento
         run: |
           python scripts/knowledge/index_docs.py
           python scripts/knowledge/build_graph.py
       - name: Suite
-        run: pytest tests -q
+        run: python -m pytest tests -q
