@@ -1,5 +1,7 @@
 # S310 — `0x43ad9704` es un thunk de llamada virtual, no un constructor de mensajes
 
+> **Aviso D4 (25-10-2026):** [S314](s314-selector-object.md) rectifica este informe: `0x43ad9704` no es el thunk del slot `0x64` (lo es `0x43ad96f8`) y va a `0x43ad9ada` (`vtable+0x24`).
+
 Octava sesión del carril B. S308 concluyó que el código de modo Silent se pasa a
 `0x43ad9704` y lo describió como «constructor/despachador de mensajes» (INFERENCIA). Al
 desensamblar la función, esa descripción es **incorrecta en el mecanismo**: es un **thunk de

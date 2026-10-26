@@ -1,5 +1,7 @@
 # S313 — Síntesis del carril B: qué distingue el silent shutter de la A7S (estado actual)
 
+> **Aviso D4 (25-10-2026):** [S314](s314-selector-object.md) rectifica la fila 13 (slot `0x64`) y [S341 §4](s341-synthesis-b2.md) enumera las rectificaciones posteriores del carril B; esta síntesis no las incorpora.
+
 Sesión de consolidación. Reúne los resultados de S300–S312 (todos con evidencia en
 `analysis/`) y separa lo demostrado de lo que queda abierto. **No introduce afirmaciones
 nuevas**: cada fila remite a su informe.

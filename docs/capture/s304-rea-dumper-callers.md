@@ -1,5 +1,7 @@
 # S304 — REA/Ghidra: callers de `FUN_43858338` (dumper gates) y código que carga GOT `0x4401f080`
 
+> **Aviso D4 (25-10-2026):** [S303 §5](s303-ref-tree-43ff3200.md) rectifica las direcciones de la rev.1 usadas aquí: `0x438581e8` y `0x43858390` eran entradas reales +0x58 (`0x43858190` y `0x43858338`).
+
 **Informe histórico superado:** las direcciones interiores con sesgo +0x58
 y las trece llamadas de este texto fueron invalidadas en
 [S303 rev.3](s303-ref-tree-43ff3200.md). [S305 actualizado](s305-fun43858390-literal-pool.md)

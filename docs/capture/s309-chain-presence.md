@@ -1,5 +1,7 @@
 # S309 — La cadena silent/config de la A7S no aparece en la A6000
 
+> **Aviso D4 (25-10-2026):** [S310](s310-vtable-thunk.md) rectifica el mecanismo: `0x43ad96fa`/`0x43ad9704` son thunks de llamada virtual, no un constructor de mensajes.
+
 Séptima sesión del carril B. Cierra la pregunta que dejaron S302/S307/S308: ¿la cadena que
 selecciona el modo silent y escribe el cluster de tiempos existe en la A6000?
 

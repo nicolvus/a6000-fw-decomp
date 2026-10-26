@@ -1,5 +1,7 @@
 # S321 — la «tabla de 68 filas» de `0x43fee5ac` es la fila 1 de la matriz de 69 filas de `0x43fee598`
 
+> **Aviso D4 (25-10-2026):** [S325](s325-position-map.md) y [S329](s329-mode-timing-tables.md) retiran «`0x4c`–`0x4f` → columna 1» y el mapa de 82 B por código: el mapa es posición→columna de 34 entradas.
+
 Trigésimo primera sesión del carril B. La cola pedía identificar el índice/consumidor de
 una supuesta tabla de **68 filas** `{ptr, 16 B}` en `0x43fee5ac` y su relación con los
 drive modes (S302).

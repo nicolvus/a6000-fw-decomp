@@ -1,5 +1,7 @@
 # S321 — Matriz real de 69 filas y consumidor por modo (resumen; ver canónico)
 
+> **Aviso D4 (25-10-2026):** [S325](s325-position-map.md) y [S329](s329-mode-timing-tables.md) retiran «`0x4e`/`0x4f` comparten la columna 1»: el mapa es posición→columna y `0x4e`→columna 12, `0x4f`→13.
+
 **Documento canónico:** [`docs/capture/s321-matrix-rows.md`](s321-matrix-rows.md)
 (evidencia completa en `analysis/s321_matrix_rows/matrix_rows.json`, 138 comprobaciones
 del verificador y 14 tests).

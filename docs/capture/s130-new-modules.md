@@ -1,5 +1,7 @@
 # S130 — los 20 módulos "NUEVO/PROPIO": ¿contenido nuevo o solo otra etiqueta?
 
+> **Aviso D4 (25-10-2026):** [S170](../../analysis/s170_illumi/illumi.md) rectifica la lectura de `[ILLUMI]` como contenido nuevo: el subsistema de iluminación tiene las mismas RTTI en los tres modelos; lo propio de la A6000 son las trazas. Que sea el mismo código en los tres sigue NO_VERIFICADO.
+
 **Hito de la línea de ingeniería inversa general**: cierra la pregunta abierta por S128.
 
 Informe: [analysis/s130_new_modules/new_modules.md](../../analysis/s130_new_modules/new_modules.md) ·

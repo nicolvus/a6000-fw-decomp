@@ -1,5 +1,7 @@
 # S46 — base VD e identidad de los escritores de contexto
 
+> **Aviso D4 (25-10-2026):** [S47](s47-payload-producer-and-order.md) cierra el pendiente de orden: si el callback se ejecuta en esa invocación, escribe antes de la copia (no se recertifica un orden universal).
+
 Sesión 18-10-2026; continuación puntual de [S45](s45-context-identity-and-physical-closure.md).
 Solo investigación estática de los dos objetivos pedidos. No se reabren OSAL
 bit31, diagnóstico AF, consumidor de registros ni virtual+0xa8.

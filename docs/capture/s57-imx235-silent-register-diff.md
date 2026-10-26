@@ -1,5 +1,7 @@
 # S57-D — Configuración efectiva IMX235 normal/Silent y comparación con IMX210 (20-10-2026)
 
+> **Aviso D4 (25-10-2026):** [S58](s58-a7s-silent-effective-diff.md) reemplaza esta comparación: la matriz tiene 69 filas de 0x14 B con selección indirecta de 15 columnas, no 35 filas de 40 B con 34 columnas directas; los pares `0x000C` y `0x000A` de aquí proceden de esa lectura.
+
 **Resultado:** el Silent de la A7S **no añade una operación de fin de integración al sensor**: selecciona dos modos de lectura dedicados (`0x4e`, `0x4f`) cuya columna es una variante mínima de los modos `0x4c/0x4d` (1–4 registros de diferencia) y distinta del modo foto `0x0b` en 33–35 de 35 registros. La diferencia funcional que «permite operar sin segunda cortina» no es recuperable del firmware a nivel de sensor; la frontera es la semántica de la dirección `0x000C` y del modo de lectura (datasheet IMX235). Pruebas: `tests/test_s57_imx210_exposure.py::Imx235Silent`; script `analysis/s57/imx235_matrix.py`; matriz S57-14, 23–26.
 
 ## 1. Estructura recuperada (VERIFICADO, bytes de A7S 3.20, sha `b857d338…103e`)

@@ -1,5 +1,7 @@
 # S302 — drive mode y exposición: A7S fw3.20 vs A6000 fw3.21, campo a campo
 
+> **Aviso D4 (25-10-2026):** [S321](s321-matrix-rows.md) rectifica «cabecera = puntero a descriptor» (es el destino de escritura del valor) y [S325](s325-position-map.md) el mapa de columnas (posición→columna de 34 entradas, no modo→columna de 82).
+
 Tercera sesión del carril B. Compara las estructuras de **exposición** y **drive mode** de
 las dos cámaras usando las direcciones ya conocidas (S124, S134, S140, S201) y
 re-verificándolas contra bytes en esta sesión. No repite el censo de registros (S201);

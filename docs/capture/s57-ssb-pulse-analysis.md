@@ -1,5 +1,7 @@
 # S57-B — Pulso SSB: productores, orden y consecuencias (20-10-2026)
 
+> **Aviso D4 (25-10-2026):** [S58](s58-conclusions.md) retira la lectura del umbral `0x1000` como condición de exposición: pertenece a SetRead/AGC (SetExposure A7S `0x436f4168`, SetRead `0x436f4a94`).
+
 **Resultado:** SSB es un *strobe* de un bit (ID1 bit 3) que el firmware emite **siempre justo después de preparar una actualización de exposición y antes de `Execute(1)`**; no aparece en `Execute(0)`, ni en el fin de exposición, ni en cambios de modo sin SetExposure. Clasificación: **operación de sincronización/aplicación probable (INFERENCIA, confianza media)**; *no* se demuestra finalización de exposición. Pruebas: `tests/test_s57_imx210_exposure.py::{SsbProducers,Id1Emulation}`; matriz S57-05…14.
 
 ## 1. Productores (VERIFICADO: índice de llamadas Capstone + REA `procedure_callers`)

@@ -1,5 +1,7 @@
 # S41 — productores de mensajes, snapshots y valores de modo IMX210
 
+> **Aviso D4 (25-10-2026):** [S42](s42-exposure-call-identity.md) rectifica la nomenclatura de «propagación de valores» y «Línea C»: `0x436d6320` es el wrapper de despacho y `0x436d6f6c` el método virtual del backend IMX210; no son alias.
+
 18-10-2026. **PARCIAL:** productores internos de `4000/4036`, transporte
 y productores de snapshots recuperados. Origen último de `3023`, resolución
 del destino con bit 31 y enlace de sus valores a integración física pendientes.

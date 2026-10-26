@@ -1,5 +1,7 @@
 # S334 — Los 12 pares se colapsan en máscaras `u16` (carril B)
 
+> **Aviso D4 (25-10-2026):** [S340](s340-w0-selector.md) rectifica `w0` como «código de operación»: es un selector de canal MMIO (`0x436f74c0`).
+
 22-10-2026. Carril B. Sesión S334. **Solo lectura estática; sin firmware en ejecución, sin cámara, sin flasheo.**
 
 ## Pregunta

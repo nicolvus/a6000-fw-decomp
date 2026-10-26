@@ -1,5 +1,7 @@
 # S58-A — Productores AE de svd / shd / spl del IMX210 (20-10-2026)
 
+> **Aviso D4 (25-10-2026):** [S59 SOL-07](s59-sol.md) rectifica la atribución de clk del §5: el mismo offset `+0x4c0` no demuestra alias; el escritor de histogramas recibe el objeto `0x43eb121c` y la entrada AE P `0x43eaee84`.
+
 **Resultado:** el productor numérico que S57 no localizó **existe y está recuperado**: no estaba en las etapas candidatas (`0x43844e80`, `0x4384b268`, `0x4385b234`, …; esas solo copian o consumen) sino en la rama de temporización `0x437b5e70`. Tres funciones calculan los valores y sus modelos Python coinciden con el código real (Unicorn): `0x4383d4d0` (tiempo → n, shd, reloj fino; 600/600), `0x4383c9dc` (filas por banco → shd/svd/spl; 300/300) y `0x4383b790` (A/B por banco; solo REA). Queda sin recuperar el **origen de las entradas** (Tv por banco y el bloque de temporización del modo). Pruebas: `tests/test_s58_timing_a7s.py::{AETimingA6000,Itstate}`; scripts `analysis/s58/`; matriz S58-01…11.
 
 ## 1. Estructuras (VERIFICADO, REA + Capstone + trazado de escrituras en Unicorn)
