@@ -14,4 +14,5 @@ Decisión del usuario (26-10-2026): la cámara no se abre; todo por software con
 
 | N.º | Fecha-hora | Plan | Backup previo | Resultado |
 |---|---|---|---|---|
-| — | — | — | — | (ninguna ejecutada; la cámara no estaba conectada el 26-10-2026) |
+| T001 | 26-10-2026 19:56 | P0 (backup) | — (referencia: `nvram-referencia-20261020-214913`) | Backup NVRAM + bootrom en `analysis/camera-dumps/20261026-195607-pre-T001-P0/`, `SHA256SUMS` OK. Bootrom idéntico a la referencia; flash/mem difieren en 15 propiedades (contadores/fechas, sin reinicio de ajustes). Cámara en modo normal tras el volcado (telnet y adb responden) |
+| T002 | 26-10-2026 ~20:00 | preparación de P20: instalar `RemoteShutter.apk` (`ar.shutter`) | T001 | Instalación `Success` (escribe en `/data`). `am start` no arrancó: «current activity is being kept for the user»; puerto 8080 cerrado. Pendiente: cámara en modo disparo sin USB |
