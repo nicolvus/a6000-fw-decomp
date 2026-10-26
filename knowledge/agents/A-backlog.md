@@ -1,5 +1,7 @@
 # Backlog del Agente A — Sensor y driver: A7S (IMX235) vs A6000 (IMX210)
 
+Actualizado el 26-10-2026: los pendientes abiertos de este carril están en [PENDIENTES](../../docs/PENDIENTES.md) (E9 y D5, ambos BLOQUEADO).
+
 Sesiones asignadas: S200–S299. Un tema = una sesión. Estado: TODO | DOING | DONE <hash> | BLOCKED <causa>.
 
 Referencia base: S57 (IMX210 ID1–8 / ShutMode / SSB / SyncMode / XPI) y S58 (AE productor, matriz IMX235, emulación A7S, diferencias Silent 0x4c/0x4d/0x4e/0x4f). S169: A7S y A6000 tienen 0/0 `CheckSet*` de LiroSeq → la A7S implementa el silent shutter por otra vía (drive mode, tabla de timings o mensaje a Liro).

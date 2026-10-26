@@ -17,6 +17,6 @@ Tema distinto de A (sensor/driver), B (imager estado) y C (ruta de control): dec
 - S512 [ENCOUCSTAT] (49 trazas) DONE f016266c
 - S513 [CONFIG] (47 trazas) DONE 3ee87e6d
 - S514 [BT] (44 trazas) DONE fc0fe2a4
-- S515 [BL] backlight montura (154 trazas)
-- S516 [PNL] panel (41 trazas)
+- S515 [BL] backlight montura (154 trazas) → DONE (D2, 25-10-2026)
+- S516 [PNL] panel (41 trazas) → DONE (D2, 25-10-2026)
 - regenerar al vaciar

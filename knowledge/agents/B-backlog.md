@@ -1,5 +1,7 @@
 # Backlog B — imager, estado y gates (S300–S399)
 
+Actualizado el 26-10-2026: los pendientes abiertos de este carril están en [PENDIENTES](../../docs/PENDIENTES.md) (E7 y E8 cerrados con límite; E13 BLOQUEADO).
+
 Actualizado el 25-10-2026. Una casilla completada acredita el entregable indicado;
 no convierte en hecho una conclusión marcada NO_VERIFICADO. Los resultados
 negativos se limitan a los sitios examinados. [Seguimiento vigente](../../docs/capture/capture-static-followup-2026-10-25.md).

@@ -62,7 +62,7 @@ Clasificación: **IDÉNTICO** (ambién ausente), pero **NO_VERIFICADO** si el se
 
 ## Artefactos
 
-- `analysis/s202_imx210_imx235_timing/verify_timing.py` + `tests/test_s202_imx210_imx235_timing.py` (ver abajo).
+- `analysis/s202_imx210_imx235_timing/timing.py` + `tests/test_s202_imx210_imx235_timing.py` (ver abajo).
 - Alimenta S204 (clasificación final).
 
 ## Siguiente (S204)

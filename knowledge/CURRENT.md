@@ -1,5 +1,13 @@
 # Estado actual — léeme primero
 
+## Estado vigente — 26-10-2026 (auditoría integral)
+
+El índice maestro [PENDIENTES](../docs/PENDIENTES.md) manda sobre los resúmenes siguientes, que son instantáneas de su fecha.
+Estáticos cerrados con límite: E2–E5, E7, E8, E10 (a–c), E12, E14–E19, D1, D3, D4 y D6 ([evidencia](../docs/capture/s403-cierre-pendientes.md));
+E1 queda `NO_VERIFICADO` sin vías estáticas. Bloqueados por datos o hardware: E6, E9, E11, E13, D5; físicos F1–F6; respaldo R1–R5.
+Datos de auditoría y memoria temporal: [estado.json](../knowledge/audit/estado.json) y [memoria.json](../knowledge/audit/memoria.json)
+(se regeneran con `scripts/audit/repo_audit.py`). Sin firmware ejecutado ni cámara.
+
 ## Estado operativo vigente — 25-10-2026
 
 - [Cierre estático S402](../docs/capture/static-closure-2026-10-25.md): RecordStill/RecordImage A6000≡A7S;
@@ -304,7 +312,7 @@ Todos los módulos del censo S178 (372 etiquetas) están ahora cubiertos:
 ni test anunciados en esta sección. El resumen siguiente queda sin certificar;
 no tratarlo como evidencia reproducida ni como hito cerrado.
 
-REA/bytes clasifican `0x4386140a` como load del state pointer seguido por lectura de `state+0xac` en `0x43861410`; si el byte es cero, la cola usa default 6. `0x438693ec` carga el mismo pointer y el bloque lee bytes `+0x30..+0x37`, copiando ceros/defaults a un objeto distinto apuntado por `r6`. No hay store a state ni a gates `+3/+6` en esos dos procedimientos. **Límite local:** campos estáticos cero no determinan runtime, y no se concluye ausencia global. S176 (informe independiente ausente; evidencia en `analysis/s176_imager_state_readers/state_readers.json`), reproducción `analysis/s176_imager_state_readers/state_readers.json` (3 tests).
+REA/bytes clasifican `0x4386140a` como load del state pointer seguido por lectura de `state+0xac` en `0x43861410`; si el byte es cero, la cola usa default 6. `0x438693ec` carga el mismo pointer y el bloque lee bytes `+0x30..+0x37`, copiando ceros/defaults a un objeto distinto apuntado por `r6`. No hay store a state ni a gates `+3/+6` en esos dos procedimientos. **Límite local:** campos estáticos cero no determinan runtime, y no se concluye ausencia global. S176 (informe independiente ausente; evidencia en `analysis/s176_imager_state_readers/readers.json`), reproducción `analysis/s176_imager_state_readers/readers.json` (3 tests).
 
 **Siguiente:** clasificar el próximo xref no resuelto del state pointer con REA typed refs y bytes; considerar el árbol de referencias de la tabla `0x43ff3200` como investigación separada, porque xrefs exactas al vector/GOT base no fueron observadas.
 
@@ -1148,7 +1156,7 @@ Los 6 del A6300: `SetApertureSTFForLiro`, `SetAutoDualRecModeForLiro`, `SetExpan
 
 ## S68 — gestión de batería, energía y carga (NP-FW50) (21-10-2026)
 
-**VERIFICADO (7 tests, `tests/test_s68_battery.py`):** resultado **negativo**: el `av-cam.bin` de A6000 **no contiene modelo del pack NP-FW50** (0 hits de `NP-FW`/`NPFW`/`FW50`, sin tensión/corriente/ciclos/SOC). Sí hay: nivel de batería vía UPM (`Set UPM Battery Level` `0x43ca2dfd`, función `0x4378f364`, lee 8 B de un dispositivo), códigos de estado hacia un MCU (`ACV_BATT_Snd` `0x43c8f95e`, `BATT_AUTH_Snd` `0x43c8f96b`, `BATT_STATE1..3_Snd`, `BATT_TYPE1/2_Snd`, `Box_Temperature_Snd` `0x43c8f9fc`, `ACV Error Voltage` `0x43c8f83b`), **carga del flash** y no de la batería (`SB_CHARGE` `0x43cb4c23`, `CamStrbChargeOn/Off`, `uc_ChargeCommand` `0x43ccd8c2`, `uc_ChargeStatus` `0x43ccd8ef`, `uc_ChargeEnable` `0x43ccd939`, `uc_ChargeForceOff` `0x43ccd96c`, `b_SBChargeReq` `0x43ccdc76`), power save del imager (`MacroPowerSaveOn/OffRequest`, `SubLVDS PowerSaveOn/Off`, `MonPowersave`) y coordinación lente↔voltaje (`Wait E-MountLens ReduceVoltage Wait(%d ms` `0x43cc7aa4`, `CaptureCancel_PowerOffDetect()` `0x43ca9d85`). La A7S (fw3.20) conserva el bloque de estado (`ACV_BATT_Snd` `0x43c983f6`, `ACV Error Voltage` `0x43c982d3`) pero **no** tiene `BatteryInfo` ni los `[IRLight]/[VideoLight] Battery Info`.
+**VERIFICADO (7 tests, `tests/test_s68_power.py`):** resultado **negativo**: el `av-cam.bin` de A6000 **no contiene modelo del pack NP-FW50** (0 hits de `NP-FW`/`NPFW`/`FW50`, sin tensión/corriente/ciclos/SOC). Sí hay: nivel de batería vía UPM (`Set UPM Battery Level` `0x43ca2dfd`, función `0x4378f364`, lee 8 B de un dispositivo), códigos de estado hacia un MCU (`ACV_BATT_Snd` `0x43c8f95e`, `BATT_AUTH_Snd` `0x43c8f96b`, `BATT_STATE1..3_Snd`, `BATT_TYPE1/2_Snd`, `Box_Temperature_Snd` `0x43c8f9fc`, `ACV Error Voltage` `0x43c8f83b`), **carga del flash** y no de la batería (`SB_CHARGE` `0x43cb4c23`, `CamStrbChargeOn/Off`, `uc_ChargeCommand` `0x43ccd8c2`, `uc_ChargeStatus` `0x43ccd8ef`, `uc_ChargeEnable` `0x43ccd939`, `uc_ChargeForceOff` `0x43ccd96c`, `b_SBChargeReq` `0x43ccdc76`), power save del imager (`MacroPowerSaveOn/OffRequest`, `SubLVDS PowerSaveOn/Off`, `MonPowersave`) y coordinación lente↔voltaje (`Wait E-MountLens ReduceVoltage Wait(%d ms` `0x43cc7aa4`, `CaptureCancel_PowerOffDetect()` `0x43ca9d85`). La A7S (fw3.20) conserva el bloque de estado (`ACV_BATT_Snd` `0x43c983f6`, `ACV Error Voltage` `0x43c982d3`) pero **no** tiene `BatteryInfo` ni los `[IRLight]/[VideoLight] Battery Info`.
 
 **Corrección de la revisión (21-10-2026):** el informe inicial del subagente afirmaba que la A7S carecía de `ACV Error Voltage` y `ACV_BATT_Snd`; es falso y está corregido en `analysis/s68_power/battery_power.md` y fijado por test.
 

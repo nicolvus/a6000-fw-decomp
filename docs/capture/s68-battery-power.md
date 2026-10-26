@@ -8,7 +8,7 @@ imager, coordinación lente↔voltaje). **Independiente** de la línea SilentShu
 **Método:** análisis estático de bytes del `av-cam.bin` de A6000 (fw3.21) y comparación con A7S
 (fw3.20). Capstone sobre bytes; **ningún firmware ejecutado, ninguna cámara tocada**.
 
-**Pruebas:** `tests/test_s68_battery.py` (7 tests) · Informe detallado: `analysis/s68_power/battery_power.md`
+**Pruebas:** `tests/test_s68_power.py` (19 tests) · Informe detallado: `analysis/s68_power/battery_power.md`
 · Tabla: `analysis/s68_power/battery_power.json`.
 
 ---
@@ -67,7 +67,7 @@ direcciones correctas de la A7S para que la afirmación no vuelva a colarse.
 
 ```bash
 cd /home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter
-.venv/bin/python -m pytest tests/test_s68_battery.py -q
+.venv/bin/python -m pytest tests/test_s68_power.py -q
 ```
 
 Referencias: `analysis/s68_power/battery_power.md` (informe), `.json` (tabla).

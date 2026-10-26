@@ -1,5 +1,7 @@
 # Backlog Agente C — Ruta de control: configuración → LIRO → imager (S401+)
 
+Actualizado el 26-10-2026: los pendientes abiertos de este carril están en [PENDIENTES](../../docs/PENDIENTES.md) (E6 BLOQUEADO; F4 y F5 físicos).
+
 Estado actualizado 25-10-2026: informes S401/S402 y tesis publicados. La ruta
 completa de control sigue parcial; las pruebas propuestas no se han ejecutado.
 

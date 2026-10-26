@@ -30,7 +30,7 @@ Tema distinto de A/B/C: decodificación de módulos exclusivos de la A6000 fw3.2
 - S625 [ADR] (1 traza) → DONE (S625)
 - S626 [CAMERA_DETECT_FC] (1 traza) → DONE (S626)
 - S627 [EO_SW] (1 traza) → DONE (S627)
-- S628 [FILE_NUM] (1 traza)
-- S629 [FSYSMODE] (1 traza)
-- S630 [RING_DIAL] (1 traza)
+- S628 [FILE_NUM] (1 traza) → DONE (D2, 25-10-2026)
+- S629 [FSYSMODE] (1 traza) → DONE (D2, 25-10-2026)
+- S630 [RING_DIAL] (1 traza) → DONE (D2, 25-10-2026)
 - regenerar al vaciar

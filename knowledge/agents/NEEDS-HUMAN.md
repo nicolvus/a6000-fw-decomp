@@ -1,6 +1,6 @@
 # Elementos diferidos y trabajo estático restante
 
-Actualizado el 25-10-2026 (cierre estático [S402](../../docs/capture/static-closure-2026-10-25.md): los ocho elementos estáticos de abajo quedan resueltos o con límite explícito). [Cola y límites vigentes](../../docs/capture/capture-static-followup-2026-10-25.md).
+Actualizado el 26-10-2026: el estado de cada pendiente está en [PENDIENTES](../../docs/PENDIENTES.md); todo lo estático salvo E1 (`NO_VERIFICADO`) está cerrado con límite o bloqueado por datos. Nota previa del 25-10-2026 (cierre estático [S402](../../docs/capture/static-closure-2026-10-25.md): los ocho elementos estáticos de abajo quedan resueltos o con límite explícito). [Cola y límites vigentes](../../docs/capture/capture-static-followup-2026-10-25.md).
 
 | Elemento | Estado y alcance |
 |---|---|

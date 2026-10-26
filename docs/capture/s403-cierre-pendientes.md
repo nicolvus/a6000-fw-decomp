@@ -194,3 +194,15 @@ Las 10 son subetiquetas o campos de módulos ya conocidos, salvo `[EXL]`; ningun
 - **Sin resolver:** `unitType`/formato del YC de Camera (sin fila hacia el grabador, no hay punto de medida; el catálogo `dmm-unit-types.json` no lo nombra). E10 se cierra con ese límite.
 
 **E1**: sin vías estáticas nuevas. Todos los emisores posibles de `0x120EF004` y `0x12030002` son de datos o de ejecución.
+
+## Adenda 26-10-2026 (4) — auditoría integral del repositorio
+
+Herramienta: [repo_audit.py](../../scripts/audit/repo_audit.py) (prueba `tests/test_repo_audit.py`) → [estado.json](../../knowledge/audit/estado.json) (hallazgos mecánicos) y [memoria.json](../../knowledge/audit/memoria.json) (memoria temporal: pendientes por ID, fechas de los documentos de estado y comprobaciones de coherencia). Alcance: los 23 702 archivos versionados, con comprobaciones mecánicas; no se leyeron uno a uno.
+
+- **Git:** `HEAD` = `origin/main` = `e0c74d13`; el flujo «Publicar estado» terminó con éxito; repositorio público; ramas remotas `copilot/*` ya fusionadas.
+- **Suite completa tras los cambios:** 3 582 aprobadas, 35 omitidas, 0 fallos, 1 168 subpruebas, 561 s (3 617 colectadas; 9 más que la ronda anterior: 4 de utilidades de s403, 2 de `build_pages_status` y 3 de la auditoría). Las líneas añadidas a los documentos desplazaron los números de línea del triaje S400; se reasentaron con `extend_triage.py` (518 filas, 0 pendientes).
+- **Sin fallos:** 3 108 JSON y 1 248 Python versionados se leen sin error; las sumas SHA-256 de los volcados de cámara (128 archivos) coinciden (cada `SHA256SUMS` lleva una línea de autorreferencia con hash de archivo vacío, ignorada).
+- **Discrepancias halladas y resueltas:** documentos de estado sin rastro del 26-10 (D7); tres rutas citadas inexistentes y una cifra de pruebas de S68 (D8); ocho utilidades de `s403_pendientes` sin prueba (tres cubiertas con `tests/test_s403_utilidades.py`; `pic` y `rq` se prueban desde otros módulos; `d3_*` y `e3_params9` desde `test_s403_static_findings.py`) (C5).
+- **Discrepancias abiertas, registradas en [PENDIENTES](../PENDIENTES.md):** `libmprctrl.so` de Sony versionado en un repositorio público (R3), cuatro `.zip` obsoletos en la raíz (R4), nueve archivos versionados que `.gitignore` ignora (R5), 11 herramientas fuera de línea sin prueba por nombre (C7), una prueba que reescribe archivos versionados de `site/` (C8) y la etiqueta `[EXL]` alcanzable desde la captura (E20).
+- **Cifras que difieren y no se reescriben (D9):** 12 menciones «N pruebas» de informes históricos frente a lo colectado hoy.
+- **Límite:** las comprobaciones son mecánicas (existencia de enlaces y rutas, validez de JSON/Python, estados, fechas); no validan el contenido técnico de los informes ni re-ejecutan el análisis de bytes.

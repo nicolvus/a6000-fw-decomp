@@ -1,5 +1,13 @@
 # Progreso — sistema de conocimiento Sony A6000
 
+## Estado vigente — 26-10-2026 (auditoría integral)
+
+El índice maestro [PENDIENTES](../docs/PENDIENTES.md) manda sobre los resúmenes siguientes, que son instantáneas de su fecha.
+Estáticos cerrados con límite: E2–E5, E7, E8, E10 (a–c), E12, E14–E19, D1, D3, D4 y D6 ([evidencia](../docs/capture/s403-cierre-pendientes.md));
+E1 queda `NO_VERIFICADO` sin vías estáticas. Bloqueados por datos o hardware: E6, E9, E11, E13, D5; físicos F1–F6; respaldo R1–R5.
+Datos de auditoría y memoria temporal: [estado.json](../knowledge/audit/estado.json) y [memoria.json](../knowledge/audit/memoria.json)
+(se regeneran con `scripts/audit/repo_audit.py`). Sin firmware ejecutado ni cámara.
+
 ## Checkpoint de captura — 25-10-2026
 
 [Cinco puntos investigados](../docs/capture/capture-static-followup-2026-10-25.md):
@@ -1944,7 +1952,7 @@ Próximo (no iniciado): traza pasiva autorizada de `MSS_SO_DWN`/bobinas, consumi
 - **Procedimiento antes de cada ola**: (1) `grep -ril "<tema>" docs/` → 0 o solo menciones superficiales; (2) `ls analysis/ | grep <tema>` → sin dir activo de otro agente; (3) `find . -newermt "-60 minutes"` para ver ficheros que otros agentes están tocando ahora; (4) elegir el número de hito libre en `origin/main` (`git ls-tree origin/main docs/capture/`) y renombrar si colisiona.
 
 ## S68 — gestión de batería, energía y carga (NP-FW50) (21-10-2026, línea general)
-- Hecho: RE general del subsistema de batería/energía del `av-cam.bin`. **Resultado negativo verificado**: no hay modelo del pack NP-FW50 (0 hits `NP-FW`/`NPFW`/`FW50`); sí nivel de batería vía UPM (`0x43ca2dfd`, fn `0x4378f364`), códigos de estado a MCU (`ACV_BATT_Snd` `0x43c8f95e`, `BATT_AUTH_Snd` `0x43c8f96b`, `BATT_STATE1..3_Snd`, `BATT_TYPE1/2_Snd`, `Box_Temperature_Snd` `0x43c8f9fc`, `ACV Error Voltage` `0x43c8f83b`), **carga de flash** (`SB_CHARGE` `0x43cb4c23`, `uc_Charge*`), power save del imager y coordinación lente↔voltaje (`Wait E-MountLens ReduceVoltage` `0x43cc7aa4`, `CaptureCancel_PowerOffDetect` `0x43ca9d85`). Informe `docs/capture/s68-battery-power.md` + `analysis/s68_power/{battery_power.md,json}`, test `tests/test_s68_battery.py` 7/7.
+- Hecho: RE general del subsistema de batería/energía del `av-cam.bin`. **Resultado negativo verificado**: no hay modelo del pack NP-FW50 (0 hits `NP-FW`/`NPFW`/`FW50`); sí nivel de batería vía UPM (`0x43ca2dfd`, fn `0x4378f364`), códigos de estado a MCU (`ACV_BATT_Snd` `0x43c8f95e`, `BATT_AUTH_Snd` `0x43c8f96b`, `BATT_STATE1..3_Snd`, `BATT_TYPE1/2_Snd`, `Box_Temperature_Snd` `0x43c8f9fc`, `ACV Error Voltage` `0x43c8f83b`), **carga de flash** (`SB_CHARGE` `0x43cb4c23`, `uc_Charge*`), power save del imager y coordinación lente↔voltaje (`Wait E-MountLens ReduceVoltage` `0x43cc7aa4`, `CaptureCancel_PowerOffDetect` `0x43ca9d85`). Informe `docs/capture/s68-battery-power.md` + `analysis/s68_power/{battery_power.md,json}`, test `tests/test_s68_power.py` 7/7.
 - Corrección de revisión: (a) la cadena ReduceVoltage está en `0x43cc7aa4`, no `0x43cc2ca6`; (b) la A7S **sí** tiene `ACV Error Voltage` (`0x43c982d3`) y `ACV_BATT_Snd` (`0x43c983f6`): el informe inicial del subagente era incorrecto en ambos puntos.
 - Comparativa: la A7S conserva el bloque de estado y la carga de flash, pero no `BatteryInfo` ni los `Battery Info` de IRLight/VideoLight.
 - Frontera: modelo del pack fuera de `av-cam.bin`; destino de `BATT_*_Snd`; carga por USB/base sin modelo en el firmware; perfiles de consumo y apagado automático no localizados.
@@ -1972,7 +1980,7 @@ Próximo (no iniciado): traza pasiva autorizada de `MSS_SO_DWN`/bobinas, consumi
 - Cuota de subagentes agotada en el proveedor (6 intentos con "Rate limit exceeded"); el trabajo continúa en el agente principal.
 
 ## Revisión de S68 y cierre de huecos (21-10-2026)
-- El test canónico del hito es `tests/test_s68_power.py` (19/19); el duplicado `tests/test_s68_battery.py` se eliminó (el subagente ya había generado el suyo antes de agotarse el cupo).
+- El test canónico del hito es `tests/test_s68_power.py` (19/19); el duplicado `tests/test_s68_power.py` se eliminó (el subagente ya había generado el suyo antes de agotarse el cupo).
 - Correcciones aplicadas al test/informe del subagente: (a) la cadena `Wait E-MountLens ReduceVoltage` está en `0x43cc7aa4` (no `0x43cc2ca6`, que apuntaba a otra cadena de SHD); (b) la **A7S sí tiene** `ACV_BATT_Snd` (`0x43c983f6`) y `ACV Error Voltage` (`0x43c982d3`) — lo que la A6000 añade es `BatteryInfo` y los `Battery Info` de IRLight/VideoLight; (c) en la A7S la cadena de nivel de batería va **sin** el prefijo `[CAMERA_MAIN_SYNC]: `; (d) el bloque de nombres de carga empieza con un `#` en `0x43ccd8aa`; (e) rango de búsqueda de las cadenas ACV (0x43c8f83b/0x43c8f95e) por debajo de 0x43c90000.
 - **Hallazgo adicional (S68)**: la carga de flash está controlada por **PWM** con realimentación del condensador: `uc_AcvOn` `0x43ccd8ff`, `uc_UnregVolltage` `0x43ccd908`, `uc_CapacitorStatus` `0x43ccd919`, `uc_PwmStatus` `0x43ccd92c`, `us_ActivePwmDutySlope` `0x43ccd949`, `us_ActiveChargeSlope` `0x43ccda10`, `uc_ChargeRequest` `0x43ccda49`, `uc_ChargeStopRequest` `0x43ccda5a`.
 - **Hallazgo adicional (S75)**: el origen "from body" de los datos ZPD es el fichero **`/setting/psd.bin`** (cadena contigua a los logs `[ZPD]:`).
