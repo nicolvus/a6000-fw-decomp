@@ -236,3 +236,4 @@ Lo que falta por cerrar está en [`docs/PENDIENTES.md`](docs/PENDIENTES.md), ín
 - E8 cerrado con límite: 7 de 14 lectores del objeto `0x43f72d02` cuelgan de la captura ([adenda](docs/capture/s403-cierre-pendientes.md)).
 - E4 cerrado con límite: la tabla de modos es el argumento `trig` de `IsNeedForceS1ON` ([adenda](docs/capture/s403-cierre-pendientes.md)).
 - D6 y D3 cerrados con límite: ninguna de las 17 trazas con homólogo en A7S es igual a nivel de instrucciones ([adenda](docs/capture/s403-cierre-pendientes.md)).
+- E16 cerrado con límite: las entradas al grupo que lee `CURTAINMODE` son 6 ranuras de tabla ([adenda](docs/capture/s403-cierre-pendientes.md)).

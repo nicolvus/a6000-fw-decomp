@@ -149,3 +149,9 @@ se demostró que lleguen a `IsNeedForceS1ON`. Queda sin establecer qué evento f
 S611 `SA_LPF/SA_BGEST/SA_SSP`) se ubicaron tomando el `push {…, lr}` anterior a la referencia PIC, y se compararon con el mismo motor que D3. Ninguna es igual salvo líneas (p. ej. 97 frente a 52 instrucciones en la rutina de S605 y 83 frente a 47 en la de S611).
 Con ellas, las 17 trazas que tienen homólogo textual quedan comparadas y ninguna coincide a nivel de instrucciones. Las 77 restantes no tienen homólogo textual y se declaran sin homólogo. Límite: el inicio de rutina por prólogo es heurístico.
 **D3** queda cerrado con límite: logger dual sin respaldo estático en 19 fichas (3 verificadas), equivalencia de código refutada en las 17 comparadas, 77 trazas sin homólogo; la equivalencia funcional no se decide con código.
+
+## Adenda 26-10-2026 (E16)
+**E16** ([e16_entradas.py](../../analysis/s403_pendientes/e16_entradas.py) → `e16_entradas.json`, prueba `tests/test_s403_e16_entradas.py`): las 10 rutinas entre `0x43841bf8` y `0x43842440` que leen `[0x43eefb1c+0x60]` (selector `0x43842158`,
+getter `0x43842404` y vecinas) tienen un grafo de llamadores finito: 26 nodos y **6 raíces** (`0x43b1ae2a`, `0x43b1aea2`, `0x43b1aeee`, `0x43b1b22e`, `0x43b1bc24`, `0x43b1ce6e`), ninguna con llamador directo y todas con una referencia por puntero
+en tablas de la imagen (`0x44021968`, `0x44021000`, `0x440222f0`, `0x44020134`, `0x440223a4`, `0x44023408`). No hay más entradas, directas ni indirectas por puntero de palabra; sí pueden existir llamadas por registro calculado o desde rutinas que REA no ubica.
+Quién invoca cada ranura es un dato de ejecución. E16 se cierra con ese límite; no cambia la decisión A/B/C=NO de S51.

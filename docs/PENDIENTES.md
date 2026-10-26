@@ -35,9 +35,8 @@ por esos índices.
 | E6 | BLOQUEADO | Cadena CAIF → Darwin → LIRO/imager: el MCU Darwin queda fuera de `av-cam` | Solo con traza del bus o volcado de Darwin (ver F4) | [C-backlog](../knowledge/agents/C-backlog.md) |
 | E9 | BLOQUEADO | Correspondencia funcional de los 112 registros IMX210/IMX235 restantes y mecanismo de fin de integración: la semántica eléctrica exige hoja de datos (ver D5) | Documento legítimo aportado por el usuario | [A-backlog](../knowledge/agents/A-backlog.md) |
 | E10 | ABIERTO | Ruta YC → archivo: productor de modo 1, creador del pin `0x2a` en disparo, formato YC y propiedad del buffer | Ciclo terminal de buffers demostrado | [matriz S51](capture/s51-static-coverage-and-tool-limits.md) |
-| E11 | PARCIAL | Segunda cortina: enlace banco/bit `0xf2910048` → P4E y rutas alternativas de fin de exposición | Traducción física verificada | [S51](capture/s51-decision.md) |
+| E11 | BLOQUEADO | Segunda cortina: enlace banco/bit `0xf2910048` → P4E (`2ND_CURTAIN_MG`). El escritor `0x43b5e2b0`/`0x4398f9a4` es un helper GPIO genérico con 78 llamadores directos; la correspondencia de ese banco/bit con el pin P4E (que S50 atribuye a Darwin) no consta en el firmware y exige mapa de pines/hoja de datos o traza | Documento externo o prueba física (ver F4, E6) | [S51](capture/s51-decision.md), [S50](capture/s50-parallel-conclusions.md) |
 | E13 | BLOQUEADO | Servicio ODL del carril B y significado físico de sus registros MMIO (`0xf292b000..8`, canales `w0`): sin hoja de datos ni símbolos | Documento externo o prueba física | [S335](capture/s335-mmio-layer.md), [B-backlog](../knowledge/agents/B-backlog.md) |
-| E16 | ABIERTO | Entradas indirectas de `CURTAINMODE` (`0x43eedecc`, `[0x43eefb1c+0x60]`): el negativo de S51 está acotado a su barrido PIC; falta seguir llamadas indirectas al selector `0x43842158` | Entradas indirectas enumeradas o declaradas de ejecución | [S51](capture/s51-decision.md), [E15](capture/s403-e15-kikilog.md) |
 
 ## B. Documental y de calidad
 
@@ -88,6 +87,7 @@ Sin pendientes abiertos (C1–C4 cerrados el 25-10-2026, ver «Cerradas»).
 | E4 | 26-10-2026 | `0x4379d378` = `IsNeedForceS1ON(trig)`; `trig` 0–10 clasificado (forzar S1: 3, 8, 9, 10; no: 0, 1, 4–7; condicional: 2); el significado físico de cada `trig` queda sin establecer | [S403 adenda](capture/s403-cierre-pendientes.md) |
 | D3 | 26-10-2026 | Afirmaciones S605–S627: logger dual sin respaldo estático en 19 fichas (3 verificadas); equivalencia de código refutada en las 17 trazas con homólogo (A7S); 77 sin homólogo textual | [S403 adenda](capture/s403-cierre-pendientes.md) |
 | D6 | 26-10-2026 | 7 trazas con homólogo sin rutina REA ubicadas por prólogo y comparadas: ninguna igual; 77 declaradas sin homólogo | [S403 adenda](capture/s403-cierre-pendientes.md) |
+| E16 | 26-10-2026 | Entradas del grupo que lee `CURTAINMODE`: 26 nodos y 6 raíces, todas ranuras de tablas (punteros); el invocador de cada ranura es de ejecución | [S403 adenda](capture/s403-cierre-pendientes.md) |
 | E7 | 25-10-2026 | Backup `0x3000b`: 14 sitios acceden al objeto `0x43f72d02` por el slot y solo leen; el productor es el callback de copia (S305); valores efectivos solo en ejecución | [S403 §E7](capture/s403-cierre-pendientes.md) |
 | E5 | 25-10-2026 | Ausencia acotada del lector `+0x238` (A6000, 262 anclas) y del almacén `[S+0]` (A7S, 73 anclas); límite: anclas PIC con ventana de 16 instrucciones | [S403 §E5](capture/s403-cierre-pendientes.md) |
 | — | 25-10-2026 | Id de modelo estático (`@M0EF`, `@M030`) y ocho emisores = autopublicaciones; E1 queda `NO_VERIFICADO` por exclusión, no por falta de búsqueda | `dd3a8212` |
@@ -107,3 +107,5 @@ Sin pendientes abiertos (C1–C4 cerrados el 25-10-2026, ver «Cerradas»).
 | 26-10-2026 | E8 cerrado con límite (lectores alcanzables desde la captura enumerados). |
 | 26-10-2026 | E4 cerrado con límite (`trig` = argumento de IsNeedForceS1ON). |
 | 26-10-2026 | D6 y D3 cerrados con límite (17/17 trazas con homólogo difieren). |
+| 26-10-2026 | E16 cerrado con límite (6 raíces por puntero). |
+| 26-10-2026 | E11 reclasificado BLOQUEADO (la traducción banco/bit→P4E no consta en el firmware). |
