@@ -1,6 +1,18 @@
 # Progreso — sistema de conocimiento Sony A6000
 
+## Reorganización documental — 26-10-2026
+
+Cronología: README, `knowledge/CURRENT.md` y `docs/STATE.md` acumulaban resultados por sesión (Sxx) y bloques por fecha; se redujeron a
+portada pública, contexto operativo mínimo y conclusiones vigentes. Sus versiones íntegras anteriores se conservan sin cambios de texto en
+[docs/history/README-historial-2026-10-26.md](../docs/history/README-historial-2026-10-26.md),
+[knowledge/history/CURRENT-historial-2026-10-26.md](history/CURRENT-historial-2026-10-26.md) (2264 líneas: S59–S627 por sesión) y
+[docs/history/STATE-historial-2026-10-26.md](../docs/history/STATE-historial-2026-10-26.md). Nuevo índice por subsistema:
+[docs/INDEX.md](../docs/INDEX.md) (generado por `scripts/knowledge/build_subsystem_index.py`, probado en `tests/test_subsystem_index.py`).
+Pendientes nuevos D10 (cerrado), D11 y D12 en [PENDIENTES](../docs/PENDIENTES.md). No se tocó ningún informe, análisis ni conclusión técnica.
+
 ## Estado vigente — 26-10-2026 (auditoría integral)
+
+> Instantánea de su fecha. El estado consolidado vigente está en [docs/STATE.md](../docs/STATE.md) y el contexto mínimo en [CURRENT.md](CURRENT.md).
 
 El índice maestro [PENDIENTES](../docs/PENDIENTES.md) manda sobre los resúmenes siguientes, que son instantáneas de su fecha.
 Estáticos cerrados con límite: E2–E5, E7, E8, E10 (a–c), E12, E14–E20, D1, D3, D4 y D6 ([evidencia](../docs/capture/s403-cierre-pendientes.md));

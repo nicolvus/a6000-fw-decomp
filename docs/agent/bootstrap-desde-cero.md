@@ -54,7 +54,7 @@ Una consulta vacía de REA **no prueba ausencia**: verifica lo decisivo contra b
 
 1. Elegir un hito abierto; escribir primero la regresión (test) que falla.
 2. Informe en `analysis/sNN_*/` + test en `tests/`; marcar VERIFICADO / PARCIAL / NO_VERIFICADO.
-3. `knowledge-maintenance`; actualizar `knowledge/CURRENT.md` y una línea en el README.
+3. `knowledge-maintenance`; actualizar `docs/PENDIENTES.md`, `docs/STATE.md` si cambió una conclusión y `knowledge/CURRENT.md` si cambió el contexto mínimo; el README no se toca por sesión.
 4. `ruff`/`mypy` sin avisos nuevos; tests relevantes en verde.
 5. Commit Conventional Commits; `git pull --rebase`; `git push` a `main` (orden permanente del autor para este repo).
 

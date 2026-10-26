@@ -18,6 +18,7 @@ documento los resume y manda. Los índices generados ([OPEN-QUESTIONS](OPEN-QUES
    (necesita cámara, dato externo o decisión del usuario), `DIFERIDO`, `CERRADO`, `DESCARTADO`.
 5. Toda cifra lleva su fuente. Si no se re-verificó en la sesión, se marca «sin re-verificar».
 6. Una cola de agente, un informe o un `NEEDS-HUMAN` que cambie de estado actualiza también esta tabla.
+7. Ningún otro documento mantiene su propia lista de pendientes: README, `knowledge/CURRENT.md` y `docs/STATE.md` solo resumen y enlazan aquí.
 
 ## Alcance de la revisión que originó este documento (25-10-2026)
 
@@ -42,6 +43,8 @@ por esos índices.
 | ID | Estado | Pendiente | Criterio de cierre / límite | Fuente |
 |---|---|---|---|---|
 | D5 | BLOQUEADO | Hojas de datos IMX210/IMX235 (mapa de registros, semántica de modos) | Documento legítimo aportado por el usuario; no existe público | [S51](capture/s51-decision.md) |
+| D11 | ABIERTO | Entradas rotuladas «27-10-2026» (en este archivo: E20, R2, R3 y su registro; y en la versión anterior del README, archivada) cuando los commits que las introducen (`60d04b4f`, `22a84402`) son del 26-10-2026 y el reloj del sistema marca 26-10-2026. No se reescribieron | Confirmar con el usuario que es un error de rotulado y, solo entonces, corregir las fechas; mientras tanto, tratarlas como 26-10-2026 | `git log --format=%cd`, [archivo del README](history/README-historial-2026-10-26.md) |
+| D12 | ABIERTO | Tres enlaces Markdown rotos preexistentes: `docs/capture/s310-vtable-thunk.md` (`...`), `knowledge/PROGRESS.md` (`old.md`) y `references/rea/docs/mcp-contracts.md` (`/rea/product-catalog.json`) | Corregir o descartar cada uno (pueden ser texto de ejemplo) hasta que `repo_audit.py` dé 0 enlaces rotos | `knowledge/audit/estado.json` |
 
 ## C. Entorno y código
 
@@ -71,6 +74,7 @@ por esos índices.
 
 | ID | Fecha | Qué se cerró | Evidencia |
 |---|---|---|---|
+| D10 | 26-10-2026 | Reorganización documental: README (portada), `knowledge/CURRENT.md` (contexto mínimo), `docs/STATE.md` (conclusiones vigentes) y nuevo `docs/INDEX.md` por subsistema; versiones íntegras anteriores en `docs/history/` y `knowledge/history/`; protocolo de sesión en `AGENTS.md`/`CLAUDE.md`/`docs/agent/` | [INDEX](INDEX.md), [CURRENT](../knowledge/CURRENT.md), [PROGRESS](../knowledge/PROGRESS.md) |
 | C1 | 25-10-2026 | `unicorn 2.1.4` instalado en `.venv`; los 8 módulos S56–S61 se colectan y pasan (315 pruebas, 36 subpruebas) | [S403](capture/s403-cierre-pendientes.md) |
 | C2 | 25-10-2026 | `tests/knowledge/test_mcp_server.py` colecta y pasa (6) con el `.venv`; el fallo era del entorno sin `mcp` | [S403](capture/s403-cierre-pendientes.md) |
 | C3 | 25-10-2026 | mypy sin errores en `scripts/knowledge` y `tests/knowledge` (21 archivos): aserciones de tipo y `mypy.ini` para `capstone` | [S403](capture/s403-cierre-pendientes.md) |
@@ -133,3 +137,4 @@ por esos índices.
 | 26-10-2026 | Auditoría integral: nuevos E20, C7, C8, R3, R4, R5; cerrados C5, C6, D7, D8; D9 descartado. |
 | 26-10-2026 | Auditoría, 2.ª ronda: cerrados E20 (límite), C7, C8, R4 y R5; R3 dividido (R3a árbol cerrado, historial BLOQUEADO); D9 sigue DESCARTADO. |
 | 27-10-2026 | Tercera ronda: E20 en su límite estático; R2 cerrado (CI con la suite); R3 preparado en clon aparte, historial sin reescribir. |
+| 26-10-2026 | Reorganización documental (D10 cerrado); nuevos D11 (fechas «27-10-2026» sin corregir) y D12 (tres enlaces rotos preexistentes). Las filas fechadas 27-10-2026 de este registro y de «Cerradas» (R2) corresponden a commits del 26-10-2026. |

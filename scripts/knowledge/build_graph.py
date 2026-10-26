@@ -575,7 +575,7 @@ WINDOW = 2  # líneas alrededor del marcador de corrección: evita relaciones po
 # Documentos derivados (generados por export_corrections.py u otros exportadores del propio
 # grafo): citan "CORRECTS"/enlaces por diseño y contaminarían el grafo con relaciones
 # autorreferenciales si se escanean como si fueran hallazgos originales de investigación.
-GENERATED_DOCS = {"docs/CORRECTIONS.md", "docs/OPEN-QUESTIONS.md"}
+GENERATED_DOCS = {"docs/CORRECTIONS.md", "docs/OPEN-QUESTIONS.md", "docs/INDEX.md"}
 
 
 def build_correction_graph(conn: sqlite3.Connection) -> int:

@@ -25,11 +25,18 @@ falla si se separan: editar siempre `.claude/skills/<name>/SKILL.md` y copiar.
 
 ## Arranque de una sesión
 
-1. Leer `knowledge/CURRENT.md` (resumen operativo). Solo ir a `knowledge/PROGRESS.md` para el detalle.
+1. Leer `knowledge/CURRENT.md` (resumen operativo), luego los pendientes relevantes de `docs/PENDIENTES.md` y solo los
+   informes necesarios (por tema: `docs/INDEX.md`). `knowledge/PROGRESS.md` solo para el detalle histórico.
 2. Comprobar entorno: `python scripts/agent/check_env.py` (con `--json` para agentes).
 3. Respetar `docs/STATE.md` § "Política de ingeniería inversa": REA primero, Ghidra
    histórico como respaldo, verificar contra bytes, firmware y proyectos intactos,
    sin ejecutar firmware ni flashear.
+
+## Cierre de una sesión
+
+Informe en `docs/capture/` (+ evidencia en `analysis/`, prueba en `tests/`) → fila de `docs/PENDIENTES.md` → `docs/STATE.md` si cambió una
+conclusión → `knowledge/CURRENT.md` si cambió el contexto mínimo (≤ ~150 líneas) → entrada en `knowledge/PROGRESS.md` →
+`python scripts/knowledge/build_subsystem_index.py` + `knowledge-maintenance`. El README no recibe un párrafo por sesión.
 
 ## MCP (Claude Code y Codex)
 

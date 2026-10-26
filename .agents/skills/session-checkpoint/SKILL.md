@@ -13,15 +13,18 @@ trabajo significativa, antes de que termine la sesión.
 
 ## Procedimiento — reanudar
 
-1. Leer `knowledge/PROGRESS.md` completo (es corto, es el único archivo que hace
-   falta leer para saber qué está hecho, qué falta y el próximo paso exacto).
-2. Leer `docs/STATE.md` para el estado de la investigación (no de la
-   implementación del sistema de conocimiento, que es lo que cubre PROGRESS.md).
-3. NO releer `docs/history/CONTEXT-full-2026-10-18.md` completo salvo que
-   `PROGRESS.md`/`STATE.md` no basten: son 1263 líneas de historial ya resumidas.
+1. Leer `knowledge/CURRENT.md` (contexto operativo mínimo). Consultar solo los pendientes
+   relevantes en `docs/PENDIENTES.md` y los informes necesarios (por tema: `docs/INDEX.md`).
+2. Leer `docs/STATE.md` para las conclusiones y límites vigentes. `knowledge/PROGRESS.md` es el
+   historial cronológico: consultarlo solo si hace falta el detalle de cómo se llegó al estado actual.
+3. NO releer los archivos históricos (`docs/history/`, `knowledge/history/`) completos salvo
+   que `CURRENT.md`/`STATE.md` no basten.
 
 ## Procedimiento — registrar checkpoint
 
+0. Orden de actualización: informe técnico y evidencia → fila afectada de `docs/PENDIENTES.md`
+   → `docs/STATE.md` si cambió una conclusión → `knowledge/CURRENT.md` solo si cambió el contexto
+   mínimo → `knowledge/PROGRESS.md` → `build_subsystem_index.py`. El README no se toca por cada sesión.
 1. Editar `knowledge/PROGRESS.md`: actualizar la tabla de fases, añadir una
    entrada nueva bajo la fase correspondiente con lo hecho/probado/bloqueado,
    y reescribir "Próximo paso exacto" con una instrucción concreta y ejecutable

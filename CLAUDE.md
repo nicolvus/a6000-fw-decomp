@@ -7,12 +7,15 @@ Antes de investigar manualmente, usa el sistema de conocimiento en
 `knowledge-maintenance`, `session-checkpoint` en `.claude/skills/`).
 
 Al empezar una sesión: lee `knowledge/CURRENT.md` (resumen operativo breve) antes de
-releer el repo; solo recurre a `knowledge/PROGRESS.md` (historial completo) si necesitas
-el detalle de cómo se llegó al estado actual.
+releer el repo, luego los pendientes relevantes de `docs/PENDIENTES.md` y solo los informes
+necesarios (índice por subsistema: `docs/INDEX.md`); `knowledge/PROGRESS.md` (historial) solo
+si necesitas el detalle de cómo se llegó al estado actual.
+Al terminar: informe → PENDIENTES → `docs/STATE.md` (si cambió una conclusión) → `CURRENT.md`
+(solo si cambió el contexto mínimo; ≤ ~150 líneas) → `PROGRESS.md` → `scripts/knowledge/build_subsystem_index.py`.
 Después de editar cualquier `.md` indexado: corre `knowledge-maintenance`.
 Antes de reutilizar un hallazgo: corre `contradiction-audit` (puede estar corregido/superado).
 
-Commits: al terminar cada fase (S54 en adelante) haz SIEMPRE commit local de los cambios propios (Conventional Commits; excluye logs de sesión REA). Actualiza SIEMPRE el README principal con la fase y haz `git push` a `origin` (GitHub personal nicolvus/a6000-fw-decomp, rama `main`) tras el commit (orden permanente del usuario, 2026-10-20).
+Commits: al terminar cada fase (S54 en adelante) haz SIEMPRE commit local de los cambios propios (Conventional Commits; excluye logs de sesión REA). El README principal solo se toca si cambia el estado global (tabla «Estado técnico actual» o «Último cierre»; nunca un párrafo por sesión Sxx) y haz `git push` a `origin` (GitHub personal nicolvus/a6000-fw-decomp, rama `main`) tras el commit (orden permanente del usuario, 2026-10-20).
 
 Restricciones del proyecto: sin firmware ejecutado, sin cámara, sin flasheo,
 `git push` solo según la regla de commits. Detalle completo en `docs/STATE.md`.

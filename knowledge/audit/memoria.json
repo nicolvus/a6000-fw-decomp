@@ -1,6 +1,6 @@
 {
- "head": "22a84402",
- "pruebas_colectadas": 3631,
+ "head": "a84fcb39",
+ "pruebas_colectadas": 3633,
  "pendientes_abiertos": {
   "E1": "NO_VERIFICADO",
   "E6": "BLOQUEADO",
@@ -8,6 +8,8 @@
   "E11": "BLOQUEADO",
   "E13": "BLOQUEADO",
   "D5": "BLOQUEADO",
+  "D11": "ABIERTO",
+  "D12": "ABIERTO",
   "F1": "DIFERIDO",
   "F2": "DIFERIDO",
   "F3": "DIFERIDO",
@@ -18,6 +20,7 @@
   "R3": "BLOQUEADO"
  },
  "pendientes_cerrados": [
+  "D10",
   "C1",
   "C2",
   "C3",
@@ -79,7 +82,7 @@
   }
  },
  "coherencia": {
-  "head_igual_a_origin": true,
+  "head_igual_a_origin": false,
   "ids_pendientes_unicos": true,
   "estados_validos": true,
   "enlaces_de_pendientes_validos": true,
@@ -89,5 +92,7 @@
   "sin_rutas_citadas_inexistentes": true,
   "volcados_sha256_ok": true
  },
- "incoherencias": []
+ "incoherencias": [
+  "head_igual_a_origin"
+ ]
 }

@@ -8,8 +8,11 @@ canónica en `.claude/skills/`: `knowledge-navigation`, `contradiction-audit`,
 `knowledge-maintenance`, `session-checkpoint`).
 
 Al empezar una sesión: lee `knowledge/CURRENT.md` (resumen operativo breve) antes de
-releer el repo; solo recurre a `knowledge/PROGRESS.md` (historial completo) si necesitas
-el detalle de cómo se llegó al estado actual.
+releer el repo, luego los pendientes relevantes de `docs/PENDIENTES.md` y solo los informes
+necesarios (índice por subsistema: `docs/INDEX.md`); `knowledge/PROGRESS.md` (historial) solo
+si necesitas el detalle de cómo se llegó al estado actual.
+Al terminar: informe → PENDIENTES → `docs/STATE.md` (si cambió una conclusión) → `CURRENT.md`
+(solo si cambió el contexto mínimo; ≤ ~150 líneas) → `PROGRESS.md` → `scripts/knowledge/build_subsystem_index.py`.
 Después de editar cualquier `.md` indexado: corre `knowledge-maintenance`.
 Antes de reutilizar un hallazgo: corre `contradiction-audit` (puede estar corregido/superado).
 

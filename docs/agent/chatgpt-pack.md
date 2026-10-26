@@ -16,7 +16,7 @@
 - Tras editar `.md` indexado: `index_docs.py`, `build_graph.py`, `export_corrections.py`,
   reindexar y confirmar que el grafo da el mismo total.
 - Al cerrar fase: commit local (Conventional Commits, solo archivos propios) y push
-  a `origin/main`; actualizar el README con la fase.
+  a `origin/main`; el README solo cambia si cambia el estado global (no una sesión nueva).
 - Foco: obturador completamente electrónico del A6000. Decisión vigente S51:
   A=NO, B=NO, C=NO (sin ruta electrónica demostrada y sin parche justificable).
 

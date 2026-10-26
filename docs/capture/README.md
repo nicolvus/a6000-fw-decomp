@@ -86,3 +86,5 @@ de métodos, rutas de mensajes, alternativas y evidencia aún necesaria.
 E012 resolvió secuencia→conversor; E013, despacho 0x1008; E015/E016 añaden
 factory, identidad de cola y receptor LIRO. Siguiente frontera: consumo físico
 del estado, selección por modelo y fin de integración/lectura.
+
+Índice completo de informes por subsistema (con pruebas y evidencia): [docs/INDEX.md](../INDEX.md).

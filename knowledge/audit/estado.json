@@ -1,24 +1,36 @@
 {
  "git": {
-  "head": "22a84402",
+  "head": "a84fcb39",
   "adelante_atras_origin": [
-   0,
+   1,
    0
   ],
-  "versionados": 23701,
+  "versionados": 23712,
   "modificados_sin_commit": [
+   " M .agents/skills/session-checkpoint/SKILL.md",
+   " M .claude/skills/session-checkpoint/SKILL.md",
+   " M AGENTS.md",
+   " M CLAUDE.md",
    " M README.md",
-   " M analysis/s403_pendientes/e20_exl.json",
-   " M analysis/s403_pendientes/e20_exl.py",
+   " M analysis/s400_open_questions_triage/triage.json",
    " M docs/CORRECTIONS.md",
+   " A docs/INDEX.md",
    " M docs/OPEN-QUESTIONS.md",
    " M docs/PENDIENTES.md",
-   " M docs/capture/s403-cierre-pendientes.md",
-   " M tests/test_s403_e20_exl.py",
-   "?? .github/workflows/tests.yml",
-   "?? scripts/r3_prepare_history_rewrite.sh",
-   "?? tests/conftest.py",
-   "?? tests/test_ci_conftest.py"
+   " M docs/STATE.md",
+   " M docs/agent/README.md",
+   " M docs/agent/bootstrap-desde-cero.md",
+   " M docs/agent/chatgpt-pack.md",
+   " M docs/capture/README.md",
+   " M knowledge/CURRENT.md",
+   " M knowledge/PROGRESS.md",
+   " M knowledge/audit/estado.json",
+   " M knowledge/audit/memoria.json",
+   " M projects/electronic-shutter/README.md",
+   " M scripts/knowledge/build_graph.py",
+   " A scripts/knowledge/build_subsystem_index.py",
+   " A tests/test_subsystem_index.py",
+   "?? analysis/s400_open_questions_triage/reubicar_reorganizacion_2026_10_26.py"
   ],
   "versionados_e_ignorados": {
    "total": 0,
@@ -137,52 +149,52 @@
     "real": 6
    },
    {
-    "en": "knowledge/CURRENT.md",
+    "en": "knowledge/PROGRESS.md",
+    "archivo": "tests/knowledge/test_mcp_server.py",
+    "dice": 4,
+    "real": 6
+   },
+   {
+    "en": "knowledge/history/CURRENT-historial-2026-10-26.md",
     "archivo": "tests/test_s105_panorama.py",
     "dice": 305,
     "real": 314
    },
    {
-    "en": "knowledge/CURRENT.md",
+    "en": "knowledge/history/CURRENT-historial-2026-10-26.md",
     "archivo": "tests/test_s101_pending.py",
     "dice": 3,
     "real": 6
    },
    {
-    "en": "knowledge/CURRENT.md",
+    "en": "knowledge/history/CURRENT-historial-2026-10-26.md",
     "archivo": "tests/test_s101_block238.py",
     "dice": 3,
     "real": 5
    },
    {
-    "en": "knowledge/CURRENT.md",
+    "en": "knowledge/history/CURRENT-historial-2026-10-26.md",
     "archivo": "tests/test_s68_power.py",
     "dice": 7,
     "real": 19
    },
    {
-    "en": "knowledge/CURRENT.md",
+    "en": "knowledge/history/CURRENT-historial-2026-10-26.md",
     "archivo": "tests/test_s77_pp.py",
     "dice": 10,
     "real": 11
    },
    {
-    "en": "knowledge/CURRENT.md",
+    "en": "knowledge/history/CURRENT-historial-2026-10-26.md",
     "archivo": "tests/test_s103_sdf.py",
     "dice": 51,
     "real": 46
-   },
-   {
-    "en": "knowledge/PROGRESS.md",
-    "archivo": "tests/knowledge/test_mcp_server.py",
-    "dice": 4,
-    "real": 6
    }
   ]
  },
- "pruebas_colectadas": 3631,
+ "pruebas_colectadas": 3633,
  "pruebas": {
-  "archivos_de_prueba": 295,
+  "archivos_de_prueba": 298,
   "s403_sin_prueba": {
    "total": 8,
    "muestra": [
@@ -238,12 +250,12 @@
   }
  },
  "pendientes": {
-  "filas": 55,
+  "filas": 58,
   "abiertas_por_estado": {
    "NO_VERIFICADO": 1,
    "BLOQUEADO": 8,
-   "DIFERIDO": 3,
-   "ABIERTO": 2
+   "ABIERTO": 4,
+   "DIFERIDO": 3
   },
   "estados_no_validos": [],
   "ids_duplicados": [],
@@ -254,6 +266,8 @@
    "E11",
    "E13",
    "D5",
+   "D11",
+   "D12",
    "F1",
    "F2",
    "F3",
@@ -265,19 +279,18 @@
   ]
  },
  "cifras_citadas": {
-  "README.md": [
-   "263",
-   "3521"
-  ],
+  "README.md": [],
   "docs/PENDIENTES.md": [
    "3 595",
    "315",
    "3521",
-   "797"
+   "799"
   ],
-  "docs/STATE.md": [],
-  "knowledge/CURRENT.md": [
+  "docs/STATE.md": [
    "263"
+  ],
+  "knowledge/CURRENT.md": [
+   "3521"
   ]
  },
  "site": {
