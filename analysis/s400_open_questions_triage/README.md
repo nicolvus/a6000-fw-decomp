@@ -1,5 +1,7 @@
 # S400 — revisión manual de relaciones documentales
 
+**Resolución final del 26-10-2026 (D4):** las 86 filas pendientes se resolvieron con los casos `d4-*` de `manual_review.json` ([d4_resolve.py](d4_resolve.py)). El historial queda en 518 filas: 364 descartadas, 154 con rectificación respaldada y 0 pendientes; el índice tiene 335 candidatas. Los avisos se añadieron a 13 informes destino y la revisión de destino de esas filas se fija en el commit que los contiene. Una rectificación respaldada acredita que el informe corrector la declara y que su prueba pasa; no recertifica el hallazgo contra los bytes. Los contadores siguientes son instantáneas históricas.
+
 **Revisión del 25-10-2026 (44 filas restantes):** las 44 filas sin revisión manual se revisaron una a una. El índice tiene 335 candidatas: 50 pendientes, 221 aristas descartadas y 64 rectificaciones respaldadas; el historial tiene 518 filas (86 pendientes, 322 descartadas, 110 respaldadas). Cinco filas pasan a `CORRECCION_APLICADA` (el comando `0x40e3` de la tabla de A7S, con hash del JSON), 28 se descartan (índice, adyacencia, dominio, procedencia invertida) y 11 conservan `VIGENTE` con caso razonado. Las filas posteriores a `revision_destinos` fijan su propia `revision_destino`. No es una certificación física.
 
 **Estado del 25-10-2026:** 329 relaciones candidatas en el índice: 75 pendientes,

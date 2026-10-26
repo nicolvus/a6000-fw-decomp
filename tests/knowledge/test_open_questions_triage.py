@@ -229,7 +229,7 @@ def test_review_does_not_repeat_previous_misclassifications() -> None:
         ("analysis/s50/shared/inbox-for-claude.md:5", "s49-capture-config-producer.md", "CORRECCION_APLICADA"),
         ("docs/capture/s50-codex-exposure-curtains.md:17", "s49-capture-config-producer.md", "CORRECCION_APLICADA"),
         ("docs/history/CONTEXT-full-2026-10-18.md:89", "s23-yc-pin-dataflow-boundary.md", "CORRECCION_APLICADA"),
-        ("docs/capture/s59-sol.md:28", "s58-ae-timing-producers.md", "VIGENTE"),
+        ("docs/capture/s59-sol.md:28", "s58-ae-timing-producers.md", "CORRECCION_APLICADA"),
         ("docs/capture/s135-elec-shutter.md:57", "s172-elec-shutter-a6300.md", "FALSO_POSITIVO"),
     ]
     for source, target, verdict in expected:

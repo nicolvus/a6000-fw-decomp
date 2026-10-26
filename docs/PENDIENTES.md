@@ -31,10 +31,12 @@ por esos índices.
 
 | ID | Estado | Pendiente | Criterio de cierre / límite | Fuente |
 |---|---|---|---|---|
-| E1 | NO_VERIFICADO | Quién publica el local 4 a `ModelScalarPb` (`0x120EF004`), el 2 a `ModelPbCap` (`0x12030002`) y los mensajes `0x35001004`, `0x35003002`, `0x3a494026` | Ningún código de `libObj` construye esos ids; el emisor, si existe, es de datos o de ejecución. Reabrir solo si aparece un llamador que pase `@M0EF` o `@M030` a `0x12d780` | [cierre S402 §8](capture/static-closure-2026-10-25.md) |
+| E1 | NO_VERIFICADO | Quién publica el local 4 a `ModelScalarPb` (`0x120EF004`), el 2 a `ModelPbCap` (`0x12030002`) y los mensajes `0x35001004`, `0x35003002`, `0x3a494026` | Ningún código de `libObj` construye esos ids; el emisor, si existe, es de datos o de ejecución. Reabrir solo si aparece un llamador que pase `@M0EF` o `@M030` a `0x12d780`. Reintento 26-10-2026: modelo nunca constante en los 92 sitios de `0x120168`; 3 de los 11 llamadores de `0x12d780` son la consola `[AppTestcmd]` | [cierre S402 §8](capture/static-closure-2026-10-25.md) |
 | E6 | BLOQUEADO | Cadena CAIF → Darwin → LIRO/imager: el MCU Darwin queda fuera de `av-cam` | Solo con traza del bus o volcado de Darwin (ver F4) | [C-backlog](../knowledge/agents/C-backlog.md) |
 | E9 | BLOQUEADO | Correspondencia funcional de los 112 registros IMX210/IMX235 restantes y mecanismo de fin de integración: la semántica eléctrica exige hoja de datos (ver D5) | Documento legítimo aportado por el usuario | [A-backlog](../knowledge/agents/A-backlog.md) |
-| E10 | ABIERTO | Ruta YC → archivo: productor de modo 1, creador del pin `0x2a` en disparo, formato YC y propiedad del buffer | Ciclo terminal de buffers demostrado | [matriz S51](capture/s51-static-coverage-and-tool-limits.md) |
+| E10 | ABIERTO | Ruta YC → archivo: productor de modo 1, formato YC y propiedad del buffer (el creador de `0x2a` en disparo pasó a E10a) | Ciclo terminal de buffers demostrado | [matriz S51](capture/s51-static-coverage-and-tool-limits.md) |
+| E17 | ABIERTO | 151 de los 300 sitios de `createTopology`/`destroyTopology` de `libObj` tienen la lista en heap o en otro marco y no se resolvieron (origen: E10) | Listas resueltas por dataflow o proyección de los miembros de modelo (`this+0xdc` en `ModelStillRec`) | [S403 adenda](capture/s403-cierre-pendientes.md) |
+| E18 | ABIERTO | `[LGA]` (`GetDfeDrvParam`, función `0x4389b320`, profundidad 4 bajo la captura): qué parámetros DFE lee y si alguno depende del modo (origen: D1) | Función leída y parámetros enumerados | [S403 adenda](capture/s403-cierre-pendientes.md) |
 | E11 | BLOQUEADO | Segunda cortina: enlace banco/bit `0xf2910048` → P4E (`2ND_CURTAIN_MG`). El escritor `0x43b5e2b0`/`0x4398f9a4` es un helper GPIO genérico con 78 llamadores directos; la correspondencia de ese banco/bit con el pin P4E (que S50 atribuye a Darwin) no consta en el firmware y exige mapa de pines/hoja de datos o traza | Documento externo o prueba física (ver F4, E6) | [S51](capture/s51-decision.md), [S50](capture/s50-parallel-conclusions.md) |
 | E13 | BLOQUEADO | Servicio ODL del carril B y significado físico de sus registros MMIO (`0xf292b000..8`, canales `w0`): sin hoja de datos ni símbolos | Documento externo o prueba física | [S335](capture/s335-mmio-layer.md), [B-backlog](../knowledge/agents/B-backlog.md) |
 
@@ -42,8 +44,6 @@ por esos índices.
 
 | ID | Estado | Pendiente | Criterio de cierre / límite | Fuente |
 |---|---|---|---|---|
-| D1 | PARCIAL | Censo: 226 etiquetas revisadas de forma léxico-estructural (101 módulo propio, 118 subetiqueta, 6 campo de formato, 1 mixta); 4 `ACEPTO` decodificadas por texto. Los veredictos del censo no cambian; la función real de las 222 `NO_VERIFICADO` exige leer instrucciones | Una etiqueta se reabre solo si un hallazgo de captura la enlaza por código | [S403 D1](capture/s403-censo-revision.md), [censo](../analysis/s178_census/pendientes.md) |
-| D4 | PARCIAL | Triaje S400: 518 filas, todas con revisión manual (322 `FALSO_POSITIVO`, 110 con rectificación respaldada, 86 `VIGENTE`). Las `VIGENTE` están razonadas, no certificadas | Cada `VIGENTE` pasa a respaldada o descartada tras cotejar su cita con la revisión Git (D3 ya cerrado, no decide por sí mismo ninguna fila) | [triaje](../analysis/s400_open_questions_triage/README.md) |
 | D5 | BLOQUEADO | Hojas de datos IMX210/IMX235 (mapa de registros, semántica de modos) | Documento legítimo aportado por el usuario; no existe público | [S51](capture/s51-decision.md) |
 
 ## C. Entorno y código
@@ -88,6 +88,9 @@ Sin pendientes abiertos (C1–C4 cerrados el 25-10-2026, ver «Cerradas»).
 | D3 | 26-10-2026 | Afirmaciones S605–S627: logger dual sin respaldo estático en 19 fichas (3 verificadas); equivalencia de código refutada en las 17 trazas con homólogo (A7S); 77 sin homólogo textual | [S403 adenda](capture/s403-cierre-pendientes.md) |
 | D6 | 26-10-2026 | 7 trazas con homólogo sin rutina REA ubicadas por prólogo y comparadas: ninguna igual; 77 declaradas sin homólogo | [S403 adenda](capture/s403-cierre-pendientes.md) |
 | E16 | 26-10-2026 | Entradas del grupo que lee `CURTAINMODE`: 26 nodos y 6 raíces, todas ranuras de tablas (punteros); el invocador de cada ranura es de ejecución | [S403 adenda](capture/s403-cierre-pendientes.md) |
+| D1 | 26-10-2026 | 226 etiquetas del censo: 216 sin emisor bajo las raíces de captura por llamadas directas (grafo mínimo, calibrado con E8) y 10 alcanzables, todas subetiquetas o campos de módulos conocidos salvo `[EXL]` | [S403 adenda](capture/s403-cierre-pendientes.md) |
+| D4 | 26-10-2026 | Triaje S400: las 86 filas pendientes resueltas con casos razonados y evidencia con hash; 518 filas, 364 descartadas, 154 con rectificación respaldada, 0 pendientes | [triaje](../analysis/s400_open_questions_triage/README.md) |
+| E10a | 26-10-2026 | Creador del pin `0x2a` en disparo: solo seis modelos de edición (más PbCap); `ModelStillRec` usa STILL_DATA (`0x8`, `0xb0`, `0xb1`); 149 de 300 listas resueltas | [S403 adenda](capture/s403-cierre-pendientes.md) |
 | E7 | 25-10-2026 | Backup `0x3000b`: 14 sitios acceden al objeto `0x43f72d02` por el slot y solo leen; el productor es el callback de copia (S305); valores efectivos solo en ejecución | [S403 §E7](capture/s403-cierre-pendientes.md) |
 | E5 | 25-10-2026 | Ausencia acotada del lector `+0x238` (A6000, 262 anclas) y del almacén `[S+0]` (A7S, 73 anclas); límite: anclas PIC con ventana de 16 instrucciones | [S403 §E5](capture/s403-cierre-pendientes.md) |
 | — | 25-10-2026 | Id de modelo estático (`@M0EF`, `@M030`) y ocho emisores = autopublicaciones; E1 queda `NO_VERIFICADO` por exclusión, no por falta de búsqueda | `dd3a8212` |
@@ -109,3 +112,4 @@ Sin pendientes abiertos (C1–C4 cerrados el 25-10-2026, ver «Cerradas»).
 | 26-10-2026 | D6 y D3 cerrados con límite (17/17 trazas con homólogo difieren). |
 | 26-10-2026 | E16 cerrado con límite (6 raíces por puntero). |
 | 26-10-2026 | E11 reclasificado BLOQUEADO (la traducción banco/bit→P4E no consta en el firmware). |
+| 26-10-2026 | D4 y D1 cerrados con límite; E10 dividido (E10a cerrado); E1 reintentado sin cambio; nuevos E17 y E18. |

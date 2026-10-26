@@ -8,7 +8,7 @@
   "lint_tipos": "Ruff y Mypy sin avisos en los ocho archivos Python nuevos",
   "indice": "Dos reconstrucciones estables: 1461 entidades, 3104 relaciones; 329 relaciones candidatas en OPEN-QUESTIONS (25-10-2026); revisión manual de las 44 filas restantes el 25-10-2026"
  },
- "alcance": "518 filas históricas. El 25-10-2026 se revisaron una a una las 44 filas que seguían sin revisión manual: 5 rectificaciones respaldadas (S402 sobre S401), 9 pendientes de la auditoría S605–S627 y 2 del historial S58/S60 conservan VIGENTE con caso razonado, y 28 aristas se descartan (índice, adyacencia, dominio y procedencia invertida). Las filas posteriores a la revisión de destinos fijan su propia revisión en `revision_destino`. No se certifica semántica física por estas clasificaciones.",
+ "alcance": "518 filas históricas. El 25-10-2026 se revisaron una a una las 44 filas que seguían sin revisión manual: 5 rectificaciones respaldadas (S402 sobre S401), 9 pendientes de la auditoría S605–S627 y 2 del historial S58/S60 conservan VIGENTE con caso razonado, y 28 aristas se descartan (índice, adyacencia, dominio y procedencia invertida). Las filas posteriores a la revisión de destinos fijan su propia revisión en `revision_destino`. No se certifica semántica física por estas clasificaciones. El 25-10-2026 (D4) se resolvieron las 86 filas VIGENTE restantes: ver los casos `d4-*`.",
  "casos": {
   "indice": {
    "veredicto": "FALSO_POSITIVO",
@@ -349,9 +349,9 @@
     },
     {
      "archivo": "docs/capture/s334-pair-dataflow.md",
-     "localizador": "1:20",
-     "cita": "# S334 — Los 12 pares se colapsan en máscaras `u16` (carril B)\n\n22-10-2026. Carril B. Sesión S334. **Solo lectura estática; sin firmware en ejecución, sin cámara, sin flasheo.**\n\n## Pregunta\n\nS331 dejó tres bloques de 12 pares `(flag, byte)` en `obj+0x16`, `obj+0x2e` y `obj+0xa5`. ¿Qué los consume y qué representan?\n\n## Veredicto\n\n| Afirmación | Clasificación | Evidencia |\n|---|---|---|\n| El segundo byte del par **no es un offset de estado**: es un **índice de bit** | **VERIFICADO** | `0x43ada370`: `ldrb r4,[r1,r2]` (flag), `ldrb r4,[r4,#1]`, `lsls.w r4, r5(=1), r4`, `orrs`, `uxth` |\n| Los 12 pares se **colapsan en una máscara `u16`** | **VERIFICADO** | Bucle `r2 = 0,2,…,0x16` (`cmp r2,#0x18`); resultado en `obj+0x68` (`strh.w r0,[r3,#0x68]`) |\n| Variante con destino: `0x43ada402(obj, pares, dst, op)` guarda la máscara en `[dst]` | **VERIFICADO** | `strh r5,[r2]` y tail `0x436f822c` |\n| `0x436f61f8` colapsa `obj+0x16 → obj+0x68` y `obj+0xa5 → obj+0xf8` (op 1) | **VERIFICADO** | `add.w r1,r4,#0x16` + `bl 0x43ada370`; `#0xa5`/`#0xf8`/`r3=1` + `b 0x43ada402` |\n| `0x436f60ac` aplica la máscara de `obj+0x68` con op 0 | **VERIFICADO** | `add.w r1,r4,#0x68`, `movs r2,#0`, `bl 0x436f81b4` |\n| El `w0` de T1/T2 es un **código de operación** (T1: 0/1, T2: 2/3) | **VERIFICADO** | `0x436f5eac`: `muls r2,r5,#0x1c`, `ldr r2,[r3,r2]`, `cmp r2,#1` / `cmp r1,#2` / `cmp r1,#3` |\n| `0x436f822c` aplica la máscara (lectura, `~valor ^ máscara`, escritura) | **VERIFICADO (forma)** | `bl 0x436f82b0` / `0x436f8314`, `mvns`, `eors`, `uxth`, `bl 0x436f82a0` |\n| Qué hay detrás de `0x436f8290/82a0/82d0/82e8/8300/8314/8324` (¿MMIO? ¿P2S?) | **NO_VERIFICADO** | No resuelto en esta sesión |",
-     "sha256": "55566b0ecf932c6c0f26d936ecb06ed01004ba8643e05c76f68c1c1cb327f141"
+     "localizador": "1:23",
+     "cita": "# S334 — Los 12 pares se colapsan en máscaras `u16` (carril B)\n\n> **Aviso D4 (25-10-2026):** [S340](s340-w0-selector.md) rectifica `w0` como «código de operación»: es un selector de canal MMIO (`0x436f74c0`).\n\n22-10-2026. Carril B. Sesión S334. **Solo lectura estática; sin firmware en ejecución, sin cámara, sin flasheo.**\n\n## Pregunta\n\nS331 dejó tres bloques de 12 pares `(flag, byte)` en `obj+0x16`, `obj+0x2e` y `obj+0xa5`. ¿Qué los consume y qué representan?\n\n## Veredicto\n\n| Afirmación | Clasificación | Evidencia |\n|---|---|---|\n| El segundo byte del par **no es un offset de estado**: es un **índice de bit** | **VERIFICADO** | `0x43ada370`: `ldrb r4,[r1,r2]` (flag), `ldrb r4,[r4,#1]`, `lsls.w r4, r5(=1), r4`, `orrs`, `uxth` |\n| Los 12 pares se **colapsan en una máscara `u16`** | **VERIFICADO** | Bucle `r2 = 0,2,…,0x16` (`cmp r2,#0x18`); resultado en `obj+0x68` (`strh.w r0,[r3,#0x68]`) |\n| Variante con destino: `0x43ada402(obj, pares, dst, op)` guarda la máscara en `[dst]` | **VERIFICADO** | `strh r5,[r2]` y tail `0x436f822c` |\n| `0x436f61f8` colapsa `obj+0x16 → obj+0x68` y `obj+0xa5 → obj+0xf8` (op 1) | **VERIFICADO** | `add.w r1,r4,#0x16` + `bl 0x43ada370`; `#0xa5`/`#0xf8`/`r3=1` + `b 0x43ada402` |\n| `0x436f60ac` aplica la máscara de `obj+0x68` con op 0 | **VERIFICADO** | `add.w r1,r4,#0x68`, `movs r2,#0`, `bl 0x436f81b4` |\n| El `w0` de T1/T2 es un **código de operación** (T1: 0/1, T2: 2/3) | **VERIFICADO** | `0x436f5eac`: `muls r2,r5,#0x1c`, `ldr r2,[r3,r2]`, `cmp r2,#1` / `cmp r1,#2` / `cmp r1,#3` |\n| `0x436f822c` aplica la máscara (lectura, `~valor ^ máscara`, escritura) | **VERIFICADO (forma)** | `bl 0x436f82b0` / `0x436f8314`, `mvns`, `eors`, `uxth`, `bl 0x436f82a0` |\n| Qué hay detrás de `0x436f8290/82a0/82d0/82e8/8300/8314/8324` (¿MMIO? ¿P2S?) | **NO_VERIFICADO** | No resuelto en esta sesión |\n",
+     "sha256": "b2d02e6bfd35192afa8a282f4624e64931f8396461f12ccf35ec0fe2e801988c"
     }
    ]
   },
@@ -481,9 +481,9 @@
     },
     {
      "archivo": "docs/capture/s130-new-modules.md",
-     "localizador": "1:15",
-     "cita": "# S130 — los 20 módulos \"NUEVO/PROPIO\": ¿contenido nuevo o solo otra etiqueta?\n\n**Hito de la línea de ingeniería inversa general**: cierra la pregunta abierta por S128.\n\nInforme: [analysis/s130_new_modules/new_modules.md](../../analysis/s130_new_modules/new_modules.md) ·\nDatos: `new_modules.json` · Test: `tests/test_s130_new_modules.py`.\n\n## Método\n\nPara cada prefijo `NUEVO/PROPIO` de S128 se extrae el **núcleo** de cada mensaje (lo que sigue a\n`\"[PREFIX]: \"`) y se busca como subcadena en la A7S fw3.20 y el A6300 fw2.01, anotando con qué\netiqueta aparece allí.\n\n## Resultado\n",
-     "sha256": "6ee8d126ce3f4e8b73d5056418dd1418d12ab13a7389436e4847bd3d321eb25f"
+     "localizador": "1:18",
+     "cita": "# S130 — los 20 módulos \"NUEVO/PROPIO\": ¿contenido nuevo o solo otra etiqueta?\n\n> **Aviso D4 (25-10-2026):** [S170](../../analysis/s170_illumi/illumi.md) rectifica la lectura de `[ILLUMI]` como contenido nuevo: el subsistema de iluminación tiene las mismas RTTI en los tres modelos; lo propio de la A6000 son las trazas. Que sea el mismo código en los tres sigue NO_VERIFICADO.\n\n**Hito de la línea de ingeniería inversa general**: cierra la pregunta abierta por S128.\n\nInforme: [analysis/s130_new_modules/new_modules.md](../../analysis/s130_new_modules/new_modules.md) ·\nDatos: `new_modules.json` · Test: `tests/test_s130_new_modules.py`.\n\n## Método\n\nPara cada prefijo `NUEVO/PROPIO` de S128 se extrae el **núcleo** de cada mensaje (lo que sigue a\n`\"[PREFIX]: \"`) y se busca como subcadena en la A7S fw3.20 y el A6300 fw2.01, anotando con qué\netiqueta aparece allí.\n\n## Resultado\n\n| clase | nº | prefijos |",
+     "sha256": "8a4003f2a810881f7e649935f2ba98f43b866a26e36d31a461a4d3fc352fc6bc"
     }
    ]
   },
@@ -529,9 +529,9 @@
     },
     {
      "archivo": "docs/capture/s41-message-origin-imx210.md",
-     "localizador": "1:20",
-     "cita": "# S41 — productores de mensajes, snapshots y valores de modo IMX210\n\n18-10-2026. **PARCIAL:** productores internos de `4000/4036`, transporte\ny productores de snapshots recuperados. Origen último de `3023`, resolución\ndel destino con bit 31 y enlace de sus valores a integración física pendientes.\nLa frontera de implementación OSAL activa una comprobación de Línea C;\nno se declara agotamiento universal de las líneas A/B.\n\n## VERIFICADO — método e integridad\n\nSolo `analysis/ghidra/silent-liro.gpr`, programa `av-cam.bin`, con\n`-readOnly -noanalysis`. Sin crear funciones, tipos, referencias ni guardar\nel programa. `S41Export.java` y `S41Scan.java` consultan memoria/listado;\nla primera exportación reutiliza `S39Export.java` (su comentario identifica\nel exportador). Cada ejecución comprueba el SHA y todos los bytes cargados.\n\nSHA-256 esperado antes/después:\n`b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9`.\nTambién se contrastan los manifiestos persistentes S38 del `.gpr/.rep`.\nSin firmware ejecutado, cámara, flasheo, instalaciones ni push.",
-     "sha256": "c599ea898c3b85db1617566e10b5174167f7125637fef2c3774cc10454a75513"
+     "localizador": "1:23",
+     "cita": "# S41 — productores de mensajes, snapshots y valores de modo IMX210\n\n> **Aviso D4 (25-10-2026):** [S42](s42-exposure-call-identity.md) rectifica la nomenclatura de «propagación de valores» y «Línea C»: `0x436d6320` es el wrapper de despacho y `0x436d6f6c` el método virtual del backend IMX210; no son alias.\n\n18-10-2026. **PARCIAL:** productores internos de `4000/4036`, transporte\ny productores de snapshots recuperados. Origen último de `3023`, resolución\ndel destino con bit 31 y enlace de sus valores a integración física pendientes.\nLa frontera de implementación OSAL activa una comprobación de Línea C;\nno se declara agotamiento universal de las líneas A/B.\n\n## VERIFICADO — método e integridad\n\nSolo `analysis/ghidra/silent-liro.gpr`, programa `av-cam.bin`, con\n`-readOnly -noanalysis`. Sin crear funciones, tipos, referencias ni guardar\nel programa. `S41Export.java` y `S41Scan.java` consultan memoria/listado;\nla primera exportación reutiliza `S39Export.java` (su comentario identifica\nel exportador). Cada ejecución comprueba el SHA y todos los bytes cargados.\n\nSHA-256 esperado antes/después:\n`b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9`.\nTambién se contrastan los manifiestos persistentes S38 del `.gpr/.rep`.\nSin firmware ejecutado, cámara, flasheo, instalaciones ni push.\n",
+     "sha256": "a17c0deddb7f4d0a7da3adce945b4d0ada11235cbc741eb4f72229e70ef14dac"
     }
    ]
   },
@@ -547,9 +547,9 @@
     },
     {
      "archivo": "docs/capture/s46-vd-base-and-context-identity.md",
-     "localizador": "1:15",
-     "cita": "# S46 — base VD e identidad de los escritores de contexto\n\nSesión 18-10-2026; continuación puntual de [S45](s45-context-identity-and-physical-closure.md).\nSolo investigación estática de los dos objetivos pedidos. No se reabren OSAL\nbit31, diagnóstico AF, consumidor de registros ni virtual+0xa8.\n\n## VERIFICADO — método y evidencia\n\nFirmware `av-cam.bin`, ORIL (firma en `0x43541004`), base lógica `0x43541000`.\nNo es ELF; no se aplicó un modelo de relocaciones ELF. La base VD se resuelve\npor una asignación explícita de inicialización, sin necesitar hipotetizar un\nloader que rellene ese slot. Esto no caracteriza todo el formato ORIL.\nSHA-256 esperado: `b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9`.\nProyecto `analysis/ghidra/silent-liro.gpr`, siempre `-readOnly -noanalysis`;\nsin guardar, crear funciones ni ejecutar firmware. S41Export compara todo el",
-     "sha256": "69ada0971d1ec32323a705952ffd494f3548bb797d6970d901d3634aed4f9c9c"
+     "localizador": "1:18",
+     "cita": "# S46 — base VD e identidad de los escritores de contexto\n\n> **Aviso D4 (25-10-2026):** [S47](s47-payload-producer-and-order.md) cierra el pendiente de orden: si el callback se ejecuta en esa invocación, escribe antes de la copia (no se recertifica un orden universal).\n\nSesión 18-10-2026; continuación puntual de [S45](s45-context-identity-and-physical-closure.md).\nSolo investigación estática de los dos objetivos pedidos. No se reabren OSAL\nbit31, diagnóstico AF, consumidor de registros ni virtual+0xa8.\n\n## VERIFICADO — método y evidencia\n\nFirmware `av-cam.bin`, ORIL (firma en `0x43541004`), base lógica `0x43541000`.\nNo es ELF; no se aplicó un modelo de relocaciones ELF. La base VD se resuelve\npor una asignación explícita de inicialización, sin necesitar hipotetizar un\nloader que rellene ese slot. Esto no caracteriza todo el formato ORIL.\nSHA-256 esperado: `b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9`.\nProyecto `analysis/ghidra/silent-liro.gpr`, siempre `-readOnly -noanalysis`;\nsin guardar, crear funciones ni ejecutar firmware. S41Export compara todo el\nprograma cargado con los bytes del archivo antes de cada exportación.",
+     "sha256": "71c4550ce6122422bb6e1fc04e7f86d31722df5589ec57d31aa983c36641d914"
     }
    ]
   },
@@ -593,9 +593,9 @@
    "evidencias": [
     {
      "archivo": "docs/capture/s302-drive-modes.md",
-     "localizador": "90:99",
-     "cita": "| `0x51` | 0 |\n\n**Hallazgo:** para **este** accesor, los modos Silent `0x4e`/`0x4f` usan la **misma\ncolumna (1)** que `0x4c`/`0x4d`. Es decir, la matriz de registros no distingue el modo\nsilencioso: los cuatro modos producen el mismo conjunto de valores de registro. Esto\n**discrepa** de la frase de S204 «sus filas de registro difieren mínimamente de\n`0x4c`/`0x4d` (1 registro cada una: `0x000c` y `0x000a`)». No se corrige S204 aquí\n(regla del carril), pero queda como **contradicción a re-verificar**: si S204 midió otra\ntabla (p. ej. la de timings), ambas pueden ser ciertas; si midió esta, el dato es\nincorrecto. Lo que sí queda VERIFICADO es el byte del mapa.",
-     "sha256": "05f7f3ff78fe835f63cfdddc2b64f8ab09f0f6763bfff767853445d783e0d2a9"
+     "localizador": "93:102",
+     "cita": "\n**Hallazgo:** para **este** accesor, los modos Silent `0x4e`/`0x4f` usan la **misma\ncolumna (1)** que `0x4c`/`0x4d`. Es decir, la matriz de registros no distingue el modo\nsilencioso: los cuatro modos producen el mismo conjunto de valores de registro. Esto\n**discrepa** de la frase de S204 «sus filas de registro difieren mínimamente de\n`0x4c`/`0x4d` (1 registro cada una: `0x000c` y `0x000a`)». No se corrige S204 aquí\n(regla del carril), pero queda como **contradicción a re-verificar**: si S204 midió otra\ntabla (p. ej. la de timings), ambas pueden ser ciertas; si midió esta, el dato es\nincorrecto. Lo que sí queda VERIFICADO es el byte del mapa.\n",
+     "sha256": "f4f94d45aa762327fb007c65f544d7861c9bbb5dad4ecb61595986e0344621f0"
     },
     {
      "archivo": "docs/capture/s204-clasificacion-final.md",
@@ -643,7 +643,7 @@
      "archivo": "tests/knowledge/test_open_questions_triage.py",
      "localizador": "33:49",
      "cita": "def test_s32_rectification_uses_original_firmware_bytes() -> None:\n    from capstone import CS_ARCH_ARM, CS_MODE_THUMB, Cs\n\n    base = 0x43541000\n    blob = (ROOT / \"firmware/extracted/fw321/firmware.tar_unpacked/\"\n            \"0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin\").read_bytes()\n    decoder = Cs(CS_ARCH_ARM, CS_MODE_THUMB)\n\n    def instruction(address: int):\n        return next(decoder.disasm(blob[address-base:address-base+4], address, count=1))\n\n    assert instruction(0x43AD6034).mnemonic == \"push\"\n    assert instruction(0x43AD604E).op_str == \"r3\"  # BLX del despachador.\n    assert instruction(0x4379CB2E).op_str == \"#0x43902718\"\n    pool = int.from_bytes(blob[0x4379CDCC-base:0x4379CDD0-base], \"little\")\n    assert (pool + 0x4379CB30) & 0xFFFFFFFF == 0x43CA519F\n    assert blob[0x43CA519F-base:].startswith(b\"VD_Sequence: YC out window overflow \")",
-     "sha256": "5e3a6b3564aabf10c53fb2a19006a718d2cdda591d02d508b5eb82d042e5b137"
+     "sha256": "3e557b11e714b89bf1e2ac600ab328ec339e4bc76468e7e4a1454632699ffe70"
     }
    ]
   },
@@ -674,6 +674,406 @@
     }
    ],
    "razon": "S402 retira la diferencia 1 de S401: el comando 0x40e3 sí está en la tabla de despacho de A7S (fila 0x43ff79e4, manejador 0x437a9cb1, comprobada en los bytes de av-cam-a7s.bin) y SequenceSetSilentShutterMode existe en el libObj de A7S. S401 incorpora el aviso en la cabecera y en la fila 1. El texto lista los campos como {0x40e3, 0, 0x437a9cb1}, pero en los bytes el orden es comando, manejador, ajuste. El cierre se limita al despacho y a la presencia del comando; la escritura S[0]=&G sigue sin asignación y no se prueba ejecución física."
+  },
+  "d4-s116": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "El destino ya lleva las cifras de la regla actual (117 cadenas, 131 puntos, 52 funciones) y sfrs.md §156 describe la regla laxa retirada; el script aborta si una cadena o sitio queda sin atribuir.",
+   "evidencias": [
+    {
+     "archivo": "analysis/s116_sfrs/sfrs.md",
+     "localizador": "156:160",
+     "cita": "Corrección respecto al borrador anterior de S116: con la regla laxa (retroceder al último\n`ldr` del registro aunque estuviera lejos, y PC alineado) se obtenían pares que no cuadraban\ncon el texto de la cadena. La regla actual resuelve **117/117 cadenas** y **131/131 sitios**\natribuidos a función; el script aborta si aparece una cadena sin referencia o un sitio sin\nfunción.",
+     "sha256": "e07647bbeebab2e6fa1e4567c40f96e07c08ae01581e76e591e8a90e24374ca1"
+    },
+    {
+     "archivo": "docs/capture/s116-sfrs.md",
+     "localizador": "13:14",
+     "cita": "`[SFRS]` es la etiqueta de módulo de **117 cadenas de traza** en `0x43ce7661`–`0x43ceb8c4`\n(≈17 KB), emitidas desde **131 puntos** `ldr`+`add` PC-relativo en **52 funciones** de",
+     "sha256": "cba7743b871d472789eb78fd7c7d3121dd91bcbb75173825afd98ab1a580d080"
+    }
+   ]
+  },
+  "d4-s307": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "S308 §2 retira la entrada del bloque de tiempos de S307 (`0x438645bc`, prólogo decodificado) y S307 ya recoge la entrada real en su texto.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/s308-silent-flow.md",
+     "localizador": "27:30",
+     "cita": "## 2. Entrada del bloque de tiempos (corrección de S307)\n\nLa entrada real es `0x438645bc` (`sub sp,#0x10` + `push {r4,r5,r6,r7,lr}`). S307 buscaba\n`0x438645be` y concluía «sin llamadas directas»: era un error de un byte. El `bl` va a",
+     "sha256": "e8b16c794f6c96cff9f1945f8a08fc460482e4b4d4b0a61210628f19ee3950a0"
+    },
+    {
+     "archivo": "docs/capture/s307-a7s-only-writers.md",
+     "localizador": "39:40",
+     "cita": "La entrada real es **`0x438645bc`** (`sub sp,#0x10` + `push {r4,r5,r6,r7,lr}`), no\n`0x438645be`: una búsqueda de llamadas a `0x438645be` daba 0 porque el destino del `bl` es",
+     "sha256": "fb0ebc265df7b5526fae194800dbd78bc943ba5b384344a350a05d575dd1c535"
+    }
+   ]
+  },
+  "d4-s60": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "S60 ya declara la base TBH rectificada (`…c28`/`…d06`) y S61 la cierra con base PC `0x43806a08`, script y test.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/s60-conclusions.md",
+     "localizador": "7:7",
+     "cita": "1. **A6000 – emisor del payload (Sol, verificado por bytes).** `0x438069f0` es el despachador de una **tarea de mensajes** (`0x43806e38`, recv `0x3030f`, sin timeout). Los casos 4 y 10 son **respuestas** a peticiones 3 y 9 (`0x43b00fe6`/`0x43b00f62` → `0x43806400` → cola `0x8003030f`). Quien origina las peticiones 3/9 y el bit 31 del handle siguen sin resolver. Corrección mía: las entradas TBH son `…c28`/`…d06` (Sol: `…c24`/`…d02`).",
+     "sha256": "cfe111baf45405ea3d998818cb8b0cc3b823918a052a8491735543fa480a271f"
+    },
+    {
+     "archivo": "docs/capture/s61-conclusions.md",
+     "localizador": "7:7",
+     "cita": "1. **Corrección TBH (S60-Sol) cerrada.** Base PC = `0x43806a08`; casos 4/10 → `0x43806c28`/`0x43806d06`; script y test corregidos; destinos verificados contra bytes y prólogo de manejador (`s61-message-flow.md`).",
+     "sha256": "fa784bb13709e4d9e76c8d0a13bf275b673173d0582bdc877514263fdff36f91"
+    }
+   ]
+  },
+  "d4-s130": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "S170 retira la lectura de ILLUMI como contenido nuevo (mismas RTTI en tres modelos; propio de A6000 son las trazas). La equivalencia de código sigue NO_VERIFICADO. El destino lleva aviso.",
+   "evidencias": [
+    {
+     "archivo": "analysis/s170_illumi/illumi.md",
+     "localizador": "38:41",
+     "cita": "**Conclusión principal (corrige la lectura superficial de S130):** el *subsistema* de\niluminación **existe en las tres fw** (mismas clases RTTI, mismo código de acceso al\ndispositivo); lo **propio de la fw3.21 de la A6000 es la instrumentación** (las 34 trazas\n`[ILLUMI]` + las 20 cadenas `__PRETTY_FUNCTION__`). Ver §6.",
+     "sha256": "e5117f0fcd6f4215252472d1d1eb84d17b92ff4d8bde5b7cf474bc58e79691fe"
+    },
+    {
+     "archivo": "docs/capture/s130-new-modules.md",
+     "localizador": "3:3",
+     "cita": "> **Aviso D4 (25-10-2026):** [S170](../../analysis/s170_illumi/illumi.md) rectifica la lectura de `[ILLUMI]` como contenido nuevo: el subsistema de iluminación tiene las mismas RTTI en los tres modelos; lo propio de la A6000 son las trazas. Que sea el mismo código en los tres sigue NO_VERIFICADO.",
+     "sha256": "8a4003f2a810881f7e649935f2ba98f43b866a26e36d31a461a4d3fc352fc6bc"
+    }
+   ]
+  },
+  "d4-s41": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "S42 separa wrapper `0x436d6320` y método de backend `0x436d6f6c` y retira la nomenclatura de S41. El destino lleva aviso; no se recertifica el objeto/vtable.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/s42-exposure-call-identity.md",
+     "localizador": "34:40",
+     "cita": "## VERIFICADO — CORRECCIÓN de S41: wrapper y método virtual distintos\n\nCorrige la nomenclatura ambigua de [S41](s41-message-origin-imx210.md),\nsecciones «propagación de valores» y «Línea C»: `0x436d6320` es el **wrapper\nde despacho de exposición**; `0x436d6f6c` es el **método del backend instalado\npor la factoría IMX210**. No son alias, thunk de salto fijo ni entradas\ndesplazadas del mismo cuerpo. Existe una llamada **virtual**, no un BL directo.",
+     "sha256": "7fcea238eadd836150308820a394888fa27535b1047835753656a279e0fd7d8c"
+    },
+    {
+     "archivo": "docs/capture/s41-message-origin-imx210.md",
+     "localizador": "3:3",
+     "cita": "> **Aviso D4 (25-10-2026):** [S42](s42-exposure-call-identity.md) rectifica la nomenclatura de «propagación de valores» y «Línea C»: `0x436d6320` es el wrapper de despacho y `0x436d6f6c` el método virtual del backend IMX210; no son alias.",
+     "sha256": "a17c0deddb7f4d0a7da3adce945b4d0ada11235cbc741eb4f72229e70ef14dac"
+    }
+   ]
+  },
+  "d4-s46": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "S47 cierra el pendiente de orden de S46 bajo la condición de que el callback se ejecute en esa invocación; no recertifica un orden universal. El destino lleva aviso.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/s47-payload-producer-and-order.md",
+     "localizador": "100:105",
+     "cita": "## VERIFICADO — orden y rango exactos de la copia\n\n**ACEPTO:** el callback, cuando se ejecuta en esta invocación de VD_Pre, escribe\n**ANTES** de la copia. S47 supera el pendiente de orden de\n[S46](s46-vd-base-and-context-identity.md); no refuta su propagación por orden.\n",
+     "sha256": "1ea1a42a23f4f29681195d274b0ba8b0e1a16c844bba66d841d50224e99b79dc"
+    },
+    {
+     "archivo": "docs/capture/s46-vd-base-and-context-identity.md",
+     "localizador": "3:3",
+     "cita": "> **Aviso D4 (25-10-2026):** [S47](s47-payload-producer-and-order.md) cierra el pendiente de orden: si el callback se ejecuta en esa invocación, escribe antes de la copia (no se recertifica un orden universal).",
+     "sha256": "71c4550ce6122422bb6e1fc04e7f86d31722df5589ec57d31aa983c36641d914"
+    }
+   ]
+  },
+  "d4-s57-matriz": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "S58 reemplaza la comparación de S57-D: 69 filas de 0x14 B y 15 columnas con selección indirecta; los pares 0x000C/0x000A procedían de leer 35 filas de 40 B. El destino lleva aviso.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/s58-a7s-silent-effective-diff.md",
+     "localizador": "5:8",
+     "cita": "## Corrección de la comparación S57\n\n**CORRECCIÓN (VERIFICADO) de [s57-imx235-silent-register-diff.md](s57-imx235-silent-register-diff.md):** paso real 0x14 B, 69 filas y selección indirecta de 15 columnas para 34 modos. SetMode emulado reproduce las 69 filas para los seis modos. Los pares 0x000C 0x20→0x10 y 0x000A 0x02→0x01 de S57 procedían de interpretar 35 filas de 40 B con 34 columnas directas.\n",
+     "sha256": "fad881da78734d69c9aad523f1b76b0b37422d4e5239fda2cc9c46894eedc972"
+    },
+    {
+     "archivo": "docs/capture/s58-conclusions.md",
+     "localizador": "15:15",
+     "cita": "- **ACEPTO** matriz IMX235 69 filas de 0x14 B, 15 columnas usadas, selección indirecta de 34 modos. **CORRECCIÓN VERIFICADA de [S57-D](s57-imx235-silent-register-diff.md)**: 0x4c→0x4e difiere en 14 registros, 0x4d→0x4f en 11; los cuatro registros entre Silent son 01/09/0a/0b.",
+     "sha256": "f30af24822540d562db8165cd4c210294c9db331acc54c6a1a54ac8605122c8e"
+    },
+    {
+     "archivo": "docs/capture/s57-imx235-silent-register-diff.md",
+     "localizador": "3:3",
+     "cita": "> **Aviso D4 (25-10-2026):** [S58](s58-a7s-silent-effective-diff.md) reemplaza esta comparación: la matriz tiene 69 filas de 0x14 B con selección indirecta de 15 columnas, no 35 filas de 40 B con 34 columnas directas; los pares `0x000C` y `0x000A` de aquí proceden de esa lectura.",
+     "sha256": "dc903666449b31d35be0df4272ab75033227ae3881bee963fa86f05ba900acd9"
+    }
+   ]
+  },
+  "d4-s57-umbral": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "S58 atribuye el umbral 0x1000 a SetRead/AGC y no a la exposición (vtable y ejecución independientes). El destino lleva aviso.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/s58-conclusions.md",
+     "localizador": "14:14",
+     "cita": "- **ACEPTO** SetExposure A7S=0x436f4168 y SetRead=0x436f4a94: vtable y ejecución independiente. **CORRECCIÓN VERIFICADA de [S57-B](s57-ssb-pulse-analysis.md)**: el umbral 0x1000 es de SetRead/AGC, no exposición.",
+     "sha256": "f30af24822540d562db8165cd4c210294c9db331acc54c6a1a54ac8605122c8e"
+    },
+    {
+     "archivo": "docs/capture/s57-ssb-pulse-analysis.md",
+     "localizador": "3:3",
+     "cita": "> **Aviso D4 (25-10-2026):** [S58](s58-conclusions.md) retira la lectura del umbral `0x1000` como condición de exposición: pertenece a SetRead/AGC (SetExposure A7S `0x436f4168`, SetRead `0x436f4a94`).",
+     "sha256": "04f56db9ea6be721a36d45f5c150a72f5c594c9b8b630c82b8d29a231e556b33"
+    }
+   ]
+  },
+  "d4-s58-clk": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "S59 SOL-07 separa los objetos `0x43eb121c` y `0x43eaee84` y retira el alias de clk de S58-A §5; la prueba `test_histogram_writer_has_a_different_object` pasa. El destino lleva aviso.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/s59-sol.md",
+     "localizador": "28:28",
+     "cita": "| SOL-07 | `0x437b5b68..6e`: GOT+`0x7ad0 → stack+0x18`; `0x43844e80` reserva `0x88` B; `0x438479ce/d0`: carga stack+`0xa0` y llama `0x438667e0` | Primer argumento del escritor de histogramas=`0x43eb121c`, mientras entrada AE P de la misma llamada=`0x43eaee84` (GOT+`0xcb0`). Son objetos diferentes. | VERIFICADO / alta | CORRECCIÓN de la atribución de clk en [S58-A §5](s58-ae-timing-producers.md): un mismo offset `+0x4c0` no demuestra alias. Bloque del llamador ejecutado hasta antes del BL; aritmética del frame y sitio consumidor contrastados contra bytes. `test_histogram_writer_has_a_different_object`. |",
+     "sha256": "e1707b434d51517a58503a7512a0aa38cbd533a063fba8ebde105ea3ea1a9b46"
+    },
+    {
+     "archivo": "docs/capture/s58-ae-timing-producers.md",
+     "localizador": "3:3",
+     "cita": "> **Aviso D4 (25-10-2026):** [S59 SOL-07](s59-sol.md) rectifica la atribución de clk del §5: el mismo offset `+0x4c0` no demuestra alias; el escritor de histogramas recibe el objeto `0x43eb121c` y la entrada AE P `0x43eaee84`.",
+     "sha256": "3e3e191ae0043daaef35fe1449c20ff1627768fd52b2c78a263b21cbf8115a2d"
+    }
+   ]
+  },
+  "d4-s309": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "S310 desensambla `0x43ad96fa`/`0x43ad9704` y los identifica como thunks de llamada virtual, no constructor de mensajes (S309 fila 3). El destino lleva aviso; el consumidor del modo sigue NO_VERIFICADO.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/s310-vtable-thunk.md",
+     "localizador": "1:6",
+     "cita": "# S310 — `0x43ad9704` es un thunk de llamada virtual, no un constructor de mensajes\n\n> **Aviso D4 (25-10-2026):** [S314](s314-selector-object.md) rectifica este informe: `0x43ad9704` no es el thunk del slot `0x64` (lo es `0x43ad96f8`) y va a `0x43ad9ada` (`vtable+0x24`).\n\nOctava sesión del carril B. S308 concluyó que el código de modo Silent se pasa a\n`0x43ad9704` y lo describió como «constructor/despachador de mensajes» (INFERENCIA). Al",
+     "sha256": "e19bf6ea69adc0fed07cfcb30dbe0cc34c06a9fdd7936321468fe424c3b5775a"
+    },
+    {
+     "archivo": "docs/capture/s309-chain-presence.md",
+     "localizador": "3:3",
+     "cita": "> **Aviso D4 (25-10-2026):** [S310](s310-vtable-thunk.md) rectifica el mecanismo: `0x43ad96fa`/`0x43ad9704` son thunks de llamada virtual, no un constructor de mensajes.",
+     "sha256": "43d194d1bc1185a6e8bdc1a19aa1c3ad3a5a1324105446a96a12e5b2023947b3"
+    }
+   ]
+  },
+  "d4-s310": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "S314 retira que `0x43ad9704` sea el thunk del slot 0x64 (lo es `0x43ad96f8`); la tabla de bytes está en S314. El destino lleva aviso.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/s314-selector-object.md",
+     "localizador": "47:53",
+     "cita": "| `0x43ad9ada` | `... 5b 6a 98 47 ... 5b 6a 98 47` | `vtable+0x24` **dos veces** (cálculo de tamaños) |\n\n**Corrige S310 y la fila 13 de S313:** `0x43ad9704` no es el thunk del slot `0x64`; lo es\n`0x43ad96f8`. La llamada de `0x435490c4` pasa el resultado del selector como tercer\nargumento a `0x43ad9ada` (dimensiones), no a un despacho `vtable+0x64`.\nCallers: selector → `0x4354908c`, `0x43826df2`; wrapper `0x43ad9704` → `0x435490c4`,\n`0x43826e3e`.",
+     "sha256": "7615d8f083d5c0380af1b90b68500a1db6e256d7645c7beb066635800b151828"
+    },
+    {
+     "archivo": "docs/capture/s310-vtable-thunk.md",
+     "localizador": "3:3",
+     "cita": "> **Aviso D4 (25-10-2026):** [S314](s314-selector-object.md) rectifica este informe: `0x43ad9704` no es el thunk del slot `0x64` (lo es `0x43ad96f8`) y va a `0x43ad9ada` (`vtable+0x24`).",
+     "sha256": "e19bf6ea69adc0fed07cfcb30dbe0cc34c06a9fdd7936321468fe424c3b5775a"
+    }
+   ]
+  },
+  "d4-s313": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "S314 retira la fila 13 de S313 (slot 0x64) y S341 §4 enumera las rectificaciones del carril B que S313 no incorpora. El destino lleva aviso.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/s314-selector-object.md",
+     "localizador": "49:52",
+     "cita": "**Corrige S310 y la fila 13 de S313:** `0x43ad9704` no es el thunk del slot `0x64`; lo es\n`0x43ad96f8`. La llamada de `0x435490c4` pasa el resultado del selector como tercer\nargumento a `0x43ad9ada` (dimensiones), no a un despacho `vtable+0x64`.\nCallers: selector → `0x4354908c`, `0x43826df2`; wrapper `0x43ad9704` → `0x435490c4`,",
+     "sha256": "7615d8f083d5c0380af1b90b68500a1db6e256d7645c7beb066635800b151828"
+    },
+    {
+     "archivo": "docs/capture/s341-synthesis-b2.md",
+     "localizador": "44:52",
+     "cita": "## 4. Correcciones que esta síntesis asume (y que sustituyen a S313)\n\n- El mapa `0x43c9c5b5` es **posición→columna** (34 entradas), no `modo→columna` (S325).\n- La matriz **sí** distingue los modos silent (14/11 registros); el «comparte columna 1» de S302/S321 queda superado (S325/S329).\n- Las bases de T2/T3 publicadas en S317/S326 estaban **4 B altas** (S329).\n- La fila de T se elige por la **posición del modo**; `obj+0x2b4` es un **flag de log** (S331), no un índice (S327/S330).\n- Los pares **no** llevan valores: llevan índices de bit (S334).\n- El destino **no** es P2S, es MMIO DFE/CISIF (S335/S338).\n- `w0` **no** es un código de operación abstracto: es un selector de canal MMIO (S340).",
+     "sha256": "51d14998994e2805ce5b3013bd2ecf70187f9bc88725a2e742a3864c10ba2f5c"
+    },
+    {
+     "archivo": "docs/capture/s313-synthesis-carril-b.md",
+     "localizador": "3:3",
+     "cita": "> **Aviso D4 (25-10-2026):** [S314](s314-selector-object.md) rectifica la fila 13 (slot `0x64`) y [S341 §4](s341-synthesis-b2.md) enumera las rectificaciones posteriores del carril B; esta síntesis no las incorpora.",
+     "sha256": "2703a9f33902d5604bd57acc33d4451e3f80fcee14583b21258962c006274734"
+    }
+   ]
+  },
+  "d4-s302": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "S321 retira «cabecera = puntero a descriptor» (es el destino de escritura) y S325 el mapa modo→columna de 82 B (es posición→columna de 34). El destino lleva aviso.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/s321-matrix-rows.md",
+     "localizador": "60:63",
+     "cita": "| Registros del pool no alcanzados por la matriz | **29** |\n\nEsto **corrige la lectura** de S302/S314 («cabecera = puntero a descriptor»): el puntero\nno describe el registro, **es el lugar donde se escribe el valor**. La relación con el",
+     "sha256": "38a2bb1eee05c73fc4d13084a7f33ed135c93566c6f35078b0741ae08de9ef6f"
+    },
+    {
+     "archivo": "docs/capture/s325-position-map.md",
+     "localizador": "7:10",
+     "cita": "**Resultado:** `0x43c9c5b5` es una tabla **`posición -> columna` de 34 entradas**, no un\nmapa `modo -> columna` de 82. El accesor recibe una **posición** (0..33) obtenida por una\nbúsqueda lineal del código de modo en el array `u32[34]` de `0x43fee370`. Consecuencia\ndirecta: `0x4e` (posición 29) usa la **columna 12** y `0x4f` (posición 30) la **columna",
+     "sha256": "7918857114e7d7fa0071989502c3543fcf8b76c127c09dc3d5382397743639ab"
+    },
+    {
+     "archivo": "docs/capture/s302-drive-modes.md",
+     "localizador": "3:3",
+     "cita": "> **Aviso D4 (25-10-2026):** [S321](s321-matrix-rows.md) rectifica «cabecera = puntero a descriptor» (es el destino de escritura del valor) y [S325](s325-position-map.md) el mapa de columnas (posición→columna de 34 entradas, no modo→columna de 82).",
+     "sha256": "f4f94d45aa762327fb007c65f544d7861c9bbb5dad4ecb61595986e0344621f0"
+    }
+   ]
+  },
+  "d4-s321m": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "S325/S329 retiran el «comparte columna 1»: `0x4e`→columna 12 y `0x4f`→13 por posición; S341 §4 lo recoge. El destino lleva aviso.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/s325-position-map.md",
+     "localizador": "7:10",
+     "cita": "**Resultado:** `0x43c9c5b5` es una tabla **`posición -> columna` de 34 entradas**, no un\nmapa `modo -> columna` de 82. El accesor recibe una **posición** (0..33) obtenida por una\nbúsqueda lineal del código de modo en el array `u32[34]` de `0x43fee370`. Consecuencia\ndirecta: `0x4e` (posición 29) usa la **columna 12** y `0x4f` (posición 30) la **columna",
+     "sha256": "7918857114e7d7fa0071989502c3543fcf8b76c127c09dc3d5382397743639ab"
+    },
+    {
+     "archivo": "docs/capture/s341-synthesis-b2.md",
+     "localizador": "46:47",
+     "cita": "- El mapa `0x43c9c5b5` es **posición→columna** (34 entradas), no `modo→columna` (S325).\n- La matriz **sí** distingue los modos silent (14/11 registros); el «comparte columna 1» de S302/S321 queda superado (S325/S329).",
+     "sha256": "51d14998994e2805ce5b3013bd2ecf70187f9bc88725a2e742a3864c10ba2f5c"
+    },
+    {
+     "archivo": "docs/capture/s321-mode-matrix.md",
+     "localizador": "3:3",
+     "cita": "> **Aviso D4 (25-10-2026):** [S325](s325-position-map.md) y [S329](s329-mode-timing-tables.md) retiran «`0x4e`/`0x4f` comparten la columna 1»: el mapa es posición→columna y `0x4e`→columna 12, `0x4f`→13.",
+     "sha256": "652e467690421f57122456c0aaf208f03a4cc8f2de42464aa4e4d482e5829784"
+    }
+   ]
+  },
+  "d4-s321r": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "S325/S329 retiran el mapa de 82 B por código y el «columna 1» de `0x4c`–`0x4f`; el mapa es posición→columna. El destino lleva aviso.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/s325-position-map.md",
+     "localizador": "7:10",
+     "cita": "**Resultado:** `0x43c9c5b5` es una tabla **`posición -> columna` de 34 entradas**, no un\nmapa `modo -> columna` de 82. El accesor recibe una **posición** (0..33) obtenida por una\nbúsqueda lineal del código de modo en el array `u32[34]` de `0x43fee370`. Consecuencia\ndirecta: `0x4e` (posición 29) usa la **columna 12** y `0x4f` (posición 30) la **columna",
+     "sha256": "7918857114e7d7fa0071989502c3543fcf8b76c127c09dc3d5382397743639ab"
+    },
+    {
+     "archivo": "docs/capture/s341-synthesis-b2.md",
+     "localizador": "46:47",
+     "cita": "- El mapa `0x43c9c5b5` es **posición→columna** (34 entradas), no `modo→columna` (S325).\n- La matriz **sí** distingue los modos silent (14/11 registros); el «comparte columna 1» de S302/S321 queda superado (S325/S329).",
+     "sha256": "51d14998994e2805ce5b3013bd2ecf70187f9bc88725a2e742a3864c10ba2f5c"
+    },
+    {
+     "archivo": "docs/capture/s321-matrix-rows.md",
+     "localizador": "3:3",
+     "cita": "> **Aviso D4 (25-10-2026):** [S325](s325-position-map.md) y [S329](s329-mode-timing-tables.md) retiran «`0x4c`–`0x4f` → columna 1» y el mapa de 82 B por código: el mapa es posición→columna de 34 entradas.",
+     "sha256": "38a2bb1eee05c73fc4d13084a7f33ed135c93566c6f35078b0741ae08de9ef6f"
+    }
+   ]
+  },
+  "d4-s334": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "S340 identifica `w0` como selector de canal MMIO y retira «código de operación» de S334. El destino lleva aviso.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/s340-w0-selector.md",
+     "localizador": "7:7",
+     "cita": "S334/S336 dejaron `w0` (primer `u32` de cada fila de T1/T2/T3) como «código de operación» sin interpretar. ¿Qué hace exactamente?",
+     "sha256": "152a0e8759f57a6d78579ac6089cedbcf9ed39556b4a28a04597bd6ec13985d2"
+    },
+    {
+     "archivo": "docs/capture/s340-w0-selector.md",
+     "localizador": "16:17",
+     "cita": "| `0x436f605c` **suma** la lectura seleccionada por `w0` de T1 y de T2, y devuelve `u16` | **VERIFICADO** | Dos `ldr r1,[r3,r5]`, dos `bl 0x43ada4d8`, `adds r0,r0,r6`, `uxth` |\n| `w0` medido: T1 ∈ {0,1}, T2 ∈ {2,3}, T3 = 4 | **VERIFICADO** | Tablas `0x43bbeb70`/`0x43bbf2e8`/`0x43bbef30` por posición de modo |",
+     "sha256": "152a0e8759f57a6d78579ac6089cedbcf9ed39556b4a28a04597bd6ec13985d2"
+    },
+    {
+     "archivo": "docs/capture/s334-pair-dataflow.md",
+     "localizador": "3:3",
+     "cita": "> **Aviso D4 (25-10-2026):** [S340](s340-w0-selector.md) rectifica `w0` como «código de operación»: es un selector de canal MMIO (`0x436f74c0`).",
+     "sha256": "b2d02e6bfd35192afa8a282f4624e64931f8396461f12ccf35ec0fe2e801988c"
+    }
+   ]
+  },
+  "d4-s304": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "S303 §5 muestra por bytes que `0x438581e8`/`0x43858390` eran interiores (+0x58) de `0x43858190`/`0x43858338`; S304 usa esas direcciones y ya se declara informe histórico invalidado por S303 rev.3.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/s303-ref-tree-43ff3200.md",
+     "localizador": "106:116",
+     "cita": "## 5. Corrección de las direcciones de la rev.1 / S304\n\nLa revisión anterior publicó `FUN_438581e8` como dumper y `FUN_43858390` como su caller\núnico con 13 llamadas. Ambas direcciones son **entradas reales + 0x58**:\n\n| Dirección publicada | Bytes | Decodificación | Qué es en realidad |\n|---|---|---|---|\n| `0x438581e8` | `1ca0b8f5` | `adr r0, #0x70` | interior de `FUN_43858190` (prólogo en `0x43858190`) |\n| `0x43858390` | `4b467844` | `mov r3, sb` | interior de `FUN_43858338` (prólogo `push.w` en `0x43858338`) |\n\n`0x43858190 + 0x58 = 0x438581e8` y `0x43858338 + 0x58 = 0x43858390`: es el mismo sesgo",
+     "sha256": "a99d3f8258686b40ddc03c88d7f198b6198b302470a5c2d92ad804d91bee26c6"
+    },
+    {
+     "archivo": "docs/capture/s304-rea-dumper-callers.md",
+     "localizador": "3:5",
+     "cita": "**Informe histórico superado:** las direcciones interiores con sesgo +0x58\ny las trece llamadas de este texto fueron invalidadas en\n[S303 rev.3](s303-ref-tree-43ff3200.md). [S305 actualizado](s305-fun43858390-literal-pool.md)",
+     "sha256": "1a6ee6caf168440b307ec57079676f710195c10870545c3b8aa1c262e6c11107"
+    }
+   ]
+  },
+  "d4-auditoria": {
+   "veredicto": "CORRECCION_APLICADA",
+   "razon": "Los cinco informes destino declaran al inicio que la auditoría S605–S627 rectifica sus conclusiones históricas, y la tabla de hallazgos enumera las rectificaciones concretas (13 omisiones, 21 núcleos, gemelas S606, prefijo `[ADR]` de S625). No se certifica el logger dual ni las equivalencias.",
+   "evidencias": [
+    {
+     "archivo": "docs/capture/S605-S627_tabla_hallazgos.md",
+     "localizador": "34:41",
+     "cita": "- S607 `0x43caeb3d`: el texto termina en `req[%d]\\\\n\\\\0`, no en `req[%d]\\\\0`.\n  Otras omisiones: S607 (4), S609 (5), S616 (4): 13 en total.\n- S606, gemelas correctas:\n  `0x43cfdb44`, `0x43cfdb88`, `0x43cfdbda`, `0x43cfdc36`,\n  `0x43cfdc7f`, `0x43cfdcbc`, `0x43cfdcf8`.\n  Deltas desde las principales: **38, 34, 52, 44, 33, 32, 32 B**.\n  La primera dirección antigua, `0x43cfdb9c`, apuntaba a `mer(): %d`, no a la gemela.\n- S607, S608, S611 y S616: **21 núcleos** comprobados como sufijos NUL de las cadenas A6000.",
+     "sha256": "ec4e8422d2b4ecded6cfd7fdbf8446f406ec7a1b3dc5ee4bf609915af5b4eed0"
+    },
+    {
+     "archivo": "docs/capture/S605-S627_tabla_hallazgos.md",
+     "localizador": "74:74",
+     "cita": "| S625: `[ADR]` como prefijo de 5 B | RECHAZO | Es un marcador interno en `0x43cce418`; el inicio `0x43cce3fa` contiene `[CAM_UTIL_SENS]: `, 17 B. Corregidos JSON, test, verificador e informe. |",
+     "sha256": "ec4e8422d2b4ecded6cfd7fdbf8446f406ec7a1b3dc5ee4bf609915af5b4eed0"
+    },
+    {
+     "archivo": "docs/capture/s605-jpeg.md",
+     "localizador": "3:3",
+     "cita": "**Auditoría de la validación de OpenCode — 23-10-2026.** Este informe corrige las conclusiones históricas de S605. La presencia de texto no demuestra funciones, llamadas ni equivalencia entre modelos.",
+     "sha256": "a49fcb9c1e3d93c1c67cfe1f798bcd98d2630c82208ad6c5c81540148c309cc1"
+    },
+    {
+     "archivo": "docs/capture/s607-cam_cmd.md",
+     "localizador": "3:3",
+     "cita": "**Actualización 24-10-2026 — logger dual VERIFICADO_ESTATICO.** Las seis",
+     "sha256": "ced1dc8d7de717bc7f262fd6a237724a915c53320afa42c6102d8bb019ddc2e1"
+    },
+    {
+     "archivo": "docs/capture/s616-lens_pdr.md",
+     "localizador": "3:3",
+     "cita": "**Actualización 24-10-2026 — logger dual VERIFICADO_ESTATICO.** REA localizó",
+     "sha256": "8301677f49b04048e52a20e8c07c0236457144f1fa9129c7ebcefe4904f86d0d"
+    },
+    {
+     "archivo": "docs/capture/s625-adr.md",
+     "localizador": "3:3",
+     "cita": "**Auditoría de la validación de OpenCode — 23-10-2026.** Este informe corrige las conclusiones históricas de S625. La presencia de texto no demuestra funciones, llamadas ni equivalencia entre modelos.",
+     "sha256": "995edce2c392087536404eb6ec267307229236da2a680ec4fc072a6a30b20dd3"
+    },
+    {
+     "archivo": "docs/capture/s627-eo_sw.md",
+     "localizador": "3:3",
+     "cita": "**Auditoría de la validación de OpenCode — 23-10-2026.** Este informe corrige las conclusiones históricas de S627. La presencia de texto no demuestra funciones, llamadas ni equivalencia entre modelos.",
+     "sha256": "3d64c6b6b7ed0d8dd8f555c003919a4175db70fa4ab561d99b77c9b6467c1c50"
+    }
+   ]
+  },
+  "d4-resumen": {
+   "veredicto": "FALSO_POSITIVO",
+   "razon": "La línea es un resumen acumulado (README, STATE o checkpoint del carril B) que lista varias sesiones. Las rectificaciones concretas se juzgan en las filas de cada documento corrector; este destino no es el sujeto de la cita.",
+   "evidencias": []
+  },
+  "d4-ausente": {
+   "veredicto": "FALSO_POSITIVO",
+   "razon": "La rectificación citada se refiere a una lectura que este destino no contiene (otra tabla, otro informe o una consulta del propio autor). Si otro documento la sostiene, la arista correcta apunta allí.",
+   "evidencias": []
   }
  }
 }

@@ -237,3 +237,5 @@ Lo que falta por cerrar está en [`docs/PENDIENTES.md`](docs/PENDIENTES.md), ín
 - E4 cerrado con límite: la tabla de modos es el argumento `trig` de `IsNeedForceS1ON` ([adenda](docs/capture/s403-cierre-pendientes.md)).
 - D6 y D3 cerrados con límite: ninguna de las 17 trazas con homólogo en A7S es igual a nivel de instrucciones ([adenda](docs/capture/s403-cierre-pendientes.md)).
 - E16 cerrado con límite: las entradas al grupo que lee `CURTAINMODE` son 6 ranuras de tabla ([adenda](docs/capture/s403-cierre-pendientes.md)).
+- D4 cerrado con límite: las 86 filas pendientes del triaje S400 quedan resueltas (364 descartadas, 154 con rectificación respaldada, 0 pendientes) y 13 informes llevan aviso ([adenda](docs/capture/s403-cierre-pendientes.md)).
+- D1 cerrado con límite: de las 226 etiquetas del censo, 216 no cuelgan de la captura por llamadas directas y las 10 que sí son subetiquetas o campos de módulos conocidos (salvo `[EXL]`); E10a: el pin `0x2a` solo lo crean modelos de edición; E1 reintentado sin cambio; nuevos E17 y E18.
