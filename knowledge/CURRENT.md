@@ -76,7 +76,7 @@ Para la trazabilidad completa: [CORRECTIONS](../docs/CORRECTIONS.md) y [STATE §
 |---|---|---|
 | E1 | NO_VERIFICADO | Origen del local 4/2 a `ModelScalarPb`/`ModelPbCap`; todo emisor posible es de datos o ejecución |
 | E6, E9, E11, E13, D5 | BLOQUEADO | Darwin fuera de `av-cam`; semántica de 112 registros y fin de integración; enlace banco/bit→P4E; servicio ODL/MMIO `0xf292b000`; hojas de datos IMX210/IMX235 |
-| F1–F6 | DIFERIDO / BLOQUEADO | P1–P8, P9–P12, P13–P21; traza de bus; Darwin real; revisión de S51 solo con evidencia nueva |
+| F1–F8 | DIFERIDO / BLOQUEADO | P1–P24 (inventario en [revisión](../docs/capture/physical-test-review-2026-10-26.md)); traza de bus; Darwin real; revisión de S51 solo con evidencia nueva |
 | R1, R3 | ABIERTO / BLOQUEADO | Sin respaldo externo de firmware/volcados; historial público con `libmprctrl.so` (reescritura solo con orden expresa) |
 
 ## Bloqueos y límites de evidencia

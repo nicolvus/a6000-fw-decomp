@@ -78,7 +78,7 @@ flowchart TD
 | Criterio | Qué observaría | Consecuencia para H₀/H₁ |
 |---|---|---|
 | **R1 (P5)**: Analizador lógico muestra bit 0x20 en `pkt[+0x12]` A7S Silent y **también** en A6000 si se fuerza campo captura | A6000 **sí** tiene capacidad latente de poner bit 0x20 | **Refuta H₀** → H₁ gana (solo falta activar campo) |
-| **R2 (P3+P7)**: Forzar `G+0x808=2` (tipo 2) en A6000 + disparo → foto silenciosa (P7: sin rolling shutter / bandas flicker distintas a mecánico) | A6000 **ejecuta** exposición electrónica completa | **Refuta H₀** → H₁ gana (Darwin tipo 0/2 funcional) |
+| **R2 (P3+P7)**: Forzar `G+0x808` con `&7`=1 (tipo 2; **no 2**: 2..6 dan tipo 1, S101, ver [revisión de pruebas físicas](physical-test-review-2026-10-26.md)) en A6000 + disparo → foto silenciosa (P7: sin rolling shutter / bandas flicker distintas a mecánico) | A6000 **ejecuta** exposición electrónica completa | **Refuta H₀** → H₁ gana (Darwin tipo 0/2 funcional) |
 | **R3 (P3+P12)**: Forzar tipo 2 en A6000 + aborto → **doble click** (bobinas accionan en reposición) | A6000 **tiene** reposición coherente latente | **Refuta H₀** parcial → H₁ gana (falta solo activar) |
 | **R4 (P9)**: Traza bus sensor IMX210 muestra registros de fin integración electrónico / lectura global en modo vídeo/LiveView | IMX210 **soporta** fin electrónico por filas | **Refuta H₀** → H₁ gana (hardware capaz) |
 | **R5 (P6)**: Service shell expone `captura+0x804` (o equivalente) y cambia con menú Silent/EFCS | Campo existe y es escribible | **Refuta H₀** → H₁ gana (origen del campo identificable) |

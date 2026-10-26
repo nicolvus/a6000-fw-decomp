@@ -2,6 +2,8 @@
 
 Estado: **ninguna de estas pruebas se ha ejecutado**. Cada una requiere autorización expresa del usuario en el momento de lanzarla. Se redacta el 21-10-2026 a partir de S64, S70 y S71 (`analysis/s101_shutter_type/block238/`, `analysis/s101_shutter_type/pending/report.md`). Conclusión vigente que estas pruebas podrían cambiar: **S51 (no parchear)**; A7S es la referencia con Silent.
 
+> **[Revisión 26-10-2026](physical-test-review-2026-10-26.md):** inventario único P1–P24. En el volcado del 20-10 `G+0x808` vale `0x120983c8` (no 0; `&7`=0, tipo 0); para P2/P3 escribir `0x120983c9` (conserva los bits altos) en lugar de `1`. P5 solo es realizable en A6000. Ninguna prueba queda descartada por lo estático.
+
 ## 0. Reglas comunes (obligatorias)
 
 | Regla | Detalle |

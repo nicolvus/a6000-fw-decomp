@@ -3,6 +3,8 @@
 > Hito de la **línea del obturador electrónico** (Agente C, sesión S402).
 > Basado en `s401-a7s-silent-control-path.md`. Para cada diferencia, se indica cuál prueba de `physical-test-plan.md` la confirmaría o refutaría, y se proponen pruebas nuevas donde faltan.
 
+> **[Revisión 26-10-2026](physical-test-review-2026-10-26.md):** la diferencia 1 (handler `0x40e3` ausente en A7S) fue corregida por [S402 cierre estático](static-closure-2026-10-25.md): sí existe. Los casos «Silent A7S» de P5/P7/P9 requieren una A7S que el proyecto no tiene. P10 necesita fijar antes el offset del campo en la A6000 (S401: el de `0x43841070` solo vale 0/1).
+
 ---
 
 ## Tabla de mapeo

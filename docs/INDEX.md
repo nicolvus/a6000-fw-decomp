@@ -204,7 +204,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 3. Obturador (cortinas, EFCS, SilentShutter, exposición electrónica completa)
 
-50 informes.
+51 informes.
 
 - **—** [Darwin: entradas verificadas para investigar el obturador](capture/darwin-shutter-entrypoints.md)
 - **—** [Darwin: fases, notificaciones y escrituras de control](capture/darwin-state-machine.md)
@@ -214,6 +214,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [Exposición IMX210, EFCS y transferencia P2S — E019](capture/imager-exposure-p2s.md)
 - **—** [Plan de pruebas físicas 2 (P13–P21) — lecturas nuevas a partir de S329–S343](capture/physical-test-plan-2.md)
 - **—** [Plan de pruebas físicas (pendientes) — obturador electrónico A6000](capture/physical-test-plan.md)
+- **—** [Revisión de las pruebas físicas en cámara (P1–P24) — 26-10-2026](capture/physical-test-review-2026-10-26.md)
 - **—** [Tema 3 — Control físico de cortinas y puente físico Darwin/MCU (P4C / 1ST_CURTAIN_MG / 2ND_CURTAIN_MG)](capture/rea-tema3-cortinas-darwin.md)
 - **S101** [S101 — selector del tipo de mecanismo y consumidores de los campos de ajuste (A6000 vs A7S) — 21-10-2026](capture/s101-conclusions.md) · pruebas: [test_s101_block238.py](../tests/test_s101_block238.py) [test_s101_pending.py](../tests/test_s101_pending.py) · evidencia: [s101_shutter_type](../analysis/s101_shutter_type)
 - **S17** [Comparación de arquitecturas A / E / P (sesión 17)](capture/s17-a-e-p-architecture-comparison.md)

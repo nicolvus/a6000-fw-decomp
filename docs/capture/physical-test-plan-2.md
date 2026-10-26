@@ -6,6 +6,8 @@ Conversión usada en S64: dirección virtual del firmware `0x43xxxxxx` = física
 
 **Ya hecho antes (no repetir):** S64 forzó el campo Silent `0x83edf8bc` (`0→1→0`) y comparó 4 MB de RAM; `camera_drivemode_override.py` ya escribió drive mode `0x37`/`0x38`.
 
+> **[Revisión 26-10-2026](physical-test-review-2026-10-26.md):** P17 se fusiona con P7; P16 y P18 ya tienen línea base en reposo (volcado del 20-10: matriz con datos, gates a 0); P13–P15 solo por RMEM, una página por sesión (el barrido de `0xF0020000+` reinició la cámara 5 veces); P21 escribe en RAM y no pasa por el setter. Nuevas: P22–P24.
+
 ## P0 — Preparación (obligatoria, ~20 min)
 
 1. `python3 scripts/senser_backup_dump.py`; verificar el volcado y guardarlo en `analysis/camera-dumps/`.

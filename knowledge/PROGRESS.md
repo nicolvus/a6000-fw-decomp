@@ -10,6 +10,10 @@ portada pública, contexto operativo mínimo y conclusiones vigentes. Sus versio
 [docs/INDEX.md](../docs/INDEX.md) (generado por `scripts/knowledge/build_subsystem_index.py`, probado en `tests/test_subsystem_index.py`).
 Pendientes nuevos D10 (cerrado), D11 y D12 en [PENDIENTES](../docs/PENDIENTES.md). No se tocó ningún informe, análisis ni conclusión técnica.
 
+## Revisión de pruebas físicas — 26-10-2026
+
+Inventario único P1–P24 en [physical-test-review-2026-10-26](../docs/capture/physical-test-review-2026-10-26.md): ninguna prueba descartada por lo estático; P1/P2/P3/P10/P13/P21 ajustadas, P17 fusionada con P7, P16/P18 con línea base en reposo, nuevas P22–P24 (F7, F8) y E21. S51 sin cambios; nada ejecutado en cámara.
+
 ## Estado vigente — 26-10-2026 (auditoría integral)
 
 > Instantánea de su fecha. El estado consolidado vigente está en [docs/STATE.md](../docs/STATE.md) y el contexto mínimo en [CURRENT.md](CURRENT.md).
