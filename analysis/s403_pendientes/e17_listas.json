@@ -12,6 +12,8 @@
   "nula": 4,
   "pila": 8
  },
+ "sin_resolver": 79,
+ "sin_resolver_de_disparo": 0,
  "modelos_de_disparo": {
   "ModelBootEE": {
    "sitios": 2,
@@ -54,7 +56,9 @@
      "tienda": "0x42a482",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x42a610",
@@ -70,7 +74,9 @@
      "tienda": "0x42a482",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x42c1b2",
@@ -178,7 +184,9 @@
    "tipo": "destroy",
    "clase": "Model3dPb",
    "clase_por": "llamadores",
-   "motivo": "miembro"
+   "motivo": "miembro",
+   "descarte": "puntero a lista guardado en un miembro sin tienda est\u00e1tica en la clase",
+   "de_disparo": false
   },
   {
    "sitio": "0x455b64",
@@ -264,7 +272,9 @@
    "tipo": "create",
    "clase": "ModelBigImagePb",
    "clase_por": "llamadores",
-   "motivo": "heap_dinamica"
+   "motivo": "heap_dinamica",
+   "descarte": "lista armada en bucle desde datos de ejecuci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x47566a",
@@ -280,7 +290,9 @@
      "tienda": "0x475604",
      "lista": "heap_dinamica"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde datos de ejecuci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x47d026",
@@ -296,7 +308,9 @@
      "tienda": "0x47cefa",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x47d09e",
@@ -312,7 +326,9 @@
      "tienda": "0x47cefa",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x48339c",
@@ -328,7 +344,9 @@
      "tienda": "0x483412",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x48348e",
@@ -344,7 +362,9 @@
      "tienda": "0x483412",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x48353e",
@@ -360,7 +380,9 @@
      "tienda": "0x483412",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x4ae6d4",
@@ -673,7 +695,9 @@
    "tipo": "create",
    "clase": "ModelCopy",
    "clase_por": "llamadores",
-   "motivo": "heap_dinamica"
+   "motivo": "heap_dinamica",
+   "descarte": "lista armada en bucle desde datos de ejecuci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x5002b2",
@@ -694,7 +718,9 @@
      "tienda": "0x501440",
      "lista": "heap_dinamica"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde datos de ejecuci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x50130c",
@@ -715,7 +741,9 @@
      "tienda": "0x501440",
      "lista": "heap_dinamica"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde datos de ejecuci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x501460",
@@ -723,7 +751,9 @@
    "tipo": "create",
    "clase": "ModelCopy",
    "clase_por": "llamadores",
-   "motivo": "heap_dinamica"
+   "motivo": "heap_dinamica",
+   "descarte": "lista armada en bucle desde datos de ejecuci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x503c3e",
@@ -731,7 +761,9 @@
    "tipo": "create",
    "clase": "ModelCopyDiffExtDvd",
    "clase_por": "llamadores",
-   "motivo": "sin_valor"
+   "motivo": "sin_valor",
+   "descarte": "r2 depende de una rama que el evaluador lineal no sigue",
+   "de_disparo": false
   },
   {
    "sitio": "0x503c76",
@@ -739,7 +771,9 @@
    "tipo": "destroy",
    "clase": "ModelCopyDiffExtDvd",
    "clase_por": "llamadores",
-   "motivo": "sin_valor"
+   "motivo": "sin_valor",
+   "descarte": "r2 depende de una rama que el evaluador lineal no sigue",
+   "de_disparo": false
   },
   {
    "sitio": "0x506496",
@@ -747,7 +781,9 @@
    "tipo": "create",
    "clase": "ModelCopyDiffExtStorage",
    "clase_por": "llamadores",
-   "motivo": "sin_valor"
+   "motivo": "sin_valor",
+   "descarte": "r2 depende de una rama que el evaluador lineal no sigue",
+   "de_disparo": false
   },
   {
    "sitio": "0x5064cc",
@@ -755,7 +791,9 @@
    "tipo": "destroy",
    "clase": "ModelCopyDiffExtStorage",
    "clase_por": "llamadores",
-   "motivo": "sin_valor"
+   "motivo": "sin_valor",
+   "descarte": "r2 depende de una rama que el evaluador lineal no sigue",
+   "de_disparo": false
   },
   {
    "sitio": "0x50865a",
@@ -763,7 +801,9 @@
    "tipo": "create",
    "clase": "ModelCopySelect",
    "clase_por": "llamadores",
-   "motivo": "sin_valor"
+   "motivo": "sin_valor",
+   "descarte": "r2 depende de una rama que el evaluador lineal no sigue",
+   "de_disparo": false
   },
   {
    "sitio": "0x508674",
@@ -771,7 +811,9 @@
    "tipo": "destroy",
    "clase": "ModelCopySelect",
    "clase_por": "llamadores",
-   "motivo": "sin_valor"
+   "motivo": "sin_valor",
+   "descarte": "r2 depende de una rama que el evaluador lineal no sigue",
+   "de_disparo": false
   },
   {
    "sitio": "0x50b01e",
@@ -779,7 +821,9 @@
    "tipo": "create",
    "clase": "ModelCopySelectExtDvd",
    "clase_por": "llamadores",
-   "motivo": "sin_valor"
+   "motivo": "sin_valor",
+   "descarte": "r2 depende de una rama que el evaluador lineal no sigue",
+   "de_disparo": false
   },
   {
    "sitio": "0x50b056",
@@ -787,7 +831,9 @@
    "tipo": "destroy",
    "clase": "ModelCopySelectExtDvd",
    "clase_por": "llamadores",
-   "motivo": "sin_valor"
+   "motivo": "sin_valor",
+   "descarte": "r2 depende de una rama que el evaluador lineal no sigue",
+   "de_disparo": false
   },
   {
    "sitio": "0x50f016",
@@ -831,7 +877,9 @@
    "tipo": "destroy",
    "clase": "ModelDaNeutral",
    "clase_por": "llamadores",
-   "motivo": "otro"
+   "motivo": "otro",
+   "descarte": "lista de un std::vector del objeto (this+0x84), rellenado en ejecuci\u00f3n",
+   "de_disparo": false
   },
   {
    "sitio": "0x50fb8a",
@@ -839,7 +887,9 @@
    "tipo": "create",
    "clase": "ModelDaNeutral",
    "clase_por": "llamadores",
-   "motivo": "otro"
+   "motivo": "otro",
+   "descarte": "lista de un std::vector del objeto (this+0x84), rellenado en ejecuci\u00f3n",
+   "de_disparo": false
   },
   {
    "sitio": "0x5105ac",
@@ -855,7 +905,9 @@
      "tienda": "0x5104e8",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x51067a",
@@ -871,7 +923,9 @@
      "tienda": "0x5104e8",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x513d26",
@@ -887,7 +941,9 @@
      "tienda": "0x513dba",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x5150f8",
@@ -897,7 +953,9 @@
    "clase_por": "ninguno",
    "motivo": "miembro_sin_origen",
    "miembro": "0x8c",
-   "origenes": []
+   "origenes": [],
+   "descarte": "miembro sin ninguna tienda est\u00e1tica en los m\u00e9todos atribuidos a la clase",
+   "de_disparo": false
   },
   {
    "sitio": "0x51919a",
@@ -1257,7 +1315,9 @@
      "tienda": "0x525716",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x525866",
@@ -1273,7 +1333,9 @@
      "tienda": "0x525716",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x527392",
@@ -1289,7 +1351,9 @@
      "tienda": "0x5273ca",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x52745c",
@@ -1305,7 +1369,9 @@
      "tienda": "0x5273ca",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x5274ae",
@@ -1321,7 +1387,9 @@
      "tienda": "0x5273ca",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x53398c",
@@ -1337,7 +1405,9 @@
      "tienda": "0x5338c8",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x533a5a",
@@ -1353,7 +1423,9 @@
      "tienda": "0x5338c8",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x55e0e8",
@@ -1400,7 +1472,9 @@
      "tienda": "0x55fb9e",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x56027c",
@@ -1408,7 +1482,9 @@
    "tipo": "destroy",
    "clase": "ModelFolder",
    "clase_por": "cercania",
-   "motivo": "miembro"
+   "motivo": "miembro",
+   "descarte": "puntero a lista guardado en un miembro sin tienda est\u00e1tica en la clase",
+   "de_disparo": false
   },
   {
    "sitio": "0x56083a",
@@ -1424,7 +1500,9 @@
      "tienda": "0x5608dc",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x56140a",
@@ -1440,7 +1518,9 @@
      "tienda": "0x5608dc",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x5877c6",
@@ -1624,7 +1704,9 @@
      "tienda": "0x58b20e",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x58b35e",
@@ -1640,7 +1722,9 @@
      "tienda": "0x58b20e",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x58c640",
@@ -1763,7 +1847,9 @@
      "tienda": "0x599848",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x5998b8",
@@ -1779,7 +1865,9 @@
      "tienda": "0x599848",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x59992c",
@@ -1795,7 +1883,9 @@
      "tienda": "0x599848",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x5a6762",
@@ -1826,7 +1916,9 @@
    "clase_por": "llamadores",
    "motivo": "miembro_sin_origen",
    "miembro": "0x8c",
-   "origenes": []
+   "origenes": [],
+   "descarte": "miembro sin ninguna tienda est\u00e1tica en los m\u00e9todos atribuidos a la clase",
+   "de_disparo": false
   },
   {
    "sitio": "0x5a7ddc",
@@ -1836,7 +1928,9 @@
    "clase_por": "llamadores",
    "motivo": "miembro_sin_origen",
    "miembro": "0x8c",
-   "origenes": []
+   "origenes": [],
+   "descarte": "miembro sin ninguna tienda est\u00e1tica en los m\u00e9todos atribuidos a la clase",
+   "de_disparo": false
   },
   {
    "sitio": "0x5a8c10",
@@ -1908,7 +2002,9 @@
      "tienda": "0x5f5262",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x5f5302",
@@ -1924,7 +2020,9 @@
      "tienda": "0x5f5262",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x5fe1be",
@@ -2032,7 +2130,9 @@
    "tipo": "create",
    "clase": "ModelMvPb",
    "clase_por": "llamadores",
-   "motivo": "heap_dinamica"
+   "motivo": "heap_dinamica",
+   "descarte": "lista armada en bucle desde datos de ejecuci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x60f816",
@@ -2048,7 +2148,9 @@
      "tienda": "0x60f7c0",
      "lista": "heap_dinamica"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde datos de ejecuci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x610480",
@@ -2056,7 +2158,9 @@
    "tipo": "destroy",
    "clase": "ModelPaint",
    "clase_por": "llamadores",
-   "motivo": "miembro"
+   "motivo": "miembro",
+   "descarte": "puntero a lista guardado en un miembro sin tienda est\u00e1tica en la clase",
+   "de_disparo": false
   },
   {
    "sitio": "0x61156c",
@@ -2227,7 +2331,9 @@
      "tienda": "0x613650",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x61372a",
@@ -2243,7 +2349,9 @@
      "tienda": "0x613650",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x619458",
@@ -2251,7 +2359,9 @@
    "tipo": "destroy",
    "clase": "ModelPbZoom",
    "clase_por": "llamadores",
-   "motivo": "sin_valor"
+   "motivo": "sin_valor",
+   "descarte": "r2 depende de una rama que el evaluador lineal no sigue",
+   "de_disparo": false
   },
   {
    "sitio": "0x619a5e",
@@ -2267,7 +2377,9 @@
      "tienda": "0x61999e",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x61e6b0",
@@ -2283,7 +2395,9 @@
      "tienda": "0x61e5ec",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x61e77a",
@@ -2299,7 +2413,9 @@
      "tienda": "0x61e5ec",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x62145e",
@@ -2307,7 +2423,9 @@
    "tipo": "destroy",
    "clase": "ModelRecPbNeutral",
    "clase_por": "llamadores",
-   "motivo": "otro"
+   "motivo": "otro",
+   "descarte": "lista de un std::vector del objeto (this+0x84), rellenado en ejecuci\u00f3n",
+   "de_disparo": false
   },
   {
    "sitio": "0x62149a",
@@ -2315,7 +2433,9 @@
    "tipo": "create",
    "clase": "ModelRecPbNeutral",
    "clase_por": "llamadores",
-   "motivo": "otro"
+   "motivo": "otro",
+   "descarte": "lista de un std::vector del objeto (this+0x84), rellenado en ejecuci\u00f3n",
+   "de_disparo": false
   },
   {
    "sitio": "0x6249a4",
@@ -2354,7 +2474,9 @@
    "tipo": "create",
    "clase": "ModelRepair",
    "clase_por": "llamadores",
-   "motivo": "sin_valor"
+   "motivo": "sin_valor",
+   "descarte": "r2 depende de una rama que el evaluador lineal no sigue",
+   "de_disparo": false
   },
   {
    "sitio": "0x62ef92",
@@ -2362,7 +2484,9 @@
    "tipo": "destroy",
    "clase": "ModelRepair",
    "clase_por": "llamadores",
-   "motivo": "sin_valor"
+   "motivo": "sin_valor",
+   "descarte": "r2 depende de una rama que el evaluador lineal no sigue",
+   "de_disparo": false
   },
   {
    "sitio": "0x637ab4",
@@ -2503,7 +2627,9 @@
    "tipo": "destroy",
    "clase": "ModelRotate",
    "clase_por": "llamadores",
-   "motivo": "sin_valor"
+   "motivo": "sin_valor",
+   "descarte": "r2 depende de una rama que el evaluador lineal no sigue",
+   "de_disparo": false
   },
   {
    "sitio": "0x640776",
@@ -2519,7 +2645,9 @@
      "tienda": "0x640824",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x640938",
@@ -2535,7 +2663,9 @@
      "tienda": "0x640824",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x643e22",
@@ -2543,7 +2673,9 @@
    "tipo": "create",
    "clase": "ModelSalvage",
    "clase_por": "llamadores",
-   "motivo": "miembro"
+   "motivo": "miembro",
+   "descarte": "puntero a lista guardado en un miembro sin tienda est\u00e1tica en la clase",
+   "de_disparo": false
   },
   {
    "sitio": "0x643e52",
@@ -2551,7 +2683,9 @@
    "tipo": "destroy",
    "clase": "ModelSalvage",
    "clase_por": "llamadores",
-   "motivo": "sin_valor"
+   "motivo": "sin_valor",
+   "descarte": "r2 depende de una rama que el evaluador lineal no sigue",
+   "de_disparo": false
   },
   {
    "sitio": "0x65a7ee",
@@ -2559,7 +2693,9 @@
    "tipo": "destroy",
    "clase": "ModelScalarPb",
    "clase_por": "llamadores",
-   "motivo": "sin_valor"
+   "motivo": "sin_valor",
+   "descarte": "r2 depende de una rama que el evaluador lineal no sigue",
+   "de_disparo": false
   },
   {
    "sitio": "0x65a826",
@@ -2698,7 +2834,9 @@
      "tienda": "0x663484",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x663516",
@@ -2714,7 +2852,9 @@
      "tienda": "0x663484",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x6639e8",
@@ -2730,7 +2870,9 @@
      "tienda": "0x663934",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x663b70",
@@ -2746,7 +2888,9 @@
      "tienda": "0x663934",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x665d98",
@@ -2967,7 +3111,9 @@
      "tienda": "0x6b10d0",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x6b2708",
@@ -2983,7 +3129,9 @@
      "tienda": "0x6b10d0",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x6b4ce6",
@@ -3009,7 +3157,9 @@
      "tienda": "0x6b3e16",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x6b4e60",
@@ -3035,7 +3185,9 @@
      "tienda": "0x6b3e16",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x6b67f6",
@@ -3051,7 +3203,9 @@
      "tienda": "0x6b5438",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x6b696c",
@@ -3067,7 +3221,9 @@
      "tienda": "0x6b5438",
      "lista": "heap_incompleta"
     }
-   ]
+   ],
+   "descarte": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la funci\u00f3n; sin valor est\u00e1tico",
+   "de_disparo": false
   },
   {
    "sitio": "0x6bb406",
@@ -3075,7 +3231,9 @@
    "tipo": "create",
    "clase": "ModelWifiBackup",
    "clase_por": "llamadores",
-   "motivo": "sin_valor"
+   "motivo": "sin_valor",
+   "descarte": "r2 depende de una rama que el evaluador lineal no sigue",
+   "de_disparo": false
   },
   {
    "sitio": "0x6bb436",
@@ -3083,7 +3241,9 @@
    "tipo": "destroy",
    "clase": "ModelWifiBackup",
    "clase_por": "llamadores",
-   "motivo": "sin_valor"
+   "motivo": "sin_valor",
+   "descarte": "r2 depende de una rama que el evaluador lineal no sigue",
+   "de_disparo": false
   }
  ]
 }

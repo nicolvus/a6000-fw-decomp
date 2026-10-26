@@ -28,3 +28,9 @@ def test_row_b4_is_created_only_by_scalar_pb():
         if any("0xb4" in flat(lst) for lst in lists):
             classes.add(e["clase"])
     assert classes == {"ModelScalarPb"}
+
+
+def test_every_unresolved_site_has_a_reason_and_none_is_a_shooting_model():
+    pending = [e for e in DATA["sitios"] if e["motivo"] not in RESOLVED | {"miembro_proyectado"}]
+    assert len(pending) == DATA["sin_resolver"] == 79
+    assert all(e["descarte"] for e in pending) and DATA["sin_resolver_de_disparo"] == 0

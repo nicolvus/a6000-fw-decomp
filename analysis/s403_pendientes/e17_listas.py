@@ -26,6 +26,16 @@ MAX_CAND = 16
 END = (0, 0xFFFFFFFF)  # fin de lista: 0, o -1 en las listas estáticas de ModelHighlightSave
 
 
+# Motivo por el que una lista sin resolver no se sigue. shortcut: la relevancia se decide por la clase propietaria (vtable/llamadores/cercanía), no por alcanzabilidad desde el disparo.
+DESCARTE = {
+    "heap_incompleta": "lista armada en bucle desde el vector de registros de this+0x9c, rellenado fuera de la función; sin valor estático",
+    "heap_dinamica": "lista armada en bucle desde datos de ejecución; sin valor estático",
+    "sin_valor": "r2 depende de una rama que el evaluador lineal no sigue",
+    "miembro": "puntero a lista guardado en un miembro sin tienda estática en la clase",
+    "otro": "lista de un std::vector del objeto (this+0x84), rellenado en ejecución",
+}
+
+
 def parse_imm(text: str) -> int | None:
     m = re.fullmatch(r"#(-?(?:0x)?[0-9a-f]+)", text.strip())
     return int(m[1], 0) if m else None
@@ -283,10 +293,17 @@ def main() -> None:
             d["resueltos"] += res
             lists = [e["lista"]] if "lista" in e else [o["lista"] for o in e.get("origenes", []) if isinstance(o["lista"], list)]
             d["filas_yc"] += any(set(YC_ROWS) & set(x if isinstance(x, list) else [x]) for lst in lists for x in lst)
+    for e in out:
+        if e["motivo"] in RESOLVED + ("miembro_proyectado",):
+            continue
+        causa = e["origenes"][0]["lista"] if e.get("origenes") else e["motivo"]
+        e["descarte"] = DESCARTE.get(causa, "miembro sin ninguna tienda estática en los métodos atribuidos a la clase")
+        e["de_disparo"] = e["clase"] in SHOOTING
     resumen: dict[str, int] = {}
     for e in out:
         resumen[e["motivo"]] = resumen.get(e["motivo"], 0) + 1
-    (Path(__file__).with_name("e17_listas.json")).write_text(json.dumps({"no_resueltos_e10": len(out), "motivos": resumen, "modelos_de_disparo": disparo, "sitios": out}, indent=1) + "\n")
+    (Path(__file__).with_name("e17_listas.json")).write_text(json.dumps({"no_resueltos_e10": len(out), "motivos": resumen, "sin_resolver": sum("descarte" in e for e in out),
+                                                                     "sin_resolver_de_disparo": sum(e.get("de_disparo", False) for e in out), "modelos_de_disparo": disparo, "sitios": out}, indent=1) + "\n")
     print(resumen, file=sys.stderr)
 
 
