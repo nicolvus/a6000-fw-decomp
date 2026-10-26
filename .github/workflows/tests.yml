@@ -1,0 +1,29 @@
+name: Pruebas
+
+"on":
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    env:
+      CI: "1"  # tests/conftest.py omite lo que necesita firmware no versionado
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Dependencias
+        run: pip install -r knowledge/requirements.txt -r knowledge/requirements-dev.txt capstone pyelftools numpy
+      - name: Índice de conocimiento
+        run: |
+          python scripts/knowledge/index_docs.py
+          python scripts/knowledge/build_graph.py
+      - name: Suite
+        run: pytest tests -q

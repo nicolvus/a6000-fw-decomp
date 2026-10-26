@@ -66,5 +66,21 @@
  "0x437f635a": {
   "instruccion": "cbz r0, #0x437f6390",
   "papel": "cbz r0: distinto de 0 -> registra 'snrBusThroughPrereviewParamSet Error!' y aborta"
+ },
+ "0x43ad5aa8": {
+  "instruccion": "cmp.w r3, #0x8a0",
+  "papel": "cmp r3,#0x8a0: 0x43ad5998 acota a 2208 el ancho de salida que pasa a 0x43ad5b02 (sp+0x70)"
+ },
+ "0x43ad5ab8": {
+  "instruccion": "movw r3, #0x4da",
+  "papel": "movw r3,#0x4da: acota a 1242 la altura de salida (sp+0x74)"
+ },
+ "0x437f6354": {
+  "instruccion": "bl #0x43acc424",
+  "papel": "bl 0x43acc424 con el rectángulo en sp+0x50, armado antes con el estado vivo del sensor (r4+0x568)"
+ },
+ "0x438cb7ca": {
+  "instruccion": "bl #0x43acc424",
+  "papel": "bl 0x43acc424 (segundo llamador) con el rectángulo en sp+0x88, también armado en ejecución"
  }
 }

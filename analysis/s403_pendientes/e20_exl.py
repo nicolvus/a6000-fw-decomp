@@ -1,6 +1,7 @@
 """E20: ¿puede una comprobación `[EXL]` rechazar una captura? Cadena de retorno desde las dos rutinas (0x436ca820, 0x436cafc0) hasta el llamador que aborta.
 Desensambla con Capstone las instrucciones decisivas del binario A6000 y las vuelca en e20_exl.json (la prueba las compara con los bytes).
-shortcut: comprueba el mecanismo (condición, bandera, propagación, destino del error); no evalúa los valores de dimensiones por modo de disparo."""
+Límite estático: la salida (ancho/alto) está acotada a 2208x1242 aguas arriba, pero los rectángulos de entrada de 0x436c25d0 los arman en ejecución sus dos llamadores (0x437f5a04 y el que contiene 0x438cb7ca) con estado vivo del sensor; los valores por modo de disparo no salen del binario.
+shortcut: comprueba el mecanismo (condición, bandera, propagación, destino del error, acotado de salida); no evalúa dimensiones por modo, que dependen de datos de ejecución."""
 import json
 from pathlib import Path
 
@@ -25,6 +26,10 @@ SITES = {  # dirección: papel
     0x43ACC44A: "b.w 0x436c25d0: 0x43acc424 devuelve ese código tal cual",
     0x437F6358: "mov r6,r0: 0x437f5a04 guarda el código",
     0x437F635A: "cbz r0: distinto de 0 -> registra 'snrBusThroughPrereviewParamSet Error!' y aborta",
+    0x43AD5AA8: "cmp r3,#0x8a0: 0x43ad5998 acota a 2208 el ancho de salida que pasa a 0x43ad5b02 (sp+0x70)",
+    0x43AD5AB8: "movw r3,#0x4da: acota a 1242 la altura de salida (sp+0x74)",
+    0x437F6354: "bl 0x43acc424 con el rectángulo en sp+0x50, armado antes con el estado vivo del sensor (r4+0x568)",
+    0x438CB7CA: "bl 0x43acc424 (segundo llamador) con el rectángulo en sp+0x88, también armado en ejecución",
 }
 
 

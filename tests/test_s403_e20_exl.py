@@ -16,7 +16,8 @@ DATA = json.loads((HERE / "e20_exl.json").read_text())
 def test_failure_chain_reaches_the_aborting_caller():
     roles = " ".join(v["papel"] for v in DATA.values())
     assert "devuelve 7" in roles and "aborta" in roles and "0x43acc424 devuelve ese código tal cual" in roles
-    assert len(DATA) == 17
+    assert len(DATA) == 21
+    assert "2208" in DATA["0x43ad5aa8"]["papel"] and "1242" in DATA["0x43ad5ab8"]["papel"]
 
 
 @pytest.mark.skipif(not pic.FIRMWARE["a6000"].exists(), reason="requiere el av-cam de A6000")

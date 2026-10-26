@@ -216,3 +216,4 @@ Herramienta: [repo_audit.py](../../scripts/audit/repo_audit.py) (prueba `tests/t
 - **D9:** sigue descartado (cifras históricas).
 
 - **Suite completa:** 3 595 aprobadas, 35 omitidas, 0 fallos, 1 168 subpruebas, 576 s (3 630 colectadas); el árbol de `site/` y `docs/progress/` queda intacto tras correrla (C8). Se lanza con `pytest tests`: `pytest` sin ruta choca con el nombre duplicado de `analysis/s300_state_xref_sweep/test_s300_state_xref_sweep.py`.
+- 27-10-2026 (6): E20 llega a su límite estático (salida acotada a 2208x1242; los rectángulos de entrada se arman en ejecución); R2 cerrado con `.github/workflows/tests.yml` y `tests/conftest.py`; R3 preparado en clon aparte con `scripts/r3_prepare_history_rewrite.sh`, sin `push --force`.
