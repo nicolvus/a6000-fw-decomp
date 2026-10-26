@@ -19,6 +19,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.14'
+      - name: ripgrep (búsqueda exacta del índice)
+        run: sudo apt-get install -y ripgrep
       - name: Dependencias
         run: pip install -r knowledge/requirements-ci.txt pyelftools numpy
       - name: Índice de conocimiento
