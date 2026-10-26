@@ -5,6 +5,11 @@ import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -22,19 +27,48 @@ public class Main extends Activity implements SurfaceHolder.Callback {
     private final Handler ui = new Handler();
     private volatile String last = "none";
     private int count;
+    private TextView info;
+    private String keyLog = "-";
 
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         SurfaceView v = new SurfaceView(this);
         v.getHolder().addCallback(this);
-        setContentView(v);
+        LinearLayout l = new LinearLayout(this);
+        l.setOrientation(LinearLayout.VERTICAL);
+        info = new TextView(this);
+        info.setTextSize(22);
+        Button btn = new Button(this);
+        btn.setText("SHUTTER");
+        btn.setTextSize(28);
+        btn.setOnClickListener(new View.OnClickListener() { public void onClick(View x) { shoot(); } });
+        l.addView(btn);
+        l.addView(info);
+        l.addView(v, new LinearLayout.LayoutParams(1, 1));
+        setContentView(l);
+        btn.requestFocus();
+        refresh();
         new Thread(new Runnable() { public void run() { serve(); } }).start();
     }
 
     public void surfaceCreated(SurfaceHolder h) { last = "ready"; }
     public void surfaceChanged(SurfaceHolder h, int f, int w, int hh) {}
     public void surfaceDestroyed(SurfaceHolder h) { release(); }
+    private void refresh() {
+        info.setText("OK = disparar | MENU, atras o izquierda = salir\nestado: " + last + "\ntecla: " + keyLog);
+        ui.postDelayed(new Runnable() { public void run() { refresh(); } }, 500);
+    }
+
+    @Override public boolean onKeyDown(int k, KeyEvent e) {
+        keyLog = String.valueOf(k);
+        if (k == KeyEvent.KEYCODE_BACK || k == KeyEvent.KEYCODE_MENU || k == KeyEvent.KEYCODE_DPAD_LEFT) { finish(); return true; }
+        return super.onKeyDown(k, e);
+    }
+
+    // Mata el proceso al salir: libera el puerto 8080 y deja la cámara limpia para la siguiente apertura.
+    @Override protected void onDestroy() { super.onDestroy(); android.os.Process.killProcess(android.os.Process.myPid()); }
+
     @Override protected void onPause() { super.onPause(); release(); }
 
     // Sin preview: el overlay falla en esta cámara, pero takePicture funciona sin él.
