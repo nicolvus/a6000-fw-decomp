@@ -9,9 +9,10 @@ from urllib.parse import urlparse
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_public_session_index_has_real_sources() -> None:
-    subprocess.run([sys.executable, "scripts/build_pages_status.py"], cwd=ROOT, check=True)
-    data = json.loads((ROOT / "site/status.json").read_text(encoding="utf-8"))
+def test_public_session_index_has_real_sources(tmp_path: Path) -> None:
+    out = tmp_path  # la salida va a un directorio temporal: la prueba no ensucia `site/` versionado
+    subprocess.run([sys.executable, "scripts/build_pages_status.py", str(out)], cwd=ROOT, check=True)
+    data = json.loads((out / "site/status.json").read_text(encoding="utf-8"))
     sessions = data["sessions"]
     ids = [int(item["id"][1:]) for item in sessions]
 
@@ -26,13 +27,13 @@ def test_public_session_index_has_real_sources() -> None:
     coverage = data["module_coverage"]
     assert coverage["covered"] + coverage["pending"] + coverage["excluded"] == coverage["total"]
     assert coverage["excluded"] == 13
-    assert (ROOT / "site/progress/index.html").read_bytes() == (ROOT / "docs/progress/index.html").read_bytes()
-    svg = (ROOT / "site/progress/progress.svg").read_text(encoding="utf-8")
+    assert (out / "site/progress/index.html").read_bytes() == (out / "docs/progress/index.html").read_bytes()
+    svg = (out / "site/progress/progress.svg").read_text(encoding="utf-8")
     assert svg.count("<rect") == 1 + coverage["total"] + data["latest_number"] + data["physical_tests"]["total"]
-    badge = json.loads((ROOT / "site/badge-modulos.json").read_text(encoding="utf-8"))
+    badge = json.loads((out / "site/badge-modulos.json").read_text(encoding="utf-8"))
     assert badge["schemaVersion"] == 1 and f"{coverage['covered']}/{coverage['total']}" in badge["message"]
 
-    page = (ROOT / "site/progress/index.html").read_text(encoding="utf-8")
+    page = (out / "site/progress/index.html").read_text(encoding="utf-8")
     assert page.count('class="cell m-') == coverage["total"]
     assert page.count('class="cell m-hito"') + page.count('class="cell m-sub"') == coverage["covered"]
     assert page.count('class="cell m-rejected"') == coverage["excluded"]

@@ -89,3 +89,9 @@ raw*.jsonl
 .codex/
 analysis/rea-independent/logs/*.log
 tools/camera-ptrace/sctrace
+
+# Auditoría 26-10-2026 (R3/R4): binario de Sony y copias .zip antiguas, solo locales
+analysis/ghidra/s37-input/libmprctrl.so
+/*.zip
+# R5: evidencia pequeña de S303 que sí se versiona pese a `raw*.jsonl`
+!analysis/s303_ref_tree/raw305*.jsonl

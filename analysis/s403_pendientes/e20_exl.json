@@ -1,0 +1,70 @@
+{
+ "0x436ca9b2": {
+  "instruccion": "bls #0x436ca9d6",
+  "papel": "bls: hsiz_arcout <= 2240 (0x8c0) salta la comprobación; si no, registra [EXL] y sigue"
+ },
+ "0x436caa0a": {
+  "instruccion": "movs r7, #0",
+  "papel": "movs r7,#0: valor 0 para la bandera"
+ },
+ "0x436caa0c": {
+  "instruccion": "str r7, [sp, #0x58]",
+  "papel": "str r7,[sp,#0x58]: bandera de éxito a 0 tras 'arcout> arcin' o 'hsiz_arcout > 2240'"
+ },
+ "0x436cab34": {
+  "instruccion": "bls #0x436cab58",
+  "papel": "bls: hsiz_sig <= 2240 salta la comprobación"
+ },
+ "0x436cab56": {
+  "instruccion": "str r1, [sp, #0x58]",
+  "papel": "str r1,[sp,#0x58]: bandera a 0 tras 'hsiz_sig > 2240'"
+ },
+ "0x436caf78": {
+  "instruccion": "ldr r0, [sp, #0x58]",
+  "papel": "ldr r0,[sp,#0x58]: la bandera es el valor de retorno"
+ },
+ "0x436cb216": {
+  "instruccion": "movs r3, #0",
+  "papel": "movs r3,#0: en 0x436cafc0, tras 'hsiz_arcout > 2240'"
+ },
+ "0x436cb218": {
+  "instruccion": "str r3, [sp, #0x60]",
+  "papel": "str r3,[sp,#0x60]: bandera de 0x436cafc0 a 0"
+ },
+ "0x436cb740": {
+  "instruccion": "ldr r0, [sp, #0x60]",
+  "papel": "ldr r0,[sp,#0x60]: la bandera es el retorno de 0x436cafc0"
+ },
+ "0x43ad5b60": {
+  "instruccion": "mov r5, r0",
+  "papel": "mov r5,r0: 0x43ad5b02 conserva el retorno de las dos rutinas"
+ },
+ "0x43ad5bba": {
+  "instruccion": "mov r0, r5",
+  "papel": "mov r0,r5: y lo devuelve"
+ },
+ "0x43ad5af4": {
+  "instruccion": "bl #0x43ad5b02",
+  "papel": "bl 0x43ad5b02 dentro de 0x43ad5998"
+ },
+ "0x436c2726": {
+  "instruccion": "cbz r0, #0x436c275c",
+  "papel": "cbz r0: bandera 0 -> salta a 'movs r0,#7' (código de error)"
+ },
+ "0x436c275c": {
+  "instruccion": "movs r0, #7",
+  "papel": "movs r0,#7: 0x436c25d0 devuelve 7 y no ejecuta el resto de la captura"
+ },
+ "0x43acc44a": {
+  "instruccion": "b.w #0x436c25d0",
+  "papel": "b.w 0x436c25d0: 0x43acc424 devuelve ese código tal cual"
+ },
+ "0x437f6358": {
+  "instruccion": "mov r6, r0",
+  "papel": "mov r6,r0: 0x437f5a04 guarda el código"
+ },
+ "0x437f635a": {
+  "instruccion": "cbz r0, #0x437f6390",
+  "papel": "cbz r0: distinto de 0 -> registra 'snrBusThroughPrereviewParamSet Error!' y aborta"
+ }
+}

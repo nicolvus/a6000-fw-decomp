@@ -3,8 +3,8 @@
 ## Estado vigente — 26-10-2026 (auditoría integral)
 
 El índice maestro [PENDIENTES](PENDIENTES.md) manda sobre los resúmenes siguientes, que son instantáneas de su fecha.
-Estáticos cerrados con límite: E2–E5, E7, E8, E10 (a–c), E12, E14–E19, D1, D3, D4 y D6 ([evidencia](capture/s403-cierre-pendientes.md));
-E1 queda `NO_VERIFICADO` sin vías estáticas. Bloqueados por datos o hardware: E6, E9, E11, E13, D5; físicos F1–F6; respaldo R1–R5.
+Estáticos cerrados con límite: E2–E5, E7, E8, E10 (a–c), E12, E14–E20, D1, D3, D4 y D6 ([evidencia](capture/s403-cierre-pendientes.md));
+E1 queda `NO_VERIFICADO` sin vías estáticas. Bloqueados por datos o hardware: E6, E9, E11, E13, D5; físicos F1–F6; respaldo R1–R3 (R3: historial con un binario de Sony).
 Datos de auditoría y memoria temporal: [estado.json](../knowledge/audit/estado.json) y [memoria.json](../knowledge/audit/memoria.json)
 (se regeneran con `scripts/audit/repo_audit.py`). Sin firmware ejecutado ni cámara.
 

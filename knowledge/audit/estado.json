@@ -1,53 +1,45 @@
 {
  "git": {
-  "head": "e0c74d13",
+  "head": "094eabce",
   "adelante_atras_origin": [
    0,
    0
   ],
-  "versionados": 23702,
+  "versionados": 23697,
   "modificados_sin_commit": [
+   "D  .claude.zip",
+   " M .gitignore",
    " M CONTEXT.md",
    " M README.md",
-   " M analysis/s400_open_questions_triage/triage.json",
+   "D  analysis/ghidra/s37-input/libmprctrl.so",
+   "D  analysis/rea-independent/logs/daemon.log",
+   "D  analysis/rea-independent/logs/exp2-runner.log",
+   "D  analysis/rea-independent/logs/exp2d.log",
+   "D  analysis/rea-independent/run/daemon.log",
+   "D  analysis/rea-independent/run/liro-daemon.log",
+   "D  analysis/rea-independent/run/sen-daemon.log",
    " M docs/CORRECTIONS.md",
    " M docs/OPEN-QUESTIONS.md",
    " M docs/PENDIENTES.md",
    " M docs/STATE.md",
-   " M docs/capture/s202-imx210-imx235-timing.md",
    " M docs/capture/s403-cierre-pendientes.md",
-   " M docs/capture/s68-battery-power.md",
-   " M docs/progress/index.html",
+   "D  knowledge.zip",
    " M knowledge/CURRENT.md",
    " M knowledge/PROGRESS.md",
-   " M knowledge/agents/A-backlog.md",
-   " M knowledge/agents/B-backlog.md",
-   " M knowledge/agents/C-backlog.md",
-   " M knowledge/agents/D-backlog.md",
-   " M knowledge/agents/E-backlog.md",
-   " M knowledge/agents/NEEDS-HUMAN.md",
-   " M site/badge-sesiones.json",
-   " M site/progress/index.html",
-   " M site/status.json",
-   "?? knowledge/audit/",
-   "?? scripts/audit/",
-   "?? tests/test_build_pages_status.py",
-   "?? tests/test_repo_audit.py",
-   "?? tests/test_s403_utilidades.py"
+   " M knowledge/audit/estado.json",
+   " M knowledge/audit/memoria.json",
+   "D  scripts.zip",
+   " M scripts/build_pages_status.py",
+   "D  tests.zip",
+   " M tests/test_pages_status.py",
+   "?? analysis/s403_pendientes/e20_exl.json",
+   "?? analysis/s403_pendientes/e20_exl.py",
+   "?? tests/test_s403_e20_exl.py",
+   "?? tests/test_s404_herramientas_offline.py"
   ],
   "versionados_e_ignorados": {
-   "total": 9,
-   "muestra": [
-    "analysis/rea-independent/logs/daemon.log",
-    "analysis/rea-independent/logs/exp2-runner.log",
-    "analysis/rea-independent/logs/exp2d.log",
-    "analysis/rea-independent/run/daemon.log",
-    "analysis/rea-independent/run/liro-daemon.log",
-    "analysis/rea-independent/run/sen-daemon.log",
-    "analysis/s303_ref_tree/raw305.jsonl",
-    "analysis/s303_ref_tree/raw305b.jsonl",
-    "analysis/s303_ref_tree/raw305c.jsonl"
-   ]
+   "total": 0,
+   "muestra": []
   },
   "mayores": [
    {
@@ -84,14 +76,8 @@
    }
   ],
   "binarios_versionados": {
-   "total": 5,
-   "muestra": [
-    ".claude.zip",
-    "analysis/ghidra/s37-input/libmprctrl.so",
-    "knowledge.zip",
-    "scripts.zip",
-    "tests.zip"
-   ]
+   "total": 0,
+   "muestra": []
   }
  },
  "enlaces_md": {
@@ -116,63 +102,11 @@
    ]
   },
   "existen_pero_no_versionados": {
-   "total": 14,
+   "total": 1,
    "muestra": [
     {
-     "en": "CONTEXT.md",
-     "enlace": "knowledge/audit/estado.json"
-    },
-    {
-     "en": "CONTEXT.md",
-     "enlace": "knowledge/audit/memoria.json"
-    },
-    {
-     "en": "docs/PENDIENTES.md",
-     "enlace": "../knowledge/audit/estado.json"
-    },
-    {
-     "en": "docs/PENDIENTES.md",
-     "enlace": "../knowledge/audit/estado.json"
-    },
-    {
-     "en": "docs/PENDIENTES.md",
-     "enlace": "../knowledge/audit/estado.json"
-    },
-    {
-     "en": "docs/STATE.md",
-     "enlace": "../knowledge/audit/estado.json"
-    },
-    {
-     "en": "docs/STATE.md",
-     "enlace": "../knowledge/audit/memoria.json"
-    },
-    {
      "en": "docs/capture/s403-cierre-pendientes.md",
-     "enlace": "../../scripts/audit/repo_audit.py"
-    },
-    {
-     "en": "docs/capture/s403-cierre-pendientes.md",
-     "enlace": "../../knowledge/audit/estado.json"
-    },
-    {
-     "en": "docs/capture/s403-cierre-pendientes.md",
-     "enlace": "../../knowledge/audit/memoria.json"
-    },
-    {
-     "en": "knowledge/CURRENT.md",
-     "enlace": "../knowledge/audit/estado.json"
-    },
-    {
-     "en": "knowledge/CURRENT.md",
-     "enlace": "../knowledge/audit/memoria.json"
-    },
-    {
-     "en": "knowledge/PROGRESS.md",
-     "enlace": "../knowledge/audit/estado.json"
-    },
-    {
-     "en": "knowledge/PROGRESS.md",
-     "enlace": "../knowledge/audit/memoria.json"
+     "enlace": "../../analysis/s403_pendientes/e20_exl.py"
     }
    ]
   }
@@ -268,9 +202,9 @@
    }
   ]
  },
- "pruebas_colectadas": 3617,
+ "pruebas_colectadas": 3630,
  "pruebas": {
-  "archivos_de_prueba": 290,
+  "archivos_de_prueba": 293,
   "s403_sin_prueba": {
    "total": 8,
    "muestra": [
@@ -285,9 +219,8 @@
    ]
   },
   "scripts_raiz_sin_prueba_por_nombre": {
-   "total": 36,
+   "total": 35,
    "muestra": [
-    "scripts/build_pages_status.py",
     "scripts/camera_bisect_fields.py",
     "scripts/camera_drivemode_override.py",
     "scripts/camera_efcs_conditions.py",
@@ -327,18 +260,17 @@
   }
  },
  "pendientes": {
-  "filas": 54,
+  "filas": 55,
   "abiertas_por_estado": {
    "NO_VERIFICADO": 1,
-   "ABIERTO": 6,
    "BLOQUEADO": 8,
-   "DIFERIDO": 3
+   "DIFERIDO": 3,
+   "ABIERTO": 3
   },
   "estados_no_validos": [],
   "ids_duplicados": [],
   "ids_abiertos": [
    "E1",
-   "E20",
    "E6",
    "E9",
    "E11",
@@ -352,9 +284,7 @@
    "F6",
    "R1",
    "R2",
-   "R3",
-   "R4",
-   "R5"
+   "R3"
   ]
  },
  "cifras_citadas": {

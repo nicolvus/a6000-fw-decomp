@@ -5,11 +5,11 @@ from __future__ import annotations
 import json
 import re
 import shutil
+import sys
 from html import escape
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT = ROOT / "site" / "status.json"
 DETAIL = ROOT / "analysis" / "s178_census" / "census_detalle.json"
 PROGRESS = ROOT / "analysis" / "s178_census" / "census.md"
 REPO = "https://github.com/nicolvus/a6000-fw-decomp/blob/main/"
@@ -158,7 +158,8 @@ Datos crudos: <a href="../status.json">status.json</a>.</p>
 """
 
 
-def main() -> None:
+def main(out: Path = ROOT) -> None:
+    """Escribe `site/` y `docs/progress/` bajo `out` (por defecto la raíz del repositorio)."""
     # The catalogue points to a representative document, not to a claim of completion.
     candidates: dict[int, tuple[int, Path]] = {}
     for folder, priority in (("docs/capture", 0), ("analysis", 1)):
@@ -224,13 +225,17 @@ def main() -> None:
         },
         "decision": {"label": "No parchear: evidencia insuficiente", "source": REPO + "docs/capture/s51-decision.md"},
     }
-    OUTPUT.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    (ROOT / "site" / "progress").mkdir(exist_ok=True)
+    site = out / "site"
+    output = site / "status.json"
+    site.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    (site / "progress").mkdir(exist_ok=True)
     grids = groups(data)
-    src_dir = ROOT / "docs" / "progress"
+    src_dir = out / "docs" / "progress"
+    src_dir.mkdir(parents=True, exist_ok=True)
     (src_dir / "index.html").write_text(render_html(grids, data), encoding="utf-8")
-    (ROOT / "site" / "progress" / "progress.svg").write_text(render_svg(grids), encoding="utf-8")  # solo en Pages, no versionado
-    shutil.copyfile(src_dir / "index.html", ROOT / "site" / "progress" / "index.html")
+    (site / "progress" / "progress.svg").write_text(render_svg(grids), encoding="utf-8")  # solo en Pages, no versionado
+    shutil.copyfile(src_dir / "index.html", site / "progress" / "index.html")
     # Shields "endpoint" JSON: README badges read these from Pages, so they follow every deploy.
     cov, tests = data["module_coverage"], data["physical_tests"]
     for name, label, msg, color in (
@@ -239,9 +244,9 @@ def main() -> None:
         ("pruebas", "pruebas físicas", f"{tests['done']}/{tests['total']}", "lightgrey"),
     ):
         badge = {"schemaVersion": 1, "label": label, "message": msg, "color": color}
-        (ROOT / "site" / f"badge-{name}.json").write_text(json.dumps(badge, ensure_ascii=False) + "\n", encoding="utf-8")
-    print(f"{len(sessions)} sesiones documentadas; última {data['latest']}; salida {OUTPUT}")
+        (site / f"badge-{name}.json").write_text(json.dumps(badge, ensure_ascii=False) + "\n", encoding="utf-8")
+    print(f"{len(sessions)} sesiones documentadas; última {data['latest']}; salida {output}")
 
 
 if __name__ == "__main__":
-    main()
+    main(Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT)

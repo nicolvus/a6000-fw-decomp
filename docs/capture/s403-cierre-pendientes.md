@@ -206,3 +206,13 @@ Herramienta: [repo_audit.py](../../scripts/audit/repo_audit.py) (prueba `tests/t
 - **Discrepancias abiertas, registradas en [PENDIENTES](../PENDIENTES.md):** `libmprctrl.so` de Sony versionado en un repositorio público (R3), cuatro `.zip` obsoletos en la raíz (R4), nueve archivos versionados que `.gitignore` ignora (R5), 11 herramientas fuera de línea sin prueba por nombre (C7), una prueba que reescribe archivos versionados de `site/` (C8) y la etiqueta `[EXL]` alcanzable desde la captura (E20).
 - **Cifras que difieren y no se reescriben (D9):** 12 menciones «N pruebas» de informes históricos frente a lo colectado hoy.
 - **Límite:** las comprobaciones son mecánicas (existencia de enlaces y rutas, validez de JSON/Python, estados, fechas); no validan el contenido técnico de los informes ni re-ejecutan el análisis de bytes.
+
+## Adenda 26-10-2026 (5) — cierre de los pendientes de la auditoría
+
+- **E20 (estático, cerrado con límite):** [e20_exl.py](../../analysis/s403_pendientes/e20_exl.py) → `e20_exl.json` (17 instrucciones decisivas, comprobadas contra los bytes por `tests/test_s403_e20_exl.py`). `[EXL]` sí puede rechazar una captura: `hsiz_arcout > 2240` (`0x8c0`), `arcout > arcin` y `hsiz_sig > 2240` registran el aviso y ponen a 0 la bandera de retorno de `0x436ca820` (y `0x436cafc0`, sin la comprobación de `hsiz_sig`). La bandera sube por `0x43ad5b02` y `0x43ad5998` hasta `0x436c25d0` (`cbz` → `movs r0,#7`), que sale sin ejecutar el resto; `0x43acc424` devuelve el 7 y `0x437f5a04` lo registra como `snrBusThroughPrereviewParamSet Error!` y aborta. Límite: no se evaluaron las dimensiones de cada modo de disparo, así que no se sabe si algún modo real pasa de 2240.
+- **C8:** `build_pages_status.py` acepta un directorio de salida y la prueba escribe en uno temporal; la suite deja de ensuciar `site/`.
+- **C7:** `tests/test_s404_herramientas_offline.py` (11 pruebas sintéticas) cubre las 11 herramientas fuera de línea.
+- **R3a, R4, R5:** `libmprctrl.so`, los cuatro `.zip` y seis registros `*.log` salen del índice (copias locales conservadas) y se ignoran; los tres `raw305*.jsonl` se conservan con excepción en `.gitignore`. El historial de git aún contiene `libmprctrl.so` (R3): reescribirlo es decisión del usuario.
+- **D9:** sigue descartado (cifras históricas).
+
+- **Suite completa:** 3 595 aprobadas, 35 omitidas, 0 fallos, 1 168 subpruebas, 576 s (3 630 colectadas); el árbol de `site/` y `docs/progress/` queda intacto tras correrla (C8). Se lanza con `pytest tests`: `pytest` sin ruta choca con el nombre duplicado de `analysis/s300_state_xref_sweep/test_s300_state_xref_sweep.py`.
