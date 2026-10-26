@@ -4,7 +4,7 @@ Entrada única para localizar informes, pruebas y evidencia **por tema**, sin im
 (A–E) ni la sesión que los produjo. Los resúmenes del repositorio enlazan aquí en lugar de copiar
 informes. El bloque de abajo se **regenera** con `python3 scripts/knowledge/build_subsystem_index.py`
 (cada informe de `docs/capture/` aparece en una sola categoría, con sus pruebas `tests/test_s<N>_*.py`
-y su evidencia `analysis/s<N>*/`); `tests/test_subsystem_index.py` falla si falta alguno.
+y su evidencia `analysis/s<N>*/`; la categoría sale de reglas sobre el nombre del archivo, revisadas contra los títulos del tema obturador/Silent, no una lectura de cada informe); `tests/test_subsystem_index.py` falla si falta alguno.
 
 ## Quién es la fuente de cada cosa
 
@@ -47,7 +47,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 1. Pipeline de captura (botón, RecordStill/RecordImage, LIRO, RAW/JPEG, almacenamiento)
 
-46 informes.
+45 informes.
 
 - **—** [Tabla de secuencias de captura 0x43edccf8 (línea D, resuelta por Claude)](capture/capture-stage-reuse.md)
 - **—** [Seguimiento de los cinco pendientes de captura — 25-10-2026](capture/capture-static-followup-2026-10-25.md)
@@ -85,7 +85,6 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **S20** [S20 — P4: código real del despachador interno de `StillConverter` para "Receive CBID_ENCODE_STILL"](capture/s20-p4-stillconverter-encodestill-dispatch.md)
 - **S20** [S20 — P5: nuevo llamador real de `MprFileIf::WriteAndFlush`, alcanzado solo indirectamente](capture/s20-p5-writeandflush-caller.md)
 - **S20** [S20 — Stage_RawPlayInit y reutilización de etapas](capture/s20-rawplay-stage-reuse.md)
-- **S21** [S21 (Claude): pulsación del disparador → orden de movimiento de cortinas](capture/s21-claude-button-to-shutter-order.md)
 - **S21** [S21 — Codex: exposición → imagen en biblioteca](capture/s21-codex-exposure-to-library.md)
 - **S29** [S29 — WriteStill: entrada, escritura, retorno y cierre](capture/s29-writestill-end-to-end.md)
 - **S30** [S30 — captura, origen YC y cierre de EncodeStill](capture/s30-pipelines-capture-encode.md)
@@ -98,7 +97,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 2. Sensor e imager (IMX210/IMX235, registros, estados, drive modes)
 
-107 informes.
+102 informes.
 
 - **—** [IMX210: matriz de registros por modo (SetMode) — A6000 3.21](capture/imx210-video-readout.md)
 - **—** [Tema 1 — Cadena VD (Vertical Drive/Blanking) y fin de integración electrónica del sensor IMX210](capture/rea-tema1-vd-integracion.md)
@@ -133,10 +132,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **S303** [S303 — Árbol de referencias de la tabla `0x43ff3200` y callers del dumper de gates](capture/s303-ref-tree-43ff3200.md) · pruebas: [test_s303_ref_tree.py](../tests/test_s303_ref_tree.py) · evidencia: [s303_ref_tree](../analysis/s303_ref_tree)
 - **S304** [S304 — REA/Ghidra: callers de `FUN_43858338` (dumper gates) y código que carga GOT `0x4401f080`](capture/s304-rea-dumper-callers.md)
 - **S305** [S305 — corrección de la entrada y acceso al estado por GOT](capture/s305-fun43858390-literal-pool.md)
-- **S308** [S308 — A dónde va el modo Silent y cómo entra el bloque de tiempos](capture/s308-silent-flow.md) · pruebas: [test_s308_silent_flow.py](../tests/test_s308_silent_flow.py) · evidencia: [s308_silent_flow](../analysis/s308_silent_flow)
 - **S310** [S310 — `0x43ad9704` es un thunk de llamada virtual, no un constructor de mensajes](capture/s310-vtable-thunk.md) · pruebas: [test_s310_vtable_thunk.py](../tests/test_s310_vtable_thunk.py) · evidencia: [s310_vtable_thunk](../analysis/s310_vtable_thunk)
-- **S313** [S313 — Síntesis del carril B: qué distingue el silent shutter de la A7S (estado actual)](capture/s313-synthesis-carril-b.md) · pruebas: [test_s313_synthesis.py](../tests/test_s313_synthesis.py)
-- **S314** [S314 — Procedencia real del selector silent y tabla `0x43fee3f8` (carril B)](capture/s314-selector-object.md) · pruebas: [test_s314_selector_object.py](../tests/test_s314_selector_object.py) · evidencia: [s314_selector_object](../analysis/s314_selector_object)
 - **S315** [S315 — Tres listas de registros aplicadas por `0x436f44c4` (carril B)](capture/s315-register-lists.md) · pruebas: [test_s315_register_lists.py](../tests/test_s315_register_lists.py) · evidencia: [s315_register_lists](../analysis/s315_register_lists)
 - **S316** [S316 — Clase dueña de las listas: constructor, vtable y slots `+0x38`/`+0x44` (carril B)](capture/s316-class-vtable.md) · pruebas: [test_s316_class_vtable.py](../tests/test_s316_class_vtable.py) · evidencia: [s316_class_vtable](../analysis/s316_class_vtable)
 - **S317** [S317 — `obj+0x2b4` indexa tres tablas de `0x1c` B por modo (carril B)](capture/s317-mode-tables.md) · pruebas: [test_s317_mode_tables.py](../tests/test_s317_mode_tables.py) · evidencia: [s317_mode_tables](../analysis/s317_mode_tables)
@@ -192,11 +188,9 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **S57** [S57-A — Semántica del registro ID1 (dirección 0x0001) del IMX210 (20-10-2026)](capture/s57-imx210-register1-semantics.md) · pruebas: [test_s57_imx210_exposure.py](../tests/test_s57_imx210_exposure.py) · evidencia: [s57](../analysis/s57)
 - **S57** [S57-F — SyncMode del P2S, VD y aplicación de registros (20-10-2026)](capture/s57-p2s-vd-synchronization.md) · pruebas: [test_s57_imx210_exposure.py](../tests/test_s57_imx210_exposure.py) · evidencia: [s57](../analysis/s57)
 - **S58** [S58-A — Productores AE de svd / shd / spl del IMX210 (20-10-2026)](capture/s58-ae-timing-producers.md) · pruebas: [test_s58_timing_a7s.py](../tests/test_s58_timing_a7s.py) · evidencia: [s58](../analysis/s58)
-- **S58** [S58 — Cálculo AE y configuración efectiva A7S Silent](capture/s58-conclusions.md) · pruebas: [test_s58_timing_a7s.py](../tests/test_s58_timing_a7s.py) · evidencia: [s58](../analysis/s58)
 - **S58** [S58-E/F — Ciclo lógico y fronteras de integración](capture/s58-exposure-cycle.md) · pruebas: [test_s58_timing_a7s.py](../tests/test_s58_timing_a7s.py) · evidencia: [s58](../analysis/s58)
 - **S58** [S58-B — Unidades y límites de temporización IMX210](capture/s58-imx210-timing-units.md) · pruebas: [test_s58_timing_a7s.py](../tests/test_s58_timing_a7s.py) · evidencia: [s58](../analysis/s58)
 - **S58** [S58-C — Emulación IMX235: cadena ejecutada y cobertura delimitada](capture/s58-imx235-full-emulation.md) · pruebas: [test_s58_timing_a7s.py](../tests/test_s58_timing_a7s.py) · evidencia: [s58](../analysis/s58)
-- **S59** [S59-Claude — IMX235 (A7S 3.20): constructor real de C_Imager y Silent en la cadena de cuatro métodos](capture/s59-claude.md) · pruebas: [test_s59_claude.py](../tests/test_s59_claude.py) [test_s59_sol.py](../tests/test_s59_sol.py) · evidencia: [s59](../analysis/s59)
 - **S59** [S59 — Investigación colaborativa Claude + GPT-6.1 Sol](capture/s59-conclusions.md) · pruebas: [test_s59_claude.py](../tests/test_s59_claude.py) [test_s59_sol.py](../tests/test_s59_sol.py) · evidencia: [s59](../analysis/s59)
 - **S59** [S59 — Validación cruzada Claude ↔ GPT-6.1 Sol](capture/s59-cross-validation.md) · pruebas: [test_s59_claude.py](../tests/test_s59_claude.py) [test_s59_sol.py](../tests/test_s59_sol.py) · evidencia: [s59](../analysis/s59)
 - **S59** [S59 Sol — temporización IMX210 de la A6000](capture/s59-sol.md) · pruebas: [test_s59_claude.py](../tests/test_s59_claude.py) [test_s59_sol.py](../tests/test_s59_sol.py) · evidencia: [s59](../analysis/s59)
@@ -210,7 +204,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 3. Obturador (cortinas, EFCS, SilentShutter, exposición electrónica completa)
 
-43 informes.
+50 informes.
 
 - **—** [Darwin: entradas verificadas para investigar el obturador](capture/darwin-shutter-entrypoints.md)
 - **—** [Darwin: fases, notificaciones y escrituras de control](capture/darwin-state-machine.md)
@@ -225,6 +219,11 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **S17** [Comparación de arquitecturas A / E / P (sesión 17)](capture/s17-a-e-p-architecture-comparison.md)
 - **S19** [S19-12 Follow-up: Mechanical Shutter Decision Points & CAIF/Darwin Path Conditions](capture/s19-12-mechanical-shutter-decision.md)
 - **S19** [S19-12 — Puntos de decisión antes de la captura mecánica](capture/s19-mechanical-shutter-decision-points.md)
+- **S21** [S21 (Claude): pulsación del disparador → orden de movimiento de cortinas](capture/s21-claude-button-to-shutter-order.md)
+- **S308** [S308 — A dónde va el modo Silent y cómo entra el bloque de tiempos](capture/s308-silent-flow.md) · pruebas: [test_s308_silent_flow.py](../tests/test_s308_silent_flow.py) · evidencia: [s308_silent_flow](../analysis/s308_silent_flow)
+- **S313** [S313 — Síntesis del carril B: qué distingue el silent shutter de la A7S (estado actual)](capture/s313-synthesis-carril-b.md) · pruebas: [test_s313_synthesis.py](../tests/test_s313_synthesis.py)
+- **S314** [S314 — Procedencia real del selector silent y tabla `0x43fee3f8` (carril B)](capture/s314-selector-object.md) · pruebas: [test_s314_selector_object.py](../tests/test_s314_selector_object.py) · evidencia: [s314_selector_object](../analysis/s314_selector_object)
+- **S383** [S383 — Mensajes `…ForLiro` y SilentShutter en libObj.so (A6000 fw3.21)](capture/s383-forliro-silentlibobj.md)
 - **S402** [S402 — Mapeo de diferencias A7S vs A6000 a pruebas físicas (P1–P8)](capture/s402-physical-test-mapping.md) · pruebas: [test_s402_static_closure.py](../tests/test_s402_static_closure.py) · evidencia: [s402_static_closure](../analysis/s402_static_closure)
 - **S50** [S50 — Investigador A (Claude): configuración electrónica (`0xce`, `0xb6`, `0xb7`, `0xed`, `C+0x60/0x94/0x95/…`)](capture/s50-claude-electronic-config.md) · evidencia: [s50](../analysis/s50)
 - **S50** [S50 B — exposición y cortinas (Codex)](capture/s50-codex-exposure-curtains.md) · evidencia: [s50](../analysis/s50)
@@ -245,6 +244,8 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **S56** [S56-C — Integración electrónica del IMX210 (20-10-2026)](capture/s56-imx210-electronic-shutter.md) · pruebas: [test_s56_imx210_transport.py](../tests/test_s56_imx210_transport.py) · evidencia: [s56](../analysis/s56)
 - **S57** [S57-B — Pulso SSB: productores, orden y consecuencias (20-10-2026)](capture/s57-ssb-pulse-analysis.md) · pruebas: [test_s57_imx210_exposure.py](../tests/test_s57_imx210_exposure.py) · evidencia: [s57](../analysis/s57)
 - **S57** [S57-E — CIS0_SHT_RST / XPI del IMX210 (20-10-2026)](capture/s57-xpi-shutter-reset.md) · pruebas: [test_s57_imx210_exposure.py](../tests/test_s57_imx210_exposure.py) · evidencia: [s57](../analysis/s57)
+- **S58** [S58 — Cálculo AE y configuración efectiva A7S Silent](capture/s58-conclusions.md) · pruebas: [test_s58_timing_a7s.py](../tests/test_s58_timing_a7s.py) · evidencia: [s58](../analysis/s58)
+- **S59** [S59-Claude — IMX235 (A7S 3.20): constructor real de C_Imager y Silent en la cadena de cuatro métodos](capture/s59-claude.md) · pruebas: [test_s59_claude.py](../tests/test_s59_claude.py) [test_s59_sol.py](../tests/test_s59_sol.py) · evidencia: [s59](../analysis/s59)
 - **S64** [S64 — prueba en cámara: SilentShutter en RAM, NVRAM y consumidores](capture/s64-silent-ram-nvram-test.md) · evidencia: [s64_jpeg](../analysis/s64_jpeg)
 - **S65** [S65 — NVRAM antes / durante / después del incidente (2026-10-20)](capture/s65-nvram-incident-diff.md) · evidencia: [s65_video](../analysis/s65_video)
 - **—** [EFCS y obturación completamente electrónica — 15-10-2026](capture/shutter-investigation.md)
@@ -258,7 +259,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 4. Control y comunicación (OSAL, colas, mensajes, callbacks, libObj, servicios)
 
-36 informes.
+35 informes.
 
 - **—** [Rama A — ObjEffect: EffectInternalMode, escritores y topología (sesión Claude)](capture/branch-claude-objeffect.md)
 - **—** [Cola 0x40193: construcción, transporte, consumo e instalación](capture/queue-40193-flow-2026-10-23.md)
@@ -293,7 +294,6 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **S380** [S380 — Mapa de libObj.so (A6000 fw3.21)](capture/s380-libobj-a6000-map.md) · evidencia: [s380_libobj_map](../analysis/s380_libobj_map)
 - **S381** [S381 — Despacho de mensajes en libObj.so A6000 fw3.21](capture/s381-libobj-a6000-dispatch.md)
 - **S382** [S382 — Llamadores de RecordImage (0x90b248), antigua etiqueta RecordStill::Execute](capture/s382-recordstill-callers.md) · evidencia: [s382_libobj_bl](../analysis/s382_libobj_bl)
-- **S383** [S383 — Mensajes `…ForLiro` y SilentShutter en libObj.so (A6000 fw3.21)](capture/s383-forliro-silentlibobj.md)
 - **S384** [S384 — Búsqueda del ID de cola `0x40193` (C2 receptor) en ARM y Thumb](capture/s384-queue-id-0x40193-search.md)
 - **S403** [S403 · E15/E12 — el buzón `0x0110027c` es la cola de `kikilog`](capture/s403-e15-kikilog.md) · pruebas: [test_s403_d1_alcance.py](../tests/test_s403_d1_alcance.py) [test_s403_d1_census_review.py](../tests/test_s403_d1_census_review.py) [test_s403_d6_homologos.py](../tests/test_s403_d6_homologos.py) +14 · evidencia: [s403_pendientes](../analysis/s403_pendientes)
 

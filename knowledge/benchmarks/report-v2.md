@@ -1,5 +1,7 @@
 # Benchmark v2 — verdad de referencia estructurada (Fase 12.6)
 
+> Nota (26-10-2026): las citas `README.md:N` de este reporte son números de línea del README previo a la reorganización documental (commit `b782ebe2`, íntegro en [docs/history/README-historial-2026-10-26.md](../../docs/history/README-historial-2026-10-26.md), donde la línea N original es la N+2). No se reescriben: son instantáneas del benchmark.
+
 Línea base PRE-rediseño conservada sin cambios en knowledge/benchmarks/baseline-2026-10-18-pre-12.6.md. Este reporte usa criterios de acierto distintos (afirmación+fuente, arista exacta, abstención correcta, cobertura de ambigüedad) y por tanto NO es comparable número-a-número con la línea base; compara la CAPACIDAD de cada método, no una métrica idéntica.
 
 ## Precision@1 por método (todas las categorías)

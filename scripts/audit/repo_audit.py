@@ -56,9 +56,10 @@ def md_links(files: list[str]) -> dict:
         base = (ROOT / f).parent
         text = (ROOT / f).read_text(errors="replace")
         text = re.sub(r"```.*?```", "", text, flags=re.DOTALL)
+        text = re.sub(r"`[^`\n]*`", "", text)
         for m in LINK.finditer(text):
             t = m.group(1).split("#")[0]
-            if not t or re.match(r"[a-z]+:", t) or t.startswith("<") or not re.search(r"[/.]", t):
+            if not t or re.match(r"[a-z]+:", t) or t.startswith(("<", "/")) or not re.search(r"[/.]", t):
                 continue  # shortcut: ignora destinos sin / ni punto (ruido de código entre corchetes)
             p = (base / t.split("?")[0]).resolve()
             try:

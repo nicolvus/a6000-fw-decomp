@@ -61,7 +61,6 @@ Para la trazabilidad completa: [CORRECTIONS](../docs/CORRECTIONS.md) y [STATE §
   66 de 69 afirmaciones de equivalencia siguen sin verificar ([auditoría](../docs/capture/S605-S627_tabla_hallazgos.md)).
 - S207 no demuestra ausencia de un fin de integración (JSON/generador declaran `NO_VERIFICADO`). S51 A/B/C no se altera sin evidencia nueva.
 - Darwin: base ROM `0x4200`, no `0`. SetImageWrited = `0x6108/0x1007`, no `0x1009`.
-- Fechas: entradas rotuladas «27-10-2026» pertenecen a commits del 26-10-2026 (ver [PENDIENTES](../docs/PENDIENTES.md), registro de cambios).
 
 ## Decisiones técnicas vigentes
 
