@@ -32,28 +32,20 @@ por esos índices.
 | ID | Estado | Pendiente | Criterio de cierre / límite | Fuente |
 |---|---|---|---|---|
 | E1 | NO_VERIFICADO | Quién publica el local 4 a `ModelScalarPb` (`0x120EF004`), el 2 a `ModelPbCap` (`0x12030002`) y los mensajes `0x35001004`, `0x35003002`, `0x3a494026` | Ningún código de `libObj` construye esos ids; el emisor, si existe, es de datos o de ejecución. Reabrir solo si aparece un llamador que pase `@M0EF` o `@M030` a `0x12d780` | [cierre S402 §8](capture/static-closure-2026-10-25.md) |
-| E2 | PARCIAL | Activación real de RecordImage/RecordStill: el check `0x907ba0` no condiciona la fila `0x10000005` (solo rechaza mensaje nulo o `0x10000003` con búsqueda fallida). Falta el productor externo de `0x10000005` (los dos constructores conocidos no son envíos externos) | Cadena disparo → mensaje → estado 2 demostrada por código, o declarada de ejecución | [S403](capture/s403-cierre-pendientes.md) §E2, [seguimiento](capture/capture-static-followup-2026-10-25.md) |
-| E3 | PARCIAL | `params[+9]` de SetExposure (IMX210): cinco sitios de llamada y sus escritores identificados (valores 0, 1 y 4 por constante); los valores 2 y 3 sin constante directa (ver E14) | Origen de 2/3 resuelto o declarado de ejecución | [S403](capture/s403-cierre-pendientes.md) §E3 |
-| E4 | PARCIAL | Modos `+8` de `0x40193`: hay tabla booleana `0x43ca530e` y clasificador por máscara en `0x4379d378`, pero los códigos de los ocho wrappers (`0xc/0xb/0x14/0xa`, `0x6/0x5/0xa/0x4`) no están todos en 0–10; sin nombre por modo | Tabla índice → estado nombrada | [S403](capture/s403-cierre-pendientes.md) §E4, [cierre S402 §9](capture/static-closure-2026-10-25.md) |
 | E6 | BLOQUEADO | Cadena CAIF → Darwin → LIRO/imager: el MCU Darwin queda fuera de `av-cam` | Solo con traza del bus o volcado de Darwin (ver F4) | [C-backlog](../knowledge/agents/C-backlog.md) |
-| E8 | PARCIAL | Estado `0x43f72d02`: 14 sitios lo leen por el slot (S176 solo contaba 2) y ninguno escribe; los dos lectores S176 tienen cadena de llamadores; el lector 2 cuelga de `0x437b5b14` (origen del bloque `B` de captura, S42). Falta activación efectiva y efecto de los campos | Activación solo en ejecución | [S403](capture/s403-cierre-pendientes.md) §E8 |
 | E9 | BLOQUEADO | Correspondencia funcional de los 112 registros IMX210/IMX235 restantes y mecanismo de fin de integración: la semántica eléctrica exige hoja de datos (ver D5) | Documento legítimo aportado por el usuario | [A-backlog](../knowledge/agents/A-backlog.md) |
 | E10 | ABIERTO | Ruta YC → archivo: productor de modo 1, creador del pin `0x2a` en disparo, formato YC y propiedad del buffer | Ciclo terminal de buffers demostrado | [matriz S51](capture/s51-static-coverage-and-tool-limits.md) |
 | E11 | PARCIAL | Segunda cortina: enlace banco/bit `0xf2910048` → P4E y rutas alternativas de fin de exposición | Traducción física verificada | [S51](capture/s51-decision.md) |
-| E12 | PARCIAL | Mensaje de `0x437b0390` (tipo 3, subtipo `0x22`, buzón `0x0110027c`): 13 emisores y ningún receptor por literal; entradas indirectas de `CURTAINMODE` sin seguir | Receptor localizado por registro de tareas (E15) | [S403](capture/s403-cierre-pendientes.md) §E12, [matriz S51](capture/s51-static-coverage-and-tool-limits.md) |
 | E13 | BLOQUEADO | Servicio ODL del carril B y significado físico de sus registros MMIO (`0xf292b000..8`, canales `w0`): sin hoja de datos ni símbolos | Documento externo o prueba física | [S335](capture/s335-mmio-layer.md), [B-backlog](../knowledge/agents/B-backlog.md) |
-| E14 | ABIERTO | Origen de los valores 2 y 3 de `params[+9]`: 14 `str`/`strh` con desplazamiento `0x654` (tipo de objeto sin confirmar) y el campo `[r4+0x1fc]` de `0x4381106c` | Escritores clasificados por tipo de objeto, o valores 2/3 declarados sin productor | [S403](capture/s403-cierre-pendientes.md) §E3 |
-| E15 | ABIERTO | Receptor del buzón `0x0110027c` por el registro de tareas (no por literal) | Tarea receptora identificada | [S403](capture/s403-cierre-pendientes.md) §E12 |
+| E16 | ABIERTO | Entradas indirectas de `CURTAINMODE` (`0x43eedecc`, `[0x43eefb1c+0x60]`): el negativo de S51 está acotado a su barrido PIC; falta seguir llamadas indirectas al selector `0x43842158` | Entradas indirectas enumeradas o declaradas de ejecución | [S51](capture/s51-decision.md), [E15](capture/s403-e15-kikilog.md) |
 
 ## B. Documental y de calidad
 
 | ID | Estado | Pendiente | Criterio de cierre / límite | Fuente |
 |---|---|---|---|---|
 | D1 | PARCIAL | Censo: 226 etiquetas revisadas de forma léxico-estructural (101 módulo propio, 118 subetiqueta, 6 campo de formato, 1 mixta); 4 `ACEPTO` decodificadas por texto. Los veredictos del censo no cambian; la función real de las 222 `NO_VERIFICADO` exige leer instrucciones | Una etiqueta se reabre solo si un hallazgo de captura la enlaza por código | [S403 D1](capture/s403-censo-revision.md), [censo](../analysis/s178_census/pendientes.md) |
-| D3 | PARCIAL | Afirmaciones S605–S627: logger dual de 19 fichas sin respaldo estático (3 verificadas); equivalencia de código refutada en 10 rutinas comparadas (4 fichas); 7 trazas con homólogo sin rutina resuelta y 77 sin homólogo textual (ver D6) | Cotejo de las rutinas restantes contra bytes; la equivalencia funcional no se decide solo con código | [S403](capture/s403-cierre-pendientes.md) §D3, [auditoría](capture/S605-S627_tabla_hallazgos.md) |
-| D4 | PARCIAL | Triaje S400: 518 filas, todas con revisión manual (322 `FALSO_POSITIVO`, 110 con rectificación respaldada, 86 `VIGENTE`). Las `VIGENTE` están razonadas, no certificadas | Cada `VIGENTE` pasa a respaldada o descartada al cerrar D3 o su historial | [triaje](../analysis/s400_open_questions_triage/README.md) |
+| D4 | PARCIAL | Triaje S400: 518 filas, todas con revisión manual (322 `FALSO_POSITIVO`, 110 con rectificación respaldada, 86 `VIGENTE`). Las `VIGENTE` están razonadas, no certificadas | Cada `VIGENTE` pasa a respaldada o descartada tras cotejar su cita con la revisión Git (D3 ya cerrado, no decide por sí mismo ninguna fila) | [triaje](../analysis/s400_open_questions_triage/README.md) |
 | D5 | BLOQUEADO | Hojas de datos IMX210/IMX235 (mapa de registros, semántica de modos) | Documento legítimo aportado por el usuario; no existe público | [S51](capture/s51-decision.md) |
-| D6 | ABIERTO | Equivalencia S605–S627: 7 trazas con homólogo en A7S cuya rutina REA no resolvió (Thumb sembradas) y 77 sin homólogo textual | Rutinas ubicadas con Capstone y comparadas, o declaradas sin homólogo | [S403](capture/s403-cierre-pendientes.md) §D3 |
 
 ## C. Entorno y código
 
@@ -87,6 +79,15 @@ Sin pendientes abiertos (C1–C4 cerrados el 25-10-2026, ver «Cerradas»).
 | C3 | 25-10-2026 | mypy sin errores en `scripts/knowledge` y `tests/knowledge` (21 archivos): aserciones de tipo y `mypy.ini` para `capstone` | [S403](capture/s403-cierre-pendientes.md) |
 | C4 | 25-10-2026 | Suite integral ejecutada completa: 3521 aprobadas, 35 omitidas, 0 fallos, 529 s | [S403](capture/s403-cierre-pendientes.md) |
 | D2 | 25-10-2026 | Módulos S515 `[BL]`, S516 `[PNL]`, S628 `[FILE_NUM]`, S629 `[FSYSMODE]`, S630 `[RING_DIAL]`: informe y 8 pruebas | [informe](capture/s515-s516-s628-s630-modulos.md) |
+| E12 | 26-10-2026 | Mensaje de `0x437b0390` (tipo 3, subtipo `0x22`, buzón `0x0110027c`): registro de `kikilog`, no de control; 13 emisores en av-cam | [E15](capture/s403-e15-kikilog.md) |
+| E15 | 26-10-2026 | Receptor del buzón `0x0110027c` = `kikilog_main_thread` de `kikilog.ko` (Linux), que llama a `record_log`; también envían `libObj.so` y `upm.ko` | [E15](capture/s403-e15-kikilog.md) |
+| E3 | 26-10-2026 | `params[+9]` de SetExposure: valores 0/1/4 por constante en tres sitios; 2 y 3 sin productor constante (ver E14) | [E14](capture/s403-e14-params9.md) |
+| E14 | 26-10-2026 | Los 14 escritores anchos de `+0x654` clasificados (10 de bloque de parámetros, 4 de otra clase FSM); ninguno guarda 2 o 3 como constante; 4 fuentes de datos enumeradas | [E14](capture/s403-e14-params9.md) |
+| E2 | 26-10-2026 | Productores de `0x10000005` en libObj enumerados (2 publican en cola: gestor `View` `0x8382f8` y método `0x91c1c8`); activación por pulsación solo en ejecución | [E2](capture/s403-e2-productores.md) |
+| E8 | 26-10-2026 | Objeto `0x43f72d02`: 7 de 14 sitios lectores cuelgan de las raíces de captura (≤7 niveles de llamadores); valores y activación declarados de ejecución | [S403 adenda](capture/s403-cierre-pendientes.md) |
+| E4 | 26-10-2026 | `0x4379d378` = `IsNeedForceS1ON(trig)`; `trig` 0–10 clasificado (forzar S1: 3, 8, 9, 10; no: 0, 1, 4–7; condicional: 2); el significado físico de cada `trig` queda sin establecer | [S403 adenda](capture/s403-cierre-pendientes.md) |
+| D3 | 26-10-2026 | Afirmaciones S605–S627: logger dual sin respaldo estático en 19 fichas (3 verificadas); equivalencia de código refutada en las 17 trazas con homólogo (A7S); 77 sin homólogo textual | [S403 adenda](capture/s403-cierre-pendientes.md) |
+| D6 | 26-10-2026 | 7 trazas con homólogo sin rutina REA ubicadas por prólogo y comparadas: ninguna igual; 77 declaradas sin homólogo | [S403 adenda](capture/s403-cierre-pendientes.md) |
 | E7 | 25-10-2026 | Backup `0x3000b`: 14 sitios acceden al objeto `0x43f72d02` por el slot y solo leen; el productor es el callback de copia (S305); valores efectivos solo en ejecución | [S403 §E7](capture/s403-cierre-pendientes.md) |
 | E5 | 25-10-2026 | Ausencia acotada del lector `+0x238` (A6000, 262 anclas) y del almacén `[S+0]` (A7S, 73 anclas); límite: anclas PIC con ventana de 16 instrucciones | [S403 §E5](capture/s403-cierre-pendientes.md) |
 | — | 25-10-2026 | Id de modelo estático (`@M0EF`, `@M030`) y ocho emisores = autopublicaciones; E1 queda `NO_VERIFICADO` por exclusión, no por falta de búsqueda | `dd3a8212` |
@@ -100,3 +101,9 @@ Sin pendientes abiertos (C1–C4 cerrados el 25-10-2026, ver «Cerradas»).
 |---|---|
 | 25-10-2026 | Creación a partir de la revisión integral del repo: 13 pendientes estáticos, 5 documentales, 4 de entorno, 6 físicos, 2 de respaldo. |
 | 25-10-2026 | S403: cerrados C1–C4, D2, E5 y E7; avanzados D1, D3, E2, E3, E4, E8, E12; reclasificados E6, E9 y E13 como BLOQUEADO; nuevos E14, E15 y D6. |
+| 26-10-2026 | E15 y E12 cerrados (receptor = `kikilog.ko`); nuevo E16 (entradas indirectas de `CURTAINMODE`). |
+| 26-10-2026 | E14 y E3 cerrados con límite (2/3 solo por flujo de datos). |
+| 26-10-2026 | E2 cerrado con límite (activación declarada de ejecución). |
+| 26-10-2026 | E8 cerrado con límite (lectores alcanzables desde la captura enumerados). |
+| 26-10-2026 | E4 cerrado con límite (`trig` = argumento de IsNeedForceS1ON). |
+| 26-10-2026 | D6 y D3 cerrados con límite (17/17 trazas con homólogo difieren). |

@@ -230,3 +230,9 @@ Auditoría vigente de la lista de pendientes:
 Lo que falta por cerrar está en [`docs/PENDIENTES.md`](docs/PENDIENTES.md), índice maestro que se actualiza en cada tarea.
 
 Último cierre (S403, 25-10-2026): entorno completo (suite integral 3521 aprobadas, mypy limpio, `unicorn` instalado), módulos S515/S516/S628–S630, revisión del censo y avances estáticos (E2, E3, E4, E5, E8, E12); detalle en [`docs/capture/s403-cierre-pendientes.md`](docs/capture/s403-cierre-pendientes.md).
+Último cierre (26-10-2026): E15 y E12 cerrados — el buzón `0x0110027c` es la cola de `kikilog.ko` ([informe](docs/capture/s403-e15-kikilog.md)).
+- E14/E3 cerrados con límite: los valores 2/3 de `params[+9]` solo por flujo de datos ([informe](docs/capture/s403-e14-params9.md)).
+- E2 cerrado con límite: productores de `0x10000005` enumerados ([informe](docs/capture/s403-e2-productores.md)).
+- E8 cerrado con límite: 7 de 14 lectores del objeto `0x43f72d02` cuelgan de la captura ([adenda](docs/capture/s403-cierre-pendientes.md)).
+- E4 cerrado con límite: la tabla de modos es el argumento `trig` de `IsNeedForceS1ON` ([adenda](docs/capture/s403-cierre-pendientes.md)).
+- D6 y D3 cerrados con límite: ninguna de las 17 trazas con homólogo en A7S es igual a nivel de instrucciones ([adenda](docs/capture/s403-cierre-pendientes.md)).

@@ -131,3 +131,21 @@ traducción banco/bit del hardware.
 - **E14:** origen de los valores 2 y 3 de `params[+9]` (14 escritores anchos a `+0x654` y el campo `[r4+0x1fc]` de `0x4381106c`).
 - **E15:** receptor del buzón `0x0110027c` por registro de tareas.
 - **D6:** 7 trazas con homólogo en A7S cuya rutina REA no resolvió (hilos Thumb sembrados) y 77 sin homólogo textual.
+
+## Adenda 26-10-2026 (E8)
+**E8** ([e8_alcance.py](../../analysis/s403_pendientes/e8_alcance.py) → `e8_alcance.json`, prueba `tests/test_s403_e8_alcance.py`): de los 14 sitios que leen el objeto `0x43f72d02`,
+7 cuelgan, por llamadores directos hasta 7 niveles (REA), de las raíces de captura `0x437b5b14`, `0x438c7800` y `0x438c828c`: los de las rutinas `0x438363cc` (campos `+0x39/3a/3b`), `0x43857f88`, `0x43857fa8`,
+`0x4385812c` (`+0x0`, `+0x4`), `0x43858190` (`+0x4`, `+0x1c`), `0x43859710` (`+0x1/2/5/0x1f/0x24/0x2e`) y `0x43859944` (`+0x5`, `+0xf`, solo hacia SetExposure). Los otros 6 (`+0x22`, `+0xa3`, `+0xac`, `+0x1c/0x1e`) y el sitio `0x438e7088` (rutina sin ubicar) no.
+Los valores efectivos y la activación son datos de la cámara (Backup `0x3000b`), solo observables en ejecución. E8 se cierra con ese límite.
+
+**E4** ([e4_trig.py](../../analysis/s403_pendientes/e4_trig.py) → `e4_trig.json`, prueba `tests/test_s403_e4_trig.py`): `0x4379d378` es `IsNeedForceS1ON(trig)`: su rama de error imprime
+`[IMAGING_REL]: it is a strange trig in IsNeedForceS1ON : %d` (`0x4379d3b8`) cuando `trig > 10`. Los dos llamadores (`0x4379da66`, `0x4379db72`, dentro del despachador `REL_EVT` `0x4379d838`) le pasan el campo `+0x10`
+del registro de evento, que los manejadores LIRO rellenan con el byte `+8` del mensaje de `0x40193` (§3 de S402). Clasificación: fuerzan S1 los `trig` 3, 8, 9 y 10; no lo fuerzan 0, 1, 4, 5, 6 y 7; el 2 depende de dos consultas de estado (`0x43aea220`
+con 0xb y 0x13). La tabla booleana `0x43ca530e` (`0,0,1,1,0,1,1,1,1,1,0`) la lee `0x4379d364`, que su único llamador (`0x4379e13e`) indexa con el resultado de `0x43aea264`, no con el `trig`. Los códigos `0xb`, `0xc`, `0x14`, `0x15` de los wrappers no
+se demostró que lleguen a `IsNeedForceS1ON`. Queda sin establecer qué evento físico representa cada `trig`. E4 se cierra con ese límite.
+
+## Adenda 26-10-2026 (D6, D3)
+**D6** ([d6_homologos.py](../../analysis/s403_pendientes/d6_homologos.py) → `d6_homologos.json`, prueba `tests/test_s403_d6_homologos.py`): las 7 trazas con homólogo en A7S cuya rutina REA no ubicó (S605 ×2, S606 `bt stop`, S607 `s_request is NULL`,
+S611 `SA_LPF/SA_BGEST/SA_SSP`) se ubicaron tomando el `push {…, lr}` anterior a la referencia PIC, y se compararon con el mismo motor que D3. Ninguna es igual salvo líneas (p. ej. 97 frente a 52 instrucciones en la rutina de S605 y 83 frente a 47 en la de S611).
+Con ellas, las 17 trazas que tienen homólogo textual quedan comparadas y ninguna coincide a nivel de instrucciones. Las 77 restantes no tienen homólogo textual y se declaran sin homólogo. Límite: el inicio de rutina por prólogo es heurístico.
+**D3** queda cerrado con límite: logger dual sin respaldo estático en 19 fichas (3 verificadas), equivalencia de código refutada en las 17 comparadas, 77 trazas sin homólogo; la equivalencia funcional no se decide con código.

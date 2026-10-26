@@ -66,3 +66,5 @@ respuestas NO de [S51](s51-decision.md).
 **Actualización 25-10-2026 (C1 de [PENDIENTES](../PENDIENTES.md)):** `unicorn 2.1.4` quedó instalado en `.venv` y los ocho módulos
 de prueba que no se colectaban (S56–S61) pasan: 315 pruebas, 36 subpruebas. La suite integral (`tests/`) se ejecutó completa:
 3521 aprobadas, 35 omitidas (firmware o herramienta ausentes en esa prueba), 0 fallos, 529 s. El bloqueo descrito arriba ya no existe.
+
+> Nota 26-10-2026: el receptor del mensaje de `0x437b0390` es `kikilog_main_thread` (registro de diagnóstico); ver [E15](s403-e15-kikilog.md). Las entradas indirectas de `CURTAINMODE` siguen abiertas (E16).

@@ -1,0 +1,243 @@
+[
+ {
+  "addr": "0x435c116c",
+  "insn": "str.w r3, [r4, #0x654]",
+  "clase": "bloque_de_parametros",
+  "vecinos": [
+   "0x634",
+   "0x638",
+   "0x63c",
+   "0x640",
+   "0x644",
+   "0x648",
+   "0x64c",
+   "0x650",
+   "0x654",
+   "0x658",
+   "0x65c"
+  ],
+  "origen": "pila",
+  "definicion": "0x435c116a ldr r3, [sp, #0x50]"
+ },
+ {
+  "addr": "0x4364af66",
+  "insn": "str.w r7, [r6, #0x654]",
+  "clase": "estado_fsm",
+  "vecinos": [
+   "0x650",
+   "0x654"
+  ],
+  "origen": "calculo",
+  "definicion": "0x4364af14 mov r7, r2"
+ },
+ {
+  "addr": "0x4364afc8",
+  "insn": "str.w r7, [r6, #0x654]",
+  "clase": "estado_fsm",
+  "vecinos": [
+   "0x650",
+   "0x654"
+  ],
+  "origen": "fuera_de_ventana",
+  "definicion": null
+ },
+ {
+  "addr": "0x4364c27e",
+  "insn": "str.w r0, [r5, #0x654]",
+  "clase": "estado_fsm",
+  "vecinos": [
+   "0x3b4",
+   "0x650",
+   "0x654"
+  ],
+  "origen": "constante_0",
+  "definicion": "cero: ruta de `cbz r0` con r0 == 0"
+ },
+ {
+  "addr": "0x437d83ee",
+  "insn": "str.w r3, [r4, #0x654]",
+  "clase": "bloque_de_parametros",
+  "vecinos": [
+   "0x63c",
+   "0x640",
+   "0x644",
+   "0x648",
+   "0x64c",
+   "0x650",
+   "0x654",
+   "0x658",
+   "0x65c",
+   "0x65d",
+   "0x65e",
+   "0x660"
+  ],
+  "origen": "copia_de_otro_bloque",
+  "definicion": "0x437d83ea ldr.w r3, [r5, #0x654]"
+ },
+ {
+  "addr": "0x437d952c",
+  "insn": "str.w r3, [r4, #0x654]",
+  "clase": "bloque_de_parametros",
+  "vecinos": [
+   "0x63c",
+   "0x640",
+   "0x644",
+   "0x648",
+   "0x64c",
+   "0x650",
+   "0x654",
+   "0x658",
+   "0x65c",
+   "0x65d",
+   "0x65e",
+   "0x660"
+  ],
+  "origen": "copia_de_otro_bloque",
+  "definicion": "0x437d9528 ldr.w r3, [r5, #0x654]"
+ },
+ {
+  "addr": "0x438551f4",
+  "insn": "strh.w r2, [r4, #0x654]",
+  "clase": "bloque_de_parametros",
+  "vecinos": [
+   "0x64e",
+   "0x650",
+   "0x652",
+   "0x654"
+  ],
+  "origen": "pila",
+  "definicion": "0x438551e2 ldr r2, [sp, #4]"
+ },
+ {
+  "addr": "0x43855206",
+  "insn": "strh.w r8, [r4, #0x654]",
+  "clase": "bloque_de_parametros",
+  "vecinos": [
+   "0x64e",
+   "0x650",
+   "0x652",
+   "0x654"
+  ],
+  "origen": "fuera_de_ventana",
+  "definicion": null
+ },
+ {
+  "addr": "0x438691ba",
+  "insn": "strh.w r3, [r6, #0x654]",
+  "clase": "bloque_de_parametros",
+  "vecinos": [
+   "0x2b4",
+   "0x3b0",
+   "0x4f8",
+   "0x654",
+   "0x657",
+   "0x66c",
+   "0x674",
+   "0x67c",
+   "0x684",
+   "0x68c",
+   "0x690",
+   "0x694",
+   "0x698",
+   "0x69c"
+  ],
+  "origen": "constante",
+  "definicion": "0x43869194 movs r3, #0"
+ },
+ {
+  "addr": "0x43869248",
+  "insn": "strh.w r2, [r6, #0x654]",
+  "clase": "bloque_de_parametros",
+  "vecinos": [
+   "0x2bc",
+   "0x63a",
+   "0x63c",
+   "0x640",
+   "0x648",
+   "0x654",
+   "0x69c"
+  ],
+  "origen": "carga",
+  "definicion": "0x4386923e ldrh r2, [r2, #0x20]"
+ },
+ {
+  "addr": "0x43a471ec",
+  "insn": "str.w r1, [r0, #0x654]",
+  "clase": "estado_fsm",
+  "vecinos": [
+   "0x650",
+   "0x654"
+  ],
+  "origen": "constante",
+  "definicion": "0x43a471ce movs r1, #6"
+ },
+ {
+  "addr": "0x43b0b8ac",
+  "insn": "strh.w r3, [r0, #0x654]",
+  "clase": "bloque_de_parametros",
+  "vecinos": [
+   "0x238",
+   "0x23c",
+   "0x240",
+   "0x244",
+   "0x248",
+   "0x24c",
+   "0x250",
+   "0x252",
+   "0x254",
+   "0x640",
+   "0x644",
+   "0x648",
+   "0x64c",
+   "0x650",
+   "0x654",
+   "0x656",
+   "0x658"
+  ],
+  "origen": "constante_0",
+  "definicion": "cero: ruta de `subs r3,#1; beq` con r3 == 0"
+ },
+ {
+  "addr": "0x43b1414a",
+  "insn": "str.w r3, [r4, #0x654]",
+  "clase": "bloque_de_parametros",
+  "vecinos": [
+   "0x63c",
+   "0x640",
+   "0x644",
+   "0x648",
+   "0x64c",
+   "0x650",
+   "0x654",
+   "0x658",
+   "0x65c",
+   "0x65d",
+   "0x65e",
+   "0x660"
+  ],
+  "origen": "copia_de_otro_bloque",
+  "definicion": "0x43b14146 ldr.w r3, [r5, #0x654]"
+ },
+ {
+  "addr": "0x43b14866",
+  "insn": "str.w r2, [r4, #0x654]",
+  "clase": "bloque_de_parametros",
+  "vecinos": [
+   "0x630",
+   "0x634",
+   "0x638",
+   "0x63c",
+   "0x640",
+   "0x644",
+   "0x648",
+   "0x64c",
+   "0x650",
+   "0x654",
+   "0x658",
+   "0x65c",
+   "0x65d"
+  ],
+  "origen": "carga",
+  "definicion": "0x43b14864 ldr r2, [r3, #8]"
+ }
+]
