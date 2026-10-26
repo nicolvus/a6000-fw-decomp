@@ -358,8 +358,9 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 6. Otros subsistemas (AF, estabilización, vídeo, audio, lentes, energía, visor, accesorios, módulos de trazas)
 
-87 informes.
+88 informes.
 
+- **—** [E21 — Lecturas sin cámara de los volcados del 20-10-2026](capture/e21-lecturas-backups-2026-10-26.md)
 - **S102** [S102 — Menú principal (botón MENU): cadena de carga y apertura](capture/s102-menu-principal.md)
 - **S111** [S111 — Módulo `[TRK]`: 215 trazas, 288 sitios y 47 funciones](capture/s111-trk.md) · pruebas: [test_s111_trk.py](../tests/test_s111_trk.py) · evidencia: [s111_trk](../analysis/s111_trk)
 - **S121** [S121 — `[AIP]`: el Audio IP (37 trazas)](capture/s121-aip.md) · pruebas: [test_s121_aip.py](../tests/test_s121_aip.py) · evidencia: [s121_aip](../analysis/s121_aip)

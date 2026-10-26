@@ -2779,3 +2779,7 @@ B S343–S348, libObj.so S380–S385, módulos D S515 y E S618–S627, cierre de
 # Auditoría 23-10-2026
 
 Base remota `f4dc7062`, cuenta `nicolvus`, pull sin cambios y árbol inicial limpio. [Informe completo](../docs/auditoria-2026-10-23.md). Corregidos destinos BL S382, negativos inválidos S384, 94 direcciones y 21 longitudes S605–S627, JSON S68, enlaces relativos y censo detallado; Pages incluye P1–P21. Reabiertas 141 clasificaciones automáticas. Verificación contra bytes con regresiones nuevas y mantenimiento del conocimiento; sin pruebas físicas ni push. Los apartados anteriores de cada sesión se conservan como historia.
+
+# E21 — lectura de volcados del 20-10 (26-10-2026)
+
+ARM7 SRAM = código ARM de coprocesador; clave `0x3000b` igual en 18 copias; matriz `0x43e80160` = 13 registros de 0x30 B. [Informe](../docs/capture/e21-lecturas-backups-2026-10-26.md). S51 sin cambios.

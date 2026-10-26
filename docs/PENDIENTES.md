@@ -37,7 +37,6 @@ por esos índices.
 | E9 | BLOQUEADO | Correspondencia funcional de los 112 registros IMX210/IMX235 restantes y mecanismo de fin de integración: la semántica eléctrica exige hoja de datos (ver D5) | Documento legítimo aportado por el usuario | [A-backlog](../knowledge/agents/A-backlog.md) |
 | E11 | BLOQUEADO | Segunda cortina: enlace banco/bit `0xf2910048` → P4E (`2ND_CURTAIN_MG`). El escritor `0x43b5e2b0`/`0x4398f9a4` es un helper GPIO genérico con 78 llamadores directos; la correspondencia de ese banco/bit con el pin P4E (que S50 atribuye a Darwin) no consta en el firmware y exige mapa de pines/hoja de datos o traza | Documento externo o prueba física (ver F4, E6) | [S51](capture/s51-decision.md), [S50](capture/s50-parallel-conclusions.md) |
 | E13 | BLOQUEADO | Servicio ODL del carril B y significado físico de sus registros MMIO (`0xf292b000..8`, canales `w0`): sin hoja de datos ni símbolos | Documento externo o prueba física | [S335](capture/s335-mmio-layer.md), [B-backlog](../knowledge/agents/B-backlog.md) |
-| E21 | ABIERTO | Lecturas ya hechas el 20-10 y sin interpretar, que no necesitan cámara: `regiones-20261020/arm7sram_0x0_0x4000.bin` (código ARM7, no es Darwin), clave Backup `0x3000b` dentro de los BK4 (`20261020-first`), y la matriz `0x43e80160` con datos en la RAM viva (¿quién la escribe?) | Informe con lo hallado y su etiqueta; o descartar con motivo | [revisión](capture/physical-test-review-2026-10-26.md) |
 
 ## B. Documental y de calidad
 
@@ -83,6 +82,7 @@ por esos índices.
 | C3 | 25-10-2026 | mypy sin errores en `scripts/knowledge` y `tests/knowledge` (21 archivos): aserciones de tipo y `mypy.ini` para `capstone` | [S403](capture/s403-cierre-pendientes.md) |
 | C4 | 25-10-2026 | Suite integral ejecutada completa: 3521 aprobadas, 35 omitidas, 0 fallos, 529 s | [S403](capture/s403-cierre-pendientes.md) |
 | D2 | 25-10-2026 | Módulos S515 `[BL]`, S516 `[PNL]`, S628 `[FILE_NUM]`, S629 `[FSYSMODE]`, S630 `[RING_DIAL]`: informe y 8 pruebas | [informe](capture/s515-s516-s628-s630-modulos.md) |
+| E21 | 26-10-2026 | Lecturas de los volcados del 20-10 sin cámara: `arm7sram` = código ARM de un coprocesador ARM7 (no Darwin; arranque y vectores leídos, papel en el obturador sin establecer), clave Backup `0x3000b` idéntica en las 18 copias (256 B, 10 bytes a 1; `+3`/`+6` a 0), matriz `0x43e80160` = tabla de 13 registros de 0x30 B con pares ancho×alto; escritor solo en ejecución. Límite: los volcados son instantáneas en reposo | [E21](capture/e21-lecturas-backups-2026-10-26.md) |
 | E12 | 26-10-2026 | Mensaje de `0x437b0390` (tipo 3, subtipo `0x22`, buzón `0x0110027c`): registro de `kikilog`, no de control; 13 emisores en av-cam | [E15](capture/s403-e15-kikilog.md) |
 | E15 | 26-10-2026 | Receptor del buzón `0x0110027c` = `kikilog_main_thread` de `kikilog.ko` (Linux), que llama a `record_log`; también envían `libObj.so` y `upm.ko` | [E15](capture/s403-e15-kikilog.md) |
 | E3 | 26-10-2026 | `params[+9]` de SetExposure: valores 0/1/4 por constante en tres sitios; 2 y 3 sin productor constante (ver E14) | [E14](capture/s403-e14-params9.md) |
@@ -142,4 +142,5 @@ por esos índices.
 | 26-10-2026 | Tercera ronda: E20 en su límite estático; R2 cerrado (CI con la suite); R3 preparado en clon aparte, historial sin reescribir. |
 | 26-10-2026 | Revisión de las pruebas físicas: inventario único P1–P24, nuevos P22–P24 (F7, F8) y E21; premisas corregidas en los planes. S51 sin cambios. |
 | 26-10-2026 | Decisión del usuario: no se abre la cámara, solo software por USB. F4 y F5 DESCARTADOS, P22 (F7) descartada; E6 y E11 siguen BLOQUEADOS por su parte de hardware (la vía F4 ya no existe). |
+| 26-10-2026 | E21 cerrado con límite (lectura de volcados del 20-10); P16/P18 parcialmente resueltas con esos datos. |
 | 26-10-2026 | Reorganización documental (D10 cerrado). Corrección posterior: D11 (rotulado «27-10-2026» de E20/R2/R3 y su registro → 26-10-2026, fecha real de los commits `60d04b4f` y `22a84402`; el archivo `docs/history/README-historial-2026-10-26.md` conserva el rotulado original por ser copia íntegra) y D12 (tres enlaces falsos de `repo_audit.py`) cerrados. |
