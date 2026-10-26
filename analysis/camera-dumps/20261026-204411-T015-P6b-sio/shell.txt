@@ -1,0 +1,28 @@
+[   72.084964] console [usbgcon-1] enabled
+[   72.085207] [usbter usbg_sen_ldisc_open][154]exit
+
+
+BusyBox v1.13.4 (2012-07-17 15:11:04 JST) built-in shell (ash)
+Enter 'help' for a list of built-in commands.
+
+ash: can't access tty; job control turned off
+/usr/share/app # dd if=/dev/sio0 bs=16 count=1 of=/tmp/s0.bin 2>&1 & sleep 3; ki
+ll $! 2>&1; ls -l /tmp/s0.bin
+dd: can't open '/dev/sio0': No such device or address
+ash: cannot kill pid 955: No such process
+ls: /tmp/s0.bin: No such file or directory
+/usr/share/app # chroot /android /system/bin/hd /tmp/s0.bin
+could not open /tmp/s0.bin, No such file or directory
+/usr/share/app # dd if=/dev/sio1 bs=16 count=1 of=/tmp/s1.bin 2>&1 & sleep 3; ki
+ll $! 2>&1; ls -l /tmp/s1.bin
+dd: can't open '/dev/sio1': No such device or address
+ash: cannot kill pid 961: No such process
+ls: /tmp/s1.bin: No such file or directory
+chroot /android /s/usr/share/app # chroot /android /system/bin/hd /tmp/s1.bin
+could not open /tmp/s1.bin, No such file or directory
+/usr/share/app # dd if=/dev/sio2 bs=16 count=1 of=/tmp/s2.bin 2>&1 & sleep 3; ki
+ll $! 2>&1; ls -l /tmp/s2.bin
+dd: can't open '/dev/sio2': No such device or address
+ash: cannot kill pid 967: No such process
+ls: /tmp/s2.bin: No such file or directory
+chroot /an/usr/share/app # 

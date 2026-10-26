@@ -1,0 +1,1496 @@
+[  424.138958] console [usbgcon-1] enabled
+[  424.139439] [usbter usbg_sen_ldisc_open][154]exit
+
+
+BusyBox v1.13.4 (2012-07-17 15:11:04 JST) built-in shell (ash)
+Enter 'help' for a list of built-in commands.
+
+ash: can't access tty; job control turned off
+/usr/share/app # ls -la /dev/uipc /dev/sio0 /dev/sio1 /dev/sio2 /dev/sio3 /dev/s
+io4 /dev/gpio /dev/ttyAM0 /dev/mcmn /dev/backup
+crwxrwxrwx    1 0        0        251, 208 May 28  2013 /dev/backup
+crwxrwxrwx    1 0        0        240,   0 May 28  2013 /dev/gpio
+crwxrwxrwx    1 0        0        249,   1 May 28  2013 /dev/mcmn
+crwxrwxrwx    1 0        0        251, 200 May 28  2013 /dev/sio0
+crwxrwxrwx    1 0        0        251, 201 May 28  2013 /dev/sio1
+crwxrwxrwx    1 0        0        251, 202 May 28  2013 /dev/sio2
+crwxrwxrwx    1 0        0        251, 203 May 28  2013 /dev/sio3
+crwxrwxrwx    1 0        0        251, 204 May 28  2013 /dev/sio4
+crw-r--r--    1 0        0        204,  16 May 28  2013 /dev/ttyAM0
+crwxrwxrwx    1 0        0        251, 207 May 28  2013 /dev/uipc
+/usr/share/app # cat /proc/tty/drivers
+/dev/tty             /dev/tty        5       0 system:/dev/tty
+/dev/console         /dev/console    5       1 system:console
+/dev/ptmx            /dev/ptmx       5       2 system
+unknown              /dev/ttynull  241       0 type:0.0
+ttyAM                /dev/ttyAM    204 16-18 serial
+pty_slave            /dev/pts      136 0-1048575 pty:slave
+pty_master           /dev/ptm      128 0-1048575 pty:master
+/usr/share/app # ls -l /proc/*/fd
+/proc/1/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /dev/console
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /dev/console
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /dev/console
+
+/proc/10/fd:
+
+/proc/1000/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /dev/pts/3
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /dev/pts/3
+lrwx------    1 0        0              64 Jan  1 00:08 10 -> /dev/tty
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /dev/pts/3
+l-wx------    1 0        0              64 Jan  1 00:08 3 -> /proc/snsc_boot_time
+lrwx------    1 0        0              64 Jan  1 00:08 4 -> socket:[1452]
+lrwx------    1 0        0              64 Jan  1 00:08 5 -> socket:[1650]
+lrwx------    1 0        0              64 Jan  1 00:08 6 -> /dev/ptmx
+
+/proc/1017/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /dev/pts/4
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /dev/pts/4
+lrwx------    1 0        0              64 Jan  1 00:08 10 -> /dev/tty
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /dev/pts/4
+l-wx------    1 0        0              64 Jan  1 00:08 3 -> /proc/snsc_boot_time
+lrwx------    1 0        0              64 Jan  1 00:08 4 -> socket:[1452]
+lrwx------    1 0        0              64 Jan  1 00:08 5 -> socket:[3095]
+lrwx------    1 0        0              64 Jan  1 00:08 6 -> /dev/ptmx
+
+/proc/102/fd:
+
+/proc/1036/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /dev/pts/5
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /dev/pts/5
+lrwx------    1 0        0              64 Jan  1 00:08 10 -> /dev/tty
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /dev/pts/5
+l-wx------    1 0        0              64 Jan  1 00:08 3 -> /proc/snsc_boot_time
+lrwx------    1 0        0              64 Jan  1 00:08 4 -> socket:[1452]
+lrwx------    1 0        0              64 Jan  1 00:08 5 -> socket:[3099]
+lrwx------    1 0        0              64 Jan  1 00:08 6 -> /dev/ptmx
+
+/proc/105/fd:
+
+/proc/1053/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /dev/pts/6
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /dev/pts/6
+lrwx------    1 0        0              64 Jan  1 00:08 10 -> /dev/tty
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /dev/pts/6
+l-wx------    1 0        0              64 Jan  1 00:08 3 -> /proc/snsc_boot_time
+lrwx------    1 0        0              64 Jan  1 00:08 4 -> socket:[1452]
+lrwx------    1 0        0              64 Jan  1 00:08 5 -> socket:[1668]
+lrwx------    1 0        0              64 Jan  1 00:08 6 -> /dev/ptmx
+
+/proc/106/fd:
+
+/proc/107/fd:
+
+/proc/108/fd:
+
+/proc/11/fd:
+
+/proc/111/fd:
+
+/proc/112/fd:
+
+/proc/114/fd:
+
+/proc/1159/fd:
+
+/proc/1160/fd:
+
+/proc/1161/fd:
+
+/proc/1186/fd:
+
+/proc/1187/fd:
+
+/proc/1188/fd:
+
+/proc/1197/fd:
+
+/proc/1198/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /dev/pts/8
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /dev/pts/8
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /dev/pts/8
+
+/proc/1204/fd:
+
+/proc/123/fd:
+
+/proc/129/fd:
+
+/proc/134/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /dev/console
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /dev/console
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /dev/console
+l-wx------    1 0        0              64 Jan  1 00:08 3 -> /proc/snsc_boot_time
+lrwx------    1 0        0              64 Jan  1 00:08 4 -> /dev/uipc
+
+/proc/148/fd:
+lr-x------    1 0        0              64 Jan  1 00:08 0 -> /dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /dev/console
+lr-x------    1 0        0              64 Jan  1 00:08 10 -> pipe:[1672]
+l-wx------    1 0        0              64 Jan  1 00:08 11 -> pipe:[1672]
+lrwx------    1 0        0              64 Jan  1 00:08 12 -> /dev/hdmi
+lrwx------    1 0        0              64 Jan  1 00:08 13 -> /dev/hdmi
+lr-x------    1 0        0              64 Jan  1 00:08 14 -> /dev/mem
+lrwx------    1 0        0              64 Jan  1 00:08 15 -> /dev/hdmi
+lrwx------    1 0        0              64 Jan  1 00:08 16 -> /dev/cec
+lr-x------    1 0        0              64 Jan  1 00:08 17 -> pipe:[2091]
+l-wx------    1 0        0              64 Jan  1 00:08 18 -> pipe:[2091]
+lrwx------    1 0        0              64 Jan  1 00:08 19 -> /dev/cec
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /dev/console
+lrwx------    1 0        0              64 Jan  1 00:08 20 -> /dev/cec
+lrwx------    1 0        0              64 Jan  1 00:08 21 -> /dev/stream
+lr-x------    1 0        0              64 Jan  1 00:08 22 -> pipe:[2092]
+l-wx------    1 0        0              64 Jan  1 00:08 23 -> pipe:[2092]
+lrwx------    1 0        0              64 Jan  1 00:08 24 -> /dev/mem
+lrwx------    1 0        0              64 Jan  1 00:08 25 -> /dev/mem
+lrwx------    1 0        0              64 Jan  1 00:08 26 -> /dev/mem
+lrwx------    1 0        0              64 Jan  1 00:08 27 -> /dev/mem
+lrwx------    1 0        0              64 Jan  1 00:08 28 -> /dev/mem
+lrwx------    1 0        0              64 Jan  1 00:08 29 -> /dev/mem
+l-wx------    1 0        0              64 Jan  1 00:08 3 -> /proc/snsc_boot_time
+lrwx------    1 0        0              64 Jan  1 00:08 30 -> /dev/dmpgles2
+lrwx------    1 0        0              64 Jan  1 00:08 31 -> /dev/mem
+lrwx------    1 0        0              64 Jan  1 00:08 32 -> /dev/stream
+lrwx------    1 0        0              64 Jan  1 00:08 33 -> /dev/uinput
+lrwx------    1 0        0              64 Jan  1 00:08 34 -> /dev/stream2
+lrwx------    1 0        0              64 Jan  1 00:08 35 -> /dev/mem
+lrwx------    1 0        0              64 Jan  1 00:08 36 -> /dev/nflasha4
+lrwx------    1 0        0              64 Jan  1 00:08 37 -> /dev/stream2
+lrwx------    1 0        0              64 Jan  1 00:08 38 -> /dev/stream
+lrwx------    1 0        0              64 Jan  1 00:08 39 -> /dev/fuse
+lrwx------    1 0        0              64 Jan  1 00:08 4 -> /dev/uipc
+lr-x------    1 0        0              64 Jan  1 00:08 40 -> pipe:[25]
+l-wx------    1 0        0              64 Jan  1 00:08 41 -> pipe:[25]
+lrwx------    1 0        0              64 Jan  1 00:08 42 -> /dev/stream
+lrwx------    1 0        0              64 Jan  1 00:08 43 -> /dev/stream
+lrwx------    1 0        0              64 Jan  1 00:08 44 -> /dev/stream
+lr-x------    1 0        0              64 Jan  1 00:08 45 -> /usr/share/app/image_DSLR_Only_169.uxc
+lr-x------    1 0        0              64 Jan  1 00:08 46 -> /usr/share/app/image_EVF.uxc
+lr-x------    1 0        0              64 Jan  1 00:08 47 -> /usr/share/app/image_cmn_169.uxc
+lr-x------    1 0        0              64 Jan  1 00:08 48 -> /usr/share/app/global.xdb
+lrwx------    1 0        0              64 Jan  1 00:08 5 -> /dev/usb/kikilog
+lr-x------    1 0        0              64 Jan  1 00:08 50 -> /usr/share/app/lang.uxb
+lr-x------    1 0        0              64 Jan  1 00:08 51 -> /usr/share/app/lang_cmn.uxc
+lr-x------    1 0        0              64 Jan  1 00:08 52 -> /usr/share/app/style_cmn.uxc
+lr-x------    1 0        0              64 Jan  1 00:08 53 -> /usr/share/app/UniversOTS-SJ_wIcon.ltt
+lr-x------    1 0        0              64 Jan  1 00:08 54 -> /usr/share/app/Sony_DI_Icons.ttf
+lrwx------    1 0        0              64 Jan  1 00:08 55 -> /dev/stream
+lrwx------    1 0        0              64 Jan  1 00:08 56 -> /dev/mem
+lrwx------    1 0        0              64 Jan  1 00:08 57 -> /dev/mem
+lrwx------    1 0        0              64 Jan  1 00:08 58 -> /dev/mem
+lrwx------    1 0        0              64 Jan  1 00:08 59 -> /dev/usb/otgcore
+lrwx------    1 0        0              64 Jan  1 00:08 6 -> /dev/mem
+lrwx------    1 0        0              64 Jan  1 00:08 60 -> /dev/mem
+lr-x------    1 0        0              64 Jan  1 00:08 61 -> /usr/share/app/viewSinglePb.uxc
+lr-x------    1 0        0              64 Jan  1 00:08 62 -> /usr/share/app/viewUsbMassStorage.uxc
+lr-x------    1 0        0              64 Jan  1 00:08 63 -> /usr/share/app/viewCaution.uxc
+lrwx------    1 0        0              64 Jan  1 00:08 64 -> /dev/mem
+lrwx------    1 0        0              64 Jan  1 00:08 65 -> /dev/nflasha23
+lrwx------    1 0        0              64 Jan  1 00:08 66 -> /dev/mmca-char
+lrwx------    1 0        0              64 Jan  1 00:08 67 -> /dev/usb/sen
+lrwx------    1 0        0              64 Jan  1 00:08 68 -> /dev/stream
+lr-x------    1 0        0              64 Jan  1 00:08 69 -> /usr/share/app/string_spanish.uxc
+lrwx------    1 0        0              64 Jan  1 00:08 7 -> /dev/stream
+lrwx------    1 0        0              64 Jan  1 00:08 70 -> /dev/mmca
+lrwx------    1 0        0              64 Jan  1 00:08 71 -> /dev/mmca
+lrwx------    1 0        0              64 Jan  1 00:08 72 -> /dev/stream
+lr-x------    1 0        0              64 Jan  1 00:08 73 -> /usr/share/app/master_other.uxc
+lrwx------    1 0        0              64 Jan  1 00:08 74 -> /dev/usb/ter
+lrwx------    1 0        0              64 Jan  1 00:08 75 -> /dev/usb/gadgetcore
+lrwx------    1 0        0              64 Jan  1 00:08 76 -> /dev/mem
+lrwx------    1 0        0              64 Jan  1 00:08 77 -> /dev/ptmx
+lrwx------    1 0        0              64 Jan  1 00:08 78 -> /dev/usb/event
+lrwx------    1 0        0              64 Jan  1 00:08 79 -> /dev/pts/7
+lr-x------    1 0        0              64 Jan  1 00:08 8 -> pipe:[2052]
+lrwx------    1 0        0              64 Jan  1 00:08 80 -> /dev/ptmx
+lrwx------    1 0        0              64 Jan  1 00:08 81 -> /dev/stream2
+lr-x------    1 0        0              64 Jan  1 00:08 82 -> /usr/share/app/master_browser.uxc
+l-wx------    1 0        0              64 Jan  1 00:08 9 -> pipe:[2052]
+
+/proc/17/fd:
+
+/proc/173/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /dev/console
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /dev/console
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /dev/console
+
+/proc/185/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /android/dev/__null__ (deleted)
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /android/dev/__null__ (deleted)
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /android/dev/__null__ (deleted)
+l-wx------    1 0        0              64 Jan  1 00:08 3 -> /proc/snsc_boot_time
+l-wx------    1 0        0              64 Jan  1 00:08 4 -> /android/dev/__kmsg__ (deleted)
+lr-x------    1 0        0              64 Jan  1 00:08 5 -> /android/dev/__properties__ (deleted)
+lrwx------    1 0        0              64 Jan  1 00:08 6 -> socket:[1167]
+lrwx------    1 0        0              64 Jan  1 00:08 7 -> socket:[1169]
+lrwx------    1 0        0              64 Jan  1 00:08 8 -> socket:[1170]
+
+/proc/186/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /android/dev/__null__ (deleted)
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /android/dev/__null__ (deleted)
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /android/dev/__null__ (deleted)
+l-wx------    1 0        0              64 Jan  1 00:08 3 -> /proc/snsc_boot_time
+l-wx------    1 0        0              64 Jan  1 00:08 4 -> /android/dev/__kmsg__ (deleted)
+lrwx------    1 0        0              64 Jan  1 00:08 5 -> socket:[1055]
+
+/proc/187/fd:
+lrwx------    1 1000     0              64 Jan  1 00:08 0 -> /android/dev/null
+lrwx------    1 1000     0              64 Jan  1 00:08 1 -> /android/dev/null
+lrwx------    1 1000     0              64 Jan  1 00:08 2 -> /android/dev/null
+l-wx------    1 1000     0              64 Jan  1 00:08 3 -> /proc/snsc_boot_time
+lrwx------    1 1000     0              64 Jan  1 00:08 4 -> /android/dev/binder
+lr-x------    1 1000     0              64 Jan  1 00:08 9 -> /android/dev/__properties__ (deleted)
+
+/proc/188/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /android/dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /android/dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 10 -> socket:[1182]
+l-wx------    1 0        0              64 Jan  1 00:08 11 -> pipe:[1212]
+lr-x------    1 0        0              64 Jan  1 00:08 12 -> pipe:[1215]
+l-wx------    1 0        0              64 Jan  1 00:08 13 -> pipe:[1215]
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /android/dev/null
+l-wx------    1 0        0              64 Jan  1 00:08 3 -> /proc/snsc_boot_time
+l-wx------    1 0        0              64 Jan  1 00:08 4 -> /android/dev/log/main
+l-wx------    1 0        0              64 Jan  1 00:08 5 -> /android/dev/log/radio
+l-wx------    1 0        0              64 Jan  1 00:08 6 -> /android/dev/log/events
+lrwx------    1 0        0              64 Jan  1 00:08 7 -> socket:[1211]
+lr-x------    1 0        0              64 Jan  1 00:08 8 -> pipe:[1212]
+lr-x------    1 0        0              64 Jan  1 00:08 9 -> /android/dev/__properties__ (deleted)
+
+/proc/189/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /android/dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /android/dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 10 -> socket:[1184]
+lr-x------    1 0        0              64 Jan  1 00:08 11 -> pipe:[1208]
+l-wx------    1 0        0              64 Jan  1 00:08 12 -> pipe:[1208]
+lr-x------    1 0        0              64 Jan  1 00:08 13 -> pipe:[1209]
+l-wx------    1 0        0              64 Jan  1 00:08 14 -> pipe:[1209]
+lrwx------    1 0        0              64 Jan  1 00:08 15 -> socket:[1271]
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /android/dev/null
+l-wx------    1 0        0              64 Jan  1 00:08 3 -> /proc/snsc_boot_time
+l-wx------    1 0        0              64 Jan  1 00:08 4 -> /android/dev/log/main
+l-wx------    1 0        0              64 Jan  1 00:08 5 -> /android/dev/log/radio
+l-wx------    1 0        0              64 Jan  1 00:08 6 -> /android/dev/log/events
+lrwx------    1 0        0              64 Jan  1 00:08 7 -> socket:[1206]
+lrwx------    1 0        0              64 Jan  1 00:08 8 -> socket:[1207]
+lr-x------    1 0        0              64 Jan  1 00:08 9 -> /android/dev/__properties__ (deleted)
+
+/proc/190/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /android/dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /android/dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /android/dev/null
+l-wx------    1 0        0              64 Jan  1 00:08 3 -> /proc/snsc_boot_time
+lrwx------    1 0        0              64 Jan  1 00:08 4 -> socket:[1193]
+l-wx------    1 0        0              64 Jan  1 00:08 5 -> /android/dev/log/main
+l-wx------    1 0        0              64 Jan  1 00:08 6 -> /android/dev/log/radio
+l-wx------    1 0        0              64 Jan  1 00:08 7 -> /android/dev/log/events
+lr-x------    1 0        0              64 Jan  1 00:08 9 -> /android/dev/__properties__ (deleted)
+
+/proc/191/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /android/dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /android/dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 10 -> socket:[1186]
+lr-x------    1 0        0              64 Jan  1 00:08 11 -> /android/system/framework/bouncycastle.jar
+lr-x------    1 0        0              64 Jan  1 00:08 12 -> /android/system/framework/ext.jar
+lr-x------    1 0        0              64 Jan  1 00:08 13 -> /android/system/framework/framework.jar
+lr-x------    1 0        0              64 Jan  1 00:08 14 -> /android/system/framework/android.policy.jar
+lr-x------    1 0        0              64 Jan  1 00:08 15 -> /android/system/framework/services.jar
+lr-x------    1 0        0              64 Jan  1 00:08 16 -> /android/system/framework/core-junit.jar
+lr-x------    1 0        0              64 Jan  1 00:08 17 -> /android/system/framework/androidsystemstateservice.jar
+lr-x------    1 0        0              64 Jan  1 00:08 18 -> /android/system/framework/sony.cameraex.jar
+lr-x------    1 0        0              64 Jan  1 00:08 19 -> /android/system/framework/com.sony.scalar.database_library.jar
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /android/dev/null
+lr-x------    1 0        0              64 Jan  1 00:08 20 -> /android/system/framework/com.sony.scalar.hardware.avio.cec.jar
+lr-x------    1 0        0              64 Jan  1 00:08 21 -> /android/system/framework/com.sony.scalar.hardware.avio.DisplayManager.jar
+lr-x------    1 0        0              64 Jan  1 00:08 22 -> /android/system/framework/com.sony.scalar.hardware.indicator.light.jar
+lr-x------    1 0        0              64 Jan  1 00:08 23 -> /android/system/framework/com.sony.scalar.stillPlay.jar
+lr-x------    1 0        0              64 Jan  1 00:08 24 -> /android/system/framework/com.sony.scalar.sysnetutil.ScalarWifiInfo.jar
+lr-x------    1 0        0              64 Jan  1 00:08 25 -> /android/system/framework/com.sony.scalar.sysutil.didep.Caution.jar
+lr-x------    1 0        0              64 Jan  1 00:08 26 -> /android/system/framework/com.sony.scalar.sysutil.didep.Gpelibrary.jar
+lr-x------    1 0        0              64 Jan  1 00:08 27 -> /android/system/framework/com.sony.scalar.sysutil.didep.Kikilog.jar
+lr-x------    1 0        0              64 Jan  1 00:08 28 -> /android/system/framework/com.sony.scalar.sysutil.didep.ScalarSystemManager.jar
+lr-x------    1 0        0              64 Jan  1 00:08 29 -> /android/system/framework/com.sony.scalar.sysutil.didep.Settings.jar
+l-wx------    1 0        0              64 Jan  1 00:08 3 -> /proc/snsc_boot_time
+lr-x------    1 0        0              64 Jan  1 00:08 30 -> /android/system/framework/com.sony.scalar.sysutil.didep.Status.jar
+lr-x------    1 0        0              64 Jan  1 00:08 31 -> /android/system/framework/com.sony.scalar.sysutil.Property.jar
+lr-x------    1 0        0              64 Jan  1 00:08 32 -> /android/system/framework/com.sony.scalar.sysutil.ScalarInput.jar
+lr-x------    1 0        0              64 Jan  1 00:08 33 -> /android/system/framework/com.sony.scalar.sysutil.TimeUtil.jar
+lr-x------    1 0        0              64 Jan  1 00:08 34 -> /android/system/framework/framework.jar
+lr-x------    1 0        0              64 Jan  1 00:08 35 -> /android/system/fonts/UniversOTS-SJ.ttf
+lr-x------    1 0        0              64 Jan  1 00:08 36 -> /android/system/framework/core.jar
+lr-x------    1 0        0              64 Jan  1 00:08 37 -> /android/dev/urandom
+lr-x------    1 0        0              64 Jan  1 00:08 38 -> /android/system/framework/framework-res.apk
+lrwx------    1 0        0              64 Jan  1 00:08 39 -> socket:[1275]
+lrwx------    1 0        0              64 Jan  1 00:08 4 -> /android/dev/uipc
+l-wx------    1 0        0              64 Jan  1 00:08 5 -> /android/dev/log/main
+l-wx------    1 0        0              64 Jan  1 00:08 6 -> /android/dev/log/radio
+l-wx------    1 0        0              64 Jan  1 00:08 7 -> /android/dev/log/events
+lr-x------    1 0        0              64 Jan  1 00:08 8 -> /android/system/framework/core.jar
+lr-x------    1 0        0              64 Jan  1 00:08 9 -> /android/dev/__properties__ (deleted)
+
+/proc/192/fd:
+lrwx------    1 1013     1000           64 Jan  1 00:08 0 -> /android/dev/null
+lrwx------    1 1013     1000           64 Jan  1 00:08 1 -> /android/dev/null
+lrwx------    1 1013     1000           64 Jan  1 00:08 2 -> /android/dev/null
+l-wx------    1 1013     1000           64 Jan  1 00:08 3 -> /proc/snsc_boot_time
+lrwx------    1 1013     1000           64 Jan  1 00:08 4 -> /android/dev/uipc
+l-wx------    1 1013     1000           64 Jan  1 00:08 5 -> /android/dev/log/main
+l-wx------    1 1013     1000           64 Jan  1 00:08 6 -> /android/dev/log/radio
+l-wx------    1 1013     1000           64 Jan  1 00:08 7 -> /android/dev/log/events
+lrwx------    1 1013     1000           64 Jan  1 00:08 8 -> /android/dev/binder
+lr-x------    1 1013     1000           64 Jan  1 00:08 9 -> /android/dev/__properties__ (deleted)
+
+/proc/193/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /android/dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /android/dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 10 -> socket:[1188]
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /android/dev/null
+l-wx------    1 0        0              64 Jan  1 00:08 3 -> /proc/snsc_boot_time
+lrwx------    1 0        0              64 Jan  1 00:08 4 -> socket:[1195]
+l-wx------    1 0        0              64 Jan  1 00:08 5 -> /android/dev/log/main
+l-wx------    1 0        0              64 Jan  1 00:08 6 -> /android/dev/log/radio
+l-wx------    1 0        0              64 Jan  1 00:08 7 -> /android/dev/log/events
+lr-x------    1 0        0              64 Jan  1 00:08 9 -> /android/dev/__properties__ (deleted)
+
+/proc/2/fd:
+
+/proc/23/fd:
+
+/proc/29/fd:
+
+/proc/3/fd:
+
+/proc/31/fd:
+
+/proc/32/fd:
+
+/proc/33/fd:
+
+/proc/34/fd:
+
+/proc/341/fd:
+
+/proc/344/fd:
+
+/proc/36/fd:
+
+/proc/363/fd:
+
+/proc/366/fd:
+
+/proc/37/fd:
+
+/proc/38/fd:
+
+/proc/39/fd:
+
+/proc/4/fd:
+
+/proc/40/fd:
+
+/proc/41/fd:
+
+/proc/42/fd:
+
+/proc/43/fd:
+
+/proc/435/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /android/dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /android/dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 10 -> /android/dev/binder
+lrwx------    1 0        0              64 Jan  1 00:08 100 -> anon_inode:[eventpoll]
+lr-x------    1 0        0              64 Jan  1 00:08 101 -> pipe:[753]
+lr-x------    1 0        0              64 Jan  1 00:08 102 -> pipe:[751]
+l-wx------    1 0        0              64 Jan  1 00:08 103 -> pipe:[751]
+lrwx------    1 0        0              64 Jan  1 00:08 104 -> anon_inode:[eventpoll]
+l-wx------    1 0        0              64 Jan  1 00:08 105 -> pipe:[753]
+lrwx------    1 0        0              64 Jan  1 00:08 106 -> anon_inode:[eventpoll]
+lr-x------    1 0        0              64 Jan  1 00:08 107 -> pipe:[754]
+l-wx------    1 0        0              64 Jan  1 00:08 108 -> pipe:[754]
+lrwx------    1 0        0              64 Jan  1 00:08 109 -> anon_inode:[eventpoll]
+lr-x------    1 0        0              64 Jan  1 00:08 11 -> /android/system/framework/bouncycastle.jar
+lr-x------    1 0        0              64 Jan  1 00:08 110 -> pipe:[755]
+l-wx------    1 0        0              64 Jan  1 00:08 111 -> pipe:[755]
+lrwx------    1 0        0              64 Jan  1 00:08 112 -> anon_inode:[eventpoll]
+lr-x------    1 0        0              64 Jan  1 00:08 113 -> pipe:[756]
+l-wx------    1 0        0              64 Jan  1 00:08 114 -> pipe:[756]
+lrwx------    1 0        0              64 Jan  1 00:08 115 -> anon_inode:[eventpoll]
+lr-x------    1 0        0              64 Jan  1 00:08 116 -> pipe:[757]
+l-wx------    1 0        0              64 Jan  1 00:08 117 -> pipe:[757]
+lrwx------    1 0        0              64 Jan  1 00:08 118 -> anon_inode:[eventpoll]
+lr-x------    1 0        0              64 Jan  1 00:08 119 -> pipe:[758]
+lr-x------    1 0        0              64 Jan  1 00:08 12 -> /android/system/framework/ext.jar
+l-wx------    1 0        0              64 Jan  1 00:08 120 -> pipe:[758]
+lrwx------    1 0        0              64 Jan  1 00:08 121 -> anon_inode:[eventpoll]
+lr-x------    1 0        0              64 Jan  1 00:08 122 -> pipe:[762]
+l-wx------    1 0        0              64 Jan  1 00:08 123 -> pipe:[762]
+lr-x------    1 0        0              64 Jan  1 00:08 124 -> pipe:[763]
+l-wx------    1 0        0              64 Jan  1 00:08 125 -> pipe:[763]
+lrwx------    1 0        0              64 Jan  1 00:08 126 -> anon_inode:[eventpoll]
+lr-x------    1 0        0              64 Jan  1 00:08 127 -> /android/system/app/ScalarALauncher.apk
+lrwx------    1 0        0              64 Jan  1 00:08 128 -> socket:[764]
+lr-x------    1 0        0              64 Jan  1 00:08 129 -> pipe:[765]
+lr-x------    1 0        0              64 Jan  1 00:08 13 -> /android/system/framework/framework.jar
+l-wx------    1 0        0              64 Jan  1 00:08 130 -> pipe:[765]
+lrwx------    1 0        0              64 Jan  1 00:08 131 -> anon_inode:[eventpoll]
+lr-x------    1 0        0              64 Jan  1 00:08 132 -> pipe:[766]
+l-wx------    1 0        0              64 Jan  1 00:08 133 -> pipe:[766]
+lrwx------    1 0        0              64 Jan  1 00:08 134 -> anon_inode:[eventpoll]
+lrwx------    1 0        0              64 Jan  1 00:08 135 -> /android/dev/ashmem
+lr-x------    1 0        0              64 Jan  1 00:08 136 -> /android/data/app/com.github.ma1co.openmemories.tweak-1.apk
+lrwx------    1 0        0              64 Jan  1 00:08 137 -> socket:[5029]
+lrwx------    1 0        0              64 Jan  1 00:08 138 -> socket:[5030]
+lr-x------    1 0        0              64 Jan  1 00:08 139 -> pipe:[5031]
+lr-x------    1 0        0              64 Jan  1 00:08 14 -> /android/system/framework/android.policy.jar
+l-wx------    1 0        0              64 Jan  1 00:08 140 -> pipe:[5031]
+lrwx------    1 0        0              64 Jan  1 00:08 141 -> anon_inode:[eventpoll]
+lrwx------    1 0        0              64 Jan  1 00:08 142 -> /android/dev/ashmem
+lrwx------    1 0        0              64 Jan  1 00:08 143 -> /android/dev/ashmem
+lrwx------    1 0        0              64 Jan  1 00:08 144 -> /android/dev/ashmem
+lr-x------    1 0        0              64 Jan  1 00:08 145 -> pipe:[776]
+l-wx------    1 0        0              64 Jan  1 00:08 146 -> pipe:[776]
+lr-x------    1 0        0              64 Jan  1 00:08 147 -> pipe:[777]
+l-wx------    1 0        0              64 Jan  1 00:08 148 -> pipe:[777]
+lrwx------    1 0        0              64 Jan  1 00:08 149 -> /android/dev/ashmem
+lr-x------    1 0        0              64 Jan  1 00:08 15 -> /android/system/framework/services.jar
+lrwx------    1 0        0              64 Jan  1 00:08 150 -> /android/dev/ashmem
+lr-x------    1 0        0              64 Jan  1 00:08 151 -> pipe:[5032]
+l-wx------    1 0        0              64 Jan  1 00:08 152 -> pipe:[779]
+lr-x------    1 0        0              64 Jan  1 00:08 153 -> pipe:[780]
+lrwx------    1 0        0              64 Jan  1 00:08 155 -> /android/dev/ashmem
+l-wx------    1 0        0              64 Jan  1 00:08 156 -> pipe:[5032]
+lrwx------    1 0        0              64 Jan  1 00:08 159 -> anon_inode:[eventpoll]
+lr-x------    1 0        0              64 Jan  1 00:08 16 -> /android/system/framework/core-junit.jar
+lr-x------    1 0        0              64 Jan  1 00:08 17 -> /android/system/framework/androidsystemstateservice.jar
+lr-x------    1 0        0              64 Jan  1 00:08 18 -> /android/system/framework/sony.cameraex.jar
+lr-x------    1 0        0              64 Jan  1 00:08 19 -> /android/system/framework/com.sony.scalar.database_library.jar
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /android/dev/null
+lr-x------    1 0        0              64 Jan  1 00:08 20 -> /android/system/framework/com.sony.scalar.hardware.avio.cec.jar
+lr-x------    1 0        0              64 Jan  1 00:08 21 -> /android/system/framework/com.sony.scalar.hardware.avio.DisplayManager.jar
+lr-x------    1 0        0              64 Jan  1 00:08 22 -> /android/system/framework/com.sony.scalar.hardware.indicator.light.jar
+lr-x------    1 0        0              64 Jan  1 00:08 23 -> /android/system/framework/com.sony.scalar.stillPlay.jar
+lr-x------    1 0        0              64 Jan  1 00:08 24 -> /android/system/framework/com.sony.scalar.sysnetutil.ScalarWifiInfo.jar
+lr-x------    1 0        0              64 Jan  1 00:08 25 -> /android/system/framework/com.sony.scalar.sysutil.didep.Caution.jar
+lr-x------    1 0        0              64 Jan  1 00:08 26 -> /android/system/framework/com.sony.scalar.sysutil.didep.Gpelibrary.jar
+lr-x------    1 0        0              64 Jan  1 00:08 27 -> /android/system/framework/com.sony.scalar.sysutil.didep.Kikilog.jar
+lr-x------    1 0        0              64 Jan  1 00:08 28 -> /android/system/framework/com.sony.scalar.sysutil.didep.ScalarSystemManager.jar
+lr-x------    1 0        0              64 Jan  1 00:08 29 -> /android/system/framework/com.sony.scalar.sysutil.didep.Settings.jar
+l-wx------    1 0        0              64 Jan  1 00:08 3 -> /proc/snsc_boot_time
+lr-x------    1 0        0              64 Jan  1 00:08 30 -> /android/system/framework/com.sony.scalar.sysutil.didep.Status.jar
+lr-x------    1 0        0              64 Jan  1 00:08 31 -> /android/system/framework/com.sony.scalar.sysutil.Property.jar
+lr-x------    1 0        0              64 Jan  1 00:08 32 -> /android/system/framework/com.sony.scalar.sysutil.ScalarInput.jar
+lr-x------    1 0        0              64 Jan  1 00:08 33 -> /android/system/framework/com.sony.scalar.sysutil.TimeUtil.jar
+lr-x------    1 0        0              64 Jan  1 00:08 34 -> /android/system/framework/framework.jar
+lr-x------    1 0        0              64 Jan  1 00:08 35 -> /android/system/fonts/UniversOTS-SJ.ttf
+lr-x------    1 0        0              64 Jan  1 00:08 36 -> /android/system/framework/core.jar
+lr-x------    1 0        0              64 Jan  1 00:08 37 -> /android/dev/urandom
+lr-x------    1 0        0              64 Jan  1 00:08 38 -> /android/system/framework/framework-res.apk
+lrwx------    1 0        0              64 Jan  1 00:08 39 -> /android/dev/stream
+lrwx------    1 0        0              64 Jan  1 00:08 4 -> /android/dev/uipc
+lrwx------    1 0        0              64 Jan  1 00:08 40 -> /android/dev/stream
+lrwx------    1 0        0              64 Jan  1 00:08 41 -> /android/dev/stream
+lrwx------    1 0        0              64 Jan  1 00:08 42 -> /android/dev/dmpgles2
+lrwx------    1 0        0              64 Jan  1 00:08 43 -> /android/dev/ashmem
+lr-x------    1 0        0              64 Jan  1 00:08 44 -> pipe:[28]
+l-wx------    1 0        0              64 Jan  1 00:08 45 -> pipe:[28]
+lr-x------    1 0        0              64 Jan  1 00:08 46 -> pipe:[29]
+l-wx------    1 0        0              64 Jan  1 00:08 47 -> pipe:[29]
+lr-x------    1 0        0              64 Jan  1 00:08 48 -> pipe:[30]
+l-wx------    1 0        0              64 Jan  1 00:08 49 -> pipe:[30]
+l-wx------    1 0        0              64 Jan  1 00:08 5 -> /android/dev/log/main
+lr-x------    1 0        0              64 Jan  1 00:08 50 -> pipe:[31]
+l-wx------    1 0        0              64 Jan  1 00:08 51 -> pipe:[31]
+lrwx------    1 0        0              64 Jan  1 00:08 52 -> anon_inode:[eventpoll]
+lr-x------    1 0        0              64 Jan  1 00:08 53 -> pipe:[32]
+l-wx------    1 0        0              64 Jan  1 00:08 54 -> pipe:[32]
+lrwx------    1 0        0              64 Jan  1 00:08 55 -> anon_inode:[eventpoll]
+lr-x------    1 0        0              64 Jan  1 00:08 56 -> /android/dev/alarm
+lrwx------    1 0        0              64 Jan  1 00:08 57 -> socket:[701]
+lr-x------    1 0        0              64 Jan  1 00:08 58 -> pipe:[702]
+l-wx------    1 0        0              64 Jan  1 00:08 59 -> pipe:[702]
+l-wx------    1 0        0              64 Jan  1 00:08 6 -> /android/dev/log/radio
+lrwx------    1 0        0              64 Jan  1 00:08 60 -> anon_inode:[eventpoll]
+lr-x------    1 0        0              64 Jan  1 00:08 61 -> pipe:[728]
+l-wx------    1 0        0              64 Jan  1 00:08 62 -> pipe:[728]
+lrwx------    1 0        0              64 Jan  1 00:08 63 -> anon_inode:[eventpoll]
+lr-x------    1 0        0              64 Jan  1 00:08 64 -> pipe:[730]
+l-wx------    1 0        0              64 Jan  1 00:08 65 -> pipe:[730]
+lrwx------    1 0        0              64 Jan  1 00:08 66 -> anon_inode:[eventpoll]
+lr-x------    1 0        0              64 Jan  1 00:08 67 -> /android/system/app/SettingsProvider.apk
+lr-x------    1 0        0              64 Jan  1 00:08 68 -> /android/system/app/SettingsProvider.apk
+lr-x------    1 0        0              64 Jan  1 00:08 69 -> /android/system/app/SettingsProvider.apk
+l-wx------    1 0        0              64 Jan  1 00:08 7 -> /android/dev/log/events
+lrwx------    1 0        0              64 Jan  1 00:08 70 -> /android/dev/alarm
+lrwx------    1 0        0              64 Jan  1 00:08 71 -> socket:[735]
+lr-x------    1 0        0              64 Jan  1 00:08 72 -> pipe:[736]
+l-wx------    1 0        0              64 Jan  1 00:08 73 -> pipe:[736]
+lrwx------    1 0        0              64 Jan  1 00:08 74 -> anon_inode:[eventpoll]
+lr-x------    1 0        0              64 Jan  1 00:08 75 -> pipe:[737]
+l-wx------    1 0        0              64 Jan  1 00:08 76 -> pipe:[737]
+lr-x------    1 0        0              64 Jan  1 00:08 77 -> anon_inode:inotify
+lrwx------    1 0        0              64 Jan  1 00:08 78 -> anon_inode:[eventpoll]
+lrwx------    1 0        0              64 Jan  1 00:08 79 -> /android/dev/ashmem
+lr-x------    1 0        0              64 Jan  1 00:08 8 -> /android/system/framework/core.jar
+lr-x------    1 0        0              64 Jan  1 00:08 80 -> pipe:[740]
+l-wx------    1 0        0              64 Jan  1 00:08 81 -> pipe:[740]
+lrwx------    1 0        0              64 Jan  1 00:08 82 -> anon_inode:[eventpoll]
+lr-x------    1 0        0              64 Jan  1 00:08 83 -> pipe:[741]
+l-wx------    1 0        0              64 Jan  1 00:08 84 -> pipe:[741]
+lrwx------    1 0        0              64 Jan  1 00:08 85 -> anon_inode:[eventpoll]
+lrwx------    1 0        0              64 Jan  1 00:08 86 -> /android/dev/ashmem
+lr-x------    1 0        0              64 Jan  1 00:08 87 -> pipe:[742]
+l-wx------    1 0        0              64 Jan  1 00:08 88 -> pipe:[742]
+lrwx------    1 0        0              64 Jan  1 00:08 89 -> anon_inode:[eventpoll]
+lr-x------    1 0        0              64 Jan  1 00:08 9 -> /android/dev/__properties__ (deleted)
+lrwx------    1 0        0              64 Jan  1 00:08 90 -> socket:[750]
+lr-x------    1 0        0              64 Jan  1 00:08 91 -> anon_inode:inotify
+lr-x------    1 0        0              64 Jan  1 00:08 92 -> pipe:[747]
+lrwx------    1 0        0              64 Jan  1 00:08 93 -> /android/dev/input/event0
+lr-x------    1 0        0              64 Jan  1 00:08 94 -> pipe:[745]
+l-wx------    1 0        0              64 Jan  1 00:08 95 -> pipe:[745]
+lrwx------    1 0        0              64 Jan  1 00:08 96 -> anon_inode:[eventpoll]
+lrwx------    1 0        0              64 Jan  1 00:08 97 -> /android/dev/input/mouse0
+lrwx------    1 0        0              64 Jan  1 00:08 98 -> /android/dev/input/mice
+l-wx------    1 0        0              64 Jan  1 00:08 99 -> pipe:[747]
+
+/proc/44/fd:
+
+/proc/49/fd:
+
+/proc/497/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /android/dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /android/dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 10 -> /android/dev/binder
+lr-x------    1 0        0              64 Jan  1 00:08 11 -> /android/system/framework/bouncycastle.jar
+lr-x------    1 0        0              64 Jan  1 00:08 12 -> /android/system/framework/ext.jar
+lr-x------    1 0        0              64 Jan  1 00:08 13 -> /android/system/framework/framework.jar
+lr-x------    1 0        0              64 Jan  1 00:08 14 -> /android/system/framework/android.policy.jar
+lr-x------    1 0        0              64 Jan  1 00:08 15 -> /android/system/framework/services.jar
+lr-x------    1 0        0              64 Jan  1 00:08 16 -> /android/system/framework/core-junit.jar
+lr-x------    1 0        0              64 Jan  1 00:08 17 -> /android/system/framework/androidsystemstateservice.jar
+lr-x------    1 0        0              64 Jan  1 00:08 18 -> /android/system/framework/sony.cameraex.jar
+lr-x------    1 0        0              64 Jan  1 00:08 19 -> /android/system/framework/com.sony.scalar.database_library.jar
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /android/dev/null
+lr-x------    1 0        0              64 Jan  1 00:08 20 -> /android/system/framework/com.sony.scalar.hardware.avio.cec.jar
+lr-x------    1 0        0              64 Jan  1 00:08 21 -> /android/system/framework/com.sony.scalar.hardware.avio.DisplayManager.jar
+lr-x------    1 0        0              64 Jan  1 00:08 22 -> /android/system/framework/com.sony.scalar.hardware.indicator.light.jar
+lr-x------    1 0        0              64 Jan  1 00:08 23 -> /android/system/framework/com.sony.scalar.stillPlay.jar
+lr-x------    1 0        0              64 Jan  1 00:08 24 -> /android/system/framework/com.sony.scalar.sysnetutil.ScalarWifiInfo.jar
+lr-x------    1 0        0              64 Jan  1 00:08 25 -> /android/system/framework/com.sony.scalar.sysutil.didep.Caution.jar
+lr-x------    1 0        0              64 Jan  1 00:08 26 -> /android/system/framework/com.sony.scalar.sysutil.didep.Gpelibrary.jar
+lr-x------    1 0        0              64 Jan  1 00:08 27 -> /android/system/framework/com.sony.scalar.sysutil.didep.Kikilog.jar
+lr-x------    1 0        0              64 Jan  1 00:08 28 -> /android/system/framework/com.sony.scalar.sysutil.didep.ScalarSystemManager.jar
+lr-x------    1 0        0              64 Jan  1 00:08 29 -> /android/system/framework/com.sony.scalar.sysutil.didep.Settings.jar
+l-wx------    1 0        0              64 Jan  1 00:08 3 -> /proc/snsc_boot_time
+lr-x------    1 0        0              64 Jan  1 00:08 30 -> /android/system/framework/com.sony.scalar.sysutil.didep.Status.jar
+lr-x------    1 0        0              64 Jan  1 00:08 31 -> /android/system/framework/com.sony.scalar.sysutil.Property.jar
+lr-x------    1 0        0              64 Jan  1 00:08 32 -> /android/system/framework/com.sony.scalar.sysutil.ScalarInput.jar
+lr-x------    1 0        0              64 Jan  1 00:08 33 -> /android/system/framework/com.sony.scalar.sysutil.TimeUtil.jar
+lr-x------    1 0        0              64 Jan  1 00:08 34 -> /android/system/framework/framework.jar
+lr-x------    1 0        0              64 Jan  1 00:08 35 -> /android/system/fonts/UniversOTS-SJ.ttf
+lr-x------    1 0        0              64 Jan  1 00:08 36 -> /android/system/framework/core.jar
+lr-x------    1 0        0              64 Jan  1 00:08 37 -> /android/dev/urandom
+lr-x------    1 0        0              64 Jan  1 00:08 38 -> /android/system/framework/framework-res.apk
+lr-x------    1 0        0              64 Jan  1 00:08 39 -> pipe:[1298]
+lrwx------    1 0        0              64 Jan  1 00:08 4 -> /android/dev/uipc
+l-wx------    1 0        0              64 Jan  1 00:08 40 -> pipe:[1298]
+lrwx------    1 0        0              64 Jan  1 00:08 41 -> anon_inode:[eventpoll]
+lr-x------    1 0        0              64 Jan  1 00:08 42 -> /android/system/framework/com.sony.scalar.database_library.jar
+lr-x------    1 0        0              64 Jan  1 00:08 43 -> /android/system/framework/com.sony.scalar.stillPlay.jar
+lr-x------    1 0        0              64 Jan  1 00:08 44 -> /android/system/app/AvindexProvider.apk
+lr-x------    1 0        0              64 Jan  1 00:08 45 -> /android/system/app/AvindexProvider.apk
+lrwx------    1 0        0              64 Jan  1 00:08 46 -> /android/dev/ashmem
+lrwx------    1 0        0              64 Jan  1 00:08 47 -> /android/dev/ashmem
+lr-x------    1 0        0              64 Jan  1 00:08 48 -> /android/system/app/AvindexProvider.apk
+l-wx------    1 0        0              64 Jan  1 00:08 5 -> /android/dev/log/main
+l-wx------    1 0        0              64 Jan  1 00:08 6 -> /android/dev/log/radio
+l-wx------    1 0        0              64 Jan  1 00:08 7 -> /android/dev/log/events
+lr-x------    1 0        0              64 Jan  1 00:08 8 -> /android/system/framework/core.jar
+lr-x------    1 0        0              64 Jan  1 00:08 9 -> /android/dev/__properties__ (deleted)
+
+/proc/5/fd:
+
+/proc/50/fd:
+
+/proc/507/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /android/dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /android/dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 10 -> /android/dev/binder
+lr-x------    1 0        0              64 Jan  1 00:08 11 -> /android/system/framework/bouncycastle.jar
+lr-x------    1 0        0              64 Jan  1 00:08 12 -> /android/system/framework/ext.jar
+lr-x------    1 0        0              64 Jan  1 00:08 13 -> /android/system/framework/framework.jar
+lr-x------    1 0        0              64 Jan  1 00:08 14 -> /android/system/framework/android.policy.jar
+lr-x------    1 0        0              64 Jan  1 00:08 15 -> /android/system/framework/services.jar
+lr-x------    1 0        0              64 Jan  1 00:08 16 -> /android/system/framework/core-junit.jar
+lr-x------    1 0        0              64 Jan  1 00:08 17 -> /android/system/framework/androidsystemstateservice.jar
+lr-x------    1 0        0              64 Jan  1 00:08 18 -> /android/system/framework/sony.cameraex.jar
+lr-x------    1 0        0              64 Jan  1 00:08 19 -> /android/system/framework/com.sony.scalar.database_library.jar
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /android/dev/null
+lr-x------    1 0        0              64 Jan  1 00:08 20 -> /android/system/framework/com.sony.scalar.hardware.avio.cec.jar
+lr-x------    1 0        0              64 Jan  1 00:08 21 -> /android/system/framework/com.sony.scalar.hardware.avio.DisplayManager.jar
+lr-x------    1 0        0              64 Jan  1 00:08 22 -> /android/system/framework/com.sony.scalar.hardware.indicator.light.jar
+lr-x------    1 0        0              64 Jan  1 00:08 23 -> /android/system/framework/com.sony.scalar.stillPlay.jar
+lr-x------    1 0        0              64 Jan  1 00:08 24 -> /android/system/framework/com.sony.scalar.sysnetutil.ScalarWifiInfo.jar
+lr-x------    1 0        0              64 Jan  1 00:08 25 -> /android/system/framework/com.sony.scalar.sysutil.didep.Caution.jar
+lr-x------    1 0        0              64 Jan  1 00:08 26 -> /android/system/framework/com.sony.scalar.sysutil.didep.Gpelibrary.jar
+lr-x------    1 0        0              64 Jan  1 00:08 27 -> /android/system/framework/com.sony.scalar.sysutil.didep.Kikilog.jar
+lr-x------    1 0        0              64 Jan  1 00:08 28 -> /android/system/framework/com.sony.scalar.sysutil.didep.ScalarSystemManager.jar
+lr-x------    1 0        0              64 Jan  1 00:08 29 -> /android/system/framework/com.sony.scalar.sysutil.didep.Settings.jar
+l-wx------    1 0        0              64 Jan  1 00:08 3 -> /proc/snsc_boot_time
+lr-x------    1 0        0              64 Jan  1 00:08 30 -> /android/system/framework/com.sony.scalar.sysutil.didep.Status.jar
+lr-x------    1 0        0              64 Jan  1 00:08 31 -> /android/system/framework/com.sony.scalar.sysutil.Property.jar
+lr-x------    1 0        0              64 Jan  1 00:08 32 -> /android/system/framework/com.sony.scalar.sysutil.ScalarInput.jar
+lr-x------    1 0        0              64 Jan  1 00:08 33 -> /android/system/framework/com.sony.scalar.sysutil.TimeUtil.jar
+lr-x------    1 0        0              64 Jan  1 00:08 34 -> /android/system/framework/framework.jar
+lr-x------    1 0        0              64 Jan  1 00:08 35 -> /android/system/fonts/UniversOTS-SJ.ttf
+lr-x------    1 0        0              64 Jan  1 00:08 36 -> /android/system/framework/core.jar
+lr-x------    1 0        0              64 Jan  1 00:08 37 -> /android/dev/urandom
+lr-x------    1 0        0              64 Jan  1 00:08 38 -> /android/system/framework/framework-res.apk
+lr-x------    1 0        0              64 Jan  1 00:08 39 -> pipe:[1299]
+lrwx------    1 0        0              64 Jan  1 00:08 4 -> /android/dev/uipc
+l-wx------    1 0        0              64 Jan  1 00:08 40 -> pipe:[1299]
+lrwx------    1 0        0              64 Jan  1 00:08 41 -> anon_inode:[eventpoll]
+lr-x------    1 0        0              64 Jan  1 00:08 42 -> /android/system/app/ScalarALauncher.apk
+lr-x------    1 0        0              64 Jan  1 00:08 43 -> /android/system/app/ScalarALauncher.apk
+lrwx------    1 0        0              64 Jan  1 00:08 44 -> /android/dev/ashmem
+lrwx------    1 0        0              64 Jan  1 00:08 45 -> /android/dev/ashmem
+lr-x------    1 0        0              64 Jan  1 00:08 46 -> /android/system/app/ScalarALauncher.apk
+lr-x------    1 0        0              64 Jan  1 00:08 47 -> pipe:[1313]
+l-wx------    1 0        0              64 Jan  1 00:08 48 -> pipe:[1313]
+lrwx------    1 0        0              64 Jan  1 00:08 49 -> anon_inode:[eventpoll]
+l-wx------    1 0        0              64 Jan  1 00:08 5 -> /android/dev/log/main
+lrwx------    1 0        0              64 Jan  1 00:08 50 -> /android/dev/stream
+lr-x------    1 0        0              64 Jan  1 00:08 51 -> pipe:[1340]
+l-wx------    1 0        0              64 Jan  1 00:08 52 -> pipe:[1340]
+lrwx------    1 0        0              64 Jan  1 00:08 53 -> /android/dev/ashmem
+lr-x------    1 0        0              64 Jan  1 00:08 54 -> pipe:[779]
+l-wx------    1 0        0              64 Jan  1 00:08 55 -> pipe:[780]
+lrwx------    1 0        0              64 Jan  1 00:08 56 -> /android/dev/ashmem
+lrwx------    1 0        0              64 Jan  1 00:08 57 -> /android/dev/ashmem
+lrwx------    1 0        0              64 Jan  1 00:08 58 -> /android/dev/stream
+l-wx------    1 0        0              64 Jan  1 00:08 6 -> /android/dev/log/radio
+lrwx------    1 0        0              64 Jan  1 00:08 60 -> anon_inode:[eventpoll]
+lr-x------    1 0        0              64 Jan  1 00:08 62 -> /android/system/fonts/Sony_DI_Icons.ttf
+lr-x------    1 0        0              64 Jan  1 00:08 67 -> /android/system/fonts/UniversOTS-SJ.ttf
+lr-x------    1 0        0              64 Jan  1 00:08 68 -> /android/system/fonts/HeiseiKakuGothW5-SJ.ttf
+lr-x------    1 0        0              64 Jan  1 00:08 69 -> /android/system/fonts/MYingHeiC-KSX1001-SJ.ttf
+l-wx------    1 0        0              64 Jan  1 00:08 7 -> /android/dev/log/events
+lr-x------    1 0        0              64 Jan  1 00:08 70 -> /android/system/fonts/MYingHeiC-Big5HKSCS-SJ.ttf
+lr-x------    1 0        0              64 Jan  1 00:08 8 -> /android/system/framework/core.jar
+lr-x------    1 0        0              64 Jan  1 00:08 9 -> /android/dev/__properties__ (deleted)
+
+/proc/51/fd:
+
+/proc/52/fd:
+
+/proc/54/fd:
+
+/proc/55/fd:
+
+/proc/56/fd:
+
+/proc/57/fd:
+
+/proc/58/fd:
+
+/proc/60/fd:
+
+/proc/61/fd:
+
+/proc/614/fd:
+
+/proc/615/fd:
+
+/proc/616/fd:
+
+/proc/617/fd:
+
+/proc/618/fd:
+
+/proc/619/fd:
+
+/proc/620/fd:
+
+/proc/621/fd:
+
+/proc/622/fd:
+
+/proc/623/fd:
+
+/proc/624/fd:
+
+/proc/625/fd:
+
+/proc/626/fd:
+
+/proc/627/fd:
+
+/proc/628/fd:
+
+/proc/629/fd:
+
+/proc/63/fd:
+
+/proc/630/fd:
+
+/proc/631/fd:
+
+/proc/632/fd:
+
+/proc/633/fd:
+
+/proc/634/fd:
+
+/proc/635/fd:
+
+/proc/636/fd:
+
+/proc/637/fd:
+
+/proc/638/fd:
+
+/proc/639/fd:
+
+/proc/640/fd:
+
+/proc/641/fd:
+
+/proc/642/fd:
+
+/proc/643/fd:
+
+/proc/644/fd:
+
+/proc/645/fd:
+
+/proc/646/fd:
+
+/proc/647/fd:
+
+/proc/648/fd:
+
+/proc/649/fd:
+
+/proc/65/fd:
+
+/proc/650/fd:
+
+/proc/651/fd:
+
+/proc/652/fd:
+
+/proc/653/fd:
+
+/proc/654/fd:
+
+/proc/655/fd:
+
+/proc/656/fd:
+
+/proc/657/fd:
+
+/proc/658/fd:
+
+/proc/659/fd:
+
+/proc/66/fd:
+
+/proc/660/fd:
+
+/proc/661/fd:
+
+/proc/662/fd:
+
+/proc/663/fd:
+
+/proc/664/fd:
+
+/proc/665/fd:
+
+/proc/666/fd:
+
+/proc/667/fd:
+
+/proc/668/fd:
+
+/proc/669/fd:
+
+/proc/670/fd:
+
+/proc/671/fd:
+
+/proc/672/fd:
+
+/proc/673/fd:
+
+/proc/674/fd:
+
+/proc/675/fd:
+
+/proc/676/fd:
+
+/proc/677/fd:
+
+/proc/678/fd:
+
+/proc/679/fd:
+
+/proc/68/fd:
+
+/proc/680/fd:
+
+/proc/681/fd:
+
+/proc/682/fd:
+
+/proc/683/fd:
+
+/proc/684/fd:
+
+/proc/685/fd:
+
+/proc/686/fd:
+
+/proc/687/fd:
+
+/proc/688/fd:
+
+/proc/689/fd:
+
+/proc/69/fd:
+
+/proc/690/fd:
+
+/proc/691/fd:
+
+/proc/692/fd:
+
+/proc/693/fd:
+
+/proc/694/fd:
+
+/proc/695/fd:
+
+/proc/696/fd:
+
+/proc/697/fd:
+
+/proc/698/fd:
+
+/proc/699/fd:
+
+/proc/7/fd:
+
+/proc/70/fd:
+
+/proc/700/fd:
+
+/proc/701/fd:
+
+/proc/702/fd:
+
+/proc/703/fd:
+
+/proc/704/fd:
+
+/proc/705/fd:
+
+/proc/706/fd:
+
+/proc/707/fd:
+
+/proc/708/fd:
+
+/proc/709/fd:
+
+/proc/71/fd:
+
+/proc/710/fd:
+
+/proc/711/fd:
+
+/proc/712/fd:
+
+/proc/713/fd:
+
+/proc/714/fd:
+
+/proc/715/fd:
+
+/proc/716/fd:
+
+/proc/717/fd:
+
+/proc/718/fd:
+
+/proc/719/fd:
+
+/proc/72/fd:
+
+/proc/720/fd:
+
+/proc/721/fd:
+
+/proc/722/fd:
+
+/proc/723/fd:
+
+/proc/724/fd:
+
+/proc/725/fd:
+
+/proc/75/fd:
+
+/proc/763/fd:
+
+/proc/764/fd:
+
+/proc/765/fd:
+
+/proc/766/fd:
+
+/proc/767/fd:
+
+/proc/768/fd:
+
+/proc/769/fd:
+
+/proc/77/fd:
+
+/proc/770/fd:
+
+/proc/771/fd:
+
+/proc/772/fd:
+
+/proc/773/fd:
+
+/proc/774/fd:
+
+/proc/775/fd:
+
+/proc/776/fd:
+
+/proc/777/fd:
+
+/proc/778/fd:
+
+/proc/779/fd:
+
+/proc/78/fd:
+
+/proc/780/fd:
+
+/proc/781/fd:
+
+/proc/782/fd:
+
+/proc/783/fd:
+
+/proc/784/fd:
+
+/proc/785/fd:
+
+/proc/786/fd:
+
+/proc/787/fd:
+
+/proc/79/fd:
+
+/proc/790/fd:
+
+/proc/8/fd:
+
+/proc/80/fd:
+
+/proc/832/fd:
+
+/proc/835/fd:
+
+/proc/837/fd:
+
+/proc/851/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /android/dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /android/dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 10 -> /android/dev/binder
+lr-x------    1 0        0              64 Jan  1 00:08 11 -> /android/system/framework/bouncycastle.jar
+lr-x------    1 0        0              64 Jan  1 00:08 12 -> /android/system/framework/ext.jar
+lr-x------    1 0        0              64 Jan  1 00:08 13 -> /android/system/framework/framework.jar
+lr-x------    1 0        0              64 Jan  1 00:08 14 -> /android/system/framework/android.policy.jar
+lr-x------    1 0        0              64 Jan  1 00:08 15 -> /android/system/framework/services.jar
+lr-x------    1 0        0              64 Jan  1 00:08 16 -> /android/system/framework/core-junit.jar
+lr-x------    1 0        0              64 Jan  1 00:08 17 -> /android/system/framework/androidsystemstateservice.jar
+lr-x------    1 0        0              64 Jan  1 00:08 18 -> /android/system/framework/sony.cameraex.jar
+lr-x------    1 0        0              64 Jan  1 00:08 19 -> /android/system/framework/com.sony.scalar.database_library.jar
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /android/dev/null
+lr-x------    1 0        0              64 Jan  1 00:08 20 -> /android/system/framework/com.sony.scalar.hardware.avio.cec.jar
+lr-x------    1 0        0              64 Jan  1 00:08 21 -> /android/system/framework/com.sony.scalar.hardware.avio.DisplayManager.jar
+lr-x------    1 0        0              64 Jan  1 00:08 22 -> /android/system/framework/com.sony.scalar.hardware.indicator.light.jar
+lr-x------    1 0        0              64 Jan  1 00:08 23 -> /android/system/framework/com.sony.scalar.stillPlay.jar
+lr-x------    1 0        0              64 Jan  1 00:08 24 -> /android/system/framework/com.sony.scalar.sysnetutil.ScalarWifiInfo.jar
+lr-x------    1 0        0              64 Jan  1 00:08 25 -> /android/system/framework/com.sony.scalar.sysutil.didep.Caution.jar
+lr-x------    1 0        0              64 Jan  1 00:08 26 -> /android/system/framework/com.sony.scalar.sysutil.didep.Gpelibrary.jar
+lr-x------    1 0        0              64 Jan  1 00:08 27 -> /android/system/framework/com.sony.scalar.sysutil.didep.Kikilog.jar
+lr-x------    1 0        0              64 Jan  1 00:08 28 -> /android/system/framework/com.sony.scalar.sysutil.didep.ScalarSystemManager.jar
+lr-x------    1 0        0              64 Jan  1 00:08 29 -> /android/system/framework/com.sony.scalar.sysutil.didep.Settings.jar
+l-wx------    1 0        0              64 Jan  1 00:08 3 -> /proc/snsc_boot_time
+lr-x------    1 0        0              64 Jan  1 00:08 30 -> /android/system/framework/com.sony.scalar.sysutil.didep.Status.jar
+lr-x------    1 0        0              64 Jan  1 00:08 31 -> /android/system/framework/com.sony.scalar.sysutil.Property.jar
+lr-x------    1 0        0              64 Jan  1 00:08 32 -> /android/system/framework/com.sony.scalar.sysutil.ScalarInput.jar
+lr-x------    1 0        0              64 Jan  1 00:08 33 -> /android/system/framework/com.sony.scalar.sysutil.TimeUtil.jar
+lr-x------    1 0        0              64 Jan  1 00:08 34 -> /android/system/framework/framework.jar
+lr-x------    1 0        0              64 Jan  1 00:08 35 -> /android/system/fonts/UniversOTS-SJ.ttf
+lr-x------    1 0        0              64 Jan  1 00:08 36 -> /android/system/framework/core.jar
+lr-x------    1 0        0              64 Jan  1 00:08 37 -> /android/dev/urandom
+lr-x------    1 0        0              64 Jan  1 00:08 38 -> /android/system/framework/framework-res.apk
+lr-x------    1 0        0              64 Jan  1 00:08 39 -> pipe:[1347]
+lrwx------    1 0        0              64 Jan  1 00:08 4 -> /android/dev/uipc
+l-wx------    1 0        0              64 Jan  1 00:08 40 -> pipe:[1347]
+lrwx------    1 0        0              64 Jan  1 00:08 41 -> anon_inode:[eventpoll]
+lr-x------    1 0        0              64 Jan  1 00:08 42 -> /android/data/app/com.github.ma1co.openmemories.tweak-1.apk
+lr-x------    1 0        0              64 Jan  1 00:08 43 -> /android/data/app/com.github.ma1co.openmemories.tweak-1.apk
+lrwx------    1 0        0              64 Jan  1 00:08 44 -> /android/dev/ashmem
+lrwx------    1 0        0              64 Jan  1 00:08 45 -> /android/dev/ashmem
+lr-x------    1 0        0              64 Jan  1 00:08 46 -> /android/data/app/com.github.ma1co.openmemories.tweak-1.apk
+lrwx------    1 0        0              64 Jan  1 00:08 47 -> /android/dev/ashmem
+lrwx------    1 0        0              64 Jan  1 00:08 48 -> /android/dev/ashmem
+lrwx------    1 0        0              64 Jan  1 00:08 49 -> /android/dev/stream
+l-wx------    1 0        0              64 Jan  1 00:08 5 -> /android/dev/log/main
+l-wx------    1 0        0              64 Jan  1 00:08 6 -> /android/dev/log/radio
+l-wx------    1 0        0              64 Jan  1 00:08 7 -> /android/dev/log/events
+lr-x------    1 0        0              64 Jan  1 00:08 8 -> /android/system/framework/core.jar
+lr-x------    1 0        0              64 Jan  1 00:01 9 -> /android/dev/__properties__ (deleted)
+
+/proc/858/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /android/dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /android/dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 10 -> /android/dev/binder
+lr-x------    1 0        0              64 Jan  1 00:08 11 -> /android/system/framework/bouncycastle.jar
+lr-x------    1 0        0              64 Jan  1 00:08 12 -> /android/system/framework/ext.jar
+lr-x------    1 0        0              64 Jan  1 00:08 13 -> /android/system/framework/framework.jar
+lr-x------    1 0        0              64 Jan  1 00:08 14 -> /android/system/framework/android.policy.jar
+lr-x------    1 0        0              64 Jan  1 00:08 15 -> /android/system/framework/services.jar
+lr-x------    1 0        0              64 Jan  1 00:08 16 -> /android/system/framework/core-junit.jar
+lr-x------    1 0        0              64 Jan  1 00:08 17 -> /android/system/framework/androidsystemstateservice.jar
+lr-x------    1 0        0              64 Jan  1 00:08 18 -> /android/system/framework/sony.cameraex.jar
+lr-x------    1 0        0              64 Jan  1 00:08 19 -> /android/system/framework/com.sony.scalar.database_library.jar
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /android/dev/null
+lr-x------    1 0        0              64 Jan  1 00:08 20 -> /android/system/framework/com.sony.scalar.hardware.avio.cec.jar
+lr-x------    1 0        0              64 Jan  1 00:08 21 -> /android/system/framework/com.sony.scalar.hardware.avio.DisplayManager.jar
+lr-x------    1 0        0              64 Jan  1 00:08 22 -> /android/system/framework/com.sony.scalar.hardware.indicator.light.jar
+lr-x------    1 0        0              64 Jan  1 00:08 23 -> /android/system/framework/com.sony.scalar.stillPlay.jar
+lr-x------    1 0        0              64 Jan  1 00:08 24 -> /android/system/framework/com.sony.scalar.sysnetutil.ScalarWifiInfo.jar
+lr-x------    1 0        0              64 Jan  1 00:08 25 -> /android/system/framework/com.sony.scalar.sysutil.didep.Caution.jar
+lr-x------    1 0        0              64 Jan  1 00:08 26 -> /android/system/framework/com.sony.scalar.sysutil.didep.Gpelibrary.jar
+lr-x------    1 0        0              64 Jan  1 00:08 27 -> /android/system/framework/com.sony.scalar.sysutil.didep.Kikilog.jar
+lr-x------    1 0        0              64 Jan  1 00:08 28 -> /android/system/framework/com.sony.scalar.sysutil.didep.ScalarSystemManager.jar
+lr-x------    1 0        0              64 Jan  1 00:08 29 -> /android/system/framework/com.sony.scalar.sysutil.didep.Settings.jar
+l-wx------    1 0        0              64 Jan  1 00:08 3 -> /proc/snsc_boot_time
+lr-x------    1 0        0              64 Jan  1 00:08 30 -> /android/system/framework/com.sony.scalar.sysutil.didep.Status.jar
+lr-x------    1 0        0              64 Jan  1 00:08 31 -> /android/system/framework/com.sony.scalar.sysutil.Property.jar
+lr-x------    1 0        0              64 Jan  1 00:08 32 -> /android/system/framework/com.sony.scalar.sysutil.ScalarInput.jar
+lr-x------    1 0        0              64 Jan  1 00:08 33 -> /android/system/framework/com.sony.scalar.sysutil.TimeUtil.jar
+lr-x------    1 0        0              64 Jan  1 00:08 34 -> /android/system/framework/framework.jar
+lr-x------    1 0        0              64 Jan  1 00:08 35 -> /android/system/fonts/UniversOTS-SJ.ttf
+lr-x------    1 0        0              64 Jan  1 00:08 36 -> /android/system/framework/core.jar
+lr-x------    1 0        0              64 Jan  1 00:08 37 -> /android/dev/urandom
+lr-x------    1 0        0              64 Jan  1 00:08 38 -> /android/system/framework/framework-res.apk
+lr-x------    1 0        0              64 Jan  1 00:08 39 -> pipe:[1349]
+lrwx------    1 0        0              64 Jan  1 00:08 4 -> /android/dev/uipc
+l-wx------    1 0        0              64 Jan  1 00:08 40 -> pipe:[1349]
+lrwx------    1 0        0              64 Jan  1 00:08 41 -> anon_inode:[eventpoll]
+lr-x------    1 0        0              64 Jan  1 00:08 42 -> /android/system/app/ScalarASoftKeyboard.apk
+lr-x------    1 0        0              64 Jan  1 00:08 43 -> /android/system/app/ScalarASoftKeyboard.apk
+lrwx------    1 0        0              64 Jan  1 00:08 44 -> /android/dev/ashmem
+lrwx------    1 0        0              64 Jan  1 00:08 45 -> /android/dev/ashmem
+lr-x------    1 0        0              64 Jan  1 00:08 46 -> /android/system/app/ScalarASoftKeyboard.apk
+l-wx------    1 0        0              64 Jan  1 00:08 5 -> /android/dev/log/main
+l-wx------    1 0        0              64 Jan  1 00:08 6 -> /android/dev/log/radio
+l-wx------    1 0        0              64 Jan  1 00:08 7 -> /android/dev/log/events
+lr-x------    1 0        0              64 Jan  1 00:08 8 -> /android/system/framework/core.jar
+lr-x------    1 0        0              64 Jan  1 00:08 9 -> /android/dev/__properties__ (deleted)
+
+/proc/865/fd:
+
+/proc/866/fd:
+
+/proc/868/fd:
+
+/proc/869/fd:
+
+/proc/887/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /dev/null
+l-wx------    1 0        0              64 Jan  1 00:08 3 -> /proc/snsc_boot_time
+lrwx------    1 0        0              64 Jan  1 00:08 4 -> socket:[1452]
+
+/proc/890/fd:
+
+/proc/892/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /android/dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /android/dev/null
+lr-x------    1 0        0              64 Jan  1 00:08 10 -> /android/system/bin/wlan_tool
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /android/dev/null
+l-wx------    1 0        0              64 Jan  1 00:08 3 -> /proc/snsc_boot_time
+lr-x------    1 0        0              64 Jan  1 00:08 9 -> /android/dev/__properties__ (deleted)
+
+/proc/9/fd:
+
+/proc/90/fd:
+
+/proc/91/fd:
+
+/proc/912/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /android/dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /android/dev/null
+l-wx------    1 0        0              64 Jan  1 00:08 10 -> /android/dev/log/radio
+l-wx------    1 0        0              64 Jan  1 00:08 11 -> /android/dev/log/events
+lrwx------    1 0        0              64 Jan  1 00:08 12 -> socket:[1494]
+lrwx------    1 0        0              64 Jan  1 00:08 13 -> socket:[1495]
+lrwx------    1 0        0              64 Jan  1 00:08 14 -> socket:[1496]
+lrwx------    1 0        0              64 Jan  1 00:08 15 -> socket:[1505]
+lrwx------    1 0        0              64 Jan  1 00:08 16 -> socket:[1532]
+lrwx------    1 0        0              64 Jan  1 00:08 17 -> socket:[1508]
+lrwx------    1 0        0              64 Jan  1 00:08 18 -> socket:[1509]
+lrwx------    1 0        0              64 Jan  1 00:08 19 -> socket:[1518]
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /android/dev/null
+l-wx------    1 0        0              64 Jan  1 00:08 3 -> /proc/snsc_boot_time
+lrwx------    1 0        0              64 Jan  1 00:08 4 -> socket:[1489]
+lrwx------    1 0        0              64 Jan  1 00:08 5 -> socket:[1490]
+lrwx------    1 0        0              64 Jan  1 00:08 6 -> socket:[1491]
+lrwx------    1 0        0              64 Jan  1 00:08 7 -> socket:[1492]
+l-wx------    1 0        0              64 Jan  1 00:08 8 -> /android/dev/log/main
+lr-x------    1 0        0              64 Jan  1 00:08 9 -> /android/dev/__properties__ (deleted)
+
+/proc/915/fd:
+lr-x------    1 0        0              64 Jan  1 00:08 0 -> /dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /dev/console
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /dev/console
+l-wx------    1 0        0              64 Jan  1 00:08 3 -> /proc/snsc_boot_time
+lrwx------    1 0        0              64 Jan  1 00:08 4 -> socket:[5008]
+lrwx------    1 0        0              64 Jan  1 00:08 5 -> socket:[5009]
+lrwx------    1 0        0              64 Jan  1 00:08 6 -> socket:[5012]
+lrwx------    1 0        0              64 Jan  1 00:08 7 -> socket:[5013]
+lr-x------    1 0        0              64 Jan  1 00:08 9 -> /android/dev/__properties__ (deleted)
+
+/proc/920/fd:
+
+/proc/921/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /android/dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /android/dev/null
+lr-x------    1 0        0              64 Jan  1 00:08 10 -> /android/system/bin/wlan_tool
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /android/dev/null
+l-wx------    1 0        0              64 Jan  1 00:08 3 -> /proc/snsc_boot_time
+lr-x------    1 0        0              64 Jan  1 00:08 9 -> /android/dev/__properties__ (deleted)
+
+/proc/93/fd:
+
+/proc/939/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /android/dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /android/dev/null
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /android/dev/null
+l-wx------    1 0        0              64 Jan  1 00:08 3 -> /android/data/misc/dhcp/dhcpcd-ath0.pid
+lrwx------    1 0        0              64 Jan  1 00:08 4 -> socket:[1580]
+lr-x------    1 0        0              64 Jan  1 00:08 5 -> pipe:[1582]
+l-wx------    1 0        0              64 Jan  1 00:08 6 -> pipe:[1582]
+
+/proc/94/fd:
+
+/proc/95/fd:
+
+/proc/964/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /dev/pts/0
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /dev/pts/0
+lrwx------    1 0        0              64 Jan  1 00:08 10 -> /dev/tty
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /dev/pts/0
+l-wx------    1 0        0              64 Jan  1 00:08 3 -> /proc/snsc_boot_time
+lrwx------    1 0        0              64 Jan  1 00:08 4 -> socket:[1452]
+lrwx------    1 0        0              64 Jan  1 00:08 5 -> socket:[1633]
+lrwx------    1 0        0              64 Jan  1 00:08 6 -> /dev/ptmx
+
+/proc/981/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /dev/pts/1
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /dev/pts/1
+lrwx------    1 0        0              64 Jan  1 00:08 10 -> /dev/tty
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /dev/pts/1
+l-wx------    1 0        0              64 Jan  1 00:08 3 -> /proc/snsc_boot_time
+lrwx------    1 0        0              64 Jan  1 00:08 4 -> socket:[1452]
+lrwx------    1 0        0              64 Jan  1 00:08 5 -> socket:[3085]
+lrwx------    1 0        0              64 Jan  1 00:08 6 -> /dev/ptmx
+
+/proc/983/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /dev/pts/2
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /dev/pts/2
+lrwx------    1 0        0              64 Jan  1 00:08 10 -> /dev/tty
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /dev/pts/2
+l-wx------    1 0        0              64 Jan  1 00:08 3 -> /proc/snsc_boot_time
+lrwx------    1 0        0              64 Jan  1 00:08 4 -> socket:[1452]
+lrwx------    1 0        0              64 Jan  1 00:08 5 -> socket:[3086]
+lrwx------    1 0        0              64 Jan  1 00:08 6 -> /dev/ptmx
+
+/proc/99/fd:
+
+/proc/self/fd:
+lrwx------    1 0        0              64 Jan  1 00:08 0 -> /dev/pts/8
+lrwx------    1 0        0              64 Jan  1 00:08 1 -> /dev/pts/8
+lrwx------    1 0        0              64 Jan  1 00:08 2 -> /dev/pts/8
+lr-x------    1 0        0              64 Jan  1 00:08 3ls: /proc/self/fd/3: cannot read link (not a symlink?)
+
+/usr/share/app # ps
+ PID TTY          TIME CMD
+   1 ?        00:00:00 ash
+   2 ?        00:00:00 kthreadd
+   3 ?        00:00:00 irq/254-rstreq
+   4 ?        00:00:04 ksoftirqd/0
+   5 ?        00:00:00 kworker/0:0
+   7 ?        00:00:00 posixcputmr/0
+   8 ?        00:00:00 migration/0
+   9 ?        00:00:00 kipid_wq/0
+  10 ?        00:00:00 watchdog/0
+  11 ?        00:00:00 posixcputmr/1
+  17 ?        00:00:00 posixcputmr/2
+  23 ?        00:00:00 posixcputmr/3
+  29 ?        00:00:00 khelper
+  31 ?        00:00:00 sync_supers
+  32 ?        00:00:00 bdi-default
+  33 ?        00:00:00 kblockd
+  34 ?        00:00:00 errind
+  36 ?        00:00:00 irq/146-pmn
+  37 ?        00:00:00 irq/147-pmn
+  38 ?        00:00:00 irq/148-pmn
+  39 ?        00:00:00 irq/149-pmn
+  40 ?        00:00:00 irq/255-L2
+  41 ?        00:00:00 rmond
+  42 ?        00:00:00 kswapd0
+  43 ?        00:00:00 fsnotify_mark
+  44 ?        00:00:00 crypto
+  49 ?        00:00:00 irq/232-fusb_us
+  50 ?        00:00:00 irq/233-fusb_us
+  51 ?        00:00:00 kworker/0:1
+  52 ?        00:00:00 binder
+  54 ?        00:00:00 irq/189-dmac_ch
+  55 ?        00:00:00 irq/190-dmac_ch
+  56 ?        00:00:00 irq/191-dmac_ch
+  57 ?        00:00:00 irq/192-dmac_ch
+  58 ?        00:00:00 irq/193-dmac_ch
+  60 ?        00:00:00 irq/195-dmac_ch
+  61 ?        00:00:00 irq/196-dmac_ch
+  63 ?        00:00:00 irq/171-ldec
+  65 ?        00:00:00 irq/172-nandreg
+  66 ?        00:00:01 irq/170-arm7io
+  68 ?        00:00:02 bdev_nflasha
+  69 ?        00:00:00 bdev_dnflasha
+  70 ?        00:00:00 bdev_dnflasha
+  71 ?        00:00:01 bdev_dnflasha
+  72 ?        00:00:01 bdev_dnflasha
+  75 ?        00:00:00 uipc_dumper
+  77 ?        00:00:00 UTIMER0
+  78 ?        00:00:00 UTIMER1
+  79 ?        00:00:00 UTIMER2
+  80 ?        00:00:00 UTIMER3
+  90 ?        00:00:00 irq/199-i2c
+  91 ?        00:00:00 i2c_uipc
+  93 ?        00:00:00 evq(sircs)
+  94 ?        00:00:00 irq/198-sircs
+  95 ?        00:00:00 irq/197-sircs_o
+  99 ?        00:00:00 UsbPortMonitor
+ 102 ?        00:00:00 memmgr
+ 105 ?        00:00:00 UPM_TMO
+ 106 ?        00:00:00 UPM_TSK
+ 107 ?        00:00:00 UPM_DFS
+ 108 ?        00:00:00 PON_RM
+ 111 ?        00:00:00 irq/125-nfc_rsr
+ 112 ?        00:00:00 irq/129-nfc_rsr
+ 114 ?        00:00:00 irq/76-dmpgles2
+ 123 ?        00:00:00 RMCMND-UIPC
+ 129 ?        00:00:00 flush-252:0
+ 134 ?        00:00:00 bootin.elf
+ 148 ?        00:01:54 im.elf
+ 173 ?        00:00:00 ash
+ 185 ?        00:00:00 init
+ 186 ?        00:00:00 ueventd
+ 188 ?        00:00:00 vold
+ 189 ?        00:00:00 netd
+ 190 ?        00:00:00 debuggerd
+ 191 ?        00:00:06 zygote
+ 193 ?        00:00:00 installd
+ 341 ?        00:00:00 kworker/u:1
+ 344 ?        00:00:00 irq/194-dmac_ch
+ 363 ?        00:00:00 hdmi_state
+ 366 ?        00:00:00 cec_state
+ 614 ?        00:00:00 liro-kliro_8
+ 615 ?        00:00:00 liro-kliro_3
+ 616 ?        00:00:00 liro-kliro_9
+ 617 ?        00:00:05 liro-kliro_2
+ 618 ?        00:00:00 liro-kliro_4
+ 619 ?        00:00:05 liro-kliro_5
+ 620 ?        00:00:00 liro-kliro_6
+ 621 ?        00:00:16 liro-kliro_10
+ 622 ?        00:00:00 liro-kliro_11
+ 623 ?        00:00:00 liro-kliro_12
+ 624 ?        00:00:05 liro-kliro_13
+ 625 ?        00:00:00 liro-kliro_17
+ 626 ?        00:00:01 liro-kliro_19
+ 627 ?        00:00:00 liro-kliro_20
+ 628 ?        00:00:00 liro-kliro_21
+ 629 ?        00:00:00 liro-kliro_22
+ 630 ?        00:00:00 liro-kliro_23
+ 631 ?        00:00:00 liro-kliro_24
+ 632 ?        00:00:00 liro-kliro_25
+ 633 ?        00:00:00 liro-kliro_26
+ 634 ?        00:00:00 liro-kliro_27
+ 635 ?        00:00:00 liro-kliro_28
+ 636 ?        00:00:03 liro-kliro_30
+ 637 ?        00:00:00 liro-kliro_31
+ 638 ?        00:00:04 liro-kliro_32
+ 639 ?        00:00:00 liro-kliro_33
+ 640 ?        00:00:00 liro-kliro_35
+ 641 ?        00:00:00 liro-kliro_36
+ 642 ?        00:00:00 liro-kliro_37
+ 643 ?        00:00:00 liro-kliro_38
+ 644 ?        00:00:00 liro-kliro_39
+ 645 ?        00:00:01 liro-kliro_40
+ 646 ?        00:00:00 liro-kliro_41
+ 647 ?        00:00:00 liro-kliro_42
+ 648 ?        00:00:13 liro-kliro_43
+ 649 ?        00:00:00 liro-kliro_44
+ 650 ?        00:00:00 liro-kliro_45
+ 651 ?        00:00:00 liro-kliro_46
+ 652 ?        00:00:03 liro-kliro_50
+ 653 ?        00:00:00 liro-kliro_51
+ 654 ?        00:00:00 liro-kliro_52
+ 655 ?        00:00:00 liro-kliro_57
+ 656 ?        00:00:01 liro-kliro_55
+ 657 ?        00:00:00 liro-kliro_60
+ 658 ?        00:00:00 liro-kliro_7
+ 659 ?        00:00:00 liro-kliro_62
+ 660 ?        00:00:00 liro-kliro_63
+ 661 ?        00:00:00 liro-kliro_56
+ 662 ?        00:00:01 liro-kliro_61
+ 663 ?        00:00:00 liro-kliro_54
+ 664 ?        00:00:05 liro-kliro_124
+ 665 ?        00:00:00 liro-kliro_125
+ 666 ?        00:00:07 liro-kliro_126
+ 667 ?        00:00:00 liro-kliro_127
+ 668 ?        00:00:00 liro-kliro_65
+ 669 ?        00:01:04 liro-kliro_66
+ 670 ?        00:00:00 liro-kliro_67
+ 671 ?        00:00:11 liro-kliro_100
+ 672 ?        00:00:11 liro-kliro_101
+ 673 ?        00:00:02 liro-kliro_68
+ 674 ?        00:00:00 liro-kliro_69
+ 675 ?        00:00:00 liro-kliro_70
+ 676 ?        00:00:00 liro-kliro_71
+ 677 ?        00:00:00 liro-kliro_72
+ 678 ?        00:00:00 liro-kliro_73
+ 679 ?        00:00:00 liro-kliro_74
+ 680 ?        00:00:00 liro-kliro_75
+ 681 ?        00:00:00 liro-kliro_76
+ 682 ?        00:00:00 liro-kliro_77
+ 683 ?        00:00:04 liro-kliro_78
+ 684 ?        00:00:22 liro-kliro_79
+ 685 ?        00:00:17 liro-kliro_80
+ 686 ?        00:00:08 liro-kliro_81
+ 687 ?        00:00:02 liro-kliro_82
+ 688 ?        00:00:06 liro-kliro_84
+ 689 ?        00:00:02 liro-kliro_85
+ 690 ?        00:00:01 liro-kliro_83
+ 691 ?        00:00:00 liro-kliro_86
+ 692 ?        00:00:07 liro-kliro_90
+ 693 ?        00:00:00 liro-kliro_91
+ 694 ?        00:00:00 liro-kliro_92
+ 695 ?        00:00:01 liro-kliro_110
+ 696 ?        00:00:00 liro-kliro_94
+ 697 ?        00:00:00 liro-kliro_95
+ 698 ?        00:00:00 liro-kliro_96
+ 699 ?        00:00:00 liro-kliro_97
+ 700 ?        00:00:05 liro-kliro_98
+ 701 ?        00:00:11 liro-kliro_99
+ 702 ?        00:00:00 liro-kliro_105
+ 703 ?        00:00:00 liro-kliro_111
+ 704 ?        00:00:00 liro-kliro_112
+ 705 ?        00:00:00 liro-kliro_107
+ 706 ?        00:00:00 liro-kliro_108
+ 707 ?        00:00:00 liro-kliro_106
+ 708 ?        00:00:00 liro-kliro_114
+ 709 ?        00:00:00 liro-kliro_102
+ 710 ?        00:00:00 liro-kliro_103
+ 711 ?        00:00:02 liro-kliro_113
+ 712 ?        00:00:00 liro-kliro_115
+ 713 ?        00:00:00 liro-kliro_116
+ 714 ?        00:00:00 liro-kliro_118
+ 715 ?        00:00:00 liro-kliro_119
+ 716 ?        00:00:00 liro-kliro_120
+ 717 ?        00:00:02 liro-kliro_121
+ 718 ?        00:00:00 liro-kliro_122
+ 719 ?        00:00:00 liro-kliro_87
+ 720 ?        00:00:02 liro-kliro_88
+ 721 ?        00:00:02 liro-kliro_89
+ 722 ?        00:00:00 liro-kliro_117
+ 723 ?        00:00:00 liro-kliro_14
+ 724 ?        00:00:07 liro-kliro_48
+ 725 ?        00:00:00 liro-kliro_49
+ 763 ?        00:00:00 migration/1
+ 764 ?        00:00:00 kworker/1:1
+ 765 ?        00:00:01 ksoftirqd/1
+ 766 ?        00:00:00 kipid_wq/1
+ 767 ?        00:00:00 watchdog/1
+ 768 ?        00:00:00 migration/2
+ 769 ?        00:00:00 kworker/2:1
+ 770 ?        00:00:01 ksoftirqd/2
+ 771 ?        00:00:00 kipid_wq/2
+ 772 ?        00:00:00 watchdog/2
+ 773 ?        00:00:00 migration/3
+ 774 ?        00:00:00 kworker/3:1
+ 775 ?        00:00:01 ksoftirqd/3
+ 776 ?        00:00:00 kipid_wq/3
+ 777 ?        00:00:00 watchdog/3
+ 778 ?        00:00:00 kworker/2:0
+ 779 ?        00:00:00 kworker/3:0
+ 780 ?        00:00:00 kworker/1:0
+ 781 ?        00:00:03 ULOGIO_LOGREC
+ 782 ?        00:00:03 ULOGIO_LOGREC
+ 783 ?        00:00:00 nfc_rsrc_event_
+ 784 ?        00:00:01 hdmi_inter_req_
+ 785 ?        00:00:03 hdmi_workqueue
+ 786 ?        00:00:00 RMCMND-UIPC
+ 787 ?        00:00:00 irq/206-ms
+ 790 ?        00:00:00 KIKILOG_MAIN
+ 832 ?        00:00:00 KIKILOG_NOTIFY
+ 835 ?        00:00:00 irq/218-mmc0
+ 837 ?        00:00:00 bdev_mmca
+ 865 ?        00:00:00 cfg80211
+ 866 ?        00:00:00 irq/221-mmc1
+ 868 ?        00:00:00 ath6kl
+ 869 ?        00:00:00 htc_rx
+ 887 ?        00:00:00 busybox
+ 890 ?        00:00:00 ksdioirqd/mmc0
+ 892 ?        00:00:00 wlan_tool
+ 920 ?        00:00:00 kworker/u:3
+ 921 ?        00:00:00 wlan_tool
+1159 ?        00:00:00 irq/227-f_usb20
+1160 ?        00:00:00 irq/228-f_usb20
+1161 ?        00:00:00 irq/229-f_usb20
+1186 ?        00:00:00 flush-0:18
+1187 ?        00:00:00 flush-1:8
+1188 ?        00:00:00 flush-1:9
+1197 ?        00:00:00 usbgtertx
+1198 ?        00:00:00 ash
+1204 ?        00:00:00 kworker/u:0
+1207 ?        00:00:00 ps
+/usr/share/app # cat /proc/misc
+ 55 network_throughput
+ 56 network_latency
+ 57 cpu_dma_latency
+ 58 log_radio
+ 59 log_events
+ 60 log_main
+ 61 binder
+ 62 alarm
+223 uinput
+  1 psaux
+229 fuse
+ 63 ashmem
+/usr/share/app # 

@@ -1,0 +1,30 @@
+[   53.012144] console [usbgcon-1] enabled
+[   53.012391] [usbter usbg_sen_ldisc_open][154]exit
+
+
+BusyBox v1.13.4 (2012-07-17 15:11:04 JST) built-in shell (ash)
+Enter 'help' for a list of built-in commands.
+
+ash: can't access tty; job control turned off
+/usr/share/app # dd if=/dev/gpio bs=16 count=1 of=/tmp/g0.bin 2>&1 & sleep 3; ki
+ll $! 2>&1; ls -l /tmp/g0.bin
+dd: /dev/gpio: Function not implemented
+ash: cannot kill pid 907: No such process
+-rw-r--r--    1 0        0               0 Jan  1 00:01 /tmp/g0.bin
+chroot /android /system/bin/hd //usr/share/app # chroot /android /system/bin/hd /tmp/g0.bin
+could not open /tmp/g0.bin, No such file or directory
+/usr/share/app # dd if=/dev/mcmn bs=16 count=1 of=/tmp/g1.bin 2>&1 & sleep 3; ki
+ll $! 2>&1; ls -l /tmp/g1.bin
+dd: /dev/mcmn: Function not implemented
+ash: cannot kill pid 911: No such process
+-rw-r--r--    1 0        0               0 Jan  1 00:01 /tmp/g1.bin
+/usr/share/app # chroot /android /system/bin/hd /tmp/g1.bin
+could not open /tmp/g1.bin, No such file or directory
+/usr/share/app # dd if=/dev/ttyAM0 bs=16 count=1 of=/tmp/g2.bin 2>&1 & sleep 3; 
+kill $! 2>&1; ls -l /tmp/g2.bin
+dd: /dev/ttyAM0: Input/output error
+ash: cannot kill pid 915: No such process
+-rw-r--r--    1 0        0               0 Jan  1 00:02 /tmp/g2.bin
+chroot /android /system/bin/hd //usr/share/app # chroot /android /system/bin/hd /tmp/g2.bin
+could not open /tmp/g2.bin, No such file or directory
+/usr/share/app # 
