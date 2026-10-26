@@ -24,12 +24,11 @@ AVISOS = {
     "s58-ae-timing-producers": "[S59 SOL-07](s59-sol.md) rectifica la atribución de clk del §5: el mismo offset `+0x4c0` no demuestra alias; el escritor de histogramas recibe el objeto `0x43eb121c` y la entrada AE P `0x43eaee84`.",
     "s309-chain-presence": "[S310](s310-vtable-thunk.md) rectifica el mecanismo: `0x43ad96fa`/`0x43ad9704` son thunks de llamada virtual, no un constructor de mensajes.",
     "s310-vtable-thunk": "[S314](s314-selector-object.md) rectifica este informe: `0x43ad9704` no es el thunk del slot `0x64` (lo es `0x43ad96f8`) y va a `0x43ad9ada` (`vtable+0x24`).",
-    "s313-synthesis-carril-b": "[S314](s314-selector-object.md) rectifica la fila 13 (slot `0x64`) y [S341 §4](s341-synthesis-b2.md) enumera las rectificaciones posteriores del carril B; esta síntesis no las incorpora.",
+    "s313-synthesis-carril-b": "[S314](s314-selector-object.md) rectifica la fila 13 (slot `0x64`) y [S341 §4](s341-synthesis-b2.md) enumera las rectificaciones posteriores del carril B; solo el thunk del slot `0x64` se recoge al final de este informe.",
     "s302-drive-modes": "[S321](s321-matrix-rows.md) rectifica «cabecera = puntero a descriptor» (es el destino de escritura del valor) y [S325](s325-position-map.md) el mapa de columnas (posición→columna de 34 entradas, no modo→columna de 82).",
     "s321-mode-matrix": "[S325](s325-position-map.md) y [S329](s329-mode-timing-tables.md) retiran «`0x4e`/`0x4f` comparten la columna 1»: el mapa es posición→columna y `0x4e`→columna 12, `0x4f`→13.",
     "s321-matrix-rows": "[S325](s325-position-map.md) y [S329](s329-mode-timing-tables.md) retiran «`0x4c`–`0x4f` → columna 1» y el mapa de 82 B por código: el mapa es posición→columna de 34 entradas.",
     "s334-pair-dataflow": "[S340](s340-w0-selector.md) rectifica `w0` como «código de operación»: es un selector de canal MMIO (`0x436f74c0`).",
-    "s304-rea-dumper-callers": "[S303 §5](s303-ref-tree-43ff3200.md) rectifica las direcciones de la rev.1 usadas aquí: `0x438581e8` y `0x43858390` eran entradas reales +0x58 (`0x43858190` y `0x43858338`).",
 }
 
 COR = "CORRECCION_APLICADA"
@@ -67,8 +66,8 @@ CASOS = {
                  [(CAP + "s325-position-map.md", "7:10"), (CAP + "s341-synthesis-b2.md", "46:47")]),
     "d4-s334": (COR, "S340 identifica `w0` como selector de canal MMIO y retira «código de operación» de S334. El destino lleva aviso.",
                 [(CAP + "s340-w0-selector.md", "7:7"), (CAP + "s340-w0-selector.md", "16:17")]),
-    "d4-s304": (COR, "S303 §5 muestra por bytes que `0x438581e8`/`0x43858390` eran interiores (+0x58) de `0x43858190`/`0x43858338`; S304 usa esas direcciones. El destino lleva aviso.",
-                [(CAP + "s303-ref-tree-43ff3200.md", "106:116")]),
+    "d4-s304": (COR, "S303 §5 muestra por bytes que `0x438581e8`/`0x43858390` eran interiores (+0x58) de `0x43858190`/`0x43858338`; S304 usa esas direcciones y ya se declara informe histórico invalidado por S303 rev.3.",
+                [(CAP + "s303-ref-tree-43ff3200.md", "106:116"), (CAP + "s304-rea-dumper-callers.md", "3:5")]),
     "d4-auditoria": (COR, "Los cinco informes destino declaran al inicio que la auditoría S605–S627 rectifica sus conclusiones históricas, y la tabla de hallazgos enumera las rectificaciones concretas (13 omisiones, 21 núcleos, gemelas S606, prefijo `[ADR]` de S625). No se certifica el logger dual ni las equivalencias.",
                      [(CAP + "S605-S627_tabla_hallazgos.md", "34:41"), (CAP + "S605-S627_tabla_hallazgos.md", "74:74")]
                      + [(CAP + f"{n}.md", "3:3") for n in ("s605-jpeg", "s607-cam_cmd", "s616-lens_pdr", "s625-adr", "s627-eo_sw")]),
@@ -95,13 +94,13 @@ FILAS = {
 AUDITORIA = {390, 391, 392, 448, 449, 450, 455, 456, 458, 461, 462, 463, 464, 472, 473, 474, 475, 476}
 FILAS.update({i: "d4-auditoria" for i in AUDITORIA})
 CON_AVISO = {"d4-s130", "d4-s41", "d4-s46", "d4-s57-matriz", "d4-s57-umbral", "d4-s58-clk", "d4-s309",
-             "d4-s310", "d4-s313", "d4-s302", "d4-s321m", "d4-s321r", "d4-s334", "d4-s304"}
+             "d4-s310", "d4-s313", "d4-s302", "d4-s321m", "d4-s321r", "d4-s334"}
 AVISO_DE = {"d4-s130": "s130-new-modules", "d4-s41": "s41-message-origin-imx210",
             "d4-s46": "s46-vd-base-and-context-identity", "d4-s57-matriz": "s57-imx235-silent-register-diff",
             "d4-s57-umbral": "s57-ssb-pulse-analysis", "d4-s58-clk": "s58-ae-timing-producers",
             "d4-s309": "s309-chain-presence", "d4-s310": "s310-vtable-thunk", "d4-s313": "s313-synthesis-carril-b",
             "d4-s302": "s302-drive-modes", "d4-s321m": "s321-mode-matrix", "d4-s321r": "s321-matrix-rows",
-            "d4-s334": "s334-pair-dataflow", "d4-s304": "s304-rea-dumper-callers"}
+            "d4-s334": "s334-pair-dataflow"}
 
 
 def avisos() -> None:
@@ -134,6 +133,12 @@ def resolver(revision: str) -> None:
     rows, review = json.loads(triage_path.read_text()), json.loads(review_path.read_text())
     pendientes = {i for i, r in enumerate(rows) if r["veredicto"] == "VIGENTE"}
     assert pendientes == set(FILAS), sorted(pendientes ^ set(FILAS))
+    for case in review["casos"].values():
+        for e in case["evidencias"]:  # un archivo editado fuera del triaje conserva la cita: solo cambia el hash
+            raw = (ROOT / e["archivo"]).read_bytes()
+            if hashlib.sha256(raw).hexdigest() != e["sha256"] and Path(e["archivo"]).stem not in AVISOS \
+                    and evidencia(e["archivo"], e["localizador"])["cita"] == e["cita"]:
+                e["sha256"] = hashlib.sha256(raw).hexdigest()
     for case in review["casos"].values():  # los avisos desplazan 3 líneas las citas posteriores a la cabecera
         for e in case["evidencias"]:
             if Path(e["archivo"]).stem in AVISOS and e["archivo"].startswith(CAP) and MARK not in e["cita"]:
