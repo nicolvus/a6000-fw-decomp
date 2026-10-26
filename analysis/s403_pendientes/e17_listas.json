@@ -1,0 +1,3089 @@
+{
+ "no_resueltos_e10": 151,
+ "motivos": {
+  "miembro_sin_origen": 51,
+  "heap": 15,
+  "miembro_proyectado": 43,
+  "miembro": 4,
+  "heap_dinamica": 4,
+  "sin_valor": 16,
+  "otro": 4,
+  "estatica": 2,
+  "nula": 4,
+  "pila": 8
+ },
+ "modelos_de_disparo": {
+  "ModelBootEE": {
+   "sitios": 2,
+   "resueltos": 2,
+   "filas_yc": 0
+  },
+  "ModelBootEE3D": {
+   "sitios": 2,
+   "resueltos": 2,
+   "filas_yc": 0
+  },
+  "ModelMovieRec": {
+   "sitios": 8,
+   "resueltos": 8,
+   "filas_yc": 0
+  },
+  "ModelCamera": {
+   "sitios": 2,
+   "resueltos": 2,
+   "filas_yc": 0
+  },
+  "ModelStillRec": {
+   "sitios": 6,
+   "resueltos": 6,
+   "filas_yc": 0
+  }
+ },
+ "sitios": [
+  {
+   "sitio": "0x428c26",
+   "funcion": "0x428c10",
+   "tipo": "destroy",
+   "clase": "ModelMediaBase",
+   "clase_por": "vtable",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x94",
+   "origenes": [
+    {
+     "funcion": "0x42a448",
+     "tienda": "0x42a482",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x42a610",
+   "funcion": "0x42a448",
+   "tipo": "create",
+   "clase": "ModelMediaBase",
+   "clase_por": "vtable",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x94",
+   "origenes": [
+    {
+     "funcion": "0x42a448",
+     "tienda": "0x42a482",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x42c1b2",
+   "funcion": "0x42bfb8",
+   "tipo": "create",
+   "clase": "ModelContShotsPb",
+   "clase_por": "cercania",
+   "motivo": "heap",
+   "lista": [
+    [],
+    [],
+    "0x0"
+   ]
+  },
+  {
+   "sitio": "0x42c236",
+   "funcion": "0x42c200",
+   "tipo": "destroy",
+   "clase": "ModelContShotsPb",
+   "clase_por": "cercania",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x8",
+   "origenes": [
+    {
+     "funcion": "0x42bfb8",
+     "tienda": "0x42c192",
+     "lista": [
+      [],
+      [],
+      "0x0"
+     ]
+    },
+    {
+     "funcion": "0x4fd750",
+     "tienda": "0x4fd8c2",
+     "lista": [
+      [
+       "0x12",
+       "0x19",
+       "0x1f",
+       "0x22",
+       "0x25",
+       "0x38",
+       "0x3f",
+       "0x4f",
+       "0x50",
+       "0x51",
+       "0x52",
+       "0xaa",
+       "0xb8",
+       "0xc4"
+      ],
+      [
+       "0x11",
+       "0x18",
+       "0x23",
+       "0x26",
+       "0x4b",
+       "0x4c",
+       "0x4d",
+       "0x4e",
+       "0xb7"
+      ],
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x42c286",
+   "funcion": "0x42c254",
+   "tipo": "create",
+   "clase": "ModelContShotsPb",
+   "clase_por": "cercania",
+   "motivo": "heap",
+   "lista": [
+    "0x2",
+    "0x3",
+    "0x0"
+   ]
+  },
+  {
+   "sitio": "0x42c2e0",
+   "funcion": "0x42c2ac",
+   "tipo": "destroy",
+   "clase": "ModelContShotsPb",
+   "clase_por": "cercania",
+   "motivo": "miembro_proyectado",
+   "miembro": "0xc",
+   "origenes": [
+    {
+     "funcion": "0x42c254",
+     "tienda": "0x42c266",
+     "lista": [
+      "0x2",
+      "0x3",
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x4559b6",
+   "funcion": "0x455950",
+   "tipo": "destroy",
+   "clase": "Model3dPb",
+   "clase_por": "llamadores",
+   "motivo": "miembro"
+  },
+  {
+   "sitio": "0x455b64",
+   "funcion": "0x4559fc",
+   "tipo": "create",
+   "clase": "Model3dPb",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x4559fc",
+     "tienda": "0x455b3c",
+     "lista": [
+      [
+       "0x12",
+       "0x19",
+       "0x1f",
+       "0x22",
+       "0x25",
+       "0x38",
+       "0x3f",
+       "0x4f",
+       "0x50",
+       "0x51",
+       "0x52",
+       "0xaa",
+       "0xb8",
+       "0xc4"
+      ],
+      [
+       "0x11",
+       "0x18",
+       "0x23",
+       "0x26",
+       "0x4b",
+       "0x4c",
+       "0x4d",
+       "0x4e",
+       "0xb7"
+      ],
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x46f1be",
+   "funcion": "0x46f0c4",
+   "tipo": "create",
+   "clase": "ModelBeautyEffect",
+   "clase_por": "llamadores",
+   "motivo": "heap",
+   "lista": [
+    "?",
+    "?",
+    "0x0"
+   ]
+  },
+  {
+   "sitio": "0x46f21a",
+   "funcion": "0x46f1e4",
+   "tipo": "destroy",
+   "clase": "ModelBeautyEffect",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x34",
+   "origenes": [
+    {
+     "funcion": "0x46f0c4",
+     "tienda": "0x46f1a0",
+     "lista": [
+      "?",
+      "?",
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x47561c",
+   "funcion": "0x475548",
+   "tipo": "create",
+   "clase": "ModelBigImagePb",
+   "clase_por": "llamadores",
+   "motivo": "heap_dinamica"
+  },
+  {
+   "sitio": "0x47566a",
+   "funcion": "0x475650",
+   "tipo": "destroy",
+   "clase": "ModelBigImagePb",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x475548",
+     "tienda": "0x475604",
+     "lista": "heap_dinamica"
+    }
+   ]
+  },
+  {
+   "sitio": "0x47d026",
+   "funcion": "0x47cff0",
+   "tipo": "create",
+   "clase": "ModelBrowseRepair",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x47ceb4",
+     "tienda": "0x47cefa",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x47d09e",
+   "funcion": "0x47cff0",
+   "tipo": "destroy",
+   "clase": "ModelBrowseRepair",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x47ceb4",
+     "tienda": "0x47cefa",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x48339c",
+   "funcion": "0x48337c",
+   "tipo": "destroy",
+   "clase": "ModelCalendar",
+   "clase_por": "cercania",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x54",
+   "origenes": [
+    {
+     "funcion": "0x48337c",
+     "tienda": "0x483412",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x48348e",
+   "funcion": "0x48337c",
+   "tipo": "create",
+   "clase": "ModelCalendar",
+   "clase_por": "cercania",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x54",
+   "origenes": [
+    {
+     "funcion": "0x48337c",
+     "tienda": "0x483412",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x48353e",
+   "funcion": "0x483520",
+   "tipo": "destroy",
+   "clase": "ModelCalendar",
+   "clase_por": "cercania",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x54",
+   "origenes": [
+    {
+     "funcion": "0x48337c",
+     "tienda": "0x483412",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x4ae6d4",
+   "funcion": "0x4ae6ac",
+   "tipo": "create",
+   "clase": "ModelCamera",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x4acc70",
+     "tienda": "0x4acdce",
+     "lista": [
+      "0x9",
+      "0xa",
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x4ae720",
+   "funcion": "0x4ae6f4",
+   "tipo": "destroy",
+   "clase": "ModelCamera",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x4acc70",
+     "tienda": "0x4acdce",
+     "lista": [
+      "0x9",
+      "0xa",
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x4f7f80",
+   "funcion": "0x4f7f40",
+   "tipo": "destroy",
+   "clase": "ModelClusterIndex",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x4f7f40",
+     "tienda": "0x4f8026",
+     "lista": [
+      [
+       "0x12",
+       "0x19",
+       "0x1f",
+       "0x22",
+       "0x25",
+       "0x38",
+       "0x3f",
+       "0x4f",
+       "0x50",
+       "0x51",
+       "0x52",
+       "0xaa",
+       "0xb8",
+       "0xc4"
+      ],
+      [
+       "0x11",
+       "0x18",
+       "0x23",
+       "0x26",
+       "0x4b",
+       "0x4c",
+       "0x4d",
+       "0x4e",
+       "0xb7"
+      ],
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x4f803e",
+   "funcion": "0x4f7f40",
+   "tipo": "create",
+   "clase": "ModelClusterIndex",
+   "clase_por": "llamadores",
+   "motivo": "heap",
+   "lista": [
+    [
+     "0x12",
+     "0x19",
+     "0x1f",
+     "0x22",
+     "0x25",
+     "0x38",
+     "0x3f",
+     "0x4f",
+     "0x50",
+     "0x51",
+     "0x52",
+     "0xaa",
+     "0xb8",
+     "0xc4"
+    ],
+    [
+     "0x11",
+     "0x18",
+     "0x23",
+     "0x26",
+     "0x4b",
+     "0x4c",
+     "0x4d",
+     "0x4e",
+     "0xb7"
+    ],
+    "0x0"
+   ]
+  },
+  {
+   "sitio": "0x4f875a",
+   "funcion": "0x4f8744",
+   "tipo": "destroy",
+   "clase": "ModelClusterIndex",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x4f7f40",
+     "tienda": "0x4f8026",
+     "lista": [
+      [
+       "0x12",
+       "0x19",
+       "0x1f",
+       "0x22",
+       "0x25",
+       "0x38",
+       "0x3f",
+       "0x4f",
+       "0x50",
+       "0x51",
+       "0x52",
+       "0xaa",
+       "0xb8",
+       "0xc4"
+      ],
+      [
+       "0x11",
+       "0x18",
+       "0x23",
+       "0x26",
+       "0x4b",
+       "0x4c",
+       "0x4d",
+       "0x4e",
+       "0xb7"
+      ],
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x4f879a",
+   "funcion": "0x4f8744",
+   "tipo": "destroy",
+   "clase": "ModelClusterIndex",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x4f7f40",
+     "tienda": "0x4f8026",
+     "lista": [
+      [
+       "0x12",
+       "0x19",
+       "0x1f",
+       "0x22",
+       "0x25",
+       "0x38",
+       "0x3f",
+       "0x4f",
+       "0x50",
+       "0x51",
+       "0x52",
+       "0xaa",
+       "0xb8",
+       "0xc4"
+      ],
+      [
+       "0x11",
+       "0x18",
+       "0x23",
+       "0x26",
+       "0x4b",
+       "0x4c",
+       "0x4d",
+       "0x4e",
+       "0xb7"
+      ],
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x4fd8e0",
+   "funcion": "0x4fd750",
+   "tipo": "create",
+   "clase": "ModelContShotsPb",
+   "clase_por": "llamadores",
+   "motivo": "heap",
+   "lista": [
+    [
+     "0x12",
+     "0x19",
+     "0x1f",
+     "0x22",
+     "0x25",
+     "0x38",
+     "0x3f",
+     "0x4f",
+     "0x50",
+     "0x51",
+     "0x52",
+     "0xaa",
+     "0xb8",
+     "0xc4"
+    ],
+    [
+     "0x11",
+     "0x18",
+     "0x23",
+     "0x26",
+     "0x4b",
+     "0x4c",
+     "0x4d",
+     "0x4e",
+     "0xb7"
+    ],
+    "0x0"
+   ]
+  },
+  {
+   "sitio": "0x4fd960",
+   "funcion": "0x4fd940",
+   "tipo": "destroy",
+   "clase": "ModelContShotsPb",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x8",
+   "origenes": [
+    {
+     "funcion": "0x42bfb8",
+     "tienda": "0x42c192",
+     "lista": [
+      [],
+      [],
+      "0x0"
+     ]
+    },
+    {
+     "funcion": "0x4fd750",
+     "tienda": "0x4fd8c2",
+     "lista": [
+      [
+       "0x12",
+       "0x19",
+       "0x1f",
+       "0x22",
+       "0x25",
+       "0x38",
+       "0x3f",
+       "0x4f",
+       "0x50",
+       "0x51",
+       "0x52",
+       "0xaa",
+       "0xb8",
+       "0xc4"
+      ],
+      [
+       "0x11",
+       "0x18",
+       "0x23",
+       "0x26",
+       "0x4b",
+       "0x4c",
+       "0x4d",
+       "0x4e",
+       "0xb7"
+      ],
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x4ffd32",
+   "funcion": "0x4ffcec",
+   "tipo": "create",
+   "clase": "ModelCopy",
+   "clase_por": "llamadores",
+   "motivo": "heap_dinamica"
+  },
+  {
+   "sitio": "0x5002b2",
+   "funcion": "0x50029c",
+   "tipo": "destroy",
+   "clase": "ModelCopy",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x4ffcec",
+     "tienda": "0x4ffd10",
+     "lista": "heap_dinamica"
+    },
+    {
+     "funcion": "0x5012e8",
+     "tienda": "0x501440",
+     "lista": "heap_dinamica"
+    }
+   ]
+  },
+  {
+   "sitio": "0x50130c",
+   "funcion": "0x5012e8",
+   "tipo": "destroy",
+   "clase": "ModelCopy",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x4ffcec",
+     "tienda": "0x4ffd10",
+     "lista": "heap_dinamica"
+    },
+    {
+     "funcion": "0x5012e8",
+     "tienda": "0x501440",
+     "lista": "heap_dinamica"
+    }
+   ]
+  },
+  {
+   "sitio": "0x501460",
+   "funcion": "0x5012e8",
+   "tipo": "create",
+   "clase": "ModelCopy",
+   "clase_por": "llamadores",
+   "motivo": "heap_dinamica"
+  },
+  {
+   "sitio": "0x503c3e",
+   "funcion": "0x503c2a",
+   "tipo": "create",
+   "clase": "ModelCopyDiffExtDvd",
+   "clase_por": "llamadores",
+   "motivo": "sin_valor"
+  },
+  {
+   "sitio": "0x503c76",
+   "funcion": "0x503c60",
+   "tipo": "destroy",
+   "clase": "ModelCopyDiffExtDvd",
+   "clase_por": "llamadores",
+   "motivo": "sin_valor"
+  },
+  {
+   "sitio": "0x506496",
+   "funcion": "0x506482",
+   "tipo": "create",
+   "clase": "ModelCopyDiffExtStorage",
+   "clase_por": "llamadores",
+   "motivo": "sin_valor"
+  },
+  {
+   "sitio": "0x5064cc",
+   "funcion": "0x5064b8",
+   "tipo": "destroy",
+   "clase": "ModelCopyDiffExtStorage",
+   "clase_por": "llamadores",
+   "motivo": "sin_valor"
+  },
+  {
+   "sitio": "0x50865a",
+   "funcion": "0x508644",
+   "tipo": "create",
+   "clase": "ModelCopySelect",
+   "clase_por": "llamadores",
+   "motivo": "sin_valor"
+  },
+  {
+   "sitio": "0x508674",
+   "funcion": "0x508644",
+   "tipo": "destroy",
+   "clase": "ModelCopySelect",
+   "clase_por": "llamadores",
+   "motivo": "sin_valor"
+  },
+  {
+   "sitio": "0x50b01e",
+   "funcion": "0x50b00a",
+   "tipo": "create",
+   "clase": "ModelCopySelectExtDvd",
+   "clase_por": "llamadores",
+   "motivo": "sin_valor"
+  },
+  {
+   "sitio": "0x50b056",
+   "funcion": "0x50b040",
+   "tipo": "destroy",
+   "clase": "ModelCopySelectExtDvd",
+   "clase_por": "llamadores",
+   "motivo": "sin_valor"
+  },
+  {
+   "sitio": "0x50f016",
+   "funcion": "0x50f002",
+   "tipo": "create",
+   "clase": "ModelCreateFolder",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x94",
+   "origenes": [
+    {
+     "funcion": "0x50f084",
+     "tienda": "0x50f0ba",
+     "lista": [
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x50f978",
+   "funcion": "0x50f948",
+   "tipo": "destroy",
+   "clase": "ModelCreateFolder",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x94",
+   "origenes": [
+    {
+     "funcion": "0x50f084",
+     "tienda": "0x50f0ba",
+     "lista": [
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x50fb64",
+   "funcion": "0x50fb42",
+   "tipo": "destroy",
+   "clase": "ModelDaNeutral",
+   "clase_por": "llamadores",
+   "motivo": "otro"
+  },
+  {
+   "sitio": "0x50fb8a",
+   "funcion": "0x50fb42",
+   "tipo": "create",
+   "clase": "ModelDaNeutral",
+   "clase_por": "llamadores",
+   "motivo": "otro"
+  },
+  {
+   "sitio": "0x5105ac",
+   "funcion": "0x510474",
+   "tipo": "create",
+   "clase": "ModelDelete",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0xa0",
+   "origenes": [
+    {
+     "funcion": "0x510474",
+     "tienda": "0x5104e8",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x51067a",
+   "funcion": "0x510654",
+   "tipo": "destroy",
+   "clase": "ModelDelete",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0xa0",
+   "origenes": [
+    {
+     "funcion": "0x510474",
+     "tienda": "0x5104e8",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x513d26",
+   "funcion": "0x513d12",
+   "tipo": "create",
+   "clase": "ModelDeleteFolder",
+   "clase_por": "cercania",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x8c",
+   "origenes": [
+    {
+     "funcion": "0x513d94",
+     "tienda": "0x513dba",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x5150f8",
+   "funcion": "0x5150c8",
+   "tipo": "destroy",
+   "clase": null,
+   "clase_por": "ninguno",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x8c",
+   "origenes": []
+  },
+  {
+   "sitio": "0x51919a",
+   "funcion": "0x519184",
+   "tipo": "destroy",
+   "clase": "ModelDemoMoviePb",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x5191c4",
+     "tienda": "0x519338",
+     "lista": [
+      [
+       "0x12",
+       "0x19",
+       "0x1f",
+       "0x22",
+       "0x25",
+       "0x38",
+       "0x3f",
+       "0x4f",
+       "0x50",
+       "0x51",
+       "0x52",
+       "0xaa",
+       "0xb8",
+       "0xc4"
+      ],
+      [
+       "0x11",
+       "0x18",
+       "0x23",
+       "0x26",
+       "0x4b",
+       "0x4c",
+       "0x4d",
+       "0x4e",
+       "0xb7"
+      ],
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x5191f6",
+   "funcion": "0x5191c4",
+   "tipo": "destroy",
+   "clase": "ModelDemoMoviePb",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x5191c4",
+     "tienda": "0x519338",
+     "lista": [
+      [
+       "0x12",
+       "0x19",
+       "0x1f",
+       "0x22",
+       "0x25",
+       "0x38",
+       "0x3f",
+       "0x4f",
+       "0x50",
+       "0x51",
+       "0x52",
+       "0xaa",
+       "0xb8",
+       "0xc4"
+      ],
+      [
+       "0x11",
+       "0x18",
+       "0x23",
+       "0x26",
+       "0x4b",
+       "0x4c",
+       "0x4d",
+       "0x4e",
+       "0xb7"
+      ],
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x519352",
+   "funcion": "0x5191c4",
+   "tipo": "create",
+   "clase": "ModelDemoMoviePb",
+   "clase_por": "llamadores",
+   "motivo": "heap",
+   "lista": [
+    [
+     "0x12",
+     "0x19",
+     "0x1f",
+     "0x22",
+     "0x25",
+     "0x38",
+     "0x3f",
+     "0x4f",
+     "0x50",
+     "0x51",
+     "0x52",
+     "0xaa",
+     "0xb8",
+     "0xc4"
+    ],
+    [
+     "0x11",
+     "0x18",
+     "0x23",
+     "0x26",
+     "0x4b",
+     "0x4c",
+     "0x4d",
+     "0x4e",
+     "0xb7"
+    ],
+    "0x0"
+   ]
+  },
+  {
+   "sitio": "0x51a2c6",
+   "funcion": "0x51a2a8",
+   "tipo": "destroy",
+   "clase": "ModelDemoPb",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x51a308",
+     "tienda": "0x51a450",
+     "lista": [
+      "0x8f",
+      "0x95",
+      "0x91",
+      "0x92",
+      [
+       "0x12",
+       "0x19",
+       "0x1f",
+       "0x22",
+       "0x25",
+       "0x38",
+       "0x3f",
+       "0x4f",
+       "0x50",
+       "0x51",
+       "0x52",
+       "0xaa",
+       "0xb8",
+       "0xc4"
+      ],
+      [
+       "0x11",
+       "0x18",
+       "0x23",
+       "0x26",
+       "0x4b",
+       "0x4c",
+       "0x4d",
+       "0x4e",
+       "0xb7"
+      ],
+      "0x0"
+     ]
+    },
+    {
+     "funcion": "0x51a308",
+     "tienda": "0x51a472",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x51a32a",
+   "funcion": "0x51a308",
+   "tipo": "destroy",
+   "clase": "ModelDemoPb",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x51a308",
+     "tienda": "0x51a450",
+     "lista": [
+      "0x8f",
+      "0x95",
+      "0x91",
+      "0x92",
+      [
+       "0x12",
+       "0x19",
+       "0x1f",
+       "0x22",
+       "0x25",
+       "0x38",
+       "0x3f",
+       "0x4f",
+       "0x50",
+       "0x51",
+       "0x52",
+       "0xaa",
+       "0xb8",
+       "0xc4"
+      ],
+      [
+       "0x11",
+       "0x18",
+       "0x23",
+       "0x26",
+       "0x4b",
+       "0x4c",
+       "0x4d",
+       "0x4e",
+       "0xb7"
+      ],
+      "0x0"
+     ]
+    },
+    {
+     "funcion": "0x51a308",
+     "tienda": "0x51a472",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x51a488",
+   "funcion": "0x51a308",
+   "tipo": "create",
+   "clase": "ModelDemoPb",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x51a308",
+     "tienda": "0x51a450",
+     "lista": [
+      "0x8f",
+      "0x95",
+      "0x91",
+      "0x92",
+      [
+       "0x12",
+       "0x19",
+       "0x1f",
+       "0x22",
+       "0x25",
+       "0x38",
+       "0x3f",
+       "0x4f",
+       "0x50",
+       "0x51",
+       "0x52",
+       "0xaa",
+       "0xb8",
+       "0xc4"
+      ],
+      [
+       "0x11",
+       "0x18",
+       "0x23",
+       "0x26",
+       "0x4b",
+       "0x4c",
+       "0x4d",
+       "0x4e",
+       "0xb7"
+      ],
+      "0x0"
+     ]
+    },
+    {
+     "funcion": "0x51a308",
+     "tienda": "0x51a472",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x51a500",
+   "funcion": "0x51a4ea",
+   "tipo": "destroy",
+   "clase": "ModelDemoPb",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x51a308",
+     "tienda": "0x51a450",
+     "lista": [
+      "0x8f",
+      "0x95",
+      "0x91",
+      "0x92",
+      [
+       "0x12",
+       "0x19",
+       "0x1f",
+       "0x22",
+       "0x25",
+       "0x38",
+       "0x3f",
+       "0x4f",
+       "0x50",
+       "0x51",
+       "0x52",
+       "0xaa",
+       "0xb8",
+       "0xc4"
+      ],
+      [
+       "0x11",
+       "0x18",
+       "0x23",
+       "0x26",
+       "0x4b",
+       "0x4c",
+       "0x4d",
+       "0x4e",
+       "0xb7"
+      ],
+      "0x0"
+     ]
+    },
+    {
+     "funcion": "0x51a308",
+     "tienda": "0x51a472",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x5257b6",
+   "funcion": "0x525688",
+   "tipo": "create",
+   "clase": "ModelDivide",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x88",
+   "origenes": [
+    {
+     "funcion": "0x525688",
+     "tienda": "0x525716",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x525866",
+   "funcion": "0x525820",
+   "tipo": "destroy",
+   "clase": "ModelDivide",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x88",
+   "origenes": [
+    {
+     "funcion": "0x525688",
+     "tienda": "0x525716",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x527392",
+   "funcion": "0x527320",
+   "tipo": "destroy",
+   "clase": "ModelDlnaServer",
+   "clase_por": "cercania",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0xb4",
+   "origenes": [
+    {
+     "funcion": "0x527320",
+     "tienda": "0x5273ca",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x52745c",
+   "funcion": "0x527320",
+   "tipo": "create",
+   "clase": "ModelDlnaServer",
+   "clase_por": "cercania",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0xb4",
+   "origenes": [
+    {
+     "funcion": "0x527320",
+     "tienda": "0x5273ca",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x5274ae",
+   "funcion": "0x527498",
+   "tipo": "destroy",
+   "clase": "ModelDlnaServer",
+   "clase_por": "cercania",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0xb4",
+   "origenes": [
+    {
+     "funcion": "0x527320",
+     "tienda": "0x5273ca",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x53398c",
+   "funcion": "0x533854",
+   "tipo": "create",
+   "clase": "ModelDpofPrint",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x94",
+   "origenes": [
+    {
+     "funcion": "0x533854",
+     "tienda": "0x5338c8",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x533a5a",
+   "funcion": "0x533a34",
+   "tipo": "destroy",
+   "clase": "ModelDpofPrint",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x94",
+   "origenes": [
+    {
+     "funcion": "0x533854",
+     "tienda": "0x5338c8",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x55e0e8",
+   "funcion": "0x55e0d0",
+   "tipo": "destroy",
+   "clase": "ModelFocusRevision",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0xa8",
+   "origenes": [
+    {
+     "funcion": "0x55f074",
+     "tienda": "0x55f108",
+     "lista": [
+      "?",
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x55f124",
+   "funcion": "0x55f074",
+   "tipo": "create",
+   "clase": "ModelFocusRevision",
+   "clase_por": "llamadores",
+   "motivo": "heap",
+   "lista": [
+    "?",
+    "0x0"
+   ]
+  },
+  {
+   "sitio": "0x55fa98",
+   "funcion": "0x55fa84",
+   "tipo": "create",
+   "clase": "ModelFolder",
+   "clase_por": "cercania",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x55fb28",
+     "tienda": "0x55fb9e",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x56027c",
+   "funcion": "0x560214",
+   "tipo": "destroy",
+   "clase": "ModelFolder",
+   "clase_por": "cercania",
+   "motivo": "miembro"
+  },
+  {
+   "sitio": "0x56083a",
+   "funcion": "0x560804",
+   "tipo": "create",
+   "clase": "ModelFormat",
+   "clase_por": "cercania",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x8c",
+   "origenes": [
+    {
+     "funcion": "0x560888",
+     "tienda": "0x5608dc",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x56140a",
+   "funcion": "0x5613da",
+   "tipo": "destroy",
+   "clase": "ModelFormat",
+   "clase_por": "cercania",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x8c",
+   "origenes": [
+    {
+     "funcion": "0x560888",
+     "tienda": "0x5608dc",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x5877c6",
+   "funcion": "0x5874e8",
+   "tipo": "create",
+   "clase": "ModelHighlight",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x708",
+   "origenes": [
+    {
+     "funcion": "0x5874e8",
+     "tienda": "0x58777a",
+     "lista": [
+      "0x8f",
+      "0x95",
+      "0x91",
+      "0x92",
+      [
+       "0x12",
+       "0x19",
+       "0x1f",
+       "0x22",
+       "0x25",
+       "0x38",
+       "0x3f",
+       "0x4f",
+       "0x50",
+       "0x51",
+       "0x52",
+       "0xaa",
+       "0xb8",
+       "0xc4"
+      ],
+      [
+       "0x11",
+       "0x18",
+       "0x23",
+       "0x26",
+       "0x4b",
+       "0x4c",
+       "0x4d",
+       "0x4e",
+       "0xb7"
+      ],
+      [
+       "0x15",
+       "0x1c",
+       "0x5b",
+       "0x5c",
+       "0x5d",
+       "0x5e",
+       "0x8e"
+      ],
+      "0x0"
+     ]
+    },
+    {
+     "funcion": "0x5874e8",
+     "tienda": "0x5877a0",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x587a08",
+   "funcion": "0x5879dc",
+   "tipo": "destroy",
+   "clase": "ModelHighlight",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x708",
+   "origenes": [
+    {
+     "funcion": "0x5874e8",
+     "tienda": "0x58777a",
+     "lista": [
+      "0x8f",
+      "0x95",
+      "0x91",
+      "0x92",
+      [
+       "0x12",
+       "0x19",
+       "0x1f",
+       "0x22",
+       "0x25",
+       "0x38",
+       "0x3f",
+       "0x4f",
+       "0x50",
+       "0x51",
+       "0x52",
+       "0xaa",
+       "0xb8",
+       "0xc4"
+      ],
+      [
+       "0x11",
+       "0x18",
+       "0x23",
+       "0x26",
+       "0x4b",
+       "0x4c",
+       "0x4d",
+       "0x4e",
+       "0xb7"
+      ],
+      [
+       "0x15",
+       "0x1c",
+       "0x5b",
+       "0x5c",
+       "0x5d",
+       "0x5e",
+       "0x8e"
+      ],
+      "0x0"
+     ]
+    },
+    {
+     "funcion": "0x5874e8",
+     "tienda": "0x5877a0",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x587ab8",
+   "funcion": "0x587a7c",
+   "tipo": "destroy",
+   "clase": "ModelHighlight",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x70c",
+   "origenes": [
+    {
+     "funcion": "0x587ac4",
+     "tienda": "0x587bf6",
+     "lista": [
+      "0x19",
+      "0x18",
+      "0x1c",
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x587c0e",
+   "funcion": "0x587ac4",
+   "tipo": "create",
+   "clase": "ModelHighlight",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x70c",
+   "origenes": [
+    {
+     "funcion": "0x587ac4",
+     "tienda": "0x587bf6",
+     "lista": [
+      "0x19",
+      "0x18",
+      "0x1c",
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x58b2ae",
+   "funcion": "0x58b188",
+   "tipo": "create",
+   "clase": "ModelHighlightPointEdit",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x58b188",
+     "tienda": "0x58b20e",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x58b35e",
+   "funcion": "0x58b318",
+   "tipo": "destroy",
+   "clase": "ModelHighlightPointEdit",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x58b188",
+     "tienda": "0x58b20e",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x58c640",
+   "funcion": "0x58c62c",
+   "tipo": "create",
+   "clase": "ModelHighlightSave",
+   "clase_por": "llamadores",
+   "motivo": "estatica",
+   "lista": [
+    "0x5",
+    "0x6",
+    "0x84",
+    "0x85",
+    "0x86",
+    "0x87",
+    "0x88",
+    "0x89",
+    "0x7",
+    "0xffffffff"
+   ]
+  },
+  {
+   "sitio": "0x58c66a",
+   "funcion": "0x58c648",
+   "tipo": "destroy",
+   "clase": "ModelHighlightSave",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x58c82c",
+     "tienda": "0x58c8a8",
+     "lista": [
+      [
+       "0x17",
+       "0x1e",
+       "0x63",
+       "0x64",
+       "0x65",
+       "0x66",
+       "0x8b"
+      ],
+      [
+       "0x24",
+       "0x27",
+       "0x39",
+       "0x77",
+       "0x78",
+       "0x79",
+       "0x7a",
+       "0x8a"
+      ],
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x58c698",
+   "funcion": "0x58c648",
+   "tipo": "destroy",
+   "clase": "ModelHighlightSave",
+   "clase_por": "llamadores",
+   "motivo": "estatica",
+   "lista": [
+    "0x5",
+    "0x6",
+    "0x84",
+    "0x85",
+    "0x86",
+    "0x87",
+    "0x88",
+    "0x89",
+    "0x7",
+    "0xffffffff"
+   ]
+  },
+  {
+   "sitio": "0x58c8c4",
+   "funcion": "0x58c82c",
+   "tipo": "create",
+   "clase": "ModelHighlightSave",
+   "clase_por": "llamadores",
+   "motivo": "heap",
+   "lista": [
+    [
+     "0x17",
+     "0x1e",
+     "0x63",
+     "0x64",
+     "0x65",
+     "0x66",
+     "0x8b"
+    ],
+    [
+     "0x24",
+     "0x27",
+     "0x39",
+     "0x77",
+     "0x78",
+     "0x79",
+     "0x7a",
+     "0x8a"
+    ],
+    "0x0"
+   ]
+  },
+  {
+   "sitio": "0x5997fe",
+   "funcion": "0x5997d8",
+   "tipo": "destroy",
+   "clase": "ModelIndexPb",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x54",
+   "origenes": [
+    {
+     "funcion": "0x5997d8",
+     "tienda": "0x599848",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x5998b8",
+   "funcion": "0x5997d8",
+   "tipo": "create",
+   "clase": "ModelIndexPb",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x54",
+   "origenes": [
+    {
+     "funcion": "0x5997d8",
+     "tienda": "0x599848",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x59992c",
+   "funcion": "0x599910",
+   "tipo": "destroy",
+   "clase": "ModelIndexPb",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x54",
+   "origenes": [
+    {
+     "funcion": "0x5997d8",
+     "tienda": "0x599848",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x5a6762",
+   "funcion": "0x5a6748",
+   "tipo": "destroy",
+   "clase": "ModelJetImport",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0xa0",
+   "origenes": [
+    {
+     "funcion": "0x5a760c",
+     "tienda": "0x5a7686",
+     "lista": [
+      "0x31",
+      "0x33",
+      "0x12",
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x5a7d6a",
+   "funcion": "0x5a7c54",
+   "tipo": "create",
+   "clase": "ModelJetMass",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x8c",
+   "origenes": []
+  },
+  {
+   "sitio": "0x5a7ddc",
+   "funcion": "0x5a7db0",
+   "tipo": "destroy",
+   "clase": "ModelJetMass",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x8c",
+   "origenes": []
+  },
+  {
+   "sitio": "0x5a8c10",
+   "funcion": "0x5a8bf8",
+   "tipo": "destroy",
+   "clase": "ModelJetUpload",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0xa0",
+   "origenes": [
+    {
+     "funcion": "0x5a8b44",
+     "tienda": "0x5a8bc6",
+     "lista": [
+      "0x35",
+      "0x12",
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x5d5618",
+   "funcion": "0x5d55a8",
+   "tipo": "create",
+   "clase": "ModelMap",
+   "clase_por": "llamadores",
+   "motivo": "nula",
+   "lista": []
+  },
+  {
+   "sitio": "0x5d56b0",
+   "funcion": "0x5d55a8",
+   "tipo": "destroy",
+   "clase": "ModelMap",
+   "clase_por": "llamadores",
+   "motivo": "nula",
+   "lista": []
+  },
+  {
+   "sitio": "0x5e2df6",
+   "funcion": "0x5e2d94",
+   "tipo": "destroy",
+   "clase": "ModelMediaMap",
+   "clase_por": "llamadores",
+   "motivo": "nula",
+   "lista": []
+  },
+  {
+   "sitio": "0x5e3030",
+   "funcion": "0x5e2f20",
+   "tipo": "create",
+   "clase": "ModelMediaMap",
+   "clase_por": "llamadores",
+   "motivo": "nula",
+   "lista": []
+  },
+  {
+   "sitio": "0x5f5126",
+   "funcion": "0x5f5104",
+   "tipo": "destroy",
+   "clase": "ModelMixPb",
+   "clase_por": "cercania",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x704",
+   "origenes": [
+    {
+     "funcion": "0x5f51fc",
+     "tienda": "0x5f5262",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x5f5302",
+   "funcion": "0x5f51fc",
+   "tipo": "create",
+   "clase": "ModelMixPb",
+   "clase_por": "cercania",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x704",
+   "origenes": [
+    {
+     "funcion": "0x5f51fc",
+     "tienda": "0x5f5262",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x5fe1be",
+   "funcion": "0x5fe14c",
+   "tipo": "destroy",
+   "clase": "ModelMovieRec",
+   "clase_por": "llamadores",
+   "motivo": "pila",
+   "lista": [
+    [
+     "0x14",
+     "0x1b",
+     "0x57",
+     "0x58",
+     "0x59",
+     "0x5a",
+     "0x97",
+     "0x98",
+     "0x99",
+     "0x9a",
+     "0x9b",
+     "0x9c"
+    ],
+    "0x0"
+   ]
+  },
+  {
+   "sitio": "0x5fe2ec",
+   "funcion": "0x5fe14c",
+   "tipo": "create",
+   "clase": "ModelMovieRec",
+   "clase_por": "llamadores",
+   "motivo": "pila",
+   "lista": [
+    [
+     "0x14",
+     "0x1b",
+     "0x57",
+     "0x58",
+     "0x59",
+     "0x5a",
+     "0x97",
+     "0x98",
+     "0x99",
+     "0x9a",
+     "0x9b",
+     "0x9c"
+    ],
+    "0x0"
+   ]
+  },
+  {
+   "sitio": "0x60a0ea",
+   "funcion": "0x60a088",
+   "tipo": "destroy",
+   "clase": "ModelMovieRec",
+   "clase_por": "llamadores",
+   "motivo": "pila",
+   "lista": [
+    [
+     "0x14",
+     "0x1b",
+     "0x57",
+     "0x58",
+     "0x59",
+     "0x5a",
+     "0x97",
+     "0x98",
+     "0x99",
+     "0x9a",
+     "0x9b",
+     "0x9c"
+    ],
+    "0x0"
+   ]
+  },
+  {
+   "sitio": "0x60a2f2",
+   "funcion": "0x60a288",
+   "tipo": "destroy",
+   "clase": "ModelMovieRec",
+   "clase_por": "llamadores",
+   "motivo": "pila",
+   "lista": [
+    [
+     "0x14",
+     "0x1b",
+     "0x57",
+     "0x58",
+     "0x59",
+     "0x5a",
+     "0x97",
+     "0x98",
+     "0x99",
+     "0x9a",
+     "0x9b",
+     "0x9c"
+    ],
+    "0x0"
+   ]
+  },
+  {
+   "sitio": "0x60f7e6",
+   "funcion": "0x60f6f8",
+   "tipo": "create",
+   "clase": "ModelMvPb",
+   "clase_por": "llamadores",
+   "motivo": "heap_dinamica"
+  },
+  {
+   "sitio": "0x60f816",
+   "funcion": "0x60f804",
+   "tipo": "destroy",
+   "clase": "ModelMvPb",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x60f6f8",
+     "tienda": "0x60f7c0",
+     "lista": "heap_dinamica"
+    }
+   ]
+  },
+  {
+   "sitio": "0x610480",
+   "funcion": "0x6103f4",
+   "tipo": "destroy",
+   "clase": "ModelPaint",
+   "clase_por": "llamadores",
+   "motivo": "miembro"
+  },
+  {
+   "sitio": "0x61156c",
+   "funcion": "0x611498",
+   "tipo": "create",
+   "clase": "ModelPaint",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x611498",
+     "tienda": "0x611542",
+     "lista": [
+      [
+       "0x13",
+       "0x1a",
+       "0x53",
+       "0x54",
+       "0x55",
+       "0x56",
+       "0xc0"
+      ],
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x611ef6",
+   "funcion": "0x611ee0",
+   "tipo": "destroy",
+   "clase": "ModelPanoramaPb",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x611f24",
+     "tienda": "0x612048",
+     "lista": [
+      [
+       "0x12",
+       "0x19",
+       "0x1f",
+       "0x22",
+       "0x25",
+       "0x38",
+       "0x3f",
+       "0x4f",
+       "0x50",
+       "0x51",
+       "0x52",
+       "0xaa",
+       "0xb8",
+       "0xc4"
+      ],
+      [
+       "0x11",
+       "0x18",
+       "0x23",
+       "0x26",
+       "0x4b",
+       "0x4c",
+       "0x4d",
+       "0x4e",
+       "0xb7"
+      ],
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x611f3e",
+   "funcion": "0x611f24",
+   "tipo": "destroy",
+   "clase": "ModelPanoramaPb",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x611f24",
+     "tienda": "0x612048",
+     "lista": [
+      [
+       "0x12",
+       "0x19",
+       "0x1f",
+       "0x22",
+       "0x25",
+       "0x38",
+       "0x3f",
+       "0x4f",
+       "0x50",
+       "0x51",
+       "0x52",
+       "0xaa",
+       "0xb8",
+       "0xc4"
+      ],
+      [
+       "0x11",
+       "0x18",
+       "0x23",
+       "0x26",
+       "0x4b",
+       "0x4c",
+       "0x4d",
+       "0x4e",
+       "0xb7"
+      ],
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x612062",
+   "funcion": "0x611f24",
+   "tipo": "create",
+   "clase": "ModelPanoramaPb",
+   "clase_por": "llamadores",
+   "motivo": "heap",
+   "lista": [
+    [
+     "0x12",
+     "0x19",
+     "0x1f",
+     "0x22",
+     "0x25",
+     "0x38",
+     "0x3f",
+     "0x4f",
+     "0x50",
+     "0x51",
+     "0x52",
+     "0xaa",
+     "0xb8",
+     "0xc4"
+    ],
+    [
+     "0x11",
+     "0x18",
+     "0x23",
+     "0x26",
+     "0x4b",
+     "0x4c",
+     "0x4d",
+     "0x4e",
+     "0xb7"
+    ],
+    "0x0"
+   ]
+  },
+  {
+   "sitio": "0x613694",
+   "funcion": "0x6135dc",
+   "tipo": "create",
+   "clase": "ModelPbCap",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x98",
+   "origenes": [
+    {
+     "funcion": "0x6135dc",
+     "tienda": "0x613650",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x61372a",
+   "funcion": "0x613718",
+   "tipo": "destroy",
+   "clase": "ModelPbCap",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x98",
+   "origenes": [
+    {
+     "funcion": "0x6135dc",
+     "tienda": "0x613650",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x619458",
+   "funcion": "0x6193d8",
+   "tipo": "destroy",
+   "clase": "ModelPbZoom",
+   "clase_por": "llamadores",
+   "motivo": "sin_valor"
+  },
+  {
+   "sitio": "0x619a5e",
+   "funcion": "0x619914",
+   "tipo": "create",
+   "clase": "ModelPbZoom",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x619914",
+     "tienda": "0x61999e",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x61e6b0",
+   "funcion": "0x61e578",
+   "tipo": "create",
+   "clase": "ModelProtect",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0xa0",
+   "origenes": [
+    {
+     "funcion": "0x61e578",
+     "tienda": "0x61e5ec",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x61e77a",
+   "funcion": "0x61e758",
+   "tipo": "destroy",
+   "clase": "ModelProtect",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0xa0",
+   "origenes": [
+    {
+     "funcion": "0x61e578",
+     "tienda": "0x61e5ec",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x62145e",
+   "funcion": "0x621440",
+   "tipo": "destroy",
+   "clase": "ModelRecPbNeutral",
+   "clase_por": "llamadores",
+   "motivo": "otro"
+  },
+  {
+   "sitio": "0x62149a",
+   "funcion": "0x621440",
+   "tipo": "create",
+   "clase": "ModelRecPbNeutral",
+   "clase_por": "llamadores",
+   "motivo": "otro"
+  },
+  {
+   "sitio": "0x6249a4",
+   "funcion": "0x62498c",
+   "tipo": "destroy",
+   "clase": "ModelRedEye",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0xa8",
+   "origenes": [
+    {
+     "funcion": "0x6258a0",
+     "tienda": "0x625934",
+     "lista": [
+      "?",
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x625950",
+   "funcion": "0x6258a0",
+   "tipo": "create",
+   "clase": "ModelRedEye",
+   "clase_por": "llamadores",
+   "motivo": "heap",
+   "lista": [
+    "?",
+    "0x0"
+   ]
+  },
+  {
+   "sitio": "0x62ef62",
+   "funcion": "0x62ef2c",
+   "tipo": "create",
+   "clase": "ModelRepair",
+   "clase_por": "llamadores",
+   "motivo": "sin_valor"
+  },
+  {
+   "sitio": "0x62ef92",
+   "funcion": "0x62ef2c",
+   "tipo": "destroy",
+   "clase": "ModelRepair",
+   "clase_por": "llamadores",
+   "motivo": "sin_valor"
+  },
+  {
+   "sitio": "0x637ab4",
+   "funcion": "0x637a88",
+   "tipo": "destroy",
+   "clase": "ModelRetouchArtFilter",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0xb8",
+   "origenes": [
+    {
+     "funcion": "0x638cfc",
+     "tienda": "0x638d9e",
+     "lista": [
+      "?",
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x638d82",
+   "funcion": "0x638cfc",
+   "tipo": "destroy",
+   "clase": "ModelRetouchArtFilter",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0xb8",
+   "origenes": [
+    {
+     "funcion": "0x638cfc",
+     "tienda": "0x638d9e",
+     "lista": [
+      "?",
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x638db4",
+   "funcion": "0x638cfc",
+   "tipo": "create",
+   "clase": "ModelRetouchArtFilter",
+   "clase_por": "llamadores",
+   "motivo": "heap",
+   "lista": [
+    "?",
+    "0x0"
+   ]
+  },
+  {
+   "sitio": "0x63a172",
+   "funcion": "0x63a010",
+   "tipo": "create",
+   "clase": "ModelRichSlideShow",
+   "clase_por": "cercania",
+   "motivo": "heap",
+   "lista": [
+    [
+     "0x12",
+     "0x19",
+     "0x1f",
+     "0x22",
+     "0x25",
+     "0x38",
+     "0x3f",
+     "0x4f",
+     "0x50",
+     "0x51",
+     "0x52",
+     "0xaa",
+     "0xb8",
+     "0xc4"
+    ],
+    [
+     "0x11",
+     "0x18",
+     "0x23",
+     "0x26",
+     "0x4b",
+     "0x4c",
+     "0x4d",
+     "0x4e",
+     "0xb7"
+    ],
+    "0x0"
+   ]
+  },
+  {
+   "sitio": "0x63a1f2",
+   "funcion": "0x63a1cc",
+   "tipo": "destroy",
+   "clase": "ModelRichSlideShow",
+   "clase_por": "cercania",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x3a4",
+   "origenes": [
+    {
+     "funcion": "0x63a010",
+     "tienda": "0x63a158",
+     "lista": [
+      [
+       "0x12",
+       "0x19",
+       "0x1f",
+       "0x22",
+       "0x25",
+       "0x38",
+       "0x3f",
+       "0x4f",
+       "0x50",
+       "0x51",
+       "0x52",
+       "0xaa",
+       "0xb8",
+       "0xc4"
+      ],
+      [
+       "0x11",
+       "0x18",
+       "0x23",
+       "0x26",
+       "0x4b",
+       "0x4c",
+       "0x4d",
+       "0x4e",
+       "0xb7"
+      ],
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x6406fe",
+   "funcion": "0x64066c",
+   "tipo": "destroy",
+   "clase": "ModelRotate",
+   "clase_por": "llamadores",
+   "motivo": "sin_valor"
+  },
+  {
+   "sitio": "0x640776",
+   "funcion": "0x640728",
+   "tipo": "destroy",
+   "clase": "ModelRotate",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x640728",
+     "tienda": "0x640824",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x640938",
+   "funcion": "0x640728",
+   "tipo": "create",
+   "clase": "ModelRotate",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x640728",
+     "tienda": "0x640824",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x643e22",
+   "funcion": "0x643da4",
+   "tipo": "create",
+   "clase": "ModelSalvage",
+   "clase_por": "llamadores",
+   "motivo": "miembro"
+  },
+  {
+   "sitio": "0x643e52",
+   "funcion": "0x643da4",
+   "tipo": "destroy",
+   "clase": "ModelSalvage",
+   "clase_por": "llamadores",
+   "motivo": "sin_valor"
+  },
+  {
+   "sitio": "0x65a7ee",
+   "funcion": "0x65a788",
+   "tipo": "destroy",
+   "clase": "ModelScalarPb",
+   "clase_por": "llamadores",
+   "motivo": "sin_valor"
+  },
+  {
+   "sitio": "0x65a826",
+   "funcion": "0x65a788",
+   "tipo": "create",
+   "clase": "ModelScalarPb",
+   "clase_por": "llamadores",
+   "motivo": "heap",
+   "lista": [
+    "?",
+    "0x0"
+   ]
+  },
+  {
+   "sitio": "0x65a864",
+   "funcion": "0x65a84c",
+   "tipo": "destroy",
+   "clase": "ModelScalarPb",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x8c",
+   "origenes": [
+    {
+     "funcion": "0x65a788",
+     "tienda": "0x65a80e",
+     "lista": [
+      "?",
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x65a88a",
+   "funcion": "0x65a84c",
+   "tipo": "destroy",
+   "clase": "ModelScalarPb",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x8c",
+   "origenes": [
+    {
+     "funcion": "0x65a788",
+     "tienda": "0x65a80e",
+     "lista": [
+      "?",
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x65a922",
+   "funcion": "0x65a8a4",
+   "tipo": "destroy",
+   "clase": "ModelScalarPb",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x90",
+   "origenes": [
+    {
+     "funcion": "0x65a8a4",
+     "tienda": "0x65a944",
+     "lista": [
+      "?",
+      "0xb4",
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x65a95e",
+   "funcion": "0x65a8a4",
+   "tipo": "create",
+   "clase": "ModelScalarPb",
+   "clase_por": "llamadores",
+   "motivo": "heap",
+   "lista": [
+    "?",
+    "0xb4",
+    "0x0"
+   ]
+  },
+  {
+   "sitio": "0x65a9c8",
+   "funcion": "0x65a998",
+   "tipo": "destroy",
+   "clase": "ModelScalarPb",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x90",
+   "origenes": [
+    {
+     "funcion": "0x65a8a4",
+     "tienda": "0x65a944",
+     "lista": [
+      "?",
+      "0xb4",
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x65a9ee",
+   "funcion": "0x65a998",
+   "tipo": "destroy",
+   "clase": "ModelScalarPb",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x90",
+   "origenes": [
+    {
+     "funcion": "0x65a8a4",
+     "tienda": "0x65a944",
+     "lista": [
+      "?",
+      "0xb4",
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x6634c4",
+   "funcion": "0x663450",
+   "tipo": "create",
+   "clase": "ModelSelectEdit",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0xac",
+   "origenes": [
+    {
+     "funcion": "0x663450",
+     "tienda": "0x663484",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x663516",
+   "funcion": "0x6634f4",
+   "tipo": "destroy",
+   "clase": "ModelSelectEdit",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0xac",
+   "origenes": [
+    {
+     "funcion": "0x663450",
+     "tienda": "0x663484",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x6639e8",
+   "funcion": "0x663890",
+   "tipo": "create",
+   "clase": "ModelSelectEdit",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0xa8",
+   "origenes": [
+    {
+     "funcion": "0x663890",
+     "tienda": "0x663934",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x663b70",
+   "funcion": "0x663adc",
+   "tipo": "destroy",
+   "clase": "ModelSelectEdit",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0xa8",
+   "origenes": [
+    {
+     "funcion": "0x663890",
+     "tienda": "0x663934",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x665d98",
+   "funcion": "0x665d84",
+   "tipo": "create",
+   "clase": "ModelSelectFolder",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x94",
+   "origenes": [
+    {
+     "funcion": "0x665e08",
+     "tienda": "0x665e42",
+     "lista": [
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x666d92",
+   "funcion": "0x666d62",
+   "tipo": "destroy",
+   "clase": "ModelSelectFolder",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0x94",
+   "origenes": [
+    {
+     "funcion": "0x665e08",
+     "tienda": "0x665e42",
+     "lista": [
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x68e172",
+   "funcion": "0x68e124",
+   "tipo": "create",
+   "clase": "ModelStillRec",
+   "clase_por": "llamadores",
+   "motivo": "pila",
+   "lista": [
+    [
+     "0x13",
+     "0x1a",
+     "0x53",
+     "0x54",
+     "0x55",
+     "0x56",
+     "0xc0"
+    ],
+    "0x0"
+   ]
+  },
+  {
+   "sitio": "0x68e224",
+   "funcion": "0x68e124",
+   "tipo": "destroy",
+   "clase": "ModelStillRec",
+   "clase_por": "llamadores",
+   "motivo": "pila",
+   "lista": [
+    [
+     "0x13",
+     "0x1a",
+     "0x53",
+     "0x54",
+     "0x55",
+     "0x56",
+     "0xc0"
+    ],
+    "0x0"
+   ]
+  },
+  {
+   "sitio": "0x68e31c",
+   "funcion": "0x68e268",
+   "tipo": "destroy",
+   "clase": "ModelStillRec",
+   "clase_por": "llamadores",
+   "motivo": "pila",
+   "lista": [
+    [
+     "0x13",
+     "0x1a",
+     "0x53",
+     "0x54",
+     "0x55",
+     "0x56",
+     "0xc0"
+    ],
+    [
+     "0xba",
+     "0xbb",
+     "0xbc",
+     "0xbd",
+     "0xbe",
+     "0xbf",
+     "0xc2"
+    ],
+    "0x0"
+   ]
+  },
+  {
+   "sitio": "0x68e45c",
+   "funcion": "0x68e3b8",
+   "tipo": "create",
+   "clase": "ModelStillRec",
+   "clase_por": "llamadores",
+   "motivo": "pila",
+   "lista": [
+    [
+     "0x13",
+     "0x1a",
+     "0x53",
+     "0x54",
+     "0x55",
+     "0x56",
+     "0xc0"
+    ],
+    [
+     "0xba",
+     "0xbb",
+     "0xbc",
+     "0xbd",
+     "0xbe",
+     "0xbf",
+     "0xc2"
+    ],
+    "0x0"
+   ]
+  },
+  {
+   "sitio": "0x699bd4",
+   "funcion": "0x699ba4",
+   "tipo": "create",
+   "clase": "ModelStillRec",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0xdc",
+   "origenes": [
+    {
+     "funcion": "0x6943fc",
+     "tienda": "0x694582",
+     "lista": [
+      "0x8",
+      "0x10",
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x699c32",
+   "funcion": "0x699bf8",
+   "tipo": "destroy",
+   "clase": "ModelStillRec",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0xdc",
+   "origenes": [
+    {
+     "funcion": "0x6943fc",
+     "tienda": "0x694582",
+     "lista": [
+      "0x8",
+      "0x10",
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x6ae91c",
+   "funcion": "0x6ae904",
+   "tipo": "destroy",
+   "clase": "ModelTrimming",
+   "clase_por": "llamadores",
+   "motivo": "miembro_proyectado",
+   "miembro": "0xa8",
+   "origenes": [
+    {
+     "funcion": "0x6b01a0",
+     "tienda": "0x6b0234",
+     "lista": [
+      "?",
+      "0x0"
+     ]
+    }
+   ]
+  },
+  {
+   "sitio": "0x6b0250",
+   "funcion": "0x6b01a0",
+   "tipo": "create",
+   "clase": "ModelTrimming",
+   "clase_por": "llamadores",
+   "motivo": "heap",
+   "lista": [
+    "?",
+    "0x0"
+   ]
+  },
+  {
+   "sitio": "0x6b2586",
+   "funcion": "0x6b2568",
+   "tipo": "destroy",
+   "clase": "ModelUsbAuto",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x6b1080",
+     "tienda": "0x6b10d0",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x6b2708",
+   "funcion": "0x6b2690",
+   "tipo": "create",
+   "clase": "ModelUsbAuto",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x6b1080",
+     "tienda": "0x6b10d0",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x6b4ce6",
+   "funcion": "0x6b4cc8",
+   "tipo": "destroy",
+   "clase": "ModelUsbMass",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x6b3b78",
+     "tienda": "0x6b3bb8",
+     "lista": "heap_incompleta"
+    },
+    {
+     "funcion": "0x6b3b78",
+     "tienda": "0x6b3c20",
+     "lista": "heap_incompleta"
+    },
+    {
+     "funcion": "0x6b3df4",
+     "tienda": "0x6b3e16",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x6b4e60",
+   "funcion": "0x6b4de8",
+   "tipo": "create",
+   "clase": "ModelUsbMass",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x6b3b78",
+     "tienda": "0x6b3bb8",
+     "lista": "heap_incompleta"
+    },
+    {
+     "funcion": "0x6b3b78",
+     "tienda": "0x6b3c20",
+     "lista": "heap_incompleta"
+    },
+    {
+     "funcion": "0x6b3df4",
+     "tienda": "0x6b3e16",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x6b67f6",
+   "funcion": "0x6b67d8",
+   "tipo": "destroy",
+   "clase": "ModelUsbMtp",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x6b53e8",
+     "tienda": "0x6b5438",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x6b696c",
+   "funcion": "0x6b68f4",
+   "tipo": "create",
+   "clase": "ModelUsbMtp",
+   "clase_por": "llamadores",
+   "motivo": "miembro_sin_origen",
+   "miembro": "0x84",
+   "origenes": [
+    {
+     "funcion": "0x6b53e8",
+     "tienda": "0x6b5438",
+     "lista": "heap_incompleta"
+    }
+   ]
+  },
+  {
+   "sitio": "0x6bb406",
+   "funcion": "0x6bb3d0",
+   "tipo": "create",
+   "clase": "ModelWifiBackup",
+   "clase_por": "llamadores",
+   "motivo": "sin_valor"
+  },
+  {
+   "sitio": "0x6bb436",
+   "funcion": "0x6bb3d0",
+   "tipo": "destroy",
+   "clase": "ModelWifiBackup",
+   "clase_por": "llamadores",
+   "motivo": "sin_valor"
+  }
+ ]
+}
