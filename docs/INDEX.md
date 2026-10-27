@@ -359,7 +359,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 6. Otros subsistemas (AF, estabilización, vídeo, audio, lentes, energía, visor, accesorios, módulos de trazas)
 
-97 informes.
+98 informes.
 
 - **—** [E21 — Lecturas sin cámara de los volcados del 20-10-2026](capture/e21-lecturas-backups-2026-10-26.md)
 - **—** [E24-01 — Arranque, modo actualizador y dependencia de Darwin (27-10-2026)](capture/e24-01-arranque-recuperacion.md)
@@ -369,6 +369,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [E24-05 — Ruta `InitCom → Upd → bootloader` y origen de la máquina de rearme (27-10-2026)](capture/e24-05-upd-y-rearme.md)
 - **—** [E24-05a — Origen de la captura y confirmación BIONZ–Darwin (27-10-2026)](capture/e24-05a-captura-fin-bionz-darwin.md)
 - **—** [E24-05d — Consumidor BIONZ del estado de Darwin y cierre de captura (27-10-2026)](capture/e24-05d-consumidor-estado-darwin-bionz.md)
+- **—** [E24-05f — Emisores mss de Darwin de los ocho mensajes Darwin→BIONZ (27-10-2026)](capture/e24-05f-emisores-mss-darwin.md)
 - **—** [Registro de pruebas en cámara (solo software, USB)](capture/registro-pruebas-camara.md)
 - **S102** [S102 — Menú principal (botón MENU): cadena de carga y apertura](capture/s102-menu-principal.md)
 - **S111** [S111 — Módulo `[TRK]`: 215 trazas, 288 sitios y 47 funciones](capture/s111-trk.md) · pruebas: [test_s111_trk.py](../tests/test_s111_trk.py) · evidencia: [s111_trk](../analysis/s111_trk)

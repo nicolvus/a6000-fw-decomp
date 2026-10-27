@@ -101,4 +101,4 @@ Copia estable de los últimos valores: BIONZ **no** conserva una copia: el bloqu
 
 1. E24-05a §4.4 y §9 (INFERENCIA «regiones `0x26d2c` viajan en `0x0d/0x10/0x11`») → **refutada**; es el registro de fallos.
 2. E24-05a veredictos C/D: la señal que BIONZ espera no es el bit 24 ni los eventos; son mensajes mss en orden (el mapa queda en §1–§2).
-3. Pendiente nuevo E24-05f: emisores de Darwin de los ocho IDs y su disparo en la máquina de 49 estados.
+3. Pendiente nuevo E24-05f: emisores de Darwin de los ocho IDs y su disparo en la máquina de 49 estados. **Resuelto en [E24-05f](e24-05f-emisores-mss-darwin.md)**, que además corrige el veredicto B: la máscara no sale en bruto, pero su clase decodificada (`S+0x43`) viaja en el byte 0 del `0x0b`.
