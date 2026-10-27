@@ -2809,3 +2809,6 @@ Con autorización expresa del usuario se flasheó el FDAT 3.22 con `darwin_core.
 
 ## 26-10-2026 — T025: barrido de velocidades con Darwin tipo 0 (E23)
 RemoteShutter v3 (`/ss`, `/nr`, `/last`) y `scripts/camera_shutter_sweep.py`. Brillo plano de 1/4000 a 1/250 y creciente después; suelo mayor en la parte baja: la exposición termina con la lectura del sensor (~30 ms). Tipo 0 no da obturador electrónico rápido.
+
+## 26-10-2026 — T026: tipo 2 en RAM con Darwin tipo 0 (E23)
+Parche de T020 + barrido y control sin parche: luminancias iguales y mismo suelo de 1/4000 a 1/500. La ruta tipo 2 no da final electrónico; solo queda programar el IMX210 (D5). `scripts/camera_tipo2_sweep.py`.
