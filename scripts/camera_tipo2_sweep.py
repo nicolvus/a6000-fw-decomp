@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Parche en RAM del selector de tipo (T020: and r2,r2,#7 -> mov.w r2,#1 en 0x83793166) + barrido de velocidades; revierte siempre.
-Uso: camera_tipo2_sweep.py OUTDIR [n/d ...]   (RemoteShutter abierta, escena fija)."""
+"""Parche en RAM + barrido de velocidades; revierte siempre. Por defecto el selector de tipo de T020
+(and r2,r2,#7 -> mov.w r2,#1 en 0x83793166); otro parche con RAMPATCH=DIR_FÍSICA:ORIG_HEX:NUEVO_HEX (alineado a 2, longitud par de halfwords).
+Uso: [RAMPATCH=...] camera_tipo2_sweep.py OUTDIR [n/d ...]   (RemoteShutter abierta, escena fija)."""
 import os
 import subprocess
 import sys
@@ -9,8 +10,9 @@ import time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from camera_telnet import run
 
-HOST, CODE, G784 = '192.168.1.29', 0x83793164, 0x83e9bccc
-ORIG, PATCH = '012302f00702013a', '01234ff00102013a'
+HOST, G784 = '192.168.1.29', 0x83e9bccc
+_a, ORIG, PATCH = os.environ.get('RAMPATCH', '0x83793166:02f00702:4ff00102').split(':')
+CODE = int(_a, 16)
 
 
 def rd(addr, n):
@@ -33,17 +35,17 @@ def wr(addr, hexs):
 if __name__ != '__main__':
     raise ImportError('solo como script')
 out = sys.argv[1]
-cur = rd(CODE, 8)
+cur = rd(CODE, len(ORIG) // 2)
 print('codigo', cur, 'G+0x784', rd(G784, 4), flush=True)
 assert cur == ORIG, f'código inesperado {cur}: no se parchea'
 try:
-    wr(CODE + 2, PATCH[4:12])
-    assert rd(CODE, 8) == PATCH, 'parche no aplicado'
+    wr(CODE, PATCH)
+    assert rd(CODE, len(PATCH) // 2) == PATCH, 'parche no aplicado'
     print('parcheado', PATCH, flush=True)
     subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), 'camera_shutter_sweep.py'), out, *sys.argv[2:]], check=False)
     print('G+0x784 tras el barrido', rd(G784, 4), flush=True)
 finally:
-    wr(CODE + 2, ORIG[4:12])
+    wr(CODE, ORIG)
     time.sleep(0.5)
-    fin = rd(CODE, 8)
+    fin = rd(CODE, len(ORIG) // 2)
     print('revertido', fin, 'OK' if fin == ORIG else 'FALLO', flush=True)

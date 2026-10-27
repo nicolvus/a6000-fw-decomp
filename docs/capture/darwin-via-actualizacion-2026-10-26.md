@@ -124,3 +124,10 @@ Con el selector forzado a tipo 2 (`G+0x784`=2, parche de T020) y control sin par
 
 ## EFCS activada frente a desactivada (T027, 27-10-2026)
 Mismo suelo de exposición y mismo perfil por franjas con la EFCS activada y desactivada (diferencias ≤ 8 de luminancia media, EFCS off algo más clara a velocidades rápidas). Con tipo 0 el ajuste EFCS no cambia el inicio de la exposición de forma medible: no permite atribuirlo al reinicio electrónico del EFCS ni a la cortina sin retención. La idea de reaprovechar los tiempos del EFCS (retrasar el reinicio y ajustar su ritmo al de la lectura) sigue siendo hipótesis, sin evidencia a favor.
+
+## Siguiente palanca: forzar ShutMode del IMX210 (estático, 27-10-2026)
+Antecedentes (S52/S56, vigentes): el `SetExposure` del IMX210 (`0x436d6f6c`, vtable `0x43fcc090+0x28`) lee el modo de obturación en `0x436d6fb6 ldrb.w r9,[r1,#9]` (`param+9`) y despacha con `tbb` los ShutMode 0–4 (`0x436d70be`). La A7S programa su modo Silent con **ShutMode 0** (clase 0 → `param+9`); la A6000 tiene la rama 0 (y la 4, con la misma función de temporización `0x436d6f50`) pero su política normal no la usa (S52: «ninguna ruta normal la alimenta»). Hasta ahora no se podía probar: con cortinas activas el resultado quedaba enmascarado.
+- Bytes verificados en `av-cam.bin` (Capstone): `0x436d6fb6` = `91 f8 09 90` (`ldrb.w r9,[r1,#9]`). Parche en RAM propuesto (físico `0x836d6fb6`): `4f f0 00 09` (`mov.w r9,#0`) o `4f f0 04 09` (`mov.w r9,#4`). Mismo tamaño; reversible.
+- Alcance: afecta a **toda** llamada a `SetExposure` mientras esté activo (también vista en directo); por eso se aplica solo durante el barrido y se revierte.
+- Prueba propuesta (T028): barrido 1/4000–1/15 con ShutMode 0, con ShutMode 4 y control. Si el brillo baja de forma proporcional de 1/250 a 1/4000, el IMX210 sí termina la exposición electrónicamente con ese ShutMode.
+`scripts/camera_tipo2_sweep.py` admite ahora otros parches por `RAMPATCH=DIR:ORIG:NUEVO`.
