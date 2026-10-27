@@ -2845,3 +2845,6 @@ r7 0–64 sin efecto sobre el degradado. En r7=255 telnet y ADB dejaron de abrir
 
 ## 27-10-2026 — T038: r6 con ShutMode 0 + r5=2500 (E23), cuelgue
 r6=0 sin efecto sobre el degradado; r6=4 cuelga la captura y la cámara sale de la red. Parches revertidos y verificados antes de la caída; pendiente apagado completo.
+
+## 27-10-2026 — T039: r5 cerca del límite con ShutMode 0 (E23)
+A 1/250, r5 4000–4200 da exposición corta y casi uniforme en la foto completa (L 27 → 4,8 frente a 152); desde 4300 sin efecto. A 1/30 aparece una banda oscura móvil. Primera obturación electrónica corta de foto completa.
