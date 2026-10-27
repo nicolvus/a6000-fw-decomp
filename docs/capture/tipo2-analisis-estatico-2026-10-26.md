@@ -27,3 +27,9 @@ El tipo 2 llega hasta un gestor de recursos del módulo `0x4359xxxx` que se arma
 - `0x4378e1a4` rellena un registro (campos `+0x8..+0x40`) y llama a `0x4378df14` con el modo, que devuelve constantes por tipo: tipo 0 → `0x412b55`, `0xbbb`, `0x8257`; tipo 1 → `0x4e2000`, `0xe10`, `0x9c40`; tipo 2 → `0x51762b`, `0xeaa`, `0xa2ec`. Son parámetros de temporización distintos para el tipo 2 (INFERENCIA: lectura/tiempos del sensor; significado físico NO_VERIFICADO). El registro se rellena desde el manejador `0x43791c08` (`G+0x560`).
 - Consumidores del registro: NO identificados (los offsets `+0x578/+0x580/+0x584` aparecen en muchas estructuras y el barrido no discrimina).
 - Conclusión: el tipo 2 cambia constantes de temporización internas de `av-cam`, pero no se halló emisión de orden CAIF. Cierre parcial; seguir exige REA (`trace_native_values`) sobre el registro `G+0x560`.
+
+## Tercera pasada (E22): el registro no pasa a otro módulo
+- `0x4378e1a4` calcula cocientes (`0x4355faf0` = división) de las tres constantes por tipo y las guarda en `+0x1c/+0x22/+0x28/+0x2c` del registro. Es un registro de relojes/tiempos, no una orden.
+- Las funciones vecinas que tocan `+0x57c/+0x584/+0x588/+0x784` (`0x43736800..`, `0x43737228..`) operan sobre una tabla de temporización por modo con cientos de campos (medias `(a+b)>>1` y diferencias `a-(b>>1)`): es otro objeto distinto de G. El `+0x784` leído en `0x43737228` NO es el tipo de obturador (coincidencia de offset; corrige la tabla de la primera pasada).
+- Consumidores del registro de relojes del tipo 2: no hallados con barrido de bytes. Se abrió una sesión REA de `av-cam.bin` y se cerró sin consultas: las ramas relevantes son Thumb sembradas a mano que REA no cubre (ver `docs/STATE.md`).
+- Estado: E22 se cierra con límite. El tipo 2 solo alcanza el gestor `0x4359xxxx` y constantes de reloj internas; sin camino hallado hacia CAIF/Darwin.
