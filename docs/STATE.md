@@ -41,6 +41,7 @@ Etiquetas: **V** = VERIFICADO (bytes/instrucciones), **I** = INFERENCIA, **N** =
 | EFCS → sensor | Recorrido estático cerrado hasta IMX210; `CURTAINMODE 0xce` no gobierna el sensor (T1); SilentShutter `+0x238` sin lector de captura en `av-cam`; fin electrónico de integración sin identificar | V / N | [efcs-capture-selector](capture/efcs-capture-selector.md), [S51](capture/s51-decision.md), [S58](capture/s58-conclusions.md) |
 | PMCA | `updatershell` inyecta un fdat propio (guard CRC + modelo/región/versión **sin firma**); `bk w 0x003e0005` escribe la propiedad `modelName` (`ILCE-6000` de fábrica); el efecto «shell mode» de `ILCE-6001` es no verificado | V / N | [S62](capture/s62-pmca-injection.md) |
 | Patrón de logging | La fw3.21 reescribe etiquetas de trazas, no funcionalidad (9+ ejemplos); la presencia de una cadena **no** prueba una funcionalidad | V / I | [S128](capture/s128-label-map.md), [S130](capture/s130-new-modules.md), [S174](capture/s174-forliro-api.md) |
+| Arranque y recuperación (E24-01) | Darwin (IC5700) es también el **control de energía**: `darwin_core` sube `DD_ON1/2/3` (núcleo y LPDDR2 del BIONZ). **No está demostrado** que el actualizador USB arranque sin `darwin_core`. El script del actualizador ignora el resultado de `ud_darwin_init`. La entrada por pmca exige el sistema normal (batería vía `upm`) | V / I | [E24-01](capture/e24-01-arranque-recuperacion.md) |
 
 ## Conclusiones corregidas (no reusar versiones previas)
 
@@ -50,6 +51,7 @@ La conclusión vigente va primero; el antecedente conserva su informe y se seña
 |---|---|---|---|
 | Darwin — base ROM | La base es `0x4200`, NO `0`; no reusar punteros de proyectos Ghidra antiguos | proyectos a6000/a6300-darwin | [darwin-shutter-entrypoints](capture/darwin-shutter-entrypoints.md) |
 | SetImageWrited | `0x6108/0x1007`, **no** `0x1009` | sesión 12 | [pool-write-completion](capture/pool-write-completion.md), [S29](capture/s29-writestill-end-to-end.md) |
+| Recuperación por USB | Depende también de que `darwin_core` encienda el sistema, no solo de `nflasha1` y `ud_darwin_firmup`; la entrada al actualizador por USB pasa por el sistema normal (`up.sh user`), no por botón | custom-fw-recovery (punto 3), darwin-via-actualizacion (riesgo 4) | [E24-01](capture/e24-01-arranque-recuperacion.md) |
 | GPIO cortinillas | P4D/P4E no son serie (descartado estáticamente) | hipótesis serie | [fm3-gpio](capture/fm3-gpio-shutter-mapping.md) |
 | Manejador LIRO `0x40e3` | **Existe en la A7S** (fila `0x43ff79e4` → `0x437a9cb1`); S401 lo buscó en la VA de la A6000 | S401 | [S402](capture/static-closure-2026-10-25.md) |
 | Etiqueta `RecordStill::Execute` | `0x90b248` es RecordImage; no demostrada la antigua etiqueta | etiqueta histórica | [contrato](capture/recordstill-contract-audit-2026-10-23.md) |

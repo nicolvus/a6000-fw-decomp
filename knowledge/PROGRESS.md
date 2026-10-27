@@ -2857,3 +2857,6 @@ El motor de rearme lo excita Darwin por P40/P41 (XOR IC6800 → Q6801); la posic
 
 ## 27-10-2026 — Corrección: compuerta del motor (E23, estático)
 `0x1fe66`→0 no basta: la máquina de rearme (27 estados, `0x297c0`) arrancada desde la exterior (`0x29d0c`) enciende el motor con primitivas sin compuerta; el tiempo agotado lleva a `0x1fa3a` (error 6). Falta localizar la notificación de fin de rearme.
+
+## 27-10-2026 — E24-01: arranque y acceso al actualizador (estático)
+Grafo Darwin → BootROM «Musashi Loader1» (`bootrom.bin`) → Loader2/3 (no volcado) → `nflasha1` (actualizador) / `nflasha3`+`nflasha5` (normal/caliente). `ud_darwin_init.elf` se ignora y está acotado; pero `darwin_core` sube `DD_ON1/2/3`, que alimentan el BIONZ. Respuesta: NO está demostrado que el actualizador arranque sin Darwin. Verificador `tests/test_e24_01_boot.py`.

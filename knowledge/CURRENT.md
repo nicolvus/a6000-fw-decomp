@@ -45,6 +45,9 @@ flasheo salvo autorización expresa del usuario para un caso concreto.
   La A6000 carece del parámetro y del código de selector/tiempos de la A7S (S307–S312, S169). Ausencia estática ≠ incapacidad de hardware.
 - **Cortinas:** GPIO P4D=1ST_CURTAIN_MG, P4E=2ND_CURTAIN_MG, P4C=CA_1ST_CURTAIN_START, P4B=CA_RELEASE_LOCK_MSS (esquema + inspección;
   no son serie). El enlace banco/bit `0xf2910048` → P4E no consta en el firmware (E11).
+- **Recuperación (E24-01):** Darwin también controla la energía del cuerpo (`DD_ON1/2/3` desde `darwin_core`, tabla `0x28c6c`).
+  No está demostrado que el actualizador USB arranque sin `darwin_core`. Cualquier parche de Darwin arriesga la vía de reinstalación.
+  [informe](../docs/capture/e24-01-arranque-recuperacion.md).
 
 ## Correcciones fundamentales (no reutilizar las versiones previas)
 
