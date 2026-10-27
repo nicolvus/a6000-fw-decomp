@@ -2795,3 +2795,7 @@ Decisión del usuario: la prohibición de flashear deja de ser absoluta en los d
 # E23: updater de Darwin analizado (26-10-2026)
 
 `ud_darwin_firmup.elf` (initrd de `nflasha1`) desensamblado: valida solo la cadena `VERM.mm` y CRC-16 por trama SIO; sin `darwin_boo.bin` (fw321 no lo trae) reescribe el core siempre. Sin firma ni suma de imagen del lado Linux. Pendiente: bootloader del MCU, aceptación de FDAT propio, efecto físico. Sin acciones en cámara. [informe](../docs/capture/darwin-via-actualizacion-2026-10-26.md).
+
+# T023: buffers BIONZ→Darwin restantes a cero (26-10-2026)
+
+Emisores de los IDs `0x12` (4 B), `0x0f` (2 B) y `0x13` (10 B) localizados en `av-cam` (`0x436b88e8/0x436b8aec/0x436b8864`); leídos en cámara (solo lectura) en reposo y tras 2 disparos: todo a cero. Ninguno de los 5 mensajes BIONZ→Darwin lleva el tipo de mecanismo; para E23 solo queda el FDAT. Script `scripts/camera_darwin_buffers.py`.

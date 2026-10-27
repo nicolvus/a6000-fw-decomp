@@ -88,3 +88,10 @@ Fuente: `nand-20261020/dev_nflasha1.bin` (FAT) → `boot/initrd.img` (cramfs) �
 | Que el **bootloader del propio MCU** (no incluido en el paquete) verifique la imagen antes de arrancarla | NO VERIFICADO (no hay binario que analizar) |
 
 Consecuencia: del lado Linux el parche tipo 0 cumple todo lo que se comprueba (CRC-32 recalculado, cadena `VER` intacta). Lo que sigue sin probar: el bootloader del MCU, que la cámara acepte un FDAT reempaquetado y el efecto físico (fin de exposición sin cortinas, rearme). Matiz a T022: lo que descarta es el bloque ID `0x16` como portador del tipo; los mensajes `0x0f/0x12/0x13` no se leyeron, así que «sin vía RAM» es inferencia, no prueba.
+
+## Buffers BIONZ→Darwin restantes (T023, solo lectura, 26-10-2026)
+Emisores en `av-cam` (VERIFICADO por bytes, base de carga `0x43541000`; físico = virtual + `0x40000000`): las cabeceras `{03, NN, len}` se arman en `0x436b88e8` (`03 07`, 4 B, buffer `0x43f91e2e`, copia `0x436b8b8c`), `0x436b8aec` (`03 04`, 2 B, buffer `0x43f91f24`, **escrito a cero por el propio código antes de cada envío**) y `0x436b8864` (`03 08`, 10 B, buffer `0x43f91f1a`, copia `0x436b8ba8`), y coinciden con los IDs `0x12`, `0x0f` y `0x13` de la tabla de Darwin. Son los cinco únicos llamadores de `0x436ba234` en `0x43600000..0x43c00000`.
+
+Lectura en la cámara: **los tres buffers están a cero** en reposo y tras dos disparos remotos; el paquete ev1 de 22 B (control) se lee igual que en T022.
+
+Conclusión (INFERENCIA con evidencia fuerte): ninguno de los cinco mensajes BIONZ→Darwin lleva un tipo de mecanismo no nulo (si lo llevaran a 0, Darwin no movería las bobinas, y sí las mueve). El tipo lo fija Darwin por su cuenta. Límites: muestreo después del envío (supone que los buffers no se limpian, como el de 22 B), y no cubre otros canales hacia Darwin fuera de `0x436ba234`. **La vía por RAM en `av-cam` queda descartada en la práctica; solo queda el parche de Darwin (FDAT).**
