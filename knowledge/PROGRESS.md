@@ -2818,3 +2818,6 @@ Dos barridos, misma escena: suelo y perfil iguales. El ajuste EFCS no cambia el 
 
 ## 27-10-2026 — T028: ShutMode 0/4 forzado en RAM (E23)
 Con Darwin tipo 0, forzar `param+9` de `SetExposure` IMX210 a 0 o 4 cambia la integración (más luz a velocidades rápidas, casi fija hasta 1/30, perfil distinto) frente al control. Primera evidencia de que el reinicio del sensor es programable desde el firmware principal; los tiempos de la rama 0/4 no encajan aún.
+
+## 27-10-2026 — T029: ShutMode 1/3 forzado (E23), incidente
+Control normal; forzar ShutMode 1 deja la captura colgada en `shooting`; el modo 3 empezó con la cámara ya colgada. El reinicio del usuario no limpió la RAM (parche de modo 3 aún presente): revertido a mano. `scripts/camera_tipo2_sweep.py` admite varios parches.
