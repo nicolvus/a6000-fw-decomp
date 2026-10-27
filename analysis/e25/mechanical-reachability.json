@@ -1,0 +1,1121 @@
+{
+  "schema": "a6000.e25.mechanical.v1",
+  "binary": {
+    "sha256": "5f2be06d9885d154e8e0df46a611d6830d29754b4353f6e82cecfe66dd6a0bf4",
+    "base": "0x4200",
+    "size": 157276
+  },
+  "patch": {
+    "address": "0x1fe6a",
+    "before": "2846",
+    "after": "0ae0",
+    "instruction": "0x1fe6a: mov r0,r5 -> b 0x1fe82 (r5=0; retorno 0 sin leer la compuerta)"
+  },
+  "lists": {
+    "L0": {
+      "address": "0x29cd8",
+      "ids": [
+        0,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    "L1": {
+      "address": "0x29cdd",
+      "ids": [
+        0,
+        2,
+        3,
+        6,
+        9,
+        10
+      ]
+    },
+    "L2": {
+      "address": "0x29ce3",
+      "ids": [
+        0,
+        4,
+        5,
+        6,
+        9,
+        10
+      ]
+    },
+    "L3": {
+      "address": "0x29ce9",
+      "ids": [
+        0,
+        1,
+        4,
+        5,
+        6,
+        9,
+        10
+      ]
+    }
+  },
+  "starters": {
+    "load 0x1fee2": {
+      "entry": "0x1fee2",
+      "gate4_list": "0x29cdd",
+      "gate0_list": "0x29cd8",
+      "gate4_ids": [
+        0,
+        2,
+        3,
+        6,
+        9,
+        10
+      ],
+      "gate0_ids": [
+        0,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    "capture 4 0x1ff72": {
+      "entry": "0x1ff72",
+      "gate4_list": "0x29ce3",
+      "gate0_list": "0x29cd8",
+      "gate4_ids": [
+        0,
+        4,
+        5,
+        6,
+        9,
+        10
+      ],
+      "gate0_ids": [
+        0,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    "capture 5/1f 0x1ffce": {
+      "entry": "0x1ffce",
+      "gate4_list": "0x29ce9",
+      "gate0_list": "0x29cd8",
+      "gate4_ids": [
+        0,
+        1,
+        4,
+        5,
+        6,
+        9,
+        10
+      ],
+      "gate0_ids": [
+        0,
+        7,
+        8,
+        9,
+        10
+      ]
+    }
+  },
+  "outer": {
+    "descriptor": "0x29cf0",
+    "table": "0x29d0c",
+    "terminal": 10,
+    "handlers": {
+      "0": "0x20100",
+      "1": "0x2011c",
+      "2": "0x20120",
+      "3": "0x200e2",
+      "4": "0x20134",
+      "5": "0x200e2",
+      "6": "0x20148",
+      "7": "0x2014c",
+      "8": "0x200e2",
+      "9": "0x200e6",
+      "10": "0x200fc"
+    },
+    "L0_sequence": [
+      0,
+      7,
+      8,
+      9,
+      10
+    ],
+    "L0_handlers": [
+      {
+        "id": 0,
+        "handler": "0x20100"
+      },
+      {
+        "id": 7,
+        "handler": "0x2014c"
+      },
+      {
+        "id": 8,
+        "handler": "0x200e2"
+      },
+      {
+        "id": 9,
+        "handler": "0x200e6"
+      },
+      {
+        "id": 10,
+        "handler": "0x200fc"
+      }
+    ],
+    "state7_calls": [
+      "0x1e4f6",
+      "0x20c90",
+      "0x2016e",
+      "0x1e3d2",
+      "0x5c9e",
+      "0x5c88",
+      "0x1e33e"
+    ],
+    "state9_calls": [
+      "0xd18e",
+      "0x1e4aa",
+      "0x1e4f6"
+    ],
+    "state7_p4d_gate": "0x20c90 consulta 0x20c74; con tipo 0 no escribe",
+    "state9_release": "0xd18e(0x1000000)"
+  },
+  "reachability": [
+    {
+      "name": "load",
+      "entry": "0x1984e",
+      "gate": 0,
+      "coil": 0,
+      "lists": [
+        "0x29cd8"
+      ],
+      "states": [
+        0,
+        7,
+        8,
+        9,
+        10
+      ],
+      "motor_primitives": [],
+      "rearm_direct_called": false,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [],
+      "error6": [
+        "0x1989c"
+      ],
+      "functions": 105,
+      "open_indirect": 1
+    },
+    {
+      "name": "load(1)",
+      "entry": "0x1984e",
+      "gate": 0,
+      "coil": 0,
+      "lists": [
+        "0x29cd8"
+      ],
+      "states": [
+        0,
+        7,
+        8,
+        9,
+        10
+      ],
+      "motor_primitives": [],
+      "rearm_direct_called": false,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [],
+      "error6": [
+        "0x1989c"
+      ],
+      "functions": 104,
+      "open_indirect": 1
+    },
+    {
+      "name": "capture4",
+      "entry": "0x19998",
+      "gate": 0,
+      "coil": 0,
+      "lists": [
+        "0x29cd8"
+      ],
+      "states": [
+        0,
+        7,
+        8,
+        9,
+        10
+      ],
+      "motor_primitives": [],
+      "rearm_direct_called": false,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [],
+      "error6": [],
+      "functions": 74,
+      "open_indirect": 1
+    },
+    {
+      "name": "capture5",
+      "entry": "0x199b8",
+      "gate": 0,
+      "coil": 0,
+      "lists": [
+        "0x29cd8"
+      ],
+      "states": [
+        0,
+        7,
+        8,
+        9,
+        10
+      ],
+      "motor_primitives": [],
+      "rearm_direct_called": false,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [],
+      "error6": [],
+      "functions": 74,
+      "open_indirect": 1
+    },
+    {
+      "name": "capture1f",
+      "entry": "0x199d8",
+      "gate": 0,
+      "coil": 0,
+      "lists": [
+        "0x29cd8"
+      ],
+      "states": [
+        0,
+        7,
+        8,
+        9,
+        10
+      ],
+      "motor_primitives": [],
+      "rearm_direct_called": false,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [],
+      "error6": [],
+      "functions": 76,
+      "open_indirect": 1
+    },
+    {
+      "name": "load",
+      "entry": "0x1984e",
+      "gate": 4,
+      "coil": 0,
+      "lists": [
+        "0x29cdd"
+      ],
+      "states": [
+        0,
+        2,
+        3,
+        6,
+        9,
+        10
+      ],
+      "motor_primitives": [
+        "0x1fe32",
+        "0x1fe50",
+        "0x1fe86",
+        "0x1feb6"
+      ],
+      "rearm_direct_called": false,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [],
+      "error6": [
+        "0x1989c",
+        "0x1f518",
+        "0x1fab8"
+      ],
+      "functions": 145,
+      "open_indirect": 1
+    },
+    {
+      "name": "load(1)",
+      "entry": "0x1984e",
+      "gate": 4,
+      "coil": 0,
+      "lists": [
+        "0x29cdd"
+      ],
+      "states": [
+        0,
+        2,
+        3,
+        6,
+        9,
+        10
+      ],
+      "motor_primitives": [
+        "0x1fe32",
+        "0x1fe50",
+        "0x1fe86",
+        "0x1feb6"
+      ],
+      "rearm_direct_called": false,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [],
+      "error6": [
+        "0x1989c",
+        "0x1f518",
+        "0x1fab8"
+      ],
+      "functions": 144,
+      "open_indirect": 1
+    },
+    {
+      "name": "capture4",
+      "entry": "0x19998",
+      "gate": 4,
+      "coil": 0,
+      "lists": [
+        "0x29ce3"
+      ],
+      "states": [
+        0,
+        4,
+        5,
+        6,
+        9,
+        10
+      ],
+      "motor_primitives": [
+        "0x1fe32",
+        "0x1fe50",
+        "0x1feb6"
+      ],
+      "rearm_direct_called": false,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [],
+      "error6": [
+        "0x1fab8"
+      ],
+      "functions": 112,
+      "open_indirect": 1
+    },
+    {
+      "name": "capture5",
+      "entry": "0x199b8",
+      "gate": 4,
+      "coil": 0,
+      "lists": [
+        "0x29ce9"
+      ],
+      "states": [
+        0,
+        1,
+        4,
+        5,
+        6,
+        9,
+        10
+      ],
+      "motor_primitives": [
+        "0x1fe32",
+        "0x1fe50",
+        "0x1feb6"
+      ],
+      "rearm_direct_called": false,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [],
+      "error6": [
+        "0x1fab8"
+      ],
+      "functions": 113,
+      "open_indirect": 1
+    },
+    {
+      "name": "capture1f",
+      "entry": "0x199d8",
+      "gate": 4,
+      "coil": 0,
+      "lists": [
+        "0x29ce3"
+      ],
+      "states": [
+        0,
+        4,
+        5,
+        6,
+        9,
+        10
+      ],
+      "motor_primitives": [
+        "0x1fe32",
+        "0x1fe50",
+        "0x1feb6"
+      ],
+      "rearm_direct_called": false,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [],
+      "error6": [
+        "0x1fab8"
+      ],
+      "functions": 114,
+      "open_indirect": 1
+    },
+    {
+      "name": "load",
+      "entry": "0x1984e",
+      "gate": 0,
+      "coil": 4,
+      "lists": [
+        "0x29cd8"
+      ],
+      "states": [
+        0,
+        7,
+        8,
+        9,
+        10
+      ],
+      "motor_primitives": [],
+      "rearm_direct_called": false,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [],
+      "error6": [
+        "0x1989c"
+      ],
+      "functions": 112,
+      "open_indirect": 1
+    },
+    {
+      "name": "load(1)",
+      "entry": "0x1984e",
+      "gate": 0,
+      "coil": 4,
+      "lists": [
+        "0x29cd8"
+      ],
+      "states": [
+        0,
+        7,
+        8,
+        9,
+        10
+      ],
+      "motor_primitives": [],
+      "rearm_direct_called": false,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [],
+      "error6": [
+        "0x1989c"
+      ],
+      "functions": 111,
+      "open_indirect": 1
+    },
+    {
+      "name": "capture4",
+      "entry": "0x19998",
+      "gate": 0,
+      "coil": 4,
+      "lists": [
+        "0x29cd8"
+      ],
+      "states": [
+        0,
+        7,
+        8,
+        9,
+        10
+      ],
+      "motor_primitives": [],
+      "rearm_direct_called": false,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [],
+      "error6": [],
+      "functions": 74,
+      "open_indirect": 1
+    },
+    {
+      "name": "capture5",
+      "entry": "0x199b8",
+      "gate": 0,
+      "coil": 4,
+      "lists": [
+        "0x29cd8"
+      ],
+      "states": [
+        0,
+        7,
+        8,
+        9,
+        10
+      ],
+      "motor_primitives": [],
+      "rearm_direct_called": false,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [],
+      "error6": [],
+      "functions": 74,
+      "open_indirect": 1
+    },
+    {
+      "name": "capture1f",
+      "entry": "0x199d8",
+      "gate": 0,
+      "coil": 4,
+      "lists": [
+        "0x29cd8"
+      ],
+      "states": [
+        0,
+        7,
+        8,
+        9,
+        10
+      ],
+      "motor_primitives": [],
+      "rearm_direct_called": false,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [],
+      "error6": [],
+      "functions": 76,
+      "open_indirect": 1
+    },
+    {
+      "name": "m49_4",
+      "entry": "0x18636",
+      "gate": 0,
+      "coil": 0,
+      "lists": [
+        "0x29cd8"
+      ],
+      "states": [
+        0,
+        7,
+        8,
+        9,
+        10
+      ],
+      "motor_primitives": [],
+      "rearm_direct_called": false,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [],
+      "error6": [],
+      "functions": 76,
+      "open_indirect": 1
+    },
+    {
+      "name": "m49_5",
+      "entry": "0x1865a",
+      "gate": 0,
+      "coil": 0,
+      "lists": [
+        "0x29cd8"
+      ],
+      "states": [
+        0,
+        7,
+        8,
+        9,
+        10
+      ],
+      "motor_primitives": [],
+      "rearm_direct_called": false,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [],
+      "error6": [],
+      "functions": 78,
+      "open_indirect": 1
+    },
+    {
+      "name": "m49_1f",
+      "entry": "0x190fc",
+      "gate": 0,
+      "coil": 0,
+      "lists": [
+        "0x29cd8"
+      ],
+      "states": [
+        0,
+        7,
+        8,
+        9,
+        10
+      ],
+      "motor_primitives": [],
+      "rearm_direct_called": false,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [],
+      "error6": [],
+      "functions": 273,
+      "open_indirect": 4
+    },
+    {
+      "name": "m49_4",
+      "entry": "0x18636",
+      "gate": 4,
+      "coil": 0,
+      "lists": [
+        "0x29ce3"
+      ],
+      "states": [
+        0,
+        4,
+        5,
+        6,
+        9,
+        10
+      ],
+      "motor_primitives": [
+        "0x1fe32",
+        "0x1fe50",
+        "0x1feb6"
+      ],
+      "rearm_direct_called": false,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [],
+      "error6": [
+        "0x1fab8"
+      ],
+      "functions": 114,
+      "open_indirect": 1
+    },
+    {
+      "name": "m49_5",
+      "entry": "0x1865a",
+      "gate": 4,
+      "coil": 0,
+      "lists": [
+        "0x29ce9"
+      ],
+      "states": [
+        0,
+        1,
+        4,
+        5,
+        6,
+        9,
+        10
+      ],
+      "motor_primitives": [
+        "0x1fe32",
+        "0x1fe50",
+        "0x1feb6"
+      ],
+      "rearm_direct_called": false,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [],
+      "error6": [
+        "0x1fab8"
+      ],
+      "functions": 117,
+      "open_indirect": 1
+    },
+    {
+      "name": "m49_1f",
+      "entry": "0x190fc",
+      "gate": 4,
+      "coil": 0,
+      "lists": [
+        "0x29ce9"
+      ],
+      "states": [
+        0,
+        1,
+        4,
+        5,
+        6,
+        9,
+        10
+      ],
+      "motor_primitives": [
+        "0x1fe32",
+        "0x1fe50",
+        "0x1feb6"
+      ],
+      "rearm_direct_called": false,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [],
+      "error6": [
+        "0x1f518",
+        "0x1fab8"
+      ],
+      "functions": 308,
+      "open_indirect": 4
+    },
+    {
+      "name": "burst_prep",
+      "entry": "0x17cee",
+      "gate": 0,
+      "coil": 0,
+      "lists": [
+        "0x29cd8"
+      ],
+      "states": [
+        0,
+        7,
+        8,
+        9,
+        10
+      ],
+      "motor_primitives": [],
+      "rearm_direct_called": false,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [],
+      "error6": [],
+      "functions": 144,
+      "open_indirect": 1
+    },
+    {
+      "name": "rearm_burst",
+      "entry": "0x17a44",
+      "gate": 0,
+      "coil": 0,
+      "lists": [
+        "0x29cd8"
+      ],
+      "states": [
+        0,
+        7,
+        8,
+        9,
+        10
+      ],
+      "motor_primitives": [],
+      "rearm_direct_called": false,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [],
+      "error6": [],
+      "functions": 140,
+      "open_indirect": 1
+    },
+    {
+      "name": "capture_task",
+      "entry": "0x1811a",
+      "gate": 0,
+      "coil": 0,
+      "lists": [
+        "0x29cd8"
+      ],
+      "states": [
+        0,
+        7,
+        8,
+        9,
+        10
+      ],
+      "motor_primitives": [],
+      "rearm_direct_called": false,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [],
+      "error6": [],
+      "functions": 227,
+      "open_indirect": 3
+    },
+    {
+      "name": "burst_prep",
+      "entry": "0x17cee",
+      "gate": 4,
+      "coil": 0,
+      "lists": [
+        "0x29ce3"
+      ],
+      "states": [
+        0,
+        4,
+        5,
+        6,
+        9,
+        10
+      ],
+      "motor_primitives": [
+        "0x1fe32",
+        "0x1fe50",
+        "0x1feb6"
+      ],
+      "rearm_direct_called": false,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [],
+      "error6": [
+        "0x1fab8"
+      ],
+      "functions": 181,
+      "open_indirect": 1
+    },
+    {
+      "name": "rearm_burst",
+      "entry": "0x17a44",
+      "gate": 4,
+      "coil": 0,
+      "lists": [
+        "0x29ce9"
+      ],
+      "states": [
+        0,
+        1,
+        4,
+        5,
+        6,
+        9,
+        10
+      ],
+      "motor_primitives": [
+        "0x1fe32",
+        "0x1fe50",
+        "0x1feb6"
+      ],
+      "rearm_direct_called": false,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [],
+      "error6": [
+        "0x1fab8"
+      ],
+      "functions": 179,
+      "open_indirect": 1
+    },
+    {
+      "name": "capture_task",
+      "entry": "0x1811a",
+      "gate": 4,
+      "coil": 0,
+      "lists": [
+        "0x29ce3",
+        "0x29ce9"
+      ],
+      "states": [
+        0,
+        1,
+        4,
+        5,
+        6,
+        9,
+        10
+      ],
+      "motor_primitives": [
+        "0x1fe32",
+        "0x1fe50",
+        "0x1feb6"
+      ],
+      "rearm_direct_called": false,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [],
+      "error6": [
+        "0x1f518",
+        "0x1fab8"
+      ],
+      "functions": 266,
+      "open_indirect": 3
+    }
+  ],
+  "operation5": {
+    "0": {
+      "name": "op5",
+      "entry": "0xd46e",
+      "gate": 0,
+      "coil": 0,
+      "lists": [],
+      "states": [],
+      "motor_primitives": [
+        "0x1feb6"
+      ],
+      "rearm_direct_called": true,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [
+        "0x1fcb8"
+      ],
+      "error6": [],
+      "functions": 91,
+      "open_indirect": 6
+    },
+    "4": {
+      "name": "op5",
+      "entry": "0xd46e",
+      "gate": 4,
+      "coil": 0,
+      "lists": [],
+      "states": [],
+      "motor_primitives": [
+        "0x1fe50",
+        "0x1feb6"
+      ],
+      "rearm_direct_called": true,
+      "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+      "brake": [
+        "0x1fcb8"
+      ],
+      "error6": [],
+      "functions": 92,
+      "open_indirect": 6
+    }
+  },
+  "lifecycle": {
+    "state_mains": {
+      "Init": "0x72c2",
+      "Seton": "0x747a",
+      "On": "0x76ce",
+      "Exiton": "0x80c2",
+      "Off": "0x8908",
+      "Upd": "0x8da8"
+    },
+    "gate_consumers": [
+      "0x1f4ba",
+      "0x1f4de",
+      "0x1f576",
+      "0x1f5a2",
+      "0x1f5a8",
+      "0x1f896",
+      "0x1f908",
+      "0x1fa40",
+      "0x1fe88",
+      "0x1fe90",
+      "0x1fe98",
+      "0x201bc"
+    ],
+    "reset_initcom_upd_off_have_no_gate_consumer": true,
+    "on_init_reaches_load": true,
+    "load_callers": [
+      "0x197d0",
+      "0x1f22e",
+      "0x1f262",
+      "0xcee8"
+    ],
+    "note": "On init 0x75f0 -> 0x1b260 -> 0xcee6 -> 0x1984e(0) es la única entrada de ciclo de vida que consulta la compuerta; con E25 elige L0. Reset/InitCom/Upd/Off no contienen consumidores de 0x1fe66."
+  },
+  "errors": {
+    "lever_0x1f4ce": {
+      "0": {
+        "name": "lever",
+        "entry": "0x1f4ce",
+        "gate": 0,
+        "coil": 0,
+        "lists": [],
+        "states": [],
+        "motor_primitives": [],
+        "rearm_direct_called": false,
+        "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+        "brake": [],
+        "error6": [],
+        "functions": 2,
+        "open_indirect": 0
+      },
+      "4": {
+        "name": "lever",
+        "entry": "0x1f4ce",
+        "gate": 4,
+        "coil": 0,
+        "lists": [],
+        "states": [],
+        "motor_primitives": [],
+        "rearm_direct_called": false,
+        "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+        "brake": [],
+        "error6": [
+          "0x1f518"
+        ],
+        "functions": 3,
+        "open_indirect": 0
+      }
+    },
+    "timeout_0x1fa3a": {
+      "0": {
+        "name": "timeout",
+        "entry": "0x1fa3a",
+        "gate": 0,
+        "coil": 0,
+        "lists": [],
+        "states": [],
+        "motor_primitives": [
+          "0x1fe32"
+        ],
+        "rearm_direct_called": false,
+        "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+        "brake": [],
+        "error6": [
+          "0x1fab8"
+        ],
+        "functions": 23,
+        "open_indirect": 0
+      },
+      "4": {
+        "name": "timeout",
+        "entry": "0x1fa3a",
+        "gate": 4,
+        "coil": 0,
+        "lists": [],
+        "states": [],
+        "motor_primitives": [
+          "0x1fe32"
+        ],
+        "rearm_direct_called": false,
+        "rearm_direct_note": "0x1f5a6 se llama, pero con gate 0 retorna en 0x1f5ae; la llamada no ejecuta el motor",
+        "brake": [],
+        "error6": [
+          "0x1fab8"
+        ],
+        "functions": 24,
+        "open_indirect": 0
+      }
+    }
+  },
+  "pins": {
+    "P4C": {
+      "writer": "0x1ecec -> 0x51c0(0x230, r1)",
+      "set_to_1": "0x16e7a (0x1ecec(1)); llamado desde 0x17cee y 0x175ea",
+      "clear": "0x16e68 (0x1ecec(0))",
+      "note": "E24-05h corrige la lectura de rea-tema3: sí existe P4C←1, a través del alias variable r0=0x230; los 9 sitios con literal solo escriben 0"
+    },
+    "P4B": {
+      "writer": "0xd116/0xd18e (máscaras de ocupación)",
+      "mask": "0x800 (bit 11)",
+      "note": "sigue cambiando durante la captura; no es el motor de rearme"
+    },
+    "P4D": {
+      "writer": "0x20c90 (1) / 0x20cb2 (0)",
+      "filter": "0x20c74 (tipo 0 => no escribe)"
+    },
+    "P4E": {
+      "writer": "0x20d00 (1) / 0x20cd4 (0)",
+      "filter": "0x20c74 (tipo 0 => no escribe)"
+    }
+  },
+  "motor": {
+    "PDOR4_writer": "0x51cc(4, valor, 0xfffc)",
+    "values": {
+      "0x1fe32": {
+        "value": 0,
+        "P40": 0,
+        "P41": 0,
+        "xor": 0,
+        "meaning": "apagar"
+      },
+      "0x1fe50": {
+        "value": 1,
+        "P40": 1,
+        "P41": 0,
+        "xor": 1,
+        "meaning": "movimiento"
+      },
+      "0x1fe86": {
+        "value": 2,
+        "P40": 0,
+        "P41": 1,
+        "xor": 1,
+        "meaning": "movimiento"
+      },
+      "0x1feb6": {
+        "value": 3,
+        "P40": 1,
+        "P41": 1,
+        "xor": 0,
+        "meaning": "freno/pasivo"
+      }
+    },
+    "circuit": "Q6801 excitado por XOR IC6800 (P40 XOR P41); 0 y 3 dan XOR=0, 1 y 2 dan XOR=1. El freno 3 no es una orden de movimiento; su efecto físico (corto/frenado) no está medido."
+  },
+  "verdict": {
+    "normal_capture_and_rearm": "sin primitivas del motor con gate 0 + tipo 0",
+    "exceptions": [
+      "operación 5: 0x1feb6 (P40/P41=3, XOR=0) sin compuerta",
+      "P4B/P4C siguen activos y su efecto físico no está medido",
+      "0x1989c (error 6 ADC) puede dispararse en load(0) y encolar operación 5"
+    ]
+  }
+}

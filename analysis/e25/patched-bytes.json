@@ -1,0 +1,35 @@
+{
+  "schema": "a6000.e25.patched.v1",
+  "input_sha256": "55a366a5fc95f01ccb044ae352db90f0122ee779cab69063b6b99da8b3dcea1d",
+  "variant": "tipo0_322",
+  "tipo0_present": true,
+  "gate_bytes": "70b500250ae0fbf708f90409062c05d2dfe804f00403030303032546284670bd",
+  "gate_disassembly": [
+    "0x1fe66: push {r4, r5, r6, lr}",
+    "0x1fe68: movs r5, #0",
+    "0x1fe6a: b #0x1fe82",
+    "0x1fe6c: bl #0x1b080",
+    "0x1fe70: lsrs r4, r0, #4",
+    "0x1fe72: cmp r4, #6",
+    "0x1fe74: bhs #0x1fe82",
+    "0x1fe76: tbb [pc, r4]",
+    "0x1fe7a: lsls r4, r0, #0xc",
+    "0x1fe7c: lsls r3, r0, #0xc",
+    "0x1fe7e: lsls r3, r0, #0xc",
+    "0x1fe80: mov r5, r4",
+    "0x1fe82: mov r0, r5",
+    "0x1fe84: pop {r4, r5, r6, pc}"
+  ],
+  "returns_zero": true,
+  "reads_gate": false,
+  "three_starters_use_L0": true,
+  "L0": [
+    0,
+    7,
+    8,
+    9,
+    10
+  ],
+  "type0_bytes": "09e000bf00bf00bf",
+  "type0_preserved": true
+}
