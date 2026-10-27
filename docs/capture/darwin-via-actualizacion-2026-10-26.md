@@ -37,3 +37,16 @@ El tipo de mecanismo de Darwin es el byte `0x20000050+ch`, que el firmware princ
 
 ## Recomendación
 No instalar. El parche tipo 0 es probablemente el experimento Darwin más pequeño que existe, pero apaga las bobinas en todos los modos y no resuelve el fin de exposición del sensor. Primero localizar el emisor del tipo de mecanismo (vía RAM, sin flash); solo si no hay vía RAM y el usuario lo autoriza expresamente, evaluar el FDAT.
+
+## Búsqueda del emisor del tipo de mecanismo (segunda sesión, 26-10-2026) — NO LOCALIZADO
+Objetivo: saber si `av-cam` envía a Darwin el byte `[0x20000050+ch]` (tipo de mecanismo) para forzarlo por RAM. Resultado: **emisor no hallado**; lo establecido:
+
+| Hecho | Estado |
+|---|---|
+| Tabla de manejadores CAIF categoría `0x2d` en `0x2a1a0`: 8 B por entrada `(cabecera 0x2d000N, manejador)`; entrada 33 (`0x2a2a8`) = `0x1b0b3` (valida el canal). Otros manejadores no nulos: ids 0 `0xd4b9`, 1 `0xd97d`, 14 `0x1bd7b`, 15 `0x1cd7b`, 16 `0xd92b`, 17 `0x1b167`, 31 `0x1cd97` | VERIFICADO |
+| La carga inicial de RAM de Darwin (tabla de arranque `0x2a744`) solo cubre `0x20002a00..` (descompresión `0x4d0` B) y `0x20002ed0..` (cero, `0xf8c` B). La región `0x20000000..0x20002a00` (incluye `+0x50`) **no** se inicializa desde la ROM: la rellena el firmware en ejecución (mensajes o copias) | VERIFICADO |
+| En Darwin no hay formación de puntero `base+0x50` ni literal `0x20000050` (reconfirmado) | VERIFICADO (cobertura de literales/`add #0x50`) |
+| En `av-cam`, la tabla `{cmd,size,texto}` de 51 entradas está en `0x43fe8730..`; `0x0400018a` = `Sens:AdjCmd DwnCamera` (12 B), `0x0400018c` = `DwnCamera Done`. Ninguna constante `0x0400018a/18c/188/189/180` aparece en código ni en pools (fuera de la propia tabla): son identificadores de la herramienta de ajuste (S143: utilidad de calibración del sensor, no de obturador) | VERIFICADO |
+| Referencias a las cadenas `Sens:*` por pools PIC y por GOT (225 bases probadas, formas `ldr pc`/`ldr.w imm12`): ninguna coincidencia fiable | NEGATIVO con cobertura limitada |
+
+Conclusión: el valor llega a Darwin por un camino no identificado (probablemente un bloque copiado por mensaje desde el firmware principal). **No se puede afirmar que exista una vía de RAM** ni que no exista. Sigue abierto: (a) cartografiar con REA los emisores CAIF hacia Darwin (categoría `0x2d`); (b) verificar `sio3/sio4` como enlace Linux↔Darwin; (c) solo entonces, el FDAT.
