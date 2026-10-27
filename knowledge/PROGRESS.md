@@ -2842,3 +2842,6 @@ r5 300/1240/2500 oscurece la foto de forma monótona (138,5/121,7/93,1 frente a 
 
 ## 27-10-2026 — T037: r7 con ShutMode 0 + r5=2500 (E23), incidente
 r7 0–64 sin efecto sobre el degradado. En r7=255 telnet y ADB dejaron de abrir shell; reversión no verificada; pendiente apagado completo y comprobación del código.
+
+## 27-10-2026 — T038: r6 con ShutMode 0 + r5=2500 (E23), cuelgue
+r6=0 sin efecto sobre el degradado; r6=4 cuelga la captura y la cámara sale de la red. Parches revertidos y verificados antes de la caída; pendiente apagado completo.
