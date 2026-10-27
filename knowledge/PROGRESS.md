@@ -2833,3 +2833,6 @@ Solo lectura. En la vista en directo solo r5 (`param+0`) cambia con la velocidad
 
 ## 27-10-2026 — T034: r5 forzado en la foto (E23)
 Parche en RAM r5=1240 (valor de vista en directo a 1/4000), un disparo a 1/250: misma luminancia que el control (121,8/119,9). En ShutMode 3 r5 solo no acorta la exposición; falta probar combinado con ShutMode 0.
+
+## 27-10-2026 — T035: ShutMode 0 + r5 en la foto (E23)
+Con ShutMode 0 forzado, r5=1240 oscurece la foto (143,7 → 121,7), sobre todo arriba; imagen íntegra. Primera exposición electrónica controlable en foto completa, todavía no uniforme.
