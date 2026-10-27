@@ -13,9 +13,12 @@ Proyecto abierto: hay piezas reales y reutilizables, pero **ninguna captura sile
 capacidad ni la imposibilidad de fotografía totalmente electrónica a resolución completa.
 
 - **S51: A=NO, B=NO, C=NO** ([decisión](capture/s51-decision.md)): sin ruta demostrada, sin base para un parche, sin prueba de imposibilidad.
+- **E25-04: A=NO, B=NO, C=NO, D=NO, E=SÍ, F=NO, G=NO** ([informe](capture/e25-04-recuperabilidad-y-decision.md)): no hay recuperación
+  independiente de Darwin demostrada (ni USB, ni bootloader sin la aplicación, ni hardware verificado); B1a **no es instalable**.
+  R1 tiene procedimiento y manifiesto (62/62 archivos, `verify` OK contra el origen), pero **la copia externa no está hecha ni verificada**.
 - Estáticos cerrados con límite: E2–E5, E7, E8, E10 (a–c), E12, E14–E20, D1, D3, D4 y D6 ([evidencia](capture/s403-cierre-pendientes.md));
   E1 `NO_VERIFICADO` sin vías estáticas. Bloqueados por datos o hardware: E6, E9, E11, E13, D5; físicos F1–F6 (P1–P4, P6, P13–P16, P18–P21 ejecutadas el 26-10-2026 por USB (T001–T021, [registro](capture/registro-pruebas-camara.md)); P5/P11 caen con F4, P7/P17 descartadas; E22 cerrado con límite ([informe](capture/tipo2-analisis-estatico-2026-10-26.md)));
-  respaldo R1–R3 (R3: historial con un binario de Sony). Sin firmware ejecutado ni cámara.
+  respaldo R1 parcial (procedimiento y manifiesto; falta copia externa verificada), R2 cerrado y R3 bloqueado (historial con un binario de Sony). Sin firmware ejecutado ni cámara.
 - Datos de auditoría y memoria temporal: [estado.json](../knowledge/audit/estado.json), [memoria.json](../knowledge/audit/memoria.json)
   (`scripts/audit/repo_audit.py`). Viabilidad por escenarios (17-10-2026): [estado-y-viabilidad](estado-y-viabilidad-2026-10-17.md).
 - Los 133/372 del censo miden **documentación de etiquetas**, no código recuperado ni funcionamiento ([matriz de cobertura](capture/s51-static-coverage-and-tool-limits.md)).
@@ -42,6 +45,7 @@ Etiquetas: **V** = VERIFICADO (bytes/instrucciones), **I** = INFERENCIA, **N** =
 | PMCA | `updatershell` inyecta un fdat propio (guard CRC + modelo/región/versión **sin firma**); `bk w 0x003e0005` escribe la propiedad `modelName` (`ILCE-6000` de fábrica); el efecto «shell mode» de `ILCE-6001` es no verificado | V / N | [S62](capture/s62-pmca-injection.md) |
 | Patrón de logging | La fw3.21 reescribe etiquetas de trazas, no funcionalidad (9+ ejemplos); la presencia de una cadena **no** prueba una funcionalidad | V / I | [S128](capture/s128-label-map.md), [S130](capture/s130-new-modules.md), [S174](capture/s174-forliro-api.md) |
 | Arranque y recuperación (E24-01) | Darwin (IC5700) es también el **control de energía**: `darwin_core` sube `DD_ON1/2/3` (núcleo y LPDDR2 del BIONZ). **No está demostrado** que el actualizador USB arranque sin `darwin_core`. El script del actualizador ignora el resultado de `ud_darwin_init`. La entrada por pmca exige el sistema normal (batería vía `upm`) | V / I | [E24-01](capture/e24-01-arranque-recuperacion.md) |
+| Recuperabilidad y B1a (E25-04) | **No hay recuperación independiente de Darwin demostrada**: ni USB (depende de `DD_ON*`), ni acceso al bootloader sin la aplicación, ni hardware verificado; solo el puerto físico (`MD0_DWN`, `XDWN_RESET`, UART, SWD, `CN4906` no montado) está documentado. El plan 3.24/3.25 es formalmente correcto, pero el 3.23 no recupera un Darwin defectuoso; si se instala 3.24 hace falta ≥3.25. R1: procedimiento y manifiesto listos (62/62, `verify` OK contra el origen), copia externa sin verificar. L0 no tiene contradicción estática con BIONZ (estado 9 libera el bit 24, el 10 es terminal, mensajes de la máquina de captura, estado 31 sin cambio); P29, `pkt[2..3]` y el lector BIONZ del fin siguen abiertos. **B1a no es instalable** | V / I / N | [E25-04](capture/e25-04-recuperabilidad-y-decision.md) |
 
 ## Conclusiones corregidas (no reusar versiones previas)
 

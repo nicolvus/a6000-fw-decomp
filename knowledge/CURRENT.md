@@ -1,6 +1,6 @@
 # Estado actual — léeme primero
 
-Contexto operativo mínimo para agentes. Última revisión: 27-10-2026 (E24-05e/h-5, protocolo preparado). Este archivo **no** es
+Contexto operativo mínimo para agentes. Última revisión: 27-10-2026 (E25-04, decisión de recuperación; R1 pendiente de copia externa). Este archivo **no** es
 historial ni fuente de verdad de los pendientes: ver [Responsabilidades](#responsabilidades-documentales).
 La versión íntegra anterior (2264 líneas, instantáneas S59–S627) está en
 [history/CURRENT-historial-2026-10-26.md](history/CURRENT-historial-2026-10-26.md); nada se borró.
@@ -17,6 +17,10 @@ flasheo salvo autorización expresa del usuario para un caso concreto.
 
 - **Decisión [S51](../docs/capture/s51-decision.md): A=NO, B=NO, C=NO.** No hay ruta de exposición totalmente electrónica
   demostrada (A), ni base para un parche justificable (B), ni prueba de imposibilidad por hardware (C). Sin cambios desde S51.
+- **Recuperabilidad y B1a ([E25-04](../docs/capture/e25-04-recuperabilidad-y-decision.md)): A=NO, B=NO, C=NO, D=NO,
+  E=SÍ, F=NO, G=NO.** No hay recuperación independiente de Darwin demostrada (USB, bootloader sin la aplicación
+  o hardware verificado); B1a **no es instalable**. R1: procedimiento y manifiesto listos (62/62, `verify` OK contra
+  el origen), **copia externa sin verificar**. La única acción que cambia G exige hardware (donante + SWD/UART).
 - Estático: todo cerrado **con límite** salvo E1 (`NO_VERIFICADO`, sin vías estáticas); lo restante está bloqueado por datos
   (E6, E9, E11, E13, D5) o es físico (F1–F6; pruebas por USB ya hechas el 26-10-2026: T001–T021, ver [registro](../docs/capture/registro-pruebas-camara.md); el tipo 2 se fuerza y no cambia el obturador; E22 cerrado con límite). Lista y estados:
   [PENDIENTES](../docs/PENDIENTES.md).
@@ -100,9 +104,10 @@ Para la trazabilidad completa: [CORRECTIONS](../docs/CORRECTIONS.md) y [STATE §
 |---|---|---|
 | E1 | NO_VERIFICADO | Origen del local 4/2 a `ModelScalarPb`/`ModelPbCap`; todo emisor posible es de datos o ejecución |
 | E25 | CERRADO CON LÍMITE; E25-01/03 BLOQUEADOS | Candidato offline tipo 0 + compuerta 0 (2 bytes); **E25-02 cierra A=NO** (sin emisor BIONZ de `0x16`; `0x16` copia 129 B, no 1 B); B1a auditado (42 pruebas); falta validación física (M0 físico/M1) y fin de L0/BIONZ |
+| E25-04 | CERRADO CON LÍMITE | Recuperación de Darwin: A/B/C/G=NO; H exige hardware (donante + SWD/UART + corromper/recuperar); R1 sin copia externa |
 | E6, E9, E11, E13, D5 | BLOQUEADO | Darwin fuera de `av-cam`; semántica de 112 registros y fin de integración; enlace banco/bit→P4E; servicio ODL/MMIO `0xf292b000`; hojas de datos IMX210/IMX235 |
 | F1–F8 | DIFERIDO / BLOQUEADO | P1–P24 (inventario en [revisión](../docs/capture/physical-test-review-2026-10-26.md)); traza de bus; Darwin real; revisión de S51 solo con evidencia nueva |
-| R1, R3 | ABIERTO / BLOQUEADO | Sin respaldo externo de firmware/volcados; historial público con `libmprctrl.so` (reescritura solo con orden expresa) |
+| R1, R3 | PARCIAL / BLOQUEADO | R1: procedimiento y manifiesto listos (62/62), **copia externa sin verificar**; R3: historial público con `libmprctrl.so` (reescritura solo con orden expresa) |
 
 ## Bloqueos y límites de evidencia
 
@@ -114,7 +119,7 @@ Para la trazabilidad completa: [CORRECTIONS](../docs/CORRECTIONS.md) y [STATE §
 
 1. Si se reabre lo estático: seguir el productor de `0x10000005` hasta la entrada de estado 2 de `StateMgr` y `0x90de2e → RecordImage`;
    fijar tamaño/contenido de Backup `0x3000b` antes de atribuir valores a los gates `+3/+6`; enlaces IMX210/YC/archivo/cortina y cuerpos locales de RecordStill (ocho parejas).
-2. Pedir al usuario: hojas de datos (D5), mapa de pines (E11), decisión sobre respaldo (R1) e historial (R3), P10 (offset del campo de captura), medir ráfaga y verificar `sio3/sio4` si se quiere seguir con la cámara.
+2. Pedir al usuario: hojas de datos (D5), mapa de pines (E11), copia externa y verificación (R1), decisión sobre historial (R3), P10 (offset del campo de captura), medir ráfaga y verificar `sio3/sio4` si se quiere seguir con la cámara.
 3. Mantener la documentación según el protocolo de abajo.
 
 ## Protocolo de sesión

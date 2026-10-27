@@ -1,5 +1,21 @@
 # Progreso — sistema de conocimiento Sony A6000
 
+## E25-04 — Recuperabilidad de Darwin y decisión sobre B1a — 27-10-2026
+
+Auditoría 100 % offline (base `2cf51593`). **A=NO, B=NO, C=NO, D=NO, E=SÍ, F=NO, G=NO.** No hay
+recuperación independiente de la aplicación Darwin demostrada: el USB depende de `DD_ON1/2/3` de
+`darwin_core`, el acceso al bootloader sin la aplicación no está demostrado y el puerto físico
+(`MD0_DWN`, `XDWN_RESET`, UART, SWD, `CN4906` no montado) está documentado pero no verificado. El plan
+3.24/3.25 es formalmente correcto, pero el 3.23 no recupera un Darwin defectuoso y, si se instala 3.24,
+la recuperación debe ser ≥3.25. R1: procedimiento `scripts/recovery/r1_manifest.py` + inventario;
+manifiesto local 62/62, 0 requeridos ausentes, `verify` OK contra el origen; **la copia externa no está
+hecha ni verificada**, así que R1 sigue abierto. F = NO: L0 no tiene contradicción estática con BIONZ
+(estado 9 libera el bit 24, el 10 es terminal, los mensajes obligatorios salen de la máquina de captura,
+el estado 31 no cambia); P29, `pkt[2..3]` y el lector BIONZ del fin siguen abiertos. Pruebas nuevas:
+`tests/test_e25_04_recuperabilidad.py` (2) y `tests/test_r1_manifest.py` (6); 239 pruebas E24/E25 verdes.
+No se generó FDAT, no se tocó B1a y no se abrió la cámara. Informe:
+[E25-04](../docs/capture/e25-04-recuperabilidad-y-decision.md).
+
 ## Reorganización documental — 26-10-2026
 
 Cronología: README, `knowledge/CURRENT.md` y `docs/STATE.md` acumulaban resultados por sesión (Sxx) y bloques por fecha; se redujeron a

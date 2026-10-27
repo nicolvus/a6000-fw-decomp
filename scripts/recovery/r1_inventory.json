@@ -1,0 +1,142 @@
+{
+  "schema": "a6000.r1.inventory.v1",
+  "note": "Archivos críticos para reconstruir el estado de la cámara y el plan de recuperación. Rutas relativas a la raíz del repositorio. Los binarios, volcados y manuales NO se versionan; este inventario solo describe qué copiar fuera del disco.",
+  "entries": [
+    {
+      "role": "nvram_referencia",
+      "glob": "analysis/camera-dumps/nvram-referencia-20261020-214913/*",
+      "required": true,
+      "note": "NVRAM BK4 de referencia (fw 3.21, cámara funcionando): backup_flash, backup_mem, bootrom, status, info y SHA256SUMS."
+    },
+    {
+      "role": "nvram_pre_t024",
+      "glob": "analysis/camera-dumps/20261026-232912-pre-T024-darwin-tipo0/*",
+      "required": true,
+      "note": "Última NVRAM tomada antes del flasheo tipo 0 (26-10-2026). Es la referencia más reciente del estado 3.21."
+    },
+    {
+      "role": "nand_logica",
+      "glob": "analysis/camera-dumps/nand-20261020/dev_nflasha*.bin",
+      "required": true,
+      "note": "NAND lógica completa (/dev/nflasha) y particiones 1-18/23 del volcado del 20-10-2026. Sin vía de escritura por software, pero es la única copia del estado físico."
+    },
+    {
+      "role": "nand_meta",
+      "paths": [
+        "analysis/camera-dumps/nand-20261020/SHA256SUMS",
+        "analysis/camera-dumps/nand-20261020/README.md",
+        "analysis/camera-dumps/nand-20261020/shell.txt"
+      ],
+      "required": true,
+      "note": "Hashes, contexto y shell del volcado de NAND."
+    },
+    {
+      "role": "firmware_original",
+      "paths": [
+        "firmware/original/Update_ILCE6000V321.dmg"
+      ],
+      "required": true,
+      "note": "Instalador oficial 3.21 de la A6000 (fuente del firmware.tar y updater.img)."
+    },
+    {
+      "role": "firmware_extraido",
+      "paths": [
+        "firmware/extracted/fw321/firmware.fdat",
+        "firmware/extracted/fw321/firmware.tar",
+        "firmware/extracted/fw321/updater.img",
+        "firmware/extracted/fw321/config.yaml"
+      ],
+      "required": true,
+      "note": "FDAT, tar y updater oficiales extraídos; entradas para reconstruir el 3.23 y un futuro 3.25."
+    },
+    {
+      "role": "darwin_original",
+      "paths": [
+        "firmware/extracted/fw321/firmware.tar_unpacked/0640_darwin/darwin_core.bin",
+        "firmware/extracted/fw321/firmware.tar_unpacked/0641_darwin_sum/darwin.sum"
+      ],
+      "required": true,
+      "note": "darwin_core.bin oficial 3.21 (SHA-256 5f2be06d...) y su darwin.sum. Es el núcleo que restaura el FDAT de recuperación."
+    },
+    {
+      "role": "fdat_recuperacion_323",
+      "paths": [
+        "analysis/darwin-patch/fdat/recuperacion-323/firmware_packed.dat",
+        "analysis/darwin-patch/fdat/recuperacion-323/firmware_packed.fdat",
+        "analysis/darwin-patch/fdat/recuperacion-323/config-323.yaml"
+      ],
+      "required": true,
+      "note": "FDAT de recuperación 3.23: core original, tar y updater oficiales, reproducible byte a byte. No probado en hardware."
+    },
+    {
+      "role": "fdat_instalado_322_tipo0",
+      "paths": [
+        "analysis/darwin-patch/fdat/firmware_packed.dat",
+        "analysis/darwin-patch/fdat/firmware_packed.fdat",
+        "analysis/darwin-patch/fdat/firmware_tipo0.tar",
+        "analysis/darwin-patch/fdat/config-322.yaml"
+      ],
+      "required": true,
+      "note": "FDAT 3.22 con el Darwin tipo 0 que se instaló en T024; documenta el estado actual (supuesto 3.22)."
+    },
+    {
+      "role": "darwin_tipo0",
+      "paths": [
+        "analysis/darwin-patch/darwin_core_tipo0.bin",
+        "analysis/darwin-patch/darwin.sum.tipo0",
+        "analysis/darwin-patch/README.md"
+      ],
+      "required": true,
+      "note": "Copia del Darwin tipo 0 instalado (SHA-256 ca41b46c...); entrada del candidato B1a."
+    },
+    {
+      "role": "candidato_b1a",
+      "paths": [
+        "analysis/e25/darwin_core_tipo0_sin_rearme.bin",
+        "analysis/e25/manifest_tipo0_sin_rearme.json"
+      ],
+      "required": true,
+      "note": "Candidato B1a (SHA-256 55a366a5...) y su manifiesto de parche. No instalar; solo preservar los bytes exactos."
+    },
+    {
+      "role": "controles_b1a",
+      "paths": [
+        "analysis/e25/darwin_core_original_sin_rearme.bin",
+        "analysis/e25/manifest_original_sin_rearme.json",
+        "analysis/e25/patched-bytes.json",
+        "analysis/e25-02/audit.json"
+      ],
+      "required": false,
+      "note": "Controles diferenciales y auditoría independiente de B1a. Regenerables, pero útiles para verificar la copia."
+    },
+    {
+      "role": "registro_instalacion_t024",
+      "paths": [
+        "analysis/camera-dumps/20261026-T024-darwin-tipo0/flash.log",
+        "analysis/camera-dumps/20261026-T024-darwin-tipo0/info-post.txt"
+      ],
+      "required": false,
+      "note": "Registro del único flasheo persistente ejercitado (3.21 -> 3.22)."
+    },
+    {
+      "role": "manuales_referencia",
+      "paths": [
+        "references/manuals/a6000_service_L3.pdf",
+        "references/manuals/fm3_peripheral_main.pdf",
+        "references/manuals/a6000_service_L3.txt",
+        "references/manuals/fm3_peripheral_main.txt"
+      ],
+      "required": false,
+      "note": "Manual de servicio L3 y manual de periféricos FM3. Copyright de terceros: solo copia local/externa, nunca al repositorio."
+    },
+    {
+      "role": "otros_modelos",
+      "paths": [
+        "firmware/original/Update_ILCE7SV320.exe",
+        "firmware/original/Update_ILCE6300V201.exe"
+      ],
+      "required": false,
+      "note": "Paquetes A7S/A6300 usados como referencia comparativa; no recuperan esta cámara."
+    }
+  ]
+}
