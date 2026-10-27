@@ -16,3 +16,24 @@ Motivo: el obturador mecánico en tipo 2 se atribuye a que el Darwin de la A6000
 
 ## Corrección
 Frases previas del tipo «no hay volcado de Darwin» se refieren a la **lectura en vivo** del MCU (P6, negativa), no a su firmware: la imagen oficial existe y está analizada.
+
+## Revisión del parche preparado (sin instalar)
+Artefactos en `analysis/darwin-patch/` (el `.bin` no se versiona: deriva de firmware de Sony).
+
+| Punto | Resultado | Estado |
+|---|---|---|
+| CRC-32 original de `darwin_core.bin` = `9ff7148c` = el de `darwin.sum` | coincide; el cálculo local reproduce la suma del updater | VERIFICADO |
+| Parche | `0x20c78..0x20c7f` = `b 0x20c8e` + 3 `nop`; `0x20c74` devuelve siempre 0 (7 bytes distintos de 8 tocados; mismo tamaño) | VERIFICADO (desensamblado del resultado) |
+| Efecto buscado | tipo de mecanismo 0 ⇒ `0x20cb2/0x20cd4/0x20c90` omiten las bobinas P4D/P4E (rama sin bobinas ya presente) | VERIFICADO estáticamente; efecto físico NO VERIFICADO |
+| CRC-32 del parcheado | `0e2620b4` (`darwin.sum.tipo0`) | calculado |
+| Alcance | **global**: ninguna bobina se acciona en ningún modo (también rearme y vídeo), no solo con Silent (S53 §«alternativa tipo 0») | VERIFICADO estático |
+| Fin de la exposición | sin cortinas, la exposición solo la termina el sensor; el fin electrónico del IMX210 en foto completa NO está demostrado (S51/S52). Riesgo de imágenes sobreexpuestas o sin lectura válida | NO VERIFICADO |
+| Rearme tras tipo 0 | S54 H54-5: «tipo 0 ≠ en reposición»; el rearme podría quedar mal | NO VERIFICADO |
+| ¿Valida algo más el MCU/`ud_darwin_firmup`? | desconocido (`ud_darwin_firmup.elf` no desensamblado) | NO VERIFICADO |
+| FDAT propio | NO generado; el empaquetado de extremo a extremo (212 MB) nunca se ejecutó y no hay prueba de que la cámara acepte una `nflasha*`/`0640_darwin` modificada | NO VERIFICADO |
+
+## Alternativa sin flasheo (a investigar antes que nada)
+El tipo de mecanismo de Darwin es el byte `0x20000050+ch`, que el firmware principal le envía por CAIF (categoría `0x2d`, entrada 33, S54); el escritor/emisor del valor no está localizado. Si la cámara lo envía en cada arranque o disparo, sería posible forzar el tipo 0 con un parche **en RAM** de `av-cam` (reversible, como T020) en lugar de reflashear Darwin. Falta localizar ese emisor en `av-cam`.
+
+## Recomendación
+No instalar. El parche tipo 0 es probablemente el experimento Darwin más pequeño que existe, pero apaga las bobinas en todos los modos y no resuelve el fin de exposición del sensor. Primero localizar el emisor del tipo de mecanismo (vía RAM, sin flash); solo si no hay vía RAM y el usuario lo autoriza expresamente, evaluar el FDAT.
