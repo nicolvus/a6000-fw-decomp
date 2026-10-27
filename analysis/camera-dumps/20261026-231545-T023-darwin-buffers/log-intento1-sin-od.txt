@@ -1,0 +1,11 @@
+    reposo ID 0x12 (03 07, 4 B): dd if=/dev/mem bs=1 skip=2214141486 count=4 2>/dev/null | od -An -tx1; echo
+    reposo ID 0x0f (03 04, 2 B): __END0__ / # dd if=/dev/mem bs=1 skip=2214141732 count=2 2>/dev/null | od -An -tx1; echo __END1__ sh: od: not found
+    reposo ID 0x13 (03 08, 10 B): dd if=/dev/mem bs=1 skip=2214141722 count=10 2>/dev/null | od -An -tx1; echo __END2__ sh: od: not found
+disparo 1: 6.138 s | done 49755
+    tras 1 ID 0x12 (03 07, 4 B): dd if=/dev/mem bs=1 skip=2214141486 count=4 2>/dev/null | od -An -tx1; echo
+    tras 1 ID 0x0f (03 04, 2 B): __END0__ / # dd if=/dev/mem bs=1 skip=2214141732 count=2 2>/dev/null | od -An -tx1; echo __END1__ sh: od: not found
+    tras 1 ID 0x13 (03 08, 10 B): dd if=/dev/mem bs=1 skip=2214141722 count=10 2>/dev/null | od -An -tx1; echo __END2__ sh: od: not found
+disparo 2: 6.041 s | done 47091
+    tras 2 ID 0x12 (03 07, 4 B): dd if=/dev/mem bs=1 skip=2214141486 count=4 2>/dev/null | od -An -tx1; echo
+    tras 2 ID 0x0f (03 04, 2 B): sh: od: not found __END0__ / # dd if=/dev/mem bs=1 skip=2214141732 count=2 2>/dev/null | od -An -tx1; echo __END1__ sh: od: not found
+    tras 2 ID 0x13 (03 08, 10 B): dd if=/dev/mem bs=1 skip=2214141722 count=10 2>/dev/null | od -An -tx1; echo __END2__ sh: od: not found

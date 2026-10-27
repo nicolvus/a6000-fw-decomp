@@ -37,8 +37,8 @@ pregunta concreta: ¿puede la cámara hacer fotos a resolución completa **sin c
 - **Cobertura de la ruta del obturador:** [matriz de descompilación y límites REA/Unicorn](docs/capture/s51-static-coverage-and-tool-limits.md).
 - **Pruebas físicas:** [P1–P8](docs/capture/physical-test-plan.md), [P9–P12](docs/capture/s402-physical-test-mapping.md) y
   [P13–P21](docs/capture/physical-test-plan-2.md) propuestas, **ninguna ejecutada**, diferidas por orden del usuario.
-- **Último cierre (26-10-2026):** E19, E17 y el resto de E10 cerrados con límite; E20 en su límite estático; CI de la suite (R2); auditoría
-  integral del repositorio. Cierres y su evidencia: [S403](docs/capture/s403-cierre-pendientes.md).
+- **Último cierre (27-10-2026):** E23 (pruebas en cámara con autorización expresa): ShutMode 0/4 en RAM cambia la exposición y `r5` es el
+  candidato a registro de exposición electrónica; E24-04/05/05a cerrados con límite. Antes: E19, E17, E10, E20 y CI (R2) ([S403](docs/capture/s403-cierre-pendientes.md)).
 
 ![progreso](https://nicolvus.github.io/a6000-fw-decomp/progress/progress.svg)
 

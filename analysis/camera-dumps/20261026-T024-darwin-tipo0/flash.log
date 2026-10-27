@@ -1,0 +1,42 @@
+  r = re.compile('<div class="camera-manage-box" id="(?P<deviceid>\d*?)">.*?<td class = "w104 h20">(?P<name>.*?)</td>.*?<span class="sirial-hint">Serial:(?P<serial>.*?)</span>', re.DOTALL)
+  yield MarketApp(app['app_id'], re.sub('\s+', ' ', app['app_name']), app['appimg_url'], None if app['app_price'] == 'Free' else app['app_price'], int(app['regist_date']))
+  m = self._consume('\s+')
+  m = self._consume('([^\s"\'\\\\]|\\\\[^\s])*(\\\\(?=(\s|$)))?')
+  while self.available() and not self._match('\s'):
+No native drivers available
+Using drivers libusb-MSC, libusb-MTP, libusb-vendor-specific
+Looking for Sony devices
+
+Querying mass storage device
+Sony DSC is a camera in mass storage mode
+
+Initializing firmware update
+Updating from version 3.21 to version 3.22
+Switching to updater mode
+
+Waiting for camera to switch...
+Please follow the instructions on the camera screen.
+Initializing firmware update
+Updating from version 3.21 to version 3.22
+Writing firmware
+5%
+10%
+15%
+20%
+25%
+30%
+35%
+40%
+45%
+50%
+55%
+60%
+65%
+70%
+75%
+80%
+85%
+90%
+95%
+100%
+Done

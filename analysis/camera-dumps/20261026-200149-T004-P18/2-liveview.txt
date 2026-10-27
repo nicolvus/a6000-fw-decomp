@@ -1,0 +1,6 @@
+20:04:00
+dd if=/dev/mem bs=4 skip=553503552 count=8 of=/android/dev/z 2>/dev/null; ch
+root /android /system/bin/hd /dev/z | grep -v Read; rm -f /android/dev/z; echo _
+_END0__
+00000000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 s 0
+00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 s 0
