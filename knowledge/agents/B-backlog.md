@@ -23,4 +23,5 @@ negativos se limitan a los sitios examinados. [Seguimiento vigente](../../docs/c
 - [ ] Determinar condiciones de invocación y efecto de los campos del estado. S176 acredita lectores, no activación durante un disparo ni semántica física.
 - [ ] Resolver los límites del carril B (servicio ODL y significado físico de registros) con evidencia estática; consultar la [matriz S51](../../docs/capture/s51-static-coverage-and-tool-limits.md).
 
-Sin ejecución de firmware, cámara ni flasheo. Las pruebas físicas siguen diferidas.
+Sin ejecución de firmware, cámara ni flasheo (salvo autorización expresa del usuario para un caso
+concreto). Las pruebas físicas siguen diferidas.

@@ -16,7 +16,8 @@ Al terminar: informe → PENDIENTES → `docs/STATE.md` (si cambió una conclusi
 Después de editar cualquier `.md` indexado: corre `knowledge-maintenance`.
 Antes de reutilizar un hallazgo: corre `contradiction-audit` (puede estar corregido/superado).
 
-Restricciones del proyecto: sin firmware ejecutado, sin cámara, sin flasheo.
+Restricciones del proyecto: sin firmware ejecutado, sin cámara, sin flasheo salvo autorización
+expresa del usuario para ese caso concreto.
 Al terminar cada cambio versionable: validar, crear un commit convencional y subirlo
 a `origin/main` con la cuenta `nicolvus`, sin pedir nueva confirmación. La instrucción
 del usuario del 23-10-2026 autoriza esta publicación habitual; no incluir firmware

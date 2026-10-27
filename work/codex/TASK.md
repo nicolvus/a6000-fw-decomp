@@ -2,7 +2,8 @@
 
 Trabajas SOLO en `work/codex/` (escritura). Todo lo demás del repo es de solo lectura.
 Lee primero `AGENTS.md`, `knowledge/CURRENT.md` y `docs/STATE.md` § "Política de ingeniería inversa".
-Restricciones: sin ejecutar firmware, sin cámara, sin flasheo, sin git push, no modificar `firmware/`,
+Restricciones: sin ejecutar firmware, sin cámara, sin flasheo (salvo autorización expresa del usuario
+para un caso concreto), sin git push, no modificar `firmware/`,
 `analysis/ghidra/`, `silent-liro.*`. No escribas en la base Ghidra histórica (solo readOnly).
 Otro agente (Claude) tiene abierta una sesión REA sobre `work/claude/input/a7s-av-cam.bin`
 (socket `work/claude/run/rea.sock`): NO la uses ni la cierres. RAM libre ~7 GB: si necesitas abrir

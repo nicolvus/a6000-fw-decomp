@@ -60,9 +60,10 @@ Una consulta vacía de REA **no prueba ausencia**: verifica lo decisivo contra b
 
 ## 6. Límites (qué NO hacer y qué puede fallar)
 
-**Prohibido por el proyecto:** ejecutar firmware, flashear, tocar la cámara sin backup de NVRAM
-(ver `docs/STATE.md`), modificar `firmware/` o proyectos Ghidra históricos, subir binarios Sony
-(`firmware/`, `*.bin`, `*.elf`, `*.tar.gz` están en `.gitignore`), exponer secretos.
+**Prohibido por el proyecto:** ejecutar firmware, flashear (salvo autorización expresa del usuario
+para un caso concreto), tocar la cámara sin backup de NVRAM (ver `docs/STATE.md`), modificar
+`firmware/` o proyectos Ghidra históricos, subir binarios Sony (`firmware/`, `*.bin`, `*.elf`,
+`*.tar.gz` están en `.gitignore`), exponer secretos.
 
 **Puede fallar:**
 - URL de Sony caída o archivo cambiado → el hash del `.dmg` no coincide: parar y avisar al usuario.

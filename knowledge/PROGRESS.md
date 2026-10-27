@@ -2787,3 +2787,7 @@ ARM7 SRAM = código ARM de coprocesador; clave `0x3000b` igual en 18 copias; mat
 # Pruebas en cámara por USB y E22 (26-10-2026)
 
 T001–T021: P0–P4, P6, P13–P16, P18–P21 (P5/P11 caen con F4; P7/P17 sin material). Forzar `G+0x784`=2 por parche RAM es efectivo y el obturador sigue igual (T020); `D+0x86` fuera de vocabulario sin efecto (T021). E22: el tipo 2 solo llega al gestor `0x4359xxxx` y constantes de reloj; sin camino a CAIF. [Registro](../docs/capture/registro-pruebas-camara.md), [E22](../docs/capture/tipo2-analisis-estatico-2026-10-26.md). S51 sin cambios.
+
+# Cambio de restricción: flasheo (26-10-2026)
+
+Decisión del usuario: la prohibición de flashear deja de ser absoluta en los documentos de reglas (CLAUDE.md, AGENTS.md, README.md, `docs/STATE.md`, `docs/project-scope.md`, `docs/agentes-opencode.md`, `docs/agent/*`, `knowledge/CURRENT.md`, `knowledge/agents/B-backlog.md`, `work/codex/TASK.md`); ahora se levanta solo con autorización expresa del usuario para un caso concreto. No afecta "sin cámara" ni "sin firmware ejecutado", que siguen vigentes sin cambios. E23 (parche Darwin vía FDAT) sigue ABIERTO: la autorización concreta aún no se ha dado.

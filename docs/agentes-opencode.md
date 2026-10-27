@@ -32,7 +32,8 @@ subsistema y cierra con una tabla.
 
 **Nunca te detengas ni preguntes.** Prohibido cerrar el turno con un resumen o pedir confirmación: decide con el criterio de este documento, anota dudas en `NEEDS-HUMAN.md` y pasa al siguiente ítem. El humano relanza con `tools/agents/run-forever.sh <A|B|C> [modelo]`, que reinicia el agente si se detiene (parada: crear `docs/agents/STOP`).
 
-**Límites duros:** sin firmware ejecutado, sin cámara, sin flasheo, sin tocar `.venv`/ignorados, sin
+**Límites duros:** sin firmware ejecutado, sin cámara, sin flasheo (salvo autorización expresa del
+usuario para un caso concreto), sin tocar `.venv`/ignorados, sin
 `push --force`, sin reescribir historia, no editar archivos de otro agente (solo los tuyos más
 README/CURRENT.md por append). No expongas secretos. Si algo exige cámara o decisión humana, anótalo en
 `knowledge/agents/NEEDS-HUMAN.md` y sigue con otro ítem.

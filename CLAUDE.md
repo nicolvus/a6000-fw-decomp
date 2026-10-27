@@ -17,8 +17,8 @@ Antes de reutilizar un hallazgo: corre `contradiction-audit` (puede estar correg
 
 Commits: al terminar cada fase (S54 en adelante) haz SIEMPRE commit local de los cambios propios (Conventional Commits; excluye logs de sesión REA). El README principal solo se toca si cambia el estado global (tabla «Estado técnico actual» o «Último cierre»; nunca un párrafo por sesión Sxx) y haz `git push` a `origin` (GitHub personal nicolvus/a6000-fw-decomp, rama `main`) tras el commit (orden permanente del usuario, 2026-10-20).
 
-Restricciones del proyecto: sin firmware ejecutado, sin cámara, sin flasheo,
-`git push` solo según la regla de commits. Detalle completo en `docs/STATE.md`.
+Restricciones del proyecto: sin firmware ejecutado, sin cámara, sin flasheo salvo autorización expresa
+del usuario para ese caso concreto; `git push` solo según la regla de commits. Detalle completo en `docs/STATE.md`.
 
 Ingeniería inversa del firmware: **REA primero** (MCP `rea`: funciones, xrefs, llamadas, decompilación,
 `trace_native_values`) y Ghidra histórico `silent-liro.gpr` (readOnly) como respaldo cuando REA no

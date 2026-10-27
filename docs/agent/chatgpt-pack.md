@@ -5,7 +5,8 @@
 
 ## Reglas
 
-- Investigación estática: sin firmware ejecutado, sin cámara, sin flasheo.
+- Investigación estática: sin firmware ejecutado, sin cámara, sin flasheo (salvo autorización
+  expresa del usuario para un caso concreto).
 - Silencio: ejecutar sin narrar pasos intermedios; comentar solo al terminar.
 - REA primero (funciones, xrefs, decompilación, `trace_native_values`); Ghidra
   histórico `analysis/ghidra/silent-liro.gpr` (readOnly) solo como respaldo o para

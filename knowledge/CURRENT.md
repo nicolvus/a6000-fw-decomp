@@ -10,7 +10,8 @@ La versión íntegra anterior (2264 líneas, instantáneas S59–S627) está en
 Determinar con evidencia **estática** si la Sony A6000 (fw 3.21, sensor IMX210) puede capturar a resolución completa sin
 cierre mecánico (obturador totalmente electrónico). Se separa siempre `VERIFICADO` / `INFERENCIA` / `NO_VERIFICADO`;
 el análisis estático no prueba ejecución ni ausencia en cámara. Comparación con A7S fw3.20 (IMX235, tiene Silent) y
-A6300 fw2.01 (controles positivos). Restricciones: sin ejecutar firmware, sin cámara, sin flasheo, sin parche.
+A6300 fw2.01 (controles positivos). Restricciones: sin ejecutar firmware, sin cámara, sin parche, sin
+flasheo salvo autorización expresa del usuario para un caso concreto.
 
 ## Estado actual
 

@@ -7,8 +7,9 @@
 Ingeniería inversa **estática** del firmware de la **Sony A6000 (ILCE-6000, fw 3.21)**, con foco en la línea de captura y en una
 pregunta concreta: ¿puede la cámara hacer fotos a resolución completa **sin cierre mecánico** (obturador totalmente electrónico)?
 
-> Restricciones activas: no se ejecuta firmware en cámara, no se flashea y no hay pruebas físicas hasta agotar la ingeniería inversa
-> necesaria. El repositorio no incluye firmware ni volcados (ver [R1](docs/PENDIENTES.md)).
+> Restricciones activas: no se ejecuta firmware en cámara, no se flashea (salvo autorización expresa del usuario para un
+> caso concreto) y no hay pruebas físicas hasta agotar la ingeniería inversa necesaria. El repositorio no incluye firmware
+> ni volcados (ver [R1](docs/PENDIENTES.md)).
 
 ## Objetivo y alcance
 
@@ -16,7 +17,8 @@ pregunta concreta: ¿puede la cámara hacer fotos a resolución completa **sin c
   (IMX235, que sí ofrece Silent) y la **A6300 fw 2.01** (controles positivos).
 - **Método:** REA/Ghidra + bytes y decodificación independiente (LLVM); cada afirmación se etiqueta `VERIFICADO`, `INFERENCIA` o
   `NO_VERIFICADO`. Política completa en [docs/STATE.md](docs/STATE.md).
-- **Fuera de alcance por ahora:** parches, flasheo, ejecución de firmware, pruebas en cámara.
+- **Fuera de alcance por ahora:** parches, flasheo, ejecución de firmware, pruebas en cámara — salvo autorización
+  expresa del usuario para un caso concreto.
 
 ## Estado técnico actual
 

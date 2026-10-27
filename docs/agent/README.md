@@ -30,7 +30,7 @@ falla si se separan: editar siempre `.claude/skills/<name>/SKILL.md` y copiar.
 2. Comprobar entorno: `python scripts/agent/check_env.py` (con `--json` para agentes).
 3. Respetar `docs/STATE.md` § "Política de ingeniería inversa": REA primero, Ghidra
    histórico como respaldo, verificar contra bytes, firmware y proyectos intactos,
-   sin ejecutar firmware ni flashear.
+   sin ejecutar firmware ni flashear (salvo autorización expresa del usuario para un caso concreto).
 
 ## Cierre de una sesión
 

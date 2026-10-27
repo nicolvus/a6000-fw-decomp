@@ -92,7 +92,8 @@ Canónica para Codex y Claude Code; `AGENTS.md`/`CLAUDE.md` solo la resumen. No 
    hallazgos decisivos contra instrucciones y bytes reales; separar hecho, inferencia y NO_VERIFICADO.
 5. **Intactos siempre:** firmware original, `silent-liro.*`, `analysis/ghidra`, informes S1–S48; comprobar con
    SHA-256 (`analysis/rea-independent/manifests/*.final.sha256`). REA trabaja en proyecto temporal
-   `-readOnly -deleteProject`. Sin ejecutar firmware, sin flasheo, sin pruebas físicas.
+   `-readOnly -deleteProject`. Sin ejecutar firmware, sin flasheo (salvo autorización expresa del usuario
+   para un caso concreto), sin pruebas físicas.
 6. **Foco:** obturador completamente electrónico, en hitos grandes y autónomos; no ampliar infraestructura.
 7. **MCP:** `rea` en Codex (`~/.codex/config.toml`, `[mcp_servers.rea]`) y en Claude Code (`.mcp.json` del directorio padre `../`, único punto de configuración MCP/permisos; sesiones siempre desde el padre;
    usa `scripts/rea`, requiere aprobación del usuario al abrir `claude`), junto a `sony-a6000-knowledge`.
@@ -101,7 +102,8 @@ Canónica para Codex y Claude Code; `AGENTS.md`/`CLAUDE.md` solo la resumen. No 
 
 - No se ha ejecutado firmware en hardware real; no se ha flasheado ninguna cámara.
 - **Git**: el usuario ha instruido explícitamente (21-10-2026) **subir cada hito terminado a
-  `origin/main`**; sigue vigente la prohibición de subir firmware, de tocar la cámara y de flashear.
+  `origin/main`**; sigue vigente la prohibición de subir firmware y de tocar la cámara. La prohibición
+  de flashear solo se levanta con autorización expresa del usuario para un caso concreto (26-10-2026).
   Los hitos se commitean **por ruta** (nunca `git add -A`) y el repositorio se compacta con
   `git gc` (`gc.auto=512`).
 - Ningún resultado estático se ha convertido en demostración física sin evidencia adicional explícita.

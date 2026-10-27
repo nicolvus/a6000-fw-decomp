@@ -31,7 +31,8 @@ ejecución sobre hardware ni que se hayan delegado a agentes independientes.
 3. Seguir libsdcom/IPC, controladores y fronteras entre sensor y procesamiento.
 4. Documentar arranque normal, actualización y recuperación por separado.
 5. Mantener modificaciones candidatas aisladas y basadas en pruebas. No se
-   habilitan escrituras, flasheo ni pruebas en cámara con este cambio de alcance.
+   habilitan escrituras, flasheo ni pruebas en cámara con este cambio de alcance, salvo
+   autorización expresa del usuario para un caso concreto.
 
 ## Reutilización
 
