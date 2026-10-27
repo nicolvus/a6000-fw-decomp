@@ -55,6 +55,7 @@ flasheo salvo autorización expresa del usuario para un caso concreto.
 - **Recuperación (E24-03):** respaldos íntegros pero incompletos; el FDAT 3.23 lleva el `darwin_core` original y se reconstruye bit a bit, pero solo está
   demostrada una restauración de NVRAM (A=NO, B=SÍ, C=NO, D=NO). El guard exige versión mayor: el script 3.21 ya no sirve; un FDAT 3.24 exigiría recuperación 3.25.
   [informe](../docs/capture/e24-03-auditoria-recuperacion-usb.md).
+- **Dictamen de seguridad (E24-04):** NO hay evidencia para autorizar otro flasheo persistente de Darwin (A=NO, B=SÍ, C=NO, D=NO, E=SÍ, F=SÍ solo RAM). Ningún fallo de Darwin tiene recuperación demostrada; M6 no es cerrable hasta trazar estado 4→`Upd` (E24-05). La aceptación del riesgo no cuenta como comprobación. [informe](../docs/capture/e24-04-dictamen-seguridad.md).
 
 ## Correcciones fundamentales (no reutilizar las versiones previas)
 

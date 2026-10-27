@@ -359,12 +359,13 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 6. Otros subsistemas (AF, estabilización, vídeo, audio, lentes, energía, visor, accesorios, módulos de trazas)
 
-93 informes.
+94 informes.
 
 - **—** [E21 — Lecturas sin cámara de los volcados del 20-10-2026](capture/e21-lecturas-backups-2026-10-26.md)
 - **—** [E24-01 — Arranque, modo actualizador y dependencia de Darwin (27-10-2026)](capture/e24-01-arranque-recuperacion.md)
 - **—** [E24-02 — Bootloader de Darwin, protocolo de actualización y recuperación sin la aplicación (27-10-2026)](capture/e24-02-protocolo-actualizacion-darwin.md)
 - **—** [E24-03 — Auditoría de respaldos y del FDAT de recuperación 3.23 (27-10-2026)](capture/e24-03-auditoria-recuperacion-usb.md)
+- **—** [E24-04 — Dictamen de seguridad y recuperabilidad ante un nuevo flasheo persistente de Darwin (27-10-2026)](capture/e24-04-dictamen-seguridad.md)
 - **—** [Registro de pruebas en cámara (solo software, USB)](capture/registro-pruebas-camara.md)
 - **S102** [S102 — Menú principal (botón MENU): cadena de carga y apertura](capture/s102-menu-principal.md)
 - **S111** [S111 — Módulo `[TRK]`: 215 trazas, 288 sitios y 47 funciones](capture/s111-trk.md) · pruebas: [test_s111_trk.py](../tests/test_s111_trk.py) · evidencia: [s111_trk](../analysis/s111_trk)
