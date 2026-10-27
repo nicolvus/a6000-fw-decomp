@@ -2830,3 +2830,6 @@ ID1 leído en vivo: vista en directo ShutMode 0, foto ShutMode 3 (corrige T029/T
 
 ## 27-10-2026 — T033: registro de exposición electrónica en la vista en directo (E23)
 Solo lectura. En la vista en directo solo r5 (`param+0`) cambia con la velocidad (1240 a 1/4000 … 651 saturado de 1/250 a 1/15); r6/r7 fijos. Candidato a registro de inicio del reinicio electrónico; escala sin determinar.
+
+## 27-10-2026 — T034: r5 forzado en la foto (E23)
+Parche en RAM r5=1240 (valor de vista en directo a 1/4000), un disparo a 1/250: misma luminancia que el control (121,8/119,9). En ShutMode 3 r5 solo no acorta la exposición; falta probar combinado con ShutMode 0.

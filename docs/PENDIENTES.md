@@ -150,6 +150,7 @@ por esos índices.
 | 26-10-2026 | Reorganización documental (D10 cerrado). Corrección posterior: D11 (rotulado «27-10-2026» de E20/R2/R3 y su registro → 26-10-2026, fecha real de los commits `60d04b4f` y `22a84402`; el archivo `docs/history/README-historial-2026-10-26.md` conserva el rotulado original por ser copia íntegra) y D12 (tres enlaces falsos de `repo_audit.py`) cerrados. |
 | 26-10-2026 | E22 añadido: seguimiento estático del tipo 2 (parcial). |
 | 26-10-2026 | E23 añadido: vía de parcheo de Darwin por la actualización oficial (solo análisis; sin flasheo). |
+| 27-10-2026 | E23: T034, r5=1240 forzado en la foto (ShutMode 3) no cambia la exposición. |
 | 27-10-2026 | E23: T033, en la vista en directo solo r5 (`param+0`) sigue a la velocidad: candidato a registro de exposición electrónica. |
 | 27-10-2026 | E23: T031, foto = ShutMode 3, vista en directo = 0; b2 en foto da imagen corrupta. |
 | 27-10-2026 | E23: T030, ShutMode 3 forzado también cuelga la captura. |
