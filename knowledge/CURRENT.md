@@ -1,6 +1,6 @@
 # Estado actual — léeme primero
 
-Contexto operativo mínimo para agentes. Última revisión: 27-10-2026 (E24-05f). Este archivo **no** es
+Contexto operativo mínimo para agentes. Última revisión: 27-10-2026 (E24-05g). Este archivo **no** es
 historial ni fuente de verdad de los pendientes: ver [Responsabilidades](#responsabilidades-documentales).
 La versión íntegra anterior (2264 líneas, instantáneas S59–S627) está en
 [history/CURRENT-historial-2026-10-26.md](history/CURRENT-historial-2026-10-26.md); nada se borró.
@@ -61,6 +61,7 @@ flasheo salvo autorización expresa del usuario para un caso concreto.
 - **Captura y fin (E24-05a):** el ID `0x0c` (22 B) entra por la tarea `0x1811a` → `0x17f8c` → `0x1961c`, que elige entre cinco listas de la máquina de 49 estados (`S+0x44.b0`, `S+0x32`, `S+0x3c`); los estados 4/5/0x1f arrancan los rearmes y el 4 depende del predicado de clase `0x196a2`. `[0,7,8,9,10]` cumple las esperas internas de Darwin; el lector BIONZ del fin sigue sin localizar (C/D/F/G = NO; E24-05d/e). [informe](../docs/capture/e24-05a-captura-fin-bionz-darwin.md).
 - **Consumidor BIONZ (E24-05d):** BIONZ recibe de Darwin ocho mensajes mss (`0x0b,0x0d,0x0e,0x10,0x11,0x14,0x15,0x17`) por la tabla CAIF `0x43fe87f0` → buzón `[0x43e77284]` → `caif_recv` `0x437db9f0` (bloquea sin plazo, exige la subclase esperada). **Corrige E24-05a:** máscara de ocupación y anillo no viajan a BIONZ (el «bloque de estado» `0x6c78` es el registro de fallos). A=SÍ, B=NO, C=NO, D=SÍ, E=SÍ, F=NO, G=NO. [informe](../docs/capture/e24-05d-consumidor-estado-darwin-bionz.md).
 - **Emisores mss (E24-05f):** `0x0b` (admisión `0x17f8c`), `0x0d/0x15` (estado de captura 9/11), `0x0e/0x10` (estado 31 → FSM `0x296f0` estado 5), `0x11/0x14` (FSM de ajustes `0x294f8`, evento `0x18a`), `0x17` (`0x125f6`, orden de modo). Los cinco primeros no dependen de la compuerta `0x1fe66` y salen en el mismo orden en `[0,7,8,9,10]`; el byte 0 del `0x0b` lleva la clase de ocupación (corrige E24-05d B). A=SÍ, B=NO, C=NO, D=NO, E=NO, F=NO, G=NO; falta el disparo de `0x11/0x14/0x17` (E24-05g). [informe](../docs/capture/e24-05f-emisores-mss-darwin.md).
+- **Ajustes, modo y ocupación (E24-05g):** `0x18a` eran flags de `0x29514`; `0x11/0x14` los dispara el gancho de trama `0x1c04c` o el arrancador por disparo `0x17c26` (modos 0–8); `0x17` lo pide Darwin (estado 27, modo 0), no BIONZ; BIONZ lee la clase del `0x0b` en `0x438c2538` (0 acepta, 1 reintenta ≤19, 2 error). A=SÍ, B=SÍ, C=NO, D=SÍ, E=SÍ, F=NO, G=NO, H=NO demostrada; candidatos P29 y `0x2041e`→P4E (E24-05h). [informe](../docs/capture/e24-05g-ajustes-modo-ocupacion.md).
 
 ## Correcciones fundamentales (no reutilizar las versiones previas)
 

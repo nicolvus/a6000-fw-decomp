@@ -2,6 +2,9 @@
 
 Sesión 100 % estática: sin cámara, sin USB, sin escrituras de RAM/NAND/NVRAM, sin FDAT ni flasheo, sin tocar el watchdog. Continúa [E24-05d](e24-05d-consumidor-estado-darwin-bionz.md) (base `71b262da`). **No autoriza parche ni flasheo; E24-04 no cambia.**
 
+> **Corregido por [E24-05g](e24-05g-ajustes-modo-ocupacion.md):** `0x18a` no es un evento (son flags de la tabla `0x29514`, que aquí estaba leída desalineada 4 B); el `0x17` no lo ordena BIONZ, lo pide Darwin (solo modo 0).
+
+
 Binario: `darwin_core.bin` 3.21 (SHA-256 `5f2be06d…6bf4`, base `0x4200`). Método: Capstone propio (decisivo, por bytes) sobre las tablas y los manejadores; no se abrió sesión REA (el desensamblado Thumb propio resolvió todas las relaciones). Reproducible: `python scripts/e24_05f/emisores.py` (→ `analysis/e24-05f/emisores.json`) y `pytest tests/test_e24_05f_emisores.py` (16 pruebas sobre instrucciones, tablas y llamadores).
 
 ## Veredictos
