@@ -50,3 +50,22 @@ Objetivo: saber si `av-cam` envía a Darwin el byte `[0x20000050+ch]` (tipo de m
 | Referencias a las cadenas `Sens:*` por pools PIC y por GOT (225 bases probadas, formas `ldr pc`/`ldr.w imm12`): ninguna coincidencia fiable | NEGATIVO con cobertura limitada |
 
 Conclusión: el valor llega a Darwin por un camino no identificado (probablemente un bloque copiado por mensaje desde el firmware principal). **No se puede afirmar que exista una vía de RAM** ni que no exista. Sigue abierto: (a) cartografiar con REA los emisores CAIF hacia Darwin (categoría `0x2d`); (b) verificar `sio3/sio4` como enlace Linux↔Darwin; (c) solo entonces, el FDAT.
+
+## Mensajes BIONZ→Darwin: emisores localizados (tercera sesión, 26-10-2026)
+Sin REA (el demonio de `av-cam.bin` se abrió y se cerró: el resto era vtable/Thumb a mano); con barrido de bytes + capstone.
+
+**Darwin, tabla mss-async `0x27c68`** (16 B por ID desde `0x0b`: `{tx, rx, longitud, código}`; VERIFICADO). Mensajes con buffer de recepción (BIONZ→Darwin), código `03 NN 02`:
+| ID | NN | Longitud | Nota |
+|---|---|---|---|
+| `0x0c` | 1 | 22 B | paquete CAIF ev1 de captura (ya conocido) |
+| `0x0f` | 4 | 2 B | |
+| `0x12` | 7 | 4 B | |
+| `0x13` | 8 | 10 B | |
+| `0x16` | 0x0b | **210 B** | bloque de parámetros grande |
+
+**av-cam**: el despachador `0x437db85e(evento, payload)` (tabla `tbb` en `0x437db89e`, 14 eventos) envía cada mensaje. Evento 1 → `0x436b8a50(payload+0x40)`: copia 22 B a `0x43f91e32` (cabecera `03 01`). **Evento 11 → `0x436b8a70(payload+0x56)`: copia 0xd2 B a `0x43f91e48` y la cabecera `{03, 0x0b, len 0xd2}` va en `0x436b88ac` → `0x436ba234`** (VERIFICADO por bytes; coincide con ID `0x16` de Darwin). Otros eventos usan `0x43acab4a..62`, `0x436b8b8c` (payload+0x12a) y `0x436b8ba8` (+0x12e).
+El evento 11 lo emite `0x438d079c`: rellena `obj+0x56` (210 B) con `0x43af0b64`/`0x43af0b70` (envoltorios de métodos virtuales `0x43b0f5c2/…/0x43b0f678` a partir de `capture+0x3388` y `capture+0x20`) y lo envía.
+
+**Hipótesis (INFERENCIA, no demostrada):** el bloque de 210 B es el único mensaje BIONZ→Darwin lo bastante grande para llevar los 24 bytes de tipo de mecanismo (`[0x20000050+ch]`). Lo que falta es (a) ver su contenido real y (b) hallar en Darwin el consumidor del ID `0x16` (no es el buffer `0x200032cc` del camino 0x21/0x31/0x41 de `0x11fac`).
+
+**Prueba pendiente (solo lectura, sin riesgo):** leer en la cámara `0x83f91e48` (0xd2 B) y comprobar si hay 24 bytes con valores 0–3 y qué canal es el mecánico. Intentada: la cámara no respondía (`No route to host`). Si el bloque contiene el tipo, la ruta por RAM sería parchear **en `av-cam`** el campo antes del envío (reversible, como T020).
