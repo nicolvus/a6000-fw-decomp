@@ -31,6 +31,26 @@ fotos a resolución completa **sin cierre mecánico** (obturador totalmente elec
 | ¿Estado del obturador electrónico completo? | **Abierto, sin validar.** No hay ninguna captura silenciosa completa; ver [subproyecto](projects/electronic-shutter/README.md) |
 | ¿Qué falta? | Lista única y viva: [docs/PENDIENTES.md](docs/PENDIENTES.md) |
 
+## Para otro agente: estado en un minuto
+
+**Pregunta de trabajo:** ¿puede la A6000 capturar a resolución completa sin cierre mecánico? **Respuesta vigente: no demostrado** (S51 A/B/C = NO).
+
+| Línea | Estado a 27-10-2026 |
+|---|---|
+| E23 (registro `r5` con ShutMode 0 forzado) | Abierto: `r5` controla la exposición de forma monótona hasta ~4200, no uniforme. Inferencia, no prueba de obturador electrónico |
+| Rearme y compuerta `0x1fe66` (E24-05…05g) | Cerrado con límite: `0x1fe66`=0 selecciona la lista `[0,7,8,9,10]` de la máquina exterior de Darwin y evita el motor, salvo el freno de la operación 5 |
+| Captura sin rearme (E24-05h…05h-4) | Cerrado con límite, **sin bloqueo demostrado ni ausencia demostrable por estática**: el estado 31 espera P29 (`S+0x32=0`, sin plazo) o la FSM ADC-B (`S+0x32≠0`); los estados 3/32 exigen ADC-A y ADC-B terminales |
+| Medición pendiente (E24-05e, E24-05h-5) | **Preparada y no ejecutada.** Los métodos T022/T023 leen solo DRAM de BIONZ (`0x83f91e20..0x83f91f30`); **no** leen la SRAM de Darwin. Matriz EFCS ABBAAB y criterios C1–C5 en el [protocolo](docs/capture/e24-05e-05h5-protocolo-lectura.md). Una foto normal no prueba el funcionamiento sin rearme |
+| Flasheo de Darwin | **No autorizado** (E24-04: sin recuperación demostrada ante un fallo). E24-06 (conectar la cámara) tampoco |
+
+**Límites que no se deben saltar:** nada se ejecuta en la cámara, se escribe en RAM ni se flashea sin autorización expresa del usuario para ese
+caso; los valores de Darwin (SRAM `0x2000xxxx`, 12 magnitudes) no tienen vía de lectura demostrada; todo hallazgo se etiqueta
+`VERIFICADO` / `INFERENCIA` / `NO_VERIFICADO`. Antes de reutilizar una conclusión, comprobar [docs/CORRECTIONS.md](docs/CORRECTIONS.md).
+
+**Siguiente paso posible (requiere decisión del usuario):** autorizar la ejecución de las seis lecturas del protocolo, o evaluar una vía nueva
+de lectura de Darwin (analizador lógico pasivo en P29/P4B/P4C/CAIF, E24-05h-2). Orden de lectura para retomar: [CURRENT](knowledge/CURRENT.md) →
+[PENDIENTES](docs/PENDIENTES.md) (E24-05e, E24-05h-1/-5, E24-06) → [STATE](docs/STATE.md) → informes de [INDEX](docs/INDEX.md).
+
 ## Progreso
 
 - **Censo documental de etiquetas de trazas:** 133/372 (35,75 %) con informe propio; 226 pendientes y 13 descartadas. Mide
@@ -41,10 +61,9 @@ fotos a resolución completa **sin cierre mecánico** (obturador totalmente elec
   restauración de los cinco sitios parcheados ([registro](docs/capture/registro-pruebas-camara.md)).
 - **Planes de prueba física:** [P1–P8](docs/capture/physical-test-plan.md), [P9–P12](docs/capture/s402-physical-test-mapping.md) y
   [P13–P21](docs/capture/physical-test-plan-2.md). Su ejecución depende de cada autorización; el estado de cada uno está en el registro.
-- **Último cierre (27-10-2026):** E23 (pruebas T024–T039 en RAM con autorización expresa): con ShutMode 0 forzado, el registro
-  `r5` controla la exposición de la foto de forma monótona hasta ~4200 y **no** es uniforme (degradado vertical). E23 sigue
-  ABIERTO. E24-04, E24-05 y E24-05a cerrados con límite: no hay evidencia para autorizar otro flasheo de Darwin
-  ([S403](docs/capture/s403-cierre-pendientes.md)).
+- **Último cierre (27-10-2026):** E24-05h-4 (cierre estático de la captura sin rearme) y la preparación offline de E24-05e/E24-05h-5
+  ([protocolo de lectura](docs/capture/e24-05e-05h5-protocolo-lectura.md), **no ejecutado**). E23 sigue ABIERTO; E24-04 a E24-05h-4
+  cerrados con límite: no hay evidencia para autorizar otro flasheo de Darwin ni E24-06. Detalle en «Para otro agente».
 
 ![progreso](https://nicolvus.github.io/a6000-fw-decomp/progress/progress.svg)
 
