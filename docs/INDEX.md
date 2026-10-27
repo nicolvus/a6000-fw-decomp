@@ -204,10 +204,11 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 3. Obturador (cortinas, EFCS, SilentShutter, exposición electrónica completa)
 
-51 informes.
+52 informes.
 
 - **—** [Darwin: entradas verificadas para investigar el obturador](capture/darwin-shutter-entrypoints.md)
 - **—** [Darwin: fases, notificaciones y escrituras de control](capture/darwin-state-machine.md)
+- **—** [Vía de parcheo de Darwin por actualización oficial — 26-10-2026](capture/darwin-via-actualizacion-2026-10-26.md)
 - **—** [EFCS: configuración → selector de captura → IMX210 — E020](capture/efcs-capture-selector.md)
 - **—** [Captura electrónica a resolución reducida — estado y plan](capture/electronic-still-low-resolution.md)
 - **—** [FM3 GPIO ↔ cortinillas (IC5700 MB9AF004B) — Darwin A6000 3.21](capture/fm3-gpio-shutter-mapping.md)
