@@ -2799,3 +2799,7 @@ Decisión del usuario: la prohibición de flashear deja de ser absoluta en los d
 # T023: buffers BIONZ→Darwin restantes a cero (26-10-2026)
 
 Emisores de los IDs `0x12` (4 B), `0x0f` (2 B) y `0x13` (10 B) localizados en `av-cam` (`0x436b88e8/0x436b8aec/0x436b8864`); leídos en cámara (solo lectura) en reposo y tras 2 disparos: todo a cero. Ninguno de los 5 mensajes BIONZ→Darwin lleva el tipo de mecanismo; para E23 solo queda el FDAT. Script `scripts/camera_darwin_buffers.py`.
+
+# E23: FDAT tipo 0 generado y verificado, sin instalar (26-10-2026)
+
+`fwtool pack` reproduce el FDAT oficial byte a byte (control); tar oficial parcheado en sitio (15 B: Darwin + CRC), FDAT 3.22 generado (`ddc2d5db…`) y descifrado con éxito; contenido idéntico al esperado. Script `scripts/darwin_fdat_build.py`; salida en `analysis/darwin-patch/fdat/` (ignorada). Nada instalado.

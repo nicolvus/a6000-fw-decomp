@@ -95,3 +95,16 @@ Emisores en `av-cam` (VERIFICADO por bytes, base de carga `0x43541000`; físico 
 Lectura en la cámara: **los tres buffers están a cero** en reposo y tras dos disparos remotos; el paquete ev1 de 22 B (control) se lee igual que en T022.
 
 Conclusión (INFERENCIA con evidencia fuerte): ninguno de los cinco mensajes BIONZ→Darwin lleva un tipo de mecanismo no nulo (si lo llevaran a 0, Darwin no movería las bobinas, y sí las mueve). El tipo lo fija Darwin por su cuenta. Límites: muestreo después del envío (supone que los buffers no se limpian, como el de 22 B), y no cubre otros canales hacia Darwin fuera de `0x436ba234`. **La vía por RAM en `av-cam` queda descartada en la práctica; solo queda el parche de Darwin (FDAT).**
+
+## FDAT tipo 0 generado y verificado (sin instalar, 26-10-2026)
+Script `scripts/darwin_fdat_build.py`; salida en `analysis/darwin-patch/fdat/` (ignorada por git: deriva de firmware de Sony).
+
+| Paso / comprobación | Resultado | Estado |
+|---|---|---|
+| Control del empaquetador: `fwtool pack` con `firmware.tar` + `updater.img` + `config.yaml` originales | reproduce `firmware.fdat` oficial **byte a byte** (SHA-256 `603b42ec…`) | VERIFICADO |
+| `firmware.tar` modificado: parche en sitio de los datos de `0640_darwin/darwin_core.bin` y `0641_darwin_sum/darwin.sum` (mismos tamaños) | solo cambian 15 B: 7 en `0x915a78..7f` (= Darwin `0x20c78`) y 8 del CRC (`9ff7148c`→`0e2620b4`); cabeceras tar, orden y tamaño (212 011 520 B) intactos | VERIFICADO |
+| Versión del FDAT | `3.22` (el updater rechaza 3.21 sobre 3.21, «Invalid version», 20-10) | elegido |
+| FDAT generado | `firmware_packed.fdat` 212 155 392 B, SHA-256 `ddc2d5db41cfd049…`; también `firmware_packed.dat` (contenedor completo, `c19a1463…`). Reproducible: dos ejecuciones dan el mismo hash | VERIFICADO |
+| Descifrado con `fwtool unpack` del `.fdat` y del `.dat` | sin errores (fwtool comprueba magia, CRC-32 de cabecera y suma de 16 bits + bandera de último bloque en cada bloque); `firmware.tar` descifrado = el modificado, `updater.img` = el oficial, `darwin_core.bin` = `darwin_core_tipo0.bin`, `darwin.sum` con `0e2620b4`; config: modelo `0x41030035`, región 0, versión 3.22, cripto `CXD90014` | VERIFICADO |
+
+No verificado: que la cámara acepte el FDAT (el descifrado de `fwtool` usa las mismas claves que el updater, pero la cámara puede comprobar más), el bootloader del MCU, y el efecto físico. **No se ha instalado nada.**
