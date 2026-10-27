@@ -2803,3 +2803,6 @@ Emisores de los IDs `0x12` (4 B), `0x0f` (2 B) y `0x13` (10 B) localizados en `a
 # E23: FDAT tipo 0 generado y verificado, sin instalar (26-10-2026)
 
 `fwtool pack` reproduce el FDAT oficial byte a byte (control); tar oficial parcheado en sitio (15 B: Darwin + CRC), FDAT 3.22 generado (`ddc2d5db…`) y descifrado con éxito; contenido idéntico al esperado. Script `scripts/darwin_fdat_build.py`; salida en `analysis/darwin-patch/fdat/` (ignorada). Nada instalado.
+
+## 26-10-2026 — T024: Darwin tipo 0 instalado (E23)
+Con autorización expresa del usuario se flasheó el FDAT 3.22 con `darwin_core.bin` tipo 0, previo backup NVRAM y FDAT de recuperación oficial como 3.23. La cámara lo acepta y arranca; las cortinas cierran y reabren muy rápido al disparar; con «RR exp. larga» la toma de 1 s sale como resta de dos tomas (sin cortina el fotograma oscuro capta la escena); sin RR sale normal. Falta EXIF y barrido de velocidades. Informe: `docs/capture/darwin-via-actualizacion-2026-10-26.md`.
