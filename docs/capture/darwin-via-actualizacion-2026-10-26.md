@@ -75,3 +75,16 @@ El evento 11 lo emite `0x438d079c`: rellena `obj+0x56` (210 B) con `0x43af0b64`/
 - El bloque de 210 B (`0x83f91e48..0x83f91f1b`) está **entero a cero**, antes y después de un disparo.
 - Razonamiento: si el bloque se hubiera enviado con el tipo de mecanismo, el tipo valdría 0 y Darwin no accionaría las bobinas (`0x20c74`→0), pero el obturador mecánico funciona. Si no se envía, el tipo llega por otra vía. En ambos casos **el ID `0x16` no es el portador del tipo de mecanismo** (supone que el buffer estático no se limpia tras el envío, como ocurre con el de 22 B).
 - Queda: el tipo probablemente no viaja desde el firmware principal, sino que Darwin lo toma de su propia configuración (la ruta «DD»/MFS3 de S53, o constante de fábrica). **Eso elimina la vía de RAM en `av-cam` para forzar el tipo 0.** Solo quedaría el parche del propio Darwin (FDAT), que sigue sin autorizar.
+
+## Qué valida `ud_darwin_firmup.elf` (cuarta sesión, 26-10-2026, solo análisis)
+Fuente: `nand-20261020/dev_nflasha1.bin` (FAT) → `boot/initrd.img` (cramfs) → `usr/bin/ud_darwin_firmup.elf` (8156 B, ARM Thumb, sin símbolos), desensamblado con `llvm-objdump`. `us_darwin_firm.sh` lo llama como `ud_darwin_firmup.elf darwin_boo.bin darwin_core.bin`; resultado ≠ 0 ⇒ «NG» y LED `0x63`.
+
+| Hecho | Estado |
+|---|---|
+| Versión: `0x8a48` busca en el fichero la cadena ASCII `VER` seguida de `M.mm` (dígitos, ≤255 cada uno) → `u16 (M<<8)|mm`; devuelve 1 OK, 2 «not found», 3 «invalid». «Invalid» = formato de la cadena, **no** firma ni suma. `darwin_core.bin` fw321 lleva `VER0.78` en `0x2193c` (fuera de los bytes parcheados) | VERIFICADO |
+| El paquete fw321 **no trae `darwin_boo.bin`**: `open` falla ⇒ versión boo = 0 ⇒ la condición «Core Firm-Up is not needed» (`0x9080`: exige boo ≠ 0, boo nueva = antigua y core igual) nunca se cumple: **el core se reescribe siempre**, sin depender de su versión | VERIFICADO |
+| Transporte: SIO (`/dev/sio…`, `ioctl` de baudios) + GPIO CS (`UdtrGpio*`); trama con CRC-16-CCITT (`0x8b28`: semilla `0xffff`, polinomio `0x1021`, 0x7e B) y comprobación de `com_id`/`dwn_stat` en las respuestas. Integridad **del enlace**, no del contenido | VERIFICADO |
+| No hay en el updater cálculo de suma ni firma sobre la imagen completa; la única suma de la imagen es el CRC-32 de `darwin.sum` (ya recalculado: `0e2620b4`) | VERIFICADO (código del ELF completo, 0x958 B de `.text`) |
+| Que el **bootloader del propio MCU** (no incluido en el paquete) verifique la imagen antes de arrancarla | NO VERIFICADO (no hay binario que analizar) |
+
+Consecuencia: del lado Linux el parche tipo 0 cumple todo lo que se comprueba (CRC-32 recalculado, cadena `VER` intacta). Lo que sigue sin probar: el bootloader del MCU, que la cámara acepte un FDAT reempaquetado y el efecto físico (fin de exposición sin cortinas, rearme). Matiz a T022: lo que descarta es el bloque ID `0x16` como portador del tipo; los mensajes `0x0f/0x12/0x13` no se leyeron, así que «sin vía RAM» es inferencia, no prueba.
