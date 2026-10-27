@@ -2848,3 +2848,6 @@ r6=0 sin efecto sobre el degradado; r6=4 cuelga la captura y la cámara sale de 
 
 ## 27-10-2026 — T039: r5 cerca del límite con ShutMode 0 (E23)
 A 1/250, r5 4000–4200 da exposición corta y casi uniforme en la foto completa (L 27 → 4,8 frente a 152); desde 4300 sin efecto. A 1/30 aparece una banda oscura móvil. Primera obturación electrónica corta de foto completa.
+
+## 27-10-2026 — Motor de rearme en Darwin (E23, estático)
+El motor de rearme lo excita Darwin por P40/P41 (XOR IC6800 → Q6801); la posición vuelve por sensores de leva P25–P27. Primitivas en 0x1fe32/0x1fe50/0x1fe86/0x1feb6, secuencia en 0x1f3a0..0x1fd80 con errores de categoría 6. Desactivarlo requiere tratar también las comprobaciones de leva.
