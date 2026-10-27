@@ -12,6 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DETAIL = ROOT / "analysis" / "s178_census" / "census_detalle.json"
 PROGRESS = ROOT / "analysis" / "s178_census" / "census.md"
+REGISTRY = ROOT / "docs" / "capture" / "registro-pruebas-camara.md"
 REPO = "https://github.com/nicolvus/a6000-fw-decomp/blob/main/"
 SESSION = re.compile(r"(?:^|/)s(\d{1,3})(?:[-_/]|\.md$)", re.IGNORECASE)
 HEADING = re.compile(r"^#\s+(.+)$", re.MULTILINE)
@@ -27,7 +28,7 @@ COLS = 62
 CATALOG = ROOT / "docs" / "capture" / "linea-general-re.md"
 TOP = 30
 FILL = {"m-hito": COLORS["hito"], "m-sub": COLORS["sub"], "m-todo": COLORS["todo"], "s-ok": COLORS["ok"],
-        "s-cancel": COLORS["cancel"], "s-todo": COLORS["todo"], "t-todo": COLORS["todo"],
+        "s-cancel": COLORS["cancel"], "s-todo": COLORS["todo"], "t-todo": COLORS["todo"], "t-ok": COLORS["ok"],
         "m-rejected": "#6e7681"}
 KIND = {"hito": "m-hito", "sub-etiqueta": "m-sub", "pendiente": "m-todo", "no-modulo": "m-rejected"}
 
@@ -71,7 +72,9 @@ def groups(data: dict) -> list[tuple[str, str, list[tuple[str, str]]]]:
         ("s-cancel", f"S{n}: cancelada") if n == 67 else ("s-todo", f"S{n}: sin informe propio")
         for n in range(1, data["latest_number"] + 1)
     ]
-    tests = [("t-todo", f"P{n}: sin ejecutar") for n in range(1, data["physical_tests"]["total"] + 1)]
+    run = set(data["physical_tests"]["executed"])
+    tests = [("t-ok", f"P{n}: con prueba registrada") if n in run else ("t-todo", f"P{n}: sin prueba registrada")
+             for n in range(1, data["physical_tests"]["total"] + 1)]
     cov = data["module_coverage"]
     return [
         (f"Cobertura documental de etiquetas*: {cov['percent']}% ({cov['covered']}/{cov['total']})", "modules", modules),
@@ -139,7 +142,9 @@ td:nth-child(n+3):not(:last-child),td:last-child,th:nth-child(n+3){{text-align:r
 <p>{cov['pending']} etiquetas pendientes; {cov['excluded']} fragmentos descartados como módulos. Descartar no aumenta cobertura.</p>
 <p>Cobertura documental de etiquetas: no mide código descompilado ni funciones verificadas.
 <a href="{REPO}docs/capture/repo-audit-2026-10-24.md">Auditoría y pendientes vigentes</a>.
-Las pruebas físicas siguen diferidas hasta completar la ingeniería inversa necesaria.</p>
+Pruebas en cámara: {data['physical_tests']['registered']} registros (T001–T039, por USB, con backup NVRAM previo);
+planes P1–P21 con prueba registrada: {data['physical_tests']['done']}/{data['physical_tests']['total']}.
+<a href="{data['physical_tests']['source']}">Registro de pruebas</a>.</p>
 <h2>Etiquetas por familia — {cov['percent']}% ({cov['covered']}/{cov['total']})*</h2>
 <table><tr><th>Familia</th><th>Etiquetas</th><th>Cubiertas</th><th>Total</th><th>%</th></tr>{fam_rows}</table>
 <h2>Etiquetas pendientes (top {TOP} por cadenas referenciadas)</h2>
@@ -156,6 +161,16 @@ las pendientes aún no tienen nombre funcional. Generado por
 Datos crudos: <a href="../status.json">status.json</a>.</p>
 </body></html>
 """
+
+
+def physical_tests() -> dict:
+    """Pruebas en cámara del registro: planes P con alguna prueba y número de registros T."""
+    rows = [line.split("|") for line in REGISTRY.read_text(encoding="utf-8").splitlines() if re.match(r"^\| T\d{3}", line)]
+    plans = {int(n) for row in rows for n in re.findall(r"\bP(\d{1,2})\b", row[3]) if 1 <= int(n) <= 21}
+    return {
+        "done": len(plans), "total": 21, "executed": sorted(plans), "registered": len(rows),
+        "source": REPO + "docs/capture/registro-pruebas-camara.md",
+    }
 
 
 def main(out: Path = ROOT) -> None:
@@ -216,13 +231,7 @@ def main(out: Path = ROOT) -> None:
                 "source": REPO + "docs/capture/linea-general-re.md",
             }
         },
-        "physical_tests": {
-            "done": 0, "total": 21,
-            "source": REPO + "docs/capture/physical-test-plan.md",
-            "sources": [REPO + "docs/capture/" + name for name in (
-                "physical-test-plan.md", "s402-physical-test-mapping.md", "physical-test-plan-2.md",
-            )],
-        },
+        "physical_tests": physical_tests(),
         "decision": {"label": "No parchear: evidencia insuficiente", "source": REPO + "docs/capture/s51-decision.md"},
     }
     site = out / "site"
@@ -241,7 +250,7 @@ def main(out: Path = ROOT) -> None:
     for name, label, msg, color in (
         ("modulos", "módulos", f"{cov['percent']}% ({cov['covered']}/{cov['total']})", "yellow"),
         ("sesiones", "sesiones", f"{len(sessions)}/{data['latest_number']}", "blue"),
-        ("pruebas", "pruebas físicas", f"{tests['done']}/{tests['total']}", "lightgrey"),
+        ("pruebas", "planes con prueba", f"{tests['done']}/{tests['total']}", "green"),
     ):
         badge = {"schemaVersion": 1, "label": label, "message": msg, "color": color}
         (site / f"badge-{name}.json").write_text(json.dumps(badge, ensure_ascii=False) + "\n", encoding="utf-8")
