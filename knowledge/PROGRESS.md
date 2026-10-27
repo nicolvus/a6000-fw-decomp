@@ -2812,3 +2812,6 @@ RemoteShutter v3 (`/ss`, `/nr`, `/last`) y `scripts/camera_shutter_sweep.py`. Br
 
 ## 26-10-2026 — T026: tipo 2 en RAM con Darwin tipo 0 (E23)
 Parche de T020 + barrido y control sin parche: luminancias iguales y mismo suelo de 1/4000 a 1/500. La ruta tipo 2 no da final electrónico; solo queda programar el IMX210 (D5). `scripts/camera_tipo2_sweep.py`.
+
+## 27-10-2026 — T027: EFCS on/off con Darwin tipo 0 (E23)
+Dos barridos, misma escena: suelo y perfil iguales. El ajuste EFCS no cambia el inicio de la exposición con tipo 0; la vía de los tiempos del EFCS queda sin apoyo.

@@ -121,3 +121,6 @@ Con la app y escena fija (M, f/3,5, ISO 640, RR larga apagada): luminancia media
 
 ## Tipo 2 forzado en RAM con Darwin tipo 0 (T026, 26-10-2026)
 Con el selector forzado a tipo 2 (`G+0x784`=2, parche de T020) y control sin parche inmediatamente después, el barrido 1/4000–1/15 da la misma luminancia (dentro de ±3 % salvo 1/60 y 1/15) y el mismo suelo plano de 1/4000 a 1/500. **La ruta tipo 2 del firmware principal no programa un final electrónico de la exposición** (VERIFICADO en estas condiciones: modo M, f/3,5, ISO 640, RR apagada). Queda como única vía la programación directa del barrido de reinicio del IMX210, bloqueada sin hoja de datos (D5).
+
+## EFCS activada frente a desactivada (T027, 27-10-2026)
+Mismo suelo de exposición y mismo perfil por franjas con la EFCS activada y desactivada (diferencias ≤ 8 de luminancia media, EFCS off algo más clara a velocidades rápidas). Con tipo 0 el ajuste EFCS no cambia el inicio de la exposición de forma medible: no permite atribuirlo al reinicio electrónico del EFCS ni a la cortina sin retención. La idea de reaprovechar los tiempos del EFCS (retrasar el reinicio y ajustar su ritmo al de la lectura) sigue siendo hipótesis, sin evidencia a favor.
