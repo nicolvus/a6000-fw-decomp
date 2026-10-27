@@ -52,6 +52,9 @@ flasheo salvo autorización expresa del usuario para un caso concreto.
   `ud_darwin_firmup` reconstruido (`0x11/0x14/0x15`, CRC-16). No está demostrado que reprograme una aplicación rota ni que encienda
   el BIONZ solo (A=SÍ, B=NO, C=NO). Un parche de Darwin no debe tocar encendido, `InitCom`, `Upd` ni el watchdog.
   [informe](../docs/capture/e24-02-protocolo-actualizacion-darwin.md).
+- **Recuperación (E24-03):** respaldos íntegros pero incompletos; el FDAT 3.23 lleva el `darwin_core` original y se reconstruye bit a bit, pero solo está
+  demostrada una restauración de NVRAM (A=NO, B=SÍ, C=NO, D=NO). El guard exige versión mayor: el script 3.21 ya no sirve; un FDAT 3.24 exigiría recuperación 3.25.
+  [informe](../docs/capture/e24-03-auditoria-recuperacion-usb.md).
 
 ## Correcciones fundamentales (no reutilizar las versiones previas)
 

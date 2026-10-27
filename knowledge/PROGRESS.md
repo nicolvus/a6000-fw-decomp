@@ -2863,3 +2863,6 @@ Grafo Darwin → BootROM «Musashi Loader1» (`bootrom.bin`) → Loader2/3 (no v
 
 ## 27-10-2026 — E24-02: bootloader de Darwin y protocolo de actualización (estático)
 El core de Darwin (`0x4200`) salta al vector de `0x0` (arranque propio, sin binario) con el buzón `[0x20000706]=4` tras recibir `0x11` estado 4; `ud_darwin_firmup` envía `0x14` (destino 1 boo / 2 core, tamaño) y `0x15` (bloques ≤ 0x78 B pedidos por el dispositivo); el core no tiene código de flash. Ningún paquete trae `darwin_boo.bin`. Esquema: `MD0_DWN`, `XDWN_RESET`, UART0 y SWD de IC5700 llegan a `CN4906` (no montado). A=SÍ (existencia), B=NO, C=NO (no demostrados). Verificador `tests/test_e24_02_darwin_update.py`.
+
+## 27-10-2026 — E24-03: auditoría offline de respaldos y FDAT de recuperación 3.23
+Respaldos íntegros (32 carpetas con suma; NVRAM, NAND lógica, BootROM, firmware 3.21) pero incompletos: faltan arranque de Darwin, Loader2/3, escritura de NAND, NVRAM post-3.22 y copia externa. El FDAT 3.23 lleva `darwin_core` oficial y tar oficial, y se reconstruye bit a bit; el guard solo acepta versiones mayores (el script 3.21 ya no sirve). `ud_darwin_firmup` reescribe el core siempre si no hay `darwin_boo.bin`. Restauración demostrada solo en NVRAM. A=NO, B=SÍ, C=NO, D=NO. Matriz M1–M14 para E24-04 (sin iniciar). Solo offline; `tests/test_e24_03_recovery.py`.
