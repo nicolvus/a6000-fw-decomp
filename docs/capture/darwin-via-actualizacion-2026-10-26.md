@@ -131,3 +131,8 @@ Antecedentes (S52/S56, vigentes): el `SetExposure` del IMX210 (`0x436d6f6c`, vta
 - Alcance: afecta a **toda** llamada a `SetExposure` mientras esté activo (también vista en directo); por eso se aplica solo durante el barrido y se revierte.
 - Prueba propuesta (T028): barrido 1/4000–1/15 con ShutMode 0, con ShutMode 4 y control. Si el brillo baja de forma proporcional de 1/250 a 1/4000, el IMX210 sí termina la exposición electrónicamente con ese ShutMode.
 `scripts/camera_tipo2_sweep.py` admite ahora otros parches por `RAMPATCH=DIR:ORIG:NUEVO`.
+
+## ShutMode 0/4 forzado en RAM (T028, 27-10-2026) — primer cambio real del sensor
+Barridos con ShutMode 0, control y ShutMode 4 (Darwin tipo 0). Control: suelo plano de 1/4000 a 1/250 (≈76) y subida desde 1/125 (como T025–T027). **ShutMode 0 y 4: ≈93–96 de 1/4000 a 1/30, solo sube a 1/15; perfil por franjas distinto** (más luz arriba a velocidades rápidas; la parte baja pierde luz al alargar el tiempo). Ambos modos dan casi lo mismo, coherente con que comparten la función de temporización `0x436d6f50`.
+- VERIFICADO: forzar `param+9` cambia la integración del sensor en foto completa ⇒ **el reinicio electrónico del IMX210 es programable desde el firmware principal** y la rama ShutMode 0/4 (la que usa la A7S en Silent) actúa sobre él.
+- INFERENCIA: los tiempos de la rama 0/4 se calculan con parámetros que no encajan con la lectura completa (exposición casi fija ~1/60 e invertida en la parte baja). Siguiente paso estático: emular `0x436d6f50` frente a la rama 1/3 (`0x436d6f34`/`0x4355faf0`) para varios tiempos de exposición con el arnés S52 y ver qué campos (SHR y similares en `0x4401c67a…0x4401c812`) cambian; después ajustar esos valores con otro parche en RAM.

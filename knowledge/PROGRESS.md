@@ -2815,3 +2815,6 @@ Parche de T020 + barrido y control sin parche: luminancias iguales y mismo suelo
 
 ## 27-10-2026 — T027: EFCS on/off con Darwin tipo 0 (E23)
 Dos barridos, misma escena: suelo y perfil iguales. El ajuste EFCS no cambia el inicio de la exposición con tipo 0; la vía de los tiempos del EFCS queda sin apoyo.
+
+## 27-10-2026 — T028: ShutMode 0/4 forzado en RAM (E23)
+Con Darwin tipo 0, forzar `param+9` de `SetExposure` IMX210 a 0 o 4 cambia la integración (más luz a velocidades rápidas, casi fija hasta 1/30, perfil distinto) frente al control. Primera evidencia de que el reinicio del sensor es programable desde el firmware principal; los tiempos de la rama 0/4 no encajan aún.
