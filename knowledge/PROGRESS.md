@@ -2860,3 +2860,6 @@ El motor de rearme lo excita Darwin por P40/P41 (XOR IC6800 → Q6801); la posic
 
 ## 27-10-2026 — E24-01: arranque y acceso al actualizador (estático)
 Grafo Darwin → BootROM «Musashi Loader1» (`bootrom.bin`) → Loader2/3 (no volcado) → `nflasha1` (actualizador) / `nflasha3`+`nflasha5` (normal/caliente). `ud_darwin_init.elf` se ignora y está acotado; pero `darwin_core` sube `DD_ON1/2/3`, que alimentan el BIONZ. Respuesta: NO está demostrado que el actualizador arranque sin Darwin. Verificador `tests/test_e24_01_boot.py`.
+
+## 27-10-2026 — E24-02: bootloader de Darwin y protocolo de actualización (estático)
+El core de Darwin (`0x4200`) salta al vector de `0x0` (arranque propio, sin binario) con el buzón `[0x20000706]=4` tras recibir `0x11` estado 4; `ud_darwin_firmup` envía `0x14` (destino 1 boo / 2 core, tamaño) y `0x15` (bloques ≤ 0x78 B pedidos por el dispositivo); el core no tiene código de flash. Ningún paquete trae `darwin_boo.bin`. Esquema: `MD0_DWN`, `XDWN_RESET`, UART0 y SWD de IC5700 llegan a `CN4906` (no montado). A=SÍ (existencia), B=NO, C=NO (no demostrados). Verificador `tests/test_e24_02_darwin_update.py`.

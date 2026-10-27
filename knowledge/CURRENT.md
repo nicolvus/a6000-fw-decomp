@@ -48,6 +48,10 @@ flasheo salvo autorización expresa del usuario para un caso concreto.
 - **Recuperación (E24-01):** Darwin también controla la energía del cuerpo (`DD_ON1/2/3` desde `darwin_core`, tabla `0x28c6c`).
   No está demostrado que el actualizador USB arranque sin `darwin_core`. Cualquier parche de Darwin arriesga la vía de reinstalación.
   [informe](../docs/capture/e24-01-arranque-recuperacion.md).
+- **Bootloader de Darwin (E24-02):** hay arranque propio en `0x0–0x41ff` (el core salta a él con el buzón `[0x20000706]=4`); protocolo de
+  `ud_darwin_firmup` reconstruido (`0x11/0x14/0x15`, CRC-16). No está demostrado que reprograme una aplicación rota ni que encienda
+  el BIONZ solo (A=SÍ, B=NO, C=NO). Un parche de Darwin no debe tocar encendido, `InitCom`, `Upd` ni el watchdog.
+  [informe](../docs/capture/e24-02-protocolo-actualizacion-darwin.md).
 
 ## Correcciones fundamentales (no reutilizar las versiones previas)
 
