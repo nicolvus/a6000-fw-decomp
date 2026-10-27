@@ -73,6 +73,8 @@ Respuesta: el modo 0 recorre `0x11bdc`/`0x11de8` (envía trama `0x30`), `0x11ef6
 
 ### 2.3 Dependencias de hardware halladas (no son el rearme)
 
+> **Corregido por [E24-05h](e24-05h-dependencias-finales-captura.md):** la espera por P29 es solo la variante `S+0x32=0`; con `S+0x32≠0` (visto en T022) el estado 31 espera la FSM ADC-B. Con `0x20c74=0` `0x20d00` no escribe P4E.
+
 * **P29:** la salida de la espera del estado 31 es `0x16c44 = !0x1ec9c()`, y `0x1ec9c` lee el bit-band `0x124` (`0x51c6`) = PDIR2 b9 = **P29**. Decodificación `puerto = off//0x80`, `bit = (off%0x80)//4` (idéntica a la de `fm3-gpio-shutter-mapping.md`). Otro lector: `0x7c8a`. La red de P29 no consta (E11). Si la espera no termina, se repite cada umbral la petición de modo 2/1.
 * **`0x2041e` → P4E:** al salir de la espera (`0x190e4` / `0x18e84` → `0x19932`), si `0x19b9e() != 0` (`S+0x170.b0 == 0` y `S+0x444.b4 == 0`) se llama `0x2041e(0)`, que invoca `0x20d00`: con `0x20c74() != 0` escribe `0x51c0(0x238, 1)` = **P4E (2ND_CURTAIN_MG)** y arranca la FSM del subsistema ADC (`0x29d90`). La compuerta `0x1fe66` solo aparece en `0x201b0` (guarda `S+0x150`); **no condiciona el `0x20d00`**. No se determinó el sentido eléctrico del `1`.
 
