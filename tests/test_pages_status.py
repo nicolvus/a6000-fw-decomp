@@ -22,7 +22,9 @@ def test_public_session_index_has_real_sources(tmp_path: Path) -> None:
     assert data["latest"] == f"S{ids[0]}"
     assert {"S51", "S74", "S101", "S102", "S180"} <= {item["id"] for item in sessions}
     assert "Cancelada" in data["exceptions"]["S67"]["label"]
-    assert data["physical_tests"]["done"] == 0
+    executed = data["physical_tests"]["executed"]
+    assert data["physical_tests"]["done"] == len(executed) >= 1
+    assert set(executed) <= set(range(1, 22))  # P0 es respaldo, no plan
     assert data["physical_tests"]["total"] == 21
     coverage = data["module_coverage"]
     assert coverage["covered"] + coverage["pending"] + coverage["excluded"] == coverage["total"]
