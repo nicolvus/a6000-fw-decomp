@@ -161,7 +161,7 @@ Estructuras (VERIFICADO por bytes): el contexto es el búfer local de 0x14 B de 
 
 1. **Quién conduce `MSS_S2_REQ_CA` (P29) y con qué nivel** (A/B): solo en IC6000 y esquema; no sale del firmware de Darwin ni de `av-cam`. *Experimento mínimo futuro* (no ejecutado, 100 % pasivo): analizador lógico en P29 junto con P4B/P4C y el CAIF durante un disparo normal, sin tocar el firmware.
 2. **Valor de `pkt[2..3]` y `pkt[1]` durante la captura y su productor BIONZ** (E/G): lectura de RAM de solo lectura de la carga `[obj+0x4ad8]+0x40..0x55` *durante* el disparo, con el método de T022 (ya autorizado como solo lectura).
-3. **Terminación de ADC-B si `0x19b9e()=0`** y estado inicial de P4E tras el arranque (I): no determinables sin ejecución.
+3. **Terminación de ADC-B si `0x19b9e()=0`** y estado inicial de P4E tras el arranque (I): no determinables sin ejecución. → ADC-B y P29 cerrados con límite en [E24-05h-3](e24-05h-3-adcb-p29.md).
 
 ## 7. Correcciones respecto a E24-05g y anteriores
 

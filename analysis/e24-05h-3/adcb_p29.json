@@ -1,0 +1,1494 @@
+{
+ "sha256_darwin_core": "5f2be06d9885d154e8e0df46a611d6830d29754b4353f6e82cecfe66dd6a0bf4",
+ "descriptores": {
+  "ADC-A": {
+   "desc": "0x29d90",
+   "tabla": "0x29e00",
+   "n": 17,
+   "ptr_pos": "0x2000381c",
+   "ptr_id": "0x2000381d",
+   "ptr_celda_lista": "0x20003818",
+   "terminal": 17,
+   "timers_id": [
+    5,
+    13,
+    13
+   ],
+   "id_log": 11,
+   "estados": {
+    "1": "0x20724",
+    "2": "0x20734",
+    "3": "0x207be",
+    "4": "0x207e8",
+    "5": "0x2081c",
+    "6": "0x2083c",
+    "7": "0x209a2",
+    "8": "0x209cc",
+    "9": "0x209d0",
+    "10": "0x209ee",
+    "14": "0x209f2",
+    "15": "0x20a1a",
+    "16": "0x20a4c",
+    "17": "0x20a62"
+   }
+  },
+  "29dac": {
+   "desc": "0x29dac",
+   "tabla": "0x29e70",
+   "n": 17,
+   "ptr_pos": "0x2000381c",
+   "ptr_id": "0x2000381d",
+   "ptr_celda_lista": "0x20003818",
+   "terminal": 17,
+   "timers_id": [
+    5,
+    13,
+    13
+   ],
+   "id_log": 11,
+   "estados": {
+    "1": "0x20a62",
+    "2": "0x2089c",
+    "3": "0x20a62",
+    "4": "0x2089c",
+    "5": "0x20a62",
+    "6": "0x2089c",
+    "7": "0x20a62",
+    "8": "0x20a62",
+    "9": "0x20a62",
+    "10": "0x20a62",
+    "14": "0x20a62",
+    "15": "0x20a62",
+    "16": "0x20a62",
+    "17": "0x20a62"
+   }
+  },
+  "ADC-B": {
+   "desc": "0x29dc8",
+   "tabla": "0x29ee0",
+   "n": 7,
+   "ptr_pos": "0x2000381e",
+   "ptr_id": "0x2000381f",
+   "ptr_celda_lista": "0x20003820",
+   "terminal": 7,
+   "timers_id": [
+    9,
+    13,
+    13
+   ],
+   "id_log": 12,
+   "estados": {
+    "0": "0x20a62",
+    "1": "0x20a66",
+    "2": "0x20a72",
+    "3": "0x20a8a",
+    "4": "0x20aa4",
+    "5": "0x20af4",
+    "6": "0x20b06",
+    "7": "0x20a62"
+   }
+  },
+  "ADC-C": {
+   "desc": "0x29de4",
+   "tabla": "0x29f20",
+   "n": 6,
+   "ptr_pos": "0x20003839",
+   "ptr_id": "0x2000383a",
+   "ptr_celda_lista": "0x2000383c",
+   "terminal": 6,
+   "timers_id": [
+    4,
+    13,
+    13
+   ],
+   "id_log": 13,
+   "estados": {
+    "0": "0x20b1c",
+    "1": "0x20b30",
+    "2": "0x20b56",
+    "3": "0x20b8a",
+    "4": "0x20bbe",
+    "5": "0x20bf2",
+    "6": "0x20a62"
+   }
+  }
+ },
+ "manejadores_ADC-B": {
+  "0": {
+   "manejador": "0x20a62",
+   "llamadas": [],
+   "colas": [
+    "0x1e4aa"
+   ],
+   "bucles_internos": [],
+   "hecho": true,
+   "arma_temporizador": false,
+   "cancela_temporizador": false,
+   "FAIL_en_cierre": false,
+   "SALTO_en_cierre": false,
+   "funciones_cierre": 1,
+   "lecturas_pin_0x51c6": [],
+   "usa_0x1fe66": false,
+   "usa_0x20c74": false,
+   "pines_tipoN": {},
+   "pines_tipo0": {}
+  },
+  "1": {
+   "manejador": "0x20a66",
+   "llamadas": [],
+   "colas": [
+    "0x1e3d2"
+   ],
+   "bucles_internos": [],
+   "hecho": false,
+   "arma_temporizador": true,
+   "cancela_temporizador": false,
+   "FAIL_en_cierre": false,
+   "SALTO_en_cierre": false,
+   "funciones_cierre": 1,
+   "lecturas_pin_0x51c6": [],
+   "usa_0x1fe66": false,
+   "usa_0x20c74": false,
+   "pines_tipoN": {},
+   "pines_tipo0": {}
+  },
+  "2": {
+   "manejador": "0x20a72",
+   "llamadas": [
+    "0x20cee",
+    "0x20fd6"
+   ],
+   "colas": [
+    "0x1e4aa"
+   ],
+   "bucles_internos": [],
+   "hecho": true,
+   "arma_temporizador": false,
+   "cancela_temporizador": false,
+   "FAIL_en_cierre": false,
+   "SALTO_en_cierre": false,
+   "funciones_cierre": 105,
+   "lecturas_pin_0x51c6": [],
+   "usa_0x1fe66": false,
+   "usa_0x20c74": true,
+   "pines_tipoN": {
+    "P4B": [
+     "0xd116"
+    ]
+   },
+   "pines_tipo0": {
+    "P4B": [
+     "0xd116"
+    ]
+   }
+  },
+  "3": {
+   "manejador": "0x20a8a",
+   "llamadas": [
+    "0x16e68",
+    "0x202c2",
+    "0x20cb2"
+   ],
+   "colas": [
+    "0x1e4aa"
+   ],
+   "bucles_internos": [],
+   "hecho": true,
+   "arma_temporizador": false,
+   "cancela_temporizador": false,
+   "FAIL_en_cierre": false,
+   "SALTO_en_cierre": false,
+   "funciones_cierre": 16,
+   "lecturas_pin_0x51c6": [],
+   "usa_0x1fe66": false,
+   "usa_0x20c74": true,
+   "pines_tipoN": {
+    "P4C": [
+     "0x1ecec"
+    ],
+    "P4D": [
+     "0x20cb2"
+    ]
+   },
+   "pines_tipo0": {
+    "P4C": [
+     "0x1ecec"
+    ]
+   }
+  },
+  "4": {
+   "manejador": "0x20aa4",
+   "llamadas": [
+    "0xd116",
+    "0x16fe2",
+    "0x1e150",
+    "0x1e476",
+    "0x201b0",
+    "0x20408",
+    "0x20c06",
+    "0x20c4a",
+    "0x20c74",
+    "0x20d00"
+   ],
+   "colas": [
+    "0x1e4aa"
+   ],
+   "bucles_internos": [],
+   "hecho": true,
+   "arma_temporizador": false,
+   "cancela_temporizador": true,
+   "FAIL_en_cierre": false,
+   "SALTO_en_cierre": false,
+   "funciones_cierre": 31,
+   "lecturas_pin_0x51c6": [],
+   "usa_0x1fe66": true,
+   "usa_0x20c74": true,
+   "pines_tipoN": {
+    "P0C": [
+     "0x20fb2"
+    ],
+    "P4B": [
+     "0xd116"
+    ],
+    "P4E": [
+     "0x20d00"
+    ]
+   },
+   "pines_tipo0": {
+    "P0C": [
+     "0x20fb2"
+    ],
+    "P4B": [
+     "0xd116"
+    ]
+   }
+  },
+  "5": {
+   "manejador": "0x20af4",
+   "llamadas": [
+    "0x20cb2"
+   ],
+   "colas": [
+    "0x1e4aa"
+   ],
+   "bucles_internos": [],
+   "hecho": true,
+   "arma_temporizador": false,
+   "cancela_temporizador": false,
+   "FAIL_en_cierre": false,
+   "SALTO_en_cierre": false,
+   "funciones_cierre": 5,
+   "lecturas_pin_0x51c6": [],
+   "usa_0x1fe66": false,
+   "usa_0x20c74": true,
+   "pines_tipoN": {
+    "P4D": [
+     "0x20cb2"
+    ]
+   },
+   "pines_tipo0": {}
+  },
+  "6": {
+   "manejador": "0x20b06",
+   "llamadas": [
+    "0xd18e"
+   ],
+   "colas": [
+    "0x1e4aa"
+   ],
+   "bucles_internos": [],
+   "hecho": true,
+   "arma_temporizador": false,
+   "cancela_temporizador": false,
+   "FAIL_en_cierre": false,
+   "SALTO_en_cierre": false,
+   "funciones_cierre": 5,
+   "lecturas_pin_0x51c6": [],
+   "usa_0x1fe66": false,
+   "usa_0x20c74": false,
+   "pines_tipoN": {
+    "P4B": [
+     "0xd18e"
+    ]
+   },
+   "pines_tipo0": {
+    "P4B": [
+     "0xd18e"
+    ]
+   }
+  },
+  "7": {
+   "manejador": "0x20a62",
+   "llamadas": [],
+   "colas": [
+    "0x1e4aa"
+   ],
+   "bucles_internos": [],
+   "hecho": true,
+   "arma_temporizador": false,
+   "cancela_temporizador": false,
+   "FAIL_en_cierre": false,
+   "SALTO_en_cierre": false,
+   "funciones_cierre": 1,
+   "lecturas_pin_0x51c6": [],
+   "usa_0x1fe66": false,
+   "usa_0x20c74": false,
+   "pines_tipoN": {},
+   "pines_tipo0": {}
+  }
+ },
+ "sitios_primitivas": {
+  "instalar_lista": [
+   {
+    "sitio": "0x19678",
+    "funcion": "0x1961c",
+    "r0": null,
+    "r1": "0x28f88"
+   },
+   {
+    "sitio": "0x1ff10",
+    "funcion": "0x1fee2",
+    "r0": null,
+    "r1": "0x29cd8"
+   },
+   {
+    "sitio": "0x1ffa2",
+    "funcion": "0x1ff72",
+    "r0": null,
+    "r1": "0x29cd8"
+   },
+   {
+    "sitio": "0x1fffc",
+    "funcion": "0x1ffce",
+    "r0": null,
+    "r1": "0x29cd8"
+   },
+   {
+    "sitio": "0x202a6",
+    "funcion": "0x2027c",
+    "r0": "0x29dc8",
+    "r1": "0x29d71"
+   },
+   {
+    "sitio": "0x20324",
+    "funcion": "0x202f2",
+    "r0": "0x29dc8",
+    "r1": "0x29d83"
+   },
+   {
+    "sitio": "0x20484",
+    "funcion": "0x2041e",
+    "r0": "0x29dc8",
+    "r1": "0x29d75"
+   },
+   {
+    "sitio": "0x22992",
+    "funcion": "0x22930",
+    "r0": null,
+    "r1": "0x29fc9"
+   }
+  ],
+  "forzar_terminal": [
+   {
+    "sitio": "0x17968",
+    "funcion": "0x17950",
+    "r0": null,
+    "r1": null
+   },
+   {
+    "sitio": "0x201dc",
+    "funcion": "0x201d0",
+    "r0": "0x29dc8",
+    "r1": null
+   },
+   {
+    "sitio": "0x2070c",
+    "funcion": "0x206ec",
+    "r0": "0x29dc8",
+    "r1": null
+   }
+  ],
+  "reiniciar": [
+   {
+    "sitio": "0x1e156",
+    "funcion": "0x1e150",
+    "r0": null,
+    "r1": null
+   }
+  ],
+  "salto": [
+   {
+    "sitio": "0x1f790",
+    "funcion": "0x1f740",
+    "r0": null,
+    "r1": null
+   },
+   {
+    "sitio": "0x1f7dc",
+    "funcion": "0x1f794",
+    "r0": null,
+    "r1": null
+   },
+   {
+    "sitio": "0x1f812",
+    "funcion": "0x1f7e0",
+    "r0": null,
+    "r1": null
+   },
+   {
+    "sitio": "0x1f850",
+    "funcion": "0x1f816",
+    "r0": null,
+    "r1": null
+   },
+   {
+    "sitio": "0x1f886",
+    "funcion": "0x1f854",
+    "r0": null,
+    "r1": null
+   },
+   {
+    "sitio": "0x1f8c2",
+    "funcion": "0x1f88a",
+    "r0": null,
+    "r1": null
+   },
+   {
+    "sitio": "0x1f8f8",
+    "funcion": "0x1f8c6",
+    "r0": null,
+    "r1": null
+   },
+   {
+    "sitio": "0x1f93e",
+    "funcion": "0x1f8fc",
+    "r0": null,
+    "r1": null
+   },
+   {
+    "sitio": "0x1f974",
+    "funcion": "0x1f942",
+    "r0": null,
+    "r1": null
+   },
+   {
+    "sitio": "0x1f9e0",
+    "funcion": "0x1f978",
+    "r0": null,
+    "r1": null
+   },
+   {
+    "sitio": "0x1fa86",
+    "funcion": "0x1fa3a",
+    "r0": null,
+    "r1": null
+   },
+   {
+    "sitio": "0x1fb02",
+    "funcion": "0x1fa3a",
+    "r0": null,
+    "r1": null
+   },
+   {
+    "sitio": "0x1fb34",
+    "funcion": "0x1fb1e",
+    "r0": null,
+    "r1": null
+   },
+   {
+    "sitio": "0x1fb74",
+    "funcion": "0x1fb5e",
+    "r0": null,
+    "r1": null
+   }
+  ],
+  "ejecutar_idx": [
+   {
+    "sitio": "0x20244",
+    "funcion": "0x20220",
+    "r0": null,
+    "r1": null
+   },
+   {
+    "sitio": "0x202b6",
+    "funcion": "0x2027c",
+    "r0": "0x2",
+    "r1": null
+   },
+   {
+    "sitio": "0x202ec",
+    "funcion": "0x202c2",
+    "r0": "0x3",
+    "r1": null
+   },
+   {
+    "sitio": "0x20334",
+    "funcion": "0x202f2",
+    "r0": "0x2",
+    "r1": null
+   },
+   {
+    "sitio": "0x2035a",
+    "funcion": "0x20338",
+    "r0": "0x0",
+    "r1": null
+   },
+   {
+    "sitio": "0x20380",
+    "funcion": "0x2035e",
+    "r0": "0x0",
+    "r1": null
+   },
+   {
+    "sitio": "0x203aa",
+    "funcion": "0x20392",
+    "r0": "0x0",
+    "r1": null
+   },
+   {
+    "sitio": "0x203e8",
+    "funcion": "0x203b2",
+    "r0": "0x0",
+    "r1": null
+   },
+   {
+    "sitio": "0x2046c",
+    "funcion": "0x2041e",
+    "r0": "0x0",
+    "r1": null
+   },
+   {
+    "sitio": "0x204a6",
+    "funcion": "0x20492",
+    "r0": "0x2",
+    "r1": null
+   },
+   {
+    "sitio": "0x205e2",
+    "funcion": "0x20544",
+    "r0": "0x0",
+    "r1": null
+   },
+   {
+    "sitio": "0x20ae6",
+    "funcion": "0x20aa4",
+    "r0": "0x0",
+    "r1": null
+   }
+  ]
+ },
+ "instalaciones_ADC-B": [
+  {
+   "sitio": "0x202a6",
+   "funcion": "0x2027c",
+   "r0": "0x29dc8",
+   "r1": "0x29d71",
+   "lista": [
+    1,
+    5,
+    6,
+    7
+   ]
+  },
+  {
+   "sitio": "0x20324",
+   "funcion": "0x202f2",
+   "r0": "0x29dc8",
+   "r1": "0x29d83",
+   "lista": [
+    1,
+    3,
+    6,
+    2,
+    7
+   ]
+  },
+  {
+   "sitio": "0x20484",
+   "funcion": "0x2041e",
+   "r0": "0x29dc8",
+   "r1": "0x29d75",
+   "lista": [
+    1,
+    4,
+    6,
+    7
+   ]
+  }
+ ],
+ "forzar_terminal_ADC-B": [
+  {
+   "sitio": "0x201dc",
+   "funcion": "0x201d0",
+   "r0": "0x29dc8",
+   "r1": null
+  },
+  {
+   "sitio": "0x2070c",
+   "funcion": "0x206ec",
+   "r0": "0x29dc8",
+   "r1": null
+  }
+ ],
+ "reinicios_ADC-B": [],
+ "saltos_ADC-B": [],
+ "sitios_ejecutar_idx": [
+  {
+   "sitio": "0x20244",
+   "funcion": "0x20220",
+   "r0": null,
+   "r1": null
+  },
+  {
+   "sitio": "0x202b6",
+   "funcion": "0x2027c",
+   "r0": "0x2",
+   "r1": null
+  },
+  {
+   "sitio": "0x202ec",
+   "funcion": "0x202c2",
+   "r0": "0x3",
+   "r1": null
+  },
+  {
+   "sitio": "0x20334",
+   "funcion": "0x202f2",
+   "r0": "0x2",
+   "r1": null
+  },
+  {
+   "sitio": "0x2035a",
+   "funcion": "0x20338",
+   "r0": "0x0",
+   "r1": null
+  },
+  {
+   "sitio": "0x20380",
+   "funcion": "0x2035e",
+   "r0": "0x0",
+   "r1": null
+  },
+  {
+   "sitio": "0x203aa",
+   "funcion": "0x20392",
+   "r0": "0x0",
+   "r1": null
+  },
+  {
+   "sitio": "0x203e8",
+   "funcion": "0x203b2",
+   "r0": "0x0",
+   "r1": null
+  },
+  {
+   "sitio": "0x2046c",
+   "funcion": "0x2041e",
+   "r0": "0x0",
+   "r1": null
+  },
+  {
+   "sitio": "0x204a6",
+   "funcion": "0x20492",
+   "r0": "0x2",
+   "r1": null
+  },
+  {
+   "sitio": "0x205e2",
+   "funcion": "0x20544",
+   "r0": "0x0",
+   "r1": null
+  },
+  {
+   "sitio": "0x20ae6",
+   "funcion": "0x20aa4",
+   "r0": "0x0",
+   "r1": null
+  }
+ ],
+ "cadena_forzar_terminal": {
+  "0x201d0": [
+   "0x197fe"
+  ],
+  "0x197f8": [
+   "0xcec8"
+  ],
+  "0x206ec": [
+   "0x19b8e"
+  ],
+  "0x19b6e": [
+   "0xcefa"
+  ],
+  "0x19b8e_salto_a_0x206ec": true
+ },
+ "ptrs_ADC-B_en_S": {
+  "pos": true,
+  "id": true,
+  "celda": true,
+  "literales_de_la_direccion": {
+   "0x2000381e": [
+    "0x29dd0"
+   ],
+   "0x2000381f": [
+    "0x29dd4"
+   ],
+   "0x20003820": [
+    "0x29dd8"
+   ]
+  }
+ },
+ "motor": {
+  "0x1e25c lsls #0x18": true,
+  "0x1e25e bmi 0x1e2b6": true,
+  "0x1e260 lsls #0x17": true,
+  "0x1e262 bmi 0x1e294": true,
+  "0x1e264 ldrb [r2]": true,
+  "0x1e266 adds #1": true,
+  "0x1e268 strb [r2]": true,
+  "0x1e256 cmp r3": true,
+  "0x1e258 bhs 0x1e338": true,
+  "0x1e39a cmp r1": true,
+  "0x1e39c beq 0x1e3a0": true,
+  "0x1e3cc bne 0x1e346": true,
+  "0x1e3b8 movs #7": true,
+  "0x1e17a cmp r3": true,
+  "0x1e17c bhi 0x1e190": true,
+  "0x1e182 beq 0x1e18e": true,
+  "0x1e18e movs #1": true,
+  "0x203ae b.w 0x20c2c": true,
+  "0x20c2c ldr [pc, #0x3c]": true,
+  "0x20c30 b.w 0x1e16e": true,
+  "0x20c2c carga 0x29d90+0x38": true
+ },
+ "arrancadores": {
+  "0x2041e": {
+   "0x20422 movs r0": true,
+   "0x2042c bne 0x20470": true,
+   "0x20484 bl 0x1e150": true,
+   "0x2048e movs #2": true,
+   "0x20490 b 0x20468": true,
+   "0x2046c b.w 0x20c06": true,
+   "0x20428 str.w [r5, #0x14c]": true,
+   "0x2045c bl 0x1e150": true,
+   "0x20466 movs #0": true
+  },
+  "0x2027c": {
+   "0x20284 cbnz #0x20296": true,
+   "0x202a6 bl 0x1e150": true,
+   "0x202aa movs #8": true
+  },
+  "0x202f2": {
+   "0x202fa cbnz #0x20314": true,
+   "0x20324 bl 0x1e150": true,
+   "0x20334 b.w 0x20c06": true,
+   "0x20332 movs #2": true
+  },
+  "llamadores": {
+   "0x2041e": [
+    "0x19942",
+    "0x1995a"
+   ],
+   "0x202f2": [
+    "0x198ca",
+    "0x198fe"
+   ],
+   "0x2027c": [
+    "0x198e8"
+   ]
+  }
+ },
+ "compuerta_0x19b9e": {
+  "bytes": {
+   "0x19ba2 movs #0x10": true,
+   "0x19ba4 bl 0x165c8": true,
+   "0x19ba8 cbnz #0x19bac": true,
+   "0x19baa movs #0": true,
+   "0x19bb2 lsls #0x1f": true,
+   "0x19bb6 movs #0": true,
+   "0x165ce tst r0": true,
+   "0x165ca ldrh.w [r1, #0x444]": true
+  },
+  "formula": "ok \u21d4 (S+0x444 & 0x10)==0 \u2227 (S+0x170 & 1)==0",
+  "llama_a_0x20c74": false,
+  "cierre": [
+   "0x165c8",
+   "0x19b9e"
+  ],
+  "escribe_S444": [
+   "0x16558"
+  ],
+  "escribe_S170": [
+   "0x197f8",
+   "0x19b6e"
+  ]
+ },
+ "gate_0x201b0": {
+  "0x201b4 bl 0x20c74": true,
+  "0x201ba cbz #0x201c8": true,
+  "0x201bc bl 0x1fe66": true,
+  "0x201c0 cbz #0x201c8": true,
+  "0x201c2 strb.w [r5, #0x150]": true,
+  "0x201ca strb.w [r5, #0x150]": true
+ },
+ "simulacion": {
+  "0x29d71 (instalada en 0x202a6)": [
+   {
+    "invocacion": 0,
+    "estado": 1,
+    "manejador": "0x20a66",
+    "hecho": false,
+    "temporizador": true,
+    "siguiente": 5,
+    "espera": "evento 0 del temporizador (canal 0 de 0x40023000)"
+   },
+   {
+    "invocacion": 1,
+    "estado": 5,
+    "manejador": "0x20af4",
+    "hecho": true,
+    "temporizador": false,
+    "siguiente": 6,
+    "espera": null
+   },
+   {
+    "invocacion": 1,
+    "estado": 6,
+    "manejador": "0x20b06",
+    "hecho": true,
+    "temporizador": false,
+    "siguiente": 7,
+    "espera": null
+   }
+  ],
+  "0x29d83 (instalada en 0x20324)": [
+   {
+    "invocacion": 0,
+    "estado": 1,
+    "manejador": "0x20a66",
+    "hecho": false,
+    "temporizador": true,
+    "siguiente": 3,
+    "espera": "evento 0 del temporizador (canal 0 de 0x40023000)"
+   },
+   {
+    "invocacion": 1,
+    "estado": 3,
+    "manejador": "0x20a8a",
+    "hecho": true,
+    "temporizador": false,
+    "siguiente": 6,
+    "espera": null
+   },
+   {
+    "invocacion": 1,
+    "estado": 6,
+    "manejador": "0x20b06",
+    "hecho": true,
+    "temporizador": false,
+    "siguiente": 2,
+    "espera": null
+   },
+   {
+    "invocacion": 1,
+    "estado": 2,
+    "manejador": "0x20a72",
+    "hecho": true,
+    "temporizador": false,
+    "siguiente": 7,
+    "espera": null
+   }
+  ],
+  "0x29d75 (instalada en 0x20484)": [
+   {
+    "invocacion": 0,
+    "estado": 1,
+    "manejador": "0x20a66",
+    "hecho": false,
+    "temporizador": true,
+    "siguiente": 4,
+    "espera": "evento 0 del temporizador (canal 0 de 0x40023000)"
+   },
+   {
+    "invocacion": 1,
+    "estado": 4,
+    "manejador": "0x20aa4",
+    "hecho": true,
+    "temporizador": false,
+    "siguiente": 6,
+    "espera": null
+   },
+   {
+    "invocacion": 1,
+    "estado": 6,
+    "manejador": "0x20b06",
+    "hecho": true,
+    "temporizador": false,
+    "siguiente": 7,
+    "espera": null
+   }
+  ]
+ },
+ "lista_pos0_ADC-B_tras_init": {
+  "init_0x201d0": {
+   "0x201dc bl 0x1e0b4": true,
+   "0x201da adds #0x38": true
+  },
+  "terminal": 7
+ },
+ "cadena_ejecutor": {
+  "hilo": "0x1d04c \u2192 0x197d8 \u2192 0x199b0 \u2192 0x203ae; si 0 \u2192 0x197c6 \u2192 0x199fe \u2192 0x20274 \u2192 0x20220(2) \u2192 0x20c06(2)",
+  "bytes": {
+   "0x1d04e bl 0x197d8": true,
+   "0x1d052 cbz #0x1d05c": true,
+   "0x1d058 b.w 0x1979c": true,
+   "0x1d060 b.w 0x197c6": true,
+   "0x197d8 b.w 0x199b0": true,
+   "0x199b0 b.w 0x203ae": true,
+   "0x197c6 b.w 0x199fe": true,
+   "0x199fe b.w 0x20274": true,
+   "0x20274 movs #2": true,
+   "0x20276 b 0x20220": true,
+   "0x20244 b.w 0x20c06": true,
+   "0x2023a bl 0x1e51a": true
+  },
+  "llamadores": {
+   "0x1d04c": [],
+   "0x197c6": [
+    "0x1d060"
+   ],
+   "0x199fe": [
+    "0x197c6"
+   ],
+   "0x20274": [
+    "0x199fe"
+   ],
+   "0x20220": []
+  },
+  "tabla_0x296d4": {
+   "[0]": "0x1d04d",
+   "[1]": "0x1d065",
+   "cargada_en": [
+    "0xf8b2"
+   ],
+   "despachador_sitio": "0xf8b2"
+  },
+  "ejecutar_idx_constantes": [
+   "0x0",
+   "0x2",
+   "0x3"
+  ]
+ },
+ "temporizadores": {
+  "id_timer0_ADC-B": 9,
+  "indice_bloque_B": 1,
+  "canal_hw": 0,
+  "bytes": {
+   "0x1e1fa cmp #0xc": true,
+   "0x1e1fe subs #8": true,
+   "0x1e204 bl 0x24d1a": true,
+   "0x1e20a bl 0x24ca4": true,
+   "0x1e210 bl 0x24cfa": true,
+   "0x1e21c b.w 0x24c6e": true,
+   "0x24c72 cmp #0xa": true,
+   "0x24c76 movs #0xa": true,
+   "0x24c94 ldrb [r0, #4]": true,
+   "0x24c96 b.w 0x9388": true,
+   "0x939c b.w 0x94f6": true,
+   "0x9388 cmp #0xd": true
+  },
+  "min_ticks": 10,
+  "overflow_ticks": "0xffffffff si ticks\u00b75/5\u2260ticks (0x24c7c\u20130x24c86)",
+  "perifericos": {
+   "base": "0x40023000",
+   "contador": "[+4]",
+   "palabra_config_0x2796c": "0x10400",
+   "ctrl_calculado": "0x51",
+   "recarga_0x27970-4": "0x400"
+  },
+  "93e6": {
+   "lee": "~contador via blx [0x2792c+0x18]",
+   "puntero": "0xf577",
+   "chk": {
+    "0x93fc mvns r0, r0": true,
+    "0x94e8 blx r1": true
+   }
+  },
+  "umbrales_ticks": {
+   "0x18ee8": 50000,
+   "0x18efc": 60000,
+   "0x18f36": 250000,
+   "0x18f44": 25000,
+   "nota": "5000/50000/250000/25000/500000 de E24-05h"
+  }
+ },
+ "tiempo": {
+  "exposicion_us(0x1600)": 15625,
+  "exposicion_us(0x1400)": 62500,
+  "exposicion_us(0x1000)": 1000000,
+  "bytes_0x19a12": {
+   "0x19a12 rsb.w #0x1000": true,
+   "0x19a18 asrs #8": true,
+   "0x19a24 add.w #0x800": true,
+   "0x19a28 muls r0, r2, r0": true,
+   "0x19a2a rsb.w #0xb": true,
+   "0x19a2e lsrs r1": true
+  },
+  "factor_literal_1e6": true
+ },
+ "estado31_S32_no_cero": {
+  "0x18d74 ldrh [r7, #0x32]": true,
+  "0x18d76 bl 0x19a12": true,
+  "0x18e8a bl 0x203ae": true,
+  "0x18e8e cmp #0": true,
+  "0x18e90 beq 0x18e8a": true,
+  "0x18ed8 cmp.w #0x1400": true,
+  "0x18edc bhs 0x18f88": true,
+  "0x18f88 bl 0x203ae": true,
+  "0x18f8c cmp #0": true,
+  "0x18f8e beq 0x18f88": true,
+  "0x18f7e bl 0x203ae": true,
+  "0x18f84 beq 0x18f0c": true,
+  "0x18f86 b 0x18f90": true,
+  "0x18ec8 bl 0x19948": true,
+  "0x18ecc bl 0x198bc": true,
+  "0x18e9e bl 0x19978": true,
+  "0x18e80 bl 0x198ee": true,
+  "0x18e84 bl 0x19932": true,
+  "0x18ec4 mov r0": true,
+  "llamadas_a_0x203ae_en_0x18d6e": [
+   "0x18e8a",
+   "0x18f7e",
+   "0x18f88"
+  ],
+  "rutas": {
+   "S48<-0x96": "0x198ee(\u2212S48) \u2192 ADC-B lista [1,3,6,2,7] + 0x19932 (ADC-A) + espera 0x203ae sin plazo",
+   "\u22120x96\u2264S48\u22640x32": "0x19978 \u2192 0x20544 (paso de bobina), sin ADC-B",
+   "S48>0x32": "r8\u22651 \u2192 0x19948(r8) \u2192 0x2041e(r8) lista [1,4,6,7] + 0x198bc; S+0x32\u22650x1400: espera 0x203ae sin plazo"
+  }
+ },
+ "otras_FSM_bucles_internos": {
+  "ADC-A": {
+   "0x2083c": {
+    "bucles_internos": [
+     "0x2089a"
+    ],
+    "hecho": true,
+    "arma_temporizador": false,
+    "FAIL_en_cierre": false
+   },
+   "0x209a2": {
+    "bucles_internos": [
+     "0x209ac"
+    ],
+    "hecho": true,
+    "arma_temporizador": false,
+    "FAIL_en_cierre": false
+   }
+  },
+  "29dac": {},
+  "ADC-C": {}
+ },
+ "otras_FSM_manejadores_sin_hecho_ni_FAIL": {
+  "ADC-A": [
+   "0x20734"
+  ],
+  "29dac": [
+   "0x2089c"
+  ],
+  "ADC-C": []
+ },
+ "escenarios_por_estado": {
+  "0": {
+   "manejador": "0x20a62",
+   "tipo\u22600": {},
+   "tipo0": {},
+   "FAIL": false,
+   "hecho": true
+  },
+  "1": {
+   "manejador": "0x20a66",
+   "tipo\u22600": {},
+   "tipo0": {},
+   "FAIL": false,
+   "hecho": false
+  },
+  "2": {
+   "manejador": "0x20a72",
+   "tipo\u22600": {
+    "P4B": [
+     "0xd116"
+    ]
+   },
+   "tipo0": {
+    "P4B": [
+     "0xd116"
+    ]
+   },
+   "FAIL": false,
+   "hecho": true
+  },
+  "3": {
+   "manejador": "0x20a8a",
+   "tipo\u22600": {
+    "P4C": [
+     "0x1ecec"
+    ],
+    "P4D": [
+     "0x20cb2"
+    ]
+   },
+   "tipo0": {
+    "P4C": [
+     "0x1ecec"
+    ]
+   },
+   "FAIL": false,
+   "hecho": true
+  },
+  "4": {
+   "manejador": "0x20aa4",
+   "tipo\u22600": {
+    "P0C": [
+     "0x20fb2"
+    ],
+    "P4B": [
+     "0xd116"
+    ],
+    "P4E": [
+     "0x20d00"
+    ]
+   },
+   "tipo0": {
+    "P0C": [
+     "0x20fb2"
+    ],
+    "P4B": [
+     "0xd116"
+    ]
+   },
+   "FAIL": false,
+   "hecho": true
+  },
+  "5": {
+   "manejador": "0x20af4",
+   "tipo\u22600": {
+    "P4D": [
+     "0x20cb2"
+    ]
+   },
+   "tipo0": {},
+   "FAIL": false,
+   "hecho": true
+  },
+  "6": {
+   "manejador": "0x20b06",
+   "tipo\u22600": {
+    "P4B": [
+     "0xd18e"
+    ]
+   },
+   "tipo0": {
+    "P4B": [
+     "0xd18e"
+    ]
+   },
+   "FAIL": false,
+   "hecho": true
+  },
+  "7": {
+   "manejador": "0x20a62",
+   "tipo\u22600": {},
+   "tipo0": {},
+   "FAIL": false,
+   "hecho": true
+  }
+ },
+ "p29": {
+  "tabla_0x2675c": [
+   {
+    "pin": "0x124",
+    "clave": "0x29",
+    "INT": 5,
+    "alt": 0,
+    "alias": "0x4266c328"
+   }
+  ],
+  "inicializacion_0x5512": {
+   "0x5552 cmp #0x10": true,
+   "0x5562 str.w [r2, #0x300]": true,
+   "0x5568 str.w [r2, #0x304]": true,
+   "0x554c ldrh [r2, #6]": true,
+   "0x5550 adds #1": true
+  },
+  "llamador_0x5512": [
+   "0x5658"
+  ],
+  "lectura": {
+   "0x1ec9c": [
+    "0x16c44",
+    "0x16c54"
+   ],
+   "0x16c44": [
+    "0x18fa0"
+   ],
+   "0x16c54": [
+    "0x7de2",
+    "0x1811a",
+    "0x18d6e"
+   ],
+   "inmediato_0x124_en": [
+    "0x1ec9c",
+    "0x7c8a"
+   ]
+  },
+  "modos_tbb": {
+   "bytes": "4506273845333d4147454f54",
+   "destinos": {
+    "0": "0x5678",
+    "1": "0x55fa",
+    "2": "0x563c",
+    "3": "0x565e",
+    "4": "0x5678",
+    "5": "0x5654",
+    "6": "0x5668",
+    "7": "0x5670",
+    "8": "0x567c",
+    "9": "0x5678",
+    "10": "0x568c",
+    "11": "0x5696"
+   }
+  },
+  "volcado_a_hw": {
+   "0x581a str.w [r0, #0x200]": true,
+   "0x5822 str.w [r0, #0x400]": true,
+   "0x582a str [r0]": true,
+   "0x5830 str.w [r0, #0x100]": true,
+   "0x57b0 str.w [sb, #0x500]": true
+  },
+  "semantica_modo1": {
+   "0x55fa ldrh [r4]": true,
+   "0x55fc orrs r5": true,
+   "0x5600 ldrh [r4, #4]": true,
+   "0x5602 bics r5": true,
+   "0x560c ldrh [r4, #6]": true,
+   "0x560e bics r5": true
+  },
+  "semantica_modo2": {
+   "0x563c ldrh [r4]": true,
+   "0x563e bics r5": true,
+   "0x5642 ldrh [r4, #4]": true,
+   "0x5644 bics r5": true,
+   "0x564c ldrh [r4, #6]": true,
+   "0x564e orrs r5": true
+  },
+  "semantica_modo5": {
+   "0x5654 mov r1, r5": true,
+   "0x5658 bl 0x5512": true,
+   "0x567c ldrh [r4, #4]": true,
+   "0x567e orrs r5": true
+  },
+  "grupos": {
+   "0": {
+    "P29": [
+     {
+      "modo": 1,
+      "pull_bits": 0,
+      "nivel_bits": 0,
+      "mascara": "0x1ff0"
+     }
+    ],
+    "P4E_salida_modo1": true
+   },
+   "1": {
+    "P29": [
+     {
+      "modo": 1,
+      "pull_bits": 0,
+      "nivel_bits": 0,
+      "mascara": "0x1ff0"
+     }
+    ],
+    "P4E_salida_modo1": true
+   },
+   "2": {
+    "P29": [
+     {
+      "modo": 2,
+      "pull_bits": 0,
+      "nivel_bits": 0,
+      "mascara": "0x300"
+     }
+    ],
+    "P4E_salida_modo1": true
+   },
+   "3": {
+    "P29": [
+     {
+      "modo": 5,
+      "pull_bits": 0,
+      "nivel_bits": 0,
+      "mascara": "0x300"
+     }
+    ],
+    "P4E_salida_modo1": true
+   },
+   "4": {
+    "P29": [
+     {
+      "modo": 2,
+      "pull_bits": 0,
+      "nivel_bits": 0,
+      "mascara": "0x300"
+     }
+    ],
+    "P4E_salida_modo1": true
+   },
+   "5": {
+    "P29": [
+     {
+      "modo": 1,
+      "pull_bits": 0,
+      "nivel_bits": 0,
+      "mascara": "0x13f8"
+     }
+    ],
+    "P4E_salida_modo1": true
+   },
+   "6": {
+    "P29": [
+     {
+      "modo": 1,
+      "pull_bits": 0,
+      "nivel_bits": 0,
+      "mascara": "0x13fc"
+     }
+    ],
+    "P4E_salida_modo1": true
+   }
+  },
+  "arranque": {
+   "0x4770 orr.w r1, r0, lsl #8": true,
+   "0x4774 cmp #5": true,
+   "0x4776 beq 0x4784": true,
+   "0x4780 cmp #2": true,
+   "0x4782 bne 0x4788": true,
+   "0x4784 movs #1": true,
+   "0x4788 movs #0": true,
+   "0x478a bl 0x5792": true
+  },
+  "llamadas_5792": {
+   "0x478a": {
+    "funcion": "0x46b2",
+    "r0_inmediatos": [
+     0,
+     1
+    ]
+   },
+   "0x7188": {
+    "funcion": "0x7150",
+    "r0_inmediatos": [
+     1,
+     5
+    ]
+   },
+   "0x7284": {
+    "funcion": "0x71c4",
+    "r0_inmediatos": [
+     6
+    ]
+   },
+   "0x7292": {
+    "funcion": "0x71c4",
+    "r0_inmediatos": [
+     5,
+     6
+    ]
+   },
+   "0x73fa": {
+    "funcion": "0x73cc",
+    "r0_inmediatos": [
+     1,
+     2
+    ]
+   },
+   "0x7618": {
+    "funcion": "0x75f0",
+    "r0_inmediatos": [
+     1,
+     3,
+     20
+    ]
+   },
+   "0x8078": {
+    "funcion": "0x8044",
+    "r0_inmediatos": [
+     1,
+     4
+    ]
+   },
+   "0x826c": {
+    "funcion": "0x8234",
+    "r0_inmediatos": [
+     1,
+     5
+    ]
+   },
+   "0x85a8": {
+    "funcion": "0x8538",
+    "r0_inmediatos": [
+     6
+    ]
+   },
+   "0x85be": {
+    "funcion": "0x8538",
+    "r0_inmediatos": [
+     1,
+     5,
+     6
+    ]
+   }
+  },
+  "tabla_manejadores_0x25b50": [
+   "0x7151",
+   "0x72c3",
+   "0x730f",
+   "0x7329",
+   "0x73cd",
+   "0x747b",
+   "0x7543",
+   "0x755d",
+   "0x75f1",
+   "0x76cf",
+   "0x7715",
+   "0x772f",
+   "0x8045",
+   "0x80c3",
+   "0x817d",
+   "0x8197",
+   "0x8235",
+   "0x8909",
+   "0x8c29",
+   "0x8c43",
+   "0x8da5",
+   "0x8da9"
+  ],
+  "escritores_directos_P29": [
+   "0x1ec9c",
+   "0x7c8a"
+  ],
+  "tablas_secundarias_0x5b60": {
+   "tbb": "041106080a0c0e",
+   "variante": "0xcf3a() = [0x20000000] si 0x6da2()==1, si no 0",
+   "entradas_puerto2_bit9": []
+  },
+  "pull_en_P29": true,
+  "usuarios_0x40031000": [
+   "0x9f9a",
+   "0xf2d8",
+   "0xf59a",
+   "0xf86e",
+   "0xfb7a",
+   "0xfdc6"
+  ]
+ }
+}

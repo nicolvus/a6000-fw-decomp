@@ -1,6 +1,6 @@
 # Estado actual — léeme primero
 
-Contexto operativo mínimo para agentes. Última revisión: 27-10-2026 (E24-05h). Este archivo **no** es
+Contexto operativo mínimo para agentes. Última revisión: 27-10-2026 (E24-05h-3). Este archivo **no** es
 historial ni fuente de verdad de los pendientes: ver [Responsabilidades](#responsabilidades-documentales).
 La versión íntegra anterior (2264 líneas, instantáneas S59–S627) está en
 [history/CURRENT-historial-2026-10-26.md](history/CURRENT-historial-2026-10-26.md); nada se borró.
@@ -63,6 +63,7 @@ flasheo salvo autorización expresa del usuario para un caso concreto.
 - **Emisores mss (E24-05f):** `0x0b` (admisión `0x17f8c`), `0x0d/0x15` (estado de captura 9/11), `0x0e/0x10` (estado 31 → FSM `0x296f0` estado 5), `0x11/0x14` (FSM de ajustes `0x294f8`, evento `0x18a`), `0x17` (`0x125f6`, orden de modo). Los cinco primeros no dependen de la compuerta `0x1fe66` y salen en el mismo orden en `[0,7,8,9,10]`; el byte 0 del `0x0b` lleva la clase de ocupación (corrige E24-05d B). A=SÍ, B=NO, C=NO, D=NO, E=NO, F=NO, G=NO; falta el disparo de `0x11/0x14/0x17` (E24-05g). [informe](../docs/capture/e24-05f-emisores-mss-darwin.md).
 - **Ajustes, modo y ocupación (E24-05g):** `0x18a` eran flags de `0x29514`; `0x11/0x14` los dispara el gancho de trama `0x1c04c` o el arrancador por disparo `0x17c26` (modos 0–8); `0x17` lo pide Darwin (estado 27, modo 0), no BIONZ; BIONZ lee la clase del `0x0b` en `0x438c2538` (0 acepta, 1 reintenta ≤19, 2 error). A=SÍ, B=SÍ, C=NO, D=SÍ, E=SÍ, F=NO, G=NO, H=NO demostrada; candidatos P29 y `0x2041e`→P4E (E24-05h). [informe](../docs/capture/e24-05g-ajustes-modo-ocupacion.md).
 - **Dependencias finales (E24-05h):** estado 31 con dos variantes: `S+0x32=0` espera P29 bajo (`MSS_S2_REQ_CA`, BIONZ→Darwin, sin plazo), `S+0x32≠0` (T022: `0x1600`) espera la FSM ADC-B (temporizada). Con `0x20c74=0` no hay escritura estática a P4D/P4E (P4C sí); FAIL = reintento sin avance. Sin bloqueo real demostrado ni ausencia demostrada (A=NO,B=NO,C=SÍ,D=NO,E=NO,F=SÍ,G=NO,H=NO,I=SÍ); eslabones físicos: conductor de P29 y `pkt[1]`/`pkt[2..3]` en BIONZ. [informe](../docs/capture/e24-05h-dependencias-finales-captura.md).
+- **ADC-B y P29 (E24-05h-3):** ADC-B (`0x29dc8`, terminal 7) arranca (`0x19b9e`: `S+0x444` b4=0 ∧ `S+0x170` b0=0, sin leer el tipo) y termina con `0x20c74=0` por `[1,4,6,7]`; única espera = evento 0 del canal 0 de `0x40023000`; el estado 31 espera `0x203ae` sin plazo. P29→INT05; grupo de pines activo en captura sin determinar (salida en grupos 0/1/5/6, entrada en 2/4, INT05 en 3). Pendientes E24-05h-4/5. [E24-05h-3](../docs/capture/e24-05h-3-adcb-p29.md)
 
 ## Correcciones fundamentales (no reutilizar las versiones previas)
 
