@@ -4,6 +4,8 @@ Sesión 100 % offline: no se conectó la cámara, no se emitió ningún comando 
 
 Binario único analizado: `darwin_core.bin` A6000 3.21, SHA-256 `5f2be06d9885d154e8e0df46a611d6830d29754b4353f6e82cecfe66dd6a0bf4` (157 276 B, base ROM `0x4200`). Dirección = ROM; offset de archivo = dirección − `0x4200`. Método: desensamblado Capstone (Thumb, M-class) propio ([`scripts/e24_05/`](../../scripts/e24_05/)) y un intérprete abstracto mínimo con poda de ramas; **REA/Ghidra** (`raw-binary`, ARM v7 genérico: no admite Cortex-M/Thumb de forma nativa) se abrió sobre el mismo binario y solo se usó para contrastar una función (`0x1e53c` = escribir un evento en la variable de la máquina bajo sección crítica, coherente con los bytes). Lo decisivo se verificó contra bytes en [`tests/test_e24_05_upd_rearme.py`](../../tests/test_e24_05_upd_rearme.py) (28 pruebas).
 
+> **Nota (E24-05a, mismo día):** la respuesta «B = NO» de la tabla siguiente queda resuelta —el mensaje que arranca la máquina de 49 estados es el ID `0x0c`, vía tarea `0x1811a` y ejecutor `0x1961c`— y los 49 estados no son una unión sin orden: hay cinco listas. Ver [E24-05a](e24-05a-captura-fin-bionz-darwin.md) §10.
+
 ## Respuestas
 
 ### Las seis preguntas de E24-05
