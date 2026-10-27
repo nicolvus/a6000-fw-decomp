@@ -1,6 +1,6 @@
 # Estado actual — léeme primero
 
-Contexto operativo mínimo para agentes. Última revisión: 27-10-2026 (E24-05a). Este archivo **no** es
+Contexto operativo mínimo para agentes. Última revisión: 27-10-2026 (E24-05d). Este archivo **no** es
 historial ni fuente de verdad de los pendientes: ver [Responsabilidades](#responsabilidades-documentales).
 La versión íntegra anterior (2264 líneas, instantáneas S59–S627) está en
 [history/CURRENT-historial-2026-10-26.md](history/CURRENT-historial-2026-10-26.md); nada se borró.
@@ -59,6 +59,7 @@ flasheo salvo autorización expresa del usuario para un caso concreto.
 
 - **Ruta `Upd` y rearme (E24-05):** `InitCom → Upd → 0x45bc` trazada con bytes (solo en `Seton`; clausura C1 480 / C2 571 funciones; el arranque sigue sin binario). `0x1fe66`→0 **sí** selecciona la lista `[0,7,8,9,10]` de la máquina exterior y evita el motor (salvo el freno de la operación 5 sin compuerta); control volátil NO demostrado, watchdog NO cerrado. No cambia E24-04: sin recuperación demostrada no hay base para flashear. [informe](../docs/capture/e24-05-upd-y-rearme.md).
 - **Captura y fin (E24-05a):** el ID `0x0c` (22 B) entra por la tarea `0x1811a` → `0x17f8c` → `0x1961c`, que elige entre cinco listas de la máquina de 49 estados (`S+0x44.b0`, `S+0x32`, `S+0x3c`); los estados 4/5/0x1f arrancan los rearmes y el 4 depende del predicado de clase `0x196a2`. `[0,7,8,9,10]` cumple las esperas internas de Darwin; el lector BIONZ del fin sigue sin localizar (C/D/F/G = NO; E24-05d/e). [informe](../docs/capture/e24-05a-captura-fin-bionz-darwin.md).
+- **Consumidor BIONZ (E24-05d):** BIONZ recibe de Darwin ocho mensajes mss (`0x0b,0x0d,0x0e,0x10,0x11,0x14,0x15,0x17`) por la tabla CAIF `0x43fe87f0` → buzón `[0x43e77284]` → `caif_recv` `0x437db9f0` (bloquea sin plazo, exige la subclase esperada). **Corrige E24-05a:** máscara de ocupación y anillo no viajan a BIONZ (el «bloque de estado» `0x6c78` es el registro de fallos). Falta el emisor Darwin de cada ID (E24-05f); A=SÍ, B=NO, C=NO, D=SÍ, E=SÍ, F=NO, G=NO. [informe](../docs/capture/e24-05d-consumidor-estado-darwin-bionz.md).
 
 ## Correcciones fundamentales (no reutilizar las versiones previas)
 

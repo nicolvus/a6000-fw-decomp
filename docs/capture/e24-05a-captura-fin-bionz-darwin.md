@@ -153,6 +153,7 @@ La máquina de 49 estados acaba al llegar al id `0x31`. Después, si `S+0x3c ≠
 
 * `0x1e5f2(código, a, b)` emite eventos con los códigos `0x10/0x20/0x30` (estado deduplicado por tipo), `0x90`, `0xa0`, `0xb0`, `0xe0/0xf0`; los escribe con `0x16adc(1, …)` en un **anillo de 24 entradas de 4 B** (`0x20000680…`, índice `0x20000631`) si el bit 0 de `0x20000470` está activo (VERIFICADO).
 * El constructor del bloque de estado `0x6c78` (puntero de callback `0x26d28`, regiones `0x26d2c…`) copia a la región `0x200009f8` las dos palabras de la **máscara de ocupación** (`0xd294(1)`→`+4`, `0xd294(0)`→`+8`) y a `0x20000a70` el anillo (`0x16bca`, ≤ 0x60 B + índice), y vuelca la estructura `S` (0x150 B) en `0x20000af0` (`0xceb4`). VERIFICADO el contenido; que estas regiones viajen en los IDs `0x10/0x0d/…` es INFERENCIA por tamaños.
+* **CORREGIDO por [E24-05d §3](e24-05d-consumidor-estado-darwin-bionz.md):** `0x6c78` es una instantánea del registro de fallos (llamada `0x45b2`), no un mensaje; la máscara no sale de Darwin.
 * **NO_VERIFICADO**: la función de BIONZ que lee esos campos. La máscara de ocupación **no es un mensaje CAIF**: es un campo del bloque de estado, y por eso su lectura por BIONZ queda sin demostrar (veredicto C).
 
 ### 4.5 Diferencias entre la lista sin rearme y la convencional
