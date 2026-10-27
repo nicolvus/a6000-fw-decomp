@@ -1,6 +1,6 @@
 # Estado actual — léeme primero
 
-Contexto operativo mínimo para agentes. Última revisión: 26-10-2026 (reorganización documental). Este archivo **no** es
+Contexto operativo mínimo para agentes. Última revisión: 27-10-2026 (E24-05). Este archivo **no** es
 historial ni fuente de verdad de los pendientes: ver [Responsabilidades](#responsabilidades-documentales).
 La versión íntegra anterior (2264 líneas, instantáneas S59–S627) está en
 [history/CURRENT-historial-2026-10-26.md](history/CURRENT-historial-2026-10-26.md); nada se borró.
@@ -57,6 +57,8 @@ flasheo salvo autorización expresa del usuario para un caso concreto.
   [informe](../docs/capture/e24-03-auditoria-recuperacion-usb.md).
 - **Dictamen de seguridad (E24-04):** NO hay evidencia para autorizar otro flasheo persistente de Darwin (A=NO, B=SÍ, C=NO, D=NO, E=SÍ, F=SÍ solo RAM). Ningún fallo de Darwin tiene recuperación demostrada; M6 no es cerrable hasta trazar estado 4→`Upd` (E24-05). La aceptación del riesgo no cuenta como comprobación. [informe](../docs/capture/e24-04-dictamen-seguridad.md).
 
+- **Ruta `Upd` y rearme (E24-05):** `InitCom → Upd → 0x45bc` trazada con bytes (solo en `Seton`; clausura C1 480 / C2 571 funciones; el arranque sigue sin binario). `0x1fe66`→0 **sí** selecciona la lista `[0,7,8,9,10]` de la máquina exterior y evita el motor (salvo el freno de la operación 5 sin compuerta); control volátil NO demostrado, watchdog NO cerrado. No cambia E24-04: sin recuperación demostrada no hay base para flashear. [informe](../docs/capture/e24-05-upd-y-rearme.md).
+
 ## Correcciones fundamentales (no reutilizar las versiones previas)
 
 Para la trazabilidad completa: [CORRECTIONS](../docs/CORRECTIONS.md) y [STATE § Conclusiones corregidas](../docs/STATE.md).
@@ -73,6 +75,7 @@ Para la trazabilidad completa: [CORRECTIONS](../docs/CORRECTIONS.md) y [STATE §
   66 de 69 afirmaciones de equivalencia siguen sin verificar ([auditoría](../docs/capture/S605-S627_tabla_hallazgos.md)).
 - S207 no demuestra ausencia de un fin de integración (JSON/generador declaran `NO_VERIFICADO`). S51 A/B/C no se altera sin evidencia nueva.
 - Darwin: base ROM `0x4200`, no `0`. SetImageWrited = `0x6108/0x1007`, no `0x1009`.
+- E23 «`0x1fe66`→0 no desactiva el rearme» queda **superado** por E24-05: la compuerta elige la lista de estados de la máquina exterior.
 
 ## Decisiones técnicas vigentes
 

@@ -2856,7 +2856,7 @@ El motor de rearme lo excita Darwin por P40/P41 (XOR IC6800 → Q6801); la posic
 `0x1fe66` (nibble alto del tipo de mecanismo) gobierna el motor como `0x20c74` las bobinas. Candidato: forzarla a 0 sobre tipo 0. Riesgos: error 6 en `0x1fa3a` y posible espera del firmware principal.
 
 ## 27-10-2026 — Corrección: compuerta del motor (E23, estático)
-`0x1fe66`→0 no basta: la máquina de rearme (27 estados, `0x297c0`) arrancada desde la exterior (`0x29d0c`) enciende el motor con primitivas sin compuerta; el tiempo agotado lleva a `0x1fa3a` (error 6). Falta localizar la notificación de fin de rearme.
+[Corregido en E24-05: `0x1fe66`→0 sí cambia la lista de la máquina exterior a `[0,7,8,9,10]` y evita el motor, salvo el freno de la operación 5.] `0x1fe66`→0 no basta: la máquina de rearme (27 estados, `0x297c0`) arrancada desde la exterior (`0x29d0c`) enciende el motor con primitivas sin compuerta; el tiempo agotado lleva a `0x1fa3a` (error 6). Falta localizar la notificación de fin de rearme.
 
 ## 27-10-2026 — E24-01: arranque y acceso al actualizador (estático)
 Grafo Darwin → BootROM «Musashi Loader1» (`bootrom.bin`) → Loader2/3 (no volcado) → `nflasha1` (actualizador) / `nflasha3`+`nflasha5` (normal/caliente). `ud_darwin_init.elf` se ignora y está acotado; pero `darwin_core` sube `DD_ON1/2/3`, que alimentan el BIONZ. Respuesta: NO está demostrado que el actualizador arranque sin Darwin. Verificador `tests/test_e24_01_boot.py`.
@@ -2869,3 +2869,6 @@ Respaldos íntegros (32 carpetas con suma; NVRAM, NAND lógica, BootROM, firmwar
 
 ## 27-10-2026 — E24-04: dictamen de seguridad y recuperabilidad (offline)
 Auditoría de M1–M14 (PASS M3/M4/M8, FAIL M1 frente a 3.24, M9, M12, M14; añadidas M15–M17), diez escenarios de fallo y cuatro alternativas. Veredicto: D = NO por límite de evidencia (A=NO, B=SÍ, C=NO, E=SÍ, F=SÍ solo RAM); ningún fallo de Darwin tiene recuperación demostrada y una modificación persistente de LIRO tampoco es más segura. Nuevo hallazgo verificado: el watchdog de Darwin se arma con `arg × 0x1869f` (byte `+0x40..+0x43`; 0 lo desarma). Nuevos pendientes E24-05 (estático) y E24-06 (exige conectar). `tests/test_e24_04_watchdog.py` (2). No se avanza a otro hito E24 sin orden.
+
+## 27-10-2026 — E24-05: ruta Upd, origen del rearme y auditoría de la compuerta (estático)
+Cadena `COM 0xece4 → InitCom → cola 0 → Seton main → next[2]=5 → Upd main 0x8da8 → 0x45bc` trazada con bytes; solo existe en `Seton`; orden desconocida o estado 7 ⇒ `On`. Clausura C1 480 / C2 571 funciones (`analysis/e24-05/recovery-closure.json`). Máquina exterior `0x29cf0`: los tres arrancadores eligen la lista de ids con `0x1fe66`; con 0 → `[0,7,8,9,10]`, sin máquina interior ni primitivas del motor (salvo `0x1fcb8→0x1feb6` en la operación 5). Cinco sitios de error 6; `0x1989c` independiente de la compuerta. `0x20003a00..15` = copia del mensaje `0x0c`. Corrige E23/E24-04. Veredictos A=SÍ, B=NO, C=SÍ interna, D=NO, E=NO, F=NO. Informe: `docs/capture/e24-05-upd-y-rearme.md`; 28 pruebas en `tests/test_e24_05_upd_rearme.py`; herramientas `scripts/e24_05/`.
