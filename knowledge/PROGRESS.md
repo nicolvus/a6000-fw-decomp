@@ -2824,3 +2824,6 @@ Control normal; forzar ShutMode 1 deja la captura colgada en `shooting`; el modo
 
 ## 27-10-2026 — T030: ShutMode 3 forzado (E23)
 Un disparo de prueba con ShutMode 3 no termina (como el 1 en T029); revertido. Solo 0 y 4 permiten disparar; falta leer ID1 tras un disparo normal para saber qué modo usa la cámara.
+
+## 27-10-2026 — T031: ShutMode real y bit 2 (E23)
+ID1 leído en vivo: vista en directo ShutMode 0, foto ShutMode 3 (corrige T029/T030). Borrar b2 solo en la foto da imagen corrupta. Las palancas de ShutMode quedan agotadas sin hoja de datos.
