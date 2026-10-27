@@ -20,3 +20,10 @@ Método: barrido de bytes de `av-cam.bin` (base `0x43541000`) por `ldr/str.w [rN
 
 ## Conclusión (INFERENCIA, con límite)
 El tipo 2 llega hasta un gestor de recursos del módulo `0x4359xxxx` que se arma/desarma por tipo (1 y 2 usan rutas distintas, 0 las desarma). En ese tramo no aparece ninguna decisión que cambie el obturador físico, coherente con T020. La orden hacia Darwin no se arma en este camino; el siguiente paso sería identificar quién consume la "variable global" que guarda `0x4378dfdc` (y `0x4378dda0`) y dónde se arma la orden de captura. NO_VERIFICADO que el bit `0x20` se pierda aquí o en Darwin.
+
+## Ampliación (E22, segunda pasada)
+- Las globales que fija `0x4378dfdc` (`0x43e991cc..dc`, `0x43f9a424`) solo se referencian dentro del clúster `0x4378dd00..0x4378e2a0` (barrido PIC `ldr`+`add pc` de todo `av-cam.bin`; VERIFICADO). No salen del módulo.
+- `0x4378dda0(i)` (tabla de 11 palabras) y `0x4378de88` (mapa 0..5 → 0..10) convierten el modo en índices; `0x4378df70` los inicializa (llamada desde `0x43787fa2`).
+- `0x4378e1a4` rellena un registro (campos `+0x8..+0x40`) y llama a `0x4378df14` con el modo, que devuelve constantes por tipo: tipo 0 → `0x412b55`, `0xbbb`, `0x8257`; tipo 1 → `0x4e2000`, `0xe10`, `0x9c40`; tipo 2 → `0x51762b`, `0xeaa`, `0xa2ec`. Son parámetros de temporización distintos para el tipo 2 (INFERENCIA: lectura/tiempos del sensor; significado físico NO_VERIFICADO). El registro se rellena desde el manejador `0x43791c08` (`G+0x560`).
+- Consumidores del registro: NO identificados (los offsets `+0x578/+0x580/+0x584` aparecen en muchas estructuras y el barrido no discrimina).
+- Conclusión: el tipo 2 cambia constantes de temporización internas de `av-cam`, pero no se halló emisión de orden CAIF. Cierre parcial; seguir exige REA (`trace_native_values`) sobre el registro `G+0x560`.
