@@ -136,3 +136,15 @@ Antecedentes (S52/S56, vigentes): el `SetExposure` del IMX210 (`0x436d6f6c`, vta
 Barridos con ShutMode 0, control y ShutMode 4 (Darwin tipo 0). Control: suelo plano de 1/4000 a 1/250 (≈76) y subida desde 1/125 (como T025–T027). **ShutMode 0 y 4: ≈93–96 de 1/4000 a 1/30, solo sube a 1/15; perfil por franjas distinto** (más luz arriba a velocidades rápidas; la parte baja pierde luz al alargar el tiempo). Ambos modos dan casi lo mismo, coherente con que comparten la función de temporización `0x436d6f50`.
 - VERIFICADO: forzar `param+9` cambia la integración del sensor en foto completa ⇒ **el reinicio electrónico del IMX210 es programable desde el firmware principal** y la rama ShutMode 0/4 (la que usa la A7S en Silent) actúa sobre él.
 - INFERENCIA: los tiempos de la rama 0/4 se calculan con parámetros que no encajan con la lectura completa (exposición casi fija ~1/60 e invertida en la parte baja). Siguiente paso estático: emular `0x436d6f50` frente a la rama 1/3 (`0x436d6f34`/`0x4355faf0`) para varios tiempos de exposición con el arnés S52 y ver qué campos (SHR y similares en `0x4401c67a…0x4401c812`) cambian; después ajustar esos valores con otro parche en RAM.
+
+## Qué hace realmente ShutMode en `SetExposure` IMX210 (estático + lectura en vivo, 27-10-2026)
+Desensamblado completo de `0x436d6f6c..0x436d7292` (Capstone sobre `av-cam.bin`):
+- Prólogo común a **todos** los ShutMode: `r5=param+0`, `r6=param+4`, `r7=param+6` (u16) se reparten en bytes/nibbles a seis campos de registro (`+2` de cada estructura sombra): son los tiempos del sensor (SHR y similares, S52). **No dependen del ShutMode.**
+- El `tbb` solo cambia (a) 4 bits del campo ID1 (b2/b7/b4/b6, tabla S52) y (b) la espera `[obj+0x3a0]` (ms), que S56 asocia al mensaje a Darwin `0x107`:
+  - modo 1: `(tabla1[obj+0x17c].w4 >> 8) · param+0 / 1000 + 1` (`0x436d6f34`, entradas de 0x30 B);
+  - modo 2: igual que 1 + `(param+0x14+1)·0x26aa >> 16`, y copia `param+8/+0x14` a dos registros;
+  - modo 3: `param+0x10 / 1000 + 1` (`0x4355faf0` = división);
+  - modos 0 y 4: `(tabla2[obj+0x17c].h0 >> 8) + 1` (`0x436d6f50`, entradas de 0xc B) ⇒ **constante por modo de lectura, independiente del tiempo de exposición**.
+- Por tanto T028 se explica (INFERENCIA fuerte) por la espera constante de los modos 0/4, no por un cambio en los tiempos del sensor: con tipo 0, la exposición efectiva ≈ espera hasta la lectura + barrido de lectura.
+- Objeto `C_ImagerCtrl_IMX210`: **única instancia en físico `0x83e7f4a8`** (vtable `0x43fcc090`; volcado del 20-10 y RAM viva hoy). En reposo `+0x170=0x11` (ruta de salida temprana). Muestreo durante disparos (`scripts/camera_imx210_obj.py` y muestreo en bucle): `+0x3a0` toma **4** a 1/4000 y **58** a 1/15 en la ruta normal (escala con la velocidad), y 17 en reposo. El muestreo en bucle mezcló estados (lecturas no atómicas): valores orientativos, NO VERIFICADO el ShutMode normal.
+- Siguiente prueba (en RAM, reversible): forzar ShutMode 1 y 3 para identificar cuál usa la captura normal, y el modo 3 con b2 borrado (`0x436d717c` `orr r2,#4` → `bic r2,#4`) para separar el efecto de los bits del de la espera.
