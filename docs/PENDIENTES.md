@@ -150,6 +150,7 @@ por esos índices.
 | 26-10-2026 | Reorganización documental (D10 cerrado). Corrección posterior: D11 (rotulado «27-10-2026» de E20/R2/R3 y su registro → 26-10-2026, fecha real de los commits `60d04b4f` y `22a84402`; el archivo `docs/history/README-historial-2026-10-26.md` conserva el rotulado original por ser copia íntegra) y D12 (tres enlaces falsos de `repo_audit.py`) cerrados. |
 | 26-10-2026 | E22 añadido: seguimiento estático del tipo 2 (parcial). |
 | 26-10-2026 | E23 añadido: vía de parcheo de Darwin por la actualización oficial (solo análisis; sin flasheo). |
+| 27-10-2026 | E23: compuerta del motor `0x1fe66` (nibble alto del tipo de mecanismo); candidato «sin rearme» = `0x1fe66`→0 sobre tipo 0, sin preparar ni instalar. |
 | 27-10-2026 | E23: motor de rearme localizado (Darwin P40/P41, sensores de leva P25–P27); desactivarlo exige también las comprobaciones de leva (error 6). Solo análisis. |
 | 27-10-2026 | E23: T039, ShutMode 0 + r5 4000–4200 da exposición corta y casi uniforme en la foto completa (límite 4200–4300). |
 | 27-10-2026 | E23: T038, r6=0 sin efecto; r6=4 cuelga la captura; cámara fuera de red, pendiente apagado completo. |

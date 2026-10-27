@@ -2851,3 +2851,6 @@ A 1/250, r5 4000–4200 da exposición corta y casi uniforme en la foto completa
 
 ## 27-10-2026 — Motor de rearme en Darwin (E23, estático)
 El motor de rearme lo excita Darwin por P40/P41 (XOR IC6800 → Q6801); la posición vuelve por sensores de leva P25–P27. Primitivas en 0x1fe32/0x1fe50/0x1fe86/0x1feb6, secuencia en 0x1f3a0..0x1fd80 con errores de categoría 6. Desactivarlo requiere tratar también las comprobaciones de leva.
+
+## 27-10-2026 — Compuerta del motor de rearme (E23, estático)
+`0x1fe66` (nibble alto del tipo de mecanismo) gobierna el motor como `0x20c74` las bobinas. Candidato: forzarla a 0 sobre tipo 0. Riesgos: error 6 en `0x1fa3a` y posible espera del firmware principal.
