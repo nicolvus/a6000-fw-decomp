@@ -154,3 +154,8 @@ Desensamblado completo de `0x436d6f6c..0x436d7292` (Capstone sobre `av-cam.bin`)
 - Por tanto T028 = foto con los bits y la espera de la vista en directo: exposición casi constante (espera de tabla) con los mismos registros de tiempo.
 - **Bit 2 borrado solo en la rama de foto (T031):** dispara, pero la imagen sale corrupta (lavada, magenta, rayas horizontales). b2 cambia el modo de funcionamiento o de lectura del sensor; sin hoja de datos no se puede saber qué otros registros habría que acompañar.
 - Estado: las palancas de ShutMode están agotadas sin datos del sensor. Un obturador electrónico en foto completa exigiría cambiar los registros de tiempo (`param+0/+4/+6`) de la foto para que el reinicio recorra el sensor al ritmo de la lectura, como hace la vista en directo (ShutMode 0) a menor resolución; su semántica sigue sin hoja de datos (D5).
+
+## Registro de exposición electrónica en la vista en directo (T033, 27-10-2026, solo lectura)
+- **VERIFICADO en vivo:** en la vista en directo (ShutMode 0, ID1 `0x40`) solo r5 (`param+0`) sigue a la velocidad: 1240 a 1/4000, 1205 a 1/2000, 1059 a 1/1000, 691 a 1/500, 651 de 1/250 a 1/15, 2–3 a 1/8 y 1/4. r6/r7 quedan en 1.
+- INFERENCIA: r5 es el registro de inicio del reinicio electrónico (exposición mayor ⇒ r5 menor). No es lineal con el tiempo en los puntos medidos y se satura en 651, así que la escala (líneas por segundo, longitud de cuadro) no está determinada; a 1/8 y 1/4 la vista en directo cambia probablemente de cadencia.
+- Siguiente: comparar con el r5 de la propia foto (ShutMode 3) en un estado estable, y solo con autorización expresa, probar en la foto un r5 de la vista en directo.

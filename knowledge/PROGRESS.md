@@ -2827,3 +2827,6 @@ Un disparo de prueba con ShutMode 3 no termina (como el 1 en T029); revertido. S
 
 ## 27-10-2026 — T031: ShutMode real y bit 2 (E23)
 ID1 leído en vivo: vista en directo ShutMode 0, foto ShutMode 3 (corrige T029/T030). Borrar b2 solo en la foto da imagen corrupta. Las palancas de ShutMode quedan agotadas sin hoja de datos.
+
+## 27-10-2026 — T033: registro de exposición electrónica en la vista en directo (E23)
+Solo lectura. En la vista en directo solo r5 (`param+0`) cambia con la velocidad (1240 a 1/4000 … 651 saturado de 1/250 a 1/15); r6/r7 fijos. Candidato a registro de inicio del reinicio electrónico; escala sin determinar.
