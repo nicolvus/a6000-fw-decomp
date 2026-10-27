@@ -2821,3 +2821,6 @@ Con Darwin tipo 0, forzar `param+9` de `SetExposure` IMX210 a 0 o 4 cambia la in
 
 ## 27-10-2026 — T029: ShutMode 1/3 forzado (E23), incidente
 Control normal; forzar ShutMode 1 deja la captura colgada en `shooting`; el modo 3 empezó con la cámara ya colgada. El reinicio del usuario no limpió la RAM (parche de modo 3 aún presente): revertido a mano. `scripts/camera_tipo2_sweep.py` admite varios parches.
+
+## 27-10-2026 — T030: ShutMode 3 forzado (E23)
+Un disparo de prueba con ShutMode 3 no termina (como el 1 en T029); revertido. Solo 0 y 4 permiten disparar; falta leer ID1 tras un disparo normal para saber qué modo usa la cámara.
