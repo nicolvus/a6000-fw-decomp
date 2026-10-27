@@ -17,7 +17,7 @@ A6300 fw2.01 (controles positivos). Restricciones: sin ejecutar firmware, sin c�
 - **Decisión [S51](../docs/capture/s51-decision.md): A=NO, B=NO, C=NO.** No hay ruta de exposición totalmente electrónica
   demostrada (A), ni base para un parche justificable (B), ni prueba de imposibilidad por hardware (C). Sin cambios desde S51.
 - Estático: todo cerrado **con límite** salvo E1 (`NO_VERIFICADO`, sin vías estáticas); lo restante está bloqueado por datos
-  (E6, E9, E11, E13, D5) o es físico (F1–F6, P1–P21 sin ejecutar, diferidas por orden del usuario). Lista y estados:
+  (E6, E9, E11, E13, D5) o es físico (F1–F6; pruebas por USB ya hechas el 26-10-2026: T001–T021, ver [registro](../docs/capture/registro-pruebas-camara.md); el tipo 2 se fuerza y no cambia el obturador; E22 cerrado con límite). Lista y estados:
   [PENDIENTES](../docs/PENDIENTES.md).
 - Los censos (133/372 etiquetas, 35,75 %) y las cifras de pruebas **miden documentación**, no código descompilado ni
   funcionamiento físico. Datos de auditoría: [estado.json](audit/estado.json), [memoria.json](audit/memoria.json)
@@ -67,7 +67,7 @@ Para la trazabilidad completa: [CORRECTIONS](../docs/CORRECTIONS.md) y [STATE §
 - **REA primero**, Ghidra histórico (`silent-liro.gpr`, readOnly) como respaldo; una consulta vacía de REA no prueba ausencia.
   Una sola sesión `session_daemon.py` + `q.py` (`av-cam.bin` ~8 min en frío); verificar lo decisivo contra bytes. Detalle:
   [STATE § Política de ingeniería inversa](../docs/STATE.md).
-- Pruebas físicas P1–P21 **diferidas** hasta agotar lo estático; antes de cualquier prueba, backup NVRAM.
+- Pruebas en cámara solo por USB/software (la cámara no se abre); antes de cualquier prueba, backup NVRAM y registro T0NN.
 - Commits convencionales por fase; actualizar [PENDIENTES](../docs/PENDIENTES.md) en el mismo commit; nunca firmware ni archivos ignorados.
 
 ## Pendientes activos prioritarios (autoridad: PENDIENTES)
@@ -89,7 +89,7 @@ Para la trazabilidad completa: [CORRECTIONS](../docs/CORRECTIONS.md) y [STATE §
 
 1. Si se reabre lo estático: seguir el productor de `0x10000005` hasta la entrada de estado 2 de `StateMgr` y `0x90de2e → RecordImage`;
    fijar tamaño/contenido de Backup `0x3000b` antes de atribuir valores a los gates `+3/+6`; enlaces IMX210/YC/archivo/cortina y cuerpos locales de RecordStill (ocho parejas).
-2. Pedir al usuario: hojas de datos (D5), mapa de pines (E11), decisión sobre respaldo (R1) e historial (R3), autorización de P1–P21.
+2. Pedir al usuario: hojas de datos (D5), mapa de pines (E11), decisión sobre respaldo (R1) e historial (R3), P10 (offset del campo de captura), medir ráfaga y verificar `sio3/sio4` si se quiere seguir con la cámara.
 3. Mantener la documentación según el protocolo de abajo.
 
 ## Protocolo de sesión

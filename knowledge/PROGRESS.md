@@ -2783,3 +2783,7 @@ Base remota `f4dc7062`, cuenta `nicolvus`, pull sin cambios y árbol inicial lim
 # E21 — lectura de volcados del 20-10 (26-10-2026)
 
 ARM7 SRAM = código ARM de coprocesador; clave `0x3000b` igual en 18 copias; matriz `0x43e80160` = 13 registros de 0x30 B. [Informe](../docs/capture/e21-lecturas-backups-2026-10-26.md). S51 sin cambios.
+
+# Pruebas en cámara por USB y E22 (26-10-2026)
+
+T001–T021: P0–P4, P6, P13–P16, P18–P21 (P5/P11 caen con F4; P7/P17 sin material). Forzar `G+0x784`=2 por parche RAM es efectivo y el obturador sigue igual (T020); `D+0x86` fuera de vocabulario sin efecto (T021). E22: el tipo 2 solo llega al gestor `0x4359xxxx` y constantes de reloj; sin camino a CAIF. [Registro](../docs/capture/registro-pruebas-camara.md), [E22](../docs/capture/tipo2-analisis-estatico-2026-10-26.md). S51 sin cambios.
