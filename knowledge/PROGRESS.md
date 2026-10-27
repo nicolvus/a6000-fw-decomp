@@ -2806,3 +2806,6 @@ Emisores de los IDs `0x12` (4 B), `0x0f` (2 B) y `0x13` (10 B) localizados en `a
 
 ## 26-10-2026 — T024: Darwin tipo 0 instalado (E23)
 Con autorización expresa del usuario se flasheó el FDAT 3.22 con `darwin_core.bin` tipo 0, previo backup NVRAM y FDAT de recuperación oficial como 3.23. La cámara lo acepta y arranca; las cortinas cierran y reabren muy rápido al disparar; con «RR exp. larga» la toma de 1 s sale como resta de dos tomas (sin cortina el fotograma oscuro capta la escena); sin RR sale normal. Falta EXIF y barrido de velocidades. Informe: `docs/capture/darwin-via-actualizacion-2026-10-26.md`.
+
+## 26-10-2026 — T025: barrido de velocidades con Darwin tipo 0 (E23)
+RemoteShutter v3 (`/ss`, `/nr`, `/last`) y `scripts/camera_shutter_sweep.py`. Brillo plano de 1/4000 a 1/250 y creciente después; suelo mayor en la parte baja: la exposición termina con la lectura del sensor (~30 ms). Tipo 0 no da obturador electrónico rápido.

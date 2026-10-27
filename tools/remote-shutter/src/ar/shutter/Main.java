@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-/** Abre CameraEx por reflexión y dispara con GET /shoot por el puerto 8080. */
+/** Abre CameraEx por reflexión y dispara con GET /shoot por el puerto 8080; /ss fija la velocidad, /nr la RR larga, /last da el último JPEG. */
 public class Main extends Activity implements SurfaceHolder.Callback {
     private static final String TAG = "RemoteShutter";
     private Object cameraEx;
@@ -27,6 +27,7 @@ public class Main extends Activity implements SurfaceHolder.Callback {
     private final Handler ui = new Handler();
     private volatile String last = "none";
     private int count;
+    private volatile byte[] lastJpeg;
     private TextView info;
     private String keyLog = "-";
 
@@ -96,6 +97,7 @@ public class Main extends Activity implements SurfaceHolder.Callback {
                 camera.takePicture(null, null, new Camera.PictureCallback() {
                     public void onPictureTaken(byte[] data, Camera cam) {
                         try {
+                            lastJpeg = data;
                             OutputStream o = new FileOutputStream("/mnt/sdcard/RS" + (++count) + ".JPG");
                             o.write(data); o.close();
                         } catch (Throwable t) { Log.e(TAG, "save", t); }
@@ -191,6 +193,49 @@ public class Main extends Activity implements SurfaceHolder.Callback {
         }});
     }
 
+    private Object modifier() throws Exception {
+        if (cameraEx == null) open();
+        return cameraEx.getClass().getMethod("createParametersModifier", Camera.Parameters.class).invoke(cameraEx, camera.getParameters());
+    }
+
+    private double speed() throws Exception {
+        Object pm = modifier();
+        android.util.Pair<?, ?> p = (android.util.Pair<?, ?>) pm.getClass().getMethod("getShutterSpeed").invoke(pm);
+        return ((Integer) p.first).doubleValue() / (Integer) p.second;
+    }
+
+    /** GET /ss?n=&d= : lleva la velocidad a n/d con CameraEx.adjustShutterSpeed (no hay setter directo); el sentido del paso se descubre. */
+    private synchronized String ss(int n, int d) {
+        try {
+            Method adj = null;
+            if (cameraEx == null) open();
+            for (Method m : cameraEx.getClass().getMethods()) if (m.getName().equals("adjustShutterSpeed")) adj = m;
+            double target = (double) n / d, v = speed(), err = Math.abs(Math.log(v / target));
+            int dir = v > target ? 1 : -1;
+            for (int i = 0; i < 80 && err > 0.05; i++) {
+                adj.invoke(cameraEx, dir);
+                Thread.sleep(120);
+                double v2 = speed(), e2 = Math.abs(Math.log(v2 / target));
+                if (e2 > err) dir = -dir;
+                v = v2; err = e2;
+            }
+            return (err > 0.05 ? "ss-fail " : "ss-ok ") + v;
+        } catch (Throwable t) { Log.e(TAG, "ss", t); return "ss-error " + cause(t); }
+    }
+
+    /** GET /nr?v=0|1 : reducción de ruido de exposición larga. */
+    private synchronized String nr(boolean on) {
+        try {
+            Camera.Parameters prm = (cameraEx == null ? null : camera.getParameters());
+            if (prm == null) { open(); prm = camera.getParameters(); }
+            Object pm = cameraEx.getClass().getMethod("createParametersModifier", Camera.Parameters.class).invoke(cameraEx, prm);
+            pm.getClass().getMethod("setLongExposureNR", boolean.class).invoke(pm, on);
+            camera.setParameters(prm);
+            Object pm2 = modifier();
+            return "nr " + pm2.getClass().getMethod("getLongExposureNR").invoke(pm2);
+        } catch (Throwable t) { Log.e(TAG, "nr", t); return "nr-error " + cause(t); }
+    }
+
     private static String hex(byte[] d) {
         StringBuilder h = new StringBuilder();
         for (int i = 0; i < d.length && i < 48; i++) h.append(String.format("%02x", d[i]));
@@ -219,7 +264,16 @@ public class Main extends Activity implements SurfaceHolder.Callback {
                     byte[] buf = new byte[512];
                     int n = s.getInputStream().read(buf);
                     String req = n > 0 ? new String(buf, 0, n) : "";
-                    if (req.startsWith("GET /shoot")) shoot();
+                    if (req.startsWith("GET /last")) {
+                        byte[] j = lastJpeg;
+                        OutputStream o = s.getOutputStream();
+                        o.write(("HTTP/1.0 200 OK\r\nContent-Type: image/jpeg\r\nContent-Length: " + (j == null ? 0 : j.length) + "\r\n\r\n").getBytes());
+                        if (j != null) o.write(j);
+                        o.close(); s.close(); continue;
+                    }
+                    if (req.startsWith("GET /ss")) last = ss(q(req, "n", 1), q(req, "d", 60));
+                    else if (req.startsWith("GET /nr")) last = nr(q(req, "v", 0) == 1);
+                    else if (req.startsWith("GET /shoot")) shoot();
                     else if (req.startsWith("GET /seq")) seq(q(req, "w", 1280), q(req, "h", 720), q(req, "f", 17), q(req, "n", 1), q(req, "p", 0) == 1, q(req, "t", 0) == 1);
                     OutputStream o = s.getOutputStream();
                     o.write(("HTTP/1.0 200 OK\r\n\r\n" + last + "\n").getBytes());
