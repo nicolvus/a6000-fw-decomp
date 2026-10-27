@@ -1,0 +1,1452 @@
+{
+ "sha256_darwin_core": "5f2be06d9885d154e8e0df46a611d6830d29754b4353f6e82cecfe66dd6a0bf4",
+ "A_ADC-A": {
+  "descriptor": {
+   "desc": "0x29d90",
+   "tabla": "0x29e00",
+   "n": 17,
+   "ptr_pos": "0x2000381c",
+   "ptr_id": "0x2000381d",
+   "ptr_celda_lista": "0x20003818",
+   "terminal": 17,
+   "timers_id": [
+    5,
+    13,
+    13
+   ],
+   "id_log": 11
+  },
+  "estados": {
+   "1": "0x20724",
+   "2": "0x20734",
+   "3": "0x207be",
+   "4": "0x207e8",
+   "5": "0x2081c",
+   "6": "0x2083c",
+   "7": "0x209a2",
+   "8": "0x209cc",
+   "9": "0x209d0",
+   "10": "0x209ee",
+   "14": "0x209f2",
+   "15": "0x20a1a",
+   "16": "0x20a4c",
+   "17": "0x20a62"
+  },
+  "lista_desde_ADC-B": [
+   2,
+   4,
+   6,
+   16,
+   17
+  ],
+  "instalaciones_ADC-A": [
+   {
+    "sitio": "0x20348",
+    "funcion": "0x20338",
+    "r0": "0x29d90",
+    "r1": "0x29d69",
+    "lista": [
+     9,
+     10,
+     16,
+     17
+    ]
+   },
+   {
+    "sitio": "0x2036e",
+    "funcion": "0x2035e",
+    "r0": "0x29d90",
+    "r1": "0x29d6d",
+    "lista": [
+     14,
+     15,
+     16,
+     17
+    ]
+   },
+   {
+    "sitio": "0x20398",
+    "funcion": "0x20392",
+    "r0": "0x29d90",
+    "r1": "0x29d66",
+    "lista": [
+     7,
+     15,
+     17
+    ]
+   },
+   {
+    "sitio": "0x203d6",
+    "funcion": "0x203b2",
+    "r0": "0x29d90",
+    "r1": "0x29d79",
+    "lista": [
+     1,
+     3,
+     5,
+     16,
+     17
+    ]
+   },
+   {
+    "sitio": "0x2045c",
+    "funcion": "0x2041e",
+    "r0": "0x29d90",
+    "r1": "0x29d7e",
+    "lista": [
+     2,
+     4,
+     6,
+     16,
+     17
+    ]
+   },
+   {
+    "sitio": "0x205d0",
+    "funcion": "0x20544",
+    "r0": "0x29d90",
+    "r1": "0x29d7e",
+    "lista": [
+     2,
+     4,
+     6,
+     16,
+     17
+    ]
+   },
+   {
+    "sitio": "0x20ae0",
+    "funcion": "0x20aa4",
+    "r0": "0x29d90",
+    "r1": "0x29d7e",
+    "lista": [
+     2,
+     4,
+     6,
+     16,
+     17
+    ]
+   }
+  ],
+  "ejecuciones_idx0": [
+   {
+    "sitio": "0x2035a",
+    "funcion": "0x20338"
+   },
+   {
+    "sitio": "0x20380",
+    "funcion": "0x2035e"
+   },
+   {
+    "sitio": "0x203aa",
+    "funcion": "0x20392"
+   },
+   {
+    "sitio": "0x203e8",
+    "funcion": "0x203b2"
+   },
+   {
+    "sitio": "0x2046c",
+    "funcion": "0x2041e"
+   },
+   {
+    "sitio": "0x205e2",
+    "funcion": "0x20544"
+   },
+   {
+    "sitio": "0x20ae6",
+    "funcion": "0x20aa4"
+   }
+  ],
+  "estado4_ADC-B": {
+   "0x20ae0 bl 0x1e150": true,
+   "0x20ad6 bl 0x1e476": true,
+   "0x20ae4 movs #0": true,
+   "0x20ae6 bl 0x20c06": true,
+   "0x20aec pop.w {r4, lr}": true,
+   "0x20af0 b.w 0x1e4aa": true
+  },
+  "ctx_en_pila": {
+   "0x1e340 sub #0x14": true,
+   "0x1e370 mov r1, sp": true,
+   "0x1e3b0 mov r0, sp": true,
+   "0x1e3b2 blx r1": true,
+   "0x1e3c2 mov r1, sp": true,
+   "0x1e3c6 bl 0x1e234": true
+  },
+  "ejecutor_0x20c06": {
+   "0x20c0a rsb r0, r0, r0, lsl #3": true,
+   "0x20c0e add.w r4, r1, r0, lsl #2": true,
+   "0x20c28 b.w 0x1e33e": true
+  },
+  "simulacion_ADC-A": [
+   {
+    "invocacion": 0,
+    "estado": 2,
+    "manejador": "0x20734",
+    "hecho": false,
+    "temporizador": false,
+    "siguiente": 4,
+    "espera": "siguiente invocaci\u00f3n del ejecutor"
+   },
+   {
+    "invocacion": 1,
+    "estado": 4,
+    "manejador": "0x207e8",
+    "hecho": false,
+    "temporizador": true,
+    "siguiente": 6,
+    "espera": "evento 0 del temporizador (canal 0 de 0x40023000)"
+   },
+   {
+    "invocacion": 2,
+    "estado": 6,
+    "manejador": "0x2083c",
+    "hecho": true,
+    "temporizador": false,
+    "siguiente": 16,
+    "espera": null
+   },
+   {
+    "invocacion": 2,
+    "estado": 16,
+    "manejador": "0x20a4c",
+    "hecho": true,
+    "temporizador": false,
+    "siguiente": 17,
+    "espera": null
+   }
+  ],
+  "temporizador": {
+   "id": 5,
+   "bloque": "A (ids 0..7)",
+   "canal_hw": 11,
+   "entrada_bloqueA": "0x0",
+   "bytes": {
+    "0x1e1da bhi 0x1e1fa": true,
+    "0x1e1de bl 0x24ce0": true,
+    "0x1e1e4 bl 0x24c54": true,
+    "0x1e1ea bl 0x24cc2": true,
+    "0x1e1f6 b.w 0x24bee": true,
+    "0x24bf2 add.w r1, r1, r1, lsl #2": true,
+    "0x24bf6 ubfx r1, r1, #3, #0x1c": true,
+    "0x24bfa cmp.w r1, #0x10000": true,
+    "0x24c16 b.w 0x90dc": true
+   },
+   "cuentas": "\u230a5\u00b7ticks/8\u230b acotado a [1, 0xffff]",
+   "callback_0x2969c[11]": "0x1d041",
+   "cadena_evento": {
+    "0x1d040 b.w 0x197b0": true,
+    "0x197b2 bl 0x199f2": true,
+    "0x199f2 b.w 0x20248": true,
+    "0x20248 movs #0": true,
+    "0x2024a b 0x20220": true,
+    "0x20244 b.w 0x20c06": true
+   },
+   "otras_cuentas_ticks": {
+    "0x2073c ldrb.w [r5, #0x32]": true,
+    "0x20746 movs #0x64": true,
+    "0x2074a mul r8, r0, r1": true,
+    "0x207ba b.w 0x1e3d2": true,
+    "0x207fc adds #0x31": true,
+    "0x20800 ldrb [r1, #1]": true,
+    "0x20808 movs #0x64": true,
+    "0x2080e movs #0": true,
+    "0x20818 b.w 0x1e3d2": true
+   },
+   "despacho_base_timer": {
+    "bytes": {
+     "0xef4c ldr.w r1, [r7, r5, lsl #2]": true,
+     "0xef52 blx r1": true,
+     "0xf378 cmp #1": true,
+     "0xf37a beq #0xf384": true,
+     "0xf380 b.w 0xf698": true,
+     "0xf384 b.w 0xef28": true
+    },
+    "tabla_callbacks": "0x2969c",
+    "vectores_0x43ac": [
+     "0xf305",
+     "0xf317",
+     "0xf329",
+     "0xf2d9"
+    ],
+    "llamadores_0xf370": [
+     "0xf2f6",
+     "0xf310",
+     "0xf322",
+     "0xf334",
+     "0xf346",
+     "0xf358",
+     "0xf36a"
+    ],
+    "limite": "ISR/enable del canal 11 no enumerados; el despachador gen\u00e9rico s\u00ed"
+   },
+   "timers_libres_ids": [
+    5,
+    13,
+    13
+   ]
+  },
+  "flujos_por_estado": {
+   "2": {
+    "manejador": "0x20734",
+    "hecho": false,
+    "arma_temporizador": false,
+    "FAIL_directo": false,
+    "tipo0": {
+     "funciones": 6,
+     "ciclos": {},
+     "indirectos": [],
+     "lee_pin_0x51c6": false,
+     "escribe_pin_0x51c0": false,
+     "periferico": []
+    },
+    "tipoN": {
+     "funciones": 45,
+     "ciclos": {
+      "0x5cd4": [
+       [
+        "0x5cd8",
+        "0x5cf2"
+       ]
+      ],
+      "0x941e": [
+       [
+        "0x9422",
+        "0x9428"
+       ]
+      ],
+      "0x8e14": [
+       [
+        "0x251f2",
+        "0x2526c"
+       ]
+      ],
+      "0x2541c": [
+       [
+        "0x25432",
+        "0x2554c"
+       ]
+      ],
+      "0x44b0": [
+       [
+        "0x258e4",
+        "0x258fa"
+       ],
+       [
+        "0x258cc",
+        "0x258e0"
+       ],
+       [
+        "0x258a8",
+        "0x258bc"
+       ],
+       [
+        "0x25390",
+        "0x2539c"
+       ],
+       [
+        "0x253e8",
+        "0x253fa"
+       ]
+      ],
+      "0x252d6": [
+       [
+        "0x252e4",
+        "0x252f6"
+       ]
+      ],
+      "0x252fa": [
+       [
+        "0x25336",
+        "0x25342"
+       ],
+       [
+        "0x25314",
+        "0x2531e"
+       ]
+      ],
+      "0x252a8": [
+       [
+        "0x252c0",
+        "0x252d2"
+       ]
+      ],
+      "0x5d00": [
+       [
+        "0x5d52",
+        "0x5d5c"
+       ],
+       [
+        "0x5d44",
+        "0x5d4e"
+       ]
+      ],
+      "0x97d0": [
+       [
+        "0x984c",
+        "0x9850"
+       ]
+      ],
+      "0x8e7e": [
+       [
+        "0x251f2",
+        "0x2526c"
+       ]
+      ]
+     },
+     "indirectos": [
+      "0x1b3e2 blx r1",
+      "0x1b3ee blx r0",
+      "0x1b3f6 blx r1",
+      "0x1b460 blx r1",
+      "0x1b46c blx r0",
+      "0x1b474 blx r1",
+      "0x94e8 blx r1",
+      "0x1b4b4 blx r0",
+      "0x1b4c0 blx r0",
+      "0x1b4c8 blx r1",
+      "0x1b516 blx r2",
+      "0x25436 blx r1",
+      "0x25544 blx r2",
+      "0x2544e blx r1",
+      "0x2548c blx r1",
+      "0x254e2 blx r1",
+      "0x254ca blx r1",
+      "0x258ec blx r2",
+      "0x258d2 blx r2",
+      "0x258b0 blx r2",
+      "0x252ea blx r2",
+      "0x2533e blx r2",
+      "0x252c6 blx r2",
+      "0x1b360 blx r0",
+      "0x1b36c blx r0",
+      "0x1b374 blx r1",
+      "0x1b3b4 blx r2"
+     ],
+     "lee_pin_0x51c6": false,
+     "escribe_pin_0x51c0": false,
+     "periferico": [
+      "0x40023000",
+      "0x4002710e",
+      "0x40030000",
+      "0x4266c300",
+      "0xfffffe23",
+      "0xffffffe1"
+     ]
+    },
+    "solo_tipoN": [
+     "0x44b0",
+     "0x5782",
+     "0x5cd4",
+     "0x5d00",
+     "0x5d70",
+     "0x5e56",
+     "0x5ec4",
+     "0x8e14",
+     "0x8e7e",
+     "0x941e",
+     "0x94de",
+     "0x96ea",
+     "0x976a",
+     "0x97d0",
+     "0x9854",
+     "0x98c6",
+     "0x1b096",
+     "0x1b3cc",
+     "0x1b434",
+     "0x1b456",
+     "0x1b458",
+     "0x1b498",
+     "0x1b532",
+     "0x1b56e",
+     "0x1b586",
+     "0x20cee",
+     "0x20fd6",
+     "0x20fde",
+     "0x21014",
+     "0x210a2",
+     "0x25290",
+     "0x252a8",
+     "0x252d6",
+     "0x252fa",
+     "0x2541c",
+     "0x25940",
+     "0x25964",
+     "0x259c2",
+     "0x25b1c"
+    ]
+   },
+   "4": {
+    "manejador": "0x207e8",
+    "hecho": false,
+    "arma_temporizador": true,
+    "FAIL_directo": false,
+    "tipo0": {
+     "funciones": 4,
+     "ciclos": {},
+     "indirectos": [],
+     "lee_pin_0x51c6": false,
+     "escribe_pin_0x51c0": false,
+     "periferico": []
+    },
+    "tipoN": {
+     "funciones": 5,
+     "ciclos": {},
+     "indirectos": [],
+     "lee_pin_0x51c6": false,
+     "escribe_pin_0x51c0": false,
+     "periferico": [
+      "0x42668000"
+     ]
+    },
+    "solo_tipoN": [
+     "0x16ff4"
+    ]
+   },
+   "6": {
+    "manejador": "0x2083c",
+    "hecho": true,
+    "arma_temporizador": false,
+    "FAIL_directo": false,
+    "tipo0": {
+     "funciones": 3,
+     "ciclos": {},
+     "indirectos": [],
+     "lee_pin_0x51c6": false,
+     "escribe_pin_0x51c0": false,
+     "periferico": []
+    },
+    "tipoN": {
+     "funciones": 35,
+     "ciclos": {
+      "0x5cd4": [
+       [
+        "0x5cd8",
+        "0x5cf2"
+       ]
+      ],
+      "0x24330": [
+       [
+        "0x24348",
+        "0x24350"
+       ]
+      ],
+      "0x2541c": [
+       [
+        "0x25432",
+        "0x2554c"
+       ]
+      ],
+      "0x44b0": [
+       [
+        "0x258e4",
+        "0x258fa"
+       ],
+       [
+        "0x258cc",
+        "0x258e0"
+       ],
+       [
+        "0x258a8",
+        "0x258bc"
+       ],
+       [
+        "0x25390",
+        "0x2539c"
+       ],
+       [
+        "0x253e8",
+        "0x253fa"
+       ]
+      ],
+      "0x252d6": [
+       [
+        "0x252e4",
+        "0x252f6"
+       ]
+      ],
+      "0x252fa": [
+       [
+        "0x25336",
+        "0x25342"
+       ],
+       [
+        "0x25314",
+        "0x2531e"
+       ]
+      ],
+      "0x252a8": [
+       [
+        "0x252c0",
+        "0x252d2"
+       ]
+      ],
+      "0x97d0": [
+       [
+        "0x984c",
+        "0x9850"
+       ]
+      ]
+     },
+     "indirectos": [
+      "0x1b3e2 blx r1",
+      "0x1b3ee blx r0",
+      "0x1b3f6 blx r1",
+      "0x1b460 blx r1",
+      "0x1b46c blx r0",
+      "0x1b474 blx r1",
+      "0x25436 blx r1",
+      "0x25544 blx r2",
+      "0x2544e blx r1",
+      "0x2548c blx r1",
+      "0x254e2 blx r1",
+      "0x254ca blx r1",
+      "0x258ec blx r2",
+      "0x258d2 blx r2",
+      "0x258b0 blx r2",
+      "0x252ea blx r2",
+      "0x2533e blx r2",
+      "0x252c6 blx r2"
+     ],
+     "lee_pin_0x51c6": false,
+     "escribe_pin_0x51c0": true,
+     "periferico": [
+      "0x40030000",
+      "0x42668000",
+      "0x4266c300",
+      "0xfffffe23",
+      "0xffffffe1"
+     ]
+    },
+    "solo_tipoN": [
+     "0x44b0",
+     "0x51c0",
+     "0x5cd4",
+     "0x5d70",
+     "0x5e56",
+     "0x5ec4",
+     "0x96ea",
+     "0x976a",
+     "0x9782",
+     "0x97ba",
+     "0x97d0",
+     "0x98c6",
+     "0x1b096",
+     "0x1b17c",
+     "0x1b3cc",
+     "0x1b458",
+     "0x1b586",
+     "0x1f3d4",
+     "0x1fe66",
+     "0x201b0",
+     "0x20cee",
+     "0x20fde",
+     "0x210a2",
+     "0x24330",
+     "0x252a8",
+     "0x252d6",
+     "0x252fa",
+     "0x2541c",
+     "0x25940",
+     "0x25964",
+     "0x259c2",
+     "0x25b1c"
+    ]
+   },
+   "16": {
+    "manejador": "0x20a4c",
+    "hecho": true,
+    "arma_temporizador": false,
+    "FAIL_directo": false,
+    "tipo0": {
+     "funciones": 5,
+     "ciclos": {},
+     "indirectos": [],
+     "lee_pin_0x51c6": false,
+     "escribe_pin_0x51c0": true,
+     "periferico": [
+      "0x42668000"
+     ]
+    },
+    "tipoN": {
+     "funciones": 5,
+     "ciclos": {},
+     "indirectos": [],
+     "lee_pin_0x51c6": false,
+     "escribe_pin_0x51c0": true,
+     "periferico": [
+      "0x42668000"
+     ]
+    },
+    "solo_tipoN": []
+   }
+  }
+ },
+ "A_ADC-B_cierres_podados": {
+  "0": {
+   "manejador": "0x20a62",
+   "tipo0": {
+    "funciones": 1,
+    "ciclos": {},
+    "indirectos": [],
+    "lee_pin_0x51c6": false,
+    "escribe_pin_0x51c0": false,
+    "periferico": []
+   },
+   "tipoN": {
+    "funciones": 1,
+    "ciclos": {},
+    "indirectos": [],
+    "lee_pin_0x51c6": false,
+    "escribe_pin_0x51c0": false,
+    "periferico": []
+   },
+   "solo_tipoN": []
+  },
+  "1": {
+   "manejador": "0x20a66",
+   "tipo0": {
+    "funciones": 1,
+    "ciclos": {},
+    "indirectos": [],
+    "lee_pin_0x51c6": false,
+    "escribe_pin_0x51c0": false,
+    "periferico": []
+   },
+   "tipoN": {
+    "funciones": 1,
+    "ciclos": {},
+    "indirectos": [],
+    "lee_pin_0x51c6": false,
+    "escribe_pin_0x51c0": false,
+    "periferico": []
+   },
+   "solo_tipoN": []
+  },
+  "2": {
+   "manejador": "0x20a72",
+   "tipo0": {
+    "funciones": 5,
+    "ciclos": {},
+    "indirectos": [],
+    "lee_pin_0x51c6": false,
+    "escribe_pin_0x51c0": false,
+    "periferico": []
+   },
+   "tipoN": {
+    "funciones": 5,
+    "ciclos": {},
+    "indirectos": [],
+    "lee_pin_0x51c6": false,
+    "escribe_pin_0x51c0": false,
+    "periferico": []
+   },
+   "solo_tipoN": []
+  },
+  "3": {
+   "manejador": "0x20a8a",
+   "tipo0": {
+    "funciones": 12,
+    "ciclos": {},
+    "indirectos": [
+     "0x94e8 blx r1"
+    ],
+    "lee_pin_0x51c6": false,
+    "escribe_pin_0x51c0": false,
+    "periferico": [
+     "0x42668000"
+    ]
+   },
+   "tipoN": {
+    "funciones": 12,
+    "ciclos": {},
+    "indirectos": [
+     "0x94e8 blx r1"
+    ],
+    "lee_pin_0x51c6": false,
+    "escribe_pin_0x51c0": false,
+    "periferico": [
+     "0x42668000"
+    ]
+   },
+   "solo_tipoN": []
+  },
+  "4": {
+   "manejador": "0x20aa4",
+   "tipo0": {
+    "funciones": 17,
+    "ciclos": {},
+    "indirectos": [],
+    "lee_pin_0x51c6": false,
+    "escribe_pin_0x51c0": true,
+    "periferico": [
+     "0x42668000"
+    ]
+   },
+   "tipoN": {
+    "funciones": 25,
+    "ciclos": {},
+    "indirectos": [
+     "0x94e8 blx r1"
+    ],
+    "lee_pin_0x51c6": false,
+    "escribe_pin_0x51c0": true,
+    "periferico": [
+     "0x40023000",
+     "0x42668000"
+    ]
+   },
+   "solo_tipoN": [
+    "0x5ec4",
+    "0x93e6",
+    "0x94de",
+    "0x16fe2",
+    "0x1b52e",
+    "0x20c4a",
+    "0x20cee",
+    "0x210c0"
+   ]
+  },
+  "5": {
+   "manejador": "0x20af4",
+   "tipo0": {
+    "funciones": 4,
+    "ciclos": {},
+    "indirectos": [],
+    "lee_pin_0x51c6": false,
+    "escribe_pin_0x51c0": false,
+    "periferico": []
+   },
+   "tipoN": {
+    "funciones": 4,
+    "ciclos": {},
+    "indirectos": [],
+    "lee_pin_0x51c6": false,
+    "escribe_pin_0x51c0": false,
+    "periferico": [
+     "0x42668000"
+    ]
+   },
+   "solo_tipoN": []
+  },
+  "6": {
+   "manejador": "0x20b06",
+   "tipo0": {
+    "funciones": 5,
+    "ciclos": {},
+    "indirectos": [],
+    "lee_pin_0x51c6": false,
+    "escribe_pin_0x51c0": true,
+    "periferico": [
+     "0x42668000"
+    ]
+   },
+   "tipoN": {
+    "funciones": 5,
+    "ciclos": {},
+    "indirectos": [],
+    "lee_pin_0x51c6": false,
+    "escribe_pin_0x51c0": true,
+    "periferico": [
+     "0x42668000"
+    ]
+   },
+   "solo_tipoN": []
+  }
+ },
+ "A_dependencia_terminal": {
+  "estado_3": {
+   "entrada_tabla": [
+    "0x3",
+    "0x1860d"
+   ],
+   "bytes": {
+    "0x18610 bl 0x196a2": true,
+    "0x18622 bl 0x19974": true,
+    "0x18628 bne 0x18634": true,
+    "0x18630 b.w 0x1e4c2": true
+   }
+  },
+  "estado_32": {
+   "entrada_tabla": [
+    "0x20",
+    "0x192a1"
+   ],
+   "bytes": {
+    "0x192a4 bl 0x19974": true,
+    "0x192a8 cbz #0x192be": true,
+    "0x192c4 b.w 0x1e4c2": true,
+    "0x192cc b.w 0x1b178": true,
+    "0x192aa bl 0x1e782": true
+   }
+  },
+  "orden_lista_captura": [
+   2,
+   9,
+   3,
+   4,
+   13,
+   10,
+   15,
+   6,
+   19,
+   20,
+   26,
+   28,
+   31,
+   32,
+   48,
+   49
+  ],
+  "descriptor_captura": {
+   "desc": "0x28fdc",
+   "pos": "0x200036fc",
+   "id": "0x200036fd",
+   "terminal": 49
+  },
+  "predicado_0x20c34": {
+   "0x19974 b.w 0x204b2": true,
+   "0x204b2 b.w 0x20c34": true,
+   "0x20c36 bl 0x20c2c": true,
+   "0x20c3c beq #0x20c48": true,
+   "0x20c42 ldr [pc, #0x28]": true,
+   "0x20c44 b.w 0x1e16e": true
+  },
+  "literal_0x20c42": "0x29d90",
+  "esperas_activas": {
+   "0x20384": {
+    "0x20386 bl 0x20c34": true,
+    "0x2038c beq #0x20386": true
+   },
+   "0x204b6": {
+    "0x204b8 bl 0x20c34": true,
+    "0x204be beq #0x204b8": true
+   }
+  },
+  "llamadores_esperas": {
+   "0x20384": [
+    "0x19830"
+   ],
+   "0x204b6": [
+    "0x19848"
+   ],
+   "0x19974": [
+    "0x174e4",
+    "0x18622",
+    "0x192a4"
+   ]
+  },
+  "en_estado_31_0x18d6e": []
+ },
+ "B_P29_grupo": {
+  "llamadas_0x5792": {
+   "0x478a": {
+    "funcion": "0x46b2",
+    "grupo": 0
+   },
+   "0x7188": {
+    "funcion": "0x7150",
+    "grupo": 5
+   },
+   "0x7284": {
+    "funcion": "0x71c4",
+    "grupo": 6
+   },
+   "0x7292": {
+    "funcion": "0x71c4",
+    "grupo": 5
+   },
+   "0x73fa": {
+    "funcion": "0x73cc",
+    "grupo": 2
+   },
+   "0x7618": {
+    "funcion": "0x75f0",
+    "grupo": 3
+   },
+   "0x8078": {
+    "funcion": "0x8044",
+    "grupo": 4
+   },
+   "0x826c": {
+    "funcion": "0x8234",
+    "grupo": 5
+   },
+   "0x85a8": {
+    "funcion": "0x8538",
+    "grupo": 6
+   },
+   "0x85be": {
+    "funcion": "0x8538",
+    "grupo": 5
+   }
+  },
+  "tabla_0x25b50": [
+   [
+    "0x7150",
+    "0x72c2",
+    "0x730e",
+    "0x7328"
+   ],
+   [
+    "0x73cc",
+    "0x747a",
+    "0x7542",
+    "0x755c"
+   ],
+   [
+    "0x75f0",
+    "0x76ce",
+    "0x7714",
+    "0x772e"
+   ],
+   [
+    "0x8044",
+    "0x80c2",
+    "0x817c",
+    "0x8196"
+   ],
+   [
+    "0x8234",
+    "0x8908",
+    "0x8c28",
+    "0x8c42"
+   ],
+   [
+    "0x8da4",
+    "0x8da8",
+    "-0x1",
+    "-0x1"
+   ]
+  ],
+  "grupos_por_estado": {
+   "Init": {
+    "callbacks": [
+     "0x7150",
+     "0x72c2",
+     "0x730e",
+     "0x7328"
+    ],
+    "grupos": [
+     5
+    ]
+   },
+   "Seton": {
+    "callbacks": [
+     "0x73cc",
+     "0x747a",
+     "0x7542",
+     "0x755c"
+    ],
+    "grupos": [
+     2
+    ]
+   },
+   "On": {
+    "callbacks": [
+     "0x75f0",
+     "0x76ce",
+     "0x7714",
+     "0x772e"
+    ],
+    "grupos": [
+     3
+    ]
+   },
+   "(3)": {
+    "callbacks": [
+     "0x8044",
+     "0x80c2",
+     "0x817c",
+     "0x8196"
+    ],
+    "grupos": [
+     4
+    ]
+   },
+   "Off": {
+    "callbacks": [
+     "0x8234",
+     "0x8908",
+     "0x8c28",
+     "0x8c42"
+    ],
+    "grupos": [
+     5
+    ]
+   },
+   "Upd": {
+    "callbacks": [
+     "0x8da4",
+     "0x8da8",
+     "-0x1",
+     "-0x1"
+    ],
+    "grupos": []
+   }
+  },
+  "next_0x274a4": [
+   1,
+   2,
+   3,
+   5
+  ],
+  "next_0x274a8": [
+   2,
+   3,
+   5,
+   3,
+   3
+  ],
+  "On_next_0x274b8": [
+   3,
+   3
+  ],
+  "motor": {
+   "0x7188 bl 0x5792": true,
+   "0x7616 movs #3": true,
+   "0x7618 bl 0x5792": true,
+   "0x73f8 movs #2": true,
+   "0x8076 movs #4": true,
+   "0x826a movs #5": true,
+   "0x7726 ldr [pc, #0xa4]": true,
+   "0x7728 ldr.w r0, [r0, r4, lsl #2]": true
+  },
+  "On_main_0x76ce": {
+   "0x76e8 bl 0x4530": true,
+   "0x76ee cmp #1": true,
+   "0x76f0 beq #0x7710": true,
+   "0x76f2 cmp #2": true,
+   "0x76f4 bne #0x76e4": true,
+   "0x7710 movs #0": true
+  },
+  "grupo3_P29": {
+   "P29": [
+    {
+     "modo": 5,
+     "pull_bits": 0,
+     "nivel_bits": 0,
+     "mascara": "0x300"
+    }
+   ],
+   "P4E_salida_modo1": true
+  },
+  "grupos_P29": {
+   "0": [
+    {
+     "modo": 1,
+     "pull_bits": 0,
+     "nivel_bits": 0,
+     "mascara": "0x1ff0"
+    }
+   ],
+   "1": [
+    {
+     "modo": 1,
+     "pull_bits": 0,
+     "nivel_bits": 0,
+     "mascara": "0x1ff0"
+    }
+   ],
+   "2": [
+    {
+     "modo": 2,
+     "pull_bits": 0,
+     "nivel_bits": 0,
+     "mascara": "0x300"
+    }
+   ],
+   "3": [
+    {
+     "modo": 5,
+     "pull_bits": 0,
+     "nivel_bits": 0,
+     "mascara": "0x300"
+    }
+   ],
+   "4": [
+    {
+     "modo": 2,
+     "pull_bits": 0,
+     "nivel_bits": 0,
+     "mascara": "0x300"
+    }
+   ],
+   "5": [
+    {
+     "modo": 1,
+     "pull_bits": 0,
+     "nivel_bits": 0,
+     "mascara": "0x13f8"
+    }
+   ],
+   "6": [
+    {
+     "modo": 1,
+     "pull_bits": 0,
+     "nivel_bits": 0,
+     "mascara": "0x13fc"
+    }
+   ]
+  },
+  "raices_capture_fsm": 156,
+  "cierre_raices": 816,
+  "interseccion_con_cambiadores_de_grupo": [],
+  "lectores_P29_0x124": {
+   "0x7d12 mov.w r0, #0x124": true,
+   "0x7d16 bl 0x51c6": true
+  },
+  "boot": {
+   "0x4770 orr.w r1, r0, lsl #8": true,
+   "0x4774 cmp #5": true,
+   "0x4780 cmp #2": true,
+   "0x4784 movs #1": true,
+   "0x4788 movs #0": true,
+   "0x478a bl 0x5792": true
+  }
+ },
+ "C_irq_ADC-B": {
+  "armado": {
+   "engine_1e1fa": {
+    "0x1e1fa cmp #0xc": true,
+    "0x1e204 bl 0x24d1a": true,
+    "0x1e20a bl 0x24ca4": true,
+    "0x1e210 bl 0x24cfa": true,
+    "0x1e21c b.w 0x24c6e": true
+   },
+   "bloqueB_id9": {
+    "entrada": "0x0",
+    "canal": 0,
+    "bytes": {
+     "0x24c94 ldrb [r0, #4]": true,
+     "0x24c96 b.w 0x9388": true,
+     "0x939c b.w 0x94f6": true
+    }
+   },
+   "0x94f6": {
+    "0x94fa movs #0": true,
+    "0x9500 str [sp]": true,
+    "0x9504 bls #0x9512": true,
+    "0x9514 bl 0xf86e": true,
+    "0x9518 cbz #0x9526": true,
+    "0x9528 adds r1, r6, r0": true,
+    "0x9530 str [r0, #4]": true,
+    "0x9534 strb [r0, #1]": true,
+    "0x9538 bl 0xf99a": true,
+    "0x953e bl 0xfa18": true,
+    "0x9544 beq #0x9554": true
+   },
+   "0xf86e_contador": {
+    "0xf872 ldrb [r0]": true,
+    "0xf878 cmp #2": true,
+    "0xf87e bne #0xf88c": true,
+    "0xf886 ldr [r0, #4]": true,
+    "0xf888 str [r2]": true
+   },
+   "0xf99a_habilita_NVIC": {
+    "0xf9a2 ldrb.w [r5, r0, lsl #3]": true,
+    "0xf9a6 cbnz #0xf9c8": true,
+    "0xf9aa movs #0x20": true,
+    "0xf9b2 movs #0x21": true,
+    "0xf9b4 bl 0xfaa2": true,
+    "0xf9ba strb.w [r5, r4, lsl #3]": true,
+    "0xf9c0 bl 0xf8ee": true,
+    "0xf9c8 mov.w r0, #-1": true
+   },
+   "0xfaa2_ISER": {
+    "0xfaa2 and r2, r0, #0x1f": true,
+    "0xfaa8 lsls r1, r2": true,
+    "0xfaaa lsrs r0, r0, #5": true,
+    "0xfaac mov.w r2, #-0x1fff2000": true,
+    "0xfab4 str.w [r0, #0x100]": true
+   },
+   "0xf8ee_config_canal0": {
+    "0xf8f8 cbz #0xf952": true,
+    "0xf952 ldrh [r1, #0x1c]": true,
+    "0xf95e orr.w r4, r4, r5, lsl #4": true,
+    "0xf96c strh [r1, #0x1c]": true,
+    "0xf990 strh [r1, #0x1c]": true,
+    "0xf994 ldr [r3, #4]": true,
+    "0xf996 str [r1, #0x14]": true
+   },
+   "0xfa18_inicio": {
+    "0xfa1c ldrb.w [r1, r0, lsl #3]": true,
+    "0xfa20 cmp #1": true,
+    "0xfa26 strb.w [r1, r0, lsl #3]": true,
+    "0xfa42 ldrh [r1, #0x1c]": true,
+    "0xfa48 orr #0x81": true,
+    "0xfa4c b #0xfa3c": true
+   },
+   "config_ch0_0x27970": "0x180",
+   "ctrl_0x1c_tras_0xf8ee_calculado": "0x2094",
+   "config_global_0x2796c": "0x10400",
+   "estados": {
+    "global": "0x20002d68",
+    "canal0": "0x20002d6c",
+    "flag_canal0": "0x20002d6d",
+    "compare_canal0": "0x20002d70"
+   }
+  },
+  "init_global": {
+   "0x8fb4": {
+    "0x8fba blx r0": true,
+    "0x8fc0 beq #0x8fce": true,
+    "0x8fd0 blx r0": true,
+    "0x8fe6 blx r0": true,
+    "0x901e bl 0xf834": true,
+    "0x9030 bl 0xf84e": true,
+    "0x905e mov r0, r5": true
+   },
+   "0xf834": {
+    "0xf838 ldrb [r0]": true,
+    "0xf83a cbnz #0xf848": true,
+    "0xf83e strb [r0]": true,
+    "0xf840 bl 0xfaba": true,
+    "0xf848 mov.w r0, #-1": true
+   },
+   "0xf84e": {
+    "0xf852 cmp #1": true,
+    "0xf856 movs #2": true,
+    "0xf85e bic r1, r1, #0x50": true,
+    "0xf862 strh [r0, #8]": true
+   },
+   "0xfaba": {
+    "0xfad8 movs #0x50": true,
+    "0xfada strh [r2, #8]": true,
+    "0xfade str [r2, #4]": true,
+    "0xfb06 orr #0x50": true,
+    "0xfb0a strh [r2, #8]": true
+   },
+   "cadena": {
+    "0x8fb4": [
+     "0x5f08"
+    ],
+    "0x5f04": [
+     "0x47f4"
+    ],
+    "0x46b2": [
+     "0x44ee"
+    ]
+   }
+  },
+  "isr": {
+   "vectores_tabla_0x42fc": {
+    "0x43bc": "0xf8d3",
+    "0x43c0": "0xfa95",
+    "indice_IRQ_si_base_0x42fc": [
+     32,
+     33
+    ],
+    "base_0x42fc_palabra0": "0x6809",
+    "reset_en_0x4300": "0x45c9",
+    "tabla_0x4200_irq0": "0x6809",
+    "tabla_0x4200_hasta_0x42ff_todas_por_defecto": true,
+    "exc1_a_3_en_0x4300": [
+     "0x45c9",
+     "0x47fb",
+     "0x45db"
+    ]
+   },
+   "isr_canal0_0xf8d2": {
+    "0xf8d2 ldr [pc, #0x24c]": true,
+    "0xf8d4 ldr.w r1, [r0, #0x94]": true,
+    "0xf8d8 lsls #0x1f": true,
+    "0xf8da beq #0xf8e0": true,
+    "0xf8dc movs #0": true,
+    "0xf8de b #0xf88e": true
+   },
+   "isr_canal1_0xfa94": {
+    "0xfa96 ldr r0, [r0]": true,
+    "0xfa98 lsls #0x1f": true,
+    "0xfa9c movs #1": true,
+    "0xfa9e b #0xf88e": true
+   },
+   "monitor_0x40031094": "IRQ32 si 0x14+4\u00b7IRQ",
+   "0xf88e_despacho": {
+    "0xf88e ldr [pc, #0x288]": true,
+    "0xf890 cbz #0xf8bc": true,
+    "0xf8bc ldrh [r2, #0x1c]": true,
+    "0xf8be and r1, r1, #0x40": true,
+    "0xf89e beq #0xf8d0": true,
+    "0xf8a0 cbz #0xf8c4": true,
+    "0xf8c4 ldrh [r2, #0x1c]": true,
+    "0xf8ca orr r1, r1, #0x80": true,
+    "0xf8b0 strh [r2, #0x1c]": true,
+    "0xf8b2 ldr [pc, #0x268]": true,
+    "0xf8b4 ldr.w r1, [r1, r0, lsl #2]": true,
+    "0xf8b8 movs #1": true,
+    "0xf8ba bx r1": true
+   },
+   "tabla_callbacks_0x2969c": {
+    "[11]": "0x1d041",
+    "[13]": "0x1d049",
+    "[14]=0x296d4[0]": "0x1d04d",
+    "[15]=0x296d8[1]": "0x1d065"
+   },
+   "NVIC_escritores_ISER": [
+    "0x5830",
+    "0xfab4"
+   ]
+  },
+  "callback_ADC-B": {
+   "0x1d04e bl 0x197d8": true,
+   "0x1d052 cbz #0x1d05c": true,
+   "0x1d060 b.w 0x197c6": true,
+   "0x197d8 b.w 0x199b0": true,
+   "0x199b0 b.w 0x203ae": true,
+   "0x197c6 b.w 0x199fe": true,
+   "0x199fe b.w 0x20274": true,
+   "0x20274 movs #2": true,
+   "0x20276 b 0x20220": true,
+   "0x20244 b.w 0x20c06": true
+  },
+  "parada": {
+   "estado4_ADC-B_cancela": {
+    "0x20ad6 bl 0x1e476": true,
+    "0x1e48a ldrh [r4, #0x10]": true,
+    "0x1e492 ldrh [r4, #0x10]": true,
+    "0x1e494 orr r0, r0, #8": true,
+    "0x1e300 lsls #0x1c": true,
+    "0x1e304 ldrb [r4, #0x18]": true,
+    "0x1e306 bl 0x1e0e4": true
+   },
+   "0x1e0e4": {
+    "0x1e0fc cmp #0xc": true,
+    "0x1e106 bl 0x24d1a": true,
+    "0x1e110 b.w 0x24ca4": true
+   },
+   "0x93a0": {
+    "0x93b4 bl 0xfa54": true,
+    "0x93be b.w 0xf9ce": true
+   },
+   "0xfa54": {
+    "0xfa58 ldrb.w [r2, r0, lsl #3]": true,
+    "0xfa5c cmp #2": true,
+    "0xfa62 strb.w [r2, r0, lsl #3]": true,
+    "0xfa7e ldrh [r1, #0x1c]": true,
+    "0xfa84 orr #0x80": true
+   },
+   "0xf9ce": {
+    "0xf9d4 ldrb.w [r1, r0, lsl #3]": true,
+    "0xf9d8 cmp #1": true,
+    "0xf9e0 strb.w [r1, r0, lsl #3]": true,
+    "0xf9fe str [r0, #4]": true
+   }
+  },
+  "estado_1_arma": {
+   "0x20a66 ldr [pc, #0x200]": true,
+   "0x20a68 ldr.w r2, [r1, #0x14c]": true
+  },
+  "engine_2b6": {
+   "0x1e2b6 ldrh [r5, #0x10]": true,
+   "0x1e2b8 lsls #0x1f": true,
+   "0x1e2c4 bl 0x1e1d2": true,
+   "0x1e2fe ldrh [r5, #0x10]": true,
+   "0x1e302 bpl #0x1e30a": true,
+   "0x1e256 cmp r3": true,
+   "0x1e258 bhs #0x1e338": true
+  },
+  "tabla_NVIC_prioridades": "no se localiz\u00f3 escritura de IPR para IRQ32 (l\u00edmite)"
+ }
+}
