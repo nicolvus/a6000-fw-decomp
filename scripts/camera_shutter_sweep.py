@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 """Barrido de velocidades con RemoteShutter (/nr, /ss, /shoot, /last): guarda cada JPEG y mide luminancia y bandas.
 Uso: camera_shutter_sweep.py OUTDIR [n/d ...]   (por defecto 1/4000 … 1/15). App abierta en la cámara, escena fija."""
-import io, os, sys, time, urllib.request
+import io
+import os
+import sys
+import time
+import urllib.request
+
 from PIL import Image, ImageStat
 
 HOST = 'http://192.168.1.29:8080'
@@ -9,7 +14,7 @@ get = lambda p, t=60: urllib.request.urlopen(HOST + p, timeout=t).read()
 out = sys.argv[1]
 speeds = sys.argv[2:] or ['1/4000', '1/2000', '1/1000', '1/500', '1/250', '1/125', '1/60', '1/30', '1/15']
 os.makedirs(out, exist_ok=False)
-log = open(f'{out}/log.txt', 'w')
+log = open(f'{out}/log.txt', 'w')  # noqa: SIM115 (abierto todo el barrido)
 def say(*a):
     print(*a, flush=True); print(*a, file=log, flush=True)
 
@@ -23,7 +28,8 @@ for sp in speeds:
         if st.startswith(('done', 'shoot-error')): break
         time.sleep(0.3)
     jpg = get('/last')
-    open(f'{out}/{n}_{d}.jpg', 'wb').write(jpg)
+    with open(f'{out}/{n}_{d}.jpg', 'wb') as f:
+        f.write(jpg)
     im = Image.open(io.BytesIO(jpg)); im.draft('L', (1500, 1000)); g = im.convert('L')
     rows = [sum(g.crop((0, y, g.width, y + 1)).getdata()) / g.width for y in range(g.height)]
     # bandas: desviación típica de la diferencia entre filas suavizadas (detecta parpadeo LED con exposición por filas)
