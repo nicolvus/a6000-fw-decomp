@@ -2839,3 +2839,6 @@ Con ShutMode 0 forzado, r5=1240 oscurece la foto (143,7 → 121,7), sobre todo a
 
 ## 27-10-2026 — T036: barrido de r5 con ShutMode 0 (E23)
 r5 300/1240/2500 oscurece la foto de forma monótona (138,5/121,7/93,1 frente a 143,5); desde 5000 no actúa. Degradado vertical (más oscuro arriba). Falta igualar ritmos de reinicio y lectura (r6/r7).
+
+## 27-10-2026 — T037: r7 con ShutMode 0 + r5=2500 (E23), incidente
+r7 0–64 sin efecto sobre el degradado. En r7=255 telnet y ADB dejaron de abrir shell; reversión no verificada; pendiente apagado completo y comprobación del código.
