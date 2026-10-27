@@ -2836,3 +2836,6 @@ Parche en RAM r5=1240 (valor de vista en directo a 1/4000), un disparo a 1/250: 
 
 ## 27-10-2026 — T035: ShutMode 0 + r5 en la foto (E23)
 Con ShutMode 0 forzado, r5=1240 oscurece la foto (143,7 → 121,7), sobre todo arriba; imagen íntegra. Primera exposición electrónica controlable en foto completa, todavía no uniforme.
+
+## 27-10-2026 — T036: barrido de r5 con ShutMode 0 (E23)
+r5 300/1240/2500 oscurece la foto de forma monótona (138,5/121,7/93,1 frente a 143,5); desde 5000 no actúa. Degradado vertical (más oscuro arriba). Falta igualar ritmos de reinicio y lectura (r6/r7).
