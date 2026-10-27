@@ -14,7 +14,7 @@ Reproducible: `python scripts/e24_05h4/adca_p29_irq.py` → `analysis/e24-05h-4/
 | **D** | ¿Cadena software de entrega del evento de ADC-B reconstruida? | **SÍ** | Armado `0x1e1d2` → `0x94f6` → `0xf99a` (NVIC IRQ 32) → `0xfa18`; ISR `0xf8d3` → `0xf88e` → `[0x296d4]` = `0x1d04d` → motor. Todos los enlaces por bytes (§4). El enlace **vector↔NVIC** depende de un VTOR que no está en la imagen: la tabla coherente es la de base `0x42fc` (IRQ 32/33 = `0xf8d3`/`0xfa95`) |
 | **E** | ¿Bloqueo estático **demostrado** que impida completar la captura sin rearme? | **NO** | Ninguna ruta de software bloquea por sí sola. Los puntos de espera no acotados existen pero dependen de eventos de hardware (canal 0 de `0x40023000`; temporizador base canal 11), son idénticos a los de la captura convencional, y no se demuestran fallando. No es contradicción |
 | **F** | ¿Se puede demostrar ausencia de bloqueos en la ruta completa sin medir hardware? | **NO** | *Evidencia insuficiente* (no contradicción): VTOR/arranque, prioridad NVIC, semántica de bits de `ctrl` y reloj del contador, ISR/habilitación del temporizador base canal 11 y equivalencia temporal con T022 no están en `darwin_core.bin` |
-| **G** | Valores mínimos a observar | — | Tabla en §6 |
+| **G** | Valores mínimos a observar | — | Tabla en §6. **Corregido en E24-05e/h-5**: ninguno de esos valores es alcanzable con el método T022 (que lee DRAM de BIONZ, no SRAM de Darwin); ver [protocolo](e24-05e-05h5-protocolo-lectura.md) §1 y §5 |
 
 ## 1. ADC-A desde el estado 4 de ADC-B
 
@@ -95,9 +95,11 @@ Parámetros no demostrados por software: prioridad NVIC de IRQ 32 (no se halló 
 
 El tipo 0 **no cambia** ninguna de las condiciones de entrega ni de espera; solo suprime escrituras de pines y rutas de posición.
 
-## 6. Experimento mínimo de solo lectura (no ejecutado) — G
+## 6. Valores a observar (no ejecutado) — G
 
-Con el método de lectura de T022 durante un disparo normal (sin escrituras). Orden de aparición de los valores en una captura que completa:
+> **Corrección (27-10-2026, [E24-05e/h-5](e24-05e-05h5-protocolo-lectura.md) §1):** la versión original decía «con el método de lectura de T022». Es incorrecto: T022/T023 leen `/dev/mem` físico `0x83f9…`, DRAM de **BIONZ**. Todos los valores de esta tabla están en la SRAM o los periféricos de **Darwin** (`0x2000xxxx`, `0x4002xxxx`, `0x4003xxxx`) y **no tienen vía de lectura demostrada**; el tipo de bobina (fila 1) es una deducción, no una celda. Lo observable por T022 está en el protocolo (§5 de ese informe).
+
+Orden de aparición de los valores en una captura que completa:
 
 | # | Valor | Dirección | Esperado / qué decide |
 |---|---|---|---|
@@ -114,7 +116,7 @@ Con el método de lectura de T022 durante un disparo normal (sin escrituras). Or
 | 11 | Registros del periférico (solo si el método alcanza periféricos) | `0x40023004` (contador), `0x40023014` (compare), `0x4002301c` (ctrl), `0x40031094` (monitor IRQ 32) | contador alcanza compare; ctrl bit 6; monitor bit 0 |
 | 12 | Configuración de P29 (idem) | puerto 2 bit 9 (`0x5792`: PFR `0x40033008`, PCR `0x40033108`, DDR `0x40033208`, PDOR `0x40033408`) | PFR bit 9 = 1 (función INT), DDR bit 9 = 0 |
 
-Solo con 3, 4, 7 y 9 (RAM) ya se distingue entre «no llegó el evento de ADC-B», «no llegó el de ADC-A» y «la captura avanzó».
+Con 3, 4, 7 y 9 se distinguiría entre «no llegó el evento de ADC-B», «no llegó el de ADC-A» y «la captura avanzó», **si existiera una vía de lectura de la RAM de Darwin** (no hay: corrección de arriba).
 
 ## 7. Pruebas
 
@@ -122,4 +124,4 @@ Solo con 3, 4, 7 y 9 (RAM) ya se distingue entre «no llegó el evento de ADC-B�
 
 ## 8. Límites
 
-Sin ejecución ni emulación. Recorrido estático por `bl/b.w` y saltos directos (más `tbb` acotados y réplica de `0x1b30a`); las llamadas indirectas (`blx reg`) no se siguen salvo la hoja `0x94e8`. No se analizó la ISR ni la habilitación del temporizador base canal 11, ni la prioridad/VTOR (arranque fuera de la imagen), ni los bits de `ctrl`. «Reintenta» del estado 32 viene de la semántica FAIL de E24-05h §5. La interpretación de los ticks como µs sigue siendo inferencia. El resto es observación física: **E24-05h-5** (diferida, requiere orden expresa) recibe la tabla del §6 como criterio.
+Sin ejecución ni emulación. Recorrido estático por `bl/b.w` y saltos directos (más `tbb` acotados y réplica de `0x1b30a`); las llamadas indirectas (`blx reg`) no se siguen salvo la hoja `0x94e8`. No se analizó la ISR ni la habilitación del temporizador base canal 11, ni la prioridad/VTOR (arranque fuera de la imagen), ni los bits de `ctrl`. «Reintenta» del estado 32 viene de la semántica FAIL de E24-05h §5. La interpretación de los ticks como µs sigue siendo inferencia. El resto es observación física sobre Darwin, sin vía demostrada: **E24-05h-5** (diferida, requiere orden expresa) queda limitada a lo que T022 puede leer (BIONZ); la tabla del §6 exige una vía nueva.

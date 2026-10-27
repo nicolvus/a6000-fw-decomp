@@ -1,0 +1,206 @@
+{
+ "A_espacios": {
+  "T022_T023": {
+   "ventana": [
+    "0x83f91e20",
+    "0x83f91f30"
+   ],
+   "buffers": [
+    "0x83f91e2e",
+    "0x83f91f24",
+    "0x83f91f1a"
+   ],
+   "en_DRAM_BIONZ": true,
+   "solape_SRAM_Darwin": false,
+   "solape_perifericos_Darwin": false
+  },
+  "scripts_que_usan_dev_mem": {
+   "camera_bisect_fields.py": {
+    "lee": true,
+    "escribe": true,
+    "fisicas": [
+     "0x83e9b548",
+     "0x83edf684"
+    ]
+   },
+   "camera_darwin_buffers.py": {
+    "lee": true,
+    "escribe": false,
+    "fisicas": [
+     "0x83f91e20",
+     "0x83f91f24"
+    ]
+   },
+   "camera_drivemode_override.py": {
+    "lee": false,
+    "escribe": true,
+    "fisicas": [
+     "0x83e95984",
+     "0x83e959d6"
+    ]
+   },
+   "camera_efcs_conditions.py": {
+    "lee": true,
+    "escribe": true,
+    "fisicas": [
+     "0x83e94ee4",
+     "0x83e95950"
+    ]
+   },
+   "camera_imx210_obj.py": {
+    "lee": true,
+    "escribe": false,
+    "fisicas": [
+     "0x83e7f4a8",
+     "0x83e7f4a8"
+    ]
+   },
+   "camera_imx210_timing.py": {
+    "lee": true,
+    "escribe": false,
+    "fisicas": [
+     "0x8401c670",
+     "0x8401ca2f"
+    ]
+   },
+   "camera_shutter_matrix.py": {
+    "lee": false,
+    "escribe": true,
+    "fisicas": [
+     "0x83ed4d70",
+     "0x83edf8bc"
+    ]
+   },
+   "camera_tipo2_sweep.py": {
+    "lee": true,
+    "escribe": true,
+    "fisicas": [
+     "0x83793166",
+     "0x83e9bccc"
+    ]
+   },
+   "senser_silent_backup_diff.py": {
+    "lee": false,
+    "escribe": true,
+    "fisicas": [
+     "0x83edf8bc",
+     "0x83edf8bc"
+    ]
+   },
+   "senser_silent_ram_diff.py": {
+    "lee": false,
+    "escribe": true,
+    "fisicas": [
+     "0x83edf8bc",
+     "0x83edf8bc"
+    ]
+   },
+   "senser_write_poll.py": {
+    "lee": false,
+    "escribe": true,
+    "fisicas": []
+   }
+  },
+  "scripts_con_literales_0x20xxxxxx": [],
+  "volcado_actualizador": {
+   "RAM": [
+    "0x80000000",
+    "0xc0000000"
+   ],
+   "SFR": "0xf0000000"
+  }
+ },
+ "B_paquete": {
+  "bytes": {
+   "0x43841088": true,
+   "0x43841344": true,
+   "0x43841392": true,
+   "0x43841396": true,
+   "0x438413a4": true,
+   "0x438413b4": true,
+   "0x438413b6": true,
+   "0x438413ba": true,
+   "0x438413c4": true,
+   "0x438413cc": true,
+   "0x438413d4": true,
+   "0x438413da": true,
+   "0x4384144a": true,
+   "0x4382fe16": true,
+   "0x4382fe28": true,
+   "0x4382fe2c": true,
+   "0x437f8800": true,
+   "0x437f8816": true,
+   "0x437f87fe": true
+  },
+  "pkt_es_carga_mas_0x40": true,
+  "globales_pkt1": {
+   "clase_0x43eedecc": "0x43eedecc",
+   "flag_0x43f9b503": "0x43f9b503"
+  },
+  "estructuras_sl": [
+   "0x43f79f94",
+   "0x43f7cac0"
+  ],
+  "got": "0x4401eee4",
+  "sl_0x162_fisicas": [
+   "0x83f7a0f6",
+   "0x83f7cc22"
+  ],
+  "T022": {
+   "pkt1": 2,
+   "pkt23": 5632,
+   "pkt45": 5053,
+   "pkt_a_b": 3667,
+   "pkt8": 0,
+   "pkt23_supera_umbral_0xb00": true,
+   "pkt8_esperado_0xa0": true
+  }
+ },
+ "C_direcciones": [
+  {
+   "nombre": "pkt 0x0c completo",
+   "virt": "0x43f91e32",
+   "fisica": "0x83f91e32",
+   "bytes": 22,
+   "estado": "MEDIDO en T022",
+   "persiste_tras_disparo": "s\u00ed, hasta el siguiente env\u00edo/reintento del 0x0c",
+   "via": "T022"
+  },
+  {
+   "nombre": "clase de captura (pkt[1] clase 1/3)",
+   "virt": "0x43eedecc",
+   "fisica": "0x83eedecc",
+   "bytes": 4,
+   "estado": "direcci\u00f3n por bytes; lectura no probada",
+   "persiste_tras_disparo": "s\u00ed (copia estable)",
+   "via": "T022"
+  },
+  {
+   "nombre": "flag de captura (pkt[1] bit 6)",
+   "virt": "0x43f9b503",
+   "fisica": "0x83f9b503",
+   "bytes": 1,
+   "estado": "direcci\u00f3n por bytes; lectura no probada",
+   "persiste_tras_disparo": "s\u00ed (copia estable)",
+   "via": "T022"
+  },
+  {
+   "nombre": "[sl+0x162] estructura 1 (origen de pkt[2..3])",
+   "virt": "0x43f7a0f6",
+   "fisica": "0x83f7a0f6",
+   "bytes": 2,
+   "estado": "direcci\u00f3n por bytes; lectura no probada",
+   "persiste_tras_disparo": "no se sabe (AE la reescribe)",
+   "via": "T022"
+  },
+  {
+   "nombre": "[sl+0x162] estructura 2 (origen de pkt[2..3])",
+   "virt": "0x43f7cc22",
+   "fisica": "0x83f7cc22",
+   "bytes": 2,
+   "estado": "direcci\u00f3n por bytes; lectura no probada",
+   "persiste_tras_disparo": "no se sabe (AE la reescribe)",
+   "via": "T022"
+  }
+ ]
+}
