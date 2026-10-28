@@ -143,7 +143,7 @@ td:nth-child(n+3):not(:last-child),td:last-child,th:nth-child(n+3){{text-align:r
 <p>{cov['pending']} etiquetas pendientes; {cov['excluded']} fragmentos descartados como módulos. Descartar no aumenta cobertura.</p>
 <p>Cobertura documental de etiquetas: no mide código descompilado ni funciones verificadas.
 <a href="{REPO}docs/capture/repo-audit-2026-10-24.md">Auditoría y pendientes vigentes</a>.
-Pruebas en cámara: {data['physical_tests']['registered']} registros (T001–T{data['physical_tests']['registered']:03d}, con backup NVRAM previo);
+Pruebas en cámara: {data['physical_tests']['registered']} registros (hasta {data['physical_tests']['last']}, con backup NVRAM previo);
 planes P1–P21 con prueba registrada: {data['physical_tests']['done']}/{data['physical_tests']['total']}.
 <a href="{data['physical_tests']['source']}">Registro de pruebas</a>.</p>
 <h2>Etiquetas por familia — {cov['percent']}% ({cov['covered']}/{cov['total']})*</h2>
@@ -169,7 +169,7 @@ def physical_tests() -> dict:
     rows = [line.split("|") for line in REGISTRY.read_text(encoding="utf-8").splitlines() if re.match(r"^\| T\d{3}", line)]
     plans = {int(n) for row in rows for n in re.findall(r"\bP(\d{1,2})\b", row[3]) if 1 <= int(n) <= 21}
     return {
-        "done": len(plans), "total": 21, "executed": sorted(plans), "registered": len(rows),
+        "done": len(plans), "total": 21, "executed": sorted(plans), "registered": len(rows), "last": rows[-1][1].strip(),
         "source": REPO + "docs/capture/registro-pruebas-camara.md",
     }
 
