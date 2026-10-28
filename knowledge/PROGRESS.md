@@ -1,5 +1,19 @@
 # Progreso — sistema de conocimiento Sony A6000
 
+## E25-14 — Temporización IMX235/IMX210 — 28-10-2026
+
+Sesión 100 % offline (solo bytes; sin cámara ni emulación de sensor). Reconstruida la cadena Silent del
+IMX235: `cap+0x648` → `SetExposure` (`0x436f4168`; `param+0`=SHR/líneas, `param+9`=ShutMode) y
+`cap+0x6b0` → método de velocidad (`0x436f4a94`, `vtable+0x30`) → bloque de comandos. La A6000 tiene el
+mismo contrato (`0x436d6f6c`/`0x436d7e08`), la misma tabla de tiempos (30 filas idénticas) y **ya llama
+al método `+0x30` en la foto** (`0x438c831e`); lo que no usa es ShutMode 0. El armado de exposición
+larga del A7S (`0x436f43c0`, `obj+0x3dc=2`, `0x43b73044(0xe)`, tercer argumento `r3`) no tiene
+equivalente en el método del IMX210. El límite de ~65 ms es también del firmware (clamp a un cuadro);
+no se demostró ningún modo de sensor con cuadro más largo ni acumulación multicuadro. **A=SÍ, B=NO,
+C=NO, D=NO, E=NO, F=PARCIAL, G=NO, H=NO, I=NO, J=NO, K=SÍ, L=NO, M=NO.** 13 pruebas en
+`tests/test_e25_14_exposicion.py`. Informe:
+[E25-14](../docs/capture/e25-14-imx235-imx210-exposicion-electronica.md).
+
 ## E25-06 — Auditoría independiente de los paquetes 3.23 (B1a) y 3.24 — 27-10-2026
 
 Auditoría 100 % offline del commit `67fd3a40` (paquetes de DeepSeek). Parsers propios de `.dat`, FDAT y

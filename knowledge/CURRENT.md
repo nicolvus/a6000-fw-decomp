@@ -54,6 +54,10 @@ flasheo salvo autorización expresa del usuario para un caso concreto.
 - **Silent A7S:** UI → LIRO `0x40e3` → `+0x250` → bit `0x20` (`no_silent`); el driver IMX210 conmuta modos 0–4, el IMX235 0,1,3,4;
   `…ForLiro` rechazado (0 soportados) en A6000 y A7S ([S174](../docs/capture/s174-forliro-api.md), [S383](../docs/capture/s383-forliro-silentlibobj.md)).
   La A6000 carece del parámetro y del código de selector/tiempos de la A7S (S307–S312, S169). Ausencia estática ≠ incapacidad de hardware.
+- **Exposición electrónica (E25-14):** el IMX235 usa `SetExposure` (`0x436f4168`; `param+0`=SHR/líneas, `param+9`=ShutMode) y un
+  método de velocidad `+0x30` (`0x436f4a94`). La A6000 tiene el mismo contrato (`0x436d6f6c`/`0x436d7e08`) y **ya llama a `+0x30`
+  en la foto** (`0x438c831e`), pero no tiene el armado de exposición larga del A7S (`0x436f43c0`, `obj+0x3dc=2`). El límite de
+  ~65 ms es también del firmware (clamp a un cuadro). [E25-14](../docs/capture/e25-14-imx235-imx210-exposicion-electronica.md).
 - **Cortinas:** GPIO P4D=1ST_CURTAIN_MG, P4E=2ND_CURTAIN_MG, P4C=CA_1ST_CURTAIN_START, P4B=CA_RELEASE_LOCK_MSS (esquema + inspección;
   no son serie). El enlace banco/bit `0xf2910048` → P4E no consta en el firmware (E11).
 - **Recuperación (E24-01):** Darwin también controla la energía del cuerpo (`DD_ON1/2/3` desde `darwin_core`, tabla `0x28c6c`).

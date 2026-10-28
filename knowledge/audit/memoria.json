@@ -1,23 +1,25 @@
 {
- "head": "bbadd7d3",
- "pruebas_colectadas": 3633,
+ "head": "77224074",
+ "pruebas_colectadas": 3960,
  "pendientes_abiertos": {
   "E1": "NO_VERIFICADO",
+  "E22": "CERRADO CON LÍMITE",
+  "E23": "ABIERTO (instalado en T024, en prueba)",
+  "E25": "CERRADO CON LÍMITE",
   "E6": "BLOQUEADO",
   "E9": "BLOQUEADO",
   "E11": "BLOQUEADO",
   "E13": "BLOQUEADO",
-  "E21": "ABIERTO",
   "D5": "BLOQUEADO",
-  "F1": "DIFERIDO",
+  "F1": "PARCIAL",
   "F2": "DIFERIDO",
-  "F3": "DIFERIDO",
-  "F4": "BLOQUEADO",
-  "F5": "BLOQUEADO",
+  "F3": "PARCIAL",
+  "F4": "DESCARTADO",
+  "F5": "DESCARTADO",
   "F6": "ABIERTO",
-  "F7": "DIFERIDO",
+  "F7": "PARCIAL",
   "F8": "BLOQUEADO",
-  "R1": "ABIERTO",
+  "R1": "PARCIAL",
   "R3": "BLOQUEADO"
  },
  "pendientes_cerrados": [
@@ -29,6 +31,7 @@
   "C3",
   "C4",
   "D2",
+  "E21",
   "E12",
   "E15",
   "E3",
@@ -64,15 +67,15 @@
  ],
  "documentos_de_estado": {
   "docs/STATE.md": {
-   "ultimo_commit": "2026-10-26",
+   "ultimo_commit": "2026-10-27",
    "menciona_26_10": true
   },
   "knowledge/CURRENT.md": {
-   "ultimo_commit": "2026-10-26",
+   "ultimo_commit": "2026-10-27",
    "menciona_26_10": true
   },
   "knowledge/PROGRESS.md": {
-   "ultimo_commit": "2026-10-26",
+   "ultimo_commit": "2026-10-27",
    "menciona_26_10": true
   },
   "CONTEXT.md": {
@@ -87,7 +90,7 @@
  "coherencia": {
   "head_igual_a_origin": true,
   "ids_pendientes_unicos": true,
-  "estados_validos": true,
+  "estados_validos": false,
   "enlaces_de_pendientes_validos": true,
   "docs_de_estado_mencionan_26_10": true,
   "readme_cita_cierres_recientes": true,
@@ -95,5 +98,7 @@
   "sin_rutas_citadas_inexistentes": true,
   "volcados_sha256_ok": true
  },
- "incoherencias": []
+ "incoherencias": [
+  "estados_validos"
+ ]
 }
