@@ -35,3 +35,11 @@ Servidor MCP compartido con Claude Code: ver `knowledge/PROGRESS.md` (Fase 6)
 para el snippet de `~/.codex/config.toml` necesario para habilitarlo aquí.
 
 Pendientes: `docs/PENDIENTES.md` es el índice maestro de lo que falta. Regla permanente: toda tarea que se haga, descarte o reabra actualiza ese documento en el mismo commit, y todo pendiente nuevo que se descubra se añade allí (ID nuevo, origen y criterio de cierre). No se cierra una fase sin revisarlo.
+
+## Regla permanente: reinicio experimental en cada sesión física
+
+La cámara puede cambiar de lugar, orientación y escena entre sesiones. Antes de cada experimento físico, identificar de nuevo cámara e IP actuales; comprobar Telnet y RemoteShutter, modelo, versión y hashes pertinentes, originales T050, punteros GOT y mapa de memoria. Localizar de nuevo M, cap y demás objetos dinámicos antes de usarlos; no reutilizar direcciones históricas sin verificarlas. Confirmar estabilidad y disponibilidad de la cámara.
+
+Registrar una línea base propia antes de fotografiar: objetivo y focal, apertura, ISO, velocidad efectiva, modo y configuración de obturador, luz, escena y encuadre, temperatura si disponible, balance de blancos, batería y condiciones relevantes. Marcar como desconocido lo que no se pueda medir. Para comparaciones cuantitativas, crear controles en la misma sesión, mantener escena, luz, apertura, ISO y encuadre constantes en lo posible, conservar RAW originales y metadatos, y verificar velocidad efectiva. No comparar sesiones distintas sin demostrar equivalencia.
+
+Distinguir histórico, actual y comparable. Verificar integridad inicial y final, estado de firmware, acceso a memoria y ausencia de modificaciones en cada sesión; registrar condiciones, evidencia y resultados. Solo lecturas y fotografías normales autorizadas: sin escribir RAM, MMIO, firmware ni NVRAM. No hace falta repetir la ingeniería inversa estática; sí toda validación experimental física.

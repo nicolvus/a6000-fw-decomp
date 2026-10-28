@@ -3039,3 +3039,10 @@ Se reprodujo el transporte de parámetros con SetExposure y formateador P2S real
 ## E25-22 — Protocolo físico (2026-10-28)
 
 Telnet y RemoteShutter bloqueados por el entorno (EPERM); sin conexión ni disparo. [Protocolo](../docs/capture/e25-22-protocolo-transporte-fisico.md): sombras RAM candidatas e identificación de dependencia para traza pasiva del bus, sin leer MMIO. Próximo paso exacto: obtener acceso permitido a la cámara para verificar GOT y sombras; para probar llegada al sensor, confirmar puntos/tensiones del bus y capturar señales pasivamente con autorización física específica.
+
+
+## E25-22 — Reinicio experimental y acceso (2026-10-28)
+
+Regla permanente incorporada a AGENTS y al protocolo: cada sesión física requiere identificación, controles e integridad nuevos y línea base propia; no se reutilizan objetos dinámicos históricos. En esta sesión TCP 23/8080 y HTTP `/info`/`/status` respondieron fuera del sandbox; Telnet y originales T050/GOT del lector coincidieron. Línea base incompleta: no verificados modelo, versión/hash, GOT de sombras, M/cap ni condiciones físicas. No hubo disparos ni escritura; ver registro en [protocolo](../docs/capture/e25-22-protocolo-transporte-fisico.md).
+
+Próximo paso exacto: obtener modelo y versión reales, hashes y GOT de las seis sombras, verificar mapa y registrar condiciones disponibles antes de leerlas o fotografiar; la validación del transporte exige además captura pasiva autorizada del bus.

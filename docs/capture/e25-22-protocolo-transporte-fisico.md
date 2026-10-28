@@ -2,6 +2,18 @@
 
 **Estado: preparado, no ejecutado.** El 28-10-2026, en este entorno, las conexiones TCP normales a `192.168.1.29:23` (Telnet) y `:8080` (RemoteShutter) devolvieron `PermissionError: [Errno 1] Operation not permitted`; no se sabe si la cámara está conectada. `ip route get` también fue bloqueado. No se solicitó ni eludió acceso adicional; no se disparó, no se leyó ni se modificó la cámara.
 
+## Reinicio obligatorio de cada sesión física
+
+Aplicar la regla permanente de [AGENTS.md](../../AGENTS.md): identificar de nuevo equipo e IP, servicios, modelo, versión y hashes, originales T050, GOT y mapa; localizar M y cap en esta sesión y comprobar integridad inicial y final. No usar direcciones dinámicas históricas sin verificarlas. Documentar cada sesión con objetivo/focal, apertura, ISO, velocidad efectiva, modo y obturador, iluminación, escena/encuadre, temperatura disponible, balance de blancos, batería y entorno; anotar lo desconocido.
+
+Las comparaciones requieren controles y RAW originales con metadatos de la sesión actual, velocidad aplicada comprobada y condiciones constantes en lo posible. Distinguir evidencia histórica, actual y comparable; no comparar cuantitativamente sesiones sin verificar equivalencia. Solo lecturas y fotografías normales autorizadas; nunca escribir RAM, MMIO, firmware ni NVRAM. La ingeniería inversa estática no necesita repetirse.
+
+## Sesión de línea base parcial — 28-10-2026
+
+En la red local se respondió en `192.168.1.29` por TCP 23 y 8080; `/info` dio `v8b`, sin ráfaga activa, y `/status` `ready`. Telnet identificó Linux ARMv7; los dos sitios T050 y los seis GOT del lector `e25_19_readonly.py` coincidieron con sus valores esperados. La comprobación final repitió ambos sitios y los seis GOT con coincidencia y `/status` respondió `ready`. Estos son controles puntuales, no un hash íntegro ni prueba de ausencia de todas las modificaciones. Las conexiones requirieron ejecución fuera del sandbox: dentro se obtuvo EPERM.
+
+**No verificado:** modelo y versión actuales, hashes de firmware, GOT de las seis sombras, mapa completo, M y cap, batería y todos los parámetros ópticos, de exposición, escena y entorno. `getprop` no estaba disponible. No se leyeron sombras ni se tomaron fotografías; `ready` no demuestra por sí solo estabilidad completa. La línea base está incompleta y no es comparable con sesiones históricas. Sin captura pasiva del bus no se confirma el transporte al sensor. Completar verificaciones sin inventar datos antes de fotografiar o leer las sombras.
+
 ## Primera dependencia para observar el bus
 
 La RAM P2S `0xfc088340…` es una ventana **MMIO**: no conocemos el mapa físico, la semántica de lectura, si una lectura tiene efectos laterales, ni si los datos sobreviven a cada transferencia. `dd /dev/mem` leyendo esa dirección virtual no está justificado. Incluso una lectura segura y consistente de esa RAM demostraría preparación, no que los bits lleguen al sensor. La primera dependencia precisa para comprobar la **entrega al sensor** es una captura pasiva y sincronizada de las señales serie entre BIONZ y sensor, con puntos de acceso, tensión, polaridad y conexión verificados. No se conocen puntos de prueba accesibles sin abrir la cámara: su apertura sigue fuera de la autorización de esta sesión.
@@ -37,4 +49,4 @@ La conversión `física = virtual + 0x40000000` procede de la ruta RAM usada en 
 - **Lectura RAW:** identificar una señal de salida/recepción o marcador trazado hasta datos RAW; VD o duración del archivo por sí solos no la localizan.
 - **Multicuadro:** contar VD y correlacionar datos y exposición efectiva sin asumir integración continua. El plan `svd` o una foto mecánica larga no bastan.
 
-Sin el analizador y acceso físico verificado no se puede comprobar llegada al sensor. Telnet/RemoteShutter por sí solos permiten como máximo estudiar las sombras; el acceso fue bloqueado en esta sesión.
+Sin el analizador y acceso físico verificado no se puede comprobar llegada al sensor. Telnet/RemoteShutter por sí solos permiten como máximo estudiar las sombras; el acceso inicial fue bloqueado por el sandbox; la sesión posterior obtuvo acceso autorizado fuera de él.
