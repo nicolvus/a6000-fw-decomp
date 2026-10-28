@@ -3051,3 +3051,8 @@ Próximo paso exacto: obtener modelo y versión reales, hashes y GOT de las seis
 ## E25-22 — Revalidación parcial (2026-10-28)
 
 HTTP respondió y T050/GOT T052-A coincidieron dos veces; el MD5 y tamaño del av-cam instalado coinciden con el archivo local analizado. Modelo y versión comercial siguen sin identificar y Telnet fue intermitente. No se disparó ni se leyeron sombras: [detalle](../docs/capture/e25-22-protocolo-transporte-fisico.md). Próximo paso exacto: restablecer respuesta estable de Telnet, confirmar modelo/versión comercial y línea base, verificar GOT de sombras y seguir el protocolo antes de fotografiar.
+
+
+## E25-22 — Sombras en reposo y RemoteShutter bloqueado (2026-10-28)
+
+GOT y encabezados de ID3–ID8 coinciden; sombras en reposo `03 00 4b 01 00 00` (bytes de datos). La consulta `/silent` agotó el plazo y RemoteShutter dejó de responder; Telnet y los originales permanecieron accesibles. Sin disparo ni escritura. [Informe](../docs/capture/e25-22-protocolo-transporte-fisico.md). Próximo paso: recuperar el servicio, comprobar por una vía de solo lectura que `silentOn` es falso y completar línea base antes de disparar.
