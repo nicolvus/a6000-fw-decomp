@@ -194,6 +194,7 @@ public class Main extends Activity implements SurfaceHolder.Callback {
     }
 
 
+    // NO USAR (T049): Runtime.exec se colgó entre las dos escrituras y dejó ShutMode 0 forzado. El parche se aplica desde el PC con guardián: scripts/camera_silent.py.
     // ---- Modo silencioso (E25-11): ShutMode 0 + r5 calculado desde la velocidad, parche RAM de BIONZ con reversión ----
     private static final long SM_A = 0x836D6FB6L, R5_A = 0x836D7000L;       // ldrb.w sb,[r1,#9] / asrs r0,r5,#8; uxtb.w lr,r5
     private static final byte[] SM_O = {(byte) 0x91, (byte) 0xf8, 0x09, (byte) 0x90}, SM_N = {0x4f, (byte) 0xf0, 0x00, 0x09};
