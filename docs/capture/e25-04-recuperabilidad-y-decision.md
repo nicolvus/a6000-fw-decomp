@@ -150,6 +150,11 @@ debe gastar el 3.24 en una prueba sin recuperación 3.25 preparada. La alternati
 prueba obligaría a reempaquetar la recuperación como ≥3.24; el plan de E24-04 reserva el 3.23 ya
 verificado como recuperación y por eso sube el par a 3.24/3.25.
 
+> **Corrección (E25-05, 27-10-2026):** el plan vigente es **prueba 3.23 / recuperación 3.24**
+> (`3.22 < 3.23 < 3.24`), con ambos paquetes preparados y verificados offline; el 3.23 de
+> recuperación queda obsoleto y se conserva intacto. Ver
+> [E25-05](e25-05-preparacion-paquetes-323-324.md).
+
 ### 3.3 Los cuatro niveles que no deben confundirse
 
 | Nivel | Qué significa | Estado hoy |

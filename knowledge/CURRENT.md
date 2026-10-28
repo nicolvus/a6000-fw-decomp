@@ -1,6 +1,6 @@
 # Estado actual — léeme primero
 
-Contexto operativo mínimo para agentes. Última revisión: 27-10-2026 (E25-04, decisión de recuperación; R1 pendiente de copia externa). Este archivo **no** es
+Contexto operativo mínimo para agentes. Última revisión: 27-10-2026 (E25-05, paquetes 3.23/3.24 offline; R1 pendiente de copia externa). Este archivo **no** es
 historial ni fuente de verdad de los pendientes: ver [Responsabilidades](#responsabilidades-documentales).
 La versión íntegra anterior (2264 líneas, instantáneas S59–S627) está en
 [history/CURRENT-historial-2026-10-26.md](history/CURRENT-historial-2026-10-26.md); nada se borró.
@@ -21,6 +21,10 @@ flasheo salvo autorización expresa del usuario para un caso concreto.
   E=SÍ, F=NO, G=NO.** No hay recuperación independiente de Darwin demostrada (USB, bootloader sin la aplicación
   o hardware verificado); B1a **no es instalable**. R1: procedimiento y manifiesto listos (62/62, `verify` OK contra
   el origen), **copia externa sin verificar**. La única acción que cambia G exige hardware (donante + SWD/UART).
+  **E25-05**: paquetes **3.23** (tipo 0 + B1a) y **3.24** (recuperación con Darwin oficial) preparados y verificados
+  offline en directorios separados (69 comprobaciones, 0 fallos). El 3.24 reutiliza el payload verificado del 3.23
+  y **solo funciona si la cámara conserva acceso al actualizador**; no es recuperación independiente del MCU.
+  Versiones: `3.22 < 3.23 < 3.24`; el antiguo `recuperacion-323` queda obsoleto.
 - Estático: todo cerrado **con límite** salvo E1 (`NO_VERIFICADO`, sin vías estáticas); lo restante está bloqueado por datos
   (E6, E9, E11, E13, D5) o es físico (F1–F6; pruebas por USB ya hechas el 26-10-2026: T001–T021, ver [registro](../docs/capture/registro-pruebas-camara.md); el tipo 2 se fuerza y no cambia el obturador; E22 cerrado con límite). Lista y estados:
   [PENDIENTES](../docs/PENDIENTES.md).
@@ -105,6 +109,7 @@ Para la trazabilidad completa: [CORRECTIONS](../docs/CORRECTIONS.md) y [STATE §
 | E1 | NO_VERIFICADO | Origen del local 4/2 a `ModelScalarPb`/`ModelPbCap`; todo emisor posible es de datos o ejecución |
 | E25 | CERRADO CON LÍMITE; E25-01/03 BLOQUEADOS | Candidato offline tipo 0 + compuerta 0 (2 bytes); **E25-02 cierra A=NO** (sin emisor BIONZ de `0x16`; `0x16` copia 129 B, no 1 B); B1a auditado (42 pruebas); falta validación física (M0 físico/M1) y fin de L0/BIONZ |
 | E25-04 | CERRADO CON LÍMITE | Recuperación de Darwin: A/B/C/G=NO; H exige hardware (donante + SWD/UART + corromper/recuperar); R1 sin copia externa |
+| E25-05 | CERRADO CON LÍMITE | Paquetes **3.23** (tipo 0 + B1a) y **3.24** (recuperación oficial) preparados y verificados offline (69 checks); falta autorización y medida del guard; el 3.24 solo sirve con acceso al actualizador |
 | E6, E9, E11, E13, D5 | BLOQUEADO | Darwin fuera de `av-cam`; semántica de 112 registros y fin de integración; enlace banco/bit→P4E; servicio ODL/MMIO `0xf292b000`; hojas de datos IMX210/IMX235 |
 | F1–F8 | DIFERIDO / BLOQUEADO | P1–P24 (inventario en [revisión](../docs/capture/physical-test-review-2026-10-26.md)); traza de bus; Darwin real; revisión de S51 solo con evidencia nueva |
 | R1, R3 | PARCIAL / BLOQUEADO | R1: procedimiento y manifiesto listos (62/62), **copia externa sin verificar**; R3: historial público con `libmprctrl.so` (reescritura solo con orden expresa) |

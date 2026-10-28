@@ -1,5 +1,22 @@
 # Progreso — sistema de conocimiento Sony A6000
 
+## E25-05 — Paquetes offline 3.23 (B1a) y 3.24 (recuperación) — 27-10-2026
+
+Sesión 100 % offline sobre `f4bb7f50`; no se conectó la cámara ni se flasheó nada. **Plan de versiones
+corregido**: con 3.22 instalada, `3.22 < 3.23 < 3.24`; la prueba pasa a 3.23 (tipo 0 + B1a) y la
+recuperación a 3.24 (Darwin oficial). El antiguo `recuperacion-323` queda superado (misma versión que la
+prueba) y se conserva intacto. Paquetes en directorios separados: `experimental-323` (`.dat`
+`4c21353d…`, `.fdat` `268621fb…`; tar oficial + B1a + `darwin.sum` `cf930ac9`) y `recuperacion-324`
+(`.dat` `e1345aff…`, `.fdat` `24ee9b42…`; payload oficial extraído del 3.23 verificado). **69
+comprobaciones, 0 fallos**: DEND, CRC de cabecera FDAT, sumas por bloque, hashes, modelo `0x41030035`,
+región 0, versiones BCD `0x23`/`0x24`, `fwtool unpack`. B1a vs tipo 0 = **exactamente 2 bytes**
+(`0x1fe6a: 28 46 → 0a e0`); tar experimental solo cambia los dos ficheros Darwin; el 3.24 vs 3.23 solo
+difiere en cabecera (`[8,12)`, `[32,33)` en `.fdat`; dos bloques AES + CRC DEND en `.dat`). **Rollback
+limitado**: el 3.24 solo funciona si la cámara conserva acceso al actualizador; no es recuperación
+independiente del MCU y no está demostrado que recupere un Darwin defectuoso. B1a sigue sin ser
+instalable (E25-04 G=NO). Script `scripts/e25_05/build_packages.py`, 11 pruebas, manifiestos en
+`analysis/e25-05/`. Informe: [E25-05](../docs/capture/e25-05-preparacion-paquetes-323-324.md).
+
 ## E25-04 — Recuperabilidad de Darwin y decisión sobre B1a — 27-10-2026
 
 Auditoría 100 % offline (base `2cf51593`). **A=NO, B=NO, C=NO, D=NO, E=SÍ, F=NO, G=NO.** No hay

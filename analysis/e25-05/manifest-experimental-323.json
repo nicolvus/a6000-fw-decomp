@@ -1,0 +1,495 @@
+{
+  "schema": "a6000.e25_05.manifest.v1",
+  "generated_by": "scripts/e25_05/build_packages.py",
+  "generated_at": "2026-10-27T23:57:42Z",
+  "base_commit": "f4bb7f50",
+  "role": "experimental",
+  "version": "3.23",
+  "install_order": 1,
+  "scope": "offline: sin cámara, sin USB, sin RAM/NVRAM/NAND, sin flasheo",
+  "preconditions": {
+    "installed_version": "3.22",
+    "installed_darwin": "tipo 0",
+    "guard": "solo acepta versión estrictamente mayor que la instalada (medido con 3.21; INFERENCIA con 3.22)"
+  },
+  "dir": "analysis/darwin-patch/fdat/experimental-323",
+  "outputs": {
+    "config": {
+      "path": "analysis/darwin-patch/fdat/experimental-323/config-323.yaml",
+      "sha256": "1fb2da7027c64b8d2b71db2775a9d8df63ab98cfddf3140b465cda1e8b007199"
+    },
+    "fdat": {
+      "path": "analysis/darwin-patch/fdat/experimental-323/firmware_packed.fdat",
+      "sha256": "268621fb70948fc58676bb19bcf82e7d73a2634d0085e3032d64833b04fc6e49",
+      "size": 212155392
+    },
+    "dat": {
+      "path": "analysis/darwin-patch/fdat/experimental-323/firmware_packed.dat",
+      "sha256": "4c21353dc742bde86d66de6d3d6bdd8dc18f4c445c436399e768731ccf474542",
+      "size": 212988056
+    },
+    "header": {
+      "magic": "UDTRFIRM",
+      "fdat_version": "0100",
+      "checksum_crc32": "0xcc61c53c",
+      "mode": "U",
+      "luw": "N",
+      "version_major": 3,
+      "version_minor": "0x23",
+      "version": "3.23",
+      "model": "0x41030035",
+      "region": 0,
+      "is_accessory": false,
+      "firmware_offset": 143872,
+      "firmware_size": 212011520,
+      "num_filesystems": 2,
+      "header_size": 512
+    },
+    "container": {
+      "magic": "895546550d0a1a0a",
+      "normal_usb_descriptors": [
+        [
+          1356,
+          1096
+        ],
+        [
+          1356,
+          1149
+        ],
+        [
+          1356,
+          1983
+        ],
+        [
+          1356,
+          1984
+        ],
+        [
+          1356,
+          1985
+        ],
+        [
+          1356,
+          1986
+        ],
+        [
+          1356,
+          1987
+        ],
+        [
+          1356,
+          1988
+        ],
+        [
+          1356,
+          1989
+        ],
+        [
+          1356,
+          1990
+        ]
+      ],
+      "updater_usb_descriptors": [
+        [
+          1356,
+          994
+        ]
+      ],
+      "is_lens": false,
+      "payload_offset": 140,
+      "payload_size": 212987904
+    },
+    "payload": {
+      "firmware_tar_sha256": "ae6d76eae9ff9363a42a60e37a8703b67c401fa3a81679259c4e73a0f1c402ee",
+      "updater_img_sha256": "b6d5175245c8fb26879c5376f0e6e0d9ff13064f805d591954ff2a48a8c2566c"
+    },
+    "darwin": {
+      "core_path": "analysis/e25/darwin_core_tipo0_sin_rearme.bin",
+      "core_sha256": "55a366a5fc95f01ccb044ae352db90f0122ee779cab69063b6b99da8b3dcea1d",
+      "core_crc32": "cf930ac9",
+      "core_size": 157276,
+      "sum_sha256": "06b5eb8608fd24695811b27f2f824a0885ab52f1cd5080354a7c10afd85b9e6f",
+      "sum_line": "0,cf930ac9,0002665c,000001a4,00000000,000003e8,root,root,-1,-1,darwin_core.bin,",
+      "diff_vs_tipo0_count": 2,
+      "diff_vs_tipo0": [
+        {
+          "file_offset": 113770,
+          "before": "28",
+          "after": "0a"
+        },
+        {
+          "file_offset": 113771,
+          "before": "46",
+          "after": "e0"
+        }
+      ],
+      "tipo0_patch_preserved": true
+    }
+  },
+  "tar_members_changed_vs_official": [
+    "0640_darwin/darwin_core.bin",
+    "0641_darwin_sum/darwin.sum"
+  ],
+  "differences": {
+    "b1a_vs_tipo0": "exactamente 2 bytes en 0x1fe6a (28 46 -> 0a e0); ver analysis/e25-05/diferencias-binarias.json",
+    "tar_vs_official": [
+      "0640_darwin/darwin_core.bin",
+      "0641_darwin_sum/darwin.sum"
+    ]
+  },
+  "checks": [
+    {
+      "id": "existing.322_installed",
+      "result": "PASS",
+      "detail": "el paquete 3.22 instalado sigue intacto"
+    },
+    {
+      "id": "existing.322_installed_fdat",
+      "result": "PASS",
+      "detail": "el .fdat 3.22 instalado sigue intacto"
+    },
+    {
+      "id": "existing.323_recovery",
+      "result": "PASS",
+      "detail": "el paquete de recuperación 3.23 sigue intacto"
+    },
+    {
+      "id": "exp.input.tar",
+      "result": "PASS",
+      "detail": "firmware.tar oficial 3.21"
+    },
+    {
+      "id": "exp.input.updater",
+      "result": "PASS",
+      "detail": "updater.img oficial"
+    },
+    {
+      "id": "exp.input.tipo0",
+      "result": "PASS",
+      "detail": "Darwin tipo 0 instalado (3.22)"
+    },
+    {
+      "id": "exp.input.b1a",
+      "result": "PASS",
+      "detail": "candidato B1a"
+    },
+    {
+      "id": "exp.input.official_sum_crc",
+      "result": "PASS",
+      "detail": "CRC-32 del core oficial coincide con darwin.sum"
+    },
+    {
+      "id": "exp.b1a_size",
+      "result": "PASS",
+      "detail": "157276 B"
+    },
+    {
+      "id": "exp.b1a_diff_vs_tipo0_two_bytes",
+      "result": "PASS",
+      "detail": "B1a vs tipo 0: [{'file_offset': 113770, 'before': '28', 'after': '0a'}, {'file_offset': 113771, 'before': '46', 'after': 'e0'}]"
+    },
+    {
+      "id": "exp.tipo0_patch_preserved",
+      "result": "PASS",
+      "detail": "los 8 B del filtro tipo 0 (0x20c78) siguen intactos en B1a"
+    },
+    {
+      "id": "exp.sum_crc",
+      "result": "PASS",
+      "detail": "darwin.sum lleva el CRC-32 cf930ac9"
+    },
+    {
+      "id": "exp.sum_size",
+      "result": "PASS",
+      "detail": "darwin.sum lleva el tamaño 0002665c"
+    },
+    {
+      "id": "exp.tar_size",
+      "result": "PASS",
+      "detail": "firmware.tar conserva tamaño y cabeceras"
+    },
+    {
+      "id": "exp.tar_changed_only_darwin",
+      "result": "PASS",
+      "detail": "miembros distintos del tar oficial: ['0640_darwin/darwin_core.bin', '0641_darwin_sum/darwin.sum']"
+    },
+    {
+      "id": "exp.files_exist",
+      "result": "PASS",
+      "detail": "firmware_packed.fdat y firmware_packed.dat presentes"
+    },
+    {
+      "id": "exp.fdat_magic",
+      "result": "PASS",
+      "detail": "cabecera FDAT 'UDTRFIRM'"
+    },
+    {
+      "id": "exp.dat_magic",
+      "result": "PASS",
+      "detail": "contenedor .dat con magia oficial"
+    },
+    {
+      "id": "exp.unpack_ok",
+      "result": "PASS",
+      "detail": "fwtool unpack descifra y valida DEND, CRC de cabecera y suma de cada bloque"
+    },
+    {
+      "id": "exp.tar_sha",
+      "result": "PASS",
+      "detail": "firmware.tar = ae6d76eae9ff9363a42a60e37a8703b67c401fa3a81679259c4e73a0f1c402ee"
+    },
+    {
+      "id": "exp.updater_sha",
+      "result": "PASS",
+      "detail": "updater.img = b6d5175245c8fb26879c5376f0e6e0d9ff13064f805d591954ff2a48a8c2566c"
+    },
+    {
+      "id": "exp.fdat_roundtrip",
+      "result": "PASS",
+      "detail": "el .fdat descifrado del .dat coincide con el .fdat empaquetado"
+    },
+    {
+      "id": "exp.unpacked_config_version",
+      "result": "PASS",
+      "detail": "config descifrada: versión 3.23, modelo 0x41030035"
+    },
+    {
+      "id": "exp.tar_core",
+      "result": "PASS",
+      "detail": "darwin_core.bin = 55a366a5fc95f01ccb044ae352db90f0122ee779cab69063b6b99da8b3dcea1d"
+    },
+    {
+      "id": "exp.tar_core_crc",
+      "result": "PASS",
+      "detail": "CRC-32 del core = cf930ac9"
+    },
+    {
+      "id": "exp.tar_sum",
+      "result": "PASS",
+      "detail": "darwin.sum coincide con el recalculado"
+    },
+    {
+      "id": "exp.no_darwin_boo",
+      "result": "PASS",
+      "detail": "sin darwin_boo.bin ni loader en el paquete"
+    },
+    {
+      "id": "exp.header_version",
+      "result": "PASS",
+      "detail": "versión de cabecera 3.23"
+    },
+    {
+      "id": "exp.header_model",
+      "result": "PASS",
+      "detail": "modelo 0x41030035"
+    },
+    {
+      "id": "exp.header_region",
+      "result": "PASS",
+      "detail": "región 0"
+    },
+    {
+      "id": "exp.header_accessory",
+      "result": "PASS",
+      "detail": "isAccessory = False"
+    },
+    {
+      "id": "exp.header_mode",
+      "result": "PASS",
+      "detail": "modo U / LUW N"
+    },
+    {
+      "id": "exp.header_filesystems_count",
+      "result": "PASS",
+      "detail": "2 sistemas de ficheros"
+    },
+    {
+      "id": "exp.dat_descriptors",
+      "result": "PASS",
+      "detail": "descriptores del actualizador [[1356, 994]]"
+    },
+    {
+      "id": "exp.dat_is_lens",
+      "result": "PASS",
+      "detail": "isLens = False"
+    },
+    {
+      "id": "rec.input.323_dat",
+      "result": "PASS",
+      "detail": "paquete de recuperación 3.23 (.dat)"
+    },
+    {
+      "id": "rec.input.323_fdat",
+      "result": "PASS",
+      "detail": "paquete de recuperación 3.23 (.fdat)"
+    },
+    {
+      "id": "rec.reuse.323_tar_official",
+      "result": "PASS",
+      "detail": "el tar del 3.23 es el oficial (reutilizado como base)"
+    },
+    {
+      "id": "rec.reuse.323_updater_official",
+      "result": "PASS",
+      "detail": "el updater.img del 3.23 es el oficial (reutilizado como base)"
+    },
+    {
+      "id": "rec.reuse.323_version",
+      "result": "PASS",
+      "detail": "el paquete base declara 3.23"
+    },
+    {
+      "id": "rec.reuse.323_core_official",
+      "result": "PASS",
+      "detail": "el core del 3.23 es el original (Darwin conocido y funcional)"
+    },
+    {
+      "id": "rec.files_exist",
+      "result": "PASS",
+      "detail": "firmware_packed.fdat y firmware_packed.dat presentes"
+    },
+    {
+      "id": "rec.fdat_magic",
+      "result": "PASS",
+      "detail": "cabecera FDAT 'UDTRFIRM'"
+    },
+    {
+      "id": "rec.dat_magic",
+      "result": "PASS",
+      "detail": "contenedor .dat con magia oficial"
+    },
+    {
+      "id": "rec.unpack_ok",
+      "result": "PASS",
+      "detail": "fwtool unpack descifra y valida DEND, CRC de cabecera y suma de cada bloque"
+    },
+    {
+      "id": "rec.tar_sha",
+      "result": "PASS",
+      "detail": "firmware.tar = 970246492293e9175ef67b1ad587d5289ae886d47dbd10e77637d9bee458d5a8"
+    },
+    {
+      "id": "rec.updater_sha",
+      "result": "PASS",
+      "detail": "updater.img = b6d5175245c8fb26879c5376f0e6e0d9ff13064f805d591954ff2a48a8c2566c"
+    },
+    {
+      "id": "rec.fdat_roundtrip",
+      "result": "PASS",
+      "detail": "el .fdat descifrado del .dat coincide con el .fdat empaquetado"
+    },
+    {
+      "id": "rec.unpacked_config_version",
+      "result": "PASS",
+      "detail": "config descifrada: versión 3.24, modelo 0x41030035"
+    },
+    {
+      "id": "rec.tar_core",
+      "result": "PASS",
+      "detail": "darwin_core.bin = 5f2be06d9885d154e8e0df46a611d6830d29754b4353f6e82cecfe66dd6a0bf4"
+    },
+    {
+      "id": "rec.tar_core_crc",
+      "result": "PASS",
+      "detail": "CRC-32 del core = 9ff7148c"
+    },
+    {
+      "id": "rec.tar_sum",
+      "result": "PASS",
+      "detail": "darwin.sum coincide con el recalculado"
+    },
+    {
+      "id": "rec.no_darwin_boo",
+      "result": "PASS",
+      "detail": "sin darwin_boo.bin ni loader en el paquete"
+    },
+    {
+      "id": "rec.header_version",
+      "result": "PASS",
+      "detail": "versión de cabecera 3.24"
+    },
+    {
+      "id": "rec.header_model",
+      "result": "PASS",
+      "detail": "modelo 0x41030035"
+    },
+    {
+      "id": "rec.header_region",
+      "result": "PASS",
+      "detail": "región 0"
+    },
+    {
+      "id": "rec.header_accessory",
+      "result": "PASS",
+      "detail": "isAccessory = False"
+    },
+    {
+      "id": "rec.header_mode",
+      "result": "PASS",
+      "detail": "modo U / LUW N"
+    },
+    {
+      "id": "rec.header_filesystems_count",
+      "result": "PASS",
+      "detail": "2 sistemas de ficheros"
+    },
+    {
+      "id": "rec.dat_descriptors",
+      "result": "PASS",
+      "detail": "descriptores del actualizador [[1356, 994]]"
+    },
+    {
+      "id": "rec.dat_is_lens",
+      "result": "PASS",
+      "detail": "isLens = False"
+    },
+    {
+      "id": "versions.order",
+      "result": "PASS",
+      "detail": "3.22 (0x22) < 3.23 (0x23) < 3.24 (0x24)"
+    },
+    {
+      "id": "versions.experimental_gt_installed",
+      "result": "PASS",
+      "detail": "3.23 > 3.22: el guard acepta la experimental (regla medida con 3.21; INFERENCIA con 3.22)"
+    },
+    {
+      "id": "versions.recovery_gt_experimental",
+      "result": "PASS",
+      "detail": "3.24 > 3.23: el guard acepta la recuperación tras la experimental"
+    },
+    {
+      "id": "diff.recovery_payload_identical",
+      "result": "PASS",
+      "detail": "el cuerpo del .fdat 3.24 es idéntico al del 3.23: solo cambia la cabecera (versión y CRC)"
+    },
+    {
+      "id": "diff.recovery_fdat_header_only",
+      "result": "PASS",
+      "detail": "rangos distintos en el .fdat 3.24 vs 3.23: [[8, 12], [32, 33]] (cabecera = 512 B)"
+    },
+    {
+      "id": "diff.recovery_dat_header_and_dend",
+      "result": "PASS",
+      "detail": "rangos distintos en el .dat 3.24 vs 3.23: [[140, 156], [172, 188], [212988052, 212988056]] (primer bloque cifrado del FDAT en 140 y CRC DEND al final)"
+    },
+    {
+      "id": "diff.packages_tar",
+      "result": "PASS",
+      "detail": "el tar experimental (tipo 0 + B1a) difiere del tar de recuperación (oficial)"
+    },
+    {
+      "id": "existing.unchanged",
+      "result": "PASS",
+      "detail": "los paquetes 3.22 y la recuperación 3.23 no se modificaron"
+    }
+  ],
+  "limitations": [
+    "La recuperación 3.24 solo puede instalarse si la cámara conserva acceso al actualizador (Darwin capaz de ejecutar InitCom/Upd o vía de actualizador alcanzable). No recupera un MCU que no arranca ni sustituye una recuperación independiente de Darwin.",
+    "No está demostrado que un Darwin defectuoso vuelva a arrancar (E25-04 A=NO, G=NO).",
+    "La aceptación del guard con 3.22 instalada es INFERENCIA: la regla se midió con 3.21 (M2).",
+    "Instalar 3.23 consume la versión; tras instalar 3.24 la siguiente prueba exigiría 3.25 y su recuperación ≥3.26 (tope 3.99). El paquete de recuperación 3.23 queda superado por el 3.24.",
+    "El 3.24 restaura el Darwin oficial (3.21), no el tipo 0; volver al tipo 0 exigiría otro paquete ≥3.25.",
+    "Nada de esto se ha probado en cámara: no se conectó, no se escribió RAM/NVRAM/NAND y no se flasheó."
+  ]
+}

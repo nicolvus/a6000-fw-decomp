@@ -1,0 +1,112 @@
+{
+  "schema": "a6000.e25_05.differences.v1",
+  "generated_by": "scripts/e25_05/build_packages.py",
+  "generated_at": "2026-10-27T23:57:42Z",
+  "base_commit": "f4bb7f50",
+  "b1a_vs_tipo0": {
+    "tipo0_sha256": "ca41b46c43d4324a20414692fa081c4cfbffa96dce58bd61c0af2c7060fa52dc",
+    "b1a_sha256": "55a366a5fc95f01ccb044ae352db90f0122ee779cab69063b6b99da8b3dcea1d",
+    "count": 2,
+    "bytes": [
+      {
+        "file_offset": 113770,
+        "before": "28",
+        "after": "0a"
+      },
+      {
+        "file_offset": 113771,
+        "before": "46",
+        "after": "e0"
+      }
+    ],
+    "note": "2 bytes: 0x1fe6a 28 46 -> 0a e0 (B.N a 0x1fe82); el resto del tipo 0 queda intacto"
+  },
+  "b1a_vs_original": {
+    "original_sha256": "5f2be06d9885d154e8e0df46a611d6830d29754b4353f6e82cecfe66dd6a0bf4",
+    "count": 9,
+    "bytes": [
+      {
+        "file_offset": 113770,
+        "before": "28",
+        "after": "0a"
+      },
+      {
+        "file_offset": 113771,
+        "before": "46",
+        "after": "e0"
+      },
+      {
+        "file_offset": 117368,
+        "before": "fa",
+        "after": "09"
+      },
+      {
+        "file_offset": 117369,
+        "before": "f7",
+        "after": "e0"
+      },
+      {
+        "file_offset": 117370,
+        "before": "02",
+        "after": "00"
+      },
+      {
+        "file_offset": 117371,
+        "before": "fa",
+        "after": "bf"
+      },
+      {
+        "file_offset": 117373,
+        "before": "f0",
+        "after": "bf"
+      },
+      {
+        "file_offset": 117374,
+        "before": "07",
+        "after": "00"
+      },
+      {
+        "file_offset": 117375,
+        "before": "00",
+        "after": "bf"
+      }
+    ],
+    "note": "filtro tipo 0 en 0x20c78..0x20c7f + 2 bytes de la compuerta en 0x1fe6a..0x1fe6b"
+  },
+  "packages": {
+    "experimental_323_tar_sha256": "ae6d76eae9ff9363a42a60e37a8703b67c401fa3a81679259c4e73a0f1c402ee",
+    "recuperacion_324_tar_sha256": "970246492293e9175ef67b1ad587d5289ae886d47dbd10e77637d9bee458d5a8",
+    "experimental_vs_recovery_tar_members_changed": [
+      "0640_darwin/darwin_core.bin",
+      "0641_darwin_sum/darwin.sum"
+    ],
+    "recovery_324_fdat_diff_ranges_vs_323": [
+      [
+        8,
+        12
+      ],
+      [
+        32,
+        33
+      ]
+    ],
+    "recovery_324_dat_diff_ranges_vs_323": [
+      [
+        140,
+        156
+      ],
+      [
+        172,
+        188
+      ],
+      [
+        212988052,
+        212988056
+      ]
+    ],
+    "recovery_324_fdat_sha256": "24ee9b42e9fae29c7a86ec5f17d85d9a5076a8a36698a3766e0b13801126b2c2",
+    "recovery_324_dat_sha256": "e1345aff44270270fec8ae15014f3696cf98c06a07b9eaeb89ff6346e77c8f22",
+    "experimental_323_fdat_sha256": "268621fb70948fc58676bb19bcf82e7d73a2634d0085e3032d64833b04fc6e49",
+    "experimental_323_dat_sha256": "4c21353dc742bde86d66de6d3d6bdd8dc18f4c445c436399e768731ccf474542"
+  }
+}
