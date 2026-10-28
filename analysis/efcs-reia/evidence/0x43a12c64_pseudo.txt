@@ -1,0 +1,34 @@
+
+undefined4 FUN_43a12c64(void)
+
+{
+  uint uVar1;
+  
+  uVar1 = *(uint *)(DAT_43a12ca4 + 0x43a12c6a);
+  if (uVar1 == 0xbc) {
+    return 1;
+  }
+  if (uVar1 < 0xbd) {
+    if (uVar1 < 0x38) {
+      if (0x30 < uVar1) {
+        return 1;
+      }
+      if (uVar1 == 1) {
+        return 3;
+      }
+    }
+    else if (uVar1 == 0xbb) {
+      return 2;
+    }
+  }
+  else if (0xed < uVar1) {
+    if (uVar1 < 0xf0) {
+      return 1;
+    }
+    if (uVar1 - 0xfd < 3) {
+      return 1;
+    }
+  }
+  return 0;
+}
+
