@@ -111,6 +111,15 @@ El muestreo de 30 s se interrumpió porque el usuario apagó y encendió la cám
 así que la exposición larga se sostiene en esa espera de la secuencia, no en `svd`/VTS del registro. Sigue sin demostrarse `cap` ni lo que recibe `SetExposure`;
 falta desensamblar `0x43b1b024` (quién sale de la espera: temporizador, evento de sensor o contador) y el origen de `r1`.
 
+### 4e. Estado `0x43b1b025` desensamblado (V por bytes)
+
+`0x43b1b024` lee el subestado `[M+0x23]` (`0x43afdf16`) y salta por `tbh` (12 entradas) a un manejador por subestado: 0→`0x437ed9c4`, 1→`0x438c27f0`, 2→`0x438c8474`,
+3→`0x438c23f4`, 4→`0x43b1e854`, 5→`0x43b1d93c`, 6→`0x438c89a8`, 7→`0x437f2540`, 8→`0x437f00a4`, **9→`0x438c289c`**, 10→`0x43b1e878`, 11→`0x437ed568`; otro valor devuelve 5.
+El manejador del subestado 9 (el observado durante toda la exposición) **no espera**: obtiene `cap=[M]` (`0x43ae75dc`), anota hitos (`0x43ae769a(cap,0xc8)`), lee el estado de un registro
+(`0x43560e00(0x13)`, bit 15), compara `[[cap+0x4ad0]+0x1d]` con `0x436e86dc()`, llama a `0x437f9a64`/`0x438d0958`/`0x437c1178` y **devuelve 0**. Por tanto el tiempo que la secuencia pasa en
+paso 2/sub 9 no es un bucle de este manejador: la máquina queda parada hasta un **evento externo** que la haga avanzar (el que termina la exposición) y que no se ha identificado
+(temporizador, interrupción del imager o contador). Sigue sin leerse `cap`; el siguiente paso útil es leer en vuelo `cap+0x4ad0`/`0x4b80` y localizar al productor del evento de fin (quien encola paso 3/sub 11).
+
 ## 5. Respuestas
 
 | # | Pregunta | Respuesta |
