@@ -44,5 +44,5 @@ for b in range(nb):
     alt.append(best[0])
 print("residuo medio modelo aditivo", float(np.mean([np.sum((L[:, b] - np.polyval(np.polyfit(T, L[:, b], 1), T)) ** 2) for b in range(nb)])),
       "vs modelo max()", float(np.mean(alt)))
-json.dump({"velocidades_s": T.tolist(), "bandas": out, "tau_lineal": {"ms_banda0": icpt, "ms_por_banda": slope}},
-          open(f"{d}/e25_10_tau_por_fila.json", "w"), indent=1)
+with open(f"{d}/e25_10_tau_por_fila.json", "w") as fh:
+    json.dump({"velocidades_s": T.tolist(), "bandas": out, "tau_lineal": {"ms_banda0": icpt, "ms_por_banda": slope}}, fh, indent=1)
