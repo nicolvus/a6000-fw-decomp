@@ -81,9 +81,10 @@ Solo funciona si la cámara sigue llegando al actualizador.
   app de pruebas solo recibe un JPEG reducido de 1616×1080; las medidas serias se hacen sobre el ARW (T044).
 - **Disparo y rearme:** 36 de 36 disparos en ráfagas de 6 y 10 de 10 sueltos; rearme de 0,7–1,0 s entre disparos y latencia de 2,6–2,9 s a velocidades rápidas.
 - **Error de apertura:** tras un disparo, `CameraEx` puede tardar hasta ~1 s en poder reabrirse; con un reintento no hay fallos (T045).
-- **Exposición — limitación abierta (E25-10):** con ISO fijo la velocidad de obturación **no escala la exposición** de 1/4000 a 1/500 y apenas
-  a 1/250–1/125 (pendiente log2/log2 = 0,21; 1,0 sería ideal), y la exposición **crece con la fila**: a 1/4000 la fila superior recibe ≈ 27 % de la
-  inferior. Las velocidades lentas (≤ 1/60) se comportan mejor. Es consistente con el degradado de `r5` de E23, pero la causa no está aislada.
+- **Exposición — limitación medida ([E25-10](docs/capture/e25-10-exposicion-por-fila.md)):** sin cortina trasera, el sensor se reinicia a la vez y se lee por filas, y
+  la exposición de la fila `i` es **T + ≈7 ms + 15,2 µs·i** (lectura completa ≈ 61 ms). Por eso, con ISO fijo, la velocidad no escala la exposición de 1/4000 a 1/500
+  y la fila inferior recibe hasta 3,7× la superior; de 1/60 en adelante el efecto pesa poco. No lo introduce B1a (ya se veía con la 3.22). Relación con `r5` de
+  E23 consistente pero sin demostrar: lograr exposición uniforme a velocidades rápidas exigiría reinicio por filas.
 
 ## Límites y riesgos
 
