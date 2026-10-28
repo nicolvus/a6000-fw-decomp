@@ -30,6 +30,22 @@ sensor (lectura y reinicio por filas) en lugar de las cortinillas. Detalle, dire
 Los paquetes de firmware se construyen, verifican y auditan offline antes de tocar la cámara (69 comprobaciones de empaquetado y
 una batería de 21 pruebas independientes sobre cabecera FDAT, cifrado, sumas y diferencias de bytes).
 
+## Versiones: qué es la 3.22, la 3.23 y la 3.24
+
+Sony solo publicó hasta la **3.21**. Las demás versiones las generé yo con el firmware oficial y solo cambian el Darwin; el resto del paquete
+es el oficial. El actualizador de la cámara solo acepta versiones **estrictamente mayores** que la instalada, así que cada paso necesita un número nuevo.
+
+| Versión | Origen | Qué hace |
+|---|---|---|
+| **3.21** | Oficial de Sony | Darwin original: el obturador mecánico se acciona con normalidad |
+| **3.22** | Mía (T024, 26-10-2026) | **Apaga las bobinas.** Darwin «tipo 0»: la función de tipo de mecanismo `0x20c74` devuelve siempre 0 (rama que ya existe en el firmware, «sin bobinas»), así que los cuatro escritores de P4D/P4E dejan de activarlas. El resto del mecanismo sigue funcionando |
+| **3.23** | Mía (T040, 27-10-2026) | 3.22 **+ B1a**: la compuerta `0x1fe66` devuelve siempre 0 y Darwin ya no acciona el **mecanismo completo** (P40/P41) en captura ni rearme. Es la versión que dispara en silencio |
+| **3.24** | Mía, solo recuperación | Darwin **oficial** con versión 3.24, para volver atrás: con la 3.23 instalada, el guard solo admite un número mayor |
+
+La 3.22 fue el primer paso: demostró que la cámara acepta un firmware con Darwin propio (el actualizador solo comprueba un CRC-32) y que
+apagar las bobinas no la bloquea. La 3.23 pasó de apagar las bobinas a apagar el mecanismo entero. Por eso la instalación documentada
+va de 3.22 a 3.23, que fue mi ruta real. El efecto «sin bobinas» de la 3.22 es **estático** (lectura del código), no una medida física.
+
 ## Línea temporal del hito
 
 | Fecha | Qué pasó |
