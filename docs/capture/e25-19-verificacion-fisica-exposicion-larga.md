@@ -103,6 +103,14 @@ Observado: de 1,2 s a 4,0 s el evento fue `estado 0x43b1b025, paso 2, sub 9` y a
 no un valor de `svd`**. Faltan: la duración de ese estado frente a la velocidad (30 s) y el origen de `r1`. `cap` sigue sin leerse.
 El muestreo de 30 s se interrumpió porque el usuario apagó y encendió la cámara a mitad (conexión reiniciada; sin fichero de resultados). Tras el reinicio: originales T050 intactos y `ready`.
 
+### 4d. Muestreo en vuelo durante un 30 s (`analysis/e25-19b/muestreo-30s.json`)
+
+53 pasadas, 0 errores, originales T050 intactos antes y después, cámara `ready`. El evento (ahora en `0x43eeafa8`: es un banco de eventos, no una dirección fija) estuvo en
+`estado 0x43b1b025, paso 2, sub 9` desde 1,06 s hasta ≈ 32,5 s y pasó entonces a `0x43b1ce6f, paso 3`; a 33,1 s aparecen eventos `0x435503b1` en los gestores `0x43edbd3c/6c/fc`
+(fin de captura, lectura). Con 4 s el paso 2 duró ≈ 3,1 s (1,2 → ≈ 4,3 s): **el estado `0x43b1b025` dura lo que la exposición** (≈ T + 1 s de preparación),
+así que la exposición larga se sostiene en esa espera de la secuencia, no en `svd`/VTS del registro. Sigue sin demostrarse `cap` ni lo que recibe `SetExposure`;
+falta desensamblar `0x43b1b024` (quién sale de la espera: temporizador, evento de sensor o contador) y el origen de `r1`.
+
 ## 5. Respuestas
 
 | # | Pregunta | Respuesta |
