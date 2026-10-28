@@ -93,6 +93,16 @@ liga un puntero `0x43eeafe8` que **no** se toma como `cap` (coincidencia de valo
 se escribiera nada). Siguiente paso: con la cámara de nuevo en red, muestrear los centinelas durante un 4 s/30 s (`e25_19b_cadena.py --live` solo lee la matriz y los centinelas; falta el
 muestreo con seguimiento de nodo→`M`→`cap`) y buscar el productor de mensajes.
 
+### 4c. Muestreo en vuelo durante un 4 s (`scripts/e25_19b_muestreo.py`, `analysis/e25-19b/muestreo-4s.json`)
+
+13 pasadas (≈0,6 s cada una; los 14 centinelas en 2 lotes de 7 porque >8 regiones desborda la línea del telnet), 1 disparo de 4 s, originales T050 intactos al final.
+La única cola no vacía fue la del gestor `0x43edbd9c` (grupos 1–3): un nodo del banco `0x43ed8e5c` cuyo payload es `{0x43eeb028, 0x80000a99, 0x100, thunk 0x43ae8633}`.
+**Corrige §4b punto 3**: `0x43eeb028` no es un `M` con `[M]=cap`; es un **objeto functor/evento estático** (`+8` = thunk `0x43afb3bb`, `+0x10` = función de estado, `+0x1c` = paso, `+0x20` = `0x0901ffff`
+→ subestado 9 en `+0x23`) y su primer dword (`0x952db580`) no es un puntero. El `cap` llega por el segundo argumento del thunk (`r1`), que el muestreo no capturó.
+Observado: de 1,2 s a 4,0 s el evento fue `estado 0x43b1b025, paso 2, sub 9` y a 4,65 s `estado 0x43b1ce6f, paso 3, sub 11`: **la espera de la exposición es un estado de la secuencia,
+no un valor de `svd`**. Faltan: la duración de ese estado frente a la velocidad (30 s) y el origen de `r1`. `cap` sigue sin leerse.
+El muestreo de 30 s se interrumpió porque el usuario apagó y encendió la cámara a mitad (conexión reiniciada; sin fichero de resultados). Tras el reinicio: originales T050 intactos y `ready`.
+
 ## 5. Respuestas
 
 | # | Pregunta | Respuesta |
