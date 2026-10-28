@@ -3061,3 +3061,7 @@ GOT y encabezados de ID3–ID8 coinciden; sombras en reposo `03 00 4b 01 00 00` 
 ## E25-22 — Fotos y sombras reales (2026-10-28)
 
 Tras reinicio y nueva escena: dos RAW; `cap` (shd=1/svd=0) y sombras compatibles durante la toma de 4 s; lecturas no simultáneas. T050/GOT T052-A finales coinciden. Sin evidencia de transmisión eléctrica o integración electrónica; EXIF/latencia no prueban tiempo efectivo. [Informe y evidencia](../docs/capture/e25-22-protocolo-transporte-fisico.md). Próximo paso exacto: caracterizar plan por foto y validar pasivamente la entrega P2S solo con autorización y puntos/tensión verificados; no repetir `/silent`.
+
+## E25-23 — Interrupción de captura larga (2026-10-28)
+
+5 s y petición 15 s (selección 20 s) produjeron archivos; petición 30 s mostró 65535 y quedó en `shooting`, con bloqueo comunicado por el usuario. Tras reinicio, servicios y controles puntuales respondieron. [Informe y límites](../docs/capture/e25-23-exposiciones-largas-incidente.md). RAW recuperados con MD5 coincidente y EXIF 5/20 s; próxima acción: investigar offline selección de velocidad y causa del valor discrepante sin volver a disparar.
