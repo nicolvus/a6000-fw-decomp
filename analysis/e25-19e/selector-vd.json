@@ -1,0 +1,45 @@
+{
+ "tbb": {
+  "1": "0x436c75d2",
+  "2": "0x436c7672",
+  "3": "0x436c76e0",
+  "4": "0x436c770a"
+ },
+ "sel3": [
+  "0x436c76e0: bl #0x436c72e4",
+  "0x436c76e4: mov.w r0, #-0xd000000",
+  "0x436c76e8: bl #0x43ad381e",
+  "0x436c76ec: adds r5, r4, #4",
+  "0x436c76ee: ldr r0, [pc, #0x114]",
+  "0x436c76f0: bl #0x43ad381e",
+  "0x436c76f4: mov r0, r5",
+  "0x436c76f6: bl #0x43acee62",
+  "0x436c76fa: movs r1, #1",
+  "0x436c76fc: bl #0x43ad2bbc",
+  "0x436c7700: mov r0, r5",
+  "0x436c7702: bl #0x43acee62",
+  "0x436c7706: movs r1, #0",
+  "0x436c7708: b #0x436c7732"
+ ],
+ "sel4": [
+  "0x436c770a: bl #0x436c72e4",
+  "0x436c770e: mov.w r0, #-0xd000000",
+  "0x436c7712: bl #0x43ad381e",
+  "0x436c7716: adds r5, r4, #4",
+  "0x436c7718: ldr r0, [pc, #0xe8]",
+  "0x436c771a: bl #0x43ad381e",
+  "0x436c771e: mov r0, r5",
+  "0x436c7720: bl #0x43acee62",
+  "0x436c7724: movs r1, #0",
+  "0x436c7726: bl #0x43ad2bbc",
+  "0x436c772a: mov r0, r5",
+  "0x436c772c: bl #0x43acee62",
+  "0x436c7730: movs r1, #1",
+  "0x436c7732: bl #0x43ad2bfc",
+  "0x436c7736: mov r0, r5",
+  "0x436c7738: bl #0x43acee62",
+  "0x436c773c: ldr r1, [r4, #0x34]",
+  "0x436c773e: bl #0x43ad2be0",
+  "0x436c7742: movs r7, #0"
+ ]
+}
