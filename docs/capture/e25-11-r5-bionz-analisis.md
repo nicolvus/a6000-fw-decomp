@@ -98,3 +98,14 @@ Pendiente antes de cualquier prueba: que `[cap+0x4da]` lleve en la **foto** el c
 | 1/15 | 66 696 | 4388 | **−169 (imposible)** | — |
 
 **Límite nuevo:** con ShutMode 0 la exposición máxima uniforme es el **cuadro completo (≈ 64,9 ms ≈ 1/15,4)**; desde 1/15 hacia velocidades más lentas `r5` queda fuera de rango y habría que dejar la ruta normal (ShutMode 3, donde el τ de T044 pesa poco) o un modo de varios cuadros. C2 debería caer a la ruta original cuando `líneas > 4218`.
+
+## 7. Lectura en vivo de `[cap+0x4da]` (T048, 27-10-2026, solo lectura de RAM) — NO confirmado
+
+Con autorización del usuario («lee [cap+0x4da] en vivo, solo lectura»; sin parches ni escrituras de RAM; `scripts/camera_ram_speed_scan.py`): cuatro disparos (1/60, 1/250, 1/500, 1/1000) con un volcado de 4 MiB (`0x83c00000..0x84000000`, que contiene los objetos conocidos `0x83e7f4a8`, `0x83ea5ca4`, `0x83edf684`) tras cada uno.
+(Un primer intento no sirvió: los archivos de `/data/local/tmp` creados por `dd` son de solo lectura y el segundo volcado devolvía el primero; se repitió borrando antes.)
+
+- **No hay ningún halfword con el código Tv `0x1000 + 256·log2(1/t)`** (1/60 → 5608, 1/250 → 6135, 1/500 → 6391, 1/1000 → 6647, tolerancia ±3) en las cuatro velocidades, ni ninguno con pasos de ±256/±527 (1/256 EV), ni monótono con el tiempo en 1/256 EV.
+- **Candidato a objeto de captura:** el patrón del `param` de la foto (`r5` = 1, ShutMode 3 en `+0x64c`) aparece, entre otros, en `0x83e1a36c` ⇒ `cap` = `0x83e19d20` (INFERENCIA: hay otras seis coincidencias del patrón). Ahí `[+0x56c]` = 864 y `[+0x570]` = 4176 (valores constantes) y **`[+0x4d4..+0x4de]` = 0, 0, 1, 1, 3, 0**, es decir **`[cap+0x4da]` = 1**, sin cambio con la velocidad ni durante el disparo (600 lecturas de 388 B por disparo, a 1/250 y 1/1000: un único estado). Si ese es el objeto vivo, `[cap+0x4da]` **no lleva el Tv de la foto**; si no lo es, el objeto vivo no se localizó.
+- **Lo que sí sigue a la velocidad en esa ventana:** (a) un índice en tercios de EV, 24 → 30 → 33 → 37 para 1/60 → 1/250 → 1/500 → 1/1000 (p. ej. `0x83e996cc`, `0x83e9b700`, `0x83ea9a90`, `0x83eaf1a8`, `0x83eb29a4`: espejos de ajustes); (b) un registro de exposición en `0x83e88ab8` (u16 = 4283, 1017, 521, 252) con una copia ×32 en `+4` (137 060, 32 557, 16 700, 8070): ≈ t/3,9 µs, o t en unidades de 125 ns (≈ 1–4 % por encima del tiempo nominal, ¿cuantizado en líneas de ≈ 4 µs, probablemente de la vista en directo?). Sin interpretar.
+
+**Consecuencia para C2:** la entrada de tiempo `[cap+0x4da]` de §4/§6 queda **sin confirmar** (y probablemente sea propia de la vista en directo). Fuentes alternativas para el tiempo de la foto, sin verificar: el índice en tercios de EV (tabla de velocidades → µs) o el registro de `0x83e88ab8`; habría que buscar su origen estático (escritor) antes de diseñar C2. No se ha tocado nada en la cámara.
