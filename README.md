@@ -41,15 +41,18 @@ una batería de 21 pruebas independientes sobre cabecera FDAT, cifrado, sumas y 
 | 27-10-2026 | **T040:** SHA-256 de ambos paquetes verificados, guard de versiones medido (3.22 < 3.23 < 3.24), NVRAM volcada, **3.23 (B1a) instalado**; la cámara arranca en 3.23 |
 | 27-10-2026 | **El usuario confirma que la cámara dispara en silencio y sin error** |
 
-## Instalación (3.22 → 3.23)
+## Instalación (3.21 o 3.22 → 3.23)
 
-Requisitos: A6000 con firmware **3.22** (la 3.21 original no basta: el actualizador solo acepta versiones estrictamente mayores),
-batería cargada, cable USB y [`pmca-console`](https://github.com/ma1co/Sony-PMCA-RE). El repositorio **no incluye** firmware de
-Sony, volcados ni binarios; los paquetes se generan a partir de tu propio firmware (ver [E25-05](docs/capture/e25-05-preparacion-paquetes-323-324.md)).
+Requisitos: A6000 con firmware **3.21 o 3.22**, batería cargada, cable USB y [`pmca-console`](https://github.com/ma1co/Sony-PMCA-RE).
+El actualizador solo acepta versiones estrictamente mayores que la instalada, y la 3.23 lo es sobre ambas. **Probado únicamente desde la 3.22** (T040):
+la 3.22 ya llevaba el Darwin «tipo 0» (desactivar bobinas) y la 3.23 añade B1a (no accionar el mecanismo completo). Desde la 3.21 original
+debería funcionar igual, porque el paquete 3.23 es un firmware completo (tar oficial con solo los dos ficheros de Darwin cambiados) y no un parche
+incremental, pero **no se ha probado**. El repositorio **no incluye** firmware de Sony, volcados ni binarios; los paquetes se generan a partir de tu
+propio firmware (ver [E25-05](docs/capture/e25-05-preparacion-paquetes-323-324.md)).
 
 1. **Backup de NVRAM** en modo servicio antes de nada: `scripts/senser_backup_dump.py` (guarda los volcados fuera del repositorio).
 2. **Verifica el SHA-256** del paquete 3.23 (`4c21353d…`) y del de recuperación 3.24 (`e1345aff…`) con `scripts/recovery/r1_manifest.py verify`.
-3. **Mide el guard** sin flashear (`fdat_guard_probe.py`): debe rechazar la 3.22 y aceptar 3.23 y 3.24.
+3. **Mide el guard** sin flashear (`fdat_guard_probe.py`): debe rechazar tu versión instalada y aceptar la 3.23 y la 3.24.
 4. Flashea el 3.23 con `pmca-console firmware`; la cámara se reinicia sola y `pmca info` debe dar **3.23**.
 5. Registra la prueba en [registro-pruebas-camara.md](docs/capture/registro-pruebas-camara.md) (T040 es el modelo).
 
