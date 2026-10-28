@@ -180,6 +180,33 @@ class Elf:
             start = i + 1
 
 
+    # --- llamadas directas -------------------------------------------------
+    def callers(self, target: int) -> list[int]:
+        """Sitios de `.text` con `bl`/`blx` directos a `target` (Thumb-2, 4 B)."""
+        text = next((s for s in self.sections if s.name == ".text"), None)
+        if text is None:
+            return []
+        data = self.raw[text.offset:text.offset + text.size]
+        out = []
+        for i in range(0, len(data) - 4, 2):
+            hw1, hw2 = struct.unpack_from("<HH", data, i)
+            if (hw1 & 0xF800) != 0xF000 or (hw2 & 0xC000) != 0xC000:
+                continue
+            s = (hw1 >> 10) & 1
+            imm10 = hw1 & 0x3FF
+            j1, j2, imm11 = (hw2 >> 13) & 1, (hw2 >> 11) & 1, hw2 & 0x7FF
+            i1, i2 = 1 - (j1 ^ s), 1 - (j2 ^ s)
+            off = (s << 24) | (i1 << 23) | (i2 << 22) | (imm10 << 12) | (imm11 << 1)
+            if s:
+                off -= 1 << 25
+            here = text.addr + i
+            dest = (here + 4 + off) & 0xFFFFFFFF
+            if (hw2 & 0x1000) == 0:  # blx: destino ARM alineado
+                dest &= ~3
+            if dest == (target & ~1) or dest == target:
+                out.append(here)
+        return out
+
     # --- PLT ---------------------------------------------------------------
     def jump_slots(self) -> list[tuple[int, str]]:
         """(slot GOT, nombre del símbolo) de cada R_ARM_JUMP_SLOT de .rel.plt."""
@@ -333,6 +360,16 @@ def main(argv: list[str]) -> int:
         for addr, name in sorted(plt.items()):
             print(f"0x{addr:08x} {name}")
         print(f"; {len(plt)} stubs resueltos")
+    elif cmd == "callers":
+        plt = elf.plt_map()
+        for arg in argv[3:]:
+            va = int(arg, 0)
+            sites = elf.callers(va)
+            name = elf.name_of(va, plt)
+            print(f"== 0x{va:08x} {name or ''} ({len(sites)} llamadas directas)")
+            for site in sites:
+                holder = elf.symbol_at(site)
+                print(f"   0x{site:08x} {holder.name if holder else '?'}")
     elif cmd == "resolve":
         plt = elf.plt_map()
         for arg in argv[3:]:

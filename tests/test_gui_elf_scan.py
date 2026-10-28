@@ -118,3 +118,37 @@ def test_inventario_recursos():
     assert res["prefixes"]["string"] == 66
     assert len(inv["libs"]) >= 18
     assert inv["libs"]["libObj.so"]["bytes"] == 17_436_172
+
+# --- llamadas directas (G03) --------------------------------------------------
+
+def test_callers_de_plt_del_motor(obj: Elf):
+    # GRM_fbrmUpdateYUV se llama desde la rutina de presentación 0x12e6d0..0x12e7de
+    stub = next(a for a, n in obj.plt_map().items() if n == "GRM_fbrmUpdateYUV")
+    sites = obj.callers(stub)
+    assert 0x12E782 in sites and 0x12E7C2 in sites
+    # GRM_gpermRectblit: 7 llamadas directas, entre ellas la limpieza de imagen
+    stub = next(a for a, n in obj.plt_map().items() if n == "GRM_gpermRectblit")
+    sites = obj.callers(stub)
+    assert len(sites) == 7
+    assert 0x5ED8D6 in sites
+
+
+def test_callers_incluye_blx_y_no_inventa(obj: Elf):
+    # las llamadas a la PLT ARM son `blx`: si sólo se decodificara `bl` saldrían 0
+    stub = next(a for a, n in obj.plt_map().items() if n == "GRM_fbrmFillrectYUV")
+    assert len(obj.callers(stub)) == 3
+    # 0x12e6d0 no tiene llamada directa ni puntero literal (G03 §3)
+    assert obj.callers(0x12E6D0) == []
+    assert obj.find_literal_refs(0x12E6D0) == []
+
+
+def test_cadenas_del_compositor_sin_referencias(obj: Elf):
+    # WindowServer/ViewSystem y /dev/fb0 son cadenas muertas: sin literales ni punteros
+    for text in ("/dev/fb0", "WindowServer_DI.cpp", "ViewSystem::ViewSystem(AppConfigIF*)"):
+        addrs = obj.find_string(text)
+        assert addrs, text
+        for va in addrs:
+            assert obj.find_literal_refs(va) == [], (text, hex(va))
+            import struct as _s
+
+            assert obj.raw.find(_s.pack("<I", va)) < 0, (text, hex(va))

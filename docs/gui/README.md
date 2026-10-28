@@ -52,6 +52,10 @@ Evidencia y detalle: [G01 — arquitectura](g01-arquitectura.md).
    de símbolos dinámicos y Capstone. Un resultado vacío de REA en este carril **no** prueba ausencia.
 5. **La tabla PLT ya está resuelta** (2 419 de 2 420 stubs), así que las llamadas externas del motor se pueden
    nombrar: es la base para seguir el compositor.
+6. **Las cadenas de `WindowServer`/`ViewSystem`/`/dev/fb0` son muertas**: cero referencias en todo el binario
+   (ni literales, ni `add pc`, ni punteros). El compositor se persigue por llamadas y estructuras, no por texto.
+7. **El dibujo es propio**: `GRM_fbrm*` (superficies YUV), `GRM_gpermRectblit` (copia/mezcla) y `DMP2D_*`
+   (blitter); no hay `libGLES`/`libEGL` en `DT_NEEDED`.
 
 ## 3. Tareas del carril (ids G)
 
@@ -59,7 +63,7 @@ Evidencia y detalle: [G01 — arquitectura](g01-arquitectura.md).
 |---|---|---|---|
 | G1 | Reconocimiento: inventario, capas, arranque, dependencias, PLT | **CERRADO** | [G01](g01-arquitectura.md), `scripts/gui/{inventory,elf_scan}.py`, `analysis/gui/g01-inventory.json`, `tests/test_gui_elf_scan.py` |
 | G2 | Formato de contenedor `.uxc`/`.uxb`/`.xdb` (cabecera, tabla, *payload*, codificación de texto) | ABIERTO | Parser reproducible + editor de ida/vuelta sobre un `.uxc` de prueba; cerrar la codificación de `string_<idioma>.uxc` |
-| G3 | Compositor: quién escribe `/dev/fb0`, `ViewSystem::updateFrame`/`drawFramebuffer`, `swap`, regiones sucias | ABIERTO (parcial) | Cadena de llamadas desde el bucle principal hasta el *swap*, y punto de enganche estable |
+| G3 | Compositor: capa `GRM_fbrm*`/`GRM_gperm*`/`DMP2D`, rutina de presentación, `WindowServer`/`ViewSystem`, `/dev/fb0`, regiones sucias | **PARCIAL**: capa de dibujo y rutina de presentación localizadas; falta el invocador | Cadena verificada desde un bucle de la aplicación hasta `GRM_fbrmUpdateYUV`, con el punto de enganche estable |
 | G4 | Menús: estructuras `CmnViewMenuData`/`CmnViewMenuItemStruct`, `cmn_menuTableUtil`, `LayoutMaster_Menu.uxc` | ABIERTO | Volcado verificable de un menú real y su correspondencia con las entradas visibles |
 | G5 | Texto y fuentes: `.ltt`, `registerFontFaceFile`, `TextSprite::drawText/setString/setFont` | ABIERTO | Ruta de una cadena desde el recurso hasta el píxel, con un texto cambiado y verificado |
 | G6 | Entrada: `InputService`, `GestureAnalyzer`, mapeo de teclas/rueda/dial | ABIERTO | Correspondencia evento físico → acción, con una acción alterada de forma reversible |
@@ -71,7 +75,7 @@ Evidencia y detalle: [G01 — arquitectura](g01-arquitectura.md).
 | Nivel | Significado | Estado en este carril |
 |---|---|---|
 | 1 | Identificado (símbolo, dirección, fichero) | **SÍ** para el motor, las vistas y los recursos |
-| 2 | Estructura reproducida (formato, campos, semántica) | **Parcial**: ELF/PLT sí; `.uxc` no |
+| 2 | Estructura reproducida (formato, campos, semántica) | **Parcial**: ELF/PLT sí; pila de dibujo en campos (G03) parcial; `.uxc` no |
 | 3 | Cambio en copia local y verificación estática del resultado | **NO** |
 | 4 | Cambio aplicado en la cámara y visible | **NO** |
 | 5 | Cambio persistente tras reinicio | **NO** |
@@ -108,6 +112,7 @@ Evidencia y detalle: [G01 — arquitectura](g01-arquitectura.md).
 | Documento | Contenido |
 |---|---|
 | [g01-arquitectura.md](g01-arquitectura.md) | Reconocimiento: inventario, capas de símbolos, arranque, carga de vistas, compositor, tabla PLT, límites |
+| [g03-compositor.md](g03-compositor.md) | Pila de dibujo (`GRM_*`, `DMP2D`, `Ts*`), rutina de presentación y mapa de campos; cadenas muertas de `WindowServer` |
 | G02 (pendiente) | Formato `.uxc`/`.uxb`/`.xdb` |
 | G04 (pendiente) | Estructuras de menú |
 | G08 (pendiente) | Mecanismo de modificación y reversión |
