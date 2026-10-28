@@ -1,0 +1,271 @@
+{
+ "fallos": 0,
+ "sitios": [
+  {
+   "addr": "0x438c82d8",
+   "esperado": "7ebb",
+   "leido": "7ebb",
+   "ok": true,
+   "nota": "cbnz r6,0x438c833a: solo el paso 0 (cap+0x4b9c == 0) ejecuta SetExposure"
+  },
+  {
+   "addr": "0x438c82dc",
+   "esperado": "56f220f9",
+   "leido": "56f220f9",
+   "ok": true,
+   "nota": "bl 0x43b1e520 (fija cap+0x73b desde cap+0x655)"
+  },
+  {
+   "addr": "0x438c82e4",
+   "esperado": "b4f85076",
+   "leido": "b4f85076",
+   "ok": true,
+   "nota": "ldrh r7,[cap+0x650]: guarda el svd nativo"
+  },
+  {
+   "addr": "0x438c82f0",
+   "esperado": "a4f85066",
+   "leido": "a4f85066",
+   "ok": true,
+   "nota": "strheq [cap+0x650],0 si cap+0x504 == 1"
+  },
+  {
+   "addr": "0x438c82fe",
+   "esperado": "0df60bff",
+   "leido": "0df60bff",
+   "ok": true,
+   "nota": "bl 0x436d6118: punto de enganche (tras 0x82f0, antes de SetExposure)"
+  },
+  {
+   "addr": "0x438c830c",
+   "esperado": "0ef608f8",
+   "leido": "0ef608f8",
+   "ok": true,
+   "nota": "bl 0x436d6320 SetExposure(cap+0x64c)"
+  },
+  {
+   "addr": "0x438c831e",
+   "esperado": "0ef63bf8",
+   "leido": "0ef63bf8",
+   "ok": true,
+   "nota": "bl 0x436d6398 SetRead(cap+0x6bc)"
+  },
+  {
+   "addr": "0x438c8326",
+   "esperado": "10f2f6fe",
+   "leido": "10f2f6fe",
+   "ok": true,
+   "nota": "bl 0x43ad9116 (SSB)"
+  },
+  {
+   "addr": "0x438c8330",
+   "esperado": "10f2f4fe",
+   "leido": "10f2f4fe",
+   "ok": true,
+   "nota": "bl 0x43ad911c(1) (Execute)"
+  },
+  {
+   "addr": "0x438c8334",
+   "esperado": "a4f85076",
+   "leido": "a4f85076",
+   "ok": true,
+   "nota": "strh r7 -> cap+0x650: restaura el svd nativo"
+  },
+  {
+   "addr": "0x438c83c4",
+   "esperado": "a4f85036",
+   "leido": "a4f85036",
+   "ok": true,
+   "nota": "strh 0 -> cap+0x650 si cap+0x740 == 0"
+  },
+  {
+   "addr": "0x438c82c4",
+   "esperado": "c4f84c16",
+   "leido": "c4f84c16",
+   "ok": true,
+   "nota": "bloque forzado (0x43a12c64 = 2/3): cap+0x64c = 2"
+  },
+  {
+   "addr": "0x43b1e54c",
+   "esperado": "94f85536",
+   "leido": "94f85536",
+   "ok": true,
+   "nota": "ldrb cap+0x655 en 0x43b1e520"
+  },
+  {
+   "addr": "0x43b1e556",
+   "esperado": "84f83b57",
+   "leido": "84f83b57",
+   "ok": true,
+   "nota": "strb cap+0x73b"
+  },
+  {
+   "addr": "0x4383fa9a",
+   "esperado": "d3f105f9",
+   "leido": "d3f105f9",
+   "ok": true,
+   "nota": "bl 0x43a12ca8 (predicado) en el productor"
+  },
+  {
+   "addr": "0x4383faa0",
+   "esperado": "b044",
+   "leido": "b044",
+   "ok": true,
+   "nota": "add r8,r6: el predicado suma un VTS"
+  },
+  {
+   "addr": "0x4383fac0",
+   "esperado": "a4f86870",
+   "leido": "a4f86870",
+   "ok": true,
+   "nota": "strh svd -> record+0x68"
+  },
+  {
+   "addr": "0x4383fae8",
+   "esperado": "a4f8d810",
+   "leido": "a4f8d810",
+   "ok": true,
+   "nota": "strh d8 -> record+0xd8"
+  },
+  {
+   "addr": "0x4383faee",
+   "esperado": "a4f8da50",
+   "leido": "a4f8da50",
+   "ok": true,
+   "nota": "strh da -> record+0xda"
+  },
+  {
+   "addr": "0x4383faf2",
+   "esperado": "a4f8dc50",
+   "leido": "a4f8dc50",
+   "ok": true,
+   "nota": "strh dc -> record+0xdc"
+  },
+  {
+   "addr": "0x437b22a4",
+   "esperado": "b4f8d820",
+   "leido": "b4f8d820",
+   "ok": true,
+   "nota": "ldrh d8 (cuadro 0) en el planificador 0x437b21b8"
+  },
+  {
+   "addr": "0x437b22b4",
+   "esperado": "b4f8dc30",
+   "leido": "b4f8dc30",
+   "ok": true,
+   "nota": "ldrh dc (cuadro == svd)"
+  },
+  {
+   "addr": "0x437b22be",
+   "esperado": "b4f8da10",
+   "leido": "b4f8da10",
+   "ok": true,
+   "nota": "ldrh da (cuadros intermedios)"
+  },
+  {
+   "addr": "0x437b22dc",
+   "esperado": "3df7a4f9",
+   "leido": "3df7a4f9",
+   "ok": true,
+   "nota": "bl 0x436ef628 (periodo*VTS -> host)"
+  },
+  {
+   "addr": "0x436ef62c",
+   "esperado": "1864",
+   "leido": "1864",
+   "ok": true,
+   "nota": "str r0,[0x43e849c0+0x40]"
+  },
+  {
+   "addr": "0x437b2260",
+   "esperado": "9846",
+   "leido": "9846",
+   "ok": true,
+   "nota": "cuadro != svd: r8 = 0"
+  },
+  {
+   "addr": "0x437b227a",
+   "esperado": "4ff00108",
+   "leido": "4ff00108",
+   "ok": true,
+   "nota": "cuadro == svd: r8 = 1"
+  },
+  {
+   "addr": "0x437b2272",
+   "esperado": "9046",
+   "leido": "9046",
+   "ok": true,
+   "nota": "cuadro 0 (record+4 == 0): sb = 1"
+  },
+  {
+   "addr": "0x437b2254",
+   "esperado": "a288",
+   "leido": "a288",
+   "ok": true,
+   "nota": "ldrh record+4 (índice de cuadro)"
+  },
+  {
+   "addr": "0x437b2258",
+   "esperado": "b4f86810",
+   "leido": "b4f86810",
+   "ok": true,
+   "nota": "ldrh record+0x68 (svd)"
+  },
+  {
+   "addr": "0x436d6faa",
+   "esperado": "8e88",
+   "leido": "8e88",
+   "ok": true,
+   "nota": "SetExposure: ldrh param+4 (svd)"
+  },
+  {
+   "addr": "0x436d6fba",
+   "esperado": "c0f8a863",
+   "leido": "c0f8a863",
+   "ok": true,
+   "nota": "str svd -> obj+0x3a8"
+  },
+  {
+   "addr": "0x436d6fe2",
+   "esperado": "8ef802b0",
+   "leido": "8ef802b0",
+   "ok": true,
+   "nota": "strb svd[7:0] -> ID3"
+  },
+  {
+   "addr": "0x436d6ffc",
+   "esperado": "80f802e0",
+   "leido": "80f802e0",
+   "ok": true,
+   "nota": "strb svd[11:8] -> ID4"
+  },
+  {
+   "addr": "0x436d700a",
+   "esperado": "8cf802e0",
+   "leido": "8cf802e0",
+   "ok": true,
+   "nota": "strb shd[7:0] -> ID5"
+  },
+  {
+   "addr": "0x436d701e",
+   "esperado": "82f802c0",
+   "leido": "82f802c0",
+   "ok": true,
+   "nota": "strb shd[13:8] -> ID6"
+  },
+  {
+   "addr": "0x436d7026",
+   "esperado": "8270",
+   "leido": "8270",
+   "ok": true,
+   "nota": "strb spl[7:0] -> ID7"
+  },
+  {
+   "addr": "0x436d7034",
+   "esperado": "9970",
+   "leido": "9970",
+   "ok": true,
+   "nota": "strb spl[11:8] -> ID8"
+  }
+ ]
+}
