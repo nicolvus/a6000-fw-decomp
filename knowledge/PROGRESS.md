@@ -3046,3 +3046,8 @@ Telnet y RemoteShutter bloqueados por el entorno (EPERM); sin conexión ni dispa
 Regla permanente incorporada a AGENTS y al protocolo: cada sesión física requiere identificación, controles e integridad nuevos y línea base propia; no se reutilizan objetos dinámicos históricos. En esta sesión TCP 23/8080 y HTTP `/info`/`/status` respondieron fuera del sandbox; Telnet y originales T050/GOT del lector coincidieron. Línea base incompleta: no verificados modelo, versión/hash, GOT de sombras, M/cap ni condiciones físicas. No hubo disparos ni escritura; ver registro en [protocolo](../docs/capture/e25-22-protocolo-transporte-fisico.md).
 
 Próximo paso exacto: obtener modelo y versión reales, hashes y GOT de las seis sombras, verificar mapa y registrar condiciones disponibles antes de leerlas o fotografiar; la validación del transporte exige además captura pasiva autorizada del bus.
+
+
+## E25-22 — Revalidación parcial (2026-10-28)
+
+HTTP respondió y T050/GOT T052-A coincidieron dos veces; el MD5 y tamaño del av-cam instalado coinciden con el archivo local analizado. Modelo y versión comercial siguen sin identificar y Telnet fue intermitente. No se disparó ni se leyeron sombras: [detalle](../docs/capture/e25-22-protocolo-transporte-fisico.md). Próximo paso exacto: restablecer respuesta estable de Telnet, confirmar modelo/versión comercial y línea base, verificar GOT de sombras y seguir el protocolo antes de fotografiar.
