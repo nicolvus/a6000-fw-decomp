@@ -75,6 +75,24 @@ aparece en los GOT enumerados. Elegir `cap` por coincidencia de valores (`cap+0x
 validación y no se hizo: **no se leyó ninguna dirección candidata** en la cámara. Siguiente paso concreto: localizar el invocador del
 functor (`ldr rX,[fn]; mov r0,fn; mov r1,M; blx rX`) y la construcción de M (¿`StateMgr` de `libmprctrl`?).
 
+## 4b. E25-19b (parcial): cadena estática hasta `cap` derivada; lectura en vivo sin hacer
+
+Hecho **V por bytes** (`scripts/e25_19b_cadena.py`, `tests/test_e25_19b_cadena.py`; `analysis/e25-19b/cadena-estatica.json`):
+
+1. El thunk `0x43afb3ba` (`ldr r3,[r0,#8]; mov r0,r1; blx r3`) llama al estado con `r0 = M`; los estados leen `cap = [M]` (`0x43ae75dc`).
+2. El despachador `0x437e534c(id, M)` copia la tabla de 16 pares `{selector, id}` en `0x43ff8fb8` (se alcanza por `ldr/add pc` en `0x437e5374`),
+   busca `id` y llama al selector con `M`; el selector (p. ej. `0x437ea034`, id 8) toma `cap=[M]` y elige la entrada de 0x14 B de la tabla de 239
+   functors por `[[cap+0x4ae4]+0xc]`. Aclara E25-19 §4: la tabla de 239 es un mapa estado→functor, no contiene `M` (leída en vivo: campos 0, 2 y 4 a cero).
+3. `M` sale de una cola: bucle `0x43afbffc(id)` → gestor `E = matriz[id]` (`0x437e50d8`; GOT `0x440267bc` → matriz `0x43ff8f70` de 17 punteros) →
+   `0x43afc408(E)` copia 0x70 B del nodo (`nodo+8`) y devuelve su primer campo `M`; `[M+0x1c]` = id de grupo.
+4. Los 14 gestores son objetos estáticos en `.bss` (`0x43ed8814…0x43edbe2c`, vptr `0x43fcd320`), con centinela de cola en `E+0x14`. **En vivo (cámara en reposo)**: la matriz coincide
+   con el fichero y todas las colas están vacías (autoapuntadas) ⇒ `M` es transitorio y `cap` **no se puede leer en reposo por esta vía**.
+
+No demostrado: quién escribe `[M]=cap` al encolar, ni una lectura de `cap` con mensajes en vuelo. El bloque de control del grupo 10 (`0x43ed8e50`, capacidad `0x64`, función `0x43ae8633`)
+liga un puntero `0x43eeafe8` que **no** se toma como `cap` (coincidencia de valor, sin cadena). Tras estas lecturas la cámara dejó de responder (sin ruta a 192.168.1.29; sin que
+se escribiera nada). Siguiente paso: con la cámara de nuevo en red, muestrear los centinelas durante un 4 s/30 s (`e25_19b_cadena.py --live` solo lee la matriz y los centinelas; falta el
+muestreo con seguimiento de nodo→`M`→`cap`) y buscar el productor de mensajes.
+
 ## 5. Respuestas
 
 | # | Pregunta | Respuesta |
