@@ -3023,3 +3023,6 @@ Corrige §4f/§4h (la entrada `[+8]=0` es el evento en vuelo). Decodificado el m
 
 ## 28-10-2026 — E25-19c: fin de exposición, mensaje y cronómetro
 El mensaje (3,3) que desbloquea sub 9 es el ID `0x0e` de Darwin; receptor `0x436b8ef0` y `caif_recv` comparten la cola `0x00056118` (vivo). BIONZ envía Tv (`pkt[2..3]`=3243 tras la foto de «8 s»=10,07 s); `cap+0x728` es un cronómetro de 32 µs leído en sub 10. Dos fotos (2 y 8 s) de solo lectura: 49 553/125 045/314 771 ticks con 2→≈1,6 s y 8→10 s por redondeo de RemoteShutter. Rama de host `74f=0` sin observar; pendiente E25-19d. Cámara sin modificar.
+
+## 28-10-2026 — E25-19d: origen de `cap+0x74f` y rama de host (offline, decisión B)
+Barrido Thumb-2 completo: tres escritores directos (copia del plan `0x438acc9c`; `0` si falla el arranque `0x437df5e8`; `0` si id cancelado `0x438c2562`). Con `74f=0` 21 manejadores `0x438d…` saltan sus esperas CAIF y sub 9 espera el flag `0x13:0x100000`; rama emulada con Unicorn (937 081 ticks a 30 s, sin overflow, mismo Tv que el `0x0c`). No es ruta de fotografía normal ni toca el sensor. Abierto: procedencia del 1 (E25-19e). Cámara inaccesible; sin RAM escrita. Scripts `scripts/e25_19d/`, pruebas `tests/test_e25_19d.py`.

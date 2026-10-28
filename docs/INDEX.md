@@ -204,7 +204,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 3. Obturador (cortinas, EFCS, SilentShutter, exposición electrónica completa)
 
-66 informes.
+67 informes.
 
 - **—** [Darwin: entradas verificadas para investigar el obturador](capture/darwin-shutter-entrypoints.md)
 - **—** [Darwin: fases, notificaciones y escrituras de control](capture/darwin-state-machine.md)
@@ -222,6 +222,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [E25-18 — Diseño offline del obturador electrónico de 1/8000 s a 30 s (y BULB)](capture/e25-18-integracion-silent-todas-velocidades.md)
 - **—** [E25-19 — Verificación física de la exposición larga (solo lectura, T053)](capture/e25-19-verificacion-fisica-exposicion-larga.md)
 - **—** [E25-19c — Qué termina la espera de sub 9 y qué mide `cap+0x728`](capture/e25-19c-fin-exposicion-mensaje-temporizador.md)
+- **—** [E25-19d — Origen de `cap+0x74f` y viabilidad de la rama de host](capture/e25-19d-origen-74f-rama-host.md)
 - **—** [E25 — Desactivación del accionamiento normal del obturador mecánico (27-10-2026)](capture/e25-desactivacion-mecanica.md)
 - **—** [EFCS: configuración → selector de captura → IMX210 — E020](capture/efcs-capture-selector.md)
 - **—** [Captura electrónica a resolución reducida — estado y plan](capture/electronic-still-low-resolution.md)
