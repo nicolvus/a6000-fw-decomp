@@ -57,7 +57,7 @@ Conclusiones (VERIFICADO sobre estas medidas):
 1. **Con ShutMode 0 la exposición es uniforme en todas las filas** (octavos iguales dentro de ±0,2 ms): reinicio por filas, no el reinicio global + lectura de ShutMode 3.
 2. **`r5` fija la exposición en líneas: E = (4219 − `r5`) × 15,2 µs**, con `r5` entre 1 y ≈4219. La pendiente medida (−15,2 µs por unidad) **coincide con los 15,2 µs por fila** de T044 medidos de forma independiente: `r5` es una distancia en líneas entre el reinicio y la lectura.
 3. Sin forzar (o con `r5` ≥ 4300) la exposición es el cuadro completo, **64,9 ms ≈ 4270 líneas**; con `r5` = 0 es nula.
-4. Predicción para velocidades uniformes (por calcular, no medida salvo los puntos de la tabla): `r5` = 4219 − T/15,2 µs → 1/4000 ≈ 4203, 1/1000 ≈ 4153, 1/250 ≈ 3956, 1/60 ≈ 3122.
+4. Predicción para velocidades uniformes (**comprobada en T047**, ver abajo): `r5` = 4219 − T/15,2 µs → 1/4000 ≈ 4203, 1/1000 ≈ 4153, 1/250 ≈ 3956, 1/60 ≈ 3122.
 
 Así, la limitación de T044 (sesgo vertical) es del modo ShutMode 3 (el de la foto normal, T031); el reinicio por filas ya existe en ShutMode 0 y solo falta que la foto lo use con `r5` calculado a partir de la velocidad.
 
@@ -71,3 +71,18 @@ Así, la limitación de T044 (sesgo vertical) es del modo ShutMode 3 (el de la f
 
 Una sola escena y un solo encuadre; ISO 100 y modo M; velocidades 1/4000–1/8; RAW sin corregir por viñeteo/lente (se asume que `s_b` lo absorbe, constante entre disparos).
 No se midió con movimiento (la distorsión por lectura se infiere del tiempo de lectura, no de imágenes con sujetos rápidos). T046: una escena y un encuadre; `r5` = 0 no estudiado más allá de «exposición nula».
+
+### T047 — comprobación de la predicción (27-10-2026)
+
+`r5` = 4203, 4153, 3956, 3122 a 1/250 con ShutMode 0 (RAM, `analysis/camera-dumps/20261027-233006-T047-r5-pred/`):
+
+| Velocidad objetivo | `r5` | Objetivo (ms) | Medido con escena de T046 | Medido con refs de T047 |
+|---|---|---|---|---|
+| 1/4000 | 4203 | 0,25 | 0,24 (−1 %) | 0,19 (−23 %) / 0,27 (+13 %*) |
+| 1/1000 | 4153 | 1,00 | 0,99 (−1 %) | 0,79 (−21 %) / 1,12 (+12 %*) |
+| 1/250 | 3956 | 4,00 | 4,03 (+1 %) | 3,20 (−20 %) / 4,55 (+14 %*) |
+| 1/60 | 3122 | 16,7 | 16,75 (0 %) | 13,3 (−20 %) / 18,9 (+13 %*) |
+
+\* sin la referencia a 1/8 de T047, que salió ≈ 20 % más alta que en T046 con 1/15 idéntico (lectura anómala, probablemente cambio de luz en esa toma).
+
+La **linealidad es sólida** (proporciones entre puntos dentro de 3 %, uniforme por filas); la **escala absoluta tiene ±20 % de incertidumbre** por la calibración de la escena por tanda. Con la escena de T046 la ley `E = (4219 − r5)·15,2 µs` se reproduce a ±1 %. Conclusión: valores de `r5` calculados desde la velocidad dan exposiciones uniformes de 0,25 ms a 16,7 ms, **verificado en RAM**; una calibración absoluta fina requiere una referencia más fiable (p. ej. varias tomas por tanda o luz controlada).

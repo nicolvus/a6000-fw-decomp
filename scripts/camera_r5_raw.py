@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """E25-10: exposición por fila en RAW con parche RAM (ShutMode 0 + r5 forzado), como T035–T039 pero midiendo el ARW.
 
-Uso: camera_r5_raw.py OUTDIR   (RemoteShutter v7 abierta, telnet 23 y adb 5555, escena fija, escena no tocada durante la prueba)
+Uso: camera_r5_raw.py OUTDIR [r5 ...]   (con r5 dados solo mide esos a 1/250; (RemoteShutter v7 abierta, telnet 23 y adb 5555, escena fija, escena no tocada durante la prueba)
 Solo RAM, nada de flash/NVRAM. Parches (BIONZ, direcciones de T034/T035): ShutMode 0 `0x836d6fb6` y r5 `0x836d7000`
 (`movs r0,#hi; mov.w lr,#lo`, r5 = 256·hi + lo). Antes: comprueba el código original y G+0x784. Siempre revierte y verifica;
 aborta (y revierte) si un disparo no termina en 45 s. Deja jpeg e ISO automático."""
@@ -94,7 +94,9 @@ try:
         print("ref", sp, flush=True)
     wr(SM_A, SM_N)
     assert rd(SM_A, 4) == SM_N
-    for sp, r5s in (("1/250", [None, 0, 1000, 2000, 3000, 3500, 4000, 4100, 4200, 4300]), ("1/30", [None, 1240, 2500, 4000])):
+    plan = (("1/250", [int(v) for v in sys.argv[2:]]),) if sys.argv[2:] else (
+        ("1/250", [None, 0, 1000, 2000, 3000, 3500, 4000, 4100, 4200, 4300]), ("1/30", [None, 1240, 2500, 4000]))
+    for sp, r5s in plan:
         n, d = sp.split("/")
         get(f"/ss?n={n}&d={d}")
         for v in r5s:
