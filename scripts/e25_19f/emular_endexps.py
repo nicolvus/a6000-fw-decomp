@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
+from typing import cast
 
 from emu import Emu  # type: ignore[import-not-found]
 from unicorn.arm_const import UC_ARM_REG_PC, UC_ARM_REG_SP
@@ -28,7 +29,7 @@ def correr(snap: Path, caso: str, cap_json: Path | None = None, forzar_c38: bool
     e.stubs.update(STOPS)
     r4 = LV
     if caso == "cap":
-        j = json.loads(cap_json.read_text())
+        j = json.loads(cast(Path, cap_json).read_text())
         buf = bytes.fromhex(j["muestras"][0]["0x0"])
         assert not any(e.mu.mem_read(FAKE_CAP, 0xE00)), "hueco no vacío"
         e.wr(FAKE_CAP, buf)

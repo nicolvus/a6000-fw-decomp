@@ -6,6 +6,7 @@ Cada lectura de datos (fuera de código/pila) se registra en `lecturas` para sab
 """
 from __future__ import annotations
 
+from collections.abc import Callable
 from pathlib import Path
 
 from unicorn import (
@@ -57,12 +58,12 @@ class Emu:
         self._map(0, 8)
         mu.mem_write(0, b"\x1e\xff\x2f\xe1")
         self.nulas = 0
-        self.stubs: dict[int, int | callable] = {}
+        self.stubs: dict[int, int | Callable[[Emu], int]] = {}
         self.lecturas: dict[int, int] = {}
         self.escrituras: list[tuple[int, int, int]] = []
         self.llamadas: list[tuple[int, int, int, int, int]] = []
         self.pcs: list[int] = []
-        self.hooks_pc: dict[int, callable] = {}
+        self.hooks_pc: dict[int, Callable[[Emu, int], object]] = {}
         self.trazar = False
         self.auto: list[int] = []
         mu.hook_add(UC_HOOK_MEM_READ_UNMAPPED | UC_HOOK_MEM_WRITE_UNMAPPED, self._unmapped)
@@ -76,24 +77,24 @@ class Emu:
         while p < hi:
             try:
                 self.mu.mem_map(p, PAGE, UC_PROT_ALL)
-            except Exception:  # noqa: BLE001 - ya mapeada
+            except Exception:  # noqa: BLE001, S110 - ya mapeada
                 pass
             p += PAGE
 
-    def _unmapped(self, mu, _acc, addr, size, _val, _ud) -> bool:  # noqa: ANN001
+    def _unmapped(self, mu, _acc, addr, size, _val, _ud) -> bool:
         self.auto.append(addr)
         self._map(addr, size)
         return True
 
-    def _read(self, mu, _acc, addr, size, _val, _ud) -> None:  # noqa: ANN001
+    def _read(self, mu, _acc, addr, size, _val, _ud) -> None:
         if not (STACK_TOP - 0x100000 <= addr < STACK_TOP):
             self.lecturas[addr] = self.lecturas.get(addr, 0) + 1
 
-    def _write(self, mu, _acc, addr, size, val, _ud) -> None:  # noqa: ANN001
+    def _write(self, mu, _acc, addr, size, val, _ud) -> None:
         if not (STACK_TOP - 0x100000 <= addr < STACK_TOP):
             self.escrituras.append((addr, size, val & 0xFFFFFFFF))
 
-    def _code(self, mu, addr, size, _ud) -> None:  # noqa: ANN001
+    def _code(self, mu, addr, size, _ud) -> None:
         a = addr & ~1
         if a == 0:
             self.nulas += 1

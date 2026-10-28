@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 import sys
+from pathlib import Path
 
 from capstone import CS_ARCH_ARM, CS_MODE_THUMB, Cs
 
@@ -12,7 +13,7 @@ BIN = "analysis/rea-independent/input/av-cam.bin"
 
 
 def refs(off: int, modo: str = "") -> list[str]:
-    data = open(BIN, "rb").read()
+    data = Path(BIN).read_bytes()
     md = Cs(CS_ARCH_ARM, CS_MODE_THUMB)
     pat = re.compile(rf"\[(?:r\d+|sb|sl|fp|ip), #{off:#x}\]|\[(?:r\d+|sb|sl|fp|ip), #{off:#x}\]!")
     out, pos = [], 0

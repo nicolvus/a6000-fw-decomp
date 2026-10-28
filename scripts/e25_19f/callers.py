@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import sys
+from pathlib import Path
 
 from capstone import CS_ARCH_ARM, CS_MODE_THUMB, Cs
 from capstone.arm_const import ARM_OP_IMM
@@ -12,7 +13,7 @@ BIN = "analysis/rea-independent/input/av-cam.bin"
 
 
 def callers(targets: set[int]) -> dict[int, list[int]]:
-    data = open(BIN, "rb").read()
+    data = Path(BIN).read_bytes()
     md = Cs(CS_ARCH_ARM, CS_MODE_THUMB)
     md.detail = True
     out: dict[int, list[int]] = {t: [] for t in targets}
