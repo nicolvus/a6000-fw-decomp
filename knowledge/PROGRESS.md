@@ -16,6 +16,22 @@ campo del registro; su valor real no se verificó (T052 fase A). C3 (tras `0x437
 29 pruebas nuevas; 59 con E25-14/E25-15. Informe:
 [E25-16](../docs/capture/e25-16-r5-autonomo-fotografia.md).
 
+## T052-A — VTS real y preparación de C3 — 28-10-2026
+
+**No ejecutada físicamente:** la cámara no era accesible (PC en `192.168.0.0/24`, sin ruta a
+`192.168.1.29`, sin `adb`/`pmca`; barrido sin shell). Sin escrituras. Se completó A0 y la emulación, y
+se usó el volcado real del 20-10 (1 GiB, reposo, sin foto) para confirmar el mapa: GOT
+`0x4401eee4`; registro A `0x43ea5b4c`, B `0x43eee770`, ajustes `0x43f79f94`, imager `0x43ea976c`,
+gate B `0x43f6e5c2`, predicado `0x43deb360`. **VTS:** `record+0x20 ← cap+0x5e0 ← [descriptor+6]`
+(`0x43846e12`; descriptor en `[param+0x3c]` de `0x43844e80`); 4219 no es constante y 4266 solo lo
+produce la vista en directo (`0x4385de94`); el valor de foto sigue **N**. **Compuerta:** `0x437b3b08`
+la deriva de `[imager+0x504]==3` o `[gate B+0x8c]==1` (2 fuerza 0); en reposo 2/0 → 0. **Correcciones:**
+el 2.º argumento del productor es el imager (`+0x4b8`), no `settings`; el productor escribe también
+`+0xd8/+0xda/+0xdc`; el predicado `0x43a12ca8` lee `[0x43deb360+0x10]` y en reposo devuelve 1 → suma
+un cuadro (r5 8422/8175/7341, inválido). C3 **no autorizada**; T052-B0 de solo lectura primero.
+22 pruebas nuevas; 81 con E25-14/15/16. Informe:
+[T052-A](../docs/capture/t052-a-parametros-reales.md).
+
 ## E25-14 — Temporización IMX235/IMX210 — 28-10-2026
 
 Sesión 100 % offline (solo bytes; sin cámara ni emulación de sensor). Reconstruida la cadena Silent del

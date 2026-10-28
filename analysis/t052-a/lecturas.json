@@ -1,0 +1,262 @@
+{
+ "firmware": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin",
+ "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+ "base": "0x43541000",
+ "ram_offset": "0x40000000",
+ "dump": {
+  "path": "analysis/camera-dumps/ram-servicio-20261020/ram_0x80000000.bin",
+  "bytes": 1073741824,
+  "base": "0x80000000",
+  "sha256": "f96c6152f697a8680f6d342cfdc0133bc28b8ab85a6baf48c19358546ff2fdbf"
+ },
+ "lecturas": {
+  "whitelist": {
+   "record_a": {
+    "virtual": "0x43ea5b4c",
+    "physical": "0x83ea5b4c",
+    "prefijo_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "record_b": {
+    "virtual": "0x43eee770",
+    "physical": "0x83eee770",
+    "prefijo_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "settings": {
+    "virtual": "0x43f79f94",
+    "physical": "0x83f79f94",
+    "prefijo_hex": "0000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "imager": {
+    "virtual": "0x43ea976c",
+    "physical": "0x83ea976c",
+    "prefijo_hex": "0103010301030103000001000000000001000000000001010101010100000000"
+   },
+   "gate_b": {
+    "virtual": "0x43f6e5c2",
+    "physical": "0x83f6e5c2",
+    "prefijo_hex": "001c000012101008040212101008060400020203030000000000000010002000"
+   },
+   "predicate": {
+    "virtual": "0x43deb360",
+    "physical": "0x83deb360",
+    "prefijo_hex": "ffffff01020202ffffffffffffff001000000000000101ff00ffaa000000ffff"
+   },
+   "got_record_a": {
+    "virtual": "0x44022648",
+    "physical": "0x84022648",
+    "prefijo_hex": "4c5bea43"
+   },
+   "got_record_b": {
+    "virtual": "0x44025dfc",
+    "physical": "0x84025dfc",
+    "prefijo_hex": "70e7ee43"
+   },
+   "got_settings": {
+    "virtual": "0x440207e8",
+    "physical": "0x840207e8",
+    "prefijo_hex": "949ff743"
+   },
+   "got_imager": {
+    "virtual": "0x44021ba8",
+    "physical": "0x84021ba8",
+    "prefijo_hex": "6c97ea43"
+   },
+   "got_gate_b": {
+    "virtual": "0x44024e58",
+    "physical": "0x84024e58",
+    "prefijo_hex": "c2e5f643"
+   },
+   "got_predicate": {
+    "virtual": "0x440253cc",
+    "physical": "0x840253cc",
+    "prefijo_hex": "60b3de43"
+   }
+  },
+  "objetos": {
+   "record_a": {
+    "tv_f6": 0,
+    "periodo_c": 0,
+    "suelo_1c": 0,
+    "vts_20": 0,
+    "r5_64": 0,
+    "frames_68": 0,
+    "shutmode_6d": 0,
+    "lineas_f0": 0,
+    "d8_dc": [
+     0,
+     0,
+     0
+    ]
+   },
+   "record_b": {
+    "tv_f6": 0,
+    "periodo_c": 0,
+    "suelo_1c": 0,
+    "vts_20": 0,
+    "r5_64": 0,
+    "frames_68": 0,
+    "shutmode_6d": 0,
+    "lineas_f0": 0
+   },
+   "settings": {
+    "tv_162": 5608,
+    "modo_15e": 5053,
+    "cuadro_164": 4096
+   },
+   "imager": {
+    "factor_4b8": 1,
+    "modo_504": 2,
+    "tv_118": 5053,
+    "tv_11a": 4096,
+    "tv_11c": 5608,
+    "tv_11e": 4096
+   },
+   "gate": {
+    "b_8c": 0,
+    "gate_esperada": 0
+   },
+   "predicate": {
+    "byte_10": 0,
+    "extra_frame": 1
+   },
+   "got": {
+    "record_a": "0x43ea5b4c",
+    "record_b": "0x43eee770",
+    "settings": "0x43f79f94",
+    "imager": "0x43ea976c",
+    "gate_b": "0x43f6e5c2",
+    "predicate": "0x43deb360"
+   }
+  }
+ },
+ "emulacion": {
+  "funcion": "0x4383fa40",
+  "line_us": 15.2,
+  "line_q8": 3891,
+  "factor": 1,
+  "suelo": 1,
+  "stub_predicado": "0x43a12ca8 se sustituye por 0/1; en el firmware real lee [0x43deb360+0x10]",
+  "velocidades": {
+   "1/4000": {
+    "tv": "0x1bf7",
+    "nominal_ms": 0.25,
+    "vts4219_extra0": {
+     "r5": 4203,
+     "frames": 0,
+     "lineas": 16,
+     "tiempo_ley_4219_ms": 0.243,
+     "representable": 1,
+     "r5_valido_en_su_vts": 1,
+     "error_pct_vs_nominal": -2.7
+    },
+    "vts4219_extra1": {
+     "r5": 8422,
+     "frames": 1,
+     "lineas": 16,
+     "tiempo_ley_4219_ms": -63.886,
+     "representable": 0,
+     "r5_valido_en_su_vts": 0,
+     "error_pct_vs_nominal": null
+    },
+    "vts4266_extra0": {
+     "r5": 4250,
+     "frames": 0,
+     "lineas": 16,
+     "tiempo_ley_4219_ms": -0.471,
+     "representable": 0,
+     "r5_valido_en_su_vts": 1,
+     "error_pct_vs_nominal": null
+    },
+    "vts4266_extra1": {
+     "r5": 8516,
+     "frames": 1,
+     "lineas": 16,
+     "tiempo_ley_4219_ms": -65.314,
+     "representable": 0,
+     "r5_valido_en_su_vts": 0,
+     "error_pct_vs_nominal": null
+    }
+   },
+   "1/250": {
+    "tv": "0x17f7",
+    "nominal_ms": 4.0,
+    "vts4219_extra0": {
+     "r5": 3956,
+     "frames": 0,
+     "lineas": 263,
+     "tiempo_ley_4219_ms": 3.998,
+     "representable": 1,
+     "r5_valido_en_su_vts": 1,
+     "error_pct_vs_nominal": -0.1
+    },
+    "vts4219_extra1": {
+     "r5": 8175,
+     "frames": 1,
+     "lineas": 263,
+     "tiempo_ley_4219_ms": -60.131,
+     "representable": 0,
+     "r5_valido_en_su_vts": 0,
+     "error_pct_vs_nominal": null
+    },
+    "vts4266_extra0": {
+     "r5": 4003,
+     "frames": 0,
+     "lineas": 263,
+     "tiempo_ley_4219_ms": 3.283,
+     "representable": 1,
+     "r5_valido_en_su_vts": 1,
+     "error_pct_vs_nominal": -17.9
+    },
+    "vts4266_extra1": {
+     "r5": 8269,
+     "frames": 1,
+     "lineas": 263,
+     "tiempo_ley_4219_ms": -61.56,
+     "representable": 0,
+     "r5_valido_en_su_vts": 0,
+     "error_pct_vs_nominal": null
+    }
+   },
+   "1/60": {
+    "tv": "0x15e8",
+    "nominal_ms": 16.674,
+    "vts4219_extra0": {
+     "r5": 3122,
+     "frames": 0,
+     "lineas": 1097,
+     "tiempo_ley_4219_ms": 16.674,
+     "representable": 1,
+     "r5_valido_en_su_vts": 1,
+     "error_pct_vs_nominal": 0.0
+    },
+    "vts4219_extra1": {
+     "r5": 7341,
+     "frames": 1,
+     "lineas": 1097,
+     "tiempo_ley_4219_ms": -47.454,
+     "representable": 0,
+     "r5_valido_en_su_vts": 0,
+     "error_pct_vs_nominal": null
+    },
+    "vts4266_extra0": {
+     "r5": 3169,
+     "frames": 0,
+     "lineas": 1097,
+     "tiempo_ley_4219_ms": 15.96,
+     "representable": 1,
+     "r5_valido_en_su_vts": 1,
+     "error_pct_vs_nominal": -4.3
+    },
+    "vts4266_extra1": {
+     "r5": 7435,
+     "frames": 1,
+     "lineas": 1097,
+     "tiempo_ley_4219_ms": -48.883,
+     "representable": 0,
+     "r5_valido_en_su_vts": 0,
+     "error_pct_vs_nominal": null
+    }
+   }
+  }
+ }
+}

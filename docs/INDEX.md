@@ -369,7 +369,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 6. Otros subsistemas (AF, estabilización, vídeo, audio, lentes, energía, visor, accesorios, módulos de trazas)
 
-103 informes.
+104 informes.
 
 - **—** [E21 — Lecturas sin cámara de los volcados del 20-10-2026](capture/e21-lecturas-backups-2026-10-26.md)
 - **—** [E24-01 — Arranque, modo actualizador y dependencia de Darwin (27-10-2026)](capture/e24-01-arranque-recuperacion.md)
@@ -473,6 +473,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **S66** [S66 — Montura de lente E-mount en la A6000 (línea general de ingeniería inversa)](capture/s66-lens-mount.md) · pruebas: [test_s66_lens_mount.py](../tests/test_s66_lens_mount.py) · evidencia: [s66](../analysis/s66)
 - **S68** [S68 — Gestión de batería, alimentación y carga (NP-FW50) en la A6000](capture/s68-battery-power.md) · pruebas: [test_s68_power.py](../tests/test_s68_power.py) · evidencia: [s68_power](../analysis/s68_power)
 - **S69** [S69 — Subsistema de audio de la Sony A6000 (fw3.21)](capture/s69-audio-subsystem.md) · pruebas: [test_s69_audio.py](../tests/test_s69_audio.py) · evidencia: [s69_audio](../analysis/s69_audio)
+- **—** [T052-A — Parámetros reales de exposición y preparación segura de C3](capture/t052-a-parametros-reales.md)
 - **—** [Seguimiento estático de `G+0x784` (tipo de obturador) en `av-cam.bin` — 26-10-2026](capture/tipo2-analisis-estatico-2026-10-26.md)
 
 ### 7. Comparaciones A6000 / A7S / A6300 y controles positivos
