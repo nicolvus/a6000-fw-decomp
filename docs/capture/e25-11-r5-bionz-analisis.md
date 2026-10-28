@@ -109,3 +109,33 @@ Con autorización del usuario («lee [cap+0x4da] en vivo, solo lectura»; sin pa
 - **Lo que sí sigue a la velocidad en esa ventana:** (a) un índice en tercios de EV, 24 → 30 → 33 → 37 para 1/60 → 1/250 → 1/500 → 1/1000 (p. ej. `0x83e996cc`, `0x83e9b700`, `0x83ea9a90`, `0x83eaf1a8`, `0x83eb29a4`: espejos de ajustes); (b) un registro de exposición en `0x83e88ab8` (u16 = 4283, 1017, 521, 252) con una copia ×32 en `+4` (137 060, 32 557, 16 700, 8070): ≈ t/3,9 µs, o t en unidades de 125 ns (≈ 1–4 % por encima del tiempo nominal, ¿cuantizado en líneas de ≈ 4 µs, probablemente de la vista en directo?). Sin interpretar.
 
 **Consecuencia para C2:** la entrada de tiempo `[cap+0x4da]` de §4/§6 queda **sin confirmar** (y probablemente sea propia de la vista en directo). Fuentes alternativas para el tiempo de la foto, sin verificar: el índice en tercios de EV (tabla de velocidades → µs) o el registro de `0x83e88ab8`; habría que buscar su origen estático (escritor) antes de diseñar C2. No se ha tocado nada en la cámara.
+
+## 8. Búsqueda estática del origen del tiempo de la foto y propuesta C2 (27-10-2026, offline)
+
+**Corrección a §6/§7 (VERIFICADO por bytes):** en el constructor de la vista en directo el objeto que se pasa como `r0` a `0x437b27b8` no es `cap` sino `cap+0x1198`
+(`0x438cc856..5e`: `add.w r0,r4,#0x1180; adds r0,#0x18`; `r1 = cap+0x20`, `r2 = sp+0xec` entrada, `r3 = sp+0xbc` salida). Por tanto su `ldrh r0,[r4,#0x4da]`
+(`0x437b2878`) es **`[cap+0x1198+0x4da] = [cap+0x1672]`**, no `[cap+0x4da]`. En el objeto candidato de T048 (`cap` = `0x83e19d20`) todos esos campos están a 0 en reposo (4 volcados),
+de modo que ese objeto no es el vivo o no se rellena fuera de la vista en directo. La lectura de T048 sobre `[cap+0x4da]` (la función de captura `0x438c828c` usa otro `r4`) no refuta ni confirma el Tv de LV.
+
+**Qué se buscó y qué se encontró (VERIFICADO salvo indicación):**
+
+| Búsqueda | Resultado |
+|---|---|
+| Tabla de velocidades (código Tv de 1/3 EV, pasos de 85/86 en u16) en `av-cam.bin` | **No existe.** La conversión es la fórmula exp2 de §6; la velocidad llega ya como valor (índice o código) desde fuera de LIRO |
+| Tablas geométricas (razón 2^(1/3)) u32/u16 | Solo tablas de **ISO**: `0x43bc48ec`/`0x43bc6050` (16, 20, 25 … 204 800, 41 entradas, versión ×65536 en `…ea`) y `0x43bc5fcc` (800 … 128 000); ninguna de velocidades |
+| Cadenas con «shutter speed/exposure time» | Ninguna útil (`0x43c52495` «EDIT SHUTTER SPEED ERROR» es de la edición de vídeo) |
+| `0x83e88ab8` (T048) | **Registro de estadísticas de AE/AF** en un vector de entradas de `0x210` B (`0x83e88ab8`, `…cc8`, `…ed8`): `[+0]` = 255/216, `[+4]` = valor con signo (5760, −2765, −1057, −22 221), `[+8]` = 4283/1017/521/252, `[+0xc]` = 32× eso, más contadores. El campo `[+8]` ≈ t/3,9 µs: la **exposición usada por la medición**, no un parámetro que lea `SetExposure`. Descartado como entrada de C2 |
+| Fuente del `param` de la foto | `StrtExps` `0x4381106c` (`CaptureManager`): copia 16 B desde `*(0x4378f9b4()+0x24)` (objeto estático, `0x4378f9b4` devuelve `0x4378f9bc+0x70984e`) a `sp+0x18` y los modifica con `[cap+0x1f8]`, `[cap+0x1fc]`, `[obj+0xcc]` y `[obj+0x14e]` (`0x438110be..28`) antes de llamar a `SetExposure`. **Ahí** se decide `param+4` (r6); aún no se ha desarmado la rama que fija `param+0` (r5) ni la entrada de tiempo |
+
+**Estado:** el tiempo de exposición de la foto **no tiene una fuente estática confirmada** dentro de `av-cam`. Cualquier C2 en BIONZ (entrada = `[cap+0x4da]`, `[cap+0x1672]` o `0x83e88ab8`) sigue sin base verificada y no se debe proponer como parche.
+
+### C2 viable: «modo silencioso» desde la app (RAM), sin tocar BIONZ ni Darwin (propuesta, no implementada)
+
+La entrada de tiempo **ya la tiene la app**: `CameraEx.getShutterSpeed()` (RemoteShutter lo usa). Como los parches de T046/T047 son de RAM y `/dev/mem` es `crw-rw-rw-` (visto en T048, accesible al usuario de adb), la app podría hacerlo sola:
+
+1. Antes de cada disparo: `T` → µs (par `n/d` de `getShutterSpeed`), líneas = µs/15,2, `r5 = 4219 − líneas` (§6; solo si 2 ≤ `r5`, es decir T ≤ ≈ 64 ms; si no, disparo normal).
+2. Comprobar los bytes originales de `0x836d6fb6` (`91f80990`) y `0x836d7000` (`28125ffa85fe`); escribir `4ff00009` y `r5` (`hi 20 4ff0 lo 0e`); verificar lectura.
+3. Disparar con RAW+JPEG; **siempre revertir y verificar** (`finally`), con aborto a los 45 s como `camera_r5_raw.py`.
+4. Medidas ya hechas lo respaldan: T046/T047 (uniforme por filas, ±1 % con la calibración de T046). Sin persistencia: tras apagar vuelve al comportamiento normal.
+
+Riesgos: ShutMode 0 vale para **todas** las llamadas mientras esté parcheado (la vista en directo ya lo usa, T031); no probado con ráfaga, AF ni vídeo; el incidente de T037/T038 fue con `r6`/`r7`, no con `r5`; la app debe poder revertir aunque se cierre (vigilante).
