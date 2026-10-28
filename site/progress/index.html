@@ -2,7 +2,7 @@
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sony A6000 FW RE — progreso</title>
 <style>body{font-family:sans-serif;max-width:1000px;margin:auto;padding:16px;background:#0d1117;color:#c9d1d9}
-a{color:#58a6ff}h2{font-size:1.1rem;margin:24px 0 8px;color:#fff}
+a{color:#58a6ff}.hito{border:1px solid #2ea043;background:#12261a;padding:8px 12px;border-radius:6px}h2{font-size:1.1rem;margin:24px 0 8px;color:#fff}
 .grid{display:grid;grid-template-columns:repeat(62,1fr);gap:2px}
 .cell{aspect-ratio:1;border-radius:2px;display:inline-block;width:11px;height:11px;margin:1px} .grid .cell{width:auto;height:auto;margin:0} .m-hito{background:#2ea043} .m-sub{background:#9be9a8} .m-todo{background:#30363d} .s-ok{background:#2ea043} .s-cancel{background:#d29922} .s-todo{background:#30363d} .t-todo{background:#30363d} .t-ok{background:#2ea043} .m-rejected{background:#6e7681}
 table{border-collapse:collapse;width:100%}th,td{border:1px solid #30363d;padding:2px 8px;text-align:left}
@@ -10,11 +10,12 @@ td:nth-child(n+3):not(:last-child),td:last-child,th:nth-child(n+3){text-align:ri
 .legend span{display:inline-block;width:12px;height:12px;border-radius:2px;margin:0 4px 0 12px}
 @media(max-width:600px){.grid{grid-template-columns:repeat(31,1fr)}}</style></head><body>
 <h1>Progreso</h1>
+<p class="hito"><b>Hito: la A6000 dispara en silencio.</b> Con el firmware modificado 3.23 (Darwin tipo 0 + B1a, 2 bytes) la cámara real hace fotos sin accionar el obturador mecánico y sin error (confirmado por el usuario, 27-10-2026; capturas sin archivar). <a href="https://github.com/nicolvus/a6000-fw-decomp/blob/main/README.md">README</a> · <a href="https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e25-desactivacion-mecanica.md">informe E25</a>.</p>
 <p class="legend"><span class="m-hito"></span>módulo con hito<span class="m-sub"></span>sub-etiqueta cubierta<span class="m-todo"></span>pendiente / sin informe / sin ejecutar<span class="m-rejected"></span>fragmento descartado<span class="s-cancel"></span>cancelada</p>
 <p>226 etiquetas pendientes; 13 fragmentos descartados como módulos. Descartar no aumenta cobertura.</p>
 <p>Cobertura documental de etiquetas: no mide código descompilado ni funciones verificadas.
 <a href="https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/repo-audit-2026-10-24.md">Auditoría y pendientes vigentes</a>.
-Pruebas en cámara: 36 registros (T001–T039, por USB, con backup NVRAM previo);
+Pruebas en cámara: 38 registros (T001–T038, con backup NVRAM previo);
 planes P1–P21 con prueba registrada: 12/21.
 <a href="https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/registro-pruebas-camara.md">Registro de pruebas</a>.</p>
 <h2>Etiquetas por familia — 35.75% (133/372)*</h2>
