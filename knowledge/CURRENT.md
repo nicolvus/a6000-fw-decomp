@@ -127,7 +127,7 @@ Para la trazabilidad completa: [CORRECTIONS](../docs/CORRECTIONS.md) y [STATE §
 | E25-18 | CERRADO CON LÍMITE | Integración Silent de todo el rango (offline): decisión C (una fórmula, dos rutas); C3-B = `svd'=0`; ruta larga sin capacidades demostradas. C3-B en RAM pasa a E25-20 |
 | E25-20 | BLOQUEADO | T052-B1: C3-B en RAM (enganche `0x438c82fe`, scratch + `0x4383fa40` + `record+0xf0` + `4219 − líneas`), guardián y reversión; exige B0 físico, scratch verificado y autorización expresa; no 1/15/bulb/30 s |
 | E25-19 | CERRADO CON LÍMITE | Verificación física (solo lectura): decisión C; el registro de foto no lleva el plan nativo (svd=0, VTS 4176, período 4096); `cap` sin cadena demostrada |
-| E25-19b | ABIERTO | Localizar `cap` (invocador del functor / objeto de flujo M) y leer `cap+0x504/0x64c/0x650/0x740`; precede a E25-20 |
+| E25-19b | ABIERTO | Medido (§4h): la compuerta difiere por `en_vuelo=1 ≥ max=1` en el grupo 1 durante la exposición; falta el argumento real con `[arg]=cap` (no es el `M` de la cola) y leer `cap`; precede a E25-20 |
 | E6, E9, E11, E13, D5 | BLOQUEADO | Darwin fuera de `av-cam`; semántica de 112 registros y fin de integración; enlace banco/bit→P4E; servicio ODL/MMIO `0xf292b000`; hojas de datos IMX210/IMX235 |
 | F1–F8 | DIFERIDO / BLOQUEADO | P1–P24 (inventario en [revisión](../docs/capture/physical-test-review-2026-10-26.md)); traza de bus; Darwin real; revisión de S51 solo con evidencia nueva |
 | R1, R3 | PARCIAL / BLOQUEADO | R1: procedimiento y manifiesto listos (62/62), **copia externa sin verificar**; R3: historial público con `libmprctrl.so` (reescritura solo con orden expresa) |

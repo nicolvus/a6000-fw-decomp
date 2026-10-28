@@ -145,6 +145,33 @@ Reproducible: `scripts/e25_19b_dis.py`, `e25_19b_callers.py`, `e25_19b_calls.py`
 
 **Decisión: D — bloqueo concreto.** Falta (1) quién escribe `[M]=cap` al crear/encolar el objeto de flujo: observar `M` (p. ej. `0x43eeafa8`) **en el instante de entrega** o hallar el constructor que llama a `0x43afb408`/stores en `M+0` (el productor de los envíos `0x437e515a/0x437e519c` se llama por puntero); (2) leer en vuelo `[E+0x24/0x2c/0x2d]` de los 14 gestores en una foto de 4 s (`e25_19b_compuerta.py`) para decidir diferimiento por compuerta frente a manejador ocupado; (3) rastrear los callees de `0x438c8474`/`0x437f00a4` hasta las primitivas de espera.
 
+### 4h. E25-19b (cámara en red): la compuerta difiere por límite de vuelo; candidatos y `M` revisados
+
+Reproducible: `scripts/e25_19b_compuerta.py --confirm-readonly --speed 4` (una foto normal; solo lecturas `/dev/mem`; `analysis/e25-19b/compuerta-4s.json`, reposo en `compuerta-reposo.json`), `scripts/e25_19b_esperas.py` (`analysis/e25-19b/esperas.json`), `tests/test_e25_19b_compuerta.py`. Originales T050/GOT íntegros antes y después; 1 disparo; nada escrito.
+
+**Compuerta completa (V por bytes).** `0x43afc544(E, b=byte(cap+0x5490), flag, u=0x437e4fd8(..))` con `flag=0` devuelve 0 (difiere) si: lista diferida `[E+0xc]≠0`; `[E+0x24]≠0`; `[E+0x2d] ≥ [E+0x2c]`; o `[E+0x2e]≠0` y hay en la cola `E+0x14` una entrada con `[+8]==0` y `[+9]==b`. Si no difiere, acepta si `[E+0x28]==u` **o** `[E+0x2d]==0`. Constructor `0x437e5300`: `[E+0x2c]=1`, `[E+0x2d]=0`, `[E+0x2e]=0` (los 14 gestores en reposo: `max=1`, `en_vuelo=0`, `habilitado=0`, sin diferidas). La entrada solo se libera con `Complete(E, M)` (`0x437e6098`, vía `0x437e611c`, llamada desde `0x437e5638` y `0x437e577a`) que marca `[entrada+8]=1` y llama a `Done(E)=0x437e5de8` (único decremento: `en_vuelo-1`, con registro de error si ya es 0).
+
+**Medición (4 s, 15 muestras ≈ 0,5 s).** Antes del disparo todo en reposo. De **1,16 s a 5,24 s** el gestor del grupo 1 (`E=0x43edbd9c`) tiene `en_vuelo=1 ≥ max=1`, `bloqueado=0`, diferidas 0, `habilitado=0` y **un evento pendiente** (`M=0x43eeb0e8`, `[+8]=0`): motivo `difiere:limite_vuelo` (≈ 4,08 s, la exposición). A 5,24 s la ranura se libera y el mismo `M` aparece pendiente en el gestor `0x43edbe2c` (grupo 9) hasta ≈ 6,08 s, también por límite de vuelo; luego todo vuelve a reposo (en 6,08 s dos gestores suben `max` a 2). El `E+0x24` nunca se activó (coherente con que `Block` solo lo llama el grupo 6).
+
+**Candidatos (P1).** Wrappers OSAL de `av-cam.bin` = `ldr r3,[API]; ldr r3,[r3,#0x14]; ldr.w r3,[r3,#OFF]`, con `OFF = tabla de liro.ko + 0x24`: `osal_wai_sem_tmo` `0x435611b8`, `osal_sig_sem` `0x435611d4`, `osal_snd_msg` `0x4356120c`, `osal_rcv_msg_tmo` `0x43561260`. Por llamadas directas (profundidad 6): `0x438c8474` alcanza `wai_sem_tmo` (`→0x437f8990→0x437b43b4→0x4382dcfc→0x4382d820→0x4393ac98`, acceso a sensor/bus, `r1=-1`), `sig_sem` y `snd_msg`; `0x437f00a4` alcanza `wai_sem_tmo` (`→0x43787180→0x43785338→0x436cead4`, `r1=-1`: bloqueo infinito de un semáforo/mutex), `rcv_msg_tmo` (`→0x437fafac→0x437873a4→0x43ae7d2e→0x439037c0→0x43ae07c0`, `r2=-1`, infinito), `sig_sem` y `snd_msg`. **Los dos contienen esperas alcanzables, pero son helpers genéricos (bus del sensor, mutex, recepción de cola) a 4–6 llamadas; no se demuestra que alguna sostenga la exposición** (la rama tomada no se trazó; no hay ejecución).
+
+**`M` (P2).** El `M` de la cola es un objeto de banco `{[M]=enlace, [M+4]=.bss, +8=thunk 0x43afb3bb, +0x10=estado, +0x1c=id, +0x23=sub}` y **`[M]` no es `cap` en lo observado**: `[M]` enlaza otros objetos tipo functor (`0x43eeb0e8→0x43ee1b64→0x43ee3674→0x43fcd4c0`, que acaba en una vtable; `[x+0x4ae4]` no es una tabla de estados); la muestra previa `0x952db580` apuntaba a otro objeto de la misma clase. El thunk `0x43afb3ba` pasa a la función de estado su **segundo** argumento (`mov r0,r1`), no `M`; el objeto con `[obj]=cap` es ese argumento, que sigue sin identificarse. `cap` no se leyó.
+
+| | Respuesta |
+|---|---|
+| A. ¿La compuerta difiere durante la exposición? | **SÍ (M)**: 1,16–5,24 s, grupo 1, `en_vuelo=1 ≥ max=1`, 1 evento pendiente |
+| B. ¿Condición exacta? | **SÍ** para esta captura: `[E+0x2d] ≥ [E+0x2c]` (única rama activa: sin diferidas, sin bloqueo, `habilitado=0`) |
+| C. ¿Espera bloqueante en los candidatos? | Alcanzable (infinita, vía helpers) en ambos; **no demostrado que sea la que ocupa la exposición** |
+| D. ¿Hilo/manejador que mantiene ocupada la ejecución? | **NO**: se sabe qué evento ocupa la ranura (el entregado antes de 1,16 s), no cuál es ni por qué no se completa |
+| E. ¿Verdadero `M`? | Parcial: el `M` de la cola es un objeto de banco (id 2, sub 9); el objeto con `[obj]=cap` **NO** |
+| F. ¿`[M]=cap`? | **NO** (refutado para el `M` observado) |
+| G. ¿`cap` leído en foto? | **NO** |
+| H. ¿shd/svd de `SetExposure`? | **NO** |
+| I. ¿Mecanismo de 30 s? | **NO**; solo: la ranura de vuelo dura ≈ la exposición (30 s no se repitió: sin pregunta nueva) |
+| J. ¿Finalización electrónica independiente? | **NO** hay evidencia |
+
+Dependencia única restante: identificar el **argumento real de la función de estado** (el que cumple `[arg]=cap`), p. ej. el valor de `r1` en el `blx` del thunk en el instante de entrega del evento de la ranura en vuelo (se necesita un punto de observación fuera de lo no intrusivo, o el escritor estático del segundo argumento en `0x437e534c`/`0x43afb408`), y el llamador de `Complete(E,M)` para ese evento.
+
 ## 5. Respuestas
 
 | # | Pregunta | Respuesta |
