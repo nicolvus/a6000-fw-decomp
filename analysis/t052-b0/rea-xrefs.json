@@ -1,0 +1,19 @@
+{
+ "session": "analysis/rea-independent/run/t052b0.sock",
+ "firmware_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+ "provider": "ghidra 12.1.4 (REA)",
+ "queries": {
+  "xrefs_0x43deb360": ["0x43fea1f8"],
+  "xrefs_0x43a12ca8": ["0x4383fa9a", "0x438c7416"],
+  "xrefs_0x43844e80": ["0x437b5ba4"],
+  "xrefs_0x437b4df0": ["0x437b4ed2"],
+  "xrefs_0x437b5b14": ["0x437b4e10"],
+  "xrefs_0x43eaadd8": ["0x437b4ec8", "0x437b4f6c", "0x437b4fb0"]
+ },
+ "notes": [
+  "0x43deb360 solo aparece en la tabla de punteros 0x43fea1f8; el unico slot GOT es 0x440253cc (GOT+0x64e8).",
+  "0x43a12ca8 tiene dos llamadores reconocidos por REA; el tercero (0x43a1415a) se verifico con Capstone/BL (fef7a5fd) porque REA no reconoce esa funcion.",
+  "0x43eaadd8 es el contexto que el dispatcher 0x437b4eb4 pasa a 0x437b4df0.",
+  "La sesion REA se cerro al terminar las consultas; no se dejo ningun proceso."
+ ]
+}

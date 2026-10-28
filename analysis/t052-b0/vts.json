@@ -1,0 +1,42 @@
+{
+ "firmware_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+ "base": "0x43541000",
+ "ram_offset": "0x40000000",
+ "chain": {
+  "record_0x20": {
+   "virtual": "0x43ea5b6c",
+   "source": "cap+0x5e0",
+   "instruction": "0x43846e12 a4f8e035",
+   "bytes_ok": true
+  },
+  "cap_0x5e0": {
+   "source": "[descriptor+6]",
+   "instruction": "0x43846e08 db88 ; 0x43846e12 a4f8e035",
+   "descriptor_rest_u16_6": 0
+  },
+  "descriptor": {
+   "virtual": "0x43ea13dc",
+   "source": "[ctx+0x3c]",
+   "instruction": "0x43846d9c ldr r2,[r5,#0x3c]",
+   "ctx": "0x43eaadd8",
+   "ctx_0x3c": "0x43ea13dc"
+  },
+  "ctx": {
+   "dispatcher": "0x437b4eb4",
+   "init": "0x437b4df0",
+   "builder": "0x437b5b14",
+   "constructor": "0x43844e80",
+   "note": "ctx+0x3c se copia de la tabla de componentes; el descriptor es un objeto de modo en DRAM"
+  }
+ },
+ "descriptor_rest_header_hex": "0104000000000000000000000000e72e145fe72e145f0001000100010001000100010001000100010001000000000000",
+ "vts_candidates": {
+  "4219": "referencia efectiva medida en T046/T047; ley E=(4219-r5)*15.2 us",
+  "4266": "0x4385de94(600,1,0): 0x271000/600 = 4266 (foto no la llama; solo vista en directo)"
+ },
+ "grep_4219_const_in_photo_path": {
+  "result": "no aparece como constante del productor; el productor lee record+0x20",
+  "byte_check": true
+ },
+ "static_conclusion": "VTS de fotografia NO determinado estaticamente: [descriptor+6] es 0 en reposo y su escritor/selector de foto no se localizo. Falta la lectura fisica de record+0x20 (o descriptor+6) tras un disparo."
+}
