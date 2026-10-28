@@ -58,6 +58,7 @@ flasheo salvo autorización expresa del usuario para un caso concreto.
   método de velocidad `+0x30` (`0x436f4a94`). La A6000 tiene el mismo contrato (`0x436d6f6c`/`0x436d7e08`) y **ya llama a `+0x30`
   en la foto** (`0x438c831e`), pero no tiene el armado de exposición larga del A7S (`0x436f43c0`, `obj+0x3dc=2`). El límite de
   ~65 ms es también del firmware (clamp a un cuadro). [E25-14](../docs/capture/e25-14-imx235-imx210-exposicion-electronica.md).
+- **ShutMode 0 y temporización nativa (E25-15):** `SetExposure` y `+0x30` escriben bloques disjuntos (`blk+0x50/0x52/0x54/0x56/0x57` vs `blk+0x66/0x68/0x6a/0x6c`); `+0x30` no recibe ShutMode ni r5. Emulación A/B/C: solo cambian r5 y ShutMode; B (r5=1) ≈ 64–65 ms, C sigue la velocidad. El bloque `+0x30` es un código de posición (0..4095, conversión `0x436d8a90`, compartida con SetReadZ), no el Tv: corrige E25-14 A. >65 ms, bulb y 30 s siguen sin mecanismo demostrado. [E25-15](../docs/capture/e25-15-shutmode0-temporizacion-nativa.md).
 - **Cortinas:** GPIO P4D=1ST_CURTAIN_MG, P4E=2ND_CURTAIN_MG, P4C=CA_1ST_CURTAIN_START, P4B=CA_RELEASE_LOCK_MSS (esquema + inspección;
   no son serie). El enlace banco/bit `0xf2910048` → P4E no consta en el firmware (E11).
 - **Recuperación (E24-01):** Darwin también controla la energía del cuerpo (`DD_ON1/2/3` desde `darwin_core`, tabla `0x28c6c`).
@@ -114,7 +115,7 @@ Para la trazabilidad completa: [CORRECTIONS](../docs/CORRECTIONS.md) y [STATE §
 | ID | Estado | Qué falta |
 |---|---|---|
 | E1 | NO_VERIFICADO | Origen del local 4/2 a `ModelScalarPb`/`ModelPbCap`; todo emisor posible es de datos o ejecución |
-| E25 | CERRADO CON LÍMITE; E25-01/03 BLOQUEADOS | Candidato offline tipo 0 + compuerta 0 (2 bytes); **E25-02 cierra A=NO** (sin emisor BIONZ de `0x16`; `0x16` copia 129 B, no 1 B); B1a auditado (42 pruebas); falta validación física (M0 físico/M1) y fin de L0/BIONZ |
+| E25 | CERRADO CON LÍMITE; E25-01/03 BLOQUEADOS; E25-15 cierra la relación SetExposure/+0x30 | Candidato offline tipo 0 + compuerta 0 (2 bytes); **E25-02 cierra A=NO** (sin emisor BIONZ de `0x16`; `0x16` copia 129 B, no 1 B); B1a auditado (42 pruebas); falta validación física (M0 físico/M1) y fin de L0/BIONZ |
 | E25-04 | CERRADO CON LÍMITE | Recuperación de Darwin: A/B/C/G=NO; H exige hardware (donante + SWD/UART + corromper/recuperar); R1 sin copia externa |
 | E25-05 | CERRADO CON LÍMITE | Paquetes **3.23** (tipo 0 + B1a) y **3.24** (recuperación oficial) preparados y verificados offline (69 checks); falta autorización y medida del guard; el 3.24 solo sirve con acceso al actualizador |
 | E25-06 / E25-07 | CERRADO CON LÍMITE / ABIERTO | Auditoría independiente: sin defecto binario; puntos ciegos en las pruebas de E25-05; E25-07 = procedimiento con verificación de SHA-256 y `recuperacion-323` marcado obsoleto |

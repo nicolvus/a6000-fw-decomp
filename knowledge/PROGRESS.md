@@ -2967,3 +2967,6 @@ La vía volátil se cierra con evidencia: `InitCom 0x16` existe en Darwin, pero 
 
 ## T040 (27-10-2026)
 B1a 3.23 instalado tras verificar SHA-256, medir el guard con 3.22 (3.23/3.24 aceptadas) y volcar NVRAM; cámara en 3.23.
+
+## 28-10-2026 — E25-15: relación SetExposure ↔ +0x30 y límite de ShutMode 0 (offline)
+La foto `0x438c828c` construye **dos** bloques (`0x437f8a50`): `cap+0x64c` (r5=1, ShutMode=3) y `cap+0x6bc`, y llama en orden a `SetExposure` (`0x436d6f6c`) y `+0x30` (`0x436d7e08`, "SetRead"). Escriben bloques disjuntos: `blk+0x50/0x52/0x54/0x56/0x57` frente a `blk+0x66/0x68/0x6a/0x6c`; `+0x30` no recibe r5 ni ShutMode. Emulación Unicorn (`scripts/e25_15_emu.py`): A/B/C solo difieren en `blk+0x52` (r5) y `blk+0x57` (ShutMode); el bloque `+0x30` es idéntico. Con ShutMode 0 y r5=1 la exposición sigue siendo el cuadro completo (~64–65 ms); para 1/250 hace falta `r5=3956`. El bloque `+0x30` transporta un **código de posición** (conversión `0x436d8a90` → 0..4095, compartida con `+0x34`/SetReadZ), no el Tv: **corrige E25-14 A**. Bulb: `0x4381106c` → SetExposure con plantilla de runtime; `0x43810fa8` → SetRead; SetReadZ sin llamador. >65 ms, bulb y 30 s sin mecanismo demostrado. T051 diseñada y no ejecutada. Informe: `docs/capture/e25-15-shutmode0-temporizacion-nativa.md`; 17 pruebas.

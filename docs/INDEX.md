@@ -204,7 +204,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 3. Obturador (cortinas, EFCS, SilentShutter, exposición electrónica completa)
 
-60 informes.
+61 informes.
 
 - **—** [Darwin: entradas verificadas para investigar el obturador](capture/darwin-shutter-entrypoints.md)
 - **—** [Darwin: fases, notificaciones y escrituras de control](capture/darwin-state-machine.md)
@@ -216,6 +216,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [E25-10 — Tiempo efectivo de exposición por fila con 3.23 (27-10-2026)](capture/e25-10-exposicion-por-fila.md)
 - **—** [E25-11 — Dónde calcula BIONZ `r5` y qué cambiar para que la foto use ShutMode 0 (análisis offline, 27-10-2026)](capture/e25-11-r5-bionz-analisis.md)
 - **—** [E25-14 — Temporización del obturador electrónico: IMX235 (A7S) frente a IMX210 (A6000)](capture/e25-14-imx235-imx210-exposicion-electronica.md)
+- **—** [E25-15 — ShutMode 0 y la temporización nativa del IMX210](capture/e25-15-shutmode0-temporizacion-nativa.md)
 - **—** [E25 — Desactivación del accionamiento normal del obturador mecánico (27-10-2026)](capture/e25-desactivacion-mecanica.md)
 - **—** [EFCS: configuración → selector de captura → IMX210 — E020](capture/efcs-capture-selector.md)
 - **—** [Captura electrónica a resolución reducida — estado y plan](capture/electronic-still-low-resolution.md)
