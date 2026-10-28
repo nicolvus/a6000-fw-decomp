@@ -24,7 +24,7 @@ flasheo salvo autorización expresa del usuario para un caso concreto.
   **E25-05**: paquetes **3.23** (tipo 0 + B1a) y **3.24** (recuperación con Darwin oficial) preparados y verificados
   offline en directorios separados (69 comprobaciones, 0 fallos). El 3.24 reutiliza el payload verificado del 3.23
   y **solo funciona si la cámara conserva acceso al actualizador**; no es recuperación independiente del MCU.
-  Versiones: `3.22 < 3.23 < 3.24`; el antiguo `recuperacion-323` queda obsoleto.
+  Versiones: `3.22 < 3.23 < 3.24`; el antiguo `recuperacion-323` queda obsoleto. **T040: 3.23 (B1a) instalado; la cámara arranca en 3.23; prueba física pendiente (E25-01). Recuperación: `recuperacion-324` (`e1345aff…`).**
   **E25-06** (auditoría independiente): paquetes binariamente correctos (145 comprobaciones, 0 fallos;
   L=NO, N=SÍ); instalación no segura con la evidencia actual (O/P/Q/R=NO). Hay dos 3.23 con config idéntica:
   comprobar el SHA-256 antes de instalar (E25-07).

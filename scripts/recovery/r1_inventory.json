@@ -137,6 +137,24 @@
       ],
       "required": false,
       "note": "Paquetes A7S/A6300 usados como referencia comparativa; no recuperan esta cámara."
+    },
+    {
+      "role": "nvram_pre_t040",
+      "glob": "analysis/camera-dumps/20261027-T040-pre-B1a/nvram/*",
+      "required": true,
+      "note": "NVRAM tomada con 3.22 (tipo 0) justo antes de instalar B1a 3.23 (T040, 27-10-2026)."
+    },
+    {
+      "role": "fdat_experimental_323",
+      "glob": "analysis/darwin-patch/fdat/experimental-323/*",
+      "required": true,
+      "note": "Paquete de prueba B1a 3.23 (E25-05); firmware_packed.dat 4c21353d…"
+    },
+    {
+      "role": "fdat_recuperacion_324",
+      "glob": "analysis/darwin-patch/fdat/recuperacion-324/*",
+      "required": true,
+      "note": "Recuperación Darwin oficial 3.24 (E25-05); firmware_packed.dat e1345aff…. El antiguo recuperacion-323 queda obsoleto (rechazado por el guard con 3.23 instalada)."
     }
   ]
 }
