@@ -203,7 +203,7 @@ def memoria(estado: dict, files: list[str]) -> dict:
         "estados_validos": not estado["pendientes"]["estados_no_validos"],
         "enlaces_de_pendientes_validos": not enlaces_pend,
         "docs_de_estado_mencionan_26_10": all(menciona.values()),
-        "readme_cita_cierres_recientes": all(i in readme for i in ("E19", "E17", "E10")),
+        "readme_cita_cierres_recientes": all(i in readme for i in ("E25", "T040", "recuperacion-324")),
         "sin_json_ni_python_invalido": not (estado["json_py"]["json_invalido"]["total"] or estado["json_py"]["python_invalido"]["total"]),
         "sin_rutas_citadas_inexistentes": estado["rutas_citadas_inexistentes"]["total"] == 0,
         "volcados_sha256_ok": not estado["volcados_sha256"]["falla"],
