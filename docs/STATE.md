@@ -169,3 +169,8 @@ Todo en [history/STATE-historial-2026-10-26.md](history/STATE-historial-2026-10-
 payload `0x43ed4620`, callback `0x437dad78`), S58 (productores numéricos y emulación IMX235), S140–S163 (mapa de registros IMX210, filas G, gates),
 S138–S174 (línea de RE general y controles positivos A6300), S300–S348 (carril B) y los bloques por fecha del 23 al 25-10-2026. Sus informes
 originales siguen en [docs/capture/](capture/); acceso por tema en [INDEX](INDEX.md).
+
+
+## E25-22 — observación física parcial de sombras (28-10-2026)
+
+Dos fotos normales y RAW de una nueva escena: durante la toma larga `cap` mostró shd=1/svd=0 y los bytes de sombras ID3–ID6 fueron compatibles (`00 00 01 00`), en lecturas no simultáneas. No se midió el plan nativo de cada foto ni la transferencia eléctrica; no se demostró inicio o fin de integración electrónica. Detalles, datos y límites: [E25-22](capture/e25-22-protocolo-transporte-fisico.md).

@@ -15,6 +15,8 @@ flasheo salvo autorización expresa del usuario para un caso concreto.
 
 ## Estado actual
 
+- **E25-22:** dos capturas normales en una escena nueva; sombras y `cap` compatibles con shd=1/svd=0 durante la foto larga, sin prueba de envío P2S ni de integración electrónica. [Informe](../docs/capture/e25-22-protocolo-transporte-fisico.md); plan nativo por foto y trazado eléctrico pendientes.
+
 - **Decisión [S51](../docs/capture/s51-decision.md): A=NO, B=NO, C=NO.** No hay ruta de exposición totalmente electrónica
   demostrada (A), ni base para un parche justificable (B), ni prueba de imposibilidad por hardware (C). Sin cambios desde S51.
 - **Recuperabilidad y B1a ([E25-04](../docs/capture/e25-04-recuperabilidad-y-decision.md)): A=NO, B=NO, C=NO, D=NO,

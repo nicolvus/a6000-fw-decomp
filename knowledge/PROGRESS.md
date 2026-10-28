@@ -3056,3 +3056,8 @@ HTTP respondió y T050/GOT T052-A coincidieron dos veces; el MD5 y tamaño del a
 ## E25-22 — Sombras en reposo y RemoteShutter bloqueado (2026-10-28)
 
 GOT y encabezados de ID3–ID8 coinciden; sombras en reposo `03 00 4b 01 00 00` (bytes de datos). La consulta `/silent` agotó el plazo y RemoteShutter dejó de responder; Telnet y los originales permanecieron accesibles. Sin disparo ni escritura. [Informe](../docs/capture/e25-22-protocolo-transporte-fisico.md). Próximo paso: recuperar el servicio, comprobar por una vía de solo lectura que `silentOn` es falso y completar línea base antes de disparar.
+
+
+## E25-22 — Fotos y sombras reales (2026-10-28)
+
+Tras reinicio y nueva escena: dos RAW; `cap` (shd=1/svd=0) y sombras compatibles durante la toma de 4 s; lecturas no simultáneas. T050/GOT T052-A finales coinciden. Sin evidencia de transmisión eléctrica o integración electrónica; EXIF/latencia no prueban tiempo efectivo. [Informe y evidencia](../docs/capture/e25-22-protocolo-transporte-fisico.md). Próximo paso exacto: caracterizar plan por foto y validar pasivamente la entrega P2S solo con autorización y puntos/tensión verificados; no repetir `/silent`.
