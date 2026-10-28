@@ -100,7 +100,7 @@ def pull_new(prev_count: int) -> list[tuple[int, bytes]]:
 def run_log(since_count: int) -> list[dict]:
     rows = []
     for line in get("/log").decode().splitlines():
-        i, t0, ms, by, rt = (int(v) for v in line.split(","))
+        i, t0, ms, by, rt = (int(v) for v in line.split(",")[:5])
         if i > since_count:
             rows.append({"n": i, "t0": t0 / 1000, "ms": ms, "bytes": by, "reintentos": rt})
     return rows

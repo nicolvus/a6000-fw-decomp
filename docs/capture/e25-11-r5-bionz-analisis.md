@@ -139,3 +139,10 @@ La entrada de tiempo **ya la tiene la app**: `CameraEx.getShutterSpeed()` (Remot
 4. Medidas ya hechas lo respaldan: T046/T047 (uniforme por filas, ±1 % con la calibración de T046). Sin persistencia: tras apagar vuelve al comportamiento normal.
 
 Riesgos: ShutMode 0 vale para **todas** las llamadas mientras esté parcheado (la vista en directo ya lo usa, T031); no probado con ráfaga, AF ni vídeo; el incidente de T037/T038 fue con `r6`/`r7`, no con `r5`; la app debe poder revertir aunque se cierre (vigilante).
+
+## 9. Prueba del modo silencioso en la app (T049, 28-10-2026): funciona, pero el mecanismo de escritura no es seguro
+
+- **Funciona:** 6 disparos silenciosos (1/4000, 1/1000, 1/250 ×2) con `r5` calculado por la app (4203, 4153, 3956), parche y reversión verificados cada vez; exposición uniforme por filas y dentro de ≈ ±16 % del objetivo con la calibración de la misma tanda (1/1000 +6 %, 1/250 +11 %, 1/4000 −16 % con señal muy baja).
+- **Dos fallos de implementación (no de la idea):** (1) `RandomAccessFile` no direcciona `/dev/mem` por encima de 2 GiB (`Value too large`); (2) `Runtime.exec("dd")` desde un proceso de 100 MB en una cámara con ≈ 8 MB libres es frágil: en el 7.º disparo el `fork` quedó colgado (hijo `ar.shutter` parado) **entre las dos escrituras**, dejando **ShutMode 0 forzado** en RAM y `r5` original. El vigilante y los `catch` usan el mismo camino y no podían revertir; se revirtió por telnet y se mató la app.
+- **Consecuencia:** una app no debe aplicar el parche por `Runtime.exec`. Alternativas: (a) que lo aplique el PC por telnet (probado en T046/T047, sin colgar), (b) la app habla con el `telnetd` de `127.0.0.1:23` (sin `fork` propio), (c) aplicar ambas escrituras en **un solo `dd`/comando** y proceso auxiliar preabierto. Sin eso, el modo silencioso en la app **no se considera seguro** y queda desactivado por defecto (`silentOn` = false; solo `/silent?v=1`).
+- Sin la 2.ª parte de la tanda (1/60, 1/30, 1/15, ráfaga) no hay medida de esos casos con la app; sí con parches por telnet (T047: 1/60 → 16,75 ms).

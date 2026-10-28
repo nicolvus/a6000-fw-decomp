@@ -30,8 +30,9 @@ public class Main extends Activity implements SurfaceHolder.Callback {
     private volatile byte[] lastJpeg;
     private volatile long lastMs = -1;
     private volatile int openRetries;
+    private volatile int lastShotR5;
     private final StringBuilder shotLog = new StringBuilder();  // CSV: n,t_inicio_ms,ms_hasta_jpeg,bytes
-    private static final String VERSION = "v7";
+    private static final String VERSION = "v8b";
     private TextView info;
     private String keyLog = "-";
 
@@ -86,6 +87,7 @@ public class Main extends Activity implements SurfaceHolder.Callback {
     }
 
     private void release() {
+        silentRevert("release");
         try {
             if (cameraEx != null) cameraEx.getClass().getMethod("release").invoke(cameraEx);
         } catch (Throwable t) { Log.e(TAG, "release", t); }
@@ -103,10 +105,19 @@ public class Main extends Activity implements SurfaceHolder.Callback {
                     catch (Throwable t) { if (++tries > 6) throw t; release(); Thread.sleep(400); }
                 }
                 openRetries = tries;
+                String sil = "normal";
+                lastShotR5 = 0;
+                if (silentOn) {
+                    int r5 = silentR5();
+                    if (r5 < 0) sil = "normal(velocidad-lenta)";
+                    else { sil = silentApply(r5); if (sil.startsWith("silent r5=")) lastShotR5 = r5; else throw new Exception(sil); }
+                }
+                silentLog = sil;
                 last = "shooting";
                 final long t0 = android.os.SystemClock.elapsedRealtime();
                 camera.takePicture(null, null, new Camera.PictureCallback() {
                     public void onPictureTaken(byte[] data, Camera cam) {
+                        silentRevert("cb");   // primero revertir: el estado «done» ya no ve el parche
                         final long ms = android.os.SystemClock.elapsedRealtime() - t0;
                         int id = ++count;
                         try {
@@ -115,7 +126,7 @@ public class Main extends Activity implements SurfaceHolder.Callback {
                             o.write(data); o.close();
                         } catch (Throwable t) { Log.e(TAG, "save", t); }
                         lastMs = ms;
-                        synchronized (shotLog) { shotLog.append(id + "," + t0 + "," + ms + "," + (data == null ? 0 : data.length) + "," + openRetries + "\n"); }
+                        synchronized (shotLog) { shotLog.append(id + "," + t0 + "," + ms + "," + (data == null ? 0 : data.length) + "," + openRetries + "," + lastShotR5 + "\n"); }
                         last = "done " + (data == null ? 0 : data.length) + " ms=" + ms + " n=" + id;
                         release();
                     }
@@ -180,6 +191,91 @@ public class Main extends Activity implements SurfaceHolder.Callback {
             try { release(); Thread.sleep(gap); } catch (Throwable t) { /* sigue */ }
         }
         return "reopen n=" + n + " gap=" + gap + " fails=" + fails + " " + sb;
+    }
+
+
+    // ---- Modo silencioso (E25-11): ShutMode 0 + r5 calculado desde la velocidad, parche RAM de BIONZ con reversión ----
+    private static final long SM_A = 0x836D6FB6L, R5_A = 0x836D7000L;       // ldrb.w sb,[r1,#9] / asrs r0,r5,#8; uxtb.w lr,r5
+    private static final byte[] SM_O = {(byte) 0x91, (byte) 0xf8, 0x09, (byte) 0x90}, SM_N = {0x4f, (byte) 0xf0, 0x00, 0x09};
+    private static final byte[] R5_O = {0x28, 0x12, 0x5f, (byte) 0xfa, (byte) 0x85, (byte) 0xfe};
+    private static final double LINE_US = 15.2;     // tiempo de línea medido (T044/T046)
+    private static final int R5_FULL = 4219;        // exposición nula (T046): E = (4219 - r5)·15,2 µs; r5 mínimo seguro:
+    private static final int R5_MIN = 10;
+    private volatile boolean silentOn;
+    private volatile boolean patched;
+    private volatile int lastR5;
+    private volatile String silentLog = "-";
+    private long patchedAt;
+
+    // RandomAccessFile no llega por encima de 2 GiB (lseek de 32 bits: «Value too large»): se usa `dd` de /system/bin, que sí direcciona /dev/mem.
+    private static byte[] memRead(long addr, int n) throws Exception {
+        Process p = Runtime.getRuntime().exec(new String[] {"dd", "if=/dev/mem", "bs=2", "skip=" + (addr / 2), "count=" + (n / 2)});
+        java.io.InputStream in = p.getInputStream();
+        byte[] b = new byte[n];
+        int off = 0, r;
+        while (off < n && (r = in.read(b, off, n - off)) > 0) off += r;
+        p.waitFor();
+        if (off < n) throw new java.io.IOException("lectura corta " + off + "/" + n);
+        return b;
+    }
+
+    private static void memWrite(long addr, byte[] b) throws Exception {
+        Process p = Runtime.getRuntime().exec(new String[] {"dd", "of=/dev/mem", "bs=2", "seek=" + (addr / 2), "count=" + (b.length / 2)});
+        OutputStream o = p.getOutputStream();
+        o.write(b); o.close();
+        if (p.waitFor() != 0) throw new java.io.IOException("dd de escritura falló");
+    }
+
+    private static byte[] r5Bytes(int v) { return new byte[] {(byte) (v >> 8), 0x20, 0x4f, (byte) 0xf0, (byte) v, 0x0e}; }
+
+    /** r5 para la velocidad actual, o -1 si queda fuera del rango (exposición más larga que el cuadro completo). */
+    private int silentR5() throws Exception {
+        long lines = Math.round(speed() * 1e6 / LINE_US);
+        int r5 = (int) (R5_FULL - lines);
+        return r5 >= R5_MIN ? r5 : -1;
+    }
+
+    /** Aplica ShutMode 0 + r5 tras comprobar el código original; deja patched=true solo si todo se verificó. */
+    private synchronized String silentApply(int r5) {
+        try {
+            if (!java.util.Arrays.equals(memRead(SM_A, 4), SM_O) || !java.util.Arrays.equals(memRead(R5_A, 6), R5_O)) return "silent-abort codigo-inesperado";
+            memWrite(SM_A, SM_N);
+            memWrite(R5_A, r5Bytes(r5));
+            if (!java.util.Arrays.equals(memRead(SM_A, 4), SM_N) || !java.util.Arrays.equals(memRead(R5_A, 6), r5Bytes(r5))) {
+                silentRevert("verify");
+                return "silent-abort verificacion";
+            }
+            patched = true; lastR5 = r5; patchedAt = android.os.SystemClock.elapsedRealtime();
+            // vigilante: si el disparo no termina, se revierte solo
+            new Thread(new Runnable() { public void run() {
+                try { Thread.sleep(45000); } catch (InterruptedException e) { return; }
+                if (patched && android.os.SystemClock.elapsedRealtime() - patchedAt >= 44000) silentRevert("watchdog");
+            }}).start();
+            return "silent r5=" + r5;
+        } catch (Throwable t) { silentRevert("error"); return "silent-error " + cause(t); }
+    }
+
+    private synchronized void silentRevert(String why) {
+        if (!patched && !"verify".equals(why) && !"error".equals(why)) return;
+        try {
+            memWrite(R5_A, R5_O);
+            memWrite(SM_A, SM_O);
+            boolean ok = java.util.Arrays.equals(memRead(SM_A, 4), SM_O) && java.util.Arrays.equals(memRead(R5_A, 6), R5_O);
+            silentLog = "revert(" + why + ")=" + (ok ? "OK" : "FALLO");
+            if (!ok) Log.e(TAG, "revert FALLO " + why);
+        } catch (Throwable t) { silentLog = "revert(" + why + ")=error " + cause(t); Log.e(TAG, "revert", t); }
+        patched = false;
+    }
+
+    /** GET /silent?v=0|1 activa o no el modo; sin v informa; /silent?v=check lee los dos sitios (solo lectura). */
+    private String silentCmd(String req) {
+        int a = req.indexOf("v=");
+        String v = a < 0 ? "" : req.substring(a + 2).split("[ &]")[0];
+        if ("1".equals(v)) silentOn = true;
+        else if ("0".equals(v)) { silentOn = false; silentRevert("off"); }
+        String chk;
+        try { chk = "sm=" + hex(memRead(SM_A, 4)) + " r5=" + hex(memRead(R5_A, 6)); } catch (Throwable t) { chk = "lectura-error " + cause(t); }
+        return "silent on=" + silentOn + " patched=" + patched + " lastR5=" + lastR5 + " " + chk + " " + silentLog;
     }
 
     /** GET /burst?n=&gap= : n disparos seguidos (gap ms entre ellos); cada uno espera su JPEG. Mide el rearme. Resultado en /log. */
@@ -388,7 +484,8 @@ public class Main extends Activity implements SurfaceHolder.Callback {
                         o.write(("HTTP/1.0 200 OK\r\n\r\n" + VERSION + " speed=" + sp + " count=" + count + " lastMs=" + lastMs + " bursting=" + bursting + " t=" + android.os.SystemClock.elapsedRealtime() + "\n").getBytes());
                         o.close(); s.close(); continue;
                     }
-                    if (req.startsWith("GET /params")) last = params();
+                    if (req.startsWith("GET /silent")) last = silentCmd(req);
+                    else if (req.startsWith("GET /params")) last = params();
                     else if (req.startsWith("GET /iso")) last = iso(q(req, "v", -1));
                     else if (req.startsWith("GET /fmt")) { int a = req.indexOf("v="); last = fmt(a < 0 ? null : req.substring(a + 2).split("[ &]")[0]); }
                     else if (req.startsWith("GET /reopen")) last = reopen(q(req, "n", 10), q(req, "gap", 0));
