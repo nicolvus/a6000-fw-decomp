@@ -1,0 +1,372 @@
+{
+ "sha256_firmware": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+ "sitios": [
+  {
+   "addr": "0x436d6faa",
+   "esperado": "8e88",
+   "real": "8e88",
+   "ok": true,
+   "mnemonico": "ldrh r6,[r1,#4]",
+   "hecho": "SetExposure lee svd = u16[param+4]",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x436d6fba",
+   "esperado": "c0f8a863",
+   "real": "c0f8a863",
+   "ok": true,
+   "mnemonico": "str.w r6,[r0,#0x3a8]",
+   "hecho": "SetExposure guarda svd en obj+0x3a8",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x436d6fe2",
+   "esperado": "8ef802b0",
+   "real": "8ef802b0",
+   "ok": true,
+   "mnemonico": "strb.w fp,[lr,#2]",
+   "hecho": "svd[7:0] -> registro ID3",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x436d6ff8",
+   "esperado": "61f3030e",
+   "real": "61f3030e",
+   "ok": true,
+   "mnemonico": "bfi lr,r1,#0,#4",
+   "hecho": "svd[11:8] -> ID4[3:0]",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x436d70c6",
+   "esperado": "dfe809f0",
+   "real": "dfe809f0",
+   "ok": true,
+   "mnemonico": "tbb [pc,sb]",
+   "hecho": "SetExposure ramifica por ShutMode (0..4)",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x438c82e4",
+   "esperado": "b4f85076",
+   "real": "b4f85076",
+   "ok": true,
+   "mnemonico": "ldrh.w r7,[r4,#0x650]",
+   "hecho": "StartExposure guarda svd del cap",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x438c82f0",
+   "esperado": "a4f85066",
+   "real": "a4f85066",
+   "ok": true,
+   "mnemonico": "strheq.w r6,[r4,#0x650]",
+   "hecho": "con cap+0x504==1 el svd pasado a SetExposure es 0",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x438c8334",
+   "esperado": "a4f85076",
+   "real": "a4f85076",
+   "ok": true,
+   "mnemonico": "strh.w r7,[r4,#0x650]",
+   "hecho": "svd restaurado tras SetExposure",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x438c83c4",
+   "esperado": "a4f85036",
+   "real": "a4f85036",
+   "ok": true,
+   "mnemonico": "strh.w r3,[r4,#0x650]",
+   "hecho": "con cap+0x740==0 el svd del cap se pone a 0 tras StartExposure",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x43b1e7f8",
+   "esperado": "b0f85046",
+   "real": "b0f85046",
+   "ok": true,
+   "mnemonico": "ldrh.w r4,[r0,#0x650]",
+   "hecho": "paso con contador: lee svd; svd==0 -> mensaje de fin sin exposición",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x43b1e842",
+   "esperado": "9142",
+   "real": "9142",
+   "ok": true,
+   "mnemonico": "cmp r1,r2",
+   "hecho": "paso con contador: compara svd con cap+0x4b9c",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x43b1e84a",
+   "esperado": "c3f89c20",
+   "real": "c3f89c20",
+   "ok": true,
+   "mnemonico": "str.w r2,[r3,#0x9c]",
+   "hecho": "paso con contador: incrementa cap+0x4b9c",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x4383fa9a",
+   "esperado": "d3f105f9",
+   "real": "d3f105f9",
+   "ok": true,
+   "mnemonico": "bl 0x43a12ca8",
+   "hecho": "productor: predicado de cuadro extra",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x4383faa0",
+   "esperado": "b044",
+   "real": "b044",
+   "ok": true,
+   "mnemonico": "add r8,r6",
+   "hecho": "productor: cuadro extra suma un VTS",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x4383fab6",
+   "esperado": "20f549f9",
+   "real": "20f549f9",
+   "ok": true,
+   "mnemonico": "bl 0x4355fd4c",
+   "hecho": "productor: resto de líneas totales / VTS",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x4383faba",
+   "esperado": "c9eb080a",
+   "real": "c9eb080a",
+   "ok": true,
+   "mnemonico": "rsb sl,sb,r8",
+   "hecho": "productor: shd(r5) = líneas totales - líneas de exposición",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x4383fac0",
+   "esperado": "a4f86870",
+   "real": "a4f86870",
+   "ok": true,
+   "mnemonico": "strh.w r7,[r4,#0x68]",
+   "hecho": "productor: record+0x68 = svd = cuadros enteros - 1",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x4383fadc",
+   "esperado": "8919",
+   "real": "8919",
+   "ok": true,
+   "mnemonico": "adds r1,r1,r6",
+   "hecho": "productor: VTS del cuadro con resto = resto + VTS",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x4383fae8",
+   "esperado": "a4f8d810",
+   "real": "a4f8d810",
+   "ok": true,
+   "mnemonico": "strh.w r1,[r4,#0xd8]",
+   "hecho": "productor: record+0xd8 (VTS del primer cuadro)",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x437b22a4",
+   "esperado": "b4f8d820",
+   "real": "b4f8d820",
+   "ok": true,
+   "mnemonico": "ldrh.w r2,[r4,#0xd8]",
+   "hecho": "planificador por VD: elige VTS del primer cuadro",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x437b22a8",
+   "esperado": "a4f86020",
+   "real": "a4f86020",
+   "ok": true,
+   "mnemonico": "strh.w r2,[r4,#0x60]",
+   "hecho": "planificador por VD: record+0x60 = VTS del cuadro actual",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x437b22b4",
+   "esperado": "b4f8dc30",
+   "real": "b4f8dc30",
+   "ok": true,
+   "mnemonico": "ldrh.w r3,[r4,#0xdc]",
+   "hecho": "planificador por VD: VTS del último cuadro",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x437b22be",
+   "esperado": "b4f8da10",
+   "real": "b4f8da10",
+   "ok": true,
+   "mnemonico": "ldrh.w r1,[r4,#0xda]",
+   "hecho": "planificador por VD: VTS de cuadros intermedios",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x437b2258",
+   "esperado": "b4f86810",
+   "real": "b4f86810",
+   "ok": true,
+   "mnemonico": "ldrh.w r1,[r4,#0x68]",
+   "hecho": "planificador por VD: compara svd con el índice de cuadro record+4",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x438c7528",
+   "esperado": "631c",
+   "real": "631c",
+   "ok": true,
+   "mnemonico": "adds r3,r4,#1",
+   "hecho": "temporizador: (bulbFrameCount+1)",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x438c753e",
+   "esperado": "47f61223",
+   "real": "47f61223",
+   "ok": true,
+   "mnemonico": "movw r3,#0x7a12",
+   "hecho": "temporizador: periodo = fotogramas * 31250 ticks",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x438c7522",
+   "esperado": "d5f82c47",
+   "real": "d5f82c47",
+   "ok": true,
+   "mnemonico": "ldr.w r4,[r5,#0x72c]",
+   "hecho": "temporizador: lee bulbFrameCount",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x43b1e42a",
+   "esperado": "d0f82c37",
+   "real": "d0f82c37",
+   "ok": true,
+   "mnemonico": "ldr.w r3,[r0,#0x72c]",
+   "hecho": "bulbFrameCount++ (lectura)",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x43b1e440",
+   "esperado": "c0f82c37",
+   "real": "c0f82c37",
+   "ok": true,
+   "mnemonico": "str.w r3,[r0,#0x72c]",
+   "hecho": "bulbFrameCount++ (escritura)",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x43b1e4e4",
+   "esperado": "07b5",
+   "real": "07b5",
+   "ok": true,
+   "mnemonico": "push {r0,r1,r2,lr}",
+   "hecho": "callback de temporizador: fotograma completo (flag 0x2000)",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x43b1e4c0",
+   "esperado": "07b5",
+   "real": "07b5",
+   "ok": true,
+   "mnemonico": "push {r0,r1,r2,lr}",
+   "hecho": "callback de temporizador: último tramo (flag 0x100000)",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x438c78de",
+   "esperado": "5b68",
+   "real": "5b68",
+   "ok": true,
+   "mnemonico": "ldr r3,[r3,#4]",
+   "hecho": "LongObMode = u32[req.sub+4] (solo se registra y se empaqueta)",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x438c796c",
+   "esperado": "4ff21301",
+   "real": "4ff21301",
+   "ok": true,
+   "mnemonico": "movw r1,#0xf013",
+   "hecho": "LongObMode viaja en el mensaje 0xf013 (con 0x43b1e57c)",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x438c82ac",
+   "esperado": "0228",
+   "real": "0228",
+   "ok": true,
+   "mnemonico": "cmp r0,#2",
+   "hecho": "clase 0x43a12c64==2 -> bloque de exposición forzado",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x438c82c4",
+   "esperado": "c4f84c16",
+   "real": "c4f84c16",
+   "ok": true,
+   "mnemonico": "str.w r1,[r4,#0x64c]",
+   "hecho": "bloque forzado: shd=2, svd=0, spl=0, ShutMode 0",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x43ae93ca",
+   "esperado": "edf703b0",
+   "real": "edf703b0",
+   "ok": true,
+   "mnemonico": "b.w 0x436d63d4",
+   "hecho": "SetReadZ: único salto a 0x436d63d4 (sin llamador de 0x43ae93ca)",
+   "etiqueta": "V"
+  },
+  {
+   "addr": "0x436d63fc",
+   "esperado": "5b6b",
+   "real": "5b6b",
+   "ok": true,
+   "mnemonico": "ldr r3,[r3,#0x34]",
+   "hecho": "0x436d63d4 despacha por vtable+0x34 (SetRead_ZAF)",
+   "etiqueta": "V"
+  }
+ ],
+ "cadenas": [
+  {
+   "addr": "0x43cc8b31",
+   "esperado": "[IMAGING_CAP]: SplitExpRead (snr_expread_count %d, bulbFrameCount :%d)",
+   "real": "[IMAGING_CAP]: SplitExpRead (snr_expread_count %d, bulbFrameCount :%d)",
+   "ok": true
+  },
+  {
+   "addr": "0x43cc8c32",
+   "esperado": "[IMAGING_CAP]: ExposureTimerStart!(first)",
+   "real": "[IMAGING_CAP]: ExposureTimerStart!(first)",
+   "ok": true
+  },
+  {
+   "addr": "0x43cc8c5c",
+   "esperado": "[IMAGING_CAP]: ExposureTimerEnd!",
+   "real": "[IMAGING_CAP]: ExposureTimerEnd!",
+   "ok": true
+  },
+  {
+   "addr": "0x43cc89b3",
+   "esperado": "[IMAGING_CAP]: LongObMode [%x]",
+   "real": "[IMAGING_CAP]: LongObMode [%x]",
+   "ok": true
+  },
+  {
+   "addr": "0x43ca6c02",
+   "esperado": "[CAMERA_MAIN_IM]: bulb Table",
+   "real": "[CAMERA_MAIN_IM]: bulb Table",
+   "ok": true
+  }
+ ],
+ "fallos": 0,
+ "setread_zaf_cadena": "Camera::Imager::IMAGER_ERROR_CODE Camera::Imager::C_Imager::SetRead_ZAF(Camera::Imager::ZafReadRsvParam*, short unsigned"
+}

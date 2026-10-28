@@ -34,7 +34,9 @@ Etiquetas: **V** = bytes/instrucciones leídos; **I** = inferencia; **N** = no v
    exposición larga. (V para la diferencia de código; N para ausencia en todo el firmware)
 7. El límite de ~65 ms no es solo de nuestro parche: la función de conversión satura en **un cuadro** (máximo de
    líneas del modo). Para superarlo haría falta un modo de sensor con cuadro más largo o acumulación multicuadro; no
-   se encontró ninguno demostrado. (V/I)
+   se encontró ninguno demostrado. (V/I) **Corrección posterior (E25-17):** el productor nativo `0x4383fa40` sí planifica más de un cuadro
+   (`svd = cuadros − 1` en `record+0x68`, VTS ampliado en `record+0xd8`); el límite es de la ruta manual `r5`, no un clamp del firmware.
+   Sigue sin demostrarse el efecto físico. [E25-17](e25-17-bulb-exposicion-electronica-larga.md)
 8. La precisión de las velocidades rápidas es de **una línea (15,2 µs)**; no se encontró temporización fraccionaria
    ni corrección de latencia. El sesgo de T050 (±20–25 %) no se explica solo por cuantización salvo en 1/8000. (V/I)
 

@@ -428,7 +428,7 @@ expresa.**
 | G | ¿Hay una función reutilizable que calcule r5 desde la velocidad de foto? | **NO** (la aritmética existe en LV `0x437b27b8`, no cableada a la foto; la foto usa `cap+0x5dc`) | falta de evidencia |
 | H | ¿Puede seleccionarse ShutMode 0 por datos sin sobrescribir instrucciones? | **NO** con efecto útil (el byte `0x43eedeca` y la ruta 2/3 existen, pero fijan `r5=2`; no hay dato para r5 variable) | falta de evidencia |
 | I | ¿Hay un camino demostrado que preserve vídeo, AF y funcionamiento normal? | **NO** (el parche global afecta a todas las llamadas; el específico de foto no está probado) | falta de evidencia |
-| J | ¿Se identificó un mecanismo electrónico para superar un cuadro? | **NO** (sin acumulador; bulb usa las mismas primitivas; sin cuadro más largo) | falta de evidencia (no imposibilidad) |
+| J | ¿Se identificó un mecanismo electrónico para superar un cuadro? | **NO** (sin acumulador; bulb usa las mismas primitivas; sin cuadro más largo) | falta de evidencia (no imposibilidad). **Corregido por E25-17:** el productor nativo sí codifica varios cuadros (`svd`, `record+0xd8`); sigue sin demostración física |
 | K | ¿La emulación reproduce coherentemente A, B y C? | **SÍ en escrituras** (A/B/C: +0x30 idéntico; r5/ShutMode distintos). **NO en tiempo físico** (no se emula el sensor) | V (software) |
 | L | ¿La evidencia permite diseñar una T051 reversible? | **SÍ** (§11) | V |
 | M | ¿Hay base para un parche persistente seguro? | **NO** (E24-04/E25-04: sin recuperación independiente; BIONZ no tiene reempaquetador reproducible) | falta de evidencia |

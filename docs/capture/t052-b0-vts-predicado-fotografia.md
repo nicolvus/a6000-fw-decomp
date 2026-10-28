@@ -207,6 +207,8 @@ seleccionado es el de **cuadro extra**.
 
 ### 4.4 Contador `record+0x68`
 
+> **Corregido por [E25-17](e25-17-bulb-exposicion-electronica-larga.md):** `record+0x68` es el `svd` (cuadros enteros − 1): `SetExposure` lo escribe en los registros ID3/ID4 y es la misma celda (`cap+0x650`) que compara el contador de pasos del host. «Ventana» (`blk+0x50`) es la misma cifra; para exposiciones de un cuadro vale 0, por eso C3-B no lo necesita.
+
 `0x4383fd6c` copia 16 B desde `record+0x64`:
 
 ```
