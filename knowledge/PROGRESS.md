@@ -3029,3 +3029,8 @@ Barrido Thumb-2 completo: tres escritores directos (copia del plan `0x438acc9c`;
 
 ## 28-10-2026 — E25-19e: origen de `cap+0x74f` y selector 3/4 (decisión B)
 W1 copia `plan[0x13f..0x142]` byte a byte y `plan+0x142`=2×lookup (8/8 ramas): no puede dar un 1. 19d omitió 3 `strh@74e` (`EndExps` `0x4354af88/0x4354b0ac`, `0x4354c868`) y 5 `str.w@74c` de otro objeto; `74c/74e` son halfwords de geometría (tabla global 720×240/288 en vídeo). Dos fotos de 4 s de solo lectura: `74f=1` constante, `74d` 1→0 al final, `cap+0x19a..=0`, `G` sin cambios. Selector 3/4 → `0x436c74c8` (VD/imager `0xf3120000`): 3≠4 en `+0x208` bit0, `+0x258` y llamada virtual. `G+0x60/7e/7f` sin escritor. Siguiente: E25-19f. [informe](../docs/capture/e25-19e-origen-74f-selector-sensor.md)
+
+
+## E25-21 — SetExposure a P2S (2026-10-28)
+
+Se reprodujo el transporte de parámetros con SetExposure y formateador P2S reales emulados, en una instancia: [informe](../docs/capture/e25-21-setexposure-p2s.md), `scripts/e25_21/traza.py`. La frontera observada es el disparo MMIO del P2S; sin prueba de fin electrónico o RAW. Siguiente paso exacto: rastrear el consumidor indirecto de `0x43e849c0+0x40` y correlacionar sus salidas con el disparo de lectura; no inferir semántica del sensor por nombres.
