@@ -31,23 +31,43 @@ la de la superior a velocidades rápidas (T044: 0,095 → 0,350 relativo a 1/8).
   (B1a solo evita accionar el mecanismo): T025 (3.22, antes de B1a, JPEG) ya mostraba el mismo suelo plano 1/4000–1/250 y la subida desde 1/125.
   Comparación débil: T025 es JPEG y otra escena.
 
-## 3. Relación con `r5` de E23 (INFERENCIA)
+## 3. Relación con `r5` de E23 — VERIFICADO en T046
 
-- T039 (ShutMode 0 forzado): la luminancia a 1/250 cae de forma casi lineal al subir `r5` entre 4000 y 4200 (27,2 → 16,3 → 4,8) y **extrapola a cero en
-  `r5` ≈ 4244**; a partir de 4300 `r5` no actúa. 4244 coincide con el orden de las **líneas totales del cuadro** (≈ 4024 visibles + blanking).
-- Hipótesis consistente con T044: `r5` fija en **líneas** cuánto antes de la lectura se reinicia cada fila (reinicio por filas, como el obturador electrónico
-  de cortina delantera); exposición ≈ (límite − `r5`) líneas × 15,2 µs, con `r5` ≈ 4200 ⇒ exposición corta y casi uniforme (lo que se vio en T039).
-  En ese modo el degradado vertical desaparece porque el reinicio también es por filas. **No está demostrado:** falta la unidad de `r5` (¿líneas?) y
-  una medida RAW a `r5` conocido.
+T046 (27-10-2026, autorizado por el usuario: «continua con los parches en ram»; solo RAM, parches de T035 revertidos y verificados; ISO 100, RAW; `analysis/camera-dumps/20261027-231049-T046-r5-raw/`):
+tres referencias sin parche (1/8, 1/15, 1/60) fijan la escena y τ por banda; después ShutMode 0 forzado (`0x836d6fb6`) con `r5` forzado (`0x836d7000`).
+Exposición efectiva = 1000·RAW/escena (ms), media y por octavos:
+
+| `r5` (1/250, ShutMode 0) | Exposición media | Por octavos (arriba → abajo) |
+|---|---|---|
+| sin forzar | 64,9 ms | 65,0 64,9 64,7 64,8 64,8 64,9 64,9 65,0 |
+| 0 | ≈ 0 (imagen negra) | — |
+| 1000 | 49,1 ms | 49,2 … 49,2 |
+| 2000 | 33,8 ms | 33,9 … 33,8 |
+| 3000 | 18,5 ms | 18,7 … 18,5 |
+| 3500 | 10,9 ms | 11,1 … 11,0 |
+| 4000 | 3,3 ms | 3,4 … 3,4 |
+| 4100 | 1,8 ms | 1,9 … 1,8 |
+| 4200 | 0,3 ms | 0,3 … 0,3 |
+| 4300 | 64,9 ms | sin efecto (= sin forzar) |
+
+A 1/30: sin forzar 65,4 ms; `r5` 1240 → 45,4 ms; 2500 → 26,2 ms; 4000 → 3,4 ms (los mismos valores que a 1/250: **con ShutMode 0 la velocidad fijada no interviene**).
+
+Conclusiones (VERIFICADO sobre estas medidas):
+
+1. **Con ShutMode 0 la exposición es uniforme en todas las filas** (octavos iguales dentro de ±0,2 ms): reinicio por filas, no el reinicio global + lectura de ShutMode 3.
+2. **`r5` fija la exposición en líneas: E = (4219 − `r5`) × 15,2 µs**, con `r5` entre 1 y ≈4219. La pendiente medida (−15,2 µs por unidad) **coincide con los 15,2 µs por fila** de T044 medidos de forma independiente: `r5` es una distancia en líneas entre el reinicio y la lectura.
+3. Sin forzar (o con `r5` ≥ 4300) la exposición es el cuadro completo, **64,9 ms ≈ 4270 líneas**; con `r5` = 0 es nula.
+4. Predicción para velocidades uniformes (por calcular, no medida salvo los puntos de la tabla): `r5` = 4219 − T/15,2 µs → 1/4000 ≈ 4203, 1/1000 ≈ 4153, 1/250 ≈ 3956, 1/60 ≈ 3122.
+
+Así, la limitación de T044 (sesgo vertical) es del modo ShutMode 3 (el de la foto normal, T031); el reinicio por filas ya existe en ShutMode 0 y solo falta que la foto lo use con `r5` calculado a partir de la velocidad.
 
 ## 4. Qué cambia para el proyecto
 
 - Con 3.23 **no hay obturador electrónico de cortina trasera/uniforme**: hay exposición con reinicio global y lectura por filas. Utilizable para velocidades
   lentas (≤ 1/60) donde τ pesa poco, y con sujetos sin movimiento; a velocidades rápidas hay sesgo de exposición de hasta 3,7× arriba-abajo y distorsión por lectura (≈ 61 ms).
-- Para velocidades rápidas uniformes haría falta **reinicio por filas** (programar el reinicio del IMX210, lo que hacía `r5` en E23). Eso exige parches en RAM
-  (como T035–T039, con el incidente de T037) o una versión nueva de Darwin/BIONZ: **no autorizado**.
+- Para velocidades rápidas uniformes hace falta **reinicio por filas** (ShutMode 0 con `r5` calculado, §3). Ese parche está en **BIONZ/av-cam** (`0x836d6fb6`, `0x836d7000`), no en Darwin: un FDAT de Darwin no lo instala. Hoy solo es posible en RAM (T046); hacerlo permanente exigiría modificar el firmware de BIONZ (fuera de alcance y sin recuperación probada).
 
 ## 5. Límites
 
 Una sola escena y un solo encuadre; ISO 100 y modo M; velocidades 1/4000–1/8; RAW sin corregir por viñeteo/lente (se asume que `s_b` lo absorbe, constante entre disparos).
-No se midió con movimiento (la distorsión por lectura se infiere del tiempo de lectura, no de imágenes con sujetos rápidos). La unidad de `r5` sigue sin verificar.
+No se midió con movimiento (la distorsión por lectura se infiere del tiempo de lectura, no de imágenes con sujetos rápidos). T046: una escena y un encuadre; `r5` = 0 no estudiado más allá de «exposición nula».

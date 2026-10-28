@@ -83,8 +83,9 @@ Solo funciona si la cámara sigue llegando al actualizador.
 - **Error de apertura:** tras un disparo, `CameraEx` puede tardar hasta ~1 s en poder reabrirse; con un reintento no hay fallos (T045).
 - **Exposición — limitación medida ([E25-10](docs/capture/e25-10-exposicion-por-fila.md)):** sin cortina trasera, el sensor se reinicia a la vez y se lee por filas, y
   la exposición de la fila `i` es **T + ≈7 ms + 15,2 µs·i** (lectura completa ≈ 61 ms). Por eso, con ISO fijo, la velocidad no escala la exposición de 1/4000 a 1/500
-  y la fila inferior recibe hasta 3,7× la superior; de 1/60 en adelante el efecto pesa poco. No lo introduce B1a (ya se veía con la 3.22). Relación con `r5` de
-  E23 consistente pero sin demostrar: lograr exposición uniforme a velocidades rápidas exigiría reinicio por filas.
+  y la fila inferior recibe hasta 3,7× la superior; de 1/60 en adelante el efecto pesa poco. No lo introduce B1a (ya se veía con la 3.22). **T046 (parches en RAM) lo explica:**
+  con ShutMode 0 el reinicio es por filas, la exposición es uniforme y vale (4219 − `r5`) × 15,2 µs. Falta que la foto use ese modo con `r5` calculado a partir de la
+  velocidad y una vía permanente (el parche es de BIONZ, no de Darwin): E25-11.
 
 ## Límites y riesgos
 
