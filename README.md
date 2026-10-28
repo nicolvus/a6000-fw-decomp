@@ -75,6 +75,16 @@ propio firmware (ver [E25-05](docs/capture/e25-05-preparacion-paquetes-323-324.m
 **Volver atrás:** `analysis/darwin-patch/fdat/recuperacion-324/firmware_packed.dat` restaura el Darwin oficial como versión 3.24.
 Solo funciona si la cámara sigue llegando al actualizador.
 
+## Qué se ha medido en las imágenes (3.23)
+
+- **Imágenes completas:** la cámara guarda en la tarjeta el JPEG de 6000×4000 y el RAW (ARW) de 6024×4024, sin obturador mecánico. El callback de la
+  app de pruebas solo recibe un JPEG reducido de 1616×1080; las medidas serias se hacen sobre el ARW (T044).
+- **Disparo y rearme:** 36 de 36 disparos en ráfagas de 6 y 10 de 10 sueltos; rearme de 0,7–1,0 s entre disparos y latencia de 2,6–2,9 s a velocidades rápidas.
+- **Error de apertura:** tras un disparo, `CameraEx` puede tardar hasta ~1 s en poder reabrirse; con un reintento no hay fallos (T045).
+- **Exposición — limitación abierta (E25-10):** con ISO fijo la velocidad de obturación **no escala la exposición** de 1/4000 a 1/500 y apenas
+  a 1/250–1/125 (pendiente log2/log2 = 0,21; 1,0 sería ideal), y la exposición **crece con la fila**: a 1/4000 la fila superior recibe ≈ 27 % de la
+  inferior. Las velocidades lentas (≤ 1/60) se comportan mejor. Es consistente con el degradado de `r5` de E23, pero la causa no está aislada.
+
 ## Límites y riesgos
 
 - **Sin recuperación independiente de Darwin** ([E24-04](docs/capture/e24-04-dictamen-seguridad.md), [E25-04](docs/capture/e25-04-recuperabilidad-y-decision.md)):

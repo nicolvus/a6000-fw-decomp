@@ -1,22 +1,20 @@
 #!/usr/bin/env python3
 """Suite de verificación de imágenes con RemoteShutter v5: dispara y mide todo a la vez.
 
-Uso: camera_suite.py OUTDIR [--host 192.168.1.29] [--no-audio] [--quick]
+Uso: camera_suite.py OUTDIR [--host 192.168.1.29] [--quick]
 Por disparo mide: latencia disparo→JPEG, tamaño, EXIF, luminancia, saturación, franjas oscuras, gradiente por filas y bandas;
-en ráfagas, el intervalo de rearme; en el PC, el audio (micrófono) y el dmesg de la cámara antes/después.
+en ráfagas, el intervalo de rearme; y el dmesg de la cámara antes/después.
 No escribe RAM ni NVRAM ni drive_mode: solo `takePicture` y la velocidad (`/ss`). Genera report.json, report.md y montaje.jpg.
-El audio no está calibrado contra un obturador mecánico real: se informa como INFERENCIA, no como veredicto."""
+No se mide sonido: el obturador mecánico está desactivado por completo (B1a)."""
 import argparse
 import io
 import json
 import re
-import shutil
 import statistics
 import subprocess
 import sys
 import time
 import urllib.request
-import wave
 from pathlib import Path
 
 import numpy as np
@@ -25,7 +23,6 @@ from PIL import ExifTags, Image
 ap = argparse.ArgumentParser()
 ap.add_argument("out")
 ap.add_argument("--host", default="192.168.1.29")
-ap.add_argument("--no-audio", action="store_true")
 ap.add_argument("--quick", action="store_true")
 a = ap.parse_args()
 H = f"http://{a.host}:8080"
@@ -79,43 +76,6 @@ def dmesg() -> set[str]:
     return {line for line in telnet("dmesg").splitlines() if line.strip()}
 
 
-# ------------------------------------------------------------------ audio (PC)
-audio = None
-wav = OUT / "audio.wav"
-if not a.no_audio and shutil.which("pw-record"):
-    audio = subprocess.Popen(["pw-record", "--rate", "48000", "--channels", "1", str(wav)],
-                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    time.sleep(1.0)
-    audio_t0 = time.time()
-
-
-AUDIO_WIN: list[tuple[dict, float, float]] = []
-
-
-def audio_peaks(t_start: float, t_end: float) -> dict | None:
-    """Pico (dB sobre el suelo de ruido) y nº de transitorios en [t_start, t_end] (segundos de reloj del PC)."""
-    if audio is None or not wav.exists():
-        return None
-    try:
-        with wave.open(str(wav)) as w:
-            rate, raw = w.getframerate(), w.readframes(w.getnframes())
-    except wave.Error:
-        return None
-    x = np.frombuffer(raw, dtype=np.int16).astype(np.float32)
-    if len(x) < rate:
-        return None
-    win = rate // 100  # 10 ms
-    env = np.sqrt(np.convolve(x * x, np.ones(win) / win, mode="same")) + 1e-6
-    floor = float(np.median(env))
-    a0, a1 = int((t_start - audio_t0) * rate), int((t_end - audio_t0) * rate)
-    seg = env[max(a0, 0):max(a1, 0)]
-    if len(seg) == 0:
-        return None
-    db = 20 * np.log10(seg / floor)
-    ups = int(((db[1:] > 12) & (db[:-1] <= 12)).sum())
-    return {"peak_db": round(float(db.max()), 1), "transients": ups}
-
-
 # ------------------------------------------------------------------ medición
 report: dict = {"host": a.host, "inicio": time.strftime("%Y-%m-%d %H:%M:%S"), "shots": [], "bursts": []}
 report["info_inicial"] = info()["raw"]
@@ -161,8 +121,7 @@ for sp in SPEEDS:
         m = metrics(jpg)
         (OUT / f"{n_img:03d}_{n}_{d}_r{rep}.jpg").write_bytes(jpg)
         report["shots"].append({"speed": sp, "set": ss, "rep": rep, "ms": row["ms"], "reintentos_apertura": row["reintentos"], **m,
-                                "audio": None})
-        AUDIO_WIN.append((report["shots"][-1], row["t0"] + off - 0.2, row["t0"] + off + row["ms"] / 1000 + 0.3))
+                                })
         print(sp, rep, ss, row["ms"], "ms", m["lum"], "lum", m["sat_pct"], "% sat", flush=True)
 
 # Ráfagas: rearme sin pausa (gap 0) y con pausa
@@ -185,21 +144,13 @@ for n_b, gap, sp in ([(4, 0, "1/250")] if a.quick else [(8, 0, "1/250"), (5, 500
         lum.append(m["lum"])
         (OUT / f"{r['n']:03d}_burst_{n}_{d}.jpg").write_bytes(imgs[r["n"]])
     report["bursts"].append({"n": n_b, "gap_ms": gap, "speed": sp, "disparos": len(rows), "ms": [r["ms"] for r in rows], "reintentos_apertura": [r["reintentos"] for r in rows],
-                             "rearme_ms": gaps, "lum": lum, "audio": None,
-                             "estado_final": get("/status").decode().strip()})
-    AUDIO_WIN.append((report["bursts"][-1], ts, time.time()))
+                             "rearme_ms": gaps, "lum": lum, "estado_final": get("/status").decode().strip()})
     print("rafaga", n_b, gap, sp, len(rows), "disparos; ms", [r["ms"] for r in rows], flush=True)
 
 dm1 = dmesg()
 nuevas = sorted(dm1 - dm0)
 report["dmesg_nuevas"] = nuevas
 report["dmesg_errores"] = [line for line in nuevas if re.search(r"error|fail|oops|panic|watchdog|timeout|reset", line, re.IGNORECASE)]
-if audio:
-    audio.terminate()
-    audio.wait()
-    for entry, t0_, t1_ in AUDIO_WIN:
-        entry["audio"] = audio_peaks(t0_, t1_)
-
 # ------------------------------------------------------------------ veredicto
 sh, bu = report["shots"], report["bursts"]
 c = {
@@ -214,11 +165,9 @@ c = {
 }
 report["veredicto"] = c
 (OUT / "report.json").write_text(json.dumps(report, indent=1, ensure_ascii=False))
-lines = ["| velocidad | rep | ms | lum | sat % | oscuro % | bandas | audio pico dB / transitorios |", "|---|---|---|---|---|---|---|---|"]
+lines = ["| velocidad | rep | ms | lum | sat % | oscuro % | bandas |", "|---|---|---|---|---|---|---|"]
 for s in sh:
-    au = s["audio"]
-    lines.append(f"| {s['speed']} | {s['rep']} | {s['ms']} | {s['lum']} | {s['sat_pct']} | {s['dark_pct']} | {s['bandas']} | "
-                 + (f"{au['peak_db']} / {au['transients']}" if au else "-") + " |")
+    lines.append(f"| {s['speed']} | {s['rep']} | {s['ms']} | {s['lum']} | {s['sat_pct']} | {s['dark_pct']} | {s['bandas']} |")
 lines += ["", "| ráfaga | disparos | ms por disparo | rearme ms | reintentos de apertura | lum |", "|---|---|---|---|---|---|"]
 for b in bu:
     lines.append(f"| {b['n']}×{b['speed']} gap {b['gap_ms']} | {b['disparos']} | {b['ms']} | {b['rearme_ms']} | {b['reintentos_apertura']} | {b['lum']} |")

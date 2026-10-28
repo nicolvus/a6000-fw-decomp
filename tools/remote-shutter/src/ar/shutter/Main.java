@@ -31,7 +31,7 @@ public class Main extends Activity implements SurfaceHolder.Callback {
     private volatile long lastMs = -1;
     private volatile int openRetries;
     private final StringBuilder shotLog = new StringBuilder();  // CSV: n,t_inicio_ms,ms_hasta_jpeg,bytes
-    private static final String VERSION = "v5c";
+    private static final String VERSION = "v7";
     private TextView info;
     private String keyLog = "-";
 
@@ -122,6 +122,64 @@ public class Main extends Activity implements SurfaceHolder.Callback {
                 });
             } catch (Throwable t) { last = "shoot-error " + cause(t); Log.e(TAG, "shoot", t); release(); }
         }});
+    }
+
+    /** GET /params : getters sin argumentos de ParametersModifier (modo, ISO, EV...) y Camera.Parameters.flatten(). */
+    private synchronized String params() {
+        StringBuilder sb = new StringBuilder();
+        try {
+            Object pm = modifier();
+            for (Method m : pm.getClass().getMethods()) {
+                String n = m.getName();
+                if (m.getParameterTypes().length != 0 || !(n.startsWith("get") || n.startsWith("is")) || n.equals("getClass")) continue;
+                try { sb.append(n + "=" + render(m.invoke(pm)) + "\n"); } catch (Throwable t) { sb.append(n + "=err " + cause(t) + "\n"); }
+            }
+            sb.append("flatten=" + camera.getParameters().flatten() + "\n");
+        } catch (Throwable t) { sb.append("params-error " + cause(t)); }
+        return sb.toString();
+    }
+
+    private static String render(Object o) {
+        if (o instanceof java.util.List) return o.toString();
+        if (o instanceof android.util.Pair) return ((android.util.Pair<?, ?>) o).first + "/" + ((android.util.Pair<?, ?>) o).second;
+        return String.valueOf(o);
+    }
+
+    /** GET /iso?v=N : fija ISO con setISOSensitivity (0 = auto); sin v devuelve el valor actual. */
+    private synchronized String iso(int v) {
+        try {
+            Camera.Parameters prm = camera == null ? null : camera.getParameters();
+            if (prm == null) { open(); prm = camera.getParameters(); }
+            Object pm = cameraEx.getClass().getMethod("createParametersModifier", Camera.Parameters.class).invoke(cameraEx, prm);
+            if (v >= 0) { pm.getClass().getMethod("setISOSensitivity", int.class).invoke(pm, v); camera.setParameters(prm); }
+            Object pm2 = modifier();
+            return "iso " + pm2.getClass().getMethod("getISOSensitivity").invoke(pm2);
+        } catch (Throwable t) { Log.e(TAG, "iso", t); return "iso-error " + cause(t); }
+    }
+
+    /** GET /fmt?v=jpeg|raw|rawjpeg : formato de almacenamiento (setPictureStorageFormat); sin v devuelve el actual. */
+    private synchronized String fmt(String v) {
+        try {
+            Camera.Parameters prm = camera == null ? null : camera.getParameters();
+            if (prm == null) { open(); prm = camera.getParameters(); }
+            Object pm = cameraEx.getClass().getMethod("createParametersModifier", Camera.Parameters.class).invoke(cameraEx, prm);
+            if (v != null) { pm.getClass().getMethod("setPictureStorageFormat", String.class).invoke(pm, v); camera.setParameters(prm); }
+            Object pm2 = modifier();
+            return "fmt " + pm2.getClass().getMethod("getPictureStorageFormat").invoke(pm2);
+        } catch (Throwable t) { Log.e(TAG, "fmt", t); return "fmt-error " + cause(t); }
+    }
+
+    /** GET /reopen?n=&gap= : n ciclos abrir/liberar CameraEx sin disparar; cuenta fallos (aísla el error de apertura de takePicture). */
+    private String reopen(int n, int gap) {
+        StringBuilder sb = new StringBuilder();
+        int fails = 0;
+        for (int i = 0; i < n; i++) {
+            long t0 = android.os.SystemClock.elapsedRealtime();
+            try { release(); open(); sb.append("ok:" + (android.os.SystemClock.elapsedRealtime() - t0) + " "); }
+            catch (Throwable t) { fails++; sb.append("FAIL(" + cause(t) + "):" + (android.os.SystemClock.elapsedRealtime() - t0) + " "); }
+            try { release(); Thread.sleep(gap); } catch (Throwable t) { /* sigue */ }
+        }
+        return "reopen n=" + n + " gap=" + gap + " fails=" + fails + " " + sb;
     }
 
     /** GET /burst?n=&gap= : n disparos seguidos (gap ms entre ellos); cada uno espera su JPEG. Mide el rearme. Resultado en /log. */
@@ -330,7 +388,11 @@ public class Main extends Activity implements SurfaceHolder.Callback {
                         o.write(("HTTP/1.0 200 OK\r\n\r\n" + VERSION + " speed=" + sp + " count=" + count + " lastMs=" + lastMs + " bursting=" + bursting + " t=" + android.os.SystemClock.elapsedRealtime() + "\n").getBytes());
                         o.close(); s.close(); continue;
                     }
-                    if (req.startsWith("GET /burst")) burst(q(req, "n", 5), q(req, "gap", 0));
+                    if (req.startsWith("GET /params")) last = params();
+                    else if (req.startsWith("GET /iso")) last = iso(q(req, "v", -1));
+                    else if (req.startsWith("GET /fmt")) { int a = req.indexOf("v="); last = fmt(a < 0 ? null : req.substring(a + 2).split("[ &]")[0]); }
+                    else if (req.startsWith("GET /reopen")) last = reopen(q(req, "n", 10), q(req, "gap", 0));
+                    else if (req.startsWith("GET /burst")) burst(q(req, "n", 5), q(req, "gap", 0));
                     else if (req.startsWith("GET /ss")) last = ss(q(req, "n", 1), q(req, "d", 60));
                     else if (req.startsWith("GET /nr")) last = nr(q(req, "v", 0) == 1);
                     else if (req.startsWith("GET /shoot")) shoot();
