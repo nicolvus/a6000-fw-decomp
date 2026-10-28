@@ -3034,3 +3034,8 @@ W1 copia `plan[0x13f..0x142]` byte a byte y `plan+0x142`=2×lookup (8/8 ramas): 
 ## E25-21 — SetExposure a P2S (2026-10-28)
 
 Se reprodujo el transporte de parámetros con SetExposure y formateador P2S reales emulados, en una instancia: [informe](../docs/capture/e25-21-setexposure-p2s.md), `scripts/e25_21/traza.py`. La frontera observada es el disparo MMIO del P2S; sin prueba de fin electrónico o RAW. Siguiente paso exacto: rastrear el consumidor indirecto de `0x43e849c0+0x40` y correlacionar sus salidas con el disparo de lectura; no inferir semántica del sensor por nombres.
+
+
+## E25-22 — Protocolo físico (2026-10-28)
+
+Telnet y RemoteShutter bloqueados por el entorno (EPERM); sin conexión ni disparo. [Protocolo](../docs/capture/e25-22-protocolo-transporte-fisico.md): sombras RAM candidatas e identificación de dependencia para traza pasiva del bus, sin leer MMIO. Próximo paso exacto: obtener acceso permitido a la cámara para verificar GOT y sombras; para probar llegada al sensor, confirmar puntos/tensiones del bus y capturar señales pasivamente con autorización física específica.
