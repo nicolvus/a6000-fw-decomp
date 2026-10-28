@@ -16,6 +16,7 @@ flasheo salvo autorización expresa del usuario para un caso concreto.
 ## Estado actual
 
 - **E25-22:** dos capturas normales en una escena nueva; sombras y `cap` compatibles con shd=1/svd=0 durante la foto larga, sin prueba de envío P2S ni de integración electrónica. [Informe](../docs/capture/e25-22-protocolo-transporte-fisico.md); plan nativo por foto y trazado eléctrico pendientes.
+- **Carril GUI (G1, independiente del obturador):** la interfaz vive en el userland Linux, no en `av-cam.bin`: `bin/im.elf` carga por `dlopen` `/usr/lib/libObj.so` (motor `ux::`, 17,4 MB, 17 `DT_NEEDED`), que abre `viewUnified2..8.so` y 238 recursos de `share/app`. Tabla PLT resuelta (2 419/2 420 importados), `GraphicsEngine::updateResource` trazado; compositor y `/dev/fb0` en INFERENCIA. REA no puede abrir `libObj.so` (plazo de 900 s). Pendientes G2–G8 en [PENDIENTES](../docs/PENDIENTES.md); mapa en [docs/gui/README.md](../docs/gui/README.md).
 
 - **Decisión [S51](../docs/capture/s51-decision.md): A=NO, B=NO, C=NO.** No hay ruta de exposición totalmente electrónica
   demostrada (A), ni base para un parche justificable (B), ni prueba de imposibilidad por hardware (C). Sin cambios desde S51.
@@ -145,12 +146,21 @@ Para la trazabilidad completa: [CORRECTIONS](../docs/CORRECTIONS.md) y [STATE §
 - Valores en ejecución (rectángulos de `[EXL]`, contenido de Backup, `params[+9]` = 2/3, activación de RecordImage) no salen del binario.
 - Cobertura del censo (133/372) y 3521 pruebas aprobadas (C4, sin re-verificar hoy) no acreditan funcionamiento en cámara.
 
+## EFCS REA — hallazgos nuevos (28-10-2026)
+
+Mapa completo de EFCS reconstruido mediante REA sobre `av-cam.bin` (9 funciones, grafo de llamadas, campos `cap`/`record`). Evidencia en `analysis/efcs-reia/evidence/`. Informe: `docs/capture/efcs-darwin-silent-integracion.md`.
+
+- **Productor nativo r5** `0x4383fa40`: calcula `r5 = frame − líneas`, `ShutMode = 0`, `svd = frames−1` desde Tv, período, VTS. Llamado por constructor normal y EFCS. Emulado vs T047: ±1 línea. **VERIFICADO**.
+- **EFCS → Darwin**: BIONZ envía ID `0x0c` y mensaje `0x107` (vía `0x43901a8c`); Darwin responde `0x0e` (ExposureReady). Con B1a (tipo 0), Darwin no mueve P4D/P4E. Sin diferencia en Darwin con/sin EFCS. **VERIFICADO (BIONZ) / INFERENCIA (Darwin)**.
+- **Recomendación**: Alternativa B — enganche C3 en `0x438c82a0`/`0x438c82fe` (tras `0x437f8a50`, antes de `0x436d6320`) que ejecute `0x4383fa40` sobre scratch y escriba `cap+0x64c` (r5) + `cap+0x655` (ShutMode=0) solo en paso 0 de foto. Darwin B1a (3.23) intacto. Para ≤1/30 s. **Probabilidad estimada: ALTA**.
+
 ## Próximos pasos concretos
 
 1. Si se reabre lo estático: seguir el productor de `0x10000005` hasta la entrada de estado 2 de `StateMgr` y `0x90de2e → RecordImage`;
    fijar tamaño/contenido de Backup `0x3000b` antes de atribuir valores a los gates `+3/+6`; enlaces IMX210/YC/archivo/cortina y cuerpos locales de RecordStill (ocho parejas).
 2. Pedir al usuario: hojas de datos (D5), mapa de pines (E11), copia externa y verificación (R1), decisión sobre historial (R3), P10 (offset del campo de captura), medir ráfaga y verificar `sio3/sio4` si se quiere seguir con la cámara.
-3. Mantener la documentación según el protocolo de abajo.
+3. Ejecutar T052 fase A (solo lectura: `record+0x20`, `+0xc`, `+0x1c`, `cap+0x11b0`) y fase B (RAM, enganche C3) con autorización expresa.
+4. Mantener la documentación según el protocolo de abajo.
 
 ## Protocolo de sesión
 

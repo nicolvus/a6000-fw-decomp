@@ -1,0 +1,2165 @@
+{
+ "generated_by": "scripts/gui/inventory.py",
+ "root": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked",
+ "libs": {
+  "libObj.so": {
+   "bytes": 17436172,
+   "sha256": "8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a",
+   "dyn_defined_symbols": 1814,
+   "layers": {
+    "CmnViewMenuData": 23,
+    "DefRootView": 22,
+    "HighlightManager": 19,
+    "InputService": 36,
+    "LayoutableWidgetBase": 45,
+    "ScalarView": 17,
+    "ViewBase": 53,
+    "stella": 3,
+    "ux::animeng": 1,
+    "ux::core": 21,
+    "ux::gfxeng": 28,
+    "ux::resmgr": 12,
+    "ux::wgtlay": 102
+   },
+   "needed": [
+    "libInfraFsys.so",
+    "libmprctrl.so",
+    "libMWF.so",
+    "libmpr.so",
+    "libutil_date.so",
+    "libcompassutil.so",
+    "libsencore.so",
+    "libBizFw.so",
+    "libBizFw2.so",
+    "libNetContUtil.so",
+    "libUsbControl.so",
+    "libNetCommon.so",
+    "libGOConnectionManager.so",
+    "libInfraMediaCommon.so",
+    "libbackup.so",
+    "libgcc_s.so.1",
+    "libc.so.6"
+   ],
+   "gui_strings": [
+    "/dev/fb0",
+    "/usr/share/app/",
+    "/usr/share/appfw_infra/infra_tp_key_emulation.txt",
+    "Can not use framebuffer",
+    "ux::wgtlay::Layout::create(): LayoutConveter is not set. <UX_LOG_ERROR>",
+    "ux::wgtlay::Layout::swtichLayout(): LayoutConveter is not set. <UX_LOG_ERROR>",
+    "ux::wgtlay::LayoutGroupManager::openLayout(): LayoutConveter and uxc is not match. <LayoutGroupID %lu, LayoutID %lu> <UX_LOG_ERROR>"
+   ]
+  },
+  "viewUnified2.so": {
+   "bytes": 4953524,
+   "sha256": "7fbfa8539717ba3dca0cb5a82cf976b50a2b97443972fe321a064cbb09a75588",
+   "dyn_defined_symbols": 1450,
+   "layers": {
+    "CmnMenuTableUtil": 13
+   },
+   "needed": [
+    "CautionConfig.so",
+    "libgcc_s.so.1",
+    "libc.so.6"
+   ],
+   "gui_strings": []
+  },
+  "viewUnified3.so": {
+   "bytes": 398464,
+   "sha256": "80ae3b94db5413dc15a00a845ffb0fd82558f1d946d04a37839061e8a8612127",
+   "dyn_defined_symbols": 19,
+   "layers": {},
+   "needed": [
+    "libgcc_s.so.1",
+    "libc.so.6"
+   ],
+   "gui_strings": []
+  },
+  "viewUnified4.so": {
+   "bytes": 1784836,
+   "sha256": "149282ac0f1e1a1cf1ef7302214c6ab843e889945ce613cc9e7ec15823fd26e1",
+   "dyn_defined_symbols": 83,
+   "layers": {},
+   "needed": [
+    "libgcc_s.so.1",
+    "libc.so.6"
+   ],
+   "gui_strings": []
+  },
+  "viewUnified5.so": {
+   "bytes": 549852,
+   "sha256": "5c1f69ff5055a928c7ee5da0741dc9df23b737d4985131231494bcce952e10d2",
+   "dyn_defined_symbols": 21,
+   "layers": {},
+   "needed": [
+    "libgcc_s.so.1",
+    "libc.so.6"
+   ],
+   "gui_strings": []
+  },
+  "viewUnified6.so": {
+   "bytes": 394432,
+   "sha256": "13f18bf054f85c494f6237654d9acbe6d6f8cb470b43c1979682ded797ca9796",
+   "dyn_defined_symbols": 21,
+   "layers": {},
+   "needed": [
+    "libgcc_s.so.1",
+    "libc.so.6"
+   ],
+   "gui_strings": []
+  },
+  "viewUnified7.so": {
+   "bytes": 366676,
+   "sha256": "ca581f5a23361d0a0467e4ae02415281dd61dfd39dfa7bd2bea47f93da8858b1",
+   "dyn_defined_symbols": 17,
+   "layers": {},
+   "needed": [
+    "libgcc_s.so.1",
+    "libc.so.6"
+   ],
+   "gui_strings": []
+  },
+  "viewUnified8.so": {
+   "bytes": 240764,
+   "sha256": "5dcd54082f3e3941fee14f905da0d5638da31e5fd8610a2b7f16c3ff6565f452",
+   "dyn_defined_symbols": 19,
+   "layers": {},
+   "needed": [
+    "libgcc_s.so.1",
+    "libc.so.6"
+   ],
+   "gui_strings": []
+  },
+  "cmn_menuTableUtil.so": {
+   "bytes": 9912,
+   "sha256": "832c45e2bf85391a04376309cbfcdd634800f5e87ee957fd48a2221dbf515038",
+   "dyn_defined_symbols": 50,
+   "layers": {
+    "CmnMenuTableUtil": 21,
+    "stella": 18
+   },
+   "needed": [
+    "libpthread.so.0",
+    "libstdc++.so.6",
+    "libm.so.6",
+    "libdl.so.2",
+    "libgcc_s.so.1",
+    "libc.so.6",
+    "librt.so.1"
+   ],
+   "gui_strings": []
+  },
+  "cmnviewViewModel.so": {
+   "bytes": 12144,
+   "sha256": "c0acc5c89cb8d20bd8776efcf9c7bca18cf168c0c6ec1ad2f6ee64314c6a11e0",
+   "dyn_defined_symbols": 76,
+   "layers": {
+    "stella": 18
+   },
+   "needed": [
+    "libpthread.so.0",
+    "libstdc++.so.6",
+    "libm.so.6",
+    "libdl.so.2",
+    "libgcc_s.so.1",
+    "libc.so.6",
+    "librt.so.1"
+   ],
+   "gui_strings": []
+  },
+  "cmn_view_processDataMgr.so": {
+   "bytes": 598400,
+   "sha256": "e2968b2836edd55c3e033ff077c05a54413dda227ee70a791345c180a3eecaf0",
+   "dyn_defined_symbols": 2840,
+   "layers": {
+    "stella": 18
+   },
+   "needed": [
+    "libpthread.so.0",
+    "libstdc++.so.6",
+    "libm.so.6",
+    "libdl.so.2",
+    "libgcc_s.so.1",
+    "libc.so.6",
+    "librt.so.1"
+   ],
+   "gui_strings": []
+  },
+  "cmnviewMRUtil.so": {
+   "bytes": 80620,
+   "sha256": "7e544afb630e88c964bd3b1f9b6d5e846c5c719c4cbf78753c6f9d50410ac4db",
+   "dyn_defined_symbols": 293,
+   "layers": {
+    "stella": 18
+   },
+   "needed": [
+    "libpthread.so.0",
+    "libstdc++.so.6",
+    "libm.so.6",
+    "libdl.so.2",
+    "libgcc_s.so.1",
+    "libc.so.6",
+    "librt.so.1"
+   ],
+   "gui_strings": []
+  },
+  "CmnShootingInfoLayoutMgr.so": {
+   "bytes": 31124,
+   "sha256": "921acc34620f07c8b903235eb45933b1cd89ad932c0c06a28d8eb0ed6dc86235",
+   "dyn_defined_symbols": 88,
+   "layers": {
+    "stella": 18
+   },
+   "needed": [
+    "libpthread.so.0",
+    "libstdc++.so.6",
+    "libm.so.6",
+    "libdl.so.2",
+    "libgcc_s.so.1",
+    "libc.so.6",
+    "librt.so.1"
+   ],
+   "gui_strings": []
+  },
+  "CmnViewIroiroConDataMgr.so": {
+   "bytes": 10660,
+   "sha256": "c9baf8a5a72b597cca085902d4355e900c85bb9187eed289d23d30d82c260b21",
+   "dyn_defined_symbols": 67,
+   "layers": {
+    "stella": 18
+   },
+   "needed": [
+    "libpthread.so.0",
+    "libstdc++.so.6",
+    "libm.so.6",
+    "libdl.so.2",
+    "libgcc_s.so.1",
+    "libc.so.6",
+    "librt.so.1"
+   ],
+   "gui_strings": []
+  },
+  "cmnFnWrapper.so": {
+   "bytes": 37920,
+   "sha256": "c709b95a8d6f3b34bcb799052870081fa60828ea9b527916086c117aa291a454",
+   "dyn_defined_symbols": 107,
+   "layers": {
+    "stella": 18
+   },
+   "needed": [
+    "libpthread.so.0",
+    "libstdc++.so.6",
+    "libm.so.6",
+    "libdl.so.2",
+    "libgcc_s.so.1",
+    "libc.so.6",
+    "librt.so.1"
+   ],
+   "gui_strings": []
+  },
+  "zakoMenuUtil.so": {
+   "bytes": 13040,
+   "sha256": "4c860e78e036b7a474b103628d0a6b267d5a2bbd0e82fc2abed947ccc2d4d7e2",
+   "dyn_defined_symbols": 60,
+   "layers": {
+    "stella": 18
+   },
+   "needed": [
+    "libpthread.so.0",
+    "libstdc++.so.6",
+    "libm.so.6",
+    "libdl.so.2",
+    "libgcc_s.so.1",
+    "libc.so.6",
+    "librt.so.1"
+   ],
+   "gui_strings": []
+  },
+  "libScalarDaemon.so": {
+   "bytes": 1883224,
+   "sha256": "ca28cbf4c5c6402160ad80f6ad9f5e99052f42c3fabc382c557fcded18addc29",
+   "dyn_defined_symbols": 7341,
+   "layers": {
+    "stella": 18
+   },
+   "needed": [
+    "libsdcom.so",
+    "libpthread.so.0",
+    "libstdc++.so.6",
+    "libm.so.6",
+    "libdl.so.2",
+    "libgcc_s.so.1",
+    "libc.so.6",
+    "librt.so.1"
+   ],
+   "gui_strings": []
+  },
+  "libmintx.so": {
+   "bytes": 1502248,
+   "sha256": "a988cd8ae5276ee1c848f040263c452515c04623908f65e6f5c1a23988cdff53",
+   "dyn_defined_symbols": 10359,
+   "layers": {},
+   "needed": [
+    "libexpat.so.1",
+    "libpthread.so.0",
+    "libstdc++.so.6",
+    "libm.so.6",
+    "libdl.so.2",
+    "libgcc_s.so.1",
+    "libc.so.6",
+    "librt.so.1"
+   ],
+   "gui_strings": []
+  }
+ },
+ "resources": {
+  "files": 238,
+  "total_bytes": 55175204,
+  "prefixes": {
+   "HeiseiKakuGothW5-SJ": 1,
+   "IRShooting": 1,
+   "LayoutMaster": 1,
+   "MYingHeiC-Big5-SJ": 1,
+   "MYingHeiC-GB18030-SJ": 1,
+   "MYingHeiC-KSX1001-SJ": 1,
+   "Sony": 1,
+   "UniversOTS-SJ": 1,
+   "color": 1,
+   "fontlist": 1,
+   "global": 1,
+   "image": 8,
+   "lang": 2,
+   "master": 4,
+   "string": 66,
+   "style": 1,
+   "view24pMode": 1,
+   "view3DPb": 1,
+   "viewAccessPoint": 1,
+   "viewAfAdjustment": 1,
+   "viewAnimation360": 1,
+   "viewAreaSet": 1,
+   "viewArtFilter": 1,
+   "viewAspectRatio": 1,
+   "viewAudioRecLevel": 1,
+   "viewAutoPlay": 1,
+   "viewAutoPlaySetting": 1,
+   "viewAutoRepair": 1,
+   "viewAutoSelection": 1,
+   "viewBaseMenu": 1,
+   "viewBeautyEffect": 1,
+   "viewCalibration": 1,
+   "viewCaution": 1,
+   "viewCertificationLogo": 1,
+   "viewCleaningMode": 1,
+   "viewCommonShootingSetting": 1,
+   "viewContPriorityExpMode": 1,
+   "viewCreateFolder": 1,
+   "viewCreativeStyle": 1,
+   "viewCustomWB": 1,
+   "viewDateSet": 1,
+   "viewDeleteAllIn4Single": 1,
+   "viewDeleteSelected4Index": 1,
+   "viewDeleteSelected4Single": 1,
+   "viewDeleteThis4Index": 1,
+   "viewDeleteThis4Single": 1,
+   "viewDeleteThisConfirm4Index": 1,
+   "viewDemoMoviePb": 1,
+   "viewDgtlZoomSetting": 1,
+   "viewDpofCancelAll": 1,
+   "viewDpofPhotoBookDatePrint": 1,
+   "viewDpofPhotoBookSelected4Index": 1,
+   "viewDpofPhotoBookSelected4Single": 1,
+   "viewDpofSetting": 1,
+   "viewDro": 1,
+   "viewEpo": 1,
+   "viewEvfAdjustment": 1,
+   "viewEvfBrightness": 1,
+   "viewExposureCompensation": 1,
+   "viewFaceDetection": 1,
+   "viewFlash": 1,
+   "viewFlashLevel": 1,
+   "viewFnMenu": 1,
+   "viewFocusArea": 2,
+   "viewFocusControl": 1,
+   "viewFocusMagnification": 1,
+   "viewFocusMagnificationMovie": 1,
+   "viewFocusMode": 1,
+   "viewFocusSet": 1,
+   "viewFormat": 1,
+   "viewGlobalMenu": 1,
+   "viewGpsInfo": 1,
+   "viewGpsTest": 1,
+   "viewGpsTracker": 1,
+   "viewGroupSelectionCalendar": 1,
+   "viewGroupSelectionFolder": 1,
+   "viewIREditOne": 1,
+   "viewImageRotate": 1,
+   "viewIndexPb": 1,
+   "viewIndividualRecognition": 1,
+   "viewInitialSetting": 1,
+   "viewIroiroCon": 1,
+   "viewIsoSensitivity": 1,
+   "viewKeyboard": 1,
+   "viewLcdBrightness": 1,
+   "viewLensRing": 1,
+   "viewManualControlDial": 1,
+   "viewManualRepair": 1,
+   "viewManualRepairForPlay": 1,
+   "viewMediaCopy": 1,
+   "viewMediaFileMgmt": 1,
+   "viewMeteringmode": 1,
+   "viewModeDialGuide": 1,
+   "viewMonitorBrightness": 1,
+   "viewMotionAdjustment": 1,
+   "viewMotionVideo": 1,
+   "viewMovieExpMode": 1,
+   "viewMoviePb": 1,
+   "viewMoviePreview": 1,
+   "viewNoImage": 1,
+   "viewNtscPalSEL": 1,
+   "viewObjectTracking": 1,
+   "viewObjecttrackingBase": 1,
+   "viewPanoramaMode": 1,
+   "viewPanoramaPb": 1,
+   "viewPanoramaStl": 1,
+   "viewPictureEffectPb": 1,
+   "viewPlayingMedia": 1,
+   "viewPortraitFraming": 1,
+   "viewProtectAll": 1,
+   "viewProtectSelected4Index": 1,
+   "viewProtectSelected4Single": 1,
+   "viewQuickNavi": 1,
+   "viewRecCustomReset": 1,
+   "viewRecDriveMode": 1,
+   "viewRecRecordingMedia": 1,
+   "viewRecSteadyShot": 1,
+   "viewRecovery": 1,
+   "viewRemoteCameraControl": 1,
+   "viewRichHelpGuide": 1,
+   "viewRootPowerSw": 1,
+   "viewSalvageRestore": 1,
+   "viewScnSelection": 1,
+   "viewSelectContentType": 1,
+   "viewSelectFolder": 1,
+   "viewSendSelected4Index": 1,
+   "viewSendSelected4Single": 1,
+   "viewSendToComputer": 1,
+   "viewSendToSmartphone": 1,
+   "viewSettingMenu": 1,
+   "viewSettingReset": 1,
+   "viewSettingSave": 1,
+   "viewSetupCustomFunction": 1,
+   "viewShootingInfoDisp": 1,
+   "viewSinglePb": 1,
+   "viewSinglePb4K": 1,
+   "viewSmileShutter": 1,
+   "viewSnapShotBoot": 1,
+   "viewSoftSkin": 1,
+   "viewStillImageQuality": 1,
+   "viewStillImageSize": 1,
+   "viewStlrec": 1,
+   "viewTriDial": 1,
+   "viewUsbAuto": 1,
+   "viewUsbMTP": 1,
+   "viewUsbMassStorage": 1,
+   "viewUsbRemotePc": 1,
+   "viewUserUpdate": 1,
+   "viewVersionNumber": 1,
+   "viewViewOnTVForConnect": 1,
+   "viewViewOnTVForSinglePb": 1,
+   "viewViewOnTVForSlideShow": 1,
+   "viewViewOnTVForSlideShowSetting": 1,
+   "viewVolume": 1,
+   "viewWaterProof": 1,
+   "viewWhiteBalance": 1,
+   "viewWidgetTest": 1,
+   "viewWlanTest": 1,
+   "viewZoomPb": 1,
+   "viewmovierecpatch": 2
+  },
+  "entries": [
+   {
+    "name": "HeiseiKakuGothW5-SJ_wIcon.ltt",
+    "bytes": 851496,
+    "magic": "LTT\n",
+    "header_hex": "4c54540a370a320a466f6e742d6c696e",
+    "sha256": "dc38182754d8bf705990b13bb43c835bd707a4c5ee8854d33b24f731241913a8"
+   },
+   {
+    "name": "IRShooting.uxc",
+    "bytes": 7124,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800100008800000",
+    "sha256": "c92fbfc7f95a18a2a37c12775f4e961d3339a2cbf92ed2fc6963a62ecef6564f"
+   },
+   {
+    "name": "LayoutMaster_Menu.uxc",
+    "bytes": 3512,
+    "magic": "uxc",
+    "header_hex": "757863070000000008008f000f000100",
+    "sha256": "457e729566bce143768d4e15ca4dc2569b31d2dfd585d4b1010385ae2ca5b8a3"
+   },
+   {
+    "name": "MYingHeiC-Big5-SJ_wIcon.ltt",
+    "bytes": 1150740,
+    "magic": "LTT\n",
+    "header_hex": "4c54540a370a320a466f6e742d6c696e",
+    "sha256": "2740050df983d5c34ff9b2b6877410716126972cda5922b1a4167ed583260276"
+   },
+   {
+    "name": "MYingHeiC-GB18030-SJ_wIcon.ltt",
+    "bytes": 1958432,
+    "magic": "LTT\n",
+    "header_hex": "4c54540a370a320a466f6e742d6c696e",
+    "sha256": "047a37d03531da0607506c01626d70bb62935019bcfddd76878b99922d8d13e4"
+   },
+   {
+    "name": "MYingHeiC-KSX1001-SJ_wIcon.ltt",
+    "bytes": 924104,
+    "magic": "LTT\n",
+    "header_hex": "4c54540a370a320a466f6e742d6c696e",
+    "sha256": "4d18759f50080f4118f9b69f780a1657756a086a8405d70fa56c6fd4de23c65b"
+   },
+   {
+    "name": "Sony_DI_Icons.ttf",
+    "bytes": 481960,
+    "magic": "\u0000\u0001\u0000\u0000",
+    "header_hex": "00010000000c0080000300404f532f32",
+    "sha256": "40877833eb4fc25cafc663aff05affb2350fcf1f2959ce734ede06c95ad79c16"
+   },
+   {
+    "name": "UniversOTS-SJ_wIcon.ltt",
+    "bytes": 379996,
+    "magic": "LTT\n",
+    "header_hex": "4c54540a370a320a466f6e742d6c696e",
+    "sha256": "1c2cafe48af174b66cad5a95002d2a376e1999ba6a86a655ece65a5c95f64291"
+   },
+   {
+    "name": "color_cmn.uxc",
+    "bytes": 276,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004a001ee00100",
+    "sha256": "5b98a4424bbb7f6a0dc4cdad65d98f2377b2a160962c76b1edb7ea59d5f84ef5"
+   },
+   {
+    "name": "fontlist.dat",
+    "bytes": 364,
+    "magic": "FONT",
+    "header_hex": "464f4e545f554e4956455253092f7573",
+    "sha256": "14bb64de457efc052e63d9864b2bb16e00e4402f7bb8ca5cab437af25eb9bc76"
+   },
+   {
+    "name": "global.xdb",
+    "bytes": 10540,
+    "magic": "uxa",
+    "header_hex": "757861070000000009000000ca401900",
+    "sha256": "40c60c0c60122ae9496da613f7f80335946e66a1020b2c555d1c46259412bb61"
+   },
+   {
+    "name": "image_DSC_Entry_Only_169.uxc",
+    "bytes": 1693452,
+    "magic": "uxd\u0007",
+    "header_hex": "75786407000000000800650095633900",
+    "sha256": "81cdf01be13f44505b863609c8b187f0a3bab34401ddacfeb0ffcb5e45ab9203"
+   },
+   {
+    "name": "image_DSC_Only_169.uxc",
+    "bytes": 1952272,
+    "magic": "uxd\u0007",
+    "header_hex": "75786407000000000800670099a33900",
+    "sha256": "c0f9c45abaa546d80c1d3a6f28282e6379c532740c1e7df9ea4a379790a006d0"
+   },
+   {
+    "name": "image_DSLR_Only_169.uxc",
+    "bytes": 1666736,
+    "magic": "uxd\u0007",
+    "header_hex": "75786407000000000800660014433100",
+    "sha256": "3e0443f59602c3ac80dd40941abc6535a9ce66df4e4d47f1548383be5f2825c2"
+   },
+   {
+    "name": "image_EVF.uxc",
+    "bytes": 2097148,
+    "magic": "uxd\u0007",
+    "header_hex": "757864070000000008007400ede77e00",
+    "sha256": "e9690ae2d5d87eadf85af6561dd412907a4f50a02c4689d6f50e0fa9bea99f0f"
+   },
+   {
+    "name": "image_Fn_Menu_169.uxc",
+    "bytes": 153036,
+    "magic": "uxd\u0007",
+    "header_hex": "75786407000000000800310034411300",
+    "sha256": "d56c4e5f0859288f2b1f3ccf9187c622ec13bb22335c5844c5fff1d61586a399"
+   },
+   {
+    "name": "image_Rich_Help_Guide_169.uxc",
+    "bytes": 4851952,
+    "magic": "uxd\u0007",
+    "header_hex": "757864070000000008006a00cee00c00",
+    "sha256": "ac5d464dd383d8150b24eee722daa1dd6c7a32efefc7c6604a39d96d78ecbe71"
+   },
+   {
+    "name": "image_cmn_169.uxc",
+    "bytes": 25204848,
+    "magic": "uxd\u0007",
+    "header_hex": "757864070000000008002e00989cc901",
+    "sha256": "3eb42cd41dceb80d4459d0374cf5a6b9259cb8683742ae3a8e211fcbb20bed7c"
+   },
+   {
+    "name": "image_cmn_o_direct_169.uxc",
+    "bytes": 1229312,
+    "magic": "uxd\u0007",
+    "header_hex": "7578640700000004080082000aa00000",
+    "sha256": "9cae4c7905e0f2afe573ce1780c8d09a9bb9672ecf7d428a008929501b47c407"
+   },
+   {
+    "name": "lang.uxb",
+    "bytes": 2656,
+    "magic": "uxb",
+    "header_hex": "757862070000000009003b0021200400",
+    "sha256": "2d27fc6fc5351304d7c8cb1df5141a3368705b43f663744bd1570ab0ce974f01"
+   },
+   {
+    "name": "lang_cmn.uxc",
+    "bytes": 980,
+    "magic": "uxc",
+    "header_hex": "7578630700000000080033002cc00200",
+    "sha256": "714206871da0e2dfd8f6c1dee42ca5fde11bb4d0cd7dd717b87c0c7c1f2586b9"
+   },
+   {
+    "name": "master_browser.uxc",
+    "bytes": 21192,
+    "magic": "uxc",
+    "header_hex": "757863070000000008003e0030000300",
+    "sha256": "69cbfc325d8a3e2dce342eddd45166cd95ab3b6a9b369f8cf005ecc48c171fe7"
+   },
+   {
+    "name": "master_camera.uxc",
+    "bytes": 102244,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004e0044411400",
+    "sha256": "e2d81e5b7fbbc3ba6f4b362b5e6a68744b4ca3ae1bade5f2fea77d5828bb9f26"
+   },
+   {
+    "name": "master_network.uxc",
+    "bytes": 30196,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800910070000700",
+    "sha256": "3e457ddb30c6c18f248fc0ef0f2be4c06fa5c7ab1fc3691fbd851b0501b8a2ce"
+   },
+   {
+    "name": "master_other.uxc",
+    "bytes": 12616,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800060035600300",
+    "sha256": "ed6c284ccb3338ff8cb69c49542106e6601afa114b5c84f93c469ffb8bec0421"
+   },
+   {
+    "name": "string_arabic.uxc",
+    "bytes": 329956,
+    "magic": "uxc",
+    "header_hex": "75786307000000000f00270046974102",
+    "sha256": "8d54df42c5c9a3b1cb2c872d1aea14426f0f9a63c77dd84c574d9ee953071d42"
+   },
+   {
+    "name": "string_arabic_guide.uxc",
+    "bytes": 6612,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "bd139df55508b2bd5f14d80ed9b3a28e7b4866d2081d1b622580563925f8147a"
+   },
+   {
+    "name": "string_brazilianportuguese.uxc",
+    "bytes": 216876,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800270046777401",
+    "sha256": "37765329ccc417844ea9b9cb3acbac8c2dde17f3240b07f9d8faac540ccf649f"
+   },
+   {
+    "name": "string_brazilianportuguese_guide.uxc",
+    "bytes": 6612,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "bd139df55508b2bd5f14d80ed9b3a28e7b4866d2081d1b622580563925f8147a"
+   },
+   {
+    "name": "string_bulgarian.uxc",
+    "bytes": 340460,
+    "magic": "uxc",
+    "header_hex": "75786307000000000f00270046f74502",
+    "sha256": "dd16b1f8433540c8cebc846de9b3c7482e26493a7c8410269d0360489e132e49"
+   },
+   {
+    "name": "string_bulgarian_guide.uxc",
+    "bytes": 6612,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "bd139df55508b2bd5f14d80ed9b3a28e7b4866d2081d1b622580563925f8147a"
+   },
+   {
+    "name": "string_canadianfrench.uxc",
+    "bytes": 230420,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800270046777401",
+    "sha256": "b9c3f5e532dabee78c18a10f33f25719958c95444c3cd81ba15a90b24534e5bb"
+   },
+   {
+    "name": "string_canadianfrench_guide.uxc",
+    "bytes": 6612,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "bd139df55508b2bd5f14d80ed9b3a28e7b4866d2081d1b622580563925f8147a"
+   },
+   {
+    "name": "string_croatian.uxc",
+    "bytes": 207816,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800270046777401",
+    "sha256": "a52d3003acb8519943756688d8943eda818012e31487f1a20bb7505a3aafbbab"
+   },
+   {
+    "name": "string_croatian_guide.uxc",
+    "bytes": 6612,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "bd139df55508b2bd5f14d80ed9b3a28e7b4866d2081d1b622580563925f8147a"
+   },
+   {
+    "name": "string_czech.uxc",
+    "bytes": 241056,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800270046777401",
+    "sha256": "5c61fb442f1d528b3e58d52bbbe209d910b4f3b2378551ddacb59cecb08f3f3c"
+   },
+   {
+    "name": "string_czech_guide.uxc",
+    "bytes": 6612,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "bd139df55508b2bd5f14d80ed9b3a28e7b4866d2081d1b622580563925f8147a"
+   },
+   {
+    "name": "string_danish.uxc",
+    "bytes": 229804,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800270046777401",
+    "sha256": "d806823b15d780ca2f920ca677e8493e64d57073c9477de81d2c16afeb501bfe"
+   },
+   {
+    "name": "string_danish_guide.uxc",
+    "bytes": 6612,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "bd139df55508b2bd5f14d80ed9b3a28e7b4866d2081d1b622580563925f8147a"
+   },
+   {
+    "name": "string_dutch.uxc",
+    "bytes": 238276,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800270046777401",
+    "sha256": "2ef9ee8725c749ea5c75bd4aec9a6b44a8a10e9b4a86a6f51b66c628f4b9d839"
+   },
+   {
+    "name": "string_dutch_guide.uxc",
+    "bytes": 32948,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "c4111cbcfd19cf31c03cd2186dacd1d42f76cef10d12ea23cbdc4787a9f5356f"
+   },
+   {
+    "name": "string_english.uxc",
+    "bytes": 219996,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800270046777401",
+    "sha256": "297505316b879ab4b09939b27458143f315309b9bd8625e560aad4aafd2be247"
+   },
+   {
+    "name": "string_english_guide.uxc",
+    "bytes": 78716,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "b45c3dad2c52e98da7a6e591c4e36a3fb96c42a4cbc5bec7d2a2a7b8678f77d1"
+   },
+   {
+    "name": "string_finnish.uxc",
+    "bytes": 229276,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800270046777401",
+    "sha256": "c9c694407c4d8bb7dfee062b683f27e495678438d415740776372a70004e9b1c"
+   },
+   {
+    "name": "string_finnish_guide.uxc",
+    "bytes": 32948,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "c4111cbcfd19cf31c03cd2186dacd1d42f76cef10d12ea23cbdc4787a9f5356f"
+   },
+   {
+    "name": "string_french.uxc",
+    "bytes": 257880,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800270046777401",
+    "sha256": "1adf8e64abf31ea5de82100c09f068b2a32770981a7a6cc0aecb42164c37d937"
+   },
+   {
+    "name": "string_french_guide.uxc",
+    "bytes": 32948,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "c4111cbcfd19cf31c03cd2186dacd1d42f76cef10d12ea23cbdc4787a9f5356f"
+   },
+   {
+    "name": "string_german.uxc",
+    "bytes": 244332,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800270046777401",
+    "sha256": "aaff2545f05e91ca20e214a9a66143274422cfa339baeb0eec261d33d6d0edfe"
+   },
+   {
+    "name": "string_german_guide.uxc",
+    "bytes": 32948,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "c4111cbcfd19cf31c03cd2186dacd1d42f76cef10d12ea23cbdc4787a9f5356f"
+   },
+   {
+    "name": "string_greek.uxc",
+    "bytes": 412300,
+    "magic": "uxc",
+    "header_hex": "75786307000000000f00270046d75602",
+    "sha256": "c39e8781c0fb6cd534019e73c742c6edd6c4ab3475f059f74a02a64e449e0ea6"
+   },
+   {
+    "name": "string_greek_guide.uxc",
+    "bytes": 32948,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "c4111cbcfd19cf31c03cd2186dacd1d42f76cef10d12ea23cbdc4787a9f5356f"
+   },
+   {
+    "name": "string_hungarian.uxc",
+    "bytes": 253532,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800270046777401",
+    "sha256": "1cad42a44b5e510fa5db114df6736230ebc2555dc0a4f376237645b533c784f7"
+   },
+   {
+    "name": "string_hungarian_guide.uxc",
+    "bytes": 32948,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "c4111cbcfd19cf31c03cd2186dacd1d42f76cef10d12ea23cbdc4787a9f5356f"
+   },
+   {
+    "name": "string_indonesia.uxc",
+    "bytes": 205476,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800270046777401",
+    "sha256": "98e4ddd8543abb7dc4687240bbb35de1f9e965624af4e41bb237c73ce7ee4ad2"
+   },
+   {
+    "name": "string_indonesia_guide.uxc",
+    "bytes": 32948,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "c4111cbcfd19cf31c03cd2186dacd1d42f76cef10d12ea23cbdc4787a9f5356f"
+   },
+   {
+    "name": "string_italian.uxc",
+    "bytes": 256464,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800270046777401",
+    "sha256": "6d25e0399530f9aa718c604570a91000558a50d28e3a18273e1b13ca3fefb83b"
+   },
+   {
+    "name": "string_italian_guide.uxc",
+    "bytes": 32948,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "c4111cbcfd19cf31c03cd2186dacd1d42f76cef10d12ea23cbdc4787a9f5356f"
+   },
+   {
+    "name": "string_japanese.uxc",
+    "bytes": 284464,
+    "magic": "uxc",
+    "header_hex": "75786307000000000f00270046171a02",
+    "sha256": "e96ca59ff73a322231578fa3d1f8a824fb5c3f8cb43fe2b63a6b80e9d12a8113"
+   },
+   {
+    "name": "string_japanese_guide.uxc",
+    "bytes": 109468,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "a21d5e1068591f339ed8c88857750c6184d008bf0d2abc8c27d0bc72c34a9f2f"
+   },
+   {
+    "name": "string_korean.uxc",
+    "bytes": 257260,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800270046777401",
+    "sha256": "3ed827eb5730d42be233baf454221537289882b3de2b288797ad0ec40961137b"
+   },
+   {
+    "name": "string_korean_guide.uxc",
+    "bytes": 32948,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "c4111cbcfd19cf31c03cd2186dacd1d42f76cef10d12ea23cbdc4787a9f5356f"
+   },
+   {
+    "name": "string_malay.uxc",
+    "bytes": 228880,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800270046777401",
+    "sha256": "098dd3506fad414788a74839b449a321cd0f67de5ac53916489435b0de9882fd"
+   },
+   {
+    "name": "string_malay_guide.uxc",
+    "bytes": 32948,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "c4111cbcfd19cf31c03cd2186dacd1d42f76cef10d12ea23cbdc4787a9f5356f"
+   },
+   {
+    "name": "string_norwegian.uxc",
+    "bytes": 226008,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800270046777401",
+    "sha256": "bc81b489d52b563507ba7e504a81857bee0751abf806a74f39b1d7d9457c2284"
+   },
+   {
+    "name": "string_norwegian_guide.uxc",
+    "bytes": 32948,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "c4111cbcfd19cf31c03cd2186dacd1d42f76cef10d12ea23cbdc4787a9f5356f"
+   },
+   {
+    "name": "string_persian.uxc",
+    "bytes": 359208,
+    "magic": "uxc",
+    "header_hex": "75786307000000000f00270046b74602",
+    "sha256": "bd51d1f6999f40aafe3f0215e1149ea68af8f31f77903c7b5959b7ff2b1abc6b"
+   },
+   {
+    "name": "string_persian_guide.uxc",
+    "bytes": 32948,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "c4111cbcfd19cf31c03cd2186dacd1d42f76cef10d12ea23cbdc4787a9f5356f"
+   },
+   {
+    "name": "string_polish.uxc",
+    "bytes": 242968,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800270046777401",
+    "sha256": "65453648cca6902be31bf6d4ff57e41ade58dbc8b7675f451620ff1b5e31f9a4"
+   },
+   {
+    "name": "string_polish_guide.uxc",
+    "bytes": 32948,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "c4111cbcfd19cf31c03cd2186dacd1d42f76cef10d12ea23cbdc4787a9f5356f"
+   },
+   {
+    "name": "string_portuguese.uxc",
+    "bytes": 239644,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800270046777401",
+    "sha256": "4c43eb7706eaf3e6221863db1087dd85a3b41251f123f857f01932b6b81862be"
+   },
+   {
+    "name": "string_portuguese_guide.uxc",
+    "bytes": 32948,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "c4111cbcfd19cf31c03cd2186dacd1d42f76cef10d12ea23cbdc4787a9f5356f"
+   },
+   {
+    "name": "string_romanian.uxc",
+    "bytes": 223904,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800270046777401",
+    "sha256": "0a2ebabaf00cbe238513a1e2f51bb5e71903496e21de1ae1217762e5a83c3a67"
+   },
+   {
+    "name": "string_romanian_guide.uxc",
+    "bytes": 32948,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "c4111cbcfd19cf31c03cd2186dacd1d42f76cef10d12ea23cbdc4787a9f5356f"
+   },
+   {
+    "name": "string_russian.uxc",
+    "bytes": 391480,
+    "magic": "uxc",
+    "header_hex": "75786307000000000f00270046175302",
+    "sha256": "11df3e61d3624762515515529d6aa56f52803864710effd7c5c9bd4f4ca9f3db"
+   },
+   {
+    "name": "string_russian_guide.uxc",
+    "bytes": 32948,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "c4111cbcfd19cf31c03cd2186dacd1d42f76cef10d12ea23cbdc4787a9f5356f"
+   },
+   {
+    "name": "string_simplifiedchinese.uxc",
+    "bytes": 197420,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800270046777401",
+    "sha256": "af3dc2dc656a4549230019b7600e6341f1bccbb5aafad5457144a67f2d68da26"
+   },
+   {
+    "name": "string_simplifiedchinese_guide.uxc",
+    "bytes": 32948,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "c4111cbcfd19cf31c03cd2186dacd1d42f76cef10d12ea23cbdc4787a9f5356f"
+   },
+   {
+    "name": "string_spanish.uxc",
+    "bytes": 246480,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800270046777401",
+    "sha256": "ab78f252f5a422f3c6020c93b5b4498eba318332647c87308f9ee6ec1d5b2e6b"
+   },
+   {
+    "name": "string_spanish_guide.uxc",
+    "bytes": 32948,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "c4111cbcfd19cf31c03cd2186dacd1d42f76cef10d12ea23cbdc4787a9f5356f"
+   },
+   {
+    "name": "string_swedish.uxc",
+    "bytes": 225092,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800270046777401",
+    "sha256": "bd5824b49d42c38c70359941ac3f3a51fa139c57c32e6abd605d289ae7c1e7a7"
+   },
+   {
+    "name": "string_swedish_guide.uxc",
+    "bytes": 32948,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "c4111cbcfd19cf31c03cd2186dacd1d42f76cef10d12ea23cbdc4787a9f5356f"
+   },
+   {
+    "name": "string_thai.uxc",
+    "bytes": 488728,
+    "magic": "uxc",
+    "header_hex": "75786307000000000f00270046576202",
+    "sha256": "daad6c2d5129928a2bb85ce8bac5e0c803686f8d52e955aafd6c1015534830f9"
+   },
+   {
+    "name": "string_thai_guide.uxc",
+    "bytes": 32948,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "c4111cbcfd19cf31c03cd2186dacd1d42f76cef10d12ea23cbdc4787a9f5356f"
+   },
+   {
+    "name": "string_traditionalchinese.uxc",
+    "bytes": 198948,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800270046777401",
+    "sha256": "9a01666edc5ba4ba30e9955362615599dbe1fa513a0baaca33f6f5b28f884b18"
+   },
+   {
+    "name": "string_traditionalchinese_guide.uxc",
+    "bytes": 32948,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "c4111cbcfd19cf31c03cd2186dacd1d42f76cef10d12ea23cbdc4787a9f5356f"
+   },
+   {
+    "name": "string_turkish.uxc",
+    "bytes": 237948,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800270046777401",
+    "sha256": "81115190d88d8b3f64205e9d10f990c3cde2044214449b93c56ced15250d1c4e"
+   },
+   {
+    "name": "string_turkish_guide.uxc",
+    "bytes": 32948,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "c4111cbcfd19cf31c03cd2186dacd1d42f76cef10d12ea23cbdc4787a9f5356f"
+   },
+   {
+    "name": "string_ukrainian.uxc",
+    "bytes": 347112,
+    "magic": "uxc",
+    "header_hex": "75786307000000000f00270046974602",
+    "sha256": "26418888810a03aa86df9684b9bb587e37ea2735c03028f023336efae6517c5c"
+   },
+   {
+    "name": "string_ukrainian_guide.uxc",
+    "bytes": 32948,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "c4111cbcfd19cf31c03cd2186dacd1d42f76cef10d12ea23cbdc4787a9f5356f"
+   },
+   {
+    "name": "string_vietnamese.uxc",
+    "bytes": 250752,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800270046777401",
+    "sha256": "9d28d0911755f0b057cb012f503570caa7d52322e53e3160fd7cf11668e5504c"
+   },
+   {
+    "name": "string_vietnamese_guide.uxc",
+    "bytes": 32948,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004500ddeccd00",
+    "sha256": "c4111cbcfd19cf31c03cd2186dacd1d42f76cef10d12ea23cbdc4787a9f5356f"
+   },
+   {
+    "name": "style_cmn.uxc",
+    "bytes": 1596,
+    "magic": "uxc",
+    "header_hex": "757863070000000008003d0034400300",
+    "sha256": "3161c5bd08b96a01e92efed6297fb2d03047a3aa2e407255987a41f9e0881710"
+   },
+   {
+    "name": "view24pMode.uxc",
+    "bytes": 748,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800900001200000",
+    "sha256": "8997e97b1f09eabe976622f8fc782eaeda7dbb8a69a08502d077a949999671af"
+   },
+   {
+    "name": "view3DPb.uxc",
+    "bytes": 748,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800370006600000",
+    "sha256": "1c251eb7996d6ccfb3433e861223195c9149a1e32de3135c8cbad01c659e9cb1"
+   },
+   {
+    "name": "viewAccessPoint.uxc",
+    "bytes": 21348,
+    "magic": "uxc",
+    "header_hex": "757863070000000008009f002aa00200",
+    "sha256": "549797207c52d3464eb8a8314f44ee8b7234f638ce0e40ff49d2a48b192ef41c"
+   },
+   {
+    "name": "viewAfAdjustment.uxc",
+    "bytes": 1352,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800480003400000",
+    "sha256": "dabb96e42d934c4ab991d7b77b050ae6255ef4c3b472cab639ffb5e594e3680e"
+   },
+   {
+    "name": "viewAnimation360.uxc",
+    "bytes": 588,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800a80002200000",
+    "sha256": "4f700fb726c373620b2c98d7af26c3c6ec438e44fa3a108f7bb18048bff47d9f"
+   },
+   {
+    "name": "viewAreaSet.uxc",
+    "bytes": 1172,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004f0002200000",
+    "sha256": "711d030a101f81872adcf5ad97abd7011d0c9e3aa5bbe6405ddead74745f71c5"
+   },
+   {
+    "name": "viewArtFilter.uxc",
+    "bytes": 1112,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800510002200000",
+    "sha256": "a1beff286e46d88cc530ada0e2ff2560f1006aa002816d6c0356275e43471b73"
+   },
+   {
+    "name": "viewAspectRatio.uxc",
+    "bytes": 1352,
+    "magic": "uxc",
+    "header_hex": "757863070000000008006e0003400000",
+    "sha256": "3202da883e4401e74f11f430c26b43465ea0b3a6f407b60f961fc77ce6199317"
+   },
+   {
+    "name": "viewAudioRecLevel_D.uxc",
+    "bytes": 876,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800810001200000",
+    "sha256": "5cd0db64042f1bf6b0a780f6db98292d311eeb75e14760282521b36405688afa"
+   },
+   {
+    "name": "viewAutoPlay.uxc",
+    "bytes": 1108,
+    "magic": "uxc",
+    "header_hex": "757863070000000008003a0008800000",
+    "sha256": "1ba3bebe83a289f2527bb75154af2a714ff2637c7becd2b5cb04d07b77ae44bc"
+   },
+   {
+    "name": "viewAutoPlaySetting.uxc",
+    "bytes": 1308,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800050002200000",
+    "sha256": "17a4320089f517191ea6869344ca8001027c9b6de159371dd95ce7b54bb8151e"
+   },
+   {
+    "name": "viewAutoRepair.uxc",
+    "bytes": 1272,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800150009a00000",
+    "sha256": "93f24f5376460ae73621ce4a126aba308b045428d9fdd1a46fdc0676e504046b"
+   },
+   {
+    "name": "viewAutoSelection.uxc",
+    "bytes": 1040,
+    "magic": "uxc",
+    "header_hex": "757863070000000008007e0003400000",
+    "sha256": "91eb967405687c2b9fdb4829fce8a99214d0ee0a98ba48f8ff7944af079ca91c"
+   },
+   {
+    "name": "viewBaseMenu.uxc",
+    "bytes": 84,
+    "magic": "uxc",
+    "header_hex": "757863070000000008008d0001200000",
+    "sha256": "113716bfcb2e1dfbff02074282e2263359154c46e7d0ea3029d123f8172369bd"
+   },
+   {
+    "name": "viewBeautyEffect.uxc",
+    "bytes": 6892,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800ab0014400100",
+    "sha256": "8bd9a71c20a985df1ef2c3d6bb713a03e208da8163e2b5b51c07df1e6adcdc57"
+   },
+   {
+    "name": "viewCalibration.uxc",
+    "bytes": 1708,
+    "magic": "uxc",
+    "header_hex": "7578630700000000080085000bc00000",
+    "sha256": "373acb6b7554df22b2777f5d420889dbab051ae1633c0206adfbc9f06c69650d"
+   },
+   {
+    "name": "viewCaution.uxc",
+    "bytes": 4340,
+    "magic": "uxc",
+    "header_hex": "7578630700000000080053000de00000",
+    "sha256": "620e9a72edfc873a61f2eca52a3467d50962853623eda7bc5147dc04fb821c39"
+   },
+   {
+    "name": "viewCertificationLogo.uxc",
+    "bytes": 428,
+    "magic": "uxc",
+    "header_hex": "757863070000000008009e0001200000",
+    "sha256": "7b3eb4db51e878b25b82b4ecc625baec60e8869c8f18cc5b95a9133d963a67cf"
+   },
+   {
+    "name": "viewCleaningMode.uxc",
+    "bytes": 556,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800290004400000",
+    "sha256": "99a2ffa520e428708cc333133db441aaa9bcb4a01d7bc35c92ec9f1fabbe92b8"
+   },
+   {
+    "name": "viewCommonShootingSetting.uxc",
+    "bytes": 4752,
+    "magic": "uxc",
+    "header_hex": "757863070000000008007d0016600100",
+    "sha256": "0e80f2ace297ff3f389fd2850e493634f499cd6096f432328e8766d9372d9da6"
+   },
+   {
+    "name": "viewContPriorityExpMode.uxc",
+    "bytes": 724,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800610001200000",
+    "sha256": "45482f95086a368cc25b3c0a4ca60f7fded2385386a8b152d6f2907c6d386351"
+   },
+   {
+    "name": "viewCreateFolder.uxc",
+    "bytes": 412,
+    "magic": "uxc",
+    "header_hex": "757863070000000008005a0003400000",
+    "sha256": "9e95a1ebc4f6c0fee4062983486d7acbb257b2589420f311f41aca8c0f4963b0"
+   },
+   {
+    "name": "viewCreativeStyle.uxc",
+    "bytes": 1120,
+    "magic": "uxc",
+    "header_hex": "757863070000000008003f0002200000",
+    "sha256": "41c23c0f8a520c8e76ae0a01857e3bd5f39fb228fa09458167745e42d5d93477"
+   },
+   {
+    "name": "viewCustomWB.uxc",
+    "bytes": 2652,
+    "magic": "uxc",
+    "header_hex": "757863070000000008001a0003400000",
+    "sha256": "2e6b1bc2141322ea29670fd53fc1a22ced4305fa639c95e683cc57ec4baa510e"
+   },
+   {
+    "name": "viewDateSet.uxc",
+    "bytes": 1440,
+    "magic": "uxc",
+    "header_hex": "757863070000000008000d0004400000",
+    "sha256": "5b90b9196cf433c6d2a5431220a58217994d455019e3a204c025539ad68c14e7"
+   },
+   {
+    "name": "viewDeleteAllIn4Single.uxc",
+    "bytes": 1108,
+    "magic": "uxc",
+    "header_hex": "757863070000000008000e0003400000",
+    "sha256": "48b99a0ade658558654bb3c367f226d39da690ec232c237fa2e3fd7229381081"
+   },
+   {
+    "name": "viewDeleteSelected4Index.uxc",
+    "bytes": 2848,
+    "magic": "uxc",
+    "header_hex": "7578630700000000080000001de00100",
+    "sha256": "7aa73a33ef0d28da7515a630e7ca126df2b9d19aad159d678a8b3d2a879d2cb5"
+   },
+   {
+    "name": "viewDeleteSelected4Single.uxc",
+    "bytes": 2456,
+    "magic": "uxc",
+    "header_hex": "7578630700000000080024000cc00000",
+    "sha256": "c249bdb41fc304d842b7422e62b05a2bcdaee8e86a4c8f0fb3f1d1eb0d783d0a"
+   },
+   {
+    "name": "viewDeleteThis4Index.uxc",
+    "bytes": 216,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800880004400000",
+    "sha256": "a68a558477520bc4e70378f17b03df11ff383e53c15dc4e73b1fa6a3f5159fb8"
+   },
+   {
+    "name": "viewDeleteThis4Single.uxc",
+    "bytes": 372,
+    "magic": "uxc",
+    "header_hex": "757863070000000008000c0009a00000",
+    "sha256": "353020f3e73e2a968b4ec4eb10810cd1818b07d7bcc0a0db934b8ab2f3f308aa"
+   },
+   {
+    "name": "viewDeleteThisConfirm4Index.uxc",
+    "bytes": 268,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800870007800000",
+    "sha256": "51a49b7b510e15030b19991224a79cf7ad79fe1305924141e7c0f051ddb336a2"
+   },
+   {
+    "name": "viewDemoMoviePb.uxc",
+    "bytes": 552,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800160003400000",
+    "sha256": "94b8c4e936e4ca3d54e5d8c354eae3bdfeb8a9a7fa36003b0430d82e1c021ff9"
+   },
+   {
+    "name": "viewDgtlZoomSetting.uxc",
+    "bytes": 1748,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800600003400000",
+    "sha256": "5d060e417f8d23a2504d12a190da1e53516164b7b7a008b66842ba542074e60a"
+   },
+   {
+    "name": "viewDpofCancelAll.uxc",
+    "bytes": 1112,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800360003400000",
+    "sha256": "8921c05826549103d09419c9f06ac9fe6155ba1dae968f099a869f16cf31bb22"
+   },
+   {
+    "name": "viewDpofPhotoBookDatePrint.uxc",
+    "bytes": 500,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800390002200000",
+    "sha256": "1ebfe82b00b4fdbd6e8ae89bec0fa77ca03d42f2e1ff7a2b39e6a9178b6f52b7"
+   },
+   {
+    "name": "viewDpofPhotoBookSelected4Index.uxc",
+    "bytes": 2792,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800550005600000",
+    "sha256": "6d4b6c8c5689706029bb43e51ba0cf72678e34030d02754482253c6d33554f85"
+   },
+   {
+    "name": "viewDpofPhotoBookSelected4Single.uxc",
+    "bytes": 2404,
+    "magic": "uxc",
+    "header_hex": "7578630700000000080011000bc00000",
+    "sha256": "ff004c3d0d31f7d9389e503d9ea3b054db2882906f4f200fd91053a4424d4b31"
+   },
+   {
+    "name": "viewDpofSetting.uxc",
+    "bytes": 1336,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800540004400000",
+    "sha256": "60f11d8e6f69b4d6d3e369d2ce74abf1c0c859edcbce9e38106f004fe90d9849"
+   },
+   {
+    "name": "viewDro.uxc",
+    "bytes": 1320,
+    "magic": "uxc",
+    "header_hex": "757863070000000008001f0002200000",
+    "sha256": "4a78effb70788d35b4ad005af9e45f33940086b12d809fcf5f644777b57bc9a7"
+   },
+   {
+    "name": "viewEpo.uxc",
+    "bytes": 2620,
+    "magic": "uxc",
+    "header_hex": "757863070000000008002a0004400000",
+    "sha256": "63fbdfa0405bb92623588b2446ddeb17ee316a0b040452ffbf9d628b8d9976c6"
+   },
+   {
+    "name": "viewEvfAdjustment_D.uxc",
+    "bytes": 920,
+    "magic": "uxc",
+    "header_hex": "757863070000000008006f0003400000",
+    "sha256": "6bf584d00df71e565eac9728a3f3d7110d3f229ba8a2239f3cc28feb455f38ff"
+   },
+   {
+    "name": "viewEvfBrightness.uxc",
+    "bytes": 1312,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800030006600000",
+    "sha256": "08e27da44f7c49e28025976f175ebd5122af3608a40dbb4d2447c905c945a710"
+   },
+   {
+    "name": "viewExposureCompensation.uxc",
+    "bytes": 1372,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800090003400000",
+    "sha256": "871c082d8d64f6e4b7dd06c748d40e7d59ccd73fb8363ab15a9af32e40e9688c"
+   },
+   {
+    "name": "viewFaceDetection.uxc",
+    "bytes": 1148,
+    "magic": "uxc",
+    "header_hex": "757863070000000008002b0002200000",
+    "sha256": "563d97bb0c19c2f6472192dda62a38950d89d59fb4175f6c1ed81c85677adaec"
+   },
+   {
+    "name": "viewFlash.uxc",
+    "bytes": 1252,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800470003400000",
+    "sha256": "a8acc3f18c020d9b12c9ccbdba96d136559490ba7b9282f5645b6e9d7a5c05d7"
+   },
+   {
+    "name": "viewFlashLevel.uxc",
+    "bytes": 1324,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800380003400000",
+    "sha256": "f5cea8ca1a19047cac894e65462fb4499376af9dfc586a911669c27f51dc9fc9"
+   },
+   {
+    "name": "viewFnMenu.uxc",
+    "bytes": 5904,
+    "magic": "uxc",
+    "header_hex": "757863070000000008003c000f000100",
+    "sha256": "75fce586b7bbf99a44d060787aed320e747580045029198efc7fcf94dd5041e4"
+   },
+   {
+    "name": "viewFocusArea.uxc",
+    "bytes": 2420,
+    "magic": "uxc",
+    "header_hex": "757863070000000008001c0004400000",
+    "sha256": "789035f7a19cf89fd10eeb2db9379f05827fb2a68c5841b410abcc2fd3d2591e"
+   },
+   {
+    "name": "viewFocusArea_C.uxc",
+    "bytes": 1796,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800710006600000",
+    "sha256": "3bbc41e88da3db0f7fde502e4ce7a21a54b36c3a361f85723d6b792db65f5246"
+   },
+   {
+    "name": "viewFocusControl.uxc",
+    "bytes": 1196,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800800003400000",
+    "sha256": "5245defe937ca111d92dc4a2775e4aff26bf45b3fd82772d1c583b88c5fc2559"
+   },
+   {
+    "name": "viewFocusMagnification.uxc",
+    "bytes": 6960,
+    "magic": "uxc",
+    "header_hex": "7578630700000000080008000aa00000",
+    "sha256": "81292958ba8590a704072af68c5733ae9ede0679a22adbecae50f183a1028228"
+   },
+   {
+    "name": "viewFocusMagnificationMovie.uxc",
+    "bytes": 6384,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800ac0006600000",
+    "sha256": "06c240955a83bb592c2e80decec77d86059f3a45b8b138a66ebe2b75c845a9ab"
+   },
+   {
+    "name": "viewFocusMode.uxc",
+    "bytes": 1316,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800410003400000",
+    "sha256": "52b6e8d4bbad30fd6d3c0a0222b9fa69c2f25e32eb399416a7af5bd188a0487e"
+   },
+   {
+    "name": "viewFocusSet.uxc",
+    "bytes": 3760,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800a50008800000",
+    "sha256": "eed3558e76f13947021d676f2dba45b58af659716d4f58615a0f03f602b30f4f"
+   },
+   {
+    "name": "viewFormat.uxc",
+    "bytes": 1356,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004d0006600000",
+    "sha256": "06f64c7e4e22d5a38077e5674b42bb6c8c8d0cabd388c1fb5f11a26829f0241e"
+   },
+   {
+    "name": "viewGlobalMenu.uxc",
+    "bytes": 2332,
+    "magic": "uxc",
+    "header_hex": "757863070000000008008e0004400000",
+    "sha256": "6d362e9b4f080218cffbd3d0e062f30668e05a420c2f37de7bca2cbda7194c50"
+   },
+   {
+    "name": "viewGpsInfo.uxc",
+    "bytes": 5380,
+    "magic": "uxc",
+    "header_hex": "757863070000000008005e0001200000",
+    "sha256": "bd40b417dfa0c36b1feb1536a6a9854f6605049166db2c5b7ad2b2983e6925a9"
+   },
+   {
+    "name": "viewGpsTest.uxc",
+    "bytes": 440,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800780001200000",
+    "sha256": "a9b5ba1d82046b9c857fab3d8648e9c328adabbfa4636d9859db30161bd8643a"
+   },
+   {
+    "name": "viewGpsTracker.uxc",
+    "bytes": 4344,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800a70015600100",
+    "sha256": "171fe41588a813946bd7cb6bb7fb2a7c4bfc2def2b57e979fec9a86c6168731f"
+   },
+   {
+    "name": "viewGroupSelectionCalendar.uxc",
+    "bytes": 3728,
+    "magic": "uxc",
+    "header_hex": "757863070000000008008a0009a00000",
+    "sha256": "7adc90b604199ac62a37a6139c11472a5782f56bf63affc07927f1ea613c766b"
+   },
+   {
+    "name": "viewGroupSelectionFolder.uxc",
+    "bytes": 2508,
+    "magic": "uxc",
+    "header_hex": "757863070000000008008b000bc00000",
+    "sha256": "e558442b6139e4f51e308c0e95cef4067222808d867078b4671924df81cb06f1"
+   },
+   {
+    "name": "viewIREditOne.uxc",
+    "bytes": 14488,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800580003400000",
+    "sha256": "a42940b60e805ca0dbd5fc91bc349030f2677377f7d763da40fac134edd7f55c"
+   },
+   {
+    "name": "viewImageRotate.uxc",
+    "bytes": 1016,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800210004400000",
+    "sha256": "394bbeabf3b21c9c8cbb3d3c7e96efce67ebcc375e6969ae76eb1baa5fdc2d74"
+   },
+   {
+    "name": "viewIndexPb.uxc",
+    "bytes": 2580,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800490003400000",
+    "sha256": "0600c5d84cf5e1acd543b942128084ac953435799b9a762844d51d4ad0559efe"
+   },
+   {
+    "name": "viewIndividualRecognition.uxc",
+    "bytes": 2112,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800570007800000",
+    "sha256": "41e742a376a8e515f06314c201d929eab47d2a759618ad696b26061e0c364817"
+   },
+   {
+    "name": "viewInitialSetting.uxc",
+    "bytes": 3400,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800260008800000",
+    "sha256": "704b4c7eadfa542ea8ff3583453f4df31afccc35d1197c3ff076a79322445d92"
+   },
+   {
+    "name": "viewIroiroCon.uxc",
+    "bytes": 36952,
+    "magic": "uxc",
+    "header_hex": "757863070000000008006d0032200300",
+    "sha256": "5090a401392aec98d0fb655823c1f085c0524218d4b001c7cf7f2c6871da4a9c"
+   },
+   {
+    "name": "viewIsoSensitivity.uxc",
+    "bytes": 1860,
+    "magic": "uxc",
+    "header_hex": "757863070000000008002d0007800000",
+    "sha256": "667a4f8e9203ebeb03cd287fa3ae5be099c34b50993a3203fafc9ad97c8fbc47"
+   },
+   {
+    "name": "viewKeyboard.uxc",
+    "bytes": 13816,
+    "magic": "uxc",
+    "header_hex": "757863070000000008009d0012200100",
+    "sha256": "be841317fa48c05930e34187b13a9c7e0ce67a6ae190cd0ace3d67673e44db33"
+   },
+   {
+    "name": "viewLcdBrightness.uxc",
+    "bytes": 1096,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800a30005600000",
+    "sha256": "746a325def92b6965fd96853db0bf5adf05fba2573a9cd9bfd8baf9ad3226b5a"
+   },
+   {
+    "name": "viewLensRing.uxc",
+    "bytes": 1212,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800690001200000",
+    "sha256": "50908bab00c9ba14603d7512b3bcd11c5d9b46ebf38348227fa78c5c8e8b0539"
+   },
+   {
+    "name": "viewManualControlDial_D.uxc",
+    "bytes": 8996,
+    "magic": "uxc",
+    "header_hex": "757863070000000008007b0015600100",
+    "sha256": "d8e301fea58cd995317d4799cac5f039714777c385927d8103214516b60b3895"
+   },
+   {
+    "name": "viewManualRepair.uxc",
+    "bytes": 2212,
+    "magic": "uxc",
+    "header_hex": "7578630700000000080013000cc00000",
+    "sha256": "3dd1fea921a90ea6267a7de8375397a067f4731f8b18c0d1bf248bb646d0481a"
+   },
+   {
+    "name": "viewManualRepairForPlay.uxc",
+    "bytes": 1832,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800960005600000",
+    "sha256": "d705f8de969c3452166fae9c6c5fed992ecee562508fd54121de56be9c7df843"
+   },
+   {
+    "name": "viewMediaCopy.uxc",
+    "bytes": 2544,
+    "magic": "uxc",
+    "header_hex": "757863070000000008007a0005600000",
+    "sha256": "38841df0db7ae217e34d912c8b7ee3599ce74af83a26c137db335dc27f88f3f9"
+   },
+   {
+    "name": "viewMediaFileMgmt.uxc",
+    "bytes": 1544,
+    "magic": "uxc",
+    "header_hex": "757863070000000008005d0002200000",
+    "sha256": "2c645064cf8de162d1a0cec22f69aac5b45da09b85de88a83dbde60fc786fd48"
+   },
+   {
+    "name": "viewMeteringmode.uxc",
+    "bytes": 1004,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800500005600000",
+    "sha256": "cac7168e9ecd2f74ca36bc3870e3dc1b6f2a881b545339f09866e6a871a279bf"
+   },
+   {
+    "name": "viewModeDialGuide.uxc",
+    "bytes": 1332,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800230002200000",
+    "sha256": "7676862dbdcc758b5973ac9bf5609b52c063bcd7a3415c27e141e31d575151ac"
+   },
+   {
+    "name": "viewMonitorBrightness.uxc",
+    "bytes": 1352,
+    "magic": "uxc",
+    "header_hex": "7578630700000000080002000bc00000",
+    "sha256": "4ffabafb58494e4485e6f4d83358067e8e6f48ed7230467c9708d366a2293d91"
+   },
+   {
+    "name": "viewMotionAdjustment.uxc",
+    "bytes": 1504,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800aa0006600000",
+    "sha256": "fa229c19f805daa998a4bd29834caf9d0f323bea6dc25bce13074712d2d45c90"
+   },
+   {
+    "name": "viewMotionVideo.uxc",
+    "bytes": 2956,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800a90005600000",
+    "sha256": "b0f4b6a21909cb2ab9d8bbaacc48a361d6bd43a2ed30d1cfd7858882ae939520"
+   },
+   {
+    "name": "viewMovieExpMode.uxc",
+    "bytes": 2488,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800440004400000",
+    "sha256": "099b9bff45ce12c0c9783d634843e1bcb7ba4eec2097ddec21b6fe9ab87bd24a"
+   },
+   {
+    "name": "viewMoviePb.uxc",
+    "bytes": 4796,
+    "magic": "uxc",
+    "header_hex": "7578630700000000080020000bc00000",
+    "sha256": "d1734f963b7919c7e2847bdb6dc29506b958053ecaacb3c3f0a5a23d14763ba9"
+   },
+   {
+    "name": "viewMoviePreview.uxc",
+    "bytes": 2216,
+    "magic": "uxc",
+    "header_hex": "757863070000000008008c0005600000",
+    "sha256": "05433ff52a1b800d5856758c1c41c79ada6dea5fbc8881288b3b6ec79ec41250"
+   },
+   {
+    "name": "viewNoImage.uxc",
+    "bytes": 1804,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800890006600000",
+    "sha256": "34435c30dda08814ec135714863042515a9172310fff60cb14a2eacc19c583fd"
+   },
+   {
+    "name": "viewNtscPalSEL_D.uxc",
+    "bytes": 700,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800700001200000",
+    "sha256": "efa162881be7f69f2ddb04f68c50cd1b7698ef74099ee7684b8d4cf30b5c7aa0"
+   },
+   {
+    "name": "viewObjectTracking.uxc",
+    "bytes": 1048,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800560002200000",
+    "sha256": "acb5619f622be2d3de4f002417fa97a6657207345ff2bffc75e6f081da81df24"
+   },
+   {
+    "name": "viewObjecttrackingBase.uxc",
+    "bytes": 1132,
+    "magic": "uxc",
+    "header_hex": "757863070000000008005c0002200000",
+    "sha256": "c01641e21b50808dc741533a99c2e0def6d7f4c69ee6089802ecb9eb90aafce9"
+   },
+   {
+    "name": "viewPanoramaMode.uxc",
+    "bytes": 912,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800750002200000",
+    "sha256": "3d3d70ba43765409a60f4a3984b780c16c9664fef152845bda753590b1149eff"
+   },
+   {
+    "name": "viewPanoramaPb.uxc",
+    "bytes": 2440,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800180010000100",
+    "sha256": "a7e094e53f685f2ba4b02d99406002be68dbd3263e9c085ce82032f07e31aa40"
+   },
+   {
+    "name": "viewPanoramaStl.uxc",
+    "bytes": 41520,
+    "magic": "uxc",
+    "header_hex": "757863070000000008002c002de00200",
+    "sha256": "88f6352425aeb971ed84f96b14e359277bbaf07a734bae1f4711967d50ec5f5f"
+   },
+   {
+    "name": "viewPictureEffectPb_C.uxc",
+    "bytes": 2380,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800770005600000",
+    "sha256": "729707dad57a2277dd20ac2fa32ddf7d1769270de69d51cb51e5eb7b842eec3e"
+   },
+   {
+    "name": "viewPlayingMedia_D.uxc",
+    "bytes": 1216,
+    "magic": "uxc",
+    "header_hex": "757863070000000008007c0003400000",
+    "sha256": "6a1e698bff617899837341ee5ad763dc0b2ab44c32c3168cced53cf160844cf3"
+   },
+   {
+    "name": "viewPortraitFraming.uxc",
+    "bytes": 1248,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800620002200000",
+    "sha256": "b064a4e4e96cf5f616d21d47f97961e4ed08e45462e7bcfe76aaef2818b905dd"
+   },
+   {
+    "name": "viewProtectAll.uxc",
+    "bytes": 1164,
+    "magic": "uxc",
+    "header_hex": "757863070000000008002f0003400000",
+    "sha256": "3c68c72195f80dc25cb18b704ede41f84fdec1b24b33e9d15a43e6074f6a8d1a"
+   },
+   {
+    "name": "viewProtectSelected4Index.uxc",
+    "bytes": 2800,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800520012200100",
+    "sha256": "309940d64c84f69043569fec8c11dc785d8307792bb155a2a1a073021975d304"
+   },
+   {
+    "name": "viewProtectSelected4Single.uxc",
+    "bytes": 2304,
+    "magic": "uxc",
+    "header_hex": "757863070000000008000b000bc00000",
+    "sha256": "859a5056371852158ed78b395b921b61b81d182830831d2c410296cf8b06cc72"
+   },
+   {
+    "name": "viewQuickNavi.uxc",
+    "bytes": 8412,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800760006600000",
+    "sha256": "04528836d62a9b79c44af57a0fdaadc4c282fab13670f3d9c022032747559290"
+   },
+   {
+    "name": "viewRecCustomReset.uxc",
+    "bytes": 192,
+    "magic": "uxc",
+    "header_hex": "757863070000000008005f0001200000",
+    "sha256": "0ad30e8911ed9ccbc9655a6f8124dd9b1ac12c63558a44eef9bea7bd45f30e67"
+   },
+   {
+    "name": "viewRecDriveMode.uxc",
+    "bytes": 1828,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800460009a00000",
+    "sha256": "1220590ce8f814c798831f6a5fb487a18126d0daa87fd818763fccc941c75a7f"
+   },
+   {
+    "name": "viewRecRecordingMedia.uxc",
+    "bytes": 1820,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800840006600000",
+    "sha256": "5ce4dca207fa209129b91992a3198a4d069b088a409dfc741ffdcf13b80b41a9"
+   },
+   {
+    "name": "viewRecSteadyShot.uxc",
+    "bytes": 2084,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800830006600000",
+    "sha256": "bfc552173f8201f8cfd1b8e08d29d923b4499312d1b4c0335976fde3e111ee13"
+   },
+   {
+    "name": "viewRecovery.uxc",
+    "bytes": 172,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004b0001200000",
+    "sha256": "3bbd69f9f057a343687335c1f162499ca23c6b547f6d93d9b25acaea307025c9"
+   },
+   {
+    "name": "viewRemoteCameraControl.uxc",
+    "bytes": 6328,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800a20036600300",
+    "sha256": "51bbf6d4cfe42887433a970a5179ec06a0736360f9c2aa9de4e09a3a80f81157"
+   },
+   {
+    "name": "viewRichHelpGuide.uxc",
+    "bytes": 2552,
+    "magic": "uxc",
+    "header_hex": "757863070000000008000f0003400000",
+    "sha256": "133193da1a6e8d1f66a54713555e6d2f8ed62b378fa3e0cba0bf5682d16c182b"
+   },
+   {
+    "name": "viewRootPowerSw.uxc",
+    "bytes": 1764,
+    "magic": "uxc",
+    "header_hex": "7578630700000000080030000aa00000",
+    "sha256": "2e8729ea07f7afcf226ac9967248082c12c0ad169a6ca096e26a9f021a28e05a"
+   },
+   {
+    "name": "viewSalvageRestore.uxc",
+    "bytes": 1040,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800010006600000",
+    "sha256": "860323e9ca856f74dc960d5cc0e76e8f27f834f0029a1836d4484a10ce250024"
+   },
+   {
+    "name": "viewScnSelection.uxc",
+    "bytes": 668,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800170001200000",
+    "sha256": "e8e45d752e540bd7e12b6f5f781fead7bdd69a5b768a9eefd0de1e9dc2bd3f89"
+   },
+   {
+    "name": "viewSelectContentType.uxc",
+    "bytes": 1364,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800990003400000",
+    "sha256": "3c72f538cf8400886f0e729537ccf25f3f7b8c1aacf61802359d7c46253b4888"
+   },
+   {
+    "name": "viewSelectFolder.uxc",
+    "bytes": 636,
+    "magic": "uxc",
+    "header_hex": "757863070000000008005b0001200000",
+    "sha256": "5dfed4595a706575d32f275656804be3ed47160f8757ab7440393547f2fbbf27"
+   },
+   {
+    "name": "viewSendSelected4Index.uxc",
+    "bytes": 2488,
+    "magic": "uxc",
+    "header_hex": "757863070000000008009b0005600000",
+    "sha256": "e9413bc4bf144e948dbba95c6ff6f33d4644411dc6f4526bd11eabbefef0b2ac"
+   },
+   {
+    "name": "viewSendSelected4Single.uxc",
+    "bytes": 2980,
+    "magic": "uxc",
+    "header_hex": "757863070000000008009a000aa00000",
+    "sha256": "9a2dd4ebb865d889154704d7db5499b7b6483213e8f9531ebdff9491b390aa72"
+   },
+   {
+    "name": "viewSendToComputer.uxc",
+    "bytes": 5376,
+    "magic": "uxc",
+    "header_hex": "7578630700000000080095000de00000",
+    "sha256": "ad89d57e8051efe0bc9088c92cfa39b7fca906aee56b4324b8ada1178eb4a834"
+   },
+   {
+    "name": "viewSendToSmartphone.uxc",
+    "bytes": 7112,
+    "magic": "uxc",
+    "header_hex": "757863070000000008009c0012200100",
+    "sha256": "efb8c533909c0c3aa4d829e2073e4c49706b3349eb4bd518b30ed91d484d8d02"
+   },
+   {
+    "name": "viewSettingMenu.uxc",
+    "bytes": 4984,
+    "magic": "uxc",
+    "header_hex": "757863070000000008004c0007800000",
+    "sha256": "8f692dd0754e558e4a4c225114b671c6dc31941f98925c10c00139e53da60d76"
+   },
+   {
+    "name": "viewSettingReset.uxc",
+    "bytes": 1408,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800320006600000",
+    "sha256": "bdcf32226952e5aab299435af60cf9b21db5ea53e569a0dbe6553d0848c83d72"
+   },
+   {
+    "name": "viewSettingSave.uxc",
+    "bytes": 5316,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800120003400000",
+    "sha256": "4bbad1fc9a102e695944df4566df945d167870813927b348a5aec836a41ac4c9"
+   },
+   {
+    "name": "viewSetupCustomFunction.uxc",
+    "bytes": 1356,
+    "magic": "uxc",
+    "header_hex": "757863070000000008006b0002200000",
+    "sha256": "61dbe3fd333c6c84cd9ec80a79a95a7e44d1562b0883bcd25d52a83f82f73547"
+   },
+   {
+    "name": "viewShootingInfoDisp.uxc",
+    "bytes": 2420,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800220003400000",
+    "sha256": "5641812e25a91c58be603afddaa305881b749ae9007527350e3d2109a19309e8"
+   },
+   {
+    "name": "viewSinglePb.uxc",
+    "bytes": 4520,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800190015600100",
+    "sha256": "6d0ddc48606dfe99cdc38c9df685129456f4959c2a6c17371f9d7263c3c80be6"
+   },
+   {
+    "name": "viewSinglePb4K.uxc",
+    "bytes": 2224,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800a10006600000",
+    "sha256": "2e81ec1e508a2840c0ee63c734e00c96dae1bafb1dd0d5d9bca18dcec75e90dd"
+   },
+   {
+    "name": "viewSmileShutter.uxc",
+    "bytes": 1736,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800400004400000",
+    "sha256": "2335ec0a74f5463513766705eaf65d32431b0f40579aa24f3795ed3d975f45bd"
+   },
+   {
+    "name": "viewSnapShotBoot.uxc",
+    "bytes": 132,
+    "magic": "uxc",
+    "header_hex": "757863070000000008006c0001200000",
+    "sha256": "098f71d032be11074fddab7d584dd827d6f39acc3213d0bfa2c5a917fafc59ca"
+   },
+   {
+    "name": "viewSoftSkin.uxc",
+    "bytes": 1648,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800720006600000",
+    "sha256": "6ee31569da0434666d255deb7dcba852b66b58436b8b926ed0b1645f69cc58c7"
+   },
+   {
+    "name": "viewStillImageQuality.uxc",
+    "bytes": 1004,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800280003400000",
+    "sha256": "11be5edf845a901d3d6453145cea1cee43438d7ffef48faa5a2c4dcc26a9ec01"
+   },
+   {
+    "name": "viewStillImageSize.uxc",
+    "bytes": 1912,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800250004400000",
+    "sha256": "6701d49da9be5cd7ac133ab2a2d641fd176122b07e0f1c0084ea2625fc2e36b2"
+   },
+   {
+    "name": "viewStlrec.uxc",
+    "bytes": 66644,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800040051200500",
+    "sha256": "c7bf834e762956bcd87bc70ce49d1cdd1533b1b246cfb72b59ae432ef2770241"
+   },
+   {
+    "name": "viewTriDial.uxc",
+    "bytes": 3088,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800a40004400000",
+    "sha256": "9f3c8b48621854d768f8aa11f3db2d1b08cffe267a50e91ec0e7c4db9335f6e9"
+   },
+   {
+    "name": "viewUsbAuto.uxc",
+    "bytes": 2876,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800350009a00000",
+    "sha256": "9f53e495ecf56227eb05899b092a64060db3d1ccfe5d74ccd110d9e65da41024"
+   },
+   {
+    "name": "viewUsbMTP.uxc",
+    "bytes": 2360,
+    "magic": "uxc",
+    "header_hex": "757863070000000008001e0007800000",
+    "sha256": "a3a178926e02abdcf3a7c6151fb97f3e2c2873e786df98f5f17c6c0da9f4a5c2"
+   },
+   {
+    "name": "viewUsbMassStorage.uxc",
+    "bytes": 2104,
+    "magic": "uxc",
+    "header_hex": "757863070000000008001b0005600000",
+    "sha256": "8e975a6aa29e76db7e3a3219035c8cf380ad7363c62dea297b835ccdc82c920f"
+   },
+   {
+    "name": "viewUsbRemotePc.uxc",
+    "bytes": 632,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800790003400000",
+    "sha256": "a0083d7dd11cf7c02342e3c92c577747afca522e778a7e65f8747382e8517626"
+   },
+   {
+    "name": "viewUserUpdate.uxc",
+    "bytes": 720,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800140005600000",
+    "sha256": "497f22ff030b224df23f14b0650352659c854d2ebdc88f25ba8e3e3b6f0fccde"
+   },
+   {
+    "name": "viewVersionNumber.uxc",
+    "bytes": 1108,
+    "magic": "uxc",
+    "header_hex": "757863070000000008000a0002200000",
+    "sha256": "494080f6fad68efa25d9628d39c7642f5290334ff44e82efd20b650bdafe4d33"
+   },
+   {
+    "name": "viewViewOnTVForConnect.uxc",
+    "bytes": 2372,
+    "magic": "uxc",
+    "header_hex": "7578630700000000080097000de00000",
+    "sha256": "4061a8e5ac5efc3efe2c8104fa125dbdb4ac0c64a75f950bfadb37969d917e79"
+   },
+   {
+    "name": "viewViewOnTVForSinglePb.uxc",
+    "bytes": 1400,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800980009a00000",
+    "sha256": "ad18c6c577e7653b1a5ab797d62ed1a50473385ae8dbc2e3811b661e67f998a3"
+   },
+   {
+    "name": "viewViewOnTVForSlideShow.uxc",
+    "bytes": 1384,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800940006600000",
+    "sha256": "d646fad0d5649dec77a3e3dbe8734436279ba5b97f9d9cd7d08d4cadcfc8f3ad"
+   },
+   {
+    "name": "viewViewOnTVForSlideShowSetting.uxc",
+    "bytes": 2236,
+    "magic": "uxc",
+    "header_hex": "7578630700000000080092000bc00000",
+    "sha256": "77a1f10fe48f4d9a7efb28c04a6878bf3f2e8a6ac420a085dc743f3909e3a574"
+   },
+   {
+    "name": "viewVolume.uxc",
+    "bytes": 556,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800860001200000",
+    "sha256": "72c04e18212be783a72a6074b38abb32f9605000d5bc1aa19dacba262700b634"
+   },
+   {
+    "name": "viewWaterProof.uxc",
+    "bytes": 1256,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800a60002200000",
+    "sha256": "132d46b18892ce13f42848e2e7b1f56ebf068306f9fd78e902e653475b27d695"
+   },
+   {
+    "name": "viewWhiteBalance.uxc",
+    "bytes": 5960,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800340005600000",
+    "sha256": "10a0de602fb424e2d852c1306176b632f504f9698209a96d223e0dbacc39ff3d"
+   },
+   {
+    "name": "viewWidgetTest.uxc",
+    "bytes": 120,
+    "magic": "uxc",
+    "header_hex": "75786307000000080800590003400000",
+    "sha256": "181bc1ce13db52096567d4e0f2a4736524f669cc54755f766a7f9b10cea047e6"
+   },
+   {
+    "name": "viewWlanTest.uxc",
+    "bytes": 1968,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800a00002200000",
+    "sha256": "2804a8e665b175d8e2aa357c685b3bc91770f63c6057331f0cb57ef7809ec471"
+   },
+   {
+    "name": "viewZoomPb.uxc",
+    "bytes": 1508,
+    "magic": "uxc",
+    "header_hex": "75786307000000000800070004400000",
+    "sha256": "ee162cc24a35f676a21fc1fd7f8db611937b99f80a8c6d34f935853500bf0a56"
+   },
+   {
+    "name": "viewmovierecpatch.uxc",
+    "bytes": 79412,
+    "magic": "uxc",
+    "header_hex": "757863070000000008001d004de00400",
+    "sha256": "3c94bd60b1142f8ca579676beed467bbede3564aa20482d798be8e7285403fc4"
+   },
+   {
+    "name": "viewmovierecpatch_c.uxc",
+    "bytes": 35896,
+    "magic": "uxc",
+    "header_hex": "7578630700000000080063002f000300",
+    "sha256": "ae53ff7d611c23be5857f42348470395b75806a91a59fd3697ce4499d319518f"
+   }
+  ]
+ },
+ "startup_candidates": {
+  "WebApiLauncher.sh": "#!/bin/sh\n\necho \"busybox killall orb-server\"\nbusybox killall orb-server\n\necho \"Starting orb-server!\"\nLD_LIBRARY_PATH=/usr/glib orb-server -f /usr/share/network/remotecontrol -p 10000 -D -1 &\necho \"... Started!\"\n",
+  "android_console.sh": "#!/bin/sh -x\necho \"Starting android console...\"\nexport PATH=/sbin:/vendor/bin:/system/sbin:/system/bin:/system/xbin\nexport LD_LIBRARY_PATH=/vendor/lib:/system/lib\nexport ANDROID_BOOTLOGO=1\nexport ANDROID_ROOT=/system\nexport ANDROID_ASSETS=/system/app\nexport ANDROID_DATA=/data\nexport EXTERNAL_STORAGE=/mnt/sdcard\nexport ASEC_MOUNTPOINT=/mnt/asec\nexport LOOP_MOUNTPOINT=/mnt/obb\nexport BOOTCLASSPATH=/system/framework/core.jar:/system/framework/bouncycastle.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/android.policy.jar:/system/framework/services.jar:/system/framework/core-junit.jar\n/bin/busybox chroot /android /system/bin/sh\n",
+  "appdbglv.sh": "#!/bin/sh\n\nCMDNAME=${0#/usr/bin/}\n\nif [ -e /usr/bin/ulogio.elf ] ; then\n\tULOGIOCMD=ulogio.elf\nelse\n\tULOGIOCMD=ulogio\nfi\n\nAPPSYSTEM_NO=131\nMODELSUBSYS_NO=135\nVIEWSUBSYS_NO=136\nWGTSUBSYS_NO=137\n\nSUBSYSTEM_NO=$APPSYSTEM_NO\nSUBSYS_SELECT=legacy\n\n#------------------------------------------------------\n#  USAGE\n#------------------------------------------------------\nUsage()\n{\n\techo \"Usage: $CMDNAME [option] [category|modelID|viewID|wgtDlogID] [level]\"\n\techo \"  options  -d   set to default\"\n\techo \"           -i   infomation(show setting)\"\n\techo \"           -o   other subsystem\"\n\techo \"           -s   silent\"\n\tif [ \"$ULOGIOCMD\" = \"ulogio.elf\" ] ; then\n\t\techo \"           -r   rewind\"\n\tfi\n\techo \"           -m   each model\"\n\techo \"           -v   each view\"\n\techo \"           -q   inquire model/view id number\"\n\techo \"                    ex. $CMDNAME -q view/TOOL_MENU\"\n\techo \"           -w   widget\"\n\techo \"\"\n\techo \"           $CMDNAME cannot accept multiple options at same time.\"\n\techo \"  category  all | view | model | vmng | mmng | mbase | cbase  | vbase | fmwk | wgt | wrapper\"\n\techo \"  level     clr | err | war | dbg | info | off\"\n\texit 0\n}\n\nSubsysModel_set()\n{\n\tSUBSYSTEM_NO=$MODELSUBSYS_NO\t\t# 0x87\n\tSUBSYS_SELECT=\"model\"\n}\n\nSubsysView_set()\n{\n\tSUBSYSTEM_NO=$VIEWSUBSYS_NO\t\t# 0x88\n\tSUBSYS_SELECT=\"view\"\n}\n\nSubsysWgt_set()\n{\n\tSUBSYSTEM_NO=$WGTSUBSYS_NO\t\t# 0x89\n\tSUBSYS_SELECT=\"wgt\"\n}\n\n#------------------------------------------------------\n#  OPTIONS\n#------------------------------------------------------\nOptions()\n{\n\tcase $1 in\n\t\t-*) HIFEN=\"TRUE\";;\n\tesac\n\n\tif [ \"$HIFEN\" = \"TRUE\" ]; then\n\t\tHIFEN_EXIT=\"yes\"\n\n\t\t# debug\n\t\tif [ \"$1\" = \"-b\" -o  \"$1\" = \"-B\" ]; then\n\t\t\tAPPDBGLVSH_DEBUG=yes\n\t\t\tshift\n\t\t\techo \"debug on, $1\"\n\t\tfi\n\n\t\t# clear filter setting(rollback to default)\n\t\tif [ \"$1\" = \"-d\" -o \"$1\" = \"-D\" ]; then\n\t\t\t$ULOGIOCMD filter clear\n\t\t\t$ULOGIOCMD filter on 0 error\n\t\tfi\n\n\t\t# information(show setting)\n\t\tif [ \"$1\" = \"-i\" -o \"$1\" = \"-I\" ]; then\n\t\t\techo \"app category ids(hex):\"\n\t\t\techo \"    1 - view    2 - model   3 - vmng   4 - mmng   5 - cbase\"\n\t\t\techo \"    6 - mbase   7 - vbase   8 - fmwk   9 - wgt    a - wrapper\"\n\t\t\t$ULOGIOCMD filter info\n\t\tfi\n\n\t\t# other subsystem\n\t\tif [ \"$1\" = \"-o\" -o \"$1\" = \"-O\" ]; then\n\t\t\tshift\n\t\t\tif [ \"$1\" = \"clear\" -o \"$2\" = \"clear\" -o \"$3\" = \"clear\" ]; then\n\t\t\t\techo $CMDNAME': cannot apply \"clear\" to each component. try only \"clear\" for all clear'\n\t\t\telse\n\t\t\t\tif [ $# -eq 2 ] ; then\n\t\t\t\t\tif [ \"$2\" = \"off\" ]; then\n\t\t\t\t\t\t$ULOGIOCMD filter off $1\n\t\t\t\t\telse\n\t\t\t\t\t\tif [ \"$2\" = \"on\" ]; then\n\t\t\t\t\t\t\t$ULOGIOCMD filter on $1 info\n\t\t\t\t\t\telse\n\t\t\t\t\t\t\t$ULOGIOCMD filter on $1 $2\n\t\t\t\t\t\tfi\n\t\t\t\t\tfi\n\t\t\t\telse\n\t\t\t\t\tif [ $# -eq 3 ] ; then\n\t\t\t\t\t\tif [ \"$3\" = \"off\" ]; then\n\t\t\t\t\t\t\techo $CMDNAME': cannot apply \"off\" to each component. typing \"'$1' err\" might reduce messages.'\n\t\t\t\t\t\telse\n\t\t\t\t\t\t\t$ULOGIOCMD filter on $1 $2 $3\n\t\t\t\t\t\tfi\n\t\t\t\t\telse\n\t\t\t\t\t\techo $CMDNAME': illeagal parameter(s)'\n\t\t\t\t\tfi\n\t\t\t\tfi\n\t\t\tfi\n\t\tfi\n\n\t\t# rewind\n\t\tif [ \"$1\" = \"-r\" -o \"$1\" = \"-R\" ]; then\n\t\t\tif [ \"$ULOGIOCMD\" = \"ulogio.elf\" ] ; then\n\t\t\t\t$ULOGIOCMD rewind\n\t\t\tfi\n\t\tfi\n\n\t\t# silent\n\t\tif [ \"$1\" = \"-s\" -o \"$1\" = \"-S\" ]; then\n\t\t\t$ULOGIOCMD filter off 0\n\t\tfi\n\n\t\t# each model\n\t\tif [ \"$1\" = \"-m\" -o \"$1\" = \"-M\" ]; then\n\t\t\tSubsysModel_set\n\t\t\tHIFEN_EXIT=\"no\"\n\t\tfi\n\t\t# each view\n\t\tif [ \"$1\" = \"-v\" -o \"$1\" = \"-V\" ]; then\n\t\t\tSubsysView_set\n\t\t\tHIFEN_EXIT=\"no\"\n\t\tfi\n\t\t# widget\n\t\tif [ \"$1\" = \"-w\" -o \"$1\" = \"-W\" ]; then\n\t\t\tSubsysWgt_set\n\t\t\tHIFEN_EXIT=\"no\"\n\t\tfi\n\n\t\t# model/view id number inquiry\n\t\tif [ \"$1\" = \"-q\" -o \"$1\" = \"-Q\" ]; then\n\t\t\techo \"*** check debug level if nothing is shown. ***\"\n\t\t\techo \"***   \\\"$CMDNAME cbase error\\\" required.   ***\"\n\t\t\techo \"\"\n\t\t\ttestcmd.elf --sync 0x83014b other 0x1700200C str 0x17002009 $2\n\t\tfi\n\n\t\t# exit if not -v or -m\n\t\tif [ \"$HIFEN_EXIT\" = \"yes\" ]; then\n\t\t\texit 0;\n\t\tfi\n\tfi\n}\n\ndo_ulogio_filter_clear() {\n\tif [ \"$SUBSYS_SELECT\" = \"legacy\" ]; then\n\t\t$ULOGIOCMD filter clear\n\telse\n\t\techo $CMDNAME': cannot clear by each subsystem or component. use \"all clr\".'\n\tfi\n}\n\ndo",
+  "change_mode.sh": "#!/bin/sh\n\nusage()\n{\n\techo \"Usage   : change_mode.sh <param>\"\n\techo \"param   : \"\n\techo \"    0   : kernel boot\"\n\techo \"    1   : kernel boot -> created global infra\"\n\techo \"    2   : kernel boot -> created global infra -> LIRO boot\"\n\techo \"    3   : kernel boot -> created global infra -> LIRO boot -> appFw boot (**default**)\"\n\techo \"    4   : kernel boot -> created global infra(nounified driver)\"\n\techo \"    5   : kernel boot -> created global infra(nounified driver) -> LIRO boot\"\n\techo \"    6   : kernel boot -> created global infra(nounified driver) -> LIRO boot -> appFw boot\"\n\techo \"  ----  : \"\n\techo \"    7   : kernel boot -> created global infra -> LIRO boot -> appFw boot (w/ LeakTracer)\"\n\techo \"    8   : kernel boot -> created global infra -> LIRO boot -> appFw boot (sslibc Wfree Check Mode)\"\n\techo \"    9   : kernel boot -> created global infra -> LIRO boot -> appFw boot (KMC ICE)\"\n\techo \"    a   : kernel boot -> created global infra -> LIRO boot -> appFw boot (target gdb)\"\n\techo \"    b   : kernel boot -> created global infra -> LIRO boot -> appFw boot (gdbserver)\"\n\techo \"    d   : kernel boot -> created global infra -> LIRO boot -> appFw boot (DUMA)\"\n\techo \"    e   : kernel boot -> created global infra -> LIRO boot -> appFw boot (Electric Fence)\"\n\techo \" --help : display Usage\"\n}\n\n\nif [ ! -d /setting/mode ] ; then \n\tmkdir -p /setting/mode\nfi\n\nMODE_FILE=/setting/mode/dmode\nif [ ! -f $MODE_FILE ] ; then \n\techo > $MODE_FILE\nfi\n\nchmod 777 $MODE_FILE\n\nif [ $# = 0 ]; then\n\techo \"Invalid parameter.\"\n\tusage\n\texit 1\nelif [ $1 = 0 ]; then\n\techo 0 > $MODE_FILE\n\techo \"Changed your mode to mode0.\"\nelif [ $1 = 1 ]; then\n\techo 1 > $MODE_FILE\n\techo \"Changed your mode to mode1.\"\nelif [ $1 = 2 ]; then\n\techo 2 > $MODE_FILE\n\techo \"Changed your mode to mode2.\"\nelif [ $1 = 3 ]; then\n\techo 3 > $MODE_FILE\n\techo \"Changed your mode to mode3(default).\"\nelif [ $1 = 4 ]; then\n\techo 1n > $MODE_FILE\n\techo \"Changed your mode to mode1(nounified driver).\"\nelif [ $1 = 5 ]; then\n\techo 2n > $MODE_FILE\n\techo \"Changed your mode to mode2(nounified driver).\"\nelif [ $1 = 6 ]; then\n\techo 3n > $MODE_FILE\n\techo \"Changed your mode to mode3(nounified driver).\"\nelif [ $1 = 7 ]; then\n\techo 3L > $MODE_FILE\n\techo \"Changed your mode to mode3(LeakTracer).\"\nelif [ $1 = 8 ]; then\n\techo 3w > $MODE_FILE\n\techo \"Changed your mode to mode3(sslibc WCheck).\"\nelif [ $1 = 9 ]; then\n\techo 3k > $MODE_FILE\n\techo \"Changed your mode to mode3(KMC ICE).\"\nelif [ $1 = a ]; then\n\techo 3g > $MODE_FILE\n\techo \"Changed your mode to mode3(target gdb).\"\nelif [ $1 = b ]; then\n\techo 3s > $MODE_FILE\n\techo \"Changed your mode to mode3(gdbserver).\"\nelif [ $1 = d ]; then\n\techo 3d > $MODE_FILE\n\techo \"Changed your mode to mode3(DUMA).\"\nelif [ $1 = e ]; then\n\techo 3e > $MODE_FILE\n\techo \"Changed your mode to mode3(eFence).\"\nelif [ $1 = \"--help\" ]; then\n\tusage\n\texit 1\nelse\n\techo \"Invalid parameter.\"\n\tusage\n\texit 1\nfi\n\n\necho \"============================\"\necho \"Please reboot your system.\"\n",
+  "clean_data.sh": "#!/bin/sh\n\n#######################################\n# must be in sync with s_start_android.sh\n#######################################\n\nmkdir -p  /android/data/data/\nchmod 777 /android/data/data\nmkdir -p  /android/data/system/\nchmod 777 /android/data/system\n\n\n#######################################\n# must be in sync with init.rc\n#######################################\nmkdir -p  /android/data/backup/\nchmod 777 /android/data/backup\n\nmkdir -p  /android/data/lib/\nchmod 777 /android/data/lib\n",
+  "compat_firmware.sh": "#!/bin/sh -e\n\n# This is ported from Ubuntu but ubuntu uses these directories which\n# other distributions don't care about:\n# FIRMWARE_DIRS=\"/lib/firmware/updates/$(uname -r) /lib/firmware/updates \\\n#               /lib/firmware/$(uname -r) /lib/firmware\"\n# If your distribution looks for firmware in other directories\n# feel free to extend this and add your own directory here.\n#\nFIRMWARE_DIRS=\"/usr/wlan/ath/\"\n\nerr() {\n\techo \"$@\" >&2\n\tlogger -t \"${0##*/}[$$]\" \"$@\" 2>/dev/null || true\n}\n\nif [ \"$ACTION\" != \"add\" ] ; then\n    exit 0\nfi\n\nif [ ! -e /sys$DEVPATH/loading ]; then\n\terr \"udev firmware loader misses sysfs directory\"\n\texit 1\nfi\n\nfor DIR in $FIRMWARE_DIRS; do\n\t[ -e \"$DIR/$FIRMWARE\" ] || continue\n\techo 1 > /sys$DEVPATH/loading\n\tcat \"$DIR/$FIRMWARE\" > /sys$DEVPATH/data\n\techo 0 > /sys$DEVPATH/loading\n\texit 0\ndone\n\necho -1 > /sys$DEVPATH/loading\nerr \"Cannot find  firmware file '$FIRMWARE'\"\nmkdir -p /dev/.udev/firmware-missing\nfile=$(echo \"$FIRMWARE\" | sed 's:/:\\\\x2f:g')\nln -s -f \"$DEVPATH\" /dev/.udev/firmware-missing/$file\nexit 1\n",
+  "doemparse.sh": "#! /bin/sh\n\n# doemparse.sh\n\nexport PATH=/bin:/usr/bin:/devel/usr/bin\n\nif [ 0 -eq $# ] ; then\n\temparse.pl -f /proc/klog -s /System.map -t \"/usr/lib /lib\" | c++filt\nelse\n\tif [ $1 = '/' ] ; then\n\t\temparse.pl -f /proc/klog -s /System.map -t / | c++filt\n\telse\n\t\techo 'Usage : doemparse.sh </>'\n\t\techo '    wraps emparse.pl.'\n\t\techo '    The option \"/\" is to set library path to root.'\n\tfi\nfi\n",
+  "load_init_bk.sh": "#!/bin/sh\n\nLOAD_ERR=101\n\ncur_dir=\"$PWD\"\nroot_dir=/android/\n\ndir_data=data/\n\nini_bk_tag=/setting/iniok\ndes_ini_bk=/setting/init_bk.bak\n\ndes_data_bk1=/android/data/backup/bk1.bak\ndes_data_bk2=/android/data/backup/bk2.bak\n\n\n####\ncd $root_dir\n\n\necho \"  155 B  load $des_ini_bk\" > /proc/snsc_boot_time\n#if [ -e $ini_bk_tag ]\n#then\n\ttar xf $des_ini_bk $dir_data\n#else\n#\texit $LOAD_ERR\n#fi\necho \"  155 E  load $des_ini_bk\" > /proc/snsc_boot_time\n\ndd if=$des_data_bk1   of=$des_data_bk2  bs=512K\necho \"  155 M  copy BK1 done.\"  > /proc/snsc_boot_time\n\n\ncd $cur_dir\n\n",
+  "make_init_bk.sh": "#!/bin/sh\n\n\n\ncur_dir=\"$PWD\"\nroot_dir=/android/\n\ndir_data=data/\n\nini_bk_tag=/setting/iniok\ndes_ini_bk=/setting/init_bk.bak\n\n\n\n\n\n\n####\ncd $root_dir\n\necho \"  155 B  make $des_init_bk\" > /proc/snsc_boot_time\n\nrm -f $ini_bk_tag\ntar cvf  $des_ini_bk  $dir_data\n\nif [ $? -eq 0 ] \nthen\n\ttouch $ini_bk_tag\nfi\n\necho \"  155 E  make $des_init_bk\" > /proc/snsc_boot_time\n\ncd $cur_dir\n",
+  "network.sh": "#!/bin/sh\n\n/usr/bin/WS_SubProcess.elf\n\n",
+  "s_start_android.sh": "#!/bin/sh\n\necho \"s_start_android_set.sh\"\n\nbk_dir=/android/data/backup\n\nmount -t tmpfs tmpfs /android\ncd android\ngzip -dc /usr/bin/ramdisk.img | busybox cpio -idm\nmount -t ext2 -o ro /dev/dnflasha16 system\nmount -t vfat -o dirsync,noatime,batch_sync,posix_attr,uid=1000,gid=1000,umask=0 /dev/nflasha17  data\nret=$?\nif [ $ret -eq 0 ]; then\n    mkdir -p $bk_dir\n    chmod 777 $bk_dir\n    \n    /usr/bin/chk_bkfile.elf\n    ret=$?\n    if [ $ret -eq 0 ]; then\n\techo \"bk.bak not found\"\n\tmkdir data/data\n\tif [ ! -f $bk_dir/data.img ]; then\n\t    dd if=/dev/zero of=$bk_dir/data.img bs=1024k count=1\n\tfi\n\tmke2fs -F -N 1024 -m 0 $bk_dir/data.img\n\tdd if=$bk_dir/data.img of=/dev/ram8 bs=1024K count=1\n\tmount -o dirsync,sync /dev/ram8 data/data\n\tchmod 777 data/data\n\trm -f $bk_dir/data.img\n\t\n\tmkdir data/system\n\tif [ ! -f $bk_dir/sys.img ]; then\n\t    dd if=/dev/zero of=$bk_dir/sys.img bs=256k count=1\n\tfi\n\tmke2fs -F -N 256 -m 0 $bk_dir/sys.img\n\tdd if=$bk_dir/sys.img of=/dev/ram9 bs=256K count=1\n\tmount -o dirsync,sync /dev/ram9 data/system\n\tchmod 777 data/system\n\trm -f $bk_dir/sys.img\n    else\n\techo \"bk.bak found!\"\n    fi\nelse\nmount -t ext2 /dev/nflasha17  data\nmkdir -p $bk_dir\nchmod 777 $bk_dir\nfi\ncd -\n\ninsmod /usr/kmod/usbg_adb.ko\n\necho \"Starting Android...\"\nrm -f /android/tmp/*\numask 000\n\n#mkdir -p /android/system/cgroup\t# create when \"make firm\"\nmount -t tmpfs cgroup_root /android/system/cgroup\nmkdir /android/system/cgroup/memory\nmount -t cgroup -omemory none /android/system/cgroup/memory\nmkdir /android/system/cgroup/memory/android\necho 113M > /android/system/cgroup/memory/android/memory.limit_in_bytes\necho $$ > /android/system/cgroup/memory/android/tasks\n\n/bin/busybox taskset 0x00000008 /bin/busybox chroot /android /init &\n",
+  "swap_prepare.sh": "#!/bin/sh\n\nPROC_SWAP=/proc/ssboot/swapfile\nSWAP_FILE=/dev/nflasha8\nPART_DIR=/sys/block/nflasha0/nflasha0p8\n\nMAX_KB=60000\n\n\nif [ -d \"$PART_DIR\" ]; then\n    echo \"SwapPartition Found !\"\n\n    echo /dev/compswap > $PROC_SWAP\n    echo $SWAP_FILE > /sys/block/compswap0/backing_file\n    echo $MAX_KB > /sys/block/compswap0/disksize_kb\n    echo > /sys/block/compswap0/init\n\n    echo \"SwapPartition Prepare Done (compswap) !\"\n    exit 0\nelse\n    echo \"SwapPartition($SWAP_FILE) Not Found.\"\n    exit 1\nfi\n",
+  "up.sh": "#!/bin/sh\n\nUPMNT=/setting\nUPDIR=$UPMNT/updater\nUPMODE=$UPDIR/mode\nUPMODE1=$UPDIR/mode1\n\nLSI_MAIN=1\nLSI_SUB=2\n\n#######################################\n### Function declaration\n\n### change to usermode\nfunc_usermode()\n{\n\t#delete other mode flags\n\trm -f $UPDIR/mode*\n\n\t#create mode flag\n\ttouch $UPDIR/mode\n\n\t#sync\n\tsync\n\n\t# file check and message\n\tif [ -f \"$UPMODE\" ] ; then\n\t\techo \"next boot...   UFP mode\"\n\telse\n\t\techo \"next boot...   Normal mode\"\n\tfi\n}\n\n### change to version skip mode\nfunc_verskip()\n{\n\t#delete other mode flags\n\trm -f $UPDIR/mode*\n\n\t#create mode flag\n\ttouch $UPDIR/mode $UPDIR/mode6\n\n\t#sync\n\tsync\n\n\t# file check and message\n\tif [ -f \"$UPDIR/mode6\" ] ; then\n\t\techo \"next boot...   Version Skip mode\"\n\telse\n\t\techo \"next boot...   Normal mode\"\n\tfi\n}\n\n### change to version skip mode\nfunc_mscrypt()\n{\n\t#delete other mode flags\n\trm -f $UPDIR/mode*\n\n\t#create mode flag\n\ttouch $UPDIR/mode $UPDIR/mode5\n\n\t#sync\n\tsync\n\n\t# file check and message\n\tif [ -f \"$UPDIR/mode5\" ] ; then\n\t\techo \"next boot...   MS Crypt mode\"\n\telse\n\t\techo \"next boot...   Normal mode\"\n\tfi\n}\n\n### change to servicemode\nfunc_servicemode()\n{\n\t#delete other mode flags\n\trm -f $UPDIR/mode*\n\n\t#create mode flag\n\ttouch $UPDIR/mode $UPDIR/mode3\n\n\t#sync\n\tsync\n\n\t# file check and message\n\tif [ -f \"$UPDIR/mode3\" ] ; then\n\t\techo \"next boot...   Service mode\"\n\telse\n\t\techo \"next boot...   Normal mode\"\n\tfi\n\n}\n\n### change to keepbackup mode\nfunc_keepbackup()\n{\n\t#delete other mode flags\n\trm -f $UPDIR/mode*\n\n\t#create mode flag\n\ttouch $UPDIR/mode $UPDIR/mode1 $UPDIR/mode4\n\n\t#sync\n\tsync\n\n\t# file check and message\n\tif [ -f \"$UPDIR/mode4\" ] ; then\n\t\techo \"next boot...   Keepbackup mode\"\n\telse\n\t\techo \"next boot...   Normal mode\"\n\tfi\n}\n\n\n### modify version\n## $1 : target version\nfunc_modver()\n{\n\tlocal _newver=$1\n\ttest ${#_newver} -eq 4 || { echo \"Invalid Parameter\" ; return 1 ; } \n\n\tif [ ! -e /root/IAMUPDATER ] ; then\n\t\tmount -t tmpfs -o size=1024 tmpfs /tmp_updater\n\tfi\n\n\t#get current version\n\tud_datcnv.elf -d -i /setting/updater/dat4 -o /tmp_updater/upcurver -a\n\tif [ $? -ne 0 ] ; then\n\t\techo \"Could not get current version\" ; return 1 ;\n\tfi\n\tlocal _current\n\t_current=`cat /tmp_updater/upcurver`\n\n\trm -f /tmp_updater/upcurver\n\n\t#write new version into tempfile\n\techo \"$_newver\" > /tmp_updater/upnewver\n\tud_datcnv.elf -e -i /tmp_updater/upnewver -o /setting/updater/dat4 -a\n\tif [ $? -ne 0 ] ; then\n\t\techo \"Could not write new version\" ; return 1 ;\n\tfi\n\n\t#sync\n\tsync\n\tsync\n\n\trm -f /tmp_updater/upnewver\n\n\tif [ ! -e /root/IAMUPDATER ] ; then\n\t\tumount /tmp_updater\n\tfi\n\n\t#message\n\techo \"Modify verion $_current -> $_newver\"\n}\n\n### modify model\n## $1 : target model\nfunc_modmod()\n{\n\tfunc_com_mod_modreg \"model\" \"dat2\" $1\n}\n\n### modify region\n## $1 : target region\nfunc_modreg()\n{\n\tfunc_com_mod_modreg \"region\" \"dat3\" $1\n\n}\n\n### common func modmod, modreg\n# $1 : Prompt String\n# $2 : filename ( dat2 or dat3 )\n# $3 : new value\nfunc_com_mod_modreg()\n{\n\tlocal _file=$2\n\tlocal _newval=$3\n\ttest ${#_newval} -eq 8 || { echo \"Invalid Parameter\" ; return 1 ; }\n\n\tif [ ! -e /root/IAMUPDATER ] ; then\n\t\tmount -t tmpfs -o size=1024 tmpfs /tmp_updater\n\tfi\n\n\tmkdir -p /tmp_updater/upmnt\n\tmount -t vfat /dev/nflasha1 -o posix_attr,noatime,nodiratime,shortname=mixed /tmp_updater/upmnt\n\tif [ $? -ne 0 ] ; then\n\t\techo \"Error Failed to mount p1\" ; exit 1\n\tfi\n\n\t#get current value\n\tud_datcnv.elf -d -i /tmp_updater/upmnt/$_file -o /tmp_updater/upcurval -a\n\tif [ $? -ne 0 ] ; then\n\t\techo \"Could not get current value\"\n\t\tumount /tmp_updater/upmnt\n\t\texit 1\n\tfi\n\n\tlocal _current\n\t_current=`cat /tmp_updater/upcurval`\n\trm -f /tmp_updater/upcurval\n\n\t#write new value into tempfile\n\techo \"$_newval\" > /tmp_updater/upnewval\n\tud_datcnv.elf -e -i /tmp_updater/upnewval -o /tmp_updater/upmnt/$_file -a\n\tif [ $? -ne 0 ] ; then\n\t\techo \"Could not write new value\" ; unmount /tmp_updater/upmnt ; exit 1 ;\n\tfi\n\n\tumount /tmp_updater/upmnt\n\n\trm -rf /tmp_updater/upnewval /tmp_updater/upmnt\n\n\tif [ ! -e /root/IAMUPDATER ] ; then\n\t\tumount /tmp_updater\n\tfi\n\n\t#message\n\tec",
+  "usb_insmod.sh": "#!/bin/sh\n\ninsmod /kmod/usb_event.ko\ninsmod /kmod/usb_scd.ko\ninsmod /kmod/ups.ko\ninsmod /kmod/usb_otgcore.ko\ninsmod /kmod/usb_gadgetcore.ko\ninsmod /kmod/usb_portMonitor.ko\ninsmod /kmod/usbg_sen.ko\ninsmod /kmod/usb_extcmd.ko\n\n"
+ }
+}

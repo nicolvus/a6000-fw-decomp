@@ -30,6 +30,7 @@ y su evidencia `analysis/s<N>*/`; la categoría sale de reglas sobre el nombre d
 | Sensor / imager | [sensor-investigation](sensor-investigation.md), [S341 síntesis carril B](capture/s341-synthesis-b2.md), [S313 síntesis anterior](capture/s313-synthesis-carril-b.md) |
 | Obturador | [decisión S51](capture/s51-decision.md), [tesis](capture/tesis-obturador-electronico.md), [EFCS](capture/shutter-investigation.md), [SilentShutter](capture/silent-shutter-status.md), [viabilidad](feasibility-report.md), [subproyecto](../projects/electronic-shutter/README.md), [pruebas físicas P1–P8](capture/physical-test-plan.md) / [P13–P21](capture/physical-test-plan-2.md) |
 | Control / comunicación | [architecture](architecture.md), [subsystem-dependencies](subsystem-dependencies.md), [libObj A6000](capture/s380-libobj-a6000-map.md) |
+| GUI / interfaz | [carril GUI](gui/README.md), [G01 arquitectura](gui/g01-arquitectura.md) |
 | Imagen | [YC de EncodeStill](capture/encodestill-yc-contract.md), [SFRA](capture/sfra-electronic-frame-source.md), [SDF](capture/s103-sdf.md) |
 | Otros / módulos de trazas | [catálogo de hitos](capture/linea-general-re.md), [censo S178](capture/s178-census.md) |
 | Comparaciones | [comparative-analysis](comparative-analysis.md), [A7S vs A6000](capture/a7s-silent-reconstruction.md), [libObj A6000 vs A7S](capture/s385-libobj-a6000-vs-a7s-diff.md) |
