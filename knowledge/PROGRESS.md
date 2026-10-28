@@ -1,5 +1,19 @@
 # Progreso — sistema de conocimiento Sony A6000
 
+## E25-06 — Auditoría independiente de los paquetes 3.23 (B1a) y 3.24 — 27-10-2026
+
+Auditoría 100 % offline del commit `67fd3a40` (paquetes de DeepSeek). Parsers propios de `.dat`, FDAT y
+tar; descifrador AES propio validado contra el `.dat` original de Sony; `uc_crc32sum` reproducido sobre
+los 7 `*.sum`; B1a emulado con Unicorn frente al tipo 0 y al original (retorno 0 en 259 entradas, sin
+`0x1b080`, L0 en los tres arrancadores, escritores P4D/P4E filtrados con control positivo, comprobación
+de leva suprimida, operación 5 sin cambios). **145 comprobaciones, 0 fallos; 21 pruebas (15
+negativas).** A–K = SÍ, L = NO (sin defecto binario), M = NO (las pruebas de E25-05 pasan sin paquetes:
+2 passed / 9 skipped; el manifiesto no puede registrar FAIL; hay comprobaciones de constantes), N = SÍ,
+O/P/Q/R = NO por evidencia insuficiente. 3.24 vs 3.23: rangos del `.dat` predichos desde el formato =
+reales. Riesgos comprobados: R4, R5, R6, R7 (dos 3.23 con `config-323.yaml` idéntico) y R8 (el
+inventario R1 no tiene los paquetes nuevos). Nuevo pendiente E25-07. Informe:
+[E25-06](../docs/capture/e25-06-auditoria-independiente-paquetes.md).
+
 ## E25-05 — Paquetes offline 3.23 (B1a) y 3.24 (recuperación) — 27-10-2026
 
 Sesión 100 % offline sobre `f4bb7f50`; no se conectó la cámara ni se flasheó nada. **Plan de versiones

@@ -18,6 +18,8 @@ capacidad ni la imposibilidad de fotografía totalmente electrónica a resoluci�
   R1 tiene procedimiento y manifiesto (62/62 archivos, `verify` OK contra el origen), pero **la copia externa no está hecha ni verificada**.
   **E25-05**: paquetes 3.23 (tipo 0 + B1a) y 3.24 (recuperación) preparados y verificados offline en directorios separados
   ([informe](capture/e25-05-preparacion-paquetes-323-324.md)); el rollback 3.24 solo sirve con acceso al actualizador.
+  **E25-06** ([auditoría independiente](capture/e25-06-auditoria-independiente-paquetes.md)): ambos paquetes binariamente correctos
+  (145 comprobaciones, 0 fallos; N=SÍ), pero la instalación no se puede declarar segura (O/P/Q/R=NO). Antes de instalar, comprobar el SHA-256 (E25-07).
 - Estáticos cerrados con límite: E2–E5, E7, E8, E10 (a–c), E12, E14–E20, D1, D3, D4 y D6 ([evidencia](capture/s403-cierre-pendientes.md));
   E1 `NO_VERIFICADO` sin vías estáticas. Bloqueados por datos o hardware: E6, E9, E11, E13, D5; físicos F1–F6 (P1–P4, P6, P13–P16, P18–P21 ejecutadas el 26-10-2026 por USB (T001–T021, [registro](capture/registro-pruebas-camara.md)); P5/P11 caen con F4, P7/P17 descartadas; E22 cerrado con límite ([informe](capture/tipo2-analisis-estatico-2026-10-26.md)));
   respaldo R1 parcial (procedimiento y manifiesto; falta copia externa verificada), R2 cerrado y R3 bloqueado (historial con un binario de Sony). Sin firmware ejecutado ni cámara.
