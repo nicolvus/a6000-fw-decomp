@@ -3020,3 +3020,6 @@ Una foto normal de 4 s con `scripts/e25_19b_compuerta.py` (solo lectura, origina
 
 ## 28-10-2026 — E25-19b (tramo final): `cap` real y ciclo del evento en vuelo
 Corrige §4f/§4h (la entrada `[+8]=0` es el evento en vuelo). Decodificado el motor `Run(M)` 0x43b047d0 (`r1=M` al thunk, códigos 0–6), la creación de `M` con `[M]=copia de cap` (`0x4381ba9c`/`0x4378764c`) y la espera de sub 9 (`0x438d08e8` → `0x437db9f0`, −1). Una foto de 4 s (solo lectura, 51 muestras): `cap=0x952db580` física, shd 1, svd 0, ShutMode 3, `0x56c`=864, `0x570`=4176, SetRead 4091, `0x744`=4; ranura del grupo 1 ocupada 1,3–5,36 s por `M` (id 2, sub 9). Criterio A. Pendiente E25-19c (emisor del mensaje, `SetExposure`). Informe §4i; `scripts/e25_19b_ciclo.py`, `e25_19b_cap.py`, `tests/test_e25_19b_ciclo.py`.
+
+## 28-10-2026 — E25-19c: fin de exposición, mensaje y cronómetro
+El mensaje (3,3) que desbloquea sub 9 es el ID `0x0e` de Darwin; receptor `0x436b8ef0` y `caif_recv` comparten la cola `0x00056118` (vivo). BIONZ envía Tv (`pkt[2..3]`=3243 tras la foto de «8 s»=10,07 s); `cap+0x728` es un cronómetro de 32 µs leído en sub 10. Dos fotos (2 y 8 s) de solo lectura: 49 553/125 045/314 771 ticks con 2→≈1,6 s y 8→10 s por redondeo de RemoteShutter. Rama de host `74f=0` sin observar; pendiente E25-19d. Cámara sin modificar.
