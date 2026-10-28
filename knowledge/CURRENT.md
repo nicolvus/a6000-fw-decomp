@@ -1,6 +1,6 @@
 # Estado actual — léeme primero
 
-Contexto operativo mínimo para agentes. Última revisión: 27-10-2026 (E25-06, auditoría independiente de los paquetes 3.23/3.24; R1 pendiente de copia externa). Este archivo **no** es
+Contexto operativo mínimo para agentes. Última revisión: 28-10-2026 (E25-16, productor nativo de `r5`; R1 pendiente de copia externa). Este archivo **no** es
 historial ni fuente de verdad de los pendientes: ver [Responsabilidades](#responsabilidades-documentales).
 La versión íntegra anterior (2264 líneas, instantáneas S59–S627) está en
 [history/CURRENT-historial-2026-10-26.md](history/CURRENT-historial-2026-10-26.md); nada se borró.
@@ -59,6 +59,7 @@ flasheo salvo autorización expresa del usuario para un caso concreto.
   en la foto** (`0x438c831e`), pero no tiene el armado de exposición larga del A7S (`0x436f43c0`, `obj+0x3dc=2`). El límite de
   ~65 ms es también del firmware (clamp a un cuadro). [E25-14](../docs/capture/e25-14-imx235-imx210-exposicion-electronica.md).
 - **ShutMode 0 y temporización nativa (E25-15):** `SetExposure` y `+0x30` escriben bloques disjuntos (`blk+0x50/0x52/0x54/0x56/0x57` vs `blk+0x66/0x68/0x6a/0x6c`); `+0x30` no recibe ShutMode ni r5. Emulación A/B/C: solo cambian r5 y ShutMode; B (r5=1) ≈ 64–65 ms, C sigue la velocidad. El bloque `+0x30` es un código de posición (0..4095, conversión `0x436d8a90`, compartida con SetReadZ), no el Tv: corrige E25-14 A. >65 ms, bulb y 30 s siguen sin mecanismo demostrado. [E25-15](../docs/capture/e25-15-shutmode0-temporizacion-nativa.md).
+- **Cálculo autónomo de `r5` (E25-16):** BIONZ ya tiene el productor nativo `0x4383fa40`, llamado por los constructores normal (`0x437b46d0`, compuerta `cap+0x11b0`) y EFCS (`0x438417c0`). Lee Tv de `record+0xf6`, período de línea de `record+0xc`, VTS de `record+0x20` y multiplicador de `settings+0x4b8`; escribe `r5` y ShutMode 0. `0x4383fd6c` copia el bloque a `cap+0x64c` y `0x438c828c` llega a `SetExposure`. Emulación con VTS 4219: T047 ±1 línea; con 4266: 47 líneas (0,71 ms) de desviación; 1/15 y mayores saturan a 0. **No se hardcodea 4219**; el valor real de `record+0x20` no se verificó (T052 fase A). [E25-16](../docs/capture/e25-16-r5-autonomo-fotografia.md).
 - **Cortinas:** GPIO P4D=1ST_CURTAIN_MG, P4E=2ND_CURTAIN_MG, P4C=CA_1ST_CURTAIN_START, P4B=CA_RELEASE_LOCK_MSS (esquema + inspección;
   no son serie). El enlace banco/bit `0xf2910048` → P4E no consta en el firmware (E11).
 - **Recuperación (E24-01):** Darwin también controla la energía del cuerpo (`DD_ON1/2/3` desde `darwin_core`, tabla `0x28c6c`).

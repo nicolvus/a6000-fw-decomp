@@ -1,5 +1,21 @@
 # Progreso — sistema de conocimiento Sony A6000
 
+## E25-16 — Cálculo autónomo de `r5` en BIONZ — 28-10-2026
+
+Sesión 100 % offline (bytes, REA y emulación Unicorn; sin cámara). Hallado el productor nativo de
+`r5`: `0x4383fa40(record, settings)`. Lee el Tv de `record+0xf6`, el período de línea de
+`record+0xc`, el VTS de `record+0x20`, el suelo de `record+0x1c` y el multiplicador de
+`settings+0x4b8`; escribe `r5` en `record+0x64` y ShutMode 0 en `+0x6d`. Lo llaman el constructor
+normal (`0x437b46d0`, compuerta `[cap+0x11b0]`) y el EFCS (`0x438417c0`). La foto medida no lo usa
+(r5=1); `0x4383fd6c` copia `record+0x64..0x73` a `cap+0x64c` y `0x438c828c` llega a `SetExposure`
+(`0x436d6320` → vtable +0x28 → `0x436d6f6c`). La emulación con VTS 4219 reproduce T047 (±1 línea:
+4203/4154/3956/3122); con 4266 se desvía 47 líneas (0,71 ms). 1/15 y mayores saturan a 0 (negro), no
+son compatibles; >1 cuadro, bulb y 30 s siguen sin mecanismo. No se hardcodea 4219: el diseño usa el
+campo del registro; su valor real no se verificó (T052 fase A). C3 (tras `0x437f8a50`, antes de
+`0x436d6320`, copia a scratch + `0x4383fa40`) es la vía lógica recomendada; no hay parche instalable.
+29 pruebas nuevas; 59 con E25-14/E25-15. Informe:
+[E25-16](../docs/capture/e25-16-r5-autonomo-fotografia.md).
+
 ## E25-14 — Temporización IMX235/IMX210 — 28-10-2026
 
 Sesión 100 % offline (solo bytes; sin cámara ni emulación de sensor). Reconstruida la cadena Silent del

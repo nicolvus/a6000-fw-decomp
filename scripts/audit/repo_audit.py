@@ -17,6 +17,18 @@ MEMORIA = ROOT / "knowledge" / "audit" / "memoria.json"
 ESTADO_DOCS = ("docs/STATE.md", "knowledge/CURRENT.md", "knowledge/PROGRESS.md", "CONTEXT.md", "knowledge/agents/NEEDS-HUMAN.md")
 LINK = re.compile(r"(?<!!)\[[^\]]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
 ESTADOS = {"ABIERTO", "PARCIAL", "NO_VERIFICADO", "BLOQUEADO", "DIFERIDO", "CERRADO", "DESCARTADO"}
+
+
+def estado_valido(estado: str) -> bool:
+    """Acepta el estado base y sus calificadores habituales ('CON LÍMITE', '(…)').
+
+    El documento usa variantes como «CERRADO CON LÍMITE» o «ABIERTO (en prueba)»;
+    el estado base sigue siendo uno de ESTADOS.
+    """
+    return any(
+        estado == base or estado.startswith((base + " CON ", base + " ("))
+        for base in ESTADOS
+    )
 MAX_JSON = 30_000_000
 CAP = 60  # shortcut: lista truncada por categoría, subir si se necesita el detalle completo
 
@@ -171,7 +183,7 @@ def pendientes() -> dict:
     abiertas = [
         f for f in filas if f["seccion"].startswith(("A.", "B.", "D.", "E.")) and f["id"] != "—"
     ]
-    estados_mal = [f for f in abiertas if f["campo2"] not in ESTADOS]
+    estados_mal = [f for f in abiertas if not estado_valido(f["campo2"])]
     ids = [f["id"] for f in filas if f["id"] != "—"]
     dup = [i for i, n in Counter(ids).items() if n > 1]
     return {

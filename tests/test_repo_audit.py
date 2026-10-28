@@ -21,6 +21,13 @@ def test_md_links_reports_missing_target_and_ignores_urls(tmp_path, monkeypatch)
     assert [e["enlace"] for e in r["rotos"]["muestra"]] == ["nada.md"]
 
 
+def test_estado_valido_accepts_qualifiers():
+    assert audit.estado_valido("CERRADO CON LÍMITE")
+    assert audit.estado_valido("ABIERTO (instalado en T024, en prueba)")
+    assert audit.estado_valido("PARCIAL")
+    assert not audit.estado_valido("CERRADO PERO")
+
+
 def test_pendientes_have_valid_states_and_unique_ids():
     p = audit.pendientes()
     assert not p["estados_no_validos"] and not p["ids_duplicados"]
