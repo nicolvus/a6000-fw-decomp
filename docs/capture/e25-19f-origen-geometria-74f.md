@@ -1,0 +1,17 @@
+# E25-19f — Origen temporal de `cap+0x74f=1` (INCOMPLETO: sesión cortada por límite de uso)
+
+Fecha: 28-10-2026. Estático + emulación parcial + 1 foto normal de 4 s (solo lectura; originales T050 íntegros antes y después). Evidencia: `analysis/e25-19f/`, scripts `scripts/e25_19f/`, prueba `tests/test_e25_19f.py`.
+
+## Resultados (V = bytes, F = físico, I = inferencia)
+* **V — `0x4354b0ac` solo se ejecuta si `cap+0xc38 != 0`.** `0x4354a786 beq 0x4354b23a` (c38==0) lleva a la «rama B», desde la que `0x4354b0ac` y la producción `0x43af54d8/5504` no son alcanzables (CFG, tbb incluidos). `c38` lo recalcula `0x438106ec` (0x4381077a/80) en cada VD_Post: 1 si `cap+0x1f8≠0`, o flag del dispositivo, o contador de cuadro distinto (>1) del guardado en `G2+0x2c8`.
+* **F — el `cap` en vuelo tiene `c38=0`** (13 muestras, 2,0–5,7 s) y es **idéntico en toda la exposición**; solo en la última muestra se rellena (`0x1ec`=6048×4024, `0x728`, `0xd22`…). `0xbd8/0x964/0xc30/0xd54=0`: la rama A (que los escribe siempre) **nunca corrió** sobre este `cap`. Por tanto `0x4354b0ac` no explica el `74e=0x0100` observado.
+* **V — rama B restaura** `cap+0x73c..+0x988` (0x24c B, `memcpy` en `0x4354b28a`) y `cap+0xbe0` desde el global `G2=0x43eea328`; la rama A (con `1f8==0`) lo guarda (`0x4354b1c2 str [G2+0x10]←cap+0x74c`). Único acceso a `G2` es EndExps. **F:** `G2` en reposo = 0 y `G2+0x2c8`=0 mientras el contador vivo `[[dev+4]]`=90011 ⇒ la rama A→G2 no ha corrido desde el arranque; el bloque no fue la fuente del `00 01 00 01`.
+* **F — el objeto vivo de live view `0x43ee5184`** (`c38=1`, `1f8=4`) tiene `74c=0x06bf, 74e=0x023a` (74f=2): la rama A produce geometría real en LV, **no** `0x0100`.
+* **V — «ID 0x9405» no es un objeto de captura** sino una entrada de 12 B (id u16 @+4) de un directorio en `[cap+0x4a5c]` (`0x43b13b2c`→`0x43ae9226`, 36 entradas máx.); W1 escribe en el puntero devuelto (`0x438ab3e8`, `r6`=cap). Contenido no leído en vuelo (post-exposición `[cap+0x4a5c]`=0). P3 sin cerrar.
+* **V — escritores nuevos de bytes de `74c..74e` (no contados en 19d/19e):** `0x437f647a/647e` (`74c←[sp+0x1c]`, `74d←[sp+0x40]`, fn `0x437f5a04`, llamada solo desde `0x438c7b8a`), `0x437f3b64` (`74e`, fn `0x437f39b4`), `0x438bbd14`, `0x43b177f2/856`. **Candidatos al `74d`: 1→0 y a la procedencia del 1; sin analizar.** Ningún `strb` en `74f` salvo W1/W2/W3.
+* **Emulación (P1): NO concluyente.** El arnés (`emu.py`, `emular_endexps.py`) corre el código real sobre una instantánea física de 4 MB, pero con el objeto LV reproduce `sp+0x30c..0x31a` = 0 (físico: `74e=0x023a`): faltan efectos del bloque `0x4354a78a..0x4354a9a2` omitido. **No se evaluó `sp+0x312` del capture.** `0x437d1e6c` escribe `[r4+6]=sb>>12` (entero de un Q12).
+
+## Veredictos
+A NO (reconstruido el flujo y destino `r4+0x74e`, no el valor) · B SÍ (el `r4` de EndExps, mismo diseño que `cap`; alias con el cap en vuelo NO demostrado) · C NO · D no demostrado · E NO (la rama es inalcanzable con c38=0) · F NO · G NO · H NO (no hay escritor demostrado anterior; hay candidatos nuevos) · I NO · J NO · K NO · L SÍ (solo lectura; 1 foto de 4 s) · M NO.
+
+**Decisión: C parcial** — la hipótesis EndExps-bloque-2 queda descartada para el `cap` observado (c38=0 constante, rama A nunca corrió); el 1 sigue sin origen: siguiente mínimo = analizar `0x437f5a04` (desde `0x438c7b8a`) y `0x437f39b4`, y leer `[cap+0x4a5c]` en vuelo. No se reconsidera la decisión B de E25-19d. Sin auditoría global ruff/mypy ni push.
