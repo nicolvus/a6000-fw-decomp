@@ -120,6 +120,17 @@ El manejador del subestado 9 (el observado durante toda la exposición) **no esp
 paso 2/sub 9 no es un bucle de este manejador: la máquina queda parada hasta un **evento externo** que la haga avanzar (el que termina la exposición) y que no se ha identificado
 (temporizador, interrupción del imager o contador). Sigue sin leerse `cap`; el siguiente paso útil es leer en vuelo `cap+0x4ad0`/`0x4b80` y localizar al productor del evento de fin (quien encola paso 3/sub 11).
 
+### 4f. Productor del evento de fin: no hallado; lectura corregida de lo observado (V por bytes + I)
+
+- El bucle `0x43afbffc` entrega un evento solo si la compuerta `0x43afbf68(E, M, flag)` → `0x437e6224` → `0x43afc544` lo acepta (usa `cap+0x5488`, `cap+0x5490`, `cap+0x4b64` y `0x437e4fd8`);
+  si no, el evento se difiere en una matriz de 5 ranuras de 0x14 B. Los envíos (`0x437e519c`, `0x437e515a`) no tienen llamadores directos (se llaman por puntero).
+- **Corrección de §4c/4d (I)**: el evento visto de 1,06 a ≈ 32,5 s es el **pendiente** (siguiente en la cola), no el que se ejecuta. Que permanezca en cola toda la exposición indica que el
+  hilo despachador está ocupado en un manejador anterior (o la compuerta lo difiere) hasta el fin de la exposición; no que el manejador del subestado 9 espere (§4e: devuelve 0). El manejador
+  bloqueante no se ha identificado (candidatos: los de los subestados 2 y 8, `0x438c8474`, `0x437f00a4`).
+- Dato nuevo en `StartExposure` (`0x438c828c`, tras el prólogo ya conocido): calcula `[cap+0x570]` a partir de `[cap+0x56c]` y de `0x43ad90b6/0x436c2270/0x436c28d0`
+  (`(n+1)·K / (1000·[cap+0x56c] / x)`, entradas en bruto: cuentas de línea/tiempo) y lo registra con `cap+0x4b64`; también usa `cap+0x740` (si ≠ 0 conserva `[cap+0x570]`) y `cap+0x504`.
+  Campos a leer cuando `cap` esté demostrado: `cap+0x56c`, `0x570`, `0x1d8`, `0x1e0`, `0x4b64`, `0x5488`, `0x5490`.
+
 ## 5. Respuestas
 
 | # | Pregunta | Respuesta |
