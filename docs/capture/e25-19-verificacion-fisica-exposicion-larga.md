@@ -172,13 +172,80 @@ Reproducible: `scripts/e25_19b_compuerta.py --confirm-readonly --speed 4` (una f
 
 Dependencia única restante: identificar el **argumento real de la función de estado** (el que cumple `[arg]=cap`), p. ej. el valor de `r1` en el `blx` del thunk en el instante de entrega del evento de la ranura en vuelo (se necesita un punto de observación fuera de lo no intrusivo, o el escritor estático del segundo argumento en `0x437e534c`/`0x43afb408`), y el llamador de `Complete(E,M)` para ese evento.
 
+### 4i. E25-19b (tramo final): evento en vuelo, `Complete` y `cap` real (V = bytes de `av-cam.bin`; F = lectura física, solo lectura)
+
+Reproducible: `scripts/e25_19b_ciclo.py` (`analysis/e25-19b/ciclo.json`), `scripts/e25_19b_cap.py --confirm-readonly --speed 4` (`analysis/e25-19b/cap-4s.json`, 51 muestras; originales T050 íntegros antes/después; 1 disparo normal; nada escrito), `tests/test_e25_19b_ciclo.py` (5). Corrige §4f/§4h: la entrada de `E+0x14` con `[+8]=0` **es** el evento en vuelo (no «el siguiente»).
+
+**Diagrama del ciclo (direcciones reales; condiciones de transición).**
+
+```
+captura (0x437f08e4)           r5 = copia de cap  <- 0x4378764c(pool, cap)  [V]  (reserva 0x437dcfc8)
+   0x4381ba9c(plantilla, r5)   M = pool.pop 0x43b0473e; [M] = r5 (str r8,[r0] @0x4381bb12); copia functor y [M+0x23]   [V]
+gate 0x43afbf68 -> 0x437e6224  acepta: [E+0x2d]++ y entrada {M,.., +8=0} en la lista E+0x14      (E=0x43edbd9c grupo 1; en vuelo=1)  [V+F]
+0x437e534c(id,M)               selector[id](out,M) -> 0x43afb408 escribe el functor en M+8..M+0x1b       [V]
+0x43b04730(M)                  [M+4]->vtable[0]=0x4381befc: 0x439018b0(hilo [obj+4], msg{0x4381bf38}) = post al hilo [V]
+hilo: 0x4381bf38 (drena)       sem 0x1b; 0x43afc5c6 saca M; 0x43b047d0 Run(M)                          [V]
+Run(M) 0x43b047d0              functor(M+8) con r1=M (0x43b047e2 mov r1,r4 -> 0x43b047aa -> 0x43b0478c blx thunk)
+   thunk 0x43afb3ba(r0=M+8,r1=M): r3=[r0+8]=[M+0x10]=0x43b1b025 ; r0=r1=M ; blx   -> 0x43b1b024(M)       [V]
+   0x43b1b024: sub=[M+0x23] -> tbh @0x43b1b030 -> 9 => 0x438c289c ; 2 => 0x438c8474 ; 8 => 0x437f00a4     [V]
+   código devuelto (tbb @0x43b047ec): 0 sub++ y re-post | 1 re-post | 2 dly_tsk(50 ms)+re-post | 3 vuelve (espera externa)
+                                      | 4 fin(M) 0x4381ba7c | 5 callback M+0x24 + fin | 6 vuelve
+sub 9 = 0x438c289c(M)          cap=[M]; 0x438d08e8(cap): si [cap+0x74f]==0  twai_flg(0x13, 0x100000, TMO_FEVR)  (0x438d0900)
+                                          si [cap+0x74f]!=0  0x437db9f0(3, [cap+0x4ad8]) -> osal_rcv_msg_tmo(.., r2=-1) @0x437dba34  [V]
+                               ** en vuelo: [cap+0x74f]=1 (F) => espera de MENSAJE sin límite; el manejador no devuelve, M queda en (id 2, sub 9)
+fin de la espera -> retorna 0  -> sub 10 (0x43b1e878) -> sub 11 (0x437ed568: 0x437e58c4(M,0))      [V; cuál de ellos avanza: no probado]
+Avance 0x437e56ec(M)           id' = 0x437e5508(id) (0x43afbf4e); re-vincula functor; sub=0 (0x43afbf3c);
+                               si E(id') != E(id): Complete(E,M)=0x437e611c @0x437e577a -> 0x437e6098 (entrada +8=1) -> Done 0x437e5de8 (en_vuelo--) -> 0x43afbffc(E) entrega el siguiente
+Fin 0x437e55d4(M)              Complete @0x437e5638 (único otro llamador). Llamadores del Avance: 0x437e5822 (0x437e57d0), 0x437e5934 (0x437e58c4)
+```
+
+**Medido (F, 4 s).** `E1` (grupo 1) con `en_vuelo=1`, `cola=1` de **1,3 a 5,36 s**; en todas las muestras `M=0x43eeafa8`, `[M]=0x952db580`, `(id,sub)=(2,9)`; a 5,36 s `(9,6)` (M ya avanzó a la etapa 9); a 6,51 s `E1` vacío. `[M]` fue también `0x952db580` en el muestreo previo (otro `M`, otro arranque): es la **ranura de copia de `cap`**, no el `M`. `0x952db580` es una dirección **física** en System RAM (`/proc/iomem` 0x95000000–0x957fffff) legible con `/dev/mem` sin `RAM_OFF`; el firmware la usa tal cual como puntero. Los `M` en reposo tienen `[M]` = enlaces de la lista libre (por eso §4h veía «functors»).
+
+**Campos de `cap` en vuelo (F; `cap=0x952db580`; idénticos de 1,3 a 4,63 s salvo lo indicado).**
+
+| campo | valor | lectura |
+|---|---|---|
+| `cap+0x64c` shd | 1 | = registro de E25-19 |
+| `cap+0x650` svd | 0 | = registro (`svd=0` también para 4 s) |
+| `cap+0x655` ShutMode | 3 | = registro |
+| `cap+0x504` selector | 1 | |
+| `cap+0x56c` / `0x570` | 864 (0x360) / 4176 (0x1050) | 4176 = VTS medido en E25-19 |
+| `cap+0x6bc` SetRead | 4091 (0xffb) | |
+| `cap+0x740` / `0x744` | 0 / 4 | secuenciador = 0 (como E25-17); `0x744`=4 coincide con los 4 s (no probado causal: una sola velocidad) |
+| `cap+0x74f`, `0x74d` | 1, 1→0 (a 5,36 s) | decide la rama de espera de sub 9 |
+| `cap+0x728` | 0 en vuelo; **125 045** a 5,36 s (en reposo previo 125 058) | ×32 µs ≈ 4,00 s (unidad = hipótesis) |
+| `cap+0x4ad0` | `0x952e0a50` = `cap+0x54d0` (autorreferencia); a 5,36 s 0 | |
+| `cap+0x4ad8` | `0x43ed4908`; a 5,36 s 0 | destino de `0x437db9f0` |
+| `cap+0x1d8/0x1e0` | 0 / 0 | contador de cuadros sin avanzar en vuelo |
+| `cap+0x4b64`, `0x4b68` | `0x800000ff`, 1 | estado temporal que lee la compuerta |
+| `cap+0x4b80` | 0; 1 a 5,36 s | |
+| `cap+0x5488`, `0x548c`, byte `0x5490` | 0, 4, 1 | «b» de la compuerta = 1 |
+
+**Quién libera la ranura (P2).** `Complete` solo lo llaman `Avance` (0x437e56ec) y `Fin` (0x437e55d4), que ejecuta el propio motor tras volver el manejador de la etapa; mientras sub 9 espera (mensaje sin límite) el hilo no sale y `en_vuelo` no baja → la compuerta difiere (§4h). El mensaje esperado lo valida `0x437db9f0` (`[msg+2]==3`); su **emisor no se halló**. Hay además un camino de temporizador: `0x438c8aa8..0x438c8b18` arma con `0x43b1f1ec(0, ticks, cb)` los callbacks `0x43b1e4c0` (activa la bandera 0x13 bit 0x100000 que desbloquea la rama `twai_flg`) con `ticks=0x43840f7c()+1` (se guarda en `cap+0x728`), `[cap+0x728]` o 0x50775d80/−1; el `cap+0x728` observado solo cambia al terminar, y en la foto de 4 s la rama activa es la de mensaje (`+0x74f=1`). `ref_flg(0x13)` en sub 9 consulta el bit 0x8000 (temporizador/BULB, E25-18). **No se demuestra** que Complete termine electrónicamente la integración del sensor: sin operación al sensor entre el inicio y el fin de la espera (hay `svd=0`, ShutMode 3).
+
+| | Respuesta |
+|---|---|
+| A. ¿Evento que ocupa la ranura del grupo 1? | **SÍ (V+F)**: `M` de etapa id 2, sub 9, functor `0x43b1b025` → `0x438c289c` |
+| B. ¿Quién llama a `Complete` para ese evento? | **SÍ (V)**: `Avance` 0x437e56ec (0x437e577a) o `Fin` 0x437e55d4 (0x437e5638); que sea el `Avance` lo muestra id 2→9 a 5,36 s; qué subestado (10 u 11) lo invoca: no probado |
+| C. ¿Condición que provoca `Complete`? | **Parcial**: el motor llega a `Avance` cuando el manejador de sub 9 retorna 0; esa vuelta depende de la llegada del mensaje tipo 3 (o de la bandera 0x13:0x100000 en la otra rama). Emisor del mensaje: observación pendiente |
+| D. ¿Por qué permanece ocupada? | **SÍ (V+F)**: el hilo está dentro del manejador de sub 9 (`osal_rcv_msg_tmo` con −1, `+0x74f=1`), `Complete` ocurre después |
+| E. ¿Origen del 2.º argumento del thunk? | **SÍ (V)**: `r1 = M` (`0x43b047e2 mov r1,r4` en `Run`), ya no «otro objeto» |
+| F. ¿Objeto con `[obj]=cap`? | **SÍ (V+F)**: el propio `M`; `[M]` = copia de cap fijada en `0x4381bb12` |
+| G. ¿Dirección real de `cap`? | **SÍ (F)**: `0x952db580` (física), idéntica en dos disparos y arranques |
+| H. ¿`cap` leído durante una foto? | **SÍ**: 51 muestras, 4 s |
+| I. ¿Parámetros efectivos de `SetExposure`? | **NO (observación pendiente)**: se conocen los de `cap` (shd 1, svd 0, ShutMode 3, VTS 4176, SetRead 4091) pero no la llamada ni la copia `cap → SetExposure` |
+| J. ¿Finalización electrónica de integración? | **NO demostrado** (sin contradicción) |
+| K. ¿Se modificó la cámara? | **NO** (solo `/dev/mem` y `/proc`; originales íntegros) |
+
+**Criterio final: A — cadena resuelta (cap identificado y validado)**, con la finalización parcial: falta el emisor del mensaje de sub 9 (E25-19c).
+
 ## 5. Respuestas
 
 | # | Pregunta | Respuesta |
 |---|---|---|
 | 1 | ¿Telnet? | **SÍ** (192.168.1.29:23) |
 | 2 | ¿RemoteShutter? | **SÍ** (`v8b`, `/info`, `/status`, `/ss`, `/shoot`, `/log`, `/jpg`) |
-| 3 | ¿`cap` con cadena verificable? | **NO** — observación no obtenida (§4); sin contradicción |
+| 3 | ¿`cap` con cadena verificable? | **SÍ (E25-19b, §4i)**: `M` → `[M]` = `0x952db580` (física); campos leídos en una foto de 4 s |
 | 4 | ¿Registro real de una foto? | **SÍ** (`record_a`; `record_b` siempre 0) |
 | 5 | ¿VTS 4219, 4266 u otro? | **Otro: 4176** en las seis velocidades (O) |
 | 6 | ¿Período 3891 Q8? | **NO: 4096 Q8** (16,0 µs). Contradice la referencia 15,2 µs (T044/T046/T047); puede ser otro modo del registro o un valor por defecto: **sin resolver** |
