@@ -336,7 +336,7 @@ indicadas en el informe; no se certifica todo el grafo por sus contadores.
 - Pregunta: clasificar `0x4386140a` y `0x438693ec` de la lista de referencias al state `0x43f72d02`.
 - Resultado local: primer procedimiento lee u8 `+0xac`; la cola usa 6 como default cuando es cero. Segundo procedimiento lee ocho bytes `+0x30..+0x37`; los ceros se copian como default a un objeto salida `r6`. Ninguno escribe al state ni a gates +3/+6 en esos cuerpos. No se concluye alcanzabilidad ni ausencia global.
 - Evidencia REA: dossier/instrucciones `ev_474646b78b019c40a5be101c0b25fa2f8fc0f7b00e56a0fe98b36582f222f8de`, `ev_a0a95677ffee71c22b9a8cbcb94857e805552b36a4a3463ce53f4f2be7eb4a29`; listings completos `ev_e48f6a737e25bc757ebbe9614caa157d7479420eed30b4e82bc5f56b19634ac7` / `ev_a2cc8d5a1213fd60050be7db5b58938a4a22a798ce434ebce7d05fec7e04af4e`; typed instructions `ev_46a7ccc6109d3be149a14715b2b8b2ee074af9464b0fd9f05b45c5d5cac85fae` / `ev_228b7dae4e7d04e4f47e48a3c0fadc63154081e02d398d7146bb7a9917172387`.
-- Artefactos: `analysis/s176_imager_state_readers/{verify_readers.py,state_readers.json}`, `tests/test_s176_imager_state_readers.py`, `docs/capture/s176-imager-state-readers.md`.
+- Artefactos: `analysis/s176_imager_state_readers/{readers_audit.py,readers.json}`, `tests/test_s176_imager_state_readers.py`, `docs/capture/s176-imager-state-readers.md`. Los locales `{verify_readers.py,state_readers.json}` se eliminaron el 28-10-2026 por duplicar exactamente esos mismos hechos ya publicados (mismo slot `0x4401f990`, mismos offsets y mismo default 6).
 - Pruebas: unittest 3/3 PASS; mantenimiento/suite completa pendiente.
 - Siguiente: un xref restante de `0x43f72d02`, clasificado con diferencia explícita entre edge de pointer y dereferencia real.
 
