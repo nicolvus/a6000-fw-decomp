@@ -28,6 +28,10 @@ public class Main extends Activity implements SurfaceHolder.Callback {
     private volatile String last = "none";
     private int count;
     private volatile byte[] lastJpeg;
+    private volatile long lastMs = -1;
+    private volatile int openRetries;
+    private final StringBuilder shotLog = new StringBuilder();  // CSV: n,t_inicio_ms,ms_hasta_jpeg,bytes
+    private static final String VERSION = "v5c";
     private TextView info;
     private String keyLog = "-";
 
@@ -92,21 +96,51 @@ public class Main extends Activity implements SurfaceHolder.Callback {
         ui.post(new Runnable() { public void run() {
             try {
                 release();
-                open();
+                // Reabrir justo tras liberar puede fallar ("Fail to connect to cameraex service"): se reintenta y se cuenta.
+                int tries = 0;
+                while (true) {
+                    try { open(); break; }
+                    catch (Throwable t) { if (++tries > 6) throw t; release(); Thread.sleep(400); }
+                }
+                openRetries = tries;
                 last = "shooting";
+                final long t0 = android.os.SystemClock.elapsedRealtime();
                 camera.takePicture(null, null, new Camera.PictureCallback() {
                     public void onPictureTaken(byte[] data, Camera cam) {
+                        final long ms = android.os.SystemClock.elapsedRealtime() - t0;
+                        int id = ++count;
                         try {
                             lastJpeg = data;
-                            OutputStream o = new FileOutputStream("/mnt/sdcard/RS" + (++count) + ".JPG");
+                            OutputStream o = new FileOutputStream("/mnt/sdcard/RS" + id + ".JPG");
                             o.write(data); o.close();
                         } catch (Throwable t) { Log.e(TAG, "save", t); }
-                        last = "done " + (data == null ? 0 : data.length);
+                        lastMs = ms;
+                        synchronized (shotLog) { shotLog.append(id + "," + t0 + "," + ms + "," + (data == null ? 0 : data.length) + "," + openRetries + "\n"); }
+                        last = "done " + (data == null ? 0 : data.length) + " ms=" + ms + " n=" + id;
                         release();
                     }
                 });
-            } catch (Throwable t) { last = "shoot-error " + t; Log.e(TAG, "shoot", t); release(); }
+            } catch (Throwable t) { last = "shoot-error " + cause(t); Log.e(TAG, "shoot", t); release(); }
         }});
+    }
+
+    /** GET /burst?n=&gap= : n disparos seguidos (gap ms entre ellos); cada uno espera su JPEG. Mide el rearme. Resultado en /log. */
+    private volatile boolean bursting;
+    private void burst(final int n, final int gap) {
+        if (bursting) return;
+        bursting = true;
+        new Thread(new Runnable() { public void run() {
+            try {
+                for (int i = 0; i < n; i++) {
+                    long w = android.os.SystemClock.elapsedRealtime();
+                    last = "queued";
+                    shoot();
+                    while (!(last.startsWith("done") || last.startsWith("shoot-error")) && android.os.SystemClock.elapsedRealtime() - w < 30000) Thread.sleep(20);
+                    if (last.startsWith("shoot-error")) break;
+                    Thread.sleep(gap);
+                }
+            } catch (Throwable t) { Log.e(TAG, "burst", t); } finally { bursting = false; }
+        }}).start();
     }
 
     /** GET /seq?w=&h=&f=&n= : CameraSequence.startPreviewSequence + getPreviewSequenceFrames (frames de Live View, sin obturador). */
@@ -271,7 +305,33 @@ public class Main extends Activity implements SurfaceHolder.Callback {
                         if (j != null) o.write(j);
                         o.close(); s.close(); continue;
                     }
-                    if (req.startsWith("GET /ss")) last = ss(q(req, "n", 1), q(req, "d", 60));
+                    if (req.startsWith("GET /jpg")) {
+                        java.io.File f = new java.io.File("/mnt/sdcard/RS" + q(req, "i", 0) + ".JPG");
+                        byte[] j = new byte[(int) f.length()];
+                        java.io.FileInputStream in = new java.io.FileInputStream(f);
+                        int off = 0, r;
+                        while (off < j.length && (r = in.read(j, off, j.length - off)) > 0) off += r;
+                        in.close();
+                        OutputStream o = s.getOutputStream();
+                        o.write(("HTTP/1.0 200 OK\r\nContent-Type: image/jpeg\r\nContent-Length: " + j.length + "\r\n\r\n").getBytes());
+                        o.write(j); o.close(); s.close(); continue;
+                    }
+                    if (req.startsWith("GET /log")) {
+                        String l;
+                        synchronized (shotLog) { l = shotLog.toString(); if (q(req, "clear", 0) == 1) shotLog.setLength(0); }
+                        OutputStream o = s.getOutputStream();
+                        o.write(("HTTP/1.0 200 OK\r\n\r\n" + l).getBytes());
+                        o.close(); s.close(); continue;
+                    }
+                    if (req.startsWith("GET /info")) {
+                        String sp = "?";
+                        try { sp = String.valueOf(speed()); } catch (Throwable t) { sp = "err " + cause(t); }
+                        OutputStream o = s.getOutputStream();
+                        o.write(("HTTP/1.0 200 OK\r\n\r\n" + VERSION + " speed=" + sp + " count=" + count + " lastMs=" + lastMs + " bursting=" + bursting + " t=" + android.os.SystemClock.elapsedRealtime() + "\n").getBytes());
+                        o.close(); s.close(); continue;
+                    }
+                    if (req.startsWith("GET /burst")) burst(q(req, "n", 5), q(req, "gap", 0));
+                    else if (req.startsWith("GET /ss")) last = ss(q(req, "n", 1), q(req, "d", 60));
                     else if (req.startsWith("GET /nr")) last = nr(q(req, "v", 0) == 1);
                     else if (req.startsWith("GET /shoot")) shoot();
                     else if (req.startsWith("GET /seq")) seq(q(req, "w", 1280), q(req, "h", 720), q(req, "f", 17), q(req, "n", 1), q(req, "p", 0) == 1, q(req, "t", 0) == 1);
