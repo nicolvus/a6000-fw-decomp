@@ -57,13 +57,44 @@ Objetivo: en M/A/S/P, ShutMode 0 con `r5 = máx(r5_mín, VTS − T/15,2 µs)`.
 | Opción | Cambio | Ventajas / límites |
 |---|---|---|
 | **C1** (lo ya probado en RAM, T028–T047) | `0x436d6fb6` → `4ff00009` (`mov.w sb,#0`) y `0x436d7000` → `r5` calculado | Fuerza ShutMode 0 para **toda** llamada (vista en directo ya usa 0; vídeo y otros modos sin probar). `r5` no puede ser constante: necesita T |
-| **C2** (propuesta) | En `0x438c82b6` sustituir `bne 0x438c82d0` (2 B) por `nop` (`00bf`) para tomar siempre el bloque de §3, y cambiar `movs r1,#2` (`0x438c82ba`) por un cálculo de `r5` en una cueva de código | Solo afecta a la ruta de captura. Falta T: candidato `[cap+0x56c]` (`ldr r8,[r4,#0x56c]` en `0x438c8356`, usado en `1000·r8 / …` y en el mensaje a Darwin `0x107`). **Unidad sin verificar**; la conversión T → líneas necesita una división (`0x4355faf0` ya existe) y constantes (VTS, 15,2 µs) medidas solo en esta cámara |
+| **C2** (propuesta) | En `0x438c82b6` sustituir `bne 0x438c82d0` (2 B) por `nop` (`00bf`) para tomar siempre el bloque de §3, y cambiar `movs r1,#2` (`0x438c82ba`) por un cálculo de `r5` en una cueva de código | Solo afecta a la ruta de captura. Falta T: **[cap+0x4da] (código Tv, §6)**, no `[cap+0x56c]` (descartado en §6). T → líneas: `0x4382fac8([cap+0x4da])` da µs; líneas = µs·5/76 (`0x4355faf0` es la división ya existente); constantes (4219, 15,2 µs) medidas en esta cámara |
 | C3 | Llamar al constructor de la vista en directo `0x437b27b8` desde la captura | Descartada por ahora: argumentos y efectos laterales sin verificar |
 
-Pendiente estático antes de cualquier prueba: unidad de `[cap+0x56c]` y de `0x4382fa94`; valor y origen de `[r8]` (VTS) y `[r6+0x144]`; que Darwin (`0x107`) no dependa de `r5`; efecto sobre ráfaga/vídeo/AF.
+Pendiente antes de cualquier prueba: que `[cap+0x4da]` lleve en la **foto** el código Tv de la velocidad (§6); valor de `[r6+0x134]` y `[r6+0x144]`; que Darwin (`0x107`) no dependa de `r5`; efecto sobre ráfaga/vídeo/AF.
 
 ## 5. Vía permanente: no recomendada hoy
 
 - `av-cam.bin` está dentro de `nflasha3` (TPZL: vmlinux + initrd + av-cam + sabin) en `firmware.tar`. Cambiarlo exige un re-empaquetador reproducible byte a byte (existe para Darwin, **no** para `nflasha3`), que el arranque no valide firma/hash (sin verificar) y reescribe ≈ 212 MB de particiones ([E24-04 M16](e24-04-dictamen-seguridad.md)).
 - Un `av-cam` defectuoso deja sin arranque el sistema principal, y **la única entrada al actualizador es por software desde ese sistema** ([E24-03 F6](e24-03-auditoria-recuperacion-usb.md)): el FDAT 3.24 de recuperación solo sirve si la cámara sigue llegando al actualizador. El riesgo es «alto y simétrico» (E24-04) y no hay recuperación independiente (E25-04).
 - **Alternativa sin flasheo (no implementada):** reaplicar los parches de RAM (§4 C1/C2, con verificación y reversión) desde la app RemoteShutter tras cada arranque, vía telnet/adb. No persiste tras apagar, pero es reversible y no toca flash/NVRAM.
+
+## 6. Unidades verificadas (offline, 27-10-2026)
+
+**Tv → tiempo — VERIFICADO por bytes y por emulación** (`scripts/e25_11_tv_emu.py`, Unicorn sobre `av-cam.bin`; prueba `test_tv_a_tiempo_emulado`):
+
+- `0x4382fac8(x)` devuelve **µs** = `1e6 · 2^((4096 − x)/256)` (±1 µs); `0x4382fa94(x)` devuelve ese tiempo en **1/256 µs** y `0xFFFFFFFF` si `x ≤ 0xC00` (≥ 16 s). Entrada `x` = `0x1000 + 256·log2(1/t)`: `0x1000` = 1 s, un paso de 1/256 EV por unidad.
+  Tablas internas: `0x43902924` = `2^(x/256)·65536` (exp2 con tabla de 256 entradas).
+- Velocidades enteras (calculado con la función): 1/4000 → `x`=`0x1bf7` → 250 µs; 1/1000 → `0x19f7` → 1000 µs; 1/250 → `0x17f7` → 4002 µs; 1/60 → `0x15e8` → 16 674 µs.
+
+**`[cap+0x56c]` NO es el tiempo de exposición (INFERENCIA moderada):** es un `u32` que `0x438c7aee` pone a `10·k + valor` o `2·valor`, y `0x438c7df0` reescribe desde `fp`; se usa como `1000·[0x56c] / …` y como mitad baja de la carga del mensaje a Darwin `0x107` junto con `[0x570]` (`0x438c83ae..ba`). Es la espera/sincronización asociada al mensaje `0x107` (S56), no `T`. Se descarta como entrada de C2.
+
+**`[cap+0x4da]` es el candidato correcto (VERIFICADO por bytes; significado = INFERENCIA):** halfword copiado de `[src+0x29c]` en una tira de seis halfwords `+0x4d4..+0x4de` (`0x43b0cbc6`, simétrico en `0x43b0c554`); la única lectura que lo usa es el constructor de la vista en directo (`0x437b2878`), que lo pasa a `0x4382fa94`. Falta comprobar que en la **foto** lleve el código de la velocidad elegida (dump en vivo, con autorización).
+
+**Constantes del sensor (INFERENCIA fuerte):** `0x4385de94(a, m, c)` = `(0x271000 | 0x4e2000) / a · m` (u16), que se usa como longitud de cuadro (VTS). Con `a = 600`: 2 560 000/600 = **4267 líneas**, el cuadro completo medido (≈ 4270; T046: 64,9 ms). Y 15,2 µs/600 = 25,33 ns = 64,9 ms/2 560 000: **una misma unidad de 25,3 ns (≈ 39,5 MHz) explica tanto el tiempo de línea como el de cuadro**. No se pudo leer `[r6+0x134]` (la estructura está a cero en el volcado de servicio en reposo `ram-servicio-20261020`).
+**No resuelto:** el constructor de la vista en directo divide `256·t_µs` entre `[r6+0x134]` (`0x437b2894`); con `[0x134]`=600 daría 2,34 µs por línea (6,49 veces menos que los 15,2 µs medidos). Hay una escala (¿unidad de `0x4382fa94`? ¿otra fuente de `[0x134]`?) sin explicar; para la foto C2 usaría las constantes **medidas** (T044/T046/T047), no esa división.
+
+**Fórmula C2 propuesta (calculada, no medida salvo T047):** `r5 = máx(r5_mín, 4219 − round(µs/15,2))` con `µs = 0x4382fac8([cap+0x4da])`:
+
+| Velocidad | µs | líneas | `r5` | medido (T047) |
+|---|---|---|---|---|
+| 1/4000 | 250 | 16 | 4203 | 0,24 ms (obj. 0,25) |
+| 1/2000 | 500 | 33 | 4186 | — |
+| 1/1000 | 1000 | 66 | 4153 | 0,99 ms (obj. 1,00) |
+| 1/500 | 2001 | 132 | 4087 | — |
+| 1/250 | 4002 | 263 | 3956 | 4,03 ms (obj. 4,00) |
+| 1/125 | 8005 | 527 | 3692 | — |
+| 1/60 | 16 674 | 1097 | 3122 | 16,75 ms (obj. 16,7) |
+| 1/30 | 33 348 | 2194 | 2025 | — |
+| 1/15 | 66 696 | 4388 | **−169 (imposible)** | — |
+
+**Límite nuevo:** con ShutMode 0 la exposición máxima uniforme es el **cuadro completo (≈ 64,9 ms ≈ 1/15,4)**; desde 1/15 hacia velocidades más lentas `r5` queda fuera de rango y habría que dejar la ruta normal (ShutMode 3, donde el τ de T044 pesa poco) o un modo de varios cuadros. C2 debería caer a la ruta original cuando `líneas > 4218`.

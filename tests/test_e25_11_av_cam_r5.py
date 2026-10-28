@@ -28,3 +28,18 @@ def at(addr: int, n: int) -> str:
 ])
 def test_bytes(addr, expected):
     assert at(addr, len(expected) // 2) == expected
+
+
+def test_tv_a_tiempo_emulado():
+    """0x4382fac8(x) = 1e6·2^((4096−x)/256) µs y 0x4382fa94 = lo mismo ×256 (−1 si x ≤ 0xC00); verificado por emulación."""
+    pytest.importorskip("unicorn")
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+    import e25_11_tv_emu as E
+
+    mu = E.emulator()
+    assert E.call(mu, 0x4382FA94, 0xC00) == 0xFFFFFFFF
+    for x in (0xE00, 0x1000, 0x1200, 0x1400, 0x17F6):
+        us = E.call(mu, 0x4382FAC8, x)
+        assert abs(us - 1e6 * 2 ** ((4096 - x) / 256)) <= 1
+        assert abs(E.call(mu, 0x4382FA94, x) - 256 * us) <= 256
