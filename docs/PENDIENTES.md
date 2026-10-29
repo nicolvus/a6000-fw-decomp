@@ -10,6 +10,8 @@
 
 **Fase C parcial:** XML y scripts identifican CRC de imágenes, actualización Darwin en hilo y operaciones `endupdate.sh`; orden frente a `Done`, readback, `uincomp` y `mode` no demostrados. Seguir con `ThreadPlugin::Join`, `XmlConfigHandler::Join` y mensaje al host. El usuario indica una cara de la placa expuesta, sin mediciones ni autorización de intervención.
 
+**R3:** `UpdaterBody::Execute` espera `ThreadPlugin::Join` antes de `EndUpdate` y `CompleteUpdate`; el manejo de errores de hilo y la relación con `Done` del PC no están cerrados. `CompleteUpdate` manipula indicadores de modo en `nflasha2`; ver E26. Continuar con Loader2/Loader3 y el emisor host.
+
 
 Creado el 25-10-2026. Es la lista única y viva de lo que falta en el proyecto. Los
 backlogs de agentes ([A](../knowledge/agents/A-backlog.md), [B](../knowledge/agents/B-backlog.md),

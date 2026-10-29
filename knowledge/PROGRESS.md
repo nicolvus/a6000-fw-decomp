@@ -8,6 +8,8 @@ Fase B parcial: `libsenupdater.so` de initrd `nflasha1` y `mf` trazados con REA;
 
 Fase C iniciada: `config.xml`, `us_crc32sum.sh`, `us_darwin_firm.sh` y `endupdate.sh` delimitan comprobaciones, hilo Darwin y operaciones de cierre; sin orden demostrado respecto a Done. REA: `ThreadPlugin::Join` 0x23d88 ejecuta `pthread_join`; `XmlConfigHandler::Join` 0x23768 usa una llamada virtual. Próxima operación: resolver llamador del thunk 0x1db8c, destino virtual y mensaje de éxito al host; Fase B mantiene pendiente el script real del byte 0x32. El usuario informa una cara de la placa expuesta, sin acceso físico autorizado.
 
+R3: `UpdaterBody::Execute` 0x1f4c8 → thunk 0x1db8c → `XmlConfigHandler::Join` → `ThreadPlugin::Join` 0x23d88 (objeto construido en 0x23964, vtable 0x30fa0 +0x10); después `HasError`, `EndUpdate`, `CompleteUpdate` 0x2516c y retorno. `CompleteUpdate` borra clases de banderas de modo y crea la de completo. Enlace al Done del PC pendiente. Próxima tarea: Loader2 0xc0030000 y localización de Loader3, sin repetir BootROM.
+
 El usuario informa instalación 3.25, Done y bloqueo. Comprobados hashes FDAT, Darwin y `nflasha3` locales y anomalía de alineación en el manifiesto; aún no se verifica causalidad ni lector real. Ver [informe](../docs/capture/e26-recovery.md). Siguiente paso exacto: inspeccionar con REA `uc_portctl.elf` y `SenserUpdaterIF::setResult`, y contrastar las tablas TPZL directamente con los binarios. Sin acceso físico.
 
 
