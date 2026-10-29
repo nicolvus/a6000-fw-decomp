@@ -119,14 +119,17 @@ NOMBRES = {0x437F8A50: "0x437f8a50", 0x43A12C64: "forzado", 0x436D6320: "SetExpo
 
 
 def start_exposure(cap: dict, forzado: int = 0, cfg_u16: int = 0xFFFF, hook=None, hasta: int = 0x438C83E8,
-                   data: bytes | None = None) -> dict:
+                   data: bytes | None = None, ret: dict[int, int] | None = None) -> dict:
     """Ejecuta StartExposure (0x438c828c) hasta `hasta`. `cap`: offsets -> (valor, bytes). `hook(emu)` escribe memoria justo antes de `hook_pc`.
 
     `data` permite ejecutar una imagen parcheada (mismo tamaño) en lugar del firmware original.
     """
     e = nuevo(data)
     logs: list = []
-    _stub_externos(e, REALES_START, logs, {0x43A12C64: forzado, 0x43AD90C2: cfg_u16, 0x437F8A50: 0, 0x436C28D0: 1, 0x43AD90B6: 1})
+    stubs = {0x43A12C64: forzado, 0x43AD90C2: cfg_u16, 0x437F8A50: 0, 0x436C28D0: 1, 0x43AD90B6: 1}
+    if ret:
+        stubs.update(ret)
+    _stub_externos(e, REALES_START, logs, stubs)
     e.mu.mem_write(CAP, b"\0" * 0x5000)
     for off, (n, v) in cap.items():
         e.mu.mem_write(CAP + off, v.to_bytes(n, "little"))
@@ -137,7 +140,8 @@ def start_exposure(cap: dict, forzado: int = 0, cfg_u16: int = 0xFFFF, hook=None
     rd = lambda off, n: int.from_bytes(e.read(CAP + off, n), "little")
     sx = [l for l in logs if l[0] == 0x436D6320]
     prm = sx[0][4] if sx else b""
-    return {"svd_a_SetExposure": int.from_bytes(prm[4:6], "little") if prm else None,
+    return {"r0_a_SetExposure": sx[0][1] if sx else None,
+            "svd_a_SetExposure": int.from_bytes(prm[4:6], "little") if prm else None,
             "shd_a_SetExposure": int.from_bytes(prm[0:4], "little") if prm else None,
             "shutmode_a_SetExposure": prm[9] if prm else None,
             "param_bytes": prm.hex(), "mem": e.read(CAP, 0x5000), "cap650_final": rd(0x650, 2), "cap655_final": rd(0x655, 1), "cap73b": rd(0x73B, 1),

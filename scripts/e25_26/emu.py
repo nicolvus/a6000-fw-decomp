@@ -44,8 +44,9 @@ def _cap(shd: int, svd: int, shutmode: int, flag: int, vts: int = VTS, cap504: i
 
 
 def run(data: bytes, *, flag: int, shd: int, svd: int, shutmode: int = 3, vts: int = VTS,
-        cap504: int = 0, forzado: int = 0) -> dict:
-    r = S.start_exposure(_cap(shd, svd, shutmode, flag, vts, cap504), forzado=forzado, data=data)
+        cap504: int = 0, forzado: int = 0, imager_ret: int | None = None) -> dict:
+    ret = {0x436D6118: imager_ret} if imager_ret is not None else None
+    r = S.start_exposure(_cap(shd, svd, shutmode, flag, vts, cap504), forzado=forzado, data=data, ret=ret)
     mem = r.pop("mem")
     r["cap_64c_final"] = int.from_bytes(mem[0x64C:0x650], "little")
     r["cap_650_final"] = int.from_bytes(mem[0x650:0x652], "little")

@@ -146,3 +146,10 @@ def test_origen_de_vts_y_modalidad_en_cap(image):
     mod = [(i.mnemonic, i.op_str) for i in md.disasm(data[0x43845F2E - PB.BASE:0x43845F38 - PB.BASE], 0x43845F2E)]
     assert ("ldr.w", "r2, [r3, #0x210]") in mod
     assert ("str.w", "r2, [r4, #0x41c]") in mod
+
+
+def test_conserva_r0_del_imager(combined):
+    """La cueva no debe perder el puntero del imager que devuelve 0x436d6118."""
+    for flag in (0, 1):
+        r = emu.run(combined, flag=flag, shd=8422, svd=1, shutmode=3, imager_ret=0x1234)
+        assert r["r0_a_SetExposure"] == 0x1234
