@@ -2,6 +2,8 @@
 
 ## Prioridad E26-RECOVERY — incidente 3.25
 
+**R7B parcial offline:** [informe](capture/e26-r7b-recuperacion-prelinux.md). COLD negativo examinado termina en bucle; Loader2 lee NAND antes de Linux; BootROM contiene receptor por GPIO y salto a RAM sin interfaz de recuperación demostrada; BossFirm histórico cotejado con SRAM ARM7. Persisten semántica del residuo LDEC, condiciones físicas del receptor, selector y escritura conservadora; investigar exclusivamente con archivos.
+
 **R7 parcial offline:** [informe](capture/e26-r7-recuperacion-estatica.md): trazadas escrituras lógicas, operaciones físicas Linux y envío LLD a ARM7; no constituyen acceso pre-Linux. Pendiente: fallo COLD, callbacks PBM, recovery_check, productores UPDATER, receptor ARM7/TPZL, fuentes INFO6 y servicio/comparación.
 
 **ABIERTO:** el usuario informa cámara bloqueada tras instalar 3.25; investigar origen 0x32, lector TPZL, Done, Loader2/3, modos de recuperación, respaldos y vías físicas sin tocar la cámara. Cierre: evidencia por vía y diagnóstico discriminado según [E26-RECOVERY](capture/e26-recovery.md). Las filas históricas sobre 3.25 no instalado no describen el estado actual.

@@ -1,0 +1,290 @@
+{
+  "artifact": "libupdatercommon.so",
+  "sha256": "56d9f46e17fedee057873abfb898303c271a01c3c8e69aff73290a676be663eb",
+  "rea_base": "0x10000",
+  "functions": [
+    {
+      "id": "ev_0057cbd827b2e7808cb74a3678457ebdaea10978eeb754eb94668474bcf5a33f",
+      "procedure": {
+        "address": "0x159f4",
+        "name": "Updater::FileHandler::Open",
+        "classification": {
+          "external": false,
+          "thunk": false,
+          "thunk_target": null,
+          "provenance": "ghidra-function-manager"
+        },
+        "body": {
+          "available": true,
+          "provenance": "ghidra-function-body-address-set",
+          "ranges": [
+            {
+              "start": "0x159f4",
+              "end": "0x15a6d"
+            }
+          ],
+          "total_bytes": 122,
+          "span_bytes": 122,
+          "non_contiguous": false,
+          "contains_entry": true
+        },
+        "signature": "undefined __thiscall Open(FileHandler * this, char * param_1, int param_2)",
+        "locals": [
+          {
+            "description": "undefined4 local_18 @ Stack[-0x18]:4",
+            "provenance": "ghidra-function-database"
+          }
+        ]
+      },
+      "pseudocode": "\n/* Updater::FileHandler::Open(char const*, int) */\n\nbool __thiscall Updater::FileHandler::Open(FileHandler *this,char *param_1,int param_2)\n\n{\n  undefined4 uVar1;\n  int iVar2;\n  int *piVar3;\n  \n  if ((param_1 != (char *)0x0) && (*(int *)(this + 4) == -1)) {\n    iVar2 = open(param_1,param_2);\n    *(int *)(this + 4) = iVar2;\n    if (iVar2 == -1) {\n      piVar3 = __errno_location();\n      printf(\"UdrAPI,%d,%s:%d,\\\"%d\\\"\\n\",0x30005,\"FileHandler.cpp\",0x27,*piVar3);\n      *(undefined4 *)(this + 4) = 0xffffffff;\n    }\n    return *(int *)(this + 4) != -1;\n  }\n  printf(\"UdrAPI,%d,%s:%d,\\\"\\\"\\n\",0x3001a,\"FileHandler.cpp\",0x21);\n  uVar1 = __cxa_allocate_exception(0xc);\n  FUN_000159cc();\n                    /* WARNING: Subroutine does not return */\n  __cxa_throw(uVar1,&ApiException::typeinfo,ApiException::~ApiException);\n}\n\n",
+      "assembly": [
+        "0x159f4: push {r4,r5,r7,lr}",
+        "0x159f6: sub sp, #0x8",
+        "0x159f8: ldr r4, [0x00015a78]",
+        "0x159fa: mov r5, r0",
+        "0x159fc: add r7, sp,#0x8",
+        "0x159fe: add r4, pc",
+        "0x15a00: cbz r1, 0x00015a0a",
+        "0x15a02: ldr r3, [r0,#0x4]",
+        "0x15a04: cmp.w r3, #0xffffffff",
+        "0x15a08: beq 0x00015a34",
+        "0x15a0a: ldr r0, [0x00015a7c]",
+        "0x15a0c: movs r3, #0x21",
+        "0x15a0e: ldr r2, [0x00015a80]",
+        "0x15a10: ldr r1, [0x00015a70]",
+        "0x15a12: add r0, pc",
+        "0x15a14: add r2, pc",
+        "0x15a16: blx 0x00014a80",
+        "0x15a1a: movs r0, #0xc",
+        "0x15a1c: blx 0x00014b14",
+        "0x15a20: mov r5, r0",
+        "0x15a22: bl 0x000159cc",
+        "0x15a26: ldr r3, [0x00015a84]",
+        "0x15a28: mov r0, r5",
+        "0x15a2a: ldr r1, [r4,r3]",
+        "0x15a2c: ldr r3, [0x00015a88]",
+        "0x15a2e: ldr r2, [r4,r3]",
+        "0x15a30: blx 0x00014b5c",
+        "0x15a34: mov r0, r1",
+        "0x15a36: mov r1, r2",
+        "0x15a38: blx 0x00014844",
+        "0x15a3c: cmp.w r0, #0xffffffff",
+        "0x15a40: mov r4, r0",
+        "0x15a42: str r0, [r5,#0x4]",
+        "0x15a44: bne 0x00015a60",
+        "0x15a46: blx 0x00014c28",
+        "0x15a4a: ldr r2, [0x00015a8c]",
+        "0x15a4c: ldr r1, [0x00015a74]",
+        "0x15a4e: add r2, pc",
+        "0x15a50: ldr r3, [r0,#0x0]",
+        "0x15a52: ldr r0, [0x00015a90]",
+        "0x15a54: str r3, [sp,#0x0]",
+        "0x15a56: add r0, pc",
+        "0x15a58: movs r3, #0x27",
+        "0x15a5a: blx 0x00014a80",
+        "0x15a5e: str r4, [r5,#0x4]",
+        "0x15a60: ldr r0, [r5,#0x4]",
+        "0x15a62: subs.w r0, r0, #0xffffffff",
+        "0x15a66: it ne",
+        "0x15a68: mov.ne r0, #0x1",
+        "0x15a6a: mov sp, r7",
+        "0x15a6c: pop {r4,r5,r7,pc}"
+      ],
+      "callees": [
+        "<EXTERNAL>::open",
+        "<EXTERNAL>::printf",
+        "<EXTERNAL>::__cxa_allocate_exception",
+        "<EXTERNAL>::__cxa_throw",
+        "<EXTERNAL>::__errno_location",
+        "FUN_000159cc"
+      ]
+    },
+    {
+      "id": "ev_8ef2753ce449fa7b3053b5b590a5a992c7f1283632de2bb3cb96c6953de2eff0",
+      "procedure": {
+        "address": "0x15d04",
+        "name": "Updater::FileHandler::WriteAll",
+        "classification": {
+          "external": false,
+          "thunk": false,
+          "thunk_target": null,
+          "provenance": "ghidra-function-manager"
+        },
+        "body": {
+          "available": true,
+          "provenance": "ghidra-function-body-address-set",
+          "ranges": [
+            {
+              "start": "0x15d04",
+              "end": "0x15d8d"
+            }
+          ],
+          "total_bytes": 138,
+          "span_bytes": 138,
+          "non_contiguous": false,
+          "contains_entry": true
+        },
+        "signature": "undefined __thiscall WriteAll(FileHandler * this, uchar * param_1, uint param_2, uint * param_3)",
+        "locals": []
+      },
+      "pseudocode": "\n/* Updater::FileHandler::WriteAll(unsigned char const*, unsigned int, unsigned int*) */\n\nundefined4 __thiscall\nUpdater::FileHandler::WriteAll(FileHandler *this,uchar *param_1,uint param_2,uint *param_3)\n\n{\n  undefined4 uVar1;\n  uint uVar2;\n  uint __n;\n  \n  if (((param_1 == (uchar *)0x0) || (param_3 == (uint *)0x0)) ||\n     (__n = param_2, *(int *)(this + 4) == -1)) {\n    printf(\"UdrAPI,%d,%s:%d,\\\"\\\"\\n\",0x3001a,\"FileHandler.cpp\",0x6e,param_3);\n    uVar1 = __cxa_allocate_exception(0xc);\n    FUN_000159cc();\n                    /* WARNING: Subroutine does not return */\n    __cxa_throw(uVar1,&ApiException::typeinfo,ApiException::~ApiException);\n  }\n  while (uVar2 = write(*(int *)(this + 4),param_1,__n), -1 < (int)uVar2) {\n    if (uVar2 == __n) {\n      *param_3 = param_2;\n      return 1;\n    }\n    if (uVar2 == 0) break;\n    if (__n < uVar2) {\n      *param_3 = (uVar2 + param_2) - __n;\n      return 0;\n    }\n    param_1 = param_1 + uVar2;\n    __n = __n - uVar2;\n  }\n  *param_3 = param_2 - __n;\n  return 0;\n}\n\n",
+      "assembly": [
+        "0x15d04: push {r3,r4,r5,r6,r7,r8,r9,lr}",
+        "0x15d08: mov r6, r0",
+        "0x15d0a: ldr r4, [0x00015d94]",
+        "0x15d0c: add r7, sp,#0x0",
+        "0x15d0e: mov r5, r2",
+        "0x15d10: mov r8, r3",
+        "0x15d12: add r4, pc",
+        "0x15d14: cbz r1, 0x00015d26",
+        "0x15d16: cbz r3, 0x00015d26",
+        "0x15d18: ldr r3, [r0,#0x4]",
+        "0x15d1a: cmp.w r3, #0xffffffff",
+        "0x15d1e: beq 0x00015d26",
+        "0x15d20: mov r4, r2",
+        "0x15d22: mov r9, r1",
+        "0x15d24: b 0x00015d50",
+        "0x15d26: ldr r0, [0x00015d98]",
+        "0x15d28: movs r3, #0x6e",
+        "0x15d2a: ldr r2, [0x00015d9c]",
+        "0x15d2c: ldr r1, [0x00015d90]",
+        "0x15d2e: add r0, pc",
+        "0x15d30: add r2, pc",
+        "0x15d32: blx 0x00014a80",
+        "0x15d36: movs r0, #0xc",
+        "0x15d38: blx 0x00014b14",
+        "0x15d3c: mov r5, r0",
+        "0x15d3e: bl 0x000159cc",
+        "0x15d42: ldr r3, [0x00015da0]",
+        "0x15d44: mov r0, r5",
+        "0x15d46: ldr r1, [r4,r3]",
+        "0x15d48: ldr r3, [0x00015da4]",
+        "0x15d4a: ldr r2, [r4,r3]",
+        "0x15d4c: blx 0x00014b5c",
+        "0x15d50: ldr r0, [r6,#0x4]",
+        "0x15d52: mov r1, r9",
+        "0x15d54: mov r2, r4",
+        "0x15d56: blx 0x000149bc",
+        "0x15d5a: cmp r0, #0x0",
+        "0x15d5c: blt 0x00015d64",
+        "0x15d5e: cmp r0, r4",
+        "0x15d60: beq 0x00015d84",
+        "0x15d62: cbnz r0, 0x00015d6c",
+        "0x15d64: subs r5, r5, r4",
+        "0x15d66: str.w r5, [r8,#0x0]",
+        "0x15d6a: b 0x00015d78",
+        "0x15d6c: cmp r0, r4",
+        "0x15d6e: bls 0x00015d7e",
+        "0x15d70: adds r5, r0, r5",
+        "0x15d72: subs r4, r5, r4",
+        "0x15d74: str.w r4, [r8,#0x0]",
+        "0x15d78: movs r0, #0x0",
+        "0x15d7a: pop.w {r3,r4,r5,r6,r7,r8,r9,pc}",
+        "0x15d7e: add r9, r0",
+        "0x15d80: subs r4, r4, r0",
+        "0x15d82: b 0x00015d50",
+        "0x15d84: str.w r5, [r8,#0x0]",
+        "0x15d88: movs r0, #0x1",
+        "0x15d8a: pop.w {r3,r4,r5,r6,r7,r8,r9,pc}"
+      ],
+      "callees": [
+        "<EXTERNAL>::write",
+        "<EXTERNAL>::printf",
+        "<EXTERNAL>::__cxa_allocate_exception",
+        "<EXTERNAL>::__cxa_throw",
+        "FUN_000159cc"
+      ]
+    },
+    {
+      "id": "ev_cd23432874be02b3f6c25988776e965f038b879938fb4e71fa0309b34c813922",
+      "procedure": {
+        "address": "0x15bb8",
+        "name": "Updater::FileHandler::Close",
+        "classification": {
+          "external": false,
+          "thunk": false,
+          "thunk_target": null,
+          "provenance": "ghidra-function-manager"
+        },
+        "body": {
+          "available": true,
+          "provenance": "ghidra-function-body-address-set",
+          "ranges": [
+            {
+              "start": "0x15bb8",
+              "end": "0x15c27"
+            }
+          ],
+          "total_bytes": 112,
+          "span_bytes": 112,
+          "non_contiguous": false,
+          "contains_entry": true
+        },
+        "signature": "undefined __thiscall Close(FileHandler * this)",
+        "locals": [
+          {
+            "description": "undefined4 local_18 @ Stack[-0x18]:4",
+            "provenance": "ghidra-function-database"
+          }
+        ]
+      },
+      "pseudocode": "\n/* Updater::FileHandler::Close() */\n\nint __thiscall Updater::FileHandler::Close(FileHandler *this)\n\n{\n  undefined4 uVar1;\n  uint uVar2;\n  int *piVar3;\n  int iVar4;\n  \n  if (*(int *)(this + 4) == -1) {\n    printf(\"UdrAPI,%d,%s:%d,\\\"\\\"\\n\",0x3001a,\"FileHandler.cpp\",0x4f);\n    uVar1 = __cxa_allocate_exception(0xc);\n    FUN_000159cc();\n                    /* WARNING: Subroutine does not return */\n    __cxa_throw(uVar1,&ApiException::typeinfo,ApiException::~ApiException);\n  }\n  uVar2 = close(*(int *)(this + 4));\n  iVar4 = 1 - uVar2;\n  if (1 < uVar2) {\n    iVar4 = 0;\n  }\n  if (iVar4 == 0) {\n    piVar3 = __errno_location();\n    printf(\"UdrAPI,%d,%s:%d,\\\"%d\\\"\\n\",0x30005,\"FileHandler.cpp\",0x53,*piVar3);\n  }\n  *(undefined4 *)(this + 4) = 0xffffffff;\n  return iVar4;\n}\n\n",
+      "assembly": [
+        "0x15bb8: push {r4,r5,r7,lr}",
+        "0x15bba: sub sp, #0x8",
+        "0x15bbc: mov r5, r0",
+        "0x15bbe: ldr r4, [0x00015c30]",
+        "0x15bc0: add r7, sp,#0x8",
+        "0x15bc2: ldr r0, [r0,#0x4]",
+        "0x15bc4: add r4, pc",
+        "0x15bc6: cmp.w r0, #0xffffffff",
+        "0x15bca: bne 0x00015bf6",
+        "0x15bcc: ldr r0, [0x00015c34]",
+        "0x15bce: movs r3, #0x4f",
+        "0x15bd0: ldr r2, [0x00015c38]",
+        "0x15bd2: ldr r1, [0x00015c28]",
+        "0x15bd4: add r0, pc",
+        "0x15bd6: add r2, pc",
+        "0x15bd8: blx 0x00014a80",
+        "0x15bdc: movs r0, #0xc",
+        "0x15bde: blx 0x00014b14",
+        "0x15be2: mov r5, r0",
+        "0x15be4: bl 0x000159cc",
+        "0x15be8: ldr r3, [0x00015c3c]",
+        "0x15bea: mov r0, r5",
+        "0x15bec: ldr r1, [r4,r3]",
+        "0x15bee: ldr r3, [0x00015c40]",
+        "0x15bf0: ldr r2, [r4,r3]",
+        "0x15bf2: blx 0x00014b5c",
+        "0x15bf6: blx 0x00014abc",
+        "0x15bfa: rsbs.w r4, r0, #0x1",
+        "0x15bfe: it cc",
+        "0x15c00: mov.cc r4, #0x0",
+        "0x15c02: cbnz r4, 0x00015c1c",
+        "0x15c04: blx 0x00014c28",
+        "0x15c08: ldr r2, [0x00015c44]",
+        "0x15c0a: ldr r1, [0x00015c2c]",
+        "0x15c0c: add r2, pc",
+        "0x15c0e: ldr r3, [r0,#0x0]",
+        "0x15c10: ldr r0, [0x00015c48]",
+        "0x15c12: str r3, [sp,#0x0]",
+        "0x15c14: add r0, pc",
+        "0x15c16: movs r3, #0x53",
+        "0x15c18: blx 0x00014a80",
+        "0x15c1c: mov.w r3, #0xffffffff",
+        "0x15c20: mov r0, r4",
+        "0x15c22: str r3, [r5,#0x4]",
+        "0x15c24: mov sp, r7",
+        "0x15c26: pop {r4,r5,r7,pc}"
+      ],
+      "callees": [
+        "<EXTERNAL>::printf",
+        "<EXTERNAL>::close",
+        "<EXTERNAL>::__cxa_allocate_exception",
+        "<EXTERNAL>::__cxa_throw",
+        "<EXTERNAL>::__errno_location",
+        "FUN_000159cc"
+      ]
+    }
+  ]
+}

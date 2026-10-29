@@ -1,0 +1,1971 @@
+[
+  {
+    "name": "0xec8",
+    "id": "ev_993755b02447e3bcc2c65e58491fa15401c5647a8a058dd5aa37564b4de2b874",
+    "procedure": {
+      "address": "0xec8",
+      "name": "FUN_00000ec8",
+      "classification": {
+        "external": false,
+        "thunk": false,
+        "thunk_target": null,
+        "provenance": "ghidra-function-manager"
+      },
+      "body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0xec8",
+            "end": "0xf33"
+          }
+        ],
+        "total_bytes": 108,
+        "span_bytes": 108,
+        "non_contiguous": false,
+        "contains_entry": true
+      },
+      "signature": "undefined FUN_00000ec8()",
+      "locals": []
+    },
+    "pseudocode": "\nvoid FUN_00000ec8(void)\n\n{\n  int iVar1;\n  int iVar2;\n  undefined4 uVar3;\n  \n  iVar2 = DAT_00000f38;\n  iVar1 = DAT_00000f34;\n  do {\n    FUN_000003b0();\n    DAT_00003f40 = 3;\n    uVar3 = FUN_00000580();\n    DAT_00003f58 = DAT_00003f48;\n    DAT_00003f5c = 0;\n    DAT_00003f60 = 0;\n    DAT_00003f68 = 0;\n    DAT_00003f6c = 0;\n    *(undefined4 *)(iVar1 + 0x24) = 0;\n    (**(code **)(iVar2 + DAT_00003f48 * 4))(DAT_00000f34);\n    DAT_00003f40 = 4;\n    FUN_0000059c(uVar3);\n    FUN_00000394();\n  } while( true );\n}\n\n",
+    "assembly": [
+      "0xec8: ldr r8, [0xf34]",
+      "0xecc: ldr r9, [0xf38]",
+      "0xed0: mov r4, #0x3f40",
+      "0xed4: mov r7, #0x3",
+      "0xed8: mov r5, #0x0",
+      "0xedc: mov r10, #0x4",
+      "0xee0: bl 0x000003b0",
+      "0xee4: str r7, [r4,#0x0]",
+      "0xee8: bl 0x00000580",
+      "0xeec: cpy r6, r0",
+      "0xef0: ldr r0, [r4,#0x8]",
+      "0xef4: str r0, [r4,#0x18]",
+      "0xef8: str r5, [r4,#0x1c]",
+      "0xefc: str r5, [r4,#0x20]",
+      "0xf00: str r5, [r4,#0x28]",
+      "0xf04: str r5, [r4,#0x2c]",
+      "0xf08: str r5, [r8,#0x24]",
+      "0xf0c: ldr r0, [r4,#0x8]",
+      "0xf10: adr lr, 0xf20",
+      "0xf14: ldr r1, [r9,r0,lsl #0x2]",
+      "0xf18: ldr r0, [0xf34]",
+      "0xf1c: bx r1",
+      "0xf20: str r10, [r4,#0x0]",
+      "0xf24: cpy r0, r6",
+      "0xf28: bl 0x0000059c",
+      "0xf2c: bl 0x00000394",
+      "0xf30: b 0x00000ee0"
+    ],
+    "callees": [
+      "FUN_00000394",
+      "FUN_000003b0",
+      "FUN_00000580",
+      "FUN_0000059c",
+      "FUN_00002984"
+    ]
+  },
+  {
+    "name": "0xe94",
+    "id": "ev_6c59b7411e8f5a27656ab7a47e810cff1551e55b73b1cd9216f0cdc888e7dd65",
+    "procedure": {
+      "address": "0xe94",
+      "name": "FUN_00000e94",
+      "classification": {
+        "external": false,
+        "thunk": false,
+        "thunk_target": null,
+        "provenance": "ghidra-function-manager"
+      },
+      "body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0xe94",
+            "end": "0xec7"
+          }
+        ],
+        "total_bytes": 52,
+        "span_bytes": 52,
+        "non_contiguous": false,
+        "contains_entry": true
+      },
+      "signature": "undefined FUN_00000e94()",
+      "locals": [
+        {
+          "description": "undefined4 local_8 @ Stack[-0x8]:4",
+          "provenance": "ghidra-function-database"
+        }
+      ]
+    },
+    "pseudocode": "\nvoid FUN_00000e94(void)\n\n{\n  DAT_00003f40 = 1;\n  FUN_000004f4(DAT_00000f34);\n  FUN_000003b0();\n  DAT_00003f40 = 2;\n  DAT_00003f44 = 0;\n  FUN_00000394();\n  return;\n}\n\n",
+    "assembly": [
+      "0xe94: stmdb sp!,{r4,lr}",
+      "0xe98: mov r4, #0x3f40",
+      "0xe9c: mov r0, #0x1",
+      "0xea0: str r0, [r4,#0x0]",
+      "0xea4: ldr r0, [0xf34]",
+      "0xea8: bl 0x000004f4",
+      "0xeac: bl 0x000003b0",
+      "0xeb0: mov r0, #0x2",
+      "0xeb4: str r0, [r4,#0x0]",
+      "0xeb8: mov r0, #0x0",
+      "0xebc: str r0, [r4,#0x4]",
+      "0xec0: ldmia sp!,{r4,lr}",
+      "0xec4: b 0x00000394"
+    ],
+    "callees": [
+      "FUN_00000394",
+      "FUN_000003b0",
+      "FUN_000004f4"
+    ]
+  },
+  {
+    "name": "0x2984",
+    "id": "ev_11ff10124aa5ab37a4bda2cd8d9b128a5cde496c74f9c3d5e4d709554a01feb1",
+    "procedure": {
+      "address": "0x2984",
+      "name": "FUN_00002984",
+      "classification": {
+        "external": false,
+        "thunk": false,
+        "thunk_target": null,
+        "provenance": "ghidra-function-manager"
+      },
+      "body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0x2984",
+            "end": "0x2a03"
+          }
+        ],
+        "total_bytes": 128,
+        "span_bytes": 128,
+        "non_contiguous": false,
+        "contains_entry": true
+      },
+      "signature": "undefined FUN_00002984()",
+      "locals": []
+    },
+    "pseudocode": "\nvoid FUN_00002984(undefined4 *param_1)\n\n{\n  int iVar1;\n  undefined4 uVar2;\n  int iVar3;\n  int *piVar4;\n  \n  iVar1 = DAT_00003f50;\n  piVar4 = (int *)*DAT_00003f54;\n  iVar3 = DAT_00003f50 + 0x40;\n  *(undefined4 *)(DAT_00003f50 + 0x4c) = DAT_00003f54[1];\n  *(int *)(iVar1 + 0x48) = iVar1 + 0x68;\n  *(undefined1 *)(iVar1 + 0x41) = 0;\n  *(int *)(iVar1 + 0x54) = piVar4[1];\n  uVar2 = FUN_00001aa4(*(undefined4 *)(*piVar4 + 4),*(undefined4 *)(*piVar4 + 8),param_1);\n  *(undefined4 *)(iVar1 + 0x50) = uVar2;\n  *param_1 = *(undefined4 *)*piVar4;\n  DAT_00003f5c = FUN_00002758(param_1,iVar3);\n  return;\n}\n\n",
+    "assembly": [
+      "0x2984: stmdb sp!,{r4,r5,r6,r7,r8,lr}",
+      "0x2988: mov r6, #0x3f40",
+      "0x298c: ldr r1, [r6,#0x14]",
+      "0x2990: cpy r7, r0",
+      "0x2994: add r2, r6, #0x10",
+      "0x2998: ldr r0, [r2,#0x0]",
+      "0x299c: ldr r5, [r1,#0x0]",
+      "0x29a0: add r4, r0, #0x40",
+      "0x29a4: ldr r0, [r1,#0x4]",
+      "0x29a8: ldr r1, [r2,#0x0]",
+      "0x29ac: str r0, [r4,#0xc]",
+      "0x29b0: add r1, r1, #0x68",
+      "0x29b4: mov r0, #0x0",
+      "0x29b8: str r1, [r4,#0x8]",
+      "0x29bc: strb r0, [r4,#0x1]",
+      "0x29c0: ldr r0, [r5,#0x4]",
+      "0x29c4: cpy r2, r7",
+      "0x29c8: str r0, [r4,#0x14]",
+      "0x29cc: ldr r1, [r5,#0x0]",
+      "0x29d0: add r1, r1, #0x4",
+      "0x29d4: ldmia r1,{r0,r3}",
+      "0x29d8: cpy r1, r3",
+      "0x29dc: bl 0x00001aa4",
+      "0x29e0: str r0, [r4,#0x10]",
+      "0x29e4: ldr r0, [r5,#0x0]",
+      "0x29e8: cpy r1, r4",
+      "0x29ec: ldr r0, [r0,#0x0]",
+      "0x29f0: str r0, [r7,#0x0]",
+      "0x29f4: cpy r0, r7",
+      "0x29f8: bl 0x00002758",
+      "0x29fc: str r0, [r6,#0x1c]",
+      "0x2a00: ldmia sp!,{r4,r5,r6,r7,r8,pc}"
+    ],
+    "callees": [
+      "FUN_00001aa4",
+      "FUN_00002758"
+    ]
+  },
+  {
+    "name": "0x2eb4",
+    "id": "ev_002d312be4f983fc6b0e9ed1bc6696152eeb812ef680d9100729a32c5756d740",
+    "procedure": {
+      "address": "0x2eb4",
+      "name": "FUN_00002eb4",
+      "classification": {
+        "external": false,
+        "thunk": false,
+        "thunk_target": null,
+        "provenance": "ghidra-function-manager"
+      },
+      "body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0x2eb4",
+            "end": "0x30cf"
+          }
+        ],
+        "total_bytes": 540,
+        "span_bytes": 540,
+        "non_contiguous": false,
+        "contains_entry": true
+      },
+      "signature": "undefined FUN_00002eb4()",
+      "locals": [
+        {
+          "description": "undefined4 local_2c @ Stack[-0x2c]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_30 @ Stack[-0x30]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_34 @ Stack[-0x34]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_38 @ Stack[-0x38]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_3c @ Stack[-0x3c]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_40 @ Stack[-0x40]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_44 @ Stack[-0x44]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_48 @ Stack[-0x48]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_50 @ Stack[-0x50]:4",
+          "provenance": "ghidra-function-database"
+        }
+      ]
+    },
+    "pseudocode": "\nvoid FUN_00002eb4(undefined4 *param_1)\n\n{\n  uint uVar1;\n  undefined4 uVar2;\n  uint *puVar3;\n  int iVar4;\n  int iVar5;\n  int iVar6;\n  int *piVar7;\n  uint uVar8;\n  uint uVar9;\n  int iVar10;\n  int iVar11;\n  uint uVar12;\n  uint uVar13;\n  uint local_44;\n  uint local_40;\n  uint *local_3c;\n  undefined4 *local_38;\n  int local_34;\n  uint local_30;\n  int local_2c;\n  \n  local_38 = &DAT_00003f40;\n  iVar5 = *DAT_0000330c;\n  iVar6 = iVar5 + 0x40;\n  local_44 = 0;\n  local_40 = 0;\n  piVar7 = (int *)*DAT_00003f54;\n  iVar11 = *DAT_0000330c + 0x68;\n  local_2c = DAT_00003f54[1];\n  local_3c = (uint *)DAT_00003f54[3];\n  *(undefined4 *)(iVar5 + 0x4c) = DAT_00003f54[4];\n  *(int *)(iVar5 + 0x48) = iVar11;\n  *(undefined1 *)(iVar5 + 0x41) = 0;\n  local_34 = piVar7[1];\n  uVar2 = FUN_00001aa4(*(undefined4 *)(*piVar7 + 4),*(undefined4 *)(*piVar7 + 8),param_1);\n  *(undefined4 *)(iVar5 + 0x50) = uVar2;\n  iVar10 = 0;\n  uVar12 = 0;\n  *param_1 = *(undefined4 *)*piVar7;\n  uVar8 = param_1[6] * local_2c;\n  do {\n    if (*local_3c <= uVar12) {\nLAB_000030c0:\n      local_38[10] = iVar10;\n      return;\n    }\n    puVar3 = (uint *)(local_3c[1] + uVar12 * 8);\n    uVar9 = puVar3[1];\n    uVar1 = *puVar3 >> 9;\n    uVar13 = uVar8;\n    if (uVar1 <= uVar8) {\n      uVar13 = uVar8 - uVar1;\n      uVar8 = uVar1;\n    }\n    for (; uVar8 != 0; uVar8 = uVar8 - iVar4) {\n      *(int *)(iVar5 + 0x54) = local_34;\n      local_30 = local_44;\n      iVar4 = FUN_00003218(param_1,&local_34,uVar8,&local_44,uVar9,iVar11,iVar6);\n      if (local_44 < (uint)param_1[6]) {\n        iVar11 = iVar11 + uVar8 * 0x200;\n      }\n      else {\n        local_40 = FUN_000030d0(param_1,iVar6);\n        piVar7 = DAT_0000330c;\n        local_44 = local_44 - *(int *)(iVar5 + 0x58) * param_1[6];\n        *(int *)(iVar5 + 0x48) = *DAT_0000330c + 0x68;\n        if (local_30 == 0) {\n          iVar11 = param_1[4] * *(int *)(iVar5 + 0x58) * 4;\n        }\n        else {\n          iVar11 = (param_1[6] - local_30) * 0x200;\n        }\n        uVar9 = uVar9 + iVar11;\n        iVar11 = *piVar7 + 0x68;\n        *(int *)(iVar5 + 0x4c) = *(int *)(iVar5 + 0x4c) + *(int *)(iVar5 + 0x58) * 8;\n      }\n      if (0xb < local_40) goto LAB_000030a8;\n      iVar10 = iVar10 + *(int *)(iVar5 + 0x58);\n    }\n    if ((*local_3c - 1 == uVar12) && (local_44 != 0)) {\n      *(undefined4 *)(iVar5 + 0x58) = 1;\n      local_40 = FUN_000030d0(param_1,iVar6);\n      if (0xb < local_40) {\nLAB_000030a8:\n        iVar10 = 0;\n        goto LAB_000030c0;\n      }\n      iVar10 = iVar10 + *(int *)(iVar5 + 0x58);\n    }\n    if (iVar10 == local_2c) goto LAB_000030c0;\n    uVar12 = uVar12 + 1;\n    uVar8 = uVar13;\n  } while( true );\n}\n\n",
+    "assembly": [
+      "0x2eb4: stmdb sp!,{r4,r5,r6,r7,r8,r9,r10,r11,lr}",
+      "0x2eb8: cpy r8, r0",
+      "0x2ebc: sub sp, sp, #0x2c",
+      "0x2ec0: mov r0, #0x3f40",
+      "0x2ec4: str r0, [sp,#0x18]",
+      "0x2ec8: ldr r0, [r0,#0x14]",
+      "0x2ecc: ldr r1, [0x330c]",
+      "0x2ed0: ldr r2, [r1,#0x0]",
+      "0x2ed4: ldr r1, [r1,#0x0]",
+      "0x2ed8: add r4, r2, #0x40",
+      "0x2edc: mov r2, #0x0",
+      "0x2ee0: str r2, [sp,#0xc]",
+      "0x2ee4: str r2, [sp,#0x10]",
+      "0x2ee8: ldr r5, [r0,#0x0]",
+      "0x2eec: add r9, r1, #0x68",
+      "0x2ef0: ldr r1, [r0,#0x4]",
+      "0x2ef4: str r1, [sp,#0x24]",
+      "0x2ef8: ldr r1, [r0,#0xc]",
+      "0x2efc: str r1, [sp,#0x14]",
+      "0x2f00: ldr r0, [r0,#0x10]",
+      "0x2f04: str r0, [r4,#0xc]",
+      "0x2f08: str r9, [r4,#0x8]",
+      "0x2f0c: strb r2, [r4,#0x1]",
+      "0x2f10: ldr r0, [r5,#0x4]",
+      "0x2f14: cpy r2, r8",
+      "0x2f18: str r0, [sp,#0x1c]",
+      "0x2f1c: ldr r0, [r5,#0x0]",
+      "0x2f20: add r0, r0, #0x4",
+      "0x2f24: ldmia r0,{r0,r1}",
+      "0x2f28: bl 0x00001aa4",
+      "0x2f2c: str r0, [r4,#0x10]",
+      "0x2f30: ldr r0, [r5,#0x0]",
+      "0x2f34: mov r7, #0x0",
+      "0x2f38: ldr r0, [r0,#0x0]",
+      "0x2f3c: cpy r10, r7",
+      "0x2f40: str r0, [r8,#0x0]",
+      "0x2f44: ldr r0, [r8,#0x18]",
+      "0x2f48: ldr r1, [sp,#0x24]",
+      "0x2f4c: mul r11, r0, r1",
+      "0x2f50: ldr r0, [sp,#0x14]",
+      "0x2f54: ldr r0, [r0,#0x0]",
+      "0x2f58: cmp r0, r10",
+      "0x2f5c: bls 0x000030c0",
+      "0x2f60: ldr r0, [sp,#0x14]",
+      "0x2f64: ldr r0, [r0,#0x4]",
+      "0x2f68: ldr r1, [r0,r10,lsl #0x3]!",
+      "0x2f6c: ldr r6, [r0,#0x4]",
+      "0x2f70: mov r5, r1, lsr #0x9",
+      "0x2f74: cmp r5, r11",
+      "0x2f78: cpyhi r5, r11",
+      "0x2f7c: subls r11, r11, r5",
+      "0x2f80: b 0x00003058",
+      "0x2f84: ldr r0, [sp,#0x1c]",
+      "0x2f88: add r3, sp, #0xc",
+      "0x2f8c: str r0, [r4,#0x14]",
+      "0x2f90: ldr r0, [sp,#0xc]",
+      "0x2f94: str r4, [sp,#0x8]",
+      "0x2f98: str r0, [sp,#0x20]",
+      "0x2f9c: stmia sp,{r6,r9}",
+      "0x2fa0: cpy r2, r5",
+      "0x2fa4: add r1, sp, #0x1c",
+      "0x2fa8: cpy r0, r8",
+      "0x2fac: bl 0x00003218",
+      "0x2fb0: str r0, [sp,#0x0]",
+      "0x2fb4: ldr r0, [r8,#0x18]",
+      "0x2fb8: ldr r1, [sp,#0xc]",
+      "0x2fbc: cmp r0, r1",
+      "0x2fc0: addhi r9, r9, r5, lsl #0x9",
+      "0x2fc4: bhi 0x0000303c",
+      "0x2fc8: cpy r1, r4",
+      "0x2fcc: cpy r0, r8",
+      "0x2fd0: bl 0x000030d0",
+      "0x2fd4: str r0, [sp,#0x10]",
+      "0x2fd8: ldr r0, [r8,#0x18]",
+      "0x2fdc: ldr r1, [r4,#0x18]",
+      "0x2fe0: mul r0, r1, r0",
+      "0x2fe4: ldr r1, [sp,#0xc]",
+      "0x2fe8: sub r0, r1, r0",
+      "0x2fec: str r0, [sp,#0xc]",
+      "0x2ff0: ldr r0, [0x330c]",
+      "0x2ff4: ldr r1, [r0,#0x0]",
+      "0x2ff8: add r1, r1, #0x68",
+      "0x2ffc: str r1, [r4,#0x8]",
+      "0x3000: ldr r1, [sp,#0x20]",
+      "0x3004: ldr r0, [r0,#0x0]",
+      "0x3008: cmp r1, #0x0",
+      "0x300c: ldreq r1, [r4,#0x18]",
+      "0x3010: ldreq r2, [r8,#0x10]",
+      "0x3014: muleq r1, r2, r1",
+      "0x3018: ldrne r2, [r8,#0x18]",
+      "0x301c: addeq r6, r6, r1, lsl #0x2",
+      "0x3020: subne r1, r2, r1",
+      "0x3024: addne r6, r6, r1, lsl #0x9",
+      "0x3028: add r9, r0, #0x68",
+      "0x302c: ldr r0, [r4,#0xc]",
+      "0x3030: ldr r1, [r4,#0x18]",
+      "0x3034: add r0, r0, r1, lsl #0x3",
+      "0x3038: str r0, [r4,#0xc]",
+      "0x303c: ldr r0, [sp,#0x10]",
+      "0x3040: cmp r0, #0xb",
+      "0x3044: bhi 0x000030a8",
+      "0x3048: ldr r0, [r4,#0x18]",
+      "0x304c: add r7, r7, r0",
+      "0x3050: ldr r0, [sp,#0x0]",
+      "0x3054: sub r5, r5, r0",
+      "0x3058: cmp r5, #0x0",
+      "0x305c: bne 0x00002f84",
+      "0x3060: ldr r0, [sp,#0x14]",
+      "0x3064: ldr r0, [r0,#0x0]",
+      "0x3068: sub r0, r0, #0x1",
+      "0x306c: cmp r0, r10",
+      "0x3070: bne 0x000030b0",
+      "0x3074: ldr r0, [sp,#0xc]",
+      "0x3078: cmp r0, #0x0",
+      "0x307c: beq 0x000030b0",
+      "0x3080: mov r0, #0x1",
+      "0x3084: str r0, [r4,#0x18]",
+      "0x3088: cpy r1, r4",
+      "0x308c: cpy r0, r8",
+      "0x3090: bl 0x000030d0",
+      "0x3094: cmp r0, #0xb",
+      "0x3098: str r0, [sp,#0x10]",
+      "0x309c: ldrls r0, [r4,#0x18]",
+      "0x30a0: addls r7, r7, r0",
+      "0x30a4: bls 0x000030b0",
+      "0x30a8: mov r7, #0x0",
+      "0x30ac: b 0x000030c0",
+      "0x30b0: ldr r0, [sp,#0x24]",
+      "0x30b4: cmp r7, r0",
+      "0x30b8: addne r10, r10, #0x1",
+      "0x30bc: bne 0x00002f50",
+      "0x30c0: ldr r0, [sp,#0x18]",
+      "0x30c4: str r7, [r0,#0x28]",
+      "0x30c8: add sp, sp, #0x2c",
+      "0x30cc: ldmia sp!,{r4,r5,r6,r7,r8,r9,r10,r11,pc}"
+    ],
+    "callees": [
+      "FUN_00001aa4",
+      "FUN_000030d0",
+      "FUN_00003218"
+    ]
+  },
+  {
+    "name": "0x10c8",
+    "id": "ev_47c70199c8880572b0cfec53cc5d1a00c3a839c99405a7de6d6fd3b625efa715",
+    "procedure": {
+      "address": "0x10c8",
+      "name": "FUN_000010c8",
+      "classification": {
+        "external": false,
+        "thunk": false,
+        "thunk_target": null,
+        "provenance": "ghidra-function-manager"
+      },
+      "body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0x10c8",
+            "end": "0x112f"
+          }
+        ],
+        "total_bytes": 104,
+        "span_bytes": 104,
+        "non_contiguous": false,
+        "contains_entry": true
+      },
+      "signature": "undefined FUN_000010c8()",
+      "locals": []
+    },
+    "pseudocode": "\nvoid FUN_000010c8(undefined4 *param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4)\n\n{\n  int iVar1;\n  undefined4 uVar2;\n  int iVar3;\n  undefined4 *puVar4;\n  undefined4 uStack_18;\n  \n  iVar1 = DAT_00003f50;\n  puVar4 = (undefined4 *)*DAT_00003f54;\n  iVar3 = DAT_00003f50 + 0x40;\n  *(undefined4 *)(DAT_00003f50 + 0x44) = 5;\n  *(undefined1 *)(iVar1 + 0x40) = 0;\n  *(undefined1 *)(iVar1 + 0x41) = 0;\n  uStack_18 = param_4;\n  uVar2 = FUN_00001aa4(puVar4[1],puVar4[2],param_1);\n  *(undefined4 *)(iVar1 + 0x50) = uVar2;\n  *param_1 = *puVar4;\n  DAT_00003f5c = FUN_00000a1c(param_1,iVar3,&uStack_18);\n  return;\n}\n\n",
+    "assembly": [
+      "0x10c8: stmdb sp!,{r3,r4,r5,r6,r7,lr}",
+      "0x10cc: cpy r7, r0",
+      "0x10d0: mov r6, #0x3f40",
+      "0x10d4: ldr r0, [r6,#0x14]",
+      "0x10d8: add r1, r6, #0x10",
+      "0x10dc: ldr r1, [r1,#0x0]",
+      "0x10e0: ldr r5, [r0,#0x0]",
+      "0x10e4: add r4, r1, #0x40",
+      "0x10e8: mov r0, #0x5",
+      "0x10ec: str r0, [r1,#0x44]",
+      "0x10f0: mov r0, #0x0",
+      "0x10f4: strb r0, [r1,#0x40]",
+      "0x10f8: strb r0, [r1,#0x41]",
+      "0x10fc: add r0, r5, #0x4",
+      "0x1100: ldmia r0,{r0,r1}",
+      "0x1104: cpy r2, r7",
+      "0x1108: bl 0x00001aa4",
+      "0x110c: str r0, [r4,#0x10]",
+      "0x1110: ldr r0, [r5,#0x0]",
+      "0x1114: cpy r2, sp",
+      "0x1118: str r0, [r7,#0x0]",
+      "0x111c: cpy r1, r4",
+      "0x1120: cpy r0, r7",
+      "0x1124: bl 0x00000a1c",
+      "0x1128: str r0, [r6,#0x1c]",
+      "0x112c: ldmia sp!,{r3,r4,r5,r6,r7,pc}"
+    ],
+    "callees": [
+      "FUN_00000a1c",
+      "FUN_00001aa4"
+    ]
+  },
+  {
+    "name": "0x2758",
+    "id": "ev_08557cc78a564facc21eea1b93521f0d1307b5c79436ab70a640abc4b4be3bdd",
+    "procedure": {
+      "address": "0x2758",
+      "name": "FUN_00002758",
+      "classification": {
+        "external": false,
+        "thunk": false,
+        "thunk_target": null,
+        "provenance": "ghidra-function-manager"
+      },
+      "body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0x2758",
+            "end": "0x27b3"
+          }
+        ],
+        "total_bytes": 92,
+        "span_bytes": 92,
+        "non_contiguous": false,
+        "contains_entry": true
+      },
+      "signature": "undefined FUN_00002758()",
+      "locals": [
+        {
+          "description": "undefined4 local_10 @ Stack[-0x10]:4",
+          "provenance": "ghidra-function-database"
+        }
+      ]
+    },
+    "pseudocode": "\nvoid FUN_00002758(int param_1,undefined1 *param_2)\n\n{\n  undefined4 uVar1;\n  int iVar2;\n  \n  *param_2 = 0;\n  *(undefined4 *)(param_2 + 4) = 3;\n  if (param_2[1] == '\\x01') {\n    uVar1 = *(undefined4 *)(param_1 + 8);\n  }\n  else {\n    uVar1 = 1;\n  }\n  *(undefined4 *)(param_2 + 0x18) = uVar1;\n  iVar2 = *(int *)(param_1 + 0x10);\n  if (param_2[1] == '\\x01') {\n    iVar2 = *(int *)(param_1 + 8) * iVar2;\n  }\n  FUN_0000346c(*(undefined4 *)(param_2 + 8),iVar2 << 2,0xff);\n  FUN_000008ac(param_1,param_2);\n  return;\n}\n\n",
+    "assembly": [
+      "0x2758: stmdb sp!,{r4,r5,r6,lr}",
+      "0x275c: cpy r5, r0",
+      "0x2760: mov r0, #0x0",
+      "0x2764: strb r0, [r1,#0x0]",
+      "0x2768: mov r0, #0x3",
+      "0x276c: cpy r4, r1",
+      "0x2770: str r0, [r1,#0x4]",
+      "0x2774: ldrb r1, [r1,#0x1]",
+      "0x2778: ldr r0, [r4,#0x8]",
+      "0x277c: cmp r1, #0x1",
+      "0x2780: ldreq r1, [r5,#0x8]",
+      "0x2784: movne r1, #0x1",
+      "0x2788: str r1, [r4,#0x18]",
+      "0x278c: ldr r1, [r5,#0x10]",
+      "0x2790: ldreq r2, [r5,#0x8]",
+      "0x2794: muleq r1, r2, r1",
+      "0x2798: mov r1, r1, lsl #0x2",
+      "0x279c: mov r2, #0xff",
+      "0x27a0: bl 0x0000346c",
+      "0x27a4: cpy r1, r4",
+      "0x27a8: cpy r0, r5",
+      "0x27ac: ldmia sp!,{r4,r5,r6,lr}",
+      "0x27b0: b 0x000008ac"
+    ],
+    "callees": [
+      "FUN_000008ac",
+      "FUN_0000346c"
+    ]
+  },
+  {
+    "name": "0x1aa4",
+    "id": "ev_4827c9f7a0e99ec42a3acc57ab0f6e8232e8bf652de6d385f87735e7c8b4ef8b",
+    "procedure": {
+      "address": "0x1aa4",
+      "name": "FUN_00001aa4",
+      "classification": {
+        "external": false,
+        "thunk": false,
+        "thunk_target": null,
+        "provenance": "ghidra-function-manager"
+      },
+      "body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0x1aa4",
+            "end": "0x1ae3"
+          }
+        ],
+        "total_bytes": 64,
+        "span_bytes": 64,
+        "non_contiguous": false,
+        "contains_entry": true
+      },
+      "signature": "undefined FUN_00001aa4()",
+      "locals": []
+    },
+    "pseudocode": "\nint FUN_00001aa4(int param_1,int param_2,int param_3)\n\n{\n  int iVar1;\n  int iVar2;\n  int iVar3;\n  \n  iVar3 = *(int *)(param_3 + 8);\n  if (iVar3 != 1) {\n    iVar2 = *(int *)(param_3 + 0x20);\n    iVar1 = FUN_0000372c(param_2,iVar2);\n    return (iVar3 + -1) * iVar2 * iVar1 + iVar2 * param_1 + param_2;\n  }\n  return param_2;\n}\n\n",
+    "assembly": [
+      "0x1aa4: stmdb sp!,{r4,r5,r6,r7,r8,lr}",
+      "0x1aa8: ldr r5, [r2,#0x8]",
+      "0x1aac: cpy r7, r0",
+      "0x1ab0: cmp r5, #0x1",
+      "0x1ab4: cpy r6, r1",
+      "0x1ab8: cpyeq r0, r1",
+      "0x1abc: ldmiaeq sp!,{r4,r5,r6,r7,r8,pc}",
+      "0x1ac0: ldr r4, [r2,#0x20]",
+      "0x1ac4: cpy r0, r6",
+      "0x1ac8: cpy r1, r4",
+      "0x1acc: bl 0x0000372c",
+      "0x1ad0: mul r0, r4, r0",
+      "0x1ad4: mla r2, r4, r7, r6",
+      "0x1ad8: sub r1, r5, #0x1",
+      "0x1adc: mla r0, r1, r0, r2",
+      "0x1ae0: ldmia sp!,{r4,r5,r6,r7,r8,pc}"
+    ],
+    "callees": [
+      "FUN_0000372c"
+    ]
+  },
+  {
+    "name": "0x394",
+    "id": "ev_6d07ef4c59a778faee7af4e1ea2233cd0d4f8a2950b9d8a1e266e4fdb27acbeb",
+    "procedure": {
+      "address": "0x394",
+      "name": "FUN_00000394",
+      "classification": {
+        "external": false,
+        "thunk": false,
+        "thunk_target": null,
+        "provenance": "ghidra-function-manager"
+      },
+      "body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0x394",
+            "end": "0x3af"
+          }
+        ],
+        "total_bytes": 28,
+        "span_bytes": 28,
+        "non_contiguous": false,
+        "contains_entry": true
+      },
+      "signature": "undefined FUN_00000394()",
+      "locals": []
+    },
+    "pseudocode": "\nvoid FUN_00000394(void)\n\n{\n  undefined4 *puVar1;\n  \n  puVar1 = DAT_000003ec;\n  *DAT_000003f0 = 0;\n  *puVar1 = 1;\n  return;\n}\n\n",
+    "assembly": [
+      "0x394: ldr r2, [0x3f0]",
+      "0x398: ldr r0, [0x3ec]",
+      "0x39c: mov r1, #0x0",
+      "0x3a0: str r1, [r2,#0x0]",
+      "0x3a4: mov r1, #0x1",
+      "0x3a8: str r1, [r0,#0x0]",
+      "0x3ac: bx lr"
+    ],
+    "callees": []
+  },
+  {
+    "name": "0x3b0",
+    "id": "ev_34f24dd0f47681276c0a825356e178e2bb2ba9e433dd0751fcc0d9051eaa072c",
+    "procedure": {
+      "address": "0x3b0",
+      "name": "FUN_000003b0",
+      "classification": {
+        "external": false,
+        "thunk": false,
+        "thunk_target": null,
+        "provenance": "ghidra-function-manager"
+      },
+      "body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0x3b0",
+            "end": "0x3c3"
+          }
+        ],
+        "total_bytes": 20,
+        "span_bytes": 20,
+        "non_contiguous": false,
+        "contains_entry": true
+      },
+      "signature": "undefined FUN_000003b0()",
+      "locals": []
+    },
+    "pseudocode": "\nvoid FUN_000003b0(void)\n\n{\n  do {\n  } while (*DAT_000003f0 == 0);\n  return;\n}\n\n",
+    "assembly": [
+      "0x3b0: ldr r0, [0x3f0]",
+      "0x3b4: ldr r1, [r0,#0x0]",
+      "0x3b8: cmp r1, #0x0",
+      "0x3bc: beq 0x000003b4",
+      "0x3c0: bx lr"
+    ],
+    "callees": []
+  },
+  {
+    "name": "0x1338",
+    "id": "ev_b8b6da0b285f86004a17ee88972545f2e8b25895d3946d1629b1e5e33f3eb04b",
+    "procedure": {
+      "address": "0x1338",
+      "name": "FUN_00001338",
+      "classification": {
+        "external": false,
+        "thunk": false,
+        "thunk_target": null,
+        "provenance": "ghidra-function-manager"
+      },
+      "body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0x1338",
+            "end": "0x1413"
+          }
+        ],
+        "total_bytes": 220,
+        "span_bytes": 220,
+        "non_contiguous": false,
+        "contains_entry": true
+      },
+      "signature": "undefined FUN_00001338()",
+      "locals": [
+        {
+          "description": "undefined4 local_28 @ Stack[-0x28]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_2c @ Stack[-0x2c]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_30 @ Stack[-0x30]:4",
+          "provenance": "ghidra-function-database"
+        }
+      ]
+    },
+    "pseudocode": "\nvoid FUN_00001338(undefined4 param_1)\n\n{\n  uint uVar1;\n  uint uVar2;\n  uint *puVar3;\n  int iVar4;\n  uint uVar5;\n  int iVar6;\n  undefined4 local_2c;\n  undefined4 local_28;\n  \n  iVar4 = DAT_00003f50;\n  puVar3 = (uint *)*DAT_00003f54;\n  iVar6 = DAT_00003f50 + 0x40;\n  uVar5 = 0;\n  *(undefined4 *)(DAT_00003f50 + 0x48) = DAT_00001a74;\n  *(int *)(iVar4 + 0x4c) = DAT_00003f50 + 0x2068;\n  iVar4 = DAT_00003f64;\n  uVar2 = *puVar3;\n  local_28 = param_1;\n  FUN_0000346c(DAT_00003f64,uVar2 << 2,0xff);\n  local_2c = 0;\n  DAT_00003f60 = uVar2;\n  FUN_000003f4(puVar3);\n  uVar2 = 0;\n  while( true ) {\n    if (*puVar3 <= uVar2) {\n      uVar2 = FUN_000004c0();\n      DAT_00003f5c = uVar5;\n      if (uVar5 <= uVar2) {\n        DAT_00003f5c = uVar2;\n      }\n      return;\n    }\n    uVar1 = FUN_00001130(local_28,puVar3[1] + uVar2 * 0xc,iVar6,iVar4,&local_2c);\n    if (uVar1 == 0xb) {\n      uVar5 = 0xb;\n    }\n    if (0xb < uVar1) break;\n    iVar4 = iVar4 + 4;\n    uVar2 = uVar2 + 1;\n  }\n  if (uVar1 == 0xd) {\n    uVar1 = 0xc;\n  }\n  FUN_000004d8();\n  DAT_00003f5c = uVar1;\n  return;\n}\n\n",
+    "assembly": [
+      "0x1338: stmdb sp!,{r0,r4,r5,r6,r7,r8,r9,r10,r11,lr}",
+      "0x133c: mov r5, #0x3f40",
+      "0x1340: ldr r0, [r5,#0x14]",
+      "0x1344: sub sp, sp, #0x8",
+      "0x1348: add r1, r5, #0x10",
+      "0x134c: ldr r2, [r1,#0x0]",
+      "0x1350: ldr r7, [r0,#0x0]",
+      "0x1354: add r10, r2, #0x40",
+      "0x1358: mov r9, #0x0",
+      "0x135c: ldr r0, [0x1a74]",
+      "0x1360: str r0, [r2,#0x48]",
+      "0x1364: ldr r0, [r1,#0x0]",
+      "0x1368: add r0, r0, #0x2000",
+      "0x136c: add r0, r0, #0x68",
+      "0x1370: str r0, [r2,#0x4c]",
+      "0x1374: ldr r8, [r5,#0x24]",
+      "0x1378: ldr r4, [r7,#0x0]",
+      "0x137c: mov r2, #0xff",
+      "0x1380: mov r1, r4, lsl #0x2",
+      "0x1384: cpy r0, r8",
+      "0x1388: bl 0x0000346c",
+      "0x138c: str r4, [r5,#0x20]",
+      "0x1390: mov r0, #0x0",
+      "0x1394: str r0, [sp,#0x4]",
+      "0x1398: cpy r0, r7",
+      "0x139c: bl 0x000003f4",
+      "0x13a0: mov r4, #0x0",
+      "0x13a4: add r11, sp, #0x4",
+      "0x13a8: ldr r0, [r7,#0x0]",
+      "0x13ac: cmp r0, r4",
+      "0x13b0: bls 0x00001400",
+      "0x13b4: str r11, [sp,#0x0]",
+      "0x13b8: ldr r0, [r7,#0x4]",
+      "0x13bc: add r1, r4, r4, lsl #0x1",
+      "0x13c0: add r1, r0, r1, lsl #0x2",
+      "0x13c4: ldr r0, [sp,#0x8]",
+      "0x13c8: cpy r3, r8",
+      "0x13cc: cpy r2, r10",
+      "0x13d0: bl 0x00001130",
+      "0x13d4: cmp r0, #0xb",
+      "0x13d8: cpy r6, r0",
+      "0x13dc: moveq r9, #0xb",
+      "0x13e0: addls r8, r8, #0x4",
+      "0x13e4: addls r4, r4, #0x1",
+      "0x13e8: bls 0x000013a8",
+      "0x13ec: cmp r6, #0xd",
+      "0x13f0: moveq r6, #0xc",
+      "0x13f4: bl 0x000004d8",
+      "0x13f8: str r6, [r5,#0x1c]",
+      "0x13fc: ldmia sp!,{r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11,pc}",
+      "0x1400: bl 0x000004c0",
+      "0x1404: cmp r9, r0",
+      "0x1408: strhi r9, [r5,#0x1c]",
+      "0x140c: strls r0, [r5,#0x1c]",
+      "0x1410: ldmia sp!,{r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11,pc}"
+    ],
+    "callees": [
+      "FUN_000003f4",
+      "FUN_000004c0",
+      "FUN_000004d8",
+      "FUN_00001130",
+      "FUN_0000346c"
+    ]
+  },
+  {
+    "name": "0x8ac",
+    "id": "ev_a72ccf46875b4f7ed4d91e0df3b38e50b584f9804228fe23ea75d17621168e72",
+    "procedure": {
+      "address": "0x8ac",
+      "name": "FUN_000008ac",
+      "classification": {
+        "external": false,
+        "thunk": false,
+        "thunk_target": null,
+        "provenance": "ghidra-function-manager"
+      },
+      "body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0x8ac",
+            "end": "0x947"
+          }
+        ],
+        "total_bytes": 156,
+        "span_bytes": 156,
+        "non_contiguous": false,
+        "contains_entry": true
+      },
+      "signature": "undefined FUN_000008ac()",
+      "locals": []
+    },
+    "pseudocode": "\nundefined4 FUN_000008ac(int param_1,int param_2)\n\n{\n  int iVar1;\n  int iVar2;\n  int iVar3;\n  \n  if (*(uint *)(param_2 + 0x10) <= *(uint *)(param_1 + 0x1c)) {\n    if (*(char *)(param_2 + 1) == '\\x01') {\n      iVar2 = FUN_0000372c(*(undefined4 *)(param_2 + 0x18),*(undefined4 *)(param_1 + 8));\n      iVar3 = *(int *)(param_2 + 0x14);\n    }\n    else {\n      iVar2 = *(int *)(param_2 + 0x14);\n      iVar3 = *(int *)(param_2 + 0x18);\n    }\n    iVar1 = DAT_00000e78;\n    if ((uint)(iVar2 + iVar3) <= *(uint *)(param_1 + 0x14)) {\n      *(undefined4 *)(DAT_00000e78 + 4) = DAT_00000e7c;\n      *(undefined4 *)(DAT_00000e6c + 0x280) = 1;\n      FUN_000005f8(param_1,param_2);\n      *(undefined4 *)(DAT_00000e6c + 0x280) = 0;\n      *(undefined4 *)(param_1 + 0x24) = *(undefined4 *)(iVar1 + 4);\n      return *(undefined4 *)(iVar1 + 8);\n    }\n  }\n  return 0xe;\n}\n\n",
+    "assembly": [
+      "0x8ac: stmdb sp!,{r4,r5,r6,lr}",
+      "0x8b0: cpy r5, r0",
+      "0x8b4: ldr r0, [r1,#0x10]",
+      "0x8b8: cpy r4, r1",
+      "0x8bc: ldr r1, [r5,#0x1c]",
+      "0x8c0: cmp r0, r1",
+      "0x8c4: bhi 0x000008ec",
+      "0x8c8: ldrb r0, [r4,#0x1]",
+      "0x8cc: cmp r0, #0x1",
+      "0x8d0: addne r0, r4, #0x14",
+      "0x8d4: ldmiane r0,{r0,r1}",
+      "0x8d8: beq 0x000008f4",
+      "0x8dc: add r0, r0, r1",
+      "0x8e0: ldr r1, [r5,#0x14]",
+      "0x8e4: cmp r0, r1",
+      "0x8e8: bls 0x00000908",
+      "0x8ec: mov r0, #0xe",
+      "0x8f0: ldmia sp!,{r4,r5,r6,pc}",
+      "0x8f4: ldr r1, [r5,#0x8]",
+      "0x8f8: ldr r0, [r4,#0x18]",
+      "0x8fc: bl 0x0000372c",
+      "0x900: ldr r1, [r4,#0x14]",
+      "0x904: b 0x000008dc",
+      "0x908: ldr r0, [0xe7c]",
+      "0x90c: ldr r6, [0xe78]",
+      "0x910: str r0, [r6,#0x4]",
+      "0x914: ldr r0, [0xe6c]",
+      "0x918: mov r1, #0x1",
+      "0x91c: str r1, [r0,#0x280]",
+      "0x920: cpy r1, r4",
+      "0x924: cpy r0, r5",
+      "0x928: bl 0x000005f8",
+      "0x92c: ldr r0, [0xe6c]",
+      "0x930: mov r1, #0x0",
+      "0x934: str r1, [r0,#0x280]",
+      "0x938: ldr r0, [r6,#0x4]",
+      "0x93c: str r0, [r5,#0x24]",
+      "0x940: ldr r0, [r6,#0x8]",
+      "0x944: ldmia sp!,{r4,r5,r6,pc}"
+    ],
+    "callees": [
+      "FUN_000005f8",
+      "FUN_0000372c"
+    ]
+  },
+  {
+    "name": "0x1130",
+    "id": "ev_3c8bddf540c6c5a3835d358431e22995ff1417518eacbcf5e58344f6e9731b43",
+    "procedure": {
+      "address": "0x1130",
+      "name": "FUN_00001130",
+      "classification": {
+        "external": false,
+        "thunk": false,
+        "thunk_target": null,
+        "provenance": "ghidra-function-manager"
+      },
+      "body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0x1130",
+            "end": "0x1337"
+          }
+        ],
+        "total_bytes": 520,
+        "span_bytes": 520,
+        "non_contiguous": false,
+        "contains_entry": true
+      },
+      "signature": "undefined FUN_00001130()",
+      "locals": [
+        {
+          "description": "undefined4 local_2c @ Stack[-0x2c]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_30 @ Stack[-0x30]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_34 @ Stack[-0x34]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_38 @ Stack[-0x38]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_3c @ Stack[-0x3c]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_40 @ Stack[-0x40]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_44 @ Stack[-0x44]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_48 @ Stack[-0x48]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_4c @ Stack[-0x4c]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_50 @ Stack[-0x50]:4",
+          "provenance": "ghidra-function-database"
+        }
+      ]
+    },
+    "pseudocode": "\nuint FUN_00001130(undefined4 *param_1,int *param_2,undefined1 *param_3,uint *param_4,uint *param_5)\n\n{\n  undefined4 uVar1;\n  uint uVar2;\n  int iVar3;\n  uint uVar4;\n  uint uVar5;\n  uint unaff_r6;\n  uint uVar6;\n  int iVar7;\n  bool bVar8;\n  uint local_44 [4];\n  int local_34;\n  int local_30;\n  undefined4 local_2c;\n  \n  uVar6 = 0;\n  local_2c = 0;\n  local_44[2] = param_2[1];\n  uVar5 = param_2[2];\n  uVar4 = *param_5;\n  uVar2 = uVar4 + uVar5;\n  bVar8 = 0x7f < uVar2;\n  if (bVar8) {\n    uVar2 = 0x80;\n  }\n  *param_5 = uVar2;\n  iVar7 = *param_2;\n  if (bVar8) {\n    unaff_r6 = 0x80 - uVar4;\n  }\n  local_44[3] = *(undefined4 *)(iVar7 + 8);\n  if (!bVar8) {\n    unaff_r6 = uVar5;\n  }\n  local_34 = *(int *)(iVar7 + 4);\n  iVar3 = *(int *)(iVar7 + 0xc);\n  if (param_1[2] == 1) {\n    local_44[0] = **(uint **)(*(int *)(iVar3 + 4) + 8);\n    local_44[0] = FUN_00001aa4(0,local_44[0],param_1);\n  }\n  else {\n    local_44[0] = **(uint **)(*(int *)(iVar3 + 4) + 8);\n    local_44[1] = *(undefined4 *)(*(int *)(*(int *)(iVar3 + 4) + 8) + 4);\n    local_2c = FUN_00001ae4(param_1,local_44);\n  }\n  *param_3 = 0;\n  *param_1 = **(undefined4 **)(*(int *)(iVar7 + 0xc) + 4);\n  *param_4 = 0;\n  while( true ) {\n    if (uVar5 == 0) {\n      return uVar6;\n    }\n    param_3[1] = 0;\n    *(uint *)(param_3 + 0x14) = local_44[3];\n    *(uint *)(param_3 + 0x10) = local_44[local_34];\n    iVar3 = param_1[6];\n    uVar2 = local_44[2];\n    iVar7 = FUN_0000372c(local_44[2],iVar3);\n    if (iVar7 * iVar3 - uVar2 == 0) {\n      uVar2 = FUN_00001738(param_1,unaff_r6,&local_34,local_44 + 3,param_3,local_2c,&local_30);\n    }\n    else {\n      uVar2 = FUN_00001688(param_1,unaff_r6,&local_34,local_44 + 3,param_3,local_44 + 2,&local_30);\n    }\n    local_44[2] = local_44[2] + unaff_r6;\n    if ((uint)param_1[6] <= local_44[2]) {\n      local_44[2] = 0;\n    }\n    if (10 < uVar2) {\n      uVar6 = uVar2;\n    }\n    uVar4 = uVar2;\n    if (uVar2 == 0xb) {\n      uVar4 = 1;\n    }\n    if (0xb < uVar2) {\n      uVar4 = 2;\n    }\n    if (10 < uVar2) {\n      *param_4 = uVar4;\n    }\n    uVar1 = DAT_00001a74;\n    if (0xb < uVar2) break;\n    uVar5 = uVar5 - local_30;\n    unaff_r6 = unaff_r6 - local_30;\n    if (*param_5 == 0x80 && unaff_r6 == 0) {\n      bVar8 = 0x7f < uVar5;\n      if (!bVar8) {\n        *param_5 = uVar5;\n      }\n      *(undefined4 *)(param_3 + 8) = uVar1;\n      if (bVar8) {\n        unaff_r6 = 0x80;\n      }\n      if (!bVar8) {\n        unaff_r6 = uVar5;\n      }\n      *(int *)(param_3 + 0xc) = *DAT_00001a78 + 0x2068;\n    }\n  }\n  return uVar6;\n}\n\n",
+    "assembly": [
+      "0x1130: stmdb sp!,{r4,r5,r6,r7,r8,r9,r10,r11,lr}",
+      "0x1134: cpy r8, r0",
+      "0x1138: sub sp, sp, #0x2c",
+      "0x113c: mov r0, #0x0",
+      "0x1140: cpy r9, r0",
+      "0x1144: str r0, [sp,#0x24]",
+      "0x1148: add r0, r1, #0x4",
+      "0x114c: ldmia r0,{r0,r4}",
+      "0x1150: ldr r7, [sp,#0x50]",
+      "0x1154: cpy r5, r2",
+      "0x1158: str r0, [sp,#0x14]",
+      "0x115c: ldr r2, [r7,#0x0]",
+      "0x1160: cpy r10, r3",
+      "0x1164: add r0, r2, r4",
+      "0x1168: cmp r0, #0x80",
+      "0x116c: movcs r0, #0x80",
+      "0x1170: str r0, [r7,#0x0]",
+      "0x1174: ldr r11, [r1,#0x0]",
+      "0x1178: rsbcs r6, r2, #0x80",
+      "0x117c: ldr r0, [r11,#0x8]",
+      "0x1180: cpycc r6, r4",
+      "0x1184: str r0, [sp,#0x18]",
+      "0x1188: ldr r0, [r11,#0x4]",
+      "0x118c: str r0, [sp,#0x1c]",
+      "0x1190: ldr r0, [r8,#0x8]",
+      "0x1194: cmp r0, #0x1",
+      "0x1198: ldr r0, [r11,#0xc]",
+      "0x119c: beq 0x000011d4",
+      "0x11a0: ldr r1, [r0,#0x4]",
+      "0x11a4: ldr r1, [r1,#0x8]",
+      "0x11a8: ldr r1, [r1,#0x0]",
+      "0x11ac: str r1, [sp,#0xc]",
+      "0x11b0: ldr r0, [r0,#0x4]",
+      "0x11b4: add r1, sp, #0xc",
+      "0x11b8: ldr r0, [r0,#0x8]",
+      "0x11bc: ldr r0, [r0,#0x4]",
+      "0x11c0: str r0, [sp,#0x10]",
+      "0x11c4: cpy r0, r8",
+      "0x11c8: bl 0x00001ae4",
+      "0x11cc: str r0, [sp,#0x24]",
+      "0x11d0: b 0x000011f8",
+      "0x11d4: ldr r0, [r0,#0x4]",
+      "0x11d8: cpy r2, r8",
+      "0x11dc: ldr r0, [r0,#0x8]",
+      "0x11e0: ldr r0, [r0,#0x0]",
+      "0x11e4: cpy r1, r0",
+      "0x11e8: str r0, [sp,#0xc]",
+      "0x11ec: mov r0, #0x0",
+      "0x11f0: bl 0x00001aa4",
+      "0x11f4: str r0, [sp,#0xc]",
+      "0x11f8: mov r0, #0x0",
+      "0x11fc: strb r0, [r5,#0x0]",
+      "0x1200: ldr r1, [r11,#0xc]",
+      "0x1204: ldr r1, [r1,#0x4]",
+      "0x1208: ldr r1, [r1,#0x0]",
+      "0x120c: str r1, [r8,#0x0]",
+      "0x1210: str r0, [r10,#0x0]",
+      "0x1214: b 0x00001324",
+      "0x1218: mov r0, #0x0",
+      "0x121c: strb r0, [r5,#0x1]",
+      "0x1220: ldr r0, [sp,#0x18]",
+      "0x1224: str r0, [r5,#0x14]",
+      "0x1228: ldr r1, [sp,#0x1c]",
+      "0x122c: add r0, sp, #0xc",
+      "0x1230: ldr r0, [r0,r1,lsl #0x2]",
+      "0x1234: str r0, [r5,#0x10]",
+      "0x1238: ldr r11, [r8,#0x18]",
+      "0x123c: ldr r0, [sp,#0x14]",
+      "0x1240: cpy r1, r11",
+      "0x1244: str r0, [sp,#0x0]",
+      "0x1248: bl 0x0000372c",
+      "0x124c: mul r1, r0, r11",
+      "0x1250: ldr r0, [sp,#0x0]",
+      "0x1254: cmp r1, r0",
+      "0x1258: add r0, sp, #0x20",
+      "0x125c: bne 0x00001288",
+      "0x1260: ldr r1, [sp,#0x24]",
+      "0x1264: str r0, [sp,#0x8]",
+      "0x1268: str r1, [sp,#0x4]",
+      "0x126c: add r3, sp, #0x18",
+      "0x1270: add r2, sp, #0x1c",
+      "0x1274: cpy r1, r6",
+      "0x1278: cpy r0, r8",
+      "0x127c: str r5, [sp,#0x0]",
+      "0x1280: bl 0x00001738",
+      "0x1284: b 0x000012ac",
+      "0x1288: add r1, sp, #0x14",
+      "0x128c: str r0, [sp,#0x8]",
+      "0x1290: str r1, [sp,#0x4]",
+      "0x1294: add r3, sp, #0x18",
+      "0x1298: add r2, sp, #0x1c",
+      "0x129c: cpy r1, r6",
+      "0x12a0: cpy r0, r8",
+      "0x12a4: str r5, [sp,#0x0]",
+      "0x12a8: bl 0x00001688",
+      "0x12ac: ldr r1, [sp,#0x14]",
+      "0x12b0: ldr r2, [r8,#0x18]",
+      "0x12b4: add r1, r1, r6",
+      "0x12b8: cmp r1, r2",
+      "0x12bc: movcs r1, #0x0",
+      "0x12c0: cmp r0, #0xb",
+      "0x12c4: cpycs r9, r0",
+      "0x12c8: moveq r0, #0x1",
+      "0x12cc: movhi r0, #0x2",
+      "0x12d0: str r1, [sp,#0x14]",
+      "0x12d4: strcs r0, [r10,#0x0]",
+      "0x12d8: bhi 0x0000132c",
+      "0x12dc: ldr r0, [sp,#0x20]",
+      "0x12e0: sub r4, r4, r0",
+      "0x12e4: sub r6, r6, r0",
+      "0x12e8: ldr r0, [r7,#0x0]",
+      "0x12ec: cmp r0, #0x80",
+      "0x12f0: cmpeq r6, #0x0",
+      "0x12f4: bne 0x00001324",
+      "0x12f8: ldr r0, [0x1a74]",
+      "0x12fc: cmp r4, #0x80",
+      "0x1300: strcc r4, [r7,#0x0]",
+      "0x1304: str r0, [r5,#0x8]",
+      "0x1308: ldr r0, [0x1a78]",
+      "0x130c: movcs r6, #0x80",
+      "0x1310: ldr r0, [r0,#0x0]",
+      "0x1314: cpycc r6, r4",
+      "0x1318: add r0, r0, #0x2000",
+      "0x131c: add r0, r0, #0x68",
+      "0x1320: str r0, [r5,#0xc]",
+      "0x1324: cmp r4, #0x0",
+      "0x1328: bne 0x00001218",
+      "0x132c: cpy r0, r9",
+      "0x1330: add sp, sp, #0x2c",
+      "0x1334: ldmia sp!,{r4,r5,r6,r7,r8,r9,r10,r11,pc}"
+    ],
+    "callees": [
+      "FUN_00001688",
+      "FUN_00001738",
+      "FUN_00001aa4",
+      "FUN_00001ae4",
+      "FUN_0000372c"
+    ]
+  },
+  {
+    "name": "0x5f8",
+    "id": "ev_2e72f7b7edaee9032d01894e851ddecfe7a1dea1968439bc0f58a79387170d70",
+    "procedure": {
+      "address": "0x5f8",
+      "name": "FUN_000005f8",
+      "classification": {
+        "external": false,
+        "thunk": false,
+        "thunk_target": null,
+        "provenance": "ghidra-function-manager"
+      },
+      "body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0x5f8",
+            "end": "0x783"
+          }
+        ],
+        "total_bytes": 396,
+        "span_bytes": 396,
+        "non_contiguous": false,
+        "contains_entry": true
+      },
+      "signature": "undefined FUN_000005f8()",
+      "locals": []
+    },
+    "pseudocode": "\nvoid FUN_000005f8(undefined4 param_1,int param_2)\n\n{\n  int iVar1;\n  int *piVar2;\n  \n  piVar2 = DAT_00000e78;\n  iVar1 = DAT_00000e6c;\n  DAT_00000e78[2] = 0;\n  if (*(char *)(param_2 + 1) == '\\x01') {\n    if (DAT_00003f20 == 1) {\n      *(uint *)(iVar1 + 0x70) = *(uint *)(iVar1 + 0x70) | 1;\n    }\n    if (DAT_00003f24 == 1) {\n      *(uint *)(iVar1 + 0x80) = *(uint *)(iVar1 + 0x80) | 1;\n    }\n  }\n  else {\n    if (1 < DAT_00003f28) {\n      *(uint *)(iVar1 + 0x1c0) = DAT_00003f28 & 1;\n    }\n    if (1 < DAT_00003f2c) {\n      *(uint *)(iVar1 + 0x1d0) = DAT_00003f2c & 1;\n    }\n  }\n  piVar2[3] = *(int *)(param_2 + 4);\n  FUN_00000ccc();\n  FUN_000005a8(1);\n  if (*(int *)(param_2 + 4) == 2 || *(int *)(param_2 + 4) == 4) {\n    *(uint *)(iVar1 + 0xe0) = *(uint *)(iVar1 + 0xe0) & 0xfffffffe;\n    *(int *)(iVar1 + 0x6c0) = *(int *)(iVar1 + 0x180) + 0x200;\n  }\n  FUN_00000c1c(param_1,param_2);\n  do {\n  } while (*piVar2 != 1);\n  if (*(int *)(param_2 + 4) == 2 || *(int *)(param_2 + 4) == 4) {\n    *(undefined4 *)(iVar1 + 0x6c0) = 0x200;\n    *(uint *)(iVar1 + 0xe0) = *(uint *)(iVar1 + 0xe0) | 1;\n    *(undefined4 *)(iVar1 + 0x690) = 2;\n  }\n  FUN_000005a8(0);\n  if (*(char *)(param_2 + 1) == '\\x01') {\n    if (DAT_00003f20 == 1) {\n      *(uint *)(iVar1 + 0x70) = *(uint *)(iVar1 + 0x70) & 0xfffffffe;\n    }\n    if (DAT_00003f24 == 1) {\n      *(uint *)(iVar1 + 0x80) = *(uint *)(iVar1 + 0x80) & 0xfffffffe;\n    }\n    return;\n  }\n  if (1 < DAT_00003f28) {\n    *(uint *)(iVar1 + 0x1c0) = DAT_00003f28;\n  }\n  if (DAT_00003f2c < 2) {\n    return;\n  }\n  *(uint *)(iVar1 + 0x1d0) = DAT_00003f2c;\n  return;\n}\n\n",
+    "assembly": [
+      "0x5f8: stmdb sp!,{r4,r5,r6,r7,r8,lr}",
+      "0x5fc: ldr r7, [0xe78]",
+      "0x600: cpy r8, r0",
+      "0x604: ldr r4, [0xe6c]",
+      "0x608: mov r0, #0x0",
+      "0x60c: cpy r6, r1",
+      "0x610: mov r5, #0x3f00",
+      "0x614: str r0, [r7,#0x8]",
+      "0x618: ldrb r0, [r1,#0x1]",
+      "0x61c: cmp r0, #0x1",
+      "0x620: beq 0x00000684",
+      "0x624: ldr r0, [r5,#0x28]",
+      "0x628: cmp r0, #0x0",
+      "0x62c: ldrne r0, [r5,#0x28]",
+      "0x630: cmpne r0, #0x1",
+      "0x634: ldrne r0, [r5,#0x28]",
+      "0x638: andne r0, r0, #0x1",
+      "0x63c: strne r0, [r4,#0x1c0]",
+      "0x640: ldr r0, [r5,#0x2c]",
+      "0x644: cmp r0, #0x0",
+      "0x648: ldrne r0, [r5,#0x2c]",
+      "0x64c: cmpne r0, #0x1",
+      "0x650: ldrne r0, [r5,#0x2c]",
+      "0x654: andne r0, r0, #0x1",
+      "0x658: strne r0, [r4,#0x1d0]",
+      "0x65c: ldr r0, [r6,#0x4]",
+      "0x660: str r0, [r7,#0xc]",
+      "0x664: bl 0x00000ccc",
+      "0x668: mov r0, #0x1",
+      "0x66c: bl 0x000005a8",
+      "0x670: ldr r1, [r6,#0x4]",
+      "0x674: cmp r1, #0x2",
+      "0x678: cmpne r1, #0x4",
+      "0x67c: bne 0x000006c8",
+      "0x680: b 0x000006b0",
+      "0x684: ldr r0, [r5,#0x20]",
+      "0x688: cmp r0, #0x1",
+      "0x68c: ldreq r0, [r4,#0x70]",
+      "0x690: orreq r0, r0, #0x1",
+      "0x694: streq r0, [r4,#0x70]",
+      "0x698: ldr r0, [r5,#0x24]",
+      "0x69c: cmp r0, #0x1",
+      "0x6a0: ldreq r0, [r4,#0x80]",
+      "0x6a4: orreq r0, r0, #0x1",
+      "0x6a8: streq r0, [r4,#0x80]",
+      "0x6ac: b 0x0000065c",
+      "0x6b0: ldr r0, [r4,#0xe0]",
+      "0x6b4: bic r0, r0, #0x1",
+      "0x6b8: str r0, [r4,#0xe0]",
+      "0x6bc: ldr r1, [r4,#0x180]",
+      "0x6c0: add r0, r1, #0x200",
+      "0x6c4: str r0, [r4,#0x6c0]",
+      "0x6c8: cpy r1, r6",
+      "0x6cc: cpy r0, r8",
+      "0x6d0: bl 0x00000c1c",
+      "0x6d4: ldr r0, [r7,#0x0]",
+      "0x6d8: cmp r0, #0x1",
+      "0x6dc: bne 0x000006d4",
+      "0x6e0: ldr r0, [r6,#0x4]",
+      "0x6e4: cmp r0, #0x2",
+      "0x6e8: cmpne r0, #0x4",
+      "0x6ec: bne 0x0000070c",
+      "0x6f0: mov r0, #0x200",
+      "0x6f4: str r0, [r4,#0x6c0]",
+      "0x6f8: ldr r0, [r4,#0xe0]",
+      "0x6fc: orr r0, r0, #0x1",
+      "0x700: str r0, [r4,#0xe0]",
+      "0x704: mov r0, #0x2",
+      "0x708: str r0, [r4,#0x690]",
+      "0x70c: mov r0, #0x0",
+      "0x710: bl 0x000005a8",
+      "0x714: ldrb r0, [r6,#0x1]",
+      "0x718: cmp r0, #0x1",
+      "0x71c: beq 0x00000758",
+      "0x720: ldr r0, [r5,#0x28]",
+      "0x724: cmp r0, #0x0",
+      "0x728: ldrne r0, [r5,#0x28]",
+      "0x72c: cmpne r0, #0x1",
+      "0x730: ldrne r0, [r5,#0x28]",
+      "0x734: strne r0, [r4,#0x1c0]",
+      "0x738: ldr r0, [r5,#0x2c]",
+      "0x73c: cmp r0, #0x0",
+      "0x740: ldrne r0, [r5,#0x2c]",
+      "0x744: cmpne r0, #0x1",
+      "0x748: ldrne r0, [r5,#0x2c]",
+      "0x74c: strne r0, [r4,#0x1d0]",
+      "0x750: ldmiaeq sp!,{r4,r5,r6,r7,r8,pc}",
+      "0x754: ldmia sp!,{r4,r5,r6,r7,r8,pc}",
+      "0x758: ldr r0, [r5,#0x20]",
+      "0x75c: cmp r0, #0x1",
+      "0x760: ldreq r0, [r4,#0x70]",
+      "0x764: biceq r0, r0, #0x1",
+      "0x768: streq r0, [r4,#0x70]",
+      "0x76c: ldr r0, [r5,#0x24]",
+      "0x770: cmp r0, #0x1",
+      "0x774: ldreq r0, [r4,#0x80]",
+      "0x778: biceq r0, r0, #0x1",
+      "0x77c: streq r0, [r4,#0x80]",
+      "0x780: ldmia sp!,{r4,r5,r6,r7,r8,pc}"
+    ],
+    "callees": [
+      "FUN_000005a8",
+      "FUN_00000c1c",
+      "FUN_00000ccc"
+    ]
+  },
+  {
+    "name": "0x1688",
+    "id": "ev_941739f19885b163c37104e0e0ee6515a73f2670ca60985429f0b72e4a0b7b52",
+    "procedure": {
+      "address": "0x1688",
+      "name": "FUN_00001688",
+      "classification": {
+        "external": false,
+        "thunk": false,
+        "thunk_target": null,
+        "provenance": "ghidra-function-manager"
+      },
+      "body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0x81c",
+            "end": "0x8ab"
+          },
+          {
+            "start": "0x1688",
+            "end": "0x1737"
+          }
+        ],
+        "total_bytes": 320,
+        "span_bytes": 3868,
+        "non_contiguous": true,
+        "contains_entry": true
+      },
+      "signature": "undefined FUN_00001688()",
+      "locals": [
+        {
+          "description": "undefined4 local_28 @ Stack[-0x28]:4",
+          "provenance": "ghidra-function-database"
+        }
+      ]
+    },
+    "pseudocode": "\nundefined4\nFUN_00001688(int param_1,uint param_2,int *param_3,int *param_4,int param_5,int *param_6,\n            undefined4 *param_7)\n\n{\n  int iVar1;\n  uint uVar2;\n  int iVar3;\n  int iVar4;\n  bool bVar5;\n  bool bVar6;\n  \n  *(undefined4 *)(param_5 + 4) = 1;\n  iVar3 = *(int *)(param_1 + 0x18);\n  iVar4 = *param_6;\n  iVar1 = FUN_0000372c(iVar4,iVar3);\n  iVar4 = iVar4 - iVar3 * iVar1;\n  *(int *)(param_5 + 0x18) = iVar4;\n  uVar2 = *(int *)(param_1 + 0x18) - iVar4;\n  if (param_2 < uVar2) {\n    *(uint *)(param_5 + 0x1c) = param_2;\n  }\n  else {\n    *(uint *)(param_5 + 0x1c) = uVar2;\n    if (*(int *)(param_1 + 8) != 1) {\n      iVar1 = *param_3;\n      *param_3 = iVar1 + 1;\n      if (iVar1 + 1 != *(int *)(param_1 + 8)) goto LAB_0000081c;\n      *param_3 = 0;\n    }\n    *param_4 = *param_4 + 1;\n  }\nLAB_0000081c:\n  *param_7 = *(undefined4 *)(param_5 + 0x1c);\n  iVar4 = *(int *)(param_5 + 0x18);\n  iVar1 = *(int *)(param_5 + 0x1c);\n  bVar6 = *(uint *)(param_1 + 0x1c) <= *(uint *)(param_5 + 0x10);\n  bVar5 = *(uint *)(param_5 + 0x10) == *(uint *)(param_1 + 0x1c);\n  if (!bVar6 || bVar5) {\n    bVar6 = *(uint *)(param_1 + 0x14) <= *(uint *)(param_5 + 0x14);\n    bVar5 = *(uint *)(param_5 + 0x14) == *(uint *)(param_1 + 0x14);\n  }\n  if (!bVar6 || bVar5) {\n    FUN_00000cec(param_1,param_5,0x47);\n    FUN_000005f8(param_1,param_5);\n    FUN_00000cec(param_1,param_5,0x42);\n    *(int *)(param_5 + 8) = *(int *)(param_5 + 8) + iVar1 * 0x200;\n    if (iVar4 + iVar1 == *(int *)(param_1 + 0x18)) {\n      *(int *)(param_5 + 0xc) = *(int *)(param_5 + 0xc) + 8;\n    }\n    return *(undefined4 *)(DAT_00000e78 + 8);\n  }\n  return 0xe;\n}\n\n",
+    "assembly": [
+      "0x81c: stmdb sp!,{r4,r5,r6,r7,r8,lr}",
+      "0x820: cpy r5, r0",
+      "0x824: cpy r4, r1",
+      "0x828: ldr r0, [r1,#0x10]!",
+      "0x82c: ldr r7, [r1,#0x8]!",
+      "0x830: ldr r6, [r1,#0x4]",
+      "0x834: ldr r1, [r5,#0x1c]",
+      "0x838: cmp r0, r1",
+      "0x83c: ldrls r0, [r4,#0x14]",
+      "0x840: ldrls r1, [r5,#0x14]",
+      "0x844: cmpls r0, r1",
+      "0x848: movhi r0, #0xe",
+      "0x84c: ldmiahi sp!,{r4,r5,r6,r7,r8,pc}",
+      "0x850: mov r2, #0x47",
+      "0x854: cpy r1, r4",
+      "0x858: cpy r0, r5",
+      "0x85c: bl 0x00000cec",
+      "0x860: cpy r1, r4",
+      "0x864: cpy r0, r5",
+      "0x868: bl 0x000005f8",
+      "0x86c: mov r2, #0x42",
+      "0x870: cpy r1, r4",
+      "0x874: cpy r0, r5",
+      "0x878: bl 0x00000cec",
+      "0x87c: ldr r0, [r4,#0x8]",
+      "0x880: add r0, r0, r6, lsl #0x9",
+      "0x884: str r0, [r4,#0x8]",
+      "0x888: ldr r1, [r5,#0x18]",
+      "0x88c: add r0, r7, r6",
+      "0x890: cmp r0, r1",
+      "0x894: ldreq r0, [r4,#0xc]",
+      "0x898: addeq r0, r0, #0x8",
+      "0x89c: streq r0, [r4,#0xc]",
+      "0x8a0: ldr r0, [0xe78]",
+      "0x8a4: ldr r0, [r0,#0x8]",
+      "0x8a8: ldmia sp!,{r4,r5,r6,r7,r8,pc}",
+      "0x1688: stmdb sp!,{r4,r5,r6,r7,r8,r9,r10,r11,r12,lr}",
+      "0x168c: cpy r9, r1",
+      "0x1690: cpy r5, r0",
+      "0x1694: add r1, sp, #0x2c",
+      "0x1698: ldmia r1,{r0,r8}",
+      "0x169c: ldr r4, [sp,#0x28]",
+      "0x16a0: mov r1, #0x1",
+      "0x16a4: str r1, [r4,#0x4]",
+      "0x16a8: ldr r10, [r5,#0x18]",
+      "0x16ac: ldr r11, [r0,#0x0]",
+      "0x16b0: cpy r7, r2",
+      "0x16b4: cpy r6, r3",
+      "0x16b8: cpy r1, r10",
+      "0x16bc: cpy r0, r11",
+      "0x16c0: bl 0x0000372c",
+      "0x16c4: mul r0, r10, r0",
+      "0x16c8: sub r0, r11, r0",
+      "0x16cc: str r0, [r4,#0x18]",
+      "0x16d0: ldr r1, [r5,#0x18]",
+      "0x16d4: sub r0, r1, r0",
+      "0x16d8: cmp r0, r9",
+      "0x16dc: strhi r9, [r4,#0x1c]",
+      "0x16e0: bhi 0x00001720",
+      "0x16e4: str r0, [r4,#0x1c]",
+      "0x16e8: ldr r0, [r5,#0x8]",
+      "0x16ec: cmp r0, #0x1",
+      "0x16f0: beq 0x00001714",
+      "0x16f4: ldr r0, [r7,#0x0]",
+      "0x16f8: add r0, r0, #0x1",
+      "0x16fc: str r0, [r7,#0x0]",
+      "0x1700: ldr r1, [r5,#0x8]",
+      "0x1704: cmp r0, r1",
+      "0x1708: moveq r0, #0x0",
+      "0x170c: streq r0, [r7,#0x0]",
+      "0x1710: bne 0x00001720",
+      "0x1714: ldr r0, [r6,#0x0]",
+      "0x1718: add r0, r0, #0x1",
+      "0x171c: str r0, [r6,#0x0]",
+      "0x1720: ldr r0, [r4,#0x1c]",
+      "0x1724: cpy r1, r4",
+      "0x1728: str r0, [r8,#0x0]",
+      "0x172c: cpy r0, r5",
+      "0x1730: ldmia sp!,{r4,r5,r6,r7,r8,r9,r10,r11,r12,lr}",
+      "0x1734: b 0x0000081c"
+    ],
+    "callees": [
+      "FUN_000005f8",
+      "FUN_00000cec",
+      "FUN_0000372c"
+    ]
+  },
+  {
+    "name": "0x1738",
+    "id": "ev_999ed97546fe27703bc00301e9810739f5d2ed2f985d023d869965384a8955ed",
+    "procedure": {
+      "address": "0x1738",
+      "name": "FUN_00001738",
+      "classification": {
+        "external": false,
+        "thunk": false,
+        "thunk_target": null,
+        "provenance": "ghidra-function-manager"
+      },
+      "body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0x1738",
+            "end": "0x185f"
+          }
+        ],
+        "total_bytes": 296,
+        "span_bytes": 296,
+        "non_contiguous": false,
+        "contains_entry": true
+      },
+      "signature": "undefined FUN_00001738()",
+      "locals": [
+        {
+          "description": "undefined4 local_28 @ Stack[-0x28]:4",
+          "provenance": "ghidra-function-database"
+        }
+      ]
+    },
+    "pseudocode": "\nundefined4\nFUN_00001738(int param_1,uint param_2,int *param_3,int *param_4,int param_5,int param_6,\n            uint *param_7)\n\n{\n  uint uVar1;\n  undefined4 uVar2;\n  int iVar3;\n  int iVar4;\n  bool bVar5;\n  bool bVar6;\n  \n  if (param_2 < *(uint *)(param_1 + 0x18)) {\n    *(uint *)(param_5 + 0x1c) = param_2;\n    *(undefined4 *)(param_5 + 4) = 1;\n    *(undefined4 *)(param_5 + 0x18) = 0;\n    *param_7 = param_2;\n    iVar4 = *(int *)(param_5 + 0x18);\n    iVar3 = *(int *)(param_5 + 0x1c);\n    bVar6 = *(uint *)(param_1 + 0x1c) <= *(uint *)(param_5 + 0x10);\n    bVar5 = *(uint *)(param_5 + 0x10) == *(uint *)(param_1 + 0x1c);\n    if (!bVar6 || bVar5) {\n      bVar6 = *(uint *)(param_1 + 0x14) <= *(uint *)(param_5 + 0x14);\n      bVar5 = *(uint *)(param_5 + 0x14) == *(uint *)(param_1 + 0x14);\n    }\n    if (!bVar6 || bVar5) {\n      FUN_00000cec(param_1,param_5,0x47);\n      FUN_000005f8(param_1,param_5);\n      FUN_00000cec(param_1,param_5,0x42);\n      *(int *)(param_5 + 8) = *(int *)(param_5 + 8) + iVar3 * 0x200;\n      if (iVar4 + iVar3 == *(int *)(param_1 + 0x18)) {\n        *(int *)(param_5 + 0xc) = *(int *)(param_5 + 0xc) + 8;\n      }\n      return *(undefined4 *)(DAT_00000e78 + 8);\n    }\n    return 0xe;\n  }\n  *(undefined4 *)(param_5 + 4) = 0;\n  if (*(int *)(param_1 + 8) == 1) {\n    iVar3 = FUN_0000372c(param_2,*(undefined4 *)(param_1 + 0x18));\n    *(int *)(param_5 + 0x18) = iVar3;\n    iVar3 = iVar3 + *param_4;\n  }\n  else {\n    if ((param_6 != 1) || (iVar3 = FUN_00001a7c(param_1,*param_3,param_2), iVar3 != 1)) {\n      *(undefined4 *)(param_5 + 0x18) = 1;\n      iVar3 = *param_3;\n      *param_3 = iVar3 + 1;\n      if (iVar3 + 1 == *(int *)(param_1 + 8)) {\n        *param_3 = 0;\n        *param_4 = *param_4 + 1;\n      }\n      uVar1 = *(uint *)(param_1 + 0x18);\n      goto LAB_0000184c;\n    }\n    iVar4 = *(int *)(param_1 + 8);\n    iVar3 = FUN_0000372c(param_2,*(int *)(param_1 + 0x18) * iVar4);\n    iVar4 = iVar4 * iVar3;\n    *(int *)(param_5 + 0x18) = iVar4;\n    *(undefined1 *)(param_5 + 1) = 1;\n    iVar3 = FUN_0000372c(iVar4,*(undefined4 *)(param_1 + 8));\n    iVar3 = iVar3 + *param_4;\n  }\n  *param_4 = iVar3;\n  uVar1 = *(int *)(param_1 + 0x18) * *(int *)(param_5 + 0x18);\nLAB_0000184c:\n  *param_7 = uVar1;\n  uVar2 = FUN_00000784(param_1,param_5);\n  return uVar2;\n}\n\n",
+    "assembly": [
+      "0x1738: stmdb sp!,{r4,r5,r6,r7,r8,r9,r10,r11,r12,lr}",
+      "0x173c: cpy r9, r1",
+      "0x1740: cpy r4, r0",
+      "0x1744: add r1, sp, #0x2c",
+      "0x1748: ldmia r1,{r0,r8}",
+      "0x174c: ldr r1, [r4,#0x18]",
+      "0x1750: ldr r5, [sp,#0x28]",
+      "0x1754: cmp r1, r9",
+      "0x1758: cpy r7, r2",
+      "0x175c: cpy r6, r3",
+      "0x1760: mov r10, #0x1",
+      "0x1764: mov r11, #0x0",
+      "0x1768: bls 0x0000178c",
+      "0x176c: str r9, [r5,#0x1c]",
+      "0x1770: str r10, [r5,#0x4]",
+      "0x1774: str r11, [r5,#0x18]",
+      "0x1778: cpy r1, r5",
+      "0x177c: cpy r0, r4",
+      "0x1780: str r9, [r8,#0x0]",
+      "0x1784: ldmia sp!,{r4,r5,r6,r7,r8,r9,r10,r11,r12,lr}",
+      "0x1788: b 0x0000081c",
+      "0x178c: str r11, [r5,#0x4]",
+      "0x1790: ldr r1, [r4,#0x8]",
+      "0x1794: cmp r1, #0x1",
+      "0x1798: beq 0x00001824",
+      "0x179c: cmp r0, #0x1",
+      "0x17a0: bne 0x000017bc",
+      "0x17a4: ldr r1, [r7,#0x0]",
+      "0x17a8: cpy r2, r9",
+      "0x17ac: cpy r0, r4",
+      "0x17b0: bl 0x00001a7c",
+      "0x17b4: cmp r0, #0x1",
+      "0x17b8: beq 0x000017f0",
+      "0x17bc: str r10, [r5,#0x18]",
+      "0x17c0: ldr r0, [r7,#0x0]",
+      "0x17c4: add r0, r0, #0x1",
+      "0x17c8: str r0, [r7,#0x0]",
+      "0x17cc: ldr r1, [r4,#0x8]",
+      "0x17d0: cmp r0, r1",
+      "0x17d4: bne 0x000017e8",
+      "0x17d8: str r11, [r7,#0x0]",
+      "0x17dc: ldr r0, [r6,#0x0]",
+      "0x17e0: add r0, r0, #0x1",
+      "0x17e4: str r0, [r6,#0x0]",
+      "0x17e8: ldr r0, [r4,#0x18]",
+      "0x17ec: b 0x0000184c",
+      "0x17f0: ldr r0, [r4,#0x18]",
+      "0x17f4: ldr r7, [r4,#0x8]",
+      "0x17f8: mul r1, r0, r7",
+      "0x17fc: cpy r0, r9",
+      "0x1800: bl 0x0000372c",
+      "0x1804: mul r0, r7, r0",
+      "0x1808: str r0, [r5,#0x18]",
+      "0x180c: strb r10, [r5,#0x1]",
+      "0x1810: ldr r1, [r4,#0x8]",
+      "0x1814: bl 0x0000372c",
+      "0x1818: ldr r1, [r6,#0x0]",
+      "0x181c: add r0, r0, r1",
+      "0x1820: b 0x0000183c",
+      "0x1824: ldr r1, [r4,#0x18]",
+      "0x1828: cpy r0, r9",
+      "0x182c: bl 0x0000372c",
+      "0x1830: str r0, [r5,#0x18]",
+      "0x1834: ldr r1, [r6,#0x0]",
+      "0x1838: add r0, r0, r1",
+      "0x183c: str r0, [r6,#0x0]",
+      "0x1840: ldr r0, [r5,#0x18]",
+      "0x1844: ldr r1, [r4,#0x18]",
+      "0x1848: mul r0, r1, r0",
+      "0x184c: str r0, [r8,#0x0]",
+      "0x1850: cpy r1, r5",
+      "0x1854: cpy r0, r4",
+      "0x1858: ldmia sp!,{r4,r5,r6,r7,r8,r9,r10,r11,r12,lr}",
+      "0x185c: b 0x00000784"
+    ],
+    "callees": [
+      "FUN_00000784",
+      "FUN_00001a7c",
+      "FUN_0000372c"
+    ]
+  },
+  {
+    "name": "0xc1c",
+    "id": "ev_0090ddcba51c23a88d2d0f675d8146ad9a86d5d3843aff4cd4faeea20117b545",
+    "procedure": {
+      "address": "0xc1c",
+      "name": "FUN_00000c1c",
+      "classification": {
+        "external": false,
+        "thunk": false,
+        "thunk_target": null,
+        "provenance": "ghidra-function-manager"
+      },
+      "body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0xc1c",
+            "end": "0xccb"
+          }
+        ],
+        "total_bytes": 176,
+        "span_bytes": 176,
+        "non_contiguous": false,
+        "contains_entry": true
+      },
+      "signature": "undefined FUN_00000c1c()",
+      "locals": []
+    },
+    "pseudocode": "\nvoid FUN_00000c1c(undefined4 param_1,int param_2)\n\n{\n  int iVar1;\n  undefined4 *puVar2;\n  undefined4 *puVar3;\n  \n  iVar1 = DAT_00000e6c;\n  puVar3 = (undefined4 *)*DAT_00000e88;\n  *(uint *)(DAT_00000e6c + 0x700) = *(uint *)(DAT_00000e6c + 0x700) | 1;\n  *(uint *)(iVar1 + 0x730) = *(uint *)(iVar1 + 0x730) | 2;\n  *(uint *)(iVar1 + 2000) = *(uint *)(iVar1 + 2000) | 1;\n  *(undefined4 *)(iVar1 + 0x720) = 2;\n  *puVar3 = 0;\n  puVar3[1] = 0;\n  puVar3[5] = 0;\n  *(undefined2 *)(puVar3 + 8) = 0;\n  puVar3[10] = 0;\n  puVar3[0xb] = 0;\n  puVar3[6] = *(undefined4 *)(param_2 + 8);\n  puVar3[7] = 0;\n  puVar3[0xe] = *(undefined4 *)(param_2 + 0xc);\n  puVar3[0xf] = 0;\n  puVar3[3] = 0;\n  *(undefined2 *)((int)puVar3 + 0x22) = 0;\n  puVar3[9] = 0;\n  puVar3[0xc] = 0;\n  puVar3[0xd] = 0;\n  FUN_00000dbc(param_1,puVar3);\n  puVar2 = DAT_00000e80;\n  *DAT_00000e80 = 0x8000000;\n  puVar2[4] = 0x80;\n  puVar2[4] = puVar3;\n  puVar2[4] = 0;\n  return;\n}\n\n",
+    "assembly": [
+      "0xc1c: stmdb sp!,{r4,r5,r6,lr}",
+      "0xc20: cpy r2, r1",
+      "0xc24: ldr r1, [0xe88]",
+      "0xc28: ldr r4, [r1,#0x0]",
+      "0xc2c: ldr r1, [0xe6c]",
+      "0xc30: ldr r3, [r1,#0x700]",
+      "0xc34: orr r3, r3, #0x1",
+      "0xc38: str r3, [r1,#0x700]",
+      "0xc3c: ldr r3, [r1,#0x730]",
+      "0xc40: orr r3, r3, #0x2",
+      "0xc44: str r3, [r1,#0x730]",
+      "0xc48: ldr r3, [r1,#0x7d0]",
+      "0xc4c: orr r3, r3, #0x1",
+      "0xc50: str r3, [r1,#0x7d0]",
+      "0xc54: mov r3, #0x2",
+      "0xc58: str r3, [r1,#0x720]",
+      "0xc5c: mov r5, #0x0",
+      "0xc60: str r5, [r4,#0x0]",
+      "0xc64: str r5, [r4,#0x4]",
+      "0xc68: str r5, [r4,#0x14]",
+      "0xc6c: strh r5, [r4,#0x20]",
+      "0xc70: str r5, [r4,#0x28]",
+      "0xc74: str r5, [r4,#0x2c]",
+      "0xc78: ldr r1, [r2,#0x8]",
+      "0xc7c: str r1, [r4,#0x18]",
+      "0xc80: str r5, [r4,#0x1c]",
+      "0xc84: ldr r1, [r2,#0xc]",
+      "0xc88: str r1, [r4,#0x38]",
+      "0xc8c: str r5, [r4,#0x3c]",
+      "0xc90: str r5, [r4,#0xc]",
+      "0xc94: strh r5, [r4,#0x22]",
+      "0xc98: str r5, [r4,#0x24]",
+      "0xc9c: str r5, [r4,#0x30]",
+      "0xca0: cpy r1, r4",
+      "0xca4: str r5, [r4,#0x34]",
+      "0xca8: bl 0x00000dbc",
+      "0xcac: ldr r0, [0xe80]",
+      "0xcb0: mov r1, #0x8000000",
+      "0xcb4: str r1, [r0,#0x0]",
+      "0xcb8: mov r1, #0x80",
+      "0xcbc: str r1, [r0,#0x10]",
+      "0xcc0: str r4, [r0,#0x10]",
+      "0xcc4: str r5, [r0,#0x10]",
+      "0xcc8: ldmia sp!,{r4,r5,r6,pc}"
+    ],
+    "callees": [
+      "FUN_00000dbc"
+    ]
+  },
+  {
+    "name": "0xcec",
+    "id": "ev_76363605b956270a38cbbfad379c0761d1c8485c8740763ff71ec7bd9809102f",
+    "procedure": {
+      "address": "0xcec",
+      "name": "FUN_00000cec",
+      "classification": {
+        "external": false,
+        "thunk": false,
+        "thunk_target": null,
+        "provenance": "ghidra-function-manager"
+      },
+      "body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0xcec",
+            "end": "0xd23"
+          }
+        ],
+        "total_bytes": 56,
+        "span_bytes": 56,
+        "non_contiguous": false,
+        "contains_entry": true
+      },
+      "signature": "undefined FUN_00000cec()",
+      "locals": []
+    },
+    "pseudocode": "\nvoid FUN_00000cec(int *param_1,int param_2,uint param_3)\n\n{\n  uint *puVar1;\n  \n  puVar1 = DAT_00000e80;\n  *DAT_00000e80 =\n       *param_1 << (param_1[1] & 0xffU) | *(int *)(param_2 + 0x10) << (param_1[3] & 0xffU) |\n       *(uint *)(param_2 + 0x14) | 0x8000000;\n  puVar1[4] = param_3;\n  return;\n}\n\n",
+    "assembly": [
+      "0xcec: stmdb sp!,{r4,lr}",
+      "0xcf0: ldr r4, [r0,#0x4]",
+      "0xcf4: ldr r12, [r0,#0x0]",
+      "0xcf8: mov r12, r12, lsl r4",
+      "0xcfc: ldr r4, [r1,#0x10]",
+      "0xd00: ldr r0, [r0,#0xc]",
+      "0xd04: ldr r1, [r1,#0x14]",
+      "0xd08: orr r0, r12, r4, lsl r0",
+      "0xd0c: ldr r3, [0xe80]",
+      "0xd10: orr r0, r0, r1",
+      "0xd14: orr r0, r0, #0x8000000",
+      "0xd18: str r0, [r3,#0x0]",
+      "0xd1c: str r2, [r3,#0x10]",
+      "0xd20: ldmia sp!,{r4,pc}"
+    ],
+    "callees": []
+  },
+  {
+    "name": "0x22d4"
+  },
+  {
+    "name": "0xdbc",
+    "id": "ev_017b6d656fbf11b25324415b530dba74be8ffb9b53da22d2dff2a28c2f245125",
+    "procedure": {
+      "address": "0xdbc",
+      "name": "FUN_00000dbc",
+      "classification": {
+        "external": false,
+        "thunk": false,
+        "thunk_target": null,
+        "provenance": "ghidra-function-manager"
+      },
+      "body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0xdbc",
+            "end": "0xe6b"
+          }
+        ],
+        "total_bytes": 176,
+        "span_bytes": 176,
+        "non_contiguous": false,
+        "contains_entry": true
+      },
+      "signature": "undefined FUN_00000dbc()",
+      "locals": []
+    },
+    "pseudocode": "\nvoid FUN_00000dbc(int *param_1,int param_2,int param_3)\n\n{\n  ushort uVar1;\n  int iVar2;\n  \n  *(uint *)(param_2 + 8) =\n       *param_1 << (param_1[1] & 0xffU) | *(int *)(param_3 + 0x10) << (param_1[3] & 0xffU) |\n       *(uint *)(param_3 + 0x14) | 0x8000000;\n  *(undefined2 *)(param_2 + 0x12) = 0x140;\n  iVar2 = *(int *)(param_3 + 4);\n  if (iVar2 == 0) {\n    *(ushort *)(param_2 + 0x12) = *(ushort *)(param_2 + 0x12) | 0x3000;\n    uVar1 = (ushort)*(undefined4 *)(param_3 + 0x18);\n  }\n  else {\n    if (iVar2 == 3) {\n      *(ushort *)(param_2 + 0x12) = *(ushort *)(param_2 + 0x12) | 0x3000;\n      uVar1 = (ushort)*(undefined4 *)(param_3 + 0x18) | 0x2100;\n      goto LAB_00000e64;\n    }\n    if (iVar2 == 2) {\n      *(undefined2 *)(param_2 + 0x12) = *(undefined2 *)(param_2 + 0x12);\n      uVar1 = (ushort)DAT_00000e8c;\n      goto LAB_00000e64;\n    }\n    uVar1 = *(ushort *)(param_2 + 0x12);\n    if (iVar2 != 4) {\n      uVar1 = uVar1 | 0x5000;\n    }\n    *(ushort *)(param_2 + 0x12) = uVar1;\n    if (iVar2 == 4) {\n      uVar1 = (ushort)DAT_00000e90;\n      goto LAB_00000e64;\n    }\n    uVar1 = (ushort)*(undefined4 *)(param_3 + 0x1c) | (ushort)(*(int *)(param_3 + 0x18) << 4);\n  }\n  uVar1 = uVar1 | 0x2000;\nLAB_00000e64:\n  *(ushort *)(param_2 + 0x10) = uVar1;\n  return;\n}\n\n",
+    "assembly": [
+      "0xdbc: ldmia r0,{r3,r12}",
+      "0xdc0: ldr r0, [r0,#0xc]",
+      "0xdc4: mov r3, r3, lsl r12",
+      "0xdc8: ldr r12, [r2,#0x10]",
+      "0xdcc: orr r0, r3, r12, lsl r0",
+      "0xdd0: ldr r3, [r2,#0x14]",
+      "0xdd4: orr r0, r0, r3",
+      "0xdd8: orr r0, r0, #0x8000000",
+      "0xddc: str r0, [r1,#0x8]",
+      "0xde0: mov r0, #0x140",
+      "0xde4: strh r0, [r1,#0x12]",
+      "0xde8: ldr r0, [r2,#0x4]",
+      "0xdec: cmp r0, #0x0",
+      "0xdf0: beq 0x00000e3c",
+      "0xdf4: cmp r0, #0x3",
+      "0xdf8: beq 0x00000e50",
+      "0xdfc: cmp r0, #0x2",
+      "0xe00: ldrheq r0, [r1,#0x12]",
+      "0xe04: strheq r0, [r1,#0x12]",
+      "0xe08: ldreq r0, [0xe8c]",
+      "0xe0c: beq 0x00000e64",
+      "0xe10: cmp r0, #0x4",
+      "0xe14: ldrh r0, [r1,#0x12]",
+      "0xe18: orrne r0, r0, #0x5000",
+      "0xe1c: strh r0, [r1,#0x12]",
+      "0xe20: ldrne r0, [r2,#0x1c]",
+      "0xe24: ldrne r2, [r2,#0x18]",
+      "0xe28: ldreq r0, [0xe90]",
+      "0xe2c: orrne r0, r0, r2, lsl #0x4",
+      "0xe30: beq 0x00000e64",
+      "0xe34: orr r0, r0, #0x2000",
+      "0xe38: b 0x00000e64",
+      "0xe3c: ldrh r0, [r1,#0x12]",
+      "0xe40: orr r0, r0, #0x3000",
+      "0xe44: strh r0, [r1,#0x12]",
+      "0xe48: ldr r0, [r2,#0x18]",
+      "0xe4c: b 0x00000e34",
+      "0xe50: ldrh r0, [r1,#0x12]",
+      "0xe54: orr r0, r0, #0x3000",
+      "0xe58: strh r0, [r1,#0x12]",
+      "0xe5c: ldr r0, [r2,#0x18]",
+      "0xe60: orr r0, r0, #0x2100",
+      "0xe64: strh r0, [r1,#0x10]",
+      "0xe68: bx lr"
+    ],
+    "callees": []
+  },
+  {
+    "name": "0x3f4",
+    "id": "ev_5b61511da543fdfa3a832701d84e437444dcd68adfe169fce32d7fff176954fc",
+    "procedure": {
+      "address": "0x3f4",
+      "name": "FUN_000003f4",
+      "classification": {
+        "external": false,
+        "thunk": false,
+        "thunk_target": null,
+        "provenance": "ghidra-function-manager"
+      },
+      "body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0x3f4",
+            "end": "0x43b"
+          }
+        ],
+        "total_bytes": 72,
+        "span_bytes": 72,
+        "non_contiguous": false,
+        "contains_entry": true
+      },
+      "signature": "undefined FUN_000003f4()",
+      "locals": []
+    },
+    "pseudocode": "\nvoid FUN_000003f4(int param_1)\n\n{\n  undefined4 *puVar1;\n  \n  puVar1 = DAT_000004ec;\n  *DAT_000004f0 = 0;\n  puVar1[1] = 1;\n  puVar1[0xc] = 0x7b;\n  puVar1[0xb] = 4;\n  puVar1[10] = 0x7b;\n  *puVar1 = 0;\n  puVar1[3] = *(undefined4 *)(param_1 + 0xc);\n  puVar1[4] = *(undefined4 *)(param_1 + 0x10);\n  puVar1[1] = 0;\n  return;\n}\n\n",
+    "assembly": [
+      "0x3f4: ldr r3, [0x4f0]",
+      "0x3f8: ldr r1, [0x4ec]",
+      "0x3fc: mov r2, #0x0",
+      "0x400: str r2, [r3,#0x0]",
+      "0x404: mov r3, #0x1",
+      "0x408: str r3, [r1,#0x4]",
+      "0x40c: mov r3, #0x7b",
+      "0x410: str r3, [r1,#0x30]",
+      "0x414: mov r12, #0x4",
+      "0x418: str r12, [r1,#0x2c]",
+      "0x41c: str r3, [r1,#0x28]",
+      "0x420: str r2, [r1,#0x0]",
+      "0x424: ldr r3, [r0,#0xc]",
+      "0x428: str r3, [r1,#0xc]",
+      "0x42c: ldr r0, [r0,#0x10]",
+      "0x430: str r0, [r1,#0x10]",
+      "0x434: str r2, [r1,#0x4]",
+      "0x438: bx lr"
+    ],
+    "callees": []
+  },
+  {
+    "name": "0x784",
+    "id": "ev_d12bef2427f59fab34fa91a3d03fdc454283eca4de9271bfa757241c2cdd17d1",
+    "procedure": {
+      "address": "0x784",
+      "name": "FUN_00000784",
+      "classification": {
+        "external": false,
+        "thunk": false,
+        "thunk_target": null,
+        "provenance": "ghidra-function-manager"
+      },
+      "body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0x784",
+            "end": "0x81b"
+          }
+        ],
+        "total_bytes": 152,
+        "span_bytes": 152,
+        "non_contiguous": false,
+        "contains_entry": true
+      },
+      "signature": "undefined FUN_00000784()",
+      "locals": []
+    },
+    "pseudocode": "\nundefined4 FUN_00000784(int param_1,int param_2)\n\n{\n  int iVar1;\n  uint uVar2;\n  int iVar3;\n  \n  iVar1 = *(int *)(param_2 + 0x18);\n  if (*(uint *)(param_2 + 0x10) <= *(uint *)(param_1 + 0x1c)) {\n    if (*(char *)(param_2 + 1) == '\\x01') {\n      iVar3 = FUN_0000372c(iVar1,*(undefined4 *)(param_1 + 8));\n      uVar2 = iVar3 + *(int *)(param_2 + 0x14);\n    }\n    else {\n      uVar2 = iVar1 + *(int *)(param_2 + 0x14);\n    }\n    if (uVar2 <= *(uint *)(param_1 + 0x14)) {\n      FUN_000005f8(param_1,param_2);\n      *(int *)(param_2 + 8) = *(int *)(param_2 + 8) + iVar1 * *(int *)(param_1 + 0x10) * 4;\n      *(int *)(param_2 + 0xc) = *(int *)(param_2 + 0xc) + iVar1 * 8;\n      return *(undefined4 *)(DAT_00000e78 + 8);\n    }\n  }\n  return 0xe;\n}\n\n",
+    "assembly": [
+      "0x784: stmdb sp!,{r4,r5,r6,lr}",
+      "0x788: cpy r5, r0",
+      "0x78c: ldr r0, [r1,#0x18]",
+      "0x790: cpy r4, r1",
+      "0x794: ldr r1, [r1,#0x10]",
+      "0x798: ldr r2, [r5,#0x1c]",
+      "0x79c: cpy r6, r0",
+      "0x7a0: cmp r1, r2",
+      "0x7a4: bhi 0x000007c8",
+      "0x7a8: ldrb r1, [r4,#0x1]",
+      "0x7ac: cmp r1, #0x1",
+      "0x7b0: ldrne r1, [r4,#0x14]",
+      "0x7b4: addne r0, r0, r1",
+      "0x7b8: beq 0x000007d0",
+      "0x7bc: ldr r1, [r5,#0x14]",
+      "0x7c0: cmp r0, r1",
+      "0x7c4: bls 0x000007e4",
+      "0x7c8: mov r0, #0xe",
+      "0x7cc: ldmia sp!,{r4,r5,r6,pc}",
+      "0x7d0: ldr r1, [r5,#0x8]",
+      "0x7d4: bl 0x0000372c",
+      "0x7d8: ldr r1, [r4,#0x14]",
+      "0x7dc: add r0, r0, r1",
+      "0x7e0: b 0x000007bc",
+      "0x7e4: cpy r1, r4",
+      "0x7e8: cpy r0, r5",
+      "0x7ec: bl 0x000005f8",
+      "0x7f0: ldr r1, [r5,#0x10]",
+      "0x7f4: ldr r0, [r4,#0x8]",
+      "0x7f8: mul r1, r6, r1",
+      "0x7fc: add r0, r0, r1, lsl #0x2",
+      "0x800: str r0, [r4,#0x8]",
+      "0x804: ldr r0, [r4,#0xc]",
+      "0x808: add r0, r0, r6, lsl #0x3",
+      "0x80c: str r0, [r4,#0xc]",
+      "0x810: ldr r0, [0xe78]",
+      "0x814: ldr r0, [r0,#0x8]",
+      "0x818: ldmia sp!,{r4,r5,r6,pc}"
+    ],
+    "callees": [
+      "FUN_000005f8",
+      "FUN_0000372c"
+    ]
+  },
+  {
+    "name": "0x81c",
+    "id": "ev_bed8708ae48ded1b36992a6f2a1be6d155a833095979c32fd5955a0a9c701893",
+    "procedure": {
+      "address": "0x1688",
+      "name": "FUN_00001688",
+      "classification": {
+        "external": false,
+        "thunk": false,
+        "thunk_target": null,
+        "provenance": "ghidra-function-manager"
+      },
+      "body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0x81c",
+            "end": "0x8ab"
+          },
+          {
+            "start": "0x1688",
+            "end": "0x1737"
+          }
+        ],
+        "total_bytes": 320,
+        "span_bytes": 3868,
+        "non_contiguous": true,
+        "contains_entry": true
+      },
+      "signature": "undefined FUN_00001688()",
+      "locals": [
+        {
+          "description": "undefined4 local_28 @ Stack[-0x28]:4",
+          "provenance": "ghidra-function-database"
+        }
+      ]
+    },
+    "pseudocode": "\nundefined4\nFUN_00001688(int param_1,uint param_2,int *param_3,int *param_4,int param_5,int *param_6,\n            undefined4 *param_7)\n\n{\n  int iVar1;\n  uint uVar2;\n  int iVar3;\n  int iVar4;\n  bool bVar5;\n  bool bVar6;\n  \n  *(undefined4 *)(param_5 + 4) = 1;\n  iVar3 = *(int *)(param_1 + 0x18);\n  iVar4 = *param_6;\n  iVar1 = FUN_0000372c(iVar4,iVar3);\n  iVar4 = iVar4 - iVar3 * iVar1;\n  *(int *)(param_5 + 0x18) = iVar4;\n  uVar2 = *(int *)(param_1 + 0x18) - iVar4;\n  if (param_2 < uVar2) {\n    *(uint *)(param_5 + 0x1c) = param_2;\n  }\n  else {\n    *(uint *)(param_5 + 0x1c) = uVar2;\n    if (*(int *)(param_1 + 8) != 1) {\n      iVar1 = *param_3;\n      *param_3 = iVar1 + 1;\n      if (iVar1 + 1 != *(int *)(param_1 + 8)) goto LAB_0000081c;\n      *param_3 = 0;\n    }\n    *param_4 = *param_4 + 1;\n  }\nLAB_0000081c:\n  *param_7 = *(undefined4 *)(param_5 + 0x1c);\n  iVar4 = *(int *)(param_5 + 0x18);\n  iVar1 = *(int *)(param_5 + 0x1c);\n  bVar6 = *(uint *)(param_1 + 0x1c) <= *(uint *)(param_5 + 0x10);\n  bVar5 = *(uint *)(param_5 + 0x10) == *(uint *)(param_1 + 0x1c);\n  if (!bVar6 || bVar5) {\n    bVar6 = *(uint *)(param_1 + 0x14) <= *(uint *)(param_5 + 0x14);\n    bVar5 = *(uint *)(param_5 + 0x14) == *(uint *)(param_1 + 0x14);\n  }\n  if (!bVar6 || bVar5) {\n    FUN_00000cec(param_1,param_5,0x47);\n    FUN_000005f8(param_1,param_5);\n    FUN_00000cec(param_1,param_5,0x42);\n    *(int *)(param_5 + 8) = *(int *)(param_5 + 8) + iVar1 * 0x200;\n    if (iVar4 + iVar1 == *(int *)(param_1 + 0x18)) {\n      *(int *)(param_5 + 0xc) = *(int *)(param_5 + 0xc) + 8;\n    }\n    return *(undefined4 *)(DAT_00000e78 + 8);\n  }\n  return 0xe;\n}\n\n",
+    "assembly": [
+      "0x81c: stmdb sp!,{r4,r5,r6,r7,r8,lr}",
+      "0x820: cpy r5, r0",
+      "0x824: cpy r4, r1",
+      "0x828: ldr r0, [r1,#0x10]!",
+      "0x82c: ldr r7, [r1,#0x8]!",
+      "0x830: ldr r6, [r1,#0x4]",
+      "0x834: ldr r1, [r5,#0x1c]",
+      "0x838: cmp r0, r1",
+      "0x83c: ldrls r0, [r4,#0x14]",
+      "0x840: ldrls r1, [r5,#0x14]",
+      "0x844: cmpls r0, r1",
+      "0x848: movhi r0, #0xe",
+      "0x84c: ldmiahi sp!,{r4,r5,r6,r7,r8,pc}",
+      "0x850: mov r2, #0x47",
+      "0x854: cpy r1, r4",
+      "0x858: cpy r0, r5",
+      "0x85c: bl 0x00000cec",
+      "0x860: cpy r1, r4",
+      "0x864: cpy r0, r5",
+      "0x868: bl 0x000005f8",
+      "0x86c: mov r2, #0x42",
+      "0x870: cpy r1, r4",
+      "0x874: cpy r0, r5",
+      "0x878: bl 0x00000cec",
+      "0x87c: ldr r0, [r4,#0x8]",
+      "0x880: add r0, r0, r6, lsl #0x9",
+      "0x884: str r0, [r4,#0x8]",
+      "0x888: ldr r1, [r5,#0x18]",
+      "0x88c: add r0, r7, r6",
+      "0x890: cmp r0, r1",
+      "0x894: ldreq r0, [r4,#0xc]",
+      "0x898: addeq r0, r0, #0x8",
+      "0x89c: streq r0, [r4,#0xc]",
+      "0x8a0: ldr r0, [0xe78]",
+      "0x8a4: ldr r0, [r0,#0x8]",
+      "0x8a8: ldmia sp!,{r4,r5,r6,r7,r8,pc}",
+      "0x1688: stmdb sp!,{r4,r5,r6,r7,r8,r9,r10,r11,r12,lr}",
+      "0x168c: cpy r9, r1",
+      "0x1690: cpy r5, r0",
+      "0x1694: add r1, sp, #0x2c",
+      "0x1698: ldmia r1,{r0,r8}",
+      "0x169c: ldr r4, [sp,#0x28]",
+      "0x16a0: mov r1, #0x1",
+      "0x16a4: str r1, [r4,#0x4]",
+      "0x16a8: ldr r10, [r5,#0x18]",
+      "0x16ac: ldr r11, [r0,#0x0]",
+      "0x16b0: cpy r7, r2",
+      "0x16b4: cpy r6, r3",
+      "0x16b8: cpy r1, r10",
+      "0x16bc: cpy r0, r11",
+      "0x16c0: bl 0x0000372c",
+      "0x16c4: mul r0, r10, r0",
+      "0x16c8: sub r0, r11, r0",
+      "0x16cc: str r0, [r4,#0x18]",
+      "0x16d0: ldr r1, [r5,#0x18]",
+      "0x16d4: sub r0, r1, r0",
+      "0x16d8: cmp r0, r9",
+      "0x16dc: strhi r9, [r4,#0x1c]",
+      "0x16e0: bhi 0x00001720",
+      "0x16e4: str r0, [r4,#0x1c]",
+      "0x16e8: ldr r0, [r5,#0x8]",
+      "0x16ec: cmp r0, #0x1",
+      "0x16f0: beq 0x00001714",
+      "0x16f4: ldr r0, [r7,#0x0]",
+      "0x16f8: add r0, r0, #0x1",
+      "0x16fc: str r0, [r7,#0x0]",
+      "0x1700: ldr r1, [r5,#0x8]",
+      "0x1704: cmp r0, r1",
+      "0x1708: moveq r0, #0x0",
+      "0x170c: streq r0, [r7,#0x0]",
+      "0x1710: bne 0x00001720",
+      "0x1714: ldr r0, [r6,#0x0]",
+      "0x1718: add r0, r0, #0x1",
+      "0x171c: str r0, [r6,#0x0]",
+      "0x1720: ldr r0, [r4,#0x1c]",
+      "0x1724: cpy r1, r4",
+      "0x1728: str r0, [r8,#0x0]",
+      "0x172c: cpy r0, r5",
+      "0x1730: ldmia sp!,{r4,r5,r6,r7,r8,r9,r10,r11,r12,lr}",
+      "0x1734: b 0x0000081c"
+    ],
+    "callees": [
+      "FUN_000005f8",
+      "FUN_00000cec",
+      "FUN_0000372c"
+    ]
+  },
+  {
+    "name": "0x1f6c",
+    "id": "ev_d6f28c9e92675fbf890d07d2482da4bc855095e359b03804e555d3ba46c3d98e",
+    "procedure": {
+      "address": "0x1f6c",
+      "name": "FUN_00001f6c",
+      "classification": {
+        "external": false,
+        "thunk": false,
+        "thunk_target": null,
+        "provenance": "ghidra-function-manager"
+      },
+      "body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0x1f6c",
+            "end": "0x1feb"
+          }
+        ],
+        "total_bytes": 128,
+        "span_bytes": 128,
+        "non_contiguous": false,
+        "contains_entry": true
+      },
+      "signature": "undefined FUN_00001f6c()",
+      "locals": []
+    },
+    "pseudocode": "\nbool FUN_00001f6c(int param_1,int param_2,int *param_3,undefined4 *param_4,int param_5)\n\n{\n  int iVar1;\n  uint uVar2;\n  int iVar3;\n  int iVar4;\n  bool bVar5;\n  \n  *(undefined4 *)(param_5 + 4) = 1;\n  iVar3 = *(int *)(param_1 + 0x18);\n  iVar4 = *param_3;\n  iVar1 = FUN_0000372c(iVar4,iVar3);\n  iVar4 = iVar4 - iVar3 * iVar1;\n  *(int *)(param_5 + 0x18) = iVar4;\n  uVar2 = *(uint *)(param_1 + 0x18);\n  bVar5 = uVar2 <= (uint)(iVar4 + param_2);\n  if (bVar5) {\n    *(uint *)(param_5 + 0x1c) = uVar2 - iVar4;\n  }\n  else {\n    *(int *)(param_5 + 0x1c) = param_2;\n  }\n  *param_3 = *param_3 + *(int *)(param_5 + 0x1c);\n  *param_4 = *(undefined4 *)(param_5 + 0x1c);\n  return bVar5;\n}\n\n",
+    "assembly": [
+      "0x1f6c: stmdb sp!,{r4,r5,r6,r7,r8,r9,r10,r11,r12,lr}",
+      "0x1f70: ldr r4, [sp,#0x28]",
+      "0x1f74: cpy r9, r0",
+      "0x1f78: mov r0, #0x1",
+      "0x1f7c: str r0, [r4,#0x4]",
+      "0x1f80: ldr r10, [r9,#0x18]",
+      "0x1f84: ldr r11, [r2,#0x0]",
+      "0x1f88: cpy r6, r1",
+      "0x1f8c: cpy r5, r2",
+      "0x1f90: cpy r8, r3",
+      "0x1f94: mov r7, #0x0",
+      "0x1f98: cpy r1, r10",
+      "0x1f9c: cpy r0, r11",
+      "0x1fa0: bl 0x0000372c",
+      "0x1fa4: mul r0, r10, r0",
+      "0x1fa8: sub r12, r11, r0",
+      "0x1fac: str r12, [r4,#0x18]",
+      "0x1fb0: ldr r2, [r9,#0x18]",
+      "0x1fb4: add r0, r12, r6",
+      "0x1fb8: cmp r0, r2",
+      "0x1fbc: subcs r0, r2, r12",
+      "0x1fc0: strcs r0, [r4,#0x1c]",
+      "0x1fc4: strcc r6, [r4,#0x1c]",
+      "0x1fc8: ldr r0, [r5,#0x0]",
+      "0x1fcc: ldr r1, [r4,#0x1c]",
+      "0x1fd0: movcs r7, #0x1",
+      "0x1fd4: add r0, r0, r1",
+      "0x1fd8: str r0, [r5,#0x0]",
+      "0x1fdc: ldr r0, [r4,#0x1c]",
+      "0x1fe0: str r0, [r8,#0x0]",
+      "0x1fe4: cpy r0, r7",
+      "0x1fe8: ldmia sp!,{r4,r5,r6,r7,r8,r9,r10,r11,r12,pc}"
+    ],
+    "callees": [
+      "FUN_0000372c"
+    ]
+  }
+]

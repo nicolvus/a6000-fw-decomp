@@ -4,6 +4,8 @@
 
 ## E26-RECOVERY — 29-10-2026: incidente abierto
 
+**R7B parcial:** [informe](../docs/capture/e26-r7b-recuperacion-prelinux.md), REA/bytes: COLD negativo a bucle; Loader2 carga BOSS y lee NAND; BootROM receptor GPIO a memoria y salto sin acceso externo demostrado; BossFirm y SRAM ARM7 históricos coinciden en 14305/14336 bytes; uincomp protege tags updater y escritura lógica nflasha3 requiere Linux. Próximo paso exacto: trazar residuo LDEC ARM7 y callbacks PBM; resolver red GPIO de ROM en fuentes documentales sin acceder a hardware.
+
 **R7 parcial:** REA trazó escritura lógica y primitivas físicas de `nand.ko` y despacho LLD a ARM7 (operaciones observadas 9 y 0x0c); no se demostró una vía externa ni restauración selectiva. [Informe y evidencia](../docs/capture/e26-r7-recuperacion-estatica.md). Próximo paso exacto: analizar `boss_hw_nandc_recovery_check`, resolver callbacks PBM y retornos COLD en el prefijo respaldado, exclusivamente offline.
 
 **R6 fases 2/3, checkpoint:** prefijo de 43 páginas sin cambios, REA/Capstone confirman las cinco rutinas del selector, sin reconstruir cola INFO6 ni certificar runtime. Nueva condición de log: Backup510015 debe valer1; histórico00, de modo que silencio UART no prueba falta de ejecución. Puerto0/1 y registros compatibles PL011; reloj y mux no certificados. 73 tests knowledge pasan excluyendo seis de servidor MCP (espera sin respuesta en entorno), 12 triage pasan; no cambios al servidor. Próximo paso exacto: usar dibujo SIDE A6-38 para orientación CN4906 y documentar niveles/SWD/NAND, sin conexiones.
