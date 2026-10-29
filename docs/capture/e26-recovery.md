@@ -1,5 +1,7 @@
 # E26-RECOVERY — incidente 3.25 (investigación abierta)
 
+> **R7 parcial:** [nuevas primitivas MuMin/BOSS](e26-r7-recuperacion-estatica.md); su existencia en Linux no demuestra acceso desde la cámara bloqueada. Investigación offline abierta.
+
 > **Actualización R6, fase BLDR:** [mapa y evidencia](e26-r6-recuperacion-bionz.md). Identificada la implementación del payload local: bloque safe + cuatro normales, normales solo die0/plane0. INFO exige plane1 para la cola Loader3; no reconstruida. BLDR puede descartar una advertencia ECC y pierde metadatos/fronteras al concatenar. No demuestra daño en cámara.
 
 ## Hechos y alcance

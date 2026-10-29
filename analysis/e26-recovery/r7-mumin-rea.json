@@ -1,0 +1,957 @@
+[
+  {
+    "name": "__mumin_write_ltus",
+    "id": "ev_ad4d2acd2739bd5ebc2158e6f3f9bcfd21ff3a30a97a3d44966c8c2594b24977",
+    "procedure": {
+      "address": "0x139fc",
+      "name": "__mumin_write_ltus",
+      "classification": {
+        "external": false,
+        "thunk": false,
+        "thunk_target": null,
+        "provenance": "ghidra-function-manager"
+      },
+      "body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0x139fc",
+            "end": "0x13b1f"
+          }
+        ],
+        "total_bytes": 292,
+        "span_bytes": 292,
+        "non_contiguous": false,
+        "contains_entry": true
+      },
+      "signature": "undefined __mumin_write_ltus()",
+      "locals": [
+        {
+          "description": "undefined4 local_2c @ Stack[-0x2c]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_30 @ Stack[-0x30]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_34 @ Stack[-0x34]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_40 @ Stack[-0x40]:4",
+          "provenance": "ghidra-function-database"
+        }
+      ]
+    },
+    "pseudocode": "\nint __mumin_write_ltus(int param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4)\n\n{\n  int iVar1;\n  undefined4 local_34;\n  undefined4 local_30;\n  undefined4 local_2c;\n  \n  iVar1 = FUN_00012af4();\n  if ((iVar1 == 0) && (iVar1 = FUN_00012bd4(param_1,param_2,param_3), iVar1 == 0)) {\n    iVar1 = FUN_00012f98(param_1 + 0xb0);\n    if (iVar1 == 0) {\n      if (*(short *)(param_1 + 0xb0) == 2) {\n        printk(\"%s : \",\"__mumin_write_ltus\");\n        printk(\"Err : \");\n        printk(\"stat %d\\n\",2);\n        return -0x10003;\n      }\n      FUN_00012a3c(param_1,param_2,&local_2c,&local_30,&local_34);\n      iVar1 = mumin_ebm_write_ltus(param_1,local_2c,local_30,local_34,param_3,param_4);\n      if (iVar1 != 0) {\n        printk(\"%s : \",\"__mumin_write_ltus\");\n        printk(\"Err : \");\n        printk(\"ret=0x%08x\\n\",-iVar1);\n      }\n      FUN_00012f0c(param_1 + 0xb0,iVar1);\n      return iVar1;\n    }\n  }\n  printk(\"%s : \",\"__mumin_write_ltus\");\n  printk(\"Err : \");\n  printk(\"ret %d\\n\",-iVar1);\n  return iVar1;\n}\n\n",
+    "assembly": [
+      "0x139fc: cpy r12, sp",
+      "0x13a00: stmdb sp!,{r4,r5,r6,r7,r8,r10,r11,r12,lr,pc}",
+      "0x13a04: sub r11, r12, #0x4",
+      "0x13a08: sub sp, sp, #0x18",
+      "0x13a0c: cpy r4, r0",
+      "0x13a10: cpy r6, r1",
+      "0x13a14: cpy r5, r2",
+      "0x13a18: cpy r8, r3",
+      "0x13a1c: bl 0x00012af4",
+      "0x13a20: subs r10, r0, #0x0",
+      "0x13a24: bne 0x00013a54",
+      "0x13a28: cpy r0, r4",
+      "0x13a2c: cpy r1, r6",
+      "0x13a30: cpy r2, r5",
+      "0x13a34: bl 0x00012bd4",
+      "0x13a38: subs r10, r0, #0x0",
+      "0x13a3c: bne 0x00013a54",
+      "0x13a40: add r7, r4, #0xb0",
+      "0x13a44: cpy r0, r7",
+      "0x13a48: bl 0x00012f98",
+      "0x13a4c: subs r10, r0, #0x0",
+      "0x13a50: beq 0x00013a78",
+      "0x13a54: ldr r1, [0x13b20]",
+      "0x13a58: ldr r0, [0x13b24]",
+      "0x13a5c: bl 0x0002e08c",
+      "0x13a60: ldr r0, [0x13b28]",
+      "0x13a64: bl 0x0002e08c",
+      "0x13a68: rsb r1, r10, #0x0",
+      "0x13a6c: ldr r0, [0x13b2c]",
+      "0x13a70: bl 0x0002e08c",
+      "0x13a74: b 0x00013b14",
+      "0x13a78: ldrh r10, [r4,#0xb0]",
+      "0x13a7c: cmp r10, #0x2",
+      "0x13a80: bne 0x00013aac",
+      "0x13a84: ldr r1, [0x13b20]",
+      "0x13a88: ldr r0, [0x13b24]",
+      "0x13a8c: bl 0x0002e08c",
+      "0x13a90: ldr r0, [0x13b28]",
+      "0x13a94: bl 0x0002e08c",
+      "0x13a98: cpy r1, r10",
+      "0x13a9c: ldr r0, [0x13b30]",
+      "0x13aa0: bl 0x0002e08c",
+      "0x13aa4: ldr r10, [0x13b34]",
+      "0x13aa8: b 0x00013b14",
+      "0x13aac: sub r3, r11, #0x30",
+      "0x13ab0: cpy r0, r4",
+      "0x13ab4: str r3, [sp,#0x0]",
+      "0x13ab8: cpy r1, r6",
+      "0x13abc: sub r2, r11, #0x28",
+      "0x13ac0: sub r3, r11, #0x2c",
+      "0x13ac4: bl 0x00012a3c",
+      "0x13ac8: cpy r0, r4",
+      "0x13acc: ldr r1, [r11,#-0x28]",
+      "0x13ad0: ldr r2, [r11,#-0x2c]",
+      "0x13ad4: ldr r3, [r11,#-0x30]",
+      "0x13ad8: stmia sp,{r5,r8}",
+      "0x13adc: bl 0x0001a638",
+      "0x13ae0: subs r10, r0, #0x0",
+      "0x13ae4: beq 0x00013b08",
+      "0x13ae8: ldr r1, [0x13b20]",
+      "0x13aec: ldr r0, [0x13b24]",
+      "0x13af0: bl 0x0002e08c",
+      "0x13af4: ldr r0, [0x13b28]",
+      "0x13af8: bl 0x0002e08c",
+      "0x13afc: ldr r0, [0x13b38]",
+      "0x13b00: rsb r1, r10, #0x0",
+      "0x13b04: bl 0x0002e08c",
+      "0x13b08: cpy r0, r7",
+      "0x13b0c: cpy r1, r10",
+      "0x13b10: bl 0x00012f0c",
+      "0x13b14: cpy r0, r10",
+      "0x13b18: sub sp, r11, #0x24",
+      "0x13b1c: ldmia sp,{r4,r5,r6,r7,r8,r10,r11,sp,pc}"
+    ],
+    "callees": [
+      "FUN_00012a3c",
+      "FUN_00012af4",
+      "FUN_00012bd4",
+      "FUN_00012f0c",
+      "FUN_00012f98",
+      "mumin_ebm_write_ltus",
+      "<EXTERNAL>::printk"
+    ]
+  },
+  {
+    "name": "mumin_ebm_write_ltus",
+    "id": "ev_7d0b4fdc366fbf006698443932a3828126b999b80b03f8857b986097457197bf",
+    "procedure": {
+      "address": "0x1a638",
+      "name": "mumin_ebm_write_ltus",
+      "classification": {
+        "external": false,
+        "thunk": false,
+        "thunk_target": null,
+        "provenance": "ghidra-function-manager"
+      },
+      "body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0x1a638",
+            "end": "0x1a81f"
+          },
+          {
+            "start": "0x1a834",
+            "end": "0x1ac0b"
+          },
+          {
+            "start": "0x1ac1c",
+            "end": "0x1b6bb"
+          }
+        ],
+        "total_bytes": 4192,
+        "span_bytes": 4228,
+        "non_contiguous": true,
+        "contains_entry": true
+      },
+      "signature": "undefined mumin_ebm_write_ltus()",
+      "locals": [
+        {
+          "description": "undefined4 local_34 @ Stack[-0x34]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_38 @ Stack[-0x38]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_3c @ Stack[-0x3c]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_40 @ Stack[-0x40]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_44 @ Stack[-0x44]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_48 @ Stack[-0x48]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_4c @ Stack[-0x4c]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_50 @ Stack[-0x50]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_54 @ Stack[-0x54]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_58 @ Stack[-0x58]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_5c @ Stack[-0x5c]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_60 @ Stack[-0x60]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_64 @ Stack[-0x64]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_68 @ Stack[-0x68]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_6c @ Stack[-0x6c]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_70 @ Stack[-0x70]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_74 @ Stack[-0x74]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_78 @ Stack[-0x78]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_7c @ Stack[-0x7c]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_84 @ Stack[-0x84]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_88 @ Stack[-0x88]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_8c @ Stack[-0x8c]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_90 @ Stack[-0x90]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_94 @ Stack[-0x94]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_98 @ Stack[-0x98]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_a0 @ Stack[-0xa0]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_a4 @ Stack[-0xa4]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_a8 @ Stack[-0xa8]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_ac @ Stack[-0xac]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_b0 @ Stack[-0xb0]:4",
+          "provenance": "ghidra-function-database"
+        }
+      ]
+    },
+    "pseudocode": "\nint mumin_ebm_write_ltus\n              (int param_1,undefined4 param_2,uint param_3,int param_4,uint param_5,\n              undefined4 param_6)\n\n{\n  int iVar1;\n  uint uVar2;\n  undefined4 uVar3;\n  int iVar4;\n  undefined4 uVar5;\n  char *pcVar6;\n  int iVar7;\n  undefined4 uVar8;\n  int iVar9;\n  uint uVar10;\n  uint uVar11;\n  int iVar12;\n  undefined4 *puVar13;\n  int *piVar14;\n  uint local_84;\n  undefined4 local_7c;\n  uint local_78;\n  uint local_74;\n  undefined4 local_70;\n  int local_6c;\n  uint local_68;\n  uint local_64;\n  uint local_60;\n  uint local_5c;\n  uint local_58;\n  uint local_54;\n  uint local_50;\n  uint local_4c;\n  int local_48;\n  uint local_44;\n  uint local_40;\n  int local_3c;\n  uint local_38;\n  int local_34 [2];\n  \n  piVar14 = &local_3c;\n  local_3c = 0;\n  puVar13 = (undefined4 *)0x1;\n  iVar1 = FUN_00018db8();\n  if (iVar1 == 0) {\n    iVar1 = *(int *)(param_1 + 0x28);\n    if (iVar1 == 0) goto LAB_0001a7f4;\n    iVar7 = *(int *)(param_1 + 4);\n    uVar3 = *(undefined4 *)(param_1 + 0x20);\n    iVar9 = *(int *)(iVar7 + 0x20);\n    iVar4 = *(int *)(iVar7 + 0x10);\n    iVar12 = *(int *)(iVar7 + 0xc);\n    uVar8 = *(undefined4 *)(iVar7 + 0x18);\n    uVar5 = *(undefined4 *)(param_1 + 0x14);\n    iVar7 = mumin_ebi_get_ewbbinfo(param_1,param_2,&local_68,iVar9,puVar13,piVar14);\n    uVar10 = local_60;\n    if (iVar7 == 0) {\n      if (local_68 == param_3) {\n        iVar1 = 4;\n      }\n      else if (local_60 == 0xffff) {\n        iVar1 = 2;\n      }\n      else {\n        uVar3 = __aeabi_uidiv(uVar5,uVar8);\n        iVar1 = __aeabi_uidiv(iVar4 * iVar9 * iVar12,uVar3);\n        if (uVar10 < iVar1 - 1U) {\n          iVar1 = 2;\n        }\n        else {\n          iVar1 = 3;\n        }\n      }\n    }\n    else {\n      mumin_ebi_get_num_of_cached_lblks(param_1,param_2,&local_4c);\n      uVar10 = __aeabi_uidiv(uVar3,iVar1);\n      iVar1 = 0;\n      if ((uVar10 <= local_4c) &&\n         (iVar7 = mumin_ebi_get_writeback_target_lblk(param_1,param_2,&local_40), iVar7 == 0)) {\n        if (local_40 != param_3) {\n          puVar13 = &local_7c;\n          iVar1 = mumin_ebi_get_mru_ecbinfo(param_1,param_2,local_40,&local_54,puVar13);\n          if (iVar1 == 0) {\n            mumin_ebi_get_num_of_unassigned_ecbs(param_1,param_2,local_40,&local_58);\n            iVar1 = 0;\n            if (local_58 == 0) {\n              FUN_00016e18(param_1,local_74,local_70,&local_50);\n              if (local_50 == 0) {\n                iVar1 = 5;\n              }\n              else {\n                iVar1 = 1;\n              }\n            }\n            goto LAB_0001a7f8;\n          }\n        }\nLAB_0001a7f4:\n        iVar1 = 0;\n      }\n    }\nLAB_0001a7f8:\n    if (local_3c == 0) {\n      switch(iVar1 + -1) {\n      case 0:\n        iVar7 = mumin_ebi_get_ewbbinfo(param_1,param_2,&local_68,iVar1 + -1,puVar13,piVar14);\n        if (iVar7 == 0) {\n          printk(\"%s : \",\"mumin_ebm_s_split_writeback_phase1\");\n          printk(\"Err : \");\n          iVar7 = 0x10005;\nLAB_0001a8c4:\n          printk(\"ret=0x%08x\\n\",iVar7);\n          iVar7 = -0x10005;\n        }\n        else {\n          iVar7 = mumin_ebi_get_writeback_target_lblk(param_1,param_2,&local_54);\n          if ((iVar7 != 0) ||\n             (iVar7 = mumin_ebi_get_mru_ecbinfo(param_1,param_2,local_54,&local_40,&local_7c),\n             iVar7 != 0)) {\n            printk(\"%s : \",\"mumin_ebm_s_split_writeback_phase1\");\n            printk(\"Err : \");\n            iVar7 = -iVar7;\n            goto LAB_0001a8c4;\n          }\n          iVar7 = mumin_vbm_get_wtb(param_1,param_2,&local_58);\n          if (iVar7 == 0) {\n            local_68 = local_54;\n            local_64 = local_58;\n            local_60 = 0xffff;\n            local_5c = local_6c + 1U & 0xff;\n            mumin_ebi_set_ewbbinfo(param_1,param_2,&local_68);\n            goto switchD_0001a818_caseD_1;\n          }\n          printk(\"%s : \",\"mumin_ebm_s_split_writeback_phase1\");\n          printk(\"Err : \");\n          printk(\"ret=0x%08x\\n\",-iVar7);\n        }\n        printk(\"%s : \",\"mumin_ebm_write_ltus\");\n        printk(\"Err : \");\n        printk(\"ret=0x%08x\\n\",-iVar7);\n        goto LAB_0001a9fc;\n      case 1:\nswitchD_0001a818_caseD_1:\n        iVar7 = FUN_00018c34(param_1,param_2);\n        if (iVar7 == -0x20007) {\n          printk(\"%s : \",\"mumin_ebm_write_ltus\");\n          printk(\"Warn : \");\n          printk(\"ret=0x%08x\\n\",0x20007);\n          goto switchD_0001a818_caseD_3;\n        }\n        break;\n      case 2:\n        iVar7 = FUN_00017ce0(param_1,param_2);\n        break;\n      case 3:\nswitchD_0001a818_caseD_3:\n        iVar7 = FUN_00017c0c(param_1,param_2);\n        iVar1 = 4;\n        break;\n      case 4:\n        iVar7 = FUN_00018a00(param_1,param_2);\n        break;\n      default:\n        local_3c = 0;\n        goto LAB_0001aa24;\n      }\n      if (iVar7 != 0) {\nLAB_0001a9fc:\n        printk(\"%s : \",\"mumin_ebm_write_ltus\");\n        printk(\"Err : \");\n        printk(\"ret=0x%08x\\n\",-iVar7);\n        return iVar7;\n      }\nLAB_0001aa24:\n      if (iVar1 - 3U < 2) {\n        local_3c = 1;\n        iVar1 = FUN_000178fc(param_1,param_2);\n        if (iVar1 != 0) goto LAB_0001b5c8;\n      }\n    }\n    else if (iVar1 == 4) goto switchD_0001a818_caseD_3;\n    uVar10 = 0;\n    if (*(int *)(param_1 + 0x2c) != 0) {\n      iVar1 = *(int *)(param_1 + 4);\n      uVar3 = *(undefined4 *)(param_1 + 0x14);\n      iVar7 = *(int *)(iVar1 + 0xc);\n      iVar9 = *(int *)(iVar1 + 0x10);\n      iVar4 = *(int *)(iVar1 + 0x20);\n      uVar5 = *(undefined4 *)(iVar1 + 0x18);\n      iVar1 = mumin_ebi_get_ewlbinfo(param_1,param_2,&local_68);\n      uVar10 = local_60;\n      if (iVar1 == 0) {\n        if (local_68 == param_3) {\n          uVar10 = 4;\n        }\n        else if (local_60 == 0xffff) {\n          uVar10 = 2;\n        }\n        else {\n          uVar3 = __aeabi_uidiv(uVar3,uVar5);\n          iVar1 = __aeabi_uidiv(iVar9 * iVar4 * iVar7,uVar3);\n          if (uVar10 < iVar1 - 1U) {\n            uVar10 = 2;\n          }\n          else {\n            uVar10 = 3;\n          }\n        }\n      }\n      else {\n        iVar1 = mumin_vbm_get_fb_of_largest_erased_counts(param_1,param_2,&local_40,&local_54);\n        if (iVar1 == 0) {\n          iVar1 = mumin_vbm_get_udb_of_least_erased_counts\n                            (param_1,param_2,&local_4c,&local_58,&local_50);\n          if (iVar1 == 0) {\n            uVar10 = 0;\n            if (local_4c != param_3) {\n              iVar1 = mumin_ebi_get_mru_ecbinfo(param_1,param_2,local_4c,&local_48,&local_7c);\n              if (iVar1 == 0) {\n                uVar10 = 0;\n              }\n              else {\n                mumin_ebi_get_num_of_unassigned_ecbs(param_1,param_2,local_4c,&local_44);\n                if (local_44 == 0) {\n                  uVar11 = *(uint *)(*(int *)(param_1 + 4) + 0x34);\n                  uVar10 = 0xffff;\n                  if (uVar11 < 0xffff) {\n                    uVar10 = uVar11;\n                  }\n                  uVar11 = 0;\n                  if (local_54 < uVar10) {\n                    uVar11 = uVar10 - local_54;\n                  }\n                  if (local_50 < uVar10) {\n                    iVar1 = uVar10 - local_50;\n                  }\n                  else {\n                    iVar1 = 0;\n                  }\n                  uVar2 = __aeabi_uidiv((1000 - *(int *)(param_1 + 0x2c)) * iVar1,1000);\n                  uVar10 = (uint)(uVar2 != 0);\n                  if (uVar2 < uVar11) {\n                    uVar10 = 0;\n                  }\n                }\n              }\n            }\n          }\n          else {\n            uVar10 = 0;\n          }\n        }\n        else {\n          uVar10 = 0;\n        }\n      }\n    }\n    if (local_3c == 0) {\n      switch(uVar10) {\n      case 1:\n        iVar1 = mumin_ebi_get_ewlbinfo(param_1,param_2,&local_68);\n        if (iVar1 == 0) {\n          printk(\"%s : \",\"mumin_ebm_s_split_static_wearleveling_phase1\");\n          printk(\"Err : \");\n          iVar1 = 0x10005;\nLAB_0001ac8c:\n          printk(\"ret=0x%08x\\n\",iVar1);\n          iVar1 = -0x10005;\n        }\n        else {\n          iVar1 = mumin_vbm_get_fb_of_largest_erased_counts(param_1,param_2,&local_44,&local_48);\n          if (((iVar1 != 0) ||\n              (iVar1 = mumin_vbm_get_udb_of_least_erased_counts\n                                 (param_1,param_2,&local_58,&local_4c,&local_50), iVar1 != 0)) ||\n             (iVar1 = mumin_vbm_get_udb(param_1,param_2,local_58,&local_4c,&local_54), iVar1 != 0))\n          {\n            printk(\"%s : \",\"mumin_ebm_s_split_static_wearleveling_phase1\");\n            printk(\"Err : \");\n            iVar1 = -iVar1;\n            goto LAB_0001ac8c;\n          }\n          local_68 = local_58;\n          local_64 = local_44;\n          local_60 = 0xffff;\n          local_5c = local_54 + 1 & 0xff;\n          mumin_ebi_set_ewlbinfo(param_1,param_2,&local_68);\n          iVar1 = FUN_000178fc(param_1,param_2,1);\n          if (iVar1 == 0) goto switchD_0001ac04_caseD_2;\n          printk(\"%s : \",\"mumin_ebm_s_split_static_wearleveling_phase1\");\n          printk(\"Err : \");\n          printk(\"ret=0x%08x\\n\",-iVar1);\n        }\n        printk(\"%s : \",\"mumin_ebm_write_ltus\");\n        printk(\"Err : \");\n        printk(\"ret=0x%08x\\n\",-iVar1);\n        goto LAB_0001b5c8;\n      case 2:\nswitchD_0001ac04_caseD_2:\n        iVar1 = mumin_ebi_get_ewlbinfo(param_1,param_2,&local_7c);\n        if (iVar1 == 0) {\n          if (local_74 == 0xffff) {\n            iVar1 = mumin_vbm_get_fb_of_largest_erased_counts(param_1,param_2,&local_54,&local_58);\n            if (iVar1 != 0) goto LAB_0001adc0;\n            if (local_78 != local_54) goto LAB_0001afe0;\n            local_84 = 0;\n          }\n          else {\n            local_84 = local_74 + 1;\n          }\n          FUN_0001815c(&local_68,0,0,local_7c,local_84,local_70);\n          iVar1 = FUN_0001857c(param_1,param_2,local_7c,local_84,local_78,&local_68);\n          if (iVar1 == -0x20007) {\n            printk(\"%s : \",\"mumin_ebm_s_split_static_wearleveling_phase2\");\n            printk(\"Warn : \");\n            printk(\"ret=0x%08x\\n\",0x20007);\nLAB_0001ae60:\n            local_74 = local_84;\n            mumin_ebi_set_ewlbinfo(param_1,param_2,&local_7c);\n          }\n          else {\n            if (iVar1 == 0) goto LAB_0001ae60;\n            printk(\"%s : \",\"mumin_ebm_s_split_static_wearleveling_phase2\");\n            printk(\"Err : \");\n            printk(\"ret=0x%08x\\n\",-iVar1);\n          }\n          if (local_84 == 0 && iVar1 == 0) {\n            iVar1 = FUN_000178fc(param_1,param_2,1);\n            if (iVar1 == 0) goto LAB_0001b01c;\n            printk(\"%s : \",\"mumin_ebm_s_split_static_wearleveling_phase2\");\n            printk(\"Err : \");\n            printk(\"ret=0x%08x\\n\",-iVar1);\n          }\n          if (iVar1 != -0x40008) {\n            if (iVar1 != -0x20007) break;\n            printk(\"%s : \",\"mumin_ebm_write_ltus\");\n            printk(\"Warn : \");\n            printk(\"ret=0x%08x\\n\",0x20007);\n            goto switchD_0001ac04_caseD_4;\n          }\nLAB_0001afe0:\n          mumin_ebi_clear_ewlbinfo(param_1,param_2);\n          goto LAB_0001b01c;\n        }\nLAB_0001adc0:\n        pcVar6 = \"mumin_ebm_s_split_static_wearleveling_phase2\";\n        goto LAB_0001af40;\n      case 3:\n        iVar1 = mumin_ebi_get_ewlbinfo(param_1,param_2,&local_7c);\n        if (iVar1 != 0) {\n          pcVar6 = \"mumin_ebm_s_split_static_wearleveling_phase3\";\n          goto LAB_0001af40;\n        }\n        iVar1 = mumin_vbm_get_udb(param_1,param_2,local_7c,&local_58,&local_54);\n        if ((iVar1 != 0) ||\n           (iVar1 = mumin_vbm_register_vblks_erasing(param_1,param_2,1,&local_58), iVar1 == 0)) {\n          mumin_vbm_register_udb(param_1,param_2,local_7c,local_78,local_70);\n          goto LAB_0001afe0;\n        }\n        printk(\"%s : \",\"mumin_ebm_s_split_static_wearleveling_phase3\");\n        printk(\"Err : \");\n        printk(\"ret=0x%08x\\n\",-iVar1);\n        break;\n      case 4:\nswitchD_0001ac04_caseD_4:\n        iVar1 = FUN_00017df0(param_1,param_2);\n        uVar10 = 4;\n        break;\n      default:\n        local_3c = 0;\n        goto LAB_0001b01c;\n      }\n      if (iVar1 != 0) goto LAB_0001b5c8;\nLAB_0001b01c:\n      if (uVar10 - 3 < 2) {\n        local_3c = 1;\n        iVar1 = FUN_000178fc(param_1,param_2);\n        if (iVar1 != 0) goto LAB_0001b5c8;\n      }\n    }\n    else if (uVar10 == 4) goto switchD_0001ac04_caseD_4;\n    if (local_3c == 0) {\n      FUN_00016f6c(param_1,param_2,param_3,local_34);\n      if (local_34[0] == 1) {\n        local_3c = local_34[0];\n        iVar1 = FUN_00017ec4(param_1,param_2);\nLAB_0001b0a8:\n        if (iVar1 != 0) goto LAB_0001b5c8;\n      }\n      else if (local_34[0] == 2) {\n        local_3c = 1;\n        iVar1 = FUN_000175ac(param_1,param_2,param_3);\n        goto LAB_0001b0a8;\n      }\n      if ((local_3c == 1) && (iVar1 = FUN_000178fc(param_1,param_2), iVar1 != 0)) goto LAB_0001b5c8;\n    }\n    iVar4 = *(int *)(param_1 + 4);\n    iVar1 = *(int *)(iVar4 + 0xc);\n    iVar9 = *(int *)(iVar4 + 0x20);\n    iVar7 = *(int *)(iVar4 + 0x10);\n    uVar3 = __aeabi_uidiv(*(undefined4 *)(param_1 + 0x14),*(undefined4 *)(iVar4 + 0x18));\n    uVar10 = __aeabi_uidiv(iVar7 * iVar9 * iVar1,uVar3);\n    if (param_5 == uVar10 && param_4 == 0) {\n      iVar7 = mumin_vbm_get_udb(param_1,param_2,param_3,&local_4c,&local_48);\n      mumin_ebi_get_num_of_unassigned_ecbs(param_1,param_2,param_3,&local_58);\n      if (((local_58 == 0) ||\n          ((iVar1 = FUN_000175ac(param_1,param_2,param_3), iVar1 == 0 &&\n           (iVar1 = FUN_000178fc(param_1,param_2,1), iVar1 == 0)))) &&\n         (iVar1 = mumin_vbm_get_wtb(param_1,param_2,&local_50), iVar1 == 0)) {\n        iVar1 = mumin_ebi_get_mru_ecbinfo(param_1,param_2,param_3,&local_44,&local_7c);\n        if (iVar1 != 0) {\n          local_6c = local_48;\n        }\n        uVar11 = local_6c + 1U & 0xff;\n        FUN_0001815c(&local_68,0,0,param_3,0,uVar11);\n        do {\n          iVar1 = FUN_0001807c(param_1,param_2,local_50,0,uVar10,&local_54,param_6,&local_68);\n          if (iVar1 != -0x20007) {\n            if ((iVar1 == 0) &&\n               ((iVar7 != 0 ||\n                (iVar1 = mumin_vbm_register_vblks_erasing(param_1,param_2,1,&local_4c), iVar1 == 0))\n               )) {\n              mumin_vbm_register_udb(param_1,param_2,param_3,local_50,uVar11);\n              mumin_ebi_clear_lblk_table(param_1,param_2,param_3);\n              mumin_ebi_get_num_of_unassigned_ecbs(param_1,param_2,param_3,&local_58);\n              if ((local_58 == 0) || (iVar1 = FUN_000175ac(param_1,param_2,param_3,1), iVar1 == 0))\n              goto LAB_0001b5ec;\n            }\n            break;\n          }\n          printk(\"%s : \",\"mumin_ebm_s_write_data_to_newudb\");\n          printk(\"Warn : \");\n          printk(\"ret=0x%08x\\n\",0x20007);\n          iVar1 = mumin_vbm_erase_vblk(param_1,param_2,local_50,1);\n        } while (iVar1 == 0);\n      }\n      pcVar6 = \"mumin_ebm_s_write_data_to_newudb\";\nLAB_0001b5a8:\n      printk(\"%s : \",pcVar6);\n      printk(\"Err : \");\n      printk(\"ret=0x%08x\\n\",-iVar1);\nLAB_0001b5c0:\n      if (iVar1 != 0) goto LAB_0001b5c8;\n    }\n    else {\n      mumin_ebi_get_num_of_ecbs_per_lblk(param_1,param_2,param_3,&local_54);\n      if (local_54 != 0) {\n        iVar4 = *(int *)(param_1 + 4);\n        local_44 = 0;\n        iVar9 = *(int *)(iVar4 + 0x24);\n        iVar1 = *(int *)(iVar4 + 0xc);\n        iVar7 = *(int *)(iVar4 + 0x10);\n        if (iVar9 == 0) {\n          iVar9 = *(int *)(iVar4 + 0x20);\n        }\n        uVar3 = __aeabi_uidiv(*(undefined4 *)(param_1 + 0x14),*(undefined4 *)(iVar4 + 0x18));\n        iVar7 = __aeabi_uidiv(iVar7 * iVar9 * iVar1,uVar3);\n        local_38 = 0;\n        iVar1 = mumin_ebi_get_mru_ecbinfo(param_1,param_2,param_3,&local_54,&local_7c);\n        if (iVar1 != 0) {\n          pcVar6 = \"mumin_ebm_s_data_caching_of_existing_lblk\";\nLAB_0001af40:\n          printk(\"%s : \",pcVar6);\n          printk(\"Err : \");\n          printk(\"ret=0x%08x\\n\",-iVar1);\n          iVar1 = -0x10005;\n          goto LAB_0001b5c8;\n        }\n        iVar4 = 0;\n        iVar1 = iVar4;\n        if (local_74 < iVar7 - 1U) {\n          uVar10 = ~local_74 + iVar7;\n          FUN_00016e88(param_1,local_70,local_74,param_4,&local_50);\n          FUN_0001815c(&local_68,local_50,1,param_3,param_4,local_6c);\n          if (param_5 < uVar10) {\n            uVar10 = param_5;\n          }\n          iVar1 = FUN_000176f0(param_1,param_2,local_78,local_74 + 1,uVar10,&local_58,0,param_6,\n                               &local_68);\n          if (iVar1 == -0x20007) {\n            printk(\"%s : \",\"mumin_ebm_s_data_caching_of_existing_lblk\");\n            printk(\"Warn : \");\n            printk(\"ret=0x%08x\\n\",0x20007);\n            iVar7 = 1;\nLAB_0001b2c8:\n            iVar1 = iVar4;\n            iVar4 = iVar7;\n            if (local_58 != 0) {\n              local_38 = local_38 + local_58;\n              iVar1 = mumin_ebi_set_ecbinfo(param_1,param_2,param_4,local_54,local_58,local_50);\n            }\n            goto LAB_0001b304;\n          }\n          iVar7 = iVar4;\n          if (iVar1 == 0) goto LAB_0001b2c8;\n          printk(\"%s : \",\"mumin_ebm_s_data_caching_of_existing_lblk\");\n          printk(\"Err : \");\n          printk(\"ret=0x%08x\\n\",-iVar1);\n        }\n        else {\nLAB_0001b304:\n          iVar7 = local_6c;\n          if (local_38 < param_5) {\n            if (iVar4 == 1) {\n              iVar1 = FUN_00018db8(param_1,param_2,param_3,param_5 - local_38,0,&local_44);\n              if (iVar1 == 0) {\n                iVar1 = mumin_vbm_get_udb(param_1,param_2,param_3,&local_4c,&local_48);\n                if ((iVar1 == 0) && ((local_48 - local_6c & 0xffU) < 3)) {\n                  iVar7 = local_48;\n                }\n                goto LAB_0001b394;\n              }\n            }\n            else {\nLAB_0001b394:\n              iVar1 = FUN_000181d8(param_1,param_2,param_3,param_4 + local_38,param_5 - local_38,\n                                   &local_58,local_38,param_6,iVar7 + 1U & 0xff);\n              if (iVar1 == 0) {\n                local_38 = local_38 + local_58;\n                goto LAB_0001b5ec;\n              }\n            }\n            pcVar6 = \"mumin_ebm_s_data_caching_of_existing_lblk\";\n            goto LAB_0001b5a8;\n          }\n        }\n        goto LAB_0001b5c0;\n      }\n      iVar1 = mumin_vbm_get_udb(param_1,param_2,param_3,&local_54,&local_58);\n      uVar10 = 0;\n      if (iVar1 == 0) {\n        uVar10 = local_58 + 1 & 0xff;\n      }\n      iVar1 = FUN_000181d8(param_1,param_2,param_3,param_4,param_5,&local_38,0,param_6,uVar10);\n      if (iVar1 != 0) {\n        pcVar6 = \"mumin_ebm_s_data_caching_of_new_lblk\";\n        goto LAB_0001b5a8;\n      }\n    }\nLAB_0001b5ec:\n    iVar1 = FUN_000178fc(param_1,param_2,1);\n  }\n  else {\nLAB_0001b5c8:\n    printk(\"%s : \",\"mumin_ebm_write_ltus\");\n    printk(\"Err : \");\n    printk(\"ret=0x%08x\\n\",-iVar1);\n  }\n  return iVar1;\n}\n\n",
+    "assembly": [],
+    "callees": [
+      "mumin_ebi_get_num_of_ecbs_per_lblk",
+      "mumin_ebi_get_num_of_cached_lblks",
+      "mumin_ebi_get_mru_ecbinfo",
+      "mumin_ebi_set_ecbinfo",
+      "mumin_ebi_clear_lblk_table",
+      "mumin_ebi_get_num_of_unassigned_ecbs",
+      "mumin_ebi_get_ewbbinfo",
+      "mumin_ebi_set_ewbbinfo",
+      "mumin_ebi_get_ewlbinfo",
+      "mumin_ebi_set_ewlbinfo",
+      "mumin_ebi_clear_ewlbinfo",
+      "mumin_ebi_get_writeback_target_lblk",
+      "FUN_00016e18",
+      "FUN_00016e88",
+      "FUN_00016f6c",
+      "FUN_000175ac",
+      "FUN_000176f0",
+      "FUN_000178fc",
+      "FUN_00017c0c",
+      "FUN_00017ce0",
+      "FUN_00017df0",
+      "FUN_00017ec4",
+      "FUN_0001807c",
+      "FUN_0001815c",
+      "FUN_000181d8",
+      "FUN_0001857c",
+      "FUN_00018a00",
+      "FUN_00018c34",
+      "FUN_00018db8",
+      "mumin_vbm_register_vblks_erasing",
+      "mumin_vbm_get_udb",
+      "mumin_vbm_register_udb",
+      "mumin_vbm_get_wtb",
+      "mumin_vbm_get_fb_of_largest_erased_counts",
+      "mumin_vbm_get_udb_of_least_erased_counts",
+      "mumin_vbm_erase_vblk",
+      "<EXTERNAL>::printk",
+      "<EXTERNAL>::__aeabi_uidiv"
+    ]
+  },
+  {
+    "name": "FUN_0001fa44",
+    "id": "ev_730483ced0d4a5876ca878a619abf95f1c778cbf4bf84f673a1695b87769fb63",
+    "procedure": {
+      "address": "0x1fa44",
+      "name": "FUN_0001fa44",
+      "classification": {
+        "external": false,
+        "thunk": false,
+        "thunk_target": null,
+        "provenance": "ghidra-function-manager"
+      },
+      "body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0x1fa44",
+            "end": "0x1fe5f"
+          }
+        ],
+        "total_bytes": 1052,
+        "span_bytes": 1052,
+        "non_contiguous": false,
+        "contains_entry": true
+      },
+      "signature": "undefined FUN_0001fa44()",
+      "locals": [
+        {
+          "description": "undefined4 local_34 @ Stack[-0x34]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_38 @ Stack[-0x38]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_3c @ Stack[-0x3c]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_40 @ Stack[-0x40]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_44 @ Stack[-0x44]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_48 @ Stack[-0x48]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_4c @ Stack[-0x4c]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_54 @ Stack[-0x54]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_58 @ Stack[-0x58]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_68 @ Stack[-0x68]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_6c @ Stack[-0x6c]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_70 @ Stack[-0x70]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_74 @ Stack[-0x74]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_7c @ Stack[-0x7c]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_80 @ Stack[-0x80]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_84 @ Stack[-0x84]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_88 @ Stack[-0x88]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_8c @ Stack[-0x8c]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_98 @ Stack[-0x98]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_a0 @ Stack[-0xa0]:4",
+          "provenance": "ghidra-function-database"
+        }
+      ]
+    },
+    "pseudocode": "\nint FUN_0001fa44(int param_1,int param_2,undefined4 param_3,undefined4 param_4,undefined4 param_5,\n                undefined4 param_6,undefined4 *param_7,undefined4 param_8,undefined4 param_9)\n\n{\n  int iVar1;\n  int iVar2;\n  uint uVar3;\n  uint uVar4;\n  uint uVar5;\n  uint uVar6;\n  undefined1 **ppuVar7;\n  uint uVar8;\n  undefined1 *puVar9;\n  uint uVar10;\n  int iVar11;\n  code *pcVar12;\n  undefined1 **local_7c;\n  undefined1 *local_74;\n  undefined4 local_70;\n  undefined4 local_6c;\n  undefined1 **local_68;\n  undefined1 auStack_64 [12];\n  undefined1 *local_58 [5];\n  int local_44;\n  undefined4 local_40;\n  undefined4 local_3c;\n  int local_38;\n  undefined4 local_34 [2];\n  \n  FUN_0001d3e8(param_1,param_3,param_4,local_58);\n  FUN_0001e7c8(param_1 + 4,param_5,&local_38,&local_3c,&local_40);\n  iVar1 = *(int *)(param_1 + 4);\n  ppuVar7 = local_58 + 3;\n  iVar11 = *(int *)(iVar1 + 0x20);\n  puVar9 = local_58[local_38];\n  local_58[4] = auStack_64;\n  local_70 = local_3c;\n  iVar2 = *(int *)(iVar1 + 0x24);\n  if (*(int *)(iVar1 + 0x24) == 0) {\n    iVar2 = iVar11;\n  }\n  local_6c = local_40;\n  local_74 = puVar9;\n  local_68 = ppuVar7;\n  FUN_0001e948(iVar1,local_58,ppuVar7);\n  mumin_debug_print_pblkgroup(0x8ff08,ppuVar7);\n  mumin_debug_print_sg(0x8ff08,param_8);\n  mumin_debug_print_extdata(0x8ff08,0,1,param_9);\n  if (param_2 == 0 && iVar2 != iVar11) {\n    pcVar12 = *(code **)(*(int *)(param_1 + 8) + 0x2c);\n  }\n  else {\n    pcVar12 = *(code **)(*(int *)(param_1 + 8) + 0x28);\n  }\n  iVar2 = (*pcVar12)(&local_74,param_6,param_7,param_8,param_9,local_34,\n                     *(undefined4 *)(param_1 + 0xc));\n  if (iVar2 == -0x20001) {\n    printk(\"%s : \",\"mumin_pbm_s_write_pages_in_pblkgroup\");\n    printk(\"Err : \");\n    printk(\"Unexpected error!\\n\");\n    iVar2 = -0x10005;\n    mumin_err_print_pblkgroup(0x8ff01,local_58 + 3);\n    printk(\"%s : \",\"mumin_pbm_s_write_pages_in_pblkgroup\");\n    printk(\"Err : \");\n    printk(\"lfg=%d die=%d pl=%d s_pg=%d num=%d\\n\",param_2,puVar9,local_3c,local_40,param_6);\n  }\n  else if (iVar2 != 0) {\n    if (iVar2 == -0x20007) {\n      printk(\"%s : \",\"mumin_pbm_s_write_pages_in_pblkgroup\");\n      printk(\"Warn : \");\n      printk(\"Write error, badinfo=0x%08x\\n\",local_34[0]);\n      mumin_warn_print_pblkgroup(0x8ff01,local_58 + 3);\n      printk(\"%s : \",\"mumin_pbm_s_write_pages_in_pblkgroup\");\n      printk(\"Warn : \");\n      printk(\"lfg=%d die=%d pl=%d s_pg=%d num=%d n_exe=%d\\n\",param_2,puVar9,local_3c,local_40,\n             param_6,*param_7);\n    }\n    else {\n      printk(\"%s : \",\"mumin_pbm_s_write_pages_in_pblkgroup\");\n      printk(\"Err : \");\n      printk(\"Invalid error(0x%08x)!\\n\",-iVar2);\n      mumin_err_print_pblkgroup(0x8ff01,local_58 + 3);\n      printk(\"%s : \",\"mumin_pbm_s_write_pages_in_pblkgroup\");\n      printk(\"Err : \");\n      printk(\"lfg=%d die=%d pl=%d s_pg=%d num=%d\\n\",param_2,puVar9,local_3c,local_40,param_6);\n    }\n  }\n  mumin_debug_print_sg(0x8ff08,param_8);\n  if (iVar2 == -0x20007) {\n    iVar1 = 0;\n    printk(\"%s : \",\"mumin_pbm_s_write_vpages\");\n    printk(\"Warn : \");\n    printk(\"ret=0x%08x\\n\",0x20007);\n    local_7c = local_58;\n    uVar3 = *(uint *)(*(int *)(param_1 + 4) + 0xc);\n    uVar4 = *(uint *)(*(int *)(param_1 + 4) + 0x10);\n    for (uVar10 = 0; uVar10 < uVar3; uVar10 = uVar10 + 1) {\n      uVar5 = 0;\n      uVar6 = uVar5;\n      uVar8 = uVar5;\n      while (uVar6 < uVar4) {\n        FUN_0001eeb4(*(undefined4 *)(param_1 + 4),local_34,uVar10,uVar6,&local_44);\n        uVar6 = uVar6 + 1;\n        if (local_44 == 0) {\n          uVar8 = 1;\n          *(undefined4 *)((int)local_58 + uVar5 + 0xc) = *(undefined4 *)((int)local_7c + uVar5 + 4);\n        }\n        else {\n          *(undefined4 *)((int)local_58 + uVar5 + 0xc) = 0xffffffff;\n        }\n        uVar5 = uVar5 + 4;\n      }\n      if (uVar8 == 1) {\n        iVar11 = mumin_pbi_set_ppeb(param_1,*(undefined4 *)((int)local_58 + iVar1),param_4,\n                                    local_58 + 3);\n        if (iVar11 != 0) {\n          printk(\"%s : \",\"mumin_pbm_s_register_ppeb_and_store_pbi\");\n          printk(\"Err : \");\n          printk(\"ret=0x%08x\\n\",-iVar11);\n          iVar2 = -0x10005;\n          goto LAB_0001fe2c;\n        }\n        iVar11 = FUN_0001f56c(param_1,*(undefined4 *)((int)local_58 + iVar1),1);\n        if (iVar11 != 0) {\n          printk(\"%s : \",\"mumin_pbm_s_register_ppeb_and_store_pbi\");\n          printk(\"Err : \");\n          printk(\"ret=0x%08x\\n\",-iVar11);\n          iVar2 = iVar11;\n          goto LAB_0001fe2c;\n        }\n      }\n      iVar1 = iVar1 + 4;\n      local_7c = local_7c + 2;\n    }\n  }\n  else if (iVar2 != 0) {\nLAB_0001fe2c:\n    printk(\"%s : \",\"mumin_pbm_s_write_vpages\");\n    printk(\"Err : \");\n    printk(\"ret=0x%08x\\n\",-iVar2);\n  }\n  return iVar2;\n}\n\n",
+    "assembly": [
+      "0x1fa44: cpy r12, sp",
+      "0x1fa48: stmdb sp!,{r4,r5,r6,r7,r8,r9,r10,r11,r12,lr,pc}",
+      "0x1fa4c: sub r11, r12, #0x4",
+      "0x1fa50: sub sp, sp, #0x74",
+      "0x1fa54: cpy r5, r0",
+      "0x1fa58: cpy r10, r1",
+      "0x1fa5c: str r3, [r11,#-0x84]",
+      "0x1fa60: cpy r1, r2",
+      "0x1fa64: cpy r2, r3",
+      "0x1fa68: sub r3, r11, #0x54",
+      "0x1fa6c: ldr r7, [r11,#0x8]",
+      "0x1fa70: bl 0x0001d3e8",
+      "0x1fa74: sub r3, r11, #0x3c",
+      "0x1fa78: add r0, r5, #0x4",
+      "0x1fa7c: str r3, [sp,#0x0]",
+      "0x1fa80: sub r2, r11, #0x34",
+      "0x1fa84: ldr r1, [r11,#0x4]",
+      "0x1fa88: sub r3, r11, #0x38",
+      "0x1fa8c: bl 0x0001e7c8",
+      "0x1fa90: ldr r3, [r11,#-0x34]",
+      "0x1fa94: ldr r0, [r5,#0x4]",
+      "0x1fa98: sub r1, r11, #0x2c",
+      "0x1fa9c: ldr r2, [r11,#-0x38]",
+      "0x1faa0: sub r8, r11, #0x48",
+      "0x1faa4: add r3, r1, r3, lsl #0x2",
+      "0x1faa8: ldr r6, [r11,#-0x3c]",
+      "0x1faac: ldr r12, [r0,#0x20]",
+      "0x1fab0: sub r1, r11, #0x54",
+      "0x1fab4: ldr r4, [r0,#0x24]",
+      "0x1fab8: ldr r9, [r3,#-0x28]",
+      "0x1fabc: sub r3, r11, #0x60",
+      "0x1fac0: cmp r4, #0x0",
+      "0x1fac4: str r2, [r11,#-0x78]",
+      "0x1fac8: str r2, [r11,#-0x6c]",
+      "0x1facc: cpy r2, r8",
+      "0x1fad0: cpyeq r4, r12",
+      "0x1fad4: str r12, [r11,#-0x88]",
+      "0x1fad8: str r3, [r11,#-0x44]",
+      "0x1fadc: str r8, [r11,#-0x64]",
+      "0x1fae0: str r9, [r11,#-0x70]",
+      "0x1fae4: str r6, [r11,#-0x68]",
+      "0x1fae8: bl 0x0001e948",
+      "0x1faec: ldr r0, [0x1fe60]",
+      "0x1faf0: cpy r1, r8",
+      "0x1faf4: bl 0x000152d4",
+      "0x1faf8: ldr r0, [0x1fe60]",
+      "0x1fafc: ldr r1, [r11,#0x10]",
+      "0x1fb00: bl 0x000152e4",
+      "0x1fb04: ldr r0, [0x1fe60]",
+      "0x1fb08: mov r1, #0x0",
+      "0x1fb0c: mov r2, #0x1",
+      "0x1fb10: ldr r3, [r11,#0x14]",
+      "0x1fb14: bl 0x000152f4",
+      "0x1fb18: ldr r12, [r11,#-0x88]",
+      "0x1fb1c: ldr r1, [r11,#0x14]",
+      "0x1fb20: sub r2, r11, #0x30",
+      "0x1fb24: subs r4, r4, r12",
+      "0x1fb28: ldr r3, [r5,#0x8]",
+      "0x1fb2c: movne r4, #0x1",
+      "0x1fb30: cmp r10, #0x0",
+      "0x1fb34: stmia sp,{r1,r2}",
+      "0x1fb38: movne r4, #0x0",
+      "0x1fb3c: ldr r2, [r5,#0xc]",
+      "0x1fb40: cmp r4, #0x0",
+      "0x1fb44: sub r0, r11, #0x70",
+      "0x1fb48: cpy r1, r7",
+      "0x1fb4c: str r2, [sp,#0x8]",
+      "0x1fb50: ldr r2, [r11,#0xc]",
+      "0x1fb54: ldrne r12, [r3,#0x2c]",
+      "0x1fb58: ldreq r12, [r3,#0x28]",
+      "0x1fb5c: ldr r3, [r11,#0x10]",
+      "0x1fb60: blx r12",
+      "0x1fb64: mvn r3, #0x20000",
+      "0x1fb68: cmp r0, r3",
+      "0x1fb6c: cpy r4, r0",
+      "0x1fb70: beq 0x0001fbf0",
+      "0x1fb74: cmp r0, #0x0",
+      "0x1fb78: beq 0x0001fca4",
+      "0x1fb7c: sub r3, r3, #0x6",
+      "0x1fb80: cmp r0, r3",
+      "0x1fb84: bne 0x0001fc4c",
+      "0x1fb88: ldr r1, [0x1fe64]",
+      "0x1fb8c: ldr r0, [0x1fe68]",
+      "0x1fb90: bl 0x0002e08c",
+      "0x1fb94: ldr r0, [0x1fe6c]",
+      "0x1fb98: bl 0x0002e08c",
+      "0x1fb9c: ldr r1, [r11,#-0x30]",
+      "0x1fba0: ldr r0, [0x1fe70]",
+      "0x1fba4: bl 0x0002e08c",
+      "0x1fba8: sub r1, r11, #0x48",
+      "0x1fbac: ldr r0, [0x1fe74]",
+      "0x1fbb0: bl 0x00015058",
+      "0x1fbb4: ldr r1, [0x1fe64]",
+      "0x1fbb8: ldr r0, [0x1fe68]",
+      "0x1fbbc: bl 0x0002e08c",
+      "0x1fbc0: ldr r0, [0x1fe6c]",
+      "0x1fbc4: bl 0x0002e08c",
+      "0x1fbc8: ldr r2, [r11,#0xc]",
+      "0x1fbcc: stmia sp,{r6,r7}",
+      "0x1fbd0: cpy r1, r10",
+      "0x1fbd4: ldr r0, [0x1fe78]",
+      "0x1fbd8: ldr r3, [r2,#0x0]",
+      "0x1fbdc: cpy r2, r9",
+      "0x1fbe0: str r3, [sp,#0x8]",
+      "0x1fbe4: ldr r3, [r11,#-0x78]",
+      "0x1fbe8: bl 0x0002e08c",
+      "0x1fbec: b 0x0001fca4",
+      "0x1fbf0: ldr r1, [0x1fe64]",
+      "0x1fbf4: ldr r0, [0x1fe68]",
+      "0x1fbf8: bl 0x0002e08c",
+      "0x1fbfc: ldr r0, [0x1fe7c]",
+      "0x1fc00: bl 0x0002e08c",
+      "0x1fc04: ldr r0, [0x1fe80]",
+      "0x1fc08: bl 0x0002e08c",
+      "0x1fc0c: ldr r0, [0x1fe74]",
+      "0x1fc10: sub r1, r11, #0x48",
+      "0x1fc14: ldr r4, [0x1fe84]",
+      "0x1fc18: bl 0x00015190",
+      "0x1fc1c: ldr r1, [0x1fe64]",
+      "0x1fc20: ldr r0, [0x1fe68]",
+      "0x1fc24: bl 0x0002e08c",
+      "0x1fc28: ldr r0, [0x1fe7c]",
+      "0x1fc2c: bl 0x0002e08c",
+      "0x1fc30: ldr r0, [0x1fe88]",
+      "0x1fc34: cpy r1, r10",
+      "0x1fc38: cpy r2, r9",
+      "0x1fc3c: ldr r3, [r11,#-0x78]",
+      "0x1fc40: stmia sp,{r6,r7}",
+      "0x1fc44: bl 0x0002e08c",
+      "0x1fc48: b 0x0001fca4",
+      "0x1fc4c: ldr r1, [0x1fe64]",
+      "0x1fc50: ldr r0, [0x1fe68]",
+      "0x1fc54: bl 0x0002e08c",
+      "0x1fc58: ldr r0, [0x1fe7c]",
+      "0x1fc5c: bl 0x0002e08c",
+      "0x1fc60: rsb r1, r4, #0x0",
+      "0x1fc64: ldr r0, [0x1fe8c]",
+      "0x1fc68: bl 0x0002e08c",
+      "0x1fc6c: ldr r0, [0x1fe74]",
+      "0x1fc70: sub r1, r11, #0x48",
+      "0x1fc74: bl 0x00015190",
+      "0x1fc78: ldr r1, [0x1fe64]",
+      "0x1fc7c: ldr r0, [0x1fe68]",
+      "0x1fc80: bl 0x0002e08c",
+      "0x1fc84: ldr r0, [0x1fe7c]",
+      "0x1fc88: bl 0x0002e08c",
+      "0x1fc8c: ldr r0, [0x1fe88]",
+      "0x1fc90: cpy r1, r10",
+      "0x1fc94: cpy r2, r9",
+      "0x1fc98: ldr r3, [r11,#-0x78]",
+      "0x1fc9c: stmia sp,{r6,r7}",
+      "0x1fca0: bl 0x0002e08c",
+      "0x1fca4: ldr r0, [0x1fe60]",
+      "0x1fca8: ldr r1, [r11,#0x10]",
+      "0x1fcac: bl 0x000152e4",
+      "0x1fcb0: ldr r3, [0x1fe90]",
+      "0x1fcb4: cmp r4, r3",
+      "0x1fcb8: beq 0x0001fcc8",
+      "0x1fcbc: cmp r4, #0x0",
+      "0x1fcc0: beq 0x0001fe54",
+      "0x1fcc4: b 0x0001fe2c",
+      "0x1fcc8: ldr r1, [0x1fe94]",
+      "0x1fccc: mov r7, #0x0",
+      "0x1fcd0: ldr r0, [0x1fe68]",
+      "0x1fcd4: cpy r10, r7",
+      "0x1fcd8: bl 0x0002e08c",
+      "0x1fcdc: ldr r0, [0x1fe6c]",
+      "0x1fce0: bl 0x0002e08c",
+      "0x1fce4: ldr r1, [0x1fe98]",
+      "0x1fce8: ldr r0, [0x1fe9c]",
+      "0x1fcec: cpy r9, r4",
+      "0x1fcf0: bl 0x0002e08c",
+      "0x1fcf4: ldr r3, [r5,#0x4]",
+      "0x1fcf8: sub r2, r11, #0x54",
+      "0x1fcfc: str r2, [r11,#-0x78]",
+      "0x1fd00: ldr r1, [r3,#0xc]",
+      "0x1fd04: ldr r3, [r3,#0x10]",
+      "0x1fd08: str r1, [r11,#-0x7c]",
+      "0x1fd0c: str r3, [r11,#-0x80]",
+      "0x1fd10: b 0x0001fe10",
+      "0x1fd14: cpy r2, r10",
+      "0x1fd18: sub r1, r11, #0x30",
+      "0x1fd1c: sub r3, r11, #0x40",
+      "0x1fd20: ldr r0, [r5,#0x4]",
+      "0x1fd24: str r3, [sp,#0x0]",
+      "0x1fd28: cpy r3, r6",
+      "0x1fd2c: bl 0x0001eeb4",
+      "0x1fd30: ldr r3, [r11,#-0x40]",
+      "0x1fd34: add r6, r6, #0x1",
+      "0x1fd38: cmp r3, #0x0",
+      "0x1fd3c: sub r3, r11, #0x48",
+      "0x1fd40: mvnne r2, #0x0",
+      "0x1fd44: moveq r8, #0x1",
+      "0x1fd48: ldreq r1, [r11,#-0x78]",
+      "0x1fd4c: addeq r2, r1, r4",
+      "0x1fd50: strne r2, [r3,r4]",
+      "0x1fd54: ldreq r2, [r2,#0x4]",
+      "0x1fd58: streq r2, [r3,r4]",
+      "0x1fd5c: add r4, r4, #0x4",
+      "0x1fd60: ldr r2, [r11,#-0x80]",
+      "0x1fd64: cmp r6, r2",
+      "0x1fd68: bcc 0x0001fd14",
+      "0x1fd6c: cmp r8, #0x1",
+      "0x1fd70: bne 0x0001fdfc",
+      "0x1fd74: sub r4, r11, #0x54",
+      "0x1fd78: cpy r0, r5",
+      "0x1fd7c: ldr r2, [r11,#-0x84]",
+      "0x1fd80: sub r3, r11, #0x48",
+      "0x1fd84: ldr r1, [r4,r7]",
+      "0x1fd88: bl 0x0001cbb4",
+      "0x1fd8c: subs r6, r0, #0x0",
+      "0x1fd90: beq 0x0001fdbc",
+      "0x1fd94: ldr r1, [0x1fea0]",
+      "0x1fd98: ldr r0, [0x1fe68]",
+      "0x1fd9c: bl 0x0002e08c",
+      "0x1fda0: ldr r0, [0x1fe7c]",
+      "0x1fda4: bl 0x0002e08c",
+      "0x1fda8: ldr r0, [0x1fe9c]",
+      "0x1fdac: rsb r1, r6, #0x0",
+      "0x1fdb0: ldr r4, [0x1fe84]",
+      "0x1fdb4: bl 0x0002e08c",
+      "0x1fdb8: b 0x0001fe2c",
+      "0x1fdbc: cpy r0, r5",
+      "0x1fdc0: ldr r1, [r4,r7]",
+      "0x1fdc4: cpy r2, r8",
+      "0x1fdc8: bl 0x0001f56c",
+      "0x1fdcc: subs r6, r0, #0x0",
+      "0x1fdd0: beq 0x0001fdfc",
+      "0x1fdd4: ldr r1, [0x1fea0]",
+      "0x1fdd8: cpy r4, r6",
+      "0x1fddc: ldr r0, [0x1fe68]",
+      "0x1fde0: bl 0x0002e08c",
+      "0x1fde4: ldr r0, [0x1fe7c]",
+      "0x1fde8: bl 0x0002e08c",
+      "0x1fdec: ldr r0, [0x1fe9c]",
+      "0x1fdf0: rsb r1, r6, #0x0",
+      "0x1fdf4: bl 0x0002e08c",
+      "0x1fdf8: b 0x0001fe2c",
+      "0x1fdfc: ldr r3, [r11,#-0x78]",
+      "0x1fe00: add r10, r10, #0x1",
+      "0x1fe04: add r7, r7, #0x4",
+      "0x1fe08: add r3, r3, #0x8",
+      "0x1fe0c: str r3, [r11,#-0x78]",
+      "0x1fe10: ldr r1, [r11,#-0x7c]",
+      "0x1fe14: cmp r10, r1",
+      "0x1fe18: bcs 0x0001fe50",
+      "0x1fe1c: mov r4, #0x0",
+      "0x1fe20: cpy r8, r4",
+      "0x1fe24: cpy r6, r4",
+      "0x1fe28: b 0x0001fd60",
+      "0x1fe2c: ldr r1, [0x1fe94]",
+      "0x1fe30: ldr r0, [0x1fe68]",
+      "0x1fe34: bl 0x0002e08c",
+      "0x1fe38: ldr r0, [0x1fe7c]",
+      "0x1fe3c: bl 0x0002e08c",
+      "0x1fe40: rsb r1, r4, #0x0",
+      "0x1fe44: ldr r0, [0x1fe9c]",
+      "0x1fe48: bl 0x0002e08c",
+      "0x1fe4c: b 0x0001fe54",
+      "0x1fe50: cpy r4, r9",
+      "0x1fe54: cpy r0, r4",
+      "0x1fe58: sub sp, r11, #0x28",
+      "0x1fe5c: ldmia sp,{r4,r5,r6,r7,r8,r9,r10,r11,sp,pc}"
+    ],
+    "callees": [
+      "mumin_warn_print_pblkgroup",
+      "mumin_err_print_pblkgroup",
+      "mumin_debug_print_pblkgroup",
+      "mumin_debug_print_sg",
+      "mumin_debug_print_extdata",
+      "mumin_pbi_set_ppeb",
+      "FUN_0001d3e8",
+      "FUN_0001e7c8",
+      "FUN_0001e948",
+      "FUN_0001eeb4",
+      "FUN_0001f56c",
+      "<EXTERNAL>::printk"
+    ]
+  },
+  {
+    "name": "muminblk_ioctl",
+    "id": "ev_59c4299da4afcf66011ce92948310b34f3b0670d21d431754b46fccf95837065",
+    "procedure": {
+      "address": "0x104b0",
+      "name": "muminblk_ioctl",
+      "classification": {
+        "external": false,
+        "thunk": false,
+        "thunk_target": null,
+        "provenance": "ghidra-function-manager"
+      },
+      "body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0x104b0",
+            "end": "0x104f3"
+          },
+          {
+            "start": "0x10528",
+            "end": "0x10617"
+          }
+        ],
+        "total_bytes": 308,
+        "span_bytes": 360,
+        "non_contiguous": true,
+        "contains_entry": true
+      },
+      "signature": "undefined muminblk_ioctl()",
+      "locals": []
+    },
+    "pseudocode": "\nundefined4 muminblk_ioctl(int param_1,int *param_2,undefined4 param_3,undefined4 param_4)\n\n{\n  undefined4 extraout_r2;\n  int iVar1;\n  undefined4 uVar2;\n  \n  iVar1 = **(int **)(param_1 + 4);\n  if (iVar1 == 0) {\n    return 0xffffffed;\n  }\n  _mutex_lock(iVar1 + 0x3c);\n  switch(*param_2 + -0x6e01) {\n  case 0:\n    uVar2 = nand_ioc_perase_safe(iVar1,param_2[1]);\n    break;\n  case 1:\n    uVar2 = nand_ioc_pread_safe(iVar1,param_2[1]);\n    break;\n  case 2:\n    uVar2 = nand_ioc_pwrite_safe(iVar1,param_2[1]);\n    break;\n  case 3:\n    uVar2 = nand_ioc_perase_normal(iVar1,param_2[1]);\n    break;\n  case 4:\n    uVar2 = nand_ioc_pread_normal(iVar1,param_2[1]);\n    break;\n  case 5:\n    uVar2 = nand_ioc_pwrite_normal(iVar1,param_2[1]);\n    break;\n  case 6:\n    uVar2 = nand_ioc_get_lblkinfo(iVar1,param_2[1]);\n    break;\n  case 7:\n    uVar2 = nand_ioc_lerase(iVar1,param_2[1]);\n    break;\n  case 8:\n    uVar2 = nand_ioc_get_devinfo(iVar1,param_2[1]);\n    break;\n  case 9:\n    uVar2 = nand_ioc_conv2pblk(iVar1,param_2[1]);\n    break;\n  case 10:\n    uVar2 = nand_ioc_get_safe_phys_blocks(iVar1,param_2[1]);\n    break;\n  case 0xb:\n    uVar2 = nand_ioc_get_normal_phys_blocks(iVar1,param_2[1]);\n    break;\n  case 0xc:\n    uVar2 = nand_ioc_lerase_sct(iVar1,param_2[1],extraout_r2,*param_2 + -0x6e01,param_4);\n    break;\n  default:\n    uVar2 = 0xffffffe7;\n  }\n  _mutex_unlock(iVar1 + 0x3c);\n  return uVar2;\n}\n\n",
+    "assembly": [
+      "0x104b0: cpy r12, sp",
+      "0x104b4: stmdb sp!,{r3,r4,r5,r6,r11,r12,lr,pc}",
+      "0x104b8: sub r11, r12, #0x4",
+      "0x104bc: ldr r3, [r0,#0x4]",
+      "0x104c0: cpy r6, r1",
+      "0x104c4: ldr r5, [r3,#0x0]",
+      "0x104c8: cmp r5, #0x0",
+      "0x104cc: beq 0x00010610",
+      "0x104d0: add r4, r5, #0x3c",
+      "0x104d4: cpy r0, r4",
+      "0x104d8: bl 0x0002e008",
+      "0x104dc: ldr r3, [r6,#0x0]",
+      "0x104e0: sub r3, r3, #0x6e00",
+      "0x104e4: sub r3, r3, #0x1",
+      "0x104e8: cmp r3, #0xc",
+      "0x104ec: ldrls pc, [pc,r3,lsl #0x2]",
+      "0x104f0: b 0x000105fc",
+      "0x10528: cpy r0, r5",
+      "0x1052c: ldr r1, [r6,#0x4]",
+      "0x10530: bl 0x00028024",
+      "0x10534: b 0x000105f4",
+      "0x10538: cpy r0, r5",
+      "0x1053c: ldr r1, [r6,#0x4]",
+      "0x10540: bl 0x000280e4",
+      "0x10544: b 0x000105f4",
+      "0x10548: cpy r0, r5",
+      "0x1054c: ldr r1, [r6,#0x4]",
+      "0x10550: bl 0x000281d0",
+      "0x10554: b 0x000105f4",
+      "0x10558: cpy r0, r5",
+      "0x1055c: ldr r1, [r6,#0x4]",
+      "0x10560: bl 0x00028298",
+      "0x10564: b 0x000105f4",
+      "0x10568: cpy r0, r5",
+      "0x1056c: ldr r1, [r6,#0x4]",
+      "0x10570: bl 0x0002832c",
+      "0x10574: b 0x000105f4",
+      "0x10578: cpy r0, r5",
+      "0x1057c: ldr r1, [r6,#0x4]",
+      "0x10580: bl 0x000284bc",
+      "0x10584: b 0x000105f4",
+      "0x10588: cpy r0, r5",
+      "0x1058c: ldr r1, [r6,#0x4]",
+      "0x10590: bl 0x000286ec",
+      "0x10594: b 0x000105f4",
+      "0x10598: cpy r0, r5",
+      "0x1059c: ldr r1, [r6,#0x4]",
+      "0x105a0: bl 0x00028624",
+      "0x105a4: b 0x000105f4",
+      "0x105a8: cpy r0, r5",
+      "0x105ac: ldr r1, [r6,#0x4]",
+      "0x105b0: bl 0x000287ac",
+      "0x105b4: b 0x000105f4",
+      "0x105b8: cpy r0, r5",
+      "0x105bc: ldr r1, [r6,#0x4]",
+      "0x105c0: bl 0x00028878",
+      "0x105c4: b 0x000105f4",
+      "0x105c8: cpy r0, r5",
+      "0x105cc: ldr r1, [r6,#0x4]",
+      "0x105d0: bl 0x00028928",
+      "0x105d4: b 0x000105f4",
+      "0x105d8: cpy r0, r5",
+      "0x105dc: ldr r1, [r6,#0x4]",
+      "0x105e0: bl 0x000289f0",
+      "0x105e4: b 0x000105f4",
+      "0x105e8: cpy r0, r5",
+      "0x105ec: ldr r1, [r6,#0x4]",
+      "0x105f0: bl 0x00028b30",
+      "0x105f4: cpy r5, r0",
+      "0x105f8: b 0x00010600",
+      "0x105fc: mvn r5, #0x18",
+      "0x10600: cpy r0, r4",
+      "0x10604: bl 0x0002e0b8",
+      "0x10608: cpy r0, r5",
+      "0x1060c: ldmia sp,{r3,r4,r5,r6,r11,sp,pc}",
+      "0x10610: mvn r0, #0x12",
+      "0x10614: ldmia sp,{r3,r4,r5,r6,r11,sp,pc}"
+    ],
+    "callees": [
+      "nand_ioc_perase_safe",
+      "nand_ioc_pread_safe",
+      "nand_ioc_pwrite_safe",
+      "nand_ioc_perase_normal",
+      "nand_ioc_pread_normal",
+      "nand_ioc_pwrite_normal",
+      "nand_ioc_lerase",
+      "nand_ioc_get_lblkinfo",
+      "nand_ioc_get_devinfo",
+      "nand_ioc_get_safe_phys_blocks",
+      "nand_ioc_get_normal_phys_blocks",
+      "nand_ioc_conv2pblk",
+      "nand_ioc_lerase_sct",
+      "<EXTERNAL>::_mutex_lock",
+      "<EXTERNAL>::_mutex_unlock"
+    ]
+  },
+  {
+    "name": "nand_ioc_perase_normal",
+    "id": "ev_0650befa3450eb8e47ee86c2b4071f61c605153ccdce088566f83bb75c8988d8",
+    "procedure": {
+      "address": "0x28298",
+      "name": "nand_ioc_perase_normal",
+      "classification": {
+        "external": false,
+        "thunk": false,
+        "thunk_target": null,
+        "provenance": "ghidra-function-manager"
+      },
+      "body": {
+        "available": true,
+        "provenance": "ghidra-function-body-address-set",
+        "ranges": [
+          {
+            "start": "0x28298",
+            "end": "0x2832b"
+          }
+        ],
+        "total_bytes": 148,
+        "span_bytes": 148,
+        "non_contiguous": false,
+        "contains_entry": true
+      },
+      "signature": "undefined nand_ioc_perase_normal()",
+      "locals": [
+        {
+          "description": "undefined4 local_14 @ Stack[-0x14]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_18 @ Stack[-0x18]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_1c @ Stack[-0x1c]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_34 @ Stack[-0x34]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_38 @ Stack[-0x38]:4",
+          "provenance": "ghidra-function-database"
+        },
+        {
+          "description": "undefined4 local_3c @ Stack[-0x3c]:4",
+          "provenance": "ghidra-function-database"
+        }
+      ]
+    },
+    "pseudocode": "\nundefined4 nand_ioc_perase_normal(undefined4 param_1,uint param_2)\n\n{\n  int iVar1;\n  uint uVar2;\n  uint uVar3;\n  uint uVar4;\n  undefined1 auStack_40 [4];\n  undefined4 local_3c;\n  undefined4 local_38;\n  undefined4 local_34;\n  undefined4 local_1c;\n  undefined4 local_18;\n  undefined4 local_14;\n  \n  uVar4 = *(uint *)(((uint)auStack_40 & 0xffffe000) + 8);\n  uVar2 = param_2 + 0x24;\n  uVar3 = uVar2;\n  if (param_2 < 0xffffffdc) {\n    uVar3 = uVar2 - (uVar4 + 1);\n  }\n  if (param_2 < 0xffffffdc && uVar2 <= uVar4) {\n    uVar4 = 0;\n  }\n  if (uVar4 == 0) {\n    iVar1 = __copy_from_user(auStack_40,param_2,0x24);\n    if (iVar1 == 0) {\n      local_1c = local_3c;\n      local_18 = local_38;\n      local_14 = local_34;\n      iVar1 = mumin_devif_erase_pblk(&local_1c);\n      if (iVar1 == 0) {\n        return 0;\n      }\n      return 0xfffffffb;\n    }\n  }\n  else {\n    __memzero(auStack_40,0x24,uVar3);\n  }\n  return 0xfffffff2;\n}\n\n",
+    "assembly": [
+      "0x28298: cpy r12, sp",
+      "0x2829c: stmdb sp!,{r11,r12,lr,pc}",
+      "0x282a0: sub r11, r12, #0x4",
+      "0x282a4: sub sp, sp, #0x30",
+      "0x282a8: cpy r2, sp",
+      "0x282ac: bic r3, r2, #0x1fc0",
+      "0x282b0: bic r3, r3, #0x3f",
+      "0x282b4: ldr r3, [r3,#0x8]",
+      "0x282b8: adds r2, r1, #0x24",
+      "0x282bc: sbcscc r2, r2, r3",
+      "0x282c0: movcc r3, #0x0",
+      "0x282c4: cmp r3, #0x0",
+      "0x282c8: bne 0x000282e4",
+      "0x282cc: sub r0, r11, #0x3c",
+      "0x282d0: mov r2, #0x24",
+      "0x282d4: bl 0x0002e0d4",
+      "0x282d8: subs r1, r0, #0x0",
+      "0x282dc: beq 0x000282f4",
+      "0x282e0: b 0x00028320",
+      "0x282e4: sub r0, r11, #0x3c",
+      "0x282e8: mov r1, #0x24",
+      "0x282ec: bl 0x0002e0a0",
+      "0x282f0: b 0x00028320",
+      "0x282f4: ldr r3, [r11,#-0x38]",
+      "0x282f8: sub r0, r11, #0x18",
+      "0x282fc: str r3, [r11,#-0x18]",
+      "0x28300: ldr r3, [r11,#-0x34]",
+      "0x28304: str r3, [r11,#-0x14]",
+      "0x28308: ldr r3, [r11,#-0x30]",
+      "0x2830c: str r3, [r11,#-0x10]",
+      "0x28310: bl 0x0002e068",
+      "0x28314: cmp r0, #0x0",
+      "0x28318: mvnne r0, #0x4",
+      "0x2831c: b 0x00028324",
+      "0x28320: mvn r0, #0xd",
+      "0x28324: sub sp, r11, #0xc",
+      "0x28328: ldmia sp,{r11,sp,pc}"
+    ],
+    "callees": [
+      "<EXTERNAL>::mumin_devif_erase_pblk",
+      "<EXTERNAL>::__memzero",
+      "<EXTERNAL>::__copy_from_user"
+    ]
+  }
+]

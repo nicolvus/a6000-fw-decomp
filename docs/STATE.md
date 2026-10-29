@@ -1,5 +1,7 @@
 # Estado vigente — Sony A6000 reverse engineering
 
+> **E26 R7 parcial:** [escritura MuMin y LLD](capture/e26-r7-recuperacion-estatica.md) verificadas en módulos Linux, sin ruta de invocación pre-Linux demostrada. La investigación offline continúa; el diagnóstico físico no es requisito para proseguirla.
+
 > **E26 R6, diagnóstico offline cerrado:** [informe](capture/e26-r6-recuperacion-bionz.md). Payload local cotejado con fuente histórica fijada; no adquiere explícitamente plane1 requerida por INFO6. Concatena bloques sin IDs/metadatos y puede descartar estados ECC tolerados por Loader2. Integridad Loader3 y restauración aún no demostradas. CN4906 queda orientado documentalmente, pero SWD BIONZ, NAND física y una restauración conservadora siguen sin demostración; el siguiente dato útil es foto/UART pasiva autorizada.
 
 > **Incidente 3.25:** el usuario informa instalación y bloqueo posterior a Done. La prioridad vigente es recuperación, no nuevas funciones; el dictamen y las limitaciones están en [E26-RECOVERY](capture/e26-recovery.md). Las afirmaciones históricas de «no instalado» no describen el estado actual.

@@ -4,6 +4,8 @@
 
 ## E26-RECOVERY — 29-10-2026: incidente abierto
 
+**R7 parcial:** REA trazó escritura lógica y primitivas físicas de `nand.ko` y despacho LLD a ARM7 (operaciones observadas 9 y 0x0c); no se demostró una vía externa ni restauración selectiva. [Informe y evidencia](../docs/capture/e26-r7-recuperacion-estatica.md). Próximo paso exacto: analizar `boss_hw_nandc_recovery_check`, resolver callbacks PBM y retornos COLD en el prefijo respaldado, exclusivamente offline.
+
 **R6 fases 2/3, checkpoint:** prefijo de 43 páginas sin cambios, REA/Capstone confirman las cinco rutinas del selector, sin reconstruir cola INFO6 ni certificar runtime. Nueva condición de log: Backup510015 debe valer1; histórico00, de modo que silencio UART no prueba falta de ejecución. Puerto0/1 y registros compatibles PL011; reloj y mux no certificados. 73 tests knowledge pasan excluyendo seis de servidor MCP (espera sin respuesta en entorno), 12 triage pasan; no cambios al servidor. Próximo paso exacto: usar dibujo SIDE A6-38 para orientación CN4906 y documentar niveles/SWD/NAND, sin conexiones.
 
 **R6 fases 4–8, checkpoint:** manual SIDE A6-38 fija CN4906 con pin1 arriba/pin16 abajo y entorno fotografiable; se publicó mapa SVG documental. SWD BIONZ sigue opcional por R4911/R4912 XX, sin puerto, tensión, protección ni acceso NAND demostrado. BLDR/MuMin no autorizan NAND cruda; las vías restantes son Loader3 condicionado, servicio BIONZ demostrado o diagnóstico profesional que obtenga lectura repetible. Se redactó matriz conservadora: foto identificada → UART pasiva → clasificación de etapa; sin conexión, energía, escritura ni imagen firmware. Próximo paso exacto: esperar autorización física y fotografías; no hacer más inferencia de recuperación ni activar SWD.

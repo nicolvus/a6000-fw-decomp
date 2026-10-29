@@ -1,0 +1,1053 @@
+[
+  {
+    "name": "muminblk_request",
+    "id": "ev_732c38274f892302ee8ed140010f51c1b7a22b083b462bd6c4da1b663441744c",
+    "sha256": "2169b84deee1a424539255affbdff499c4094e0913eeefe49339f3d47cbe6faa",
+    "result": {
+      "procedure": {
+        "address": "0x1020c",
+        "name": "muminblk_request",
+        "classification": {
+          "external": false,
+          "thunk": false,
+          "thunk_target": null,
+          "provenance": "ghidra-function-manager"
+        },
+        "body": {
+          "available": true,
+          "provenance": "ghidra-function-body-address-set",
+          "ranges": [
+            {
+              "start": "0x1020c",
+              "end": "0x10483"
+            }
+          ],
+          "total_bytes": 632,
+          "span_bytes": 632,
+          "non_contiguous": false,
+          "contains_entry": true
+        },
+        "signature": "undefined muminblk_request()",
+        "locals": [
+          {
+            "description": "undefined4 local_34 @ Stack[-0x34]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_38 @ Stack[-0x38]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_3c @ Stack[-0x3c]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_44 @ Stack[-0x44]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_48 @ Stack[-0x48]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_4c @ Stack[-0x4c]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_54 @ Stack[-0x54]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_58 @ Stack[-0x58]:4",
+            "provenance": "ghidra-function-database"
+          }
+        ]
+      },
+      "pseudocode": "\n/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */\n\nint muminblk_request(int param_1,int *param_2,int *param_3)\n\n{\n  int iVar1;\n  int iVar2;\n  uint uVar3;\n  char *pcVar4;\n  uint uVar5;\n  int iVar6;\n  int iVar7;\n  int iVar8;\n  int iVar9;\n  uint local_3c;\n  int local_38;\n  int local_34 [2];\n  \n  iVar6 = **(int **)(param_1 + 4);\n  if (iVar6 == 0) {\n    return -0x13;\n  }\n  _mutex_lock(iVar6 + 0x3c);\n  sg_init_table(param_2[5],0x80);\n  udif_bdev_map_rq(param_2);\n  iVar8 = param_2[2];\n  iVar9 = param_2[4];\n  iVar7 = param_2[5];\n  if (udif_km_debug == 0) {\n    iVar2 = kmem_cache_alloc(_DAT_0002e100,0xd0);\n    kmalloc_add_trace(iVar2,0x400,0xd0);\n  }\n  else {\n    iVar2 = __udif_kmalloc(\"mumin_sg\",0x400,0xd0);\n  }\n  local_38 = iVar2;\n  if (iVar2 == 0) {\n    printk(\"<3>%s(%4d[%s]) : Error : sg alloc failed \\n\",\"MMD_MUMINBLK\",0x86,\"muminblk_request\");\n    iVar7 = 0;\n    goto LAB_00010460;\n  }\n  local_3c = 0;\n  for (uVar5 = iVar9 << 9; uVar5 != 0; uVar5 = uVar5 - *(int *)(iVar2 + iVar1)) {\n    iVar1 = local_3c * 8;\n    uVar3 = *(uint *)(iVar7 + 8);\n    *(int *)(iVar2 + iVar1 + 4) = *(int *)(iVar7 + 0xc) + -0x40000000;\n    if (uVar5 < uVar3) {\n      *(uint *)(iVar2 + local_3c * 8) = uVar5;\n    }\n    else {\n      iVar7 = iVar7 + 0x10;\n      *(uint *)(iVar2 + local_3c * 8) = uVar3;\n    }\n    local_3c = local_3c + 1;\n  }\n  if (*param_2 == 0) {\n    iVar7 = mumin_ext_read_scts(iVar6 + 0x78,*(undefined4 *)(iVar6 + 0x78),iVar8,iVar9,&local_3c,\n                                local_34);\n    if (iVar7 == 0) {\n      if (local_34[0] == 1) {\n        for (uVar5 = 0; uVar5 < local_3c; uVar5 = uVar5 + 1) {\n          iVar8 = *(int *)(local_38 + uVar5 * 8);\n          iVar7 = *(int *)(local_38 + uVar5 * 8 + 4);\n          if (iVar7 != 0 && iVar8 != 0) {\n            ___dma_single_cpu_to_dev(iVar7,iVar8,1);\n          }\n        }\n      }\n      goto LAB_000103c0;\n    }\nLAB_000103d0:\n    printk(\"<3>%s(%4d[%s]) : Error : muminblk_transfer() failed : err = %d\\n\",\"MMD_MUMINBLK\",0xb4,\n           \"muminblk_request\",iVar7);\n    pcVar4 = \"read\";\n    if (*param_2 != 0) {\n      pcVar4 = \"write\";\n    }\n    printk(\"<3>%s(%4d[%s]) : Error : request=%s, sector = %u, nr_sects = %u, processed_sectors = %u\\n\\n\"\n           ,\"MMD_MUMINBLK\",0xb8,\"muminblk_request\",pcVar4,iVar8,iVar9,*param_3);\n    if (iVar7 == -0x10001) {\n      __bug(\"/home/jp10239/git-work/build/141H/141H.DSLR.DM_UUD3.reco.LATEST.diadem.set/Etools-NAND_131H/driver/muminblk/muminblk.c\"\n            ,0xb9);\n    }\n  }\n  else {\n    iVar7 = mumin_ext_write_scts(iVar6 + 0x78,*(undefined4 *)(iVar6 + 0x78),iVar8,iVar9,&local_3c);\n    if (iVar7 != 0) goto LAB_000103d0;\nLAB_000103c0:\n    iVar7 = 0;\n    *param_3 = iVar9;\n  }\n  if (local_38 != 0) {\n    if (udif_km_debug == 0) {\n      kfree();\n    }\n    else {\n      __udif_kfree();\n    }\n  }\nLAB_00010460:\n  udif_bdev_unmap_rq(param_2);\n  _mutex_unlock(iVar6 + 0x3c);\n  return iVar7;\n}\n\n",
+      "assembly": [
+        "0x1020c: cpy r12, sp",
+        "0x10210: stmdb sp!,{r4,r5,r6,r7,r8,r9,r10,r11,r12,lr,pc}",
+        "0x10214: sub r11, r12, #0x4",
+        "0x10218: sub sp, sp, #0x2c",
+        "0x1021c: ldr r3, [r0,#0x4]",
+        "0x10220: cpy r4, r1",
+        "0x10224: str r2, [r11,#-0x44]",
+        "0x10228: ldr r7, [r3,#0x0]",
+        "0x1022c: cmp r7, #0x0",
+        "0x10230: beq 0x00010478",
+        "0x10234: add r2, r7, #0x3c",
+        "0x10238: str r2, [r11,#-0x40]",
+        "0x1023c: cpy r0, r2",
+        "0x10240: bl 0x0002e008",
+        "0x10244: ldr r0, [r4,#0x14]",
+        "0x10248: mov r1, #0x80",
+        "0x1024c: bl 0x0002e0d8",
+        "0x10250: cpy r0, r4",
+        "0x10254: bl 0x0002e0a4",
+        "0x10258: ldr r3, [0x10484]",
+        "0x1025c: ldr r9, [r4,#0x8]",
+        "0x10260: ldr r10, [r4,#0x10]",
+        "0x10264: ldr r3, [r3,#0x0]",
+        "0x10268: ldr r8, [r4,#0x14]",
+        "0x1026c: cmp r3, #0x0",
+        "0x10270: beq 0x0001028c",
+        "0x10274: ldr r0, [0x10488]",
+        "0x10278: mov r1, #0x400",
+        "0x1027c: mov r2, #0xd0",
+        "0x10280: bl 0x0002e05c",
+        "0x10284: cpy r5, r0",
+        "0x10288: b 0x000102ac",
+        "0x1028c: ldr r3, [0x1048c]",
+        "0x10290: mov r1, #0xd0",
+        "0x10294: ldr r0, [r3,#0x3c]",
+        "0x10298: bl 0x0002e054",
+        "0x1029c: mov r1, #0x400",
+        "0x102a0: mov r2, #0xd0",
+        "0x102a4: cpy r5, r0",
+        "0x102a8: bl 0x0002e02c",
+        "0x102ac: cmp r5, #0x0",
+        "0x102b0: str r5, [r11,#-0x34]",
+        "0x102b4: movne r6, r10, lsl #0x9",
+        "0x102b8: movne r3, #0x0",
+        "0x102bc: bne 0x00010318",
+        "0x102c0: ldr r1, [0x10490]",
+        "0x102c4: mov r2, #0x86",
+        "0x102c8: ldr r3, [0x10494]",
+        "0x102cc: ldr r0, [0x10498]",
+        "0x102d0: bl 0x0002e08c",
+        "0x102d4: b 0x00010460",
+        "0x102d8: ldr r1, [r11,#-0x34]",
+        "0x102dc: mov r2, r3, lsl #0x3",
+        "0x102e0: ldr r12, [r8,#0xc]",
+        "0x102e4: add r1, r1, r2",
+        "0x102e8: ldr r0, [r8,#0x8]",
+        "0x102ec: add r12, r12, #0xc0000000",
+        "0x102f0: str r12, [r1,#0x4]",
+        "0x102f4: cmp r0, r6",
+        "0x102f8: ldr r1, [r11,#-0x34]",
+        "0x102fc: addls r8, r8, #0x10",
+        "0x10300: strhi r6, [r1,r3,lsl #0x3]",
+        "0x10304: strls r0, [r1,r3,lsl #0x3]",
+        "0x10308: add r3, r3, #0x1",
+        "0x1030c: ldr r1, [r11,#-0x34]",
+        "0x10310: ldr r2, [r1,r2]",
+        "0x10314: rsb r6, r2, r6",
+        "0x10318: cmp r6, #0x0",
+        "0x1031c: bne 0x000102d8",
+        "0x10320: sub r2, r11, #0x2c",
+        "0x10324: add r0, r7, #0x78",
+        "0x10328: str r3, [r2,#-0xc]!",
+        "0x1032c: ldr r3, [r4,#0x0]",
+        "0x10330: cmp r3, #0x0",
+        "0x10334: bne 0x000103a4",
+        "0x10338: str r2, [sp,#0x0]",
+        "0x1033c: sub r3, r11, #0x30",
+        "0x10340: cpy r2, r9",
+        "0x10344: str r3, [sp,#0x4]",
+        "0x10348: cpy r3, r10",
+        "0x1034c: ldr r1, [r7,#0x78]",
+        "0x10350: bl 0x000271a0",
+        "0x10354: subs r5, r0, #0x0",
+        "0x10358: bne 0x000103d0",
+        "0x1035c: ldr r3, [r11,#-0x30]",
+        "0x10360: cmp r3, #0x1",
+        "0x10364: bne 0x000103c0",
+        "0x10368: b 0x00010394",
+        "0x1036c: ldr r3, [r11,#-0x34]",
+        "0x10370: add r2, r3, r6, lsl #0x3",
+        "0x10374: ldr r1, [r3,r6,lsl #0x3]",
+        "0x10378: ldr r0, [r2,#0x4]",
+        "0x1037c: cmp r0, #0x0",
+        "0x10380: cmpne r1, #0x0",
+        "0x10384: beq 0x00010390",
+        "0x10388: mov r2, #0x1",
+        "0x1038c: bl 0x0002e0b0",
+        "0x10390: add r6, r6, #0x1",
+        "0x10394: ldr r3, [r11,#-0x38]",
+        "0x10398: cmp r6, r3",
+        "0x1039c: bcc 0x0001036c",
+        "0x103a0: b 0x000103c0",
+        "0x103a4: str r2, [sp,#0x0]",
+        "0x103a8: cpy r3, r10",
+        "0x103ac: ldr r1, [r7,#0x78]",
+        "0x103b0: cpy r2, r9",
+        "0x103b4: bl 0x00026e80",
+        "0x103b8: subs r5, r0, #0x0",
+        "0x103bc: bne 0x000103d0",
+        "0x103c0: ldr r3, [r11,#-0x44]",
+        "0x103c4: mov r5, #0x0",
+        "0x103c8: str r10, [r3,#0x0]",
+        "0x103cc: b 0x00010438",
+        "0x103d0: ldr r1, [0x10490]",
+        "0x103d4: mov r2, #0xb4",
+        "0x103d8: ldr r3, [0x10494]",
+        "0x103dc: ldr r0, [0x1049c]",
+        "0x103e0: str r5, [sp,#0x0]",
+        "0x103e4: bl 0x0002e08c",
+        "0x103e8: ldr r1, [r4,#0x0]",
+        "0x103ec: ldr r2, [0x104a0]",
+        "0x103f0: cmp r1, #0x0",
+        "0x103f4: ldr r3, [0x104a4]",
+        "0x103f8: cpyne r3, r2",
+        "0x103fc: ldr r2, [r11,#-0x44]",
+        "0x10400: ldr r0, [0x104a8]",
+        "0x10404: stmia sp,{r3,r9,r10}",
+        "0x10408: ldr r3, [r2,#0x0]",
+        "0x1040c: mov r2, #0xb8",
+        "0x10410: ldr r1, [0x10490]",
+        "0x10414: str r3, [sp,#0xc]",
+        "0x10418: ldr r3, [0x10494]",
+        "0x1041c: bl 0x0002e08c",
+        "0x10420: mvn r3, #0x10000",
+        "0x10424: cmp r5, r3",
+        "0x10428: bne 0x00010438",
+        "0x1042c: ldr r0, [0x104ac]",
+        "0x10430: mov r1, #0xb9",
+        "0x10434: bl 0x0002e040",
+        "0x10438: ldr r0, [r11,#-0x34]",
+        "0x1043c: cmp r0, #0x0",
+        "0x10440: beq 0x00010460",
+        "0x10444: ldr r3, [0x10484]",
+        "0x10448: ldr r3, [r3,#0x0]",
+        "0x1044c: cmp r3, #0x0",
+        "0x10450: beq 0x0001045c",
+        "0x10454: bl 0x0002e000",
+        "0x10458: b 0x00010460",
+        "0x1045c: bl 0x0002e028",
+        "0x10460: cpy r0, r4",
+        "0x10464: bl 0x0002e098",
+        "0x10468: ldr r0, [r11,#-0x40]",
+        "0x1046c: bl 0x0002e0b8",
+        "0x10470: cpy r0, r5",
+        "0x10474: b 0x0001047c",
+        "0x10478: mvn r0, #0x12",
+        "0x1047c: sub sp, r11, #0x28",
+        "0x10480: ldmia sp,{r4,r5,r6,r7,r8,r9,r10,r11,sp,pc}"
+      ],
+      "callees": [
+        "mumin_ext_write_scts",
+        "mumin_ext_read_scts",
+        "<EXTERNAL>::__udif_kfree",
+        "<EXTERNAL>::_mutex_lock",
+        "<EXTERNAL>::kfree",
+        "<EXTERNAL>::kmalloc_add_trace",
+        "<EXTERNAL>::__bug",
+        "<EXTERNAL>::kmem_cache_alloc",
+        "<EXTERNAL>::__udif_kmalloc",
+        "<EXTERNAL>::printk",
+        "<EXTERNAL>::udif_bdev_unmap_rq",
+        "<EXTERNAL>::udif_bdev_map_rq",
+        "<EXTERNAL>::___dma_single_cpu_to_dev",
+        "<EXTERNAL>::_mutex_unlock",
+        "<EXTERNAL>::sg_init_table"
+      ]
+    }
+  },
+  {
+    "name": "nand_ioc_pwrite_normal",
+    "id": "ev_2c037d87785057d207cff959c4bc6a7c9c11e06ef645b5e2caae1e5a38c31ac0",
+    "sha256": "2169b84deee1a424539255affbdff499c4094e0913eeefe49339f3d47cbe6faa",
+    "result": {
+      "procedure": {
+        "address": "0x284bc",
+        "name": "nand_ioc_pwrite_normal",
+        "classification": {
+          "external": false,
+          "thunk": false,
+          "thunk_target": null,
+          "provenance": "ghidra-function-manager"
+        },
+        "body": {
+          "available": true,
+          "provenance": "ghidra-function-body-address-set",
+          "ranges": [
+            {
+              "start": "0x284bc",
+              "end": "0x28623"
+            }
+          ],
+          "total_bytes": 360,
+          "span_bytes": 360,
+          "non_contiguous": false,
+          "contains_entry": true
+        },
+        "signature": "undefined nand_ioc_pwrite_normal()",
+        "locals": [
+          {
+            "description": "undefined4 local_30 @ Stack[-0x30]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_34 @ Stack[-0x34]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_38 @ Stack[-0x38]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_3c @ Stack[-0x3c]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_40 @ Stack[-0x40]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_44 @ Stack[-0x44]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_48 @ Stack[-0x48]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_4c @ Stack[-0x4c]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_50 @ Stack[-0x50]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_54 @ Stack[-0x54]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_58 @ Stack[-0x58]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_5c @ Stack[-0x5c]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_60 @ Stack[-0x60]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_64 @ Stack[-0x64]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_68 @ Stack[-0x68]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_6c @ Stack[-0x6c]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_70 @ Stack[-0x70]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_74 @ Stack[-0x74]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_80 @ Stack[-0x80]:4",
+            "provenance": "ghidra-function-database"
+          }
+        ]
+      },
+      "pseudocode": "\nundefined4 nand_ioc_pwrite_normal(int param_1,uint param_2)\n\n{\n  uint uVar1;\n  uint uVar2;\n  uint uVar3;\n  int iVar4;\n  undefined4 uVar5;\n  void *__dest;\n  void *local_80;\n  int iStack_7c;\n  int local_74;\n  undefined4 local_70;\n  undefined4 local_6c;\n  undefined4 local_68;\n  undefined4 local_64;\n  uint local_60;\n  uint local_5c;\n  void *local_58;\n  void *local_54;\n  undefined4 local_50;\n  undefined4 local_4c;\n  undefined4 local_48;\n  size_t local_44;\n  void *local_40;\n  undefined4 local_3c;\n  size_t *local_38;\n  undefined4 *local_34;\n  undefined4 local_30;\n  undefined1 auStack_2c [8];\n  \n  uVar3 = *(uint *)(((uint)&local_80 & 0xffffe000) + 8);\n  uVar1 = param_2 + 0x24;\n  uVar2 = uVar1;\n  if (param_2 < 0xffffffdc) {\n    uVar2 = uVar1 - (uVar3 + 1);\n  }\n  if (param_2 < 0xffffffdc && uVar1 <= uVar3) {\n    uVar3 = 0;\n  }\n  if (uVar3 == 0) {\n    iStack_7c = __copy_from_user(&local_74,param_2,0x24);\n    uVar2 = local_5c;\n    if (iStack_7c == 0) {\n      local_34 = &local_50;\n      local_50 = local_70;\n      local_4c = local_6c;\n      local_48 = local_68;\n      local_30 = local_64;\n      local_38 = &local_44;\n      local_3c = 1;\n      iVar4 = *(int *)(*(int *)(param_1 + 0x6c) + 0x10);\n      if ((*(uint *)(iVar4 + 0x4c) < local_5c) || (*(uint *)(iVar4 + 0x54) < local_60)) {\n        return 0xfffffffb;\n      }\n      local_44 = local_5c * local_60;\n      local_40 = *(void **)(param_1 + 0x70);\n      __dest = *(void **)(param_1 + 0x74);\n      memcpy(local_40,local_58,local_44);\n      memcpy(__dest,local_54,local_5c << 3);\n      local_80 = __dest;\n      local_74 = mumin_devif_write_pages_in_pblk(&local_34,uVar2,auStack_2c,&local_3c);\n      uVar2 = *(uint *)(((uint)&local_80 & 0xffffe000) + 8);\n      if (local_74 == 0) {\n        uVar5 = 0;\n      }\n      else {\n        uVar5 = 0xfffffffb;\n      }\n      if (param_2 < 0xffffffdc && param_2 + 0x24 <= uVar2) {\n        uVar2 = 0;\n      }\n      if (uVar2 == 0) {\n        iVar4 = __copy_to_user(param_2,&local_74,0x24);\n        if (iVar4 == 0) {\n          return uVar5;\n        }\n        return 0xfffffff2;\n      }\n    }\n  }\n  else {\n    __memzero(&local_74,0x24,uVar2);\n  }\n  return 0xfffffff2;\n}\n\n",
+      "assembly": [
+        "0x284bc: cpy r12, sp",
+        "0x284c0: stmdb sp!,{r4,r5,r6,r7,r8,r11,r12,lr,pc}",
+        "0x284c4: sub r11, r12, #0x4",
+        "0x284c8: sub sp, sp, #0x5c",
+        "0x284cc: cpy r3, sp",
+        "0x284d0: cpy r7, r0",
+        "0x284d4: bic r5, r3, #0x1fc0",
+        "0x284d8: cpy r4, r1",
+        "0x284dc: bic r5, r5, #0x3f",
+        "0x284e0: ldr r3, [r5,#0x8]",
+        "0x284e4: adds r2, r1, #0x24",
+        "0x284e8: sbcscc r2, r2, r3",
+        "0x284ec: movcc r3, #0x0",
+        "0x284f0: cmp r3, #0x0",
+        "0x284f4: bne 0x00028510",
+        "0x284f8: sub r0, r11, #0x70",
+        "0x284fc: mov r2, #0x24",
+        "0x28500: bl 0x0002e0d4",
+        "0x28504: subs r8, r0, #0x0",
+        "0x28508: bne 0x00028614",
+        "0x2850c: b 0x00028520",
+        "0x28510: sub r0, r11, #0x70",
+        "0x28514: mov r1, #0x24",
+        "0x28518: bl 0x0002e0a0",
+        "0x2851c: b 0x00028614",
+        "0x28520: sub r3, r11, #0x4c",
+        "0x28524: str r3, [r11,#-0x30]",
+        "0x28528: ldr r3, [r11,#-0x6c]",
+        "0x2852c: ldr r6, [r11,#-0x58]",
+        "0x28530: str r3, [r11,#-0x4c]",
+        "0x28534: ldr r3, [r11,#-0x68]",
+        "0x28538: str r3, [r11,#-0x48]",
+        "0x2853c: ldr r3, [r11,#-0x64]",
+        "0x28540: str r3, [r11,#-0x44]",
+        "0x28544: ldr r3, [r11,#-0x60]",
+        "0x28548: str r3, [r11,#-0x2c]",
+        "0x2854c: sub r3, r11, #0x40",
+        "0x28550: str r3, [r11,#-0x34]",
+        "0x28554: mov r3, #0x1",
+        "0x28558: str r3, [r11,#-0x38]",
+        "0x2855c: ldr r3, [r7,#0x6c]",
+        "0x28560: ldr r3, [r3,#0x10]",
+        "0x28564: ldr r2, [r3,#0x4c]",
+        "0x28568: cmp r6, r2",
+        "0x2856c: bhi 0x0002860c",
+        "0x28570: ldr r2, [r11,#-0x5c]",
+        "0x28574: ldr r3, [r3,#0x54]",
+        "0x28578: cmp r2, r3",
+        "0x2857c: bhi 0x0002860c",
+        "0x28580: mul r2, r6, r2",
+        "0x28584: ldr r0, [r7,#0x70]",
+        "0x28588: ldr r1, [r11,#-0x54]",
+        "0x2858c: ldr r7, [r7,#0x74]",
+        "0x28590: str r0, [r11,#-0x3c]",
+        "0x28594: str r2, [r11,#-0x40]",
+        "0x28598: bl 0x0002e024",
+        "0x2859c: ldr r2, [r11,#-0x58]",
+        "0x285a0: cpy r0, r7",
+        "0x285a4: ldr r1, [r11,#-0x50]",
+        "0x285a8: mov r2, r2, lsl #0x3",
+        "0x285ac: bl 0x0002e024",
+        "0x285b0: cpy r1, r6",
+        "0x285b4: sub r2, r11, #0x28",
+        "0x285b8: sub r3, r11, #0x38",
+        "0x285bc: sub r0, r11, #0x30",
+        "0x285c0: stmia sp,{r7,r8}",
+        "0x285c4: bl 0x0002e078",
+        "0x285c8: ldr r3, [r5,#0x8]",
+        "0x285cc: cmp r0, #0x0",
+        "0x285d0: str r0, [r11,#-0x70]",
+        "0x285d4: cpyeq r6, r0",
+        "0x285d8: mvnne r6, #0x4",
+        "0x285dc: adds r2, r4, #0x24",
+        "0x285e0: sbcscc r2, r2, r3",
+        "0x285e4: movcc r3, #0x0",
+        "0x285e8: cmp r3, #0x0",
+        "0x285ec: bne 0x00028614",
+        "0x285f0: cpy r0, r4",
+        "0x285f4: sub r1, r11, #0x70",
+        "0x285f8: mov r2, #0x24",
+        "0x285fc: bl 0x0002e0cc",
+        "0x28600: cmp r0, #0x0",
+        "0x28604: mvnne r6, #0xd",
+        "0x28608: b 0x00028618",
+        "0x2860c: mvn r6, #0x4",
+        "0x28610: b 0x00028618",
+        "0x28614: mvn r6, #0xd",
+        "0x28618: cpy r0, r6",
+        "0x2861c: sub sp, r11, #0x20",
+        "0x28620: ldmia sp,{r4,r5,r6,r7,r8,r11,sp,pc}"
+      ],
+      "callees": [
+        "<EXTERNAL>::memcpy",
+        "<EXTERNAL>::mumin_devif_write_pages_in_pblk",
+        "<EXTERNAL>::__memzero",
+        "<EXTERNAL>::__copy_to_user",
+        "<EXTERNAL>::__copy_from_user"
+      ]
+    }
+  },
+  {
+    "name": "nand_ioc_lerase",
+    "id": "ev_32fc30013b7786d1a1557be2c9991fa37f020301a0915b08f9b30e12cf9ee5af",
+    "sha256": "2169b84deee1a424539255affbdff499c4094e0913eeefe49339f3d47cbe6faa",
+    "result": {
+      "procedure": {
+        "address": "0x28624",
+        "name": "nand_ioc_lerase",
+        "classification": {
+          "external": false,
+          "thunk": false,
+          "thunk_target": null,
+          "provenance": "ghidra-function-manager"
+        },
+        "body": {
+          "available": true,
+          "provenance": "ghidra-function-body-address-set",
+          "ranges": [
+            {
+              "start": "0x28624",
+              "end": "0x286eb"
+            }
+          ],
+          "total_bytes": 200,
+          "span_bytes": 200,
+          "non_contiguous": false,
+          "contains_entry": true
+        },
+        "signature": "undefined nand_ioc_lerase()",
+        "locals": [
+          {
+            "description": "undefined4 local_24 @ Stack[-0x24]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_28 @ Stack[-0x28]:4",
+            "provenance": "ghidra-function-database"
+          }
+        ]
+      },
+      "pseudocode": "\nundefined4 nand_ioc_lerase(int param_1,uint param_2)\n\n{\n  int iVar1;\n  uint uVar2;\n  uint uVar3;\n  uint uVar4;\n  undefined4 uVar5;\n  int local_28;\n  undefined4 local_24;\n  \n  uVar4 = *(uint *)(((uint)&local_28 & 0xffffe000) + 8);\n  uVar2 = param_2 + 8;\n  uVar3 = uVar2;\n  if (param_2 < 0xfffffff8) {\n    uVar3 = uVar2 - (uVar4 + 1);\n  }\n  if (param_2 < 0xfffffff8 && uVar2 <= uVar4) {\n    uVar4 = 0;\n  }\n  if (uVar4 == 0) {\n    iVar1 = __copy_from_user(&local_28,param_2,8);\n    if (iVar1 == 0) {\n      local_28 = mumin_ext_erase_lblk(param_1 + 0x78,*(undefined4 *)(param_1 + 0x34),local_24);\n      uVar3 = *(uint *)(((uint)&local_28 & 0xffffe000) + 8);\n      if (local_28 == 0) {\n        uVar5 = 0;\n      }\n      else {\n        uVar5 = 0xfffffffb;\n      }\n      if (param_2 < 0xfffffff8 && param_2 + 8 <= uVar3) {\n        uVar3 = 0;\n      }\n      if (uVar3 == 0) {\n        iVar1 = __copy_to_user(param_2,&local_28,8);\n        if (iVar1 == 0) {\n          return uVar5;\n        }\n        return 0xfffffff2;\n      }\n    }\n  }\n  else {\n    __memzero(&local_28,8,uVar3);\n  }\n  return 0xfffffff2;\n}\n\n",
+      "assembly": [
+        "0x28624: cpy r12, sp",
+        "0x28628: stmdb sp!,{r4,r5,r6,r11,r12,lr,pc}",
+        "0x2862c: sub r11, r12, #0x4",
+        "0x28630: sub sp, sp, #0xc",
+        "0x28634: cpy r3, sp",
+        "0x28638: cpy r4, r0",
+        "0x2863c: bic r6, r3, #0x1fc0",
+        "0x28640: cpy r5, r1",
+        "0x28644: bic r6, r6, #0x3f",
+        "0x28648: ldr r3, [r6,#0x8]",
+        "0x2864c: adds r2, r1, #0x8",
+        "0x28650: sbcscc r2, r2, r3",
+        "0x28654: movcc r3, #0x0",
+        "0x28658: cmp r3, #0x0",
+        "0x2865c: bne 0x00028678",
+        "0x28660: sub r0, r11, #0x24",
+        "0x28664: mov r2, #0x8",
+        "0x28668: bl 0x0002e0d4",
+        "0x2866c: cmp r0, #0x0",
+        "0x28670: bne 0x000286dc",
+        "0x28674: b 0x00028688",
+        "0x28678: sub r0, r11, #0x24",
+        "0x2867c: mov r1, #0x8",
+        "0x28680: bl 0x0002e0a0",
+        "0x28684: b 0x000286dc",
+        "0x28688: add r0, r4, #0x78",
+        "0x2868c: ldr r1, [r4,#0x34]",
+        "0x28690: ldr r2, [r11,#-0x20]",
+        "0x28694: bl 0x00027b60",
+        "0x28698: ldr r3, [r6,#0x8]",
+        "0x2869c: cmp r0, #0x0",
+        "0x286a0: str r0, [r11,#-0x24]",
+        "0x286a4: cpyeq r4, r0",
+        "0x286a8: mvnne r4, #0x4",
+        "0x286ac: adds r2, r5, #0x8",
+        "0x286b0: sbcscc r2, r2, r3",
+        "0x286b4: movcc r3, #0x0",
+        "0x286b8: cmp r3, #0x0",
+        "0x286bc: bne 0x000286dc",
+        "0x286c0: cpy r0, r5",
+        "0x286c4: sub r1, r11, #0x24",
+        "0x286c8: mov r2, #0x8",
+        "0x286cc: bl 0x0002e0cc",
+        "0x286d0: cmp r0, #0x0",
+        "0x286d4: mvnne r4, #0xd",
+        "0x286d8: b 0x000286e0",
+        "0x286dc: mvn r4, #0xd",
+        "0x286e0: cpy r0, r4",
+        "0x286e4: sub sp, r11, #0x18",
+        "0x286e8: ldmia sp,{r4,r5,r6,r11,sp,pc}"
+      ],
+      "callees": [
+        "mumin_ext_erase_lblk",
+        "<EXTERNAL>::__memzero",
+        "<EXTERNAL>::__copy_to_user",
+        "<EXTERNAL>::__copy_from_user"
+      ]
+    }
+  },
+  {
+    "name": "mumin_ext_write_scts",
+    "id": "ev_2d17be7b5750fe93c7ff60b9949a478bf04878cc5818a013093883896a6ac50a",
+    "sha256": "2169b84deee1a424539255affbdff499c4094e0913eeefe49339f3d47cbe6faa",
+    "result": {
+      "procedure": {
+        "address": "0x26e80",
+        "name": "mumin_ext_write_scts",
+        "classification": {
+          "external": false,
+          "thunk": false,
+          "thunk_target": null,
+          "provenance": "ghidra-function-manager"
+        },
+        "body": {
+          "available": true,
+          "provenance": "ghidra-function-body-address-set",
+          "ranges": [
+            {
+              "start": "0x26e80",
+              "end": "0x2717b"
+            }
+          ],
+          "total_bytes": 764,
+          "span_bytes": 764,
+          "non_contiguous": false,
+          "contains_entry": true
+        },
+        "signature": "undefined mumin_ext_write_scts()",
+        "locals": [
+          {
+            "description": "undefined4 local_34 @ Stack[-0x34]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_38 @ Stack[-0x38]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_3c @ Stack[-0x3c]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_40 @ Stack[-0x40]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_44 @ Stack[-0x44]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_48 @ Stack[-0x48]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_7c @ Stack[-0x7c]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_80 @ Stack[-0x80]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_84 @ Stack[-0x84]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_88 @ Stack[-0x88]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_8c @ Stack[-0x8c]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_98 @ Stack[-0x98]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_9c @ Stack[-0x9c]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_a0 @ Stack[-0xa0]:4",
+            "provenance": "ghidra-function-database"
+          }
+        ]
+      },
+      "pseudocode": "\nint mumin_ext_write_scts(int param_1,undefined4 param_2,int param_3,uint param_4,uint *param_5)\n\n{\n  int iVar1;\n  int iVar2;\n  undefined4 uVar3;\n  int iVar4;\n  uint uVar5;\n  void *__dest;\n  int iVar6;\n  uint uVar7;\n  size_t __n;\n  uint uVar8;\n  uint local_7c;\n  undefined1 auStack_78 [24];\n  undefined1 auStack_60 [24];\n  undefined4 local_48;\n  int local_44;\n  int local_40;\n  int local_3c;\n  undefined4 local_38;\n  int local_34 [2];\n  \n  if (*(int *)(param_1 + 0x58) == 0) {\n    printk(\"%s : \",\"mumin_ext_write_scts\");\n    printk(\"Err : \");\n    printk(\"stat %d\\n\",*(undefined4 *)(param_1 + 0x58));\n    iVar6 = -0x10005;\n  }\n  else {\n    uVar5 = 1 - param_4;\n    if (1 < param_4) {\n      uVar5 = 0;\n    }\n    if (*(uint *)(param_1 + 0x54) < param_4 + param_3) {\n      uVar5 = uVar5 | 1;\n    }\n    iVar6 = param_3;\n    local_7c = param_4;\n    if (uVar5 == 0) {\n      do {\n        mumin_cmn_get_offset_sgbuf(0x200,iVar6 - param_3,param_5,auStack_60);\n        FUN_00026bb8(param_1,iVar6,local_7c,&local_3c,local_34,&local_38,&local_40);\n        iVar2 = local_34[0];\n        uVar3 = local_38;\n        iVar1 = local_40;\n        if (local_3c == 0) {\n          local_48 = *(undefined4 *)(param_1 + 0xc);\n          local_44 = *(int *)(param_1 + 0x10);\n          if ((*(int *)(param_1 + 4) == 0) || (local_34[0] != *(int *)(param_1 + 8))) {\n            mumin_ext_check_obsolete_data_cache_and_invalid\n                      (param_1,local_34[0] * *(int *)(param_1 + 0x44));\n            *(undefined4 *)(param_1 + 4) = 0;\n            iVar4 = mumin_read_ltus(param_2,iVar2,1,&local_48);\n            if (iVar4 == 0) {\n              *(int *)(param_1 + 8) = iVar2;\n              *(undefined4 *)(param_1 + 4) = 1;\n              goto LAB_00027034;\n            }\n          }\n          else {\nLAB_00027034:\n            mumin_cmn_get_offset_sgbuf(0x200,uVar3,&local_48,auStack_78);\n            uVar5 = iVar1 * 0x200;\n            uVar7 = 0;\n            __dest = *(void **)(local_44 + 4);\n            for (uVar8 = 0; uVar8 < *param_5; uVar8 = uVar8 + 1) {\n              __n = *(size_t *)(param_5[1] + uVar8 * 8);\n              if (uVar5 < uVar7 + __n) {\n                __n = uVar5 - uVar7;\n              }\n              uVar7 = uVar7 + __n;\n              memcpy(__dest,*(void **)(param_5[1] + uVar8 * 8 + 4),__n);\n              if (uVar5 <= uVar7) break;\n              __dest = (void *)((int)__dest + __n);\n            }\n            mumin_cmn_restore_sgbuf(&local_48,auStack_78);\n            iVar4 = __mumin_write_ltus(param_2,iVar2,1,&local_48);\n            if (iVar4 == 0) goto LAB_00027120;\n          }\n          printk(\"%s : \",\"mumin_ext_s_read_modify_write_ltu\");\n          printk(\"Err : \");\n          printk(\"ret=0x%08x\\n\",-iVar4);\n          mumin_ext_check_obsolete_data_cache_and_invalid(param_1,iVar2 * *(int *)(param_1 + 0x44));\n        }\n        else {\n          mumin_ext_check_obsolete_data_cache_and_invalid\n                    (param_1,local_34[0] * *(int *)(param_1 + 0x44),local_40);\n          uVar3 = __aeabi_uidiv(local_40,*(undefined4 *)(param_1 + 0x44));\n          iVar4 = __mumin_write_ltus(param_2,local_34[0],uVar3,param_5);\n        }\nLAB_00027120:\n        mumin_cmn_restore_sgbuf(param_5,auStack_60);\n        if (iVar4 != 0) {\n          printk(\"%s : \",\"mumin_ext_write_scts\");\n          printk(\"Err : \");\n          printk(\"ret=0x%08x\\n\",-iVar4);\n          return iVar4;\n        }\n        local_7c = local_7c - local_40;\n        if (local_7c == 0) {\n          return 0;\n        }\n        iVar6 = iVar6 + local_40;\n      } while( true );\n    }\n    printk(\"%s : \",\"mumin_ext_write_scts\");\n    printk(\"Err : \");\n    printk(\"start_sct=%d num_of_scts=%d\\n\",param_3,param_4);\n    iVar6 = -0x10002;\n  }\n  return iVar6;\n}\n\n",
+      "assembly": [
+        "0x26e80: cpy r12, sp",
+        "0x26e84: stmdb sp!,{r4,r5,r6,r7,r8,r9,r10,r11,r12,lr,pc}",
+        "0x26e88: sub r11, r12, #0x4",
+        "0x26e8c: sub sp, sp, #0x74",
+        "0x26e90: cpy r5, r3",
+        "0x26e94: ldr r3, [r0,#0x58]",
+        "0x26e98: cpy r4, r0",
+        "0x26e9c: str r1, [r11,#-0x80]",
+        "0x26ea0: cmp r3, #0x0",
+        "0x26ea4: str r2, [r11,#-0x7c]",
+        "0x26ea8: ldr r6, [r11,#0x4]",
+        "0x26eac: bne 0x00026ed8",
+        "0x26eb0: ldr r1, [0x2717c]",
+        "0x26eb4: ldr r0, [0x27180]",
+        "0x26eb8: bl 0x0002e08c",
+        "0x26ebc: ldr r0, [0x27184]",
+        "0x26ec0: bl 0x0002e08c",
+        "0x26ec4: ldr r0, [0x27188]",
+        "0x26ec8: ldr r1, [r4,#0x58]",
+        "0x26ecc: bl 0x0002e08c",
+        "0x26ed0: ldr r7, [0x2718c]",
+        "0x26ed4: b 0x00027170",
+        "0x26ed8: ldr r2, [r11,#-0x7c]",
+        "0x26edc: ldr r3, [r0,#0x54]",
+        "0x26ee0: add r1, r5, r2",
+        "0x26ee4: rsbs r2, r5, #0x1",
+        "0x26ee8: movcc r2, #0x0",
+        "0x26eec: cmp r1, r3",
+        "0x26ef0: cpyls r3, r2",
+        "0x26ef4: orrhi r3, r2, #0x1",
+        "0x26ef8: cmp r3, #0x0",
+        "0x26efc: streq r5, [r11,#-0x78]",
+        "0x26f00: ldreq r9, [r11,#-0x7c]",
+        "0x26f04: beq 0x00026f34",
+        "0x26f08: ldr r1, [0x2717c]",
+        "0x26f0c: ldr r0, [0x27180]",
+        "0x26f10: bl 0x0002e08c",
+        "0x26f14: ldr r0, [0x27184]",
+        "0x26f18: bl 0x0002e08c",
+        "0x26f1c: ldr r0, [0x27190]",
+        "0x26f20: ldr r1, [r11,#-0x7c]",
+        "0x26f24: cpy r2, r5",
+        "0x26f28: bl 0x0002e08c",
+        "0x26f2c: ldr r7, [0x27194]",
+        "0x26f30: b 0x00027170",
+        "0x26f34: ldr r3, [r11,#-0x7c]",
+        "0x26f38: mov r0, #0x200",
+        "0x26f3c: cpy r2, r6",
+        "0x26f40: rsb r1, r3, r9",
+        "0x26f44: sub r3, r11, #0x5c",
+        "0x26f48: bl 0x00014cd0",
+        "0x26f4c: sub r3, r11, #0x30",
+        "0x26f50: cpy r0, r4",
+        "0x26f54: str r3, [sp,#0x0]",
+        "0x26f58: cpy r1, r9",
+        "0x26f5c: sub r3, r11, #0x34",
+        "0x26f60: ldr r2, [r11,#-0x78]",
+        "0x26f64: str r3, [sp,#0x4]",
+        "0x26f68: sub r3, r11, #0x3c",
+        "0x26f6c: str r3, [sp,#0x8]",
+        "0x26f70: sub r3, r11, #0x38",
+        "0x26f74: bl 0x00026bb8",
+        "0x26f78: ldr r3, [r11,#-0x38]",
+        "0x26f7c: ldr r5, [r11,#-0x30]",
+        "0x26f80: cmp r3, #0x0",
+        "0x26f84: beq 0x00026fc4",
+        "0x26f88: ldr r1, [r4,#0x44]",
+        "0x26f8c: cpy r0, r4",
+        "0x26f90: ldr r2, [r11,#-0x3c]",
+        "0x26f94: mul r1, r5, r1",
+        "0x26f98: bl 0x00026d3c",
+        "0x26f9c: ldr r1, [r4,#0x44]",
+        "0x26fa0: ldr r0, [r11,#-0x3c]",
+        "0x26fa4: bl 0x0002e0a8",
+        "0x26fa8: ldr r1, [r11,#-0x30]",
+        "0x26fac: cpy r3, r6",
+        "0x26fb0: cpy r2, r0",
+        "0x26fb4: ldr r0, [r11,#-0x80]",
+        "0x26fb8: bl 0x000139fc",
+        "0x26fbc: cpy r7, r0",
+        "0x26fc0: b 0x00027120",
+        "0x26fc4: add r2, r4, #0xc",
+        "0x26fc8: sub r3, r11, #0x44",
+        "0x26fcc: ldr r8, [r11,#-0x34]",
+        "0x26fd0: ldmia r2,{r0,r1}",
+        "0x26fd4: ldr r10, [r11,#-0x3c]",
+        "0x26fd8: stmia r3,{r0,r1}",
+        "0x26fdc: ldr r3, [r4,#0x4]",
+        "0x26fe0: cmp r3, #0x0",
+        "0x26fe4: beq 0x00026ff4",
+        "0x26fe8: ldr r3, [r4,#0x8]",
+        "0x26fec: cmp r5, r3",
+        "0x26ff0: beq 0x00027034",
+        "0x26ff4: ldr r2, [r4,#0x44]",
+        "0x26ff8: cpy r0, r4",
+        "0x26ffc: mul r1, r5, r2",
+        "0x27000: bl 0x00026d3c",
+        "0x27004: mov r3, #0x0",
+        "0x27008: ldr r0, [r11,#-0x80]",
+        "0x2700c: cpy r1, r5",
+        "0x27010: str r3, [r4,#0x4]",
+        "0x27014: mov r2, #0x1",
+        "0x27018: sub r3, r11, #0x44",
+        "0x2701c: bl 0x00013b3c",
+        "0x27020: subs r7, r0, #0x0",
+        "0x27024: streq r5, [r4,#0x8]",
+        "0x27028: moveq r3, #0x1",
+        "0x2702c: streq r3, [r4,#0x4]",
+        "0x27030: bne 0x000270f0",
+        "0x27034: sub r3, r11, #0x74",
+        "0x27038: mov r0, #0x200",
+        "0x2703c: cpy r1, r8",
+        "0x27040: sub r2, r11, #0x44",
+        "0x27044: bl 0x00014cd0",
+        "0x27048: ldr r3, [r11,#-0x40]",
+        "0x2704c: mov r12, r10, lsl #0x9",
+        "0x27050: mov r7, #0x0",
+        "0x27054: str r9, [r11,#-0x84]",
+        "0x27058: cpy r10, r7",
+        "0x2705c: ldr r3, [r3,#0x4]",
+        "0x27060: cpy r9, r5",
+        "0x27064: str r4, [r11,#-0x88]",
+        "0x27068: cpy r4, r12",
+        "0x2706c: cpy r5, r3",
+        "0x27070: b 0x000270b0",
+        "0x27074: ldr r1, [r6,#0x4]",
+        "0x27078: cpy r0, r5",
+        "0x2707c: add r2, r1, r10, lsl #0x3",
+        "0x27080: ldr r8, [r1,r10,lsl #0x3]",
+        "0x27084: add r1, r7, r8",
+        "0x27088: cmp r1, r4",
+        "0x2708c: ldr r1, [r2,#0x4]",
+        "0x27090: rsbhi r8, r7, r4",
+        "0x27094: cpy r2, r8",
+        "0x27098: add r7, r7, r8",
+        "0x2709c: bl 0x0002e024",
+        "0x270a0: cmp r7, r4",
+        "0x270a4: bcs 0x000270bc",
+        "0x270a8: add r5, r5, r8",
+        "0x270ac: add r10, r10, #0x1",
+        "0x270b0: ldr r2, [r6,#0x0]",
+        "0x270b4: cmp r10, r2",
+        "0x270b8: bcc 0x00027074",
+        "0x270bc: cpy r5, r9",
+        "0x270c0: sub r0, r11, #0x44",
+        "0x270c4: sub r1, r11, #0x74",
+        "0x270c8: ldr r4, [r11,#-0x88]",
+        "0x270cc: ldr r9, [r11,#-0x84]",
+        "0x270d0: bl 0x00014dd0",
+        "0x270d4: ldr r0, [r11,#-0x80]",
+        "0x270d8: cpy r1, r5",
+        "0x270dc: mov r2, #0x1",
+        "0x270e0: sub r3, r11, #0x44",
+        "0x270e4: bl 0x000139fc",
+        "0x270e8: subs r7, r0, #0x0",
+        "0x270ec: beq 0x00027120",
+        "0x270f0: ldr r1, [0x27198]",
+        "0x270f4: ldr r0, [0x27180]",
+        "0x270f8: bl 0x0002e08c",
+        "0x270fc: ldr r0, [0x27184]",
+        "0x27100: bl 0x0002e08c",
+        "0x27104: rsb r1, r7, #0x0",
+        "0x27108: ldr r0, [0x2719c]",
+        "0x2710c: bl 0x0002e08c",
+        "0x27110: ldr r2, [r4,#0x44]",
+        "0x27114: cpy r0, r4",
+        "0x27118: mul r1, r5, r2",
+        "0x2711c: bl 0x00026d3c",
+        "0x27120: cpy r0, r6",
+        "0x27124: sub r1, r11, #0x5c",
+        "0x27128: bl 0x00014dd0",
+        "0x2712c: cmp r7, #0x0",
+        "0x27130: beq 0x00027158",
+        "0x27134: ldr r1, [0x2717c]",
+        "0x27138: ldr r0, [0x27180]",
+        "0x2713c: bl 0x0002e08c",
+        "0x27140: ldr r0, [0x27184]",
+        "0x27144: bl 0x0002e08c",
+        "0x27148: rsb r1, r7, #0x0",
+        "0x2714c: ldr r0, [0x2719c]",
+        "0x27150: bl 0x0002e08c",
+        "0x27154: b 0x00027170",
+        "0x27158: ldr r2, [r11,#-0x78]",
+        "0x2715c: ldr r3, [r11,#-0x3c]",
+        "0x27160: subs r2, r2, r3",
+        "0x27164: str r2, [r11,#-0x78]",
+        "0x27168: addne r9, r9, r3",
+        "0x2716c: bne 0x00026f34",
+        "0x27170: cpy r0, r7",
+        "0x27174: sub sp, r11, #0x28",
+        "0x27178: ldmia sp,{r4,r5,r6,r7,r8,r9,r10,r11,sp,pc}"
+      ],
+      "callees": [
+        "__mumin_write_ltus",
+        "mumin_read_ltus",
+        "mumin_cmn_get_offset_sgbuf",
+        "mumin_cmn_restore_sgbuf",
+        "FUN_00026bb8",
+        "mumin_ext_check_obsolete_data_cache_and_invalid",
+        "<EXTERNAL>::memcpy",
+        "<EXTERNAL>::printk",
+        "<EXTERNAL>::__aeabi_uidiv"
+      ]
+    }
+  },
+  {
+    "name": "mumin_pbm_write_vpages",
+    "id": "ev_104165a1df21254a444a40d0c242cd0f3748a318621c650710c5d0ff7b99095d",
+    "sha256": "2169b84deee1a424539255affbdff499c4094e0913eeefe49339f3d47cbe6faa",
+    "result": {
+      "procedure": {
+        "address": "0x21ba8",
+        "name": "mumin_pbm_write_vpages",
+        "classification": {
+          "external": false,
+          "thunk": false,
+          "thunk_target": null,
+          "provenance": "ghidra-function-manager"
+        },
+        "body": {
+          "available": true,
+          "provenance": "ghidra-function-body-address-set",
+          "ranges": [
+            {
+              "start": "0x21ba8",
+              "end": "0x21bfb"
+            }
+          ],
+          "total_bytes": 84,
+          "span_bytes": 84,
+          "non_contiguous": false,
+          "contains_entry": true
+        },
+        "signature": "undefined mumin_pbm_write_vpages()",
+        "locals": [
+          {
+            "description": "undefined4 local_18 @ Stack[-0x18]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_1c @ Stack[-0x1c]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_20 @ Stack[-0x20]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_24 @ Stack[-0x24]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_28 @ Stack[-0x28]:4",
+            "provenance": "ghidra-function-database"
+          }
+        ]
+      },
+      "pseudocode": "\nvoid mumin_pbm_write_vpages\n               (undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,\n               undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8)\n\n{\n  FUN_0001fa44(param_1,1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);\n  return;\n}\n\n",
+      "assembly": [
+        "0x21ba8: cpy r12, sp",
+        "0x21bac: stmdb sp!,{r11,r12,lr,pc}",
+        "0x21bb0: sub r11, r12, #0x4",
+        "0x21bb4: sub sp, sp, #0x18",
+        "0x21bb8: str r3, [sp,#0x0]",
+        "0x21bbc: cpy lr, r1",
+        "0x21bc0: ldr r3, [r11,#0x4]",
+        "0x21bc4: cpy r12, r2",
+        "0x21bc8: mov r1, #0x1",
+        "0x21bcc: cpy r2, lr",
+        "0x21bd0: str r3, [sp,#0x4]",
+        "0x21bd4: ldr r3, [r11,#0x8]",
+        "0x21bd8: str r3, [sp,#0x8]",
+        "0x21bdc: ldr r3, [r11,#0xc]",
+        "0x21be0: str r3, [sp,#0xc]",
+        "0x21be4: ldr r3, [r11,#0x10]",
+        "0x21be8: str r3, [sp,#0x10]",
+        "0x21bec: cpy r3, r12",
+        "0x21bf0: bl 0x0001fa44",
+        "0x21bf4: sub sp, r11, #0xc",
+        "0x21bf8: ldmia sp,{r11,sp,pc}"
+      ],
+      "callees": [
+        "FUN_0001fa44"
+      ]
+    }
+  },
+  {
+    "name": "mumin_vbm_write_vpages",
+    "id": "ev_ed4ad78b155437b6a0eb90a7fe885064482dfe36935b1c8f38aa4fa8c8dc6f24",
+    "sha256": "2169b84deee1a424539255affbdff499c4094e0913eeefe49339f3d47cbe6faa",
+    "result": {
+      "procedure": {
+        "address": "0x24490",
+        "name": "mumin_vbm_write_vpages",
+        "classification": {
+          "external": false,
+          "thunk": false,
+          "thunk_target": null,
+          "provenance": "ghidra-function-manager"
+        },
+        "body": {
+          "available": true,
+          "provenance": "ghidra-function-body-address-set",
+          "ranges": [
+            {
+              "start": "0x24490",
+              "end": "0x24587"
+            }
+          ],
+          "total_bytes": 248,
+          "span_bytes": 248,
+          "non_contiguous": false,
+          "contains_entry": true
+        },
+        "signature": "undefined mumin_vbm_write_vpages()",
+        "locals": [
+          {
+            "description": "undefined4 local_2c @ Stack[-0x2c]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_30 @ Stack[-0x30]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_34 @ Stack[-0x34]:4",
+            "provenance": "ghidra-function-database"
+          },
+          {
+            "description": "undefined4 local_38 @ Stack[-0x38]:4",
+            "provenance": "ghidra-function-database"
+          }
+        ]
+      },
+      "pseudocode": "\nint mumin_vbm_write_vpages\n              (undefined4 param_1,undefined4 param_2,undefined4 param_3,int param_4,\n              undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8)\n\n{\n  int iVar1;\n  int iVar2;\n  \n  if (param_4 == 0) {\n    Mumin_G_Vbm_Update_Flag = 1;\n    iVar1 = mumin_vbi_set_used_vblk();\n    if (iVar1 != 0) {\n      printk(\"%s : \",\"mumin_vbm_write_vpages\");\n      printk(\"Err : \");\n      printk(\"ret=0x%08x\\n\",-iVar1);\n      return -0x10005;\n    }\n  }\n  iVar1 = mumin_pbm_write_vpages(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);\n  if (iVar1 != 0) {\n    if (iVar1 == -0x20007) {\n      printk(\"%s : \",\"mumin_vbm_write_vpages\");\n      printk(\"Warn : \");\n      iVar2 = 0x20007;\n    }\n    else {\n      printk(\"%s : \",\"mumin_vbm_write_vpages\");\n      printk(\"Err : \");\n      iVar2 = -iVar1;\n    }\n    printk(\"ret=0x%08x\\n\",iVar2);\n  }\n  return iVar1;\n}\n\n",
+      "assembly": [
+        "0x24490: cpy r12, sp",
+        "0x24494: stmdb sp!,{r4,r5,r6,r7,r8,r11,r12,lr,pc}",
+        "0x24498: sub r11, r12, #0x4",
+        "0x2449c: sub sp, sp, #0x14",
+        "0x244a0: subs r7, r3, #0x0",
+        "0x244a4: cpy r6, r0",
+        "0x244a8: cpy r5, r1",
+        "0x244ac: cpy r4, r2",
+        "0x244b0: bne 0x000244f4",
+        "0x244b4: ldr r3, [0x24588]",
+        "0x244b8: mov r12, #0x1",
+        "0x244bc: str r12, [r3,#0x0]",
+        "0x244c0: bl 0x00023068",
+        "0x244c4: subs r8, r0, #0x0",
+        "0x244c8: beq 0x000244f4",
+        "0x244cc: ldr r1, [0x2458c]",
+        "0x244d0: ldr r0, [0x24590]",
+        "0x244d4: bl 0x0002e08c",
+        "0x244d8: ldr r0, [0x24594]",
+        "0x244dc: bl 0x0002e08c",
+        "0x244e0: ldr r0, [0x24598]",
+        "0x244e4: rsb r1, r8, #0x0",
+        "0x244e8: ldr r4, [0x2459c]",
+        "0x244ec: bl 0x0002e08c",
+        "0x244f0: b 0x0002457c",
+        "0x244f4: ldr r3, [r11,#0x4]",
+        "0x244f8: cpy r2, r4",
+        "0x244fc: cpy r0, r6",
+        "0x24500: cpy r1, r5",
+        "0x24504: str r3, [sp,#0x0]",
+        "0x24508: ldr r3, [r11,#0x8]",
+        "0x2450c: str r3, [sp,#0x4]",
+        "0x24510: ldr r3, [r11,#0xc]",
+        "0x24514: str r3, [sp,#0x8]",
+        "0x24518: ldr r3, [r11,#0x10]",
+        "0x2451c: str r3, [sp,#0xc]",
+        "0x24520: cpy r3, r7",
+        "0x24524: bl 0x00021ba8",
+        "0x24528: subs r4, r0, #0x0",
+        "0x2452c: beq 0x0002457c",
+        "0x24530: ldr r3, [0x245a0]",
+        "0x24534: cmp r4, r3",
+        "0x24538: bne 0x0002455c",
+        "0x2453c: ldr r1, [0x2458c]",
+        "0x24540: ldr r0, [0x24590]",
+        "0x24544: bl 0x0002e08c",
+        "0x24548: ldr r0, [0x245a4]",
+        "0x2454c: bl 0x0002e08c",
+        "0x24550: ldr r0, [0x24598]",
+        "0x24554: ldr r1, [0x245a8]",
+        "0x24558: b 0x00024578",
+        "0x2455c: ldr r1, [0x2458c]",
+        "0x24560: ldr r0, [0x24590]",
+        "0x24564: bl 0x0002e08c",
+        "0x24568: ldr r0, [0x24594]",
+        "0x2456c: bl 0x0002e08c",
+        "0x24570: ldr r0, [0x24598]",
+        "0x24574: rsb r1, r4, #0x0",
+        "0x24578: bl 0x0002e08c",
+        "0x2457c: cpy r0, r4",
+        "0x24580: sub sp, r11, #0x20",
+        "0x24584: ldmia sp,{r4,r5,r6,r7,r8,r11,sp,pc}"
+      ],
+      "callees": [
+        "mumin_pbm_write_vpages",
+        "mumin_vbi_set_used_vblk",
+        "<EXTERNAL>::printk"
+      ]
+    }
+  }
+]
