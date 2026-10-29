@@ -1,6 +1,6 @@
 # E26-RECOVERY — incidente 3.25 (investigación abierta)
 
-> **R7B parcial:** [BootROM, COLD, ARM7 y actualización](e26-r7b-recuperacion-prelinux.md). Hay carga a memoria por receptor GPIO en ROM, sin ruta de recuperación externa demostrada.
+> **R7B parcial:** [BootROM, COLD, ARM7 y actualización](e26-r7b-recuperacion-prelinux.md). Hay carga a memoria por receptor serie en ROM, sin ruta de recuperación externa demostrada.
 
 > **R7 parcial:** [nuevas primitivas MuMin/BOSS](e26-r7-recuperacion-estatica.md); su existencia en Linux no demuestra acceso desde la cámara bloqueada. Investigación offline abierta.
 

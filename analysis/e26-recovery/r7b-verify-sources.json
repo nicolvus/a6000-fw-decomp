@@ -1,0 +1,24 @@
+{
+  "sources": [
+    {
+      "path": "firmware/extracted/fw321/updater.img_unpacked/config/config.xml",
+      "sha256": "31b2ff3c3f7d7f2f002495debd71c18bb8bc3707196025423a4f3d74fe15b38c",
+      "size": 1870
+    },
+    {
+      "path": "firmware/extracted/fw321/updater.img_unpacked/bin/us_crc32sum.sh",
+      "sha256": "a0ce2112c37bfd67884d28c26aa4871f8added98852bdfa25c9e668013af6729",
+      "size": 1195
+    },
+    {
+      "path": "firmware/extracted/fw321/updater.img_unpacked/bin/uc_crc32sum.elf",
+      "sha256": "8e368185be4a074034a3f86a7ff06123ba0936e5cb70fea963009f6f8628f4da",
+      "size": 10028
+    }
+  ],
+  "observations": [
+    "config.xml:17-18 dispatches part_image_sum/part_image.sum to us_crc32sum.sh part_image image",
+    "us_crc32sum.sh:27-29 changes working directory then executes command; 43-47 image selects / and uc_crc32sum.elf -s -c",
+    "us_crc32sum.sh:56-57 derives manifest path from EXTRACT_ROOT and keyword"
+  ]
+}

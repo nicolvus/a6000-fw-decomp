@@ -1,6 +1,6 @@
 # Estado actual — léeme primero
 
-> **E26 R7B parcial:** [hallazgos y límites](../docs/capture/e26-r7b-recuperacion-prelinux.md): BootROM recibe datos por GPIO y puede saltar, Loader2 lee NAND, ARM7 histórico cotejado, COLD negativo señaliza en bucle. Falta demostrar acceso externo y restauración selectiva; seguir offline.
+> **E26 R7B parcial:** [hallazgos y límites](../docs/capture/e26-r7b-recuperacion-prelinux.md): BootROM recibe datos por entrada serie y puede saltar, Loader2 lee NAND, ARM7 histórico cotejado, COLD negativo señaliza en bucle. Falta demostrar acceso externo y restauración selectiva; seguir offline.
 
 > **E26 R7 parcial:** [primitivas MuMin/BOSS](../docs/capture/e26-r7-recuperacion-estatica.md) en Linux; escritura selectiva y acceso pre-Linux no demostrados. Continuar offline con retornos COLD, callbacks PBM y `boss_hw_nandc_recovery_check`.
 

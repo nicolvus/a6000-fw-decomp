@@ -2,7 +2,7 @@
 
 ## Prioridad E26-RECOVERY — incidente 3.25
 
-**R7B parcial offline:** [informe](capture/e26-r7b-recuperacion-prelinux.md). COLD negativo examinado termina en bucle; Loader2 lee NAND antes de Linux; BootROM contiene receptor por GPIO y salto a RAM sin interfaz de recuperación demostrada; BossFirm histórico cotejado con SRAM ARM7. Persisten semántica del residuo LDEC, condiciones físicas del receptor, selector y escritura conservadora; investigar exclusivamente con archivos.
+**R7B parcial offline:** [informe](capture/e26-r7b-recuperacion-prelinux.md). COLD negativo examinado termina en bucle; Loader2 lee NAND antes de Linux; BootROM contiene receptor serie y salto a RAM sin interfaz de recuperación demostrada; BossFirm histórico cotejado con SRAM ARM7. Fuente CXD90014 llama al registro MISC y a bit 1 BOOT_SERIAL_IN; enlace físico no demostrado. ARM7 no muestra lectura del residuo +8 en tramos examinados; efecto LDEC indeterminado. Updater programa relectura CRC de nflasha3 en tar local sujeto a guard. Persisten configuración LDEC, receptor, selector y escritura conservadora; investigar exclusivamente con archivos.
 
 **R7 parcial offline:** [informe](capture/e26-r7-recuperacion-estatica.md): trazadas escrituras lógicas, operaciones físicas Linux y envío LLD a ARM7; no constituyen acceso pre-Linux. Pendiente: fallo COLD, callbacks PBM, recovery_check, productores UPDATER, receptor ARM7/TPZL, fuentes INFO6 y servicio/comparación.
 

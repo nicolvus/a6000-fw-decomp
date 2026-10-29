@@ -4,7 +4,9 @@
 
 ## E26-RECOVERY — 29-10-2026: incidente abierto
 
-**R7B parcial:** [informe](../docs/capture/e26-r7b-recuperacion-prelinux.md), REA/bytes: COLD negativo a bucle; Loader2 carga BOSS y lee NAND; BootROM receptor GPIO a memoria y salto sin acceso externo demostrado; BossFirm y SRAM ARM7 históricos coinciden en 14305/14336 bytes; uincomp protege tags updater y escritura lógica nflasha3 requiere Linux. Próximo paso exacto: trazar residuo LDEC ARM7 y callbacks PBM; resolver red GPIO de ROM en fuentes documentales sin acceder a hardware.
+**R7B continuación:** corregida la atribución GPIO: fuente CXD90014 denomina `0xf2915010` MISC_MODEREG y bit 1 BOOT_SERIAL_IN; correspondencia física A6000 aún no demostrada. ARM7/LDEC: descriptor +8 no observado en registros examinados, resultado hardware indeterminado. El updater programa CRC por relectura después de 0700 en el tar local, bajo guard y éxito; ejecución real no demostrada. Próximo paso: trazar configuración LDEC, callbacks PBM y mapeo de entrada serie; no realizar pruebas físicas.
+
+**R7B parcial:** [informe](../docs/capture/e26-r7b-recuperacion-prelinux.md), REA/bytes: COLD negativo a bucle; Loader2 carga BOSS y lee NAND; BootROM receptor serie a memoria y salto sin acceso externo demostrado; BossFirm y SRAM ARM7 históricos coinciden en 14305/14336 bytes; uincomp protege tags updater y escritura lógica nflasha3 requiere Linux. Próximo paso exacto: trazar residuo LDEC ARM7 y callbacks PBM; resolver red de entrada serie de ROM en fuentes documentales sin acceder a hardware.
 
 **R7 parcial:** REA trazó escritura lógica y primitivas físicas de `nand.ko` y despacho LLD a ARM7 (operaciones observadas 9 y 0x0c); no se demostró una vía externa ni restauración selectiva. [Informe y evidencia](../docs/capture/e26-r7-recuperacion-estatica.md). Próximo paso exacto: analizar `boss_hw_nandc_recovery_check`, resolver callbacks PBM y retornos COLD en el prefijo respaldado, exclusivamente offline.
 

@@ -1,6 +1,6 @@
 # Estado vigente — Sony A6000 reverse engineering
 
-> **E26 R7B parcial:** [informe](capture/e26-r7b-recuperacion-prelinux.md). COLD negativo en bucle, lectura pre-Linux interna, receptor GPIO en BootROM y firmware ARM7 histórico identificado; ninguna ruta de restauración demostrada. La investigación offline sigue abierta.
+> **E26 R7B parcial:** [informe](capture/e26-r7b-recuperacion-prelinux.md). COLD negativo en bucle, lectura pre-Linux interna, receptor serie en BootROM y firmware ARM7 histórico identificado; ninguna ruta de restauración demostrada. La investigación offline sigue abierta.
 
 > **E26 R7 parcial:** [escritura MuMin y LLD](capture/e26-r7-recuperacion-estatica.md) verificadas en módulos Linux, sin ruta de invocación pre-Linux demostrada. La investigación offline continúa; el diagnóstico físico no es requisito para proseguirla.
 

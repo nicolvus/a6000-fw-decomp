@@ -1,0 +1,42 @@
+{
+  "scope": "Local Sony OSS CXD90014 platform definitions and A6000 manual, not evidence of hardware accessibility",
+  "files": {
+    "platform.h": {
+      "path": "analysis/session18/main/sony-oss-extracted/linux/arch/arm/mach-cxd90014/include/mach/platform.h",
+      "sha256": "37e342be403c8dc1678eca4d5b375b0554daab56ef35657acf69d5f44ad39682"
+    },
+    "regs-misc.h": {
+      "path": "analysis/session18/main/sony-oss-extracted/linux/arch/arm/mach-cxd90014/include/mach/regs-misc.h",
+      "sha256": "3aba3e4373b745cd322db75461b901296c90148693d8584dcb1aae67c72cf385"
+    },
+    "regs-gpio.h": {
+      "path": "analysis/session18/main/sony-oss-extracted/linux/arch/arm/mach-cxd90014/include/mach/regs-gpio.h",
+      "sha256": "c8a44ea5bf19e20878a666ccf81d0214134d936c60ac063d9112b0181c76607d"
+    },
+    "manual": {
+      "path": "references/manuals/a6000_service_L3.pdf",
+      "sha256": "4ab1630bffdba4aff01fa5934b8a1f3fe4bb54f4fefd6a7c19192836bda31aa5"
+    },
+    "bootrom": {
+      "path": "analysis/camera-dumps/updater-20261020-175427/bootrom.bin",
+      "sha256": "81a17e039a2debfe589b127e12384ed4d7c2ba0d0c819238d0b021b466246026"
+    }
+  },
+  "source": {
+    "platform.h:88-102": "MACRO_BASE=0xf2910000; GPIO_BASE=MACRO_BASE; MISC_BASE=MACRO_BASE+0x5000",
+    "regs-misc.h:34,46-49": "MISC_MODEREG=0x10; MISC_MODEREG_BOOT_SERIAL_IN=0x0002; bit0 not defined",
+    "regs-gpio.h:35-42": "GPIO_RDATA=0x10; GPIO_REG=((ch << 8)+register); hence 0xf2910410=GPIO(4,RDATA) for CXD90014",
+    "provenance": "analysis/session18/main/sony-oss-inventory.md: model of Sony OSS package not established"
+  },
+  "manual": {
+    "page24": "IC6000 MHZ4G8G01A diagram labels BOOT_SERIAL_IN near H21 and BOOT_MAIN near P7; actual continuity and mapping to bit1 unproven",
+    "page37": "BOOT_SERIAL_IN and R4002/R4003 XX appear near MULTI; visual topology and population not verified",
+    "identity": "IC6200 CXD90027GF is distinct from IC6000 per parts list"
+  },
+  "limits": [
+    "CXD90014 source is cross-platform comparison, not confirmation of A6000 SoC register definitions",
+    "No independent pin-to-register mapping or continuity proof",
+    "No semantic definition of f2915010 bit0 or f2910410 bit22",
+    "No physical access or instrumentation"
+  ]
+}
