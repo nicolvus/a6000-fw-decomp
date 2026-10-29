@@ -8,7 +8,27 @@ El usuario informa que la A6000 funcional con 3.23 recibió 3.25, el actualizado
 
 El SHA-256 calculado del FDAT local `analysis/e25-27/artifacts/package-3.25/firmware_packed.fdat` es `87145e1b06c01564dbebbb40d98acb084aa8ff8d044e6bf93e8cf79cae1a8d9f`, coincidente con la referencia aportada. No prueba por sí solo qué archivo transfirió el actualizador. Del tar local `firmware.integrated.tar`, los miembros `0640_darwin/darwin_core.bin` y `0700_part_image/dev/nflasha3` dan respectivamente `9771c0508ee17e7984a619479c1f69cc4e8b71f0091fb5f9dfde66bbd19fb177` y `bb9ce25a073d1ccc990d8ee1fdd75322c703d5d2a4020ab5e7daeaf8d23d546c`. Son comprobaciones independientes del manifiesto, no lectura posterior de la cámara.
 
-El manifiesto `analysis/e25-27/artifacts/manifest.json` enumera 369 offsets: los 369 originales son múltiplos de 512; de los nuevos, 10 son múltiplos de 512 y 359 tienen residuo 256. **VERIFICADO EN MANIFIESTO**: falta contrastar directamente las tablas binarias y el lector A6000. El constructor usa `ALIGN = 256` (`scripts/e25_27/tpzl.py`). Esto es una anomalía prioritaria, no una incompatibilidad ni causalidad demostradas. Las pruebas offline de E25-27 no validaron el lector real.
+El manifiesto `analysis/e25-27/artifacts/manifest.json` enumera 369 offsets: los 369 originales son múltiplos de 512; de los nuevos, 10 son múltiplos de 512 y 359 tienen residuo 256. La comparación directa y el lector A6000 se examinan a continuación. El constructor usa `ALIGN = 256` (`scripts/e25_27/tpzl.py`). Esto es una anomalía prioritaria, no una incompatibilidad ni causalidad demostradas. Las pruebas offline de E25-27 no validaron el lector real.
+
+### Fase A: lector Sony y comparación directa (29-10-2026)
+
+**VERIFICADO EN BINARIO:** el `nand.ko` del initrd oficial 3.21, SHA-256 `2169b84deee1a424539255affbdff499c4094e0913eeefe49339f3d47cbe6faa`, contiene `muminlzp_register` en `0x12520` y `muminlzp_request` en `0x11d50` (direcciones REA/Ghidra de un ELF relocatable, no direcciones de carga en cámara). `register` lee la cabecera, valida `0x4c5a5054` (`TPZL` little-endian), usa los campos del offset y tamaño de TOC y copia la tabla a `piVar1[0x10]`. `request` selecciona una entrada de 8 bytes por índice: en `0x11e78–0x11e90` carga offset y tamaño y obtiene el residuo con dos desplazamientos equivalentes a `offset & 0x1ff`. Si no es cero, `0x11e98–0x11ec0` imprime **«Offset for lded_read should be 0»**, pero no rechaza inmediatamente la entrada. En `0x11efc` calcula el sector como base de partición más `offset >> 9`; `0x11ef0–0x11f3c` calcula `ceil((size + residuo)/512)` y llama a `mumin_map_tulist`. En `0x11f60` pasa a `mumin_devif_ldec_read` una estructura que incluye el residuo. Por tanto la referencia de Sony al cero está ligada al offset de la TOC y a la lectura LDEC, no es una constante aislada.
+
+El importador de REA identificó el proveedor en `lld.ko` del initrd extraído de la cámara, SHA-256 `113c1b1f97ef2339b804c88d8924bc5ac7acc81f775fe4ccf27da73625e6840e`: `mumin_devif_ldec_read` `0x11048` copia los campos y los pone en cola; `0x10e0c` los entrega a `boss_hw_arm7_comm_set_firmware_api_param` con operación `0x2800`. **Límite:** no se ha trazado qué hace el firmware ARM7/hardware con ese residuo, ni demostrado que este módulo Linux se ejecute para leer el mismo `nflasha3` antes de que el propio initrd esté disponible. La advertencia no equivale a un rechazo demostrado. **Resultado: PROBABLE CON EVIDENCIA** de incumplimiento de la condición indicada por el controlador; incompatibilidad efectiva con el arranque y causa del bloqueo **INDETERMINADAS**.
+
+La comparación directa de los dos binarios de partición, ejecutada por `scripts/e26_recovery/compare_tpzl.py`, confirma 369 entradas originales con residuo 0 y 359/369 entradas 3.25 con residuo 256. El mismo script reconstruye una tercera imagen **solo en memoria**, alineada a 512, sin FDAT ni escritura de firmware; descomprime los 369 bloques y comprueba que la tercera reproduce cada bloque descomprimido de 3.25. Los únicos bloques descomprimidos que difieren entre original y 3.25 son 0, 48 y 57. Las longitudes son 11 489 040, 11 572 480 y 11 573 248 bytes, respectivamente. El tamaño declarado del último bloque original excede el archivo en 240 bytes; el decodificador offline lo tolera y esto no demuestra cómo actúa la cámara.
+
+| Bloque | Original offset / tamaño | 3.25 offset / tamaño | Residuo 3.25 | Alineado offset / tamaño | Sectores 3.25 / alineado |
+|---:|---:|---:|---:|---:|---:|
+| 0 | 3072 / 26112 | 3072 / 73984 | 0 | 3072 / 74240 | 145 / 145 |
+| 1 | 29184 / 58880 | 77056 / 58880 | 256 | 77312 / 58880 | 116 / 115 |
+| 48 | 2527232 / 56320 | 2575104 / 73984 | 256 | 2575360 / 74240 | 145 / 145 |
+| 49 | 2583552 / 59392 | 2649088 / 59392 | 0 | 2649600 / 59392 | 116 / 116 |
+| 57 | 3011072 / 56320 | 3076608 / 73984 | 0 | 3077120 / 74240 | 145 / 145 |
+| 58 | 3067392 / 51712 | 3150592 / 51712 | 256 | 3151360 / 51712 | 102 / 101 |
+| 368 | 11486720 / 2560 | 11569920 / 2560 | 256 | 11570688 / 2560 | 6 / 5 |
+
+Los sectores son el cálculo de la ruta `muminlzp_request`, no una simulación del hardware. Evidencia reproducible: [JSON](../../analysis/e26-recovery/tpzl-comparison.json), `tests/test_e26_tpzl.py`; entradas locales no publicadas: `firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3` y `analysis/e25-27/artifacts/nflasha3.integrated.bin`. 17 pruebas de E26/E25-27 pasaron. No se construyó imagen instalable.
 
 ## Casos externos y límites
 

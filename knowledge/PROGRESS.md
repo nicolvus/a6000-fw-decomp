@@ -2,6 +2,8 @@
 
 ## E26-RECOVERY — 29-10-2026: incidente abierto
 
+Fase A: REA sobre `nand.ko` (`muminlzp_register` 0x12520, `muminlzp_request` 0x11d50) y `lld.ko` (0x11048/0x10e0c) identifica TOC, advertencia de offset y entrega ARM7; falta implementación ARM7 y nexo con lectura inicial. Tablas binarias comparadas y tres imágenes descomprimidas, tercera solo en memoria; 17 pruebas, ruff y mypy sin errores. Siguiente paso exacto: Fase B, analizar llamadores reales de `SenserUpdaterIF::setResult` en `libupdaterbody.so` y registrar argumentos y conversiones; no volver a atribuir el LED sin evidencia.
+
 El usuario informa instalación 3.25, Done y bloqueo. Comprobados hashes FDAT, Darwin y `nflasha3` locales y anomalía de alineación en el manifiesto; aún no se verifica causalidad ni lector real. Ver [informe](../docs/capture/e26-recovery.md). Siguiente paso exacto: inspeccionar con REA `uc_portctl.elf` y `SenserUpdaterIF::setResult`, y contrastar las tablas TPZL directamente con los binarios. Sin acceso físico.
 
 
