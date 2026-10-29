@@ -6,6 +6,8 @@ Fase A: REA sobre `nand.ko` (`muminlzp_register` 0x12520, `muminlzp_request` 0x1
 
 Fase B parcial: `libsenupdater.so` de initrd `nflasha1` y `mf` trazados con REA; `setResult` convierte nibbles hex y `mf` transmite por FIFO2 el valor de excepciones `0x3000c`; `BuildInPlugin::execute` acepta un resultado de shell 50 como valor 0x32. Pendiente identificar script real y conexión de excepciones, y trazar Done. Los binarios extraídos están solo en `/tmp/e26-updater/root`, no se publican.
 
+Fase C iniciada: `config.xml`, `us_crc32sum.sh`, `us_darwin_firm.sh` y `endupdate.sh` delimitan comprobaciones, hilo Darwin y operaciones de cierre; sin orden demostrado respecto a Done. Próxima operación: REA `ThreadPlugin::Join` y `XmlConfigHandler::Join`, luego seguir el mensaje de éxito al host; Fase B mantiene pendiente el script real del byte 0x32. El usuario informa una cara de la placa expuesta, sin acceso físico autorizado.
+
 El usuario informa instalación 3.25, Done y bloqueo. Comprobados hashes FDAT, Darwin y `nflasha3` locales y anomalía de alineación en el manifiesto; aún no se verifica causalidad ni lector real. Ver [informe](../docs/capture/e26-recovery.md). Siguiente paso exacto: inspeccionar con REA `uc_portctl.elf` y `SenserUpdaterIF::setResult`, y contrastar las tablas TPZL directamente con los binarios. Sin acceso físico.
 
 

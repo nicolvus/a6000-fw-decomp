@@ -4,6 +4,8 @@
 
 El usuario informa que la A6000 funcional con 3.23 recibió 3.25, el actualizador mostró 100 % y Done, y después dejó de arrancar; describe tres destellos lentos y dos rápidos. Es un testimonio, no una captura UART ni una verificación de la NAND. La prioridad pasa a ser la recuperación original preservando calibraciones. Ninguna conexión o escritura en la cámara está autorizada. El diagnóstico y los mecanismos de recuperación siguen abiertos.
 
+El usuario indica ahora que la cámara ya está desmontada, con una cara de SY-1028 expuesta, y prefiere no retirar la placa. No existen mediciones posteriores al bloqueo; no se autoriza intervención física en esta ejecución. La cara visible aún no está identificada con evidencia.
+
 ## Identidad y alineación: primera comprobación offline
 
 El SHA-256 calculado del FDAT local `analysis/e25-27/artifacts/package-3.25/firmware_packed.fdat` es `87145e1b06c01564dbebbb40d98acb084aa8ff8d044e6bf93e8cf79cae1a8d9f`, coincidente con la referencia aportada. No prueba por sí solo qué archivo transfirió el actualizador. Del tar local `firmware.integrated.tar`, los miembros `0640_darwin/darwin_core.bin` y `0700_part_image/dev/nflasha3` dan respectivamente `9771c0508ee17e7984a619479c1f69cc4e8b71f0091fb5f9dfde66bbd19fb177` y `bb9ce25a073d1ccc990d8ee1fdd75322c703d5d2a4020ab5e7daeaf8d23d546c`. Son comprobaciones independientes del manifiesto, no lectura posterior de la cámara.
@@ -50,6 +52,14 @@ script integrado: system() sale con byte 0x32 (decimal 50)
 Otros llamadores directos encontrados vía el thunk `0x11688` en `libsenupdater.so`: `receiveReturnCode` genera `0x44` cuando falla la lectura de un byte; `complete` genera `0x55` al agotarse 300000 ms; `write` genera `0x44`, `0x55` o `0x83` en sus errores locales; el constructor genera `0x44` si no abre un FIFO y `0x55` si falla la sincronización inicial. **Ninguna de estas constantes locales es 0x32**; la lectura del FIFO acepta un byte arbitrario. `libupdaterbody` `Plugin::Execute` (`0x2443c`) y `XmlConfigHandler::executeGuard` (`0x23584`) también crean excepciones `0x3000c` con valores retornados por módulos, pero en una rama específica valores menores de `0x41` se sustituyen por `0x59`: hay que determinar la ruta y configuración concreta antes de atribuirles `0x32`. La lista es de llamadores estáticos identificados, no una prueba exhaustiva de todas las entradas indirectas ni de persistencia.
 
 **Pendiente:** identificar el script integrado y sus condiciones reales de salida, reconstruir cómo el estado de excepción llega al `mf` en esta configuración, auditar otros productores y comprobar si el LED posterior a reinicio usa esta ruta o alguna independiente. No hay evidencia de que el byte 0x32 del FIFO se haya observado físicamente ni de que describa NAND, Darwin o alimentación. La ausencia de una coincidencia textual con `exit 50` no descarta valores calculados.
+
+### Fase C: cierre de actualización (parcial)
+
+**VERIFICADO EN SCRIPTS:** `firmware/extracted/fw321/updater.img_unpacked/config/config.xml:17–18` asocia la suma de imágenes de partición con `us_crc32sum.sh`; este último usa `uc_crc32sum.elf -s -c` sobre `/` en modo imagen (`bin/us_crc32sum.sh:43–48`). No se ha verificado todavía la implementación de esa herramienta ni si lee de nuevo NAND o solo los datos extraídos. El XML asocia `darwin.sum` con comprobación CRC y después `us_darwin_firm.sh` marcado `thread="yes"` (`config.xml:35–37`). El script homónimo en el initrd del respaldo llama a `ud_darwin_firmup.elf`, comprueba su código de salida y devuelve cero si la herramienta declara éxito; eso no es evidencia de lectura posterior independiente ni de éxito en esta cámara.
+
+`endupdate.sh:25–76` monta `nflasha2`, restaura ciertos datos, ejecuta `ud_backup_write.elf` y `ud_keep_backup.elf`, y desmonta `/setting`; después `:83` llama a `ud_lerase.elf /dev/nflasha 4`, con otras ramas según el modo, y `:97` vuelve a montar `/setting`. La condición de `$? -lt 0` tras `ud_backup_write.elf` está presente literalmente, pero no se ha establecido aquí qué implican todos sus retornos. Estas son operaciones documentadas de scripts, no un orden demostrado respecto de la interfaz del PC.
+
+**INDETERMINADO:** aún no se ha reconstruido cuándo el programa del PC muestra `Done`, el orden real entre procesos con `thread="yes"`, la escritura y verificación de `nflasha3`, la limpieza de `uincomp` o `mode`, ni el resultado persistente de Darwin. `Done` por sí solo no demuestra que el sistema normal pueda arrancar. Siguiente dependencia exacta: estudiar `ThreadPlugin::Join`, `XmlConfigHandler::Join`, la activación de `endupdate.sh` y el mensaje de éxito hacia el host antes de fijar una línea temporal.
 
 ## Casos externos y límites
 

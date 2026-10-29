@@ -8,6 +8,8 @@
 
 **Fase B parcial:** localizados llamadores de `setResult` y una vía posible para el byte 0x32 por excepción `0x3000c` y FIFO2; falta identificar script/condición concreta, conexión completa de excepciones y origen del LED tras el reinicio. Ver [E26-RECOVERY](capture/e26-recovery.md); seguir con esa dependencia y luego la secuencia de Done.
 
+**Fase C parcial:** XML y scripts identifican CRC de imágenes, actualización Darwin en hilo y operaciones `endupdate.sh`; orden frente a `Done`, readback, `uincomp` y `mode` no demostrados. Seguir con `ThreadPlugin::Join`, `XmlConfigHandler::Join` y mensaje al host. El usuario indica una cara de la placa expuesta, sin mediciones ni autorización de intervención.
+
 
 Creado el 25-10-2026. Es la lista única y viva de lo que falta en el proyecto. Los
 backlogs de agentes ([A](../knowledge/agents/A-backlog.md), [B](../knowledge/agents/B-backlog.md),
