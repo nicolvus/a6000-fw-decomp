@@ -14,6 +14,8 @@
 
 **R3 Loader3:** candidato de 128 KiB encontrado en `bootloader.bin` con tabla INFO y código de modo actualizador; corrige la ausencia previamente afirmada. Falta validar geometría, integridad, condiciones de selección y método independiente de activar la bandera. Ver E26; no escribir el candidato.
 
+**R3 placa:** manual 6-38/SIDE A muestra CN4906 e IC6000; 6-39/SIDE B muestra IC5700 y CL5701/CL701/CL703–707. Falta fotografía para identificar cara visible, continuidad, niveles y almacenamiento físico. Ver matriz de rutas en E26; no realizar intervención.
+
 
 Creado el 25-10-2026. Es la lista única y viva de lo que falta en el proyecto. Los
 backlogs de agentes ([A](../knowledge/agents/A-backlog.md), [B](../knowledge/agents/B-backlog.md),

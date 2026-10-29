@@ -12,6 +12,8 @@ R3: `UpdaterBody::Execute` 0x1f4c8 → thunk 0x1db8c → `XmlConfigHandler::Join
 
 R3 Loader3: `bootloader.bin` INFO 0x18000, entradas 5→6 y candidato continuo 0x22800–0x427ff (SHA 8fd98a41…); Loader2 carga índice 5 en 0xc01f0000. REA del candidato: comprobación `\\updater\\mode` 0xc01f159a, selector 0xc01f1de6, modo 3 0xc01f1312, carga de kernel/initrd de dispositivo 1 0xc01f068a. Pendientes integridad/geométrica, modo físico y condiciones previas. Próximo paso: diagrama SIDE A/B de SY-1028 y accesibilidad de servicio.
 
+R3 placa: manual PDF páginas 50/51 verifica CN4906 e IC6000 lado A e IC5700 y CL5701/CL701/CL703–707 lado B; esquema PDF 23 determina señales de islas. Sin foto de la cara visible ni identificación física de NAND, no se puede concluir acceso. Matriz de recuperación y siguiente diagnóstico documental en E26. Próxima operación: resolver indicador `mode`/`uincomp` y origen `Done`; validar geometría del candidato Loader3 sin escribir hardware.
+
 El usuario informa instalación 3.25, Done y bloqueo. Comprobados hashes FDAT, Darwin y `nflasha3` locales y anomalía de alineación en el manifiesto; aún no se verifica causalidad ni lector real. Ver [informe](../docs/capture/e26-recovery.md). Siguiente paso exacto: inspeccionar con REA `uc_portctl.elf` y `SenserUpdaterIF::setResult`, y contrastar las tablas TPZL directamente con los binarios. Sin acceso físico.
 
 

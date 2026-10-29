@@ -75,6 +75,36 @@ En el volcado local, los 64 × 2048 bytes de `0x22800` a `0x42800` son un **cand
 
 **VERIFICADO EN BINARIO:** en el candidato, `0xc01f159a` monta el dispositivo identificado como 2 y comprueba `\\updater\\mode`; `0xc01f1de6` asigna el modo 3 cuando la comprobación devuelve éxito. `0xc01f1312` despacha el caso 3 hacia `0xc01f1378`, que llama `0xc01f068a`. Esta última monta el dispositivo identificado como 1 y busca `\\boot\\loadaddr.txt`, `\\boot\\vmlinux.bin` y `\\boot\\initrd.img`, como en el respaldo `nflasha1`. El flujo ofrece una vía de arranque del actualizador que **no lee `nflasha3` en esa función**, si Loader3, alimentación y sus dependencias previas funcionan y la bandera está disponible. No se ha demostrado una vía para activar la bandera en la cámara bloqueada ni que el proceso entero sea independiente de toda otra región o del hardware. No forzar señales ni modificar flags.
 
+### R3 — placa SY-1028 y accesibilidad
+
+El manual local `references/manuals/a6000_service_L3.pdf` identifica las páginas impresas 6-11, 6-26, 6-38 y 6-39 como páginas PDF 23, 38, 50 y 51 respectivamente. La localización por cara se verificó en los dibujos de distribución, no por el esquema eléctrico. No hay fotografía de la placa en los archivos adjuntos disponibles, por lo que **no está identificada la cara actualmente visible ni la accesibilidad real**.
+
+| Referencia | Cara según plano | Función documentada | Acceso sin levantar placa |
+|---|---|---|---|
+| `IC5700` | B, PDF 51 | Darwin FM3 | Desconocido; puede estar tapado |
+| `CL5701` | B, PDF 51 | `MD0` (esquema PDF 23) | Desconocido |
+| `CL701` | B, PDF 51 | `XDWN_RESET`/`INITX` | Desconocido |
+| `CL703`, `CL704`, `CL705`, `CL706`, `CL707` | B, PDF 51 | Respectivamente `TRST_DWN`, `TCK_DWN`, `TDI_DWN`, `TMS_DWN`, `TDO_DWN` (PDF 23) | Desconocido |
+| `CN4906` | A, PDF 50 | Huella de servicio, señales en esquema PDF 38 | Desconocido; montaje y acceso en esta unidad sin comprobar |
+| `IC6000` `MHZ4G8G01A` | A, PDF 50; identificación PDF 5 | BIONZ y señales del sistema | Desconocido; ubicación interna y acceso a NAND no demostrados |
+| `DWN_UART_RXD/TXD`, `MD0_DWN`, `XDWN_RESET` | Esquema PDF 38 | Señales de servicio hacia Darwin | La cara de cada punto de acceso, salvo los identificados arriba, queda pendiente |
+| `DD_ON1/2/3` | Esquema PDF 23 | Señales de habilitación de alimentación | Punto de medición accesible y niveles no verificados |
+
+La presencia de una referencia en una cara no prueba continuidad eléctrica, conector montado, nivel seguro ni acceso desde la posición actual. El manual de distribución identifica `IC6000`, pero no se ha identificado una NAND separada, encapsulado, pines directos, ECC ni traducción entre bloques físicos y `nflasha3`; la imagen lógica no sustituye una copia física. El SWD de Darwin no demuestra acceso al almacenamiento BIONZ. La comparación de una fotografía con las marcas y conectores de ambos dibujos permitiría identificar la cara sin cambiar conexiones; falta esa fotografía en esta sesión.
+
+### R3 — opciones y diagnóstico diferencial
+
+| Vía | Objetivo y requisitos | Evidencia y límite | Riesgo/condición previa |
+|---|---|---|---|
+| Actualizador original | `nflasha3` y/o Darwin; Loader3, energía y `nflasha1` funcionales, modo de actualización | Existe ruta estática por bandera y partición 1; no hay acceso USB actual ni forma demostrada de activar la bandera | Verificar estado y preservar `nflasha2`/calibraciones antes de cualquier escritura |
+| Acceso al almacenamiento BIONZ | Restaurar solo `nflasha3` usando respaldo lógico adecuado | Controlador MUMIN y respaldo lógico conocidos; sin interfaz física, geometría/ECC ni mapeo determinados | No escribir imagen completa ni alterar identificadores; requiere identificación del almacenamiento y técnica de lectura/verificación |
+| SWD/JTAG Darwin | Diagnóstico o restauración del MCU; depurador compatible y puntos de cara B | Señales del esquema, no continuidad, protección ni capacidad de lectura verificadas | Puede afectar alimentación y datos del MCU; no restaura directamente NAND BIONZ |
+| Serial Writer Darwin | Flash del MCU; herramienta compatible y señales de modo/serie | Familia FM3 documentada; compatibilidad concreta y protección del MB9AF004B pendientes | Cambiar modo o escribir requiere autorización separada y preservación de datos |
+| Servicio especializado Sony | Diagnóstico de placa y almacenamiento | Existencia de huella de servicio, no procedimiento de recuperación para este caso | Confirmar conservación de calibraciones y recuperación de datos antes de aceptar reparación |
+| Sustitución de placa | Restaurar funcionalidad mediante otra placa | No recupera necesariamente los datos/calibraciones originales | Último recurso, conservar placa original y respaldos |
+
+La desalineación TPZL es una hipótesis respaldada por el lector, sin rechazo demostrado; el error del actualizador, Darwin, Loader2/3, NAND física, alimentación y bandera persistente siguen como alternativas sin prueba discriminante posterior al incidente. La siguiente comprobación menos invasiva es **identificar visualmente la cara expuesta** comparando conectores con PDF 50/51; después, solo si se autoriza y se verifican pinout, niveles y aislamiento, una captura UART pasiva podría distinguir mensajes de Loader3, montaje NAND o LDEC. La ausencia de registros no demostraría que el procesador no arranca. No se propone conexión concreta todavía.
+
 ## Casos externos y límites
 
 En [Sony-PMCA-RE #488](https://github.com/ma1co/Sony-PMCA-RE/issues/488), la A6000 original presenta un patrón compatible con 73 y un registro UART con errores Mumin/ECC y montaje. El autor sospecha flash defectuosa; no constituye diagnóstico de esta cámara. Un comentario posterior describe una **ILCE-7RM2 distinta**, 3 largos + 2 cortos tras un paquete modificado y registros `LDEC` con un offset de 32; atribuye el fallo a bloques no alineados. Es un testimonio de otro modelo, no prueba del origen del LED ni del mecanismo de la A6000. La afirmación del comentario de que códigos menores de 41 nunca provienen del actualizador requiere auditoría del binario: no debe usarse para atribuir el origen de 32. No se ha identificado allí una restauración ejecutada para este incidente.
