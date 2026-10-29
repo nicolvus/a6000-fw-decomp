@@ -15,6 +15,7 @@ flasheo salvo autorización expresa del usuario para un caso concreto.
 
 ## Estado actual
 
+- **E25-24:** selector EFCS / Electronic binario como candidato, sin implementación; B1a global impide dar por recuperada la segunda cortina EFCS. La [auditoría](../docs/capture/e25-24-selector-efcs-electronico.md) identifica contradicciones en el informe de integración y pendientes de GUI, Darwin y sensor. E25-24/E25-25 abiertos.
 - **E25-22:** dos capturas normales en una escena nueva; sombras y `cap` compatibles con shd=1/svd=0 durante la foto larga, sin prueba de envío P2S ni de integración electrónica. [Informe](../docs/capture/e25-22-protocolo-transporte-fisico.md); plan nativo por foto y trazado eléctrico pendientes.
 - **Carril GUI (G1, independiente del obturador):** la interfaz vive en el userland Linux, no en `av-cam.bin`: `bin/im.elf` carga por `dlopen` `/usr/lib/libObj.so` (motor `ux::`, 17,4 MB, 17 `DT_NEEDED`), que abre `viewUnified2..8.so` y 238 recursos de `share/app`. Tabla PLT resuelta (2 419/2 420 importados), `GraphicsEngine::updateResource` trazado; compositor y `/dev/fb0` en INFERENCIA. REA no puede abrir `libObj.so` (plazo de 900 s). **G3 parcial:** pila de dibujo propia (`GRM_fbrm*` sobre YUV, `GRM_gpermRectblit`, `DMP2D_*`, `Ts*`), rutina de presentación en `0x12e6d0` (presente en `GRM_fbrmUpdateYUV`) y cadenas de `WindowServer`/`ViewSystem`//dev/fb0` sin ninguna referencia (muertas); falta el invocador de `0x12e6d0`. Pendientes G2–G8 en [PENDIENTES](../docs/PENDIENTES.md); mapa en [docs/gui/README.md](../docs/gui/README.md).
 

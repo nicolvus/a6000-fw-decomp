@@ -31,6 +31,12 @@ capacidad ni la imposibilidad de fotografía totalmente electrónica a resoluci�
 
 Etiquetas: **V** = VERIFICADO (bytes/instrucciones), **I** = INFERENCIA, **N** = NO_VERIFICADO.
 
+**Selector EFCS / Electronic (E25-24):** candidato binario aún sin implementar;
+B1a es global y no está demostrado cómo recuperar la segunda cortina EFCS por
+captura. El informe de integración EFCS contiene afirmaciones contradictorias
+sobre `r5`, el enganche y el mecanismo: consultar la [auditoría](capture/e25-24-selector-efcs-electronico.md)
+antes de reutilizarlo. Pendientes E25-24/E25-25.
+
 | Tema | Conclusión vigente | Estado | Fuente |
 |---|---|---|---|
 | RecordStill / RecordImage | A6000 `0x90b248` = RecordImage (sus diagnósticos lo dicen); pareja A7S `0x84a568`. RecordStill A6000 `0x908afc` ↔ A7S `0x847e1c`; RecordImage llama a RecordStill en ambos. Equivalentes salvo líneas de log (199 pares) | V | [contrato](capture/recordstill-contract-audit-2026-10-23.md), [S402](capture/static-closure-2026-10-25.md) |

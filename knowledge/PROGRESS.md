@@ -1,5 +1,15 @@
 # Progreso — sistema de conocimiento Sony A6000
 
+## E25-24 — Selector EFCS / Electronic, auditoría parcial — 28-10-2026
+
+Se actualizó la base a `c8b1b166` y se contrastó el informe de referencia con
+E020 y E25-18–23. La opción binaria es candidata, sin implementación: B1a es
+global y no hay conmutación demostrada que restaure el EFCS original. Se
+registraron contradicciones sobre `r5`, C3 y el mecanismo, y los pendientes
+E25-24/E25-25. Sin cámara ni pruebas físicas. Próximo paso: censar consumidores
+y persistencia del selector con REA y bytes y buscar un canal por captura hacia
+Darwin, antes de preparar código o solicitar pruebas físicas.
+
 ## E25-16 — Cálculo autónomo de `r5` en BIONZ — 28-10-2026
 
 Sesión 100 % offline (bytes, REA y emulación Unicorn; sin cámara). Hallado el productor nativo de
