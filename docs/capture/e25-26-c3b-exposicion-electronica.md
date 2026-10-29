@@ -14,8 +14,8 @@ Base: `e71df5b3` + reubicación de cuevas de [E25-25](e25-25-validacion-carga-ca
 |---|---|
 | Enganche | `0x438c82fe` — `bl 0x436d6118` (obtener el imager), antes de `SetExposure` (`0x438c830c`) |
 | Paso | solo 0: `0x438c82d8 cbnz [cap+0x4b9c]` salta a `0x438c833a` |
-| Cueva | `0x43541840`, 52 B, zona reservada de cabecera (E25-25) |
-| Condición | `cap+0x41c == 1` (Electronic) ∧ `r7 = svd nativo ≤ 1` ∧ VTS ≠ 0 ∧ `shd > VTS` |
+| Cueva | `0x43541840`, 58 B, zona reservada de cabecera (E25-25) |
+| Condición | `cap+0x41c == 1` (Electronic) ∧ `r7 = svd nativo ≤ 1` ∧ VTS ≠ 0 ∧ (`shd > VTS` si `svd=1`) ∧ `shd' < VTS` |
 | Escrituras | `cap+0x64c` (shd), `cap+0x650` (svd), `cap+0x655` (ShutMode) |
 | No escribe | `cap+0x41c`, `cap+0x4b9c`, `cap+0x12f8`, `record`, Darwin, GPIO |
 
@@ -27,22 +27,25 @@ Bytes:
 43541840  02 b5            push {r1, lr}          ; conserva alineación y r0
 43541842  d4 f8 1c 14      ldr.w r1,[r4,#0x41c]   ; modalidad por captura
 43541846  01 29            cmp r1,#1
-43541848  11 d1            bne 0x4354186e         ; EFCS -> original
+43541848  14 d1            bne 0x43541874         ; EFCS -> original
 4354184a  01 2f            cmp r7,#1              ; svd nativo
-4354184c  0f d8            bhi 0x4354186e         ; svd>1 -> no tocar largas
-4354184e  4f b1            cbz r7,0x43541864
-43541850  b4 f8 e0 25      ldrh.w r2,[r4,#0x5e0]  ; VTS de la captura
-43541854  5a b1            cbz r2,0x4354186e      ; VTS 0 -> fallo seguro
-43541856  d4 f8 4c 36      ldr.w r3,[r4,#0x64c]   ; shd nativo
-4354185a  93 42            cmp r3,r2
-4354185c  07 d9            bls 0x4354186e         ; no restar bajo cero
-4354185e  9b 1a            subs r3,r3,r2
-43541860  c4 f8 4c 36      str.w r3,[r4,#0x64c]   ; shd' = VTS - líneas
-43541864  00 23            movs r3,#0
-43541866  84 f8 55 36      strb.w r3,[r4,#0x655]  ; ShutMode = 0
-4354186a  a4 f8 50 36      strh.w r3,[r4,#0x650]  ; svd = 0
-4354186e  94 f1 53 fc      bl 0x436d6118          ; llamada original
-43541872  02 bd            pop {r1, pc}
+4354184c  12 d8            bhi 0x43541874         ; svd>1 -> no tocar largas
+4354184e  b4 f8 e0 25      ldrh.w r2,[r4,#0x5e0]  ; VTS de la captura
+43541852  7a b1            cbz r2,0x43541874      ; VTS 0 -> fallo seguro
+43541854  d4 f8 4c 36      ldr.w r3,[r4,#0x64c]   ; shd nativo
+43541858  01 2f            cmp r7,#1
+4354185a  02 d1            bne 0x43541862
+4354185c  93 42            cmp r3,r2
+4354185e  09 d9            bls 0x43541874         ; shd<=VTS -> no restar
+43541860  9b 1a            subs r3,r3,r2
+43541862  93 42            cmp r3,r2              ; shd' debe quedar < VTS
+43541864  06 d2            bhs 0x43541874
+43541866  c4 f8 4c 36      str.w r3,[r4,#0x64c]   ; shd' = VTS - líneas
+4354186a  00 23            movs r3,#0
+4354186c  84 f8 55 36      strb.w r3,[r4,#0x655]  ; ShutMode = 0
+43541870  a4 f8 50 36      strh.w r3,[r4,#0x650]  ; svd = 0
+43541874  94 f1 50 fc      bl 0x436d6118          ; llamada original
+43541878  02 bd            pop {r1, pc}
 ```
 
 `r0` (retorno del imager), `r4`, `r6` y `r7` se conservan; `r1`–`r3` son muertos en el
@@ -156,7 +159,7 @@ pytest -q tests/test_e25_26_c3b.py
 ```
 
 `patch_c3b.restore_bytes()` + `patch_bionz.restore_bytes()` devuelven el `av-cam.bin` original
-(SHA-256 `b60c845c…`). El manifiesto incluye los 83 bytes del diff (28 del selector + 55 de C3-B) y las
+(SHA-256 `b60c845c…`). El manifiesto incluye los 89 bytes del diff (28 del selector + 61 de C3-B) y las
 regiones protegidas.
 
 ## 9. Estado

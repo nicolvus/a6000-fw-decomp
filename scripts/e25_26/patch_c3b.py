@@ -33,7 +33,7 @@ HOOK = 0x438C82FE
 HOOK_OLD = bytes.fromhex("0df60bff")       # bl 0x436d6118
 HOOK_TARGET = 0x436D6118
 CAVE = 0x43541840
-CAVE_LEN = 52
+CAVE_LEN = 58
 
 CAP_MODALITY = 0x41C
 CAP_VTS = 0x5E0
@@ -56,25 +56,28 @@ PROTECTED: tuple[tuple[str, int, int], ...] = (
 
 
 def cave_bytes(cave: int = CAVE) -> bytes:
-    """Cueva de 52 B; las ramas se codifican con la dirección real."""
+    """Cueva de 60 B; las ramas se codifican con la dirección real."""
     if cave % 2:
         raise ValueError("la cueva debe estar alineada a 2 B")
     out = bytearray()
     out += bytes.fromhex("02b5")            # push {r1, lr}      (alineación 8 B)
     out += bytes.fromhex("d4f81c14")        # ldr.w r1,[r4,#0x41c]
     out += bytes.fromhex("0129")            # cmp r1,#1
-    out += bytes.fromhex("11d1")            # bne skip            -> 0x2e
+    out += bytes.fromhex("14d1")            # bne skip            -> 0x34
     out += bytes.fromhex("012f")            # cmp r7,#1
-    out += bytes.fromhex("0fd8")            # bhi skip            -> 0x2e
-    out += bytes.fromhex("4fb1")            # cbz r7, write       -> 0x24
+    out += bytes.fromhex("12d8")            # bhi skip            -> 0x34
     out += bytes.fromhex("b4f8e025")        # ldrh.w r2,[r4,#0x5e0]
-    out += bytes.fromhex("5ab1")            # cbz r2, skip        -> 0x2e
+    out += bytes.fromhex("7ab1")            # cbz r2, skip        -> 0x34
     out += bytes.fromhex("d4f84c36")        # ldr.w r3,[r4,#0x64c]
+    out += bytes.fromhex("012f")            # cmp r7,#1
+    out += bytes.fromhex("02d1")            # bne check           -> 0x22
     out += bytes.fromhex("9342")            # cmp r3,r2
-    out += bytes.fromhex("07d9")            # bls skip            -> 0x2e
+    out += bytes.fromhex("09d9")            # bls skip            -> 0x34
     out += bytes.fromhex("9b1a")            # subs r3,r3,r2
+    out += bytes.fromhex("9342")            # check: cmp r3,r2
+    out += bytes.fromhex("06d2")            # bhs skip            -> 0x34
     out += bytes.fromhex("c4f84c36")        # str.w r3,[r4,#0x64c]
-    out += bytes.fromhex("0023")            # movs r3,#0          (write)
+    out += bytes.fromhex("0023")            # movs r3,#0
     out += bytes.fromhex("84f85536")        # strb.w r3,[r4,#0x655]
     out += bytes.fromhex("a4f85036")        # strh.w r3,[r4,#0x650]
     out += bl(cave + len(out), HOOK_TARGET)  # skip: bl 0x436d6118
