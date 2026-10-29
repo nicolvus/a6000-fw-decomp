@@ -10,7 +10,14 @@ Sitios (bytes originales verificados):
     0x4384133e  40 f0 1a 81  bne.w 0x43841576   -> 2 NOP (cae al cave)
     0x43841342  00 23 23 70  movs r3,#0; strb r3,[r4] -> bl cave
     0x43841476  a3 73        strb r3,[r4,#0xe]  -> NOP (el cave ya escribió)
-    0x43541a80  relleno de ceros entre cabecera y código -> cave de 20 B
+    0x43541800  área reservada de la cabecera LIRO -> cave de 20 B
+
+E25-25 reubicó la cueva: la zona `0x435418e4-0x43541aff` NO es relleno libre
+(contiene un objeto de 512 B con entrada en la GOT: `0x44020f00 -> 0x43541900`,
+presente también en la A7S).  La nueva zona `0x4354141c-0x435418d8` es cero en
+A6000 y A7S, no tiene punteros literales ni destinos de rama y queda después del
+`memcpy` de la tabla API del cargador (`liro.ko`: `hdr[0x14]+0x24`, 0x344 B,
+0x435410d8-0x4354141c).
 
 No genera FDAT/DAT, no instala nada y no toca la cámara.  El binario parcheado no
 se versiona; solo el manifiesto con hashes y bytes.
@@ -36,9 +43,19 @@ CALL = 0x43841342
 CALL_OLD = bytes.fromhex("00232370")
 STORE = 0x43841476
 STORE_OLD = bytes.fromhex("a373")
-CAVE = 0x43541A80
+CAVE = 0x43541800
 CAVE_LEN = 20
-CAVE_OLD = bytes(CAVE_LEN)          # relleno de ceros verificado
+CAVE_OLD = bytes(CAVE_LEN)          # área reservada de cabecera, cero verificado
+
+# Regiones que el parche no debe tocar (E25-25).
+PROTECTED: tuple[tuple[str, int, int], ...] = (
+    ("liro_header", 0x43541000, 0x4354141C),
+    ("api_table_dest", 0x435410D8, 0x4354141C),
+    ("header_metadata_tail", 0x435418D8, 0x435418E4),
+    ("got_zero_object", 0x43541900, 0x43541B00),
+    ("text_start", 0x43541B00, 0x43541B80),
+)
+
 
 
 class ImageError(ValueError):
@@ -154,10 +171,19 @@ def restore_bytes(data: bytes) -> bytes:
     return bytes(out)
 
 
+def _protected(data: bytes) -> dict[str, str]:
+    return {name: sha256(_slice(data, a, b - a)) for name, a, b in PROTECTED}
+
+
 def build_manifest(image: BionzImage, output: bytes, diff: list[dict[str, Any]]) -> dict[str, Any]:
     bad = [d for d in diff if d["address"] not in allowed_addresses()]
     if bad:
         raise ImageError(f"cambios fuera de los sitios autorizados: {bad[:3]}")
+    before = _protected(image.data)
+    after = _protected(output)
+    changed = {k: (before[k], after[k]) for k in before if before[k] != after[k]}
+    if changed:
+        raise ImageError(f"región protegida alterada: {sorted(changed)}")
     return {
         "phase": "E25-24",
         "component": "BIONZ av-cam.bin",
@@ -177,10 +203,13 @@ def build_manifest(image: BionzImage, output: bytes, diff: list[dict[str, Any]])
             "bytes": cave_bytes().hex(),
             "length": CAVE_LEN,
             "original": CAVE_OLD.hex(),
-            "note": "relleno de ceros entre la cabecera LIRO y el código (0x8e4-0xaff); "
-                    "verificado sin referencias BL/literal; la instalación exige comprobar "
-                    "que el cargador no consume ese relleno",
+            "note": "área reservada de la cabecera LIRO (0x141c-0x18d8), cero en A6000 y "
+                    "A7S, sin punteros literales ni destinos de rama; queda después del "
+                    "memcpy de la tabla API (0x435410d8-0x4354141c). E25-25 descartó "
+                    "0x43541a80: 0x43541900 es un objeto de 512 B con entrada en la GOT "
+                    "(0x44020f00) en ambas imágenes",
         },
+        "protected": {name: before[name] for name, _, _ in PROTECTED},
         "semantics": {
             "EFCS_ON": "campo +0x210 = 0 -> pkt[0x0e] = 0 -> Darwin conserva la ruta original",
             "EFCS_OFF": "campo +0x210 = 1 -> pkt[0x0e] = 1 -> Darwin suprime bobinas y motor",

@@ -67,11 +67,14 @@ def thumb_stub_ret(value: int) -> bytes:
 
 
 class Emu:
-    def __init__(self, fw: Path = FW):
-        data = fw.read_bytes()
-        h = hashlib.sha256(data).hexdigest()
-        if h != SHA:
-            raise RuntimeError(f"SHA-256 inesperado: {h}")
+    def __init__(self, fw: Path = FW, data: bytes | None = None):
+        if data is None:
+            data = fw.read_bytes()
+            h = hashlib.sha256(data).hexdigest()
+            if h != SHA:
+                raise RuntimeError(f"SHA-256 inesperado: {h}")
+        elif len(data) != FW.stat().st_size:
+            raise RuntimeError(f"tamaño inesperado: {len(data)}")
         self.mu = Uc(UC_ARCH_ARM, UC_MODE_THUMB)
         size = ((len(data) + 0xFFF) & ~0xFFF) + 0x200000
         self.mu.mem_map(BASE, size, UC_PROT_ALL)

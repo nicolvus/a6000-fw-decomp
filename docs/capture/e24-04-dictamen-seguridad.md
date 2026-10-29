@@ -132,3 +132,18 @@ Consecuencia (INFERENCIA, sin el valor de los bytes ni el reloj del contador): e
 ## Límites
 
 Todo lo dicho del arranque de Darwin, de Loader2/3 y de lo que haga el actualizador ante un fallo de Darwin es deducido de lo que los llama y de lo que los usa; ninguno de esos binarios está disponible. La versión instalada y la regla del guard con 3.22 no se re-verificaron. «Ruta plausible» no es «ruta demostrada». No se cuantifica probabilidad de fallo.
+
+## Addendum 28-10-2026 — E25-25 (carga del BIONZ, no cambia el dictamen)
+
+E25-25 verificó, con el `liro.ko` ya documentado en S49, que `tsk_entry` lee
+`av-cam.bin` completo (`filp_open`/`vfs_read`), comprueba `LIRO`/versión 4 y hace
+`memcpy(hdr[0x14]+0x24, tabla_API, 0x344)`; el stub ARM de `0x0` se ejecuta desde el
+mismo buffer. Eso sostiene que una cueva en el área reservada de la cabecera
+(`0x4354141c–0x435418d8`) se carga y comparte permisos con el texto, pero **no**
+demuestra que el cargador acepte la imagen ni que ignore esos campos.
+
+No hay checksum ni firma dentro de la imagen: la única integridad conocida es el CRC-32
+del paquete (`us_crc32sum.sh`, E24-03), recalculable offline. **El dictamen no cambia:**
+un Darwin defectuoso sigue sin recuperación demostrada; no se autoriza un flasheo
+persistente. La reubicación de cuevas elimina un riesgo de corrupción de datos, no el
+riesgo de arranque. Detalle: [E25-25](e25-25-validacion-carga-caves.md).

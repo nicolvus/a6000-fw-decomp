@@ -167,9 +167,9 @@ La cadena BIONZ → `SetExposure` no cambia: `0x437f8a50` construye `cap+0x64c/0
 | Dirección | Antes | Después | Rol |
 |---|---|---|---|
 | `0x4384133e` | `40 f0 1a 81` | `00 bf 00 bf` | elimina el salto condicional; el cave decide |
-| `0x43841342` | `00 23 23 70` | `bl 0x43541a80` | replica `pkt[0]=0` y escribe `pkt[0x0e]` |
+| `0x43841342` | `00 23 23 70` | `bl 0x43541800` | replica `pkt[0]=0` y escribe `pkt[0x0e]` |
 | `0x43841476` | `a3 73` | `00 bf` | evita que el store posterior borre el byte |
-| `0x43541a80` | 20 B a cero | cave | `pkt[0]=0; pkt[0x0e]=[sb+0x41c]; cmp r1; beq/b.w; bx lr` |
+| `0x43541800` | 20 B a cero | cave | `pkt[0]=0; pkt[0x0e]=[sb+0x41c]; cmp r1; beq/b.w; bx lr` |
 
 Cave (20 B):
 
@@ -184,10 +184,12 @@ ff f2 70 bd   b.w 0x43841576
 70 47         bx lr
 ```
 
-El cave se coloca en el relleno de ceros `0x435418e4–0x43541aff`, entre la cabecera LIRO y
-el código (`0x43541b00`). Es la única zona de 20 B contigua sin referencias `bl`/literal en
-ese rango. **Riesgo residual:** no está demostrado que el cargador de BIONZ no consuma ese
-relleno; la instalación física exigiría comprobarlo (fuera de esta autorización).
+El cave se coloca en el área reservada de la cabecera LIRO `0x4354141c–0x435418d8`
+(en concreto `0x43541800`), cero en A6000 y A7S, sin punteros literales ni destinos de rama
+y después del `memcpy` de la tabla API (`0x435410d8–0x4354141c`). **Corrección E25-25:** la
+ubicación original `0x43541a80` quedaba dentro de un objeto de 512 B con entrada en la GOT
+(`0x44020f00 → 0x43541900`, también en la A7S) y no era relleno libre. Detalle en
+[E25-25](e25-25-validacion-carga-caves.md).
 
 ### 4.2 Parche Darwin (22 bytes distintos)
 
@@ -293,14 +295,16 @@ constructor original.
 
 No demostrado offline:
 
-1. Que el cargador de BIONZ acepte el parche en el relleno y que la imagen arranque.
+1. Que el cargador de BIONZ acepte el parche en el área reservada y que la imagen arranque
+   (E25-25: la zona es estructuralmente apta, pero el cargador no está demostrado).
 2. Que `pkt[0x0e]` no tenga un consumidor no detectado en Darwin (el mapa no lo lista; el
    barrido de lecturas con desplazamiento `0x3e` no encontró ninguno, pero no prueba ausencia).
-3. Que las entradas 70/76 de la tabla de vectores de Darwin no se usen en ningún modo.
+3. Que las entradas 70/76 de la tabla de vectores de Darwin no se usen en ningún modo
+   (E25-25: son cero; un IRQ que las usara ya provocaría un fault en el original).
 4. Que EFCS accione físicamente la segunda cortina con el Darwin parcheado.
 5. Que Electronic no accione ninguna cortina (sonido, consumo, sensor).
-6. La exposición RAW de Electronic: con `ShutMode 3` sigue el sesgo por filas de E25-10;
-   la corrección C3-B es E25-26.
+6. La exposición RAW de Electronic: C3-B está implementado en E25-26 y verificado solo en
+   emulación; la aplicación por el IMX210 sigue pendiente.
 7. La sincronización de fin de exposición (`0x0e`) y la lectura RAW completa.
 8. Cualquier recuperación tras un fallo de arranque: E24-04 sigue vigente (sin recuperación
    independiente demostrada).

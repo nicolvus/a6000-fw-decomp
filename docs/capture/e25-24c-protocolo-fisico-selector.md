@@ -2,7 +2,9 @@
 
 28-10-2026. **No ejecutado.** Este documento no autoriza escrituras, flasheo ni pruebas en
 cámara; describe qué habría que medir y con qué criterios, para una autorización separada.
-La implementación offline está en [E25-24b](e25-24b-implementacion-selector.md).
+La implementación offline está en [E25-24b](e25-24b-implementacion-selector.md), con C3-B en
+[E25-26](e25-26-c3b-exposicion-electronica.md) y la validación de cuevas/carga en
+[E25-25](e25-25-validacion-carga-caves.md).
 
 ## 0. Qué se quiere demostrar
 
@@ -38,7 +40,8 @@ Con EFCS ON y OFF, tres disparos por velocidad:
 | 1/250 | Control intermedio |
 | 1/60 | Control lento dentro del cuadro |
 | 1/30 | Límite del cuadro (64,9 ms) |
-| 1 s | Solo si Electronic ya tiene C3-B; si no, documentar el límite |
+| 1/8000 | Ruta más rápida de C3-B; cuantización de 8 líneas (−2,72 %) |
+| ≥ 1/15 | **Fuera de alcance**: C3-B se inhibe (`svd > 1`); no usar para validar el selector |
 
 Secuencia de aislamiento: EFCS ×3 → Electronic ×3 → EFCS ×3 → Electronic ×3. Entre bloques,
 comprobar que la cámara vuelve a `ready` y que no hay error.
@@ -52,7 +55,10 @@ comprobar que la cámara vuelve a `ready` y que no hay error.
   con el control de la misma sesión. Electronic con `ShutMode 3` puede conservar el sesgo de
   E25-10; no confundirlo con fallo del selector.
 * **Estado:** `pkt[0x0e]` (si se puede leer), `cap+0x41c`, `record+0x6d`, `cap+0x655`,
-  `cap+0x64c`, mensajes `0x0c`/`0x0e`. Solo lectura; no escribir RAM.
+  `cap+0x64c`, `cap+0x650`, mensajes `0x0c`/`0x0e`. Solo lectura; no escribir RAM.
+  En Electronic se espera `cap+0x655 = 0` y `SetExposure(shd = VTS − líneas, svd = 0)`;
+  en EFCS, `cap+0x655 = 3` y el `shd` nativo. `cap+0x650` vuelve al valor nativo tras
+  `Execute(1)` (0x438c8334).
 * **Reversión:** restaurar imágenes, verificar SHA y repetir un disparo mecánico de control.
 
 Criterio de éxito del selector: EFCS conserva segunda cortina y exposición; Electronic no
@@ -70,9 +76,17 @@ C3-B).
 Ante un aborto: apagar, no insistir, restaurar imágenes originales si se llegó a instalar, y
 documentar el estado antes de cualquier otro intento.
 
-## 5. Lo que no se puede demostrar offline
+## 5. Modo de aplicación (a decidir en la autorización)
+
+* **A — RAM (preferente para el primer contacto):** aplicar el hook y la cueva en RAM con
+  guardián y reversión verificada (patrón T050), sin tocar firmware ni NVRAM. Solo si la
+  autorización lo permite expresamente.
+* **B — Imagen parcheada:** exige resolver la recuperación de Darwin (E24-04) y el arranque
+  con el área reservada (E25-25). No se propone como primer paso.
+
+## 6. Lo que no se puede demostrar offline
 
 El movimiento físico de P4D/P4E, la ausencia de rebote, la integridad del RAW en todas las
-velocidades, el comportamiento del cargador con el relleno parcheado y la recuperación tras
+velocidades, el comportamiento del cargador con el área reservada parcheada y la recuperación tras
 un fallo de arranque. Todo eso queda fuera de E25-24b y requiere esta sesión física
 autorizada.

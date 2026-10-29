@@ -32,8 +32,8 @@ CAP, IMG, TBL, ENT = SCRATCH + 0x1000, SCRATCH + 0x8000, SCRATCH + 0x9000, SCRAT
 MOD = 0x4355FD4C
 
 
-def nuevo() -> Emu:
-    e = Emu()
+def nuevo(data: bytes | None = None) -> Emu:
+    e = Emu(data=data)
     # restaura el módulo/división real que Emu sustituye por un stub
     e.mu.mem_write(MOD, FW.read_bytes()[MOD - BASE:MOD - BASE + 0x40])
     return e
@@ -118,9 +118,13 @@ NOMBRES = {0x437F8A50: "0x437f8a50", 0x43A12C64: "forzado", 0x436D6320: "SetExpo
            0x43AD90C2: "cfg_u16", 0x436D6118: "imager"}
 
 
-def start_exposure(cap: dict, forzado: int = 0, cfg_u16: int = 0xFFFF, hook=None, hasta: int = 0x438C83E8) -> dict:
-    """Ejecuta StartExposure (0x438c828c) hasta `hasta`. `cap`: offsets -> (valor, bytes). `hook(emu)` escribe memoria justo antes de `hook_pc`."""
-    e = nuevo()
+def start_exposure(cap: dict, forzado: int = 0, cfg_u16: int = 0xFFFF, hook=None, hasta: int = 0x438C83E8,
+                   data: bytes | None = None) -> dict:
+    """Ejecuta StartExposure (0x438c828c) hasta `hasta`. `cap`: offsets -> (valor, bytes). `hook(emu)` escribe memoria justo antes de `hook_pc`.
+
+    `data` permite ejecutar una imagen parcheada (mismo tamaño) en lugar del firmware original.
+    """
+    e = nuevo(data)
     logs: list = []
     _stub_externos(e, REALES_START, logs, {0x43A12C64: forzado, 0x43AD90C2: cfg_u16, 0x437F8A50: 0, 0x436C28D0: 1, 0x43AD90B6: 1})
     e.mu.mem_write(CAP, b"\0" * 0x5000)

@@ -1,0 +1,183 @@
+{
+ "phase": "E25-25",
+ "status": "offline",
+ "installable": false,
+ "bionz": {
+  "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "size": 11427236,
+  "base": "0x43541000",
+  "old_gap": {
+   "range": [
+    "0x435418e4",
+    "0x43541b00"
+   ],
+   "length": 540,
+   "all_zero": true,
+   "nonzero_bytes": 0,
+   "literal_references": [
+    {
+     "source": "0x43adeee4",
+     "target": "0x43541a64",
+     "kind": "literal"
+    },
+    {
+     "source": "0x44020f00",
+     "target": "0x43541900",
+     "kind": "literal"
+    }
+   ],
+   "branch_references": [],
+   "before": "00000000007df0ff0000ffff58105443",
+   "after": "4b68f0b5b3f57a6f84bf4ff47a634b60",
+   "label": "relleno cabecera/código (E25-24)"
+  },
+  "header_reserved": {
+   "range": [
+    "0x4354141c",
+    "0x435418d8"
+   ],
+   "length": 1212,
+   "all_zero": true,
+   "nonzero_bytes": 0,
+   "literal_references": [],
+   "branch_references": [
+    {
+     "source": "0x4361d67c",
+     "target": "0x4354167e",
+     "kind": "bl"
+    }
+   ],
+   "before": "00000000000000000000000000000000",
+   "after": "007df0ff0000ffff5810544300000000",
+   "label": "reservado de cabecera (E25-25)"
+  },
+  "got_object": {
+   "range": [
+    "0x43541900",
+    "0x43541b00"
+   ],
+   "length": 512,
+   "all_zero": true,
+   "nonzero_bytes": 0,
+   "literal_references": [
+    {
+     "source": "0x43adeee4",
+     "target": "0x43541a64",
+     "kind": "literal"
+    },
+    {
+     "source": "0x44020f00",
+     "target": "0x43541900",
+     "kind": "literal"
+    }
+   ],
+   "branch_references": [],
+   "before": "00000000000000000000000000000000",
+   "after": "4b68f0b5b3f57a6f84bf4ff47a634b60",
+   "label": "objeto cero con entrada GOT"
+  },
+  "a7s_same_gap_zero": true,
+  "a7s_same_header_zero": true,
+  "selector_cave": {
+   "fits": true,
+   "start": "0x43541800",
+   "end": "0x43541814",
+   "literal_conflicts": [],
+   "branch_conflicts": []
+  },
+  "loader": {
+   "source": "liro.ko tsk_entry (S49): memcpy(hdr[0x14]+0x24, tabla_API, 0x344)",
+   "hdr_0x14": "0x435410b4",
+   "api_table_dest": "0x435410d8-0x4354141c",
+   "implication": "el área 0x141c-0x18d8 queda fuera del memcpy conocido; el archivo se lee completo (vfs_read) y el stub ARM de 0x0 se ejecuta, por lo que cabecera y texto comparten la misma imagen cargada"
+  }
+ },
+ "darwin": {
+  "sha256": "5f2be06d9885d154e8e0df46a611d6830d29754b4353f6e82cecfe66dd6a0bf4",
+  "size": 157276,
+  "base": "0x4200",
+  "vectors_70_76": [
+   {
+    "index": 70,
+    "address": "0x4318",
+    "value": "0x0",
+    "zero": true
+   },
+   {
+    "index": 71,
+    "address": "0x431c",
+    "value": "0x0",
+    "zero": true
+   },
+   {
+    "index": 72,
+    "address": "0x4320",
+    "value": "0x0",
+    "zero": true
+   },
+   {
+    "index": 73,
+    "address": "0x4324",
+    "value": "0x0",
+    "zero": true
+   },
+   {
+    "index": 74,
+    "address": "0x4328",
+    "value": "0x4539",
+    "zero": false
+   },
+   {
+    "index": 76,
+    "address": "0x4330",
+    "value": "0x0",
+    "zero": true
+   }
+  ],
+  "cave_4318": {
+   "range": [
+    "0x4318",
+    "0x4326"
+   ],
+   "length": 14,
+   "all_zero": true,
+   "nonzero_bytes": 0,
+   "literal_references": [],
+   "branch_references": [],
+   "before": "db450000e5450000ef450000f9450000",
+   "after": "0000394500000d460000000000006345",
+   "label": "cueva (vectores 70-73)"
+  },
+  "literal_4330": {
+   "range": [
+    "0x4330",
+    "0x4334"
+   ],
+   "length": 4,
+   "all_zero": true,
+   "nonzero_bytes": 0,
+   "literal_references": [],
+   "branch_references": [],
+   "before": "0000000000000000394500000d460000",
+   "after": "63450000214600002b4600002b460000",
+   "label": "literal S+0x3e (vector 76)"
+  },
+  "cave_fits_zero_entries": true,
+  "literal_refs": [],
+  "branch_refs": []
+ },
+ "channel": {
+  "packet_len": 22,
+  "modality_offset": "0xe",
+  "cap_field": "0x41c",
+  "darwin_s": "0x200036d8",
+  "darwin_flag": "0x20003716",
+  "efcs_packet_flag": 0,
+  "electronic_packet_flag": 1,
+  "electronic_darwin_flag": 1,
+  "frozen_after_menu_change": true,
+  "invalid_fallback": 0,
+  "s_readers": [],
+  "s_readers_note": "barrido de desplazamiento 0x3e y literales a 0x200036d8/0x20003716: 0 lectores estáticos"
+ }
+}

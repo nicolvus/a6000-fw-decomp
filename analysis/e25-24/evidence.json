@@ -21,7 +21,7 @@
     "component": "BIONZ av-cam.bin",
     "source": "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/analysis/rea-independent/input/av-cam.bin",
     "source_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
-    "patched_sha256": "a53e016ea7a8304f24cf3c53b93f24c4036cb4bc74a66c663e773d633dfeacc3",
+    "patched_sha256": "f939e1d150f4abfd418512166c5dcc036e3a600743c9d20b2474690e7eb2834a",
     "status": "offline-candidate",
     "installable": false,
     "sites": [
@@ -34,7 +34,7 @@
       {
         "address": "0x43841342",
         "before": "00232370",
-        "after": "00f59dfb",
+        "after": "00f55dfa",
         "role": "movs/strb -> bl cave"
       },
       {
@@ -44,9 +44,9 @@
         "role": "store duplicado -> NOP"
       },
       {
-        "address": "0x43541a80",
+        "address": "0x43541800",
         "before": "0000000000000000000000000000000000000000",
-        "after": "00232370d9f81c24a273012901d0fff272bd7047",
+        "after": "00232370d9f81c24a273012901d0fff2b2be7047",
         "role": "cave: pkt[0x0e] = cap+0x41c"
       }
     ],
@@ -84,13 +84,13 @@
       {
         "address": 1132729156,
         "before": "23",
-        "after": "9d",
+        "after": "5d",
         "role": "movs/strb -> bl cave"
       },
       {
         "address": 1132729157,
         "before": "70",
-        "after": "fb",
+        "after": "fa",
         "role": "movs/strb -> bl cave"
       },
       {
@@ -106,115 +106,115 @@
         "role": "store duplicado -> NOP"
       },
       {
-        "address": 1129585281,
+        "address": 1129584641,
         "before": "00",
         "after": "23",
         "role": "cave: pkt[0x0e] = cap+0x41c"
       },
       {
-        "address": 1129585282,
+        "address": 1129584642,
         "before": "00",
         "after": "23",
         "role": "cave: pkt[0x0e] = cap+0x41c"
       },
       {
-        "address": 1129585283,
+        "address": 1129584643,
         "before": "00",
         "after": "70",
         "role": "cave: pkt[0x0e] = cap+0x41c"
       },
       {
-        "address": 1129585284,
+        "address": 1129584644,
         "before": "00",
         "after": "d9",
         "role": "cave: pkt[0x0e] = cap+0x41c"
       },
       {
-        "address": 1129585285,
+        "address": 1129584645,
         "before": "00",
         "after": "f8",
         "role": "cave: pkt[0x0e] = cap+0x41c"
       },
       {
-        "address": 1129585286,
+        "address": 1129584646,
         "before": "00",
         "after": "1c",
         "role": "cave: pkt[0x0e] = cap+0x41c"
       },
       {
-        "address": 1129585287,
+        "address": 1129584647,
         "before": "00",
         "after": "24",
         "role": "cave: pkt[0x0e] = cap+0x41c"
       },
       {
-        "address": 1129585288,
+        "address": 1129584648,
         "before": "00",
         "after": "a2",
         "role": "cave: pkt[0x0e] = cap+0x41c"
       },
       {
-        "address": 1129585289,
+        "address": 1129584649,
         "before": "00",
         "after": "73",
         "role": "cave: pkt[0x0e] = cap+0x41c"
       },
       {
-        "address": 1129585290,
+        "address": 1129584650,
         "before": "00",
         "after": "01",
         "role": "cave: pkt[0x0e] = cap+0x41c"
       },
       {
-        "address": 1129585291,
+        "address": 1129584651,
         "before": "00",
         "after": "29",
         "role": "cave: pkt[0x0e] = cap+0x41c"
       },
       {
-        "address": 1129585292,
+        "address": 1129584652,
         "before": "00",
         "after": "01",
         "role": "cave: pkt[0x0e] = cap+0x41c"
       },
       {
-        "address": 1129585293,
+        "address": 1129584653,
         "before": "00",
         "after": "d0",
         "role": "cave: pkt[0x0e] = cap+0x41c"
       },
       {
-        "address": 1129585294,
+        "address": 1129584654,
         "before": "00",
         "after": "ff",
         "role": "cave: pkt[0x0e] = cap+0x41c"
       },
       {
-        "address": 1129585295,
+        "address": 1129584655,
         "before": "00",
         "after": "f2",
         "role": "cave: pkt[0x0e] = cap+0x41c"
       },
       {
-        "address": 1129585296,
+        "address": 1129584656,
         "before": "00",
-        "after": "72",
+        "after": "b2",
         "role": "cave: pkt[0x0e] = cap+0x41c"
       },
       {
-        "address": 1129585297,
+        "address": 1129584657,
         "before": "00",
-        "after": "bd",
+        "after": "be",
         "role": "cave: pkt[0x0e] = cap+0x41c"
       },
       {
-        "address": 1129585298,
+        "address": 1129584658,
         "before": "00",
         "after": "70",
         "role": "cave: pkt[0x0e] = cap+0x41c"
       },
       {
-        "address": 1129585299,
+        "address": 1129584659,
         "before": "00",
         "after": "47",
         "role": "cave: pkt[0x0e] = cap+0x41c"
@@ -222,11 +222,18 @@
     ],
     "diff_count": 28,
     "cave": {
-      "address": "0x43541a80",
-      "bytes": "00232370d9f81c24a273012901d0fff272bd7047",
+      "address": "0x43541800",
+      "bytes": "00232370d9f81c24a273012901d0fff2b2be7047",
       "length": 20,
       "original": "0000000000000000000000000000000000000000",
-      "note": "relleno de ceros entre la cabecera LIRO y el código (0x8e4-0xaff); verificado sin referencias BL/literal; la instalación exige comprobar que el cargador no consume ese relleno"
+      "note": "área reservada de la cabecera LIRO (0x141c-0x18d8), cero en A6000 y A7S, sin punteros literales ni destinos de rama; queda después del memcpy de la tabla API (0x435410d8-0x4354141c). E25-25 descartó 0x43541a80: 0x43541900 es un objeto de 512 B con entrada en la GOT (0x44020f00) en ambas imágenes"
+    },
+    "protected": {
+      "liro_header": "b39fae9212dfbd20427b7960b859303fc2da6552e8b2374568c0faee692747fb",
+      "api_table_dest": "875fd088c3e4fc6a48ec6d7f9b897956a5ab6a83b9710de550857731c1311fef",
+      "header_metadata_tail": "de15f98e1c028cb7ab47cb9149c0ca0bc39029aca02f50aeb4f0e8561f7e32aa",
+      "got_zero_object": "076a27c79e5ace2a3d47f9dd2e83e4ff6ea8872b3c2218f66c92b89b55f36560",
+      "text_start": "520cca48ca10ce6641d7ef08a09400827db2d849b589d0f1f524dbd83ae0b035"
     },
     "semantics": {
       "EFCS_ON": "campo +0x210 = 0 -> pkt[0x0e] = 0 -> Darwin conserva la ruta original",
