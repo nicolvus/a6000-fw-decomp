@@ -1,0 +1,76 @@
+{
+  "backup_sha256": "eb420385120f2cd7c9b071f67ce5808721b7de44fb78e2884a856e3c438a327f",
+  "backup_length": 491520,
+  "assumptions": [
+    "64 pages/block, 2048 normal bytes/page, 1536 safe bytes/page",
+    "safe block succeeded and observed INFO begins first surviving normal block"
+  ],
+  "requested_frames": 5,
+  "conditional_surviving_normal_frames": 3,
+  "conditional_missing_normal_frames": 1,
+  "lost_frame_ordinal": null,
+  "physical_mapping_verified": false,
+  "chunks": [
+    {
+      "ordinal_surviving": 0,
+      "offset": 0,
+      "length": 98304,
+      "sha256": "4437629aaef58a6c97535d488e55131407f7a8e07395eb9da7de72b6f810dd48",
+      "physical_block": null,
+      "status": "conditional boundary; original frame headers not retained"
+    },
+    {
+      "ordinal_surviving": 1,
+      "offset": 98304,
+      "length": 131072,
+      "sha256": "d17c6bca09d75190ff00a127de43470bfdaf1d47d7568dee6155cb60e9b5ad75",
+      "physical_block": null,
+      "status": "conditional boundary; original frame headers not retained"
+    },
+    {
+      "ordinal_surviving": 2,
+      "offset": 229376,
+      "length": 131072,
+      "sha256": "59dfdb2d89adbc6964e032bdd3633825d0682a1e495b555138d3de28aef05598",
+      "physical_block": null,
+      "status": "conditional boundary; original frame headers not retained"
+    },
+    {
+      "ordinal_surviving": 3,
+      "offset": 360448,
+      "length": 131072,
+      "sha256": "f7155ab7b0ab21fd96dd06816c296421e8c69669152aaaf6ee3011dbd453a819",
+      "physical_block": null,
+      "status": "conditional boundary; original frame headers not retained"
+    }
+  ],
+  "loader3_fragments": [
+    {
+      "info_index": 5,
+      "die": 0,
+      "plane": 0,
+      "block": 2,
+      "page": 21,
+      "pages": 43,
+      "next": 6,
+      "runtime_start": 3223257088,
+      "length": 88064,
+      "source_offset": 141312,
+      "status": "prefix located by INFO; physical identity inferred"
+    },
+    {
+      "info_index": 6,
+      "die": 0,
+      "plane": 1,
+      "block": 2,
+      "page": 0,
+      "pages": 21,
+      "next": 0,
+      "runtime_start": 3223345152,
+      "length": 43008,
+      "source_offset": null,
+      "status": "plane 1 not explicitly acquired by BLDR"
+    }
+  ],
+  "scope": "No raw image, no OOB/ECC, no saved block IDs or failed-frame sizes. A corrected-ECC warning can be discarded as an error by this payload."
+}

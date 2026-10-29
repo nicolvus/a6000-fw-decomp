@@ -1,5 +1,7 @@
 # Estado vigente — Sony A6000 reverse engineering
 
+> **E26 R6, BLDR:** [informe](capture/e26-r6-recuperacion-bionz.md). Payload local cotejado con fuente histórica fijada; no adquiere explícitamente plane1 requerida por INFO6. Concatena bloques sin IDs/metadatos y puede descartar estados ECC tolerados por Loader2. Integridad Loader3 y restauración aún no demostradas.
+
 > **Incidente 3.25:** el usuario informa instalación y bloqueo posterior a Done. La prioridad vigente es recuperación, no nuevas funciones; el dictamen y las limitaciones están en [E26-RECOVERY](capture/e26-recovery.md). Las afirmaciones históricas de «no instalado» no describen el estado actual.
 
 > **E26 R5:** [evidencia y estrategia](capture/e26-r5-loader3-servicio.md). El recorte Loader3 conserva código útil, pero su integridad global no está validada (suma32 y referencias de runtime incoherentes). La bandera `updater/mode` selecciona 3 sin leer contenido; no hay activación independiente demostrada. CN4906 SIDE A tiene UART0 BIONZ 4/5 y SWD BIONZ opcional 11/12 por R4911/R4912 XX, además de Darwin. El cierre normal crea `comp` y elimina `mode`; no demuestra arranque posterior. Próximo diagnóstico: foto, continuidad/niveles y UART0 pasiva, con autorización física separada.

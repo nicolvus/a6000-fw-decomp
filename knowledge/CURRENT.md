@@ -1,5 +1,7 @@
 # Estado actual — léeme primero
 
+> **E26 R6, BLDR:** [informe vigente](../docs/capture/e26-r6-recuperacion-bionz.md). Fuente del payload local resuelta; normales die0/plane0, cola INFO6 requiere plane1. No reconstruida ni certificada. Próximo paso: delimitar selector en prefijo válido y mapa visual CN4906; no repetir búsqueda de implementación BLDR.
+
 > **Prioridad vigente:** recuperar la cámara tras el bloqueo informado después de instalar 3.25. Ver [E26-RECOVERY](../docs/capture/e26-recovery.md); ningún acceso físico está autorizado. El texto histórico inferior sobre instalación pendiente queda superado por el testimonio del usuario.
 
 > **E26 Fase A:** el lector MUMIN del initrd A6000 advierte cuando el offset de TOC no es múltiplo de 512; la tabla 3.25 tiene 359 entradas con residuo 256. No se ha demostrado rechazo por ARM7 ni uso de esta ruta antes del initrd. Comparación de bloques y límites en E26; siguiente Fase B, productores de `setResult`.

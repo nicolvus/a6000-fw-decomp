@@ -20,7 +20,7 @@
 
 | ID | Estado | Origen y criterio de cierre |
 |---|---|---|
-| E26-R5-L3 | ABIERTO offline | R5 §1: obtener implementación BLDR de la revisión usada, resolver orden/cobertura de bloques y reconstruir INFO 5→6; verificar checksum/runtime/segmentos antes de declarar integridad |
+| E26-R5-L3 | PARCIAL R6 / fuente resuelta | R6 §1: payload local cotejado con fuente histórica; normales die0/plane0 y descarte de estados ECC. Falta cola INFO6 die0/plane1/block2/pages0–20 identificada, IDs/tramas perdidas, checksum real y runtime; no repetir búsqueda de implementación |
 | E26-R5-MODE | PARCIAL | R5 §2: condición de bandera y prioridades verificadas; SIO alternativo condicionado no habilitado históricamente. Cierre: vía independiente demostrada para seleccionar 3 y dependencias completas sin nflasha3 |
 | E26-R5-HOST | PARCIAL offline | R5 §3: flag HasError, catch/setError, comp/mode y byte 2 al adaptador resueltos. Cierre: ciclo uincomp, cobertura errores join/EH y último éxito gráfico Done del host, sin volver a resolver Join |
 | E26-R5-SIDEA | PARCIAL / físico diferido | R5 §4/7: pinout documental completo, UART0 BIONZ 4/5 y SWD por R4911/12 XX. Cierre: foto/cara/acceso, población/continuidad y nivel seguros; captura pasiva solo tras autorización independiente |

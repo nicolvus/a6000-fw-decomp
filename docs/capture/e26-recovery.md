@@ -1,5 +1,7 @@
 # E26-RECOVERY — incidente 3.25 (investigación abierta)
 
+> **Actualización R6, fase BLDR:** [mapa y evidencia](e26-r6-recuperacion-bionz.md). Identificada la implementación del payload local: bloque safe + cuatro normales, normales solo die0/plane0. INFO exige plane1 para la cola Loader3; no reconstruida. BLDR puede descartar una advertencia ECC y pierde metadatos/fronteras al concatenar. No demuestra daño en cámara.
+
 ## Hechos y alcance
 
 **Actualización R5 (29-10-2026):** [informe de Loader3, CN4906 y estrategia de recuperación](e26-r5-loader3-servicio.md). El recorte contiguo de Loader3 **no está validado íntegramente**: suma32 distinta de INFO y referencias de inicialización incoherentes en su tramo final. Su prefijo permite reconstruir selector y dependencias con ese límite. CN4906 transporta **UART0 BIONZ (4/5)** y enlaces opcionales **SWD BIONZ (11/12, R4911/R4912 XX)**, además de Darwin; confirmado por esquema, continuidad real pendiente. La primera evaluación física propuesta es UART0 pasiva tras foto, pinout y niveles verificados; no se ha autorizado ni realizado.

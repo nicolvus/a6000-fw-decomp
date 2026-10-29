@@ -1,5 +1,7 @@
 # E26-RECOVERY R5 — Loader3, servicio BIONZ y diagnóstico de SY-1028
 
+> **Corrección R6 §1 (29-10-2026):** implementación BLDR del payload local recuperada y cotejada con upstream fijado. Solicita die0/plane0; INFO requiere plane1 para las últimas 21 páginas. Descarta metadatos y estados ECC tolerados por Loader2; concatenación pierde tramas vacías. El mapa físico y Loader3 íntegro siguen sin demostrarse. Véase [R6](e26-r6-recuperacion-bionz.md).
+
 Fecha: 29-10-2026. Base comprobada: `480056cd`, tras revisar `fb1be962`, `0446275f` y `b998b31a`. Investigación exclusivamente sobre archivos locales: sin encendido, conexión, comandos a la cámara, escrituras ni firmware instalable. Continúa [E26](e26-recovery.md); no repite la auditoría TPZL ni el transporte de 0x32.
 
 ## Resultado y estrategia
