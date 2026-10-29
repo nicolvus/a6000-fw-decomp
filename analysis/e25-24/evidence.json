@@ -1,0 +1,494 @@
+{
+  "phase": "E25-24",
+  "selector": [
+    {
+      "mode": "efcs",
+      "field": 0,
+      "packet_flag": 0,
+      "route": "efcs_original",
+      "state_during": "capture_active"
+    },
+    {
+      "mode": "electronic",
+      "field": 1,
+      "packet_flag": 1,
+      "route": "silent_electronico",
+      "state_during": "capture_active"
+    }
+  ],
+  "bionz": {
+    "phase": "E25-24",
+    "component": "BIONZ av-cam.bin",
+    "source": "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/analysis/rea-independent/input/av-cam.bin",
+    "source_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+    "patched_sha256": "a53e016ea7a8304f24cf3c53b93f24c4036cb4bc74a66c663e773d633dfeacc3",
+    "status": "offline-candidate",
+    "installable": false,
+    "sites": [
+      {
+        "address": "0x4384133e",
+        "before": "40f01a81",
+        "after": "00bf00bf",
+        "role": "bne.w -> NOP; el cave decide la rama"
+      },
+      {
+        "address": "0x43841342",
+        "before": "00232370",
+        "after": "00f59dfb",
+        "role": "movs/strb -> bl cave"
+      },
+      {
+        "address": "0x43841476",
+        "before": "a373",
+        "after": "00bf",
+        "role": "store duplicado -> NOP"
+      },
+      {
+        "address": "0x43541a80",
+        "before": "0000000000000000000000000000000000000000",
+        "after": "00232370d9f81c24a273012901d0fff272bd7047",
+        "role": "cave: pkt[0x0e] = cap+0x41c"
+      }
+    ],
+    "diff": [
+      {
+        "address": 1132729150,
+        "before": "40",
+        "after": "00",
+        "role": "bne.w -> NOP; el cave decide la rama"
+      },
+      {
+        "address": 1132729151,
+        "before": "f0",
+        "after": "bf",
+        "role": "bne.w -> NOP; el cave decide la rama"
+      },
+      {
+        "address": 1132729152,
+        "before": "1a",
+        "after": "00",
+        "role": "bne.w -> NOP; el cave decide la rama"
+      },
+      {
+        "address": 1132729153,
+        "before": "81",
+        "after": "bf",
+        "role": "bne.w -> NOP; el cave decide la rama"
+      },
+      {
+        "address": 1132729155,
+        "before": "23",
+        "after": "f5",
+        "role": "movs/strb -> bl cave"
+      },
+      {
+        "address": 1132729156,
+        "before": "23",
+        "after": "9d",
+        "role": "movs/strb -> bl cave"
+      },
+      {
+        "address": 1132729157,
+        "before": "70",
+        "after": "fb",
+        "role": "movs/strb -> bl cave"
+      },
+      {
+        "address": 1132729462,
+        "before": "a3",
+        "after": "00",
+        "role": "store duplicado -> NOP"
+      },
+      {
+        "address": 1132729463,
+        "before": "73",
+        "after": "bf",
+        "role": "store duplicado -> NOP"
+      },
+      {
+        "address": 1129585281,
+        "before": "00",
+        "after": "23",
+        "role": "cave: pkt[0x0e] = cap+0x41c"
+      },
+      {
+        "address": 1129585282,
+        "before": "00",
+        "after": "23",
+        "role": "cave: pkt[0x0e] = cap+0x41c"
+      },
+      {
+        "address": 1129585283,
+        "before": "00",
+        "after": "70",
+        "role": "cave: pkt[0x0e] = cap+0x41c"
+      },
+      {
+        "address": 1129585284,
+        "before": "00",
+        "after": "d9",
+        "role": "cave: pkt[0x0e] = cap+0x41c"
+      },
+      {
+        "address": 1129585285,
+        "before": "00",
+        "after": "f8",
+        "role": "cave: pkt[0x0e] = cap+0x41c"
+      },
+      {
+        "address": 1129585286,
+        "before": "00",
+        "after": "1c",
+        "role": "cave: pkt[0x0e] = cap+0x41c"
+      },
+      {
+        "address": 1129585287,
+        "before": "00",
+        "after": "24",
+        "role": "cave: pkt[0x0e] = cap+0x41c"
+      },
+      {
+        "address": 1129585288,
+        "before": "00",
+        "after": "a2",
+        "role": "cave: pkt[0x0e] = cap+0x41c"
+      },
+      {
+        "address": 1129585289,
+        "before": "00",
+        "after": "73",
+        "role": "cave: pkt[0x0e] = cap+0x41c"
+      },
+      {
+        "address": 1129585290,
+        "before": "00",
+        "after": "01",
+        "role": "cave: pkt[0x0e] = cap+0x41c"
+      },
+      {
+        "address": 1129585291,
+        "before": "00",
+        "after": "29",
+        "role": "cave: pkt[0x0e] = cap+0x41c"
+      },
+      {
+        "address": 1129585292,
+        "before": "00",
+        "after": "01",
+        "role": "cave: pkt[0x0e] = cap+0x41c"
+      },
+      {
+        "address": 1129585293,
+        "before": "00",
+        "after": "d0",
+        "role": "cave: pkt[0x0e] = cap+0x41c"
+      },
+      {
+        "address": 1129585294,
+        "before": "00",
+        "after": "ff",
+        "role": "cave: pkt[0x0e] = cap+0x41c"
+      },
+      {
+        "address": 1129585295,
+        "before": "00",
+        "after": "f2",
+        "role": "cave: pkt[0x0e] = cap+0x41c"
+      },
+      {
+        "address": 1129585296,
+        "before": "00",
+        "after": "72",
+        "role": "cave: pkt[0x0e] = cap+0x41c"
+      },
+      {
+        "address": 1129585297,
+        "before": "00",
+        "after": "bd",
+        "role": "cave: pkt[0x0e] = cap+0x41c"
+      },
+      {
+        "address": 1129585298,
+        "before": "00",
+        "after": "70",
+        "role": "cave: pkt[0x0e] = cap+0x41c"
+      },
+      {
+        "address": 1129585299,
+        "before": "00",
+        "after": "47",
+        "role": "cave: pkt[0x0e] = cap+0x41c"
+      }
+    ],
+    "diff_count": 28,
+    "cave": {
+      "address": "0x43541a80",
+      "bytes": "00232370d9f81c24a273012901d0fff272bd7047",
+      "length": 20,
+      "original": "0000000000000000000000000000000000000000",
+      "note": "relleno de ceros entre la cabecera LIRO y el código (0x8e4-0xaff); verificado sin referencias BL/literal; la instalación exige comprobar que el cargador no consume ese relleno"
+    },
+    "semantics": {
+      "EFCS_ON": "campo +0x210 = 0 -> pkt[0x0e] = 0 -> Darwin conserva la ruta original",
+      "EFCS_OFF": "campo +0x210 = 1 -> pkt[0x0e] = 1 -> Darwin suprime bobinas y motor"
+    },
+    "reversal": "restaurar los bytes `before` de sites; no hay cambios fuera de diff"
+  },
+  "bionz_emulation": [
+    {
+      "sp_44": 0,
+      "field_0x41c": 0,
+      "pkt_0x0e": 0,
+      "pkt_0": 0,
+      "stopped_at": "0x43841576",
+      "r0": 43981
+    },
+    {
+      "sp_44": 0,
+      "field_0x41c": 1,
+      "pkt_0x0e": 1,
+      "pkt_0": 0,
+      "stopped_at": "0x43841576",
+      "r0": 43981
+    },
+    {
+      "sp_44": 1,
+      "field_0x41c": 0,
+      "pkt_0x0e": 0,
+      "pkt_0": 0,
+      "stopped_at": "0x43841346",
+      "r0": 43981
+    },
+    {
+      "sp_44": 1,
+      "field_0x41c": 1,
+      "pkt_0x0e": 1,
+      "pkt_0": 0,
+      "stopped_at": "0x43841346",
+      "r0": 43981
+    }
+  ],
+  "darwin": {
+    "phase": "E25-24",
+    "component": "Darwin darwin_core.bin",
+    "source": "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0640_darwin/darwin_core.bin",
+    "source_sha256": "5f2be06d9885d154e8e0df46a611d6830d29754b4353f6e82cecfe66dd6a0bf4",
+    "patched_sha256": "9771c0508ee17e7984a619479c1f69cc4e8b71f0091fb5f9dfde66bbd19fb177",
+    "status": "offline-candidate",
+    "installable": false,
+    "supersedes": [
+      "B1a (bloqueo global del motor)",
+      "tipo 0 (bloqueo global de bobinas)"
+    ],
+    "sites": [
+      {
+        "address": "0x20c78",
+        "before": "faf702fa",
+        "after": "e3f74efb",
+        "role": "tipo de bobina -> cave"
+      },
+      {
+        "address": "0x1fe6c",
+        "before": "fbf708f9",
+        "after": "e4f754fa",
+        "role": "compuerta del motor -> cave"
+      },
+      {
+        "address": "0x4318",
+        "before": "0000000000000000000000000000",
+        "after": "054a12780ab10020704716f0adbe",
+        "role": "cave: flag 0 -> original; flag != 0 -> 0"
+      },
+      {
+        "address": "0x4330",
+        "before": "00000000",
+        "after": "16370020",
+        "role": "literal S+0x3e"
+      }
+    ],
+    "diff": [
+      {
+        "address": 134264,
+        "before": "fa",
+        "after": "e3",
+        "role": "tipo de bobina -> cave"
+      },
+      {
+        "address": 134266,
+        "before": "02",
+        "after": "4e",
+        "role": "tipo de bobina -> cave"
+      },
+      {
+        "address": 134267,
+        "before": "fa",
+        "after": "fb",
+        "role": "tipo de bobina -> cave"
+      },
+      {
+        "address": 130668,
+        "before": "fb",
+        "after": "e4",
+        "role": "compuerta del motor -> cave"
+      },
+      {
+        "address": 130670,
+        "before": "08",
+        "after": "54",
+        "role": "compuerta del motor -> cave"
+      },
+      {
+        "address": 130671,
+        "before": "f9",
+        "after": "fa",
+        "role": "compuerta del motor -> cave"
+      },
+      {
+        "address": 17176,
+        "before": "00",
+        "after": "05",
+        "role": "cave: flag 0 -> original; flag != 0 -> 0"
+      },
+      {
+        "address": 17177,
+        "before": "00",
+        "after": "4a",
+        "role": "cave: flag 0 -> original; flag != 0 -> 0"
+      },
+      {
+        "address": 17178,
+        "before": "00",
+        "after": "12",
+        "role": "cave: flag 0 -> original; flag != 0 -> 0"
+      },
+      {
+        "address": 17179,
+        "before": "00",
+        "after": "78",
+        "role": "cave: flag 0 -> original; flag != 0 -> 0"
+      },
+      {
+        "address": 17180,
+        "before": "00",
+        "after": "0a",
+        "role": "cave: flag 0 -> original; flag != 0 -> 0"
+      },
+      {
+        "address": 17181,
+        "before": "00",
+        "after": "b1",
+        "role": "cave: flag 0 -> original; flag != 0 -> 0"
+      },
+      {
+        "address": 17183,
+        "before": "00",
+        "after": "20",
+        "role": "cave: flag 0 -> original; flag != 0 -> 0"
+      },
+      {
+        "address": 17184,
+        "before": "00",
+        "after": "70",
+        "role": "cave: flag 0 -> original; flag != 0 -> 0"
+      },
+      {
+        "address": 17185,
+        "before": "00",
+        "after": "47",
+        "role": "cave: flag 0 -> original; flag != 0 -> 0"
+      },
+      {
+        "address": 17186,
+        "before": "00",
+        "after": "16",
+        "role": "cave: flag 0 -> original; flag != 0 -> 0"
+      },
+      {
+        "address": 17187,
+        "before": "00",
+        "after": "f0",
+        "role": "cave: flag 0 -> original; flag != 0 -> 0"
+      },
+      {
+        "address": 17188,
+        "before": "00",
+        "after": "ad",
+        "role": "cave: flag 0 -> original; flag != 0 -> 0"
+      },
+      {
+        "address": 17189,
+        "before": "00",
+        "after": "be",
+        "role": "cave: flag 0 -> original; flag != 0 -> 0"
+      },
+      {
+        "address": 17200,
+        "before": "00",
+        "after": "16",
+        "role": "literal S+0x3e"
+      },
+      {
+        "address": 17201,
+        "before": "00",
+        "after": "37",
+        "role": "literal S+0x3e"
+      },
+      {
+        "address": 17203,
+        "before": "00",
+        "after": "20",
+        "role": "literal S+0x3e"
+      }
+    ],
+    "diff_count": 22,
+    "cave": {
+      "address": "0x4318",
+      "bytes": "054a12780ab10020704716f0adbe",
+      "length": 14,
+      "flag_address": "0x20003716",
+      "note": "0x4318..0x4327 y 0x4330..0x4333 eran cero (vectores 70 y 76, sin referencias BL/literal); el resto de la tabla de vectores no se toca"
+    },
+    "protected": {
+      "reset": "1fe67d25eb29fa9f5148773b0454a6ccad5a069306d06014349330991bb9dea9",
+      "scatter_load": "3b69ce262ffcd5081abfe5bbfd445b7834fe9dcfd16bbf5eae5cdec5131f4e35",
+      "bootloader_mailbox": "9a1526fc782a7e32bdf1fae3dafaad5141ad87bb850163fcf955becff348d11d",
+      "upd_main": "a229cdbf3169b32edcf69530a4f87dcb179712158a6f6b6ec2303120dba9fb8f",
+      "initcom": "a408dcc3898f6af139b57b5505bc430d154e5979d41b3344b62413bd9d87469f",
+      "com_task": "9c53045118020df4815a72bccddfcd02556990fbd0a58e5c48913c85b7c6cfea",
+      "watchdog": "88a7a7efc6f403331846a639b5b150a4aaaf7cf5e2f2b291211eb55b42dfcaca",
+      "power_table": "9347c5bac2f5a8a17b7c5f7bb756d63ba0607424157443643acb5c558512aa6f",
+      "gpio_writer": "a80991b1537d48cc6c217477a73555a43f5279656c2c900d3d03a1d167b99bcf"
+    },
+    "semantics": {
+      "pkt[0x0e] == 0": "EFCS: 0x20c74 y 0x1fe66 ejecutan 0x1b080 original",
+      "pkt[0x0e] != 0": "Electronic: ambas compuertas devuelven 0 (sin bobinas ni motor)"
+    },
+    "reversal": "restaurar los bytes `before`; 0x20c74/0x1fe66/InitCom/Upd/watchdog no se modifican y vuelven a su comportamiento original al restaurar"
+  },
+  "darwin_emulation": [
+    {
+      "image": "original",
+      "pkt_0x0e": 0,
+      "coil_0x20c74": 3,
+      "motor_0x1fe66": 4
+    },
+    {
+      "image": "original",
+      "pkt_0x0e": 1,
+      "coil_0x20c74": 3,
+      "motor_0x1fe66": 4
+    },
+    {
+      "image": "patched",
+      "pkt_0x0e": 0,
+      "coil_0x20c74": 3,
+      "motor_0x1fe66": 4
+    },
+    {
+      "image": "patched",
+      "pkt_0x0e": 1,
+      "coil_0x20c74": 0,
+      "motor_0x1fe66": 0
+    }
+  ]
+}

@@ -15,7 +15,7 @@ flasheo salvo autorización expresa del usuario para un caso concreto.
 
 ## Estado actual
 
-- **E25-24:** selector EFCS / Electronic binario como candidato, sin implementación; B1a global impide dar por recuperada la segunda cortina EFCS. La [auditoría](../docs/capture/e25-24-selector-efcs-electronico.md) identifica contradicciones en el informe de integración y pendientes de GUI, Darwin y sensor. E25-24/E25-25 abiertos.
+- **E25-24:** **selector EFCS / Electronic implementado offline** ([E25-24b](../docs/capture/e25-24b-implementacion-selector.md)): EFCS ON/OFF (`+0x210` 0/1) elige la modalidad; BIONZ copia `cap+0x41c` a `pkt[0x0e]` y Darwin sustituye B1a/tipo 0 por una compuerta por captura (`0x20c78`/`0x1fe6c` → cave `0x4318`). EFCS conserva la segunda cortina; Electronic la suprime. 36 pruebas, emulación Unicorn, manifiesto y reversión. Falta C3-B para la exposición electrónica (E25-26) y la validación física (E25-27). E25-25 sigue parcial por la trazabilidad de E25-23.
 - **E25-22:** dos capturas normales en una escena nueva; sombras y `cap` compatibles con shd=1/svd=0 durante la foto larga, sin prueba de envío P2S ni de integración electrónica. [Informe](../docs/capture/e25-22-protocolo-transporte-fisico.md); plan nativo por foto y trazado eléctrico pendientes.
 - **Carril GUI (G1, independiente del obturador):** la interfaz vive en el userland Linux, no en `av-cam.bin`: `bin/im.elf` carga por `dlopen` `/usr/lib/libObj.so` (motor `ux::`, 17,4 MB, 17 `DT_NEEDED`), que abre `viewUnified2..8.so` y 238 recursos de `share/app`. Tabla PLT resuelta (2 419/2 420 importados), `GraphicsEngine::updateResource` trazado; compositor y `/dev/fb0` en INFERENCIA. REA no puede abrir `libObj.so` (plazo de 900 s). **G3 parcial:** pila de dibujo propia (`GRM_fbrm*` sobre YUV, `GRM_gpermRectblit`, `DMP2D_*`, `Ts*`), rutina de presentación en `0x12e6d0` (presente en `GRM_fbrmUpdateYUV`) y cadenas de `WindowServer`/`ViewSystem`//dev/fb0` sin ninguna referencia (muertas); falta el invocador de `0x12e6d0`. Pendientes G2–G8 en [PENDIENTES](../docs/PENDIENTES.md); mapa en [docs/gui/README.md](../docs/gui/README.md).
 
@@ -153,7 +153,8 @@ Mapa completo de EFCS reconstruido mediante REA sobre `av-cam.bin` (9 funciones,
 
 - **Productor nativo r5** `0x4383fa40`: calcula `r5 = frame − líneas`, `ShutMode = 0`, `svd = frames−1` desde Tv, período, VTS. Llamado por constructor normal y EFCS. Emulado vs T047: ±1 línea. **VERIFICADO**.
 - **EFCS → Darwin**: BIONZ envía ID `0x0c` y mensaje `0x107` (vía `0x43901a8c`); Darwin responde `0x0e` (ExposureReady). Con B1a (tipo 0), Darwin no mueve P4D/P4E. Sin diferencia en Darwin con/sin EFCS. **VERIFICADO (BIONZ) / INFERENCIA (Darwin)**.
-- **Recomendación**: Alternativa B — enganche C3 en `0x438c82a0`/`0x438c82fe` (tras `0x437f8a50`, antes de `0x436d6320`) que ejecute `0x4383fa40` sobre scratch y escriba `cap+0x64c` (r5) + `cap+0x655` (ShutMode=0) solo en paso 0 de foto. Darwin B1a (3.23) intacto. Para ≤1/30 s. **Probabilidad estimada: ALTA**.
+- **Selector implementado (E25-24b)**: BIONZ copia `cap+0x41c` a `pkt[0x0e]`; Darwin parcheado (`0x20c78`/`0x1fe6c` → cave `0x4318`) lee `S+0x3e` (copia de `pkt[0x0e]`): 0 → `0x1b080` original (EFCS, segunda cortina); ≠0 → 0 (Electronic, sin P4D/P4E ni motor). Sustituye B1a/tipo 0. **VERIFICADO offline; físico pendiente**.
+- **Recomendación C3-B (E25-26)**: enganche en `0x438c82fe` (tras `0x43b1e520`, antes de `SetExposure`), solo paso 0 y condicionado a `pkt[0x0e] == 1`; ejecutar `0x4383fa40` sobre scratch y escribir `cap+0x64c` (r5) + `cap+0x655` (ShutMode=0). El selector ya entrega la modalidad; la exposición electrónica aún no está integrada. Para ≤1/30 s. **DISEÑO**.
 
 ## Próximos pasos concretos
 

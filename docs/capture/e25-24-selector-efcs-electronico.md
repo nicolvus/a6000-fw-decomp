@@ -102,3 +102,23 @@ conservar RAW y medir exposición tras nivel negro, Bayer, saturación, filas,
 columnas, ruido y repetibilidad con incertidumbre. 1/4000, 1/250, 1/60 y
 1/30 s son objetivos de ensayo, no velocidades certificadas seguras para esta
 implementación inexistente. EFCS no es un baseline de dos cortinas mecánicas.
+
+---
+
+## Actualización 28-10-2026 — implementación offline (E25-24b)
+
+La auditoría anterior identificaba los bloqueos; ya hay una implementación
+offline verificada en [E25-24b](e25-24b-implementacion-selector.md):
+
+* Selector binario EFCS↔Electronic reutilizando el campo `+0x210` (EFCS ON/OFF),
+  sin añadir una entrada de menú.
+* B1a y tipo 0 sustituidos por una compuerta por captura: BIONZ copia
+  `cap+0x41c` a `pkt[0x0e]` y Darwin decide con ese byte si ejecuta la ruta
+  original (`0x20c74`/`0x1fe66` → `0x1b080`) o devuelve 0.
+* Parches con bytes originales, manifiesto, reversión y 36 pruebas; emulación
+  Unicorn de las dos compuertas y del cave de BIONZ.
+* Sigue pendiente la exposición electrónica C3-B (E25-26) y toda la validación
+  física (E25-27, protocolo en [E25-24c](e25-24c-protocolo-fisico-selector.md)).
+
+La frase «no se proponen bytes nuevos» de las secciones anteriores queda
+superada por esta actualización; se conserva como registro de la auditoría.

@@ -31,11 +31,14 @@ capacidad ni la imposibilidad de fotografía totalmente electrónica a resoluci�
 
 Etiquetas: **V** = VERIFICADO (bytes/instrucciones), **I** = INFERENCIA, **N** = NO_VERIFICADO.
 
-**Selector EFCS / Electronic (E25-24):** candidato binario aún sin implementar;
-B1a es global y no está demostrado cómo recuperar la segunda cortina EFCS por
-captura. El informe de integración EFCS contiene afirmaciones contradictorias
-sobre `r5`, el enganche y el mecanismo: consultar la [auditoría](capture/e25-24-selector-efcs-electronico.md)
-antes de reutilizarlo. Pendientes E25-24/E25-25.
+**Selector EFCS / Electronic (E25-24):** **implementado offline** ([E25-24b](capture/e25-24b-implementacion-selector.md)).
+El ajuste EFCS (`0x2b4`/`0x2b5` → `+0x210` 0/1) selecciona la modalidad; BIONZ copia
+`cap+0x41c` a `pkt[0x0e]` y Darwin sustituye B1a/tipo 0 por una compuerta por captura
+(`0x20c78`/`0x1fe6c` → cave `0x4318`): con 0 ejecuta `0x1b080` original (segunda cortina),
+con ≠0 devuelve 0 (sin P4D/P4E ni motor). Parches con bytes, manifiesto, reversión, 35
+pruebas y emulación Unicorn. La exposición electrónica sigue con `ShutMode 3` hasta E25-26;
+la validación física es E25-27. El informe de integración EFCS tenía contradicciones de
+`r5`/enganche/mecanismo: resueltas en E25-24b §6bis.
 
 | Tema | Conclusión vigente | Estado | Fuente |
 |---|---|---|---|
@@ -108,8 +111,8 @@ La conclusión vigente va primero; el antecedente conserva su informe y se seña
 | EFCS mapa completo (REA) | 9 funciones reconstruidas (0x43844e80, 0x43842158, 0x43841070, 0x4383fa40, 0x4383fd6c, 0x437f8a50, 0x438c828c, 0x436d6320/0x436d6f6c, 0x437ea8cc), grafo de llamadas, campos de `cap`/`record`, tabla de clases 0–7. Direcciones 0x436d6f6c/0x437ea8cc/0x43844e80 son código Thumb válido pero no auto-detectadas por Ghidra (E30). | VERIFICADO | [REA `analysis/efcs-reia/`](analysis/efcs-reia/), [informe](capture/efcs-darwin-silent-integracion.md) |
 | Productor nativo r5 | `0x4383fa40(record, settings)` calcula r5 = frame − líneas, ShutMode = 0, svd = frames−1 desde Tv (`record+0xf6`), período (`record+0xc`), VTS (`record+0x20`). Llamado por constructor normal (0x437b43b4, compuerta `cap+0x11b0`) y EFCS (0x43841070). Emulado vs T047: ±1 línea. | VERIFICADO | [REA](analysis/efcs-reia/evidence/0x4383fa40_pseudo.txt), [E25-16](capture/e25-16-r5-autonomo-fotografia.md) |
 | EFCS → Darwin | BIONZ envía ID `0x0c` (CaptureStart) y mensaje `0x107` (vía `0x43901a8c`) con timing; Darwin responde `0x0e` (ExposureReady). Con tipo 0/B1a, Darwin no mueve P4D/P4E. No hay diferencia en el lado Darwin con o sin EFCS. | VERIFICADO (BIONZ) / INFERENCIA (Darwin) | [REA `0x43901a8c`](analysis/efcs-reia/evidence/0x43901a8c_pseudo.txt), [E24-05](capture/e24-05-*) |
-| Recomendación Silent | Alternativa B: enganche C3 en `0x438c82a0`/`0x438c82fe` (tras `0x437f8a50`, antes de `0x436d6320`) que ejecute `0x4383fa40` sobre scratch y escriba `cap+0x64c` (r5) + `cap+0x655` (ShutMode=0) solo en paso 0 de foto. Darwin B1a (3.23) intacto. Para ≤1/30 s. Probabilidad estimada: ALTA. | ESTIMACIÓN | [informe §5.2](capture/efcs-darwin-silent-integracion.md) |
-| Darwin sin modificar | No es necesaria modificación adicional de Darwin para ≤1/30 s: B1a ya suprime P4D/P4E, los ocho mensajes mss son idénticos con tipo 0, BIONZ no depende de respuesta específica de Darwin para el modo de exposición. | INFERENCIA | [E24-05](capture/e24-05-*), [E25](capture/e25-desactivacion-mecanica.md) |
+| Recomendación Silent | **C3-B (E25-26):** enganche en `0x438c82fe` (tras `0x43b1e520`, antes de `SetExposure`), solo paso 0 de foto y condicionado a `pkt[0x0e] == 1`; ejecutar `0x4383fa40` sobre scratch y escribir `cap+0x64c` (r5) + `cap+0x655` (ShutMode=0). El selector E25-24b ya entrega la modalidad; la exposición electrónica aún no está integrada. Para ≤1/30 s. | DISEÑO | [E25-24b](capture/e25-24b-implementacion-selector.md), [E25-18](capture/e25-18-integracion-silent-todas-velocidades.md) |
+| Darwin condicionado (E25-24b) | **Sí se modifica Darwin**, pero solo dos `bl` y un cave: B1a/tipo 0 se sustituyen por una compuerta que lee `pkt[0x0e]`. EFCS conserva `0x20c74`/`0x1fe66` originales; Electronic devuelve 0. No se tocan `InitCom`, `Upd`, reset, watchdog ni GPIO. Verificado por bytes y Unicorn; no físicamente. | V (offline) / N (físico) | [E25-24b](capture/e25-24b-implementacion-selector.md), `tests/test_e25_24_selector.py` |
 
 ## Política de ingeniería inversa: REA primero (vigente desde 2026-10-19)
 
