@@ -1,0 +1,3873 @@
+{
+  "cave_overlap": {
+    "c3b_end": "0x4354187a",
+    "c3b_start": "0x43541840",
+    "header_metadata_tail": "0x435418d8",
+    "overlap": false,
+    "selector_end": "0x43541814"
+  },
+  "components": {
+    "c3b": {
+      "cave": "0x43541840",
+      "conditions": [
+        "paso 0",
+        "cap+0x41c == 1",
+        "r7 (svd) <= 1",
+        "VTS != 0",
+        "shd > VTS si svd == 1",
+        "shd' < VTS"
+      ],
+      "diff_count": 61,
+      "hook": "0x438c82fe",
+      "length": 58,
+      "sites": [
+        {
+          "address": "0x438c82fe",
+          "after": "79f49ffa",
+          "before": "0df60bff",
+          "role": "bl imager -> bl cueva C3-B"
+        },
+        {
+          "address": "0x43541840",
+          "bytes": "02b5d4f81c14012914d1012f12d8b4f8e0257ab1d4f84c36012f02d1934209d99b1a934206d2c4f84c36002384f85536a4f8503694f150fc02bd",
+          "length": 58,
+          "role": "cueva C3-B"
+        }
+      ]
+    },
+    "darwin": {
+      "cave": "0x4318",
+      "diff_count": 22,
+      "flag": "0x20003716",
+      "length": 14,
+      "sites": [
+        {
+          "address": "0x20c78",
+          "after": "e3f74efb",
+          "before": "faf702fa",
+          "role": "tipo de bobina -> cave"
+        },
+        {
+          "address": "0x1fe6c",
+          "after": "e4f754fa",
+          "before": "fbf708f9",
+          "role": "compuerta del motor -> cave"
+        },
+        {
+          "address": "0x4318",
+          "after": "054a12780ab10020704716f0adbe",
+          "before": "0000000000000000000000000000",
+          "role": "cave: flag 0 -> original; flag != 0 -> 0"
+        },
+        {
+          "address": "0x4330",
+          "after": "16370020",
+          "before": "00000000",
+          "role": "literal S+0x3e"
+        }
+      ]
+    },
+    "selector": {
+      "cave": "0x43541800",
+      "diff_count": 28,
+      "length": 20,
+      "sites": [
+        {
+          "address": "0x4384133e",
+          "after": "00bf00bf",
+          "before": "40f01a81",
+          "role": "bne.w -> NOP; el cave decide la rama"
+        },
+        {
+          "address": "0x43841342",
+          "after": "00f55dfa",
+          "before": "00232370",
+          "role": "movs/strb -> bl cave"
+        },
+        {
+          "address": "0x43841476",
+          "after": "00bf",
+          "before": "a373",
+          "role": "store duplicado -> NOP"
+        },
+        {
+          "address": "0x43541800",
+          "after": "00232370d9f81c24a273012901d0fff2b2be7047",
+          "before": "0000000000000000000000000000000000000000",
+          "role": "cave: pkt[0x0e] = cap+0x41c"
+        }
+      ]
+    }
+  },
+  "diff": [
+    {
+      "address": 1132729150,
+      "after": "00",
+      "before": "40",
+      "role": "bne.w -> NOP; el cave decide la rama"
+    },
+    {
+      "address": 1132729151,
+      "after": "bf",
+      "before": "f0",
+      "role": "bne.w -> NOP; el cave decide la rama"
+    },
+    {
+      "address": 1132729152,
+      "after": "00",
+      "before": "1a",
+      "role": "bne.w -> NOP; el cave decide la rama"
+    },
+    {
+      "address": 1132729153,
+      "after": "bf",
+      "before": "81",
+      "role": "bne.w -> NOP; el cave decide la rama"
+    },
+    {
+      "address": 1132729155,
+      "after": "f5",
+      "before": "23",
+      "role": "movs/strb -> bl cave"
+    },
+    {
+      "address": 1132729156,
+      "after": "5d",
+      "before": "23",
+      "role": "movs/strb -> bl cave"
+    },
+    {
+      "address": 1132729157,
+      "after": "fa",
+      "before": "70",
+      "role": "movs/strb -> bl cave"
+    },
+    {
+      "address": 1132729462,
+      "after": "00",
+      "before": "a3",
+      "role": "store duplicado -> NOP"
+    },
+    {
+      "address": 1132729463,
+      "after": "bf",
+      "before": "73",
+      "role": "store duplicado -> NOP"
+    },
+    {
+      "address": 1129584641,
+      "after": "23",
+      "before": "00",
+      "role": "cave: pkt[0x0e] = cap+0x41c"
+    },
+    {
+      "address": 1129584642,
+      "after": "23",
+      "before": "00",
+      "role": "cave: pkt[0x0e] = cap+0x41c"
+    },
+    {
+      "address": 1129584643,
+      "after": "70",
+      "before": "00",
+      "role": "cave: pkt[0x0e] = cap+0x41c"
+    },
+    {
+      "address": 1129584644,
+      "after": "d9",
+      "before": "00",
+      "role": "cave: pkt[0x0e] = cap+0x41c"
+    },
+    {
+      "address": 1129584645,
+      "after": "f8",
+      "before": "00",
+      "role": "cave: pkt[0x0e] = cap+0x41c"
+    },
+    {
+      "address": 1129584646,
+      "after": "1c",
+      "before": "00",
+      "role": "cave: pkt[0x0e] = cap+0x41c"
+    },
+    {
+      "address": 1129584647,
+      "after": "24",
+      "before": "00",
+      "role": "cave: pkt[0x0e] = cap+0x41c"
+    },
+    {
+      "address": 1129584648,
+      "after": "a2",
+      "before": "00",
+      "role": "cave: pkt[0x0e] = cap+0x41c"
+    },
+    {
+      "address": 1129584649,
+      "after": "73",
+      "before": "00",
+      "role": "cave: pkt[0x0e] = cap+0x41c"
+    },
+    {
+      "address": 1129584650,
+      "after": "01",
+      "before": "00",
+      "role": "cave: pkt[0x0e] = cap+0x41c"
+    },
+    {
+      "address": 1129584651,
+      "after": "29",
+      "before": "00",
+      "role": "cave: pkt[0x0e] = cap+0x41c"
+    },
+    {
+      "address": 1129584652,
+      "after": "01",
+      "before": "00",
+      "role": "cave: pkt[0x0e] = cap+0x41c"
+    },
+    {
+      "address": 1129584653,
+      "after": "d0",
+      "before": "00",
+      "role": "cave: pkt[0x0e] = cap+0x41c"
+    },
+    {
+      "address": 1129584654,
+      "after": "ff",
+      "before": "00",
+      "role": "cave: pkt[0x0e] = cap+0x41c"
+    },
+    {
+      "address": 1129584655,
+      "after": "f2",
+      "before": "00",
+      "role": "cave: pkt[0x0e] = cap+0x41c"
+    },
+    {
+      "address": 1129584656,
+      "after": "b2",
+      "before": "00",
+      "role": "cave: pkt[0x0e] = cap+0x41c"
+    },
+    {
+      "address": 1129584657,
+      "after": "be",
+      "before": "00",
+      "role": "cave: pkt[0x0e] = cap+0x41c"
+    },
+    {
+      "address": 1129584658,
+      "after": "70",
+      "before": "00",
+      "role": "cave: pkt[0x0e] = cap+0x41c"
+    },
+    {
+      "address": 1129584659,
+      "after": "47",
+      "before": "00",
+      "role": "cave: pkt[0x0e] = cap+0x41c"
+    },
+    {
+      "address": 1133282046,
+      "after": "79",
+      "before": "0d",
+      "role": "bl imager -> bl cueva C3-B"
+    },
+    {
+      "address": 1133282047,
+      "after": "f4",
+      "before": "f6",
+      "role": "bl imager -> bl cueva C3-B"
+    },
+    {
+      "address": 1133282048,
+      "after": "9f",
+      "before": "0b",
+      "role": "bl imager -> bl cueva C3-B"
+    },
+    {
+      "address": 1133282049,
+      "after": "fa",
+      "before": "ff",
+      "role": "bl imager -> bl cueva C3-B"
+    },
+    {
+      "address": 1129584704,
+      "after": "02",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584705,
+      "after": "b5",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584706,
+      "after": "d4",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584707,
+      "after": "f8",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584708,
+      "after": "1c",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584709,
+      "after": "14",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584710,
+      "after": "01",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584711,
+      "after": "29",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584712,
+      "after": "14",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584713,
+      "after": "d1",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584714,
+      "after": "01",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584715,
+      "after": "2f",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584716,
+      "after": "12",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584717,
+      "after": "d8",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584718,
+      "after": "b4",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584719,
+      "after": "f8",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584720,
+      "after": "e0",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584721,
+      "after": "25",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584722,
+      "after": "7a",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584723,
+      "after": "b1",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584724,
+      "after": "d4",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584725,
+      "after": "f8",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584726,
+      "after": "4c",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584727,
+      "after": "36",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584728,
+      "after": "01",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584729,
+      "after": "2f",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584730,
+      "after": "02",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584731,
+      "after": "d1",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584732,
+      "after": "93",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584733,
+      "after": "42",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584734,
+      "after": "09",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584735,
+      "after": "d9",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584736,
+      "after": "9b",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584737,
+      "after": "1a",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584738,
+      "after": "93",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584739,
+      "after": "42",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584740,
+      "after": "06",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584741,
+      "after": "d2",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584742,
+      "after": "c4",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584743,
+      "after": "f8",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584744,
+      "after": "4c",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584745,
+      "after": "36",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584747,
+      "after": "23",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584748,
+      "after": "84",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584749,
+      "after": "f8",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584750,
+      "after": "55",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584751,
+      "after": "36",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584752,
+      "after": "a4",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584753,
+      "after": "f8",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584754,
+      "after": "50",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584755,
+      "after": "36",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584756,
+      "after": "94",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584757,
+      "after": "f1",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584758,
+      "after": "50",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584759,
+      "after": "fc",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584760,
+      "after": "02",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 1129584761,
+      "after": "bd",
+      "before": "00",
+      "role": "cueva C3-B"
+    },
+    {
+      "address": 134264,
+      "after": "e3",
+      "before": "fa",
+      "role": "tipo de bobina -> cave"
+    },
+    {
+      "address": 134266,
+      "after": "4e",
+      "before": "02",
+      "role": "tipo de bobina -> cave"
+    },
+    {
+      "address": 134267,
+      "after": "fb",
+      "before": "fa",
+      "role": "tipo de bobina -> cave"
+    },
+    {
+      "address": 130668,
+      "after": "e4",
+      "before": "fb",
+      "role": "compuerta del motor -> cave"
+    },
+    {
+      "address": 130670,
+      "after": "54",
+      "before": "08",
+      "role": "compuerta del motor -> cave"
+    },
+    {
+      "address": 130671,
+      "after": "fa",
+      "before": "f9",
+      "role": "compuerta del motor -> cave"
+    },
+    {
+      "address": 17176,
+      "after": "05",
+      "before": "00",
+      "role": "cave: flag 0 -> original; flag != 0 -> 0"
+    },
+    {
+      "address": 17177,
+      "after": "4a",
+      "before": "00",
+      "role": "cave: flag 0 -> original; flag != 0 -> 0"
+    },
+    {
+      "address": 17178,
+      "after": "12",
+      "before": "00",
+      "role": "cave: flag 0 -> original; flag != 0 -> 0"
+    },
+    {
+      "address": 17179,
+      "after": "78",
+      "before": "00",
+      "role": "cave: flag 0 -> original; flag != 0 -> 0"
+    },
+    {
+      "address": 17180,
+      "after": "0a",
+      "before": "00",
+      "role": "cave: flag 0 -> original; flag != 0 -> 0"
+    },
+    {
+      "address": 17181,
+      "after": "b1",
+      "before": "00",
+      "role": "cave: flag 0 -> original; flag != 0 -> 0"
+    },
+    {
+      "address": 17183,
+      "after": "20",
+      "before": "00",
+      "role": "cave: flag 0 -> original; flag != 0 -> 0"
+    },
+    {
+      "address": 17184,
+      "after": "70",
+      "before": "00",
+      "role": "cave: flag 0 -> original; flag != 0 -> 0"
+    },
+    {
+      "address": 17185,
+      "after": "47",
+      "before": "00",
+      "role": "cave: flag 0 -> original; flag != 0 -> 0"
+    },
+    {
+      "address": 17186,
+      "after": "16",
+      "before": "00",
+      "role": "cave: flag 0 -> original; flag != 0 -> 0"
+    },
+    {
+      "address": 17187,
+      "after": "f0",
+      "before": "00",
+      "role": "cave: flag 0 -> original; flag != 0 -> 0"
+    },
+    {
+      "address": 17188,
+      "after": "ad",
+      "before": "00",
+      "role": "cave: flag 0 -> original; flag != 0 -> 0"
+    },
+    {
+      "address": 17189,
+      "after": "be",
+      "before": "00",
+      "role": "cave: flag 0 -> original; flag != 0 -> 0"
+    },
+    {
+      "address": 17200,
+      "after": "16",
+      "before": "00",
+      "role": "literal S+0x3e"
+    },
+    {
+      "address": 17201,
+      "after": "37",
+      "before": "00",
+      "role": "literal S+0x3e"
+    },
+    {
+      "address": 17203,
+      "after": "20",
+      "before": "00",
+      "role": "literal S+0x3e"
+    }
+  ],
+  "diff_count": 111,
+  "experimental": true,
+  "inputs": {
+    "av-cam.bin": {
+      "container": "0700_part_image/dev/nflasha3",
+      "fat_name": "AV-CAM.BIN",
+      "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+      "size": 11427236
+    },
+    "darwin_core.bin": {
+      "container": "0640_darwin/darwin_core.bin",
+      "sha256": "5f2be06d9885d154e8e0df46a611d6830d29754b4353f6e82cecfe66dd6a0bf4",
+      "size": 157276
+    },
+    "firmware_tar": {
+      "path": "firmware/extracted/fw321/firmware.tar",
+      "sha256": "970246492293e9175ef67b1ad587d5289ae886d47dbd10e77637d9bee458d5a8",
+      "size": 212011520
+    },
+    "updater_img": {
+      "path": "firmware/extracted/fw321/updater.img",
+      "sha256": "b6d5175245c8fb26879c5376f0e6e0d9ff13064f805d591954ff2a48a8c2566c",
+      "size": 143360
+    }
+  },
+  "installable": false,
+  "limitations": [
+    "No se ha ejecutado en la cámara ni se ha instalado.",
+    "El fin electrónico de integración y la ausencia de movimiento no están demostrados.",
+    "La ruta larga (>= 1/15 s) no está incluida en C3-B.",
+    "cap+0x73b conserva el valor calculado con el ShutMode nativo (E25-28).",
+    "La recuperación de un Darwin que no arranque sigue sin demostrarse (E24-04)."
+  ],
+  "model": "0x41030035",
+  "outputs": {
+    "av-cam.bin": {
+      "sha256": "45a5ab350c356d6d76f5ee79ed51d98fadf920f64ce75c387f6358f11225190e",
+      "size": 11427236
+    },
+    "darwin_core.bin": {
+      "sha256": "9771c0508ee17e7984a619479c1f69cc4e8b71f0091fb5f9dfde66bbd19fb177",
+      "size": 157276
+    },
+    "firmware.tar": {
+      "sha256": "440b70b1b1afaed2a80e03679728b26917336cc2aed30052e7906d638a6d52e1",
+      "size": 212094976
+    },
+    "nflasha3": {
+      "sha256": "bb9ce25a073d1ccc990d8ee1fdd75322c703d5d2a4020ab5e7daeaf8d23d546c",
+      "size": 11572480
+    }
+  },
+  "partition": {
+    "block_log2": 16,
+    "blocks": [
+      {
+        "block": 0,
+        "offset_new": 3072,
+        "offset_old": 3072,
+        "recompressed": true,
+        "size_new": 73732,
+        "size_old": 26112
+      },
+      {
+        "block": 1,
+        "offset_new": 77056,
+        "offset_old": 29184,
+        "recompressed": false,
+        "size_new": 58880,
+        "size_old": 58880
+      },
+      {
+        "block": 2,
+        "offset_new": 135936,
+        "offset_old": 88064,
+        "recompressed": false,
+        "size_new": 54784,
+        "size_old": 54784
+      },
+      {
+        "block": 3,
+        "offset_new": 190720,
+        "offset_old": 142848,
+        "recompressed": false,
+        "size_new": 50688,
+        "size_old": 50688
+      },
+      {
+        "block": 4,
+        "offset_new": 241408,
+        "offset_old": 193536,
+        "recompressed": false,
+        "size_new": 44544,
+        "size_old": 44544
+      },
+      {
+        "block": 5,
+        "offset_new": 285952,
+        "offset_old": 238080,
+        "recompressed": false,
+        "size_new": 47104,
+        "size_old": 47104
+      },
+      {
+        "block": 6,
+        "offset_new": 333056,
+        "offset_old": 285184,
+        "recompressed": false,
+        "size_new": 45568,
+        "size_old": 45568
+      },
+      {
+        "block": 7,
+        "offset_new": 378624,
+        "offset_old": 330752,
+        "recompressed": false,
+        "size_new": 49664,
+        "size_old": 49664
+      },
+      {
+        "block": 8,
+        "offset_new": 428288,
+        "offset_old": 380416,
+        "recompressed": false,
+        "size_new": 46592,
+        "size_old": 46592
+      },
+      {
+        "block": 9,
+        "offset_new": 474880,
+        "offset_old": 427008,
+        "recompressed": false,
+        "size_new": 52736,
+        "size_old": 52736
+      },
+      {
+        "block": 10,
+        "offset_new": 527616,
+        "offset_old": 479744,
+        "recompressed": false,
+        "size_new": 53760,
+        "size_old": 53760
+      },
+      {
+        "block": 11,
+        "offset_new": 581376,
+        "offset_old": 533504,
+        "recompressed": false,
+        "size_new": 47616,
+        "size_old": 47616
+      },
+      {
+        "block": 12,
+        "offset_new": 628992,
+        "offset_old": 581120,
+        "recompressed": false,
+        "size_new": 50176,
+        "size_old": 50176
+      },
+      {
+        "block": 13,
+        "offset_new": 679168,
+        "offset_old": 631296,
+        "recompressed": false,
+        "size_new": 48128,
+        "size_old": 48128
+      },
+      {
+        "block": 14,
+        "offset_new": 727296,
+        "offset_old": 679424,
+        "recompressed": false,
+        "size_new": 54272,
+        "size_old": 54272
+      },
+      {
+        "block": 15,
+        "offset_new": 781568,
+        "offset_old": 733696,
+        "recompressed": false,
+        "size_new": 51712,
+        "size_old": 51712
+      },
+      {
+        "block": 16,
+        "offset_new": 833280,
+        "offset_old": 785408,
+        "recompressed": false,
+        "size_new": 50688,
+        "size_old": 50688
+      },
+      {
+        "block": 17,
+        "offset_new": 883968,
+        "offset_old": 836096,
+        "recompressed": false,
+        "size_new": 47616,
+        "size_old": 47616
+      },
+      {
+        "block": 18,
+        "offset_new": 931584,
+        "offset_old": 883712,
+        "recompressed": false,
+        "size_new": 47616,
+        "size_old": 47616
+      },
+      {
+        "block": 19,
+        "offset_new": 979200,
+        "offset_old": 931328,
+        "recompressed": false,
+        "size_new": 49664,
+        "size_old": 49664
+      },
+      {
+        "block": 20,
+        "offset_new": 1028864,
+        "offset_old": 980992,
+        "recompressed": false,
+        "size_new": 49152,
+        "size_old": 49152
+      },
+      {
+        "block": 21,
+        "offset_new": 1078016,
+        "offset_old": 1030144,
+        "recompressed": false,
+        "size_new": 53248,
+        "size_old": 53248
+      },
+      {
+        "block": 22,
+        "offset_new": 1131264,
+        "offset_old": 1083392,
+        "recompressed": false,
+        "size_new": 48640,
+        "size_old": 48640
+      },
+      {
+        "block": 23,
+        "offset_new": 1179904,
+        "offset_old": 1132032,
+        "recompressed": false,
+        "size_new": 53248,
+        "size_old": 53248
+      },
+      {
+        "block": 24,
+        "offset_new": 1233152,
+        "offset_old": 1185280,
+        "recompressed": false,
+        "size_new": 48640,
+        "size_old": 48640
+      },
+      {
+        "block": 25,
+        "offset_new": 1281792,
+        "offset_old": 1233920,
+        "recompressed": false,
+        "size_new": 49664,
+        "size_old": 49664
+      },
+      {
+        "block": 26,
+        "offset_new": 1331456,
+        "offset_old": 1283584,
+        "recompressed": false,
+        "size_new": 53248,
+        "size_old": 53248
+      },
+      {
+        "block": 27,
+        "offset_new": 1384704,
+        "offset_old": 1336832,
+        "recompressed": false,
+        "size_new": 53760,
+        "size_old": 53760
+      },
+      {
+        "block": 28,
+        "offset_new": 1438464,
+        "offset_old": 1390592,
+        "recompressed": false,
+        "size_new": 57344,
+        "size_old": 57344
+      },
+      {
+        "block": 29,
+        "offset_new": 1495808,
+        "offset_old": 1447936,
+        "recompressed": false,
+        "size_new": 54784,
+        "size_old": 54784
+      },
+      {
+        "block": 30,
+        "offset_new": 1550592,
+        "offset_old": 1502720,
+        "recompressed": false,
+        "size_new": 55808,
+        "size_old": 55808
+      },
+      {
+        "block": 31,
+        "offset_new": 1606400,
+        "offset_old": 1558528,
+        "recompressed": false,
+        "size_new": 57344,
+        "size_old": 57344
+      },
+      {
+        "block": 32,
+        "offset_new": 1663744,
+        "offset_old": 1615872,
+        "recompressed": false,
+        "size_new": 60416,
+        "size_old": 60416
+      },
+      {
+        "block": 33,
+        "offset_new": 1724160,
+        "offset_old": 1676288,
+        "recompressed": false,
+        "size_new": 61440,
+        "size_old": 61440
+      },
+      {
+        "block": 34,
+        "offset_new": 1785600,
+        "offset_old": 1737728,
+        "recompressed": false,
+        "size_new": 57856,
+        "size_old": 57856
+      },
+      {
+        "block": 35,
+        "offset_new": 1843456,
+        "offset_old": 1795584,
+        "recompressed": false,
+        "size_new": 59904,
+        "size_old": 59904
+      },
+      {
+        "block": 36,
+        "offset_new": 1903360,
+        "offset_old": 1855488,
+        "recompressed": false,
+        "size_new": 57856,
+        "size_old": 57856
+      },
+      {
+        "block": 37,
+        "offset_new": 1961216,
+        "offset_old": 1913344,
+        "recompressed": false,
+        "size_new": 56320,
+        "size_old": 56320
+      },
+      {
+        "block": 38,
+        "offset_new": 2017536,
+        "offset_old": 1969664,
+        "recompressed": false,
+        "size_new": 56320,
+        "size_old": 56320
+      },
+      {
+        "block": 39,
+        "offset_new": 2073856,
+        "offset_old": 2025984,
+        "recompressed": false,
+        "size_new": 60928,
+        "size_old": 60928
+      },
+      {
+        "block": 40,
+        "offset_new": 2134784,
+        "offset_old": 2086912,
+        "recompressed": false,
+        "size_new": 60928,
+        "size_old": 60928
+      },
+      {
+        "block": 41,
+        "offset_new": 2195712,
+        "offset_old": 2147840,
+        "recompressed": false,
+        "size_new": 55808,
+        "size_old": 55808
+      },
+      {
+        "block": 42,
+        "offset_new": 2251520,
+        "offset_old": 2203648,
+        "recompressed": false,
+        "size_new": 54784,
+        "size_old": 54784
+      },
+      {
+        "block": 43,
+        "offset_new": 2306304,
+        "offset_old": 2258432,
+        "recompressed": false,
+        "size_new": 54272,
+        "size_old": 54272
+      },
+      {
+        "block": 44,
+        "offset_new": 2360576,
+        "offset_old": 2312704,
+        "recompressed": false,
+        "size_new": 49664,
+        "size_old": 49664
+      },
+      {
+        "block": 45,
+        "offset_new": 2410240,
+        "offset_old": 2362368,
+        "recompressed": false,
+        "size_new": 53760,
+        "size_old": 53760
+      },
+      {
+        "block": 46,
+        "offset_new": 2464000,
+        "offset_old": 2416128,
+        "recompressed": false,
+        "size_new": 57344,
+        "size_old": 57344
+      },
+      {
+        "block": 47,
+        "offset_new": 2521344,
+        "offset_old": 2473472,
+        "recompressed": false,
+        "size_new": 53760,
+        "size_old": 53760
+      },
+      {
+        "block": 48,
+        "offset_new": 2575104,
+        "offset_old": 2527232,
+        "recompressed": true,
+        "size_new": 73732,
+        "size_old": 56320
+      },
+      {
+        "block": 49,
+        "offset_new": 2649088,
+        "offset_old": 2583552,
+        "recompressed": false,
+        "size_new": 59392,
+        "size_old": 59392
+      },
+      {
+        "block": 50,
+        "offset_new": 2708480,
+        "offset_old": 2642944,
+        "recompressed": false,
+        "size_new": 57344,
+        "size_old": 57344
+      },
+      {
+        "block": 51,
+        "offset_new": 2765824,
+        "offset_old": 2700288,
+        "recompressed": false,
+        "size_new": 59904,
+        "size_old": 59904
+      },
+      {
+        "block": 52,
+        "offset_new": 2825728,
+        "offset_old": 2760192,
+        "recompressed": false,
+        "size_new": 52736,
+        "size_old": 52736
+      },
+      {
+        "block": 53,
+        "offset_new": 2878464,
+        "offset_old": 2812928,
+        "recompressed": false,
+        "size_new": 46592,
+        "size_old": 46592
+      },
+      {
+        "block": 54,
+        "offset_new": 2925056,
+        "offset_old": 2859520,
+        "recompressed": false,
+        "size_new": 50688,
+        "size_old": 50688
+      },
+      {
+        "block": 55,
+        "offset_new": 2975744,
+        "offset_old": 2910208,
+        "recompressed": false,
+        "size_new": 48640,
+        "size_old": 48640
+      },
+      {
+        "block": 56,
+        "offset_new": 3024384,
+        "offset_old": 2958848,
+        "recompressed": false,
+        "size_new": 52224,
+        "size_old": 52224
+      },
+      {
+        "block": 57,
+        "offset_new": 3076608,
+        "offset_old": 3011072,
+        "recompressed": true,
+        "size_new": 73732,
+        "size_old": 56320
+      },
+      {
+        "block": 58,
+        "offset_new": 3150592,
+        "offset_old": 3067392,
+        "recompressed": false,
+        "size_new": 51712,
+        "size_old": 51712
+      },
+      {
+        "block": 59,
+        "offset_new": 3202304,
+        "offset_old": 3119104,
+        "recompressed": false,
+        "size_new": 56320,
+        "size_old": 56320
+      },
+      {
+        "block": 60,
+        "offset_new": 3258624,
+        "offset_old": 3175424,
+        "recompressed": false,
+        "size_new": 54784,
+        "size_old": 54784
+      },
+      {
+        "block": 61,
+        "offset_new": 3313408,
+        "offset_old": 3230208,
+        "recompressed": false,
+        "size_new": 53760,
+        "size_old": 53760
+      },
+      {
+        "block": 62,
+        "offset_new": 3367168,
+        "offset_old": 3283968,
+        "recompressed": false,
+        "size_new": 56320,
+        "size_old": 56320
+      },
+      {
+        "block": 63,
+        "offset_new": 3423488,
+        "offset_old": 3340288,
+        "recompressed": false,
+        "size_new": 52736,
+        "size_old": 52736
+      },
+      {
+        "block": 64,
+        "offset_new": 3476224,
+        "offset_old": 3393024,
+        "recompressed": false,
+        "size_new": 50688,
+        "size_old": 50688
+      },
+      {
+        "block": 65,
+        "offset_new": 3526912,
+        "offset_old": 3443712,
+        "recompressed": false,
+        "size_new": 52224,
+        "size_old": 52224
+      },
+      {
+        "block": 66,
+        "offset_new": 3579136,
+        "offset_old": 3495936,
+        "recompressed": false,
+        "size_new": 49152,
+        "size_old": 49152
+      },
+      {
+        "block": 67,
+        "offset_new": 3628288,
+        "offset_old": 3545088,
+        "recompressed": false,
+        "size_new": 45056,
+        "size_old": 45056
+      },
+      {
+        "block": 68,
+        "offset_new": 3673344,
+        "offset_old": 3590144,
+        "recompressed": false,
+        "size_new": 39936,
+        "size_old": 39936
+      },
+      {
+        "block": 69,
+        "offset_new": 3713280,
+        "offset_old": 3630080,
+        "recompressed": false,
+        "size_new": 52224,
+        "size_old": 52224
+      },
+      {
+        "block": 70,
+        "offset_new": 3765504,
+        "offset_old": 3682304,
+        "recompressed": false,
+        "size_new": 52224,
+        "size_old": 52224
+      },
+      {
+        "block": 71,
+        "offset_new": 3817728,
+        "offset_old": 3734528,
+        "recompressed": false,
+        "size_new": 51712,
+        "size_old": 51712
+      },
+      {
+        "block": 72,
+        "offset_new": 3869440,
+        "offset_old": 3786240,
+        "recompressed": false,
+        "size_new": 45056,
+        "size_old": 45056
+      },
+      {
+        "block": 73,
+        "offset_new": 3914496,
+        "offset_old": 3831296,
+        "recompressed": false,
+        "size_new": 52736,
+        "size_old": 52736
+      },
+      {
+        "block": 74,
+        "offset_new": 3967232,
+        "offset_old": 3884032,
+        "recompressed": false,
+        "size_new": 53248,
+        "size_old": 53248
+      },
+      {
+        "block": 75,
+        "offset_new": 4020480,
+        "offset_old": 3937280,
+        "recompressed": false,
+        "size_new": 56320,
+        "size_old": 56320
+      },
+      {
+        "block": 76,
+        "offset_new": 4076800,
+        "offset_old": 3993600,
+        "recompressed": false,
+        "size_new": 55296,
+        "size_old": 55296
+      },
+      {
+        "block": 77,
+        "offset_new": 4132096,
+        "offset_old": 4048896,
+        "recompressed": false,
+        "size_new": 53760,
+        "size_old": 53760
+      },
+      {
+        "block": 78,
+        "offset_new": 4185856,
+        "offset_old": 4102656,
+        "recompressed": false,
+        "size_new": 52736,
+        "size_old": 52736
+      },
+      {
+        "block": 79,
+        "offset_new": 4238592,
+        "offset_old": 4155392,
+        "recompressed": false,
+        "size_new": 53248,
+        "size_old": 53248
+      },
+      {
+        "block": 80,
+        "offset_new": 4291840,
+        "offset_old": 4208640,
+        "recompressed": false,
+        "size_new": 45056,
+        "size_old": 45056
+      },
+      {
+        "block": 81,
+        "offset_new": 4336896,
+        "offset_old": 4253696,
+        "recompressed": false,
+        "size_new": 44544,
+        "size_old": 44544
+      },
+      {
+        "block": 82,
+        "offset_new": 4381440,
+        "offset_old": 4298240,
+        "recompressed": false,
+        "size_new": 49152,
+        "size_old": 49152
+      },
+      {
+        "block": 83,
+        "offset_new": 4430592,
+        "offset_old": 4347392,
+        "recompressed": false,
+        "size_new": 47616,
+        "size_old": 47616
+      },
+      {
+        "block": 84,
+        "offset_new": 4478208,
+        "offset_old": 4395008,
+        "recompressed": false,
+        "size_new": 49664,
+        "size_old": 49664
+      },
+      {
+        "block": 85,
+        "offset_new": 4527872,
+        "offset_old": 4444672,
+        "recompressed": false,
+        "size_new": 52736,
+        "size_old": 52736
+      },
+      {
+        "block": 86,
+        "offset_new": 4580608,
+        "offset_old": 4497408,
+        "recompressed": false,
+        "size_new": 51200,
+        "size_old": 51200
+      },
+      {
+        "block": 87,
+        "offset_new": 4631808,
+        "offset_old": 4548608,
+        "recompressed": false,
+        "size_new": 44032,
+        "size_old": 44032
+      },
+      {
+        "block": 88,
+        "offset_new": 4675840,
+        "offset_old": 4592640,
+        "recompressed": false,
+        "size_new": 47616,
+        "size_old": 47616
+      },
+      {
+        "block": 89,
+        "offset_new": 4723456,
+        "offset_old": 4640256,
+        "recompressed": false,
+        "size_new": 49152,
+        "size_old": 49152
+      },
+      {
+        "block": 90,
+        "offset_new": 4772608,
+        "offset_old": 4689408,
+        "recompressed": false,
+        "size_new": 53760,
+        "size_old": 53760
+      },
+      {
+        "block": 91,
+        "offset_new": 4826368,
+        "offset_old": 4743168,
+        "recompressed": false,
+        "size_new": 53248,
+        "size_old": 53248
+      },
+      {
+        "block": 92,
+        "offset_new": 4879616,
+        "offset_old": 4796416,
+        "recompressed": false,
+        "size_new": 50688,
+        "size_old": 50688
+      },
+      {
+        "block": 93,
+        "offset_new": 4930304,
+        "offset_old": 4847104,
+        "recompressed": false,
+        "size_new": 56832,
+        "size_old": 56832
+      },
+      {
+        "block": 94,
+        "offset_new": 4987136,
+        "offset_old": 4903936,
+        "recompressed": false,
+        "size_new": 46592,
+        "size_old": 46592
+      },
+      {
+        "block": 95,
+        "offset_new": 5033728,
+        "offset_old": 4950528,
+        "recompressed": false,
+        "size_new": 50176,
+        "size_old": 50176
+      },
+      {
+        "block": 96,
+        "offset_new": 5083904,
+        "offset_old": 5000704,
+        "recompressed": false,
+        "size_new": 57344,
+        "size_old": 57344
+      },
+      {
+        "block": 97,
+        "offset_new": 5141248,
+        "offset_old": 5058048,
+        "recompressed": false,
+        "size_new": 50176,
+        "size_old": 50176
+      },
+      {
+        "block": 98,
+        "offset_new": 5191424,
+        "offset_old": 5108224,
+        "recompressed": false,
+        "size_new": 47616,
+        "size_old": 47616
+      },
+      {
+        "block": 99,
+        "offset_new": 5239040,
+        "offset_old": 5155840,
+        "recompressed": false,
+        "size_new": 48128,
+        "size_old": 48128
+      },
+      {
+        "block": 100,
+        "offset_new": 5287168,
+        "offset_old": 5203968,
+        "recompressed": false,
+        "size_new": 51712,
+        "size_old": 51712
+      },
+      {
+        "block": 101,
+        "offset_new": 5338880,
+        "offset_old": 5255680,
+        "recompressed": false,
+        "size_new": 30720,
+        "size_old": 30720
+      },
+      {
+        "block": 102,
+        "offset_new": 5369600,
+        "offset_old": 5286400,
+        "recompressed": false,
+        "size_new": 14848,
+        "size_old": 14848
+      },
+      {
+        "block": 103,
+        "offset_new": 5384448,
+        "offset_old": 5301248,
+        "recompressed": false,
+        "size_new": 17408,
+        "size_old": 17408
+      },
+      {
+        "block": 104,
+        "offset_new": 5401856,
+        "offset_old": 5318656,
+        "recompressed": false,
+        "size_new": 25088,
+        "size_old": 25088
+      },
+      {
+        "block": 105,
+        "offset_new": 5426944,
+        "offset_old": 5343744,
+        "recompressed": false,
+        "size_new": 28672,
+        "size_old": 28672
+      },
+      {
+        "block": 106,
+        "offset_new": 5455616,
+        "offset_old": 5372416,
+        "recompressed": false,
+        "size_new": 33280,
+        "size_old": 33280
+      },
+      {
+        "block": 107,
+        "offset_new": 5488896,
+        "offset_old": 5405696,
+        "recompressed": false,
+        "size_new": 48128,
+        "size_old": 48128
+      },
+      {
+        "block": 108,
+        "offset_new": 5537024,
+        "offset_old": 5453824,
+        "recompressed": false,
+        "size_new": 45568,
+        "size_old": 45568
+      },
+      {
+        "block": 109,
+        "offset_new": 5582592,
+        "offset_old": 5499392,
+        "recompressed": false,
+        "size_new": 35840,
+        "size_old": 35840
+      },
+      {
+        "block": 110,
+        "offset_new": 5618432,
+        "offset_old": 5535232,
+        "recompressed": false,
+        "size_new": 35328,
+        "size_old": 35328
+      },
+      {
+        "block": 111,
+        "offset_new": 5653760,
+        "offset_old": 5570560,
+        "recompressed": false,
+        "size_new": 20480,
+        "size_old": 20480
+      },
+      {
+        "block": 112,
+        "offset_new": 5674240,
+        "offset_old": 5591040,
+        "recompressed": false,
+        "size_new": 25600,
+        "size_old": 25600
+      },
+      {
+        "block": 113,
+        "offset_new": 5699840,
+        "offset_old": 5616640,
+        "recompressed": false,
+        "size_new": 24576,
+        "size_old": 24576
+      },
+      {
+        "block": 114,
+        "offset_new": 5724416,
+        "offset_old": 5641216,
+        "recompressed": false,
+        "size_new": 22528,
+        "size_old": 22528
+      },
+      {
+        "block": 115,
+        "offset_new": 5746944,
+        "offset_old": 5663744,
+        "recompressed": false,
+        "size_new": 27136,
+        "size_old": 27136
+      },
+      {
+        "block": 116,
+        "offset_new": 5774080,
+        "offset_old": 5690880,
+        "recompressed": false,
+        "size_new": 26112,
+        "size_old": 26112
+      },
+      {
+        "block": 117,
+        "offset_new": 5800192,
+        "offset_old": 5716992,
+        "recompressed": false,
+        "size_new": 24064,
+        "size_old": 24064
+      },
+      {
+        "block": 118,
+        "offset_new": 5824256,
+        "offset_old": 5741056,
+        "recompressed": false,
+        "size_new": 26624,
+        "size_old": 26624
+      },
+      {
+        "block": 119,
+        "offset_new": 5850880,
+        "offset_old": 5767680,
+        "recompressed": false,
+        "size_new": 25600,
+        "size_old": 25600
+      },
+      {
+        "block": 120,
+        "offset_new": 5876480,
+        "offset_old": 5793280,
+        "recompressed": false,
+        "size_new": 15872,
+        "size_old": 15872
+      },
+      {
+        "block": 121,
+        "offset_new": 5892352,
+        "offset_old": 5809152,
+        "recompressed": false,
+        "size_new": 24576,
+        "size_old": 24576
+      },
+      {
+        "block": 122,
+        "offset_new": 5916928,
+        "offset_old": 5833728,
+        "recompressed": false,
+        "size_new": 27648,
+        "size_old": 27648
+      },
+      {
+        "block": 123,
+        "offset_new": 5944576,
+        "offset_old": 5861376,
+        "recompressed": false,
+        "size_new": 22528,
+        "size_old": 22528
+      },
+      {
+        "block": 124,
+        "offset_new": 5967104,
+        "offset_old": 5883904,
+        "recompressed": false,
+        "size_new": 27648,
+        "size_old": 27648
+      },
+      {
+        "block": 125,
+        "offset_new": 5994752,
+        "offset_old": 5911552,
+        "recompressed": false,
+        "size_new": 26112,
+        "size_old": 26112
+      },
+      {
+        "block": 126,
+        "offset_new": 6020864,
+        "offset_old": 5937664,
+        "recompressed": false,
+        "size_new": 40448,
+        "size_old": 40448
+      },
+      {
+        "block": 127,
+        "offset_new": 6061312,
+        "offset_old": 5978112,
+        "recompressed": false,
+        "size_new": 44032,
+        "size_old": 44032
+      },
+      {
+        "block": 128,
+        "offset_new": 6105344,
+        "offset_old": 6022144,
+        "recompressed": false,
+        "size_new": 43008,
+        "size_old": 43008
+      },
+      {
+        "block": 129,
+        "offset_new": 6148352,
+        "offset_old": 6065152,
+        "recompressed": false,
+        "size_new": 40448,
+        "size_old": 40448
+      },
+      {
+        "block": 130,
+        "offset_new": 6188800,
+        "offset_old": 6105600,
+        "recompressed": false,
+        "size_new": 27136,
+        "size_old": 27136
+      },
+      {
+        "block": 131,
+        "offset_new": 6215936,
+        "offset_old": 6132736,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 132,
+        "offset_new": 6218496,
+        "offset_old": 6135296,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 133,
+        "offset_new": 6221056,
+        "offset_old": 6137856,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 134,
+        "offset_new": 6223616,
+        "offset_old": 6140416,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 135,
+        "offset_new": 6226176,
+        "offset_old": 6142976,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 136,
+        "offset_new": 6228736,
+        "offset_old": 6145536,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 137,
+        "offset_new": 6231296,
+        "offset_old": 6148096,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 138,
+        "offset_new": 6233856,
+        "offset_old": 6150656,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 139,
+        "offset_new": 6236416,
+        "offset_old": 6153216,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 140,
+        "offset_new": 6238976,
+        "offset_old": 6155776,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 141,
+        "offset_new": 6241536,
+        "offset_old": 6158336,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 142,
+        "offset_new": 6244096,
+        "offset_old": 6160896,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 143,
+        "offset_new": 6246656,
+        "offset_old": 6163456,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 144,
+        "offset_new": 6249216,
+        "offset_old": 6166016,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 145,
+        "offset_new": 6251776,
+        "offset_old": 6168576,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 146,
+        "offset_new": 6254336,
+        "offset_old": 6171136,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 147,
+        "offset_new": 6256896,
+        "offset_old": 6173696,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 148,
+        "offset_new": 6259456,
+        "offset_old": 6176256,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 149,
+        "offset_new": 6262016,
+        "offset_old": 6178816,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 150,
+        "offset_new": 6264576,
+        "offset_old": 6181376,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 151,
+        "offset_new": 6267136,
+        "offset_old": 6183936,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 152,
+        "offset_new": 6269696,
+        "offset_old": 6186496,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 153,
+        "offset_new": 6272256,
+        "offset_old": 6189056,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 154,
+        "offset_new": 6274816,
+        "offset_old": 6191616,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 155,
+        "offset_new": 6277376,
+        "offset_old": 6194176,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 156,
+        "offset_new": 6279936,
+        "offset_old": 6196736,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 157,
+        "offset_new": 6282496,
+        "offset_old": 6199296,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 158,
+        "offset_new": 6285056,
+        "offset_old": 6201856,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 159,
+        "offset_new": 6287616,
+        "offset_old": 6204416,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 160,
+        "offset_new": 6290176,
+        "offset_old": 6206976,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 161,
+        "offset_new": 6292736,
+        "offset_old": 6209536,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 162,
+        "offset_new": 6295296,
+        "offset_old": 6212096,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 163,
+        "offset_new": 6297856,
+        "offset_old": 6214656,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 164,
+        "offset_new": 6300416,
+        "offset_old": 6217216,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 165,
+        "offset_new": 6302976,
+        "offset_old": 6219776,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 166,
+        "offset_new": 6305536,
+        "offset_old": 6222336,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 167,
+        "offset_new": 6308096,
+        "offset_old": 6224896,
+        "recompressed": false,
+        "size_new": 18432,
+        "size_old": 18432
+      },
+      {
+        "block": 168,
+        "offset_new": 6326528,
+        "offset_old": 6243328,
+        "recompressed": false,
+        "size_new": 35328,
+        "size_old": 35328
+      },
+      {
+        "block": 169,
+        "offset_new": 6361856,
+        "offset_old": 6278656,
+        "recompressed": false,
+        "size_new": 29696,
+        "size_old": 29696
+      },
+      {
+        "block": 170,
+        "offset_new": 6391552,
+        "offset_old": 6308352,
+        "recompressed": false,
+        "size_new": 31744,
+        "size_old": 31744
+      },
+      {
+        "block": 171,
+        "offset_new": 6423296,
+        "offset_old": 6340096,
+        "recompressed": false,
+        "size_new": 32256,
+        "size_old": 32256
+      },
+      {
+        "block": 172,
+        "offset_new": 6455552,
+        "offset_old": 6372352,
+        "recompressed": false,
+        "size_new": 38912,
+        "size_old": 38912
+      },
+      {
+        "block": 173,
+        "offset_new": 6494464,
+        "offset_old": 6411264,
+        "recompressed": false,
+        "size_new": 38400,
+        "size_old": 38400
+      },
+      {
+        "block": 174,
+        "offset_new": 6532864,
+        "offset_old": 6449664,
+        "recompressed": false,
+        "size_new": 48128,
+        "size_old": 48128
+      },
+      {
+        "block": 175,
+        "offset_new": 6580992,
+        "offset_old": 6497792,
+        "recompressed": false,
+        "size_new": 6144,
+        "size_old": 6144
+      },
+      {
+        "block": 176,
+        "offset_new": 6587136,
+        "offset_old": 6503936,
+        "recompressed": false,
+        "size_new": 6144,
+        "size_old": 6144
+      },
+      {
+        "block": 177,
+        "offset_new": 6593280,
+        "offset_old": 6510080,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 178,
+        "offset_new": 6595840,
+        "offset_old": 6512640,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 179,
+        "offset_new": 6598400,
+        "offset_old": 6515200,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 180,
+        "offset_new": 6600960,
+        "offset_old": 6517760,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 181,
+        "offset_new": 6603520,
+        "offset_old": 6520320,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 182,
+        "offset_new": 6606080,
+        "offset_old": 6522880,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 183,
+        "offset_new": 6608640,
+        "offset_old": 6525440,
+        "recompressed": false,
+        "size_new": 25088,
+        "size_old": 25088
+      },
+      {
+        "block": 184,
+        "offset_new": 6633728,
+        "offset_old": 6550528,
+        "recompressed": false,
+        "size_new": 41984,
+        "size_old": 41984
+      },
+      {
+        "block": 185,
+        "offset_new": 6675712,
+        "offset_old": 6592512,
+        "recompressed": false,
+        "size_new": 32768,
+        "size_old": 32768
+      },
+      {
+        "block": 186,
+        "offset_new": 6708480,
+        "offset_old": 6625280,
+        "recompressed": false,
+        "size_new": 33280,
+        "size_old": 33280
+      },
+      {
+        "block": 187,
+        "offset_new": 6741760,
+        "offset_old": 6658560,
+        "recompressed": false,
+        "size_new": 37376,
+        "size_old": 37376
+      },
+      {
+        "block": 188,
+        "offset_new": 6779136,
+        "offset_old": 6695936,
+        "recompressed": false,
+        "size_new": 45568,
+        "size_old": 45568
+      },
+      {
+        "block": 189,
+        "offset_new": 6824704,
+        "offset_old": 6741504,
+        "recompressed": false,
+        "size_new": 40960,
+        "size_old": 40960
+      },
+      {
+        "block": 190,
+        "offset_new": 6865664,
+        "offset_old": 6782464,
+        "recompressed": false,
+        "size_new": 58880,
+        "size_old": 58880
+      },
+      {
+        "block": 191,
+        "offset_new": 6924544,
+        "offset_old": 6841344,
+        "recompressed": false,
+        "size_new": 58368,
+        "size_old": 58368
+      },
+      {
+        "block": 192,
+        "offset_new": 6982912,
+        "offset_old": 6899712,
+        "recompressed": false,
+        "size_new": 54272,
+        "size_old": 54272
+      },
+      {
+        "block": 193,
+        "offset_new": 7037184,
+        "offset_old": 6953984,
+        "recompressed": false,
+        "size_new": 53760,
+        "size_old": 53760
+      },
+      {
+        "block": 194,
+        "offset_new": 7090944,
+        "offset_old": 7007744,
+        "recompressed": false,
+        "size_new": 57344,
+        "size_old": 57344
+      },
+      {
+        "block": 195,
+        "offset_new": 7148288,
+        "offset_old": 7065088,
+        "recompressed": false,
+        "size_new": 54784,
+        "size_old": 54784
+      },
+      {
+        "block": 196,
+        "offset_new": 7203072,
+        "offset_old": 7119872,
+        "recompressed": false,
+        "size_new": 60928,
+        "size_old": 60928
+      },
+      {
+        "block": 197,
+        "offset_new": 7264000,
+        "offset_old": 7180800,
+        "recompressed": false,
+        "size_new": 56832,
+        "size_old": 56832
+      },
+      {
+        "block": 198,
+        "offset_new": 7320832,
+        "offset_old": 7237632,
+        "recompressed": false,
+        "size_new": 52224,
+        "size_old": 52224
+      },
+      {
+        "block": 199,
+        "offset_new": 7373056,
+        "offset_old": 7289856,
+        "recompressed": false,
+        "size_new": 54784,
+        "size_old": 54784
+      },
+      {
+        "block": 200,
+        "offset_new": 7427840,
+        "offset_old": 7344640,
+        "recompressed": false,
+        "size_new": 53760,
+        "size_old": 53760
+      },
+      {
+        "block": 201,
+        "offset_new": 7481600,
+        "offset_old": 7398400,
+        "recompressed": false,
+        "size_new": 30208,
+        "size_old": 30208
+      },
+      {
+        "block": 202,
+        "offset_new": 7511808,
+        "offset_old": 7428608,
+        "recompressed": false,
+        "size_new": 36864,
+        "size_old": 36864
+      },
+      {
+        "block": 203,
+        "offset_new": 7548672,
+        "offset_old": 7465472,
+        "recompressed": false,
+        "size_new": 43520,
+        "size_old": 43520
+      },
+      {
+        "block": 204,
+        "offset_new": 7592192,
+        "offset_old": 7508992,
+        "recompressed": false,
+        "size_new": 30208,
+        "size_old": 30208
+      },
+      {
+        "block": 205,
+        "offset_new": 7622400,
+        "offset_old": 7539200,
+        "recompressed": false,
+        "size_new": 14848,
+        "size_old": 14848
+      },
+      {
+        "block": 206,
+        "offset_new": 7637248,
+        "offset_old": 7554048,
+        "recompressed": false,
+        "size_new": 15872,
+        "size_old": 15872
+      },
+      {
+        "block": 207,
+        "offset_new": 7653120,
+        "offset_old": 7569920,
+        "recompressed": false,
+        "size_new": 40960,
+        "size_old": 40960
+      },
+      {
+        "block": 208,
+        "offset_new": 7694080,
+        "offset_old": 7610880,
+        "recompressed": false,
+        "size_new": 48128,
+        "size_old": 48128
+      },
+      {
+        "block": 209,
+        "offset_new": 7742208,
+        "offset_old": 7659008,
+        "recompressed": false,
+        "size_new": 45568,
+        "size_old": 45568
+      },
+      {
+        "block": 210,
+        "offset_new": 7787776,
+        "offset_old": 7704576,
+        "recompressed": false,
+        "size_new": 44032,
+        "size_old": 44032
+      },
+      {
+        "block": 211,
+        "offset_new": 7831808,
+        "offset_old": 7748608,
+        "recompressed": false,
+        "size_new": 52224,
+        "size_old": 52224
+      },
+      {
+        "block": 212,
+        "offset_new": 7884032,
+        "offset_old": 7800832,
+        "recompressed": false,
+        "size_new": 32256,
+        "size_old": 32256
+      },
+      {
+        "block": 213,
+        "offset_new": 7916288,
+        "offset_old": 7833088,
+        "recompressed": false,
+        "size_new": 23040,
+        "size_old": 23040
+      },
+      {
+        "block": 214,
+        "offset_new": 7939328,
+        "offset_old": 7856128,
+        "recompressed": false,
+        "size_new": 14336,
+        "size_old": 14336
+      },
+      {
+        "block": 215,
+        "offset_new": 7953664,
+        "offset_old": 7870464,
+        "recompressed": false,
+        "size_new": 24576,
+        "size_old": 24576
+      },
+      {
+        "block": 216,
+        "offset_new": 7978240,
+        "offset_old": 7895040,
+        "recompressed": false,
+        "size_new": 34816,
+        "size_old": 34816
+      },
+      {
+        "block": 217,
+        "offset_new": 8013056,
+        "offset_old": 7929856,
+        "recompressed": false,
+        "size_new": 27648,
+        "size_old": 27648
+      },
+      {
+        "block": 218,
+        "offset_new": 8040704,
+        "offset_old": 7957504,
+        "recompressed": false,
+        "size_new": 28672,
+        "size_old": 28672
+      },
+      {
+        "block": 219,
+        "offset_new": 8069376,
+        "offset_old": 7986176,
+        "recompressed": false,
+        "size_new": 29696,
+        "size_old": 29696
+      },
+      {
+        "block": 220,
+        "offset_new": 8099072,
+        "offset_old": 8015872,
+        "recompressed": false,
+        "size_new": 29696,
+        "size_old": 29696
+      },
+      {
+        "block": 221,
+        "offset_new": 8128768,
+        "offset_old": 8045568,
+        "recompressed": false,
+        "size_new": 23552,
+        "size_old": 23552
+      },
+      {
+        "block": 222,
+        "offset_new": 8152320,
+        "offset_old": 8069120,
+        "recompressed": false,
+        "size_new": 24576,
+        "size_old": 24576
+      },
+      {
+        "block": 223,
+        "offset_new": 8176896,
+        "offset_old": 8093696,
+        "recompressed": false,
+        "size_new": 35840,
+        "size_old": 35840
+      },
+      {
+        "block": 224,
+        "offset_new": 8212736,
+        "offset_old": 8129536,
+        "recompressed": false,
+        "size_new": 57856,
+        "size_old": 57856
+      },
+      {
+        "block": 225,
+        "offset_new": 8270592,
+        "offset_old": 8187392,
+        "recompressed": false,
+        "size_new": 35840,
+        "size_old": 35840
+      },
+      {
+        "block": 226,
+        "offset_new": 8306432,
+        "offset_old": 8223232,
+        "recompressed": false,
+        "size_new": 50176,
+        "size_old": 50176
+      },
+      {
+        "block": 227,
+        "offset_new": 8356608,
+        "offset_old": 8273408,
+        "recompressed": false,
+        "size_new": 52736,
+        "size_old": 52736
+      },
+      {
+        "block": 228,
+        "offset_new": 8409344,
+        "offset_old": 8326144,
+        "recompressed": false,
+        "size_new": 60416,
+        "size_old": 60416
+      },
+      {
+        "block": 229,
+        "offset_new": 8469760,
+        "offset_old": 8386560,
+        "recompressed": false,
+        "size_new": 61952,
+        "size_old": 61952
+      },
+      {
+        "block": 230,
+        "offset_new": 8531712,
+        "offset_old": 8448512,
+        "recompressed": false,
+        "size_new": 64512,
+        "size_old": 64512
+      },
+      {
+        "block": 231,
+        "offset_new": 8596224,
+        "offset_old": 8513024,
+        "recompressed": false,
+        "size_new": 50176,
+        "size_old": 50176
+      },
+      {
+        "block": 232,
+        "offset_new": 8646400,
+        "offset_old": 8563200,
+        "recompressed": false,
+        "size_new": 43520,
+        "size_old": 43520
+      },
+      {
+        "block": 233,
+        "offset_new": 8689920,
+        "offset_old": 8606720,
+        "recompressed": false,
+        "size_new": 30720,
+        "size_old": 30720
+      },
+      {
+        "block": 234,
+        "offset_new": 8720640,
+        "offset_old": 8637440,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 235,
+        "offset_new": 8723200,
+        "offset_old": 8640000,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 236,
+        "offset_new": 8725760,
+        "offset_old": 8642560,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 237,
+        "offset_new": 8728320,
+        "offset_old": 8645120,
+        "recompressed": false,
+        "size_new": 18944,
+        "size_old": 18944
+      },
+      {
+        "block": 238,
+        "offset_new": 8747264,
+        "offset_old": 8664064,
+        "recompressed": false,
+        "size_new": 52736,
+        "size_old": 52736
+      },
+      {
+        "block": 239,
+        "offset_new": 8800000,
+        "offset_old": 8716800,
+        "recompressed": false,
+        "size_new": 50176,
+        "size_old": 50176
+      },
+      {
+        "block": 240,
+        "offset_new": 8850176,
+        "offset_old": 8766976,
+        "recompressed": false,
+        "size_new": 36864,
+        "size_old": 36864
+      },
+      {
+        "block": 241,
+        "offset_new": 8887040,
+        "offset_old": 8803840,
+        "recompressed": false,
+        "size_new": 47616,
+        "size_old": 47616
+      },
+      {
+        "block": 242,
+        "offset_new": 8934656,
+        "offset_old": 8851456,
+        "recompressed": false,
+        "size_new": 49664,
+        "size_old": 49664
+      },
+      {
+        "block": 243,
+        "offset_new": 8984320,
+        "offset_old": 8901120,
+        "recompressed": false,
+        "size_new": 37376,
+        "size_old": 37376
+      },
+      {
+        "block": 244,
+        "offset_new": 9021696,
+        "offset_old": 8938496,
+        "recompressed": false,
+        "size_new": 40960,
+        "size_old": 40960
+      },
+      {
+        "block": 245,
+        "offset_new": 9062656,
+        "offset_old": 8979456,
+        "recompressed": false,
+        "size_new": 43520,
+        "size_old": 43520
+      },
+      {
+        "block": 246,
+        "offset_new": 9106176,
+        "offset_old": 9022976,
+        "recompressed": false,
+        "size_new": 29184,
+        "size_old": 29184
+      },
+      {
+        "block": 247,
+        "offset_new": 9135360,
+        "offset_old": 9052160,
+        "recompressed": false,
+        "size_new": 46592,
+        "size_old": 46592
+      },
+      {
+        "block": 248,
+        "offset_new": 9181952,
+        "offset_old": 9098752,
+        "recompressed": false,
+        "size_new": 47104,
+        "size_old": 47104
+      },
+      {
+        "block": 249,
+        "offset_new": 9229056,
+        "offset_old": 9145856,
+        "recompressed": false,
+        "size_new": 45568,
+        "size_old": 45568
+      },
+      {
+        "block": 250,
+        "offset_new": 9274624,
+        "offset_old": 9191424,
+        "recompressed": false,
+        "size_new": 44032,
+        "size_old": 44032
+      },
+      {
+        "block": 251,
+        "offset_new": 9318656,
+        "offset_old": 9235456,
+        "recompressed": false,
+        "size_new": 45568,
+        "size_old": 45568
+      },
+      {
+        "block": 252,
+        "offset_new": 9364224,
+        "offset_old": 9281024,
+        "recompressed": false,
+        "size_new": 45568,
+        "size_old": 45568
+      },
+      {
+        "block": 253,
+        "offset_new": 9409792,
+        "offset_old": 9326592,
+        "recompressed": false,
+        "size_new": 45568,
+        "size_old": 45568
+      },
+      {
+        "block": 254,
+        "offset_new": 9455360,
+        "offset_old": 9372160,
+        "recompressed": false,
+        "size_new": 48128,
+        "size_old": 48128
+      },
+      {
+        "block": 255,
+        "offset_new": 9503488,
+        "offset_old": 9420288,
+        "recompressed": false,
+        "size_new": 48640,
+        "size_old": 48640
+      },
+      {
+        "block": 256,
+        "offset_new": 9552128,
+        "offset_old": 9468928,
+        "recompressed": false,
+        "size_new": 49664,
+        "size_old": 49664
+      },
+      {
+        "block": 257,
+        "offset_new": 9601792,
+        "offset_old": 9518592,
+        "recompressed": false,
+        "size_new": 46080,
+        "size_old": 46080
+      },
+      {
+        "block": 258,
+        "offset_new": 9647872,
+        "offset_old": 9564672,
+        "recompressed": false,
+        "size_new": 45568,
+        "size_old": 45568
+      },
+      {
+        "block": 259,
+        "offset_new": 9693440,
+        "offset_old": 9610240,
+        "recompressed": false,
+        "size_new": 45056,
+        "size_old": 45056
+      },
+      {
+        "block": 260,
+        "offset_new": 9738496,
+        "offset_old": 9655296,
+        "recompressed": false,
+        "size_new": 47616,
+        "size_old": 47616
+      },
+      {
+        "block": 261,
+        "offset_new": 9786112,
+        "offset_old": 9702912,
+        "recompressed": false,
+        "size_new": 47104,
+        "size_old": 47104
+      },
+      {
+        "block": 262,
+        "offset_new": 9833216,
+        "offset_old": 9750016,
+        "recompressed": false,
+        "size_new": 46080,
+        "size_old": 46080
+      },
+      {
+        "block": 263,
+        "offset_new": 9879296,
+        "offset_old": 9796096,
+        "recompressed": false,
+        "size_new": 47616,
+        "size_old": 47616
+      },
+      {
+        "block": 264,
+        "offset_new": 9926912,
+        "offset_old": 9843712,
+        "recompressed": false,
+        "size_new": 48640,
+        "size_old": 48640
+      },
+      {
+        "block": 265,
+        "offset_new": 9975552,
+        "offset_old": 9892352,
+        "recompressed": false,
+        "size_new": 45568,
+        "size_old": 45568
+      },
+      {
+        "block": 266,
+        "offset_new": 10021120,
+        "offset_old": 9937920,
+        "recompressed": false,
+        "size_new": 44544,
+        "size_old": 44544
+      },
+      {
+        "block": 267,
+        "offset_new": 10065664,
+        "offset_old": 9982464,
+        "recompressed": false,
+        "size_new": 43520,
+        "size_old": 43520
+      },
+      {
+        "block": 268,
+        "offset_new": 10109184,
+        "offset_old": 10025984,
+        "recompressed": false,
+        "size_new": 45056,
+        "size_old": 45056
+      },
+      {
+        "block": 269,
+        "offset_new": 10154240,
+        "offset_old": 10071040,
+        "recompressed": false,
+        "size_new": 43008,
+        "size_old": 43008
+      },
+      {
+        "block": 270,
+        "offset_new": 10197248,
+        "offset_old": 10114048,
+        "recompressed": false,
+        "size_new": 44032,
+        "size_old": 44032
+      },
+      {
+        "block": 271,
+        "offset_new": 10241280,
+        "offset_old": 10158080,
+        "recompressed": false,
+        "size_new": 43520,
+        "size_old": 43520
+      },
+      {
+        "block": 272,
+        "offset_new": 10284800,
+        "offset_old": 10201600,
+        "recompressed": false,
+        "size_new": 32768,
+        "size_old": 32768
+      },
+      {
+        "block": 273,
+        "offset_new": 10317568,
+        "offset_old": 10234368,
+        "recompressed": false,
+        "size_new": 44544,
+        "size_old": 44544
+      },
+      {
+        "block": 274,
+        "offset_new": 10362112,
+        "offset_old": 10278912,
+        "recompressed": false,
+        "size_new": 46080,
+        "size_old": 46080
+      },
+      {
+        "block": 275,
+        "offset_new": 10408192,
+        "offset_old": 10324992,
+        "recompressed": false,
+        "size_new": 46592,
+        "size_old": 46592
+      },
+      {
+        "block": 276,
+        "offset_new": 10454784,
+        "offset_old": 10371584,
+        "recompressed": false,
+        "size_new": 46080,
+        "size_old": 46080
+      },
+      {
+        "block": 277,
+        "offset_new": 10500864,
+        "offset_old": 10417664,
+        "recompressed": false,
+        "size_new": 45056,
+        "size_old": 45056
+      },
+      {
+        "block": 278,
+        "offset_new": 10545920,
+        "offset_old": 10462720,
+        "recompressed": false,
+        "size_new": 47104,
+        "size_old": 47104
+      },
+      {
+        "block": 279,
+        "offset_new": 10593024,
+        "offset_old": 10509824,
+        "recompressed": false,
+        "size_new": 48128,
+        "size_old": 48128
+      },
+      {
+        "block": 280,
+        "offset_new": 10641152,
+        "offset_old": 10557952,
+        "recompressed": false,
+        "size_new": 49664,
+        "size_old": 49664
+      },
+      {
+        "block": 281,
+        "offset_new": 10690816,
+        "offset_old": 10607616,
+        "recompressed": false,
+        "size_new": 48128,
+        "size_old": 48128
+      },
+      {
+        "block": 282,
+        "offset_new": 10738944,
+        "offset_old": 10655744,
+        "recompressed": false,
+        "size_new": 48640,
+        "size_old": 48640
+      },
+      {
+        "block": 283,
+        "offset_new": 10787584,
+        "offset_old": 10704384,
+        "recompressed": false,
+        "size_new": 46592,
+        "size_old": 46592
+      },
+      {
+        "block": 284,
+        "offset_new": 10834176,
+        "offset_old": 10750976,
+        "recompressed": false,
+        "size_new": 29696,
+        "size_old": 29696
+      },
+      {
+        "block": 285,
+        "offset_new": 10863872,
+        "offset_old": 10780672,
+        "recompressed": false,
+        "size_new": 45056,
+        "size_old": 45056
+      },
+      {
+        "block": 286,
+        "offset_new": 10908928,
+        "offset_old": 10825728,
+        "recompressed": false,
+        "size_new": 51712,
+        "size_old": 51712
+      },
+      {
+        "block": 287,
+        "offset_new": 10960640,
+        "offset_old": 10877440,
+        "recompressed": false,
+        "size_new": 46592,
+        "size_old": 46592
+      },
+      {
+        "block": 288,
+        "offset_new": 11007232,
+        "offset_old": 10924032,
+        "recompressed": false,
+        "size_new": 42496,
+        "size_old": 42496
+      },
+      {
+        "block": 289,
+        "offset_new": 11049728,
+        "offset_old": 10966528,
+        "recompressed": false,
+        "size_new": 46080,
+        "size_old": 46080
+      },
+      {
+        "block": 290,
+        "offset_new": 11095808,
+        "offset_old": 11012608,
+        "recompressed": false,
+        "size_new": 43520,
+        "size_old": 43520
+      },
+      {
+        "block": 291,
+        "offset_new": 11139328,
+        "offset_old": 11056128,
+        "recompressed": false,
+        "size_new": 35840,
+        "size_old": 35840
+      },
+      {
+        "block": 292,
+        "offset_new": 11175168,
+        "offset_old": 11091968,
+        "recompressed": false,
+        "size_new": 33792,
+        "size_old": 33792
+      },
+      {
+        "block": 293,
+        "offset_new": 11208960,
+        "offset_old": 11125760,
+        "recompressed": false,
+        "size_new": 44032,
+        "size_old": 44032
+      },
+      {
+        "block": 294,
+        "offset_new": 11252992,
+        "offset_old": 11169792,
+        "recompressed": false,
+        "size_new": 36352,
+        "size_old": 36352
+      },
+      {
+        "block": 295,
+        "offset_new": 11289344,
+        "offset_old": 11206144,
+        "recompressed": false,
+        "size_new": 47104,
+        "size_old": 47104
+      },
+      {
+        "block": 296,
+        "offset_new": 11336448,
+        "offset_old": 11253248,
+        "recompressed": false,
+        "size_new": 28672,
+        "size_old": 28672
+      },
+      {
+        "block": 297,
+        "offset_new": 11365120,
+        "offset_old": 11281920,
+        "recompressed": false,
+        "size_new": 3072,
+        "size_old": 3072
+      },
+      {
+        "block": 298,
+        "offset_new": 11368192,
+        "offset_old": 11284992,
+        "recompressed": false,
+        "size_new": 8704,
+        "size_old": 8704
+      },
+      {
+        "block": 299,
+        "offset_new": 11376896,
+        "offset_old": 11293696,
+        "recompressed": false,
+        "size_new": 18944,
+        "size_old": 18944
+      },
+      {
+        "block": 300,
+        "offset_new": 11395840,
+        "offset_old": 11312640,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 301,
+        "offset_new": 11398400,
+        "offset_old": 11315200,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 302,
+        "offset_new": 11400960,
+        "offset_old": 11317760,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 303,
+        "offset_new": 11403520,
+        "offset_old": 11320320,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 304,
+        "offset_new": 11406080,
+        "offset_old": 11322880,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 305,
+        "offset_new": 11408640,
+        "offset_old": 11325440,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 306,
+        "offset_new": 11411200,
+        "offset_old": 11328000,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 307,
+        "offset_new": 11413760,
+        "offset_old": 11330560,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 308,
+        "offset_new": 11416320,
+        "offset_old": 11333120,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 309,
+        "offset_new": 11418880,
+        "offset_old": 11335680,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 310,
+        "offset_new": 11421440,
+        "offset_old": 11338240,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 311,
+        "offset_new": 11424000,
+        "offset_old": 11340800,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 312,
+        "offset_new": 11426560,
+        "offset_old": 11343360,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 313,
+        "offset_new": 11429120,
+        "offset_old": 11345920,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 314,
+        "offset_new": 11431680,
+        "offset_old": 11348480,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 315,
+        "offset_new": 11434240,
+        "offset_old": 11351040,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 316,
+        "offset_new": 11436800,
+        "offset_old": 11353600,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 317,
+        "offset_new": 11439360,
+        "offset_old": 11356160,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 318,
+        "offset_new": 11441920,
+        "offset_old": 11358720,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 319,
+        "offset_new": 11444480,
+        "offset_old": 11361280,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 320,
+        "offset_new": 11447040,
+        "offset_old": 11363840,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 321,
+        "offset_new": 11449600,
+        "offset_old": 11366400,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 322,
+        "offset_new": 11452160,
+        "offset_old": 11368960,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 323,
+        "offset_new": 11454720,
+        "offset_old": 11371520,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 324,
+        "offset_new": 11457280,
+        "offset_old": 11374080,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 325,
+        "offset_new": 11459840,
+        "offset_old": 11376640,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 326,
+        "offset_new": 11462400,
+        "offset_old": 11379200,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 327,
+        "offset_new": 11464960,
+        "offset_old": 11381760,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 328,
+        "offset_new": 11467520,
+        "offset_old": 11384320,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 329,
+        "offset_new": 11470080,
+        "offset_old": 11386880,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 330,
+        "offset_new": 11472640,
+        "offset_old": 11389440,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 331,
+        "offset_new": 11475200,
+        "offset_old": 11392000,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 332,
+        "offset_new": 11477760,
+        "offset_old": 11394560,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 333,
+        "offset_new": 11480320,
+        "offset_old": 11397120,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 334,
+        "offset_new": 11482880,
+        "offset_old": 11399680,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 335,
+        "offset_new": 11485440,
+        "offset_old": 11402240,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 336,
+        "offset_new": 11488000,
+        "offset_old": 11404800,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 337,
+        "offset_new": 11490560,
+        "offset_old": 11407360,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 338,
+        "offset_new": 11493120,
+        "offset_old": 11409920,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 339,
+        "offset_new": 11495680,
+        "offset_old": 11412480,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 340,
+        "offset_new": 11498240,
+        "offset_old": 11415040,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 341,
+        "offset_new": 11500800,
+        "offset_old": 11417600,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 342,
+        "offset_new": 11503360,
+        "offset_old": 11420160,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 343,
+        "offset_new": 11505920,
+        "offset_old": 11422720,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 344,
+        "offset_new": 11508480,
+        "offset_old": 11425280,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 345,
+        "offset_new": 11511040,
+        "offset_old": 11427840,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 346,
+        "offset_new": 11513600,
+        "offset_old": 11430400,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 347,
+        "offset_new": 11516160,
+        "offset_old": 11432960,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 348,
+        "offset_new": 11518720,
+        "offset_old": 11435520,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 349,
+        "offset_new": 11521280,
+        "offset_old": 11438080,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 350,
+        "offset_new": 11523840,
+        "offset_old": 11440640,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 351,
+        "offset_new": 11526400,
+        "offset_old": 11443200,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 352,
+        "offset_new": 11528960,
+        "offset_old": 11445760,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 353,
+        "offset_new": 11531520,
+        "offset_old": 11448320,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 354,
+        "offset_new": 11534080,
+        "offset_old": 11450880,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 355,
+        "offset_new": 11536640,
+        "offset_old": 11453440,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 356,
+        "offset_new": 11539200,
+        "offset_old": 11456000,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 357,
+        "offset_new": 11541760,
+        "offset_old": 11458560,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 358,
+        "offset_new": 11544320,
+        "offset_old": 11461120,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 359,
+        "offset_new": 11546880,
+        "offset_old": 11463680,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 360,
+        "offset_new": 11549440,
+        "offset_old": 11466240,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 361,
+        "offset_new": 11552000,
+        "offset_old": 11468800,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 362,
+        "offset_new": 11554560,
+        "offset_old": 11471360,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 363,
+        "offset_new": 11557120,
+        "offset_old": 11473920,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 364,
+        "offset_new": 11559680,
+        "offset_old": 11476480,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 365,
+        "offset_new": 11562240,
+        "offset_old": 11479040,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 366,
+        "offset_new": 11564800,
+        "offset_old": 11481600,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 367,
+        "offset_new": 11567360,
+        "offset_old": 11484160,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      },
+      {
+        "block": 368,
+        "offset_new": 11569920,
+        "offset_old": 11486720,
+        "recompressed": false,
+        "size_new": 2560,
+        "size_old": 2560
+      }
+    ],
+    "changed_blocks": [
+      0,
+      48,
+      57
+    ],
+    "container": "0700_part_image/dev/nflasha3",
+    "fat_offset": 38400,
+    "part_sum": {
+      "crc32_after": "f5e75c34",
+      "crc32_before": "0c047870",
+      "line_after": "0,f5e75c34,00b09500,000001a4,00000000,000003e8,root,root,-1,-1,dev/nflasha3,",
+      "line_before": "0,0c047870,00af4f10,000001a4,00000000,000003e8,root,root,-1,-1,dev/nflasha3,",
+      "path": "dev/nflasha3",
+      "size_after": "00b09500",
+      "size_before": "00af4f10"
+    },
+    "tpzl_blocks": 369
+  },
+  "phase": "E25-27",
+  "protection": {
+    "bionz": [
+      "liro_header",
+      "api_table_dest",
+      "header_metadata_tail",
+      "got_zero_object",
+      "text_start"
+    ],
+    "darwin": [
+      "reset",
+      "scatter_load",
+      "bootloader_mailbox",
+      "upd_main",
+      "initcom",
+      "com_task",
+      "watchdog",
+      "power_table",
+      "gpio_writer"
+    ],
+    "note": "las regiones protegidas se comparan por SHA-256 en cada parche"
+  },
+  "region": 0,
+  "reversal": {
+    "bionz": "PB.restore_bytes -> selector; PC.restore_bytes -> original; SHA-256 b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+    "darwin": "PD.restore_bytes -> original; SHA-256 5f2be06d9885d154e8e0df46a611d6830d29754b4353f6e82cecfe66dd6a0bf4",
+    "partition": "reconstruir firmware.tar desde el original verificado; el original se conserva intacto en la entrada",
+    "verified": true
+  },
+  "status": "CONSTRUIDO OFFLINE — INSTALACIÓN NO AUTORIZADA",
+  "tar": {
+    "darwin_sum": {
+      "crc32_after": "d55a54b5",
+      "crc32_before": "9ff7148c",
+      "line_after": "0,d55a54b5,0002665c,000001a4,00000000,000003e8,root,root,-1,-1,darwin_core.bin,",
+      "line_before": "0,9ff7148c,0002665c,000001a4,00000000,000003e8,root,root,-1,-1,darwin_core.bin,",
+      "path": "darwin_core.bin",
+      "size_after": "0002665c",
+      "size_before": "0002665c"
+    },
+    "members": 105,
+    "replacements": [
+      {
+        "name": "0640_darwin/darwin_core.bin",
+        "offset_old": 9408000,
+        "sha256_new": "9771c0508ee17e7984a619479c1f69cc4e8b71f0091fb5f9dfde66bbd19fb177",
+        "sha256_old": "5f2be06d9885d154e8e0df46a611d6830d29754b4353f6e82cecfe66dd6a0bf4",
+        "size_new": 157276,
+        "size_old": 157276
+      },
+      {
+        "name": "0641_darwin_sum/darwin.sum",
+        "offset_old": 9566720,
+        "sha256_new": "0defc4eb81b45a5eae978575d8d895695fe81dd36b8cb97bbc6d5d36f9b77d90",
+        "sha256_old": "b9d6876870f35349ecce3ed5056625e22f7a875822e59d9ecd570ad06b499731",
+        "size_new": 80,
+        "size_old": 80
+      },
+      {
+        "name": "0700_part_image/dev/nflasha3",
+        "offset_old": 153365504,
+        "sha256_new": "bb9ce25a073d1ccc990d8ee1fdd75322c703d5d2a4020ab5e7daeaf8d23d546c",
+        "sha256_old": "93d4a1f089e306d14a9c48732a0be33427951966db88b30ec48af24a92963765",
+        "size_new": 11572480,
+        "size_old": 11489040
+      },
+      {
+        "name": "0701_part_image_sum/part_image.sum",
+        "offset_old": 210475008,
+        "sha256_new": "95aeae48f86d77b3c7b3e38654dfd8189a38da6835d41bf7e1e39eafd5d967bf",
+        "sha256_old": "697380948f994c47f26728ac759185e1d22a19d65977622227f56540ea585ea1",
+        "size_new": 455,
+        "size_old": 455
+      }
+    ]
+  },
+  "version": "3.25"
+}

@@ -1,0 +1,687 @@
+{
+  "cap73b_trace": {
+    "decision": "sin corrección verificada; C3-B no toca 0x73b (E25-28)",
+    "description": "campo calculado por 0x43b1e520 antes del enganche C3-B; no se modifica",
+    "instructions": [
+      {
+        "address": "0x438acbfc",
+        "kind": "write",
+        "mnemonic": "strb.w",
+        "operands": "r1, [r3, #0x73b]"
+      },
+      {
+        "address": "0x438c8b4e",
+        "kind": "read",
+        "mnemonic": "ldrb.w",
+        "operands": "r3, [r4, #0x73b]"
+      },
+      {
+        "address": "0x4394efd0",
+        "kind": "read",
+        "mnemonic": "movw",
+        "operands": "r3, #0x73b"
+      },
+      {
+        "address": "0x43b1e448",
+        "kind": "read",
+        "mnemonic": "ldrb.w",
+        "operands": "r3, [r0, #0x73b]"
+      },
+      {
+        "address": "0x43b1e474",
+        "kind": "read",
+        "mnemonic": "ldrb.w",
+        "operands": "r3, [r0, #0x73b]"
+      },
+      {
+        "address": "0x43b1e556",
+        "kind": "write",
+        "mnemonic": "strb.w",
+        "operands": "r5, [r4, #0x73b]"
+      },
+      {
+        "address": "0x43b1e55e",
+        "kind": "write",
+        "mnemonic": "strb.w",
+        "operands": "r3, [r4, #0x73b]"
+      },
+      {
+        "address": "0x43b1e7b6",
+        "kind": "read",
+        "mnemonic": "ldrb.w",
+        "operands": "r3, [r4, #0x73b]"
+      }
+    ],
+    "reads": [
+      "0x438c8b4e",
+      "0x43b1e448",
+      "0x43b1e474",
+      "0x43b1e7b6"
+    ],
+    "source": "0x438acbfc copia cap+0x12e a plan+0x73b; 0x43b1e520 decide 0/1 con 0x73a, 0x655 y cap+0x12f8",
+    "writes": [
+      "0x438acbfc (copia del plan)",
+      "0x43b1e556",
+      "0x43b1e55e"
+    ]
+  },
+  "command": "python scripts/e25_27/build.py --package && python scripts/e25_27/build_evidence.py",
+  "container": {
+    "config": {
+      "path": "analysis/e25-27/artifacts/config-325.yaml",
+      "sha256": "1914e6f902b3fac013a8743b0a3cd8429d855c8a0ab2e8e10676678abfeb366e"
+    },
+    "container": {
+      "is_lens": false,
+      "magic": "895546550d0a1a0a",
+      "normal_usb_descriptors": [
+        [
+          1356,
+          1096
+        ],
+        [
+          1356,
+          1149
+        ],
+        [
+          1356,
+          1983
+        ],
+        [
+          1356,
+          1984
+        ],
+        [
+          1356,
+          1985
+        ],
+        [
+          1356,
+          1986
+        ],
+        [
+          1356,
+          1987
+        ],
+        [
+          1356,
+          1988
+        ],
+        [
+          1356,
+          1989
+        ],
+        [
+          1356,
+          1990
+        ]
+      ],
+      "payload_offset": 140,
+      "payload_size": 213071872,
+      "updater_usb_descriptors": [
+        [
+          1356,
+          994
+        ]
+      ]
+    },
+    "dat": {
+      "path": "analysis/e25-27/artifacts/package-3.25/firmware_packed.dat",
+      "sha256": "42c02504f42d2126c362e2bc1023c0285276a97dcfb67ca544bb3934739f7cae",
+      "size": 213072024
+    },
+    "fdat": {
+      "path": "analysis/e25-27/artifacts/package-3.25/firmware_packed.fdat",
+      "sha256": "87145e1b06c01564dbebbb40d98acb084aa8ff8d044e6bf93e8cf79cae1a8d9f",
+      "size": 212238848
+    },
+    "header": {
+      "checksum_crc32": "0x6facbbf7",
+      "fdat_version": "0100",
+      "firmware_offset": 143872,
+      "firmware_size": 212094976,
+      "header_size": 512,
+      "is_accessory": false,
+      "luw": "N",
+      "magic": "UDTRFIRM",
+      "mode": "U",
+      "model": "0x41030035",
+      "num_filesystems": 2,
+      "region": 0,
+      "version": "3.25",
+      "version_major": 3,
+      "version_minor": "0x25"
+    },
+    "installable": false,
+    "phase": "E25-27",
+    "roundtrip": {
+      "avcam_extracted_sha256": "45a5ab350c356d6d76f5ee79ed51d98fadf920f64ce75c387f6358f11225190e",
+      "darwin_extracted_sha256": "9771c0508ee17e7984a619479c1f69cc4e8b71f0091fb5f9dfde66bbd19fb177",
+      "part_sum_verified": true,
+      "tar_extracted_sha256": "440b70b1b1afaed2a80e03679728b26917336cc2aed30052e7906d638a6d52e1"
+    },
+    "status": "CONSTRUIDO OFFLINE — INSTALACIÓN NO AUTORIZADA",
+    "tar_sha256": "440b70b1b1afaed2a80e03679728b26917336cc2aed30052e7906d638a6d52e1",
+    "version": "3.25"
+  },
+  "emulation": {
+    "all_ok": true,
+    "alternation": [
+      {
+        "change_during_capture_rejected": true,
+        "frozen": true,
+        "mode": "efcs",
+        "packet_flag": 0,
+        "ticket_flag": 0
+      },
+      {
+        "change_during_capture_rejected": true,
+        "frozen": true,
+        "mode": "electronic",
+        "packet_flag": 1,
+        "ticket_flag": 1
+      },
+      {
+        "change_during_capture_rejected": true,
+        "frozen": true,
+        "mode": "efcs",
+        "packet_flag": 0,
+        "ticket_flag": 0
+      },
+      {
+        "change_during_capture_rejected": true,
+        "frozen": true,
+        "mode": "electronic",
+        "packet_flag": 1,
+        "ticket_flag": 1
+      },
+      {
+        "change_during_capture_rejected": true,
+        "frozen": true,
+        "mode": "efcs",
+        "packet_flag": 0,
+        "ticket_flag": 0
+      }
+    ],
+    "alternation_ok": true,
+    "cap73b": {
+      "note": "calculado por 0x43b1e520 antes del enganche con ShutMode nativo; C3-B no lo modifica (E25-28)",
+      "value": 0
+    },
+    "efcs": [
+      {
+        "branch": "0x43841346",
+        "cap650_final": 1,
+        "cap655_final": 3,
+        "cap73b": 0,
+        "coil": 3,
+        "field": 0,
+        "motor": 4,
+        "packet": "00000000000000000000000000000000",
+        "packet_flag": 0,
+        "param_bytes": "e6200000010000000003000000000000",
+        "r0_selector": 43981,
+        "r1": 1,
+        "shd_SetExposure": 8422,
+        "shd_native": 8422,
+        "shutmode_SetExposure": 3,
+        "svd_SetExposure": 1
+      },
+      {
+        "branch": "0x43841576",
+        "cap650_final": 1,
+        "cap655_final": 3,
+        "cap73b": 0,
+        "coil": 3,
+        "field": 0,
+        "motor": 4,
+        "packet": "00000000000000000000000000000000",
+        "packet_flag": 0,
+        "param_bytes": "e6200000010000000003000000000000",
+        "r0_selector": 43981,
+        "r1": 0,
+        "shd_SetExposure": 8422,
+        "shd_native": 8422,
+        "shutmode_SetExposure": 3,
+        "svd_SetExposure": 1
+      }
+    ],
+    "efcs_identical": true,
+    "electronic": [
+      {
+        "branch": "0x43841346",
+        "cap650_final": 1,
+        "cap655_final": 0,
+        "cap73b": 0,
+        "coil": 0,
+        "field": 1,
+        "motor": 0,
+        "packet": "00000000000000000000000000000100",
+        "packet_flag": 1,
+        "param_bytes": "6b100000000000000000000000000000",
+        "r0_selector": 43981,
+        "r1": 1,
+        "shd_SetExposure": 4203,
+        "shd_native": 8422,
+        "shutmode_SetExposure": 0,
+        "svd_SetExposure": 0
+      },
+      {
+        "branch": "0x43841576",
+        "cap650_final": 1,
+        "cap655_final": 0,
+        "cap73b": 0,
+        "coil": 0,
+        "field": 1,
+        "motor": 0,
+        "packet": "00000000000000000000000000000100",
+        "packet_flag": 1,
+        "param_bytes": "6b100000000000000000000000000000",
+        "r0_selector": 43981,
+        "r1": 0,
+        "shd_SetExposure": 4203,
+        "shd_native": 8422,
+        "shutmode_SetExposure": 0,
+        "svd_SetExposure": 0
+      }
+    ],
+    "electronic_normalized": true,
+    "electronic_pred0_ok": true,
+    "errors": {
+      "long_route": {
+        "shd": 1,
+        "shutmode": 3,
+        "svd": 2
+      },
+      "underflow": {
+        "shd": 100,
+        "shutmode": 3,
+        "svd": 1
+      },
+      "zero_vts": {
+        "shd": 8422,
+        "shutmode": 3,
+        "svd": 1
+      }
+    },
+    "errors_ok": true,
+    "invalid_field_ok": true,
+    "speeds": {
+      "1/1000": {
+        "efcs_shd": 8373,
+        "electronic": {
+          "expected_shd": 4154,
+          "ok": true,
+          "r5": 4154,
+          "shd": 4154,
+          "shutmode": 0,
+          "svd": 0
+        },
+        "native": {
+          "d8": 4219,
+          "da": 4219,
+          "dc": 4219,
+          "lineas": 65,
+          "shd": 8373,
+          "shutmode": 0,
+          "sint": 0,
+          "spl": 0,
+          "svd": 1
+        },
+        "period_q8": 3891,
+        "tv_code": 6647,
+        "vts": 4219
+      },
+      "1/125": {
+        "efcs_shd": 7912,
+        "electronic": {
+          "expected_shd": 3693,
+          "ok": true,
+          "r5": 3693,
+          "shd": 3693,
+          "shutmode": 0,
+          "svd": 0
+        },
+        "native": {
+          "d8": 4219,
+          "da": 4219,
+          "dc": 4219,
+          "lineas": 526,
+          "shd": 7912,
+          "shutmode": 0,
+          "sint": 0,
+          "spl": 0,
+          "svd": 1
+        },
+        "period_q8": 3891,
+        "tv_code": 5879,
+        "vts": 4219
+      },
+      "1/250": {
+        "efcs_shd": 8175,
+        "electronic": {
+          "expected_shd": 3956,
+          "ok": true,
+          "r5": 3956,
+          "shd": 3956,
+          "shutmode": 0,
+          "svd": 0
+        },
+        "native": {
+          "d8": 4219,
+          "da": 4219,
+          "dc": 4219,
+          "lineas": 263,
+          "shd": 8175,
+          "shutmode": 0,
+          "sint": 0,
+          "spl": 0,
+          "svd": 1
+        },
+        "period_q8": 3891,
+        "tv_code": 6135,
+        "vts": 4219
+      },
+      "1/30": {
+        "efcs_shd": 6244,
+        "electronic": {
+          "expected_shd": 2025,
+          "ok": true,
+          "r5": 2025,
+          "shd": 2025,
+          "shutmode": 0,
+          "svd": 0
+        },
+        "native": {
+          "d8": 4219,
+          "da": 4219,
+          "dc": 4219,
+          "lineas": 2194,
+          "shd": 6244,
+          "shutmode": 0,
+          "sint": 0,
+          "spl": 0,
+          "svd": 1
+        },
+        "period_q8": 3891,
+        "tv_code": 5352,
+        "vts": 4219
+      },
+      "1/4000": {
+        "efcs_shd": 8422,
+        "electronic": {
+          "expected_shd": 4203,
+          "ok": true,
+          "r5": 4203,
+          "shd": 4203,
+          "shutmode": 0,
+          "svd": 0
+        },
+        "native": {
+          "d8": 4219,
+          "da": 4219,
+          "dc": 4219,
+          "lineas": 16,
+          "shd": 8422,
+          "shutmode": 0,
+          "sint": 0,
+          "spl": 0,
+          "svd": 1
+        },
+        "period_q8": 3891,
+        "tv_code": 7159,
+        "vts": 4219
+      },
+      "1/60": {
+        "efcs_shd": 7341,
+        "electronic": {
+          "expected_shd": 3122,
+          "ok": true,
+          "r5": 3122,
+          "shd": 3122,
+          "shutmode": 0,
+          "svd": 0
+        },
+        "native": {
+          "d8": 4219,
+          "da": 4219,
+          "dc": 4219,
+          "lineas": 1097,
+          "shd": 7341,
+          "shutmode": 0,
+          "sint": 0,
+          "spl": 0,
+          "svd": 1
+        },
+        "period_q8": 3891,
+        "tv_code": 5608,
+        "vts": 4219
+      },
+      "1/8000": {
+        "efcs_shd": 8430,
+        "electronic": {
+          "expected_shd": 4211,
+          "ok": true,
+          "r5": 4211,
+          "shd": 4211,
+          "shutmode": 0,
+          "svd": 0
+        },
+        "native": {
+          "d8": 4219,
+          "da": 4219,
+          "dc": 4219,
+          "lineas": 8,
+          "shd": 8430,
+          "shutmode": 0,
+          "sint": 0,
+          "spl": 0,
+          "svd": 1
+        },
+        "period_q8": 3891,
+        "tv_code": 7415,
+        "vts": 4219
+      }
+    },
+    "speeds_ok": true
+  },
+  "generated": "2026-10-29T02:02:53+00:00",
+  "independent_audit": {
+    "bad_flag": [],
+    "bad_len": [],
+    "bad_sum": [],
+    "blocks": 208078,
+    "dat_magic": true,
+    "dend_computed": "fae7ef16",
+    "dend_stored": "fae7ef16",
+    "fdat_size": 212238848,
+    "header": {
+      "checksum_computed": "6facbbf7",
+      "checksum_stored": "6facbbf7",
+      "luw": "N",
+      "mode": "U",
+      "model": "0x41030035",
+      "num_filesystems": 2,
+      "version": "3.25"
+    },
+    "ok": true,
+    "pad_not_ff": false,
+    "plain_size": 212238848,
+    "plaintext_matches_fdat": true,
+    "tar_members": 105,
+    "tar_problems": []
+  },
+  "inputs": {
+    "av-cam.bin": {
+      "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+      "size": 11427236
+    },
+    "darwin_core.bin": {
+      "sha256": "5f2be06d9885d154e8e0df46a611d6830d29754b4353f6e82cecfe66dd6a0bf4",
+      "size": 157276
+    },
+    "firmware_tar": {
+      "sha256": "970246492293e9175ef67b1ad587d5289ae886d47dbd10e77637d9bee458d5a8",
+      "size": 212011520,
+      "version": "3.21"
+    },
+    "updater_img": {
+      "sha256": "b6d5175245c8fb26879c5376f0e6e0d9ff13064f805d591954ff2a48a8c2566c",
+      "size": 143360
+    }
+  },
+  "installable": false,
+  "limitations": [
+    "No se ha instalado ni ejecutado en la cámara.",
+    "El fin electrónico de integración y la ausencia de movimiento no están demostrados.",
+    "La ruta larga (>= 1/15 s) queda fuera de C3-B.",
+    "cap+0x73b conserva el valor nativo (E25-28).",
+    "La recuperación de un Darwin que no arranque no está demostrada (E24-04).",
+    "El guard del actualizador no se ha ejercitado con este contenedor."
+  ],
+  "outputs": {
+    "av-cam.bin": {
+      "sha256": "45a5ab350c356d6d76f5ee79ed51d98fadf920f64ce75c387f6358f11225190e",
+      "size": 11427236
+    },
+    "darwin.sum": {
+      "sha256": "0defc4eb81b45a5eae978575d8d895695fe81dd36b8cb97bbc6d5d36f9b77d90"
+    },
+    "darwin_core.bin": {
+      "sha256": "9771c0508ee17e7984a619479c1f69cc4e8b71f0091fb5f9dfde66bbd19fb177",
+      "size": 157276
+    },
+    "firmware.tar": {
+      "sha256": "440b70b1b1afaed2a80e03679728b26917336cc2aed30052e7906d638a6d52e1",
+      "size": 212094976
+    },
+    "nflasha3": {
+      "sha256": "bb9ce25a073d1ccc990d8ee1fdd75322c703d5d2a4020ab5e7daeaf8d23d546c",
+      "size": 11572480
+    },
+    "part_image.sum": {
+      "sha256": "95aeae48f86d77b3c7b3e38654dfd8189a38da6835d41bf7e1e39eafd5d967bf"
+    }
+  },
+  "partition": {
+    "block_log2": 16,
+    "blocks": [
+      {
+        "block": 0,
+        "offset_new": 3072,
+        "offset_old": 3072,
+        "recompressed": true,
+        "size_new": 73732,
+        "size_old": 26112
+      },
+      {
+        "block": 48,
+        "offset_new": 2575104,
+        "offset_old": 2527232,
+        "recompressed": true,
+        "size_new": 73732,
+        "size_old": 56320
+      },
+      {
+        "block": 57,
+        "offset_new": 3076608,
+        "offset_old": 3011072,
+        "recompressed": true,
+        "size_new": 73732,
+        "size_old": 56320
+      }
+    ],
+    "changed_blocks": [
+      0,
+      48,
+      57
+    ],
+    "container": "0700_part_image/dev/nflasha3",
+    "fat_first_cluster_offset": "0x9600",
+    "fat_name": "AV-CAM.BIN",
+    "fat_type": 12,
+    "part_sum": {
+      "crc32_after": "f5e75c34",
+      "crc32_before": "0c047870",
+      "line_after": "0,f5e75c34,00b09500,000001a4,00000000,000003e8,root,root,-1,-1,dev/nflasha3,",
+      "line_before": "0,0c047870,00af4f10,000001a4,00000000,000003e8,root,root,-1,-1,dev/nflasha3,",
+      "path": "dev/nflasha3",
+      "size_after": "00b09500",
+      "size_before": "00af4f10"
+    },
+    "part_sum_verified": true,
+    "roundtrip_avcam_sha256": "45a5ab350c356d6d76f5ee79ed51d98fadf920f64ce75c387f6358f11225190e",
+    "tpzl_blocks": 369
+  },
+  "patches": {
+    "c3b": {
+      "cave": "0x43541840",
+      "diff_count": 61,
+      "hook": "0x438c82fe",
+      "length": 58
+    },
+    "cave_layout": {
+      "c3b": [
+        "0x43541840",
+        "0x4354187a"
+      ],
+      "header_metadata_tail": "0x435418d8",
+      "selector": [
+        "0x43541800",
+        "0x43541814"
+      ]
+    },
+    "darwin": {
+      "cave": "0x4318",
+      "diff_count": 22,
+      "length": 14,
+      "sites": [
+        "0x20c78",
+        "0x1fe6c",
+        "0x4318",
+        "0x4330"
+      ]
+    },
+    "overlap": false,
+    "selector": {
+      "cave": "0x43541800",
+      "diff_count": 28,
+      "length": 20,
+      "sites": [
+        "0x4384133e",
+        "0x43841342",
+        "0x43841476",
+        "0x43541800"
+      ]
+    },
+    "total_diff": 111
+  },
+  "phase": "E25-27",
+  "reversal": {
+    "bionz": "PC.restore_bytes -> PB.restore_bytes",
+    "bionz_original_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+    "darwin": "PD.restore_bytes",
+    "darwin_original_sha256": "5f2be06d9885d154e8e0df46a611d6830d29754b4353f6e82cecfe66dd6a0bf4",
+    "verified": true
+  },
+  "status": "CONSTRUIDO OFFLINE — INSTALACIÓN NO AUTORIZADA",
+  "tar": {
+    "changed": [
+      "0640_darwin/darwin_core.bin",
+      "0641_darwin_sum/darwin.sum",
+      "0700_part_image/dev/nflasha3",
+      "0701_part_image_sum/part_image.sum"
+    ],
+    "darwin_sum": {
+      "crc32_after": "d55a54b5",
+      "crc32_before": "9ff7148c",
+      "line_after": "0,d55a54b5,0002665c,000001a4,00000000,000003e8,root,root,-1,-1,darwin_core.bin,",
+      "line_before": "0,9ff7148c,0002665c,000001a4,00000000,000003e8,root,root,-1,-1,darwin_core.bin,",
+      "path": "darwin_core.bin",
+      "size_after": "0002665c",
+      "size_before": "0002665c"
+    },
+    "members": 105
+  },
+  "version": "3.25"
+}
