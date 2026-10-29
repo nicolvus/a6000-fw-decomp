@@ -10,6 +10,8 @@ Fase C iniciada: `config.xml`, `us_crc32sum.sh`, `us_darwin_firm.sh` y `endupdat
 
 R3: `UpdaterBody::Execute` 0x1f4c8 → thunk 0x1db8c → `XmlConfigHandler::Join` → `ThreadPlugin::Join` 0x23d88 (objeto construido en 0x23964, vtable 0x30fa0 +0x10); después `HasError`, `EndUpdate`, `CompleteUpdate` 0x2516c y retorno. `CompleteUpdate` borra clases de banderas de modo y crea la de completo. Enlace al Done del PC pendiente. Próxima tarea: Loader2 0xc0030000 y localización de Loader3, sin repetir BootROM.
 
+R3 Loader3: `bootloader.bin` INFO 0x18000, entradas 5→6 y candidato continuo 0x22800–0x427ff (SHA 8fd98a41…); Loader2 carga índice 5 en 0xc01f0000. REA del candidato: comprobación `\\updater\\mode` 0xc01f159a, selector 0xc01f1de6, modo 3 0xc01f1312, carga de kernel/initrd de dispositivo 1 0xc01f068a. Pendientes integridad/geométrica, modo físico y condiciones previas. Próximo paso: diagrama SIDE A/B de SY-1028 y accesibilidad de servicio.
+
 El usuario informa instalación 3.25, Done y bloqueo. Comprobados hashes FDAT, Darwin y `nflasha3` locales y anomalía de alineación en el manifiesto; aún no se verifica causalidad ni lector real. Ver [informe](../docs/capture/e26-recovery.md). Siguiente paso exacto: inspeccionar con REA `uc_portctl.elf` y `SenserUpdaterIF::setResult`, y contrastar las tablas TPZL directamente con los binarios. Sin acceso físico.
 
 

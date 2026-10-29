@@ -12,6 +12,8 @@
 
 **R3:** `UpdaterBody::Execute` espera `ThreadPlugin::Join` antes de `EndUpdate` y `CompleteUpdate`; el manejo de errores de hilo y la relación con `Done` del PC no están cerrados. `CompleteUpdate` manipula indicadores de modo en `nflasha2`; ver E26. Continuar con Loader2/Loader3 y el emisor host.
 
+**R3 Loader3:** candidato de 128 KiB encontrado en `bootloader.bin` con tabla INFO y código de modo actualizador; corrige la ausencia previamente afirmada. Falta validar geometría, integridad, condiciones de selección y método independiente de activar la bandera. Ver E26; no escribir el candidato.
+
 
 Creado el 25-10-2026. Es la lista única y viva de lo que falta en el proyecto. Los
 backlogs de agentes ([A](../knowledge/agents/A-backlog.md), [B](../knowledge/agents/B-backlog.md),
