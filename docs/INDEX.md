@@ -28,7 +28,7 @@ y su evidencia `analysis/s<N>*/`; la categoría sale de reglas sobre el nombre d
 |---|---|
 | Captura | [capture-pipeline](capture-pipeline.md), [shutter-control](shutter-control.md), [S402 cierre estático](capture/static-closure-2026-10-25.md), [seguimiento 25-10](capture/capture-static-followup-2026-10-25.md), [contrato RecordStill/RecordImage](capture/recordstill-contract-audit-2026-10-23.md), [cola `0x40193`](capture/queue-40193-flow-2026-10-23.md) |
 | Sensor / imager | [sensor-investigation](sensor-investigation.md), [S341 síntesis carril B](capture/s341-synthesis-b2.md), [S313 síntesis anterior](capture/s313-synthesis-carril-b.md) |
-| Obturador | [decisión S51](capture/s51-decision.md), [tesis](capture/tesis-obturador-electronico.md), [EFCS](capture/shutter-investigation.md), [SilentShutter](capture/silent-shutter-status.md), [selector E25-24b](capture/e25-24b-implementacion-selector.md), [cuevas/carga E25-25](capture/e25-25-validacion-carga-caves.md), [C3-B E25-26](capture/e25-26-c3b-exposicion-electronica.md), [viabilidad](feasibility-report.md), [subproyecto](../projects/electronic-shutter/README.md), [pruebas físicas P1–P8](capture/physical-test-plan.md) / [P13–P21](capture/physical-test-plan-2.md) |
+| Obturador | [decisión S51](capture/s51-decision.md), [tesis](capture/tesis-obturador-electronico.md), [EFCS](capture/shutter-investigation.md), [SilentShutter](capture/silent-shutter-status.md), [selector E25-24b](capture/e25-24b-implementacion-selector.md), [cuevas/carga E25-25](capture/e25-25-validacion-carga-caves.md), [C3-B E25-26](capture/e25-26-c3b-exposicion-electronica.md), [firmware integrado E25-27](capture/e25-27-construccion-firmware-integrado.md), [viabilidad](feasibility-report.md), [subproyecto](../projects/electronic-shutter/README.md), [pruebas físicas P1–P8](capture/physical-test-plan.md) / [P13–P21](capture/physical-test-plan-2.md) |
 | Control / comunicación | [architecture](architecture.md), [subsystem-dependencies](subsystem-dependencies.md), [libObj A6000](capture/s380-libobj-a6000-map.md) |
 | GUI / interfaz | [carril GUI](gui/README.md), [G01 arquitectura](gui/g01-arquitectura.md) |
 | Imagen | [YC de EncodeStill](capture/encodestill-yc-contract.md), [SFRA](capture/sfra-electronic-frame-source.md), [SDF](capture/s103-sdf.md) |
@@ -233,6 +233,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [E25-24c — Protocolo físico del selector EFCS / Electronic (pendiente de autorización)](capture/e25-24c-protocolo-fisico-selector.md)
 - **—** [E25-25 — Validación de cuevas, carga del firmware y canal de modalidad](capture/e25-25-validacion-carga-caves.md)
 - **—** [E25-26 — C3-B: exposición electrónica condicionada a la modalidad](capture/e25-26-c3b-exposicion-electronica.md)
+- **—** [E25-27 — Construcción offline del firmware integrado EFCS / Electronic (3.25)](capture/e25-27-construccion-firmware-integrado.md)
 - **—** [E25 — Desactivación del accionamiento normal del obturador mecánico (27-10-2026)](capture/e25-desactivacion-mecanica.md)
 - **—** [EFCS: configuración → selector de captura → IMX210 — E020](capture/efcs-capture-selector.md)
 - **—** [EFCS + Darwin + Silent Shutter — Integración técnica integral](capture/efcs-darwin-silent-integracion.md)

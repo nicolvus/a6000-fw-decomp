@@ -41,7 +41,10 @@ un objeto de 512 B con entrada GOT (`0x44020f00 → 0x43541900`, también en A7S
 **E25-26** integra C3-B (enganche `0x438c82fe`, cueva `0x43541840`): en Electronic normaliza
 `shd −= VTS`, `svd = 0`, `ShutMode = 0`; EFCS queda idéntico al original en emulación. La
 validación física es E25-27. El informe de integración EFCS tenía contradicciones de
-`r5`/enganche/mecanismo: resueltas en E25-24b §6bis.
+`r5`/enganche/mecanismo: resueltas en E25-24b §6bis. **E25-29** construye el firmware
+integrado 3.25 sobre los originales 3.21 (selector + C3-B + Darwin) y lo verifica
+offline: contenedor FDAT/DAT, extracción inversa y emulación integrada; no se ha
+instalado ni ejercitado el guard/arranque ([E25-27](capture/e25-27-construccion-firmware-integrado.md)).
 
 | Tema | Conclusión vigente | Estado | Fuente |
 |---|---|---|---|
@@ -116,6 +119,7 @@ La conclusión vigente va primero; el antecedente conserva su informe y se seña
 | EFCS → Darwin | BIONZ envía ID `0x0c` (CaptureStart) y mensaje `0x107` (vía `0x43901a8c`) con timing; Darwin responde `0x0e` (ExposureReady). Con tipo 0/B1a, Darwin no mueve P4D/P4E. No hay diferencia en el lado Darwin con o sin EFCS. | VERIFICADO (BIONZ) / INFERENCIA (Darwin) | [REA `0x43901a8c`](analysis/efcs-reia/evidence/0x43901a8c_pseudo.txt), [E24-05](capture/e24-05-*) |
 | C3-B integrado (E25-26) | **Implementado offline y verificado en emulación:** enganche `0x438c82fe`, cueva `0x43541840`, solo paso 0, `cap+0x41c==1`, `svd ≤ 1`, VTS≠0 y `shd>VTS`; consume el plan nativo de `cap+0x64c` (no reejecuta `0x4383fa40`), escribe `shd−=VTS`, `svd=0`, `ShutMode=0`. EFCS idéntico al original; Electronic 1/8000–1/30 (`shd` 4211…2025); largas inhibidas. Riesgo residual `cap+0x73b` (E25-28). | V/E (offline) / N (físico) | [E25-26](capture/e25-26-c3b-exposicion-electronica.md), `tests/test_e25_26_c3b.py` |
 | Carga y cuevas (E25-25) | La cueva antigua de E25-24 no era segura; nueva zona `0x4354141c–0x435418d8` (cero en A6000/A7S, sin punteros, después del `memcpy` API del cargador). Canal `cap+0x41c → pkt[0x0e] → S+0x3e`, congelado por captura; 0 lectores estáticos de `S+0x3e`. `liro.ko` lee el archivo completo; CRC-32 externo, sin firma demostrada; recuperación de Darwin sigue sin demostrar. | V/I/B | [E25-25](capture/e25-25-validacion-carga-caves.md) |
+| Firmware integrado (E25-29) | **Construido offline** sobre los originales 3.21: selector + C3-B + compuertas Darwin, `nflasha3` recompuesta (3 bloques TPZL), `part_image.sum`/`darwin.sum` y tar de 105 miembros; FDAT/DAT 3.25 con `fwtool`. **Verificado offline:** 208 078 bloques descifrados sin errores, DEND/CRC, extracción inversa exacta, reversión SHA-256 y emulación integrada (`all_ok`). El guard y el arranque **no** se han ejercitado; no es instalable. | V/E (offline) / N (físico) | [E25-27](capture/e25-27-construccion-firmware-integrado.md), `analysis/e25-27/evidence.json` |
 | Darwin condicionado (E25-24b) | **Sí se modifica Darwin**, pero solo dos `bl` y un cave: B1a/tipo 0 se sustituyen por una compuerta que lee `pkt[0x0e]`. EFCS conserva `0x20c74`/`0x1fe66` originales; Electronic devuelve 0. No se tocan `InitCom`, `Upd`, reset, watchdog ni GPIO. Verificado por bytes y Unicorn; no físicamente. | V (offline) / N (físico) | [E25-24b](capture/e25-24b-implementacion-selector.md), `tests/test_e25_24_selector.py` |
 
 ## Política de ingeniería inversa: REA primero (vigente desde 2026-10-19)
