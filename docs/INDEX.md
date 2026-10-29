@@ -1,5 +1,8 @@
 # Índice temático por subsistema
 
+**Prioridad actual:** [E26-RECOVERY — incidente 3.25 y recuperación](capture/e26-recovery.md).
+
+
 Entrada única para localizar informes, pruebas y evidencia **por tema**, sin importar el agente
 (A–E) ni la sesión que los produjo. Los resúmenes del repositorio enlazan aquí en lugar de copiar
 informes. El bloque de abajo se **regenera** con `python3 scripts/knowledge/build_subsystem_index.py`
@@ -205,7 +208,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 3. Obturador (cortinas, EFCS, SilentShutter, exposición electrónica completa)
 
-77 informes.
+78 informes.
 
 - **—** [Darwin: entradas verificadas para investigar el obturador](capture/darwin-shutter-entrypoints.md)
 - **—** [Darwin: fases, notificaciones y escrituras de control](capture/darwin-state-machine.md)
@@ -233,7 +236,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [E25-24c — Protocolo físico del selector EFCS / Electronic (pendiente de autorización)](capture/e25-24c-protocolo-fisico-selector.md)
 - **—** [E25-25 — Validación de cuevas, carga del firmware y canal de modalidad](capture/e25-25-validacion-carga-caves.md)
 - **—** [E25-26 — C3-B: exposición electrónica condicionada a la modalidad](capture/e25-26-c3b-exposicion-electronica.md)
-- **—** [E25-27 — Construcción offline del firmware integrado EFCS / Electronic (3.25)](capture/e25-27-construccion-firmware-integrado.md)
+- **—** [E25-27 — Construcción offline del firmware integrado EFCS / Electronic](capture/e25-27-construccion-firmware-integrado.md)
 - **—** [E25 — Desactivación del accionamiento normal del obturador mecánico (27-10-2026)](capture/e25-desactivacion-mecanica.md)
 - **—** [EFCS: configuración → selector de captura → IMX210 — E020](capture/efcs-capture-selector.md)
 - **—** [EFCS + Darwin + Silent Shutter — Integración técnica integral](capture/efcs-darwin-silent-integracion.md)
@@ -386,7 +389,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 6. Otros subsistemas (AF, estabilización, vídeo, audio, lentes, energía, visor, accesorios, módulos de trazas)
 
-105 informes.
+106 informes.
 
 - **—** [E21 — Lecturas sin cámara de los volcados del 20-10-2026](capture/e21-lecturas-backups-2026-10-26.md)
 - **—** [E24-01 — Arranque, modo actualizador y dependencia de Darwin (27-10-2026)](capture/e24-01-arranque-recuperacion.md)
@@ -402,6 +405,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [E24-05h-3 — Terminación de ADC-B y configuración de P29 (27-10-2026)](capture/e24-05h-3-adcb-p29.md)
 - **—** [E24-05h-4 — Auditoría final de ADC-A, grupo activo de P29 y entrega del evento de ADC-B (27-10-2026)](capture/e24-05h-4-adca-p29-irq.md)
 - **—** [E24-05h — Dependencias finales de la captura sin rearme: P29, P4E, BIONZ, modos Darwin y FAIL (27-10-2026)](capture/e24-05h-dependencias-finales-captura.md)
+- **—** [E26-RECOVERY — incidente 3.25 (investigación abierta)](capture/e26-recovery.md)
 - **—** [Registro de pruebas en cámara (solo software, USB)](capture/registro-pruebas-camara.md)
 - **S102** [S102 — Menú principal (botón MENU): cadena de carga y apertura](capture/s102-menu-principal.md)
 - **S111** [S111 — Módulo `[TRK]`: 215 trazas, 288 sitios y 47 funciones](capture/s111-trk.md) · pruebas: [test_s111_trk.py](../tests/test_s111_trk.py) · evidencia: [s111_trk](../analysis/s111_trk)

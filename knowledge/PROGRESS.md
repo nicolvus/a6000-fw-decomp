@@ -1,5 +1,10 @@
 # Progreso — sistema de conocimiento Sony A6000
 
+## E26-RECOVERY — 29-10-2026: incidente abierto
+
+El usuario informa instalación 3.25, Done y bloqueo. Comprobados hashes FDAT, Darwin y `nflasha3` locales y anomalía de alineación en el manifiesto; aún no se verifica causalidad ni lector real. Ver [informe](../docs/capture/e26-recovery.md). Siguiente paso exacto: inspeccionar con REA `uc_portctl.elf` y `SenserUpdaterIF::setResult`, y contrastar las tablas TPZL directamente con los binarios. Sin acceso físico.
+
+
 ## E25-24 — Selector EFCS / Electronic, auditoría parcial — 28-10-2026
 
 Se actualizó la base a `c8b1b166` y se contrastó el informe de referencia con

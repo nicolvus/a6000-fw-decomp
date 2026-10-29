@@ -1,5 +1,8 @@
 # Estado vigente — Sony A6000 reverse engineering
 
+> **Incidente 3.25:** el usuario informa instalación y bloqueo posterior a Done. La prioridad vigente es recuperación, no nuevas funciones; el dictamen y las limitaciones están en [E26-RECOVERY](capture/e26-recovery.md). Las afirmaciones históricas de «no instalado» no describen el estado actual.
+
+
 Estado técnico **consolidado**: conclusiones vigentes, rectificaciones y límites. No es historial ni lista de tareas:
 cada afirmación enlaza al informe canónico donde está comprobada. Tareas y sus estados: [PENDIENTES](PENDIENTES.md) (única fuente).
 Informes por tema: [INDEX](INDEX.md). Cronología: [PROGRESS](../knowledge/PROGRESS.md). Contexto mínimo para agentes:

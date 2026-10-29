@@ -1,5 +1,8 @@
 # Estado actual — léeme primero
 
+> **Prioridad vigente:** recuperar la cámara tras el bloqueo informado después de instalar 3.25. Ver [E26-RECOVERY](../docs/capture/e26-recovery.md); ningún acceso físico está autorizado. El texto histórico inferior sobre instalación pendiente queda superado por el testimonio del usuario.
+
+
 Contexto operativo mínimo para agentes. Última revisión: 29-10-2026 (E25-29/E25-27: firmware integrado 3.25 construido y verificado offline; E25-26/E25-25: C3-B y cuevas/carga, offline; E25-19: verificación física de exposición larga, solo lectura; R1 pendiente de copia externa). Este archivo **no** es
 historial ni fuente de verdad de los pendientes: ver [Responsabilidades](#responsabilidades-documentales).
 La versión íntegra anterior (2264 líneas, instantáneas S59–S627) está en

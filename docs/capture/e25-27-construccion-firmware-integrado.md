@@ -1,5 +1,8 @@
 # E25-27 — Construcción offline del firmware integrado EFCS / Electronic
 
+> **Actualización E26:** el usuario informa que este 3.25 fue instalado y la cámara dejó de arrancar. El resultado offline no demuestra arranque ni seguridad. Ver [investigación de recuperación](e26-recovery.md).
+
+
 29-10-2026. Construcción reproducible sobre los originales de Sony 3.21. Sin cámara,
 sin instalación, sin RAM/NVRAM/MMIO y sin firmware ejecutado. El resultado es un
 candidato **experimental** identificado como **CONSTRUIDO OFFLINE — INSTALACIÓN NO

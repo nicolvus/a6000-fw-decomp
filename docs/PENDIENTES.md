@@ -1,5 +1,10 @@
 # Pendientes por cerrar — índice maestro
 
+## Prioridad E26-RECOVERY — incidente 3.25
+
+**ABIERTO:** el usuario informa cámara bloqueada tras instalar 3.25; investigar origen 0x32, lector TPZL, Done, Loader2/3, modos de recuperación, respaldos y vías físicas sin tocar la cámara. Cierre: evidencia por vía y diagnóstico discriminado según [E26-RECOVERY](capture/e26-recovery.md). Las filas históricas sobre 3.25 no instalado no describen el estado actual.
+
+
 Creado el 25-10-2026. Es la lista única y viva de lo que falta en el proyecto. Los
 backlogs de agentes ([A](../knowledge/agents/A-backlog.md), [B](../knowledge/agents/B-backlog.md),
 [C](../knowledge/agents/C-backlog.md), [D](../knowledge/agents/D-backlog.md), [E](../knowledge/agents/E-backlog.md),
