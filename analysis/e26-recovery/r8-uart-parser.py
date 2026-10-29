@@ -2,6 +2,9 @@
 """
 E26-R8 — Sony A6000 BootROM UART receiver offline parser.
 
+OBSOLETO: R9 encontró errores en formato, tipos y CRC. No usar para validar
+ni construir tramas; ver docs/capture/e26-r9-bootrom-ram-execution.md.
+
 Parses the BootROM serial receiver protocol reconstructed from static REA of
 bootrom.bin (SHA-256: 81a17e039a2debfe589b127e12384ed4d7c2ba0d0c819238d0b021b466246026).
 All offsets, register addresses, and packet formats are derived from the

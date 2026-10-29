@@ -1,5 +1,7 @@
 # Estado actual — léeme primero
 
+> **E26 R9 parcial:** [revisión](../docs/capture/e26-r9-bootrom-ram-execution.md) corrige R8: CRC-32, copia por tipos distintos de 0 y 0xffff; parser R8 no válido. Falta emular la ruta, demostrar RAM ejecutable y señal física.
+
 > **E26 R7B parcial:** [hallazgos y límites](../docs/capture/e26-r7b-recuperacion-prelinux.md): BootROM recibe datos por entrada serie y puede saltar, Loader2 lee NAND, ARM7 histórico cotejado, COLD negativo señaliza en bucle. Falta demostrar acceso externo y restauración selectiva; seguir offline.
 
 > **E26 R8 completo:** [informe](../docs/capture/e26-r8-bootrom-uart-boss.md): receptor serie BootROM reconstruido (`FUN_ffff1062`→`FUN_ffff0fa0`→`FUN_ffff0876`→`FUN_ffff0634`; MMIO `0xf2915010` bit 1; tipos 0/0xFFFF; checksum XOR+CRC8; parser offline con 6/6 tests). Pines físicos UART no identificados (candidato GPIO(4,RDATA)=`0xf2910410`, CN4906 pin 9 vía R4003 XX sin continuidad verificada). No hay lectura de NAND vía protocolo. Escrituras NAND solo en Linux. INFO6 sin fuente. Seis preguntas de cierre: 1=SÍ, 2=NO DEMOSTRADO, 3=NO DEMOSTRADO, 4=NO DEMOSTRADO, 5=NO DEMOSTRADO, 6=NO.

@@ -1,5 +1,7 @@
 # Progreso — sistema de conocimiento Sony A6000
 
+> **E26 R9 parcial:** [revisión](../docs/capture/e26-r9-bootrom-ram-execution.md) corrige R8: CRC-32, copia por tipos distintos de 0 y 0xffff; parser R8 no válido. Falta emular la ruta, demostrar RAM ejecutable y señal física.
+
 **R6 fase 1, checkpoint:** [BLDR](../docs/capture/e26-r6-recuperacion-bionz.md). PMCA payload local byte a byte igual a upstream 0ce3c7e8, gitlink plataforma 85bcb545. ELF extraído y REA: un safe/cuatro normales, normales die0/plane0, metadatos descartados, error => trama vacía; wrapper rechaza estado 1 de ECC tolerado por Loader2. Mapa condicional de 480 KiB con una trama normal perdida; ID/error desconocidos. Cola INFO6 die0/plane1/block2/pages0–20 sin correspondencia adquirida. Regresión inicial falló por inspector inexistente; implementado, 3 pruebas, ruff/mypy pasan. Sin cámara. Próximo paso exacto: verificar límites del selector en los primeros 43 folios y localizar orientación CN4906 en SIDE A.
 
 ## E26-RECOVERY — 29-10-2026: incidente abierto

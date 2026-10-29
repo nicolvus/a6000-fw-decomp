@@ -1,5 +1,7 @@
 # Estado vigente — Sony A6000 reverse engineering
 
+> **E26 R9 parcial:** [revisión](capture/e26-r9-bootrom-ram-execution.md) corrige R8: CRC-32, copia por tipos distintos de 0 y 0xffff; parser R8 no válido. Falta emular la ruta, demostrar RAM ejecutable y señal física.
+
 > **E26 R7B parcial:** [informe](capture/e26-r7b-recuperacion-prelinux.md). COLD negativo en bucle, lectura pre-Linux interna, receptor serie en BootROM y firmware ARM7 histórico identificado; ninguna ruta de restauración demostrada. La investigación offline sigue abierta.
 
 > **E26 R7 completo:** [informe](capture/e26-r7-recuperacion-estatica.md). Grafo de rutas de arranque verificado en binario: COLD fallo → `FUN_c01f3b74` bucle LED sin retorno; UPDATER (modo 3) carga kernel desde dispositivo 1 y salta al mismo, sin entorno independiente; escrituras NAND (MuMin/LLD → ARM7) solo en entorno Linux; `boss_hw_nandc_recovery_check` no es selección de UPDATER; no hay productor pre-Linux de `updater/mode`; INFO6 sin fuente; residuo TPZL sin rechazo demostrado; escritura selectiva de `nflasha3` no demostrada. No existe ruta de restauración utilizable antes de `nflasha3` con evidencia actual.
