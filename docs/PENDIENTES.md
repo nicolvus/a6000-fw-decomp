@@ -6,6 +6,8 @@
 
 **Fase A parcial:** el `nand.ko` A6000 advierte cuando el offset de TOC no es múltiplo de 512 y pasa el residuo al lector; las tablas reales confirman 359 entradas 3.25 con residuo 256. La lectura del residuo por ARM7/hardware y la ruta previa al initrd siguen pendientes. Comparación de tres imágenes y pruebas en [E26-RECOVERY](capture/e26-recovery.md). Continuar con Fase B: llamadores de `SenserUpdaterIF::setResult`.
 
+**Fase B parcial:** localizados llamadores de `setResult` y una vía posible para el byte 0x32 por excepción `0x3000c` y FIFO2; falta identificar script/condición concreta, conexión completa de excepciones y origen del LED tras el reinicio. Ver [E26-RECOVERY](capture/e26-recovery.md); seguir con esa dependencia y luego la secuencia de Done.
+
 
 Creado el 25-10-2026. Es la lista única y viva de lo que falta en el proyecto. Los
 backlogs de agentes ([A](../knowledge/agents/A-backlog.md), [B](../knowledge/agents/B-backlog.md),

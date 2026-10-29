@@ -30,6 +30,27 @@ La comparación directa de los dos binarios de partición, ejecutada por `script
 
 Los sectores son el cálculo de la ruta `muminlzp_request`, no una simulación del hardware. Evidencia reproducible: [JSON](../../analysis/e26-recovery/tpzl-comparison.json), `tests/test_e26_tpzl.py`; entradas locales no publicadas: `firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3` y `analysis/e25-27/artifacts/nflasha3.integrated.bin`. 17 pruebas de E26/E25-27 pasaron. No se construyó imagen instalable.
 
+### Fase B: procedencia del byte 0x32 (parcial, 29-10-2026)
+
+**VERIFICADO EN BINARIO.** Del respaldo privado `analysis/camera-dumps/nand-20261020/dev_nflasha1.bin`, FAT12 → `boot/initrd.img` CRAMFS, se extrajeron temporalmente en `/tmp` los módulos del actualizador. `usr/lib/libsenupdater.so` tiene SHA-256 `3683de6c998876e67c6e16b5137d65dd7c8fd6ba207ade4726bb950d2d1e2e1d`; `usr/bin/mf` tiene SHA-256 `85590243764cbb5de11ae576c7c7a5b96e20da787c2c860b3532148321799aeb`. `libupdaterbody.so` local tiene SHA-256 `8d1dc242decea362c65c6dcaf320046df93f06e2fc97c547b7b250b2cc3057d6`. Las direcciones son las que REA/Ghidra asigna a cada ELF y no deben tratarse como direcciones de ejecución física.
+
+```text
+script integrado: system() sale con byte 0x32 (decimal 50)
+  → libupdaterbody BuildInPlugin::execute 0x248e8
+  → ApiException(tipo 0x3000c, valor 0x32)
+  → mf LEDErrorConverter::Convert 0xbf84: tipo 0x3000c devuelve GetErrorValue()
+  → mf StartWriting 0xa038 → sendErrorMessage 0x9fcc → fifo2, un byte
+  → libsenupdater receiveReturnCode 0x11a84 → setResult 0x119f8
+  → cadena hexadecimal ASCII "32" → us_error.sh → common.src:blink_error
+  → uc_portctl.elf -b 32 -n 0
+```
+
+`BuildInPlugin::execute` extrae `(system_status & 0xff00) >> 8` en `0x249d0–0x249d4`; un resultado no cero distinto de `0x8f` se copia como valor de `ApiException(0x3000c, valor)` en `0x24a12–0x24a32`. El convertidor devuelve ese valor para `0x3000c`; `sendErrorMessage` escribe exactamente un byte. El llamador `receiveReturnCode` lo lee de `/tmp_updater/fifo2` y lo pasa sin reinterpretarlo a `setResult`. Para valores mayores que 2, `setResult` convierte cada nibble a un dígito hexadecimal mayúsculo (`0x11a06–0x11a2c`), invoca el script y también actualiza `Status::SetResultCode`. Así, **byte 0x32 = decimal 50 → texto «32»**; el byte decimal 32 sería `0x20` y produciría texto «20». Esto demuestra una vía posible de propagación del valor desde el actualizador, no que se haya ejecutado en este incidente ni que un script concreto haya salido con 50.
+
+Otros llamadores directos encontrados vía el thunk `0x11688` en `libsenupdater.so`: `receiveReturnCode` genera `0x44` cuando falla la lectura de un byte; `complete` genera `0x55` al agotarse 300000 ms; `write` genera `0x44`, `0x55` o `0x83` en sus errores locales; el constructor genera `0x44` si no abre un FIFO y `0x55` si falla la sincronización inicial. **Ninguna de estas constantes locales es 0x32**; la lectura del FIFO acepta un byte arbitrario. `libupdaterbody` `Plugin::Execute` (`0x2443c`) y `XmlConfigHandler::executeGuard` (`0x23584`) también crean excepciones `0x3000c` con valores retornados por módulos, pero en una rama específica valores menores de `0x41` se sustituyen por `0x59`: hay que determinar la ruta y configuración concreta antes de atribuirles `0x32`. La lista es de llamadores estáticos identificados, no una prueba exhaustiva de todas las entradas indirectas ni de persistencia.
+
+**Pendiente:** identificar el script integrado y sus condiciones reales de salida, reconstruir cómo el estado de excepción llega al `mf` en esta configuración, auditar otros productores y comprobar si el LED posterior a reinicio usa esta ruta o alguna independiente. No hay evidencia de que el byte 0x32 del FIFO se haya observado físicamente ni de que describa NAND, Darwin o alimentación. La ausencia de una coincidencia textual con `exit 50` no descarta valores calculados.
+
 ## Casos externos y límites
 
 En [Sony-PMCA-RE #488](https://github.com/ma1co/Sony-PMCA-RE/issues/488), la A6000 original presenta un patrón compatible con 73 y un registro UART con errores Mumin/ECC y montaje. El autor sospecha flash defectuosa; no constituye diagnóstico de esta cámara. Un comentario posterior describe una **ILCE-7RM2 distinta**, 3 largos + 2 cortos tras un paquete modificado y registros `LDEC` con un offset de 32; atribuye el fallo a bloques no alineados. Es un testimonio de otro modelo, no prueba del origen del LED ni del mecanismo de la A6000. La afirmación del comentario de que códigos menores de 41 nunca provienen del actualizador requiere auditoría del binario: no debe usarse para atribuir el origen de 32. No se ha identificado allí una restauración ejecutada para este incidente.
