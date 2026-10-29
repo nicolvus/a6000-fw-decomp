@@ -407,7 +407,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [E24-05h — Dependencias finales de la captura sin rearme: P29, P4E, BIONZ, modos Darwin y FAIL (27-10-2026)](capture/e24-05h-dependencias-finales-captura.md)
 - **—** [E26-RECOVERY R5 — Loader3, servicio BIONZ y diagnóstico de SY-1028](capture/e26-r5-loader3-servicio.md)
 - **—** [E26-RECOVERY R6 — BLDR, BIONZ y recuperación conservando la placa](capture/e26-r6-recuperacion-bionz.md)
-- **—** [E26-RECOVERY R7 — investigación estática en curso](capture/e26-r7-recuperacion-estatica.md)
+- **—** [E26-RECOVERY R7 — informe final de ingeniería inversa exhaustiva](capture/e26-r7-recuperacion-estatica.md)
 - **—** [E26-R7B — recuperación pre-Linux: investigación estática](capture/e26-r7b-recuperacion-prelinux.md)
 - **—** [E26-RECOVERY — incidente 3.25 (investigación abierta)](capture/e26-recovery.md)
 - **—** [Registro de pruebas en cámara (solo software, USB)](capture/registro-pruebas-camara.md)

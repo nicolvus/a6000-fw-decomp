@@ -29,9 +29,35 @@
     "provenance": "analysis/session18/main/sony-oss-inventory.md: model of Sony OSS package not established"
   },
   "manual": {
-    "page24": "IC6000 MHZ4G8G01A diagram labels BOOT_SERIAL_IN near H21 and BOOT_MAIN near P7; actual continuity and mapping to bit1 unproven",
-    "page37": "BOOT_SERIAL_IN and R4002/R4003 XX appear near MULTI; visual topology and population not verified",
-    "identity": "IC6200 CXD90027GF is distinct from IC6000 per parts list"
+    "sha256": "4ab1630bffdba4aff01fa5934b8a1f3fe4bb54f4fefd6a7c19192836bda31aa5",
+    "visual_inspection": [
+      {
+        "pdf_page": 24,
+        "clip_pdf_points": [
+          335,
+          220,
+          455,
+          265
+        ],
+        "finding": "IC6000 diagram identifies H21 as BOOT_SERIAL_IN and P7 as BOOT_MAIN."
+      },
+      {
+        "pdf_page": 37,
+        "clip_pdf_points": [
+          185,
+          640,
+          440,
+          690
+        ],
+        "finding": "BOOT_SERIAL_IN passes through R4003, marked XX, to the node labelled MULTI pin 9 UART_RX/BOOT_IN. An alternative footprint CM4003 is drawn in parallel. DEBUG_UART0_RXD reaches this node via R4002, also XX. AD_JACK_IN is the separate pin 10 net."
+      }
+    ],
+    "limits": [
+      "The drawing does not prove R4003 or CM4003 fitted or an electrical path in this camera.",
+      "The register bit to pad correspondence remains an inference, not a verified pin mapping.",
+      "The diagram does not supply voltage, safe operating conditions or a validated recovery protocol.",
+      "IC6200 CXD90027GF and IC6000 MHZ4G8G01A are distinct entries in parts list."
+    ]
   },
   "limits": [
     "CXD90014 source is cross-platform comparison, not confirmation of A6000 SoC register definitions",

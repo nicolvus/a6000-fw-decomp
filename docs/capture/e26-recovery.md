@@ -2,7 +2,7 @@
 
 > **R7B parcial:** [BootROM, COLD, ARM7 y actualización](e26-r7b-recuperacion-prelinux.md). Hay carga a memoria por receptor serie en ROM, sin ruta de recuperación externa demostrada.
 
-> **R7 parcial:** [nuevas primitivas MuMin/BOSS](e26-r7-recuperacion-estatica.md); su existencia en Linux no demuestra acceso desde la cámara bloqueada. Investigación offline abierta.
+> **R7 completo:** [nuevas primitivas MuMin/BOSS y grafo de rutas de arranque](e26-r7-recuperacion-estatica.md); COLD fallo → `FUN_c01f3b74` bucle LED sin retorno; UPDATER (modo 3) carga kernel desde dispositivo 1 y salta, sin entorno independiente; escrituras NAND solo en entorno Linux; `boss_hw_nandc_recovery_check` no es UPDATER; no hay productor pre-Linux de `updater/mode`; INFO6 sin fuente; residuo TPZL sin rechazo demostrado. Investigación offline concluida sin ruta de restauración utilizable antes de `nflasha3`.
 
 > **Actualización R6, fase BLDR:** [mapa y evidencia](e26-r6-recuperacion-bionz.md). Identificada la implementación del payload local: bloque safe + cuatro normales, normales solo die0/plane0. INFO exige plane1 para la cola Loader3; no reconstruida. BLDR puede descartar una advertencia ECC y pierde metadatos/fronteras al concatenar. No demuestra daño en cámara.
 

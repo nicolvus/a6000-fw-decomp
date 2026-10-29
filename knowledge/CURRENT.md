@@ -2,7 +2,7 @@
 
 > **E26 R7B parcial:** [hallazgos y límites](../docs/capture/e26-r7b-recuperacion-prelinux.md): BootROM recibe datos por entrada serie y puede saltar, Loader2 lee NAND, ARM7 histórico cotejado, COLD negativo señaliza en bucle. Falta demostrar acceso externo y restauración selectiva; seguir offline.
 
-> **E26 R7 parcial:** [primitivas MuMin/BOSS](../docs/capture/e26-r7-recuperacion-estatica.md) en Linux; escritura selectiva y acceso pre-Linux no demostrados. Continuar offline con retornos COLD, callbacks PBM y `boss_hw_nandc_recovery_check`.
+> **E26 R7 completo:** [informe](../docs/capture/e26-r7-recuperacion-estatica.md): grafo de rutas de arranque verificado en binario; COLD fallo → `FUN_c01f3b74` bucle LED sin retorno; UPDATER (modo 3) carga kernel desde dispositivo 1 y salta, sin entorno independiente; escrituras NAND (MuMin/LLD → ARM7) solo en entorno Linux; `boss_hw_nandc_recovery_check` no es UPDATER; no hay productor pre-Linux de `updater/mode`; INFO6 sin fuente; residuo TPZL sin rechazo demostrado; escritura selectiva de `nflasha3` no demostrada. No existe ruta de restauración utilizable antes de `nflasha3` con evidencia actual.
 
 > **E26 R6, diagnóstico cerrado offline:** [informe vigente](../docs/capture/e26-r6-recuperacion-bionz.md). BLDR normales die0/plane0 y cola INFO6 plane1 no reconstruida; selector solo estático. CN4906 queda orientado documentalmente (mapa SVG), pero población/niveles/acceso siguen desconocidos; SWD no es recuperación validada y NAND carece de vía física segura. R7 continúa exclusivamente offline; no se requieren capturas físicas para seguir investigando.
 
