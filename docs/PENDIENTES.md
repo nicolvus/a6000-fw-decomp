@@ -8,13 +8,25 @@
 
 **Fase B parcial:** localizados llamadores de `setResult` y una vía posible para el byte 0x32 por excepción `0x3000c` y FIFO2; falta identificar script/condición concreta, conexión completa de excepciones y origen del LED tras el reinicio. Ver [E26-RECOVERY](capture/e26-recovery.md); seguir con esa dependencia y luego la secuencia de Done.
 
-**Fase C parcial:** XML y scripts identifican CRC de imágenes, actualización Darwin en hilo y operaciones `endupdate.sh`; orden frente a `Done`, readback, `uincomp` y `mode` no demostrados. Seguir con `ThreadPlugin::Join`, `XmlConfigHandler::Join` y mensaje al host. El usuario indica una cara de la placa expuesta, sin mediciones ni autorización de intervención.
+**Fase C parcial, ampliada en R5:** Join ya resuelto en R3; R5 verifica HasError, landing pads que llaman setError, `comp`/`mode`, comprobación de `uincomp` y byte 2 de éxito en FIFO2. Falta frontera gráfica Done, cobertura EH/join completa, readback y ciclo de `uincomp`. No repetir thunks/vtables de Join. Ver [R5](capture/e26-r5-loader3-servicio.md).
 
 **R3:** `UpdaterBody::Execute` espera `ThreadPlugin::Join` antes de `EndUpdate` y `CompleteUpdate`; el manejo de errores de hilo y la relación con `Done` del PC no están cerrados. `CompleteUpdate` manipula indicadores de modo en `nflasha2`; ver E26. Continuar con Loader2/Loader3 y el emisor host.
 
 **R3 Loader3:** candidato de 128 KiB encontrado en `bootloader.bin` con tabla INFO y código de modo actualizador; corrige la ausencia previamente afirmada. Falta validar geometría, integridad, condiciones de selección y método independiente de activar la bandera. Ver E26; no escribir el candidato.
 
 **R3 placa:** manual 6-38/SIDE A muestra CN4906 e IC6000; 6-39/SIDE B muestra IC5700 y CL5701/CL701/CL703–707. Falta fotografía para identificar cara visible, continuidad, niveles y almacenamiento físico. Ver matriz de rutas en E26; no realizar intervención.
+
+**R5 vigente:** recorte Loader3 con incoherencias de checksum/runtime; no validado íntegramente. CN4906 tiene UART BIONZ y SWD BIONZ opcional además de Darwin. Estrategia y respuestas a los 15 criterios en [R5](capture/e26-r5-loader3-servicio.md). Cero acceso físico durante la investigación.
+
+| ID | Estado | Origen y criterio de cierre |
+|---|---|---|
+| E26-R5-L3 | ABIERTO offline | R5 §1: obtener implementación BLDR de la revisión usada, resolver orden/cobertura de bloques y reconstruir INFO 5→6; verificar checksum/runtime/segmentos antes de declarar integridad |
+| E26-R5-MODE | PARCIAL | R5 §2: condición de bandera y prioridades verificadas; SIO alternativo condicionado no habilitado históricamente. Cierre: vía independiente demostrada para seleccionar 3 y dependencias completas sin nflasha3 |
+| E26-R5-HOST | PARCIAL offline | R5 §3: flag HasError, catch/setError, comp/mode y byte 2 al adaptador resueltos. Cierre: ciclo uincomp, cobertura errores join/EH y último éxito gráfico Done del host, sin volver a resolver Join |
+| E26-R5-SIDEA | PARCIAL / físico diferido | R5 §4/7: pinout documental completo, UART0 BIONZ 4/5 y SWD por R4911/12 XX. Cierre: foto/cara/acceso, población/continuidad y nivel seguros; captura pasiva solo tras autorización independiente |
+| E26-R5-BIONZ | ABIERTO | R5 §4/5: SWD opcional documentado eléctricamente, UART sin monitor demostrado. Cierre: AP/protección/efectos y acceso de lectura validado sin atribuir NAND por compatibilidad teórica |
+| E26-R5-NAND | ABIERTO | R5 §5: identificar chip/die/topología, bus, geometría, ECC/OOB, bad blocks y traducción física de nflasha3; especificar herramienta y preservación antes de escritura |
+| E26-R5-FM3 | ABIERTO offline / físico diferido | R5 §6: EPFR00 corrige atribución histórica a SPSR. Cierre: manual de flash MB9AF004B, protocolo/herramienta y protección concretos; no auto-unlock ni escritura por defecto |
 
 
 Creado el 25-10-2026. Es la lista única y viva de lo que falta en el proyecto. Los

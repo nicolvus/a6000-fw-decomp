@@ -1,0 +1,2031 @@
+[
+  {
+    "evidence_id": "ev_7c1cd336e52475af7d8828c8800cf37f593ad5dfcf7d65eb3706298c5616fc20",
+    "subject": {
+      "name": "e26-loader3.bin",
+      "digest": {
+        "sha256": "8fd98a4140bf85f955c994ea263c4a295846e049121b593c0a823aec01620c07"
+      },
+      "local_path": "/tmp/e26-loader3.bin",
+      "format": "raw-binary",
+      "architecture": "arm"
+    },
+    "operation": "batch_decompile",
+    "parameters": {
+      "addresses": [
+        "0xc01f0cca",
+        "0xc01f4690",
+        "0xc01f2156",
+        "0xc01f4828",
+        "0xc01f488a",
+        "0xc01f3b74",
+        "0xc01f03e2",
+        "0xc01f04b6"
+      ]
+    },
+    "normalized_result": {
+      "items": [
+        {
+          "address": "0xc01f0cca",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f0cca",
+            "name": "FUN_c01f0cca"
+          },
+          "status": "ok",
+          "pseudocode": "\nint FUN_c01f0cca(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4)\n\n{\n  int iVar1;\n  undefined4 uVar2;\n  undefined4 uVar3;\n  int iVar4;\n  char *pcVar5;\n  undefined4 uVar6;\n  \n  uVar6 = 0;\n  FUN_c01f3670(2,s_LD3_Init_Sync_c01f1038,param_3,param_4,param_4);\n  iVar1 = FUN_c01f5130();\n  if (iVar1 == 0) {\n    FUN_c01f3670(2,s_LD3_Init_Power_c01f1060);\n    iVar1 = FUN_c01f55dc();\n    if (iVar1 == 0) {\n      FUN_c01f3670(2,s_LD3_Init_UDIF_P_c01f1088);\n      iVar1 = FUN_c01f686c();\n      if (iVar1 == 0) {\n        FUN_c01f3670(2,s_LD3_Init_UDIF_D_c01f10b4);\n        iVar1 = FUN_c01f68a4();\n        if (iVar1 == 0) {\n          FUN_c01f3670(2,s_LD3_Reinit_BOSS_c01f10e0);\n          iVar1 = FUN_c01f2a48();\n          if (iVar1 != 0) {\n            FUN_c01f3670(3,s_LD3_E_Reinit_BOSS_c01f13bc);\n            return iVar1;\n          }\n          FUN_c01f3670(2,s_LD3_Wake_DDR_c01f13d0);\n          FUN_c01f5f18();\n          iVar1 = FUN_c01f39de();\n          if (iVar1 != 0) {\n            FUN_c01f3670(3,s_LD3_E_Wake_DGU_c01f13e0);\n            return -0x12d;\n          }\n          iVar1 = FUN_c01f5f18();\n          if ((iVar1 != 0) &&\n             ((iVar1 = FUN_c01f1650(), iVar1 == 0 || (iVar1 = FUN_c01f22a6(), iVar1 != 0)))) {\n            uVar6 = 1;\n          }\n          uVar2 = FUN_c01f22a6();\n          iVar1 = FUN_c01f1650();\n          uVar3 = FUN_c01f5f18();\n          FUN_c01f3670(6,s_LD3_ddr__d_serr__d_ld__d_c01f13f0,uVar3,iVar1 == 0,uVar2);\n          FUN_c01f3670(2,s_LD3_Init_BlkDev_c01f140c);\n          iVar1 = FUN_c01f2a4c(uVar6);\n          if (iVar1 == 0) {\n            FUN_c01f3670(2,s_LD3_Init_FAT_c01f1438);\n            iVar1 = FUN_c01f3d50();\n            if (iVar1 == 0) {\n              FUN_c01f3670(2,s_LD3_Switch_Bkup_c01f145c);\n              iVar1 = thunk_FUN_c01f49d2(uVar6);\n              if (iVar1 != 0) {\n                FUN_c01f3670(3,s_LD3_E_Switch_Bkup__d__c01f1470,iVar1);\n                iVar4 = FUN_c01f159a();\n                if (iVar4 == 0) {\n                  return iVar1;\n                }\n              }\n              FUN_c01f3670(2,s_LD3_Init_DbgLv_c01f1488);\n              FUN_c01f35c0();\n              FUN_c01f3670(2,s_LD3_Init_Pwr2nd_c01f1498);\n              iVar1 = FUN_c01f5948();\n              if (iVar1 == 0) {\n                iVar1 = FUN_c01f21c6();\n                if (iVar1 == 0) {\n                  FUN_c01f3514();\n                  FUN_c01f4ef8();\n                  return 0;\n                }\n                return -0x12f;\n              }\n              pcVar5 = s_LD3_E_Init_Pwr2nd__d__c01f14ac;\n            }\n            else {\n              pcVar5 = s_LD3_E_Init_FAT__d__c01f1448;\n            }\n          }\n          else {\n            pcVar5 = s_LD3_E_Init_BlkDev__d__c01f1420;\n          }\n          goto LAB_c01f0cf8;\n        }\n        pcVar5 = s_LD3_E_Init_UDIF_D__d__c01f10c8;\n      }\n      else {\n        pcVar5 = s_LD3_E_Init_UDIF_P__d__c01f109c;\n      }\n      FUN_c01f3670(3,pcVar5,iVar1);\n      if (((iVar1 != -0x6e) && (iVar1 != -0x10)) && (iVar1 != -5)) {\n        iVar4 = 0;\n        if (iVar1 != 0) {\n          iVar4 = -0x133;\n        }\n        return iVar4;\n      }\n      return -0xca;\n    }\n    pcVar5 = s_LD3_E_Init_Power__d__c01f1070;\n  }\n  else {\n    pcVar5 = s_LD3_E_Init_Sync__d__c01f1048;\n  }\nLAB_c01f0cf8:\n  FUN_c01f3670(3,pcVar5,iVar1);\n  return iVar1;\n}\n\n"
+        },
+        {
+          "address": "0xc01f4690",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f4690",
+            "name": "FUN_c01f4690"
+          },
+          "status": "ok",
+          "pseudocode": "\nint FUN_c01f4690(undefined4 param_1,undefined4 param_2,undefined4 param_3)\n\n{\n  int iVar1;\n  int iVar2;\n  \n  iVar1 = FUN_c01f2c2a(*(undefined4 *)(DAT_c01f47a0 + 0x18),param_2,param_1,param_3);\n  iVar2 = 0;\n  if (iVar1 != 0) {\n    iVar2 = DAT_c01f474c + 4;\n  }\n  return iVar2;\n}\n\n"
+        },
+        {
+          "address": "0xc01f2156",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f2156",
+            "name": "FUN_c01f2156"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_c01f2156(void)\n\n{\n  return *DAT_c01f248c;\n}\n\n"
+        },
+        {
+          "address": "0xc01f4828",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f4828",
+            "name": "FUN_c01f4828"
+          },
+          "status": "ok",
+          "pseudocode": "\nvoid FUN_c01f4828(void)\n\n{\n  undefined4 *puVar1;\n  \n  *DAT_c01f48fc = 1;\n  DAT_c01f48fc[-2] = 0;\n  DAT_c01f48fc[-1] = 200;\n  puVar1 = DAT_c01f48fc;\n  DAT_c01f48fc[1] = 0;\n  puVar1[2] = 0;\n  puVar1[3] = 0;\n  puVar1[4] = 0;\n  return;\n}\n\n"
+        },
+        {
+          "address": "0xc01f488a",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f488a",
+            "name": "FUN_c01f488a"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_c01f488a(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)\n\n{\n  int iVar1;\n  int local_10;\n  uint local_c;\n  \n  local_10 = param_3;\n  local_c = param_4;\n  iVar1 = FUN_c01f498c(DAT_c01f4900,&local_10);\n  if ((((-1 < iVar1) && (local_10 != -1)) &&\n      (iVar1 = FUN_c01f498c(DAT_c01f4900 + 1,&local_c), -1 < iVar1)) &&\n     ((local_c != 0xffffffff &&\n      ((*(uint *)(DAT_c01f4904 + local_10 * 0x100 + 0x10) & 1 << (local_c & 0xff)) == 0)))) {\n    return 1;\n  }\n  return 0;\n}\n\n"
+        },
+        {
+          "address": "0xc01f3b74",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f3b74",
+            "name": "FUN_c01f3b74"
+          },
+          "status": "ok",
+          "pseudocode": "\nvoid FUN_c01f3b74(int param_1)\n\n{\n  int iVar1;\n  int iVar2;\n  int iVar3;\n  undefined4 uVar4;\n  undefined4 extraout_r1;\n  int iVar5;\n  undefined8 uVar6;\n  \n  FUN_c01f6d0c();\n  uVar6 = func_0xc020c544(-param_1,1000);\n  uVar4 = func_0xc020c544((int)((ulonglong)uVar6 >> 0x20),100);\n  func_0xc020c544(-param_1,100);\n  FUN_c01f3670(1,s_ERROR__Blinking_LED_LDR2__d_LNG__c01f3bf8,(int)uVar6,uVar4,extraout_r1);\n  FUN_c01f3670(1,s_ERROR__Loader_boot_failed__c01f3c24);\n  FUN_c01f3884();\n  FUN_c01f5008();\n  iVar3 = DAT_c01f3c40;\n  iVar5 = DAT_c01f3c40 >> 1;\n  iVar1 = DAT_c01f3c40 >> 2;\n  iVar2 = DAT_c01f3c40 >> 3;\n  do {\n    FUN_c01f379a();\n    FUN_c01f6d18((int)uVar6,iVar3);\n    FUN_c01f4f88(iVar5);\n    FUN_c01f6d18(uVar4,iVar1);\n    FUN_c01f4f88(iVar5);\n    FUN_c01f6d18(extraout_r1,iVar2);\n    FUN_c01f4f88(iVar3);\n  } while( true );\n}\n\n"
+        },
+        {
+          "address": "0xc01f03e2",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f03e2",
+            "name": "FUN_c01f03e2"
+          },
+          "status": "ok",
+          "pseudocode": "\nint FUN_c01f03e2(undefined4 *param_1,undefined4 param_2,int param_3,undefined4 *param_4)\n\n{\n  bool bVar1;\n  int iVar2;\n  int iVar3;\n  char *pcVar4;\n  int local_18;\n  undefined4 *local_14;\n  \n  local_18 = param_3;\n  local_14 = param_4;\n  switch(*param_1) {\n  case 7:\n  case 8:\n    goto switchD_c01f03ee_caseD_7;\n  case 9:\n    iVar3 = FUN_c01f129c(param_1);\n    return iVar3;\n  default:\n    FUN_c01f3670(3,s_LD3_E_Inv_bootmode__d_c01f07e0);\n    return DAT_c01f07f8;\n  case 0xd:\n    FUN_c01f3670(2,s_LD3_Load_Image_OFF_c01f0754);\n    iVar2 = FUN_c01f2c06(DAT_c01f0768);\n    local_18 = iVar2;\n    iVar3 = FUN_c01f498c(DAT_c01f076c,&local_14);\n    if ((0 < iVar3) && (local_14 != (undefined4 *)0xffffffff)) {\n      *local_14 = *DAT_c01f0768;\n    }\n    iVar3 = FUN_c01f51f4(&local_18,4,3);\n    if (iVar3 != 0) {\n      pcVar4 = s_LD3_E_Sync_Ierr__d__c01f0770;\nLAB_c01f048c:\n      FUN_c01f3670(3,pcVar4,iVar3);\n      return iVar3;\n    }\n    bVar1 = local_18 == 0;\n    if (iVar2 != 0 || !bVar1) {\n      FUN_c01f3670(3,s_LD3_E_Load_Image__d__d__c01f0788,iVar2);\n      *param_1 = 7;\n      FUN_c01f1544();\n    }\n    FUN_c01f2214(iVar2 == 0 && bVar1);\n    iVar3 = FUN_c01f2fe8(0x4000000);\n    if (iVar3 != 0) {\n      pcVar4 = s_LD3_E_Normal_load_OFF__d__c01f07a4;\n      goto LAB_c01f048c;\n    }\n    break;\n  case 0xe:\n    iVar3 = FUN_c01f2fe8(0x1000000);\n    if (iVar3 != 0) {\n      pcVar4 = s_LD3_E_Normal_load_HotOFF__d__c01f07c0;\n      goto LAB_c01f048c;\n    }\n    FUN_c01f2214(2);\n  }\n  FUN_c01f3450();\nswitchD_c01f03ee_caseD_7:\n  iVar3 = FUN_c01f036c(param_1);\n  return iVar3;\n}\n\n"
+        },
+        {
+          "address": "0xc01f04b6",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f04b6",
+            "name": "FUN_c01f04b6"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_c01f04b6(int param_1)\n\n{\n  uint *puVar1;\n  int iVar2;\n  uint uVar3;\n  undefined4 uVar4;\n  int iVar5;\n  undefined1 auStack_5c [64];\n  int local_1c;\n  uint *local_18 [2];\n  \n  local_18[0] = (uint *)0x0;\n  if (param_1 != 3) {\n    local_1c = 0;\n    iVar5 = DAT_c01f06e8 + 1;\n    iVar2 = FUN_c01f498c(iVar5,&local_1c);\n    if (0 < iVar2) {\n      if ((param_1 == 2) || (param_1 == 10)) {\n        local_1c = local_1c + 1;\n      }\n      else {\n        local_1c = 0;\n      }\n      FUN_c01f4aa0(0x51,iVar5,&local_1c);\n    }\n    FUN_c020bd3c(auStack_5c,0x40,s_L__Kernel_Jump_MODE__d_NR_RES__u_c01f07fc,param_1,local_1c);\n    FUN_c01f297c(auStack_5c);\n  }\n  uVar4 = DAT_c01f076c;\n  puVar1 = DAT_c01f0768;\n  if (param_1 == 2) {\nLAB_c01f0528:\n    iVar2 = FUN_c01f498c(uVar4,local_18);\n    if ((iVar2 < 1) || (local_18[0] == (uint *)0xffffffff)) goto LAB_c01f0542;\n    uVar3 = *local_18[0];\n  }\n  else {\n    if ((param_1 == 10) || (param_1 == 0xb)) {\n      iVar2 = FUN_c01f16e2();\n      if (iVar2 == 0) goto LAB_c01f0542;\n      goto LAB_c01f0528;\n    }\n    if (*DAT_c01f0768 != 0) goto LAB_c01f0542;\n    uVar3 = FUN_c01f31ba();\n  }\n  *puVar1 = uVar3;\nLAB_c01f0542:\n  FUN_c01f2214(0);\n  FUN_c01f3450();\n  if (param_1 == 3) {\n    FUN_c01f028c();\n  }\n  uVar4 = FUN_c01f4fb0();\n  FUN_c01f3670(1,s_LDR_Jump_to_kernel_0x_X__luus__c01f0820,*puVar1,uVar4);\n  if (*puVar1 == 0) {\n    FUN_c01f3670(3,s_LD3_E_addr_is_NULL_c01f085c);\n    uVar4 = 0xfffffed1;\n  }\n  else {\n    if ((*puVar1 & 3) != 0) {\n      FUN_c01f3670(3,s_LD3_E_addr_is_unaligned_c01f0840);\n    }\n    FUN_c01f5078();\n    (*(code *)*puVar1)();\n    uVar4 = 0;\n  }\n  return uVar4;\n}\n\n"
+        }
+      ],
+      "total": 8,
+      "succeeded": 8,
+      "failed": 0
+    },
+    "limitations": [
+      "Derived by an REA composed workflow.",
+      "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+      "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+      "External functions and functions without an analyzable body return null; other decompiler failures remain explicit.",
+      "External functions and local thunks are distinct; procedure metadata identifies both and preserves a thunk target when Ghidra resolves one.",
+      "Headerless raw-binary analysis uses the caller-supplied architecture and entry address; file offset 0 is mapped at that address. Headers are not discovered from file bytes.",
+      "Little-endian generic Ghidra languages are used for x86, x86_64, arm, arm64, and NMOS 6502. Big-endian, Thumb-only, Cortex-M, 65C02, 65816, and other processor variants are unsupported in this increment.",
+      "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+      "Static analysis does not emulate reset vectors, memory-mapped I/O, or firmware boot sequences.",
+      "The imported Program and temporary project are ephemeral and deleted on close. Annotation operations edit session database metadata; original executable bytes are never written.",
+      "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results."
+    ]
+  },
+  {
+    "evidence_id": "ev_5923f38cbec76ed3bb4c7e7c4b629b5428b28afaea7126897b5b4d4a4318d275",
+    "subject": {
+      "name": "e26-loader3.bin",
+      "digest": {
+        "sha256": "8fd98a4140bf85f955c994ea263c4a295846e049121b593c0a823aec01620c07"
+      },
+      "local_path": "/tmp/e26-loader3.bin",
+      "format": "raw-binary",
+      "architecture": "arm"
+    },
+    "operation": "batch_decompile",
+    "parameters": {
+      "addresses": [
+        "0xc01f2a48",
+        "0xc01f2a4c",
+        "0xc01f2c2a",
+        "0xc01f49d2",
+        "0xc01f21c6",
+        "0xc01f5130"
+      ]
+    },
+    "normalized_result": {
+      "items": [
+        {
+          "address": "0xc01f2a48",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f2a48",
+            "name": "FUN_c01f2a48"
+          },
+          "status": "ok",
+          "pseudocode": "\n/* WARNING: Removing unreachable block (ram,0xc01f2a02) */\n/* WARNING: Removing unreachable block (ram,0xc01f2a2c) */\n\nundefined4 FUN_c01f2a48(void)\n\n{\n  int iVar1;\n  int iVar2;\n  int iVar3;\n  char *pcVar4;\n  undefined4 uVar5;\n  undefined1 auStack_20 [4];\n  undefined1 auStack_1c [8];\n  \n  iVar1 = DAT_c01f2ccc;\n  iVar3 = DAT_c01f2cc8;\n  uVar5 = 0xffffff37;\n  if (*(int *)(DAT_c01f2ccc + 8) != 0) {\n    FUN_c020b952();\n  }\n  iVar2 = FUN_c020b8f4(*(int *)(*(int *)(iVar3 + 0x10) + 0x4c) << 3);\n  *(int *)(iVar1 + 8) = iVar2;\n  if (iVar2 == 0) {\n    uVar5 = 0xfffffecd;\n  }\n  else {\n    iVar2 = *(int *)(iVar3 + 0x10);\n    *(undefined4 *)(iVar1 + 0xc) = *(undefined4 *)(iVar2 + 0x54);\n    *(undefined4 *)(iVar2 + 4) = 500;\n    *(undefined4 *)(*(int *)(iVar3 + 0x10) + 8) = 500;\n    *(undefined4 *)(*(int *)(iVar3 + 0x10) + 0xc) = 500;\n    FUN_c01f3670(6,s_BOS_ibt_blksize__d_c01f2cd0,*(undefined4 *)(iVar3 + 8));\n    iVar3 = FUN_c01fa1fc(iVar3);\n    if (iVar3 == 0) {\n      iVar3 = FUN_c01fa364(0,auStack_20,auStack_1c);\n      if (iVar3 == 0) {\n        iVar3 = FUN_c01fa456();\n        if (iVar3 == 0) {\n          return 0;\n        }\n        pcVar4 = s_BOS_E_Reset_MuMin__d_c01f2d28;\n      }\n      else {\n        pcVar4 = s_BOS_E_MuMin_info__d_c01f2cfc;\n      }\n    }\n    else {\n      pcVar4 = s_BOS_E_Init_MuMin__d_c01f2ce4;\n    }\n    FUN_c01f3670(3,pcVar4);\n  }\n  return uVar5;\n}\n\n"
+        },
+        {
+          "address": "0xc01f2a4c",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f2a4c",
+            "name": "FUN_c01f2a4c"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_c01f2a4c(int param_1,undefined4 param_2,undefined4 param_3,undefined4 *param_4)\n\n{\n  int iVar1;\n  undefined4 local_18;\n  undefined4 *local_14;\n  \n  local_18 = param_3;\n  local_14 = param_4;\n  iVar1 = FUN_c01f498c(DAT_c01f2d40,&local_14);\n  if ((iVar1 < 0) || (iVar1 = FUN_c01f498c(DAT_c01f2d40 + 0x35,&local_18), iVar1 < 0)) {\n    return 0xfffffed1;\n  }\n  if (param_1 == 0) {\n    *local_14 = 0;\n    iVar1 = FUN_c01fbbae(local_14,local_18);\n  }\n  else {\n    iVar1 = FUN_c01fbbb2(local_14,local_18);\n  }\n  if (iVar1 != 0) {\n    FUN_c01f3670(3,s_BOS_E_Init_MuMin__d___d__c01f2d44,param_1);\n    return 0xfffffecd;\n  }\n  return 0;\n}\n\n"
+        },
+        {
+          "address": "0xc01f2c2a",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f2c2a",
+            "name": "FUN_c01f2c2a"
+          },
+          "status": "ok",
+          "pseudocode": "\nint FUN_c01f2c2a(int param_1,undefined4 param_2,int param_3,int param_4)\n\n{\n  int *piVar1;\n  int iVar2;\n  int iVar3;\n  uint uVar4;\n  int iVar5;\n  \n  piVar1 = DAT_c01f2ccc;\n  iVar5 = param_4 << 9;\n  iVar3 = DAT_c01f2dd4 + param_1 * 0x10;\n  if (*(int *)(iVar3 + 0x18) != 3) {\n    uVar4 = *(uint *)(iVar3 + 0x10);\n    iVar3 = FUN_c01f9d74(DAT_c01f2db0,param_2,iVar5,param_4);\n    if (-1 < iVar3) {\n      iVar2 = FUN_c01f9e8a(iVar3,(param_3 + (uVar4 >> 9)) * 0x200,0);\n      if ((iVar2 < 0) || (iVar5 = FUN_c01f9e40(iVar3,param_2,iVar5), iVar5 < 0)) {\n        FUN_c01f9df8(iVar3);\n      }\n      else {\n        iVar3 = FUN_c01f9df8(iVar3);\n        if (-1 < iVar3) {\n          return 0;\n        }\n      }\n    }\n    return -1;\n  }\n  if (*DAT_c01f2ccc != param_1) {\n    iVar3 = FUN_c01f9a66(2,param_1);\n    piVar1[1] = iVar3;\n    iVar3 = FUN_c01f9a90();\n    if (iVar3 != 0) {\n      return iVar3;\n    }\n    *piVar1 = param_1;\n  }\n  iVar2 = 0;\n  iVar3 = FUN_c01f9bd0(piVar1[1],param_2,param_3 << 9,iVar5,0);\n  if (iVar3 < 1) {\n    iVar2 = -5;\n  }\n  return iVar2;\n}\n\n"
+        },
+        {
+          "address": "0xc01f49d2",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f49d2",
+            "name": "FUN_c01f49d2"
+          },
+          "status": "ok",
+          "pseudocode": "\nint FUN_c01f49d2(int param_1)\n\n{\n  undefined4 *puVar1;\n  int iVar2;\n  undefined4 uVar3;\n  char *pcVar4;\n  int iVar5;\n  undefined4 local_20;\n  \n  iVar5 = 0;\n  local_20 = 0;\n  iVar2 = FUN_c01f498c(DAT_c01f4c54,&local_20);\n  puVar1 = DAT_c01f4c2c;\n  if (iVar2 < 0) {\n    return -0x12f;\n  }\n  if (param_1 != 0) {\n    FUN_c01f3670(6,s_LBK_load_Bkup_mem__c01f4c58);\n    uVar3 = local_20;\n    iVar2 = FUN_c01fa1d0(local_20);\n    if (iVar2 == 0) {\n      iVar2 = thunk_FUN_c01fa0f2(uVar3);\n      if (iVar2 != 0) {\n        pcVar4 = s_LBK_E_init_mem__x___d__c01f4c84;\n        goto LAB_c01f4a26;\n      }\n    }\n    else {\n      pcVar4 = s_LBK_E_chk_mem__x___d__c01f4c6c;\nLAB_c01f4a26:\n      FUN_c01f3670(3,pcVar4,uVar3);\n      iVar5 = -1;\n    }\n    if (iVar5 == 0) {\n      uVar3 = 3;\n      goto LAB_c01f4a88;\n    }\n    FUN_c01f3670(3,s_LBK_E_load_mem_c01f4c9c);\n  }\n  FUN_c01f3670(6,s_LBK_load_Bkup_bin__c01f4cac);\n  iVar2 = FUN_c01f3eb6(2);\n  if (iVar2 != 0) {\n    FUN_c01f3670(3,s_LBK_E_mount_Bkup_c01f4cc0);\n    return iVar2;\n  }\n  iVar2 = FUN_c01f4918(s__Backup_bin_c01f4cd4,local_20);\n  if (iVar2 < 0) {\n    FUN_c01f3670(3,s_LBK_E_load_bin_c01f4ce0);\n    FUN_c01f3670(2,s_LBK_load_Bkup_bak__c01f4cf0);\n    iVar2 = FUN_c01f4918(s__Backup_bak_c01f4d04,local_20);\n    if (iVar2 < 0) {\n      FUN_c01f3670(3,s_LBK_E_load_bak_c01f4d10);\n      return -0x12f;\n    }\n    uVar3 = 2;\n  }\n  else {\n    uVar3 = 1;\n  }\nLAB_c01f4a88:\n  *(undefined4 *)*puVar1 = uVar3;\n  return 0;\n}\n\n"
+        },
+        {
+          "address": "0xc01f21c6",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f21c6",
+            "name": "FUN_c01f21c6"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_c01f21c6(void)\n\n{\n  int iVar1;\n  char *pcVar2;\n  \n  iVar1 = FUN_c01f2192();\n  if ((iVar1 == 0) || (iVar1 = FUN_c01f4aec(), iVar1 != 1)) {\n    iVar1 = FUN_c01f215c();\n    if (iVar1 != 0) {\n      FUN_c01f3670(2,s_BOM_Rst_Bkup_All_c01f2494);\n      iVar1 = FUN_c01f4b0a(0x1e);\n      if (iVar1 != 0) {\n        pcVar2 = s_BOM_E_Rst_Bkup_All_c01f24a8;\n        goto LAB_c01f21f2;\n      }\n    }\n  }\n  else {\n    FUN_c01f3670(2,s_BOM_Rst_Bkup_c01f24bc);\n    iVar1 = FUN_c01f4b0a(2);\n    if (iVar1 != 0) {\n      pcVar2 = s_BOM_E_Rst_Bkup_c01f24cc;\nLAB_c01f21f2:\n      FUN_c01f3670(3,pcVar2);\n      return 0xfffffed1;\n    }\n  }\n  return 0;\n}\n\n"
+        },
+        {
+          "address": "0xc01f5130",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f5130",
+            "name": "FUN_c01f5130"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_c01f5130(void)\n\n{\n  int iVar1;\n  undefined4 uVar2;\n  \n  iVar1 = FUN_c01f50f4();\n  uVar2 = 1;\n  if (iVar1 != 1) {\n    if (iVar1 != 2) {\n      return 0;\n    }\n    uVar2 = 0;\n  }\n  FUN_c01f6d48(uVar2);\n  return 0;\n}\n\n"
+        }
+      ],
+      "total": 6,
+      "succeeded": 6,
+      "failed": 0
+    },
+    "limitations": [
+      "Derived by an REA composed workflow.",
+      "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+      "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+      "External functions and functions without an analyzable body return null; other decompiler failures remain explicit.",
+      "External functions and local thunks are distinct; procedure metadata identifies both and preserves a thunk target when Ghidra resolves one.",
+      "Headerless raw-binary analysis uses the caller-supplied architecture and entry address; file offset 0 is mapped at that address. Headers are not discovered from file bytes.",
+      "Little-endian generic Ghidra languages are used for x86, x86_64, arm, arm64, and NMOS 6502. Big-endian, Thumb-only, Cortex-M, 65C02, 65816, and other processor variants are unsupported in this increment.",
+      "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+      "Static analysis does not emulate reset vectors, memory-mapped I/O, or firmware boot sequences.",
+      "The imported Program and temporary project are ephemeral and deleted on close. Annotation operations edit session database metadata; original executable bytes are never written.",
+      "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results."
+    ]
+  },
+  {
+    "evidence_id": "ev_937992bfdc106cd0179417547a686e9d3838332608ddb0f4a57c0e2fb242d3cc",
+    "subject": {
+      "name": "e26-loader3.bin",
+      "digest": {
+        "sha256": "8fd98a4140bf85f955c994ea263c4a295846e049121b593c0a823aec01620c07"
+      },
+      "local_path": "/tmp/e26-loader3.bin",
+      "format": "raw-binary",
+      "architecture": "arm"
+    },
+    "operation": "batch_decompile",
+    "parameters": {
+      "addresses": [
+        "0xc020e090",
+        "0xc020e024",
+        "0xc020c45c"
+      ]
+    },
+    "normalized_result": {
+      "items": [
+        {
+          "address": "0xc020e090",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc020e090",
+            "name": "FUN_c020e090"
+          },
+          "status": "ok",
+          "pseudocode": "\n/* WARNING: Control flow encountered bad instruction data */\n/* WARNING: Removing unreachable block (ram,0xc020e0a0) */\n\nvoid FUN_c020e090(void)\n\n{\n  undefined4 unaff_r5;\n  int in_r12;\n  bool in_OV;\n  undefined4 in_cr0;\n  undefined4 in_cr15;\n  \n  coprocessor_store2(7,in_cr15,in_r12 + -0x3ec);\n  if (!in_OV) {\n                    /* WARNING: Bad instruction - Truncating control flow here */\n    halt_baddata();\n  }\n  coprocessor_store2(0xe,in_cr0,unaff_r5);\n                    /* WARNING: Bad instruction - Truncating control flow here */\n  halt_baddata();\n}\n\n"
+        },
+        {
+          "address": "0xc020e024",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc020e024",
+            "name": "FUN_c020e024"
+          },
+          "status": "ok",
+          "pseudocode": "\n/* WARNING: Control flow encountered bad instruction data */\n/* WARNING: Removing unreachable block (ram,0xc020e048) */\n/* WARNING: Removing unreachable block (ram,0xc020e0a0) */\n\nvoid FUN_c020e024(undefined4 *param_1,undefined4 param_2,undefined4 param_3,uint param_4)\n\n{\n  uint uVar1;\n  undefined4 *puVar2;\n  undefined4 *puVar3;\n  uint uVar4;\n  int iVar5;\n  undefined4 extraout_r2;\n  undefined4 extraout_r2_00;\n  undefined4 extraout_r2_01;\n  undefined4 uVar6;\n  uint extraout_r3;\n  uint extraout_r3_00;\n  uint extraout_r3_01;\n  undefined4 *unaff_r4;\n  undefined4 unaff_r5;\n  uint unaff_r6;\n  byte *unaff_r8;\n  undefined4 unaff_r9;\n  byte *unaff_r10;\n  int unaff_r11;\n  int iVar7;\n  int in_r12;\n  uint extraout_r12;\n  uint extraout_r12_00;\n  uint uVar8;\n  uint extraout_r12_01;\n  uint uVar9;\n  char in_NG;\n  undefined1 in_ZR;\n  undefined1 in_CY;\n  char in_OV;\n  undefined1 uVar10;\n  undefined4 in_cr0;\n  undefined4 in_cr1;\n  undefined4 in_cr6;\n  undefined4 in_cr7;\n  undefined4 in_cr8;\n  undefined4 in_cr9;\n  undefined4 in_cr10;\n  undefined4 in_cr11;\n  undefined4 in_cr14;\n  undefined4 in_cr15;\n  undefined8 uVar11;\n  \n  if (!(bool)in_ZR && in_NG == in_OV) {\n    software_interrupt(0x216446);\n  }\n  if ((bool)in_ZR) {\n    coprocessor_moveto(2,7,7,unaff_r10,in_cr14,in_cr7);\n  }\n  puVar2 = param_1;\n  if ((bool)in_CY) {\n    puVar2 = param_1 + -0x180;\n    *param_1 = param_3;\n  }\n  if ((bool)in_OV) {\n    unaff_r6 = (uint)*(ushort *)(in_r12 + 0x1c);\n  }\n  if ((bool)in_ZR) {\n    puVar2 = (undefined4 *)func_0xc138e24c();\n    param_4 = extraout_r3;\n  }\n  uVar10 = false;\n  if ((bool)in_ZR) {\n    in_CY = 0;\n    in_NG = (int)(param_4 ^ 0x3c4) < 0;\n    uVar10 = (param_4 ^ 0x3c4) == 0;\n  }\n                    /* WARNING: Could not recover jumptable at 0xc020e040. Too many branches */\n                    /* WARNING: Treating indirect jump as call */\n  if ((bool)uVar10) {\n    (*(code *)((uint)puVar2 & 0xfffffffe | 0x3c0))();\n    return;\n  }\n  iVar7 = unaff_r11;\n  if (in_NG != in_OV) {\n    register0x00000054 = *(BADSPACEBASE **)unaff_r11;\n    iVar7 = *(int *)(unaff_r11 + -4);\n    unaff_r9 = *(undefined4 *)(unaff_r11 + -8);\n    unaff_r8 = *(byte **)(unaff_r11 + -0xc);\n    puVar2 = *(undefined4 **)(unaff_r11 + -0x18);\n  }\n  if ((bool)in_NG) {\n    iVar7 = iVar7 + -0xb00;\n  }\n  uVar9 = 0xc020e054;\n  uVar11 = func_0xbe50c996(puVar2);\n  uVar6 = extraout_r2;\n  uVar4 = extraout_r3_00;\n  uVar8 = extraout_r12;\n  if ((bool)in_CY) {\n    uVar9 = 0xc020e058;\n    uVar11 = func_0xc000e1a8();\n    uVar6 = extraout_r2_00;\n    uVar4 = extraout_r3_01;\n    uVar8 = extraout_r12_00;\n  }\n  iVar5 = (int)((ulonglong)uVar11 >> 0x20);\n  puVar2 = (undefined4 *)uVar11;\n  if ((bool)uVar10) {\n    iVar5 = ((uint)puVar2 >> (uVar4 & 0xff)) - ((int)puVar2 + (uint)!(bool)in_CY);\n  }\n  if (!(bool)in_CY) {\n    coprocessor_store(3,in_cr8,puVar2 + -0xbf);\n  }\n  if (!(bool)uVar10 && in_NG == in_OV) {\n    register0x00000054 = (BADSPACEBASE *)coprocessor_movefromRt(1,6,1,in_cr9,in_cr9);\n  }\n  if ((bool)uVar10) {\n    puVar3 = (undefined4 *)((int)puVar2 + -0xace);\n    *puVar2 = unaff_r10;\n  }\n  else {\n    uVar8 = (uint)*unaff_r10;\n    puVar3 = puVar2;\n  }\n  uVar11 = CONCAT44(iVar5,puVar3);\n  if (in_NG == in_OV) {\n    uVar9 = 0xc020e070;\n    uVar11 = func_0xc030e328();\n    uVar6 = extraout_r2_01;\n    uVar8 = extraout_r12_01;\n  }\n  iVar5 = (int)((ulonglong)uVar11 >> 0x20);\n  uVar4 = (uint)uVar11;\n  if (in_NG == in_OV) {\n    coprocessor_function(0xe,4,6,in_cr1,in_cr0,in_cr6);\n    coprocessor_function(4,1,3,in_cr11,in_cr14,in_cr10);\n  }\n  if ((bool)in_CY) {\n    *unaff_r4 = uVar6;\n    *(undefined8 *)(unaff_r4 + -2) = uVar11;\n  }\n  if ((bool)in_NG) {\n    uVar1 = uVar4 * 0x100;\n    in_CY = uVar9 <= uVar1;\n    in_OV = SBORROW4(uVar1,uVar9);\n    iVar7 = uVar1 - uVar9;\n    uVar10 = iVar7 == 0;\n  }\n  if ((bool)in_CY) {\n    uVar4 = 0;\n  }\n  if ((bool)in_CY && !(bool)uVar10) {\n    uVar4 = (uint)*unaff_r8;\n  }\n  if ((bool)in_CY) {\n    uVar8 = *(uint *)(iVar5 + 8);\n    iVar5 = iVar5 + 0x10;\n  }\n  if ((bool)in_OV) {\n    *(int *)(uVar4 + 4) = iVar5;\n    *(undefined4 *)(uVar4 + 8) = uVar6;\n    *(uint *)(uVar4 + 0xc) = unaff_r6;\n    *(undefined4 *)(uVar4 + 0x10) = unaff_r9;\n    *(int *)(uVar4 + 0x14) = iVar7;\n    *(uint *)(uVar4 + 0x18) = uVar8;\n    *(BADSPACEBASE **)(uVar4 + 0x1c) = register0x00000054;\n  }\n  coprocessor_store2(7,in_cr15,uVar8 - 0x3ec);\n  if ((bool)in_OV) {\n    coprocessor_store2(0xe,in_cr0,unaff_r5);\n                    /* WARNING: Bad instruction - Truncating control flow here */\n    halt_baddata();\n  }\n                    /* WARNING: Bad instruction - Truncating control flow here */\n  halt_baddata();\n}\n\n"
+        },
+        {
+          "address": "0xc020c45c",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc020c45c",
+            "name": "FUN_c020c45c"
+          },
+          "status": "ok",
+          "pseudocode": "\n/* WARNING: Control flow encountered bad instruction data */\n\nvoid FUN_c020c45c(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)\n\n{\n  int extraout_r1;\n  int extraout_r2;\n  int unaff_r6;\n  int unaff_r7;\n  undefined4 in_cr1;\n  undefined4 in_stack_00000090;\n  \n  *(undefined4 *)(unaff_r7 + 0x48) = param_1;\n  if (param_4 < 0xe8) {\n    param_3 = unaff_r6 << 0x14;\n    param_4 = iRam00000040 + 0x58;\n  }\n  func_0xc01e4d9c(param_1,param_2,param_3,param_4);\n  coprocessor_store(0xe,in_cr1,&stack0x00000000);\n  *(int *)(extraout_r1 + 0x40) = extraout_r2 + 3;\n                    /* WARNING: Bad instruction - Truncating control flow here */\n  halt_baddata();\n}\n\n"
+        }
+      ],
+      "total": 3,
+      "succeeded": 3,
+      "failed": 0
+    },
+    "limitations": [
+      "Derived by an REA composed workflow.",
+      "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+      "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+      "External functions and functions without an analyzable body return null; other decompiler failures remain explicit.",
+      "External functions and local thunks are distinct; procedure metadata identifies both and preserves a thunk target when Ghidra resolves one.",
+      "Headerless raw-binary analysis uses the caller-supplied architecture and entry address; file offset 0 is mapped at that address. Headers are not discovered from file bytes.",
+      "Little-endian generic Ghidra languages are used for x86, x86_64, arm, arm64, and NMOS 6502. Big-endian, Thumb-only, Cortex-M, 65C02, 65816, and other processor variants are unsupported in this increment.",
+      "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+      "Static analysis does not emulate reset vectors, memory-mapped I/O, or firmware boot sequences.",
+      "The imported Program and temporary project are ephemeral and deleted on close. Annotation operations edit session database metadata; original executable bytes are never written.",
+      "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results."
+    ]
+  },
+  {
+    "evidence_id": "ev_9ee9fde52548e07fa32ecc2a80993ee8523cfb78663f0c0bde1af6d0ee4f4c90",
+    "subject": {
+      "name": "e26-loader3.bin",
+      "digest": {
+        "sha256": "8fd98a4140bf85f955c994ea263c4a295846e049121b593c0a823aec01620c07"
+      },
+      "local_path": "/tmp/e26-loader3.bin",
+      "format": "raw-binary",
+      "architecture": "arm"
+    },
+    "operation": "read_function_instructions",
+    "parameters": {
+      "procedure": "0xc01f159a"
+    },
+    "normalized_result": {
+      "procedure": {
+        "address": "0xc01f159a",
+        "name": "FUN_c01f159a",
+        "classification": {
+          "external": false,
+          "thunk": false,
+          "thunk_target": null,
+          "provenance": "ghidra-function-manager"
+        },
+        "body": {
+          "available": true,
+          "provenance": "ghidra-function-body-address-set",
+          "ranges": [
+            {
+              "start": "0xc01f159a",
+              "end": "0xc01f15cb"
+            }
+          ],
+          "total_bytes": 50,
+          "span_bytes": 50,
+          "non_contiguous": false,
+          "contains_entry": true
+        }
+      },
+      "instructions": [
+        "0xc01f159a: movs r0, #0x5",
+        "0xc01f159c: adr r1, [0xc01f1974]",
+        "0xc01f159e: push {r4,lr}",
+        "0xc01f15a0: bl 0xc01f3670",
+        "0xc01f15a4: movs r0, #0x2",
+        "0xc01f15a6: bl 0xc01f3eb6",
+        "0xc01f15aa: movs r3, r0",
+        "0xc01f15ac: beq 0xc01f15ba",
+        "0xc01f15ae: movs r0, #0x3",
+        "0xc01f15b0: adr r2, [0xc01f1988]",
+        "0xc01f15b2: adr r1, [0xc01f1994]",
+        "0xc01f15b4: bl 0xc01f3670",
+        "0xc01f15b8: b 0xc01f15c4",
+        "0xc01f15ba: adr r0, [0xc01f19a4]",
+        "0xc01f15bc: bl 0xc01f44c6",
+        "0xc01f15c0: cmp r0, #0x0",
+        "0xc01f15c2: bge 0xc01f15c8",
+        "0xc01f15c4: movs r0, #0x0",
+        "0xc01f15c6: pop {r4,pc}",
+        "0xc01f15c8: movs r0, #0x1",
+        "0xc01f15ca: pop {r4,pc}"
+      ],
+      "limitations": [
+        "Instruction text and ordering are Ghidra-specific representations.",
+        "The fast path does not invoke the decompiler or scan whole-program names and strings."
+      ]
+    },
+    "limitations": [
+      "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.",
+      "The imported Program and temporary project are ephemeral and deleted on close. Annotation operations edit session database metadata; original executable bytes are never written.",
+      "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+      "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+      "This fast path reads only the requested function and does not invoke the decompiler or whole-program string/name inventories.",
+      "Instruction text is Ghidra-specific and does not claim textual equivalence with Hopper output.",
+      "Headerless raw-binary analysis uses the caller-supplied architecture and entry address; file offset 0 is mapped at that address. Headers are not discovered from file bytes.",
+      "Little-endian generic Ghidra languages are used for x86, x86_64, arm, arm64, and NMOS 6502. Big-endian, Thumb-only, Cortex-M, 65C02, 65816, and other processor variants are unsupported in this increment.",
+      "Static analysis does not emulate reset vectors, memory-mapped I/O, or firmware boot sequences."
+    ]
+  },
+  {
+    "evidence_id": "ev_e516e8094414a35fd19cefac1412abfc38e2dc2f83ce925ac8040e938a04350b",
+    "subject": {
+      "name": "e26-loader3.bin",
+      "digest": {
+        "sha256": "8fd98a4140bf85f955c994ea263c4a295846e049121b593c0a823aec01620c07"
+      },
+      "local_path": "/tmp/e26-loader3.bin",
+      "format": "raw-binary",
+      "architecture": "arm"
+    },
+    "operation": "read_function_instructions",
+    "parameters": {
+      "procedure": "0xc01f0078"
+    },
+    "normalized_result": {
+      "procedure": {
+        "address": "0xc01f0078",
+        "name": "FUN_c01f0078",
+        "classification": {
+          "external": false,
+          "thunk": false,
+          "thunk_target": null,
+          "provenance": "ghidra-function-manager"
+        },
+        "body": {
+          "available": true,
+          "provenance": "ghidra-function-body-address-set",
+          "ranges": [
+            {
+              "start": "0xc01f0078",
+              "end": "0xc01f00a3"
+            }
+          ],
+          "total_bytes": 44,
+          "span_bytes": 44,
+          "non_contiguous": false,
+          "contains_entry": true
+        }
+      },
+      "instructions": [
+        "0xc01f0078: adr r0, [0xc01f00a4]",
+        "0xc01f007a: ldm.w r0, {r10,r11}",
+        "0xc01f007e: add r10, r0",
+        "0xc01f0080: add r11, r0",
+        "0xc01f0082: sub.w r7, r10, #0x1",
+        "0xc01f0086: cmp r10, r11",
+        "0xc01f0088: bne 0xc01f008e",
+        "0xc01f008a: bl 0xc01f01e0",
+        "0xc01f008e: adr.w lr, 0xc01f0087",
+        "0xc01f0092: ldm.w r10, {r0,r1,r2,r3}",
+        "0xc01f0096: tst r3, #0x1",
+        "0xc01f009a: it ne",
+        "0xc01f009c: sub.ne r3, r7, r3",
+        "0xc01f009e: orr r3, r3, #0x1",
+        "0xc01f00a2: bx r3"
+      ],
+      "limitations": [
+        "Instruction text and ordering are Ghidra-specific representations.",
+        "The fast path does not invoke the decompiler or scan whole-program names and strings."
+      ]
+    },
+    "limitations": [
+      "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.",
+      "The imported Program and temporary project are ephemeral and deleted on close. Annotation operations edit session database metadata; original executable bytes are never written.",
+      "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+      "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+      "This fast path reads only the requested function and does not invoke the decompiler or whole-program string/name inventories.",
+      "Instruction text is Ghidra-specific and does not claim textual equivalence with Hopper output.",
+      "Headerless raw-binary analysis uses the caller-supplied architecture and entry address; file offset 0 is mapped at that address. Headers are not discovered from file bytes.",
+      "Little-endian generic Ghidra languages are used for x86, x86_64, arm, arm64, and NMOS 6502. Big-endian, Thumb-only, Cortex-M, 65C02, 65816, and other processor variants are unsupported in this increment.",
+      "Static analysis does not emulate reset vectors, memory-mapped I/O, or firmware boot sequences."
+    ]
+  },
+  {
+    "evidence_id": "ev_053719472faad8194a55ad39cb5f78207792996ebf8e87666481982a0a2fc8aa",
+    "subject": {
+      "name": "e26-loader2.bin",
+      "digest": {
+        "sha256": "1106e8b422f11113212f7c0e99882beace6b65056fdbc07a5ad5741dd6379016"
+      },
+      "local_path": "/tmp/e26-loader2.bin",
+      "format": "raw-binary",
+      "architecture": "arm"
+    },
+    "operation": "batch_decompile",
+    "parameters": {
+      "addresses": [
+        "0xc0030de8",
+        "0xc00306ce"
+      ]
+    },
+    "normalized_result": {
+      "items": [
+        {
+          "address": "0xc0030de8",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc0030de8",
+            "name": "FUN_c0030de8"
+          },
+          "status": "ok",
+          "pseudocode": "\nint FUN_c0030de8(int param_1,int param_2,undefined4 param_3,undefined4 param_4)\n\n{\n  int *piVar1;\n  int iVar2;\n  uint uVar3;\n  undefined4 *puVar4;\n  int iVar5;\n  \n  piVar1 = DAT_c0030e78;\n  uVar3 = FUN_c0035ae4(param_3,*(undefined4 *)(*DAT_c0030e78 + 8),param_3,param_4,param_3,param_4);\n  iVar2 = DAT_c0030e98;\n  do {\n    puVar4 = (undefined4 *)FUN_c0030dd4(param_1);\n    if (puVar4 == (undefined4 *)0x0) {\n      FUN_c0030980(3,s_INS_E_ROM_info__d_c0030ef0,param_1);\n      return iVar2;\n    }\n    if (uVar3 < (uint)puVar4[4]) {\n      FUN_c0030980(3,s_INS_E_ROM_size__d__x__x__c0030ed4,param_1,uVar3,puVar4[4]);\n      return iVar2;\n    }\n    iVar5 = FUN_c00306ce(*puVar4,puVar4[1],puVar4[2],puVar4[3],puVar4[4],param_2);\n    if (iVar5 != 0) {\n      FUN_c0030980(3,s_INS_E_Load_ROM__d__d__c0030f04,param_1,iVar5);\n      return iVar5;\n    }\n    param_1 = puVar4[5];\n    uVar3 = uVar3 - puVar4[4];\n    param_2 = puVar4[4] * *(int *)(*piVar1 + 8) + param_2;\n  } while (param_1 != 0);\n  return 0;\n}\n\n"
+        },
+        {
+          "address": "0xc00306ce",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc00306ce",
+            "name": "FUN_c00306ce"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4\nFUN_c00306ce(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,int param_5\n            ,undefined4 param_6)\n\n{\n  int iVar1;\n  undefined4 uVar2;\n  undefined4 uVar3;\n  int iVar4;\n  undefined4 local_48;\n  undefined4 local_44;\n  undefined4 uStack_40;\n  int local_3c;\n  undefined4 *local_38;\n  undefined4 uStack_34;\n  undefined4 local_30;\n  int *local_2c;\n  int local_28;\n  undefined4 uStack_24;\n  \n  local_3c = 0;\n  iVar4 = param_5;\n  uVar2 = param_6;\n  FUN_c0030980(6,s_BOS_Load_DI__d_PL__d_BK__d_PG__d_c00307dc,param_1,param_2,param_3,param_4,param_5\n               ,param_6);\n  local_38 = &local_48;\n  local_28 = param_5 * *(int *)(DAT_c0030760 + 0xc);\n  uStack_24 = param_6;\n  local_30 = 1;\n  local_2c = &local_28;\n  uVar3 = 0;\n  local_48 = param_1;\n  local_44 = param_2;\n  uStack_40 = param_3;\n  uStack_34 = param_4;\n  iVar1 = FUN_c00323e8(&local_38,param_5,&local_3c,&local_30,*(undefined4 *)(DAT_c0030760 + 8),0);\n  if (((iVar1 == 0) || (iVar1 == -0x20006)) && (param_5 == local_3c)) {\n    uVar2 = 0;\n  }\n  else {\n    FUN_c0030980(3,s_BOS_E_Load_page__d_<_>__X___d_c003080c,param_5,local_3c,iVar1,uVar3,iVar4,uVar2\n                );\n    uVar2 = 0xffffff37;\n  }\n  return uVar2;\n}\n\n"
+        }
+      ],
+      "total": 2,
+      "succeeded": 2,
+      "failed": 0
+    },
+    "limitations": [
+      "Derived by an REA composed workflow.",
+      "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+      "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+      "External functions and functions without an analyzable body return null; other decompiler failures remain explicit.",
+      "External functions and local thunks are distinct; procedure metadata identifies both and preserves a thunk target when Ghidra resolves one.",
+      "Headerless raw-binary analysis uses the caller-supplied architecture and entry address; file offset 0 is mapped at that address. Headers are not discovered from file bytes.",
+      "Little-endian generic Ghidra languages are used for x86, x86_64, arm, arm64, and NMOS 6502. Big-endian, Thumb-only, Cortex-M, 65C02, 65816, and other processor variants are unsupported in this increment.",
+      "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+      "Static analysis does not emulate reset vectors, memory-mapped I/O, or firmware boot sequences.",
+      "The imported Program and temporary project are ephemeral and deleted on close. Annotation operations edit session database metadata; original executable bytes are never written.",
+      "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results."
+    ]
+  },
+  {
+    "evidence_id": "ev_6eb2b622a8460792004e1de9d29b9eb197cb6d21648baa8cb6933bbe0c7ba75d",
+    "subject": {
+      "name": "bootrom.bin",
+      "digest": {
+        "sha256": "81a17e039a2debfe589b127e12384ed4d7c2ba0d0c819238d0b021b466246026"
+      },
+      "local_path": "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/analysis/camera-dumps/updater-20261020-175427/bootrom.bin",
+      "format": "raw-binary",
+      "architecture": "arm"
+    },
+    "operation": "batch_decompile",
+    "parameters": {
+      "addresses": [
+        "0xffff1062",
+        "0xffff0fa0",
+        "0xffff013c"
+      ]
+    },
+    "normalized_result": {
+      "items": [
+        {
+          "address": "0xffff1062",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xffff1062",
+            "name": "FUN_ffff1062"
+          },
+          "status": "ok",
+          "pseudocode": "\nvoid FUN_ffff1062(void)\n\n{\n  uint *puVar1;\n  uint uVar2;\n  int iVar3;\n  int local_1c;\n  int local_18 [3];\n  \n  FUN_ffff0d14();\n  FUN_ffff1584(DAT_ffff12b8,0x40,s_Musashi_Loader1_Ver_01_00_Dec_2_2_ffff1288);\n  FUN_ffff0c98(DAT_ffff12b8);\n  FUN_ffff0cb6(0);\n  FUN_ffff0efc();\n  FUN_ffff0d4c();\n  FUN_ffff0244();\n  *(undefined4 *)(DAT_ffff12bc + 0x20) = 6;\n  puVar1 = DAT_ffff1284;\n  uVar2 = *(uint *)(DAT_ffff12c0 + 0x10) & 1;\n  *DAT_ffff1284 = uVar2;\n  if (uVar2 == 0) {\n    FUN_ffff0cb6(1,0);\n    iVar3 = FUN_ffff028c();\n    if (iVar3 != 0) {\n      FUN_ffff0cb6(1);\n      FUN_ffff0d62(iVar3);\n    }\n    FUN_ffff0cb6(1,2);\n    iVar3 = FUN_ffff02c6();\n    if (iVar3 == 0) {\n      FUN_ffff0cb6(1,3);\n      thunk_EXT_FUN_c0030000();\n    }\n    else {\n      FUN_ffff0cb6(1,4);\n      FUN_ffff0d62(iVar3);\n    }\n  }\n  FUN_ffff0cb6(0,1);\n  FUN_ffff0554();\n  uVar2 = -((*DAT_ffff12c4 << 9) >> 0x1f);\n  puVar1[1] = uVar2;\n  if (uVar2 != 0) {\n    FUN_ffff0cb6(2,0);\n    FUN_ffff0fa0();\n  }\n  FUN_ffff0cb6(0,2);\n  iVar3 = FUN_ffff028c();\n  if (iVar3 != 0) {\n    FUN_ffff0cb6(0,3);\n    FUN_ffff0fa0();\n  }\n  iVar3 = FUN_ffff0332();\n  if (iVar3 != 0) {\n    FUN_ffff0cb6(0,4);\n    FUN_ffff0fa0();\n  }\n  iVar3 = FUN_ffff039c(local_18);\n  if (iVar3 == 1) {\n    FUN_ffff0cb6(0,5);\n    FUN_ffff0fa0();\n  }\n  FUN_ffff0cb6(0,6);\n  local_1c = 0;\n  iVar3 = FUN_ffff0876(&local_1c);\n  if (iVar3 == 0x3001) {\n    FUN_ffff0cb6(0,7);\n    goto LAB_ffff1226;\n  }\n  if (iVar3 == 0) {\n    FUN_ffff0cb6(0,8);\n    iVar3 = FUN_ffff0bd4();\n    if (iVar3 == 0) {\n      FUN_ffff0cb6(0,10);\n      FUN_ffff0d62(0x2004);\n    }\n    iVar3 = FUN_ffff0c52(local_18,8);\n    if (iVar3 != -1) {\n      FUN_ffff0cb6(0,0xe);\n      FUN_ffff1584(DAT_ffff12b8,0x40,s_KEY_f__x_r__x_ffff12c8,local_18[0],local_1c);\n      FUN_ffff0c98(DAT_ffff12b8);\n      FUN_ffff0d62(0x2003);\n      goto LAB_ffff1226;\n    }\n    FUN_ffff0cb6(0,0xb);\n    if (local_18[0] == local_1c) {\n      FUN_ffff0cb6(0,0xc);\n      FUN_ffff0fa0();\n      goto LAB_ffff1226;\n    }\n    FUN_ffff0cb6(0,0xd);\n    FUN_ffff1584(DAT_ffff12b8,0x40,s_KEY_f__x_r__x_ffff12c8,local_18[0],local_1c);\n    FUN_ffff0c98(DAT_ffff12b8);\n    iVar3 = 0x2002;\n  }\n  else {\n    FUN_ffff0cb6(0,9);\n  }\n  FUN_ffff0d62(iVar3);\nLAB_ffff1226:\n  iVar3 = FUN_ffff03de();\n  if (iVar3 != 0) {\n    FUN_ffff0cb6(0,0xf);\n    FUN_ffff0d62(iVar3);\n  }\n  iVar3 = FUN_ffff044e();\n  if (iVar3 == 1) {\n    FUN_ffff0cb6(0,0x10);\n    FUN_ffff0d62(0x2001);\n  }\n  iVar3 = FUN_ffff0486();\n  if (iVar3 == 0) {\n    FUN_ffff0cb6(0,0x11);\n    FUN_ffff0144();\n  }\n  else {\n    FUN_ffff0cb6(0,0x12);\n    FUN_ffff0d62(iVar3);\n  }\n  FUN_ffff0d62(0x2005);\n  return;\n}\n\n"
+        },
+        {
+          "address": "0xffff0fa0",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xffff0fa0",
+            "name": "FUN_ffff0fa0"
+          },
+          "status": "ok",
+          "pseudocode": "\nvoid FUN_ffff0fa0(void)\n\n{\n  int iVar1;\n  undefined4 in_r3;\n  undefined4 local_10;\n  \n  local_10 = in_r3;\n  FUN_ffff0cb6(2,1);\n  if (*(int *)(DAT_ffff1284 + 4) == 0) {\n    FUN_ffff0cb6(2,3);\n    iVar1 = FUN_ffff0bda();\n    if (iVar1 == 1) {\n      FUN_ffff0cb6(2,4);\n      goto LAB_ffff104c;\n    }\n    iVar1 = FUN_ffff0bda();\n    if ((iVar1 == 0) && (iVar1 = FUN_ffff0bd4(), iVar1 == 0)) {\n      FUN_ffff0cb6(2,5);\n    }\n    else {\n      FUN_ffff0cb6(2,6);\n      FUN_ffff0d62(0x1001);\n    }\n  }\n  else {\n    FUN_ffff0cb6(2);\n  }\n  local_10 = 0;\n  iVar1 = FUN_ffff0876(&local_10);\n  if (iVar1 != 0) {\n    FUN_ffff0cb6(2,7);\n    if (iVar1 == 0x3001) {\n      FUN_ffff0cb6(2,8);\n      iVar1 = 0x1001;\n    }\n    FUN_ffff0d62(iVar1);\n  }\n  iVar1 = FUN_ffff0bda();\n  if (iVar1 == 0) {\n    FUN_ffff0cb6(2,9);\n    FUN_ffff0d62(0x1001);\n  }\n  FUN_ffff0cb6(2,10);\nLAB_ffff104c:\n  FUN_ffff0cb6(2,0xb);\n  FUN_ffff0144();\n  FUN_ffff0d62(0x2005);\n  return;\n}\n\n"
+        },
+        {
+          "address": "0xffff013c",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xffff013c",
+            "name": "<EXTERNAL>::thunk_EXT_FUN_c0030000"
+          },
+          "status": "ok",
+          "pseudocode": "\nvoid thunk_EXT_FUN_c0030000(void)\n\n{\n                    /* WARNING: Could not recover jumptable at 0xffff013e. Too many branches */\n                    /* WARNING: Treating indirect jump as call */\n  (*DAT_ffff0140)();\n  return;\n}\n\n"
+        }
+      ],
+      "total": 3,
+      "succeeded": 3,
+      "failed": 0
+    },
+    "limitations": [
+      "Derived by an REA composed workflow.",
+      "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+      "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+      "External functions and functions without an analyzable body return null; other decompiler failures remain explicit.",
+      "External functions and local thunks are distinct; procedure metadata identifies both and preserves a thunk target when Ghidra resolves one.",
+      "Headerless raw-binary analysis uses the caller-supplied architecture and entry address; file offset 0 is mapped at that address. Headers are not discovered from file bytes.",
+      "Little-endian generic Ghidra languages are used for x86, x86_64, arm, arm64, and NMOS 6502. Big-endian, Thumb-only, Cortex-M, 65C02, 65816, and other processor variants are unsupported in this increment.",
+      "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+      "Static analysis does not emulate reset vectors, memory-mapped I/O, or firmware boot sequences.",
+      "The imported Program and temporary project are ephemeral and deleted on close. Annotation operations edit session database metadata; original executable bytes are never written.",
+      "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results."
+    ]
+  },
+  {
+    "evidence_id": "ev_d4c8bb039381f5ef9c85b60f606fcb15ab4c5aa88d408577344a21d2c9924d35",
+    "subject": {
+      "name": "bootrom.bin",
+      "digest": {
+        "sha256": "81a17e039a2debfe589b127e12384ed4d7c2ba0d0c819238d0b021b466246026"
+      },
+      "local_path": "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/analysis/camera-dumps/updater-20261020-175427/bootrom.bin",
+      "format": "raw-binary",
+      "architecture": "arm"
+    },
+    "operation": "batch_decompile",
+    "parameters": {
+      "addresses": [
+        "0xffff028c",
+        "0xffff02c6",
+        "0xffff0144",
+        "0xffff0554"
+      ]
+    },
+    "normalized_result": {
+      "items": [
+        {
+          "address": "0xffff028c",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xffff028c",
+            "name": "FUN_ffff028c"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_ffff028c(void)\n\n{\n  int iVar1;\n  int iVar2;\n  \n  FUN_ffff0cb6(4,1);\n  iVar1 = DAT_ffff0544;\n  *(undefined4 *)(DAT_ffff0544 + 0x24) = 0;\n  iVar2 = FUN_ffff12d8();\n  if (iVar2 != 0) {\n    FUN_ffff0cb6(4,2);\n    return 0x1003;\n  }\n  *(undefined4 *)(iVar1 + 0x24) = 1;\n  *DAT_ffff0538 = DAT_ffff0534;\n  FUN_ffff0cb6(4,3);\n  return 0;\n}\n\n"
+        },
+        {
+          "address": "0xffff02c6",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xffff02c6",
+            "name": "FUN_ffff02c6"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_ffff02c6(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4)\n\n{\n  undefined4 uVar1;\n  int iVar2;\n  \n  uVar1 = DAT_ffff0548;\n  FUN_ffff0cb6(4,0xd,param_3,param_4,param_4);\n  iVar2 = FUN_ffff0150(0,3,0xd,6,uVar1);\n  if (iVar2 != 0) {\n    FUN_ffff0cb6(4,0xe);\n    if (iVar2 == 0x3005) {\n      FUN_ffff0cb6(4,0xf);\n      return 0x1004;\n    }\n    if (iVar2 == 0x3006) {\n      FUN_ffff0cb6(4,0x10);\n      return 0x1005;\n    }\n  }\n  FUN_ffff0cb6(4,0x11);\n  return 0;\n}\n\n"
+        },
+        {
+          "address": "0xffff0144",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xffff0144",
+            "name": "FUN_ffff0144"
+          },
+          "status": "ok",
+          "pseudocode": "\nvoid FUN_ffff0144(void)\n\n{\n                    /* WARNING: Could not recover jumptable at 0xffff0148. Too many branches */\n                    /* WARNING: Treating indirect jump as call */\n  (**(code **)(DAT_ffff014c + 0xc))();\n  return;\n}\n\n"
+        },
+        {
+          "address": "0xffff0554",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xffff0554",
+            "name": "FUN_ffff0554"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_ffff0554(void)\n\n{\n  undefined4 *puVar1;\n  undefined4 uVar2;\n  \n  FUN_ffff0cb6(3,0);\n  puVar1 = DAT_ffff0948;\n  *DAT_ffff0948 = 0;\n  puVar1[1] = 0;\n  puVar1 = DAT_ffff0950;\n  if (*DAT_ffff094c << 10 < 0) {\n    FUN_ffff0cb6(3,1);\n    *puVar1 = 0x4a0;\n    puVar1[1] = 0x38d;\n    puVar1[2] = 0x70a;\n    puVar1[3] = 0x33e;\n    puVar1[4] = 1;\n    uVar2 = DAT_ffff0954;\n    puVar1[5] = DAT_ffff0954;\n    puVar1[6] = uVar2;\n    uVar2 = DAT_ffff0958;\n  }\n  else {\n    FUN_ffff0cb6(3,2);\n    *puVar1 = 0xe74;\n    puVar1[1] = 0xb18;\n    puVar1[2] = 0xf05;\n    puVar1[3] = 0xa23;\n    puVar1[4] = 0x14;\n    uVar2 = DAT_ffff095c;\n    puVar1[5] = DAT_ffff095c;\n    puVar1[6] = uVar2;\n    uVar2 = DAT_ffff0960;\n  }\n  puVar1[7] = uVar2;\n  FUN_ffff0cb6(3);\n  return 0;\n}\n\n"
+        }
+      ],
+      "total": 4,
+      "succeeded": 4,
+      "failed": 0
+    },
+    "limitations": [
+      "Derived by an REA composed workflow.",
+      "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+      "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+      "External functions and functions without an analyzable body return null; other decompiler failures remain explicit.",
+      "External functions and local thunks are distinct; procedure metadata identifies both and preserves a thunk target when Ghidra resolves one.",
+      "Headerless raw-binary analysis uses the caller-supplied architecture and entry address; file offset 0 is mapped at that address. Headers are not discovered from file bytes.",
+      "Little-endian generic Ghidra languages are used for x86, x86_64, arm, arm64, and NMOS 6502. Big-endian, Thumb-only, Cortex-M, 65C02, 65816, and other processor variants are unsupported in this increment.",
+      "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+      "Static analysis does not emulate reset vectors, memory-mapped I/O, or firmware boot sequences.",
+      "The imported Program and temporary project are ephemeral and deleted on close. Annotation operations edit session database metadata; original executable bytes are never written.",
+      "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results."
+    ]
+  },
+  {
+    "evidence_id": "ev_c9748e718850207d18325701672b71af1016eab4613652a26256bfd6e4c80b99",
+    "subject": {
+      "name": "libupdaterbody.so",
+      "digest": {
+        "sha256": "8d1dc242decea362c65c6dcaf320046df93f06e2fc97c547b7b250b2cc3057d6"
+      },
+      "local_path": "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/updater.img_unpacked/bodylib/libupdaterbody.so",
+      "format": "elf",
+      "architecture": "arm"
+    },
+    "operation": "batch_decompile",
+    "parameters": {
+      "addresses": [
+        "0x23c42",
+        "0x2370c",
+        "0x247fc",
+        "0x247d4",
+        "0x2516c"
+      ]
+    },
+    "normalized_result": {
+      "items": [
+        {
+          "address": "0x23c42",
+          "procedure": {
+            "status": "resolved",
+            "address": "0x23c42",
+            "name": "Updater::ThreadPlugin::HasError"
+          },
+          "status": "ok",
+          "pseudocode": "\n/* Updater::ThreadPlugin::HasError() */\n\nThreadPlugin __thiscall Updater::ThreadPlugin::HasError(ThreadPlugin *this)\n\n{\n  ThreadPlugin TVar1;\n  undefined1 auStack_14 [8];\n  \n  FUN_00023c20(auStack_14,this + 0x24);\n  TVar1 = this[0x48];\n  FUN_00023c32(auStack_14);\n  return TVar1;\n}\n\n"
+        },
+        {
+          "address": "0x2370c",
+          "procedure": {
+            "status": "resolved",
+            "address": "0x2370c",
+            "name": "Updater::XmlConfigHandler::HasError"
+          },
+          "status": "ok",
+          "pseudocode": "\n/* Updater::XmlConfigHandler::HasError() */\n\nvoid Updater::XmlConfigHandler::HasError(void)\n\n{\n  int in_r0;\n  ApiException *pAVar1;\n  int *piVar2;\n  \n  piVar2 = *(int **)(in_r0 + 0x14);\n  if (piVar2 == (int *)0x0) {\n    printf(\"UdrAPI,%d,%s:%d,\\\"\\\"\\n\",0x3001a,\"XmlConfigHandler.cpp\",0xba);\n    pAVar1 = (ApiException *)__cxa_allocate_exception(0xc);\n    ApiException::ApiException(pAVar1,0x3001a,0);\n                    /* WARNING: Subroutine does not return */\n    __cxa_throw(pAVar1,&ApiException::typeinfo,ApiException::~ApiException);\n  }\n  (**(code **)(*piVar2 + 0x14))(piVar2);\n  return;\n}\n\n"
+        },
+        {
+          "address": "0x247fc",
+          "procedure": {
+            "status": "resolved",
+            "address": "0x247fc",
+            "name": "Updater::ThreadPlugin::startRoutine"
+          },
+          "status": "ok",
+          "pseudocode": "\n/* Updater::ThreadPlugin::startRoutine(void*) */\n\nundefined4 Updater::ThreadPlugin::startRoutine(void *param_1)\n\n{\n  int iVar1;\n  ApiException *pAVar2;\n  \n  iVar1 = getNode(param_1);\n  if (iVar1 == 0) {\n    printf(\"UdrAPI,%d,%s:%d,\\\"\\\"\\n\",0x3001a,\"Plugin.cpp\",0x161);\n    pAVar2 = (ApiException *)__cxa_allocate_exception(0xc);\n    ApiException::ApiException(pAVar2,0x3001a,0);\n                    /* WARNING: Subroutine does not return */\n    __cxa_throw(pAVar2,&ApiException::typeinfo,ApiException::~ApiException);\n  }\n  Plugin::Execute(*(undefined4 *)((int)param_1 + 4),iVar1);\n  return 0;\n}\n\n"
+        },
+        {
+          "address": "0x247d4",
+          "procedure": {
+            "status": "resolved",
+            "address": "0x247d4",
+            "name": "Updater::ThreadPlugin::setError"
+          },
+          "status": "ok",
+          "pseudocode": "\n/* Updater::ThreadPlugin::setError() */\n\nvoid __thiscall Updater::ThreadPlugin::setError(ThreadPlugin *this)\n\n{\n  undefined1 auStack_14 [8];\n  \n  FUN_00023c20(auStack_14,this + 0x24);\n  this[0x48] = (ThreadPlugin)0x1;\n  FUN_00023c32(auStack_14);\n  return;\n}\n\n"
+        },
+        {
+          "address": "0x2516c",
+          "procedure": {
+            "status": "resolved",
+            "address": "0x2516c",
+            "name": "Updater::FlagFirmwareInformationHandler::CompleteUpdate"
+          },
+          "status": "ok",
+          "pseudocode": "\n/* Updater::FlagFirmwareInformationHandler::CompleteUpdate(UpdaterAPI::firmware_information_t::information\n   const&) */\n\nvoid __thiscall\nUpdater::FlagFirmwareInformationHandler::CompleteUpdate\n          (FlagFirmwareInformationHandler *this,information *param_1)\n\n{\n  int iVar1;\n  undefined4 uVar2;\n  information local_f0 [4];\n  int local_ec;\n  int local_e8;\n  int local_e4;\n  int local_e0;\n  MountPoint aMStack_d4 [24];\n  ModeFlagFile aMStack_bc [20];\n  CompleteFlagFile aCStack_a8 [20];\n  Mode6FlagFile aMStack_94 [20];\n  Mode5FlagFile aMStack_80 [20];\n  Mode3FlagFile aMStack_6c [20];\n  Mode2FlagFile aMStack_58 [20];\n  Mode1FlagFile aMStack_44 [20];\n  StringHandler aSStack_30 [16];\n  int local_20;\n  int local_1c [2];\n  \n  iVar1 = (**(code **)(*(int *)this + 0x2c))();\n  if (iVar1 == 0) {\n    Updater::MountPoint::MountPoint(aMStack_d4);\n    Updater::MountPoint::Initialize((char *)aMStack_d4);\n    if (*param_1 != (information)0x0) {\n      iVar1 = Updater::MountPoint::Mount((char *)aMStack_d4,0x26e8f);\n      if (iVar1 == 0) {\n        printf(\"UdrAPI,%d,%s:%d,\\\"%s\\\"\\n\",0x3000e,\"FlagFirmwareInformationHandler.cpp\",0xb3,\n               \"/dev/nflasha1\");\n        uVar2 = __cxa_allocate_exception(0xc);\n        FUN_00024b6c(uVar2,0x3000e);\n                    /* WARNING: Subroutine does not return */\n        __cxa_throw(uVar2,&ApiException::typeinfo,ApiException::~ApiException);\n      }\n      iVar1 = (**(code **)(*(int *)this + 0x28))(this);\n      if (iVar1 != 0) {\n        (**(code **)(*(int *)this + 0x24))\n                  (this,*(undefined4 *)(param_1 + 0xc),*(undefined4 *)(param_1 + 0x10));\n      }\n      iVar1 = Updater::MountPoint::Umount();\n      if (iVar1 == 0) {\n        printf(\"UdrAPI,%d,%s:%d,\\\"%s\\\"\\n\",0x3000f,\"FlagFirmwareInformationHandler.cpp\",0xbb,\n               \"/tmp_updater/updater/current\");\n        uVar2 = __cxa_allocate_exception(0xc);\n        FUN_00024b6c(uVar2,0x3000f);\n                    /* WARNING: Subroutine does not return */\n        __cxa_throw(uVar2,&ApiException::typeinfo,ApiException::~ApiException);\n      }\n      if (*param_1 != (information)0x0) {\n        iVar1 = Updater::MountPoint::Mount((char *)aMStack_d4,0x26434);\n        if (iVar1 == 0) {\n          printf(\"UdrAPI,%d,%s:%d,\\\"%s\\\"\\n\",0x3000e,\"FlagFirmwareInformationHandler.cpp\",0xc2,\n                 \"/dev/nflasha2\");\n          uVar2 = __cxa_allocate_exception(0xc);\n          FUN_00024b6c(uVar2,0x3000e);\n                    /* WARNING: Subroutine does not return */\n          __cxa_throw(uVar2,&ApiException::typeinfo,ApiException::~ApiException);\n        }\n        Updater::StringHandler::StringHandler(aSStack_30);\n        Updater::StringHandler::SetString((char *)aSStack_30,\"/tmp_updater/updater/current\",\"/\");\n        Updater::DirectoryHandler::Create(aSStack_30);\n        (**(code **)(*(int *)this + 0x1c))(this,*(uint *)(param_1 + 8) | *(int *)(param_1 + 4) << 8)\n        ;\n        iVar1 = Updater::MountPoint::Umount();\n        if (iVar1 == 0) {\n          printf(\"UdrAPI,%d,%s:%d,\\\"%s\\\"\\n\",0x3000f,\"FlagFirmwareInformationHandler.cpp\",0xce,\n                 \"/tmp_updater/updater/current\");\n          uVar2 = __cxa_allocate_exception(0xc);\n          FUN_00024b6c(uVar2,0x3000f);\n                    /* WARNING: Subroutine does not return */\n          __cxa_throw(uVar2,&ApiException::typeinfo,ApiException::~ApiException);\n        }\n        if ((*(int *)(this + 4) == 3) || (*(int *)(this + 4) == 5)) {\n          iVar1 = Updater::MountPoint::Mount((char *)aMStack_d4,0x26434);\n          if (iVar1 == 0) {\n            printf(\"UdrAPI,%d,%s:%d,\\\"%s\\\"\\n\",0x3000e,\"FlagFirmwareInformationHandler.cpp\",0xdc,\n                   \"/dev/nflasha2\");\n            uVar2 = __cxa_allocate_exception(0xc);\n            FUN_00024b6c(uVar2,0x3000e);\n                    /* WARNING: Subroutine does not return */\n            __cxa_throw(uVar2,&ApiException::typeinfo,ApiException::~ApiException);\n          }\n          local_1c[0] = 0;\n          local_20 = 0;\n          (**(code **)(*(int *)this + 0x18))(this,local_1c,&local_20);\n          iVar1 = Updater::MountPoint::Umount();\n          if (iVar1 == 0) {\n            printf(\"UdrAPI,%d,%s:%d,\\\"%s\\\"\\n\",0x3000f,\"FlagFirmwareInformationHandler.cpp\",0xe1,\n                   \"/tmp_updater/updater/current\");\n            uVar2 = __cxa_allocate_exception(0xc);\n            FUN_00024b6c(uVar2,0x3000f);\n                    /* WARNING: Subroutine does not return */\n            __cxa_throw(uVar2,&ApiException::typeinfo,ApiException::~ApiException);\n          }\n          if ((local_1c[0] != *(int *)(param_1 + 4)) || (local_20 != *(int *)(param_1 + 8))) {\n            printf(\"UdrAPI,%d,%s:%d,\\\"\\\"\\n\",0x30004,\"FlagFirmwareInformationHandler.cpp\",0xe4);\n            uVar2 = __cxa_allocate_exception(0xc);\n            FUN_00024b6c(uVar2,0x30004);\n                    /* WARNING: Subroutine does not return */\n            __cxa_throw(uVar2,&ApiException::typeinfo,ApiException::~ApiException);\n          }\n        }\n        else {\n          UpdaterAPI::firmware_information_t::information::information(local_f0);\n          (**(code **)(*(int *)this + 0x14))(this,local_f0);\n          if ((((local_f0[0] == (information)0x0) || (local_ec != *(int *)(param_1 + 4))) ||\n              (local_e8 != *(int *)(param_1 + 8))) ||\n             ((local_e4 != *(int *)(param_1 + 0xc) || (local_e0 != *(int *)(param_1 + 0x10))))) {\n            printf(\"UdrAPI,%d,%s:%d,\\\"\\\"\\n\",0x30004,\"FlagFirmwareInformationHandler.cpp\",0xd8);\n            uVar2 = __cxa_allocate_exception(0xc);\n            FUN_00024b6c(uVar2,0x30004);\n                    /* WARNING: Subroutine does not return */\n            __cxa_throw(uVar2,&ApiException::typeinfo,ApiException::~ApiException);\n          }\n        }\n        Updater::StringHandler::~StringHandler(aSStack_30);\n      }\n    }\n    iVar1 = Updater::MountPoint::Mount((char *)aMStack_d4,0x26434);\n    if (iVar1 == 0) {\n      printf(\"UdrAPI,%d,%s:%d,\\\"%s\\\"\\n\",0x3000e,\"FlagFirmwareInformationHandler.cpp\",0xec,\n             \"/dev/nflasha2\");\n      uVar2 = __cxa_allocate_exception(0xc);\n      FUN_00024b6c(uVar2,0x3000e);\n                    /* WARNING: Subroutine does not return */\n      __cxa_throw(uVar2,&ApiException::typeinfo,ApiException::~ApiException);\n    }\n    Updater::Mode1FlagFile::Mode1FlagFile(aMStack_44,\"/tmp_updater/updater/current\");\n    iVar1 = Updater::BaseFlagFile::IsValid();\n    if (iVar1 != 0) {\n      Updater::BaseFlagFile::Delete();\n    }\n    Updater::Mode2FlagFile::Mode2FlagFile(aMStack_58,\"/tmp_updater/updater/current\");\n    iVar1 = Updater::BaseFlagFile::IsValid();\n    if (iVar1 != 0) {\n      Updater::BaseFlagFile::Delete();\n    }\n    Updater::Mode3FlagFile::Mode3FlagFile(aMStack_6c,\"/tmp_updater/updater/current\");\n    iVar1 = Updater::BaseFlagFile::IsValid();\n    if (iVar1 != 0) {\n      Updater::BaseFlagFile::Delete();\n    }\n    Updater::Mode5FlagFile::Mode5FlagFile(aMStack_80,\"/tmp_updater/updater/current\");\n    iVar1 = Updater::BaseFlagFile::IsValid();\n    if (iVar1 != 0) {\n      Updater::BaseFlagFile::Delete();\n    }\n    Updater::Mode6FlagFile::Mode6FlagFile(aMStack_94,\"/tmp_updater/updater/current\");\n    iVar1 = Updater::BaseFlagFile::IsValid();\n    if (iVar1 != 0) {\n      Updater::BaseFlagFile::Delete();\n    }\n    Updater::CompleteFlagFile::CompleteFlagFile(aCStack_a8,\"/tmp_updater/updater/current\");\n    Updater::BaseFlagFile::Create();\n    Updater::ModeFlagFile::ModeFlagFile(aMStack_bc,\"/tmp_updater/updater/current\");\n    Updater::BaseFlagFile::Delete();\n    iVar1 = Updater::MountPoint::Umount();\n    if (iVar1 == 0) {\n      printf(\"UdrAPI,%d,%s:%d,\\\"%s\\\"\\n\",0x3000f,\"FlagFirmwareInformationHandler.cpp\",0x10a,\n             \"/tmp_updater/updater/current\");\n      uVar2 = __cxa_allocate_exception(0xc);\n      FUN_00024b6c(uVar2,0x3000f);\n                    /* WARNING: Subroutine does not return */\n      __cxa_throw(uVar2,&ApiException::typeinfo,ApiException::~ApiException);\n    }\n    ModeFlagFile::~ModeFlagFile(aMStack_bc);\n    CompleteFlagFile::~CompleteFlagFile(aCStack_a8);\n    Mode6FlagFile::~Mode6FlagFile(aMStack_94);\n    Mode5FlagFile::~Mode5FlagFile(aMStack_80);\n    Mode3FlagFile::~Mode3FlagFile(aMStack_6c);\n    Mode2FlagFile::~Mode2FlagFile(aMStack_58);\n    Mode1FlagFile::~Mode1FlagFile(aMStack_44);\n    Updater::MountPoint::~MountPoint(aMStack_d4);\n  }\n  return;\n}\n\n"
+        }
+      ],
+      "total": 5,
+      "succeeded": 5,
+      "failed": 0
+    },
+    "limitations": [
+      "Derived by an REA composed workflow.",
+      "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+      "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+      "External functions and functions without an analyzable body return null; other decompiler failures remain explicit.",
+      "External functions and local thunks are distinct; procedure metadata identifies both and preserves a thunk target when Ghidra resolves one.",
+      "Ghidra Listing reports a terminal call at 0x23742 to 0x1decc <EXTERNAL>::__cxa_throw (external=false, thunk=true, hasNoReturn=true); fallthrough is excluded by Ghidra's flow model. This records Ghidra's FunctionManager flag, not an independent verification that the callee cannot return.",
+      "Ghidra Listing reports a terminal call at 0x2483c to 0x1decc <EXTERNAL>::__cxa_throw (external=false, thunk=true, hasNoReturn=true); fallthrough is excluded by Ghidra's flow model. This records Ghidra's FunctionManager flag, not an independent verification that the callee cannot return.",
+      "Ghidra Listing reports a terminal call at 0x251e2 to 0x1decc <EXTERNAL>::__cxa_throw (external=false, thunk=true, hasNoReturn=true); fallthrough is excluded by Ghidra's flow model. This records Ghidra's FunctionManager flag, not an independent verification that the callee cannot return.",
+      "Ghidra Listing reports a terminal call at 0x25234 to 0x1decc <EXTERNAL>::__cxa_throw (external=false, thunk=true, hasNoReturn=true); fallthrough is excluded by Ghidra's flow model. This records Ghidra's FunctionManager flag, not an independent verification that the callee cannot return.",
+      "Ghidra Listing reports a terminal call at 0x25280 to 0x1decc <EXTERNAL>::__cxa_throw (external=false, thunk=true, hasNoReturn=true); fallthrough is excluded by Ghidra's flow model. This records Ghidra's FunctionManager flag, not an independent verification that the callee cannot return.",
+      "Ghidra Listing reports a terminal call at 0x252f0 to 0x1decc <EXTERNAL>::__cxa_throw (external=false, thunk=true, hasNoReturn=true); fallthrough is excluded by Ghidra's flow model. This records Ghidra's FunctionManager flag, not an independent verification that the callee cannot return.",
+      "Ghidra Listing reports a terminal call at 0x2535c to 0x1decc <EXTERNAL>::__cxa_throw (external=false, thunk=true, hasNoReturn=true); fallthrough is excluded by Ghidra's flow model. This records Ghidra's FunctionManager flag, not an independent verification that the callee cannot return.",
+      "Ghidra Listing reports a terminal call at 0x253a0 to 0x1decc <EXTERNAL>::__cxa_throw (external=false, thunk=true, hasNoReturn=true); fallthrough is excluded by Ghidra's flow model. This records Ghidra's FunctionManager flag, not an independent verification that the callee cannot return.",
+      "Ghidra Listing reports a terminal call at 0x253f6 to 0x1decc <EXTERNAL>::__cxa_throw (external=false, thunk=true, hasNoReturn=true); fallthrough is excluded by Ghidra's flow model. This records Ghidra's FunctionManager flag, not an independent verification that the callee cannot return.",
+      "Ghidra Listing reports a terminal call at 0x25436 to 0x1decc <EXTERNAL>::__cxa_throw (external=false, thunk=true, hasNoReturn=true); fallthrough is excluded by Ghidra's flow model. This records Ghidra's FunctionManager flag, not an independent verification that the callee cannot return.",
+      "Ghidra Listing reports a terminal call at 0x25510 to 0x1decc <EXTERNAL>::__cxa_throw (external=false, thunk=true, hasNoReturn=true); fallthrough is excluded by Ghidra's flow model. This records Ghidra's FunctionManager flag, not an independent verification that the callee cannot return.",
+      "Ghidra Listing reports a terminal call at 0x2560c to 0x1decc <EXTERNAL>::__cxa_throw (external=false, thunk=true, hasNoReturn=true); fallthrough is excluded by Ghidra's flow model. This records Ghidra's FunctionManager flag, not an independent verification that the callee cannot return.",
+      "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+      "The imported Program and temporary project are ephemeral and deleted on close. Annotation operations edit session database metadata; original executable bytes are never written.",
+      "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results."
+    ]
+  },
+  {
+    "evidence_id": "ev_967391f52536eb7bd477e07ce8c7e3d86fbf1e81ecc807673d80ddb73667860b",
+    "subject": {
+      "name": "libupdaterbody.so",
+      "digest": {
+        "sha256": "8d1dc242decea362c65c6dcaf320046df93f06e2fc97c547b7b250b2cc3057d6"
+      },
+      "local_path": "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/updater.img_unpacked/bodylib/libupdaterbody.so",
+      "format": "elf",
+      "architecture": "arm"
+    },
+    "operation": "read_function_instructions",
+    "parameters": {
+      "procedure": "0x247fc"
+    },
+    "normalized_result": {
+      "procedure": {
+        "address": "0x247fc",
+        "name": "Updater::ThreadPlugin::startRoutine",
+        "classification": {
+          "external": false,
+          "thunk": false,
+          "thunk_target": null,
+          "provenance": "ghidra-function-manager"
+        },
+        "body": {
+          "available": true,
+          "provenance": "ghidra-function-body-address-set",
+          "ranges": [
+            {
+              "start": "0x247fc",
+              "end": "0x2484f"
+            }
+          ],
+          "total_bytes": 84,
+          "span_bytes": 84,
+          "non_contiguous": false,
+          "contains_entry": true
+        }
+      },
+      "instructions": [
+        "0x247fc: push {r4,r5,r6,r7,lr}",
+        "0x247fe: sub sp, #0x14",
+        "0x24800: ldr r5, [0x000248d4]",
+        "0x24802: add r7, sp,#0x0",
+        "0x24804: mov r4, r0",
+        "0x24806: add r5, pc",
+        "0x24808: blx 0x0001d60c",
+        "0x2480c: mov r1, r0",
+        "0x2480e: cbnz r0, 0x00024840",
+        "0x24810: ldr r0, [0x000248d8]",
+        "0x24812: movw r3, #0x161",
+        "0x24816: ldr r2, [0x000248dc]",
+        "0x24818: add r0, pc",
+        "0x2481a: ldr r1, [0x000248c8]",
+        "0x2481c: add r2, pc",
+        "0x2481e: blx 0x0001db5c",
+        "0x24822: movs r0, #0xc",
+        "0x24824: blx 0x0001dda0",
+        "0x24828: ldr r1, [0x000248c8]",
+        "0x2482a: movs r2, #0x0",
+        "0x2482c: mov r6, r0",
+        "0x2482e: blx 0x0001d810",
+        "0x24832: ldr r3, [0x000248e0]",
+        "0x24834: mov r0, r6",
+        "0x24836: ldr r1, [r5,r3]",
+        "0x24838: ldr r3, [0x000248e4]",
+        "0x2483a: ldr r2, [r5,r3]",
+        "0x2483c: blx 0x0001decc",
+        "0x24840: ldr r0, [r4,#0x4]",
+        "0x24842: blx 0x0001dc88",
+        "0x24846: movs r0, #0x0",
+        "0x24848: add.w r7, r7, #0x14",
+        "0x2484c: mov sp, r7",
+        "0x2484e: pop {r4,r5,r6,r7,pc}"
+      ],
+      "limitations": [
+        "Instruction text and ordering are Ghidra-specific representations.",
+        "The fast path does not invoke the decompiler or scan whole-program names and strings.",
+        "Ghidra Listing reports a terminal call at 0x2483c to 0x1decc <EXTERNAL>::__cxa_throw (external=false, thunk=true, hasNoReturn=true); fallthrough is excluded by Ghidra's flow model. This records Ghidra's FunctionManager flag, not an independent verification that the callee cannot return."
+      ]
+    },
+    "limitations": [
+      "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.",
+      "The imported Program and temporary project are ephemeral and deleted on close. Annotation operations edit session database metadata; original executable bytes are never written.",
+      "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+      "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+      "This fast path reads only the requested function and does not invoke the decompiler or whole-program string/name inventories.",
+      "Instruction text is Ghidra-specific and does not claim textual equivalence with Hopper output.",
+      "Ghidra Listing reports a terminal call at 0x2483c to 0x1decc <EXTERNAL>::__cxa_throw (external=false, thunk=true, hasNoReturn=true); fallthrough is excluded by Ghidra's flow model. This records Ghidra's FunctionManager flag, not an independent verification that the callee cannot return."
+    ]
+  },
+  {
+    "evidence_id": "ev_f4dba7c80f2dccb1f258dc5dd87f75823066eb91f890ab06ae6f32e638d588b6",
+    "subject": {
+      "name": "libupdatercommon.so",
+      "digest": {
+        "sha256": "56d9f46e17fedee057873abfb898303c271a01c3c8e69aff73290a676be663eb"
+      },
+      "local_path": "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/updater.img_unpacked/usr/lib/libupdatercommon.so",
+      "format": "elf",
+      "architecture": "arm"
+    },
+    "operation": "batch_decompile",
+    "parameters": {
+      "addresses": [
+        "0x1633c",
+        "0x16444",
+        "0x161b4",
+        "0x16220",
+        "0x15354"
+      ]
+    },
+    "normalized_result": {
+      "items": [
+        {
+          "address": "0x1633c",
+          "procedure": {
+            "status": "resolved",
+            "address": "0x1633c",
+            "name": "Updater::ModeFlagFile::ModeFlagFile"
+          },
+          "status": "ok",
+          "pseudocode": "\n/* Updater::ModeFlagFile::ModeFlagFile(char const*) */\n\nModeFlagFile * __thiscall Updater::ModeFlagFile::ModeFlagFile(ModeFlagFile *this,char *param_1)\n\n{\n  BaseFlagFile::BaseFlagFile((BaseFlagFile *)this,param_1,\"updater/mode\");\n  *(undefined ***)this = &PTR_Create_000182b8;\n  return this;\n}\n\n"
+        },
+        {
+          "address": "0x16444",
+          "procedure": {
+            "status": "resolved",
+            "address": "0x16444",
+            "name": "Updater::CompleteFlagFile::CompleteFlagFile"
+          },
+          "status": "ok",
+          "pseudocode": "\n/* Updater::CompleteFlagFile::CompleteFlagFile(char const*) */\n\nCompleteFlagFile * __thiscall\nUpdater::CompleteFlagFile::CompleteFlagFile(CompleteFlagFile *this,char *param_1)\n\n{\n  BaseFlagFile::BaseFlagFile((BaseFlagFile *)this,param_1,\"updater/comp\");\n  *(undefined ***)this = &PTR_Create_00018198;\n  return this;\n}\n\n"
+        },
+        {
+          "address": "0x161b4",
+          "procedure": {
+            "status": "resolved",
+            "address": "0x161b4",
+            "name": "Updater::BaseFlagFile::Delete"
+          },
+          "status": "ok",
+          "pseudocode": "\n/* Updater::BaseFlagFile::Delete() */\n\nvoid __thiscall Updater::BaseFlagFile::Delete(BaseFlagFile *this)\n\n{\n  char *__name;\n  int iVar1;\n  undefined4 uVar2;\n  ApiException *pAVar3;\n  \n  __name = (char *)StringHandler::GetCharString((StringHandler *)(this + 4));\n  iVar1 = unlink(__name);\n  if (iVar1 != 0) {\n    uVar2 = StringHandler::GetCharString((StringHandler *)(this + 4));\n    printf(\"UdrAPI,%d,%s:%d,\\\"%s\\\"\\n\",0x30003,\"FlagFiles.cpp\",0x31,uVar2);\n    pAVar3 = (ApiException *)__cxa_allocate_exception(0xc);\n    ApiException::ApiException(pAVar3,0x30003,0);\n                    /* WARNING: Subroutine does not return */\n    __cxa_throw(pAVar3,&ApiException::typeinfo,ApiException::~ApiException);\n  }\n  return;\n}\n\n"
+        },
+        {
+          "address": "0x16220",
+          "procedure": {
+            "status": "resolved",
+            "address": "0x16220",
+            "name": "Updater::BaseFlagFile::Create"
+          },
+          "status": "ok",
+          "pseudocode": "\n/* Updater::BaseFlagFile::Create() */\n\nvoid __thiscall Updater::BaseFlagFile::Create(BaseFlagFile *this)\n\n{\n  char *__file;\n  int iVar1;\n  undefined4 uVar2;\n  int iVar3;\n  ApiException *pAVar4;\n  undefined4 uVar5;\n  StringHandler *this_00;\n  \n  this_00 = (StringHandler *)(this + 4);\n  __file = (char *)StringHandler::GetCharString(this_00);\n  iVar1 = open(__file,0x1241);\n  if (iVar1 == -1) {\n    uVar2 = StringHandler::GetCharString(this_00);\n    uVar5 = 0x1d;\n  }\n  else {\n    iVar3 = fsync(iVar1);\n    if (iVar3 == 0) {\n      iVar1 = close(iVar1);\n      if (iVar1 != 0) {\n        uVar2 = StringHandler::GetCharString(this_00);\n        printf(\"UdrAPI,%d,%s:%d,\\\"%s\\\"\\n\",0x30003,\"FlagFiles.cpp\",0x25,uVar2);\n      }\n      return;\n    }\n    close(iVar1);\n    uVar2 = StringHandler::GetCharString(this_00);\n    uVar5 = 0x22;\n  }\n  printf(\"UdrAPI,%d,%s:%d,\\\"%s\\\"\\n\",0x30003,\"FlagFiles.cpp\",uVar5,uVar2);\n  pAVar4 = (ApiException *)__cxa_allocate_exception(0xc);\n  ApiException::ApiException(pAVar4,0x30003,0);\n                    /* WARNING: Subroutine does not return */\n  __cxa_throw(pAVar4,&ApiException::typeinfo,ApiException::~ApiException);\n}\n\n"
+        },
+        {
+          "address": "0x15354",
+          "procedure": {
+            "status": "resolved",
+            "address": "0x15354",
+            "name": "Updater::MountPoint::Umount"
+          },
+          "status": "ok",
+          "pseudocode": "\n/* Updater::MountPoint::Umount() */\n\nundefined4 __thiscall Updater::MountPoint::Umount(MountPoint *this)\n\n{\n  char *__special_file;\n  int iVar1;\n  \n  __special_file = (char *)StringHandler::GetCharString((StringHandler *)(this + 4));\n  iVar1 = umount(__special_file);\n  if (iVar1 == 0) {\n    this[0x14] = (MountPoint)0x0;\n    return 1;\n  }\n  return 0;\n}\n\n"
+        }
+      ],
+      "total": 5,
+      "succeeded": 5,
+      "failed": 0
+    },
+    "limitations": [
+      "Derived by an REA composed workflow.",
+      "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+      "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+      "External functions and functions without an analyzable body return null; other decompiler failures remain explicit.",
+      "External functions and local thunks are distinct; procedure metadata identifies both and preserves a thunk target when Ghidra resolves one.",
+      "Ghidra Listing reports a terminal call at 0x16202 to 0x14b5c <EXTERNAL>::__cxa_throw (external=false, thunk=true, hasNoReturn=true); fallthrough is excluded by Ghidra's flow model. This records Ghidra's FunctionManager flag, not an independent verification that the callee cannot return.",
+      "Ghidra Listing reports a terminal call at 0x1629c to 0x14b5c <EXTERNAL>::__cxa_throw (external=false, thunk=true, hasNoReturn=true); fallthrough is excluded by Ghidra's flow model. This records Ghidra's FunctionManager flag, not an independent verification that the callee cannot return.",
+      "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+      "The imported Program and temporary project are ephemeral and deleted on close. Annotation operations edit session database metadata; original executable bytes are never written.",
+      "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results."
+    ]
+  },
+  {
+    "evidence_id": "ev_b60ee563b2205a0100c1f96b4907f900529eb1d9686085e8a100e56a0f51bb10",
+    "subject": {
+      "name": "libsenupdater.so",
+      "digest": {
+        "sha256": "3683de6c998876e67c6e16b5137d65dd7c8fd6ba207ade4726bb950d2d1e2e1d"
+      },
+      "local_path": "/tmp/e26-initrd-r5-files/usr/lib/libsenupdater.so",
+      "format": "elf",
+      "architecture": "arm"
+    },
+    "operation": "batch_decompile",
+    "parameters": {
+      "addresses": [
+        "0x11b28",
+        "0x1199e",
+        "0x11940"
+      ]
+    },
+    "normalized_result": {
+      "items": [
+        {
+          "address": "0x11b28",
+          "procedure": {
+            "status": "resolved",
+            "address": "0x11b28",
+            "name": "Updater::SenserUpdaterIF::complete"
+          },
+          "status": "ok",
+          "pseudocode": "\n/* Updater::SenserUpdaterIF::complete() */\n\nvoid __thiscall Updater::SenserUpdaterIF::complete(SenserUpdaterIF *this)\n\n{\n  int iVar1;\n  \n  iVar1 = receiveReturnCode(this,300000);\n  if (iVar1 == 0) {\n    setResult(this,'U');\n    return;\n  }\n  if (this[0x14] != (SenserUpdaterIF)0x2) {\n    return;\n  }\n  Status::SetNumerator((Status *)&DAT_0001a520,0x99);\n  return;\n}\n\n"
+        },
+        {
+          "address": "0x1199e",
+          "procedure": {
+            "status": "resolved",
+            "address": "0x1199e",
+            "name": "Updater::Status::Get"
+          },
+          "status": "ok",
+          "pseudocode": "\n/* Updater::Status::Get() */\n\nundefined4 __thiscall Updater::Status::Get(Status *this)\n\n{\n  undefined4 uVar1;\n  undefined1 auStack_14 [8];\n  \n  FUN_00011856(auStack_14,this);\n  uVar1 = *(undefined4 *)(this + 0x18);\n  FUN_00011868(auStack_14);\n  return uVar1;\n}\n\n"
+        },
+        {
+          "address": "0x11940",
+          "procedure": {
+            "status": "resolved",
+            "address": "0x11940",
+            "name": "Updater::Status::SetResultCode"
+          },
+          "status": "ok",
+          "pseudocode": "\n/* Updater::Status::SetResultCode(unsigned char) */\n\nvoid __thiscall Updater::Status::SetResultCode(Status *this,uchar param_1)\n\n{\n  undefined1 auStack_14 [4];\n  \n  FUN_00011856(auStack_14,this);\n  this[0x18] = (Status)param_1;\n  FUN_00011868(auStack_14);\n  return;\n}\n\n"
+        }
+      ],
+      "total": 3,
+      "succeeded": 3,
+      "failed": 0
+    },
+    "limitations": [
+      "Derived by an REA composed workflow.",
+      "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+      "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+      "External functions and functions without an analyzable body return null; other decompiler failures remain explicit.",
+      "External functions and local thunks are distinct; procedure metadata identifies both and preserves a thunk target when Ghidra resolves one.",
+      "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+      "The imported Program and temporary project are ephemeral and deleted on close. Annotation operations edit session database metadata; original executable bytes are never written.",
+      "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results."
+    ]
+  },
+  {
+    "evidence_id": "ev_45ffa1fb258c7e61ce0e7a29cb3696be07ac604f253e8e05d47926ee4c7ced17",
+    "subject": {
+      "name": "e26-loader3.bin",
+      "digest": {
+        "sha256": "8fd98a4140bf85f955c994ea263c4a295846e049121b593c0a823aec01620c07"
+      },
+      "local_path": "/tmp/e26-loader3.bin",
+      "format": "raw-binary",
+      "architecture": "arm"
+    },
+    "operation": "batch_decompile",
+    "parameters": {
+      "addresses": [
+        "0xc01f0000",
+        "0xc01f159a",
+        "0xc01f1de6",
+        "0xc01f1312",
+        "0xc01f1378",
+        "0xc01f068a"
+      ]
+    },
+    "normalized_result": {
+      "items": [
+        {
+          "address": "0xc01f0000",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f0000",
+            "name": "thunk_FUN_c01f0028"
+          },
+          "status": "ok",
+          "pseudocode": "\nvoid thunk_FUN_c01f0028(void)\n\n{\n  int iVar1;\n  code *UNRECOVERED_JUMPTABLE;\n  int iVar2;\n  undefined4 *puVar3;\n  \n  FUN_c020e090();\n  FUN_c020e024();\n  FUN_c01f0078();\n  FUN_c01f01e0();\n  iVar1 = DAT_c01f00a4;\n  puVar3 = (undefined4 *)((int)&DAT_c01f00a4 + DAT_c01f00a4);\n  iVar2 = DAT_c01f00a4 + -0x3fe0ff5d;\n  if (puVar3 == (undefined4 *)((int)&DAT_c01f00a4 + DAT_c01f00a8)) {\n    FUN_c01f01e0();\n  }\n  UNRECOVERED_JUMPTABLE = *(code **)(iVar1 + -0x3fe0ff50);\n  if (((uint)UNRECOVERED_JUMPTABLE & 1) != 0) {\n    UNRECOVERED_JUMPTABLE = (code *)(iVar2 - (int)UNRECOVERED_JUMPTABLE);\n  }\n                    /* WARNING: Could not recover jumptable at 0xc01f00a2. Too many branches */\n                    /* WARNING: Treating indirect jump as call */\n  (*UNRECOVERED_JUMPTABLE)\n            (*puVar3,*(undefined4 *)((int)&DAT_c01f00a8 + iVar1),\n             *(undefined4 *)(iVar1 + -0x3fe0ff54));\n  return;\n}\n\n"
+        },
+        {
+          "address": "0xc01f159a",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f159a",
+            "name": "FUN_c01f159a"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_c01f159a(void)\n\n{\n  int iVar1;\n  \n  FUN_c01f3670(5,s_BOM_chk_updater_c01f1974);\n  iVar1 = FUN_c01f3eb6(2);\n  if (iVar1 == 0) {\n    iVar1 = FUN_c01f44c6(s__updater_mode_c01f19a4);\n    if (-1 < iVar1) {\n      return 1;\n    }\n  }\n  else {\n    FUN_c01f3670(3,s_BOM_E__s___d__c01f1994,s_fat_mount_c01f1988);\n  }\n  return 0;\n}\n\n"
+        },
+        {
+          "address": "0xc01f1de6",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f1de6",
+            "name": "FUN_c01f1de6"
+          },
+          "status": "ok",
+          "pseudocode": "\nlonglong FUN_c01f1de6(void)\n\n{\n  int iVar1;\n  uint uVar2;\n  uint in_r3;\n  uint uVar3;\n  bool bVar4;\n  uint local_20;\n  int local_1c;\n  uint local_18;\n  \n  local_20 = 1;\n  local_1c = 0;\n  local_18 = in_r3;\n  iVar1 = FUN_c01f50f4();\n  if ((iVar1 != 2) || (iVar1 = FUN_c01f159a(), uVar3 = local_20, iVar1 != 0)) {\n    iVar1 = FUN_c01f498c(DAT_c01f1ef4 + -8,&local_1c);\n    if (iVar1 < 0) {\n      local_1c = 0;\n    }\n    iVar1 = FUN_c01f159a();\n    if (iVar1 == 0) {\n      iVar1 = FUN_c01f1d6a();\n      uVar3 = 5;\n      bVar4 = iVar1 == 0;\n      do {\n        do {\n          if (!bVar4) goto LAB_c01f2122;\n          iVar1 = FUN_c01f1c70();\n          bVar4 = iVar1 == 0;\n        } while (!bVar4);\n        local_18 = local_18 & 0xffffff00;\n        iVar1 = FUN_c01f498c(DAT_c01f1ef4 + 0x20,&local_18);\n        if ((-1 < iVar1) && ((local_18 & 0xff) != 0)) {\n          FUN_c01f3670(5,s_BOM_chk_reboot_c01f2000);\n          iVar1 = FUN_c01f5e74();\n          if (iVar1 != 0) {\n            uVar3 = 8;\n            goto LAB_c01f2122;\n          }\n        }\n        iVar1 = FUN_c01f281e();\n        if (iVar1 != 0) {\n          uVar3 = 0xc;\n          goto LAB_c01f2122;\n        }\n        iVar1 = FUN_c01f27c4();\n        uVar3 = 7;\n        bVar4 = iVar1 == 0;\n      } while (!bVar4);\n      iVar1 = FUN_c01f272e();\n      if (iVar1 == 0) {\n        if (local_1c == 0) {\n          local_18 = local_18 & 0xffffff00;\n          iVar1 = FUN_c01f498c(DAT_c01f1ef4 + 4,&local_18);\n          if ((-1 < iVar1) && ((char)local_18 != '\\0')) {\n            FUN_c01f3670(5,s_BOM_chk_keychat_off_c01f2010);\n            iVar1 = FUN_c01f5614();\n            if ((iVar1 == 0) && (iVar1 = FUN_c01f5e7a(), iVar1 != 0)) goto LAB_c01f2122;\n          }\n          if (local_1c == 0) {\n            local_18 = local_18 & 0xffffff00;\n            iVar1 = FUN_c01f498c(DAT_c01f1ef4 + 0x1b,&local_18);\n            if ((-1 < iVar1) && ((char)local_18 != '\\0')) {\n              FUN_c01f3670(5,s_BOM_chk_chg_key_off_c01f2028);\n              iVar1 = FUN_c01f5e80();\n              if (iVar1 != 0) goto LAB_c01f2122;\n            }\n            if (local_1c == 0) {\n              iVar1 = FUN_c01f26bc();\n              if (iVar1 != 0) goto LAB_c01f2122;\n              if (local_1c == 0) {\n                iVar1 = FUN_c01f2620();\n                if (iVar1 != 0) {\n                  uVar3 = 6;\n                  goto LAB_c01f2122;\n                }\n                if (local_1c == 0) {\n                  local_18 = local_18 & 0xffffff00;\n                  iVar1 = FUN_c01f498c(DAT_c01f2448,&local_18);\n                  if ((-1 < iVar1) && ((char)local_18 != '\\0')) {\n                    FUN_c01f3670(5,s_BOM_chk_usbcharge_off_c01f244c);\n                    iVar1 = FUN_c01f5314();\n                    if (iVar1 == 7) {\n                      iVar1 = FUN_c01f8746();\n                      uVar2 = (uint)*(byte *)(iVar1 + 0x1c);\n                      if ((-1 < (int)(uVar2 << 0x1f | uVar2 << 0x1e)) && ((int)(uVar2 << 0x1d) < 0))\n                      goto LAB_c01f2122;\n                    }\n                  }\n                  if (local_1c == 0) {\n                    iVar1 = FUN_c01f1b8c();\n                    if (iVar1 != 0) {\n                      iVar1 = FUN_c01f2bc6();\n                      if (iVar1 == 0) {\n                        uVar3 = 0xe;\n                      }\n                      else {\n                        uVar3 = 0xd;\n                      }\n                      goto LAB_c01f2122;\n                    }\n                    if ((local_1c == 0) &&\n                       ((iVar1 = FUN_c01f184a(), iVar1 != 0 ||\n                        ((local_1c == 0 &&\n                         ((iVar1 = FUN_c01f25c6(), iVar1 != 0 ||\n                          ((local_1c == 0 && (iVar1 = FUN_c01f173e(), iVar1 != 0))))))))))\n                    goto LAB_c01f2122;\n                  }\n                }\n              }\n            }\n          }\n        }\n        iVar1 = FUN_c01f23ee();\n        if (iVar1 == 0) {\n          iVar1 = FUN_c01f16fe();\n          if (iVar1 == 0) {\n            iVar1 = FUN_c01f15cc();\n            if (iVar1 == 0) {\n              iVar1 = FUN_c01f498c(DAT_c01f2448 + 0x11,&local_18);\n              if ((-1 < iVar1) && ((local_18 & 0xff) == 2)) {\n                FUN_c01f3670(5,s_BOM_chk_ssboot_c01f2464);\n                iVar1 = FUN_c01f2bc6();\n                if (((iVar1 != 0) || (iVar1 = FUN_c01f2be6(), iVar1 != 0)) &&\n                   (((iVar1 = FUN_c01f498c(DAT_c01f2448 + 0x17,&local_18), iVar1 < 1 ||\n                     ((local_18 & 0xff) == 0)) || (iVar1 = FUN_c01f5614(), iVar1 == 0)))) {\n                  uVar3 = 0xb;\n                  goto LAB_c01f2122;\n                }\n              }\n              local_20 = 1;\n              uVar3 = local_20;\n            }\n            else {\n              uVar3 = 10;\n            }\n          }\n          else {\n            uVar3 = 2;\n          }\n        }\n        else {\n          uVar3 = 4;\n        }\n      }\n      else {\n        uVar3 = 9;\n      }\n    }\n    else {\n      uVar3 = 3;\n    }\n  }\nLAB_c01f2122:\n  local_20 = uVar3;\n  iVar1 = FUN_c01f159a();\n  if ((iVar1 == 0) && (iVar1 = FUN_c01f51f4(&local_20,4,1), iVar1 != 0)) {\n    FUN_c01f3670(3,s_BOM_E_Sync_mode__d__c01f2474,iVar1);\n    return CONCAT44(local_20,iVar1);\n  }\n  FUN_c01f1544(local_20);\n  return (ulonglong)local_20 << 0x20;\n}\n\n"
+        },
+        {
+          "address": "0xc01f1312",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f1312",
+            "name": "FUN_c01f1312"
+          },
+          "status": "ok",
+          "pseudocode": "\nint FUN_c01f1312(undefined4 *param_1)\n\n{\n  int iVar1;\n  \n  switch(*param_1) {\n  default:\n    FUN_c01f3670(3,s_LD3_E_Inv_bootmode__d_c01f07e0);\n    return DAT_c01f14e4;\n  case 1:\n  case 2:\n  case 4:\n  case 5:\n  case 6:\n  case 10:\n  case 0xb:\n  case 0xc:\n    iVar1 = FUN_c01f09e4();\n    break;\n  case 3:\n    iVar1 = FUN_c01f1378();\n  }\n  if (iVar1 == 0) {\n    FUN_c01f3670(2,s_LD3_Exit_UDIF_drvs_c01f14fc);\n    FUN_c01f68ac();\n    FUN_c01f3670(2,s_LD3_Exit_UDIF_plat_c01f1510);\n    FUN_c01f6888();\n    iVar1 = FUN_c01f4e0c(*param_1,1);\n    if (iVar1 == 0) {\n      FUN_c01f0590(*param_1);\n      iVar1 = 0;\n    }\n  }\n  return iVar1;\n}\n\n"
+        },
+        {
+          "address": "0xc01f1378",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f1378",
+            "name": "FUN_c01f1378"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_c01f1378(void)\n\n{\n  undefined4 uVar1;\n  \n  FUN_c01f60c2();\n  FUN_c01f3670(2,s_LD3_Pwr_bootmode_c01f0e14);\n  FUN_c01f5a68(3);\n  FUN_c01f5b2a();\n  FUN_c01f3670(2,s_LD3_Run_Config_init_HW__c01f0fbc);\n  FUN_c01f3108();\n  FUN_c01f3670(2,s_LD3_Load_vmlinux_initrd_c01f1524);\n  uVar1 = FUN_c01f068a();\n  *DAT_c01f1540 = uVar1;\n  FUN_c01f5afe(3);\n  return 0;\n}\n\n"
+        },
+        {
+          "address": "0xc01f068a",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f068a",
+            "name": "FUN_c01f068a"
+          },
+          "status": "ok",
+          "pseudocode": "\nchar * FUN_c01f068a(void)\n\n{\n  int iVar1;\n  char *pcVar2;\n  undefined4 uVar3;\n  char *pcVar4;\n  char *pcVar5;\n  char *pcVar6;\n  char acStack_44 [49];\n  undefined1 local_13;\n  \n  FUN_c020c45c(acStack_44,0x34);\n  iVar1 = FUN_c01f3eb6(1);\n  if (iVar1 == 0) {\n    pcVar4 = (char *)FUN_c01f44c6(s__boot_loadaddr_txt_c01f092c);\n    if (pcVar4 < (char *)0x33) {\n      pcVar2 = (char *)FUN_c01f45cc(acStack_44,pcVar4);\n      if (pcVar2 == pcVar4) {\n        if (pcVar2 == (char *)0x32) {\n          local_13 = 0;\n        }\n        uVar3 = func_0xc020c13c(acStack_44,&DAT_c01f0d44);\n        pcVar6 = (char *)FUN_c020c0b8(uVar3,0,0x10);\n        uVar3 = func_0xc020c13c(0,&DAT_c01f0d44);\n        pcVar2 = (char *)FUN_c020c0b8(uVar3,0,0x10);\n        FUN_c01f3670(2,s_LD3_Addr_of_vmlinux__p_initrd__p_c01f0d48,pcVar6,pcVar2);\n        if ((pcVar6 != (char *)0x0) && (pcVar2 != (char *)0x0)) {\n          iVar1 = FUN_c01f4654(s__boot_vmlinux_bin_c01f0d6c,pcVar6);\n          if (iVar1 < 1) {\n            pcVar4 = s_LD3_E_Load_vmlinux__p__c01f0d80;\n            pcVar2 = pcVar6;\n          }\n          else {\n            iVar1 = FUN_c01f4654(s__boot_initrd_img_c01f0dc4,pcVar2);\n            if (0 < iVar1) {\n              return pcVar6;\n            }\n            pcVar4 = s_LD3_E_Load_initrd__p__c01f0dd8;\n          }\n          goto LAB_c01f06b4;\n        }\n        pcVar4 = acStack_44;\n        pcVar5 = s_LD3_E_Addr_of_vmlinux__p__initrd_c01f0d98;\n      }\n      else {\n        pcVar6 = s__boot_loadaddr_txt_c01f092c;\n        pcVar5 = s_LD3_E_Read__s___d___d__c01f0950;\n      }\n      FUN_c01f3670(3,pcVar5,pcVar6,pcVar2,pcVar4);\n      return (char *)0x0;\n    }\n    pcVar4 = s_LD3_E_Open__s_c01f0940;\n    pcVar2 = s__boot_loadaddr_txt_c01f092c;\n  }\n  else {\n    pcVar4 = s_LD3_E_Mount_Updater_Partition__d_c01f0908;\n    pcVar2 = (char *)0x1;\n  }\nLAB_c01f06b4:\n  FUN_c01f3670(3,pcVar4,pcVar2);\n  return (char *)0x0;\n}\n\n"
+        }
+      ],
+      "total": 6,
+      "succeeded": 6,
+      "failed": 0
+    },
+    "limitations": [
+      "Derived by an REA composed workflow.",
+      "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+      "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+      "External functions and functions without an analyzable body return null; other decompiler failures remain explicit.",
+      "External functions and local thunks are distinct; procedure metadata identifies both and preserves a thunk target when Ghidra resolves one.",
+      "Headerless raw-binary analysis uses the caller-supplied architecture and entry address; file offset 0 is mapped at that address. Headers are not discovered from file bytes.",
+      "Little-endian generic Ghidra languages are used for x86, x86_64, arm, arm64, and NMOS 6502. Big-endian, Thumb-only, Cortex-M, 65C02, 65816, and other processor variants are unsupported in this increment.",
+      "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+      "Static analysis does not emulate reset vectors, memory-mapped I/O, or firmware boot sequences.",
+      "The imported Program and temporary project are ephemeral and deleted on close. Annotation operations edit session database metadata; original executable bytes are never written.",
+      "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results."
+    ]
+  },
+  {
+    "evidence_id": "ev_d03d9b1c24eec20545b26158beb66b18671c9b1fdab7f992ebd9b7f3844d1ca7",
+    "subject": {
+      "name": "e26-loader3.bin",
+      "digest": {
+        "sha256": "8fd98a4140bf85f955c994ea263c4a295846e049121b593c0a823aec01620c07"
+      },
+      "local_path": "/tmp/e26-loader3.bin",
+      "format": "raw-binary",
+      "architecture": "arm"
+    },
+    "operation": "batch_decompile",
+    "parameters": {
+      "addresses": [
+        "0xc01f3eb6",
+        "0xc01f44c6",
+        "0xc01f50f4",
+        "0xc01f51f4",
+        "0xc01f498c",
+        "0xc01f1544",
+        "0xc01f0078",
+        "0xc01f01e0",
+        "0xc01f09e4",
+        "0xc01f4e0c"
+      ]
+    },
+    "normalized_result": {
+      "items": [
+        {
+          "address": "0xc01f3eb6",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f3eb6",
+            "name": "FUN_c01f3eb6"
+          },
+          "status": "ok",
+          "pseudocode": "\nint FUN_c01f3eb6(int param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4)\n\n{\n  int iVar1;\n  int iVar2;\n  char *pcVar3;\n  \n  iVar1 = DAT_c01f4140;\n  if (param_1 < 1) {\n    FUN_c01f3670(3,s_FAT_E_Invalid_partition_number_c01f427c,param_3,param_4,param_3,param_4);\n    return -0x131;\n  }\n  if (*(int *)(DAT_c01f4140 + 0x1c) != 0) {\n    if (*(int *)(DAT_c01f4140 + 0x18) == param_1) {\n      return 0;\n    }\n    *(int *)(DAT_c01f4140 + 0x18) = param_1;\n    iVar2 = FUN_c01f3e54();\n    if (iVar2 < 0) {\n      pcVar3 = s_FAT_E_error_at_reading_PBR_c01f429c;\n    }\n    else {\n      iVar2 = FUN_c01f3d8a();\n      if (iVar2 < 0) {\n        pcVar3 = s_FAT_E_error_at_reading_FAT_c01f42d4;\n      }\n      else {\n        iVar2 = FUN_c01f46a8();\n        if (-1 < iVar2) {\n          FUN_c01f3670(6,DAT_c01f4318,param_1,*(undefined4 *)(iVar1 + 0xc),\n                       *(undefined2 *)(DAT_c01f4144 + 0xb),*(undefined4 *)(iVar1 + 0x14));\n          return 0;\n        }\n        pcVar3 = s_FAT_E_error_at_reading_Root_Dir_e_c01f42f0;\n      }\n    }\n    FUN_c01f3670(3,pcVar3);\n    return iVar2;\n  }\n  FUN_c01f3670(3,s_FAT_E_Not_initialized_yet_c01f42b8,param_3,param_4,param_3,param_4);\n  return DAT_c01f4148 + -4;\n}\n\n"
+        },
+        {
+          "address": "0xc01f44c6",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f44c6",
+            "name": "FUN_c01f44c6"
+          },
+          "status": "ok",
+          "pseudocode": "\nuint FUN_c01f44c6(undefined4 param_1)\n\n{\n  byte bVar1;\n  int *piVar2;\n  int iVar3;\n  int iVar4;\n  uint uVar5;\n  int iVar6;\n  int iVar7;\n  int iVar8;\n  uint uVar9;\n  undefined4 local_48;\n  undefined4 local_44;\n  undefined4 local_40;\n  undefined4 local_3c;\n  undefined4 local_38;\n  undefined4 local_34;\n  int local_30;\n  undefined4 local_2c [2];\n  \n  piVar2 = DAT_c01f471c;\n  local_48 = 0;\n  local_44 = 0;\n  local_40 = 0;\n  local_3c = 0;\n  local_38 = 0;\n  local_34 = 0;\n  local_30 = 0;\n  local_2c[0] = 0;\n  if (*DAT_c01f471c != 0) {\n    FUN_c01f9d36();\n    *piVar2 = 0;\n  }\n  if (piVar2[1] != 0) {\n    FUN_c01f9d36();\n    piVar2[1] = 0;\n  }\n  iVar3 = FUN_c01f4434(param_1,&local_30,local_2c);\n  uVar9 = DAT_c01f474c + 4;\n  if (iVar3 < 0) {\n    FUN_c01f3670(3,s_FAT_E_Failed_to_parse_filename____c01f477c,param_1);\n    return uVar9;\n  }\n  FUN_c01f43c2(local_2c[0],&local_48);\n  iVar6 = DAT_c01f47a4;\n  iVar3 = DAT_c01f47a0;\n  if ((local_30 == 0) || (FUN_c01f43c2(local_30,&local_3c), local_30 == 0)) {\n    uVar5 = (uint)*(ushort *)(iVar6 + 0x11);\n    iVar6 = *(int *)(iVar3 + 4);\n  }\n  else {\n    iVar7 = *(int *)(iVar3 + 4);\n    for (iVar8 = 0; iVar8 < (int)(uint)*(ushort *)(iVar6 + 0x11); iVar8 = iVar8 + 1) {\n      iVar4 = FUN_c020c180(&local_3c,iVar7,0xb);\n      if (iVar4 == 0) {\n        if ((*(byte *)(iVar7 + 0xb) & 0x18) != 0) goto LAB_c01f4566;\n        break;\n      }\n      iVar7 = iVar7 + 0x20;\n    }\n    iVar7 = 0;\nLAB_c01f4566:\n    if (iVar7 == 0) {\n      return uVar9;\n    }\n    uVar5 = FUN_c01f407e(iVar7,DAT_c01f471c);\n    if ((int)uVar5 < 0) {\n      FUN_c01f3670(3,s_FAT_E_Failed_to_read_dirent_c01f47a8);\n      return uVar5;\n    }\n    iVar6 = *piVar2;\n    uVar5 = *(uint *)(iVar3 + 0xc) >> 5;\n  }\n  iVar3 = FUN_c01f3f34(&local_48,iVar6,uVar5);\n  piVar2[2] = iVar3;\n  if (iVar3 != 0) {\n    piVar2[3] = (uint)*(ushort *)(iVar3 + 0x1a);\n    bVar1 = *(byte *)(iVar3 + 0x1f);\n    uVar9 = FUN_c020c518(iVar3 + 0x1c);\n    uVar9 = uVar9 & 0xffffff | (uint)bVar1 << 0x18;\n    piVar2[4] = uVar9;\n  }\n  return uVar9;\n}\n\n"
+        },
+        {
+          "address": "0xc01f50f4",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f50f4",
+            "name": "FUN_c01f50f4"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_c01f50f4(void)\n\n{\n  int iVar1;\n  uint uVar2;\n  uint in_r3;\n  uint local_8;\n  \n  local_8 = in_r3 & 0xffffff00;\n  iVar1 = FUN_c01f498c(DAT_c01f52d8,&local_8);\n  if (-1 < iVar1) {\n    uVar2 = local_8 & 0xff;\n    if (uVar2 == 0) {\n      return 1;\n    }\n    if (uVar2 == 1) {\n      return 3;\n    }\n    if (uVar2 == 2) {\n      return 2;\n    }\n    FUN_c01f3670(3,s_SYC_E_invalid_TYPE__d_c01f52dc);\n  }\n  return 0;\n}\n\n"
+        },
+        {
+          "address": "0xc01f51f4",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f51f4",
+            "name": "FUN_c01f51f4"
+          },
+          "status": "ok",
+          "pseudocode": "\nint FUN_c01f51f4(uint param_1,int param_2,uint param_3)\n\n{\n  int *piVar1;\n  int iVar2;\n  uint uVar3;\n  undefined4 uVar4;\n  int iVar5;\n  int iVar6;\n  uint uVar7;\n  \n  uVar7 = param_1 + param_2;\n  iVar2 = FUN_c01f50f4();\n  piVar1 = DAT_c01f5300;\n  while( true ) {\n    if (uVar7 <= param_1) {\n      return 0;\n    }\n    iVar6 = uVar7 - param_1;\n    if (100 < iVar6) {\n      iVar6 = 100;\n    }\n    if (iVar2 == 1) {\n      uVar3 = param_3 & 2;\n      iVar5 = *piVar1;\n      *piVar1 = iVar5 + 1;\n      uVar4 = 1;\n    }\n    else {\n      if (iVar2 != 2) {\n        return 0;\n      }\n      uVar3 = param_3 & 1;\n      iVar5 = *piVar1;\n      uVar4 = 0;\n      *piVar1 = iVar5 + 1;\n    }\n    iVar5 = FUN_c01f5148(uVar4,iVar5,param_1,iVar6,uVar3);\n    if (iVar5 != 0) break;\n    param_1 = param_1 + iVar6;\n  }\n  return iVar5;\n}\n\n"
+        },
+        {
+          "address": "0xc01f498c",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f498c",
+            "name": "FUN_c01f498c"
+          },
+          "status": "ok",
+          "pseudocode": "\nint FUN_c01f498c(undefined4 param_1)\n\n{\n  int *piVar1;\n  int iVar2;\n  \n  piVar1 = DAT_c01f4c2c;\n  iVar2 = -1;\n  if (*(int *)*DAT_c01f4c2c == 4) {\n    iVar2 = FUN_c01f4b66(param_1);\n  }\n  else {\n    if (*(int *)*DAT_c01f4c2c == 0) {\n      FUN_c01f3670(3,s_LBK_E_No_Bkup_c01f4c30);\n      goto LAB_c01f49bc;\n    }\n    iVar2 = FUN_c01f68e6(param_1);\n  }\n  if (0 < iVar2) {\n    return iVar2;\n  }\nLAB_c01f49bc:\n  FUN_c01f3670(3,s_LBK_E_Read_Bkup__X_c01f4c40,param_1);\n  *(int *)(*piVar1 + 4) = *(int *)(*piVar1 + 4) + 1;\n  return iVar2;\n}\n\n"
+        },
+        {
+          "address": "0xc01f1544",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f1544",
+            "name": "FUN_c01f1544"
+          },
+          "status": "ok",
+          "pseudocode": "\nvoid FUN_c01f1544(undefined4 param_1)\n\n{\n  undefined4 *puVar1;\n  undefined1 local_10 [8];\n  undefined4 local_8;\n  \n  local_10[0] = 0;\n  local_8 = param_1;\n  FUN_c01f4aa0(0x51,DAT_c01f1944,&local_8);\n  puVar1 = DAT_c01f1948 + 1;\n  *DAT_c01f1948 = local_8;\n  FUN_c01f4aa0(0x51,DAT_c01f1944 + 0x28,puVar1);\n  local_10[0] = FUN_c01f5f18();\n  FUN_c01f4aa0(0x51,DAT_c01f1944 + 0x27,local_10);\n  FUN_c01f3670(2,s_BOM_<<BootMode:__u>>_c01f194c,local_8);\n  FUN_c01f3670(6,s_BOM_ddr___d_c01f1964,local_10[0]);\n  return;\n}\n\n"
+        },
+        {
+          "address": "0xc01f0078",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f0078",
+            "name": "FUN_c01f0078"
+          },
+          "status": "ok",
+          "pseudocode": "\nvoid FUN_c01f0078(void)\n\n{\n  int iVar1;\n  code *UNRECOVERED_JUMPTABLE;\n  int iVar2;\n  undefined4 *puVar3;\n  \n  iVar1 = DAT_c01f00a4;\n  puVar3 = (undefined4 *)((int)&DAT_c01f00a4 + DAT_c01f00a4);\n  iVar2 = DAT_c01f00a4 + -0x3fe0ff5d;\n  if (puVar3 == (undefined4 *)((int)&DAT_c01f00a4 + DAT_c01f00a8)) {\n    FUN_c01f01e0();\n  }\n  UNRECOVERED_JUMPTABLE = *(code **)(iVar1 + -0x3fe0ff50);\n  if (((uint)UNRECOVERED_JUMPTABLE & 1) != 0) {\n    UNRECOVERED_JUMPTABLE = (code *)(iVar2 - (int)UNRECOVERED_JUMPTABLE);\n  }\n                    /* WARNING: Could not recover jumptable at 0xc01f00a2. Too many branches */\n                    /* WARNING: Treating indirect jump as call */\n  (*UNRECOVERED_JUMPTABLE)\n            (*puVar3,*(undefined4 *)((int)&DAT_c01f00a8 + iVar1),\n             *(undefined4 *)(iVar1 + -0x3fe0ff54));\n  return;\n}\n\n"
+        },
+        {
+          "address": "0xc01f01e0",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f01e0",
+            "name": "FUN_c01f01e0"
+          },
+          "status": "ok",
+          "pseudocode": "\nvoid FUN_c01f01e0(void)\n\n{\n  undefined4 uVar1;\n  int iVar2;\n  undefined4 uVar3;\n  undefined4 uVar4;\n  undefined4 uVar5;\n  undefined4 uVar6;\n  undefined4 uVar7;\n  undefined4 extraout_r2;\n  uint extraout_r2_00;\n  uint unaff_r4;\n  undefined4 in_cr0;\n  undefined4 in_cr3;\n  undefined8 uVar8;\n  \n  uVar1 = FUN_c020d50e();\n  FUN_c01f01b4(uVar1,extraout_r2);\n  FUN_c01f11ec();\n  uVar8 = FUN_c020d6ac();\n  FUN_c01f01dc();\n  uVar8 = FUN_c020c6e6((int)uVar8,(int)((ulonglong)uVar8 >> 0x20));\n  coprocessor_function(0,1,0,in_cr0,in_cr0,in_cr3);\n  FUN_c020bd3c((uint)uVar8,(int)((ulonglong)uVar8 >> 0x20),extraout_r2_00 & (uint)uVar8);\n  FUN_c01f297c(&stack0xfffffff4);\n  iVar2 = FUN_c01f5314();\n  if (iVar2 == 7) {\n    uVar1 = FUN_c01f5314();\n    FUN_c020bd3c(&stack0xfffffff4,0x40,s_L__check_POWER_IC__x_VER_B__02d__c01f0898,uVar1,\n                 unaff_r4 >> 0x18,(unaff_r4 & 0xffffff) >> 0x10,(unaff_r4 & 0xffff) >> 8,\n                 unaff_r4 & 0xff);\n    FUN_c01f297c(&stack0xfffffff4);\n  }\n  uVar1 = FUN_c01f1650();\n  uVar3 = FUN_c01f355e();\n  uVar4 = FUN_c01f4b02();\n  uVar5 = FUN_c01f4afa();\n  uVar6 = FUN_c01f2192();\n  uVar7 = FUN_c01f4ae4();\n  FUN_c020bd3c(&stack0xfffffff4,0x40,s_L__check_BACKUP_FILE__d_RST__d_E_c01f08cc,uVar7,uVar6,uVar5,\n               uVar4,uVar3,uVar1);\n  FUN_c01f297c(&stack0xfffffff4);\n  return;\n}\n\n"
+        },
+        {
+          "address": "0xc01f09e4",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f09e4",
+            "name": "FUN_c01f09e4"
+          },
+          "status": "ok",
+          "pseudocode": "\nint FUN_c01f09e4(int *param_1)\n\n{\n  bool bVar1;\n  int iVar2;\n  undefined4 uVar3;\n  undefined4 uVar4;\n  int iVar5;\n  char *pcVar6;\n  uint uVar7;\n  uint uVar8;\n  undefined4 *local_68;\n  undefined1 auStack_64 [64];\n  int local_24;\n  undefined4 *local_20 [2];\n  \n  if (*param_1 == 0xc) {\n    FUN_c01f3670(2,s_LD3_Reset_Bkup_c01f0df0);\n    iVar2 = FUN_c01f6ada(1);\n    if (iVar2 != 0) {\n      FUN_c01f3670(3,s_LD3_E_Reset_Bkup_c01f0e00);\n      return -0x12f;\n    }\n    FUN_c01f3514();\n  }\n  FUN_c01f60c2();\n  FUN_c01f3670(2,s_LD3_Pwr_bootmode_c01f0e14);\n  iVar2 = FUN_c01f5a68(*param_1);\n  if (iVar2 != 0) {\n    pcVar6 = s_LD3_E_Pwr_bootmode__d__c01f0720;\n    goto LAB_c01f0c60;\n  }\n  FUN_c01f3670(2,s_LD3_Del_LOG_c01f0e28);\n  iVar2 = FUN_c01f5614();\n  if (((iVar2 == 0) && (iVar2 = FUN_c01f5eae(), iVar2 == 0)) || (iVar2 = FUN_c01f2be6(), iVar2 != 0)\n     ) {\n    bVar1 = false;\n  }\n  else {\n    bVar1 = true;\n  }\n  uVar3 = DAT_c01f0e38;\n  if (((!bVar1) && (iVar2 = *param_1, iVar2 != 2)) &&\n     (((((iVar2 != 10 && (iVar2 != 0xb)) && ((iVar2 != 0xc || (iVar2 = FUN_c01f2ba6(), iVar2 == 0)))\n        ) || (iVar2 = FUN_c01f498c(uVar3,&local_68), iVar2 < 1)) || (((uint)local_68 & 0xff) != 0)))\n     ) {\n    local_20[0] = (undefined4 *)0x0;\n    local_68 = (undefined4 *)0x0;\n    iVar2 = FUN_c01f498c(DAT_c01f0e3c,local_20);\n    if ((0 < iVar2) && (local_20[0] != (undefined4 *)0xffffffff)) {\n      *local_20[0] = 0;\n    }\n    iVar2 = FUN_c01f498c(DAT_c01f0e3c + -0x14,&local_68);\n    if ((0 < iVar2) && (local_68 != (undefined4 *)0xffffffff)) {\n      *local_68 = 0;\n    }\n    FUN_c01f3670(6,s_LD3_Clr_kLog__p__tLog__p__c01f0e40,local_20[0],local_68);\n  }\n  FUN_c01f3670(2,s_LD3_Init_boottime_c01f0e5c);\n  FUN_c01f2934();\n  local_68 = (undefined4 *)&DAT_c01f0e70;\n  FUN_c020bd3c(auStack_64,0x40,s_L__BOOT__VER__s__s__c01f0e78,&DAT_c01f0e74);\n  FUN_c01f297c(auStack_64);\n  uVar3 = FUN_c01f5eae();\n  uVar4 = FUN_c01f5614();\n  FUN_c01f3670(6,s_LD3_Esc_log____r_req__d_crash__d_c01f0e8c,uVar4,uVar3);\n  if (bVar1) {\n    uVar3 = FUN_c01f5eae();\n    uVar4 = FUN_c01f5614();\n    FUN_c01f3670(2,s_LD3_Esc_log_r_req__d_crash__d__c01f0eb0,uVar4,uVar3);\n    FUN_c01f297c(s_L__log_escape_c01f0ed0);\n    FUN_c01f3c44();\n    FUN_c01f5b66();\n  }\n  else {\n    FUN_c01f3cda();\n    FUN_c01f5b86();\n  }\n  iVar2 = *param_1;\n  if ((iVar2 == 10) || (iVar2 == 0xb)) {\n    iVar2 = FUN_c01f16e2();\n    if (iVar2 == 0) {\n      FUN_c01f3670(2,s_LD3_Load_Image_c01f0ee0);\n      FUN_c01f297c(s_L__load_image_c01f0ef0);\n      iVar5 = FUN_c01f2c06(DAT_c01f0f00);\n      local_24 = iVar5;\n      iVar2 = FUN_c01f51f4(&local_24,4,3);\n      if (iVar2 != 0) {\n        pcVar6 = s_LD3_E_Sync_Ierr__d__c01f0770;\n        goto LAB_c01f0c60;\n      }\n      if (iVar5 != 0 || local_24 != 0) {\n        pcVar6 = s_LD3_E_Load_Image__d__d__c01f0788;\n        goto LAB_c01f0bc2;\n      }\n    }\n  }\n  else if ((iVar2 == 0xc) && (iVar2 = FUN_c01f2ba6(), iVar2 != 0)) {\n    FUN_c01f3670(2,s_LD3_Load_Image_2nd_c01f0f04);\n    iVar5 = FUN_c01f2c06(DAT_c01f0f00);\n    local_24 = iVar5;\n    iVar2 = FUN_c01f51f4(&local_24,4,3);\n    if (iVar2 != 0) {\n      pcVar6 = s_LD3_E_Sync_Ierr__d__2nd_c01f0f18;\n      goto LAB_c01f0c60;\n    }\n    if (iVar5 != 0 || local_24 != 0) {\n      pcVar6 = s_LD3_E_Load_Image__d__d__2nd_c01f0f34;\nLAB_c01f0bc2:\n      FUN_c01f3670(3,pcVar6,iVar5);\n      *param_1 = 1;\n      FUN_c01f1544(1);\n    }\n  }\n  iVar2 = FUN_c01f5b2a();\n  if (iVar2 == 0) {\n    FUN_c01f3670(2,s_LD3_Save_Date_to_DDR_c01f0f54);\n    FUN_c01f3564();\n    FUN_c01f2e20(2);\n    uVar8 = 0x4000000;\n    if (*param_1 == 4) {\n      FUN_c01f3670(2,s_LD3_Run_Config_eload__c01f0f6c);\n      FUN_c01f297c(s_L__early_load_c01f0f84);\n      iVar2 = *param_1;\n      if (iVar2 == 2) {\n        uVar7 = 0x2000000;\n      }\n      else {\n        uVar7 = uVar8;\n        if (((iVar2 != 10) && (iVar2 != 0xb)) &&\n           ((iVar2 != 0xc || (iVar2 = FUN_c01f2ba6(), iVar2 == 0)))) {\n          uVar7 = 0x1000000;\n        }\n      }\n      iVar2 = FUN_c01f2fe8(uVar7 | 0x100000);\n      if (iVar2 != 0) {\n        pcVar6 = s_LD3_E_Early_load__d__c01f0f94;\n        goto LAB_c01f0c60;\n      }\n      FUN_c01f297c(s_L__CIPA_Boot_c01f0fac);\n    }\n    FUN_c01f3670(2,s_LD3_Run_Config_init_HW__c01f0fbc);\n    iVar2 = FUN_c01f3108();\n    if (iVar2 == 0) {\n      FUN_c01f2e20(1);\n      FUN_c01f5afe(*param_1);\n      FUN_c01f297c(s_L__normal_load_config_c01f0fec);\n      iVar2 = *param_1;\n      if (iVar2 == 2) {\n        uVar8 = 0x2000000;\n      }\n      else if (((iVar2 != 10) && (iVar2 != 0xb)) &&\n              ((iVar2 != 0xc || (iVar2 = FUN_c01f2ba6(), iVar2 == 0)))) {\n        uVar8 = 0x1000000;\n      }\n      FUN_c01f3670(2,s_LD3_Run_Config_load__X__c01f1004,uVar8);\n      iVar2 = FUN_c01f2fe8(uVar8);\n      if (iVar2 != 0) {\n        FUN_c01f3670(3,s_LD3_E_Normal_load__d__c01f1020,iVar2);\n        return iVar2;\n      }\n      FUN_c01f48cc();\n      return 0;\n    }\n    pcVar6 = s_LD3_E_Init_HW__d__c01f0fd8;\n  }\n  else {\n    pcVar6 = s_LD3_E_Pwr_chg_state__d__c01f0738;\n  }\nLAB_c01f0c60:\n  FUN_c01f3670(3,pcVar6,iVar2);\n  return iVar2;\n}\n\n"
+        },
+        {
+          "address": "0xc01f4e0c",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f4e0c",
+            "name": "FUN_c01f4e0c"
+          },
+          "status": "ok",
+          "pseudocode": "\nlonglong FUN_c01f4e0c(int param_1,undefined4 *param_2,int param_3,uint param_4)\n\n{\n  undefined4 *puVar1;\n  undefined4 uVar2;\n  int iVar3;\n  undefined4 uVar4;\n  undefined4 uVar5;\n  undefined4 *local_20;\n  int local_1c;\n  uint local_18;\n  \n  local_20 = param_2;\n  local_1c = param_3;\n  local_18 = param_4;\n  if (param_2 == (undefined4 *)0x1) {\n    uVar5 = 1;\n    uVar4 = FUN_c01f5314();\n    iVar3 = FUN_c01f50f4();\n    if (iVar3 == 2) {\n      uVar4 = 0;\n    }\n    iVar3 = FUN_c01f498c(DAT_c01f4f44,&local_20);\n    if ((0 < iVar3) && (local_20 != (undefined4 *)0xffffffff)) {\n      *local_20 = 1;\n    }\n    iVar3 = FUN_c01f498c(DAT_c01f4f44 + 0x1f,&local_20);\n    if ((0 < iVar3) && (local_20 != (undefined4 *)0xffffffff)) {\n      *local_20 = uVar4;\n    }\n    iVar3 = FUN_c01f498c(DAT_c01f4f44 + 0xe,&local_20);\n    if ((((0 < iVar3) && (local_20 != (undefined4 *)0xffffffff)) &&\n        (iVar3 = FUN_c01f498c(DAT_c01f4f44 + 0x43,&local_1c), 0 < iVar3)) && (local_1c != -1)) {\n      FUN_c020c318(local_20,DAT_c01f4f48);\n    }\n    iVar3 = FUN_c01f498c(DAT_c01f4f4c,&local_20);\n    if (((0 < iVar3) && (local_20 != (undefined4 *)0xffffffff)) &&\n       ((iVar3 = FUN_c01f498c(DAT_c01f4f4c + 1,&local_1c), 0 < iVar3 && (local_1c != -1)))) {\n      local_18 = (uint)(param_1 == 0xc);\n      FUN_c020c318(local_20,&local_18);\n    }\n  }\n  else {\n    uVar5 = 0;\n    uVar4 = 0;\n  }\n  *DAT_c01f4f40 = param_2;\n  uVar2 = FUN_c01f1596();\n  puVar1 = DAT_c01f4f40;\n  DAT_c01f4f40[2] = uVar2;\n  puVar1[1] = uVar4;\n  puVar1[3] = uVar5;\n  return ZEXT48(local_20) << 0x20;\n}\n\n"
+        }
+      ],
+      "total": 10,
+      "succeeded": 10,
+      "failed": 0
+    },
+    "limitations": [
+      "Derived by an REA composed workflow.",
+      "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+      "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+      "External functions and functions without an analyzable body return null; other decompiler failures remain explicit.",
+      "External functions and local thunks are distinct; procedure metadata identifies both and preserves a thunk target when Ghidra resolves one.",
+      "Headerless raw-binary analysis uses the caller-supplied architecture and entry address; file offset 0 is mapped at that address. Headers are not discovered from file bytes.",
+      "Little-endian generic Ghidra languages are used for x86, x86_64, arm, arm64, and NMOS 6502. Big-endian, Thumb-only, Cortex-M, 65C02, 65816, and other processor variants are unsupported in this increment.",
+      "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+      "Static analysis does not emulate reset vectors, memory-mapped I/O, or firmware boot sequences.",
+      "The imported Program and temporary project are ephemeral and deleted on close. Annotation operations edit session database metadata; original executable bytes are never written.",
+      "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results."
+    ]
+  },
+  {
+    "evidence_id": "ev_66fa3f0aca256c4853bb50e4a2f76c0cf6bf7915c4c024a6b60e0f63bcccca01",
+    "subject": {
+      "name": "e26-loader3.bin",
+      "digest": {
+        "sha256": "8fd98a4140bf85f955c994ea263c4a295846e049121b593c0a823aec01620c07"
+      },
+      "local_path": "/tmp/e26-loader3.bin",
+      "format": "raw-binary",
+      "architecture": "arm"
+    },
+    "operation": "batch_decompile",
+    "parameters": {
+      "addresses": [
+        "0xc01f11ec",
+        "0xc01f3e54",
+        "0xc01f3d8a",
+        "0xc01f3108",
+        "0xc01f48cc",
+        "0xc01f1d6a",
+        "0xc01f1c70",
+        "0xc01f23ee",
+        "0xc01f16fe",
+        "0xc01f15cc"
+      ]
+    },
+    "normalized_result": {
+      "items": [
+        {
+          "address": "0xc01f11ec",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f11ec",
+            "name": "FUN_c01f11ec"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_c01f11ec(void)\n\n{\n  int iVar1;\n  int iVar2;\n  undefined4 in_r3;\n  undefined4 local_10;\n  \n  local_10 = in_r3;\n  FUN_c01f3670(1,&DAT_c01f14c8,DAT_c01f14c4);\n  iVar2 = FUN_c01f0cca();\n  if (iVar2 == 0) {\n    iVar2 = FUN_c01f1de6();\n    if (iVar2 == 0) {\n      local_10 = FUN_c01f2156();\n      iVar1 = DAT_c01f14e4;\n      switch(local_10) {\n      default:\n        FUN_c01f3670(3,s_LD3_E_Inv_bootmode__d_c01f07e0,local_10);\n        iVar2 = iVar1;\n        goto LAB_c01f1262;\n      case 1:\n      case 2:\n      case 3:\n      case 4:\n      case 5:\n      case 6:\n      case 10:\n      case 0xb:\n      case 0xc:\n        iVar2 = FUN_c01f1312(&local_10);\n        if ((iVar2 != 0) || (iVar2 = FUN_c01f04b6(local_10), iVar2 != 0)) goto LAB_c01f1262;\n        break;\n      case 7:\n      case 8:\n      case 9:\n      case 0xd:\n      case 0xe:\n        iVar2 = FUN_c01f03e2(&local_10);\n        if (iVar2 != 0) goto LAB_c01f1262;\n        FUN_c01f5bb6();\n      }\n      FUN_c01f3670(3,s_LD3_E_NOTREACHED_c01f14e8);\n      iVar2 = iVar1;\n    }\n    else {\n      FUN_c01f3670(3,s_LD3_E_Chk_bootmode__d_c01f14cc,iVar2);\n    }\n  }\nLAB_c01f1262:\n  FUN_c01f3b74(iVar2);\n  return 0;\n}\n\n"
+        },
+        {
+          "address": "0xc01f3e54",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f3e54",
+            "name": "FUN_c01f3e54"
+          },
+          "status": "ok",
+          "pseudocode": "\nint FUN_c01f3e54(void)\n\n{\n  byte bVar1;\n  int iVar2;\n  int iVar3;\n  int iVar4;\n  char *pcVar5;\n  \n  iVar3 = DAT_c01f4148;\n  iVar4 = DAT_c01f4144;\n  iVar2 = DAT_c01f4140;\n  *(undefined4 *)(DAT_c01f4140 + 8) = 0;\n  iVar4 = FUN_c01f4690(0,iVar4,1);\n  if (iVar4 < 0) {\n    FUN_c01f3670(3,s_FAT_E_Can_t_read_PBR_c01f4200);\n    return iVar4;\n  }\n  if (*(short *)(DAT_c01f4144 + 0x1fe) == -0x55ab) {\n    if (*(short *)(DAT_c01f4144 + 0xb) == 0x200) {\n      bVar1 = *(byte *)(DAT_c01f4144 + 0xd);\n      *(uint *)(iVar2 + 0xc) = (uint)bVar1 * 0x200;\n      if (bVar1 == 0x20) {\n        return 0;\n      }\n      pcVar5 = s_FAT_E_Unsupported_cluster_size_c01f425c;\n    }\n    else {\n      pcVar5 = s_FAT_E_Unsupported_sector_size_c01f423c;\n    }\n  }\n  else {\n    pcVar5 = s_FAT_E_PBR_end_mark_does_not_matc_c01f4218;\n  }\n  FUN_c01f3670(3,pcVar5);\n  return iVar3;\n}\n\n"
+        },
+        {
+          "address": "0xc01f3d8a",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f3d8a",
+            "name": "FUN_c01f3d8a"
+          },
+          "status": "ok",
+          "pseudocode": "\nint FUN_c01f3d8a(void)\n\n{\n  int *piVar1;\n  int iVar2;\n  uint uVar3;\n  int iVar4;\n  int iVar5;\n  char *pcVar6;\n  uint uVar7;\n  \n  iVar5 = DAT_c01f4148;\n  iVar4 = DAT_c01f4144;\n  piVar1 = DAT_c01f4140;\n  uVar7 = (uint)*(ushort *)(DAT_c01f4144 + 0x16);\n  if (uVar7 == 0) {\n    pcVar6 = s_FAT_E_This_File_System_Type_is_n_c01f4178;\nLAB_c01f3e4a:\n    FUN_c01f3670(3,pcVar6);\n  }\n  else {\n    if (*DAT_c01f4140 != 0) {\n      FUN_c01f9d36();\n    }\n    iVar2 = FUN_c01f9d10(uVar7 << 9);\n    *piVar1 = iVar2;\n    if (iVar2 == 0) {\n      FUN_c01f3670(3,s_FAT_E_Out_of_memory_in__fat_read_c01f41a8);\n      return DAT_c01f4148 + -4;\n    }\n    iVar2 = FUN_c01f4690(piVar1[2] + (uint)*(ushort *)(iVar4 + 0xe),iVar2,uVar7);\n    if (iVar2 < 0) {\n      return iVar2;\n    }\n    if (*(char *)*piVar1 != *(char *)(iVar4 + 0x15)) {\n      FUN_c01f3670(3,s_FAT_E_FAT_ID_does_not_match__0x__c01f414c);\n      return iVar5;\n    }\n    iVar2 = func_0xc020c544((uint)*(ushort *)(iVar4 + 0x11) * 0x20 + (uint)*(ushort *)(iVar4 + 0xb)\n                            + -1);\n    uVar3 = (uint)*(ushort *)(iVar4 + 0x13);\n    if (uVar3 == 0) {\n      uVar3 = *(uint *)(iVar4 + 0x20) & 0xffffff | (uint)*(byte *)(iVar4 + 0x23) << 0x18;\n    }\n    iVar4 = func_0xc020c544(uVar3 - (iVar2 + *(byte *)(iVar4 + 0x10) * uVar7 +\n                                             (uint)*(ushort *)(iVar4 + 0xe)),\n                            *(undefined1 *)(iVar4 + 0xd));\n    if (iVar4 < 0xff5) {\n      iVar4 = 0xc;\n    }\n    else {\n      if (0xfff4 < iVar4) {\n        pcVar6 = s_FAT_E_This_File_System_Type_is_n_c01f41d0;\n        goto LAB_c01f3e4a;\n      }\n      iVar4 = 0x10;\n    }\n    piVar1[5] = iVar4;\n    iVar5 = 0;\n  }\n  return iVar5;\n}\n\n"
+        },
+        {
+          "address": "0xc01f3108",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f3108",
+            "name": "FUN_c01f3108"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_c01f3108(void)\n\n{\n  undefined4 uVar1;\n  int iVar2;\n  uint uVar3;\n  \n  uVar1 = DAT_c01f3288;\n  iVar2 = FUN_c01f4aec();\n  if ((iVar2 == 1) && (uVar3 = FUN_c01f498c(DAT_c01f3328,uVar1), -1 < (int)uVar3)) {\n    FUN_c01f3670(6,s_CFG_Set_PORT__sz__d__c01f332c,uVar3);\n    if (0x1200 < uVar3) {\n      FUN_c01f3670(4,s_CFG_W_PORTCFG_size_overflow___d>_c01f3344,uVar3,0xd800);\n    }\n    FUN_c01f30d8(uVar1,uVar3);\n    uVar3 = FUN_c01f498c(0xfc0000,uVar1);\n    if (-1 < (int)uVar3) {\n      FUN_c01f3670(6,s_CFG_Set_INT__sz__d__c01f336c,uVar3);\n      if (0xc00 < uVar3) {\n        FUN_c01f3670(4,s_CFG_W_INTCFG_size_overflow___d>__c01f3384,uVar3,0x9000);\n      }\n      FUN_c01f30d8(uVar1,uVar3);\n      uVar3 = FUN_c01f498c(0xfb0000,uVar1);\n      if (-1 < (int)uVar3) {\n        FUN_c01f3670(6,s_CFG_Set_REG__sz__d__c01f33a8,uVar3);\n        if (0x300 < uVar3) {\n          FUN_c01f3670(4,s_CFG_W_REGCFG_size_overflow___d>__c01f33c0,uVar3,0x2400);\n        }\n        FUN_c01f30d8(uVar1,uVar3);\n        return 0;\n      }\n    }\n  }\n  return 0xfffffed1;\n}\n\n"
+        },
+        {
+          "address": "0xc01f48cc",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f48cc",
+            "name": "FUN_c01f48cc"
+          },
+          "status": "ok",
+          "pseudocode": "\n/* WARNING: Control flow encountered bad instruction data */\n\nvoid FUN_c01f48cc(void)\n\n{\n  int iVar1;\n  \n  FUN_c01f4828();\n  iVar1 = FUN_c01f488a();\n  if (iVar1 != 0) {\n    FUN_c01f3670(2,s_CFG_Wait_ICE_c01f4908);\n    FUN_c01f3884();\n    FUN_c01f5008();\n    FUN_c01f025c();\n    FUN_c01f4852();\n                    /* WARNING: Bad instruction - Truncating control flow here */\n    halt_baddata();\n  }\n  return;\n}\n\n"
+        },
+        {
+          "address": "0xc01f1d6a",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f1d6a",
+            "name": "FUN_c01f1d6a"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_c01f1d6a(undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4)\n\n{\n  int iVar1;\n  char *pcVar2;\n  char *pcVar3;\n  uint local_10;\n  undefined4 uStack_c;\n  \n  local_10 = param_3 & 0xffffff00;\n  uStack_c = param_4;\n  iVar1 = FUN_c01f498c(DAT_c01f1ef4 + -2,&local_10);\n  if ((-1 < iVar1) && ((char)local_10 != '\\0')) {\n    FUN_c01f3670(5,s_BOM_chk_adjust_c01f1fa4);\n    iVar1 = FUN_c01f3eb6(2);\n    if (iVar1 == 0) {\n      iVar1 = FUN_c01f44c6(s__mode_cmode_c01f1fb4);\n      if (iVar1 < 0) {\n        pcVar3 = s_file_load_c01f1fc0;\n        pcVar2 = s_BOM___s_c01f1fcc;\n      }\n      else {\n        iVar1 = FUN_c01f45cc(&uStack_c,3);\n        if (-1 < iVar1) {\n          iVar1 = FUN_c020c224(&uStack_c,&DAT_c01f1ffc,2);\n          if (iVar1 != 0) {\n            return 0;\n          }\n          return 1;\n        }\n        pcVar3 = s__mode_cmode_c01f1fb4;\n        pcVar2 = s_CFG_Failed_to_read_file__path__s_c01f1fd8;\n      }\n      FUN_c01f3670(6,pcVar2,pcVar3);\n    }\n    else {\n      FUN_c01f3670(3,s_BOM_E__s___d__c01f1994,s_fat_mount_c01f1988);\n    }\n  }\n  return 0;\n}\n\n"
+        },
+        {
+          "address": "0xc01f1c70",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f1c70",
+            "name": "FUN_c01f1c70"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_c01f1c70(void)\n\n{\n  undefined4 uVar1;\n  undefined4 uVar2;\n  int iVar3;\n  uint uVar4;\n  uint uVar5;\n  undefined4 uVar6;\n  undefined4 uVar7;\n  ushort local_2c [2];\n  ushort local_28 [2];\n  ushort local_24 [2];\n  byte local_20 [8];\n  \n  local_2c[0] = 0;\n  local_28[0] = 0;\n  local_24[0] = 0;\n  local_20[0] = 0;\n  FUN_c01f3670(5,s_BOM_chk_ank_c01f1f4c);\n  uVar1 = FUN_c01f68ec(DAT_c01f1f5c);\n  uVar2 = FUN_c01f68ec(DAT_c01f1f5c + -1);\n  iVar3 = FUN_c01f498c(DAT_c01f1f60,local_28);\n  if ((((-1 < iVar3) && (iVar3 = FUN_c01f498c(DAT_c01f1f60 + 1,local_24), -1 < iVar3)) &&\n      (iVar3 = FUN_c01f498c(DAT_c01f1f60 + 6,local_20), -1 < iVar3)) &&\n     (iVar3 = FUN_c01f498c(DAT_c01f1f60 + 7,local_2c), -1 < iVar3)) {\n    uVar4 = FUN_c01f6b9e(uVar1,uVar2);\n    uVar5 = (uint)local_24[0];\n    uVar6 = uVar1;\n    uVar7 = uVar2;\n    FUN_c01f3670(6,s_BOM_ANK__02X_L__02X_U__02X__u__d_c01f1f64,uVar4,local_28[0],uVar5,uVar1,uVar2);\n    if (((uVar4 != 0xffff) && (local_28[0] < uVar4)) && (uVar4 < local_24[0])) {\n      iVar3 = 0;\n      while( true ) {\n        if ((int)(local_20[0] - 1) <= iVar3) {\n          *(undefined4 *)(DAT_c01f1fa0 + 4) = 1;\n          return 1;\n        }\n        FUN_c01f4f88((uint)local_2c[0] * 2000);\n        uVar4 = FUN_c01f6b9e(uVar1,uVar2);\n        FUN_c01f3670(6,s_BOM_ANK__d___02X_c01f1f8c,iVar3,uVar4,uVar5,uVar6,uVar7);\n        if (((uVar4 == 0xffff) || (uVar4 <= local_28[0])) || (local_24[0] <= uVar4)) break;\n        iVar3 = iVar3 + 1;\n      }\n    }\n  }\n  return 0;\n}\n\n"
+        },
+        {
+          "address": "0xc01f23ee",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f23ee",
+            "name": "FUN_c01f23ee"
+          },
+          "status": "ok",
+          "pseudocode": "\nlonglong FUN_c01f23ee(undefined4 param_1,uint param_2)\n\n{\n  int iVar1;\n  uint local_10;\n  int local_c;\n  int local_8;\n  \n  local_10 = param_2 & 0xffffff00;\n  local_c = 0;\n  local_8 = 0;\n  iVar1 = FUN_c01f498c(DAT_c01f2448 + -0x10,&local_10);\n  if ((-1 < iVar1) && ((char)local_10 != '\\0')) {\n    FUN_c01f3670(5,s_BOM_chk_cipa_c01f2580);\n    iVar1 = FUN_c01f498c(DAT_c01f2448 + 1,&local_c);\n    if ((-1 < iVar1) &&\n       (((iVar1 = FUN_c01f498c(DAT_c01f2448 + 2,&local_8), -1 < iVar1 && (-1 < local_8 << 0x1c)) &&\n        (-1 < local_c << 0x1d)))) {\n      iVar1 = FUN_c01f3eb6(3);\n      if (iVar1 == 0) {\n        iVar1 = FUN_c01f44c6(s__cipa_bin_c01f287c);\n        if ((-1 < iVar1) && (iVar1 = FUN_c01f355e(), iVar1 == 4)) {\n          return CONCAT44(local_10,1);\n        }\n      }\n      else {\n        FUN_c01f3670(3,s_BOM_E__s___d__c01f1994,s_fat_mount_c01f1988);\n      }\n    }\n  }\n  return (ulonglong)local_10 << 0x20;\n}\n\n"
+        },
+        {
+          "address": "0xc01f16fe",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f16fe",
+            "name": "FUN_c01f16fe"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_c01f16fe(void)\n\n{\n  int iVar1;\n  undefined4 in_r3;\n  undefined4 local_8;\n  \n  local_8 = in_r3;\n  iVar1 = FUN_c01f498c(DAT_c01f1944 + 0x19,&local_8);\n  if ((-1 < iVar1) && ((char)local_8 != '\\0')) {\n    FUN_c01f3670(5,s_BOM_chk_hotboot_c01f1a7c);\n    iVar1 = FUN_c01f5614();\n    if ((iVar1 == 0) &&\n       (((iVar1 = FUN_c01f16e2(), iVar1 == 0 && (iVar1 = FUN_c01f5f18(), iVar1 != 0)) &&\n        (iVar1 = FUN_c01f1650(), iVar1 == 0)))) {\n      return 1;\n    }\n  }\n  return 0;\n}\n\n"
+        },
+        {
+          "address": "0xc01f15cc",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f15cc",
+            "name": "FUN_c01f15cc"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_c01f15cc(void)\n\n{\n  int iVar1;\n  uint in_r3;\n  uint local_8;\n  \n  local_8 = in_r3;\n  iVar1 = FUN_c01f498c(DAT_c01f1944 + 0x14,&local_8);\n  if ((-1 < iVar1) && ((char)local_8 == '\\x01')) {\n    FUN_c01f3670(5,s_BOM_chk_warmboot_c01f19b4);\n    iVar1 = FUN_c01f2bc6();\n    if ((iVar1 != 0) || (iVar1 = FUN_c01f2be6(), iVar1 != 0)) {\n      FUN_c01f3670(6,s_BOM_chk_HW_reset_c01f19c8);\n      iVar1 = FUN_c01f5e94();\n      if (iVar1 == 0) {\n        FUN_c01f3670(6,s_BOM_chk_LSI_crash_c01f19dc);\n        iVar1 = FUN_c01f5eae();\n        if (iVar1 == 0) {\n          FUN_c01f3670(6,s_BOM_chk_RestReq_c01f19f0);\n          iVar1 = FUN_c01f498c(DAT_c01f1944 + 0x1a,&local_8);\n          if (((iVar1 < 1) || ((local_8 & 0xff) == 0)) || (iVar1 = FUN_c01f5614(), iVar1 == 0)) {\n            FUN_c01f3670(6,s_BOM_chk_date_set_c01f1a04);\n            iVar1 = FUN_c01f355e();\n            if (iVar1 == 4) {\n              return 1;\n            }\n          }\n        }\n      }\n    }\n  }\n  return 0;\n}\n\n"
+        }
+      ],
+      "total": 10,
+      "succeeded": 10,
+      "failed": 0
+    },
+    "limitations": [
+      "Derived by an REA composed workflow.",
+      "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+      "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+      "External functions and functions without an analyzable body return null; other decompiler failures remain explicit.",
+      "External functions and local thunks are distinct; procedure metadata identifies both and preserves a thunk target when Ghidra resolves one.",
+      "Headerless raw-binary analysis uses the caller-supplied architecture and entry address; file offset 0 is mapped at that address. Headers are not discovered from file bytes.",
+      "Little-endian generic Ghidra languages are used for x86, x86_64, arm, arm64, and NMOS 6502. Big-endian, Thumb-only, Cortex-M, 65C02, 65816, and other processor variants are unsupported in this increment.",
+      "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+      "Static analysis does not emulate reset vectors, memory-mapped I/O, or firmware boot sequences.",
+      "The imported Program and temporary project are ephemeral and deleted on close. Annotation operations edit session database metadata; original executable bytes are never written.",
+      "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results."
+    ]
+  },
+  {
+    "operation": "independent_capstone_landing_pads",
+    "subject_sha256": "8d1dc242decea362c65c6dcaf320046df93f06e2fc97c547b7b250b2cc3057d6",
+    "file_range": [
+      "0x14850",
+      "0x148c8"
+    ],
+    "analysis_base": "0x10000",
+    "instructions": [
+      "0x24850: f9f772eb blx #0x1df38",
+      "0x24854: 04e0 b #0x24860",
+      "0x24856: 381d adds r0, r7, #4",
+      "0x24858: f8f7ceef blx #0x1d7f8",
+      "0x2485c: f9f76ceb blx #0x1df38",
+      "0x24860: f8f752ef blx #0x1d708",
+      "0x24864: 0129 cmp r1, #1",
+      "0x24866: 18d1 bne #0x2489a",
+      "0x24868: f9f7a8eb blx #0x1dfbc",
+      "0x2486c: 0646 mov r6, r0",
+      "0x2486e: f8f73aef blx #0x1d6e4",
+      "0x24872: 164b ldr r3, [pc, #0x58]",
+      "0x24874: 9842 cmp r0, r3",
+      "0x24876: a068 ldr r0, [r4, #8]",
+      "0x24878: 03d1 bne #0x24882",
+      "0x2487a: 0368 ldr r3, [r0]",
+      "0x2487c: 0521 movs r1, #5",
+      "0x2487e: 9d68 ldr r5, [r3, #8]",
+      "0x24880: 02e0 b #0x24888",
+      "0x24882: 0368 ldr r3, [r0]",
+      "0x24884: 0621 movs r1, #6",
+      "0x24886: 9d68 ldr r5, [r3, #8]",
+      "0x24888: 3246 mov r2, r6",
+      "0x2488a: 0023 movs r3, #0",
+      "0x2488c: a847 blx r5",
+      "0x2488e: 2046 mov r0, r4",
+      "0x24890: f9f714e8 blx #0x1d8bc",
+      "0x24894: f9f750eb blx #0x1df38",
+      "0x24898: d5e7 b #0x24846",
+      "0x2489a: f9f790eb blx #0x1dfbc",
+      "0x2489e: 0c49 ldr r1, [pc, #0x30]",
+      "0x248a0: 0022 movs r2, #0",
+      "0x248a2: 381d adds r0, r7, #4",
+      "0x248a4: f8f7b4ef blx #0x1d810",
+      "0x248a8: a068 ldr r0, [r4, #8]",
+      "0x248aa: 0621 movs r1, #6",
+      "0x248ac: 3a1d adds r2, r7, #4",
+      "0x248ae: 0368 ldr r3, [r0]",
+      "0x248b0: 9d68 ldr r5, [r3, #8]",
+      "0x248b2: 0023 movs r3, #0",
+      "0x248b4: a847 blx r5",
+      "0x248b6: 2046 mov r0, r4",
+      "0x248b8: f9f700e8 blx #0x1d8bc",
+      "0x248bc: 381d adds r0, r7, #4",
+      "0x248be: f8f79cef blx #0x1d7f8",
+      "0x248c2: f9f73aeb blx #0x1df38",
+      "0x248c6: bee7 b #0x24846"
+    ]
+  },
+  {
+    "evidence_id": "ev_7aa0570870e9c21bbfea92d0bec727821342390cfbdd299fcf34ca9c9e926ccb",
+    "subject": {
+      "name": "libupdaterbody.so",
+      "digest": {
+        "sha256": "8d1dc242decea362c65c6dcaf320046df93f06e2fc97c547b7b250b2cc3057d6"
+      },
+      "local_path": "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/updater.img_unpacked/bodylib/libupdaterbody.so",
+      "format": "elf",
+      "architecture": "arm"
+    },
+    "operation": "batch_decompile",
+    "parameters": {
+      "addresses": [
+        "0x24e88"
+      ]
+    },
+    "normalized_result": {
+      "items": [
+        {
+          "address": "0x24e88",
+          "procedure": {
+            "status": "resolved",
+            "address": "0x24e88",
+            "name": "Updater::FlagFirmwareInformationHandler::StartUpdate"
+          },
+          "status": "ok",
+          "pseudocode": "\n/* Updater::FlagFirmwareInformationHandler::StartUpdate() */\n\nvoid __thiscall\nUpdater::FlagFirmwareInformationHandler::StartUpdate(FlagFirmwareInformationHandler *this)\n\n{\n  int iVar1;\n  undefined4 uVar2;\n  MountPoint aMStack_9c [24];\n  CompleteFlagFile aCStack_84 [20];\n  ModeFlagFile aMStack_70 [20];\n  Mode6FlagFile aMStack_5c [20];\n  Mode5FlagFile aMStack_48 [20];\n  Mode3FlagFile aMStack_34 [20];\n  StringHandler aSStack_20 [16];\n  \n  Updater::MountPoint::MountPoint(aMStack_9c);\n  iVar1 = (**(code **)(*(int *)this + 0x2c))(this);\n  if (iVar1 != 0) goto LAB_00025054;\n  Updater::MountPoint::Initialize((char *)aMStack_9c);\n  iVar1 = Updater::MountPoint::Mount((char *)aMStack_9c,0x26434);\n  if (iVar1 == 0) {\n    if ((1 < *(int *)(this + 4) - 1U) && (*(int *)(this + 4) != 4)) {\n      printf(\"UdrAPI,%d,%s:%d,\\\"%s\\\"\\n\",0x3000e,\"FlagFirmwareInformationHandler.cpp\",0x31,\n             \"/dev/nflasha2\");\n      uVar2 = __cxa_allocate_exception(0xc);\n      FUN_00024b6c(uVar2,0x3000e);\n                    /* WARNING: Subroutine does not return */\n      __cxa_throw(uVar2,&ApiException::typeinfo,ApiException::~ApiException);\n    }\n    goto LAB_00025054;\n  }\n  Updater::StringHandler::StringHandler(aSStack_20);\n  Updater::StringHandler::SetString((char *)aSStack_20,\"/tmp_updater/updater/current\",\"/\");\n  Updater::DirectoryHandler::Create(aSStack_20);\n  switch(*(undefined4 *)(this + 4)) {\n  case 3:\n    Updater::ModeFlagFile::ModeFlagFile(aMStack_70,\"/tmp_updater/updater/current\");\n    Updater::BaseFlagFile::Create();\n    break;\n  default:\n    goto switchD_00024f30_caseD_4;\n  case 5:\n    Updater::ModeFlagFile::ModeFlagFile(aMStack_70,\"/tmp_updater/updater/current\");\n    Updater::BaseFlagFile::Create();\n    Updater::Mode3FlagFile::Mode3FlagFile(aMStack_34,\"/tmp_updater/updater/current\");\n    Updater::BaseFlagFile::Create();\n    Mode3FlagFile::~Mode3FlagFile(aMStack_34);\n    break;\n  case 6:\n    Updater::ModeFlagFile::ModeFlagFile(aMStack_70,\"/tmp_updater/updater/current\");\n    Updater::BaseFlagFile::Create();\n    Updater::Mode5FlagFile::Mode5FlagFile(aMStack_48,\"/tmp_updater/updater/current\");\n    Updater::BaseFlagFile::Create();\n    Mode5FlagFile::~Mode5FlagFile(aMStack_48);\n    break;\n  case 7:\n    Updater::ModeFlagFile::ModeFlagFile(aMStack_70,\"/tmp_updater/updater/current\");\n    Updater::BaseFlagFile::Create();\n    Updater::Mode6FlagFile::Mode6FlagFile(aMStack_5c,\"/tmp_updater/updater/current\");\n    Updater::BaseFlagFile::Create();\n    Mode6FlagFile::~Mode6FlagFile(aMStack_5c);\n  }\n  ModeFlagFile::~ModeFlagFile(aMStack_70);\nswitchD_00024f30_caseD_4:\n  Updater::CompleteFlagFile::CompleteFlagFile(aCStack_84,\"/tmp_updater/updater/current\");\n  iVar1 = Updater::BaseFlagFile::IsValid();\n  if (iVar1 != 0) {\n    Updater::BaseFlagFile::Delete();\n  }\n  iVar1 = Updater::MountPoint::Umount();\n  if (iVar1 == 0) {\n    printf(\"UdrAPI,%d,%s:%d,\\\"%s\\\"\\n\",0x3000f,\"FlagFirmwareInformationHandler.cpp\",0x62,\n           \"/tmp_updater/updater/current\");\n    uVar2 = __cxa_allocate_exception(0xc);\n    FUN_00024b6c(uVar2,0x3000f);\n                    /* WARNING: Subroutine does not return */\n    __cxa_throw(uVar2,&ApiException::typeinfo,ApiException::~ApiException);\n  }\n  CompleteFlagFile::~CompleteFlagFile(aCStack_84);\n  Updater::StringHandler::~StringHandler(aSStack_20);\nLAB_00025054:\n  Updater::MountPoint::~MountPoint(aMStack_9c);\n  return;\n}\n\n"
+        }
+      ],
+      "total": 1,
+      "succeeded": 1,
+      "failed": 0
+    },
+    "limitations": [
+      "Derived by an REA composed workflow.",
+      "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+      "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+      "External functions and functions without an analyzable body return null; other decompiler failures remain explicit.",
+      "External functions and local thunks are distinct; procedure metadata identifies both and preserves a thunk target when Ghidra resolves one.",
+      "Ghidra Listing reports a terminal call at 0x24f00 to 0x1decc <EXTERNAL>::__cxa_throw (external=false, thunk=true, hasNoReturn=true); fallthrough is excluded by Ghidra's flow model. This records Ghidra's FunctionManager flag, not an independent verification that the callee cannot return.",
+      "Ghidra Listing reports a terminal call at 0x25040 to 0x1decc <EXTERNAL>::__cxa_throw (external=false, thunk=true, hasNoReturn=true); fallthrough is excluded by Ghidra's flow model. This records Ghidra's FunctionManager flag, not an independent verification that the callee cannot return.",
+      "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+      "The imported Program and temporary project are ephemeral and deleted on close. Annotation operations edit session database metadata; original executable bytes are never written.",
+      "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results."
+    ]
+  },
+  {
+    "evidence_id": "ev_2d0aec609027718b2a451f8f56b5e4635b1cb29231e3b53e171ecb3383694c0a",
+    "subject": {
+      "name": "mf",
+      "digest": {
+        "sha256": "85590243764cbb5de11ae576c7c7a5b96e20da787c2c860b3532148321799aeb"
+      },
+      "local_path": "/tmp/e26-initrd-r5-files/usr/bin/mf",
+      "format": "elf",
+      "architecture": "arm"
+    },
+    "operation": "batch_decompile",
+    "parameters": {
+      "addresses": [
+        "0xa038",
+        "0x9fcc"
+      ]
+    },
+    "normalized_result": {
+      "items": [
+        {
+          "address": "0xa038",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xa038",
+            "name": "Updater::SenserInputUpdaterManager::StartWriting"
+          },
+          "status": "ok",
+          "pseudocode": "\n/* Updater::SenserInputUpdaterManager::StartWriting() */\n\nundefined4 __thiscall\nUpdater::SenserInputUpdaterManager::StartWriting(SenserInputUpdaterManager *this)\n\n{\n  uchar uVar1;\n  int iVar2;\n  int *piVar3;\n  ApiException *pAVar4;\n  BufferContainer *this_00;\n  uint *puVar5;\n  undefined4 uVar6;\n  FileHandler aFStack_34 [8];\n  FileHandler aFStack_2c [8];\n  undefined1 local_24 [8];\n  \n  Updater::FileHandler::FileHandler(aFStack_2c);\n  Updater::FileHandler::FileHandler(aFStack_34);\n  iVar2 = Updater::FileHandler::Open((char *)aFStack_2c,0xe379);\n  if (iVar2 == 0) {\n    piVar3 = __errno_location();\n    printf(\"UdrAPI,%d,%s:%d,\\\"%d\\\"\\n\",0x3000a,\"SenserInputUpdaterManager.cpp\",0x5f,*piVar3);\n    pAVar4 = (ApiException *)__cxa_allocate_exception(0xc);\n    ApiException::ApiException(pAVar4,0x3000a);\n                    /* WARNING: Subroutine does not return */\n    __cxa_throw(pAVar4,&ApiException::typeinfo,0x9cdd);\n  }\n  iVar2 = Updater::FileHandler::Open((char *)aFStack_34,0xe38c);\n  if (iVar2 == 0) {\n    piVar3 = __errno_location();\n    printf(\"UdrAPI,%d,%s:%d,\\\"%d\\\"\\n\",0x3000a,\"SenserInputUpdaterManager.cpp\",0x62,*piVar3);\n    pAVar4 = (ApiException *)__cxa_allocate_exception(0xc);\n    ApiException::ApiException(pAVar4,0x3000a);\n                    /* WARNING: Subroutine does not return */\n    __cxa_throw(pAVar4,&ApiException::typeinfo,0x9cdd);\n  }\n  (**(code **)(**(int **)(this + 0xc) + 0x10))();\n  this_00 = (BufferContainer *)(**(code **)(**(int **)(this + 0x14) + 0x10))();\n  Updater::FileHandler::Write((uchar *)aFStack_34,0xe3d8);\n  CommonUpdaterManagerStatus::Run(*(CommonUpdaterManagerStatus **)(this + 8));\n  do {\n    iVar2 = CommonUpdaterManagerStatus::IsRunning(*(CommonUpdaterManagerStatus **)(this + 8));\n    if (iVar2 == 0) break;\n    puVar5 = (uint *)BufferContainer::GetBufferInformation(this_00);\n    iVar2 = Updater::FileHandler::Read((uchar *)aFStack_2c,*puVar5);\n    if (iVar2 < 0) {\n      piVar3 = __errno_location();\n      printf(\"UdrAPI,%d,%s:%d,\\\"%d\\\"\\n\",0x3000a,\"SenserInputUpdaterManager.cpp\",0x74,*piVar3);\n      pAVar4 = (ApiException *)__cxa_allocate_exception(0xc);\n      ApiException::ApiException(pAVar4,0x3000a);\n                    /* WARNING: Subroutine does not return */\n      __cxa_throw(pAVar4,&ApiException::typeinfo,0x9cdd);\n    }\n    (**(code **)(**(int **)(this + 0xc) + 0x18))(*(int **)(this + 0xc),*puVar5,iVar2,iVar2 == 0);\n  } while (iVar2 != 0);\n  CommonUpdaterManagerStatus::WaitComplete(*(CommonUpdaterManagerStatus **)(this + 8));\n  (**(code **)(**(int **)(this + 0xc) + 0x14))();\n  iVar2 = Updater::FileHandler::Close();\n  if (iVar2 == 0) {\n    piVar3 = __errno_location();\n    printf(\"UdrAPI,%d,%s:%d,\\\"%d\\\"\\n\",0x3000a,\"SenserInputUpdaterManager.cpp\",0x7f,*piVar3);\n    pAVar4 = (ApiException *)__cxa_allocate_exception(0xc);\n    ApiException::ApiException(pAVar4,0x3000a);\n                    /* WARNING: Subroutine does not return */\n    __cxa_throw(pAVar4,&ApiException::typeinfo,0x9cdd);\n  }\n  iVar2 = CommonUpdaterManagerStatus::HasError(*(CommonUpdaterManagerStatus **)(this + 8));\n  if (iVar2 == 0) {\n    local_24[0] = 2;\n    iVar2 = Updater::FileHandler::Write((uchar *)aFStack_34,(uint)local_24);\n    if (iVar2 != 1) {\n      piVar3 = __errno_location();\n      printf(\"UdrAPI,%d,%s:%d,\\\"%d\\\"\\n\",0x3000a,\"SenserInputUpdaterManager.cpp\",0x87,*piVar3);\n      pAVar4 = (ApiException *)__cxa_allocate_exception(0xc);\n      ApiException::ApiException(pAVar4,0x3000a);\n                    /* WARNING: Subroutine does not return */\n      __cxa_throw(pAVar4,&ApiException::typeinfo,0x9cdd);\n    }\n    uVar6 = 0;\n  }\n  else {\n    pAVar4 = (ApiException *)\n             CommonUpdaterManagerStatus::GetError(*(CommonUpdaterManagerStatus **)(this + 8));\n    uVar1 = LEDErrorConverter::Convert(pAVar4);\n    sendErrorMessage(this,aFStack_34,uVar1);\n    uVar6 = 4;\n  }\n  iVar2 = Updater::FileHandler::Close();\n  if (iVar2 != 0) {\n    if (this_00 != (BufferContainer *)0x0) {\n      BufferContainer::Free(this_00);\n    }\n    Updater::FileHandler::~FileHandler(aFStack_34);\n    Updater::FileHandler::~FileHandler(aFStack_2c);\n    return uVar6;\n  }\n  piVar3 = __errno_location();\n  printf(\"UdrAPI,%d,%s:%d,\\\"%d\\\"\\n\",0x3000a,\"SenserInputUpdaterManager.cpp\",0x8c,*piVar3);\n  pAVar4 = (ApiException *)__cxa_allocate_exception(0xc);\n  ApiException::ApiException(pAVar4,0x3000a);\n                    /* WARNING: Subroutine does not return */\n  __cxa_throw(pAVar4,&ApiException::typeinfo,0x9cdd);\n}\n\n"
+        },
+        {
+          "address": "0x9fcc",
+          "procedure": {
+            "status": "resolved",
+            "address": "0x9fcc",
+            "name": "Updater::SenserInputUpdaterManager::sendErrorMessage"
+          },
+          "status": "ok",
+          "pseudocode": "\n/* Updater::SenserInputUpdaterManager::sendErrorMessage(Updater::FileHandler*, unsigned char) */\n\nvoid __thiscall\nUpdater::SenserInputUpdaterManager::sendErrorMessage\n          (SenserInputUpdaterManager *this,FileHandler *param_1,uchar param_2)\n\n{\n  int iVar1;\n  int *piVar2;\n  uchar local_c [4];\n  \n  local_c[0] = param_2;\n  iVar1 = (**(code **)(*(int *)param_1 + 0x18))(param_1,local_c,1);\n  if (iVar1 != 1) {\n    piVar2 = __errno_location();\n    printf(\"UdrAPI,%d,%s:%d,\\\"%d\\\"\\n\",0x3000a,\"SenserInputUpdaterManager.cpp\",200,*piVar2);\n  }\n  return;\n}\n\n"
+        }
+      ],
+      "total": 2,
+      "succeeded": 2,
+      "failed": 0
+    },
+    "limitations": [
+      "Derived by an REA composed workflow.",
+      "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+      "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+      "External functions and functions without an analyzable body return null; other decompiler failures remain explicit.",
+      "External functions and local thunks are distinct; procedure metadata identifies both and preserves a thunk target when Ghidra resolves one.",
+      "Ghidra Listing reports a terminal call at 0xa086 to 0x9998 <EXTERNAL>::__cxa_throw (external=false, thunk=true, hasNoReturn=true); fallthrough is excluded by Ghidra's flow model. This records Ghidra's FunctionManager flag, not an independent verification that the callee cannot return.",
+      "Ghidra Listing reports a terminal call at 0xa0be to 0x9998 <EXTERNAL>::__cxa_throw (external=false, thunk=true, hasNoReturn=true); fallthrough is excluded by Ghidra's flow model. This records Ghidra's FunctionManager flag, not an independent verification that the callee cannot return.",
+      "Ghidra Listing reports a terminal call at 0xa12a to 0x9998 <EXTERNAL>::__cxa_throw (external=false, thunk=true, hasNoReturn=true); fallthrough is excluded by Ghidra's flow model. This records Ghidra's FunctionManager flag, not an independent verification that the callee cannot return.",
+      "Ghidra Listing reports a terminal call at 0xa196 to 0x9998 <EXTERNAL>::__cxa_throw (external=false, thunk=true, hasNoReturn=true); fallthrough is excluded by Ghidra's flow model. This records Ghidra's FunctionManager flag, not an independent verification that the callee cannot return.",
+      "Ghidra Listing reports a terminal call at 0xa1f4 to 0x9998 <EXTERNAL>::__cxa_throw (external=false, thunk=true, hasNoReturn=true); fallthrough is excluded by Ghidra's flow model. This records Ghidra's FunctionManager flag, not an independent verification that the callee cannot return.",
+      "Ghidra Listing reports a terminal call at 0xa22e to 0x9998 <EXTERNAL>::__cxa_throw (external=false, thunk=true, hasNoReturn=true); fallthrough is excluded by Ghidra's flow model. This records Ghidra's FunctionManager flag, not an independent verification that the callee cannot return.",
+      "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+      "The imported Program and temporary project are ephemeral and deleted on close. Annotation operations edit session database metadata; original executable bytes are never written.",
+      "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results."
+    ]
+  },
+  {
+    "evidence_id": "ev_9983c62f9c8921d55e0e0360bfbd29a3b63f79ecaeb7d645fb59ad60b919f188",
+    "subject": {
+      "name": "libupdaterbody.so",
+      "digest": {
+        "sha256": "8d1dc242decea362c65c6dcaf320046df93f06e2fc97c547b7b250b2cc3057d6"
+      },
+      "local_path": "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/updater.img_unpacked/bodylib/libupdaterbody.so",
+      "format": "elf",
+      "architecture": "arm"
+    },
+    "operation": "batch_decompile",
+    "parameters": {
+      "addresses": [
+        "0x1d8bc",
+        "0x24860",
+        "0x2489a"
+      ]
+    },
+    "normalized_result": {
+      "items": [
+        {
+          "address": "0x1d8bc",
+          "procedure": {
+            "status": "resolved",
+            "address": "0x1d8bc",
+            "name": "Updater::ThreadPlugin::setError"
+          },
+          "status": "ok",
+          "pseudocode": "\nvoid __thiscall Updater::ThreadPlugin::setError(ThreadPlugin *this)\n\n{\n  undefined1 auStack_14 [8];\n  \n  FUN_00023c20(auStack_14,this + 0x24);\n  this[0x48] = (ThreadPlugin)0x1;\n  FUN_00023c32(auStack_14);\n  return;\n}\n\n"
+        },
+        {
+          "address": "0x24860",
+          "status": "error",
+          "error": "No procedure recognized at requested landing-pad address; independently inspected bytes."
+        },
+        {
+          "address": "0x2489a",
+          "status": "error",
+          "error": "No procedure recognized at requested landing-pad address; independently inspected bytes."
+        }
+      ],
+      "total": 3,
+      "succeeded": 1,
+      "failed": 2
+    },
+    "limitations": [
+      "Derived by an REA composed workflow.",
+      "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+      "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+      "External functions and functions without an analyzable body return null; other decompiler failures remain explicit.",
+      "External functions and local thunks are distinct; procedure metadata identifies both and preserves a thunk target when Ghidra resolves one.",
+      "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+      "The imported Program and temporary project are ephemeral and deleted on close. Annotation operations edit session database metadata; original executable bytes are never written.",
+      "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results."
+    ]
+  },
+  {
+    "evidence_id": "ev_96c7f8985ffe344e8cca1e53cdbb7b003398bf5213b1bbea738ae5f0fea788ad",
+    "subject": {
+      "name": "libupdaterbody.so",
+      "digest": {
+        "sha256": "8d1dc242decea362c65c6dcaf320046df93f06e2fc97c547b7b250b2cc3057d6"
+      },
+      "local_path": "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/updater.img_unpacked/bodylib/libupdaterbody.so",
+      "format": "elf",
+      "architecture": "arm"
+    },
+    "operation": "batch_decompile",
+    "parameters": {
+      "addresses": [
+        "0x1dfbc",
+        "0x1df38",
+        "0x1d708",
+        "0x1d6e4"
+      ]
+    },
+    "normalized_result": {
+      "items": [
+        {
+          "address": "0x1dfbc",
+          "procedure": {
+            "status": "resolved",
+            "address": "0x1dfbc",
+            "name": "<EXTERNAL>::__cxa_begin_catch"
+          },
+          "status": "ok",
+          "pseudocode": "\nvoid __cxa_begin_catch(void)\n\n{\n  __cxa_begin_catch();\n  return;\n}\n\n"
+        },
+        {
+          "address": "0x1df38",
+          "procedure": {
+            "status": "resolved",
+            "address": "0x1df38",
+            "name": "<EXTERNAL>::__cxa_end_catch"
+          },
+          "status": "ok",
+          "pseudocode": "\nvoid __cxa_end_catch(void)\n\n{\n  __cxa_end_catch();\n  return;\n}\n\n"
+        },
+        {
+          "address": "0x1d708",
+          "procedure": {
+            "status": "resolved",
+            "address": "0x1d708",
+            "name": "<EXTERNAL>::__cxa_end_cleanup"
+          },
+          "status": "ok",
+          "pseudocode": "\nvoid __cxa_end_cleanup(void)\n\n{\n  __cxa_end_cleanup();\n  return;\n}\n\n"
+        },
+        {
+          "address": "0x1d6e4",
+          "procedure": {
+            "status": "resolved",
+            "address": "0x1d6e4",
+            "name": "Updater::ApiException::GetErrorCode"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 __thiscall Updater::ApiException::GetErrorCode(ApiException *this)\n\n{\n  return *(undefined4 *)(this + 4);\n}\n\n"
+        }
+      ],
+      "total": 4,
+      "succeeded": 4,
+      "failed": 0
+    },
+    "limitations": [
+      "Derived by an REA composed workflow.",
+      "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+      "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+      "External functions and functions without an analyzable body return null; other decompiler failures remain explicit.",
+      "External functions and local thunks are distinct; procedure metadata identifies both and preserves a thunk target when Ghidra resolves one.",
+      "Ghidra Listing reports a terminal call at 0x1d710 to 0x3207c <EXTERNAL>::__cxa_end_cleanup (external=false, thunk=true, hasNoReturn=false); fallthrough is excluded by Ghidra's flow model. The reason for the terminal flow is not established by this observation.",
+      "Ghidra Listing reports a terminal call at 0x1df40 to 0x3219c <EXTERNAL>::__cxa_end_catch (external=false, thunk=true, hasNoReturn=false); fallthrough is excluded by Ghidra's flow model. The reason for the terminal flow is not established by this observation.",
+      "Ghidra Listing reports a terminal call at 0x1dfc4 to 0x321b0 <EXTERNAL>::__cxa_begin_catch (external=false, thunk=true, hasNoReturn=false); fallthrough is excluded by Ghidra's flow model. The reason for the terminal flow is not established by this observation.",
+      "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+      "The imported Program and temporary project are ephemeral and deleted on close. Annotation operations edit session database metadata; original executable bytes are never written.",
+      "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results."
+    ]
+  },
+  {
+    "evidence_id": "ev_12ae9aaf6952a7c1c9218b778d14824e9b1635c266ae52390ec36938b509f2e6",
+    "subject": {
+      "name": "e26-loader3.bin",
+      "digest": {
+        "sha256": "8fd98a4140bf85f955c994ea263c4a295846e049121b593c0a823aec01620c07"
+      },
+      "local_path": "/tmp/e26-loader3.bin",
+      "format": "raw-binary",
+      "architecture": "arm"
+    },
+    "operation": "batch_decompile",
+    "parameters": {
+      "addresses": [
+        "0xc01f5148",
+        "0xc01f6d48",
+        "0xc01f55dc",
+        "0xc01f5948",
+        "0xc01f5a68"
+      ]
+    },
+    "normalized_result": {
+      "items": [
+        {
+          "address": "0xc01f5148",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f5148",
+            "name": "FUN_c01f5148"
+          },
+          "status": "ok",
+          "pseudocode": "\nint FUN_c01f5148(int param_1,int param_2,int param_3,int param_4,int param_5)\n\n{\n  int iVar1;\n  uint uVar2;\n  uint uVar3;\n  undefined4 local_a8;\n  undefined1 local_a4;\n  undefined1 local_a3;\n  int local_a0;\n  undefined1 auStack_9c [104];\n  int iStack_34;\n  int iStack_30;\n  int local_2c;\n  int iStack_28;\n  \n  uVar2 = 0;\n  if ((param_3 == 0) || (100 < param_4)) {\n    iVar1 = -0x131;\n  }\n  else {\n    iStack_34 = param_1;\n    iStack_30 = param_2;\n    local_2c = param_3;\n    iStack_28 = param_4;\n    FUN_c01f3708(7,&local_2c,param_4,1);\n    if (param_1 == 0) {\n      uVar3 = 0x96;\n    }\n    else {\n      uVar3 = 3000;\n    }\n    do {\n      local_a8 = DAT_c01f52f4;\n      FUN_c020c318(auStack_9c,local_2c,param_4);\n      local_a4 = (char)param_1;\n      local_a0 = param_2;\n      local_a3 = FUN_c01f525e(auStack_9c,100);\n      iVar1 = FUN_c01f5278(param_1,&local_a8);\n      if (param_1 != 0) {\n        FUN_c01f4f88(2000);\n      }\n      if (iVar1 == 0) {\n        FUN_c01f3708(7,&local_a8,param_4,1);\n        if (param_5 != 0) {\n          FUN_c020c318(local_2c,auStack_9c,param_4);\n        }\n        if (local_a0 != param_2) {\n          return DAT_c01f52fc + 4;\n        }\n        return 0;\n      }\n      uVar2 = uVar2 + 1;\n      iVar1 = DAT_c01f52fc;\n    } while (uVar2 < uVar3);\n  }\n  return iVar1;\n}\n\n"
+        },
+        {
+          "address": "0xc01f6d48",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f6d48",
+            "name": "FUN_c01f6d48"
+          },
+          "status": "ok",
+          "pseudocode": "\nvoid FUN_c01f6d48(int param_1)\n\n{\n  undefined4 uVar1;\n  undefined4 *puVar2;\n  undefined4 *puVar3;\n  undefined4 *puVar4;\n  undefined4 *puVar5;\n  undefined4 *puVar6;\n  undefined4 *puVar7;\n  undefined4 *puVar8;\n  undefined4 *puVar9;\n  \n  *DAT_c01f6ee4 = 0x40000;\n  puVar2 = DAT_c01f6ee4 + -0x10;\n  *puVar2 = 0x40000;\n  puVar3 = DAT_c01f6ee8;\n  *DAT_c01f6ee8 = 0x40000;\n  *puVar2 = 0x80000;\n  *puVar3 = 0x80000;\n  puVar2 = DAT_c01f6ee4;\n  DAT_c01f6ee4[-0x10] = 0x20000;\n  *puVar3 = 0x20000;\n  puVar2[-0xf] = 0x10000;\n  DAT_c01f6ee4[-8] = 0x10000;\n  DAT_c01f6ee8[4] = 0x10000;\n  puVar2 = DAT_c01f6ee4 + -3;\n  *puVar2 = 0x80000;\n  *puVar2 = 0x20000;\n  *puVar2 = 0x10000;\n  puVar2 = DAT_c01f6eec;\n  puVar3 = DAT_c01f6ee8 + 0x10;\n  puVar7 = DAT_c01f6eec + 1;\n  puVar8 = DAT_c01f6eec + 2;\n  puVar9 = DAT_c01f6eec + -4;\n  if (param_1 == 0) {\n    puVar4 = DAT_c01f6ee4 + -0xf;\n    *puVar4 = 0x80000;\n    puVar5 = DAT_c01f6ee4 + -8;\n    *puVar5 = 0x80000;\n    puVar6 = DAT_c01f6ee8 + 4;\n    *puVar6 = 0x80000;\n    *puVar3 = 0x80000;\n    *puVar4 = 0x40000;\n    *puVar5 = 0x40000;\n    *puVar6 = 0x40000;\n    *puVar3 = 0x20000;\n    *puVar2 = 0x1000000;\n    *puVar7 = 0x13000000;\n    *puVar8 = 0;\n    uVar1 = 0xc9000000;\n  }\n  else {\n    *puVar3 = 0x80000;\n    *puVar3 = 0x40000;\n    *puVar3 = 0x20000;\n    *puVar2 = 0x1000000;\n    *puVar7 = 0x13000000;\n    *puVar8 = 0;\n    uVar1 = 0xd8000000;\n  }\n  *puVar9 = uVar1;\n  DAT_c01f6eec[-3] = 0x70000000;\n  return;\n}\n\n"
+        },
+        {
+          "address": "0xc01f55dc",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f55dc",
+            "name": "FUN_c01f55dc"
+          },
+          "status": "ok",
+          "pseudocode": "\nint FUN_c01f55dc(void)\n\n{\n  int iVar1;\n  \n  iVar1 = FUN_c01f63a6();\n  if ((iVar1 == 0) && (iVar1 = FUN_c01f553c(), iVar1 == 0)) {\n    iVar1 = FUN_c01f54f0(DAT_c01f5714 + 0x14,DAT_c01f5714 + 0x18,DAT_c01f5714,1);\n    if (iVar1 == 0) {\n      FUN_c01f5426();\n      iVar1 = FUN_c01f5340();\n      if (iVar1 == 0) {\n        FUN_c01f61a0();\n        iVar1 = 0;\n      }\n    }\n  }\n  return iVar1;\n}\n\n"
+        },
+        {
+          "address": "0xc01f5948",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f5948",
+            "name": "FUN_c01f5948"
+          },
+          "status": "ok",
+          "pseudocode": "\nint FUN_c01f5948(void)\n\n{\n  undefined1 uVar1;\n  int iVar2;\n  int iVar3;\n  undefined4 in_r3;\n  undefined4 local_10;\n  \n  iVar3 = DAT_c01f5cb8;\n  local_10 = in_r3;\n  if ((*(int *)(DAT_c01f5cb8 + 0x34) == 4) && (iVar2 = FUN_c01f553c(1), iVar2 != 0)) {\n    return iVar2;\n  }\n  if (*(int *)(iVar3 + 0x34) == 5) {\n    FUN_c01f7d08();\n  }\n  iVar2 = FUN_c01f64d0();\n  if (iVar2 == 0) {\n    iVar2 = FUN_c01f590a();\n    if (iVar2 != 0) {\n      return iVar2;\n    }\n    iVar2 = FUN_c01f63f2();\n    if (iVar2 == 0) {\n      iVar3 = *(int *)(iVar3 + 0x34);\n      if (iVar3 == 5) {\n        iVar3 = FUN_c01f82fe();\n        uVar1 = *(undefined1 *)(iVar3 + 0x11);\n      }\n      else {\n        if (iVar3 != 7) {\n          return 0;\n        }\n        iVar3 = FUN_c01f8746();\n        uVar1 = *(undefined1 *)(iVar3 + 0x7a);\n      }\n      local_10 = CONCAT31(local_10._1_3_,uVar1);\n      FUN_c01f4aa0(0x51,DAT_c01f5cf4 + 5,&local_10);\n      return 0;\n    }\n    return iVar2;\n  }\n  return iVar2;\n}\n\n"
+        },
+        {
+          "address": "0xc01f5a68",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f5a68",
+            "name": "FUN_c01f5a68"
+          },
+          "status": "ok",
+          "pseudocode": "\nint FUN_c01f5a68(undefined4 param_1)\n\n{\n  int iVar1;\n  int iVar2;\n  \n  iVar1 = FUN_c01f50f4();\n  iVar2 = DAT_c01f5cb8;\n  if (iVar1 != 2) {\n    *(undefined4 *)(DAT_c01f5cb8 + 0x40) = 0;\n    *(undefined4 *)(iVar2 + 0x44) = 1;\n    *(undefined4 *)(iVar2 + 0x48) = 0;\n    *(undefined4 *)(iVar2 + 0x54) = 0;\n    *(undefined4 *)(iVar2 + 0x4c) = 0;\n    switch(param_1) {\n    default:\n      FUN_c01f3670(3,s_PWR_E_inv_bootmode_c01f5d88);\n      return 0;\n    case 3:\n      FUN_c01f5a2e(1);\n      *(undefined4 *)(iVar2 + 0x40) = 1;\n      *(undefined4 *)(iVar2 + 0x44) = 0;\n      break;\n    case 5:\n      *(undefined4 *)(iVar2 + 0x44) = 0;\n    case 1:\n    case 2:\n    case 4:\n    case 10:\n    case 0xb:\n    case 0xc:\n      FUN_c01f5a2e(1);\n    case 6:\n      *(undefined4 *)(iVar2 + 0x40) = 1;\n      break;\n    case 7:\n    case 0xd:\n    case 0xe:\n      *(undefined4 *)(iVar2 + 0x54) = 1;\n      *(undefined4 *)(iVar2 + 0x4c) = 1;\n      break;\n    case 8:\n      *(undefined4 *)(iVar2 + 0x48) = 1;\n      break;\n    case 9:\n      *(undefined4 *)(iVar2 + 0x54) = 1;\n    }\n    iVar2 = FUN_c01f59ae();\n    if (iVar2 != 0) {\n      return iVar2;\n    }\n  }\n  return 0;\n}\n\n"
+        }
+      ],
+      "total": 5,
+      "succeeded": 5,
+      "failed": 0
+    },
+    "limitations": [
+      "Derived by an REA composed workflow.",
+      "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+      "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+      "External functions and functions without an analyzable body return null; other decompiler failures remain explicit.",
+      "External functions and local thunks are distinct; procedure metadata identifies both and preserves a thunk target when Ghidra resolves one.",
+      "Headerless raw-binary analysis uses the caller-supplied architecture and entry address; file offset 0 is mapped at that address. Headers are not discovered from file bytes.",
+      "Little-endian generic Ghidra languages are used for x86, x86_64, arm, arm64, and NMOS 6502. Big-endian, Thumb-only, Cortex-M, 65C02, 65816, and other processor variants are unsupported in this increment.",
+      "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+      "Static analysis does not emulate reset vectors, memory-mapped I/O, or firmware boot sequences.",
+      "The imported Program and temporary project are ephemeral and deleted on close. Annotation operations edit session database metadata; original executable bytes are never written.",
+      "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results."
+    ]
+  },
+  {
+    "evidence_id": "ev_fe52e6e28f3d38c5904685669d50d39141e4fe6a2a6f7a9ae39ccc9d02878c7d",
+    "subject": {
+      "name": "e26-loader3.bin",
+      "digest": {
+        "sha256": "8fd98a4140bf85f955c994ea263c4a295846e049121b593c0a823aec01620c07"
+      },
+      "local_path": "/tmp/e26-loader3.bin",
+      "format": "raw-binary",
+      "architecture": "arm"
+    },
+    "operation": "batch_decompile",
+    "parameters": {
+      "addresses": [
+        "0xc01f5278",
+        "0xc01f4b66",
+        "0xc01f68e6",
+        "0xc01f2192"
+      ]
+    },
+    "normalized_result": {
+      "items": [
+        {
+          "address": "0xc01f5278",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f5278",
+            "name": "FUN_c01f5278"
+          },
+          "status": "ok",
+          "pseudocode": "\nint FUN_c01f5278(uint param_1,int param_2,undefined4 param_3,undefined4 param_4)\n\n{\n  int iVar1;\n  uint uVar2;\n  int local_14;\n  \n  local_14 = param_2;\n  iVar1 = FUN_c01f6e3e(param_1,param_2,0x70,param_4,param_1);\n  if (iVar1 != 0) {\n    FUN_c01f3670(6,s_SYC_CommErr_c01f5304);\n    return iVar1;\n  }\n  FUN_c01f4f88(0x14);\n  iVar1 = FUN_c020c180(local_14,&DAT_c01f52f4,4);\n  if (iVar1 == 0) {\n    if ((uint)*(byte *)(local_14 + 4) != (param_1 & 0xff)) {\n      uVar2 = FUN_c01f525e(local_14 + 0xc,100);\n      if (*(byte *)(local_14 + 5) != uVar2) {\n        FUN_c01f3708(7,&local_14,4,1);\n        return 4;\n      }\n      return 0;\n    }\n  }\n  return 3;\n}\n\n"
+        },
+        {
+          "address": "0xc01f4b66",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f4b66",
+            "name": "FUN_c01f4b66"
+          },
+          "status": "ok",
+          "pseudocode": "\nint FUN_c01f4b66(int param_1,undefined4 param_2)\n\n{\n  uint uVar1;\n  int iVar2;\n  char *pcVar3;\n  int iVar4;\n  int iVar5;\n  \n  uVar1 = 0;\n  iVar4 = *(int *)(DAT_c01f4c2c + 4);\n  while ((uVar1 < *(uint *)(iVar4 + 4) && (*(int *)(iVar4 + uVar1 * 0xc + 8) != param_1))) {\n    uVar1 = uVar1 + 1;\n  }\n  if (uVar1 < *(uint *)(iVar4 + 4)) {\n    iVar2 = iVar4 + uVar1 * 0xc;\n    iVar5 = *(int *)(iVar2 + 0x10);\n    iVar4 = *(int *)(iVar2 + 0xc) + iVar4;\n    if ((iVar4 != -1) && (iVar5 != -1)) {\n      FUN_c020c318(param_2,iVar4,iVar5);\n      return iVar5;\n    }\n    pcVar3 = s_LBK_E_no_data__d_c01f4dd0;\n  }\n  else {\n    pcVar3 = s_LBK_E_no_entry__X_c01f4dbc;\n  }\n  FUN_c01f3670(3,pcVar3);\n  return -1;\n}\n\n"
+        },
+        {
+          "address": "0xc01f68e6",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f68e6",
+            "name": "FUN_c01f68e6"
+          },
+          "status": "ok",
+          "pseudocode": "\nvoid FUN_c01f68e6(undefined4 param_1,undefined4 param_2)\n\n{\n  FUN_c01f68bc(param_1,param_2,0);\n  return;\n}\n\n"
+        },
+        {
+          "address": "0xc01f2192",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f2192",
+            "name": "FUN_c01f2192"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_c01f2192(void)\n\n{\n  int iVar1;\n  int in_r3;\n  int local_10;\n  int local_c;\n  \n  local_10 = 0;\n  local_c = in_r3;\n  iVar1 = FUN_c01f5650(&local_c);\n  if (((iVar1 != 0) || (local_c != 0xc)) &&\n     ((iVar1 = FUN_c01f498c(DAT_c01f2490 + 0x11,&local_10), iVar1 < 0 ||\n      ((local_10 == 0 || (iVar1 = FUN_c01f5e94(), iVar1 == 0)))))) {\n    return 0;\n  }\n  return 1;\n}\n\n"
+        }
+      ],
+      "total": 4,
+      "succeeded": 4,
+      "failed": 0
+    },
+    "limitations": [
+      "Derived by an REA composed workflow.",
+      "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+      "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+      "External functions and functions without an analyzable body return null; other decompiler failures remain explicit.",
+      "External functions and local thunks are distinct; procedure metadata identifies both and preserves a thunk target when Ghidra resolves one.",
+      "Ghidra Listing reports a terminal call at 0xc01f68ea to 0xc01f68bc FUN_c01f68bc (external=false, thunk=false, hasNoReturn=false); fallthrough is excluded by Ghidra's flow model. The reason for the terminal flow is not established by this observation.",
+      "Headerless raw-binary analysis uses the caller-supplied architecture and entry address; file offset 0 is mapped at that address. Headers are not discovered from file bytes.",
+      "Little-endian generic Ghidra languages are used for x86, x86_64, arm, arm64, and NMOS 6502. Big-endian, Thumb-only, Cortex-M, 65C02, 65816, and other processor variants are unsupported in this increment.",
+      "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+      "Static analysis does not emulate reset vectors, memory-mapped I/O, or firmware boot sequences.",
+      "The imported Program and temporary project are ephemeral and deleted on close. Annotation operations edit session database metadata; original executable bytes are never written.",
+      "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results."
+    ]
+  },
+  {
+    "evidence_id": "ev_786e964fa44e228ca10f8d62a520a400cf94a3aa93ddec694e15016ec7c44d49",
+    "subject": {
+      "name": "e26-loader3.bin",
+      "digest": {
+        "sha256": "8fd98a4140bf85f955c994ea263c4a295846e049121b593c0a823aec01620c07"
+      },
+      "local_path": "/tmp/e26-loader3.bin",
+      "format": "raw-binary",
+      "architecture": "arm"
+    },
+    "operation": "batch_decompile",
+    "parameters": {
+      "addresses": [
+        "0xc01f6e3e",
+        "0xc01f68bc"
+      ]
+    },
+    "normalized_result": {
+      "items": [
+        {
+          "address": "0xc01f6e3e",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f6e3e",
+            "name": "FUN_c01f6e3e"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_c01f6e3e(int param_1,undefined4 param_2,int param_3)\n\n{\n  int iVar1;\n  undefined4 uVar2;\n  uint *puVar3;\n  int iVar4;\n  \n  if (param_1 == 0) {\n    iVar4 = FUN_c01f6e0a(1);\n    if ((iVar4 != 0) || (iVar4 = FUN_c01f6e0a(0), iVar4 != 0)) {\n      return 3;\n    }\n  }\n  else {\n    DAT_c01f6ee4[1] = 0x40000;\n    FUN_c01f4f88(8);\n  }\n  *(int *)(DAT_c01f6eec + -4) = (param_3 + -1) * 0x1000000;\n  iVar4 = DAT_c01f6eec + 0xf0;\n  FUN_c020c318(iVar4,param_2,param_3);\n  *(undefined4 *)(DAT_c01f6eec + -8) = 0;\n  puVar3 = (uint *)(DAT_c01f6eec + -0x10);\n  *puVar3 = *puVar3 | 0x20000000;\n  FUN_c01f4f7c();\n  uVar2 = 0;\n  do {\n    if (-1 < (int)(*puVar3 << 2)) goto LAB_c01f6eca;\n    iVar1 = FUN_c01f4fa0(20000);\n  } while (iVar1 == 0);\n  FUN_c01f3670(3,s_SIO_E_Tmo_Err_c01f6f00);\n  uVar2 = 3;\nLAB_c01f6eca:\n  FUN_c020c318(param_2,iVar4,param_3);\n  FUN_c01f4f88(4);\n  if (param_1 != 0) {\n    *DAT_c01f6ee4 = 0x40000;\n  }\n  return uVar2;\n}\n\n"
+        },
+        {
+          "address": "0xc01f68bc",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f68bc",
+            "name": "FUN_c01f68bc"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_c01f68bc(undefined4 param_1,undefined4 param_2)\n\n{\n  int iVar1;\n  undefined4 uVar2;\n  undefined4 uVar3;\n  \n  uVar3 = 0xffffffff;\n  iVar1 = FUN_c01fa070();\n  if (iVar1 != 0) {\n    uVar3 = FUN_c01fa052();\n    uVar2 = FUN_c01fa02c(iVar1);\n    FUN_c020c318(param_2,uVar2,uVar3);\n  }\n  return uVar3;\n}\n\n"
+        }
+      ],
+      "total": 2,
+      "succeeded": 2,
+      "failed": 0
+    },
+    "limitations": [
+      "Derived by an REA composed workflow.",
+      "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+      "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+      "External functions and functions without an analyzable body return null; other decompiler failures remain explicit.",
+      "External functions and local thunks are distinct; procedure metadata identifies both and preserves a thunk target when Ghidra resolves one.",
+      "Headerless raw-binary analysis uses the caller-supplied architecture and entry address; file offset 0 is mapped at that address. Headers are not discovered from file bytes.",
+      "Little-endian generic Ghidra languages are used for x86, x86_64, arm, arm64, and NMOS 6502. Big-endian, Thumb-only, Cortex-M, 65C02, 65816, and other processor variants are unsupported in this increment.",
+      "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+      "Static analysis does not emulate reset vectors, memory-mapped I/O, or firmware boot sequences.",
+      "The imported Program and temporary project are ephemeral and deleted on close. Annotation operations edit session database metadata; original executable bytes are never written.",
+      "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results."
+    ]
+  },
+  {
+    "evidence_id": "ev_d926892ddf25dcd9bcd95a0074710d2111a529343f62fa53ea430b6ab19186ab",
+    "subject": {
+      "name": "e26-loader3.bin",
+      "digest": {
+        "sha256": "8fd98a4140bf85f955c994ea263c4a295846e049121b593c0a823aec01620c07"
+      },
+      "local_path": "/tmp/e26-loader3.bin",
+      "format": "raw-binary",
+      "architecture": "arm"
+    },
+    "operation": "batch_decompile",
+    "parameters": {
+      "addresses": [
+        "0xc01f215c",
+        "0xc01f4b0a",
+        "0xc01f5e94",
+        "0xc01f5eae"
+      ]
+    },
+    "normalized_result": {
+      "items": [
+        {
+          "address": "0xc01f215c",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f215c",
+            "name": "FUN_c01f215c"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_c01f215c(void)\n\n{\n  int iVar1;\n  uint in_r3;\n  uint local_8;\n  \n  local_8 = in_r3 & 0xffffff00;\n  iVar1 = FUN_c01f498c(DAT_c01f2490,&local_8);\n  if ((((-1 < iVar1) && ((local_8 & 0xff) != 0)) && (iVar1 = FUN_c01f5314(), iVar1 == 5)) &&\n     (iVar1 = FUN_c01f5320(), (*(byte *)(iVar1 + 2) & 0x80) != 0)) {\n    return 1;\n  }\n  return 0;\n}\n\n"
+        },
+        {
+          "address": "0xc01f4b0a",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f4b0a",
+            "name": "FUN_c01f4b0a"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_c01f4b0a(int param_1)\n\n{\n  int iVar1;\n  char *pcVar2;\n  \n  if ((param_1 << 0x1e < 0) && (iVar1 = FUN_c01f6ada(1), iVar1 != 0)) {\n    pcVar2 = s_LDR_E_Rst_Bkup_ALL__d__c01f4d4c;\n  }\n  else if ((param_1 << 0x1d < 0) && (iVar1 = FUN_c01f6ada(2), iVar1 != 0)) {\n    pcVar2 = s_LDR_E_Rst_Bkup_CUSTOM__d__c01f4d64;\n  }\n  else if ((param_1 << 0x1c < 0) && (iVar1 = FUN_c01f6ada(3), iVar1 != 0)) {\n    pcVar2 = s_LDR_E_Rst_Bkup_PHOTOMODE__d__c01f4d80;\n  }\n  else {\n    if ((-1 < param_1 << 0x1b) || (iVar1 = FUN_c01f6ada(4), iVar1 == 0)) {\n      return 0;\n    }\n    pcVar2 = s_LDR_E_Rst_Bkup_NETWORK__d__c01f4da0;\n  }\n  FUN_c01f3670(3,pcVar2);\n  return 0xfffffed1;\n}\n\n"
+        },
+        {
+          "address": "0xc01f5e94",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f5e94",
+            "name": "FUN_c01f5e94"
+          },
+          "status": "ok",
+          "pseudocode": "\nbyte FUN_c01f5e94(void)\n\n{\n  int iVar1;\n  \n  if (*(int *)(DAT_c01f624c + 0x34) != 7) {\n    return 0;\n  }\n  iVar1 = FUN_c01f8746();\n  return *(byte *)(iVar1 + 0xf) & 1;\n}\n\n"
+        },
+        {
+          "address": "0xc01f5eae",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f5eae",
+            "name": "FUN_c01f5eae"
+          },
+          "status": "ok",
+          "pseudocode": "\nuint FUN_c01f5eae(void)\n\n{\n  int iVar1;\n  \n  if (*(int *)(DAT_c01f624c + 0x34) == 4) {\n    iVar1 = FUN_c01f764e();\n    return (*(byte *)(iVar1 + 1) & 0x3f) >> 5;\n  }\n  if (*(int *)(DAT_c01f624c + 0x34) != 7) {\n    return 0;\n  }\n  iVar1 = FUN_c01f8746();\n  return *(byte *)(iVar1 + 0xd) & 1;\n}\n\n"
+        }
+      ],
+      "total": 4,
+      "succeeded": 4,
+      "failed": 0
+    },
+    "limitations": [
+      "Derived by an REA composed workflow.",
+      "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+      "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+      "External functions and functions without an analyzable body return null; other decompiler failures remain explicit.",
+      "External functions and local thunks are distinct; procedure metadata identifies both and preserves a thunk target when Ghidra resolves one.",
+      "Headerless raw-binary analysis uses the caller-supplied architecture and entry address; file offset 0 is mapped at that address. Headers are not discovered from file bytes.",
+      "Little-endian generic Ghidra languages are used for x86, x86_64, arm, arm64, and NMOS 6502. Big-endian, Thumb-only, Cortex-M, 65C02, 65816, and other processor variants are unsupported in this increment.",
+      "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+      "Static analysis does not emulate reset vectors, memory-mapped I/O, or firmware boot sequences.",
+      "The imported Program and temporary project are ephemeral and deleted on close. Annotation operations edit session database metadata; original executable bytes are never written.",
+      "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results."
+    ]
+  }
+]

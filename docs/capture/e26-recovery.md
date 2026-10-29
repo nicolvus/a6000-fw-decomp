@@ -2,6 +2,8 @@
 
 ## Hechos y alcance
 
+**Actualización R5 (29-10-2026):** [informe de Loader3, CN4906 y estrategia de recuperación](e26-r5-loader3-servicio.md). El recorte contiguo de Loader3 **no está validado íntegramente**: suma32 distinta de INFO y referencias de inicialización incoherentes en su tramo final. Su prefijo permite reconstruir selector y dependencias con ese límite. CN4906 transporta **UART0 BIONZ (4/5)** y enlaces opcionales **SWD BIONZ (11/12, R4911/R4912 XX)**, además de Darwin; confirmado por esquema, continuidad real pendiente. La primera evaluación física propuesta es UART0 pasiva tras foto, pinout y niveles verificados; no se ha autorizado ni realizado.
+
 El usuario informa que la A6000 funcional con 3.23 recibió 3.25, el actualizador mostró 100 % y Done, y después dejó de arrancar; describe tres destellos lentos y dos rápidos. Es un testimonio, no una captura UART ni una verificación de la NAND. La prioridad pasa a ser la recuperación original preservando calibraciones. Ninguna conexión o escritura en la cámara está autorizada. El diagnóstico y los mecanismos de recuperación siguen abiertos.
 
 El usuario indica ahora que la cámara ya está desmontada, con una cara de SY-1028 expuesta, y prefiere no retirar la placa. No existen mediciones posteriores al bloqueo; no se autoriza intervención física en esta ejecución. La cara visible aún no está identificada con evidencia.
@@ -117,8 +119,10 @@ Para una eventual captura **pasiva**, un [análisis de un conector de A6000](htt
 
 ## Pendientes prioritarios
 
-1. Reconstruir el productor y representación de `0x32` con REA y bytes, distinguiendo origen, transporte y presentación.
-2. Comprobar la tabla TPZL en binarios y las precondiciones del lector real; construir solo comparación local no instalable.
-3. Trazar Done, verificación de escritura, Darwin, estados persistentes y selección de `nflasha1`.
-4. Verificar y analizar Loader2 del respaldo; localizar Loader3 y auditar qué copias físicas faltan.
-5. Validar pinout/voltaje para captura pasiva, y estudiar SWD, serial writer y NAND preservando datos de calibración.
+1. Resolver el mapa de los bloques BLDR concatenados y reconstruir INFO 5→6; después validar el runtime y dependencias de Loader3. No buscarlo desde cero ni escribir el recorte.
+2. Conservar el selector verificado: bandera `updater/mode` sin lectura de contenido; alternativa SIO condicionada y deshabilitada con el byte Backup histórico 01. Falta entrada independiente real.
+3. Completar frontera gráfica Done, cobertura EH/join y ciclo de `uincomp`; `comp` y eliminación de `mode` ya identificados en R5.
+4. Confirmar foto de la cara expuesta, continuidad/población y niveles de UART0 BIONZ; diagnóstico físico solo con autorización independiente.
+5. Identificar almacenamiento, geometría/ECC/remapeo y herramienta antes de especificar una escritura de nflasha3; no sustituirlo por SWD Darwin.
+
+El productor físico de 0x32 y la causalidad TPZL siguen abiertos con los límites de fases A/B, pero no se reauditan en R5. Estados y criterios de cierre: [PENDIENTES](../PENDIENTES.md), IDs E26-R5-*.

@@ -6,7 +6,7 @@
 
 > **E26 Fase B parcial:** un script integrado que termine con 50 puede producir byte `0x32` vía excepción `0x3000c` → `mf` → FIFO2 → `setResult` → texto hexadecimal `32`. No se ha identificado tal script ni demostrado esta ruta en la cámara bloqueada. Ver E26.
 
-> **E26 R3 Loader3:** candidato de 128 KiB localizado en el respaldo `bootloader.bin` a `0x22800–0x427ff`, según entradas INFO 5→6; REA identifica selector `\\updater\\mode` y carga de kernel/initrd desde dispositivo 1. Falta validar geometría, integridad y una forma de activar la ruta; no escribirlo.
+> **E26 R5:** [informe vigente](../docs/capture/e26-r5-loader3-servicio.md). Candidato Loader3 de 128 KiB identificado, pero recorte con suma32/runtime incoherentes; resolver mapa BLDR antes de declararlo íntegro. Selector por existencia de `updater/mode`, carga desde dispositivo 1, sin activación independiente demostrada. CN4906 SIDE A tiene UART0 BIONZ 4/5 y SWD BIONZ opcional por R4911/R4912 XX en 11/12, además de Darwin. Sin foto, continuidad ni niveles medidos. Cierre normal crea comp y elimina mode; Done no valida siguiente arranque. Próximo paso offline: fuente de BLDR; físico propuesto: UART0 pasiva tras verificación/autorización separada.
 
 
 Contexto operativo mínimo para agentes. Última revisión: 29-10-2026 (E25-29/E25-27: firmware integrado 3.25 construido y verificado offline; E25-26/E25-25: C3-B y cuevas/carga, offline; E25-19: verificación física de exposición larga, solo lectura; R1 pendiente de copia externa). Este archivo **no** es

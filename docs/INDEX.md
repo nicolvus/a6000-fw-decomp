@@ -389,7 +389,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 6. Otros subsistemas (AF, estabilización, vídeo, audio, lentes, energía, visor, accesorios, módulos de trazas)
 
-106 informes.
+107 informes.
 
 - **—** [E21 — Lecturas sin cámara de los volcados del 20-10-2026](capture/e21-lecturas-backups-2026-10-26.md)
 - **—** [E24-01 — Arranque, modo actualizador y dependencia de Darwin (27-10-2026)](capture/e24-01-arranque-recuperacion.md)
@@ -405,6 +405,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [E24-05h-3 — Terminación de ADC-B y configuración de P29 (27-10-2026)](capture/e24-05h-3-adcb-p29.md)
 - **—** [E24-05h-4 — Auditoría final de ADC-A, grupo activo de P29 y entrega del evento de ADC-B (27-10-2026)](capture/e24-05h-4-adca-p29-irq.md)
 - **—** [E24-05h — Dependencias finales de la captura sin rearme: P29, P4E, BIONZ, modos Darwin y FAIL (27-10-2026)](capture/e24-05h-dependencias-finales-captura.md)
+- **—** [E26-RECOVERY R5 — Loader3, servicio BIONZ y diagnóstico de SY-1028](capture/e26-r5-loader3-servicio.md)
 - **—** [E26-RECOVERY — incidente 3.25 (investigación abierta)](capture/e26-recovery.md)
 - **—** [Registro de pruebas en cámara (solo software, USB)](capture/registro-pruebas-camara.md)
 - **S102** [S102 — Menú principal (botón MENU): cadena de carga y apertura](capture/s102-menu-principal.md)
