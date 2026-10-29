@@ -23,7 +23,7 @@ verificado · **B** = bloqueado por una dependencia no demostrable.
    A7S, sin punteros literales, después del `memcpy` de la tabla API del cargador
    (`0x435410d8–0x4354141c`) y antes del puntero final de la cabecera (`0x435418d8`).
    - selector E25-24: `0x43541800` (20 B).
-   - C3-B E25-26: `0x43541840` (52 B).
+   - C3-B E25-26: `0x43541840` (58 B).
 3. **La carga es compatible con las cuevas, con un límite (V/I).** `liro.ko` (`tsk_entry`)
    lee `av-cam.bin` completo (`filp_open`/`vfs_read`), comprueba `LIRO`/versión 4 y hace
    `memcpy(blob+0x14+0x24, tabla_API, 0x344)`; el stub ARM de `0x0` se ejecuta desde el mismo
@@ -65,7 +65,7 @@ compartido con la A7S. No se mantiene esa ubicación.
 | Destinos de rama `bl`/`b.w` | 1 falso positivo: `0x4361d67c → 0x4354167e` (bytes de datos); fuera de las cuevas | V/I |
 | `memcpy` del cargador | `0x435410d8–0x4354141c` (0x344 B); no alcanza la zona | V |
 | Puntero final de cabecera | `0x435418d8–0x435418e4`; la zona termina antes | V |
-| Cuevas | selector `0x43541800` (20 B), C3-B `0x43541840` (52 B) | V |
+| Cuevas | selector `0x43541800` (20 B), C3-B `0x43541840` (58 B) | V |
 
 **Límite:** no existe una tabla de símbolos/segmentos que demuestre que el cargador ignora
 los campos reservados. La evidencia es estructural (cero, sin referencias, después del
