@@ -1,6 +1,6 @@
 # Estado actual — léeme primero
 
-> **E26 R6, BLDR:** [informe vigente](../docs/capture/e26-r6-recuperacion-bionz.md). Fuente del payload local resuelta; normales die0/plane0, cola INFO6 requiere plane1. No reconstruida ni certificada. Próximo paso: delimitar selector en prefijo válido y mapa visual CN4906; no repetir búsqueda de implementación BLDR.
+> **E26 R6, diagnóstico cerrado offline:** [informe vigente](../docs/capture/e26-r6-recuperacion-bionz.md). BLDR normales die0/plane0 y cola INFO6 plane1 no reconstruida; selector solo estático. CN4906 queda orientado documentalmente (mapa SVG), pero población/niveles/acceso siguen desconocidos; SWD no es recuperación validada y NAND carece de vía física segura. Próximo paso: solo foto y UART pasiva tras autorización física separada.
 
 > **Prioridad vigente:** recuperar la cámara tras el bloqueo informado después de instalar 3.25. Ver [E26-RECOVERY](../docs/capture/e26-recovery.md); ningún acceso físico está autorizado. El texto histórico inferior sobre instalación pendiente queda superado por el testimonio del usuario.
 

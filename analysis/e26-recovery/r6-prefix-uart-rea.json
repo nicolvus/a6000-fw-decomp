@@ -1,0 +1,1026 @@
+[
+  {
+    "key": "r6prefix",
+    "evidence_id": "ev_62bfb33a2301176b5d86dca8e98a907223603707100f57b3cd02d1316e45adbb",
+    "subject": {
+      "name": "e26-r6-loader3-prefix.bin",
+      "digest": {
+        "sha256": "bda777a220447fc6f67d1d4f52c38a491043b1efcff570fdfc78969c47c2d8e5"
+      },
+      "local_path": "/tmp/e26-r6-loader3-prefix.bin",
+      "format": "raw-binary",
+      "architecture": "arm"
+    },
+    "parameters": {
+      "addresses": [
+        "0xc01f159a",
+        "0xc01f1de6",
+        "0xc01f1312",
+        "0xc01f1378",
+        "0xc01f068a",
+        "0xc01f3670"
+      ]
+    },
+    "result": {
+      "items": [
+        {
+          "address": "0xc01f159a",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f159a",
+            "name": "FUN_c01f159a"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_c01f159a(void)\n\n{\n  int iVar1;\n  \n  FUN_c01f3670(5,s_BOM_chk_updater_c01f1974);\n  iVar1 = FUN_c01f3eb6(2);\n  if (iVar1 == 0) {\n    iVar1 = FUN_c01f44c6(s__updater_mode_c01f19a4);\n    if (-1 < iVar1) {\n      return 1;\n    }\n  }\n  else {\n    FUN_c01f3670(3,s_BOM_E__s___d__c01f1994,s_fat_mount_c01f1988);\n  }\n  return 0;\n}\n\n"
+        },
+        {
+          "address": "0xc01f1de6",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f1de6",
+            "name": "FUN_c01f1de6"
+          },
+          "status": "ok",
+          "pseudocode": "\nlonglong FUN_c01f1de6(void)\n\n{\n  int iVar1;\n  uint uVar2;\n  uint in_r3;\n  uint uVar3;\n  bool bVar4;\n  uint local_20;\n  int local_1c;\n  uint local_18;\n  \n  local_20 = 1;\n  local_1c = 0;\n  local_18 = in_r3;\n  iVar1 = FUN_c01f50f4();\n  if ((iVar1 != 2) || (iVar1 = FUN_c01f159a(), uVar3 = local_20, iVar1 != 0)) {\n    iVar1 = FUN_c01f498c(DAT_c01f1ef4 + -8,&local_1c);\n    if (iVar1 < 0) {\n      local_1c = 0;\n    }\n    iVar1 = FUN_c01f159a();\n    if (iVar1 == 0) {\n      iVar1 = FUN_c01f1d6a();\n      uVar3 = 5;\n      bVar4 = iVar1 == 0;\n      do {\n        do {\n          if (!bVar4) goto LAB_c01f2122;\n          iVar1 = FUN_c01f1c70();\n          bVar4 = iVar1 == 0;\n        } while (!bVar4);\n        local_18 = local_18 & 0xffffff00;\n        iVar1 = FUN_c01f498c(DAT_c01f1ef4 + 0x20,&local_18);\n        if ((-1 < iVar1) && ((local_18 & 0xff) != 0)) {\n          FUN_c01f3670(5,s_BOM_chk_reboot_c01f2000);\n          iVar1 = FUN_c01f5e74();\n          if (iVar1 != 0) {\n            uVar3 = 8;\n            goto LAB_c01f2122;\n          }\n        }\n        iVar1 = FUN_c01f281e();\n        if (iVar1 != 0) {\n          uVar3 = 0xc;\n          goto LAB_c01f2122;\n        }\n        iVar1 = FUN_c01f27c4();\n        uVar3 = 7;\n        bVar4 = iVar1 == 0;\n      } while (!bVar4);\n      iVar1 = FUN_c01f272e();\n      if (iVar1 == 0) {\n        if (local_1c == 0) {\n          local_18 = local_18 & 0xffffff00;\n          iVar1 = FUN_c01f498c(DAT_c01f1ef4 + 4,&local_18);\n          if ((-1 < iVar1) && ((char)local_18 != '\\0')) {\n            FUN_c01f3670(5,s_BOM_chk_keychat_off_c01f2010);\n            iVar1 = FUN_c01f5614();\n            if ((iVar1 == 0) && (iVar1 = FUN_c01f5e7a(), iVar1 != 0)) goto LAB_c01f2122;\n          }\n          if (local_1c == 0) {\n            local_18 = local_18 & 0xffffff00;\n            iVar1 = FUN_c01f498c(DAT_c01f1ef4 + 0x1b,&local_18);\n            if ((-1 < iVar1) && ((char)local_18 != '\\0')) {\n              FUN_c01f3670(5,s_BOM_chk_chg_key_off_c01f2028);\n              iVar1 = FUN_c01f5e80();\n              if (iVar1 != 0) goto LAB_c01f2122;\n            }\n            if (local_1c == 0) {\n              iVar1 = FUN_c01f26bc();\n              if (iVar1 != 0) goto LAB_c01f2122;\n              if (local_1c == 0) {\n                iVar1 = FUN_c01f2620();\n                if (iVar1 != 0) {\n                  uVar3 = 6;\n                  goto LAB_c01f2122;\n                }\n                if (local_1c == 0) {\n                  local_18 = local_18 & 0xffffff00;\n                  iVar1 = FUN_c01f498c(DAT_c01f2448,&local_18);\n                  if ((-1 < iVar1) && ((char)local_18 != '\\0')) {\n                    FUN_c01f3670(5,s_BOM_chk_usbcharge_off_c01f244c);\n                    iVar1 = FUN_c01f5314();\n                    if (iVar1 == 7) {\n                      iVar1 = FUN_c01f8746();\n                      uVar2 = (uint)*(byte *)(iVar1 + 0x1c);\n                      if ((-1 < (int)(uVar2 << 0x1f | uVar2 << 0x1e)) && ((int)(uVar2 << 0x1d) < 0))\n                      goto LAB_c01f2122;\n                    }\n                  }\n                  if (local_1c == 0) {\n                    iVar1 = FUN_c01f1b8c();\n                    if (iVar1 != 0) {\n                      iVar1 = FUN_c01f2bc6();\n                      if (iVar1 == 0) {\n                        uVar3 = 0xe;\n                      }\n                      else {\n                        uVar3 = 0xd;\n                      }\n                      goto LAB_c01f2122;\n                    }\n                    if ((local_1c == 0) &&\n                       ((iVar1 = FUN_c01f184a(), iVar1 != 0 ||\n                        ((local_1c == 0 &&\n                         ((iVar1 = FUN_c01f25c6(), iVar1 != 0 ||\n                          ((local_1c == 0 && (iVar1 = FUN_c01f173e(), iVar1 != 0))))))))))\n                    goto LAB_c01f2122;\n                  }\n                }\n              }\n            }\n          }\n        }\n        iVar1 = FUN_c01f23ee();\n        if (iVar1 == 0) {\n          iVar1 = FUN_c01f16fe();\n          if (iVar1 == 0) {\n            iVar1 = FUN_c01f15cc();\n            if (iVar1 == 0) {\n              iVar1 = FUN_c01f498c(DAT_c01f2448 + 0x11,&local_18);\n              if ((-1 < iVar1) && ((local_18 & 0xff) == 2)) {\n                FUN_c01f3670(5,s_BOM_chk_ssboot_c01f2464);\n                iVar1 = FUN_c01f2bc6();\n                if (((iVar1 != 0) || (iVar1 = FUN_c01f2be6(), iVar1 != 0)) &&\n                   (((iVar1 = FUN_c01f498c(DAT_c01f2448 + 0x17,&local_18), iVar1 < 1 ||\n                     ((local_18 & 0xff) == 0)) || (iVar1 = FUN_c01f5614(), iVar1 == 0)))) {\n                  uVar3 = 0xb;\n                  goto LAB_c01f2122;\n                }\n              }\n              local_20 = 1;\n              uVar3 = local_20;\n            }\n            else {\n              uVar3 = 10;\n            }\n          }\n          else {\n            uVar3 = 2;\n          }\n        }\n        else {\n          uVar3 = 4;\n        }\n      }\n      else {\n        uVar3 = 9;\n      }\n    }\n    else {\n      uVar3 = 3;\n    }\n  }\nLAB_c01f2122:\n  local_20 = uVar3;\n  iVar1 = FUN_c01f159a();\n  if ((iVar1 == 0) && (iVar1 = FUN_c01f51f4(&local_20,4,1), iVar1 != 0)) {\n    FUN_c01f3670(3,s_BOM_E_Sync_mode__d__c01f2474,iVar1);\n    return CONCAT44(local_20,iVar1);\n  }\n  FUN_c01f1544(local_20);\n  return (ulonglong)local_20 << 0x20;\n}\n\n"
+        },
+        {
+          "address": "0xc01f1312",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f1312",
+            "name": "FUN_c01f1312"
+          },
+          "status": "ok",
+          "pseudocode": "\nint FUN_c01f1312(undefined4 *param_1)\n\n{\n  int iVar1;\n  \n  switch(*param_1) {\n  default:\n    FUN_c01f3670(3,s_LD3_E_Inv_bootmode__d_c01f07e0);\n    return DAT_c01f14e4;\n  case 1:\n  case 2:\n  case 4:\n  case 5:\n  case 6:\n  case 10:\n  case 0xb:\n  case 0xc:\n    iVar1 = FUN_c01f09e4();\n    break;\n  case 3:\n    iVar1 = FUN_c01f1378();\n  }\n  if (iVar1 == 0) {\n    FUN_c01f3670(2,s_LD3_Exit_UDIF_drvs_c01f14fc);\n    FUN_c01f68ac();\n    FUN_c01f3670(2,s_LD3_Exit_UDIF_plat_c01f1510);\n    FUN_c01f6888();\n    iVar1 = FUN_c01f4e0c(*param_1,1);\n    if (iVar1 == 0) {\n      FUN_c01f0590(*param_1);\n      iVar1 = 0;\n    }\n  }\n  return iVar1;\n}\n\n"
+        },
+        {
+          "address": "0xc01f1378",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f1378",
+            "name": "FUN_c01f1378"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_c01f1378(void)\n\n{\n  undefined4 uVar1;\n  \n  FUN_c01f60c2();\n  FUN_c01f3670(2,s_LD3_Pwr_bootmode_c01f0e14);\n  FUN_c01f5a68(3);\n  FUN_c01f5b2a();\n  FUN_c01f3670(2,s_LD3_Run_Config_init_HW__c01f0fbc);\n  FUN_c01f3108();\n  FUN_c01f3670(2,s_LD3_Load_vmlinux_initrd_c01f1524);\n  uVar1 = FUN_c01f068a();\n  *DAT_c01f1540 = uVar1;\n  FUN_c01f5afe(3);\n  return 0;\n}\n\n"
+        },
+        {
+          "address": "0xc01f068a",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f068a",
+            "name": "FUN_c01f068a"
+          },
+          "status": "ok",
+          "pseudocode": "\nchar * FUN_c01f068a(void)\n\n{\n  int iVar1;\n  char *pcVar2;\n  undefined4 uVar3;\n  char *pcVar4;\n  char *pcVar5;\n  char *pcVar6;\n  char acStack_44 [49];\n  undefined1 local_13;\n  \n  func_0xc020c45c(acStack_44,0x34);\n  iVar1 = FUN_c01f3eb6(1);\n  if (iVar1 == 0) {\n    pcVar4 = (char *)FUN_c01f44c6(s__boot_loadaddr_txt_c01f092c);\n    if (pcVar4 < (char *)0x33) {\n      pcVar2 = (char *)FUN_c01f45cc(acStack_44,pcVar4);\n      if (pcVar2 == pcVar4) {\n        if (pcVar2 == (char *)0x32) {\n          local_13 = 0;\n        }\n        uVar3 = func_0xc020c13c(acStack_44,&DAT_c01f0d44);\n        pcVar6 = (char *)func_0xc020c0b8(uVar3,0,0x10);\n        uVar3 = func_0xc020c13c(0,&DAT_c01f0d44);\n        pcVar2 = (char *)func_0xc020c0b8(uVar3,0,0x10);\n        FUN_c01f3670(2,s_LD3_Addr_of_vmlinux__p_initrd__p_c01f0d48,pcVar6,pcVar2);\n        if ((pcVar6 != (char *)0x0) && (pcVar2 != (char *)0x0)) {\n          iVar1 = FUN_c01f4654(s__boot_vmlinux_bin_c01f0d6c,pcVar6);\n          if (iVar1 < 1) {\n            pcVar4 = s_LD3_E_Load_vmlinux__p__c01f0d80;\n            pcVar2 = pcVar6;\n          }\n          else {\n            iVar1 = FUN_c01f4654(s__boot_initrd_img_c01f0dc4,pcVar2);\n            if (0 < iVar1) {\n              return pcVar6;\n            }\n            pcVar4 = s_LD3_E_Load_initrd__p__c01f0dd8;\n          }\n          goto LAB_c01f06b4;\n        }\n        pcVar4 = acStack_44;\n        pcVar5 = s_LD3_E_Addr_of_vmlinux__p__initrd_c01f0d98;\n      }\n      else {\n        pcVar6 = s__boot_loadaddr_txt_c01f092c;\n        pcVar5 = s_LD3_E_Read__s___d___d__c01f0950;\n      }\n      FUN_c01f3670(3,pcVar5,pcVar6,pcVar2,pcVar4);\n      return (char *)0x0;\n    }\n    pcVar4 = s_LD3_E_Open__s_c01f0940;\n    pcVar2 = s__boot_loadaddr_txt_c01f092c;\n  }\n  else {\n    pcVar4 = s_LD3_E_Mount_Updater_Partition__d_c01f0908;\n    pcVar2 = (char *)0x1;\n  }\nLAB_c01f06b4:\n  FUN_c01f3670(3,pcVar4,pcVar2);\n  return (char *)0x0;\n}\n\n"
+        },
+        {
+          "address": "0xc01f3670",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f3670",
+            "name": "FUN_c01f3670"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_c01f3670(uint param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4)\n\n{\n  int *piVar1;\n  undefined4 uVar2;\n  undefined1 auStack_130 [256];\n  undefined4 local_30;\n  undefined4 local_2c;\n  undefined4 local_28;\n  undefined4 local_24;\n  undefined4 uStack_8;\n  undefined4 uStack_4;\n  \n  uStack_8 = param_3;\n  uStack_4 = param_4;\n  func_0xc020c45c(auStack_130,0x100);\n  piVar1 = DAT_c01f388c;\n  local_30 = 0;\n  local_2c = 0;\n  local_28 = 0;\n  local_24 = 0;\n  if (((int)param_1 <= *DAT_c01f388c) || ((int)param_1 <= DAT_c01f388c[1])) {\n    func_0xc020bcf0(auStack_130,0x100,param_2,&uStack_8);\n    if ((piVar1[4] & 0x10001 << (param_1 & 0xff)) != 0) {\n      uVar2 = FUN_c01f4fb0();\n      func_0xc020bd3c(&local_30,0x10,s___lu__c01f3898,uVar2);\n    }\n  }\n  if ((int)param_1 <= *piVar1) {\n    if ((piVar1[4] & 1 << (param_1 & 0xff)) != 0) {\n      FUN_c01f50c0(&local_30);\n    }\n    FUN_c01f50c0(auStack_130);\n  }\n  if ((int)param_1 <= piVar1[1]) {\n    if ((piVar1[4] & 0x10000 << (param_1 & 0xff)) != 0) {\n      FUN_c01f3640(&local_30);\n    }\n    FUN_c01f3640(auStack_130);\n  }\n  return 0;\n}\n\n"
+        }
+      ],
+      "total": 6,
+      "succeeded": 6,
+      "failed": 0
+    }
+  },
+  {
+    "key": "r6prefixlog",
+    "evidence_id": "ev_99606dcdaf36816958f5fbb3a6ced282244571d4e0fd89be74df3f5069768681",
+    "subject": {
+      "name": "e26-r6-loader3-prefix.bin",
+      "digest": {
+        "sha256": "bda777a220447fc6f67d1d4f52c38a491043b1efcff570fdfc78969c47c2d8e5"
+      },
+      "local_path": "/tmp/e26-r6-loader3-prefix.bin",
+      "format": "raw-binary",
+      "architecture": "arm"
+    },
+    "parameters": {
+      "addresses": [
+        "0xc01f50c0",
+        "0xc01f3640",
+        "0xc01f35c0",
+        "0xc01f4690",
+        "0xc01f215c"
+      ]
+    },
+    "result": {
+      "items": [
+        {
+          "address": "0xc01f50c0",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f50c0",
+            "name": "FUN_c01f50c0"
+          },
+          "status": "ok",
+          "pseudocode": "\nvoid FUN_c01f50c0(char *param_1)\n\n{\n  while (*param_1 != '\\0') {\n    if (*param_1 == '\\n') {\n      FUN_c01f505a(10);\n      FUN_c01f505a(0xd);\n      param_1 = param_1 + 1;\n    }\n    else {\n      param_1 = param_1 + 1;\n      FUN_c01f505a();\n    }\n  }\n  return;\n}\n\n"
+        },
+        {
+          "address": "0xc01f3640",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f3640",
+            "name": "FUN_c01f3640"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_c01f3640(undefined4 param_1)\n\n{\n  int iVar1;\n  int iVar2;\n  \n  iVar2 = func_0xc020c1ea();\n  iVar1 = DAT_c01f388c;\n  if (DAT_c01f3894 < (uint)(*(int *)(DAT_c01f388c + 8) + iVar2)) {\n    *(int *)(DAT_c01f388c + 8) = DAT_c01f388c + 0x1c;\n  }\n  FUN_c01f4de4(*(undefined4 *)(iVar1 + 8),param_1,iVar2);\n  *(int *)(iVar1 + 8) = *(int *)(iVar1 + 8) + iVar2;\n  return 0;\n}\n\n"
+        },
+        {
+          "address": "0xc01f35c0",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f35c0",
+            "name": "FUN_c01f35c0"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined8 FUN_c01f35c0(void)\n\n{\n  undefined4 *puVar1;\n  int iVar2;\n  undefined4 local_20;\n  undefined4 local_1c;\n  undefined4 local_18;\n  undefined4 local_14;\n  \n  local_20 = 0;\n  local_1c = 0;\n  local_18 = 0;\n  local_14 = 0;\n  iVar2 = FUN_c01f4edc();\n  puVar1 = DAT_c01f388c;\n  if (iVar2 == 0) {\n    DAT_c01f388c[5] = 0;\n    puVar1[6] = 0;\n    *puVar1 = 0;\n  }\n  else {\n    DAT_c01f388c[5] = 1;\n    iVar2 = FUN_c01f498c(0x510000,&local_1c);\n    if (0 < iVar2) {\n      puVar1[3] = local_1c;\n      FUN_c01f5008();\n    }\n    iVar2 = FUN_c01f498c(DAT_c01f3890,&local_20);\n    if (0 < iVar2) {\n      *puVar1 = local_20;\n    }\n    iVar2 = FUN_c01f498c(DAT_c01f3890 + 0x2c,&local_14);\n    if (0 < iVar2) {\n      puVar1[6] = local_14;\n    }\n  }\n  iVar2 = FUN_c01f498c(DAT_c01f3890 + 3,&local_20);\n  if (0 < iVar2) {\n    puVar1[1] = local_20;\n  }\n  iVar2 = FUN_c01f498c(DAT_c01f3890 + 0x22,&local_18);\n  if (0 < iVar2) {\n    puVar1[4] = local_18;\n  }\n  return CONCAT44(local_1c,local_20);\n}\n\n"
+        },
+        {
+          "address": "0xc01f4690",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f4690",
+            "name": "FUN_c01f4690"
+          },
+          "status": "ok",
+          "pseudocode": "\nint FUN_c01f4690(undefined4 param_1,undefined4 param_2,undefined4 param_3)\n\n{\n  int iVar1;\n  int iVar2;\n  \n  iVar1 = FUN_c01f2c2a(*(undefined4 *)(DAT_c01f47a0 + 0x18),param_2,param_1,param_3);\n  iVar2 = 0;\n  if (iVar1 != 0) {\n    iVar2 = DAT_c01f474c + 4;\n  }\n  return iVar2;\n}\n\n"
+        },
+        {
+          "address": "0xc01f215c",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f215c",
+            "name": "FUN_c01f215c"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_c01f215c(void)\n\n{\n  int iVar1;\n  uint in_r3;\n  uint local_8;\n  \n  local_8 = in_r3 & 0xffffff00;\n  iVar1 = FUN_c01f498c(DAT_c01f2490,&local_8);\n  if ((((-1 < iVar1) && ((local_8 & 0xff) != 0)) && (iVar1 = FUN_c01f5314(), iVar1 == 5)) &&\n     (iVar1 = FUN_c01f5320(), (*(byte *)(iVar1 + 2) & 0x80) != 0)) {\n    return 1;\n  }\n  return 0;\n}\n\n"
+        }
+      ],
+      "total": 5,
+      "succeeded": 5,
+      "failed": 0
+    }
+  },
+  {
+    "key": "r6uart",
+    "evidence_id": "ev_ef824e95bd43dd2e03fe0b458fc2c22928aa4f782beb0e3fe94e84af88bca29f",
+    "subject": {
+      "name": "e26-r6-loader3-prefix.bin",
+      "digest": {
+        "sha256": "bda777a220447fc6f67d1d4f52c38a491043b1efcff570fdfc78969c47c2d8e5"
+      },
+      "local_path": "/tmp/e26-r6-loader3-prefix.bin",
+      "format": "raw-binary",
+      "architecture": "arm"
+    },
+    "parameters": {
+      "addresses": [
+        "0xc01f505a",
+        "0xc01f5008",
+        "0xc01f4edc",
+        "0xc01f4e04",
+        "0xc01f4e60"
+      ]
+    },
+    "result": {
+      "items": [
+        {
+          "address": "0xc01f505a",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f505a",
+            "name": "FUN_c01f505a"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_c01f505a(undefined4 param_1)\n\n{\n  do {\n  } while (*(int *)(*(int *)(DAT_c01f50e8 + 0xc) * 0x1000 + -0xdffffe8) << 0x1a < 0);\n  *(undefined4 *)(*(int *)(DAT_c01f50e8 + 0xc) * 0x1000 + -0xe000000) = param_1;\n  return 0;\n}\n\n"
+        },
+        {
+          "address": "0xc01f5008",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f5008",
+            "name": "FUN_c01f5008"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_c01f5008(int param_1)\n\n{\n  undefined4 *puVar1;\n  \n  puVar1 = DAT_c01f50ec;\n  if ((param_1 == 0) || (param_1 == 1)) {\n    *(int *)(DAT_c01f50e8 + 0xc) = param_1;\n    *puVar1 = 0xa00;\n    *(undefined4 *)(DAT_c01f50f0 + 0x204) = 0xa00;\n    *puVar1 = 0x500;\n    param_1 = param_1 * 0x1000;\n    *(undefined4 *)(param_1 + -0xdffffe4) = 0x1ff;\n    *(undefined4 *)(param_1 + -0xdffffc8) = 0;\n    *(undefined4 *)(param_1 + -0xdffffdc) = 0x1a;\n    *(undefined4 *)(param_1 + -0xdffffd8) = 3;\n    *(undefined4 *)(param_1 + -0xdffffd4) = 0x70;\n    *(undefined4 *)(param_1 + -0xdfffffc) = 0;\n    *(undefined4 *)(param_1 + -0xdffffd0) = 0x701;\n  }\n  return 0;\n}\n\n"
+        },
+        {
+          "address": "0xc01f4edc",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f4edc",
+            "name": "FUN_c01f4edc"
+          },
+          "status": "ok",
+          "pseudocode": "\nundefined4 FUN_c01f4edc(void)\n\n{\n  int iVar1;\n  undefined4 uVar2;\n  int local_8;\n  \n  local_8 = 0;\n  iVar1 = FUN_c01f498c(DAT_c01f4f50,&local_8);\n  if ((iVar1 < 0) || (uVar2 = 1, local_8 != 1)) {\n    uVar2 = 0;\n  }\n  return uVar2;\n}\n\n"
+        },
+        {
+          "address": "0xc01f4e04",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f4dfa",
+            "name": "FUN_c01f4dfa"
+          },
+          "status": "ok",
+          "pseudocode": "\nvoid FUN_c01f4dfa(undefined1 *param_1,undefined1 param_2,int param_3)\n\n{\n  for (; 0 < param_3; param_3 = param_3 + -1) {\n    *param_1 = param_2;\n    param_1 = param_1 + 1;\n  }\n  return;\n}\n\n"
+        },
+        {
+          "address": "0xc01f4e60",
+          "procedure": {
+            "status": "resolved",
+            "address": "0xc01f4e0c",
+            "name": "FUN_c01f4e0c"
+          },
+          "status": "ok",
+          "pseudocode": "\nlonglong FUN_c01f4e0c(int param_1,undefined4 *param_2,int param_3,uint param_4)\n\n{\n  undefined4 *puVar1;\n  undefined4 uVar2;\n  int iVar3;\n  undefined4 uVar4;\n  undefined4 uVar5;\n  undefined4 *local_20;\n  int local_1c;\n  uint local_18;\n  \n  local_20 = param_2;\n  local_1c = param_3;\n  local_18 = param_4;\n  if (param_2 == (undefined4 *)0x1) {\n    uVar5 = 1;\n    uVar4 = FUN_c01f5314();\n    iVar3 = FUN_c01f50f4();\n    if (iVar3 == 2) {\n      uVar4 = 0;\n    }\n    iVar3 = FUN_c01f498c(DAT_c01f4f44,&local_20);\n    if ((0 < iVar3) && (local_20 != (undefined4 *)0xffffffff)) {\n      *local_20 = 1;\n    }\n    iVar3 = FUN_c01f498c(DAT_c01f4f44 + 0x1f,&local_20);\n    if ((0 < iVar3) && (local_20 != (undefined4 *)0xffffffff)) {\n      *local_20 = uVar4;\n    }\n    iVar3 = FUN_c01f498c(DAT_c01f4f44 + 0xe,&local_20);\n    if ((((0 < iVar3) && (local_20 != (undefined4 *)0xffffffff)) &&\n        (iVar3 = FUN_c01f498c(DAT_c01f4f44 + 0x43,&local_1c), 0 < iVar3)) && (local_1c != -1)) {\n      func_0xc020c318(local_20,DAT_c01f4f48);\n    }\n    iVar3 = FUN_c01f498c(DAT_c01f4f4c,&local_20);\n    if (((0 < iVar3) && (local_20 != (undefined4 *)0xffffffff)) &&\n       ((iVar3 = FUN_c01f498c(DAT_c01f4f4c + 1,&local_1c), 0 < iVar3 && (local_1c != -1)))) {\n      local_18 = (uint)(param_1 == 0xc);\n      func_0xc020c318(local_20,&local_18);\n    }\n  }\n  else {\n    uVar5 = 0;\n    uVar4 = 0;\n  }\n  *DAT_c01f4f40 = param_2;\n  uVar2 = FUN_c01f1596();\n  puVar1 = DAT_c01f4f40;\n  DAT_c01f4f40[2] = uVar2;\n  puVar1[1] = uVar4;\n  puVar1[3] = uVar5;\n  return ZEXT48(local_20) << 0x20;\n}\n\n"
+        }
+      ],
+      "total": 5,
+      "succeeded": 5,
+      "failed": 0
+    }
+  },
+  {
+    "key": "0xc01f159a",
+    "evidence_id": "ev_8d7661f36d79fb694d8e1d66ecd645658b40c419876bab109d2ca18f143612b1",
+    "result": {
+      "procedure": {
+        "address": "0xc01f159a",
+        "name": "FUN_c01f159a",
+        "classification": {
+          "external": false,
+          "thunk": false,
+          "thunk_target": null,
+          "provenance": "ghidra-function-manager"
+        },
+        "body": {
+          "available": true,
+          "provenance": "ghidra-function-body-address-set",
+          "ranges": [
+            {
+              "start": "0xc01f159a",
+              "end": "0xc01f15cb"
+            }
+          ],
+          "total_bytes": 50,
+          "span_bytes": 50,
+          "non_contiguous": false,
+          "contains_entry": true
+        }
+      },
+      "instructions": [
+        "0xc01f159a: movs r0, #0x5",
+        "0xc01f159c: adr r1, [0xc01f1974]",
+        "0xc01f159e: push {r4,lr}",
+        "0xc01f15a0: bl 0xc01f3670",
+        "0xc01f15a4: movs r0, #0x2",
+        "0xc01f15a6: bl 0xc01f3eb6",
+        "0xc01f15aa: movs r3, r0",
+        "0xc01f15ac: beq 0xc01f15ba",
+        "0xc01f15ae: movs r0, #0x3",
+        "0xc01f15b0: adr r2, [0xc01f1988]",
+        "0xc01f15b2: adr r1, [0xc01f1994]",
+        "0xc01f15b4: bl 0xc01f3670",
+        "0xc01f15b8: b 0xc01f15c4",
+        "0xc01f15ba: adr r0, [0xc01f19a4]",
+        "0xc01f15bc: bl 0xc01f44c6",
+        "0xc01f15c0: cmp r0, #0x0",
+        "0xc01f15c2: bge 0xc01f15c8",
+        "0xc01f15c4: movs r0, #0x0",
+        "0xc01f15c6: pop {r4,pc}",
+        "0xc01f15c8: movs r0, #0x1",
+        "0xc01f15ca: pop {r4,pc}"
+      ],
+      "limitations": [
+        "Instruction text and ordering are Ghidra-specific representations.",
+        "The fast path does not invoke the decompiler or scan whole-program names and strings."
+      ]
+    }
+  },
+  {
+    "key": "0xc01f1de6",
+    "evidence_id": "ev_36133261ed16ce51e7a4891803c60c20ad6f20a6524391b0b3337ea66adec5f7",
+    "result": {
+      "procedure": {
+        "address": "0xc01f1de6",
+        "name": "FUN_c01f1de6",
+        "classification": {
+          "external": false,
+          "thunk": false,
+          "thunk_target": null,
+          "provenance": "ghidra-function-manager"
+        },
+        "body": {
+          "available": true,
+          "provenance": "ghidra-function-body-address-set",
+          "ranges": [
+            {
+              "start": "0xc01f1de6",
+              "end": "0xc01f1ef3"
+            },
+            {
+              "start": "0xc01f2040",
+              "end": "0xc01f2155"
+            }
+          ],
+          "total_bytes": 548,
+          "span_bytes": 880,
+          "non_contiguous": true,
+          "contains_entry": true
+        }
+      },
+      "instructions": [
+        "0xc01f1de6: push {r1,r2,r3,r4,r5,r6,r7,lr}",
+        "0xc01f1de8: movs r6, #0x0",
+        "0xc01f1dea: movs r5, #0x1",
+        "0xc01f1dec: strd r5, r6, [sp,#0x0]",
+        "0xc01f1df0: bl 0xc01f50f4",
+        "0xc01f1df4: cmp r0, #0x2",
+        "0xc01f1df6: bne 0xc01f1e00",
+        "0xc01f1df8: bl 0xc01f159a",
+        "0xc01f1dfc: cmp r0, #0x0",
+        "0xc01f1dfe: beq 0xc01f1eec",
+        "0xc01f1e00: ldr r0, [0xc01f1ef4]",
+        "0xc01f1e02: add r1, sp,#0x4",
+        "0xc01f1e04: subs r0, #0x8",
+        "0xc01f1e06: bl 0xc01f498c",
+        "0xc01f1e0a: cmp r0, #0x0",
+        "0xc01f1e0c: bge 0xc01f1e10",
+        "0xc01f1e0e: str r6, [sp,#0x4]",
+        "0xc01f1e10: bl 0xc01f159a",
+        "0xc01f1e14: cbz r0, 0xc01f1e1a",
+        "0xc01f1e16: movs r0, #0x3",
+        "0xc01f1e18: b 0xc01f212c",
+        "0xc01f1e1a: bl 0xc01f1d6a",
+        "0xc01f1e1e: movs r4, #0x5",
+        "0xc01f1e20: cmp r0, #0x0",
+        "0xc01f1e22: bne 0xc01f1eee",
+        "0xc01f1e24: bl 0xc01f1c70",
+        "0xc01f1e28: cmp r0, #0x0",
+        "0xc01f1e2a: bne 0xc01f1e22",
+        "0xc01f1e2c: ldr r0, [0xc01f1ef4]",
+        "0xc01f1e2e: add r1, sp,#0x8",
+        "0xc01f1e30: strb.w r6, [sp,#0x8]",
+        "0xc01f1e34: adds r0, #0x20",
+        "0xc01f1e36: bl 0xc01f498c",
+        "0xc01f1e3a: cmp r0, #0x0",
+        "0xc01f1e3c: blt 0xc01f1e56",
+        "0xc01f1e3e: ldrb.w r0, [sp,#0x8]",
+        "0xc01f1e42: cbz r0, 0xc01f1e56",
+        "0xc01f1e44: movs r0, #0x5",
+        "0xc01f1e46: adr r1, [0xc01f2000]",
+        "0xc01f1e48: bl 0xc01f3670",
+        "0xc01f1e4c: bl 0xc01f5e74",
+        "0xc01f1e50: cbz r0, 0xc01f1e56",
+        "0xc01f1e52: movs r0, #0x8",
+        "0xc01f1e54: b 0xc01f212c",
+        "0xc01f1e56: bl 0xc01f281e",
+        "0xc01f1e5a: cbz r0, 0xc01f1e60",
+        "0xc01f1e5c: movs r0, #0xc",
+        "0xc01f1e5e: b 0xc01f212c",
+        "0xc01f1e60: bl 0xc01f27c4",
+        "0xc01f1e64: movs r4, #0x7",
+        "0xc01f1e66: cmp r0, #0x0",
+        "0xc01f1e68: bne 0xc01f1e22",
+        "0xc01f1e6a: bl 0xc01f272e",
+        "0xc01f1e6e: cbz r0, 0xc01f1e74",
+        "0xc01f1e70: movs r0, #0x9",
+        "0xc01f1e72: b 0xc01f212c",
+        "0xc01f1e74: ldr r0, [sp,#0x4]",
+        "0xc01f1e76: cmp r0, #0x0",
+        "0xc01f1e78: bne 0xc01f1ef0",
+        "0xc01f1e7a: ldr r0, [0xc01f1ef4]",
+        "0xc01f1e7c: add r1, sp,#0x8",
+        "0xc01f1e7e: strb.w r6, [sp,#0x8]",
+        "0xc01f1e82: adds r0, r0, #0x4",
+        "0xc01f1e84: bl 0xc01f498c",
+        "0xc01f1e88: cmp r0, #0x0",
+        "0xc01f1e8a: blt 0xc01f1ea8",
+        "0xc01f1e8c: ldrb.w r0, [sp,#0x8]",
+        "0xc01f1e90: cbz r0, 0xc01f1ea8",
+        "0xc01f1e92: movs r0, #0x5",
+        "0xc01f1e94: adr r1, [0xc01f2010]",
+        "0xc01f1e96: bl 0xc01f3670",
+        "0xc01f1e9a: bl 0xc01f5614",
+        "0xc01f1e9e: cbnz r0, 0xc01f1ea8",
+        "0xc01f1ea0: bl 0xc01f5e7a",
+        "0xc01f1ea4: cmp r0, #0x0",
+        "0xc01f1ea6: bne 0xc01f1eee",
+        "0xc01f1ea8: ldr r0, [sp,#0x4]",
+        "0xc01f1eaa: cmp r0, #0x0",
+        "0xc01f1eac: bne 0xc01f1ef0",
+        "0xc01f1eae: ldr r0, [0xc01f1ef4]",
+        "0xc01f1eb0: add r1, sp,#0x8",
+        "0xc01f1eb2: strb.w r6, [sp,#0x8]",
+        "0xc01f1eb6: adds r0, #0x1b",
+        "0xc01f1eb8: bl 0xc01f498c",
+        "0xc01f1ebc: cmp r0, #0x0",
+        "0xc01f1ebe: blt 0xc01f1ed4",
+        "0xc01f1ec0: ldrb.w r0, [sp,#0x8]",
+        "0xc01f1ec4: cbz r0, 0xc01f1ed4",
+        "0xc01f1ec6: movs r0, #0x5",
+        "0xc01f1ec8: adr r1, [0xc01f2028]",
+        "0xc01f1eca: bl 0xc01f3670",
+        "0xc01f1ece: bl 0xc01f5e80",
+        "0xc01f1ed2: cbnz r0, 0xc01f1eee",
+        "0xc01f1ed4: ldr r0, [sp,#0x4]",
+        "0xc01f1ed6: cbnz r0, 0xc01f1ef0",
+        "0xc01f1ed8: bl 0xc01f26bc",
+        "0xc01f1edc: cbnz r0, 0xc01f1eee",
+        "0xc01f1ede: ldr r0, [sp,#0x4]",
+        "0xc01f1ee0: cbnz r0, 0xc01f1ef0",
+        "0xc01f1ee2: bl 0xc01f2620",
+        "0xc01f1ee6: cbz r0, 0xc01f1ef2",
+        "0xc01f1ee8: movs r0, #0x6",
+        "0xc01f1eea: b 0xc01f212c",
+        "0xc01f1eec: b 0xc01f2122",
+        "0xc01f1eee: b 0xc01f20b8",
+        "0xc01f1ef0: b 0xc01f20bc",
+        "0xc01f1ef2: b 0xc01f2040",
+        "0xc01f2040: ldr r0, [sp,#0x4]",
+        "0xc01f2042: cbnz r0, 0xc01f20bc",
+        "0xc01f2044: add r1, sp,#0x8",
+        "0xc01f2046: strb.w r6, [sp,#0x8]",
+        "0xc01f204a: ldr r0, [0xc01f2448]",
+        "0xc01f204c: bl 0xc01f498c",
+        "0xc01f2050: cmp r0, #0x0",
+        "0xc01f2052: blt 0xc01f2082",
+        "0xc01f2054: ldrb.w r0, [sp,#0x8]",
+        "0xc01f2058: cbz r0, 0xc01f2082",
+        "0xc01f205a: movs r0, #0x5",
+        "0xc01f205c: adr r1, [0xc01f244c]",
+        "0xc01f205e: bl 0xc01f3670",
+        "0xc01f2062: bl 0xc01f5314",
+        "0xc01f2066: cmp r0, #0x7",
+        "0xc01f2068: bne 0xc01f2082",
+        "0xc01f206a: bl 0xc01f8746",
+        "0xc01f206e: ldrb r0, [r0,#0x1c]",
+        "0xc01f2070: ubfx r1, r0, #0x0, #0x1",
+        "0xc01f2074: ubfx r2, r0, #0x1, #0x1",
+        "0xc01f2078: orrs r1, r2",
+        "0xc01f207a: ubfx r0, r0, #0x2, #0x1",
+        "0xc01f207e: bne 0xc01f2082",
+        "0xc01f2080: cbnz r0, 0xc01f20b8",
+        "0xc01f2082: ldr r0, [sp,#0x4]",
+        "0xc01f2084: cbnz r0, 0xc01f20bc",
+        "0xc01f2086: bl 0xc01f1b8c",
+        "0xc01f208a: cbz r0, 0xc01f209a",
+        "0xc01f208c: bl 0xc01f2bc6",
+        "0xc01f2090: cbz r0, 0xc01f2096",
+        "0xc01f2092: movs r0, #0xd",
+        "0xc01f2094: b 0xc01f212c",
+        "0xc01f2096: movs r0, #0xe",
+        "0xc01f2098: b 0xc01f212c",
+        "0xc01f209a: ldr r0, [sp,#0x4]",
+        "0xc01f209c: cbnz r0, 0xc01f20bc",
+        "0xc01f209e: bl 0xc01f184a",
+        "0xc01f20a2: cbnz r0, 0xc01f20b8",
+        "0xc01f20a4: ldr r0, [sp,#0x4]",
+        "0xc01f20a6: cbnz r0, 0xc01f20bc",
+        "0xc01f20a8: bl 0xc01f25c6",
+        "0xc01f20ac: cbnz r0, 0xc01f20b8",
+        "0xc01f20ae: ldr r0, [sp,#0x4]",
+        "0xc01f20b0: cbnz r0, 0xc01f20bc",
+        "0xc01f20b2: bl 0xc01f173e",
+        "0xc01f20b6: cbz r0, 0xc01f20bc",
+        "0xc01f20b8: str r4, [sp,#0x0]",
+        "0xc01f20ba: b 0xc01f2122",
+        "0xc01f20bc: b 0xc01f20be",
+        "0xc01f20be: bl 0xc01f23ee",
+        "0xc01f20c2: cbz r0, 0xc01f20c8",
+        "0xc01f20c4: movs r0, #0x4",
+        "0xc01f20c6: b 0xc01f212c",
+        "0xc01f20c8: bl 0xc01f16fe",
+        "0xc01f20cc: cbz r0, 0xc01f20d2",
+        "0xc01f20ce: movs r0, #0x2",
+        "0xc01f20d0: b 0xc01f212c",
+        "0xc01f20d2: bl 0xc01f15cc",
+        "0xc01f20d6: cbz r0, 0xc01f20dc",
+        "0xc01f20d8: movs r0, #0xa",
+        "0xc01f20da: b 0xc01f212c",
+        "0xc01f20dc: ldr r0, [0xc01f2448]",
+        "0xc01f20de: add r1, sp,#0x8",
+        "0xc01f20e0: adds r0, #0x11",
+        "0xc01f20e2: bl 0xc01f498c",
+        "0xc01f20e6: cmp r0, #0x0",
+        "0xc01f20e8: blt 0xc01f2120",
+        "0xc01f20ea: ldrb.w r0, [sp,#0x8]",
+        "0xc01f20ee: cmp r0, #0x2",
+        "0xc01f20f0: bne 0xc01f2120",
+        "0xc01f20f2: movs r0, #0x5",
+        "0xc01f20f4: adr r1, [0xc01f2464]",
+        "0xc01f20f6: bl 0xc01f3670",
+        "0xc01f20fa: bl 0xc01f2bc6",
+        "0xc01f20fe: cbnz r0, 0xc01f2106",
+        "0xc01f2100: bl 0xc01f2be6",
+        "0xc01f2104: cbz r0, 0xc01f2120",
+        "0xc01f2106: ldr r0, [0xc01f2448]",
+        "0xc01f2108: add r1, sp,#0x8",
+        "0xc01f210a: adds r0, #0x17",
+        "0xc01f210c: bl 0xc01f498c",
+        "0xc01f2110: cmp r0, #0x0",
+        "0xc01f2112: ble 0xc01f212a",
+        "0xc01f2114: ldrb.w r0, [sp,#0x8]",
+        "0xc01f2118: cbz r0, 0xc01f212a",
+        "0xc01f211a: bl 0xc01f5614",
+        "0xc01f211e: cbz r0, 0xc01f212a",
+        "0xc01f2120: str r5, [sp,#0x0]",
+        "0xc01f2122: bl 0xc01f159a",
+        "0xc01f2126: cbz r0, 0xc01f2130",
+        "0xc01f2128: b 0xc01f214c",
+        "0xc01f212a: movs r0, #0xb",
+        "0xc01f212c: str r0, [sp,#0x0]",
+        "0xc01f212e: b 0xc01f2122",
+        "0xc01f2130: movs r2, #0x1",
+        "0xc01f2132: mov r0, sp",
+        "0xc01f2134: movs r1, #0x4",
+        "0xc01f2136: bl 0xc01f51f4",
+        "0xc01f213a: movs r4, r0",
+        "0xc01f213c: beq 0xc01f214c",
+        "0xc01f213e: adr r1, [0xc01f2474]",
+        "0xc01f2140: mov r2, r0",
+        "0xc01f2142: movs r0, #0x3",
+        "0xc01f2144: bl 0xc01f3670",
+        "0xc01f2148: mov r0, r4",
+        "0xc01f214a: pop {r1,r2,r3,r4,r5,r6,r7,pc}",
+        "0xc01f214c: ldr r0, [sp,#0x0]",
+        "0xc01f214e: bl 0xc01f1544",
+        "0xc01f2152: movs r0, #0x0",
+        "0xc01f2154: pop {r1,r2,r3,r4,r5,r6,r7,pc}"
+      ],
+      "limitations": [
+        "Instruction text and ordering are Ghidra-specific representations.",
+        "The fast path does not invoke the decompiler or scan whole-program names and strings."
+      ]
+    }
+  },
+  {
+    "key": "0xc01f1312",
+    "evidence_id": "ev_95374d0a6d9139a023e67ab06479df12264fa082180fdabf9cf137f5b9ec0cd1",
+    "result": {
+      "procedure": {
+        "address": "0xc01f1312",
+        "name": "FUN_c01f1312",
+        "classification": {
+          "external": false,
+          "thunk": false,
+          "thunk_target": null,
+          "provenance": "ghidra-function-manager"
+        },
+        "body": {
+          "available": true,
+          "provenance": "ghidra-function-body-address-set",
+          "ranges": [
+            {
+              "start": "0xc01f1312",
+              "end": "0xc01f131f"
+            },
+            {
+              "start": "0xc01f132e",
+              "end": "0xc01f1377"
+            }
+          ],
+          "total_bytes": 88,
+          "span_bytes": 102,
+          "non_contiguous": true,
+          "contains_entry": true
+        }
+      },
+      "instructions": [
+        "0xc01f1312: push {r4,lr}",
+        "0xc01f1314: ldr r2, [r0,#0x0]",
+        "0xc01f1316: mov r4, r0",
+        "0xc01f1318: cmp r2, #0xd",
+        "0xc01f131a: bcs 0xc01f136a",
+        "0xc01f131c: tbb [pc,r2]",
+        "0xc01f132e: bl 0xc01f09e4",
+        "0xc01f1332: b 0xc01f1338",
+        "0xc01f1334: bl 0xc01f1378",
+        "0xc01f1338: cmp r0, #0x0",
+        "0xc01f133a: bne 0xc01f1368",
+        "0xc01f133c: movs r0, #0x2",
+        "0xc01f133e: adr r1, [0xc01f14fc]",
+        "0xc01f1340: bl 0xc01f3670",
+        "0xc01f1344: bl 0xc01f68ac",
+        "0xc01f1348: movs r0, #0x2",
+        "0xc01f134a: adr r1, [0xc01f1510]",
+        "0xc01f134c: bl 0xc01f3670",
+        "0xc01f1350: bl 0xc01f6888",
+        "0xc01f1354: ldr r0, [r4,#0x0]",
+        "0xc01f1356: movs r1, #0x1",
+        "0xc01f1358: bl 0xc01f4e0c",
+        "0xc01f135c: cmp r0, #0x0",
+        "0xc01f135e: bne 0xc01f1368",
+        "0xc01f1360: ldr r0, [r4,#0x0]",
+        "0xc01f1362: bl 0xc01f0590",
+        "0xc01f1366: movs r0, #0x0",
+        "0xc01f1368: pop {r4,pc}",
+        "0xc01f136a: adr.w r1, 0xc01f07e0",
+        "0xc01f136e: movs r0, #0x3",
+        "0xc01f1370: bl 0xc01f3670",
+        "0xc01f1374: ldr r0, [0xc01f14e4]",
+        "0xc01f1376: pop {r4,pc}"
+      ],
+      "limitations": [
+        "Instruction text and ordering are Ghidra-specific representations.",
+        "The fast path does not invoke the decompiler or scan whole-program names and strings."
+      ]
+    }
+  },
+  {
+    "key": "0xc01f1378",
+    "evidence_id": "ev_919573c03dad563ed234756b8bf59ec325f873ac7c7e1198c062213bda598fb1",
+    "result": {
+      "procedure": {
+        "address": "0xc01f1378",
+        "name": "FUN_c01f1378",
+        "classification": {
+          "external": false,
+          "thunk": false,
+          "thunk_target": null,
+          "provenance": "ghidra-function-manager"
+        },
+        "body": {
+          "available": true,
+          "provenance": "ghidra-function-body-address-set",
+          "ranges": [
+            {
+              "start": "0xc01f1378",
+              "end": "0xc01f13b9"
+            }
+          ],
+          "total_bytes": 66,
+          "span_bytes": 66,
+          "non_contiguous": false,
+          "contains_entry": true
+        }
+      },
+      "instructions": [
+        "0xc01f1378: push {r4,lr}",
+        "0xc01f137a: bl 0xc01f60c2",
+        "0xc01f137e: adr.w r1, 0xc01f0e14",
+        "0xc01f1382: movs r0, #0x2",
+        "0xc01f1384: bl 0xc01f3670",
+        "0xc01f1388: movs r0, #0x3",
+        "0xc01f138a: bl 0xc01f5a68",
+        "0xc01f138e: bl 0xc01f5b2a",
+        "0xc01f1392: adr.w r1, 0xc01f0fbc",
+        "0xc01f1396: movs r0, #0x2",
+        "0xc01f1398: bl 0xc01f3670",
+        "0xc01f139c: bl 0xc01f3108",
+        "0xc01f13a0: movs r0, #0x2",
+        "0xc01f13a2: adr r1, [0xc01f1524]",
+        "0xc01f13a4: bl 0xc01f3670",
+        "0xc01f13a8: bl 0xc01f068a",
+        "0xc01f13ac: ldr r1, [0xc01f1540]",
+        "0xc01f13ae: str r0, [r1,#0x0]",
+        "0xc01f13b0: movs r0, #0x3",
+        "0xc01f13b2: bl 0xc01f5afe",
+        "0xc01f13b6: movs r0, #0x0",
+        "0xc01f13b8: pop {r4,pc}"
+      ],
+      "limitations": [
+        "Instruction text and ordering are Ghidra-specific representations.",
+        "The fast path does not invoke the decompiler or scan whole-program names and strings."
+      ]
+    }
+  },
+  {
+    "key": "0xc01f068a",
+    "evidence_id": "ev_a64464f84297e6cb43bb7d177867c40d14a41be4370a5ccc78282bb83d4c8cca",
+    "result": {
+      "procedure": {
+        "address": "0xc01f068a",
+        "name": "FUN_c01f068a",
+        "classification": {
+          "external": false,
+          "thunk": false,
+          "thunk_target": null,
+          "provenance": "ghidra-function-manager"
+        },
+        "body": {
+          "available": true,
+          "provenance": "ghidra-function-body-address-set",
+          "ranges": [
+            {
+              "start": "0xc01f068a",
+              "end": "0xc01f06d3"
+            },
+            {
+              "start": "0xc01f0968",
+              "end": "0xc01f09e3"
+            }
+          ],
+          "total_bytes": 198,
+          "span_bytes": 858,
+          "non_contiguous": true,
+          "contains_entry": true
+        }
+      },
+      "instructions": [
+        "0xc01f068a: push {r4,r5,lr}",
+        "0xc01f068c: sub sp, #0x3c",
+        "0xc01f068e: movs r1, #0x34",
+        "0xc01f0690: add r0, sp,#0x4",
+        "0xc01f0692: bl 0xc020c45c",
+        "0xc01f0696: movs r0, #0x1",
+        "0xc01f0698: bl 0xc01f3eb6",
+        "0xc01f069c: cbz r0, 0xc01f06a4",
+        "0xc01f069e: movs r2, #0x1",
+        "0xc01f06a0: adr r1, [0xc01f0908]",
+        "0xc01f06a2: b 0xc01f06b4",
+        "0xc01f06a4: adr r0, [0xc01f092c]",
+        "0xc01f06a6: bl 0xc01f44c6",
+        "0xc01f06aa: cmp r0, #0x33",
+        "0xc01f06ac: mov r4, r0",
+        "0xc01f06ae: bcc 0xc01f06bc",
+        "0xc01f06b0: adr r2, [0xc01f092c]",
+        "0xc01f06b2: adr r1, [0xc01f0940]",
+        "0xc01f06b4: movs r0, #0x3",
+        "0xc01f06b6: bl 0xc01f3670",
+        "0xc01f06ba: b 0xc01f09c8",
+        "0xc01f06bc: mov r1, r0",
+        "0xc01f06be: add r0, sp,#0x4",
+        "0xc01f06c0: bl 0xc01f45cc",
+        "0xc01f06c4: cmp r0, r4",
+        "0xc01f06c6: mov r3, r0",
+        "0xc01f06c8: beq 0xc01f06d2",
+        "0xc01f06ca: adr r2, [0xc01f092c]",
+        "0xc01f06cc: str r4, [sp,#0x0]",
+        "0xc01f06ce: adr r1, [0xc01f0950]",
+        "0xc01f06d0: b 0xc01f09c2",
+        "0xc01f06d2: b 0xc01f0968",
+        "0xc01f0968: cmp r0, #0x32",
+        "0xc01f096a: bne 0xc01f0972",
+        "0xc01f096c: movs r0, #0x0",
+        "0xc01f096e: strb.w r0, [sp,#0x35]",
+        "0xc01f0972: adr r1, [0xc01f0d44]",
+        "0xc01f0974: add r0, sp,#0x4",
+        "0xc01f0976: bl 0xc020c13c",
+        "0xc01f097a: movs r2, #0x10",
+        "0xc01f097c: movs r1, #0x0",
+        "0xc01f097e: bl 0xc020c0b8",
+        "0xc01f0982: adr r1, [0xc01f0d44]",
+        "0xc01f0984: mov r5, r0",
+        "0xc01f0986: movs r0, #0x0",
+        "0xc01f0988: bl 0xc020c13c",
+        "0xc01f098c: movs r2, #0x10",
+        "0xc01f098e: movs r1, #0x0",
+        "0xc01f0990: bl 0xc020c0b8",
+        "0xc01f0994: adr r1, [0xc01f0d48]",
+        "0xc01f0996: mov r4, r0",
+        "0xc01f0998: mov r3, r0",
+        "0xc01f099a: mov r2, r5",
+        "0xc01f099c: movs r0, #0x2",
+        "0xc01f099e: bl 0xc01f3670",
+        "0xc01f09a2: cbz r5, 0xc01f09b8",
+        "0xc01f09a4: cbz r4, 0xc01f09b8",
+        "0xc01f09a6: adr r0, [0xc01f0d6c]",
+        "0xc01f09a8: mov r1, r5",
+        "0xc01f09aa: bl 0xc01f4654",
+        "0xc01f09ae: cmp r0, #0x0",
+        "0xc01f09b0: bgt 0xc01f09ce",
+        "0xc01f09b2: adr r1, [0xc01f0d80]",
+        "0xc01f09b4: mov r2, r5",
+        "0xc01f09b6: b 0xc01f06b4",
+        "0xc01f09b8: add r0, sp,#0x4",
+        "0xc01f09ba: mov r3, r4",
+        "0xc01f09bc: adr r1, [0xc01f0d98]",
+        "0xc01f09be: mov r2, r5",
+        "0xc01f09c0: str r0, [sp,#0x0]",
+        "0xc01f09c2: movs r0, #0x3",
+        "0xc01f09c4: bl 0xc01f3670",
+        "0xc01f09c8: movs r0, #0x0",
+        "0xc01f09ca: add sp, #0x3c",
+        "0xc01f09cc: pop {r4,r5,pc}",
+        "0xc01f09ce: adr r0, [0xc01f0dc4]",
+        "0xc01f09d0: mov r1, r4",
+        "0xc01f09d2: bl 0xc01f4654",
+        "0xc01f09d6: cmp r0, #0x0",
+        "0xc01f09d8: bgt 0xc01f09e0",
+        "0xc01f09da: adr r1, [0xc01f0dd8]",
+        "0xc01f09dc: mov r2, r4",
+        "0xc01f09de: b 0xc01f06b4",
+        "0xc01f09e0: mov r0, r5",
+        "0xc01f09e2: b 0xc01f09ca"
+      ],
+      "limitations": [
+        "Instruction text and ordering are Ghidra-specific representations.",
+        "The fast path does not invoke the decompiler or scan whole-program names and strings."
+      ]
+    }
+  },
+  {
+    "key": "0xc01f5008",
+    "evidence_id": "ev_9a612165abf08ae72ae0c964931bb43eda71a5be1793b4df064fcb8dfbeacbdc",
+    "result": {
+      "procedure": {
+        "address": "0xc01f5008",
+        "name": "FUN_c01f5008",
+        "classification": {
+          "external": false,
+          "thunk": false,
+          "thunk_target": null,
+          "provenance": "ghidra-function-manager"
+        },
+        "body": {
+          "available": true,
+          "provenance": "ghidra-function-body-address-set",
+          "ranges": [
+            {
+              "start": "0xc01f5008",
+              "end": "0xc01f5059"
+            }
+          ],
+          "total_bytes": 82,
+          "span_bytes": 82,
+          "non_contiguous": false,
+          "contains_entry": true
+        }
+      },
+      "instructions": [
+        "0xc01f5008: cbz r0, 0xc01f5012",
+        "0xc01f500a: cmp r0, #0x1",
+        "0xc01f500c: beq 0xc01f5012",
+        "0xc01f500e: movs r0, #0x0",
+        "0xc01f5010: bx lr",
+        "0xc01f5012: ldr r1, [0xc01f50e8]",
+        "0xc01f5014: ldr r2, [0xc01f50ec]",
+        "0xc01f5016: str r0, [r1,#0xc]",
+        "0xc01f5018: movw r1, #0xa00",
+        "0xc01f501c: str r1, [r2,#0x0]",
+        "0xc01f501e: ldr r3, [0xc01f50f0]",
+        "0xc01f5020: str.w r1, [r3,#0x204]",
+        "0xc01f5024: movw r1, #0x500",
+        "0xc01f5028: str r1, [r2,#0x0]",
+        "0xc01f502a: mov.w r1, #0xf2000000",
+        "0xc01f502e: add.w r0, r1, r0, lsl #0xc",
+        "0xc01f5032: movw r2, #0x1ff",
+        "0xc01f5036: str r2, [r0,#0x1c]",
+        "0xc01f5038: mov.w r1, #0x0",
+        "0xc01f503c: str r1, [r0,#0x38]",
+        "0xc01f503e: mov.w r2, #0x1a",
+        "0xc01f5042: str r2, [r0,#0x24]",
+        "0xc01f5044: mov.w r2, #0x3",
+        "0xc01f5048: str r2, [r0,#0x28]",
+        "0xc01f504a: mov.w r2, #0x70",
+        "0xc01f504e: str r2, [r0,#0x2c]",
+        "0xc01f5050: str r1, [r0,#0x4]",
+        "0xc01f5052: movw r1, #0x701",
+        "0xc01f5056: str r1, [r0,#0x30]",
+        "0xc01f5058: b 0xc01f500e"
+      ],
+      "limitations": [
+        "Instruction text and ordering are Ghidra-specific representations.",
+        "The fast path does not invoke the decompiler or scan whole-program names and strings."
+      ]
+    }
+  },
+  {
+    "key": "0xc01f505a",
+    "evidence_id": "ev_da8411d51761e6d55f64c00fce357ba2b6768971c9c92b8d4467f4d28ad4796f",
+    "result": {
+      "procedure": {
+        "address": "0xc01f505a",
+        "name": "FUN_c01f505a",
+        "classification": {
+          "external": false,
+          "thunk": false,
+          "thunk_target": null,
+          "provenance": "ghidra-function-manager"
+        },
+        "body": {
+          "available": true,
+          "provenance": "ghidra-function-body-address-set",
+          "ranges": [
+            {
+              "start": "0xc01f505a",
+              "end": "0xc01f5077"
+            }
+          ],
+          "total_bytes": 30,
+          "span_bytes": 30,
+          "non_contiguous": false,
+          "contains_entry": true
+        }
+      },
+      "instructions": [
+        "0xc01f505a: ldr r2, [0xc01f50e8]",
+        "0xc01f505c: mov.w r1, #0xf2000000",
+        "0xc01f5060: ldr r3, [r2,#0xc]",
+        "0xc01f5062: add.w r3, r1, r3, lsl #0xc",
+        "0xc01f5066: ldr r3, [r3,#0x18]",
+        "0xc01f5068: lsls r3, r3, #0x1a",
+        "0xc01f506a: bmi 0xc01f5060",
+        "0xc01f506c: ldr r2, [r2,#0xc]",
+        "0xc01f506e: add.w r1, r1, r2, lsl #0xc",
+        "0xc01f5072: str r0, [r1,#0x0]",
+        "0xc01f5074: movs r0, #0x0",
+        "0xc01f5076: bx lr"
+      ],
+      "limitations": [
+        "Instruction text and ordering are Ghidra-specific representations.",
+        "The fast path does not invoke the decompiler or scan whole-program names and strings."
+      ]
+    }
+  },
+  {
+    "key": "0xc01f35c0",
+    "evidence_id": "ev_8d81c238b9df9fb4d7381dc075ed628bd58c52fec3a2fdf1f8aa2cbe9def308b",
+    "result": {
+      "procedure": {
+        "address": "0xc01f35c0",
+        "name": "FUN_c01f35c0",
+        "classification": {
+          "external": false,
+          "thunk": false,
+          "thunk_target": null,
+          "provenance": "ghidra-function-manager"
+        },
+        "body": {
+          "available": true,
+          "provenance": "ghidra-function-body-address-set",
+          "ranges": [
+            {
+              "start": "0xc01f35c0",
+              "end": "0xc01f363f"
+            }
+          ],
+          "total_bytes": 128,
+          "span_bytes": 128,
+          "non_contiguous": false,
+          "contains_entry": true
+        }
+      },
+      "instructions": [
+        "0xc01f35c0: push {r0,r1,r2,r3,r4,r5,r6,lr}",
+        "0xc01f35c2: movs r4, #0x0",
+        "0xc01f35c4: str r4, [sp,#0x0]",
+        "0xc01f35c6: str r4, [sp,#0x4]",
+        "0xc01f35c8: str r4, [sp,#0x8]",
+        "0xc01f35ca: str r4, [sp,#0xc]",
+        "0xc01f35cc: bl 0xc01f4edc",
+        "0xc01f35d0: ldr r5, [0xc01f388c]",
+        "0xc01f35d2: cbz r0, 0xc01f3636",
+        "0xc01f35d4: movs r0, #0x1",
+        "0xc01f35d6: str r0, [r5,#0x14]",
+        "0xc01f35d8: add r1, sp,#0x4",
+        "0xc01f35da: mov.w r0, #0x510000",
+        "0xc01f35de: bl 0xc01f498c",
+        "0xc01f35e2: cmp r0, #0x0",
+        "0xc01f35e4: ble 0xc01f35ee",
+        "0xc01f35e6: ldr r0, [sp,#0x4]",
+        "0xc01f35e8: str r0, [r5,#0xc]",
+        "0xc01f35ea: bl 0xc01f5008",
+        "0xc01f35ee: ldr r0, [0xc01f3890]",
+        "0xc01f35f0: mov r1, sp",
+        "0xc01f35f2: bl 0xc01f498c",
+        "0xc01f35f6: cmp r0, #0x0",
+        "0xc01f35f8: ble 0xc01f35fe",
+        "0xc01f35fa: ldr r0, [sp,#0x0]",
+        "0xc01f35fc: str r0, [r5,#0x0]",
+        "0xc01f35fe: add r1, sp,#0xc",
+        "0xc01f3600: ldr r0, [0xc01f3890]",
+        "0xc01f3602: adds r0, #0x2c",
+        "0xc01f3604: bl 0xc01f498c",
+        "0xc01f3608: cmp r0, #0x0",
+        "0xc01f360a: ble 0xc01f3610",
+        "0xc01f360c: ldr r0, [sp,#0xc]",
+        "0xc01f360e: str r0, [r5,#0x18]",
+        "0xc01f3610: mov r1, sp",
+        "0xc01f3612: ldr r0, [0xc01f3890]",
+        "0xc01f3614: adds r0, r0, #0x3",
+        "0xc01f3616: bl 0xc01f498c",
+        "0xc01f361a: cmp r0, #0x0",
+        "0xc01f361c: ble 0xc01f3622",
+        "0xc01f361e: ldr r0, [sp,#0x0]",
+        "0xc01f3620: str r0, [r5,#0x4]",
+        "0xc01f3622: add r1, sp,#0x8",
+        "0xc01f3624: ldr r0, [0xc01f3890]",
+        "0xc01f3626: adds r0, #0x22",
+        "0xc01f3628: bl 0xc01f498c",
+        "0xc01f362c: cmp r0, #0x0",
+        "0xc01f362e: ble 0xc01f3634",
+        "0xc01f3630: ldr r0, [sp,#0x8]",
+        "0xc01f3632: str r0, [r5,#0x10]",
+        "0xc01f3634: pop {r0,r1,r2,r3,r4,r5,r6,pc}",
+        "0xc01f3636: b 0xc01f3638",
+        "0xc01f3638: str r4, [r5,#0x14]",
+        "0xc01f363a: str r4, [r5,#0x18]",
+        "0xc01f363c: str r4, [r5,#0x0]",
+        "0xc01f363e: b 0xc01f3610"
+      ],
+      "limitations": [
+        "Instruction text and ordering are Ghidra-specific representations.",
+        "The fast path does not invoke the decompiler or scan whole-program names and strings."
+      ]
+    }
+  }
+]

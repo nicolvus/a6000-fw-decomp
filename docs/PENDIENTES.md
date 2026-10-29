@@ -21,11 +21,11 @@
 | ID | Estado | Origen y criterio de cierre |
 |---|---|---|
 | E26-R5-L3 | PARCIAL R6 / fuente resuelta | R6 §1: payload local cotejado con fuente histórica; normales die0/plane0 y descarte de estados ECC. Falta cola INFO6 die0/plane1/block2/pages0–20 identificada, IDs/tramas perdidas, checksum real y runtime; no repetir búsqueda de implementación |
-| E26-R5-MODE | PARCIAL | R5 §2: condición de bandera y prioridades verificadas; SIO alternativo condicionado no habilitado históricamente. Cierre: vía independiente demostrada para seleccionar 3 y dependencias completas sin nflasha3 |
+| E26-R5-MODE | PARCIAL | R6 §3: selector confirmado en prefijo idéntico, imagen completa ausente; SIO alternativo condicionado no habilitado históricamente. Cierre: vía independiente demostrada para seleccionar 3 y dependencias completas sin nflasha3 |
 | E26-R5-HOST | PARCIAL offline | R5 §3: flag HasError, catch/setError, comp/mode y byte 2 al adaptador resueltos. Cierre: ciclo uincomp, cobertura errores join/EH y último éxito gráfico Done del host, sin volver a resolver Join |
-| E26-R5-SIDEA | PARCIAL / físico diferido | R5 §4/7: pinout documental completo, UART0 BIONZ 4/5 y SWD por R4911/12 XX. Cierre: foto/cara/acceso, población/continuidad y nivel seguros; captura pasiva solo tras autorización independiente |
-| E26-R5-BIONZ | ABIERTO | R5 §4/5: SWD opcional documentado eléctricamente, UART sin monitor demostrado. Cierre: AP/protección/efectos y acceso de lectura validado sin atribuir NAND por compatibilidad teórica |
-| E26-R5-NAND | ABIERTO | R5 §5: identificar chip/die/topología, bus, geometría, ECC/OOB, bad blocks y traducción física de nflasha3; especificar herramienta y preservación antes de escritura |
+| E26-R5-SIDEA | PARCIAL / físico diferido | R6 §4/7: orientación documental resuelta y mapa SVG; UART0 BIONZ 4/5, logging condicionado por510015 (histórico00), silencio no excluye ejecución. SWD por R4911/12 XX. Cierre: foto/cara/acceso, población/continuidad y nivel seguros; captura pasiva solo tras autorización independiente |
+| E26-R5-BIONZ | ABIERTO | R6 §5/7: SWD opcional documentado eléctricamente, UART sin monitor demostrado. Cierre: AP/protección/efectos y acceso de lectura validado sin atribuir NAND por compatibilidad teórica |
+| E26-R5-NAND | ABIERTO | R6 §6: identificar chip/die/topología, bus, geometría, ECC/OOB, bad blocks y traducción física de nflasha3; especificar herramienta y preservación antes de escritura |
 | E26-R5-FM3 | ABIERTO offline / físico diferido | R5 §6: EPFR00 corrige atribución histórica a SPSR. Cierre: manual de flash MB9AF004B, protocolo/herramienta y protección concretos; no auto-unlock ni escritura por defecto |
 
 
