@@ -3167,3 +3167,10 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 - **−302:** 7 funciones, 9 cargas; 3 devuelven −306. Propagan al LED: BOS `c01f2c98` y CFG `c01f2f24`.
 - **Tiempos:** `d`=2,0 s (timer DIV2, entrada 4 MHz según cabeceras Sony; sin medir). Ciclo de −302 = 8,0 s.
 - **Entregables:** `docs/capture/e26-r13-led-error-provenance.md`, `analysis/e26-recovery/r13_loader3.py`, `r13-led-provenance.py`, `tests/test_e26_r13_led_provenance.py`. Pendientes `E26-R14-RAMCFG`, `E26-R14-LED-MEDIDA`.
+
+## E26-R14 — RAMCFG, BOS y FAT de Loader3 (30-10-2026)
+
+- **RAMCFG:** Backup BK4 `0xfa0080`, 64 entradas de `0x90` B (6 usadas); idéntico en 55 BK4 (volcados, `nflasha2`, paquetes 3.21/3.25).
+- **Particiones:** 2 = FAT12 (`\Backup.bin`, `\kemco.txt`); 3 = TPZL→FAT12 (resto). BOS sector 0 = `8246`.
+- **−302:** `c01f4690` convierte todo fallo de sector en −302; BOS: lectura −1, firma −302; Backup no en estado 1 → −303.
+- **Entregables:** `docs/capture/e26-r14-ramcfg-bos-analysis.md`, `analysis/e26-recovery/r14_backup.py`, `r14-ramcfg-bos-fat.py`, `tests/test_e26_r14_ramcfg_bos.py`. Pendientes `E26-R15-*`.
