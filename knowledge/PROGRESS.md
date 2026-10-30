@@ -3189,3 +3189,10 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 - **Límites:** 129 sectores funcionan (Sony `nflasha15/16`); ARM7 trocea en lotes de 0x80; residuo copiado y no leído en lo analizado.
 - **Conciliado:** 89 B BIONZ + 22 B Darwin = 111; `c01f7752` no carga archivos ni da −302; fallos `tests/knowledge` desde R7 (`9dbd232e`).
 - **Entregables:** `docs/capture/e26-r16-ldec-hardware-audit.md`, `analysis/e26-recovery/r16_*.py`, `tests/test_e26_r16_ldec.py`. Pendientes `E26-R17-*`.
+
+## E26-R17 — BossFirm ARM7 y semántica LDEC (30-10-2026)
+
+- **ARM7:** todo ARM; despachador `0xec8` (`bx r1`) sobre 18 punteros `0x379c`; op 0 = `0x1338`. LDEC (`0xf2903000`) solo en `0x3f4` (config), `0x43c` (ISR, errores `0x28–0x2d`), `0x4d8` (arranque).
+- **Hallazgos:** `+0xc` se escribe una vez desde `trabajo+0xc` y no se lee ni compara; `trabajo+8` sin lector en la op 0; tulist síncrono por tanda de 0x80 (`0x5f8` sondea `[0x378c]`).
+- **Decisión C.** No ejecutado: corpus Sony externo (`E26-R17-TPZL-1SEG` abierto), trazado de otras ops (`E26-R18-ARM7-RESTO`).
+- **Entregables:** `docs/capture/e26-r17-arm7-ldec-segment-analysis.md`, `analysis/e26-recovery/r17_arm7_full.py`, `tests/test_e26_r17_arm7.py`.
