@@ -1,0 +1,162 @@
+{
+ "sha256": {
+  "orig": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+  "integ": "45a5ab350c356d6d76f5ee79ed51d98fadf920f64ce75c387f6358f11225190e",
+  "extraida_nflasha3": "45a5ab350c356d6d76f5ee79ed51d98fadf920f64ce75c387f6358f11225190e",
+  "nflasha3_artifact": "bb9ce25a073d1ccc990d8ee1fdd75322c703d5d2a4020ab5e7daeaf8d23d546c",
+  "nflasha3_en_tar": "bb9ce25a073d1ccc990d8ee1fdd75322c703d5d2a4020ab5e7daeaf8d23d546c",
+  "extraida_tar": "45a5ab350c356d6d76f5ee79ed51d98fadf920f64ce75c387f6358f11225190e"
+ },
+ "size": {
+  "orig": 11427236,
+  "integ": 11427236,
+  "extraida": 11427236
+ },
+ "integ_eq_extraida": true,
+ "nflasha3_artifact_eq_tar": true,
+ "bytes_distintos_orig_vs_integ": 89,
+ "intervalos_orig_vs_integ": 7,
+ "bytes_distintos_orig_vs_extraida": 89,
+ "c3b_consts": [
+  "BASE",
+  "CAP_IMAGER",
+  "CAP_MODALITY",
+  "CAP_SHD",
+  "CAP_SHUTMODE",
+  "CAP_STEP",
+  "CAP_SVD",
+  "CAP_VTS",
+  "CAVE",
+  "CAVE_LEN",
+  "HOOK",
+  "HOOK_OLD",
+  "HOOK_TARGET",
+  "PROTECTED",
+  "SHA256_ORIGINAL",
+  "SIZE"
+ ],
+ "patches_selector": [
+  [
+   "0x30033e",
+   4,
+   "bne.w -> NOP; el cave decide la rama"
+  ],
+  [
+   "0x300342",
+   4,
+   "movs/strb -> bl cave"
+  ],
+  [
+   "0x300476",
+   2,
+   "store duplicado -> NOP"
+  ],
+  [
+   "0x800",
+   20,
+   "cave: pkt[0x0e] = cap+0x41c"
+  ],
+  [
+   "0x3872fe",
+   4,
+   "bl imager -> bl cueva C3-B"
+  ],
+  [
+   "0x840",
+   58,
+   "cueva C3-B"
+  ]
+ ],
+ "parcheados_total": 92,
+ "tabla": [
+  {
+   "offset": "0x30033e",
+   "va": "0x4384133e",
+   "len": 4,
+   "distintos": 4,
+   "rol": "bne.w -> NOP; el cave decide la rama",
+   "comp": "selector (patch_bionz)"
+  },
+  {
+   "offset": "0x300342",
+   "va": "0x43841342",
+   "len": 4,
+   "distintos": 3,
+   "rol": "movs/strb -> bl cave",
+   "comp": "selector (patch_bionz)"
+  },
+  {
+   "offset": "0x300476",
+   "va": "0x43841476",
+   "len": 2,
+   "distintos": 2,
+   "rol": "store duplicado -> NOP",
+   "comp": "selector (patch_bionz)"
+  },
+  {
+   "offset": "0x800",
+   "va": "0x43541800",
+   "len": 20,
+   "distintos": 19,
+   "rol": "cave: pkt[0x0e] = cap+0x41c",
+   "comp": "selector (patch_bionz)"
+  },
+  {
+   "offset": "0x3872fe",
+   "va": "0x438c82fe",
+   "len": 4,
+   "distintos": 4,
+   "rol": "bl imager -> bl cueva C3-B",
+   "comp": "patch_c3b"
+  },
+  {
+   "offset": "0x840",
+   "va": "0x43541840",
+   "len": 58,
+   "distintos": 57,
+   "rol": "cueva C3-B",
+   "comp": "patch_c3b"
+  }
+ ],
+ "distintos_en_parches": 89,
+ "distintos_fuera_de_parches": [],
+ "intervalos": [
+  [
+   "0x801",
+   19
+  ],
+  [
+   "0x840",
+   42
+  ],
+  [
+   "0x86b",
+   15
+  ],
+  [
+   "0x30033e",
+   4
+  ],
+  [
+   "0x300343",
+   3
+  ],
+  [
+   "0x300476",
+   2
+  ],
+  [
+   "0x3872fe",
+   4
+  ]
+ ],
+ "darwin_sha_orig_ok": true,
+ "darwin_distintos": 22,
+ "bionz_escritos": 92,
+ "manifiesto_diff_count": {
+  "c3b": 61,
+  "darwin": 22,
+  "selector": 28,
+  "total": 111
+ }
+}

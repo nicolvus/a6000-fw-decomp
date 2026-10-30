@@ -3181,3 +3181,11 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 - **Lector TPZL:** registro `c01fe4ec`, petición `c01fdd8e`; residuo ≠ 0 solo avisa; sectores `(res+tam+0x1ff)>>9`. Las 3 imágenes pasan.
 - **`c01f2282`:** omite solo si Backup `0xfa0033` ∈ {1,2}; vale `0x80021048` en 55 BK4 → nunca.
 - **Entregables:** `docs/capture/e26-r15-tpzl-custom-fw325.md`, `analysis/e26-recovery/r15_tpzl_loader3.py`, `r15-mode-table.py`, `tests/test_e26_r15_tpzl.py`. Pendientes `E26-R16-*`.
+
+## E26-R16 — Ruta LDEC/BOSS/ARM7 del TPZL 3.25 (30-10-2026)
+
+- **Ruta:** Loader3 `c01fdd8e`→`c01fce8c`→MuMin→SRAM ARM7 `+0x3f40`→BossFirm `0x1338`→LDEC `0xf2903000`; sin descompresor software en Loader3. `0x2800` (NAND/firmware) excluido del grafo.
+- **Diferencia nueva (decisión C):** 100 % del corpus Sony = 16 segmentos × 4096 B por bloque (`size>>12`=16 va al registro `+0x0c`); bloques 0/48/57 del 3.25 = 1 × 65 536 B. Sin rechazo demostrado.
+- **Límites:** 129 sectores funcionan (Sony `nflasha15/16`); ARM7 trocea en lotes de 0x80; residuo copiado y no leído en lo analizado.
+- **Conciliado:** 89 B BIONZ + 22 B Darwin = 111; `c01f7752` no carga archivos ni da −302; fallos `tests/knowledge` desde R7 (`9dbd232e`).
+- **Entregables:** `docs/capture/e26-r16-ldec-hardware-audit.md`, `analysis/e26-recovery/r16_*.py`, `tests/test_e26_r16_ldec.py`. Pendientes `E26-R17-*`.

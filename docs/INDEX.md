@@ -389,7 +389,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 6. Otros subsistemas (AF, estabilización, vídeo, audio, lentes, energía, visor, accesorios, módulos de trazas)
 
-118 informes.
+119 informes.
 
 - **—** [E21 — Lecturas sin cámara de los volcados del 20-10-2026](capture/e21-lecturas-backups-2026-10-26.md)
 - **—** [E24-01 — Arranque, modo actualizador y dependencia de Darwin (27-10-2026)](capture/e24-01-arranque-recuperacion.md)
@@ -411,6 +411,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [E26-R13 — Procedencia del error LED 3 lentos + 2 rápidos (Loader2 / Loader3)](capture/e26-r13-led-error-provenance.md)
 - **—** [E26-R14 — RAMCFG, tabla BOS y geometría FAT de Loader3](capture/e26-r14-ramcfg-bos-analysis.md)
 - **—** [E26-R15 — Auditoría TPZL de Loader3, firmware personalizado 3.25 y lógica RAMCFG](capture/e26-r15-tpzl-custom-fw325.md)
+- **—** [E26-R16 — Auditoría de la ruta LDEC/BOSS/ARM7 del TPZL personalizado 3.25](capture/e26-r16-ldec-hardware-audit.md)
 - **—** [E26-RECOVERY R5 — Loader3, servicio BIONZ y diagnóstico de SY-1028](capture/e26-r5-loader3-servicio.md)
 - **—** [E26-RECOVERY R6 — BLDR, BIONZ y recuperación conservando la placa](capture/e26-r6-recuperacion-bionz.md)
 - **—** [E26-RECOVERY R7 — informe final de ingeniería inversa exhaustiva](capture/e26-r7-recuperacion-estatica.md)
