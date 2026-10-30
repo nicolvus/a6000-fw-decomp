@@ -3153,3 +3153,10 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 - **Auditoría R9:** eSRAM 1 MiB (`0xc0000000–0xc0100000`), `0xEDB88320` = CRC-32 reflejado, salto indirecto compatible con la carga de prueba; válida offline, sin hardware.
 - **Decisión C.** Q1–Q8=NO, Q9=PARCIAL, Q10=SÍ, Q12=CN4906. Pendiente `E26-R12-UART-FISICO`.
 - **Entregables:** `docs/capture/e26-r11-bootrom-uart-physical-access.md`, `analysis/e26-recovery/r11-pinout-reconstruction.py`, `tests/test_e26_r11_pinout.py`. Sin cámara, sin UART, sin intervención física.
+
+## E26-R12 — Auditoría estática del arranque (30-10-2026)
+
+- **Selector:** MODEREG `0xf2915010` bit0 (`ffff1094..109e`); 1 → serie, 0 → almacenamiento. Registro externo.
+- **LED:** BootROM ≤ 2 lentos; Loader2 −302 → 0/3/2 (hipótesis para el patrón 3+2). Corrección R7 `0xfffffed1`→`0xfffffed2`.
+- **Darwin:** `PwrCtrl` Fase1..4, watchdog virtual, SIO `mss` (hipótesis hacia BIONZ).
+- **Entregables:** `docs/capture/e26-r12-bootrom-static-audit.md`, `analysis/e26-recovery/r12-loader2-led-codes.py`, `r12-selector-emulation.py`, `tests/test_e26_r12_led_codes.py`.
