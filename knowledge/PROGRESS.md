@@ -3145,3 +3145,11 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 - **Hallazgos clave:** la interfaz HID declara **solo un informe Input de 1 byte** (sin Output ni Feature, sin canal host → dispositivo). No se localizó el manejador de solicitudes de control (SETEP) ni peticiones vendor-specific de Sony en `darwin_core.bin`. El módulo DWN de Darwin (`DWN_VER0.78` + tabla de salto de 20 punteros en `0x021950`) es **pista futura no demostrada** (no demostrado USB-accesible ni capaz de cambiar modo). No existe cadena demostrada desde USB Charger hasta escritura de RAM, salto a ejecución o activación de Updater Mode.
 - **Decisión de cierre: Opción B** — abandonar provisionalmente la ruta USB Charger y concentrar la recuperación en BootROM UART de R9. Respuestas Q1–Q10: Q1=SÍ, Q2=SÍ(binario)/NO(físico), Q3=NO, Q4=NO, Q5=PARCIAL, Q6=NO, Q7=NO, Q8=NO DEMOSTRADO/NO, Q9=módulo DWN no demostrado, Q10=priorizar BootROM UART.
 - **Entregables:** `docs/capture/e26-r10-usb-charger-recovery.md`, `analysis/e26-recovery/r10-usb-descriptor-parse.py`, `tests/test_e26_r10_usb_charger.py`. Sin cámara, sin escritura, sin flasheo, sin intervención física.
+
+## E26-R11 — Acceso físico al BootROM UART (29-10-2026)
+
+- **Hallazgo:** esquema pág. 38: `BOOT_SERIAL_IN` → `MULTI pin 9 UART_RX/BOOT_IN` (CN4001) vía R4003/R4002, ambas `XX`. CN4906 pin 4 = `DEBUG_UART0_RXD` (montaje no verificado). CN4906 pin 9 ≠ Multi Terminal pin 9.
+- **Selector BootROM:** `0xf2915010` bit 1 es estado externo leído; condición de activación, niveles y baudios no determinados.
+- **Auditoría R9:** eSRAM 1 MiB (`0xc0000000–0xc0100000`), `0xEDB88320` = CRC-32 reflejado, salto indirecto compatible con la carga de prueba; válida offline, sin hardware.
+- **Decisión C.** Q1–Q8=NO, Q9=PARCIAL, Q10=SÍ, Q12=CN4906. Pendiente `E26-R12-UART-FISICO`.
+- **Entregables:** `docs/capture/e26-r11-bootrom-uart-physical-access.md`, `analysis/e26-recovery/r11-pinout-reconstruction.py`, `tests/test_e26_r11_pinout.py`. Sin cámara, sin UART, sin intervención física.
