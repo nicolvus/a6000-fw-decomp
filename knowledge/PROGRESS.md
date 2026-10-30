@@ -3211,3 +3211,10 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 - **Verificación:** REA (descompilación de `main`), Capstone y emulación Unicorn con auxiliares sustituidas (9 escenarios, 4 pruebas).
 - **Pendientes:** `E26-R20-BOOTMAIN-NIVEL` (físico), `E26-R20-KEYTABLE`, `E26-R20-GPIO4`.
 - **Entregables:** `docs/capture/e26-r20-bootrom-selector.md`, `analysis/e26-recovery/r20_bootrom_selector.py`, `tests/test_e26_r20_bootrom_selector.py`.
+
+## E26-R20-KEYTABLE — mecanismo de la tabla de clave (30-10-2026)
+
+- **Pedido:** resolver `E26-R20-KEYTABLE`.
+- **Hallazgos:** `0xffff1352` (llamada desde `0x150/0x332`) es un lector real de sectores de `0x600` B desde un controlador de bloque en `0x20000` (FIFO `0x10000010`), con reintentos; solo pone a 0xFF un array de estado por sector (`memset` vía `0xffff1814`), no el buffer de datos. El sector que correspondería a `0xc0001200` vive en la partición `nflasha0` (área de boot/loader1), que según `analysis/camera-dumps/nand-20261020/README.md` **no tiene nodo de dispositivo Linux y nunca se volcó**; `bootloader.bin` (paquete `EXBL`) es una etapa posterior sin relación con esa zona.
+- **Decisión:** C — mecanismo cerrado estáticamente; contenido («vacía»/«con clave») no determinable sin volcado físico/JTAG del área de boot.
+- **Entregables:** `docs/capture/e26-r20-keytable.md`, `tests/test_e26_r20_keytable.py`.
