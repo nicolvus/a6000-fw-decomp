@@ -3174,3 +3174,10 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 - **Particiones:** 2 = FAT12 (`\Backup.bin`, `\kemco.txt`); 3 = TPZL→FAT12 (resto). BOS sector 0 = `8246`.
 - **−302:** `c01f4690` convierte todo fallo de sector en −302; BOS: lectura −1, firma −302; Backup no en estado 1 → −303.
 - **Entregables:** `docs/capture/e26-r14-ramcfg-bos-analysis.md`, `analysis/e26-recovery/r14_backup.py`, `r14-ramcfg-bos-fat.py`, `tests/test_e26_r14_ramcfg_bos.py`. Pendientes `E26-R15-*`.
+
+## E26-R15 — TPZL de Loader3, firmware 3.25 propio y c01f2282 (30-10-2026)
+
+- **Procedencia:** 3.25 = paquete propio (E25-27) sobre 3.21 oficial; 4 de 73 miembros del tar difieren; `updater.img` oficial; Loader/Backup/kernel intactos. Sin logs de instalación.
+- **Lector TPZL:** registro `c01fe4ec`, petición `c01fdd8e`; residuo ≠ 0 solo avisa; sectores `(res+tam+0x1ff)>>9`. Las 3 imágenes pasan.
+- **`c01f2282`:** omite solo si Backup `0xfa0033` ∈ {1,2}; vale `0x80021048` en 55 BK4 → nunca.
+- **Entregables:** `docs/capture/e26-r15-tpzl-custom-fw325.md`, `analysis/e26-recovery/r15_tpzl_loader3.py`, `r15-mode-table.py`, `tests/test_e26_r15_tpzl.py`. Pendientes `E26-R16-*`.
