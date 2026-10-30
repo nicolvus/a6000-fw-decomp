@@ -1,5 +1,7 @@
 # Estado actual — léeme primero
 
+> **E26 R19 (USB Charger cerrado con límite, decisión C):** [informe](../docs/capture/e26-r19-darwin-usb-static.md). Darwin: EP0 `0xc90a`, clase/vendor → callback sin resolver; sin código de flash/MFS; tabla DWN sin referencias. **Corrige R11:** en el esquema `CM4002/CM4003` (paralelos a R4002/R4003 XX) serían la opción montada → Multi pin 9 ↔ `BOOT_SERIAL_IN` probable; CN4906 no llega a `BOOT_SERIAL_IN`. `BOOT_MAIN` (P7→CL1000) = candidato a bit 0 de `MODEREG` (hipótesis). Pendientes `E26-R19-*`.
+>
 > **E26 R9 parcial:** [revisión](../docs/capture/e26-r9-bootrom-ram-execution.md) corrige R8: CRC-32, copia por tipos distintos de 0 y 0xffff; parser R8 no válido. Falta emular la ruta, demostrar RAM ejecutable y señal física.
 
 > **E26 R7B parcial:** [hallazgos y límites](../docs/capture/e26-r7b-recuperacion-prelinux.md): BootROM recibe datos por entrada serie y puede saltar, Loader2 lee NAND, ARM7 histórico cotejado, COLD negativo señaliza en bucle. Falta demostrar acceso externo y restauración selectiva; seguir offline.

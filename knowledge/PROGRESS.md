@@ -3196,3 +3196,10 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 - **Hallazgos:** `+0xc` se escribe una vez desde `trabajo+0xc` y no se lee ni compara; `trabajo+8` sin lector en la op 0; tulist síncrono por tanda de 0x80 (`0x5f8` sondea `[0x378c]`).
 - **Decisión C.** No ejecutado: corpus Sony externo (`E26-R17-TPZL-1SEG` abierto), trazado de otras ops (`E26-R18-ARM7-RESTO`).
 - **Entregables:** `docs/capture/e26-r17-arm7-ldec-segment-analysis.md`, `analysis/e26-recovery/r17_arm7_full.py`, `tests/test_e26_r17_arm7.py`.
+
+## E26-R19 — capa USB de Darwin y esquema de arranque (30-10-2026)
+
+- **Pedido:** avanzar hacia una vía de arranque/actualización; USB Charger, Multi, CN4906 por código.
+- **Hallazgos:** EP0 `0xc90a` (estándar `0x19388`; clase/vendor → callback `[0x200032a4]` sin resolver); Darwin sin código de flash ni MFS; tabla DWN sin referencias, solo GPIO. Esquema: `CM4002/CM4003` en paralelo a R4002/R4003 XX (patrón de componente montado) → Multi pin 9 ↔ `BOOT_SERIAL_IN` probable (corrige R11); `BOOT_MAIN`→CL1000 candidato a bit 0 de `MODEREG`; CN4906 no llega a `BOOT_SERIAL_IN`.
+- **Decisión C.** REA no reconoce el Thumb de `darwin_core.bin`; desensamblado con Capstone sin cotejo REA.
+- **Entregables:** `docs/capture/e26-r19-darwin-usb-static.md`, `analysis/e26-recovery/r19_darwin_usb.py`, `tests/test_e26_r19_darwin_usb.py`.
