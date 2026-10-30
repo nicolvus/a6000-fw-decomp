@@ -3203,3 +3203,11 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 - **Hallazgos:** mapeo dirección = archivo + `0x4200` (primera pasada lo ignoró y dio rutinas desalineadas; corregido). EP0 `0xc90a`; callback `0xc59c`: GET_DESCRIPTOR HID, GET_REPORT, SET_IDLE; vendor parado; sin OUT; Darwin sin flash/MFS en código; DWN (`0x2f50–0x4ba8`) sin referencias. Esquema: `CM4002/CM4003` en paralelo a R4002/R4003 XX (patrón de montado) → Multi pin 9 ↔ `BOOT_SERIAL_IN` probable (corrige R11); `BOOT_MAIN`→CL1000 candidato a bit 0 de `MODEREG`; CN4906 no llega a `BOOT_SERIAL_IN`.
 - **Decisión:** USB Charger cerrado (límite documentado); resto C. REA no reconoce el Thumb de `darwin_core.bin`; desensamblado con Capstone y emulación Unicorn.
 - **Entregables:** `docs/capture/e26-r19-darwin-usb-static.md`, `analysis/e26-recovery/r19_darwin_usb.py`, `r19_darwin_usb_emu.py`, `tests/test_e26_r19_darwin_usb*.py`.
+
+## E26-R20 — selector del BootROM (30-10-2026)
+
+- **Pedido:** reconstruir `ffff1062–109e`.
+- **Hallazgos:** el BootROM es `Musashi Loader1 Ver.01.00` (2011). Selector = `MODEREG` bit 0 (0 → Loader2; 1 → ruta de servicio). GPIO(4,RDATA) bit 21 = juego de temporización, bit 22 = salto directo a la recepción serie. Con bit0=1 y GPIO4.22=0: fallo de almacenamiento/cabecera o tabla de claves vacía → serie; clave presente → hay que enviarla (4 B + CRC-32 `0xEDB88320`), sin datos → payload alternativo. Bit 0 = `BOOT_MAIN` (CL1000) por exclusión y por el registro hermano CXD4132; por defecto 0 en uso normal.
+- **Verificación:** REA (descompilación de `main`), Capstone y emulación Unicorn con auxiliares sustituidas (9 escenarios, 4 pruebas).
+- **Pendientes:** `E26-R20-BOOTMAIN-NIVEL` (físico), `E26-R20-KEYTABLE`, `E26-R20-GPIO4`.
+- **Entregables:** `docs/capture/e26-r20-bootrom-selector.md`, `analysis/e26-recovery/r20_bootrom_selector.py`, `tests/test_e26_r20_bootrom_selector.py`.

@@ -1,5 +1,7 @@
 # Estado actual — léeme primero
 
+> **E26 R20 (selector del BootROM reconstruido):** [informe](../docs/capture/e26-r20-bootrom-selector.md). `FUN_ffff1062` decide por `MODEREG` (`0xf2915010`) **bit 0**: 0 → Loader2 (`0xc0030000`); 1 → ruta de servicio (GPIO4.21 = temporización, GPIO4.22 = salto directo a serie; si falla el almacenamiento o no hay clave → recepción serie; con clave en `0xc0001200` hace falta enviarla). Bit 0 = `BOOT_MAIN` (P7→CL1000) por inferencia; nivel físico y tabla de claves sin verificar (`E26-R20-*`). Emulación `r20_bootrom_selector.py` con tabla de decisiones.
+>
 > **E26 R19 (USB Charger cerrado, límite documentado):** [informe](../docs/capture/e26-r19-darwin-usb-static.md). **Mapeo Darwin: dirección = archivo + `0x4200`.** EP0 `0xc90a`; callback de clase/vendor en `0xc59c`: solo GET_DESCRIPTOR HID, GET_REPORT y SET_IDLE, vendor siempre parado, sin etapa OUT; Darwin sin código de flash/MFS; tabla DWN (rutinas `0x2f50–0x4ba8`) sin referencias ni flash. **Corrige R11:** en el esquema `CM4002/CM4003` (paralelos a R4002/R4003 XX) serían la opción montada → Multi pin 9 ↔ `BOOT_SERIAL_IN` probable; CN4906 no llega a `BOOT_SERIAL_IN`. `BOOT_MAIN` (P7→CL1000) = candidato a bit 0 de `MODEREG` (hipótesis). Pendientes `E26-R19-*`.
 >
 > **E26 R9 parcial:** [revisión](../docs/capture/e26-r9-bootrom-ram-execution.md) corrige R8: CRC-32, copia por tipos distintos de 0 y 0xffff; parser R8 no válido. Falta emular la ruta, demostrar RAM ejecutable y señal física.
