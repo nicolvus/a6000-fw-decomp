@@ -49,11 +49,17 @@ def test_sin_flash_if_ni_literal_mfs_en_codigo(d):
         assert not 0x40000000 <= w < 0x40003000 or (a >= 0x21000), hex(a)
 
 
-def test_tabla_dwn_22_entradas_sin_referencias_literales(d):
-    t = [word(d, 0x21950 + 4 * i) for i in range(24)]
-    assert (
-        d[0x21938:0x21943] == b"DWN_VER0.78"
-        and t[:22] == [x for x in t[:22] if x]
-        and t[22:] == [0, 0]
+def test_tabla_dwn_22_rutinas_sin_flash_ni_referencias(d):
+    t = [(word(d, 0x21950 + 4 * i) & ~1) - 0x4200 for i in range(22)]
+    assert d[0x21938:0x21943] == b"DWN_VER0.78" and word(d, 0x21950 + 4 * 22) == 0
+    assert 0x2F50 == min(t) and 0x4BA8 == max(t)
+    assert not any(
+        abs(word(d, a) - (0x21950 + 0x4200)) <= 0x20 for a in range(0, 0x21000, 4)
     )
-    assert not any(0x21900 <= word(d, a) < 0x21A80 for a in range(0, 0x21000, 4))
+
+
+def test_mapeo_base_0x4200(d):
+    # descriptor de dispositivo USB: archivo 0x239e4 = dirección 0x27be4 (puntero en 0x23a40)
+    assert (
+        d[0x239E4:0x239E8].hex() == "12010002" and word(d, 0x23A40) == 0x239E4 + 0x4200
+    )

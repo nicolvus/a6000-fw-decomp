@@ -15,6 +15,7 @@ DEFAULT = (
     / "firmware/extracted/fw321/firmware.tar_unpacked/0640_darwin/darwin_core.bin"
 )
 CODE_END = 0x21000  # el resto son tablas y cadenas (DWN en 0x21938)
+BASE = 0x4200  # dirección = offset de archivo + BASE (descriptores USB: archivo 0x239e4 = código 0x27be4)
 
 
 def literal_refs(d, lo, hi):
@@ -70,8 +71,25 @@ def main(path):
         {hex(k) for k in refs if 0x40038000 <= k < 0x40039000}
         or "sin referencias en código",
     )
-    tabla = [struct.unpack_from("<I", d, 0x21950 + 4 * i)[0] for i in range(22)]
-    print("tabla DWN:", d[0x21938:0x21943], [hex(x) for x in tabla][:4], "...")
+    tabla = [
+        (struct.unpack_from("<I", d, 0x21950 + 4 * i)[0] & ~1) - BASE for i in range(22)
+    ]
+    print(
+        "tabla DWN:",
+        d[0x21938:0x21943],
+        "rutinas (offset de archivo):",
+        hex(min(tabla)),
+        "-",
+        hex(max(tabla)),
+    )
+    dwn = literal_refs(d, min(tabla) - 0x40, max(tabla) + 0x300)
+    print("periféricos en rutinas DWN:", sorted(hex(k) for k in dwn if k < 0x40100000))
+    refs_tabla = [
+        hex(a)
+        for a in range(0, len(d) - 3, 4)
+        if abs(struct.unpack_from("<I", d, a)[0] - (0x21950 + BASE)) <= 0x20
+    ]
+    print("literales hacia la tabla DWN:", refs_tabla or "ninguno")
     print(
         "llamadores 0xce54 (registro de callbacks USB):",
         [hex(x) for x in callers(d).get(0x19284, [])],
