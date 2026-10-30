@@ -1,6 +1,6 @@
 {
- "head": "5a4906c1",
- "pruebas_colectadas": 4086,
+ "head": "6b46897f",
+ "pruebas_colectadas": 4292,
  "pendientes_abiertos": {
   "E1": "NO_VERIFICADO",
   "E22": "CERRADO CON LÍMITE",
@@ -20,7 +20,20 @@
   "F7": "PARCIAL",
   "F8": "BLOQUEADO",
   "R1": "PARCIAL",
-  "R3": "BLOQUEADO"
+  "R3": "BLOQUEADO",
+  "G1": "CERRADO",
+  "G2": "ABIERTO",
+  "G3": "PARCIAL",
+  "G4": "ABIERTO",
+  "G5": "ABIERTO",
+  "G6": "ABIERTO",
+  "G7": "ABIERTO",
+  "G8": "ABIERTO (decisión pendiente)",
+  "E26": "CERRADO (este informe)",
+  "E27": "ABIERTO",
+  "E28": "ABIERTO",
+  "E29": "ABIERTO",
+  "E30": "ABIERTO"
  },
  "pendientes_cerrados": [
   "D11",
@@ -67,15 +80,15 @@
  ],
  "documentos_de_estado": {
   "docs/STATE.md": {
-   "ultimo_commit": "2026-10-28",
+   "ultimo_commit": "2026-10-29",
    "menciona_26_10": true
   },
   "knowledge/CURRENT.md": {
-   "ultimo_commit": "2026-10-28",
+   "ultimo_commit": "2026-10-29",
    "menciona_26_10": true
   },
   "knowledge/PROGRESS.md": {
-   "ultimo_commit": "2026-10-28",
+   "ultimo_commit": "2026-10-29",
    "menciona_26_10": true
   },
   "CONTEXT.md": {
@@ -91,12 +104,15 @@
   "head_igual_a_origin": true,
   "ids_pendientes_unicos": true,
   "estados_validos": true,
-  "enlaces_de_pendientes_validos": true,
+  "enlaces_de_pendientes_validos": false,
   "docs_de_estado_mencionan_26_10": true,
   "readme_cita_cierres_recientes": true,
   "sin_json_ni_python_invalido": true,
-  "sin_rutas_citadas_inexistentes": true,
+  "sin_rutas_citadas_inexistentes": false,
   "volcados_sha256_ok": true
  },
- "incoherencias": []
+ "incoherencias": [
+  "enlaces_de_pendientes_validos",
+  "sin_rutas_citadas_inexistentes"
+ ]
 }
