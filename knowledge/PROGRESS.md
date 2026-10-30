@@ -3160,3 +3160,10 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 - **LED:** BootROM ≤ 2 lentos; Loader2 −302 → 0/3/2 (hipótesis para el patrón 3+2). Corrección R7 `0xfffffed1`→`0xfffffed2`.
 - **Darwin:** `PwrCtrl` Fase1..4, watchdog virtual, SIO `mss` (hipótesis hacia BIONZ).
 - **Entregables:** `docs/capture/e26-r12-bootrom-static-audit.md`, `analysis/e26-recovery/r12-loader2-led-codes.py`, `r12-selector-emulation.py`, `tests/test_e26_r12_led_codes.py`.
+
+## E26-R13 — Procedencia del error LED (30-10-2026)
+
+- **Identidad:** `FUN_c01f3b74` = Loader3 (corrige R12); gemela Loader2 `c0030c7c` con `err−1000`.
+- **−302:** 7 funciones, 9 cargas; 3 devuelven −306. Propagan al LED: BOS `c01f2c98` y CFG `c01f2f24`.
+- **Tiempos:** `d`=2,0 s (timer DIV2, entrada 4 MHz según cabeceras Sony; sin medir). Ciclo de −302 = 8,0 s.
+- **Entregables:** `docs/capture/e26-r13-led-error-provenance.md`, `analysis/e26-recovery/r13_loader3.py`, `r13-led-provenance.py`, `tests/test_e26_r13_led_provenance.py`. Pendientes `E26-R14-RAMCFG`, `E26-R14-LED-MEDIDA`.

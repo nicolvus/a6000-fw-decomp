@@ -389,7 +389,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 6. Otros subsistemas (AF, estabilización, vídeo, audio, lentes, energía, visor, accesorios, módulos de trazas)
 
-115 informes.
+116 informes.
 
 - **—** [E21 — Lecturas sin cámara de los volcados del 20-10-2026](capture/e21-lecturas-backups-2026-10-26.md)
 - **—** [E24-01 — Arranque, modo actualizador y dependencia de Darwin (27-10-2026)](capture/e24-01-arranque-recuperacion.md)
@@ -408,6 +408,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [E26-R10 — Ingeniería inversa del Sony USB Charger como ruta de recuperación de la Sony a6000](capture/e26-r10-usb-charger-recovery.md)
 - **—** [E26-R11 — Sony A6000: acceso externo al BootROM UART y activación del modo de carga en RAM](capture/e26-r11-bootrom-uart-physical-access.md)
 - **—** [E26-R12 — Auditoría estática del sistema de arranque (BootROM, Loader2, Darwin)](capture/e26-r12-bootrom-static-audit.md)
+- **—** [E26-R13 — Procedencia del error LED 3 lentos + 2 rápidos (Loader2 / Loader3)](capture/e26-r13-led-error-provenance.md)
 - **—** [E26-RECOVERY R5 — Loader3, servicio BIONZ y diagnóstico de SY-1028](capture/e26-r5-loader3-servicio.md)
 - **—** [E26-RECOVERY R6 — BLDR, BIONZ y recuperación conservando la placa](capture/e26-r6-recuperacion-bionz.md)
 - **—** [E26-RECOVERY R7 — informe final de ingeniería inversa exhaustiva](capture/e26-r7-recuperacion-estatica.md)
