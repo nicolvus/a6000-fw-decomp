@@ -390,7 +390,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 6. Otros subsistemas (AF, estabilización, vídeo, audio, lentes, energía, visor, accesorios, módulos de trazas)
 
-144 informes.
+145 informes.
 
 - **—** [E21 — Lecturas sin cámara de los volcados del 20-10-2026](capture/e21-lecturas-backups-2026-10-26.md)
 - **—** [E24-01 — Arranque, modo actualizador y dependencia de Darwin (27-10-2026)](capture/e24-01-arranque-recuperacion.md)
@@ -438,6 +438,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [E26-R37 — Cierre estático tras R36: entrada al actualizador, paquete 3.26, consola UART y Darwin al encender](capture/e26-r37-cierre-estatico-recuperacion.md)
 - **—** [E26-R38 — Guard de versión del actualizador, escritura de `dat4`/`comp` y entrada mínima `\updater\mode`](capture/e26-r38-guard-y-entrada-updater.md)
 - **—** [E26-R39 — Investigación estática a fondo: emulación TPZL→LDEC, NAND física, arranque del actualizador, `MODE`, sesión USB y clave de `nflasha0`](capture/e26-r39-estatico-profundo.md)
+- **—** [E26-R40 — JTAG/SWD del BIONZ como vía de escritura: qué permite el estático, qué exige lo físico](capture/e26-r40-jtag-swd-bionz.md)
 - **—** [E26-RECOVERY R5 — Loader3, servicio BIONZ y diagnóstico de SY-1028](capture/e26-r5-loader3-servicio.md)
 - **—** [E26-RECOVERY R6 — BLDR, BIONZ y recuperación conservando la placa](capture/e26-r6-recuperacion-bionz.md)
 - **—** [E26-RECOVERY R7 — informe final de ingeniería inversa exhaustiva](capture/e26-r7-recuperacion-estatica.md)

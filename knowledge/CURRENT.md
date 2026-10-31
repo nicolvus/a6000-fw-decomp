@@ -1,6 +1,6 @@
 # Estado actual — léeme primero
 
-Contexto operativo mínimo para agentes. Última revisión: **31-10-2026** (E26 R39: investigación estática a fondo).
+Contexto operativo mínimo para agentes. Última revisión: **31-10-2026** (E26 R40: JTAG/SWD del BIONZ).
 No es historial ni fuente de verdad de los pendientes: ver [Responsabilidades](#responsabilidades-documentales).
 Versiones íntegras anteriores (nada se borró): [CURRENT-historial-2026-10-31](history/CURRENT-historial-2026-10-31.md)
 (bloques E26 R5–R35 y E25 completos) y [CURRENT-historial-2026-10-26](history/CURRENT-historial-2026-10-26.md) (S59–S627).
@@ -38,6 +38,7 @@ Versiones íntegras anteriores (nada se borró): [CURRENT-historial-2026-10-31](
 | R37 | Cierre estático: solo `\updater\mode` (en `nflasha2`) lleva al actualizador de `nflasha1`, que no lee `nflasha3` (corrige R26 §1.2); paquete **3.26** listo (3.24 ya no sirve); UART de Loader2/3 apagada por `Backup[0x510015]=0`; Darwin 3.25 sin comportamiento nuevo al encender | [R37](../docs/capture/e26-r37-cierre-estatico-recuperacion.md) |
 | R38 | Guard de `sauu`: compara con `\updater\dat4` (`comp` = firmware válido); `CompleteUpdate` escribe la versión del FDAT → tras el 3.25 hace falta ≥ 3.26. Loader3 solo pide la entrada corta `MODE` (0 B); en el volcado basta 1 byte (entrada borrada, sector 132 de `nflasha2`); sin LFN persiste tras sesiones fallidas (corrige R37 §2) | [R38](../docs/capture/e26-r38-guard-y-entrada-updater.md) |
 | R39 | Fallo del 3.25 reproducido en emulación (Loader3 + ARM7 reales, LDEC modelado: 361/369, Sony/corregida 0); `nflasha` lógico de MuMin → el byte de `MODE` no se escribe con lector externo, hace falta escribir desde el BIONZ; `MODE` persistente por FUENTE; guard USB sin batería; clave quizá legible en SRAM `0xc0001200` | [R39](../docs/capture/e26-r39-estatico-profundo.md) |
+| R40 | JTAG/SWD del BIONZ: ningún cargador previo a Linux toca el DAP CoreSight (0xf2710000); `defconfig` `ice_*` de Sony arrancan bajo depurador; tras −302 la CPU no se apaga (bucle de LED sin `wfi`, ventana indefinida). No añade vía nueva sobre R5/R6/R29: falta población de R4911/R4912 y el eFuse de seguridad, no legibles estáticamente | [R40](../docs/capture/e26-r40-jtag-swd-bionz.md) |
 
 **Conclusión operativa:** la vía serie del BootROM existe y se abre en cada arranque, pero exige la clave de `nflasha0`, que nunca se
 volcó; todo lo restante es físico (`E26-FISICO-UPDATERMODE`, `E26-FISICO-BOOT`, `E26-R33-BLOQUE0`) y requiere autorización expresa. La

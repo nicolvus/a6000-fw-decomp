@@ -24,8 +24,9 @@ recuperación, solo con análisis offline.
 | Selector EFCS / Electronic (3.25) | Implementado y verificado **solo offline** (emulación); nunca validado en la cámara ([E25-24b](docs/capture/e25-24b-implementacion-selector.md), [E25-27](docs/capture/e25-27-construccion-firmware-integrado.md)) |
 | Verificación | 4 427 pruebas en local (las que leen firmware se omiten en CI); censo de etiquetas 133/372; 291 sesiones S + 74 informes de fase E; 12/24 planes físicos con prueba; registro T001–T056 |
 
-**Último cierre:** E26 R39 (31-10-2026) — fallo del 3.25 reproducido en emulación (código real de Loader3 y ARM7; 361/369 bloques,
-Sony y corregida 0); el byte de `MODE` exige escribir vía MuMin desde el BIONZ; actualizador, Darwin 3.25, guard USB y `MODE` verificados. Detalle por informe en [knowledge/CURRENT.md](knowledge/CURRENT.md).
+**Último cierre:** E26 R40 (31-10-2026) — JTAG/SWD del BIONZ analizado como alternativa a escribir la NAND con lector externo: ningún
+cargador bloquea el DAP CoreSight y el chip trae `defconfig` de fábrica para arrancar bajo depurador, pero sigue siendo físico
+(falta población de R4911/R4912 y el eFuse de seguridad). Detalle por informe en [knowledge/CURRENT.md](knowledge/CURRENT.md).
 
 ## Cómo funciona el parche del 3.23
 

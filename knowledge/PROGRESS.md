@@ -3392,3 +3392,13 @@ README, CURRENT (≤150 líneas, tabla E26) y cabecera de STATE reescritos; vers
 - **Actualizador:** `/sbin/init` + `insmod.sh` solo montan `nflasha2`; Darwin 3.25 = Sony + 22 B. Kernel `3.0.27_nl-rt106` = árbol GPL: búsqueda `nls_strnicmp`, `shortname=mixed` lista `MODE`. Guard: modelo/región/versión, sin batería.
 - **Clave:** sin paquetes con loader; ningún cargador toca `0xc0001200`; el actualizador ya lee SRAM de arranque → `E26-R39-CLAVE-SRAM`.
 - **Entregables:** `docs/capture/e26-r39-estatico-profundo.md`, `tests/test_e26_r39_estatico_profundo.py` (9), `r39-tpzl-emu.json`.
+
+## E26-R40 — JTAG/SWD del BIONZ (31-10-2026)
+
+- **Pedido:** analizar JTAG/SWD como alternativa a lo físico tras R39 (escribir `nflasha2` sin lector externo).
+- **DAP CoreSight** (FUENTE, GPL de Sony): `0xf2710000`, 4 CTI, `dap.c` solo lo usa para una IRQ de la PMU; literal de desbloqueo `0xC5ACCE55` único en el kernel.
+- **Sin bloqueo de software** (BINARIO): barrido de literales en BootROM/Loader2/Loader3/ARM7 sobre `0xf2710000`–`0xf271ffff`: 0 en los cuatro.
+- **Silicio pensado para ICE:** `defconfig` `cxd90014_ice_initrd`/`ice_nfs` arrancan con `initrd`/cmdline fijos, sin `nflasha1`.
+- **Ventana sin apagado:** `c01f3bf6: b #0xc01f3bc8` (bytes `e7e7`), bucle de LED tras −302 sin `wfi` ni apagado.
+- **Límite real:** población de R4911/R4912 y eFuse de seguridad (junto al bloque JTAG en el manual) no están en ningún binario accesible; mismo límite que la clave de `nflasha0` (R33).
+- **Entregables:** `docs/capture/e26-r40-jtag-swd-bionz.md`, `tests/test_e26_r40_jtag_swd.py` (8). Anota R5-SIDEA/R5-BIONZ; no los cierra (siguen físicos).
