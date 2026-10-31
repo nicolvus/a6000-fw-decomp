@@ -51,6 +51,31 @@ def test_bucle_de_led_inicializa_la_uart_y_sondea_la_consola():
     assert b"\x1a" in init[:4] and init[6:10].hex() == "4ff00302"
 
 
+def test_loader2_fija_uart0_y_nivel_uart_0_al_arrancar():
+    d = _l3()
+    l2 = d[OFF2 : OFF2 + 0x6C00]
+    # c0030010: mov r0,#0; blx c003110c (UART 0) · mov r0,#0; mov r1,#7; blx c00308b8 (logger)
+    assert l2[0x10:0x24].hex() == "0000a0e33c0400fa0000a0e30710a0e3240200fa"
+    # c00308c4..cc: movs r0,#0; str r0,[r2,#0x10/#0x14/#0xc/#0x18]
+    assert l2[0x8C4:0x8CE].hex() == "0020" + "1061" + "5061" + "d060" + "9061"
+
+
+def test_reloj_uart_48_mhz_en_el_gpl_de_sony():
+    gpl = ROOT / "analysis/session18/codex-g/oss-linux/linux/arch/arm/mach-cxd90014"
+    if not gpl.exists():
+        pytest.skip("falta el árbol GPL")
+    clk = (gpl / "include/mach/regs-clk.h").read_text()
+    uart = (gpl / "uart.S").read_text()
+    assert "#define CXD90014_UART_CLK_HIGH  48000000" in clk
+    assert "/* UART baudrate clock 48MHz, 115200baud */" in uart
+    assert "return CXD90014_UART_CLK_HIGH;" in (gpl / "clock.c").read_text()
+    # puerto 0 = GPIO_S: las bolas GPIO_n del esquema no son el puerto 14
+    assert (
+        "port: GPIO port number (0=GPIO_S, 1=GPIO_SB)"
+        in (gpl / "cxd90014.c").read_text()
+    )
+
+
 def test_salida_de_la_consola_apagada_con_backup_de_fabrica():
     from r14_backup import BK4  # type: ignore[import-not-found]
 

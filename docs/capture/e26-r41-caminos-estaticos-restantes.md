@@ -2,7 +2,7 @@
 
 Fecha: 31-10-2026. Continúa [R40](e26-r40-jtag-swd-bionz.md). **Solo análisis offline** de `bootloader.bin` (volcado del 20-10) y de los 12 volcados BK4. Sin cámara, sin escritura. Pedido del usuario: «verifica los caminos estáticos faltantes por descubrir».
 
-Etiquetas: **BINARIO** (bytes releídos con Capstone) · **DATOS** (Backup) · **INFERENCIA**. Pruebas: [`tests/test_e26_r41_consola_loader3.py`](../../tests/test_e26_r41_consola_loader3.py) (4).
+Etiquetas: **BINARIO** (bytes releídos con Capstone) · **FUENTE** (GPL de Sony) · **DATOS** (Backup, manual) · **INFERENCIA**. Pruebas: [`tests/test_e26_r41_consola_loader3.py`](../../tests/test_e26_r41_consola_loader3.py) (6). §7 completa los tres límites de la primera versión (petición «completa esos»).
 
 ## 1. Resumen
 
@@ -27,9 +27,9 @@ Etiquetas: **BINARIO** (bytes releídos con Capstone) · **DATOS** (Backup) · *
 
 Bucle de LED (`c01f3b74`): `c01f3bb4: bl c01f3884` (devuelve `[0xc006000c]`, índice de UART) → `c01f3bb8: bl c01f5008` → en cada ciclo `c01f3bc8: bl c01f379a`, y luego el parpadeo.
 
-`c01f5008(n)`, solo si `n ∈ {0, 1}`: guarda `n` en `[0xc006000c]`, configura el pinmux (`0xf2910238`, `0xf2912204`) y programa una UART tipo PL011 en `0xf2000000 + n·0x1000`: `IBRD = 0x1a`, `FBRD = 3`, `LCRH = 0x70` (8N1, FIFO), `CR = 0x701` (UART, TX y RX activos). **INFERENCIA:** con reloj de 48 MHz da 115 200 baudios.
+`c01f5008(n)`, solo si `n ∈ {0, 1}`: guarda `n` en `[0xc006000c]`, configura el pinmux (`0xf2910238`, `0xf2912204`) y programa una UART tipo PL011 en `0xf2000000 + n·0x1000`: `IBRD = 0x1a`, `FBRD = 3`, `LCRH = 0x70` (8N1, FIFO), `CR = 0x701` (UART, TX y RX activos): **115 200 baudios 8N1** (§7.2).
 
-**Corrección de [R37](e26-r37-cierre-estatico-recuperacion.md) §4:** «el registro de la UART no se inicializa (`c01f5008` no se llama)» vale para el inicio del logger (`c01f35c0`), no para todo Loader3. El bucle de error (`c01f3bb8`) y la espera de ICE (`c01f48e6`) sí llaman a `c01f5008` con `[0xc006000c]`, cuyo valor con la consola apagada no se fija en Loader3 (**INFERENCIA:** heredado de Loader2 o del valor inicial de la SRAM). La conclusión de R37 no cambia: una UART pasiva no muestra nada.
+**Corrección de [R37](e26-r37-cierre-estatico-recuperacion.md) §4:** «el registro de la UART no se inicializa (`c01f5008` no se llama)» vale para el inicio del logger (`c01f35c0`), no para todo Loader3. El bucle de error (`c01f3bb8`) y la espera de ICE (`c01f48e6`) sí llaman a `c01f5008` con `[0xc006000c]`, que vale **0 (UART0)**: lo fija Loader2 al arrancar y Loader3 no lo cambia con la consola apagada (§7.1). La conclusión de R37 no cambia: una UART pasiva no muestra nada.
 
 **Corrección de [R13](e26-r13-led-error-provenance.md) (HIPÓTESIS «consume UART») y de [R40](e26-r40-jtag-swd-bionz.md) §6 («sondea la UART»):** es una consola de comandos, no un simple sondeo. La conclusión de R40 (la CPU no se apaga) no cambia.
 
@@ -46,7 +46,7 @@ Bucle de LED (`c01f3b74`): `c01f3bb4: bl c01f3884` (devuelve `[0xc006000c]`, ín
 - `c01f0cc2: bl c01f48cc`, justo antes de `c01f0cca` (inicio, BOS y `nflasha2`, donde nace el −302 de R13 §3).
 - `c01f48cc` → `c01f4828` (pone a cero `0xc0045804…0xc0045818`) → `c01f488a`: lee Backup `0xf90449` (banco) y `0xf9044a` (bit). Si ninguno es `0xffffffff`, lee `0xf2910000 + banco·0x100 + 0x10` (datos de entrada del GPIO) y devuelve 1 si el bit está a **0**.
 - Si devuelve 1: `CFG:Wait ICE` → `c01f3884`/`c01f5008` (UART) → `c01f025c` (limpieza de la caché D por conjunto/vía, ARM) → `c01f4852`: bucle que llama a la consola y espera `[0xc0045804] ≠ 0`. Después salta a `c020e0d8`, en la parte no volcada (INFO6).
-- **DATOS:** banco 14, bit 17 en los 12 volcados. La cámara arrancaba con normalidad, así que ese GPIO está a 1 en uso normal (**INFERENCIA**). En el manual de servicio no se ha identificado qué bola o red es el GPIO 14.17 (aparece `GPIO_14 AC22`, pero no está demostrado que sea la misma numeración).
+- **DATOS:** banco 14, bit 17 en los 12 volcados. La cámara arrancaba con normalidad, así que ese GPIO está a 1 en uso normal (**INFERENCIA**). La bola física no sale de las fuentes disponibles; `GPIO_14 AC22` queda descartada (§7.3).
 
 **Lectura:** Sony detiene Loader3 por una línea GPIO para que el depurador cargue o parchee la RAM. Refuerza R40 (silicio pensado para ICE). Para usarlo hace falta igualmente el SWD abierto, y entonces el bucle de error tras −302 ya da la misma ventana. No añade una vía sin depurador.
 
@@ -63,6 +63,38 @@ Bucle de LED (`c01f3b74`): `c01f3bb4: bl c01f3884` (devuelve `[0xc006000c]`, ín
 ## 6. Límites
 
 - `c020c224`/`c020c0b8` se identifican por su uso (`strncmp`/`strtoul`); su código no está en el volcado.
-- El valor de `[0xc006000c]` con la consola apagada y la bola física del GPIO 14.17 no se han determinado.
-- El reloj de la UART (48 MHz → 115 200 baudios) es inferencia.
+- Que el arranque de C de Loader3 (`c020e090`/`c020e024`, en INFO6) no ponga un valor distinto de 0 en `[0xc006000c]` es inferencia (§7.1).
+- La habilitación de entrada del pin RX (`OCTRL(2)+IEN`, bit 8) no la escribe ningún cargador: depende del valor de reinicio del silicio (§7.2).
+- La bola física del GPIO 14.17 no se puede determinar sin la tabla de pines del CXD90014 (§7.3).
 - Nada de lo anterior autoriza ni prueba una conexión o una escritura.
+
+## 7. Límites de la primera versión, completados
+
+### 7.1 Índice de UART `[0xc006000c]` = 0 (BINARIO)
+
+Arranque ARM de Loader2 (`c0030000`):
+
+```
+c0030010: mov r0,#0          ; c0030014: blx c003110c   → inicializa la UART 0 (mismo código que c01f5008)
+c0030018: mov r0,#0          ; c003001c: mov r1,#7
+c0030020: blx c00308b8       → logger: [+0]=0 (nivel UART), [+4]=7 (nivel RAM), [+8]=0xc006001c,
+                               [+0xc]=0, [+0x10]=0, [+0x14]=0, [+0x18]=0
+```
+
+Después, `c00308d0` (Loader2) y `c01f35c0` (Loader3) solo escriben `[+0xc]` (con `Backup[0x510000]`) si `Backup[0x510015] == 1`. En el resto de Loader3, la única escritura en `[+0xc]` es la de `c01f5016`, que guarda el mismo índice que recibe. Por tanto, con el Backup de fábrica, `[0xc006000c] = 0`: el bucle de error inicializa la **UART0** (`0xf2000000`). Sus líneas son `DEBUG_UART0_TXD`/`RXD`, que llegan directas a CN4906, pines 5/4 ([R29](e26-r29-pinout-cn4001-cn4906-completo.md)). En el terminal Multi, TXD llega al pin 8 por `CM4008` (montado según el esquema), pero RXD solo llega al pin 9 por `R4002`, marcada `XX` (sin montar). **Sin abrir la cámara no se le pueden enviar órdenes a la consola**, y en cualquier caso no contesta (§3).
+
+Límite: el arranque de C de Loader3 está en la parte no volcada (INFO6). Si limpiara la zona, el valor seguiría siendo 0. Si la copiara desde datos, sería otro (**INFERENCIA**: improbable, porque `0xc0060000` es el registro compartido de ambos cargadores).
+
+### 7.2 Reloj de la UART: 48 MHz → 115 200 baudios (FUENTE)
+
+- `regs-clk.h`: `CXD90014_UART_CLK_HIGH 48000000` en el ASIC (24 MHz solo en FPGA). `clock.c` (`cxd90014_getrate_uart`) devuelve siempre `CXD90014_UART_CLK_HIGH`.
+- `uart.S`: `/* UART baudrate clock 48MHz, 115200baud */`, con `__UART_BAUD_I 0x1a` y `__UART_BAUD_F 3`, los mismos valores que escribe `c01f5008`. Cálculo: 48·10⁶ / (16 × (26 + 3/64)) = 115 177 baudios (−0,02 %).
+- Pines (mismo `uart.S`): puerto 2, `UART0_RXD` bit 8 y `UART0_TXD` bit 9. `c01f5008` hace lo mismo que `uart_init` con `CONFIG_CXD90014_UART_IO_INIT`: `GPIO(2,PORT)+CLR` = `0xa00` y luego `0x500` (función de UART para los bits 8–11, UART0 y UART1), y `OCTRL(2)+OEN+SET` = `0xa00` (salidas TX).
+- **Diferencia:** `uart_init` también activa `OCTRL(2)+IEN` para RXD. Ningún cargador lo hace (literales `0xf2912000` en BootROM: solo LED, `led_gpio_init`). El kernel de serie (`cxd90014_set_defconfig`) deja `UART_IO_INIT` sin activar y solo la configuración `ice_initrd` lo activa. Es coherente con que el kernel normal se fíe de lo que dejan los cargadores, pero no prueba que el receptor esté habilitado tras el reinicio (**INFERENCIA**: sí lo está, o la consola de los cargadores nunca habría recibido nada).
+
+### 7.3 GPIO 14.17 (FUENTE + DATOS)
+
+- `cxd90014.c` (`gpiopin_to_irq`): el **puerto 0 es `GPIO_S`** (bits 0–16) y el 1 es `GPIO_SB`. El esquema numera las bolas `GPIO_0…GPIO_16` y `GPIO_S_0…GPIO_S_16`, exactamente los 17 bits del puerto 0. **`GPIO_14 AC22` es el puerto 0, bit 14, no el 14.17.**
+- El puerto 14 (`gpio_p14`, `0xf2910e00`; 18 puertos en `udif/platform.c`) solo agrupa pines de función multiplexada, que el esquema nombra por su función, no por su número de GPIO. La correspondencia puerto/bit → bola está en la tabla de pines del CXD90014, que no está en el árbol GPL ni en el manual de servicio.
+- Ningún binario disponible usa el puerto 14 de forma directa: no hay literales `0xf2910e00`–`0xf2910eff` en BootROM, cargadores ni `av-cam`. Los IDs de Backup `0xf90449`/`0xf9044a` solo los lee Loader3. Sus vecinos del grupo `0xf9` son otros pares puerto/bit (p. ej., `0xf9044f`/`0xf90450` = 3/25) sin nombre en ninguna cadena.
+- **Cierre (límite):** la bola no se puede determinar estáticamente. Además, no cambia nada: para usar la espera de ICE hace falta el SWD abierto, y entonces el bucle de error tras −302 ya da la misma ventana (§4).
