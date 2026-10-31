@@ -40,4 +40,4 @@ La **primera frontera hardware demostrable** de esta ruta es la activación del 
 
 ## Validación y límites
 
-Tests S56, E25-17 y E25-19f: 53 aprobados. Script integrado: asserts de integridad, mapeo y decodificación completa. `ruff` del script limpio; `mypy` limpio con `MYPYPATH=analysis/s56`. La revisión del commit anterior `a11e91d5` detectó 15 avisos Ruff y 3 errores mypy en sus archivos; por ello no se considera validado para publicar. Sin ensayo físico ni ejecución de firmware real; no se demostró inicio/fin electrónico ni inicio RAW.
+Tests S56, E25-17 y E25-19f: 53 aprobados. Script integrado: asserts de integridad, mapeo y decodificación completa. `ruff` del script limpio; `mypy` limpio con `MYPYPATH=analysis/s56`. La revisión del commit anterior `c450733f` detectó 15 avisos Ruff y 3 errores mypy en sus archivos; por ello no se considera validado para publicar. Sin ensayo físico ni ejecución de firmware real; no se demostró inicio/fin electrónico ni inicio RAW.

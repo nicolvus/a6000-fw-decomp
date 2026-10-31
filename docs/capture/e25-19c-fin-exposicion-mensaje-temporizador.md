@@ -1,6 +1,6 @@
 # E25-19c — Qué termina la espera de sub 9 y qué mide `cap+0x728`
 
-**Fecha:** 28-10-2026 · **Cámara:** 192.168.1.29 (solo lectura; 2 fotos normales + 1 lectura en reposo) · **Commit base:** `3b6fccba`
+**Fecha:** 28-10-2026 · **Cámara:** 192.168.1.29 (solo lectura; 2 fotos normales + 1 lectura en reposo) · **Commit base:** `e686eb49`
 **Etiquetas:** V = bytes de `av-cam.bin`; F = lectura física; I = inferencia. No se escribió RAM, firmware, NVRAM ni NAND; originales T050 íntegros antes y después de cada prueba.
 
 ## 1. Resultado

@@ -94,20 +94,20 @@ EXPECT_REC = Expect("recuperacion-324", 0x24,
 # Paquetes anteriores: SHA-256 registrados en git antes de E25-05 (commit donde aparecen por primera vez).
 PREVIOUS = {
     "fdat/firmware_packed.dat (3.22 instalado, T024)":
-        (FDAT_ROOT / "firmware_packed.dat", "c19a1463a14d2b8038289240aa68d62dfa0de7e07b0db5c513e99565db3305a6", "210e9d21"),
+        (FDAT_ROOT / "firmware_packed.dat", "c19a1463a14d2b8038289240aa68d62dfa0de7e07b0db5c513e99565db3305a6", "54ad3b7f"),
     "fdat/firmware_packed.fdat (3.22 instalado, T024)":
-        (FDAT_ROOT / "firmware_packed.fdat", "ddc2d5db41cfd049be6b64d702f544ecb6b8e92f6150782097ddb95dccb33295", "210e9d21"),
+        (FDAT_ROOT / "firmware_packed.fdat", "ddc2d5db41cfd049be6b64d702f544ecb6b8e92f6150782097ddb95dccb33295", "54ad3b7f"),
     "recuperacion-323/firmware_packed.dat":
-        (REC323_DIR / "firmware_packed.dat", "5f10890110bd9bf760a33288e5facfcee4b41a79fe35192c3f5ce83196c0ceaf", "f5de42b0"),
+        (REC323_DIR / "firmware_packed.dat", "5f10890110bd9bf760a33288e5facfcee4b41a79fe35192c3f5ce83196c0ceaf", "fb5a1e3d"),
     "recuperacion-323/firmware_packed.fdat":
-        (REC323_DIR / "firmware_packed.fdat", "cfb65c8aad8ac8a3ccb1c4c758d485feee1ebf2e83e503d9c62d59fb96b01ce4", "f5de42b0"),
-    "darwin_core_tipo0.bin": (TIPO0_CORE, TIPO0_SHA, "f5de42b0"),
-    "darwin_core.bin oficial 3.21": (OFFICIAL_CORE, OFFICIAL_CORE_SHA, "ac94c961"),
-    "firmware.tar oficial 3.21": (OFFICIAL_TAR, OFFICIAL_TAR_SHA, "ac94c961"),
-    "updater.img oficial 3.21": (OFFICIAL_UPDATER, UPDATER_SHA, "ac94c961"),
+        (REC323_DIR / "firmware_packed.fdat", "cfb65c8aad8ac8a3ccb1c4c758d485feee1ebf2e83e503d9c62d59fb96b01ce4", "fb5a1e3d"),
+    "darwin_core_tipo0.bin": (TIPO0_CORE, TIPO0_SHA, "fb5a1e3d"),
+    "darwin_core.bin oficial 3.21": (OFFICIAL_CORE, OFFICIAL_CORE_SHA, "ee2a3732"),
+    "firmware.tar oficial 3.21": (OFFICIAL_TAR, OFFICIAL_TAR_SHA, "ee2a3732"),
+    "updater.img oficial 3.21": (OFFICIAL_UPDATER, UPDATER_SHA, "ee2a3732"),
     "FirmwareData_ILCE6000V321.dat (Sony)":
         (SONY_DAT, "29aef21ab9b5c2e98388974ac9749c2cbfb1815273b444e62f2e41398aa8892f", "firmware/hashes/sha256.json"),
-    "B1a darwin_core_tipo0_sin_rearme.bin": (B1A_CORE, B1A_SHA, "d26f687c"),
+    "B1a darwin_core_tipo0_sin_rearme.bin": (B1A_CORE, B1A_SHA, "efaf228b"),
 }
 
 DAT_MAGIC = bytes.fromhex("895546550d0a1a0a")

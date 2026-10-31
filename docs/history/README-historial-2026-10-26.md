@@ -1,4 +1,4 @@
-> **Archivo histórico (solo lectura).** Versión íntegra de `README.md` anterior a la reorganización documental del 26-10-2026 (Git: `git show b782ebe2:README.md`). Los enlaces relativos se ajustaron a esta ubicación; el texto no se modificó. Vigente: [README.md](../../README.md).
+> **Archivo histórico (solo lectura).** Versión íntegra de `README.md` anterior a la reorganización documental del 26-10-2026 (Git: `git show 93745c92:README.md`). Los enlaces relativos se ajustaron a esta ubicación; el texto no se modificó. Vigente: [README.md](../../README.md).
 
 # Sony A6000 Firmware Reverse Engineering
 

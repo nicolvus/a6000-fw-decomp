@@ -37,7 +37,7 @@ El usuario informa instalación 3.25, Done y bloqueo. Comprobados hashes FDAT, D
 
 ## E25-24 — Selector EFCS / Electronic, auditoría parcial — 28-10-2026
 
-Se actualizó la base a `c8b1b166` y se contrastó el informe de referencia con
+Se actualizó la base a `1edcf13a` y se contrastó el informe de referencia con
 E020 y E25-18–23. La opción binaria es candidata, sin implementación: B1a es
 global y no hay conmutación demostrada que restaure el EFCS original. Se
 registraron contradicciones sobre `r5`, C3 y el mecanismo, y los pendientes
@@ -93,7 +93,7 @@ C=NO, D=NO, E=NO, F=PARCIAL, G=NO, H=NO, I=NO, J=NO, K=SÍ, L=NO, M=NO.** 13 pru
 
 ## E25-06 — Auditoría independiente de los paquetes 3.23 (B1a) y 3.24 — 27-10-2026
 
-Auditoría 100 % offline del commit `67fd3a40` (paquetes de DeepSeek). Parsers propios de `.dat`, FDAT y
+Auditoría 100 % offline del commit `88ce09ef` (paquetes de DeepSeek). Parsers propios de `.dat`, FDAT y
 tar; descifrador AES propio validado contra el `.dat` original de Sony; `uc_crc32sum` reproducido sobre
 los 7 `*.sum`; B1a emulado con Unicorn frente al tipo 0 y al original (retorno 0 en 259 entradas, sin
 `0x1b080`, L0 en los tres arrancadores, escritores P4D/P4E filtrados con control positivo, comprobación
@@ -107,7 +107,7 @@ inventario R1 no tiene los paquetes nuevos). Nuevo pendiente E25-07. Informe:
 
 ## E25-05 — Paquetes offline 3.23 (B1a) y 3.24 (recuperación) — 27-10-2026
 
-Sesión 100 % offline sobre `f4bb7f50`; no se conectó la cámara ni se flasheó nada. **Plan de versiones
+Sesión 100 % offline sobre `81fab68e`; no se conectó la cámara ni se flasheó nada. **Plan de versiones
 corregido**: con 3.22 instalada, `3.22 < 3.23 < 3.24`; la prueba pasa a 3.23 (tipo 0 + B1a) y la
 recuperación a 3.24 (Darwin oficial). El antiguo `recuperacion-323` queda superado (misma versión que la
 prueba) y se conserva intacto. Paquetes en directorios separados: `experimental-323` (`.dat`
@@ -124,7 +124,7 @@ instalable (E25-04 G=NO). Script `scripts/e25_05/build_packages.py`, 11 pruebas,
 
 ## E25-04 — Recuperabilidad de Darwin y decisión sobre B1a — 27-10-2026
 
-Auditoría 100 % offline (base `2cf51593`). **A=NO, B=NO, C=NO, D=NO, E=SÍ, F=NO, G=NO.** No hay
+Auditoría 100 % offline (base `9d85cae9`). **A=NO, B=NO, C=NO, D=NO, E=SÍ, F=NO, G=NO.** No hay
 recuperación independiente de la aplicación Darwin demostrada: el USB depende de `DD_ON1/2/3` de
 `darwin_core`, el acceso al bootloader sin la aplicación no está demostrado y el puerto físico
 (`MD0_DWN`, `XDWN_RESET`, UART, SWD, `CN4906` no montado) está documentado pero no verificado. El plan
@@ -209,7 +209,7 @@ indicadas en el informe; no se certifica todo el grafo por sus contadores.
 - REA Evidence del vector: `ev_3e4a16b351da4229205a68b4225aedf7ff70d9edb3e89440d91314576341614b`; `0x43b0893c`: `ev_b376d03662f3edddb3c528e4fa223070270ef09dbc71e5ef8ccc7d012e05857b`.
 - Resultado: 119 punteros, cero terminador en `0x43fe9b38`; los rangos BSS examinados están a cero; selector `S[0]` indexa fila y copia a `S+0xc4`. No se recupera el contenido runtime.
 - Artefactos: `analysis/s140_imager_regmap/{extract_regmap.py,imager_regmap.json}`, `tests/test_s140_imager_regmap.py`, `docs/capture/s140-imager-register-map.md`.
-- Verificación: unittest del hito 3/3 y suite `tests/knowledge` 67/67 PASS; `git diff --check` PASS. Commit `6f064d93` publicado en `origin/main`; no se incluyeron archivos ajenos S138/S139.
+- Verificación: unittest del hito 3/3 y suite `tests/knowledge` 67/67 PASS; `git diff --check` PASS. Commit `72a3bd5d` publicado en `origin/main`; no se incluyeron archivos ajenos S138/S139.
 - Siguiente paso exacto: seguir selectivamente `0x43843a44` por REA/bytes desde una sesión que mapee las direcciones virtuales, identificando stores de `S[0]` y origen de la fila, sin tocar la asignación física.
 
 ## Investigación S141 — selección de fila y límite del origen runtime
@@ -218,7 +218,7 @@ indicadas en el informe; no se certifica todo el grafo por sus contadores.
 - REA `0x43b0893c`: `ev_b376d03662f3edddb3c528e4fa223070270ef09dbc71e5ef8ccc7d012e05857b`; caller `0x43b08750`: `ev_b1bd068317fa32b2167455cc5189065e7d50b48f6e99b20ffde5dd250cfd3513`; constructor `0x43849fb8`: `ev_158664de14075207b8688292074cd88ef3ba64d4e12caeac876ffc695254c9f9`.
 - Resultado PARCIAL: bytes confirman `S[0]`→`S+4+16·índice`→copia 16 B a `S+0xc4`; `0x43849fb8` copia las 4 palabras a la salida. `0x43843a44` no quedó resuelto por REA; eso no es evidencia de ausencia. Stores, gates y cadena G→S siguen abiertos.
 - Artefactos: `analysis/s141_imager_row_trace/{verify_instructions.py,row_trace.json}`, `tests/test_s141_imager_row_trace.py`, `docs/capture/s141-imager-row-copy.md`.
-- Pruebas: 3/3 unittest PASS, suite S140+S141+knowledge 73/73 PASS; `git diff --check` PASS. Commit `47147952` publicado en `origin/main`.
+- Pruebas: 3/3 unittest PASS, suite S140+S141+knowledge 73/73 PASS; `git diff --check` PASS. Commit `e31efa98` publicado en `origin/main`.
 - Siguiente: localizar una coordenada Thumb aceptada por REA para el código candidato `0x43843a44`; seguir únicamente stores de `S[0]` y transferencias G→S, con contraste de bytes.
 
 ## Investigación S142 — xrefs directas al estado S
@@ -227,7 +227,7 @@ indicadas en el informe; no se certifica todo el grafo por sus contadores.
 - Evidencia REA: xrefs `ev_c003561cd210577dc1bc7acc5d8edee0f20991a28f194009e2bd8d4f278b19ab`; función de memset `0x437b5614`, lector `0x437b59b8`, thunk `0x43b08748`, consumidor `0x4383c638`; Evidence IDs adicionales y límites en `docs/capture/s142-imager-s-init.md`.
 - Resultado: VERIFICADO reset de 0x148 B a cero; VERIFICADO lectura/consumo de `S+0xda`; PARCIAL para escritor `S[0]` (xrefs directas no cubren aliases/punteros argumentos).
 - Artefactos: `analysis/s142_imager_s_init/{verify_s_accesses.py,s_accesses.json}`, `tests/test_s142_imager_s_init.py`, `docs/capture/s142-imager-s-init.md`.
-- Pruebas: unittest S142 3/3; suite S140–S142 + knowledge 76/76 PASS; `git diff --check` PASS. Commit `bf199b15` publicado en `origin/main`.
+- Pruebas: unittest S142 3/3; suite S140–S142 + knowledge 76/76 PASS; `git diff --check` PASS. Commit `a72b27a3` publicado en `origin/main`.
 - Siguiente: REA para recuperar coordenada de procedimiento Thumb de staging `0x43843a44` y seguir el store al selector.
 
 ## Investigación S145 — gap de procedimiento en el staging
@@ -237,7 +237,7 @@ indicadas en el informe; no se certifica todo el grafo por sus contadores.
 - Bytes REA corroborados: prólogo `ev_1341f2fcb0c98ed30d51646e21fd980c2c7fdd917c14493817665a26e707173a`; BL `ev_51665d015dc585c586b3ef325ee488b0a7dbe64ea0c74cf3f7519e63649a6336`; staging candidate `ev_f6cf7574b2e3b18fcec3ebf5f5fc14bbfd36049e3fdc90b9ac37a20541919ebb`.
 - Resultado PARCIAL: bytes demuestran una llamada codificada, no ejecución. El código candidato queda en zona no representada por funciones REA, así que no hay pseudocódigo/call graph para el store a S[0].
 - Artefactos: `analysis/s145_imager_unanalyzed_code/{verify_code_gap.py,code_gap.json}`, `tests/test_s145_imager_unanalyzed_code.py`, `docs/capture/s145-imager-code-gap.md`.
-- Pruebas: unittest S145 3/3 PASS; suite S140–S143/S145 + knowledge 79/79 PASS; `git diff --check` PASS. Commit `a0955258` publicado en `origin/main`.
+- Pruebas: unittest S145 3/3 PASS; suite S140–S143/S145 + knowledge 79/79 PASS; `git diff --check` PASS. Commit `26f527ed` publicado en `origin/main`.
 - Siguiente (revisado por S146): recorrido estático reproducible de bytes REA en `0x437b617e`/`0x43843a44`; la superficie disponible no permite sembrar funciones.
 
 ## Investigación S146 — capacidad REA para selectores de offset
@@ -246,7 +246,7 @@ indicadas en el informe; no se certifica todo el grafo por sus contadores.
 - Resultado: `procedure_pseudo_code` mapea offset y falla explícitamente si no hay procedimiento; `procedure_info`, `procedure_assembly`, `analyze_function` rechazan ese selector; no hay herramienta de crear procedimiento/entry en la sesión actual. No se mutó sesión ni artefacto.
 - Evidencia: error de cobertura `ev_ea22a2182a4e3d23312394b402b358789ae6a158f2c91f4dd012453fd50de7ed`; mapeo staging `ev_adf4d88907eb3ff81fba796af3f1ddac9680ffe4aded30e67aa18febd79e3417`; caller real `ev_26bca5083b40a7c16bcf21eec1635a774c20532c95739f7acd57aa3649d06ad7`; offset equivocado `0x27617e` → `0x437b717e`, procedimiento no relacionado `ev_b0d6874334a9baa4823bb7b150b77290a5434ef146c37fcd58858065b1babd63`.
 - Artefactos: `analysis/s146_rea_seed_capability/{verify_offsets.py,rea_seed_capability.json}`, `tests/test_s146_rea_seed_capability.py`, `docs/capture/s146-rea-seed-limit.md`.
-- Pruebas: unittest S146 3/3 PASS; suite S140–S146 + knowledge 82/82 PASS; `git diff --check` PASS. Commit `0a865472` publicado en `origin/main`.
+- Pruebas: unittest S146 3/3 PASS; suite S140–S146 + knowledge 82/82 PASS; `git diff --check` PASS. Commit `377e5522` publicado en `origin/main`.
 - Siguiente: recorrido estático de bytes con `read_bytes` REA para localizar stores/gates, o mover a otra pregunta independiente; no repetir `file-offset:` como seeding.
 
 ## Investigación S147 — referencias y writer de filas G
@@ -255,7 +255,7 @@ indicadas en el informe; no se certifica todo el grafo por sus contadores.
 - Evidencia REA: xrefs `ev_7375812f6a63afe1d0db14b91c6cec50187e7d53a2f6bd7a4436500fb2ec9df0`; builder `0x4383bf2c` `ev_5305a4dbabf37e02baec4bd8b258137d9e733c0817ce4b373defe5a8ecc12203`; writer `0x4383c9dc` `ev_cd6567d4fb0af5c12b4d8d21ee30a574ca5bd289cfba828745757f185d89ecb2`, pseudocode paginado `ev_d4653d3615add43984db5b04eb31c812b23d2a5865e6038908736caf291fd05a` + `ev_9caa8366dd8aa3149c26482110e5523aa6132b3fd299d39fb05de95a2003380e`.
 - Resultado: un path observado escribe en cuatro filas 16 B, offset base `G+0x224+0x2c`, stores relativos 0/4/6/a/c/e; no se atribuye semántica física. Los otros xrefs son pasos/lecturas; por cobertura limitada se conserva PARCIAL.
 - Artefactos: `analysis/s147_imager_g_rows/{verify_g_rows.py,g_rows.json}`, `tests/test_s147_imager_g_rows.py`, `docs/capture/s147-imager-g-rows.md`.
-- Pruebas: unittest S147 3/3 PASS; suite S140–S147 + knowledge 85/85 PASS; `git diff --check` PASS. Commit `ffdba84b` publicado en `origin/main`.
+- Pruebas: unittest S147 3/3 PASS; suite S140–S147 + knowledge 85/85 PASS; `git diff --check` PASS. Commit `c4a4efb7` publicado en `origin/main`.
 - Siguiente: revisar helpers `0x4383bfd4`, `0x4383c818`, `0x43b08786` para cerrar escrituras faltantes por evidencia, sin semántica física.
 
 ## Investigación S149 — auditoría de helpers por fila
@@ -265,7 +265,7 @@ indicadas en el informe; no se certifica todo el grafo por sus contadores.
 - Helpers/gates auditados: `0x4383b790`, `0x4383bfd4`, `0x43b08786` si `[G+0x50]==2`, `0x4383c818` si `[GOT+0xca]==1`. No tienen stores en `+0x2c..+0x6b`; S149 acota que no existen en esos cuerpos, no globalmente.
 - Evidencia del loop: `read_function_instructions` `ev_05541f7fa796e9902a584d283765f42028aa618772a3ece2a2b2e519b172211b`; pseudocode page 1/2 y cada dossier/helper en S149 report. Los bytes `0x4383c9ec`, `0x4383cbfa`, `0x4383cbbe` se reproducen desde el blob.
 - Artefactos: `analysis/s149_imager_row_helpers/{verify_helper_stores.py,row_helper_stores.json}`, `tests/test_s149_imager_row_helpers.py`, `docs/capture/s149-imager-row-helpers.md`.
-- Pruebas: unittest S149 3/3 PASS; suite S140–S149 + knowledge 88/88 PASS; `git diff --check` PASS. Commit `c4193a2a` publicado en `origin/main`.
+- Pruebas: unittest S149 3/3 PASS; suite S140–S149 + knowledge 88/88 PASS; `git diff --check` PASS. Commit `3027cafd` publicado en `origin/main`.
 - Siguiente: búsqueda de writers alternos de los bytes `G+0x234/+0x235` (hueco relativo +8/+9 del primer row), con REA/bytes y sin inferir ausencia por scans vacíos.
 
 ## Investigación S150 — xrefs directas y literales a los gaps
@@ -274,7 +274,7 @@ indicadas en el informe; no se certifica todo el grafo por sus contadores.
 - Resultado parcial: 8/8 xrefs exactas vacías; REA control positivo a la base de una fila; bytes BSS cero. Búsqueda de imagen completa encontró dos words `0x43eb0850` en `0x4400812c`/`0x4400b27c`; son literales dentro de datos sin xrefs/instrucción consumidora identificada. No convertirlo en lectura/escritura efectiva.
 - Evidencia: xrefs exactas `ev_c42a7d7fd9a1e599c8d0b74992d387d3f1e7164896d259abe3a6ef0f7e68f68c` … `ev_55c7c05551f922a8af96f3b4d7dbae64da5be5e55e55eacc780eb55d0149416b`; control `ev_afcfff7678cf182ee835cd1ed4dfd1b2f55fdb0872a6bfc51817b3a9ab9f3b55`; búsqueda literal completa `ev_201b0a5e0f16fe153da29642e861f41b0a7cebeb611865db65540927452d7668`.
 - Artefactos: `analysis/s150_imager_row_gaps/{verify_gap_refs.py,gap_refs.json}`, `tests/test_s150_imager_row_gaps.py`, `docs/capture/s150-imager-row-gaps.md`.
-- Pruebas: unittest S150 3/3 PASS; suite S140–S150 + knowledge 91/91 PASS; `git diff --check` PASS. Commit `feb767e5` publicado en `origin/main`.
+- Pruebas: unittest S150 3/3 PASS; suite S140–S150 + knowledge 91/91 PASS; `git diff --check` PASS. Commit `364b008d` publicado en `origin/main`.
 - Siguiente: identificar consumidores de las celdas `0x4400812c` y `0x4400b27c`; seguir el word inicial `0x43eb0850` con REA xrefs/lecturas y evidencia de índice/call path.
 
 ## Investigación S152 — consumidor del descriptor gap
@@ -283,7 +283,7 @@ indicadas en el informe; no se certifica todo el grafo por sus contadores.
 - Resultado: tablas A[32]/B[6] se decodifican `{id=0x30,size=1,addr=0x43eb0850}`. `FUN_43858338` selecciona formato raw/hex; raw `FUN_43b09c7a` lee desde addr y copia a buffer; size=1 implica lectura de un byte. Sin store al origen en ese copiador. Gates de runtime dependen de dos bits y permanecen PARCIAL.
 - Evidencia REA: tabla A `ev_f8bd0f66f1e8d90f997d6ea0c37e47e3911c40c8dc9de66f9652bfca536f4289`, B `ev_01d929687b87aa4343c193261123044fac8ffad3ae264dda33a77826adfffa90`, copiador `ev_2d31ad1d2d49ace2985775034cfc294bb17251c7e6930056dfb4cb9c47716ffa`, hex formatter `ev_6efbdb9318dab3f4c890adbbc9f1e066ffa8905d6ccb639967336a706653e212`.
 - Artefactos: `analysis/s152_imager_descriptor_reads/{verify_descriptor_reads.py,descriptor_reads.json}`, `tests/test_s152_imager_descriptor_reads.py`, `docs/capture/s152-imager-gap-descriptor-read.md`.
-- Pruebas: unittest S152 3/3 PASS; suite S140–S152 + knowledge 94/94 PASS; `git diff --check` PASS. Commit `024bb46f` publicado en `origin/main`.
+- Pruebas: unittest S152 3/3 PASS; suite S140–S152 + knowledge 94/94 PASS; `git diff --check` PASS. Commit `bee88e8e` publicado en `origin/main`.
 - Siguiente: localizar escritores de flags `0x43f72d05&2` y `0x43f72d08&0x20`; no reabrir asignación física del byte gap.
 
 ## Investigación S153 — gates del volcado de descriptores
@@ -292,7 +292,7 @@ indicadas en el informe; no se certifica todo el grafo por sus contadores.
 - Resultado PARCIAL: instrucciones verifican lecturas/tst/beq en `0x438583b0`/`0x438584f0`; xrefs exactas a ambos bytes son solo los lectores del dispatcher. El estado está a cero en la imagen. No hay escritor reproducible ni valor runtime confirmado; no se declara ausencia global.
 - Evidence: función/cuerpo `ev_74804f459247fbbe0d22d0b1e7e58bba3e8ee690e33a1b6d20ffacc7020ba7fc`; refs byte+3 `ev_2988fcffcf7768198b5e5d25f616294bfa4ee489710012b6f85b06434aabfde4`; byte+6 `ev_7a31d71d07dc687daced9c48fe2a917ae8a24bf330dd09d4cb5d966c77a1669a`; BSS bytes `ev_498f8dc63dab90ff677e302176e0737dcbb3d54be6fc4bc97ad00cafe4ce158d`.
 - Artefactos: `analysis/s153_imager_dump_gates/{verify_gates.py,dump_gates.json}`, `tests/test_s153_imager_dump_gates.py`, `docs/capture/s153-imager-dump-gates.md`.
-- Pruebas: unittest S153 3/3 PASS; suite S140–S153 + knowledge 97/97 PASS; `git diff --check` PASS. Commit `7ce7f329` publicado en `origin/main`.
+- Pruebas: unittest S153 3/3 PASS; suite S140–S153 + knowledge 97/97 PASS; `git diff --check` PASS. Commit `cecec1f1` publicado en `origin/main`.
 - Siguiente: inspeccionar consumidores/copiadores del bloque state `0x43f72d02` para detectar escrituras estructuradas a +3/+6; no equiparar xrefs vacíos con ausencia.
 
 ## Investigación S154 — clasificación del xref a estado
@@ -301,7 +301,7 @@ indicadas en el informe; no se certifica todo el grafo por sus contadores.
 - Resultado: `ldr r0,[r5,r3]` lee el slot GOT `0x4401f990`; segundo edge DATA apunta al valor base, no a un store/read directo del objeto. La función lee campos +0x38..+0x3b y escribe en otros targets; no hay store +3/+6 en ese procedimiento. PARCIAL global.
 - Evidencia: instructions `ev_98aa775d3c95df94438bb40d89c729bddd5b0493c30968d146bfee6243fb3c63`; typed refs `ev_e8a264c61f10ca8c40c32e8171a4b743ec4bfa571f23898386dd5ab4a8ec7efa`; slot `ev_ef0ae04fe4e640945736ea7bd40211f7cbdc4dbc7865e58ec0051c994f67bc7f`.
 - Artefactos: `analysis/s154_imager_state_ref/{verify_state_ref.py,state_ref.json}`, `tests/test_s154_imager_state_ref.py`, `docs/capture/s154-imager-state-ref.md`.
-- Pruebas: unittest S154 3/3 PASS; suite S140–S154 + knowledge 100/100 PASS; `git diff --check` PASS. Commit `9030811f` publicado en `origin/main`.
+- Pruebas: unittest S154 3/3 PASS; suite S140–S154 + knowledge 100/100 PASS; `git diff --check` PASS. Commit `b98b8de7` publicado en `origin/main`.
 - Siguiente: seleccionar otro xref de base y clasificar con typed references/instructions, buscando stores estructurados a los flags.
 
 ## Investigación S155 — lectores/accesores del estado
@@ -310,7 +310,7 @@ indicadas en el informe; no se certifica todo el grafo por sus contadores.
 - Resultado: dos readers de `+0` como predicados; el tercero carga la base desde GOT y lee +4/+1c, stores a otras estructuras. Ninguno escribe +3/+6 dentro de su procedimiento. Sin conclusión global.
 - Evidencia REA: funciones `ev_50ec9a795fdeee1871d4df7045a9bc37b0e30b6187a21faef21c2d7d3fd3734a`, `ev_671901b96f062bf27c18b5a5db2b60b04f8131fde5cb02090e128ff818624502`, `ev_b38e559657d05b6ab4a57389988c5f11f0adae407c47ecaa4e30cd3bfccd740c`; refs tipadas `ev_9975507315e3e9ae8b0b12ed371553fbde517212c7deab61373a08b5fdd07e0c`, `ev_8af01bde84b54dc562aa3f33aacbc80ffbc8e7e2ca7f89e26e51b8143ca3dd92`, `ev_8e30d1b8e05356a533217a31f3da3ec92df520c6aa1e9eb79cca3dbd31c18132`.
 - Artefactos: `analysis/s155_imager_state_readers/{verify_state_readers.py,state_readers.json}`, `tests/test_s155_imager_state_readers.py`, `docs/capture/s155-imager-state-readers.md`.
-- Pruebas: unittest S155 3/3 PASS; suite S140–S155 + knowledge 103/103 PASS; `git diff --check` PASS. Commit `d0888afd` publicado en `origin/main`.
+- Pruebas: unittest S155 3/3 PASS; suite S140–S155 + knowledge 103/103 PASS; `git diff --check` PASS. Commit `a6d7bbe6` publicado en `origin/main`.
 - Siguiente: clasificar un próximo xref restante, manteniendo alcance local.
 
 ## Investigación S157 — accesores de snapshot del estado
@@ -319,7 +319,7 @@ indicadas en el informe; no se certifica todo el grafo por sus contadores.
 - Resultado PARCIAL: instrucción `ldr r2,[r4,r3]` carga base del objeto desde GOT; edge a base es PARAM, no write. Procedimiento lee +5/+0xf y escribe a otros destinos, sin stores a +3/+6 en ese cuerpo.
 - Evidencia REA: función `ev_ec6f97762141815f395c4f95495973ab27f5327ae5c1aab1c33e5f7593780ece`, refs `ev_34d9295f6218a4ff16b071ff3c48aabd51ee2f8280c09aeb46d5ca2e438bfc4d`, slot `ev_a2be1dc38d7278043336827bd87c0991eeccbd13742659906de531563db077dd`.
 - Artefactos: `analysis/s157_imager_state_snapshot/{verify_snapshot_ref.py,snapshot_ref.json}`, `tests/test_s157_imager_state_snapshot.py`, `docs/capture/s157-imager-state-snapshot.md`.
-- Pruebas: unittest S157 3/3 PASS; suite S140–S157 + knowledge 106/106 PASS; `git diff --check` PASS. Commit `6d8680c8` publicado en `origin/main`.
+- Pruebas: unittest S157 3/3 PASS; suite S140–S157 + knowledge 106/106 PASS; `git diff --check` PASS. Commit `07103377` publicado en `origin/main`.
 - Siguiente: inspeccionar otro xref al estado, distinguiendo base-pointer loads de field writes.
 
 ## Investigación S158 — spill del puntero en xref de estado
@@ -328,7 +328,7 @@ indicadas en el informe; no se certifica todo el grafo por sus contadores.
 - Resultado: `ldr` previo obtiene objeto desde GOT; el xref es `str r3,[sp,#0x20]`, edge de valor/stack, no store a `0x43f72d02`. El cuerpo lee +0x26/+0x28/+0x29 y escribe otros objetos; no gates +3/+6 en el cuerpo.
 - Evidencia REA: función `ev_633b2499c1f64a98ef9dd1dee3a8785a4eb185e877a01886c8f80b10ecfb5551`, instrucción `ev_a1843181423095ac768e124db07db27e4259ffb8776b681caea4238fdb06414e`, refs `ev_34d9295f6218a4ff16b071ff3c48aabd51ee2f8280c09aeb46d5ca2e438bfc4d`.
 - Artefactos: `analysis/s158_imager_state_ref/{verify_gate_accessor.py,state_accessor.json}`, `tests/test_s158_imager_state_ref.py`, `docs/capture/s158-imager-state-ref.md`.
-- Pruebas: unittest S158 3/3 PASS; suite S140–S158 + knowledge 109/109 PASS; `git diff --check` PASS. Commit `3affd7cc` publicado en `origin/main`.
+- Pruebas: unittest S158 3/3 PASS; suite S140–S158 + knowledge 109/109 PASS; `git diff --check` PASS. Commit `c6acb379` publicado en `origin/main`.
 - Siguiente: clasificar xref restante a base, evitando confundir edge al valor con acceso a memoria.
 
 ## Investigación S159 — segundo spill del estado
@@ -337,7 +337,7 @@ indicadas en el informe; no se certifica todo el grafo por sus contadores.
 - Resultado: `FUN_4385fff0` lee el GOT slot y derrama `r3` a `[sp+0x1c]`; lee +0/+0x1c/+0xa2 y stores a otros targets. Ningún store a +3/+6 en ese cuerpo; no se infiere ausencia global.
 - Evidencia REA: contenedor `ev_5b0f148005650c3e22de895825765d726859466967149bcff370c3d43ddd1f73`; instrucción `ev_3c2f0fbe550810719bf22e531025709d7c0ca323e91ab8635e60f9afca166181`; referencias `ev_eb099b43bb1c2559ab27672e7a60d390533927b72af8b8a486614aaee8090843`; slot `ev_ef0ae04fe4e640945736ea7bd40211f7cbdc4dbc7865e58ec0051c994f67bc7f`.
 - Artefactos: `analysis/s159_imager_state_ref/{verify_state_spill.py,state_spill.json}`, `tests/test_s159_imager_state_ref.py`, `docs/capture/s159-imager-state-spill.md`.
-- Pruebas: unittest S159 3/3 PASS; suite S140–S159 + knowledge 112/112 PASS; `git diff --check` PASS. Commit `98262cd6` publicado en `origin/main`.
+- Pruebas: unittest S159 3/3 PASS; suite S140–S159 + knowledge 112/112 PASS; `git diff --check` PASS. Commit `7ed44063` publicado en `origin/main`.
 - Siguiente: escoger un xref restante, preferiblemente uno con typed WRITE directo, y verificar si base-pointer edge es spill u objeto efectivo.
 
 ## Investigación S160 — writer de `state+0`
@@ -346,7 +346,7 @@ indicadas en el informe; no se certifica todo el grafo por sus contadores.
 - Resultado VERIFIED local: slot GOT `0x4401f990→0x43f72d02`; `strb r3,[r2,#0]` WRITE a `state+0`, valor 0 cuando expira el contador. No escribe +3/+6. Callers estáticos encontrados, sin prueba dinámica.
 - Evidencia: procedure `ev_134be2dfce4598770fe1825386a5899cfad96fb794784e8673a5c3f42e37bd3b`; WRITE instruction `ev_3992433ca320c9303ec5bd74990f7e8e53f481516afd812000138c8654f83014`; pseudocode `ev_d9486547d0d47dc8039f483cc2e75d37bee5fd8e82c1044c8d033137462f0946`.
 - Artefactos: `analysis/s160_state_open_flag_writer/{verify_open_flag_store.py,open_flag_store.json}`, `tests/test_s160_state_open_flag_writer.py`, `docs/capture/s160-state-open-flag.md`.
-- Pruebas: unittest S160 3/3 PASS; suite S140–S160 + knowledge 115/115 PASS; `git diff --check` PASS. Commit `0a7daba9` publicado en `origin/main`.
+- Pruebas: unittest S160 3/3 PASS; suite S140–S160 + knowledge 115/115 PASS; `git diff --check` PASS. Commit `7896dc68` publicado en `origin/main`.
 - Siguiente: analizar otro xref al estado con mismo criterio tipado; priorizar stores/copia a +3/+6 si aparece ruta.
 
 ## Investigación S161 — segundo spill en el objeto de flags
@@ -355,7 +355,7 @@ indicadas en el informe; no se certifica todo el grafo por sus contadores.
 - Resultado: `ldr.w r3,[r8,r3]` carga el puntero GOT; `str r3,[sp,#0x20]` lo derrama en pila. Luego lee +0x40/+0xa5/+0x42; stores a otros destinos, no gates +3/+6 en el cuerpo.
 - Evidencia REA: procedimiento `ev_1e8e048eb0f0141cf4d85e3688d89fe80dba6b0653e5ad1a7171f615be7c3de4`; instrucciones `ev_e619946dcb53ed41e95f05e0c71ea3c2c80e31a62fec960cff765160d0789e49`; refs `ev_3303b18d85c46c4e2f17bbd020bc6d05f0c6ea1dcb7fee814e779e672f12ab01`.
 - Artefactos: `analysis/s161_imager_state_spill/{verify_state_spill.py,state_spill.json}`, `tests/test_s161_imager_state_spill.py`, `docs/capture/s161-imager-state-spill.md`.
-- Pruebas: unittest S161 3/3 PASS; suite S140–S161 + knowledge 118/118 PASS; `git diff --check` PASS. Commit `0a26c130` publicado en `origin/main`.
+- Pruebas: unittest S161 3/3 PASS; suite S140–S161 + knowledge 118/118 PASS; `git diff --check` PASS. Commit `d7ee27bb` publicado en `origin/main`.
 - Siguiente: clasificar otro xref pendiente por edge tipado y destino efectivo.
 
 ## Investigación S162 — lectores de `state+0x1c`
@@ -364,7 +364,7 @@ indicadas en el informe; no se certifica todo el grafo por sus contadores.
 - Resultado: ambos usan `ldrh [state+0x1c]`; devuelven default 3 si cero y almacenan el halfword en `0x43f7c702/704`. No escriben state/gates en esos dos cuerpos. “Notificación” queda INFERENCIA; alcanzabilidad PARTIAL.
 - Evidencia: xrefs `ev_4db80d5468d11118561f766f8d8699b7d85f44889d368fd8c5eacd01aae0454d`; lectores `ev_02d7e5d7893000bd111b30f25f386665394b5759bfb5ae161c19b78576267719` / `ev_59bc79c25846b1f1541a2e92f6dc4702c4546864117f903afa9c76c5a9ee6dfd`.
 - Artefactos: `analysis/s162_imager_state_event_readers/{verify_state_event_readers.py,event_readers.json}`, `tests/test_s162_imager_state_event_readers.py`, `docs/capture/s162-imager-state-event-readers.md`.
-- Pruebas: unittest S162 3/3 PASS; suite S140–S162 + knowledge 121/121 PASS; `git diff --check` PASS. Commit `8f17819a` publicado en `origin/main`.
+- Pruebas: unittest S162 3/3 PASS; suite S140–S162 + knowledge 121/121 PASS; `git diff --check` PASS. Commit `826e9245` publicado en `origin/main`.
 - Siguiente: clasificar otro xref restante con evidencia de edge y bytes.
 
 ## Investigación S163 — tercer lector de `state+0x1c`
@@ -373,7 +373,7 @@ indicadas en el informe; no se certifica todo el grafo por sus contadores.
 - Resultado: `FUN_438d939c` lee `u16 state+0x1c` y `u8 state+0x1e`, defaults a 3/4 cuando cero, construye buffers/mensaje y escribe a `0x43f7c708/70a` y `0x43eff43c`, no al objeto de estado. La etiqueta “notificación/evento” queda como INFERENCIA; runtime no alcanzado.
 - Evidencia: función `ev_102b271ac6592a0bafc828c3d02e3a2d717b827f29445c7c46fc53a24e2942d9`; read `+1c` `ev_3d73989ad3bf9bf698d74295d05425993f61317c5abb3c491511a3a71c5f800e`; read `+1e` `ev_acf64d0ce0966ca85e468761ddb57b8dd267b30031d509fc210fabec25001053`; outgoing refs `ev_0a887b1bd052d8b3d5b4d678910ef9808acc4c0ec7648dab3c13fc020e0fc190`.
 - Artefactos: `analysis/s163_imager_state_event_reader/{verify_state_event.py,state_event_reader.json}`, `tests/test_s163_imager_state_event_reader.py`, `docs/capture/s163-imager-state-event-reader.md`.
-- Pruebas: unittest S163 3/3 PASS; suite S140–S163 + knowledge 124/124 PASS; `git diff --check` PASS. Commit `ff5bbb98` publicado en `origin/main`.
+- Pruebas: unittest S163 3/3 PASS; suite S140–S163 + knowledge 124/124 PASS; `git diff --check` PASS. Commit `c9eadd28` publicado en `origin/main`.
 - Siguiente: seguir un xref restante al estado y distinguir lectura de campo, pointer spill y write real.
 
 ## Investigación S176 — lectores `state+0xac` y `state+0x30..+0x37`
@@ -2916,7 +2916,7 @@ no `0x43cad6fd`) y S68 (test canónico, direcciones y el diferencial A7S).
 B S343–S348, libObj.so S380–S385, módulos D S515 y E S618–S627, cierre de pendientes y plan físico 2. Censo 133/372. Detalle en `knowledge/CURRENT.md`. S51 sin cambios.
 # Auditoría 23-10-2026
 
-Base remota `f4dc7062`, cuenta `nicolvus`, pull sin cambios y árbol inicial limpio. [Informe completo](../docs/auditoria-2026-10-23.md). Corregidos destinos BL S382, negativos inválidos S384, 94 direcciones y 21 longitudes S605–S627, JSON S68, enlaces relativos y censo detallado; Pages incluye P1–P21. Reabiertas 141 clasificaciones automáticas. Verificación contra bytes con regresiones nuevas y mantenimiento del conocimiento; sin pruebas físicas ni push. Los apartados anteriores de cada sesión se conservan como historia.
+Base remota `f616852a`, cuenta `nicolvus`, pull sin cambios y árbol inicial limpio. [Informe completo](../docs/auditoria-2026-10-23.md). Corregidos destinos BL S382, negativos inválidos S384, 94 direcciones y 21 longitudes S605–S627, JSON S68, enlaces relativos y censo detallado; Pages incluye P1–P21. Reabiertas 141 clasificaciones automáticas. Verificación contra bytes con regresiones nuevas y mantenimiento del conocimiento; sin pruebas físicas ni push. Los apartados anteriores de cada sesión se conservan como historia.
 
 # E21 — lectura de volcados del 20-10 (26-10-2026)
 
@@ -3187,7 +3187,7 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 - **Ruta:** Loader3 `c01fdd8e`→`c01fce8c`→MuMin→SRAM ARM7 `+0x3f40`→BossFirm `0x1338`→LDEC `0xf2903000`; sin descompresor software en Loader3. `0x2800` (NAND/firmware) excluido del grafo.
 - **Diferencia nueva (decisión C):** 100 % del corpus Sony = 16 segmentos × 4096 B por bloque (`size>>12`=16 va al registro `+0x0c`); bloques 0/48/57 del 3.25 = 1 × 65 536 B. Sin rechazo demostrado.
 - **Límites:** 129 sectores funcionan (Sony `nflasha15/16`); ARM7 trocea en lotes de 0x80; residuo copiado y no leído en lo analizado.
-- **Conciliado:** 89 B BIONZ + 22 B Darwin = 111; `c01f7752` no carga archivos ni da −302; fallos `tests/knowledge` desde R7 (`9dbd232e`).
+- **Conciliado:** 89 B BIONZ + 22 B Darwin = 111; `c01f7752` no carga archivos ni da −302; fallos `tests/knowledge` desde R7 (`a8a182c9`).
 - **Entregables:** `docs/capture/e26-r16-ldec-hardware-audit.md`, `analysis/e26-recovery/r16_*.py`, `tests/test_e26_r16_ldec.py`. Pendientes `E26-R17-*`.
 
 ## E26-R17 — BossFirm ARM7 y semántica LDEC (30-10-2026)
@@ -3341,7 +3341,7 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 
 ## Auditoría integral repo/GitHub (31-10-2026)
 
-Local = `origin/main` (`89c4311c`) al empezar. **CI «Pruebas» en rojo desde el 30-10 (26 ejecuciones):** Pillow ausente en el flujo y R20/R29
+Local = `origin/main` (`a4c42e69`) al empezar. **CI «Pruebas» en rojo desde el 30-10 (26 ejecuciones):** Pillow ausente en el flujo y R20/R29
 leyendo `bootrom.bin` y el manual de servicio (no versionados); arreglado (C9). **Fugas:** número de serie de la cámara en 16 `info*.txt`
 redactado (SHA256SUMS recalculados; queda en el historial, R6); la clave `localtest.me.pem` es el certificado público de PMCA; sin tokens.
 Volcados nuevos: se versionan JPEG reducidos, montajes y JSON de T042–T044/E25-22/E25-23; RAW, parciales, audio y la corrida previa de T043
@@ -3355,3 +3355,4 @@ README, CURRENT (≤150 líneas, tabla E26) y cabecera de STATE reescritos; vers
 - **D13:** registro T054 (E25-22), T055 (E25-23) y T056 (instalación del 3.25, testimonio); informe [E25-23](../docs/capture/e25-23-interrupcion-captura-larga.md) redactado desde la evidencia (5 s OK, 15→20 s, 30 s→`65535` y `shooting` >90 s; causa sin demostrar).
 - **C10:** los 15 fallos/errores de `test_s402_static_closure.py` en la suite completa eran una colisión de módulos `fw` en `sys.modules`; los 2 de `test_subsystem_index` venían del informe nuevo sin indexar.
 - **C11:** dependencias de CI fijadas en `knowledge/requirements-ci.txt`; `pyelftools` retirado; `F821` corregido; `repo_audit.py` ignora cifras de copias históricas.
+- **R3/R6 (historial):** con orden del usuario («hazlas todas»), `git filter-repo` quitó `libmprctrl.so`, el número de serie y el correo personal de los 727 commits; `main` publicado con `--force-with-lease` y árbol idéntico. SHA citados remapeados. Respaldo previo: `~/a6000-respaldo-historial-20261031.git`. Queda R7 (refs de PR y fork ajeno en GitHub).

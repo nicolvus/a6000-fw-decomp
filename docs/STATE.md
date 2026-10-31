@@ -42,7 +42,7 @@ electrónica a resolución completa.
   (145 comprobaciones, 0 fallos; N=SÍ), pero la instalación no se puede declarar segura (O/P/Q/R=NO). Antes de instalar, comprobar el SHA-256 (E25-07).
 - Estáticos cerrados con límite: E2–E5, E7, E8, E10 (a–c), E12, E14–E20, D1, D3, D4 y D6 ([evidencia](capture/s403-cierre-pendientes.md));
   E1 `NO_VERIFICADO` sin vías estáticas. Bloqueados por datos o hardware: E6, E9, E11, E13, D5; físicos F1–F6 (P1–P4, P6, P13–P16, P18–P21 ejecutadas el 26-10-2026 por USB (T001–T021, [registro](capture/registro-pruebas-camara.md)); P5/P11 caen con F4, P7/P17 descartadas; E22 cerrado con límite ([informe](capture/tipo2-analisis-estatico-2026-10-26.md)));
-  respaldo R1 parcial (procedimiento y manifiesto; falta copia externa verificada), R2 cerrado, R3 y R6 bloqueados (historial con un binario de Sony y con el número de serie de la cámara).
+  respaldo R1 parcial (procedimiento y manifiesto; falta copia externa verificada), R2 cerrado, R3 y R6 cerrados (historial reescrito el 31-10-2026); R7 bloqueado (copias antiguas en `refs/pull/*` y en un fork ajeno).
 - Datos de auditoría y memoria temporal: [estado.json](../knowledge/audit/estado.json), [memoria.json](../knowledge/audit/memoria.json)
   (`scripts/audit/repo_audit.py`). Viabilidad por escenarios (17-10-2026): [estado-y-viabilidad](estado-y-viabilidad-2026-10-17.md).
 - Los 133/372 del censo miden **documentación de etiquetas**, no código recuperado ni funcionamiento ([matriz de cobertura](capture/s51-static-coverage-and-tool-limits.md)).

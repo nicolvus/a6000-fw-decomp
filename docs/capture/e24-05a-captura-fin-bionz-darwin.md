@@ -1,6 +1,6 @@
 # E24-05a — Origen de la captura y confirmación BIONZ–Darwin (27-10-2026)
 
-Sesión 100 % offline: sin cámara, sin comandos USB, sin escrituras de RAM/flash, sin FDAT, sin tocar el watchdog ni las protecciones del mecanismo. Continúa [E24-05](e24-05-upd-y-rearme.md) (base `e37f50f5`) y reutiliza sus scripts (`scripts/e24_05/`), su prueba y `analysis/e24-05/recovery-closure.json`. **Nada de lo que sigue autoriza un parche ni un flasheo**; E24-04 no cambia.
+Sesión 100 % offline: sin cámara, sin comandos USB, sin escrituras de RAM/flash, sin FDAT, sin tocar el watchdog ni las protecciones del mecanismo. Continúa [E24-05](e24-05-upd-y-rearme.md) (base `691203bb`) y reutiliza sus scripts (`scripts/e24_05/`), su prueba y `analysis/e24-05/recovery-closure.json`. **Nada de lo que sigue autoriza un parche ni un flasheo**; E24-04 no cambia.
 
 Binarios: `darwin_core.bin` A6000 3.21 (SHA-256 `5f2be06d…6bf4`, base ROM `0x4200`) y `av-cam.bin` (base `0x43541000`). Método: desensamblado Capstone propio sobre Darwin; REA/Ghidra (sesión única sobre `av-cam.bin`, cerrada al acabar) para xrefs/llamadores/pseudocódigo del lado BIONZ y Capstone para verificar los bytes decisivos. Reproducible: `python scripts/e24_05/capture_flow.py` (→ `analysis/e24-05a/capture-flow.json`) y `pytest tests/test_e24_05a_captura_fin.py` (27 pruebas).
 

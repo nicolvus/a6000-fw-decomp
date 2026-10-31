@@ -1,6 +1,6 @@
 # E26-RECOVERY R6 — BLDR, BIONZ y recuperación conservando la placa
 
-Fecha: 29-10-2026. Continúa `946dd198` y [R5](e26-r5-loader3-servicio.md). Solo análisis de archivos y fuentes públicas, estas últimas autorizadas expresamente durante R6. Sin conectar, encender, depurar ni modificar la cámara. No se genera firmware ni imagen para escritura.
+Fecha: 29-10-2026. Continúa `c17bd856` y [R5](e26-r5-loader3-servicio.md). Solo análisis de archivos y fuentes públicas, estas últimas autorizadas expresamente durante R6. Sin conectar, encender, depurar ni modificar la cámara. No se genera firmware ni imagen para escritura.
 
 ## 1. BLDR: implementación recuperada y alcance real
 

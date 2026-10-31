@@ -1,6 +1,6 @@
 # E26-R13 — Procedencia del error LED 3 lentos + 2 rápidos (Loader2 / Loader3)
 
-Fecha: 30-10-2026. Continúa [R12](e26-r12-bootrom-static-audit.md) (`2baf2378`). **Solo análisis estático y emulación/aritmética offline.** No se interactuó con la cámara, no se envió nada y no se generó ningún artefacto instalable.
+Fecha: 30-10-2026. Continúa [R12](e26-r12-bootrom-static-audit.md) (`3d4d9e19`). **Solo análisis estático y emulación/aritmética offline.** No se interactuó con la cámara, no se envió nada y no se generó ningún artefacto instalable.
 
 Fuentes: `analysis/camera-dumps/updater-20261020-175427/bootloader.bin` (491 520 B, SHA-256 `eb420385…a327f`, original intacto) · cabeceras públicas de Sony ya presentes en el repo (`analysis/session18/main/sony-oss-extracted/linux/arch/arm/mach-cxd90014/include/mach/{regs-timer,timex}.h`) · [`r13_loader3.py`](../../analysis/e26-recovery/r13_loader3.py) (barrido Thumb, grafo, listados) · [`r13-led-provenance.py`](../../analysis/e26-recovery/r13-led-provenance.py) · pruebas `tests/test_e26_r13_led_provenance.py`.
 

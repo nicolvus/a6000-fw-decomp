@@ -1,6 +1,6 @@
 # E24-02 — Bootloader de Darwin, protocolo de actualización y recuperación sin la aplicación (27-10-2026)
 
-Solo análisis estático y pruebas offline sobre archivos ya presentes en el repositorio. No se conectó, reinició ni modificó la cámara; no se flasheó nada ni se escribió NVRAM/NAND. Continúa [E24-01](e24-01-arranque-recuperacion.md) (commit `2f29630f`): Darwin (IC5700, MB9AF004B, FM3) alimenta el BIONZ desde `darwin_core.bin` (`DD_ON1/2/3`).
+Solo análisis estático y pruebas offline sobre archivos ya presentes en el repositorio. No se conectó, reinició ni modificó la cámara; no se flasheó nada ni se escribió NVRAM/NAND. Continúa [E24-01](e24-01-arranque-recuperacion.md) (commit `84511a69`): Darwin (IC5700, MB9AF004B, FM3) alimenta el BIONZ desde `darwin_core.bin` (`DD_ON1/2/3`).
 
 Fuentes (SHA-256 en [§ Pruebas](#pruebas-reproducibles)): `darwin_core.bin` oficial 3.21 (y los de A7S 3.20 y A6300 2.01 para comparar), `ud_darwin_firmup.elf`, `ud_darwin_init.elf` y `ud_darwin_reboot.elf` del initrd de `nflasha1` (volcado del 20-10), manual de servicio L3 (págs. 23 y 38 del PDF = hojas 6-11 y 6-26) y manual de periféricos FM3.
 

@@ -4,7 +4,7 @@
 flasheo, sin escrituras RAM. Todo lo que sigue es análisis de bytes, parches preparados y
 emulación; **no** es una validación física.
 
-Base: `bed32ade` (HEAD al empezar). Firmware A6000 3.21:
+Base: `9569aec4` (HEAD al empezar). Firmware A6000 3.21:
 `av-cam.bin` SHA-256 `b60c845c…e56bb9`; `darwin_core.bin` SHA-256 `5f2be06d…0bf4`.
 
 **Método:** el MCP de REA no estuvo disponible en esta sesión. Las direcciones y los bytes

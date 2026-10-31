@@ -31,7 +31,7 @@ def test_estado_valido_accepts_qualifiers():
 def test_pendientes_have_valid_states_and_unique_ids():
     p = audit.pendientes()
     assert not p["estados_no_validos"] and not p["ids_duplicados"]
-    assert {"E1", "R1", "R3"} <= set(p["ids_abiertos"])
+    assert {"E1", "R1", "R7"} <= set(p["ids_abiertos"])
 
 
 def test_test_claims_ignores_historical_snapshots(tmp_path, monkeypatch):

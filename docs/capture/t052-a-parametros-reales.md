@@ -49,7 +49,7 @@ evidencia; **N** = no verificado.
 | BIONZ analizado | `av-cam.bin` 3.21, SHA-256 `b60c845c…e56bb9` | binario del repo |
 | Base de carga | `0x43541000`; virtual `0x43xxxxxx` = físico `0x83xxxxxx` | bytes + volcado |
 | Estado físico | **no accesible** en esta sesión | ping/telnet/scan; sin `adb`/`pmca` |
-| HEAD al inicio | `4997ecc6` (sin commits posteriores; los archivos sin seguimiento de T042–T044 no se tocaron) | `git log`/`git status` |
+| HEAD al inicio | `57078c80` (sin commits posteriores; los archivos sin seguimiento de T042–T044 no se tocaron) | `git log`/`git status` |
 
 La instalación de T040 cambió Darwin (tipo 0 + B1a); el paquete 3.23 conserva el `av-cam.bin` de 3.21
 según E25-05/T040 (no se comparó byte a byte en esta sesión). El análisis estático y el volcado del

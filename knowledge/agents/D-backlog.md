@@ -5,18 +5,18 @@ Tema distinto de A (sensor/driver), B (imager estado) y C (ruta de control): dec
 - S500 [VDF] visor (243 trazas) DONE 381c75b3
 - S501 [STK] (76 trazas, eliminado en A6300) DONE 18a2ea0e
 - S502 [EIS] estabilización electrónica DONE 2cbe4af6
-- S503 [ZPD] zero point detection DONE aa19fb01
+- S503 [ZPD] zero point detection DONE d5c0dd90
 - S504 [STABILIZER] DONE 0258cf16
-- S505 [VEF] visor EVF (149 trazas) DONE 2348326f
+- S505 [VEF] visor EVF (149 trazas) DONE 8e0a688f
 - S506 [TD] (73 trazas) DONE 6d4db7a5
-- S507 [VIDENCSTAT] (70 trazas) DONE 960a3170
-- S508 [GOLFSHOT] (65 trazas) DONE cd6fac05
+- S507 [VIDENCSTAT] (70 trazas) DONE 8dcf9b84
+- S508 [GOLFSHOT] (65 trazas) DONE c931d0d8
 - S509 [WSX] (59 trazas) DONE 60fad377
-- S510 [RE] (54 trazas) DONE 51a8d3fa
+- S510 [RE] (54 trazas) DONE 02a06380
 - S511 [INT_ERROR] (53 trazas) DONE 93cc54d4
-- S512 [ENCOUCSTAT] (49 trazas) DONE f016266c
+- S512 [ENCOUCSTAT] (49 trazas) DONE 9e882bc6
 - S513 [CONFIG] (47 trazas) DONE 3ee87e6d
-- S514 [BT] (44 trazas) DONE fc0fe2a4
+- S514 [BT] (44 trazas) DONE f195c1fb
 - S515 [BL] backlight montura (154 trazas) → DONE (D2, 25-10-2026)
 - S516 [PNL] panel (41 trazas) → DONE (D2, 25-10-2026)
 - regenerar al vaciar

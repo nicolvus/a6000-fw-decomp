@@ -6,7 +6,7 @@ a la rama «ShutMode:%d is not supported.». Los significados eléctricos de los
 import json
 from pathlib import Path
 
-import fw
+import s402_fw as fw
 import rawfw
 from capstone import CS_ARCH_ARM, CS_MODE_THUMB, Cs
 

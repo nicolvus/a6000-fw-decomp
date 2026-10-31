@@ -1,6 +1,6 @@
 # E24-05g — Cierre de los mensajes de ajustes, cambio de modo y ocupación (27-10-2026)
 
-Sesión 100 % estática: sin cámara, sin USB, sin escrituras de RAM/NAND/NVRAM, sin FDAT ni flasheo, sin tocar el watchdog ni comprobaciones mecánicas. Continúa [E24-05f](e24-05f-emisores-mss-darwin.md) (base `76477396`). **No autoriza parche ni flasheo; E24-04 no cambia.**
+Sesión 100 % estática: sin cámara, sin USB, sin escrituras de RAM/NAND/NVRAM, sin FDAT ni flasheo, sin tocar el watchdog ni comprobaciones mecánicas. Continúa [E24-05f](e24-05f-emisores-mss-darwin.md) (base `be5e57bd`). **No autoriza parche ni flasheo; E24-04 no cambia.**
 
 Binarios: `darwin_core.bin` 3.21 (SHA-256 `5f2be06d…0bf4`, base `0x4200`) y `av-cam.bin` (BIONZ, base `0x43541000`). Método: Capstone propio sobre ambos (decisivo, por bytes); no se abrió sesión REA (el desensamblado propio resolvió todas las relaciones). Reproducible: `python scripts/e24_05g/ajustes_modo.py` (→ `analysis/e24-05g/ajustes_modo.json`) y `pytest tests/test_e24_05g_ajustes_modo.py` (15 pruebas nuevas; las 16 de E24-05f no se duplican y siguen pasando).
 

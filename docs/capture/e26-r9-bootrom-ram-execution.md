@@ -1,7 +1,7 @@
 # E26-R9 — Sony A6000: ejecución desde RAM mediante BootROM/UART
 
 **Fecha:** 29-10-2026
-**Repositorio:** `nicolvus/a6000-fw-decomp`, commit base `0c5857ab` (E26-R8)
+**Repositorio:** `nicolvus/a6000-fw-decomp`, commit base `e4f8269a` (E26-R8)
 **Alcance:** Exclusivamente offline. REA, desensamblado ARM/Thumb, binarios de firmware, análisis estático de protocolos, emulación Unicorn.
 **Binario BootROM:** `analysis/camera-dumps/updater-20261020-175427/bootrom.bin`, SHA-256 `81a17e039a2debfe589b127e12384ed4d7c2ba0d0c819238d0b021b466246026`, 24 576 bytes, base `0xffff0000`, modo Thumb.
 **Scripts nuevos:** `analysis/e26-recovery/r9-uart-protocol.py`, `analysis/e26-recovery/r9-unicorn-ramjump.py`.
@@ -468,7 +468,7 @@ Identificar eléctricamente el contacto UART (continuidad R4003→CN4906 pin 9, 
 | BootROM | `analysis/camera-dumps/updater-20261020-175427/bootrom.bin` | `81a17e039a2debfe589b127e12384ed4d7c2ba0d0c819238d0b021b466246026` |
 | Parser R9 | `analysis/e26-recovery/r9-uart-protocol.py` | (commit) |
 | Emulación Unicorn R9 | `analysis/e26-recovery/r9-unicorn-ramjump.py` | (commit) |
-| Informe R8 | `docs/capture/e26-r8-bootrom-uart-boss.md` | (commit `0c5857ab`) |
+| Informe R8 | `docs/capture/e26-r8-bootrom-uart-boss.md` | (commit `e4f8269a`) |
 
 **Comandos de verificación:**
 ```bash

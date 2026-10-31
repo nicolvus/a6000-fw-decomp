@@ -1,6 +1,6 @@
 # E25-06 — Auditoría independiente de B1a 3.23 y recuperación 3.24 (27-10-2026)
 
-Auditoría **100 % offline** del commit `67fd3a40` (E25-05, construido por DeepSeek V4.1 Flash). No se
+Auditoría **100 % offline** del commit `88ce09ef` (E25-05, construido por DeepSeek V4.1 Flash). No se
 conectó la cámara, no hubo USB, no se ejecutó ninguna actualización, no se escribió RAM/NVRAM/NAND y no
 se flasheó. Los paquetes se abrieron con `mmap` de solo lectura; sus SHA-256 son los mismos antes y
 después (§2). No se modificó B1a ni ningún paquete, y no se creó ninguna versión nueva.
@@ -52,12 +52,12 @@ Paquetes y entradas anteriores, comparados con el SHA-256 registrado en git **an
 
 | Artefacto | SHA-256 actual | Registrado en |
 |---|---|---|
-| 3.22 instalado `.dat` / `.fdat` (T024) | `c19a1463…` / `ddc2d5db…` | `210e9d21` (informe de T024) |
-| Recuperación 3.23 antigua `.dat` / `.fdat` | `5f108901…` / `cfb65c8a…` | `f5de42b0` (E24-03) |
-| Darwin tipo 0 | `ca41b46c…` | `f5de42b0` |
-| Darwin, tar y `updater.img` oficiales 3.21 | `5f2be06d…`, `97024649…`, `b6d51752…` | `ac94c961` |
+| 3.22 instalado `.dat` / `.fdat` (T024) | `c19a1463…` / `ddc2d5db…` | `54ad3b7f` (informe de T024) |
+| Recuperación 3.23 antigua `.dat` / `.fdat` | `5f108901…` / `cfb65c8a…` | `fb5a1e3d` (E24-03) |
+| Darwin tipo 0 | `ca41b46c…` | `fb5a1e3d` |
+| Darwin, tar y `updater.img` oficiales 3.21 | `5f2be06d…`, `97024649…`, `b6d51752…` | `ee2a3732` |
 | `.dat` original de Sony | `29aef21a…` | `firmware/hashes/sha256.json` |
-| B1a | `55a366a5…` | `d26f687c` (E25) |
+| B1a | `55a366a5…` | `efaf228b` (E25) |
 
 Todos coinciden. `firmware_tipo0.tar` no tiene hash en git, pero es idéntico byte a byte al tar
 contenido en el `.fdat` 3.22 (cuyo hash sí está registrado). El experimental solo difiere de él en los
@@ -115,7 +115,7 @@ tar (sobrescribiendo solo los datos de los dos miembros) y `fwtool pack`: salen 
 | 7 | Tipo 0 intacto en `0x20c78` (`09 e0 00 bf 00 bf 00 bf`) | PASS | bytes |
 | 8 | Los 4 escritores P4D/P4E (`0x20c90`, `0x20cb2`, `0x20cd4`, `0x20d00`) no llegan a `0x51c0` para ningún tipo 0..7. **Control:** el original sí escribe `0x234`/`0x238` con tipo 1/2/3 | PASS | emulación diferencial |
 | 9 | Regiones críticas idénticas al original: reinicio, scatter, buzón, `InitCom`, `0x51c0`, `Upd`, `Off`, CRC `0xa1dc`, watchdog, tarea COM, manejadores y tabla de energía; vectores SP/reset intactos; `VER0.78` presente | PASS | bytes |
-| 10 | El core integrado es el fichero B1a auditado en E25/E25-02 (`55a366a5…`, registrado en `d26f687c`) | PASS | SHA-256 + igualdad |
+| 10 | El core integrado es el fichero B1a auditado en E25/E25-02 (`55a366a5…`, registrado en `efaf228b`) | PASS | SHA-256 + igualdad |
 
 Frente al **original oficial**: 9 bytes distintos = 7 del tipo 0 (`0x20c78..0x20c7f`; `0x20c7c` coincide)
 + 2 de B1a. No hay más.

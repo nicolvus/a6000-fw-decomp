@@ -10,7 +10,7 @@ import struct
 import subprocess
 from pathlib import Path
 
-import fw
+import s402_fw as fw
 from capstone import CS_ARCH_ARM, CS_MODE_THUMB, Cs
 
 ROOT = Path(__file__).resolve().parents[2]

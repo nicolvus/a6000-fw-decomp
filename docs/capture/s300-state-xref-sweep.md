@@ -169,7 +169,7 @@ hay escape a otro objeto/global en estos cuerpos.
 
 ## 7. Corrección de la rev.1 de este informe
 
-La primera versión de S300 (commit `75f5fa28`) publicó la tabla de 15 xrefs con **todas
+La primera versión de S300 (commit `1942460f`) publicó la tabla de 15 xrefs con **todas
 las direcciones desplazadas +0x58** (`0x4383643e` en vez de `0x438363e6`, `0x4383ace8`
 en vez de `0x4383ac90`, `0x4384cb5e` en vez de `0x4384cb06`, `0x43857fe8` en vez de
 `0x43857f90`, `0x43ff32a0` en vez de `0x43ff3248`, …). **VERIFICADO en esta sesión:**

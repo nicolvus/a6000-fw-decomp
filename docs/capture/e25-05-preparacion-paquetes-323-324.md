@@ -1,7 +1,7 @@
 # E25-05 — Preparación offline de B1a 3.23 y recuperación 3.24 (27-10-2026)
 
 Sesión **100 % offline**: no se conectó la cámara, no se emitió ningún comando USB, no se ejecutó
-firmware, no se escribió RAM/NVRAM/NAND y no se flasheó. Base: `f4bb7f50` (E25-04). No se modificó
+firmware, no se escribió RAM/NVRAM/NAND y no se flasheó. Base: `81fab68e` (E25-04). No se modificó
 ningún paquete existente: el 3.22 instalado, el tar tipo 0 y la recuperación 3.23 conservan sus
 SHA-256 (comprobado antes y después).
 

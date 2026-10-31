@@ -120,6 +120,6 @@ python3 scripts/knowledge/search.py text "concepto"  # buscar sin releer el repo
 
 ## Seguridad y contribución
 
-- No se suben firmware de Sony, `*.bin`/`*.elf`, RAW, paquetes generados ni datos personales (el número de serie de la cámara se redactó
-  el 31-10-2026; el historial antiguo aún lo contiene, ver R6 en PENDIENTES). Commits convencionales.
+- No se suben firmware de Sony, `*.bin`/`*.elf`, RAW, paquetes generados ni datos personales (el número de serie, el correo personal y
+  `libmprctrl.so` se borraron del historial el 31-10-2026; ver R7 en PENDIENTES). Commits convencionales.
 - Toda prueba en cámara lleva backup NVRAM previo y se anota en el registro; toda tarea actualiza [PENDIENTES](docs/PENDIENTES.md) en el mismo commit.

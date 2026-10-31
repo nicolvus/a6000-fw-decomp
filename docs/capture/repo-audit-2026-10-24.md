@@ -18,7 +18,7 @@ cadena presente no certifican toda la conclusión técnica de una sesión.
   estado de Git/GitHub y verificadores del proyecto.
 - Los 3033 JSON propios versionados se pueden analizar sin errores de sintaxis.
   Esto no valida automáticamente su esquema ni sus conclusiones.
-- El árbol estaba limpio y `HEAD` coincidía con `origin/main` en `11bf0ca9`.
+- El árbol estaba limpio y `HEAD` coincidía con `origin/main` en `c3e519a5`.
   La API de GitHub muestra dos PR, #1 y #2, ambas fusionadas, sin incidencias
   independientes ni PR abiertas. No existe una cola de issues que sustituya
   los pendientes documentados. Pages se había desplegado correctamente para

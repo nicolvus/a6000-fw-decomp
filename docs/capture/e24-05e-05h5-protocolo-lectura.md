@@ -1,6 +1,6 @@
 # E24-05e / E24-05h-5 — Protocolo de lectura de solo lectura (preparado, NO ejecutado) (27-10-2026)
 
-Base `e606f515`. 100 % offline: sin cámara, sin USB, sin escritura de RAM, sin modificar Darwin ni BIONZ, sin FDAT. Fuentes: texto de los scripts de cámara del repo, `av-cam.bin` (Capstone) y los informes previos. Script: `scripts/e24_05h5/protocolo.py` → `analysis/e24-05h-5/protocolo.json`; pruebas: `tests/test_e24_05h5_protocolo.py`.
+Base `9dfa74cb`. 100 % offline: sin cámara, sin USB, sin escritura de RAM, sin modificar Darwin ni BIONZ, sin FDAT. Fuentes: texto de los scripts de cámara del repo, `av-cam.bin` (Capstone) y los informes previos. Script: `scripts/e24_05h5/protocolo.py` → `analysis/e24-05h-5/protocolo.json`; pruebas: `tests/test_e24_05h5_protocolo.py`.
 
 ## Veredictos
 

@@ -1,4 +1,4 @@
-> **Archivo histórico (solo lectura).** Versión íntegra de `knowledge/CURRENT.md` anterior a la reorganización documental del 26-10-2026 (Git: `git show b782ebe2:knowledge/CURRENT.md`). Los enlaces relativos se ajustaron a esta ubicación; el texto no se modificó. Vigente: [knowledge/CURRENT.md](../CURRENT.md).
+> **Archivo histórico (solo lectura).** Versión íntegra de `knowledge/CURRENT.md` anterior a la reorganización documental del 26-10-2026 (Git: `git show 93745c92:knowledge/CURRENT.md`). Los enlaces relativos se ajustaron a esta ubicación; el texto no se modificó. Vigente: [knowledge/CURRENT.md](../CURRENT.md).
 
 # Estado actual — léeme primero
 
@@ -320,85 +320,85 @@ REA/bytes clasifican `0x4386140a` como load del state pointer seguido por lectur
 
 ## S163 — tercer lector del estado (22-10-2026)
 
-`FUN_438d939c` lee `state+0x1c` (halfword) y `+0x1e` (byte); defaults 3/4 si los campos valen cero. Construye un mensaje y almacena resultados a otros globals, no a estado/gates dentro de este cuerpo. **Notificación es INFERENCIA; runtime no probado.** [S163](../../docs/capture/s163-imager-state-event-reader.md), JSON/3 tests en `analysis/s163_imager_state_event_reader/`. Commit publicado `ff5bbb98`.
+`FUN_438d939c` lee `state+0x1c` (halfword) y `+0x1e` (byte); defaults 3/4 si los campos valen cero. Construye un mensaje y almacena resultados a otros globals, no a estado/gates dentro de este cuerpo. **Notificación es INFERENCIA; runtime no probado.** [S163](../../docs/capture/s163-imager-state-event-reader.md), JSON/3 tests en `analysis/s163_imager_state_event_reader/`. Commit publicado `c9eadd28`.
 
 **Siguiente:** seguir un xref aún no clasificado hacia `0x43f72d02`, especialmente si hay store tipado; mantener “no demostrado” en lugar de inferir ausencia.
 
 ## S162 — lectores de `state+0x1c` (22-10-2026)
 
-`FUN_438d9318`/`FUN_438d936c` cargan el state pointer y leen un halfword en `+0x1c`; cada resultado se escribe a `0x43f7c702` o `0x43f7c704`, no al objeto/gates. La lectura es VERIFICADA; “notificación” es INFERENCIA, alcanzabilidad runtime NO_VERIFICADA. [S162](../../docs/capture/s162-imager-state-event-readers.md), `analysis/s162_imager_state_event_readers/event_readers.json` (3 tests). Commit publicado: `8f17819a`.
+`FUN_438d9318`/`FUN_438d936c` cargan el state pointer y leen un halfword en `+0x1c`; cada resultado se escribe a `0x43f7c702` o `0x43f7c704`, no al objeto/gates. La lectura es VERIFICADA; “notificación” es INFERENCIA, alcanzabilidad runtime NO_VERIFICADA. [S162](../../docs/capture/s162-imager-state-event-readers.md), `analysis/s162_imager_state_event_readers/event_readers.json` (3 tests). Commit publicado: `826e9245`.
 
 **Siguiente:** otro xref pendiente; comprobar si es puntero/GOT, field read o writer tipado antes de atribuirlo a gates.
 
 ## S161 — otro spill del state pointer (22-10-2026)
 
-En `FUN_4384b268`, `0x4384cb06` carga `0x43f72d02` desde GOT y `0x4384cb0a` almacena el puntero en `[sp+0x20]`; el edge al objeto es de valor, el WRITE efectivo es stack. El cuerpo lee otros campos, no gates `+3/+6`. [S161](../../docs/capture/s161-imager-state-spill.md), `analysis/s161_imager_state_spill/state_spill.json` (3 tests). Límite local. Commit publicado: `0a26c130`.
+En `FUN_4384b268`, `0x4384cb06` carga `0x43f72d02` desde GOT y `0x4384cb0a` almacena el puntero en `[sp+0x20]`; el edge al objeto es de valor, el WRITE efectivo es stack. El cuerpo lee otros campos, no gates `+3/+6`. [S161](../../docs/capture/s161-imager-state-spill.md), `analysis/s161_imager_state_spill/state_spill.json` (3 tests). Límite local. Commit publicado: `d7ee27bb`.
 
 **Siguiente:** escoger otro xref restante y clasificar si es acceso de memoria efectivo o propagación de puntero; no convertirlo en conclusión global.
 
 ## S160 — writer local de `state+0` (22-10-2026)
 
-`FUN_4383abec` carga el state pointer vía GOT y `0x4383ac90` ejecuta `strb r3,[r2]`, edge REA WRITE a `0x43f72d02+0`; en la ruta que alcanza el store el contador expira y el byte se pone a cero. No escribe gates `+3/+6`, y la condición de los callers no acredita ejecución runtime. [S160](../../docs/capture/s160-state-open-flag.md), JSON y 3 tests en `analysis/s160_state_open_flag_writer/`. Commit publicado: `0a7daba9`.
+`FUN_4383abec` carga el state pointer vía GOT y `0x4383ac90` ejecuta `strb r3,[r2]`, edge REA WRITE a `0x43f72d02+0`; en la ruta que alcanza el store el contador expira y el byte se pone a cero. No escribe gates `+3/+6`, y la condición de los callers no acredita ejecución runtime. [S160](../../docs/capture/s160-state-open-flag.md), JSON y 3 tests en `analysis/s160_state_open_flag_writer/`. Commit publicado: `7896dc68`.
 
 **Siguiente:** clasificar xrefs restantes; buscar escritura estructurada/copias hacia `+3/+6`, sin inferir ausencia global.
 
 ## S159 — spill del puntero de estado en `0x4386001c` (22-10-2026)
 
-`FUN_4385fff0` carga el objeto vía GOT; `0x4386001c` es `str r3,[sp,#0x1c]` (spill), no write a estado. Este cuerpo lee `+0/+0x1c/+0xa2`, stores van a otros destinos; no gates `+3/+6` localmente. [S159](../../docs/capture/s159-imager-state-spill.md), reproducción `analysis/s159_imager_state_ref/state_spill.json` (3 tests); no prueba ausencia global. Commit publicado: `98262cd6`.
+`FUN_4385fff0` carga el objeto vía GOT; `0x4386001c` es `str r3,[sp,#0x1c]` (spill), no write a estado. Este cuerpo lee `+0/+0x1c/+0xa2`, stores van a otros destinos; no gates `+3/+6` localmente. [S159](../../docs/capture/s159-imager-state-spill.md), reproducción `analysis/s159_imager_state_ref/state_spill.json` (3 tests); no prueba ausencia global. Commit publicado: `7ed44063`.
 
 **Siguiente:** otro xref restante a `0x43f72d02`; distinguir el edge de valor del acceso al contenido y priorizar instrucciones de escritura/copia.
 
 ## S158 — `0x4385b268` guarda el puntero de estado en stack (22-10-2026)
 
-`FUN_4385b234` lee GOT `0x4401f990→0x43f72d02`; el xref `0x4385b268` es `str r3,[sp,#0x20]`, un spill, no acceso de escritura a la base. El cuerpo lee `+0x26/+0x28/+0x29`, escribe a otros objetos, y no toca gates `+3/+6` localmente. [S158](../../docs/capture/s158-imager-state-ref.md), `analysis/s158_imager_state_ref/state_accessor.json` (3 tests). Sin conclusión global. Commit publicado: `3affd7cc`.
+`FUN_4385b234` lee GOT `0x4401f990→0x43f72d02`; el xref `0x4385b268` es `str r3,[sp,#0x20]`, un spill, no acceso de escritura a la base. El cuerpo lee `+0x26/+0x28/+0x29`, escribe a otros objetos, y no toca gates `+3/+6` localmente. [S158](../../docs/capture/s158-imager-state-ref.md), `analysis/s158_imager_state_ref/state_accessor.json` (3 tests). Sin conclusión global. Commit publicado: `c6acb379`.
 
 **Siguiente:** clasificar otro xref restante; priorizar candidato que use store/copy sobre puntero estado, no otro spill, mediante typed references y bytes.
 
 ## S157 — lector de snapshot del estado (22-10-2026)
 
-`0x43859954` lee el GOT slot `0x4401f990` y obtiene el puntero `0x43f72d02`; `FUN_43859944` lee `+5`, condicional `+0xf`, vuelca/copía a buffer y escribe un global distinto. No hay stores `+3/+6` en este cuerpo. **Límite local**, no ausencia global. [S157](../../docs/capture/s157-imager-state-snapshot.md), JSON/3 tests `analysis/s157_imager_state_snapshot/`. Commit publicado: `6d8680c8`.
+`0x43859954` lee el GOT slot `0x4401f990` y obtiene el puntero `0x43f72d02`; `FUN_43859944` lee `+5`, condicional `+0xf`, vuelca/copía a buffer y escribe un global distinto. No hay stores `+3/+6` en este cuerpo. **Límite local**, no ausencia global. [S157](../../docs/capture/s157-imager-state-snapshot.md), JSON/3 tests `analysis/s157_imager_state_snapshot/`. Commit publicado: `07103377`.
 
 **Siguiente:** clasificar otro xref a base del estado, especialmente candidatos no cubiertos en S153–S157; seguir stores y alias por evidencia directa.
 
 ## S155 — tres referencias más al estado de gates (22-10-2026)
 
-REA/bytes: `0x43857f90` y `0x43857fb0` cargan el byte `+0` y devuelven predicados; `0x43858134` carga el puntero GOT pero solo lee campos `+4` y `+0x1c`, almacenando en otros objetos. No se observa write a gates `+3/+6` **en estos cuerpos**. No es ausencia global. [S155](../../docs/capture/s155-imager-state-readers.md), reproducción `analysis/s155_imager_state_readers/state_readers.json` (3 tests). Commit publicado: `d0888afd`.
+REA/bytes: `0x43857f90` y `0x43857fb0` cargan el byte `+0` y devuelven predicados; `0x43858134` carga el puntero GOT pero solo lee campos `+4` y `+0x1c`, almacenando en otros objetos. No se observa write a gates `+3/+6` **en estos cuerpos**. No es ausencia global. [S155](../../docs/capture/s155-imager-state-readers.md), reproducción `analysis/s155_imager_state_readers/state_readers.json` (3 tests). Commit publicado: `a6d7bbe6`.
 
 **Siguiente:** elegir un xref restante a `0x43f72d02` (p. ej. `0x43859954`/`0x4385b268`) y clasificar su dataflow/store por evidencia, uno o un grupo acotado.
 
 ## S154 — referencia del estado desde `0x438363e6` (22-10-2026)
 
-`FUN_438363cc` en `0x438363e6` carga el valor del slot `0x4401f990` (`0x43f72d02`); el edge al objeto es DATA y el READ efectivo es al GOT slot. Este procedimiento lee otros campos +0x38..+0x3b y no escribe +3/+6; sus stores van a otros objetos/buffers. **Acotado a esta función**; no prueba ausencia de otros writers. [S154](../../docs/capture/s154-imager-state-ref.md), JSON y 3 tests en `analysis/s154_imager_state_ref/`. Commit publicado: `9030811f`.
+`FUN_438363cc` en `0x438363e6` carga el valor del slot `0x4401f990` (`0x43f72d02`); el edge al objeto es DATA y el READ efectivo es al GOT slot. Este procedimiento lee otros campos +0x38..+0x3b y no escribe +3/+6; sus stores van a otros objetos/buffers. **Acotado a esta función**; no prueba ausencia de otros writers. [S154](../../docs/capture/s154-imager-state-ref.md), JSON y 3 tests en `analysis/s154_imager_state_ref/`. Commit publicado: `b98b8de7`.
 
 **Siguiente:** revisar otro xref a la base del estado para detectar copias estructuradas o stores a +3/+6 con evidencia positiva; no inferir ausencia por la lista de xrefs.
 
 ## S153 — gates lectores del volcado del gap (22-10-2026)
 
-REA/bytes verifican los gates en `FUN_43858338`: `[obj+3]&2` y `[obj+6]&0x20` habilitan líneas del dumper; los xrefs directos a esos bytes son lecturas y los bytes BSS iniciales están a cero. **Escritor/valor runtime NO_VERIFICADOS**; no prueba ausencia global ni ejecución en una foto. [Informe](../../docs/capture/s153-imager-dump-gates.md), `analysis/s153_imager_dump_gates/dump_gates.json` (3 tests). Commit publicado: `7ce7f329`.
+REA/bytes verifican los gates en `FUN_43858338`: `[obj+3]&2` y `[obj+6]&0x20` habilitan líneas del dumper; los xrefs directos a esos bytes son lecturas y los bytes BSS iniciales están a cero. **Escritor/valor runtime NO_VERIFICADOS**; no prueba ausencia global ni ejecución en una foto. [Informe](../../docs/capture/s153-imager-dump-gates.md), `analysis/s153_imager_dump_gates/dump_gates.json` (3 tests). Commit publicado: `cecec1f1`.
 
 **Siguiente:** seguir refs al bloque de estado `0x43f72d02` buscando copias estructuradas a +3/+6, distinguiendo base-pointer stores de inicialización `+0/+2`; si no se resuelve, mover a otra ruta estática independiente. No hacer pruebas físicas.
 
 ## S152 — lectura diagnóstica de un byte del gap G (22-10-2026)
 
-Las celdas de S150 son campos `addr` de dos tablas `{u16 id,u16 size,u32 addr}`: A[32] y B[6] = `{0x0030,1,0x43eb0850}`. `FUN_43858338` dirige al raw copier `FUN_43b09c7a`, que lee `addr+size−1` hacia abajo y copia a buffer; con size=1, lectura exacta del byte gap. **No escribe el byte.** Dos gates dependen de flags con valor runtime desconocido, así que alcanzabilidad es PARCIAL. [S152](../../docs/capture/s152-imager-gap-descriptor-read.md); `analysis/s152_imager_descriptor_reads/descriptor_reads.json` (3 tests). Commit publicado: `024bb46f`.
+Las celdas de S150 son campos `addr` de dos tablas `{u16 id,u16 size,u32 addr}`: A[32] y B[6] = `{0x0030,1,0x43eb0850}`. `FUN_43858338` dirige al raw copier `FUN_43b09c7a`, que lee `addr+size−1` hacia abajo y copia a buffer; con size=1, lectura exacta del byte gap. **No escribe el byte.** Dos gates dependen de flags con valor runtime desconocido, así que alcanzabilidad es PARCIAL. [S152](../../docs/capture/s152-imager-gap-descriptor-read.md); `analysis/s152_imager_descriptor_reads/descriptor_reads.json` (3 tests). Commit publicado: `bee88e8e`.
 
 **Siguiente:** identificar escritores de los bits gates de `0x43f72d05`/`0x43f72d08` o demostrar cómo se inicializan dinámicamente; mantener la distinción entre ruta de volcado y exposición. S51 sigue A/B/C=NO.
 
 ## S150 — xrefs de los huecos +8/+9 y pista de descriptor (22-10-2026)
 
-REA devolvió `[]` para las ocho direcciones exactas de los huecos de fila; el control positivo muestra xrefs al inicio de una fila. Una búsqueda completa de bytes encuentra dos celdas que empiezan con literal `0x43eb0850` (el hueco +8/+9 de la tercera fila), pero no se ha identificado su consumidor ni formato: **no afirmar lectura/escritura efectiva**. Bytes estructurados en `analysis/s150_imager_row_gaps/gap_refs.json`; [informe](../../docs/capture/s150-imager-row-gaps.md), 3 tests. El resultado vacío no prueba ausencia de escritores por alias/argumento. Commit publicado: `feb767e5`.
+REA devolvió `[]` para las ocho direcciones exactas de los huecos de fila; el control positivo muestra xrefs al inicio de una fila. Una búsqueda completa de bytes encuentra dos celdas que empiezan con literal `0x43eb0850` (el hueco +8/+9 de la tercera fila), pero no se ha identificado su consumidor ni formato: **no afirmar lectura/escritura efectiva**. Bytes estructurados en `analysis/s150_imager_row_gaps/gap_refs.json`; [informe](../../docs/capture/s150-imager-row-gaps.md), 3 tests. El resultado vacío no prueba ausencia de escritores por alias/argumento. Commit publicado: `364b008d`.
 
 **Siguiente:** resolver quién consulta las dos celdas `0x4400812c` y `0x4400b27c` y cómo se interpreta su primer campo; confirmar si se usa como puntero a `0x43eb0850` antes de atribuir acceso a gap.
 
 ## S149 — cierre parcial de helpers de filas G (22-10-2026)
 
-Se verificó el cierre del loop por instrucciones: el writer `0x4383c9dc` **itera cuatro veces** (contador 4, stride `0x10`, back-edge), no solo una; stores por fila en `0,4,6,0xa,0xc,0xe`. Los cuatro helpers auditados no escriben `+0x2c..+0x6b` ni el hueco +8/+9. **Limitado** a estos cuerpos/gates, no excluye otros writers. Evidencias y test reproducible: [S149](../../docs/capture/s149-imager-row-helpers.md), `analysis/s149_imager_row_helpers/row_helper_stores.json` (3 tests). S51 sin cambios. Commit publicado: `c4193a2a`.
+Se verificó el cierre del loop por instrucciones: el writer `0x4383c9dc` **itera cuatro veces** (contador 4, stride `0x10`, back-edge), no solo una; stores por fila en `0,4,6,0xa,0xc,0xe`. Los cuatro helpers auditados no escriben `+0x2c..+0x6b` ni el hueco +8/+9. **Limitado** a estos cuerpos/gates, no excluye otros writers. Evidencias y test reproducible: [S149](../../docs/capture/s149-imager-row-helpers.md), `analysis/s149_imager_row_helpers/row_helper_stores.json` (3 tests). S51 sin cambios. Commit publicado: `3027cafd`.
 
 **Siguiente:** decidir una pregunta IMX210 independiente para cerrar el consumidor de filas/valores modo; buscar escritores alternos de `+0x34/+0x35` con evidencia positiva, sin asumir que el silencio de estos helpers es ausencia global.
 
 ## S147 — escritor parcial de filas G (22-10-2026)
 
-**VERIFICADO:** `0x437b5f00` forma `G+0x224` y prepara la llamada a `0x4383bf2c`; éste llama a `0x4383c9dc`, cuyo loop usa stride `0x10` durante cuatro iteraciones y escribe offsets relativos `0,4,6,0xa,0xc,0xe` en cada fila desde `+0x2c`. No escribe `+8/+9` **en ese loop**. REA evidence/páginas y bytes: [S147](../../docs/capture/s147-imager-g-rows.md), `analysis/s147_imager_g_rows/g_rows.json` (3 tests). Commit publicado: `ffdba84b`.
+**VERIFICADO:** `0x437b5f00` forma `G+0x224` y prepara la llamada a `0x4383bf2c`; éste llama a `0x4383c9dc`, cuyo loop usa stride `0x10` durante cuatro iteraciones y escribe offsets relativos `0,4,6,0xa,0xc,0xe` en cada fila desde `+0x2c`. No escribe `+8/+9` **en ese loop**. REA evidence/páginas y bytes: [S147](../../docs/capture/s147-imager-g-rows.md), `analysis/s147_imager_g_rows/g_rows.json` (3 tests). Commit publicado: `c4a4efb7`.
 
 **PARCIAL:** los otros xrefs a G son paso de puntero o loads; consumidores indirectos/efectos restantes, otros escritores, modo fotográfico y semántica física no se cerraron. No cambia S51.
 
@@ -406,19 +406,19 @@ Se verificó el cierre del loop por instrucciones: el writer `0x4383c9dc` **iter
 
 ## S146 — límite de seeding REA y offset corregido (22-10-2026)
 
-REA acepta `file-offset:` solo para resolver un procedimiento ya existente; no ofrece creación/seeding de función en el proveedor activo. `0x43843a44` mapea a `0x302a44` pero pseudocode falla por `no procedure`; `0x437b617e` corresponde a `0x27517e` (el offset `0x27617e` fue error de coordenada y mapea a otra VA). **La cobertura limitada no prueba ausencia.** [Informe](../../docs/capture/s146-rea-seed-limit.md), reproducción `analysis/s146_rea_seed_capability/rea_seed_capability.json` (3 tests). Commit publicado: `0a865472`.
+REA acepta `file-offset:` solo para resolver un procedimiento ya existente; no ofrece creación/seeding de función en el proveedor activo. `0x43843a44` mapea a `0x302a44` pero pseudocode falla por `no procedure`; `0x437b617e` corresponde a `0x27517e` (el offset `0x27617e` fue error de coordenada y mapea a otra VA). **La cobertura limitada no prueba ausencia.** [Informe](../../docs/capture/s146-rea-seed-limit.md), reproducción `analysis/s146_rea_seed_capability/rea_seed_capability.json` (3 tests). Commit publicado: `377e5522`.
 
 **S145 se conserva** como observación de bytes; su sugerencia de sembrar se reemplaza por recorrido estático reproducible. Siguiente: delimitar código Thumb mediante `read_bytes` REA y contrastar stores/gates sin afirmar CFG completo; si no cierra, pasar a otra pregunta IMX210 independiente.
 
 ## S145 — staging en hueco de análisis (22-10-2026)
 
-**PARCIAL:** REA reconoce `FUN_43843a38` (`0x43843a38..0x43843a3f`), pero `0x43843a44` y la rutina que empieza en `0x437b617e` están fuera de procedimientos analizados. Los bytes originales verifican el prólogo Thumb candidato y `BL 0x43843a44` en `0x437b61d2`. Evidencia y reproducción: [S145](../../docs/capture/s145-imager-code-gap.md), `analysis/s145_imager_unanalyzed_code/code_gap.json` (3 tests). Esto **no prueba ejecución ni ausencia**. Commit publicado: `a0955258`.
+**PARCIAL:** REA reconoce `FUN_43843a38` (`0x43843a38..0x43843a3f`), pero `0x43843a44` y la rutina que empieza en `0x437b617e` están fuera de procedimientos analizados. Los bytes originales verifican el prólogo Thumb candidato y `BL 0x43843a44` en `0x437b61d2`. Evidencia y reproducción: [S145](../../docs/capture/s145-imager-code-gap.md), `analysis/s145_imager_unanalyzed_code/code_gap.json` (3 tests). Esto **no prueba ejecución ni ausencia**. Commit publicado: `26f527ed`.
 
 **Siguiente exacto:** en REA sembrar solo entradas Thumb observadas `0x437b617e` y `0x43843a44`; recuperar `procedure_info` y refs salientes; después seguir referencias a tablas/callbacks del caller.
 
 ## S142 — referencias directas al struct S (22-10-2026)
 
-**VERIFICADO:** REA `xrefs(S=0x43eb35d0)` devuelve `0x437b56b4` (inicialización que limpia 0x148 bytes) y `0x437b59ce` (lee `u16 S+0xda`, lo consume en `0x4383c638`). Bytes Thumb del GOT/lectura/thunk corroborados y reproducibles en `analysis/s142_imager_s_init/s_accesses.json`; 3 tests. Commit publicado: `bf199b15`.
+**VERIFICADO:** REA `xrefs(S=0x43eb35d0)` devuelve `0x437b56b4` (inicialización que limpia 0x148 bytes) y `0x437b59ce` (lee `u16 S+0xda`, lo consume en `0x4383c638`). Bytes Thumb del GOT/lectura/thunk corroborados y reproducibles en `analysis/s142_imager_s_init/s_accesses.json`; 3 tests. Commit publicado: `a72b27a3`.
 
 **PARCIAL:** el memset inicializa `S[0]=0` pero no identifica escritor posterior ni valor por modo. Las xrefs directas no incluyen necesariamente rutinas que reciben S como argumento; no se toma el listado como prueba de ausencia. [Informe](../../docs/capture/s142-imager-s-init.md). S51 intacto.
 
@@ -426,13 +426,13 @@ REA acepta `file-offset:` solo para resolver un procedimiento ya existente; no o
 
 ## S141 — selección de fila IMX210, origen sin cerrar (21-10-2026)
 
-**PARCIAL:** REA `0x43b0893c` + bytes Thumb verifican `S[0]` como selector, fila en `S+4+16·S[0]` y copia de 16 bytes a `S+0xc4`; `0x43849fb8` consume esa fila al construir exposición. **NO_VERIFICADO:** quién escribe `S[0]`, condiciones de staging y origen G+`0x224`; REA no reconoció `0x43843a44`, consulta vacía no prueba ausencia. Evidencias y reproducción: [S141](../../docs/capture/s141-imager-row-copy.md), `analysis/s141_imager_row_trace/row_trace.json`; 3 tests. Commit publicado: `47147952`.
+**PARCIAL:** REA `0x43b0893c` + bytes Thumb verifican `S[0]` como selector, fila en `S+4+16·S[0]` y copia de 16 bytes a `S+0xc4`; `0x43849fb8` consume esa fila al construir exposición. **NO_VERIFICADO:** quién escribe `S[0]`, condiciones de staging y origen G+`0x224`; REA no reconoció `0x43843a44`, consulta vacía no prueba ausencia. Evidencias y reproducción: [S141](../../docs/capture/s141-imager-row-copy.md), `analysis/s141_imager_row_trace/row_trace.json`; 3 tests. Commit publicado: `e31efa98`.
 
 **Siguiente:** obtener una dirección Thumb que REA admita para el código referido como `0x43843a44` y seguir evidencia positiva del store a `S[0]` / copia G→S. No nueva Ghidra. No semántica física ni cambio de S51.
 
 ## S140 — vector de registros IMX210 y bancos de filas (21-10-2026)
 
-**VERIFICADO:** REA leyó 119 punteros en `0x43fe995c`, terminador cero en `0x43fe9b38`; cada registro empieza `{u16 ID little-endian, byte +2, byte +3}`. El vector completo está en `analysis/s140_imager_regmap/imager_regmap.json` y se reproduce con `analysis/s140_imager_regmap/extract_regmap.py` (3 tests). Commit publicado: `6f064d93`.
+**VERIFICADO:** REA leyó 119 punteros en `0x43fe995c`, terminador cero en `0x43fe9b38`; cada registro empieza `{u16 ID little-endian, byte +2, byte +3}`. El vector completo está en `analysis/s140_imager_regmap/imager_regmap.json` y se reproduce con `analysis/s140_imager_regmap/extract_regmap.py` (3 tests). Commit publicado: `72a3bd5d`.
 
 **PARCIAL:** los rangos S `0x43eb35d0` y G+`0x224` `0x43eb07fc` son cero en el blob. El código selecciona fila mediante `S[0]` desde `S+4+16·índice` y la copia a `S+0xc4`; no se ha determinado la asignación modo→fila ni su contenido runtime o significado físico. **S51 A/B/C=NO se mantiene.** [Informe](../../docs/capture/s140-imager-register-map.md).
 
@@ -1909,7 +1909,7 @@ Ver "Próximo paso exacto" al final de `knowledge/PROGRESS.md`.
 se leen como bitfield de 7 bits + signo en `FUN_43858338` (8 lectores cada uno). Únicos stores:
 `+0x00` (`0x4383ac90`) y `+0x02` (4 instrucciones en `FUN_43833ff8`/`FUN_4383ace0`/`FUN_4383b2dc`).
 Solo dos literales absolutos con el puntero en todo el blob: `0x4401f990` y `0x43ff3248`. Corrige el
-sesgo +0x58 de la rev.1 (commit `75f5fa28`) y deja S176 como no reutilizable (artefactos ausentes).
+sesgo +0x58 de la rev.1 (commit `1942460f`) y deja S176 como no reutilizable (artefactos ausentes).
 [S300](../../docs/capture/s300-state-xref-sweep.md), `analysis/s300_state_xref_sweep/state_xref_sweep.json`
 (4 tests + 7 del test previo). Límite: estático, sin runtime/DMA/índice dinámico.
 

@@ -1,6 +1,6 @@
 # S59 — Investigación colaborativa Claude + GPT-6.1 Sol
 
-20-10-2026. Baseline S58 `aa495e0e`. SHA A6000 `b60c845c…6bb9`, A7S `b857d338…5103`. **Resultado: avance parcial en ambas líneas; fin electrónico del IMX210 sigue NO VERIFICADO. S51: A=NO, B=NO, C=NO.**
+20-10-2026. Baseline S58 `abb78218`. SHA A6000 `b60c845c…6bb9`, A7S `b857d338…5103`. **Resultado: avance parcial en ambas líneas; fin electrónico del IMX210 sigue NO VERIFICADO. S51: A=NO, B=NO, C=NO.**
 
 ## Descubrimientos de GPT (IMX210, A6000) — [informe](s59-sol.md)
 

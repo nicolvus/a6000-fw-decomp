@@ -7,7 +7,7 @@ import json
 import struct
 from pathlib import Path
 
-import fw
+import s402_fw as fw
 from capstone import CS_ARCH_ARM, CS_MODE_THUMB, Cs
 
 OUT = Path(__file__).with_name("producer_10000005.json")

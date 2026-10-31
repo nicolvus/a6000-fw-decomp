@@ -143,7 +143,7 @@ Se abrieron tres sesiones únicas con `session_daemon.py`: `av-cam` A7S (listo a
   (`resolve_containing_procedure`) superó los **1700 s** del cliente sin responder. Es la limitación ya registrada
   (consultas de 300 s en S178/S380) y confirma que no hace falta intervención humana: el trabajo sobre `libObj.so` se
   hizo con Capstone/LLVM sobre los bytes originales, con el índice de inicios por `.ARM.exidx`, PLT por relocaciones y
-  resolución de RTTI/vtables (`analysis/s402_static_closure/fw.py`). Esa ruta reproducible sustituye a REA aquí; una
+  resolución de RTTI/vtables (`analysis/s402_static_closure/s402_fw.py`). Esa ruta reproducible sustituye a REA aquí; una
   consulta vacía o sin respuesta de REA no prueba ausencia.
 - Sesiones cerradas al terminar; el log compartido de REA no se versiona.
 

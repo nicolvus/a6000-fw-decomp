@@ -1,8 +1,8 @@
 # E24-03 — Auditoría de respaldos y del FDAT de recuperación 3.23 (27-10-2026)
 
 Sesión 100 % offline: no se conectó la cámara, no se entró al modo actualizador, no se emitió ningún comando USB ni se instaló nada. Solo
-se leyeron archivos locales. Parte de [E24-01](e24-01-arranque-recuperacion.md) (`2f29630f`) y [E24-02](e24-02-protocolo-actualizacion-darwin.md)
-(`1ecfc0d2`). Estado de la cámara **supuesto** (no re-verificado hoy): fw 3.22 con `darwin_core` tipo 0 ([T024](registro-pruebas-camara.md)); no consta
+se leyeron archivos locales. Parte de [E24-01](e24-01-arranque-recuperacion.md) (`84511a69`) y [E24-02](e24-02-protocolo-actualizacion-darwin.md)
+(`97db3017`). Estado de la cámara **supuesto** (no re-verificado hoy): fw 3.22 con `darwin_core` tipo 0 ([T024](registro-pruebas-camara.md)); no consta
 ningún flasheo posterior (T025–T039 solo escribieron RAM).
 
 ## Respuestas

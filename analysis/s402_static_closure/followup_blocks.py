@@ -9,7 +9,7 @@ import struct
 from collections import defaultdict
 from pathlib import Path
 
-import fw
+import s402_fw as fw
 import queue_commands
 import rawfw
 from capstone import CS_ARCH_ARM, CS_MODE_THUMB, Cs

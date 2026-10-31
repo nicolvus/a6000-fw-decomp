@@ -2,7 +2,7 @@
 
 **Fecha:** 23-10-2026. **VEREDICTO sobre la entrega de OpenCode: CAMBIOS.**
 
-Este informe corrige [la validación anterior, commit 9e1a4055](https://github.com/nicolvus/a6000-fw-decomp/commit/9e1a4055).
+Este informe corrige [la validación anterior, commit 1000b0cb](https://github.com/nicolvus/a6000-fw-decomp/commit/1000b0cb).
 Sus 263 pruebas pasan, pero no acreditan todas sus conclusiones. Las nuevas regresiones
 reprodujeron siete fallos antes de corregir datos y estados.
 

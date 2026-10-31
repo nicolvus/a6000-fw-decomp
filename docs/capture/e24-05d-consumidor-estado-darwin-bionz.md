@@ -1,6 +1,6 @@
 # E24-05d — Consumidor BIONZ del estado de Darwin y cierre de captura (27-10-2026)
 
-Sesión 100 % offline: sin cámara, sin USB, sin escrituras de RAM/NAND/NVRAM, sin FDAT ni flasheo, sin tocar el watchdog. Continúa [E24-05](e24-05-upd-y-rearme.md) y [E24-05a](e24-05a-captura-fin-bionz-darwin.md) (base `763d795a`). **No autoriza parche ni flasheo; E24-04 no cambia.**
+Sesión 100 % offline: sin cámara, sin USB, sin escrituras de RAM/NAND/NVRAM, sin FDAT ni flasheo, sin tocar el watchdog. Continúa [E24-05](e24-05-upd-y-rearme.md) y [E24-05a](e24-05a-captura-fin-bionz-darwin.md) (base `58d0b4f7`). **No autoriza parche ni flasheo; E24-04 no cambia.**
 
 Binarios: `av-cam.bin` (SHA-256 `b60c845c…56bb9`, base `0x43541000`) y `darwin_core.bin` 3.21 (SHA-256 `5f2be06d…6bf4`, base `0x4200`). Método: Capstone propio sobre ambos (decisivo, por bytes) + REA/Ghidra sobre `av-cam.bin` (sesión única, cerrada) para llamadores y pseudocódigo. REA y Ghidra comparten motor: sus coincidencias no cuentan como validación independiente de lo que Capstone ya verifica. Reproducible: `python scripts/e24_05d/transport.py` (→ `analysis/e24-05d/transport.json`) y `pytest tests/test_e24_05d_consumidor.py` (10 pruebas).
 

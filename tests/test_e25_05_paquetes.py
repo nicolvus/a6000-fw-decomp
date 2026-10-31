@@ -108,7 +108,7 @@ def test_manifests_describe_the_pair():
         doc = json.loads((MANI / name).read_text())
         assert doc["schema"] == "a6000.e25_05.manifest.v1"
         assert (doc["role"], doc["version"], doc["install_order"]) == (role, version, order)
-        assert doc["base_commit"] == "f4bb7f50"
+        assert doc["base_commit"] == "81fab68e"
         assert doc["outputs"]["header"]["model"] == "0x41030035"
         assert doc["outputs"]["header"]["region"] == 0
         assert doc["outputs"]["header"]["version"] == version

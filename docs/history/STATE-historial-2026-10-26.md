@@ -1,4 +1,4 @@
-> **Archivo histórico (solo lectura).** Versión íntegra de `docs/STATE.md` anterior a la reorganización documental del 26-10-2026 (Git: `git show b782ebe2:docs/STATE.md`). Los enlaces relativos se ajustaron a esta ubicación; el texto no se modificó. Vigente: [docs/STATE.md](../STATE.md).
+> **Archivo histórico (solo lectura).** Versión íntegra de `docs/STATE.md` anterior a la reorganización documental del 26-10-2026 (Git: `git show 93745c92:docs/STATE.md`). Los enlaces relativos se ajustaron a esta ubicación; el texto no se modificó. Vigente: [docs/STATE.md](../STATE.md).
 
 # Estado vigente — Sony A6000 reverse engineering
 

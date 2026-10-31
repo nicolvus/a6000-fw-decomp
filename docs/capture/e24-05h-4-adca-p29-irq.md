@@ -1,6 +1,6 @@
 # E24-05h-4 — Auditoría final de ADC-A, grupo activo de P29 y entrega del evento de ADC-B (27-10-2026)
 
-Sesión 100 % estática: sin cámara, sin USB, sin escrituras de RAM/NAND/NVRAM, sin FDAT ni flasheo, sin tocar el watchdog ni protecciones, sin parche. Base `aa570baf`. Cierra los residuos de [E24-05h-3](e24-05h-3-adcb-p29.md) (ADC-A, grupo de P29, IRQ del canal 0). No abre E24-05h-5 ni E24-06.
+Sesión 100 % estática: sin cámara, sin USB, sin escrituras de RAM/NAND/NVRAM, sin FDAT ni flasheo, sin tocar el watchdog ni protecciones, sin parche. Base `ba50d501`. Cierra los residuos de [E24-05h-3](e24-05h-3-adcb-p29.md) (ADC-A, grupo de P29, IRQ del canal 0). No abre E24-05h-5 ni E24-06.
 
 Reproducible: `python scripts/e24_05h4/adca_p29_irq.py` → `analysis/e24-05h-4/adca_p29_irq.json`; `pytest tests/test_e24_05h4_adca_p29_irq.py` (15 pruebas sobre bytes reales). `scripts/e24_05h4/flow.py` añade un recorrido de flujo con poda por tipo de bobina (`bl 0x20c74` + `cbz/cmp r0` fija r0) y ciclos por componentes fuertemente conexas, sobre el barrido de E24-05h-3.
 

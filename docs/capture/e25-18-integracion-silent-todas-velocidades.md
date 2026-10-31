@@ -1,6 +1,6 @@
 # E25-18 — Diseño offline del obturador electrónico de 1/8000 s a 30 s (y BULB)
 
-**Fecha:** 28-10-2026 · **Binario:** A6000 fw 3.21 `av-cam.bin` (SHA-256 `b60c845c…56bb9`, base `0x43541000`) · **Commit base:** `5a4906c1`.
+**Fecha:** 28-10-2026 · **Binario:** A6000 fw 3.21 `av-cam.bin` (SHA-256 `b60c845c…56bb9`, base `0x43541000`) · **Commit base:** `d7a2d032`.
 **Alcance:** bytes (Capstone), emulación de código real (Unicorn) y diseño. **No se conectó la cámara, no se escribió RAM/NVRAM/firmware, no se generó instalador.**
 Etiquetas: **V** = bytes o emulación del código real · **I** = inferencia · **N** = no verificado. La emulación prueba aritmética y flujo del firmware, **no** el comportamiento del IMX210.
 

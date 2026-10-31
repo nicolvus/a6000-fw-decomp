@@ -1,6 +1,6 @@
 # E26-R12 — Auditoría estática del sistema de arranque (BootROM, Loader2, Darwin)
 
-Fecha: 30-10-2026 · Parte de `aa37912a` (R11) · Solo análisis estático y emulación offline. Sin cámara, sin UART/USB, sin payloads.
+Fecha: 30-10-2026 · Parte de `597eb937` (R11) · Solo análisis estático y emulación offline. Sin cámara, sin UART/USB, sin payloads.
 Fuentes: `analysis/camera-dumps/20261020-174955/bootrom.bin` (24 576 B), `analysis/camera-dumps/updater-20261020-175427/bootloader.bin` (Loader2; dirección→offset: `addr − 0xc01f0000 + 0x22800`), `firmware/extracted/fw321/.../0640_darwin/darwin_core.bin`.
 Scripts: `analysis/e26-recovery/r12-loader2-led-codes.py`, `r12-selector-emulation.py` · Tests: `tests/test_e26_r12_led_codes.py`.
 

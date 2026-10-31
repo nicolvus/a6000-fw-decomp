@@ -27,7 +27,7 @@ Revisión estructural de todos los Python, JSON y Markdown versionados; pruebas 
 | RECHAZO | Enlaces de análisis correctos | Reparadas rutas relativas de `docs/capture/` cuando el destino real existe. No se inventan documentos ausentes ni se modifican informes protegidos S1–S48. |
 | DUDOSO | Semántica reciente S619/S622/S625 y logger dual | SENSER no demuestra sensor de imagen/audio; AVR no se identifica con AV rendezvous por compartir sigla; ADR es un campo de traza. Corregidas interpretaciones y marcados los límites. Las afirmaciones históricas de logger dual y equivalencia de código requieren xrefs/instrucciones. |
 | ACEPTO | Originales y Ghidra preservados | Pasan los manifiestos `firmware.final.sha256`, `silent-liro.final.sha256` y `ghidra-dir.final.sha256`. |
-| ACEPTO | Publicación remota de la base | La ejecución `39975391488` de «Publicar estado» terminó correctamente para `f4dc7062`. Ese flujo publica Pages; no ejecuta la suite de Python. |
+| ACEPTO | Publicación remota de la base | La ejecución `39975391488` de «Publicar estado» terminó correctamente para `f616852a`. Ese flujo publica Pages; no ejecuta la suite de Python. |
 
 ## Validación y límites
 

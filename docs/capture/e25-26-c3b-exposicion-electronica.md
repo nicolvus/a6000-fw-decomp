@@ -4,7 +4,7 @@
 Sin cámara, sin RAM/NVRAM/firmware, sin paquete instalable. Emulación Unicorn del
 `StartExposure` real (`0x438c828c–0x438c83e8`) con la imagen combinada.
 
-Base: `e71df5b3` + reubicación de cuevas de [E25-25](e25-25-validacion-carga-caves.md).
+Base: `e65da7ba` + reubicación de cuevas de [E25-25](e25-25-validacion-carga-caves.md).
 
 ---
 

@@ -1,6 +1,6 @@
 # E26-R14 — RAMCFG, tabla BOS y geometría FAT de Loader3
 
-Fecha: 30-10-2026. Continúa [R13](e26-r13-led-error-provenance.md) (`37976917`). **Solo análisis estático y lectura de archivos existentes.** No se interactuó con la cámara, no se escribió ninguna imagen y no se generó ningún artefacto instalable. Los volcados originales no se tocaron.
+Fecha: 30-10-2026. Continúa [R13](e26-r13-led-error-provenance.md) (`79a48bdb`). **Solo análisis estático y lectura de archivos existentes.** No se interactuó con la cámara, no se escribió ninguna imagen y no se generó ningún artefacto instalable. Los volcados originales no se tocaron.
 
 Etiquetas: **BINARIO** = desensamblado de `bootloader.bin` (Loader3) · **DATOS** = decodificado de volcados/paquetes reales · **SCRIPT** = lo dice un script del actualizador (no prueba que se ejecutara así) · **HIPÓTESIS** = sobre la cámara real, sin prueba física.
 

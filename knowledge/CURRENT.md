@@ -79,7 +79,7 @@ Trazabilidad completa: [CORRECTIONS](../docs/CORRECTIONS.md) y [STATE § Conclus
 | E1 | NO_VERIFICADO | Origen del local 4/2 a `ModelScalarPb`/`ModelPbCap` |
 | E25-01 / E25-27 / E25-20 | ABIERTO / BLOQUEADO | Validación física del obturador (3.23 y 3.25) y C3-B en RAM; dependen de recuperar la cámara |
 | E25-19f, E25-EFCS-1…4 | ABIERTO | Escritores de `cap+0x74f`, `+0x504`, `+0x740`, `+0x11b0`; funciones Thumb sin sembrar |
-| R1 / R3 / R6 | PARCIAL / BLOQUEADO | Copia externa del respaldo; historial público con `libmprctrl.so` y con el número de serie (reescritura solo con orden expresa) |
+| R1 / R7 | PARCIAL / BLOQUEADO | Copia externa del respaldo; GitHub conserva commits antiguos en `refs/pull/*` y en un fork ajeno (R3/R6 cerrados: historial reescrito el 31-10-2026) |
 
 ## Bloqueos y límites de evidencia
 

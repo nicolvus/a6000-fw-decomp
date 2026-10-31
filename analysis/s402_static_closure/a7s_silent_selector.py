@@ -53,7 +53,7 @@ def pic(image: bytes, load: int, add: int) -> int:
 
 
 def libobj_checks() -> dict:
-    import fw
+    import s402_fw as fw
 
     lib = fw.Lib("A7S")
     decoder = Cs(CS_ARCH_ARM, CS_MODE_THUMB)

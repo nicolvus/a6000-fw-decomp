@@ -1,6 +1,6 @@
 # E24-05h — Dependencias finales de la captura sin rearme: P29, P4E, BIONZ, modos Darwin y FAIL (27-10-2026)
 
-Sesión 100 % estática: sin cámara, sin USB, sin escrituras de RAM/NAND/NVRAM, sin FDAT ni flasheo, sin tocar el watchdog ni protecciones físicas, sin parche instalable. Base `f7136385`. Continúa [E24-05g](e24-05g-ajustes-modo-ocupacion.md). **No autoriza parche ni flasheo; E24-04 no cambia. No se inicia E24-06.**
+Sesión 100 % estática: sin cámara, sin USB, sin escrituras de RAM/NAND/NVRAM, sin FDAT ni flasheo, sin tocar el watchdog ni protecciones físicas, sin parche instalable. Base `470f5180`. Continúa [E24-05g](e24-05g-ajustes-modo-ocupacion.md). **No autoriza parche ni flasheo; E24-04 no cambia. No se inicia E24-06.**
 
 Binarios: `darwin_core.bin` 3.21 (SHA-256 `5f2be06d…0bf4`, base `0x4200`) y `av-cam.bin` (BIONZ, base `0x43541000`). Método: Capstone propio (decisivo) más una ejecución simbólica por ramas de las primitivas de GPIO (`Sym` en el script; el valor de `0x20c74` se modela como `T`, podado a 0 o libre). No se abrió sesión REA: el desensamblado propio resolvió todo lo decisivo. Reproducible: `python scripts/e24_05h/dependencias_finales.py` (→ `analysis/e24-05h/dependencias.json`, 2,4 s) y `pytest tests/test_e24_05h_dependencias.py` (19 pruebas nuevas; las de E24-05f/g no se duplican y siguen pasando: 50 en total).
 

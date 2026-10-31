@@ -37,7 +37,7 @@ OUT_REC = FDAT_ROOT / "recuperacion-324"
 MANI_DIR = ROOT / "analysis/e25-05"
 FWTOOL = ROOT / "references/fwtool/fwtool.py"
 
-BASE_COMMIT = "f4bb7f50"
+BASE_COMMIT = "81fab68e"
 
 # Entradas fijadas (no se reescriben en esta sesión) -------------------------------------------
 OFFICIAL_TAR_SHA = "970246492293e9175ef67b1ad587d5289ae886d47dbd10e77637d9bee458d5a8"

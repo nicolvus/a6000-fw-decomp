@@ -4,7 +4,7 @@
 bytes, emulación y pruebas offline. **No se conectó la cámara, no se escribió RAM/NVRAM ni
 firmware, no se generó un paquete instalable.**
 
-Base: `e71df5b3`. Firmware A6000 3.21: `av-cam.bin` SHA-256 `b60c845c…e56bb9`,
+Base: `e65da7ba`. Firmware A6000 3.21: `av-cam.bin` SHA-256 `b60c845c…e56bb9`,
 `darwin_core.bin` SHA-256 `5f2be06d…0bf4`. Comparación: `av-cam.bin` de la A7S 3.20
 (`b857d338…`, 11 455 416 B).
 

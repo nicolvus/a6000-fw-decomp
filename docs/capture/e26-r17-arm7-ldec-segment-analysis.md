@@ -1,6 +1,6 @@
 # E26-R17 — Traza del BossFirm ARM7, semántica LDEC y segmentos TPZL
 
-Fecha: 30-10-2026. Continúa [R16](e26-r16-ldec-hardware-audit.md) (`b12d4e9f`, presente en `main`). **Solo análisis estático offline.** Sin cámara, sin USB/UART, sin NAND, sin firmware instalable. `camera-dumps` y `exp2-session-log.jsonl` no se tocaron.
+Fecha: 30-10-2026. Continúa [R16](e26-r16-ldec-hardware-audit.md) (`23de4a54`, presente en `main`). **Solo análisis estático offline.** Sin cámara, sin USB/UART, sin NAND, sin firmware instalable. `camera-dumps` y `exp2-session-log.jsonl` no se tocaron.
 
 Etiquetas: **BINARIO** = desensamblado de BossFirm (`bootloader.bin[0x18800:+0x3800]`, ARM de 32 bits, base 0) · **SCRIPT** = salida de [`r17_arm7_full.py`](../../analysis/e26-recovery/r17_arm7_full.py) (`r17-arm7-full.json`) · **INFERENCIA** · **NO VERIFICADO**. Pruebas: [`tests/test_e26_r17_arm7.py`](../../tests/test_e26_r17_arm7.py) (5; comprueban instrucciones, no el silicio).
 

@@ -1,7 +1,7 @@
 # E25-24 — Selector EFCS / electrónico: auditoría y bloqueos
 
-28-10-2026. Investigación offline, sin acceso a la cámara. Base `c8b1b166`; el
-commit solicitado `2eeaea3a` está contenido en esta base. Este informe es un
+28-10-2026. Investigación offline, sin acceso a la cámara. Base `1edcf13a`; el
+commit solicitado `c6faf44d` está contenido en esta base. Este informe es un
 avance parcial de E25-13, no una implementación ni una validación física.
 
 ## Cadena y alcance

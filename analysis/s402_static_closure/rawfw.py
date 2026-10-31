@@ -3,7 +3,7 @@
 import struct
 from pathlib import Path
 
-import fw
+import s402_fw as fw
 
 ROOT = Path(__file__).resolve().parents[2]
 BASE = 0x43541000

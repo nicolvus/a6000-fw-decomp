@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-import fw
+import s402_fw as fw
 
 OUT = Path(__file__).with_name("recordstill_equivalence.json")
 ROOTS = {"RecordStill": (0x908AFC, 0x847E1C), "RecordImage_Execute": (0x90B248, 0x84A568)}

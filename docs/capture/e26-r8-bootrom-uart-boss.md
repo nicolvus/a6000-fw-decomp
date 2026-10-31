@@ -1,7 +1,7 @@
 # E26-R8 — Sony A6000 BootROM / UART / BOSS / NAND Recovery Investigation
 
 **Fecha:** 29-10-2026
-**Repositorio:** `nicolvus/a6000-fw-decomp`, commit base `9dbd232e` en `origin/main`
+**Repositorio:** `nicolvus/a6000-fw-decomp`, commit base `a8a182c9` en `origin/main`
 **Alcance:** Exclusivamente offline. REA, desensamblado ARM/Thumb, binarios de firmware, análisis estático de protocolos.
 **Binario BootROM:** `analysis/camera-dumps/updater-20261020-175427/bootrom.bin`, SHA-256 `81a17e039a2debfe589b127e12384ed4d7c2ba0d0c819238d0b021b466246026`, 24 576 bytes, base `0xffff0000`, modo Thumb (salvo vectores de excepción en ARM al inicio).
 **Script analizador:** `analysis/e26-recovery/r8-uart-parser.py` (parser offline, autotest incluido).

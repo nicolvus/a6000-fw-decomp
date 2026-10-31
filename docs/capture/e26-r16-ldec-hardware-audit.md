@@ -1,6 +1,6 @@
 # E26-R16 — Auditoría de la ruta LDEC/BOSS/ARM7 del TPZL personalizado 3.25
 
-Fecha: 30-10-2026. Continúa [R15](e26-r15-tpzl-custom-fw325.md) (`8388047a`, presente en `main`). **Solo análisis estático y lectura de archivos existentes.** Sin cámara, sin USB/UART, sin imágenes instaladoras, sin escribir NAND. `camera-dumps` y `exp2-session-log.jsonl` no se tocaron.
+Fecha: 30-10-2026. Continúa [R15](e26-r15-tpzl-custom-fw325.md) (`e5368824`, presente en `main`). **Solo análisis estático y lectura de archivos existentes.** Sin cámara, sin USB/UART, sin imágenes instaladoras, sin escribir NAND. `camera-dumps` y `exp2-session-log.jsonl` no se tocaron.
 
 Etiquetas: **BINARIO** = desensamblado de `bootloader.bin` (Loader3 `0xc01f0000`, prefijo de 43 páginas; BossFirm = `bootloader.bin[0x18800:+0x3800]`, SHA `b70a89a0…`) · **DATOS** = leído de imágenes · **SCRIPT** = salida de un script de este informe · **INFERENCIA** · **NO VERIFICADO**.
 
@@ -15,7 +15,7 @@ Código: [`r16_dis.py`](../../analysis/e26-recovery/r16_dis.py), [`r16_xref.py`]
 5. **BINARIO. −302 es un colector:** `c01f4690` convierte *cualquier* error no nulo de `c01f2c2a` en −302. No se prueba un fallo LDEC real en la cámara.
 6. **BINARIO. `c01f7752` resuelto:** no carga archivos; solo conmuta el bit 2 de un byte de configuración. Sus errores son −205/−206/3, nunca −302.
 7. **DATOS. 89/111 conciliado:** 89 B BIONZ (28 selector + 61 C3-B, todos dentro de los parches; 92 B escritos, 3 sin cambio de valor) **+ 22 B Darwin** = 111. E25-27 §ejecutivo rotula 111 como «BIONZ»: era el total del manifiesto.
-8. **Tests de conocimiento:** los 2 fallos se reproducen en una línea base limpia desde `9dbd232e` (R7); R15 no los introdujo (§12).
+8. **Tests de conocimiento:** los 2 fallos se reproducen en una línea base limpia desde `a8a182c9` (R7); R15 no los introdujo (§12).
 9. **Decisión: C** — diferencia real entre artefactos (estructura de segmentos del TPZL 3.25) no explicada por R15; **no A**: no hay rechazo demostrado.
 
 ## 2. Estado heredado de R15
@@ -145,8 +145,8 @@ El manifiesto E25-27 (`diff_count`): selector 28, C3-B 61, Darwin 22, total **11
 ## 12. Auditoría de `tests/knowledge`
 
 - Nombres: `test_every_open_question_is_triaged` y `test_current_index_matches_full_citations_contexts_and_relation_types` (`tests/knowledge/test_open_questions_triage.py`).
-- Causa: `analysis/s400_open_questions_triage/triage.json` (último cambio `91d7beec`, R7b) no contiene las filas de `docs/PENDIENTES.md`/`OPEN-QUESTIONS.md` añadidas después (CORRECTS/«pendiente» de R8–R15).
-- Línea base reproducible: *worktree* limpios en cada commit de `91d7beec..8388047a`: el fallo aparece en **`9dbd232e` (R7 completo)** y se mantiene hasta `8388047a`. R15 no lo introdujo; la deriva se acumula desde R7.
+- Causa: `analysis/s400_open_questions_triage/triage.json` (último cambio `a432e3ee`, R7b) no contiene las filas de `docs/PENDIENTES.md`/`OPEN-QUESTIONS.md` añadidas después (CORRECTS/«pendiente» de R8–R15).
+- Línea base reproducible: *worktree* limpios en cada commit de `a432e3ee..e5368824`: el fallo aparece en **`a8a182c9` (R7 completo)** y se mantiene hasta `e5368824`. R15 no lo introdujo; la deriva se acumula desde R7.
 - Entorno: con el Python del sistema falla la recolección (`ModuleNotFoundError: mcp`); con `.venv/bin/python`, **77 pasan, 2 fallan**. En un *worktree* limpio fallan además 2 por datos no versionados (`test_s32_rectification_uses_original_firmware_bytes` necesita `firmware/…/av-cam.bin`; `test_call_tool_with_invalid_input_does_not_crash_server` necesita `.knowledge-cache` sqlite).
 - Corrección aplicada: `extend_triage.py` añadió las filas nuevas a `triage.json` (como `VIGENTE`, pendientes de revisión manual); los tests no se modificaron; `tests/knowledge`: 79 pasan.
 

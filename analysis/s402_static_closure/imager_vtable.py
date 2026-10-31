@@ -9,7 +9,7 @@ import re
 import struct
 from pathlib import Path
 
-import fw
+import s402_fw as fw
 import rawfw
 
 OUT = Path(__file__).with_name("imager_vtable_correspondence.json")
