@@ -3262,3 +3262,10 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 - **Hallazgos:** 674/674 funciones localizadas y con rol; vectores de excepción (toda excepción -> LED directo, sin boot_dispatch); `log`/consola con la misma forma que Loader2; capas BOS/CFG/FAT/TPZL de R13/R15/R16 ahora con dirección fija en el mapa; candidato `LD3:<< KEY E… >>` para E26-R20-KEYTABLE, no explorado.
 - **Límite:** INFO 6 (21 páginas) no adquirida; 256 funciones de soporte solo inventariadas.
 - **Entregables:** `docs/capture/e26-r25-loader3-completo.md`, `analysis/e26-recovery/r25_loader3_map.py`, `r25-loader3-functions.json`, `r25-boot-sequence.json`, `tests/test_e26_r25_loader3_map.py`.
+
+## E26-R26 — updater\mode (gate verificado) y descarte de la clave PwrIC (30-10-2026)
+
+- **Pedido:** continuar con los 4 pendientes estáticos restantes.
+- **Hallazgos:** `boot_dispatch` indexa un valor 0-14 persistido en Backup; `\updater\mode` (dispositivo 2 = nflasha2) es condición necesaria verificada por bytes (su ausencia fuerza modo 3, cadena normal); la cadena `LD3:<<KEY E/L/D>>` es de autenticación de batería, no de arranque — descartada para E26-R20-KEYTABLE.
+- **Cierre:** E26-R7-C-UPDATER-MODE CERRADO PARCIAL (mecanismo de lectura resuelto, sin productor pre-Linux); nueva fila E26-R20-KEYTABLE-PWRIC DESCARTADA.
+- **Entregables:** `docs/capture/e26-r26-updater-mode-y-clave-pwric.md`, `tests/test_e26_r26_updater_mode.py`.
