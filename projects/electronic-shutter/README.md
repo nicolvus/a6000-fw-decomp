@@ -3,15 +3,17 @@
 Forma parte de Sony A6000 Hardware & Firmware Reverse Engineering Project.
 Mantiene el objetivo original de determinar fotografía sin cierre mecánico.
 
-Estado: categoría E, evidencia insuficiente. No hay parche ni prueba sobre
-hardware. Se conservan todas las evidencias anteriores en sus rutas originales.
+Estado (31-10-2026): el parche de Darwin **3.23** (tipo 0 + B1a) hizo disparar la cámara en silencio (T040, confirmado por el
+usuario; exposición por filas medida en [E25-10](../../docs/capture/e25-10-exposicion-por-fila.md)). El firmware integrado **3.25**
+(selector EFCS/Electronic + C3-B) dejó la cámara sin arrancar y la prioridad es su recuperación ([E26](../../docs/capture/e26-recovery.md)).
+Estado global en el [README](../../README.md). Se conservan todas las evidencias anteriores en sus rutas originales.
 
-## Estado del obturador electrónico completo (26-10-2026)
+## Estado estático del obturador electrónico completo (26-10-2026)
 
 Decisión [S51](../../docs/capture/s51-decision.md): **A=NO** (ruta no demostrada), **B=NO** (sin base para un parche), **C=NO** (sin prueba de
 imposibilidad). No hay captura silenciosa completa validada. Lo demostrado y lo pendiente: [STATE](../../docs/STATE.md); tareas:
 [PENDIENTES](../../docs/PENDIENTES.md); informes por tema (obturador, sensor, comparaciones): [INDEX](../../docs/INDEX.md);
-pruebas físicas propuestas y diferidas: [P1–P8](../../docs/capture/physical-test-plan.md), [P13–P21](../../docs/capture/physical-test-plan-2.md).
+pruebas físicas propuestas y diferidas: [P1–P8](../../docs/capture/physical-test-plan.md), [P13–P21](../../docs/capture/physical-test-plan-2.md), [P22–P24](../../docs/capture/physical-test-review-2026-10-26.md).
 
 - [Viabilidad provisional](../../docs/feasibility-report.md).
 - [SilentShutter hasta el receptor LIRO](../../docs/capture/silent-shutter-status.md).

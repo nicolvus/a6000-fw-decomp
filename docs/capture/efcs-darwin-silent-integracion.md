@@ -522,9 +522,9 @@ Esto da:
 | `analysis/efcs-reia/evidence/0x43841070_pseudo.txt` | Pseudocódigo constructor EFCS (18,377 chars) |
 | `analysis/efcs-reia/evidence/0x43842158_pseudo.txt` | Pseudocódigo selección de clase (4,436 chars) |
 | `analysis/efcs-reia/evidence/0x4383fa40_pseudo.txt` | Pseudocódigo productor nativo r5 (1,521 chars) |
-| `analysis/efcs-reia/evidence/0x4383fd6c_pseudo.txt` | Pseudocódigo registro→exposición |
-| `analysis/efcs-reia/evidence/0x437f8a50_pseudo.txt` | Pseudocódigo construcción de parámetros |
-| `analysis/efcs-reia/evidence/0x438c828c_pseudo.txt` | Pseudocódigo programación de exposición |
+| `analysis/efcs-reia/evidence/0x4383fd6c_xrefs.json` | Referencias cruzadas de registro→exposición (el pseudocódigo no se versionó) |
+| `analysis/efcs-reia/evidence/0x437f8a50_xrefs.json` | Referencias cruzadas de construcción de parámetros (el pseudocódigo no se versionó) |
+| `analysis/efcs-reia/evidence/0x438c828c_xrefs.json` | Referencias cruzadas de programación de exposición (el pseudocódigo no se versionó) |
 | `analysis/efcs-reia/evidence/0x43901a8c_pseudo.txt` | Pseudocódigo mensaje a Darwin |
 | `analysis/efcs-reia/evidence/0x436d6118_pseudo.txt` | Getter de objeto imager |
 | `analysis/efcs-reia/evidence/0x43a12c64_pseudo.txt` | Selector de modo de captura |

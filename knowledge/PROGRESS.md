@@ -3110,7 +3110,7 @@ Tras reinicio y nueva escena: dos RAW; `cap` (shd=1/svd=0) y sombras compatibles
 
 ## E25-23 — Interrupción de captura larga (2026-10-28)
 
-5 s y petición 15 s (selección 20 s) produjeron archivos; petición 30 s mostró 65535 y quedó en `shooting`, con bloqueo comunicado por el usuario. Tras reinicio, servicios y controles puntuales respondieron. [Informe y límites](../docs/capture/e25-23-exposiciones-largas-incidente.md). RAW recuperados con MD5 coincidente y EXIF 5/20 s; próxima acción: investigar offline selección de velocidad y causa del valor discrepante sin volver a disparar.
+5 s y petición 15 s (selección 20 s) produjeron archivos; petición 30 s mostró 65535 y quedó en `shooting`, con bloqueo comunicado por el usuario. Tras reinicio, servicios y controles puntuales respondieron. Informe no redactado (D13); [evidencia](../analysis/camera-dumps/20261028-201843-E25-23/). RAW recuperados con MD5 coincidente y EXIF 5/20 s; próxima acción: investigar offline selección de velocidad y causa del valor discrepante sin volver a disparar.
 
 
 ## G1 — Carril GUI: arquitectura de la interfaz (2026-10-28)
@@ -3338,3 +3338,14 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 - **Corrección (propia, dentro de esta sesión, no de un informe publicado):** la hipótesis inicial de que el chequeo final exigía específicamente un paquete de salto era incorrecta; es un OR que acepta cualquier paquete tipo 0 o tipo `0xFFFF` visto en la secuencia, no necesariamente el que cierra el bucle.
 - **Límite:** `main` llama a la misma función para la «clave» de R32/R33; no se ha trazado si el valor que usa puede venir de varios paquetes encadenados. No se emuló una secuencia real de varios paquetes (solo control de flujo por bytes).
 - **Entregables:** `docs/capture/e26-r35-serial-receiver-multi-paquete.md`, `tests/test_e26_r35_serial_receiver_multipaquete.py`.
+
+## Auditoría integral repo/GitHub (31-10-2026)
+
+Local = `origin/main` (`89c4311c`) al empezar. **CI «Pruebas» en rojo desde el 30-10 (26 ejecuciones):** Pillow ausente en el flujo y R20/R29
+leyendo `bootrom.bin` y el manual de servicio (no versionados); arreglado (C9). **Fugas:** número de serie de la cámara en 16 `info*.txt`
+redactado (SHA256SUMS recalculados; queda en el historial, R6); la clave `localtest.me.pem` es el certificado público de PMCA; sin tokens.
+Volcados nuevos: se versionan JPEG reducidos, montajes y JSON de T042–T044/E25-22/E25-23; RAW, parciales, audio y la corrida previa de T043
+quedan ignorados. **Coherencia:** README y CURRENT decían «funcional» tras el bloqueo del 3.25; STATE afirmaba «no se ha flasheado ninguna
+cámara»; PENDIENTES tenía filas EFCS con IDs E26–E30 dentro del registro de cambios (renumeradas E25-EFCS…) y E25-19f duplicado; 61 enlaces
+rotos corregidos (0 restantes salvo el ejemplo `old.md`). Tablero: planes P1–P24 (antes P1–P21) y recuento de informes de fase E.
+README, CURRENT (≤150 líneas, tabla E26) y cabecera de STATE reescritos; versiones previas en `docs/history/` y `knowledge/history/`.

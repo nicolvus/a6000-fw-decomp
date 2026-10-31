@@ -159,7 +159,7 @@ Esto indica que Darwin gestiona el USB mientras la cámara está apagada, pero n
 
 ### 4.5 Modos USB de la A6000
 
-Según `docs/research/docs/01-overview.md` del repositorio:
+Según `references/research/docs/01-overview.md` del repositorio:
 
 | Modo | VID:PID | Protocolo | Estado de cámara |
 |---|---|---|---|
@@ -352,7 +352,7 @@ No se permite: conectar 5 V directamente, escribir NAND, flashear firmware, modi
 | E11 | `lsusb -v -d 054c:0994` (descriptor físico observado) | Físico | VERIFICADO (propietario) | E26-R10 §3.2 |
 | E12 | Descriptor HID físico (`report_descriptor`) | Físico | VERIFICADO (propietario) | E26-R10 §3.3 |
 | E13 | `CMD_SWITCH_MODE = 0x30` (PMCA) | Documental | VERIFICADO (pero interfaz distinta) | `references/pmca/pmca/usb/sony.py:425` |
-| E14 | Modos USB: `07c4` normal, `03e2` updater, `0994` charging | Documental | VERIFICADO | `docs/research/docs/01-overview.md` |
+| E14 | Modos USB: `07c4` normal, `03e2` updater, `0994` charging | Documental | VERIFICADO | `references/research/docs/01-overview.md` |
 
 ### Referencias
 

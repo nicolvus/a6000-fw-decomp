@@ -14,6 +14,8 @@ DETAIL = ROOT / "analysis" / "s178_census" / "census_detalle.json"
 PROGRESS = ROOT / "analysis" / "s178_census" / "census.md"
 REGISTRY = ROOT / "docs" / "capture" / "registro-pruebas-camara.md"
 REPO = "https://github.com/nicolvus/a6000-fw-decomp/blob/main/"
+# P1–P24: inventario de physical-test-review-2026-10-26.md (P22–P24 añadidos ese día).
+PLANS = 24
 SESSION = re.compile(r"(?:^|/)s(\d{1,3})(?:[-_/]|\.md$)", re.IGNORECASE)
 HEADING = re.compile(r"^#\s+(.+)$", re.MULTILINE)
 
@@ -78,7 +80,7 @@ def groups(data: dict) -> list[tuple[str, str, list[tuple[str, str]]]]:
     cov = data["module_coverage"]
     return [
         (f"Cobertura documental de etiquetas*: {cov['percent']}% ({cov['covered']}/{cov['total']})", "modules", modules),
-        (f"Sesiones documentadas: {len(done)}/{data['latest_number']}", "sessions", sessions),
+        (f"Sesiones S documentadas: {len(done)}/{data['latest_number']} (más {data['phase_reports']} informes de fase E)", "sessions", sessions),
         (f"Pruebas físicas: {data['physical_tests']['done']}/{data['physical_tests']['total']}", "tests", tests),
     ]
 
@@ -138,13 +140,13 @@ td:nth-child(n+3):not(:last-child),td:last-child,th:nth-child(n+3){{text-align:r
 .legend span{{display:inline-block;width:12px;height:12px;border-radius:2px;margin:0 4px 0 12px}}
 @media(max-width:600px){{.grid{{grid-template-columns:repeat(31,1fr)}}}}</style></head><body>
 <h1>Progreso</h1>
-<p class="hito"><b>Hito: la A6000 dispara en silencio.</b> Con el firmware modificado 3.23 (Darwin tipo 0 + B1a, 2 bytes) la cámara real hace fotos sin accionar el obturador mecánico y sin error (confirmado por el usuario, 27-10-2026; capturas sin archivar). <a href="{REPO}README.md">README</a> · <a href="{REPO}docs/capture/e25-desactivacion-mecanica.md">informe E25</a>.</p>
+<p class="hito"><b>Hito (27-10-2026): la A6000 disparó en silencio</b> con el firmware modificado 3.23 (Darwin tipo 0 + B1a, 2 bytes), según confirmó el usuario. <b>Estado actual:</b> tras instalar el 3.25 integrado la cámara no arranca (testimonio del usuario); la recuperación se investiga offline (E26). <a href="{REPO}README.md">README</a> · <a href="{REPO}docs/capture/e26-recovery.md">E26</a>.</p>
 <p class="legend"><span class="m-hito"></span>módulo con hito<span class="m-sub"></span>sub-etiqueta cubierta<span class="m-todo"></span>pendiente / sin informe / sin ejecutar<span class="m-rejected"></span>fragmento descartado<span class="s-cancel"></span>cancelada</p>
 <p>{cov['pending']} etiquetas pendientes; {cov['excluded']} fragmentos descartados como módulos. Descartar no aumenta cobertura.</p>
 <p>Cobertura documental de etiquetas: no mide código descompilado ni funciones verificadas.
 <a href="{REPO}docs/capture/repo-audit-2026-10-24.md">Auditoría y pendientes vigentes</a>.
 Pruebas en cámara: {data['physical_tests']['registered']} registros (hasta {data['physical_tests']['last']}, con backup NVRAM previo);
-planes P1–P21 con prueba registrada: {data['physical_tests']['done']}/{data['physical_tests']['total']}.
+planes P1–P24 con prueba registrada: {data['physical_tests']['done']}/{data['physical_tests']['total']}.
 <a href="{data['physical_tests']['source']}">Registro de pruebas</a>.</p>
 <h2>Etiquetas por familia — {cov['percent']}% ({cov['covered']}/{cov['total']})*</h2>
 <table><tr><th>Familia</th><th>Etiquetas</th><th>Cubiertas</th><th>Total</th><th>%</th></tr>{fam_rows}</table>
@@ -167,9 +169,9 @@ Datos crudos: <a href="../status.json">status.json</a>.</p>
 def physical_tests() -> dict:
     """Pruebas en cámara del registro: planes P con alguna prueba y número de registros T."""
     rows = [line.split("|") for line in REGISTRY.read_text(encoding="utf-8").splitlines() if re.match(r"^\| T\d{3}", line)]
-    plans = {int(n) for row in rows for n in re.findall(r"\bP(\d{1,2})\b", row[3]) if 1 <= int(n) <= 21}
+    plans = {int(n) for row in rows for n in re.findall(r"\bP(\d{1,2})\b", row[3]) if 1 <= int(n) <= PLANS}
     return {
-        "done": len(plans), "total": 21, "executed": sorted(plans), "registered": len(rows), "last": rows[-1][1].strip(),
+        "done": len(plans), "total": PLANS, "executed": sorted(plans), "registered": len(rows), "last": rows[-1][1].strip(),
         "source": REPO + "docs/capture/registro-pruebas-camara.md",
     }
 
@@ -233,7 +235,9 @@ def main(out: Path = ROOT) -> None:
             }
         },
         "physical_tests": physical_tests(),
-        "decision": {"label": "No parchear: evidencia insuficiente", "source": REPO + "docs/capture/s51-decision.md"},
+        # Since E21 the work is numbered by phase (E21–E26 and their sub-reports), not by S session.
+        "phase_reports": len(list((ROOT / "docs" / "capture").glob("e[0-9]*.md"))),
+        "decision": {"label": "S51 (estático): A=NO, B=NO, C=NO", "source": REPO + "docs/capture/s51-decision.md"},
     }
     site = out / "site"
     output = site / "status.json"
@@ -250,7 +254,7 @@ def main(out: Path = ROOT) -> None:
     cov, tests = data["module_coverage"], data["physical_tests"]
     for name, label, msg, color in (
         ("modulos", "módulos", f"{cov['percent']}% ({cov['covered']}/{cov['total']})", "yellow"),
-        ("sesiones", "sesiones", f"{len(sessions)}/{data['latest_number']}", "blue"),
+        ("sesiones", "sesiones", f"S {len(sessions)}/{data['latest_number']} · E {data['phase_reports']}", "blue"),
         ("pruebas", "planes con prueba", f"{tests['done']}/{tests['total']}", "green"),
     ):
         badge = {"schemaVersion": 1, "label": label, "message": msg, "color": color}

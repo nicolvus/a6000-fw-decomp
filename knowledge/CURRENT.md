@@ -1,245 +1,103 @@
 # Estado actual — léeme primero
 
-> **E26 R35 (`serial_receiver`, varios paquetes por llamada):** [informe](../docs/capture/e26-r35-serial-receiver-multi-paquete.md). Bucle interno confirmado por bytes: tras el 1.er paquete siempre reintenta; termina cuando el tipo de un paquete posterior coincide con el del primero y `get_flag0()` o `get_flag1()` está a 1. `main` usa la misma función para la «clave» de R32/R33 (límite, no reabre).
+Contexto operativo mínimo para agentes. Última revisión: **31-10-2026** (auditoría integral repo/GitHub, tras E26 R35).
+No es historial ni fuente de verdad de los pendientes: ver [Responsabilidades](#responsabilidades-documentales).
+Versiones íntegras anteriores (nada se borró): [CURRENT-historial-2026-10-31](history/CURRENT-historial-2026-10-31.md)
+(bloques E26 R5–R35 y E25 completos) y [CURRENT-historial-2026-10-26](history/CURRENT-historial-2026-10-26.md) (S59–S627).
 
-> **E26 R34 (`serial_entry`, todas las banderas):** [informe](../docs/capture/e26-r34-serial-entry-flags.md). Emulado: sin bucle de reintento. Corrige R23 §2 (el pseudocódigo describía un reintento que los bytes no tienen).
+## Estado global
 
-> **E26 R33 (clave de `nflasha0`):** [informe](../docs/capture/e26-r33-veracidad-clave-nflasha0.md). Probado: tabla = bloque 0, sector `0xc00`, no borrado. No probado: que sea una clave válida (palabra 0 + `~crc32`); el valor solo se obtiene leyendo la NAND (`E26-R33-BLOQUE0`). R23 §1 tenía las condiciones invertidas.
+| Aspecto | Estado | Fuente |
+|---|---|---|
+| **Cámara** | **No arranca** desde que se instaló el 3.25 integrado (actualizador al 100 % y Done; LED 3 lentos + 2 rápidos). Testimonio del usuario, sin captura UART ni lectura de NAND | [E26-RECOVERY](../docs/capture/e26-recovery.md) |
+| **Prioridad** | Recuperar la cámara conservando calibraciones. Investigación **solo offline**; ningún acceso físico autorizado | [PENDIENTES § E26](../docs/PENDIENTES.md) |
+| Objetivo de recuperación | Una sola partición, `nflasha3` (CRC releída por el actualizador = imagen 3.25); copia válida `dev_nflasha3.bin` (20-10-2026). Falta la vía de escritura | [R30](../docs/capture/e26-r30-updater-done-boundary.md) |
+| Hito del obturador | **3.23 (Darwin tipo 0 + B1a, 2 bytes)** instalado en T040 (27-10-2026): el usuario confirmó que disparaba en silencio y sin error. Capturas de T042–T044 versionadas el 31-10-2026 | [E25](../docs/capture/e25-desactivacion-mecanica.md), [registro](../docs/capture/registro-pruebas-camara.md) |
+| Firmware 3.25 | Selector EFCS/Electronic + C3-B + Darwin condicionado, construido y verificado **offline** (E25-24b…E25-29); es el que se instaló. Su `nflasha3` tiene 359/369 entradas TPZL con residuo 256 y 3 bloques de un segmento de 64 KiB (sin rechazo demostrado) | [E25-27](../docs/capture/e25-27-construccion-firmware-integrado.md), [R15](../docs/capture/e26-r15-tpzl-custom-fw325.md)–[R17](../docs/capture/e26-r17-arm7-ldec-segment-analysis.md) |
+| Pregunta original (S51) | Exposición totalmente electrónica a resolución completa: A=NO, B=NO, C=NO en estático; superada en la práctica por el parche de Darwin (3.23), cuya exposición por filas tiene el límite medido de E25-10 | [S51](../docs/capture/s51-decision.md), [E25-10](../docs/capture/e25-10-exposicion-por-fila.md) |
+| Cifras | 4 426 pruebas colectadas en local; CI (sin firmware): 920 pasan, 2 307 omitidas. Censo de etiquetas 133/372 (35,75 %, mide documentación). Sesiones S 291/627 y 74 informes de fase E. Planes físicos con prueba 12/24 (P1–P24). Registro T001–T053 (50 filas) | [estado.json](audit/estado.json), [tablero](https://nicolvus.github.io/a6000-fw-decomp/progress/) |
 
-> **E26 R30 (frontera Done del actualizador, cierre Fase A):** [informe](../docs/capture/e26-r30-updater-done-boundary.md). Fase A (residuo TPZL leído por ARM7) cerrada: escrito una vez en el LDEC, nunca leído en software (ya resuelto en R16/R17/R27). Fase B (byte 0x32) acotada: sin evidencia de haberse observado en este incidente (hubo Done). Fase C avanzada: `CompleteUpdate()` solo corre si `HasError()==0`; el actualizador relee `/dev/nflasha3` y compara CRC32 (verificado 31-10-2026): con Done, la cámara tiene exactamente la imagen 3.25 integrada. Objetivo de recuperación = solo `nflasha3`, copia válida en `dev_nflasha3.bin` (20-10-2026); falta la vía de escritura. Abierto de baja prioridad: `E26-R30-HOSTRET0`.
+## E26 — recuperación (todo offline)
 
-> **E26 R20 (selector del BootROM reconstruido):** [informe](../docs/capture/e26-r20-bootrom-selector.md). `FUN_ffff1062` decide por `MODEREG` (`0xf2915010`) **bit 0**: 0 → Loader2 (`0xc0030000`); 1 → ruta de servicio (GPIO4.21 = temporización, GPIO4.22 = salto directo a serie; si falla el almacenamiento o no hay clave → recepción serie; con clave en `0xc0001200` hace falta enviarla). Bit 0 = `BOOT_MAIN` (P7→CL1000) por inferencia; nivel físico sin verificar (`E26-R20-BOOTMAIN-NIVEL`, `E26-R20-GPIO4`). Emulación `r20_bootrom_selector.py` con tabla de decisiones.
-> **E26 R29 (pinout CN4001/CN4906 completo):** [informe](../docs/capture/e26-r29-pinout-cn4001-cn4906-completo.md). Corrige R11: CN4001 pin1=USB_VBUS (no USB_D-), 19 pines; CN4906 18 pines (no 32), pin10=RTCK sin red externa. Hallazgo: CN4906 combina BIONZ (SWCLK/SWDIO/VIO_FLD) con el bus `_DWN` de Darwin en los mismos pines 11/12/15.
+| R | Resultado vigente | Informe |
+|---|---|---|
+| R1–R4 | Identidad del FDAT 3.25, comparación TPZL (fases A/B/C), Loader3 candidato, placa SY-1028 | [E26-RECOVERY](../docs/capture/e26-recovery.md) |
+| R5–R7B | Loader3 de 128 KiB (recorte no íntegro), BLDR die0/plane0, INFO6 sin fuente; COLD fallido = bucle LED; escrituras NAND solo desde Linux | [R5](../docs/capture/e26-r5-loader3-servicio.md), [R6](../docs/capture/e26-r6-recuperacion-bionz.md), [R7](../docs/capture/e26-r7-recuperacion-estatica.md), [R7B](../docs/capture/e26-r7b-recuperacion-prelinux.md) |
+| R8–R9 | Receptor serie del BootROM: tipo 0 = escritura RAM arbitraria, `0xFFFF` = salto (`0xc000500C`); CRC-32 reflejado `0xEDB88320`; eSRAM 1 MiB ejecutable (emulado) | [R8](../docs/capture/e26-r8-bootrom-uart-boss.md), [R9](../docs/capture/e26-r9-bootrom-ram-execution.md) |
+| R10, R19 | USB Charger `054c:0994` = Darwin; HID solo Input, sin canal de escritura → descartado como vía | [R10](../docs/capture/e26-r10-usb-charger-recovery.md), [R19](../docs/capture/e26-r19-darwin-usb-static.md) |
+| R11, R29 | Pinout CN4001 (19 pines) y CN4906 (18; BIONZ+Darwin combinados); `BOOT_SERIAL_IN` → Multi pin 9 vía `CM4002/CM4003` (montados por convención) | [R11](../docs/capture/e26-r11-bootrom-uart-physical-access.md), [R29](../docs/capture/e26-r29-pinout-cn4001-cn4906-completo.md), [R19/R20](../docs/capture/e26-r19-r20-cierre-estatico.md) |
+| R12–R14 | LED 3+2 = −302 de **Loader3** (BOS o CFG); tiempos con reloj de 4 MHz; RAMCFG y FAT cumplidos por 3.21 y 3.25 | [R12](../docs/capture/e26-r12-bootrom-static-audit.md), [R13](../docs/capture/e26-r13-led-error-provenance.md), [R14](../docs/capture/e26-r14-ramcfg-bos-analysis.md) |
+| R15–R17, R27–R28 | Loader3 acepta el residuo TPZL (solo avisa); el ARM7 escribe el residuo en el LDEC y nadie lo lee; semántica de silicio indecidible sin hardware (decisión C); sin muestras públicas de TPZL | [R15](../docs/capture/e26-r15-tpzl-custom-fw325.md), [R16](../docs/capture/e26-r16-ldec-hardware-audit.md), [R17](../docs/capture/e26-r17-arm7-ldec-segment-analysis.md), [R27](../docs/capture/e26-r27-arm7-isr-geometria.md), [R28](../docs/capture/e26-r28-tpzl-busqueda-externa.md) |
+| R20–R23 | BootROM completo: selector `MODEREG` (`0xf2915010`) bit 0, GPIO4.21/22; receptor 8O1 ~16 000/~47 600 baudios; 57 rutinas, 109 pasos de traza, 25 códigos | [R20](../docs/capture/e26-r20-bootrom-selector.md), [R21](../docs/capture/e26-r21-bootrom-rx-serie.md), [R22](../docs/capture/e26-r22-bootrom-mapa-completo.md), [R23](../docs/capture/e26-r23-bootrom-flujo-completo.md) |
+| R24–R26 | Loader2 247/247 y Loader3 674/674 funciones con rol; `\updater\mode` en `nflasha2` es condición necesaria de la cadena especial; `LD3:<<KEY>>` = clave de batería, descartada | [R24](../docs/capture/e26-r24-loader2-completo.md), [R25](../docs/capture/e26-r25-loader3-completo.md), [R26](../docs/capture/e26-r26-updater-mode-y-clave-pwric.md) |
+| R30 | Fase A cerrada, B acotada (byte 0x32 no observado), C: con Done la cámara tiene exactamente el `nflasha3` del 3.25 | [R30](../docs/capture/e26-r30-updater-done-boundary.md) |
+| R31–R33 | Bit 0 = `BOOT_MAIN`/`CL1000`; **valor real `MODEREG[15:0]=0x0003`** (23 volcados): el arranque normal pasa por la ventana serie con clave; la clave está en `nflasha0` (sector `0xc00` no borrado; validez y valor desconocidos) | [R31](../docs/capture/e26-r31-bootmain-bit0-cierre.md), [R32](../docs/capture/e26-r32-moderreg-valor-real.md), [R33](../docs/capture/e26-r33-veracidad-clave-nflasha0.md), [KEYTABLE](../docs/capture/e26-r20-keytable.md) |
+| R34–R35 | `serial_entry` sin bucle de reintento (corrige R23 §2); `serial_receiver` recibe varios paquetes por llamada | [R34](../docs/capture/e26-r34-serial-entry-flags.md), [R35](../docs/capture/e26-r35-serial-receiver-multi-paquete.md) |
 
-> **E26 R28 (búsqueda externa TPZL):** [informe](../docs/capture/e26-r28-tpzl-busqueda-externa.md). Resultado negativo: ninguna mención pública de «TPZL»; Sony-PMCA-RE/fwtool solo cubren la capa de actualizador (FDAT), no Loader2/Loader3. Sin muestras externas disponibles.
+**Conclusión operativa:** la vía serie del BootROM existe y se abre en cada arranque, pero exige la clave de `nflasha0`, que nunca se
+volcó; todo lo restante es físico (`E26-FISICO-BOOT`, `E26-R33-BLOQUE0`, `E26-R12-UART-FISICO`) y requiere autorización expresa.
 
-> **E26 R27 (ARM7: ISR NAND y geometría):** [informe](../docs/capture/e26-r27-arm7-isr-geometria.md). ISR `0xd24` traduce bits de estado NAND a códigos `0xc/0xd/0x20/0x21/0x23/0x24` (distinto del LDEC `0x28-0x2d`); `0x1a80-0x1ae4` = capacidad + traducción con entrelazado multi-plano; las 17 operaciones restantes del despachador comparten la misma base SRAM `0x3f40` que op 0, sin comando NAND clasificado por operación.
+## Obturador — hallazgos que siguen vigentes (VERIFICADO salvo nota)
 
-> **E26 R26 (updater\mode y clave PwrIC):** [informe](../docs/capture/e26-r26-updater-mode-y-clave-pwric.md). `boot_dispatch` indexa `[0xc00e0004]` (0–14, tabla `tbb` verificada); `\updater\mode` en `nflasha2` es condición necesaria de la cadena especial (7–9/13/14), verificado por bytes; sin productor pre-Linux. Cadena `LD3:<<KEY…>>` descartada: es clave de batería (PwrIC), no de arranque.
-
-> **E26 R25 (Loader3 completo):** [informe](../docs/capture/e26-r25-loader3-completo.md). 674/674 funciones de `bootloader.bin` (prefijo INFO 5) localizadas y con rol; vectores de excepción confirmados (toda excepción → `led_error_blink` directo); `log`/consola igual forma que Loader2 (R24); capas BOS/CFG/FAT/TPZL de R13/R15/R16 con dirección fija. Pista sin explorar: `LD3:<< KEY E… >>` (`0xc01f0590`) para `E26-R20-KEYTABLE`.
-
-> **E26 R24 (Loader2 completo):** [informe](../docs/capture/e26-r24-loader2-completo.md). 247/247 funciones de `bootloader.bin` localizadas y con rol; secuencia de arranque completa (ARM→Thumb→`loader2_main`: UDIF/InfSec/BOSS/LBkup/LDR3→handoff a Loader3 `0xc01f0000`); confirma −306→1/3/6 (R13) y el temporizador de 4 MHz (R22) por una ruta independiente.
-
-> **E26 R23 (BootROM cerrado por completo):** [informe](../docs/capture/e26-r23-bootrom-flujo-completo.md). Flujo línea a línea de `main`/`serial_entry`; 109/109 pasos de traza y 25/25 códigos de error resueltos. Corrige R12 §3: cabecera dañada no recuperable desvía a `serial_entry`, no es «éxito aparente». Nada del BootROM queda sin identificar; lo físico (`nflasha0`, GPIO4 bit21/22, `BOOT_MAIN`) sigue en `E26-FISICO-BOOT`.
-
-> **E26 R22 (BootROM completo):** [informe](../docs/capture/e26-r22-bootrom-mapa-completo.md). 57 rutinas nombradas (vectores/reset ARM, carga de bloques, claves, receptor serie, CRC, consola/traza, LED, `printf`/`memset`), mapa de eSRAM y códigos de error. **Reloj de temporizadores = 4 MHz verificado en el ROM** (parpadeo de error 0,5 s/0,25 s/pausa 2 s) ⇒ baudios R21 firmes.
-
-> **E26 R21 (receptor serie del BootROM):** [informe](../docs/capture/e26-r21-bootrom-rx-serie.md). `MODEREG` bit 1 = `BOOT_SERIAL_IN` (verificado en `regs-misc.h` Sony). Receptor por software: tren de sincronismo de 60 flancos (ancho 909–1184 / 2840–3700 ticks según perfil) y luego trama 8 datos LSB-first + paridad impar + parada (validado por emulación del BootROM real); ~16 000 baudios (GPIO4.21=0) o ~47 600 (=1), reloj base 4 MHz verificado (R22). **Corrige** «baud NO DETERMINADA»/divisores de 115 200 de R8/R9/R11.
-
-> **E26 R19/R20 (cerrados estáticamente, 30-10-2026):** [informe](../docs/capture/e26-r19-r20-cierre-estatico.md). `post(0x13)` de Darwin es traza, EP1 IN único; `CM4002/CM4003` montados (convención) → Multi pin 9 conduce a `BOOT_SERIAL_IN`; `BOOT_MAIN` solo a `CL1000` sin pull externo, y **`MODEREG` bit 0 = `BOOT_MAIN` cerrado estáticamente en [R31](../docs/capture/e26-r31-bootmain-bit0-cierre.md)** (exclusión de todos los lectores del registro y de las tres redes BOOT). **[R32](../docs/capture/e26-r32-moderreg-valor-real.md): Loader3 guarda `MODEREG[15:0]` en el backup (ID `0x3e000a`); los 23 volcados dan `0x0003` → `CL1000` = 1 en reposo y el arranque normal es «bit0=1 + clave → ventana serie → `0x3001` → payload». Corrige «bit 0 = 0 en uso normal» (R20/R23); la tabla de claves tiene clave (inferencia fuerte), así que la vía serie exige conocerla.**; GPIO4 bit21 = perfil de muestreo serie (250 vs 84 ticks/bit), bit22 = salto a serie, pines no identificables. Todo lo restante es físico y requiere autorización.
-
-> **E26 R20-KEYTABLE (cerrado con límite):** [informe](../docs/capture/e26-r20-keytable.md). `0x1352` lee sectores reales de `0x600` B (hardware en `0x20000`/FIFO `0x10000010`); no sintetiza ni limpia la tabla. El sector que correspondería a `0xc0001200` vive en `nflasha0` (área de boot/loader1), **sin nodo Linux y nunca volcada** — contenido («vacía»/«con clave») no determinable sin acceso físico/JTAG.
->
-> **E26 R19 (USB Charger cerrado, límite documentado):** [informe](../docs/capture/e26-r19-darwin-usb-static.md). **Mapeo Darwin: dirección = archivo + `0x4200`.** EP0 `0xc90a`; callback de clase/vendor en `0xc59c`: solo GET_DESCRIPTOR HID, GET_REPORT y SET_IDLE, vendor siempre parado, sin etapa OUT; Darwin sin código de flash/MFS; tabla DWN (rutinas `0x2f50–0x4ba8`) sin referencias ni flash. **Corrige R11:** en el esquema `CM4002/CM4003` (paralelos a R4002/R4003 XX) serían la opción montada → Multi pin 9 ↔ `BOOT_SERIAL_IN` probable; CN4906 no llega a `BOOT_SERIAL_IN`. `BOOT_MAIN` (P7→CL1000) = candidato a bit 0 de `MODEREG` (hipótesis). Pendientes `E26-R19-*`.
->
-> **E26 R9 parcial:** [revisión](../docs/capture/e26-r9-bootrom-ram-execution.md) corrige R8: CRC-32, copia por tipos distintos de 0 y 0xffff; parser R8 no válido. Falta emular la ruta, demostrar RAM ejecutable y señal física.
-
-> **E26 R7B parcial:** [hallazgos y límites](../docs/capture/e26-r7b-recuperacion-prelinux.md): BootROM recibe datos por entrada serie y puede saltar, Loader2 lee NAND, ARM7 histórico cotejado, COLD negativo señaliza en bucle. Falta demostrar acceso externo y restauración selectiva; seguir offline.
-
-> **E26 R8 completo:** [informe](../docs/capture/e26-r8-bootrom-uart-boss.md): receptor serie BootROM reconstruido (`FUN_ffff1062`→`FUN_ffff0fa0`→`FUN_ffff0876`→`FUN_ffff0634`; MMIO `0xf2915010` bit 1; tipos 0/0xFFFF; checksum XOR+CRC8; parser offline con 6/6 tests). Pines físicos UART no identificados (candidato GPIO(4,RDATA)=`0xf2910410`, CN4906 pin 9 vía R4003 XX sin continuidad verificada). No hay lectura de NAND vía protocolo. Escrituras NAND solo en Linux. INFO6 sin fuente. Seis preguntas de cierre: 1=SÍ, 2=NO DEMOSTRADO, 3=NO DEMOSTRADO, 4=NO DEMOSTRADO, 5=NO DEMOSTRADO, 6=NO.
->
-> **E26 R9 completo:** [informe](../docs/capture/e26-r9-bootrom-ram-execution.md): cadena BootROM→UART→RAM→salto a RAM demostrada estáticamente y en emulación. Tipo 0 hace `str(valor,[dirección])` sin validación de rango (escritura RAM arbitraria, `0xffff0bb8`); tipo 0xFFFF almacena dirección de salto de 32 bits en `0xc000500C` y `FUN_ffff0144` (`0xffff0144`: `ldr r1,[0xc0005000]; ldr r0,[r1,#0xc]; bx r0`) transfiere el control. eSRAM `0xc0000000–0xc0100000` demostrada usable y ejecutable en tiempo de BootROM. CRC8 corregido: polinomio `0xEDB88320` (`0xffff0c04`), no placeholder `0x07`. Scripts: `analysis/e26-recovery/r9-uart-protocol.py`, `r9-unicorn-ramjump.py`. Tests: `tests/test_e26_r9_*.py` (19/19). Pines físicos UART sin identificar (NO DEMOSTRADO; requiere autorización física separada). Q1–Q10: Q1=SÍ, Q2=SÍ, Q3=SÍ, Q4=NO, Q5=SÍ, Q6=SÍ (emulado), Q7=SÍ, Q8=NO DEMOSTRADO, Q9=viable estática+emulada / no demostrada en hardware, Q10=identificación eléctrica del contacto UART.
->
-> **E26 R17 completo (BossFirm ARM7, decisión C):** [informe](../docs/capture/e26-r17-arm7-ldec-segment-analysis.md). `0xf290300c` solo se escribe (`trabajo+0xc`), sin lectura ni comparación en el ARM7; sin lector de `trabajo+8`; tulist síncrono por tanda de 0x80 (145 sectores sin límite propio); semántica LDEC dependiente del silicio. Corpus externo pendiente (R18).
-
-> **E26 R16 completo (ruta LDEC/ARM7, decisión C):** [informe](../docs/capture/e26-r16-ldec-hardware-audit.md). Descompresión TPZL = Loader3→MuMin→ARM7→LDEC; sin límite de 64 KiB demostrado; diferencia nueva: bloques 0/48/57 del 3.25 = 1 segmento de 64 KiB frente a 16×4 KiB en todo el corpus Sony (sin rechazo probado). 89+22=111 B conciliados; `c01f7752` sin ruta a −302.
-
-> **E26 R15 completo (TPZL/3.25/RAMCFG, decisión C):** [informe](../docs/capture/e26-r15-tpzl-custom-fw325.md). El 3.25 es un paquete propio sobre el 3.21 oficial (solo `darwin_core`, `darwin.sum`, `nflasha3`, `part_image.sum` difieren). El lector TPZL de Loader3 (`c01fdd8e`) **acepta** residuo ≠ 0 (solo avisa); las 3 imágenes pasan sus comprobaciones. `c01f2282` nunca omite (Backup `0xfa0033` = `0x80021048` en 55 BK4). Sin prueba de qué se escribió realmente (sin logs). Siguiente: ruta hardware LDEC (R16).
->
-> **E26 R14 completo (RAMCFG/BOS/FAT, decisión C):** [informe](../docs/capture/e26-r14-ramcfg-bos-analysis.md). RAMCFG = Backup `0xfa0080` (idéntico en 55 BK4): `idt_cam`, `sa_dfdet`, `av-cam`, `initrd`, `vmlinux` (partición 3 = TPZL→FAT12) y `kemco.txt` (partición 2). Loader3 lee `\Backup.bin` de `nflasha2`. −302 = firma BOS `8246` incorrecta o cualquier fallo de FAT/lectura de sector. Las imágenes 3.21 (cámara y oficial) e integrada 3.25 cumplen todas las condiciones; sin causalidad con 3.25.
->
-> **E26 R13 completo (procedencia del LED):** [informe](capture/e26-r13-led-error-provenance.md). `FUN_c01f3b74` pertenece a **Loader3** (`0xc01f0000`); **corrige R12**, que lo llamó Loader2. Loader2 (`0xc0030000`) trae una copia gemela `0xc0030c7c` que resta 1000 al código. Solo −302 de Loader3 da «3 y luego 2»; −302 = 7 funciones/9 cargas (3 devuelven −306); solo BOS (`c01f2c98`) y CFG (`c01f2f24`) llegan al LED. `d` = 2,0 s asumiendo entrada de temporizador a 4 MHz (cabeceras Sony; no medido). Sin vínculo demostrado con 3.25. R14: RAMCFG/BOS/FAT offline. Scripts `r13_loader3.py`, `r13-led-provenance.py`, test `test_e26_r13_led_provenance.py`.
->
-> **E26 R12 completo (auditoría estática):** [informe](capture/e26-r12-bootrom-static-audit.md). Selector BootROM = `MODEREG` (`0xf2915010`) bit0 leído en `ffff1094..109e` (1 → serie, 0 → almacenamiento): registro externo, contacto físico NO identificado. `FUN_ffff0d62` solo emite hasta 2 parpadeos lentos (códigos `0x1001..0x3004`): el patrón 3 lentos + 2 rápidos **no sale del BootROM**; Loader2 `FUN_c01f3b74` decodifica `−302` como 0/3/2 (compatible, HIPÓTESIS). **Corrección:** R7 `0xfffffed1 (-0x12e)` → −302 = `0xfffffed2`. Darwin: `PwrCtrl` por fases, watchdog virtual, SIO `mss`. Sin evidencia que atribuya el fallo. Scripts `r12-loader2-led-codes.py`, `r12-selector-emulation.py`, test `test_e26_r12_led_codes.py`.
-
-> **E26 R11 completo:** [informe](capture/e26-r11-bootrom-uart-physical-access.md). Esquema manual pág. 38: `BOOT_SERIAL_IN` llega a `MULTI pin 9 UART_RX/BOOT_IN` (CN4001) vía `R4003`/`R4002`, ambas `XX` (no montadas) → sin continuidad documentada con el Multi Terminal; CN4906 pin 4 lleva `DEBUG_UART0_RXD` pero montaje/continuidad sin verificar. `0xf2915010` bit 1 = estado externo leído; condición de activación, niveles y baudios NO determinados. Auditoría R9: eSRAM = 1 MiB (no 16), polinomio `0xEDB88320` = CRC-32 reflejado, cadena válida en estático/Unicorn, sin hardware. Sin procedimientos públicos aplicables a la a6000. Script `analysis/e26-recovery/r11-pinout-reconstruction.py` + `tests/test_e26_r11_pinout.py`. **Decisión C** (falta identificación física); R12 prioriza CN4906 (pasivo, RX-only, con autorización separada). Q1–Q8=NO, Q9=PARCIAL, Q10=SÍ, Q12=CN4906.
->
-> **E26 R10 completo:** [informe](../docs/capture/e26-r10-usb-charger-recovery.md). El componente que genera `054c:0994` (Sony USB Charger, cámara apagada) se identificó con evidencia de binario: **Darwin** (FM3). `darwin_core.bin` contiene el descriptor USB completo (VID `0x054c`, PID `0x0994`, clase HID, EP1 IN interrupt 8 bytes, cadenas "Sony" y "USB Charger") que coincide exactamente con el observado por `lsusb -v` (validación + 4 tests pasan: `analysis/e26-recovery/r10-usb-descriptor-parse.py`, `tests/test_e26_r10_usb_charger.py`). `bootrom.bin` no contiene `0x0994`/`0x054c`. Sin embargo, **no se encontró evidencia de recuperación vía USB Charger**: HID solo Input de 1 byte (sin Output ni Feature, sin canal host → dispositivo); no se localizó el manejador de SETEP ni peticiones vendor-specific de Sony; no existe cadena demostrada desde USB Charger hasta escritura de RAM, salto a ejecución, o activación de Updater Mode. El módulo DWN de Darwin (`DWN_VER0.78` + tabla de salto de 20 punteros en `0x021950`) es pista futura no demostrada. `CMD_SWITCH_MODE = 0x30` (PMCA) pertenece a interfaz USB distinta (`07c4`/`03e2`), no a `054c:0994`. Tres modos USB: normal `054c:07c4`, updater `054c:03e2`, charging `054c:0994` (Darwin, cámara apagada). **Decisión: Opción B** — abandonar provisionalmente USB Charger, concentrar en BootROM UART de R9.
-
-> **E26 R6, diagnóstico cerrado offline:** [informe vigente](../docs/capture/e26-r6-recuperacion-bionz.md). BLDR normales die0/plane0 y cola INFO6 plane1 no reconstruida; selector solo estático. CN4906 queda orientado documentalmente (mapa SVG), pero población/niveles/acceso siguen desconocidos; SWD no es recuperación validada y NAND carece de vía física segura. R7 continúa exclusivamente offline; no se requieren capturas físicas para seguir investigando.
-
-> **Prioridad vigente:** recuperar la cámara tras el bloqueo informado después de instalar 3.25. Ver [E26-RECOVERY](../docs/capture/e26-recovery.md); ningún acceso físico está autorizado. El texto histórico inferior sobre instalación pendiente queda superado por el testimonio del usuario.
-
-> **E26 Fase A:** el lector MUMIN del initrd A6000 advierte cuando el offset de TOC no es múltiplo de 512; la tabla 3.25 tiene 359 entradas con residuo 256. No se ha demostrado rechazo por ARM7 ni uso de esta ruta antes del initrd. Comparación de bloques y límites en E26; siguiente Fase B, productores de `setResult`.
-
-> **E26 Fase B parcial:** un script integrado que termine con 50 puede producir byte `0x32` vía excepción `0x3000c` → `mf` → FIFO2 → `setResult` → texto hexadecimal `32`. No se ha identificado tal script ni demostrado esta ruta en la cámara bloqueada. Ver E26.
-
-> **E26 R5:** [informe vigente](../docs/capture/e26-r5-loader3-servicio.md). Candidato Loader3 de 128 KiB identificado, pero recorte con suma32/runtime incoherentes; resolver mapa BLDR antes de declararlo íntegro. Selector por existencia de `updater/mode`, carga desde dispositivo 1, sin activación independiente demostrada. CN4906 SIDE A tiene UART0 BIONZ 4/5 y SWD BIONZ opcional por R4911/R4912 XX en 11/12, además de Darwin. Sin foto, continuidad ni niveles medidos. Cierre normal crea comp y elimina mode; Done no valida siguiente arranque. Próximo paso offline: fuente de BLDR; físico propuesto: UART0 pasiva tras verificación/autorización separada.
-
-
-Contexto operativo mínimo para agentes. Última revisión: 29-10-2026 (E25-29/E25-27: firmware integrado 3.25 construido y verificado offline; E25-26/E25-25: C3-B y cuevas/carga, offline; E25-19: verificación física de exposición larga, solo lectura; R1 pendiente de copia externa). Este archivo **no** es
-historial ni fuente de verdad de los pendientes: ver [Responsabilidades](#responsabilidades-documentales).
-La versión íntegra anterior (2264 líneas, instantáneas S59–S627) está en
-[history/CURRENT-historial-2026-10-26.md](history/CURRENT-historial-2026-10-26.md); nada se borró.
-
-## Objetivo técnico vigente
-
-Determinar con evidencia **estática** si la Sony A6000 (fw 3.21, sensor IMX210) puede capturar a resolución completa sin
-cierre mecánico (obturador totalmente electrónico). Se separa siempre `VERIFICADO` / `INFERENCIA` / `NO_VERIFICADO`;
-el análisis estático no prueba ejecución ni ausencia en cámara. Comparación con A7S fw3.20 (IMX235, tiene Silent) y
-A6300 fw2.01 (controles positivos). Restricciones: sin ejecutar firmware, sin cámara, sin parche, sin
-flasheo salvo autorización expresa del usuario para un caso concreto.
-
-## Estado actual
-
-- **E25-24/E25-25/E25-26:** **selector EFCS / Electronic + C3-B implementados offline** ([E25-24b](../docs/capture/e25-24b-implementacion-selector.md), [E25-25](../docs/capture/e25-25-validacion-carga-caves.md), [E25-26](../docs/capture/e25-26-c3b-exposicion-electronica.md)): EFCS ON/OFF (`+0x210` 0/1) elige la modalidad; BIONZ copia `cap+0x41c` a `pkt[0x0e]` y Darwin usa una compuerta por captura (`0x20c78`/`0x1fe6c` → cueva `0x4318`). E25-25 reubicó la cueva BIONZ de `0x43541a80` a `0x43541800` (la zona antigua es un objeto de 512 B con GOT) y validó el canal `cap+0x41c → pkt[0x0e] → S+0x3e` (congelado por captura, sin lectores estáticos). C3-B: enganche `0x438c82fe`, cueva `0x43541840`, solo Electronic y rutas rápidas; EFCS idéntico al original en emulación, Electronic normalizado 1/8000–1/30, largas inhibidas. **E25-29** construye el firmware integrado **3.25** desde los originales 3.21 (BIONZ `45a5ab35…`, Darwin `9771c050…`) y lo verifica offline: 3 bloques TPZL, FDAT/DAT, 208 078 bloques descifrados sin errores, extracción inversa y emulación integrada `all_ok` ([E25-27](../docs/capture/e25-27-construccion-firmware-integrado.md)). Falta la validación física (E25-27) y la recuperación (E24-04); **no instalar**.
-- **E25-22:** dos capturas normales en una escena nueva; sombras y `cap` compatibles con shd=1/svd=0 durante la foto larga, sin prueba de envío P2S ni de integración electrónica. [Informe](../docs/capture/e25-22-protocolo-transporte-fisico.md); plan nativo por foto y trazado eléctrico pendientes.
-- **Carril GUI (G1, independiente del obturador):** la interfaz vive en el userland Linux, no en `av-cam.bin`: `bin/im.elf` carga por `dlopen` `/usr/lib/libObj.so` (motor `ux::`, 17,4 MB, 17 `DT_NEEDED`), que abre `viewUnified2..8.so` y 238 recursos de `share/app`. Tabla PLT resuelta (2 419/2 420 importados), `GraphicsEngine::updateResource` trazado; compositor y `/dev/fb0` en INFERENCIA. REA no puede abrir `libObj.so` (plazo de 900 s). **G3 parcial:** pila de dibujo propia (`GRM_fbrm*` sobre YUV, `GRM_gpermRectblit`, `DMP2D_*`, `Ts*`), rutina de presentación en `0x12e6d0` (presente en `GRM_fbrmUpdateYUV`) y cadenas de `WindowServer`/`ViewSystem`//dev/fb0` sin ninguna referencia (muertas); falta el invocador de `0x12e6d0`. Pendientes G2–G8 en [PENDIENTES](../docs/PENDIENTES.md); mapa en [docs/gui/README.md](../docs/gui/README.md).
-
-- **Decisión [S51](../docs/capture/s51-decision.md): A=NO, B=NO, C=NO.** No hay ruta de exposición totalmente electrónica
-  demostrada (A), ni base para un parche justificable (B), ni prueba de imposibilidad por hardware (C). Sin cambios desde S51.
-- **Recuperabilidad y B1a ([E25-04](../docs/capture/e25-04-recuperabilidad-y-decision.md)): A=NO, B=NO, C=NO, D=NO,
-  E=SÍ, F=NO, G=NO.** No hay recuperación independiente de Darwin demostrada (USB, bootloader sin la aplicación
-  o hardware verificado); B1a **no es instalable**. R1: procedimiento y manifiesto listos (62/62, `verify` OK contra
-  el origen), **copia externa sin verificar**. La única acción que cambia G exige hardware (donante + SWD/UART).
-  **E25-05**: paquetes **3.23** (tipo 0 + B1a) y **3.24** (recuperación con Darwin oficial) preparados y verificados
-  offline en directorios separados (69 comprobaciones, 0 fallos). El 3.24 reutiliza el payload verificado del 3.23
-  y **solo funciona si la cámara conserva acceso al actualizador**; no es recuperación independiente del MCU.
-  Versiones: `3.22 < 3.23 < 3.24`; el antiguo `recuperacion-323` queda obsoleto. **T040: 3.23 (B1a) instalado; la cámara arranca en 3.23; **el usuario confirma que dispara en silencio y sin error (27-10-2026; sin capturas archivadas, E25-01)**. Recuperación: `recuperacion-324` (`e1345aff…`).**
-  **E25-06** (auditoría independiente): paquetes binariamente correctos (145 comprobaciones, 0 fallos;
-  L=NO, N=SÍ); instalación no segura con la evidencia actual (O/P/Q/R=NO). Hay dos 3.23 con config idéntica:
-  comprobar el SHA-256 antes de instalar (E25-07).
-- Estático: todo cerrado **con límite** salvo E1 (`NO_VERIFICADO`, sin vías estáticas); lo restante está bloqueado por datos
-  (E6, E9, E11, E13, D5) o es físico (F1–F6; pruebas por USB ya hechas el 26-10-2026: T001–T021, ver [registro](../docs/capture/registro-pruebas-camara.md); el tipo 2 se fuerza y no cambia el obturador; E22 cerrado con límite). Lista y estados:
-  [PENDIENTES](../docs/PENDIENTES.md).
-- Los censos (133/372 etiquetas, 35,75 %) y las cifras de pruebas **miden documentación**, no código descompilado ni
-  funcionamiento físico. Datos de auditoría: [estado.json](audit/estado.json), [memoria.json](audit/memoria.json)
-  (`python scripts/audit/repo_audit.py`).
-
-## Hallazgos críticos confirmados (VERIFICADO salvo nota)
-
-- **Captura:** RecordStill (`0x908afc`) y RecordImage (`0x90b248`) de `libObj.so` A6000 ≡ A7S (199 pares, solo cambian líneas
-  de log); RecordImage llama a RecordStill; llamadores BL `0x90de2e` y `0x91634e`; 25 punteros Thumb a `0x90d7e8` son
-  `call_fn` de `StateMgr::_FuncEntry`, ejecutados por `StateMgr::CallFunc` (`libmprctrl.so:0x1cef2`). Activación real: `NO_VERIFICADO`.
-  [S402](../docs/capture/static-closure-2026-10-25.md), [contrato](../docs/capture/recordstill-contract-audit-2026-10-23.md).
-- **Cola `0x40193`:** construcción desde literales `.text` (LDR), 16 B hasta `osal_snd_msg`, receptor LIRO `0x4381d16c`, tabla
-  `0x44000174` (35×12 B); servicio LIRO `+0x3c` = `sta_tsk(0x46, descriptor)`; recepción bloqueante. Instalador `0x4379e93c`
-  (fila 189 de 372 punteros Thumb, bucle `0x4356082c`). Ejecución real no observada. [flujo](../docs/capture/queue-40193-flow-2026-10-23.md),
-  [seguimiento](../docs/capture/capture-static-followup-2026-10-25.md).
-- **Mensaje `0x10000005`:** dos constructores (PlayData y secuencia `0x3026`); único emisor de `ObjMsg(0x3a49,0x3026)` = `0x659cb0`
-  (acción 13 de `ModelScalarPb`). Quién publica el local `4`/`2` a Pb/PbCap: ningún código de `libObj` (E1).
-- **Imager IMX210:** estado `0x43f72d02` (A7S `0x43f7bce6`): gates `+3/+6` idénticos en ambos y **sin escritor** (S300/S301);
-  Backup `0x3000b` = 256 B con gates a 0; `S[0]` y copia G→S resueltos (S205); mecanismo por modo
-  `modo → matriz 69/59 filas → T1/T2/T3 → pares (flag,bit) → máscara u16 → MMIO DFE/CISIF (0xfc02a00c)` idéntico en código
-  A7S/A6000; la diferencia está en los **datos** (34 vs 13 modos). Síntesis: [S341](../docs/capture/s341-synthesis-b2.md).
-- **Silent A7S:** UI → LIRO `0x40e3` → `+0x250` → bit `0x20` (`no_silent`); el driver IMX210 conmuta modos 0–4, el IMX235 0,1,3,4;
-  `…ForLiro` rechazado (0 soportados) en A6000 y A7S ([S174](../docs/capture/s174-forliro-api.md), [S383](../docs/capture/s383-forliro-silentlibobj.md)).
-  La A6000 carece del parámetro y del código de selector/tiempos de la A7S (S307–S312, S169). Ausencia estática ≠ incapacidad de hardware.
-- **Exposición electrónica (E25-14):** el IMX235 usa `SetExposure` (`0x436f4168`; `param+0`=SHR/líneas, `param+9`=ShutMode) y un
-  método `+0x30` (`0x436f4a94`); la A6000 tiene el mismo contrato (`0x436d6f6c`/`0x436d7e08`) y ya llama a `+0x30` en la foto
-  (`0x438c831e`), pero sin el armado de exposición larga del A7S (`0x436f43c0`, `obj+0x3dc=2`). El «límite de ~65 ms» es de la ruta manual `r5`,
-  no del firmware (corregido por E25-17). [E25-14](../docs/capture/e25-14-imx235-imx210-exposicion-electronica.md).
-- **ShutMode 0 y `r5` nativo (E25-15/E25-16):** `SetExposure` y `+0x30` escriben bloques disjuntos; con ShutMode 0 solo cambian r5 y ShutMode (r5=1 ≈ 64–65 ms). El productor `0x4383fa40` (llamado por `0x437b46d0`, compuerta `cap+0x11b0`, y por EFCS `0x438417c0`) lee Tv de `record+0xf6`, período de `record+0xc`, VTS de `record+0x20` y `imager+0x4b8`; `0x4383fd6c` copia el bloque a `cap+0x64c`. Con VTS 4219 reproduce T047 ±1 línea; no se hardcodea 4219. [E25-15](../docs/capture/e25-15-shutmode0-temporizacion-nativa.md), [E25-16](../docs/capture/e25-16-r5-autonomo-fotografia.md).
-- **Integración Silent 1/8000–30 s (E25-18, 28-10-2026, offline): decisión C, una fórmula y dos rutas.** Productor `0x4383fa40` normalizado frente al predicado (`shd−=VTS`, `svd−=1`); C3-B = caso `svd'=0`. Enganche `0x438c82fe` confirmado, válido solo para rápidas (`0x438c8334` restaura `cap+0x650`; el planificador lee `record`). Sumidero físico del VTS no encontrado; `0x8000` de BULB = callbacks de temporizador. Modelo `scripts/e25_18/silent_plan.py`. [E25-18](../docs/capture/e25-18-integracion-silent-todas-velocidades.md).
-- **`cap` real y ciclo del evento en vuelo (E25-19b §4i, 28-10-2026, solo lectura):** `cap` es una copia por petición (`0x4378764c`) cuyo puntero físico va en `[M]` (`0x4381bb12`); `0x952db580` en dos disparos. `Run(M)`=0x43b047d0 pasa `r1=M` al thunk; sub 9 (`0x438c289c`) espera mensaje sin límite (`0x437db9f0`, `cap+0x74f=1`) y la ranura del grupo 1 se libera con `Avance`/`Fin` (`Complete`). Emisor = Darwin `0x0e` (E25-19c); falta `SetExposure`. [§4i](../docs/capture/e25-19-verificacion-fisica-exposicion-larga.md)
-- **Origen de `cap+0x74f` y rama de host (E25-19d, 28-10-2026, offline): decisión B.** Escritores: copia del plan `0x438acc9c`, `0` por arranque rechazado `0x437df5e8`, `0` por cancelación `0x438c2562`; 21 manejadores `0x438d…` omiten esperas CAIF con 0 y sub 9 usa `twai_flg(0x13,0x100000)`. Emulada (1/8000–30 s; 937 081 ticks a 30 s); mismo Tv que el `0x0c`; sin efecto en el sensor, Darwin no la ve. No es ruta normal. Sin resolver: procedencia del 1 (E25-19e). [E25-19d](../docs/capture/e25-19d-origen-74f-rama-host.md)
-- **Selector 3/4 y origen del 1 (E25-19e, 28-10-2026, estático + lectura física): decisión B.** `r6`=3/4 va a `0x436c74c8` = controlador VD/imager `0xf3120000` (no comando al sensor): 3 y 4 difieren en `+0x208` bit0, `+0x258` y una llamada virtual. W1 no puede copiar un 1 (`plan+0x142` par); hay stores `strh@74e` no contados en 19d (`EndExps` `0x4354af88/0x4354b0ac`, `0x4354c868`); `74c/74e` son halfwords de geometría. Físico: `74f=1` siempre, `74d` 1→0 al final. `G+0x60/7e/7f` sin escritor. Pendiente E25-19f. [E25-19e](../docs/capture/e25-19e-origen-74f-selector-sensor.md)
-- **Exposición larga física (E25-19/T053, 28-10-2026, solo lectura): decisión C.** 7 fotos normales (1/30–30 s) en 192.168.1.29: `record_a` = `shd=1, svd=0, r5=1, ShutMode=3, lineas=0, d8/da/dc=0` siempre; VTS **4176**, período **4096** Q8 (no 4219/3891), predicado byte 0. 20 s y 30 s correctas, cámara estable. `cap` no localizado con cadena demostrada (pendiente E25-19b); lectura RAM sin `base64`: `dd … | chroot /android /system/bin/hd /proc/self/fd/0`. [E25-19](../docs/capture/e25-19-verificacion-fisica-exposicion-larga.md)
-- **Exposición larga y BULB (E25-17, 28-10-2026, estático): decisión C.** El productor `0x4383fa40` ya codifica 1/15 s–30 s como `shd=1`, `svd=cuadros−1` (`record+0x68`→ID3/ID4) y VTS ampliado (`record+0xd8`); emulación: 1 s `svd 14`, 30 s `svd 472`. El contador de pasos no es el mecanismo (`cap+0x650` se anula con `cap+0x740==0`). BULB/largas: tramos de un cuadro del host (`0x438c74b0`, `cap+0x72c`, objetivo 0 = sin límite). LongObMode = OB/DFE; SetReadZ = `SetRead_ZAF`. Sin medida física (R=S=NO). C3-B se engancha en `0x438c82fe`. Siguiente: E25-19 (solo lectura). [E25-17](../docs/capture/e25-17-bulb-exposicion-electronica-larga.md).
-- **T052-B0 (28-10-2026, sin cámara):** `record+0x20 ← cap+0x5e0 ← [descriptor+6]` (VTS de foto sin leer). Predicado `0x43deb360` = bloque NVRAM (`+0x10=0` ⇒ cuadro extra activo; el `r5` nativo con ese predicado es inválido). **C3-A no autorizable; C3-B preferible:** `r5 = 4219 − record+0xf0` reproduce T047 (4203/3956/3122). [T052-B0](../docs/capture/t052-b0-vts-predicado-fotografia.md).
-- **Cortinas:** GPIO P4D=1ST_CURTAIN_MG, P4E=2ND_CURTAIN_MG, P4C=CA_1ST_CURTAIN_START, P4B=CA_RELEASE_LOCK_MSS (esquema + inspección;
-  no son serie). El enlace banco/bit `0xf2910048` → P4E no consta en el firmware (E11).
-- **Recuperación (E24-01):** Darwin también controla la energía del cuerpo (`DD_ON1/2/3` desde `darwin_core`, tabla `0x28c6c`).
-  No está demostrado que el actualizador USB arranque sin `darwin_core`. Cualquier parche de Darwin arriesga la vía de reinstalación.
-  [informe](../docs/capture/e24-01-arranque-recuperacion.md).
-- **Bootloader de Darwin (E24-02):** hay arranque propio en `0x0–0x41ff` (el core salta a él con el buzón `[0x20000706]=4`); protocolo de
-  `ud_darwin_firmup` reconstruido (`0x11/0x14/0x15`, CRC-16). No está demostrado que reprograme una aplicación rota ni que encienda
-  el BIONZ solo (A=SÍ, B=NO, C=NO). Un parche de Darwin no debe tocar encendido, `InitCom`, `Upd` ni el watchdog.
-  [informe](../docs/capture/e24-02-protocolo-actualizacion-darwin.md).
-- **Recuperación (E24-03):** respaldos íntegros pero incompletos; el FDAT 3.23 lleva el `darwin_core` original y se reconstruye bit a bit, pero solo está
-  demostrada una restauración de NVRAM (A=NO, B=SÍ, C=NO, D=NO). El guard exige versión mayor: el script 3.21 ya no sirve; un FDAT 3.24 exigiría recuperación 3.25.
-  [informe](../docs/capture/e24-03-auditoria-recuperacion-usb.md).
-- **Dictamen de seguridad (E24-04):** NO hay evidencia para autorizar otro flasheo persistente de Darwin (A=NO, B=SÍ, C=NO, D=NO, E=SÍ, F=SÍ solo RAM). Ningún fallo de Darwin tiene recuperación demostrada; M6 no es cerrable hasta trazar estado 4→`Upd` (E24-05). La aceptación del riesgo no cuenta como comprobación. [informe](../docs/capture/e24-04-dictamen-seguridad.md).
-
-- **Ruta `Upd` y rearme (E24-05):** `InitCom → Upd → 0x45bc` trazada con bytes (solo en `Seton`; clausura C1 480 / C2 571 funciones; el arranque sigue sin binario). `0x1fe66`→0 **sí** selecciona la lista `[0,7,8,9,10]` de la máquina exterior y evita el motor (salvo el freno de la operación 5 sin compuerta); control volátil NO demostrado, watchdog NO cerrado. No cambia E24-04: sin recuperación demostrada no hay base para flashear. [informe](../docs/capture/e24-05-upd-y-rearme.md).
-- **Candidato sin rearme (E25 / E25-02):** sobre el tipo 0, `0x1fe6a: 28 46 → 0a e0` (2 bytes) fuerza la compuerta a 0; L0 en los tres arrancadores, `0x1f5a6` retorna y no se alcanzan las primitivas del motor en captura/rearme. Tipo 0 intacto; P4B/P4C siguen; operación 5 (P40/P41=3, XOR=0) es **apagado**, no freno demostrado. **E25-02 cierra la vía volátil: A=NO** (sin emisor BIONZ de `InitCom 0x16`; actualizador solo `0x11/0x14/0x15`; Micon `NoAction`; `0x16` copia 129 B con `length=0x81`, no 1 B). B1a válido estáticamente con auditoría independiente (42 pruebas). Candidato offline no instalable (E24-04); M0 normal estático sí, M0 físico/M1 pendientes. [E25-02](../docs/capture/e25-02-validacion-candidato-y-via-volatil.md), [E25](../docs/capture/e25-desactivacion-mecanica.md).
-- **Captura y fin (E24-05a):** el ID `0x0c` (22 B) entra por la tarea `0x1811a` → `0x17f8c` → `0x1961c`, que elige entre cinco listas de la máquina de 49 estados (`S+0x44.b0`, `S+0x32`, `S+0x3c`); los estados 4/5/0x1f arrancan los rearmes y el 4 depende del predicado de clase `0x196a2`. `[0,7,8,9,10]` cumple las esperas internas de Darwin; el lector BIONZ del fin sigue sin localizar (C/D/F/G = NO; E24-05d/e). [informe](../docs/capture/e24-05a-captura-fin-bionz-darwin.md).
-- **Consumidor BIONZ (E24-05d):** BIONZ recibe de Darwin ocho mensajes mss (`0x0b,0x0d,0x0e,0x10,0x11,0x14,0x15,0x17`) por la tabla CAIF `0x43fe87f0` → buzón `[0x43e77284]` → `caif_recv` `0x437db9f0` (bloquea sin plazo, exige la subclase esperada). **Corrige E24-05a:** máscara de ocupación y anillo no viajan a BIONZ (el «bloque de estado» `0x6c78` es el registro de fallos). A=SÍ, B=NO, C=NO, D=SÍ, E=SÍ, F=NO, G=NO. [informe](../docs/capture/e24-05d-consumidor-estado-darwin-bionz.md).
-- **Emisores mss (E24-05f):** `0x0b` (admisión `0x17f8c`), `0x0d/0x15` (estado de captura 9/11), `0x0e/0x10` (estado 31 → FSM `0x296f0` estado 5), `0x11/0x14` (FSM de ajustes `0x294f8`, evento `0x18a`), `0x17` (`0x125f6`, orden de modo). Los cinco primeros no dependen de la compuerta `0x1fe66` y salen en el mismo orden en `[0,7,8,9,10]`; el byte 0 del `0x0b` lleva la clase de ocupación (corrige E24-05d B). A=SÍ, B=NO, C=NO, D=NO, E=NO, F=NO, G=NO; falta el disparo de `0x11/0x14/0x17` (E24-05g). [informe](../docs/capture/e24-05f-emisores-mss-darwin.md).
-- **Ajustes, modo y ocupación (E24-05g):** `0x18a` eran flags de `0x29514`; `0x11/0x14` los dispara el gancho de trama `0x1c04c` o el arrancador por disparo `0x17c26` (modos 0–8); `0x17` lo pide Darwin (estado 27, modo 0), no BIONZ; BIONZ lee la clase del `0x0b` en `0x438c2538` (0 acepta, 1 reintenta ≤19, 2 error). A=SÍ, B=SÍ, C=NO, D=SÍ, E=SÍ, F=NO, G=NO, H=NO demostrada; candidatos P29 y `0x2041e`→P4E (E24-05h). [informe](../docs/capture/e24-05g-ajustes-modo-ocupacion.md).
-- **Dependencias finales (E24-05h):** estado 31 con dos variantes: `S+0x32=0` espera P29 bajo (`MSS_S2_REQ_CA`, BIONZ→Darwin, sin plazo), `S+0x32≠0` (T022: `0x1600`) espera la FSM ADC-B (temporizada). Con `0x20c74=0` no hay escritura estática a P4D/P4E (P4C sí); FAIL = reintento sin avance. Sin bloqueo real demostrado ni ausencia demostrada (A=NO,B=NO,C=SÍ,D=NO,E=NO,F=SÍ,G=NO,H=NO,I=SÍ); eslabones físicos: conductor de P29 y `pkt[1]`/`pkt[2..3]` en BIONZ. [informe](../docs/capture/e24-05h-dependencias-finales-captura.md).
-- **ADC-B y P29 (E24-05h-3):** ADC-B (`0x29dc8`, terminal 7) arranca (`0x19b9e`: `S+0x444` b4=0 ∧ `S+0x170` b0=0, sin leer el tipo) y termina con `0x20c74=0` por `[1,4,6,7]`; única espera = evento 0 del canal 0 de `0x40023000`; el estado 31 espera `0x203ae` sin plazo. P29→INT05; grupo de pines activo en captura sin determinar (salida en grupos 0/1/5/6, entrada en 2/4, INT05 en 3). [E24-05h-3](../docs/capture/e24-05h-3-adcb-p29.md)
-- **ADC-A, P29 e IRQ (E24-05h-4):** ADC-A `[2,4,6,16,17]` (desde el estado 4 de ADC-B) retorna sin bloquear; los estados 3/32 de la captura exigen ADC-A y ADC-B en terminal (FAIL = reintento; ADC-A usa 2 eventos del temporizador base canal 11). P29 en `On` = grupo 3 (INT05, entrada). Evento de ADC-B: IRQ 32, vector `0xf8d3` (tabla base `0x42fc`). Sin bloqueo demostrado; ausencia no demostrable sin medir. Pendiente: E24-05h-5 (cámara, diferido). [E24-05h-4](../docs/capture/e24-05h-4-adca-p29-irq.md)
-- **Protocolo de lectura (E24-05e/h-5, preparado, no ejecutado):** T022/T023 leen DRAM de BIONZ, no SRAM de Darwin; los valores de Darwin de E24-05h-4 §6 no tienen vía. `pkt[1]`/`pkt[2..3]` del `0x0c` los construye `0x43841070`. Matriz EFCS ON/OFF ABBAAB (6 disparos) y criterios C1–C5; una foto normal no prueba el funcionamiento sin rearme. [Informe](../docs/capture/e24-05e-05h5-protocolo-lectura.md)
+- **Darwin gobierna el obturador y la energía** (`DD_ON1/2/3`, E24-01); bootloader propio en `0x0–0x41ff` (E24-02). Ningún Darwin defectuoso
+  tiene recuperación demostrada (E24-04, E25-04). Base ROM `0x4200`.
+- **B1a**: `0x1fe6a: 28 46 → 0a e0` fuerza la compuerta `0x1fe66` a 0 → lista `[0,7,8,9,10]` sin motor en captura ni rearme (E24-05, E25-02).
+- **Exposición sin cortina** (E25-10): fila `i` = T + ≈7 ms + 15,2 µs·i; con ShutMode 0 la integración es uniforme y vale (4219 − `r5`) × 15,2 µs (T046/T047).
+- **Productor nativo** `0x4383fa40`: `r5`, ShutMode 0 y `svd` desde Tv/período/VTS; emulado ±1 línea frente a T047 (E25-15/16). VTS real de foto 4176 (T053).
+- **Selector EFCS/Electronic + C3-B** (E25-24b/25/26): `cap+0x41c → pkt[0x0e] → S+0x3e`; enganche `0x438c82fe`, cueva `0x43541840`; verificado offline, nunca físicamente antes del 3.25.
+- **Captura BIONZ↔Darwin** (E24-05a…h-4): ID `0x0c` arranca la máquina de 49 estados; fin = Darwin→BIONZ `0x0e`; P29/ADC-A/ADC-B sin bloqueo demostrado.
+- **Silent A7S**: LIRO `0x40e3` → `+0x250` bit `0x20`; la A6000 no tiene ese selector (S401/S402). Ausencia estática ≠ incapacidad de hardware.
+- **RecordStill/RecordImage** A6000 ≡ A7S salvo logs; cola `0x40193` trazada; origen del local 4/2 de `ModelScalarPb` sin resolver (E1, `NO_VERIFICADO`).
 
 ## Correcciones fundamentales (no reutilizar las versiones previas)
 
-Para la trazabilidad completa: [CORRECTIONS](../docs/CORRECTIONS.md) y [STATE § Conclusiones corregidas](../docs/STATE.md).
+Trazabilidad completa: [CORRECTIONS](../docs/CORRECTIONS.md) y [STATE § Conclusiones corregidas](../docs/STATE.md).
 
-- S401 negaba el manejador LIRO `0x40e3` en la A7S: **sí existe** (fila `0x43ff79e4` → `0x437a9cb1`); lo corrige S402.
-- La etiqueta `RecordStill::Execute` de A6000 `0x90b248` no está demostrada: es **RecordImage**; RecordStill es `0x908afc`.
-- Destinos BL `0x7484dc`/`0x755af8` (S382) y los encodings MOVW/MOVT de `0x40193` (S384) eran falsos; el ID sí se construye desde `.text`.
-- S305 original invalidado por sesgo `+0x58`; tabla148/fila18 → Backup `0x3000b`. S303 corrigió el mismo sesgo de S303rev1/S304.
-- Carril B: S325 corrige S302/S321 (mapa **posición→columna**, no modo→columna); S329 corrige bases T2/T3 (4 B menos) y no hay tabla de
-  tiempos por modo; S331 refuta S327/S330 (`obj+0x2b4` es un flag de log; la fila es la posición del modo); `0x43fef404` es la tabla
-  de ids de `Camera::Lens::ODL`, no de tiempos (S337→S342/S347/S348).
-- Cadenas ≠ funcionalidad: la cadena `rolling` del A6300 está muerta (S168); los 128 B de `0x43dcfa9e` no tienen referencias (S172, corrige S135).
-- S605–S627: las pruebas originales ocultaban siete gemelas erróneas y 13 textos truncados; logger dual verificado solo en S607/S611/S616;
-  66 de 69 afirmaciones de equivalencia siguen sin verificar ([auditoría](../docs/capture/S605-S627_tabla_hallazgos.md)).
-- S207 no demuestra ausencia de un fin de integración (JSON/generador declaran `NO_VERIFICADO`). S51 A/B/C no se altera sin evidencia nueva.
-- Darwin: base ROM `0x4200`, no `0`. SetImageWrited = `0x6108/0x1007`, no `0x1009`.
-- E23 «`0x1fe66`→0 no desactiva el rearme» queda **superado** por E24-05: la compuerta elige la lista de estados de la máquina exterior.
+- E26: R13 corrige R12 (el LED es de Loader3); R21 corrige los baudios de R8/R9/R11; R29 corrige el pinout de R11; R32 corrige «bit 0 = 0 en uso
+  normal» (R20/R23); R33 corrige R23 §1; R34 corrige R23 §2; R11 corrige eSRAM 16 MiB → 1 MiB y R9 el CRC «0x07» de R8.
+- S401 negaba el manejador LIRO `0x40e3` en la A7S: sí existe (S402). `0x90b248` es RecordImage, no RecordStill.
+- Destinos BL `0x7484dc`/`0x755af8` (S382) y MOVW/MOVT de `0x40193` (S384) eran falsos. Sesgo `+0x58` de S303rev1/S304/S305 corregido.
+- Carril B: S325 (posición→columna), S329 (bases T2/T3), S331 (`obj+0x2b4` = flag de log), `0x43fef404` = ids de `Camera::Lens::ODL`.
+- Cadenas ≠ funcionalidad (S168, S172). S605–S627: siete gemelas erróneas y 13 textos truncados. SetImageWrited = `0x6108/0x1007`.
+- E23 «`0x1fe66`→0 no desactiva el rearme» superado por E24-05. El «límite de ~65 ms» es de la ruta manual `r5`, no del firmware (E25-17).
 
 ## Decisiones técnicas vigentes
 
-- **REA primero**, Ghidra histórico (`silent-liro.gpr`, readOnly) como respaldo; una consulta vacía de REA no prueba ausencia.
-  Una sola sesión `session_daemon.py` + `q.py` (`av-cam.bin` ~8 min en frío); verificar lo decisivo contra bytes. Detalle:
-  [STATE § Política de ingeniería inversa](../docs/STATE.md).
-- Pruebas en cámara solo por USB/software (la cámara no se abre); antes de cualquier prueba, backup NVRAM y registro T0NN.
-- Commits convencionales por fase; actualizar [PENDIENTES](../docs/PENDIENTES.md) en el mismo commit; nunca firmware ni archivos ignorados.
+- **REA primero**, Ghidra histórico (`silent-liro.gpr`, readOnly) como respaldo; una consulta vacía de REA no prueba ausencia. Una sola
+  sesión `session_daemon.py` + `q.py`; verificar lo decisivo contra bytes ([STATE § Política](../docs/STATE.md)).
+- Ningún acceso físico, flasheo ni escritura en la cámara sin autorización expresa para ese caso concreto. Backup NVRAM y fila T0NN antes de cualquier prueba.
+- Commit convencional por fase con PENDIENTES en el mismo commit; push a `origin/main` tras cada fase; nunca firmware, binarios de Sony ni datos personales.
 
 ## Pendientes activos prioritarios (autoridad: PENDIENTES)
 
 | ID | Estado | Qué falta |
 |---|---|---|
-| E1 | NO_VERIFICADO | Origen del local 4/2 a `ModelScalarPb`/`ModelPbCap`; todo emisor posible es de datos o ejecución |
-| E25 | CERRADO CON LÍMITE; E25-01/03 BLOQUEADOS; E25-15 cierra la relación SetExposure/+0x30 | Candidato offline tipo 0 + compuerta 0 (2 bytes); **E25-02 cierra A=NO** (sin emisor BIONZ de `0x16`; `0x16` copia 129 B, no 1 B); B1a auditado (42 pruebas); falta validación física (M0 físico/M1) y fin de L0/BIONZ |
-| E25-04 | CERRADO CON LÍMITE | Recuperación de Darwin: A/B/C/G=NO; H exige hardware (donante + SWD/UART + corromper/recuperar); R1 sin copia externa |
-| E25-05 | CERRADO CON LÍMITE | Paquetes **3.23** (tipo 0 + B1a) y **3.24** (recuperación oficial) preparados y verificados offline (69 checks); falta autorización y medida del guard; el 3.24 solo sirve con acceso al actualizador |
-| E25-06 / E25-07 | CERRADO CON LÍMITE / ABIERTO | Auditoría independiente: sin defecto binario; puntos ciegos en las pruebas de E25-05; E25-07 = procedimiento con verificación de SHA-256 y `recuperacion-323` marcado obsoleto |
-| E25-17 | CERRADO CON LÍMITE | Exposición larga/BULB (estático): decisión C; el productor ya planifica `svd`/VTS hasta 30 s; sin medida física. Falta E25-19 (lectura de solo lectura en fotos mecánicas largas y BULB) |
-| E25-18 | CERRADO CON LÍMITE | Integración Silent de todo el rango (offline): decisión C (una fórmula, dos rutas); C3-B = `svd'=0`; ruta larga sin capacidades demostradas. C3-B en RAM pasa a E25-20 |
-| E25-20 | BLOQUEADO | T052-B1: C3-B en RAM (enganche `0x438c82fe`, scratch + `0x4383fa40` + `record+0xf0` + `4219 − líneas`), guardián y reversión; exige B0 físico, scratch verificado y autorización expresa; no 1/15/bulb/30 s |
-| E25-19 | CERRADO CON LÍMITE | Verificación física (solo lectura): decisión C; el registro de foto no lleva el plan nativo (svd=0, VTS 4176, período 4096); `cap` sin cadena demostrada |
-| E25-19d | CERRADO CON LÍMITE | Escritores de `cap+0x74f` (copia / 0 por fallo / 0 por cancelación); rama de host auxiliar, decisión B; sigue E25-19e (procedencia del 1) |
-| E25-19c | CERRADO CON LÍMITE | Fin de espera = Darwin→BIONZ `0x0e` (3,3); Tv viaja en `pkt[2..3]` del `0x0c`; `cap+0x728` = cronómetro 32 µs (2/4/8 s → 1,59/4,00/10,07 s) |
-| E25-19b | CERRADO | `cap` = copia física `0x952db580` (`[M]`, `r1=M` en `Run` 0x43b047d0); leído en una foto de 4 s: shd 1, svd 0, ShutMode 3, VTS 4176; la ranura la ocupa `M` (id 2, sub 9) en espera de mensaje sin límite. Sigue E25-19c (emisor, SetExposure) |
-| E6, E9, E11, E13, D5 | BLOQUEADO | Darwin fuera de `av-cam`; semántica de 112 registros y fin de integración; enlace banco/bit→P4E; servicio ODL/MMIO `0xf292b000`; hojas de datos IMX210/IMX235 |
-| F1–F8 | DIFERIDO / BLOQUEADO | P1–P24 (inventario en [revisión](../docs/capture/physical-test-review-2026-10-26.md)); traza de bus; Darwin real; revisión de S51 solo con evidencia nueva |
-| R1, R3 | PARCIAL / BLOQUEADO | R1: procedimiento y manifiesto listos (62/62), **copia externa sin verificar**; R3: historial público con `libmprctrl.so` (reescritura solo con orden expresa) |
+| E26-R33-BLOQUE0 / E26-FISICO-BOOT | ABIERTO (físico) | Leer la clave de `nflasha0` (bloque 0, `0xc00`, 8 B) y continuidad Multi pin 9 ↔ `BOOT_SERIAL_IN`; exige lector NAND/JTAG y autorización |
+| E26-R12-UART-FISICO / E26-R14-LED-MEDIDA | ABIERTO (físico) | UART0 pasiva (solo RX) en CN4906; vídeo del LED para confirmar 0,5/0,25 s |
+| E26-R5-NAND / -BIONZ / -FM3 | ABIERTO | Geometría y ECC de `nflasha3`, acceso SWD de lectura, protocolo del FM3; especificar herramienta y preservación antes de escribir |
+| E26-R30-HOSTRET0 | ABIERTO (baja) | Qué muestra el PC si `Execute` retorna 0 sin excepción |
+| E1 | NO_VERIFICADO | Origen del local 4/2 a `ModelScalarPb`/`ModelPbCap` |
+| E25-01 / E25-27 / E25-20 | ABIERTO / BLOQUEADO | Validación física del obturador (3.23 y 3.25) y C3-B en RAM; dependen de recuperar la cámara |
+| E25-19f, E25-EFCS-1…4 | ABIERTO | Escritores de `cap+0x74f`, `+0x504`, `+0x740`, `+0x11b0`; funciones Thumb sin sembrar |
+| D13 | ABIERTO | Filas del registro para E25-22/E25-23 e informe E25-23 |
+| R1 / R3 / R6 | PARCIAL / BLOQUEADO | Copia externa del respaldo; historial público con `libmprctrl.so` y con el número de serie (reescritura solo con orden expresa) |
 
 ## Bloqueos y límites de evidencia
 
-- Sin sembrar funciones Thumb a mano REA no cubre `0x437…`/`0x438…`; usar Ghidra histórico para verificar bytes.
-- Valores en ejecución (rectángulos de `[EXL]`, contenido de Backup, `params[+9]` = 2/3, activación de RecordImage) no salen del binario.
-- Cobertura del censo (133/372) y 3521 pruebas aprobadas (C4, sin re-verificar hoy) no acreditan funcionamiento en cámara.
-
-## EFCS REA — hallazgos nuevos (28-10-2026)
-
-Mapa completo de EFCS reconstruido mediante REA sobre `av-cam.bin` (9 funciones, grafo de llamadas, campos `cap`/`record`). Evidencia en `analysis/efcs-reia/evidence/`. Informe: `docs/capture/efcs-darwin-silent-integracion.md`.
-
-- **Productor nativo r5** `0x4383fa40`: calcula `r5 = frame − líneas`, `ShutMode = 0`, `svd = frames−1` desde Tv, período, VTS. Llamado por constructor normal y EFCS. Emulado vs T047: ±1 línea. **VERIFICADO**.
-- **EFCS → Darwin**: BIONZ envía ID `0x0c` y mensaje `0x107` (vía `0x43901a8c`); Darwin responde `0x0e` (ExposureReady). Con B1a (tipo 0), Darwin no mueve P4D/P4E. Sin diferencia en Darwin con/sin EFCS. **VERIFICADO (BIONZ) / INFERENCIA (Darwin)**.
-- **Selector implementado (E25-24b)**: BIONZ copia `cap+0x41c` a `pkt[0x0e]`; Darwin parcheado (`0x20c78`/`0x1fe6c` → cave `0x4318`) lee `S+0x3e` (copia de `pkt[0x0e]`): 0 → `0x1b080` original (EFCS, segunda cortina); ≠0 → 0 (Electronic, sin P4D/P4E ni motor). Sustituye B1a/tipo 0. **VERIFICADO offline; físico pendiente**.
-- **C3-B integrado (E25-26/E25-29)**: enganche en `0x438c82fe` (tras `0x43b1e520`, antes de `SetExposure`), solo paso 0 y condicionado a `cap+0x41c == 1`; consume el plan nativo de `cap+0x64c`, resta VTS, `svd=0`, `ShutMode=0`. EFCS idéntico al original en emulación; Electronic 1/8000–1/30 (`shd` 4211…2025). Ya forma parte del firmware integrado 3.25 construido offline (E25-29); la exposición física sigue sin validar. **VERIFICADO OFFLINE; físico pendiente**.
-
-## Próximos pasos concretos
-
-1. Si se reabre lo estático: seguir el productor de `0x10000005` hasta la entrada de estado 2 de `StateMgr` y `0x90de2e → RecordImage`;
-   fijar tamaño/contenido de Backup `0x3000b` antes de atribuir valores a los gates `+3/+6`; enlaces IMX210/YC/archivo/cortina y cuerpos locales de RecordStill (ocho parejas).
-2. Pedir al usuario: hojas de datos (D5), mapa de pines (E11), copia externa y verificación (R1), decisión sobre historial (R3), P10 (offset del campo de captura), medir ráfaga y verificar `sio3/sio4` si se quiere seguir con la cámara.
-3. Ejecutar T052 fase A (solo lectura: `record+0x20`, `+0xc`, `+0x1c`, `cap+0x11b0`) y fase B (RAM, enganche C3) con autorización expresa.
-4. Mantener la documentación según el protocolo de abajo.
+- Sin sembrar funciones Thumb a mano, REA no cubre `0x437…`/`0x438…`; usar Ghidra histórico para verificar bytes.
+- Valores en ejecución (rectángulos `[EXL]`, Backup `0x3000b`, `params[+9]`, activación de RecordImage) no salen del binario.
+- `nflasha0`, INFO6 (die0/plane1/block2) y el arranque de Darwin no están en ningún respaldo.
+- Censo, número de pruebas y sesiones miden documentación y verificadores, no funcionamiento en cámara.
 
 ## Protocolo de sesión
 
-**Al empezar:** instrucciones del proyecto (`AGENTS.md`/`CLAUDE.md`) → este archivo → pendientes relevantes en
-[PENDIENTES](../docs/PENDIENTES.md) → solo los informes necesarios (buscar con `scripts/knowledge/search.py`, por tema en [INDEX](../docs/INDEX.md)).
-**Durante:** `knowledge-navigation`, `contradiction-audit` antes de reutilizar un hallazgo; marcar `VERIFICADO` / `INFERENCIA` / `NO_VERIFICADO`.
-**Al terminar (en este orden):** informe en `docs/capture/` (+ prueba/evidencia) → fila afectada de PENDIENTES → [STATE](../docs/STATE.md) si cambió una conclusión
-→ este archivo solo si cambió el contexto mínimo (máx. ~150 líneas; no añadir un párrafo por sesión) → una entrada en [PROGRESS](PROGRESS.md)
-→ `python scripts/knowledge/build_subsystem_index.py` y `knowledge-maintenance` → commit y push. El README **no** se toca por una sesión nueva.
+**Al empezar:** `AGENTS.md`/`CLAUDE.md` → este archivo → pendientes relevantes en [PENDIENTES](../docs/PENDIENTES.md) → solo los informes
+necesarios (`scripts/knowledge/search.py`, [INDEX](../docs/INDEX.md)).
+**Durante:** `knowledge-navigation`; `contradiction-audit` antes de reutilizar un hallazgo; marcar `VERIFICADO` / `INFERENCIA` / `NO_VERIFICADO`.
+**Al terminar (en este orden):** informe en `docs/capture/` (+ prueba/evidencia) → fila de PENDIENTES → [STATE](../docs/STATE.md) si cambió una
+conclusión → este archivo solo si cambió el contexto mínimo (≤ ~150 líneas; **sin bloques por sesión**: una fila en las tablas de arriba) →
+una entrada en [PROGRESS](PROGRESS.md) → `python scripts/knowledge/build_subsystem_index.py` y `knowledge-maintenance` → commit y push.
+El README solo cambia si cambia el estado global (tabla «Estado técnico actual» o «Último cierre»).
 
 ## Responsabilidades documentales
 
