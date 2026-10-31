@@ -1,0 +1,1997 @@
+{
+ "total_funciones": 247,
+ "por_categoria": {
+  "auxiliar": 153,
+  "task": 1,
+  "thumb": 1,
+  "loader2": 1,
+  "mmio": 64,
+  "log": 9,
+  "mem": 1,
+  "led": 1,
+  "load": 1,
+  "timer": 2,
+  "tcb": 1,
+  "util": 10,
+  "memset": 1,
+  "fatal": 1
+ },
+ "funciones": [
+  {
+   "addr": "0xc0030030",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 216,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0030108",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 144,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0030198",
+   "name": "task_env_init",
+   "note": "crea entorno/pila de tarea (0x34ad2/0x34f6c) y registra dos manejadores (0x363e0/0x3640c)",
+   "size": 40,
+   "callers": 1,
+   "callees": 4
+  },
+  {
+   "addr": "0xc00301c0",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 4,
+   "callers": 2,
+   "callees": 0
+  },
+  {
+   "addr": "0xc00301c4",
+   "name": "thumb_entry",
+   "note": "Thumb: init global (0x3581a), entorno de tareas (0x30198), loader2_main (0x302d8); si retorna: fatal(0)",
+   "size": 16,
+   "callers": 1,
+   "callees": 4
+  },
+  {
+   "addr": "0xc00301d6",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 154,
+   "callers": 1,
+   "callees": 2
+  },
+  {
+   "addr": "0xc0030272",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 98,
+   "callers": 0,
+   "callees": 0
+  },
+  {
+   "addr": "0xc00302d8",
+   "name": "loader2_main",
+   "note": "secuencia de arranque completa (R24 §3): Init UDIF_P/D, InfSec_S, BOSS, Load InfSec_N/LBkup, Init DebugLv, Load LDR3, Exit UDIF_D/P, Jump LDR3",
+   "size": 280,
+   "callers": 1,
+   "callees": 16
+  },
+  {
+   "addr": "0xc00303f0",
+   "name": "mmio_access",
+   "note": "toca 0x49445520, 0x4c206461",
+   "size": 462,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc00305c0",
+   "name": "log_bos",
+   "note": "BOS:ibt_blksize:%d",
+   "size": 180,
+   "callers": 0,
+   "callees": 8
+  },
+  {
+   "addr": "0xc0030674",
+   "name": "mmio_access",
+   "note": "toca 0xc0000c00, 0xc0001400, 0xc0001500",
+   "size": 90,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc00306ce",
+   "name": "log_bos",
+   "note": "BOS:Load[DI:%d PL:%d BK:%d PG:%d SZ:%d MEM:%X]",
+   "size": 350,
+   "callers": 2,
+   "callees": 2
+  },
+  {
+   "addr": "0xc003082c",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 126,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc00308aa",
+   "name": "mmio_access",
+   "note": "toca 0xc0060000",
+   "size": 38,
+   "callers": 0,
+   "callees": 0
+  },
+  {
+   "addr": "0xc00308d0",
+   "name": "mmio_access",
+   "note": "toca 0xc0060000",
+   "size": 128,
+   "callers": 1,
+   "callees": 3
+  },
+  {
+   "addr": "0xc0030950",
+   "name": "mmio_access",
+   "note": "toca 0xc0060000, 0xc00c0000",
+   "size": 48,
+   "callers": 1,
+   "callees": 2
+  },
+  {
+   "addr": "0xc0030980",
+   "name": "log",
+   "note": "log(nivel,fmt,...): vsnprintf (0xc0034870 memset + motor de formato) + consola; confirma R13",
+   "size": 150,
+   "callers": 12,
+   "callees": 6
+  },
+  {
+   "addr": "0xc0030a18",
+   "name": "mem_dump",
+   "note": "vuelca bytes en hex (formato '\\n%X: '/'%02X ') vía log — soporte de MEM_DUMP",
+   "size": 100,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0030a7e",
+   "name": "mmio_access",
+   "note": "toca 0xc0060000",
+   "size": 44,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0030aaa",
+   "name": "log_ld3_w",
+   "note": "LD3_W:size is out of range:0x%X",
+   "size": 234,
+   "callers": 1,
+   "callees": 9
+  },
+  {
+   "addr": "0xc0030b94",
+   "name": "mmio_access",
+   "note": "toca 0xc0060000",
+   "size": 232,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0030c7c",
+   "name": "led_error_blink",
+   "note": "patrón del LED de error: −n -> n/1000, (n%1000)/100, n%100; `log` ERROR: Blinking LED / Loader boot failed (R13)",
+   "size": 208,
+   "callers": 2,
+   "callees": 8
+  },
+  {
+   "addr": "0xc0030d4c",
+   "name": "log_ins_e",
+   "note": "INS_E:Sign INFS_SAFE:%X",
+   "size": 32,
+   "callers": 1,
+   "callees": 2
+  },
+  {
+   "addr": "0xc0030d6c",
+   "name": "mmio_access",
+   "note": "toca 0xc00c8014",
+   "size": 20,
+   "callers": 2,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0030d80",
+   "name": "log_ins_e",
+   "note": "INS_E:Sign INFS_NORMAL:%X",
+   "size": 76,
+   "callers": 1,
+   "callees": 4
+  },
+  {
+   "addr": "0xc0030dcc",
+   "name": "mmio_access",
+   "note": "toca 0xc00c8014",
+   "size": 8,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0030dd4",
+   "name": "mmio_access",
+   "note": "toca 0xc00c8014",
+   "size": 20,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0030de8",
+   "name": "load_rom_info",
+   "note": "INS_E:ROM size/info/Load ROM — lee la cabecera de la imagen y la carga (bl 0xc00306ce)",
+   "size": 308,
+   "callers": 2,
+   "callees": 4
+  },
+  {
+   "addr": "0xc0030f1c",
+   "name": "mmio_access",
+   "note": "toca 0xc00c801c",
+   "size": 14,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0030f2c",
+   "name": "log_lbk_e",
+   "note": "LBK_E:No Bkup",
+   "size": 70,
+   "callers": 2,
+   "callees": 3
+  },
+  {
+   "addr": "0xc0030f72",
+   "name": "log_lbk_e",
+   "note": "LBK_E:Load LBK[%d]",
+   "size": 66,
+   "callers": 0,
+   "callees": 2
+  },
+  {
+   "addr": "0xc0030fb4",
+   "name": "log_lbk_e",
+   "note": "LBK_E:no data:%d",
+   "size": 228,
+   "callers": 1,
+   "callees": 2
+  },
+  {
+   "addr": "0xc003109a",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 24,
+   "callers": 2,
+   "callees": 1
+  },
+  {
+   "addr": "0xc00310b2",
+   "name": "timer_read_us",
+   "note": "lee 0xf240310c (mismo temporizador que BootROM) >>1 para el «(%luus)» del log de salto a LDR3",
+   "size": 10,
+   "callers": 2,
+   "callees": 0
+  },
+  {
+   "addr": "0xc00310bc",
+   "name": "timer_wait",
+   "note": "espera activa sobre 0xf2403000+0x10c (misma familia de temporizador que BootROM, R22)",
+   "size": 48,
+   "callers": 3,
+   "callees": 0
+  },
+  {
+   "addr": "0xc00310ec",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 32,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc003110c",
+   "name": "mmio_access",
+   "note": "toca 0xc0060000",
+   "size": 82,
+   "callers": 2,
+   "callees": 0
+  },
+  {
+   "addr": "0xc003115e",
+   "name": "mmio_access",
+   "note": "toca 0xc0060000",
+   "size": 30,
+   "callers": 4,
+   "callees": 0
+  },
+  {
+   "addr": "0xc003117c",
+   "name": "mmio_access",
+   "note": "toca 0xc0060000",
+   "size": 22,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0031192",
+   "name": "mmio_access",
+   "note": "toca 0xc0060000",
+   "size": 22,
+   "callers": 2,
+   "callees": 0
+  },
+  {
+   "addr": "0xc00311a8",
+   "name": "mmio_access",
+   "note": "toca 0xc0060000",
+   "size": 28,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc00311c4",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 52,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc00311f8",
+   "name": "mmio_access",
+   "note": "toca 0xc00c8164",
+   "size": 28,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0031214",
+   "name": "mmio_access",
+   "note": "toca 0xc00c8164",
+   "size": 28,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0031230",
+   "name": "mmio_access",
+   "note": "toca 0xc00c8188",
+   "size": 6,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0031238",
+   "name": "mmio_access",
+   "note": "toca 0xc00c8188",
+   "size": 12,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0031244",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 22,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc003125a",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 18,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc003126c",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 32,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc003128c",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 12,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0031298",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 48,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc00312c8",
+   "name": "mmio_access",
+   "note": "toca 0xc00365ec",
+   "size": 96,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0031328",
+   "name": "mmio_access",
+   "note": "toca 0xc00365ec",
+   "size": 172,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc00313d4",
+   "name": "mmio_access",
+   "note": "toca 0xc003662a",
+   "size": 194,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0031498",
+   "name": "mmio_access",
+   "note": "toca 0xc003662a",
+   "size": 172,
+   "callers": 1,
+   "callees": 2
+  },
+  {
+   "addr": "0xc0031544",
+   "name": "mmio_access",
+   "note": "toca 0xc003662a",
+   "size": 58,
+   "callers": 2,
+   "callees": 2
+  },
+  {
+   "addr": "0xc003157e",
+   "name": "mmio_access",
+   "note": "toca 0xc003662a",
+   "size": 54,
+   "callers": 0,
+   "callees": 2
+  },
+  {
+   "addr": "0xc00315b4",
+   "name": "mmio_access",
+   "note": "toca 0xc003662a",
+   "size": 42,
+   "callers": 0,
+   "callees": 2
+  },
+  {
+   "addr": "0xc00315de",
+   "name": "mmio_access",
+   "note": "toca 0xc003662a",
+   "size": 430,
+   "callers": 1,
+   "callees": 3
+  },
+  {
+   "addr": "0xc003178c",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 42,
+   "callers": 0,
+   "callees": 4
+  },
+  {
+   "addr": "0xc00317b6",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 6,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc00317bc",
+   "name": "mmio_access",
+   "note": "toca 0xc00c818c",
+   "size": 8,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc00317c4",
+   "name": "mmio_access",
+   "note": "toca 0xc00c818c, 0xc00c8240",
+   "size": 196,
+   "callers": 1,
+   "callees": 9
+  },
+  {
+   "addr": "0xc003188a",
+   "name": "mmio_access",
+   "note": "toca 0xc00c8240",
+   "size": 162,
+   "callers": 0,
+   "callees": 4
+  },
+  {
+   "addr": "0xc003192c",
+   "name": "mmio_access",
+   "note": "toca 0xc00c818c, 0xc00c8240",
+   "size": 92,
+   "callers": 1,
+   "callees": 5
+  },
+  {
+   "addr": "0xc0031988",
+   "name": "mmio_access",
+   "note": "toca 0xc00c8240",
+   "size": 148,
+   "callers": 1,
+   "callees": 13
+  },
+  {
+   "addr": "0xc0031a1e",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 80,
+   "callers": 1,
+   "callees": 11
+  },
+  {
+   "addr": "0xc0031a6e",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 2,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0031a70",
+   "name": "mmio_access",
+   "note": "toca 0xc00c8240",
+   "size": 4,
+   "callers": 2,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0031a74",
+   "name": "mmio_access",
+   "note": "toca 0xc00c8240",
+   "size": 6,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0031a7a",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 20,
+   "callers": 2,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0031a8e",
+   "name": "mmio_access",
+   "note": "toca 0xc0031cc9, 0xc0031ddf, 0xc0032337, 0xc00323e3",
+   "size": 122,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0031b0a",
+   "name": "mmio_access",
+   "note": "toca 0xc00c8240",
+   "size": 78,
+   "callers": 1,
+   "callees": 3
+  },
+  {
+   "addr": "0xc0031b5a",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 252,
+   "callers": 1,
+   "callees": 8
+  },
+  {
+   "addr": "0xc0031c58",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 110,
+   "callers": 2,
+   "callees": 8
+  },
+  {
+   "addr": "0xc0031cc8",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 278,
+   "callers": 0,
+   "callees": 14
+  },
+  {
+   "addr": "0xc0031dde",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 62,
+   "callers": 0,
+   "callees": 4
+  },
+  {
+   "addr": "0xc0031e1c",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 426,
+   "callers": 1,
+   "callees": 12
+  },
+  {
+   "addr": "0xc0031fc6",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 338,
+   "callers": 2,
+   "callees": 11
+  },
+  {
+   "addr": "0xc0032118",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 292,
+   "callers": 1,
+   "callees": 9
+  },
+  {
+   "addr": "0xc003223c",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 250,
+   "callers": 1,
+   "callees": 8
+  },
+  {
+   "addr": "0xc0032336",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 178,
+   "callers": 0,
+   "callees": 8
+  },
+  {
+   "addr": "0xc00323e8",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 106,
+   "callers": 1,
+   "callees": 5
+  },
+  {
+   "addr": "0xc0032452",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 240,
+   "callers": 0,
+   "callees": 11
+  },
+  {
+   "addr": "0xc0032542",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 180,
+   "callers": 2,
+   "callees": 8
+  },
+  {
+   "addr": "0xc00325f6",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 86,
+   "callers": 0,
+   "callees": 5
+  },
+  {
+   "addr": "0xc003264c",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 416,
+   "callers": 0,
+   "callees": 13
+  },
+  {
+   "addr": "0xc00327ec",
+   "name": "mmio_access",
+   "note": "toca 0xc00366b0, 0xc00c8190",
+   "size": 168,
+   "callers": 0,
+   "callees": 9
+  },
+  {
+   "addr": "0xc0032896",
+   "name": "mmio_access",
+   "note": "toca 0xc00366b0, 0xc00c8190",
+   "size": 126,
+   "callers": 0,
+   "callees": 5
+  },
+  {
+   "addr": "0xc0032914",
+   "name": "mmio_access",
+   "note": "toca 0xc00366b0",
+   "size": 54,
+   "callers": 0,
+   "callees": 3
+  },
+  {
+   "addr": "0xc003294a",
+   "name": "mmio_access",
+   "note": "toca 0xc00c8190",
+   "size": 42,
+   "callers": 0,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0032974",
+   "name": "mmio_access",
+   "note": "toca 0xc00c8190",
+   "size": 6,
+   "callers": 2,
+   "callees": 0
+  },
+  {
+   "addr": "0xc003297a",
+   "name": "mmio_access",
+   "note": "toca 0xc00c8190",
+   "size": 6,
+   "callers": 14,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0032980",
+   "name": "tcb_get",
+   "note": "lector de un campo de la tarea actual (tabla en 0xc00c8190) — forma idéntica en 0xc0032980..0xc00329bc (8 campos)",
+   "size": 6,
+   "callers": 14,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0032986",
+   "name": "mmio_access",
+   "note": "toca 0xc00c8190",
+   "size": 6,
+   "callers": 12,
+   "callees": 0
+  },
+  {
+   "addr": "0xc003298c",
+   "name": "mmio_access",
+   "note": "toca 0xc00c8190",
+   "size": 8,
+   "callers": 13,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0032994",
+   "name": "mmio_access",
+   "note": "toca 0xc00c8190",
+   "size": 8,
+   "callers": 2,
+   "callees": 0
+  },
+  {
+   "addr": "0xc003299c",
+   "name": "mmio_access",
+   "note": "toca 0xc00c8190",
+   "size": 8,
+   "callers": 3,
+   "callees": 0
+  },
+  {
+   "addr": "0xc00329a4",
+   "name": "mmio_access",
+   "note": "toca 0xc00c8190",
+   "size": 8,
+   "callers": 9,
+   "callees": 0
+  },
+  {
+   "addr": "0xc00329ac",
+   "name": "mmio_access",
+   "note": "toca 0xc00c8190",
+   "size": 8,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc00329b4",
+   "name": "mmio_access",
+   "note": "toca 0xc00c8190",
+   "size": 8,
+   "callers": 3,
+   "callees": 0
+  },
+  {
+   "addr": "0xc00329bc",
+   "name": "util_compartida",
+   "note": "sin cadena de log; reutilizada por 19 funciones",
+   "size": 252,
+   "callers": 19,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0032ab8",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 128,
+   "callers": 2,
+   "callees": 7
+  },
+  {
+   "addr": "0xc0032b3a",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 300,
+   "callers": 0,
+   "callees": 13
+  },
+  {
+   "addr": "0xc0032c66",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 80,
+   "callers": 0,
+   "callees": 5
+  },
+  {
+   "addr": "0xc0032cb6",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 224,
+   "callers": 0,
+   "callees": 11
+  },
+  {
+   "addr": "0xc0032d96",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 320,
+   "callers": 2,
+   "callees": 11
+  },
+  {
+   "addr": "0xc0032ed6",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 528,
+   "callers": 0,
+   "callees": 17
+  },
+  {
+   "addr": "0xc00330e6",
+   "name": "mmio_access",
+   "note": "toca 0xc00366ce",
+   "size": 190,
+   "callers": 0,
+   "callees": 5
+  },
+  {
+   "addr": "0xc00331a4",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 38,
+   "callers": 2,
+   "callees": 1
+  },
+  {
+   "addr": "0xc00331ca",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 3 llamador(es)",
+   "size": 14,
+   "callers": 3,
+   "callees": 0
+  },
+  {
+   "addr": "0xc00331d8",
+   "name": "mmio_access",
+   "note": "toca 0xc00c81f8",
+   "size": 38,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc00331fe",
+   "name": "mmio_access",
+   "note": "toca 0xc00c81f8",
+   "size": 30,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc003321c",
+   "name": "mmio_access",
+   "note": "toca 0xc00c81f8",
+   "size": 84,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0033270",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 2,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0033272",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 18,
+   "callers": 1,
+   "callees": 2
+  },
+  {
+   "addr": "0xc0033286",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 18,
+   "callers": 2,
+   "callees": 2
+  },
+  {
+   "addr": "0xc003329a",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 16,
+   "callers": 1,
+   "callees": 2
+  },
+  {
+   "addr": "0xc00332ac",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 16,
+   "callers": 1,
+   "callees": 2
+  },
+  {
+   "addr": "0xc00332be",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 58,
+   "callers": 0,
+   "callees": 4
+  },
+  {
+   "addr": "0xc00332f8",
+   "name": "util_compartida",
+   "note": "sin cadena de log; reutilizada por 15 funciones",
+   "size": 16,
+   "callers": 15,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0033308",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 2,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc003330a",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 2,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc003330c",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 2,
+   "callers": 2,
+   "callees": 0
+  },
+  {
+   "addr": "0xc003330e",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 2,
+   "callers": 2,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0033310",
+   "name": "util_compartida",
+   "note": "sin cadena de log; reutilizada por 17 funciones",
+   "size": 18,
+   "callers": 17,
+   "callees": 2
+  },
+  {
+   "addr": "0xc0033324",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 3 llamador(es)",
+   "size": 20,
+   "callers": 3,
+   "callees": 2
+  },
+  {
+   "addr": "0xc003333a",
+   "name": "util_compartida",
+   "note": "sin cadena de log; reutilizada por 14 funciones",
+   "size": 40,
+   "callers": 14,
+   "callees": 2
+  },
+  {
+   "addr": "0xc0033364",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 18,
+   "callers": 1,
+   "callees": 2
+  },
+  {
+   "addr": "0xc0033378",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 7 llamador(es)",
+   "size": 18,
+   "callers": 7,
+   "callees": 2
+  },
+  {
+   "addr": "0xc003338c",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 24,
+   "callers": 2,
+   "callees": 2
+  },
+  {
+   "addr": "0xc00333a4",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 2,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc00333a6",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 86,
+   "callers": 2,
+   "callees": 2
+  },
+  {
+   "addr": "0xc00333fc",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 114,
+   "callers": 2,
+   "callees": 4
+  },
+  {
+   "addr": "0xc0033470",
+   "name": "mmio_access",
+   "note": "toca 0xc00366e0",
+   "size": 80,
+   "callers": 1,
+   "callees": 4
+  },
+  {
+   "addr": "0xc00334c0",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 316,
+   "callers": 1,
+   "callees": 2
+  },
+  {
+   "addr": "0xc00335fe",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 44,
+   "callers": 2,
+   "callees": 2
+  },
+  {
+   "addr": "0xc003362c",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 56,
+   "callers": 2,
+   "callees": 2
+  },
+  {
+   "addr": "0xc0033664",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 18,
+   "callers": 1,
+   "callees": 2
+  },
+  {
+   "addr": "0xc0033678",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 16,
+   "callers": 2,
+   "callees": 2
+  },
+  {
+   "addr": "0xc003368a",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 6 llamador(es)",
+   "size": 18,
+   "callers": 6,
+   "callees": 2
+  },
+  {
+   "addr": "0xc003369e",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 38,
+   "callers": 1,
+   "callees": 2
+  },
+  {
+   "addr": "0xc00336c6",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 98,
+   "callers": 1,
+   "callees": 3
+  },
+  {
+   "addr": "0xc0033728",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 88,
+   "callers": 1,
+   "callees": 3
+  },
+  {
+   "addr": "0xc0033780",
+   "name": "mmio_access",
+   "note": "toca 0xc00366e0",
+   "size": 364,
+   "callers": 2,
+   "callees": 13
+  },
+  {
+   "addr": "0xc00338ec",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 2,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc00338ee",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 2,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc00338f0",
+   "name": "util_compartida",
+   "note": "sin cadena de log; reutilizada por 17 funciones",
+   "size": 20,
+   "callers": 17,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0033904",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 86,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc003395c",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 124,
+   "callers": 0,
+   "callees": 6
+  },
+  {
+   "addr": "0xc00339d8",
+   "name": "mmio_access",
+   "note": "toca 0xc00c831c",
+   "size": 16,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc00339e8",
+   "name": "util_compartida",
+   "note": "sin cadena de log; reutilizada por 18 funciones",
+   "size": 10,
+   "callers": 18,
+   "callees": 0
+  },
+  {
+   "addr": "0xc00339f4",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 60,
+   "callers": 2,
+   "callees": 2
+  },
+  {
+   "addr": "0xc0033a32",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 3 llamador(es)",
+   "size": 84,
+   "callers": 3,
+   "callees": 2
+  },
+  {
+   "addr": "0xc0033a86",
+   "name": "util_compartida",
+   "note": "sin cadena de log; reutilizada por 18 funciones",
+   "size": 2,
+   "callers": 18,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0033a88",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 46,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0033ab6",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 42,
+   "callers": 2,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0033ae0",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 36,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0033b04",
+   "name": "util_compartida",
+   "note": "sin cadena de log; reutilizada por 12 funciones",
+   "size": 124,
+   "callers": 12,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0033b80",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 64,
+   "callers": 1,
+   "callees": 2
+  },
+  {
+   "addr": "0xc0033bc0",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 36,
+   "callers": 2,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0033be6",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 3 llamador(es)",
+   "size": 22,
+   "callers": 3,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0033bfe",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 54,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0033c34",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 128,
+   "callers": 2,
+   "callees": 9
+  },
+  {
+   "addr": "0xc0033cb4",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 280,
+   "callers": 0,
+   "callees": 15
+  },
+  {
+   "addr": "0xc0033dcc",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 98,
+   "callers": 0,
+   "callees": 5
+  },
+  {
+   "addr": "0xc0033e34",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 94,
+   "callers": 2,
+   "callees": 2
+  },
+  {
+   "addr": "0xc0033e92",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 78,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0033ee0",
+   "name": "mmio_access",
+   "note": "toca 0x52760004",
+   "size": 816,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0034210",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 52,
+   "callers": 1,
+   "callees": 2
+  },
+  {
+   "addr": "0xc0034244",
+   "name": "mmio_access",
+   "note": "toca 0xc00c821c",
+   "size": 24,
+   "callers": 10,
+   "callees": 1
+  },
+  {
+   "addr": "0xc003425c",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 56,
+   "callers": 1,
+   "callees": 2
+  },
+  {
+   "addr": "0xc0034294",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 6 llamador(es)",
+   "size": 44,
+   "callers": 6,
+   "callees": 0
+  },
+  {
+   "addr": "0xc00342c0",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 6 llamador(es)",
+   "size": 36,
+   "callers": 6,
+   "callees": 0
+  },
+  {
+   "addr": "0xc00342e4",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 84,
+   "callers": 1,
+   "callees": 2
+  },
+  {
+   "addr": "0xc0034338",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 208,
+   "callers": 0,
+   "callees": 3
+  },
+  {
+   "addr": "0xc0034408",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 64,
+   "callers": 0,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0034448",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 400,
+   "callers": 1,
+   "callees": 2
+  },
+  {
+   "addr": "0xc00345d8",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 114,
+   "callers": 1,
+   "callees": 3
+  },
+  {
+   "addr": "0xc003464a",
+   "name": "util_compartida",
+   "note": "sin cadena de log; reutilizada por 55 funciones",
+   "size": 14,
+   "callers": 55,
+   "callees": 3
+  },
+  {
+   "addr": "0xc003465a",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 58,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0034694",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 3 llamador(es)",
+   "size": 240,
+   "callers": 3,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0034784",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 234,
+   "callers": 2,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0034870",
+   "name": "memset",
+   "note": "memset: igual forma que BootROM 0xffff1926 (bloques de 0x20, relleno por tamaño decreciente)",
+   "size": 78,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc00348be",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 3 llamador(es)",
+   "size": 22,
+   "callers": 3,
+   "callees": 0
+  },
+  {
+   "addr": "0xc00348d4",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 3 llamador(es)",
+   "size": 386,
+   "callers": 3,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0034a56",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 32,
+   "callers": 0,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0034a76",
+   "name": "fatal",
+   "note": "fatal(código): niega el código, llama a la rutina LED (0xc0030c7c) y no retorna (b self)",
+   "size": 10,
+   "callers": 2,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0034a80",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 2,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0034a84",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 16,
+   "callers": 2,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0034a94",
+   "name": "mmio_access",
+   "note": "toca 0xc00c8354",
+   "size": 8,
+   "callers": 3,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0034a9c",
+   "name": "mmio_access",
+   "note": "toca 0xc00c834c",
+   "size": 16,
+   "callers": 2,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0034aac",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 36,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0034ad2",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 94,
+   "callers": 1,
+   "callees": 3
+  },
+  {
+   "addr": "0xc0034b30",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 14,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0034b3e",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 18,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0034b50",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 3 llamador(es)",
+   "size": 18,
+   "callers": 3,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0034b62",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 232,
+   "callers": 0,
+   "callees": 2
+  },
+  {
+   "addr": "0xc0034c4a",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 3 llamador(es)",
+   "size": 38,
+   "callers": 3,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0034c70",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 26,
+   "callers": 2,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0034c8a",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 46,
+   "callers": 0,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0034cb8",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 34,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0034cdc",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 188,
+   "callers": 1,
+   "callees": 3
+  },
+  {
+   "addr": "0xc0034d98",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 194,
+   "callers": 0,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0034e5c",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 44,
+   "callers": 0,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0034e88",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 156,
+   "callers": 1,
+   "callees": 2
+  },
+  {
+   "addr": "0xc0034f24",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 16,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0034f34",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 42,
+   "callers": 2,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0034f60",
+   "name": "mmio_access",
+   "note": "toca 0xc00c834c",
+   "size": 12,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0034f6c",
+   "name": "mmio_access",
+   "note": "toca 0xc00c836c",
+   "size": 8,
+   "callers": 3,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0034f74",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 52,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0034fa8",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 152,
+   "callers": 2,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0035042",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 428,
+   "callers": 1,
+   "callees": 5
+  },
+  {
+   "addr": "0xc00351ee",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 606,
+   "callers": 0,
+   "callees": 7
+  },
+  {
+   "addr": "0xc003544c",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 334,
+   "callers": 0,
+   "callees": 2
+  },
+  {
+   "addr": "0xc003559a",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 426,
+   "callers": 1,
+   "callees": 3
+  },
+  {
+   "addr": "0xc0035744",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 44,
+   "callers": 0,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0035770",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 32,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0035790",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 76,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc00357dc",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 48,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc003580c",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 12,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc003581a",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 22,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0035830",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 52,
+   "callers": 0,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0035864",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 124,
+   "callers": 2,
+   "callees": 2
+  },
+  {
+   "addr": "0xc00358e0",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 216,
+   "callers": 1,
+   "callees": 3
+  },
+  {
+   "addr": "0xc00359b8",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 10,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc00359c4",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 52,
+   "callers": 2,
+   "callees": 1
+  },
+  {
+   "addr": "0xc00359f8",
+   "name": "mmio_access",
+   "note": "toca 0x4080f040",
+   "size": 76,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc0035a44",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 14,
+   "callers": 2,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0035a52",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 146,
+   "callers": 0,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0035ae4",
+   "name": "util_compartida",
+   "note": "sin cadena de log; reutilizada por 10 funciones",
+   "size": 32,
+   "callers": 10,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0035b08",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 228,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0035bec",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 26,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0035c08",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 796,
+   "callers": 0,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0035f24",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 8,
+   "callers": 2,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0035f2c",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 190,
+   "callers": 0,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0035fea",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 38,
+   "callers": 2,
+   "callees": 2
+  },
+  {
+   "addr": "0xc0036012",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 38,
+   "callers": 2,
+   "callees": 2
+  },
+  {
+   "addr": "0xc003603a",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 42,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0036066",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 540,
+   "callers": 0,
+   "callees": 0
+  },
+  {
+   "addr": "0xc0036282",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 170,
+   "callers": 0,
+   "callees": 0
+  },
+  {
+   "addr": "0xc003632e",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 118,
+   "callers": 0,
+   "callees": 0
+  },
+  {
+   "addr": "0xc00363a8",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 2 llamador(es)",
+   "size": 40,
+   "callers": 2,
+   "callees": 0
+  },
+  {
+   "addr": "0xc00363d0",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 16,
+   "callers": 1,
+   "callees": 0
+  },
+  {
+   "addr": "0xc00363e0",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 44,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc003640c",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 1 llamador(es)",
+   "size": 968,
+   "callers": 1,
+   "callees": 1
+  },
+  {
+   "addr": "0xc00367d4",
+   "name": "auxiliar",
+   "note": "sin cadena de log ni MMIO directo; 0 llamador(es)",
+   "size": 544,
+   "callers": 0,
+   "callees": 0
+  }
+ ]
+}

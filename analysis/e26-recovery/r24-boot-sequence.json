@@ -1,0 +1,87 @@
+[
+ [
+  "0xc0030000",
+  "entry_arm",
+  "ARM: pila, invalidación de caché, VIC"
+ ],
+ [
+  "0xc0030054",
+  "mode_switch",
+  "conmuta a Thumb"
+ ],
+ [
+  "0xc00301c4",
+  "thumb_entry",
+  "init global + entorno de tarea + loader2_main"
+ ],
+ [
+  "0xc00302d8",
+  "loader2_main",
+  "Loader2 Ver.33.01.90 (Jan 24 2014 22:07:33)"
+ ],
+ [
+  "0xc00311f8",
+  "udif_p_init",
+  "LDR:Init UDIF_P"
+ ],
+ [
+  "0xc0031230",
+  "udif_d_init",
+  "LDR:Init UDIF_D"
+ ],
+ [
+  "0xc0030d4c",
+  "infsec_s_init",
+  "LDR:Init InfSec_S"
+ ],
+ [
+  "0xc0030674",
+  "boss_init",
+  "LDR:Init BOSS"
+ ],
+ [
+  "0xc0030d80",
+  "infsec_n_load",
+  "LDR:Load InfSec_N"
+ ],
+ [
+  "0xc0030f1c",
+  "lbkup_load",
+  "LDR:Load LBkup"
+ ],
+ [
+  "0xc00308d0",
+  "debuglv_init",
+  "LDR:Init DebugLv"
+ ],
+ [
+  "0xc0030de8",
+  "load_rom_info",
+  "LDR:Load LDR3 -> INS_E:ROM size/info/Load ROM"
+ ],
+ [
+  "0xc0031238",
+  "udif_d_exit",
+  "LDR:Exit UDIF_D"
+ ],
+ [
+  "0xc0031214",
+  "udif_p_exit",
+  "LDR:Exit UDIF_P"
+ ],
+ [
+  "0xc00310b2",
+  "timer_read_us",
+  "mide el tiempo de arranque (%luus)"
+ ],
+ [
+  "0xc003082c",
+  "loader3_prep",
+  "previo al salto"
+ ],
+ [
+  "r5=0xc01f0000",
+  "loader3_jump",
+  "blx r5 -> entrada de Loader3 (R13)"
+ ]
+]

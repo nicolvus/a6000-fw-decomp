@@ -1,6 +1,8 @@
 # Estado actual — léeme primero
 
 > **E26 R20 (selector del BootROM reconstruido):** [informe](../docs/capture/e26-r20-bootrom-selector.md). `FUN_ffff1062` decide por `MODEREG` (`0xf2915010`) **bit 0**: 0 → Loader2 (`0xc0030000`); 1 → ruta de servicio (GPIO4.21 = temporización, GPIO4.22 = salto directo a serie; si falla el almacenamiento o no hay clave → recepción serie; con clave en `0xc0001200` hace falta enviarla). Bit 0 = `BOOT_MAIN` (P7→CL1000) por inferencia; nivel físico sin verificar (`E26-R20-BOOTMAIN-NIVEL`, `E26-R20-GPIO4`). Emulación `r20_bootrom_selector.py` con tabla de decisiones.
+> **E26 R24 (Loader2 completo):** [informe](../docs/capture/e26-r24-loader2-completo.md). 247/247 funciones de `bootloader.bin` localizadas y con rol; secuencia de arranque completa (ARM→Thumb→`loader2_main`: UDIF/InfSec/BOSS/LBkup/LDR3→handoff a Loader3 `0xc01f0000`); confirma −306→1/3/6 (R13) y el temporizador de 4 MHz (R22) por una ruta independiente.
+
 > **E26 R23 (BootROM cerrado por completo):** [informe](../docs/capture/e26-r23-bootrom-flujo-completo.md). Flujo línea a línea de `main`/`serial_entry`; 109/109 pasos de traza y 25/25 códigos de error resueltos. Corrige R12 §3: cabecera dañada no recuperable desvía a `serial_entry`, no es «éxito aparente». Nada del BootROM queda sin identificar; lo físico (`nflasha0`, GPIO4 bit21/22, `BOOT_MAIN`) sigue en `E26-FISICO-BOOT`.
 
 > **E26 R22 (BootROM completo):** [informe](../docs/capture/e26-r22-bootrom-mapa-completo.md). 57 rutinas nombradas (vectores/reset ARM, carga de bloques, claves, receptor serie, CRC, consola/traza, LED, `printf`/`memset`), mapa de eSRAM y códigos de error. **Reloj de temporizadores = 4 MHz verificado en el ROM** (parpadeo de error 0,5 s/0,25 s/pausa 2 s) ⇒ baudios R21 firmes.

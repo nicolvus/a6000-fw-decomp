@@ -3248,3 +3248,10 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 - **Hallazgos:** pseudocódigo línea a línea de `main` y `serial_entry`; 109 pasos de traza y 25 códigos de error resueltos a su sitio emisor exacto; corrige R12 §3 (cabecera dañada desvía a `serial_entry`, no es éxito aparente).
 - **Cierre:** el BootROM queda completo en estático; lo que falta es físico (`E26-FISICO-BOOT`).
 - **Entregables:** `docs/capture/e26-r23-bootrom-flujo-completo.md`, `analysis/e26-recovery/r22-trace-steps.json`, `analysis/e26-recovery/r22-error-codes.json`, `tests/test_e26_r23_bootrom_flujo_completo.py`.
+
+## E26-R24 — mapa completo de Loader2 (30-10-2026)
+
+- **Pedido:** seguir con Loader2 (`bootloader.bin`), completo.
+- **Hallazgos:** 247/247 funciones localizadas y con rol; secuencia de arranque `loader2_main` completa por cadenas `LDR:`/`BOS:`/`INS_E:`; entrada ARM→Thumb verificada por bytes; handoff a Loader3 (`0xc01f0000`); confirma −306→1/3/6 (R13) y el temporizador de 4 MHz (R22) de forma independiente.
+- **Límite:** 153 funciones de soporte (RTOS interno) solo inventariadas por dirección/grafo, no narradas una a una.
+- **Entregables:** `docs/capture/e26-r24-loader2-completo.md`, `analysis/e26-recovery/r24_loader2_map.py`, `r24-loader2-functions.json`, `r24-boot-sequence.json`, `tests/test_e26_r24_loader2_map.py`.
