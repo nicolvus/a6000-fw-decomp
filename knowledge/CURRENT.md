@@ -1,5 +1,7 @@
 # Estado actual — léeme primero
 
+> **E26 R35 (`serial_receiver`, varios paquetes por llamada):** [informe](../docs/capture/e26-r35-serial-receiver-multi-paquete.md). Bucle interno confirmado por bytes: tras el 1.er paquete siempre reintenta; termina cuando el tipo de un paquete posterior coincide con el del primero y `get_flag0()` o `get_flag1()` está a 1. `main` usa la misma función para la «clave» de R32/R33 (límite, no reabre).
+
 > **E26 R34 (`serial_entry`, todas las banderas):** [informe](../docs/capture/e26-r34-serial-entry-flags.md). Emulado: sin bucle de reintento. Corrige R23 §2 (el pseudocódigo describía un reintento que los bytes no tienen).
 
 > **E26 R33 (clave de `nflasha0`):** [informe](../docs/capture/e26-r33-veracidad-clave-nflasha0.md). Probado: tabla = bloque 0, sector `0xc00`, no borrado. No probado: que sea una clave válida (palabra 0 + `~crc32`); el valor solo se obtiene leyendo la NAND (`E26-R33-BLOQUE0`). R23 §1 tenía las condiciones invertidas.

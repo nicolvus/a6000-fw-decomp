@@ -1,5 +1,7 @@
 # Estado vigente — Sony A6000 reverse engineering
 
+> **E26 R35 (`serial_receiver` recibe varios paquetes por llamada, 31-10-2026):** [informe](capture/e26-r35-serial-receiver-multi-paquete.md). `0xffff0876` (hasta ahora caja sustituible en R20/R21/R34) tiene un bucle interno: tras el primer paquete siempre vuelve a sincronizar, y solo termina cuando el tipo de un paquete posterior coincide con el del primero; el chequeo final es `get_flag0() OR get_flag1()`, satisfecho por cualquier paquete tipo 0 o tipo `0xFFFF` visto en la secuencia. `main` usa la misma función para la «clave» de R32/R33 (límite anotado, sin reabrir esos informes).
+
 > **E26 R34 (`serial_entry` emulado con todas las banderas, 31-10-2026):** [informe](capture/e26-r34-serial-entry-flags.md). No hay bucle de reintento dentro de `serial_entry`: solo dos saltos llegan a la llamada de recepción (bytes verificados), y aceptar un paquete sin que quede fijado el motivo de salto es un error directo (`0x1001`), igual que cualquier error de recepción. Corrige el pseudocódigo de R23 §2.
 
 > **E26 R33 (veracidad de la clave de `nflasha0`, 31-10-2026):** [informe](capture/e26-r33-veracidad-clave-nflasha0.md). La tabla viene del bloque 0 de la NAND (`nflasha0`, sector `0xc00`), y eso está verificado por bytes. Que la cámara arranque con bit 0 = 1 solo prueba que ese sector **no está borrado**, no que haya una clave válida (palabra 0 + `~crc32`). El valor sigue sin conocerse (`E26-R33-BLOQUE0`). Corrige R23 §1 (condiciones invertidas); R12 §3 sigue vigente.

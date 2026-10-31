@@ -3330,3 +3330,11 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 - **Corrección:** R23 §2 tenía un bucle de reintento inexistente y mezclaba dos tramos bajo una sola etiqueta `REGISTRO_MOTIVO`.
 - **Límite:** `serial_receiver`/`rx_packet` sigue tratado como caja sustituible (su lógica interna es de R9/R21); no se emuló la forma de onda real.
 - **Entregables:** `docs/capture/e26-r34-serial-entry-flags.md`, `analysis/e26-recovery/r33_serial_entry_flags.py`, `tests/test_e26_r34_serial_entry_flags.py`.
+
+## E26-R35 — `serial_receiver` recibe varios paquetes por llamada (31-10-2026)
+
+- **Pedido:** revisar si `rx_packet`/`serial_receiver` (`0x876`) puede recibir varios paquetes en una sola llamada (seguimiento de R34, donde quedó como caja sustituible sin examinar).
+- **Hallazgos (desensamblado completo de la función, 279 instrucciones, dos tramos separados por un pool de literales en `0x944–0x99f`):** tras procesar un paquete, `fp==0` (primer paquete) fuerza siempre otra vuelta a `0x89c` (resincronizar), sea el tipo que sea. Solo con `fp==1` y el tipo del paquete actual igual al del primero (`sl`) se sale del bucle; el chequeo final es `[0xc0010004] OR [0xc0010008]` (= `get_flag0()`/`get_flag1()`, mismas variables que lee `serial_entry`, confirmado por ser la única otra copia del literal `0xc0010004` en todo el ROM). Un paquete tipo 0 pone a 1 `[0xc0010004]`; uno tipo `0xFFFF` guarda el destino de salto y pone a 1 `[0xc0010008]`. Confirmado que solo dos saltos (`0xb90`, `0xb96`) llegan al punto de resincronización.
+- **Corrección (propia, dentro de esta sesión, no de un informe publicado):** la hipótesis inicial de que el chequeo final exigía específicamente un paquete de salto era incorrecta; es un OR que acepta cualquier paquete tipo 0 o tipo `0xFFFF` visto en la secuencia, no necesariamente el que cierra el bucle.
+- **Límite:** `main` llama a la misma función para la «clave» de R32/R33; no se ha trazado si el valor que usa puede venir de varios paquetes encadenados. No se emuló una secuencia real de varios paquetes (solo control de flujo por bytes).
+- **Entregables:** `docs/capture/e26-r35-serial-receiver-multi-paquete.md`, `tests/test_e26_r35_serial_receiver_multipaquete.py`.
