@@ -83,7 +83,7 @@ en T046, T047 y T050.
 **Puntos débiles**
 - **Solo con la capa 1, la exposición no es uniforme.** Sin cortina trasera, cada fila recibe T + ≈7 ms + 15,2 µs·i: la parte inferior llega a recibir 3,7 veces más luz y las velocidades rápidas casi no escalan.
 - **Escala absoluta:** con la capa 2 la forma de la exposición es correcta, pero el nivel cae ≈ 22 % por debajo del objetivo con una referencia y ±1 % con otra. La incertidumbre es de ±25 % hasta tener una referencia fiable.
-- **Rango:** se midió de 1/4000 a 1/30 (T050); 1/8000 solo se ha emulado. Desde 1/15 se vuelve al disparo normal y la exposición larga no está resuelta: 30 s dejó la cámara colgada ([E25-23](docs/capture/e25-23-interrupcion-captura-larga.md)).
+- **Rango:** se midió de 1/4000 a 1/30 (T050); 1/8000 solo se ha emulado. Desde 1/15 se vuelve al disparo normal (con el 3.23, 30 s funciona bien); la exposición larga electrónica no está implementada.
 - **Efecto rolling:** la lectura dura ≈ 61 ms, así que los objetos en movimiento salen deformados.
 - **Dependencias:** necesita acceso telnet a la cámara y la app RemoteShutter. El parche hay que aplicarlo en cada disparo o ráfaga, y antes de calcular `r5` hay que esperar a que la velocidad se estabilice.
 - **Sin medir:** flash, vídeo y Live View con los parches activos.

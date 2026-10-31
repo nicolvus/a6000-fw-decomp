@@ -27,6 +27,8 @@ Condiciones: RAW+JPEG, ISO 100, f/3.5, 16 mm, exposición manual, WB auto, flash
 - Sombras: ID5 y ID6 cambian durante las capturas (p. ej. `0x73→…`, `0xa4→0x03`, `0x01→0x00`). Son lecturas no atómicas y no demuestran qué se envió al sensor.
 - RAW: media por canal (sin el negro 512) de 3,9/14,2/14,3/9,2 a 5 s y de 19,2/60,1/60,3/40,3 a 20 s. La razón es de ≈ 4,2–4,9, compatible con 4× de exposición, pero la escena es muy oscura (cerca del suelo de ruido) y no está controlada: **no mide la integración electrónica**.
 
+**Corrección del usuario (31-10-2026, TESTIMONIO):** en su propia prueba con el 3.23, 30 s funcionó bien. T053 ([E25-19](e25-19-verificacion-fisica-exposicion-larga.md)) también completó 20 s y 30 s. El cuelgue de esta sesión no es, por tanto, un límite general de 30 s; queda como un incidente de esta sesión automatizada (velocidad `65535`).
+
 ## 3. Interpretación
 
 - **HIPÓTESIS:** `65535` es un valor centinela (fuera de tabla o BULB). Una captura en modo BULB espera a que se suelte el disparador y no termina sola, lo que encajaría con `shooting` indefinido. No se demostró en binario ni en la cámara.
@@ -35,4 +37,4 @@ Condiciones: RAW+JPEG, ISO 100, f/3.5, 16 mm, exposición manual, WB auto, flash
 ## 4. Límites y recomendación
 
 - Sin captura de bus, sin RAW de 30 s y sin control de iluminación.
-- No repetir 30 s ni BULB con firmware modificado sin antes resolver en estático qué representa `65535` en `getShutterSpeed`/`setShutterSpeed`. Hoy la cámara está bloqueada por el 3.25 ([E26](e26-recovery.md)), así que el punto queda solo para análisis offline (fila E25-23 de [PENDIENTES](../PENDIENTES.md)).
+- No repetir la secuencia automatizada que llevó a `65535` (ni BULB) sin antes resolver en estático qué representa `65535` en `getShutterSpeed`/`setShutterSpeed`. Hoy la cámara está bloqueada por el 3.25 ([E26](e26-recovery.md)), así que el punto queda solo para análisis offline (fila E25-23 de [PENDIENTES](../PENDIENTES.md)).
