@@ -63,6 +63,53 @@ Sony solo publicó hasta la **3.21**; las demás las generó el autor a partir d
 - Capturas de ejemplo: [T042](analysis/camera-dumps/20261027-221329-T042-b1a-323/), [T043](analysis/camera-dumps/20261027-223012-T043-suite/)
   y [T044](analysis/camera-dumps/20261027-224101-T044-raw-iso100/) (JPEG reducidos y montajes; los RAW no se versionan).
 
+## Cómo replicar el obturador electrónico completo
+
+«Completo» significa dos cosas a la vez: que no se mueva nada mecánico y que la exposición sea **uniforme** en toda la imagen. La única
+forma probada en la cámara de conseguir las dos es combinar dos capas: el firmware 3.23 y un parche temporal en RAM. Lo hicimos así
+en T046, T047 y T050.
+
+| Capa | Qué hace | Cómo | Probado |
+|---|---|---|---|
+| 1. Darwin (3.23) | Las cortinillas no se mueven ni en captura ni en rearme | Instalar el FDAT 3.23 (ver [Instalación](#instalación-del-323-histórica-desaconsejada)) | Sí: T040–T044 |
+| 2. BIONZ en RAM | `ShutMode 0` (`0x836d6fb6`) y `r5` calculado según la velocidad (`0x836d7000`) hacen que el sensor controle la exposición de cada fila | `scripts/camera_silent.py` por telnet: comprueba que los bytes sean los originales, deja un guardián que revierte solo a los 25 s, aplica el parche, dispara y revierte ([E25-11 §10](docs/capture/e25-11-r5-bionz-analisis.md)) | Sí: T050, 12 disparos y una ráfaga de 4, siempre revertido |
+
+**Puntos a favor**
+- Silencio total y sin desgaste mecánico: 36/36 disparos en ráfaga y 10/10 sueltos con el 3.23.
+- Con la capa 2, la exposición es uniforme por filas y proporcional a la velocidad: (4219 − `r5`) × 15,2 µs.
+- La capa 2 no deja nada guardado: vive solo en RAM, el guardián la deshace aunque se corte la conexión y un reinicio la borra.
+- No hay que tocar `nflasha3` ni flashear nada más allá del 3.23.
+
+**Puntos débiles**
+- **Solo con la capa 1, la exposición no es uniforme.** Sin cortina trasera, cada fila recibe T + ≈7 ms + 15,2 µs·i: la parte inferior llega a recibir 3,7 veces más luz y las velocidades rápidas casi no escalan.
+- **Escala absoluta:** con la capa 2 la forma de la exposición es correcta, pero el nivel cae ≈ 22 % por debajo del objetivo con una referencia y ±1 % con otra. La incertidumbre es de ±25 % hasta tener una referencia fiable.
+- **Rango:** se midió de 1/4000 a 1/30 (T050); 1/8000 solo se ha emulado. Desde 1/15 se vuelve al disparo normal y la exposición larga no está resuelta: 30 s dejó la cámara colgada ([E25-23](docs/capture/e25-23-interrupcion-captura-larga.md)).
+- **Efecto rolling:** la lectura dura ≈ 61 ms, así que los objetos en movimiento salen deformados.
+- **Dependencias:** necesita acceso telnet a la cámara y la app RemoteShutter. El parche hay que aplicarlo en cada disparo o ráfaga, y antes de calcular `r5` hay que esperar a que la velocidad se estabilice.
+- **Sin medir:** flash, vídeo y Live View con los parches activos.
+- **Riesgo de base:** instalar el 3.23 ya implica flashear firmware modificado, y no hay recuperación independiente demostrada.
+
+## Qué falló en el 3.25 y cómo se podría solucionar (sin probar)
+
+El 3.25 intentó llevar la capa 2 al firmware, con un selector EFCS/Electronic, para no depender del telnet. Para eso hubo que
+modificar `av-cam.bin`, que vive dentro de la partición comprimida `nflasha3` ([E25-27](docs/capture/e25-27-construccion-firmware-integrado.md)):
+
+| Cambio del 3.25 | Diferencia frente a Sony |
+|---|---|
+| Selector y C3-B en `av-cam.bin` (89 bytes) | Código nuevo, nunca ejecutado en la cámara |
+| Darwin condicionado al selector | Cueva nueva, distinta del B1a probado en el 3.23 |
+| Recompresión de 3 bloques TPZL (0, 48 y 57; +83 440 B) | El constructor (`scripts/e25_27/tpzl.py`) alinea a **256 B** (`ALIGN = 256`): 359 de 369 entradas quedan con residuo 256, mientras que todas las imágenes de Sony están alineadas a 512 |
+
+**Qué falló:** no se ha demostrado. La desalineación TPZL es la única anomalía frente a todo el corpus de Sony y es la hipótesis
+principal. Loader3 la acepta, con solo un aviso, y el ARM7 no lee el residuo. Lo que haga el descompresor por hardware (LDEC) con ese
+residuo no se puede saber sin la cámara ([R15](docs/capture/e26-r15-tpzl-custom-fw325.md)–[R17](docs/capture/e26-r17-arm7-ldec-segment-analysis.md)).
+Hay alternativas que no se han descartado: el código nuevo de BIONZ o de Darwin, el actualizador, la NAND y la alimentación.
+
+**Cómo solucionarlo. Nada de esto se ha probado:**
+1. **Dejar de recomponer `nflasha3`.** Usar el 3.23 con la capa 2 en RAM consigue el mismo resultado sin tocar la partición que falló. Es la vía recomendada.
+2. **Si se vuelve a integrar en firmware:** alinear a 512 (`ALIGN = 512`). `scripts/e26_recovery/compare_tpzl.py` ya reconstruye esa imagen solo en memoria y comprueba que sus 369 bloques descomprimen igual que en el 3.25. Para separar las causas, convendría además probar en versiones distintas el cambio de Darwin y el de BIONZ. Ninguna de las dos variantes se ha instalado nunca.
+3. **Recuperar esta cámara:** basta con restaurar `nflasha3`, y hay una copia válida (`dev_nflasha3.bin`, [R30](docs/capture/e26-r30-updater-done-boundary.md)). La vía serie del BootROM necesita una clave de 8 B guardada en `nflasha0` (bloque 0, `0xc00`), que solo se puede leer con un lector NAND o JTAG ([R33](docs/capture/e26-r33-veracidad-clave-nflasha0.md)). Antes de eso, una captura UART pasiva diría en qué punto se detiene el arranque. Todo esto es físico y no está autorizado ni probado. Si nada funciona, el último recurso es cambiar la placa.
+
 ## Límites y riesgos
 
 - **Sin recuperación independiente** ([E24-04](docs/capture/e24-04-dictamen-seguridad.md), [E25-04](docs/capture/e25-04-recuperabilidad-y-decision.md)):
