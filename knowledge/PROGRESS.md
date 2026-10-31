@@ -3356,3 +3356,12 @@ README, CURRENT (≤150 líneas, tabla E26) y cabecera de STATE reescritos; vers
 - **C10:** los 15 fallos/errores de `test_s402_static_closure.py` en la suite completa eran una colisión de módulos `fw` en `sys.modules`; los 2 de `test_subsystem_index` venían del informe nuevo sin indexar.
 - **C11:** dependencias de CI fijadas en `knowledge/requirements-ci.txt`; `pyelftools` retirado; `F821` corregido; `repo_audit.py` ignora cifras de copias históricas.
 - **R3/R6 (historial):** con orden del usuario («hazlas todas»), `git filter-repo` quitó `libmprctrl.so`, el número de serie y el correo personal de los 727 commits; `main` publicado con `--force-with-lease` y árbol idéntico. SHA citados remapeados. Respaldo previo: `~/a6000-respaldo-historial-20261031.git`. Queda R7 (refs de PR y fork ajeno en GitHub).
+
+## E26-R36 — causa del fallo del 3.25 frente al 3.23 (31-10-2026)
+
+- **Pedido:** verificar de inicio a fin, dos veces, por qué falló el 3.25 si el 3.23 (solo Darwin) se instaló bien.
+- **Paquetes:** `.dat` instalados descifrados (auditor E25-06) = FDAT plano; frente al 3.21, el 3.23 cambia `darwin_core.bin`/`darwin.sum` y el 3.25 además `dev/nflasha3`/`part_image.sum`. El `nflasha3` del 3.25 instalado = `bb9ce25a…`.
+- **Binario (Capstone, releído):** `c01fdd8e` arma la lista de sectores desde `off>>9` y el residuo solo va al aviso y a `trabajo+8`; `c01fccd2` copia 0x18 B; ARM7 `0x1338`/`0x3f4` leen `+0`, `+4`, `+0xc` (16 registros) y `+0x10` (destino), nunca `+8`. `ldec.ko` (Linux) programa el LDEC igual. El residuo no llega al silicio.
+- **Datos:** 16 imágenes Sony, 19 489 bloques, 311 824 registros: siempre residuo 0 y 16 × 4096 B (dos parsers coinciden). Cota de Sony `cmpr.c`: 4112 B por registro de 4 KiB. El 3.25: 359 residuos, bloques 0/48/57 = 1 registro de 73 732 B. Montaje (bloque 0) y primera entrada RAMCFG (bloque 240) caen en bloques defectuosos → −302.
+- **Arreglo:** `tpzl.py` alinea a 512, recompone con 16 registros almacenados y `rebuild` rechaza particiones con `hardware_violations`; regresión primero (fallaba), 49 pruebas pasan; construcción completa en temporal cumple el formato de Sony con el mismo contenido FAT. La variante «alinear a 512» del README no bastaba.
+- **Límite:** sin confirmación física (UART). El Darwin y el BIONZ nuevos del 3.25 nunca se han ejecutado. Entregables: `docs/capture/e26-r36-causa-fallo-325.md`, `analysis/e26-recovery/r36_ldec_records.py`, `r36-ldec-records.json`.

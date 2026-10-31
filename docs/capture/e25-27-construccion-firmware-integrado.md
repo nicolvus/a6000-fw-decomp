@@ -1,6 +1,8 @@
 # E25-27 — Construcción offline del firmware integrado EFCS / Electronic
 
 > **Actualización E26:** el usuario informa que este 3.25 fue instalado y la cámara dejó de arrancar. El resultado offline no demuestra arranque ni seguridad. Ver [investigación de recuperación](e26-recovery.md).
+>
+> **Actualización R36:** la causa identificada es el formato de `nflasha3` descrito en §3: alineación a 256 B y un único segmento de literales por bloque, que la ruta Loader3 → LDEC no puede leer ([R36](e26-r36-causa-fallo-325.md)). Los hashes de este informe describen el artefacto instalado; el constructor actual produce otra `nflasha3` (512 B, 16 registros de 4096 B).
 
 
 29-10-2026. Construcción reproducible sobre los originales de Sony 3.21. Sin cámara,

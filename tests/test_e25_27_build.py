@@ -56,6 +56,49 @@ def test_tpzl_rechaza_magia():
         tpzl.TpzlImage.parse(b"NOPE" + b"\0" * 32)
 
 
+def _sony_like_image(blocks: list[bytes]) -> bytes:
+    """Imagen TPZL con la forma de Sony: 16 registros raw de 4096 B por bloque, a 512 B."""
+    toc_end = 0x18 + 8 * len(blocks)
+    cursor = (toc_end + 511) // 512 * 512
+    toc, body = bytearray(), bytearray()
+    for raw in blocks:
+        comp = b"".join(
+            b"\x0f\x00" + struct.pack("<H", 4096) + raw[i:i + 4096] for i in range(0, 65536, 4096)
+        )
+        size = (len(comp) + 511) // 512 * 512
+        toc += struct.pack("<II", cursor, size)
+        body += comp + bytes(size - len(comp))
+        cursor += size
+    head = struct.pack("<4sIII", b"TPZL", 16, 0x18, len(toc)) + bytes(8) + toc
+    return head + bytes((toc_end + 511) // 512 * 512 - len(head)) + body
+
+
+def test_tpzl_rebuild_respeta_invariantes_del_ldec():
+    # E26-R36: el 3.25 se construyó con un único segmento de 64 KiB y bloques a 256 B;
+    # Loader3 solo lee sectores enteros y el LDEC espera 16 registros de 4096 B.
+    blocks = [bytes((i * 7 + b) & 0xFF for i in range(65536)) for b in range(3)]
+    image = tpzl.TpzlImage.parse(_sony_like_image(blocks))
+    assert tpzl.hardware_violations(image) == []
+    patched = bytearray(image.decompressed())
+    patched[0x10000 + 5] ^= 0xFF
+    out, info = tpzl.patch_decompressed(image, bytes(patched))
+    rebuilt = tpzl.TpzlImage.parse(out)
+    assert [i["block"] for i in info if i["recompressed"]] == [1]
+    assert tpzl.hardware_violations(rebuilt) == []
+    assert rebuilt.decompressed() == bytes(patched)
+
+
+def test_tpzl_invariantes_detectan_el_325_y_aceptan_sony():
+    official = ROOT / "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3"
+    installed = ARTIFACTS / "nflasha3.integrated.bin"
+    if not official.is_file() or not installed.is_file():
+        pytest.skip("faltan nflasha3 oficial o el artefacto 3.25 (no versionados)")
+    assert tpzl.hardware_violations(tpzl.TpzlImage.parse(official.read_bytes())) == []
+    bad = tpzl.hardware_violations(tpzl.TpzlImage.parse(installed.read_bytes()))
+    assert sum("residuo" in v for v in bad) == 359
+    assert sum("registros" in v for v in bad) == 3
+
+
 # --------------------------------------------------------------------- FAT12
 
 
@@ -212,6 +255,7 @@ def test_build_completo_y_determinista(tmp_path: Path):
     assert got[build.NFLASHA3] == (out / "nflasha3.integrated.bin").read_bytes()
 
     part = tpzl.TpzlImage.parse(got[build.NFLASHA3])
+    assert tpzl.hardware_violations(part) == []
     fat = fatimg.Fat16.parse(part.decompressed())
     assert fat.read(build.AVCAM_NAME) == (out / "av-cam.integrated.bin").read_bytes()
     assert sums.verify(got[build.PART_SUM].decode(), build.PART_ENTRY, got[build.NFLASHA3])

@@ -1,6 +1,6 @@
 # Estado actual — léeme primero
 
-Contexto operativo mínimo para agentes. Última revisión: **31-10-2026** (auditoría integral repo/GitHub, tras E26 R35).
+Contexto operativo mínimo para agentes. Última revisión: **31-10-2026** (E26 R36: causa del fallo del 3.25).
 No es historial ni fuente de verdad de los pendientes: ver [Responsabilidades](#responsabilidades-documentales).
 Versiones íntegras anteriores (nada se borró): [CURRENT-historial-2026-10-31](history/CURRENT-historial-2026-10-31.md)
 (bloques E26 R5–R35 y E25 completos) y [CURRENT-historial-2026-10-26](history/CURRENT-historial-2026-10-26.md) (S59–S627).
@@ -13,7 +13,8 @@ Versiones íntegras anteriores (nada se borró): [CURRENT-historial-2026-10-31](
 | **Prioridad** | Recuperar la cámara conservando calibraciones. Investigación **solo offline**; ningún acceso físico autorizado | [PENDIENTES § E26](../docs/PENDIENTES.md) |
 | Objetivo de recuperación | Una sola partición, `nflasha3` (CRC releída por el actualizador = imagen 3.25); copia válida `dev_nflasha3.bin` (20-10-2026). Falta la vía de escritura | [R30](../docs/capture/e26-r30-updater-done-boundary.md) |
 | Hito del obturador | **3.23 (Darwin tipo 0 + B1a, 2 bytes)** instalado en T040 (27-10-2026): el usuario confirmó que disparaba en silencio y sin error. Capturas de T042–T044 versionadas el 31-10-2026 | [E25](../docs/capture/e25-desactivacion-mecanica.md), [registro](../docs/capture/registro-pruebas-camara.md) |
-| Firmware 3.25 | Selector EFCS/Electronic + C3-B + Darwin condicionado, construido y verificado **offline** (E25-24b…E25-29); es el que se instaló. Su `nflasha3` tiene 359/369 entradas TPZL con residuo 256 y 3 bloques de un segmento de 64 KiB (sin rechazo demostrado) | [E25-27](../docs/capture/e25-27-construccion-firmware-integrado.md), [R15](../docs/capture/e26-r15-tpzl-custom-fw325.md)–[R17](../docs/capture/e26-r17-arm7-ldec-segment-analysis.md) |
+| Firmware 3.25 | Selector EFCS/Electronic + C3-B + Darwin condicionado, construido y verificado **offline** (E25-24b…E25-29); es el que se instaló | [E25-27](../docs/capture/e25-27-construccion-firmware-integrado.md) |
+| **Causa del fallo** | **Identificada offline (R36):** el `nflasha3` del 3.25 incumple el formato que lee Loader3 → ARM7 → LDEC (residuo 256 en 359/369 bloques que nunca llega al LDEC; bloques 0/48/57 de 1 registro de 64 KiB frente a 16 × 4096). El 3.23 solo cambiaba Darwin. Constructor corregido; falta confirmación UART | [R36](../docs/capture/e26-r36-causa-fallo-325.md) |
 | Pregunta original (S51) | Exposición totalmente electrónica a resolución completa: A=NO, B=NO, C=NO en estático; superada en la práctica por el parche de Darwin (3.23), cuya exposición por filas tiene el límite medido de E25-10 | [S51](../docs/capture/s51-decision.md), [E25-10](../docs/capture/e25-10-exposicion-por-fila.md) |
 | Cifras | 4 427 pruebas colectadas en local; CI (sin firmware): 918 pasan, 2 310 omitidas. Censo de etiquetas 133/372 (35,75 %, mide documentación). Sesiones S 291/627 y 74 informes de fase E. Planes físicos con prueba 12/24 (P1–P24). Registro T001–T053 (50 filas) | [estado.json](audit/estado.json), [tablero](https://nicolvus.github.io/a6000-fw-decomp/progress/) |
 
@@ -33,6 +34,7 @@ Versiones íntegras anteriores (nada se borró): [CURRENT-historial-2026-10-31](
 | R30 | Fase A cerrada, B acotada (byte 0x32 no observado), C: con Done la cámara tiene exactamente el `nflasha3` del 3.25 | [R30](../docs/capture/e26-r30-updater-done-boundary.md) |
 | R31–R33 | Bit 0 = `BOOT_MAIN`/`CL1000`; **valor real `MODEREG[15:0]=0x0003`** (23 volcados): el arranque normal pasa por la ventana serie con clave; la clave está en `nflasha0` (sector `0xc00` no borrado; validez y valor desconocidos) | [R31](../docs/capture/e26-r31-bootmain-bit0-cierre.md), [R32](../docs/capture/e26-r32-moderreg-valor-real.md), [R33](../docs/capture/e26-r33-veracidad-clave-nflasha0.md), [KEYTABLE](../docs/capture/e26-r20-keytable.md) |
 | R34–R35 | `serial_entry` sin bucle de reintento (corrige R23 §2); `serial_receiver` recibe varios paquetes por llamada | [R34](../docs/capture/e26-r34-serial-entry-flags.md), [R35](../docs/capture/e26-r35-serial-receiver-multi-paquete.md) |
+| R36 | Causa del −302: formato TPZL del 3.25 (residuo descartado por Loader3; registros ≠ 16 × 4096); 3.23 vs 3.25 = solo Darwin + `nflasha3`; corrige R16/R17 (residuo) y la recomendación «alinear a 512» | [R36](../docs/capture/e26-r36-causa-fallo-325.md) |
 
 **Conclusión operativa:** la vía serie del BootROM existe y se abre en cada arranque, pero exige la clave de `nflasha0`, que nunca se
 volcó; todo lo restante es físico (`E26-FISICO-BOOT`, `E26-R33-BLOQUE0`, `E26-R12-UART-FISICO`) y requiere autorización expresa.

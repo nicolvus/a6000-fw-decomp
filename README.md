@@ -18,14 +18,14 @@ recuperación, solo con análisis offline.
 | Aspecto | Estado (31-10-2026) |
 |---|---|
 | Cámara | **Bloqueada** tras instalar el 3.25 (actualizador al 100 % y Done; testimonio del usuario, sin captura UART ni lectura de NAND) |
-| Causa | Indeterminada. Única anomalía del 3.25 frente al corpus Sony: alineación TPZL de `nflasha3` (residuo 256 en 359/369 entradas); Loader3 la acepta y su efecto en el descompresor por hardware no se puede decidir sin la cámara ([R15](docs/capture/e26-r15-tpzl-custom-fw325.md)–[R17](docs/capture/e26-r17-arm7-ldec-segment-analysis.md)) |
+| Causa | **Identificada offline** ([R36](docs/capture/e26-r36-causa-fallo-325.md)): el `nflasha3` recomprimido del 3.25 no respeta el formato que lee el descompresor por hardware (359/369 bloques empiezan a mitad de sector y Loader3 no transmite ese desplazamiento; 3 bloques son un solo registro de 64 KiB en vez de 16 de 4 KiB). La primera lectura de la partición falla y Loader3 da −302 (3 lentos + 2 rápidos). El 3.23 no tocaba `nflasha3`. Falta la confirmación física (UART) |
 | Recuperación | Solo hay que restaurar `nflasha3` y existe copia válida ([R30](docs/capture/e26-r30-updater-done-boundary.md)). La vía serie del BootROM se abre en cada arranque pero exige una clave guardada en `nflasha0`, nunca volcada ([R32](docs/capture/e26-r32-moderreg-valor-real.md), [R33](docs/capture/e26-r33-veracidad-clave-nflasha0.md)). Lo que falta es físico y no está autorizado |
 | Obturador silencioso | Logrado con el 3.23 (T040, confirmado por el usuario); exposición por filas medida en el RAW ([E25-10](docs/capture/e25-10-exposicion-por-fila.md)) |
 | Selector EFCS / Electronic (3.25) | Implementado y verificado **solo offline** (emulación); nunca validado en la cámara ([E25-24b](docs/capture/e25-24b-implementacion-selector.md), [E25-27](docs/capture/e25-27-construccion-firmware-integrado.md)) |
 | Verificación | 4 427 pruebas en local (las que leen firmware se omiten en CI); censo de etiquetas 133/372; 291 sesiones S + 74 informes de fase E; 12/24 planes físicos con prueba; registro T001–T056 |
 
-**Último cierre:** E26 R35 (31-10-2026) — el receptor serie del BootROM acepta varios paquetes por llamada; con R20–R34 el BootROM,
-Loader2 y Loader3 quedan descritos por completo en estático. Detalle por informe en [knowledge/CURRENT.md](knowledge/CURRENT.md).
+**Último cierre:** E26 R36 (31-10-2026) — causa del fallo del 3.25 identificada offline (formato TPZL de `nflasha3`) y constructor
+corregido para producir el formato de Sony. Detalle por informe en [knowledge/CURRENT.md](knowledge/CURRENT.md).
 
 ## Cómo funciona el parche del 3.23
 
@@ -98,23 +98,25 @@ modificar `av-cam.bin`, que vive dentro de la partición comprimida `nflasha3` (
 |---|---|
 | Selector y C3-B en `av-cam.bin` (89 bytes) | Código nuevo, nunca ejecutado en la cámara |
 | Darwin condicionado al selector | Cueva nueva, distinta del B1a probado en el 3.23 |
-| Recompresión de 3 bloques TPZL (0, 48 y 57; +83 440 B) | El constructor (`scripts/e25_27/tpzl.py`) alinea a **256 B** (`ALIGN = 256`): 359 de 369 entradas quedan con residuo 256, mientras que todas las imágenes de Sony están alineadas a 512 |
+| Recompresión de 3 bloques TPZL (0, 48 y 57; +83 440 B) | El constructor de entonces (`scripts/e25_27/tpzl.py`) alineaba a **256 B**: 359 de 369 bloques empezaban a mitad de sector. Además escribía cada bloque nuevo como **un solo registro de 64 KiB** (73 732 B). En las 16 imágenes de Sony del repo, los 19 489 bloques empiezan en un sector y son 16 registros de 4 KiB |
 
-**Qué falló:** no se ha demostrado. La desalineación TPZL es la única anomalía frente a todo el corpus de Sony y es la hipótesis
-principal. Loader3 la acepta, con solo un aviso, y el ARM7 no lee el residuo. Lo que haga el descompresor por hardware (LDEC) con ese
-residuo no se puede saber sin la cámara ([R15](docs/capture/e26-r15-tpzl-custom-fw325.md)–[R17](docs/capture/e26-r17-arm7-ldec-segment-analysis.md)).
-Hay alternativas que no se han descartado: el código nuevo de BIONZ o de Darwin, el actualizador, la NAND y la alimentación.
+**Qué falló ([R36](docs/capture/e26-r36-causa-fallo-325.md)):** Loader3 lee cada bloque por sectores enteros desde `offset >> 9` y
+el desplazamiento dentro del sector solo genera un aviso: no llega al ARM7 ni al descompresor por hardware (LDEC), que recibe 256 B del
+bloque anterior delante del bloque real. El LDEC se programa con 16 registros por bloque, y los bloques 0, 48 y 57 tenían uno.
+El montaje de la partición empieza por el bloque 0 y la primera entrada del RAMCFG lee el bloque 240 (desplazado). El fallo sale como
+−302, el código del LED. El 3.23 pasó por el mismo actualizador y el mismo Loader3, pero con el `nflasha3` de Sony. Las
+comprobaciones offline no lo vieron porque descomprimían por software, sin modelar esa ruta. Falta confirmarlo con una captura UART.
 
 **Cómo solucionarlo. Nada de esto se ha probado:**
 1. **Dejar de recomponer `nflasha3`.** Usar el 3.23 con la capa 2 en RAM consigue el mismo resultado sin tocar la partición que falló. Es la vía recomendada.
-2. **Si se vuelve a integrar en firmware:** alinear a 512 (`ALIGN = 512`). `scripts/e26_recovery/compare_tpzl.py` ya reconstruye esa imagen solo en memoria y comprueba que sus 369 bloques descomprimen igual que en el 3.25. Para separar las causas, convendría además probar en versiones distintas el cambio de Darwin y el de BIONZ. Ninguna de las dos variantes se ha instalado nunca.
+2. **Si se vuelve a integrar en firmware:** el constructor ya produce el formato de Sony: alineación a 512 y 16 registros almacenados de 4096 B por bloque. `tpzl.hardware_violations` rechaza cualquier partición que se salga de él. Alinear a 512 **no basta por sí solo**, porque deja los bloques de un único registro. Que la partición cumpla el formato no prueba que el código nuevo de BIONZ o de Darwin funcione: conviene probar cada cambio en una versión separada. Nada de esto se ha instalado.
 3. **Recuperar esta cámara:** basta con restaurar `nflasha3`, y hay una copia válida (`dev_nflasha3.bin`, [R30](docs/capture/e26-r30-updater-done-boundary.md)). La vía serie del BootROM necesita una clave de 8 B guardada en `nflasha0` (bloque 0, `0xc00`), que solo se puede leer con un lector NAND o JTAG ([R33](docs/capture/e26-r33-veracidad-clave-nflasha0.md)). Antes de eso, una captura UART pasiva diría en qué punto se detiene el arranque. Todo esto es físico y no está autorizado ni probado. Si nada funciona, el último recurso es cambiar la placa.
 
 ## Límites y riesgos
 
 - **Sin recuperación independiente** ([E24-04](docs/capture/e24-04-dictamen-seguridad.md), [E25-04](docs/capture/e25-04-recuperabilidad-y-decision.md)):
   Darwin también controla la energía, y un BIONZ o Darwin que no arranca no tiene vuelta atrás demostrada por USB. El caso real es el 3.25.
-- **Lo offline no garantiza el arranque:** el 3.25 pasó todas las comprobaciones offline (FDAT, cifrado, extracción inversa, emulación) y aun así bloqueó la cámara.
+- **Lo offline no garantiza el arranque:** el 3.25 pasó todas las comprobaciones offline (FDAT, cifrado, extracción inversa, emulación) y aun así bloqueó la cámara: ninguna modelaba cómo lee Loader3 la partición comprimida ([R36](docs/capture/e26-r36-causa-fallo-325.md)).
 - **Escenarios sin medir con el 3.23:** operación 5 de Darwin (P40/P41=3) y P4B/P4C siguen activos; su efecto físico no se midió.
 - **Respaldo:** la copia externa del respaldo (R1) sigue sin verificar.
 

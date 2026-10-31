@@ -12,9 +12,12 @@ Estructura:
     TOC: N pares (offset, size) little-endian
     datos: N bloques comprimidos; cada bloque produce 65536 B (2**blockSize)
 
-Un bloque puede contener varios segmentos LZ77 terminados en `bd == 0`; el
-descompresor los concatena hasta completar 65536 B.  Para recompresar se emite un
-único segmento de literales, válido para cualquier contenido y determinista.
+Cada bloque son 16 registros independientes (LZ77 `0xF0` o almacenado `0x0F`) de
+4096 B de salida cada uno: así son todos los bloques de Sony y así lo exige la ruta
+Loader3 → ARM7 → LDEC, que programa `bloque >> 12` registros y lee sectores enteros
+(el desplazamiento dentro del sector no llega al LDEC).  Para recompresar se emiten
+16 registros almacenados alineados a 512 B, la forma que Sony usa para páginas
+incompresibles (E26-R36).
 """
 from __future__ import annotations
 
@@ -25,7 +28,9 @@ MAGIC = b"TPZL"
 HEADER_SIZE = 16
 TOC_OFFSET = 0x18
 DEFAULT_BLOCK_LOG2 = 16
-ALIGN = 256
+ALIGN = 512
+RECORD = 4096
+RECORD_MAX = 4112  # cota de Sony por registro (cmpr.c: blk/4096 * 4112 + 8)
 _LENGTHS = list(range(3, 17)) + [32, 64]
 
 
@@ -100,8 +105,20 @@ def decode_block(block: bytes, target: int) -> bytes:
     return bytes(out)
 
 
+def encode_raw(data: bytes) -> bytes:
+    """Registros almacenados de 4096 B (`0F 00 <u16 len> datos`), como los de Sony."""
+    return b"".join(
+        b"\x0f\x00" + struct.pack("<H", len(data[i:i + RECORD])) + data[i:i + RECORD]
+        for i in range(0, len(data), RECORD)
+    )
+
+
 def encode_literal(data: bytes) -> bytes:
-    """Segmento LZ77 de literales (sin coincidencias), terminado en `bd=0`."""
+    """Segmento LZ77 de literales (sin coincidencias), terminado en `bd=0`.
+
+    Solo para pruebas del descompresor: un segmento de más de 4096 B no es un
+    registro válido para el LDEC (causa del fallo del 3.25, E26-R36).
+    """
     out = bytearray([0xF0])
     i = 0
     while i + 8 <= len(data):
@@ -188,12 +205,35 @@ def _align(value: int, align: int = ALIGN) -> int:
     return (value + align - 1) // align * align
 
 
+def hardware_violations(image: TpzlImage) -> list[str]:
+    """Propiedades que el software acepta pero la ruta hardware de Loader3 no.
+
+    Residuo de sector distinto de 0, bloque que no sea `bloque/4096` registros de
+    4096 B o datos comprimidos por encima de la cota de Sony.
+    """
+    out: list[str] = []
+    records = image.block_size // RECORD
+    for index, (offset, _size) in enumerate(image.entries):
+        if offset & 0x1FF:
+            out.append(f"bloque {index}: residuo {offset & 0x1ff} B dentro del sector")
+        block, pos = image.block(index), 0
+        outputs: list[int] = []
+        while sum(outputs) < image.block_size:
+            chunk, pos = _inflate_segment(block, pos)
+            outputs.append(len(chunk))
+        if outputs != [RECORD] * records:
+            out.append(f"bloque {index}: {len(outputs)} registros de {sorted(set(outputs))} B")
+        if pos > records * RECORD_MAX + 8:
+            out.append(f"bloque {index}: {pos} B comprimidos > {records * RECORD_MAX + 8}")
+    return out
+
+
 def rebuild(image: TpzlImage, replacements: dict[int, bytes]) -> tuple[bytes, list[dict]]:
     """Reconstruye la partición cambiando solo los bloques indicados.
 
     `replacements` asocia índice de bloque con sus 65536 B descomprimidos.  El
     resto de bloques se copia byte a byte, sin recomprimir.  Los bloques nuevos se
-    recompresan como literales y se alinean a 256 B.
+    escriben como registros almacenados y todo se alinea a 512 B con relleno 0x00.
     """
     blocks: list[bytes] = []
     info: list[dict] = []
@@ -205,8 +245,7 @@ def rebuild(image: TpzlImage, replacements: dict[int, bytes]) -> tuple[bytes, li
                 raise TpzlError(
                     f"bloque {index}: {len(raw)} B, esperado {target} B"
                 )
-            compressed = encode_literal(raw)
-            image.block(index)
+            compressed = encode_raw(raw)
             if decode_block(compressed, target) != raw:
                 raise TpzlError(f"bloque {index}: la recompresión no reproduce el contenido")
             info.append({
@@ -235,7 +274,7 @@ def rebuild(image: TpzlImage, replacements: dict[int, bytes]) -> tuple[bytes, li
         padded_size = _align(len(compressed))
         toc += struct.pack("<II", cursor, padded_size)
         body += compressed
-        body += b"\xFF" * (padded_size - len(compressed))
+        body += b"\x00" * (padded_size - len(compressed))
         cursor += padded_size
 
     header = struct.pack(
@@ -249,6 +288,8 @@ def rebuild(image: TpzlImage, replacements: dict[int, bytes]) -> tuple[bytes, li
     rebuilt = TpzlImage.parse(out)
     if rebuilt.decompressed() != _apply(image, replacements):
         raise TpzlError("la partición reconstruida no reproduce el contenido previsto")
+    if violations := hardware_violations(rebuilt):
+        raise TpzlError(f"la partición no es apta para el LDEC: {violations[:3]}")
     for item in info:
         item["offset_new"] = rebuilt.entries[item["block"]][0]
     return out, info
