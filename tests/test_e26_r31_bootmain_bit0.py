@@ -1,5 +1,6 @@
 """E26-R31: cierre estático de `MODEREG` bit 0 = `BOOT_MAIN` (CL1000) por exclusión de consumidores."""
 
+import re
 import struct
 from pathlib import Path
 
@@ -73,3 +74,22 @@ def test_bloque_boot_del_esquema_tiene_tres_redes():
 def test_bootrom_solo_lee_moderreg_desde_dos_sitios():
     """Literal de la base MISC solo en `0x968` (receptor, bit 1) y `0x12c0` (selector `main`, bit 0)."""
     assert words(ROM, 0xF2915000) == [0x968, 0x12C0]
+
+
+AVCAM = Path(
+    "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/"
+    "nflasha3_unpacked_unpacked/av-cam.bin"
+)
+
+
+@pytest.mark.skipif(not AVCAM.exists(), reason="av-cam.bin ausente")
+def test_av_cam_no_direcciona_el_bloque_misc():
+    """Ni literal `0xf2915xxx` ni `movt #0xf291` (Thumb-2 T1 / ARM A1); sí usa GPIO `0xf2910000` por literal."""
+    d = AVCAM.read_bytes()
+    lit = [m.start() for m in re.finditer(rb"[\x00-\xff][\x50-\x5f]\x91\xf2", d)]
+    assert [o for o in lit if o % 4 == 0] == []
+    thumb = [m.start() for m in re.finditer(rb"\xcf\xf2\x91[\x20-\x2f]", d)]
+    arm = [m.start() for m in re.finditer(rb"\x91[\x02-\xf2]\x4f\xe3", d)]
+    assert [o for o in thumb if o % 2 == 0] == []
+    assert [o for o in arm if o % 4 == 0 and d[o + 1] & 0xF == 2] == []
+    assert struct.pack("<I", 0xF2910000) in d
