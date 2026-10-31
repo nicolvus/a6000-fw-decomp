@@ -3241,3 +3241,10 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 - **Hallazgos:** 57 rutinas (0xffff0000–0xffff1a80) nombradas; capa de carga de bloques, claves, consola/traza, CRC, `printf`; reloj de 4 MHz verificado por las dos variantes del parpadeo de error.
 - **Límite:** nombres propios; `0x2001–0x2005` y pasos de traza sin asociar a condiciones concretas.
 - **Entregables:** `docs/capture/e26-r22-bootrom-mapa-completo.md`, `analysis/e26-recovery/r22_bootrom_map.py`, `tests/test_e26_r22_bootrom_map.py`.
+
+## E26-R23 — flujo completo de main/serial_entry, cierre total del BootROM (30-10-2026)
+
+- **Pedido:** no detenerse hasta obtener todo el BootROM.
+- **Hallazgos:** pseudocódigo línea a línea de `main` y `serial_entry`; 109 pasos de traza y 25 códigos de error resueltos a su sitio emisor exacto; corrige R12 §3 (cabecera dañada desvía a `serial_entry`, no es éxito aparente).
+- **Cierre:** el BootROM queda completo en estático; lo que falta es físico (`E26-FISICO-BOOT`).
+- **Entregables:** `docs/capture/e26-r23-bootrom-flujo-completo.md`, `analysis/e26-recovery/r22-trace-steps.json`, `analysis/e26-recovery/r22-error-codes.json`, `tests/test_e26_r23_bootrom_flujo_completo.py`.
