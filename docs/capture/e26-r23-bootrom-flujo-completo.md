@@ -57,33 +57,37 @@ trace(2,17); jump_serial_image()              ; bx [0xc000500c+0xc]             
 
 ## 2. `serial_entry` (`0xffff0fa0`) — BINARIO, línea a línea
 
+> **Corregido por [R34](e26-r34-serial-entry-flags.md):** el pseudocódigo de esta sección tenía un
+> bucle de reintento que los bytes no tienen, y confundía dos tramos distintos bajo una sola
+> etiqueta `REGISTRO_MOTIVO`. Versión verificada por emulación (sustitución de `get_flag0`,
+> `get_flag1`, `serial_receiver`) y por los únicos dos saltos que llegan a la llamada de recepción:
+
 ```
 trace(2,1)
 si [0xc0010010+4] (copia de GPIO4.22) != 0: trace(2,2); ir a RECEPCION
 trace(2,3)
-si get_flag1() == 1: trace(2,4); ir a RECEPCION
-si no, si get_flag1() == 0:
-  si get_flag0() != 0: trace(2,6); error_blink(0x1001)      ; ni clave en tabla ni bandera
-  si no: ir a SIN_RECEPCION
-si no (get_flag1() no es 0 ni 1): ir a SIN_RECEPCION
+si get_flag1() == 1 (1.a lectura): trace(2,4); SALTAR la recepcion, ir a SECCION_FINAL
+si no:
+  si get_flag1() != 0 (2.a lectura, cualquier valor no nulo): trace(2,6); error_blink(0x1001)
+  si no:
+    si get_flag0() != 0: trace(2,6); error_blink(0x1001)      ; sentido opuesto al de `main`
+    si no: trace(2,5); ir a RECEPCION
 
 RECEPCION:
 r = serial_receiver(&motivo)                  ; tren de 60 flancos + trama 8O1 (R21)
 si r != 0:
   trace(2,7)
   si r == 0x3001 (fallo de sincronismo): trace(2,8); r = 0x1001
-  r -> REGISTRO_MOTIVO (igual que en main)
-si no: ir a SIN_RECEPCION
+  error_blink(r)                               ; SIEMPRE, sin reintento
+si no (r == 0, paquete aceptado):
+  si get_flag1() != 0 (3.a lectura): ir a SECCION_FINAL
+  si no: trace(2,9); error_blink(0x1001)        ; aceptado pero sin motivo fijado = error
 
-SIN_RECEPCION:
-si get_flag1() != 0: ir a REGISTRO_MOTIVO
-si no: trace(2,5); ir a RECEPCION             ; (bucle: get_flag1==0 reintenta sin reclasificar)
-
-REGISTRO_MOTIVO:
-trace(2,9/2,10); trace(2,11); jump_serial_image()  ; bx [0xc000500c+0xc]
+SECCION_FINAL:
+trace(2,10); trace(2,11); jump_serial_image()  ; bx [0xc000500c+0xc]; si retorna: error_blink(0x2005)
 ```
 
-**Hallazgo nuevo:** `serial_entry` no recibe directamente — delega en `serial_receiver` (`0x876`, R21) y en la bandera `get_flag1()` (`[0xc0010004+4]`), que decide si ya hay un motivo de arranque fijado (p. ej. por un intento anterior) antes de volver a esperar en el UART software. Si no hay clave ni bandera (`get_flag0()==0`), el código es `0x1001` y el LED parpadea sin reintentar.
+**Hallazgo nuevo:** `serial_entry` no recibe directamente — delega en `serial_receiver` (`0x876`, R21) y en la bandera `get_flag1()` (`[0xc0010004+4]`), que decide si ya hay un motivo de arranque fijado (p. ej. por un intento anterior) antes de intentar la recepción. **No hay bucle: toda llamada a `serial_receiver` que no deja fijado el motivo termina en el LED `0x1001`, sin una segunda oportunidad dentro de la misma invocación de `serial_entry`** ([R34](e26-r34-serial-entry-flags.md)).
 
 ## 3. Pasos de traza — BINARIO (109 pares, 111 sitios; 0 sin resolver)
 

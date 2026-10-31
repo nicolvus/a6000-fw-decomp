@@ -1,5 +1,7 @@
 # Estado actual — léeme primero
 
+> **E26 R34 (`serial_entry`, todas las banderas):** [informe](../docs/capture/e26-r34-serial-entry-flags.md). Emulado: sin bucle de reintento. Corrige R23 §2 (el pseudocódigo describía un reintento que los bytes no tienen).
+
 > **E26 R33 (clave de `nflasha0`):** [informe](../docs/capture/e26-r33-veracidad-clave-nflasha0.md). Probado: tabla = bloque 0, sector `0xc00`, no borrado. No probado: que sea una clave válida (palabra 0 + `~crc32`); el valor solo se obtiene leyendo la NAND (`E26-R33-BLOQUE0`). R23 §1 tenía las condiciones invertidas.
 
 > **E26 R30 (frontera Done del actualizador, cierre Fase A):** [informe](../docs/capture/e26-r30-updater-done-boundary.md). Fase A (residuo TPZL leído por ARM7) cerrada: escrito una vez en el LDEC, nunca leído en software (ya resuelto en R16/R17/R27). Fase B (byte 0x32) acotada: sin evidencia de haberse observado en este incidente (hubo Done). Fase C avanzada: `CompleteUpdate()` solo corre si `HasError()==0`; el actualizador relee `/dev/nflasha3` y compara CRC32 (verificado 31-10-2026): con Done, la cámara tiene exactamente la imagen 3.25 integrada. Objetivo de recuperación = solo `nflasha3`, copia válida en `dev_nflasha3.bin` (20-10-2026); falta la vía de escritura. Abierto de baja prioridad: `E26-R30-HOSTRET0`.

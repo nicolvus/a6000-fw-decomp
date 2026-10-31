@@ -3322,3 +3322,11 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 - **Correcciones:** R32/`E26-R20-KEYTABLE` precisados («sector no borrado», no «clave válida»); R23 §1 con condiciones invertidas; R12 §3 vigente.
 - **Límite:** valor y formato reales solo con lectura del bloque 0 (`E26-R33-BLOQUE0`, nuevo).
 - **Entregables:** `docs/capture/e26-r33-veracidad-clave-nflasha0.md`, `tests/test_e26_r33_clave_nflasha0.py`.
+
+## E26-R34 — `serial_entry` emulado con todas las combinaciones de banderas (31-10-2026)
+
+- **Pedido:** emular `serial_entry` con todas las combinaciones de banderas (continuación de R33).
+- **Hallazgos (bytes + emulación Unicorn, sustitución de llamadas):** `get_flag1()` se lee hasta 3 veces en puntos distintos: 1.ª lectura ==1 salta la recepción entera (va directo a la sección de salto); 2.ª lectura !=0 (cualquier valor) es error `0x1001` directo; tras aceptar un paquete (`rx_packet()==0`), una 3.ª lectura ==0 es también error `0x1001`, no un reintento. Confirmado por bytes: solo dos saltos llegan a la llamada de recepción (`0xfb8`, `0x1032`); ninguno sale del tramo de error ni del de aceptación. `get_flag0()!=0` es error (sentido opuesto al de la misma bandera en `main`, ya documentado en R23, confirmado aquí).
+- **Corrección:** R23 §2 tenía un bucle de reintento inexistente y mezclaba dos tramos bajo una sola etiqueta `REGISTRO_MOTIVO`.
+- **Límite:** `serial_receiver`/`rx_packet` sigue tratado como caja sustituible (su lógica interna es de R9/R21); no se emuló la forma de onda real.
+- **Entregables:** `docs/capture/e26-r34-serial-entry-flags.md`, `analysis/e26-recovery/r33_serial_entry_flags.py`, `tests/test_e26_r34_serial_entry_flags.py`.

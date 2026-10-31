@@ -1,5 +1,7 @@
 # Estado vigente — Sony A6000 reverse engineering
 
+> **E26 R34 (`serial_entry` emulado con todas las banderas, 31-10-2026):** [informe](capture/e26-r34-serial-entry-flags.md). No hay bucle de reintento dentro de `serial_entry`: solo dos saltos llegan a la llamada de recepción (bytes verificados), y aceptar un paquete sin que quede fijado el motivo de salto es un error directo (`0x1001`), igual que cualquier error de recepción. Corrige el pseudocódigo de R23 §2.
+
 > **E26 R33 (veracidad de la clave de `nflasha0`, 31-10-2026):** [informe](capture/e26-r33-veracidad-clave-nflasha0.md). La tabla viene del bloque 0 de la NAND (`nflasha0`, sector `0xc00`), y eso está verificado por bytes. Que la cámara arranque con bit 0 = 1 solo prueba que ese sector **no está borrado**, no que haya una clave válida (palabra 0 + `~crc32`). El valor sigue sin conocerse (`E26-R33-BLOQUE0`). Corrige R23 §1 (condiciones invertidas); R12 §3 sigue vigente.
 
 > **E26 R32 (valor real de `MODEREG`, 31-10-2026):** [informe](capture/e26-r32-moderreg-valor-real.md). El backup de la cámara (ID `0x3e000a`, lo escribe Loader3 en cada arranque) da `MODEREG[15:0] = 0x0003`: `CL1000`/`BOOT_MAIN` = 1 en reposo. El arranque normal pasa por la rama de servicio con clave (ventana serie → `0x3001` → payload). La vía serie de recuperación ya está abierta en cada arranque, pero exige la clave de `nflasha0`. Corrige R20/R23.
