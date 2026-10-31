@@ -390,7 +390,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 6. Otros subsistemas (AF, estabilización, vídeo, audio, lentes, energía, visor, accesorios, módulos de trazas)
 
-141 informes.
+142 informes.
 
 - **—** [E21 — Lecturas sin cámara de los volcados del 20-10-2026](capture/e21-lecturas-backups-2026-10-26.md)
 - **—** [E24-01 — Arranque, modo actualizador y dependencia de Darwin (27-10-2026)](capture/e24-01-arranque-recuperacion.md)
@@ -435,6 +435,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [E26-R34 — `serial_entry` emulado con todas las combinaciones de banderas (31-10-2026)](capture/e26-r34-serial-entry-flags.md)
 - **—** [E26-R35 — `serial_receiver`/`rx_packet` (`0xffff0876`) recibe varios paquetes por llamada (31-10-2026)](capture/e26-r35-serial-receiver-multi-paquete.md)
 - **—** [E26-R36 — Por qué falló el 3.25 si el 3.23 se instaló bien](capture/e26-r36-causa-fallo-325.md)
+- **—** [E26-R37 — Cierre estático tras R36: entrada al actualizador, paquete 3.26, consola UART y Darwin al encender](capture/e26-r37-cierre-estatico-recuperacion.md)
 - **—** [E26-RECOVERY R5 — Loader3, servicio BIONZ y diagnóstico de SY-1028](capture/e26-r5-loader3-servicio.md)
 - **—** [E26-RECOVERY R6 — BLDR, BIONZ y recuperación conservando la placa](capture/e26-r6-recuperacion-bionz.md)
 - **—** [E26-RECOVERY R7 — informe final de ingeniería inversa exhaustiva](capture/e26-r7-recuperacion-estatica.md)

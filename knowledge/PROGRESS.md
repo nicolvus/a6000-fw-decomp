@@ -3365,3 +3365,12 @@ README, CURRENT (≤150 líneas, tabla E26) y cabecera de STATE reescritos; vers
 - **Datos:** 16 imágenes Sony, 19 489 bloques, 311 824 registros: siempre residuo 0 y 16 × 4096 B (dos parsers coinciden). Cota de Sony `cmpr.c`: 4112 B por registro de 4 KiB. El 3.25: 359 residuos, bloques 0/48/57 = 1 registro de 73 732 B. Montaje (bloque 0) y primera entrada RAMCFG (bloque 240) caen en bloques defectuosos → −302.
 - **Arreglo:** `tpzl.py` alinea a 512, recompone con 16 registros almacenados y `rebuild` rechaza particiones con `hardware_violations`; regresión primero (fallaba), 49 pruebas pasan; construcción completa en temporal cumple el formato de Sony con el mismo contenido FAT. La variante «alinear a 512» del README no bastaba.
 - **Límite:** sin confirmación física (UART). El Darwin y el BIONZ nuevos del 3.25 nunca se han ejecutado. Entregables: `docs/capture/e26-r36-causa-fallo-325.md`, `analysis/e26-recovery/r36_ldec_records.py`, `r36-ldec-records.json`.
+
+## E26-R37 — cierre estático de la recuperación (31-10-2026)
+
+- **Pedido:** avanzar letra por letra (a→d) hasta cerrar todo lo estático tras R36.
+- **(a)** `c01f1de6` trazado: solo `\updater\mode` en `nflasha2` fija el modo 3 (`c01f1e14 cbz` → `movs r0,#3`; R26 lo había leído al revés). El modo 3 carga el actualizador de `nflasha1` (dispositivo 1, intacto: `\boot\{loadaddr.txt,vmlinux.bin,initrd.img}` de 2013), que con solo `mode` entra en MODE_USER y espera firmware por USB (`UdtrMain.sh`, `execute_ufp.sh`). Teclas (`chk ank` → modo 5, ajuste) y Backup llevan a modos que leen `nflasha3`. `c01f51f4` solo envía el modo.
+- **(b)** `scripts/e26_recovery/build_326.py`: 3.26 = 3.24 oficial con versión 3.26 (CRC de cabecera, suma y cifrado del primer bloque, DEND). Verificado con el auditor E25-06 (descifrado completo = FDAT) y con `fwtool`; mismos rangos de diferencia que 3.23→3.24.
+- **(c)** Loader2 (`c003126c`) y Loader3 (`c01f4edc`) solo encienden la UART si `Backup[0x510015]==1`; 12/12 BK4 = 0. Una UART pasiva no confirma R36; solo el vídeo del LED.
+- **(d)** Darwin 3.25: `0x20003716` está en la zona que `__scatterload_zeroinit` (`0x4494`) pone a 0; los vectores 70–73/76 que pisa la cueva son IRQ 54–57/60 y no hay ningún acceso a `NVIC_ISER1`.
+- **Entregables:** `docs/capture/e26-r37-cierre-estatico-recuperacion.md`, `tests/test_e26_r37_cierre_estatico.py` (5), `analysis/e26-recovery/manifest-recuperacion-326.json`; pendiente nuevo `E26-FISICO-UPDATERMODE`.

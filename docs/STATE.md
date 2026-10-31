@@ -17,7 +17,11 @@
   bloques 0, 48 y 57 son un único registro de 64 KiB, cuando el LDEC se programa con 16 de 4096 B (73 732 B, por encima de la cota de
   Sony de 65 800 B). Las 16 imágenes de Sony del repo (19 489 bloques) siempre tienen residuo 0 y 16 × 4096 B. La primera lectura de
   la partición (bloque 0) y la primera entrada del RAMCFG (bloque 240) caen en bloques defectuosos y dan −302. Corrige la decisión C de
-  [R16](capture/e26-r16-ldec-hardware-audit.md)/[R17](capture/e26-r17-arm7-ldec-segment-analysis.md) en cuanto al residuo. Falta la confirmación por UART.
+  [R16](capture/e26-r16-ldec-hardware-audit.md)/[R17](capture/e26-r17-arm7-ldec-segment-analysis.md) en cuanto al residuo. La UART no puede confirmarlo
+  (consola apagada por `Backup[0x510015]=0`, [R37](capture/e26-r37-cierre-estatico-recuperacion.md)).
+- **Recuperación (R37):** solo el modo 3 de Loader3 evita `nflasha3`, y solo lo fija `\updater\mode` en `nflasha2` (corrige R26 §1.2). Con ese
+  archivo, Loader3 arranca el actualizador de fábrica de `nflasha1` y acepta firmware por USB; el paquete 3.26 (contenido oficial) está preparado.
+  Crear el archivo exige escribir la NAND: sigue siendo físico.
 - **Hito previo:** con el 3.23 (Darwin tipo 0 + B1a) la cámara disparó en silencio y sin error según el usuario (T040, 27-10-2026).
 - Resumen por informe E26 (R1–R35): tabla en [CURRENT § E26](../knowledge/CURRENT.md); versión anterior de este encabezado, con un bloque por
   informe, en [STATE-historial-2026-10-31](history/STATE-historial-2026-10-31.md).

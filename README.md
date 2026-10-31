@@ -18,14 +18,14 @@ recuperación, solo con análisis offline.
 | Aspecto | Estado (31-10-2026) |
 |---|---|
 | Cámara | **Bloqueada** tras instalar el 3.25 (actualizador al 100 % y Done; testimonio del usuario, sin captura UART ni lectura de NAND) |
-| Causa | **Identificada offline** ([R36](docs/capture/e26-r36-causa-fallo-325.md)): el `nflasha3` recomprimido del 3.25 no respeta el formato que lee el descompresor por hardware (359/369 bloques empiezan a mitad de sector y Loader3 no transmite ese desplazamiento; 3 bloques son un solo registro de 64 KiB en vez de 16 de 4 KiB). La primera lectura de la partición falla y Loader3 da −302 (3 lentos + 2 rápidos). El 3.23 no tocaba `nflasha3`. Falta la confirmación física (UART) |
-| Recuperación | Solo hay que restaurar `nflasha3` y existe copia válida ([R30](docs/capture/e26-r30-updater-done-boundary.md)). La vía serie del BootROM se abre en cada arranque pero exige una clave guardada en `nflasha0`, nunca volcada ([R32](docs/capture/e26-r32-moderreg-valor-real.md), [R33](docs/capture/e26-r33-veracidad-clave-nflasha0.md)). Lo que falta es físico y no está autorizado |
+| Causa | **Identificada offline** ([R36](docs/capture/e26-r36-causa-fallo-325.md)): el `nflasha3` recomprimido del 3.25 no respeta el formato que lee el descompresor por hardware (359/369 bloques empiezan a mitad de sector y Loader3 no transmite ese desplazamiento; 3 bloques son un solo registro de 64 KiB en vez de 16 de 4 KiB). La primera lectura de la partición falla y Loader3 da −302 (3 lentos + 2 rápidos). El 3.23 no tocaba `nflasha3`. Falta la confirmación física (vídeo del LED; la UART está silenciada, R37) |
+| Recuperación | Solo hay que restaurar `nflasha3` y existe copia válida ([R30](docs/capture/e26-r30-updater-done-boundary.md)). La vía serie del BootROM se abre en cada arranque pero exige una clave guardada en `nflasha0`, nunca volcada ([R32](docs/capture/e26-r32-moderreg-valor-real.md), [R33](docs/capture/e26-r33-veracidad-clave-nflasha0.md)). Mínimo físico identificado ([R37](docs/capture/e26-r37-cierre-estatico-recuperacion.md)): un archivo vacío `\updater\mode` en `nflasha2` hace que Loader3 arranque el actualizador de fábrica de `nflasha1` (intacto) y acepte firmware por USB; el paquete **3.26** (contenido oficial) ya está preparado. Escribir ese archivo exige acceso a la NAND y no está autorizado |
 | Obturador silencioso | Logrado con el 3.23 (T040, confirmado por el usuario); exposición por filas medida en el RAW ([E25-10](docs/capture/e25-10-exposicion-por-fila.md)) |
 | Selector EFCS / Electronic (3.25) | Implementado y verificado **solo offline** (emulación); nunca validado en la cámara ([E25-24b](docs/capture/e25-24b-implementacion-selector.md), [E25-27](docs/capture/e25-27-construccion-firmware-integrado.md)) |
 | Verificación | 4 427 pruebas en local (las que leen firmware se omiten en CI); censo de etiquetas 133/372; 291 sesiones S + 74 informes de fase E; 12/24 planes físicos con prueba; registro T001–T056 |
 
-**Último cierre:** E26 R36 (31-10-2026) — causa del fallo del 3.25 identificada offline (formato TPZL de `nflasha3`) y constructor
-corregido para producir el formato de Sony. Detalle por informe en [knowledge/CURRENT.md](knowledge/CURRENT.md).
+**Último cierre:** E26 R37 (31-10-2026) — cerrado todo lo estático: no hay entrada sin escribir NAND, el mínimo físico es crear
+`\updater\mode`, el paquete de recuperación 3.26 está listo y el Darwin del 3.25 no introduce comportamientos nuevos al encender. Detalle por informe en [knowledge/CURRENT.md](knowledge/CURRENT.md).
 
 ## Cómo funciona el parche del 3.23
 
@@ -50,8 +50,9 @@ Sony solo publicó hasta la **3.21**; las demás las generó el autor a partir d
 | **3.21** | Oficial de Sony | Obturador mecánico normal |
 | **3.22** | Darwin «tipo 0» (bobinas apagadas) | Instalada en T024 (26-10-2026); arranca. Efecto «sin bobinas» deducido del código, no medido |
 | **3.23** | 3.22 + B1a: Darwin no acciona el mecanismo en captura ni rearme | Instalada en T040 (27-10-2026); **dispara en silencio y sin error** (usuario) |
-| **3.24** | Darwin oficial con número 3.24, para volver atrás desde el 3.23 | Preparada, no instalada; solo sirve si el actualizador sigue accesible |
+| **3.24** | Darwin oficial con número 3.24, para volver atrás desde el 3.23 | Preparada, no instalada; **ya no sirve**: con el 3.25 instalado el actualizador exige > 3.25 |
 | **3.25** | Integrado: selector EFCS/Electronic en BIONZ + C3-B + Darwin condicionado; `nflasha3` recompuesta | Instalada (informado el 29-10-2026); **la cámara no arranca** ([E26](docs/capture/e26-recovery.md)) |
+| **3.26** | Recuperación: contenido oficial 3.21 (igual que el 3.24) con número 3.26 | Preparada y verificada offline ([R37](docs/capture/e26-r37-cierre-estatico-recuperacion.md)); solo sirve si se vuelve a entrar en el actualizador |
 
 ## Qué se midió con el 3.23
 
@@ -105,12 +106,12 @@ el desplazamiento dentro del sector solo genera un aviso: no llega al ARM7 ni al
 bloque anterior delante del bloque real. El LDEC se programa con 16 registros por bloque, y los bloques 0, 48 y 57 tenían uno.
 El montaje de la partición empieza por el bloque 0 y la primera entrada del RAMCFG lee el bloque 240 (desplazado). El fallo sale como
 −302, el código del LED. El 3.23 pasó por el mismo actualizador y el mismo Loader3, pero con el `nflasha3` de Sony. Las
-comprobaciones offline no lo vieron porque descomprimían por software, sin modelar esa ruta. Falta confirmarlo con una captura UART.
+comprobaciones offline no lo vieron porque descomprimían por software, sin modelar esa ruta. Una captura UART no lo confirmaría: Loader2 y Loader3 tienen la consola apagada por el Backup ([R37](docs/capture/e26-r37-cierre-estatico-recuperacion.md)); grabar el LED confirmaría el código −302.
 
 **Cómo solucionarlo. Nada de esto se ha probado:**
 1. **Dejar de recomponer `nflasha3`.** Usar el 3.23 con la capa 2 en RAM consigue el mismo resultado sin tocar la partición que falló. Es la vía recomendada.
 2. **Si se vuelve a integrar en firmware:** el constructor ya produce el formato de Sony: alineación a 512 y 16 registros almacenados de 4096 B por bloque. `tpzl.hardware_violations` rechaza cualquier partición que se salga de él. Alinear a 512 **no basta por sí solo**, porque deja los bloques de un único registro. Que la partición cumpla el formato no prueba que el código nuevo de BIONZ o de Darwin funcione: conviene probar cada cambio en una versión separada. Nada de esto se ha instalado.
-3. **Recuperar esta cámara:** basta con restaurar `nflasha3`, y hay una copia válida (`dev_nflasha3.bin`, [R30](docs/capture/e26-r30-updater-done-boundary.md)). La vía serie del BootROM necesita una clave de 8 B guardada en `nflasha0` (bloque 0, `0xc00`), que solo se puede leer con un lector NAND o JTAG ([R33](docs/capture/e26-r33-veracidad-clave-nflasha0.md)). Antes de eso, una captura UART pasiva diría en qué punto se detiene el arranque. Todo esto es físico y no está autorizado ni probado. Si nada funciona, el último recurso es cambiar la placa.
+3. **Recuperar esta cámara:** basta con restaurar `nflasha3`, y hay una copia válida (`dev_nflasha3.bin`, [R30](docs/capture/e26-r30-updater-done-boundary.md)). La vía serie del BootROM necesita una clave de 8 B guardada en `nflasha0` (bloque 0, `0xc00`), que solo se puede leer con un lector NAND o JTAG ([R33](docs/capture/e26-r33-veracidad-clave-nflasha0.md)). Una alternativa más pequeña es crear el archivo vacío `\updater\mode` en `nflasha2`: Loader3 arranca entonces el actualizador de fábrica de `nflasha1` y se instala el paquete 3.26 por USB ([R37](docs/capture/e26-r37-cierre-estatico-recuperacion.md)). Una captura UART pasiva no ayuda: la consola de Loader2/Loader3 está apagada por el Backup. Todo esto es físico y no está autorizado ni probado. Si nada funciona, el último recurso es cambiar la placa.
 
 ## Límites y riesgos
 
