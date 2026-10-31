@@ -1,6 +1,6 @@
 # Estado actual — léeme primero
 
-Contexto operativo mínimo para agentes. Última revisión: **31-10-2026** (E26 R37: cierre estático de la recuperación).
+Contexto operativo mínimo para agentes. Última revisión: **31-10-2026** (E26 R38: guard del actualizador y entrada mínima `\updater\mode`).
 No es historial ni fuente de verdad de los pendientes: ver [Responsabilidades](#responsabilidades-documentales).
 Versiones íntegras anteriores (nada se borró): [CURRENT-historial-2026-10-31](history/CURRENT-historial-2026-10-31.md)
 (bloques E26 R5–R35 y E25 completos) y [CURRENT-historial-2026-10-26](history/CURRENT-historial-2026-10-26.md) (S59–S627).
@@ -36,10 +36,12 @@ Versiones íntegras anteriores (nada se borró): [CURRENT-historial-2026-10-31](
 | R34–R35 | `serial_entry` sin bucle de reintento (corrige R23 §2); `serial_receiver` recibe varios paquetes por llamada | [R34](../docs/capture/e26-r34-serial-entry-flags.md), [R35](../docs/capture/e26-r35-serial-receiver-multi-paquete.md) |
 | R36 | Causa del −302: formato TPZL del 3.25 (residuo descartado por Loader3; registros ≠ 16 × 4096); 3.23 vs 3.25 = solo Darwin + `nflasha3`; corrige R16/R17 (residuo) y la recomendación «alinear a 512» | [R36](../docs/capture/e26-r36-causa-fallo-325.md) |
 | R37 | Cierre estático: solo `\updater\mode` (en `nflasha2`) lleva al actualizador de `nflasha1`, que no lee `nflasha3` (corrige R26 §1.2); paquete **3.26** listo (3.24 ya no sirve); UART de Loader2/3 apagada por `Backup[0x510015]=0`; Darwin 3.25 sin comportamiento nuevo al encender | [R37](../docs/capture/e26-r37-cierre-estatico-recuperacion.md) |
+| R38 | Guard de `sauu`: compara con `\updater\dat4` (`comp` = firmware válido); `CompleteUpdate` escribe la versión del FDAT → tras el 3.25 hace falta ≥ 3.26. Loader3 solo pide la entrada corta `MODE` (0 B); en el volcado basta 1 byte (entrada borrada, sector 132 de `nflasha2`); sin LFN persiste tras sesiones fallidas (corrige R37 §2) | [R38](../docs/capture/e26-r38-guard-y-entrada-updater.md) |
 
 **Conclusión operativa:** la vía serie del BootROM existe y se abre en cada arranque, pero exige la clave de `nflasha0`, que nunca se
 volcó; todo lo restante es físico (`E26-FISICO-UPDATERMODE`, `E26-FISICO-BOOT`, `E26-R33-BLOQUE0`) y requiere autorización expresa. La
-intervención mínima es crear `\updater\mode` en `nflasha2` e instalar el 3.26 por USB (R37).
+intervención mínima es crear `\updater\mode` en `nflasha2` (1 byte en el último volcado, `updater_mode_entry.py`) e instalar el 3.26 por
+USB en menos de 30 min (R37, R38).
 
 ## Obturador — hallazgos que siguen vigentes (VERIFICADO salvo nota)
 

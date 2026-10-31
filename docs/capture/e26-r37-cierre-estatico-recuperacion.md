@@ -41,7 +41,7 @@ Al final, `c01f2122` vuelve a mirar `\updater\mode`. Si no existe, `c01f51f4` **
 - Contiene `\boot\loadaddr.txt` (`0x81528000,0x80628000`), `vmlinux.bin` (977 820 B) e `initrd.img` (cramfs, 3 809 280 B).
 - El 3.25 no tocó `nflasha1`.
 - Su `UdtrMain.sh` lee `/setting/updater/mode1|2|3|6`. Si solo existe `mode`, entra en **MODE_USER**: `execute_ufp.sh` → `prepare-usb.sh` → `sauu` espera un firmware por USB.
-- Si existe `\updater\comp` (presente en el volcado de `nflasha2`), borra `mode*` al empezar. Por tanto, la actualización tiene que hacerse en esa misma sesión.
+- Si existe `\updater\comp` (presente en el volcado de `nflasha2`), borra `mode*` al empezar. Por tanto, la actualización tiene que hacerse en esa misma sesión. **[Corregido en [R38](e26-r38-guard-y-entrada-updater.md): solo si el archivo se llama `mode` en minúsculas (con LFN); una entrada corta `MODE` sin LFN no casa con el glob y persiste hasta que `CompleteUpdate` la borra.]**
 
 **Consecuencia:** la intervención física mínima ya no es reescribir los 11 MB de `nflasha3`. Basta crear un archivo vacío de 0 B en `\updater\` de `nflasha2` (una entrada de directorio FAT). Después se instala por USB un paquete de versión > 3.25, como en T024/T040. Sigue exigiendo escribir en la NAND, por lector externo o por la vía serie del BootROM con la clave de `nflasha0` ([R33](e26-r33-veracidad-clave-nflasha0.md)). No está autorizado ni probado.
 

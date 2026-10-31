@@ -3374,3 +3374,12 @@ README, CURRENT (≤150 líneas, tabla E26) y cabecera de STATE reescritos; vers
 - **(c)** Loader2 (`c003126c`) y Loader3 (`c01f4edc`) solo encienden la UART si `Backup[0x510015]==1`; 12/12 BK4 = 0. Una UART pasiva no confirma R36; solo el vídeo del LED.
 - **(d)** Darwin 3.25: `0x20003716` está en la zona que `__scatterload_zeroinit` (`0x4494`) pone a 0; los vectores 70–73/76 que pisa la cueva son IRQ 54–57/60 y no hay ningún acceso a `NVIC_ISER1`.
 - **Entregables:** `docs/capture/e26-r37-cierre-estatico-recuperacion.md`, `tests/test_e26_r37_cierre_estatico.py` (5), `analysis/e26-recovery/manifest-recuperacion-326.json`; pendiente nuevo `E26-FISICO-UPDATERMODE`.
+
+## E26-R38 — guard del actualizador y entrada mínima `\updater\mode` (31-10-2026)
+
+- **Pedido:** «investiga más a fondo» tras R37; se cierra la suposición abierta (comparación de versión) y se baja la escritura física al byte.
+- **`sauu` (initrd cramfs de `nflasha1`):** `isVersionOK` (`0xd3d0`) compara con `updater/dat4` (`getVersion` `0xf6e4`, u16 LE); igual solo si falta `comp` (`IsValid` `0xf0b8`) o con `-m`; `-s` acepta todo (constructor `0xd180`).
+- **Cuerpo (`libupdaterbody.so` 3.21):** `StartUpdate` borra `comp`; `CompleteUpdate` hace `setVersion(mayor<<8|menor)` (`0x152a8`), borra `mode1…6`, crea `comp` y borra `mode`. `uincomp` solo con `updater_sum` (ausente en los tar 3.2x).
+- **Datos:** `nflasha2` del 20-10: `dat4 = 21 03`, `comp` oculto, par LFN+SFN `mode` borrado en las entradas 4–5 de `\updater`. Loader3 (`c01f44c6`/`c01f3f34`) solo compara el nombre corto en el primer clúster y no lee datos.
+- **Entregables:** `docs/capture/e26-r38-guard-y-entrada-updater.md`, `scripts/e26_recovery/updater_mode_entry.py` (réplica de Loader3 + parche mínimo; `fsck.vfat -n` limpio), `tests/test_e26_r38_guard_updater.py` (5).
+- **Límite:** nada leído de la NAND actual; la persistencia de `MODE` sin LFN es inferencia sobre `vfat`/busybox.
