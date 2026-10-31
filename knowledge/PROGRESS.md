@@ -3218,3 +3218,10 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 - **Hallazgos:** `0xffff1352` (llamada desde `0x150/0x332`) es un lector real de sectores de `0x600` B desde un controlador de bloque en `0x20000` (FIFO `0x10000010`), con reintentos; solo pone a 0xFF un array de estado por sector (`memset` vía `0xffff1814`), no el buffer de datos. El sector que correspondería a `0xc0001200` vive en la partición `nflasha0` (área de boot/loader1), que según `analysis/camera-dumps/nand-20261020/README.md` **no tiene nodo de dispositivo Linux y nunca se volcó**; `bootloader.bin` (paquete `EXBL`) es una etapa posterior sin relación con esa zona.
 - **Decisión:** C — mecanismo cerrado estáticamente; contenido («vacía»/«con clave») no determinable sin volcado físico/JTAG del área de boot.
 - **Entregables:** `docs/capture/e26-r20-keytable.md`, `tests/test_e26_r20_keytable.py`.
+
+## E26-R19/R20 — cierre estático de pendientes restantes (30-10-2026)
+
+- **Pedido:** cerrar de forma estática `E26-R19-USB-EVT13`, `E26-R19-CM-MONTAJE`, `E26-R20-BOOTMAIN-NIVEL` y `E26-R20-GPIO4`.
+- **Hallazgos:** `post(0x13)` = registro de traza; EP1 IN único; `CM4002/3` montados por convención; `BOOT_MAIN` sin pull externo; GPIO4 bit21 elige entre dos tablas de muestreo serie por software (250/84 ticks por bit), bit22 salta a serie.
+- **Límites:** baudios absolutos, pines de GPIO(4) y nivel de `BOOT_MAIN` no determinables sin hoja de datos del IC6000 o medición.
+- **Entregables:** `docs/capture/e26-r19-r20-cierre-estatico.md`, `tests/test_e26_r19_r20_cierre.py`.
