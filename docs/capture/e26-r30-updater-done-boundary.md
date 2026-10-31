@@ -102,23 +102,55 @@ estaba en la cámara).
    extracción (`$EXTRACT_ROOT`) que usan los demás modos. Es decir: si `part_image.sum` lista
    rutas de dispositivo (p. ej. `/dev/nflasha3`), este paso relee la partición ya escrita y
    compara su CRC32 contra el valor de referencia del paquete, con error LED `0x81`
-   (`getledval.elf`) si no coincide. **Límite:** `part_image.sum` se genera dentro del
-   paquete FDAT en tiempo de empaquetado y no está presente de forma estática en
-   `updater.img`; no se pudo confirmar aquí que sus entradas sean rutas de dispositivo y no
-   copias en `$EXTRACT_ROOT` — **INFERENCIA, no demostrado**, pendiente nuevo (§5).
+   (`getledval.elf`) si no coincide.
+
+### 3.5 `part_image.sum` — CERRADO (`E26-R30-SUMCONTENT`)
+
+**VERIFICADO EN ARCHIVOS.** `part_image.sum` sí viaja dentro del tar del paquete
+(`0701_part_image_sum/part_image.sum`, después de `0700_part_image/dev/*`, así que el
+desempaquetado escribe la imagen antes de que llegue la suma que dispara la comprobación).
+Sus entradas son rutas **relativas a `/`**: `dev/nflasha7`, `dev/nflasha5`, `dev/nflasha15`,
+`dev/nflasha16`, `dev/nflasha3`. Con el `cd /` del modo `image`, `uc_crc32sum.elf` abre
+**`/dev/nflasha3`, el nodo de dispositivo**, no una copia de extracción. Formato por línea:
+`tipo,crc32,tamaño,modo,…,ruta`.
+
+| Fuente | CRC32 lista | Tamaño lista | CRC32 calculado (zlib, primeros `tamaño` bytes) |
+|---|---|---|---|
+| 3.21 oficial (`fw321/…/0701_part_image_sum`) | `0c047870` | `0x00af4f10` (11 489 040) | `0c047870` de `fw321/…/dev/nflasha3` |
+| 3.25 (tar integrado y `part_image.integrated.sum`) | `f5e75c34` | `0x00b09500` (11 572 480) | `f5e75c34` de `nflasha3.integrated.bin` |
+| Respaldo de la cámara `dev_nflasha3.bin` (20-10-2026, 30 MiB) | — | — | primeros 11 489 040 B = `0c047870` |
+
+La tercera fila prueba el mecanismo con un volcado real del dispositivo: el CRC32 estándar de
+los primeros `tamaño` bytes de `/dev/nflasha3` reproduce la suma de la lista, aunque la
+partición mida 30 MiB. Las cadenas de `uc_crc32sum.elf` (`sha256 8e368185…`) confirman que
+`-s` significa *«not check size mode»* (omite comparar el tamaño de `stat`, necesario para un
+nodo de dispositivo) y que emite `crc mismatch` / `check sum NG` en caso de fallo. Las cuatro
+líneas de `nflasha7/5/15/16` son idénticas entre 3.21 y 3.25: solo cambió `nflasha3`.
+
+**Límite:** la relectura pasa por la capa de bloques de Linux justo después de escribir; puede
+servirse de la caché de páginas y no de la NAND física. Demuestra que el dato **entregado al
+dispositivo** era exactamente la imagen 3.25 integrada, no que la NAND lo conserve sin errores.
 
 ### Lectura para la recuperación
 
-Si la inferencia del punto 4 es correcta, el hecho de que el usuario viera **Done** implica
-que, en el momento de la actualización, el contenido escrito en `nflasha3` coincidía con el
-CRC32 de referencia del paquete 3.25 — es decir, la escritura NAND en sí no se corrompió de
-forma detectable por esa vía. Esto **no descarta** la anomalía TPZL (residuo 256 B / un
+Como el usuario vio **Done**, el contenido entregado a `/dev/nflasha3` coincidía con el
+CRC32 de referencia del paquete 3.25 (`f5e75c34`): la cámara recibió **exactamente la imagen
+3.25 integrada**, con la disposición TPZL anómala tal como se construyó (residuo 256 B en
+359/369 entradas, un segmento de 64 KiB en los bloques 0/48/57). No hay indicio de corrupción
+durante la escritura. Esto **no descarta** la anomalía TPZL (residuo 256 B / un
 segmento de 64 KiB en los bloques 0/48/57), porque esa comprobación es un CRC32 de bytes, no
 una simulación del LDEC/ARM7 en tiempo de arranque: una imagen "bien escrita y bien
 empaquetada" según el actualizador puede seguir siendo una imagen que el **hardware** LDEC no
 descomprime igual que el formato de 16×4 KiB universal de Sony. Esto es consistente con, y no
 sustituye, la Decisión C ya cerrada en R16/R17: la causa más probable sigue estando en la
 frontera hardware de Loader3/ARM7 en tiempo de arranque, no en la escritura del actualizador.
+
+**Consecuencia práctica:** el objetivo de una recuperación queda localizado en una sola
+partición: devolver `nflasha3` a una imagen con disposición Sony (residuo 0, 16×4 KiB). Ya
+existe una copia válida: el respaldo `dev_nflasha3.bin` del 20-10-2026, cuyos primeros
+11 489 040 B reproducen el CRC32 oficial 3.21. Las demás particiones del `part_image` no
+cambiaron. Lo que sigue faltando es una **vía de escritura** (modo actualizador o acceso al
+almacenamiento), no el dato a escribir.
 
 ## 4. Verificación de continuidad
 
@@ -128,12 +160,9 @@ Fase B (§4 de este informe). No se alteró ningún archivo de `analysis/camera-
 
 ## 5. Pendientes nuevos
 
-- **E26-R30-SUMCONTENT** (NO DEMOSTRADO): confirmar si `part_image.sum`/`darwin.sum` dentro
-  del FDAT 3.21/3.25 listan rutas de dispositivo (`/dev/nflasha3`) o copias en
-  `$EXTRACT_ROOT`; sin esto, el hallazgo del §3.4 es una inferencia del script, no una
-  verificación post-escritura demostrada. Fuente: descomprimir el FDAT 3.21/3.25 ya
-  disponible localmente (`analysis/e25-27/artifacts/package-3.25/firmware_packed.fdat`) y
-  listar el contenido de esos `.sum` sin instalar ni ejecutar nada.
+- **E26-R30-SUMCONTENT** — **CERRADO** (§3.5, 31-10-2026): `part_image.sum` lista
+  `dev/nflasha3` relativo a `/`; la comprobación relee el nodo de dispositivo y su CRC32
+  reproduce la suma oficial sobre un volcado real. Límite: caché de páginas de Linux.
 - **E26-R30-HOSTRET0** (NO DEMOSTRADO): qué hace el adaptador/host del PC cuando
   `UpdaterBody::Execute` retorna 0 (HasError sin excepción) frente a cuando retorna 1 (Done):
   ¿muestra error, cuelga, o podría mostrar Done igual? Sin esto no se puede descartar que un
@@ -143,6 +172,6 @@ Fase B (§4 de este informe). No se alteró ningún archivo de `analysis/camera-
 
 ## 6. Pruebas y validación
 
-Sin herramienta nueva de software del repo (solo lectura/decompilación); no se añadió
-código, por lo que no aplica suite de tests nueva. `ruff`/`mypy`: sin cambios en `scripts/`.
-Reindexado pendiente vía `knowledge-maintenance` tras este commit.
+`tests/test_e26_r30_part_image_sum.py` comprueba las tablas de §3.5 (formato de la lista,
+CRC32 de 3.21/3.25 y del respaldo de la cámara); se salta si faltan los archivos locales no
+publicados. Reindexado con `knowledge-maintenance`.
