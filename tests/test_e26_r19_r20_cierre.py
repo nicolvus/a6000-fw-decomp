@@ -49,3 +49,24 @@ def test_un_solo_endpoint_interrupt_in():
     o = 0x239E4
     assert d[o + 0x2D : o + 0x34] == bytes([7, 5, 0x81, 3, 8, 0, 1])  # EP1 IN interrupt
     assert d.count(bytes([7, 5]), o, o + 0x100) == 1
+
+
+def test_bit1_de_moderreg_es_boot_serial_in_en_el_codigo_sony():
+    base = Path(
+        "analysis/session18/main/sony-oss-extracted/linux/arch/arm/mach-cxd90014"
+    )
+    misc = (base / "include/mach/regs-misc.h").read_text(encoding="utf-8")
+    assert "MISC_MODEREG_BOOT_SERIAL_IN\t0x0002" in misc
+    assert "TMCK_1MHZ\t\t\tTMCK_DIV4" in (base / "hwtimer.c").read_text(
+        encoding="utf-8"
+    )
+
+
+def test_receptor_serie_8_datos_y_paridad_impar():
+    rom = ROM.read_bytes()
+    half = lambda a: struct.unpack_from("<H", rom, a - ROM_BASE)[0]
+    assert half(0xFFFF06D0) == 0x2C08  # cmp r4,#8: ocho bits de datos
+    assert (half(0xFFFF06E2), half(0xFFFF06EA)) == (
+        0x2E01,
+        0x2501,
+    )  # cmp r6,#1 ; movs r5,#1 (si XOR != 1)

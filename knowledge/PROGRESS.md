@@ -3225,3 +3225,10 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 - **Hallazgos:** `post(0x13)` = registro de traza; EP1 IN único; `CM4002/3` montados por convención; `BOOT_MAIN` sin pull externo; GPIO4 bit21 elige entre dos tablas de muestreo serie por software (250/84 ticks por bit), bit22 salta a serie.
 - **Límites:** baudios absolutos, pines de GPIO(4) y nivel de `BOOT_MAIN` no determinables sin hoja de datos del IC6000 o medición.
 - **Entregables:** `docs/capture/e26-r19-r20-cierre-estatico.md`, `tests/test_e26_r19_r20_cierre.py`.
+
+## E26-R21 — receptor serie del BootROM (30-10-2026)
+
+- **Pedido:** seguir con lo hallable sin mediciones físicas.
+- **Hallazgos:** código Sony del SoC (`mach-cxd90014`) confirma `MODEREG` bit 1 = `BOOT_SERIAL_IN`; `0x634` es un receptor serie por software (8 datos + paridad impar + parada); tablas de 250/84 ticks por bit ≈ 16 000/47 600 baudios con reloj base 4 MHz.
+- **Límite:** reloj del temporizador inferido de Linux; pin de GPIO(4) bit 21 desconocido.
+- **Entregables:** `docs/capture/e26-r21-bootrom-rx-serie.md`, ampliación de `tests/test_e26_r19_r20_cierre.py`.
