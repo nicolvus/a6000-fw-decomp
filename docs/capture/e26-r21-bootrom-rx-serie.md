@@ -15,7 +15,7 @@ Sin mediciones físicas: BootROM (`0xffff0554`, `0xffff05da`, `0xffff0634`, `0xf
 | filtro (`+0x10`) | 1 tick | 20 ticks |
 | `+0x14/+0x18` | `0x15f900` (1 440 000) | `0x44aa20` (4 500 000) — uso no trazado |
 
-5. **Velocidad (INFERIDO).** El BootROM programa el temporizador con `0x1030` = `TMST|TMCS_FREERUN|TMCK_DIV1`. En el código Sony, `TMCK_DIV4` = «1 MHz» (`hwtimer.c`) → reloj base 4 MHz, `DIV1` = **4 MHz**. Entonces: bit21=0 → 250 ticks = 62,5 µs = **16 000 baudios**; bit21=1 → 84 ticks = 21 µs ≈ **47 600 baudios** (nominal 48 000). Supone el mismo reloj base que Linux; si cambiara, ambas velocidades escalan por igual (relación fija 2,98).
+5. **Velocidad (reloj 4 MHz VERIFICADO en R22 por las dos variantes del parpadeo de error; velocidades derivadas).** El BootROM programa el temporizador con `0x1030` = `TMST|TMCS_FREERUN|TMCK_DIV1`. En el código Sony, `TMCK_DIV4` = «1 MHz» (`hwtimer.c`) → reloj base 4 MHz, `DIV1` = **4 MHz**. Entonces: bit21=0 → 250 ticks = 62,5 µs = **16 000 baudios**; bit21=1 → 84 ticks = 21 µs ≈ **47 600 baudios** (nominal 48 000). El reloj de 4 MHz ya no es solo la inferencia de Linux: `error_blink` (2 000 000 ticks) y `error_blink_ms` (500 ms) lo confirman ([R22](e26-r22-bootrom-mapa-completo.md) §2.1). Relación fija entre perfiles 2,98.
 
 ## 1b. Tren de sincronismo previo (corrige R8/R9: «no hay sincronización»)
 
@@ -35,4 +35,4 @@ Un transmisor necesitaría **primero el tren de 60 flancos (§1b)** y después *
 
 ## 4. Límites
 
-Reloj base del temporizador no verificado en silicio; semántica de `+0x14/+0x18`; espera del flanco de inicio (el contador se pone a cero antes de `0x634`, no trazado); GPIO(4) bits 21/22 sin nombre de pin.
+semántica de `+0x14/+0x18`; espera del flanco de inicio (el contador se pone a cero antes de `0x634`, no trazado); GPIO(4) bits 21/22 sin nombre de pin.

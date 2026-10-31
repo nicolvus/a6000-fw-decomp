@@ -3234,3 +3234,10 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 - **Entregables:** `docs/capture/e26-r21-bootrom-rx-serie.md`, ampliación de `tests/test_e26_r19_r20_cierre.py`.
 
 - **R21 ampliación:** descubierto el tren de sincronismo de 60 flancos previo a los bytes (corrige «sin sincronización» de R8/R9) y validado con `analysis/e26-recovery/r21_rx_emulation.py` (Unicorn, ROM real; ambos perfiles aceptan 8O1, rechazan periodo/paridad/flancos erróneos).
+
+## E26-R22 — mapa completo del BootROM (30-10-2026)
+
+- **Pedido:** identificar todo el BootROM de principio a fin.
+- **Hallazgos:** 57 rutinas (0xffff0000–0xffff1a80) nombradas; capa de carga de bloques, claves, consola/traza, CRC, `printf`; reloj de 4 MHz verificado por las dos variantes del parpadeo de error.
+- **Límite:** nombres propios; `0x2001–0x2005` y pasos de traza sin asociar a condiciones concretas.
+- **Entregables:** `docs/capture/e26-r22-bootrom-mapa-completo.md`, `analysis/e26-recovery/r22_bootrom_map.py`, `tests/test_e26_r22_bootrom_map.py`.
