@@ -3349,3 +3349,9 @@ quedan ignorados. **Coherencia:** README y CURRENT decían «funcional» tras el
 cámara»; PENDIENTES tenía filas EFCS con IDs E26–E30 dentro del registro de cambios (renumeradas E25-EFCS…) y E25-19f duplicado; 61 enlaces
 rotos corregidos (0 restantes salvo el ejemplo `old.md`). Tablero: planes P1–P24 (antes P1–P21) y recuento de informes de fase E.
 README, CURRENT (≤150 líneas, tabla E26) y cabecera de STATE reescritos; versiones previas en `docs/history/` y `knowledge/history/`.
+
+## Mantenimiento posterior a la auditoría (31-10-2026)
+
+- **D13:** registro T054 (E25-22), T055 (E25-23) y T056 (instalación del 3.25, testimonio); informe [E25-23](../docs/capture/e25-23-interrupcion-captura-larga.md) redactado desde la evidencia (5 s OK, 15→20 s, 30 s→`65535` y `shooting` >90 s; causa sin demostrar).
+- **C10:** los 15 fallos/errores de `test_s402_static_closure.py` en la suite completa eran una colisión de módulos `fw` en `sys.modules`; los 2 de `test_subsystem_index` venían del informe nuevo sin indexar.
+- **C11:** dependencias de CI fijadas en `knowledge/requirements-ci.txt`; `pyelftools` retirado; `F821` corregido; `repo_audit.py` ignora cifras de copias históricas.

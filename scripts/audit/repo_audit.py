@@ -14,6 +14,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "knowledge" / "audit" / "estado.json"
 MEMORIA = ROOT / "knowledge" / "audit" / "memoria.json"
+ESTADO_VIVOS = ("docs/STATE.md", "knowledge/CURRENT.md", "knowledge/PROGRESS.md")
 ESTADO_DOCS = ("docs/STATE.md", "knowledge/CURRENT.md", "knowledge/PROGRESS.md", "CONTEXT.md", "knowledge/agents/NEEDS-HUMAN.md")
 LINK = re.compile(r"(?<!!)\[[^\]]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
 ESTADOS = {"ABIERTO", "PARCIAL", "NO_VERIFICADO", "BLOQUEADO", "DIFERIDO", "CERRADO", "DESCARTADO"}
@@ -90,6 +91,8 @@ def md_links(files: list[str]) -> dict:
 
 
 SKIP_REFS = ("references/", "analysis/", "work/")
+# Copias históricas y bitácora: sus cifras son de la fecha en que se escribieron, no se cruzan con la colección actual.
+HISTORICAL = ("docs/history/", "knowledge/history/", "knowledge/PROGRESS.md")
 REF = re.compile(r"`((?:tests|analysis|docs|scripts|knowledge|reports|tools|site)/[A-Za-z0-9_./\-]+\.[A-Za-z0-9]+)`")
 RUNTIME = re.compile(r"\.(sock|dis|frames)$|/run/|node_modules|\.json/\.c$|\.jsonl$")
 
@@ -120,7 +123,7 @@ def test_claims(files: list[str], counts: dict[str, int]) -> dict:
     """Cifras «N tests» junto a un archivo de prueba que difieren de lo colectado."""
     dif = []
     for f in files:
-        if not f.endswith(".md") or f.startswith(SKIP_REFS):
+        if not f.endswith(".md") or f.startswith(SKIP_REFS + HISTORICAL):
             continue
         for m in CLAIM.finditer((ROOT / f).read_text(errors="replace")):
             n, path = (int(m.group(1)), m.group(2)) if m.group(1) else (int(m.group(4)), m.group(3))
@@ -206,7 +209,9 @@ def memoria(estado: dict, files: list[str]) -> dict:
         if m:
             (cerradas.append(m.group(1)) if seccion.startswith("Cerradas") else abiertas.__setitem__(m.group(1), m.group(2)))
     fechas = {d: git("log", "-1", "--format=%cs", "--", d).strip() for d in ESTADO_DOCS}
-    menciona = {d: "26-10-2026" in (ROOT / d).read_text() for d in ESTADO_DOCS}
+    # El último cambio registrado en PENDIENTES debe constar en los documentos de estado vivos.
+    ultima = re.findall(r"^\| (\d\d-\d\d-\d{4}) \|", text.split("## Registro de cambios")[-1], re.M)[-1]
+    menciona = {d: ultima in (ROOT / d).read_text() for d in ESTADO_VIVOS}
     readme = (ROOT / "README.md").read_text()
     enlaces_pend = [e for e in estado["enlaces_md"]["rotos"]["muestra"] if e["en"] == "docs/PENDIENTES.md"]
     coherencia = {
@@ -214,8 +219,8 @@ def memoria(estado: dict, files: list[str]) -> dict:
         "ids_pendientes_unicos": not estado["pendientes"]["ids_duplicados"],
         "estados_validos": not estado["pendientes"]["estados_no_validos"],
         "enlaces_de_pendientes_validos": not enlaces_pend,
-        "docs_de_estado_mencionan_26_10": all(menciona.values()),
-        "readme_cita_cierres_recientes": all(i in readme for i in ("E25", "T040", "recuperacion-324")),
+        "docs_de_estado_mencionan_ultimo_cambio": all(menciona.values()),
+        "readme_cita_cierres_recientes": all(i in readme for i in ("E26", "3.25", "T040")),
         "sin_json_ni_python_invalido": not (estado["json_py"]["json_invalido"]["total"] or estado["json_py"]["python_invalido"]["total"]),
         "sin_rutas_citadas_inexistentes": estado["rutas_citadas_inexistentes"]["total"] == 0,
         "volcados_sha256_ok": not estado["volcados_sha256"]["falla"],
@@ -225,7 +230,7 @@ def memoria(estado: dict, files: list[str]) -> dict:
         "pruebas_colectadas": estado["pruebas_colectadas"],
         "pendientes_abiertos": abiertas,
         "pendientes_cerrados": cerradas,
-        "documentos_de_estado": {d: {"ultimo_commit": fechas[d], "menciona_26_10": menciona[d]} for d in ESTADO_DOCS},
+        "documentos_de_estado": {d: {"ultimo_commit": fechas[d], "menciona_ultimo_cambio": menciona.get(d)} for d in ESTADO_DOCS},
         "coherencia": coherencia,
         "incoherencias": [k for k, v in coherencia.items() if not v],
     }

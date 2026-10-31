@@ -32,3 +32,12 @@ def test_pendientes_have_valid_states_and_unique_ids():
     p = audit.pendientes()
     assert not p["estados_no_validos"] and not p["ids_duplicados"]
     assert {"E1", "R1", "R3"} <= set(p["ids_abiertos"])
+
+
+def test_test_claims_ignores_historical_snapshots(tmp_path, monkeypatch):
+    for f in ("docs/history/h.md", "knowledge/PROGRESS.md", "docs/vivo.md"):
+        (tmp_path / f).parent.mkdir(parents=True, exist_ok=True)
+        (tmp_path / f).write_text("3 pruebas en `tests/test_x.py`\n")
+    monkeypatch.setattr(audit, "ROOT", tmp_path)
+    r = audit.test_claims(["docs/history/h.md", "knowledge/PROGRESS.md", "docs/vivo.md"], {"tests/test_x.py": 5})
+    assert [e["en"] for e in r["muestra"]] == ["docs/vivo.md"]

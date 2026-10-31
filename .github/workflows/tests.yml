@@ -22,7 +22,7 @@ jobs:
       - name: ripgrep (búsqueda exacta del índice)
         run: sudo apt-get install -y ripgrep
       - name: Dependencias
-        run: pip install -r knowledge/requirements-ci.txt pyelftools numpy Pillow
+        run: pip install -r knowledge/requirements-ci.txt
       - name: Índice de conocimiento
         run: |
           python scripts/knowledge/index_docs.py

@@ -105,4 +105,5 @@ def test_osal_bus_reference():
 
 if __name__ == "__main__":
     # Allow running as: python -m pytest tests/test_s94_hapi.py -q
+    import pytest
     pytest.main(["-v"] if "-v" in sys.argv else ["-q"])

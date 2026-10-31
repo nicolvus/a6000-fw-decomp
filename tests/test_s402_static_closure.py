@@ -8,6 +8,8 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "analysis/s402_static_closure"))
+# scripts/e25_17/fw.py comparte nombre: si otra prueba lo cargó antes, se descarta para importar el de S402.
+sys.modules.pop("fw", None)
 
 import a7s_silent_selector
 import backup_3000b

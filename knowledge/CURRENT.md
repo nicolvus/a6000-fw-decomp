@@ -15,7 +15,7 @@ Versiones íntegras anteriores (nada se borró): [CURRENT-historial-2026-10-31](
 | Hito del obturador | **3.23 (Darwin tipo 0 + B1a, 2 bytes)** instalado en T040 (27-10-2026): el usuario confirmó que disparaba en silencio y sin error. Capturas de T042–T044 versionadas el 31-10-2026 | [E25](../docs/capture/e25-desactivacion-mecanica.md), [registro](../docs/capture/registro-pruebas-camara.md) |
 | Firmware 3.25 | Selector EFCS/Electronic + C3-B + Darwin condicionado, construido y verificado **offline** (E25-24b…E25-29); es el que se instaló. Su `nflasha3` tiene 359/369 entradas TPZL con residuo 256 y 3 bloques de un segmento de 64 KiB (sin rechazo demostrado) | [E25-27](../docs/capture/e25-27-construccion-firmware-integrado.md), [R15](../docs/capture/e26-r15-tpzl-custom-fw325.md)–[R17](../docs/capture/e26-r17-arm7-ldec-segment-analysis.md) |
 | Pregunta original (S51) | Exposición totalmente electrónica a resolución completa: A=NO, B=NO, C=NO en estático; superada en la práctica por el parche de Darwin (3.23), cuya exposición por filas tiene el límite medido de E25-10 | [S51](../docs/capture/s51-decision.md), [E25-10](../docs/capture/e25-10-exposicion-por-fila.md) |
-| Cifras | 4 426 pruebas colectadas en local; CI (sin firmware): 920 pasan, 2 307 omitidas. Censo de etiquetas 133/372 (35,75 %, mide documentación). Sesiones S 291/627 y 74 informes de fase E. Planes físicos con prueba 12/24 (P1–P24). Registro T001–T053 (50 filas) | [estado.json](audit/estado.json), [tablero](https://nicolvus.github.io/a6000-fw-decomp/progress/) |
+| Cifras | 4 427 pruebas colectadas en local; CI (sin firmware): 920 pasan, 2 307 omitidas. Censo de etiquetas 133/372 (35,75 %, mide documentación). Sesiones S 291/627 y 74 informes de fase E. Planes físicos con prueba 12/24 (P1–P24). Registro T001–T053 (50 filas) | [estado.json](audit/estado.json), [tablero](https://nicolvus.github.io/a6000-fw-decomp/progress/) |
 
 ## E26 — recuperación (todo offline)
 
@@ -79,7 +79,6 @@ Trazabilidad completa: [CORRECTIONS](../docs/CORRECTIONS.md) y [STATE § Conclus
 | E1 | NO_VERIFICADO | Origen del local 4/2 a `ModelScalarPb`/`ModelPbCap` |
 | E25-01 / E25-27 / E25-20 | ABIERTO / BLOQUEADO | Validación física del obturador (3.23 y 3.25) y C3-B en RAM; dependen de recuperar la cámara |
 | E25-19f, E25-EFCS-1…4 | ABIERTO | Escritores de `cap+0x74f`, `+0x504`, `+0x740`, `+0x11b0`; funciones Thumb sin sembrar |
-| D13 | ABIERTO | Filas del registro para E25-22/E25-23 e informe E25-23 |
 | R1 / R3 / R6 | PARCIAL / BLOQUEADO | Copia externa del respaldo; historial público con `libmprctrl.so` y con el número de serie (reescritura solo con orden expresa) |
 
 ## Bloqueos y límites de evidencia

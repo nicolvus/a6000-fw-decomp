@@ -208,7 +208,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 3. Obturador (cortinas, EFCS, SilentShutter, exposición electrónica completa)
 
-78 informes.
+79 informes.
 
 - **—** [Darwin: entradas verificadas para investigar el obturador](capture/darwin-shutter-entrypoints.md)
 - **—** [Darwin: fases, notificaciones y escrituras de control](capture/darwin-state-machine.md)
@@ -231,6 +231,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [E25-19f — Origen temporal de `cap+0x74f=1` (INCOMPLETO: sesión cortada por límite de uso)](capture/e25-19f-origen-geometria-74f.md)
 - **—** [E25-21 — SetExposure hasta P2S (28-10-2026)](capture/e25-21-setexposure-p2s.md)
 - **—** [E25-22 — Protocolo para validar el transporte físico de exposición](capture/e25-22-protocolo-transporte-fisico.md)
+- **—** [E25-23 — Interrupción de una captura larga de 30 s (28-10-2026)](capture/e25-23-interrupcion-captura-larga.md)
 - **—** [E25-24 — Selector EFCS / electrónico: auditoría y bloqueos](capture/e25-24-selector-efcs-electronico.md)
 - **—** [E25-24b — Selector EFCS / Electronic: implementación offline](capture/e25-24b-implementacion-selector.md)
 - **—** [E25-24c — Protocolo físico del selector EFCS / Electronic (pendiente de autorización)](capture/e25-24c-protocolo-fisico-selector.md)

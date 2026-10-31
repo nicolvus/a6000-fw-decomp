@@ -47,7 +47,7 @@ def category(stem: str) -> int:
 
 
 def title(path: Path) -> str:
-    m = re.search(r"^#\s+(.+)$", path.read_text(errors="replace")[:1500], re.M)
+    m = re.search(r"^#\s+(.+)$", path.read_text(errors="replace")[:1500], re.MULTILINE)
     return (m.group(1) if m else path.stem).strip().replace("|", "/")
 
 
