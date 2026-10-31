@@ -3314,3 +3314,11 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 - **Correcciones:** R20 §1.6 y R23 §1 («bit 0 = 0 en uso normal»). `E26-R20-BOOTMAIN-NIVEL` → CERRADO (dato de cámara); `E26-R20-KEYTABLE` → inferencia fuerte «con clave»; `E26-R20-SERIE-PLAN` → CERRADO (el paso «`CL1000` a 1» sobra; la vía serie exige la clave de `nflasha0`).
 - **Límite:** el valor lo lee Loader3, no el BootROM; solo 16 bits; polaridad pin↔bit no probada.
 - **Entregables:** `docs/capture/e26-r32-moderreg-valor-real.md`, `tests/test_e26_r32_moderreg_backup.py`.
+
+## E26-R33 — veracidad de la clave de `nflasha0` (31-10-2026)
+
+- **Pedido:** examinar si es cierto que la clave de arranque serie está en `nflasha0`.
+- **Hallazgos (bytes del BootROM):** `load_header` lee 3 sectores de `0x600` B del bloque 0 a `0xc0000600`; la tabla `0xc0001200` es el tercero → `nflasha0`. `find_key` (`0x39c`) devuelve 0 si **alguna** de las `0x180` palabras ≠ `0xFFFFFFFF` y copia las dos primeras. Sin clave y sin serie: receptor `0x3002` → `0x3001` → `serial_entry` → LED `0x1001`. Formato válido emulado con `0xc52`: palabra 0 = clave, palabra 1 = `~crc32(clave)`.
+- **Correcciones:** R32/`E26-R20-KEYTABLE` precisados («sector no borrado», no «clave válida»); R23 §1 con condiciones invertidas; R12 §3 vigente.
+- **Límite:** valor y formato reales solo con lectura del bloque 0 (`E26-R33-BLOQUE0`, nuevo).
+- **Entregables:** `docs/capture/e26-r33-veracidad-clave-nflasha0.md`, `tests/test_e26_r33_clave_nflasha0.py`.

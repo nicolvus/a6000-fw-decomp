@@ -48,4 +48,4 @@ Es la fila de R20 «bit0=1, clave presente, sin datos serie → arranque alterna
 - El valor lo lee Loader3, no el BootROM. Si el bit fuera un strap muestreado solo en el reset y cambiara después, no coincidiría. Con `CL1000` sin conexión no hay nada que lo mueva.
 - Solo se guarda la mitad baja (16 bits) del registro.
 - Ningún otro binario se identificó como escritor de `0x3e000a` (los literales `0x003e000a` encontrados en fuentes, librerías y `.uxc` son datos sin relación); la coincidencia de `0x3e0003` = `0x0500` con el TYPEID de Sony respalda la atribución a Loader3.
-- Que la clave exista se deduce del flujo (§3) y de la emulación de R20; su valor sigue sin conocerse.
+- Que la clave exista se deduce del flujo (§3) y de la emulación de R20; su valor sigue sin conocerse. *Precisado por [R33](e26-r33-veracidad-clave-nflasha0.md): lo probado es «sector `0xc00` del bloque 0 no borrado», no «clave válida».*

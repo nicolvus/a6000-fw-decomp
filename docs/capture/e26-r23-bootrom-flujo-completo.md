@@ -4,6 +4,8 @@ Cierra el BootROM «de principio a fin»: completa [R22](e26-r22-bootrom-mapa-co
 
 ## 1. `main` (`0xffff1062`) — BINARIO, línea a línea
 
+> **Corregido por [R33](e26-r33-veracidad-clave-nflasha0.md):** las condiciones de `storage_init` y `load_header` están invertidas (con 0 **continúan**; `cbz` en `0x110e`/`0x1120`). `find_key` (`0x39c`) va antes de la recepción (`0x1130`) y lo de `0x1226` es `load_payload`/`0x44e`/`0x486`. R12 §3 sigue vigente.
+
 ```
 ctx_reset(); snprintf("Musashi Loader1 Ver.01.00 Dec  2 2011 10:45:17\n"); console_puts
 trace(0,0)
