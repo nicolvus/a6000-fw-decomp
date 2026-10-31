@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 FIRMWARE = Path(__file__).resolve().parents[1] / "analysis/rea-independent/input/av-cam.bin"
-MARKERS = ("firmware", "av-cam", "rea-independent/input", "pic.load", "import pic", "from fw import", "import fw", "verify_", "extracted", "av-cam-analysis", "bootrom.bin", "manual de servicio")
+MARKERS = ("firmware", "av-cam", "rea-independent/input", "pic.load", "import pic", "from fw import", "import fw", "import s402_fw", "verify_", "extracted", "av-cam-analysis", "bootrom.bin", "manual de servicio")
 WHY = "Skipped: requiere firmware no versionado"
 
 
