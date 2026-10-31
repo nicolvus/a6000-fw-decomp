@@ -417,7 +417,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [E26-R19 / E26-R20 — Cierre estático de los pendientes restantes (30-10-2026)](capture/e26-r19-r20-cierre-estatico.md)
 - **—** [E26-R20 — Selector del BootROM (`FUN_ffff1062`): bit 0 de `MODEREG`, GPIO(4) y clave de arranque serie](capture/e26-r20-bootrom-selector.md)
 - **—** [E26-R20-KEYTABLE — mecanismo de la tabla de clave de arranque serie](capture/e26-r20-keytable.md)
-- **—** [E26-R20-SERIE-PLAN — Síntesis: ¿"subir `CL1000` a 1 y enviar payload por pin 9" recupera la cámara?](capture/e26-r20-serie-plan.md)
+- **—** [E26-R20-SERIE-PLAN — Síntesis: ¿levantar `CL1000` y enviar el bloque de arranque por el pin 9 repara la cámara?](capture/e26-r20-serie-plan.md)
 - **—** [E26-R21 — Receptor serie del BootROM: pin, trama y velocidad (30-10-2026)](capture/e26-r21-bootrom-rx-serie.md)
 - **—** [E26-R22 — Mapa completo del BootROM «Musashi Loader1 Ver.01.00» (30-10-2026)](capture/e26-r22-bootrom-mapa-completo.md)
 - **—** [E26-R23 — Flujo completo de `main` y `serial_entry`, pasos de traza y códigos de error (30-10-2026)](capture/e26-r23-bootrom-flujo-completo.md)

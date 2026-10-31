@@ -3290,3 +3290,11 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 - **Hallazgos:** CN4001 es de 19 pines (1=VBUS, no D-; faltaba pin3=D+); CN4906 es de 18 pines, no 32 (los «31/32» eran de otro conector de la misma hoja); CN4906 combina BIONZ+Darwin: pines 11/12/15 unen SWCLK/SWDIO/VIO_FLD con TCK_DWN/TMS_DWN/XDWN_RESET; pin10=RTCK sin red externa.
 - **Método nuevo:** `analysis/e26-recovery/r29_pinout_pixel_trace.py` sigue columnas de píxel sobre el render a 600 dpi para resolver cableado que cruza filas (el agrupador por fila existente no lo distingue).
 - **Entregables:** `docs/capture/e26-r29-pinout-cn4001-cn4906-completo.md`, `tests/test_e26_r29_pinout_cn4906.py`, correcciones en `analysis/e26-recovery/r11-pinout-reconstruction.py` y `docs/capture/e26-r11-bootrom-uart-physical-access.md`.
+
+## E26-R20-SERIE-PLAN — síntesis del plan de recuperación por serie (31-10-2026, sin evidencia nueva)
+
+- **Pedido:** evaluar si "llevar `CL1000` a 1 y enviar el bloque de arranque por el pin 9" repara la cámara, recombinando R19/R20 sin abrir la carcasa.
+- **Hallazgos:** el árbol de decisión de R20 confirma por bytes que `MODEREG` bit 0=1 (`CL1000`/`BOOT_MAIN`, mapeo por inferencia) es necesario pero no demostrado suficiente; el resultado encadena tres datos físicos ya cerrados por separado (`E26-R20-BOOTMAIN-NIVEL`, `E26-R20-GPIO4`, `E26-R20-KEYTABLE`), ninguno medido.
+- **Límite:** solo estático; no resuelve ningún dato físico nuevo, solo documenta por qué no son cerrables sin acceso a la cámara.
+- **Cierre:** `E26-R20-SERIE-PLAN` permanece ABIERTO (síntesis, sin nueva evidencia); coincide con el criterio de cierre de `E26-FISICO-BOOT`. Segundo commit reescribe el informe con vocabulario neutro de recuperación de hardware (sin cambiar hechos, direcciones ni conclusión).
+- **Entregables:** `docs/capture/e26-r20-serie-plan.md`.
