@@ -23,7 +23,9 @@
   archivo, Loader3 arranca el actualizador de fábrica de `nflasha1` y acepta firmware por USB; el paquete 3.26 (contenido oficial) está preparado.
   Crear el archivo exige escribir la NAND: sigue siendo físico. **R38:** el guard de `sauu` compara con `\updater\dat4`, que `CompleteUpdate`
   pone a la versión del FDAT → con el 3.25 instalado acepta el 3.26. En el volcado del 20-10 basta recuperar una entrada `MODE` borrada
-  (1 byte, sector 132 de `nflasha2`; [R38](capture/e26-r38-guard-y-entrada-updater.md)).
+  (1 byte, sector 132 de `nflasha2`; [R38](capture/e26-r38-guard-y-entrada-updater.md)). **R39:** el fallo se reproduce en emulación
+  (código real de Loader3/ARM7, LDEC modelado); `nflasha` es lógico de MuMin, así que ese byte se escribe desde el BIONZ, no con lector externo
+  ([R39](capture/e26-r39-estatico-profundo.md)).
 - **Hito previo:** con el 3.23 (Darwin tipo 0 + B1a) la cámara disparó en silencio y sin error según el usuario (T040, 27-10-2026).
 - Resumen por informe E26 (R1–R35): tabla en [CURRENT § E26](../knowledge/CURRENT.md); versión anterior de este encabezado, con un bloque por
   informe, en [STATE-historial-2026-10-31](history/STATE-historial-2026-10-31.md).

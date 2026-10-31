@@ -15,7 +15,7 @@ El 3.23 y el 3.25 pasaron por el mismo camino (mismo actualizador 3.21, mismo Lo
 
 La primera lectura de la partición 3 en el arranque (sector de arranque FAT, bloque 0) cae en el defecto 2. La primera lectura del RAMCFG (`\sabin`, bloque 240) cae en el defecto 1. Cualquier fallo de esa lectura sale de Loader3 como **−302** (`c01f2c2a` → `c01f4690`), que es exactamente el patrón observado de 3 pulsos lentos y 2 rápidos ([R13](e26-r13-led-error-provenance.md), [R14](e26-r14-ramcfg-bos-analysis.md)).
 
-**Clasificación:** causa identificada offline (BINARIO + DATOS + FUENTE). Falta solo la confirmación física (log UART `LD3_E`/`FAT_E`), que no está autorizada.
+**Clasificación:** causa identificada offline (BINARIO + DATOS + FUENTE). Falta solo la confirmación física (log UART `LD3_E`/`FAT_E`), que no está autorizada. **[R39: reproducida en emulación con el código real de Loader3 y ARM7 y el LDEC modelado; 361/369 bloques fallan, Sony y la corregida 0 ([R39](e26-r39-estatico-profundo.md) §2). La UART está silenciada (R37).]**
 
 ## 2. Comparación de paquetes (verificada dos veces)
 

@@ -70,14 +70,14 @@ Requisitos de la entrada: nombre corto `MODE` en el primer clúster de `\updater
 - **Cambio:** un byte en `0x108A0` (sector 132 de `nflasha2`), `0xE5 → 0x4D`.
 - **Comprobaciones:** `fsck.vfat -n` sin errores (24 → 25 archivos, mismos clústeres); `mdir` lista `MODE`; la réplica de Loader3 pasa de «no existe» a «existe».
 
-**Por qué sin LFN (INFERENCIA, semántica de Linux `vfat` con `shortname=mixed` y del glob de busybox):**
+**Por qué sin LFN (INFERENCIA en R38; confirmado por FUENTE en [R39](e26-r39-estatico-profundo.md) §5):**
 - Una entrada corta en mayúsculas sin LFN aparece como `MODE`.
 - `test -f /setting/updater/mode` la encuentra, porque `vfat` compara sin distinguir mayúsculas.
 - El glob `mode*` de `execute_ufp.sh` distingue mayúsculas y no la borra. Si la sesión USB falla o se agota la batería, el siguiente encendido vuelve al actualizador sin volver a escribir la NAND.
 - `CompleteUpdate` la borra por API, sin distinguir mayúsculas, al terminar bien.
 - Si la inferencia fallara, el resultado sería el de R37 (un solo intento), no algo peor.
 
-**Límite:** el volcado es anterior a las sesiones 3.22/3.23/3.25. Cada una creó y borró `mode`, y `vfat` reutiliza los huecos borrados, así que lo esperable es el mismo par 4–5. Aun así, **hay que ejecutar la herramienta sobre una lectura actual de `nflasha2`** antes de escribir nada. La traducción del sector lógico 132 de `nflasha2` a página física de NAND pertenece a `E26-FISICO-BOOT`.
+**Límite:** el volcado es anterior a las sesiones 3.22/3.23/3.25. Cada una creó y borró `mode`, y `vfat` reutiliza los huecos borrados, así que lo esperable es el mismo par 4–5. Aun así, **hay que ejecutar la herramienta sobre una lectura actual de `nflasha2`** antes de escribir nada. La traducción del sector lógico 132 de `nflasha2` a página física de NAND pertenece a `E26-FISICO-BOOT`. **[Corregido en [R39](e26-r39-estatico-profundo.md) §3: no es calculable estáticamente (MuMin) y el byte no se puede reprogramar en su sitio; hay que escribir desde el BIONZ.]**
 
 ## 6. Procedimiento resultante (no autorizado ni probado)
 

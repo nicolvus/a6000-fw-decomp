@@ -3383,3 +3383,12 @@ README, CURRENT (≤150 líneas, tabla E26) y cabecera de STATE reescritos; vers
 - **Datos:** `nflasha2` del 20-10: `dat4 = 21 03`, `comp` oculto, par LFN+SFN `mode` borrado en las entradas 4–5 de `\updater`. Loader3 (`c01f44c6`/`c01f3f34`) solo compara el nombre corto en el primer clúster y no lee datos.
 - **Entregables:** `docs/capture/e26-r38-guard-y-entrada-updater.md`, `scripts/e26_recovery/updater_mode_entry.py` (réplica de Loader3 + parche mínimo; `fsck.vfat -n` limpio), `tests/test_e26_r38_guard_updater.py` (5).
 - **Límite:** nada leído de la NAND actual; la persistencia de `MODE` sin LFN es inferencia sobre `vfat`/busybox.
+
+## E26-R39 — investigación estática a fondo (31-10-2026)
+
+- **Pedido:** «hazlas todas, mientras se pueda avanzar en modo estático» (seis líneas tras R38).
+- **Emulación:** `analysis/e26-recovery/r39_tpzl_emu.py` ejecuta en Unicorn Loader3 `c01fe4ec`/`c01fdd8e` y ARM7 `0x3f4` (sustituye solo `c020xxxx` ausentes y E/S); LDEC modelado. 3.25: 361/369 fallos (bloque 0 primero, 359 avisos de residuo); Sony y corregida: 0. Residuo en trabajo+8, nunca en registros LDEC.
+- **NAND:** particiones = ventanas lineales de `nflasha` (473 MiB lógicos); `nand.ko` = MuMin (LTU/VBM/PBM, bloques malos, ECC/extra) → sector 132 no traducible; `0xE5→0x4D` necesita 0→1.
+- **Actualizador:** `/sbin/init` + `insmod.sh` solo montan `nflasha2`; Darwin 3.25 = Sony + 22 B. Kernel `3.0.27_nl-rt106` = árbol GPL: búsqueda `nls_strnicmp`, `shortname=mixed` lista `MODE`. Guard: modelo/región/versión, sin batería.
+- **Clave:** sin paquetes con loader; ningún cargador toca `0xc0001200`; el actualizador ya lee SRAM de arranque → `E26-R39-CLAVE-SRAM`.
+- **Entregables:** `docs/capture/e26-r39-estatico-profundo.md`, `tests/test_e26_r39_estatico_profundo.py` (9), `r39-tpzl-emu.json`.
