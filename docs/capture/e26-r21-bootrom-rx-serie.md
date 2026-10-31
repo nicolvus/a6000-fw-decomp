@@ -1,6 +1,6 @@
 # E26-R21 — Receptor serie del BootROM: pin, trama y velocidad (30-10-2026)
 
-Sin mediciones físicas: BootROM (`0xffff0554`, `0xffff05da`, `0xffff0634`, `0xffff0f52`) más el código fuente Sony del SoC (`analysis/session18/main/sony-oss-extracted/linux/arch/arm/mach-cxd90014/`). Test: `tests/test_e26_r19_r20_cierre.py`.
+Sin mediciones físicas: BootROM (`0xffff0554`, `0xffff05da`, `0xffff0634`, `0xffff0f52`) más el código fuente Sony del SoC (`analysis/session18/main/sony-oss-extracted/linux/arch/arm/mach-cxd90014/`). Test: `tests/test_e26_r19_r20_cierre.py`; emulación: `analysis/e26-recovery/r21_rx_emulation.py`.
 
 ## 1. Resultado
 
@@ -17,6 +17,13 @@ Sin mediciones físicas: BootROM (`0xffff0554`, `0xffff05da`, `0xffff0634`, `0xf
 
 5. **Velocidad (INFERIDO).** El BootROM programa el temporizador con `0x1030` = `TMST|TMCS_FREERUN|TMCK_DIV1`. En el código Sony, `TMCK_DIV4` = «1 MHz» (`hwtimer.c`) → reloj base 4 MHz, `DIV1` = **4 MHz**. Entonces: bit21=0 → 250 ticks = 62,5 µs = **16 000 baudios**; bit21=1 → 84 ticks = 21 µs ≈ **47 600 baudios** (nominal 48 000). Supone el mismo reloj base que Linux; si cambiara, ambas velocidades escalan por igual (relación fija 2,98).
 
+## 1b. Tren de sincronismo previo (corrige R8/R9: «no hay sincronización»)
+
+- **BINARIO (`0xffff0876–0xffff0a06`).** Antes de leer bytes, el BootROM exige **60 flancos consecutivos** (`cmp r4,#0x3c`) en `MODEREG` bit 1 cuyo ancho (ticks del temporizador 1, puesto a cero en cada flanco) esté en una ventana por perfil: **bit21=1: 909–1184 ticks (`0x38d`–`0x4a0`); bit21=0: 2840–3700 ticks (`0xb18`–`0xe74`)**. Ancho menor → `0x3003`: reinicia la cuenta y sigue; ancho mayor (o sin flanco en esa ventana) → `0x3002`: error fatal (parpadeo `0x1001`).
+- **BINARIO.** El último flanco del tren es el flanco de inicio del primer byte (`0x634` cuenta sus instantes desde ese flanco). Con 4 MHz, la ventana equivale a 227–296 µs (bit21=1) o 710–925 µs (bit21=0), ≈13 periodos de bit.
+- **EMULACIÓN (Unicorn, ROM real).** Con tren de 60 flancos dentro de ventana y trama 8O1, el BootROM acepta el byte (`0xA5`, `0x00`, `0xFF`, `0x5A`) en **ambos perfiles** (250 y 84 ticks/bit). Rechaza: periodo del otro perfil (`0x100c`), paridad par (`0x100d`), 59 flancos (parpadeo), primer flanco fuera de ventana. Tolerancia de periodo ≈ ±4 % (240–260 de 250; 80–86 de 84). Un tren continuo anterior a la entrada vale: el primer flanco corto solo reinicia la cuenta (61 flancos, 1.º corto → aceptado).
+- **Límite de la emulación:** solo entradas modeladas (tiempo virtual +1 tick por lectura de temporizador); `bls.w` de `0xffff064e` resuelto a mano porque Unicorn lo rechaza. No valida el reloj de 4 MHz ni lo que el BootROM hace con la cabecera de 4 bytes y la carga posterior.
+
 ## 2. Correcciones
 
 - **Corrige R8/R9/R11:** `0x04A0/0x038D…` y `0x0E74/0x0B18…` no son divisores de baudios de un UART de 115 200; son temporizaciones del receptor por software. «Velocidad NO DETERMINADA» → ver §1.5 (inferida). Las notas «no confirmado que bit 1 sea ese pin» quedan resueltas por §1.1.
@@ -24,7 +31,7 @@ Sin mediciones físicas: BootROM (`0xffff0554`, `0xffff05da`, `0xffff0634`, `0xf
 
 ## 3. Efecto práctico (solo teórico: sin hardware)
 
-Un transmisor para la ruta serie necesitaría **8O1 a ~16 000 baudios** (strap bit21=0) o ~48 000 (bit21=1), nivel inactivo alto, sin sincronización previa. Un adaptador FTDI/CP210x admite esas velocidades con divisor personalizado. Sigue sin saberse qué pin físico es GPIO(4) bit 21 (por tanto qué perfil se usa en esta cámara) ni si la tabla de clave `0xc0001200` está vacía.
+Un transmisor necesitaría **primero el tren de 60 flancos (§1b)** y después **8O1 a ~16 000 baudios** (strap bit21=0) o ~48 000 (bit21=1), nivel inactivo alto, sin sincronización previa. Un adaptador FTDI/CP210x admite esas velocidades con divisor personalizado. Sigue sin saberse qué pin físico es GPIO(4) bit 21 (por tanto qué perfil se usa en esta cámara) ni si la tabla de clave `0xc0001200` está vacía.
 
 ## 4. Límites
 

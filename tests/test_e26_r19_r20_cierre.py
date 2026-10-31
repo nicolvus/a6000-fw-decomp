@@ -70,3 +70,26 @@ def test_receptor_serie_8_datos_y_paridad_impar():
         0x2E01,
         0x2501,
     )  # cmp r6,#1 ; movs r5,#1 (si XOR != 1)
+
+
+def _rx():
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "r21", "analysis/e26-recovery/r21_rx_emulation.py"
+    )
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+@pytest.mark.parametrize(("bit21", "period", "t0"), [(0, 250, 3200), (1, 84, 1100)])
+def test_emulacion_bootrom_recibe_byte_con_tren_de_sincronismo(bit21, period, t0):
+    r = _rx().run(bit21, period, byte=0x5A, t0=t0)
+    assert r["parity_ok_reached"] and r["byte"] == 0x5A
+
+
+def test_emulacion_rechaza_periodo_de_otro_perfil_y_paridad_erronea():
+    rx = _rx()
+    assert not rx.run(0, 84, t0=3200)["parity_ok_reached"]
+    assert rx.run(0, 250, t0=3200, parity_ok=False)["error"] == 0x100D

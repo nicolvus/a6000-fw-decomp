@@ -3232,3 +3232,5 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 - **Hallazgos:** código Sony del SoC (`mach-cxd90014`) confirma `MODEREG` bit 1 = `BOOT_SERIAL_IN`; `0x634` es un receptor serie por software (8 datos + paridad impar + parada); tablas de 250/84 ticks por bit ≈ 16 000/47 600 baudios con reloj base 4 MHz.
 - **Límite:** reloj del temporizador inferido de Linux; pin de GPIO(4) bit 21 desconocido.
 - **Entregables:** `docs/capture/e26-r21-bootrom-rx-serie.md`, ampliación de `tests/test_e26_r19_r20_cierre.py`.
+
+- **R21 ampliación:** descubierto el tren de sincronismo de 60 flancos previo a los bytes (corrige «sin sincronización» de R8/R9) y validado con `analysis/e26-recovery/r21_rx_emulation.py` (Unicorn, ROM real; ambos perfiles aceptan 8O1, rechazan periodo/paridad/flancos erróneos).
