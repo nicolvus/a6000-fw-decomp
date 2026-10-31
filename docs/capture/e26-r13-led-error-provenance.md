@@ -50,7 +50,7 @@ wait(t)     = rearma timer0 y espera contador ≥ t                      (c01f4f
 
 - Un grupo con 0 pulsos no hace nada, pero **su pausa `d/2` sí se ejecuta**.
 - Las cadenas llaman LNG («long») al grupo de centenas y SHT («short») al de unidades: concuerdan con los nombres «lentos/rápidos» del usuario.
-- `c01f379a` consume UART; no altera los tiempos de forma apreciable (**HIPÓTESIS**).
+- `c01f379a` consume UART; no altera los tiempos de forma apreciable (**HIPÓTESIS**). **[Corregido en [R41](e26-r41-caminos-estaticos-restantes.md): es una consola de comandos serie (`beast`, `ldump`).]**
 - Polaridad del LED (qué escritura enciende) no determinada; el patrón no depende de ella.
 
 ## 3. Productores de −302 en Loader3 y su propagación

@@ -3402,3 +3402,11 @@ README, CURRENT (≤150 líneas, tabla E26) y cabecera de STATE reescritos; vers
 - **Ventana sin apagado:** `c01f3bf6: b #0xc01f3bc8` (bytes `e7e7`), bucle de LED tras −302 sin `wfi` ni apagado.
 - **Límite real:** población de R4911/R4912 y eFuse de seguridad (junto al bloque JTAG en el manual) no están en ningún binario accesible; mismo límite que la clave de `nflasha0` (R33).
 - **Entregables:** `docs/capture/e26-r40-jtag-swd-bionz.md`, `tests/test_e26_r40_jtag_swd.py` (8). Anota R5-SIDEA/R5-BIONZ; no los cierra (siguen físicos).
+
+## E26-R41 — caminos estáticos restantes (31-10-2026)
+
+- **Pedido:** «verifica los caminos estáticos faltantes por descubrir».
+- **Consola de Loader3** (BINARIO): `c01f379a` lee la UART, con `\r` compara `beast`/`ldump`; `ldump` (`c01f3708`) solo hace `ldrb/ldrh/ldr`; `beast` (`c01f376e`) sale si `[0xc0060014]=0`. El bucle de LED llama a `c01f5008` (PL011: `IBRD 0x1a`, `FBRD 3`, `LCRH 0x70`, `CR 0x701`). Loader2 trae la misma consola.
+- **Muda** (DATOS): `0x510015=0` → nivel UART 0 y `beast` desactivado en los 12 BK4.
+- **Wait ICE:** `c01f0cc2: bl c01f48cc`, antes de `c01f0cca`; GPIO de Backup `0xf90449/0xf9044a` = 14/17; espera `[0xc0045804]≠0`.
+- **Entregables:** `docs/capture/e26-r41-caminos-estaticos-restantes.md`, `tests/test_e26_r41_consola_loader3.py` (4); pendiente nuevo `E26-R41-ICE-GPIO`. Corrige R13, R37 §4 y R40 §6.

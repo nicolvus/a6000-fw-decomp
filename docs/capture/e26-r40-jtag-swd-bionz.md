@@ -60,7 +60,7 @@ Esto es exactamente lo que se necesita para arrancar un kernel **cargado por el 
 
 ## 6. Tras el fallo, la CPU no se apaga (BINARIO)
 
-`c01f3bf6: b #0xc01f3bc8` (bytes `e7 e7`) es un salto Thumb incondicional **hacia atrás**, dentro del bucle de parpadeo de LED de `c01f3b74` (documentado en [R13](e26-r13-led-error-provenance.md)). No hay ninguna instrucción `wfi`, `halt` ni llamada a apagado en todo el cuerpo del bucle: sondea la UART (`c01f379a`), parpadea y vuelve a empezar. **La CPU sigue encendida y ejecutando** hasta que se retire la batería o se desconecte la fuente. Para un intento de conexión SWD, esto da una ventana sin presión de tiempo (a diferencia de, por ejemplo, el bucle de 30 min del actualizador, R39 §5).
+`c01f3bf6: b #0xc01f3bc8` (bytes `e7 e7`) es un salto Thumb incondicional **hacia atrás**, dentro del bucle de parpadeo de LED de `c01f3b74` (documentado en [R13](e26-r13-led-error-provenance.md)). No hay ninguna instrucción `wfi`, `halt` ni llamada a apagado en todo el cuerpo del bucle: sondea la UART (`c01f379a`), parpadea y vuelve a empezar. **[Precisado en [R41](e26-r41-caminos-estaticos-restantes.md): `c01f379a` es una consola serie de solo lectura (`beast`, `ldump`), muda con el Backup de fábrica.]** **La CPU sigue encendida y ejecutando** hasta que se retire la batería o se desconecte la fuente. Para un intento de conexión SWD, esto da una ventana sin presión de tiempo (a diferencia de, por ejemplo, el bucle de 30 min del actualizador, R39 §5).
 
 ## 7. Qué sigue siendo desconocido (límite real)
 

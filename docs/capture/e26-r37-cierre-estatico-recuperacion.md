@@ -70,7 +70,7 @@ Restaura el `nflasha3` y el Darwin oficiales sin tocar las calibraciones, igual 
 ## 4. (c) Qué mostraría una UART pasiva (BINARIO + DATOS)
 
 - `c01f3670` (log de Loader3) escribe en la UART (`c01f50c0`) si `[0xc0060000] ≥ nivel`. Escribe en un buffer de RAM (`c01f3640`) si `[0xc0060004] ≥ nivel`.
-- `c01f35c0` llama a `c01f4edc`, que devuelve 1 solo si `Backup[0x510015] == 1`. En otro caso, pone a 0 el nivel UART y el registro de la UART no se inicializa (`c01f5008` no se llama).
+- `c01f35c0` llama a `c01f4edc`, que devuelve 1 solo si `Backup[0x510015] == 1`. En otro caso, pone a 0 el nivel UART y el registro de la UART no se inicializa (`c01f5008` no se llama). **[Corregido en [R41](e26-r41-caminos-estaticos-restantes.md): eso vale solo para el inicio del logger; el bucle de error y la espera de ICE sí llaman a `c01f5008`. La UART sigue sin imprimir nada.]**
 - Loader2 tiene la misma lógica (`c00308d0`, `c003126c`, misma estructura en `0xc0060000`).
 - **DATOS (12 volcados BK4):** `0x510015 = 00`, `0x510003 = 00`, `0x510006 = 06`. La consola está apagada y el log, incluido el `ERROR: Blinking LED[…]` de nivel 1, solo va al buffer de RAM.
 
