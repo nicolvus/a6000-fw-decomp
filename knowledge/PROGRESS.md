@@ -3276,3 +3276,10 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 - **Límite:** sin clasificar el comando NAND de cada una de las 17 operaciones.
 - **Cierre:** E26-R18-ARM7-RESTO CERRADO PARCIAL.
 - **Entregables:** `docs/capture/e26-r27-arm7-isr-geometria.md`, `tests/test_e26_r27_arm7_isr_geometria.py`.
+
+## E26-R28 — búsqueda externa de TPZL (30-10-2026, resultado negativo)
+
+- **Pedido:** continuar con el último de los 4 pendientes estáticos (Prioridad E de R17, no ejecutada).
+- **Hallazgos:** sin mención pública de «TPZL» en GitHub ni en la web; Sony-PMCA-RE y fwtool solo cubren el actualizador (FDAT), no el BootROM/Loader2/Loader3.
+- **Cierre:** E26-R17-TPZL-1SEG CERRADO con resultado negativo documentado; no hay muestras externas con las que construir la tabla pedida.
+- **Entregables:** `docs/capture/e26-r28-tpzl-busqueda-externa.md`.
