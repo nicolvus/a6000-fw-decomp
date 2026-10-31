@@ -389,7 +389,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 6. Otros subsistemas (AF, estabilización, vídeo, audio, lentes, energía, visor, accesorios, módulos de trazas)
 
-128 informes.
+129 informes.
 
 - **—** [E21 — Lecturas sin cámara de los volcados del 20-10-2026](capture/e21-lecturas-backups-2026-10-26.md)
 - **—** [E24-01 — Arranque, modo actualizador y dependencia de Darwin (27-10-2026)](capture/e24-01-arranque-recuperacion.md)
@@ -421,6 +421,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [E26-R22 — Mapa completo del BootROM «Musashi Loader1 Ver.01.00» (30-10-2026)](capture/e26-r22-bootrom-mapa-completo.md)
 - **—** [E26-R23 — Flujo completo de `main` y `serial_entry`, pasos de traza y códigos de error (30-10-2026)](capture/e26-r23-bootrom-flujo-completo.md)
 - **—** [E26-R24 — Mapa completo de Loader2 (`bootloader.bin`, 0xc0030000–0xc0036c00)](capture/e26-r24-loader2-completo.md)
+- **—** [E26-R25 — Mapa completo de Loader3 (`bootloader.bin`, 0xc01f0000–0xc0205800)](capture/e26-r25-loader3-completo.md)
 - **—** [E26-RECOVERY R5 — Loader3, servicio BIONZ y diagnóstico de SY-1028](capture/e26-r5-loader3-servicio.md)
 - **—** [E26-RECOVERY R6 — BLDR, BIONZ y recuperación conservando la placa](capture/e26-r6-recuperacion-bionz.md)
 - **—** [E26-RECOVERY R7 — informe final de ingeniería inversa exhaustiva](capture/e26-r7-recuperacion-estatica.md)

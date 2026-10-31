@@ -1,0 +1,47 @@
+[
+ [
+  "0xc01f0000",
+  "exc_vectors",
+  "vectores: reset -> 0xc01f0028; resto -> led_error_blink directo"
+ ],
+ [
+  "0xc01f0028",
+  "entry_arm",
+  "ARM: pila, bl 0xc020e090/0xc020e024"
+ ],
+ [
+  "0xc01f0070",
+  "mode_switch",
+  "ARM: blx ctx_restore_jump, blx thumb_entry"
+ ],
+ [
+  "0xc01f01e0",
+  "thumb_entry",
+  "bl 0xc020d50e; bl boot_dispatch (0xc01f11ec)"
+ ],
+ [
+  "0xc01f11ec",
+  "boot_dispatch",
+  "cualquier fallo de init/modo/carga -> 0xc01f1262 -> led_error_blink (R13)"
+ ],
+ [
+  "0xc01f2c98",
+  "bos_load",
+  "BOS: carga tabla de particiones (0xc00e04ac, firma 0x36343238)"
+ ],
+ [
+  "0xc01f2f24",
+  "cfg_load_file",
+  "CFG: carga cada archivo de la lista RAMCFG (modo 0x1000000: 6 obligatorios, R15)"
+ ],
+ [
+  "0xc01fdd8e",
+  "tpzl_block_read",
+  "lector TPZL por bloque (residuo & 0x1ff, solo aviso) (R15/R16)"
+ ],
+ [
+  "0xc01f3b74",
+  "led_error_blink",
+  "parpadeo de error; código sin modificar (a diferencia de Loader2, R13)"
+ ]
+]
