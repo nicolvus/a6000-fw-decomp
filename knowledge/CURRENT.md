@@ -1,6 +1,6 @@
 # Estado actual — léeme primero
 
-Contexto operativo mínimo para agentes. Última revisión: **31-10-2026** (E26 R41: caminos estáticos restantes).
+Contexto operativo mínimo para agentes. Última revisión: **31-10-2026** (E26 R42: búsqueda externa y esquema JTAG/eFuse).
 No es historial ni fuente de verdad de los pendientes: ver [Responsabilidades](#responsabilidades-documentales).
 Versiones íntegras anteriores (nada se borró): [CURRENT-historial-2026-10-31](history/CURRENT-historial-2026-10-31.md)
 (bloques E26 R5–R35 y E25 completos) y [CURRENT-historial-2026-10-26](history/CURRENT-historial-2026-10-26.md) (S59–S627).
@@ -40,6 +40,7 @@ Versiones íntegras anteriores (nada se borró): [CURRENT-historial-2026-10-31](
 | R39 | Fallo del 3.25 reproducido en emulación (Loader3 + ARM7 reales, LDEC modelado: 361/369, Sony/corregida 0); `nflasha` lógico de MuMin → el byte de `MODE` no se escribe con lector externo, hace falta escribir desde el BIONZ; `MODE` persistente por FUENTE; guard USB sin batería; clave quizá legible en SRAM `0xc0001200` | [R39](../docs/capture/e26-r39-estatico-profundo.md) |
 | R40 | JTAG/SWD del BIONZ: ningún cargador previo a Linux toca el DAP CoreSight (0xf2710000); `defconfig` `ice_*` de Sony arrancan bajo depurador; tras −302 la CPU no se apaga (bucle de LED sin `wfi`, ventana indefinida). No añade vía nueva sobre R5/R6/R29: falta población de R4911/R4912 y el eFuse de seguridad, no legibles estáticamente | [R40](../docs/capture/e26-r40-jtag-swd-bionz.md) |
 | R41 | Caminos estáticos restantes: `c01f379a` = consola serie de Loader3/Loader2 (`beast`, `ldump`), solo lectura y muda con `Backup[0x510015]=0` (corrige R13/R37 §4/R40 §6); espera `CFG:Wait ICE` por GPIO 14.17 antes del −302 (bola no determinable). La consola usa la UART0 a 115 200 8N1 y su RX no llega al Multi (`R4002` XX). Ninguna vía nueva sin acceso físico | [R41](../docs/capture/e26-r41-caminos-estaticos-restantes.md) |
+| R42 | Búsqueda en GitHub (sin hallazgos nuevos aplicables al CXD90014) y lectura directa del esquema (no el `.txt` OCR, que pierde la hoja): bolas de JTAG/eFuse/SWD, `FUSE_EN` atado a VDD, `NTRST` = neto `XRESET_CR` = entrada `XRESET` del propio chip; cobertura de GPIO verificada sobre el manual completo | [R42](../docs/capture/e26-r42-busqueda-externa-y-esquema-jtag.md) |
 
 **Conclusión operativa:** la vía serie del BootROM existe y se abre en cada arranque, pero exige la clave de `nflasha0`, que nunca se
 volcó; todo lo restante es físico (`E26-FISICO-UPDATERMODE`, `E26-FISICO-BOOT`, `E26-R33-BLOQUE0`) y requiere autorización expresa. La
