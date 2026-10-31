@@ -3283,3 +3283,10 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 - **Hallazgos:** sin mención pública de «TPZL» en GitHub ni en la web; Sony-PMCA-RE y fwtool solo cubren el actualizador (FDAT), no el BootROM/Loader2/Loader3.
 - **Cierre:** E26-R17-TPZL-1SEG CERRADO con resultado negativo documentado; no hay muestras externas con las que construir la tabla pedida.
 - **Entregables:** `docs/capture/e26-r28-tpzl-busqueda-externa.md`.
+
+## E26-R29 — pinout completo de CN4001/CN4906, dos correcciones a R11 (30-10-2026)
+
+- **Pedido:** mapear todos los pines del PDF a su red correspondiente (alcance acordado: CN4001 y CN4906).
+- **Hallazgos:** CN4001 es de 19 pines (1=VBUS, no D-; faltaba pin3=D+); CN4906 es de 18 pines, no 32 (los «31/32» eran de otro conector de la misma hoja); CN4906 combina BIONZ+Darwin: pines 11/12/15 unen SWCLK/SWDIO/VIO_FLD con TCK_DWN/TMS_DWN/XDWN_RESET; pin10=RTCK sin red externa.
+- **Método nuevo:** `analysis/e26-recovery/r29_pinout_pixel_trace.py` sigue columnas de píxel sobre el render a 600 dpi para resolver cableado que cruza filas (el agrupador por fila existente no lo distingue).
+- **Entregables:** `docs/capture/e26-r29-pinout-cn4001-cn4906-completo.md`, `tests/test_e26_r29_pinout_cn4906.py`, correcciones en `analysis/e26-recovery/r11-pinout-reconstruction.py` y `docs/capture/e26-r11-bootrom-uart-physical-access.md`.

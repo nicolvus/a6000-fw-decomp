@@ -16,10 +16,13 @@ from dataclasses import dataclass, field
 
 # ── Esquemas conocidos (extraídos del manual de servicio) ───────────────────
 
-# CN4001 — Multi Terminal (página 38 del manual)
+# CN4001 — Multi Terminal, PDF página 37 del manual (corregido en E26-R29: la
+# versión anterior desplazaba el pin 1 y omitía el pin 3; ver docs/capture/
+# e26-r29-pinout-cn4001-cn4906-completo.md §1).
 CN4001_PINS: dict[int, str] = {
-    1: "USB_D-",
-    2: "USB_D+",
+    1: "USB_VBUS",
+    2: "USB_D-",
+    3: "USB_D+",
     4: "USB_ID",
     5: "GND",
     6: "D_3.1V/LANC_DC",
@@ -32,9 +35,16 @@ CN4001_PINS: dict[int, str] = {
     13: "VIDEO",
     14: "AV_GND",
     15: "XPWR_ON",
+    16: "REG_GND",  # 16-19: masa/blindaje vía D4001 (XX, no montado)
+    17: "REG_GND",
+    18: "REG_GND",
+    19: "REG_GND",
 }
 
-# CN4906 — huella de servicio SIDE A (página 38 del manual)
+# CN4906 — huella de servicio SIDE A, PDF página 38 del manual (corregido en
+# E26-R29: es un conector de 18 pines; los antiguos «31/32» pertenecían a OTRO
+# conector de la misma hoja —el flex del panel superior, XS_1/XS_2 del botón
+# disparador, ver s21-claude-button-to-shutter-order.md— no a CN4906).
 CN4906_PINS: dict[int, str] = {
     1: "REG_GND",
     2: "BOOT_MODE_1",
@@ -45,17 +55,38 @@ CN4906_PINS: dict[int, str] = {
     7: "UART_TXD_DWN",
     8: "NSRST",
     9: "TDO",
-    10: "TCK(SWCLK)",
-    11: "TMS(SWDIO)",
-    12: "TDI",
-    13: "NTRST",
-    14: "DEBUG_MODE",
-    15: "REG_GND",
+    10: "RTCK",
+    11: "TCK(SWCLK)",
+    12: "TMS(SWDIO)",
+    13: "TDI",
+    14: "NTRST",
+    15: "DEBUG_MODE",
     16: "REG_GND",
-    17: "REG_GND",
+    17: "REG_GND",  # sin etiqueta propia en el esquema; une al bus de masa
     18: "REG_GND",
-    31: "XS_2 / DWN_UART_TXD",
-    32: "XS_1 / DWN_UART_RXD",
+}
+
+# CN4906 — origen interno de cada pin, trazado por coordenadas de píxel sobre
+# el esquema vectorial (E26-R29; ver informe para el método). Confirma que
+# CN4906 es un conector combinado BIONZ+Darwin: los pines 11/12/15 unen (con
+# un punto de conexión visible en el esquema) la vía de servicio de BIONZ
+# (SWCLK/SWDIO/VIO_FLD, resistencias R4911/12/13 XX) con el bus de depuración
+# "DWN" de Darwin (IC5700). El pin 10 (RTCK) no tiene red externa.
+CN4906_SOURCES: dict[int, tuple[str, str]] = {
+    2: ("FIQ (R4910, XX)", "ALTA"),
+    3: ("EVER_3.15V (vía CL4910/CL4911)", "ALTA"),
+    4: ("DEBUG_UART0_RXD", "ALTA"),
+    5: ("DEBUG_UART0_TXD", "ALTA"),
+    6: ("DWN_UART_RXD", "ALTA"),
+    7: ("DWN_UART_TXD", "ALTA"),
+    8: ("MD0_DWN", "MEDIA"),
+    9: ("TDO_DWN", "ALTA"),
+    10: ("(sin red externa)", "ALTA"),
+    11: ("SWCLK (R4911, XX) + TCK_DWN (unidos)", "ALTA"),
+    12: ("SWDIO (R4912, XX) + TMS_DWN (unidos)", "ALTA"),
+    13: ("TDI_DWN", "ALTA"),
+    14: ("TRST_DWN", "ALTA"),
+    15: ("VIO_FLD (R4913, XX) + XDWN_RESET (unidos)", "ALTA"),
 }
 
 # Resistencias candidatas en la ruta BOOT_SERIAL_IN (ambas XX = no montadas)
@@ -110,24 +141,38 @@ def reconstruct_from_schematic_text(schematic_text: str) -> ReconstructionResult
             )
 
     # 2. Verificar CN4001 pin 9 = UART_RX/BOOT_IN
-    if "9    UART_RX/BOOT_IN" not in schematic_text and "9   UART_RX/BOOT_IN" not in schematic_text:
-        result.warnings.append("CN4001 pin 9 = UART_RX/BOOT_IN no confirmada en el texto extraído")
+    if (
+        "9    UART_RX/BOOT_IN" not in schematic_text
+        and "9   UART_RX/BOOT_IN" not in schematic_text
+    ):
+        result.warnings.append(
+            "CN4001 pin 9 = UART_RX/BOOT_IN no confirmada en el texto extraído"
+        )
 
     # 3. Verificar CN4906 pin 9 = TDO (no UART_RX/BOOT_IN)
     if "9     TDO" not in schematic_text and "9    TDO" not in schematic_text:
         result.warnings.append("CN4906 pin 9 = TDO no confirmada en el texto extraído")
 
     # 4. Verificar CN4906 pin 4 = UART_RXD_MSS
-    if "4     UART_RXD_MSS" not in schematic_text and "4    UART_RXD_MSS" not in schematic_text:
-        result.warnings.append("CN4906 pin 4 = UART_RXD_MSS no confirmada en el texto extraído")
+    if (
+        "4     UART_RXD_MSS" not in schematic_text
+        and "4    UART_RXD_MSS" not in schematic_text
+    ):
+        result.warnings.append(
+            "CN4906 pin 4 = UART_RXD_MSS no confirmada en el texto extraído"
+        )
 
     # 5. Verificar advertencia XX = NO MOUNT
     if "XX MARK: NO MOUNT" not in schematic_text and "XX" not in schematic_text:
-        result.errors.append("No se encontró la advertencia XX = NO MOUNT en el esquema")
+        result.errors.append(
+            "No se encontró la advertencia XX = NO MOUNT en el esquema"
+        )
 
     # 6. Verificar que CN4906 pin 9 ≠ CN4001 pin 9
     if CN4906_PIN_9 == CN4001_PIN_9:
-        result.errors.append("ERROR: CN4906 pin 9 y CN4001 pin 9 mapeadas a la misma señal")
+        result.errors.append(
+            "ERROR: CN4906 pin 9 y CN4001 pin 9 mapeadas a la misma señal"
+        )
 
     return result
 
@@ -232,7 +277,8 @@ def build_connection_map() -> list[PinConnection]:
 def is_route_interrupted(connections: list[PinConnection]) -> bool:
     """Retorna True si la ruta BOOT_SERIAL_IN → CN4001 pin 9 está interrumpida."""
     xx_resistors = {
-        c.reference for c in connections
+        c.reference
+        for c in connections
         if c.mounting_status == "no_montado_XX" and c.reference in ("R4002", "R4003")
     }
     return "R4002" in xx_resistors and "R4003" in xx_resistors
@@ -244,6 +290,7 @@ def cn4906_pin9_equals_cn4001_pin9() -> bool:
 
 
 # ── Self-test ───────────────────────────────────────────────────────────────
+
 
 def self_test() -> bool:
     print("=== E26-R11 Pinout Reconstruction Self-Test ===")
@@ -268,8 +315,12 @@ def self_test() -> bool:
 
     # T5: Route is interrupted
     conns = build_connection_map()
-    assert is_route_interrupted(conns), "Ruta BOOT_SERIAL_IN → CN4001 pin 9 interrumpida"
-    print("  [PASS] Ruta BOOT_SERIAL_IN → CN4001 pin 9 está interrumpida (R4002/R4003 XX)")
+    assert is_route_interrupted(conns), (
+        "Ruta BOOT_SERIAL_IN → CN4001 pin 9 interrumpida"
+    )
+    print(
+        "  [PASS] Ruta BOOT_SERIAL_IN → CN4001 pin 9 está interrumpida (R4002/R4003 XX)"
+    )
 
     # T6: Connection map has expected entries
     refs = {c.reference for c in conns}
@@ -281,7 +332,9 @@ def self_test() -> bool:
 
     # T7: Certainty levels
     for c in conns:
-        assert c.certainty in ("ALTA", "MEDIA", "BAJA"), f"Nivel de certeza inválido: {c.certainty}"
+        assert c.certainty in ("ALTA", "MEDIA", "BAJA"), (
+            f"Nivel de certeza inválido: {c.certainty}"
+        )
     print("  [PASS] Todos los niveles de certeza son válidos")
 
     # T8: Schematic text validation (synthetic)
@@ -295,7 +348,9 @@ def self_test() -> bool:
     """
     result = reconstruct_from_schematic_text(synthetic_schematic)
     assert len(result.errors) == 0, f"Errores inesperados: {result.errors}"
-    assert len(result.warnings) >= 1, "Se esperaba al menos una advertencia sobre resistencias XX"
+    assert len(result.warnings) >= 1, (
+        "Se esperaba al menos una advertencia sobre resistencias XX"
+    )
     print("  [PASS] Validación de texto esquemático sintético")
 
     print(f"\n  {'Todos los tests pasaron.' if ok else 'ALGUNOS TESTS FALLARON.'}")

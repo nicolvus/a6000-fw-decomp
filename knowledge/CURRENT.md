@@ -1,6 +1,8 @@
 # Estado actual — léeme primero
 
 > **E26 R20 (selector del BootROM reconstruido):** [informe](../docs/capture/e26-r20-bootrom-selector.md). `FUN_ffff1062` decide por `MODEREG` (`0xf2915010`) **bit 0**: 0 → Loader2 (`0xc0030000`); 1 → ruta de servicio (GPIO4.21 = temporización, GPIO4.22 = salto directo a serie; si falla el almacenamiento o no hay clave → recepción serie; con clave en `0xc0001200` hace falta enviarla). Bit 0 = `BOOT_MAIN` (P7→CL1000) por inferencia; nivel físico sin verificar (`E26-R20-BOOTMAIN-NIVEL`, `E26-R20-GPIO4`). Emulación `r20_bootrom_selector.py` con tabla de decisiones.
+> **E26 R29 (pinout CN4001/CN4906 completo):** [informe](../docs/capture/e26-r29-pinout-cn4001-cn4906-completo.md). Corrige R11: CN4001 pin1=USB_VBUS (no USB_D-), 19 pines; CN4906 18 pines (no 32), pin10=RTCK sin red externa. Hallazgo: CN4906 combina BIONZ (SWCLK/SWDIO/VIO_FLD) con el bus `_DWN` de Darwin en los mismos pines 11/12/15.
+
 > **E26 R28 (búsqueda externa TPZL):** [informe](../docs/capture/e26-r28-tpzl-busqueda-externa.md). Resultado negativo: ninguna mención pública de «TPZL»; Sony-PMCA-RE/fwtool solo cubren la capa de actualizador (FDAT), no Loader2/Loader3. Sin muestras externas disponibles.
 
 > **E26 R27 (ARM7: ISR NAND y geometría):** [informe](../docs/capture/e26-r27-arm7-isr-geometria.md). ISR `0xd24` traduce bits de estado NAND a códigos `0xc/0xd/0x20/0x21/0x23/0x24` (distinto del LDEC `0x28-0x2d`); `0x1a80-0x1ae4` = capacidad + traducción con entrelazado multi-plano; las 17 operaciones restantes del despachador comparten la misma base SRAM `0x3f40` que op 0, sin comando NAND clasificado por operación.

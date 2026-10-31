@@ -96,13 +96,13 @@ BOOT_SERIAL_IN ── CM4002 ── AD_JACK_IN ── CM4003 ── CN4001 pin 1
 
 **Nota importante del esquema:** al pie del dibujo aparece `XX MARK: NO MOUNT` (marca XX: no montado). Tanto R4003 como R4002 llevan la marca XX.
 
-### 3.3 Conector Multi Terminal CN4001 (página 38)
+### 3.3 Conector Multi Terminal CN4001 (página 37; **corregido en E26-R29**, ver `docs/capture/e26-r29-pinout-cn4001-cn4906-completo.md`)
 
 | Pin | Señal | Origen en esquema | Montaje |
 |-----|-------|-------------------|---------|
-| 1 | USB_D- | UM | — |
-| 2 | USB_D+ | UM | — |
-| 3 | (no identificado claramente) | — | — |
+| 1 | USB_VBUS | F4001 (fusible 2A/36V) | — |
+| 2 | USB_D- | USB_D-_UM | — |
+| 3 | USB_D+ | USB_D+_UM | — |
 | 4 | USB_ID | — | — |
 | 5 | GND | — | — |
 | 6 | D_3.1V/LANC_DC | — | R4008 (XX) |
@@ -115,28 +115,30 @@ BOOT_SERIAL_IN ── CM4002 ── AD_JACK_IN ── CM4003 ── CN4001 pin 1
 | 13 | VIDEO | XS_2 via CM4004/CM4005 | — |
 | 14 | AV_GND | — | — |
 | 15 | XPWR_ON | — | — |
+| 16-19 | REG_GND | masa/blindaje vía D4001 (XX) | — |
 
-### 3.4 Huella de servicio CN4906 (página 38, SIDE A)
+### 3.4 Huella de servicio CN4906 (página 38, SIDE A; **corregido en E26-R29**)
+
+18 pines (no 32; los antiguos «31/32» pertenecían a otro conector de la misma hoja — el flex del disparador, `s21-claude-button-to-shutter-order.md`). Es un conector **combinado BIONZ + Darwin**: 11/12/15 unen la vía de servicio de BIONZ con el bus `_DWN` de Darwin (E26-R29 §3).
 
 | Pin | Señal | Origen | Montaje |
 |-----|-------|--------|---------|
 | 1 | REG_GND | — | — |
-| 2 | BOOT_MODE_1 | — | — |
+| 2 | BOOT_MODE_1 | FIQ | R4910 (XX) |
 | 3 | EVER_3.15V | — | — |
 | 4 | UART_RXD_MSS | DEBUG_UART0_RXD | — |
 | 5 | UART_TXD_MSS | DEBUG_UART0_TXD | — |
-| 6 | UART_RXD_DWN | — | — |
-| 7 | UART_TXD_DWN | — | — |
-| 8 | NSRST | — | — |
-| 9 | TDO | R4911 (XX) | NO |
-| 10 | TCK(SWCLK) | R4912 (XX) | NO |
-| 11 | TMS(SWDIO) | R4913 (XX) | NO |
-| 12 | TDI | R4914 (XX) | NO |
-| 13 | NTRST | — | — |
-| 14 | DEBUG_MODE | — | — |
-| 15-18 | REG_GND | — | — |
-| 31 | XS_2 / DWN_UART_TXD | — | — |
-| 32 | XS_1 / DWN_UART_RXD | — | — |
+| 6 | UART_RXD_DWN | DWN_UART_RXD (Darwin) | — |
+| 7 | UART_TXD_DWN | DWN_UART_TXD (Darwin) | — |
+| 8 | NSRST | MD0_DWN (Darwin, MEDIA confianza) | — |
+| 9 | TDO | TDO_DWN (Darwin) | — |
+| 10 | RTCK | sin red externa | — |
+| 11 | TCK(SWCLK) | SWCLK + TCK_DWN (unidos) | R4911 (XX) |
+| 12 | TMS(SWDIO) | SWDIO + TMS_DWN (unidos) | R4912 (XX) |
+| 13 | TDI | TDI_DWN (Darwin) | — |
+| 14 | NTRST | TRST_DWN (Darwin) | — |
+| 15 | DEBUG_MODE | VIO_FLD + XDWN_RESET (unidos) | R4913 (XX) |
+| 16-18 | REG_GND | — | — |
 
 CN4906 en sí aparece marcado como `XX` en la lista de repuestos (no suministrado, incluida en SY-1028 COMPLETE BOARD). Su montaje físico en esta unidad no está verificado.
 
@@ -414,7 +416,7 @@ Se creó `analysis/e26-recovery/r11-pinout-reconstruction.py` con tests en `test
 - No conectar TX de adaptador serie a ningún pin sin confirmar voltaje y dirección
 - No escribir NAND, no modificar firmware, no flashear
 - No abrir la cámara sin autorización expresa
-- No puentear resistencias no montadas (R4003, R4002, R4004, R4911-R4914)
+- No puentear resistencias no montadas (R4003, R4002, R4004, R4910-R4913)
 - No alterar señales de reset ni de selección de arranque (BOOT_MODE_1, NSRST, DEBUG_MODE)
 - No asumir 3.3V ni 115200 baudios sin verificación
 
