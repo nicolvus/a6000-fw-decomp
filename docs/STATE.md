@@ -1,5 +1,7 @@
 # Estado vigente — Sony A6000 reverse engineering
 
+> **E26 R30 (frontera Done del actualizador y cierre de Fase A):** [informe](capture/e26-r30-updater-done-boundary.md). Cierra Fase A (residuo `trabajo+0xc` del LDEC ARM7: escrito una vez, nunca leído en software; ya resuelto en R16/R17/R27, solo faltaba reflejarlo). Acota Fase B (byte 0x32: arquitectura de reporte de errores, sin evidencia de haberse observado en este incidente — el usuario vio Done). Avanza Fase C: `UpdaterBody::Execute` decompilado con símbolos confirma que `CompleteUpdate()` solo corre si `HasError()==0`, y que `part_image_sum` (nflasha3) tiene una comprobación CRC32 post-escritura no documentada antes (INFERENCIA, pendiente `E26-R30-SUMCONTENT`). Si se confirma, el Done observado implica NAND escrita correctamente; el peso causal del bloqueo se desplaza hacia la frontera de arranque Loader3/ARM7/LDEC, no hacia el actualizador.
+
 > **E26 R9 parcial:** [revisión](capture/e26-r9-bootrom-ram-execution.md) corrige R8: CRC-32, copia por tipos distintos de 0 y 0xffff; parser R8 no válido. Falta emular la ruta, demostrar RAM ejecutable y señal física.
 
 > **E26 R7B parcial:** [informe](capture/e26-r7b-recuperacion-prelinux.md). COLD negativo en bucle, lectura pre-Linux interna, receptor serie en BootROM y firmware ARM7 histórico identificado; ninguna ruta de restauración demostrada. La investigación offline sigue abierta.
