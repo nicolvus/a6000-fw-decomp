@@ -51,7 +51,7 @@ si r != 0: trace(2,18); error_blink(r)
 trace(2,17); jump_serial_image()              ; bx [0xc000500c+0xc]              ── FIN si acepta
 ```
 
-**Corrige R12 §3** («observación estática, no probada» de que un error de `load_header` distinto de `0x3005`/`0x3006` cae en «éxito aparente»): en `main` ese resultado (`r == 0`, es decir, cabecera dañada sin ser recuperable por ECC) desvía a `serial_entry`, no sigue la ruta normal. El flujo verificado es: **almacenamiento sano → Loader2; almacenamiento no apto o GPIO4.22=1 → `serial_entry`.**
+**Corrige R12 §3** («observación estática, no probada» de que un error de `load_header` distinto de `0x3005`/`0x3006` cae en «éxito aparente»): en `main` ese resultado (`r == 0`, es decir, cabecera dañada sin ser recuperable por ECC) desvía a `serial_entry`, no sigue la ruta normal. El flujo verificado es: **almacenamiento sano → Loader2; almacenamiento no apto o GPIO4.22=1 → `serial_entry`.** *Corregido por [R32](e26-r32-moderreg-valor-real.md): esta cámara arranca con `MODEREG` bit 0 = 1 (dato del backup), así que no pasa por la rama `sel == 0`. Su arranque normal es la rama de servicio con clave presente: ventana serie → `0x3001` → `load_payload` → salto.*
 
 ## 2. `serial_entry` (`0xffff0fa0`) — BINARIO, línea a línea
 

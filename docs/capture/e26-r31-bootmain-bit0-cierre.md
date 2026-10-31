@@ -35,5 +35,5 @@ Literales de la base `MISC` (`0xf2915000`) en la ROM: solo `0x968` y `0x12c0`; e
 - `av-cam.bin` tiene un acceso GPIO genérico (`0xf2910000 + banco<<8`, lectura `>> bit & 1` en archivo `0x44e990`). Un llamador con banco `0x50` alcanzaría `0xf2915000`, pero el registro está en `+0x10` y ese acceso lee `+0x00`; no se enumeraron los argumentos de todos sus llamadores.
 
 - Ninguna fuente nombra literalmente el bit 0 (`regs-misc.h` de CXD90014 solo define el bit 1). El cierre es deductivo, no una definición de hoja de datos.
-- La polaridad física (si el nivel alto en `CL1000` produce bit 0 = 1) y el pull interno siguen sin determinar: es `E26-FISICO-BOOT` (1).
+- La polaridad física (si el nivel alto en `CL1000` produce bit 0 = 1) sigue sin probarse. El valor lógico en reposo sí se conoce: bit 0 = 1 ([R32](e26-r32-moderreg-valor-real.md), backup de la cámara).
 - A6300: `BOOT_MAIN` va a la isleta `LND188` y `DDRCKSEL` a `LND911`, sin strap montado. `R6048 XX` está en la alimentación PCIe, no en `BOOT_MAIN`; no aporta polaridad.

@@ -3306,3 +3306,11 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 - **Límite:** deductivo; ninguna fuente Sony nombra el bit 0. Polaridad/pull físico siguen en `E26-FISICO-BOOT`.
 - **Cierre:** `E26-R19-BOOTMAIN` → CERRADO (R31, estático).
 - **Entregables:** `docs/capture/e26-r31-bootmain-bit0-cierre.md`, `tests/test_e26_r31_bootmain_bit0.py`.
+
+## E26-R32 — valor real de `MODEREG` en la cámara (31-10-2026)
+
+- **Pedido:** confirmar con los datos existentes en qué estado está siempre `CL1000`.
+- **Hallazgos:** Loader3 (`0xc01f4ef8`, `LD3:read MISCREG`, llamada incondicional en `0xc01f11e4`) escribe TYPEID, `[0xf2912b10]` y `MODEREG` en el backup (IDs `0x3e0003/9/a`, 2 bytes). En los 23 `backup*.bin`: `0x0500` (= `TYPEID_CXD90014`), `0x0010`, **`0x0003`**; la plantilla `0110_backup` trae `0x00ff/0/0`. → bit 0 = 1 y bit 1 = 1 en reposo. Bytes del BootROM: con bit 0 = 1 y clave presente, la ventana serie (`0x876`) sin sincronismo (`0x3001`) salta a `0x1226` (`load_payload` → salto): ese es el arranque normal.
+- **Correcciones:** R20 §1.6 y R23 §1 («bit 0 = 0 en uso normal»). `E26-R20-BOOTMAIN-NIVEL` → CERRADO (dato de cámara); `E26-R20-KEYTABLE` → inferencia fuerte «con clave»; `E26-R20-SERIE-PLAN` → CERRADO (el paso «`CL1000` a 1» sobra; la vía serie exige la clave de `nflasha0`).
+- **Límite:** el valor lo lee Loader3, no el BootROM; solo 16 bits; polaridad pin↔bit no probada.
+- **Entregables:** `docs/capture/e26-r32-moderreg-valor-real.md`, `tests/test_e26_r32_moderreg_backup.py`.
