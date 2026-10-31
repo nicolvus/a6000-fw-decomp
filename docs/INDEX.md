@@ -389,7 +389,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 6. Otros subsistemas (AF, estabilización, vídeo, audio, lentes, energía, visor, accesorios, módulos de trazas)
 
-135 informes.
+136 informes.
 
 - **—** [E21 — Lecturas sin cámara de los volcados del 20-10-2026](capture/e21-lecturas-backups-2026-10-26.md)
 - **—** [E24-01 — Arranque, modo actualizador y dependencia de Darwin (27-10-2026)](capture/e24-01-arranque-recuperacion.md)
@@ -428,6 +428,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [E26-R28 — Búsqueda externa de TPZL con 1 segmento o residuo ≠ 0 (30-10-2026)](capture/e26-r28-tpzl-busqueda-externa.md)
 - **—** [E26-R29 — Pinout completo de CN4001 (Multi) y CN4906 (servicio): los 33 pines mapeados a su red](capture/e26-r29-pinout-cn4001-cn4906-completo.md)
 - **—** [E26-R30 — Cierre de Fase A (residuo ARM7), acotación de Fase B (0x32) y avance de Fase C (frontera Done)](capture/e26-r30-updater-done-boundary.md)
+- **—** [E26-R31 — Cierre estático: `MODEREG` bit 0 = `BOOT_MAIN` (`CL1000`) (31-10-2026)](capture/e26-r31-bootmain-bit0-cierre.md)
 - **—** [E26-RECOVERY R5 — Loader3, servicio BIONZ y diagnóstico de SY-1028](capture/e26-r5-loader3-servicio.md)
 - **—** [E26-RECOVERY R6 — BLDR, BIONZ y recuperación conservando la placa](capture/e26-r6-recuperacion-bionz.md)
 - **—** [E26-RECOVERY R7 — informe final de ingeniería inversa exhaustiva](capture/e26-r7-recuperacion-estatica.md)

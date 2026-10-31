@@ -3298,3 +3298,11 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 - **Límite:** solo estático; no resuelve ningún dato físico nuevo, solo documenta por qué no son cerrables sin acceso a la cámara.
 - **Cierre:** `E26-R20-SERIE-PLAN` permanece ABIERTO (síntesis, sin nueva evidencia); coincide con el criterio de cierre de `E26-FISICO-BOOT`. Segundo commit reescribe el informe con vocabulario neutro de recuperación de hardware (sin cambiar hechos, direcciones ni conclusión).
 - **Entregables:** `docs/capture/e26-r20-serie-plan.md`.
+
+## E26-R31 — cierre estático de `MODEREG` bit 0 = `BOOT_MAIN` (31-10-2026)
+
+- **Pedido:** cerrar estáticamente la inferencia de R20 §1.6 (bit 0 = `BOOT_MAIN`/`CL1000`).
+- **Hallazgos:** inventario completo de lectores de `MODEREG`: BootROM (bit 0 selector, bit 1 serie), Loader3 `0xc01f4ef8` (solo lo registra en bruto), `mcmn_drv.ko` («MODEREAD»: bit 16 `MSX_INS_HIZ`, 24–27 CD/WP MMC); `vmlinux`/`av-cam`/Loader2 no lo leen. Bloque BOOT del IC6000 = `DDRCKSEL`/`BOOT_SERIAL_IN`/`BOOT_MAIN` (A6000 y A6300). `DDRCKSEL` sin consumidor software (y en bit 24 en CXD4132); `MODEREAD_BM1` = bit 1 en CXD4132 → BM0 = bit 0 = `BOOT_MAIN`.
+- **Límite:** deductivo; ninguna fuente Sony nombra el bit 0. Polaridad/pull físico siguen en `E26-FISICO-BOOT`.
+- **Cierre:** `E26-R19-BOOTMAIN` → CERRADO (R31, estático).
+- **Entregables:** `docs/capture/e26-r31-bootmain-bit0-cierre.md`, `tests/test_e26_r31_bootmain_bit0.py`.

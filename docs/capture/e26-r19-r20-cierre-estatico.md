@@ -19,7 +19,7 @@ Cierra `E26-R19-USB-EVT13`, `E26-R19-CM-MONTAJE`, `E26-R20-BOOTMAIN-NIVEL` y `E2
 ## 3. E26-R20-BOOTMAIN-NIVEL — CERRADO (límite)
 
 - **ESQUEMA (pág. 24).** `BOOT_MAIN` (IC6000 P7) conecta solo a la isleta de prueba `CL1000`; en todo el texto del manual no aparece otra referencia a la red (ni resistencia de pull externa).
-- **Conclusión:** el nivel por defecto lo fija el propio IC6000 (pull interno o dato de hoja de datos), no determinable con las fuentes del repo. Que `MODEREG` bit 0 = `BOOT_MAIN` sigue siendo inferencia (R20).
+- **Conclusión:** el nivel por defecto lo fija el propio IC6000 (pull interno o dato de hoja de datos), no determinable con las fuentes del repo. Que `MODEREG` bit 0 = `BOOT_MAIN` quedó cerrado estáticamente en [R31](e26-r31-bootmain-bit0-cierre.md).
 - **Hecho útil:** forzar el nivel requiere tocar `CL1000` (no hay resistencia que retirar); acción física, fuera de alcance sin autorización.
 
 ## 4. E26-R20-GPIO4 — CERRADO (roles resueltos; pines no identificables)
