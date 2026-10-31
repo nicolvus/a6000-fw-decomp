@@ -3269,3 +3269,10 @@ Construcción reproducible sobre los originales 3.21 verificados, sin cámara ni
 - **Hallazgos:** `boot_dispatch` indexa un valor 0-14 persistido en Backup; `\updater\mode` (dispositivo 2 = nflasha2) es condición necesaria verificada por bytes (su ausencia fuerza modo 3, cadena normal); la cadena `LD3:<<KEY E/L/D>>` es de autenticación de batería, no de arranque — descartada para E26-R20-KEYTABLE.
 - **Cierre:** E26-R7-C-UPDATER-MODE CERRADO PARCIAL (mecanismo de lectura resuelto, sin productor pre-Linux); nueva fila E26-R20-KEYTABLE-PWRIC DESCARTADA.
 - **Entregables:** `docs/capture/e26-r26-updater-mode-y-clave-pwric.md`, `tests/test_e26_r26_updater_mode.py`.
+
+## E26-R27 — ARM7: ISR NAND y geometría (30-10-2026)
+
+- **Hallazgos:** ISR `0xd24` traduce bits de estado del controlador NAND a códigos propios (0xc/0xd/0x20/0x21/0x23/0x24); `0x1a80-0x1ae4` implementan capacidad y traducción de direcciones con entrelazado multi-plano; las 17 operaciones restantes del despachador comparten la base SRAM `0x3f40` de op 0.
+- **Límite:** sin clasificar el comando NAND de cada una de las 17 operaciones.
+- **Cierre:** E26-R18-ARM7-RESTO CERRADO PARCIAL.
+- **Entregables:** `docs/capture/e26-r27-arm7-isr-geometria.md`, `tests/test_e26_r27_arm7_isr_geometria.py`.
