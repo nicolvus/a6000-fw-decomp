@@ -3441,3 +3441,25 @@ forma estática si forzar `CL1000` a masa es viable, revisando también el códi
   `tests/test_e26_r43_cl1000_cn4001.py` (3, en verde). Pendientes: `E26-R43-CL1000-ACCESO` (cerrado), nuevo
   `E26-R43-PIN10-CONTINUIDAD` (físico). No cambia el objetivo de recuperación ni abre vía nueva: confirma que lo que
   falta sigue siendo físico.
+
+## E26-R44 — ¿otra forma de obtener la clave de nflasha0, o forzarla? (31-10-2026)
+
+Petición del usuario, continuando R43: ¿hay alternativa a la clave, o se puede forzar?
+
+- **Desensamblado directo** (Capstone, no pseudocódigo) de la comprobación de clave en `main`: una sola palabra de 32
+  bits (la segunda palabra guardada es solo `~crc32`, sin secreto adicional), comparada en una única instrucción
+  (`ldrd`+`cmp`) — sin bucle byte a byte, sin canal lateral de tiempos explotable. `error_blink` (`0xffff0d62`) es un
+  **bucle infinito que nunca retorna**: cada intento fallido exige apagar y encender la cámara. **Fuerza bruta
+  descartada**: 2³² intentos por este interfaz, inviable incluso automatizada (años, no horas).
+- **Ninguna alternativa software** para leer/derivar la clave: Loader2 (247/247) y Loader3 (674/674), ya mapeados al
+  100 %, no tocan `nflasha0`.
+- **Mejor vía que la clave, ya documentada pero no resaltada así antes** (R20/R23, `E26-R20-GPIO4`): si `GPIO4.22`
+  lee `!=0` al arrancar, `main` salta a `serial_entry()` sin pasar nunca por la comprobación — no exige conocer ningún
+  secreto. El usuario pidió reabrir la búsqueda del pin físico con el método vectorial de R43: único bloque "GPIO SYS"
+  en las 54 páginas del esquema, sin dato que confirme que sea el canal 4 del mapa de registros (el GPL de Sony da el
+  cálculo de dirección pero no el mapeo canal→bola). Candidato débil por descarte: `GPIO_SB_5` (bola N8) es la única
+  del grupo sin red de cámara nombrada. **No cierra.**
+- **Entregables:** `docs/capture/e26-r44-gpio4-bit22-busqueda-pin.md`, `tests/test_e26_r44_gpio4_clave.py` (4, verde).
+  PENDIENTES: cierra `E26-R44-CLAVE-FUERZA-BRUTA` y `E26-R44-GPIO4-BIT22-BYPASS` (bypass ya conocido, impacto
+  precisado); abre `E26-R44-GPIO4-PIN` (sin cierre) y `E26-R44-AVCAM-GPIO4` (binario, rastrear llamadores con banco 4
+  de la lectura genérica de GPIO en `av-cam.bin`, no iniciado — requiere sesión REA ~8 min).

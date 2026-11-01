@@ -390,7 +390,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 6. Otros subsistemas (AF, estabilización, vídeo, audio, lentes, energía, visor, accesorios, módulos de trazas)
 
-148 informes.
+149 informes.
 
 - **—** [E21 — Lecturas sin cámara de los volcados del 20-10-2026](capture/e21-lecturas-backups-2026-10-26.md)
 - **—** [E24-01 — Arranque, modo actualizador y dependencia de Darwin (27-10-2026)](capture/e24-01-arranque-recuperacion.md)
@@ -442,6 +442,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [E26-R41 — Verificación de los caminos estáticos restantes: consola serie de Loader3 y espera de ICE](capture/e26-r41-caminos-estaticos-restantes.md)
 - **—** [E26-R42 — Búsqueda externa en GitHub y lectura directa del esquema JTAG/eFuse/XRESET](capture/e26-r42-busqueda-externa-y-esquema-jtag.md)
 - **—** [E26-R43 — CL1000/`BOOT_MAIN` (bit 0) cerrado estáticamente: sin atajo por el conector Multi; corrige el pin de `BOOT_SERIAL_IN` en CN4001](capture/e26-r43-cl1000-sin-acceso-externo.md)
+- **—** [E26-R44 — Búsqueda del pin físico de `GPIO(4,RDATA)` bit 22 (el salto a `serial_entry` sin clave): sin cierre, un candidato](capture/e26-r44-gpio4-bit22-busqueda-pin.md)
 - **—** [E26-RECOVERY R5 — Loader3, servicio BIONZ y diagnóstico de SY-1028](capture/e26-r5-loader3-servicio.md)
 - **—** [E26-RECOVERY R6 — BLDR, BIONZ y recuperación conservando la placa](capture/e26-r6-recuperacion-bionz.md)
 - **—** [E26-RECOVERY R7 — informe final de ingeniería inversa exhaustiva](capture/e26-r7-recuperacion-estatica.md)
