@@ -124,8 +124,9 @@ comprobaciones offline no lo vieron porque descomprimían por software, sin mode
 
 ## Instalación del 3.23 (histórica; desaconsejada)
 
-Se documenta lo que se hizo, no se recomienda repetirlo. Requisitos: A6000 con **3.21 o 3.22**, batería cargada, USB y
-[`pmca-console`](https://github.com/ma1co/Sony-PMCA-RE). Probado solo desde la 3.22 (T040). El código del repositorio **no
+Se documenta lo que se hizo, no se recomienda repetirlo. Requisitos: A6000 con el firmware oficial **3.21**, batería cargada, USB y
+[`pmca-console`](https://github.com/ma1co/Sony-PMCA-RE). El 3.22 era un paquete intermedio del autor (solo bobinas apagadas) y ya no hace
+falta: el 3.23 incluye su cambio. La prueba en cámara (T040) se hizo desde ese 3.22; desde un 3.21 directo el guard lo acepta (verificado offline), pero no se ha instalado así. El código del repositorio **no
 genera** firmware de Sony automáticamente: los dos paquetes ya construidos (3.23 y su recuperación 3.24) están publicados
 como [Release `fw-3.23-3.24`](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24); léase la nota de
 copyright antes de usarlos ([E25-05](docs/capture/e25-05-preparacion-paquetes-323-324.md)).
@@ -188,15 +189,22 @@ python3 scripts/audit/repo_audit.py                   # enlaces, rutas citadas, 
 python3 scripts/knowledge/search.py text "concepto"  # buscar sin releer el repositorio
 ```
 
-## Copyright de los binarios publicados
+## Copyright y uso
 
-Los dos `.dat` del [release `fw-3.23-3.24`](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24) son el
+**Copyright.** Los dos `.dat` del [release `fw-3.23-3.24`](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24) son el
 firmware oficial de Sony 3.21 con una modificación binaria mínima y documentada en `darwin_core.bin` (2–9 bytes; ver
 [Cómo funciona el parche del 3.23](#cómo-funciona-el-parche-del-323) y [E25-05](docs/capture/e25-05-preparacion-paquetes-323-324.md)).
-Se publican con fines de investigación e interoperabilidad — ingeniería inversa para modificar el comportamiento del
-hardware que el autor posee —, no como redistribución de código fuente de Sony. Sony Corporation conserva todos los
-derechos sobre el firmware original; este repositorio no reclama titularidad sobre él y los retirará si Sony lo solicita.
-Esta nota documenta la postura del autor, no es una garantía legal ni impide una solicitud de retirada.
+El firmware original es © Sony Corporation, que conserva todos los derechos sobre él. El autor **no tiene ninguna licencia de Sony**
+sobre ese firmware y este repositorio no reclama titularidad sobre él. Que el proyecto sea abierto no cambia eso: la apertura
+alcanza solo a lo que el autor escribió (scripts, análisis, documentación), no a la parte de Sony contenida en los `.dat`.
+Se publican con fines de investigación e interoperabilidad (ingeniería inversa para modificar el comportamiento del hardware que el
+autor posee), sin incluir código fuente de Sony. Esta nota documenta la postura del autor, no es una garantía legal, y los
+archivos se retirarán si Sony lo solicita.
+
+**Uso.**
+- Todo se ofrece «tal cual», sin garantía de ningún tipo; usarlo es bajo tu propio riesgo y puede inutilizar la cámara (ver [Límites y riesgos](#límites-y-riesgos)).
+- Pensado para investigación, aprendizaje y uso personal en una cámara de tu propiedad. No lo uses para eludir protecciones con fines ilícitos ni para redistribuir firmware de Sony por tu cuenta.
+- El repositorio todavía no declara una licencia de código (no hay archivo `LICENSE`); hasta que se añada, no se concede ningún permiso de reutilización más allá de leerlo y usarlo como se describe aquí.
 
 ## Seguridad y contribución
 
