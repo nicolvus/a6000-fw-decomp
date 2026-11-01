@@ -83,7 +83,7 @@ def groups(data: dict) -> list[tuple[str, str, list[tuple[str, str]]]]:
     done = {int(x["id"][1:]) for x in data["sessions"]}
     sessions = [
         ("s-ok", f"S{n}: documentada") if n in done else
-        ("s-cancel", f"S{n}: cancelada") if n == 67 else ("s-todo", f"S{n}: sin informe propio")
+        ("s-cancel", f"S{n}: cancelada") if n == 67 else ("s-todo", f"S{n}: número sin informe (numeración paralela)")
         for n in range(1, data["latest_number"] + 1)
     ]
     run = set(data["physical_tests"]["executed"])
@@ -92,7 +92,7 @@ def groups(data: dict) -> list[tuple[str, str, list[tuple[str, str]]]]:
     cov = data["module_coverage"]
     return [
         (f"Cobertura documental de etiquetas*: {cov['percent']}% ({cov['covered']}/{cov['total']})", "modules", modules),
-        (f"Sesiones S documentadas: {len(done)}/{data['latest_number']} (más {data['phase_reports']} informes de fase E)", "sessions", sessions),
+        (f"Sesiones S con informe: {len(done)} (numeradas hasta S{data['latest_number']}; los números salieron de trabajo en paralelo, un hueco no es una sesión pendiente) y {data['phase_reports']} informes de fase E", "sessions", sessions),
         (f"Pruebas físicas: {data['physical_tests']['done']}/{data['physical_tests']['total']}", "tests", tests),
     ]
 
@@ -281,7 +281,7 @@ def main(out: Path = ROOT) -> None:
     cov, tests = data["module_coverage"], data["physical_tests"]
     for name, label, msg, color in (
         ("modulos", "módulos", f"{cov['percent']}% ({cov['covered']}/{cov['total']})", "yellow"),
-        ("sesiones", "sesiones", f"S {len(sessions)}/{data['latest_number']} · E {data['phase_reports']}", "blue"),
+        ("sesiones", "sesiones", f"S {len(sessions)} · E {data['phase_reports']}", "blue"),
         ("pruebas", "planes con prueba", f"{tests['done']}/{tests['total']}", "green"),
     ):
         badge = {"schemaVersion": 1, "label": label, "message": msg, "color": color}
