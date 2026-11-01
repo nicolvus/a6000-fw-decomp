@@ -31,20 +31,25 @@ COLORS = {"hito": "#2ea043", "sub": "#9be9a8", "todo": "#30363d", "cancel": "#d2
 COLS = 62
 CATALOG = ROOT / "docs" / "capture" / "linea-general-re.md"
 TOP = 30
+JOINT = {74: "S74 — ADJ_CMD (informe conjunto S73/S74)", 516: "S516 — `[PNL]` (informe conjunto S515/S516/S628–S630)",
+         628: "S628 — `[FILE_NUM]` (informe conjunto S515/S516/S628–S630)", 629: "S629 — `[FSYSMODE]` (informe conjunto S515/S516/S628–S630)",
+         630: "S630 — `[RING_DIAL]` (informe conjunto S515/S516/S628–S630)"}
 FILL = {"m-hito": COLORS["hito"], "m-sub": COLORS["sub"], "m-todo": COLORS["todo"], "s-ok": COLORS["ok"],
         "s-cancel": COLORS["cancel"], "s-todo": COLORS["todo"], "t-todo": COLORS["todo"], "t-ok": COLORS["ok"],
         "m-rejected": "#6e7681"}
 KIND = {"hito": "m-hito", "sub-etiqueta": "m-sub", "pendiente": "m-todo", "no-modulo": "m-rejected"}
 
 
-def topics() -> dict[str, str]:
-    """Session number -> topic name, read from the milestone catalogue."""
+def topics(sessions: list[dict] | None = None) -> dict[str, str]:
+    """Session number -> topic name: the milestone catalogue, else the session report's own title."""
     out = {}
+    for item in sessions or []:
+        out[item["id"][1:]] = re.sub(r"^S\d+\s*[—-]\s*(el módulo\s*)?", "", item["title"]).replace("`", "")
     for line in CATALOG.read_text(encoding="utf-8").splitlines():
         row = re.match(r"\| (S\d+(?:/S\d+)?) \| ([^|]+) \|", line)
         if row:
             for num in re.findall(r"\d+", row.group(1)):
-                out[num] = row.group(2).strip()
+                out[num] = row.group(2).strip().replace("`", "")
     return out
 
 
@@ -59,16 +64,21 @@ def families(detail: dict) -> list[tuple[str, list[tuple[str, dict]]]]:
     return [(k, sorted(v)) for k, v in rows] + ([("OTROS", sorted(loose))] if loose else [])
 
 
+def hitos(info: dict) -> list[str]:
+    """Sessions with their own report; S178 is the census itself, not a report on the label."""
+    return [h for h in info["hitos"] if h != "178"]
+
+
 def tip(label: str, info: dict, names: dict[str, str]) -> str:
-    name = " / ".join(dict.fromkeys(names.get(h, "") for h in info["hitos"] if names.get(h)))
-    extra = f" S{', S'.join(info['hitos'])}" if info["hitos"] else ""
+    name = " / ".join(dict.fromkeys(names[h] for h in hitos(info) if h in names))
+    extra = f" S{', S'.join(hitos(info))}" if hitos(info) else ""
     return f"{label}: {info['estado']}{extra}" + (f" — {name}" if name else "")
 
 
 def groups(data: dict) -> list[tuple[str, str, list[tuple[str, str]]]]:
     """(title, summary, [(css class, tooltip)]) for each grid of the board."""
     detail = json.loads(DETAIL.read_text(encoding="utf-8"))
-    names = topics()
+    names = topics(data["sessions"])
     modules = [(KIND[i["estado"]], tip(k, i, names)) for _, fam in families(detail) for k, i in fam]
     done = {int(x["id"][1:]) for x in data["sessions"]}
     sessions = [
@@ -102,7 +112,7 @@ def render_svg(grids) -> str:
 def render_html(grids, data: dict) -> str:
     cov = data["module_coverage"]
     detail = json.loads(DETAIL.read_text(encoding="utf-8"))
-    names = topics()
+    names = topics(data["sessions"])
     link = {s["id"]: s["source"] for s in data["sessions"]}
 
     def squares(cells) -> str:
@@ -123,8 +133,8 @@ def render_html(grids, data: dict) -> str:
         for n, (k, i) in enumerate(pend, 1)
     )
     done_rows = "".join(
-        f"<tr><td>{escape(k)}</td><td>{escape(' / '.join(dict.fromkeys(names[h] for h in i['hitos'] if h in names)))}</td><td>"
-        + ", ".join(f'<a href="{link[f"S{h}"]}">S{h}</a>' if f"S{h}" in link else f"S{h}" for h in i["hitos"])
+        f"<tr><td>{escape(k)}</td><td>{escape(' / '.join(dict.fromkeys(names[h] for h in hitos(i) if h in names)) or 'solo citada en el censo S178')}</td><td>"
+        + ", ".join(f'<a href="{link[f"S{h}"]}">S{h}</a>' if f"S{h}" in link else f"S{h}" for h in hitos(i))
         + "</td></tr>"
         for k, i in sorted(detail.items()) if i["estado"] == "hito"
     )
@@ -154,7 +164,7 @@ td:nth-child(n+3):not(:last-child),td:last-child,th:nth-child(n+3){{text-align:r
 <p>{cov['pending']} etiquetas pendientes; {cov['excluded']} fragmentos descartados como módulos. Descartar no aumenta cobertura.</p>
 <p>Cobertura documental de etiquetas: no mide código descompilado ni funciones verificadas.
 <a href="{REPO}docs/PENDIENTES.md">Pendientes vigentes</a> · <a href="{REPO}docs/capture/repo-audit-2026-10-24.md">auditoría</a>.
-Pruebas en cámara: {data['physical_tests']['registered']} registros (hasta {data['physical_tests']['last']}, con backup NVRAM previo);
+Pruebas en cámara: {data['physical_tests']['registered']} filas de registro (hasta {data['physical_tests']['last']}, con backup NVRAM previo);
 planes P1–P24 con prueba registrada: {data['physical_tests']['done']}/{data['physical_tests']['total']}.
 <a href="{data['physical_tests']['source']}">Registro de pruebas</a>.</p>
 <h2>Etiquetas por familia — {cov['percent']}% ({cov['covered']}/{cov['total']})*</h2>
@@ -163,6 +173,10 @@ planes P1–P24 con prueba registrada: {data['physical_tests']['done']}/{data['p
 <p>Orden documental por cadenas con referencias candidatas; no demuestra volumen de código,
 prioridad técnica ni relación con el obturador. La cola técnica está en la auditoría.</p>
 <table><tr><th>#</th><th>Etiqueta</th><th>Cadenas</th><th>Apariciones</th><th>Presencia</th></tr>{prio}</table>
+<p><b>Salvedades del censo S178</b> (se conservan sus cifras; ver <a href="{REPO}docs/PENDIENTES.md">pendientes</a>):
+<code>[OSD]</code> cuenta como cubierta solo porque el propio censo la cita, sin informe propio;
+<code>[FILE_NUM]</code>, <code>[FSYSMODE]</code> y <code>[RING_DIAL]</code> tienen evidencia de cadenas en
+<a href="{REPO}docs/capture/s515-s516-s628-s630-modulos.md">S628–S630</a> y siguen contadas como pendientes.</p>
 <h2>Etiquetas con informe propio</h2>
 <table><tr><th>Etiqueta</th><th>Nombre</th><th>Hitos</th></tr>{done_rows}</table>
 {other}
@@ -199,6 +213,7 @@ def main(out: Path = ROOT) -> None:
             if not 1 <= number <= 999:
                 continue
             score = priority + (2 if "conclusion" not in path.stem and "report" not in path.stem else 0)
+            score += bool(re.match(r"s\d+-s\d+", path.stem, re.IGNORECASE))  # un informe de rango pierde frente al propio
             if number not in candidates or (score, len(relative.parts)) < (
                 candidates[number][0], len(candidates[number][1].parts)
             ):
@@ -206,11 +221,14 @@ def main(out: Path = ROOT) -> None:
 
     # S73/S74 share a report; S67 was cancelled in the general RE catalogue.
     candidates[74] = candidates[73]
+    # S515/S516 and S628–S630 share one report (the loop above only sees its first number).
+    for number in (516, 628, 629, 630):
+        candidates[number] = (0, Path("docs/capture/s515-s516-s628-s630-modulos.md"))
 
     sessions = [
         {
             "id": f"S{number}",
-            "title": "S74 — ADJ_CMD (informe conjunto S73/S74)" if number == 74 else title(ROOT / path),
+            "title": JOINT.get(number) or title(ROOT / path),
             "source": REPO + path.as_posix(),
         }
         for number, (_, path) in sorted(candidates.items(), reverse=True)
