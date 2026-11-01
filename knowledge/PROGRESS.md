@@ -3497,3 +3497,10 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
   (pasos para reproducir la publicación de Reddit: 3.23 + `camera_silent.py`) y «Copyright de los binarios
   publicados».
 - **Entregables:** release de GitHub, README actualizado, [R8 en PENDIENTES](../docs/PENDIENTES.md) CERRADO.
+
+## Wiki de réplica, LICENSE y README reducido (01-11-2026)
+
+- Petición del usuario: quitar el copyright del release (queda solo en el README), reducir el README y crear una wiki para replicar todo de principio a fin.
+- `wiki/` (11 páginas) y `scripts/replicar/generar_nucleos.py`: reconstruir 3.23/3.24 desde el firmware oficial reproduce exactamente los SHA-256 del release (`4c21353d…`, `e1345aff…`; 69/69 comprobaciones).
+- README anterior en `docs/history/README-historial-2026-11-01.md`; `LICENSE` MIT solo para código y documentación propios.
+- Pendiente: publicar `wiki/` en la wiki de GitHub (hay que crear la primera página desde la web antes de poder hacer push).

@@ -232,3 +232,5 @@ originales siguen en [docs/capture/](capture/); acceso por tema en [INDEX](INDEX
 ## E25-22 — observación física parcial de sombras (28-10-2026)
 
 Dos fotos normales y RAW de una nueva escena: durante la toma larga `cap` mostró shd=1/svd=0 y los bytes de sombras ID3–ID6 fueron compatibles (`00 00 01 00`), en lecturas no simultáneas. No se midió el plan nativo de cada foto ni la transferencia eléctrica; no se demostró inicio o fin de integración electrónica. Detalles, datos y límites: [E25-22](capture/e25-22-protocolo-transporte-fisico.md).
+
+- **Publicación (01-11-2026):** el autor no tiene licencia de Sony sobre el firmware; los `.dat` del release se rigen por el «Copyright y uso» del README y el código propio por MIT. La réplica de principio a fin está en `wiki/`. Sin cambio técnico.

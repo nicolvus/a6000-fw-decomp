@@ -1,18 +1,19 @@
 {
  "git": {
-  "head": "4a4de629",
+  "head": "ebee0ce7",
   "adelante_atras_origin": [
    0,
    0
   ],
-  "versionados": 24473,
+  "versionados": 24499,
   "modificados_sin_commit": [
    " M README.md",
-   " M analysis/s400_open_questions_triage/triage.json",
    " M docs/CORRECTIONS.md",
    " M docs/OPEN-QUESTIONS.md",
    " M docs/PENDIENTES.md",
-   " M docs/capture/e25-23-interrupcion-captura-larga.md"
+   "?? docs/history/README-historial-2026-11-01.md",
+   "?? scripts/replicar/",
+   "?? wiki/"
   ],
   "versionados_e_ignorados": {
    "total": 2,
@@ -62,8 +63,18 @@
  },
  "enlaces_md": {
   "rotos": {
-   "total": 1,
+   "total": 3,
    "muestra": [
+    {
+     "en": "docs/PENDIENTES.md",
+     "enlace": "docs/capture/e26-r40-jtag-swd-bionz.md",
+     "motivo": "no existe"
+    },
+    {
+     "en": "docs/PENDIENTES.md",
+     "enlace": "docs/capture/e26-r40-jtag-swd-bionz.md",
+     "motivo": "no existe"
+    },
     {
      "en": "knowledge/PROGRESS.md",
      "enlace": "old.md",
@@ -72,8 +83,57 @@
    ]
   },
   "existen_pero_no_versionados": {
-   "total": 0,
-   "muestra": []
+   "total": 12,
+   "muestra": [
+    {
+     "en": "README.md",
+     "enlace": "wiki/Home.md"
+    },
+    {
+     "en": "README.md",
+     "enlace": "wiki/1-Requisitos-y-riesgos.md"
+    },
+    {
+     "en": "README.md",
+     "enlace": "wiki/2-Entorno-y-firmware-oficial.md"
+    },
+    {
+     "en": "README.md",
+     "enlace": "wiki/3-Backup-de-NVRAM.md"
+    },
+    {
+     "en": "README.md",
+     "enlace": "wiki/4-Construir-los-paquetes.md"
+    },
+    {
+     "en": "README.md",
+     "enlace": "wiki/5-Instalar-el-3.23.md"
+    },
+    {
+     "en": "README.md",
+     "enlace": "wiki/6-Capa-2-exposicion-uniforme.md"
+    },
+    {
+     "en": "README.md",
+     "enlace": "wiki/7-Volver-atras-y-recuperacion.md"
+    },
+    {
+     "en": "README.md",
+     "enlace": "wiki/8-Como-funciona-el-parche.md"
+    },
+    {
+     "en": "README.md",
+     "enlace": "wiki/9-Resultados-y-limites.md"
+    },
+    {
+     "en": "README.md",
+     "enlace": "docs/history/README-historial-2026-11-01.md"
+    },
+    {
+     "en": "README.md",
+     "enlace": "wiki/Home.md"
+    }
+   ]
   }
  },
  "json_py": {
@@ -91,7 +151,7 @@
   "muestra": []
  },
  "cifras_de_pruebas_discrepantes": {
-  "total": 7,
+  "total": 8,
   "muestra": [
    {
     "en": "docs/PENDIENTES.md",
@@ -118,6 +178,12 @@
     "real": 5
    },
    {
+    "en": "docs/capture/e26-r36-causa-fallo-325.md",
+    "archivo": "tests/test_e25_27_build.py",
+    "dice": 2,
+    "real": 18
+   },
+   {
     "en": "docs/capture/s139-encseqctrl.md",
     "archivo": "tests/test_s139_encseqctrl.py",
     "dice": 34,
@@ -137,9 +203,9 @@
    }
   ]
  },
- "pruebas_colectadas": 4427,
+ "pruebas_colectadas": 4472,
  "pruebas": {
-  "archivos_de_prueba": 371,
+  "archivos_de_prueba": 379,
   "s403_sin_prueba": {
    "total": 7,
    "muestra": [
@@ -219,7 +285,7 @@
   }
  },
  "pendientes": {
-  "filas": 78,
+  "filas": 79,
   "abiertas_por_estado": {
    "NO_VERIFICADO": 1,
    "CERRADO CON LÍMITE": 2,
@@ -228,7 +294,8 @@
    "PARCIAL": 4,
    "DIFERIDO": 1,
    "DESCARTADO": 2,
-   "ABIERTO": 1
+   "ABIERTO": 1,
+   "CERRADO": 1
   },
   "estados_no_validos": [],
   "ids_duplicados": [],
@@ -251,7 +318,8 @@
    "F7",
    "F8",
    "R1",
-   "R7"
+   "R7",
+   "R8"
   ]
  },
  "cifras_citadas": {
