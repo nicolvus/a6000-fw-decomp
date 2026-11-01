@@ -15,7 +15,7 @@ Al terminar: informe → PENDIENTES → `docs/STATE.md` (si cambió una conclusi
 Después de editar cualquier `.md` indexado: corre `knowledge-maintenance`.
 Antes de reutilizar un hallazgo: corre `contradiction-audit` (puede estar corregido/superado).
 
-Commits: al terminar cada fase (S54 en adelante) haz SIEMPRE commit local de los cambios propios (Conventional Commits; excluye logs de sesión REA). El README principal solo se toca si cambia el estado global (tabla «Estado técnico actual» o «Último cierre»; nunca un párrafo por sesión Sxx) y haz `git push` a `origin` (GitHub personal nicolvus/a6000-fw-decomp, rama `main`) tras el commit (orden permanente del usuario, 2026-10-20).
+Commits: al terminar cada fase (S54 en adelante) haz SIEMPRE commit local de los cambios propios (Conventional Commits; excluye logs de sesión REA). El README es mínimo y no se toca por sesión; el estado global (tabla «Estado técnico actual» y «Último cierre») vive en `wiki/14-Estado-actual.md` y haz `git push` a `origin` (GitHub personal nicolvus/a6000-fw-decomp, rama `main`) tras el commit (orden permanente del usuario, 2026-10-20).
 
 Restricciones del proyecto: sin firmware ejecutado, sin cámara, sin flasheo salvo autorización expresa
 del usuario para ese caso concreto; `git push` solo según la regla de commits. Detalle completo en `docs/STATE.md`.

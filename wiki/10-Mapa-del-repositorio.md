@@ -2,6 +2,9 @@
 
 | Ruta | Contenido |
 |---|---|
+| `wiki/` | Fuente de esta wiki (un workflow la publica en cada cambio) |
+| `site/` | Tablero de GitHub Pages (`scripts/build_pages_status.py`) |
+| `projects/electronic-shutter/` | Subproyecto del obturador electrónico |
 | `scripts/replicar/` | Genera los núcleos de Darwin parcheados a partir del firmware oficial |
 | `scripts/e25_05/` | Construcción y verificación de los paquetes 3.23/3.24 |
 | `scripts/camera_*.py` | Control de cámara por telnet/ADB y capa 2 |
@@ -27,3 +30,28 @@ python3 scripts/knowledge/search.py text "concepto"  # buscar sin releer el repo
 - REA (MCP) y Ghidra histórico (`silent-liro.gpr`, solo lectura). `av-cam.bin` tarda ≈ 8 min en frío: reutiliza una sola sesión (`docs/agent/bootstrap-desde-cero.md` §4).
 - Por dónde empezar: `knowledge/CURRENT.md` → `docs/STATE.md` → `docs/PENDIENTES.md`.
 - Tablero de progreso: <https://nicolvus.github.io/a6000-fw-decomp/progress/>.
+
+## Navegación
+
+| Necesito… | Voy a… |
+|---|---|
+| Contexto mínimo para retomar | [knowledge/CURRENT.md](https://github.com/nicolvus/a6000-fw-decomp/blob/main/knowledge/CURRENT.md) |
+| Conclusiones y límites vigentes | [docs/STATE.md](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/STATE.md) |
+| Qué falta (única lista) | [docs/PENDIENTES.md](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/PENDIENTES.md) |
+| Incidente 3.25 y recuperación | [docs/capture/e26-recovery.md](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-recovery.md) |
+| Informes por subsistema | [docs/INDEX.md](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/INDEX.md) |
+| Registro de pruebas en cámara | [docs/capture/registro-pruebas-camara.md](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/registro-pruebas-camara.md) |
+| Historial cronológico | [knowledge/PROGRESS.md](https://github.com/nicolvus/a6000-fw-decomp/blob/main/knowledge/PROGRESS.md) |
+| Tablero de progreso | <https://nicolvus.github.io/a6000-fw-decomp/progress/> |
+| Uso por agentes | [docs/agent/README.md](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/agent/README.md), [AGENTS.md](https://github.com/nicolvus/a6000-fw-decomp/blob/main/AGENTS.md), [CLAUDE.md](https://github.com/nicolvus/a6000-fw-decomp/blob/main/CLAUDE.md) |
+
+
+## Seguridad y contribución
+
+- El código del repositorio no sube firmware de Sony, `*.bin`/`*.elf`, RAW ni datos personales (el número de serie, el
+  correo personal y `libmprctrl.so` se borraron del historial el 31-10-2026; ver R7 en PENDIENTES). Los dos paquetes `.dat`
+  listos para flashear se publican aparte, como [GitHub Release](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24)
+  (no en el árbol de git), con su nota de copyright. Commits convencionales.
+- Toda prueba en cámara lleva backup NVRAM previo y se anota en el registro; toda tarea actualiza [PENDIENTES](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/PENDIENTES.md) en el mismo commit.
+
+Cómo contribuir: [CONTRIBUTING.md](https://github.com/nicolvus/a6000-fw-decomp/blob/main/CONTRIBUTING.md).
