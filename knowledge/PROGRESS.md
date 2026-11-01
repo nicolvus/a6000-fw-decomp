@@ -3419,3 +3419,25 @@ README, CURRENT (≤150 líneas, tabla E26) y cabecera de STATE reescritos; vers
 - **Esquema (DATOS):** `pdftotext -layout` (el `.txt` versionado) pierde por completo la hoja JTAG/eFuse (pág. 26) y el neto `XRESET_CR` (pág. 24); `pdftotext` sin `-layout` + render de página (`pdftoppm`) sí los recupera. Bolas: TDI=G25/TCK=H25/TMS=F26 (atadas a VDD1), TDO=F25/RTCK=G26, NTRST=H26 (neto `XRESET_CR`); `FUSE_EN`=T12 atado a VDD2, `FUSE_CLK`=R12 sin red; SWCLK=W25/SWDIO=W26 sin atar. `XRESET_CR` = también la entrada `XRESET` del propio IC6000 (bola K6, hoja 1/7, vía `R6000` XX).
 - **GPIO:** cobertura exhaustiva (54 páginas): solo existen `GPIO_0..16`/`GPIO_S_0..16` (puerto 0) y `GPIO_SB_0..6` (puerto 1); ningún nombre para el puerto 14. Confirma el límite de `E26-R41-ICE-GPIO`.
 - **Entregables:** `docs/capture/e26-r42-busqueda-externa-y-esquema-jtag.md`, `tests/test_e26_r42_esquema_jtag_efuse.py` (3); pendiente nuevo `E26-R42-EXTERNO` (cerrado). No cambia ninguna vía de recuperación.
+
+## E26-R43 — cierre estático de CL1000/BOOT_MAIN (bit0): sin acceso externo (31-10-2026)
+
+Petición del usuario: verificar si la clave de `nflasha0` es realmente imprescindible o hay alternativa, y cerrar de
+forma estática si forzar `CL1000` a masa es viable, revisando también el código GPL de Sony.
+
+- **GPL (FUENTE SONY):** `regs-misc.h` de `mach-cxd90014` y `mach-cxd4132` solo nombra el bit 1 (`BOOT_SERIAL_IN`/`BM1`);
+  el bit 0 (`BOOT_MAIN`) no tiene definición ni polaridad en ningún archivo del árbol GPL. No hay alternativa en
+  software: sigue siendo un strap de hardware puro.
+- **Esquema (ESQUEMA, vectorial — `pdftotext -bbox` + `pdftocairo -svg`, sin rasterizar ni OCR):** trazado exhaustivo de
+  la hoja CLK BOOT (página 24): `CL1000`/`BOOT_MAIN` (P7) termina en el punto de prueba sin ningún salto hacia la
+  columna de exportación global — **no hay atajo por el conector Multi externo (CN4001)**. Sigue siendo intervención
+  física interna; polaridad no determinable sin hardware (igual que R31 §3/R32 §5, sin cambios).
+- **Efecto lateral (corrección):** al trazar la misma hoja se confirmó que `BOOT_SERIAL_IN` (H21, bit1) sí exporta, y
+  llega al **pin 10** de CN4001 (etiqueta de conector `AD_JACK_IN`), no al pin 9 como daban por hecho R11/R19/R20/R29
+  (agrupaban por fila de texto, que en esta hoja no coincide en altura con el trazo real — mismo problema que motivó
+  el pixel-trace propio de R29 para CN4906, nunca aplicado a CN4001 hasta ahora). El pin 9 solo lleva
+  `DEBUG_UART0_RXD`, señal de consola independiente.
+- **Entregables:** `docs/capture/e26-r43-cl1000-sin-acceso-externo.md`, `analysis/e26-recovery/r43_cl1000_cn4001_trace.py`,
+  `tests/test_e26_r43_cl1000_cn4001.py` (3, en verde). Pendientes: `E26-R43-CL1000-ACCESO` (cerrado), nuevo
+  `E26-R43-PIN10-CONTINUIDAD` (físico). No cambia el objetivo de recuperación ni abre vía nueva: confirma que lo que
+  falta sigue siendo físico.

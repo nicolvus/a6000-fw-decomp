@@ -41,6 +41,7 @@ Versiones íntegras anteriores (nada se borró): [CURRENT-historial-2026-10-31](
 | R40 | JTAG/SWD del BIONZ: ningún cargador previo a Linux toca el DAP CoreSight (0xf2710000); `defconfig` `ice_*` de Sony arrancan bajo depurador; tras −302 la CPU no se apaga (bucle de LED sin `wfi`, ventana indefinida). No añade vía nueva sobre R5/R6/R29: falta población de R4911/R4912 y el eFuse de seguridad, no legibles estáticamente | [R40](../docs/capture/e26-r40-jtag-swd-bionz.md) |
 | R41 | Caminos estáticos restantes: `c01f379a` = consola serie de Loader3/Loader2 (`beast`, `ldump`), solo lectura y muda con `Backup[0x510015]=0` (corrige R13/R37 §4/R40 §6); espera `CFG:Wait ICE` por GPIO 14.17 antes del −302 (bola no determinable). La consola usa la UART0 a 115 200 8N1 y su RX no llega al Multi (`R4002` XX). Ninguna vía nueva sin acceso físico | [R41](../docs/capture/e26-r41-caminos-estaticos-restantes.md) |
 | R42 | Búsqueda en GitHub (sin hallazgos nuevos aplicables al CXD90014) y lectura directa del esquema (no el `.txt` OCR, que pierde la hoja): bolas de JTAG/eFuse/SWD, `FUSE_EN` atado a VDD, `NTRST` = neto `XRESET_CR` = entrada `XRESET` del propio chip; cobertura de GPIO verificada sobre el manual completo | [R42](../docs/capture/e26-r42-busqueda-externa-y-esquema-jtag.md) |
+| R43 | Cierre estático de `CL1000`/`BOOT_MAIN` (bit0): el GPL de Sony no define su polaridad (solo nombra el bit1); trazado vectorial (`pdftotext -bbox`+`pdftocairo -svg`, sin OCR) de la hoja CLK BOOT muestra que `CL1000` no tiene salida hacia el conector Multi — sin atajo externo, sigue siendo físico interno. Efecto lateral: `BOOT_SERIAL_IN` (bit1) llega al pin **10** de CN4001, no al 9 (corrige R11/R19/R20/R29) | [R43](../docs/capture/e26-r43-cl1000-sin-acceso-externo.md) |
 
 **Conclusión operativa:** la vía serie del BootROM existe y se abre en cada arranque, pero exige la clave de `nflasha0`, que nunca se
 volcó; todo lo restante es físico (`E26-FISICO-UPDATERMODE`, `E26-FISICO-BOOT`, `E26-R33-BLOQUE0`) y requiere autorización expresa. La
@@ -65,6 +66,7 @@ Trazabilidad completa: [CORRECTIONS](../docs/CORRECTIONS.md) y [STATE § Conclus
 
 - E26: R41 corrige R13/R37 §4/R40 §6 (consola serie en el bucle de error); R13 corrige R12 (el LED es de Loader3); R21 corrige los baudios de R8/R9/R11; R29 corrige el pinout de R11; R32 corrige «bit 0 = 0 en uso
   normal» (R20/R23); R33 corrige R23 §1; R34 corrige R23 §2; R11 corrige eSRAM 16 MiB → 1 MiB y R9 el CRC «0x07» de R8.
+  R43 corrige R11/R19/R20/R29: `BOOT_SERIAL_IN` llega al pin 10 de CN4001, no al 9.
 - S401 negaba el manejador LIRO `0x40e3` en la A7S: sí existe (S402). `0x90b248` es RecordImage, no RecordStill.
 - Destinos BL `0x7484dc`/`0x755af8` (S382) y MOVW/MOVT de `0x40193` (S384) eran falsos. Sesgo `+0x58` de S303rev1/S304/S305 corregido.
 - Carril B: S325 (posición→columna), S329 (bases T2/T3), S331 (`obj+0x2b4` = flag de log), `0x43fef404` = ids de `Camera::Lens::ODL`.
