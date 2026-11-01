@@ -17,6 +17,7 @@ El 3.22 **no** es requisito: era un paquete intermedio del autor (solo bobinas a
 - **Sin recuperación independiente.** Darwin también controla la energía; un Darwin o BIONZ que no arranca no tiene vuelta atrás demostrada por USB.
 - **El 3.24 nunca se instaló en una cámara real.** Solo funciona si la cámara conserva acceso al actualizador y está en 3.23.
 - **Lo verificado offline no garantiza el arranque.** El 3.25 pasó todas las comprobaciones offline y aun así bloqueó la cámara del autor.
+  El 3.25c añade las comprobaciones que habrían detectado ese fallo (formato del descompresor y emulación del cargador real), pero sigue sin probarse en una cámara.
 - **Escenarios sin medir con el 3.23:** operación 5 de Darwin (P40/P41=3) y P4B/P4C siguen activos; su efecto físico no se midió. Flash, vídeo y Live View con los parches activos tampoco.
 - El actualizador solo acepta versiones **estrictamente mayores** que la instalada: no se puede «bajar» de versión.
 

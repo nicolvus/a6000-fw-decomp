@@ -7,19 +7,22 @@
 
 Ingeniería inversa del firmware 3.21 de la Sony A6000 (ILCE-6000: BIONZ + microcontrolador Darwin) para disparar con
 obturador electrónico. **Hito:** con el firmware modificado **3.23** (parche de 2 bytes sobre Darwin) la cámara real disparó en
-silencio y sin error. **Después**, el firmware integrado **3.25** dejó la cámara sin arrancar; hoy el proyecto investiga su
-recuperación, solo con análisis offline.
+silencio y sin error. **Después**, el firmware integrado **3.25** dejó la cámara sin arrancar por un error de formato en la partición
+`nflasha3`, ya identificado y corregido en el **3.25c**. La recuperación de esa cámara se sigue estudiando offline.
 
-> **⚠️ No instales el 3.25.** Tras instalarlo, la cámara del autor no arranca (LED 3 lentos + 2 rápidos). Instalar cualquier firmware
-> modificado puede dejar la cámara inservible y **no hay recuperación independiente demostrada**. Lee [Estado actual y límites](https://github.com/nicolvus/a6000-fw-decomp/wiki/14-Estado-actual).
+> **⚠️ 3.25c: experimental.** El [3.25c](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.25c-experimental) corrige los errores
+> que bloquearon el 3.25 (30/30 comprobaciones y emulación del cargador real sin fallos) y **debería** arrancar, pero **nunca se ha instalado
+> en una cámara**. El 3.25 original no se publica. Instalar cualquier firmware modificado puede dejar la cámara inservible y **no hay
+> recuperación independiente demostrada**. Lee [Estado actual y límites](https://github.com/nicolvus/a6000-fw-decomp/wiki/14-Estado-actual).
 
 ## Documentación
 
 Todo el detalle vive en la **[Wiki CFW Sony a6000](https://github.com/nicolvus/a6000-fw-decomp/wiki/Home)** (fuente en [`wiki/`](wiki/Home.md)): requisitos y riesgos, cómo replicarlo de principio a fin, cómo funciona el parche,
 resultados, estado actual y límites, herramientas, glosario y mapa del repositorio. Los paquetes ya construidos están en el
-[release `fw-3.23-3.24`](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24). [Tablero de progreso](https://nicolvus.github.io/a6000-fw-decomp/progress/) (estado actual, cobertura y pruebas) · [portada del sitio](https://nicolvus.github.io/a6000-fw-decomp/).
+[release `fw-3.23-3.24`](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24) y, como *pre-release* experimental, en
+[`fw-3.25c-experimental`](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.25c-experimental) (3.25c y 3.26 de vuelta atrás). [Tablero de progreso](https://nicolvus.github.io/a6000-fw-decomp/progress/) (estado actual, cobertura y pruebas) · [portada del sitio](https://nicolvus.github.io/a6000-fw-decomp/).
 
-**Estado:** el firmware 3.23 (T040) hace disparar la cámara en silencio y sin error; el 3.25 (E26) dejó la cámara del autor sin arrancar y hoy se estudia su recuperación solo offline.
+**Estado:** el firmware 3.23 (T040) hace disparar la cámara en silencio y sin error; el 3.25 (E26) dejó la cámara del autor sin arrancar; su causa está corregida en el 3.25c (experimental, sin probar en cámara, [R45](docs/capture/e26-r45-firmware-325c-experimental.md)) y la recuperación de esa cámara se estudia solo offline.
 Detalle en [Estado actual y límites](https://github.com/nicolvus/a6000-fw-decomp/wiki/14-Estado-actual). Contribuir: [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Copyright y uso

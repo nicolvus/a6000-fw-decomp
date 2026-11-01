@@ -25,5 +25,6 @@
 | 3.22 | Darwin «tipo 0» (bobinas apagadas); paquete intermedio del autor | Instalada (T024); arranca. Efecto deducido del código |
 | 3.23 | 3.22 + B1a | Instalada (T040); dispara en silencio y sin error |
 | 3.24 | Darwin oficial con número 3.24 | Preparada, no instalada |
-| 3.25 | Integrado con selector EFCS/Electronic | **La cámara no arranca** |
-| 3.26 | Recuperación con contenido oficial 3.21 | Preparada y verificada offline; solo sirve si se vuelve a entrar al actualizador |
+| 3.25 | Integrado con selector EFCS/Electronic | **La cámara no arranca** (no publicado) |
+| 3.25c | 3.25 con `nflasha3` en el formato de Sony | Publicado como experimental; verificado offline (30/30, emulación sin fallos); **nunca instalado** |
+| 3.26 | Recuperación con contenido oficial 3.21 | Publicada con el 3.25c para volver atrás; verificada offline, nunca instalada |

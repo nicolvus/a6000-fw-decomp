@@ -4,7 +4,9 @@ Guía para replicar, de principio a fin, el obturador **completamente silencioso
 ingeniería inversa del firmware 3.21: el microcontrolador Darwin deja de mover las cortinillas mecánicas y el sensor controla la exposición.
 
 > ⚠️ **Instalar firmware modificado puede inutilizar la cámara.** No hay recuperación independiente demostrada: un firmware posterior
-> (3.25, no publicado) dejó la cámara del autor sin arrancar. Lee [Requisitos y riesgos](https://github.com/nicolvus/a6000-fw-decomp/wiki/1-Requisitos-y-riesgos) antes de empezar.
+> (3.25, no publicado) dejó la cámara del autor sin arrancar. Su versión corregida, el
+> [3.25c](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.25c-experimental), debería funcionar pero es **experimental y
+> nunca se ha instalado** ([página 7](https://github.com/nicolvus/a6000-fw-decomp/wiki/7-Volver-atras-y-recuperacion)). Lee [Requisitos y riesgos](https://github.com/nicolvus/a6000-fw-decomp/wiki/1-Requisitos-y-riesgos) antes de empezar.
 
 ## Ruta de réplica
 

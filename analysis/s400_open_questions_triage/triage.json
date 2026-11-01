@@ -15127,13 +15127,13 @@
  },
  {
   "fuente": "docs/capture/e26-r36-causa-fallo-325.md:75",
-  "fuente_actual": "docs/capture/e26-r36-causa-fallo-325.md:75",
   "destino": "docs/capture/e26-r45-firmware-325c-experimental.md",
   "tipo": "CORRECTS",
   "status_grafo": "CONFLICTO_PENDIENTE",
   "veredicto": "VIGENTE",
   "motivo": "Pendiente de revisión manual de fuente, destino y evidencia.",
   "cita": "## 7. Corrección del constructor",
-  "contexto": "`tpzl.py` y `fwtool` descomprimen por software: concatenan registros sin mirar su tamaño ni la alineación, así que el 3.25 «se descomprimía igual». El constructor verificaba su salida con su propio decodificador (comprobación circular). Ningún verificador del proyecto modelaba la ruta Loader3 → ARM7 → LDEC.\n\n## 7. Corrección del constructor\n\n- `scripts/e25_27/tpzl.py`: `ALIGN = 512`, bloques recompuestos como 16 registros almacenados de 4096 B (la forma de Sony), relleno `0x00`, y `hardware_violations()` (residuo, 16 × 4096, cota de Sony). `rebuild` se niega a devolver una partición con violaciones. **[R45: los 16 registros almacenados daban bloques de 129 sectores, por encima de los 126 de Sony en `nflasha3`; ahora se conservan los registros de Sony de las páginas no tocadas (`_splice`, máx. 126) ([R45](e26-r45-firmware-325c-experimental.md) §2).]**"
+  "contexto": "`tpzl.py` y `fwtool` descomprimen por software: concatenan registros sin mirar su tamaño ni la alineación, así que el 3.25 «se descomprimía igual». El constructor verificaba su salida con su propio decodificador (comprobación circular). Ningún verificador del proyecto modelaba la ruta Loader3 → ARM7 → LDEC.\n\n## 7. Corrección del constructor\n\n- `scripts/e25_27/tpzl.py`: `ALIGN = 512`, bloques recompuestos como 16 registros almacenados de 4096 B (la forma de Sony), relleno `0x00`, y `hardware_violations()` (residuo, 16 × 4096, cota de Sony). `rebuild` se niega a devolver una partición con violaciones. **[R45: los 16 registros almacenados daban bloques de 129 sectores, por encima de los 126 de Sony en `nflasha3`; ahora se conservan los registros de Sony de las páginas no tocadas (`_splice`, máx. 126) ([R45](e26-r45-firmware-325c-experimental.md) §2).]**",
+  "fuente_actual": "docs/capture/e26-r36-causa-fallo-325.md:75"
  }
 ]
