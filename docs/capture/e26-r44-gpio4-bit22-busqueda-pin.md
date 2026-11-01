@@ -72,4 +72,34 @@ confirmara, sería una vía de recuperación **sin necesidad de ningún secreto*
 - No se tocó la cámara ni se forzó ninguna bola.
 - La hipótesis de numeración continua `GPIO_S`+`GPIO_SB` = bits 0–23 de un solo registro es una suposición razonable por
   la forma de los nombres, no una lectura del esquema ni del GPL.
-- `E26-R44-AVCAM-GPIO4` queda abierto y sin empezar; es trabajo binario, no de esquema.
+
+## 6. `E26-R44-AVCAM-GPIO4` (sesión REA de `av-cam.bin`, 31-10-2026/01-11-2026) — rastreado, sin cierre
+
+Sesión REA abierta sobre `av-cam.bin` (fw 3.21). Rastreo de **todos** los llamadores de la función genérica de lectura
+de GPIO por banco, siguiendo la cadena completa (no solo el límite ya anotado en R31 §1):
+
+- `FUN_4398f990(bank,bit)` (`return *(base+bank*0x100) >> bit & 1`) es la primitiva de más bajo nivel; `base =
+  0xf2910010` (= `GPIO_RDATA`, confirmado). **Un solo llamador en todo el binario:** `FUN_43b5e2bc`.
+- `FUN_43b5e2bc(bank,bit)` acota `bank` a **0–17** (`if (0x11 < bank) return 0;`) y elige entre `RDATA`
+  (`0xf2910010+bank*0x100`) o `WDATA` (`0xf2910040+bank*0x100`) según un modo. **`bank=4` está dentro del rango
+  permitido** (no lo descarta el límite): `bank=4` da exactamente `0xf2910410`, el registro que usa el BootROM.
+- **26 llamadores** de `FUN_43b5e2bc` en todo el binario. Ninguno pasa `bank`/`bit` como constantes inmediatas: todos
+  los resuelven en tiempo de ejecución contra el sistema de propiedades interno de Sony (identificadores opacos tipo
+  `0x00f902a9`, fuera del rango de direcciones del binario — no son punteros, son IDs de una base de datos de
+  propiedades, **el mismo mecanismo sin resolver de `E1`/`ModelScalarPb`**, `NO_VERIFICADO` desde antes de E26).
+- Se identificaron por nombre **tres** de los 26 (tabla de registro de propiedades en `0x43fd9258`–`0x43fd9270`,
+  triples `{nombre, nombre, manejador}`): `eosw_port`/`[EO_SW]` (`FUN_43592b48`), `rvport`/`[PanelReverse]`
+  (`FUN_43592b98`), `esport`/`[EyeSens]` (`FUN_43592d20`). **Ninguno tiene relación con arranque/servicio**: son
+  funciones normales de cámara (interruptor del visor, inversión de panel, sensor de proximidad del ocular).
+- Los 23 llamadores restantes usan el mismo patrón de variable indirecta (sin nombre legible sin resolver cada uno);
+  no se examinaron todos.
+
+**Conclusión: no se identificó el pin de `GPIO4.22`.** La vía de `av-cam.bin` queda **bloqueada por el mismo límite que
+`E1`**: los valores reales de `bank`/`bit` de cada propiedad no están en este binario como datos estáticos — se
+resuelven contra una base de datos de propiedades cuyo contenido no se ha localizado. Resolver esto exigiría primero
+cerrar `E1` (origen del local 4/2 a `ModelScalarPb`/`ModelPbCap`, ya `NO_VERIFICADO` en el proyecto desde antes de
+E26) o encontrar la tabla de valores por defecto de esas propiedades en otro binario/partición. **No se sigue más en
+este informe**: el límite es real y compartido con un pendiente ya existente, no un abandono arbitrario.
+
+Sesión REA cerrada limpiamente (`q.py --shutdown`); `exp2-session-log.jsonl` restaurado con `git checkout` antes de
+commitear, como indica la nota del proyecto.

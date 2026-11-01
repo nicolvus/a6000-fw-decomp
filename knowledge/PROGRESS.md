@@ -3463,3 +3463,20 @@ Petición del usuario, continuando R43: ¿hay alternativa a la clave, o se puede
   PENDIENTES: cierra `E26-R44-CLAVE-FUERZA-BRUTA` y `E26-R44-GPIO4-BIT22-BYPASS` (bypass ya conocido, impacto
   precisado); abre `E26-R44-GPIO4-PIN` (sin cierre) y `E26-R44-AVCAM-GPIO4` (binario, rastrear llamadores con banco 4
   de la lectura genérica de GPIO en `av-cam.bin`, no iniciado — requiere sesión REA ~8 min).
+
+## E26-R44 §6 — sesión REA de av-cam.bin: pin de GPIO4.22, bloqueado por el límite de E1 (01-11-2026)
+
+Petición del usuario: iniciar la sesión REA de `av-cam.bin` para `E26-R44-AVCAM-GPIO4`.
+
+- Primitiva de lectura de GPIO por banco (`FUN_4398f990`, `base=0xf2910010+banco*0x100`): **un solo llamador** en todo
+  el binario, `FUN_43b5e2bc`, que acota el banco a 0–17 (banco 4 permitido, da exactamente `0xf2910410`) y tiene
+  **26 llamadores**. Ninguno pasa banco/bit como constante: todos resuelven contra la base de datos de propiedades de
+  Sony mediante IDs opacos (`0x00f902a9`, fuera del rango de direcciones del binario) — **el mismo mecanismo sin
+  resolver de `E1`/`ModelScalarPb`**.
+- 3/26 llamadores identificados por nombre vía tabla de registro de propiedades (`eosw_port`/`[EO_SW]`,
+  `rvport`/`[PanelReverse]`, `esport`/`[EyeSens]`): los tres son funciones normales de cámara, ninguno de arranque.
+- **No se identificó el pin de `GPIO4.22`.** Bloqueado por el mismo límite que `E1`: los valores reales de banco/bit
+  no están en `av-cam.bin` como datos estáticos — dependen de una base de datos de propiedades no localizada.
+- Sesión REA cerrada limpiamente; `exp2-session-log.jsonl` restaurado con `git checkout`.
+- **Entregables:** `docs/capture/e26-r44-gpio4-bit22-busqueda-pin.md` §6. PENDIENTES: `E26-R44-AVCAM-GPIO4` pasa de
+  ABIERTO a **BLOQUEADO** (mismo origen que `E1`); cruzado en la fila de `E1`.
