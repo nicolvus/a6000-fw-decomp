@@ -1,5 +1,7 @@
 **Sony A6000 — Silent Shutter**
 
+**🇪🇸 Español** ([inicio](https://github.com/nicolvus/a6000-fw-decomp/wiki/Home))
+
 1. [Requisitos y riesgos](https://github.com/nicolvus/a6000-fw-decomp/wiki/1-Requisitos-y-riesgos)
 2. [Entorno y firmware oficial](https://github.com/nicolvus/a6000-fw-decomp/wiki/2-Entorno-y-firmware-oficial)
 3. [Backup de NVRAM](https://github.com/nicolvus/a6000-fw-decomp/wiki/3-Backup-de-NVRAM)
@@ -9,8 +11,25 @@
 7. [Volver atrás y recuperación](https://github.com/nicolvus/a6000-fw-decomp/wiki/7-Volver-atras-y-recuperacion)
 8. [Cómo funciona el parche](https://github.com/nicolvus/a6000-fw-decomp/wiki/8-Como-funciona-el-parche)
 9. [Resultados y límites](https://github.com/nicolvus/a6000-fw-decomp/wiki/9-Resultados-y-limites)
+10. [Mapa del repositorio e investigación](https://github.com/nicolvus/a6000-fw-decomp/wiki/10-Mapa-del-repositorio)
+11. [Copyright y uso](https://github.com/nicolvus/a6000-fw-decomp/wiki/11-Copyright-y-uso)
 12. [Herramientas](https://github.com/nicolvus/a6000-fw-decomp/wiki/12-Herramientas)
 13. [Glosario](https://github.com/nicolvus/a6000-fw-decomp/wiki/13-Glosario)
 14. [Estado actual y límites](https://github.com/nicolvus/a6000-fw-decomp/wiki/14-Estado-actual)
-10. [Mapa del repositorio e investigación](https://github.com/nicolvus/a6000-fw-decomp/wiki/10-Mapa-del-repositorio)
-11. [Copyright y uso](https://github.com/nicolvus/a6000-fw-decomp/wiki/11-Copyright-y-uso)
+
+**🇬🇧 English** ([home](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-Home))
+
+1. [Requirements and risks](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-1-Requirements-and-risks)
+2. [Environment and official firmware](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-2-Environment-and-official-firmware)
+3. [NVRAM backup](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-3-NVRAM-backup)
+4. [Building the 3.23 and 3.24 packages](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-4-Building-the-packages)
+5. [Installing 3.23](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-5-Installing-3.23)
+6. [Layer 2: uniform exposure](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-6-Layer-2-uniform-exposure)
+7. [Rollback and recovery](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-7-Rollback-and-recovery)
+8. [How the patch works](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-8-How-the-patch-works)
+9. [Results and limits](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-9-Results-and-limits)
+10. [Repository and research map](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-10-Repository-map)
+11. [Copyright and use](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-11-Copyright-and-use)
+12. [Tools](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-12-Tools)
+13. [Glossary](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-13-Glossary)
+14. [Current state and limits](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-14-Current-state)

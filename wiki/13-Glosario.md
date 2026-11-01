@@ -28,6 +28,7 @@
 | **`ShutMode`** | Registro de BIONZ (`0x836d6fb6`) que selecciona el modo de obturador; el parche lo fija a 0 |
 | **`r5`** | Parámetro de exposición del sensor (`0x836d7000`); (4219 − `r5`) × 15,2 µs es la exposición |
 | **Guardián** | Proceso `sh` en la cámara que revierte el parche de RAM si el PC no responde en 25 s |
+| **3.25c** | 3.25 reconstruido con `nflasha3` en el formato exacto de Sony; experimental, nunca instalado |
 
 ## Etiquetas de los informes
 
@@ -35,7 +36,7 @@
 |---|---|
 | **Sxx** | Sesión de análisis estático/offline |
 | **Exx / E25-nn** | Fase de investigación con informe en `docs/capture/` (E25 = desactivación mecánica; E26 = incidente 3.25 y recuperación) |
-| **Rnn / E26-Rnn** | Informes de recuperación de la cámara bloqueada (R36 = causa del fallo del 3.25) |
+| **Rnn / E26-Rnn** | Informes de recuperación de la cámara bloqueada (R36 = causa del fallo del 3.25; R45 = 3.25c) |
 | **Tnnn** | Prueba física en cámara, anotada en `docs/capture/registro-pruebas-camara.md` (T040 = primer disparo silencioso con el 3.23) |
 | **VERIFICADO / PARCIAL / NO_VERIFICADO** | Grado de evidencia de una conclusión |
 | **REA / Ghidra** | Herramientas de ingeniería inversa: REA vía MCP y Ghidra histórico de solo lectura |

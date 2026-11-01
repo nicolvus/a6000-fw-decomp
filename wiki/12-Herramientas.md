@@ -10,6 +10,7 @@ Todas las rutas son relativas a la raíz del repositorio. Activa antes el entorn
 | `references/fwtool/fwtool.py` | Desempaqueta/inspecciona `.dat` y FDAT | `python references/fwtool/fwtool.py unpack -f X.dat -o salida/` |
 | `scripts/replicar/generar_nucleos.py` | Parchea el `darwin_core.bin` oficial (tipo 0 y B1a) y comprueba sus SHA-256 | sin argumentos |
 | `scripts/e25_05/build_packages.py` | Construye y verifica los paquetes 3.23 y 3.24 (69 comprobaciones, ≈ 85 s) | sin argumentos |
+| `scripts/e25_27/build.py` / `verify_325c.py` | Construye el 3.25c y ejecuta sus 30 comprobaciones y la emulación del cargador | `build.py --out DIR --package`, luego `verify_325c.py` |
 | `scripts/recovery/r1_manifest.py` | Inventario y verificación de hashes del respaldo y de los paquetes | `verify` |
 | `scripts/audit/repo_audit.py` | Audita enlaces, rutas citadas, cifras y SHA-256 | sin argumentos |
 | REA / Ghidra | Ingeniería inversa del firmware ([mapa](https://github.com/nicolvus/a6000-fw-decomp/wiki/10-Mapa-del-repositorio)) | `docs/agent/bootstrap-desde-cero.md` §4 |
@@ -25,15 +26,15 @@ Todas las rutas son relativas a la raíz del repositorio. Activa antes el entorn
 
 ## Con la cámara por Wi-Fi (telnet / ADB / HTTP)
 
-Requisitos: [capa 2](https://github.com/nicolvus/a6000-fw-decomp/wiki/6-Capa-2-exposicion-uniforme) (Tweak con telnet y ADB activados, RemoteShutter abierta). Cambia la IP `192.168.1.29` por la de tu cámara
-en los scripts (constante `HOST` o `--host`).
+Requisitos: [capa 2](https://github.com/nicolvus/a6000-fw-decomp/wiki/6-Capa-2-exposicion-uniforme) (Tweak con telnet y ADB activados, RemoteShutter abierta). Indica la IP de tu cámara
+con la variable `A6000_HOST` o `--host` (por defecto `192.168.1.29`).
 
 | Herramienta | Para qué | Uso |
 |---|---|---|
 | `scripts/camera_telnet.py` | Ejecuta comandos en el `telnetd` de la cámara (root, sin login) | `python scripts/camera_telnet.py --host IP 'uname -a'` |
 | `scripts/camera_install_apk.py` | Instala un APK por ADB (puerto 5555) | `python scripts/camera_install_apk.py APK [IP]` |
 | `tools/remote-shutter/` | App RemoteShutter: servidor HTTP en el puerto 8080 (`/shoot`, `/ss`, `/status`, `/info`, `/log`, `/jpg`) | `tools/remote-shutter/build.sh` (JDK 17 y build-tools en `~/.local/android-build`) |
-| `scripts/camera_silent.py` | Parche de RAM de la capa 2 con guardián de 25 s: comprueba, parchea, revierte y verifica | se importa desde los scripts de prueba; edita `HOST` |
+| `scripts/camera_silent.py` | Parche de RAM de la capa 2 con guardián de 25 s: comprueba, parchea, revierte y verifica | se importa desde los scripts de prueba |
 | `scripts/camera_silent_test.py` | Patrón de prueba de T050: guardián, referencias, disparos de 1/4000 a 1/30 y ráfaga de 4 | `python scripts/camera_silent_test.py SALIDA/` (escena fija, sin tocar la cámara) |
 | `scripts/camera_suite.py` | Suite de verificación de imágenes: latencia, EXIF, luminancia, bandas y rearme | `python scripts/camera_suite.py SALIDA/ [--host IP] [--quick]` |
 

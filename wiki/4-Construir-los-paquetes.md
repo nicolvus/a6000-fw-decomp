@@ -29,6 +29,17 @@ Salidas (ignoradas por git, derivan de firmware de Sony):
 El paso 1 solo cambia bytes de `darwin_core.bin` (2–9 bytes, ver [Cómo funciona](https://github.com/nicolvus/a6000-fw-decomp/wiki/8-Como-funciona-el-parche)); `build_packages.py` los recompone en el `firmware.tar`
 oficial, recalcula CRC y suma de Darwin, cifra con `CXD90014` y empaqueta el `.dat`.
 
+## Construir el 3.25c (experimental)
+
+```sh
+python scripts/e25_27/build.py --out analysis/e25-27/artifacts-325c --package   # ≈ 45 s, determinista
+python scripts/e25_27/verify_325c.py                                              # 30 comprobaciones + emulación del cargador
+```
+
+SHA-256 esperado del `.dat`: `d64ad6e3d203dfafae020fc777ae8e9fe4a77c49f1f469cf5b907a1a6a477752`. El verificador necesita como control negativo
+el paquete 3.25 que bloqueó la cámara y el `bootloader.bin` de los volcados del autor; sin ellos solo se comprueba la evidencia versionada
+(`tests/test_e25_27_325c.py`).
+
 ## Inspeccionar lo construido
 
 ```sh

@@ -15,12 +15,12 @@ in the `nflasha3` partition, now identified and fixed in **3.25c**. Recovery of 
 > **⚠️ 3.25c: experimental.** [3.25c](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.25c-experimental) fixes the errors
 > that bricked 3.25 (30/30 checks, and an emulation of the real bootloader with no failures) and **should** boot, but it **has never been
 > installed on a camera**. The original 3.25 is not published. Installing any modified firmware can leave the camera unusable and **there is
-> no proven independent recovery**. Read [Current state and limits](https://github.com/nicolvus/a6000-fw-decomp/wiki/14-Estado-actual).
+> no proven independent recovery**. Read [Current state and limits](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-14-Current-state).
 
 ## Documentation
 
-All the detail lives in the **[Sony a6000 CFW Wiki](https://github.com/nicolvus/a6000-fw-decomp/wiki/Home)** (source in [`wiki/`](wiki/Home.md)): requirements and risks, how to reproduce it end to end, how the patch works,
-results, current state and limits, tools, glossary and repository map. The wiki, reports and code comments are in **Spanish**.
+All the detail lives in the **[Sony a6000 CFW Wiki](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-Home)** (source in [`wiki/`](wiki/en-Home.md)): requirements and risks, how to reproduce it end to end, how the patch works,
+results, current state and limits, tools, glossary and repository map. The wiki is available in English and Spanish; the research reports and code comments are in **Spanish**.
 Prebuilt packages are in the [`fw-3.23-3.24` release](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24) and, as an
 experimental *pre-release*, in [`fw-3.25c-experimental`](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.25c-experimental) (3.25c and a 3.26 to roll back).
 [Progress board](https://nicolvus.github.io/a6000-fw-decomp/progress/) (current state, coverage and tests) · [site home](https://nicolvus.github.io/a6000-fw-decomp/).
@@ -36,13 +36,13 @@ experimental *pre-release*, in [`fw-3.25c-experimental`](https://github.com/nico
 **Status:** firmware 3.23 (T040) makes the camera shoot silently and without errors; 3.25 (E26) left the author's camera unable to boot;
 its cause is fixed in 3.25c (experimental, untested on a camera, [R45](docs/capture/e26-r45-firmware-325c-experimental.md)) and recovery of
 that camera is being studied offline only.
-Details in [Current state and limits](https://github.com/nicolvus/a6000-fw-decomp/wiki/14-Estado-actual). Contributing: [CONTRIBUTING.md](CONTRIBUTING.md).
+Details in [Current state and limits](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-14-Current-state). Contributing: [CONTRIBUTING.en.md](CONTRIBUTING.en.md).
 
 ## Copyright and use
 
 **Copyright.** The two `.dat` files in the [`fw-3.23-3.24` release](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24) are
 Sony's official 3.21 firmware with a minimal, documented binary change to `darwin_core.bin` (2–9 bytes; see
-[How the patch works](https://github.com/nicolvus/a6000-fw-decomp/wiki/8-Como-funciona-el-parche) and [E25-05](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e25-05-preparacion-paquetes-323-324.md)).
+[How the patch works](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-8-How-the-patch-works) and [E25-05](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e25-05-preparacion-paquetes-323-324.md)).
 The ones in the [`fw-3.25c-experimental` release](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.25c-experimental) are the same firmware
 with 22 bytes changed in `darwin_core.bin` and 89 in `av-cam.bin` (3.25c), or unchanged except for the version number (3.26)
 ([R45](docs/capture/e26-r45-firmware-325c-experimental.md)).
@@ -54,7 +54,7 @@ owns), without any Sony source code. This note states the author's position, it 
 removed if Sony asks.
 
 **Use.**
-- Everything is provided "as is", without warranty of any kind; use it at your own risk, it can render the camera unusable (see [Current state and limits](https://github.com/nicolvus/a6000-fw-decomp/wiki/14-Estado-actual)).
+- Everything is provided "as is", without warranty of any kind; use it at your own risk, it can render the camera unusable (see [Current state and limits](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-14-Current-state)).
 - Meant for research, learning and personal use on a camera you own. Do not use it to bypass protections for unlawful purposes or to redistribute Sony firmware on your own.
 - The author's code, scripts, analysis and documentation are released under the [MIT](LICENSE) license. That license does **not** cover Sony's firmware, the release `.dat` files, or the third-party material below.
 

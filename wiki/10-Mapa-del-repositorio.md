@@ -7,6 +7,7 @@
 | `projects/electronic-shutter/` | Subproyecto del obturador electrónico |
 | `scripts/replicar/` | Genera los núcleos de Darwin parcheados a partir del firmware oficial |
 | `scripts/e25_05/` | Construcción y verificación de los paquetes 3.23/3.24 |
+| `scripts/e25_27/` | Construcción y verificación del 3.25c |
 | `scripts/camera_*.py` | Control de cámara por telnet/ADB y capa 2 |
 | `scripts/senser_backup_dump.py` | Backup de NVRAM (solo lectura) |
 | `tools/remote-shutter/` | App RemoteShutter |
@@ -49,9 +50,9 @@ python3 scripts/knowledge/search.py text "concepto"  # buscar sin releer el repo
 ## Seguridad y contribución
 
 - El código del repositorio no sube firmware de Sony, `*.bin`/`*.elf`, RAW ni datos personales (el número de serie, el
-  correo personal y `libmprctrl.so` se borraron del historial el 31-10-2026; ver R7 en PENDIENTES). Los dos paquetes `.dat`
-  listos para flashear se publican aparte, como [GitHub Release](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24)
-  (no en el árbol de git), con su nota de copyright. Commits convencionales.
+  correo personal y `libmprctrl.so` se borraron del historial el 31-10-2026; ver R7 en PENDIENTES). Los paquetes `.dat`
+  listos para flashear se publican aparte, como GitHub Releases ([`fw-3.23-3.24`](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24),
+  [`fw-3.25c-experimental`](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.25c-experimental); no en el árbol de git), con su nota de copyright. Commits convencionales.
 - Toda prueba en cámara lleva backup NVRAM previo y se anota en el registro; toda tarea actualiza [PENDIENTES](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/PENDIENTES.md) en el mismo commit.
 
 Cómo contribuir: [CONTRIBUTING.md](https://github.com/nicolvus/a6000-fw-decomp/blob/main/CONTRIBUTING.md).

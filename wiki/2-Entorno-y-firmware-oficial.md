@@ -29,5 +29,5 @@ Si el hash del `.dmg` no coincide (Sony cambió o retiró el archivo), **detente
 ## Si falla
 
 - `fwtool` falla en la sección WBI anidada → procedimiento alterno en `docs/firmware-analysis.md`.
-- No hay `requirements.txt`: si un script pide un paquete, `.venv/bin/pip install <paquete>`.
+- Si un script pide un paquete que falta: `.venv/bin/pip install -r requirements.txt` (o `.venv/bin/pip install <paquete>`).
 - Dependencias del bootstrap: `git curl 7z node npm unzip tar python3`.
