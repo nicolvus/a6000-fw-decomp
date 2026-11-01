@@ -1,4 +1,4 @@
-# Sony A6000 — Silent Shutter
+# Wiki CFW Sony a6000 — Silent Shutter
 
 Guía para replicar, de principio a fin, el obturador **completamente silencioso** de la Sony A6000 (ILCE-6000) obtenido por
 ingeniería inversa del firmware 3.21: el microcontrolador Darwin deja de mover las cortinillas mecánicas y el sensor controla la exposición.

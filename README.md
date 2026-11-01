@@ -30,7 +30,7 @@ cargador bloquea el DAP CoreSight y el chip trae `defconfig` de fábrica para ar
 
 ## Wiki: replicarlo de principio a fin
 
-La guía paso a paso vive en la **[wiki](https://github.com/nicolvus/a6000-fw-decomp/wiki)** (fuente versionada en [`wiki/`](wiki/Home.md)):
+La guía paso a paso vive en la **[Wiki CFW Sony a6000](https://github.com/nicolvus/a6000-fw-decomp/wiki)** (fuente versionada en [`wiki/`](wiki/Home.md)):
 
 | Paso | Página |
 |---|---|

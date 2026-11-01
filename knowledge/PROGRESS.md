@@ -3503,4 +3503,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - Petición del usuario: quitar el copyright del release (queda solo en el README), reducir el README y crear una wiki para replicar todo de principio a fin.
 - `wiki/` (11 páginas) y `scripts/replicar/generar_nucleos.py`: reconstruir 3.23/3.24 desde el firmware oficial reproduce exactamente los SHA-256 del release (`4c21353d…`, `e1345aff…`; 69/69 comprobaciones).
 - README anterior en `docs/history/README-historial-2026-11-01.md`; `LICENSE` MIT solo para código y documentación propios.
-- Pendiente: publicar `wiki/` en la wiki de GitHub (hay que crear la primera página desde la web antes de poder hacer push).
+- Publicada en la wiki de GitHub («Wiki CFW Sony a6000»); auditoría sin incoherencias.
