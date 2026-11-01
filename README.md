@@ -125,13 +125,32 @@ comprobaciones offline no lo vieron porque descomprimían por software, sin mode
 ## Instalación del 3.23 (histórica; desaconsejada)
 
 Se documenta lo que se hizo, no se recomienda repetirlo. Requisitos: A6000 con **3.21 o 3.22**, batería cargada, USB y
-[`pmca-console`](https://github.com/ma1co/Sony-PMCA-RE). Probado solo desde la 3.22 (T040). El repositorio **no incluye** firmware de
-Sony ni paquetes: se generan desde tu propio firmware ([E25-05](docs/capture/e25-05-preparacion-paquetes-323-324.md)).
+[`pmca-console`](https://github.com/ma1co/Sony-PMCA-RE). Probado solo desde la 3.22 (T040). El código del repositorio **no
+genera** firmware de Sony automáticamente: los dos paquetes ya construidos (3.23 y su recuperación 3.24) están publicados
+como [Release `fw-3.23-3.24`](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24); léase la nota de
+copyright antes de usarlos ([E25-05](docs/capture/e25-05-preparacion-paquetes-323-324.md)).
 
 1. Backup de NVRAM en modo servicio (`scripts/senser_backup_dump.py`, guarda fuera del repositorio).
-2. Verificar el SHA-256 del 3.23 (`4c21353d…`) y del 3.24 (`e1345aff…`) con `scripts/recovery/r1_manifest.py verify`.
+2. Descargar ambos `.dat` del [release](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24) y verificar
+   el SHA-256 del 3.23 (`4c21353d…`) y del 3.24 (`e1345aff…`) con `sha256sum -c SHA256SUMS.txt` o `scripts/recovery/r1_manifest.py verify`.
 3. Medir el guard sin flashear (`fdat_guard_probe.py`): debe rechazar la versión instalada y aceptar 3.23 y 3.24.
 4. Flashear con `pmca-console firmware`; `pmca info` debe dar **3.23**. Registrar la prueba en el [registro](docs/capture/registro-pruebas-camara.md).
+5. Para volver al Darwin oficial, flashear el `.dat` de 3.24 del mismo release (solo verificado offline; nunca instalado en
+   una cámara real — ver advertencia en el release).
+
+## Recrear lo mostrado en el hilo de r/a6000
+
+Lo publicado en Reddit es la combinación de las dos capas de la sección [Cómo replicar el obturador electrónico completo](#cómo-replicar-el-obturador-electrónico-completo):
+
+1. Instalar el 3.23 del [release](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24) siguiendo los pasos
+   de arriba (obturador mecánico completamente inactivo).
+2. Con la cámara en 3.23 y accesible por telnet, ejecutar `scripts/camera_silent.py` para la capa 2 (exposición uniforme por
+   filas vía `ShutMode 0` y `r5` en RAM; se revierte sola a los 25 s o al reiniciar). Detalle del cálculo en
+   [E25-11 §10](docs/capture/e25-11-r5-bionz-analisis.md).
+3. Disparar por telnet/adb (RemoteShutter) y repetir el patrón de T050 (ráfagas y disparos sueltos, siempre con el guardián
+   de reversión activo).
+
+No requiere el 3.25 (nunca estable) ni tocar `nflasha3`.
 
 ## Navegación
 
@@ -169,8 +188,20 @@ python3 scripts/audit/repo_audit.py                   # enlaces, rutas citadas, 
 python3 scripts/knowledge/search.py text "concepto"  # buscar sin releer el repositorio
 ```
 
+## Copyright de los binarios publicados
+
+Los dos `.dat` del [release `fw-3.23-3.24`](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24) son el
+firmware oficial de Sony 3.21 con una modificación binaria mínima y documentada en `darwin_core.bin` (2–9 bytes; ver
+[Cómo funciona el parche del 3.23](#cómo-funciona-el-parche-del-323) y [E25-05](docs/capture/e25-05-preparacion-paquetes-323-324.md)).
+Se publican con fines de investigación e interoperabilidad — ingeniería inversa para modificar el comportamiento del
+hardware que el autor posee —, no como redistribución de código fuente de Sony. Sony Corporation conserva todos los
+derechos sobre el firmware original; este repositorio no reclama titularidad sobre él y los retirará si Sony lo solicita.
+Esta nota documenta la postura del autor, no es una garantía legal ni impide una solicitud de retirada.
+
 ## Seguridad y contribución
 
-- No se suben firmware de Sony, `*.bin`/`*.elf`, RAW, paquetes generados ni datos personales (el número de serie, el correo personal y
-  `libmprctrl.so` se borraron del historial el 31-10-2026; ver R7 en PENDIENTES). Commits convencionales.
+- El código del repositorio no sube firmware de Sony, `*.bin`/`*.elf`, RAW ni datos personales (el número de serie, el
+  correo personal y `libmprctrl.so` se borraron del historial el 31-10-2026; ver R7 en PENDIENTES). Los dos paquetes `.dat`
+  listos para flashear se publican aparte, como [GitHub Release](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24)
+  (no en el árbol de git), con su nota de copyright. Commits convencionales.
 - Toda prueba en cámara lleva backup NVRAM previo y se anota en el registro; toda tarea actualiza [PENDIENTES](docs/PENDIENTES.md) en el mismo commit.

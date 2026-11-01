@@ -3480,3 +3480,20 @@ Petición del usuario: iniciar la sesión REA de `av-cam.bin` para `E26-R44-AVCA
 - Sesión REA cerrada limpiamente; `exp2-session-log.jsonl` restaurado con `git checkout`.
 - **Entregables:** `docs/capture/e26-r44-gpio4-bit22-busqueda-pin.md` §6. PENDIENTES: `E26-R44-AVCAM-GPIO4` pasa de
   ABIERTO a **BLOQUEADO** (mismo origen que `E1`); cruzado en la fila de `E1`.
+
+## R8 — publicación de los binarios 3.23/3.24 como GitHub Release (01-11-2026)
+
+Petición expresa del usuario: subir los dos firmware custom ya construidos en E25-05 (el que apaga las bobinas y el
+obturador mecánico completo, y el de recuperación) como release de GitHub, con sección de copyright en el README.
+
+- Verificado que `analysis/darwin-patch/fdat/experimental-323/firmware_packed.dat` (`4c21353d…`) es exactamente el
+  hash comprobado antes de flashear en T040, y que `recuperacion-324/firmware_packed.dat` (`e1345aff…`) es su
+  recuperación verificada offline (E25-05, 69/69 checks) nunca instalada en cámara real.
+- Publicados en el [release `fw-3.23-3.24`](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24)
+  (no en el árbol de git, que sigue sin firmware de Sony) con `SHA256SUMS.txt` y notas: estado real de cada paquete,
+  pasos de instalación/verificación y aviso de copyright (investigación/interoperabilidad, sin redistribuir fuente
+  de Sony, retirada a petición del titular).
+- README: enlace al release en «Instalación del 3.23», nueva sección «Recrear lo mostrado en el hilo de r/a6000»
+  (pasos para reproducir la publicación de Reddit: 3.23 + `camera_silent.py`) y «Copyright de los binarios
+  publicados».
+- **Entregables:** release de GitHub, README actualizado, [R8 en PENDIENTES](../docs/PENDIENTES.md) CERRADO.
