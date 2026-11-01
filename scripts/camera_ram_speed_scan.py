@@ -5,6 +5,7 @@ Uso: camera_ram_speed_scan.py OUTDIR [fisica_inicial_hex=83c00000]   (RemoteShut
 Por velocidad 1/60, 1/250, 1/500, 1/1000: /ss, /shoot y `dd if=/dev/mem` de 4 MiB al archivo OUTDIR/r_<d>.bin (los ficheros de /data son de solo
 lectura: se borra antes de cada volcado). Después busca halfwords = 0x1000+256·log2(1/t) (código Tv de 0x4382fac8), pasos de ±256/±527 y
 valores monótonos o proporcionales al tiempo. No escribe RAM, NVRAM ni flash."""
+import os
 import math
 import sys
 import time
@@ -14,7 +15,7 @@ from pathlib import Path
 import numpy as np
 from adb_shell.adb_device import AdbDeviceTcp
 
-H = "192.168.1.29"
+H = os.environ.get("A6000_HOST", "192.168.1.29")
 OUT = Path(sys.argv[1])
 BASE = int(sys.argv[2], 16) if len(sys.argv) > 2 else 0x83C00000
 SPEEDS = (60, 250, 500, 1000)

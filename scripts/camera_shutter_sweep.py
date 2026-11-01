@@ -9,7 +9,7 @@ import urllib.request
 
 from PIL import Image, ImageStat
 
-HOST = 'http://192.168.1.29:8080'
+HOST = f"http://{os.environ.get("A6000_HOST", os.environ.get("A6000_HOST", "192.168.1.29"))}:8080"
 get = lambda p, t=60: urllib.request.urlopen(HOST + p, timeout=t).read()
 out = sys.argv[1]
 speeds = sys.argv[2:] or ['1/4000', '1/2000', '1/1000', '1/500', '1/250', '1/125', '1/60', '1/30', '1/15']

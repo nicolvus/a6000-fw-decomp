@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Sube un archivo pequeño a la cámara por telnet (echo -ne con escapes octales; sin adb). Uso: camera_push_file.py LOCAL REMOTO [HOST]
 Comprueba el tamaño y el md5sum al final. Pensado para binarios de pocos KB."""
+import os
 import hashlib, sys
 sys.path.insert(0, __file__.rsplit('/', 1)[0])
 from camera_telnet import run
 
-local, remote = sys.argv[1], sys.argv[2]; host = sys.argv[3] if len(sys.argv) > 3 else '192.168.1.29'
+local, remote = sys.argv[1], sys.argv[2]; host = sys.argv[3] if len(sys.argv) > 3 else os.environ.get("A6000_HOST", "192.168.1.29")
 data = open(local, 'rb').read(); assert len(data) <= 64 * 1024, 'demasiado grande para este método'
 run(host, [f': > {remote}'])
 for i in range(0, len(data), 96):

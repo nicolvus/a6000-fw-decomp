@@ -19,7 +19,7 @@ from adb_shell.adb_device import AdbDeviceTcp
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from camera_telnet import run
 
-HOST, G784 = "192.168.1.29", 0x83E9BCCC
+HOST, G784 = os.environ.get("A6000_HOST", "192.168.1.29"), 0x83E9BCCC
 SM_A, SM_O, SM_N = 0x836D6FB6, "91f80990", "4ff00009"
 R5_A, R5_O = 0x836D7000, "28125ffa85fe"
 NB = 32

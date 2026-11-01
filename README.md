@@ -67,7 +67,7 @@ con el detalle del parche, el incidente del 3.25 y las mediciones, está en la w
 | Registro de pruebas en cámara | [docs/capture/registro-pruebas-camara.md](docs/capture/registro-pruebas-camara.md) |
 | Historial cronológico | [knowledge/PROGRESS.md](knowledge/PROGRESS.md) |
 | Tablero de progreso | <https://nicolvus.github.io/a6000-fw-decomp/progress/> |
-| Guía de réplica (wiki) | [wiki/Home.md](wiki/Home.md) |
+| Guía de réplica (wiki; punto de entrada para replicar) | [wiki/Home.md](wiki/Home.md) |
 | Uso por agentes | [docs/agent/README.md](docs/agent/README.md), [AGENTS.md](AGENTS.md), [CLAUDE.md](CLAUDE.md) |
 
 ## Estructura
@@ -107,7 +107,13 @@ archivos se retirarán si Sony lo solicita.
 **Uso.**
 - Todo se ofrece «tal cual», sin garantía de ningún tipo; usarlo es bajo tu propio riesgo y puede inutilizar la cámara (ver [Límites y riesgos](#límites-y-riesgos)).
 - Pensado para investigación, aprendizaje y uso personal en una cámara de tu propiedad. No lo uses para eludir protecciones con fines ilícitos ni para redistribuir firmware de Sony por tu cuenta.
-- El código, los scripts, el análisis y la documentación del autor se publican bajo licencia [MIT](LICENSE). Esa licencia **no** cubre el firmware de Sony ni los `.dat` del release.
+- El código, los scripts, el análisis y la documentación del autor se publican bajo licencia [MIT](LICENSE). Esa licencia **no** cubre el firmware de Sony ni los `.dat` del release, ni el material de terceros de abajo.
+
+**Material de Sony y de terceros que usa el proyecto**
+- **Código fuente publicado por Sony** para esta cámara (Linux y demás paquetes de código abierto). Se usa para entender el arranque, los controladores y la consola de Loader2/Loader3. Conserva su licencia original (GPL y otras); las copias extraídas están en `analysis/session18/`.
+- **Manual de servicio de nivel 3** de la ILCE-6000/6000L/6000Y (Rev. 1.1), de acceso público en la web. Se usa como fuente de esquemas eléctricos y de hojas de la placa. El PDF **no** se versiona (está en `.gitignore`); en `references/manuals/` solo hay el manifiesto con su hash y origen y unas pocas páginas de ejemplo.
+- **Firmware oficial 3.21**: lo descarga cada persona desde el servidor de Sony con `scripts/agent/bootstrap.sh`; no se incluye en el repositorio.
+- **Herramientas de terceros** con su propia licencia: [Sony-PMCA-RE](https://github.com/ma1co/Sony-PMCA-RE), [fwtool.py](https://github.com/ma1co/fwtool.py) y [OpenMemories-Tweak](https://github.com/ma1co/OpenMemories-Tweak) en `references/`.
 
 ## Seguridad y contribución
 

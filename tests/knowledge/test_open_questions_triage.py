@@ -2,7 +2,6 @@
 
 import hashlib
 import json
-import re
 import subprocess
 from functools import lru_cache
 from pathlib import Path
@@ -11,18 +10,8 @@ from analysis.s400_open_questions_triage import extend_triage
 
 ROOT = Path(__file__).resolve().parents[2]
 TRIAGE = ROOT / "analysis" / "s400_open_questions_triage" / "triage.json"
-ROW = re.compile(r"^\| \[([^\]]+)\]\([^)]*\) \| \w+ \| \w+ \| \[([^\]]+)\]")
-
-
-def _open_keys() -> set[tuple[str, str]]:
-    text = (ROOT / "docs" / "OPEN-QUESTIONS.md").read_text(encoding="utf-8")
-    return {(m[2], m[1]) for line in text.splitlines() if (m := ROW.match(line))}
-
-
-def test_every_open_question_is_triaged() -> None:
-    triaged = {(t.get("fuente_actual", t["fuente"]), t["destino"])
-               for t in json.loads(TRIAGE.read_text(encoding="utf-8"))}
-    assert _open_keys() - triaged == set()
+# La cobertura se comprueba por contenido (cita y contexto), no por número de línea:
+# ver test_current_index_matches_full_citations_contexts_and_relation_types.
 
 
 def test_verdicts_are_known() -> None:

@@ -10,7 +10,7 @@ import time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from camera_telnet import run
 
-HOST, G784 = '192.168.1.29', 0x83e9bccc
+HOST, G784 = os.environ.get("A6000_HOST", "192.168.1.29"), 0x83e9bccc
 PATCHES = [(int(a, 16), o, n) for a, o, n in
            (p.split(':') for p in os.environ.get('RAMPATCH', '0x83793166:02f00702:4ff00102').split(','))]
 

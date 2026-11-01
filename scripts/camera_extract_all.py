@@ -13,7 +13,7 @@ T = ROOT + '/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/
 TREES = {'main': ('nflasha3_unpacked_unpacked', ''), 'rootfs': ('nflasha7_unpacked_unpacked', '/'), 'usr': ('nflasha15_unpacked_unpacked', '/usr'),
          'android': ('nflasha16_unpacked_unpacked', '/android/system')}
 EXT = ('.apk', '.odex', '.jar', '.dex', '.so', '.elf', '.bin')
-out, loaded_file = sys.argv[1], sys.argv[2]; host = sys.argv[3] if len(sys.argv) > 3 else '192.168.1.29'
+out, loaded_file = sys.argv[1], sys.argv[2]; host = sys.argv[3] if len(sys.argv) > 3 else os.environ.get("A6000_HOST", "192.168.1.29")
 loaded = {l.strip() for l in open(loaded_file) if l.strip()}
 man = []
 

@@ -6,6 +6,7 @@ Cambia el formato a rawjpeg y el ISO al valor fijo; al terminar (o si falla) dej
 Por disparo trae el ARW de la tarjeta (DCIM) y mide, en lineal y sin negro: media por canal CFA, fracción saturada,
 perfil por bandas de filas y la exposición relativa media/(ISO/100). Si la velocidad escala la exposición, la media
 lineal se duplica al duplicar el tiempo; el ajuste log2 vs log2(tiempo) debe dar pendiente ≈ 1."""
+import os
 import argparse
 import json
 import time
@@ -19,7 +20,7 @@ from adb_shell.adb_device import AdbDeviceTcp
 ap = argparse.ArgumentParser()
 ap.add_argument("out")
 ap.add_argument("speeds", nargs="*")
-ap.add_argument("--host", default="192.168.1.29")
+ap.add_argument("--host", default=os.environ.get("A6000_HOST", "192.168.1.29"))
 ap.add_argument("--iso", type=int, default=100)
 ap.add_argument("--reps", type=int, default=2)
 a = ap.parse_args()

@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from adb_shell.adb_device import AdbDeviceTcp
 from camera_telnet import run
 
-H, BASE, N = '192.168.1.29', 0x8401c670, 0x3c0  # 60 bloques de 16 B: 0x8401c670..0x8401ca2f
+H, BASE, N = os.environ.get("A6000_HOST", "192.168.1.29"), 0x8401c670, 0x3c0  # 60 bloques de 16 B: 0x8401c670..0x8401ca2f
 get = lambda p: urllib.request.urlopen(f'http://{H}:8080' + p, timeout=60).read().decode().strip()
 out = sys.argv[1]
 os.makedirs(out, exist_ok=False)

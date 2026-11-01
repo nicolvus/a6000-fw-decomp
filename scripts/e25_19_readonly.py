@@ -12,6 +12,8 @@ instante de lectura para que el informe pueda decir cuándo es válido cada valo
 """
 from __future__ import annotations
 
+import os
+
 import argparse
 import hashlib
 import json
@@ -28,7 +30,7 @@ from t052_b0_readonly import FIELDS, GOT_CHECKS, OBJECTS, T050, decode
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTDIR = ROOT / "analysis/e25-19"
-HOST = "192.168.1.29"
+HOST = os.environ.get("A6000_HOST", "192.168.1.29")
 RAM_VIRT_OFF = 0x40000000  # virtual = físico - 0x40000000
 
 # Campos adicionales de E25-19 sobre los registros A/B (offsets del registro de foto).

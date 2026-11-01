@@ -4,6 +4,7 @@
 Uso: camera_telnet.py [--host 192.168.1.29] 'cmd1' 'cmd2' ...
 Cada comando se envía con un marcador de fin para delimitar su salida.
 """
+import os
 import argparse
 import re
 import socket
@@ -60,7 +61,7 @@ def run(host: str, cmds: list[str], port: int = 23, timeout: float = 20.0) -> li
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--host", default="192.168.1.29")
+    ap.add_argument("--host", default=os.environ.get("A6000_HOST", "192.168.1.29"))
     ap.add_argument("cmds", nargs="+")
     a = ap.parse_args()
     for c, r in zip(a.cmds, run(a.host, a.cmds)):

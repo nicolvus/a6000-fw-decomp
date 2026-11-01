@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Fuerza [0x43e95950+0x78]=0x40 y [0x43e94ee4+0x34]=1 (RAM, bucle 20 ms) durante un disparo remoto; restaura los originales.
 Uso: camera_efcs_conditions.py [d78|e34|ambos]"""
+import os
 import re, sys, time, urllib.request
 sys.path.insert(0, __file__.rsplit('/', 1)[0])
 from camera_telnet import run
 
-HOST = '192.168.1.29'
+HOST = os.environ.get("A6000_HOST", "192.168.1.29")
 W78, W34 = 0x83e95950 // 4 + 0x78 // 4, 0x83e94ee4 // 4 + 0x34 // 4
 
 

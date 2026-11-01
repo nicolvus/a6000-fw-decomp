@@ -10,7 +10,7 @@ import time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from camera_telnet import run
 
-HOST = "192.168.1.29"
+HOST = os.environ.get("A6000_HOST", "192.168.1.29")
 SM_A, SM_O, SM_N = 0x836D6FB6, "91f80990", "4ff00009"
 R5_A, R5_O = 0x836D7000, "28125ffa85fe"
 LINE_US, R5_FULL, R5_MIN = 15.2, 4219, 10

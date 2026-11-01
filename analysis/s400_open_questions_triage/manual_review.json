@@ -641,9 +641,9 @@
     },
     {
      "archivo": "tests/knowledge/test_open_questions_triage.py",
-     "localizador": "33:49",
+     "localizador": "22:38",
      "cita": "def test_s32_rectification_uses_original_firmware_bytes() -> None:\n    from capstone import CS_ARCH_ARM, CS_MODE_THUMB, Cs\n\n    base = 0x43541000\n    blob = (ROOT / \"firmware/extracted/fw321/firmware.tar_unpacked/\"\n            \"0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin\").read_bytes()\n    decoder = Cs(CS_ARCH_ARM, CS_MODE_THUMB)\n\n    def instruction(address: int):\n        return next(decoder.disasm(blob[address-base:address-base+4], address, count=1))\n\n    assert instruction(0x43AD6034).mnemonic == \"push\"\n    assert instruction(0x43AD604E).op_str == \"r3\"  # BLX del despachador.\n    assert instruction(0x4379CB2E).op_str == \"#0x43902718\"\n    pool = int.from_bytes(blob[0x4379CDCC-base:0x4379CDD0-base], \"little\")\n    assert (pool + 0x4379CB30) & 0xFFFFFFFF == 0x43CA519F\n    assert blob[0x43CA519F-base:].startswith(b\"VD_Sequence: YC out window overflow \")",
-     "sha256": "3e557b11e714b89bf1e2ac600ab328ec339e4bc76468e7e4a1454632699ffe70"
+     "sha256": "3e6e4a4b3693ab99a791d0f6f3836edb8c3e0128359384eb34334195edbb2532"
     }
    ]
   },

@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """T023: lee (solo lectura) los buffers de envío BIONZ→Darwin IDs 0x12 (4 B), 0x0f (2 B) y 0x13 (10 B) antes y después de un disparo remoto.
 Uso: camera_darwin_buffers.py [N_DISPAROS]"""
+import os
 import sys, time, urllib.request
 sys.path.insert(0, __file__.rsplit('/', 1)[0])
 from camera_telnet import run
 
-HOST = '192.168.1.29'
+HOST = os.environ.get("A6000_HOST", "192.168.1.29")
 # físico = virtual av-cam + 0x40000000; cabeceras {03, NN, len} en 0x436b88e8 / 0x436b8aec / 0x436b8864
 BUFS = {'0x12 (03 07, 4 B)': (0x83f91e2e, 4), '0x0f (03 04, 2 B)': (0x83f91f24, 2), '0x13 (03 08, 10 B)': (0x83f91f1a, 10)}
 

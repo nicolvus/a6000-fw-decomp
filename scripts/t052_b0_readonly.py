@@ -23,6 +23,7 @@ orden, la hora y los errores en el PC.
 """
 from __future__ import annotations
 
+import os
 import argparse
 import base64
 import hashlib
@@ -423,7 +424,7 @@ Decisión C3:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--host", default="192.168.1.29")
+    ap.add_argument("--host", default=os.environ.get("A6000_HOST", "192.168.1.29"))
     ap.add_argument("--label", default="sin-etiqueta")
     ap.add_argument("--repeats", type=int, default=2, help="lecturas completas (protocolo: 2)")
     ap.add_argument("--interval", type=float, default=0.2, help="segundos entre lecturas")

@@ -6,6 +6,7 @@ Por disparo mide: latencia disparo→JPEG, tamaño, EXIF, luminancia, saturació
 en ráfagas, el intervalo de rearme; y el dmesg de la cámara antes/después.
 No escribe RAM ni NVRAM ni drive_mode: solo `takePicture` y la velocidad (`/ss`). Genera report.json, report.md y montaje.jpg.
 No se mide sonido: el obturador mecánico está desactivado por completo (B1a)."""
+import os
 import argparse
 import io
 import json
@@ -22,7 +23,7 @@ from PIL import ExifTags, Image
 
 ap = argparse.ArgumentParser()
 ap.add_argument("out")
-ap.add_argument("--host", default="192.168.1.29")
+ap.add_argument("--host", default=os.environ.get("A6000_HOST", "192.168.1.29"))
 ap.add_argument("--quick", action="store_true")
 a = ap.parse_args()
 H = f"http://{a.host}:8080"

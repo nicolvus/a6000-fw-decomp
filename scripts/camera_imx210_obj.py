@@ -10,7 +10,7 @@ import urllib.request
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from camera_telnet import run
 
-HOST, OBJ = '192.168.1.29', 0x83e7f4a8
+HOST, OBJ = os.environ.get("A6000_HOST", "192.168.1.29"), 0x83e7f4a8
 get = lambda p, t=60: urllib.request.urlopen(f'http://{HOST}:8080' + p, timeout=t).read().decode().strip()
 
 

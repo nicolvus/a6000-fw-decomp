@@ -1,5 +1,7 @@
 # Runbook para un agente de IA: empezar desde cero
 
+Para **replicar el parche** (sin investigar) usa la [wiki](https://github.com/nicolvus/a6000-fw-decomp/wiki); este runbook es para continuar la investigación.
+
 Plantilla ejecutable. Entrada: clon de `github.com/nicolvus/a6000-fw-decomp` + firmware 3.21.
 Salida: entorno equivalente al del autor, listo para continuar la investigación.
 

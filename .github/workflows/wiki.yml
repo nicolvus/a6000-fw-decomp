@@ -1,0 +1,27 @@
+name: Wiki
+
+"on":
+  push:
+    branches: [main]
+    paths: ["wiki/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sincronizar wiki/ con la wiki de GitHub
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git clone "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.wiki.git" /tmp/wiki
+          rsync -a --delete --exclude '.git' wiki/ /tmp/wiki/
+          cd /tmp/wiki
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || { git commit -m "Sincronizar con wiki/ (${GITHUB_SHA::8})"; git push; }

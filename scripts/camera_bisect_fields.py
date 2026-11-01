@@ -5,7 +5,7 @@ import os, re, socket, sys, time, urllib.request
 sys.path.insert(0, __file__.rsplit('/', 1)[0])
 from camera_telnet import run
 
-HOST, BASEW = '192.168.1.29', int(os.environ.get('BASE', '0x83edf684'), 16) // 4  # BASE: físico del bloque/copia
+HOST, BASEW = os.environ.get("A6000_HOST", "192.168.1.29"), int(os.environ.get('BASE', '0x83edf684'), 16) // 4  # BASE: físico del bloque/copia
 val = int(sys.argv[1])
 
 

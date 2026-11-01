@@ -10,5 +10,6 @@
 8. [Cómo funciona el parche](https://github.com/nicolvus/a6000-fw-decomp/wiki/8-Como-funciona-el-parche)
 9. [Resultados y límites](https://github.com/nicolvus/a6000-fw-decomp/wiki/9-Resultados-y-limites)
 12. [Herramientas](https://github.com/nicolvus/a6000-fw-decomp/wiki/12-Herramientas)
+13. [Glosario](https://github.com/nicolvus/a6000-fw-decomp/wiki/13-Glosario)
 10. [Mapa del repositorio e investigación](https://github.com/nicolvus/a6000-fw-decomp/wiki/10-Mapa-del-repositorio)
 11. [Copyright y uso](https://github.com/nicolvus/a6000-fw-decomp/wiki/11-Copyright-y-uso)

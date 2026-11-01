@@ -23,6 +23,22 @@ Todos los scripts y apps, con su uso: [Herramientas](https://github.com/nicolvus
 Para entender el porqué: [Cómo funciona el parche](https://github.com/nicolvus/a6000-fw-decomp/wiki/8-Como-funciona-el-parche), [Resultados y límites](https://github.com/nicolvus/a6000-fw-decomp/wiki/9-Resultados-y-limites) y el
 [mapa del repositorio](https://github.com/nicolvus/a6000-fw-decomp/wiki/10-Mapa-del-repositorio). Aviso legal: [Copyright y uso](https://github.com/nicolvus/a6000-fw-decomp/wiki/11-Copyright-y-uso).
 
+## Qué está verificado y qué no
+
+| Paso | Verificación |
+|---|---|
+| Construir los `.dat` 3.23 y 3.24 desde el firmware oficial | **Reproducido el 01-11-2026**: mismos SHA-256 que el release, 69/69 comprobaciones |
+| Medir el guard sin flashear | Probado offline y con la cámara en MTP |
+| Backup y restauración de NVRAM | Probados en hardware (20-10-2026) |
+| Instalar el 3.23 | **Confirmado en cámara real** (T040/T041, 27-10-2026), desde un 3.22 intermedio |
+| Instalar el 3.23 desde un 3.21 directo | Solo verificado offline (el guard lo acepta); no instalado así |
+| Instalar el 3.24 | **Nunca instalado en una cámara real** |
+| Capa 2 (parche en RAM) | Probada en T050; escala absoluta con ±25 % de incertidumbre |
+| Instalar Tweak y RemoteShutter con las instrucciones de esta wiki | El autor ya los tenía instalados; los pasos escritos aquí vienen de la documentación y **no se han vuelto a ejecutar desde cero** |
+| Capa 2 sin PC (desde la cámara) | Solo idea, sin implementar |
+
+Glosario de términos y etiquetas: [Glosario](https://github.com/nicolvus/a6000-fw-decomp/wiki/13-Glosario).
+
 ## Estado en una línea
 
 3.23 instalado y confirmado en cámara real (27-10-2026): dispara en silencio y sin error. El 3.24 (vuelta al Darwin oficial) solo está

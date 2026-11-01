@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Dispara por HTTP (RemoteShutter) con distintos valores forzados en RAM. Solo RAM, sin flash.
 Uso: camera_shutter_matrix.py [host] [vecinos]   (telnet 23 + RemoteShutter :8080 abiertos)"""
+import os
 import sys, time, urllib.request
 sys.path.insert(0, __file__.rsplit('/', 1)[0])
 from camera_telnet import run
 
-HOST = sys.argv[1] if len(sys.argv) > 1 else '192.168.1.29'
+HOST = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("A6000_HOST", "192.168.1.29")
 MIRROR, COPY = 553352751, 553341948  # palabras de 4 B: 0x83edf8bc/4 y 0x83ed4ff0/4
 # Modo "vecinos": rellena los campos 0x230..0x254 del espejo (y su copia en 0x83ed4d70+0x278..) con el valor.
 NEIGH = len(sys.argv) > 2 and sys.argv[2] == 'vecinos'

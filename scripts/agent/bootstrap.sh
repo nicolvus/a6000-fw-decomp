@@ -26,7 +26,7 @@ if sha_ok $DMG $DMG_SHA; then echo "   ya verificado"; else
 fi
 
 step "2. Entornos Python (.venv del proyecto y venv de fwtool)"
-[ -d .venv ] || { run python3 -m venv .venv; run .venv/bin/pip install -q pytest ruff mypy pyyaml capstone unicorn; }
+[ -d .venv ] || { run python3 -m venv .venv; run .venv/bin/pip install -q -r requirements.txt; }
 [ -d .venv-fwtool ] || { run python3 -m venv .venv-fwtool; run .venv-fwtool/bin/pip install -q -r references/fwtool/requirements.txt; }
 
 step "3. Desempaquetado con fwtool"
