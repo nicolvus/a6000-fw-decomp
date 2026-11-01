@@ -17,7 +17,7 @@ recuperación, solo con análisis offline.
 
 Todo el detalle vive en la **[Wiki CFW Sony a6000](https://github.com/nicolvus/a6000-fw-decomp/wiki/Home)** (fuente en [`wiki/`](wiki/Home.md)): requisitos y riesgos, cómo replicarlo de principio a fin, cómo funciona el parche,
 resultados, estado actual y límites, herramientas, glosario y mapa del repositorio. Los paquetes ya construidos están en el
-[release `fw-3.23-3.24`](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24). Tablero de progreso: <https://nicolvus.github.io/a6000-fw-decomp/progress/>.
+[release `fw-3.23-3.24`](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24). [Tablero de progreso](https://nicolvus.github.io/a6000-fw-decomp/progress/) (estado actual, cobertura y pruebas) · [portada del sitio](https://nicolvus.github.io/a6000-fw-decomp/).
 
 **Estado:** el firmware 3.23 (T040) hace disparar la cámara en silencio y sin error; el 3.25 (E26) dejó la cámara del autor sin arrancar y hoy se estudia su recuperación solo offline.
 Detalle en [Estado actual y límites](https://github.com/nicolvus/a6000-fw-decomp/wiki/14-Estado-actual). Contribuir: [CONTRIBUTING.md](CONTRIBUTING.md).

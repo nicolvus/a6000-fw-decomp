@@ -23,3 +23,5 @@ cargador bloquea el DAP CoreSight y el chip trae `defconfig` de fábrica para ar
 
 
 Ver también la [verificación paso a paso](https://github.com/nicolvus/a6000-fw-decomp/wiki/Home) y [Requisitos y riesgos](https://github.com/nicolvus/a6000-fw-decomp/wiki/1-Requisitos-y-riesgos).
+
+Tablero de progreso (cobertura documental, sesiones y pruebas): <https://nicolvus.github.io/a6000-fw-decomp/progress/>.

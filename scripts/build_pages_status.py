@@ -14,6 +14,8 @@ DETAIL = ROOT / "analysis" / "s178_census" / "census_detalle.json"
 PROGRESS = ROOT / "analysis" / "s178_census" / "census.md"
 REGISTRY = ROOT / "docs" / "capture" / "registro-pruebas-camara.md"
 REPO = "https://github.com/nicolvus/a6000-fw-decomp/blob/main/"
+WIKI = "https://github.com/nicolvus/a6000-fw-decomp/wiki/"
+RELEASE = "https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24"
 # P1–P24: inventario de physical-test-review-2026-10-26.md (P22–P24 añadidos ese día).
 PLANS = 24
 SESSION = re.compile(r"(?:^|/)s(\d{1,3})(?:[-_/]|\.md$)", re.IGNORECASE)
@@ -140,11 +142,18 @@ td:nth-child(n+3):not(:last-child),td:last-child,th:nth-child(n+3){{text-align:r
 .legend span{{display:inline-block;width:12px;height:12px;border-radius:2px;margin:0 4px 0 12px}}
 @media(max-width:600px){{.grid{{grid-template-columns:repeat(31,1fr)}}}}</style></head><body>
 <h1>Progreso</h1>
-<p class="hito"><b>Hito (27-10-2026): la A6000 disparó en silencio</b> con el firmware modificado 3.23 (Darwin tipo 0 + B1a, 2 bytes), según confirmó el usuario. <b>Estado actual:</b> tras instalar el 3.25 integrado la cámara no arranca (testimonio del usuario); la recuperación se investiga offline (E26). <a href="{REPO}README.md">README</a> · <a href="{REPO}docs/capture/e26-recovery.md">E26</a>.</p>
+<p class="hito"><b>Hito (27-10-2026): la A6000 disparó en silencio</b> con el firmware modificado 3.23 (Darwin tipo 0 + B1a, 2 bytes), confirmado por el usuario en cámara real. Hoy cualquiera puede reproducirlo de principio a fin con la <a href="{WIKI}">Wiki CFW Sony a6000</a>.</p>
+<h2>Estado actual (01-11-2026)</h2>
+<table><tr><th>Pieza</th><th>Estado</th><th>Detalle</th></tr>
+<tr><td>Firmware 3.23</td><td>Publicado y reproducible</td><td>Darwin tipo 0 + B1a. <a href="{RELEASE}">Release fw-3.23-3.24</a>; los .dat se reconstruyen con los mismos SHA-256 (<a href="{WIKI}4-Construir-los-paquetes">wiki 4</a>, <a href="{WIKI}5-Instalar-el-3.23">wiki 5</a>).</td></tr>
+<tr><td>Firmware 3.24</td><td>Publicado</td><td>Restaura el Darwin oficial; vuelta atrás probada (<a href="{WIKI}7-Volver-atras-y-recuperacion">wiki 7</a>).</td></tr>
+<tr><td>Capa 2 (exposición uniforme)</td><td>Probada desde el PC</td><td>Parche en RAM por telnet con guardián de 25 s; exposición (4219−r5)×15,2 µs (<a href="{WIKI}6-Capa-2-exposicion-uniforme">wiki 6</a>). Hacerlo desde la cámara es solo una idea.</td></tr>
+<tr><td>Firmware 3.25 integrado</td><td><b>No instalar</b></td><td>Dejó la cámara sin arrancar (recompresión de <code>nflasha3</code>, error de Loader3 −302). Análisis en <a href="{REPO}docs/capture/e26-recovery.md">E26</a>.</td></tr>
+<tr><td>Documentación y herramientas</td><td>Wiki publicada</td><td><a href="{WIKI}12-Herramientas">Herramientas</a>, <a href="{WIKI}14-Estado-actual">estado y límites</a>, <a href="{WIKI}11-Copyright-y-uso">copyright y uso</a> (código de Sony publicado y manual de servicio nivel 3 público).</td></tr></table>
 <p class="legend"><span class="m-hito"></span>módulo con hito<span class="m-sub"></span>sub-etiqueta cubierta<span class="m-todo"></span>pendiente / sin informe / sin ejecutar<span class="m-rejected"></span>fragmento descartado<span class="s-cancel"></span>cancelada</p>
 <p>{cov['pending']} etiquetas pendientes; {cov['excluded']} fragmentos descartados como módulos. Descartar no aumenta cobertura.</p>
 <p>Cobertura documental de etiquetas: no mide código descompilado ni funciones verificadas.
-<a href="{REPO}docs/capture/repo-audit-2026-10-24.md">Auditoría y pendientes vigentes</a>.
+<a href="{REPO}docs/PENDIENTES.md">Pendientes vigentes</a> · <a href="{REPO}docs/capture/repo-audit-2026-10-24.md">auditoría</a>.
 Pruebas en cámara: {data['physical_tests']['registered']} registros (hasta {data['physical_tests']['last']}, con backup NVRAM previo);
 planes P1–P24 con prueba registrada: {data['physical_tests']['done']}/{data['physical_tests']['total']}.
 <a href="{data['physical_tests']['source']}">Registro de pruebas</a>.</p>
