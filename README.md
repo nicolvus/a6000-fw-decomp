@@ -20,9 +20,17 @@ silencio y sin error. **Después**, el firmware integrado **3.25** dejó la cám
 ## Documentación
 
 Todo el detalle vive en la **[Wiki CFW Sony a6000](https://github.com/nicolvus/a6000-fw-decomp/wiki/Home)** (fuente en [`wiki/`](wiki/Home.md)): requisitos y riesgos, cómo replicarlo de principio a fin, cómo funciona el parche,
-resultados, estado actual y límites, herramientas, glosario y mapa del repositorio. Los paquetes ya construidos están en el
+resultados, estado actual y límites, herramientas, glosario y mapa del repositorio. La wiki está en español e inglés; los informes de investigación y los comentarios del código, solo en español. Los paquetes ya construidos están en el
 [release `fw-3.23-3.24`](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24) y, como *pre-release* experimental, en
 [`fw-3.25c-experimental`](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.25c-experimental) (3.25c y 3.26 de vuelta atrás). [Tablero de progreso](https://nicolvus.github.io/a6000-fw-decomp/progress/) (estado actual, cobertura y pruebas) · [portada del sitio](https://nicolvus.github.io/a6000-fw-decomp/).
+
+| Versión | Qué hace | Estado |
+|---|---|---|
+| 3.23 | Parche de Darwin: el motor y las bobinas del obturador nunca se mueven | **Instalado y confirmado** en cámara real: silencioso y sin errores |
+| 3.24 | Darwin oficial con número de versión 3.24 (vuelta atrás desde el 3.23) | Verificado offline, nunca instalado |
+| 3.25 | EFCS / selector Electronic desde el menú | **Dejó sin arrancar la cámara del autor** (no publicado) |
+| 3.25c | 3.25 con `nflasha3` en el formato exacto de Sony | Publicado como experimental; verificado offline, **nunca instalado** |
+| 3.26 | Contenido oficial de Sony con número de versión 3.26 (vuelta atrás desde el 3.25c) | Verificado offline, nunca instalado |
 
 **Estado:** el firmware 3.23 (T040) hace disparar la cámara en silencio y sin error; el 3.25 (E26) dejó la cámara del autor sin arrancar; su causa está corregida en el 3.25c (experimental, sin probar en cámara, [R45](docs/capture/e26-r45-firmware-325c-experimental.md)) y la recuperación de esa cámara se estudia solo offline.
 Detalle en [Estado actual y límites](https://github.com/nicolvus/a6000-fw-decomp/wiki/14-Estado-actual). Contribuir: [CONTRIBUTING.md](CONTRIBUTING.md).

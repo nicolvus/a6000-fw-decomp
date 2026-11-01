@@ -204,6 +204,7 @@ por esos índices.
 | ID | Estado | Pendiente | Criterio de cierre / límite | Fuente |
 |---|---|---|---|---|
 | D5 | BLOQUEADO | Hojas de datos IMX210/IMX235 (mapa de registros, semántica de modos) | Documento legítimo aportado por el usuario; no existe público | [S51](capture/s51-decision.md) |
+| DOC-SITIO-EN | ABIERTO | El sitio de GitHub Pages (`site/index.html`, `site/progress/`, etiquetas de las insignias) y la descripción del repositorio están solo en español; README, CONTRIBUTING, wiki y releases ya son bilingües | Portada y tablero con versión o textos en inglés (generados por `scripts/build_pages_status.py`) y descripción del repositorio bilingüe, o decisión del usuario de dejarlos solo en español | Auditoría ES/EN 01-11-2026 |
 
 ## C. Entorno y código
 
@@ -430,3 +431,4 @@ Carril separado: no reutiliza ni modifica conclusiones de captura/sensor. Índic
 | 01-11-2026 | **Documentación del 3.25c:** README, wiki (Home, 1, 6, 7, 9), tablero y portada dejan de decir solo «no instales el 3.25»: el 3.25 original sigue sin publicarse y se enlaza el 3.25c como experimental (debería arrancar; nunca instalado). |
 | 01-11-2026 | **README en inglés:** `README.en.md` con botón de cambio de idioma en ambos README; nota de copyright ampliada al release `fw-3.25c-experimental`. |
 | 01-11-2026 | **Documentación en inglés:** wiki completa en inglés (`wiki/en-*`, 15 páginas) con barra lateral bilingüe y enlaces de idioma; `CONTRIBUTING.en.md`; `README.en.md` enlazado a la wiki en inglés; notas de las releases `fw-3.23-3.24` y `fw-3.25c-experimental` con sección en inglés. Wiki en español sincronizada (3.25c en Home/4/10/12/13/14, `requirements.txt`, `A6000_HOST`). Los informes de `docs/` siguen solo en español. |
+| 01-11-2026 | **Auditoría ES/EN de la documentación pública:** wiki de GitHub idéntica a `wiki/`; 15 pares de páginas con la misma estructura, cifras, direcciones y comandos (solo cambian comentarios traducidos y separador decimal); 0 enlaces rotos; releases con sección en inglés y mismos SHA-256; `repo_audit.py` sin incoherencias. Corregido: `README.md` no tenía la tabla de versiones del `README.en.md` ni la nota de idiomas. Nuevo **DOC-SITIO-EN** (sitio de Pages solo en español). |
