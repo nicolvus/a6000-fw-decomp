@@ -1,6 +1,6 @@
 # 5. Instalar el 3.23
 
-> Hazlo solo con backup de NVRAM hecho ([paso 3](3-Backup-de-NVRAM)), hashes verificados ([paso 4](4-Construir-los-paquetes)), batería cargada y la cámara en 3.21.
+> Hazlo solo con backup de NVRAM hecho ([paso 3](https://github.com/nicolvus/a6000-fw-decomp/wiki/3-Backup-de-NVRAM)), hashes verificados ([paso 4](https://github.com/nicolvus/a6000-fw-decomp/wiki/4-Construir-los-paquetes)), batería cargada y la cámara en 3.21.
 
 ```sh
 pmca-console firmware -f a6000-custom-fw-3.23-b1a-silent-shutter.dat
@@ -14,7 +14,7 @@ pmca-console info          # debe mostrar la versión 3.23
 ## Qué esperar
 
 El obturador mecánico queda **completamente inactivo**: no se mueve en captura ni en rearme. La cámara dispara en silencio y sin error.
-Sin la [capa 2](6-Capa-2-exposicion-uniforme) la exposición **no es uniforme** (la parte inferior de la imagen recibe más luz): ver [Resultados y límites](9-Resultados-y-limites).
+Sin la [capa 2](https://github.com/nicolvus/a6000-fw-decomp/wiki/6-Capa-2-exposicion-uniforme) la exposición **no es uniforme** (la parte inferior de la imagen recibe más luz): ver [Resultados y límites](https://github.com/nicolvus/a6000-fw-decomp/wiki/9-Resultados-y-limites).
 
 ## Prueba mínima
 

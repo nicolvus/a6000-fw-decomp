@@ -4,7 +4,7 @@
 |---|---|
 | `scripts/replicar/` | Genera los núcleos de Darwin parcheados a partir del firmware oficial |
 | `scripts/e25_05/` | Construcción y verificación de los paquetes 3.23/3.24 |
-| `scripts/camera_*.py`, `camera_silent.py` | Control de cámara por telnet/ADB y capa 2 |
+| `scripts/camera_*.py` | Control de cámara por telnet/ADB y capa 2 |
 | `scripts/senser_backup_dump.py` | Backup de NVRAM (solo lectura) |
 | `tools/remote-shutter/` | App RemoteShutter |
 | `references/` | pmca, fwtool y Tweak (vendorizados), manuales |

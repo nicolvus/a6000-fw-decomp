@@ -60,18 +60,17 @@ prueba una funcionalidad*, [knowledge/CURRENT.md](knowledge/CURRENT.md) ·
 [estado y restricciones](docs/STATE.md). S51 **permanece (A=NO, B=NO, C=NO)**. Las sesiones descritas a
 continuación son antecedentes.
 
-Versión breve (18-10-2026). El historial íntegro de sesiones S1–S27 (y este mismo
-archivo antes de reducirse) está preservado sin cambios en
-[docs/history/CONTEXT-full-2026-10-18.md](docs/history/CONTEXT-full-2026-10-18.md),
-con respaldo adicional verificado por SHA-256 en
-`docs/history/CONTEXT.md.2026-10-18.bak` / `docs/history/CONTEXT.md.sha256.orig`.
+Versión breve (18-10-2026). El repositorio no conserva copias de versiones
+anteriores de este archivo: el historial íntegro de sesiones S1–S27 y de este
+mismo archivo está en Git. Las copias de `docs/history/` se eliminaron el
+01-11-2026 (no se conserva historial en archivos .md).
 Estado consolidado y restricciones: [docs/STATE.md](docs/STATE.md).
 Correcciones y preguntas abiertas (generadas del grafo de conocimiento):
 [docs/CORRECTIONS.md](docs/CORRECTIONS.md), [docs/OPEN-QUESTIONS.md](docs/OPEN-QUESTIONS.md).
 
 Este archivo conserva solo las sesiones más recientes (investigación activa).
-No acumular aquí el historial completo de nuevo: cada sesión cerrada se traslada
-a `docs/history/` y se referencia desde `docs/STATE.md`/`docs/CORRECTIONS.md`.
+No acumular aquí el historial completo de nuevo: lo cerrado se resume en
+`docs/STATE.md`/`docs/CORRECTIONS.md`; el historial está en Git.
 
 ## S170–S174 — cinco controles positivos sobre el obturador y una regla metodológica (22-10-2026)
 

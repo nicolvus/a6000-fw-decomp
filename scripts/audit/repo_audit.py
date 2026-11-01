@@ -92,7 +92,7 @@ def md_links(files: list[str]) -> dict:
 
 SKIP_REFS = ("references/", "analysis/", "work/")
 # Copias históricas y bitácora: sus cifras son de la fecha en que se escribieron, no se cruzan con la colección actual.
-HISTORICAL = ("docs/history/", "knowledge/history/", "knowledge/PROGRESS.md")
+HISTORICAL = ("knowledge/PROGRESS.md",)
 REF = re.compile(r"`((?:tests|analysis|docs|scripts|knowledge|reports|tools|site)/[A-Za-z0-9_./\-]+\.[A-Za-z0-9]+)`")
 RUNTIME = re.compile(r"\.(sock|dis|frames)$|/run/|node_modules|\.json/\.c$|\.jsonl$")
 

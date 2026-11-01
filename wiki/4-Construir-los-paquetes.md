@@ -26,7 +26,7 @@ python -m pytest -q tests/test_e25_05_paquetes.py # 3. tests de los paquetes
 Salidas (ignoradas por git, derivan de firmware de Sony):
 `analysis/darwin-patch/fdat/experimental-323/firmware_packed.dat` (3.23) y `analysis/darwin-patch/fdat/recuperacion-324/firmware_packed.dat` (3.24).
 
-El paso 1 solo cambia bytes de `darwin_core.bin` (2–9 bytes, ver [Cómo funciona](8-Como-funciona-el-parche)); `build_packages.py` los recompone en el `firmware.tar`
+El paso 1 solo cambia bytes de `darwin_core.bin` (2–9 bytes, ver [Cómo funciona](https://github.com/nicolvus/a6000-fw-decomp/wiki/8-Como-funciona-el-parche)); `build_packages.py` los recompone en el `firmware.tar`
 oficial, recalcula CRC y suma de Darwin, cifra con `CXD90014` y empaqueta el `.dat`.
 
 ## Inspeccionar lo construido

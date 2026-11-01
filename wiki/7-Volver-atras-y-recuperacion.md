@@ -13,7 +13,7 @@ pmca-console firmware -f a6000-custom-fw-3.24-recovery-stock-darwin.dat
 
 ## NVRAM corrupta o ajustes extraños
 
-Service mode + `scripts/senser_backup_restore.py FILE SHA256` con tu backup ([paso 3](3-Backup-de-NVRAM)). Probado en hardware el 20-10-2026.
+Service mode + `scripts/senser_backup_restore.py FILE SHA256` con tu backup ([paso 3](https://github.com/nicolvus/a6000-fw-decomp/wiki/3-Backup-de-NVRAM)). Probado en hardware el 20-10-2026.
 
 ## El incidente del 3.25 (no lo repitas)
 

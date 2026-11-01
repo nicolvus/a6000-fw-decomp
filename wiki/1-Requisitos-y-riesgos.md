@@ -8,7 +8,7 @@
 | Batería y cable | Batería cargada y cable USB de datos |
 | PC | Linux (probado en Arch/CachyOS), Python 3, `git`, `curl`, `7z`, `unzip`, `tar` |
 | `pmca-console` | [Sony-PMCA-RE](https://github.com/ma1co/Sony-PMCA-RE) (también incluido en `references/pmca/`) |
-| Solo para la capa 2 | Wi-Fi de la cámara en tu red, OpenMemories Tweak (telnet/ADB) y la app RemoteShutter ([página 6](6-Capa-2-exposicion-uniforme)) |
+| Solo para la capa 2 | Wi-Fi de la cámara en tu red, OpenMemories Tweak (telnet/ADB) y la app RemoteShutter ([página 6](https://github.com/nicolvus/a6000-fw-decomp/wiki/6-Capa-2-exposicion-uniforme)) |
 
 El 3.22 **no** es requisito: era un paquete intermedio del autor (solo bobinas apagadas) y el 3.23 ya incluye ese cambio.
 
@@ -22,8 +22,8 @@ El 3.22 **no** es requisito: era un paquete intermedio del autor (solo bobinas a
 
 ## Reglas de seguridad del proyecto
 
-1. Backup de NVRAM antes de tocar nada ([página 3](3-Backup-de-NVRAM)).
+1. Backup de NVRAM antes de tocar nada ([página 3](https://github.com/nicolvus/a6000-fw-decomp/wiki/3-Backup-de-NVRAM)).
 2. Verificar SHA-256 de cada `.dat` antes de flashear.
 3. Medir el guard del actualizador sin flashear (`fdat_guard_probe.py`).
 4. Registrar cada prueba en cámara en `docs/capture/registro-pruebas-camara.md`.
-5. **Este proyecto no te da garantía ninguna.** Hazlo bajo tu propio riesgo ([Copyright y uso](11-Copyright-y-uso)).
+5. **Este proyecto no te da garantía ninguna.** Hazlo bajo tu propio riesgo ([Copyright y uso](https://github.com/nicolvus/a6000-fw-decomp/wiki/11-Copyright-y-uso)).

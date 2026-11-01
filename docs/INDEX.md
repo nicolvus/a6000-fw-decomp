@@ -23,7 +23,6 @@ y su evidencia `analysis/s<N>*/`; la categoría sale de reglas sobre el nombre d
 | [tests/](../tests/) | Verificadores y pruebas |
 | [projects/electronic-shutter/](../projects/electronic-shutter/README.md) | Documentación del objetivo principal |
 | [docs/CORRECTIONS.md](CORRECTIONS.md), [docs/OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) | Derivados del grafo de conocimiento (no editar a mano) |
-| [docs/history/](history/) | Versiones íntegras anteriores de README, CURRENT y STATE (solo lectura) |
 
 ## Documentos de síntesis por subsistema
 

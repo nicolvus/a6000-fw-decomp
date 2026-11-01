@@ -41,11 +41,12 @@ La guía paso a paso vive en la **[Wiki CFW Sony a6000](https://github.com/nicol
 | Flashear el 3.23 | [Instalar el 3.23](wiki/5-Instalar-el-3.23.md) |
 | Exposición uniforme por filas (RAM) | [Capa 2](wiki/6-Capa-2-exposicion-uniforme.md) |
 | Si algo falla | [Volver atrás y recuperación](wiki/7-Volver-atras-y-recuperacion.md) |
+| Scripts y apps con su uso | [Herramientas](wiki/12-Herramientas.md) |
 | Fundamentos y resultados | [Cómo funciona](wiki/8-Como-funciona-el-parche.md) · [Resultados y límites](wiki/9-Resultados-y-limites.md) |
 
 Los dos paquetes ya construidos están en el [release `fw-3.23-3.24`](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24)
 (hashes `4c21353d…` y `e1345aff…`); construirlos tú desde el firmware oficial da exactamente los mismos. La versión anterior de este README,
-con el detalle del parche, el incidente del 3.25 y las mediciones, se conserva en [docs/history/README-historial-2026-11-01.md](docs/history/README-historial-2026-11-01.md).
+con el detalle del parche, el incidente del 3.25 y las mediciones, está en la wiki y en los informes de `docs/capture/`.
 
 ## Límites y riesgos
 
@@ -66,7 +67,6 @@ con el detalle del parche, el incidente del 3.25 y las mediciones, se conserva e
 | Registro de pruebas en cámara | [docs/capture/registro-pruebas-camara.md](docs/capture/registro-pruebas-camara.md) |
 | Historial cronológico | [knowledge/PROGRESS.md](knowledge/PROGRESS.md) |
 | Tablero de progreso | <https://nicolvus.github.io/a6000-fw-decomp/progress/> |
-| README anteriores | [docs/history/](docs/history/) |
 | Guía de réplica (wiki) | [wiki/Home.md](wiki/Home.md) |
 | Uso por agentes | [docs/agent/README.md](docs/agent/README.md), [AGENTS.md](AGENTS.md), [CLAUDE.md](CLAUDE.md) |
 

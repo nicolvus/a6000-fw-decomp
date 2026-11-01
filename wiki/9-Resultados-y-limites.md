@@ -5,7 +5,7 @@
 - **Imágenes completas** (JPEG 6000×4000 y ARW 6024×4024) sin obturador mecánico.
 - **Disparo y rearme:** 36/36 disparos en ráfagas de 6 y 10/10 sueltos; rearme de 0,7–1,0 s; latencia de 2,6–2,9 s a velocidades rápidas.
 - **Exposición** (E25-10): sin cortina trasera la fila `i` integra T + ≈7 ms + 15,2 µs·i (lectura ≈ 61 ms), así que de 1/4000 a 1/500 la velocidad apenas escala.
-  Con la [capa 2](6-Capa-2-exposicion-uniforme) la exposición es uniforme.
+  Con la [capa 2](https://github.com/nicolvus/a6000-fw-decomp/wiki/6-Capa-2-exposicion-uniforme) la exposición es uniforme.
 
 ## Puntos débiles
 
