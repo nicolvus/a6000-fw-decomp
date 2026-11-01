@@ -204,7 +204,7 @@ archivos se retirarán si Sony lo solicita.
 **Uso.**
 - Todo se ofrece «tal cual», sin garantía de ningún tipo; usarlo es bajo tu propio riesgo y puede inutilizar la cámara (ver [Límites y riesgos](#límites-y-riesgos)).
 - Pensado para investigación, aprendizaje y uso personal en una cámara de tu propiedad. No lo uses para eludir protecciones con fines ilícitos ni para redistribuir firmware de Sony por tu cuenta.
-- El repositorio todavía no declara una licencia de código (no hay archivo `LICENSE`); hasta que se añada, no se concede ningún permiso de reutilización más allá de leerlo y usarlo como se describe aquí.
+- El código, los scripts, el análisis y la documentación del autor se publican bajo licencia [MIT](LICENSE). Esa licencia **no** cubre el firmware de Sony ni los `.dat` del release.
 
 ## Seguridad y contribución
 

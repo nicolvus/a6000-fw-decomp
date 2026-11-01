@@ -307,6 +307,7 @@ Carril separado: no reutiliza ni modifica conclusiones de captura/sensor. Índic
 
 | Fecha | Cambio |
 |---|---|
+| 01-11-2026 | **R8 (corrección de texto) y licencia:** release `fw-3.23-3.24` y README corregidos: requisito 3.21 oficial (el 3.22 era un paquete intermedio propio), se elimina la afirmación «con licencia de uso» (el autor no tiene licencia de Sony), se añade «Copyright y uso» y `LICENSE` MIT solo para el código/documentación propios. Riesgo abierto: una solicitud de retirada de Sony sobre los `.dat`. |
 | 25-10-2026 | Creación a partir de la revisión integral del repo: 13 pendientes estáticos, 5 documentales, 4 de entorno, 6 físicos, 2 de respaldo. |
 | 25-10-2026 | S403: cerrados C1–C4, D2, E5 y E7; avanzados D1, D3, E2, E3, E4, E8, E12; reclasificados E6, E9 y E13 como BLOQUEADO; nuevos E14, E15 y D6. |
 | 26-10-2026 | E15 y E12 cerrados (receptor = `kikilog.ko`); nuevo E16 (entradas indirectas de `CURTAINMODE`). |

@@ -59,6 +59,8 @@ va de 3.22 a 3.23, que fue mi ruta real. El efecto «sin bobinas» de la 3.22 es
 
 ## Instalación (3.21 o 3.22 → 3.23)
 
+> **Corregido el 01-11-2026:** el 3.22 era un paquete intermedio del autor y ya no es requisito; el requisito vigente es el 3.21 oficial (ver README principal). Se conserva el texto original como historial.
+
 Requisitos: A6000 con firmware **3.21 o 3.22**, batería cargada, cable USB y [`pmca-console`](https://github.com/ma1co/Sony-PMCA-RE).
 El actualizador solo acepta versiones estrictamente mayores que la instalada, y la 3.23 lo es sobre ambas. **Probado únicamente desde la 3.22** (T040):
 la 3.22 ya llevaba el Darwin «tipo 0» (desactivar bobinas) y la 3.23 añade B1a (no accionar el mecanismo completo). Desde la 3.21 original
