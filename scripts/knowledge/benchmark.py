@@ -42,7 +42,7 @@ REFERENCE_QUERIES = [
      "note": "docs/capture/efcs-capture-selector.md (coincidencia de ruta esperada)"},
     {"id": "darwin-rom-base", "kind": "concept", "query": "Darwin base ROM corrección crítica",
      "expect": "4200",
-     "note": "CONTEXT.md / docs/history (corrección Darwin base 0x4200, verificada manualmente)"},
+     "note": "CONTEXT.md (corrección Darwin base 0x4200, verificada manualmente)"},
     {"id": "a6300-comparison", "kind": "concept", "query": "A6300 comparación estática silent",
      "expect": "a6300-silent-comparison",
      "note": "docs/capture/a6300-silent-comparison.md (coincidencia de ruta esperada)"},

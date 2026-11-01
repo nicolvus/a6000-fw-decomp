@@ -17,7 +17,7 @@ trabajo significativa, antes de que termine la sesión.
    relevantes en `docs/PENDIENTES.md` y los informes necesarios (por tema: `docs/INDEX.md`).
 2. Leer `docs/STATE.md` para las conclusiones y límites vigentes. `knowledge/PROGRESS.md` es el
    historial cronológico: consultarlo solo si hace falta el detalle de cómo se llegó al estado actual.
-3. NO releer los archivos históricos (`docs/history/`, `knowledge/history/`) completos salvo
+3. NO releer `knowledge/PROGRESS.md` completo salvo
    que `CURRENT.md`/`STATE.md` no basten.
 
 ## Procedimiento — registrar checkpoint
@@ -32,8 +32,7 @@ trabajo significativa, antes de que termine la sesión.
 2. No acumular resúmenes largos: una fase ya completa se resume en 3-6 líneas
    con referencias a archivos, no se repite el detalle de cómo se hizo.
 3. Si la investigación (no el sistema de conocimiento) avanzó, actualizar
-   `docs/STATE.md` y, si corresponde, mover sesiones cerradas de `CONTEXT.md`
-   a `docs/history/` (ver fase 4 en PROGRESS.md para el patrón ya usado).
+   `docs/STATE.md` y, si corresponde, resumir en él las sesiones cerradas de `CONTEXT.md`.
 
 ## Entradas / salidas
 

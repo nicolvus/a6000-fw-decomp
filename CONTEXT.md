@@ -60,17 +60,14 @@ prueba una funcionalidad*, [knowledge/CURRENT.md](knowledge/CURRENT.md) ·
 [estado y restricciones](docs/STATE.md). S51 **permanece (A=NO, B=NO, C=NO)**. Las sesiones descritas a
 continuación son antecedentes.
 
-Versión breve (18-10-2026). El repositorio no conserva copias de versiones
-anteriores de este archivo: el historial íntegro de sesiones S1–S27 y de este
-mismo archivo está en Git. Las copias de `docs/history/` se eliminaron el
-01-11-2026 (no se conserva historial en archivos .md).
+Versión breve (18-10-2026), con solo las sesiones recientes.
 Estado consolidado y restricciones: [docs/STATE.md](docs/STATE.md).
 Correcciones y preguntas abiertas (generadas del grafo de conocimiento):
 [docs/CORRECTIONS.md](docs/CORRECTIONS.md), [docs/OPEN-QUESTIONS.md](docs/OPEN-QUESTIONS.md).
 
 Este archivo conserva solo las sesiones más recientes (investigación activa).
 No acumular aquí el historial completo de nuevo: lo cerrado se resume en
-`docs/STATE.md`/`docs/CORRECTIONS.md`; el historial está en Git.
+`docs/STATE.md`/`docs/CORRECTIONS.md`.
 
 ## S170–S174 — cinco controles positivos sobre el obturador y una regla metodológica (22-10-2026)
 

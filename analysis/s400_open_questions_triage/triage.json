@@ -28,7 +28,7 @@
   "contexto": "* **S168** — `position num in rolling is strange %d` (`0x43d9fe03`, A6300) tiene **0 referencias\n  de código** → **cadena muerta**; **corrige** el colateral de S164.\n* **S169** — el A6300 tiene una capa de validación de parámetros de cámara (`LiroSeq`, **201**\n  propiedades `CheckSet*`, **370** comprobaciones) con parámetros de obturador `sc_ShutDrive`",
   "revision_manual": "rolling",
   "destino_cita": "# S164 — el módulo `[CAMERA_IS]` (17 trazas): la capa de estabilización de imagen de la cámara\n\n> Línea de RE general. Solo bytes (A6000 fw3.21; comparación con A7S fw3.20 y A6300 fw2.01).\n> `vaddr = 0x43541000 + file_offset`. Referencias: regla **estricta** (canónica del repo).\n\n## Veredicto\n\n**`[CAMERA_IS]` es la capa de estabilización de imagen (IS) de la cámara**, con **4 sub-capas**:\n`MOUNT` (5 trazas), `DIST` (5), `AS` (3), `EIS` (4). **17 cadenas, 21 sitios PIC, 13 funciones,\n17/17 referenciadas (0 muertas), 7 envoltorios de traza.**\n\n## Cifras",
-  "fuente_actual": "CONTEXT.md:78"
+  "fuente_actual": "CONTEXT.md:75"
  },
  {
   "fuente": "CONTEXT.md:41",
@@ -44,7 +44,7 @@
   "contexto": "**código de modo de obturador** (`0x80`→3, `0x100`→4) y\n  `EC_NonlinearElecShutter_MechShutterTable.cpp` implementa la **equivalencia no lineal\n  electrónica/mecánica**; **corrige a S135** (los 128 bytes de `0x43dcfa9e` no tienen referencias).\n* **S174** — el conversor `CamMsgConv` del `libObj.so` conoce **216/221/240** nombres `…ForLiro` y\n  **soporta 0/0/6**; en la A6000 y la A7S **todos** están en la lista de **rechazo**.",
   "revision_manual": "tabla-128",
   "destino_cita": "# S135 — el subsistema `ElecShutter` del A6300 como control positivo\n\n**Hito de la línea de ingeniería inversa general** con relevancia directa para la **línea del\nobturador electrónico**.\n\nInforme: [analysis/s135_elec_shutter/elec_shutter_scan.md](../../analysis/s135_elec_shutter/elec_shutter_scan.md) ·\nDatos: `elec_shutter_scan.json` · Test: `tests/test_s135_elec_shutter.py`.\n\n## Hallazgo central\n\nBuscando en los tres `av-cam.bin` disponibles las huellas de un subsistema de **obturador\nelectrónico**, aparece una asimetría inequívoca:",
-  "fuente_actual": "CONTEXT.md:90"
+  "fuente_actual": "CONTEXT.md:87"
  },
  {
   "fuente": "CONTEXT.md:237",
@@ -60,7 +60,7 @@
   "contexto": "de438069f0. [Informe S40](docs/capture/s40-context-origin-imx210.md).\n\n## S30 — EncodeStill y corrección del supuesto origen YC (17-10-2026)\n\nInforme `docs/capture/s30-pipelines-capture-encode.md`; auditor",
   "revision_manual": "procedencia-invertida",
   "destino_cita": "# S30 — captura, origen YC y cierre de EncodeStill\n\nFirmware A6000 3.21; análisis estático local. Direcciones `libObj`, `libmpr`\ny `libBizFw`: VA ELF; Ghidra las representa con `+0x10000`. Direcciones\n`av-cam.bin`: VA con base `0x43541000`. No se ejecutó nada en la cámara.\n\n## Resultado de los tres requisitos\n\n| Requisito | Resultado comprobado | Estado |\n|---|---|---|\n| 1. Captura nueva sin movimiento de cortinas | La ruta fija conocida continúa por CAIF/Darwin. `0x437f7ff0` selecciona drive/relación de tamaño; no inicia una adquisición independiente. | **NO CERRADO** |\n| 2. Sensor/DMA → YC válido | Se resolvió el origen de `ctx+0x4b54`: es CaptureId. Esa ruta no entrega el raster. Falta identificar el productor real y su terminación DMA. | **NO CERRADO** |",
-  "fuente_actual": "CONTEXT.md:286"
+  "fuente_actual": "CONTEXT.md:283"
  },
  {
   "fuente": "CONTEXT.md:237",
@@ -76,7 +76,7 @@
   "contexto": "de438069f0. [Informe S40](docs/capture/s40-context-origin-imx210.md).\n\n## S30 — EncodeStill y corrección del supuesto origen YC (17-10-2026)\n\nInforme `docs/capture/s30-pipelines-capture-encode.md`; auditor",
   "revision_manual": "adyacencia",
   "destino_cita": "# S40 — origen de context[0]+0x24/+0x48/+0x458 y frontera IMX210\n\n18-10-2026. **PARCIAL:** origen de API y copias de los tres campos recuperados;\nno se demuestra exhaustividad universal de escritores ni equivalencia con\nFPS, exposición o formato de píxel. La rama estática sigue abierta.\n\n## VERIFICADO — método e integridad\n\nLectura limitada a CURRENT, CONTEXT breve, informe S39 y final de PROGRESS;\nsin releer S31–S38. Aplicadas knowledge-navigation/contradiction-audit:\n`search.py claim docs/capture/s39-image-format-apl.md` no registra correcciones;\nesto no garantiza ausencia de correcciones en prosa.",
-  "fuente_actual": "CONTEXT.md:286"
+  "fuente_actual": "CONTEXT.md:283"
  },
  {
   "fuente": "CONTEXT.md:323",
@@ -92,7 +92,7 @@
   "contexto": "Los cuatro ParamStd de YC0 son ENTRADAS que alimentan propiedad remota de\nREQUEST_CONNECT(1000,1,28,2), no raster ni cuatro retornos gráficos.\nCORRIGE S23: a14f88 envía20B y copia32B, dos paresLDM/STM en a150c8..d2.\nCORRIGE S25: response+1c→out+1c, no response+20; +18=estado,+1c=resultado.\nWriteStill909a84 consultaPool,UniqueId ymetadatos; preparaWriteStillParam40B y",
   "revision_manual": "dataflow-copia",
   "destino_cita": "# S23 — frontera Dataflow de los pines YC de ObjCamera\n\nActualización S28: [receptor y contrato resueltos](s28-osal-pin-contract-closure.md).\nEl helper envía 20 B pero copia **32 B** de respuesta; los cuatro enteros son\npropiedades del pin remoto que se usan en REQUEST_CONNECT, no campos gráficos.\nEsta corrección prevalece sobre las descripciones históricas siguientes.\n\nFecha: 2026-10-17. Alcance: `libObj.so` de A6000 FW 3.21, sólo lectura\nestática. SHA-256 comprobado: `8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a`.\n\n## Hallazgo\n",
-  "fuente_actual": "CONTEXT.md:372"
+  "fuente_actual": "CONTEXT.md:369"
  },
  {
   "fuente": "CONTEXT.md:324",
@@ -108,7 +108,7 @@
   "contexto": "REQUEST_CONNECT(1000,1,28,2), no raster ni cuatro retornos gráficos.\nCORRIGE S23: a14f88 envía20B y copia32B, dos paresLDM/STM en a150c8..d2.\nCORRIGE S25: response+1c→out+1c, no response+20; +18=estado,+1c=resultado.\nWriteStill909a84 consultaPool,UniqueId ymetadatos; preparaWriteStillParam40B y\nStillInfo6b0B; llamada90a172→8fe0a0. PIN_PROPERTY no satisface ese contrato.",
   "revision_manual": "dataflow-copia",
   "destino_cita": "# S25 — límite estático del registro Dataflow para `0x50004`\n\nActualización S28: [registro y receptor identificados](s28-osal-pin-contract-closure.md).\nInfraImaging construye los cinco pines estáticamente y sirve la cola en\n`0x4379744c`. La copia correcta es `reply+0x1c → out+0x1c`, dentro de 32 B.\nEste cierre supera el límite histórico y corrige el offset descrito abajo.\n\nFecha: 2026-10-17. Análisis estático de `libBizFw.so` y `libObj.so` de A6000\nFW 3.21.\n\n## Resultado\n",
-  "fuente_actual": "CONTEXT.md:373"
+  "fuente_actual": "CONTEXT.md:370"
  },
  {
   "fuente": "CONTEXT.md:331",
@@ -124,7 +124,7 @@
   "contexto": "tablas,SHA y ensamblador. No firmware ejecutado ni paquetes instalados.\nSin repositorio.git disponible; no commit/push. SilentShutter sinvalidar.\nLas secciones S23–S27 históricas sobre receptor/alta desconocidos quedan superadas.\n\n## Próximo paso de investigación vigente",
   "revision_manual": "dataflow-receptor",
   "destino_cita": "# S23 — frontera Dataflow de los pines YC de ObjCamera\n\nActualización S28: [receptor y contrato resueltos](s28-osal-pin-contract-closure.md).\nEl helper envía 20 B pero copia **32 B** de respuesta; los cuatro enteros son\npropiedades del pin remoto que se usan en REQUEST_CONNECT, no campos gráficos.\nEsta corrección prevalece sobre las descripciones históricas siguientes.\n\nFecha: 2026-10-17. Alcance: `libObj.so` de A6000 FW 3.21, sólo lectura\nestática. SHA-256 comprobado: `8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a`.\n\n## Hallazgo\n",
-  "fuente_actual": "CONTEXT.md:380"
+  "fuente_actual": "CONTEXT.md:377"
  },
  {
   "fuente": "CONTEXT.md:331",
@@ -140,7 +140,7 @@
   "contexto": "tablas,SHA y ensamblador. No firmware ejecutado ni paquetes instalados.\nSin repositorio.git disponible; no commit/push. SilentShutter sinvalidar.\nLas secciones S23–S27 históricas sobre receptor/alta desconocidos quedan superadas.\n\n## Próximo paso de investigación vigente",
   "revision_manual": "dataflow-receptor",
   "destino_cita": "# S27 — recableado de `State_IntelligentActivePostProcess`\n\nActualización S28: [semántica y registro resueltos](s28-osal-pin-contract-closure.md).\nLa transición conecta VEF YC salida 0/2 con InfraImaging YC entrada 0/1,\ntras desconectar VEF salida 0/2 y ScalarInfra salida 0/1.\nEl registro y receptor descritos como pendientes abajo ya están identificados.\n\nFecha: 2026-10-17. Análisis estático de `libObj.so` y `libBizFw.so` de A6000\nFW 3.21. Este avance no cierra la ruta sensor → YC.\n\n## Hallazgo\n",
-  "fuente_actual": "CONTEXT.md:380"
+  "fuente_actual": "CONTEXT.md:377"
  },
  {
   "fuente": "analysis/ghidra/README.md:43",
@@ -4296,7 +4296,7 @@
   "contexto": "* **S168** — `position num in rolling is strange %d` (`0x43d9fe03`, A6300) tiene **0 referencias\n  de código** → **cadena muerta**; **corrige** el colateral de S164.\n* **S169** — el A6300 tiene una capa de validación de parámetros de cámara (`LiroSeq`, **201**\n  propiedades `CheckSet*`, **370** comprobaciones) con parámetros de obturador `sc_ShutDrive`",
   "revision_manual": "rolling",
   "destino_cita": "# S164 — el módulo `[CAMERA_IS]` (17 trazas): la capa de estabilización de imagen de la cámara\n\n> Línea de RE general. Solo bytes (A6000 fw3.21; comparación con A7S fw3.20 y A6300 fw2.01).\n> `vaddr = 0x43541000 + file_offset`. Referencias: regla **estricta** (canónica del repo).\n\n## Veredicto\n\n**`[CAMERA_IS]` es la capa de estabilización de imagen (IS) de la cámara**, con **4 sub-capas**:\n`MOUNT` (5 trazas), `DIST` (5), `AS` (3), `EIS` (4). **17 cadenas, 21 sitios PIC, 13 funciones,\n17/17 referenciadas (0 muertas), 7 envoltorios de traza.**\n\n## Cifras",
-  "fuente_actual": "CONTEXT.md:78"
+  "fuente_actual": "CONTEXT.md:75"
  },
  {
   "fuente": "CONTEXT.md:45",
@@ -4312,7 +4312,7 @@
   "contexto": "**código de modo de obturador** (`0x80`→3, `0x100`→4) y\n  `EC_NonlinearElecShutter_MechShutterTable.cpp` implementa la **equivalencia no lineal\n  electrónica/mecánica**; **corrige a S135** (los 128 bytes de `0x43dcfa9e` no tienen referencias).\n* **S174** — el conversor `CamMsgConv` del `libObj.so` conoce **216/221/240** nombres `…ForLiro` y\n  **soporta 0/0/6**; en la A6000 y la A7S **todos** están en la lista de **rechazo**.",
   "revision_manual": "tabla-128",
   "destino_cita": "# S135 — el subsistema `ElecShutter` del A6300 como control positivo\n\n**Hito de la línea de ingeniería inversa general** con relevancia directa para la **línea del\nobturador electrónico**.\n\nInforme: [analysis/s135_elec_shutter/elec_shutter_scan.md](../../analysis/s135_elec_shutter/elec_shutter_scan.md) ·\nDatos: `elec_shutter_scan.json` · Test: `tests/test_s135_elec_shutter.py`.\n\n## Hallazgo central\n\nBuscando en los tres `av-cam.bin` disponibles las huellas de un subsistema de **obturador\nelectrónico**, aparece una asimetría inequívoca:",
-  "fuente_actual": "CONTEXT.md:90"
+  "fuente_actual": "CONTEXT.md:87"
  },
  {
   "fuente": "CONTEXT.md:241",
@@ -4328,7 +4328,7 @@
   "contexto": "de438069f0. [Informe S40](docs/capture/s40-context-origin-imx210.md).\n\n## S30 — EncodeStill y corrección del supuesto origen YC (17-10-2026)\n\nInforme `docs/capture/s30-pipelines-capture-encode.md`; auditor",
   "revision_manual": "procedencia-invertida",
   "destino_cita": "# S30 — captura, origen YC y cierre de EncodeStill\n\nFirmware A6000 3.21; análisis estático local. Direcciones `libObj`, `libmpr`\ny `libBizFw`: VA ELF; Ghidra las representa con `+0x10000`. Direcciones\n`av-cam.bin`: VA con base `0x43541000`. No se ejecutó nada en la cámara.\n\n## Resultado de los tres requisitos\n\n| Requisito | Resultado comprobado | Estado |\n|---|---|---|\n| 1. Captura nueva sin movimiento de cortinas | La ruta fija conocida continúa por CAIF/Darwin. `0x437f7ff0` selecciona drive/relación de tamaño; no inicia una adquisición independiente. | **NO CERRADO** |\n| 2. Sensor/DMA → YC válido | Se resolvió el origen de `ctx+0x4b54`: es CaptureId. Esa ruta no entrega el raster. Falta identificar el productor real y su terminación DMA. | **NO CERRADO** |",
-  "fuente_actual": "CONTEXT.md:286"
+  "fuente_actual": "CONTEXT.md:283"
  },
  {
   "fuente": "CONTEXT.md:241",
@@ -4344,7 +4344,7 @@
   "contexto": "de438069f0. [Informe S40](docs/capture/s40-context-origin-imx210.md).\n\n## S30 — EncodeStill y corrección del supuesto origen YC (17-10-2026)\n\nInforme `docs/capture/s30-pipelines-capture-encode.md`; auditor",
   "revision_manual": "adyacencia",
   "destino_cita": "# S40 — origen de context[0]+0x24/+0x48/+0x458 y frontera IMX210\n\n18-10-2026. **PARCIAL:** origen de API y copias de los tres campos recuperados;\nno se demuestra exhaustividad universal de escritores ni equivalencia con\nFPS, exposición o formato de píxel. La rama estática sigue abierta.\n\n## VERIFICADO — método e integridad\n\nLectura limitada a CURRENT, CONTEXT breve, informe S39 y final de PROGRESS;\nsin releer S31–S38. Aplicadas knowledge-navigation/contradiction-audit:\n`search.py claim docs/capture/s39-image-format-apl.md` no registra correcciones;\nesto no garantiza ausencia de correcciones en prosa.",
-  "fuente_actual": "CONTEXT.md:286"
+  "fuente_actual": "CONTEXT.md:283"
  },
  {
   "fuente": "CONTEXT.md:327",
@@ -4360,7 +4360,7 @@
   "contexto": "Los cuatro ParamStd de YC0 son ENTRADAS que alimentan propiedad remota de\nREQUEST_CONNECT(1000,1,28,2), no raster ni cuatro retornos gráficos.\nCORRIGE S23: a14f88 envía20B y copia32B, dos paresLDM/STM en a150c8..d2.\nCORRIGE S25: response+1c→out+1c, no response+20; +18=estado,+1c=resultado.\nWriteStill909a84 consultaPool,UniqueId ymetadatos; preparaWriteStillParam40B y",
   "revision_manual": "dataflow-copia",
   "destino_cita": "# S23 — frontera Dataflow de los pines YC de ObjCamera\n\nActualización S28: [receptor y contrato resueltos](s28-osal-pin-contract-closure.md).\nEl helper envía 20 B pero copia **32 B** de respuesta; los cuatro enteros son\npropiedades del pin remoto que se usan en REQUEST_CONNECT, no campos gráficos.\nEsta corrección prevalece sobre las descripciones históricas siguientes.\n\nFecha: 2026-10-17. Alcance: `libObj.so` de A6000 FW 3.21, sólo lectura\nestática. SHA-256 comprobado: `8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a`.\n\n## Hallazgo\n",
-  "fuente_actual": "CONTEXT.md:372"
+  "fuente_actual": "CONTEXT.md:369"
  },
  {
   "fuente": "CONTEXT.md:328",
@@ -4376,7 +4376,7 @@
   "contexto": "REQUEST_CONNECT(1000,1,28,2), no raster ni cuatro retornos gráficos.\nCORRIGE S23: a14f88 envía20B y copia32B, dos paresLDM/STM en a150c8..d2.\nCORRIGE S25: response+1c→out+1c, no response+20; +18=estado,+1c=resultado.\nWriteStill909a84 consultaPool,UniqueId ymetadatos; preparaWriteStillParam40B y\nStillInfo6b0B; llamada90a172→8fe0a0. PIN_PROPERTY no satisface ese contrato.",
   "revision_manual": "dataflow-copia",
   "destino_cita": "# S25 — límite estático del registro Dataflow para `0x50004`\n\nActualización S28: [registro y receptor identificados](s28-osal-pin-contract-closure.md).\nInfraImaging construye los cinco pines estáticamente y sirve la cola en\n`0x4379744c`. La copia correcta es `reply+0x1c → out+0x1c`, dentro de 32 B.\nEste cierre supera el límite histórico y corrige el offset descrito abajo.\n\nFecha: 2026-10-17. Análisis estático de `libBizFw.so` y `libObj.so` de A6000\nFW 3.21.\n\n## Resultado\n",
-  "fuente_actual": "CONTEXT.md:373"
+  "fuente_actual": "CONTEXT.md:370"
  },
  {
   "fuente": "CONTEXT.md:335",
@@ -4392,7 +4392,7 @@
   "contexto": "tablas,SHA y ensamblador. No firmware ejecutado ni paquetes instalados.\nSin repositorio.git disponible; no commit/push. SilentShutter sinvalidar.\nLas secciones S23–S27 históricas sobre receptor/alta desconocidos quedan superadas.\n\n## Próximo paso de investigación vigente",
   "revision_manual": "dataflow-receptor",
   "destino_cita": "# S23 — frontera Dataflow de los pines YC de ObjCamera\n\nActualización S28: [receptor y contrato resueltos](s28-osal-pin-contract-closure.md).\nEl helper envía 20 B pero copia **32 B** de respuesta; los cuatro enteros son\npropiedades del pin remoto que se usan en REQUEST_CONNECT, no campos gráficos.\nEsta corrección prevalece sobre las descripciones históricas siguientes.\n\nFecha: 2026-10-17. Alcance: `libObj.so` de A6000 FW 3.21, sólo lectura\nestática. SHA-256 comprobado: `8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a`.\n\n## Hallazgo\n",
-  "fuente_actual": "CONTEXT.md:380"
+  "fuente_actual": "CONTEXT.md:377"
  },
  {
   "fuente": "CONTEXT.md:335",
@@ -4408,7 +4408,7 @@
   "contexto": "tablas,SHA y ensamblador. No firmware ejecutado ni paquetes instalados.\nSin repositorio.git disponible; no commit/push. SilentShutter sinvalidar.\nLas secciones S23–S27 históricas sobre receptor/alta desconocidos quedan superadas.\n\n## Próximo paso de investigación vigente",
   "revision_manual": "dataflow-receptor",
   "destino_cita": "# S27 — recableado de `State_IntelligentActivePostProcess`\n\nActualización S28: [semántica y registro resueltos](s28-osal-pin-contract-closure.md).\nLa transición conecta VEF YC salida 0/2 con InfraImaging YC entrada 0/1,\ntras desconectar VEF salida 0/2 y ScalarInfra salida 0/1.\nEl registro y receptor descritos como pendientes abajo ya están identificados.\n\nFecha: 2026-10-17. Análisis estático de `libObj.so` y `libBizFw.so` de A6000\nFW 3.21. Este avance no cierra la ruta sensor → YC.\n\n## Hallazgo\n",
-  "fuente_actual": "CONTEXT.md:380"
+  "fuente_actual": "CONTEXT.md:377"
  },
  {
   "fuente": "README.md:5",
@@ -5301,7 +5301,7 @@
   "contexto": "* **S168** — `position num in rolling is strange %d` (`0x43d9fe03`, A6300) tiene **0 referencias\n  de código** → **cadena muerta**; **corrige** el colateral de S164.\n* **S169** — el A6300 tiene una capa de validación de parámetros de cámara (`LiroSeq`, **201**\n  propiedades `CheckSet*`, **370** comprobaciones) con parámetros de obturador `sc_ShutDrive`",
   "revision_manual": "rolling",
   "destino_cita": "# S164 — el módulo `[CAMERA_IS]` (17 trazas): la capa de estabilización de imagen de la cámara\n\n> Línea de RE general. Solo bytes (A6000 fw3.21; comparación con A7S fw3.20 y A6300 fw2.01).\n> `vaddr = 0x43541000 + file_offset`. Referencias: regla **estricta** (canónica del repo).\n\n## Veredicto\n\n**`[CAMERA_IS]` es la capa de estabilización de imagen (IS) de la cámara**, con **4 sub-capas**:\n`MOUNT` (5 trazas), `DIST` (5), `AS` (3), `EIS` (4). **17 cadenas, 21 sitios PIC, 13 funciones,\n17/17 referenciadas (0 muertas), 7 envoltorios de traza.**\n\n## Cifras",
-  "fuente_actual": "CONTEXT.md:78"
+  "fuente_actual": "CONTEXT.md:75"
  },
  {
   "fuente": "CONTEXT.md:49",
@@ -5317,7 +5317,7 @@
   "contexto": "**código de modo de obturador** (`0x80`→3, `0x100`→4) y\n  `EC_NonlinearElecShutter_MechShutterTable.cpp` implementa la **equivalencia no lineal\n  electrónica/mecánica**; **corrige a S135** (los 128 bytes de `0x43dcfa9e` no tienen referencias).\n* **S174** — el conversor `CamMsgConv` del `libObj.so` conoce **216/221/240** nombres `…ForLiro` y\n  **soporta 0/0/6**; en la A6000 y la A7S **todos** están en la lista de **rechazo**.",
   "revision_manual": "tabla-128",
   "destino_cita": "# S135 — el subsistema `ElecShutter` del A6300 como control positivo\n\n**Hito de la línea de ingeniería inversa general** con relevancia directa para la **línea del\nobturador electrónico**.\n\nInforme: [analysis/s135_elec_shutter/elec_shutter_scan.md](../../analysis/s135_elec_shutter/elec_shutter_scan.md) ·\nDatos: `elec_shutter_scan.json` · Test: `tests/test_s135_elec_shutter.py`.\n\n## Hallazgo central\n\nBuscando en los tres `av-cam.bin` disponibles las huellas de un subsistema de **obturador\nelectrónico**, aparece una asimetría inequívoca:",
-  "fuente_actual": "CONTEXT.md:90"
+  "fuente_actual": "CONTEXT.md:87"
  },
  {
   "fuente": "CONTEXT.md:245",
@@ -5333,7 +5333,7 @@
   "contexto": "de438069f0. [Informe S40](docs/capture/s40-context-origin-imx210.md).\n\n## S30 — EncodeStill y corrección del supuesto origen YC (17-10-2026)\n\nInforme `docs/capture/s30-pipelines-capture-encode.md`; auditor",
   "revision_manual": "procedencia-invertida",
   "destino_cita": "# S30 — captura, origen YC y cierre de EncodeStill\n\nFirmware A6000 3.21; análisis estático local. Direcciones `libObj`, `libmpr`\ny `libBizFw`: VA ELF; Ghidra las representa con `+0x10000`. Direcciones\n`av-cam.bin`: VA con base `0x43541000`. No se ejecutó nada en la cámara.\n\n## Resultado de los tres requisitos\n\n| Requisito | Resultado comprobado | Estado |\n|---|---|---|\n| 1. Captura nueva sin movimiento de cortinas | La ruta fija conocida continúa por CAIF/Darwin. `0x437f7ff0` selecciona drive/relación de tamaño; no inicia una adquisición independiente. | **NO CERRADO** |\n| 2. Sensor/DMA → YC válido | Se resolvió el origen de `ctx+0x4b54`: es CaptureId. Esa ruta no entrega el raster. Falta identificar el productor real y su terminación DMA. | **NO CERRADO** |",
-  "fuente_actual": "CONTEXT.md:286"
+  "fuente_actual": "CONTEXT.md:283"
  },
  {
   "fuente": "CONTEXT.md:245",
@@ -5349,7 +5349,7 @@
   "contexto": "de438069f0. [Informe S40](docs/capture/s40-context-origin-imx210.md).\n\n## S30 — EncodeStill y corrección del supuesto origen YC (17-10-2026)\n\nInforme `docs/capture/s30-pipelines-capture-encode.md`; auditor",
   "revision_manual": "adyacencia",
   "destino_cita": "# S40 — origen de context[0]+0x24/+0x48/+0x458 y frontera IMX210\n\n18-10-2026. **PARCIAL:** origen de API y copias de los tres campos recuperados;\nno se demuestra exhaustividad universal de escritores ni equivalencia con\nFPS, exposición o formato de píxel. La rama estática sigue abierta.\n\n## VERIFICADO — método e integridad\n\nLectura limitada a CURRENT, CONTEXT breve, informe S39 y final de PROGRESS;\nsin releer S31–S38. Aplicadas knowledge-navigation/contradiction-audit:\n`search.py claim docs/capture/s39-image-format-apl.md` no registra correcciones;\nesto no garantiza ausencia de correcciones en prosa.",
-  "fuente_actual": "CONTEXT.md:286"
+  "fuente_actual": "CONTEXT.md:283"
  },
  {
   "fuente": "CONTEXT.md:332",
@@ -5365,7 +5365,7 @@
   "contexto": "REQUEST_CONNECT(1000,1,28,2), no raster ni cuatro retornos gráficos.\nCORRIGE S23: a14f88 envía20B y copia32B, dos paresLDM/STM en a150c8..d2.\nCORRIGE S25: response+1c→out+1c, no response+20; +18=estado,+1c=resultado.\nWriteStill909a84 consultaPool,UniqueId ymetadatos; preparaWriteStillParam40B y\nStillInfo6b0B; llamada90a172→8fe0a0. PIN_PROPERTY no satisface ese contrato.",
   "revision_manual": "dataflow-copia",
   "destino_cita": "# S25 — límite estático del registro Dataflow para `0x50004`\n\nActualización S28: [registro y receptor identificados](s28-osal-pin-contract-closure.md).\nInfraImaging construye los cinco pines estáticamente y sirve la cola en\n`0x4379744c`. La copia correcta es `reply+0x1c → out+0x1c`, dentro de 32 B.\nEste cierre supera el límite histórico y corrige el offset descrito abajo.\n\nFecha: 2026-10-17. Análisis estático de `libBizFw.so` y `libObj.so` de A6000\nFW 3.21.\n\n## Resultado\n",
-  "fuente_actual": "CONTEXT.md:373"
+  "fuente_actual": "CONTEXT.md:370"
  },
  {
   "fuente": "CONTEXT.md:339",
@@ -5381,7 +5381,7 @@
   "contexto": "tablas,SHA y ensamblador. No firmware ejecutado ni paquetes instalados.\nSin repositorio.git disponible; no commit/push. SilentShutter sinvalidar.\nLas secciones S23–S27 históricas sobre receptor/alta desconocidos quedan superadas.\n\n## Próximo paso de investigación vigente",
   "revision_manual": "dataflow-receptor",
   "destino_cita": "# S27 — recableado de `State_IntelligentActivePostProcess`\n\nActualización S28: [semántica y registro resueltos](s28-osal-pin-contract-closure.md).\nLa transición conecta VEF YC salida 0/2 con InfraImaging YC entrada 0/1,\ntras desconectar VEF salida 0/2 y ScalarInfra salida 0/1.\nEl registro y receptor descritos como pendientes abajo ya están identificados.\n\nFecha: 2026-10-17. Análisis estático de `libObj.so` y `libBizFw.so` de A6000\nFW 3.21. Este avance no cierra la ruta sensor → YC.\n\n## Hallazgo\n",
-  "fuente_actual": "CONTEXT.md:380"
+  "fuente_actual": "CONTEXT.md:377"
  },
  {
   "fuente": "CONTEXT.md:339",
@@ -5397,7 +5397,7 @@
   "contexto": "tablas,SHA y ensamblador. No firmware ejecutado ni paquetes instalados.\nSin repositorio.git disponible; no commit/push. SilentShutter sinvalidar.\nLas secciones S23–S27 históricas sobre receptor/alta desconocidos quedan superadas.\n\n## Próximo paso de investigación vigente",
   "revision_manual": "dataflow-receptor",
   "destino_cita": "# S23 — frontera Dataflow de los pines YC de ObjCamera\n\nActualización S28: [receptor y contrato resueltos](s28-osal-pin-contract-closure.md).\nEl helper envía 20 B pero copia **32 B** de respuesta; los cuatro enteros son\npropiedades del pin remoto que se usan en REQUEST_CONNECT, no campos gráficos.\nEsta corrección prevalece sobre las descripciones históricas siguientes.\n\nFecha: 2026-10-17. Alcance: `libObj.so` de A6000 FW 3.21, sólo lectura\nestática. SHA-256 comprobado: `8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a`.\n\n## Hallazgo\n",
-  "fuente_actual": "CONTEXT.md:380"
+  "fuente_actual": "CONTEXT.md:377"
  },
  {
   "fuente": "README.md:5",
@@ -5749,7 +5749,7 @@
   "contexto": "* **S168** — `position num in rolling is strange %d` (`0x43d9fe03`, A6300) tiene **0 referencias\n  de código** → **cadena muerta**; **corrige** el colateral de S164.\n* **S169** — el A6300 tiene una capa de validación de parámetros de cámara (`LiroSeq`, **201**\n  propiedades `CheckSet*`, **370** comprobaciones) con parámetros de obturador `sc_ShutDrive`",
   "revision_manual": "rolling",
   "destino_cita": "# S164 — el módulo `[CAMERA_IS]` (17 trazas): la capa de estabilización de imagen de la cámara\n\n> Línea de RE general. Solo bytes (A6000 fw3.21; comparación con A7S fw3.20 y A6300 fw2.01).\n> `vaddr = 0x43541000 + file_offset`. Referencias: regla **estricta** (canónica del repo).\n\n## Veredicto\n\n**`[CAMERA_IS]` es la capa de estabilización de imagen (IS) de la cámara**, con **4 sub-capas**:\n`MOUNT` (5 trazas), `DIST` (5), `AS` (3), `EIS` (4). **17 cadenas, 21 sitios PIC, 13 funciones,\n17/17 referenciadas (0 muertas), 7 envoltorios de traza.**\n\n## Cifras",
-  "fuente_actual": "CONTEXT.md:78"
+  "fuente_actual": "CONTEXT.md:75"
  },
  {
   "fuente": "CONTEXT.md:59",
@@ -5765,7 +5765,7 @@
   "contexto": "**código de modo de obturador** (`0x80`→3, `0x100`→4) y\n  `EC_NonlinearElecShutter_MechShutterTable.cpp` implementa la **equivalencia no lineal\n  electrónica/mecánica**; **corrige a S135** (los 128 bytes de `0x43dcfa9e` no tienen referencias).\n* **S174** — el conversor `CamMsgConv` del `libObj.so` conoce **216/221/240** nombres `…ForLiro` y\n  **soporta 0/0/6**; en la A6000 y la A7S **todos** están en la lista de **rechazo**.",
   "revision_manual": "tabla-128",
   "destino_cita": "# S135 — el subsistema `ElecShutter` del A6300 como control positivo\n\n**Hito de la línea de ingeniería inversa general** con relevancia directa para la **línea del\nobturador electrónico**.\n\nInforme: [analysis/s135_elec_shutter/elec_shutter_scan.md](../../analysis/s135_elec_shutter/elec_shutter_scan.md) ·\nDatos: `elec_shutter_scan.json` · Test: `tests/test_s135_elec_shutter.py`.\n\n## Hallazgo central\n\nBuscando en los tres `av-cam.bin` disponibles las huellas de un subsistema de **obturador\nelectrónico**, aparece una asimetría inequívoca:",
-  "fuente_actual": "CONTEXT.md:90"
+  "fuente_actual": "CONTEXT.md:87"
  },
  {
   "fuente": "CONTEXT.md:255",
@@ -5781,7 +5781,7 @@
   "contexto": "de438069f0. [Informe S40](docs/capture/s40-context-origin-imx210.md).\n\n## S30 — EncodeStill y corrección del supuesto origen YC (17-10-2026)\n\nInforme `docs/capture/s30-pipelines-capture-encode.md`; auditor",
   "revision_manual": "procedencia-invertida",
   "destino_cita": "# S30 — captura, origen YC y cierre de EncodeStill\n\nFirmware A6000 3.21; análisis estático local. Direcciones `libObj`, `libmpr`\ny `libBizFw`: VA ELF; Ghidra las representa con `+0x10000`. Direcciones\n`av-cam.bin`: VA con base `0x43541000`. No se ejecutó nada en la cámara.\n\n## Resultado de los tres requisitos\n\n| Requisito | Resultado comprobado | Estado |\n|---|---|---|\n| 1. Captura nueva sin movimiento de cortinas | La ruta fija conocida continúa por CAIF/Darwin. `0x437f7ff0` selecciona drive/relación de tamaño; no inicia una adquisición independiente. | **NO CERRADO** |\n| 2. Sensor/DMA → YC válido | Se resolvió el origen de `ctx+0x4b54`: es CaptureId. Esa ruta no entrega el raster. Falta identificar el productor real y su terminación DMA. | **NO CERRADO** |",
-  "fuente_actual": "CONTEXT.md:286"
+  "fuente_actual": "CONTEXT.md:283"
  },
  {
   "fuente": "CONTEXT.md:255",
@@ -5797,7 +5797,7 @@
   "contexto": "de438069f0. [Informe S40](docs/capture/s40-context-origin-imx210.md).\n\n## S30 — EncodeStill y corrección del supuesto origen YC (17-10-2026)\n\nInforme `docs/capture/s30-pipelines-capture-encode.md`; auditor",
   "revision_manual": "adyacencia",
   "destino_cita": "# S40 — origen de context[0]+0x24/+0x48/+0x458 y frontera IMX210\n\n18-10-2026. **PARCIAL:** origen de API y copias de los tres campos recuperados;\nno se demuestra exhaustividad universal de escritores ni equivalencia con\nFPS, exposición o formato de píxel. La rama estática sigue abierta.\n\n## VERIFICADO — método e integridad\n\nLectura limitada a CURRENT, CONTEXT breve, informe S39 y final de PROGRESS;\nsin releer S31–S38. Aplicadas knowledge-navigation/contradiction-audit:\n`search.py claim docs/capture/s39-image-format-apl.md` no registra correcciones;\nesto no garantiza ausencia de correcciones en prosa.",
-  "fuente_actual": "CONTEXT.md:286"
+  "fuente_actual": "CONTEXT.md:283"
  },
  {
   "fuente": "CONTEXT.md:341",
@@ -5813,7 +5813,7 @@
   "contexto": "Los cuatro ParamStd de YC0 son ENTRADAS que alimentan propiedad remota de\nREQUEST_CONNECT(1000,1,28,2), no raster ni cuatro retornos gráficos.\nCORRIGE S23: a14f88 envía20B y copia32B, dos paresLDM/STM en a150c8..d2.\nCORRIGE S25: response+1c→out+1c, no response+20; +18=estado,+1c=resultado.\nWriteStill909a84 consultaPool,UniqueId ymetadatos; preparaWriteStillParam40B y",
   "revision_manual": "dataflow-copia",
   "destino_cita": "# S23 — frontera Dataflow de los pines YC de ObjCamera\n\nActualización S28: [receptor y contrato resueltos](s28-osal-pin-contract-closure.md).\nEl helper envía 20 B pero copia **32 B** de respuesta; los cuatro enteros son\npropiedades del pin remoto que se usan en REQUEST_CONNECT, no campos gráficos.\nEsta corrección prevalece sobre las descripciones históricas siguientes.\n\nFecha: 2026-10-17. Alcance: `libObj.so` de A6000 FW 3.21, sólo lectura\nestática. SHA-256 comprobado: `8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a`.\n\n## Hallazgo\n",
-  "fuente_actual": "CONTEXT.md:372"
+  "fuente_actual": "CONTEXT.md:369"
  },
  {
   "fuente": "CONTEXT.md:342",
@@ -5829,7 +5829,7 @@
   "contexto": "REQUEST_CONNECT(1000,1,28,2), no raster ni cuatro retornos gráficos.\nCORRIGE S23: a14f88 envía20B y copia32B, dos paresLDM/STM en a150c8..d2.\nCORRIGE S25: response+1c→out+1c, no response+20; +18=estado,+1c=resultado.\nWriteStill909a84 consultaPool,UniqueId ymetadatos; preparaWriteStillParam40B y\nStillInfo6b0B; llamada90a172→8fe0a0. PIN_PROPERTY no satisface ese contrato.",
   "revision_manual": "dataflow-copia",
   "destino_cita": "# S25 — límite estático del registro Dataflow para `0x50004`\n\nActualización S28: [registro y receptor identificados](s28-osal-pin-contract-closure.md).\nInfraImaging construye los cinco pines estáticamente y sirve la cola en\n`0x4379744c`. La copia correcta es `reply+0x1c → out+0x1c`, dentro de 32 B.\nEste cierre supera el límite histórico y corrige el offset descrito abajo.\n\nFecha: 2026-10-17. Análisis estático de `libBizFw.so` y `libObj.so` de A6000\nFW 3.21.\n\n## Resultado\n",
-  "fuente_actual": "CONTEXT.md:373"
+  "fuente_actual": "CONTEXT.md:370"
  },
  {
   "fuente": "CONTEXT.md:349",
@@ -5845,7 +5845,7 @@
   "contexto": "tablas,SHA y ensamblador. No firmware ejecutado ni paquetes instalados.\nSin repositorio.git disponible; no commit/push. SilentShutter sinvalidar.\nLas secciones S23–S27 históricas sobre receptor/alta desconocidos quedan superadas.\n\n## Próximo paso de investigación vigente",
   "revision_manual": "dataflow-receptor",
   "destino_cita": "# S27 — recableado de `State_IntelligentActivePostProcess`\n\nActualización S28: [semántica y registro resueltos](s28-osal-pin-contract-closure.md).\nLa transición conecta VEF YC salida 0/2 con InfraImaging YC entrada 0/1,\ntras desconectar VEF salida 0/2 y ScalarInfra salida 0/1.\nEl registro y receptor descritos como pendientes abajo ya están identificados.\n\nFecha: 2026-10-17. Análisis estático de `libObj.so` y `libBizFw.so` de A6000\nFW 3.21. Este avance no cierra la ruta sensor → YC.\n\n## Hallazgo\n",
-  "fuente_actual": "CONTEXT.md:380"
+  "fuente_actual": "CONTEXT.md:377"
  },
  {
   "fuente": "CONTEXT.md:349",
@@ -5861,7 +5861,7 @@
   "contexto": "tablas,SHA y ensamblador. No firmware ejecutado ni paquetes instalados.\nSin repositorio.git disponible; no commit/push. SilentShutter sinvalidar.\nLas secciones S23–S27 históricas sobre receptor/alta desconocidos quedan superadas.\n\n## Próximo paso de investigación vigente",
   "revision_manual": "dataflow-receptor",
   "destino_cita": "# S23 — frontera Dataflow de los pines YC de ObjCamera\n\nActualización S28: [receptor y contrato resueltos](s28-osal-pin-contract-closure.md).\nEl helper envía 20 B pero copia **32 B** de respuesta; los cuatro enteros son\npropiedades del pin remoto que se usan en REQUEST_CONNECT, no campos gráficos.\nEsta corrección prevalece sobre las descripciones históricas siguientes.\n\nFecha: 2026-10-17. Alcance: `libObj.so` de A6000 FW 3.21, sólo lectura\nestática. SHA-256 comprobado: `8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a`.\n\n## Hallazgo\n",
-  "fuente_actual": "CONTEXT.md:380"
+  "fuente_actual": "CONTEXT.md:377"
  },
  {
   "fuente": "docs/STATE.md:31",
@@ -15169,7 +15169,17 @@
   "veredicto": "VIGENTE",
   "motivo": "Pendiente de revisión manual de fuente, destino y evidencia.",
   "cita": "Correcciones y preguntas abiertas (generadas del grafo de conocimiento):",
-  "contexto": "01-11-2026 (no se conserva historial en archivos .md).\nEstado consolidado y restricciones: [docs/STATE.md](docs/STATE.md).\nCorrecciones y preguntas abiertas (generadas del grafo de conocimiento):\n[docs/CORRECTIONS.md](docs/CORRECTIONS.md), [docs/OPEN-QUESTIONS.md](docs/OPEN-QUESTIONS.md).",
-  "fuente_actual": "CONTEXT.md:68"
+  "contexto": "01-11-2026 (no se conserva historial en archivos .md).\nEstado consolidado y restricciones: [docs/STATE.md](docs/STATE.md).\nCorrecciones y preguntas abiertas (generadas del grafo de conocimiento):\n[docs/CORRECTIONS.md](docs/CORRECTIONS.md), [docs/OPEN-QUESTIONS.md](docs/OPEN-QUESTIONS.md)."
+ },
+ {
+  "fuente": "CONTEXT.md:65",
+  "destino": "docs/STATE.md",
+  "tipo": "CORRECTS",
+  "status_grafo": "CONFLICTO_PENDIENTE",
+  "veredicto": "VIGENTE",
+  "motivo": "Pendiente de revisión manual de fuente, destino y evidencia.",
+  "cita": "Correcciones y preguntas abiertas (generadas del grafo de conocimiento):",
+  "contexto": "Versión breve (18-10-2026), con solo las sesiones recientes.\nEstado consolidado y restricciones: [docs/STATE.md](docs/STATE.md).\nCorrecciones y preguntas abiertas (generadas del grafo de conocimiento):\n[docs/CORRECTIONS.md](docs/CORRECTIONS.md), [docs/OPEN-QUESTIONS.md](docs/OPEN-QUESTIONS.md).",
+  "fuente_actual": "CONTEXT.md:65"
  }
 ]

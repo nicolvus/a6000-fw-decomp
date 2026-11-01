@@ -141,10 +141,7 @@ No se generó FDAT, no se tocó B1a y no se abrió la cámara. Informe:
 ## Reorganización documental — 26-10-2026
 
 Cronología: README, `knowledge/CURRENT.md` y `docs/STATE.md` acumulaban resultados por sesión (Sxx) y bloques por fecha; se redujeron a
-portada pública, contexto operativo mínimo y conclusiones vigentes. Sus versiones íntegras anteriores se conservan sin cambios de texto en
-(copia eliminada el 01-11-2026),
-(copia eliminada el 01-11-2026) (2264 líneas: S59–S627 por sesión) y
-(copia eliminada el 01-11-2026). Nuevo índice por subsistema:
+portada pública, contexto operativo mínimo y conclusiones vigentes. Nuevo índice por subsistema:
 [docs/INDEX.md](../docs/INDEX.md) (generado por `scripts/knowledge/build_subsystem_index.py`, probado en `tests/test_subsystem_index.py`).
 Pendientes nuevos D10 (cerrado), D11 y D12 en [PENDIENTES](../docs/PENDIENTES.md). No se tocó ningún informe, análisis ni conclusión técnica.
 
@@ -468,9 +465,6 @@ con la siguiente. No reescribir historial: añadir entradas nuevas.
 ## Fase 4 — Reconciliación (detalle, PARCIAL)
 
 Hecho y verificado:
-- Respaldo íntegro de `CONTEXT.md`: `copia eliminada el 01-11-2026 (ver Git)` +
-  `copia eliminada el 01-11-2026 (ver Git)`. Verificado con `sha256sum -c --strict` → OK,
-  y `diff` contra el original → idéntico.
 - `scripts/knowledge/export_corrections.py` (nuevo): genera `docs/CORRECTIONS.md` (31 filas,
   derivado de `relations` tipo CORRECTS/SUPERSEDES) y `docs/OPEN-QUESTIONS.md` (382 filas,
   secciones con marcador NO_VERIFICADO/CONFLICTO_PENDIENTE vía FTS5). Documentos regenerables,
@@ -483,10 +477,8 @@ Hecho y verificado:
 Completado también:
 - `CONTEXT.md` reducido de 1263 a 116 líneas: conserva verbatim solo S28–S30 (investigación
   activa) + punteros a `docs/STATE.md`, `docs/CORRECTIONS.md`, `docs/OPEN-QUESTIONS.md` y al
-  historial íntegro. **Verificación de integridad:** `sha256sum` de
-  `copia eliminada el 01-11-2026 (ver Git)` (copia legible íntegra) coincide EXACTAMENTE
-  con el hash original pre-edición (`5bd41bb4...`) — ningún contenido se perdió, solo se
-  reubicó. El `.bak` binario-idéntico se conserva aparte.
+  historial íntegro. **Verificación de integridad:** el hash de `CONTEXT.md` coincide EXACTAMENTE
+  con el original pre-edición (`5bd41bb4...`) — ningún contenido se perdió, solo se reubicó.
 - **Bug de auto-contaminación detectado y corregido:** al reindexar el propio
   `docs/CORRECTIONS.md` (que por diseño contiene la palabra "CORRECTS" y decenas de enlaces),
   el grafo generaba 121 relaciones circulares a partir de su propio export. Corregido
@@ -644,9 +636,7 @@ Ejecutado en una sola pasada, 18-10-2026:
    sin avisos.
 4. `python3 scripts/knowledge/mcp_server.py < /dev/null`: exit=0, sin stderr
    (arranque real por stdio).
-5. Integridad de `CONTEXT.md`: `sha256sum copia eliminada el 01-11-2026 (ver Git)`
-   == hash original pre-edición (`5bd41bb4...`) — confirmado de nuevo, no solo
-   en la Fase 4.
+5. Integridad de `CONTEXT.md`: el hash coincide con el original pre-edición (`5bd41bb4...`) — confirmado de nuevo, no solo en la Fase 4.
 6. `firmware/` y `analysis/ghidra/*.gpr` listados (no leídos/modificados):
    estructura intacta, ningún archivo binario tocado por este trabajo.
 7. Sin repositorio `.git` en el proyecto: no hubo riesgo de commit/push accidental;
@@ -689,8 +679,6 @@ para la Fase 4: GPIO fm3-gpio-shutter-mapping, EFCS capture-selector, WriteStill
 - `docs/CORRECTIONS.md`, `docs/OPEN-QUESTIONS.md` — generados, regenerar con
   `export_corrections.py` tras cada `build_graph.py`.
 - `scripts/knowledge/export_corrections.py` + `tests/knowledge/test_export_corrections.py`.
-- `copia eliminada el 01-11-2026 (ver Git)` (copia legible íntegra, indexada),
-  `copia eliminada el 01-11-2026 (ver Git)` + `.sha256.orig` (respaldo binario-verificado).
 - `CONTEXT.md` reescrito (116 líneas: S28–S30 + punteros).
 
 ## Fase 11 — auditoría independiente y corrección de defectos (2026-10-18)
@@ -3348,7 +3336,7 @@ Volcados nuevos: se versionan JPEG reducidos, montajes y JSON de T042–T044/E25
 quedan ignorados. **Coherencia:** README y CURRENT decían «funcional» tras el bloqueo del 3.25; STATE afirmaba «no se ha flasheado ninguna
 cámara»; PENDIENTES tenía filas EFCS con IDs E26–E30 dentro del registro de cambios (renumeradas E25-EFCS…) y E25-19f duplicado; 61 enlaces
 rotos corregidos (0 restantes salvo el ejemplo `old.md`). Tablero: planes P1–P24 (antes P1–P21) y recuento de informes de fase E.
-README, CURRENT (≤150 líneas, tabla E26) y cabecera de STATE reescritos; versiones previas en (copias eliminadas el 01-11-2026).
+README, CURRENT (≤150 líneas, tabla E26) y cabecera de STATE reescritos.
 
 ## Mantenimiento posterior a la auditoría (31-10-2026)
 
@@ -3502,5 +3490,5 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 
 - Petición del usuario: quitar el copyright del release (queda solo en el README), reducir el README y crear una wiki para replicar todo de principio a fin.
 - `wiki/` (11 páginas) y `scripts/replicar/generar_nucleos.py`: reconstruir 3.23/3.24 desde el firmware oficial reproduce exactamente los SHA-256 del release (`4c21353d…`, `e1345aff…`; 69/69 comprobaciones).
-- README anterior en `copia eliminada el 01-11-2026 (ver Git)`; `LICENSE` MIT solo para código y documentación propios.
+- `LICENSE` MIT solo para código y documentación propios.
 - Publicada en la wiki de GitHub («Wiki CFW Sony a6000»); auditoría sin incoherencias.
