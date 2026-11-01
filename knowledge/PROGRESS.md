@@ -513,3 +513,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - `scripts/e25_27/verify_325c.py` → `analysis/e25-27/verify-325c.json`: 30/30 sobre el `.dat` final con controles (Sony 3.21 y el 3.25 que bloqueó); emulación Loader3+ARM7: 0/369 fallos frente a 361.
 - Release `fw-3.25c-experimental` (*pre-release*): 3.25c, 3.26 de vuelta atrás, SHA256SUMS y la evidencia. Informe [R45](../docs/capture/e26-r45-firmware-325c-experimental.md).
 - 01-11-2026 (seguimiento, petición del usuario): README, wiki, tablero y portada actualizados para presentar el 3.25c como alternativa experimental al 3.25 original (que sigue sin publicarse).
+- 01-11-2026: `README.en.md` (versión en inglés) enlazado con un botón al inicio del README; copyright cubre también el release 3.25c.

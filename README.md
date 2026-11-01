@@ -1,5 +1,7 @@
 # Sony A6000 — Silent Shutter
 
+[![English version](https://img.shields.io/badge/🇬🇧_English_version-blue?style=for-the-badge)](README.en.md)
+
 [![módulos](https://img.shields.io/endpoint?url=https://nicolvus.github.io/a6000-fw-decomp/badge-modulos.json)](https://nicolvus.github.io/a6000-fw-decomp/progress/)
 [![sesiones](https://img.shields.io/endpoint?url=https://nicolvus.github.io/a6000-fw-decomp/badge-sesiones.json)](https://nicolvus.github.io/a6000-fw-decomp/progress/)
 [![pruebas](https://img.shields.io/endpoint?url=https://nicolvus.github.io/a6000-fw-decomp/badge-pruebas.json)](https://nicolvus.github.io/a6000-fw-decomp/progress/)
@@ -30,6 +32,9 @@ Detalle en [Estado actual y límites](https://github.com/nicolvus/a6000-fw-decom
 **Copyright.** Los dos `.dat` del [release `fw-3.23-3.24`](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24) son el
 firmware oficial de Sony 3.21 con una modificación binaria mínima y documentada en `darwin_core.bin` (2–9 bytes; ver
 [Cómo funciona el parche](https://github.com/nicolvus/a6000-fw-decomp/wiki/8-Como-funciona-el-parche) y [E25-05](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e25-05-preparacion-paquetes-323-324.md)).
+Los del [release `fw-3.25c-experimental`](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.25c-experimental) son el mismo firmware
+con 22 bytes cambiados en `darwin_core.bin` y 89 en `av-cam.bin` (3.25c), o sin cambios salvo el número de versión (3.26)
+([R45](docs/capture/e26-r45-firmware-325c-experimental.md)).
 El firmware original es © Sony Corporation, que conserva todos los derechos sobre él. El autor **no tiene ninguna licencia de Sony**
 sobre ese firmware y este repositorio no reclama titularidad sobre él. Que el proyecto sea abierto no cambia eso: la apertura
 alcanza solo a lo que el autor escribió (scripts, análisis, documentación), no a la parte de Sony contenida en los `.dat`.

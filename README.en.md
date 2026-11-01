@@ -1,0 +1,65 @@
+# Sony A6000 — Silent Shutter
+
+[![Versión en español](https://img.shields.io/badge/🇪🇸_Versión_en_español-blue?style=for-the-badge)](README.md)
+
+[![modules](https://img.shields.io/endpoint?url=https://nicolvus.github.io/a6000-fw-decomp/badge-modulos.json)](https://nicolvus.github.io/a6000-fw-decomp/progress/)
+[![sessions](https://img.shields.io/endpoint?url=https://nicolvus.github.io/a6000-fw-decomp/badge-sesiones.json)](https://nicolvus.github.io/a6000-fw-decomp/progress/)
+[![tests](https://img.shields.io/endpoint?url=https://nicolvus.github.io/a6000-fw-decomp/badge-pruebas.json)](https://nicolvus.github.io/a6000-fw-decomp/progress/)
+[![CI](https://github.com/nicolvus/a6000-fw-decomp/actions/workflows/tests.yml/badge.svg)](https://github.com/nicolvus/a6000-fw-decomp/actions/workflows/tests.yml)
+
+Reverse engineering of the Sony A6000 firmware 3.21 (ILCE-6000: BIONZ + Darwin microcontroller) to shoot with a fully
+electronic shutter. **Milestone:** with the modified firmware **3.23** (a 2-byte patch to Darwin) the real camera shot
+silently and without errors. **Later**, the integrated firmware **3.25** left the camera unable to boot because of a format error
+in the `nflasha3` partition, now identified and fixed in **3.25c**. Recovery of that camera is still being studied offline.
+
+> **⚠️ 3.25c: experimental.** [3.25c](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.25c-experimental) fixes the errors
+> that bricked 3.25 (30/30 checks, and an emulation of the real bootloader with no failures) and **should** boot, but it **has never been
+> installed on a camera**. The original 3.25 is not published. Installing any modified firmware can leave the camera unusable and **there is
+> no proven independent recovery**. Read [Current state and limits](https://github.com/nicolvus/a6000-fw-decomp/wiki/14-Estado-actual).
+
+## Documentation
+
+All the detail lives in the **[Sony a6000 CFW Wiki](https://github.com/nicolvus/a6000-fw-decomp/wiki/Home)** (source in [`wiki/`](wiki/Home.md)): requirements and risks, how to reproduce it end to end, how the patch works,
+results, current state and limits, tools, glossary and repository map. The wiki, reports and code comments are in **Spanish**.
+Prebuilt packages are in the [`fw-3.23-3.24` release](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24) and, as an
+experimental *pre-release*, in [`fw-3.25c-experimental`](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.25c-experimental) (3.25c and a 3.26 to roll back).
+[Progress board](https://nicolvus.github.io/a6000-fw-decomp/progress/) (current state, coverage and tests) · [site home](https://nicolvus.github.io/a6000-fw-decomp/).
+
+| Version | What it does | Status |
+|---|---|---|
+| 3.23 | Darwin patch: the shutter motor and coils never move | **Installed and confirmed** on a real camera: silent, no errors |
+| 3.24 | Stock Darwin with version number 3.24 (roll back from 3.23) | Verified offline, never installed |
+| 3.25 | EFCS / Electronic selector from the menu | **Bricked the author's camera** (not published) |
+| 3.25c | 3.25 with `nflasha3` in Sony's exact format | Published as experimental; verified offline, **never installed** |
+| 3.26 | Stock Sony content with version number 3.26 (roll back from 3.25c) | Verified offline, never installed |
+
+**Status:** firmware 3.23 (T040) makes the camera shoot silently and without errors; 3.25 (E26) left the author's camera unable to boot;
+its cause is fixed in 3.25c (experimental, untested on a camera, [R45](docs/capture/e26-r45-firmware-325c-experimental.md)) and recovery of
+that camera is being studied offline only.
+Details in [Current state and limits](https://github.com/nicolvus/a6000-fw-decomp/wiki/14-Estado-actual). Contributing: [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Copyright and use
+
+**Copyright.** The two `.dat` files in the [`fw-3.23-3.24` release](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24) are
+Sony's official 3.21 firmware with a minimal, documented binary change to `darwin_core.bin` (2–9 bytes; see
+[How the patch works](https://github.com/nicolvus/a6000-fw-decomp/wiki/8-Como-funciona-el-parche) and [E25-05](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e25-05-preparacion-paquetes-323-324.md)).
+The ones in the [`fw-3.25c-experimental` release](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.25c-experimental) are the same firmware
+with 22 bytes changed in `darwin_core.bin` and 89 in `av-cam.bin` (3.25c), or unchanged except for the version number (3.26)
+([R45](docs/capture/e26-r45-firmware-325c-experimental.md)).
+The original firmware is © Sony Corporation, which keeps all rights to it. The author **holds no license from Sony** for that
+firmware and this repository claims no ownership of it. The project being open does not change that: the openness covers only what
+the author wrote (scripts, analysis, documentation), not the Sony part contained in the `.dat` files.
+They are published for research and interoperability purposes (reverse engineering to change the behavior of hardware the author
+owns), without any Sony source code. This note states the author's position, it is not a legal guarantee, and the files will be
+removed if Sony asks.
+
+**Use.**
+- Everything is provided "as is", without warranty of any kind; use it at your own risk, it can render the camera unusable (see [Current state and limits](https://github.com/nicolvus/a6000-fw-decomp/wiki/14-Estado-actual)).
+- Meant for research, learning and personal use on a camera you own. Do not use it to bypass protections for unlawful purposes or to redistribute Sony firmware on your own.
+- The author's code, scripts, analysis and documentation are released under the [MIT](LICENSE) license. That license does **not** cover Sony's firmware, the release `.dat` files, or the third-party material below.
+
+**Sony and third-party material used by the project**
+- **Source code published by Sony** for this camera (Linux and other open-source packages). Used to understand the boot process, the drivers and the Loader2/Loader3 console. It keeps its original license (GPL and others); the extracted copies are in `analysis/session18/`.
+- **Level 3 service manual** for the ILCE-6000/6000L/6000Y (Rev. 1.1), publicly available online. Used as a source of schematics and board sheets. The PDF is **not** versioned (it is in `.gitignore`); `references/manuals/` only holds the manifest with its hash and origin, plus a few sample pages.
+- **Official firmware 3.21**: each person downloads it from Sony's server with `scripts/agent/bootstrap.sh`; it is not included in the repository.
+- **Third-party tools** with their own licenses: [Sony-PMCA-RE](https://github.com/ma1co/Sony-PMCA-RE), [fwtool.py](https://github.com/ma1co/fwtool.py) and [OpenMemories-Tweak](https://github.com/ma1co/OpenMemories-Tweak) in `references/`.
