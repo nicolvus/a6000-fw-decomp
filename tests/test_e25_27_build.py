@@ -88,6 +88,27 @@ def test_tpzl_rebuild_respeta_invariantes_del_ldec():
     assert rebuilt.decompressed() == bytes(patched)
 
 
+def test_tpzl_rebuild_conserva_registros_no_tocados():
+    # 3.25c: solo se rehace el registro de 4 KiB que cambia; los otros 15 son los bytes de Sony,
+    # así el bloque no crece por encima de los 126 sectores del nflasha3 oficial (> 128 nunca probado en Loader3).
+    data = bytes(65536)
+    # registro LZ77 (0xF0) de 4096 ceros: 1 literal + coincidencias de 64/32/16/15 a distancia 1 + fin
+    lz = bytes([0xF0, 0xFE, 0]) + b"\xf0\x01" * 7 + (b"\xff" + b"\xf0\x01" * 8) * 7
+    lz += b"\x0f\xe0\x01\xd0\x01\xc0\x01\x00\x00"
+    assert tpzl.decode_block(lz, 4096) == bytes(4096)
+    comp = lz * 16
+    toc_end = 0x18 + 8
+    head = struct.pack("<4sIII", b"TPZL", 16, 0x18, 8) + bytes(8)
+    head += struct.pack("<II", 512, (len(comp) + 511) // 512 * 512)
+    image = tpzl.TpzlImage.parse(head + bytes(512 - toc_end) + comp + bytes(-len(comp) % 512))
+    patched = bytearray(data)
+    patched[3 * 4096 + 7] = 1
+    out, _ = tpzl.patch_decompressed(image, bytes(patched))
+    block = tpzl.TpzlImage.parse(out).block(0)
+    raw = tpzl.encode_raw(bytes(patched[3 * 4096 : 4 * 4096]))
+    assert block.startswith(lz * 3 + raw + lz * 12)
+
+
 def test_tpzl_invariantes_detectan_el_325_y_aceptan_sony():
     official = ROOT / "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3"
     installed = ARTIFACTS / "nflasha3.integrated.bin"

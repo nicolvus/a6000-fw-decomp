@@ -74,7 +74,7 @@ No hay ninguna ruta de arranque normal que llegue al kernel sin leer bloques def
 
 ## 7. Corrección del constructor
 
-- `scripts/e25_27/tpzl.py`: `ALIGN = 512`, bloques recompuestos como 16 registros almacenados de 4096 B (la forma de Sony), relleno `0x00`, y `hardware_violations()` (residuo, 16 × 4096, cota de Sony). `rebuild` se niega a devolver una partición con violaciones.
+- `scripts/e25_27/tpzl.py`: `ALIGN = 512`, bloques recompuestos como 16 registros almacenados de 4096 B (la forma de Sony), relleno `0x00`, y `hardware_violations()` (residuo, 16 × 4096, cota de Sony). `rebuild` se niega a devolver una partición con violaciones. **[R45: los 16 registros almacenados daban bloques de 129 sectores, por encima de los 126 de Sony en `nflasha3`; ahora se conservan los registros de Sony de las páginas no tocadas (`_splice`, máx. 126) ([R45](e26-r45-firmware-325c-experimental.md) §2).]**
 - Regresión escrita primero: falló con el codificador anterior y pasa con el nuevo. `hardware_violations` acepta el `nflasha3` oficial y marca en el 3.25 instalado 359 residuos y 3 bloques de un registro.
 - Construcción completa en un directorio temporal (no se tocó `analysis/e25-27/artifacts/`): residuo 0 en 369/369, 16 × 4096 en todos, máximo 129 sectores (igual que Sony), mismo contenido FAT que el 3.25 (89 B distintos del 3.21) y mismos `av-cam`/Darwin.
 - **La recomendación 2 del README («alinear a 512») no bastaba**: la variante de `compare_tpzl.py` alineada a 512 sigue teniendo 3 bloques de un registro de 73 732 B (6 violaciones).

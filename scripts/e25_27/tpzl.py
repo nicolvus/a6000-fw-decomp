@@ -15,9 +15,11 @@ Estructura:
 Cada bloque son 16 registros independientes (LZ77 `0xF0` o almacenado `0x0F`) de
 4096 B de salida cada uno: así son todos los bloques de Sony y así lo exige la ruta
 Loader3 → ARM7 → LDEC, que programa `bloque >> 12` registros y lee sectores enteros
-(el desplazamiento dentro del sector no llega al LDEC).  Para recompresar se emiten
-16 registros almacenados alineados a 512 B, la forma que Sony usa para páginas
-incompresibles (E26-R36).
+(el desplazamiento dentro del sector no llega al LDEC).  Al recomponer un bloque se
+conservan los registros originales de las páginas de 4096 B que no cambian y solo
+las que cambian se emiten como registros almacenados (la forma que Sony usa para
+páginas incompresibles), todo alineado a 512 B (E26-R36; 3.25c: el bloque no pasa
+de los 126 sectores del `nflasha3` oficial).
 """
 from __future__ import annotations
 
@@ -228,12 +230,27 @@ def hardware_violations(image: TpzlImage) -> list[str]:
     return out
 
 
+def _splice(block: bytes, raw: bytes) -> bytes:
+    """Registros originales para las páginas de 4096 B que no cambian; almacenados para las que sí.
+
+    Mantiene el bloque cerca de su tamaño original (3.25c: ≤ 126 sectores, como Sony en `nflasha3`).
+    """
+    out, pos = bytearray(), 0
+    for page in range(0, len(raw), RECORD):
+        start = pos
+        chunk, pos = _inflate_segment(block, pos)
+        new = raw[page:page + RECORD]
+        out += block[start:pos] if chunk == new else encode_raw(new)
+    return bytes(out)
+
+
 def rebuild(image: TpzlImage, replacements: dict[int, bytes]) -> tuple[bytes, list[dict]]:
     """Reconstruye la partición cambiando solo los bloques indicados.
 
     `replacements` asocia índice de bloque con sus 65536 B descomprimidos.  El
-    resto de bloques se copia byte a byte, sin recomprimir.  Los bloques nuevos se
-    escriben como registros almacenados y todo se alinea a 512 B con relleno 0x00.
+    resto de bloques se copia byte a byte, sin recomprimir.  En los bloques nuevos solo
+    las páginas cambiadas pasan a registros almacenados (`_splice`) y todo se alinea a
+    512 B con relleno 0x00.
     """
     blocks: list[bytes] = []
     info: list[dict] = []
@@ -245,7 +262,7 @@ def rebuild(image: TpzlImage, replacements: dict[int, bytes]) -> tuple[bytes, li
                 raise TpzlError(
                     f"bloque {index}: {len(raw)} B, esperado {target} B"
                 )
-            compressed = encode_raw(raw)
+            compressed = _splice(image.block(index), raw)
             if decode_block(compressed, target) != raw:
                 raise TpzlError(f"bloque {index}: la recompresión no reproduce el contenido")
             info.append({
