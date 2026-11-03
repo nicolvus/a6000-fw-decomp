@@ -371,7 +371,7 @@ reloj, retardo de sync) es el mismo.
    (cabecera tipo 2 / `0xc0` + 6 campos); no se ha decodificado el código de campo.
 6. **`10Count`**: no se ha averiguado qué cuenta ni por qué es "10".
 7. **Rol de "maestro" y "esclavo"**: `0x435a0596`/`0x435a0734` intercambian mensajes, pero
-   no se ha identificado qué CPU o tarea es cuál en cada configuración. **NO_VERIFICADO**
+   no se identificó qué CPU o tarea es cuál en cada configuración. **Medido (REV-01):** `0x435a0596` es el receptor (`osal_rcv_msg`, «Receive Message from Master») y `0x435a0734` el emisor de 12 B por `osal_snd_msg` (`0x4356120c`) al esclavo; qué CPU o tarea hace de cada uno según la configuración no se deduce estáticamente (cerrado con límite).
 8. **Semántica de `ddl_clkctrl_get_clk_chg_enable`** (`0x4359ee24`): devuelve si el cambio
    de reloj está habilitado; no se ha trazado su consumidor (`0x43ae8c66`).
 9. **Cifras de referencia**: 85 sitios y 36 funciones con la **regla estricta**; la regla

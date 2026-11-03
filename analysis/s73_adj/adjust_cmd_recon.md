@@ -82,7 +82,7 @@ despacha los **canales R/G/B** del ajuste de WB del display (`WB_SubB_{R,G,B}_Ad
 
 **Pendiente:** el emparejamiento exacto *elemento → bit* (y por tanto el ID/sub-comando de cada
 ajuste). La extracción por Capstone no lo da de forma fiable (los `cmp` son de distintos registros
-y contadores) → hace falta la decompilación de REA/Ghidra de `0x4363524c` o un análisis de flujo **NO_VERIFICADO**
+y contadores) → hace faltaba la decompilación de REA/Ghidra de `0x4363524c` o un análisis de flujo **Medido (REV-01):** no es un emparejamiento elemento→bit: el sub-comando `[r6+0x1a]` (1–41) entra por una `tbh` en `0x436352b4` (41 destinos) y cada destino carga su cadena `ADJ_CMD_AVBB_PANELEVF_*` (p. ej. 1 `ADJ_START`, 2 `PNL_TESTPATTERN`, 3 `PNL_W_VCOM`, 4 `PNL_W_WB`, 5 `ADJ_END`, 39 `PNL_W_VCOM_2ADRS`); tabla completa en `analysis/rev01/adj_subcmd.json` (nombres truncados a 40 caracteres, 34 y 35 sin cadena propia).
 propio; no se ha hecho por falta de sesión REA libre (RAM: 6 sesiones Ghidra abiertas).
 
 ## 2. `ADJ_CMD_LIRO_DRIVERS_ADC_*` (VERIFICADO)
