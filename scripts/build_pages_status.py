@@ -30,7 +30,6 @@ def title(path: Path) -> str:
 COLORS = {"hito": "#2ea043", "sub": "#9be9a8", "todo": "#30363d", "cancel": "#d29922", "ok": "#2ea043"}
 COLS = 62
 CATALOG = ROOT / "docs" / "capture" / "linea-general-re.md"
-TOP = 30
 JOINT = {74: "S74 — ADJ_CMD (informe conjunto S73/S74)", 516: "S516 — `[PNL]` (informe conjunto S515/S516/S628–S630)",
          628: "S628 — `[FILE_NUM]` (informe conjunto S515/S516/S628–S630)", 629: "S629 — `[FSYSMODE]` (informe conjunto S515/S516/S628–S630)",
          630: "S630 — `[RING_DIAL]` (informe conjunto S515/S516/S628–S630)"}
@@ -160,7 +159,6 @@ def render_html(grids, data: dict) -> str:
     cov = data["module_coverage"]
     detail = json.loads(DETAIL.read_text(encoding="utf-8"))
     names = topics(data["sessions"])
-    link = {s["id"]: s["source"] for s in data["sessions"]}
 
     def squares(cells) -> str:
         return "".join(f'<span class="cell {c}" title="{escape(t)}"></span>' for c, t in cells)
@@ -174,25 +172,7 @@ def render_html(grids, data: dict) -> str:
         fam_rows += (f'<tr><td>{escape(fam)}</td><td class="sq">{squares(cells)}</td>'
                      f"<td>{n}</td><td>{v}</td><td>{len(items)}</td><td>{round(100 * n / len(items))}%</td></tr>")
 
-    pend = sorted(((k, i) for k, i in detail.items() if i["estado"] == "pendiente"),
-                  key=lambda kv: (-kv[1]["cadenas_referenciadas"], -kv[1]["apariciones_token"], kv[0]))[:TOP]
-    prio = "".join(
-        f'<tr class="prio"><td>{n}</td><td>{escape(k)}</td><td>{i["cadenas_referenciadas"]}</td>'
-        f'<td>{i["apariciones_token"]}</td><td>{"solo A6000" if i["solo_a6000"] else "también A7S/A6300"}</td></tr>'
-        for n, (k, i) in enumerate(pend, 1)
-    )
-    done_rows = "".join(
-        f"<tr><td>{escape(k)}</td><td>{escape(' / '.join(dict.fromkeys(names[h] for h in hitos(i) if h in names)) or 'solo citada en el censo S178')}</td><td>"
-        + ", ".join(f'<a href="{link[f"S{h}"]}">S{h}</a>' if f"S{h}" in link else f"S{h}" for h in hitos(i))
-        + "</td></tr>"
-        for k, i in sorted(detail.items()) if i["estado"] == "hito"
-    )
     rp = data["real_progress"]
-    worst = sorted(((v["open"], v["verified"], k) for k, v in rp["by_label"].items() if detail[k]["estado"] == "hito"),
-                   reverse=True)[:15]
-    open_rows = "".join(
-        f"<tr><td>{escape(k)}</td><td>{escape(' / '.join(dict.fromkeys(names[h] for h in hitos(detail[k]) if h in names)))}</td>"
-        f"<td>{o}</td><td>{v}</td></tr>" for o, v, k in worst)
     other = "".join(f"<h2>{escape(t)}</h2><div class='grid'>{squares(c)}</div>" for t, _, c in grids[1:])
     css = " ".join(f".{c}{{background:{f}}}" for c, f in FILL.items())
     return f"""<!doctype html>
@@ -227,35 +207,13 @@ td:nth-child(n+3):not(:last-child),td:last-child,th:nth-child(n+3){{text-align:r
 <tr><td>Interfaz (GUI)</td><td>G2–G8: formatos <code>.uxc/.uxb/.xdb</code>, menús, texto y fuentes, entrada, ajustes y modificación reversible de la UI.</td><td>Abierto</td></tr>
 <tr><td>Cadena sensor / obturador</td><td>E6 (Darwin fuera de <code>av-cam</code>), E9/D5 (registros IMX210/IMX235), E11 (segunda cortina), E13 (servicio ODL), F8 (valores solo en ejecución).</td><td>Hojas de datos, volcado de Darwin o prueba física</td></tr></table>
 <p>Detalle y criterios de cierre: <a href="{REPO}docs/PENDIENTES.md">PENDIENTES.md</a>.</p>
+<h2>Avance real: {rp['index']}%</h2>
+<p>Índice ponderado sobre {cov['total']} etiquetas: cada etiqueta cubierta aporta <code>VERIFICADO / (VERIFICADO + NO_VERIFICADO)</code> según su informe. Cobertura documental: mide documentación, no código descompilado ni funciones comprobadas en cámara.</p>
+<h2>Etiquetas por familia: {cov['percent']}% documentadas ({cov['covered']}/{cov['total']}), {cov['verified_percent']}% sin pendientes ({cov['verified']}/{cov['total']})</h2>
 <p class="legend"><span class="m-ver"></span>documentada y sin pendientes<span class="m-hito"></span>módulo con hito, con pendientes<span class="m-sub"></span>sub-etiqueta cubierta, con pendientes<span class="m-todo"></span>pendiente / sin informe / sin ejecutar<span class="m-rejected"></span>fragmento descartado<span class="s-cancel"></span>cancelada</p>
-<p>{cov['pending']} etiquetas pendientes; {cov['excluded']} fragmentos descartados como módulos. Descartar no aumenta cobertura.</p>
-<p>Cobertura documental de etiquetas: no mide código descompilado ni funciones verificadas; «sin pendientes» solo indica que el informe no lista afirmaciones NO_VERIFICADO.
-<a href="{REPO}docs/PENDIENTES.md">Pendientes vigentes</a> · <a href="{REPO}docs/capture/repo-audit-2026-10-24.md">auditoría</a>.
-Pruebas en cámara: {data['physical_tests']['registered']} filas de registro (hasta {data['physical_tests']['last']}, con backup NVRAM previo);
-planes P1–P24 con prueba registrada: {data['physical_tests']['done']}/{data['physical_tests']['total']}.
-<a href="{data['physical_tests']['source']}">Registro de pruebas</a>.</p>
-<h2>Avance real hasta cerrar todo: {rp['index']}%</h2>
-<p>Índice ponderado sobre las {cov['total']} etiquetas: cada etiqueta cubierta aporta <code>VERIFICADO / (VERIFICADO + NO_VERIFICADO)</code> según su informe (las sub-etiquetas heredan el del padre); las no cubiertas aportan 0. Llega al 100 % solo con todas cubiertas y ninguna afirmación pendiente. Cuenta menciones de texto, no afirmaciones distintas, y no mide funciones comprobadas en cámara.</p>
-<table><tr><th>Etiqueta con más pendientes</th><th>Tema</th><th>NO_VERIFICADO</th><th>VERIFICADO</th></tr>{open_rows}</table>
-<h2>Etiquetas por familia — {cov['percent']}% documentadas ({cov['covered']}/{cov['total']}); {cov['verified_percent']}% sin pendientes ({cov['verified']}/{cov['total']})*</h2>
-<p>«Documentada» = tiene informe propio o un padre con informe. «Sin pendientes» (azul) = además, su informe no declara ninguna afirmación <code>NO_VERIFICADO</code>. Una etiqueta documentada con pendientes (verde) no está resuelta.</p>
-<table><tr><th>Familia</th><th>Etiquetas</th><th>Documentadas</th><th>Sin pendientes</th><th>Total</th><th>% doc.</th></tr>{fam_rows}</table>
-<h2>Etiquetas pendientes (top {TOP} por cadenas referenciadas)</h2>
-<p>Orden documental por cadenas con referencias candidatas; no demuestra volumen de código,
-prioridad técnica ni relación con el obturador. La cola técnica está en la auditoría.</p>
-<table><tr><th>#</th><th>Etiqueta</th><th>Cadenas</th><th>Apariciones</th><th>Presencia</th></tr>{prio}</table>
-<p><b>Salvedades del censo S178</b> (se conservan sus cifras; ver <a href="{REPO}docs/PENDIENTES.md">pendientes</a>):
-<code>[OSD]</code> cuenta como cubierta solo porque el propio censo la cita, sin informe propio;
-<code>[FILE_NUM]</code>, <code>[FSYSMODE]</code> y <code>[RING_DIAL]</code> tienen evidencia de cadenas en
-<a href="{REPO}docs/capture/s515-s516-s628-s630-modulos.md">S628–S630</a> y siguen contadas como pendientes.</p>
-<h2>Etiquetas con informe propio</h2>
-<table><tr><th>Etiqueta</th><th>Nombre</th><th>Hitos</th></tr>{done_rows}</table>
+<table><tr><th>Familia</th><th>Etiquetas</th><th>Total</th><th>% doc.</th></tr>{fam_rows}</table>
 {other}
-<p>*Censo <a href="{cov['source']}">S178</a>; pasa el ratón por un cuadrado para ver su etiqueta. Nombres tomados del
-<a href="https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/linea-general-re.md">catálogo de hitos</a>;
-las pendientes aún no tienen nombre funcional. Generado por
-<a href="https://github.com/nicolvus/a6000-fw-decomp/blob/main/scripts/build_pages_status.py">scripts/build_pages_status.py</a>.
-Datos crudos: <a href="../status.json">status.json</a>.</p>
+<p>Pruebas en cámara: {data['physical_tests']['done']}/{data['physical_tests']['total']} planes con prueba (<a href="{data['physical_tests']['source']}">registro</a>). Censo <a href="{cov['source']}">S178</a>; pasa el ratón por un cuadrado para ver su etiqueta. Generado por <code>scripts/build_pages_status.py</code>; datos en <a href="../status.json">status.json</a>.</p>
 </body></html>
 """
 
