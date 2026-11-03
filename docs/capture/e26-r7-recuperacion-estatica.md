@@ -428,7 +428,7 @@ Como se documentó en §1.6, el modo 3:
 
 ### 4.2 Conclusión
 
-**NO DEMOSTRADO:** incompatibilidad funcional del residuo TPZL 256. No hay evidencia de rechazo por hardware ARM7, ni código de error identificable. Las advertencias ECC son independientes de la alineación (ECC corregible reportado por controlador). Falta el firmware ARM7 actual para certificar el comportamiento.
+**NO DEMOSTRADO:** incompatibilidad funcional del residuo TPZL 256. No hay evidencia de rechazo por hardware ARM7, ni código de error identificable. Las advertencias ECC son independientes de la alineación (ECC corregible reportado por controlador). Falta el firmware ARM7 actual para certificar el comportamiento. **NO_VERIFICADO**
 
 ---
 
@@ -501,7 +501,7 @@ No se encontraron implementaciones de recuperación documentadas en otros modelo
 | 7 | ¿Permite escribir almacenamiento? | MuMin/LLD escriben páginas y borran bloques, pero solo en Linux | VERIFICADO (solo Linux) |
 | 8 | ¿Depende de interfaz física no validada? | Receptor serie BootROM sin red física identificada | SÍ (no validada) |
 | 9 | ¿Riesgo para calibraciones? | Escritura sin mapeo lógico-físico/ECC/bad-blocks podría destruir calibraciones | ALTO (no demostrado seguro) |
-| 10 | ¿Qué información falta? | Firmware ARM7 actual, funciones FUN_c01f036c/FUN_c01f129c/FUN_c01f5078/FUN_c01f028c, productor de `updater/mode`, fuente INFO6 | FALTANTE |
+| 10 | ¿Qué información falta? | Firmware ARM7 actual, funciones FUN_c01f036c/FUN_c01f129c/FUN_c01f5078/FUN_c01f028c, productor de `updater/mode`, fuente INFO6 | FALTANTE **NO_VERIFICADO** |
 
 ---
 
@@ -595,7 +595,7 @@ Alimentación + Darwin
 | E26-R7-A-UPDATER | CERRADO | R7 §1.6 | FUN_c01f1378 carga kernel desde dev1 y salta, sin entorno separado |
 | E26-R7-B-BOSS | CERRADO | R7 §2 | Primitivas de escritura verif. en binario, solo Linux |
 | E26-R7-C-UPDATER-MODE | ABIERTO | R7 §3.3 | Productor pre-Linux de `updater/mode` no identificado |
-| E26-R7-D-TPZL-ARM7 | NO DEMOSTRADO | R7 §4 | Falta firmware ARM7 actual para certificar comportamiento |
+| E26-R7-D-TPZL-ARM7 | NO DEMOSTRADO | R7 §4 | Falta firmware ARM7 actual para certificar comportamiento **NO_VERIFICADO** |
 | E26-R7-E-INFO6 | CERRADO CON LÍMITE | R7 §5 | Sin fuente adecuada para 21 páginas INFO6 |
 | E26-R7-F-SERVICE | PARCIAL | R7 §6 | Receptor serie BootROM sin red física ni cadena NAND |
 

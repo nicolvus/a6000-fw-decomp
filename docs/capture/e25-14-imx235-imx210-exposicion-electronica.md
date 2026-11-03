@@ -33,7 +33,7 @@ Etiquetas: **V** = bytes/instrucciones leídos; **I** = inferencia; **N** = no v
    esa máquina de estado; fija `obj+0x3a3=1` por sí mismo. No se encontró en él un equivalente al armado de
    exposición larga. (V para la diferencia de código; N para ausencia en todo el firmware)
 7. El límite de ~65 ms no es solo de nuestro parche: la función de conversión satura en **un cuadro** (máximo de
-   líneas del modo). Para superarlo haría falta un modo de sensor con cuadro más largo o acumulación multicuadro; no
+   líneas del modo). Para superarlo haría falta un modo de sensor con cuadro más largo o acumulación multicuadro; no **NO_VERIFICADO**
    se encontró ninguno demostrado. (V/I) **Corrección posterior (E25-17):** el productor nativo `0x4383fa40` sí planifica más de un cuadro
    (`svd = cuadros − 1` en `record+0x68`, VTS ampliado en `record+0xd8`); el límite es de la ruta manual `r5`, no un clamp del firmware.
    Sigue sin demostrarse el efecto físico. [E25-17](e25-17-bulb-exposicion-electronica-larga.md)
@@ -205,14 +205,14 @@ No se presenta ningún resultado de emulación como comportamiento real del sens
 | C | ¿Se identificó cómo se representa una exposición > 65 ms? | **NO** | el clamp de `0x436f5df0`/`0x436d8a90` satura en un cuadro; no hay campo mayor (V/I) |
 | D | ¿Se identificó el mecanismo que controla el final de integración sin cortina? | **NO** (parcial) | el final es la lectura de la fila; el bloque `+0x60..+0x66` transporta el tiempo, pero no se siguió hasta el registro físico (V/N) |
 | E | ¿El IMX235 dispone de temporización más fina que una línea? | **NO** | todas las rutas usan líneas enteras de 15,2 µs; no hay corrección fraccionaria (V en las funciones analizadas) |
-| F | ¿Existe una primitiva equivalente verificable en el IMX210? | **PARCIAL** | `SetExposure`, tablas y `+0x30` idénticos; falta el armado `r3`/`0x3dc` (V) |
+| F | ¿Existe una primitiva equivalente verificable en el IMX210? | **PARCIAL** | `SetExposure`, tablas y `+0x30` idénticos; falta el armado `r3`/`0x3dc` (V) **NO_VERIFICADO** |
 | G | ¿Se encontró una configuración compatible del IMX210 para exposición uniforme > 65 ms? | **NO** | no hay valor de `r5` ni rama que lo produzca (V/N) |
 | H | ¿Está demostrado que el IMX210 pueda ejecutar dicha configuración? | **NO** | ausencia de evidencia, no imposibilidad física (N) |
 | I | ¿Se encontró una ruta para tiempos variables sin sobrescribir instrucciones ejecutables? | **NO** | el método `+0x30` recibe el tiempo, pero no hay API/selector demostrado para variarlo sin parche (N) |
 | J | ¿Existe una explicación reproducible del sesgo de T050? | **NO** (parcial) | la cuantización no basta salvo en 1/8000; la calibración por tanda sigue siendo la hipótesis (I) |
 | K | ¿Hay base estática para diseñar una nueva prueba reversible? | **SÍ** | forzar solo `param+9=0` y dejar que `+0x30` calcule el tiempo; medir 1/8000–1/8 (V/I) |
 | L | ¿Hay base para proponer una modificación permanente? | **NO** | E24-04/E25-04: recuperación independiente no demostrada (V) |
-| M | ¿Se puede afirmar 1/8000–30 s totalmente electrónicos? | **NO** | el límite de un cuadro y la falta de armado en IMX210 lo impiden (V/N) |
+| M | ¿Se puede afirmar 1/8000–30 s totalmente electrónicos? | **NO** | el límite de un cuadro y la falta de armado en IMX210 lo impiden (V/N) **NO_VERIFICADO** |
 
 Un **NO** por ausencia de evidencia no equivale a imposibilidad física.
 

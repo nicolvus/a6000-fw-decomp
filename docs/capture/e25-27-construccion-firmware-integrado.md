@@ -11,7 +11,7 @@ candidato **experimental** identificado como **CONSTRUIDO OFFLINE — INSTALACI�
 AUTORIZADA**.
 
 Este informe documenta solo la construcción: qué se integró, qué se verificó, qué
-falló y qué falta antes de instalar. La investigación previa está en
+falló y qué falta antes de instalar. La investigación previa está en **NO_VERIFICADO**
 [E25-24b](e25-24b-implementacion-selector.md), [E25-25](e25-25-validacion-carga-caves.md)
 y [E25-26](e25-26-c3b-exposicion-electronica.md).
 

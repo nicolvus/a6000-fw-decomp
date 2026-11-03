@@ -288,7 +288,7 @@ sitios esta sesión (no era el foco); la cobertura de sesión 16 (17/93 create r
 `0x2a` = `ModelPbCap` ELF `0x613694`) sigue siendo la mejor evidencia disponible. Lo que esta sesión añade
 es contexto: dado que `createLifeCycles` resuelve el viewer en el momento de construir la *lista completa*
 de un modelo (no fila por fila bajo demanda), "crear la fila `0x2a`" en la tabla de 211 no implica por sí
-solo que se llegue a invocar `ObjPin::Connect` para esa fila — haría falta que el modelo en cuestión
+solo que se llegue a invocar `ObjPin::Connect` para esa fila — haría falta que el modelo en cuestión **NO_VERIFICADO**
 también incluya `0x2a` en su lista de filas activas pasada a `createLifeCycles`. No verifiqué qué modelos
 (aparte de `ModelPbCap`) incluyen la fila `0x2a` en su lista.
 

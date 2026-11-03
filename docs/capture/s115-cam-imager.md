@@ -49,7 +49,7 @@ parámetros:
 
 1. El campo **`shut`** de la exposición es el candidato más directo a un parámetro de
    obturador en el lado de la cámara (**NO VERIFICADO**: su significado y si difiere entre
-   A6000 y A7S no se ha comprobado).
+   A6000 y A7S no se ha comprobado). **NO_VERIFICADO**
 2. **`SSBRK_ON`** conecta con el registro SSB que S56–S58 analizaron.
 3. `SetSyncCode` **serie vs paralelo** es donde un obturador tendría que decidirse.
 

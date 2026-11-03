@@ -6,7 +6,7 @@
 
 Aplicar la regla permanente de [AGENTS.md](../../AGENTS.md): identificar de nuevo equipo e IP, servicios, modelo, versión y hashes, originales T050, GOT y mapa; localizar M y cap en esta sesión y comprobar integridad inicial y final. No usar direcciones dinámicas históricas sin verificarlas. Documentar cada sesión con objetivo/focal, apertura, ISO, velocidad efectiva, modo y obturador, iluminación, escena/encuadre, temperatura disponible, balance de blancos, batería y entorno; anotar lo desconocido.
 
-Las comparaciones requieren controles y RAW originales con metadatos de la sesión actual, velocidad aplicada comprobada y condiciones constantes en lo posible. Distinguir evidencia histórica, actual y comparable; no comparar cuantitativamente sesiones sin verificar equivalencia. Solo lecturas y fotografías normales autorizadas; nunca escribir RAM, MMIO, firmware ni NVRAM. La ingeniería inversa estática no necesita repetirse.
+Las comparaciones requieren controles y RAW originales con metadatos de la sesión actual, velocidad aplicada comprobada y condiciones constantes en lo posible. Distinguir evidencia histórica, actual y comparable; no comparar cuantitativamente sesiones sin verificar equivalencia. Solo lecturas y fotografías normales autorizadas; nunca escribir RAM, MMIO, firmware ni NVRAM. La ingeniería inversa estática no necesita repetirse. **NO_VERIFICADO**
 
 ## Sesión de línea base parcial — 28-10-2026
 

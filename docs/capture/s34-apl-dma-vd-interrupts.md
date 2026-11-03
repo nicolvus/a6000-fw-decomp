@@ -98,7 +98,7 @@ Post registra error y señala `0x100`; Drive registra error y también continúa
 El orden normal no es una barrera universal ante timeout/overflow.
 
 **NO_VERIFICADO — cuadro propio o siguiente:** las tareas transportan VD
-software y lo comparan con el actual. Falta la regla hardware de latch/inicio
+software y lo comparan con el actual. Falta la regla hardware de latch/inicio **NO_VERIFICADO**
 de APL frente al flanco VD y la tupla unidad/handle/secuencia/frame del sensor.
 No se demuestra un cambio de cuadro causado por kick ni que el flanco físico
 sea el evento software `0x80`. No se puede elegir «propio» o «siguiente».
@@ -154,12 +154,12 @@ con objetivo `context[2]+0x43e99370` (`0xf3c3013c/0xf3c30138`). EC se
 encola desde `0x437926fc` con timer 0 o desde `0x43791454`.
 No se demuestra que estas operaciones consuman fin de transferencia APL.
 
-Faltan concretamente:
+Faltan concretamente: **NO_VERIFICADO**
 
 1. **Unidad/banco APL → estado/fin → factor IRQ**, incluida la semántica
    de `0x00200000` si resulta pertinente.
 2. Callback efectivo y tupla **handle/ID/secuencia/VD**, enlazados a consumo
-   EC/LM. La tabla software ya no es desconocida; falta asociarla a estos bancos.
+   EC/LM. La tabla software ya no es desconocida; falta asociarla a estos bancos. **NO_VERIFICADO**
 3. Latch/inicio por VD físico para distinguir cuadro propio/siguiente.
    Aun cerrando fin DMA, no equivale automáticamente a fin de integración.
 

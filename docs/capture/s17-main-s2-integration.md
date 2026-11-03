@@ -102,6 +102,6 @@ La consulta de referencias de Ghidra en modo `-noanalysis` (§3) no encontró ll
 - Consumidor real de la cola `0x40193` (requiere resolver la llamada indirecta a `0x43809ed8` — candidato: localizar la tabla de function-pointers o vtable que la contiene, posiblemente vía el mismo mecanismo de `TM::createLifeCycles`/callback que investiga Claude A en libObj, aunque aquí es LIRO, no libObj — mecanismos distintos, no asumir equivalencia).
 - Contenido real de las 8 filas candidatas de `0x43edccf8` (imposible por análisis estático de este binario; requeriría volcado de memoria en caliente, que está fuera del alcance de este proyecto: "no hardware, no flasheo").
 - Semántica exacta de `FUN_43ae76ca(iVar1,0,iVar7)`, llamada antes de seleccionar las filas 8/10/11/13 (podría escribir estado, no solo leer).
-- Relación entre el evento Java `onShutterKeyDown` (PMCADemo/Android) y `RelMgr::0x4379d838` nativo — pendiente de integración con hallazgo de Claude B.
+- Relación entre el evento Java `onShutterKeyDown` (PMCADemo/Android) y `RelMgr::0x4379d838` nativo — pendiente de integración con hallazgo de Claude B. **NO_VERIFICADO**
 
 **Riesgo para el usuario:** ninguna de las rutas de esta sesión demuestra ni descarta una divergencia Silent segura en `0x437eabfc`; el candidato de integración de sesión 16 permanece como HIPÓTESIS sin refutar ni confirmar. No se tocó, flasheó ni ejecutó ningún binario.

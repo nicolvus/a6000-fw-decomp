@@ -96,9 +96,9 @@ desde S22/S30, pero no lo cierra.
 **NO_VERIFICADO:** si estos handlers marcan fin de lectura/DMA o solo
 temporización; `VD_Drive`/`VD_Post` recorren listas de trabajo con llamadas
 indirectas vía `0x43ad6034` cuyos destinos concretos no se resolvieron.
-Dato que falta y procedimiento no destructivo: resolver estáticamente quién
+Dato que falta y procedimiento no destructivo: resolver estáticamente quién **NO_VERIFICADO**
 construye esas listas de callback (siguiente paso recomendado, ver abajo);
-para comportamiento físico haría falta una captura pasiva correlacionada de
+para comportamiento físico haría falta una captura pasiva correlacionada de **NO_VERIFICADO**
 VD/lectura/interrupciones en hardware real, sin flashear.
 
 Exports: `analysis/ghidra/camera-main-sync-final-decompilation.c` (pseudocódigo),

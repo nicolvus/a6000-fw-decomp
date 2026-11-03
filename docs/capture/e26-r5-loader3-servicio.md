@@ -106,7 +106,7 @@ La cobertura describe el selector identificado, no todos los programas que podr�
 
 El initrd respaldado añade dos condiciones distintas:
 
-- `usr/bin/UdtrMain.sh:56–59`: si existe `updater/uincomp`, desmonta y entra en `ERROR_UINCOMP=54` antes de `execute_ufp.sh`. **No es `comp` ni `mode`**. No se ha identificado aquí todo el ciclo de creación/eliminación de `uincomp`.
+- `usr/bin/UdtrMain.sh:56–59`: si existe `updater/uincomp`, desmonta y entra en `ERROR_UINCOMP=54` antes de `execute_ufp.sh`. **No es `comp` ni `mode`**. No se ha identificado aquí todo el ciclo de creación/eliminación de `uincomp`. **NO_VERIFICADO**
 - `usr/bin/execute_ufp.sh:13–17`: si encuentra `comp`, elimina `mode*` y desmonta; más adelante arranca `sauu`. Por eso también existe limpieza de banderas fuera de CompleteUpdate.
 
 **INFERENCIA RESPALDADA:** una finalización normal puede dejar `comp` presente y `mode` ausente antes de intentar arrancar la imagen principal. Es compatible con éxito del proceso y fallo en el siguiente encendido, con Darwin escrito según su herramienta y sin validación de arranque, o con un payload que pasa sus comprobaciones pero falla en el lector real. **No demuestra cuál ocurrió.** Un fallo comprobado de `umount` lanza excepción: no se afirma que produzca éxito en la ruta normal. Operaciones aún pendientes tras un join fallido son una posibilidad condicionada al error residual, no una propiedad de toda actualización. La UI del host no está trazada hasta su última instrucción y no se leyó NAND tras el bloqueo.
@@ -156,7 +156,7 @@ El punto externo más temprano **documentado eléctricamente** es el SWD opciona
 | ECC/bad blocks/FTL | BOSS distingue al menos retornos de lectura y número completado; no se cerraron algoritmo ECC, OOB, tabla de defectos, remapeos ni gestión de desgaste |
 | Imagen lógica | Respaldos `/dev/nflasha*` contienen datos servidos por el controlador. No incluyen por ello necesariamente OOB/ECC ni metadatos físicos; el informe de particiones del respaldo no es geometría del chip |
 
-**NO DEMOSTRADO:** una programación física mínima viable de nflasha3 con un programador concreto. Antes de especificar hardware de escritura faltan identificación del componente/die y encapsulado, esquema/pinout de su bus, topología accesible, tensiones, aislamiento, geometría, ECC/OOB, bad blocks, traducción lógica y herramienta compatible. Un programador SPI genérico no está justificado. Un servicio de placa podría aportar esa información, pero no se afirma que Sony o un taller disponga de un procedimiento compatible con este incidente.
+**NO DEMOSTRADO:** una programación física mínima viable de nflasha3 con un programador concreto. Antes de especificar hardware de escritura faltan identificación del componente/die y encapsulado, esquema/pinout de su bus, topología accesible, tensiones, aislamiento, geometría, ECC/OOB, bad blocks, traducción lógica y herramienta compatible. Un programador SPI genérico no está justificado. Un servicio de placa podría aportar esa información, pero no se afirma que Sony o un taller disponga de un procedimiento compatible con este incidente. **NO_VERIFICADO**
 
 La restauración mínima deseada escribiría únicamente **el contenido lógico original de nflasha3 a través del controlador que conserva su traducción**, después de leer y verificar el estado actual. Una escritura NAND cruda tendría que preservar además OOB/ECC y remapeos y limitar borrados a bloques identificados; con FTL/desgaste no se presume que una partición corresponda a un intervalo físico fijo. Preservar íntegros Backup/NVRAM, nflasha2, identificadores, calibraciones, fábrica, bootloaders, otras particiones y metadatos. Si el diagnóstico señala Darwin, restaurar solo nflasha3 puede no resolverlo. El actualizador original tampoco se promete selectivo: sus scripts pueden tocar Backup/MPR y otras regiones; revisar su alcance antes de cualquier autorización.
 
@@ -170,7 +170,7 @@ El manual FM3 local, impreso p.34, documenta selección Serial Writer con MD1=0/
 
 ## 7. Diagnóstico pasivo preparado, sin ejecución
 
-**PENDIENTE DE ACCESO FÍSICO:** no hay imágenes en `/home/nicolas/.codex/attachments/` con extensiones PNG/JPEG/WebP al comprobar esta sesión. No se buscó indiscriminadamente en fotos personales. No está identificada la cara visible. Fotografía necesaria: vista perpendicular de toda la placa actualmente expuesta, con conectores/flex y orientación del cuerpo visibles; otra macro nítida de CN4906 y su entorno, sin mover placa ni contactos. Comparar con PDF 50/SIDE A (CN4906, IC6000) y 51/SIDE B (IC5700/CL); el lado de la cámara desde el que se tomó no basta.
+**PENDIENTE DE ACCESO FÍSICO:** no hay imágenes en `/home/nicolas/.codex/attachments/` con extensiones PNG/JPEG/WebP al comprobar esta sesión. No se buscó indiscriminadamente en fotos personales. No está identificada la cara visible. Fotografía necesaria: vista perpendicular de toda la placa actualmente expuesta, con conectores/flex y orientación del cuerpo visibles; otra macro nítida de CN4906 y su entorno, sin mover placa ni contactos. Comparar con PDF 50/SIDE A (CN4906, IC6000) y 51/SIDE B (IC5700/CL); el lado de la cámara desde el que se tomó no basta. **NO_VERIFICADO**
 
 Esto es un protocolo para otra ejecución **expresamente autorizada**, no una orden de encender o conectar ahora. El circuito de flash puede retener tensión peligrosa incluso sin batería; la inspección y cualquier medición deben quedar a cargo de una persona competente, sin acceder al circuito del flash ni improvisar una descarga.
 
@@ -184,7 +184,7 @@ Esto es un protocolo para otra ejecución **expresamente autorizada**, no una or
 | 6. Darwin si procede | Captura de TX Darwin con iguales condiciones | Separada de BIONZ y con nivel validado | Puede acreditar actividad del MCU; no necesariamente tiene consola/boot log | UART sin texto tampoco demuestra que Darwin no corre |
 | 7. Debug, solo diagnóstico posterior | Depurador SWD compatible y cadena confirmada | Solo si las medidas apuntan al procesador correspondiente; identificar protección/efectos de attach, sin auto-unlock | Lectura de estado podría reducir la etapa; attach puede detener CPU y alterar energía/tiempos | **No es captura pasiva**. No se incluye dentro de la autorización de UART |
 
-Una traza con último marcador identifica al menos la etapa alcanzada; no garantiza por sí sola la causa exacta. Para diferenciar Darwin que no corre de Darwin que falla en energía hace falta evidencia adicional de su actividad y de DD_ON/rails. `BOM:<<BootMode: 3>>` + errores de FAT1 o carga separaría selección de carga; salto a kernel + registros Linux desplazaría el diagnóstico después del loader. TPZL/LDEC observado situaría esa hipótesis en una ejecución real. Ninguno de estos resultados se inventa a partir del LED.
+Una traza con último marcador identifica al menos la etapa alcanzada; no garantiza por sí sola la causa exacta. Para diferenciar Darwin que no corre de Darwin que falla en energía hace falta evidencia adicional de su actividad y de DD_ON/rails. `BOM:<<BootMode: 3>>` + errores de FAT1 o carga separaría selección de carga; salto a kernel + registros Linux desplazaría el diagnóstico después del loader. TPZL/LDEC observado situaría esa hipótesis en una ejecución real. Ninguno de estos resultados se inventa a partir del LED. **NO_VERIFICADO**
 
 ## 8. Comparación de vías y decisión
 
@@ -202,7 +202,7 @@ En todas las filas, la disponibilidad en la unidad actual está sin medir. «No 
 
 **Estrategia concreta:** confirmar foto y punto UART0 accesible sin retirar placa → verificar nivel y obtener traza pasiva autorizada → clasificar energía/loader/kernel → evaluar actualizador original solo si se demuestra cómo seleccionarlo y qué regiones tocará. Si la traza confirma fallo en la imagen principal con `mode` ausente, investigar primero el SWD BIONZ opcional y una entrada al controlador conservando sus metadatos; no saltar a reprogramar Darwin ni a NAND cruda. El montaje faltante de R4911/R4912 puede impedir esa entrada desde la huella; no se propone soldarlo en esta ejecución.
 
-Antes de cualquier escritura faltan: diagnóstico discriminante, lectura del estado actual, copia externa verificada, integridad del loader/mapeo pertinente, acceso de lectura reproducible por la herramienta elegida, validación de sus protecciones/efectos y alcance de la restauración sobre calibraciones y otras regiones. La autorización deberá ser específica de esa operación.
+Antes de cualquier escritura faltan: diagnóstico discriminante, lectura del estado actual, copia externa verificada, integridad del loader/mapeo pertinente, acceso de lectura reproducible por la herramienta elegida, validación de sus protecciones/efectos y alcance de la restauración sobre calibraciones y otras regiones. La autorización deberá ser específica de esa operación. **NO_VERIFICADO**
 
 ## 9. Respuestas de cierre y pendientes explícitos
 
@@ -214,10 +214,10 @@ Antes de cualquier escritura faltan: diagnóstico discriminante, lectura del est
 | 4 | ¿Sin nflasha3? | La función carga dispositivo 1 sin nflasha3; independencia global y activación real **NO DEMOSTRADAS** |
 | 5 | ¿Activación física? | **NO DEMOSTRADA**; SIO alternativo condicionado y deshabilitado en respaldo histórico |
 | 6 | ¿CN4906 SIDE A? | **VERIFICADO OFFLINE** en plano PDF 50 |
-| 7 | ¿Qué está conectado? | Conectividad de esquema en §4; resistencias XX y continuidad real **PENDIENTE DE MEDICIÓN** |
+| 7 | ¿Qué está conectado? | Conectividad de esquema en §4; resistencias XX y continuidad real **PENDIENTE DE MEDICIÓN** **NO_VERIFICADO** |
 | 8 | ¿BIONZ o Darwin? | **VERIFICADO EN ESQUEMA:** ambos; UART BIONZ directa dibujada, SWD BIONZ condicionado |
 | 9 | ¿Acceso físico NAND? | Por procesador/controlador sería deseable; programador directo **NO DEMOSTRADO**, sin chip/mapa/ECC completos |
-| 10 | ¿Desmontaje? | Huella A no exige B en plano, accesibilidad actual **PENDIENTE DE ACCESO FÍSICO**; técnica NAND directa indeterminada |
+| 10 | ¿Desmontaje? | Huella A no exige B en plano, accesibilidad actual **PENDIENTE DE ACCESO FÍSICO**; técnica NAND directa indeterminada **NO_VERIFICADO** |
 | 11 | ¿Calibraciones? | Restauración mínima lógica de nflasha3 si el diagnóstico la justifica; preservar Backup/NVRAM y metadatos; procedimiento de escritura sin validar |
 | 12 | ¿Medición discriminante? | UART0 pasiva + DD_ON/rails cuando haga falta; un silencio aislado no localiza el fallo |
 | 13 | ¿Primera vía? | Diagnóstico por UART BIONZ; después Loader3→actualizador original si se resuelve entrada |

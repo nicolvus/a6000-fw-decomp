@@ -107,7 +107,7 @@ inválidos: sus efectos no se comprobaron.
 
 El envío obtiene la cola de objeto+4, reserva con osal_valloc_msg_wait en
 0xa1b23e, copia payload y llama osal_snd_msg en 0xa1b294. El objeto se obtiene
-mediante 0xa15fd0 (`sequence+0x20` → `+0x20`). Falta identificar consumidor y
+mediante 0xa15fd0 (`sequence+0x20` → `+0x20`). Falta identificar consumidor y **NO_VERIFICADO**
 transporte al CMOS.
 
 Si el envío devuelve cero, construye respuesta 0x9502=0xf000, copia relay y
@@ -164,7 +164,7 @@ en owner+0x20 y owner+0x24. El setter 0xa1b198 escribe el argumento en
 objeto+4. El primero recibe **0x30001**, el segundo **0x40193**; ambos reciben
 0x20002 en objeto+8 mediante 0xa1b1a0. Los literales están en 0xadb080/84.
 **Candidato de identidad de cola**: coincide la disposición de acceso +0x20
-con el accessor de secuencia, pero aún falta demostrar que se trate de la
+con el accessor de secuencia, pero aún falta demostrar que se trate de la **NO_VERIFICADO**
 misma instancia/owner. No se declara 0x30001 como cola definitiva del sensor.
 SHA-256 de bytes `[0xadaf66,0xadb088)`:
 `87dfd4c75ae3b676099cc63297eeaaf1d5384e5d2e616be45d4051b1002b3985`.

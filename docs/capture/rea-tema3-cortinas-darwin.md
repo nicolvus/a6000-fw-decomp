@@ -95,7 +95,7 @@ Conclusión 1b: **consumidor de P4C NO localizado**. Darwin emite `P4C←0` en t
 | Seguimiento ADC de fases (`0x20734`, `0x2083c`) | omitido (`S+0x153←0`) | `0x2077c/0x20780`, `0x20840/0x20844` |
 | Rutas de reposición/aborto (`0x203b2`, `0x206ec`, diferidos `0x20a8a/0x20aa4`) | sin acción de bobina | filtro `0x20c74` |
 
-Conclusión 3: tipo 0 suprime P4D/P4E y el seguimiento ADC en **todas** las rutas (más que Silent A7S, que sí actúa bobinas en reposición/aborto con `no_silent=1`), pero **mantiene `P4C←0` y la temporización**. Falta la polaridad/idle de P4C (perfil 3 da nivel inicial 1; qué usa la placa depende de `0xcf3a`/`0x5b36`, sin resolver) y falta el lado sensor. Por tanto no se ha demostrado que «suprima las cortinas físicas» en sentido completo; equivalencia funcional plena con Silent A7S: **NO demostrada**.
+Conclusión 3: tipo 0 suprime P4D/P4E y el seguimiento ADC en **todas** las rutas (más que Silent A7S, que sí actúa bobinas en reposición/aborto con `no_silent=1`), pero **mantiene `P4C←0` y la temporización**. Falta la polaridad/idle de P4C (perfil 3 da nivel inicial 1; qué usa la placa depende de `0xcf3a`/`0x5b36`, sin resolver) y falta el lado sensor. Por tanto no se ha demostrado que «suprima las cortinas físicas» en sentido completo; equivalencia funcional plena con Silent A7S: **NO demostrada**. **NO_VERIFICADO**
 
 ---
 

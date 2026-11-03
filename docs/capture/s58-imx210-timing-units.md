@@ -7,7 +7,7 @@
 | Campo | Transformación comprobada | Interpretación y límite |
 |---|---|---|
 | Tv | `0x4382fa94`: 0x1000→256000000; 0x1100→128000000; 0x1800→1000000 | escala exponencial tabulada, paso candidato 1/256 EV; la fórmula exponencial continua es aproximada |
-| T | Tv≤0xc00→0xffffffff; 0xc01→4084937500 | saturación de 32 bits; unidad física sin verificar |
+| T | Tv≤0xc00→0xffffffff; 0xc01→4084937500 | saturación de 32 bits; unidad física sin verificar **NO_VERIFICADO** |
 | n_i | `sdiv(T, M[0x20]·svr)` en `0x4383d4d0` | cociente con signo; el resto se calcula con wrap de 32 bits |
 | shd_i | `VMAX−líneas`, con suelo y recortes posteriores | posición aritmética compatible con líneas; VMAX es nombre interpretativo |
 | fino_i | `hmax−1000·resto_fino/tick`, acotado | va a fila+0xa; **distinto de spl** |
@@ -34,4 +34,4 @@ La anterior afirmación del borrador S58 de equivalencia incondicional queda cor
 
 Suite: 120 vectores para tiempo y 80 para filas, con dos rellenos de páginas no mapeadas. Campañas adicionales: `a6_verify.py` 600/600 y `a7_verify.py 150` 300/300. Los patrones no sustituyen un constructor real ni alteran automáticamente la memoria ya mapeada. Se comprueban truncamiento, ramas y estados sintéticos; no se emula el sensor.
 
-Próximo paso: recuperar la fuente de los 12 u16 que `0x437aa65c` copia desde `0x437876dc()+0xdd0` y un estado de M/Tv alcanzable por modo. Para asociar estos números al fin físico de integración hace falta documentación del IMX210 o una traza pasiva autorizada CIS0+XPI+VD.
+Próximo paso: recuperar la fuente de los 12 u16 que `0x437aa65c` copia desde `0x437876dc()+0xdd0` y un estado de M/Tv alcanzable por modo. Para asociar estos números al fin físico de integración hace falta documentación del IMX210 o una traza pasiva autorizada CIS0+XPI+VD. **NO_VERIFICADO**

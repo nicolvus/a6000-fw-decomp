@@ -10,7 +10,7 @@ Etiquetas: **BINARIO** (llvm-objdump/Capstone, bytes releídos) · **DATOS** · 
 |---|---|
 | Guard en modo actualizador | Lo aplica `sauu` (`nflasha1`) en `UpdaterHandler::isVersionOK`, comparando contra `<nflasha2>\updater\dat4`. Con solo `mode` (USER): exige versión **mayor**, o igual si falta `comp`. `-m` (MINOR, `mode3`) acepta igual; `-s` (VERSKIP, `mode6`) acepta **cualquiera** |
 | Quién escribe `dat4`/`comp` | El cuerpo del paquete: `StartUpdate` borra `comp`; `CompleteUpdate` escribe `dat4 = versión del FDAT`, borra `mode1…6`, crea `comp` y borra `mode`. Ningún paquete 3.2x trae `updater_sum`/`loader_sum`: nunca reescriben `nflasha1` ni crean `uincomp` |
-| Estado tras el 3.25 | `dat4 = 25 03` y `comp` presente (INFERENCIA: la instalación terminó, como informó el usuario) → hace falta **≥ 3.26** en modo USER. Confirma la suposición de R37 |
+| Estado tras el 3.25 | `dat4 = 25 03` y `comp` presente (INFERENCIA: la instalación terminó, como informó el usuario) → hace falta **≥ 3.26** en modo USER. Confirma la suposición de R37 **NO_VERIFICADO** |
 | Lectura de `\updater\mode` por Loader3 | Solo la entrada corta `MODE       ` en el primer clúster de `\updater`, con `attr & 0x18 == 0`. No lee datos: vale un archivo de 0 B |
 | Escritura mínima | En el volcado del 20-10, `\updater` conserva una entrada `mode` **borrada** (0xE5, 0 B). Recuperarla = **1 byte** (`0xE5 → 0x4D` en el desplazamiento `0x108A0`, sector 132 de `nflasha2`). `fsck.vfat -n` limpio |
 | Persistencia | Sin LFN, el nombre queda `MODE` y el `rm -rf /setting/updater/mode*` de `execute_ufp.sh` no lo borra: se puede reintentar sin volver a escribir la NAND. `CompleteUpdate` lo borra al acabar bien. Corrige R37 §2 («en esa misma sesión») |
@@ -97,5 +97,5 @@ Requisitos de la entrada: nombre corto `MODE` en el primer clúster de `\updater
 ## 7. Límites
 
 - Nada se ha probado en la cámara. El estado actual de `nflasha2` (`dat4`, huecos de `\updater`) se infiere del volcado del 20-10 y del código, no se ha leído.
-- La persistencia de `MODE` depende de la semántica de `vfat`/busybox en el kernel del actualizador (§5). No se ha comprobado en ejecución.
+- La persistencia de `MODE` depende de la semántica de `vfat`/busybox en el kernel del actualizador (§5). No se ha comprobado en ejecución. **NO_VERIFICADO**
 - Escribir el sector exige la vía física de E26 (lector externo o BootROM serie con la clave de `nflasha0`, [R33](e26-r33-veracidad-clave-nflasha0.md)), que no está autorizada.

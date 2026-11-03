@@ -329,7 +329,7 @@ S2 como requisitos comprobados de integración.
 
 **RECHAZO:** dar por resuelta la asignación física S1/S2, el salto
 `0x3011→CaptureStart`, una fila Silent existente o una transición sin
-movimientos. Faltan el consumidor CamUser de `0x3011` y su vuelta a LIRO,
+movimientos. Faltan el consumidor CamUser de `0x3011` y su vuelta a LIRO, **NO_VERIFICADO**
 la inicialización de `0x43edccf8/0x43eddd08`, el primer evento CAIF por
 descriptor y el camino de apertura/cierre de LV/SFRA.
 

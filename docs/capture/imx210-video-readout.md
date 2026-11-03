@@ -26,7 +26,7 @@ Los nombres «fotográfico/vídeo» son **HIPÓTESIS** por correlación con el l
 Tabla diferencial completa: ver JSON (`rows[].values`).
 
 ## Geometría (VERIFICADO como datos, vínculo con modo NO verificado)
-Descriptores en `0x43bb7f3c…`: 6048×4152, 6024×4024 (offset 12,140), 6000×4000, 6028×4024, 1736×1250(?). 1920×1080 y 1440×1080 en `0x43fe60b8…` (tablas con 720×480/768×480). Falta la función que une modo→descriptor (`getDriveModeSizeRatio`, `0x43ad908e`→thunk `0x43ad9644`).
+Descriptores en `0x43bb7f3c…`: 6048×4152, 6024×4024 (offset 12,140), 6000×4000, 6028×4024, 1736×1250(?). 1920×1080 y 1440×1080 en `0x43fe60b8…` (tablas con 720×480/768×480). Falta la función que une modo→descriptor (`getDriveModeSizeRatio`, `0x43ad908e`→thunk `0x43ad9644`). **NO_VERIFICADO**
 
 ## Llamadores de SetMode (wrapper `0x436d62e4`)
 `0x438c79bc` (solo si `0x43a12c64()==3`), `0x438c84ec`, `0x438cc7ea`, y la cola `0x43795aaa` (estructura estática `0x43ff36d0`, modo `0x11`). Todos reciben `modo=captura+0x4d0` mediante `0x43795a60`. Llamadas por vtable slot `+0x20` aún sin enumerar.

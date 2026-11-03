@@ -73,7 +73,7 @@ Esto **no afecta** a la topología `0x2a`: `0x2a` conecta la **salida** #1 de Ef
 | ObjCamera no tiene ningún pin de entrada | VERIFICADO |
 | Filas `0x0a`/`0x07` comparten StsId=0; `0x2a` tiene StsId=6 | VERIFICADO (dato de tabla) |
 | StsId no bloquea la coexistencia de topologías en `TM::createLifeCycles` | INFERENCIA (por lectura del código; no se encontró comprobación de exclusión) |
-| Camera→Effect→(Renderer y Recorder) simultáneos son posibles a nivel de TopologyManager | INFERENCIA — depende de si ObjEffect los permite (pendiente de la Rama A) |
+| Camera→Effect→(Renderer y Recorder) simultáneos son posibles a nivel de TopologyManager | INFERENCIA — depende de si ObjEffect los permite (pendiente de la Rama A) **NO_VERIFICADO** |
 | Ningún modelo de disparo conocido activa `0x2a` durante EE | NO VERIFICADO descartado solo parcialmente (sesión 14: búsqueda no exhaustiva) |
 
 ## Nota metodológica

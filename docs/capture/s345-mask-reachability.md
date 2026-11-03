@@ -83,7 +83,7 @@ Mismo patrón (dos operaciones, sin condicionales en el tramo), con los bloques 
 - Solo lectura estática; sin runtime, cámara ni flasheo.
 - «No condicionada por el modo» se refiere al **tramo rectilíneo** medido; no se ha probado la alcanzabilidad de la función que lo contiene hasta su origen.
 - El equivalente del escritor de máscara en la A6000 no se sigue: solo se verifica que las dos operaciones están presentes y que reutilizan los mismos cuerpos.
-- La puerta `0x43ad9b50` del segundo sitio del A7S no se ha identificado.
+- La puerta `0x43ad9b50` del segundo sitio del A7S no se ha identificado. **NO_VERIFICADO**
 - S51 (A/B/C) no cambia.
 
 ## Reproducción

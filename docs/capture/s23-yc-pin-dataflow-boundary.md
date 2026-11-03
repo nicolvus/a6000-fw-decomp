@@ -127,7 +127,7 @@ El auditor desensambla sólo `0xa27b22..0xa27c44`, `0xa14f88..0xa15110` y
 
 **VEREDICTO: PARCIAL.** La frontera de transporte YC quedó cerrada
 estáticamente hasta un request/reply Dataflow y se descarta que el parser sea,
-por sí solo, el productor de píxeles. Falta el handler del destino guardado en
+por sí solo, el productor de píxeles. Falta el handler del destino guardado en **NO_VERIFICADO**
 `PinParserYcOut0+0x10`: es la arista que puede revelar el significado de los
 cuatro enteros y si produce/abre un DMM compatible con `EncodeStill`.
 

@@ -27,7 +27,7 @@ Siguiendo el diagrama de R20 con `MODEREG` bit 0 = 1:
 
 - Si GPIO4.22 = 1 → el BootROM queda a la espera de datos por el puerto serie (`0xfa0`) sin más
   condición.
-- Si GPIO4.22 = 0 → hace falta que `0x28c` (inicialización de almacenamiento) y `0x332` (carga de
+- Si GPIO4.22 = 0 → hace falta que `0x28c` (inicialización de almacenamiento) y `0x332` (carga de **NO_VERIFICADO**
   cabecera) tengan éxito; si la cabecera trae un código de verificación en `0xc0001200`, la espera
   por puerto serie solo se habilita si los datos enviados incluyen ese mismo código (paquete
   `KEY f:%x r:%x`). Código distinto o CRC incorrecto → LED de error `0x2002/0x2003`, no se habilita

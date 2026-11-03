@@ -88,7 +88,7 @@ Ramas nuevas seguidas: `0x43811324` (log `StSyncDvlpPrm`) llama a
 Todos tienen pseudocódigo/ensamblador exportado. `0x43b03abe` señala evento
 `0x1a/0x20`. Los nombres de logs no prueban efectos físicos.
 La liberación del propietario (`payload+0x18`, método virtual `vtable+0xc`)
-queda sin destino concreto: falta el objeto/vtable efectivo de ejecución.
+queda sin destino concreto: falta el objeto/vtable efectivo de ejecución. **NO_VERIFICADO**
 
 ## VERIFICADO y PARCIAL — SyncYCout y memoria compartida
 
@@ -130,8 +130,8 @@ Esta última copia campos del pin a un registro de **0x34 bytes**, llama a
 No es el lugar del diagnóstico de ventana YC ni una rutina que copie píxeles.
 
 **PARCIAL:** el bloque YC referencia una asignación DMM mediante un handle.
-Para resolver el raster falta el handle efectivo en `input+0x10/+0xd4`, su
-asignación/mapeo DMM y el significado de los pares de bloques; también falta
+Para resolver el raster falta el handle efectivo en `input+0x10/+0xd4`, su **NO_VERIFICADO**
+asignación/mapeo DMM y el significado de los pares de bloques; también falta **NO_VERIFICADO**
 etiquetar ancho/alto/pitch/formato con evidencia del consumidor. No se ha
 identificado una condición de fin de DMA ni un contrato de caché/propiedad.
 Las llamadas indirectas no resueltas impiden afirmar ausencia universal de
@@ -139,7 +139,7 @@ accesos a imagen en todos los descendientes.
 
 Se inspeccionó además `0x4379744c`: recibe mensajes de control `0x50004`
 y usa `0x435a9b30` para configurar conexión/estado. No se deduce que ese
-receptor consuma el payload YC. Falta la tupla remota efectiva de cada pin
+receptor consuma el payload YC. Falta la tupla remota efectiva de cada pin **NO_VERIFICADO**
 en `+8/+0xc/+0x10/+0x14` para fijar un consumidor final; no se inventa esa arista.
 
 ## VERIFICADO — condición de ventana, no fin DMA

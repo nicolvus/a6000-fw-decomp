@@ -57,7 +57,7 @@ ni offsets iguales prueban que jamás exista otra copia intermedia.
 Por ello no se transportan a C las condiciones de P+`95=2` de `4385cf2c`.
 La copia C+94/+95→B+36/+37 en `4382dd78` permanece demostrada;
 B=`43eae270`→G=`43ea6ad4`→`43842158` se conserva como antecedente S44,
-sin atribuirle este productor de 2. Falta el escritor de `43e9d3b4+94/+95`
+sin atribuirle este productor de 2. Falta el escritor de `43e9d3b4+94/+95` **NO_VERIFICADO**
 o una copia con identidad y orden temporal demostrados desde P.
 
 ## VERIFICADO — lector real de IMX210+3a0
@@ -121,8 +121,8 @@ de strings ni agotamiento de esta rama: no se completó un inventario semántico
 ## Pendiente real
 
 P→C sigue PARCIAL. Lector IMX210+3a0 cerrado; su efecto sobre el controlador
-está seguido hasta base+220, pero la base física y el efecto eléctrico faltan.
-También faltan semántica ID0 y demostración de fin electrónico/cortinas.
+está seguido hasta base+220, pero la base física y el efecto eléctrico faltan. **NO_VERIFICADO**
+También faltan semántica ID0 y demostración de fin electrónico/cortinas. **NO_VERIFICADO**
 La serie explícita S40–S45 termina aquí; **el hito continúa abierto en S46+**.
 No hay frontera estática agotada: quedan escritores y copias concretos por
 resolver. No se activa Línea E ni se abre A6300; no se transportan offsets.

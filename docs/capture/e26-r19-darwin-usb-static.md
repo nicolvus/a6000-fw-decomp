@@ -43,7 +43,7 @@ No hay etapa de datos OUT: ninguna petición acepta datos del host hacia la cám
 
 - **USB Charger: cerrado para recuperación.** Descriptor HID solo-Input (R10), callback de clase/vendor que solo atiende GET_DESCRIPTOR HID, GET_REPORT y SET_IDLE, vendor siempre parado, sin código de flash. **Límites:** análisis de la capa USB de Darwin 3.21 (no del firmware actual de la cámara); no se ha examinado el consumidor del aviso `post(0x13)` ni el uso de EP1; la emulación intercepta transmisión y parada y no ejecuta el resto de la pila.
 - **Vía DWN:** sin referencias ni acceso a flash; no demostrada.
-- **Vía Multi↔`BOOT_SERIAL_IN`:** reabierta por §1.7, sin verificar (inferencia de esquema).
+- **Vía Multi↔`BOOT_SERIAL_IN`:** reabierta por §1.7, sin verificar (inferencia de esquema). **NO_VERIFICADO**
 - **Vía CN4906:** no sirve para el BootROM serie (§1.9).
 
 ## 4. Pendientes

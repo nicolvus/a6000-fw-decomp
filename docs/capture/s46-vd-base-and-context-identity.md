@@ -114,7 +114,7 @@ C+94/+95 a B+36/+37; B=`0x43eae270`, copia posterior a G=`0x43ea6ad4`
 y consumo en `0x43842158`. **PARCIAL:** el nuevo origen permite seguir
 condicionalmente `(1,2)` por esas copias cuando se toman sus ramas y no hay
 sobrescritura intermedia. No demuestra que una solicitud concreta llegue con
-esos u16 ni que se ejecute en hardware. Falta el productor del payload y
+esos u16 ni que se ejecute en hardware. Falta el productor del payload y **NO_VERIFICADO**
 cerrar su orden frente a las preparaciones/copias de VD_Pre.
 
 ## Pendiente real y próximo paso exacto S47

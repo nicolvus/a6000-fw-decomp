@@ -9,7 +9,7 @@ ningún flasheo posterior (T025–T039 solo escribieron RAM).
 
 | | Pregunta | Respuesta | Qué significa |
 |---|---|---|---|
-| **A** | ¿Material de recuperación completo e íntegro? | **NO** | **Íntegro: sí** (hashes y descifrados correctos, §1–§2). **Completo: no**: faltan el arranque de Darwin (`0x0–0x41ff`), Loader2/3, un volcado de la flash de Darwin, una vía de escritura de NAND, una NVRAM posterior a 3.22, un script de reinstalación 3.23 y toda copia fuera de este disco (§8) |
+| **A** | ¿Material de recuperación completo e íntegro? | **NO** | **Íntegro: sí** (hashes y descifrados correctos, §1–§2). **Completo: no**: faltan el arranque de Darwin (`0x0–0x41ff`), Loader2/3, un volcado de la flash de Darwin, una vía de escritura de NAND, una NVRAM posterior a 3.22, un script de reinstalación 3.23 y toda copia fuera de este disco (§8) **NO_VERIFICADO** |
 | **B** | ¿El FDAT 3.23 contiene el Darwin original y supera las validaciones offline disponibles? | **SÍ** | `darwin_core.bin` = oficial 3.21 (`5f2be06d…`, CRC-32 `9ff7148c`), no el tipo 0 (`ca41b46c…`); el `firmware.tar` completo es byte a byte el oficial; modelo, región, CRC y cifrado correctos; se reconstruye bit a bit (§2–§3) |
 | **C** | ¿Se ha demostrado que puede reinstalarse con la aplicación Darwin defectuosa? | **NO** | Ausencia de evidencia. No consta la inversa 3.22→3.23 en hardware, ni ningún caso con Darwin defectuoso. Lo único ejercitado: 3.21→3.22 con Darwin sano (T024) |
 | **D** | ¿Procedimiento de restauración por software independiente de `darwin_core`? | **NO** | Ausencia de evidencia, no imposibilidad: depende del arranque de Darwin, que no se ha visto (E24-02). Evidencia en contra: el actualizador necesita `DD_ON*` y `InitCom`/`Upd` de `darwin_core` (E24-01/02) |
@@ -135,8 +135,8 @@ Todas deben cumplirse; las marcadas **[conectar]** exigen la cámara y quedan fu
 | M2 | Guard medido con la versión instalada **[conectar]** | `scripts/fdat_guard_probe.py` (solo chequeo) con 3.23 | NO medido |
 | M3 | FDAT de recuperación íntegro y reproducible | `pytest tests/test_e24_03_recovery.py` | Pasa |
 | M4 | Core de recuperación = original y `darwin.sum` coincide | Misma prueba | Pasa |
-| M5 | FDAT de prueba difiere del oficial solo en lo previsto | Comparar miembros del tar (como `test_type0_fdat_differs_only_in_darwin`) | Por hacer por parche |
-| M6 | El parche no toca `0x45c8/0x43fc`, `0x4638`, `0x51c0`, tabla `0x28c6c` y manejadores, `0xece4`, `InitCom 0x4bca`, `Upd 0x8da8`, `0x45bc`, watchdog `0xa500/0xa524`, CRC `0xa1dc` | Diff byte a byte del core contra el original | Por hacer por parche |
+| M5 | FDAT de prueba difiere del oficial solo en lo previsto | Comparar miembros del tar (como `test_type0_fdat_differs_only_in_darwin`) | Por hacer por parche **NO_VERIFICADO** |
+| M6 | El parche no toca `0x45c8/0x43fc`, `0x4638`, `0x51c0`, tabla `0x28c6c` y manejadores, `0xece4`, `InitCom 0x4bca`, `Upd 0x8da8`, `0x45bc`, watchdog `0xa500/0xa524`, CRC `0xa1dc` | Diff byte a byte del core contra el original | Por hacer por parche **NO_VERIFICADO** |
 | M7 | El parche conserva `VERM.mm` en el core | `b"VER0.78"` presente | Pasa para el tipo 0 |
 | M8 | El paquete sigue sin `darwin_boo.bin` | Prueba de M4 | Pasa |
 | M9 | NVRAM íntegra y reciente, con firmware instalado conocido **[conectar]** | `senser_backup_dump.py` + `sha256sum -c` | La última es de 3.21 |

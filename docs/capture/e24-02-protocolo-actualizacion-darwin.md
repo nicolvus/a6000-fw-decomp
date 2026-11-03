@@ -12,7 +12,7 @@ Fuentes (SHA-256 en [§ Pruebas](#pruebas-reproducibles)): `darwin_core.bin` ofi
 | **B** | ¿Permite reprogramar una aplicación defectuosa desde una interfaz accesible? | **NO (no demostrado)** | Se demuestra el protocolo del lado BIONZ y la entrada desde una aplicación que responde. Que el arranque acepte una actualización con la aplicación rota no consta. Hay una vía física (puerto de descarga de Darwin en el esquema), no de software, sin demostrar |
 | **C** | ¿Está demostrado que el BIONZ entra al actualizador si `darwin_core` no funciona? | **NO (no demostrado; evidencia en contra)** | Sin la secuencia `DD_ON*` del core no hay alimentación del BIONZ (E24-01). Que el arranque de Darwin la haga por su cuenta es desconocido |
 
-Ninguno de los NO es una imposibilidad demostrada: falta el binario del arranque (`0x0–0x41ff`).
+Ninguno de los NO es una imposibilidad demostrada: falta el binario del arranque (`0x0–0x41ff`). **NO_VERIFICADO**
 
 ## 1. El bootloader propio de Darwin (tareas 1 y 2)
 
@@ -105,7 +105,7 @@ Sin suponer que existen. Lo que hay:
 - **Manual de servicio L3 local** (54 págs.): sin procedimiento de escritura de firmware ni de recuperación (solo esquemas y piezas). VERIFICADO por búsqueda de texto.
 - **Modo de escritura serie del FM3** (manual de periféricos local, cap. 1, «Mode»): MD1=0, MD0=1 durante el reinicio por `INITX` entra en «Serial Writer Mode» («see Flash Programming Manual», que **no** está en el repositorio). VERIFICADO el texto; el protocolo, el canal UART y las protecciones de flash NO_VERIFICADO.
 - **Esquema (hojas 6-11 y 6-26): el MCU tiene un puerto de descarga cableado.** En IC5700: `MD0` (L10) y `INITX` (L7) salen a las redes `MD0_DWN` y `XDWN_RESET` (islas de prueba `CL5701`, `CL701`); `P21/SIN0` y `P22/SOT0` salen como `DWN_UART_RXD/TXD`; los pines JTAG/SWD `P00–P04` (`TRST/TCK/TDI/TMS/TDO`) salen como `*_DWN` (islas `CL703–CL707`). Todo converge en el conector `CN4906` de 16 contactos de SY-1028 (`BOOT_MODE_1`, `UART_RXD/TXD_DWN`, `NSRST`, `TDO`, `RTCK`, `TCK/SWCLK`, `TMS/SWDIO`, `TDI`, `NTRST`, `DEBUG_MODE`) marcado **XX = no montado**; `MD1` (`PE0/MD1`) va a masa. VERIFICADO (lectura del esquema, renderizado y coordenadas del texto); conexiones finas (p. ej. `MD0_DWN` a través de `R4927`, no montada) LEÍDAS SOBRE IMAGEN, a confirmar con la placa.
-- Que el SWJ-DP esté activo tras un reinicio: por defecto sí (`SPSR`: `JTAGEN0B/1S` = 1, manual FM3); que Darwin lo desactive no se ha comprobado.
+- Que el SWJ-DP esté activo tras un reinicio: por defecto sí (`SPSR`: `JTAGEN0B/1S` = 1, manual FM3); que Darwin lo desactive no se ha comprobado. **NO_VERIFICADO**
 - Que la flash esté protegida contra lectura/escritura por estos medios: NO_VERIFICADO.
 - **Software:** ninguno. No hay botón ni combinación en el actualizador; el BootROM del BIONZ («Musashi Loader1») solo corre si Darwin lo alimenta (E24-01).
 

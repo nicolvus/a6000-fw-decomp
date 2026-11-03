@@ -1,7 +1,7 @@
 # E25-24c — Protocolo físico del selector EFCS / Electronic (pendiente de autorización)
 
 28-10-2026. **No ejecutado.** Este documento no autoriza escrituras, flasheo ni pruebas en
-cámara; describe qué habría que medir y con qué criterios, para una autorización separada.
+cámara; describe qué habría que medir y con qué criterios, para una autorización separada. **NO_VERIFICADO**
 La implementación offline está en [E25-24b](e25-24b-implementacion-selector.md), con C3-B en
 [E25-26](e25-26-c3b-exposicion-electronica.md) y la validación de cuevas/carga en
 [E25-25](e25-25-validacion-carga-caves.md).

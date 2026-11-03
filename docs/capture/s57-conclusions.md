@@ -40,7 +40,7 @@ Cadena SetExposure → sombra → Execute → P2S(DFE0), formato de trama `81|le
 * Por las reglas de S51 (registro de temporización o pulso no demuestran un obturador electrónico) **no se cambia la decisión**: «A: NO, B: NO, C: NO». Retomar con datasheet IMX210 o traza pasiva.
 
 ## Impacto en la viabilidad de Silent Shooting
-Sin cambio: no hay parche justificable. Lo nuevo es un diagnóstico más preciso: el Silent A7S es **selección de modo de lectura + política de clase/CAIF** (S52/S53), y en A6000 faltan esos tres eslabones; el sensor IMX210 no tiene modos dedicados (13 modos). Si existiera un camino, pasaría por (a) un modo de lectura foto con temporización programada (hay piezas: svd/shd/spl, ShutMode) y (b) lógica en LIRO/Darwin sin cortinas, que no está en el firmware.
+Sin cambio: no hay parche justificable. Lo nuevo es un diagnóstico más preciso: el Silent A7S es **selección de modo de lectura + política de clase/CAIF** (S52/S53), y en A6000 faltan esos tres eslabones; el sensor IMX210 no tiene modos dedicados (13 modos). Si existiera un camino, pasaría por (a) un modo de lectura foto con temporización programada (hay piezas: svd/shd/spl, ShutMode) y (b) lógica en LIRO/Darwin sin cortinas, que no está en el firmware. **NO_VERIFICADO**
 
 ## Límites
 Sin datasheet ni hardware; emulación Unicorn con stubs (documentados en `analysis/s57/emu57.py`), memoria rellena y no el sensor; A7S SetExposure/formateador no emulados; productor AE de las filas de banco no localizado; `AdjustCmd` categorías no resueltas; REA no reconoce `SetExposure`/`0x43a12d9c` (Thumb) y comparte motor con Ghidra — hechos críticos verificados con Capstone y bytes; mypy no instalado (scripts sin tipos; `ruff --select F,E9` limpio).

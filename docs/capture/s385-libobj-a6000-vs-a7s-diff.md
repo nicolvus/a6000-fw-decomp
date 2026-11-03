@@ -121,10 +121,10 @@ de emisión y recepción se documenta en
 
 | Ítem | Por qué |
 |---|---|
-| Equivalencia de ejecución A6000/A7S | Parejas estáticas identificadas; falta validar semántica de callees y comportamiento físico |
+| Equivalencia de ejecución A6000/A7S | Parejas estáticas identificadas; falta validar semántica de callees y comportamiento físico **NO_VERIFICADO** |
 | Flujo 0x40193 en A7S | El negativo de datos ya se midió; la correspondencia funcional de envío/recepción A7S no está demostrada |
 | Despacho indirecto A6000 | Dos contenedores recuperados; 25 punteros Thumb al primero y consumidor `StateMgr::CallFunc` demostrados. Activación concreta y exhaustividad NO_VERIFICADO |
-| Quién registra callback de cola 0x40193 | PLT y llamadas estáticas recuperados en S381; falta seguir argumentos hasta ese ID |
+| Quién registra callback de cola 0x40193 | PLT y llamadas estáticas recuperados en S381; falta seguir argumentos hasta ese ID **NO_VERIFICADO** |
 
 **Documentado en knowledge/agents/NEEDS-HUMAN.md**
 

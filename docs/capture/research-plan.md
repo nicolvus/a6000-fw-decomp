@@ -5,7 +5,7 @@
 Leer [máquina de estados Darwin](darwin-state-machine.md). Reconstruidos
 los cuatro destinos TBB por firmware, transiciones y campos modificados.
 Notificación A6300 `1d3a8→22e3e(1)→24666(1)→20c2a→23e16` condicionada
-por variante e ID de secuencia; falta enlazar su instalación/interrupción.
+por variante e ID de secuencia; falta enlazar su instalación/interrupción. **NO_VERIFICADO**
 Bit80 retiene la etapa; fase4 no demuestra final de captura.
 Identificados escritores42668000+offset en ambos firmwares y escritores de
 inhibición+170 en A6300. No se ha demostrado relación con Silent.
@@ -77,7 +77,7 @@ Usar QuerySilentLiro.java incremental; NO ExportSilentLiro.java que limpia metad
 
 Último encargo: terminar SilentShutter. E015/E016 reconstruyen el tramo de
 software hasta receptor LIRO; E017 identifica un controlador IMX210 en el blob.
-Continuar desde silent-shutter-status.md: aún falta ligar el estado al fin de
+Continuar desde silent-shutter-status.md: aún falta ligar el estado al fin de **NO_VERIFICADO**
 integración/lectura física y resolver todas las inhibiciones. No declarar que
 un receptor o una respuesta exitosa prueban fotografía electrónica completa.
 

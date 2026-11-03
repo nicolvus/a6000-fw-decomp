@@ -50,6 +50,6 @@ dispatcher local limpia/notifica o instala callback  [VERIFICADO]
 
 ## Siguiente tarea
 
-**S19-14 (f): `Stage_RawPlayInit` y reutilización de etapas.** Es la opción pendiente más útil: las etapas LIRO anteriores revelan contratos de retorno y limpieza (`0x437f22d4`), pero falta recuperar qué recursos/etapas inicializa o finaliza `Stage_RawPlayInit` para evaluar una reutilización sin inventar ownership ni movimiento de obturador.
+**S19-14 (f): `Stage_RawPlayInit` y reutilización de etapas.** Es la opción pendiente más útil: las etapas LIRO anteriores revelan contratos de retorno y limpieza (`0x437f22d4`), pero falta recuperar qué recursos/etapas inicializa o finaliza `Stage_RawPlayInit` para evaluar una reutilización sin inventar ownership ni movimiento de obturador. **NO_VERIFICADO**
 
 SilentShutter no se declara funcional.

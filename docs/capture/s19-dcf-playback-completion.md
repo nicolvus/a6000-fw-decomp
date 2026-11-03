@@ -45,4 +45,4 @@ Análisis estático de A6000 fw 3.21; se inspeccionó `libmpr.so` en modo solo l
 
 ## Veredicto
 
-No declarar SilentShutter funcional. La cadena conocida llega a una admisión asíncrona de escritura y MPR posee primitivas independientes de archivo, DCF y reproducción; falta la arista de finalización que una las cuatro condiciones. Siguiente tarea propuesta: identificar la implementación/vtable que recibe el paquete de 0x90 B de `FeaIf::WriteStill`, y desde allí rastrear pre-registro, escritura/flush, resultado, rollback y publicación de `EntryId`.
+No declarar SilentShutter funcional. La cadena conocida llega a una admisión asíncrona de escritura y MPR posee primitivas independientes de archivo, DCF y reproducción; falta la arista de finalización que una las cuatro condiciones. Siguiente tarea propuesta: identificar la implementación/vtable que recibe el paquete de 0x90 B de `FeaIf::WriteStill`, y desde allí rastrear pre-registro, escritura/flush, resultado, rollback y publicación de `EntryId`. **NO_VERIFICADO**

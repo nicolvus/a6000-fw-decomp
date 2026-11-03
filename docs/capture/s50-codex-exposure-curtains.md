@@ -123,7 +123,7 @@ El antecedente Darwin, base ROM corregida `0x4200`, mapea `20c90/20cb2` a P4D (`
 | “No tener global shutter impide cualquier obturación electrónica” | **RECHAZO:** la pregunta admite inicio/fin electrónicos por filas; la simultaneidad global es otra propiedad |
 | “La arquitectura IMX210 lo imposibilita” | **NO_VERIFICADO:** no hay evidencia concreta del mapa eléctrico de registros o arquitectura de píxel que excluya toda ruta de exposición/lectura completa por filas |
 
-Para contestar afirmativamente falta una combinación alcanzable que una: modo completo, programación de inicio y fin por filas con efecto eléctrico identificado, ausencia de cierre mecánico durante ese intervalo, lectura completa nueva y rearme coherente. La falta de esa unión no demuestra imposibilidad.
+Para contestar afirmativamente falta una combinación alcanzable que una: modo completo, programación de inicio y fin por filas con efecto eléctrico identificado, ausencia de cierre mecánico durante ese intervalo, lectura completa nueva y rearme coherente. La falta de esa unión no demuestra imposibilidad. **NO_VERIFICADO**
 
 ## Validación, tiempo, memoria y límites
 

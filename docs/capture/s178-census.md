@@ -48,7 +48,7 @@ Thumb y las palabras del pool con el `av-cam.bin` original (SHA-256
 `b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9`).
 El proyecto Ghidra histórico no creó una función que abarque ese sitio; por
 ello no se infiere contrato de `0x435aba80`, alcance de la rama ni relación
-con `[SFRA]`/`[SFRS]`. Sigue `ACEPTO` como candidato y **pendiente de
+con `[SFRA]`/`[SFRS]`. Sigue `ACEPTO` como candidato y **pendiente de **NO_VERIFICADO**
 decodificación**; el censo 133/372 no cambia.
 
 La [lista explícita](../../analysis/s178_census/pendientes.md) incluye las 226 pendientes,

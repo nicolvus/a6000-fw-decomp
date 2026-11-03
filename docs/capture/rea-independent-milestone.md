@@ -64,7 +64,7 @@ Presupuesto registrado antes (`PREREGISTRO-av-cam.md`): 15 min de arranque, 30 m
   `file_offset 0`; `ARM:LE:32:v7`; `read_bytes` == archivo y `file_offset = dir − 0x43541000` en 12/12 direcciones consultadas.
 - **Direcciones vs proyecto histórico:** de **464** entradas de funciones exportadas por Línea A (`analysis/ghidra/s*.json` con este SHA),
   REA encontró **363 exactas (78,2 %)**, 9 dentro de otra función (p. ej. 0x436397a0 en 0x436396b0) y **92 no encontradas (19,8 %)**.
-  Faltan las entradas Thumb que Línea A sembró a mano: 0x43789cc0, 0x43789708, 0x437da100, 0x43792f9c, 0x43794096, 0x43ae90ce
+  Faltan las entradas Thumb que Línea A sembró a mano: 0x43789cc0, 0x43789708, 0x437da100, 0x43792f9c, 0x43794096, 0x43ae90ce **NO_VERIFICADO**
   (`inspect_native_instruction` → *undecodable*); 0x437dad78 sí decodifica en Thumb (`push {r3,r4,r5,lr}`) pero no es función.
   No usar consultas vacías de REA como ausencia (confirma el README previo). **VERIFICADO.**
 - **Contenido de las 363 coincidentes** (357 con respuesta; 6 superan el presupuesto de respuesta stdio): 234 tenían listado histórico →

@@ -69,7 +69,7 @@ No observable sin hook. **Protocolo reversible (no ejecutado):** no existe lectu
 
 ## 7. Decisión
 
-**A con límite + B.** La exposición nativa larga la sostiene Darwin con las cortinas; esto **no** prueba ni descarta una integración electrónica nativa. Para 1/15–30 s con ShutMode 0 sin cortina hace falta la **rama de host (`74f=0`, temporizador 32 µs, flag `0x100000`)**, aún sin observar. Siguiente: **E25-19d** — origen de `cap+0x74f`, y si con `74f=0` Darwin deja de cronometrar (o si BIONZ puede sustituir el `0x0e`). No se implementa E25-20.
+**A con límite + B.** La exposición nativa larga la sostiene Darwin con las cortinas; esto **no** prueba ni descarta una integración electrónica nativa. Para 1/15–30 s con ShutMode 0 sin cortina hace falta la **rama de host (`74f=0`, temporizador 32 µs, flag `0x100000`)**, aún sin observar. Siguiente: **E25-19d** — origen de `cap+0x74f`, y si con `74f=0` Darwin deja de cronometrar (o si BIONZ puede sustituir el `0x0e`). No se implementa E25-20. **NO_VERIFICADO**
 
 ## 8. Límites
 

@@ -44,7 +44,7 @@ Presupuesto orientativo: 40–120 € según la sonda (el soldador y el microsco
 
 ## 2. Preparación (sin tocar la cámara)
 
-1. **Respaldo R1 verificado** en soporte externo (pendiente de E25-04). No se abre la cámara antes.
+1. **Respaldo R1 verificado** en soporte externo (pendiente de E25-04). No se abre la cámara antes. **NO_VERIFICADO**
 2. `gh auth switch -u nicolvus`; trabajar en la rama con el estado limpio.
 3. Instalar OpenOCD y/o pyOCD; comprobar que la sonda se detecta (`openocd -f interface/<sonda>.cfg`) **sin** conectarla a la cámara.
 4. Tener a mano: [R40](e26-r40-jtag-swd-bionz.md), el PDF del esquema (páginas 23, 38, 50, 51) y el manual del BIONZ (bolas W25/W26/H26/T12).

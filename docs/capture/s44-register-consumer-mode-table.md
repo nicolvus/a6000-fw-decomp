@@ -146,7 +146,7 @@ En esta última hay store explícito `0x4385cf7a`; la primera converge al store
 `*(u32*)(argumento5+8)=0x19` o `*(u16*)argumento2=0x313`.
 El guard inicial puede saltarse toda esta actualización.
 
-**PARCIAL:** falta demostrar que P es exactamente C=*(contexto+`0x50`)
+**PARCIAL:** falta demostrar que P es exactamente C=*(contexto+`0x50`) **NO_VERIFICADO**
 leído por `0x4382dd78`, incluyendo las copias intermedias. No se eleva un
 store con el mismo offset a escritor original de C por coincidencia.
 `0x43859944` copia condicionalmente raíz+`0x2bc`, tamaño`0x6b0`, a

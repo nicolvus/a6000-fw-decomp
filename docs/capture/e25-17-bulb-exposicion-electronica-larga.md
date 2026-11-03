@@ -29,7 +29,7 @@ La emulación demuestra aritmética del firmware, **no** el comportamiento del I
 
 **Decisión final: C — secuenciador multicuadro**, entendido como `svd` en el sensor + VTS ampliado por cuadro (A como
 componente) + temporizador del host; **no** como repetición de pasos del host. Orden por probabilidad de éxito:
-**C/A** (media; complejidad media-alta; compatibilidad alta; riesgo medio solo con RAM) > **D** (media-baja; falta el
+**C/A** (media; complejidad media-alta; compatibilidad alta; riesgo medio solo con RAM) > **D** (media-baja; falta el **NO_VERIFICADO**
 fin de integración) > **B** (baja con la evidencia actual) > E. El siguiente experimento mínimo es **de solo lectura**
 (§10) y decide entre C y E.
 
@@ -160,7 +160,7 @@ trazó su intervención (N).
 
 **H1 — Extender el cuadro (VTS).** El firmware **lo planifica**: `d8` = VTS del cuadro con resto (4389 para 1/15 s, 8225 para 1/8 s),
 `0x437b21b8` lo vuelca a `record+0x60` por cuadro y el bloque SetRead (`cap+0x6bc/6be`), y `0x437b22dc` envía `período·VTS` a
-`0x436ef628` (campo `0x43e849c0+0x40`). Falta el sumidero físico (generador de VD/DFE/registro del sensor) y si el IMX210 va en esclavo
+`0x436ef628` (campo `0x43e849c0+0x40`). Falta el sumidero físico (generador de VD/DFE/registro del sensor) y si el IMX210 va en esclavo **NO_VERIFICADO**
 (INFERENCIA débil: el VTS no aparece en `SetExposure`). **Veredicto: ruta nativa identificada en software; ruta demostrable y utilizable: no.**
 
 **H2 — Integración hasta una orden de fin.** Sin evidencia de un registro de fin (S57/S202/E25-14 se mantienen). Que ShutMode 1/3 con `Execute(1)` deje
@@ -220,7 +220,7 @@ Evidencia: «T046/47» = medida dentro de un cuadro con `r5` manual; «Prod» = 
 | 1/4000 | 250 µs | C3-B | T046/47 + Prod | integración autónoma no demostrada |
 | 1/250 | 4 ms | C3-B | T046/47 + Prod | ídem |
 | 1/60 | 16,7 ms | C3-B | T046/47 + Prod | ídem |
-| 1/30 | 33,3 ms | C3-B | Prod (shd 2025) | falta prueba física |
+| 1/30 | 33,3 ms | C3-B | Prod (shd 2025) | falta prueba física **NO_VERIFICADO** |
 | 1/15 | 66,7 ms | C (VTS 4389, shd 1, svd 0) | Prod | cuadro más largo: sumidero N; r5 manual es inválido |
 | 1/8 | 125 ms | C (VTS 8225, shd 1) | Prod | ídem |
 | 1/2 | 500 ms | C (svd 6, d8 7583) | Prod | `svd` físico N |
@@ -263,7 +263,7 @@ NO = contradicción demostrada (C), capacidad ausente en la ruta examinada (A) o
 | M | ¿Equivalente aprovechable del A7S? | **NO** (A/EI) | §5 |
 | N | ¿C3-B válido dentro de un cuadro? | **SÍ** | §6 |
 | O | ¿Diseño fundamentado para 1/15–30 s? | **SÍ** (como diseño de experimento) | §1.2 y §10; no implementación |
-| P | ¿Diseño fundamentado para BULB? | **NO** (EI) | falta fin/liberación |
+| P | ¿Diseño fundamentado para BULB? | **NO** (EI) | falta fin/liberación **NO_VERIFICADO** |
 | Q | ¿1/8000–30 s implementado en Silent? | **NO** (A) | no hay implementación; T046/T047 fueron parches RAM de prueba (1/4000–1/60) |
 | R | ¿Pruebas físicas nuevas? | **NO** | — |
 | S | ¿Se modificó RAM o firmware? | **NO** | — |

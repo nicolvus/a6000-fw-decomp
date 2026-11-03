@@ -44,7 +44,7 @@ una **llamada virtual** de un objeto cuyo tipo no se resuelve aquí. Por tanto:
 
 ## Límites
 
-- No se resuelve el objeto (`r0`) ni su vtable; haría falta seguirlo hasta su construcción o
+- No se resuelve el objeto (`r0`) ni su vtable; haría falta seguirlo hasta su construcción o **NO_VERIFICADO**
   identificar la clase por RTTI/vtable.
 - La lectura de slots es directa de las instrucciones; la semántica de cada slot es
   desconocida.

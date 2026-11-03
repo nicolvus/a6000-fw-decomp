@@ -90,7 +90,7 @@ Hecho **V por bytes** (`scripts/e25_19b_cadena.py`, `tests/test_e25_19b_cadena.p
 
 No demostrado: quién escribe `[M]=cap` al encolar, ni una lectura de `cap` con mensajes en vuelo. El bloque de control del grupo 10 (`0x43ed8e50`, capacidad `0x64`, función `0x43ae8633`)
 liga un puntero `0x43eeafe8` que **no** se toma como `cap` (coincidencia de valor, sin cadena). Tras estas lecturas la cámara dejó de responder (sin ruta a 192.168.1.29; sin que
-se escribiera nada). Siguiente paso: con la cámara de nuevo en red, muestrear los centinelas durante un 4 s/30 s (`e25_19b_cadena.py --live` solo lee la matriz y los centinelas; falta el
+se escribiera nada). Siguiente paso: con la cámara de nuevo en red, muestrear los centinelas durante un 4 s/30 s (`e25_19b_cadena.py --live` solo lee la matriz y los centinelas; falta el **NO_VERIFICADO**
 muestreo con seguimiento de nodo→`M`→`cap`) y buscar el productor de mensajes.
 
 ### 4c. Muestreo en vuelo durante un 4 s (`scripts/e25_19b_muestreo.py`, `analysis/e25-19b/muestreo-4s.json`)
@@ -100,7 +100,7 @@ La única cola no vacía fue la del gestor `0x43edbd9c` (grupos 1–3): un nodo 
 **Corrige §4b punto 3**: `0x43eeb028` no es un `M` con `[M]=cap`; es un **objeto functor/evento estático** (`+8` = thunk `0x43afb3bb`, `+0x10` = función de estado, `+0x1c` = paso, `+0x20` = `0x0901ffff`
 → subestado 9 en `+0x23`) y su primer dword (`0x952db580`) no es un puntero. El `cap` llega por el segundo argumento del thunk (`r1`), que el muestreo no capturó.
 Observado: de 1,2 s a 4,0 s el evento fue `estado 0x43b1b025, paso 2, sub 9` y a 4,65 s `estado 0x43b1ce6f, paso 3, sub 11`: **la espera de la exposición es un estado de la secuencia,
-no un valor de `svd`**. Faltan: la duración de ese estado frente a la velocidad (30 s) y el origen de `r1`. `cap` sigue sin leerse.
+no un valor de `svd`**. Faltan: la duración de ese estado frente a la velocidad (30 s) y el origen de `r1`. `cap` sigue sin leerse. **NO_VERIFICADO**
 El muestreo de 30 s se interrumpió porque el usuario apagó y encendió la cámara a mitad (conexión reiniciada; sin fichero de resultados). Tras el reinicio: originales T050 intactos y `ready`.
 
 ### 4d. Muestreo en vuelo durante un 30 s (`analysis/e25-19b/muestreo-30s.json`)
@@ -109,7 +109,7 @@ El muestreo de 30 s se interrumpió porque el usuario apagó y encendió la cám
 `estado 0x43b1b025, paso 2, sub 9` desde 1,06 s hasta ≈ 32,5 s y pasó entonces a `0x43b1ce6f, paso 3`; a 33,1 s aparecen eventos `0x435503b1` en los gestores `0x43edbd3c/6c/fc`
 (fin de captura, lectura). Con 4 s el paso 2 duró ≈ 3,1 s (1,2 → ≈ 4,3 s): **el estado `0x43b1b025` dura lo que la exposición** (≈ T + 1 s de preparación),
 así que la exposición larga se sostiene en esa espera de la secuencia, no en `svd`/VTS del registro. Sigue sin demostrarse `cap` ni lo que recibe `SetExposure`;
-falta desensamblar `0x43b1b024` (quién sale de la espera: temporizador, evento de sensor o contador) y el origen de `r1`.
+falta desensamblar `0x43b1b024` (quién sale de la espera: temporizador, evento de sensor o contador) y el origen de `r1`. **NO_VERIFICADO**
 
 ### 4e. Estado `0x43b1b025` desensamblado (V por bytes)
 
@@ -117,7 +117,7 @@ falta desensamblar `0x43b1b024` (quién sale de la espera: temporizador, evento 
 3→`0x438c23f4`, 4→`0x43b1e854`, 5→`0x43b1d93c`, 6→`0x438c89a8`, 7→`0x437f2540`, 8→`0x437f00a4`, **9→`0x438c289c`**, 10→`0x43b1e878`, 11→`0x437ed568`; otro valor devuelve 5.
 El manejador del subestado 9 (el observado durante toda la exposición) **no espera**: obtiene `cap=[M]` (`0x43ae75dc`), anota hitos (`0x43ae769a(cap,0xc8)`), lee el estado de un registro
 (`0x43560e00(0x13)`, bit 15), compara `[[cap+0x4ad0]+0x1d]` con `0x436e86dc()`, llama a `0x437f9a64`/`0x438d0958`/`0x437c1178` y **devuelve 0**. Por tanto el tiempo que la secuencia pasa en
-paso 2/sub 9 no es un bucle de este manejador: la máquina queda parada hasta un **evento externo** que la haga avanzar (el que termina la exposición) y que no se ha identificado
+paso 2/sub 9 no es un bucle de este manejador: la máquina queda parada hasta un **evento externo** que la haga avanzar (el que termina la exposición) y que no se ha identificado **NO_VERIFICADO**
 (temporizador, interrupción del imager o contador). Sigue sin leerse `cap`; el siguiente paso útil es leer en vuelo `cap+0x4ad0`/`0x4b80` y localizar al productor del evento de fin (quien encola paso 3/sub 11).
 
 ### 4f. Productor del evento de fin: no hallado; lectura corregida de lo observado (V por bytes + I)
@@ -126,7 +126,7 @@ paso 2/sub 9 no es un bucle de este manejador: la máquina queda parada hasta un
   si no, el evento se difiere en una matriz de 5 ranuras de 0x14 B. Los envíos (`0x437e519c`, `0x437e515a`) no tienen llamadores directos (se llaman por puntero).
 - **Corrección de §4c/4d (I)**: el evento visto de 1,06 a ≈ 32,5 s es el **pendiente** (siguiente en la cola), no el que se ejecuta. Que permanezca en cola toda la exposición indica que el
   hilo despachador está ocupado en un manejador anterior (o la compuerta lo difiere) hasta el fin de la exposición; no que el manejador del subestado 9 espere (§4e: devuelve 0). El manejador
-  bloqueante no se ha identificado (candidatos: los de los subestados 2 y 8, `0x438c8474`, `0x437f00a4`).
+  bloqueante no se ha identificado (candidatos: los de los subestados 2 y 8, `0x438c8474`, `0x437f00a4`). **NO_VERIFICADO**
 - Dato nuevo en `StartExposure` (`0x438c828c`, tras el prólogo ya conocido): calcula `[cap+0x570]` a partir de `[cap+0x56c]` y de `0x43ad90b6/0x436c2270/0x436c28d0`
   (`(n+1)·K / (1000·[cap+0x56c] / x)`, entradas en bruto: cuentas de línea/tiempo) y lo registra con `cap+0x4b64`; también usa `cap+0x740` (si ≠ 0 conserva `[cap+0x570]`) y `cap+0x504`.
   Campos a leer cuando `cap` esté demostrado: `cap+0x56c`, `0x570`, `0x1d8`, `0x1e0`, `0x4b64`, `0x5488`, `0x5490`.
@@ -143,7 +143,7 @@ Reproducible: `scripts/e25_19b_dis.py`, `e25_19b_callers.py`, `e25_19b_calls.py`
 
 **P2 — Temporizador (I = NO).** Solo lo ya conocido: `StartExposure` (`0x438c828c`) calcula `[cap+0x570]` a partir de `[cap+0x56c]`; no se localizó dónde se programa el temporizador ni quién recibe su fin. `0x8000`/BULB lo emiten callbacks de temporizador (E25-18). **P3/P4 no realizadas** (cámara sin red; `cap` sin dirección): J = NO, K = NO, D = NO, C = NO, L = NO (no se modificó nada).
 
-**Decisión: D — bloqueo concreto.** Falta (1) quién escribe `[M]=cap` al crear/encolar el objeto de flujo: observar `M` (p. ej. `0x43eeafa8`) **en el instante de entrega** o hallar el constructor que llama a `0x43afb408`/stores en `M+0` (el productor de los envíos `0x437e515a/0x437e519c` se llama por puntero); (2) leer en vuelo `[E+0x24/0x2c/0x2d]` de los 14 gestores en una foto de 4 s (`e25_19b_compuerta.py`) para decidir diferimiento por compuerta frente a manejador ocupado; (3) rastrear los callees de `0x438c8474`/`0x437f00a4` hasta las primitivas de espera.
+**Decisión: D — bloqueo concreto.** Falta (1) quién escribe `[M]=cap` al crear/encolar el objeto de flujo: observar `M` (p. ej. `0x43eeafa8`) **en el instante de entrega** o hallar el constructor que llama a `0x43afb408`/stores en `M+0` (el productor de los envíos `0x437e515a/0x437e519c` se llama por puntero); (2) leer en vuelo `[E+0x24/0x2c/0x2d]` de los 14 gestores en una foto de 4 s (`e25_19b_compuerta.py`) para decidir diferimiento por compuerta frente a manejador ocupado; (3) rastrear los callees de `0x438c8474`/`0x437f00a4` hasta las primitivas de espera. **NO_VERIFICADO**
 
 ### 4h. E25-19b (cámara en red): la compuerta difiere por límite de vuelo; candidatos y `M` revisados
 
@@ -237,7 +237,7 @@ Fin 0x437e55d4(M)              Complete @0x437e5638 (único otro llamador). Llam
 | J. ¿Finalización electrónica de integración? | **NO demostrado** (sin contradicción) |
 | K. ¿Se modificó la cámara? | **NO** (solo `/dev/mem` y `/proc`; originales íntegros) |
 
-**Criterio final: A — cadena resuelta (cap identificado y validado)**, con la finalización parcial: falta el emisor del mensaje de sub 9 (E25-19c).
+**Criterio final: A — cadena resuelta (cap identificado y validado)**, con la finalización parcial: falta el emisor del mensaje de sub 9 (E25-19c). **NO_VERIFICADO**
 
 ## 5. Respuestas
 

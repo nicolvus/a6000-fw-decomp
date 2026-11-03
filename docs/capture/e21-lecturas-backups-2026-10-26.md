@@ -24,4 +24,4 @@ Solo lectura de `analysis/camera-dumps/` (ILCE-6000, fw 3.21). No se ejecutó na
 
 ## Efecto en los pendientes
 
-E21 se cierra con límite. P16 queda reducida a «identificar el escritor» (ya se conoce la forma de los datos). P18: en reposo, gates a 0 en BK4 y RAM; faltan live view y disparo.
+E21 se cierra con límite. P16 queda reducida a «identificar el escritor» (ya se conoce la forma de los datos). P18: en reposo, gates a 0 en BK4 y RAM; faltan live view y disparo. **NO_VERIFICADO**

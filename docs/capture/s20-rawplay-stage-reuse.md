@@ -69,7 +69,7 @@ exista una llamada real a esta ruta.**
     en otras filas), además copia un rango de palabras adicional vía
     `FUN_437e0b88`.
   - **DESCARTADO** interpretar esto como YC real: el descriptor son 3 palabras
-    de metadatos (puntero + 2 campos), sin verificar que apunten a un buffer
+    de metadatos (puntero + 2 campos), sin verificar que apunten a un buffer **NO_VERIFICADO**
     YC válido, su tamaño, ni su formato.
 - `FUN_43b1ad32` (Stage_Notify, caso 0): lee un anillo circular en
   `ctx+0x4ad4` (tamaño en `+0x20`, cursor en `+0x28`), extrae un triple de

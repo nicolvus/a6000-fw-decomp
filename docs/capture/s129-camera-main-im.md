@@ -54,7 +54,7 @@ mecanismo térmico ya existía; la A6300 añade `EcGain…4K:%x USB:%x` (`0x43da
 - **Invocación de `0x437b8774`**: 22 sitios pero **ningún `bl` ni puntero de 32 bits** en toda la
   imagen → despacho indirecto no resuelto. Slot `0x6c` ↔ `GetImagerTemperature(float*)`
   (`0x43c936a3`): inferido (no está en ninguna vtable).
-- Contexto de `0x437b8774` = struct de S124 (+4/+6 coinciden, base distinta): sin verificar; tampoco
+- Contexto de `0x437b8774` = struct de S124 (+4/+6 coinciden, base distinta): sin verificar; tampoco **NO_VERIFICADO**
   el significado de los 24 ids, quién envía `0xa20`/`0xa21`/`0xac0` ni el helper `0x4378dd78`.
 - **Fichero fuente**: no hay `*Thermal*.cpp`; vecinos `CS_imaging.cpp` (`0x43ca3dd7`),
   `SyncYCOut.cpp` (`0x43ca4de4`) y `lc_PreReadAF.cpp` (`0x43ca793f`).

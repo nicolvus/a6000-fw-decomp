@@ -142,7 +142,7 @@ Con `svd=0` el cuadro 0 es también el último y vale `d8 = R`. Después: `0x437
 - **Emisores de `0x8000`:** solo `0x438d0e64` y `0x43b1f16c` (escaneo de los 119 llamadores de `0x43560da8`): activan el flag `0x8000` del grupo `0x13` y publican `(4, 0xf016, 0x8000)`. No tienen `bl` directo: están en la GOT (`0x4402181c`, `0x44024b6c`) y se pasan como **callback** a `0x438c867c` en `0x438c8aa8` (rama `cap+0x4b84`), que arma un temporizador (`0x439018b0`). Es decir, la «parada externa» observable en el código **es un temporizador del autómata**, no el botón. (V)
 - Los callbacks de tramo `0x2000/0x4000/0x100000` ya estaban en E25-17 (`0x43b1e4e4/508/4c0`).
 - ¿Cambia la finalización el estado electrónico del IMX210? **N** (consistente con S57: sin escritura de registros al terminar). ¿Lectura antes/después de la parada? **N**. ¿RAW de integración continua sin cierre mecánico? **N.**
-- **Bloqueo mínimo:** falta el enlace entre la liberación física del disparador y estos callbacks (o un flag equivalente), y qué hace el sensor al cesar el tramo. Hasta E25-19 no hay diseño de BULB; el modelo devuelve `Rechazo` explícito.
+- **Bloqueo mínimo:** falta el enlace entre la liberación física del disparador y estos callbacks (o un flag equivalente), y qué hace el sensor al cesar el tramo. Hasta E25-19 no hay diseño de BULB; el modelo devuelve `Rechazo` explícito. **NO_VERIFICADO**
 
 ## 8. Modelo de referencia y emulaciones
 
@@ -184,7 +184,7 @@ Predicado 0 y 1 probados en las 16 filas (`matriz.json`: `nativo_p0`, `nativo_p1
 | Solo fotografía | el sitio es el paso 0 de StartExposure; aun así debe comprobarse `cap+0x4b9c==0` y que el modo sea foto, y no actuar si `0x43a12c64 ∈ {2,3}` |
 | Parche | 4 bytes (`bl 0x436d6118`, `0df60bff`). Un `bl` no alcanza memoria de scratch (±16 MB): requiere un trampolín en relleno del propio `av-cam` **(no localizado en esta sesión; N)** que salte al cuerpo en scratch, o una instrucción de 4 bytes equivalente |
 | Registros y pila | la cueva debe salvar `r0–r3, r12, lr`, conservar alineación de 8 B y ejecutar luego el `bl 0x436d6118` original; el productor preserva `r4–r11, lr` y usa un `record` scratch de 0x158 B (E25-17) |
-| Registro global | rápida: intacto (la cueva escribe solo `cap+0x64c..0x64f`; `cap+0x650` se restaura solo). Larga: **no**, hace falta tocar o desviar la lectura de `record` |
+| Registro global | rápida: intacto (la cueva escribe solo `cap+0x64c..0x64f`; `cap+0x650` se restaura solo). Larga: **no**, hace falta tocar o desviar la lectura de `record` **NO_VERIFICADO** |
 | Reversión | restaurar los 4 bytes originales y, si se escribió, `cap+0x64c` se recompone en la siguiente foto (`0x4383fd6c` lo reescribe desde `record`); guardián T050 (reversión probada para parches más simples) **no se asume suficiente** |
 | Cachés | escribir con barrera de datos y limpiar la línea de instrucciones (patrón de T046/T047/T050); no verificado para el trampolín |
 | Caída del proceso / bloqueo de cámara | el parche vive en RAM: apagar la cámara lo elimina. Plan: guardián independiente con temporizador que reescribe los 4 bytes originales y cancela si cualquier comprobación falla |

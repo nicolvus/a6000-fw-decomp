@@ -228,7 +228,7 @@ with open('firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_
 | Pregunta S51 | Efecto de hallazgos S401 |
 |---|---|
 | A: ruta electrónica demostrada | **NO** — A7S tiene ruta pero no cerrada en A6000; falte eslabón CAIF→Darwin→imager en A6000 |
-| B: parche justificable | **NO** — faltan: bit CAIF, predicado Darwin, consumidor imager, semántica registros IMX210 |
-| C: hardware imposible | **NO** — IMX210 tiene lectura electrónica (LiveView/vídeo); Darwin tipo 0 existe; solo falta integración |
+| B: parche justificable | **NO** — faltan: bit CAIF, predicado Darwin, consumidor imager, semántica registros IMX210 **NO_VERIFICADO** |
+| C: hardware imposible | **NO** — IMX210 tiene lectura electrónica (LiveView/vídeo); Darwin tipo 0 existe; solo falta integración **NO_VERIFICADO** |
 
 **Veredicto S51 inalterado**: A=NO, B=NO, C=NO.

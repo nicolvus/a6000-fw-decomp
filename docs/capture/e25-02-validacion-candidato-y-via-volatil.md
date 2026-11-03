@@ -206,7 +206,7 @@ La cancelación/aborto real que sí está identificada es el **timeout de fase**
 (`0x189d4` → `0x16e26` → `0x16dc0`): `0x16dc0` llama a `0x16558(2,0x30,...)` (bytes verificados), que
 activa la recuperación de error y la operación 5. La operación 5 **no consulta la compuerta** y
 escribe `P40/P41=3`; su efecto es un patrón de apagado (XOR=0), no una orden de movimiento (§3.6). El
-parche no la toca. No se ha identificado una cancelación de usuario que llame directamente a las
+parche no la toca. No se ha identificado una cancelación de usuario que llame directamente a las **NO_VERIFICADO**
 primitivas del motor; si existiera, tendría que pasar por uno de los llamadores enumerados en §3.7,
 todos gated salvo la operación 5. **Cobertura real: parcial**; el único hueco es la semántica de
 usuario de la cancelación, no una vía nueva al motor.
@@ -292,7 +292,7 @@ camino de captura/cancelación que arranque el motor fuera de esta tabla.
 |---|---|---|
 | **M0 normal estático** | **SÍ** | Con B1a, las rutas normales de captura/rearme no alcanzan las primitivas del motor; el tipo 0 filtra P4D/P4E; L0 no arranca la máquina interior. |
 | **M0 físico** | **NO MEDIDO** | No se midió corriente del motor, P40/P41, P4D/P4E, P4B/P4C ni P29; no se puede distinguir “sin orden” de “sin movimiento”. |
-| **M1 captura completa** | **NO DEMOSTRADO** | Falta el fin de L0 y la aceptación por BIONZ; el orden estricto de mensajes mss y el fin electrónico del IMX210 en foto completa siguen abiertos. |
+| **M1 captura completa** | **NO DEMOSTRADO** | Falta el fin de L0 y la aceptación por BIONZ; el orden estricto de mensajes mss y el fin electrónico del IMX210 en foto completa siguen abiertos. **NO_VERIFICADO** |
 | **Recuperabilidad** | **NO DEMOSTRADA** | E24-04; el candidato no es instalable y no hay rollback independiente. |
 
 **Watchdog:** los 2 bytes no tocan `+0x31/+0x32/+0x40..+0x43`; el riesgo no es el parche, sino la

@@ -7,7 +7,7 @@ Evidencia: `analysis/e25-19e/` (`plan142.json`, `cubren-74f.json`, `campos-g.jso
 ## 1. Resumen
 
 * **W1 no puede ser el origen del 1 (V).** Copia `plan[0x13f..0x142]` → `cap[0x74c..0x74f]` byte a byte, y `plan+0x142` es `2×lookup` en las 8 ramas (`lsls r0,r0,#1` antes de cada `strh`): su byte bajo es par.
-* **19d contó mal los escritores (V).** Faltan stores `strh` en `+0x74e` (cubren `+0x74f`): `0x4354af88` y `0x4354b0ac` (callback `EndExps` `0x4354a678`, VD_Post según S32) y `0x4354c868` (secuenciador `0x4354c6d0`). Además 5 `str.w` en `+0x74c` (`0x439c8254…`) de **otro objeto** (valores negados, punteros en `+4/+8`). Total de stores que cubren `74f`: 11 (`cubren-74f.json`).
+* **19d contó mal los escritores (V).** Faltan stores `strh` en `+0x74e` (cubren `+0x74f`): `0x4354af88` y `0x4354b0ac` (callback `EndExps` `0x4354a678`, VD_Post según S32) y `0x4354c868` (secuenciador `0x4354c6d0`). Además 5 `str.w` en `+0x74c` (`0x439c8254…`) de **otro objeto** (valores negados, punteros en `+4/+8`). Total de stores que cubren `74f`: 11 (`cubren-74f.json`). **NO_VERIFICADO**
 * **`74c/74e` no son flags sino halfwords de geometría** (V): en `0x4354c6d0` son ancho/alto leídos de la tabla global `0x43e9515e` (en reposo `d0 02 f0 00` = 720×240; `0x43e95182` = 720×288). El físico `00 01 00 01` = halfwords `0x0100,0x0100`. **Consecuencia (I):** `74f` puede ser el byte alto de una altura/valor ≥256, no un flag; los 21 manejadores que hacen `ldrb 74f` lo leen como booleano.
 * **Origen del 1: no demostrado.** Candidato principal: `EndExps` bloque 2 (`0x4354b0ac`, `74e ← sp+0x312`), cuyo valor no se evaluó. Bloque 1 y el secuenciador de vídeo quedan descartados para la foto normal (§3).
 * **Selector 3/4 resuelto:** va al controlador VD/imager (`0xf3120000`), no es un comando por bus al IMX210; 3 y 4 difieren en `+0x208` bit 0, `+0x258` y una llamada virtual (§5).
@@ -82,10 +82,10 @@ Con `74f=0` el selector siempre es 3. Así: el 3/4 **no es un comando al sensor 
 | | Resp. | Prueba / incertidumbre |
 |---|---|---|
 | A. ¿W1 escribe el `cap` activo? | **NO demostrado** | escribe el objeto id 0x9405; el activo es una copia (§2) |
-| B. ¿origen real de `plan+0x142`? | **SÍ** | `2×lookup(0x4387b520)` en 8/8 ramas; falta el valor de tabla |
+| B. ¿origen real de `plan+0x142`? | **SÍ** | `2×lookup(0x4387b520)` en 8/8 ramas; falta el valor de tabla **NO_VERIFICADO** |
 | C. ¿W1 puede copiar 1? | **NO** | `lsls #1` ⇒ par (V) |
 | D. ¿escritura indirecta que alcanza `74f`? | **SÍ** | 3 `strh@74e` (+5 de otro objeto); ninguno demostrado como productor del 1 |
-| E. ¿`74f=1` explicado por completo? | **NO** | falta evaluar `0x4354b0ac` y ver el orden inicial |
+| E. ¿`74f=1` explicado por completo? | **NO** | falta evaluar `0x4354b0ac` y ver el orden inicial **NO_VERIFICADO** |
 | F. ¿escritor de `G+0x60`? | **NO** | ninguno |
 | G. ¿de `G+0x7e`? | **Parcial** | solo el clear `0x438c2724` |
 | H. ¿de `G+0x7f`? | **NO** | ninguno |
@@ -103,6 +103,6 @@ Con `74f=0` el selector siempre es 3. Así: el 3/4 **no es un comando al sensor 
 
 **B — Destino 3/4 resuelto** (controlador VD/imager, bits `+0x208`/`+0x258` y llamada virtual; sin comando al sensor). **El origen del 1 queda en D (bloqueo mínimo):** W1 queda excluido; el candidato es el store `0x4354b0ac` de `EndExps`, cuyo valor depende de `0x43af54d8/0x43af5504` y de `cap+0x19a/0x19c/0x1dc/0x1e0/0x51c/0x525`. Para Silent: no cambia la conclusión (host auxiliar, sin integración electrónica demostrada); además `74f` puede ser parte de una altura, no un flag.
 
-Siguiente mínimo (sin escribir nada): una lectura en vuelo de `cap+0x190..0x200` y `+0x510..0x530` en una foto normal, y emular con Unicorn `0x43af54d8` para obtener `sp+0x30c..0x31a`; si `sp+0x312=0x0100` queda explicado el 1 final. Para ver el estado inicial haría falta muestrear antes de ≈1 s (no logrado: la cadena `[M]` aparece tras ≈1,3–3,5 s).
+Siguiente mínimo (sin escribir nada): una lectura en vuelo de `cap+0x190..0x200` y `+0x510..0x530` en una foto normal, y emular con Unicorn `0x43af54d8` para obtener `sp+0x30c..0x31a`; si `sp+0x312=0x0100` queda explicado el 1 final. Para ver el estado inicial haría falta muestrear antes de ≈1 s (no logrado: la cadena `[M]` aparece tras ≈1,3–3,5 s). **NO_VERIFICADO**
 
 Límites: sin Unicorn de `0x438ab3e8`; tablas de configuración de `plan` no evaluadas; no se leyó el objeto id 0x9405; sin hoja de datos del VD; `G` solo por GOT.

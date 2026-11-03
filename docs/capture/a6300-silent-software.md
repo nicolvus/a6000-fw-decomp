@@ -83,4 +83,4 @@ para asignar semántica a todos los slots de la vtable.
 **ACEPTO**: ajuste 1/2 → protocolo 0/1 y comando `40e3`, comparable a A6000.
 **RECHAZO**: respuesta de ajuste = prueba de fotografía silenciosa.
 **VEREDICTO: CAMBIOS**. El ejecutor y la respuesta de ajuste están unidos;
-faltan una prueba de captura física y la capacidad necesaria del IMX210.
+faltan una prueba de captura física y la capacidad necesaria del IMX210. **NO_VERIFICADO**

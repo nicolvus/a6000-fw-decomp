@@ -37,7 +37,7 @@ tampoco está descartada como imposible; su coste y seguridad aún no se conocen
 
 El firmware experimental 3.23 combina tipo 0 y B1a: el salto fijo
 `0x1fe6a: 28 46 → 0a e0` fuerza la compuerta en Darwin. Cambiar solo BIONZ
-no demuestra que vuelva la segunda cortina para el EFCS de referencia. Falta
+no demuestra que vuelva la segunda cortina para el EFCS de referencia. Falta **NO_VERIFICADO**
 un canal y una política por captura para el mecanismo, verificar el tipo y el
 rearme, y demostrar recuperación ([E25-02](e25-02-validacion-candidato-y-via-volatil.md),
 [E25-04](e25-04-recuperabilidad-y-decision.md)). Condicionar B1a por sí solo

@@ -156,7 +156,7 @@ Evidencia: `codex-recstill-{writer-link,command5,dispatch}.json`,
 `0x3816bc`, desde llamadas `0x38b7e4` y `0x38225e`. El segundo construye ARW
 con reserva, thumbnail, información de revelado/registro y datos RAW; no es
 «EncodeStill sobre YC renombrado a .ARW». Las rutas DCF `.JPG`/`.ARW` ya
-están documentadas; no se ha verificado un archivo materializado.
+están documentadas; no se ha verificado un archivo materializado. **NO_VERIFICADO**
 
 **ACEPTO — VERIFICADO:** JPEG llama `0x397116 → 0x1d6c76 → 0x22c190`
 `RegisterJpegContent`. RAW llama `0x39746e → 0x1d6cb6 → 0x22d1cc`.
@@ -228,7 +228,7 @@ local por `0x90084c`. Wrapper `0x8fe110` espera y copia esos `0x48` B.
 **NO_VERIFICADO:** registro exacto que une el evento Recorder `0x66/0x84`
 al handler FEA que procesa el resultado y emite `0x40000012/0x48`. La función
 `0x34b138` se obtiene mediante vtable de StillRecorderIf (relocación
-`0x81bb50`), no por branch directo. Falta seguir su llamador virtual y la
+`0x81bb50`), no por branch directo. Falta seguir su llamador virtual y la **NO_VERIFICADO**
 función/context que registra. No se equiparan ambos payloads.
 
 **RECHAZO — DESCARTADO:** el callback `0x40000012` prueba por sí solo éxito
@@ -250,7 +250,7 @@ necesita resolver el despachador y selectores, no se da por cerrado.
 **NO_VERIFICADO:** invalidación/actualización de biblioteca a partir de
 RegisterDcfContent o de la respuesta final Recorder `0x3500/0x3002`, con
 `0x1001` resultado y `0x100f` información de contenido. Las APIs de consulta
-y reproducción pueden leer el catálogo; falta probar que leen esta entrada
+y reproducción pueden leer el catálogo; falta probar que leen esta entrada **NO_VERIFICADO**
 tras la escritura. No se ha demostrado el primer instante en que el JPEG/RAW
 puede verse ni en que el productor pueda reciclar todos los buffers.
 
@@ -335,6 +335,6 @@ no se usaron subagentes ni se ejecutó firmware. Sin commit ni push: el
 directorio no es un repositorio Git. Contexto y checkpoint se actualizan
 añadiendo una entrada, preservando el historial anterior.
 
-**VEREDICTO: CAMBIOS** — faltan las aristas indicadas para considerar completo
+**VEREDICTO: CAMBIOS** — faltan las aristas indicadas para considerar completo **NO_VERIFICADO**
 el objetivo exposición → biblioteca; los cierres parciales nuevos no cambian
 la arquitectura **A > E > P ≈ E2**.

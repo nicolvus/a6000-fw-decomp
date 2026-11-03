@@ -27,7 +27,7 @@ de Sony, sin depender de un VTS supuesto ni del predicado?— tiene respuesta S�
   de una foto. El recolector `scripts/t052_b0_readonly.py` queda listo, con modo offline separado.
 
 **Decisión:** **B. C3-B es preferible y se demuestra por qué.** C3-A queda bloqueado por el predicado y por el
-VTS no leído. El dato físico exacto que falta para cerrar B0 es la lectura de `record+0x20` (y del byte
+VTS no leído. El dato físico exacto que falta para cerrar B0 es la lectura de `record+0x20` (y del byte **NO_VERIFICADO**
 `[0x43deb360+0x10]`) inmediatamente después de una foto normal; no es necesario para autorizar el diseño C3-B,
 pero sí para confirmar el estado real y descartar un escritor externo.
 
@@ -148,7 +148,7 @@ medida en T046/T047 y la que C3-B reutiliza.
 
 **¿Se puede determinar estáticamente el VTS de la ruta fotográfica concreta, sin depender de una lectura de
 RAM?** **NO.** El campo `record+0x20` procede de un descriptor de modo en DRAM cuyo `+6` es 0 en reposo y cuyo
-escritor/selector de foto no se localizó. La condición exacta que falta es: **valor de `[descriptor+6]` (o de
+escritor/selector de foto no se localizó. La condición exacta que falta es: **valor de `[descriptor+6]` (o de **NO_VERIFICADO**
 `record+0x20`) durante una foto normal**. La prueba C3-B no necesita ese valor; la prueba C3-A sí.
 
 ---
@@ -362,11 +362,11 @@ autorización adicional.
 |---|---|---|---|
 | A | ¿Se identificó el productor del descriptor VTS? | **PARCIAL**: se identificó el consumidor y la cadena `[ctx+0x3c]`; el escritor/selector de `+6` no | estático + emulación |
 | B | ¿Se identificó cómo se selecciona el descriptor para fotografía? | **PARCIAL**: dispatcher `0x437b4eb4` → `0x437b4df0` → `0x437b5b14` → `0x43844e80`; el selector de modo no | estático + emulación |
-| C | ¿Se pudo determinar el VTS fotográfico? | **NO** | falta lectura de foto |
+| C | ¿Se pudo determinar el VTS fotográfico? | **NO** | falta lectura de foto **NO_VERIFICADO** |
 | D | ¿Se identificó la causa de la diferencia 4219/4266? | **NO demostrada**; 4266 = `0x271000/600` de la vista en directo, 4219 = ley medida; 47 líneas ≈ 0,71 ms | V/I |
 | E | ¿Se encontraron todos los escritores relevantes del predicado? | **SÍ en `av-cam`**: ninguno escribe `+0x10`; el bloque se copia de NVRAM | V estático |
 | F | ¿Se demostró cuándo cambia su estado? | **NO físicamente**; el valor configurado es 0 y no hay transición estática | V/I/N |
-| G | ¿Se identificó si el cuadro extra está activo durante fotografía? | **SÍ en el estado configurado** (byte 0 → predicado 1); falta confirmación física | V estático + N físico |
+| G | ¿Se identificó si el cuadro extra está activo durante fotografía? | **SÍ en el estado configurado** (byte 0 → predicado 1); falta confirmación física | V estático + N físico **NO_VERIFICADO** |
 | H | ¿Se demostró el destino del contador `record+0x68`? | **SÍ**: `cap+0x64c+4` (param+4), leído por `SetExposure` como ventana; no hay acumulador | V |
 | I | ¿La cámara estuvo accesible? | **NO** | comprobación única |
 | J | ¿Se ejecutó físicamente B0? | **NO** | — |
@@ -376,12 +376,12 @@ autorización adicional.
 | N | ¿Se puede usar directamente el `r5` de `0x4383fa40`? | **NO** con el predicado configurado (0); `r5 > VTS` | V emulación + NVRAM |
 | O | ¿Es técnicamente viable reutilizar `record+0xf0`? | **SÍ**: `líneas` es independiente de VTS/predicado y C3-B reproduce T047 | V emulación + T047 |
 | P | ¿Existe un candidato C3 con entradas y salidas verificadas? | **SÍ, C3-B**; C3-A no | V/I |
-| Q | ¿Están cerradas las dependencias necesarias para preparar B1? | **CASI**: C3-B no necesita VTS/predicado; faltan la lectura física de B0 y el scratch/cueva | V/I |
+| Q | ¿Están cerradas las dependencias necesarias para preparar B1? | **CASI**: C3-B no necesita VTS/predicado; faltan la lectura física de B0 y el scratch/cueva | V/I **NO_VERIFICADO** |
 | R | ¿Se recomienda ejecutar T052-B1? | **SÍ, después de B0 y con autorización expresa**, con C3-B; no C3-A | V/I |
 | S | ¿Se realizaron escrituras RAM en la cámara? | **NO** | — |
 | T | ¿Se modificó firmware persistente? | **NO** | — |
 
-Los **NO** de C, F (parte física), I–L y M (datos de foto) son falta de medición, no imposibilidad física. El
+Los **NO** de C, F (parte física), I–L y M (datos de foto) son falta de medición, no imposibilidad física. El **NO_VERIFICADO**
 **NO** de N sí es una contradicción demostrada con el estado configurado: el `r5` nativo incluye un cuadro
 completo.
 

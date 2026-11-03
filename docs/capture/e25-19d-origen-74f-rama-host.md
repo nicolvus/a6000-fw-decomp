@@ -84,7 +84,7 @@ Experimento RAM reversible propuesto (**no ejecutado**, exige autorización expr
 | E. ¿fuente de duración? | **SÍ** | `0x4382fac8([sl+0x162])`→`0x43eee76c`→`0x43840f7c` (µs) |
 | F. ¿30 s sin overflow? | **SÍ** | 937 081 ticks (E); ancho HW sin documentar |
 | G. ¿emulada la ruta real? | **SÍ** | `0x438c8abc..0x438c8b18` + `0x4382fac8`; no el RTOS ni el temporizador HW |
-| H. ¿libera sub 9? | **SÍ en el código** | `set_flg`→`twai_flg`→`clr_flg`; one-shot/repetición sin verificar |
+| H. ¿libera sub 9? | **SÍ en el código** | `set_flg`→`twai_flg`→`clr_flg`; one-shot/repetición sin verificar **NO_VERIFICADO** |
 | I. ¿sigue `0x0c`? | **SÍ** | §4 A |
 | J. ¿Darwin sigue controlando? | **SÍ (inferido)** | §4 C–E |
 | K. ¿BIONZ avanza sin `0x0e`? | **SÍ** | §2: esperas omitidas / flag |
@@ -98,6 +98,6 @@ Experimento RAM reversible propuesto (**no ejecutado**, exige autorización expr
 
 ## 7. Decisión final: **B — rama del host auxiliar, sin independencia de Darwin**
 
-El temporizador existe y es correcto en cifras (1/8000–30 s, sin overflow), y con `74f=0` BIONZ no necesita el `0x0e`; pero es un mecanismo de **error/cancelación** que (i) no se selecciona en fotografía normal, (ii) no cambia nada del sensor, (iii) no desactiva a Darwin, que sigue recibiendo el `0x0c` y operando la cortina. No sustituye al control mecánico; para una integración electrónica faltan el fin de integración y la lectura (E25-18, C3-B). Elementos de D: la procedencia del 1 y los escritores de `G[0x7e/0x7f]` quedan sin cerrar → E25-19e. No se pasa a E25-20.
+El temporizador existe y es correcto en cifras (1/8000–30 s, sin overflow), y con `74f=0` BIONZ no necesita el `0x0e`; pero es un mecanismo de **error/cancelación** que (i) no se selecciona en fotografía normal, (ii) no cambia nada del sensor, (iii) no desactiva a Darwin, que sigue recibiendo el `0x0c` y operando la cortina. No sustituye al control mecánico; para una integración electrónica faltan el fin de integración y la lectura (E25-18, C3-B). Elementos de D: la procedencia del 1 y los escritores de `G[0x7e/0x7f]` quedan sin cerrar → E25-19e. No se pasa a E25-20. **NO_VERIFICADO**
 
 Límites: sin cámara; Darwin solo por E24 (estático); el ancho/modo del temporizador HW no está documentado; auditoría global de escritores de `G` pendiente.

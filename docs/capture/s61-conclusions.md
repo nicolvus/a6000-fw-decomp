@@ -13,7 +13,7 @@
 
 ## Estados alcanzables
 
-**Ninguno (ALCANZABLE = 0).** Existe un estado PERMITIDO (`analysis/s61/e3_chain.json`). No se completa `(modo,M,Tv,clk,N,svr,VdNum,flags,svd,shd,spl)`: faltan escritores de `obj+0x2be..`, `G+0x168/16A`, `G[0xD]`, `stage+0x3a` y el vínculo M↔Tv/clk (`s61-imx210-parameter-origin.md`).
+**Ninguno (ALCANZABLE = 0).** Existe un estado PERMITIDO (`analysis/s61/e3_chain.json`). No se completa `(modo,M,Tv,clk,N,svr,VdNum,flags,svd,shd,spl)`: faltan escritores de `obj+0x2be..`, `G+0x168/16A`, `G[0xD]`, `stage+0x3a` y el vínculo M↔Tv/clk (`s61-imx210-parameter-origin.md`). **NO_VERIFICADO**
 
 ## Silent shooting / fin electrónico de integración
 

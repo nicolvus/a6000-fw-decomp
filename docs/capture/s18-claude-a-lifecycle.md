@@ -78,7 +78,7 @@ Esto **es** una vtabla C++ real estilo Itanium ABI (dtor completo + dtor "deleti
 
 ## 3. Filas dinámicamente seleccionables del selector de captura LIRO: `0xa0`, `0xc8`, `0xdc`, `0x104`
 
-Pendiente de sesión 18 anterior (`s18-main-init-437ebed8.md`, sección 6). Decompilé las 4 con `scripts/ghidra_dec.sh` sobre el proyecto compartido `silent-liro` (solo lectura).
+Pendiente de sesión 18 anterior (`s18-main-init-437ebed8.md`, sección 6). Decompilé las 4 con `scripts/ghidra_dec.sh` sobre el proyecto compartido `silent-liro` (solo lectura). **NO_VERIFICADO**
 
 | Offset fila | Función real | Resultado |
 |---|---|---|
@@ -87,7 +87,7 @@ Pendiente de sesión 18 anterior (`s18-main-init-437ebed8.md`, sección 6). Deco
 | `0xdc` | `0x43b1bf66` | **INFERENCIA fuerte**: prácticamente **idéntica byte a byte en estructura** a la fila `0xc8` (mismo switch de 7 casos, mismas cadenas, mismo patrón final `0x9400`/offsets EXIF). Difiere solo en variantes menores de generación de código (uso de registros, truncamiento de constantes). **Sin marca Silent/EFCS.** |
 | `0x104` | `0x43b1c034` | **INFERENCIA fuerte**: mismo patrón que `0xc8`/`0xdc` en el caso 0 (confirmado por lectura de los primeros ~120 líneas del pseudocódigo: mismas cadenas `Capture_Req_Retry`, `Capture_Cancel`, misma lógica). No decompilé el cuerpo completo de los casos 2–6 por límite de tiempo de esta tanda — **NO VERIFICADO si difiere en el resto**, aunque el patrón de cabecera es indistinguible de las otras dos. |
 
-**Conclusión Q4**: las 3 filas que sí pude decompilar completas (`0xc8`, `0xdc`, y la cabecera de `0x104`) son variantes casi idénticas de **un mismo manejador genérico de etapas de captura** (reintento, cancelación, inicialización RAW, metadatos EXIF al final) — consistente con ser modos de captura normales (quizá burst/panorama/variantes), **no** con un modo electrónico/Silent diferenciado. Ninguna de las filas examinadas (`0xb4` de sesión 18 anterior, `0xc8`, `0xdc`, `0x104` de este hilo) contiene cadena, constante o rama que mencione Silent/EFCS/electronic shutter. La fila `0xa0` permanece sin verificar por la limitación de herramienta descrita arriba.
+**Conclusión Q4**: las 3 filas que sí pude decompilar completas (`0xc8`, `0xdc`, y la cabecera de `0x104`) son variantes casi idénticas de **un mismo manejador genérico de etapas de captura** (reintento, cancelación, inicialización RAW, metadatos EXIF al final) — consistente con ser modos de captura normales (quizá burst/panorama/variantes), **no** con un modo electrónico/Silent diferenciado. Ninguna de las filas examinadas (`0xb4` de sesión 18 anterior, `0xc8`, `0xdc`, `0x104` de este hilo) contiene cadena, constante o rama que mencione Silent/EFCS/electronic shutter. La fila `0xa0` permanece sin verificar por la limitación de herramienta descrita arriba. **NO_VERIFICADO**
 
 ## 4. Relación de las ~9 tablas de `0x437ebed8` con `ObjCamera`/`ObjEffect`/ciclo de vida de pines (NO VERIFICADO — no completado)
 

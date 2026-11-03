@@ -36,7 +36,7 @@ La parte ejecutada es `SetMode→SetExposure→SetRead→Execute→buffers P2S`,
 ## Tres modelos físicos
 
 1. **Segunda cortina mecánica termina la foto convencional.** Compatible con Darwin y cortinas del modo normal; no demuestra que el IMX210 carezca de temporización electrónica alternativa. Se necesitaría correlación óptica/eléctrica y posición de cortina.
-2. **El sensor termina por temporización programada.** Apoyado indirectamente por la programación anticipada de números de tiempo y compatible con A7S Silent. Falta documentar qué gobiernan en el sensor; escribirlos no demuestra que cierren la integración del IMX210 a resolución completa.
+2. **El sensor termina por temporización programada.** Apoyado indirectamente por la programación anticipada de números de tiempo y compatible con A7S Silent. Falta documentar qué gobiernan en el sensor; escribirlos no demuestra que cierren la integración del IMX210 a resolución completa. **NO_VERIFICADO**
 3. **Señal externa/secuenciador BIONZ termina la integración.** Compatible con VD/XPI y con los límites de observación del bus. No se localizó una transición causal de esa señal al fin de integración.
 
 No hay prueba decisiva que seleccione un modelo para IMX210. Los tres pueden coexistir según fase o modo; la ausencia de una orden final en una ruta no discrimina entre 2 y 3.

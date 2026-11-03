@@ -83,7 +83,7 @@ Lo que sigue sin leerse: la lógica que decide el valor del strap `MODEREG` bit0
 
 Consumidores del literal −302 en Loader2: funciones en `c01f2c98`, `c01f2f24` (rama FAT/montaje de R7b), `c01f3d8a`, `c01f3e54`, `c01f3fd0`, `c01f407e` (zona `FUN_c01f3d50` «Init FAT», R7). −306 (nueve usos, incl. `c01f04b2` del kernel NULL según R7b), −304 (`c01f6c4c`), −308 (`c01f51c6`).
 
-Conclusión admisible: el patrón del usuario es **compatible** con un error −302 de Loader2 en la familia FAT/almacenamiento y **no es** un código de BootROM. No se atribuye el fallo: faltan la identificación del consumidor concreto que se ejecutó y el dato real de qué parpadeos son «lentos».
+Conclusión admisible: el patrón del usuario es **compatible** con un error −302 de Loader2 en la familia FAT/almacenamiento y **no es** un código de BootROM. No se atribuye el fallo: faltan la identificación del consumidor concreto que se ejecutó y el dato real de qué parpadeos son «lentos». **NO_VERIFICADO**
 
 ## 7. Auditoría de resultados anteriores
 

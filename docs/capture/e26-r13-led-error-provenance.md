@@ -141,7 +141,7 @@ El barrido de `r13_loader3.py` solo sigue BL/BLX/B.W directos y puede fallar con
 - **Q2.** Siete funciones: `c01f2c98` (BOS), `c01f2f24` (CFG), `c01f3d8a`, `c01f3e54`, `c01f3fd0`, `c01f407e` y `c01f3eb6` (esta última con −306 efectivo). −302 «crudo» solo en seis rutas; §3.
 - **Q3.** Condiciones exactas en la matriz de §3.
 - **Q4.** **Sí para P1 y P2** (aristas directas verificadas); **no** para el resto como −302 propio: `159a`/`1d6a`/`068a` descartan el error y P5/P6 se colapsan en P2.
-- **Q5.** **No medidos.** Se obtiene 2,0/0,5/0,25 s bajo la hipótesis de entrada a 4 MHz (cabeceras Sony); falta medición.
+- **Q5.** **No medidos.** Se obtiene 2,0/0,5/0,25 s bajo la hipótesis de entrada a 4 MHz (cabeceras Sony); falta medición. **NO_VERIFICADO**
 - **Q6.** Solo 3002 y 3200 (§4); ninguno existe como literal; en Loader2 harían falta −2002/−2200.
 - **Q7.** No. Compatible, no demostrado (§6).
 - **Q8.** Mejor sustentada: **Loader3 alcanzado y fallo de lectura de metadatos/configuración (BOS o RAMCFG+FAT)** representado por −302. No se puede ordenar P1 frente a P2 sin RAMCFG; no hay base para atribuirlo a NAND, Darwin ni 3.25.

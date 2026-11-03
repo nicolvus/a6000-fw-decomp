@@ -23,7 +23,7 @@ Tabla base GOT[0x44022934]=0x43edccf8 (filas de 20 B = 5 palabras; **la tabla es
 | Criterio | A — LIRO | B — Linux/MPR | C — Híbrida |
 |---|---|---|---|
 | Idea | Fila/descriptor Silent tras 0x437eabfc: YC del flujo continuo → etapas de codificación existentes (main+thumb+scn+EXIF) → Stage_Notify | Disparo → Linux pide GET_JPEG → adapta buffer + fabrica thumb/EXIF → MprIf::WriteStill | LIRO detecta/coordina el disparo Silent y entrega el YC/JPEG; Linux usa MPR |
-| Miniatura/EXIF | Reutiliza etapas Stage_THMEnc/SCNEnc/EXIF existentes (INFERENCIA, falta D) | **Bloqueante**: Linux no tiene codificador; habría que codificar thumb en LIRO igualmente | Igual que A para thumb |
+| Miniatura/EXIF | Reutiliza etapas Stage_THMEnc/SCNEnc/EXIF existentes (INFERENCIA, falta D) | **Bloqueante**: Linux no tiene codificador; habría que codificar thumb en LIRO igualmente | Igual que A para thumb **NO_VERIFICADO** |
 | Handles/propiedad | Los crea LIRO como en una foto normal (contrato conocido) | Hay que transferir/copiar handle SFRA a StillInfo 0x6b0 y retener | Mixto |
 | Ciclo mecánico | Se evita decidiendo en 0x437eabfc (HIPÓTESIS); riesgo de estados (S2Handler, contadores) | Lo evita porque no entra en CaptureManager, pero el disparador seguiría arrancando la captura normal salvo que se intercepte | Depende de interceptar 0x3011 |
 | Estado del botón / vuelta a normal | Conserva RelMgr; requiere cancelación/finalización propias | El flujo normal del botón seguiría corriendo en paralelo (conflicto) | Intermedio |
@@ -38,7 +38,7 @@ Tabla base GOT[0x44022934]=0x43edccf8 (filas de 20 B = 5 palabras; **la tabla es
 5. Vuelta a LV sin residuos (S2Handler, contadores 0x43ed4cf8/f0).
 
 ## Preguntas abiertas (prioridad)
-1. (D) Tabla RESUELTA a nivel de filas (ver `capture-stage-reuse.md`); falta etiquetar los estados de la fila 8 (0x43b1be36) y ver cuáles aceptan un YC de LV.
+1. (D) Tabla RESUELTA a nivel de filas (ver `capture-stage-reuse.md`); falta etiquetar los estados de la fila 8 (0x43b1be36) y ver cuáles aceptan un YC de LV. **NO_VERIFICADO**
 2. (F) Origen del YC en SFRA `pin` y si puede retenerse un frame sin cambiar de modo.
 3. (C2) Camino 0x3011 → CaptureStart.
 4. (E) Evento de catálogo/reproducción y EXIF mínimo.
@@ -52,7 +52,7 @@ Tabla base GOT[0x44022934]=0x43edccf8 (filas de 20 B = 5 palabras; **la tabla es
 
 ## Apéndice sesión 10
 - B (MakeWriteStillImage como constructor) queda rebajada: GetFileImage es TRANSFERENCIA (ObjConverter), sin interfaz de persistencia.
-- Mejor candidata (INFERENCIA): inyectar vía `0x1027` modo 4 en ObjStillRecorder, que reutiliza `RecordStill::Execute` nativo. Falta verificar la fuente de imagen en modo 4 y su llegada a WriteStill.
+- Mejor candidata (INFERENCIA): inyectar vía `0x1027` modo 4 en ObjStillRecorder, que reutiliza `RecordStill::Execute` nativo. Falta verificar la fuente de imagen en modo 4 y su llegada a WriteStill. **NO_VERIFICADO**
 
 ## Apéndice sesión 11
 - `0x1027` NO inyecta imagen (solo arma el grabador). La opción "C híbrida por 0x1027" queda DESCARTADA tal como estaba planteada.
@@ -85,7 +85,7 @@ Tabla base GOT[0x44022934]=0x43edccf8 (filas de 20 B = 5 palabras; **la tabla es
 | Independencia mecánica | no (secuencia mecánica) | **no demostrada** (dependencias de Effect/Camera) | no |
 | Complejidad y riesgo | ya existe | alta (varios subsistemas Linux) | alta y requiere Wi-Fi |
 
-**Orden de sustento: A > E > E2.** A es la única demostrada. E tiene mecanismo nativo y cadena identificada pero faltan tres piezas: (1) crear `0x2a` en disparo, (2) que ObjEffect sirva `REQ_DELIVER` con Camera, (3) el tipo/geometría del YC del visor. E2 queda sin sustento (el `0x1027` solo arma y hace eco; no hay topología Scalar→recorder).
+**Orden de sustento: A > E > E2.** A es la única demostrada. E tiene mecanismo nativo y cadena identificada pero faltan tres piezas: (1) crear `0x2a` en disparo, (2) que ObjEffect sirva `REQ_DELIVER` con Camera, (3) el tipo/geometría del YC del visor. E2 queda sin sustento (el `0x1027` solo arma y hace eco; no hay topología Scalar→recorder). **NO_VERIFICADO**
 
 ## Sesión 15 — investigación en paralelo, orden sin cambios
 

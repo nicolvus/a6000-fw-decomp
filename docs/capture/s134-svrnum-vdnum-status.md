@@ -44,7 +44,7 @@ Estos pueden ser el mismo puntero o diferentes. No se ha determinado.
 Desde `0x438110b4`: `ldr r3, [r0, #0x24]` lee `[estado+0x24]` y lo usa como puntero para `ldm`.
 Desde `0x438110c6`: `ldr.w sl, [r7, #8]` lee `[estado+8]` y lo usa como sl.
 
-No se ha identificado quién escribe `[estado+0x24]` ni quién rellena la sub-estructura con `svr_num`/`VdNum`.
+No se ha identificado quién escribe `[estado+0x24]` ni quién rellena la sub-estructura con `svr_num`/`VdNum`. **NO_VERIFICADO**
 
 ## Impacto en S51
 

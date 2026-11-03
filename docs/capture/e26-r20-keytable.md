@@ -71,7 +71,7 @@ medio físico.
 | ¿Tenemos el sector físico que correspondería a `0xc0001200`? | No — vive en `nflasha0`, sin nodo Linux, nunca volcado. |
 | ¿Vacía o con clave? | **No determinable de forma estática con los datos actuales.** |
 
-Para cerrar el contenido (no solo el mecanismo) haría falta un volcado de bajo nivel de la zona
+Para cerrar el contenido (no solo el mecanismo) haría falta un volcado de bajo nivel de la zona **NO_VERIFICADO**
 de boot/loader1 (fuera del alcance de `/dev/nflasha*`), que no está disponible ni se puede
 obtener sin acceso físico/JTAG — fuera de alcance mientras el usuario no autorice ese paso.
 

@@ -77,7 +77,7 @@ dos indicadores antes de entregar el descriptor del cuerpo.
 coloca el puntero de origen en el primer campo del descriptor. Para el
 paquete `1f` basta un descriptor: origen `44147b18`, longitud 31.
 Se observan parámetros numéricos de temporización del transporte, pero
-todavía no se ha identificado de forma independiente el dispositivo ni
+todavía no se ha identificado de forma independiente el dispositivo ni **NO_VERIFICADO**
 el receptor físico que interpreta el bit Silent.
 
 La llamada paralela `436fa350(122,...)` usa una tabla y una ruta distinta;
@@ -145,5 +145,5 @@ no las creó ni demuestra ausencia de receptor.
 distinta del número de modo del sensor y de la clase de exposición.
 **RECHAZO**: que localizar ese bit baste para activar obturación electrónica
 en A6000, o que un evento CAIF confirme una cortina física concreta.
-**VEREDICTO: CAMBIOS**. Falta identificar el receptor del cuerpo y comparar
+**VEREDICTO: CAMBIOS**. Falta identificar el receptor del cuerpo y comparar **NO_VERIFICADO**
 su interpretación con A6000 antes de proponer un cambio funcional.

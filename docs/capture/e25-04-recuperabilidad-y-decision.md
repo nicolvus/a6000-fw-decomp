@@ -25,7 +25,7 @@ Binarios y paquetes leídos (sin reescribirlos):
 
 **No hay ninguna recuperación independiente de la aplicación Darwin demostrada; el único acceso
 independiente es físico y no verificado, así que B1a no es técnicamente autorizable todavía.** El plan
-3.24/3.25 es coherente en lo formal, pero un paquete íntegro no es una recuperación: falta demostrar
+3.24/3.25 es coherente en lo formal, pero un paquete íntegro no es una recuperación: falta demostrar **NO_VERIFICADO**
 que un Darwin defectuoso puede volver a arrancar. La acción mínima que cambiaría el veredicto exige
 hardware (volcar/probar el arranque propio del MCU), no más análisis estático.
 
@@ -33,7 +33,7 @@ hardware (volcar/probar el arranque propio del MCU), no más análisis estático
 
 | | Pregunta | Respuesta | Tipo de límite / alcance |
 |---|---|---|---|
-| **A** | ¿Hay recuperación independiente por USB demostrada? | **NO** | Evidencia insuficiente **con evidencia en contra**: el USB necesita BIONZ alimentado y el BIONZ recibe núcleo/RAM de `DD_ON1/2/3`, que sube `darwin_core` (E24-01). No es imposibilidad demostrada: falta el binario del arranque. |
+| **A** | ¿Hay recuperación independiente por USB demostrada? | **NO** | Evidencia insuficiente **con evidencia en contra**: el USB necesita BIONZ alimentado y el BIONZ recibe núcleo/RAM de `DD_ON1/2/3`, que sube `darwin_core` (E24-01). No es imposibilidad demostrada: falta el binario del arranque. **NO_VERIFICADO** |
 | **B** | ¿Hay acceso al bootloader Darwin sin depender de su aplicación demostrado? | **NO** | Existe código de arranque propio en `0x0–0x41ff` (E24-02 A=SÍ), pero **acceder a él para reprogramar** no está demostrado. El único acceso documentado es físico (`MD0_DWN`, `XDWN_RESET`, UART, SWD) y no está verificado. |
 | **C** | ¿Existe una recuperación por hardware técnicamente especificada y verificada? | **NO** | **Especificada a nivel de esquema, no verificada**: `CN4906` no montado, `R4927` sin confirmar, protocolo del *serial writer* y protección de flash desconocidos, sin herramienta ni prueba. |
 | **D** | ¿R1 está completado y verificado? | **NO** | **Procedimiento listo, copia externa no hecha ni verificada**. El manifiesto local da 62/62 archivos presentes y `verify` pasa contra el origen; eso no es una copia externa. |
@@ -81,7 +81,7 @@ demostrado**.
 | **`MD0_DWN`, `XDWN_RESET`** | Redes del esquema; islas `CL5701`, `CL701` | Físico, dentro de la cámara | **NO** |
 | **Conector de servicio `CN4906`** | 16 contactos (`BOOT_MODE_1`, `UART_RXD/TXD_DWN`, `NSRST`, `TDO`, `RTCK`, `TCK/SWCLK`, `TMS/SWDIO`, `TDI`, `NTRST`, `DEBUG_MODE`), marcado **XX = no montado** | No hay conector externo; hay que abrir | **NO** |
 | **UART `P21/SIN0`, `P22/SOT0`** | Salen como `DWN_UART_RXD/TXD`; convergen en `CN4906` | Físico | **NO**; protocolo y protección desconocidos |
-| **SWD/JTAG `P00–P04`** | `TRST/TCK/TDI/TMS/TDO` salen como `*_DWN`; `SPSR` permite SWJ-DP tras reset por defecto; que Darwin lo desactive no se ha comprobado | Físico | **NO**; no hay volcado ni escritura, ni estado de protección |
+| **SWD/JTAG `P00–P04`** | `TRST/TCK/TDI/TMS/TDO` salen como `*_DWN`; `SPSR` permite SWJ-DP tras reset por defecto; que Darwin lo desactive no se ha comprobado | Físico | **NO**; no hay volcado ni escritura, ni estado de protección **NO_VERIFICADO** |
 | **Mecanismos accesibles desde BIONZ** | El BootROM tiene ramas para MS/USB y `is_valid_boot.sh`, pero **no se conoce su disparador**; no hay botón en el actualizador; la entrada conocida es pmca desde el sistema normal (`up.sh user` → reinicio) | Software, pero exige sistema principal y Darwin | **NO** si Darwin no alimenta o no arranca |
 
 ### 2.3 Respuestas a las seis preguntas
@@ -118,7 +118,7 @@ demostrado**.
 | Arranque `0x0–0x41ff` | Sí (existencia y salto) | **No** (sin binario) |
 | Actualizador USB | Sí (cadena completa con Darwin vivo) | Solo 3.21→3.22 con Darwin sano; **no** con Darwin roto |
 
-**Límite concreto:** la información que falta reside en el arranque `0x0–0x41ff` y en el *Flash
+**Límite concreto:** la información que falta reside en el arranque `0x0–0x41ff` y en el *Flash **NO_VERIFICADO**
 Programming Manual* del FM3. Ninguno está en el repositorio. No se busca más por software: el siguiente
 paso exige hardware.
 
@@ -343,7 +343,7 @@ recuperación**: es una decisión del usuario, no un hecho técnico.
 
 | | Recuperación | Evidencia actual | Prueba adicional | Riesgo residual | ¿Autoriza B1a? |
 |---|---|---|---|---|---|
-| **1** | Software demostrada | **No existe** | Guard 3.22, FDAT 3.24/3.25, M0/M1, NVRAM 3.22 | Bajo si todo se cierra | **No hoy** (habría que crearla) |
+| **1** | Software demostrada | **No existe** | Guard 3.22, FDAT 3.24/3.25, M0/M1, NVRAM 3.22 | Bajo si todo se cierra | **No hoy** (habría que crearla) **NO_VERIFICADO** |
 | **2** | Hardware posible, no verificada | Esquema + manual FM3; sin protocolo ni protección | Donante + SWD/UART + corrupción/recuperación + instrumentación | Medio: depende de la protección y del arranque | **No** hasta verificarla |
 | **3** | Sin recuperación independiente | La actual | Solo lectura (tabla 5.3) | **Alto**: un fallo de arranque puede dejar la cámara sin salida por software | **No**; solo aceptación expresa del riesgo |
 
@@ -356,7 +356,7 @@ auditoría general.
 |---|---|---|
 | **Estado exterior 9 y liberación de ocupación** | L0 = `[0,7,8,9,10]` (bytes `0x29cd8`); el estado 9 (`0x200e6`) hace `mov.w r0,#0x1000000; bl 0xd18e`; `0xd18e` hace `bics` en `[0x20002bd0+8]` y `+4`; la admisión lee `+8` | **No**. L0 incluye el 9 y libera exactamente el bit 24 que bloquea la admisión. |
 | **Estado exterior 10** | El descriptor `0x29cf0` tiene id terminal `0xa`; la tabla `0x29d0c` empareja 9→`0x200e6`, 10→`0x200fc`; el motor compara el id actual con el terminal en `0x1e16e` | **No**. El 10 es terminal y L0 lo alcanza. |
-| **Mensajes obligatorios esperados por BIONZ** | BIONZ espera en orden `0x0b`, `0x0d/0x15`, `0x0e`, `0x10`, `0x17` (y `0x11/0x14` de ajustes) con `caif_recv` sin plazo; los emisores son la tarea de captura, la FSM de ajustes/modo y la máquina de 49 estados, no la lista exterior (E24-05d/f/g/h) | **No demostrada**. Los cinco primeros no leen la compuerta y salen en el mismo orden; `0x17` es autopetición de Darwin (E24-05g); faltan el productor BIONZ de los datos que cumplen las condiciones de `0x11/0x14` y la correspondencia modo/tipo, pero son eslabones sin resolver, no una contradicción. |
+| **Mensajes obligatorios esperados por BIONZ** | BIONZ espera en orden `0x0b`, `0x0d/0x15`, `0x0e`, `0x10`, `0x17` (y `0x11/0x14` de ajustes) con `caif_recv` sin plazo; los emisores son la tarea de captura, la FSM de ajustes/modo y la máquina de 49 estados, no la lista exterior (E24-05d/f/g/h) | **No demostrada**. Los cinco primeros no leen la compuerta y salen en el mismo orden; `0x17` es autopetición de Darwin (E24-05g); faltan el productor BIONZ de los datos que cumplen las condiciones de `0x11/0x14` y la correspondencia modo/tipo, pero son eslabones sin resolver, no una contradicción. **NO_VERIFICADO** |
 | **Temporizadores de L0** | Estado 0: `0x8ca0`; estado 7: `0x5dc0`; unidad no medida. La espera de 1000 unidades (`0x1ff2a`) pertenece a la API de carga `0x1984e`, no al camino de captura; en la rama de preparación que espera el fin de la máquina exterior (`0x17dba`), la tarea sondea `0x199d0` mientras devuelve 0, sin ese presupuesto | **No demostrada**. No hay un plazo estático que se oponga a L0; la unidad y los plazos de BIONZ no están medidos. Es un riesgo temporal, no una contradicción. |
 | **Condiciones de entrada al estado 31** | El 31 está en las cinco listas de captura; su espera la selecciona `S+0x32` (`pkt[2..3]`): con 0, P29 bajo; con ≠0, FSM ADC-B. La compuerta `0x1fe66` no interviene en esa entrada (E24-05h) | **No**. La entrada al 31 no cambia con B1a; siguen sin resolver el conductor/polaridad de P29 y el productor de `pkt[2..3]`. |
 
@@ -372,7 +372,7 @@ del fin) son evidencia insuficiente, no una prueba de aceptación.
 | Interrupción de escritura | Core o particiones incompletas | Sin atomicidad demostrada; M16/F10 |
 | Guard rechaza la recuperación | 3.23 inútil tras 3.24 | Resoluble offline con ≥3.25 |
 | NVRAM incorrecta | Ajustes/calibración mal; no restaura Darwin | NVRAM 3.22 no existe; F12 |
-| BIONZ no acepta L0 | Captura bloqueada, no necesariamente brick | F = NO; falta medir |
+| BIONZ no acepta L0 | Captura bloqueada, no necesariamente brick | F = NO; falta medir **NO_VERIFICADO** |
 | Watchdog | Reinicio durante L0; `DD_ON*` cae | E24-05b bloqueado; no medido |
 | R1 sin copia externa | Pérdida del material si falla el disco | **PARCIAL / abierto** |
 | Aceptar el riesgo | Decisión del usuario, no recuperación | No cambia A–G |

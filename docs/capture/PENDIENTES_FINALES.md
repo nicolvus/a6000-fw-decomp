@@ -15,7 +15,7 @@ límites de los censos y del triaje.
 
 > **Corrección del 23-10-2026:** las secciones 2–4 conservan conclusiones históricas
 > superadas. La búsqueda MOVW/MOVT de `0x40193` era inválida y el flujo del ID
-> sigue pendiente de análisis estático; `libObj.so` sí contiene el código local de
+> sigue pendiente de análisis estático; `libObj.so` sí contiene el código local de **NO_VERIFICADO**
 > `RecordStill::Execute` y llamadas candidatas a registradores OSAL. El censo
 > vigente es 133/372 etiquetas documentadas, con 226 pendientes y 13 descartadas. Véase la
 > [auditoría actual](../auditoria-2026-10-23.md) y S380–S385 antes de reutilizar

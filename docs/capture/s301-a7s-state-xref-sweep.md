@@ -106,7 +106,7 @@ parece un grupo de parámetros de **tiempo/exposición** (halfwords ×10, un `u1
 `+0xae`, contadores de tabla). Encaja con que la A7S implemente el silent shutter por
 drive mode + tabla de timings (S204) y no por los flags del dumper. No se atribuye
 semántica física ni se afirma que estos campos *sean* el silent shutter: para eso hace
-falta seguir sus escritores hasta el selector `0x43826d58` (siguiente ítem).
+falta seguir sus escritores hasta el selector `0x43826d58` (siguiente ítem). **NO_VERIFICADO**
 
 ## 5. Tabla completa de los 79 sitios (A7S)
 

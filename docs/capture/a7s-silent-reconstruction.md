@@ -49,7 +49,7 @@ conversor: **incorrecto** (llama al selector; los llamadores del conversor son `
 
 | H | Veredicto | A favor | En contra / pendiente |
 |---|---|---|---|
-| H1 código Silent oculto en A6000 | **Mayormente refutada** | Persisten el comando `0x40e3` y su receptor (`+0x238`) | Faltan conversor, rama de selector, rama de política y modos IMX210 |
+| H1 código Silent oculto en A6000 | **Mayormente refutada** | Persisten el comando `0x40e3` y su receptor (`+0x238`) | Faltan conversor, rama de selector, rama de política y modos IMX210 **NO_VERIFICADO** |
 | H2 BIONZ carece pero el DFE conserva | NO VERIFICADO | Mismo CXD90027GF | No se trazó ningún comando DFE por drive_mode; A7S sin `dfe.bin` comparable |
 | H3 IMX210 admite fin electrónico completo | NO VERIFICADO | IMX210 tiene ShutMode 0 y lectura completa 6000×4000 (~66,8 ms/cuadro, [doc](imx210-video-readout.md)) | Sin datasheet; bits de ShutMode 0 distintos del IMX235 |
 | H4 depende de rasgos del IMX235 | **Apoyada parcialmente** | Silent A7S usa modos de sensor dedicados (45/69 campos) | No prueba que el IMX210 no pueda; puede ser solo tabla |
@@ -60,7 +60,7 @@ conversor: **incorrecto** (llama al selector; los llamadores del conversor son `
 ## 5. Viabilidad
 
 La A7S implementa Silent con **dos** cambios coordinados (modo de sensor dedicado + clase de obturación 0) y UI. En la A6000
-faltan los dos en LIRO y el IMX210 no tiene tabla para `0x4e/0x4f`. Activar «código existente» no es posible: no existe.
+faltan los dos en LIRO y el IMX210 no tiene tabla para `0x4e/0x4f`. Activar «código existente» no es posible: no existe. **NO_VERIFICADO**
 Un port requeriría (i) elegir un modo IMX210 válido de lectura completa (`0x0b`/`0x2f`), (ii) forzar clase 0 en la política,
 (iii) demostrar que con clase 0 el secuenciador no acciona la cortina, y (iv) que ShutMode 0 del IMX210 inicia/termina la integración
 electrónicamente. (iii) y (iv) no están demostrados. **La decisión S51 (no parchear) se mantiene**; esta reconstrucción concreta el

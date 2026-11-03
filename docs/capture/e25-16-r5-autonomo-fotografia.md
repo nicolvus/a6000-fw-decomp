@@ -40,7 +40,7 @@ cap+0x64c (param de SetExposure: +0 = r5, +9 = ShutMode)
 
 La foto actual no usa el productor porque el constructor tiene una compuerta (`cap+0x11b0`,
 `0x437b46c6`) y, cuando está cerrada, el registro conserva `r5 = 1` (T032/T046). El cálculo existe;
-lo que falta es **ejecutarlo en la ruta de foto** (C1/C3, §7).
+lo que falta es **ejecutarlo en la ruta de foto** (C1/C3, §7). **NO_VERIFICADO**
 
 ---
 
@@ -435,7 +435,7 @@ diferencia >5 % que no se explique por calibración. No se prueba 1/15, bulb ni 
 
 | # | Pregunta | Veredicto | Base |
 |---|---|---|---|
-| A | ¿Existe un cálculo autónomo de `r5` en BIONZ a partir del Tv de la foto? | **SÍ, lógicamente** (productor nativo `0x4383fa40`, llamado por los dos constructores) | V bytes/emulación; falta prueba física |
+| A | ¿Existe un cálculo autónomo de `r5` en BIONZ a partir del Tv de la foto? | **SÍ, lógicamente** (productor nativo `0x4383fa40`, llamado por los dos constructores) | V bytes/emulación; falta prueba física **NO_VERIFICADO** |
 | B | ¿De dónde sale el Tv? | `settings+0x162` (tabla de modo 9, `0x437b4340`) → `record+0xf6` (`0x437b4662/70`) | V |
 | C | ¿Se demostró la desreferenciación real o se asumió `cap+0x1198`? | **Real:** `0x4383fd6c` → `0x4383fb6c` → `record+0x64`; `cap+0x1198` es solo `param_1` | V |
 | D | ¿El conversor usa el VTS del firmware o una constante? | **El campo `record+0x20`**; no hay 4219 en el código. El valor real de ese campo no se verificó | V código / N valor |

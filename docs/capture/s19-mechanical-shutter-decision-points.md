@@ -16,7 +16,7 @@ movimiento sigue siendo la **fila/descriptor de 20 bytes** escogido por
 inicializador `0x437ebed8` (corregido en sesión 20, ver C2), pero la
 correlación de cada fila con el primer comando CAIF/Darwin sigue sin
 demostrarse. Por tanto, para evitar una captura
-mecánica haría falta, como mínimo, que el evento no supere las guardas de
+mecánica haría falta, como mínimo, que el evento no supere las guardas de **NO_VERIFICADO**
 admisión **o** que el selector no ejecute un descriptor que alcance CAIF/Darwin;
 no se verificó una alternativa electrónica completa ya activa.
 
@@ -73,5 +73,5 @@ confirmación de que exista ruta sin cortinas.
 
 **S19-13 (d): cancelaciones y estados posteriores a S2.** Es la prioridad más
 útil aún no resuelta: debe identificar qué mensajes/estados cancelan o liberan
-una solicitud entre la admisión y las filas LIRO, y qué invariantes habría que
+una solicitud entre la admisión y las filas LIRO, y qué invariantes habría que **NO_VERIFICADO**
 conservar si una rama evitara iniciar la secuencia convencional.

@@ -59,13 +59,13 @@ Conclusiones (VERIFICADO sobre estas medidas):
 3. Sin forzar (o con `r5` ≥ 4300) la exposición es el cuadro completo, **64,9 ms ≈ 4270 líneas**; con `r5` = 0 es nula.
 4. Predicción para velocidades uniformes (**comprobada en T047**, ver abajo): `r5` = 4219 − T/15,2 µs → 1/4000 ≈ 4203, 1/1000 ≈ 4153, 1/250 ≈ 3956, 1/60 ≈ 3122.
 
-Así, la limitación de T044 (sesgo vertical) es del modo ShutMode 3 (el de la foto normal, T031); el reinicio por filas ya existe en ShutMode 0 y solo falta que la foto lo use con `r5` calculado a partir de la velocidad.
+Así, la limitación de T044 (sesgo vertical) es del modo ShutMode 3 (el de la foto normal, T031); el reinicio por filas ya existe en ShutMode 0 y solo falta que la foto lo use con `r5` calculado a partir de la velocidad. **NO_VERIFICADO**
 
 ## 4. Qué cambia para el proyecto
 
 - Con 3.23 **no hay obturador electrónico de cortina trasera/uniforme**: hay exposición con reinicio global y lectura por filas. Utilizable para velocidades
   lentas (≤ 1/60) donde τ pesa poco, y con sujetos sin movimiento; a velocidades rápidas hay sesgo de exposición de hasta 3,7× arriba-abajo y distorsión por lectura (≈ 61 ms).
-- Para velocidades rápidas uniformes hace falta **reinicio por filas** (ShutMode 0 con `r5` calculado, §3). Ese parche está en **BIONZ/av-cam** (`0x836d6fb6`, `0x836d7000`), no en Darwin: un FDAT de Darwin no lo instala. Hoy solo es posible en RAM (T046); hacerlo permanente exigiría modificar el firmware de BIONZ (fuera de alcance y sin recuperación probada).
+- Para velocidades rápidas uniformes hace falta **reinicio por filas** (ShutMode 0 con `r5` calculado, §3). Ese parche está en **BIONZ/av-cam** (`0x836d6fb6`, `0x836d7000`), no en Darwin: un FDAT de Darwin no lo instala. Hoy solo es posible en RAM (T046); hacerlo permanente exigiría modificar el firmware de BIONZ (fuera de alcance y sin recuperación probada). **NO_VERIFICADO**
 
 ## 5. Límites
 

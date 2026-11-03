@@ -34,7 +34,7 @@ Todo estático. Direcciones: ELF salvo indicación; Ghidra = ELF + 0x10000 en li
 5. `MprCtrl::WriteStill`: alcanzado desde `Execute` en el código. VERIFICADO estáticamente; no para una imagen no producida por el pipeline.
 6. DCFStillWriter: NO re-verificado en esta sesión.
 7. Metadatos: dos fechas, descriptores `0x1006`/`0x1007`/`0x3009`, tipo (`0x100e`), tabla de handles. Miniatura/screennail/EXIF las ensambla `MakeWriteStillImage` en RegisterImage; quién las produce aguas arriba NO VERIFICADO.
-8. JPEG de SFRA: HIPÓTESIS. Los handles DMM `u16` coinciden con los de SFRA, pero faltan miniatura/EXIF y el layout exacto de `0x100b`.
+8. JPEG de SFRA: HIPÓTESIS. Los handles DMM `u16` coinciden con los de SFRA, pero faltan miniatura/EXIF y el layout exacto de `0x100b`. **NO_VERIFICADO**
 9. Señales de grabación: código de resultado de `RecordStill` en `0x3500/0x3002 item 0x1001`; `SetImageWrited`; `0x1045`. Completitud en SD NO VERIFICADO.
 10. Arquitectura: ver apéndices. La más prometedora es "C′": registrar un ítem en el Pool (`RegisterImage`) y disparar el `Execute` nativo; A sigue siendo la referencia.
 

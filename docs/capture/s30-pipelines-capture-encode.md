@@ -9,7 +9,7 @@ y `libBizFw`: VA ELF; Ghidra las representa con `+0x10000`. Direcciones
 | Requisito | Resultado comprobado | Estado |
 |---|---|---|
 | 1. Captura nueva sin movimiento de cortinas | La ruta fija conocida continúa por CAIF/Darwin. `0x437f7ff0` selecciona drive/relación de tamaño; no inicia una adquisición independiente. | **NO CERRADO** |
-| 2. Sensor/DMA → YC válido | Se resolvió el origen de `ctx+0x4b54`: es CaptureId. Esa ruta no entrega el raster. Falta identificar el productor real y su terminación DMA. | **NO CERRADO** |
+| 2. Sensor/DMA → YC válido | Se resolvió el origen de `ctx+0x4b54`: es CaptureId. Esa ruta no entrega el raster. Falta identificar el productor real y su terminación DMA. | **NO CERRADO** **NO_VERIFICADO** |
 | 3. YC → EncodeStill → Pool | Se recuperó el servicio receptor, secuencia, destino SDF y retorno bloqueante hasta la continuación de Execute/Pool. | **Flujo de control recuperado; contrato de caché/reciclaje del YC de captura abierto** |
 
 Estos resultados no equivalen a tres pipelines funcionales ni a SilentShutter
@@ -126,7 +126,7 @@ registrado y la espera efectiva; no es prueba de ejecución en una cámara.
 copia un descriptor de **`0x44` bytes** y cierra el acceso con `0x43651694`.
 El adaptador `0x43aa8558` acepta un contador hasta 8 y copia ocho pares
 de palabras al contrato del driver. Esto no identifica ocho planos de
-píxeles: falta asignar la semántica completa de esas entradas y verificar
+píxeles: falta asignar la semántica completa de esas entradas y verificar **NO_VERIFICADO**
 que un YC nuevo de captura cumple el formato y su sincronización de caché.
 
 ## 3. Retorno hasta Execute y Pool

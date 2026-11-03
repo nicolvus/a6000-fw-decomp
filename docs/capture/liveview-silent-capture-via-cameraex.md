@@ -27,7 +27,7 @@ Ventaja de A/B/C: el criterio es objetivo para el oído: **sin ningún clic** = 
 
 ## Límites
 - Resolución: preview/vídeo ≈ 2 MP (no 24 MP). La foto a 24 MP electrónica sigue NO demostrada (S51 en NO).
-- `CameraSequence`/`DSP` pueden requerir permisos o firma de plataforma; no se ha comprobado que una app instalada por adb (usuario `shell`) pueda abrirlas.
+- `CameraSequence`/`DSP` pueden requerir permisos o firma de plataforma; no se ha comprobado que una app instalada por adb (usuario `shell`) pueda abrirlas. **NO_VERIFICADO**
 - Nada se ha ejecutado aún: esto es el plan y el inventario de API.
 
 ## Prueba en cámara de `CameraSequence` (2026-10-20) — resultado

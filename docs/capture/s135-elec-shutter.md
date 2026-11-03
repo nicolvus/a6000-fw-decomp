@@ -27,7 +27,7 @@ en `work/claude/a7s_silent_execution_trace.md`.
 
 **La ausencia en la A6000 es selectiva**: la A6000 **sí** tiene el motor de control de exposición
 `EC` (`EC::EcTagData` `0x43ca91ce`, `EC::EcEncryptedTagData` `0x43ca9227`,
-`api_EC_GetApolloLapNum()` `0x43caa193`), lo que falta es **exactamente** la sub-rama
+`api_EC_GetApolloLapNum()` `0x43caa193`), lo que falta es **exactamente** la sub-rama **NO_VERIFICADO**
 `ElecShutter/`.
 
 Las 15 apariciones de `shutter`/`Shutter` de la A6000 son del **obturador mecánico**: el

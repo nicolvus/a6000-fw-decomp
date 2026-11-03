@@ -23,7 +23,7 @@ La región de destino `0xc0005000` reside en eSRAM (`0xc0000000–0xc0100000`, 1
 **Viabilidad:**
 - Estática: SÍ — la cadena completa está reconstruida instrucción a instrucción desde el binario.
 - Emulada: SÍ — Unicorn transfiere el PC a código en eSRAM y lo ejecuta.
-- En hardware físico: NO DEMOSTRADO — falta identificar eléctricamente el pin UART (BOOT_SERIAL_IN) y confirmar que se puede activar externamente; cualquier prueba física requiere autorización separada y mediciones no destructivas.
+- En hardware físico: NO DEMOSTRADO — falta identificar eléctricamente el pin UART (BOOT_SERIAL_IN) y confirmar que se puede activar externamente; cualquier prueba física requiere autorización separada y mediciones no destructivas. **NO_VERIFICADO**
 
 Respuestas Q1–Q10: Q1=SÍ, Q2=SÍ (con acotación), Q3=SÍ, Q4=NO, Q5=SÍ, Q6=SÍ (emulado), Q7=SÍ, Q8=NO DEMOSTRADO, Q9=viable estática+emulada / no demostrada en hardware, Q10=identificación eléctrica del contacto UART.
 
@@ -430,7 +430,7 @@ El receptor serie del BootROM opera **antes** de BOSS, NAND, ARM7 firmware y Lin
 **Q9. ¿Es técnicamente viable un diagnóstico propio desde RAM, con las evidencias disponibles?**
 Viabilidad **estática: SÍ** (cadena coherente UART→RAM write→RAM jump, restricciones identificadas). Viabilidad **emulada: SÍ** (Unicorn ejecuta en eSRAM). Viabilidad **demostrada en hardware: NO** (carece de identificación eléctrica del UART y prueba física autorizada).
 
-**Q10. ¿Qué requisito falta para pasar de la demostración offline a una prueba física no destructiva?**
+**Q10. ¿Qué requisito falta para pasar de la demostración offline a una prueba física no destructiva?** **NO_VERIFICADO**
 Identificar eléctricamente el contacto UART (continuidad R4003→CN4906 pin 9, tensión DC, señal en osciloscopio) y confirmar que BOOT_SERIAL_IN se puede activar externamente, todo con autorización física separada y mediciones no destructivas.
 
 ---
@@ -487,4 +487,4 @@ python3 analysis/e26-recovery/r9-unicorn-ramjump.py            # RAM-jump emulad
 
 **Hash del commit:** a publicar en `origin/main` tras este informe (ver sección de publicación en PROGRESS.md).
 
-**Límite de evidencia:** todo lo anterior es estático (disassembly) o emulado (Unicorn). No constituye demostración en una Sony A6000 física. La activación física del UART queda pendiente de autorización separada.
+**Límite de evidencia:** todo lo anterior es estático (disassembly) o emulado (Unicorn). No constituye demostración en una Sony A6000 física. La activación física del UART queda pendiente de autorización separada. **NO_VERIFICADO**

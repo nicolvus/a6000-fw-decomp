@@ -12,7 +12,7 @@ Etiquetas: **BINARIO** (bytes releídos con Capstone) · **FUENTE** (GPL de Sony
 | 2 | ¿La consola da una vía de escritura? | **No.** `ldump <dir> <tamaño> [1\|2\|4]` solo lee memoria (`ldrb/ldrh/ldr`); `beast` vuelca el buffer de log de RAM. No hay orden de escritura, salto ni carga. Loader2 trae la misma consola (mismas dos órdenes) |
 | 3 | ¿Sirve al menos para leer (p. ej. la clave en `0xc0001200`)? | **No con el Backup de fábrica.** `Backup[0x510015]=0` pone a 0 el nivel UART (`[0xc0060000]`) y la bandera de `beast` (`[0xc0060014]`): `ldump` escribe solo en el buffer de RAM y `beast` sale sin imprimir. La consola recibe, pero no contesta |
 | 4 | Modo **«CFG:Wait ICE»** de Loader3 (nuevo) | `c01f48cc`, llamado en `c01f0cc2`, **antes** de la etapa que da −302. Si el GPIO que indica el Backup (`0xf90449` = banco **14**, `0xf9044a` = bit **17**; 12/12 volcados) lee 0, Loader3 inicializa la UART, limpia la caché y espera a que un depurador escriba `[0xc0045804] ≠ 0`. Confirma el diseño para ICE de R40, pero exige el depurador: no es una vía nueva |
-| 5 | Resto de pendientes estáticos | Sin cambios: `E26-R30-HOSTRET0` (baja, no cambia la decisión), `E26-R5-FM3` (falta el manual de flash del MB9AF004B; solo está el de periféricos), cola INFO6 de Loader3 (no está en ningún volcado) |
+| 5 | Resto de pendientes estáticos | Sin cambios: `E26-R30-HOSTRET0` (baja, no cambia la decisión), `E26-R5-FM3` (falta el manual de flash del MB9AF004B; solo está el de periféricos), cola INFO6 de Loader3 (no está en ningún volcado) **NO_VERIFICADO** |
 
 **Conclusión:** no queda ningún camino estático sin examinar en la cadena BootROM → Loader2 → Loader3 que dé escritura en la NAND sin acceso físico. El último trozo sin examinar del bucle de error era una consola de solo lectura, muda con la configuración de fábrica. Se mantiene la conclusión de R37–R40: lo que falta es físico.
 
@@ -48,7 +48,7 @@ Bucle de LED (`c01f3b74`): `c01f3bb4: bl c01f3884` (devuelve `[0xc006000c]`, ín
 - Si devuelve 1: `CFG:Wait ICE` → `c01f3884`/`c01f5008` (UART) → `c01f025c` (limpieza de la caché D por conjunto/vía, ARM) → `c01f4852`: bucle que llama a la consola y espera `[0xc0045804] ≠ 0`. Después salta a `c020e0d8`, en la parte no volcada (INFO6).
 - **DATOS:** banco 14, bit 17 en los 12 volcados. La cámara arrancaba con normalidad, así que ese GPIO está a 1 en uso normal (**INFERENCIA**). La bola física no sale de las fuentes disponibles; `GPIO_14 AC22` queda descartada (§7.3).
 
-**Lectura:** Sony detiene Loader3 por una línea GPIO para que el depurador cargue o parchee la RAM. Refuerza R40 (silicio pensado para ICE). Para usarlo hace falta igualmente el SWD abierto, y entonces el bucle de error tras −302 ya da la misma ventana. No añade una vía sin depurador.
+**Lectura:** Sony detiene Loader3 por una línea GPIO para que el depurador cargue o parchee la RAM. Refuerza R40 (silicio pensado para ICE). Para usarlo hace falta igualmente el SWD abierto, y entonces el bucle de error tras −302 ya da la misma ventana. No añade una vía sin depurador. **NO_VERIFICADO**
 
 ## 5. Inventario de lo estático (después de R41)
 
@@ -58,7 +58,7 @@ Bucle de LED (`c01f3b74`): `c01f3bb4: bl c01f3884` (devuelve `[0xc006000c]`, ín
 | Prefijo de Loader3 (43 páginas, INFO5) | Completo. La cola INFO6 (21 páginas: `c020xxxx`, libc y destino tras ICE) no está en ningún volcado (`E26-R5-L3`) |
 | Entradas por software a modo 3 | Solo `\updater\mode` (R37); modo 5 (`chk ank`/`chk adjust`) lee `nflasha3` |
 | Canales de entrada sin abrir la cámara | USB = Darwin HID sin escritura (R10/R19); consola serie de Loader3 = muda y de solo lectura (R41); BootROM serie = con clave (R33) |
-| Pendientes offline vivos | `E26-R30-HOSTRET0` (baja), `E26-R5-FM3` (falta el manual de flash) |
+| Pendientes offline vivos | `E26-R30-HOSTRET0` (baja), `E26-R5-FM3` (falta el manual de flash) **NO_VERIFICADO** |
 
 ## 6. Límites
 
@@ -97,4 +97,4 @@ Límite: el arranque de C de Loader3 está en la parte no volcada (INFO6). Si li
 - `cxd90014.c` (`gpiopin_to_irq`): el **puerto 0 es `GPIO_S`** (bits 0–16) y el 1 es `GPIO_SB`. El esquema numera las bolas `GPIO_0…GPIO_16` y `GPIO_S_0…GPIO_S_16`, exactamente los 17 bits del puerto 0. **`GPIO_14 AC22` es el puerto 0, bit 14, no el 14.17.**
 - El puerto 14 (`gpio_p14`, `0xf2910e00`; 18 puertos en `udif/platform.c`) solo agrupa pines de función multiplexada, que el esquema nombra por su función, no por su número de GPIO. La correspondencia puerto/bit → bola está en la tabla de pines del CXD90014, que no está en el árbol GPL ni en el manual de servicio.
 - Ningún binario disponible usa el puerto 14 de forma directa: no hay literales `0xf2910e00`–`0xf2910eff` en BootROM, cargadores ni `av-cam`. Los IDs de Backup `0xf90449`/`0xf9044a` solo los lee Loader3. Sus vecinos del grupo `0xf9` son otros pares puerto/bit (p. ej., `0xf9044f`/`0xf90450` = 3/25) sin nombre en ninguna cadena.
-- **Cierre (límite):** la bola no se puede determinar estáticamente. Además, no cambia nada: para usar la espera de ICE hace falta el SWD abierto, y entonces el bucle de error tras −302 ya da la misma ventana (§4).
+- **Cierre (límite):** la bola no se puede determinar estáticamente. Además, no cambia nada: para usar la espera de ICE hace falta el SWD abierto, y entonces el bucle de error tras −302 ya da la misma ventana (§4). **NO_VERIFICADO**

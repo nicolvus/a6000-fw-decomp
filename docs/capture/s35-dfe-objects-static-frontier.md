@@ -132,13 +132,13 @@ mayor. Esa posibilidad no demuestra que su estado sea fin APL ni fin de integrac
 **NO_VERIFICADO:** ciclo físico completo, cuadro propio/siguiente y captura
 completamente electrónica. No hay cámara conectada ni verificación física real.
 
-Para superar esta frontera hace falta una especificación fiable del bloque
+Para superar esta frontera hace falta una especificación fiable del bloque **NO_VERIFICADO**
 hardware (routing APL→IRQ, significado del bit 21 y semántica de estado/ack),
 o una **traza pasiva correlacionada** en cámara real durante una captura normal:
 VD/lectura del sensor, transacciones de estado/ack APL y DFE, entrada de IRQ,
 y observación de unidad/handle/secuencia al callback y consumidor. Una traza
 solo de VD no basta. Debe obtenerse sin flashear ni cambiar firmware; si no
-hay interfaz de traza capaz de observar esos MMIO internos, hace falta acceso
+hay interfaz de traza capaz de observar esos MMIO internos, hace falta acceso **NO_VERIFICADO**
 de instrumentación autorizado o documentación del SoC. No se ha realizado.
 
 ## Próximo paso exacto

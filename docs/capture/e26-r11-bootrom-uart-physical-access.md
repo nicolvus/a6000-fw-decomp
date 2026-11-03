@@ -461,11 +461,11 @@ La cámara no ha permanecido inmóvil durante la investigación. No basarse en s
 
 | # | Pregunta | Respuesta | Fundamento / prueba que falta |
 |---|----------|-----------|-------------------------------|
-| Q1 | ¿Se identificó inequívocamente el contacto físico de recepción BootROM UART? | **NO** | Solo candidato documental: CN4001 pin 9 vía R4003/R4002 XX. Falta identificación física en hardware. |
+| Q1 | ¿Se identificó inequívocamente el contacto físico de recepción BootROM UART? | **NO** | Solo candidato documental: CN4001 pin 9 vía R4003/R4002 XX. Falta identificación física en hardware. **NO_VERIFICADO** |
 | Q2 | ¿Existe una conexión eléctrica documentada entre ese contacto y Sony Multi Terminal? | **NO** | El esquema documenta la intención (R4003/R4002 hacia CN4001 pin 9) pero ambas resistencias están XX (no montadas). Sin continuidad demostrada. |
 | Q3 | ¿Es posible utilizar el contacto externo sin modificar la placa? | **NO** | Sin población de R4003/R4002 no hay camino eléctrico desde el Multi Terminal al BOOT_SERIAL_IN. |
 | Q4 | ¿Se determinó cómo se activa la rama serie del BootROM? | **NO** | `0xf2915010` bit 1 es un estado externo leído; no se identificó condición de activación. |
-| Q5 | ¿El receptor serie se activa mediante condición eléctrica, secuencia UART o ambas? | **NO** | No se distinguió. Falta captura de señal o documentación del comportamiento de arranque. |
+| Q5 | ¿El receptor serie se activa mediante condición eléctrica, secuencia UART o ambas? | **NO** | No se distinguió. Falta captura de señal o documentación del comportamiento de arranque. **NO_VERIFICADO** |
 | Q6 | ¿Se identificaron los niveles eléctricos y temporizaciones necesarios? | **NO** | Voltaje del pin y velocidad de baud del BootROM no determinados. |
 | Q7 | ¿La ruta CN4906/R4003 es utilizable según las evidencias disponibles? | **NO** | R4003 está XX (no montado). CN4906 montaje no verificado. |
 | Q8 | ¿Se encontró algún procedimiento externo documentado en cámaras Sony compatibles? | **NO** | Casos encontrados son testimonios de otros modelos sin verificación eléctrica. |
@@ -483,7 +483,7 @@ La cámara no ha permanecido inmóvil durante la investigación. No basarse en s
 **Justificación:**
 1. La ruta externa Multi Terminal está **descartada con evidencia**: R4003 y R4002 están XX (no montadas), sin continuidad desde CN4001 pin 9 hasta BOOT_SERIAL_IN.
 2. CN4906 pin 4 lleva `UART_RXD_MSS = DEBUG_UART0_RXD` directamente desde BIONZ, sin resistencia intermedia marcada XX en esa ruta específica.
-3. Si CN4906 está montado en la placa (pendiente de verificación visual), ofrece la ruta más directa al receptor BootROM UART.
+3. Si CN4906 está montado en la placa (pendiente de verificación visual), ofrece la ruta más directa al receptor BootROM UART. **NO_VERIFICADO**
 
 **Próximos pasos para R12 (sujeto a autorización física separada):**
 1. Identificar visualmente la cara visible de la placa SY-1028 (no asumir orientación).

@@ -148,7 +148,7 @@ La función lee `0xf2910410` (GPIO(4,RDATA)), hace `ubfx r0, r0, #0x15, #1` (bit
 | A | bit 22 de `0xf2910410` = 1 | 0x04A0 | 0x038D | 0x070A | 0x033E | 0x0001 |
 | B | bit 22 de `0xf2910410` = 0 | 0x0E74 | 0x0B18 | 0x0F05 | 0x0A23 | 0x0014 |
 
-**Interpretación:** los valores 0x04A0/0x038D y 0x0E74/0x0B18 parecen ser divisores de baud rate de dos configuraciones distintas (posiblemente 115200 vs otra velocidad, o dos pines UART distintos). No se ha verificado empíricamente qué velocidad corresponde a cada valor.
+**Interpretación:** los valores 0x04A0/0x038D y 0x0E74/0x0B18 parecen ser divisores de baud rate de dos configuraciones distintas (posiblemente 115200 vs otra velocidad, o dos pines UART distintos). No se ha verificado empíricamente qué velocidad corresponde a cada valor. **NO_VERIFICADO**
 
 **Línea de kernel del shell.txt (cámara en funcionamiento):**
 ```

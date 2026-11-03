@@ -191,9 +191,9 @@ Sin resolver: `c01f2282` (omisión por modo, depende de un valor en RAM y del Ba
 - **Q6. ¿Metadatos BOS verificables en respaldos?** **SÍ**, el sector 0 del volcado 3.21 (`dev_nflasha.bin`); **NO** posterior al incidente.
 - **Q7. ¿Las imágenes FAT cumplen las condiciones?** **SÍ**, las cuatro (nflasha2 histórico; nflasha3 histórico, oficial y integrada).
 - **Q8. ¿Diferencias relevantes oficial/histórica/integrada?** Histórica = oficial; integrada 3.25 = oficial salvo 89 B de `av-cam.bin`. Ninguna afecta a lo que Loader3 comprueba.
-- **Q9. ¿Se demostró que el actualizador 3.25 puede alterar los datos implicados?** **NO** como hecho; **SÍ como capacidad en los scripts de 3.21** (Backup.bin, `edisx`, `uc_mkfs`, `nflasha3`). Faltan los scripts de 3.25 y el modo de acción.
+- **Q9. ¿Se demostró que el actualizador 3.25 puede alterar los datos implicados?** **NO** como hecho; **SÍ como capacidad en los scripts de 3.21** (Backup.bin, `edisx`, `uc_mkfs`, `nflasha3`). Faltan los scripts de 3.25 y el modo de acción. **NO_VERIFICADO**
 - **Q10. ¿BOS o CFG/FAT?** **CFG/FAT** queda mejor respaldada *estructuralmente* (más rutas hacia −302, incluida cualquier lectura fallida de `nflasha2`/`nflasha3` y la ruta TPZL que 3.25 modifica). **No está respaldada por datos**: todas las imágenes cumplen. BOS se mantiene viable con un solo mecanismo (sector 0).
-- **Q11. ¿Qué evidencia falta?** El estado real de la cámara (UART/log `LD3_E:`/`BOS_E:`/`FAT_E:`/`CFG_E:`), que distingue de inmediato las cinco vías; sin eso, el `endupdate.sh`/`us_mkfs.sh` y el modo de 3.25.
+- **Q11. ¿Qué evidencia falta?** El estado real de la cámara (UART/log `LD3_E:`/`BOS_E:`/`FAT_E:`/`CFG_E:`), que distingue de inmediato las cinco vías; sin eso, el `endupdate.sh`/`us_mkfs.sh` y el modo de 3.25. **NO_VERIFICADO**
 - **Q12. ¿R15 offline?** (1) Auditar el camino TPZL de Loader3 (`c01f9a66`, `9a90`, `9bd0`) y reproducir con el volumen 3.25 (residuo 256 B) si `c01f2c2a` puede fallar; (2) buscar y comparar el `updater.img` de 3.25 (modo de acción, `us_mkfs`); (3) resolver `c01f2282`/`c01f16b0`.
 
 **Decisión: C.** Ambas rutas están caracterizadas con sus condiciones exactas (incluida la lista real de archivos) y los datos históricos las satisfacen todas: no discriminan el fallo físico actual. Ninguna acción física en esta sesión.

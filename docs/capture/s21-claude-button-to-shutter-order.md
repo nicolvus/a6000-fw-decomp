@@ -127,12 +127,12 @@ contratos de C-04.
 
 ## 6. Huecos restantes
 
-1. **K2→K3**: falta el código libObj entre `InfraInput` (`0x7a0020`) y los envíos `0x4042/0x4043` (CamUser/RelMgr bridge). También falta asignar `XS_1/XS_2` a códigos (`key_tbl` en Backup).
-2. **MSS_S2_REQ_CA / DWN_IN_RELEASE / XS_1→INT10**: falta quién los activa en IC6000 (driver o LIRO) y qué manejadores de interrupción FM3 los atienden. El pin exacto de IC6000 para `MSS_S2_REQ_CA` es ambiguo.
-3. **L5**: falta qué estado de la máquina `0x302d9` está activo al llegar `0x100`. El registro de `0x43807f4c` está verificado; su activación, no.
-4. **L11**: falta la codificación tag `0x12`/`0x13` → trama CAIF en `0x436bc140` y su correspondencia con el opcode del parser Darwin.
-5. **D1**: falta unir la trama de captura recibida → descriptor/fase Darwin → primera escritura P4D/P4E (`0x1f694/0x1f8a2/0x1f914/0x20154`).
-6. Falta confirmar la fila `+0x12c` y el valor `cap+0x4b70==7`.
+1. **K2→K3**: falta el código libObj entre `InfraInput` (`0x7a0020`) y los envíos `0x4042/0x4043` (CamUser/RelMgr bridge). También falta asignar `XS_1/XS_2` a códigos (`key_tbl` en Backup). **NO_VERIFICADO**
+2. **MSS_S2_REQ_CA / DWN_IN_RELEASE / XS_1→INT10**: falta quién los activa en IC6000 (driver o LIRO) y qué manejadores de interrupción FM3 los atienden. El pin exacto de IC6000 para `MSS_S2_REQ_CA` es ambiguo. **NO_VERIFICADO**
+3. **L5**: falta qué estado de la máquina `0x302d9` está activo al llegar `0x100`. El registro de `0x43807f4c` está verificado; su activación, no. **NO_VERIFICADO**
+4. **L11**: falta la codificación tag `0x12`/`0x13` → trama CAIF en `0x436bc140` y su correspondencia con el opcode del parser Darwin. **NO_VERIFICADO**
+5. **D1**: falta unir la trama de captura recibida → descriptor/fase Darwin → primera escritura P4D/P4E (`0x1f694/0x1f8a2/0x1f914/0x20154`). **NO_VERIFICADO**
+6. Falta confirmar la fila `+0x12c` y el valor `cap+0x4b70==7`. **NO_VERIFICADO**
 7. Inspección visual de las hojas 23/24/26/48. Hasta ahora solo hay coordenadas de texto.
 
 ## 7. Siguiente paso concreto
@@ -140,6 +140,6 @@ contratos de C-04.
 Decompilar la máquina de la tarea CA `0x436bc140` para los tags `0x12` y `0x13`, y obtener el opcode
 y la longitud CAIF que transmite. Después, buscar ese opcode en el despachador de recepción de
 Darwin, junto al parser `0x17f8c`, hasta la primera llamada a `0x20c90` o `0x20d00`. Eso cierra la
-única arista que queda entre la orden LIRO y la bobina. En paralelo, falta determinar si la línea
+única arista que queda entre la orden LIRO y la bobina. En paralelo, falta determinar si la línea **NO_VERIFICADO**
 `MSS_S2_REQ_CA` (INT05) es la señal de tiempo real del disparo: buscar en Darwin la configuración
 del canal EXTI 5 y su vector.

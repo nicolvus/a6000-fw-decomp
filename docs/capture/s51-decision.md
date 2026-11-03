@@ -8,14 +8,14 @@ Todo es estático: no se ejecutó, modificó ni flasheó firmware, y no se usó 
 
 | | Pregunta | Respuesta | Tipo de NO |
 |---|---|---|---|
-| **A** | ¿Hay una ruta de exposición totalmente electrónica demostrada? | **NO** | falta de demostración |
-| **B** | ¿Hay evidencia suficiente para diseñar ya un parche funcional y justificable? | **NO** | falta de demostración |
+| **A** | ¿Hay una ruta de exposición totalmente electrónica demostrada? | **NO** | falta de demostración **NO_VERIFICADO** |
+| **B** | ¿Hay evidencia suficiente para diseñar ya un parche funcional y justificable? | **NO** | falta de demostración **NO_VERIFICADO** |
 | **C** | ¿Está demostrado que el hardware lo hace imposible? | **NO** | no hay prueba de imposibilidad |
 
 **A — evidencia.**
 - La configuración «electrónica» (`CURTAINMODE 0xce` → `C+0x94/95` → modo `0..7`) no gobierna el sensor (T1 = NO, abajo).
 - En la ruta de foto fija identificada, el cierre de la 2ª cortina no tiene ninguna guarda que dependa de un flag configurable (T3 = NO, Codex: `0x43b5e2b0`→`0x4398f9a4`, `1<<bit` en `0xf2910048+banco*0x100`; guardas `captura+0x74f` y `43ae7648`).
-- No se ha identificado un fin electrónico de exposición (T2: no se conoce el significado de ID1/100/101).
+- No se ha identificado un fin electrónico de exposición (T2: no se conoce el significado de ID1/100/101). **NO_VERIFICADO**
 
 **B — evidencia.** Un parche tendría que suprimir el evento de 2ª cortina y apoyarse en un fin de integración por
 filas cuyo registro y efecto no conocemos. No hay base para elegir qué escribir ni para predecir el resultado (imagen

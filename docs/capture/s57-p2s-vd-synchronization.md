@@ -29,4 +29,4 @@ Se buscó una secuencia que termine electrónicamente la integración:
 Resultado: **no hay evidencia** de que el firmware gestione el fin de integración por registros; tampoco evidencia en contra. El comportamiento podría estar en el sensor (temporización interna con svd/shd/spl), en XPI o en Darwin.
 
 ## F.5 Límites
-Sin hardware: el bloque P2S, la IRQ que activa la bandera y los instantes reales no se observan. Falta seguir `0x436d594c` (callback registrada) y la tabla OSAL (`[[GOT 0x16dc]+0x14]+0x9c…0xa8`) hasta quien activa la bandera tras la transmisión.
+Sin hardware: el bloque P2S, la IRQ que activa la bandera y los instantes reales no se observan. Falta seguir `0x436d594c` (callback registrada) y la tabla OSAL (`[[GOT 0x16dc]+0x14]+0x9c…0xa8`) hasta quien activa la bandera tras la transmisión. **NO_VERIFICADO**

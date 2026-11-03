@@ -21,7 +21,7 @@ está en `0x25b3c` en las dos entradas aceptadas.
 
 | | Pregunta | Respuesta | Alcance exacto |
 |---|---|---|---|
-| **A** | ¿Existe una vía volátil **demostrada** para seleccionar L0? | **NO** | El lado Darwin tiene una escritura selectiva posible por `InitCom 0x16` (1 B en `0x20000050`, modelo en §3.3), pero **falta el emisor BIONZ** y el disparo fuera de `Seton`; `0x12` exige bloque de `0x78 B`; la SRAM de Darwin no es alcanzable por T022/T023. Detalle y eslabón exacto en §3. |
+| **A** | ¿Existe una vía volátil **demostrada** para seleccionar L0? | **NO** | El lado Darwin tiene una escritura selectiva posible por `InitCom 0x16` (1 B en `0x20000050`, modelo en §3.3), pero **falta el emisor BIONZ** y el disparo fuera de `Seton`; `0x12` exige bloque de `0x78 B`; la SRAM de Darwin no es alcanzable por T022/T023. Detalle y eslabón exacto en §3. **NO_VERIFICADO** |
 | **B** | ¿Se implementó un candidato offline que seleccione L0? | **SÍ** | `0x1fe6a: 28 46 → 0a e0` sobre el tipo 0: `0x1fe66` retorna 0 sin leer la compuerta; los tres arrancadores eligen `0x29cd8 = [0,7,8,9,10]`. 2 bytes, SHA `55a366a5…`. §4–§5. |
 | **C** | ¿Se conserva el tipo 0 de las bobinas? | **SÍ** | `0x20c78..0x20c7f = 09 e0 00 bf 00 bf 00 bf` intacto; `0x20c74` sigue devolviendo 0 (`b 0x20c8e`). El candidato se genera **desde** el tipo 0; el control desde el original no es M0 (§5.2). |
 | **D** | ¿El candidato evita las activaciones normales de P40/P41 durante captura y rearme? | **SÍ (estático)** | Con compuerta 0 los cierres de `load`, `0x19998`, `0x199b8`, `0x199d8`, los tres estados 4/5/0x1f y la tarea de captura/ráfaga no alcanzan `0x1fe50/0x1fe86/0x1feb6`. `0x1f5a6` retorna en `0x1f5ae`. No es una medida física. §6. |
@@ -85,7 +85,7 @@ Darwin escribiría **solo** la compuerta (modelo: `accepted: true`, `bytes_chang
 3. **T022/T023 no alcanzan la SRAM de Darwin**: leen DRAM de BIONZ
    (`0x83f91e20..0x83f91f30`), no `0x2000xxxx`; no hay una vía de lectura/escritura demostrada.
 4. **Reversión**: la SRAM de Darwin está siempre alimentada (E24-05 §5); un apagado normal no la
-   borra. Habría que reescribir el byte original por la misma vía o resetear Darwin; ninguna de las
+   borra. Habría que reescribir el byte original por la misma vía o resetear Darwin; ninguna de las **NO_VERIFICADO**
    dos está demostrada.
 
 **Eslabón exacto que falta:** un emisor BIONZ de `0x16` con `dirección=0x20000050`, `longitud=1` y

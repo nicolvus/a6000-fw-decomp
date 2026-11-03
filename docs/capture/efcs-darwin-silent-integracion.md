@@ -16,7 +16,7 @@ demostración física).
 
 La A6000 ya tiene un **Silent Shutter funcional** (fw 3.23, parche B1a en Darwin:
 `0x1fe6a: 28 46 → 0a e0`, 2 bytes) que desactiva el accionamiento mecánico del
-obturador durante la captura. Lo que falta es **control de exposición uniforme y
+obturador durante la captura. Lo que falta es **control de exposición uniforme y **NO_VERIFICADO**
 sincronizado** a velocidades rápidas: hoy la foto sale con exposición no uniforme y
 casi independiente de la velocidad seleccionada de 1/4000 a 1/500 (E25-10).
 
@@ -370,7 +370,7 @@ EFCS usa `ShutMode = 0` + `r5`:
 | Silent Shutter completo | **No** (solo parcial ≤ 1/30) | Sí (selector + bloque de tiempos) | Sí | A6000 carece del selector y armado | VERIFICADO |
 | Darwin comunicación | ID `0x0c`, `0x107`; respuesta `0x0e` | Similar | — | Funcionalmente similar | INFERENCIA |
 
-**Conclusión:** La A6000 ya contiene mecanismos suficientes para Silent mejorado ≤ 1/30 s (productor nativo r5, ShutMode 0, tabla de tiempos). No necesita portar subsistemas del A7S. Lo que falta (exposición > 65 ms, BULB) requiere el armado de exposición larga que el A7S tiene y el A6000 no.
+**Conclusión:** La A6000 ya contiene mecanismos suficientes para Silent mejorado ≤ 1/30 s (productor nativo r5, ShutMode 0, tabla de tiempos). No necesita portar subsistemas del A7S. Lo que falta (exposición > 65 ms, BULB) requiere el armado de exposición larga que el A7S tiene y el A6000 no. **NO_VERIFICADO**
 
 ---
 

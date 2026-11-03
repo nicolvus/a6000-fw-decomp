@@ -35,7 +35,7 @@ Los cuatro bytes iniciales de ese registro son `01 00 40 00`.
 | 4 | 0 | 1 | 0 | 1 |
 
 Tabla derivada de las operaciones AND/OR de esa función. Representa estados
-de un byte de software; **no asigna nombres a bits del CMOS**. Hace falta
+de un byte de software; **no asigna nombres a bits del CMOS**. Hace falta **NO_VERIFICADO**
 resolver la documentación y el protocolo del sensor antes de interpretarlos
 como reset, integración, cortina delantera o cortina trasera.
 
@@ -67,7 +67,7 @@ Se añadió una ruta de exposición distinta de las llamadas por fases anteriore
 En una rama de 0x43843a44 se preparan cuatro bancos de 16 bytes a partir de
 otra estructura; el origen pasado es GOT 0x44020b20 → 0x43eb05d8, más 0x224.
 Los valores de inicialización en el archivo son cero: no representan parámetros
-observados durante una captura. Falta unir la producción de esos bancos con
+observados durante una captura. Falta unir la producción de esos bancos con **NO_VERIFICADO**
 Silent y con un fin electrónico de exposición completo. Esta ruta sí acota
 el punto donde continuar; no basta forzar el byte del selector.
 
@@ -144,7 +144,7 @@ de +0x210 que acceden al primer puntero del contexto común:
   ajustes y umbrales; genera decisiones 1/3/5 y salidas de estado. Su
   llamador 0x43841070 obtiene ese argumento mediante **0x4383fc48**. Este
   selecciona GOT 0x44021ba8 → 0x43ea976c o GOT 0x440249a4 → 0x43eee9d4.
-  Son bloques distintos del destino inicial 0x43eb2680: falta demostrar sus
+  Son bloques distintos del destino inicial 0x43eb2680: falta demostrar sus **NO_VERIFICADO**
   copias/transformaciones antes de identificar ese +0x41c con EFCS. No basta
   una coincidencia del offset. 0x437b0610, llamado antes en la misma función,
   devuelve un contador y no ese puntero; la variable de pseudocódigo se reutiliza.

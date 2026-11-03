@@ -14,7 +14,7 @@ Alcance: análisis estático. Direcciones ELF (Ghidra = ELF + 0x10000). Contrato
 | Stride | NO VERIFICADO | No es un campo; NO VERIFICADO si se deriva del canvas | Pendiente |
 | Colorimetría / rango Y | NO VERIFICADO | 0..3 y 0/1 obligatorios | Pendiente |
 | Vida útil | El productor (ISP/dataflow) reutiliza buffers; `PinSend` libera con `FUN_43b63566(handle,-1,-1)` — VERIFICADO | Execute abre y cierra el handle al preparar; FEA lee después — NO VERIFICADO | **Riesgo**: sin copia o referencia propia, el buffer podría reciclarse |
-| Quién lo entrega | EE/Rec pins | pin YC del recorder (`this+0x60`) por `PlayData` `0x2001/0x1003` | Pendiente: falta el eslabón productor→pin |
+| Quién lo entrega | EE/Rec pins | pin YC del recorder (`this+0x60`) por `PlayData` `0x2001/0x1003` | Pendiente: falta el eslabón productor→pin **NO_VERIFICADO** |
 
 ## Lo que sí se sabe de los productores
 
@@ -37,7 +37,7 @@ Alcance: análisis estático. Direcciones ELF (Ghidra = ELF + 0x10000). Contrato
 
 ## Conclusión
 
-La entrada de `EncodeStill` es un YC SDS normal; no hay un campo que un frame de Live View incumpla. Lo que falta es (a) el productor que lo entregue al pin YC del recorder en modo disparo y (b) garantizar su vida útil. Hasta verificar ambos, **no se declara compatibilidad**.
+La entrada de `EncodeStill` es un YC SDS normal; no hay un campo que un frame de Live View incumpla. Lo que falta es (a) el productor que lo entregue al pin YC del recorder en modo disparo y (b) garantizar su vida útil. Hasta verificar ambos, **no se declara compatibilidad**. **NO_VERIFICADO**
 
 ## NO VERIFICADO
 

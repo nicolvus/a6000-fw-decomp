@@ -12,7 +12,7 @@ Ver [seguimiento y límites](capture-static-followup-2026-10-25.md).
 
 ## 1. Hipótesis principal
 
-> **H₀ (hipótesis nula)**: La A6000 fw3.21 **no puede** realizar captura fotográfica totalmente electrónica (sin accionar ninguna cortina mecánica) a resolución completa, porque le faltan **tres eslabones críticos** que sí existen en la A7S fw3.20:
+> **H₀ (hipótesis nula)**: La A6000 fw3.21 **no puede** realizar captura fotográfica totalmente electrónica (sin accionar ninguna cortina mecánica) a resolución completa, porque le faltan **tres eslabones críticos** que sí existen en la A7S fw3.20: **NO_VERIFICADO**
 >
 > 1. **Bit Silent en CAIF** (`pkt[+0x12]&0x20`) — no se construye en `av-cam.bin` A6000.
 > 2. **Predicado `no_silent` en Darwin** — no existe en firmware MCU A6000.
@@ -77,9 +77,9 @@ flowchart TD
 
 | Criterio | Qué observaría | Consecuencia para H₀/H₁ |
 |---|---|---|
-| **R1 (P5)**: Analizador lógico muestra bit 0x20 en `pkt[+0x12]` A7S Silent y **también** en A6000 si se fuerza campo captura | A6000 **sí** tiene capacidad latente de poner bit 0x20 | **Refuta H₀** → H₁ gana (solo falta activar campo) |
+| **R1 (P5)**: Analizador lógico muestra bit 0x20 en `pkt[+0x12]` A7S Silent y **también** en A6000 si se fuerza campo captura | A6000 **sí** tiene capacidad latente de poner bit 0x20 | **Refuta H₀** → H₁ gana (solo falta activar campo) **NO_VERIFICADO** |
 | **R2 (P3+P7)**: Forzar `G+0x808` con `&7`=1 (tipo 2; **no 2**: 2..6 dan tipo 1, S101, ver [revisión de pruebas físicas](physical-test-review-2026-10-26.md)) en A6000 + disparo → foto silenciosa (P7: sin rolling shutter / bandas flicker distintas a mecánico) | A6000 **ejecuta** exposición electrónica completa | **Refuta H₀** → H₁ gana (Darwin tipo 0/2 funcional) |
-| **R3 (P3+P12)**: Forzar tipo 2 en A6000 + aborto → **doble click** (bobinas accionan en reposición) | A6000 **tiene** reposición coherente latente | **Refuta H₀** parcial → H₁ gana (falta solo activar) |
+| **R3 (P3+P12)**: Forzar tipo 2 en A6000 + aborto → **doble click** (bobinas accionan en reposición) | A6000 **tiene** reposición coherente latente | **Refuta H₀** parcial → H₁ gana (falta solo activar) **NO_VERIFICADO** |
 | **R4 (P9)**: Traza bus sensor IMX210 muestra registros de fin integración electrónico / lectura global en modo vídeo/LiveView | IMX210 **soporta** fin electrónico por filas | **Refuta H₀** → H₁ gana (hardware capaz) |
 | **R5 (P6)**: Service shell expone `captura+0x804` (o equivalente) y cambia con menú Silent/EFCS | Campo existe y es escribible | **Refuta H₀** → H₁ gana (origen del campo identificable) |
 | **R6 (Datasheet IMX210 público/NDA)**: Documenta modo "electronic shutter" / "rolling shutter electronic" con registros | IMX210 **diseñado** para obturación electrónica | **Refuta H₀** → H₁ gana |
@@ -94,7 +94,7 @@ flowchart TD
 |---|---|---|
 | **A**: ¿Ruta electrónica demostrada? | **NO** | Sigue NO. Brecha: CAIF bit 0x20 + Darwin no_silent + reposición + driver IMX210 modo electrónico. |
 | **B**: ¿Parche justificable? | **NO** | Sigue NO. Parche requeriría: (1) modificar `av-cam.bin` construcción CAIF, (2) flashear Darwin MCU (riesgo alto, no reversible), (3) identificar selector IMX210 electrónico, (4) verificar fin integración. Sin R1–R4, es conjetura. |
-| **C**: ¿Hardware imposible? | **NO** | Sigue NO. IMX210 tiene lectura electrónica (vídeo/LiveView); Darwin tipo 0 existe; CAIF estructura compatible. Solo falta integración firmware. |
+| **C**: ¿Hardware imposible? | **NO** | Sigue NO. IMX210 tiene lectura electrónica (vídeo/LiveView); Darwin tipo 0 existe; CAIF estructura compatible. Solo falta integración firmware. **NO_VERIFICADO** |
 
 **Conclusión S51 inalterada**: **A=NO, B=NO, C=NO**. La investigación estática **agota** lo que puede decirse sin pruebas físicas (P5, P3, P7, P9) o datasheet IMX210.
 

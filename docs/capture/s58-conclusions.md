@@ -43,7 +43,7 @@ La [matriz de 24 evidencias y 12 hipótesis](../../analysis/s58-evidence-matrix.
 
 S57 dejó sin productor los valores de tiempo y comparó una matriz A7S mal dimensionada: ambos puntos avanzaron con pruebas nuevas. Se conoce la configuración efectiva ensayada y sus tramas, incluida la diferencia 45 registros estáticos frente a **43 efectivos** entre foto 0x0b y Silent 0x4e.
 
-Faltan: origen Tv, bloque M real por modo, significado de clk, restricciones que reconcilian productor/host; constructor y servicios A7S; semántica SIF/resolución de 0x0a/0x0c; llamadores efectivos del consumidor de ganancia y receptores de mensajes; relación eléctrica de tiempos, VD y XPI con integración.
+Faltan: origen Tv, bloque M real por modo, significado de clk, restricciones que reconcilian productor/host; constructor y servicios A7S; semántica SIF/resolución de 0x0a/0x0c; llamadores efectivos del consumidor de ganancia y receptores de mensajes; relación eléctrica de tiempos, VD y XPI con integración. **NO_VERIFICADO**
 
 Los números de pruebas describen software offline, no fidelidad eléctrica del sensor. Ni la mitigación ITSTATE, ni los stubs, ni los patrones de memoria cubren estados arbitrarios del firmware.
 
@@ -68,7 +68,7 @@ La `.venv` del proyecto no ve Capstone; su fallo de colección inicial queda exp
 
 **A=NO:** no se demuestra exposición completamente electrónica a resolución completa. **B=NO:** no hay ruta suficientemente comprendida para un parche. **C=NO:** tampoco se demuestra imposibilidad física. S51 no cambia; no se parchea, flashea ni toca hardware.
 
-La respuesta final es **parcial**: se reconstruyó el cálculo y la configuración A7S bajo condiciones precisas, pero no qué configuración física suficiente falta al IMX210. El experimento estático de mayor valor es recuperar el escritor del bloque que `0x437aa65c` toma de `0x437876dc()+0xdd0`, con M/Tv alcanzables; la frontera física requiere datasheet o traza pasiva autorizada. No se prolonga el análisis estático como sustituto de esa evidencia.
+La respuesta final es **parcial**: se reconstruyó el cálculo y la configuración A7S bajo condiciones precisas, pero no qué configuración física suficiente falta al IMX210. El experimento estático de mayor valor es recuperar el escritor del bloque que `0x437aa65c` toma de `0x437876dc()+0xdd0`, con M/Tv alcanzables; la frontera física requiere datasheet o traza pasiva autorizada. No se prolonga el análisis estático como sustituto de esa evidencia. **NO_VERIFICADO**
 
 Informes: [A productores](s58-ae-timing-producers.md) · [B unidades](s58-imx210-timing-units.md) · [C emulación](s58-imx235-full-emulation.md) · [D diferencias](s58-a7s-silent-effective-diff.md) · [E ciclo](s58-exposure-cycle.md).
 

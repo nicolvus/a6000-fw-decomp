@@ -9,7 +9,7 @@ Hay (a) mapa verificado del hardware de cortinillas ([fm3-gpio-shutter-mapping.m
 | ¿Las cortinillas se mueven por GPIO P4D/P4E (no serie)? | VERIFICADO (estático+esquema) | PDOR4 b13/b14 → 1ST/2ND_CURTAIN_MG → FET Q6832 → bobinas 1C/2C |
 | ¿Silent condiciona esas escrituras en A6000? | NO (VERIFICADO estático) | `0x20C90/B2/D4/D00` solo filtran por tipo HW 1..3 vía `0x20C74` |
 | ¿Existen modos de sensor de lectura continua? | VERIFICADO que hay 13 conjuntos de registros; vídeo/Live View ↔ ID NO verificado | matriz de 59 regs |
-| ¿Puede un frame de vídeo guardarse como foto sin cortina? (2 MP) | HIPÓTESIS plausible, no probada | el vídeo FHD60 existe; falta el empalme con el guardado JPEG |
+| ¿Puede un frame de vídeo guardarse como foto sin cortina? (2 MP) | HIPÓTESIS plausible, no probada | el vídeo FHD60 existe; falta el empalme con el guardado JPEG **NO_VERIFICADO** |
 | ¿6/12 MP nativos (skip/bin/window)? | NO VERIFICADO | falta mapear regs de la matriz a ventana/binning |
 | ¿24 MP con fin electrónico de exposición? | NO VERIFICADO (no descartado) | `0x0b` programa el sensor en modo foto; el fin de integración depende de 2ª cortinilla en la ruta actual, sin demostrar necesidad física |
 

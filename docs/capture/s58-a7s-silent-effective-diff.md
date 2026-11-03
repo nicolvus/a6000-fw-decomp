@@ -46,7 +46,7 @@ Para 0x4d→0x4f desaparecen las diferencias en 0x01/0x09/0x0b y 0x0a pasa 0x16�
 
 0x0a=0xa8 en 0x35/0x38/0x4f/0x51; 0 en 0x0b/0x37/0x01/0x03/0x0a/0x36/0x12/0x44/0x4e/0x50/0x08; 0x16 en 0x32/0x34/0x33/0x4c/0x4d. Valores restantes: 24,5e,72,78,b0,b4. La matriz JSON incluye los 34 modos para ambos registros y los demás campos.
 
-SetExposure modifica 0x02–0x07 y control; SetRead no cambia 0x0a/0x0c en los escenarios guardados. La coocurrencia con resolución, frecuencia y configuración SIF **no se recuperó**: falta el vínculo entre descriptores de modo, inicialización real y receptor. No se asignan unidades ni significado óptico por correlación de columnas.
+SetExposure modifica 0x02–0x07 y control; SetRead no cambia 0x0a/0x0c en los escenarios guardados. La coocurrencia con resolución, frecuencia y configuración SIF **no se recuperó**: falta el vínculo entre descriptores de modo, inicialización real y receptor. No se asignan unidades ni significado óptico por correlación de columnas. **NO_VERIFICADO**
 
 ## Diferencias fuera de la matriz
 

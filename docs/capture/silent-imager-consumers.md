@@ -116,7 +116,7 @@ MechaCommon o un productor YC/DMA.
 | PARCIAL | `SetRead` y sus auxiliares examinados no tienen lectura identificada de Silent ni enlace a MechaCommon o productor YC. No cierra la cadena transitiva completa (quedan llamadas indirectas/auxiliares sin resolver); el objeto de temperatura parte nulo en 0x43e7f858. | `imx210-setread-runtime-object-refs-20261018.json`, `imx210-setread-callees-static-20261018.json` |
 | NO_VERIFICADO | Que los registros sombra de 0x43ad9262 programen el fin electrónico de exposición, o que Silent llegue por estas rutas a un registro, orden mecánica o buffer de captura. | Frontera de los exports anteriores. |
 
-Dato que falta y procedimiento no destructivo para resolverlo: identidad completa
+Dato que falta y procedimiento no destructivo para resolverlo: identidad completa **NO_VERIFICADO**
 de los objetos desde la inicialización de 0x43e7f858 y los llamadores de
 `SetRead` (análisis estático adicional, sin tocar el dispositivo); semántica
 física de los registros sombra y origen real del buffer, que requeriría

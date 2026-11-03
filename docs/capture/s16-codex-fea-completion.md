@@ -82,7 +82,7 @@ Bytes iniciales reales:
 
 El parámetro pasa por referencia de handles/phys en `RegionInfo`; FEA copia la estructura descriptiva, no el raster. Por tanto, el retorno `0` de `FeaIf::EncodeStill` solo certifica envío exitoso de una solicitud. No prueba que FEA ya haya leído el YC ni que sea seguro liberar o reciclar la unidad.
 
-El candidato de consumidor de completitud es `StillConverter`, respaldado por las cadenas de callback presentes en `libObj.so`. Falta una xref estática directa que una el registro de callback, el valor numérico `CBID_ENCODE_STILL`, el objeto `StillConverter` y la liberación de los buffers ObjEffect.
+El candidato de consumidor de completitud es `StillConverter`, respaldado por las cadenas de callback presentes en `libObj.so`. Falta una xref estática directa que una el registro de callback, el valor numérico `CBID_ENCODE_STILL`, el objeto `StillConverter` y la liberación de los buffers ObjEffect. **NO_VERIFICADO**
 
 ## Comandos ejecutados
 

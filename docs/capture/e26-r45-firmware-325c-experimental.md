@@ -62,7 +62,7 @@ negativos: el `.dat` 3.25 que bloqueó la cámara (`42c02504…`) y el 3.21 de S
 - El código nuevo de BIONZ (selector, C3-B) y de Darwin (cueva `0x4318`) **nunca se ha ejecutado** en hardware:
   solo emulación (E25-24b…E25-27). Un fallo ahí podría colgar la cámara después de arrancar.
 - Tras instalarlo, la cámara queda en versión 3.25: el 3.24 ya no se acepta y para volver al firmware de Sony
-  hace falta el paquete **3.26** (contenido oficial, R37/R38), también nunca instalado.
+  hace falta el paquete **3.26** (contenido oficial, R37/R38), también nunca instalado. **NO_VERIFICADO**
 - Si el arranque falla, **no hay recuperación conocida sin abrir la cámara** (R33, R37–R44).
 
 ## 5. Publicación

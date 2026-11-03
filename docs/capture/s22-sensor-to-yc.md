@@ -125,7 +125,7 @@ metadatos/StillInfo, no el raster. Se mantiene abierto el requisito central:
 el productor del YC nuevo y su contrato de caché, propiedad, sincronización y
 vida útil.
 
-Bloqueo concreto: falta la arista desde la terminación de lectura/DMA del
+Bloqueo concreto: falta la arista desde la terminación de lectura/DMA del **NO_VERIFICADO**
 dominio de sensor (candidato a partir de `0x436d6118`, llamado tras el selector)
 hacia el objeto/contexto que llena `ctx+0x4b54..+0x4b64` o hacia un
 `ycBufferInfo` DMM de `ObjCamera`/`ObjScalar`.

@@ -119,7 +119,7 @@ Las aristas TBB están incluidas. Esto prueba dominancia/orden local, sin promet
 ejecución real, ausencia de interrupciones ni exclusión de otros escritores.
 
 **PARCIAL:** propagación del valor concreto `(1,2)` a B/G. El orden y la cobertura
-de la copia dejan de ser pendientes; todavía faltan el productor original, el
+de la copia dejan de ser pendientes; todavía faltan el productor original, el **NO_VERIFICADO**
 payload concreto y las condiciones/sobrescrituras hasta los consumidores.
 **RECHAZO:** «el callback ocurre después de esa copia» para esta ruta local.
 

@@ -39,7 +39,7 @@ Original intacto: `bootloader.bin`, 491520 B, SHA-256 `eb420385120f2cd7c9b071f67
 | INFO 5: `(0,0,2,21,43)` | Prefijo situado en `0x22800–0x38000` | Runtime `0xc01f0000–0xc0205800`; ubicación física inferida |
 | INFO 6: `(0,1,2,0,21)` | Cola necesaria de 43008 B | Runtime `0xc0205800–0xc0210000`; **no hay solicitud explícita plane1 en BLDR** ni correspondencia demostrada con bytes del archivo |
 
-El mapa lógico de adquisición está reconstruido; **el mapa físico completo no**. No es una NAND contigua: mezcla safe/normal, omite bloques y metadatos y pierde la identidad de tramas. No se puede usar `offset_archivo / tamaño_bloque` como dirección NAND. Tampoco se prueba que ningún byte de la cola exista en otro respaldo: lo que falta es una adquisición identificada de esas coordenadas o una copia independiente íntegra y compatible.
+El mapa lógico de adquisición está reconstruido; **el mapa físico completo no**. No es una NAND contigua: mezcla safe/normal, omite bloques y metadatos y pierde la identidad de tramas. No se puede usar `offset_archivo / tamaño_bloque` como dirección NAND. Tampoco se prueba que ningún byte de la cola exista en otro respaldo: lo que falta es una adquisición identificada de esas coordenadas o una copia independiente íntegra y compatible. **NO_VERIFICADO**
 
 Reproducir sin mutar el respaldo:
 

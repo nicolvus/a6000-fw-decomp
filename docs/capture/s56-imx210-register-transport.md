@@ -28,4 +28,4 @@ SyncMode: 2 → `bloque1+0=2` y pulso 1,0,1 en `+8`; 0 → sin pulso (lista inme
 `[O+0x268]` ("SSBRK_ON" en `0x43c940d7`) lo pone `0x43ad9116` (5 llamadores: `0x438c7a0a, 0x438c8326, 0x438c883c, 0x438cc5ce, 0x43ae936c`: captura, prelight y StrtExps). `0x436d7c08` hace `A(ID1)|=8; B(ID1)=copia&~8`: **ID1 se envía dos veces en el mismo lote, primero con bit3=1 y luego con 0** (verificado: `0xc4/0xcc → 0xc4`, etc.). Acompaña cambios de modo/exposición; no es específico del fin de exposición.
 
 ## Frontera exacta
-Falta (1) cómo el bloque P2S serializa la RAM (bits/reloj; hardware), (2) cuál es la semántica de ID1 (bits 2,3,4,6,7), `3–8`, `0x100/0x101` en el IMX210 (sin datasheet), (3) que DFE0 = CIS0 (SCK/SI/XCS): INFERENCIA por nombres. Resultado que avanzaría: traza pasiva de CIS0 decodificable con el formato de arriba.
+Falta (1) cómo el bloque P2S serializa la RAM (bits/reloj; hardware), (2) cuál es la semántica de ID1 (bits 2,3,4,6,7), `3–8`, `0x100/0x101` en el IMX210 (sin datasheet), (3) que DFE0 = CIS0 (SCK/SI/XCS): INFERENCIA por nombres. Resultado que avanzaría: traza pasiva de CIS0 decodificable con el formato de arriba. **NO_VERIFICADO**

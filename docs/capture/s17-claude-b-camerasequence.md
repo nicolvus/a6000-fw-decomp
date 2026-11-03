@@ -250,7 +250,7 @@ mencionados (`libcameraex_jni.so`, `libcameraex_client.so`, `libcamera.so`, `lib
 en `firmware/extracted/{fw321,a7s-fw320,a6300-fw201}/.../lib/`. No hay bytecode Java/Android
 (que contendría las clases `CameraSequence.java`, `CameraEx.java`, `DeviceBuffer.java` reales con
 sus constantes numéricas) extraído ni analizado en este proyecto. Esto es la explicación de por
-qué §6 no puede verificarse más allá de HIPÓTESIS: falta la parte Java/Dalvik del sistema, que
+qué §6 no puede verificarse más allá de HIPÓTESIS: falta la parte Java/Dalvik del sistema, que **NO_VERIFICADO**
 probablemente reside en `/system/framework/*.jar` o similar dentro de una imagen de sistema
 Android completa, no presente en este árbol de firmware extraído (el firmware aquí extraído
 parece ser la partición `nflasha16` con bibliotecas nativas, no la imagen de sistema Android
@@ -277,7 +277,7 @@ rutas.**
   `onShutterKeyDown`, (b) tenga una `CameraSequence` ya corriendo en preview, y (c) llame
   `getPreviewSequenceFrames(1)` en ese instante, guardando el JPEG manualmente (sin EXIF/miniatura,
   igual que el problema ya documentado para la ruta SFRA/DMM pura en `RESEARCH_TASKS.md` línea 14).
-  Esto es trabajo de integración por hacer, no un camino ya operativo.
+  Esto es trabajo de integración por hacer, no un camino ya operativo. **NO_VERIFICADO**
 - Relación con arquitectura E: **no se encontró enlace** entre `CameraSequence`/`ScalarDaemon` y
   `ObjCamera`/`ObjEffect`/`PbCap` (esos símbolos pertenecen a otra familia de binarios LIRO, no
   tocados por `libcameraex_*`). Si comparten algo, sería más plausible que comparta backend con la

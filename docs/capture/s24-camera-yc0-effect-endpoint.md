@@ -71,7 +71,7 @@ El auditor sólo desensambla los rangos `0x987eb6..0x987ec8`,
 ## Veredicto
 
 **VEREDICTO: PARCIAL.** Se identifica el destino constante de Camera.YC0 y su
-configuración Dataflow en el dominio ObjEffect. Falta localizar el receptor de
+configuración Dataflow en el dominio ObjEffect. Falta localizar el receptor de **NO_VERIFICADO**
 payload asociado a `0x50004` y seguir su respuesta hasta un descriptor DMM o
 probar que no produce uno.
 

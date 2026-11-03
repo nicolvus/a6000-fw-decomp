@@ -18,6 +18,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "analysis/review_reports"
+IGNORED = ROOT / "analysis/review_reports/descartes_sin_marca.json"
 SCAN = ("docs/capture", "analysis", "wiki", "reports")
 SKIP = ("analysis/review_reports", "analysis/rea-independent/manifests", "analysis/s178_census/pendientes.md")
 
@@ -59,6 +60,16 @@ def section_text(lines: list[str], n: int) -> str:
     return " ".join(lines[min(a, max(0, n - 8)):max(b, n + 6)])
 
 
+def ignored_pending() -> set[tuple[str, str]]:
+    """Líneas revisadas a mano que no son un pendiente: (informe, primeros 60 caracteres)."""
+    if not IGNORED.exists():
+        return set()
+    return {(x["file"], x["prefix"]) for x in json.loads(IGNORED.read_text(encoding="utf-8"))}
+
+
+SKIPPED = ignored_pending()
+
+
 def review(rel: str) -> dict:
     """Fase map: analiza un informe."""
     path = ROOT / rel
@@ -79,7 +90,7 @@ def review(rel: str) -> dict:
             out["done"].append({"line": n, "addrs": addrs, "text": short})
             if not EVIDENCE.search(line) and not EVIDENCE.search(section_text(lines, n)):
                 out["errors"].append({"kind": "VERIFICADO sin evidencia", "line": n, "text": short})
-        elif PENDING.search(line) and not line.lstrip().startswith("#"):
+        elif PENDING.search(line) and not line.lstrip().startswith("#") and (rel, line.strip()[:60]) not in SKIPPED:
             out["pending"].append({"line": n, "text": short})
     for n, line in enumerate(lines, 1):
         for target in LINK.findall(line):

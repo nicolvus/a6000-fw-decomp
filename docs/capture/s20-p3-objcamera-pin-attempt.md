@@ -70,7 +70,7 @@ cerraría el contrato de `Camera.out0`**.
 
 Se necesita recuperar los límites de función reales de `libObj.so` (RTTI /
 vtable walking, o un análisis Ghidra que SÍ funcione para esta librería —
-pendiente de depurar por qué `scripts/libobj_dec.sh`/`DecompAt.java` falla
+pendiente de depurar por qué `scripts/libobj_dec.sh`/`DecompAt.java` falla **NO_VERIFICADO**
 aquí cuando sí funciona para `av-cam.bin`) antes de poder atribuir con
 confianza el manejador de `0x98f974` a una clase concreta. Sin eso, P3 sigue
 NO_VERIFICADO tal como lo dejó S19-04/05.

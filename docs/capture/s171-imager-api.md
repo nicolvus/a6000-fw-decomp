@@ -42,7 +42,7 @@ como fichero.
 
 **Matiz**: el módulo que lo contiene (`Mount_DividedInfo`) **existe en los tres** firmware
 (5/3/5); lo exclusivo del A6300 es la **variante `SteadyShotInfo`**. La A6000 **no** carece de
-estabilización (tiene el subsistema IS/EIS de **S164**): lo que le falta es **este canal del
+estabilización (tiene el subsistema IS/EIS de **S164**): lo que le falta es **este canal del **NO_VERIFICADO**
 objetivo** y la entrada de API `GetImagerStabilizationTime`.
 
 **Efecto en S51: NINGUNO — S51 sigue A=NO, B=NO, C=NO.** Son diferencias de **firmware**; la

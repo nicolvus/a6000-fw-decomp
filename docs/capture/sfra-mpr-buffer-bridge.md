@@ -55,7 +55,7 @@ layout de A; no escribir offsets de `mainJpg` basándose sólo en su orden.
 **VERIFICADO:** al cerrar esta línea no existía
 `analysis/stillinfo-layout.json`. Se comprobó su presencia varias veces y no
 se editó ningún archivo de A. La diferencia `0x28c`/`0x6b0` no demuestra por sí
-sola dónde ocurre toda la conversión LIRO→Linux; falta ese tramo.
+sola dónde ocurre toda la conversión LIRO→Linux; falta ese tramo. **NO_VERIFICADO**
 
 ## B-02 — dominio DMM y resolución
 

@@ -84,7 +84,7 @@ corrección.
 - No se ha emulado la forma de onda para construir una secuencia real de varios paquetes
   (eso exigiría extender el modelo de R21 a tramas múltiples); la prueba es de control de flujo
   por bytes, no de ejecución.
-- `[0xc0010004]`/`[0xc0010008]` son globales: no se ha comprobado si sobreviven entre llamadas
+- `[0xc0010004]`/`[0xc0010008]` son globales: no se ha comprobado si sobreviven entre llamadas **NO_VERIFICADO**
   distintas a `serial_entry` dentro del mismo arranque (estado persistente en SRAM) ni qué los
   reinicia; `serial_entry` solo llama a esta función una vez por invocación (R34), así que dentro
   de una misma invocación no hay contaminación cruzada, pero no se ha trazado qué pasa entre

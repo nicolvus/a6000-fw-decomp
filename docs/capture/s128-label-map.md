@@ -32,7 +32,7 @@ comunes, 0.48): la fw3.21 reescribió la instrumentación del imager (S124) y lo
 
 ## Abierto / NO VERIFICADO
 
-- Para los 20 "NUEVO/PROPIO" no se ha comprobado uno por uno si el contenido es nuevo o si la
+- Para los 20 "NUEVO/PROPIO" no se ha comprobado uno por uno si el contenido es nuevo o si la **NO_VERIFICADO**
   A7S lo etiqueta con otro nombre.
 - Si el conjunto de mensajes nuevos de la fw3.21 introduce alguna capacidad que la A7S no tiene
   (más allá de la instrumentación).

@@ -16,7 +16,7 @@ Etiquetas: `VERIFICADO` / `INFERENCIA` / `NO_VERIFICADO`. Conclusión S51 (A=NO,
 
 ## 2. Inventario único
 
-Veredicto: **VIGENTE** (útil y sin descartar), **AJUSTADA** (vigente con la corrección indicada), **PARCIAL** (parte ya resuelta con datos existentes) o **BLOQUEADA** (falta una herramienta o hardware). Riesgo: B bajo, M medio, A alto.
+Veredicto: **VIGENTE** (útil y sin descartar), **AJUSTADA** (vigente con la corrección indicada), **PARCIAL** (parte ya resuelta con datos existentes) o **BLOQUEADA** (falta una herramienta o hardware). Riesgo: B bajo, M medio, A alto. **NO_VERIFICADO**
 
 | ID | Qué mide | Veredicto | Utilidad / motivo y ajuste | Riesgo |
 |---|---|---|---|---|
@@ -38,13 +38,13 @@ Veredicto: **VIGENTE** (útil y sin descartar), **AJUSTADA** (vigente con la cor
 | P15 | `0xf292b000` (+0) | VIGENTE | Solo si P13 va limpia. Cierra E13 solo en parte (identidad sin hoja de datos) | M |
 | P16 | Segunda matriz `0x43e80160` | **PARCIAL** | El volcado del 20-10 ya la muestra **con datos** (201 palabras no nulas en 1 KiB; primera palabra 0, nulos los primeros 20 B), mientras S328 la daba a cero en la imagen estática. `INFERENCIA`: hay productor en ejecución (o la zona es compartida); no se sabe quién escribe ni si el bucle recorre esos datos. La prueba pasa a ser **dinámica** (¿cuándo se llena, cambia con drive mode?) | B |
 | P17 | Línea base de P7 | **FUSIONADA con P7** | Misma medición; se ejecuta primero | B |
-| P18 | Gates `+3/+6` del estado IMX210 (`0x83f72d00`) | **PARCIAL** | En reposo, 32 B a cero en el volcado del 20-10 (coherente con Backup `0x3000b` = gates a 0). Falta live view, medio pulsado y disparo | B |
+| P18 | Gates `+3/+6` del estado IMX210 (`0x83f72d00`) | **PARCIAL** | En reposo, 32 B a cero en el volcado del 20-10 (coherente con Backup `0x3000b` = gates a 0). Falta live view, medio pulsado y disparo | B **NO_VERIFICADO** |
 | P19 | Latencia y ráfaga, mecánico vs EFCS | VIGENTE | Complemento de P8; sin riesgo | B |
 | P20 | `dmesg`/logs durante un ciclo de disparo | VIGENTE | Barata y puede dar de golpe la vista temporal de los módulos decodificados (S181–S200, S500–S627). Conviene hacerla **primero** | B |
 | P21 | Modos fuera del vocabulario (`0x4c`, `0x4e`) | **AJUSTADA** | `camera_drivemode_override.py` escribe el byte `D+0x86` **directamente en RAM**: no pasa por el setter que S324/S333 muestran que rechaza `>0x47`. Prueba, por tanto, si el consumidor aguas abajo tolera un valor que el setter nunca dejaría pasar, no el «rechazo» que prometía el plan. Sigue siendo opcional | M-A |
 | **P22** (nueva) | Traza lógica de `CIS0_SCK/SI/XCS`, `CIS0_VD`, `CIS0_IMG_RST` y XPI (CN0400 pin 6) en foto mecánica 1/1000 s, 1/4 s y EFCS | VIGENTE (nueva) | Propuesta en S55, S57 y S31 («captura pasiva de VD/lectura/interrupciones»), listada como F4 pero sin número. Decodificar con `analysis/s56/p2s_emu.frames`; buscar `CC→C4` de ID1, flancos de XPI y fin respecto de VD. Es la prueba que podría dar el «fin de integración electrónico» (E9, R4 de la tesis). Absorbe el caso A6000 de P9. Requiere abrir la cámara | M |
 | **P23** (nueva) | Lectura de `0xf2a1xxxx` (registros BIONZ/GPIO) justo tras el flanco de `GPIO_9`, mecánico vs EFCS | VIGENTE (nueva) | S55 la pide («implica registrar `0xf2a1xxxx`»). Complemento de P5 sin abrir la cámara. Misma cautela de MMIO que P13 | M |
-| **P24** (nueva) | Valores que solo existen en ejecución: rectángulos de entrada de `0x436c25d0` (E20), `params[+9]` = 2/3 y activación de `RecordImage`/cola `0x40193`, `[estado+8]` (S134, S384) | **BLOQUEADA** | S134 y S384 piden «trazado dinámico» y los remiten a «P1», que solo lee `G+0x808`: **la referencia era incorrecta**. Estos valores están en registros o pila; no se leen con `dd` sobre RAM. Hace falta un depurador/hook en cámara que no existe | — |
+| **P24** (nueva) | Valores que solo existen en ejecución: rectángulos de entrada de `0x436c25d0` (E20), `params[+9]` = 2/3 y activación de `RecordImage`/cola `0x40193`, `[estado+8]` (S134, S384) | **BLOQUEADA** | S134 y S384 piden «trazado dinámico» y los remiten a «P1», que solo lee `G+0x808`: **la referencia era incorrecta**. Estos valores están en registros o pila; no se leen con `dd` sobre RAM. Hace falta un depurador/hook en cámara que no existe | — **NO_VERIFICADO** |
 
 Nota sobre equivalencias: `0x43xxxxxx` virtual = `0x83xxxxxx` físico (dirección de P1: `0x83e9bd50` = `G+0x808` con `G=0x83e9b548`; verificado contra el volcado).
 

@@ -186,7 +186,7 @@ reposo, fw 3.21). **No es una foto.**
 | `cap+0x5c8` (bloque 48 B) | `cap+0x5c8` | **no leído** | `cap` no localizado | **N** |
 | `cap+0x64c` (param SetExposure) | `cap+0x64c` | **no leído** | `cap` no localizado | **N** |
 
-**Lo que falta y bloquea la decisión:** `record+0xc`, `record+0x1c`, `record+0x20`, `record+0x64`,
+**Lo que falta y bloquea la decisión:** `record+0xc`, `record+0x1c`, `record+0x20`, `record+0x64`, **NO_VERIFICADO**
 `record+0x68` y `record+0x6d` **durante o inmediatamente después de una foto**. Esos seis campos son
 la entrada real del productor nativo y no se pueden sustituir por 4219/3891/0 sin convertirlos en una
 suposición.
@@ -452,14 +452,14 @@ predicado Devuelve 1. C3 debe tratar ese caso como fallo y no escribir `cap+0x64
 | B | ¿Se identificó el registro de fotografía correcto? | **SÍ**: A/B por GOT y `0x4383fb6c`; el banco activo se decide en ejecución | estático; foto **N** |
 | C | ¿Se identificó el objeto settings correcto? | **SÍ**: `0x43f79f94`; Tv en `+0x162` | estático + volcado |
 | D | ¿Se leyó físicamente el Tv real de la cámara? | **NO** en una foto; sí `0x15e8` (1/60) en reposo | volcado de reposo |
-| E | ¿Se leyó el período de línea real? | **NO** | falta lectura de foto |
-| F | ¿Se leyó el VTS real? | **NO** | falta lectura de foto |
-| G | ¿El VTS coincide con 4219? | **NO demostrado** | falta lectura |
-| H | ¿La diferencia frente a 4266 tiene explicación demostrada? | **NO** | falta lectura del descriptor |
+| E | ¿Se leyó el período de línea real? | **NO** | falta lectura de foto **NO_VERIFICADO** |
+| F | ¿Se leyó el VTS real? | **NO** | falta lectura de foto **NO_VERIFICADO** |
+| G | ¿El VTS coincide con 4219? | **NO demostrado** | falta lectura **NO_VERIFICADO** |
+| H | ¿La diferencia frente a 4266 tiene explicación demostrada? | **NO** | falta lectura del descriptor **NO_VERIFICADO** |
 | I | ¿Se confirmó el factor `settings+0x4b8`? | **SÍ, como `imager+0x4b8` = 1** (nombre corregido) | volcado real |
 | J | ¿Se confirmó el valor de `cap+0x11b0`? | **NO** (sí sus entradas: 2 y 0 → gate 0) | estático + volcado |
 | K | ¿Se identificó la semántica de esa compuerta? | **PARCIAL**: mecanismo sí; significado del modo 3, no | estático |
-| L | ¿Se estableció la vigencia temporal para una captura concreta? | **NO** | falta lectura de foto |
+| L | ¿Se estableció la vigencia temporal para una captura concreta? | **NO** | falta lectura de foto **NO_VERIFICADO** |
 | M | ¿La emulación nativa produce r5 coherente con los parámetros leídos? | **SÍ con 4219 y predicado 0; NO con el predicado observado (1)** | emulación |
 | N | ¿C3 puede usar el productor sin alterar el registro global? | **SÍ con copia a scratch**, sujeto a VTS/predicado | estático + emulación |
 | O | ¿Se identificaron los efectos secundarios relevantes? | **SÍ**: `+0xd8..+0xdc` incluidos; predicado global | emulación + bytes |

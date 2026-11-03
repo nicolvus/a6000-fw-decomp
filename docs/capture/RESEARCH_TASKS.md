@@ -33,7 +33,7 @@ Definiciones de tarea: docs/capture/tasks/*.md. Logs Codex: analysis/codex-logs/
 - B: handle SFRA = unidad DMM u16 mapeable en Linux; GET_JPEG saca el buffer del ring (propiedad al cliente); GET_JPEG solo da {handle,size>>7} (sin EXIF/thumb/scn; CORRIGE la hipótesis previa de EXIF/SCN por fotograma = DESCARTADO). Tamaño redondeado a 128 B: hay que conocer el tamaño exacto (parser JPEG). Compatibilidad con mainJpg NO VERIFICADA.
 - C: RelMgr empieza en 0x4379d838 (no ..3a); 1 y 0x10 son ÍNDICES, no bits S1/S2. Selector inicial de secuencia 0x437eabfc (desde 0x437df338) = divergencia candidata. 0x43841070 NO es el selector de secuencia. 0x3011 (CamUser 0x40193) enlace a CaptureStart NO VERIFICADO.
 - Claude (F parcial): ver docs/capture/sfra-linux-client.md (buzones, DMM, propiedad).
-- Implicación arquitectónica provisional: un JPEG SFRA no trae miniatura/EXIF => arquitectura B pura (Linux) exige fabricar thumb+EXIF+reserva; arquitectura A/C (LIRO produce main+thumb+scn con etapas existentes desde un YC y Stage_Notify) reutiliza más. Decisión pendiente de D/F.
+- Implicación arquitectónica provisional: un JPEG SFRA no trae miniatura/EXIF => arquitectura B pura (Linux) exige fabricar thumb+EXIF+reserva; arquitectura A/C (LIRO produce main+thumb+scn con etapas existentes desde un YC y Stage_Notify) reutiliza más. Decisión pendiente de D/F. **NO_VERIFICADO**
 
 ## Ronda 2
 D, E, F y C2 se interrumpieron al agotarse el límite de Codex sin dejar entregables. Síntesis y preguntas abiertas: `silent-architecture-comparison.md`.

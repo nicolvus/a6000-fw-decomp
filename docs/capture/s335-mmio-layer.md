@@ -76,7 +76,7 @@ La capa equivalente está en `0x436dbdf8..0x436dbe8c`, con los mismos cuatro lit
 ## Límites
 
 - Las direcciones se identifican como MMIO por su rango (`0xf…`) y por el acceso directo; **no hay datasheet** que diga qué bloque es `0xf292b000` ni qué controla `0xfc02a00c`.
-- No se ha verificado si el bloque pertenece al driver del sensor, al P2S/DFE o a otro periférico.
+- No se ha verificado si el bloque pertenece al driver del sensor, al P2S/DFE o a otro periférico. **NO_VERIFICADO**
 - Sin runtime no se observa el efecto de las escrituras.
 - S51 (A/B/C) no cambia.
 

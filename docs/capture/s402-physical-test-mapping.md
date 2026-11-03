@@ -84,7 +84,7 @@
 - **Objetivo**: Ver registros reales programados en sensor durante exposición Silent A7S vs A6000 tipo 0.
 - **Metodología**: Analizador lógico en bus de control sensor (pines IMX210/IMX235 serial interface) durante captura.
 - **Confirmaría**: Qué registros `SetExposure`/`SetRead`/`SetMode` programa cada driver en modo Silent/electrónico.
-- **Refutaría**: Si A6000 IMX210 programa mismos registros que A7S IMX235 → driver capaz, falta activación.
+- **Refutaría**: Si A6000 IMX210 programa mismos registros que A7S IMX235 → driver capaz, falta activación. **NO_VERIFICADO**
 - **Riesgo**: Requiere acceso físico a pines sensor (flex PCB); **muy invasivo**.
 
 ### P10 — Forzar campo `captura+0x804` equivalente A6000 a valor 2 (Silent) + disparo
@@ -128,7 +128,7 @@
 
 - **P5 es la prueba única** que puede confirmar/refutar las Diferencias 3 y 5 (bit CAIF 0x20 y predicado Darwin `no_silent`) de forma directa. Sin P5, toda la cadena CAIF→Darwin queda en **INFERENCIA**.
 - **P7 es obligatoria** en cualquier prueba con disparo (P3, P4, P10) para tener criterio objetivo de "silencioso".
-- **P10** es la prueba más directa para verificar si `av-cam.bin` A6000 tiene la **capacidad latente** de poner bit 0x20 (como A6300) y solo le falta el origen del valor.
+- **P10** es la prueba más directa para verificar si `av-cam.bin` A6000 tiene la **capacidad latente** de poner bit 0x20 (como A6300) y solo le falta el origen del valor. **NO_VERIFICADO**
 - Las pruebas nuevas (P9–P12) **no se ejecutan** sin autorización expresa y plan de seguridad; se documentan aquí para completitud.
 
 ---

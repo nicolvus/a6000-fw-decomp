@@ -181,5 +181,5 @@ LIRO 0x437efe78 → msg 0x1006
 
 Se conservaron solo las dos salidas autorizadas y se eliminó la copia privada de Ghidra. No se editan README/CONTEXT por la restricción expresa de _common.md. No hay commit: este directorio no es un repositorio Git utilizable. No se instalaron herramientas.
 
-**VEREDICTO: CAMBIOS** — evidencia estática entregada; aceptación extremo a extremo pendiente de los bloqueos señalados.
+**VEREDICTO: CAMBIOS** — evidencia estática entregada; aceptación extremo a extremo pendiente de los bloqueos señalados. **NO_VERIFICADO**
 

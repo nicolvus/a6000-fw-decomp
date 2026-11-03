@@ -172,6 +172,99 @@
    }
   },
   {
+   "file": "docs/capture/darwin-via-actualizacion-2026-10-26.md",
+   "line": 36,
+   "text": "El tipo de mecanismo de Darwin es el byte `0x20000050+ch`, que el firmware principal le envía por CAIF (categoría `0x2d`, entrada 33, S54); el escritor/emisor del valor no está localizado. Si la cámar",
+   "overlap": 0.1,
+   "tier": "B",
+   "verified_in": {
+    "0x20000050": [
+     "analysis/s101_shutter_type/block238/block238_consumers.md",
+     "docs/capture/rea-tema3-cortinas-darwin.md",
+     "docs/capture/s21-claude-button-to-shutter-order.md"
+    ]
+   }
+  },
+  {
+   "file": "docs/capture/e24-04-dictamen-seguridad.md",
+   "line": 87,
+   "text": "| **Ingeniería inversa que falta** | E24-02b (clausura de `Upd`), notificación de fin de rearme, quién arranca la máquina exterior, comportamiento del arranque | Quién pide la secuencia al rearme en D",
+   "overlap": 0.0,
+   "tier": "B",
+   "verified_in": {
+    "0x20000050": [
+     "analysis/s101_shutter_type/block238/block238_consumers.md",
+     "docs/capture/darwin-via-actualizacion-2026-10-26.md",
+     "docs/capture/rea-tema3-cortinas-darwin.md"
+    ]
+   }
+  },
+  {
+   "file": "docs/capture/e24-05d-consumidor-estado-darwin-bionz.md",
+   "line": 12,
+   "text": "| **B** | ¿Se identificó la función que consume el bit 24, o la señal alternativa? | **NO** | **Contradicción demostrada para la hipótesis de E24-05a:** Darwin no exporta la máscara. Sus únicos lector",
+   "overlap": 0.05,
+   "tier": "B",
+   "verified_in": {
+    "0x20002bd0": [
+     "docs/capture/e24-05a-captura-fin-bionz-darwin.md"
+    ]
+   }
+  },
+  {
+   "file": "docs/capture/e25-11-r5-bionz-analisis.md",
+   "line": 27,
+   "text": "medida en T046/T047 (E = (4219 − `r5`)·15,2 µs). **Sin verificar:** unidades de `0x4382fa94` y de `[obj+0x4da]`; que `[r8]` sea exactamente 4219. **NO_VERIFICADO**",
+   "overlap": 0.0,
+   "tier": "B",
+   "verified_in": {
+    "0x4382fa94": [
+     "docs/capture/s58-exposure-cycle.md"
+    ]
+   }
+  },
+  {
+   "file": "docs/capture/e25-16-r5-autonomo-fotografia.md",
+   "line": 438,
+   "text": "| A | ¿Existe un cálculo autónomo de `r5` en BIONZ a partir del Tv de la foto? | **SÍ, lógicamente** (productor nativo `0x4383fa40`, llamado por los dos constructores) | V bytes/emulación; falta prueb",
+   "overlap": 0.14,
+   "tier": "B",
+   "verified_in": {
+    "0x4383fa40": [
+     "docs/capture/efcs-darwin-silent-integracion.md"
+    ]
+   }
+  },
+  {
+   "file": "docs/capture/e25-desactivacion-mecanica.md",
+   "line": 24,
+   "text": "| **A** | ¿Existe una vía volátil **demostrada** para seleccionar L0? | **NO** | El lado Darwin tiene una escritura selectiva posible por `InitCom 0x16` (1 B en `0x20000050`, modelo en §3.3), pero **f",
+   "overlap": 0.06,
+   "tier": "B",
+   "verified_in": {
+    "0x20000050": [
+     "analysis/s101_shutter_type/block238/block238_consumers.md",
+     "docs/capture/darwin-via-actualizacion-2026-10-26.md",
+     "docs/capture/rea-tema3-cortinas-darwin.md"
+    ]
+   }
+  },
+  {
+   "file": "docs/capture/e26-r35-serial-receiver-multi-paquete.md",
+   "line": 87,
+   "text": "- `[0xc0010004]`/`[0xc0010008]` son globales: no se ha comprobado si sobreviven entre llamadas **NO_VERIFICADO**",
+   "overlap": 0.0,
+   "tier": "B",
+   "verified_in": {
+    "0xc0010004": [
+     "docs/capture/e26-r11-bootrom-uart-physical-access.md"
+    ],
+    "0xc0010008": [
+     "docs/capture/e26-r11-bootrom-uart-physical-access.md"
+    ]
+   }
+  },
+  {
    "file": "docs/capture/electronic-still-low-resolution.md",
    "line": 61,
    "text": "- VERIFICADO: `SetExposure 0x436d6f6c` recibe una estructura con tres valores (14, 12 y 12 bits) que escribe en registros sombra por pares «byte bajo + nibble/6 bits alto», y un campo de submodo `+9` ",
@@ -300,6 +393,18 @@
    "verified_in": {
     "0x932a44": [
      "docs/capture/s21-codex-exposure-to-library.md"
+    ]
+   }
+  },
+  {
+   "file": "docs/capture/physical-test-review-2026-10-26.md",
+   "line": 41,
+   "text": "| P18 | Gates `+3/+6` del estado IMX210 (`0x83f72d00`) | **PARCIAL** | En reposo, 32 B a cero en el volcado del 20-10 (coherente con Backup `0x3000b` = gates a 0). Falta live view, medio pulsado y dis",
+   "overlap": 0.13,
+   "tier": "B",
+   "verified_in": {
+    "0x83f72d00": [
+     "docs/capture/e21-lecturas-backups-2026-10-26.md"
     ]
    }
   },
@@ -581,6 +686,20 @@
      "docs/capture/imx210-video-readout.md",
      "docs/capture/rea-tema2-imx210-parametros.md",
      "docs/capture/s31-camera-main-sync-strings.md"
+    ]
+   }
+  },
+  {
+   "file": "docs/capture/s17-main-s2-integration.md",
+   "line": 105,
+   "text": "- Relación entre el evento Java `onShutterKeyDown` (PMCADemo/Android) y `RelMgr::0x4379d838` nativo — pendiente de integración con hallazgo de Claude B. **NO_VERIFICADO**",
+   "overlap": 0.08,
+   "tier": "B",
+   "verified_in": {
+    "0x4379d838": [
+     "docs/capture/s18-claude-c-relmgr.md",
+     "docs/capture/s21-claude-button-to-shutter-order.md",
+     "docs/capture/shutter-trigger-state-machine.md"
     ]
    }
   },
@@ -1084,6 +1203,18 @@
    }
   },
   {
+   "file": "docs/capture/s19-post-s2-cancellation-states.md",
+   "line": 53,
+   "text": "**S19-14 (f): `Stage_RawPlayInit` y reutilización de etapas.** Es la opción pendiente más útil: las etapas LIRO anteriores revelan contratos de retorno y limpieza (`0x437f22d4`), pero falta recuperar ",
+   "overlap": 0.0,
+   "tier": "B",
+   "verified_in": {
+    "0x437f22d4": [
+     "docs/capture/s19-13-post-s2-cancellation-dmm.md"
+    ]
+   }
+  },
+  {
    "file": "docs/capture/s20-codex-mpr-13de98-13dbb0.md",
    "line": 39,
    "text": "| NO_VERIFICADO | Registro/commit/rollback DCF, medio SD, durabilidad y publicación en reproducción para el still; tampoco queda identificado el registro del wrapper como callback. | No se recupera aq",
@@ -1137,6 +1268,32 @@
      "docs/capture/s201-imx210-imx235-registers.md",
      "docs/capture/s302-drive-modes.md",
      "docs/capture/s314-selector-object.md"
+    ]
+   }
+  },
+  {
+   "file": "docs/capture/s21-claude-button-to-shutter-order.md",
+   "line": 132,
+   "text": "3. **L5**: falta qué estado de la máquina `0x302d9` está activo al llegar `0x100`. El registro de `0x43807f4c` está verificado; su activación, no. **NO_VERIFICADO**",
+   "overlap": 0.09,
+   "tier": "B",
+   "verified_in": {
+    "0x43807f4c": [
+     "analysis/rea-independent/out/C2_CHAIN_ANALYSIS.md",
+     "analysis/session19/codex-runs/run-001/docs/s19-s2-domain-bridge.md",
+     "docs/capture/capture-stage-reuse.md"
+    ]
+   }
+  },
+  {
+   "file": "docs/capture/s21-claude-button-to-shutter-order.md",
+   "line": 133,
+   "text": "4. **L11**: falta la codificación tag `0x12`/`0x13` → trama CAIF en `0x436bc140` y su correspondencia con el opcode del parser Darwin. **NO_VERIFICADO**",
+   "overlap": 0.0,
+   "tier": "B",
+   "verified_in": {
+    "0x436bc140": [
+     "docs/capture/s51-codex-t2-t3.md"
     ]
    }
   },
@@ -1262,6 +1419,20 @@
    "verified_in": {
     "0x15d6c0": [
      "docs/capture/s27-effect-postprocess-rewire.md"
+    ]
+   }
+  },
+  {
+   "file": "docs/capture/s301-a7s-state-xref-sweep.md",
+   "line": 109,
+   "text": "falta seguir sus escritores hasta el selector `0x43826d58` (siguiente ítem). **NO_VERIFICADO**",
+   "overlap": 0.12,
+   "tier": "B",
+   "verified_in": {
+    "0x43826d58": [
+     "docs/capture/s201-imx210-imx235-registers.md",
+     "docs/capture/s302-drive-modes.md",
+     "docs/capture/s314-selector-object.md"
     ]
    }
   },
@@ -1457,6 +1628,56 @@
    }
   },
   {
+   "file": "docs/capture/s58-conclusions.md",
+   "line": 71,
+   "text": "La respuesta final es **parcial**: se reconstruyó el cálculo y la configuración A7S bajo condiciones precisas, pero no qué configuración física suficiente falta al IMX210. El experimento estático de m",
+   "overlap": 0.0,
+   "tier": "B",
+   "verified_in": {
+    "0x437876dc": [
+     "docs/capture/rea-tema2-imx210-parametros.md",
+     "docs/capture/s59-conclusions.md",
+     "docs/capture/s59-sol.md"
+    ],
+    "0x437aa65c": [
+     "docs/capture/s59-sol.md",
+     "docs/capture/s61-conclusions.md",
+     "docs/capture/s61-imx210-parameter-origin.md"
+    ]
+   }
+  },
+  {
+   "file": "docs/capture/s58-imx210-timing-units.md",
+   "line": 10,
+   "text": "| T | Tv≤0xc00→0xffffffff; 0xc01→4084937500 | saturación de 32 bits; unidad física sin verificar **NO_VERIFICADO** |",
+   "overlap": 0.0,
+   "tier": "B",
+   "verified_in": {
+    "0xffffffff": [
+     "docs/capture/e24-05d-consumidor-estado-darwin-bionz.md"
+    ]
+   }
+  },
+  {
+   "file": "docs/capture/s58-imx210-timing-units.md",
+   "line": 37,
+   "text": "Próximo paso: recuperar la fuente de los 12 u16 que `0x437aa65c` copia desde `0x437876dc()+0xdd0` y un estado de M/Tv alcanzable por modo. Para asociar estos números al fin físico de integración hace ",
+   "overlap": 0.12,
+   "tier": "B",
+   "verified_in": {
+    "0x437876dc": [
+     "docs/capture/rea-tema2-imx210-parametros.md",
+     "docs/capture/s59-conclusions.md",
+     "docs/capture/s59-sol.md"
+    ],
+    "0x437aa65c": [
+     "docs/capture/s59-sol.md",
+     "docs/capture/s61-conclusions.md",
+     "docs/capture/s61-imx210-parameter-origin.md"
+    ]
+   }
+  },
+  {
    "file": "docs/capture/s61-imx210-parameter-origin.md",
    "line": 40,
    "text": "* Dependencia de modo: B usa `obj8[3]` acotado a 0x0D..0x0F para elegir el 6.º par; `0x437aa65c` (rama `src+0xb4`) y `0x437a9d30` (cero) son constructores de etapa distintos. Qué constructor atiende a",
@@ -1539,6 +1760,20 @@
    }
   },
   {
+   "file": "docs/capture/silent-architecture-comparison.md",
+   "line": 41,
+   "text": "1. (D) Tabla RESUELTA a nivel de filas (ver `capture-stage-reuse.md`); falta etiquetar los estados de la fila 8 (0x43b1be36) y ver cuáles aceptan un YC de LV. **NO_VERIFICADO**",
+   "overlap": 0.1,
+   "tier": "B",
+   "verified_in": {
+    "0x43b1be36": [
+     "docs/capture/capture-stage-reuse.md",
+     "docs/capture/s18-claude-c-relmgr.md",
+     "docs/capture/s19-stage-rawplayinit-reuse.md"
+    ]
+   }
+  },
+  {
    "file": "docs/capture/silent-integration-design.md",
    "line": 35,
    "text": "- [DESCARTADO por línea B, 2026-10-16: esas cadenas pertenecen a `jobSetPictureInfoCmd` (entrada de ISS para fotos de tarjeta), no a GET_JPEG; SFRA solo entrega {handle,size>>7}; no hay EXIF/thumb/scn",
@@ -1572,6 +1807,20 @@
     "0x930464": [
      "docs/capture/record-still-image-route.md",
      "docs/capture/sony-dcf-playback.md"
+    ]
+   }
+  },
+  {
+   "file": "docs/capture/silent-integration-design.md",
+   "line": 118,
+   "text": "- El bloqueo de disparo en LIRO (consumidor de la cola `0x40193`/`0x3011`) se acerca un nivel: se identificó el dispatcher inmediatamente inferior (`0x43807f4c`, dominio `0x100..0x207`), pero el puent",
+   "overlap": 0.15,
+   "tier": "B",
+   "verified_in": {
+    "0x43807f4c": [
+     "analysis/rea-independent/out/C2_CHAIN_ANALYSIS.md",
+     "analysis/session19/codex-runs/run-001/docs/s19-s2-domain-bridge.md",
+     "docs/capture/capture-stage-reuse.md"
     ]
    }
   },
@@ -1808,133 +2057,22 @@
    "open_line": 64,
    "done_line": 15,
    "overlap": 0.25
+  },
+  {
+   "file": "docs/capture/s345-mask-reachability.md",
+   "addrs": [
+    "0x43ad9b50"
+   ],
+   "open_line": 86,
+   "done_line": 15,
+   "overlap": 0.75
   }
  ],
  "pending_unmarked": [
   {
-   "file": "docs/capture/PENDIENTES_FINALES.md",
-   "line": 18,
-   "text": "> sigue pendiente de análisis estático; `libObj.so` sí contiene el código local de"
-  },
-  {
-   "file": "docs/capture/RESEARCH_TASKS.md",
-   "line": 36,
-   "text": "- Implicación arquitectónica provisional: un JPEG SFRA no trae miniatura/EXIF => arquitectura B pura (Linux) exige fabricar thumb+EXIF+reserva; arquitectura A/C (LIRO produce main+thumb+scn con etapas"
-  },
-  {
-   "file": "docs/capture/a6300-silent-comparison.md",
-   "line": 86,
-   "text": "identifica el modo Silent**: hacen falta las diferencias de lectura,"
-  },
-  {
-   "file": "docs/capture/a6300-silent-comparison.md",
-   "line": 190,
-   "text": "del transporte. Falta comprobar su interpretación en el receptor físico."
-  },
-  {
-   "file": "docs/capture/a6300-silent-comparison.md",
-   "line": 227,
-   "text": "**VEREDICTO: CAMBIOS**. Falta conectar la selección con la programación"
-  },
-  {
-   "file": "docs/capture/a6300-silent-software.md",
-   "line": 86,
-   "text": "faltan una prueba de captura física y la capacidad necesaria del IMX210."
-  },
-  {
-   "file": "docs/capture/a7s-silent-reconstruction.md",
-   "line": 52,
-   "text": "| H1 código Silent oculto en A6000 | **Mayormente refutada** | Persisten el comando `0x40e3` y su receptor (`+0x238`) | Faltan conversor, rama de selector, rama de política y modos IMX210 |"
-  },
-  {
-   "file": "docs/capture/a7s-silent-reconstruction.md",
-   "line": 63,
-   "text": "faltan los dos en LIRO y el IMX210 no tiene tabla para `0x4e/0x4f`. Activar «código existente» no es posible: no existe."
-  },
-  {
-   "file": "docs/capture/branch-codex-camera-yc.md",
-   "line": 50,
-   "text": "La preparación valida presencia de ambos descriptores, que `DmmOpen` funcione, colorimetría `0..3` y rango Y `0..1`. No valida formato de píxel, stride, submuestreo, tamaño mínimo frente al canvas ni "
-  },
-  {
-   "file": "docs/capture/capture-static-followup-2026-10-25.md",
-   "line": 16,
-   "text": "| 5. S176 | **Entregables reproducidos**, con dos lectores y pruebas. Default 6 en el primer lector; ocho anulaciones a cero en el segundo. | Significado físico y ejecución concreta de esas lecturas; "
-  },
-  {
-   "file": "docs/capture/capture-static-followup-2026-10-25.md",
-   "line": 40,
-   "text": "debe convertir la falta de asociación a ese adaptador en un bloqueo de la"
-  },
-  {
-   "file": "docs/capture/claude-main-bridge-verification.md",
-   "line": 76,
-   "text": "| Camera→Effect→(Renderer y Recorder) simultáneos son posibles a nivel de TopologyManager | INFERENCIA — depende de si ObjEffect los permite (pendiente de la Rama A) |"
-  },
-  {
-   "file": "docs/capture/darwin-state-machine.md",
-   "line": 196,
-   "text": "**VEREDICTO: CAMBIOS**. Falta conectar señal, protocolo y lectura fotográfica."
-  },
-  {
-   "file": "docs/capture/darwin-via-actualizacion-2026-10-26.md",
-   "line": 14,
-   "text": "3. Además hace falta que el firmware principal produzca el paquete Silent (S53: LIRO A6000 no fija bit `0x20`, modo 2 ni clase 0): el parche de Darwin solo no basta."
-  },
-  {
-   "file": "docs/capture/darwin-via-actualizacion-2026-10-26.md",
-   "line": 36,
-   "text": "El tipo de mecanismo de Darwin es el byte `0x20000050+ch`, que el firmware principal le envía por CAIF (categoría `0x2d`, entrada 33, S54); el escritor/emisor del valor no está localizado. Si la cámar"
-  },
-  {
-   "file": "docs/capture/darwin-via-actualizacion-2026-10-26.md",
-   "line": 69,
-   "text": "**Hipótesis (INFERENCIA, no demostrada):** el bloque de 210 B es el único mensaje BIONZ→Darwin lo bastante grande para llevar los 24 bytes de tipo de mecanismo (`[0x20000050+ch]`). Lo que falta es (a)"
-  },
-  {
-   "file": "docs/capture/darwin-via-actualizacion-2026-10-26.md",
-   "line": 116,
-   "text": "- Sin verificar: EXIF de los originales (velocidad/ISO de cada toma), que la exposición la termine el sensor a velocidades rápidas (rodadura, bandas con luz artificial), rearme, vídeo y desgaste mecán"
-  },
-  {
-   "file": "docs/capture/darwin-via-actualizacion-2026-10-26.md",
-   "line": 120,
-   "text": "Con la app y escena fija (M, f/3,5, ISO 640, RR larga apagada): luminancia media **plana de 1/4000 a 1/250 (≈63)** y creciente después (1/125 → 69, 1/60 → 80, 1/30 → 97, 1/15 → 120). El suelo de expos"
-  },
-  {
-   "file": "docs/capture/darwin-via-actualizacion-2026-10-26.md",
-   "line": 155,
-   "text": "- **Bit 2 borrado solo en la rama de foto (T031):** dispara, pero la imagen sale corrupta (lavada, magenta, rayas horizontales). b2 cambia el modo de funcionamiento o de lectura del sensor; sin hoja d"
-  },
-  {
-   "file": "docs/capture/darwin-via-actualizacion-2026-10-26.md",
-   "line": 162,
-   "text": "- **T034 (RAM, un disparo):** forzar r5=1240 en la foto (ShutMode 3) no cambia la luminancia (121,8 → 119,9). La ruta parcheada sí se ejecuta (la vista en directo queda en 1240). INFERENCIA: en ShutMo"
-  },
-  {
-   "file": "docs/capture/darwin-via-actualizacion-2026-10-26.md",
-   "line": 163,
-   "text": "- **T035 (RAM, un disparo por variante):** ShutMode 0 + r5=1240 en la foto oscurece respecto de ShutMode 0 solo (143,7 → 121,7), con imagen completa y sin corrupción. El efecto se concentra en la mita"
-  },
-  {
-   "file": "docs/capture/darwin-via-actualizacion-2026-10-26.md",
-   "line": 164,
-   "text": "- **T036 (barrido de r5 con ShutMode 0):** luminancia 143,5 (sin r5) → 138,5 (300) → 121,7 (1240) → 93,1 (2500); con 5000, 10000 y 16000 vuelve a 144 (sin efecto). La exposición de la foto completa es"
-  },
-  {
    "file": "docs/capture/darwin-via-actualizacion-2026-10-26.md",
    "line": 165,
    "text": "- **T039 (más puntos de r5 con ShutMode 0):** a 1/250 la luminancia baja de 151,8 a 4,8 al subir r5 hasta 4200, y con r5 ≥ 4300 vuelve a 152. Entre 4000 y 4200 la imagen es **corta y casi uniforme** ("
-  },
-  {
-   "file": "docs/capture/darwin-via-actualizacion-2026-10-26.md",
-   "line": 173,
-   "text": "- Candidato estático para «sin rearme»: que `0x1fe66` devuelva siempre 0, sobre el tipo 0 (mismo patrón que el parche de `0x20c74`). Riesgos sin verificar: que `0x1fa3a` se invoque sin movimiento de l"
-  },
-  {
-   "file": "docs/capture/e21-lecturas-backups-2026-10-26.md",
-   "line": 27,
-   "text": "E21 se cierra con límite. P16 queda reducida a «identificar el escritor» (ya se conoce la forma de los datos). P18: en reposo, gates a 0 en BK4 y RAM; faltan live view y disparo."
   },
   {
    "file": "docs/capture/e24-01-arranque-recuperacion.md",
@@ -1948,16 +2086,6 @@
   },
   {
    "file": "docs/capture/e24-02-protocolo-actualizacion-darwin.md",
-   "line": 15,
-   "text": "Ninguno de los NO es una imposibilidad demostrada: falta el binario del arranque (`0x0–0x41ff`)."
-  },
-  {
-   "file": "docs/capture/e24-02-protocolo-actualizacion-darwin.md",
-   "line": 108,
-   "text": "- Que el SWJ-DP esté activo tras un reinicio: por defecto sí (`SPSR`: `JTAGEN0B/1S` = 1, manual FM3); que Darwin lo desactive no se ha comprobado."
-  },
-  {
-   "file": "docs/capture/e24-02-protocolo-actualizacion-darwin.md",
    "line": 127,
    "text": "| Falta | Comprobación offline posible |"
   },
@@ -1968,23 +2096,8 @@
   },
   {
    "file": "docs/capture/e24-03-auditoria-recuperacion-usb.md",
-   "line": 12,
-   "text": "| **A** | ¿Material de recuperación completo e íntegro? | **NO** | **Íntegro: sí** (hashes y descifrados correctos, §1–§2). **Completo: no**: faltan el arranque de Darwin (`0x0–0x41ff`), Loader2/3, un"
-  },
-  {
-   "file": "docs/capture/e24-03-auditoria-recuperacion-usb.md",
    "line": 117,
    "text": "| Falta | Efecto | Cómo obtenerlo |"
-  },
-  {
-   "file": "docs/capture/e24-03-auditoria-recuperacion-usb.md",
-   "line": 138,
-   "text": "| M5 | FDAT de prueba difiere del oficial solo en lo previsto | Comparar miembros del tar (como `test_type0_fdat_differs_only_in_darwin`) | Por hacer por parche |"
-  },
-  {
-   "file": "docs/capture/e24-03-auditoria-recuperacion-usb.md",
-   "line": 139,
-   "text": "| M6 | El parche no toca `0x45c8/0x43fc`, `0x4638`, `0x51c0`, tabla `0x28c6c` y manejadores, `0xece4`, `InitCom 0x4bca`, `Upd 0x8da8`, `0x45bc`, watchdog `0xa500/0xa524`, CRC `0xa1dc` | Diff byte a by"
   },
   {
    "file": "docs/capture/e24-03-auditoria-recuperacion-usb.md",
@@ -1993,43 +2106,8 @@
   },
   {
    "file": "docs/capture/e24-04-dictamen-seguridad.md",
-   "line": 41,
-   "text": "**Integridad frente a recuperación real.** M3, M4, M5, M7, M8 y la parte formal de M1/M2 (I) prueban que *el paquete está bien hecho y que el actualizador podría aceptarlo*. Solo M6, M9 (NVRAM), M11 y"
-  },
-  {
-   "file": "docs/capture/e24-04-dictamen-seguridad.md",
    "line": 43,
    "text": "| # | Condición añadida | Estado | Por qué falta |"
-  },
-  {
-   "file": "docs/capture/e24-04-dictamen-seguridad.md",
-   "line": 87,
-   "text": "| **Ingeniería inversa que falta** | E24-02b (clausura de `Upd`), notificación de fin de rearme, quién arranca la máquina exterior, comportamiento del arranque | Quién pide la secuencia al rearme en D"
-  },
-  {
-   "file": "docs/capture/e24-04-dictamen-seguridad.md",
-   "line": 89,
-   "text": "**No se declara segura ninguna opción.** «No toca `darwin_core`» no la hace segura (2). Y lo volátil (3, 4) es seguro respecto del arranque, no respecto de que *sirva*: la evidencia actual dice que fo"
-  },
-  {
-   "file": "docs/capture/e24-05-upd-y-rearme.md",
-   "line": 16,
-   "text": "| **B** | ¿Está identificado el evento exacto que inicia la máquina exterior de rearme? | **NO** | Identificado: las tres funciones que la arrancan (`0x1fee2`, `0x1ff72`, `0x1ffce`), sus llamantes y l"
-  },
-  {
-   "file": "docs/capture/e24-05-upd-y-rearme.md",
-   "line": 18,
-   "text": "| **D** | ¿Existe una ruta de control volátil del rearme demostrada estáticamente? | **NO** | Lado Darwin demostrado (la compuerta se lee en vivo de RAM y `InitCom 0x12/0x16` escriben en ella). **Falt"
-  },
-  {
-   "file": "docs/capture/e24-05-upd-y-rearme.md",
-   "line": 20,
-   "text": "| **F** | ¿Se conoce el comportamiento del watchdog ante un bloqueo de rearme? | **NO** | Se conoce la estructura (armado/desarmado/alimentación por estado). **Faltan**: reloj/periodo del HWWDT (capít"
-  },
-  {
-   "file": "docs/capture/e24-05-upd-y-rearme.md",
-   "line": 175,
-   "text": "* **Lo que BIONZ lee** para saber que terminó (bits de la respuesta/estado) **no se localizó**: eslabón que falta para afirmar que la ruta `L0` es compatible con las esperas del BIONZ. Con `L0` el fin"
   },
   {
    "file": "docs/capture/e24-05a-captura-fin-bionz-darwin.md",
@@ -2037,119 +2115,14 @@
    "text": "1. E24-05 §«B = NO» (falta el mensaje que arranca la máquina de 49 estados) → **resuelto**: es el ID `0x0c` aceptado por `0x17f8c`; el ejecutor `0x1961c` lo arranca (una sola llamada, `0x18180`)."
   },
   {
-   "file": "docs/capture/e24-05d-consumidor-estado-darwin-bionz.md",
-   "line": 12,
-   "text": "| **B** | ¿Se identificó la función que consume el bit 24, o la señal alternativa? | **NO** | **Contradicción demostrada para la hipótesis de E24-05a:** Darwin no exporta la máscara. Sus únicos lector"
-  },
-  {
-   "file": "docs/capture/e24-05d-consumidor-estado-darwin-bionz.md",
-   "line": 16,
-   "text": "| **F** | ¿`[0,7,8,9,10]` produce las condiciones que BIONZ exige? | **NO** | BIONZ exige mensajes (§2), no el bit 24 ni los eventos. Falta el eslabón: qué estado/evento de la máquina de 49 estados di"
-  },
-  {
-   "file": "docs/capture/e24-05f-emisores-mss-darwin.md",
-   "line": 15,
-   "text": "| **B** | ¿Se conoce qué estado/evento provoca cada transmisión? | **NO** | Sí para `0x0b` (admisión `0x17f8c`), `0x0d/0x15` (estado de captura 9 u 11), `0x0e/0x10` (estado 31 → FSM `0x296f0` estado 5"
-  },
-  {
-   "file": "docs/capture/e24-05f-emisores-mss-darwin.md",
-   "line": 20,
-   "text": "| **G** | ¿Los ocho bastan para completar la captura? | **NO** | No hay prueba de suficiencia: faltan el disparo de tres mensajes, el consumo en BIONZ del byte 0 del `0x0b` (§6) y el paso `0xc5` (§9) "
-  },
-  {
-   "file": "docs/capture/e24-05g-ajustes-modo-ocupacion.md",
-   "line": 11,
-   "text": "| **A** | ¿Origen del evento `0x18a` identificado? | **SÍ, con corrección** | `0x18a` **no es un evento**: son los *flags* de las filas 22/23 de la tabla `{manejador,flags}` que empieza en `0x29514` ("
-  },
-  {
    "file": "docs/capture/e24-05h-3-adcb-p29.md",
    "line": 14,
    "text": "| **D** | ¿La terminación depende necesariamente de una señal física todavía desconocida? | **NO** | *No es contradicción ni falta de evidencia sobre el código:* ningún manejador de ADC-B ni su cierre"
   },
   {
-   "file": "docs/capture/e24-05h-4-adca-p29-irq.md",
-   "line": 112,
-   "text": "| 7 | ADC-A posición/id/celda | `0x2000381c/0x2000381d/0x20003818` | llega a 17 antes del estado 32; si se detiene en 4 ó 6 ⇒ falta evento canal 11 |"
-  },
-  {
-   "file": "docs/capture/e24-05h-dependencias-finales-captura.md",
-   "line": 11,
-   "text": "| **A** | ¿Red física y significado funcional de P29? | **NO** | *Evidencia insuficiente.* La red está identificada por nombre: `MSS_S2_REQ_CA`, de IC6000 (BIONZ) al pin `P29/INT05` de IC5700 (Darwin "
-  },
-  {
-   "file": "docs/capture/e24-05h-dependencias-finales-captura.md",
-   "line": 12,
-   "text": "| **B** | ¿La espera del estado 31 termina sin rearme? | **NO** | *Evidencia insuficiente.* Hay **dos** variantes (corrige E24-05g). `S+0x32=0`: sale solo con P29 bajo, sin plazo. `S+0x32≠0` (la obser"
-  },
-  {
    "file": "docs/capture/e25-02-validacion-candidato-y-via-volatil.md",
    "line": 105,
    "text": "**Eslabón exacto que falta:** un emisor BIONZ de `0x16` con `dirección=0x20000050`, una longitud que"
-  },
-  {
-   "file": "docs/capture/e25-02-validacion-candidato-y-via-volatil.md",
-   "line": 209,
-   "text": "parche no la toca. No se ha identificado una cancelación de usuario que llame directamente a las"
-  },
-  {
-   "file": "docs/capture/e25-02-validacion-candidato-y-via-volatil.md",
-   "line": 295,
-   "text": "| **M1 captura completa** | **NO DEMOSTRADO** | Falta el fin de L0 y la aceptación por BIONZ; el orden estricto de mensajes mss y el fin electrónico del IMX210 en foto completa siguen abiertos. |"
-  },
-  {
-   "file": "docs/capture/e25-04-recuperabilidad-y-decision.md",
-   "line": 28,
-   "text": "3.24/3.25 es coherente en lo formal, pero un paquete íntegro no es una recuperación: falta demostrar"
-  },
-  {
-   "file": "docs/capture/e25-04-recuperabilidad-y-decision.md",
-   "line": 36,
-   "text": "| **A** | ¿Hay recuperación independiente por USB demostrada? | **NO** | Evidencia insuficiente **con evidencia en contra**: el USB necesita BIONZ alimentado y el BIONZ recibe núcleo/RAM de `DD_ON1/2/"
-  },
-  {
-   "file": "docs/capture/e25-04-recuperabilidad-y-decision.md",
-   "line": 84,
-   "text": "| **SWD/JTAG `P00–P04`** | `TRST/TCK/TDI/TMS/TDO` salen como `*_DWN`; `SPSR` permite SWJ-DP tras reset por defecto; que Darwin lo desactive no se ha comprobado | Físico | **NO**; no hay volcado ni esc"
-  },
-  {
-   "file": "docs/capture/e25-04-recuperabilidad-y-decision.md",
-   "line": 121,
-   "text": "**Límite concreto:** la información que falta reside en el arranque `0x0–0x41ff` y en el *Flash"
-  },
-  {
-   "file": "docs/capture/e25-04-recuperabilidad-y-decision.md",
-   "line": 308,
-   "text": "| Elemento | Qué hace falta | ¿Abre la cámara? |"
-  },
-  {
-   "file": "docs/capture/e25-04-recuperabilidad-y-decision.md",
-   "line": 346,
-   "text": "| **1** | Software demostrada | **No existe** | Guard 3.22, FDAT 3.24/3.25, M0/M1, NVRAM 3.22 | Bajo si todo se cierra | **No hoy** (habría que crearla) |"
-  },
-  {
-   "file": "docs/capture/e25-04-recuperabilidad-y-decision.md",
-   "line": 359,
-   "text": "| **Mensajes obligatorios esperados por BIONZ** | BIONZ espera en orden `0x0b`, `0x0d/0x15`, `0x0e`, `0x10`, `0x17` (y `0x11/0x14` de ajustes) con `caif_recv` sin plazo; los emisores son la tarea de c"
-  },
-  {
-   "file": "docs/capture/e25-04-recuperabilidad-y-decision.md",
-   "line": 375,
-   "text": "| BIONZ no acepta L0 | Captura bloqueada, no necesariamente brick | F = NO; falta medir |"
-  },
-  {
-   "file": "docs/capture/e25-06-auditoria-independiente-paquetes.md",
-   "line": 239,
-   "text": "| **R4** Reintroducción del mecanismo | **Comprobado (por diseño)** | El 3.24 instala el Darwin oficial: vuelven las bobinas (sin tipo 0), el motor, la comprobación de leva y el rearme. No restaura el"
-  },
-  {
-   "file": "docs/capture/e25-06-auditoria-independiente-paquetes.md",
-   "line": 243,
-   "text": "| **R8** Falta de respaldo externo | **Comprobado (documental)** | R1 sigue PARCIAL: copia externa no hecha ni verificada (E25-04 D = NO; PENDIENTES R1). Además, `r1_inventory.json` no incluye `experi"
-  },
-  {
-   "file": "docs/capture/e25-06-auditoria-independiente-paquetes.md",
-   "line": 262,
-   "text": "| Falta un paquete real | `test_missing_package_is_never_pass` | `MISSING`, ningún PASS |"
   },
   {
    "file": "docs/capture/e25-06-auditoria-independiente-paquetes.md",
@@ -2162,21 +2135,6 @@
    "text": "4. Opcional (calidad): que las pruebas de E25-05 fallen si falta un paquete. Las de E25-06 ya lo hacen."
   },
   {
-   "file": "docs/capture/e25-10-exposicion-por-fila.md",
-   "line": 62,
-   "text": "Así, la limitación de T044 (sesgo vertical) es del modo ShutMode 3 (el de la foto normal, T031); el reinicio por filas ya existe en ShutMode 0 y solo falta que la foto lo use con `r5` calculado a part"
-  },
-  {
-   "file": "docs/capture/e25-10-exposicion-por-fila.md",
-   "line": 68,
-   "text": "- Para velocidades rápidas uniformes hace falta **reinicio por filas** (ShutMode 0 con `r5` calculado, §3). Ese parche está en **BIONZ/av-cam** (`0x836d6fb6`, `0x836d7000`), no en Darwin: un FDAT de D"
-  },
-  {
-   "file": "docs/capture/e25-11-r5-bionz-analisis.md",
-   "line": 27,
-   "text": "medida en T046/T047 (E = (4219 − `r5`)·15,2 µs). **Sin verificar:** unidades de `0x4382fa94` y de `[obj+0x4da]`; que `[r8]` sea exactamente 4219."
-  },
-  {
    "file": "docs/capture/e25-11-r5-bionz-analisis.md",
    "line": 60,
    "text": "| **C2** (propuesta) | En `0x438c82b6` sustituir `bne 0x438c82d0` (2 B) por `nop` (`00bf`) para tomar siempre el bloque de §3, y cambiar `movs r1,#2` (`0x438c82ba`) por un cálculo de `r5` en una cueva"
@@ -2187,39 +2145,9 @@
    "text": "| C3 | Llamar al constructor de la vista en directo `0x437b27b8` desde la captura | Descartada por ahora: argumentos y efectos laterales sin verificar |"
   },
   {
-   "file": "docs/capture/e25-11-r5-bionz-analisis.md",
-   "line": 67,
-   "text": "- `av-cam.bin` está dentro de `nflasha3` (TPZL: vmlinux + initrd + av-cam + sabin) en `firmware.tar`. Cambiarlo exige un re-empaquetador reproducible byte a byte (existe para Darwin, **no** para `nfla"
-  },
-  {
-   "file": "docs/capture/e25-11-r5-bionz-analisis.md",
-   "line": 100,
-   "text": "**Límite nuevo:** con ShutMode 0 la exposición máxima uniforme es el **cuadro completo (≈ 64,9 ms ≈ 1/15,4)**; desde 1/15 hacia velocidades más lentas `r5` queda fuera de rango y habría que dejar la r"
-  },
-  {
-   "file": "docs/capture/e25-11-r5-bionz-analisis.md",
-   "line": 111,
-   "text": "**Consecuencia para C2:** la entrada de tiempo `[cap+0x4da]` de §4/§6 queda **sin confirmar** (y probablemente sea propia de la vista en directo). Fuentes alternativas para el tiempo de la foto, sin v"
-  },
-  {
    "file": "docs/capture/e25-14-imx235-imx210-exposicion-electronica.md",
    "line": 12,
    "text": "`tests/test_e25_14_exposicion.py` (se omiten si falta el firmware)."
-  },
-  {
-   "file": "docs/capture/e25-14-imx235-imx210-exposicion-electronica.md",
-   "line": 36,
-   "text": "líneas del modo). Para superarlo haría falta un modo de sensor con cuadro más largo o acumulación multicuadro; no"
-  },
-  {
-   "file": "docs/capture/e25-14-imx235-imx210-exposicion-electronica.md",
-   "line": 208,
-   "text": "| F | ¿Existe una primitiva equivalente verificable en el IMX210? | **PARCIAL** | `SetExposure`, tablas y `+0x30` idénticos; falta el armado `r3`/`0x3dc` (V) |"
-  },
-  {
-   "file": "docs/capture/e25-14-imx235-imx210-exposicion-electronica.md",
-   "line": 215,
-   "text": "| M | ¿Se puede afirmar 1/8000–30 s totalmente electrónicos? | **NO** | el límite de un cuadro y la falta de armado en IMX210 lo impiden (V/N) |"
   },
   {
    "file": "docs/capture/e25-15-shutmode0-temporizacion-nativa.md",
@@ -2273,38 +2201,8 @@
   },
   {
    "file": "docs/capture/e25-16-r5-autonomo-fotografia.md",
-   "line": 43,
-   "text": "lo que falta es **ejecutarlo en la ruta de foto** (C1/C3, §7)."
-  },
-  {
-   "file": "docs/capture/e25-16-r5-autonomo-fotografia.md",
-   "line": 438,
-   "text": "| A | ¿Existe un cálculo autónomo de `r5` en BIONZ a partir del Tv de la foto? | **SÍ, lógicamente** (productor nativo `0x4383fa40`, llamado por los dos constructores) | V bytes/emulación; falta prueb"
-  },
-  {
-   "file": "docs/capture/e25-16-r5-autonomo-fotografia.md",
    "line": 455,
    "text": "Un **NO** por falta de evidencia no es una prueba de imposibilidad física."
-  },
-  {
-   "file": "docs/capture/e25-17-bulb-exposicion-electronica-larga.md",
-   "line": 32,
-   "text": "**C/A** (media; complejidad media-alta; compatibilidad alta; riesgo medio solo con RAM) > **D** (media-baja; falta el"
-  },
-  {
-   "file": "docs/capture/e25-17-bulb-exposicion-electronica-larga.md",
-   "line": 163,
-   "text": "`0x436ef628` (campo `0x43e849c0+0x40`). Falta el sumidero físico (generador de VD/DFE/registro del sensor) y si el IMX210 va en esclavo"
-  },
-  {
-   "file": "docs/capture/e25-17-bulb-exposicion-electronica-larga.md",
-   "line": 223,
-   "text": "| 1/30 | 33,3 ms | C3-B | Prod (shd 2025) | falta prueba física |"
-  },
-  {
-   "file": "docs/capture/e25-17-bulb-exposicion-electronica-larga.md",
-   "line": 266,
-   "text": "| P | ¿Diseño fundamentado para BULB? | **NO** (EI) | falta fin/liberación |"
   },
   {
    "file": "docs/capture/e25-18-integracion-silent-todas-velocidades.md",
@@ -2312,139 +2210,9 @@
    "text": "No se elige A (nativa completa) porque exige un segundo punto de intervención y el sumidero del VTS; no B porque no hay dos fórmulas, sino una. No se elige D: existe diseño y todo lo demás está resuel"
   },
   {
-   "file": "docs/capture/e25-18-integracion-silent-todas-velocidades.md",
-   "line": 145,
-   "text": "- **Bloqueo mínimo:** falta el enlace entre la liberación física del disparador y estos callbacks (o un flag equivalente), y qué hace el sensor al cesar el tramo. Hasta E25-19 no hay diseño de BULB; e"
-  },
-  {
-   "file": "docs/capture/e25-18-integracion-silent-todas-velocidades.md",
-   "line": 187,
-   "text": "| Registro global | rápida: intacto (la cueva escribe solo `cap+0x64c..0x64f`; `cap+0x650` se restaura solo). Larga: **no**, hace falta tocar o desviar la lectura de `record` |"
-  },
-  {
-   "file": "docs/capture/e25-19-verificacion-fisica-exposicion-larga.md",
-   "line": 93,
-   "text": "se escribiera nada). Siguiente paso: con la cámara de nuevo en red, muestrear los centinelas durante un 4 s/30 s (`e25_19b_cadena.py --live` solo lee la matriz y los centinelas; falta el"
-  },
-  {
-   "file": "docs/capture/e25-19-verificacion-fisica-exposicion-larga.md",
-   "line": 103,
-   "text": "no un valor de `svd`**. Faltan: la duración de ese estado frente a la velocidad (30 s) y el origen de `r1`. `cap` sigue sin leerse."
-  },
-  {
-   "file": "docs/capture/e25-19-verificacion-fisica-exposicion-larga.md",
-   "line": 112,
-   "text": "falta desensamblar `0x43b1b024` (quién sale de la espera: temporizador, evento de sensor o contador) y el origen de `r1`."
-  },
-  {
-   "file": "docs/capture/e25-19-verificacion-fisica-exposicion-larga.md",
-   "line": 120,
-   "text": "paso 2/sub 9 no es un bucle de este manejador: la máquina queda parada hasta un **evento externo** que la haga avanzar (el que termina la exposición) y que no se ha identificado"
-  },
-  {
-   "file": "docs/capture/e25-19-verificacion-fisica-exposicion-larga.md",
-   "line": 129,
-   "text": "bloqueante no se ha identificado (candidatos: los de los subestados 2 y 8, `0x438c8474`, `0x437f00a4`)."
-  },
-  {
-   "file": "docs/capture/e25-19-verificacion-fisica-exposicion-larga.md",
-   "line": 146,
-   "text": "**Decisión: D — bloqueo concreto.** Falta (1) quién escribe `[M]=cap` al crear/encolar el objeto de flujo: observar `M` (p. ej. `0x43eeafa8`) **en el instante de entrega** o hallar el constructor que "
-  },
-  {
-   "file": "docs/capture/e25-19-verificacion-fisica-exposicion-larga.md",
-   "line": 240,
-   "text": "**Criterio final: A — cadena resuelta (cap identificado y validado)**, con la finalización parcial: falta el emisor del mensaje de sub 9 (E25-19c)."
-  },
-  {
    "file": "docs/capture/e25-19-verificacion-fisica-exposicion-larga.md",
    "line": 261,
    "text": "| 16 | ¿Qué falta para 1/15–30 s Silent? | (a) localizar `cap` y observar `SetExposure`; (b) entender cómo sale la exposición de 20–30 s con `svd=0` (¿contador de pasos `cap+0x740`/`4b9c`?, ¿ruta de c"
-  },
-  {
-   "file": "docs/capture/e25-19c-fin-exposicion-mensaje-temporizador.md",
-   "line": 72,
-   "text": "**A con límite + B.** La exposición nativa larga la sostiene Darwin con las cortinas; esto **no** prueba ni descarta una integración electrónica nativa. Para 1/15–30 s con ShutMode 0 sin cortina hace "
-  },
-  {
-   "file": "docs/capture/e25-19d-origen-74f-rama-host.md",
-   "line": 87,
-   "text": "| H. ¿libera sub 9? | **SÍ en el código** | `set_flg`→`twai_flg`→`clr_flg`; one-shot/repetición sin verificar |"
-  },
-  {
-   "file": "docs/capture/e25-19d-origen-74f-rama-host.md",
-   "line": 101,
-   "text": "El temporizador existe y es correcto en cifras (1/8000–30 s, sin overflow), y con `74f=0` BIONZ no necesita el `0x0e`; pero es un mecanismo de **error/cancelación** que (i) no se selecciona en fotogra"
-  },
-  {
-   "file": "docs/capture/e25-19e-origen-74f-selector-sensor.md",
-   "line": 10,
-   "text": "* **19d contó mal los escritores (V).** Faltan stores `strh` en `+0x74e` (cubren `+0x74f`): `0x4354af88` y `0x4354b0ac` (callback `EndExps` `0x4354a678`, VD_Post según S32) y `0x4354c868` (secuenciado"
-  },
-  {
-   "file": "docs/capture/e25-19e-origen-74f-selector-sensor.md",
-   "line": 85,
-   "text": "| B. ¿origen real de `plan+0x142`? | **SÍ** | `2×lookup(0x4387b520)` en 8/8 ramas; falta el valor de tabla |"
-  },
-  {
-   "file": "docs/capture/e25-19e-origen-74f-selector-sensor.md",
-   "line": 88,
-   "text": "| E. ¿`74f=1` explicado por completo? | **NO** | falta evaluar `0x4354b0ac` y ver el orden inicial |"
-  },
-  {
-   "file": "docs/capture/e25-19e-origen-74f-selector-sensor.md",
-   "line": 106,
-   "text": "Siguiente mínimo (sin escribir nada): una lectura en vuelo de `cap+0x190..0x200` y `+0x510..0x530` en una foto normal, y emular con Unicorn `0x43af54d8` para obtener `sp+0x30c..0x31a`; si `sp+0x312=0x"
-  },
-  {
-   "file": "docs/capture/e25-19f-origen-geometria-74f.md",
-   "line": 12,
-   "text": "* **Emulación (P1): NO concluyente.** El arnés (`emu.py`, `emular_endexps.py`) corre el código real sobre una instantánea física de 4 MB, pero con el objeto LV reproduce `sp+0x30c..0x31a` = 0 (físico:"
-  },
-  {
-   "file": "docs/capture/e25-21-setexposure-p2s.md",
-   "line": 39,
-   "text": "La **primera frontera hardware demostrable** de esta ruta es la activación del bloque P2S en `0xfc088808`, tras cargar RAM `0xfc088340…`. La operación física que falta para Silent 30 s **no se ha iden"
-  },
-  {
-   "file": "docs/capture/e25-22-protocolo-transporte-fisico.md",
-   "line": 9,
-   "text": "Las comparaciones requieren controles y RAW originales con metadatos de la sesión actual, velocidad aplicada comprobada y condiciones constantes en lo posible. Distinguir evidencia histórica, actual y"
-  },
-  {
-   "file": "docs/capture/e25-22-protocolo-transporte-fisico.md",
-   "line": 46,
-   "text": "La observación física vincula estados de RAM compatibles con el bloque de `cap`, no acredita que `Execute(1)` se ejecutara ni que P2S enviara eléctricamente esos datos. Se conserva la cadena estática "
-  },
-  {
-   "file": "docs/capture/e25-24-selector-efcs-electronico.md",
-   "line": 40,
-   "text": "no demuestra que vuelva la segunda cortina para el EFCS de referencia. Falta"
-  },
-  {
-   "file": "docs/capture/e25-24c-protocolo-fisico-selector.md",
-   "line": 4,
-   "text": "cámara; describe qué habría que medir y con qué criterios, para una autorización separada."
-  },
-  {
-   "file": "docs/capture/e25-27-construccion-firmware-integrado.md",
-   "line": 14,
-   "text": "falló y qué falta antes de instalar. La investigación previa está en"
-  },
-  {
-   "file": "docs/capture/e25-desactivacion-mecanica.md",
-   "line": 24,
-   "text": "| **A** | ¿Existe una vía volátil **demostrada** para seleccionar L0? | **NO** | El lado Darwin tiene una escritura selectiva posible por `InitCom 0x16` (1 B en `0x20000050`, modelo en §3.3), pero **f"
-  },
-  {
-   "file": "docs/capture/e25-desactivacion-mecanica.md",
-   "line": 30,
-   "text": "| **G** | ¿El candidato es reversible byte a byte y pasa las regresiones? | **SÍ (offline)** | `restore` reproduce el SHA de entrada (`ca41b46c…`); 54 pruebas E25 + 304 pruebas E24/GPIO/Darwin; 1 fall"
-  },
-  {
-   "file": "docs/capture/e25-desactivacion-mecanica.md",
-   "line": 88,
-   "text": "borra. Habría que reescribir el byte original por la misma vía o resetear Darwin; ninguna de las"
   },
   {
    "file": "docs/capture/e25-desactivacion-mecanica.md",
@@ -2453,28 +2221,8 @@
   },
   {
    "file": "docs/capture/e26-r10-usb-charger-recovery.md",
-   "line": 17,
-   "text": "La única ruta de recuperación con evidencia estática y emulada sigue siendo **BootROM → UART → escritura RAM → salto a RAM** (E26-R9), pendiente de identificación física del contacto UART (CN4906 pin "
-  },
-  {
-   "file": "docs/capture/e26-r10-usb-charger-recovery.md",
-   "line": 372,
-   "text": "| # | Pregunta | Respuesta | Fundamento / prueba que falta |"
-  },
-  {
-   "file": "docs/capture/e26-r10-usb-charger-recovery.md",
-   "line": 382,
-   "text": "| Q9 | ¿Qué componente o evidencia falta para decidir su viabilidad? | — | Manejador de SETEP/control endpoint en `darwin_core.bin`; peticiones vendor-specific de Sony; demostración de que DWN es USB-"
-  },
-  {
-   "file": "docs/capture/e26-r10-usb-charger-recovery.md",
    "line": 385,
    "text": "**Nota:** Cuando la respuesta es NO por falta de evidencia, se indica expresamente que no está demostrado y se identifica la prueba que falta. No se confunde \"no encontramos una implementación\" con \"d"
-  },
-  {
-   "file": "docs/capture/e26-r10-usb-charger-recovery.md",
-   "line": 394,
-   "text": "1. R9 (BootROM → UART → escritura RAM → salto a RAM) tiene una cadena completa demostrada estáticamente y en emulación Unicorn, sin NAND, sin Linux, sin firmware modificado. Q1–Q7 de R9: 6 SÍ, 1 NO (f"
   },
   {
    "file": "docs/capture/e26-r11-bootrom-uart-physical-access.md",
@@ -2488,53 +2236,8 @@
   },
   {
    "file": "docs/capture/e26-r11-bootrom-uart-physical-access.md",
-   "line": 462,
-   "text": "| # | Pregunta | Respuesta | Fundamento / prueba que falta |"
-  },
-  {
-   "file": "docs/capture/e26-r11-bootrom-uart-physical-access.md",
-   "line": 464,
-   "text": "| Q1 | ¿Se identificó inequívocamente el contacto físico de recepción BootROM UART? | **NO** | Solo candidato documental: CN4001 pin 9 vía R4003/R4002 XX. Falta identificación física en hardware. |"
-  },
-  {
-   "file": "docs/capture/e26-r11-bootrom-uart-physical-access.md",
-   "line": 468,
-   "text": "| Q5 | ¿El receptor serie se activa mediante condición eléctrica, secuencia UART o ambas? | **NO** | No se distinguió. Falta captura de señal o documentación del comportamiento de arranque. |"
-  },
-  {
-   "file": "docs/capture/e26-r11-bootrom-uart-physical-access.md",
    "line": 474,
    "text": "| Q11 | ¿Qué falta exactamente para intentar recibir datos reales del BootROM? | — | Identificación eléctrica del contacto UART (continuidad R4003→CN4001 pin 9, tensión DC, señal en osciloscopio) y pr"
-  },
-  {
-   "file": "docs/capture/e26-r11-bootrom-uart-physical-access.md",
-   "line": 486,
-   "text": "3. Si CN4906 está montado en la placa (pendiente de verificación visual), ofrece la ruta más directa al receptor BootROM UART."
-  },
-  {
-   "file": "docs/capture/e26-r12-bootrom-static-audit.md",
-   "line": 86,
-   "text": "Conclusión admisible: el patrón del usuario es **compatible** con un error −302 de Loader2 en la familia FAT/almacenamiento y **no es** un código de BootROM. No se atribuye el fallo: faltan la identif"
-  },
-  {
-   "file": "docs/capture/e26-r13-led-error-provenance.md",
-   "line": 35,
-   "text": "Cadena BootROM → Loader2 → Loader3 (BINARIO, R5/R6/R12 + esta tabla): BootROM `ffff013c` salta a `0xc0030000`; Loader2 lee INFO, inicializa BOSS y copia Loader3 a `0xc01f0000` (`c0030de8`, entradas IN"
-  },
-  {
-   "file": "docs/capture/e26-r13-led-error-provenance.md",
-   "line": 144,
-   "text": "- **Q5.** **No medidos.** Se obtiene 2,0/0,5/0,25 s bajo la hipótesis de entrada a 4 MHz (cabeceras Sony); falta medición."
-  },
-  {
-   "file": "docs/capture/e26-r13-led-error-provenance.md",
-   "line": 145,
-   "text": "- **Q6.** Solo 3002 y 3200 (§4); ninguno existe como literal; en Loader2 harían falta −2002/−2200."
-  },
-  {
-   "file": "docs/capture/e26-r14-ramcfg-bos-analysis.md",
-   "line": 14,
-   "text": "4. **DATOS. Todas las condiciones se cumplen en todas las imágenes disponibles.** Tabla BOS con firma `8246`; `nflasha2` FAT12 (512 B/sector, cluster 16 KiB, `0xAA55`, ID FAT = BPB); `nflasha3` (cámar"
   },
   {
    "file": "docs/capture/e26-r14-ramcfg-bos-analysis.md",
@@ -2545,26 +2248,6 @@
    "file": "docs/capture/e26-r14-ramcfg-bos-analysis.md",
    "line": 189,
    "text": "- **Q4. ¿Qué entradas de RAMCFG podrían producir −302?** Cualquiera de las 6 seleccionadas, si falta, está vacía o su lectura falla; el desbordamiento de ventana no. No se puede ordenar cuál sin estad"
-  },
-  {
-   "file": "docs/capture/e26-r14-ramcfg-bos-analysis.md",
-   "line": 194,
-   "text": "- **Q9. ¿Se demostró que el actualizador 3.25 puede alterar los datos implicados?** **NO** como hecho; **SÍ como capacidad en los scripts de 3.21** (Backup.bin, `edisx`, `uc_mkfs`, `nflasha3`). Faltan"
-  },
-  {
-   "file": "docs/capture/e26-r14-ramcfg-bos-analysis.md",
-   "line": 196,
-   "text": "- **Q11. ¿Qué evidencia falta?** El estado real de la cámara (UART/log `LD3_E:`/`BOS_E:`/`FAT_E:`/`CFG_E:`), que distingue de inmediato las cinco vías; sin eso, el `endupdate.sh`/`us_mkfs.sh` y el mod"
-  },
-  {
-   "file": "docs/capture/e26-r15-tpzl-custom-fw325.md",
-   "line": 12,
-   "text": "2. **BINARIO. El lector TPZL real de Loader3 acepta el residuo de 256 B.** `c01fdd8e` calcula `residuo = offset & 0x1ff`, **solo emite un aviso** si es ≠ 0 y lee `(residuo + tamaño + 0x1ff) >> 9` sect"
-  },
-  {
-   "file": "docs/capture/e26-r15-tpzl-custom-fw325.md",
-   "line": 13,
-   "text": "3. **SCRIPT. Las tres imágenes pasan todas las comprobaciones de software de Loader3** (cabecera, TOC, 369 entradas, límites del dispositivo de 30 MiB). La integrada 3.25 es la única con residuo (359 "
   },
   {
    "file": "docs/capture/e26-r15-tpzl-custom-fw325.md",
@@ -2582,49 +2265,9 @@
    "text": "**Q1.** SÍ para la cadena de software (Loader3 `c01fdd8e`→MuMin→ARM7 `0x1338`→LDEC `0xf2903000`); NO para el silicio. **Q2.** SÍ hasta `c01fccd2`/ARM7 `0x3f4` (el campo se copia, no se lee); falta el "
   },
   {
-   "file": "docs/capture/e26-r19-darwin-usb-static.md",
-   "line": 46,
-   "text": "- **Vía Multi↔`BOOT_SERIAL_IN`:** reabierta por §1.7, sin verificar (inferencia de esquema)."
-  },
-  {
-   "file": "docs/capture/e26-r20-bootrom-selector.md",
-   "line": 14,
-   "text": "6. **INFERENCIA (moderada-fuerte): bit 0 = `BOOT_MAIN` (P7 del BIONZ, único pin de la red `CL1000`).** El bit 1 es `BOOT_SERIAL_IN` (Sony OSS CXD90014: `MISC_MODEREG_BOOT_SERIAL_IN`); en el chip herma"
-  },
-  {
-   "file": "docs/capture/e26-r20-bootrom-selector.md",
-   "line": 59,
-   "text": "- **El almacenamiento sano no impide la ruta serie:** con bit0=1 y GPIO4.22=0 hace falta además una cabecera cargada con la tabla de claves vacía (o ninguna clave) para llegar a `0xfa0`; con GPIO4.22="
-  },
-  {
-   "file": "docs/capture/e26-r20-keytable.md",
-   "line": 74,
-   "text": "Para cerrar el contenido (no solo el mecanismo) haría falta un volcado de bajo nivel de la zona"
-  },
-  {
-   "file": "docs/capture/e26-r20-serie-plan.md",
-   "line": 30,
-   "text": "- Si GPIO4.22 = 0 → hace falta que `0x28c` (inicialización de almacenamiento) y `0x332` (carga de"
-  },
-  {
    "file": "docs/capture/e26-r30-updater-done-boundary.md",
    "line": 176,
    "text": "CRC32 de 3.21/3.25 y del respaldo de la cámara); se salta si faltan los archivos locales no"
-  },
-  {
-   "file": "docs/capture/e26-r32-moderreg-valor-real.md",
-   "line": 40,
-   "text": "| `E26-R20-BOOTMAIN-NIVEL`: nivel no determinable | **nivel lógico en reposo = 1**; la tensión exacta no hace falta |"
-  },
-  {
-   "file": "docs/capture/e26-r35-serial-receiver-multi-paquete.md",
-   "line": 87,
-   "text": "- `[0xc0010004]`/`[0xc0010008]` son globales: no se ha comprobado si sobreviven entre llamadas"
-  },
-  {
-   "file": "docs/capture/e26-r36-causa-fallo-325.md",
-   "line": 18,
-   "text": "**Clasificación:** causa identificada offline (BINARIO + DATOS + FUENTE). Falta solo la confirmación física (log UART `LD3_E`/`FAT_E`), que no está autorizada. **[R39: reproducida en emulación con el "
   },
   {
    "file": "docs/capture/e26-r38-guard-y-entrada-updater.md",
@@ -2632,119 +2275,9 @@
    "text": "| Guard en modo actualizador | Lo aplica `sauu` (`nflasha1`) en `UpdaterHandler::isVersionOK`, comparando contra `<nflasha2>\\updater\\dat4`. Con solo `mode` (USER): exige versión **mayor**, o igual si "
   },
   {
-   "file": "docs/capture/e26-r38-guard-y-entrada-updater.md",
-   "line": 13,
-   "text": "| Estado tras el 3.25 | `dat4 = 25 03` y `comp` presente (INFERENCIA: la instalación terminó, como informó el usuario) → hace falta **≥ 3.26** en modo USER. Confirma la suposición de R37 |"
-  },
-  {
-   "file": "docs/capture/e26-r38-guard-y-entrada-updater.md",
-   "line": 95,
-   "text": "- **MINOR** (`mode3`) solo añade aceptar la misma versión; no hace falta."
-  },
-  {
-   "file": "docs/capture/e26-r38-guard-y-entrada-updater.md",
-   "line": 100,
-   "text": "- La persistencia de `MODE` depende de la semántica de `vfat`/busybox en el kernel del actualizador (§5). No se ha comprobado en ejecución."
-  },
-  {
    "file": "docs/capture/e26-r40-jtag-swd-bionz.md",
    "line": 15,
    "text": "| ¿Qué falta para saber si sirve? | **Todo físico.** Si R4911/R4912 están montadas en esta unidad, su tensión real, y sobre todo si los **eFuses** de seguridad (visibles en el esquema como `FUSE_EN`/`"
-  },
-  {
-   "file": "docs/capture/e26-r40-jtag-swd-bionz.md",
-   "line": 69,
-   "text": "- **AP/protocolo expuesto.** Aun con el puerto físicamente accesible y sin fusible, falta identificar qué Access Port expone (de memoria, de depuración de núcleo), si permite detener la CPU y leer/esc"
-  },
-  {
-   "file": "docs/capture/e26-r40-jtag-swd-bionz.md",
-   "line": 74,
-   "text": "- Si SWD estuviera abierto, sería **más directo** que la vía serie: no hace falta clave, y permite cargar y ejecutar código arbitrario (como el kernel `ice_*`) en vez de depender del protocolo cerrado"
-  },
-  {
-   "file": "docs/capture/e26-r40-jtag-swd-bionz.md",
-   "line": 80,
-   "text": "- No se ha identificado el controlador de eFuse en ningún binario disponible."
-  },
-  {
-   "file": "docs/capture/e26-r41-caminos-estaticos-restantes.md",
-   "line": 15,
-   "text": "| 5 | Resto de pendientes estáticos | Sin cambios: `E26-R30-HOSTRET0` (baja, no cambia la decisión), `E26-R5-FM3` (falta el manual de flash del MB9AF004B; solo está el de periféricos), cola INFO6 de L"
-  },
-  {
-   "file": "docs/capture/e26-r41-caminos-estaticos-restantes.md",
-   "line": 17,
-   "text": "**Conclusión:** no queda ningún camino estático sin examinar en la cadena BootROM → Loader2 → Loader3 que dé escritura en la NAND sin acceso físico. El último trozo sin examinar del bucle de error era"
-  },
-  {
-   "file": "docs/capture/e26-r41-caminos-estaticos-restantes.md",
-   "line": 51,
-   "text": "**Lectura:** Sony detiene Loader3 por una línea GPIO para que el depurador cargue o parchee la RAM. Refuerza R40 (silicio pensado para ICE). Para usarlo hace falta igualmente el SWD abierto, y entonce"
-  },
-  {
-   "file": "docs/capture/e26-r41-caminos-estaticos-restantes.md",
-   "line": 61,
-   "text": "| Pendientes offline vivos | `E26-R30-HOSTRET0` (baja), `E26-R5-FM3` (falta el manual de flash) |"
-  },
-  {
-   "file": "docs/capture/e26-r41-caminos-estaticos-restantes.md",
-   "line": 100,
-   "text": "- **Cierre (límite):** la bola no se puede determinar estáticamente. Además, no cambia nada: para usar la espera de ICE hace falta el SWD abierto, y entonces el bucle de error tras −302 ya da la misma"
-  },
-  {
-   "file": "docs/capture/e26-r45-firmware-325c-experimental.md",
-   "line": 65,
-   "text": "hace falta el paquete **3.26** (contenido oficial, R37/R38), también nunca instalado."
-  },
-  {
-   "file": "docs/capture/e26-r46-procedimiento-fisico-swd.md",
-   "line": 47,
-   "text": "1. **Respaldo R1 verificado** en soporte externo (pendiente de E25-04). No se abre la cámara antes."
-  },
-  {
-   "file": "docs/capture/e26-r5-loader3-servicio.md",
-   "line": 109,
-   "text": "- `usr/bin/UdtrMain.sh:56–59`: si existe `updater/uincomp`, desmonta y entra en `ERROR_UINCOMP=54` antes de `execute_ufp.sh`. **No es `comp` ni `mode`**. No se ha identificado aquí todo el ciclo de cr"
-  },
-  {
-   "file": "docs/capture/e26-r5-loader3-servicio.md",
-   "line": 159,
-   "text": "**NO DEMOSTRADO:** una programación física mínima viable de nflasha3 con un programador concreto. Antes de especificar hardware de escritura faltan identificación del componente/die y encapsulado, esq"
-  },
-  {
-   "file": "docs/capture/e26-r5-loader3-servicio.md",
-   "line": 173,
-   "text": "**PENDIENTE DE ACCESO FÍSICO:** no hay imágenes en `/home/nicolas/.codex/attachments/` con extensiones PNG/JPEG/WebP al comprobar esta sesión. No se buscó indiscriminadamente en fotos personales. No e"
-  },
-  {
-   "file": "docs/capture/e26-r5-loader3-servicio.md",
-   "line": 187,
-   "text": "Una traza con último marcador identifica al menos la etapa alcanzada; no garantiza por sí sola la causa exacta. Para diferenciar Darwin que no corre de Darwin que falla en energía hace falta evidencia"
-  },
-  {
-   "file": "docs/capture/e26-r5-loader3-servicio.md",
-   "line": 205,
-   "text": "Antes de cualquier escritura faltan: diagnóstico discriminante, lectura del estado actual, copia externa verificada, integridad del loader/mapeo pertinente, acceso de lectura reproducible por la herra"
-  },
-  {
-   "file": "docs/capture/e26-r5-loader3-servicio.md",
-   "line": 217,
-   "text": "| 7 | ¿Qué está conectado? | Conectividad de esquema en §4; resistencias XX y continuidad real **PENDIENTE DE MEDICIÓN** |"
-  },
-  {
-   "file": "docs/capture/e26-r5-loader3-servicio.md",
-   "line": 220,
-   "text": "| 10 | ¿Desmontaje? | Huella A no exige B en plano, accesibilidad actual **PENDIENTE DE ACCESO FÍSICO**; técnica NAND directa indeterminada |"
-  },
-  {
-   "file": "docs/capture/e26-r5-loader3-servicio.md",
-   "line": 222,
-   "text": "| 12 | ¿Medición discriminante? | UART0 pasiva + DD_ON/rails cuando haga falta; un silencio aislado no localiza el fallo |"
-  },
-  {
-   "file": "docs/capture/e26-r6-recuperacion-bionz.md",
-   "line": 42,
-   "text": "El mapa lógico de adquisición está reconstruido; **el mapa físico completo no**. No es una NAND contigua: mezcla safe/normal, omite bloques y metadatos y pierde la identidad de tramas. No se puede usa"
   },
   {
    "file": "docs/capture/e26-r6-recuperacion-bionz.md",
@@ -2758,103 +2291,8 @@
   },
   {
    "file": "docs/capture/e26-r6-recuperacion-bionz.md",
-   "line": 82,
-   "text": "`0xc01f3670` filtra por nivel y llama `0xc01f50c0` para UART o `0xc01f3640` para memoria; no toda cadena de log se transmite. `0xc01f35c0` consulta `0x510015` mediante `0xc01f4edc`: si no vale 1, pone"
-  },
-  {
-   "file": "docs/capture/e26-r6-recuperacion-bionz.md",
-   "line": 102,
-   "text": "El detalle BLDR confirma que el almacenamiento de arranque se direcciona por die/plane/block/page y que el controlador puede informar ECC corregible. No entrega geometría total, OOB, ECC, defectos ni "
-  },
-  {
-   "file": "docs/capture/e26-r6-recuperacion-bionz.md",
    "line": 120,
    "text": "| Escenario observado en una futura evaluación | Qué discrimina | Acción segura siguiente | Lo que sigue prohibido por falta de evidencia |"
-  },
-  {
-   "file": "docs/capture/e26-r7-recuperacion-estatica.md",
-   "line": 431,
-   "text": "**NO DEMOSTRADO:** incompatibilidad funcional del residuo TPZL 256. No hay evidencia de rechazo por hardware ARM7, ni código de error identificable. Las advertencias ECC son independientes de la aline"
-  },
-  {
-   "file": "docs/capture/e26-r7-recuperacion-estatica.md",
-   "line": 504,
-   "text": "| 10 | ¿Qué información falta? | Firmware ARM7 actual, funciones FUN_c01f036c/FUN_c01f129c/FUN_c01f5078/FUN_c01f028c, productor de `updater/mode`, fuente INFO6 | FALTANTE |"
-  },
-  {
-   "file": "docs/capture/e26-r7-recuperacion-estatica.md",
-   "line": 598,
-   "text": "| E26-R7-D-TPZL-ARM7 | NO DEMOSTRADO | R7 §4 | Falta firmware ARM7 actual para certificar comportamiento |"
-  },
-  {
-   "file": "docs/capture/e26-r7b-recuperacion-prelinux.md",
-   "line": 46,
-   "text": "El tar local tipo0 modificado contiene una entrada `0700_part_image/dev/nflasha3` de 11 489 040 bytes; el manifiesto contiene ese tamaño y `0c047870`, idéntico al CRC-32 calculado offline sobre la ent"
-  },
-  {
-   "file": "docs/capture/e26-r7b-recuperacion-prelinux.md",
-   "line": 89,
-   "text": "| Linux MuMin/LLD → NAND | **PARCIAL para recuperación** | Escritura/borrado existen; necesitan Linux en el camino identificado, y no se ha verificado restauración selectiva o preservación. |"
-  },
-  {
-   "file": "docs/capture/e26-r7b-recuperacion-prelinux.md",
-   "line": 92,
-   "text": "Una escritura por rango lógico podría modificar tablas, asignación o bloques de mantenimiento. Faltan límites del destino, mapeo lógico-físico, política ECC/bad-block, validación y pruebas offline de "
-  },
-  {
-   "file": "docs/capture/e26-r8-bootrom-uart-boss.md",
-   "line": 151,
-   "text": "**Interpretación:** los valores 0x04A0/0x038D y 0x0E74/0x0B18 parecen ser divisores de baud rate de dos configuraciones distintas (posiblemente 115200 vs otra velocidad, o dos pines UART distintos). N"
-  },
-  {
-   "file": "docs/capture/e26-r9-bootrom-ram-execution.md",
-   "line": 26,
-   "text": "- En hardware físico: NO DEMOSTRADO — falta identificar eléctricamente el pin UART (BOOT_SERIAL_IN) y confirmar que se puede activar externamente; cualquier prueba física requiere autorización separad"
-  },
-  {
-   "file": "docs/capture/e26-r9-bootrom-ram-execution.md",
-   "line": 433,
-   "text": "**Q10. ¿Qué requisito falta para pasar de la demostración offline a una prueba física no destructiva?**"
-  },
-  {
-   "file": "docs/capture/e26-r9-bootrom-ram-execution.md",
-   "line": 455,
-   "text": "**No se recomienda prueba física en esta etapa** por falta de autorización y de identificación eléctrica del UART; cualquier prueba física es un hito independiente sujeto a autorización del usuario."
-  },
-  {
-   "file": "docs/capture/e26-r9-bootrom-ram-execution.md",
-   "line": 490,
-   "text": "**Límite de evidencia:** todo lo anterior es estático (disassembly) o emulado (Unicorn). No constituye demostración en una Sony A6000 física. La activación física del UART queda pendiente de autorizac"
-  },
-  {
-   "file": "docs/capture/e26-recovery.md",
-   "line": 107,
-   "text": "La presencia de una referencia en una cara no prueba continuidad eléctrica, conector montado, nivel seguro ni acceso desde la posición actual. El manual de distribución identifica `IC6000`, pero no se"
-  },
-  {
-   "file": "docs/capture/e26-recovery.md",
-   "line": 124,
-   "text": "En [Sony-PMCA-RE #488](https://github.com/ma1co/Sony-PMCA-RE/issues/488), la A6000 original presenta un patrón compatible con 73 y un registro UART con errores Mumin/ECC y montaje. El autor sospecha f"
-  },
-  {
-   "file": "docs/capture/e26-recovery.md",
-   "line": 128,
-   "text": "El [manual Infineon del programador universal FM3/FM4/FM0+](https://www.infineon.com/assets/row/public/documents/30/42/infineon-fm3-fm4-fm0-family-universal-programmer-user-manual-applicationnotes-en."
-  },
-  {
-   "file": "docs/capture/e26-recovery.md",
-   "line": 135,
-   "text": "2. Conservar el selector verificado: bandera `updater/mode` sin lectura de contenido; alternativa SIO condicionada y deshabilitada con el byte Backup histórico 01. Falta entrada independiente real."
-  },
-  {
-   "file": "docs/capture/efcs-darwin-silent-integracion.md",
-   "line": 19,
-   "text": "obturador durante la captura. Lo que falta es **control de exposición uniforme y"
-  },
-  {
-   "file": "docs/capture/efcs-darwin-silent-integracion.md",
-   "line": 373,
-   "text": "**Conclusión:** La A6000 ya contiene mecanismos suficientes para Silent mejorado ≤ 1/30 s (productor nativo r5, ShutMode 0, tabla de tiempos). No necesita portar subsistemas del A7S. Lo que falta (exp"
   },
   {
    "file": "docs/capture/efcs-darwin-silent-integracion.md",
@@ -2862,74 +2300,9 @@
    "text": "**Evidencia que falta antes de firmware permanente:**"
   },
   {
-   "file": "docs/capture/electronic-still-low-resolution.md",
-   "line": 12,
-   "text": "| ¿Puede un frame de vídeo guardarse como foto sin cortina? (2 MP) | HIPÓTESIS plausible, no probada | el vídeo FHD60 existe; falta el empalme con el guardado JPEG |"
-  },
-  {
-   "file": "docs/capture/electronic-still-low-resolution.md",
-   "line": 137,
-   "text": "- Etapa `Autoexec_jpeg_comp` (`0x439a32b8`): lee estado (`msg+8`) y tamaño comprimido (`msg+0xc`); si excede `limit` o falta área de trabajo reintenta con otra qscale (`candidate_439a318a`, `RETRY … L"
-  },
-  {
-   "file": "docs/capture/imager-exposure-p2s.md",
-   "line": 38,
-   "text": "de un byte de software; **no asigna nombres a bits del CMOS**. Hace falta"
-  },
-  {
-   "file": "docs/capture/imager-exposure-p2s.md",
-   "line": 70,
-   "text": "observados durante una captura. Falta unir la producción de esos bancos con"
-  },
-  {
-   "file": "docs/capture/imager-exposure-p2s.md",
-   "line": 147,
-   "text": "Son bloques distintos del destino inicial 0x43eb2680: falta demostrar sus"
-  },
-  {
-   "file": "docs/capture/imx210-video-readout.md",
-   "line": 29,
-   "text": "Descriptores en `0x43bb7f3c…`: 6048×4152, 6024×4024 (offset 12,140), 6000×4000, 6028×4024, 1736×1250(?). 1920×1080 y 1440×1080 en `0x43fe60b8…` (tablas con 720×480/768×480). Falta la función que une m"
-  },
-  {
-   "file": "docs/capture/linea-general-re.md",
-   "line": 115,
-   "text": "| S169 | control positivo del obturador: la API de **drive** del A6300 | capa `LiroSeq` con **201** propiedades `CheckSet*` y **370** comprobaciones `ParamCheckErr`; parámetros de obturador `sc_ShutDr"
-  },
-  {
-   "file": "docs/capture/liveview-silent-capture-via-cameraex.md",
-   "line": 30,
-   "text": "- `CameraSequence`/`DSP` pueden requerir permisos o firma de plataforma; no se ha comprobado que una app instalada por adb (usuario `shell`) pueda abrirlas."
-  },
-  {
-   "file": "docs/capture/liveview-yc-to-encodestill.md",
-   "line": 17,
-   "text": "| Quién lo entrega | EE/Rec pins | pin YC del recorder (`this+0x60`) por `PlayData` `0x2001/0x1003` | Pendiente: falta el eslabón productor→pin |"
-  },
-  {
-   "file": "docs/capture/liveview-yc-to-encodestill.md",
-   "line": 40,
-   "text": "La entrada de `EncodeStill` es un YC SDS normal; no hay un campo que un frame de Live View incumpla. Lo que falta es (a) el productor que lo entregue al pin YC del recorder en modo disparo y (b) garan"
-  },
-  {
    "file": "docs/capture/mpr-dcf-recording.md",
    "line": 165,
    "text": "| Miniatura | JPEG válido y no vacío para creación EXIF nueva | Error explícito si falta |"
-  },
-  {
-   "file": "docs/capture/mpr-dcf-recording.md",
-   "line": 184,
-   "text": "**VEREDICTO: CAMBIOS** — evidencia estática entregada; aceptación extremo a extremo pendiente de los bloqueos señalados."
-  },
-  {
-   "file": "docs/capture/objstillpool-image-producers.md",
-   "line": 51,
-   "text": "- Se sustituye el estado anterior «remitente sin verificar» (§3): `0x10000005` no viaja entre objetos; lo crea el recorder en `0x919f1a` al recibir un `PlayData` por su pin YC. El remitente real del f"
-  },
-  {
-   "file": "docs/capture/objstillrecorder-mode4.md",
-   "line": 37,
-   "text": "8. JPEG de SFRA: HIPÓTESIS. Los handles DMM `u16` coinciden con los de SFRA, pero faltan miniatura/EXIF y el layout exacto de `0x100b`."
   },
   {
    "file": "docs/capture/pending-sync-audit-2026-10-24.md",
@@ -2937,39 +2310,9 @@
    "text": "falta de prueba positiva, no falsedad ni obligación de perseguir cada caso."
   },
   {
-   "file": "docs/capture/physical-test-plan.md",
-   "line": 52,
-   "text": "- **Éxito:** distinguir si el host cambia algo en EFCS que no cambia en mecánico; es el dato que falta para el punto «consumidor de P4C»."
-  },
-  {
-   "file": "docs/capture/physical-test-review-2026-10-26.md",
-   "line": 19,
-   "text": "Veredicto: **VIGENTE** (útil y sin descartar), **AJUSTADA** (vigente con la corrección indicada), **PARCIAL** (parte ya resuelta con datos existentes) o **BLOQUEADA** (falta una herramienta o hardware"
-  },
-  {
-   "file": "docs/capture/physical-test-review-2026-10-26.md",
-   "line": 41,
-   "text": "| P18 | Gates `+3/+6` del estado IMX210 (`0x83f72d00`) | **PARCIAL** | En reposo, 32 B a cero en el volcado del 20-10 (coherente con Backup `0x3000b` = gates a 0). Falta live view, medio pulsado y dis"
-  },
-  {
-   "file": "docs/capture/physical-test-review-2026-10-26.md",
-   "line": 47,
-   "text": "| **P24** (nueva) | Valores que solo existen en ejecución: rectángulos de entrada de `0x436c25d0` (E20), `params[+9]` = 2/3 y activación de `RecordImage`/cola `0x40193`, `[estado+8]` (S134, S384) | **"
-  },
-  {
    "file": "docs/capture/pool-write-completion.md",
    "line": 40,
    "text": "Falta: (a) quién registra la entrada DCF en el índice de MPR (`DCFStillWriter`), (b) la relación `PreRegisterDcfContentSync` ↔ `PreRegisterImage` del Pool. Solo se puede afirmar que, si `WriteStill` t"
-  },
-  {
-   "file": "docs/capture/queue-40193-flow-2026-10-23.md",
-   "line": 62,
-   "text": "con cola de callback. Falta enlazar los llamadores indirectos del registrador."
-  },
-  {
-   "file": "docs/capture/rea-independent-milestone.md",
-   "line": 67,
-   "text": "Faltan las entradas Thumb que Línea A sembró a mano: 0x43789cc0, 0x43789708, 0x437da100, 0x43792f9c, 0x43794096, 0x43ae90ce"
   },
   {
    "file": "docs/capture/rea-tema1-vd-integracion.md",
@@ -2977,149 +2320,9 @@
    "text": "| # | Hallazgo ausente | Dirección(es) implicadas | Por qué falta |"
   },
   {
-   "file": "docs/capture/rea-tema3-cortinas-darwin.md",
-   "line": 98,
-   "text": "Conclusión 3: tipo 0 suprime P4D/P4E y el seguimiento ADC en **todas** las rutas (más que Silent A7S, que sí actúa bobinas en reposición/aborto con `no_silent=1`), pero **mantiene `P4C←0` y la tempori"
-  },
-  {
-   "file": "docs/capture/registro-pruebas-camara.md",
-   "line": 55,
-   "text": "| T041 | 27-10-2026 | E25-01: uso con 3.23 (B1a) instalada. **Confirmado por el usuario:** la cámara dispara en silencio y sin error. Sin disparo remoto mío (cámara fuera de red) | T040 | Sin archivos"
-  },
-  {
    "file": "docs/capture/repo-audit-2026-10-24.md",
    "line": 34,
    "text": "| 133/372 cubiertas, 226 pendientes, 13 descartadas | **ACEPTO como censo documental** | `analysis/s178_census/audit_pending.py:build()` reproduce exactamente el JSON: 94 hitos, 39 subetiquetas, cuatr"
-  },
-  {
-   "file": "docs/capture/repo-audit-2026-10-24.md",
-   "line": 111,
-   "text": "coinciden con los manifiestos finales; ninguno falta. S1–S48 sin cambios."
-  },
-  {
-   "file": "docs/capture/research-plan.md",
-   "line": 8,
-   "text": "por variante e ID de secuencia; falta enlazar su instalación/interrupción."
-  },
-  {
-   "file": "docs/capture/research-plan.md",
-   "line": 80,
-   "text": "Continuar desde silent-shutter-status.md: aún falta ligar el estado al fin de"
-  },
-  {
-   "file": "docs/capture/s115-cam-imager.md",
-   "line": 52,
-   "text": "A6000 y A7S no se ha comprobado)."
-  },
-  {
-   "file": "docs/capture/s121-aip.md",
-   "line": 53,
-   "text": "de la A6000 falta → añade la instrumentación del `SaDriverZoomNrEe`."
-  },
-  {
-   "file": "docs/capture/s122-camera-main-tc.md",
-   "line": 46,
-   "text": "(falta idx 105, interior vacío); **119 textos con refs PIC / 123 sitios** frente a 123/256."
-  },
-  {
-   "file": "docs/capture/s128-label-map.md",
-   "line": 35,
-   "text": "- Para los 20 \"NUEVO/PROPIO\" no se ha comprobado uno por uno si el contenido es nuevo o si la"
-  },
-  {
-   "file": "docs/capture/s129-camera-main-im.md",
-   "line": 57,
-   "text": "- Contexto de `0x437b8774` = struct de S124 (+4/+6 coinciden, base distinta): sin verificar; tampoco"
-  },
-  {
-   "file": "docs/capture/s134-svrnum-vdnum-status.md",
-   "line": 47,
-   "text": "No se ha identificado quién escribe `[estado+0x24]` ni quién rellena la sub-estructura con `svr_num`/`VdNum`."
-  },
-  {
-   "file": "docs/capture/s135-elec-shutter.md",
-   "line": 30,
-   "text": "`api_EC_GetApolloLapNum()` `0x43caa193`), lo que falta es **exactamente** la sub-rama"
-  },
-  {
-   "file": "docs/capture/s145-imager-code-gap.md",
-   "line": 40,
-   "text": "reproducible de los bytes, sin presentar la falta de CFG como ausencia de código."
-  },
-  {
-   "file": "docs/capture/s16-claude-effect-control.md",
-   "line": 5,
-   "text": "Continúo directamente el trabajo de sesión 15 (`docs/capture/branch-claude-objeffect.md`, `docs/capture/liveview-encodestill-parallel-verdict.md`, `analysis/branch-claude-effect-states.json`, `analysi"
-  },
-  {
-   "file": "docs/capture/s16-codex-fea-completion.md",
-   "line": 85,
-   "text": "El candidato de consumidor de completitud es `StillConverter`, respaldado por las cadenas de callback presentes en `libObj.so`. Falta una xref estática directa que una el registro de callback, el valo"
-  },
-  {
-   "file": "docs/capture/s16-main-delivery-sequences.md",
-   "line": 74,
-   "text": "Este hallazgo **no mejora ni empeora** la viabilidad de la arquitectura E: refuerza con una segunda fuente independiente que el modo 1 (`0x600d`) es un camino real y simple del parser, pero añade evid"
-  },
-  {
-   "file": "docs/capture/s169-drive-api-a6300.md",
-   "line": 29,
-   "text": "Es decir: **no falta la traza, falta el parámetro**. Esto **reforza S135** (que encontró el"
-  },
-  {
-   "file": "docs/capture/s169-drive-api-a6300.md",
-   "line": 51,
-   "text": "**sí** tiene `drive_mode` (el del imager de S134, 10 apariciones) → **no** le falta el"
-  },
-  {
-   "file": "docs/capture/s169-drive-api-a6300.md",
-   "line": 52,
-   "text": "subsistema: le falta **esta capa de validación de parámetros**, y sus parámetros no incluyen"
-  },
-  {
-   "file": "docs/capture/s17-claude-a-topology.md",
-   "line": 291,
-   "text": "solo que se llegue a invocar `ObjPin::Connect` para esa fila — haría falta que el modelo en cuestión"
-  },
-  {
-   "file": "docs/capture/s17-claude-b-camerasequence.md",
-   "line": 253,
-   "text": "qué §6 no puede verificarse más allá de HIPÓTESIS: falta la parte Java/Dalvik del sistema, que"
-  },
-  {
-   "file": "docs/capture/s17-claude-b-camerasequence.md",
-   "line": 280,
-   "text": "Esto es trabajo de integración por hacer, no un camino ya operativo."
-  },
-  {
-   "file": "docs/capture/s17-main-s2-integration.md",
-   "line": 105,
-   "text": "- Relación entre el evento Java `onShutterKeyDown` (PMCADemo/Android) y `RelMgr::0x4379d838` nativo — pendiente de integración con hallazgo de Claude B."
-  },
-  {
-   "file": "docs/capture/s171-imager-api.md",
-   "line": 45,
-   "text": "estabilización (tiene el subsistema IS/EIS de **S164**): lo que le falta es **este canal del"
-  },
-  {
-   "file": "docs/capture/s176-imager-state-readers.md",
-   "line": 40,
-   "text": "El pendiente de reconstruir estos entregables queda completado; S51 no cambia."
-  },
-  {
-   "file": "docs/capture/s178-census.md",
-   "line": 51,
-   "text": "con `[SFRA]`/`[SFRS]`. Sigue `ACEPTO` como candidato y **pendiente de"
-  },
-  {
-   "file": "docs/capture/s18-claude-a-lifecycle.md",
-   "line": 81,
-   "text": "Pendiente de sesión 18 anterior (`s18-main-init-437ebed8.md`, sección 6). Decompilé las 4 con `scripts/ghidra_dec.sh` sobre el proyecto compartido `silent-liro` (solo lectura)."
-  },
-  {
-   "file": "docs/capture/s18-claude-a-lifecycle.md",
-   "line": 90,
-   "text": "**Conclusión Q4**: las 3 filas que sí pude decompilar completas (`0xc8`, `0xdc`, y la cabecera de `0x104`) son variantes casi idénticas de **un mismo manejador genérico de etapas de captura** (reinten"
   },
   {
    "file": "docs/capture/s18-codex-e-yc-buffers.md",
@@ -3132,139 +2335,9 @@
    "text": "| DESCARTADO | Identificar CMPR como acelerador JPEG/ISP o deducir desde él el formato YC de esta ruta. | Su código identifica LZPART, no JPEG/YUV; además falta una arista estática hacia la tubería pr"
   },
   {
-   "file": "docs/capture/s19-dcf-playback-completion.md",
-   "line": 48,
-   "text": "No declarar SilentShutter funcional. La cadena conocida llega a una admisión asíncrona de escritura y MPR posee primitivas independientes de archivo, DCF y reproducción; falta la arista de finalizació"
-  },
-  {
-   "file": "docs/capture/s19-mechanical-shutter-decision-points.md",
-   "line": 19,
-   "text": "mecánica haría falta, como mínimo, que el evento no supere las guardas de"
-  },
-  {
-   "file": "docs/capture/s19-mechanical-shutter-decision-points.md",
-   "line": 76,
-   "text": "una solicitud entre la admisión y las filas LIRO, y qué invariantes habría que"
-  },
-  {
-   "file": "docs/capture/s19-post-s2-cancellation-states.md",
-   "line": 53,
-   "text": "**S19-14 (f): `Stage_RawPlayInit` y reutilización de etapas.** Es la opción pendiente más útil: las etapas LIRO anteriores revelan contratos de retorno y limpieza (`0x437f22d4`), pero falta recuperar "
-  },
-  {
-   "file": "docs/capture/s20-claude-autonomous-verdict.md",
-   "line": 80,
-   "text": "falta de límites de función recuperados en este binario *stripped*. P3"
-  },
-  {
-   "file": "docs/capture/s20-codex-mpr-13de98-13dbb0.md",
-   "line": 37,
-   "text": "| INFERENCIA | El wrapper pertenece a una capa de adaptación AVI/MPR; lo respalda el conversor exportado, pero falta un símbolo o registro que atribuya exactamente `0x13df20` a clase/método. | Salto a"
-  },
-  {
-   "file": "docs/capture/s20-codex-mpr-dcf-chain.md",
-   "line": 186,
-   "text": "rango; no hace falta inventar una traducción desde `0xc0000012` para unirlo"
-  },
-  {
    "file": "docs/capture/s20-codex-mpr-dcf-chain.md",
    "line": 202,
    "text": "| Falta | Clasificación | Siguiente comprobación estática |"
-  },
-  {
-   "file": "docs/capture/s20-p3-objcamera-pin-attempt.md",
-   "line": 73,
-   "text": "pendiente de depurar por qué `scripts/libobj_dec.sh`/`DecompAt.java` falla"
-  },
-  {
-   "file": "docs/capture/s20-rawplay-stage-reuse.md",
-   "line": 72,
-   "text": "de metadatos (puntero + 2 campos), sin verificar que apunten a un buffer"
-  },
-  {
-   "file": "docs/capture/s201-imx210-imx235-registers.md",
-   "line": 20,
-   "text": "- **Una consulta vacía no prueba ausencia:** la ausencia de `CheckSet*` / `…ForLiro` / modo silencioso se confirmó con barrido de bytes, no solo con falta de xrefs."
-  },
-  {
-   "file": "docs/capture/s202-imx210-imx235-timing.md",
-   "line": 61,
-   "text": "- Una consulta vacía de REA no prueba ausencia: la falta de fórmula equivalente en IMX235 se basa en el examen de la matriz, no en la ausencia de xrefs."
-  },
-  {
-   "file": "docs/capture/s202-imx210-imx235-timing.md",
-   "line": 70,
-   "text": "Clasificación final resumida + veredicto sobre qué falta en la A6000; regeneración del backlog y cierre del ciclo."
-  },
-  {
-   "file": "docs/capture/s21-claude-button-to-shutter-order.md",
-   "line": 130,
-   "text": "1. **K2→K3**: falta el código libObj entre `InfraInput` (`0x7a0020`) y los envíos `0x4042/0x4043` (CamUser/RelMgr bridge). También falta asignar `XS_1/XS_2` a códigos (`key_tbl` en Backup)."
-  },
-  {
-   "file": "docs/capture/s21-claude-button-to-shutter-order.md",
-   "line": 131,
-   "text": "2. **MSS_S2_REQ_CA / DWN_IN_RELEASE / XS_1→INT10**: falta quién los activa en IC6000 (driver o LIRO) y qué manejadores de interrupción FM3 los atienden. El pin exacto de IC6000 para `MSS_S2_REQ_CA` es"
-  },
-  {
-   "file": "docs/capture/s21-claude-button-to-shutter-order.md",
-   "line": 132,
-   "text": "3. **L5**: falta qué estado de la máquina `0x302d9` está activo al llegar `0x100`. El registro de `0x43807f4c` está verificado; su activación, no."
-  },
-  {
-   "file": "docs/capture/s21-claude-button-to-shutter-order.md",
-   "line": 133,
-   "text": "4. **L11**: falta la codificación tag `0x12`/`0x13` → trama CAIF en `0x436bc140` y su correspondencia con el opcode del parser Darwin."
-  },
-  {
-   "file": "docs/capture/s21-claude-button-to-shutter-order.md",
-   "line": 134,
-   "text": "5. **D1**: falta unir la trama de captura recibida → descriptor/fase Darwin → primera escritura P4D/P4E (`0x1f694/0x1f8a2/0x1f914/0x20154`)."
-  },
-  {
-   "file": "docs/capture/s21-claude-button-to-shutter-order.md",
-   "line": 135,
-   "text": "6. Falta confirmar la fila `+0x12c` y el valor `cap+0x4b70==7`."
-  },
-  {
-   "file": "docs/capture/s21-claude-button-to-shutter-order.md",
-   "line": 143,
-   "text": "única arista que queda entre la orden LIRO y la bobina. En paralelo, falta determinar si la línea"
-  },
-  {
-   "file": "docs/capture/s21-codex-exposure-to-library.md",
-   "line": 159,
-   "text": "están documentadas; no se ha verificado un archivo materializado."
-  },
-  {
-   "file": "docs/capture/s21-codex-exposure-to-library.md",
-   "line": 231,
-   "text": "`0x81bb50`), no por branch directo. Falta seguir su llamador virtual y la"
-  },
-  {
-   "file": "docs/capture/s21-codex-exposure-to-library.md",
-   "line": 253,
-   "text": "y reproducción pueden leer el catálogo; falta probar que leen esta entrada"
-  },
-  {
-   "file": "docs/capture/s21-codex-exposure-to-library.md",
-   "line": 338,
-   "text": "**VEREDICTO: CAMBIOS** — faltan las aristas indicadas para considerar completo"
-  },
-  {
-   "file": "docs/capture/s22-sensor-to-yc.md",
-   "line": 128,
-   "text": "Bloqueo concreto: falta la arista desde la terminación de lectura/DMA del"
-  },
-  {
-   "file": "docs/capture/s23-yc-pin-dataflow-boundary.md",
-   "line": 130,
-   "text": "por sí solo, el productor de píxeles. Falta el handler del destino guardado en"
-  },
-  {
-   "file": "docs/capture/s24-camera-yc0-effect-endpoint.md",
-   "line": 74,
-   "text": "configuración Dataflow en el dominio ObjEffect. Falta localizar el receptor de"
   },
   {
    "file": "docs/capture/s28-osal-pin-contract-closure.md",
@@ -3272,219 +2345,9 @@
    "text": "la hipótesis inicial de 12 salidas, además de detectar la falta de este cierre."
   },
   {
-   "file": "docs/capture/s29-writestill-end-to-end.md",
-   "line": 284,
-   "text": "| Falta imagen, metadatos o estado admisible | Puede rechazarse antes de escribir; revisar resultado y rama, no solo la presencia de un callback |"
-  },
-  {
-   "file": "docs/capture/s30-pipelines-capture-encode.md",
-   "line": 12,
-   "text": "| 2. Sensor/DMA → YC válido | Se resolvió el origen de `ctx+0x4b54`: es CaptureId. Esa ruta no entrega el raster. Falta identificar el productor real y su terminación DMA. | **NO CERRADO** |"
-  },
-  {
-   "file": "docs/capture/s30-pipelines-capture-encode.md",
-   "line": 129,
-   "text": "píxeles: falta asignar la semántica completa de esas entradas y verificar"
-  },
-  {
-   "file": "docs/capture/s301-a7s-state-xref-sweep.md",
-   "line": 109,
-   "text": "falta seguir sus escritores hasta el selector `0x43826d58` (siguiente ítem)."
-  },
-  {
-   "file": "docs/capture/s302-drive-mode-exposure-tables.md",
-   "line": 152,
-   "text": "| **¿Demuestra esto incapacidad hardware?** | **NO** (S51: A=NO, B=NO, C=NO) — IMX210 tiene lectura electrónica (vídeo/LiveView); DFE/P2S idénticos; solo falta integración firmware |"
-  },
-  {
-   "file": "docs/capture/s31-camera-main-sync-strings.md",
-   "line": 99,
-   "text": "Dato que falta y procedimiento no destructivo: resolver estáticamente quién"
-  },
-  {
-   "file": "docs/capture/s31-camera-main-sync-strings.md",
-   "line": 101,
-   "text": "para comportamiento físico haría falta una captura pasiva correlacionada de"
-  },
-  {
-   "file": "docs/capture/s310-vtable-thunk.md",
-   "line": 47,
-   "text": "- No se resuelve el objeto (`r0`) ni su vtable; haría falta seguirlo hasta su construcción o"
-  },
-  {
-   "file": "docs/capture/s32-vd-callbacks-sync-ycout.md",
-   "line": 91,
-   "text": "queda sin destino concreto: falta el objeto/vtable efectivo de ejecución."
-  },
-  {
-   "file": "docs/capture/s32-vd-callbacks-sync-ycout.md",
-   "line": 133,
-   "text": "Para resolver el raster falta el handle efectivo en `input+0x10/+0xd4`, su"
-  },
-  {
-   "file": "docs/capture/s32-vd-callbacks-sync-ycout.md",
-   "line": 134,
-   "text": "asignación/mapeo DMM y el significado de los pares de bloques; también falta"
-  },
-  {
-   "file": "docs/capture/s32-vd-callbacks-sync-ycout.md",
-   "line": 142,
-   "text": "receptor consuma el payload YC. Falta la tupla remota efectiva de cada pin"
-  },
-  {
-   "file": "docs/capture/s329-mode-timing-tables.md",
-   "line": 105,
-   "text": "- Una consulta vacía no prueba ausencia: el negativo se sostiene en la enumeración de estructuras y en el barrido de bytes, no en falta de xrefs."
-  },
-  {
-   "file": "docs/capture/s331-consumer-signature.md",
-   "line": 106,
-   "text": "- No se ha identificado quién consume los bloques `obj+0x16`, `obj+0x2e`, `obj+0xa5` (queda como S334)."
-  },
-  {
-   "file": "docs/capture/s335-mmio-layer.md",
-   "line": 79,
-   "text": "- No se ha verificado si el bloque pertenece al driver del sensor, al P2S/DFE o a otro periférico."
-  },
-  {
-   "file": "docs/capture/s34-apl-dma-vd-interrupts.md",
-   "line": 101,
-   "text": "software y lo comparan con el actual. Falta la regla hardware de latch/inicio"
-  },
-  {
-   "file": "docs/capture/s34-apl-dma-vd-interrupts.md",
-   "line": 157,
-   "text": "Faltan concretamente:"
-  },
-  {
-   "file": "docs/capture/s34-apl-dma-vd-interrupts.md",
-   "line": 162,
-   "text": "EC/LM. La tabla software ya no es desconocida; falta asociarla a estos bancos."
-  },
-  {
-   "file": "docs/capture/s341-synthesis-b2.md",
-   "line": 56,
-   "text": "| Pregunta | Estado | Qué haría falta |"
-  },
-  {
-   "file": "docs/capture/s342-fef404-consumers.md",
-   "line": 110,
-   "text": "- Los ids de la A6000 son **subconjunto estricto** de los del A7S: faltan exactamente `0x4f..0x64` (22 ids). La A6300 tiene **la misma lista** que la A7S."
-  },
-  {
-   "file": "docs/capture/s343-row-copy-chain.md",
-   "line": 100,
-   "text": "- La A6000 no tiene **ningún** campo exclusivo; le falta **uno** del A7S: `0xfc0a3100 + 0xc`, bit 24 (A7S `0x436f8180`). Es el único bit diferencial de toda la capa."
-  },
-  {
-   "file": "docs/capture/s345-mask-reachability.md",
-   "line": 86,
-   "text": "- La puerta `0x43ad9b50` del segundo sitio del A7S no se ha identificado."
-  },
-  {
-   "file": "docs/capture/s35-dfe-objects-static-frontier.md",
-   "line": 135,
-   "text": "Para superar esta frontera hace falta una especificación fiable del bloque"
-  },
-  {
-   "file": "docs/capture/s35-dfe-objects-static-frontier.md",
-   "line": 141,
-   "text": "hay interfaz de traza capaz de observar esos MMIO internos, hace falta acceso"
-  },
-  {
-   "file": "docs/capture/s384-queue-id-0x40193-search.md",
-   "line": 19,
-   "text": "El encoding correcto `40 f2 93 13` es `movw r3,#0x193` y existe en ambos binarios (A6000, por ejemplo, `0x14ccde`). `c0 f2 04 00` es `movt r0,#4`. Un barrido por máscaras de halfwords de `.text` detec"
-  },
-  {
-   "file": "docs/capture/s385-libobj-a6000-vs-a7s-diff.md",
-   "line": 124,
-   "text": "| Equivalencia de ejecución A6000/A7S | Parejas estáticas identificadas; falta validar semántica de callees y comportamiento físico |"
-  },
-  {
-   "file": "docs/capture/s385-libobj-a6000-vs-a7s-diff.md",
-   "line": 127,
-   "text": "| Quién registra callback de cola 0x40193 | PLT y llamadas estáticas recuperados en S381; falta seguir argumentos hasta ese ID |"
-  },
-  {
-   "file": "docs/capture/s401-a7s-silent-control-path.md",
-   "line": 181,
-   "text": "| CAIF bit 0x20 | **Sí** (inferido) | **No** | **FALTA** |"
-  },
-  {
-   "file": "docs/capture/s401-a7s-silent-control-path.md",
-   "line": 182,
-   "text": "| Darwin no_silent | **Sí** | **No** | **FALTA** |"
-  },
-  {
-   "file": "docs/capture/s401-a7s-silent-control-path.md",
-   "line": 231,
-   "text": "| B: parche justificable | **NO** — faltan: bit CAIF, predicado Darwin, consumidor imager, semántica registros IMX210 |"
-  },
-  {
-   "file": "docs/capture/s401-a7s-silent-control-path.md",
-   "line": 232,
-   "text": "| C: hardware imposible | **NO** — IMX210 tiene lectura electrónica (LiveView/vídeo); Darwin tipo 0 existe; solo falta integración |"
-  },
-  {
-   "file": "docs/capture/s402-physical-test-mapping.md",
-   "line": 4,
-   "text": "> Basado en `s401-a7s-silent-control-path.md`. Para cada diferencia, se indica cuál prueba de `physical-test-plan.md` la confirmaría o refutaría, y se proponen pruebas nuevas donde faltan."
-  },
-  {
-   "file": "docs/capture/s402-physical-test-mapping.md",
-   "line": 87,
-   "text": "- **Refutaría**: Si A6000 IMX210 programa mismos registros que A7S IMX235 → driver capaz, falta activación."
-  },
-  {
-   "file": "docs/capture/s402-physical-test-mapping.md",
-   "line": 131,
-   "text": "- **P10** es la prueba más directa para verificar si `av-cam.bin` A6000 tiene la **capacidad latente** de poner bit 0x20 (como A6300) y solo le falta el origen del valor."
-  },
-  {
-   "file": "docs/capture/s403-cierre-pendientes.md",
-   "line": 60,
-   "text": "- Efecto sobre las 66 afirmaciones sin verificar: las 20 de logger dual quedan con negativo acotado; de las 46 de equivalencia, las"
-  },
-  {
-   "file": "docs/capture/s44-register-consumer-mode-table.md",
-   "line": 149,
-   "text": "**PARCIAL:** falta demostrar que P es exactamente C=*(contexto+`0x50`)"
-  },
-  {
-   "file": "docs/capture/s45-context-identity-and-physical-closure.md",
-   "line": 60,
-   "text": "sin atribuirle este productor de 2. Falta el escritor de `43e9d3b4+94/+95`"
-  },
-  {
-   "file": "docs/capture/s45-context-identity-and-physical-closure.md",
-   "line": 124,
-   "text": "está seguido hasta base+220, pero la base física y el efecto eléctrico faltan."
-  },
-  {
-   "file": "docs/capture/s45-context-identity-and-physical-closure.md",
-   "line": 125,
-   "text": "También faltan semántica ID0 y demostración de fin electrónico/cortinas."
-  },
-  {
    "file": "docs/capture/s46-vd-base-and-context-identity.md",
    "line": 3,
    "text": "> **Aviso D4 (25-10-2026):** [S47](s47-payload-producer-and-order.md) cierra el pendiente de orden: si el callback se ejecuta en esa invocación, escribe antes de la copia (no se recertifica un orden u"
-  },
-  {
-   "file": "docs/capture/s46-vd-base-and-context-identity.md",
-   "line": 117,
-   "text": "esos u16 ni que se ejecute en hardware. Falta el productor del payload y"
-  },
-  {
-   "file": "docs/capture/s47-payload-producer-and-order.md",
-   "line": 103,
-   "text": "**ANTES** de la copia. S47 supera el pendiente de orden de"
-  },
-  {
-   "file": "docs/capture/s47-payload-producer-and-order.md",
-   "line": 122,
-   "text": "de la copia dejan de ser pendientes; todavía faltan el productor original, el"
   },
   {
    "file": "docs/capture/s50-claude-electronic-config.md",
@@ -3492,84 +2355,9 @@
    "text": "(`xidx.py`, `calls.py`, `sh.py`). Ghidra histórico no hizo falta: LLVM decodifica las 38 708 direcciones."
   },
   {
-   "file": "docs/capture/s50-codex-exposure-curtains.md",
-   "line": 85,
-   "text": "Se resuelve el pendiente de colocación de S21:"
-  },
-  {
-   "file": "docs/capture/s50-codex-exposure-curtains.md",
-   "line": 126,
-   "text": "Para contestar afirmativamente falta una combinación alcanzable que una: modo completo, programación de inicio y fin por filas con efecto eléctrico identificado, ausencia de cierre mecánico durante es"
-  },
-  {
-   "file": "docs/capture/s50-parallel-conclusions.md",
-   "line": 72,
-   "text": "cada 10 s. No se modificó swap/kernel. `libObj.so` no se analizó (no hizo falta en S50): el límite ya no es de 3,8 GB."
-  },
-  {
-   "file": "docs/capture/s51-decision.md",
-   "line": 11,
-   "text": "| **A** | ¿Hay una ruta de exposición totalmente electrónica demostrada? | **NO** | falta de demostración |"
-  },
-  {
-   "file": "docs/capture/s51-decision.md",
-   "line": 12,
-   "text": "| **B** | ¿Hay evidencia suficiente para diseñar ya un parche funcional y justificable? | **NO** | falta de demostración |"
-  },
-  {
-   "file": "docs/capture/s51-decision.md",
-   "line": 18,
-   "text": "- No se ha identificado un fin electrónico de exposición (T2: no se conoce el significado de ID1/100/101)."
-  },
-  {
-   "file": "docs/capture/s515-audpinedtr.md",
-   "line": 12,
-   "text": "- **Referencias de código:** por determinar (pendiente de xrefs REA)."
-  },
-  {
-   "file": "docs/capture/s52-a7s-a6000-feasibility.md",
-   "line": 11,
-   "text": "| Conversor ajuste → tipo {0,2} | `0x4379ec04` | — | **falta** |"
-  },
-  {
-   "file": "docs/capture/s52-a7s-a6000-feasibility.md",
-   "line": 14,
-   "text": "| Espera CAIF 3 reordenada (S4) | `0x43b1c92e` | solo CAIF 5 | **falta** |"
-  },
-  {
-   "file": "docs/capture/s52-a7s-a6000-feasibility.md",
-   "line": 15,
-   "text": "| Marca Silent en paquete CAIF (S1 bit `0x20` en +0x12, S2 modo 2 en +0xd) | `0x4386329a`, `0x43863258` | `0x4384149c` / `0x43841468` sin rama | **falta** |"
-  },
-  {
-   "file": "docs/capture/s52-a7s-a6000-feasibility.md",
-   "line": 17,
-   "text": "| Política tipo 2 ⇒ clase 0 | `0x438649bc` | `0x43842158` sin rama | **falta** |"
-  },
-  {
-   "file": "docs/capture/s52-a7s-a6000-feasibility.md",
-   "line": 20,
-   "text": "| Modos de sensor `0x4e/0x4f` (48 campos propios) | matriz col 12/13 | sin equivalente; `0x0b`/`0x2f` lectura completa | **falta** |"
-  },
-  {
    "file": "docs/capture/s52-parallel-conclusions.md",
    "line": 58,
    "text": "| H52-7 la ausencia en A6000 es de configuración/controlador, no física | **HIPÓTESIS** («código existente activable»: **DESCARTADO**) | todas las piezas LIRO que faltan son software; Darwin con mismo"
-  },
-  {
-   "file": "docs/capture/s53-conclusions.md",
-   "line": 31,
-   "text": "**S51 se mantiene** (no parchear). Escenario B: falta lógica de firmware en Darwin A6000, además de LIRO e IMX210."
-  },
-  {
-   "file": "docs/capture/s53-darwin-a7s-a6000-comparison.md",
-   "line": 13,
-   "text": "| Bit Silent `+0x12 & 0x20` | `S+0xd0.b5`; clase→2; predicado `0x19a86`/`0x216c2` | **no se lee** (solo bits 0 y 3) | **distinto (falta en A6000)** | `0x18460..0x18488` vs `0x18052` |"
-  },
-  {
-   "file": "docs/capture/s55-conclusions.md",
-   "line": 35,
-   "text": "| H55-8 Darwin tipo 0 insuficiente por sí solo | **INFERENCIA fuerte** (S52/S53/S54 + S55: la señal de pines es idéntica en ambas, no es lo que falta) | falta LIRO + sensor | — |"
   },
   {
    "file": "docs/capture/s55-imx210-electronic-integration.md",
@@ -3587,204 +2375,14 @@
    "text": "**Fin electrónico de integración a resolución completa: NO VERIFICADA.** Ni demostrada ni refutada en la ruta convencional (registros). Eslabón exacto que falta: semántica de ID1/3–8/0x100–0x101 del I"
   },
   {
-   "file": "docs/capture/s56-imx210-register-transport.md",
-   "line": 31,
-   "text": "Falta (1) cómo el bloque P2S serializa la RAM (bits/reloj; hardware), (2) cuál es la semántica de ID1 (bits 2,3,4,6,7), `3–8`, `0x100/0x101` en el IMX210 (sin datasheet), (3) que DFE0 = CIS0 (SCK/SI/X"
-  },
-  {
-   "file": "docs/capture/s57-conclusions.md",
-   "line": 43,
-   "text": "Sin cambio: no hay parche justificable. Lo nuevo es un diagnóstico más preciso: el Silent A7S es **selección de modo de lectura + política de clase/CAIF** (S52/S53), y en A6000 faltan esos tres eslabo"
-  },
-  {
    "file": "docs/capture/s57-exposure-timing-origin.md",
    "line": 45,
    "text": "¿Alguno de estos parámetros es una operación de fin de integración? **No hay evidencia de ello**: los tres se escriben una vez al inicio (paso 0) y el firmware no reescribe ningún registro de 3–8 al t"
   },
   {
-   "file": "docs/capture/s57-imx235-silent-register-diff.md",
-   "line": 57,
-   "text": "**¿Qué diferencia funcional concreta permite a la A7S operar sin segunda cortina?** Con el firmware: (1) selecciona los modos de lectura `0x4e/0x4f` (columnas dedicadas, 33–35 registros distintos de l"
-  },
-  {
-   "file": "docs/capture/s57-p2s-vd-synchronization.md",
-   "line": 32,
-   "text": "Sin hardware: el bloque P2S, la IRQ que activa la bandera y los instantes reales no se observan. Falta seguir `0x436d594c` (callback registrada) y la tabla OSAL (`[[GOT 0x16dc]+0x14]+0x9c…0xa8`) hasta"
-  },
-  {
-   "file": "docs/capture/s58-a7s-silent-effective-diff.md",
-   "line": 49,
-   "text": "SetExposure modifica 0x02–0x07 y control; SetRead no cambia 0x0a/0x0c en los escenarios guardados. La coocurrencia con resolución, frecuencia y configuración SIF **no se recuperó**: falta el vínculo e"
-  },
-  {
-   "file": "docs/capture/s58-conclusions.md",
-   "line": 46,
-   "text": "Faltan: origen Tv, bloque M real por modo, significado de clk, restricciones que reconcilian productor/host; constructor y servicios A7S; semántica SIF/resolución de 0x0a/0x0c; llamadores efectivos de"
-  },
-  {
-   "file": "docs/capture/s58-conclusions.md",
-   "line": 71,
-   "text": "La respuesta final es **parcial**: se reconstruyó el cálculo y la configuración A7S bajo condiciones precisas, pero no qué configuración física suficiente falta al IMX210. El experimento estático de m"
-  },
-  {
-   "file": "docs/capture/s58-exposure-cycle.md",
-   "line": 39,
-   "text": "2. **El sensor termina por temporización programada.** Apoyado indirectamente por la programación anticipada de números de tiempo y compatible con A7S Silent. Falta documentar qué gobiernan en el sens"
-  },
-  {
-   "file": "docs/capture/s58-imx210-timing-units.md",
-   "line": 10,
-   "text": "| T | Tv≤0xc00→0xffffffff; 0xc01→4084937500 | saturación de 32 bits; unidad física sin verificar |"
-  },
-  {
-   "file": "docs/capture/s58-imx210-timing-units.md",
-   "line": 37,
-   "text": "Próximo paso: recuperar la fuente de los 12 u16 que `0x437aa65c` copia desde `0x437876dc()+0xdd0` y un estado de M/Tv alcanzable por modo. Para asociar estos números al fin físico de integración hace "
-  },
-  {
-   "file": "docs/capture/s59-cross-validation.md",
-   "line": 21,
-   "text": "| C59-10: 34 llamadas a `0x439b3918` en `0x4c/4d` (24 en el resto) y falta `0x438f7114` | CORREGIDO |"
-  },
-  {
-   "file": "docs/capture/s60-cross-validation.md",
-   "line": 9,
-   "text": "| Investigación IMX210 (A6000) | workspace-write | exit **1** al final por límite de uso; **entregables escritos antes del corte**: `docs/capture/s60-sol.md`, `tests/test_s60_sol.py` (6 tests OK al re"
-  },
-  {
-   "file": "docs/capture/s61-conclusions.md",
-   "line": 16,
-   "text": "**Ninguno (ALCANZABLE = 0).** Existe un estado PERMITIDO (`analysis/s61/e3_chain.json`). No se completa `(modo,M,Tv,clk,N,svr,VdNum,flags,svd,shd,spl)`: faltan escritores de `obj+0x2be..`, `G+0x168/16"
-  },
-  {
-   "file": "docs/capture/s62-pmca-injection.md",
-   "line": 114,
-   "text": "Cambio (cámara aún identificada como `ILCE-6000`, por eso no hace falta `-m`):"
-  },
-  {
-   "file": "docs/capture/s62-pmca-injection.md",
-   "line": 122,
-   "text": "Reversión (aquí **sí** hace falta `-m ILCE-6000`):"
-  },
-  {
-   "file": "docs/capture/s631-imaging_img.md",
-   "line": 3,
-   "text": "**03-11-2026.** Cierra la etiqueta `[IMAGING_IMG]` y amplía la primera versión con llamadores y estructura de `Image`, la última pendiente de la familia IMAGING del censo S178. La presencia de texto y"
-  },
-  {
-   "file": "docs/capture/sfra-linux-client.md",
-   "line": 23,
-   "text": "- Consecuencia: la resolución de SFRA por esta ruta queda limitada a 320/640/1024 de ancho (alto <=0x1d00/256); para 2 MP hacen falta los anchos 0x500/0x5a0/0x780 de `candidate_439a2dd0`, que ISS no p"
-  },
-  {
-   "file": "docs/capture/sfra-linux-client.md",
-   "line": 46,
-   "text": "- INFERENCIA: en la arquitectura Linux/MPR (B) la miniatura JPEG no se puede obtener por reescalado de un JPEG (no hay decodificador software conocido); haría falta (a) codificar un thumb desde el YC "
-  },
-  {
-   "file": "docs/capture/sfra-mpr-buffer-bridge.md",
-   "line": 58,
-   "text": "sola dónde ocurre toda la conversión LIRO→Linux; falta ese tramo."
-  },
-  {
-   "file": "docs/capture/shutter-investigation.md",
-   "line": 40,
-   "text": "no sustituye ese modo. No hace falta global shutter para obtener silencio: un"
-  },
-  {
-   "file": "docs/capture/shutter-investigation.md",
-   "line": 110,
-   "text": "mediante 0xa15fd0 (`sequence+0x20` → `+0x20`). Falta identificar consumidor y"
-  },
-  {
-   "file": "docs/capture/shutter-investigation.md",
-   "line": 167,
-   "text": "con el accessor de secuencia, pero aún falta demostrar que se trate de la"
-  },
-  {
-   "file": "docs/capture/shutter-trigger-state-machine.md",
-   "line": 332,
-   "text": "movimientos. Faltan el consumidor CamUser de `0x3011` y su vuelta a LIRO,"
-  },
-  {
-   "file": "docs/capture/silent-architecture-comparison.md",
-   "line": 26,
-   "text": "| Miniatura/EXIF | Reutiliza etapas Stage_THMEnc/SCNEnc/EXIF existentes (INFERENCIA, falta D) | **Bloqueante**: Linux no tiene codificador; habría que codificar thumb en LIRO igualmente | Igual que A "
-  },
-  {
    "file": "docs/capture/silent-architecture-comparison.md",
    "line": 30,
    "text": "| Evidencia que falta | Contenido de la tabla, qué etapas aceptan YC de LV, EXIF | Todo el tramo thumb/EXIF/reserva, evento de reproducción | Ambos |"
-  },
-  {
-   "file": "docs/capture/silent-architecture-comparison.md",
-   "line": 41,
-   "text": "1. (D) Tabla RESUELTA a nivel de filas (ver `capture-stage-reuse.md`); falta etiquetar los estados de la fila 8 (0x43b1be36) y ver cuáles aceptan un YC de LV."
-  },
-  {
-   "file": "docs/capture/silent-architecture-comparison.md",
-   "line": 55,
-   "text": "- Mejor candidata (INFERENCIA): inyectar vía `0x1027` modo 4 en ObjStillRecorder, que reutiliza `RecordStill::Execute` nativo. Falta verificar la fuente de imagen en modo 4 y su llegada a WriteStill."
-  },
-  {
-   "file": "docs/capture/silent-architecture-comparison.md",
-   "line": 88,
-   "text": "**Orden de sustento: A > E > E2.** A es la única demostrada. E tiene mecanismo nativo y cadena identificada pero faltan tres piezas: (1) crear `0x2a` en disparo, (2) que ObjEffect sirva `REQ_DELIVER` "
-  },
-  {
-   "file": "docs/capture/silent-architecture-comparison.md",
-   "line": 134,
-   "text": "**Orden de sustento: A > E > P ≈ E2.** E no se declara viable ni se descarta; su bloqueo de control se debilitó, sus bloqueos de datos y disparo persisten. P se añade como referencia pública mejor doc"
-  },
-  {
-   "file": "docs/capture/silent-caif-transport.md",
-   "line": 80,
-   "text": "todavía no se ha identificado de forma independiente el dispositivo ni"
-  },
-  {
-   "file": "docs/capture/silent-caif-transport.md",
-   "line": 148,
-   "text": "**VEREDICTO: CAMBIOS**. Falta identificar el receptor del cuerpo y comparar"
-  },
-  {
-   "file": "docs/capture/silent-imager-consumers.md",
-   "line": 119,
-   "text": "Dato que falta y procedimiento no destructivo para resolverlo: identidad completa"
-  },
-  {
-   "file": "docs/capture/silent-integration-design.md",
-   "line": 31,
-   "text": "`exifSrcInfo{exifSrcArea, model, software, publicMakerNote, pimInfo, secretMakerNote, mpfSrcArea}` + `mainJpg`, `thumJpg`, `screenNail`, cada uno como **(memHandle, offset, size)**; más `metaMemory*` "
-  },
-  {
-   "file": "docs/capture/silent-integration-design.md",
-   "line": 68,
-   "text": "- Punto de integración a estudiar: Pool (`InfraStillPool::RegisterImage`), no `0x1027`. Contrato: mensaje con `0x1000`, `0x100e` (tipo), `0x100b` (tabla de handles DMM u16), `0x1001` (fecha), `0x1006/"
-  },
-  {
-   "file": "docs/capture/silent-integration-design.md",
-   "line": 73,
-   "text": "- Pendiente de demostrar: formato YC admitido, remitente, `MediaMgr` ≠ None, tamaño objetivo (`ImageSize`), fallo de escritura (código en `0x3500/0x1001`), vuelta a Live View."
-  },
-  {
-   "file": "docs/capture/silent-integration-design.md",
-   "line": 91,
-   "text": "- Confirmado que `EffectInternalMode` es un holder indirecto (no un byte plano en `this`) con un escritor localizado (`0x173158`) que solo lo usa en el camino de PbCap (lee el campo `0x1025` del propi"
-  },
-  {
-   "file": "docs/capture/silent-integration-design.md",
-   "line": 93,
-   "text": "- Los bloqueos de integración siguen siendo los mismos tres de sesión 14 (modelo que cree `0x2a` en disparo, modo de Effect, tipo de unidad del visor), ahora con mejor caracterización del mecanismo qu"
-  },
-  {
-   "file": "docs/capture/silent-integration-design.md",
-   "line": 108,
-   "text": "- Consecuencia directa para el diseño: la pieza que falta sigue sin ser \"cómo convencer a un árbitro\", sino, igual que en sesión 16, \"qué modelo/mensaje de disparo fotográfico invocaría `createLifeCyc"
-  },
-  {
-   "file": "docs/capture/silent-integration-design.md",
-   "line": 118,
-   "text": "- El bloqueo de disparo en LIRO (consumidor de la cola `0x40193`/`0x3011`) se acerca un nivel: se identificó el dispatcher inmediatamente inferior (`0x43807f4c`, dominio `0x100..0x207`), pero el puent"
   },
   {
    "file": "docs/capture/silent-shutter-status.md",
@@ -3802,99 +2400,9 @@
    "text": "| El hardware es incapaz de hacerlo | **RECHAZO** por falta de prueba de imposibilidad |"
   },
   {
-   "file": "docs/capture/static-closure-2026-10-25.md",
-   "line": 144,
-   "text": "(consultas de 300 s en S178/S380) y confirma que no hace falta intervención humana: el trabajo sobre `libObj.so` se"
-  },
-  {
-   "file": "docs/capture/t052-a-parametros-reales.md",
-   "line": 36,
-   "text": "6. **Decisión:** C3 **no se autoriza todavía**. No es una contradicción de la fórmula: es falta de"
-  },
-  {
-   "file": "docs/capture/t052-a-parametros-reales.md",
-   "line": 189,
-   "text": "**Lo que falta y bloquea la decisión:** `record+0xc`, `record+0x1c`, `record+0x20`, `record+0x64`,"
-  },
-  {
-   "file": "docs/capture/t052-a-parametros-reales.md",
-   "line": 455,
-   "text": "| E | ¿Se leyó el período de línea real? | **NO** | falta lectura de foto |"
-  },
-  {
-   "file": "docs/capture/t052-a-parametros-reales.md",
-   "line": 456,
-   "text": "| F | ¿Se leyó el VTS real? | **NO** | falta lectura de foto |"
-  },
-  {
-   "file": "docs/capture/t052-a-parametros-reales.md",
-   "line": 457,
-   "text": "| G | ¿El VTS coincide con 4219? | **NO demostrado** | falta lectura |"
-  },
-  {
-   "file": "docs/capture/t052-a-parametros-reales.md",
-   "line": 458,
-   "text": "| H | ¿La diferencia frente a 4266 tiene explicación demostrada? | **NO** | falta lectura del descriptor |"
-  },
-  {
-   "file": "docs/capture/t052-a-parametros-reales.md",
-   "line": 462,
-   "text": "| L | ¿Se estableció la vigencia temporal para una captura concreta? | **NO** | falta lectura de foto |"
-  },
-  {
    "file": "docs/capture/t052-a-parametros-reales.md",
    "line": 467,
    "text": "| Q | ¿Existe evidencia para ejecutar T052-B sin nuevas investigaciones estáticas? | **NO**: falta el *scratch* verificado y los bytes de la cueva; B0 debe ir primero | falta de evidencia |"
-  },
-  {
-   "file": "docs/capture/t052-b0-vts-predicado-fotografia.md",
-   "line": 30,
-   "text": "VTS no leído. El dato físico exacto que falta para cerrar B0 es la lectura de `record+0x20` (y del byte"
-  },
-  {
-   "file": "docs/capture/t052-b0-vts-predicado-fotografia.md",
-   "line": 151,
-   "text": "escritor/selector de foto no se localizó. La condición exacta que falta es: **valor de `[descriptor+6]` (o de"
-  },
-  {
-   "file": "docs/capture/t052-b0-vts-predicado-fotografia.md",
-   "line": 365,
-   "text": "| C | ¿Se pudo determinar el VTS fotográfico? | **NO** | falta lectura de foto |"
-  },
-  {
-   "file": "docs/capture/t052-b0-vts-predicado-fotografia.md",
-   "line": 369,
-   "text": "| G | ¿Se identificó si el cuadro extra está activo durante fotografía? | **SÍ en el estado configurado** (byte 0 → predicado 1); falta confirmación física | V estático + N físico |"
-  },
-  {
-   "file": "docs/capture/t052-b0-vts-predicado-fotografia.md",
-   "line": 379,
-   "text": "| Q | ¿Están cerradas las dependencias necesarias para preparar B1? | **CASI**: C3-B no necesita VTS/predicado; faltan la lectura física de B0 y el scratch/cueva | V/I |"
-  },
-  {
-   "file": "docs/capture/t052-b0-vts-predicado-fotografia.md",
-   "line": 384,
-   "text": "Los **NO** de C, F (parte física), I–L y M (datos de foto) son falta de medición, no imposibilidad física. El"
-  },
-  {
-   "file": "docs/capture/tesis-obturador-electronico.md",
-   "line": 15,
-   "text": "> **H₀ (hipótesis nula)**: La A6000 fw3.21 **no puede** realizar captura fotográfica totalmente electrónica (sin accionar ninguna cortina mecánica) a resolución completa, porque le faltan **tres eslab"
-  },
-  {
-   "file": "docs/capture/tesis-obturador-electronico.md",
-   "line": 80,
-   "text": "| **R1 (P5)**: Analizador lógico muestra bit 0x20 en `pkt[+0x12]` A7S Silent y **también** en A6000 si se fuerza campo captura | A6000 **sí** tiene capacidad latente de poner bit 0x20 | **Refuta H₀** "
-  },
-  {
-   "file": "docs/capture/tesis-obturador-electronico.md",
-   "line": 82,
-   "text": "| **R3 (P3+P12)**: Forzar tipo 2 en A6000 + aborto → **doble click** (bobinas accionan en reposición) | A6000 **tiene** reposición coherente latente | **Refuta H₀** parcial → H₁ gana (falta solo activ"
-  },
-  {
-   "file": "docs/capture/tesis-obturador-electronico.md",
-   "line": 97,
-   "text": "| **C**: ¿Hardware imposible? | **NO** | Sigue NO. IMX210 tiene lectura electrónica (vídeo/LiveView); Darwin tipo 0 existe; CAIF estructura compatible. Solo falta integración firmware. |"
   },
   {
    "file": "analysis/camera-dumps/nand-20261020/README.md",
@@ -4439,8 +2947,8 @@
  ],
  "status_by_file": {
   "docs/capture/PENDIENTES_FINALES.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 2,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 3,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -4451,8 +2959,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/RESEARCH_TASKS.md": {
-   "NO_VERIFICADO": 4,
-   "VERIFICADO": 17,
+   "NO_VERIFICADO": 5,
+   "VERIFICADO": 18,
    "INFERENCIA": 2,
    "HIPÓTESIS": 3,
    "CONFLICTO_PENDIENTE": 0,
@@ -4475,8 +2983,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/a6300-silent-comparison.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 1,
+   "NO_VERIFICADO": 3,
+   "VERIFICADO": 4,
    "INFERENCIA": 0,
    "HIPÓTESIS": 2,
    "CONFLICTO_PENDIENTE": 0,
@@ -4486,9 +2994,21 @@
    "SUPERADO": 0,
    "BLOQUEADO": 0
   },
+  "docs/capture/a6300-silent-software.md": {
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 1,
+   "INFERENCIA": 0,
+   "HIPÓTESIS": 0,
+   "CONFLICTO_PENDIENTE": 0,
+   "NEGATIVO": 0,
+   "REFUTADO": 0,
+   "CORREGIDO": 0,
+   "SUPERADO": 0,
+   "BLOQUEADO": 0
+  },
   "docs/capture/a7s-silent-reconstruction.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 14,
+   "NO_VERIFICADO": 2,
+   "VERIFICADO": 16,
    "INFERENCIA": 7,
    "HIPÓTESIS": 1,
    "CONFLICTO_PENDIENTE": 0,
@@ -4559,8 +3079,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/claude-main-bridge-verification.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 13,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 14,
    "INFERENCIA": 7,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -4595,8 +3115,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/darwin-state-machine.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 14,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 15,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -4607,8 +3127,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/darwin-via-actualizacion-2026-10-26.md": {
-   "NO_VERIFICADO": 1,
-   "VERIFICADO": 46,
+   "NO_VERIFICADO": 6,
+   "VERIFICADO": 51,
    "INFERENCIA": 16,
    "HIPÓTESIS": 2,
    "CONFLICTO_PENDIENTE": 0,
@@ -4619,8 +3139,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e21-lecturas-backups-2026-10-26.md": {
-   "NO_VERIFICADO": 4,
-   "VERIFICADO": 11,
+   "NO_VERIFICADO": 5,
+   "VERIFICADO": 12,
    "INFERENCIA": 3,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -4643,8 +3163,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e24-02-protocolo-actualizacion-darwin.md": {
-   "NO_VERIFICADO": 5,
-   "VERIFICADO": 31,
+   "NO_VERIFICADO": 7,
+   "VERIFICADO": 33,
    "INFERENCIA": 12,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -4655,8 +3175,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e24-03-auditoria-recuperacion-usb.md": {
-   "NO_VERIFICADO": 4,
-   "VERIFICADO": 31,
+   "NO_VERIFICADO": 7,
+   "VERIFICADO": 34,
    "INFERENCIA": 4,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -4667,8 +3187,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e24-04-dictamen-seguridad.md": {
-   "NO_VERIFICADO": 3,
-   "VERIFICADO": 7,
+   "NO_VERIFICADO": 4,
+   "VERIFICADO": 8,
    "INFERENCIA": 7,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -4679,8 +3199,8 @@
    "BLOQUEADO": 2
   },
   "docs/capture/e24-05-upd-y-rearme.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 61,
+   "NO_VERIFICADO": 4,
+   "VERIFICADO": 65,
    "INFERENCIA": 6,
    "HIPÓTESIS": 1,
    "CONFLICTO_PENDIENTE": 0,
@@ -4703,8 +3223,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e24-05d-consumidor-estado-darwin-bionz.md": {
-   "NO_VERIFICADO": 1,
-   "VERIFICADO": 8,
+   "NO_VERIFICADO": 3,
+   "VERIFICADO": 10,
    "INFERENCIA": 2,
    "HIPÓTESIS": 1,
    "CONFLICTO_PENDIENTE": 0,
@@ -4727,8 +3247,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e24-05f-emisores-mss-darwin.md": {
-   "NO_VERIFICADO": 1,
-   "VERIFICADO": 1,
+   "NO_VERIFICADO": 3,
+   "VERIFICADO": 3,
    "INFERENCIA": 0,
    "HIPÓTESIS": 1,
    "CONFLICTO_PENDIENTE": 0,
@@ -4775,8 +3295,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e24-05h-dependencias-finales-captura.md": {
-   "NO_VERIFICADO": 2,
-   "VERIFICADO": 11,
+   "NO_VERIFICADO": 4,
+   "VERIFICADO": 13,
    "INFERENCIA": 2,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -4787,8 +3307,8 @@
    "BLOQUEADO": 1
   },
   "docs/capture/e25-02-validacion-candidato-y-via-volatil.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 2,
+   "NO_VERIFICADO": 2,
+   "VERIFICADO": 4,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -4799,8 +3319,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e25-04-recuperabilidad-y-decision.md": {
-   "NO_VERIFICADO": 4,
-   "VERIFICADO": 22,
+   "NO_VERIFICADO": 11,
+   "VERIFICADO": 29,
    "INFERENCIA": 6,
    "HIPÓTESIS": 1,
    "CONFLICTO_PENDIENTE": 0,
@@ -4823,8 +3343,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e25-06-auditoria-independiente-paquetes.md": {
-   "NO_VERIFICADO": 2,
-   "VERIFICADO": 10,
+   "NO_VERIFICADO": 4,
+   "VERIFICADO": 12,
    "INFERENCIA": 3,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -4835,8 +3355,8 @@
    "BLOQUEADO": 1
   },
   "docs/capture/e25-10-exposicion-por-fila.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 6,
+   "NO_VERIFICADO": 2,
+   "VERIFICADO": 8,
    "INFERENCIA": 2,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -4847,8 +3367,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e25-11-r5-bionz-analisis.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 11,
+   "NO_VERIFICADO": 3,
+   "VERIFICADO": 14,
    "INFERENCIA": 7,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -4859,8 +3379,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e25-14-imx235-imx210-exposicion-electronica.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 2,
+   "NO_VERIFICADO": 3,
+   "VERIFICADO": 5,
    "INFERENCIA": 1,
    "HIPÓTESIS": 1,
    "CONFLICTO_PENDIENTE": 0,
@@ -4883,8 +3403,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e25-16-r5-autonomo-fotografia.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 3,
+   "NO_VERIFICADO": 2,
+   "VERIFICADO": 5,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -4895,8 +3415,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e25-17-bulb-exposicion-electronica-larga.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 1,
+   "NO_VERIFICADO": 4,
+   "VERIFICADO": 5,
    "INFERENCIA": 3,
    "HIPÓTESIS": 2,
    "CONFLICTO_PENDIENTE": 0,
@@ -4907,8 +3427,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e25-18-integracion-silent-todas-velocidades.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 5,
+   "NO_VERIFICADO": 2,
+   "VERIFICADO": 7,
    "INFERENCIA": 1,
    "HIPÓTESIS": 3,
    "CONFLICTO_PENDIENTE": 0,
@@ -4919,8 +3439,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e25-19-verificacion-fisica-exposicion-larga.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 0,
+   "NO_VERIFICADO": 7,
+   "VERIFICADO": 7,
    "INFERENCIA": 1,
    "HIPÓTESIS": 3,
    "CONFLICTO_PENDIENTE": 0,
@@ -4931,6 +3451,54 @@
    "BLOQUEADO": 2
   },
   "docs/capture/e25-19c-fin-exposicion-mensaje-temporizador.md": {
+   "NO_VERIFICADO": 2,
+   "VERIFICADO": 2,
+   "INFERENCIA": 1,
+   "HIPÓTESIS": 0,
+   "CONFLICTO_PENDIENTE": 0,
+   "NEGATIVO": 0,
+   "REFUTADO": 0,
+   "CORREGIDO": 0,
+   "SUPERADO": 0,
+   "BLOQUEADO": 0
+  },
+  "docs/capture/e25-19d-origen-74f-rama-host.md": {
+   "NO_VERIFICADO": 2,
+   "VERIFICADO": 4,
+   "INFERENCIA": 1,
+   "HIPÓTESIS": 1,
+   "CONFLICTO_PENDIENTE": 0,
+   "NEGATIVO": 0,
+   "REFUTADO": 0,
+   "CORREGIDO": 0,
+   "SUPERADO": 0,
+   "BLOQUEADO": 0
+  },
+  "docs/capture/e25-19e-origen-74f-selector-sensor.md": {
+   "NO_VERIFICADO": 4,
+   "VERIFICADO": 4,
+   "INFERENCIA": 2,
+   "HIPÓTESIS": 1,
+   "CONFLICTO_PENDIENTE": 0,
+   "NEGATIVO": 0,
+   "REFUTADO": 0,
+   "CORREGIDO": 0,
+   "SUPERADO": 0,
+   "BLOQUEADO": 0
+  },
+  "docs/capture/e25-19f-origen-geometria-74f.md": {
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 1,
+   "INFERENCIA": 1,
+   "HIPÓTESIS": 1,
+   "CONFLICTO_PENDIENTE": 0,
+   "NEGATIVO": 0,
+   "REFUTADO": 0,
+   "CORREGIDO": 0,
+   "SUPERADO": 0,
+   "BLOQUEADO": 0
+  },
+  "docs/capture/e25-21-setexposure-p2s.md": {
    "NO_VERIFICADO": 1,
    "VERIFICADO": 1,
    "INFERENCIA": 1,
@@ -4942,57 +3510,9 @@
    "SUPERADO": 0,
    "BLOQUEADO": 0
   },
-  "docs/capture/e25-19d-origen-74f-rama-host.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 2,
-   "INFERENCIA": 1,
-   "HIPÓTESIS": 1,
-   "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 0,
-   "REFUTADO": 0,
-   "CORREGIDO": 0,
-   "SUPERADO": 0,
-   "BLOQUEADO": 0
-  },
-  "docs/capture/e25-19e-origen-74f-selector-sensor.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 0,
-   "INFERENCIA": 2,
-   "HIPÓTESIS": 1,
-   "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 0,
-   "REFUTADO": 0,
-   "CORREGIDO": 0,
-   "SUPERADO": 0,
-   "BLOQUEADO": 0
-  },
-  "docs/capture/e25-19f-origen-geometria-74f.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 0,
-   "INFERENCIA": 1,
-   "HIPÓTESIS": 1,
-   "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 0,
-   "REFUTADO": 0,
-   "CORREGIDO": 0,
-   "SUPERADO": 0,
-   "BLOQUEADO": 0
-  },
-  "docs/capture/e25-21-setexposure-p2s.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 0,
-   "INFERENCIA": 1,
-   "HIPÓTESIS": 0,
-   "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 0,
-   "REFUTADO": 0,
-   "CORREGIDO": 0,
-   "SUPERADO": 0,
-   "BLOQUEADO": 0
-  },
   "docs/capture/e25-22-protocolo-transporte-fisico.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 5,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 6,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5014,6 +3534,18 @@
    "SUPERADO": 0,
    "BLOQUEADO": 0
   },
+  "docs/capture/e25-24-selector-efcs-electronico.md": {
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 1,
+   "INFERENCIA": 0,
+   "HIPÓTESIS": 0,
+   "CONFLICTO_PENDIENTE": 0,
+   "NEGATIVO": 0,
+   "REFUTADO": 0,
+   "CORREGIDO": 0,
+   "SUPERADO": 0,
+   "BLOQUEADO": 0
+  },
   "docs/capture/e25-24b-implementacion-selector.md": {
    "NO_VERIFICADO": 1,
    "VERIFICADO": 3,
@@ -5027,8 +3559,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e25-24c-protocolo-fisico-selector.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 1,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 2,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5063,8 +3595,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e25-27-construccion-firmware-integrado.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 26,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 27,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5075,8 +3607,8 @@
    "BLOQUEADO": 2
   },
   "docs/capture/e25-desactivacion-mecanica.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 1,
+   "NO_VERIFICADO": 2,
+   "VERIFICADO": 3,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5087,8 +3619,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e26-r10-usb-charger-recovery.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 16,
+   "NO_VERIFICADO": 2,
+   "VERIFICADO": 18,
    "INFERENCIA": 0,
    "HIPÓTESIS": 1,
    "CONFLICTO_PENDIENTE": 0,
@@ -5099,8 +3631,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e26-r11-bootrom-uart-physical-access.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 33,
+   "NO_VERIFICADO": 3,
+   "VERIFICADO": 36,
    "INFERENCIA": 0,
    "HIPÓTESIS": 1,
    "CONFLICTO_PENDIENTE": 0,
@@ -5111,8 +3643,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e26-r12-bootrom-static-audit.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 12,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 13,
    "INFERENCIA": 1,
    "HIPÓTESIS": 5,
    "CONFLICTO_PENDIENTE": 0,
@@ -5123,8 +3655,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e26-r13-led-error-provenance.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 1,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 2,
    "INFERENCIA": 2,
    "HIPÓTESIS": 6,
    "CONFLICTO_PENDIENTE": 0,
@@ -5135,8 +3667,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e26-r14-ramcfg-bos-analysis.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 1,
+   "NO_VERIFICADO": 2,
+   "VERIFICADO": 3,
    "INFERENCIA": 0,
    "HIPÓTESIS": 3,
    "CONFLICTO_PENDIENTE": 0,
@@ -5183,8 +3715,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e26-r19-darwin-usb-static.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 1,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 2,
    "INFERENCIA": 3,
    "HIPÓTESIS": 1,
    "CONFLICTO_PENDIENTE": 0,
@@ -5207,8 +3739,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e26-r20-bootrom-selector.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 2,
+   "NO_VERIFICADO": 2,
+   "VERIFICADO": 4,
    "INFERENCIA": 2,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5219,8 +3751,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e26-r20-keytable.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 0,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 1,
    "INFERENCIA": 0,
    "HIPÓTESIS": 1,
    "CONFLICTO_PENDIENTE": 0,
@@ -5231,8 +3763,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e26-r20-serie-plan.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 0,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 1,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5411,8 +3943,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e26-r35-serial-receiver-multi-paquete.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 1,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 2,
    "INFERENCIA": 0,
    "HIPÓTESIS": 1,
    "CONFLICTO_PENDIENTE": 0,
@@ -5423,8 +3955,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e26-r36-causa-fallo-325.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 2,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 3,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5447,8 +3979,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e26-r38-guard-y-entrada-updater.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 0,
+   "NO_VERIFICADO": 2,
+   "VERIFICADO": 2,
    "INFERENCIA": 5,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5471,8 +4003,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e26-r40-jtag-swd-bionz.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 0,
+   "NO_VERIFICADO": 3,
+   "VERIFICADO": 3,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5483,8 +4015,8 @@
    "BLOQUEADO": 1
   },
   "docs/capture/e26-r41-caminos-estaticos-restantes.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 0,
+   "NO_VERIFICADO": 4,
+   "VERIFICADO": 4,
    "INFERENCIA": 7,
    "HIPÓTESIS": 1,
    "CONFLICTO_PENDIENTE": 0,
@@ -5531,8 +4063,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e26-r45-firmware-325c-experimental.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 1,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 2,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5543,8 +4075,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e26-r46-procedimiento-fisico-swd.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 1,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 2,
    "INFERENCIA": 2,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5555,8 +4087,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e26-r5-loader3-servicio.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 23,
+   "NO_VERIFICADO": 7,
+   "VERIFICADO": 30,
    "INFERENCIA": 2,
    "HIPÓTESIS": 5,
    "CONFLICTO_PENDIENTE": 0,
@@ -5567,8 +4099,8 @@
    "BLOQUEADO": 1
   },
   "docs/capture/e26-r6-recuperacion-bionz.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 8,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 9,
    "INFERENCIA": 5,
    "HIPÓTESIS": 4,
    "CONFLICTO_PENDIENTE": 0,
@@ -5579,8 +4111,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e26-r7-recuperacion-estatica.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 40,
+   "NO_VERIFICADO": 3,
+   "VERIFICADO": 43,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5591,8 +4123,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e26-r7b-recuperacion-prelinux.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 14,
+   "NO_VERIFICADO": 3,
+   "VERIFICADO": 17,
    "INFERENCIA": 2,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5603,8 +4135,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e26-r8-bootrom-uart-boss.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 9,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 10,
    "INFERENCIA": 1,
    "HIPÓTESIS": 1,
    "CONFLICTO_PENDIENTE": 0,
@@ -5615,8 +4147,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e26-r9-bootrom-ram-execution.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 12,
+   "NO_VERIFICADO": 3,
+   "VERIFICADO": 15,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5627,8 +4159,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/e26-recovery.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 11,
+   "NO_VERIFICADO": 4,
+   "VERIFICADO": 15,
    "INFERENCIA": 0,
    "HIPÓTESIS": 2,
    "CONFLICTO_PENDIENTE": 0,
@@ -5639,8 +4171,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/efcs-darwin-silent-integracion.md": {
-   "NO_VERIFICADO": 7,
-   "VERIFICADO": 52,
+   "NO_VERIFICADO": 9,
+   "VERIFICADO": 54,
    "INFERENCIA": 7,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5651,8 +4183,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/electronic-still-low-resolution.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 45,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 46,
    "INFERENCIA": 10,
    "HIPÓTESIS": 6,
    "CONFLICTO_PENDIENTE": 0,
@@ -5711,8 +4243,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/imager-exposure-p2s.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 1,
+   "NO_VERIFICADO": 3,
+   "VERIFICADO": 4,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5723,8 +4255,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/imx210-video-readout.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 18,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 19,
    "INFERENCIA": 4,
    "HIPÓTESIS": 2,
    "CONFLICTO_PENDIENTE": 0,
@@ -5759,8 +4291,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/liveview-silent-capture-via-cameraex.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 8,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 9,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5771,8 +4303,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/liveview-yc-to-encodestill.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 31,
+   "NO_VERIFICADO": 2,
+   "VERIFICADO": 33,
    "INFERENCIA": 5,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5783,8 +4315,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/mpr-dcf-recording.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 36,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 37,
    "INFERENCIA": 1,
    "HIPÓTESIS": 1,
    "CONFLICTO_PENDIENTE": 0,
@@ -5843,8 +4375,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/objstillrecorder-mode4.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 13,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 14,
    "INFERENCIA": 2,
    "HIPÓTESIS": 1,
    "CONFLICTO_PENDIENTE": 0,
@@ -5891,8 +4423,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/physical-test-review-2026-10-26.md": {
-   "NO_VERIFICADO": 1,
-   "VERIFICADO": 3,
+   "NO_VERIFICADO": 4,
+   "VERIFICADO": 6,
    "INFERENCIA": 3,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5915,8 +4447,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/queue-40193-flow-2026-10-23.md": {
-   "NO_VERIFICADO": 1,
-   "VERIFICADO": 8,
+   "NO_VERIFICADO": 2,
+   "VERIFICADO": 9,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5927,8 +4459,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/rea-independent-milestone.md": {
-   "NO_VERIFICADO": 5,
-   "VERIFICADO": 12,
+   "NO_VERIFICADO": 6,
+   "VERIFICADO": 13,
    "INFERENCIA": 3,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5963,8 +4495,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/rea-tema3-cortinas-darwin.md": {
-   "NO_VERIFICADO": 8,
-   "VERIFICADO": 38,
+   "NO_VERIFICADO": 9,
+   "VERIFICADO": 39,
    "INFERENCIA": 5,
    "HIPÓTESIS": 2,
    "CONFLICTO_PENDIENTE": 0,
@@ -5999,8 +4531,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/registro-pruebas-camara.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 29,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 30,
    "INFERENCIA": 12,
    "HIPÓTESIS": 1,
    "CONFLICTO_PENDIENTE": 0,
@@ -6023,8 +4555,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/research-plan.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 2,
+   "NO_VERIFICADO": 2,
+   "VERIFICADO": 4,
    "INFERENCIA": 0,
    "HIPÓTESIS": 2,
    "CONFLICTO_PENDIENTE": 0,
@@ -6179,8 +4711,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s115-cam-imager.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 2,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 3,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -6335,8 +4867,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s128-label-map.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 1,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 2,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -6347,8 +4879,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s129-camera-main-im.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 1,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 2,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -6419,8 +4951,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s134-svrnum-vdnum-status.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 1,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 2,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -6431,8 +4963,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s135-elec-shutter.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 2,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 3,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -6731,8 +5263,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s16-codex-fea-completion.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 13,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 14,
    "INFERENCIA": 2,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -6875,8 +5407,8 @@
    "BLOQUEADO": 1
   },
   "docs/capture/s17-claude-a-topology.md": {
-   "NO_VERIFICADO": 7,
-   "VERIFICADO": 38,
+   "NO_VERIFICADO": 8,
+   "VERIFICADO": 39,
    "INFERENCIA": 5,
    "HIPÓTESIS": 4,
    "CONFLICTO_PENDIENTE": 0,
@@ -6887,8 +5419,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s17-claude-b-camerasequence.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 19,
+   "NO_VERIFICADO": 2,
+   "VERIFICADO": 21,
    "INFERENCIA": 5,
    "HIPÓTESIS": 3,
    "CONFLICTO_PENDIENTE": 0,
@@ -6935,8 +5467,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s17-main-s2-integration.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 20,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 21,
    "INFERENCIA": 2,
    "HIPÓTESIS": 5,
    "CONFLICTO_PENDIENTE": 0,
@@ -6983,8 +5515,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s171-imager-api.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 1,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 2,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -7043,8 +5575,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s178-census.md": {
-   "NO_VERIFICADO": 3,
-   "VERIFICADO": 3,
+   "NO_VERIFICADO": 4,
+   "VERIFICADO": 4,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -7067,8 +5599,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s18-claude-a-lifecycle.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 22,
+   "NO_VERIFICADO": 2,
+   "VERIFICADO": 24,
    "INFERENCIA": 6,
    "HIPÓTESIS": 3,
    "CONFLICTO_PENDIENTE": 0,
@@ -7427,8 +5959,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s19-dcf-playback-completion.md": {
-   "NO_VERIFICADO": 5,
-   "VERIFICADO": 17,
+   "NO_VERIFICADO": 6,
+   "VERIFICADO": 18,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -7487,8 +6019,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s19-mechanical-shutter-decision-points.md": {
-   "NO_VERIFICADO": 6,
-   "VERIFICADO": 16,
+   "NO_VERIFICADO": 8,
+   "VERIFICADO": 18,
    "INFERENCIA": 0,
    "HIPÓTESIS": 2,
    "CONFLICTO_PENDIENTE": 0,
@@ -7535,8 +6067,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s19-post-s2-cancellation-states.md": {
-   "NO_VERIFICADO": 5,
-   "VERIFICADO": 14,
+   "NO_VERIFICADO": 6,
+   "VERIFICADO": 15,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -7739,8 +6271,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s20-codex-mpr-13de98-13dbb0.md": {
-   "NO_VERIFICADO": 4,
-   "VERIFICADO": 16,
+   "NO_VERIFICADO": 5,
+   "VERIFICADO": 17,
    "INFERENCIA": 2,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -7787,8 +6319,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s20-p3-objcamera-pin-attempt.md": {
-   "NO_VERIFICADO": 2,
-   "VERIFICADO": 8,
+   "NO_VERIFICADO": 3,
+   "VERIFICADO": 9,
    "INFERENCIA": 2,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -7835,8 +6367,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s20-rawplay-stage-reuse.md": {
-   "NO_VERIFICADO": 2,
-   "VERIFICADO": 9,
+   "NO_VERIFICADO": 3,
+   "VERIFICADO": 10,
    "INFERENCIA": 1,
    "HIPÓTESIS": 1,
    "CONFLICTO_PENDIENTE": 0,
@@ -7979,8 +6511,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s21-claude-button-to-shutter-order.md": {
-   "NO_VERIFICADO": 3,
-   "VERIFICADO": 38,
+   "NO_VERIFICADO": 10,
+   "VERIFICADO": 45,
    "INFERENCIA": 8,
    "HIPÓTESIS": 3,
    "CONFLICTO_PENDIENTE": 0,
@@ -7991,8 +6523,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s21-codex-exposure-to-library.md": {
-   "NO_VERIFICADO": 29,
-   "VERIFICADO": 79,
+   "NO_VERIFICADO": 33,
+   "VERIFICADO": 83,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -8003,8 +6535,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s22-sensor-to-yc.md": {
-   "NO_VERIFICADO": 9,
-   "VERIFICADO": 28,
+   "NO_VERIFICADO": 10,
+   "VERIFICADO": 29,
    "INFERENCIA": 1,
    "HIPÓTESIS": 1,
    "CONFLICTO_PENDIENTE": 0,
@@ -8015,8 +6547,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s23-yc-pin-dataflow-boundary.md": {
-   "NO_VERIFICADO": 5,
-   "VERIFICADO": 11,
+   "NO_VERIFICADO": 6,
+   "VERIFICADO": 12,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -8027,8 +6559,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s24-camera-yc0-effect-endpoint.md": {
-   "NO_VERIFICADO": 2,
-   "VERIFICADO": 5,
+   "NO_VERIFICADO": 3,
+   "VERIFICADO": 6,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -8098,6 +6630,18 @@
    "SUPERADO": 0,
    "BLOQUEADO": 0
   },
+  "docs/capture/s30-pipelines-capture-encode.md": {
+   "NO_VERIFICADO": 2,
+   "VERIFICADO": 2,
+   "INFERENCIA": 0,
+   "HIPÓTESIS": 0,
+   "CONFLICTO_PENDIENTE": 0,
+   "NEGATIVO": 0,
+   "REFUTADO": 0,
+   "CORREGIDO": 0,
+   "SUPERADO": 0,
+   "BLOQUEADO": 0
+  },
   "docs/capture/s300-state-xref-sweep.md": {
    "NO_VERIFICADO": 2,
    "VERIFICADO": 7,
@@ -8111,8 +6655,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s301-a7s-state-xref-sweep.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 0,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 1,
    "INFERENCIA": 5,
    "HIPÓTESIS": 1,
    "CONFLICTO_PENDIENTE": 0,
@@ -8219,8 +6763,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s31-camera-main-sync-strings.md": {
-   "NO_VERIFICADO": 2,
-   "VERIFICADO": 14,
+   "NO_VERIFICADO": 4,
+   "VERIFICADO": 16,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -8231,8 +6775,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s310-vtable-thunk.md": {
-   "NO_VERIFICADO": 1,
-   "VERIFICADO": 1,
+   "NO_VERIFICADO": 2,
+   "VERIFICADO": 2,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -8339,8 +6883,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s32-vd-callbacks-sync-ycout.md": {
-   "NO_VERIFICADO": 1,
-   "VERIFICADO": 12,
+   "NO_VERIFICADO": 5,
+   "VERIFICADO": 16,
    "INFERENCIA": 1,
    "HIPÓTESIS": 1,
    "CONFLICTO_PENDIENTE": 0,
@@ -8495,8 +7039,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s331-consumer-signature.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 7,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 8,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -8543,8 +7087,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s335-mmio-layer.md": {
-   "NO_VERIFICADO": 1,
-   "VERIFICADO": 8,
+   "NO_VERIFICADO": 2,
+   "VERIFICADO": 9,
    "INFERENCIA": 0,
    "HIPÓTESIS": 1,
    "CONFLICTO_PENDIENTE": 0,
@@ -8603,8 +7147,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s34-apl-dma-vd-interrupts.md": {
-   "NO_VERIFICADO": 3,
-   "VERIFICADO": 7,
+   "NO_VERIFICADO": 6,
+   "VERIFICADO": 10,
    "INFERENCIA": 1,
    "HIPÓTESIS": 1,
    "CONFLICTO_PENDIENTE": 0,
@@ -8675,8 +7219,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s345-mask-reachability.md": {
-   "NO_VERIFICADO": 1,
-   "VERIFICADO": 6,
+   "NO_VERIFICADO": 2,
+   "VERIFICADO": 7,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -8723,8 +7267,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s35-dfe-objects-static-frontier.md": {
-   "NO_VERIFICADO": 3,
-   "VERIFICADO": 6,
+   "NO_VERIFICADO": 5,
+   "VERIFICADO": 8,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -8819,8 +7363,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s385-libobj-a6000-vs-a7s-diff.md": {
-   "NO_VERIFICADO": 2,
-   "VERIFICADO": 7,
+   "NO_VERIFICADO": 4,
+   "VERIFICADO": 9,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -8855,8 +7399,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s401-a7s-silent-control-path.md": {
-   "NO_VERIFICADO": 1,
-   "VERIFICADO": 13,
+   "NO_VERIFICADO": 3,
+   "VERIFICADO": 15,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -8867,8 +7411,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s402-physical-test-mapping.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 8,
+   "NO_VERIFICADO": 2,
+   "VERIFICADO": 10,
    "INFERENCIA": 2,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -8939,8 +7483,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s44-register-consumer-mode-table.md": {
-   "NO_VERIFICADO": 2,
-   "VERIFICADO": 7,
+   "NO_VERIFICADO": 3,
+   "VERIFICADO": 8,
    "INFERENCIA": 2,
    "HIPÓTESIS": 1,
    "CONFLICTO_PENDIENTE": 0,
@@ -8951,8 +7495,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s45-context-identity-and-physical-closure.md": {
-   "NO_VERIFICADO": 4,
-   "VERIFICADO": 8,
+   "NO_VERIFICADO": 7,
+   "VERIFICADO": 11,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -8963,8 +7507,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s46-vd-base-and-context-identity.md": {
-   "NO_VERIFICADO": 3,
-   "VERIFICADO": 9,
+   "NO_VERIFICADO": 4,
+   "VERIFICADO": 10,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -8975,8 +7519,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s47-payload-producer-and-order.md": {
-   "NO_VERIFICADO": 2,
-   "VERIFICADO": 7,
+   "NO_VERIFICADO": 3,
+   "VERIFICADO": 8,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -9023,8 +7567,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s50-codex-exposure-curtains.md": {
-   "NO_VERIFICADO": 10,
-   "VERIFICADO": 47,
+   "NO_VERIFICADO": 11,
+   "VERIFICADO": 48,
    "INFERENCIA": 4,
    "HIPÓTESIS": 2,
    "CONFLICTO_PENDIENTE": 1,
@@ -9179,8 +7723,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s51-decision.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 8,
+   "NO_VERIFICADO": 3,
+   "VERIFICADO": 11,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -9275,8 +7819,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s515-audpinedtr.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 3,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 4,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -9371,8 +7915,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s53-conclusions.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 2,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 3,
    "INFERENCIA": 2,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -9611,8 +8155,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s56-imx210-register-transport.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 3,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 4,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -9635,8 +8179,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s57-conclusions.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 9,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 10,
    "INFERENCIA": 3,
    "HIPÓTESIS": 3,
    "CONFLICTO_PENDIENTE": 0,
@@ -9671,8 +8215,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s57-imx235-silent-register-diff.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 1,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 2,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -9683,8 +8227,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s57-p2s-vd-synchronization.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 2,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 3,
    "INFERENCIA": 2,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -9719,8 +8263,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s58-a7s-silent-effective-diff.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 2,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 3,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -9743,8 +8287,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s58-conclusions.md": {
-   "NO_VERIFICADO": 2,
-   "VERIFICADO": 4,
+   "NO_VERIFICADO": 4,
+   "VERIFICADO": 6,
    "INFERENCIA": 3,
    "HIPÓTESIS": 2,
    "CONFLICTO_PENDIENTE": 0,
@@ -9755,8 +8299,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s58-exposure-cycle.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 5,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 6,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -9767,8 +8311,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s58-imx210-timing-units.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 0,
+   "NO_VERIFICADO": 2,
+   "VERIFICADO": 2,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -10007,8 +8551,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s61-conclusions.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 2,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 3,
    "INFERENCIA": 3,
    "HIPÓTESIS": 1,
    "CONFLICTO_PENDIENTE": 0,
@@ -10355,8 +8899,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/sfra-linux-client.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 23,
+   "NO_VERIFICADO": 2,
+   "VERIFICADO": 25,
    "INFERENCIA": 7,
    "HIPÓTESIS": 2,
    "CONFLICTO_PENDIENTE": 0,
@@ -10367,10 +8911,22 @@
    "BLOQUEADO": 0
   },
   "docs/capture/sfra-mpr-buffer-bridge.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 37,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 38,
    "INFERENCIA": 5,
    "HIPÓTESIS": 1,
+   "CONFLICTO_PENDIENTE": 0,
+   "NEGATIVO": 0,
+   "REFUTADO": 0,
+   "CORREGIDO": 0,
+   "SUPERADO": 0,
+   "BLOQUEADO": 0
+  },
+  "docs/capture/shutter-investigation.md": {
+   "NO_VERIFICADO": 2,
+   "VERIFICADO": 2,
+   "INFERENCIA": 0,
+   "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
    "NEGATIVO": 0,
    "REFUTADO": 0,
@@ -10391,8 +8947,8 @@
    "BLOQUEADO": 1
   },
   "docs/capture/shutter-trigger-state-machine.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 39,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 40,
    "INFERENCIA": 4,
    "HIPÓTESIS": 5,
    "CONFLICTO_PENDIENTE": 0,
@@ -10403,8 +8959,8 @@
    "BLOQUEADO": 1
   },
   "docs/capture/silent-architecture-comparison.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 16,
+   "NO_VERIFICADO": 4,
+   "VERIFICADO": 20,
    "INFERENCIA": 4,
    "HIPÓTESIS": 2,
    "CONFLICTO_PENDIENTE": 0,
@@ -10415,8 +8971,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/silent-caif-transport.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 4,
+   "NO_VERIFICADO": 2,
+   "VERIFICADO": 6,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -10427,8 +8983,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/silent-imager-consumers.md": {
-   "NO_VERIFICADO": 1,
-   "VERIFICADO": 5,
+   "NO_VERIFICADO": 2,
+   "VERIFICADO": 6,
    "INFERENCIA": 0,
    "HIPÓTESIS": 1,
    "CONFLICTO_PENDIENTE": 0,
@@ -10439,8 +8995,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/silent-integration-design.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 18,
+   "NO_VERIFICADO": 4,
+   "VERIFICADO": 22,
    "INFERENCIA": 2,
    "HIPÓTESIS": 5,
    "CONFLICTO_PENDIENTE": 0,
@@ -10499,8 +9055,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/t052-a-parametros-reales.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 5,
+   "NO_VERIFICADO": 6,
+   "VERIFICADO": 11,
    "INFERENCIA": 1,
    "HIPÓTESIS": 5,
    "CONFLICTO_PENDIENTE": 0,
@@ -10511,8 +9067,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/t052-b0-vts-predicado-fotografia.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 4,
+   "NO_VERIFICADO": 6,
+   "VERIFICADO": 10,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -10535,8 +9091,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/tesis-obturador-electronico.md": {
-   "NO_VERIFICADO": 5,
-   "VERIFICADO": 20,
+   "NO_VERIFICADO": 9,
+   "VERIFICADO": 24,
    "INFERENCIA": 1,
    "HIPÓTESIS": 4,
    "CONFLICTO_PENDIENTE": 0,

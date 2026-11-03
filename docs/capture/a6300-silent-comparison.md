@@ -83,7 +83,7 @@ El registro de control IMX284 está en `441ed9bc` (dirección almacenada 1,
 valor inicial `0x20`); la tabla de modos pone su byte de valor a `0x04`
 tanto para `0x0b` como `0x4e`. SetExposure clase 0 aplica máscara `0xd4`
 → `0x40`, igual en ambos casos. Por tanto, **ese registro por sí solo no
-identifica el modo Silent**: hacen falta las diferencias de lectura,
+identifica el modo Silent**: hacen falta las diferencias de lectura, **NO_VERIFICADO**
 temporización y secuencia ya identificadas. No atribuir semántica física
 idéntica a direcciones de registros de sensores distintos.
 
@@ -187,7 +187,7 @@ Exports adicionales: `a6300-silent-sequence-callbacks.json`,
 También se siguió una [selección Silent en el paquete CAIF](silent-caif-transport.md):
 `4391a6f4` activa bit `20` en byte `12`, que el evento 1 entrega a
 `436f9714`; se copia un cuerpo de 31 bytes y se sigue hasta el descriptor
-del transporte. Falta comprobar su interpretación en el receptor físico.
+del transporte. Falta comprobar su interpretación en el receptor físico. **NO_VERIFICADO**
 
 La ruta `43919c04 → 43ba72ba → 4380fc78`, omitida por Silent, quedó
 identificada como **registro KikiLog**, con receptor `kikilog.ko` y contador
@@ -224,6 +224,6 @@ las tres entradas distintas y cero avisos PIC. Se conservan ambos exports.
 
 **ACEPTO**: A6300 tiene selección Silent diferenciada de modo y secuencia.
 **RECHAZO**: equivalencia numérica directa con el selector 2 de A6000.
-**VEREDICTO: CAMBIOS**. Falta conectar la selección con la programación
+**VEREDICTO: CAMBIOS**. Falta conectar la selección con la programación **NO_VERIFICADO**
 completa, reconstruir la secuencia mecánica y demostrar una ruta equivalente
 viable en IMX210. No hay parche funcional validado.

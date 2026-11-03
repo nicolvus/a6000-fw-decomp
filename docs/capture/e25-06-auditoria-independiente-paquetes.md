@@ -236,7 +236,7 @@ La regla «solo versiones estrictamente mayores» **se midió con 3.21 instalada
 | **R1** Arranque de Darwin con B1a | **Hipotético** | B1a no cambia nada del arranque (bytes y consumidores). Con B1a, el arrancador de carga elige L0 (sin motor). Que BIONZ y Darwin toleren un mecanismo sin rearmar durante el arranque y el disparo no está demostrado (E25-04 F: sin contradicción estática; P29 y el lector BIONZ del fin, abiertos) |
 | **R2** Alimentación de BIONZ | **Hipotético, gravedad máxima** | Tabla de energía `0x28c6c`, manejadores y `0x51c0` idénticos byte a byte, sin consumidores de la compuerta. Si en ejecución faltara `DD_ON1/2/3`, no hay recuperación USB demostrada (E25-04 A/B/C = NO) |
 | **R3** Actualizador inaccesible | **Hipotético** | `nflasha1` no se reescribe. El 3.24 solo sirve si se llega a `pmca` → actualizador → `InitCom` → `Upd`; sin esa cadena no sirve |
-| **R4** Reintroducción del mecanismo | **Comprobado (por diseño)** | El 3.24 instala el Darwin oficial: vuelven las bobinas (sin tipo 0), el motor, la comprobación de leva y el rearme. No restaura el tipo 0; para eso hace falta ≥3.25. Si el mecanismo quedó desarmado o en una posición anómala con B1a, el primer arranque con el Darwin oficial intentará rearmar; ese efecto no está medido |
+| **R4** Reintroducción del mecanismo | **Comprobado (por diseño)** | El 3.24 instala el Darwin oficial: vuelven las bobinas (sin tipo 0), el motor, la comprobación de leva y el rearme. No restaura el tipo 0; para eso hace falta ≥3.25. Si el mecanismo quedó desarmado o en una posición anómala con B1a, el primer arranque con el Darwin oficial intentará rearmar; ese efecto no está medido **NO_VERIFICADO** |
 | **R5** Pérdida de versión | **Comprobado (aritmética)** | Cada instalación consume un número. Tras 3.24, la siguiente prueba exige ≥3.25 y su recuperación ≥3.26. Nunca 9.99 (el guard la aceptó con 3.21 y cerraría la vía). Instalar por error `recuperacion-323` quema el 3.23 (§7) |
 | **R6** Integridad del firmware principal | **Comprobado** | Cada paquete reescribe ~200 MB de particiones, formatea según `partconf` y reescribe backup, prfile, appli y Darwin; no solo 2 bytes. Pasa dos veces (3.23 y 3.24). El contenido es el oficial, verificado por CRC en el propio actualizador |
 | **R7** Paquetes confundidos | **Comprobado** | §7: dos paquetes 3.23 con `config-323.yaml` idéntico y el mismo nombre de fichero; solo el directorio y el SHA los distinguen |
@@ -259,7 +259,7 @@ o en `tmp_path`, nunca sobre los paquetes):
 | Cabecera FDAT alterada (modelo, región, mayor, tamaño, FS) | `test_altered_fdat_header_is_detected` (×5), `test_accessory_model_is_rejected` | primero CRC; con CRC recalculado, el campo |
 | Contenido de un bloque cifrado alterado | `test_altered_encrypted_block_is_detected` | DEND; con DEND recalculado, la suma del bloque 1000 |
 | `.dat` que no corresponde al `.fdat` | `test_dat_not_matching_declared_fdat` | `dat_matches_fdat`, SHA, versión |
-| Falta un paquete real | `test_missing_package_is_never_pass` | `MISSING`, ningún PASS |
+| Falta un paquete real | `test_missing_package_is_never_pass` | `MISSING`, ningún PASS **NO_VERIFICADO** |
 | Manifiesto en PASS con fichero distinto | `test_manifest_says_pass_but_file_differs` | SHA real ≠ declarado |
 
 Las pruebas **fallan** (no se omiten) si falta un paquete local; en CI el `conftest.py` existente las

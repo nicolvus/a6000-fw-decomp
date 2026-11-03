@@ -193,7 +193,7 @@ sin eliminar otras funciones ni forzar límites nuevos.
 condicional y escrituras de control demostradas por instrucciones originales.
 **RECHAZO:** usar estos resultados como prueba de una foto sin cortinillas,
 de un receptor Darwin CAIF o de imposibilidad física del IMX210.
-**VEREDICTO: CAMBIOS**. Falta conectar señal, protocolo y lectura fotográfica.
+**VEREDICTO: CAMBIOS**. Falta conectar señal, protocolo y lectura fotográfica. **NO_VERIFICADO**
 
 ## Validación de esta entrega
 

@@ -66,16 +66,16 @@ Esto es exactamente lo que se necesita para arrancar un kernel **cargado por el 
 
 - **Población física.** R4911/R4912 y la propia huella de CN4906 figuran «XX» en el esquema (R5 §4, R11 §3.4). Sin foto ni continuidad medida, no se sabe si esta unidad las tiene soldadas.
 - **eFuses de seguridad.** El esquema sitúa `FUSE_EN`/`FUSE_CLK`/eFuse justo junto al bloque JTAG/SWD (manual de servicio, bloque de `AB22`–`N29`). Qué fusible lee el controlador de depuración, y si está programado para desactivarla en unidades de producción, es una decisión de diseño de ARM/Sony que **no está en ningún binario accesible**: el controlador de eFuse no aparece en el árbol GPL (ni Linux lo necesita) ni en el BootROM volcado. Es la misma situación que la clave de `nflasha0` (R33): la respuesta vive en una zona que nunca se ha leído.
-- **AP/protocolo expuesto.** Aun con el puerto físicamente accesible y sin fusible, falta identificar qué Access Port expone (de memoria, de depuración de núcleo), si permite detener la CPU y leer/escribir RAM, y sobre todo si eso basta para ejecutar código que use MuMin (R39 §2) para escribir el byte de `\updater\mode` — la primitiva de almacenamiento sigue siendo la de R39, no una nueva.
+- **AP/protocolo expuesto.** Aun con el puerto físicamente accesible y sin fusible, falta identificar qué Access Port expone (de memoria, de depuración de núcleo), si permite detener la CPU y leer/escribir RAM, y sobre todo si eso basta para ejecutar código que use MuMin (R39 §2) para escribir el byte de `\updater\mode` — la primitiva de almacenamiento sigue siendo la de R39, no una nueva. **NO_VERIFICADO**
 
 ## 8. Relación con las vías ya propuestas
 
 - No sustituye a la vía serie del BootROM (R33): esa necesita una clave en `nflasha0` que tampoco se ha leído, pero es *la* vía que el propio fabricante deja accesible sin abrir el eFuse de depuración.
-- Si SWD estuviera abierto, sería **más directo** que la vía serie: no hace falta clave, y permite cargar y ejecutar código arbitrario (como el kernel `ice_*`) en vez de depender del protocolo cerrado del BootROM.
+- Si SWD estuviera abierto, sería **más directo** que la vía serie: no hace falta clave, y permite cargar y ejecutar código arbitrario (como el kernel `ice_*`) en vez de depender del protocolo cerrado del BootROM. **NO_VERIFICADO**
 - Comparte con la clave de `nflasha0` (R39 §7) el mismo tipo de límite: ambas dependen de un dato que solo una prueba física revela, y en ambos casos la pregunta es «¿lo dejó Sony abierto en esta unidad?», no algo que el código resuelva.
 
 ## 9. Límites de esta sesión
 
 - No se ha ejecutado ninguna sonda ni se ha medido continuidad, tensión ni fusible alguno.
-- No se ha identificado el controlador de eFuse en ningún binario disponible.
+- No se ha identificado el controlador de eFuse en ningún binario disponible. **NO_VERIFICADO**
 - Nada de lo anterior autoriza una conexión física.

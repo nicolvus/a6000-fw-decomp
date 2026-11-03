@@ -14,7 +14,7 @@ Se investigó exhaustivamente si la interfaz USB `054c:0994` (identificada por `
 
 Sin embargo, **no se encontró evidencia de que el USB Charger permita recuperación**. La interfaz HID declara únicamente un informe Input de 1 byte (sin informes Output ni Feature), no se identificaron manejadores de solicitudes de control (SETUP) ni peticiones específicas del fabricante, y no existe una cadena demostrada desde USB Charger hasta escritura de RAM, salto a ejecución, o activación de Updater Mode.
 
-La única ruta de recuperación con evidencia estática y emulada sigue siendo **BootROM → UART → escritura RAM → salto a RAM** (E26-R9), pendiente de identificación física del contacto UART (CN4906 pin 9 vía R4003, sin continuidad verificada).
+La única ruta de recuperación con evidencia estática y emulada sigue siendo **BootROM → UART → escritura RAM → salto a RAM** (E26-R9), pendiente de identificación física del contacto UART (CN4906 pin 9 vía R4003, sin continuidad verificada). **NO_VERIFICADO**
 
 **Decisión de cierre: Opción B** — abandonar provisionalmente la ruta USB Charger y concentrar la recuperación en BootROM UART de R9. El módulo DWN de Darwin (tabla de salto de ~20 comandos) se registra como pista futura no demostrada.
 
@@ -379,7 +379,7 @@ No se permite: conectar 5 V directamente, escribir NAND, flashear firmware, modi
 | Q6 | ¿Existe una cadena demostrada para activar Updater Mode desde esta interfaz? | **NO** | No hay mecanismo de cambio de modo identificado. El módulo DWN no se demostró USB-accesible ni capaz de cambiar modo. |
 | Q7 | ¿Existe una cadena demostrada para transferir y ejecutar código en RAM? | **NO** | No hay equivalente a los paquetes tipo 0 / 0xFFFF de BootROM UART (R9). No identificado en `darwin_core.bin`. |
 | Q8 | ¿La interfaz continúa siendo una candidata razonable para recuperación? | **NO DEMOSTRADO / NO** | Sin canal host → dispositivo (HID solo-Input), sin manejador de control identificado, sin ruta a RAM o cambio de modo. |
-| Q9 | ¿Qué componente o evidencia falta para decidir su viabilidad? | — | Manejador de SETEP/control endpoint en `darwin_core.bin`; peticiones vendor-specific de Sony; demostración de que DWN es USB-accesible; identificación física del USB D+/D- de Darwin. |
+| Q9 | ¿Qué componente o evidencia falta para decidir su viabilidad? | — | Manejador de SETEP/control endpoint en `darwin_core.bin`; peticiones vendor-specific de Sony; demostración de que DWN es USB-accesible; identificación física del USB D+/D- de Darwin. **NO_VERIFICADO** |
 | Q10 | ¿Conviene continuar con USB Charger o priorizar BootROM UART de R9? | **Priorizar BootROM UART (R9)** | R9 tiene cadena demostrada estáticamente y en emulación. USB Charger no tiene host → dispositivo demostrado. Pista futura: módulo DWN de Darwin. |
 
 **Nota:** Cuando la respuesta es NO por falta de evidencia, se indica expresamente que no está demostrado y se identifica la prueba que falta. No se confunde "no encontramos una implementación" con "demostramos su inexistencia".

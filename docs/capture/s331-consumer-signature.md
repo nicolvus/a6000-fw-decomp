@@ -103,7 +103,7 @@ Esto cierra la pregunta de S326 con la base correcta: la huella silent **existe*
 
 - Solo estático: no se ejecuta el setter ni se observa el efecto de la máscara.
 - El mapeo bit→campo depende de `0x43dc02e0` (runtime); no se atribuye semántica física.
-- No se ha identificado quién consume los bloques `obj+0x16`, `obj+0x2e`, `obj+0xa5` (queda como S334).
+- No se ha identificado quién consume los bloques `obj+0x16`, `obj+0x2e`, `obj+0xa5` (queda como S334). **NO_VERIFICADO**
 - S51 (A/B/C) no cambia.
 
 ## Reproducción

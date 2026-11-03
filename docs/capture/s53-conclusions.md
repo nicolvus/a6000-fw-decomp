@@ -28,7 +28,7 @@ concreta y reproducible en Darwin A6000. Prueba: `python3 -m unittest tests.test
 
 ## Decisión
 
-**S51 se mantiene** (no parchear). Escenario B: falta lógica de firmware en Darwin A6000, además de LIRO e IMX210.
+**S51 se mantiene** (no parchear). Escenario B: falta lógica de firmware en Darwin A6000, además de LIRO e IMX210. **NO_VERIFICADO**
 Ver [viabilidad](s53-a6000-silent-feasibility.md).
 
 ## Próximos experimentos (no iniciados)
