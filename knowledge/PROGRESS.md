@@ -519,3 +519,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 03-11-2026: **CAM-02 cerrado con límite** — familia CAM (7 etiquetas) con 0 menciones abiertas por medidas; corrige S600/S601 (sí citan ficheros fuente). `analysis/camera_closure/` ampliado.
 - 03-11-2026: `[CAMCORE]` (S107) cerrada por medidas, como CAM-02.
 - 03-11-2026: familia IMAGING (S611, S631) cerrada por medidas; el barrido bl de camera_closure pasa a patrón de halfwords (el lineal daba 0 llamadores); corrige S122 (0x438792dc sí tiene bl).
+- 03-11-2026: S632 documenta y cierra la familia MODE (`[MODE_SNR_BUS_THROUGH]` hito; `[MODE_CAP*]`, `[MODEFLG]` en el mismo informe). Cobertura 208/372.

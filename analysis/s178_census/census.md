@@ -7,22 +7,22 @@ Las listas históricas incluían etiquetas ya documentadas; la tabla siguiente u
 | magnitud | valor |
 |---|---|
 | etiquetas distintas `[XXX]` | **372** (techo, no número de módulos) |
-| etiquetas con hito documental | **95** |
+| etiquetas con hito documental | **96** |
 | subetiquetas documentadas | **112** |
-| **pendientes reales** | **152** |
+| **pendientes reales** | **151** |
 | fragmentos descartados como módulos | **13** |
-| cobertura documental | **207/372** = **55.65 %** |
+| cobertura documental | **208/372** = **55.91 %** |
 | etiquetas exclusivas de A6000 | **93** |
 | presentes en A6000/A7S y ausentes en A6300 | **7** |
 
-Antes: 239 pendientes; después de la auditoría: 226 pendientes + 13 fragmentos descartados; tras reclasificar 73 como sub-etiqueta de módulos ya documentados (pasada del 03-11-2026): 152 pendientes (S631 cierra `[IMAGING_IMG]`).
+Antes: 239 pendientes; después de la auditoría: 226 pendientes + 13 fragmentos descartados; tras reclasificar 73 como sub-etiqueta de módulos ya documentados (pasada del 03-11-2026): 151 pendientes (S631 cierra `[IMAGING_IMG]`; S632 cierra `[MODE_SNR_BUS_THROUGH]`).
 Descartar no aumenta cobertura. Se mantiene 372 como denominador histórico.
 Las siete ausentes en A6300 son `[STK]`, `[STK_AUTO_SAL]`, `[STK_COLOR_SIM]`,
 `[STK_C_SIM]`, `[STK_TOUCH_SIM]`, `[STK_T_SIM]` y `[OSD]`.
 
 ## Inventario reproducible
 
-- [Lista completa, prioridad y motivo](pendientes.md): 152 abiertas y 13 descartadas.
+- [Lista completa, prioridad y motivo](pendientes.md): 151 abiertas y 13 descartadas.
 - [Ocurrencias, direcciones y referencias por etiqueta](pendientes_auditados.json).
 - [Decisiones manuales](decisiones_auditoria.json): 13 RECHAZO, cuatro ACEPTO como candidatas y dos NO_VERIFICADO examinadas.
 - [Once referencias contrastadas con bytes y pools](evidencia_bytes.json).

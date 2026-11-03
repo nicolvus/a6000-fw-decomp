@@ -130,7 +130,6 @@ ACEPTO acepta un candidato a módulo; no cierra su decodificación. RECHAZO se c
 | `[MCMSGPINIF]` | 2 | 1 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
 | `[MCMSGSTATE]` | 2 | 1 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
 | `[MCS]` | 2 | 1 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
-| `[MODE_SNR_BUS_THROUGH]` | 2 | 1 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
 | `[MODIFY1]` | 2 | 1 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
 | `[MOJITO_ERROR]` | 2 | 1 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
 | `[MPGMSGSEND]` | 2 | 1 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |

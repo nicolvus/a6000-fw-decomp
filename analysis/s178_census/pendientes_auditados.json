@@ -2,7 +2,7 @@
   "fuentes_sha256": {
     "analysis/rea-independent/input/av-cam.bin": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
     "analysis/s106_imaging_cap/pic_refs_strict_global.json": "cbd53ea1690a2378a1b8aa9e7c07d2d9363aa7539bfc597fcd37dd0a3ad369b3",
-    "analysis/s178_census/census_detalle.json": "a48960a41428405087220c8674e7a2e843f6600f9db33c7d686a0afc19122e42",
+    "analysis/s178_census/census_detalle.json": "34a5bbb4edb6bbddd0b5c694902e4abc110b6cb099aebd025940c47882e17365",
     "analysis/s178_census/decisiones_auditoria.json": "9f580b9fddbbef4753407623ddeba83736118558af850912fdc9be80198b7b61",
     "analysis/s178_census/evidencia_bytes.json": "254793ce2759ad617e27db0fe9c609cef7470d3653b8057e06c4ff56b8287948",
     "analysis/s178_census/funciones_historicas.json": "41cd77c7b82322bf8b8e9dada5068887250b84ac9c1cfa0aa7099873c4674db9",
@@ -18,15 +18,15 @@
     "no-modulo": 0
   },
   "despues": {
-    "pendiente": 152,
-    "hito": 95,
+    "pendiente": 151,
+    "hito": 96,
     "sub-etiqueta": 112,
     "no-modulo": 13
   },
   "veredictos": {
     "ACEPTO": 3,
     "RECHAZO": 13,
-    "NO_VERIFICADO": 149
+    "NO_VERIFICADO": 148
   },
   "etiquetas": [
     {
@@ -9236,29 +9236,6 @@
           "texto_hasta_nul_latin1": "[MOUNT_ERROR]: [MCS]addCmdDataList data times overflow\n",
           "referencias_pic_candidatas": [
             "0x436dfef4"
-          ]
-        }
-      ]
-    },
-    {
-      "etiqueta": "[MODE_SNR_BUS_THROUGH]",
-      "estado_censo": "pendiente",
-      "prioridad": 2,
-      "cadenas_con_pic_candidato": 1,
-      "cadenas_referenciadas_censo": 0,
-      "veredicto": "NO_VERIFICADO",
-      "examinada": false,
-      "motivo": "Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo.",
-      "fuente_evidencia": [],
-      "ocurrencias": [
-        {
-          "token_vaddr": "0x43cadb4c",
-          "token_offset": 7785292,
-          "cadena_vaddr": "0x43cadb22",
-          "cadena_offset": 7785250,
-          "texto_hasta_nul_latin1": "[IMAGING_CAP]: CamCore Aquire Error!: %02x[MODE_SNR_BUS_THROUGH]",
-          "referencias_pic_candidatas": [
-            "0x437f6096"
           ]
         }
       ]
