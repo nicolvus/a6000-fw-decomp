@@ -1,22 +1,22 @@
 # Revisión automática de informes
 
-Generado por `scripts/review_reports.py` con 12 procesos sobre 757 informes (`docs/capture, analysis, wiki, reports`). Heurística léxica: cada hallazgo es un candidato, no un veredicto.
+Generado por `scripts/review_reports.py` con 12 procesos sobre 762 informes (`docs/capture, analysis, wiki, reports`). Heurística léxica: cada hallazgo es un candidato, no un veredicto.
 
 ## Resumen
 
-- Líneas `NO_VERIFICADO`: **2067**; `VERIFICADO`: **2593**.
-- **Cerrables (reducen pendientes):** 130 líneas abiertas cuyas direcciones constan como VERIFICADO en otro informe; **1 de nivel A** (además comparten palabras de contenido con la línea verificada, solapamiento ≥ 0,3) y el resto de nivel B (misma dirección, otro asunto).
-- **Añadibles (aumentan pendientes):** 153 líneas con «falta/por hacer/sin verificar» y sin marca `NO_VERIFICADO`.
+- Líneas `NO_VERIFICADO`: **1800**; `VERIFICADO`: **2737**.
+- **Cerrables (reducen pendientes):** 131 líneas abiertas cuyas direcciones constan como VERIFICADO en otro informe; **1 de nivel A** (además comparten palabras de contenido con la línea verificada, solapamiento ≥ 0,3) y el resto de nivel B (misma dirección, otro asunto).
+- **Añadibles (aumentan pendientes):** 154 líneas con «falta/por hacer/sin verificar» y sin marca `NO_VERIFICADO`.
 - **Conflictos:** 4 pares de líneas del mismo informe con la misma dirección, una solo NO_VERIFICADO y otra solo VERIFICADO, con solapamiento ≥ 0,25.
 - **Errores:** 18 (VERIFICADO sin evidencia: 18).
 
 ## Palabras de estado (menciones totales)
 
-- `VERIFICADO`: 5556
-- `NO_VERIFICADO`: 1276
-- `INFERENCIA`: 851
-- `HIPÓTESIS`: 274
-- `NEGATIVO`: 179
+- `VERIFICADO`: 5432
+- `NO_VERIFICADO`: 1071
+- `INFERENCIA`: 848
+- `HIPÓTESIS`: 275
+- `NEGATIVO`: 156
 - `CORREGIDO`: 108
 - `BLOQUEADO`: 40
 - `REFUTADO`: 11

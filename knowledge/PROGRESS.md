@@ -526,3 +526,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 03-11-2026: familia OTROS cerrada (S634 + cierres de 49 informes); censo 364/372, 0 pendientes.
 - 03-11-2026: S635 documenta [OSD] (última etiqueta cubierta sin informe propio).
 - 03-11-2026: S636 documenta [D0]-[D7] como sub-etiquetas de [CAM_UTIL_ADJ]; censo 372/372.
+- 03-11-2026: auditoría de pendientes tras S636: review_reports regenerado (762 informes; 1800 abiertas / 2737 verificadas), sin rutas nuevas; ver PENDIENTES. Sesión previa cortada por un `grep -rn` recursivo sobre `analysis/` (sin resultado registrado).

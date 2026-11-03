@@ -1,6 +1,6 @@
 {
  "workers": 12,
- "files": 757,
+ "files": 762,
  "closable": [
   {
    "file": "docs/capture/RESEARCH_TASKS.md",
@@ -1865,6 +1865,18 @@
    }
   },
   {
+   "file": "analysis/s144_cam_util_sens/cam_util_sens.md",
+   "line": 412,
+   "text": "`0x43902418`: sin decodificar. **NO VERIFICADO**.",
+   "overlap": 0.0,
+   "tier": "B",
+   "verified_in": {
+    "0x43902418": [
+     "docs/capture/s625-adr.md"
+    ]
+   }
+  },
+  {
    "file": "analysis/session19/codex-runs/run-005/docs/s19-camera-effect-sdf.md",
    "line": 30,
    "text": "| Selección de pines SDF | **VERIFICADO** para PbCap / **NO_VERIFICADO** para Camera | `0x15f290` conecta extremos `DataflowInfra`, pero no expone `ObjCamera.out0` ni prueba que sea una entrada SDF. |",
@@ -2353,6 +2365,11 @@
    "file": "docs/capture/s50-claude-electronic-config.md",
    "line": 7,
    "text": "(`xidx.py`, `calls.py`, `sh.py`). Ghidra histórico no hizo falta: LLVM decodifica las 38 708 direcciones."
+  },
+  {
+   "file": "docs/capture/s515-audpinedtr.md",
+   "line": 12,
+   "text": "- **Referencias de código:** por determinar (pendiente de xrefs REA). **no atribuido**"
   },
   {
    "file": "docs/capture/s52-parallel-conclusions.md",
@@ -4638,7 +4655,7 @@
    "SUPERADO": 0,
    "BLOQUEADO": 0
   },
-  "docs/capture/s107-camcore-resources.md": {
+  "docs/capture/s109-cdiag.md": {
    "NO_VERIFICADO": 0,
    "VERIFICADO": 1,
    "INFERENCIA": 0,
@@ -4650,21 +4667,9 @@
    "SUPERADO": 0,
    "BLOQUEADO": 0
   },
-  "docs/capture/s109-cdiag.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 2,
-   "INFERENCIA": 0,
-   "HIPÓTESIS": 0,
-   "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 0,
-   "REFUTADO": 0,
-   "CORREGIDO": 0,
-   "SUPERADO": 0,
-   "BLOQUEADO": 0
-  },
   "docs/capture/s110-camera-main-yc.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 2,
+   "VERIFICADO": 1,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -4676,7 +4681,7 @@
   },
   "docs/capture/s111-trk.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 3,
+   "VERIFICADO": 2,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -4688,7 +4693,7 @@
   },
   "docs/capture/s113-cam-dmm.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 2,
+   "VERIFICADO": 1,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -4711,34 +4716,10 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s115-cam-imager.md": {
-   "NO_VERIFICADO": 1,
-   "VERIFICADO": 3,
-   "INFERENCIA": 0,
-   "HIPÓTESIS": 0,
-   "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 0,
-   "REFUTADO": 0,
-   "CORREGIDO": 0,
-   "SUPERADO": 0,
-   "BLOQUEADO": 0
-  },
-  "docs/capture/s116-sfrs.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 1,
+   "VERIFICADO": 0,
    "INFERENCIA": 0,
-   "HIPÓTESIS": 0,
-   "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 0,
-   "REFUTADO": 0,
-   "CORREGIDO": 0,
-   "SUPERADO": 0,
-   "BLOQUEADO": 0
-  },
-  "docs/capture/s117-augi.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 1,
-   "INFERENCIA": 0,
-   "HIPÓTESIS": 0,
+   "HIPÓTESIS": 1,
    "CONFLICTO_PENDIENTE": 0,
    "NEGATIVO": 0,
    "REFUTADO": 0,
@@ -4747,18 +4728,6 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s118-sfra.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 2,
-   "INFERENCIA": 0,
-   "HIPÓTESIS": 0,
-   "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 0,
-   "REFUTADO": 0,
-   "CORREGIDO": 0,
-   "SUPERADO": 0,
-   "BLOQUEADO": 0
-  },
-  "docs/capture/s119-apl.md": {
    "NO_VERIFICADO": 0,
    "VERIFICADO": 1,
    "INFERENCIA": 0,
@@ -4784,20 +4753,8 @@
   },
   "docs/capture/s121-aip.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 1,
+   "VERIFICADO": 0,
    "INFERENCIA": 1,
-   "HIPÓTESIS": 0,
-   "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 0,
-   "REFUTADO": 0,
-   "CORREGIDO": 0,
-   "SUPERADO": 0,
-   "BLOQUEADO": 0
-  },
-  "docs/capture/s122-camera-main-tc.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 1,
-   "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
    "NEGATIVO": 0,
@@ -4808,8 +4765,8 @@
   },
   "docs/capture/s123-camera-main-cc.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 2,
-   "INFERENCIA": 2,
+   "VERIFICADO": 0,
+   "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
    "NEGATIVO": 0,
@@ -4842,21 +4799,9 @@
    "SUPERADO": 0,
    "BLOQUEADO": 0
   },
-  "docs/capture/s126-camera-main.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 1,
-   "INFERENCIA": 0,
-   "HIPÓTESIS": 0,
-   "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 0,
-   "REFUTADO": 0,
-   "CORREGIDO": 0,
-   "SUPERADO": 0,
-   "BLOQUEADO": 0
-  },
   "docs/capture/s127-camera-main-lc.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 1,
+   "VERIFICADO": 0,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -4879,36 +4824,12 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s129-camera-main-im.md": {
-   "NO_VERIFICADO": 1,
-   "VERIFICADO": 2,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 0,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
    "NEGATIVO": 1,
-   "REFUTADO": 0,
-   "CORREGIDO": 0,
-   "SUPERADO": 0,
-   "BLOQUEADO": 0
-  },
-  "docs/capture/s130-new-modules.md": {
-   "NO_VERIFICADO": 1,
-   "VERIFICADO": 1,
-   "INFERENCIA": 0,
-   "HIPÓTESIS": 0,
-   "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 0,
-   "REFUTADO": 0,
-   "CORREGIDO": 0,
-   "SUPERADO": 0,
-   "BLOQUEADO": 0
-  },
-  "docs/capture/s131-vph-api.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 1,
-   "INFERENCIA": 0,
-   "HIPÓTESIS": 0,
-   "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 0,
    "REFUTADO": 0,
    "CORREGIDO": 0,
    "SUPERADO": 0,
@@ -4925,18 +4846,6 @@
    "CORREGIDO": 0,
    "SUPERADO": 0,
    "BLOQUEADO": 1
-  },
-  "docs/capture/s133-mount-debug.md": {
-   "NO_VERIFICADO": 0,
-   "VERIFICADO": 2,
-   "INFERENCIA": 0,
-   "HIPÓTESIS": 0,
-   "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 0,
-   "REFUTADO": 0,
-   "CORREGIDO": 0,
-   "SUPERADO": 0,
-   "BLOQUEADO": 0
   },
   "docs/capture/s134-imager-params.md": {
    "NO_VERIFICADO": 0,
@@ -4976,7 +4885,7 @@
   },
   "docs/capture/s136-accy.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 2,
+   "VERIFICADO": 1,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -4988,7 +4897,7 @@
   },
   "docs/capture/s137-ctrlcore.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 3,
+   "VERIFICADO": 2,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5000,7 +4909,7 @@
   },
   "docs/capture/s138-camera-main-fc.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 2,
+   "VERIFICADO": 1,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5012,7 +4921,7 @@
   },
   "docs/capture/s139-encseqctrl.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 3,
+   "VERIFICADO": 1,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5060,8 +4969,8 @@
   },
   "docs/capture/s143-cam-util-adj.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 5,
-   "INFERENCIA": 1,
+   "VERIFICADO": 1,
+   "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
    "NEGATIVO": 0,
@@ -5072,7 +4981,7 @@
   },
   "docs/capture/s144-cam-util-sens.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 2,
+   "VERIFICADO": 1,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5108,7 +5017,7 @@
   },
   "docs/capture/s148-depth.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 3,
+   "VERIFICADO": 2,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5132,7 +5041,7 @@
   },
   "docs/capture/s151-panda.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 2,
+   "VERIFICADO": 1,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5192,7 +5101,7 @@
   },
   "docs/capture/s156-tp-r.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 2,
+   "VERIFICADO": 1,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5336,7 +5245,7 @@
   },
   "docs/capture/s164-camera-is.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 3,
+   "VERIFICADO": 2,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5360,7 +5269,7 @@
   },
   "docs/capture/s166-adc-debug.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 3,
+   "VERIFICADO": 2,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5372,7 +5281,7 @@
   },
   "docs/capture/s167-sad.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 6,
+   "VERIFICADO": 2,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5504,7 +5413,7 @@
   },
   "docs/capture/s170-illumi.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 3,
+   "VERIFICADO": 1,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -5732,7 +5641,7 @@
   },
   "docs/capture/s180-remote.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 2,
+   "VERIFICADO": 1,
    "INFERENCIA": 0,
    "HIPÓTESIS": 1,
    "CONFLICTO_PENDIENTE": 0,
@@ -7592,7 +7501,7 @@
   },
   "docs/capture/s500-vdf.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 3,
+   "VERIFICADO": 2,
    "INFERENCIA": 4,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -7604,7 +7513,7 @@
   },
   "docs/capture/s501-stk.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 3,
+   "VERIFICADO": 2,
    "INFERENCIA": 2,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -7616,7 +7525,7 @@
   },
   "docs/capture/s502-eis.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 3,
+   "VERIFICADO": 2,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -7628,7 +7537,7 @@
   },
   "docs/capture/s503-zpd.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 3,
+   "VERIFICADO": 2,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -7640,7 +7549,7 @@
   },
   "docs/capture/s504-stabilizer.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 3,
+   "VERIFICADO": 2,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -7652,7 +7561,7 @@
   },
   "docs/capture/s505-vef.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 3,
+   "VERIFICADO": 2,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -7664,7 +7573,7 @@
   },
   "docs/capture/s506-td.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 3,
+   "VERIFICADO": 2,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -7676,7 +7585,7 @@
   },
   "docs/capture/s507-videncstat.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 3,
+   "VERIFICADO": 2,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -7688,7 +7597,7 @@
   },
   "docs/capture/s508-golfshot.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 3,
+   "VERIFICADO": 2,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -7700,7 +7609,7 @@
   },
   "docs/capture/s509-wsx.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 3,
+   "VERIFICADO": 2,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -7760,7 +7669,7 @@
   },
   "docs/capture/s510-re.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 3,
+   "VERIFICADO": 2,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -7772,7 +7681,7 @@
   },
   "docs/capture/s511-int-error.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 3,
+   "VERIFICADO": 2,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -7784,7 +7693,7 @@
   },
   "docs/capture/s512-encoucstat.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 3,
+   "VERIFICADO": 2,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -7796,7 +7705,7 @@
   },
   "docs/capture/s513-config.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 3,
+   "VERIFICADO": 2,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -7808,7 +7717,7 @@
   },
   "docs/capture/s514-bt.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 3,
+   "VERIFICADO": 2,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -7819,8 +7728,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s515-audpinedtr.md": {
-   "NO_VERIFICADO": 1,
-   "VERIFICADO": 4,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 2,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -8431,9 +8340,9 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s600-cam-func-mgr.md": {
-   "NO_VERIFICADO": 1,
-   "VERIFICADO": 2,
-   "INFERENCIA": 1,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 1,
+   "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
    "NEGATIVO": 0,
@@ -8443,8 +8352,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s601-cam-scalar.md": {
-   "NO_VERIFICADO": 1,
-   "VERIFICADO": 2,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 1,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -8455,8 +8364,8 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s602-remote.md": {
-   "NO_VERIFICADO": 1,
-   "VERIFICADO": 2,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 1,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -8491,60 +8400,60 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s605-jpeg.md": {
-   "NO_VERIFICADO": 8,
-   "VERIFICADO": 8,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 6,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 1,
+   "NEGATIVO": 0,
    "REFUTADO": 0,
    "CORREGIDO": 0,
    "SUPERADO": 0,
    "BLOQUEADO": 0
   },
   "docs/capture/s606-nsx_vot.md": {
-   "NO_VERIFICADO": 8,
-   "VERIFICADO": 8,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 6,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 1,
+   "NEGATIVO": 0,
    "REFUTADO": 0,
    "CORREGIDO": 0,
    "SUPERADO": 0,
    "BLOQUEADO": 0
   },
   "docs/capture/s607-cam_cmd.md": {
-   "NO_VERIFICADO": 8,
-   "VERIFICADO": 11,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 8,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 1,
+   "NEGATIVO": 0,
    "REFUTADO": 0,
    "CORREGIDO": 0,
    "SUPERADO": 0,
    "BLOQUEADO": 0
   },
   "docs/capture/s608-mount_info.md": {
-   "NO_VERIFICADO": 9,
-   "VERIFICADO": 9,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 6,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 2,
+   "NEGATIVO": 1,
    "REFUTADO": 0,
    "CORREGIDO": 0,
    "SUPERADO": 0,
    "BLOQUEADO": 0
   },
   "docs/capture/s609-dist.md": {
-   "NO_VERIFICADO": 8,
-   "VERIFICADO": 8,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 6,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 1,
+   "NEGATIVO": 0,
    "REFUTADO": 0,
    "CORREGIDO": 0,
    "SUPERADO": 0,
@@ -8587,120 +8496,120 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s610-housing.md": {
-   "NO_VERIFICADO": 8,
-   "VERIFICADO": 8,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 6,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 1,
+   "NEGATIVO": 0,
    "REFUTADO": 0,
    "CORREGIDO": 0,
    "SUPERADO": 0,
    "BLOQUEADO": 0
   },
   "docs/capture/s611-imaging_rsrc.md": {
-   "NO_VERIFICADO": 8,
-   "VERIFICADO": 9,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 6,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 1,
+   "NEGATIVO": 0,
    "REFUTADO": 0,
    "CORREGIDO": 0,
    "SUPERADO": 0,
    "BLOQUEADO": 0
   },
   "docs/capture/s612-mount.md": {
-   "NO_VERIFICADO": 8,
-   "VERIFICADO": 8,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 6,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 1,
+   "NEGATIVO": 0,
    "REFUTADO": 0,
    "CORREGIDO": 0,
    "SUPERADO": 0,
    "BLOQUEADO": 0
   },
   "docs/capture/s613-mount_warning.md": {
-   "NO_VERIFICADO": 8,
-   "VERIFICADO": 8,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 6,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 1,
+   "NEGATIVO": 0,
    "REFUTADO": 0,
    "CORREGIDO": 0,
    "SUPERADO": 0,
    "BLOQUEADO": 0
   },
   "docs/capture/s614-zpd.md": {
-   "NO_VERIFICADO": 8,
-   "VERIFICADO": 8,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 6,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 1,
+   "NEGATIVO": 0,
    "REFUTADO": 0,
    "CORREGIDO": 0,
    "SUPERADO": 0,
    "BLOQUEADO": 0
   },
   "docs/capture/s615-eis.md": {
-   "NO_VERIFICADO": 8,
-   "VERIFICADO": 8,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 6,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 1,
+   "NEGATIVO": 0,
    "REFUTADO": 0,
    "CORREGIDO": 0,
    "SUPERADO": 0,
    "BLOQUEADO": 0
   },
   "docs/capture/s616-lens_pdr.md": {
-   "NO_VERIFICADO": 8,
-   "VERIFICADO": 11,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 8,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 1,
+   "NEGATIVO": 0,
    "REFUTADO": 0,
    "CORREGIDO": 0,
    "SUPERADO": 0,
    "BLOQUEADO": 0
   },
   "docs/capture/s617-camera_device.md": {
-   "NO_VERIFICADO": 8,
-   "VERIFICADO": 8,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 6,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 1,
+   "NEGATIVO": 0,
    "REFUTADO": 0,
    "CORREGIDO": 0,
    "SUPERADO": 0,
    "BLOQUEADO": 0
   },
   "docs/capture/s618-det_dir.md": {
-   "NO_VERIFICADO": 9,
-   "VERIFICADO": 9,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 6,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 1,
+   "NEGATIVO": 0,
    "REFUTADO": 0,
    "CORREGIDO": 0,
    "SUPERADO": 0,
    "BLOQUEADO": 0
   },
   "docs/capture/s619-senser.md": {
-   "NO_VERIFICADO": 8,
-   "VERIFICADO": 8,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 6,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 1,
+   "NEGATIVO": 0,
    "REFUTADO": 0,
    "CORREGIDO": 0,
    "SUPERADO": 0,
@@ -8719,104 +8628,164 @@
    "BLOQUEADO": 0
   },
   "docs/capture/s620-stabilizer.md": {
-   "NO_VERIFICADO": 8,
-   "VERIFICADO": 8,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 6,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 1,
+   "NEGATIVO": 0,
    "REFUTADO": 0,
    "CORREGIDO": 0,
    "SUPERADO": 0,
    "BLOQUEADO": 0
   },
   "docs/capture/s621-avout.md": {
-   "NO_VERIFICADO": 8,
-   "VERIFICADO": 8,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 6,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 1,
+   "NEGATIVO": 0,
    "REFUTADO": 0,
    "CORREGIDO": 0,
    "SUPERADO": 0,
    "BLOQUEADO": 0
   },
   "docs/capture/s622-avr.md": {
-   "NO_VERIFICADO": 8,
-   "VERIFICADO": 8,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 6,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 1,
+   "NEGATIVO": 0,
    "REFUTADO": 0,
    "CORREGIDO": 0,
    "SUPERADO": 0,
    "BLOQUEADO": 0
   },
   "docs/capture/s623-jiro.md": {
-   "NO_VERIFICADO": 8,
-   "VERIFICADO": 8,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 6,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 1,
+   "NEGATIVO": 0,
    "REFUTADO": 0,
    "CORREGIDO": 0,
    "SUPERADO": 0,
    "BLOQUEADO": 0
   },
   "docs/capture/s624-utility.md": {
-   "NO_VERIFICADO": 8,
-   "VERIFICADO": 8,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 6,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 1,
+   "NEGATIVO": 0,
    "REFUTADO": 0,
    "CORREGIDO": 0,
    "SUPERADO": 0,
    "BLOQUEADO": 0
   },
   "docs/capture/s625-adr.md": {
-   "NO_VERIFICADO": 8,
-   "VERIFICADO": 9,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 7,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 1,
+   "NEGATIVO": 0,
    "REFUTADO": 0,
    "CORREGIDO": 0,
    "SUPERADO": 0,
    "BLOQUEADO": 0
   },
   "docs/capture/s626-camera_detect_fc.md": {
-   "NO_VERIFICADO": 8,
-   "VERIFICADO": 8,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 6,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 1,
+   "NEGATIVO": 0,
    "REFUTADO": 0,
    "CORREGIDO": 0,
    "SUPERADO": 0,
    "BLOQUEADO": 0
   },
   "docs/capture/s627-eo_sw.md": {
-   "NO_VERIFICADO": 8,
-   "VERIFICADO": 8,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 6,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
-   "NEGATIVO": 1,
+   "NEGATIVO": 0,
    "REFUTADO": 0,
    "CORREGIDO": 0,
    "SUPERADO": 0,
    "BLOQUEADO": 0
   },
   "docs/capture/s631-imaging_img.md": {
-   "NO_VERIFICADO": 4,
-   "VERIFICADO": 6,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 2,
+   "INFERENCIA": 0,
+   "HIPÓTESIS": 0,
+   "CONFLICTO_PENDIENTE": 0,
+   "NEGATIVO": 0,
+   "REFUTADO": 0,
+   "CORREGIDO": 0,
+   "SUPERADO": 0,
+   "BLOQUEADO": 0
+  },
+  "docs/capture/s632-mode.md": {
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 2,
+   "INFERENCIA": 0,
+   "HIPÓTESIS": 0,
+   "CONFLICTO_PENDIENTE": 0,
+   "NEGATIVO": 0,
+   "REFUTADO": 0,
+   "CORREGIDO": 0,
+   "SUPERADO": 0,
+   "BLOQUEADO": 0
+  },
+  "docs/capture/s633-stk-sim.md": {
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 2,
+   "INFERENCIA": 0,
+   "HIPÓTESIS": 0,
+   "CONFLICTO_PENDIENTE": 0,
+   "NEGATIVO": 0,
+   "REFUTADO": 0,
+   "CORREGIDO": 0,
+   "SUPERADO": 0,
+   "BLOQUEADO": 0
+  },
+  "docs/capture/s634-otros-pendientes.md": {
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 1,
+   "INFERENCIA": 0,
+   "HIPÓTESIS": 0,
+   "CONFLICTO_PENDIENTE": 0,
+   "NEGATIVO": 0,
+   "REFUTADO": 0,
+   "CORREGIDO": 0,
+   "SUPERADO": 0,
+   "BLOQUEADO": 0
+  },
+  "docs/capture/s635-osd.md": {
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 2,
+   "INFERENCIA": 0,
+   "HIPÓTESIS": 0,
+   "CONFLICTO_PENDIENTE": 0,
+   "NEGATIVO": 0,
+   "REFUTADO": 0,
+   "CORREGIDO": 0,
+   "SUPERADO": 0,
+   "BLOQUEADO": 0
+  },
+  "docs/capture/s636-campos-d.md": {
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 2,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -9187,8 +9156,8 @@
    "BLOQUEADO": 1
   },
   "analysis/s100_adf_contract/adf_command_contract.md": {
-   "NO_VERIFICADO": 2,
-   "VERIFICADO": 7,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 5,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -9596,7 +9565,7 @@
   },
   "analysis/s133_mount_debug/mount_debug.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 7,
+   "VERIFICADO": 3,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -9895,8 +9864,8 @@
    "BLOQUEADO": 0
   },
   "analysis/s178_census/census.md": {
-   "NO_VERIFICADO": 2,
-   "VERIFICADO": 2,
+   "NO_VERIFICADO": 1,
+   "VERIFICADO": 1,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -10147,8 +10116,8 @@
    "BLOQUEADO": 0
   },
   "analysis/s70_is/is_gyro_recon.md": {
-   "NO_VERIFICADO": 2,
-   "VERIFICADO": 5,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 3,
    "INFERENCIA": 2,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
@@ -10159,8 +10128,8 @@
    "BLOQUEADO": 0
   },
   "analysis/s71_frc/frc_subsystem.md": {
-   "NO_VERIFICADO": 3,
-   "VERIFICADO": 14,
+   "NO_VERIFICADO": 0,
+   "VERIFICADO": 11,
    "INFERENCIA": 2,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,
