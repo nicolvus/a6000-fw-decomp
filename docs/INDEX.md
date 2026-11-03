@@ -390,7 +390,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 6. Otros subsistemas (AF, estabilización, vídeo, audio, lentes, energía, visor, accesorios, módulos de trazas)
 
-151 informes.
+152 informes.
 
 - **—** [E21 — Lecturas sin cámara de los volcados del 20-10-2026](capture/e21-lecturas-backups-2026-10-26.md)
 - **—** [E24-01 — Arranque, modo actualizador y dependencia de Darwin (27-10-2026)](capture/e24-01-arranque-recuperacion.md)
@@ -521,7 +521,6 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **S609** [S609 — CAMERA_IS/DIST: evidencia de cadenas](capture/s609-dist.md) · pruebas: [test_s609_dist.py](../tests/test_s609_dist.py) · evidencia: [s609_dist](../analysis/s609_dist)
 - **S610** [S610 — ACCY/INFO/HOUSING: evidencia de cadenas](capture/s610-housing.md) · pruebas: [test_s610_housing.py](../tests/test_s610_housing.py) · evidencia: [s610_housing](../analysis/s610_housing)
 - **S611** [S611 — IMAGING_RSRC: evidencia de cadenas](capture/s611-imaging_rsrc.md) · pruebas: [test_s611_imaging_rsrc.py](../tests/test_s611_imaging_rsrc.py) · evidencia: [s611_imaging_rsrc](../analysis/s611_imaging_rsrc)
-- **S631** [S631 — `[IMAGING_IMG]`: evidencia de cadenas y rutas de guarda](capture/s631-imaging_img.md) · pruebas: [test_s631_imaging_img.py](../tests/test_s631_imaging_img.py) · evidencia: [s631_imaging_img](../analysis/s631_imaging_img)
 - **S612** [S612 — CAMERA_IS/MOUNT: evidencia de cadenas](capture/s612-mount.md) · pruebas: [test_s612_mount.py](../tests/test_s612_mount.py) · evidencia: [s612_mount](../analysis/s612_mount)
 - **S613** [S613 — MOUNT_WARNING: evidencia de cadenas](capture/s613-mount_warning.md) · pruebas: [test_s613_mount_warning.py](../tests/test_s613_mount_warning.py) · evidencia: [s613_mount_warning](../analysis/s613_mount_warning)
 - **S614** [S614 — ZPD: evidencia de cadenas](capture/s614-zpd.md) · pruebas: [test_s614_zpd.py](../tests/test_s614_zpd.py) · evidencia: [s614_zpd](../analysis/s614_zpd)
@@ -538,6 +537,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **S625** [S625 — ADR: evidencia de cadenas](capture/s625-adr.md) · pruebas: [test_s625_adr.py](../tests/test_s625_adr.py) · evidencia: [s625_adr](../analysis/s625_adr)
 - **S626** [S626 — CAMERA_DETECT_FC: evidencia de cadenas](capture/s626-camera_detect_fc.md) · pruebas: [test_s626_camera_detect_fc.py](../tests/test_s626_camera_detect_fc.py) · evidencia: [s626_camera_detect_fc](../analysis/s626_camera_detect_fc)
 - **S627** [S627 — EO_SW: evidencia de cadenas](capture/s627-eo_sw.md) · pruebas: [test_s627_eo_sw.py](../tests/test_s627_eo_sw.py) · evidencia: [s627_eo_sw](../analysis/s627_eo_sw)
+- **S631** [S631 — `[IMAGING_IMG]`: evidencia de cadenas y rutas de guarda](capture/s631-imaging_img.md) · pruebas: [test_s631_imaging_img.py](../tests/test_s631_imaging_img.py) · evidencia: [s631_imaging_img](../analysis/s631_imaging_img)
 - **S66** [S66 — Montura de lente E-mount en la A6000 (línea general de ingeniería inversa)](capture/s66-lens-mount.md) · pruebas: [test_s66_lens_mount.py](../tests/test_s66_lens_mount.py) · evidencia: [s66](../analysis/s66)
 - **S68** [S68 — Gestión de batería, alimentación y carga (NP-FW50) en la A6000](capture/s68-battery-power.md) · pruebas: [test_s68_power.py](../tests/test_s68_power.py) · evidencia: [s68_power](../analysis/s68_power)
 - **S69** [S69 — Subsistema de audio de la Sony A6000 (fw3.21)](capture/s69-audio-subsystem.md) · pruebas: [test_s69_audio.py](../tests/test_s69_audio.py) · evidencia: [s69_audio](../analysis/s69_audio)
