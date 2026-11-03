@@ -95,7 +95,6 @@
      "0x43a0b734",
      "0x43a0b7fc",
      "0x43a0b8a8",
-     "0x43a0b95e",
      "0x43b5e2a4"
     ],
     "shutter_reach": [],
@@ -110,8 +109,6 @@
      "0x43a0b5e4",
      "0x43a0b630",
      "0x43a0b7fc",
-     "0x43a0ba36",
-     "0x43a0ba5a",
      "0x43b5e098"
     ],
     "shutter_reach": [],
@@ -126,7 +123,8 @@
     "bl_targets": [
      "0x43a0b5e4",
      "0x43a0b678",
-     "0x43a0b7fc"
+     "0x43a0b7fc",
+     "0x43a0b9a0"
     ],
     "shutter_reach": [],
     "logger_global_0x43902718_loaded": null
@@ -185,12 +183,13 @@
     ],
     "bl_targets": [
      "0x436ea3c4",
-     "0x436ea4c0",
-     "0x436ea4e2",
+     "0x436eabd0",
      "0x437000dc",
+     "0x4370047c",
      "0x43706844",
      "0x43adc2fc",
      "0x43adc74e",
+     "0x43adc926",
      "0x43b28930"
     ],
     "shutter_reach": [],
@@ -205,8 +204,6 @@
     ],
     "bl_targets": [
      "0x436ea3c4",
-     "0x436ea624",
-     "0x436ea62a",
      "0x436eabd0",
      "0x4370047c",
      "0x43706844",
@@ -222,7 +219,6 @@
     ],
     "bl_targets": [
      "0x436ea3c4",
-     "0x436ea690",
      "0x4370061c",
      "0x43adc74e",
      "0x43b28930"
@@ -286,7 +282,6 @@
     "bl_targets": [
      "0x436e91dc",
      "0x436ea224",
-     "0x436ea318",
      "0x436f961c",
      "0x439c5320",
      "0x43ad9d58"
@@ -317,9 +312,6 @@
      "0x4370558c",
      "0x43705b70",
      "0x43705cb8",
-     "0x43705e20",
-     "0x43705e3a",
-     "0x4370639a",
      "0x43707264",
      "0x43ada044"
     ],
@@ -407,19 +399,15 @@
      "0x436eaf28",
      "0x436eaf6c",
      "0x437020d4",
+     "0x43702758",
      "0x43703f74",
      "0x43703f9c",
      "0x437040d4",
      "0x43704174",
      "0x437041dc",
+     "0x43704288",
+     "0x437042d8",
      "0x43704424",
-     "0x43704796",
-     "0x437048c2",
-     "0x43704926",
-     "0x4370497c",
-     "0x437049d0",
-     "0x43704a9a",
-     "0x43704bae",
      "0x4370665c",
      "0x43706df4",
      "0x43706e00",
@@ -428,6 +416,7 @@
      "0x43706e24",
      "0x4371f64c",
      "0x4371f760",
+     "0x43941860",
      "0x43adc844"
     ],
     "shutter_reach": [],
@@ -512,10 +501,11 @@
     ],
     "bl_targets": [
      "0x437fc0d4",
-     "0x437fc47a",
-     "0x437fc4ae",
      "0x43901a8c",
      "0x43902718",
+     "0x43b00670",
+     "0x43b00678",
+     "0x43b00682",
      "0x43b006d0",
      "0x43b00752",
      "0x43b00798"
@@ -533,7 +523,6 @@
      "0x43561244",
      "0x435612d0",
      "0x435612ec",
-     "0x437fc732",
      "0x439c5004",
      "0x439c5a04"
     ],
@@ -546,9 +535,119 @@
      "0x437fc76a"
     ],
     "bl_targets": [
+     "0x42fff7aa",
      "0x437fc6a0",
-     "0x437fc794",
      "0x43902718"
+    ],
+    "shutter_reach": [],
+    "logger_global_0x43902718_loaded": null
+   }
+  ]
+ },
+ "IMAGING_RSRC": {
+  "strings": [
+   {
+    "vaddr": "0x43ca492f",
+    "text": "[IMAGING_RSRC]: [GOLFSHOT]SA_LPF Exec[%02d] Err: sa_err[0x%x] intfct[0x%x] mbox1[%x]",
+    "sites": [
+     "0x4379a360"
+    ]
+   },
+   {
+    "vaddr": "0x43ca4984",
+    "text": "[IMAGING_RSRC]: [GOLFSHOT]SA_BGEST Exec Err: sa_err[0x%x] intfct[0x%x] mbox1[%x]",
+    "sites": [
+     "0x4379a392"
+    ]
+   },
+   {
+    "vaddr": "0x43ca49d5",
+    "text": "[IMAGING_RSRC]: [GOLFSHOT]SA_SSP Exec[%03d] Err: sa_err[0x%x] intfct[0x%x] mbox1[%x]",
+    "sites": [
+     "0x4379a3c8"
+    ]
+   },
+   {
+    "vaddr": "0x43ca4a2a",
+    "text": "[IMAGING_RSRC]: [GOLFSHOT] correctSndDetResult(WARNING): Corrected Value is Out of SoundDetBuff",
+    "sites": [
+     "0x4379a556",
+     "0x4379a592"
+    ]
+   },
+   {
+    "vaddr": "0x43ca4a8a",
+    "text": "[IMAGING_RSRC]: [GOLFSHOT]vfc2indx: Shot Timing Transform Error",
+    "sites": [
+     "0x4379a634"
+    ]
+   }
+  ],
+  "token_models": {
+   "a6000_fw321": 5,
+   "a7s_fw320": 0,
+   "a6300_fw201": 0
+  },
+  "token": "[IMAGING_RSRC]",
+  "functions": [
+   {
+    "func": "0x4379a32c",
+    "sites": [
+     "0x4379a360",
+     "0x4379a392",
+     "0x4379a3c8"
+    ],
+    "bl_targets": [
+     "0x4319d0fc",
+     "0x4355faf0",
+     "0x4355fd4c",
+     "0x4378f9b4",
+     "0x4379a274",
+     "0x4379a320",
+     "0x4379a898",
+     "0x437a41f0",
+     "0x43902718",
+     "0x439c5320",
+     "0x43ae8c4a"
+    ],
+    "shutter_reach": [],
+    "logger_global_0x43902718_loaded": null
+   },
+   {
+    "func": "0x4379a41c",
+    "sites": [
+     "0x4379a556",
+     "0x4379a592"
+    ],
+    "bl_targets": [
+     "0x4319d0fc",
+     "0x4355faf0",
+     "0x4355fd4c",
+     "0x4378f9b4",
+     "0x4379a274",
+     "0x4379a320",
+     "0x4379a898",
+     "0x437a41f0",
+     "0x43902718",
+     "0x439c5320",
+     "0x43ae8c4a"
+    ],
+    "shutter_reach": [],
+    "logger_global_0x43902718_loaded": null
+   },
+   {
+    "func": "0x4379a5d4",
+    "sites": [
+     "0x4379a634"
+    ],
+    "bl_targets": [
+     "0x4319d0fc",
+     "0x4355faf0",
+     "0x4378f9b4",
+     "0x4379a274",
+     "0x4379a898",
+     "0x43902718",
+     "0x439c5320"
     ],
     "shutter_reach": [],
     "logger_global_0x43902718_loaded": null

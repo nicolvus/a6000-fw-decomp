@@ -10,5 +10,10 @@ def test_callbacks_registrados_por_puntero():
 
 
 def test_sin_referencias_estaticas():
-    for f in (0x436fecbe, 0x436fee80, 0x438786c4, 0x43879204, 0x438792dc, 0x4387938e):
+    for f in (0x436fecbe, 0x436fee80, 0x438786c4, 0x43879204, 0x4387938e):
         assert not any(K.refs(f).values())
+
+
+def test_barrido_bl_por_patron():
+    assert K.refs(0x438792dc)["bl"] == ["0x43af6082"]
+    assert len(K.refs(0x4381ba9c)["bl"]) == 10 and len(K.refs(0x4381bbf0)["bl"]) == 26 and len(K.refs(0x4381bd4c)["bl"]) == 7

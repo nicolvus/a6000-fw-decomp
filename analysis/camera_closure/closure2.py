@@ -41,11 +41,23 @@ def by_ldr(add_site):
     ks = sorted(_ldr[r]); i = bisect.bisect_left(ks, add_site) - 1
     return ks[i]
 def bl_callers():
+    """Todos los `bl`/`blx`/`b.w` Thumb-2 por patrón de halfwords (sin desensamblado lineal, que se desincroniza con datos)."""
     if "bl" not in _cache:
         d = {}
-        for i in C.md.disasm(B, BASE):
-            if i.mnemonic in ("bl", "blx", "b.w") and i.op_str.startswith("#"):
-                d.setdefault(int(i.op_str[1:], 0), []).append(i.address)
+        for o in range(0, N - 4, 2):
+            h1, h2 = struct.unpack_from("<HH", B, o)
+            if (h1 & 0xF800) != 0xF000 or (h2 & 0xC000) != 0xC000 and (h2 & 0xD000) != 0x9000: continue
+            if (h2 & 0xD000) not in (0xD000, 0xC000, 0x9000): continue
+            s = (h1 >> 10) & 1; j1 = (h2 >> 13) & 1; j2 = (h2 >> 11) & 1
+            i1 = (~(j1 ^ s)) & 1; i2 = (~(j2 ^ s)) & 1
+            if (h2 & 0xD000) == 0x9000:      # b.w (T4)
+                imm = (s << 24) | (i1 << 23) | (i2 << 22) | ((h1 & 0x3FF) << 12) | ((h2 & 0x7FF) << 1)
+            else:                             # bl / blx
+                imm = (s << 24) | (i1 << 23) | (i2 << 22) | ((h1 & 0x3FF) << 12) | ((h2 & 0x7FF) << 1)
+            if imm & (1 << 24): imm -= 1 << 25
+            a = BASE + o
+            tgt = ((a + 4) & ~3 if (h2 & 0xD000) == 0xC000 else a + 4) + imm
+            d.setdefault(tgt & 0xFFFFFFFF, []).append(a)
         _cache["bl"] = d
     return _cache["bl"]
 

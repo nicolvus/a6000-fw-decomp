@@ -18,7 +18,7 @@ SHUTTER = {0x438c82fe: "C3-B enganche", 0x4383fa40: "productor r5", 0x436d6f6c: 
            0x436d7e08: "SetRead +0x30", 0x437b46d0: "constructor normal", 0x438417c0: "EFCS",
            0x438c74b0: "BULB host"}
 SRC = {"CAMERA_DETECT_FC": "s626_camera_detect_fc/camera_detect_fc", "CAMERA_DEVICE": "s617_camera_device/camera_device",
-       "CAMERA_IS_DIST": "s609_dist/dist", "CAMERA_IS_MOUNT": "s612_mount/mount", "CAMERA_IS_EIS": "s615_eis/eis", "CAM_CMD": "s607_cam_cmd/cam_cmd"}
+       "CAMERA_IS_DIST": "s609_dist/dist", "CAMERA_IS_MOUNT": "s612_mount/mount", "CAMERA_IS_EIS": "s615_eis/eis", "CAM_CMD": "s607_cam_cmd/cam_cmd", "IMAGING_RSRC": "s611_imaging_rsrc/imaging_rsrc"}
 md = Cs(CS_ARCH_ARM, CS_MODE_THUMB)
 
 def u16(a): return struct.unpack_from("<H", B, a - BASE)[0]
@@ -40,14 +40,17 @@ def func_end(f):
         x += 2
     return x
 
+_FWD = {}
 def bl_targets(lo, hi):
-    out = []
-    for i in md.disasm(B[lo - BASE:hi - BASE], lo):
-        if i.mnemonic in ("bl", "b.w", "b") and i.op_str.startswith("#"):
-            out.append(int(i.op_str[1:], 0))
-        elif i.mnemonic == "blx" and i.op_str.startswith("#"):
-            out.append(int(i.op_str[1:], 0))
-    return out
+    """Destinos `bl`/`blx`/`b.w` con sitio en [lo,hi), del barrido por patrón de halfwords (closure2.bl_callers)."""
+    if not _FWD:
+        import closure2
+        import bisect
+        pairs = sorted((a, tg) for tg, aa in closure2.bl_callers().items() for a in aa)
+        _FWD["a"] = [x[0] for x in pairs]; _FWD["t"] = [x[1] for x in pairs]
+    import bisect
+    i, j = bisect.bisect_left(_FWD["a"], lo), bisect.bisect_left(_FWD["a"], hi)
+    return _FWD["t"][i:j]
 
 def reach(f, depth=3, seen=None):
     seen = seen if seen is not None else set()
@@ -137,7 +140,7 @@ def render(name, m, rows):
     ]
 
 PATCH = {"CAMERA_DETECT_FC": "s626-camera_detect_fc", "CAMERA_DEVICE": "s617-camera_device", "CAMERA_IS_DIST": "s609-dist",
-         "CAMERA_IS_MOUNT": "s612-mount", "CAMERA_IS_EIS": "s615-eis", "CAM_CMD": "s607-cam_cmd"}
+         "CAMERA_IS_MOUNT": "s612-mount", "CAMERA_IS_EIS": "s615-eis", "CAM_CMD": "s607-cam_cmd", "IMAGING_RSRC": "s611-imaging_rsrc"}
 
 def patch_reports():
     res = json.load(open("analysis/camera_closure/closure.json"))

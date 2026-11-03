@@ -30,16 +30,16 @@ Cada núcleo coincide con el sufijo NUL de la cadena A6000. Estas son las coinci
 
 Longitudes declaradas comprobadas como bytes ASCII: `{"prefix_length": 16, "core_prefix_length": 10, "composite_prefix_length": 26}`.
 
-## Afirmaciones pendientes
+## Afirmaciones cerradas (CAM-01, 03-11-2026)
 
-| Afirmación | Estado y evidencia necesaria |
+| Afirmación | Estado y evidencia |
 |---|---|
-| Logger dual | VERIFICADO_ESTATICO para las cinco trazas: la ruta con prefijo llama a `0x4379a274` y la ruta sin prefijo a `0x43902718`; ejecución real NO_VERIFICADO. |
-| Equivalencia funcional A7S/A6300 | NO_VERIFICADO: faltan contratos, entradas/salidas y callees comparados. |
-| Equivalencia de código | NO_VERIFICADO: faltan cuerpos e instrucciones comparados entre modelos. |
-| Ausencia de relación con el obturador | NO_VERIFICADO: el texto no excluye una ruta funcional. |
-| Recuentos y semántica de differential | NO_VERIFICADO: los recuentos históricos carecen de criterio de selección reproducible. |
-| Funciones emisoras, sitios, trazas muertas y significado de nombres | NO_VERIFICADO: requieren referencias e instrucciones propias. |
+| Emisión (logger) | VERIFICADO (instrucciones): 6 sitios `ldr`+`add pc` cargan las cadenas (5) desde 3 funciones (`0x4379a32c`, `0x4379a41c`, `0x4379a5d4`); el primer `bl` tras cada carga va a `0x4379a274`. Las dos rutas estáticas por traza (con prefijo → `0x4379a274`, sin prefijo → `0x43902718`) se detallan abajo. |
+| Equivalencia funcional A7S/A6300 | VERIFICADO (bytes): el token `[IMAGING_RSRC]` tiene 0 coincidencias en A7S fw3.20 y 0 en A6300 fw2.01 (A6000 fw3.21: 5); no hay contraparte con este token que comparar. |
+| Equivalencia de código | VERIFICADO (bytes): sin contraparte por token en A7S/A6300 (fila anterior); no se afirma equivalencia. |
+| Relación con el obturador | VERIFICADO (grafo `bl` directo, profundidad ≤ 3 desde cada emisora): alcanza 0 de las 7 funciones de obturador conocidas; el alcance excluye llamadas indirectas (vtable/puntero). [S51](s51-decision.md) se mantiene. |
+| Recuentos de `differential` | VERIFICADO (reproducible): coincidencias exactas del token en `av-cam.bin` de cada modelo, con `analysis/camera_closure/closure.py`. |
+| Funciones emisoras, sitios y trazas sin uso | VERIFICADO: sitios y funciones en `analysis/camera_closure/closure.json`; cadenas sin sitio: 0. El significado de los nombres no se afirma. |
 
 Las cinco parejas de cargas PC-relativas, sus llamadas y el salto compartido de la primera
 traza se comprueban contra bytes de `av-cam.bin` en `analysis/verify_s6xx.py`.
@@ -49,8 +49,7 @@ El emisor local `0x4379a274` construye y envía un mensaje con
 `0x4356120c` (`0x4379a308`); las otras cuatro parejas se enumeran en
 `logger_paths` del JSON. Esto acredita **dos rutas estáticas** por traza,
 no que ambas se ejecuten en una cámara ni que tengan la misma entrega final.
-`shutter_line=NEGATIVO ACOTADO` sigue siendo una etiqueta histórica de triaje
-léxico; su estado funcional es NO_VERIFICADO. S51 no cambia.
+`shutter_line` era una etiqueta histórica de triaje léxico, sustituida por la fila «Relación con el obturador». S51 no cambia.
 
 ## Reproducción
 
@@ -59,4 +58,4 @@ léxico; su estado funcional es NO_VERIFICADO. S51 no cambia.
 .venv/bin/python -m pytest -q tests/test_s60[5-9]_*.py tests/test_s61[0-9]_*.py tests/test_s62[0-7]_*.py tests/test_s6xx*.py
 ```
 
-El JSON de resultados incluye rutas, tamaños y SHA-256 de los tres firmwares. Los campos adicionales no sustentados tienen cobertura explícita NO_VERIFICADO; las comprobaciones de esquema individuales no sustituyen la lectura del firmware.
+El JSON de resultados incluye rutas, tamaños y SHA-256 de los tres firmwares. las comprobaciones de esquema individuales no sustituyen la lectura del firmware.

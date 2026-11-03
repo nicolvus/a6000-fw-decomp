@@ -43,14 +43,19 @@ Etiquetas de las cadenas que cargan las funciones llamadoras (inicio de función
 
 Los llamadores están en la zona de captura still (`[IMAGING_CAP]`, cuya `ResourceStack` gestiona acquire/release durante la captura, [S107](s107-camcore-resources.md)), en `[CAMERA_MAIN_SYNC]`/`[GOLFSHOT]` y en `[CAM_SCALAR]` (el handle `YCC_FULL`, [S604](s604-lens-yc-imaging-raw.md)). Eso sitúa `Image` en el camino de datos de la captura, **no** en el control del obturador: ninguna de las tres funciones toca registros del sensor ni de obturación, solo gestiona objetos de un pool. Conclusión: sin relación directa demostrada con el obturador electrónico; S51 no cambia.
 
-## Afirmaciones pendientes
+## Cierre CAM-01 (03-11-2026, medido en bytes)
 
-| Afirmación | Estado |
-|---|---|
-| Semántica de cada campo de `Image`/`ImageParam` y de `0x437965ac` | NO_VERIFICADO: falta comparar con los usos en los llamadores. |
-| Llamadas indirectas a las tres funciones | NO_VERIFICADO: solo se barrieron `bl` directos. |
-| Qué sitios de `Branch` sin cadena etiquetada pertenecen a qué módulo | NO_VERIFICADO. |
-| Ejecución real de las trazas en cámara | NO_VERIFICADO. |
+- **Llamadas indirectas** a `0x4381ba9c`, `0x4381bbf0`, `0x4381bd4c` y a `0x437965ac`: 0 por literal de 32 bits (con y sin bit Thumb), `ldr`+`add pc` en la misma función y `movw`+`movt` (`analysis/camera_closure/closure2.py`). Solo llamadas directas: 10, 26 y 7 (= 43, coincide con el barrido anterior) y 5 a `0x437965ac` (`0x437e5552`, `0x437e555e`, `0x4381bc96`, `0x4381bdec`, `0x43b04722`).
+- **Sitios de `Branch` sin función localizada** (la función es la primera `push {…lr}` hacia atrás en 0x2000 B; es heurística y estas funciones son grandes):
+  - `0x43551b64`: función `0x435503b0`, etiquetas cargadas hasta el sitio: `[CAMERA_MAIN_SYNC]`, `[IMAGING]`
+  - `0x43552210`: función `0x435503b0`, etiquetas cargadas hasta el sitio: `[CAMERA_MAIN_SYNC]`, `[IMAGING]`
+  - `0x435522d0`: función `0x435503b0`, etiquetas cargadas hasta el sitio: `[CAMERA_MAIN_SYNC]`, `[IMAGING]`
+  - `0x43552482`: sin `push {…lr}` en 0x2000 B previos
+  - `0x435542d6`: función `0x435525c0`, etiquetas cargadas hasta el sitio: `[CAMERA_MAIN_SYNC]`, `[IMAGING]`
+  - `0x4355447a`: función `0x435525c0`, etiquetas cargadas hasta el sitio: `[CAMERA_MAIN_SYNC]`, `[IMAGING]`
+  - `0x435561f0`: función `0x43554590`, etiquetas cargadas hasta el sitio: `[CAMERA_MAIN_SYNC]`, `[IMAGING]`
+  - `0x435563ae`: función `0x43554590`, etiquetas cargadas hasta el sitio: `[CAMERA_MAIN_SYNC]`, `[IMAGING]`
+- **Semántica de los campos de `Image`/`ImageParam` y de `0x437965ac`** y **ejecución real de las trazas en cámara**: no son afirmaciones de este informe (el layout es estructural; no se ejecutó firmware ni se usó cámara).
 
 ## Reproducción
 

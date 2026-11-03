@@ -52,7 +52,7 @@ existe en las tres versiones y la etiqueta es **exclusiva de la A6000 fw3.21**.
 ## Cierre CAM-01 (03-11-2026, medido en bytes)
 
 - Ficheros fuente: 39 funciones con traza; 0 citan un fichero fuente (ninguno); 39 ninguno.
-- `0x438786c4`, `0x43879204`, `0x438792dc`, `0x4387938e`: 0 referencias por `bl`/`b.w`, literal (con y sin bit Thumb), `ldr`+`add pc` en la misma función y `movw`+`movt`.
+- `0x438786c4`, `0x43879204` y `0x4387938e`: 0 referencias por `bl`/`b.w` (barrido por patrón de halfwords), literal (con y sin bit Thumb), `ldr`+`add pc` en la misma función y `movw`+`movt`. `0x438792dc`: 1 llamador `bl` en `0x43af6082`.
 - Token `[CAMERA_MAIN_TC]`: 127 en A6000, 0 en A7S y A6300.
 
 Método: `analysis/camera_closure/sources.py` (cadenas `.cpp/.h/.c` desnudas cargadas con la regla PIC estricta dentro de cada función; fin de función = siguiente `push {…,lr}`) y `closure2.py` (referencias a una función: `bl`/`b.w`, literal de 32 bits con o sin bit Thumb, `ldr`+`add pc` en la misma función, `movw`+`movt`). Siglas, nombres de fichero y significados de campos que el firmware no declara **no son afirmaciones de este informe**: no se atribuye ni se infiere ninguno.
