@@ -1,0 +1,438 @@
+{
+ "CAMERA_DETECT_FC": {
+  "strings": [
+   {
+    "vaddr": "0x43cf02c9",
+    "text": "[CAMERA_DETECT_FC]: %s @%s L%d",
+    "sites": [
+     "0x439dc910",
+     "0x439dc996"
+    ]
+   }
+  ],
+  "token_models": {
+   "a6000_fw321": 1,
+   "a7s_fw320": 0,
+   "a6300_fw201": 0
+  },
+  "token": "[CAMERA_DETECT_FC]",
+  "functions": [
+   {
+    "func": "0x439dc8ea",
+    "sites": [
+     "0x439dc910"
+    ],
+    "bl_targets": [
+     "0x439c5004",
+     "0x439c5b5c",
+     "0x439db1d8",
+     "0x439dc83c",
+     "0x439dcaa0",
+     "0x43b2a196"
+    ],
+    "shutter_reach": [],
+    "logger_global_0x43902718_loaded": null
+   },
+   {
+    "func": "0x439dc964",
+    "sites": [
+     "0x439dc996"
+    ],
+    "bl_targets": [
+     "0x439c5004",
+     "0x439dbd90",
+     "0x439dc83c"
+    ],
+    "shutter_reach": [],
+    "logger_global_0x43902718_loaded": null
+   }
+  ]
+ },
+ "CAMERA_DEVICE": {
+  "strings": [
+   {
+    "vaddr": "0x43cf724e",
+    "text": "[CAMERA_DEVICE][DET_DIR][osal_alloc_timer] %x",
+    "sites": [
+     "0x43a0b900",
+     "0x43a0b924"
+    ]
+   },
+   {
+    "vaddr": "0x43cf727c",
+    "text": "[CAMERA_DEVICE][DET_DIR][osal_set_timer] %x",
+    "sites": [
+     "0x43a0b94c",
+     "0x43a0baba"
+    ]
+   },
+   {
+    "vaddr": "0x43cf72a8",
+    "text": "[CAMERA_DEVICE][DET_DIR][osal_free_timer] %x",
+    "sites": [
+     "0x43a0bc5c",
+     "0x43a0bc7c"
+    ]
+   }
+  ],
+  "token_models": {
+   "a6000_fw321": 3,
+   "a7s_fw320": 0,
+   "a6300_fw201": 0
+  },
+  "token": "[CAMERA_DEVICE]",
+  "functions": [
+   {
+    "func": "0x43a0b8aa",
+    "sites": [
+     "0x43a0b900",
+     "0x43a0b924",
+     "0x43a0b94c"
+    ],
+    "bl_targets": [
+     "0x43a0b5e4",
+     "0x43a0b630",
+     "0x43a0b734",
+     "0x43a0b7fc",
+     "0x43a0b8a8",
+     "0x43a0b95e",
+     "0x43b5e2a4"
+    ],
+    "shutter_reach": [],
+    "logger_global_0x43902718_loaded": null
+   },
+   {
+    "func": "0x43a0b9c0",
+    "sites": [
+     "0x43a0baba"
+    ],
+    "bl_targets": [
+     "0x43a0b5e4",
+     "0x43a0b630",
+     "0x43a0b7fc",
+     "0x43a0ba36",
+     "0x43a0ba5a",
+     "0x43b5e098"
+    ],
+    "shutter_reach": [],
+    "logger_global_0x43902718_loaded": null
+   },
+   {
+    "func": "0x43a0bc40",
+    "sites": [
+     "0x43a0bc5c",
+     "0x43a0bc7c"
+    ],
+    "bl_targets": [
+     "0x43a0b5e4",
+     "0x43a0b678",
+     "0x43a0b7fc"
+    ],
+    "shutter_reach": [],
+    "logger_global_0x43902718_loaded": null
+   }
+  ]
+ },
+ "CAMERA_IS_DIST": {
+  "strings": [
+   {
+    "vaddr": "0x43c98e1d",
+    "text": "[CAMERA_IS][DIST]: ERR:MakeDistCorPrm prm=null\n",
+    "sites": [
+     "0x436ea492"
+    ]
+   },
+   {
+    "vaddr": "0x43c98e4d",
+    "text": "[CAMERA_IS][DIST]: ERR:CnvPosInvDistCorr prm=null\n",
+    "sites": [
+     "0x436ea53c"
+    ]
+   },
+   {
+    "vaddr": "0x43c98e80",
+    "text": "[CAMERA_IS][DIST]: ERR:CnvPosInvDistCorr prm=inv1 (%d, %d)\n",
+    "sites": [
+     "0x436ea576"
+    ]
+   },
+   {
+    "vaddr": "0x43c98ebc",
+    "text": "[CAMERA_IS][DIST]: WRN:CnvPosInvDistCorr prm=inv2 (%d, %d) \n",
+    "sites": [
+     "0x436ea600"
+    ]
+   },
+   {
+    "vaddr": "0x43c98ef9",
+    "text": "[CAMERA_IS][DIST]: ERR:MakeDistRawAppliTag prm=null\n",
+    "sites": [
+     "0x436ea670"
+    ]
+   }
+  ],
+  "token_models": {
+   "a6000_fw321": 5,
+   "a7s_fw320": 0,
+   "a6300_fw201": 0
+  },
+  "token": "[CAMERA_IS][DIST]",
+  "functions": [
+   {
+    "func": "0x436ea470",
+    "sites": [
+     "0x436ea492"
+    ],
+    "bl_targets": [
+     "0x436ea3c4",
+     "0x436ea4c0",
+     "0x436ea4e2",
+     "0x437000dc",
+     "0x43706844",
+     "0x43adc2fc",
+     "0x43adc74e",
+     "0x43b28930"
+    ],
+    "shutter_reach": [],
+    "logger_global_0x43902718_loaded": null
+   },
+   {
+    "func": "0x436ea50c",
+    "sites": [
+     "0x436ea53c",
+     "0x436ea576",
+     "0x436ea600"
+    ],
+    "bl_targets": [
+     "0x436ea3c4",
+     "0x436ea624",
+     "0x436ea62a",
+     "0x436eabd0",
+     "0x4370047c",
+     "0x43706844",
+     "0x43adc926"
+    ],
+    "shutter_reach": [],
+    "logger_global_0x43902718_loaded": null
+   },
+   {
+    "func": "0x436ea65c",
+    "sites": [
+     "0x436ea670"
+    ],
+    "bl_targets": [
+     "0x436ea3c4",
+     "0x436ea690",
+     "0x4370061c",
+     "0x43adc74e",
+     "0x43b28930"
+    ],
+    "shutter_reach": [],
+    "logger_global_0x43902718_loaded": null
+   }
+  ]
+ },
+ "CAMERA_IS_MOUNT": {
+  "strings": [
+   {
+    "vaddr": "0x43c98da6",
+    "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountExpStartCB (%x)",
+    "sites": [
+     "0x436ea2e6"
+    ]
+   },
+   {
+    "vaddr": "0x43c98dde",
+    "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountExpStartCB - checkData",
+    "sites": [
+     "0x436ea312"
+    ]
+   },
+   {
+    "vaddr": "0x43c9a3a7",
+    "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyroCB (%x)",
+    "sites": [
+     "0x43705d7a"
+    ]
+   },
+   {
+    "vaddr": "0x43c9a3e3",
+    "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyroCB - checkData",
+    "sites": [
+     "0x43705db6"
+    ]
+   },
+   {
+    "vaddr": "0x43c9a426",
+    "text": "[CAMERA_IS][MOUNT]: [Error] IS_LensMountPanoramaGyro (%x)",
+    "sites": [
+     "0x43705e28"
+    ]
+   }
+  ],
+  "token_models": {
+   "a6000_fw321": 5,
+   "a7s_fw320": 0,
+   "a6300_fw201": 0
+  },
+  "token": "[CAMERA_IS][MOUNT]: [Error]",
+  "functions": [
+   {
+    "func": "0x436ea2d0",
+    "sites": [
+     "0x436ea2e6",
+     "0x436ea312"
+    ],
+    "bl_targets": [
+     "0x436e91dc",
+     "0x436ea224",
+     "0x436ea318",
+     "0x436f961c",
+     "0x439c5320",
+     "0x43ad9d58"
+    ],
+    "shutter_reach": [],
+    "logger_global_0x43902718_loaded": null
+   },
+   {
+    "func": "0x43705d64",
+    "sites": [
+     "0x43705d7a",
+     "0x43705db6"
+    ],
+    "bl_targets": [
+     "0x43705cb8",
+     "0x43ad9d58"
+    ],
+    "shutter_reach": [],
+    "logger_global_0x43902718_loaded": null
+   },
+   {
+    "func": "0x43705dd0",
+    "sites": [
+     "0x43705e28"
+    ],
+    "bl_targets": [
+     "0x436e1254",
+     "0x4370558c",
+     "0x43705b70",
+     "0x43705cb8",
+     "0x43705e20",
+     "0x43705e3a",
+     "0x4370639a",
+     "0x43707264",
+     "0x43ada044"
+    ],
+    "shutter_reach": [],
+    "logger_global_0x43902718_loaded": null
+   }
+  ]
+ },
+ "CAMERA_IS_EIS": {
+  "strings": [
+   {
+    "vaddr": "0x43c9a2b2",
+    "text": "[CAMERA_IS][EIS]: error:0x%02x rcct_SetStblzPower error!",
+    "sites": [
+     "0x43702e02",
+     "0x43704db0"
+    ]
+   },
+   {
+    "vaddr": "0x43c9a2eb",
+    "text": "[CAMERA_IS][EIS]: error:0x%02x rcct_SetStblzGridH error!",
+    "sites": [
+     "0x43702e1c"
+    ]
+   },
+   {
+    "vaddr": "0x43c9a324",
+    "text": "[CAMERA_IS][EIS]: GyroAD[p],GyroAD[y], %d, %d",
+    "sites": [
+     "0x43704802"
+    ]
+   },
+   {
+    "vaddr": "0x43c9a352",
+    "text": "[CAMERA_IS][EIS]: %x, %d, %d",
+    "sites": [
+     "0x43704c02"
+    ]
+   }
+  ],
+  "token_models": {
+   "a6000_fw321": 4,
+   "a7s_fw320": 0,
+   "a6300_fw201": 0
+  },
+  "token": "[CAMERA_IS][EIS]",
+  "functions": [
+   {
+    "func": "0x43702dac",
+    "sites": [
+     "0x43702e02",
+     "0x43702e1c"
+    ],
+    "bl_targets": [
+     "0x437026ac",
+     "0x4371f64c",
+     "0x439417c8",
+     "0x43941814",
+     "0x43adc81e"
+    ],
+    "shutter_reach": [],
+    "logger_global_0x43902718_loaded": null
+   },
+   {
+    "func": "0x43704d90",
+    "sites": [
+     "0x43704db0"
+    ],
+    "bl_targets": [
+     "0x437041dc",
+     "0x439417c8",
+     "0x43adc81e"
+    ],
+    "shutter_reach": [],
+    "logger_global_0x43902718_loaded": null
+   },
+   {
+    "func": "0x437046a4",
+    "sites": [
+     "0x43704802",
+     "0x43704c02"
+    ],
+    "bl_targets": [
+     "0x4355faf0",
+     "0x436eaf28",
+     "0x436eaf6c",
+     "0x437020d4",
+     "0x43703f74",
+     "0x43703f9c",
+     "0x437040d4",
+     "0x43704174",
+     "0x437041dc",
+     "0x43704424",
+     "0x43704796",
+     "0x437048c2",
+     "0x43704926",
+     "0x4370497c",
+     "0x437049d0",
+     "0x43704a9a",
+     "0x43704bae",
+     "0x4370665c",
+     "0x43706df4",
+     "0x43706e00",
+     "0x43706e0c",
+     "0x43706e18",
+     "0x43706e24",
+     "0x4371f64c",
+     "0x4371f760",
+     "0x43adc844"
+    ],
+    "shutter_reach": [],
+    "logger_global_0x43902718_loaded": null
+   }
+  ]
+ }
+}

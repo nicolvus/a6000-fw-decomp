@@ -58,7 +58,7 @@ aserción, p. ej. `Camera::FC::FCTop::ExecApiNotifyStartTouch` `0x43cefa06`) y e
 
 Material **propio de la A6000 fw3.21**; la biblioteca `Camera::FC` es **idéntica en los tres**.
 
-## NO VERIFICADO
+## Abierto: No determinado con el firmware (reclasificado el 03-11-2026; seguimiento en PENDIENTES CAM-01)
 
 Fichero fuente del módulo (ninguna traza cita un `.cpp`); si `0x437b7778` se invoca desde otro
 binario del paquete de firmware; significado del flag `lc`; destinatario de los mensajes OSAL

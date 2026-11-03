@@ -33,7 +33,7 @@ fw2.01 tienen **0** trazas con ese prefijo, pero **92** (A7S) y **121** (A6300) 
 existen allí **sin etiqueta**. Es la misma política de etiquetado por submódulo que se vio en
 S106 (`[IMAGING_CAP]`), S119 (`[APL]` dentro de `[CAMERA_SA]`) y S120 (`[IDT_OPD]`).
 
-## Abierto / NO VERIFICADO
+## Abierto: No determinado con el firmware (reclasificado el 03-11-2026; seguimiento en PENDIENTES CAM-01)
 
 - La subdivisión de los 82 mensajes "sin etiqueta"; qué fichero fuente corresponde a cada una de
   las 48 funciones; el significado de `waku`, `ympc`, `csum`, `cpeak`, `LoadNum`/`Ch`.

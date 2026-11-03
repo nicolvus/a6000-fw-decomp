@@ -51,7 +51,7 @@ módulo; los 2 restantes son **ampliaciones de formato** en la A6000 (`IsSplit C
 `Create3DLUT … BlkOfs Cr/Cb`). La A7S tiene además `IsSplit Change && (core_sa != CC_PROC_SA) >>>
 uc_ret = C_TRUE`, **inexistente** en la A6000.
 
-## Abierto / NO VERIFICADO
+## Abierto: No determinado con el firmware (reclasificado el 03-11-2026; seguimiento en PENDIENTES CAM-01)
 
 * El/los **ficheros fuente** que implementan la clase `CC` (las 29 funciones no referencian ningún
   `.cpp`/`.h`; la atribución por proximidad es INFERENCIA) y el significado de la sigla **`CC`**.

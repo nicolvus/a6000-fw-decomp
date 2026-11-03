@@ -89,7 +89,7 @@ fw3.21 y en la A7S fw3.20.
 >
 > **S51 (A/B/C = NO) se mantiene.**
 
-## NO VERIFICADO / abierto
+## Abierto: No determinado con el firmware (reclasificado el 03-11-2026; seguimiento en PENDIENTES CAM-01)
 
 Fichero fuente propio del módulo (**no embebido**); significado de `upm_get_hcrn_ura` y de las
 siglas `AS`/`DIST`; significado de las `u16` `ctx+0xbd8`/`ctx+0xbda`; destino físico de

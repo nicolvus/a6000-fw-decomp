@@ -37,7 +37,7 @@ Puente al AF híbrido: `NOT_DETECT from ZPD MODULE… lc_HybridAF.cpp %d` `0x43c
 
 La etiqueta es nueva en la fw3.21; los conceptos existen sin etiqueta (`lc_HybridAF.cpp`, `fc_pos`, `MarioAfc`, `zpd_`, `LC_GetZpdResultInfo`). Matiz: `************` `0x43c9d03e` sí aparece como **subcadena** en A7S/A6300, pero solo como cola/relleno de otras cadenas, no como traza LC independiente; el 0/72 se mantiene.
 
-## Abierto / NO VERIFICADO
+## Abierto: No determinado con el firmware (reclasificado el 03-11-2026; seguimiento en PENDIENTES CAM-01)
 
 - `LC`, `CPaf`, `Mario`, `Gpma`, `MaInToOut`, `watkao`, `kinbou`, `yosoku`, `mario_use_ng_flag`: sin expandir. Semántica de `watkao1`, `kinbou`, `yosoku`, `scanless manymode`, `zpd_flags`, `select_area`: desconocida.
 - Fichero fuente de `lc_Movie_DM_AF_Util`/`lc_DM_AF_Util` y de 12 funciones más: no identificado. "Sin `bl` directo" ≠ llamada por puntero (las C++ se llaman por vtable).

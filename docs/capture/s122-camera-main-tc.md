@@ -49,7 +49,7 @@ Idéntico en ambas versiones: **115** con 1 sitio, **8** con 0, **4** con 2 (idx
 `TC:DIST:Err:SetDistMode1ForSync aspect` `0x43ca8547` e idx 108 `TC:DDT:Err: Osal Valloc Msg`
 `0x43cb7524`. Lectura: fw3.21 **instrumenta** el módulo y añade tres trazas; el código de fondo
 existe en las tres versiones y la etiqueta es **exclusiva de la A6000 fw3.21**.
-## Nota de método y abierto / NO VERIFICADO
+## Nota de método y abierto: No determinado con el firmware (reclasificado el 03-11-2026; seguimiento en PENDIENTES CAM-01)
 - Regla PIC **estricta** canónica (`analysis/s106_imaging_cap/scan_pic_refs_strict.py`): `add`
   emparejado con el `ldr` más cercano por detrás del mismo registro, ventana 4 KB, destino inicio
   de cadena. Escáner dirigido: **127 refs `string`, 0 discrepancias, 0 sitios ausentes**.

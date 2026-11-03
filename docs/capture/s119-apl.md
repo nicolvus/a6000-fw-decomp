@@ -47,7 +47,7 @@ de 5 funciones** (`0x439bcd80` 7, `0x439bcea0` 9, `0x439bcfc8` 4, `0x439bd05c` 2
 Lo único que cambia es que la A7S **no lleva el prefijo `"[CAMERA_SA]: "`** (sus cadenas están en
 `0x43ce1588`–`0x43ce1a90`). El A6300 fw2.01: 42/42 también.
 
-## Nota de método y abierto / NO VERIFICADO
+## Nota de método y abierto: No determinado con el firmware (reclasificado el 03-11-2026; seguimiento en PENDIENTES CAM-01)
 
 - La regla PIC canónica del repo (todos los `ldr` del registro en 4 KB) da **67** pares (traza,
   sitio) frente a los **42** de la regla estricta: **25 falsos positivos** comprobados

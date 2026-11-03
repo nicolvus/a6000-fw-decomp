@@ -4,7 +4,7 @@
 (`CAMERA_IS`), giroscopio y ficheros de calibración IS por lente. **No** es la línea SilentShutter
 ni la de la montura (S66). Solo lectura de bytes; nada ejecutado.
 
-**Estado:** VERIFICADO = contra bytes. INFERENCIA = lectura razonada. NO_VERIFICADO = pendiente.
+**Estado:** VERIFICADO = contra bytes. INFERENCIA = lectura razonada. ABIERTO = pendiente.
 
 ## 1. Mapa del subsistema (VERIFICADO por cadena → función)
 
@@ -46,7 +46,7 @@ ni la de la montura (S66). Solo lectura de bytes; nada ejecutado.
 4. `GyroStitScl` y `JudgeBrkGyro` operan en la cadena de **time control (TC)**: escalado por el
    movimiento medido y detección de "break" del giroscopio.
 
-## 3. Abierto (NO_VERIFICADO)
+## 3. Abierto: no determinado con el firmware (reclasificado 03-11-2026; PENDIENTES CAM-01)
 
 - Formato del fichero `/mnt/FILE_IS_%04x.dat` y quién lo escribe (¿la propia cámara al fabricar?).
 - Relación entre `GyroAD` (ADC) y las unidades de `GyroStitScl`.

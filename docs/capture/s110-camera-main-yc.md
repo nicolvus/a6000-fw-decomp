@@ -42,7 +42,7 @@ organizan internamente en **141 sub-módulos etiquetados** (los grandes: `SHD` 2
    existen también en la A7S. La única traza nueva de la fw3.21 es
    `[CAMERA_MAIN_YC]: HD_SWEEP_HOLD  =%x` (`0x43cbc27c`).
 
-## Abierto / NO VERIFICADO
+## Abierto: No determinado con el firmware (reclasificado el 03-11-2026; seguimiento en PENDIENTES CAM-01)
 
 - El significado de las siglas (SHD, ITP, DCV, OLC, CLP, PFR, ZDL, OAC, OPB, ARC): el
   firmware no las expande.
