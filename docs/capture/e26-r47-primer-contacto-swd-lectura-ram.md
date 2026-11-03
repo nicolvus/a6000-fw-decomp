@@ -86,3 +86,26 @@ Ninguna escritura en NAND hasta localizar qué comprobación devuelve −302 (§
 **Qué devuelve −302 (INFERENCIA, no cerrado).** El literal `0xfffffed2` aparece en `0xc01f2e1c`, `0xc01f3250` y `0xc01f4148`. Se descarta el de `0xc01f2e1c` (`BOS_E:Partition signature error`): la firma esperada `"8246"` está en RAM en el puntero `0xc00e04ac` y coincide. El de `0xc01f3250` es la rama `CFG_E:Load file [%s]` (la lectura de un fichero devuelve ≤ 0) y encaja con el último mensaje del log (`CFG:Set REG`); el de `0xc01f4148` es de la capa FAT. No se determinó cuál se ejecutó. Si es el de `CFG`, el fallo estaría en la carga de un fichero de configuración tras `Run Config(init HW)` y no en la lectura de `nflasha3` que supone R36.
 
 **Pila (LEÍDO).** `sp_svc = 0xc01ebfe0`, `lr_svc = 0xc01f4f95`; retornos en `0xc01f1333`, `0xc01f123b` y `0xc01f01ef` (despacho de modo de arranque 11 en Loader3).
+
+## 10. Tabla de ficheros de `CFG` y estado de sus destinos (03-11-2026, solo lectura)
+
+**Rutas que referencia Loader3 (LEÍDO en la imagen en RAM):** `\boot\loadaddr.txt`, `\boot\vmlinux.bin`, `\boot\initrd.img`, `\updater\mode`, `\mode\cmode`, `\cipa.bin`, `\Backup.bin`/`.bak`.
+
+**Tabla de configuración en RAM (`0xc005c000`, LEÍDO):** cinco entradas con ruta y rango de memoria, en este orden:
+
+| Ruta | Rango de destino |
+|---|---|
+| `\sabin\idt_cam.bin` | `0x83501000`–`0x83540fff` |
+| `\sabin\sa_dfdet.bin` | `0x96800000`–`0x9682ffff` |
+| `\av-cam.bin` | `0x83541000`–`0x84140fff` |
+| `\kemco.txt` | `0x80033000`–`0x80033fff` |
+| `\initrd.img` | `0x80628000`–`0x80e27fff` |
+
+`av-cam.bin` es el fichero que R36 sitúa en `nflasha3`. La relación entre esta tabla y la carga de ficheros de `CFG` es una INFERENCIA por los nombres y rangos; no se desensambló el código que la recorre.
+
+**Destinos (LEÍDO por AP0, 8 palabras por rango):** `idt_cam` y `av-cam` leen `0xffffffff` en todas las posiciones muestreadas; `sa_dfdet` lee ceros; `kemco` (`0x80033000`) contiene código ARM; `initrd` contiene datos al principio (`0x077b…`) y `0xffffffff` más adelante. `0x80628000` es legible, así que la DDR de esa zona responde.
+
+**Qué no permite concluir:** que `idt_cam` y `av-cam` estén a `0xffffffff` es compatible con «no cargados», pero también con relleno previo de la DDR. No se identificó qué fichero fallaba al devolver −302 (la pila del momento del fallo ya no existe: la CPU lleva en el bucle de LED).
+
+**Siguiente paso posible:** desensamblar la función de `CFG` que recorre esta tabla y el bucle de ficheros (código en `0xc01f2f00`–`0xc01f3260`) para ver en qué orden carga y qué índice devuelve −302; es análisis estático sobre el volcado, sin tocar la cámara.
+
