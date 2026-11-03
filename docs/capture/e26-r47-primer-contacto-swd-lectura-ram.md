@@ -1,6 +1,6 @@
 # E26-R47 — Primer contacto SWD con la A6000 bloqueada: DAP abierto y lectura de RAM (solo lectura)
 
-Fecha: 03-11-2026. Ejecución física de las fases F1–F7 de [R46](e26-r46-procedimiento-fisico-swd.md), con autorización del usuario. **Solo lectura: no se escribió en NAND, RAM ni registros de la CPU** (no hubo `halt`; sí escrituras de control en `CSW`/`TAR` del AP, necesarias para leer).
+Fecha: 03-11-2026. Ejecución física de las fases F1–F7 de [R46](e26-r46-procedimiento-fisico-swd.md), con autorización del usuario. **No se escribió en NAND ni en RAM.** Hubo escrituras de control en `CSW`/`TAR` del AP (necesarias para leer) y, en §9, `halt`/`resume` de la CPU 0 y las escrituras de depuración que hace OpenOCD (`cortex_a`) para ello.
 
 Etiquetas: **MEDIDO** · **LEÍDO** (dato leído por SWD) · **INFERENCIA** · **NO VERIFICADO**.
 
@@ -65,10 +65,24 @@ R36 infiere que la primera lectura de `nflasha3` falla y que Loader3 da −302. 
 
 Esto no refuta R36: la ejecución real de Loader3 sigue sin conocerse. Pero reduce la confianza en que escribir `nflasha3` (R46 F8-B) o `\updater\mode` (F8-A) resuelva el bloqueo.
 
-## 7. No verificado
+## 7. No verificado (tras §9)
 
-PC y registros de la CPU (no hubo `halt`); variables `LDR2/LNG/SHT` del bucle de LED; si el log es del arranque actual; `CTRL/STAT`; escritura en NAND desde el BIONZ (R39: solo análisis).
+Por qué el log de RAM no recoge el mensaje final de error; qué función devuelve el −302 (ver §9); `CTRL/STAT`; escritura en NAND desde el BIONZ (R39: solo análisis).
 
 ## 8. Siguiente paso propuesto (sin ejecutar)
 
-`halt` y lectura de registros y PC para localizar dónde está parada la CPU, y leer las variables del bucle de LED. Es un cambio de estado de la CPU: requiere autorización expresa. Ninguna escritura en NAND hasta tener la causa real.
+Ninguna escritura en NAND hasta localizar qué comprobación devuelve −302 (§9). Siguiente lectura útil: nombre del fichero de configuración que intenta cargar `CFG` y su partición.
+
+## 9. `halt` de la CPU 0 y registros (03-11-2026, autorizado por el usuario)
+
+**ROM table (APB-AP, `0x80000000`; LEÍDO).** Tabla anidada en `0x80100000` con 16 componentes en `0x80110000`–`0x8011f000`: cuatro **Cortex-A5** (part `0xc05`, depuración en `0x80110000`, `0x80112000`, `0x80114000`, `0x80116000`) con sus PMU (`0x9a5`), CTI (`0x906`) y ETM (`0x955`). Se actuó solo sobre el núcleo 0 (`0x80110000`).
+
+**Halt (MEDIDO).** OpenOCD `cortex_a -ap-num 1 -dbgbase 0x80110000`: la CPU 0 estaba `running`; halted en Thumb, modo Supervisor, `cpsr=0x800001f3`, MMU y cachés activas. Diez muestras halt/resume: **PC = `0xc01f4f98` siempre**. Tras cada muestra se hizo `resume`; la CPU quedó `running`.
+
+**Dónde está parada (LEÍDO + desensamblado de la RAM).** `0xc01f4f88` es una espera activa: `r1 = [0xf240300c]` mientras `r1 < r4`. El contador de `0xf240300c` avanza (tres lecturas: `0x99bc5`, `0x9a152`, `0x9a72e`) y `r4` toma valores distintos entre muestras (`0xf4240`, `0x1e8480`): es el temporizador del **bucle de parpadeo de LED** (`c01f3b74`, R13/R40), no un cuelgue.
+
+**Código de error (MEDIDO).** `c01f3b74` calcula `r4 = −código`, `LDR2 = r4/1000`, `LNG = (r4%1000)/100`, `SHT = r4%100`. En la segunda muestra `r7 = 0` (LDR2), `r8 = 3` (LNG), `r6 = 2` (SHT): el código es **−302**. R36 lo infería; ahora está medido en registros y coincide con el LED observado (3 largos + 2 cortos).
+
+**Qué devuelve −302 (INFERENCIA, no cerrado).** El literal `0xfffffed2` aparece en `0xc01f2e1c`, `0xc01f3250` y `0xc01f4148`. Se descarta el de `0xc01f2e1c` (`BOS_E:Partition signature error`): la firma esperada `"8246"` está en RAM en el puntero `0xc00e04ac` y coincide. El de `0xc01f3250` es la rama `CFG_E:Load file [%s]` (la lectura de un fichero devuelve ≤ 0) y encaja con el último mensaje del log (`CFG:Set REG`); el de `0xc01f4148` es de la capa FAT. No se determinó cuál se ejecutó. Si es el de `CFG`, el fallo estaría en la carga de un fichero de configuración tras `Run Config(init HW)` y no en la lectura de `nflasha3` que supone R36.
+
+**Pila (LEÍDO).** `sp_svc = 0xc01ebfe0`, `lr_svc = 0xc01f4f95`; retornos en `0xc01f1333`, `0xc01f123b` y `0xc01f01ef` (despacho de modo de arranque 11 en Loader3).
