@@ -153,14 +153,25 @@ td:nth-child(n+3):not(:last-child),td:last-child,th:nth-child(n+3){{text-align:r
 @media(max-width:600px){{.grid{{grid-template-columns:repeat(31,1fr)}}}}</style></head><body>
 <h1>Progreso</h1>
 <p class="hito"><b>Hito (27-10-2026): la A6000 disparó en silencio</b> con el firmware modificado 3.23 (Darwin tipo 0 + B1a, 2 bytes), confirmado por el usuario en cámara real. Hoy cualquiera puede reproducirlo de principio a fin con la <a href="{WIKI}">Wiki CFW Sony a6000</a>.</p>
-<h2>Estado actual (01-11-2026)</h2>
+<h2>Estado actual (02-11-2026)</h2>
 <table><tr><th>Pieza</th><th>Estado</th><th>Detalle</th></tr>
 <tr><td>Firmware 3.23</td><td>Publicado y reproducible</td><td>Darwin tipo 0 + B1a. <a href="{RELEASE}">Release fw-3.23-3.24</a>; los .dat se reconstruyen con los mismos SHA-256 (<a href="{WIKI}4-Construir-los-paquetes">wiki 4</a>, <a href="{WIKI}5-Instalar-el-3.23">wiki 5</a>).</td></tr>
 <tr><td>Firmware 3.24</td><td>Publicado</td><td>Restaura el Darwin oficial; vuelta atrás probada (<a href="{WIKI}7-Volver-atras-y-recuperacion">wiki 7</a>).</td></tr>
 <tr><td>Capa 2 (exposición uniforme)</td><td>Probada desde el PC</td><td>Parche en RAM por telnet con guardián de 25 s; exposición (4219−r5)×15,2 µs (<a href="{WIKI}6-Capa-2-exposicion-uniforme">wiki 6</a>). Hacerlo desde la cámara es solo una idea.</td></tr>
 <tr><td>Firmware 3.25 integrado</td><td>No publicado</td><td>Dejó la cámara sin arrancar (recompresión de <code>nflasha3</code>, error de Loader3 −302). Análisis en <a href="{REPO}docs/capture/e26-recovery.md">E26</a>.</td></tr>
 <tr><td>Firmware 3.25c</td><td><b>Experimental</b></td><td>3.25 corregido: <code>nflasha3</code> en el formato de Sony, 30/30 comprobaciones y emulación del cargador sin fallos; debería arrancar pero nunca se ha instalado. <a href="https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.25c-experimental">Release fw-3.25c-experimental</a> (<a href="{REPO}docs/capture/e26-r45-firmware-325c-experimental.md">R45</a>).</td></tr>
+<tr><td>Recuperación física (SWD)</td><td><b>Experimental, sin ejecutar</b></td><td>Procedimiento redactado (<a href="{REPO}docs/capture/e26-r46-procedimiento-fisico-swd.md">R46</a>, <a href="{WIKI}15-Recuperacion-SWD-experimental">wiki 15</a>). R4911, R4912, R4915, R4916 y CN4906 sin montar; sin medir tensión, eFuse ni DAP; autorización física pendiente.</td></tr>
 <tr><td>Documentación y herramientas</td><td>Wiki publicada</td><td><a href="{WIKI}12-Herramientas">Herramientas</a>, <a href="{WIKI}14-Estado-actual">estado y límites</a>, <a href="{WIKI}11-Copyright-y-uso">copyright y uso</a> (código de Sony publicado y manual de servicio nivel 3 público).</td></tr></table>
+<h2>Qué falta</h2>
+<table><tr><th>Área</th><th>Pendiente</th><th>Bloqueo</th></tr>
+<tr><td>Cobertura de etiquetas</td><td>{cov['pending']} pendientes; familia MODE 0/6, STK 1/6, OTROS 100/327. Mayor volumen: códec/vídeo (DECMODEMGR, AVCDPRMCHK, DECVIDDISP, ZIMA_AVCD, MC…), sin relación demostrada con el obturador.</td><td>Trabajo de análisis</td></tr>
+<tr><td>Pruebas en cámara</td><td>{data['physical_tests']['done']}/{data['physical_tests']['total']} planes P1–P24 con prueba; faltan {data['physical_tests']['total'] - data['physical_tests']['done']}.</td><td>Cámara y backup NVRAM previo</td></tr>
+<tr><td>Firmware 3.25c</td><td>Instalarlo y comprobar que arranca; el código nuevo de BIONZ/Darwin nunca se ha ejecutado en hardware.</td><td>Autorización expresa</td></tr>
+<tr><td>Recuperación física</td><td>Montar CN4906 y R49xx, medir tensión/eFuse/DAP, verificar UART/SWD de BIONZ (E26-R46-SWD, E26-R5-BIONZ, E26-R12-UART-FISICO).</td><td>Autorización física</td></tr>
+<tr><td>Darwin por actualización oficial</td><td>E23: puerta Silent y parcheo de <code>0640_darwin</code> (CRC-32 único control); F6: sin ruta demostrada (decisión S51).</td><td>Abierto</td></tr>
+<tr><td>Interfaz (GUI)</td><td>G2–G8: formatos <code>.uxc/.uxb/.xdb</code>, menús, texto y fuentes, entrada, ajustes y modificación reversible de la UI.</td><td>Abierto</td></tr>
+<tr><td>Cadena sensor / obturador</td><td>E6 (Darwin fuera de <code>av-cam</code>), E9/D5 (registros IMX210/IMX235), E11 (segunda cortina), E13 (servicio ODL), F8 (valores solo en ejecución).</td><td>Hojas de datos, volcado de Darwin o prueba física</td></tr></table>
+<p>Detalle y criterios de cierre: <a href="{REPO}docs/PENDIENTES.md">PENDIENTES.md</a>.</p>
 <p class="legend"><span class="m-hito"></span>módulo con hito<span class="m-sub"></span>sub-etiqueta cubierta<span class="m-todo"></span>pendiente / sin informe / sin ejecutar<span class="m-rejected"></span>fragmento descartado<span class="s-cancel"></span>cancelada</p>
 <p>{cov['pending']} etiquetas pendientes; {cov['excluded']} fragmentos descartados como módulos. Descartar no aumenta cobertura.</p>
 <p>Cobertura documental de etiquetas: no mide código descompilado ni funciones verificadas.
