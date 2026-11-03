@@ -4,7 +4,7 @@ import json, re, sys
 sys.path.insert(0, "analysis/camera_closure")
 import closure2 as K, closure as C
 B, BASE, N = K.B, K.BASE, K.N
-MODS = ["CAMERA_MAIN", "CAMERA_MAIN_CC", "CAMERA_MAIN_FC", "CAMERA_MAIN_IM", "CAMERA_MAIN_LC", "CAMERA_MAIN_TC", "CAMERA_MAIN_YC", "CAMERA_SA", "CAMERA_IS", "CAM_CMD", "CAM_DMM", "CAM_FUNC_MGR", "CAM_IMAGER", "CAM_SCALAR", "CAM_UTIL_ADJ", "CAM_UTIL_SENS"]
+MODS = ["CAMERA_MAIN", "CAMERA_MAIN_CC", "CAMERA_MAIN_FC", "CAMERA_MAIN_IM", "CAMERA_MAIN_LC", "CAMERA_MAIN_TC", "CAMERA_MAIN_YC", "CAMERA_SA", "CAMERA_IS", "CAM_CMD", "CAM_DMM", "CAM_FUNC_MGR", "CAM_IMAGER", "CAM_SCALAR", "CAM_UTIL_ADJ", "CAM_UTIL_SENS", "CAMCORE"]
 
 def cstr(a):
     o = a - BASE; e = B.index(b"\0", o)
