@@ -69,7 +69,6 @@ ACEPTO acepta un candidato a módulo; no cierra su decodificación. RECHAZO se c
 | `[MCIFINFACC]` | 2 | 3 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
 | `[PROC]` | 2 | 3 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
 | `[SIO]` | 2 | 3 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
-| `[STK_AUTO_SAL]` | 2 | 3 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
 | `[AVCMODEMGR]` | 2 | 2 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
 | `[BIN_LIMITER]` | 2 | 2 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
 | `[CBA_FIFO]` | 2 | 2 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
@@ -84,8 +83,6 @@ ACEPTO acepta un candidato a módulo; no cierra su decodificación. RECHAZO se c
 | `[NTF]` | 2 | 2 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
 | `[PCPSTATDRM]` | 2 | 2 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
 | `[RCV]` | 2 | 2 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
-| `[STK_COLOR_SIM]` | 2 | 2 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
-| `[STK_TOUCH_SIM]` | 2 | 2 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
 | `[STOPG]` | 2 | 2 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
 | `[TOP]` | 2 | 2 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
 | `[VIDEOCOLOR]` | 2 | 2 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
@@ -151,8 +148,6 @@ ACEPTO acepta un candidato a módulo; no cierra su decodificación. RECHAZO se c
 | `[SRC2]` | 2 | 1 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
 | `[SRC3]` | 2 | 1 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
 | `[SRC4]` | 2 | 1 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
-| `[STK_C_SIM]` | 2 | 1 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
-| `[STK_T_SIM]` | 2 | 1 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
 | `[THM]` | 2 | 1 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
 | `[VFX1]` | 2 | 1 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
 | `[VIDENCPARAM]` | 2 | 1 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |

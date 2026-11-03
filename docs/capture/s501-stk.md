@@ -42,12 +42,11 @@ submódulo del tracking (`[TRK]`, S71/S111).
 - Al ser idéntico A6000/A7S y estar ausente en A6300, es un módulo compartido de
   generación A7S/A6000 frente al A6300 (no relacionado con obturador electrónico).
 
-## NO VERIFICADO
+## Cierre CAM-01 (03-11-2026, medido en bytes; ver [S633](s633-stk-sim.md))
 
-- Funciones contenedoras: el código que referencia estas cadenas es Thumb (2 bytes)
-  no sembrado en Ghidra; no se resolvieron funciones ni se decompilaron.
-- Semántica física de los parámetros (unidades, rangos válidos).
-- Relación con los servicios de tracking (`TRK`) y FC-FRC (S71/S111).
+- **Funciones contenedoras:** resueltas con la regla PIC estricta: 154 cargas en 8 funciones (`0x43a35384`, `0x43a353d0`, `0x43a3541c`, `0x43a355d0`, `0x43a3574c`, `0x43a3588e`, `0x43a36156`, `0x43a36a06`); tres callbacks registrados en la tabla `0x4401b984…0x4401b98c`. La cadena `0x43cfc7ea` no tiene referencia. (Corrige «0 funciones resueltas»: eran referencias Thumb que Ghidra no tenía sembradas.)
+- **Obturador:** sin alcance `bl` ≤ 3 a las 7 funciones de obturador conocidas.
+- La semántica física de los parámetros (unidades, rangos) y la relación con los servicios `TRK`/FC-FRC **no son afirmaciones de este informe**.
 
 ## Artefactos
 

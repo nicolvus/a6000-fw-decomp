@@ -8,21 +8,21 @@ Las listas históricas incluían etiquetas ya documentadas; la tabla siguiente u
 |---|---|
 | etiquetas distintas `[XXX]` | **372** (techo, no número de módulos) |
 | etiquetas con hito documental | **96** |
-| subetiquetas documentadas | **117** |
-| **pendientes reales** | **151** |
+| subetiquetas documentadas | **122** |
+| **pendientes reales** | **146** |
 | fragmentos descartados como módulos | **8** |
-| cobertura documental | **213/372** = **57.26 %** |
+| cobertura documental | **218/372** = **58.60 %** |
 | etiquetas exclusivas de A6000 | **93** |
 | presentes en A6000/A7S y ausentes en A6300 | **7** |
 
-Antes: 239 pendientes; después de la auditoría: 226 pendientes + 13 fragmentos descartados; tras reclasificar 73 como sub-etiqueta de módulos ya documentados (pasada del 03-11-2026): 151 pendientes (S631 cierra `[IMAGING_IMG]`; S632 cierra `[MODE_SNR_BUS_THROUGH]` y reclasifica `[MODE_CAP*]` como sub-etiquetas de `[IMAGING_CAP]`).
+Antes: 239 pendientes; después de la auditoría: 226 pendientes + 13 fragmentos descartados; tras reclasificar 73 como sub-etiqueta de módulos ya documentados (pasada del 03-11-2026): 146 pendientes (S633 reclasifica las cinco `[STK_*]` como sub-etiquetas de `[STK]`; S631 cierra `[IMAGING_IMG]`; S632 cierra `[MODE_SNR_BUS_THROUGH]` y reclasifica `[MODE_CAP*]` como sub-etiquetas de `[IMAGING_CAP]`).
 Descartar no aumenta cobertura. Se mantiene 372 como denominador histórico.
 Las siete ausentes en A6300 son `[STK]`, `[STK_AUTO_SAL]`, `[STK_COLOR_SIM]`,
 `[STK_C_SIM]`, `[STK_TOUCH_SIM]`, `[STK_T_SIM]` y `[OSD]`.
 
 ## Inventario reproducible
 
-- [Lista completa, prioridad y motivo](pendientes.md): 151 abiertas y 8 descartadas.
+- [Lista completa, prioridad y motivo](pendientes.md): 146 abiertas y 8 descartadas.
 - [Ocurrencias, direcciones y referencias por etiqueta](pendientes_auditados.json).
 - [Decisiones manuales](decisiones_auditoria.json): 8 RECHAZO (los otros cinco, `[MODE_CAP*]`, pasan a sub-etiqueta de `[IMAGING_CAP]` en S632), cuatro ACEPTO como candidatas y dos NO_VERIFICADO examinadas.
 - [Once referencias contrastadas con bytes y pools](evidencia_bytes.json).

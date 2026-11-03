@@ -2,7 +2,7 @@
   "fuentes_sha256": {
     "analysis/rea-independent/input/av-cam.bin": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
     "analysis/s106_imaging_cap/pic_refs_strict_global.json": "cbd53ea1690a2378a1b8aa9e7c07d2d9363aa7539bfc597fcd37dd0a3ad369b3",
-    "analysis/s178_census/census_detalle.json": "01af16d1bfa7084727cd8b7312ed7a0da4b12127a4361a10c7d7fce7b34814f8",
+    "analysis/s178_census/census_detalle.json": "a5a71d9461c0c9bc11176d7160dab80fcf7b9c5c6d5299bbac3bd0bb8dd927f1",
     "analysis/s178_census/decisiones_auditoria.json": "9f580b9fddbbef4753407623ddeba83736118558af850912fdc9be80198b7b61",
     "analysis/s178_census/evidencia_bytes.json": "254793ce2759ad617e27db0fe9c609cef7470d3653b8057e06c4ff56b8287948",
     "analysis/s178_census/funciones_historicas.json": "41cd77c7b82322bf8b8e9dada5068887250b84ac9c1cfa0aa7099873c4674db9",
@@ -18,14 +18,14 @@
     "no-modulo": 0
   },
   "despues": {
-    "pendiente": 151,
+    "pendiente": 146,
     "hito": 96,
-    "sub-etiqueta": 117,
+    "sub-etiqueta": 122,
     "no-modulo": 8
   },
   "veredictos": {
     "ACEPTO": 3,
-    "NO_VERIFICADO": 148,
+    "NO_VERIFICADO": 143,
     "RECHAZO": 8
   },
   "etiquetas": [
@@ -7554,49 +7554,6 @@
       ]
     },
     {
-      "etiqueta": "[STK_AUTO_SAL]",
-      "estado_censo": "pendiente",
-      "prioridad": 2,
-      "cadenas_con_pic_candidato": 3,
-      "cadenas_referenciadas_censo": 0,
-      "veredicto": "NO_VERIFICADO",
-      "examinada": false,
-      "motivo": "Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo.",
-      "fuente_evidencia": [],
-      "ocurrencias": [
-        {
-          "token_vaddr": "0x43cfc9d2",
-          "token_offset": 8108498,
-          "cadena_vaddr": "0x43cfc9cb",
-          "cadena_offset": 8108491,
-          "texto_hasta_nul_latin1": "[TRK]: [STK_AUTO_SAL] CAM_MODE_CLOSE",
-          "referencias_pic_candidatas": [
-            "0x43a358ae"
-          ]
-        },
-        {
-          "token_vaddr": "0x43cfc9f7",
-          "token_offset": 8108535,
-          "cadena_vaddr": "0x43cfc9f0",
-          "cadena_offset": 8108528,
-          "texto_hasta_nul_latin1": "[TRK]: [STK_AUTO_SAL] CORE2 RESOURCE CONTENTION : %d",
-          "referencias_pic_candidatas": [
-            "0x43a358e6"
-          ]
-        },
-        {
-          "token_vaddr": "0x43cfca2c",
-          "token_offset": 8108588,
-          "cadena_vaddr": "0x43cfca25",
-          "cadena_offset": 8108581,
-          "texto_hasta_nul_latin1": "[TRK]: [STK_AUTO_SAL] MEMORY ALLOC ERROR",
-          "referencias_pic_candidatas": [
-            "0x43a3590a"
-          ]
-        }
-      ]
-    },
-    {
       "etiqueta": "[AVCMODEMGR]",
       "estado_censo": "pendiente",
       "prioridad": 2,
@@ -8065,72 +8022,6 @@
           "texto_hasta_nul_latin1": "[IMAGING_CAP]: [RC LOG][RCV]ProcessOverExecute: current_bit[0x%x] request_bit[0x%x]",
           "referencias_pic_candidatas": [
             "0x437870a2"
-          ]
-        }
-      ]
-    },
-    {
-      "etiqueta": "[STK_COLOR_SIM]",
-      "estado_censo": "pendiente",
-      "prioridad": 2,
-      "cadenas_con_pic_candidato": 2,
-      "cadenas_referenciadas_censo": 0,
-      "veredicto": "NO_VERIFICADO",
-      "examinada": false,
-      "motivo": "Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo.",
-      "fuente_evidencia": [],
-      "ocurrencias": [
-        {
-          "token_vaddr": "0x43cfd32b",
-          "token_offset": 8110891,
-          "cadena_vaddr": "0x43cfd324",
-          "cadena_offset": 8110884,
-          "texto_hasta_nul_latin1": "[TRK]: [STK_COLOR_SIM] CAM_MODE_CLOSE",
-          "referencias_pic_candidatas": [
-            "0x43a36178"
-          ]
-        },
-        {
-          "token_vaddr": "0x43cfd351",
-          "token_offset": 8110929,
-          "cadena_vaddr": "0x43cfd34a",
-          "cadena_offset": 8110922,
-          "texto_hasta_nul_latin1": "[TRK]: [STK_COLOR_SIM] CORE2 RESOURCE CONTENTION : %d",
-          "referencias_pic_candidatas": [
-            "0x43a361ac"
-          ]
-        }
-      ]
-    },
-    {
-      "etiqueta": "[STK_TOUCH_SIM]",
-      "estado_censo": "pendiente",
-      "prioridad": 2,
-      "cadenas_con_pic_candidato": 2,
-      "cadenas_referenciadas_censo": 0,
-      "veredicto": "NO_VERIFICADO",
-      "examinada": false,
-      "motivo": "Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo.",
-      "fuente_evidencia": [],
-      "ocurrencias": [
-        {
-          "token_vaddr": "0x43cfd66f",
-          "token_offset": 8111727,
-          "cadena_vaddr": "0x43cfd668",
-          "cadena_offset": 8111720,
-          "texto_hasta_nul_latin1": "[TRK]: [STK_TOUCH_SIM] CAM_MODE_CLOSE",
-          "referencias_pic_candidatas": [
-            "0x43a36a26"
-          ]
-        },
-        {
-          "token_vaddr": "0x43cfd695",
-          "token_offset": 8111765,
-          "cadena_vaddr": "0x43cfd68e",
-          "cadena_offset": 8111758,
-          "texto_hasta_nul_latin1": "[TRK]: [STK_TOUCH_SIM] CORE2 RESOURCE CONTENTION : %d",
-          "referencias_pic_candidatas": [
-            "0x43a36a5e"
           ]
         }
       ]
@@ -9718,52 +9609,6 @@
           "texto_hasta_nul_latin1": "[CAMERA_MAIN_SYNC]: [SRC0]r0:%02X w0:%02X  [SRC1]r0:%02X w0:%02X  [SRC2]r0:%02X w0:%02X  [SRC3]r0:%02X w0:%02X  [SRC4]r0:%02X w0:%02X",
           "referencias_pic_candidatas": [
             "0x4378ee94"
-          ]
-        }
-      ]
-    },
-    {
-      "etiqueta": "[STK_C_SIM]",
-      "estado_censo": "pendiente",
-      "prioridad": 2,
-      "cadenas_con_pic_candidato": 1,
-      "cadenas_referenciadas_censo": 0,
-      "veredicto": "NO_VERIFICADO",
-      "examinada": false,
-      "motivo": "Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo.",
-      "fuente_evidencia": [],
-      "ocurrencias": [
-        {
-          "token_vaddr": "0x43cfd387",
-          "token_offset": 8110983,
-          "cadena_vaddr": "0x43cfd380",
-          "cadena_offset": 8110976,
-          "texto_hasta_nul_latin1": "[TRK]: [STK_C_SIM] MEMORY ALLOC ERROR",
-          "referencias_pic_candidatas": [
-            "0x43a361d0"
-          ]
-        }
-      ]
-    },
-    {
-      "etiqueta": "[STK_T_SIM]",
-      "estado_censo": "pendiente",
-      "prioridad": 2,
-      "cadenas_con_pic_candidato": 1,
-      "cadenas_referenciadas_censo": 0,
-      "veredicto": "NO_VERIFICADO",
-      "examinada": false,
-      "motivo": "Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo.",
-      "fuente_evidencia": [],
-      "ocurrencias": [
-        {
-          "token_vaddr": "0x43cfd6cb",
-          "token_offset": 8111819,
-          "cadena_vaddr": "0x43cfd6c4",
-          "cadena_offset": 8111812,
-          "texto_hasta_nul_latin1": "[TRK]: [STK_T_SIM] MEMORY ALLOC ERROR",
-          "referencias_pic_candidatas": [
-            "0x43a36a80"
           ]
         }
       ]
