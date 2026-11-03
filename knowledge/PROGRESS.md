@@ -528,3 +528,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 03-11-2026: S636 documenta [D0]-[D7] como sub-etiquetas de [CAM_UTIL_ADJ]; censo 372/372.
 - 03-11-2026: auditoría de pendientes tras S636: review_reports regenerado (762 informes; 1800 abiertas / 2737 verificadas), sin rutas nuevas; ver PENDIENTES. Sesión previa cortada por un `grep -rn` recursivo sobre `analysis/` (sin resultado registrado).
 - 03-11-2026: revisión de las 154 líneas sin marca: 23 marcadas NO_VERIFICADO (REV-01), 131 apartadas; añadibles 0.
+- 03-11-2026: REV-01 parcial: 12/23 cerradas con medidas (analysis/rev01/); 11 pendientes de sesión REA.

@@ -230,7 +230,7 @@ de otras cadenas (`[SFRS][FUNC]********************FUNCCMD_SETRECSTATE…`,
 
 - `LC` no está expandido; `CPaf`, `Mario`, `Gpma`, `MaInToOut`, `watkao`, `kinbou`, `yosoku`,
   `mario_use_ng_flag` tampoco. Solo `Camera::LC` está probado por RTTI.
-- No se ha identificado el fichero fuente de los helpers `lc_Movie_DM_AF_Util`/`lc_DM_AF_Util` **NO_VERIFICADO**
+- no se identificó el fichero fuente de los helpers `lc_Movie_DM_AF_Util`/`lc_DM_AF_Util` **Cerrado con límite (REV-01):** esos helpers no pasan `file=%s`, así que el binario no da atribución.
   ni de `0x43545cd0`, `0x43765ad2`, `0x4376bf64`, `0x4376cce0`, `0x4376cd44`, `0x437770dc`,
   `0x437771a0`, `0x43777fec`, `0x437cd06c`, `0x437cde1c`, `0x437ce2a0`, `0x437ceae2`.
 - Que no haya `bl` directo **no** prueba llamada por puntero: solo "sin `bl` directo medido".

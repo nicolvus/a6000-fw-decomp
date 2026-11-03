@@ -12,7 +12,7 @@
 `[SFRS]` es **la etiqueta de módulo de 117 cadenas de traza**. Las siglas **no aparecen
 expandidas en ningún byte del binario**: lo único que hay es el prefijo literal `[SFRS]`. La
 cadena `SfrYc.cpp` (`0x43ce73ec`) y el resto de nombres de fichero citados por el propio
-módulo (§8) son los únicos indicios de nomenclatura; **no se ha verificado** que `Sfr` + `Yc` **NO_VERIFICADO**
+módulo (§8) son los únicos indicios de nomenclatura; **no se verificó** que `Sfr` + `Yc` **Cerrado con límite (REV-01):** ningún byte del binario expande la sigla; queda como inferencia de nomenclatura.
 componga la sigla.
 
 Lo que las trazas sí dicen, en su propio vocabulario:
@@ -338,11 +338,11 @@ en la A6000 sin traza o no existen.
 - **Tipo y estructura de cada campo** (`nowVfc`, `transTime`, `configNum`, `dataContent`,
   `dataPlacement`, `dataTransfer`, `scanline`, `Handle`, `osalID`, `GetCounter`…): solo se sabe
   el **offset** del objeto del que salen en los casos disecados (§6), no su semántica.
-- **Tabla de líneas**: no se ha reconstruido la numeración de los `.cpp`; no se ha comprobado **NO_VERIFICADO**
+- **Tabla de líneas**: no se ha reconstruido la numeración de los `.cpp`; no se comprobó **Cerrado con límite (REV-01):** el binario no contiene los `.cpp` de Sony; la correspondencia `line=%d` ↔ fichero no es comprobable estáticamente.
   que `line=%d` corresponda a la línea real del fichero citado en `file=%s`.
 - **Fichero fuente de 40 de las 52 funciones**: no pasan `file=%s`, así que no hay atribución.
 - **Significado de los modos**: `EFFECTMOVIEREC`, `MOTIONSHOTVIDEO`, `SUPERSTABLEMOVIE` y
-  `MULTIPLEXTRIGGER` se agrupan por nombre; no se ha verificado qué hacen ni si se excluyen **NO_VERIFICADO**
+  `MULTIPLEXTRIGGER` se agrupan por nombre; no se verificó qué hacen ni si se excluyen **Cerrado con límite (REV-01):** no hay más texto que el nombre de cada modo; su exclusión mutua no se deduce sin decompilar las funciones que los consumen.
   entre sí.
 - **Relación con otros módulos** (imager, encoder, gestor de captura): no verificada en este
   hito; aquí solo constan los nombres de fichero que el propio clúster cita.

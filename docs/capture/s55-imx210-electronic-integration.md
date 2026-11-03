@@ -21,7 +21,7 @@ heredado, lo nuevo y la frontera.
 fin de integración ≠ fin de DMA ≠ guardado ≠ notificación (`ExposureEndNotify` es solo un mensaje de 2 B, S55-D).
 
 ## Frontera (E.5)
-1. Falta: datasheet del IMX210 o traza pasiva del bus CIS (serie) y de `CIS0_IMG_RST`. 2. Por qué: sin la semántica de los campos ID/byte no se distingue «reset de filas / fin de integración» **NO_VERIFICADO**
+1. faltaba: datasheet del IMX210 o traza pasiva del bus CIS (serie) y de `CIS0_IMG_RST`. 2. Por qué: sin la semántica de los campos ID/byte no se distingue «reset de filas / fin de integración» **Cerrado con límite (REV-01):** no hay datasheet del IMX210 en el repositorio ni traza del bus CIS; solo cierra con la medida física diferida (sección D).
 de una configuración. 3. Resultado: fijar si existe un registro de «fin de exposición» y su disparo (VD vs comando). 4. Cobertura histórica: S34–S54 + S55 (GPIO); no acredita agotar el análisis estático. 5. Propuesta física diferida: analizador lógico
 sobre CIS0 + VD durante una foto mecánica y una EFCS. **No se declara imposible.**
 H55-7: **NO VERIFICADO.**

@@ -371,7 +371,7 @@ Orden exacto de getters y etiquetas:
 5. **Uso de `commtype 1`**: se sabe que transporta *Informations* y que el analizador copia
    `+0x14`; el reparto exacto entre `Informations1` e `Informations2` no está cerrado.
 6. **Funciones 0x436e2f64** (segundo volcado): REA declara 1016 B pero el flujo real llega a
-   `0x436e3370`; falta confirmar los límites exactos y el formato de cada línea. **NO_VERIFICADO**
+   `0x436e3370`; faltaba confirmar los límites exactos y el formato de cada línea. **Medido (REV-01):** el fin por `push {lr}` siguiente de `0x436e2f64` es `0x436e3394` (1072 B frente a los 1016 B de REA), coherente con el flujo que llega a `0x436e3370`; el formato de cada línea no se midió.
 
 ---
 

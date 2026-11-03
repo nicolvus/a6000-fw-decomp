@@ -4,7 +4,7 @@ Generado por `scripts/review_reports.py` con 12 procesos sobre 762 informes (`do
 
 ## Resumen
 
-- Líneas `NO_VERIFICADO`: **1823**; `VERIFICADO`: **2737**.
+- Líneas `NO_VERIFICADO`: **1811**; `VERIFICADO`: **2737**.
 - **Cerrables (reducen pendientes):** 131 líneas abiertas cuyas direcciones constan como VERIFICADO en otro informe; **1 de nivel A** (además comparten palabras de contenido con la línea verificada, solapamiento ≥ 0,3) y el resto de nivel B (misma dirección, otro asunto).
 - **Añadibles (aumentan pendientes):** 0 líneas con «falta/por hacer/sin verificar» y sin marca `NO_VERIFICADO`.
 - **Conflictos:** 4 pares de líneas del mismo informe con la misma dirección, una solo NO_VERIFICADO y otra solo VERIFICADO, con solapamiento ≥ 0,25.
@@ -12,9 +12,9 @@ Generado por `scripts/review_reports.py` con 12 procesos sobre 762 informes (`do
 
 ## Palabras de estado (menciones totales)
 
-- `VERIFICADO`: 5455
-- `NO_VERIFICADO`: 1094
-- `INFERENCIA`: 848
+- `VERIFICADO`: 5441
+- `NO_VERIFICADO`: 1082
+- `INFERENCIA`: 849
 - `HIPÓTESIS`: 275
 - `NEGATIVO`: 156
 - `CORREGIDO`: 108

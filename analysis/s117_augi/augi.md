@@ -149,7 +149,7 @@ Lo llaman al menos dos wrappers: `0x43a5cb26` (`bl 0x435d63a0` en `0x43a5cb4c`) 
 el hito lo llame «escritor de audio» se debe a `[ENCAUDSMPL]`/`[ENCAUDSTAT]` en las cadenas
 vecinas, **no** a que se haya verificado qué datos empaqueta.
 
-**No se ha identificado un escritor de vídeo equivalente**: `0x4360b6f0` es la entrada de API **NO_VERIFICADO**
+**no se identificó un escritor de vídeo equivalente**: `0x4360b6f0` es la entrada de API **Medido (REV-01):** `0x4360b6f0` tiene un único llamador `bl` (`0x4360b8fe`), dentro de `0x4360b894` (`StrmEngEncCIIf::Event`, cadena `ENC_EVENT`): el despachador de eventos de codificación, no un escritor de vídeo propio.
 `void StrmEngEncCIIf::CodecEventCreateVAUGI(UInt32, const UInt32*)` (literales en
 `0x4360b712` y `0x4360b73e` → `0x43c66fbf`), pero el cuerpo que materializa la cabecera de
 vídeo no está localizado (§10).

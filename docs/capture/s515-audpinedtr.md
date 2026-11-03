@@ -9,7 +9,7 @@ Decodificación de la subetiqueta `[AUDPINEDTR]` del `av-cam.bin` A6000 fw3.21, 
 - **Volumen de trazas:** A6000 = 34 cadenas `[AUDPINEDTR]`; A7S = 34; A6300 = 79.
   Fuente: `strings | grep -c '\[AUDPINEDTR\]'`.
 - **Inventario REA:** 34 cadenas (`analysis/s515_audpinedtr/ad_strings.json`).
-- **Referencias de código:** por determinar (pendiente de xrefs REA). **no atribuido** **NO_VERIFICADO**
+- **Referencias de código:** 52 sitios en 22 funciones, todas del fichero `mcPinAudioEditor.cpp`, ninguna alcanza funciones de obturador (`analysis/camera_closure/labels.json`, REV-01).
 - **Subsistemas inferidos (VERIFICADO por texto):** *Dataflow Infra Sender*:
   - `DataflowInfraSender::SendASync`, `dmm_share`, `dmm_free`, `Dmac Open/Start`, `dmm_alloc`, `SendPinData`, `SendMuteData`, `Initialize`, `Finalize`, `CopyNum`, `Set Audio Info`, `Pin Proc Err`, `Iterator Full`, `Bad Arg`, `Software Bug`.
   - Manejo de buffer de audio LPCM (Main/Sub), DMM (shared memory), DMAC transfers, pin-based data delivery.

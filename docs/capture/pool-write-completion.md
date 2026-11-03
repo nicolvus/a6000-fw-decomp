@@ -37,4 +37,4 @@ Cadenas: `[WriteStill] UniqueId[%d]`, «UniqueId/CaptureId/CapDate/GpsInfo/Repre
 
 ## 5. ¿Aparece en reproducción? (NO VERIFICADO)
 
-Falta: (a) quién registra la entrada DCF en el índice de MPR (`DCFStillWriter`), (b) la relación `PreRegisterDcfContentSync` ↔ `PreRegisterImage` del Pool. Solo se puede afirmar que, si `WriteStill` termina sin error, el flujo nativo continúa con `SetImageWrited` y la respuesta `0x3500`. **NO_VERIFICADO**
+faltaba: (a) quién registra la entrada DCF en el índice de MPR (`DCFStillWriter`), (b) la relación `PreRegisterDcfContentSync` ↔ `PreRegisterImage` del Pool. Solo se puede afirmar que, si `WriteStill` termina sin error, el flujo nativo continúa con `SetImageWrited` y la respuesta `0x3500`. **Cerrado con límite (REV-01):** `DCFStillWriter` aparece 1 vez y `PreRegisterDcfContentSync` 8 veces como cadena en `libmpr.so` (`MprIf::PreRegisterDcfContentSync`), y 0 en `av-cam.bin`, `av-cam-a7s.bin` y `libmprctrl.so`; `PreRegisterImage` no es cadena de ningún binario local. La relación entre ambos exige decompilar `libmpr.so` (no hecho).
