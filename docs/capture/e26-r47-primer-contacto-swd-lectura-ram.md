@@ -122,3 +122,21 @@ Sobre el volcado de RAM (`0xc01f0000`, idéntico al original), desensamblado a m
 
 **Cabos sueltos.** (a) El mensaje `CFG_E:Load file` y `CFG:Load file` no están en el log de RAM: probablemente el nivel de log los filtra (los mensajes de error de `CFG` van con nivel 3 y 6; el log recoge los de nivel bajo). Es inferencia. (b) No se verificó qué máscara de modo se pasó a `0xc01f2fe8` ni que `idt_cam` no se saltara por `CFG:skip`. (c) Con el montaje correcto de la partición 3 y la lectura fallida, falta saber si el fallo es del formato recomprimido (R36) o de otra causa.
 
+## 12. Punto de parada en el arranque: §11 queda contradicho (03-11-2026)
+
+Se reinició la cámara (batería fuera y dentro) y se conectó por SWD durante el arranque con un script que hace `halt` en cuanto el DAP responde y coloca puntos de parada hardware (la CPU se reanuda y la cámara termina en el mismo bucle de LED con −302).
+
+| Intento | Parada temprana | Puntos de parada | Resultado |
+|---|---|---|---|
+| 1 | `pc = 0xc00310e0` (código de Loader2) | `0xc01f2f88` (lectura del fichero en `CFG`) | **No saltó en 30 s**; la cámara acabó en el bucle de LED (`pc = 0xc01f4f98`, comprobado después) |
+| 2 | No capturado (el script se detuvo al pasarlo a segundo plano) | — | Sin datos |
+| 3 | `pc = 0xc01f4fe0` (Loader3, ya tarde) | `0xc01f3b74` (LED), `0xc01f2fe8`, `0xc01f2f24` | Ninguno saltó: la CPU ya estaba en la fase de error |
+
+**Comprobación del mecanismo (MEDIDO):** un punto de parada hardware en `0xc01f4f96` (dentro del bucle de LED) saltó de inmediato; los puntos de parada funcionan.
+
+**Consecuencia.** En el intento 1 la CPU pasó de Loader2 a Loader3 y terminó en el bucle de LED **sin ejecutar `0xc01f2f88`**, la lectura de ficheros de `CFG` (§11). Por tanto el −302 **no** procede, al menos en ese arranque, de esa lectura. §11 y la inferencia sobre `idt_cam.bin` quedan **sin respaldo**. Hay un matiz: el `halt` temprano pudo alterar la secuencia, aunque el estado final fue idéntico.
+
+**Dónde puede estar el −302 (INFERENCIA débil):** `0xfffffed2` figura también en el módulo FAT (`0xc01f4148`, usado en seis puntos de `0xc01f3d90`–`0xc01f40ca`, junto a los literales `FAT_E:Failed to load partition table`, `error at reading PBR/FAT/Root Dir entry`). El log termina en `CFG:Set REG`, pero eso no prueba que el fallo esté en `CFG`.
+
+**Pendiente:** llegar al punto de error (nuevo intento de captura con punto de parada en `0xc01f3b74` y la pila del llamador, o con puntos de parada en las funciones FAT). La captura depende de conectar antes de que Loader3 termine: una carrera que solo salió bien una vez de tres.
+
