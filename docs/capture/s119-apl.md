@@ -47,14 +47,10 @@ de 5 funciones** (`0x439bcd80` 7, `0x439bcea0` 9, `0x439bcfc8` 4, `0x439bd05c` 2
 Lo único que cambia es que la A7S **no lleva el prefijo `"[CAMERA_SA]: "`** (sus cadenas están en
 `0x43ce1588`–`0x43ce1a90`). El A6300 fw2.01: 42/42 también.
 
-## Nota de método y abierto: No determinado con el firmware (reclasificado el 03-11-2026; seguimiento en PENDIENTES CAM-01)
+## Cierre CAM-01 (03-11-2026, medido en bytes)
 
-- La regla PIC canónica del repo (todos los `ldr` del registro en 4 KB) da **67** pares (traza,
-  sitio) frente a los **42** de la regla estricta: **25 falsos positivos** comprobados
-  desensamblando (p.ej. `0x439b1eea` referencia en realidad un mensaje de `[SFRS]`).
-- Significado de `APL`, `HW`, `SA`, `HME`, `MMU`, `Zima` (el firmware no expande ninguna sigla;
-  el único nombre de negocio es "ApolloSA"), y layout/tamaño de `InputPrm`.
-- Identidad y fichero fuente del bloque HW: **el módulo no registra ningún fichero de origen**
-  (0 referencias `.cpp` desde `0x439ce900`–`0x439cf430`).
-- Por qué la traza dice "GetZimaNo" cuando la función se llama `GetExecUnit`.
-- El módulo `[CAMERA_MAIN_TC]` (el consumidor) **no** está reconstruido: hito pendiente.
+- Ficheros fuente de `[CAMERA_SA]`: 70 funciones con traza; 0 citan un fichero fuente (ninguno); 70 ninguno.
+- `GetZimaNo` es solo texto de traza (`0x43cec140`, función `0x439ceeb8`); las cadenas `GetExecUnit` son otras cuatro (`RcvGetExecUnitMsg`, `ddl_saGetExecUnit…`).
+- El consumidor `[CAMERA_MAIN_TC]` tiene informe propio (S122). Token `[APL]`: 42 en los tres modelos; `[CAMERA_SA]`: 231 en A6000 y 0 en A7S y A6300.
+
+Método: `analysis/camera_closure/sources.py` (cadenas `.cpp/.h/.c` desnudas cargadas con la regla PIC estricta dentro de cada función; fin de función = siguiente `push {…,lr}`) y `closure2.py` (referencias a una función: `bl`/`b.w`, literal de 32 bits con o sin bit Thumb, `ldr`+`add pc` en la misma función, `movw`+`movt`). Siglas, nombres de fichero y significados de campos que el firmware no declara **no son afirmaciones de este informe**: no se atribuye ni se infiere ninguno.

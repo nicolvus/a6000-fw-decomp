@@ -33,7 +33,10 @@ fw2.01 tienen **0** trazas con ese prefijo, pero **92** (A7S) y **121** (A6300) 
 existen allí **sin etiqueta**. Es la misma política de etiquetado por submódulo que se vio en
 S106 (`[IMAGING_CAP]`), S119 (`[APL]` dentro de `[CAMERA_SA]`) y S120 (`[IDT_OPD]`).
 
-## Abierto: No determinado con el firmware (reclasificado el 03-11-2026; seguimiento en PENDIENTES CAM-01)
+## Cierre CAM-01 (03-11-2026, medido en bytes)
 
-- La subdivisión de los 82 mensajes "sin etiqueta"; qué fichero fuente corresponde a cada una de
-  las 48 funciones; el significado de `waku`, `ympc`, `csum`, `cpeak`, `LoadNum`/`Ch`.
+- Ficheros fuente: 48 funciones con traza; 6 citan un fichero fuente (`Initialize/StaticSetInfo.cpp`, `Stage_Panorama.cpp`, `SystemDelay.cpp`, `init_cam_SetCamParam.cpp`, `init_cam_SetCamParam_main.cpp`); 42 ninguno.
+- `waku` (21 cadenas), `ympc` (3), `csum` (2), `cpeak` (2) y `LoadNum` (1) existen solo como texto de trazas con `%d`; el firmware no los define en otro sitio.
+- Token `[CAMERA_MAIN]`: 135 en A6000 fw3.21, 0 en A7S fw3.20 y 0 en A6300 fw2.01.
+
+Método: `analysis/camera_closure/sources.py` (cadenas `.cpp/.h/.c` desnudas cargadas con la regla PIC estricta dentro de cada función; fin de función = siguiente `push {…,lr}`) y `closure2.py` (referencias a una función: `bl`/`b.w`, literal de 32 bits con o sin bit Thumb, `ldr`+`add pc` en la misma función, `movw`+`movt`). Siglas, nombres de fichero y significados de campos que el firmware no declara **no son afirmaciones de este informe**: no se atribuye ni se infiere ninguno.

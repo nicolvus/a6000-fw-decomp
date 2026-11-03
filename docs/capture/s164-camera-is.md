@@ -89,12 +89,12 @@ fw3.21 y en la A7S fw3.20.
 >
 > **S51 (A/B/C = NO) se mantiene.**
 
-## Abierto: No determinado con el firmware (reclasificado el 03-11-2026; seguimiento en PENDIENTES CAM-01)
+## Cierre CAM-01 (03-11-2026, medido en bytes)
 
-Fichero fuente propio del módulo (**no embebido**); significado de `upm_get_hcrn_ura` y de las
-siglas `AS`/`DIST`; significado de las `u16` `ctx+0xbd8`/`ctx+0xbda`; destino físico de
-`SetStblzGridH`; formato binario completo de `FILE_IS_%04x.dat`; tabla de registro de los
-callbacks (no hay punteros absolutos a las 4 funciones sin llamadores `bl`).
+- Ficheros fuente: 13 funciones con traza; 0 citan un fichero fuente (ninguno); 13 ninguno.
+- Callbacks sin llamador `bl`: `0x436ea2d0` y `0x43705d64` se registran por puntero Thumb en `0x436ea36a` y `0x43705dfa` (`add r1,pc` → `…2d1`, `…d65`, misma función); `0x436fecbe` y `0x436fee80` no tienen ninguna referencia (`bl`, literal, `ldr`+`add pc`, `movw`+`movt`).
+
+Método: `analysis/camera_closure/sources.py` (cadenas `.cpp/.h/.c` desnudas cargadas con la regla PIC estricta dentro de cada función; fin de función = siguiente `push {…,lr}`) y `closure2.py` (referencias a una función: `bl`/`b.w`, literal de 32 bits con o sin bit Thumb, `ldr`+`add pc` en la misma función, `movw`+`movt`). Siglas, nombres de fichero y significados de campos que el firmware no declara **no son afirmaciones de este informe**: no se atribuye ni se infiere ninguno.
 
 Informe completo: [`analysis/s164_camera_is/camera_is.md`](../../analysis/s164_camera_is/camera_is.md) ·
 Datos: `analysis/s164_camera_is/camera_is.json` · Tests: `tests/test_s164_camera_is.py`.

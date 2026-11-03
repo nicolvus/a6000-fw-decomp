@@ -46,14 +46,9 @@ ni la de la montura (S66). Solo lectura de bytes; nada ejecutado.
 4. `GyroStitScl` y `JudgeBrkGyro` operan en la cadena de **time control (TC)**: escalado por el
    movimiento medido y detección de "break" del giroscopio.
 
-## 3. Abierto: no determinado con el firmware (reclasificado 03-11-2026; PENDIENTES CAM-01)
+## 3. Cierre CAM-01 (03-11-2026)
 
-- Formato del fichero `/mnt/FILE_IS_%04x.dat` y quién lo escribe (¿la propia cámara al fabricar?).
-- Relación entre `GyroAD` (ADC) y las unidades de `GyroStitScl`.
-- Qué es exactamente el "AS" (`STABILIZER][AS]`) frente a "EIS".
-- Si el EIS de la A6000 compensa con el OSS del objetivo (SteadyShot) y cómo se coordina con
-  `LensShdOn`/`PzShdOn` (S66, §sombreado).
-- Rail `EIS_RC1V`: qué alimentación exacta es.
+Los puntos que este informe dejaba abiertos (formato de `FILE_IS_%04x.dat` y su escritor, unidades de `GyroAD`/`GyroStitScl`, significado de «AS» frente a EIS, coordinación con el OSS del objetivo y alimentación `EIS_RC1V`) son semántica de diseño que el firmware no declara; **este informe no afirma ninguno**. Lo medido sobre las funciones de la capa IS está en [S164](../../docs/capture/s164-camera-is.md) (ficheros fuente citados y registros de callbacks) y en `analysis/camera_closure/`.
 
 ## 4. Reproducción
 

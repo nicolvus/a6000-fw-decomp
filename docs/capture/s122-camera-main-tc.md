@@ -49,12 +49,10 @@ Idéntico en ambas versiones: **115** con 1 sitio, **8** con 0, **4** con 2 (idx
 `TC:DIST:Err:SetDistMode1ForSync aspect` `0x43ca8547` e idx 108 `TC:DDT:Err: Osal Valloc Msg`
 `0x43cb7524`. Lectura: fw3.21 **instrumenta** el módulo y añade tres trazas; el código de fondo
 existe en las tres versiones y la etiqueta es **exclusiva de la A6000 fw3.21**.
-## Nota de método y abierto: No determinado con el firmware (reclasificado el 03-11-2026; seguimiento en PENDIENTES CAM-01)
-- Regla PIC **estricta** canónica (`analysis/s106_imaging_cap/scan_pic_refs_strict.py`): `add`
-  emparejado con el `ldr` más cercano por detrás del mismo registro, ventana 4 KB, destino inicio
-  de cadena. Escáner dirigido: **127 refs `string`, 0 discrepancias, 0 sitios ausentes**.
-- Por qué idx 2/32/108 pierden sus sitios; llamada por puntero a `0x438786c4`, `0x43879204`,
-  `0x438792dc`, `0x4387938e`; significado de `TC`, `DDT`, `DIST`, `STC`, `ARC`/`RC`, `Gmv`, `Lmv`;
-  estructura de los publicadores en A7S/A6300; etiqueta en A7S fw3.21; pipeline interno de
-  calibración/DIST/DDT/SMART ZOOM; qué estado representa `r7 == 2`; campos de `APL_*_INFO` y
-  `JudgeBdroRslt`. **S51 A/B/C = NO se mantiene.**
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- Ficheros fuente: 39 funciones con traza; 0 citan un fichero fuente (ninguno); 39 ninguno.
+- `0x438786c4`, `0x43879204`, `0x438792dc`, `0x4387938e`: 0 referencias por `bl`/`b.w`, literal (con y sin bit Thumb), `ldr`+`add pc` en la misma función y `movw`+`movt`.
+- Token `[CAMERA_MAIN_TC]`: 127 en A6000, 0 en A7S y A6300.
+
+Método: `analysis/camera_closure/sources.py` (cadenas `.cpp/.h/.c` desnudas cargadas con la regla PIC estricta dentro de cada función; fin de función = siguiente `push {…,lr}`) y `closure2.py` (referencias a una función: `bl`/`b.w`, literal de 32 bits con o sin bit Thumb, `ldr`+`add pc` en la misma función, `movw`+`movt`). Siglas, nombres de fichero y significados de campos que el firmware no declara **no son afirmaciones de este informe**: no se atribuye ni se infiere ninguno.

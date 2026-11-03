@@ -49,12 +49,10 @@
 (`RecStart`/`RecEnd`, `TimeA ImgTmp:%d`, `Err:Timer2Callback`, `movie thermal diffTemp`), pero el
 mecanismo térmico ya existía; la A6300 añade `EcGain…4K:%x USB:%x` (`0x43da73f6`).
 
-## Abierto: No determinado con el firmware (reclasificado el 03-11-2026; seguimiento en PENDIENTES CAM-01)
+## Cierre CAM-01 (03-11-2026, medido en bytes)
 
-- **Invocación de `0x437b8774`**: 22 sitios pero **ningún `bl` ni puntero de 32 bits** en toda la
-  imagen → despacho indirecto no resuelto. Slot `0x6c` ↔ `GetImagerTemperature(float*)`
-  (`0x43c936a3`): inferido (no está en ninguna vtable).
-- Contexto de `0x437b8774` = struct de S124 (+4/+6 coinciden, base distinta): sin verificar; tampoco se afirma
-  el significado de los 24 ids, quién envía `0xa20`/`0xa21`/`0xac0` ni el helper `0x4378dd78`.
-- **Fichero fuente**: no hay `*Thermal*.cpp`; vecinos `CS_imaging.cpp` (`0x43ca3dd7`),
-  `SyncYCOut.cpp` (`0x43ca4de4`) y `lc_PreReadAF.cpp` (`0x43ca793f`).
+- Ficheros fuente: 10 funciones con traza; 0 citan un fichero fuente (ninguno); 10 ninguno.
+- `0x437b8774`: sin `bl` ni literal; se registra como callback en `0x437b92f6` (`add r1,pc` → `0x437b8775`; función `0x437b92ec`: llama a `0x4378dd78`, copia el descriptor con `0x43ae9130` y lo entrega a `0x439018b0`). Corrige «despacho indirecto no resuelto».
+- Token `[CAMERA_MAIN_IM]`: 42 en A6000, 0 en A7S y A6300.
+
+Método: `analysis/camera_closure/sources.py` (cadenas `.cpp/.h/.c` desnudas cargadas con la regla PIC estricta dentro de cada función; fin de función = siguiente `push {…,lr}`) y `closure2.py` (referencias a una función: `bl`/`b.w`, literal de 32 bits con o sin bit Thumb, `ldr`+`add pc` en la misma función, `movw`+`movt`). Siglas, nombres de fichero y significados de campos que el firmware no declara **no son afirmaciones de este informe**: no se atribuye ni se infiere ninguno.

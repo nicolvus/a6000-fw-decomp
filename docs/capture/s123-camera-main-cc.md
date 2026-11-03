@@ -51,11 +51,9 @@ módulo; los 2 restantes son **ampliaciones de formato** en la A6000 (`IsSplit C
 `Create3DLUT … BlkOfs Cr/Cb`). La A7S tiene además `IsSplit Change && (core_sa != CC_PROC_SA) >>>
 uc_ret = C_TRUE`, **inexistente** en la A6000.
 
-## Abierto: No determinado con el firmware (reclasificado el 03-11-2026; seguimiento en PENDIENTES CAM-01)
+## Cierre CAM-01 (03-11-2026, medido en bytes)
 
-* El/los **ficheros fuente** que implementan la clase `CC` (las 29 funciones no referencian ningún
-  `.cpp`/`.h`; la atribución por proximidad es INFERENCIA) y el significado de la sigla **`CC`**.
-* Rangos reales de `CapMode`/`ContID`/`BDROSeq`/`BDRObase`/`FrameID`; sólo se ha verificado un campo de
-  16 bits comparado contra `0x480..0x482` (`0x437a1818`).
-* Equivalencia `drive_mode` (imager) ↔ `CapMode` (captura); diferencial **a nivel de función** con
-  A7S/A6300 (mismos métodos y misma máquina de estados).
+- Ficheros fuente: 29 funciones con traza; 0 citan un fichero fuente (ninguno); 29 ninguno.
+- Token `[CAMERA_MAIN_CC]`: 49 en A6000, 0 en A7S y 0 en A6300 (sin contraparte por token; no se afirma equivalencia a nivel de función).
+
+Método: `analysis/camera_closure/sources.py` (cadenas `.cpp/.h/.c` desnudas cargadas con la regla PIC estricta dentro de cada función; fin de función = siguiente `push {…,lr}`) y `closure2.py` (referencias a una función: `bl`/`b.w`, literal de 32 bits con o sin bit Thumb, `ldr`+`add pc` en la misma función, `movw`+`movt`). Siglas, nombres de fichero y significados de campos que el firmware no declara **no son afirmaciones de este informe**: no se atribuye ni se infiere ninguno.

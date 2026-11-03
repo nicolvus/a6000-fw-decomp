@@ -42,15 +42,14 @@ organizan internamente en **141 sub-módulos etiquetados** (los grandes: `SHD` 2
    existen también en la A7S. La única traza nueva de la fw3.21 es
    `[CAMERA_MAIN_YC]: HD_SWEEP_HOLD  =%x` (`0x43cbc27c`).
 
-## Abierto: No determinado con el firmware (reclasificado el 03-11-2026; seguimiento en PENDIENTES CAM-01)
+## Cierre CAM-01 (03-11-2026, medido en bytes)
 
-- El significado de las siglas (SHD, ITP, DCV, OLC, CLP, PFR, ZDL, OAC, OPB, ARC): el
-  firmware no las expande.
-- No se ha localizado una **tabla de despacho de jobs** (ni absoluta ni PIC).
-- El enlace por código entre `api_YC_SetCapBoks/SetCapStar/SetCapTbox` y las etapas
-  `Stage_BOKS/STAR/TBOX` (S76) es solo nominal.
-- El sentido de `HD_SWEEP_HOLD` (`0x43cbc27c`), en relación con el barrido (S105).
-- Nada de esto cambia S51: el motor de imagen no registra nada del obturador.
+- Ficheros fuente: 251 funciones con traza; 1 citan un fichero fuente (`CLP/yc_clp_common.cpp`); 250 ninguno.
+- Enlace `api_YC_SetCapBoks/Star/Tbox` (`0x437d8c88`, `0x437d8ce4`, `0x437d88e4`) ↔ `Stage_BOKS/STAR/TBOX` (`0x438bfda0…0x438c0cc4`, `0x438cda40`, `0x438cf818`): ningún camino `bl` directo de profundidad ≤ 4 entre ellas; el enlace es solo nominal.
+- `HD_SWEEP_HOLD` (`0x43cbc27c`) se carga desde la función `0x438968c4`; la cadena vecina `0x43cbc22c`, desde `0x43896160`.
+- Token `[CAMERA_MAIN_YC]`: 970 en A6000, 0 en A7S y A6300. El motor de imagen no registra nada del obturador (S51 se mantiene).
+
+Método: `analysis/camera_closure/sources.py` (cadenas `.cpp/.h/.c` desnudas cargadas con la regla PIC estricta dentro de cada función; fin de función = siguiente `push {…,lr}`) y `closure2.py` (referencias a una función: `bl`/`b.w`, literal de 32 bits con o sin bit Thumb, `ldr`+`add pc` en la misma función, `movw`+`movt`). Siglas, nombres de fichero y significados de campos que el firmware no declara **no son afirmaciones de este informe**: no se atribuye ni se infiere ninguno.
 
 ## Scripts
 

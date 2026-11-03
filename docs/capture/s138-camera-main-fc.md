@@ -58,10 +58,12 @@ aserción, p. ej. `Camera::FC::FCTop::ExecApiNotifyStartTouch` `0x43cefa06`) y e
 
 Material **propio de la A6000 fw3.21**; la biblioteca `Camera::FC` es **idéntica en los tres**.
 
-## Abierto: No determinado con el firmware (reclasificado el 03-11-2026; seguimiento en PENDIENTES CAM-01)
+## Cierre CAM-01 (03-11-2026, medido en bytes)
 
-Fichero fuente del módulo (ninguna traza cita un `.cpp`); si `0x437b7778` se invoca desde otro
-binario del paquete de firmware; significado del flag `lc`; destinatario de los mensajes OSAL
-(temporizador, `BatteryInfo`); si el camino táctil del FC debía enlazar con `0x3011`.
+- Ficheros fuente: 7 funciones con traza; 0 citan un fichero fuente (ninguno); 7 ninguno.
+- `0x437b7778`: sin `bl` ni literal; se registra como puntero de callback en `0x437b74fc` (`add r3,pc` → `0x437b7779`, guardado en `[sp,#0x58]`, función `0x437b74a4`, que llama a `0x43561244`). Su valor no aparece en ninguno de los 1390 archivos (distintos de `av-cam.bin`, ≤ 30 MB) del paquete fw3.21.
+- Token `[CAMERA_MAIN_FC]`: 9 en A6000, 0 en A7S y A6300.
+
+Método: `analysis/camera_closure/sources.py` (cadenas `.cpp/.h/.c` desnudas cargadas con la regla PIC estricta dentro de cada función; fin de función = siguiente `push {…,lr}`) y `closure2.py` (referencias a una función: `bl`/`b.w`, literal de 32 bits con o sin bit Thumb, `ldr`+`add pc` en la misma función, `movw`+`movt`). Siglas, nombres de fichero y significados de campos que el firmware no declara **no son afirmaciones de este informe**: no se atribuye ni se infiere ninguno.
 
 [Informe](../../analysis/s138_camera_main_fc/camera_main_fc.md) · [JSON](../../analysis/s138_camera_main_fc/camera_main_fc.json)

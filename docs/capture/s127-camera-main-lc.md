@@ -37,9 +37,11 @@ Puente al AF híbrido: `NOT_DETECT from ZPD MODULE… lc_HybridAF.cpp %d` `0x43c
 
 La etiqueta es nueva en la fw3.21; los conceptos existen sin etiqueta (`lc_HybridAF.cpp`, `fc_pos`, `MarioAfc`, `zpd_`, `LC_GetZpdResultInfo`). Matiz: `************` `0x43c9d03e` sí aparece como **subcadena** en A7S/A6300, pero solo como cola/relleno de otras cadenas, no como traza LC independiente; el 0/72 se mantiene.
 
-## Abierto: No determinado con el firmware (reclasificado el 03-11-2026; seguimiento en PENDIENTES CAM-01)
+## Cierre CAM-01 (03-11-2026, medido en bytes)
 
-- `LC`, `CPaf`, `Mario`, `Gpma`, `MaInToOut`, `watkao`, `kinbou`, `yosoku`, `mario_use_ng_flag`: sin expandir. Semántica de `watkao1`, `kinbou`, `yosoku`, `scanless manymode`, `zpd_flags`, `select_area`: desconocida.
-- Fichero fuente de `lc_Movie_DM_AF_Util`/`lc_DM_AF_Util` y de 12 funciones más: no identificado. "Sin `bl` directo" ≠ llamada por puntero (las C++ se llaman por vtable).
-- No se ha medido el consumidor de `buffer[0..3]` ni el destino de `LC_SendMessage`.
-- Si la calibración de lente existe en otro sitio, este hito no la cubre. Nada de lo hallado toca la línea del obturador: **S51 se mantiene**.
+- Ficheros fuente: 37 funciones con traza; 1 citan un fichero fuente (`lc_wrap_upm.cpp`); 36 ninguno.
+- `watkao` (1 cadena), `kinbou` (1), `yosoku` (1) y `mario_use_ng_flag` (1) existen solo como texto de trazas.
+- Token `[CAMERA_MAIN_LC]`: 72 en A6000, 0 en A7S y A6300.
+- Nada medido toca la línea del obturador: **S51 se mantiene**.
+
+Método: `analysis/camera_closure/sources.py` (cadenas `.cpp/.h/.c` desnudas cargadas con la regla PIC estricta dentro de cada función; fin de función = siguiente `push {…,lr}`) y `closure2.py` (referencias a una función: `bl`/`b.w`, literal de 32 bits con o sin bit Thumb, `ldr`+`add pc` en la misma función, `movw`+`movt`). Siglas, nombres de fichero y significados de campos que el firmware no declara **no son afirmaciones de este informe**: no se atribuye ni se infiere ninguno.
