@@ -65,25 +65,40 @@ def families(detail: dict) -> list[tuple[str, list[tuple[str, dict]]]]:
 
 
 OPEN_CLAIM = re.compile(r"NO[ _]VERIFICADO", re.IGNORECASE)
+DONE_CLAIM = re.compile(r"(?<!NO )(?<!NO_)\bVERIFICADO(?:_ESTATICO)?\b")
+
+
+def claim_counts(detail: dict, sessions: list[dict]) -> dict[str, tuple[int, int]]:
+    """Label -> (NO_VERIFICADO, VERIFICADO) mentions in its report(s); sub-labels follow their parent.
+
+    shortcut: counts text mentions, not distinct claims (a table row and its prose count twice);
+    refine per claim if the ratio is used for decisions.
+    """
+    path = {x["id"][1:]: ROOT / x["source"].split("/main/", 1)[1] for x in sessions}
+    counts: dict[str, tuple[int, int]] = {}
+    for label, info in detail.items():
+        reports = {path.get(h) for h in info["hitos"] if h != "178"}
+        if info["estado"] == "hito" and reports and all(r and r.exists() for r in reports):
+            texts = [r.read_text(encoding="utf-8", errors="replace") for r in reports]
+            counts[label] = (sum(len(OPEN_CLAIM.findall(t)) for t in texts), sum(len(DONE_CLAIM.findall(t)) for t in texts))
+    for _ in range(3):  # sub-labels may hang from other sub-labels
+        for label, info in detail.items():
+            if info["estado"] == "sub-etiqueta" and info["sub_de"] and label not in counts \
+                    and info["sub_de"][0] in counts and all(p in counts for p in info["sub_de"]):
+                counts[label] = counts[info["sub_de"][0]]
+    return counts
 
 
 def closed_labels(detail: dict, sessions: list[dict]) -> set[str]:
-    """Covered labels whose report(s) carry no NO_VERIFICADO claim; sub-labels follow their parent.
+    """Covered labels whose report(s) carry no NO_VERIFICADO mention (even a negated one counts as open)."""
+    return {k for k, (o, _) in claim_counts(detail, sessions).items() if o == 0}
 
-    shortcut: any mention of NO_VERIFICADO counts as open, even a negated one; refine per claim if it inflates.
-    """
-    path = {x["id"][1:]: ROOT / x["source"].split("/main/", 1)[1] for x in sessions}
-    closed: set[str] = set()
-    for label, info in detail.items():
-        reports = [path.get(h) for h in info["hitos"] if h != "178"]
-        if info["estado"] == "hito" and reports and all(r and r.exists() for r in reports) \
-                and not any(OPEN_CLAIM.search(r.read_text(encoding="utf-8", errors="replace")) for r in reports):
-            closed.add(label)
-    for _ in range(3):  # sub-labels may hang from other sub-labels
-        for label, info in detail.items():
-            if info["estado"] == "sub-etiqueta" and info["sub_de"] and all(p in closed for p in info["sub_de"]):
-                closed.add(label)
-    return closed
+
+def real_progress(detail: dict, sessions: list[dict]) -> dict:
+    """Weighted index: each covered label contributes VERIFICADO/(VERIFICADO+NO_VERIFICADO); uncovered ones 0."""
+    counts = claim_counts(detail, sessions)
+    index = sum(v / (o + v) if o + v else 1 for o, v in counts.values()) / len(detail)
+    return {"index": f"{100 * index:.2f}", "by_label": {k: {"open": o, "verified": v} for k, (o, v) in sorted(counts.items())}}
 
 
 def hitos(info: dict) -> list[str]:
@@ -162,6 +177,12 @@ def render_html(grids, data: dict) -> str:
         + "</td></tr>"
         for k, i in sorted(detail.items()) if i["estado"] == "hito"
     )
+    rp = data["real_progress"]
+    worst = sorted(((v["open"], v["verified"], k) for k, v in rp["by_label"].items() if detail[k]["estado"] == "hito"),
+                   reverse=True)[:15]
+    open_rows = "".join(
+        f"<tr><td>{escape(k)}</td><td>{escape(' / '.join(dict.fromkeys(names[h] for h in hitos(detail[k]) if h in names)))}</td>"
+        f"<td>{o}</td><td>{v}</td></tr>" for o, v, k in worst)
     other = "".join(f"<h2>{escape(t)}</h2><div class='grid'>{squares(c)}</div>" for t, _, c in grids[1:])
     css = " ".join(f".{c}{{background:{f}}}" for c, f in FILL.items())
     return f"""<!doctype html>
@@ -203,6 +224,9 @@ td:nth-child(n+3):not(:last-child),td:last-child,th:nth-child(n+3){{text-align:r
 Pruebas en cámara: {data['physical_tests']['registered']} filas de registro (hasta {data['physical_tests']['last']}, con backup NVRAM previo);
 planes P1–P24 con prueba registrada: {data['physical_tests']['done']}/{data['physical_tests']['total']}.
 <a href="{data['physical_tests']['source']}">Registro de pruebas</a>.</p>
+<h2>Avance real hasta cerrar todo: {rp['index']}%</h2>
+<p>Índice ponderado sobre las {cov['total']} etiquetas: cada etiqueta cubierta aporta <code>VERIFICADO / (VERIFICADO + NO_VERIFICADO)</code> según su informe (las sub-etiquetas heredan el del padre); las no cubiertas aportan 0. Llega al 100 % solo con todas cubiertas y ninguna afirmación pendiente. Cuenta menciones de texto, no afirmaciones distintas, y no mide funciones comprobadas en cámara.</p>
+<table><tr><th>Etiqueta con más pendientes</th><th>Tema</th><th>NO_VERIFICADO</th><th>VERIFICADO</th></tr>{open_rows}</table>
 <h2>Etiquetas por familia — {cov['percent']}% documentadas ({cov['covered']}/{cov['total']}); {cov['verified_percent']}% sin pendientes ({cov['verified']}/{cov['total']})*</h2>
 <p>«Documentada» = tiene informe propio o un padre con informe. «Sin pendientes» (azul) = además, su informe no declara ninguna afirmación <code>NO_VERIFICADO</code>. Una etiqueta documentada con pendientes (verde) no está resuelta.</p>
 <table><tr><th>Familia</th><th>Etiquetas</th><th>Documentadas</th><th>Sin pendientes</th><th>Total</th><th>% doc.</th></tr>{fam_rows}</table>
@@ -294,6 +318,7 @@ def main(out: Path = ROOT) -> None:
             "verified": len(closed), "verified_percent": f"{100 * len(closed) / int(total):.2f}",
             "source": REPO + "analysis/s178_census/census.md",
         },
+        "real_progress": real_progress(detail, sessions),
         "exceptions": {
             "S67": {
                 "label": "Cancelada; el tema de AF se asignó a S63.",

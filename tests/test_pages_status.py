@@ -52,3 +52,11 @@ def test_public_session_index_has_real_sources(tmp_path: Path) -> None:
         url = urlparse(item["source"])
         assert url.hostname == "github.com" and url.path.startswith(prefix)
         assert (ROOT / url.path.removeprefix(prefix)).is_file()
+
+
+def test_real_progress_is_bounded_and_covers_documented_labels(tmp_path):
+    from scripts.build_pages_status import ROOT as _root  # noqa: F401  (import comprueba que el módulo carga)
+    data = json.loads((_root / "site/status.json").read_text(encoding="utf-8"))
+    rp, cov = data["real_progress"], data["module_coverage"]
+    assert 0 <= float(rp["index"]) <= float(cov["percent"])
+    assert len(rp["by_label"]) >= cov["covered"] - 1  # [OSD] cuenta como cubierta sin informe propio
