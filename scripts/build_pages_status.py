@@ -36,7 +36,7 @@ JOINT = {74: "S74 — ADJ_CMD (informe conjunto S73/S74)", 516: "S516 — `[PNL]
          630: "S630 — `[RING_DIAL]` (informe conjunto S515/S516/S628–S630)"}
 FILL = {"m-hito": COLORS["hito"], "m-sub": COLORS["sub"], "m-todo": COLORS["todo"], "s-ok": COLORS["ok"],
         "s-cancel": COLORS["cancel"], "s-todo": COLORS["todo"], "t-todo": COLORS["todo"], "t-ok": COLORS["ok"],
-        "m-rejected": "#6e7681"}
+        "m-rejected": "#6e7681", "m-ver": "#1f6feb"}
 KIND = {"hito": "m-hito", "sub-etiqueta": "m-sub", "pendiente": "m-todo", "no-modulo": "m-rejected"}
 
 
@@ -62,6 +62,28 @@ def families(detail: dict) -> list[tuple[str, list[tuple[str, dict]]]]:
     loose = [x for k, v in by.items() if k not in big for x in v]
     rows = sorted(big.items(), key=lambda kv: (-len(kv[1]), kv[0]))
     return [(k, sorted(v)) for k, v in rows] + ([("OTROS", sorted(loose))] if loose else [])
+
+
+OPEN_CLAIM = re.compile(r"NO[ _]VERIFICADO", re.I)
+
+
+def closed_labels(detail: dict, sessions: list[dict]) -> set[str]:
+    """Covered labels whose report(s) carry no NO_VERIFICADO claim; sub-labels follow their parent.
+
+    shortcut: any mention of NO_VERIFICADO counts as open, even a negated one; refine per claim if it inflates.
+    """
+    path = {x["id"][1:]: ROOT / x["source"].split("/main/", 1)[1] for x in sessions}
+    closed: set[str] = set()
+    for label, info in detail.items():
+        reports = [path.get(h) for h in info["hitos"] if h != "178"]
+        if info["estado"] == "hito" and reports and all(r and r.exists() for r in reports) \
+                and not any(OPEN_CLAIM.search(r.read_text(encoding="utf-8", errors="replace")) for r in reports):
+            closed.add(label)
+    for _ in range(3):  # sub-labels may hang from other sub-labels
+        for label, info in detail.items():
+            if info["estado"] == "sub-etiqueta" and info["sub_de"] and all(p in closed for p in info["sub_de"]):
+                closed.add(label)
+    return closed
 
 
 def hitos(info: dict) -> list[str]:
@@ -118,12 +140,14 @@ def render_html(grids, data: dict) -> str:
     def squares(cells) -> str:
         return "".join(f'<span class="cell {c}" title="{escape(t)}"></span>' for c, t in cells)
 
+    closed = closed_labels(detail, data["sessions"])
     fam_rows = ""
     for fam, items in families(detail):
         n = sum(i["estado"] in {"hito", "sub-etiqueta"} for _, i in items)
-        cells = [(KIND[i["estado"]], tip(k, i, names)) for k, i in items]
+        v = sum(k in closed for k, _ in items)
+        cells = [("m-ver" if k in closed else KIND[i["estado"]], tip(k, i, names)) for k, i in items]
         fam_rows += (f'<tr><td>{escape(fam)}</td><td class="sq">{squares(cells)}</td>'
-                     f"<td>{n}</td><td>{len(items)}</td><td>{round(100 * n / len(items))}%</td></tr>")
+                     f"<td>{n}</td><td>{v}</td><td>{len(items)}</td><td>{round(100 * n / len(items))}%</td></tr>")
 
     pend = sorted(((k, i) for k, i in detail.items() if i["estado"] == "pendiente"),
                   key=lambda kv: (-kv[1]["cadenas_referenciadas"], -kv[1]["apariciones_token"], kv[0]))[:TOP]
@@ -172,15 +196,16 @@ td:nth-child(n+3):not(:last-child),td:last-child,th:nth-child(n+3){{text-align:r
 <tr><td>Interfaz (GUI)</td><td>G2–G8: formatos <code>.uxc/.uxb/.xdb</code>, menús, texto y fuentes, entrada, ajustes y modificación reversible de la UI.</td><td>Abierto</td></tr>
 <tr><td>Cadena sensor / obturador</td><td>E6 (Darwin fuera de <code>av-cam</code>), E9/D5 (registros IMX210/IMX235), E11 (segunda cortina), E13 (servicio ODL), F8 (valores solo en ejecución).</td><td>Hojas de datos, volcado de Darwin o prueba física</td></tr></table>
 <p>Detalle y criterios de cierre: <a href="{REPO}docs/PENDIENTES.md">PENDIENTES.md</a>.</p>
-<p class="legend"><span class="m-hito"></span>módulo con hito<span class="m-sub"></span>sub-etiqueta cubierta<span class="m-todo"></span>pendiente / sin informe / sin ejecutar<span class="m-rejected"></span>fragmento descartado<span class="s-cancel"></span>cancelada</p>
+<p class="legend"><span class="m-ver"></span>documentada y sin afirmaciones abiertas<span class="m-hito"></span>módulo con hito<span class="m-sub"></span>sub-etiqueta cubierta<span class="m-todo"></span>pendiente / sin informe / sin ejecutar<span class="m-rejected"></span>fragmento descartado<span class="s-cancel"></span>cancelada</p>
 <p>{cov['pending']} etiquetas pendientes; {cov['excluded']} fragmentos descartados como módulos. Descartar no aumenta cobertura.</p>
-<p>Cobertura documental de etiquetas: no mide código descompilado ni funciones verificadas.
+<p>Cobertura documental de etiquetas: no mide código descompilado ni funciones verificadas; «sin abiertas» solo indica que el informe no lista afirmaciones NO_VERIFICADO.
 <a href="{REPO}docs/PENDIENTES.md">Pendientes vigentes</a> · <a href="{REPO}docs/capture/repo-audit-2026-10-24.md">auditoría</a>.
 Pruebas en cámara: {data['physical_tests']['registered']} filas de registro (hasta {data['physical_tests']['last']}, con backup NVRAM previo);
 planes P1–P24 con prueba registrada: {data['physical_tests']['done']}/{data['physical_tests']['total']}.
 <a href="{data['physical_tests']['source']}">Registro de pruebas</a>.</p>
-<h2>Etiquetas por familia — {cov['percent']}% ({cov['covered']}/{cov['total']})*</h2>
-<table><tr><th>Familia</th><th>Etiquetas</th><th>Cubiertas</th><th>Total</th><th>%</th></tr>{fam_rows}</table>
+<h2>Etiquetas por familia — {cov['percent']}% documentadas ({cov['covered']}/{cov['total']}); {cov['verified_percent']}% sin afirmaciones abiertas ({cov['verified']}/{cov['total']})*</h2>
+<p>«Documentada» = tiene informe propio o un padre con informe. «Sin abiertas» (azul) = además, su informe no declara ninguna afirmación <code>NO_VERIFICADO</code>. Una etiqueta documentada con afirmaciones abiertas (verde) no está resuelta.</p>
+<table><tr><th>Familia</th><th>Etiquetas</th><th>Documentadas</th><th>Sin abiertas</th><th>Total</th><th>% doc.</th></tr>{fam_rows}</table>
 <h2>Etiquetas pendientes (top {TOP} por cadenas referenciadas)</h2>
 <p>Orden documental por cadenas con referencias candidatas; no demuestra volumen de código,
 prioridad técnica ni relación con el obturador. La cola técnica está en la auditoría.</p>
@@ -253,6 +278,7 @@ def main(out: Path = ROOT) -> None:
     covered, total, percent = coverage.groups()
     detail = json.loads(DETAIL.read_text(encoding="utf-8"))
     excluded = sum(i["estado"] == "no-modulo" for i in detail.values())
+    closed = closed_labels(detail, sessions)
     if int(covered) + int(pending.group(1)) + excluded != int(total):
         raise ValueError("El censo S178 no suma cobertura, pendientes y descartadas")
 
@@ -265,6 +291,7 @@ def main(out: Path = ROOT) -> None:
         "module_coverage": {
             "covered": int(covered), "total": int(total),
             "pending": int(pending.group(1)), "excluded": excluded, "percent": percent,
+            "verified": len(closed), "verified_percent": f"{100 * len(closed) / int(total):.2f}",
             "source": REPO + "analysis/s178_census/census.md",
         },
         "exceptions": {
@@ -292,7 +319,7 @@ def main(out: Path = ROOT) -> None:
     # Shields "endpoint" JSON: README badges read these from Pages, so they follow every deploy.
     cov, tests = data["module_coverage"], data["physical_tests"]
     for name, label, msg, color in (
-        ("modulos", "módulos", f"{cov['percent']}% ({cov['covered']}/{cov['total']})", "yellow"),
+        ("modulos", "etiquetas documentadas", f"{cov['percent']}% ({cov['covered']}/{cov['total']}) · sin abiertas {cov['verified']}", "yellow"),
         ("sesiones", "sesiones", f"S {len(sessions)} · E {data['phase_reports']}", "blue"),
         ("pruebas", "planes con prueba", f"{tests['done']}/{tests['total']}", "green"),
     ):
