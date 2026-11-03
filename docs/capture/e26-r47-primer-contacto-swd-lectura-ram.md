@@ -140,3 +140,13 @@ Se reinició la cámara (batería fuera y dentro) y se conectó por SWD durante 
 
 **Pendiente:** llegar al punto de error (nuevo intento de captura con punto de parada en `0xc01f3b74` y la pila del llamador, o con puntos de parada en las funciones FAT). La captura depende de conectar antes de que Loader3 termine: una carrera que solo salió bien una vez de tres.
 
+## 13. Corrección de §12: los puntos de parada puestos en Loader2 no sobreviven (03-11-2026)
+
+En un cuarto intento la parada temprana cayó en Loader2 (`pc = 0xc00385cc`) y se colocó, entre otros, un punto de parada en la entrada de la función del LED (`0xc01f3b74`), que **se ejecuta en todo arranque que acaba en el patrón de LED**. No saltó en 30 s y la cámara volvió al bucle de LED. Por tanto los puntos de parada colocados durante Loader2 **no llegan a Loader3** (causa no determinada: reinicio o reprogramación de la lógica de depuración entre etapas, INFERENCIA).
+
+**Consecuencia:** la evidencia de §12 (que `0xc01f2f88` no se ejecutó) **no es válida** y se retira. §11 vuelve a ser una hipótesis abierta, coherente con R13: solo P1 (`c01f2c98`, firma BOS) y P2 (`c01f2f24`, `CFG_E:Load file`) producen un −302 que llega al LED. P1 se descartó en §9 (la firma en RAM coincide). Queda P2 por confirmar.
+
+**tLog en DDR (LEÍDO).** El log de Loader3 menciona `kLog[834e0000]` y `tLog[834c0000]`. `0x834c0000` contiene un registro `WCUN` con dos entradas de texto, `L: BOOT (VER 01.90)` y `L: load image`, y nada más; `0x834e0000` está vacío. No aporta el mensaje de error.
+
+**Siguiente captura:** muestrear el PC hasta verlo en Loader3 y solo entonces colocar puntos de parada en `0xc01f2f24` (entrada de P2), `0xc01f2f9a` (retorno −302 de P2) y `0xc01f3b74` (LED).
+
