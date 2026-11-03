@@ -525,3 +525,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 03-11-2026: familia MOUNT (S133, S608, S613) sin menciones abiertas, por medidas.
 - 03-11-2026: familia OTROS cerrada (S634 + cierres de 49 informes); censo 364/372, 0 pendientes.
 - 03-11-2026: S635 documenta [OSD] (última etiqueta cubierta sin informe propio).
+- 03-11-2026: S636 documenta [D0]-[D7] como sub-etiquetas de [CAM_UTIL_ADJ]; censo 372/372.
