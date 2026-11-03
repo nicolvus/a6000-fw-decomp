@@ -1,6 +1,6 @@
 # 15. Recuperación por SWD (EXPERIMENTAL)
 
-> **EXPERIMENTAL Y NO PROBADO.** Ningún paso de esta página se ha ejecutado en una cámara. Es un plan derivado de análisis estático y emulación. Puede dañar la placa o perder las calibraciones. No hay garantía de que funcione. Se necesita tu autorización y tu propio criterio en cada fase.
+> **EXPERIMENTAL.** Solo se han ejecutado en una cámara las fases de lectura (1 a 7, el 03-11-2026, [R47](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r47-primer-contacto-swd-lectura-ram.md)); ninguna escritura se ha probado. Es un plan derivado de análisis estático y emulación. Puede dañar la placa o perder las calibraciones. No hay garantía de que funcione. Se necesita tu autorización y tu propio criterio en cada fase.
 
 Aplica solo a la A6000 bloqueada tras instalar el 3.25 (LED 3 lentos + 2 rápidos; error −302 de Loader3, **inferido**, no medido). Causa y estado: [Estado actual](14-Estado-actual). Detalle técnico completo (en español): [R46](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r46-procedimiento-fisico-swd.md).
 

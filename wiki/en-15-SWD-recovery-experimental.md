@@ -2,7 +2,7 @@
 
 Linked reports are in Spanish.
 
-> **EXPERIMENTAL AND UNTESTED.** No step on this page has been run on a camera. It is a plan derived from static analysis and emulation. It can damage the board or lose calibration data. There is no guarantee it works. Every phase needs your own authorization and judgment.
+> **EXPERIMENTAL.** Only the read-only phases (1 to 7) have been run on a camera, on 2026-11-03 ([R47](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r47-primer-contacto-swd-lectura-ram.md)); no write has been tried. It is a plan derived from static analysis and emulation. It can damage the board or lose calibration data. There is no guarantee it works. Every phase needs your own authorization and judgment.
 
 Applies only to an A6000 bricked after installing 3.25 (LED 3 slow + 2 fast; Loader3 error −302, **inferred**, not measured). Cause and status: [Current state](en-14-Current-state). Full technical detail (Spanish): [R46](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r46-procedimiento-fisico-swd.md).
 
