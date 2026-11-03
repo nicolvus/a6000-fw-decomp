@@ -37,7 +37,8 @@ def test_public_session_index_has_real_sources(tmp_path: Path) -> None:
 
     page = (out / "site/progress/index.html").read_text(encoding="utf-8")
     assert page.count('class="cell m-') == coverage["total"]
-    assert page.count('class="cell m-hito"') + page.count('class="cell m-sub"') == coverage["covered"]
+    covered = sum(page.count(f'class="cell {k}"') for k in ("m-hito", "m-sub", "m-ver"))
+    assert covered == coverage["covered"] and page.count('class="cell m-ver"') == coverage["verified"]
     assert page.count('class="cell m-rejected"') == coverage["excluded"]
     assert "Etiquetas pendientes" in page and page.count('class="prio"') == 30
     assert "más cadenas = más código" not in page

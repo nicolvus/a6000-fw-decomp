@@ -64,7 +64,7 @@ def families(detail: dict) -> list[tuple[str, list[tuple[str, dict]]]]:
     return [(k, sorted(v)) for k, v in rows] + ([("OTROS", sorted(loose))] if loose else [])
 
 
-OPEN_CLAIM = re.compile(r"NO[ _]VERIFICADO", re.I)
+OPEN_CLAIM = re.compile(r"NO[ _]VERIFICADO", re.IGNORECASE)
 
 
 def closed_labels(detail: dict, sessions: list[dict]) -> set[str]:
