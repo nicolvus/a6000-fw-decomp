@@ -2,7 +2,7 @@
   "fuentes_sha256": {
     "analysis/rea-independent/input/av-cam.bin": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
     "analysis/s106_imaging_cap/pic_refs_strict_global.json": "cbd53ea1690a2378a1b8aa9e7c07d2d9363aa7539bfc597fcd37dd0a3ad369b3",
-    "analysis/s178_census/census_detalle.json": "34a5bbb4edb6bbddd0b5c694902e4abc110b6cb099aebd025940c47882e17365",
+    "analysis/s178_census/census_detalle.json": "01af16d1bfa7084727cd8b7312ed7a0da4b12127a4361a10c7d7fce7b34814f8",
     "analysis/s178_census/decisiones_auditoria.json": "9f580b9fddbbef4753407623ddeba83736118558af850912fdc9be80198b7b61",
     "analysis/s178_census/evidencia_bytes.json": "254793ce2759ad617e27db0fe9c609cef7470d3653b8057e06c4ff56b8287948",
     "analysis/s178_census/funciones_historicas.json": "41cd77c7b82322bf8b8e9dada5068887250b84ac9c1cfa0aa7099873c4674db9",
@@ -20,13 +20,13 @@
   "despues": {
     "pendiente": 151,
     "hito": 96,
-    "sub-etiqueta": 112,
-    "no-modulo": 13
+    "sub-etiqueta": 117,
+    "no-modulo": 8
   },
   "veredictos": {
     "ACEPTO": 3,
-    "RECHAZO": 13,
-    "NO_VERIFICADO": 148
+    "NO_VERIFICADO": 148,
+    "RECHAZO": 8
   },
   "etiquetas": [
     {
@@ -456,145 +456,6 @@
           "texto_hasta_nul_latin1": "[SFR] vfx callback v:%x error:%x",
           "referencias_pic_candidatas": [
             "0x439b2538"
-          ]
-        }
-      ]
-    },
-    {
-      "etiqueta": "[MODE_CAP]",
-      "estado_censo": "no-modulo",
-      "prioridad": 0,
-      "cadenas_con_pic_candidato": 1,
-      "cadenas_referenciadas_censo": 0,
-      "veredicto": "RECHAZO",
-      "examinada": true,
-      "motivo": "Sufijo de modo dentro de un diagnóstico [IMAGING_CAP] de error de CamCore; no identifica un módulo independiente.",
-      "fuente_evidencia": [
-        "analysis/s178_census/evidencia_bytes.json",
-        "analysis/s106_imaging_cap/imaging_cap_architecture.md:135"
-      ],
-      "alcance": "Clasificación léxica y referencias; no demuestra semántica de adquisición ni obturador.",
-      "ocurrencias": [
-        {
-          "token_vaddr": "0x43cada7b",
-          "token_offset": 7785083,
-          "cadena_vaddr": "0x43cada50",
-          "cadena_offset": 7785040,
-          "texto_hasta_nul_latin1": "[IMAGING_CAP]: CamCore acquire Error!: %02x[MODE_CAP]",
-          "referencias_pic_candidatas": [
-            "0x437f5d48",
-            "0x437f5dda",
-            "0x437f5e74"
-          ]
-        }
-      ]
-    },
-    {
-      "etiqueta": "[MODE_CAP_DRP]",
-      "estado_censo": "no-modulo",
-      "prioridad": 0,
-      "cadenas_con_pic_candidato": 1,
-      "cadenas_referenciadas_censo": 0,
-      "veredicto": "RECHAZO",
-      "examinada": true,
-      "motivo": "Sufijo de modo dentro de un diagnóstico [IMAGING_CAP] de error de CamCore; no identifica un módulo independiente.",
-      "fuente_evidencia": [
-        "analysis/s178_census/evidencia_bytes.json",
-        "analysis/s106_imaging_cap/imaging_cap_architecture.md:135"
-      ],
-      "alcance": "Clasificación léxica y referencias; no demuestra semántica de adquisición ni obturador.",
-      "ocurrencias": [
-        {
-          "token_vaddr": "0x43cad99b",
-          "token_offset": 7784859,
-          "cadena_vaddr": "0x43cad970",
-          "cadena_offset": 7784816,
-          "texto_hasta_nul_latin1": "[IMAGING_CAP]: CamCore acquire Error!: %02x[MODE_CAP_DRP]",
-          "referencias_pic_candidatas": [
-            "0x437f5c32"
-          ]
-        }
-      ]
-    },
-    {
-      "etiqueta": "[MODE_CAP_PREREVIEW]",
-      "estado_censo": "no-modulo",
-      "prioridad": 0,
-      "cadenas_con_pic_candidato": 1,
-      "cadenas_referenciadas_censo": 0,
-      "veredicto": "RECHAZO",
-      "examinada": true,
-      "motivo": "Sufijo de modo dentro de un diagnóstico [IMAGING_CAP] de error de CamCore; no identifica un módulo independiente.",
-      "fuente_evidencia": [
-        "analysis/s178_census/evidencia_bytes.json",
-        "analysis/s106_imaging_cap/imaging_cap_architecture.md:135"
-      ],
-      "alcance": "Clasificación léxica y referencias; no demuestra semántica de adquisición ni obturador.",
-      "ocurrencias": [
-        {
-          "token_vaddr": "0x43cada0a",
-          "token_offset": 7784970,
-          "cadena_vaddr": "0x43cad9df",
-          "cadena_offset": 7784927,
-          "texto_hasta_nul_latin1": "[IMAGING_CAP]: CamCore Acquire Error!: %02x[MODE_CAP_PREREVIEW]",
-          "referencias_pic_candidatas": [
-            "0x437f5cb8",
-            "0x437f613a"
-          ]
-        }
-      ]
-    },
-    {
-      "etiqueta": "[MODE_CAP_SNR]",
-      "estado_censo": "no-modulo",
-      "prioridad": 0,
-      "cadenas_con_pic_candidato": 1,
-      "cadenas_referenciadas_censo": 0,
-      "veredicto": "RECHAZO",
-      "examinada": true,
-      "motivo": "Sufijo de modo dentro de un diagnóstico [IMAGING_CAP] de error de CamCore; no identifica un módulo independiente.",
-      "fuente_evidencia": [
-        "analysis/s178_census/evidencia_bytes.json",
-        "analysis/s106_imaging_cap/imaging_cap_architecture.md:135"
-      ],
-      "alcance": "Clasificación léxica y referencias; no demuestra semántica de adquisición ni obturador.",
-      "ocurrencias": [
-        {
-          "token_vaddr": "0x43cadae0",
-          "token_offset": 7785184,
-          "cadena_vaddr": "0x43cadab6",
-          "cadena_offset": 7785142,
-          "texto_hasta_nul_latin1": "[IMAGING_CAP]: CamCore Aquire Error!: %02x[MODE_CAP_SNR]",
-          "referencias_pic_candidatas": [
-            "0x437f5f20",
-            "0x437f5fd2"
-          ]
-        }
-      ]
-    },
-    {
-      "etiqueta": "[MODE_CAP_SNR_PREREVIEW]",
-      "estado_censo": "no-modulo",
-      "prioridad": 0,
-      "cadenas_con_pic_candidato": 1,
-      "cadenas_referenciadas_censo": 0,
-      "veredicto": "RECHAZO",
-      "examinada": true,
-      "motivo": "Sufijo de modo dentro de un diagnóstico [IMAGING_CAP] de error de CamCore; no identifica un módulo independiente.",
-      "fuente_evidencia": [
-        "analysis/s178_census/evidencia_bytes.json",
-        "analysis/s106_imaging_cap/imaging_cap_architecture.md:135"
-      ],
-      "alcance": "Clasificación léxica y referencias; no demuestra semántica de adquisición ni obturador.",
-      "ocurrencias": [
-        {
-          "token_vaddr": "0x43cadbc8",
-          "token_offset": 7785416,
-          "cadena_vaddr": "0x43cadb9d",
-          "cadena_offset": 7785373,
-          "texto_hasta_nul_latin1": "[IMAGING_CAP]: CamCore Acquire Error!: %02x[MODE_CAP_SNR_PREREVIEW]",
-          "referencias_pic_candidatas": [
-            "0x437f61d2"
           ]
         }
       ]

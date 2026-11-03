@@ -8,11 +8,6 @@ ACEPTO acepta un candidato a módulo; no cierra su decodificación. RECHAZO se c
 |---|---:|---:|---|---|---|
 | `[EXL]` | 0 | 20 | ACEPTO | pendiente | Prefijo de diagnóstico initCamdcv con referencia PIC comprobada; relación con muestreo de imagen sugerida por el texto, semántica funcional pendiente. |
 | `[SFR]` | 0 | 16 | ACEPTO | pendiente | Prefijo de diagnóstico Recieve CpuSelectComp con referencia PIC comprobada; identidad funcional y relación con [SFRA]/[SFRS] pendientes. |
-| `[MODE_CAP]` | 0 | 1 | RECHAZO | no-modulo | Sufijo de modo dentro de un diagnóstico [IMAGING_CAP] de error de CamCore; no identifica un módulo independiente. |
-| `[MODE_CAP_DRP]` | 0 | 1 | RECHAZO | no-modulo | Sufijo de modo dentro de un diagnóstico [IMAGING_CAP] de error de CamCore; no identifica un módulo independiente. |
-| `[MODE_CAP_PREREVIEW]` | 0 | 1 | RECHAZO | no-modulo | Sufijo de modo dentro de un diagnóstico [IMAGING_CAP] de error de CamCore; no identifica un módulo independiente. |
-| `[MODE_CAP_SNR]` | 0 | 1 | RECHAZO | no-modulo | Sufijo de modo dentro de un diagnóstico [IMAGING_CAP] de error de CamCore; no identifica un módulo independiente. |
-| `[MODE_CAP_SNR_PREREVIEW]` | 0 | 1 | RECHAZO | no-modulo | Sufijo de modo dentro de un diagnóstico [IMAGING_CAP] de error de CamCore; no identifica un módulo independiente. |
 | `[SYS_SENSER_CA_PUTS]` | 0 | 0 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
 | `[CMDMLTSYNC]` | 1 | 11 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |
 | `[EVF]` | 1 | 6 | NO_VERIFICADO | pendiente | Sin revisión individual de instrucciones: token y referencias PIC no prueban un módulo. |

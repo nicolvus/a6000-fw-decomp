@@ -8,30 +8,28 @@ Las listas históricas incluían etiquetas ya documentadas; la tabla siguiente u
 |---|---|
 | etiquetas distintas `[XXX]` | **372** (techo, no número de módulos) |
 | etiquetas con hito documental | **96** |
-| subetiquetas documentadas | **112** |
+| subetiquetas documentadas | **117** |
 | **pendientes reales** | **151** |
-| fragmentos descartados como módulos | **13** |
-| cobertura documental | **208/372** = **55.91 %** |
+| fragmentos descartados como módulos | **8** |
+| cobertura documental | **213/372** = **57.26 %** |
 | etiquetas exclusivas de A6000 | **93** |
 | presentes en A6000/A7S y ausentes en A6300 | **7** |
 
-Antes: 239 pendientes; después de la auditoría: 226 pendientes + 13 fragmentos descartados; tras reclasificar 73 como sub-etiqueta de módulos ya documentados (pasada del 03-11-2026): 151 pendientes (S631 cierra `[IMAGING_IMG]`; S632 cierra `[MODE_SNR_BUS_THROUGH]`).
+Antes: 239 pendientes; después de la auditoría: 226 pendientes + 13 fragmentos descartados; tras reclasificar 73 como sub-etiqueta de módulos ya documentados (pasada del 03-11-2026): 151 pendientes (S631 cierra `[IMAGING_IMG]`; S632 cierra `[MODE_SNR_BUS_THROUGH]` y reclasifica `[MODE_CAP*]` como sub-etiquetas de `[IMAGING_CAP]`).
 Descartar no aumenta cobertura. Se mantiene 372 como denominador histórico.
 Las siete ausentes en A6300 son `[STK]`, `[STK_AUTO_SAL]`, `[STK_COLOR_SIM]`,
 `[STK_C_SIM]`, `[STK_TOUCH_SIM]`, `[STK_T_SIM]` y `[OSD]`.
 
 ## Inventario reproducible
 
-- [Lista completa, prioridad y motivo](pendientes.md): 151 abiertas y 13 descartadas.
+- [Lista completa, prioridad y motivo](pendientes.md): 151 abiertas y 8 descartadas.
 - [Ocurrencias, direcciones y referencias por etiqueta](pendientes_auditados.json).
-- [Decisiones manuales](decisiones_auditoria.json): 13 RECHAZO, cuatro ACEPTO como candidatas y dos NO_VERIFICADO examinadas.
+- [Decisiones manuales](decisiones_auditoria.json): 8 RECHAZO (los otros cinco, `[MODE_CAP*]`, pasan a sub-etiqueta de `[IMAGING_CAP]` en S632), cuatro ACEPTO como candidatas y dos NO_VERIFICADO examinadas.
 - [Once referencias contrastadas con bytes y pools](evidencia_bytes.json).
 - [Detalle canónico](census_detalle.json) y [resumen](census.json).
 
-Los 13 descartes son `[MODE_CAP]`, `[MODE_CAP_DRP]`, `[MODE_CAP_PREREVIEW]`,
-`[MODE_CAP_SNR]`, `[MODE_CAP_SNR_PREREVIEW]` y `[D0]`–`[D7]`.
-Las cuatro candidatas aceptadas (`[IMAGING_IMG]`, `[SFR]`, `[EXL]`, `[DECMODEMGR]`)
-siguen pendientes de decodificación. Las otras 222 abiertas siguen NO_VERIFICADO;
+Los 8 descartes son `[D0]`–`[D7]`. Los cinco `[MODE_CAP*]`, descartados antes, son sufijos de los diagnósticos de `[IMAGING_CAP]` y pasan a sub-etiquetas (S632).
+Las candidatas aceptadas `[SFR]`, `[EXL]` y `[DECMODEMGR]` siguen pendientes de decodificación (`[IMAGING_IMG]` se cerró en S631). Las otras 222 abiertas siguen NO_VERIFICADO;
 220 aún no tienen examen individual de instrucciones. Ninguna se cierra por una mención documental.
 
 Método: patrón `\[[A-Z][A-Z0-9_]{1,24}\]` sobre

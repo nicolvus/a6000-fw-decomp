@@ -219,7 +219,7 @@ td:nth-child(n+3):not(:last-child),td:last-child,th:nth-child(n+3){{text-align:r
 <tr><td>Documentación y herramientas</td><td>Wiki publicada</td><td><a href="{WIKI}12-Herramientas">Herramientas</a>, <a href="{WIKI}14-Estado-actual">estado y límites</a>, <a href="{WIKI}11-Copyright-y-uso">copyright y uso</a> (código de Sony publicado y manual de servicio nivel 3 público).</td></tr></table>
 <h2>Qué falta</h2>
 <table><tr><th>Área</th><th>Pendiente</th><th>Bloqueo</th></tr>
-<tr><td>Cobertura de etiquetas</td><td>{cov['pending']} pendientes; familia MODE 0/6, STK 1/6, OTROS 100/327. Mayor volumen: códec/vídeo (DECMODEMGR, AVCDPRMCHK, DECVIDDISP, ZIMA_AVCD, MC…), sin relación demostrada con el obturador.</td><td>Trabajo de análisis</td></tr>
+<tr><td>Cobertura de etiquetas</td><td>{cov['pending']} pendientes; familia MODE 6/6, STK 1/6, OTROS 100/327. Mayor volumen: códec/vídeo (DECMODEMGR, AVCDPRMCHK, DECVIDDISP, ZIMA_AVCD, MC…), sin relación demostrada con el obturador.</td><td>Trabajo de análisis</td></tr>
 <tr><td>Pruebas en cámara</td><td>{data['physical_tests']['done']}/{data['physical_tests']['total']} planes P1–P24 con prueba; faltan {data['physical_tests']['total'] - data['physical_tests']['done']}.</td><td>Cámara y backup NVRAM previo</td></tr>
 <tr><td>Firmware 3.25c</td><td>Instalarlo y comprobar que arranca; el código nuevo de BIONZ/Darwin nunca se ha ejecutado en hardware.</td><td>Autorización expresa</td></tr>
 <tr><td>Recuperación física</td><td>Montar CN4906 y R49xx, medir tensión/eFuse/DAP, verificar UART/SWD de BIONZ (E26-R46-SWD, E26-R5-BIONZ, E26-R12-UART-FISICO).</td><td>Autorización física</td></tr>
