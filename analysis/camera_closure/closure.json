@@ -434,5 +434,125 @@
     "logger_global_0x43902718_loaded": null
    }
   ]
+ },
+ "CAM_CMD": {
+  "strings": [
+   {
+    "vaddr": "0x43caeb10",
+    "text": "[CAM_CMD]: Warning! Now rocessing... req[%d]",
+    "sites": [
+     "0x437fc372"
+    ]
+   },
+   {
+    "vaddr": "0x43caeb3d",
+    "text": "[CAM_CMD]: Error! Can't Transfer Request cur_state[%d] req[%d]\n",
+    "sites": [
+     "0x437fc3c0"
+    ]
+   },
+   {
+    "vaddr": "0x43caeb7d",
+    "text": "[CAM_CMD]: Error! s_path_selector SetupTable cur_state[%d] req[%d]\n",
+    "sites": [
+     "0x437fc43a"
+    ]
+   },
+   {
+    "vaddr": "0x43caebc1",
+    "text": "[CAM_CMD]: Error! s_request is NULL!",
+    "sites": [
+     "0x437fc466"
+    ]
+   },
+   {
+    "vaddr": "0x43caebe6",
+    "text": "[CAM_CMD]: Error! s_mode_sequencer SetupTable [%d]->[%d]\n",
+    "sites": [
+     "0x437fc4e0"
+    ]
+   },
+   {
+    "vaddr": "0x43caec20",
+    "text": "[CAM_CMD]: Error! CheckReturnAllModlueResponse\n",
+    "sites": [
+     "0x437fc702",
+     "0x437fc76a"
+    ]
+   }
+  ],
+  "token_models": {
+   "a6000_fw321": 6,
+   "a7s_fw320": 0,
+   "a6300_fw201": 0
+  },
+  "token": "[CAM_CMD]",
+  "functions": [
+   {
+    "func": "0x437fc35c",
+    "sites": [
+     "0x437fc372",
+     "0x437fc3c0"
+    ],
+    "bl_targets": [
+     "0x437fc0d4",
+     "0x43901a8c",
+     "0x43902718",
+     "0x43b00726"
+    ],
+    "shutter_reach": [],
+    "logger_global_0x43902718_loaded": null
+   },
+   {
+    "func": "0x437fc404",
+    "sites": [
+     "0x437fc43a",
+     "0x437fc466",
+     "0x437fc4e0"
+    ],
+    "bl_targets": [
+     "0x437fc0d4",
+     "0x437fc47a",
+     "0x437fc4ae",
+     "0x43901a8c",
+     "0x43902718",
+     "0x43b006d0",
+     "0x43b00752",
+     "0x43b00798"
+    ],
+    "shutter_reach": [],
+    "logger_global_0x43902718_loaded": null
+   },
+   {
+    "func": "0x437fc6a4",
+    "sites": [
+     "0x437fc702"
+    ],
+    "bl_targets": [
+     "0x4356120c",
+     "0x43561244",
+     "0x435612d0",
+     "0x435612ec",
+     "0x437fc732",
+     "0x439c5004",
+     "0x439c5a04"
+    ],
+    "shutter_reach": [],
+    "logger_global_0x43902718_loaded": null
+   },
+   {
+    "func": "0x437fc748",
+    "sites": [
+     "0x437fc76a"
+    ],
+    "bl_targets": [
+     "0x437fc6a0",
+     "0x437fc794",
+     "0x43902718"
+    ],
+    "shutter_reach": [],
+    "logger_global_0x43902718_loaded": null
+   }
+  ]
  }
 }

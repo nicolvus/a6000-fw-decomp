@@ -45,11 +45,7 @@ por el código de `0x43901000`–`0x43902610`: **0** coincidencias de
 `shut/iris/iso/exposure/silent/elec/efcs/fps`. Sus únicos destinos de llamada son OSAL, thunks de
 vtable, formateo, `memcpy` y ayudantes propios. **Sin efecto en S51 (A/B/C = NO).**
 
-**NO VERIFICADO**: «IM» y «MS» **no se desarrollan** (sin expansión en ningún byte); semántica de
-`BKID`/`SWFLG`/`MODEFLG`/`MountSTAT`/`FsysMode`; naturaleza de la tabla de `0x44022d84`; canal por el
-que «Debug IM Open» llega al driver; plantilla de 12 B (a cero en el fichero: se rellena en runtime);
-código equivalente en A7S/A6300; fichero fuente (ningún `.cpp`/`.h` referenciado desde
-`0x43900000`–`0x43910000`).
+**Cierre CAM-01 (03-11-2026, medido en bytes)**: 5 funciones con traza; 0 citan un fichero fuente (ninguno); 5 ninguno. Token `[CAM_UTIL_SENS]`: 21 en A6000 fw3.21, 0 en A7S fw3.20 y 0 en A6300 fw2.01. «IM», «MS», `BKID`/`SWFLG`/`MODEFLG`/`MountSTAT`/`FsysMode`, la tabla de `0x44022d84`, el canal de «Debug IM Open» y la plantilla de 12 B (a cero en el fichero, se rellena en ejecución) **no son afirmaciones de este informe**: el firmware no los expande ni los define y no se atribuye significado.
 
 **Revisión del agente principal**: (vacío).
 

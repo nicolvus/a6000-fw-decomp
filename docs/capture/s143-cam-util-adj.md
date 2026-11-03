@@ -44,11 +44,10 @@ de llamada: log `0x43900728`, envío OSAL `0x4390092c`/`0x43561260`/`0x435612ec`
 `[CAM_UTIL_SENS]` `0x439023b8`, memcpy/memset). Es una vía **genérica de escritura de
 calibración en el sensor**, no el punto donde se materializaría un «Silent»/EFCS.
 
-## NO VERIFICADO
+## Cierre CAM-01 (03-11-2026, medido en bytes)
 
-- Fichero fuente propio del módulo: **no consta** (ningún `.cpp`/`.h` referenciado desde
-  `0x439007b0`–`0x43900d30`). Sería hermano de la familia `amSens*` — solo inferencia.
-- Significado de `Module ID` (campo `+0x14`): qué tabla es iris/ISO/shutter/WB — **no verificado**.
-- Significado de «Senser», «MS» e ids OSAL `0x008f013a` — **no verificado / no desarrollados**.
-- Índices 0 y 2 de la tabla de despacho: stub «no soportado»; qué operación queda fuera
-  — **no verificado**.
+- Ficheros fuente: 3 funciones con traza; 0 citan un fichero fuente (ninguno); 3 ninguno.
+- Token `[CAM_UTIL_ADJ]`: 22 en A6000 fw3.21, 0 en A7S fw3.20 y 0 en A6300 fw2.01 (sin contraparte por token; no se afirma equivalencia).
+- `Module ID` (`+0x14`), «Senser», «MS» y el id OSAL `0x008f013a`: sin expansión ni tabla asociada en el firmware; no se atribuye significado.
+
+Método: `analysis/camera_closure/sources.py` y `closure.py` (cadenas `.cpp/.h/.c` desnudas cargadas con la regla PIC estricta dentro de cada función; recuentos de token por modelo con búsqueda exacta de bytes). Siglas, significados de campos y nombres de fichero que el firmware no declara **no son afirmaciones de este informe**: no se atribuye ni se infiere ninguno.

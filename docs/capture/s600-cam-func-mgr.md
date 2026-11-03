@@ -135,13 +135,14 @@
 
 ---
 
-## 7. Límites / NO_VERIFICADO
+## 7. Cierre CAM-01 (03-11-2026, medido en bytes)
 
-- Nombres de función son auto-generados por Ghidra (`FUN_...`); no se recuperaron nombres de archivo fuente (`.cpp`).
-- Semántica exacta de `CapMode` 0x19/0x17/0x1c/0x03 no mapeada a modos de captura públicos.
-- LRB = "Link Bridge" es inferencia a partir de `Snd`/`Rsv` y `from_lsi`/`req_seq_id`; no confirmado en símbolos.
-- No se probó alcance en runtime (sin firmware ejecutado).
-- La ausencia en A7S/A6300 es **estática**; no prueba que el hardware no pueda soportar la funcionalidad.
+- Ficheros fuente: 25 funciones con traza; 15 citan un fichero fuente (`Function/FunctionNotify.cpp`, `Function/LRBridge.cpp`, `wrapper/CamMain.cpp`); 10 ninguno. **Corrige** «no se recuperaron nombres de archivo fuente»: el firmware sí cita `Function/FunctionNotify.cpp`, `Function/LRBridge.cpp` y `wrapper/CamMain.cpp`.
+- `LRB`: 29 cadenas en cada uno de los tres modelos; su expansión no está en el firmware y este informe no la afirma.
+- Token `[CAM_FUNC_MGR]`: 43 en A6000 fw3.21, 0 en A7S fw3.20 y 0 en A6300 fw2.01 (sin contraparte por token; no se afirma equivalencia).
+- Ausente en A7S/A6300 por token: medida de bytes, no prueba sobre el hardware.
+
+Método: `analysis/camera_closure/sources.py` y `closure.py` (cadenas `.cpp/.h/.c` desnudas cargadas con la regla PIC estricta dentro de cada función; recuentos de token por modelo con búsqueda exacta de bytes). Siglas, significados de campos y nombres de fichero que el firmware no declara **no son afirmaciones de este informe**: no se atribuye ni se infiere ninguno.
 
 ---
 

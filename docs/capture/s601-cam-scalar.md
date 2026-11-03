@@ -102,13 +102,13 @@ Las xrefs apuntan a direcciones en el rango **0x4380a710–0x4380c6fa**. Ghidra 
 
 ---
 
-## 6. Límites / NO_VERIFICADO
+## 6. Cierre CAM-01 (03-11-2026, medido en bytes)
 
-- Ghidra (ARM:LE:32:v7) **no identificó funciones** en el rango 0x4380a000+; los bytes en 0x4380a710 (`7b44 fff7 89ff...`) muestran prólogos Thumb (`push {r2,r3,r6,r7,lr}` + `bl`), no soportados por el analizador ARM actual de REA.
-- Nombres de función y archivos fuente no recuperados.
-- Semántica de HAPI, DMM, SDS, YC inferida de formato de trazas; no confirmada en símbolos.
-- No se probó alcance en runtime (sin firmware ejecutado).
-- La ausencia en A7S/A6300 es **estática**; no prueba incapacidad de hardware.
+- Ficheros fuente: 14 funciones con traza; 4 citan un fichero fuente (`HAPI_Filter_TBOX.cpp`); 10 ninguno. **Corrige** «nombres de función y archivos fuente no recuperados»: el firmware cita `HAPI_Filter_TBOX.cpp`.
+- Token `[CAM_SCALAR]`: 34 en A6000 fw3.21, 0 en A7S fw3.20 y 0 en A6300 fw2.01 (sin contraparte por token; no se afirma equivalencia).
+- Límite de herramienta (no del firmware): Ghidra/REA no identifican funciones desde `0x4380a000`; los prólogos Thumb se leyeron con Capstone.
+
+Método: `analysis/camera_closure/sources.py` y `closure.py` (cadenas `.cpp/.h/.c` desnudas cargadas con la regla PIC estricta dentro de cada función; recuentos de token por modelo con búsqueda exacta de bytes). Siglas, significados de campos y nombres de fichero que el firmware no declara **no son afirmaciones de este informe**: no se atribuye ni se infiere ninguno.
 
 ---
 

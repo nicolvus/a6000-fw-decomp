@@ -18,7 +18,7 @@ SHUTTER = {0x438c82fe: "C3-B enganche", 0x4383fa40: "productor r5", 0x436d6f6c: 
            0x436d7e08: "SetRead +0x30", 0x437b46d0: "constructor normal", 0x438417c0: "EFCS",
            0x438c74b0: "BULB host"}
 SRC = {"CAMERA_DETECT_FC": "s626_camera_detect_fc/camera_detect_fc", "CAMERA_DEVICE": "s617_camera_device/camera_device",
-       "CAMERA_IS_DIST": "s609_dist/dist", "CAMERA_IS_MOUNT": "s612_mount/mount", "CAMERA_IS_EIS": "s615_eis/eis"}
+       "CAMERA_IS_DIST": "s609_dist/dist", "CAMERA_IS_MOUNT": "s612_mount/mount", "CAMERA_IS_EIS": "s615_eis/eis", "CAM_CMD": "s607_cam_cmd/cam_cmd"}
 md = Cs(CS_ARCH_ARM, CS_MODE_THUMB)
 
 def u16(a): return struct.unpack_from("<H", B, a - BASE)[0]
@@ -103,8 +103,13 @@ if __name__ == "__main__":
 
 def log_target(site):
     """Primer bl/blx tras la carga de la cadena (destino del logger) y constantes r0-r3 previas."""
-    ins = list(md.disasm(B[site - 0x20 - BASE:site + 0x40 - BASE], site - 0x20))
-    k = next(i for i, x in enumerate(ins) if x.address == site)
+    for d in range(0x20, 0x30, 2):  # el desensamblado desde una frontera errónea puede saltarse `site`
+        ins = list(md.disasm(B[site - d - BASE:site + 0x40 - BASE], site - d))
+        k = next((i for i, x in enumerate(ins) if x.address == site), None)
+        if k is not None:
+            break
+    else:
+        return None
     for x in ins[k:]:
         if x.mnemonic in ("bl", "blx"):
             return x.op_str.lstrip("#")
@@ -132,7 +137,7 @@ def render(name, m, rows):
     ]
 
 PATCH = {"CAMERA_DETECT_FC": "s626-camera_detect_fc", "CAMERA_DEVICE": "s617-camera_device", "CAMERA_IS_DIST": "s609-dist",
-         "CAMERA_IS_MOUNT": "s612-mount", "CAMERA_IS_EIS": "s615-eis"}
+         "CAMERA_IS_MOUNT": "s612-mount", "CAMERA_IS_EIS": "s615-eis", "CAM_CMD": "s607-cam_cmd"}
 
 def patch_reports():
     res = json.load(open("analysis/camera_closure/closure.json"))
@@ -141,7 +146,7 @@ def patch_reports():
         t = p.read_text(encoding="utf-8")
         rows = "\n".join(f"| {a} | {b} |" for a, b in render(name, res[name], None))
         t = re.sub(r"## Afirmaciones pendientes\n\n\|.*?\n\n(?=El campo)", "## Afirmaciones cerradas (S-CAMERA, 03-11-2026)\n\n| Afirmación | Estado y evidencia |\n|---|---|\n" + rows + "\n\n", t, flags=re.S)
-        t = re.sub(r"El campo `logger_dual=null`.*?\n", "Los campos históricos `logger_dual` y `shutter_line` (triaje léxico) quedan sustituidos por la tabla anterior.\n", t)
+        t = re.sub(r"El campo `logger_dual=\w+`.*?\n", "Los campos históricos `logger_dual` y `shutter_line` (triaje léxico) quedan sustituidos por la tabla anterior.\n", t)
         t = re.sub(r"Los campos adicionales no sustentados tienen cobertura explícita NO_VERIFICADO; ", "", t)
         p.write_text(t, encoding="utf-8")
 

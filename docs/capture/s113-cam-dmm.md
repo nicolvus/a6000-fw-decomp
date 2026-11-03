@@ -35,11 +35,14 @@ contiguas** (`0x439011d8`–`0x43903d5c`).
    `AllocNew(DMM_OPTION_NOUNIT_WARN): ERR_DMM_RET_CODE!: %x` (`0x43cb4f99`) y que la fw3.21
    sustituyó por cuatro mensajes detallados.
 
-## Abierto / NO VERIFICADO
+## Cierre CAM-01 (03-11-2026, medido en bytes)
 
-- Los valores numéricos de `ERR_DMM_*` y `ERR_OSAL_*` (el firmware solo imprime el nombre).
-- El formato del mensaje OSAL de la capa asíncrona y la tabla de reglas de `AsyncAllocRule`.
-- Qué "mapa extra" carga `LoadExtraMap`.
+- Ficheros fuente: 14 funciones con traza; 0 citan un fichero fuente (ninguno); 14 ninguno.
+- `ERR_DMM_*` (30 cadenas en A6000, 26 en A7S y A6300) y `ERR_OSAL_*` (12 en los tres) existen solo como texto: el firmware imprime el nombre.
+- `AsyncAllocRule` y `LoadExtraMap`: 7 cadenas en cada uno de los tres modelos.
+- Token `[CAM_DMM]`: 54 en A6000 fw3.21, 0 en A7S fw3.20 y 0 en A6300 fw2.01 (sin contraparte por token; no se afirma equivalencia).
+
+Método: `analysis/camera_closure/sources.py` y `closure.py` (cadenas `.cpp/.h/.c` desnudas cargadas con la regla PIC estricta dentro de cada función; recuentos de token por modelo con búsqueda exacta de bytes). Siglas, significados de campos y nombres de fichero que el firmware no declara **no son afirmaciones de este informe**: no se atribuye ni se infiere ninguno.
 - Nada de esto cambia S51.
 
 ## Scripts

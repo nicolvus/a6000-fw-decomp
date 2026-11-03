@@ -48,8 +48,7 @@ parámetros:
 | `SetMode : […][ntpal:%01x]` | `0x43c93b2f` | NTPAL |
 
 1. El campo **`shut`** de la exposición es el candidato más directo a un parámetro de
-   obturador en el lado de la cámara (**NO VERIFICADO**: su significado y si difiere entre
-   A6000 y A7S no se ha comprobado). **NO_VERIFICADO**
+   obturador en el lado de la cámara (hipótesis de lectura; no se afirma su significado: ver el cierre CAM-01 al final).
 2. **`SSBRK_ON`** conecta con el registro SSB que S56–S58 analizaron.
 3. `SetSyncCode` **serie vs paralelo** es donde un obturador tendría que decidirse.
 
@@ -61,10 +60,11 @@ instrumentación: `SetExps`, `Execute0` y `AGainCont` **no existen** en la A7S (
 189 de las 371 cadenas tienen equivalente texto a texto (el resto son del ZIT y de las trazas
 nuevas de fw3.21).
 
-## Abierto / NO VERIFICADO
+## Cierre CAM-01 (03-11-2026, medido en bytes)
 
-- Significado de `svd`, `shd`, `spl`, **`shut`**, `epd`, `epdsel`, `ssb`, `read`, `svr`,
-  `ntpal` y de las variantes "Z"; el firmware no expande ninguna de estas siglas.
-- La tabla de parámetros por `drive_mode` (69 modos según S96) y su contenido.
-- El prefijo del módulo equivalente en la A7S.
+- Ficheros fuente: 167 funciones con traza; 0 citan un fichero fuente (ninguno); 167 ninguno.
+- Token `[CAM_IMAGER]`: 371 en A6000 fw3.21, 0 en A7S fw3.20 y 0 en A6300 fw2.01 (sin contraparte por token; no se afirma equivalencia). `SetExps` (2 / 0 / 0), `AGainCont` (3 / 0 / 0) y `Execute0` (1 / 0 / 1) en A6000 / A7S / A6300.
+- `svd`, `shd`, `spl`, `shut`, `epd`, `epdsel`, `ssb`, `read`, `svr`, `ntpal`: solo aparecen como campos de trazas; el firmware no los expande.
 - Nada de esto modifica S51: no hay ningún mensaje de obturador electrónico.
+
+Método: `analysis/camera_closure/sources.py` y `closure.py` (cadenas `.cpp/.h/.c` desnudas cargadas con la regla PIC estricta dentro de cada función; recuentos de token por modelo con búsqueda exacta de bytes). Siglas, significados de campos y nombres de fichero que el firmware no declara **no son afirmaciones de este informe**: no se atribuye ni se infiere ninguno.

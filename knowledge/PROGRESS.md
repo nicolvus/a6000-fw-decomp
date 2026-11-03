@@ -516,3 +516,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 01-11-2026: `README.en.md` (versión en inglés) enlazado con un botón al inicio del README; copyright cubre también el release 3.25c.
 - 01-11-2026: wiki, CONTRIBUTING y notas de releases en inglés; wiki española sincronizada con los mismos datos. Los informes siguen en español.
 - 03-11-2026: **CAM-01 cerrado con límite** — familia CAMERA con 0 menciones abiertas por medidas (`analysis/camera_closure/`, `tests/test_camera_closure.py`): callbacks `0x437b8774`/`0x437b7778`/`0x436ea2d0`/`0x43705d64` sí registrados por puntero PC-relativo; seis funciones sin referencia estática; ficheros fuente casi nunca citados. Avance real 24,50 %.
+- 03-11-2026: **CAM-02 cerrado con límite** — familia CAM (7 etiquetas) con 0 menciones abiertas por medidas; corrige S600/S601 (sí citan ficheros fuente). `analysis/camera_closure/` ampliado.
