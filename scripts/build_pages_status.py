@@ -196,16 +196,16 @@ td:nth-child(n+3):not(:last-child),td:last-child,th:nth-child(n+3){{text-align:r
 <tr><td>Interfaz (GUI)</td><td>G2–G8: formatos <code>.uxc/.uxb/.xdb</code>, menús, texto y fuentes, entrada, ajustes y modificación reversible de la UI.</td><td>Abierto</td></tr>
 <tr><td>Cadena sensor / obturador</td><td>E6 (Darwin fuera de <code>av-cam</code>), E9/D5 (registros IMX210/IMX235), E11 (segunda cortina), E13 (servicio ODL), F8 (valores solo en ejecución).</td><td>Hojas de datos, volcado de Darwin o prueba física</td></tr></table>
 <p>Detalle y criterios de cierre: <a href="{REPO}docs/PENDIENTES.md">PENDIENTES.md</a>.</p>
-<p class="legend"><span class="m-ver"></span>documentada y sin afirmaciones abiertas<span class="m-hito"></span>módulo con hito<span class="m-sub"></span>sub-etiqueta cubierta<span class="m-todo"></span>pendiente / sin informe / sin ejecutar<span class="m-rejected"></span>fragmento descartado<span class="s-cancel"></span>cancelada</p>
+<p class="legend"><span class="m-ver"></span>documentada y sin pendientes<span class="m-hito"></span>módulo con hito, con pendientes<span class="m-sub"></span>sub-etiqueta cubierta, con pendientes<span class="m-todo"></span>pendiente / sin informe / sin ejecutar<span class="m-rejected"></span>fragmento descartado<span class="s-cancel"></span>cancelada</p>
 <p>{cov['pending']} etiquetas pendientes; {cov['excluded']} fragmentos descartados como módulos. Descartar no aumenta cobertura.</p>
-<p>Cobertura documental de etiquetas: no mide código descompilado ni funciones verificadas; «sin abiertas» solo indica que el informe no lista afirmaciones NO_VERIFICADO.
+<p>Cobertura documental de etiquetas: no mide código descompilado ni funciones verificadas; «sin pendientes» solo indica que el informe no lista afirmaciones NO_VERIFICADO.
 <a href="{REPO}docs/PENDIENTES.md">Pendientes vigentes</a> · <a href="{REPO}docs/capture/repo-audit-2026-10-24.md">auditoría</a>.
 Pruebas en cámara: {data['physical_tests']['registered']} filas de registro (hasta {data['physical_tests']['last']}, con backup NVRAM previo);
 planes P1–P24 con prueba registrada: {data['physical_tests']['done']}/{data['physical_tests']['total']}.
 <a href="{data['physical_tests']['source']}">Registro de pruebas</a>.</p>
-<h2>Etiquetas por familia — {cov['percent']}% documentadas ({cov['covered']}/{cov['total']}); {cov['verified_percent']}% sin afirmaciones abiertas ({cov['verified']}/{cov['total']})*</h2>
-<p>«Documentada» = tiene informe propio o un padre con informe. «Sin abiertas» (azul) = además, su informe no declara ninguna afirmación <code>NO_VERIFICADO</code>. Una etiqueta documentada con afirmaciones abiertas (verde) no está resuelta.</p>
-<table><tr><th>Familia</th><th>Etiquetas</th><th>Documentadas</th><th>Sin abiertas</th><th>Total</th><th>% doc.</th></tr>{fam_rows}</table>
+<h2>Etiquetas por familia — {cov['percent']}% documentadas ({cov['covered']}/{cov['total']}); {cov['verified_percent']}% sin pendientes ({cov['verified']}/{cov['total']})*</h2>
+<p>«Documentada» = tiene informe propio o un padre con informe. «Sin pendientes» (azul) = además, su informe no declara ninguna afirmación <code>NO_VERIFICADO</code>. Una etiqueta documentada con pendientes (verde) no está resuelta.</p>
+<table><tr><th>Familia</th><th>Etiquetas</th><th>Documentadas</th><th>Sin pendientes</th><th>Total</th><th>% doc.</th></tr>{fam_rows}</table>
 <h2>Etiquetas pendientes (top {TOP} por cadenas referenciadas)</h2>
 <p>Orden documental por cadenas con referencias candidatas; no demuestra volumen de código,
 prioridad técnica ni relación con el obturador. La cola técnica está en la auditoría.</p>
@@ -319,7 +319,7 @@ def main(out: Path = ROOT) -> None:
     # Shields "endpoint" JSON: README badges read these from Pages, so they follow every deploy.
     cov, tests = data["module_coverage"], data["physical_tests"]
     for name, label, msg, color in (
-        ("modulos", "etiquetas documentadas", f"{cov['percent']}% ({cov['covered']}/{cov['total']}) · sin abiertas {cov['verified']}", "yellow"),
+        ("modulos", "etiquetas documentadas", f"{cov['percent']}% ({cov['covered']}/{cov['total']}) · sin pendientes {cov['verified']}", "yellow"),
         ("sesiones", "sesiones", f"S {len(sessions)} · E {data['phase_reports']}", "blue"),
         ("pruebas", "planes con prueba", f"{tests['done']}/{tests['total']}", "green"),
     ):
