@@ -8,7 +8,6 @@ ACEPTO acepta un candidato a módulo; no cierra su decodificación. RECHAZO se c
 |---|---:|---:|---|---|---|
 | `[EXL]` | 0 | 20 | ACEPTO | pendiente | Prefijo de diagnóstico initCamdcv con referencia PIC comprobada; relación con muestreo de imagen sugerida por el texto, semántica funcional pendiente. |
 | `[SFR]` | 0 | 16 | ACEPTO | pendiente | Prefijo de diagnóstico Recieve CpuSelectComp con referencia PIC comprobada; identidad funcional y relación con [SFRA]/[SFRS] pendientes. |
-| `[IMAGING_IMG]` | 0 | 7 | ACEPTO | pendiente | Prefijo de trazas Image::Clone y parámetros de imagen con referencia PIC comprobada; decodificación del cuerpo y vínculo con captura electrónica pendientes. |
 | `[MODE_CAP]` | 0 | 1 | RECHAZO | no-modulo | Sufijo de modo dentro de un diagnóstico [IMAGING_CAP] de error de CamCore; no identifica un módulo independiente. |
 | `[MODE_CAP_DRP]` | 0 | 1 | RECHAZO | no-modulo | Sufijo de modo dentro de un diagnóstico [IMAGING_CAP] de error de CamCore; no identifica un módulo independiente. |
 | `[MODE_CAP_PREREVIEW]` | 0 | 1 | RECHAZO | no-modulo | Sufijo de modo dentro de un diagnóstico [IMAGING_CAP] de error de CamCore; no identifica un módulo independiente. |

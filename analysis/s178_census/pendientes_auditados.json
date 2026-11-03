@@ -2,7 +2,7 @@
   "fuentes_sha256": {
     "analysis/rea-independent/input/av-cam.bin": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
     "analysis/s106_imaging_cap/pic_refs_strict_global.json": "cbd53ea1690a2378a1b8aa9e7c07d2d9363aa7539bfc597fcd37dd0a3ad369b3",
-    "analysis/s178_census/census_detalle.json": "1034c9dfc391aa89ba5be359eee49c8bc51f5bad5be90d7596995d3116d0b6f3",
+    "analysis/s178_census/census_detalle.json": "a48960a41428405087220c8674e7a2e843f6600f9db33c7d686a0afc19122e42",
     "analysis/s178_census/decisiones_auditoria.json": "9f580b9fddbbef4753407623ddeba83736118558af850912fdc9be80198b7b61",
     "analysis/s178_census/evidencia_bytes.json": "254793ce2759ad617e27db0fe9c609cef7470d3653b8057e06c4ff56b8287948",
     "analysis/s178_census/funciones_historicas.json": "41cd77c7b82322bf8b8e9dada5068887250b84ac9c1cfa0aa7099873c4674db9",
@@ -18,13 +18,13 @@
     "no-modulo": 0
   },
   "despues": {
-    "pendiente": 153,
-    "hito": 94,
+    "pendiente": 152,
+    "hito": 95,
     "sub-etiqueta": 112,
     "no-modulo": 13
   },
   "veredictos": {
-    "ACEPTO": 4,
+    "ACEPTO": 3,
     "RECHAZO": 13,
     "NO_VERIFICADO": 149
   },
@@ -456,97 +456,6 @@
           "texto_hasta_nul_latin1": "[SFR] vfx callback v:%x error:%x",
           "referencias_pic_candidatas": [
             "0x439b2538"
-          ]
-        }
-      ]
-    },
-    {
-      "etiqueta": "[IMAGING_IMG]",
-      "estado_censo": "pendiente",
-      "prioridad": 0,
-      "cadenas_con_pic_candidato": 7,
-      "cadenas_referenciadas_censo": 7,
-      "veredicto": "ACEPTO",
-      "examinada": true,
-      "motivo": "Prefijo de trazas Image::Clone y parámetros de imagen con referencia PIC comprobada; decodificación del cuerpo y vínculo con captura electrónica pendientes.",
-      "fuente_evidencia": [
-        "analysis/s178_census/evidencia_bytes.json"
-      ],
-      "alcance": "Solo candidato a módulo de trazas. Mantiene estado pendiente; no equivale a función reconstruida.",
-      "ocurrencias": [
-        {
-          "token_vaddr": "0x43cb4355",
-          "token_offset": 7811925,
-          "cadena_vaddr": "0x43cb4355",
-          "cadena_offset": 7811925,
-          "texto_hasta_nul_latin1": "[IMAGING_IMG]: Image::Clone Image NULL %d",
-          "referencias_pic_candidatas": [
-            "0x4381bac8"
-          ]
-        },
-        {
-          "token_vaddr": "0x43cb437f",
-          "token_offset": 7811967,
-          "cadena_vaddr": "0x43cb437f",
-          "cadena_offset": 7811967,
-          "texto_hasta_nul_latin1": "[IMAGING_IMG]: Image NULL log end",
-          "referencias_pic_candidatas": [
-            "0x4381bafa",
-            "0x4381bba0",
-            "0x4381bc50",
-            "0x4381bcfc",
-            "0x4381bdb2",
-            "0x4381be62"
-          ]
-        },
-        {
-          "token_vaddr": "0x43cb43a1",
-          "token_offset": 7812001,
-          "cadena_vaddr": "0x43cb43a1",
-          "cadena_offset": 7812001,
-          "texto_hasta_nul_latin1": "[IMAGING_IMG]: Image::Clone ImageParam NULL %d",
-          "referencias_pic_candidatas": [
-            "0x4381bb6e"
-          ]
-        },
-        {
-          "token_vaddr": "0x43cb43d0",
-          "token_offset": 7812048,
-          "cadena_vaddr": "0x43cb43d0",
-          "cadena_offset": 7812048,
-          "texto_hasta_nul_latin1": "[IMAGING_IMG]: Image::Branch Image NULL %d",
-          "referencias_pic_candidatas": [
-            "0x4381bc1e"
-          ]
-        },
-        {
-          "token_vaddr": "0x43cb43fb",
-          "token_offset": 7812091,
-          "cadena_vaddr": "0x43cb43fb",
-          "cadena_offset": 7812091,
-          "texto_hasta_nul_latin1": "[IMAGING_IMG]: Image::Branch ImageParam NULL %d",
-          "referencias_pic_candidatas": [
-            "0x4381bcca"
-          ]
-        },
-        {
-          "token_vaddr": "0x43cb442b",
-          "token_offset": 7812139,
-          "cadena_vaddr": "0x43cb442b",
-          "cadena_offset": 7812139,
-          "texto_hasta_nul_latin1": "[IMAGING_IMG]: Image::Create Image NULL %d",
-          "referencias_pic_candidatas": [
-            "0x4381bd80"
-          ]
-        },
-        {
-          "token_vaddr": "0x43cb4456",
-          "token_offset": 7812182,
-          "cadena_vaddr": "0x43cb4456",
-          "cadena_offset": 7812182,
-          "texto_hasta_nul_latin1": "[IMAGING_IMG]: Image::Create ImageParam NULL %d",
-          "referencias_pic_candidatas": [
-            "0x4381be32"
           ]
         }
       ]
