@@ -18,3 +18,10 @@ def test_doce_cargas_repartidas_en_tres_funciones():
 
 def test_dos_rutas_de_log():
     assert DATA["logger_calls"] == ["0x4381b9d0", "0x43902718"]
+
+
+def test_llamadores_directos():
+    c = DATA["callers"]
+    assert [len(c[k]) for k in ("Image::Clone", "Image::Branch", "Image::Create")] == [10, 26, 7]
+    assert sum(r["function"] is None for rows in c.values() for r in rows) == 8
+    assert len({r["function"] for rows in c.values() for r in rows} - {None}) == 30
