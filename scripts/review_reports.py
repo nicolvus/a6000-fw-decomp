@@ -102,12 +102,19 @@ def cross(results: list[dict]) -> dict:
                 mine = words(item["text"])
                 best = max((len(mine & w) / max(1, len(mine | w)) for a in item["addrs"] for f, w in texts[a] if f != r["file"]),
                            default=0.0)
+                mixed = bool(DONE.search(item["text"]))  # la línea ya mezcla ambos estados: la parte abierta sigue abierta
                 closable.append({"file": r["file"], "line": item["line"], "text": item["text"], "overlap": round(best, 2),
-                                 "tier": "A" if best >= 0.3 else "B",
+                                 "tier": "M" if mixed else "A" if best >= 0.3 else "B",
                                  "verified_in": {a: f[:3] for a, f in others.items()}})
-        same = {a for i in r["open"] for a in i["addrs"]} & {a for i in r["done"] for a in i["addrs"]}
-        if same:
-            conflicts.append({"file": r["file"], "addrs": sorted(same)[:8]})
+        for o in r["open"]:
+            if DONE.search(o["text"]):
+                continue
+            for d in r["done"]:
+                shared = set(o["addrs"]) & set(d["addrs"])
+                ov = len(words(o["text"]) & words(d["text"])) / max(1, len(words(o["text"]) | words(d["text"])))
+                if shared and ov >= 0.25:
+                    conflicts.append({"file": r["file"], "addrs": sorted(shared)[:4], "open_line": o["line"],
+                                      "done_line": d["line"], "overlap": round(ov, 2)})
     return {"closable": closable, "conflicts": conflicts}
 
 
@@ -126,7 +133,7 @@ def summary(results: list[dict], crossed: dict, workers: int) -> str:
              (f"- **Cerrables (reducen pendientes):** {len(crossed['closable'])} líneas abiertas cuyas direcciones constan como VERIFICADO en otro informe; "
              f"**{sum(c['tier'] == 'A' for c in crossed['closable'])} de nivel A** (además comparten palabras de contenido con la línea verificada, solapamiento ≥ 0,3) y el resto de nivel B (misma dirección, otro asunto)."),
              f"- **Añadibles (aumentan pendientes):** {sum(len(r['pending']) for r in results)} líneas con «falta/por hacer/sin verificar» y sin marca `NO_VERIFICADO`.",
-             f"- **Conflictos:** {len(crossed['conflicts'])} informes con la misma dirección en VERIFICADO y NO_VERIFICADO.",
+             f"- **Conflictos:** {len(crossed['conflicts'])} pares de líneas del mismo informe con la misma dirección, una solo NO_VERIFICADO y otra solo VERIFICADO, con solapamiento ≥ 0,25.",
              f"- **Errores:** {sum(errors.values())} ({', '.join(f'{k}: {v}' for k, v in errors.most_common())}).", "",
              "## Palabras de estado (menciones totales)", ""]
     lines += [f"- `{k}`: {v}" for k, v in total.most_common()]

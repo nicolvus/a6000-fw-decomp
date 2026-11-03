@@ -108,7 +108,7 @@
    "line": 19,
    "text": "| Raster alternativo super-resolución | `0x243` | no recuperado | `ObjEffect 0x15f37c` llama a la reserva con literal `0x243`; `0x15ebfc` lo selecciona si `+0xc4 != 0` | VERIFICADO valor; NO VERIFICAD",
    "overlap": 0.18,
-   "tier": "B",
+   "tier": "M",
    "verified_in": {
     "0x15ebfc": [
      "analysis/session19/codex-runs/run-005/docs/s19-camera-effect-sdf.md",
@@ -211,26 +211,11 @@
    }
   },
   {
-   "file": "docs/capture/e26-r9-bootrom-ram-execution.md",
-   "line": 36,
-   "text": "| CRC polinomio | Placeholder `0x07` no verificado | `0xEDB88320` cargado literalmente en `0xffff0c04` (`ldr r2,[pc,#0x90]`) | VERIFICADO |",
-   "overlap": 0.75,
-   "tier": "A",
-   "verified_in": {
-    "0xedb88320": [
-     "docs/capture/e26-r11-bootrom-uart-physical-access.md"
-    ],
-    "0xffff0c04": [
-     "docs/capture/e26-r11-bootrom-uart-physical-access.md"
-    ]
-   }
-  },
-  {
    "file": "docs/capture/electronic-still-low-resolution.md",
    "line": 61,
    "text": "- VERIFICADO: `SetExposure 0x436d6f6c` recibe una estructura con tres valores (14, 12 y 12 bits) que escribe en registros sombra por pares «byte bajo + nibble/6 bits alto», y un campo de submodo `+9` ",
    "overlap": 0.07,
-   "tier": "B",
+   "tier": "M",
    "verified_in": {
     "0x436d6f6c": [
      "docs/capture/efcs-darwin-silent-integracion.md",
@@ -247,7 +232,7 @@
    "line": 145,
    "text": "**4. Quién abre el path: cliente en Linux (VERIFICADO)**: `libInfraStreamingServer.so` (nflasha15 `/lib`, clase `InfraStreamingServer`): `jobLiveViewStartCmd` (`0xd2bc`) → `pvtSfrSetPath` (`0xd068`) q",
    "overlap": 0.08,
-   "tier": "B",
+   "tier": "M",
    "verified_in": {
     "0x167046a": [
      "docs/capture/silent-architecture-comparison.md"
@@ -259,7 +244,7 @@
    "line": 70,
    "text": "**VERIFICADO:** la ruta habitual de EXIF nuevo exige miniatura y reserva escribible previa al JPEG (libmpr 0x38b064). **NO VERIFICADO:** conjunto mínimo exacto de etiquetas EXIF, MakerNote, dimensione",
    "overlap": 0.38,
-   "tier": "A",
+   "tier": "M",
    "verified_in": {
     "0x38b064": [
      "analysis/session19/codex-runs/run-008/docs/s19-dcf-playback-completion.md",
@@ -313,7 +298,7 @@
    "line": 28,
    "text": "2. **Formato:** el que implique el `unitType` de la unidad aportada; no se valida en `0x3eed34` más que handle ∈ [1, 0xfffd] y puntero ≠ 0 (VERIFICADO). Formato real NO VERIFICADO.",
    "overlap": 0.06,
-   "tier": "B",
+   "tier": "M",
    "verified_in": {
     "0x3eed34": [
      "docs/capture/branch-codex-camera-yc.md"
@@ -453,7 +438,7 @@
    "line": 40,
    "text": "**El modo 1 SÍ tiene escritor dinámico accesible** (dos, de hecho), contrariamente a la conclusión \"no localizado\" de sesión 15. No es un valor de reposo sin escritor. Clasificación: **VERIFICADO** (e",
    "overlap": 0.1,
-   "tier": "B",
+   "tier": "M",
    "verified_in": {
     "0x173158": [
      "docs/capture/branch-claude-objeffect.md",
@@ -467,7 +452,7 @@
    "line": 17,
    "text": "| `ObjCamera` es solamente el extremo de objeto/pines; no se recuperó en su constructor una asignación DMM, handle, dirección física, geometría ni formato del frame YC. | **VERIFICADO / NO VERIFICADO*",
    "overlap": 0.17,
-   "tier": "B",
+   "tier": "M",
    "verified_in": {
     "0x98c380": [
      "analysis/session19/codex-runs/run-004/s19-camera-yc-real-contract.md",
@@ -550,7 +535,7 @@
    "line": 17,
    "text": "- La Sequence `0x6013` (`BeginExecCommand` candidato `0x15fd50`) no compara `unitType` en sus guardas visibles (Codex C, VERIFICADO para esa función; NO VERIFICADO en capas internas del holder/SDF).",
    "overlap": 0.11,
-   "tier": "B",
+   "tier": "M",
    "verified_in": {
     "0x15fd50": [
      "docs/capture/s17-codex-c-sdf-yc.md"
@@ -617,7 +602,7 @@
    "line": 75,
    "text": "**Consecuencia (VERIFICADO, por ausencia):** `0x30001` es, según sesión 16, el **origen** (remitente) que RelMgr usa al enviar `0x3011` a la cola `0x40193` — es decir, es el identificador de RelMgr, n",
    "overlap": 0.0,
-   "tier": "B",
+   "tier": "M",
    "verified_in": {
     "0x43792a0c": [
      "docs/capture/imx210-video-readout.md",
@@ -858,7 +843,7 @@
    "line": 30,
    "text": "| Selección de pines SDF | **VERIFICADO** para PbCap / **NO_VERIFICADO** para Camera | `0x15f290` conecta extremos `DataflowInfra`, pero no expone `ObjCamera.out0` ni prueba que sea una entrada SDF. |",
    "overlap": 0.05,
-   "tier": "B",
+   "tier": "M",
    "verified_in": {
     "0x15f290": [
      "analysis/session19/codex-runs/run-005/docs/s19-camera-effect-sdf.md"
@@ -870,7 +855,7 @@
    "line": 32,
    "text": "| Resolución/canvas | **VERIFICADO** para salida PbCap / **NO_VERIFICADO** para Camera | El selector 3 del holder produce clase y `0x15ebfc` alinea canvas; no hay identificación del selector/valor des",
    "overlap": 0.15,
-   "tier": "B",
+   "tier": "M",
    "verified_in": {
     "0x15ebfc": [
      "analysis/session19/codex-runs/run-005/docs/s19-camera-effect-sdf.md",
@@ -884,7 +869,7 @@
    "line": 34,
    "text": "| Vida útil | **VERIFICADO** parcialmente para recursos de la secuencia / **NO_VERIFICADO** para Camera | `0x15f634` desconecta y cierra las unidades de salida según el estado; no localiza el dueño ni",
    "overlap": 0.17,
-   "tier": "B",
+   "tier": "M",
    "verified_in": {
     "0x15f634": [
      "analysis/session19/codex-runs/run-005/docs/s19-camera-effect-sdf.md"
@@ -1023,7 +1008,7 @@
    "line": 18,
    "text": "1. **VERIFICADO — `libmpr.so:0x44f834`, método: objdump.** `FeaIf::EncodeStill` copia el descriptor de `RegionInfo` y lo entrega de forma asíncrona; su retorno no espera JPEG ni escritura. El receptor",
    "overlap": 0.22,
-   "tier": "B",
+   "tier": "M",
    "verified_in": {
     "0x44f834": [
      "docs/capture/s16-codex-fea-completion.md",
@@ -1036,7 +1021,7 @@
    "line": 29,
    "text": "- **VERIFICADO — `libmpr.so:0x38b064`/`0x37af44`, método: evidencia previa; y `0x3b2f60`, método: evidencia previa.** EXIF, thumbnail y screennail son áreas diferenciadas. Para EXIF nuevo, la rama nor",
    "overlap": 0.38,
-   "tier": "A",
+   "tier": "M",
    "verified_in": {
     "0x37af44": [
      "analysis/session19/codex-runs/run-008/docs/s19-dcf-playback-completion.md",
@@ -1057,7 +1042,7 @@
    "line": 36,
    "text": "**VERIFICADO — `libmpr.so:0x726138`, método: objdump.** El wrapper de archivo puede devolver error por argumento nulo o por el gestor. **NO_VERIFICADO:** códigos de error del writer DCF, orden entre f",
    "overlap": 0.12,
-   "tier": "B",
+   "tier": "M",
    "verified_in": {
     "0x726138": [
      "analysis/session19/codex-runs/run-008/docs/s19-dcf-playback-completion.md",
@@ -1107,7 +1092,7 @@
    "line": 32,
    "text": "| VERIFICADO | `0x43807f4c`, caso local `msg[0] == 0x100` | El dispatcher sólo deriva ese código a `0x43807d80`. El adaptador entre `0x3011/0x40193` y este dominio local sigue NO_VERIFICADO, así que n",
    "overlap": 0.27,
-   "tier": "B",
+   "tier": "M",
    "verified_in": {
     "0x43807d80": [
      "analysis/session19/codex-runs/run-001/docs/s19-s2-domain-bridge.md",
@@ -1126,7 +1111,7 @@
    "line": 38,
    "text": "| 2 | VERIFICADO: entra al filtro `2..5`, pero en `0x176550..0x176562` no es 3 y salta a `0x17676a`; registra/retorna error. No construye `ObjMsg(0x3900, 0x0002)`. | DESCARTADO para este recorrido: no",
    "overlap": 0.07,
-   "tier": "B",
+   "tier": "M",
    "verified_in": {
     "0x176550": [
      "docs/capture/s19-11-effect-modes-camera.md"
@@ -1690,7 +1675,7 @@
    "line": 30,
    "text": "| Selección de pines SDF | **VERIFICADO** para PbCap / **NO_VERIFICADO** para Camera | `0x15f290` conecta extremos `DataflowInfra`, pero no expone `ObjCamera.out0` ni prueba que sea una entrada SDF. |",
    "overlap": 0.05,
-   "tier": "B",
+   "tier": "M",
    "verified_in": {
     "0x15f290": [
      "docs/capture/s19-camera-effect-sdf.md"
@@ -1702,7 +1687,7 @@
    "line": 32,
    "text": "| Resolución/canvas | **VERIFICADO** para salida PbCap / **NO_VERIFICADO** para Camera | El selector 3 del holder produce clase y `0x15ebfc` alinea canvas; no hay identificación del selector/valor des",
    "overlap": 0.15,
-   "tier": "B",
+   "tier": "M",
    "verified_in": {
     "0x15ebfc": [
      "docs/capture/branch-codex-camera-yc.md",
@@ -1716,7 +1701,7 @@
    "line": 34,
    "text": "| Vida útil | **VERIFICADO** parcialmente para recursos de la secuencia / **NO_VERIFICADO** para Camera | `0x15f634` desconecta y cierra las unidades de salida según el estado; no localiza el dueño ni",
    "overlap": 0.17,
-   "tier": "B",
+   "tier": "M",
    "verified_in": {
     "0x15f634": [
      "docs/capture/s19-camera-effect-sdf.md"
@@ -1751,7 +1736,7 @@
    "line": 18,
    "text": "1. **VERIFICADO — `libmpr.so:0x44f834`, método: objdump.** `FeaIf::EncodeStill` copia el descriptor de `RegionInfo` y lo entrega de forma asíncrona; su retorno no espera JPEG ni escritura. El receptor",
    "overlap": 0.22,
-   "tier": "B",
+   "tier": "M",
    "verified_in": {
     "0x44f834": [
      "docs/capture/s16-codex-fea-completion.md",
@@ -1764,7 +1749,7 @@
    "line": 29,
    "text": "- **VERIFICADO — `libmpr.so:0x38b064`/`0x37af44`, método: evidencia previa; y `0x3b2f60`, método: evidencia previa.** EXIF, thumbnail y screennail son áreas diferenciadas. Para EXIF nuevo, la rama nor",
    "overlap": 0.38,
-   "tier": "A",
+   "tier": "M",
    "verified_in": {
     "0x37af44": [
      "docs/capture/mpr-dcf-recording.md",
@@ -1785,7 +1770,7 @@
    "line": 36,
    "text": "**VERIFICADO — `libmpr.so:0x726138`, método: objdump.** El wrapper de archivo puede devolver error por argumento nulo o por el gestor. **NO_VERIFICADO:** códigos de error del writer DCF, orden entre f",
    "overlap": 0.12,
-   "tier": "B",
+   "tier": "M",
    "verified_in": {
     "0x726138": [
      "docs/capture/s19-dcf-playback-completion.md",
@@ -1798,7 +1783,7 @@
    "line": 38,
    "text": "| 2 | VERIFICADO: entra al filtro `2..5`, pero en `0x176550..0x176562` no es 3 y salta a `0x17676a`; registra/retorna error. No construye `ObjMsg(0x3900, 0x0002)`. | DESCARTADO para este recorrido: no",
    "overlap": 0.07,
-   "tier": "B",
+   "tier": "M",
    "verified_in": {
     "0x176550": [
      "docs/capture/s19-11-effect-modes-camera.md"
@@ -1816,7 +1801,7 @@
    "line": 30,
    "text": "| VERIFICADO | `0x43807f4c`, caso local `msg[0] == 0x100` | El dispatcher sólo deriva ese código a `0x43807d80`. El adaptador entre `0x3011/0x40193` y este dominio local sigue NO_VERIFICADO, así que n",
    "overlap": 0.27,
-   "tier": "B",
+   "tier": "M",
    "verified_in": {
     "0x43807d80": [
      "analysis/session19/codex-runs/run-001/docs/s19-s2-domain-bridge.md",
@@ -1852,326 +1837,32 @@
  ],
  "conflicts": [
   {
-   "file": "docs/capture/branch-claude-objeffect.md",
-   "addrs": [
-    "0x140144",
-    "0x173158"
-   ]
-  },
-  {
-   "file": "docs/capture/branch-codex-camera-yc.md",
-   "addrs": [
-    "0x15ebfc",
-    "0x15fa74"
-   ]
-  },
-  {
-   "file": "docs/capture/electronic-still-low-resolution.md",
-   "addrs": [
-    "0x167046a",
-    "0x43543dc8",
-    "0x43543fa0",
-    "0x4354c6d0",
-    "0x43653d34",
-    "0x56000f"
-   ]
-  },
-  {
-   "file": "docs/capture/mpr-dcf-recording.md",
-   "addrs": [
-    "0x38b064"
-   ]
-  },
-  {
-   "file": "docs/capture/objscalar-playdata-bridge.md",
-   "addrs": [
-    "0x10000005",
-    "0x3eed34"
-   ]
-  },
-  {
-   "file": "docs/capture/rea-independent-milestone.md",
-   "addrs": [
-    "0xf3120000"
-   ]
-  },
-  {
-   "file": "docs/capture/rea-tema2-imx210-parametros.md",
-   "addrs": [
-    "0x43aecbec"
-   ]
-  },
-  {
    "file": "docs/capture/rea-tema3-cortinas-darwin.md",
    "addrs": [
-    "0x20000050",
-    "0x43813ea2",
-    "0x438c8104",
-    "0x43b1e7b0"
-   ]
-  },
-  {
-   "file": "docs/capture/record-still-image-route.md",
-   "addrs": [
-    "0x930464"
-   ]
-  },
-  {
-   "file": "docs/capture/s16-claude-effect-control.md",
-   "addrs": [
-    "0x4294cc"
-   ]
-  },
-  {
-   "file": "docs/capture/s16-main-delivery-sequences.md",
-   "addrs": [
-    "0x17b004",
-    "0x1861a8",
-    "0x1e9880",
-    "0x1f25d8"
-   ]
-  },
-  {
-   "file": "docs/capture/s17-codex-c-sdf-yc.md",
-   "addrs": [
-    "0x0db3cc",
-    "0x15fa74",
-    "0x15fd50",
-    "0x1761a8",
-    "0x17b08e"
-   ]
-  },
-  {
-   "file": "docs/capture/s18-claude-c-relmgr.md",
-   "addrs": [
-    "0x43807f4c"
-   ]
-  },
-  {
-   "file": "docs/capture/s18-codex-g-fea-dmm.md",
-   "addrs": [
-    "0xc0000004"
-   ]
-  },
-  {
-   "file": "docs/capture/s19-07-cbid-encodestill-receiver.md",
-   "addrs": [
-    "0x4000007c"
-   ]
+    "0x43813ea2"
+   ],
+   "open_line": 70,
+   "done_line": 123,
+   "overlap": 0.3
   },
   {
    "file": "docs/capture/s19-11-effect-modes-camera.md",
    "addrs": [
-    "0x176550",
-    "0x176562",
     "0x1765cc",
-    "0x1766c0",
-    "0x17676a"
-   ]
-  },
-  {
-   "file": "docs/capture/s19-12-mechanical-shutter-decision.md",
-   "addrs": [
-    "0x437eabfc"
-   ]
-  },
-  {
-   "file": "docs/capture/s19-camera-effect-sdf.md",
-   "addrs": [
-    "0x15ebfc",
-    "0x15f290",
-    "0x15f634"
-   ]
-  },
-  {
-   "file": "docs/capture/s19-dcf-playback-completion.md",
-   "addrs": [
-    "0x37af44",
-    "0x38b064",
-    "0x726138"
-   ]
-  },
-  {
-   "file": "docs/capture/s19-domain-bridge-3011.md",
-   "addrs": [
-    "0x43807f4c"
-   ]
-  },
-  {
-   "file": "docs/capture/s19-fea-encodestill-completion.md",
-   "addrs": [
-    "0xc0000001",
-    "0xc0000091"
-   ]
-  },
-  {
-   "file": "docs/capture/s19-mechanical-shutter-decision-points.md",
-   "addrs": [
-    "0x437eabfc",
-    "0x43809ed8",
-    "0x43b0228c"
-   ]
-  },
-  {
-   "file": "docs/capture/s19-post-s2-cancellation-states.md",
-   "addrs": [
-    "0x43807f4c"
-   ]
-  },
-  {
-   "file": "docs/capture/s20-codex-mpr-dcf-chain.md",
-   "addrs": [
-    "0x2d7d20",
-    "0x34a92c",
-    "0x3974ac",
-    "0x3a1554",
-    "0x3a8508",
-    "0x3a8554",
-    "0x40000012",
-    "0x900124"
-   ]
-  },
-  {
-   "file": "docs/capture/s21-codex-exposure-to-library.md",
-   "addrs": [
-    "0x22c190",
-    "0x397116",
-    "0x932a44",
-    "0x939dd8"
-   ]
-  },
-  {
-   "file": "docs/capture/s315-register-lists.md",
-   "addrs": [
-    "0x436f44c4"
-   ]
-  },
-  {
-   "file": "docs/capture/s330-ctor-instances.md",
-   "addrs": [
-    "0x436f2a7c"
-   ]
-  },
-  {
-   "file": "docs/capture/s335-mmio-layer.md",
-   "addrs": [
-    "0xf292b000",
-    "0xfc02a00c"
-   ]
-  },
-  {
-   "file": "docs/capture/s336-table-consumers.md",
-   "addrs": [
-    "0x43ada4d8"
-   ]
-  },
-  {
-   "file": "docs/capture/s338-block-identity.md",
-   "addrs": [
-    "0xf292b000"
-   ]
+    "0x1766c0"
+   ],
+   "open_line": 76,
+   "done_line": 14,
+   "overlap": 0.33
   },
   {
    "file": "docs/capture/s345-mask-reachability.md",
    "addrs": [
     "0x43ad9b50"
-   ]
-  },
-  {
-   "file": "docs/capture/s60-sol.md",
-   "addrs": [
-    "0x43b00f62",
-    "0x43b00fe6"
-   ]
-  },
-  {
-   "file": "docs/capture/s61-imx210-parameter-origin.md",
-   "addrs": [
-    "0x437a9d30",
-    "0x437aa65c"
-   ]
-  },
-  {
-   "file": "docs/capture/sfra-linux-client.md",
-   "addrs": [
-    "0x439a282c"
-   ]
-  },
-  {
-   "file": "docs/capture/sfra-mpr-buffer-bridge.md",
-   "addrs": [
-    "0x439a6854"
-   ]
-  },
-  {
-   "file": "docs/capture/shutter-trigger-state-machine.md",
-   "addrs": [
-    "0x437eabfc"
-   ]
-  },
-  {
-   "file": "docs/capture/silent-imager-consumers.md",
-   "addrs": [
-    "0x43ad9262"
-   ]
-  },
-  {
-   "file": "docs/capture/silent-integration-design.md",
-   "addrs": [
-    "0x43841070",
-    "0x90b248"
-   ]
-  },
-  {
-   "file": "docs/capture/tipo2-analisis-estatico-2026-10-26.md",
-   "addrs": [
-    "0x4378dfdc"
-   ]
-  },
-  {
-   "file": "analysis/s101_shutter_type/block238/block238_consumers.md",
-   "addrs": [
-    "0x20000000",
-    "0x20000050"
-   ]
-  },
-  {
-   "file": "analysis/s180_remote/remote.md",
-   "addrs": [
-    "0x0a00000a",
-    "0x43566d24"
-   ]
-  },
-  {
-   "file": "analysis/session19/codex-runs/run-005/docs/s19-camera-effect-sdf.md",
-   "addrs": [
-    "0x15ebfc",
-    "0x15f290",
-    "0x15f634"
-   ]
-  },
-  {
-   "file": "analysis/session19/codex-runs/run-006/docs/s19-fea-encodestill-completion.md",
-   "addrs": [
-    "0xc0000001",
-    "0xc0000091"
-   ]
-  },
-  {
-   "file": "analysis/session19/codex-runs/run-008/docs/s19-dcf-playback-completion.md",
-   "addrs": [
-    "0x37af44",
-    "0x38b064",
-    "0x726138"
-   ]
-  },
-  {
-   "file": "analysis/session19/codex-runs/run-012/docs/s19-mechanical-shutter-decision-points.md",
-   "addrs": [
-    "0x437eabfc",
-    "0x43809ed8",
-    "0x43b0228c"
-   ]
+   ],
+   "open_line": 64,
+   "done_line": 15,
+   "overlap": 0.25
   }
  ],
  "pending_unmarked": [
@@ -7224,7 +6915,7 @@
   },
   "docs/capture/e26-r9-bootrom-ram-execution.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 13,
+   "VERIFICADO": 12,
    "INFERENCIA": 0,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,

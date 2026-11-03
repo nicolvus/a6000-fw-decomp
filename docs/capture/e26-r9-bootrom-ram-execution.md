@@ -33,7 +33,7 @@ Respuestas Q1–Q10: Q1=SÍ, Q2=SÍ (con acotación), Q3=SÍ, Q4=NO, Q5=SÍ, Q6=
 
 | Aspecto | R8 (comunicado) | R9 (este informe) | Estado |
 |---|---|---|---|
-| CRC polinomio | Placeholder `0x07` no verificado | `0xEDB88320` cargado literalmente en `0xffff0c04` (`ldr r2,[pc,#0x90]`) | VERIFICADO |
+| CRC polinomio | Placeholder `0x07` (suposición de R8) | `0xEDB88320` cargado literalmente en `0xffff0c04` (`ldr r2,[pc,#0x90]`) | VERIFICADO |
 | Algoritmo CRC | Una tabla sobre XOR de todos los bytes | Iterativo por byte (FUN_ffff0c00: 8 iteraciones, MSB-first; FUN_ffff0634: `acc=(acc^byte)&0xFF; tmp=crc8(acc); new=tmp^(old>>8)`) | VERIFICADO |
 | Acumulador CRC init | No especificado | `0xFFFFFFFF` observado en `0xffff0a20` (`str r0,[sp,#0x14]`, r0=-1) | NECESITA CONFIRMACIÓN |
 | Escritura tipo 0 | "Almacena valor+dirección" | `str r2,[r1]` donde r1=[dirección], r2=[valor], **sin validación de rango**; dirección e valor controladas por el emisor | VERIFICADO |

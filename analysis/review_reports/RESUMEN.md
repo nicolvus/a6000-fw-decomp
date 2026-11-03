@@ -4,15 +4,15 @@ Generado por `scripts/review_reports.py` con 12 procesos sobre 757 informes (`do
 
 ## Resumen
 
-- Líneas `NO_VERIFICADO`: **1815**; `VERIFICADO`: **2599**.
-- **Cerrables (reducen pendientes):** 117 líneas abiertas cuyas direcciones constan como VERIFICADO en otro informe; **5 de nivel A** (además comparten palabras de contenido con la línea verificada, solapamiento ≥ 0,3) y el resto de nivel B (misma dirección, otro asunto).
+- Líneas `NO_VERIFICADO`: **1814**; `VERIFICADO`: **2600**.
+- **Cerrables (reducen pendientes):** 116 líneas abiertas cuyas direcciones constan como VERIFICADO en otro informe; **1 de nivel A** (además comparten palabras de contenido con la línea verificada, solapamiento ≥ 0,3) y el resto de nivel B (misma dirección, otro asunto).
 - **Añadibles (aumentan pendientes):** 501 líneas con «falta/por hacer/sin verificar» y sin marca `NO_VERIFICADO`.
-- **Conflictos:** 45 informes con la misma dirección en VERIFICADO y NO_VERIFICADO.
+- **Conflictos:** 3 pares de líneas del mismo informe con la misma dirección, una solo NO_VERIFICADO y otra solo VERIFICADO, con solapamiento ≥ 0,25.
 - **Errores:** 227 (VERIFICADO sin evidencia: 224, ruta citada inexistente: 3).
 
 ## Palabras de estado (menciones totales)
 
-- `VERIFICADO`: 5292
+- `VERIFICADO`: 5291
 - `NO_VERIFICADO`: 1010
 - `INFERENCIA`: 851
 - `HIPÓTESIS`: 274
@@ -56,10 +56,6 @@ Generado por `scripts/review_reports.py` con 12 procesos sobre 757 informes (`do
 
 ## Cerrables de nivel A (revisar y retirar la marca)
 
-- `docs/capture/e26-r9-bootrom-ram-execution.md:36` (solap. 0.75) → verificado en docs/capture/e26-r11-bootrom-uart-physical-access.md
-- `docs/capture/mpr-dcf-recording.md:70` (solap. 0.38) → verificado en analysis/session19/codex-runs/run-008/docs/s19-dcf-playback-completion.md, docs/capture/s19-dcf-playback-completion.md
 - `docs/capture/s17-codex-d-fea-lifetime.md:14` (solap. 0.5) → verificado en docs/capture/s16-codex-fea-completion.md
-- `docs/capture/s19-dcf-playback-completion.md:29` (solap. 0.38) → verificado en analysis/session19/codex-runs/run-008/docs/s19-dcf-playback-completion.md, docs/capture/mpr-dcf-recording.md
-- `analysis/session19/codex-runs/run-008/docs/s19-dcf-playback-completion.md:29` (solap. 0.38) → verificado en docs/capture/mpr-dcf-recording.md, docs/capture/s19-dcf-playback-completion.md
 
 Detalle completo en `review.json`.
