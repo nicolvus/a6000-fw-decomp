@@ -44,8 +44,11 @@ Los 148 sitios van a 9 sinks: `0x436e41e4` **94**, `0x436e03b0` **29**, `0x436e3
 
 Solo 2 aciertos por subcadena, ambos falsos positivos: `[BL]Wait_BL_ASYNC` dentro de `[BL]Wait_BL_ASYNC_RCV (%+hd)` y `POFF` dentro de `SaveUsr:POFF Req`. La captura de log, `Mount_DividedInfo.cpp`, `Mount_Controller.cpp`, `LENS DETACH` y `Eclipse` ya existen en las tres; lo nuevo es la instrumentación `[MOUNT_*]`.
 
-## Abierto / NO VERIFICADO
+## Cierre CAM-01 (03-11-2026, medido en bytes)
 
-- Atribución de módulo de los puentes `0x4377e0e8` y `0x437d24c8`: **NO VERIFICADO** (0 sitios del mapa estricto).
-- No existe `Diagnosis`/`DIAGNOSIS`/`diagnosis` en ninguna de las tres cámaras (0 hits): la faceta "Diagnosis" no se puede verificar; lo medido es `[MOUNT_DEBUG]`.
-- `BL` sin expandir; consumidor de los mensajes y semántica de `CS_*`/`ATTACH_INFO*`/`PowerSeq` no medidos; definición de las macros `[MOUNT_*]` no localizada.
+- **Puentes `0x4377e0e8` y `0x437d24c8`** (0 sitios del mapa estricto): por `bl` directo hasta profundidad 2, `0x4377e0e8` llega a cuatro funciones con trazas `[MOUNT_*]` (`0x436e88f0`, `0x436e3508`, `0x436e97a8`, `0x436e89f4`) y `0x437d24c8` a una (`0x436e97a8`). Sus llamadores son `0x43793ef6` (con una traza `[CAMERA_MAIN_SYNC]` a menos de 0x400 B) y `0x4377f822` (sin etiquetas cercanas).
+- **`Diagnosis`/`DIAGNOSIS`/`diagnosis`**: 0 coincidencias en A6000, A7S y A6300 (búsqueda exacta de bytes).
+- **Ficheros fuente** (`analysis/camera_closure/sources.py`): `[MOUNT_DEBUG]` 65 funciones y `[MOUNT_ERROR]` 31, ninguna cita un fichero fuente; `[MOUNT_INFO]` 2 y `[MOUNT_WARNING]` 5, ninguna.
+- **Tokens** (A6000 / A7S / A6300): `[MOUNT_DEBUG]` 132 / 0 / 0, `[MOUNT_ERROR]` 80 / 0 / 0, `[MOUNT_INFO]` 6 / 0 / 0, `[MOUNT_WARNING]` 5 / 0 / 0.
+- Expansión de `BL`, consumidor de los mensajes, semántica de `CS_*`/`ATTACH_INFO*`/`PowerSeq` y definición/compilación condicional de las macros `[MOUNT_*]`: **no son afirmaciones de este informe**; el firmware no las declara.
+

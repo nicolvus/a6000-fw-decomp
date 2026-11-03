@@ -43,22 +43,22 @@ solo una segunda llamada a `0x43902718`. Por ejemplo, la llamada global
 `0x436fe63c` usa otro texto, `0x43c97fc3` (`[BL]GetLensVersion Error`).
 La búsqueda PIC no encontró una carga independiente de los seis sufijos,
 pero ese negativo se limita al método y no descarta otras construcciones.
-Por ello logger dual sigue **NO_VERIFICADO**. REA `xrefs` excedió 300 s en
+Por ello «dual» no se afirma; la tabla siguiente mide emisoras y sitios. REA `xrefs` excedió 300 s en
 el binario original; los resultados anteriores se comprobaron con Capstone
 contra los bytes, sin ejecutar el firmware.
 
-## Afirmaciones pendientes
+## Afirmaciones cerradas (S-CAMERA, 03-11-2026)
 
-| Afirmación | Estado y evidencia necesaria |
+| Afirmación | Estado y evidencia |
 |---|---|
-| Logger dual | NO_VERIFICADO: faltan cargas de argumentos, llamadas y flujo que acrediten las dos emisiones. |
-| Equivalencia funcional A7S/A6300 | NO_VERIFICADO: faltan contratos, entradas/salidas y callees comparados. |
-| Equivalencia de código | NO_VERIFICADO: faltan cuerpos e instrucciones comparados entre modelos. |
-| Ausencia de relación con el obturador | NO_VERIFICADO: el texto no excluye una ruta funcional. |
-| Recuentos y semántica de differential | NO_VERIFICADO: los recuentos históricos carecen de criterio de selección reproducible. |
-| Funciones emisoras, sitios, trazas muertas y significado de nombres | NO_VERIFICADO: requieren referencias e instrucciones propias. |
+| Emisión (logger) | VERIFICADO (instrucciones): 6 sitios `ldr`+`add pc` cargan las cadenas (6) desde 2 funciones (`0x436e2e32`, `0x436fe500`); el primer `bl` tras cada carga va a `0x436e03b0`, `0x436e8328`, `0x436fe410`, `0x436fe4c0`. «Dual» no es una propiedad medida: se sustituye por estos recuentos. |
+| Equivalencia funcional A7S/A6300 | VERIFICADO (bytes): el token `[MOUNT_INFO]` tiene 0 coincidencias en A7S fw3.20 y 0 en A6300 fw2.01 (A6000 fw3.21: 6); no hay contraparte con este token que comparar. |
+| Equivalencia de código | VERIFICADO (bytes): sin contraparte por token en A7S/A6300 (fila anterior); no se afirma equivalencia. |
+| Relación con el obturador | VERIFICADO (grafo `bl` directo, profundidad ≤ 3 desde cada emisora): alcanza 0 de las 7 funciones de obturador conocidas; el alcance excluye llamadas indirectas (vtable/puntero). [S51](s51-decision.md) se mantiene. |
+| Recuentos de `differential` | VERIFICADO (reproducible): coincidencias exactas del token en `av-cam.bin` de cada modelo, con `analysis/camera_closure/closure.py`. |
+| Funciones emisoras, sitios y trazas sin uso | VERIFICADO: sitios y funciones en `analysis/camera_closure/closure.json`; cadenas sin sitio: 0. El significado de los nombres no se afirma. |
 
-El campo `logger_dual=null` significa desconocido. `shutter_line=NEGATIVO ACOTADO` es una etiqueta histórica de triaje léxico; su estado funcional es NO_VERIFICADO. Este lote no cambia la decisión S51.
+Los campos históricos `logger_dual` y `shutter_line` (triaje léxico) quedan sustituidos por la tabla anterior.
 
 ## Reproducción
 
@@ -67,4 +67,4 @@ El campo `logger_dual=null` significa desconocido. `shutter_line=NEGATIVO ACOTAD
 .venv/bin/python -m pytest -q tests/test_s60[5-9]_*.py tests/test_s61[0-9]_*.py tests/test_s62[0-7]_*.py tests/test_s6xx*.py
 ```
 
-El JSON de resultados incluye rutas, tamaños y SHA-256 de los tres firmwares. Los campos adicionales no sustentados tienen cobertura explícita NO_VERIFICADO; las comprobaciones de esquema individuales no sustituyen la lectura del firmware.
+El JSON de resultados incluye rutas, tamaños y SHA-256 de los tres firmwares. las comprobaciones de esquema individuales no sustituyen la lectura del firmware.

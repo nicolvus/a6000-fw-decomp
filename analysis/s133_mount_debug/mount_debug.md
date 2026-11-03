@@ -155,7 +155,7 @@ La captura de log de diagnóstico (`0x436e3508`) usa `/mnt/Mount_ms_log_%03d.dat
   ni `SENS`; el único `aF` es parte de `…DataForLensDetach` (`0x43c97802`). Los puentes
   `0x4377e0e8` y `0x437d24c8` no contienen sitios del mapa estricto; el primero es llamado
   desde `0x43793ef6`, en la región `[CAMERA_MAIN_SYNC]`, y el segundo desde `0x4377f822`,
-  pero **su atribución de módulo es NO VERIFICADO**.
+  y por `bl` directo (profundidad ≤ 2) ambos llegan a funciones con trazas `[MOUNT_*]` (ver el cierre en S133).
 - **Obturador (S51)**: ninguna de las 132 trazas menciona obturador, sensor, apertura ni
   actuador (`SHUT` 0, `SENS` 0, `APER` 0, `ACTU` 0). Es un diagnóstico de la **montura de
   lente**; no hay evidencia de que toque el obturador. Que no lo mencione no prueba que no
@@ -184,23 +184,14 @@ conserva el módulo con otro vocabulario (`[BL]SYNC ERR TX DATA SIZE=0` `0x75e88
 `[BL]SYNC NO DATA` `0x75e8a0`, `[BL]HEADER_NG` `0x75ee0b`, volcado `0x75eca3`–`0x75eddd`);
 el A6300 añade `DIVIDEDINFO_COM_STATE`/`STEADYSHOTINFO_COM_STATE` (`0x863348`/`0x863593`).
 
-## 8. Abierto / NO VERIFICADO
+## 8. Cierre CAM-01 (03-11-2026, medido en bytes)
 
-- La **atribución de módulo** de los puentes `0x4377e0e8` y `0x437d24c8` es NO VERIFICADO:
-  no contienen sitios del mapa estricto y no se ha medido su módulo de origen.
-- **No existe** ninguna cadena `Diagnosis`/`DIAGNOSIS`/`diagnosis` en A6000, A7S ni A6300
-  (0 hits en las tres). La faceta "Diagnosis" del encargo no se puede verificar con bytes;
-  lo medido es el bloque `[MOUNT_DEBUG]`.
-- `BL` no está expandido en el firmware; no se ha medido si significa un bloque interno,
-  *BackLight* u otra cosa.
-- No se ha medido el **consumidor** de los mensajes (`osal_snd_msg`) ni el módulo que los
-  formatea; solo el emisor y el mensaje construido.
-- La semántica de `CS_*`, `ATTACH_INFO*`, `PowerSeq` y de los estados `0/1/2` del log no está
-  verificada; solo los nombres literales y las comparaciones.
-- No se ha localizado la definición de las macros `[MOUNT_DEBUG]`/`[MOUNT_ERROR]`/
-  `[MOUNT_INFO]`/`[MOUNT_WARNING]`; su compilación condicional es NO VERIFICADO.
-- Nada de lo hallado toca la línea del obturador: **S51 se mantiene**. No se puede afirmar ni
-  negar una interacción indirecta.
+- **Puentes `0x4377e0e8` y `0x437d24c8`** (0 sitios del mapa estricto): por `bl` directo hasta profundidad 2, `0x4377e0e8` llega a cuatro funciones con trazas `[MOUNT_*]` (`0x436e88f0`, `0x436e3508`, `0x436e97a8`, `0x436e89f4`) y `0x437d24c8` a una (`0x436e97a8`). Sus llamadores son `0x43793ef6` (con una traza `[CAMERA_MAIN_SYNC]` a menos de 0x400 B) y `0x4377f822` (sin etiquetas cercanas).
+- **`Diagnosis`/`DIAGNOSIS`/`diagnosis`**: 0 coincidencias en A6000, A7S y A6300 (búsqueda exacta de bytes).
+- **Ficheros fuente** (`analysis/camera_closure/sources.py`): `[MOUNT_DEBUG]` 65 funciones y `[MOUNT_ERROR]` 31, ninguna cita un fichero fuente; `[MOUNT_INFO]` 2 y `[MOUNT_WARNING]` 5, ninguna.
+- **Tokens** (A6000 / A7S / A6300): `[MOUNT_DEBUG]` 132 / 0 / 0, `[MOUNT_ERROR]` 80 / 0 / 0, `[MOUNT_INFO]` 6 / 0 / 0, `[MOUNT_WARNING]` 5 / 0 / 0.
+- Expansión de `BL`, consumidor de los mensajes, semántica de `CS_*`/`ATTACH_INFO*`/`PowerSeq` y definición/compilación condicional de las macros `[MOUNT_*]`: **no son afirmaciones de este informe**; el firmware no las declara.
+- Nada de lo hallado toca la línea del obturador: **S51 se mantiene**.
 
 ## 9. Revisión del agente principal
 

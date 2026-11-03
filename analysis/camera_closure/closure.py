@@ -18,7 +18,7 @@ SHUTTER = {0x438c82fe: "C3-B enganche", 0x4383fa40: "productor r5", 0x436d6f6c: 
            0x436d7e08: "SetRead +0x30", 0x437b46d0: "constructor normal", 0x438417c0: "EFCS",
            0x438c74b0: "BULB host"}
 SRC = {"CAMERA_DETECT_FC": "s626_camera_detect_fc/camera_detect_fc", "CAMERA_DEVICE": "s617_camera_device/camera_device",
-       "CAMERA_IS_DIST": "s609_dist/dist", "CAMERA_IS_MOUNT": "s612_mount/mount", "CAMERA_IS_EIS": "s615_eis/eis", "CAM_CMD": "s607_cam_cmd/cam_cmd", "IMAGING_RSRC": "s611_imaging_rsrc/imaging_rsrc"}
+       "CAMERA_IS_DIST": "s609_dist/dist", "CAMERA_IS_MOUNT": "s612_mount/mount", "CAMERA_IS_EIS": "s615_eis/eis", "CAM_CMD": "s607_cam_cmd/cam_cmd", "IMAGING_RSRC": "s611_imaging_rsrc/imaging_rsrc", "MOUNT_INFO": "s608_mount_info/mount_info", "MOUNT_WARNING": "s613_mount_warning/mount_warning"}
 md = Cs(CS_ARCH_ARM, CS_MODE_THUMB)
 
 def u16(a): return struct.unpack_from("<H", B, a - BASE)[0]
@@ -140,7 +140,7 @@ def render(name, m, rows):
     ]
 
 PATCH = {"CAMERA_DETECT_FC": "s626-camera_detect_fc", "CAMERA_DEVICE": "s617-camera_device", "CAMERA_IS_DIST": "s609-dist",
-         "CAMERA_IS_MOUNT": "s612-mount", "CAMERA_IS_EIS": "s615-eis", "CAM_CMD": "s607-cam_cmd", "IMAGING_RSRC": "s611-imaging_rsrc"}
+         "CAMERA_IS_MOUNT": "s612-mount", "CAMERA_IS_EIS": "s615-eis", "CAM_CMD": "s607-cam_cmd", "IMAGING_RSRC": "s611-imaging_rsrc", "MOUNT_INFO": "s608-mount_info", "MOUNT_WARNING": "s613-mount_warning"}
 
 def patch_reports():
     res = json.load(open("analysis/camera_closure/closure.json"))

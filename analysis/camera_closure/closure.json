@@ -653,5 +653,296 @@
     "logger_global_0x43902718_loaded": null
    }
   ]
+ },
+ "MOUNT_INFO": {
+  "strings": [
+   {
+    "vaddr": "0x43c970c7",
+    "text": "[MOUNT_INFO]: [BL]LIF Command Change : 0x%X >>> 0x%X",
+    "sites": [
+     "0x436e2e50"
+    ]
+   },
+   {
+    "vaddr": "0x43c98201",
+    "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_GET_VERSION",
+    "sites": [
+     "0x436fe64a"
+    ]
+   },
+   {
+    "vaddr": "0x43c98234",
+    "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_GET_FORCE_FIRMUP",
+    "sites": [
+     "0x436fe672"
+    ]
+   },
+   {
+    "vaddr": "0x43c9826c",
+    "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_FIRM_UP_REQ",
+    "sites": [
+     "0x436fe726"
+    ]
+   },
+   {
+    "vaddr": "0x43c9829f",
+    "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_PREPARE_UPDATE",
+    "sites": [
+     "0x436fe80c"
+    ]
+   },
+   {
+    "vaddr": "0x43c982d5",
+    "text": "[MOUNT_INFO]: [BL]UUD CallBack : MSGID_UNPLUG_USB",
+    "sites": [
+     "0x436fe842"
+    ]
+   }
+  ],
+  "token_models": {
+   "a6000_fw321": 6,
+   "a7s_fw320": 0,
+   "a6300_fw201": 0
+  },
+  "token": "[MOUNT_INFO]",
+  "functions": [
+   {
+    "func": "0x436e2e32",
+    "sites": [
+     "0x436e2e50"
+    ],
+    "bl_targets": [
+     "0x436e03b0",
+     "0x436e5828",
+     "0x436e587c",
+     "0x436e58d4",
+     "0x43ce4ecc",
+     "0x43de5f1a"
+    ],
+    "shutter_reach": [],
+    "logger_global_0x43902718_loaded": null
+   },
+   {
+    "func": "0x436fe500",
+    "sites": [
+     "0x436fe64a",
+     "0x436fe672",
+     "0x436fe726",
+     "0x436fe80c",
+     "0x436fe842"
+    ],
+    "bl_targets": [
+     "0x43561244",
+     "0x43561298",
+     "0x435612b4",
+     "0x436e5bc8",
+     "0x436e5bdc",
+     "0x436e5bf0",
+     "0x436e8328",
+     "0x436e86dc",
+     "0x436fe320",
+     "0x436fe338",
+     "0x436fe344",
+     "0x436fe410",
+     "0x436fe4c0",
+     "0x43902718",
+     "0x439c5320",
+     "0x439c5a04",
+     "0x43acb032",
+     "0x43adc1f0"
+    ],
+    "shutter_reach": [],
+    "logger_global_0x43902718_loaded": null
+   }
+  ]
+ },
+ "MOUNT_WARNING": {
+  "strings": [
+   {
+    "vaddr": "0x43c95691",
+    "text": "[MOUNT_WARNING]: [MOUNT AM]NO MEMBER CHECK_DATA:%d",
+    "sites": [
+     "0x436dfff6"
+    ]
+   },
+   {
+    "vaddr": "0x43c956c4",
+    "text": "[MOUNT_WARNING]: [MOUNT AM]NO MEMBER ERR_INFO:%d",
+    "sites": [
+     "0x436e004c"
+    ]
+   },
+   {
+    "vaddr": "0x43c970fc",
+    "text": "[MOUNT_WARNING]: [BL]LIF Command : Illegal Command Received!!! : cmd=%04X",
+    "sites": [
+     "0x436e2f1e"
+    ]
+   },
+   {
+    "vaddr": "0x43c97858",
+    "text": "[MOUNT_WARNING]: [MOUNT DRV]NO MEMBER PWR_MODE:%d",
+    "sites": [
+     "0x436e416c"
+    ]
+   },
+   {
+    "vaddr": "0x43c98714",
+    "text": "[MOUNT_WARNING]: [BL]cam_cmd change!! reason=%03x now=%03x (0xC05:PB 0xC06:POFF)",
+    "sites": [
+     "0x436e6d48"
+    ]
+   }
+  ],
+  "token_models": {
+   "a6000_fw321": 5,
+   "a7s_fw320": 0,
+   "a6300_fw201": 0
+  },
+  "token": "[MOUNT_WARNING]",
+  "functions": [
+   {
+    "func": "0x436dffe0",
+    "sites": [
+     "0x436dfff6"
+    ],
+    "bl_targets": [
+     "0x436dff34"
+    ],
+    "shutter_reach": [],
+    "logger_global_0x43902718_loaded": null
+   },
+   {
+    "func": "0x436e0004",
+    "sites": [
+     "0x436e004c"
+    ],
+    "bl_targets": [
+     "0x436dff34",
+     "0x43a1b080"
+    ],
+    "shutter_reach": [],
+    "logger_global_0x43902718_loaded": null
+   },
+   {
+    "func": "0x436e2e32",
+    "sites": [
+     "0x436e2f1e"
+    ],
+    "bl_targets": [
+     "0x436e03b0",
+     "0x436e5828",
+     "0x436e587c",
+     "0x436e58d4",
+     "0x43ce4ecc",
+     "0x43de5f1a"
+    ],
+    "shutter_reach": [],
+    "logger_global_0x43902718_loaded": null
+   },
+   {
+    "func": "0x436e4156",
+    "sites": [
+     "0x436e416c"
+    ],
+    "bl_targets": [
+     "0x4356120c",
+     "0x43561244",
+     "0x435612d0",
+     "0x435612ec",
+     "0x436e40a8",
+     "0x439c5004",
+     "0x439c5a04",
+     "0x43a1c404",
+     "0x43ada13c"
+    ],
+    "shutter_reach": [],
+    "logger_global_0x43902718_loaded": null
+   },
+   {
+    "func": "0x436e5e3c",
+    "sites": [
+     "0x436e6d48"
+    ],
+    "bl_targets": [
+     "0x4356120c",
+     "0x43561228",
+     "0x435612d0",
+     "0x435612ec",
+     "0x436e00dc",
+     "0x436e0710",
+     "0x436e07ec",
+     "0x436e0844",
+     "0x436e10d8",
+     "0x436e10e4",
+     "0x436e10f0",
+     "0x436e1118",
+     "0x436e1134",
+     "0x436e1254",
+     "0x436e2368",
+     "0x436e3f9c",
+     "0x436e405c",
+     "0x436e41a8",
+     "0x436e41e4",
+     "0x436e4360",
+     "0x436e4388",
+     "0x436e4444",
+     "0x436e4478",
+     "0x436e44b8",
+     "0x436e44f8",
+     "0x436e4598",
+     "0x436e4624",
+     "0x436e4674",
+     "0x436e472c",
+     "0x436e47a8",
+     "0x436e4850",
+     "0x436e48a8",
+     "0x436e48fc",
+     "0x436e4a94",
+     "0x436e4b24",
+     "0x436e4b64",
+     "0x436e4b94",
+     "0x436e4bc4",
+     "0x436e4c24",
+     "0x436e4c54",
+     "0x436e4ca0",
+     "0x436e4d68",
+     "0x436e4eb4",
+     "0x436e4f98",
+     "0x436e5058",
+     "0x436e510c",
+     "0x436e51ac",
+     "0x436e5264",
+     "0x436e529c",
+     "0x436e540c",
+     "0x436e5c6c",
+     "0x436e5cfc",
+     "0x436e6d8c",
+     "0x436e7224",
+     "0x436e7874",
+     "0x436e79de",
+     "0x436e7a72",
+     "0x436e7a7e",
+     "0x4372a570",
+     "0x4372a5a4",
+     "0x43901a8c",
+     "0x43902718",
+     "0x439c5320",
+     "0x439c5a04",
+     "0x43ad9d58",
+     "0x43ad9d94",
+     "0x43ada024",
+     "0x43ada098",
+     "0x43ada09c",
+     "0x43ada0a4",
+     "0x43ada104",
+     "0x43ada108",
+     "0x43ada11c",
+     "0x43ada154"
+    ],
+    "shutter_reach": [],
+    "logger_global_0x43902718_loaded": null
+   }
+  ]
  }
 }
