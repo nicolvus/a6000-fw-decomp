@@ -109,3 +109,16 @@ Ninguna escritura en NAND hasta localizar qué comprobación devuelve −302 (§
 
 **Siguiente paso posible:** desensamblar la función de `CFG` que recorre esta tabla y el bucle de ficheros (código en `0xc01f2f00`–`0xc01f3260`) para ver en qué orden carga y qué índice devuelve −302; es análisis estático sobre el volcado, sin tocar la cámara.
 
+## 11. Análisis estático de `CFG` en Loader3: de dónde sale el −302 (03-11-2026)
+
+Sobre el volcado de RAM (`0xc01f0000`, idéntico al original), desensamblado a mano; sin tocar la cámara.
+
+- **`0xc01f2fe8`** lee la tabla de `0xc005c000` y recorre sus entradas (paso `0x90`) en orden. Para cada una cuya máscara de modo (`[entrada+0xc]` frente a `r7`) la selecciona llama a **`0xc01f2f24`**; si esta devuelve un valor negativo, el recorrido **termina y propaga el error**. Las no seleccionadas imprimen `CFG:skip`.
+- **`0xc01f2f24`** (carga de un fichero): monta la partición `[entrada+0]` (`CFG_E:Mount part`, devuelve el código de la función de montaje) y lee el fichero de `entrada+0x10` hacia `[entrada+4]` con `0xc01f4654`. Si la lectura devuelve **≤ 0**: `CFG_E:Load file [%s]` y devuelve **`0xfffffed2` (−302)** en `0xc01f2f9a`. Si pasa, el tamaño se compara con el rango.
+- **Entradas** (LEÍDO, §10): `idt_cam.bin`, `sa_dfdet.bin`, `av-cam.bin` e `initrd.img` están en la partición **3**; `kemco.txt` en la 2. El orden es `idt_cam`, `sa_dfdet`, `av-cam`, `kemco`, `initrd`.
+- **Destinos** (LEÍDO, §10): `idt_cam` (`0x83501000`) no tiene datos (`0xffffffff`) y `sa_dfdet` (`0x96800000`) tampoco (ceros). Si la carga siguiera el orden de la tabla sin saltarse entradas, el primer fichero que no se cargó es **`\sabin\idt_cam.bin` de la partición 3** y el recorrido se detuvo ahí con −302.
+
+**Conclusión (INFERENCIA fuerte, no verificada con registros):** el −302 procede de que la lectura de un fichero de la partición 3 devuelve ≤ 0 en `CFG`, lo que **encaja con R36** (la partición 3, `nflasha3`, no se lee bien) y no apunta a la firma de partición (§9, descartada). La partición se monta (no sale `Mount part`), pero la lectura del primer fichero falla.
+
+**Cabos sueltos.** (a) El mensaje `CFG_E:Load file` y `CFG:Load file` no están en el log de RAM: probablemente el nivel de log los filtra (los mensajes de error de `CFG` van con nivel 3 y 6; el log recoge los de nivel bajo). Es inferencia. (b) No se verificó qué máscara de modo se pasó a `0xc01f2fe8` ni que `idt_cam` no se saltara por `CFG:skip`. (c) Con el montaje correcto de la partición 3 y la lectura fallida, falta saber si el fallo es del formato recomprimido (R36) o de otra causa.
+
