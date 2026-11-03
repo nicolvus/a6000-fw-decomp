@@ -149,7 +149,7 @@ Lo llaman al menos dos wrappers: `0x43a5cb26` (`bl 0x435d63a0` en `0x43a5cb4c`) 
 el hito lo llame «escritor de audio» se debe a `[ENCAUDSMPL]`/`[ENCAUDSTAT]` en las cadenas
 vecinas, **no** a que se haya verificado qué datos empaqueta.
 
-**No se ha identificado un escritor de vídeo equivalente**: `0x4360b6f0` es la entrada de API
+**No se ha identificado un escritor de vídeo equivalente**: `0x4360b6f0` es la entrada de API **NO_VERIFICADO**
 `void StrmEngEncCIIf::CodecEventCreateVAUGI(UInt32, const UInt32*)` (literales en
 `0x4360b712` y `0x4360b73e` → `0x43c66fbf`), pero el cuerpo que materializa la cabecera de
 vídeo no está localizado (§10).
@@ -260,12 +260,12 @@ función.
   `nextHRDBuffer`/`nextPTS`.
 - **Escritor de vídeo**: no localizado; `0x4360b6f0` es solo la entrada de API.
 - **Relación entre la cabecera de 32 B y la vista dec**: comparten `length` y PTS en el mismo
-  offset, pero el resto no coincide; no se ha verificado si una se convierte en la otra ni
+  offset, pero el resto no coincide; no se ha verificado si una se convierte en la otra ni **NO_VERIFICADO**
   dónde.
 - **Papel de `0x43a7e70c`** (rellena 5 bytes sueltos desde un struct de `0x34` B).
 - **Contenido de `size_SPS`/`size_PPS`**: no se han localizado ni decodificado los bytes SPS/PPS.
 - **Nombre del handler `0x436150ce`** y del dumper `0x4391ca90`.
-- **Layout en la A7S**: los textos son idénticos, pero no se ha comprobado que los offsets y
+- **Layout en la A7S**: los textos son idénticos, pero no se ha comprobado que los offsets y **NO_VERIFICADO**
   el `rev` sean los mismos.
 - La atribución a función es **heurística** (prólogo Thumb), no símbolos del firmware.
 

@@ -407,7 +407,7 @@ función→traza exacto y 1:1; la canónica añade ruido. El mapa canónico comp
 7. **Valores numéricos** de los códigos de error que devuelve la APL (`2`, `6`, `8`, `0xff`): no hay
    tabla de meanings en el firmware.
 8. **El módulo `[CAMERA_MAIN_TC]`** (el consumidor) no está reconstruido: es un hito pendiente.
-9. La A7S/A6300 tienen las 42 cadenas en otro lugar del blob; no se ha comprobado si su *código*
+9. La A7S/A6300 tienen las 42 cadenas en otro lugar del blob; no se ha comprobado si su *código* **NO_VERIFICADO**
    es idéntico byte a byte (sólo la estructura de 5 funciones y los textos).
 
 ---

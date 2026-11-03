@@ -607,7 +607,7 @@ nivel, y su valor para la línea está en que **centraliza** `REQ_CAPTURE_START/
 3. **Qué significa exactamente `LRB`, `APP`, `V2ND`, `FSPSUM`, `VSYNC_CUST`** y sus
    sufijos `_SND` / `_CMP` / `REQ_`: los **12 `type_id` están decodificados** (§2.3) pero
    la semántica de cada tipo (qué transporte, qué LSI, qué temporización) NO VERIFICADA.
-   `from_lsi` es el byte del campo emisor, pero **no se ha identificado la lista de LSIs**
+   `from_lsi` es el byte del campo emisor, pero **no se ha identificado la lista de LSIs** **NO_VERIFICADO**
    ni sus ids.
 4. **Relación entre el `id` de la tabla de funciones (§5) y los tipos de bus
    `0x3000`–`0x3030` del despachador (§2.4)**: son **dos espacios de ids distintos** y su

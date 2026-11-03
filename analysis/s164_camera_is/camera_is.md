@@ -355,7 +355,7 @@ estado de **S51 (A/B/C = NO) se mantiene**.
    `0x436fee80`, `0x43705d64`) se registran como callbacks en una tabla de offsets
    relativos (no se han encontrado punteros absolutos de 32 B a sus direcciones).
 8. La **región `0x43b7c000`** (callers `0x43b7c470`, `0x43b7c4fc`, `0x43b7c700`) y la
-   `0x43af58f8` / `0x43b71fa8` no emiten ninguna traza propia: no se ha identificado su
+   `0x43af58f8` / `0x43b71fa8` no emiten ninguna traza propia: no se ha identificado su **NO_VERIFICADO**
    módulo.
 9. Si el "rolling shutter" es un concepto presente en la A6000 con otra grafía (0 hits de
    `rolling`/`readout` en los tres blobs).

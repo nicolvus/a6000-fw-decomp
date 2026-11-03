@@ -37,4 +37,4 @@ Cadenas: `[WriteStill] UniqueId[%d]`, «UniqueId/CaptureId/CapDate/GpsInfo/Repre
 
 ## 5. ¿Aparece en reproducción? (NO VERIFICADO)
 
-Falta: (a) quién registra la entrada DCF en el índice de MPR (`DCFStillWriter`), (b) la relación `PreRegisterDcfContentSync` ↔ `PreRegisterImage` del Pool. Solo se puede afirmar que, si `WriteStill` termina sin error, el flujo nativo continúa con `SetImageWrited` y la respuesta `0x3500`.
+Falta: (a) quién registra la entrada DCF en el índice de MPR (`DCFStillWriter`), (b) la relación `PreRegisterDcfContentSync` ↔ `PreRegisterImage` del Pool. Solo se puede afirmar que, si `WriteStill` termina sin error, el flujo nativo continúa con `SetImageWrited` y la respuesta `0x3500`. **NO_VERIFICADO**

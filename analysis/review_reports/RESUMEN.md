@@ -4,16 +4,16 @@ Generado por `scripts/review_reports.py` con 12 procesos sobre 762 informes (`do
 
 ## Resumen
 
-- Líneas `NO_VERIFICADO`: **1800**; `VERIFICADO`: **2737**.
+- Líneas `NO_VERIFICADO`: **1823**; `VERIFICADO`: **2737**.
 - **Cerrables (reducen pendientes):** 131 líneas abiertas cuyas direcciones constan como VERIFICADO en otro informe; **1 de nivel A** (además comparten palabras de contenido con la línea verificada, solapamiento ≥ 0,3) y el resto de nivel B (misma dirección, otro asunto).
-- **Añadibles (aumentan pendientes):** 154 líneas con «falta/por hacer/sin verificar» y sin marca `NO_VERIFICADO`.
+- **Añadibles (aumentan pendientes):** 0 líneas con «falta/por hacer/sin verificar» y sin marca `NO_VERIFICADO`.
 - **Conflictos:** 4 pares de líneas del mismo informe con la misma dirección, una solo NO_VERIFICADO y otra solo VERIFICADO, con solapamiento ≥ 0,25.
 - **Errores:** 18 (VERIFICADO sin evidencia: 18).
 
 ## Palabras de estado (menciones totales)
 
-- `VERIFICADO`: 5432
-- `NO_VERIFICADO`: 1071
+- `VERIFICADO`: 5455
+- `NO_VERIFICADO`: 1094
 - `INFERENCIA`: 848
 - `HIPÓTESIS`: 275
 - `NEGATIVO`: 156
@@ -43,16 +43,16 @@ Generado por `scripts/review_reports.py` con 12 procesos sobre 762 informes (`do
 
 ## Informes con más pendientes sin marcar (a añadir)
 
-- `docs/capture/e25-15-shutmode0-temporizacion-nativa.md`: 10
-- `analysis/s125_imaging_rel/imaging_rel.md`: 5
-- `docs/capture/e26-r11-bootrom-uart-physical-access.md`: 3
-- `docs/capture/e26-r6-recuperacion-bionz.md`: 3
-- `docs/capture/silent-shutter-status.md`: 3
-- `analysis/s101_shutter_type/pending/report.md`: 3
-- `analysis/s116_sfrs/sfrs.md`: 3
-- `analysis/s117_augi/augi.md`: 3
-- `wiki/14-Estado-actual.md`: 3
-- `docs/capture/e24-01-arranque-recuperacion.md`: 2
+- `docs/capture/PENDIENTES_FINALES.md`: 0
+- `docs/capture/README.md`: 0
+- `docs/capture/RESEARCH_TASKS.md`: 0
+- `docs/capture/S605-S627_tabla_hallazgos.md`: 0
+- `docs/capture/a6300-silent-comparison.md`: 0
+- `docs/capture/a6300-silent-software.md`: 0
+- `docs/capture/a7s-silent-reconstruction.md`: 0
+- `docs/capture/branch-claude-objeffect.md`: 0
+- `docs/capture/branch-codex-camera-yc.md`: 0
+- `docs/capture/camera-reset-logs.md`: 0
 
 ## Cerrables de nivel A (revisar y retirar la marca)
 

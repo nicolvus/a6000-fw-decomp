@@ -119,7 +119,7 @@ generación de plataforma, LIRO/CXD). Con los tres blobs disponibles no se puede
 
 - **NO** se afirma que la A6000 carezca de estabilización: tiene el subsistema IS/EIS de
   **S164** (`rcct_SetStblzPower`, `rcct_SetStblzGridH`, giroscopio, `FILE_IS_%04x.dat`).
-  Lo que falta es **el canal «SteadyShot» del objetivo** y **la entrada de API
+  Lo que falta es **el canal «SteadyShot» del objetivo** y **la entrada de API **NO_VERIFICADO**
   `GetImagerStabilizationTime`**.
 - **NO** se afirma qué devuelve `GetImagerStabilizationTime` (el nombre viene de la tabla de
   API, no del código).

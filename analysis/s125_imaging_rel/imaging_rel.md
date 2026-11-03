@@ -372,13 +372,13 @@ la A6000 **añade 4 variantes de error** y el `[OK] StitchProc ALL OK`.
 2. **Qué es `InnerRP`** ("inner read pointer"?) y por qué `ClearInnerRP` /
    `ClearInnerRPCapIdIdx` son operaciones distintas.
 3. **La semántica de los ids de `REL_EVT`** (`0x01`–`0x27`): solo se ha verificado el rango y
-   la tabla de salto (`tbh` en `0x4379d852`); falta el significado de cada evento.
+   la tabla de salto (`tbh` en `0x4379d852`); falta el significado de cada evento. **NO_VERIFICADO**
 4. **`IsNeedForceS1ON`**: qué obliga a forzar el estado S1 y por qué se considera "un disparo
    extraño" (`it is a strange trig in IsNeedForceS1ON : %d` `0x43ca533b`).
 5. **El factor de `RelLock`** (`%08x`): se sabe que son dos u32 formados por bytes
    (`[r1+4..7]` y `[r1+8..0xb]`), no qué significan.
 6. **Quién llama a `CapIdTblMgrIf` (`0x4381cc7c`)**: 0 llamadores `bl` directos → se invoca por
-   interfaz; falta localizar el dispatch por vtable.
+   interfaz; falta localizar el dispatch por vtable. **NO_VERIFICADO**
 7. **Por qué la fw3.21 etiqueta con `[IMAGING]: ` el `FATAL!` genérico** de todo el subsistema
    de captura (443 sitios) y no con un nombre más preciso: NO VERIFICADO (es una decisión de
    etiquetado del fabricante).

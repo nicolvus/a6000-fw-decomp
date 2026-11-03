@@ -403,7 +403,7 @@ Lo que **no** se ha verificado es si el *código* equivalente existe con otro no
    nombran; su semántica y el bloque del sensor al que corresponden, **NO VERIFICADOS** en este
    hito.
 4. **Los 51 comandos «Sens»** (S143) no contienen ninguna entrada de apertura/lectura de ficheros
-   de la memoria interna; **no se ha identificado** el canal exacto por el que «Debug IM Open» y
+   de la memoria interna; **no se ha identificado** el canal exacto por el que «Debug IM Open» y **NO_VERIFICADO**
    «SET FILE NUM» llegan al driver del sensor. **NO VERIFICADO**.
 5. **Las trazas «… OSAL MEM ALLOC Error : %x»** se emiten en la rama de **éxito** de la reserva de
    memoria (verificado en `0x43901e06` y `0x43901f8c`); la intención del firmware es
