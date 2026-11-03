@@ -337,7 +337,7 @@ Los punteros de cadena de la tabla «Sens» de A7S (`0x43c98acf` → offset `0x7
 1. **Fichero fuente propio del módulo**: no consta. Ningún `.cpp`/`.h` es referenciado desde
    `0x439007b0`–`0x43900d30`. La pertenencia a la familia `amSens*` es **inferencia**.
 2. **Significado de `Module ID`** (valor `r5`, semivariable `+0x1e`): el log lo rotula así y
-   además **selecciona la operación** (0/1/2), pero **no se ha identificado qué tabla de **NO_VERIFICADO**
+   además **selecciona la operación** (0/1/2), pero **no se identificó qué tabla de **Cerrado con límite (REV-01):** `Module ID` toma 0, 1 o 2 y solo 1 tiene implementación (`0x439007b0`, lectura/escritura de tabla); 0, 2 y >2 son stubs (§3.2), así que no hay tablas de calibración distintas por identificador ni se distingue iris/ISO/shutter/WB en el código.
    calibración corresponde a qué identificador**, ni si alguno es iris, ISO, shutter o WB.
    **NO VERIFICADO** en este hito.
 3. **Significado de los ids OSAL** `0x008f013a` (destino) y de la plantilla

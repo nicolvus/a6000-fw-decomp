@@ -119,7 +119,7 @@ generación de plataforma, LIRO/CXD). Con los tres blobs disponibles no se puede
 
 - **NO** se afirma que la A6000 carezca de estabilización: tiene el subsistema IS/EIS de
   **S164** (`rcct_SetStblzPower`, `rcct_SetStblzGridH`, giroscopio, `FILE_IS_%04x.dat`).
-  Lo que falta es **el canal «SteadyShot» del objetivo** y **la entrada de API **NO_VERIFICADO**
+  Lo que faltaba es **el canal «SteadyShot» del objetivo** y **la entrada de API **Medido (REV-01):** `GetImagerStabilizationTime` y `SteadyShot` tienen 0 apariciones en `av-cam.bin` y en `av-cam-a7s.bin`; la A6000 solo contiene 5 cadenas `Stabiliz*` (`imageStabilizer…`, `Face Stabilized`), así que no hay canal ni entrada de API que trazar (cerrado con límite).
   `GetImagerStabilizationTime`**.
 - **NO** se afirma qué devuelve `GetImagerStabilizationTime` (el nombre viene de la tabla de
   API, no del código).

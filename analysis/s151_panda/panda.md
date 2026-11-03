@@ -273,7 +273,7 @@ modelos**, porque el código ya está en la A7S fw3.20 y en el A6300 fw2.01.
    y `5` en `msg[0x04]`).
 7. **El papel de `0x00910042`** (primer argumento del thunk `0x43561244`, que rellena los 32 B
    de cabecera del mensaje) no está decodificado.
-8. No se ha identificado **la cola OSAL de datos** que recibe los mensajes de lente que el **NO_VERIFICADO**
+8. no se identificó **la cola OSAL de datos** que recibe los mensajes de lente que el **Medido (REV-01):** las thunks OSAL contiguas `0x4356120c…` son llamadas virtuales `[[obj+0x14]+slot]` con slots `+0x1d4` (`osal_snd_msg`), `+0x1d8` (`0x43561228`, la de PANDA), `+0x1e0` (`0x43561260`, recepción), `+0x1f0` (reserva) y `+0x1f4` (liberación); el nombre del slot `+0x1d8` no consta en ninguna cadena y la cola destino no se identificó (cerrado con límite).
    PANDA envía (GID `0x00740017`): el thunk usado es `0x43561228` (slot `+0x1d8`), no el
    `osal_snd_msg` estándar `0x4356120c` (slot `+0x1d4`); el nombre de la función OSAL
    concreta NO VERIFICADO.

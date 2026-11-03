@@ -403,7 +403,7 @@ Lo que **no** se ha verificado es si el *código* equivalente existe con otro no
    nombran; su semántica y el bloque del sensor al que corresponden, **NO VERIFICADOS** en este
    hito.
 4. **Los 51 comandos «Sens»** (S143) no contienen ninguna entrada de apertura/lectura de ficheros
-   de la memoria interna; **no se ha identificado** el canal exacto por el que «Debug IM Open» y **NO_VERIFICADO**
+   de la memoria interna; **no se identificó** el canal exacto por el que «Debug IM Open» y **Medido (REV-01):** la tabla de `0x44022d84` mezcla 8 punteros impares (Thumb) con 16 pares (datos) en las primeras 24 palabras, así que no es una vtable pura. «Debug IM ASync Open» (`0x43901d50`) tiene 20 llamadores `bl` de otros módulos y «SET FILE NUM» (`0x43902168`) 4 (`0x43782644`, `0x43782650`, `0x43782904`, `0x4382cea2`); ambos reservan y envían un mensaje OSAL (`0x435612d0`, `0x4356120c`). El driver de destino no se identificó (límite estático).
    «SET FILE NUM» llegan al driver del sensor. **NO VERIFICADO**.
 5. **Las trazas «… OSAL MEM ALLOC Error : %x»** se emiten en la rama de **éxito** de la reserva de
    memoria (verificado en `0x43901e06` y `0x43901f8c`); la intención del firmware es

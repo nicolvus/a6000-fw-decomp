@@ -260,12 +260,12 @@ función.
   `nextHRDBuffer`/`nextPTS`.
 - **Escritor de vídeo**: no localizado; `0x4360b6f0` es solo la entrada de API.
 - **Relación entre la cabecera de 32 B y la vista dec**: comparten `length` y PTS en el mismo
-  offset, pero el resto no coincide; no se ha verificado si una se convierte en la otra ni **NO_VERIFICADO**
+  offset, pero el resto no coincide; no se verificó si una se convierte en la otra ni **Cerrado con límite (REV-01):** `av-cam.bin` no contiene ninguna secuencia `00 00 00 01 67` ni `…68` (0 apariciones): los bytes SPS/PPS no son constantes del binario sino que los produce el codec en ejecución; la relación cabecera de 32 B ↔ vista dec solo se prueba con traza dinámica.
   dónde.
 - **Papel de `0x43a7e70c`** (rellena 5 bytes sueltos desde un struct de `0x34` B).
 - **Contenido de `size_SPS`/`size_PPS`**: no se han localizado ni decodificado los bytes SPS/PPS.
 - **Nombre del handler `0x436150ce`** y del dumper `0x4391ca90`.
-- **Layout en la A7S**: los textos son idénticos, pero no se ha comprobado que los offsets y **NO_VERIFICADO**
+- **Layout en la A7S**: los textos son idénticos, pero no se comprobó que los offsets y **Medido (REV-01):** el volcador `0x4391d01c` tiene homólogo `0x438ffd9c` en A7S con 175 instrucciones en ambos y código idéntico salvo direcciones absolutas de salto y el pool de literales (`analysis/rev01/a7s_cmp.py`); `rev r0,r1` (`08 ba 70 47`) aparece una vez en cada binario. Layout y `rev` coinciden; el contenido del pool no se comparó byte a byte.
   el `rev` sean los mismos.
 - La atribución a función es **heurística** (prólogo Thumb), no símbolos del firmware.
 

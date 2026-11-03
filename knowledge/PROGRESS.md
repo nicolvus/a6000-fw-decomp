@@ -530,3 +530,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 03-11-2026: revisión de las 154 líneas sin marca: 23 marcadas NO_VERIFICADO (REV-01), 131 apartadas; añadibles 0.
 - 03-11-2026: REV-01 parcial: 12/23 cerradas con medidas (analysis/rev01/); 11 pendientes de sesión REA.
 - 03-11-2026: REV-01 14/23 (sesión REA: adjust_cmd_recon 85, clk_ctrl 374); quedan 9.
+- 03-11-2026: REV-01 cerrado con límite (23/23); corrige apl (A7S no idéntico) y label_map (solo IDT_OPD renombrado). analysis/rev01/.

@@ -93,7 +93,7 @@ Los módulos grandes (≥ 40 cadenas):
 
 ## 5. NO VERIFICADO / abierto
 
-- Para los 20 "NUEVO/PROPIO" no se ha comprobado uno por uno si el contenido es nuevo o si la **NO_VERIFICADO**
+- Para los 20 "NUEVO/PROPIO" no se comprobó uno por uno si el contenido es nuevo o si la **Medido (REV-01):** buscando el cuerpo de cada cadena sin prefijo en el binario A7S (control: ADF 1215/1216), solo `[IDT_OPD]` está renombrado (271/274); `[SAD]`, `[ILLUMI]` y `[DFE]` dan 3, 1 y 4 coincidencias genéricas y los otros 16 dan 0, así que son propios de la A6000 (`analysis/rev01/label_map_nuevo.json`).
   A7S lo etiqueta con otro nombre (caso de `[IDT_OPD]`, ya resuelto en S120).
 - Si el conjunto de mensajes *nuevos* de la fw3.21 introduce alguna capacidad que la A7S no
   tiene (más allá de la instrumentación): no comprobado.
