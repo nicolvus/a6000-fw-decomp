@@ -427,7 +427,7 @@ La cuenta de PTM la lleva `ApiPtmCount` (`ApiPtmCount.cpp` `0x43c7a3c2`, funcion
   (`0x43c781e4`), `PanoramaSweepStart` (`0x43cab054`), `lc_BracketAF.cpp` (`0x43ca79ba`) y
   `[SDF] interval(PTM) %ld` (`0x43c7a1a5`): **las direcciones coinciden**; este hito explica *qué*
   hacen.
-* **S101** (`analysis/s101_sdf/sdf_module.md`, `docs/capture/s101-sdf.md`): el panorama, el CCNR y el
+* **S103** (`analysis/s103_sdf/sdf_module.md`, `docs/capture/s103-sdf.md`; el SDF se numeraba S101 en paralelo): el panorama, el CCNR y el
   PTM viven **dentro del SDF** (módulo `[SDF]`, `0x43c7785b`–`0x43c806f9`). S101 atribuyó el CCNR a
   «corner noise reduction»: es una **hipótesis no textual** que este hito **no confirma**.
 * **S82** (`analysis/s82_autoframing/autoframing_stages.md`): las etapas de panorama usan el mismo

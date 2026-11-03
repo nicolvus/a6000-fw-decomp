@@ -5,7 +5,7 @@
 **Regla de referencias**: **estricta** (canónica, `analysis/s106_imaging_cap/scan_pic_refs_strict.py`;
 mapa global `analysis/s106_imaging_cap/pic_refs_strict_global.json`). Los sitios puntuales se han
 verificado **a mano** desensamblando (aritmética `ldr`/`add` re-hecha byte a byte).
-**Script canónico**: `analysis/s143_cam_util_adj/scan_s140.py` → `cam_util_adj.json`.
+**Script canónico**: `analysis/s143_cam_util_adj/scan_s143.py` → `cam_util_adj.json`.
 
 ---
 

@@ -25,6 +25,33 @@ def is_legend(line: str) -> bool:
     return bool(LEGEND.search(line)) and line.count("=") >= 2
 
 
+EXPLICIT = re.compile(
+    r"\bfalta[n]?\s+(?:aún\s+|todavía\s+)?(?:por\s+)?(?:determinar|identificar|comprobar|verificar|localizar|resolver|conectar|comparar|"
+    r"medir|encontrar|demostrar|probar|confirmar|decodificar|rastrear|cerrar|reproducir)|\bhace falta|\bharía falta|"
+    r"no se ha (?:verificado|comprobado|identificado)|sin verificar|pendiente de|habr[íi]a que|por hacer|queda por|"
+    r"faltan?\s+(?:el|la|los|las|un|una|pruebas?|datos|bytes|prueba)\b|^\|[^|]*\|\s*¿[^|]*\|\s*\*\*NO\*\*", re.IGNORECASE)
+NOISE = re.compile(
+    r"resuelto|cierra el pendiente|DESCARTAD|falta de (?:memoria|prueba|evidencia|configuración|este cierre)|si falta|"
+    r"^\|\s*\**Falta\**\s*\||Por qué falta|Evidencia que falta|¿Qué falta|NO por falta|Error explícito si falta", re.IGNORECASE)
+
+
+def unmarked(rev: dict, seen: set) -> tuple[list, int]:
+    """Pendientes sin marca: (fila, etiqueta explícito/probable) y número de líneas descartadas por ruido."""
+    rows, noise, cache = [], 0, {}
+    for p in rev["pending_unmarked"]:
+        name = p["file"].split("/")[-1]
+        if not p["file"].startswith("docs/capture/") or (name, p["line"]) in seen:
+            continue
+        lines = cache.setdefault(p["file"], (ROOT / p["file"]).read_text(encoding="utf-8", errors="replace").splitlines())
+        text = lines[p["line"] - 1]
+        if NOISE.search(text):
+            noise += 1
+        else:
+            rows.append((name, p["line"], "explícito" if EXPLICIT.search(text) else "probable",
+                         re.sub(r"\s+", " ", text.strip(" |*-"))[:LIMIT]))
+    return rows, noise
+
+
 def review() -> dict:
     return json.loads(REVIEW.read_text(encoding="utf-8")) if REVIEW.exists() else {"closable": [], "pending_unmarked": []}
 
@@ -53,15 +80,14 @@ def render() -> str:
     rows, labs = claims(), labels()
     rev = review()
     tier_a = {(c["file"].removeprefix("docs/capture/"), c["line"]) for c in rev["closable"] if c["tier"] == "A"}
-    seen = {(r[0], r[1]) for r in rows}
-    extra = [p for p in rev["pending_unmarked"]
-             if p["file"].startswith("docs/capture/") and (p["file"].split("/")[-1], p["line"]) not in seen]
+    extra, noise = unmarked(rev, {(r[0], r[1]) for r in rows})
+    unproven = [e for e in rev.get("errors", []) if e["kind"] == "VERIFICADO sin evidencia"]
     static = sum(r[2] == "estático" for r in rows)
     out = ["# Pendientes de verificación — registro exhaustivo", "",
            ("Generado por `scripts/build_pending_claims.py`; no editar a mano. Complementa [PENDIENTES.md](PENDIENTES.md) (índice maestro) "
            "con **todas** las afirmaciones marcadas `NO_VERIFICADO`, `CONFLICTO_PENDIENTE` o `Falta:` en `docs/capture/` y todas las etiquetas del censo sin cubrir."), "",
            f"- Afirmaciones abiertas: **{len(rows)}** en {len({r[0] for r in rows})} informes ({static} clasificadas estáticas, {len(rows) - static} físicas/externas).",
-           f"- Etiquetas del censo sin cubrir: **{len(labs)}**; pendientes sin marca (sección D): **{len(extra)}**; candidatos a cerrar (⟳): **{len(tier_a)}**.",
+           f"- Etiquetas del censo sin cubrir: **{len(labs)}**; pendientes sin marca (sección D): **{len(extra)}** ({sum(e[2] == 'explícito' for e in extra)} explícitos, {sum(e[2] == 'probable' for e in extra)} probables; {noise} descartados por ruido); `VERIFICADO` sin evidencia citada (sección E): **{len(unproven)}**; candidatos a cerrar (⟳): **{len(tier_a)}**.",
            ("- Clase `estático`: se puede cerrar con `av-cam.bin`, REA/Ghidra y los documentos, sin cámara. Clase `físico/externo`: pide cámara, medición, hoja de datos o volcado. "
            "La clase sale de palabras clave y puede errar; una afirmación puede ser estática en parte."),
            "- Cada línea es una mención de texto, no necesariamente una afirmación distinta. Cierre de cada una: evidencia en bytes/instrucciones que la confirme o la corrija, y retirar la marca en su informe.", "",
@@ -75,10 +101,16 @@ def render() -> str:
         out += [f"- **V-{rows.index(r) + 1:04d}** [{r[0]}:{r[1]}](capture/{r[0]}#L{r[1]})"
                 f"{' ⟳ candidato a cerrar' if (r[0], r[1]) in tier_a else ''} — {r[3]}" for r in sel]
     out += ["", f"## D. Pendientes sin marca `NO_VERIFICADO` ({len(extra)})", "",
-            ("Líneas de `docs/capture/` con «falta», «por hacer» o «sin verificar» que no llevan la marca; salen de "
-            "[la revisión automática](../analysis/review_reports/RESUMEN.md) y son candidatas a marcar o a convertir en tarea."), ""]
-    out += [f"- **W-{n:04d}** [{p['file'].split('/')[-1]}:{p['line']}](capture/{p['file'].split('/')[-1]}#L{p['line']}) — {p['text'][:LIMIT]}"
-            for n, p in enumerate(extra, 1)]
+            ("Líneas de `docs/capture/` con «falta», «por hacer» o «sin verificar» que no llevan la marca, tomadas de "
+            "[la revisión automática](../analysis/review_reports/RESUMEN.md). `explícito`: frase de pendiente clara; `probable`: usa «falta» "
+            "de forma ambigua. Se han descartado las líneas de ruido (cabeceras, «falta de memoria», cuestiones ya resueltas). "
+            "Cierre: marcarla con `NO_VERIFICADO` en su informe o convertirla en tarea de `PENDIENTES.md`."), ""]
+    out += [f"- **W-{n:04d}** `{e[2]}` [{e[0]}:{e[1]}](capture/{e[0]}#L{e[1]}) — {e[3]}" for n, e in enumerate(extra, 1)]
+    out += ["", f"## E. `VERIFICADO` sin evidencia citada ({len(unproven)})", "",
+            ("Afirmaciones marcadas `VERIFICADO` sin dirección, fichero, método ni prueba en su sección. Cierre: citar la evidencia "
+            "(dirección, bytes, instrucción, fichero o prueba) o rebajar la marca."), ""]
+    out += [f"- **E-{n:04d}** [{e['file'].split('/')[-1]}:{e['line']}](capture/{e['file'].split('/')[-1]}#L{e['line']}) — {e['text'][:LIMIT]}"
+            for n, e in enumerate(unproven, 1)]
     return "\n".join(out) + "\n"
 
 

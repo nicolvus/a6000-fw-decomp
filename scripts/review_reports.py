@@ -30,7 +30,13 @@ LINK = re.compile(r"\]\(([\w./-]+\.(?:md|py|json|png|svg|txt|csv))(?:#[^)]*)?\)"
 PATH = re.compile(r"`((?:analysis|scripts|tests|docs)/[\w./-]+\.(?:py|md|json))`")
 STATUS = ("NO_VERIFICADO", "VERIFICADO", "INFERENCIA", "HIPÓTESIS", "CONFLICTO_PENDIENTE", "NEGATIVO",
           "REFUTADO", "CORREGIDO", "SUPERADO", "BLOQUEADO")
-EVIDENCE = re.compile(r"0x[0-9a-fA-F]{4,}|bytes?|instrucci|\bbl\b|ldr|desensambl|xref|SHA-256|test_\w+|\.json", re.IGNORECASE)
+EVIDENCE = re.compile(
+    r"0x[0-9a-fA-F]{4,}|\b4[0-9a-f]{7}\b|bytes?|instrucci|\bbl\b|ldr|desensambl|xref|SHA-256|test_\w+|\.json|"
+    r"\b[\w/-]+\.(?:so|c|h|bin|java|odex|txt|py|md|dat)\b|decompil|dynsym|lectura completa|esquema|emulaci|"
+    r"\bREA\b|Ghidra|objdump|binario|ficheros|offline|T0\d\d|defconfig|Makefile|símbolos",
+    re.IGNORECASE)
+# «VERIFICADO si …» es una condición futura, no una afirmación verificada.
+CONDITIONAL = re.compile(r"VERIFICADO\*{0,2}\s*(?:\([^)]*\)\s*\*{0,2}\s*)?si\b", re.IGNORECASE)
 
 
 # Leyenda que define las etiquetas de estado (p. ej. «Etiquetas: V = … · N = no verificado»); no es una afirmación.
@@ -40,6 +46,17 @@ LEGEND = re.compile(r"^\s*(?:Etiquetas?|Leyenda|Convención|Estados?)\b.*[=:]", 
 
 def is_legend(line: str) -> bool:
     return bool(LEGEND.search(line)) and line.count("=") >= 2
+
+
+def section_text(lines: list[str], n: int) -> str:
+    """Texto desde el encabezado anterior hasta el siguiente (mínimo ±7 líneas), donde buscar la evidencia."""
+    a = n - 1
+    while a > 0 and not lines[a].startswith("#"):
+        a -= 1
+    b = n
+    while b < len(lines) and not lines[b].startswith("#"):
+        b += 1
+    return " ".join(lines[min(a, max(0, n - 8)):max(b, n + 6)])
 
 
 def review(rel: str) -> dict:
@@ -58,9 +75,9 @@ def review(rel: str) -> dict:
         is_open, is_done = bool(OPEN.search(line)), bool(DONE.search(line))
         if is_open:
             out["open"].append({"line": n, "addrs": addrs, "text": short})
-        elif is_done:
+        elif is_done and not CONDITIONAL.search(line):
             out["done"].append({"line": n, "addrs": addrs, "text": short})
-            if not EVIDENCE.search(line) and not EVIDENCE.search(" ".join(lines[max(0, n - 7):n + 6])):
+            if not EVIDENCE.search(line) and not EVIDENCE.search(section_text(lines, n)):
                 out["errors"].append({"kind": "VERIFICADO sin evidencia", "line": n, "text": short})
         elif PENDING.search(line) and not line.lstrip().startswith("#"):
             out["pending"].append({"line": n, "text": short})
