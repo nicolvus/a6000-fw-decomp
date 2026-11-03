@@ -16,6 +16,15 @@ LIMIT = 230
 REVIEW = ROOT / "analysis/review_reports/review.json"
 
 
+# Leyenda que define las etiquetas de estado (p. ej. «Etiquetas: V = … · N = no verificado»); no es una afirmación.
+# Mantener igual en review_reports.py, build_pending_claims.py y build_pages_status.py.
+LEGEND = re.compile(r"^\s*(?:Etiquetas?|Leyenda|Convención|Estados?)\b.*[=:]", re.IGNORECASE)
+
+
+def is_legend(line: str) -> bool:
+    return bool(LEGEND.search(line)) and line.count("=") >= 2
+
+
 def review() -> dict:
     return json.loads(REVIEW.read_text(encoding="utf-8")) if REVIEW.exists() else {"closable": [], "pending_unmarked": []}
 
@@ -24,7 +33,7 @@ def claims() -> list[tuple[str, int, str, str]]:
     rows = []
     for path in sorted((ROOT / "docs/capture").glob("*.md")):
         for n, line in enumerate(path.read_text(encoding="utf-8", errors="replace").splitlines(), 1):
-            if CLAIM.search(line):
+            if CLAIM.search(line) and not is_legend(line):
                 text = re.sub(r"\s+", " ", line.strip(" |*-")).replace("|", "¦")
                 kind = "físico/externo" if PHYSICAL.search(line) else "estático"
                 rows.append((path.name, n, kind, text[:LIMIT] + ("…" if len(text) > LIMIT else "")))

@@ -68,6 +68,15 @@ OPEN_CLAIM = re.compile(r"NO[ _]VERIFICADO", re.IGNORECASE)
 DONE_CLAIM = re.compile(r"(?<!NO )(?<!NO_)\bVERIFICADO(?:_ESTATICO)?\b")
 
 
+# Leyenda que define las etiquetas de estado (p. ej. «Etiquetas: V = … · N = no verificado»); no es una afirmación.
+# Mantener igual en review_reports.py, build_pending_claims.py y build_pages_status.py.
+LEGEND = re.compile(r"^\s*(?:Etiquetas?|Leyenda|Convención|Estados?)\b.*[=:]", re.IGNORECASE)
+
+
+def is_legend(line: str) -> bool:
+    return bool(LEGEND.search(line)) and line.count("=") >= 2
+
+
 def claim_counts(detail: dict, sessions: list[dict]) -> dict[str, tuple[int, int]]:
     """Label -> (NO_VERIFICADO, VERIFICADO) mentions in its report(s); sub-labels follow their parent.
 
@@ -79,7 +88,8 @@ def claim_counts(detail: dict, sessions: list[dict]) -> dict[str, tuple[int, int
     for label, info in detail.items():
         reports = {path.get(h) for h in info["hitos"] if h != "178"}
         if info["estado"] == "hito" and reports and all(r and r.exists() for r in reports):
-            texts = [r.read_text(encoding="utf-8", errors="replace") for r in reports]
+            texts = ["\n".join(x for x in r.read_text(encoding="utf-8", errors="replace").splitlines() if not is_legend(x))
+                     for r in reports]
             counts[label] = (sum(len(OPEN_CLAIM.findall(t)) for t in texts), sum(len(DONE_CLAIM.findall(t)) for t in texts))
     for _ in range(3):  # sub-labels may hang from other sub-labels
         for label, info in detail.items():

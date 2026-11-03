@@ -48,7 +48,7 @@ Mapas de claves de `0x1017/0x1031/0x1041` por **orden de campos del volcador**: 
 - Camino con evidencia: dar a `Execute` un frame YC de Live View (handle + unitType + phys + canvas) y que MPR haga el resto. Requisitos NO VERIFICADOS: formato YC admitido, sender de la orden, `MediaMgr` fuera de `None`, estado de MPR.
 
 ## Sesión 13 — corrección sobre el remitente
-- Se sustituye «remitente NO VERIFICADO» (§3): `0x10000005` no viaja entre objetos; lo crea el recorder en `0x919f1a` al recibir un `PlayData` por su pin YC. El remitente real del flujo es `MSGID_RECORD_IMAGE_CMD` (`0x3500/0x3001`) desde `ModelPbCap`/`ModelPaint`/Mcmd. Ver `encodestill-command-origin.md`.
+- Se sustituye el estado anterior «remitente sin verificar» (§3): `0x10000005` no viaja entre objetos; lo crea el recorder en `0x919f1a` al recibir un `PlayData` por su pin YC. El remitente real del flujo es `MSGID_RECORD_IMAGE_CMD` (`0x3500/0x3001`) desde `ModelPbCap`/`ModelPaint`/Mcmd. Ver `encodestill-command-origin.md`.
 - Contrato de entrada detallado en `encodestill-yc-contract.md` (RegionInfo 0x40 B).
 
 ## Corrección sesión 14

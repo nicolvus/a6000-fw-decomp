@@ -172,45 +172,6 @@
    }
   },
   {
-   "file": "docs/capture/e26-r15-tpzl-custom-fw325.md",
-   "line": 5,
-   "text": "Etiquetas: **BINARIO** = desensamblado de `bootloader.bin` (Loader3, `0xc01f0000`) · **DATOS** = leído de volcados/paquetes · **SCRIPT** = resultado de un script de este informe · **DOC** = lo dicen i",
-   "overlap": 0.09,
-   "tier": "B",
-   "verified_in": {
-    "0xc01f0000": [
-     "docs/capture/e26-r5-loader3-servicio.md",
-     "docs/capture/e26-recovery.md"
-    ]
-   }
-  },
-  {
-   "file": "docs/capture/e26-r16-ldec-hardware-audit.md",
-   "line": 5,
-   "text": "Etiquetas: **BINARIO** = desensamblado de `bootloader.bin` (Loader3 `0xc01f0000`, prefijo de 43 páginas; BossFirm = `bootloader.bin[0x18800:+0x3800]`, SHA `b70a89a0…`) · **DATOS** = leído de imágenes ",
-   "overlap": 0.1,
-   "tier": "B",
-   "verified_in": {
-    "0xc01f0000": [
-     "docs/capture/e26-r5-loader3-servicio.md",
-     "docs/capture/e26-recovery.md"
-    ]
-   }
-  },
-  {
-   "file": "docs/capture/e26-r20-bootrom-selector.md",
-   "line": 5,
-   "text": "Etiquetas: **BINARIO** = desensamblado Capstone del BootROM (`analysis/camera-dumps/updater-20261020-175427/bootrom.bin`, SHA `81a17e03…`, Thumb sobre ARM, base `0xffff0000`; aquí el mapeo es direcció",
-   "overlap": 0.15,
-   "tier": "B",
-   "verified_in": {
-    "0xffff0000": [
-     "docs/capture/e24-03-auditoria-recuperacion-usb.md",
-     "docs/capture/e26-r11-bootrom-uart-physical-access.md"
-    ]
-   }
-  },
-  {
    "file": "docs/capture/electronic-still-low-resolution.md",
    "line": 61,
    "text": "- VERIFICADO: `SetExposure 0x436d6f6c` recibe una estructura con tres valores (14, 12 y 12 bits) que escribe en registros sombra por pares «byte bajo + nibble/6 bits alto», y un campo de submodo `+9` ",
@@ -327,22 +288,6 @@
     "0x10000005": [
      "docs/capture/encodestill-command-origin.md",
      "docs/capture/objscalar-playdata-bridge.md"
-    ]
-   }
-  },
-  {
-   "file": "docs/capture/objstillpool-image-producers.md",
-   "line": 51,
-   "text": "- Se sustituye «remitente NO VERIFICADO» (§3): `0x10000005` no viaja entre objetos; lo crea el recorder en `0x919f1a` al recibir un `PlayData` por su pin YC. El remitente real del flujo es `MSGID_RECO",
-   "overlap": 0.13,
-   "tier": "B",
-   "verified_in": {
-    "0x10000005": [
-     "docs/capture/encodestill-command-origin.md",
-     "docs/capture/objscalar-playdata-bridge.md"
-    ],
-    "0x919f1a": [
-     "docs/capture/encodestill-command-origin.md"
     ]
    }
   },
@@ -2975,6 +2920,11 @@
    "file": "docs/capture/mpr-dcf-recording.md",
    "line": 184,
    "text": "**VEREDICTO: CAMBIOS** — evidencia estática entregada; aceptación extremo a extremo pendiente de los bloqueos señalados."
+  },
+  {
+   "file": "docs/capture/objstillpool-image-producers.md",
+   "line": 51,
+   "text": "- Se sustituye el estado anterior «remitente sin verificar» (§3): `0x10000005` no viaja entre objetos; lo crea el recorder en `0x919f1a` al recibir un `PlayData` por su pin YC. El remitente real del f"
   },
   {
    "file": "docs/capture/objstillrecorder-mode4.md",
@@ -7119,7 +7069,7 @@
   },
   "docs/capture/objstillpool-image-producers.md": {
    "NO_VERIFICADO": 0,
-   "VERIFICADO": 8,
+   "VERIFICADO": 7,
    "INFERENCIA": 1,
    "HIPÓTESIS": 0,
    "CONFLICTO_PENDIENTE": 0,

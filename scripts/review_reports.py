@@ -33,6 +33,15 @@ STATUS = ("NO_VERIFICADO", "VERIFICADO", "INFERENCIA", "HIPÓTESIS", "CONFLICTO_
 EVIDENCE = re.compile(r"0x[0-9a-fA-F]{4,}|bytes?|instrucci|\bbl\b|ldr|desensambl|xref|SHA-256|test_\w+|\.json", re.IGNORECASE)
 
 
+# Leyenda que define las etiquetas de estado (p. ej. «Etiquetas: V = … · N = no verificado»); no es una afirmación.
+# Mantener igual en review_reports.py, build_pending_claims.py y build_pages_status.py.
+LEGEND = re.compile(r"^\s*(?:Etiquetas?|Leyenda|Convención|Estados?)\b.*[=:]", re.IGNORECASE)
+
+
+def is_legend(line: str) -> bool:
+    return bool(LEGEND.search(line)) and line.count("=") >= 2
+
+
 def review(rel: str) -> dict:
     """Fase map: analiza un informe."""
     path = ROOT / rel
@@ -42,6 +51,8 @@ def review(rel: str) -> dict:
     for word in STATUS:
         out["status"][word] = len(re.findall(re.escape(word), text, re.IGNORECASE))
     for n, line in enumerate(lines, 1):
+        if is_legend(line):
+            continue
         addrs = sorted({a.lower() for a in ADDR.findall(line)})
         short = re.sub(r"\s+", " ", line.strip())[:200]
         is_open, is_done = bool(OPEN.search(line)), bool(DONE.search(line))
