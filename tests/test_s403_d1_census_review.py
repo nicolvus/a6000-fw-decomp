@@ -11,7 +11,8 @@ def test_covers_every_pending_label_once():
     pending = {e["etiqueta"] for e in CENSUS["etiquetas"] if e["estado_censo"] == "pendiente"}
     reviewed = [r["etiqueta"] for r in REVIEW["etiquetas"]]
     assert len(reviewed) == len(set(reviewed)) == 226
-    assert set(reviewed) == pending
+    # la revisión S403 es una foto de las 226 de entonces; las reclasificadas después ya no están pendientes
+    assert pending <= set(reviewed)
 
 
 def test_summary_matches_rows():
