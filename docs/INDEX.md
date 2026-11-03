@@ -390,7 +390,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 6. Otros subsistemas (AF, estabilización, vídeo, audio, lentes, energía, visor, accesorios, módulos de trazas)
 
-155 informes.
+156 informes.
 
 - **—** [E21 — Lecturas sin cámara de los volcados del 20-10-2026](capture/e21-lecturas-backups-2026-10-26.md)
 - **—** [E24-01 — Arranque, modo actualizador y dependencia de Darwin (27-10-2026)](capture/e24-01-arranque-recuperacion.md)
@@ -541,6 +541,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **S632** [S632 — `[MODE_*]`: sufijos de modo en los diagnósticos «CamCore acquire Error» y `[MODEFLG]`](capture/s632-mode.md) · pruebas: [test_s632_mode.py](../tests/test_s632_mode.py) · evidencia: [s632_mode](../analysis/s632_mode)
 - **S633** [S633 — `[STK_*]`: etiquetas de error de los tres cálculos de `[STK]` y funciones de `[STK]`](capture/s633-stk-sim.md) · pruebas: [test_s633_stk.py](../tests/test_s633_stk.py) · evidencia: [s633_stk](../analysis/s633_stk)
 - **S634** [S634 — etiquetas pendientes de la familia OTROS: evidencia medida de cadenas, funciones y referencias](capture/s634-otros-pendientes.md) · pruebas: [test_s634_otros.py](../tests/test_s634_otros.py) · evidencia: [s634_otros](../analysis/s634_otros)
+- **S635** [S635 — `[OSD]`: una cadena de `[VDF]` y su función](capture/s635-osd.md) · pruebas: [test_s635_osd.py](../tests/test_s635_osd.py) · evidencia: [s635_osd](../analysis/s635_osd)
 - **S66** [S66 — Montura de lente E-mount en la A6000 (línea general de ingeniería inversa)](capture/s66-lens-mount.md) · pruebas: [test_s66_lens_mount.py](../tests/test_s66_lens_mount.py) · evidencia: [s66](../analysis/s66)
 - **S68** [S68 — Gestión de batería, alimentación y carga (NP-FW50) en la A6000](capture/s68-battery-power.md) · pruebas: [test_s68_power.py](../tests/test_s68_power.py) · evidencia: [s68_power](../analysis/s68_power)
 - **S69** [S69 — Subsistema de audio de la Sony A6000 (fw3.21)](capture/s69-audio-subsystem.md) · pruebas: [test_s69_audio.py](../tests/test_s69_audio.py) · evidencia: [s69_audio](../analysis/s69_audio)
