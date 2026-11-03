@@ -17,6 +17,7 @@ y su evidencia `analysis/s<N>*/`; la categoría sale de reglas sobre el nombre d
 | [knowledge/CURRENT.md](../knowledge/CURRENT.md) | Contexto operativo mínimo para agentes |
 | [docs/STATE.md](STATE.md) | Estado técnico consolidado, conclusiones y límites vigentes |
 | [docs/PENDIENTES.md](PENDIENTES.md) | Fuente de autoridad de tareas abiertas, bloqueadas y cerradas |
+| [docs/PENDIENTES-VERIFICACION.md](PENDIENTES-VERIFICACION.md) | Registro generado: cada afirmación sin verificar de `docs/capture/` (estática o física/externa) y cada etiqueta del censo sin cubrir |
 | [knowledge/PROGRESS.md](../knowledge/PROGRESS.md) | Historial cronológico de investigaciones y del sistema de conocimiento |
 | [docs/capture/](capture/) | Informes técnicos individuales (aquí indexados) |
 | [analysis/](../analysis/) | Evidencia, scripts y resultados reproducibles |
