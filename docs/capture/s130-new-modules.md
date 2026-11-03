@@ -1,6 +1,6 @@
 # S130 — los 20 módulos "NUEVO/PROPIO": ¿contenido nuevo o solo otra etiqueta?
 
-> **Aviso D4 (25-10-2026):** [S170](../../analysis/s170_illumi/illumi.md) rectifica la lectura de `[ILLUMI]` como contenido nuevo: el subsistema de iluminación tiene las mismas RTTI en los tres modelos; lo propio de la A6000 son las trazas. Que sea el mismo código en los tres sigue NO_VERIFICADO.
+> **Aviso D4 (25-10-2026):** [S170](../../analysis/s170_illumi/illumi.md) rectifica la lectura de `[ILLUMI]` como contenido nuevo: el subsistema de iluminación tiene las mismas RTTI en los tres modelos; lo propio de la A6000 son las trazas. Que sea el mismo código en los tres sigue no atribuido.
 
 **Hito de la línea de ingeniería inversa general**: cierra la pregunta abierta por S128.
 
@@ -40,3 +40,13 @@ S51.
 A6000-fw3.21 ↔ A7S-fw3.20 ↔ A6300-fw2.01 mezcla **versión y modelo**: lo que se mide es
 «presente en la A6000 fw3.21 y ausente en los otros dos», y no se puede separar «nuevo en la
 fw3.21» de «propio de este modelo» (no hay una fw anterior de la A6000 en el repositorio).
+
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[DFE]`: 15 cadenas con el token (15 con sitio de carga, 21 sitios) en 16 funciones contenedoras; llamadores directos `bl` 26, punteros literal/PC-relativos/`movw`+`movt` 0/8/0; ficheros fuente citados por esas funciones: `CaptureUtilityCamCore.cpp`; token en A6000/A7S/A6300: 16/5/6; alcance `bl` ≤ 3 al obturador: BULB host.
+- `[IDT_OPD]`: 274 cadenas con el token (271 con sitio de carga, 356 sitios) en 103 funciones contenedoras; llamadores directos `bl` 90, punteros literal/PC-relativos/`movw`+`movt` 2/0/0; ficheros fuente citados por esas funciones: ninguno; token en A6000/A7S/A6300: 274/0/0; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+**Hallazgo (03-11-2026):** la función `0x438c89a8`, que carga `[IMAGING_CAP]: [DFE] GetDfeDrvParam Error %d` (`0x43cc8a5f`), llama directamente (`bl 0x438c74b0` en `0x438c8b34`) a la función del temporizador de BULB por tramos del host ([E25-17](e25-17-bulb-exposicion-electronica-larga.md)). Es una relación de llamada medida, no una relación funcional demostrada; si `[DFE]` interviene en la exposición o solo comparte la secuencia de captura no se afirma. No altera S51.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+

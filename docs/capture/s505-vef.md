@@ -37,7 +37,13 @@ A7S fw3.20 y A6300 fw2.01.
   efectos de imagen (sepia, wipe), mapas de zoom y control de memoria YC.
 - Muy cercano a `[VDF]` (S500) pero centrado en efectos/mapas, no en salida de imagen.
 
-## NO VERIFICADO
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[VEF]`: 149 cadenas con el token (146 con sitio de carga, 194 sitios) en 90 funciones contenedoras; llamadores directos `bl` 52, punteros literal/PC-relativos/`movw`+`movt` 29/10/0; ficheros fuente citados por esas funciones: `SubsystemMain.cpp`, `SystemCmdPinSend.cpp`, `VefEffectCmdSetEffect.cpp`, `VefPathCmdSetPath.cpp`; token en A6000/A7S/A6300: 149/141/144; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+
+No atribuido (lista original anterior a la medición; las funciones contenedoras y los sitios ya están medidos arriba, y nada de esto se afirma):
 
 - Semántica de los efectos y mapas; relación con captura.
 - Si las diferencias cuantitativas (149 vs 141/144) son solo de diagnóstico.

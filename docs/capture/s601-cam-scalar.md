@@ -104,7 +104,7 @@ Las xrefs apuntan a direcciones en el rango **0x4380a710–0x4380c6fa**. Ghidra 
 
 ## 6. Cierre CAM-01 (03-11-2026, medido en bytes)
 
-- Ficheros fuente: 14 funciones con traza; 4 citan un fichero fuente (`HAPI_Filter_TBOX.cpp`); 10 ninguno. **Corrige** «nombres de función y archivos fuente no recuperados»: el firmware cita `HAPI_Filter_TBOX.cpp`.
+- Ficheros fuente: 14 funciones con traza; 1 cita un fichero fuente (`HAPI_Filter_TBOX.cpp`); 13 ninguno. **Corrige** «nombres de función y archivos fuente no recuperados»: el firmware cita `HAPI_Filter_TBOX.cpp`.
 - Token `[CAM_SCALAR]`: 34 en A6000 fw3.21, 0 en A7S fw3.20 y 0 en A6300 fw2.01 (sin contraparte por token; no se afirma equivalencia).
 - Límite de herramienta (no del firmware): Ghidra/REA no identifican funciones desde `0x4380a000`; los prólogos Thumb se leyeron con Capstone.
 

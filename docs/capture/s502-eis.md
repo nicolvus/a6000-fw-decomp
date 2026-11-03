@@ -32,7 +32,13 @@ fw3.21, comparado con A7S fw3.20 y A6300 fw2.01.
 - La diferencia 6 vs 3 sugiere que la A6000 amplía el diagnóstico del EIS frente a A7S/A6300,
   sin relación evidente con el obturador electrónico.
 
-## NO VERIFICADO
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[EIS]`: 4 cadenas con el token (4 con sitio de carga, 5 sitios) en 3 funciones contenedoras; llamadores directos `bl` 6, punteros literal/PC-relativos/`movw`+`movt` 0/0/0; ficheros fuente citados por esas funciones: ninguno; token en A6000/A7S/A6300: 4/0/0; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+
+No atribuido (lista original anterior a la medición; las funciones contenedoras y los sitios ya están medidos arriba, y nada de esto se afirma):
 
 - Significado de los parámetros (`%x, %d, %d`) y de `rcct_SetStblzGridH`.
 - Relación con captura y con los modos de obturador.

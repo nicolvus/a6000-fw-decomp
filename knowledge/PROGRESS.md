@@ -523,3 +523,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 03-11-2026: familia MODE 6/6 (los cinco [MODE_CAP*] pasan de no-modulo a sub-etiqueta de [IMAGING_CAP]); cobertura 213/372.
 - 03-11-2026: S633 cierra la familia STK 6/6 (cinco [STK_*] a sub-etiqueta de [STK]; S501 sin NO VERIFICADO). Cobertura 218/372.
 - 03-11-2026: familia MOUNT (S133, S608, S613) sin menciones abiertas, por medidas.
+- 03-11-2026: familia OTROS cerrada (S634 + cierres de 49 informes); censo 364/372, 0 pendientes.

@@ -8,7 +8,7 @@ Detalle y tabla función→traza: `analysis/s170_illumi/illumi.md` · datos: `an
 `[ILLUMI]` es la instrumentación del **subsistema de iluminación** (sensor de luz ambiente):
 auto-ganancia del pre-amplificador (por GPIO), filtrado, corrección calibrada, cálculo de un
 **nivel de luz** y publicación de ese nivel como **evento de cámara** con `key_code`.
-`Illumi` **no se expande** en ninguna cadena; `RPR0400` tampoco (NO VERIFICADO).
+`Illumi` **no se expande** en ninguna cadena; `RPR0400` tampoco (no atribuido).
 Flujo: chip `IllumiRPR0400` (bus OSAL `0x520250`, reg `0x46`) → timer OSAL (`0x4e20`) →
 `TareaPeriodica` (`0x435ad680`) → AD del servicio **LIRO ADC** (`0x720018`, msg `0xfff0` [S166])
 → media móvil de 4 muestras (`0x435ad574`) → `C_AD` (`0x435ad4dc`) → `JudgeGainChange`
@@ -32,7 +32,7 @@ Ninguna cadena muerta; 20 `__PRETTY_FUNCTION__` más (31 sitios) nombran las fun
 - **Cola de eventos de cámara**: OSAL **`0x7a0020`**; 16 B `{u32 key_code, u32 0, u32 Level,
   u32 0}` (`0x435ace00`-`0x435ace0a`) — mismo formato que `[ACCY][BASE]:NotifyInput`
   (`0x43565846`-`0x43565854`). **`key_code`**: `0x17000001` (`0x435abe38`) y `0x17000002`
-  (`0x435abe34`); únicas apariciones en la imagen → consumidor final NO VERIFICADO.
+  (`0x435abe34`); únicas apariciones en la imagen → consumidor final no atribuido.
 - **ADC LIRO (S166)**: `0x435ad474` llama al servicio `0x720018` con mensaje `0xfff0`
   (`get_d`); AD crudo → global `0x4401b9fc`. **Chip `RPR0400`**: bus `0x520250`; `GetAD` =
   `ReadDevice(0x39, 0x46, buf, 4)` (`0x435adffe`-`0x435ae006`); backup ids `0x133003c`/
@@ -58,3 +58,10 @@ Ninguna cadena muerta; 20 `__PRETTY_FUNCTION__` más (31 sitios) nombran las fun
 ## Verificación
 **52/52** pares PIC verificados a mano (literal del pool, `destino = literal + (add+4)`, sin
 reutilización del registro). Scripts: `analysis/s170_illumi/` · Tests: `tests/test_s170_illumi.py`.
+
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[ILLUMI]`: 34 cadenas con el token (34 con sitio de carga, 52 sitios) en 25 funciones contenedoras; llamadores directos `bl` 16, punteros literal/PC-relativos/`movw`+`movt` 8/0/0; ficheros fuente citados por esas funciones: ninguno; token en A6000/A7S/A6300: 34/0/0; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+

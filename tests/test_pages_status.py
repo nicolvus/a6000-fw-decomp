@@ -28,7 +28,7 @@ def test_public_session_index_has_real_sources(tmp_path: Path) -> None:
     assert data["physical_tests"]["total"] == 24
     coverage = data["module_coverage"]
     assert coverage["covered"] + coverage["pending"] + coverage["excluded"] == coverage["total"]
-    assert coverage["excluded"] == 13
+    assert coverage["excluded"] == 8  # los 5 [MODE_CAP*] pasaron a sub-etiqueta (S632)
     assert (out / "site/progress/index.html").read_bytes() == (out / "docs/progress/index.html").read_bytes()
     svg = (out / "site/progress/progress.svg").read_text(encoding="utf-8")
     assert svg.count("<rect") == 1 + coverage["total"] + data["latest_number"] + data["physical_tests"]["total"]

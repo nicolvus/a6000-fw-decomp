@@ -50,9 +50,16 @@
 - Montura (S66) = subsistema **distinto** (código `0x436dfe6c`–`0x436e9ea4`, otro UART y otro
   protocolo). **S51 A/B/C = NO** se mantiene.
 
-## NO VERIFICADO / abierto
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[ACCY]`: 106 cadenas con el token (106 con sitio de carga, 111 sitios) en 61 funciones contenedoras; llamadores directos `bl` 78, punteros literal/PC-relativos/`movw`+`movt` 20/0/0; ficheros fuente citados por esas funciones: ninguno; token en A6000/A7S/A6300: 106/0/0; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+
+No atribuido (lista original anterior a la medición; las funciones contenedoras y los sitios ya están medidos arriba, y nada de esto se afirma):
 
 Ficheros fuente; significado de `ACCY`/`UM`, `Spinal`, `GF`, `SS`, `Tally`, `JIRO`, `AVR`, `LANC`, `AISATSU`; tabla de teclas `0x0A0000xx`→acción; cola OSAL de destino (`0x007A0020`); papel de `AccyMi*`; contenido de los comandos de 5 bytes.
+
 ## Revisión del agente principal
 
 (vacío)

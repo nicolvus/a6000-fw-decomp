@@ -5,11 +5,11 @@
 `[SAD]` es el **rótulo de diagnóstico del subsistema «SA»** (acelerador escalar) del bloque
 `NS_SCALAR_INFRA` (el de `[SFRA]`/`[SFRS]`, S118/S116). Vuelca configuración, estado y datos
 de la FIFO de JPEG, tiempos de cálculo, cabeceras de programa SA (`SaProgHdr`) y handles
-de unidad/DMM. **La sigla no se expande en ningún byte** → **sin desarrollar** (NO VERIFICADO).
+de unidad/DMM. **La sigla no se expande en ningún byte** → **sin desarrollar** (no atribuido).
 * Las 45 cadenas están en **3 bloques** de `.rodata` (no contiguas): A `0x43ce546b`–`0x43ce54bb`
   (3), B `0x43ce55bc`–`0x43ce5618` (3), C `0x43ce564c`–`0x43ce59d1` (39); entre ellos, una
   tabla de índices ajena al módulo (256 B) y las 3 cadenas de programa SA.
-* Fichero fuente propio: **NO VERIFICADO** (las 5 funciones no imprimen `file=%s`). Vecinos:
+* Fichero fuente propio: **no atribuido** (las 5 funciones no imprimen `file=%s`). Vecinos:
   `ScalarInfraSequenceSa.cpp` `0x43ce6c15` (10 sitios), `ScalarInfraSequenceSaStage.cpp`
   `0x43ce6e16` (6), `ScalarInfraAsyncMain.cpp` `0x43ce59fd` (3).
 * Canal de log **propio**: impresor `0x439a10f0` (id `0x93`, tamaño `0x9a`,
@@ -58,9 +58,17 @@ de unidad/DMM. **La sigla no se expande en ningún byte** → **sin desarrollar*
 Lo único del dominio de imagen es `jpg` (`JpgNrm`/`JpgSrt` = **índices de la cola FIFO**, no
 capturas). **Sin efecto en S51 (A/B/C = NO).**
 
-## Entregables / NO VERIFICADO
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[SAD]`: 45 cadenas con el token (45 con sitio de carga, 49 sitios) en 5 funciones contenedoras; llamadores directos `bl` 22, punteros literal/PC-relativos/`movw`+`movt` 0/0/0; ficheros fuente citados por esas funciones: ninguno; token en A6000/A7S/A6300: 45/0/0; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+
+No atribuido (lista original anterior a la medición; las funciones contenedoras y los sitios ya están medidos arriba, y nada de esto se afirma):
+
 `analysis/s167_sad/sad.md` · `sad.json` · `s167_*.py` · `tests/test_s167_sad.py` (106) +
-`tests/test_s167_sad_indep.py` (18). **NO VERIFICADO**: expansión de la sigla "SAD"; fichero
+`tests/test_s167_sad_indep.py` (18). **no atribuido**: expansión de la sigla "SAD"; fichero
 fuente propio; sentido de `Cdc/Nml/RsdSaPrg`, `DdsDataAdd`, `SelCode`, `ZmCfg`/`SaCfg`; qué
 es la «unit» y el «Dmm»; semántica de los 6 subcomandos y quién envía el mensaje `0x9548`;
 código homólogo en A7S/A6300 (las direcciones homónimas contienen otra cosa).
+

@@ -41,8 +41,15 @@ parámetro de API**, no el mecanismo. Es el **obturador mecánico** (junto a `yu
 El subsistema VPH es mucho mayor en la A6000 fw3.21: no solo se etiqueta, es que **la API
 completa no está** en los otros dos firmware.
 
-## Abierto / NO VERIFICADO
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[VPH_API]`: 106 cadenas con el token (48 con sitio de carga, 48 sitios) en 48 funciones contenedoras; llamadores directos `bl` 64, punteros literal/PC-relativos/`movw`+`movt` 0/0/0; ficheros fuente citados por esas funciones: ninguno; token en A6000/A7S/A6300: 106/0/0; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+
+No atribuido (lista original anterior a la medición; las funciones contenedoras y los sitios ya están medidos arriba, y nada de esto se afirma):
 
 - Cómo se referencia la tabla de manejadores (no hay punteros absolutos) y quién la invoca.
 - `laxo`, `diceic_arb`, `line_fchr`, `set_eomainsub_inverse` (siglas sin desarrollar).
 - Qué hace exactamente `shutter_mute_param` y quién lo consume.
+

@@ -45,7 +45,13 @@ A7S fw3.20 y A6300 fw2.01.
 - La mayor exposición en A6000/A6300 frente a A7S sugiere diferencias de AF/lente,
   no relación con obturador electrónico.
 
-## NO VERIFICADO
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[ZPD]`: 5 cadenas con el token (5 con sitio de carga, 5 sitios) en 4 funciones contenedoras; llamadores directos `bl` 9, punteros literal/PC-relativos/`movw`+`movt` 0/0/0; ficheros fuente citados por esas funciones: ninguno; token en A6000/A7S/A6300: 5/0/0; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+
+No atribuido (lista original anterior a la medición; las funciones contenedoras y los sitios ya están medidos arriba, y nada de esto se afirma):
 
 - Semántica de `ZPD_CLT`, `ZPD_SCC`, `ZPD_START`, parámetros de interrupción.
 - Correspondencia con servicios de AF (`MSG_ID_*`) y con S52/S53.

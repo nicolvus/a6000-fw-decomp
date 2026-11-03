@@ -5,7 +5,7 @@
 MakerNote de caras) y su puente con el **acelerador Scalar (SA)**. No es la línea SilentShutter, ni
 la montura (S66), ni el AF (`analysis/s63_af/`, otro agente), ni el pipeline (S76), ni ZIT (S80).
 
-**Estado:** VERIFICADO = contra bytes. INFERENCIA = lectura razonada. NO_VERIFICADO = pendiente.
+**Estado:** VERIFICADO = contra bytes. INFERENCIA = lectura razonada. no atribuido = pendiente.
 
 > **Nota de revisión (21-10-2026).** Este documento sustituye al borrador del subagente, que
 > contenía errores verificados: (a) direcciones en espacio de ficheros (`0x8060839`) en vez de
@@ -118,7 +118,7 @@ tracking"; la evidencia real es la de la tabla anterior.
 | `fc_drv_frc.cpp` | `index error : %d (face_num=%d)` | **FRC** (reconocimiento) |
 | `fc_drv_fdt.cpp`, `fc_drv_vat.cpp`, `fc_drv_detsa.cpp` | `IDT`/`VATR` (`VATR Mem OK`, `VATR Error det/gle`) | detección de caras en el pipeline IDT (S16–S30) |
 | `fc_drv_prc.cpp` | `PRC Acquire Error`, `PRC Start Error`, y las features `PrcRetouch`, `PrcBeautyEffect`, `PrcRecFace`, `PrcScalarAOneshot` | **PRC = el grupo de funciones de retoque/procesado de cara** (INFERENCIA) |
-| `fc_drv_vae.cpp` / `fc_seq_vae.cpp` | `[TRK]: Vae_Work Alloc_Error`, `Vat Work Alloc Error`, `VOT RefMap Get ERR` | VAE/VAT/VOT: motor de análisis de imagen por voting (NO_VERIFICADO el significado de las siglas) |
+| `fc_drv_vae.cpp` / `fc_seq_vae.cpp` | `[TRK]: Vae_Work Alloc_Error`, `Vat Work Alloc Error`, `VOT RefMap Get ERR` | VAE/VAT/VOT: motor de análisis de imagen por voting (no atribuido el significado de las siglas) |
 
 ## 7. El algoritmo FRC (VERIFICADO)
 
@@ -161,7 +161,13 @@ tracking"; la evidencia real es la de la tabla anterior.
   `fc_feature_panorama_face_meta.cpp`; ambos existen también en la A7S (`0x43ce9972` y
   `0x43ce5963`).
 
-## 10. Abierto (NO_VERIFICADO)
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[TRK]`: 215 cadenas con el token (213 con sitio de carga, 288 sitios) en 47 funciones contenedoras; llamadores directos `bl` 28, punteros literal/PC-relativos/`movw`+`movt` 18/0/0; ficheros fuente citados por esas funciones: ninguno; token en A6000/A7S/A6300: 216/216/189; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+
+No atribuido (lista original anterior a la medición; las funciones contenedoras y los sitios ya están medidos arriba, y nada de esto se afirma):
 
 - Significado de las siglas FDT, VAT, PRC, VAE, VOT, PMV (más allá de la evidencia de sus parámetros).
 - Estructura binaria de los mensajes hacia el Scalar y el reparto entre Core2/Core3.

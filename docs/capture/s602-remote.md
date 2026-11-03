@@ -132,7 +132,14 @@ Terminator: 0x30 0x2a         ("0*" ASCII)
 
 ---
 
-## 6. Límites / NO_VERIFICADO
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[ACCY]`: 106 cadenas con el token (106 con sitio de carga, 111 sitios) en 61 funciones contenedoras; llamadores directos `bl` 78, punteros literal/PC-relativos/`movw`+`movt` 20/0/0; ficheros fuente citados por esas funciones: ninguno; token en A6000/A7S/A6300: 106/0/0; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+- `[REMOTE]`: 32 cadenas con el token (32 con sitio de carga, 33 sitios) en 16 funciones contenedoras; llamadores directos `bl` 15, punteros literal/PC-relativos/`movw`+`movt` 10/0/0; ficheros fuente citados por esas funciones: ninguno; token en A6000/A7S/A6300: 32/0/0; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+
+No atribuido (lista original anterior a la medición; las funciones contenedoras y los sitios ya están medidos arriba, y nada de esto se afirma):
 
 - Solo 6/30 cadenas tienen xrefs directos; las demás pueden usar tabla de punteros o referencias computadas no resueltas por REA.
 - Funciones en 0x43c25xxx (donde residen las cadenas) no decompiladas; emisoras identificadas en 0x43566xxx (logger OSAL).

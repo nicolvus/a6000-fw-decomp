@@ -54,6 +54,13 @@ Mezclar vistas da offsets falsos: `+0x04` es `Reserved2` en la cabecera y `offse
 
 - A7S fw3.20: **75 cadenas, 75 comunes, 0 exclusivas en cada sentido**; solo cambia la posición
   (A6000 `0x43c6a28a`–`0x43cd9c8d`, A7S `0x43c6740f`–`0x43cca5a5`).
-- NO VERIFICADO: significado de `AUGI`, `PS`, `EP`, `STC`, `HRD` y de los valores de
+- no atribuido: significado de `AUGI`, `PS`, `EP`, `STC`, `HRD` y de los valores de
   `PictureType`/`AUGI_type`/`e_ptm`; qué cuenta `length`; escritor de vídeo; papel de
   `0x43a7e70c`; contenido de SPS/PPS; si A7S usa los mismos offsets (código no comparado).
+
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[AUGI]`: 75 cadenas con el token (75 con sitio de carga, 86 sitios) en 6 funciones contenedoras; llamadores directos `bl` 5, punteros literal/PC-relativos/`movw`+`movt` 9/0/0; ficheros fuente citados por esas funciones: ninguno; token en A6000/A7S/A6300: 75/75/75; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+

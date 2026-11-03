@@ -25,7 +25,13 @@ A7S fw3.20 y A6300 fw2.01.
 - `[VIDENCSTAT]` = diagnóstico/estado del **codificador de vídeo** (H.264/AVC), no
   relacionado con obturador electrónico.
 
-## NO VERIFICADO
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[VIDENCSTAT]`: 70 cadenas con el token (70 con sitio de carga, 114 sitios) en 32 funciones contenedoras; llamadores directos `bl` 45, punteros literal/PC-relativos/`movw`+`movt` 4/0/0; ficheros fuente citados por esas funciones: `video/enc/avcEncVideoState.cpp`, `video/enc/avcEncVideoStateEncStill.cpp`, `video/enc/avcEncVideoStateIdle.cpp`, `video/enc/avcEncVideoStateNonActive.cpp`; token en A6000/A7S/A6300: 70/70/71; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+
+No atribuido (lista original anterior a la medición; las funciones contenedoras y los sitios ya están medidos arriba, y nada de esto se afirma):
 
 - Semántica de los estados internos y de `augi`.
 

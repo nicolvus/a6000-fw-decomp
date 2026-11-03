@@ -52,10 +52,18 @@ fw3.21 **añade 15 trazas** a un módulo antes silencioso (coherente con S128).
 `[TP_R]: ERR. read size error` (tamaño leído por una llamada OSAL). **S51 (A/B/C = NO)
 se mantiene**.
 
-## NO VERIFICADO / abierto
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[TP_R]`: 18 cadenas con el token (14 con sitio de carga, 20 sitios) en 8 funciones contenedoras; llamadores directos `bl` 7, punteros literal/PC-relativos/`movw`+`movt` 2/0/0; ficheros fuente citados por esas funciones: ninguno; token en A6000/A7S/A6300: 18/0/0; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+
+No atribuido (lista original anterior a la medición; las funciones contenedoras y los sitios ya están medidos arriba, y nada de esto se afirma):
+
 Sigla "TP" y "DDS" sin desarrollar; `<Water>` y `ex_status`/`ex_info` sin interpretar;
 **no hay nombre de fichero fuente** en el módulo; no se ha localizado el consumidor de
 los eventos en la cola `0x005c011c`; nombres de `0x43561244`/`0x435613b0` deducidos del
 texto de las trazas.
+
 ## Revisión del agente principal
 *(vacío)*

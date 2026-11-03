@@ -36,7 +36,7 @@ tres (15 apariciones cada uno).
 vínculo de "Panda" con un mecanismo es el par `uc_PandaADError*`, de la tabla del
 **drive analógico del iris** (`0x43febd54`–`0x43febe60`) → **sin efecto en S51**.
 
-**NO VERIFICADO**: significado de la sigla; fichero fuente (el código PANDA no contiene
+**no atribuido**: significado de la sigla; fichero fuente (el código PANDA no contiene
 ningún nombre de fichero); significado de `Pre1/Pre2/Post1/Post2/Async`; ids de cola
 `0x00f9xxxx`; GID `0x00740017`; id de log `0x16`; papel de `0x00910042`; cola de datos que
 recibe los mensajes de lente; equivalente A6300 de `F4/F5/F6`.
@@ -44,3 +44,10 @@ recibe los mensajes de lente; equivalente A6300 de `F4/F5/F6`.
 [Informe](../../analysis/s151_panda/panda.md) · [datos](../../analysis/s151_panda/panda.json).
 Siguiente: decodificar los ids de cola y el GID `0x00740017`; averiguar qué tarea consume
 los 5 canales y qué significan "pre"/"post"/"async" en la lente.
+
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[PANDA]`: 10 cadenas con el token (10 con sitio de carga, 15 sitios) en 4 funciones contenedoras; llamadores directos `bl` 1, punteros literal/PC-relativos/`movw`+`movt` 0/0/0; ficheros fuente citados por esas funciones: ninguno; token en A6000/A7S/A6300: 10/0/0; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+

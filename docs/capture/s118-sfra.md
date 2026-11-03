@@ -53,9 +53,16 @@ resuelve a una tabla de contadores, no a `SET_PATH(CLOSE)`; `0x439a17e8`/`0x439a
 tabla de punteros, no en código). S118 usa *kill analysis* (`analysis/s118_sfra/pic_dataflow.py`).
 **Recomendación: revisar los recuentos de sitios de S110/S112/S113/S115.**
 
-## Abierto / NO VERIFICADO
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[SFRA]`: 100 cadenas con el token (100 con sitio de carga, 118 sitios) en 47 funciones contenedoras; llamadores directos `bl` 51, punteros literal/PC-relativos/`movw`+`movt` 10/1/0; ficheros fuente citados por esas funciones: `/home/jp10239/git-work/build/141H/141H.DSLR.DM_UUD3.reco.LATEST.diadem.set/ScalarA-ScalarInfra_131H/src/sequence/include/SfrJpegBuffer.h`, `DrvCallRc.cpp`, `ScalarInfraAsyncMain.cpp`, `ScalarInfraSequenceJpeg.cpp`, `ScalarInfraSequenceLiveView.cpp`, `ScalarInfraSequenceLiveViewStage.cpp`, `ScalarInfraSequenceSa.cpp`, `ScalarInfraSequenceSaStage.cpp`, `SfrYc.cpp`; token en A6000/A7S/A6300: 100/100/108; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+
+No atribuido (lista original anterior a la medición; las funciones contenedoras y los sitios ya están medidos arriba, y nada de esto se afirma):
 
 Significado funcional de los ids; correspondencia de los 5 casos del `TBB` (`0x439a1640`, tabla
 `0x439a1654`) con los nombres `[CMP]`; 5 ids de sub-comando sin traza propia (`0x34`, `0x40`,
 sub-ids `0x8120`); `SFRA`, `SA` y `RC` no están expandidas por el firmware; enlace con el imager
 (S115) y con el gestor de captura (S106) **indirecto**, vía `[SFR]`/`[SFRS]`.
+

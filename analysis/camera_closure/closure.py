@@ -32,11 +32,24 @@ def func_start(a):
             if struct.unpack_from("<H", B, x + 2 - BASE)[0] & 0x4000: return x
     return None
 
+_ENT = []
+def _is_push_lr(a):
+    h = u16(a)
+    if (h & 0xFE00) == 0xB400 and h & 0x100: return True                    # push {..,lr}
+    return h == 0xE92D and a + 4 <= BASE + N and bool(u16(a + 2) & 0x4000)  # push.w {..,lr}
+
+
 def func_end(f):
+    """Fin = siguiente `push {…lr}` (16 o 32 bits) o siguiente entrada fiable (destino de `bl` con ≥ 2 llamadores), la que llegue antes."""
+    if not _ENT:
+        import closure2
+        _ENT.extend(sorted(t for t, aa in closure2.bl_callers().items() if len(aa) >= 2 and BASE <= t < BASE + N - 4))
+    import bisect
+    i = bisect.bisect_right(_ENT, f)
+    lim = min(BASE + N - 4, f + 0x4000, _ENT[i] if i < len(_ENT) else f + 0x4000)
     x = f + 2
-    while x < min(BASE + N - 4, f + 0x4000):
-        h = u16(x)
-        if (h & 0xFE00) == 0xB400 and h & 0x100: return x
+    while x < lim:
+        if _is_push_lr(x): return x
         x += 2
     return x
 

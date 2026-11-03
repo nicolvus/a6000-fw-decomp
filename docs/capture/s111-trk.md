@@ -49,7 +49,13 @@ S71 ya fijó la semántica de DETSA/EDTSA/IRO2G/PMV/STK/BT. S111 no la repite: a
 inventario exacto, la pareja `ldr`→`add`, la función dueña y la zona. Sin solapamiento con
 `[IMAGING_CAP]` (S106), en `0x43c9b335`–`0x43ccab72`.
 
-## Abierto / NO VERIFICADO
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[TRK]`: 215 cadenas con el token (213 con sitio de carga, 288 sitios) en 47 funciones contenedoras; llamadores directos `bl` 28, punteros literal/PC-relativos/`movw`+`movt` 18/0/0; ficheros fuente citados por esas funciones: ninguno; token en A6000/A7S/A6300: 216/216/189; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+
+No atribuido (lista original anterior a la medición; las funciones contenedoras y los sitios ya están medidos arriba, y nada de esto se afirma):
 
 - Límites exactos de `0x43a376d8`/`0x43a37734` (prólogo anidado) y de las funciones
   `relaxed` `0x43a37ea4`/`0x43a375d8`.
@@ -58,3 +64,4 @@ inventario exacto, la pareja `ldr`→`add`, la función dueña y la zona. Sin so
 - Unidad de compilación de cada función y semántica de VAE/VAT/VOT más allá de
   `Alloc`/`Free`/`RefMap`.
 - Nada verificado en cámara ni en emulador.
+

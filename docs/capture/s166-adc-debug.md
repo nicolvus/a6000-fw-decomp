@@ -51,10 +51,18 @@ fw3.21 de la A6000 es la **capa de traza**, no el ADC.
 - **Ningún canal del ADC LIRO está ligado a la decisión mecánico/electrónico**: el A6300
   fw2.01, que **sí** tiene `ElecShutter/` (S135), tiene el **mismo** ADC y no añade
   ningún canal de obturador.
-## NO VERIFICADO / abierto
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[ADC_DEBUG]`: 14 cadenas con el token (14 con sitio de carga, 15 sitios) en 2 funciones contenedoras; llamadores directos `bl` 0, punteros literal/PC-relativos/`movw`+`movt` 0/0/0; ficheros fuente citados por esas funciones: ninguno; token en A6000/A7S/A6300: 14/0/0; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+
+No atribuido (lista original anterior a la medición; las funciones contenedoras y los sitios ya están medidos arriba, y nada de esto se afirma):
+
 Sin fichero fuente ni clase RTTI embebidos para el driver; qué sensor hay detrás de cada
 canal (la numeración llega en runtime desde parámetros `0x43561508`; sólo se conoce el
 nombre `CNF_ADC_CH_EVF_TEMP`); cómo se registra `int_ADC_Handler` (`0x4378d444`, 0
 llamadas `bl` y 0 punteros absolutos); alcance real de los comandos ADJ en runtime.
 [Informe](../../analysis/s166_adc_debug/adc_debug.md) · JSON `analysis/s166_adc_debug/adc_debug.json`
 · tests `tests/test_s166_adc_debug.py`.
+

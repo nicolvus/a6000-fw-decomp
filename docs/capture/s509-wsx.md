@@ -22,7 +22,13 @@ A7S fw3.20 y A6300 fw2.01.
 - `[WSX]` = subsistema de **búsqueda/lectura de datos en archivos binarios** (BSFS),
   no relacionado con obturador electrónico.
 
-## NO VERIFICADO
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[WSX]`: 59 cadenas con el token (59 con sitio de carga, 64 sitios) en 29 funciones contenedoras; llamadores directos `bl` 29, punteros literal/PC-relativos/`movw`+`movt` 0/0/0; ficheros fuente citados por esas funciones: `nalSepTop/nalSepApp.cpp`; token en A6000/A7S/A6300: 59/59/59; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+
+No atribuido (lista original anterior a la medición; las funciones contenedoras y los sitios ya están medidos arriba, y nada de esto se afirma):
 
 - Estructura del BSFS y su uso por otros módulos.
 

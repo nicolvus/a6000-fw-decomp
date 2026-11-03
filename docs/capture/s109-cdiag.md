@@ -51,10 +51,17 @@ fichero y comprueba **byte a byte** que el resultado coincide con el esperado.
    (0 exclusivas), mismas 16 clases, 2 ficheros y 27 firmas. La A6300 fw2.01 tiene 310
    tokens = las 270 comunes + **40 de 4K** (`[CDIAG][CTRL4KREC]`, `CdCtrl4KDec/Rec`, `CdExt*`).
 
-## Abierto / NO VERIFICADO
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[CDIAG]`: 270 cadenas con el token (241 con sitio de carga, 295 sitios) en 106 funciones contenedoras; llamadores directos `bl` 101, punteros literal/PC-relativos/`movw`+`movt` 1/0/0; ficheros fuente citados por esas funciones: `cdCtrlCore.cpp`, `cdCtrlIf.cpp`; token en A6000/A7S/A6300: 270/270/310; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+
+No atribuido (lista original anterior a la medición; las funciones contenedoras y los sitios ya están medidos arriba, y nada de esto se afirma):
 
 Fichero fuente de las clases de códec y de las utilidades · formato binario de
 `MSG_SENS_COMMAND`, `DIAGINFO` y los mensajes `SENS_*` · codificación numérica de `cmd`,
 `mode` y `func` · quién emite los comandos `SENS_*` · si `[CodecSeq]` (`0x43c3e8bb`) forma
 parte de `[CDIAG]`. Scripts: `analysis/s109_cdiag/` (`scan_cdiag.py`, `scan_diff.py`,
 `scan_class_table.py`, `scan_cdiag_refs.py`, `scan_unreferenced.py`, `disasm.py`).
+

@@ -6,7 +6,7 @@ comandos DBGCMD), S91 (los submódulos ADF) y S98 (el puente `libBizFw.so`). No 
 SilentShutter, ni la montura (S66), ni el AF, ni ADJ_CMD, ni ZPD, ni ZIT, ni el API del SA, ni el
 visor, ni las caras, ni el wireless, ni los modos de disparo, ni el IDT, ni AutoFraming.
 
-**Estado:** VERIFICADO = contra bytes. INFERENCIA = lectura razonada. NO_VERIFICADO = pendiente.
+**Estado:** VERIFICADO = contra bytes. INFERENCIA = lectura razonada. no atribuido = pendiente.
 
 Artefactos: `tests/test_s100_adf_contract.py`.
 
@@ -66,7 +66,14 @@ con la **excepción** de cuatro métodos que solo existen en el userland: `PrcSe
 comandos de solo-firmware (`LinearPhase*`, `CPU2 ExecTime`, `SoundAnalyzer*`, `ClearMSGQ`,
 `CountMSGQ`, `GetMSGQ`): son puntos de inspección, no una API.
 
-## 3. Abierto (NO_VERIFICADO)
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[ADF]`: 1220 cadenas con el token (1186 con sitio de carga, 1336 sitios) en 877 funciones contenedoras; llamadores directos `bl` 1354, punteros literal/PC-relativos/`movw`+`movt` 356/2/0; ficheros fuente citados por esas funciones: ninguno; token en A6000/A7S/A6300: 1231/1280/1356; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+- `[DBGCMD]`: 102 cadenas con el token (102 con sitio de carga, 113 sitios) en 88 funciones contenedoras; llamadores directos `bl` 25, punteros literal/PC-relativos/`movw`+`movt` 76/2/0; ficheros fuente citados por esas funciones: ninguno; token en A6000/A7S/A6300: 102/110/110; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+
+No atribuido (lista original anterior a la medición; las funciones contenedoras y los sitios ya están medidos arriba, y nada de esto se afirma):
 
 - El formato binario de cada comando (cabecera, `cateId`, `msgId`, `replyId`) y la tabla de
   equivalencia con las 11 peticiones `REQ_*` (S98).

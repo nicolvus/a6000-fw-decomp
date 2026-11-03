@@ -15,7 +15,7 @@ cadena intercalada en el bloque es el fichero fuente `seqCtrl/mcAvcEncSeqCtrl.cp
 Recibe los comandos del codificador y los ejecuta como una **máquina de estados** que
 cronometra todo en **VFC** (video frame count). Estados: u32 en `obj+0x15B84`
 (getter `0x43a5d2da`, setter `0x435d715c`, 17 llamadores); valores observados
-**0,1,2,3,4,6,7,8,10,11** (5 y 9 no aparecen → NO VERIFICADO).
+**0,1,2,3,4,6,7,8,10,11** (5 y 9 no aparecen → no atribuido).
 
 **18 ids de mensaje** (`0x8101`–`0x8112`) atendidos por `ProcAvcMsg` (`0x435d8d38`,
 `tbh` de 18 entradas en `0x435d8d50`): 12 con nombre (`OPEN_COMP`, `CLOSE_COMP`,
@@ -49,10 +49,17 @@ inicialización del codificador** (`…INITIALIZE_STILL_COMP` `0x43c4c44f`,
 `…INITIALIZE_MOVIE_COMP` `0x43c4c40e`, `…SET_MOVIE_QUALITY_INFO_COMP` `0x43c4c5fd`).
 ⇒ **S51 (A/B/C) = NO**.
 
-**NO VERIFICADO**: significado de la sigla `ENCSEQCTRL` (sin base textual; la clase es
+**no atribuido**: significado de la sigla `ENCSEQCTRL` (sin base textual; la clase es
 `McAvcEncSeqCtrl`); estado ↔ método (`Exec*State` se invocan por tabla, no por `bl`);
 semántica de los valores de la tabla O/U Crank; los 6 ids sin nombre; quién crea el
 objeto (0 punteros absolutos de 4 B a sus métodos); qué es exactamente `VFC`; qué es
 `m_beginEncCompTime`; sentido de `ReviseNum`.
 
 [Informe](../../analysis/s139_encseqctrl/encseqctrl.md) · [datos](../../analysis/s139_encseqctrl/encseqctrl.json).
+
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[ENCSEQCTRL]`: 46 cadenas con el token (46 con sitio de carga, 96 sitios) en 32 funciones contenedoras; llamadores directos `bl` 51, punteros literal/PC-relativos/`movw`+`movt` 0/0/0; ficheros fuente citados por esas funciones: `seqCtrl/mcAvcEncSeqCtrl.cpp`; token en A6000/A7S/A6300: 46/46/50; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+

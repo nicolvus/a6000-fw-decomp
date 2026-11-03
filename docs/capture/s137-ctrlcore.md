@@ -53,8 +53,19 @@ la clase **núcleo de control (`*CtrlCore`)** de ese contenedor:
 - **A6300 fw2.01: 90** = 55 comunes + **14 `[CDIAG][CTRLCORE] … 4K`** + **21
   `[CDEXT][CTRLCORE]`** (`StartVideoCodecDiag`, `LoopbackControl`, memorias
   `MEM AROOC/ARROC`). `CdExtCtrlCore` **no existe** en la A6000.
-## Abierto / NO VERIFICADO
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[AMSENS]`: 20 cadenas con el token (20 con sitio de carga, 36 sitios) en 10 funciones contenedoras; llamadores directos `bl` 11, punteros literal/PC-relativos/`movw`+`movt` 0/0/0; ficheros fuente citados por esas funciones: `amSensCtrlCore.cpp`, `amSensCtrlIf.cpp`, `amSensMsgIf.cpp`; token en A6000/A7S/A6300: 20/20/20; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+- `[CDIAG]`: 270 cadenas con el token (241 con sitio de carga, 295 sitios) en 106 funciones contenedoras; llamadores directos `bl` 101, punteros literal/PC-relativos/`movw`+`movt` 1/0/0; ficheros fuente citados por esas funciones: `cdCtrlCore.cpp`, `cdCtrlIf.cpp`; token en A6000/A7S/A6300: 270/270/310; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+- `[CTRLCORE]`: 55 cadenas con el token (55 con sitio de carga, 74 sitios) en 16 funciones contenedoras; llamadores directos `bl` 23, punteros literal/PC-relativos/`movw`+`movt` 1/0/0; ficheros fuente citados por esas funciones: `amSensCtrlCore.cpp`, `cdCtrlCore.cpp`, `mcSensCtrlCore.cpp`; token en A6000/A7S/A6300: 55/55/90; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+- `[MCSENS]`: 13 cadenas con el token (13 con sitio de carga, 16 sitios) en 6 funciones contenedoras; llamadores directos `bl` 4, punteros literal/PC-relativos/`movw`+`movt` 0/0/0; ficheros fuente citados por esas funciones: `mcSensCtrlCore.cpp`, `mcSensCtrlIf.cpp`; token en A6000/A7S/A6300: 13/13/15; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+
+No atribuido (lista original anterior a la medición; las funciones contenedoras y los sitios ya están medidos arriba, y nada de esto se afirma):
+
 Nombre de `0x439b4244` · nombres de `0x435a1bac` y `0x435a1be0` (sólo guarda corta) ·
 sitio exacto de la entrada indirecta a `ExecSensCmd`/`ExecSensComp` (sin `bl` ni puntero de
 4 B) · significado funcional de los ids `0x32`/`0x33` (`0x43a48d16`/`0x43a48cf2`). Scripts:
 `analysis/s137_ctrlcore/` (`scan_ctrlcore.py`, `verify_sites.py`).
+

@@ -70,10 +70,17 @@ de path (`TransPath*`, `SendOpen/ClosePathCmdToAsyncTask`, `SendComp`), de audio
 `DrvCallRc.cpp` (`0x43ce76fb`) y `SfrYc.cpp` (`0x43ce73ec`). Solo **12 de las 52 funciones** con
 traza pasan un `file=%s`, así que las otras 40 no tienen fichero atribuido.
 
-## Abierto / NO VERIFICADO
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[SFRS]`: 117 cadenas con el token (111 con sitio de carga, 125 sitios) en 52 funciones contenedoras; llamadores directos `bl` 42, punteros literal/PC-relativos/`movw`+`movt` 5/0/0; ficheros fuente citados por esas funciones: `ScalarInfraSuperStableMovieManager.cpp`, `SystemCmdAsyncCmdSetPin.cpp`, `SystemCmdAsyncGetPin.cpp`, `SystemCmdPinSend.cpp`; token en A6000/A7S/A6300: 117/151/212; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+
+No atribuido (lista original anterior a la medición; las funciones contenedoras y los sitios ya están medidos arriba, y nada de esto se afirma):
 
 - Significado de las siglas `SFRS`, `AIC`, `RC`, `VFX`, `IIB` y de `PINSEND`.
 - Tipo y semántica de cada campo (`nowVfc`, `transTime`, `configNum`, `dataContent`…).
 - La tabla de líneas de los `.cpp` y si `line=%d` corresponde al fichero de `file=%s`.
 - Qué hacen exactamente los modos `EFFECTMOVIEREC`, `MOTIONSHOTVIDEO` y `SUPERSTABLEMOVIE`.
 - Nada de esto modifica S51: no aparece ningún mensaje de obturador electrónico.
+

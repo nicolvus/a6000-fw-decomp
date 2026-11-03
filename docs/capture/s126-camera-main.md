@@ -35,7 +35,7 @@ S106 (`[IMAGING_CAP]`), S119 (`[APL]` dentro de `[CAMERA_SA]`) y S120 (`[IDT_OPD
 
 ## Cierre CAM-01 (03-11-2026, medido en bytes)
 
-- Ficheros fuente: 48 funciones con traza; 6 citan un fichero fuente (`Initialize/StaticSetInfo.cpp`, `Stage_Panorama.cpp`, `SystemDelay.cpp`, `init_cam_SetCamParam.cpp`, `init_cam_SetCamParam_main.cpp`); 42 ninguno.
+- Ficheros fuente: 48 funciones con traza; 4 citan un fichero fuente (`SystemDelay.cpp`, `init_cam_SetCamParam.cpp`, `init_cam_SetCamParam_main.cpp`); 44 ninguno.
 - `waku` (21 cadenas), `ympc` (3), `csum` (2), `cpeak` (2) y `LoadNum` (1) existen solo como texto de trazas con `%d`; el firmware no los define en otro sitio.
 - Token `[CAMERA_MAIN]`: 135 en A6000 fw3.21, 0 en A7S fw3.20 y 0 en A6300 fw2.01.
 

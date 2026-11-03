@@ -9,7 +9,7 @@ Decodificación de la subetiqueta `[AUDPINEDTR]` del `av-cam.bin` A6000 fw3.21, 
 - **Volumen de trazas:** A6000 = 34 cadenas `[AUDPINEDTR]`; A7S = 34; A6300 = 79.
   Fuente: `strings | grep -c '\[AUDPINEDTR\]'`.
 - **Inventario REA:** 34 cadenas (`analysis/s515_audpinedtr/ad_strings.json`).
-- **Referencias de código:** por determinar (pendiente de xrefs REA). **NO_VERIFICADO**
+- **Referencias de código:** por determinar (pendiente de xrefs REA). **no atribuido**
 - **Subsistemas inferidos (VERIFICADO por texto):** *Dataflow Infra Sender*:
   - `DataflowInfraSender::SendASync`, `dmm_share`, `dmm_free`, `Dmac Open/Start`, `dmm_alloc`, `SendPinData`, `SendMuteData`, `Initialize`, `Finalize`, `CopyNum`, `Set Audio Info`, `Pin Proc Err`, `Iterator Full`, `Bad Arg`, `Software Bug`.
   - Manejo de buffer de audio LPCM (Main/Sub), DMM (shared memory), DMAC transfers, pin-based data delivery.
@@ -21,7 +21,13 @@ Decodificación de la subetiqueta `[AUDPINEDTR]` del `av-cam.bin` A6000 fw3.21, 
 - `[AUDPINEDTR]` = módulo de **envío de infraestructura de datos de audio** (Dataflow Infra Sender), parte del pipeline de audio/vídeo, no relacionado con el obturador electrónico.
 - Maneja transferencias DMA de buffers de audio LPCM entre memoria compartida (DMM) y pines de datos (SendPinData/SendMuteData).
 
-## NO VERIFICADO
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[AUDPINEDTR]`: 34 cadenas con el token (34 con sitio de carga, 52 sitios) en 22 funciones contenedoras; llamadores directos `bl` 87, punteros literal/PC-relativos/`movw`+`movt` 0/0/0; ficheros fuente citados por esas funciones: `mcPinAudioEditor.cpp`; token en A6000/A7S/A6300: 34/34/79; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+
+No atribuido (lista original anterior a la medición; las funciones contenedoras y los sitios ya están medidos arriba, y nada de esto se afirma):
 
 - Referencias de código exactas (xrefs).
 - Funciones contenedoras y sus direcciones.

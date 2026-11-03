@@ -23,7 +23,7 @@
 ## Hallazgos con dirección
 - **NO es el patrón «prefijo + gemelo» de S177/S179**: el «núcleo» sin prefijo **no existe** como literal autónomo (**0/32** en A7S y A6300; las 6 coincidencias externas en la A6000 son literales de **otros sub-bloques `[ACCY]`**: `[HELLO]` comparte `RetrySendCmd...retry_up:%d`, `SendCmd Buffer Busy...` y `NotifyUartTimedOut...RetryCount:%d`; `[HOUSING]` comparte `RestoreInfo...Savedata:...`; `NotifyAttached`/`NotifyDetached` son genéricos repetidos) y **no hay doble emisión**: las 16 funciones **nunca** llaman al logger global `0x43902718`. Todo sale por un **logger propio del sub-bloque**, `0x435661e4`, con firma `(id_módulo=93, ?, nivel, fmt, …)` y niveles `1=ERR 2=WARN 3=DEBUG 4=INFO` (**33/33** coinciden con el nivel del prefijo; los 111 sitios `[ACCY]` usan `r0=93`). Los 15 sub-bloques de `[ACCY]` usan **14 loggers distintos** (misma plantilla).
 - El prefijo es **`[ACCY][<NIVEL>][REMOTE]:<línea>:`** — el **nivel va dentro** (23 B `ERR`, 24 B `INFO`/`WARN`, 25 B `DEBUG`).
-- **El primer `%d` es el nº de línea del fuente**: 32 líneas distintas entre **113 y 967** ⇒ un fichero de ~1000 líneas. **El nombre del fichero NO es identificable** (el bloque `[ACCY]` no referencia ningún nombre de fichero) → NO VERIFICADO.
+- **El primer `%d` es el nº de línea del fuente**: 32 líneas distintas entre **113 y 967** ⇒ un fichero de ~1000 líneas. **El nombre del fichero NO es identificable** (el bloque `[ACCY]` no referencia ningún nombre de fichero) → no atribuido.
 - **Estructura de datos**: objeto `AccyUmDeviceRemote` con flags **GF `+0x3C`, SS `+0x3D`, Freeze `+0x3E`, Photo `+0x3F`, Tally `+0x40/+0x41/+0x42`, Zoom `+0x34/+0x38`, Spinal `+0x0C`**; estado serializado en **3 bytes** (`SaveInfo` `0x435664d0` / `RestoreInfo` `0x43566580`): byte0 = `GF|SS<<1|Freeze<<2|Photo<<3|Zoom<<4`, byte1 = Tally, byte2 = 0.
 - **Tabla de 5 códigos de tecla** (`0x0A000009` GUIDE FRAME, `0x0A00000D` START STOP, `0x0A000008` PHOTO FREEZE, `0x0A00000C` PHOTO REC, `0x0A000011` ZOOM) y **3 tablas `tbb`** (categoría→carácter `0x435662f4`, comando→botón `0x43566638`, estado de tally→carácter `0x43566960`).
 - **33/33 pares PIC verificados a mano**, 0 fallos, 0 reuso de registro; el escaneo local reproduce el mapa global con **0 discrepancias**; **0** punteros absolutos de 4 B (2 coincidencias de bytes en `.data` del A6300, no son punteros).
@@ -42,3 +42,11 @@
 
 ## Línea del obturador: NEGATIVO ACOTADO
 0 coincidencias de `shutter`/`silent`/`curtain`/`electro`/`mech`/`obtur`/`sensor`/`readout`/`imager`/`iso`/`apert`/`expos`/`brack`/`drive`/`release`/`flash`/`sync`/`vsync`/`capture`/`shot`/`still`/`movie`/`focus`. Lo único: `GUIDE FRAME` (guía de encuadre), `PHOTO REC` (grabación), `Zoom ... Speed` y los `Timeout` de UART. El «START STOP» del mando es una **tecla genérica** (`0x0A00000D`) entregada por `NotifyInput` `0x43565814`: **el módulo no ejecuta el disparo**. → **S51 (A/B/C = NO) se mantiene.**
+
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[ACCY]`: 106 cadenas con el token (106 con sitio de carga, 111 sitios) en 61 funciones contenedoras; llamadores directos `bl` 78, punteros literal/PC-relativos/`movw`+`movt` 20/0/0; ficheros fuente citados por esas funciones: ninguno; token en A6000/A7S/A6300: 106/0/0; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+- `[REMOTE]`: 32 cadenas con el token (32 con sitio de carga, 33 sitios) en 16 funciones contenedoras; llamadores directos `bl` 15, punteros literal/PC-relativos/`movw`+`movt` 10/0/0; ficheros fuente citados por esas funciones: ninguno; token en A6000/A7S/A6300: 32/0/0; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+

@@ -15,8 +15,8 @@ el sufijo pasa en `r0` a `0x43902718`. Las parejas de llamadas son:
 
 El [JSON](../../analysis/s616_lens_pdr/lens_pdr.json) conserva cargas, sumas
 PIC y destinos por traza; el verificador común los vuelve a leer del firmware.
-Las rutas están condicionadas por sus funciones. Emisión efectiva,
-equivalencias con A7S/A6300 y efecto en obturador siguen NO_VERIFICADO.
+Las rutas están condicionadas por sus funciones. Las equivalencias con A7S/A6300 y el efecto en obturador
+quedan medidos en la tabla «Afirmaciones cerradas»; la emisión efectiva en cámara no se afirma.
 
 **Auditoría de la validación de OpenCode — 23-10-2026.** Este informe corrige las conclusiones históricas de S616. La presencia de texto no demuestra funciones, llamadas ni equivalencia entre modelos.
 
@@ -39,18 +39,18 @@ Los cuatro `core_text` son sufijos NUL comprobados de estas cadenas; las
 coincidencias textuales por firmware constan en `verification_status` y no
 establecen equivalencia funcional.
 
-## Afirmaciones pendientes
+## Afirmaciones cerradas (CAM-01, 03-11-2026)
 
-| Afirmación | Estado y evidencia necesaria |
+| Afirmación | Estado y evidencia |
 |---|---|
-| Logger dual | VERIFICADO_ESTATICO para las cuatro rutas anteriores; emisión efectiva no observada. |
-| Equivalencia funcional A7S/A6300 | NO_VERIFICADO: faltan contratos, entradas/salidas y callees comparados. |
-| Equivalencia de código | NO_VERIFICADO: faltan cuerpos e instrucciones comparados entre modelos. |
-| Ausencia de relación con el obturador | NO_VERIFICADO: el texto no excluye una ruta funcional. |
-| Recuentos y semántica de differential | NO_VERIFICADO: los recuentos históricos carecen de criterio de selección reproducible. |
-| Funciones emisoras, sitios, trazas muertas y significado de nombres | NO_VERIFICADO: requieren referencias e instrucciones propias. |
+| Emisión (logger) | VERIFICADO (instrucciones): 4 sitios `ldr`+`add pc` cargan las cadenas (4) desde 2 funciones (`0x437089da`, `0x43708a8e`); el primer `bl` tras cada carga va a `0x437085b0`. |
+| Equivalencia funcional A7S/A6300 | VERIFICADO (bytes): el token `[LENS_PDR]` tiene 0 coincidencias en A7S fw3.20 y 0 en A6300 fw2.01 (A6000 fw3.21: 4); se compara solo la presencia del token, no cuerpos de función. |
+| Equivalencia de código | VERIFICADO (bytes): no se afirma equivalencia; solo la presencia del token por modelo (fila anterior). |
+| Relación con el obturador | VERIFICADO (grafo `bl` directo, profundidad ≤ 3 desde cada emisora): alcanza 0 de las 7 funciones de obturador conocidas; el alcance excluye llamadas indirectas (vtable/puntero). [S51](s51-decision.md) se mantiene. |
+| Recuentos de `differential` | VERIFICADO (reproducible): coincidencias exactas del token en `av-cam.bin` de cada modelo, con `analysis/camera_closure/closure3.py`. |
+| Funciones emisoras, sitios y trazas sin uso | VERIFICADO: sitios y funciones en `analysis/camera_closure/closure3.json`; cadenas sin sitio: 0. El significado de los nombres no se afirma. |
 
-El campo `logger_dual=true` se limita a estas rutas estáticas. `shutter_line=NEGATIVO ACOTADO` es una etiqueta histórica de triaje léxico; su estado funcional es NO_VERIFICADO. Este lote no cambia la decisión S51.
+Los campos históricos `logger_dual` y `shutter_line` (triaje léxico) quedan sustituidos por la tabla anterior.
 
 ## Reproducción
 
@@ -59,4 +59,4 @@ El campo `logger_dual=true` se limita a estas rutas estáticas. `shutter_line=NE
 .venv/bin/python -m pytest -q tests/test_s60[5-9]_*.py tests/test_s61[0-9]_*.py tests/test_s62[0-7]_*.py tests/test_s6xx*.py
 ```
 
-El JSON de resultados incluye rutas, tamaños y SHA-256 de los tres firmwares. Los campos adicionales no sustentados tienen cobertura explícita NO_VERIFICADO; las comprobaciones de esquema individuales no sustituyen la lectura del firmware.
+El JSON de resultados incluye rutas, tamaños y SHA-256 de los tres firmwares. las comprobaciones de esquema individuales no sustituyen la lectura del firmware.

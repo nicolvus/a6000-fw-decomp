@@ -45,7 +45,13 @@
 
 ⇒ el módulo es **preexistente**; la fw3.21 de la A6000 añade **solo el logging** (S130/S132/S136).
 
-## NO VERIFICADO
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[DEPTH]`: 16 cadenas con el token (16 con sitio de carga, 17 sitios) en 11 funciones contenedoras; llamadores directos `bl` 5, punteros literal/PC-relativos/`movw`+`movt` 3/1/0; ficheros fuente citados por esas funciones: ninguno; token en A6000/A7S/A6300: 16/0/0; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+
+No atribuido (lista original anterior a la medición; las funciones contenedoras y los sitios ya están medidos arriba, y nada de esto se afirma):
 
 * Qué magnitud física mide `valueDepth` (0..4000) y qué significa `status`;
   la sigla `DEPTH` no aparece expandida en ningún byte (no se inventa). No hay

@@ -29,7 +29,13 @@ del `av-cam.bin` A6000 fw3.21, comparado con A7S fw3.20 y A6300 fw2.01.
   y `[AS]` (EIS/gyro, S70). El acrónimo `upm_get_hcrn_ura` sugiere un recurso URA.
 - Exclusividad A6000 puede deberse a diferencias de integración OSAL, no a captura.
 
-## NO VERIFICADO
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[STABILIZER]`: 3 cadenas con el token (3 con sitio de carga, 6 sitios) en 4 funciones contenedoras; llamadores directos `bl` 2, punteros literal/PC-relativos/`movw`+`movt` 0/0/0; ficheros fuente citados por esas funciones: ninguno; token en A6000/A7S/A6300: 3/0/0; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+
+No atribuido (lista original anterior a la medición; las funciones contenedoras y los sitios ya están medidos arriba, y nada de esto se afirma):
 
 - Significado de `upm_get_hcrn_ura` y del flujo de mensajes.
 - Relación con captura/obturador electrónico: sin evidencia.

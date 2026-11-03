@@ -22,7 +22,13 @@ A7S fw3.20 y A6300 fw2.01.
 - `[CONFIG]` = módulo de **volcado de configuración de memoria** (áreas de trabajo),
   no relacionado con obturador electrónico.
 
-## NO VERIFICADO
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[CONFIG]`: 47 cadenas con el token (47 con sitio de carga, 47 sitios) en 1 funciones contenedoras; llamadores directos `bl` 2, punteros literal/PC-relativos/`movw`+`movt` 0/0/0; ficheros fuente citados por esas funciones: ninguno; token en A6000/A7S/A6300: 47/47/47; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+
+No atribuido (lista original anterior a la medición; las funciones contenedoras y los sitios ya están medidos arriba, y nada de esto se afirma):
 
 - Semántica de cada área y su consumidor.
 

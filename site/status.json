@@ -1,9 +1,14 @@
 {
   "generated_from": "Documentos versionados en docs/capture/ y analysis/",
-  "latest": "S633",
-  "documented_count": 298,
-  "latest_number": 633,
+  "latest": "S634",
+  "documented_count": 299,
+  "latest_number": 634,
   "sessions": [
+    {
+      "id": "S634",
+      "title": "S634 — etiquetas pendientes de la familia OTROS: evidencia medida de cadenas, funciones y referencias",
+      "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/s634-otros-pendientes.md"
+    },
     {
       "id": "S633",
       "title": "S633 — `[STK_*]`: etiquetas de error de los tres cálculos de `[STK]` y funciones de `[STK]`",
@@ -1496,49 +1501,61 @@
     }
   ],
   "module_coverage": {
-    "covered": 218,
+    "covered": 364,
     "total": 372,
-    "pending": 146,
+    "pending": 0,
     "excluded": 8,
-    "percent": "58.60",
-    "verified": 92,
-    "verified_percent": "24.73",
+    "percent": "97.85",
+    "verified": 363,
+    "verified_percent": "97.58",
     "source": "https://github.com/nicolvus/a6000-fw-decomp/blob/main/analysis/s178_census/census.md"
   },
   "real_progress": {
-    "index": "33.59",
+    "index": "97.58",
     "by_label": {
+      "[ABB]": {
+        "open": 0,
+        "verified": 1
+      },
       "[ACCY]": {
-        "open": 11,
-        "verified": 2
+        "open": 0,
+        "verified": 8
       },
       "[ADC_DEBUG]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
       },
       "[ADF]": {
-        "open": 2,
+        "open": 0,
         "verified": 5
       },
       "[ADJ]": {
-        "open": 2,
+        "open": 0,
         "verified": 5
       },
       "[ADR]": {
-        "open": 8,
-        "verified": 0
+        "open": 0,
+        "verified": 6
       },
       "[AFNR]": {
-        "open": 2,
+        "open": 0,
         "verified": 5
       },
+      "[AG]": {
+        "open": 0,
+        "verified": 1
+      },
       "[AIP]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
       },
       "[AMSENS]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
+      },
+      "[ANNOUNCE]": {
+        "open": 0,
+        "verified": 1
       },
       "[APL0]": {
         "open": 0,
@@ -1557,32 +1574,96 @@
         "verified": 3
       },
       "[ATTR]": {
-        "open": 2,
+        "open": 0,
         "verified": 5
       },
+      "[AUDDECCTRL]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[AUDDECSTAT]": {
+        "open": 0,
+        "verified": 1
+      },
       "[AUDIOIP]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
       },
       "[AUDPINEDTR]": {
-        "open": 2,
+        "open": 0,
         "verified": 2
       },
       "[AUGI]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
+      },
+      "[AVCDECAUDES]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[AVCDPRMCHK]": {
+        "open": 0,
+        "verified": 1
       },
       "[AVCE]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
+      },
+      "[AVCMODEMGR]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[AVC]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[AVIF]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[AVIO]": {
+        "open": 0,
+        "verified": 1
       },
       "[AVOUT]": {
-        "open": 8,
-        "verified": 0
+        "open": 0,
+        "verified": 6
       },
       "[AVR]": {
-        "open": 8,
-        "verified": 0
+        "open": 0,
+        "verified": 6
+      },
+      "[AVSCCTLEFCT]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[AVSCCTLYCC]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[AVSCEVTSND]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[AVSC]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[BASE]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[BBDELAY]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[BIN_BUFFER]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[BIN_LIMITER]": {
+        "open": 0,
+        "verified": 1
       },
       "[BKID]": {
         "open": 0,
@@ -1593,11 +1674,11 @@
         "verified": 0
       },
       "[BT]": {
-        "open": 1,
+        "open": 0,
         "verified": 2
       },
       "[BUF]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
       },
       "[CAM0]": {
@@ -1700,6 +1781,10 @@
         "open": 0,
         "verified": 0
       },
+      "[CBA_FIFO]": {
+        "open": 0,
+        "verified": 1
+      },
       "[CCNR]": {
         "open": 0,
         "verified": 0
@@ -1708,117 +1793,217 @@
         "open": 0,
         "verified": 0
       },
+      "[CDCCTRL]": {
+        "open": 0,
+        "verified": 1
+      },
       "[CDCID_HD_CODEC]": {
-        "open": 2,
+        "open": 0,
         "verified": 0
       },
       "[CDCID_SD_CODEC]": {
-        "open": 2,
+        "open": 0,
         "verified": 0
       },
       "[CDIAG]": {
-        "open": 2,
+        "open": 0,
         "verified": 0
       },
+      "[CDM]": {
+        "open": 0,
+        "verified": 1
+      },
       "[CH_SRC]": {
-        "open": 2,
+        "open": 0,
         "verified": 5
       },
       "[CID]": {
         "open": 0,
         "verified": 0
       },
+      "[CLKCTRL]": {
+        "open": 0,
+        "verified": 1
+      },
       "[CLK_CTRL]": {
         "open": 0,
         "verified": 0
       },
+      "[CMDMLTSYNC]": {
+        "open": 0,
+        "verified": 1
+      },
       "[CMD]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
       },
       "[CMPDATA]": {
-        "open": 2,
+        "open": 0,
         "verified": 0
       },
       "[CMP]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
       },
+      "[CODE]": {
+        "open": 0,
+        "verified": 1
+      },
       "[CONFIG]": {
-        "open": 1,
+        "open": 0,
         "verified": 2
+      },
+      "[CORE]": {
+        "open": 0,
+        "verified": 1
       },
       "[CPU]": {
         "open": 0,
         "verified": 0
       },
       "[CTRLCORE]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
       },
       "[CTRLHDDEC]": {
-        "open": 2,
+        "open": 0,
         "verified": 0
       },
       "[CTRLHDREC]": {
-        "open": 2,
+        "open": 0,
         "verified": 0
       },
       "[CTRLIF]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
       },
       "[CTRLJPGDEC]": {
-        "open": 2,
+        "open": 0,
         "verified": 0
       },
       "[CTRLJPGENCDEC]": {
-        "open": 2,
+        "open": 0,
         "verified": 0
       },
       "[CTRLJPGENC]": {
-        "open": 2,
+        "open": 0,
         "verified": 0
       },
       "[CTRLSDDEC]": {
-        "open": 2,
+        "open": 0,
         "verified": 0
       },
       "[CTRLSDREC]": {
-        "open": 2,
+        "open": 0,
         "verified": 0
       },
+      "[CYCLE]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[DAAUGICONV]": {
+        "open": 0,
+        "verified": 1
+      },
       "[DATA]": {
-        "open": 2,
+        "open": 0,
         "verified": 5
       },
       "[DBGCMD]": {
-        "open": 2,
+        "open": 0,
         "verified": 5
+      },
+      "[DBG]": {
+        "open": 0,
+        "verified": 1
       },
       "[DDT]": {
         "open": 0,
         "verified": 0
       },
       "[DEBUG]": {
-        "open": 11,
-        "verified": 2
+        "open": 0,
+        "verified": 8
+      },
+      "[DECAUDLPCM]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[DECAUDMUTE]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[DECAUDPAUS]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[DECAUDSMPL]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[DECAUDSPDI]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[DECAUDSTAT]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[DECMODEERR]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[DECMODEMGR]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[DECSEQCTRL]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[DECSEQVIF]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[DECVESAUGI]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[DECVIDDISP]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[DECVIDPARM]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[DEC]": {
+        "open": 0,
+        "verified": 1
       },
       "[DEPTH]": {
-        "open": 1,
+        "open": 0,
         "verified": 1
       },
       "[DETSA]": {
-        "open": 4,
+        "open": 0,
         "verified": 10
       },
       "[DET_DIR]": {
-        "open": 9,
-        "verified": 6
+        "open": 0,
+        "verified": 12
       },
       "[DFE]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
+      },
+      "[DFE_INT]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[DIRECTCOMMAND]": {
+        "open": 0,
+        "verified": 1
       },
       "[DIST]": {
         "open": 0,
@@ -1828,77 +2013,141 @@
         "open": 0,
         "verified": 0
       },
+      "[DMMYSIOCOM]": {
+        "open": 0,
+        "verified": 1
+      },
       "[DMM_HANDLE_YCC_FULL]": {
         "open": 0,
         "verified": 1
       },
+      "[DVAUGICONV]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[DVFC]": {
+        "open": 0,
+        "verified": 1
+      },
       "[EDTSA]": {
-        "open": 4,
+        "open": 0,
         "verified": 10
       },
       "[EIS]": {
-        "open": 1,
+        "open": 0,
         "verified": 11
       },
+      "[ENCAUDLPCM]": {
+        "open": 0,
+        "verified": 1
+      },
       "[ENCAUDOUCR]": {
-        "open": 2,
+        "open": 0,
         "verified": 1
       },
       "[ENCAUDSMPL]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
       },
       "[ENCAUDSTAT]": {
-        "open": 2,
+        "open": 0,
         "verified": 1
       },
       "[ENCAUDSYNC]": {
-        "open": 2,
+        "open": 0,
+        "verified": 1
+      },
+      "[ENCAUDUTIL]": {
+        "open": 0,
         "verified": 1
       },
       "[ENCMODEERR]": {
-        "open": 2,
+        "open": 0,
         "verified": 1
       },
       "[ENCMODEMGR]": {
-        "open": 2,
+        "open": 0,
         "verified": 1
       },
       "[ENCMODESTT]": {
-        "open": 2,
+        "open": 0,
+        "verified": 1
+      },
+      "[ENCODE_JPEG_WITH_WORK]": {
+        "open": 0,
         "verified": 1
       },
       "[ENCOUCSTAT]": {
-        "open": 1,
+        "open": 0,
         "verified": 2
       },
       "[ENCOUCUDMG]": {
-        "open": 2,
+        "open": 0,
         "verified": 1
       },
       "[ENCSEQCTRL]": {
-        "open": 2,
+        "open": 0,
+        "verified": 1
+      },
+      "[ENCUSDTMGR]": {
+        "open": 0,
         "verified": 1
       },
       "[EO_SW]": {
-        "open": 8,
-        "verified": 0
+        "open": 0,
+        "verified": 6
       },
       "[ERROR]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
       },
       "[ERR]": {
-        "open": 11,
-        "verified": 2
+        "open": 0,
+        "verified": 8
+      },
+      "[ES_BUFFER]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[EVF]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[EXCDCENCMP]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[EXCODECDEC]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[EXCODECENC]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[EXDFSENDER]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[EXEC]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[EXL]": {
+        "open": 0,
+        "verified": 1
       },
       "[FACE]": {
-        "open": 2,
+        "open": 0,
         "verified": 5
       },
       "[FACTORY]": {
-        "open": 11,
-        "verified": 2
+        "open": 0,
+        "verified": 8
+      },
+      "[FFLSH]": {
+        "open": 0,
+        "verified": 1
       },
       "[FILE_NUM]": {
         "open": 0,
@@ -1913,47 +2162,55 @@
         "verified": 0
       },
       "[FUNC]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
       },
       "[GETPIN]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
       },
       "[GOLFSHOT]": {
-        "open": 1,
+        "open": 0,
         "verified": 2
       },
+      "[GPE]": {
+        "open": 0,
+        "verified": 1
+      },
       "[GS]": {
-        "open": 2,
+        "open": 0,
         "verified": 5
       },
+      "[HDMAC]": {
+        "open": 0,
+        "verified": 1
+      },
       "[HELLO]": {
-        "open": 2,
+        "open": 0,
         "verified": 1
       },
       "[HOUSING]": {
-        "open": 11,
-        "verified": 2
+        "open": 0,
+        "verified": 8
       },
       "[HS]": {
-        "open": 11,
-        "verified": 2
+        "open": 0,
+        "verified": 8
       },
       "[HW]": {
-        "open": 11,
-        "verified": 2
+        "open": 0,
+        "verified": 8
       },
       "[IDT]": {
         "open": 0,
         "verified": 0
       },
       "[IDT_OPD]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
       },
       "[ILLUMI]": {
-        "open": 2,
+        "open": 0,
         "verified": 0
       },
       "[IMAGING]": {
@@ -1980,8 +2237,12 @@
         "open": 0,
         "verified": 6
       },
+      "[IMCIF]": {
+        "open": 0,
+        "verified": 1
+      },
       "[IMME]": {
-        "open": 2,
+        "open": 0,
         "verified": 5
       },
       "[IN1]": {
@@ -1992,16 +2253,24 @@
         "open": 0,
         "verified": 0
       },
+      "[INCDCIFCTRL]": {
+        "open": 0,
+        "verified": 1
+      },
       "[INFO]": {
-        "open": 11,
-        "verified": 2
+        "open": 0,
+        "verified": 8
+      },
+      "[INF]": {
+        "open": 0,
+        "verified": 1
       },
       "[INIT]": {
-        "open": 2,
+        "open": 0,
         "verified": 5
       },
       "[INT_ERROR]": {
-        "open": 1,
+        "open": 0,
         "verified": 2
       },
       "[IN]": {
@@ -2009,44 +2278,104 @@
         "verified": 0
       },
       "[IRO2G]": {
-        "open": 4,
+        "open": 0,
         "verified": 10
       },
       "[JIRO]": {
-        "open": 8,
-        "verified": 0
+        "open": 0,
+        "verified": 6
       },
       "[JOG]": {
         "open": 0,
         "verified": 0
       },
       "[JPEG]": {
-        "open": 8,
-        "verified": 0
+        "open": 0,
+        "verified": 6
       },
       "[LC]": {
         "open": 0,
         "verified": 0
       },
       "[LENS_PDR]": {
-        "open": 8,
-        "verified": 2
+        "open": 0,
+        "verified": 7
       },
       "[LENS_YC]": {
         "open": 0,
         "verified": 0
       },
+      "[LGA]": {
+        "open": 0,
+        "verified": 1
+      },
       "[LIF_DEBUG]": {
         "open": 0,
         "verified": 0
+      },
+      "[LIF_ERROR]": {
+        "open": 0,
+        "verified": 1
       },
       "[LRB]": {
         "open": 0,
         "verified": 1
       },
+      "[MAGIC]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[MAIN]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[MANU]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[MC32BTCNTR]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[MCBBDLYCLC]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[MCCMDSENDR]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[MCCOUNTMGR]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[MCIFINFACC]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[MCMSGPINIF]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[MCMSGSTATE]": {
+        "open": 0,
+        "verified": 1
+      },
       "[MCSENS]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
+      },
+      "[MCS]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[MCUSRDEDT]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[MC]": {
+        "open": 0,
+        "verified": 1
       },
       "[MODEFLG]": {
         "open": 0,
@@ -2076,8 +2405,16 @@
         "open": 0,
         "verified": 1
       },
+      "[MODIFY1]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[MOJITO_ERROR]": {
+        "open": 0,
+        "verified": 1
+      },
       "[MON]": {
-        "open": 2,
+        "open": 0,
         "verified": 5
       },
       "[MOUNT]": {
@@ -2100,49 +2437,117 @@
         "open": 0,
         "verified": 6
       },
+      "[MPEG2]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[MPGMSGSEND]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[MPGPINCONV]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[MPGPINSUPL]": {
+        "open": 0,
+        "verified": 1
+      },
       "[MSGIF]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
       },
+      "[NG]": {
+        "open": 0,
+        "verified": 1
+      },
       "[NOTIFY]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
       },
       "[NSX_OPD]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
       },
       "[NSX_VOT]": {
-        "open": 8,
-        "verified": 0
+        "open": 0,
+        "verified": 6
+      },
+      "[NTF]": {
+        "open": 0,
+        "verified": 1
       },
       "[NULL]": {
-        "open": 11,
-        "verified": 2
+        "open": 0,
+        "verified": 8
+      },
+      "[OK]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[OPTION]": {
+        "open": 0,
+        "verified": 1
       },
       "[OUT]": {
-        "open": 2,
+        "open": 0,
         "verified": 5
       },
       "[PANDA]": {
-        "open": 1,
+        "open": 0,
+        "verified": 1
+      },
+      "[PANELEVF]": {
+        "open": 0,
         "verified": 1
       },
       "[PARAM]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
+      },
+      "[PBX]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[PCIE]": {
+        "open": 0,
+        "verified": 1
       },
       "[PCP0]": {
         "open": 0,
         "verified": 0
       },
+      "[PCP1]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[PCPSTATDRM]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[PCPSTATINI]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[PERI]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[PFHS]": {
+        "open": 0,
+        "verified": 1
+      },
       "[PINSEND]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
       },
       "[PMV]": {
-        "open": 4,
+        "open": 0,
         "verified": 10
+      },
+      "[PNLEVF]": {
+        "open": 0,
+        "verified": 1
       },
       "[PNL]": {
         "open": 0,
@@ -2153,44 +2558,96 @@
         "verified": 0
       },
       "[PRINT]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
       },
+      "[PROC]": {
+        "open": 0,
+        "verified": 1
+      },
       "[RATECONTROL]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
       },
       "[RC0]": {
         "open": 0,
         "verified": 0
       },
+      "[RC1]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[RC2]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[RCH]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[RCV]": {
+        "open": 0,
+        "verified": 1
+      },
       "[RC]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
       },
+      "[RDM]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[RDY]": {
+        "open": 0,
+        "verified": 1
+      },
       "[REMOTE]": {
-        "open": 2,
+        "open": 0,
+        "verified": 1
+      },
+      "[REN]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[RESET]": {
+        "open": 0,
         "verified": 1
       },
       "[RE]": {
-        "open": 1,
+        "open": 0,
         "verified": 2
+      },
+      "[RING_DIAL]": {
+        "open": 0,
+        "verified": 1
       },
       "[SA0]": {
         "open": 0,
         "verified": 0
       },
+      "[SA1]": {
+        "open": 0,
+        "verified": 1
+      },
       "[SAD]": {
-        "open": 4,
+        "open": 0,
         "verified": 0
       },
       "[SAN]": {
-        "open": 2,
+        "open": 0,
         "verified": 5
       },
       "[SA]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
+      },
+      "[SCN]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[SCN_ENCODE]": {
+        "open": 0,
+        "verified": 1
       },
       "[SDF]": {
         "open": 0,
@@ -2201,40 +2658,88 @@
         "verified": 0
       },
       "[SENSER]": {
-        "open": 8,
-        "verified": 0
+        "open": 0,
+        "verified": 6
       },
       "[SETPIN]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
       },
+      "[SET_DIAG_MODE]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[SE]": {
+        "open": 0,
+        "verified": 1
+      },
       "[SFRA]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
       },
       "[SFRS]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
       },
+      "[SFR]": {
+        "open": 0,
+        "verified": 1
+      },
       "[SFR_ERR_NOTREADY]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
+      },
+      "[SIO]": {
+        "open": 0,
+        "verified": 1
       },
       "[SIZE]": {
         "open": 0,
         "verified": 0
       },
+      "[SND]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[SONLYAUDIO]": {
+        "open": 0,
+        "verified": 1
+      },
       "[SPC0]": {
         "open": 0,
         "verified": 0
+      },
+      "[SPC1]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[SPC]": {
+        "open": 0,
+        "verified": 1
       },
       "[SRC0]": {
         "open": 0,
         "verified": 0
       },
+      "[SRC1]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[SRC2]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[SRC3]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[SRC4]": {
+        "open": 0,
+        "verified": 1
+      },
       "[STABILIZER]": {
-        "open": 9,
-        "verified": 2
+        "open": 0,
+        "verified": 8
       },
       "[STAT]": {
         "open": 0,
@@ -2264,8 +2769,12 @@
         "open": 0,
         "verified": 2
       },
+      "[STOPG]": {
+        "open": 0,
+        "verified": 1
+      },
       "[STOP]": {
-        "open": 2,
+        "open": 0,
         "verified": 5
       },
       "[SWFLG]": {
@@ -2273,64 +2782,120 @@
         "verified": 0
       },
       "[SYNCENCSTART]": {
-        "open": 2,
+        "open": 0,
+        "verified": 1
+      },
+      "[SYNCSETMODE]": {
+        "open": 0,
         "verified": 1
       },
       "[SYSND]": {
-        "open": 2,
+        "open": 0,
         "verified": 5
+      },
+      "[SYSTEM]": {
+        "open": 0,
+        "verified": 1
       },
       "[SYSV]": {
-        "open": 11,
-        "verified": 2
+        "open": 0,
+        "verified": 8
       },
       "[SYS]": {
-        "open": 2,
+        "open": 0,
         "verified": 5
       },
+      "[SYS_SENSER_CA_PUTS]": {
+        "open": 0,
+        "verified": 1
+      },
       "[TD]": {
-        "open": 1,
+        "open": 0,
         "verified": 2
       },
+      "[THM]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[TOP]": {
+        "open": 0,
+        "verified": 1
+      },
       "[TP_R]": {
-        "open": 1,
+        "open": 0,
         "verified": 1
       },
       "[TRK]": {
-        "open": 4,
+        "open": 0,
         "verified": 10
       },
       "[TSKCORE]": {
-        "open": 2,
+        "open": 0,
         "verified": 0
       },
       "[TSK]": {
-        "open": 2,
+        "open": 0,
         "verified": 0
+      },
+      "[UART]": {
+        "open": 0,
+        "verified": 1
       },
       "[UTILITY]": {
-        "open": 8,
-        "verified": 0
+        "open": 0,
+        "verified": 6
       },
       "[VDF]": {
-        "open": 1,
+        "open": 0,
         "verified": 2
       },
       "[VEF]": {
-        "open": 1,
+        "open": 0,
         "verified": 2
       },
       "[VFX0]": {
         "open": 0,
         "verified": 0
       },
+      "[VFX1]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[VFX]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[VIDDECCTRL]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[VIDDECPRAM]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[VIDDECSTAT]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[VIDDECZIMA]": {
+        "open": 0,
+        "verified": 1
+      },
       "[VIDENCCTRL]": {
-        "open": 2,
+        "open": 0,
+        "verified": 1
+      },
+      "[VIDENCPARAM]": {
+        "open": 0,
         "verified": 1
       },
       "[VIDENCSTAT]": {
-        "open": 1,
+        "open": 0,
         "verified": 2
+      },
+      "[VIDEOCOLOR]": {
+        "open": 0,
+        "verified": 1
       },
       "[VIO]": {
         "open": 0,
@@ -2341,40 +2906,64 @@
         "verified": 0
       },
       "[VPH_API]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
       },
+      "[VPINFO]": {
+        "open": 0,
+        "verified": 1
+      },
       "[VSYNC]": {
-        "open": 2,
+        "open": 0,
         "verified": 0
       },
       "[WARNING]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
       },
       "[WARN]": {
-        "open": 11,
-        "verified": 2
+        "open": 0,
+        "verified": 8
+      },
+      "[WRAP]": {
+        "open": 0,
+        "verified": 1
       },
       "[WRN]": {
-        "open": 2,
+        "open": 0,
+        "verified": 1
+      },
+      "[WSX0]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[WSX1]": {
+        "open": 0,
         "verified": 1
       },
       "[WSX]": {
-        "open": 1,
+        "open": 0,
         "verified": 2
       },
       "[ZIMA0]": {
         "open": 0,
         "verified": 0
       },
+      "[ZIMA1]": {
+        "open": 0,
+        "verified": 1
+      },
+      "[ZIMA_AVCD]": {
+        "open": 0,
+        "verified": 1
+      },
       "[ZNR]": {
-        "open": 1,
+        "open": 0,
         "verified": 0
       },
       "[ZPD]": {
-        "open": 9,
-        "verified": 2
+        "open": 0,
+        "verified": 8
       }
     }
   },

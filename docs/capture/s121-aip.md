@@ -52,9 +52,16 @@ dirección no-cadena: `0x43f1c4b4`, `0x43f1c5f4`). Falso positivo señero: `0x43
 **A6300 fw2.01: 63** = 37 + 26 (25 `[AIP][ZNR_EE]*` + `SetInstanceNumberExec Err %d`); ninguna
 de la A6000 falta → añade la instrumentación del `SaDriverZoomNrEe`.
 
-## Abierto / NO VERIFICADO
+## Cierre CAM-01 (03-11-2026, medido en bytes)
+
+- `[AIP]`: 37 cadenas con el token (37 con sitio de carga, 37 sitios) en 16 funciones contenedoras; llamadores directos `bl` 19, punteros literal/PC-relativos/`movw`+`movt` 0/0/0; ficheros fuente citados por esas funciones: ninguno; token en A6000/A7S/A6300: 37/37/63; alcance `bl` ≤ 3 al obturador: ninguna de las 7 funciones de obturador conocidas.
+
+Medido con `analysis/camera_closure/labels.py` (`labels.json`; regla PIC estricta, barrido `bl` por patrón de halfwords, función = primer `push {…lr}` hacia atrás). Las llamadas indirectas no se siguen.
+
+No atribuido (lista original anterior a la medición; las funciones contenedoras y los sitios ya están medidos arriba, y nada de esto se afirma):
 
 Desarrollo de `AIP`/`SA`/`LPS`/`ANR`/`ZNR`/`Zma`/`Ext`/`Mbx`; semántica de `errState`,
 `ErrStatus`, `Cmd`, `Func`, `Unq`, `bkId`, `uniqueId`; formato exacto de la cola
 `AudioIpCmdQueue`; contenido de las 350 entradas; si `SetFader` y `SetAudioNrType` usan el mismo
 objeto; significado físico de los divisores 100/20.
+
