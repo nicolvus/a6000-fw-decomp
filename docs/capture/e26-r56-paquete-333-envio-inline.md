@@ -22,3 +22,7 @@ Se quitan el selector de `0x43841070` (lo pisaba el envío) y C3-B (sin efecto d
 * Paquete `analysis/e25-27/artifacts-333/package-3.33/firmware_packed.dat` (`d4a2e880…`, no versionado).
 
 **NO VERIFICADO:** que con el bloque 0 intacto adb no cuelgue; que el obturador electrónico funcione igual que en el 3.30 (mismo `pkt[0x0e]` en el envío); exposición (sin C3-B: usar el parche de RAM de E25-11).
+
+## 4. En cámara (04-11-2026, MEDIDO)
+
+Instalado 3.32 → 3.33 (`Done`; reporta 3.33). Parche en RAM en `0x838d01ae` = `024b 1b68 06e0 00bf 00bf 94f8ed43 00bf…` (telnet). `dd if=/dev/dnflasha3 skip=12 count=1` → `1+0 records` al instante. **adb activado sin cuelgue**; conexión por Wi-Fi (`adb_shell`, puerto 5555): `ScalarA`, `uid=2000(shell)`. Cierra `E26-R51-ADB-HANG`: la causa era el bloque TPZL 0 modificado (R55 §5). Falta la foto electrónica.
