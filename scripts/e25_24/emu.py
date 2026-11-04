@@ -186,3 +186,29 @@ def run_bionz_send_from(code: bytes, start: int, live: int) -> int:
     uc.hook_add(UC_HOOK_CODE, hook)
     uc.emu_start(start | 1, 0)
     return uc.mem_read(carga + 0x4E, 1)[0]
+
+
+def run_bionz_ctor_d_e(code: bytes, r0: int, r1: int, r2: int, efcs: int) -> tuple[int, int]:
+    """Ejecuta 0x43841472..0x4384148c de 0x43841070 y devuelve (pkt[0x0d], pkt[0x0e])."""
+    uc = Uc(UC_ARCH_ARM, UC_MODE_THUMB)
+    size = (len(code) + 0xFFF) & ~0xFFF
+    uc.mem_map(BIONZ_BASE, size)
+    uc.mem_write(BIONZ_BASE, code)
+    uc.mem_map(0x50000000, 0x2000)
+    pkt, cap = 0x50000000, 0x50001000
+    uc.mem_write(pkt, bytes(0x20))
+    uc.mem_write(cap + 0x41C, efcs.to_bytes(4, "little"))
+    for reg, val in ((UC_ARM_REG_R0, r0), (UC_ARM_REG_R1, r1), (UC_ARM_REG_R2, r2),
+                     (UC_ARM_REG_R3, 0), (UC_ARM_REG_R4, pkt), (UC_ARM_REG_R9, cap),
+                     (UC_ARM_REG_SP, 0x50001F00)):
+        uc.reg_write(reg, val)
+    stop = 0x4384148C
+
+    def hook(uc_, address, size, user):
+        if address == stop:
+            uc_.emu_stop()
+
+    uc.hook_add(UC_HOOK_CODE, hook)
+    uc.emu_start(0x43841472 | 1, 0)
+    out = uc.mem_read(pkt, 0x10)
+    return out[0x0D], out[0x0E]

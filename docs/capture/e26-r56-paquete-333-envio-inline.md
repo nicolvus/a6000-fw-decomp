@@ -26,3 +26,9 @@ Se quitan el selector de `0x43841070` (lo pisaba el envío) y C3-B (sin efecto d
 ## 4. En cámara (04-11-2026, MEDIDO)
 
 Instalado 3.32 → 3.33 (`Done`; reporta 3.33). Parche en RAM en `0x838d01ae` = `024b 1b68 06e0 00bf 00bf 94f8ed43 00bf…` (telnet). `dd if=/dev/dnflasha3 skip=12 count=1` → `1+0 records` al instante. **adb activado sin cuelgue**; conexión por Wi-Fi (`adb_shell`, puerto 5555): `ScalarA`, `uid=2000(shell)`. Cierra `E26-R51-ADB-HANG`: la causa era el bloque TPZL 0 modificado (R55 §5). Falta la foto electrónica.
+
+## 5. 3.33 en cámara: la cortina suena (usuario) → 3.34
+
+Con el 3.33 la cortina sigue sonando. Causa (MEDIDO en código): el paquete de la foto (`pkt[8]=0xa0`) lo arma `0x43841070`, que escribe `pkt[0x0e]=0` en `0x43841476` (`strb r3,[r4,#0xe]`, `r3 = 0xa0 − 0xa0`); `0x438d0064` (parcheado en el 3.33) arma los envíos posteriores. En el 3.30 lo cubría la cueva del selector.
+
+3.34 añade, también en línea y sin cuevas, la reescritura de `0x43841472–0x4384148b` (salvo el `ldr.w r3,[pc,#0x494]` de `0x4384147c`, que no se mueve): `ldr.w r3,[sb,#0x41c]; strb r3,[r4,#0xe]; lsls/lsrs` para `(r0&3)<<3` y `(r1&1)<<5`, `r2<<6`, sumas y `strb r1,[r4,#0xd]`. Emulación contra el original con cinco juegos de entradas: `pkt[0x0d]` idéntico y `pkt[0x0e]` = `cap+0x41c` (0/1). Flags y `r0/r1` se recalculan antes de usarse (`cmp` en `0x43841492`; `r0/r1` se recargan). Bloques cambiados: 48 y 57; bloque 0 idéntico a Sony; `verify-334.json` 36/36; paquete `artifacts-334/package-3.34` (`95e7b94f…`, no versionado).

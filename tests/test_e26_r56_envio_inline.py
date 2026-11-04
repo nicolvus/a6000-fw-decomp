@@ -31,7 +31,7 @@ def pair() -> tuple[bytes, bytes]:
 def test_solo_cambia_el_tramo_y_revierte(pair):
     orig, out = pair
     diff = [i for i, (a, b) in enumerate(zip(orig, out)) if a != b]
-    assert diff and all(PI.SITE - PB.BASE <= i < PI.SITE - PB.BASE + len(PI.OLD) for i in diff)
+    assert diff and {i + PB.BASE for i in diff} <= PI.allowed_addresses()
     assert PI.restore_bytes(out) == orig
 
 
@@ -59,3 +59,14 @@ def test_emulacion_envio(pair, live):
     """Desde 0x438d01ae hasta el strb de 0x438d01fa: pkt[0x0e] = ajuste en vivo."""
     _, out = pair
     assert emu.run_bionz_send_from(out, PI.SITE, live) == live
+
+
+@needs
+@pytest.mark.parametrize("efcs", [0, 1])
+def test_constructor_captura_pkt_d_igual_y_e_en_vivo(pair, efcs):
+    """0x43841070 arma el paquete de la foto (pkt[8]=0xa0): pkt[0x0d] como Sony y pkt[0x0e] = cap+0x41c."""
+    orig, out = pair
+    for r0, r1, r2 in ((0, 0, 0), (3, 1, 2), (255, 255, 3), (7, 2, 1), (0x8e, 0x8d, 2)):
+        d_sony, e_sony = emu.run_bionz_ctor_d_e(orig, r0, r1, r2, efcs)
+        d_new, e_new = emu.run_bionz_ctor_d_e(out, r0, r1, r2, efcs)
+        assert e_sony == 0 and d_new == d_sony and e_new == efcs
