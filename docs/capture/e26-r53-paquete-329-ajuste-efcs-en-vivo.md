@@ -63,3 +63,17 @@ Instalado con `pmca-console firmware -f` (3.27 → 3.29, `Done`; la cámara repo
 **Resultado:** el paquete de captura lleva 1, como en el 3.27. Dos milisegundos después el búfer vuelve al paquete en reposo con `pkt[0x0e] = 0`: **no lo escribe el constructor** (con el 3.29 cada paso por el constructor da 1), sino otra rutina que restaura el paquete por defecto. La causa supuesta en §1 (`cap+0x41c` sin rellenar en paquetes sin captura) **no explica el fallo**: queda descartada como causa única. El búfer enviado (`0x83f91e32`) no llega a verse en 1, así que no está demostrado que sea el que sale hacia Darwin.
 
 **Sin resolver:** qué recibe Darwin y qué ve la compuerta `0x4318`. Sin leer `0x20003716` por SWD a Darwin (R52 §8, E24-02 §6: pines 11/12 de `CN4906`) o sin localizar la rutina que restaura el paquete, no se distingue. Vuelta atrás: 3.28 (R51) o 3.27 (R50).
+
+## 7. Investigación posterior solo con la sonda de BIONZ (04-11-2026)
+
+| Medida | Resultado | Fiabilidad |
+|---|---|---|
+| Muestreo AHB fino (~1 ms) de `0x83f91e32` y `0x83ed4948` en dos sesiones de 100–150 s | sin ningún cambio aunque el usuario disparó | **dudosa**: AP0 lee la DRAM sin pasar por las cachés de la CPU; lo que se ve depende de cuándo se expulsan las líneas |
+| Breakpoint en el emisor del evento 1 (`0x436b8a50`, copia `payload+0x40` → `0x43f91e32`), en un disparo | `r0 = 0x43ed4948` (mismo búfer que el constructor). Vista de la CPU: `00 40 00 18 bd 13 00 00 00 00 53 0e 00 40 00 00 …` (`pkt[8]=0`, `pkt[0x0e]=0`); vista AHB al mismo tiempo: `pkt[8]=0xa0`, `pkt[0x0e]=1` | MEDIDO, pero no se sabe si esa llamada es anterior o posterior a la cueva en ese disparo |
+| `0x4382fac8` (usado en R52 §6.1 como «rutina de envío») | es la conversión de tiempo a µs de E25-11 (`[cap+0x4da]`), no el envío | **corrige R52 §6.1**: aquella lectura no prueba lo que sale hacia Darwin |
+| Darwin: llamadores de las compuertas | `0x20c74` (bobinas) es alcanzable desde la tarea de captura `0x1811a`; `0x1fe66` (motor) solo desde otras tareas. `S+0x30..0x47` se borra solo al empezar la tarea (`0x196fa`, llamada única desde `0x1815c`) | MEDIDO (estático) |
+| Darwin: llamadores de `0x1b080` | 24 sitios; solo `0x20c78` y `0x1fe6c` pasan por la cueva `0x4318` (como en el 3.23 que sí silenció la cámara en T040) | MEDIDO (estático) |
+
+**Incidentes:** cinco reinicios de la cámara por paradas que no se reanudaban (`resume` sin pasar el breakpoint, o `resume` que falla tras leer memoria por la CPU: el núcleo c2 quedaba parado y el bucle registraba la misma parada cientos de veces hasta que saltaba el vigilante). Dos OpenOCD huérfanos ocuparon la sonda y se cerraron con `kill -9` sin haber examinado los núcleos. **No repetir paradas con este script** sin resolver antes el `resume` en el núcleo de BIONZ (modo Supervisor, c2).
+
+**Hipótesis vigente (INFERENCIA):** lo que el emisor del evento 1 copia hacia Darwin lleva `pkt[0x0e]=0`: o se envía antes de que la cueva escriba el 1, o algo lo restaura entre la cueva y el envío. No está demostrado el orden.

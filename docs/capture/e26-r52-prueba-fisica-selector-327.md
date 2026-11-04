@@ -53,7 +53,7 @@ Breakpoint de hardware en la cueva `0x43541800` en los 4 núcleos (OpenOCD, `cor
 
 **Resultado:** la selección **sí funciona dentro de BIONZ**: `+0x210 → cap+0x41c → cueva → pkt[0x0e] = 1`. La hipótesis 1 de la versión previa de este informe (objeto distinto) queda **descartada**. El 1 dura menos de un milisegundo en el búfer del constructor y el búfer enviado queda en 0.
 
-### 6.1 Breakpoint en la rutina de envío `0x4382fac8` (MEDIDO)
+### 6.1 Breakpoint en `0x4382fac8` (MEDIDO; **corregido en R53 §7: no es la rutina de envío**, es la conversión a µs de E25-11)
 
 Breakpoint de hardware sin watchpoints; en cada parada se leyó el paquete por AP0 (`r4 + 0x40000000`, 22 B) y se reanudó. Dos paradas, ambas con `+0x210 = 1`:
 
