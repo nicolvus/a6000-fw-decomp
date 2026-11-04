@@ -150,3 +150,46 @@ En un cuarto intento la parada temprana cayó en Loader2 (`pc = 0xc00385cc`) y s
 
 **Siguiente captura:** muestrear el PC hasta verlo en Loader3 y solo entonces colocar puntos de parada en `0xc01f2f24` (entrada de P2), `0xc01f2f9a` (retorno −302 de P2) y `0xc01f3b74` (LED).
 
+## 14. Captura encadenada y análisis estático de `Init Pwr2nd` (03-11-2026, solo lectura)
+
+**Captura (MEDIDO).** El halt se pidió desde el BootROM escribiendo `DBGDRCR` por el APB-AP (`pc = 0xc003021c`). Después se pusieron puntos de parada encadenados, armando las tres etapas siguientes del log en cada parada. Saltaron, en este orden:
+
+1. entrada de Loader3 (`0xc01f0000`)
+2. `Init BlkDev` (`0xc01f115c`)
+3. `Init FAT` (`0xc01f1178`)
+4. `Switch Bkup` (`0xc01f118e`)
+5. `Init DbgLv` (`0xc01f11b0`)
+6. `Init Pwr2nd` (`0xc01f11bc`)
+
+Los tres siguientes no saltaron en 30 s: `Pwr bootmode` (`0xc01f0a1c`), `Del LOG` (`0xc01f0a36`) y `Clr kLog` (`0xc01f0ab8`).
+
+Tras reanudar en `Init Pwr2nd`, OpenOCD perdió el APB-AP (`Could not initialize the APB-AP`), volvió a leer el DPIDR y después dio tiempos de espera en `DSCR` (`InstrCompl`). Entre la parada 1 y la 2 hubo otra pérdida breve del APB-AP, y esa vez los puntos de parada sí sobrevivieron.
+
+**Recorrido estático hasta `Pwr bootmode` (LEÍDO, Loader3 en RAM).** El arranque usa `PowerIC: 7` y `BootMode: 11`.
+
+| Paso | Función | Hardware que toca |
+|---|---|---|
+| `Init Pwr2nd` | `c01f5948`, que llama a `c01f64d0` `XPWR_OFF`, `c01f590a` ADC de batería, `c01f63f2` flags de tecla y `c01f4aa0` escritura en Bkup | Lee parámetros de Bkup, lee el ADC y el temporizador `f2403000`, escribe en la Bkup en RAM. `XPWR_OFF` solo lee el puerto y el bit y los imprime; no escribe en GPIO |
+| Rst Bkup | `c01f21c6` | Bkup |
+| Date type | `c01f3514` | Bkup |
+| `read MISCREG` | `c01f4ef8` | Solo lee `f2915000` y `f2912b10` y los copia a Bkup |
+| Comprobaciones BOM | `c01f1de6` | GPIO `f2910000`/`f2912000`, temporizador y `f2406000` |
+| Despacho de BootMode | `c01f2156`, luego `c01f1234`, `c01f1312` y `c01f132e` | Comprobado: el modo 11 llega a `c01f09e4` |
+| `OFF HotIC` | `c01f60c2` | Pulso de GPIO en `f2910000 + puerto·0x100`: `+0x48`, `+0x44` y `+0x48`, 20 µs cada uno. El puerto y el bit salen de Bkup (`0xf90387`/`0xf90388`), valor no leído |
+| `Pwr bootmode` | `0xc01f0a1c` | — |
+
+En todo Loader3 no hay ninguna instrucción `mcr p14`, es decir, ninguna escritura en los registros de depuración por coprocesador. Tampoco aparecen como literales direcciones de reinicio, de reloj ni del bloque de depuración en ese tramo.
+
+**Conclusión.** El código de `Init Pwr2nd` no borra los puntos de parada (LEÍDO). La pérdida coincide con la caída del enlace de depuración (APB-AP y luego `DSCR`), no con un paso concreto del código.
+
+Hay dos hipótesis, ninguna probada (INFERENCIA):
+- **(a)** El pulso de `OFF HotIC` u otra acción externa reinicia el dominio de depuración o el SoC.
+- **(b)** El tiempo acumulado con la CPU parada dispara un vigilante externo, el SysCon (`Init Sync`, `SYC REIO`), que reinicia el BIONZ.
+
+**Siguiente captura:**
+- Marcadores más finos entre `0xc01f11c6` (retorno de `Init Pwr2nd`) y `0xc01f0a1c` (en particular `0xc01f0a16`, antes de `OFF HotIC`, y `0xc01f612c`, después del pulso).
+- Menos lecturas por parada.
+- Si se pierde el enlace, muestrear `DBGPCSR` y `DBGDSCR` por el APB-AP sin parar la CPU.
+
+Si la pérdida se adelanta al añadir paradas, apoya (b). Si cae siempre en el mismo punto del código, apoya (a).
+
