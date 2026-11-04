@@ -41,3 +41,7 @@ A petición del usuario, `scripts/camera_silent.py` (ShutMode 0 en `0x836d6fb6`,
 ### 5.1 Comparación RAW mecánico / electrónico con el parche (04-11-2026, MEDIDO)
 
 Fotos del usuario en manual, f/3,5, ISO 2500, **1/90** (EXIF), escena fija: `DSC03398.ARW` (EFCS, sin parche) y `DSC03399.ARW` (Electronic, parche con `r5 = 3123`, calculado para **1/60** porque la app estaba cerrada). Media RAW sin negro: 307,9 → 568,8, razón **1,847 (+0,89 EV)**; canales con la misma razón (R 1,86, G 1,85, B 1,84); por franjas horizontales 1,78–1,96 (algo más en las inferiores). Con `r5` de 1/60 se esperaba 16,7/11,1 = 1,50; corregido por esa diferencia la electrónica queda **≈ 1,23× (+0,30 EV)** sobre la mecánica. Forma uniforme como en T050; la escala absoluta sigue con error de ~+25 % (T050 daba −22 %). Nota: escribir `+0x210` por `/dev/mem` no cambia el modo (Linux no ve la caché del núcleo de BIONZ: por `/dev/mem` se lee 0 cuando por SWD vale 1); el modo se cambia desde el menú.
+
+### 5.2 Repetición con `r5` calibrado a 1/90 (MEDIDO)
+
+`DSC03400.ARW` (Electronic, `r5 = 3488`) frente a `DSC03398.ARW` (mecánico), mismos ajustes: razón **1,207 (+0,27 EV)**, como se predijo en §5.1 (1,23). Canales 1,195 / 1,205 / 1,215; franjas horizontales 1,16–1,25 y verticales 1,17–1,24 (±4 %): uniforme y sin dominante. Con un solo punto no se separa pendiente de desplazamiento: si todo el exceso es de pendiente, el tiempo de línea efectivo sería ≈ 18,3 µs (en vez de 15,2); hace falta una segunda velocidad para calibrar.
