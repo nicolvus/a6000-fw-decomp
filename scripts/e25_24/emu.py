@@ -161,3 +161,28 @@ def run_bionz_send_store(code: bytes, live: int, sony_r3: int = 0xFF) -> int:
     uc.hook_add(UC_HOOK_CODE, hook)
     uc.emu_start(0x438D01FA | 1, 0)
     return uc.mem_read(carga + 0x4E, 1)[0]
+
+
+def run_bionz_send_from(code: bytes, start: int, live: int) -> int:
+    """Ejecuta 0x438d0064 desde `start` (rama r6 != 0) hasta pasar el strb de 0x438d01fa; devuelve pkt[0x0e]."""
+    uc = Uc(UC_ARCH_ARM, UC_MODE_THUMB)
+    size = (len(code) + 0xFFF) & ~0xFFF
+    uc.mem_map(BIONZ_BASE, size)
+    uc.mem_write(BIONZ_BASE, code)
+    uc.mem_map(0x50000000, 0x10000)
+    obj, carga = 0x50000000, 0x50008000
+    uc.mem_write(obj + 0x4AD8, carga.to_bytes(4, "little"))
+    uc.mem_write(carga + 0x20, (carga + 0x100).to_bytes(4, "little"))
+    uc.mem_write(LIVE_EFCS, live.to_bytes(4, "little"))
+    uc.reg_write(UC_ARM_REG_R4, obj)
+    uc.reg_write(UC_ARM_REG_R3, 0xAA)
+    uc.reg_write(UC_ARM_REG_SP, 0x5000F000)
+    stop = 0x438D01FE
+
+    def hook(uc_, address, size, user):
+        if address == stop:
+            uc_.emu_stop()
+
+    uc.hook_add(UC_HOOK_CODE, hook)
+    uc.emu_start(start | 1, 0)
+    return uc.mem_read(carga + 0x4E, 1)[0]

@@ -35,6 +35,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from e25_24 import patch_bionz as PB
 from e25_24 import patch_darwin as PD
 from e25_26 import patch_c3b as PC
+from e26_r56 import patch_send_inline as PI
 
 from e25_27 import fatimg, sums, tarball, tpzl
 
@@ -136,6 +137,10 @@ def load_originals(tar_path: Path = DEFAULT_TAR, updater_path: Path = DEFAULT_UP
     )
 
 
+# R56: solo el parche en línea del envío (sin selector, sin C3-B, sin cuevas: bloque TPZL 0 intacto)
+INLINE = False
+
+
 def _diff_addresses(diff: list[dict]) -> set[int]:
     return {item["address"] for item in diff}
 
@@ -146,6 +151,18 @@ def apply_patches(avcam: bytes, darwin: bytes) -> dict[str, Any]:
         raise BuildError("BIONZ de entrada no es el original (¿ya parcheado?)")
     if sha256(darwin) != DARWIN_SHA256:
         raise BuildError("Darwin de entrada no es el original (¿tipo 0/B1a?)")
+
+    if INLINE:
+        bionz, diff_inline = PI.apply_bytes(avcam)
+        darwin_out, diff_darwin = PD.apply_bytes(darwin)
+        if not _diff_addresses(diff_inline) <= PI.allowed_addresses():
+            raise BuildError("el parche en línea cambia bytes no autorizados")
+        if not _diff_addresses(diff_darwin) <= PD.allowed_addresses():
+            raise BuildError("Darwin cambia bytes no autorizados")
+        if PI.restore_bytes(bionz) != avcam or PD.restore_bytes(darwin_out) != darwin:
+            raise BuildError("reversión fallida")
+        return {"bionz": bionz, "darwin": darwin_out, "selector": bionz,
+                "diff_selector": diff_inline, "diff_c3b": [], "diff_darwin": diff_darwin}
 
     selector, diff_selector = PB.apply_bytes(avcam)
     combined, diff_c3b = PC.apply_bytes(selector)
@@ -260,7 +277,15 @@ def binary_manifest(originals: Originals, built: dict[str, Any], out: dict[str, 
             "nflasha3": {"sha256": sha256(out["partition"]), "size": len(out["partition"])},
             "firmware.tar": {"sha256": sha256(out["tar"]), "size": len(out["tar"])},
         },
-        "components": {
+        "components": {"envio_inline": {
+            "site": hex(PI.SITE), "before": PI.OLD.hex(), "after": PI.NEW.hex(),
+            "role": "pkt[0x0e] = ajuste EFCS en vivo (0x43edf894), en línea; sin cuevas",
+            "diff_count": len(built["diff_selector"])},
+            "darwin": {"cave": hex(PD.CAVE), "length": PD.CAVE_LEN, "flag": hex(PD.FLAG_ADDR),
+                       "sites": [{"address": hex(a), "before": o.hex(), "after": n.hex(), "role": r}
+                                 for a, o, n, r in PD.PATCHES],
+                       "diff_count": len(built["diff_darwin"])},
+        } if INLINE else {
             "selector": {
                 "cave": hex(PB.CAVE), "length": PB.CAVE_LEN,
                 "sites": [{"address": hex(a), "before": o.hex(), "after": n.hex(), "role": r}
@@ -287,7 +312,7 @@ def binary_manifest(originals: Originals, built: dict[str, Any], out: dict[str, 
         },
         "diff": diff_all,
         "diff_count": len(diff_all),
-        "cave_overlap": {
+        "cave_overlap": None if INLINE else {
             "selector_end": hex(PB.CAVE + PB.CAVE_LEN),
             "c3b_start": hex(PC.CAVE),
             "c3b_end": hex(PC.CAVE + PC.CAVE_LEN),
@@ -314,8 +339,9 @@ def binary_manifest(originals: Originals, built: dict[str, Any], out: dict[str, 
             "darwin_sum": out["darwin_sum_info"],
         },
         "reversal": {
-            "bionz": "PB.restore_bytes -> selector; PC.restore_bytes -> original; SHA-256 "
-                     + AVCAM_SHA256,
+            "bionz": ("PI.restore_bytes -> original" if INLINE
+                      else "PB.restore_bytes -> selector; PC.restore_bytes -> original")
+                     + "; SHA-256 " + AVCAM_SHA256,
             "darwin": "PD.restore_bytes -> original; SHA-256 " + DARWIN_SHA256,
             "partition": "reconstruir firmware.tar desde el original verificado; el original "
                          "se conserva intacto en la entrada",
@@ -448,8 +474,7 @@ def restore(out_dir: Path = DEFAULT_OUT) -> dict[str, Any]:
     originals = load_originals()
     bionz = (out_dir / "av-cam.integrated.bin").read_bytes()
     darwin = (out_dir / "darwin_core.integrated.bin").read_bytes()
-    selector = PC.restore_bytes(bionz)
-    avcam = PB.restore_bytes(selector)
+    avcam = PI.restore_bytes(bionz) if INLINE else PB.restore_bytes(PC.restore_bytes(bionz))
     darwin_orig = PD.restore_bytes(darwin)
     ok = sha256(avcam) == AVCAM_SHA256 and sha256(darwin_orig) == DARWIN_SHA256
     (out_dir / "av-cam.restored.bin").write_bytes(avcam)
@@ -476,7 +501,10 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--package", action="store_true", help="empaquetar FDAT/DAT y verificar")
     ap.add_argument("--restore", action="store_true", help="revertir y verificar los originales")
     ap.add_argument("--version", default=VERSION)
+    ap.add_argument("--inline", action="store_true", help="R56: solo el envío en línea, sin cuevas")
     args = ap.parse_args(argv)
+    global INLINE
+    INLINE = args.inline
     manifest = build(args.out)
     print(json.dumps({
         "status": manifest["status"],

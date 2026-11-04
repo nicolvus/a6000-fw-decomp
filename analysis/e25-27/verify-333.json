@@ -1,0 +1,106 @@
+{
+ "fase": "E26 — 3.25c experimental",
+ "dat_sha256": "d4a2e880eb9c70df3685f624323ef3020960a7133539d37112fc7bc9ffbdfb54",
+ "bootloader_sha256": "eb420385120f2cd7c9b071f67ce5808721b7de44fb78e2884a856e3c438a327f",
+ "todo_ok": true,
+ "comprobaciones": {
+  "contenedor.dend_ok": true,
+  "contenedor.descifrado_igual_a_fdat": true,
+  "contenedor.bloques_sin_error": true,
+  "contenedor.crc_cabecera_ok": true,
+  "contenedor.version_3_25_o_3_27": true,
+  "contenedor.modelo_region": true,
+  "contenedor.updater_oficial_3_21": true,
+  "control.dat_3_25_es_el_que_bloqueo": true,
+  "tar.cambios_vs_3_21_solo_4_miembros": true,
+  "tar.cambios_vs_3_25_solo_nflasha3_y_su_suma": true,
+  "tar.part_image_sum_verifica": true,
+  "nflasha3.residuo_0_en_todos_los_bloques": true,
+  "nflasha3.sin_violaciones_ldec": true,
+  "nflasha3.relleno_0x00_como_sony": true,
+  "nflasha3.bloques_contiguos_como_sony": true,
+  "nflasha3.max_sectores_igual_que_sony": true,
+  "nflasha3.cabe_en_la_particion": true,
+  "nflasha3.cabecera_y_bloque_0_en_32_kib": true,
+  "nflasha3.mismo_numero_de_bloques": true,
+  "nflasha3.solo_bloques_0_48_57_recompuestos": true,
+  "nflasha3.bloque_0_identico_a_sony": true,
+  "bionz.envio_inline_presente": true,
+  "nflasha3.registros_de_sony_salvo_paginas_cambiadas": true,
+  "control.sony_sin_violaciones": true,
+  "control.3_25_detectado": true,
+  "contenido.igual_al_3_25_previsto": true,
+  "bionz.cueva_selector_presente": true,
+  "bionz.envio_lleva_ajuste_en_vivo": true,
+  "contenido.cambios_solo_dentro_de_av_cam": true,
+  "contenido.av_cam_es_el_construido": true,
+  "contenido.revertir_av_cam_da_sony_exacto": true,
+  "emulacion.corregida_0_fallos": true,
+  "emulacion.corregida_sin_avisos_residuo": true,
+  "control.emulacion_sony_0_fallos": true,
+  "control.emulacion_reproduce_el_bloqueo": true
+ },
+ "disposicion": {
+  "corregida": {
+   "bloques": 369,
+   "offsets_no_alineados_512": 0,
+   "bloques_contiguos": true,
+   "relleno_no_cero": 0,
+   "max_sectores_por_bloque": 126,
+   "tamano": 11489280,
+   "violaciones_ldec": 0
+  },
+  "sony_3.21": {
+   "bloques": 369,
+   "offsets_no_alineados_512": 0,
+   "bloques_contiguos": true,
+   "relleno_no_cero": 0,
+   "max_sectores_por_bloque": 126,
+   "tamano": 11489040,
+   "violaciones_ldec": 0
+  },
+  "bloqueo_3.25": {
+   "bloques": 369,
+   "offsets_no_alineados_512": 359,
+   "bloques_contiguos": true,
+   "relleno_no_cero": 0,
+   "max_sectores_por_bloque": 145,
+   "tamano": 11572480,
+   "violaciones_ldec": 365
+  }
+ },
+ "emulacion": {
+  "corregida_3.25c": {
+   "entradas": 369,
+   "fallos": 0,
+   "avisos_residuo": 0,
+   "primer_fallo": null
+  },
+  "sony_3.21": {
+   "entradas": 369,
+   "fallos": 0,
+   "avisos_residuo": 0,
+   "primer_fallo": null
+  },
+  "bloqueo_3.25": {
+   "entradas": 369,
+   "fallos": 361,
+   "avisos_residuo": 359,
+   "primer_fallo": 0
+  }
+ },
+ "registros_de_sony_conservados": {
+  "57": 15
+ },
+ "bytes_logicos_distintos_de_sony": 19,
+ "tar_cambios_vs_3_21": [
+  "0640_darwin/darwin_core.bin",
+  "0641_darwin_sum/darwin.sum",
+  "0700_part_image/dev/nflasha3",
+  "0701_part_image_sum/part_image.sum"
+ ],
+ "tar_cambios_vs_3_25": [
+  "0700_part_image/dev/nflasha3",
+  "0701_part_image_sum/part_image.sum"
+ ]
+}

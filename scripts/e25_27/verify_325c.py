@@ -27,9 +27,10 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "analysis/e26-recovery"))
 
-from e25_24 import patch_bionz as PB  # type: ignore[import-not-found]
 import r39_tpzl_emu as R39  # type: ignore[import-not-found]
 from e25_06 import audit_packages as A  # type: ignore[import-not-found]
+from e25_24 import patch_bionz as PB  # type: ignore[import-not-found]
+from e26_r56 import patch_send_inline as PI  # type: ignore[import-not-found]
 
 from e25_27 import build, fatimg, sums, tarball, tpzl
 
@@ -58,7 +59,7 @@ def open_dat(path: Path, keys: tuple[bytes, bytes]) -> tuple[dict[str, Any], dic
         "descifrado_igual_a_fdat": dec.first_mismatch_vs_fdat is None,
         "bloques_sin_error": not (dec.bad_sum or dec.bad_flag or dec.bad_len),
         "crc_cabecera_ok": hdr["checksum_stored"] == hdr["checksum_computed"],
-        "version_3_25_o_3_27": hdr["version"] in ("3.25", "3.27", "3.29", "3.30", "3.31"),  # 3.27 = 3.25c; 3.29+ selector en vivo; 3.30+ envío; 3.31 bloques LZ
+        "version_3_25_o_3_27": hdr["version"] in ("3.25", "3.27", "3.29", "3.30", "3.31", "3.33"),  # 3.27 = 3.25c; 3.29+ selector en vivo; 3.30+ envío; 3.31 bloques LZ
         "modelo_region": (hdr["model"], hdr["region"]) == (build.MODEL, build.REGION),
         "updater_oficial_3_21": sha(fdat[upd["offset"] : upd["offset"] + upd["size"]])
         == build.UPDATER_SHA256,
@@ -155,7 +156,11 @@ def run(dat_path: Path = DAT) -> dict[str, Any]:
         "nflasha3.cabecera_y_bloque_0_en_32_kib": pkg["version"] != "3.31"
         or sum(p_new.entries[0]) <= 0x8000,
         "nflasha3.mismo_numero_de_bloques": lay_new["bloques"] == lay_sony["bloques"],
-        "nflasha3.solo_bloques_0_48_57_recompuestos": recompressed == [0, 48, 57],
+        "nflasha3.solo_bloques_0_48_57_recompuestos": recompressed == ([57] if pkg["version"] == "3.33" else [0, 48, 57]),
+        # R55 §5: modificar el bloque 0 cuelga el LZP de Linux; el 3.33 no lo toca
+        "nflasha3.bloque_0_identico_a_sony": pkg["version"] != "3.33" or p_new.block(0) == p_sony.block(0),
+        "bionz.envio_inline_presente": pkg["version"] != "3.33"
+        or fat_new.read(build.AVCAM_NAME)[PI.SITE - PB.BASE:PI.SITE - PB.BASE + len(PI.NEW)] == PI.NEW,
         "nflasha3.registros_de_sony_salvo_paginas_cambiadas": all(
             kept[i] == 16 - changed_pages[i] for i in recompressed),
         "control.sony_sin_violaciones": lay_sony["violaciones_ldec"] == 0,
