@@ -57,7 +57,7 @@ def open_dat(path: Path, keys: tuple[bytes, bytes]) -> tuple[dict[str, Any], dic
         "descifrado_igual_a_fdat": dec.first_mismatch_vs_fdat is None,
         "bloques_sin_error": not (dec.bad_sum or dec.bad_flag or dec.bad_len),
         "crc_cabecera_ok": hdr["checksum_stored"] == hdr["checksum_computed"],
-        "version_3_25": hdr["version"] == "3.25",
+        "version_3_25_o_3_27": hdr["version"] in ("3.25", "3.27"),  # 3.27 = mismo contenido que el 3.25c
         "modelo_region": (hdr["model"], hdr["region"]) == (build.MODEL, build.REGION),
         "updater_oficial_3_21": sha(fdat[upd["offset"] : upd["offset"] + upd["size"]])
         == build.UPDATER_SHA256,
@@ -185,8 +185,10 @@ def run(dat_path: Path = DAT) -> dict[str, Any]:
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--dat", type=Path, default=DAT)
-    report = run(ap.parse_args(argv).dat)
-    OUT.write_text(json.dumps(report, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    ap.add_argument("--out", type=Path, default=OUT)
+    args = ap.parse_args(argv)
+    report = run(args.dat)
+    args.out.write_text(json.dumps(report, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     for name, ok in report["comprobaciones"].items():
         print("OK  " if ok else "FALLO", name)
     print("todo_ok:", report["todo_ok"])
