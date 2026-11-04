@@ -390,7 +390,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 6. Otros subsistemas (AF, estabilización, vídeo, audio, lentes, energía, visor, accesorios, módulos de trazas)
 
-158 informes.
+159 informes.
 
 - **—** [E21 — Lecturas sin cámara de los volcados del 20-10-2026](capture/e21-lecturas-backups-2026-10-26.md)
 - **—** [E24-01 — Arranque, modo actualizador y dependencia de Darwin (27-10-2026)](capture/e24-01-arranque-recuperacion.md)
@@ -446,6 +446,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [E26-R45 — Firmware 3.25c (3.25 corregido), experimental y teórico](capture/e26-r45-firmware-325c-experimental.md)
 - **—** [E26-R46 — Procedimiento físico del camino 1 (SWD al BIONZ), sin osciloscopio](capture/e26-r46-procedimiento-fisico-swd.md)
 - **—** [E26-R47 — Primer contacto SWD con la A6000 bloqueada: DAP abierto y lectura de RAM (solo lectura)](capture/e26-r47-primer-contacto-swd-lectura-ram.md)
+- **—** [E26-R48 — Plan de recuperación: arrancar el actualizador de fábrica por SWD sin escribir en la NAND](capture/e26-r48-plan-recuperacion-actualizador-swd.md)
 - **—** [E26-RECOVERY R5 — Loader3, servicio BIONZ y diagnóstico de SY-1028](capture/e26-r5-loader3-servicio.md)
 - **—** [E26-RECOVERY R6 — BLDR, BIONZ y recuperación conservando la placa](capture/e26-r6-recuperacion-bionz.md)
 - **—** [E26-RECOVERY R7 — informe final de ingeniería inversa exhaustiva](capture/e26-r7-recuperacion-estatica.md)
