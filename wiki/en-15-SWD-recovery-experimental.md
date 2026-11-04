@@ -1,81 +1,120 @@
-# 15. SWD recovery (EXPERIMENTAL)
+# 15. SWD recovery (EXPERIMENTAL): how I recovered a bricked Sony A6000 with an RP2040
 
 Linked reports are in Spanish.
 
-> **EXPERIMENTAL, but proven once.** On 2026-11-03 it was run on the author's camera: read-only access ([R47](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r47-primer-contacto-swd-lectura-ram.md)) and a full recovery **with no manual NAND write** ([R48](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r48-plan-recuperacion-actualizador-swd.md), [R49](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r49-cierre-recuperacion-326.md)): the camera boots 3.26. Phase 8 A/B below (writing `nflasha2`/`nflasha3`) was **neither used nor recommended**: Loader3 ignores block writes. The path that worked is under "Actual result". It still means soldering on a board: it can damage it, and one case is not a guarantee.
+**Summary:** My A6000 was bricked (error LED, no USB connection) after I installed a modified firmware of my own. I recovered it by connecting an RP2040 to two pads on the board over SWD and forcing a single register during startup, which made the camera load Sony's factory updater. I then installed the official firmware over USB.
 
-Applies only to an A6000 bricked after installing 3.25 (LED 3 slow + 2 fast; Loader3 error −302, **measured** in R47 §15). Cause and status: [Current state](en-14-Current-state). Full technical detail (Spanish): [R46](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r46-procedimiento-fisico-swd.md).
+**Before you start:** This page is highly technical and specific. If you don't understand everything, don't worry; there are plenty of things I don't fully understand either. I hope it helps explain how this Sony camera's update system works. This is not a guide to follow blindly: soldering to the board can damage it, and this worked on only one individual camera.
 
-## Actual result (R49)
+## How the firmware is organized
 
-1. Wires soldered to the BIONZ-side pads of R4911/R4912 (option 5a) and an RP2040 `debugprobe`; OpenOCD, DPIDR `0x3ba02477`, 3.09 V.
-2. With chained breakpoints from Loader3's entry, at the `\updater\mode` check `r0 = 0` was forced (one register, during that stop). Loader3 chose BootMode 3 and started the factory updater from `nflasha1`.
-3. `pmca-console firmware` installed 3.26: the first attempt stopped at 45 % with `0x1063` (Darwin NG, cause unexplained); the second completed.
-4. Probe-free check: Mass Storage, `ILCE-6000`, firmware 3.26, no error LED.
+The A6000 stores its firmware in a NAND memory chip of about 473 MiB, divided into partitions that Linux sees as `/dev/nflasha1`, `nflasha2`, `nflasha3`, and so on. I know about these partitions from a complete dump I made on October 20, 2026, while the camera was running firmware 3.21.
 
-Still open: the cause of `0x1063`, and removing the probe. Full method and pitfalls (banked registers, breakpoints): [R49](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r49-cierre-recuperacion-326.md) (Spanish).
+That dump came from Sony's own updater mode. With the camera in that mode, one of my scripts read each `/dev/nflasha*` partition over USB, using the same protocol that pmca uses (the open-source tool for communicating with Sony cameras over USB). It was read-only. The total came to about 916 MB. I also dumped the BootROM (24 KB) and the bootloaders (`bootloader.bin`, which contains Loader2 and Loader3). The copy wasn't useful for restoring anything, but it did let me analyze everything offline.
 
-## Idea
+The three partitions that matter:
 
-An SWD debugger on the BIONZ could write the NAND without the BootROM key (which we do not know). Then the factory updater is brought back and official firmware is installed over USB. Rationale: [R37](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r37-cierre-estatico-recuperacion.md), [R38](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r38-guard-y-entrada-updater.md), [R40](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r40-jtag-swd-bionz.md).
+- `nflasha1` is the factory updater: a small FAT12 partition containing a Linux kernel, an initrd, and the programs used to install firmware over USB. The 3.2x packages don't include an updater image, so no firmware update rewrites it.
+- `nflasha2` stores settings and state: the installed version (`\updater\dat4`) and the updater flags, including the `\updater\mode` file.
+- `nflasha3` contains the main firmware (`av-cam.bin` and other files).
 
-## What is known and what is not
+## The brick
 
-| Item | Status |
-|---|---|
-| SWCLK = ball W25 and SWDIO = ball W26 of IC6000 (BIONZ), to CN4906 pins 11/12 via R4911/R4912 | Schematic |
-| R4911, R4912, R4915, R4916 and CN4906 **not populated** (footprints only) | User-confirmed (2026-11-02) |
-| No bootloader touches the CoreSight DAP | Binary (R40) |
-| Real SWCLK/SWDIO voltage (assumed ≈ 3.15 V) | **Not measured** |
-| Whether an eFuse blocks debugging | **Unknown**; if it does, this route is dropped |
-| OpenOCD/pyOCD support for the CXD90014 | **Not demonstrated** |
-| NAND writes from the BIONZ (MuMin logical layer) | Static analysis and emulation only ([R39](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r39-estatico-profundo.md)) |
+A few days later, I installed a modified firmware I had created through reverse engineering on my A6000: version 3.25. The updater reached 100% and displayed `Done`. After rebooting, the camera was dead. It had no USB connection and would not enter recovery mode. The only sign of life was the LED flashing three long times and then two short times.
 
-## Materials
+With the camera inaccessible, I statically analyzed Sony's bootloaders (Loader2 and Loader3) using REA, a reverse-engineering tool, with Claude's help. The LED pattern corresponded to Loader3 error code −302. My hypothesis was that the cause was in `nflasha3`, which I had recompressed using a format that the hardware decompressor could not read (this was an inference from analysis, not a measurement; I'll explain below what I was and wasn't able to confirm). My firmware had passed all the checks on the PC, and it still bricked the camera.
 
-- SWD probe with target-voltage reference: J-Link EDU Mini, or a Raspberry Pi Pico with `debugprobe` (fixed 3.3 V; do not use it if the line reads 1.8 V).
-- Multimeter with continuity. No oscilloscope needed.
-- Fine-tip soldering iron and thin solder with flux; 30–38 AWG enameled wire; magnifier or microscope; desoldering braid.
-- Precision screwdrivers, ESD gear, Kapton tape.
-- Regulated 3.8–4.2 V supply limited to 1 A, or a charged NP-FW50 battery.
-- Optional: 0 Ω resistors (0402/0603, only for variant 5b) and an 8-channel logic analyzer.
+There was one piece of good news: the factory updater (`nflasha1`) had not been touched. The problem was that Loader3 never got as far as launching it.
 
-## Before starting
+Using the dump, I opened `nflasha1`, extracted its initrd (a CRAMFS), and disassembled its programs. Its `UdtrMain.sh` script checks for files named `mode1`, `mode2`, `mode3`, or `mode6`. If it doesn't find any of them, it defaults to user mode and waits for firmware over USB. In other words, the updater doesn't need a flag to run. I just needed to get Loader3 to launch it.
 
-1. Make the **external R1 backup** and verify it (still pending).
-2. Install OpenOCD or pyOCD and check the probe is detected **without** connecting it to the camera.
-3. Decide in advance what will be written (phase 8).
+## Why SWD
 
-## Phases
+I needed a way into the camera, and the usual access paths were unavailable:
 
-Each phase has a stop criterion. If it is not met, stop and document.
+- USB was impossible because Loader3 never gets far enough to expose it.
+- Writing to the NAND externally wasn't an option: I hadn't identified the chip and didn't have the BootROM key at that point.
+- Conventional JTAG was ruled out: according to the schematic, TDI, TCK, and TMS are tied to 3.15 V.
 
-1. **Open and photograph.** Battery out, wait 5 min. Open per the service manual, bag screws by zone, and photograph both sides of the SY-1028 board. Locate CN4906, R4911, R4912 and IC6000.
-2. **Identify.** Compare against the schematic. Confirm R4915 and R4916 are empty (so Darwin does not fight the probe). Mark the R4911/R4912 pads and the nearest ground.
-3. **Continuity (camera off).** Check which pad of each resistor goes to the BIONZ and which to CN4906; that board ground is common; and no shorts between SWCLK/SWDIO and ground or supplies. A low reading or a short stops the procedure.
-4. **Voltage (camera powered, no probe).** Measure D_3.15V_MSS and the SWCLK/SWDIO pads to ground. 3.0–3.3 V: continue. 1.8 V or anything else: do not connect a 3.3 V probe.
-5. **Connect the wires (camera off).**
-   - **5a (recommended):** a wire straight to the BIONZ-side pad of R4911 and of R4912, plus a ground wire. Secure with Kapton.
-   - **5b:** fit 0 Ω resistors (or 22 Ω, max 47 Ω) in R4911/R4912 and solder to CN4906 pads 11/12. Harder: fine pitch.
-   - Length ≤ 15 cm. Check continuity and shorts before going on.
-6. **First contact with the DAP (read only).** Connect GND first, then SWCLK/SWDIO. With the camera powered, run an SWD scan at 100 kHz (`dap info`); drop to 10–50 kHz if there is no answer. Success: valid IDCODE. Abort: no answer after checking voltage, wiring and speed, or debugging disabled by an eFuse.
-7. **Read.** Halt the core and read `0xc0001200` (key table), `[0xc006000c]` and the log buffer at `0xc006001c…`. Confirm the real error code and dump the useful RAM with a SHA-256.
-8. **Choose the write, with a prior backup of whatever is readable from `nflasha2` and `nflasha3`:**
-   - **A.** Create `\updater\mode` in `nflasha2` (R37/R38): the factory updater in `nflasha1` boots and accepts firmware over USB.
-   - **B.** Rewrite `nflasha3` with the good 20-10 image ([R30](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r30-updater-done-boundary.md)).
-   - Both must respect ECC, geometry and bad blocks. Neither has been run.
-9. **Close.** Remove the probe and wires, reassemble, check boot, and install the official **3.26** package over USB (prepared in R37). 3.25c ([R45](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r45-firmware-325c-experimental.md)) is also experimental and not recommended.
+That left SWD, the two-wire version of the debug interface. In the service manual, SWCLK (Serial Wire Clock) comes from ball W25 of the BIONZ processor (IC6000), and SWDIO (Serial Wire Data I/O) comes from W26. Both signals run to connector CN4906 through two resistors, R4911 and R4912. On my camera, those resistors and the connector are not populated; only the footprints are present. There was nowhere to plug in, so I had to solder directly to the pads. There was also an unknown: an eFuse might have disabled debugging, and there was no way to know until I tried.
 
-## Stop conditions
+[Insert the schematic excerpt, with the two unpopulated resistors highlighted, and photos of both sides of the SY-1028 board showing IC6000, R4911, R4912, and CN4906. Cite the source of the schematic excerpt.]
 
-- A short, an abnormal reading or unexpected voltage.
-- Smell, heat or current above 1 A.
-- The DAP reports debugging disabled.
-- Any doubt about what is written or where: do not write.
+## The setup
 
-## Risks
+Before connecting anything, I took measurements with a multimeter. With the camera powered off, I checked that there were no shorts between the pads and ground or the power rails. I did not check continuity between each pad and the BIONZ; I relied on the service manual schematic. With the camera powered on and no probe connected, I measured 3.09 V on both pads, which was compatible with a 3.3 V probe. If I had measured 1.8 V, I would not have connected it.
 
-- Soldering 0402 pads is irreversible and can lift traces; secure the wires so they do not pull.
-- A wrong voltage on SWCLK/SWDIO can damage the BIONZ.
-- A bad write to `nflasha2` can lose calibration data.
-- If an eFuse blocks the DAP this route is useless; what remains is an external NAND read (no NAND identified), Sony service or a board swap.
+I soldered an AWG30 wire to the lower pad of R4911 (SWCLK, on the BIONZ side), another to the lower pad of R4912 (SWDIO, also on the BIONZ side), and a third to ground. I secured them with UV-curable solder mask and Kapton tape.
+
+[Insert a macro photo of the soldering, with an arrow pointing to each pad.]
+
+For the probe, I used an RP2040 Zero running the `debugprobe-zero` v2.3.0 firmware (https://github.com/inindev/debugprobe-zero), which turns it into a CMSIS-DAP adapter. SWCLK goes to GPIO 10, SWDIO to GPIO 11, and ground to GND. On the PC, I used OpenOCD, with Claude's assistance.
+
+[Insert a photo or diagram of the probe and its wiring.]
+
+## First contact
+
+With the wires soldered in place, the first thing I did was check whether the processor responded. I launched OpenOCD using the `cmsis-dap` driver and SWD transport at 100 kHz to be cautious. The DPIDR was `0x3ba02477`, a valid value.
+
+That answered one of the biggest questions: SWD read access was not blocked by any protection mechanism that prevented access to the DAP. I did not test writing at that point. I increased the speed to 1 MHz and checked that 256 test words matched the values read at 100 kHz; I performed the larger dumps at that speed.
+
+When I explored the DAP (the chip's debug access block), I found three access ports. Based on their identifiers, I inferred that one was for physical memory, another for debugging, and the third for JTAG. Through the debug port, I reached a ROM table containing four Cortex-A5 cores. I worked only with the first one.
+
+Using the memory access port, I read the boot vectors and dumped the RAM: one megabyte first, followed by another two. I made each dump twice and they were identical, byte for byte. In RAM, I found the running Loader3, identical to Sony's original. I also found the bootloader's internal log and the file table it was trying to load.
+
+Then I halted the CPU and saw where it was: in the LED loop, with the registers showing error code −302. By chaining breakpoints from the Loader3 entry point (I'll explain the technique shortly), I determined that the error occurred while loading `\sabin\idt_cam.bin`, which is in partition 3. That matches my theoretical diagnosis, which pointed to `nflasha3`. What this measurement cannot prove is the exact reason: the compression format remains an inference.
+
+## How to halt a boot process that takes seconds
+
+The camera's startup passes through three successive stages: BootROM, Loader2, and Loader3. It all happens within a few seconds (Loader3 takes less than one), so there isn't enough time to connect and inspect what is happening. You have to halt the CPU almost as soon as it starts and prepare the breakpoints at the locations you want to inspect.
+
+My first attempt was to set breakpoints in Loader2 so they would trigger later, in Loader3. It didn't work: they did not survive into that stage. I confirmed that a breakpoint in the LED routine, which runs on every failed boot, never triggered. I don't know why the breakpoints are lost. I only know that they are.
+
+What worked was proceeding in stages. As soon as the SWD connection responds, I halt the CPU and set a single breakpoint at the Loader3 entry point. When it triggers, I remove that breakpoint, set the next one in the chain, and continue until I reach the point I want to inspect.
+
+There is an important detail at each halt. Before resuming, I remove the current breakpoints, advance by one instruction, and then set the next ones. If I don't advance that instruction, the CPU remains halted right on the breakpoint I just set, and when I resume it immediately triggers again, over and over.
+
+The second trap is the registers. The processor has separate copies of `sp` (stack pointer) and `lr` (link register, or return address) for each operating mode. Loader3 runs in Supervisor mode. On this core, OpenOCD's generic `sp` and `lr` names do not refer to those banked registers and return 0 even when the CPU is perfectly fine. I saw `lr = 0` and thought execution had jumped to a null address, which would have meant a serious failure. When I requested the mode-specific registers, `sp_svc` and `lr_svc`, the stack and return address were healthy. If you read registers over SWD on this chip, make sure you use the registers for the current mode.
+
+## The idea: don't write anything, just change a register
+
+With the chained breakpoints working, I could inspect the boot process from the inside. My first idea was to use them to write to the NAND, for example by creating the `\updater\mode` file in `nflasha2`. I looked at how Loader3 handles this, and it wasn't viable. Its block layer accepts write requests and reports success without actually transferring anything. The functions that really write to the NAND are in RAM, but Loader3 doesn't use them. Calling them myself without the NAND controller's context could damage the translation layer for the entire NAND.
+
+The way forward came from somewhere else. I read the `bootloader.bin` dump (480 KiB), disassembled Loader3, and looked for what determines the boot mode. There are several modes. Normal mode (11), where my camera had crashed, loads `nflasha3`. Only mode 3 launches the updater in `nflasha1`, bypassing `nflasha3`, and Loader3 selects it only if it finds the `\updater\mode` file in `nflasha2`.
+
+The check is in a function I named `chk updater`. It mounts `nflasha2`, calls a routine that looks for `\updater\mode`, and compares the result with zero:
+
+```asm
+c01f15c0:  cmp r0, #0
+           bge → file exists → returns 1 → mode 3
+```
+
+If `r0` is greater than or equal to zero, the file exists and mode 3 is selected. On my bricked camera, `r0` contained `0xfffffed2`, a negative number meaning “does not exist.” (It's the same number as the LED error code; I have not demonstrated that they share the same cause.)
+
+I set a breakpoint right at that comparison and, at that moment, forced `r0 = 0`. I modified only the `r0` register while the CPU was halted immediately before executing that comparison.
+
+I didn't write anything to memory or the NAND. Loader3 thought the file existed and selected the updater mode. That function is called from eight places, but the boot path goes through it twice. I set `r0 = 0` at both points and read it back to verify the change. From the Loader3 entry point to the updater starting, 696 milliseconds elapsed.
+
+## Installation and verification
+
+The factory updater booted, and the PC detected Sony's USB device in updater mode. I started installing the official 3.26 firmware using `pmca-console`. The Sony updater wrote to the NAND, not me.
+
+The first attempt stopped at 45% with error `0x1063`. According to previous documentation in my project, this code usually indicates that Darwin (the power-management microcontroller) is not responding, but I could not confirm the cause in this case. I turned the camera off and on again. The updater started on its own, without repeating the SWD trick: the `\updater\mode` file was already there, created by Sony's updater when the installation began (this mechanism was anticipated in my analysis; I did not verify it by reading the NAND). The second attempt reached 100%.
+
+To verify the recovery, I removed the battery for ten seconds and turned the camera on with OpenOCD closed. It appeared as `ILCE-6000` in Mass Storage mode, running firmware 3.26, with no error LED.
+
+## Practical tips
+
+- Launch OpenOCD with `nohup … & disown` so it doesn't exit with the shell.
+- Don't run two OpenOCD instances against the same probe.
+- Avoid `kill -9`: it can leave the debug state dirty and force you to restart the camera.
+- When you insert the battery with the power switch set to OFF, the camera starts up and shuts itself down in less than a second. That's not a fault.
+
+## Limitations and risks
+
+- This worked on one camera, with one specific failure and one specific probe. It is not a guarantee.
+- Soldering to 0402 pads is irreversible and can lift traces. The wrong voltage on SWCLK/SWDIO can damage the BIONZ.
+- The cause of error `0x1063` is still unknown; it could have been an isolated failure or interference from the probe.
+- The probe is still soldered to my board; I have not removed it yet.
+- I have not verified that the exact script, `analysis/e26-recovery/r48_updater_swd.cfg`, will work as-is on another camera.
+- Full technical details: [R46](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r46-procedimiento-fisico-swd.md) (planned procedure), [R47](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r47-primer-contacto-swd-lectura-ram.md) (first contact), [R48](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r48-plan-recuperacion-actualizador-swd.md) (plan) and [R49](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r49-cierre-recuperacion-326.md) (closing report). Current state: [Current state](en-14-Current-state).
