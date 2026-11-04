@@ -1,6 +1,6 @@
 # Estado actual — léeme primero
 
-Contexto operativo mínimo para agentes. Última revisión: **31-10-2026** (E26 R42: búsqueda externa y esquema JTAG/eFuse).
+Contexto operativo mínimo para agentes. Última revisión: **03-11-2026** (E26 R49: cámara recuperada en el 3.26).
 No es historial ni fuente de verdad de los pendientes: ver [Responsabilidades](#responsabilidades-documentales).
 Versiones íntegras anteriores (nada se borró): [CURRENT-historial-2026-10-31](history/CURRENT-historial-2026-10-31.md)
 (bloques E26 R5–R35 y E25 completos) y [CURRENT-historial-2026-10-26](history/CURRENT-historial-2026-10-26.md) (S59–S627).
@@ -9,8 +9,8 @@ Versiones íntegras anteriores (nada se borró): [CURRENT-historial-2026-10-31](
 
 | Aspecto | Estado | Fuente |
 |---|---|---|
-| **Cámara** | **No arranca** desde que se instaló el 3.25 integrado (actualizador al 100 % y Done; LED 3 lentos + 2 rápidos). Testimonio del usuario, sin captura UART ni lectura de NAND | [E26-RECOVERY](../docs/capture/e26-recovery.md) |
-| **Prioridad** | Recuperar la cámara conservando calibraciones. Investigación **solo offline**; ningún acceso físico autorizado | [PENDIENTES § E26](../docs/PENDIENTES.md) |
+| **Cámara** | **Recuperada (03-11-2026):** arranca normal y reporta firmware **3.26**. Se bloqueó tras instalar el 3.25 integrado (−302 de Loader3); se accedió por SWD (R46/R47), se confirmó la causa en la propia cámara y se forzó la entrada al actualizador de fábrica sin escribir NAND (R48); el actualizador oficial de Sony instaló el 3.26 y restauró `nflasha3` | [R49](../docs/capture/e26-r49-cierre-recuperacion-326.md) |
+| **Prioridad** | Cerrada la recuperación física. Pendiente: retirar la sonda SWD y revisar si queda algo del obturador electrónico por retomar | [PENDIENTES § E26](../docs/PENDIENTES.md) |
 | Objetivo de recuperación | Una sola partición, `nflasha3` (CRC releída por el actualizador = imagen 3.25); copia válida `dev_nflasha3.bin` (20-10-2026). Falta la vía de escritura | [R30](../docs/capture/e26-r30-updater-done-boundary.md) |
 | Hito del obturador | **3.23 (Darwin tipo 0 + B1a, 2 bytes)** instalado en T040 (27-10-2026): el usuario confirmó que disparaba en silencio y sin error. Capturas de T042–T044 versionadas el 31-10-2026 | [E25](../docs/capture/e25-desactivacion-mecanica.md), [registro](../docs/capture/registro-pruebas-camara.md) |
 | Firmware 3.25 | Selector EFCS/Electronic + C3-B + Darwin condicionado, construido y verificado **offline** (E25-24b…E25-29); es el que se instaló | [E25-27](../docs/capture/e25-27-construccion-firmware-integrado.md) |
@@ -45,11 +45,14 @@ Versiones íntegras anteriores (nada se borró): [CURRENT-historial-2026-10-31](
 | R43 | Cierre estático de `CL1000`/`BOOT_MAIN` (bit0): el GPL de Sony no define su polaridad (solo nombra el bit1); trazado vectorial (`pdftotext -bbox`+`pdftocairo -svg`, sin OCR) de la hoja CLK BOOT muestra que `CL1000` no tiene salida hacia el conector Multi — sin atajo externo, sigue siendo físico interno. Efecto lateral: `BOOT_SERIAL_IN` (bit1) llega al pin **10** de CN4001, no al 9 (corrige R11/R19/R20/R29) | [R43](../docs/capture/e26-r43-cl1000-sin-acceso-externo.md) |
 | R44 | La comprobación de clave es una sola palabra de 32 bits comparada en una instrucción (`ldrd`+`cmp`), sin canal lateral; `error_blink` es un bucle infinito (exige apagar/encender por intento) → **fuerza bruta descartada**. Mejor vía ya conocida (R20/R23): `GPIO4.22!=0` evita la clave por completo. Reabierto el pin físico de ese bit con el método de R43: sin cierre, candidato débil `GPIO_SB_5`/bola N8. Sesión REA de `av-cam.bin` (§6): la asignación banco/bit de las 26 funciones que leen GPIO depende de la base de datos de propiedades de Sony (IDs opacos) — bloqueado por el mismo límite que `E1` | [R44](../docs/capture/e26-r44-gpio4-bit22-busqueda-pin.md) |
 | R45 | 3.25c: mismo BIONZ/Darwin que el 3.25, `nflasha3` con forma de Sony; constructor endurecido (`_splice`, máx. 126 sectores como Sony; el de R36 daba 129). 30/30 sobre el `.dat` final, emulación 0/369 fallos; publicado como *pre-release* experimental y teórica | [R45](../docs/capture/e26-r45-firmware-325c-experimental.md) |
+| R46 | Procedimiento físico planeado para SWD al BIONZ (sin osciloscopio): materiales, fases F1–F9, criterios de parada. R4911/R4912/CN4906 confirmados sin montar | [R46](../docs/capture/e26-r46-procedimiento-fisico-swd.md) |
+| R47 | Primer contacto SWD real: DPIDR/APs leídos, RAM volcada, `halt`+registros confirman −302 en registros; cadena de puntos de parada hasta el arranque 2 confirma físicamente que P2 (`CFG_E:Load file`) falla al cargar `\sabin\idt_cam.bin` de `nflasha3` (§15) | [R47](../docs/capture/e26-r47-primer-contacto-swd-lectura-ram.md) |
+| R48 | Plan de entrada al actualizador sin escribir NAND (forzar `r0=0` en `chk updater` por SWD); P0/P1 preparados; primer intento de instalación del 3.26 cortado al 45 % (`0x1063`, NG de Darwin) | [R48](../docs/capture/e26-r48-plan-recuperacion-actualizador-swd.md) |
+| R49 | **Cierre:** script corregido para el arranque único real; P1 ejecutado con éxito, reintento de instalación completo (`CMD_COMPLETE`). **Cámara recuperada, firmware 3.26 confirmado** | [R49](../docs/capture/e26-r49-cierre-recuperacion-326.md) |
 
-**Conclusión operativa:** la vía serie del BootROM existe y se abre en cada arranque, pero exige la clave de `nflasha0`, que nunca se
-volcó; todo lo restante es físico (`E26-FISICO-UPDATERMODE`, `E26-FISICO-BOOT`, `E26-R33-BLOQUE0`) y requiere autorización expresa. La
-intervención mínima es crear `\updater\mode` en `nflasha2` (1 byte lógico, `updater_mode_entry.py`) e instalar el 3.26 por USB en menos
-de 30 min con batería cargada (R37–R39); ese byte debe escribirse vía MuMin desde el BIONZ, no con lector externo (R39).
+**Conclusión operativa:** la recuperación física se completó por SWD (R46–R49): se forzó la entrada al actualizador de fábrica sin
+escribir NAND ni memoria (solo un registro de CPU durante el arranque), y el actualizador oficial de Sony instaló el 3.26, que
+restauró `nflasha3`. La cámara arranca en modo normal. Pendiente solo retirar la sonda y decidir si se retoma el obturador electrónico.
 
 ## Obturador — hallazgos que siguen vigentes (VERIFICADO salvo nota)
 
@@ -88,7 +91,7 @@ Trazabilidad completa: [CORRECTIONS](../docs/CORRECTIONS.md) y [STATE § Conclus
 | ID | Estado | Qué falta |
 |---|---|---|
 | E26-R33-BLOQUE0 / E26-FISICO-BOOT | ABIERTO (físico) | Leer la clave de `nflasha0` (bloque 0, `0xc00`, 8 B) y continuidad Multi pin 9 ↔ `BOOT_SERIAL_IN`; exige lector NAND/JTAG y autorización |
-| E26-FISICO-UPDATERMODE | ABIERTO (físico) | Crear `\updater\mode` (0 B) en `nflasha2` y, en la misma sesión, instalar `recuperacion-326` por USB |
+| E26-FISICO-UPDATERMODE | **CERRADO (R49)** | Cámara recuperada: actualizador forzado por SWD, 3.26 instalado por USB |
 | E26-R12-UART-FISICO / E26-R14-LED-MEDIDA | ABIERTO (físico) | UART0 solo útil para la vía serie del BootROM (logs apagados, R37); vídeo del LED para confirmar 0/3/2 |
 | E26-R5-NAND / -BIONZ / -FM3 | ABIERTO | Geometría y ECC de `nflasha3`, acceso SWD de lectura, protocolo del FM3; especificar herramienta y preservación antes de escribir |
 | E26-R30-HOSTRET0 | ABIERTO (baja) | Qué muestra el PC si `Execute` retorna 0 sin excepción |

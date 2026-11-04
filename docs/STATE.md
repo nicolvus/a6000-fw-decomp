@@ -1,7 +1,14 @@
 # Estado vigente — Sony A6000 reverse engineering
 
-## Estado global (31-10-2026)
+## Estado global (actualizado 03-11-2026)
 
+- **Cámara recuperada (03-11-2026):** con autorización física expresa, se accedió por SWD al BIONZ (R46/R47), se confirmó en la propia
+  cámara la causa de R36 (P2 `CFG_E:Load file` devuelve −302 al cargar `\sabin\idt_cam.bin` de `nflasha3`, [R47 §15](capture/e26-r47-primer-contacto-swd-lectura-ram.md)),
+  y se forzó por SWD (solo un registro de CPU durante el arranque, sin escribir NAND ni memoria) que Loader3 entrara al actualizador
+  de fábrica intacto de `nflasha1` ([R48](capture/e26-r48-plan-recuperacion-actualizador-swd.md)). El actualizador oficial de Sony instaló
+  el 3.26 (tras un primer intento cortado al 45 % por un NG de Darwin, `0x1063`/LED `0x63`, reintentado con éxito) y restauró `nflasha3`.
+  **La cámara arranca en modo normal y reporta firmware 3.26.** Cierre completo en [R49](capture/e26-r49-cierre-recuperacion-326.md).
+  Las entradas siguientes describen el estado previo al bloqueo, mantenidas como historial de diagnóstico.
 - **Cámara bloqueada tras instalar el 3.25 integrado** (Done en el actualizador; LED 3 lentos + 2 rápidos = −302 de Loader3 por inferencia,
   [R13](capture/e26-r13-led-error-provenance.md)). Testimonio del usuario; sin captura UART ni lectura de NAND. Prioridad: recuperación offline
   ([E26-RECOVERY](capture/e26-recovery.md)); ningún acceso físico autorizado.
@@ -191,8 +198,10 @@ Canónica para Codex y Claude Code; `AGENTS.md`/`CLAUDE.md` solo la resumen. No 
 
 ## Restricciones activas
 
-- Flasheos realizados con autorización expresa: 3.22 (T024, 26-10-2026), 3.23 (T040, 27-10-2026) y 3.25 (incidente E26). Desde el 3.25
-  ningún acceso físico ni escritura está autorizado; el análisis es offline.
+- Flasheos realizados con autorización expresa: 3.22 (T024, 26-10-2026), 3.23 (T040, 27-10-2026), 3.25 (incidente E26) y **3.26
+  (recuperación, 03-11-2026, por el actualizador oficial de Sony; R46–R49)**. Acceso físico por SWD autorizado para la recuperación
+  (R46–R48), incluida la escritura transitoria de un registro de CPU durante el arranque (R48 P1) y la instalación del 3.26 (P3).
+  Cualquier acceso físico o escritura posterior sigue necesitando autorización expresa para ese caso concreto.
 - **Git**: el usuario ha instruido explícitamente (21-10-2026) **subir cada hito terminado a
   `origin/main`**; sigue vigente la prohibición de subir firmware y de tocar la cámara. La prohibición
   de flashear solo se levanta con autorización expresa del usuario para un caso concreto (26-10-2026).
