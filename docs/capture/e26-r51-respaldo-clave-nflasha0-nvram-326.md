@@ -89,3 +89,12 @@ Con la flash sin colgar (escritura de prueba con `sync` correcta, sin `LDEC ERR`
 Al activar adb tras la reubicación: `LDEC ERR -10003 (retry)` a los 465,75 s (`dmesg` por telnet, que sigue respondiendo); `flush-252:0` en `sleep_on_page`, un `busybox` en `sleep_on_buffer`, `bdev_nflasha`/`bdev_dnflasha` en D. `misc/adb` no llegó a crearse. El `loadavg ≈ 73` es la línea base: unos 70 hilos `liro-kliro_*` en D desde el arranque, no el cuelgue. Los directorios nuevos se habían creado con 755; corregido a 777 como los originales. **No se sabe qué sector toca adb ahora**: el `dmesg` no lo dice (en R51 §6 solo salió con el oops). Siguiente: `/proc/sys/vm/block_dump` (existe) para registrar cada E/S con sector y proceso antes del error.
 
 Nota: el log del kernel leído por AP0 (SWD) se queda en el segundo 28 de este arranque: el anillo de `printk` no llega a la DRAM mientras está en la caché; para el log actual hay que usar `dmesg` por telnet.
+
+### 6.4 Causa real del cuelgue con adb (04-11-2026, MEDIDO): `/android/system/framework/core.odex`
+
+La reubicación de §6.2 dejó `misc` en 755 en la flash (el `chmod` hecho durante el cuelgue no llegó a escribirse) y el Wi-Fi dejó de conectar; corregido desde `pmca-console updatershell` (montaje con `posix_attr`, `chmod 777`, `umount` limpio). Con Wi-Fi funcionando y `/proc/sys/vm/block_dump` = 1, al activar adb:
+
+* Procesos en D: `bdev_dnflasha` (pid 69) en `mumin_devif_wait_trans`, dos hilos en `muminlzp_request` (descompresor LZP), `nmemories.tweak` en `sleep_on_page` tras `READ block 118892 on dnflasha144 (248 sectors)`, un `busybox` en `sleep_on_buffer`. **Nada en `/android/data`.**
+* `dnflasha144` = menor 144 = `dnflasha16` = **`/android/system`** (ext2 sobre TPZL, solo lectura). Con `debugfs` sobre `nflasha16_unpacked` del 3.21: sector 118892 → bloques ext2 59446–59570 → inodo 15670 = **`/framework/core.odex`**; bloque TPZL 928 de `nflasha16`.
+
+Conclusión (INFERENCIA fuerte): el cuelgue lo causa la lectura de un bloque comprimido de `nflasha16` que el LDEC no descomprime (`-10003`); cualquier proceso Dalvik que necesite esa zona de `core.odex` lo dispara (Tweak al activar adb; probablemente también el arranque del Wi-Fi en R51). `nflasha16` es el original de Sony (no lo cambia ningún paquete propio), así que apunta a la NAND física o a que el actualizador no la reescribe. La reubicación de §6.2 no era necesaria para adb (la deja, inocua). **NO VERIFICADO:** que el actualizador reescriba `nflasha16` en cada instalación.
