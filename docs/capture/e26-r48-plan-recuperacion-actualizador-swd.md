@@ -121,3 +121,14 @@ Se extrajo `UdtrMain.sh` del `initrd.img` de `nflasha1` del volcado del 20-10:
 - La enumeración USB con la placa abierta.
 - `StartUpdate`/`CompleteUpdate` en la versión exacta del cuerpo del paquete 3.26. Se toman de R5, no revisados hoy.
 - Que `set_reg` de OpenOCD 0.12 funcione con este núcleo.
+
+## 6. Resultado de P0 (03-11-2026, sin cámara)
+
+| Comprobación | Resultado |
+|---|---|
+| Entorno de `pmca` | `~/.local/share/pmca-venv`, el mismo de T024. Python 3.14.7, `pyusb` 1.3.1 y libusb1 ya instalados: **no hizo falta instalar nada** |
+| Código de `pmca` | `~/.local/share/Sony-PMCA-RE`, commit `a82f5ba`, `pmca-console.py --help` y `firmware -h` funcionan. Solo se diferencia de `references/pmca` en el tiempo de espera del cambio de modo (60 frente a 10 vueltas), que no se usa con la cámara ya en actualizador |
+| Ruta de instalación | `firmwareUpdateCommandInternal`: con un `SonyUpdaterDevice` hace `init`, `checkGuard`, `getFirmwareVersion`, `writeFirmware` y `complete`, sin `switchMode` (leído en el código instalado) |
+| Paquete 3.26 | `firmware.readDat` de `pmca` lo lee (offset 140, carga útil 212 987 904 B). Los hashes coinciden con el manifiesto (§2.5) |
+| Permisos USB | No hay regla udev para Sony (`054c`). P2 y P3 se ejecutarán con `sudo` y el Python del venv. No se ha cambiado la configuración del sistema |
+| Pendiente físico de P0 | Comprobar con el usuario que se puede conectar el USB con la placa abierta y la sonda puesta, y que la batería está cargada |
