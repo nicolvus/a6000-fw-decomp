@@ -3,10 +3,9 @@
 Sustituye el cálculo de Sony del byte (0x438d01ae–0x438d01c1: `[obj+0x4b68] − [obj+0x1d8]` o 0xff,
 solo usado por el `strb.w r3,[r2,#0x4e]` de 0x438d01fa) por la lectura del ajuste en vivo:
 
-    0x438d01ae  ldr r3,[pc,#8]      ; literal en 0x438d01b8
-    0x438d01b0  ldr r3,[r3]         ; bloque de ajustes 0x43edf684 + 0x210 (0/1)
-    0x438d01b2  b   0x438d01c2      ; continúa como Sony (r2 = 0, strb [obj+0x768])
-    0x438d01b4  nop; nop; literal 0x43edf894; nop; nop; nop
+    0x438d01ae  ldr r3,[pc,#12]; ldr r3,[r3]; b 0x438d01c2   ; rama r6 != 0
+    0x438d01b4  ldr r3,[pc,#4];  ldr r3,[r3]; b 0x438d01c8   ; rama r6 == 0 (desde 0x438d01aa)
+    0x438d01ba  nop; literal 0x43edf894 (0x438d01bc); nop
 
 También el paquete de la foto en 0x43841070 (CTOR, más abajo).
 
@@ -21,9 +20,13 @@ BASE, SIZE, SHA256 = PB.BASE, PB.SIZE, PB.SHA256
 SITE = 0x438D01AE
 OLD = bytes.fromhex("04f596439b6e23b1d4f8d8219b1adbb200e0ff23")
 LIVE_EFCS = PB.LIVE_EFCS
-NEW = (bytes.fromhex("024b" "1b68" "06e0" "00bf" "00bf") + LIVE_EFCS.to_bytes(4, "little")
-       + bytes.fromhex("00bf00bf00bf"))
+# rama r6 != 0 (0x438d01ae) y rama r6 == 0 (entra por 0x438d01b4 desde 0x438d01aa); literal común en 0x438d01bc
+NEW = (bytes.fromhex("034b" "1b68" "06e0"      # ldr r3,[pc,#12]; ldr r3,[r3]; b 0x438d01c2
+                     "014b" "1b68" "06e0"      # ldr r3,[pc,#4];  ldr r3,[r3]; b 0x438d01c8
+                     "00bf") + LIVE_EFCS.to_bytes(4, "little") + bytes.fromhex("00bf"))
 assert len(NEW) == len(OLD)
+# rama r6 == 0: Sony pone r3 = r6 = 0 (estado sin tipo); R56 §6: el 3.34 solo cubría r6 != 0
+R6_ZERO = (0x438D01AA, bytes.fromhex("33460ce0"), bytes.fromhex("03e0" "00bf"))  # mov r3,r6; b -> b 0x438d01b4
 
 # Paquete de la foto (pkt[8]=0xa0) en 0x43841070: Sony escribe pkt[0x0e]=0 en 0x43841476. Se reescribe
 # 0x43841472–0x4384148b (salvo el ldr.w pc-relativo de 0x4384147c, que no se mueve) con instrucciones
@@ -35,7 +38,7 @@ CTOR = (
     (0x43841480, bytes.fromhex("9201490101ebc00189186173"),
      bytes.fromhex("c907" "890e" "9201" "0918" "8918" "6173")),  # (r1&1)<<5; r2<<6; r1+=r0; r1+=r2; strb
 )
-SITES = ((SITE, OLD, NEW), *CTOR)
+SITES = ((SITE, OLD, NEW), R6_ZERO, *CTOR)
 
 
 def apply_bytes(data: bytes) -> tuple[bytes, list[dict]]:

@@ -48,8 +48,8 @@ def test_desensamblado(pair):
     md = capstone.Cs(capstone.CS_ARCH_ARM, capstone.CS_MODE_THUMB)
     code = out[PI.SITE - PB.BASE:PI.SITE - PB.BASE + 6]
     text = [(i.mnemonic, i.op_str) for i in md.disasm(code, PI.SITE)]
-    assert text == [("ldr", "r3, [pc, #8]"), ("ldr", "r3, [r3]"), ("b", "#0x438d01c2")]
-    lit = PI.SITE + 10
+    assert text == [("ldr", "r3, [pc, #0xc]"), ("ldr", "r3, [r3]"), ("b", "#0x438d01c2")]
+    lit = 0x438D01BC
     assert int.from_bytes(out[lit - PB.BASE:lit - PB.BASE + 4], "little") == PI.LIVE_EFCS
 
 
@@ -70,3 +70,11 @@ def test_constructor_captura_pkt_d_igual_y_e_en_vivo(pair, efcs):
         d_sony, e_sony = emu.run_bionz_ctor_d_e(orig, r0, r1, r2, efcs)
         d_new, e_new = emu.run_bionz_ctor_d_e(out, r0, r1, r2, efcs)
         assert e_sony == 0 and d_new == d_sony and e_new == efcs
+
+
+@needs
+@pytest.mark.parametrize("live", [0, 1])
+def test_emulacion_envio_rama_r6_cero(pair, live):
+    """Rama r6 == 0 de 0x438d0064 (estado sin tipo): Sony escribe r3 = r6 = 0; debe llevar el ajuste en vivo."""
+    _, out = pair
+    assert emu.run_bionz_send_from(out, 0x438D01AA, live) == live
