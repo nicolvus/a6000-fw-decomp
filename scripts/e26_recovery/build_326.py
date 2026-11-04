@@ -91,7 +91,9 @@ def verify(dat: bytes, fdat: bytes, keys: tuple[bytes, bytes], version: str) -> 
     }
 
 
-def main() -> None:
+def main(minor: int = 0x26) -> None:
+    ver = f"3.{minor:02x}"
+    out = OUT.with_name(f"recuperacion-{ver.replace('.', '')}")
     dat, fdat = (
         (SRC / "firmware_packed.dat").read_bytes(),
         (SRC / "firmware_packed.fdat").read_bytes(),
@@ -100,13 +102,13 @@ def main() -> None:
         raise SystemExit("el paquete 3.24 de partida no es el verificado en E25-05")
     keys = A.load_keys()
     base = verify(dat, fdat, keys, "3.24")
-    new_dat, new_fdat = bump(dat, fdat, 0x26, keys)
-    checks = verify(new_dat, new_fdat, keys, "3.26")
+    new_dat, new_fdat = bump(dat, fdat, minor, keys)
+    checks = verify(new_dat, new_fdat, keys, ver)
     fdat_diff = [i for i in range(A.BLOCK) if fdat[i] != new_fdat[i]]
     dat_diff = A.diff_ranges(dat, new_dat)
     result = {
         "base_3_24": base,
-        "comprobaciones_3_26": checks,
+        f"comprobaciones_{ver.replace('.', '_')}": checks,
         "bytes_fdat_distintos": fdat_diff,
         "rangos_dat_distintos": dat_diff,
         "sha256": {"dat": sha(new_dat), "fdat": sha(new_fdat)},
@@ -117,14 +119,14 @@ def main() -> None:
         or fdat_diff != [8, 9, 10, 11, 32]
     ):
         raise SystemExit(json.dumps(result, indent=1))
-    OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / "firmware_packed.dat").write_bytes(new_dat)
-    (OUT / "firmware_packed.fdat").write_bytes(new_fdat)
-    (OUT / "SHA256SUMS").write_text(
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "firmware_packed.dat").write_bytes(new_dat)
+    (out / "firmware_packed.fdat").write_bytes(new_fdat)
+    (out / "SHA256SUMS").write_text(
         f"{sha(new_dat)}  firmware_packed.dat\n{sha(new_fdat)}  firmware_packed.fdat\n",
         encoding="utf-8",
     )
-    manifest = ROOT / "analysis/e26-recovery/manifest-recuperacion-326.json"
+    manifest = ROOT / f"analysis/e26-recovery/manifest-recuperacion-{ver.replace('.', '')}.json"
     manifest.write_text(
         json.dumps(result, indent=1, ensure_ascii=False) + "\n", encoding="utf-8"
     )
@@ -132,4 +134,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    main(int(sys.argv[1], 16) if len(sys.argv) > 1 else 0x26)  # p. ej. 0x28
