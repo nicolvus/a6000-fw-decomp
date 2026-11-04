@@ -18,7 +18,17 @@ GUARD_S = 25
 FLAG = "/android/dev/sg_"  # tmpfs: /android/data (nflasha17) cuelga la E/S (R51 §6)
 
 
-def rd(addr: int, n: int) -> str:
+def rd(addr: int, n: int, tries: int = 5) -> str:
+    # con la flash colgada (R51 §6) `hd` devuelve vacío a veces: reintenta hasta leer n bytes
+    for _ in range(tries):
+        got = _rd(addr, n)
+        if len(got) == 2 * n:
+            return got
+        time.sleep(0.5)
+    raise RuntimeError(f"lectura incompleta de {addr:#x}")
+
+
+def _rd(addr: int, n: int) -> str:
     out = run(HOST, [f"dd if=/dev/mem bs=1 skip={addr} count={n} of=/android/dev/z 2>/dev/null; chroot /android /system/bin/hd /dev/z; rm -f /android/dev/z"])[0]
     data = bytearray()
     for line in out.splitlines():
