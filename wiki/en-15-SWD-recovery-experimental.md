@@ -2,6 +2,8 @@
 
 Linked reports are in Spanish.
 
+<img width="720" height="1280" alt="image" src="https://github.com/user-attachments/assets/52e7fec3-ee1a-40ab-97e3-f0b8ef6e70d0" />
+
 **Summary:** My A6000 was bricked (error LED, no USB connection) after I installed a modified firmware of my own. I recovered it by connecting an RP2040 to two pads on the board over SWD and forcing a single register during startup, which made the camera load Sony's factory updater. I then installed the official firmware over USB.
 
 **Before you start:** This page is highly technical and specific. If you don't understand everything, don't worry; there are plenty of things I don't fully understand either. I hope it helps explain how this Sony camera's update system works. This is not a guide to follow blindly: soldering to the board can damage it, and this worked on only one individual camera.
@@ -38,19 +40,24 @@ I needed a way into the camera, and the usual access paths were unavailable:
 
 That left SWD, the two-wire version of the debug interface. In the service manual, SWCLK (Serial Wire Clock) comes from ball W25 of the BIONZ processor (IC6000), and SWDIO (Serial Wire Data I/O) comes from W26. Both signals run to connector CN4906 through two resistors, R4911 and R4912. On my camera, those resistors and the connector are not populated; only the footprints are present. There was nowhere to plug in, so I had to solder directly to the pads. There was also an unknown: an eFuse might have disabled debugging, and there was no way to know until I tried.
 
-[Insert the schematic excerpt, with the two unpopulated resistors highlighted, and photos of both sides of the SY-1028 board showing IC6000, R4911, R4912, and CN4906. Cite the source of the schematic excerpt.]
+<img width="1600" height="1200" alt="image" src="https://github.com/user-attachments/assets/765d2a89-0d2d-4157-abff-4025e1dbfeed" />
+<img width="998" height="827" alt="image" src="https://github.com/user-attachments/assets/601be974-1db5-4fc5-bb9c-50544645ba3f" />
+<img width="1565" height="827" alt="image" src="https://github.com/user-attachments/assets/39ab2c04-9576-4e65-a0e4-778afc8e23f6" />
+<img width="790" height="950" alt="image" src="https://github.com/user-attachments/assets/69279de0-8e73-4c85-a2fe-ead7ad08fb14" />
 
 ## The setup
 
 Before connecting anything, I took measurements with a multimeter. With the camera powered off, I checked that there were no shorts between the pads and ground or the power rails. I did not check continuity between each pad and the BIONZ; I relied on the service manual schematic. With the camera powered on and no probe connected, I measured 3.09 V on both pads, which was compatible with a 3.3 V probe. If I had measured 1.8 V, I would not have connected it.
 
-I soldered an AWG30 wire to the lower pad of R4911 (SWCLK, on the BIONZ side), another to the lower pad of R4912 (SWDIO, also on the BIONZ side), and a third to ground. I secured them with UV-curable solder mask and Kapton tape.
+I soldered an AWG30 wire to the lower pad of R4911 (SWCLK, on the BIONZ side), another to the lower pad of R4912 (SWDIO, also on the BIONZ side), and a third to ground. I secured them with UV-curable solder mask and Kapton tape. I also took a ground connection from the shell of the micro HDMI port.
 
-[Insert a macro photo of the soldering, with an arrow pointing to each pad.]
+<img width="720" height="1280" alt="image" src="https://github.com/user-attachments/assets/40c0214c-a9df-4865-9a94-b295395daa86" />
 
 For the probe, I used an RP2040 Zero running the `debugprobe-zero` v2.3.0 firmware (https://github.com/inindev/debugprobe-zero), which turns it into a CMSIS-DAP adapter. SWCLK goes to GPIO 10, SWDIO to GPIO 11, and ground to GND. On the PC, I used OpenOCD, with Claude's assistance.
 
-[Insert a photo or diagram of the probe and its wiring.]
+<img width="720" height="1280" alt="image" src="https://github.com/user-attachments/assets/5bb2619a-3f21-44a5-9ea3-7404ec95e46c" />
+<img width="720" height="1280" alt="image" src="https://github.com/user-attachments/assets/3e5011f3-3d56-450b-ad7b-6e5205763d1d" />
+https://github.com/user-attachments/assets/6345ec01-d72f-49fd-8cec-93e6734b30ae
 
 ## First contact
 
@@ -96,12 +103,14 @@ I set a breakpoint right at that comparison and, at that moment, forced `r0 = 0`
 I didn't write anything to memory or the NAND. Loader3 thought the file existed and selected the updater mode. That function is called from eight places, but the boot path goes through it twice. I set `r0 = 0` at both points and read it back to verify the change. From the Loader3 entry point to the updater starting, 696 milliseconds elapsed.
 
 ## Installation and verification
+<img width="720" height="1280" alt="image" src="https://github.com/user-attachments/assets/cb369a75-3c27-4cb6-b993-0e51495df575" />
 
 The factory updater booted, and the PC detected Sony's USB device in updater mode. I started installing the official 3.26 firmware using `pmca-console`. The Sony updater wrote to the NAND, not me.
 
 The first attempt stopped at 45% with error `0x1063`. According to previous documentation in my project, this code usually indicates that Darwin (the power-management microcontroller) is not responding, but I could not confirm the cause in this case. I turned the camera off and on again. The updater started on its own, without repeating the SWD trick: the `\updater\mode` file was already there, created by Sony's updater when the installation began (this mechanism was anticipated in my analysis; I did not verify it by reading the NAND). The second attempt reached 100%.
 
 To verify the recovery, I removed the battery for ten seconds and turned the camera on with OpenOCD closed. It appeared as `ILCE-6000` in Mass Storage mode, running firmware 3.26, with no error LED.
+<img width="720" height="1280" alt="image" src="https://github.com/user-attachments/assets/479e0f95-1ecd-46cc-aa53-a91235362123" />
 
 ## Practical tips
 
@@ -117,4 +126,4 @@ To verify the recovery, I removed the battery for ten seconds and turned the cam
 - The cause of error `0x1063` is still unknown; it could have been an isolated failure or interference from the probe.
 - The probe is still soldered to my board; I have not removed it yet.
 - I have not verified that the exact script, `analysis/e26-recovery/r48_updater_swd.cfg`, will work as-is on another camera.
-- Full technical details: [R46](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r46-procedimiento-fisico-swd.md) (planned procedure), [R47](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r47-primer-contacto-swd-lectura-ram.md) (first contact), [R48](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r48-plan-recuperacion-actualizador-swd.md) (plan) and [R49](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r49-cierre-recuperacion-326.md) (closing report). Current state: [Current state](en-14-Current-state).
+- Full technical details: [R46](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r46-procedimiento-fisico-swd.md) (planned procedure), [R47](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r47-primer-contacto-swd-lectura-ram.md) (first contact), [R48](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r48-plan-recuperacion-actualizador-swd.md) (plan) and [R49](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r49-cierre-recuperacion-326.md) (closing report).

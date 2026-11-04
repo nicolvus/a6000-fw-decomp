@@ -1,5 +1,8 @@
 # 15. Recuperación por SWD (EXPERIMENTAL): cómo recuperé una Sony A6000 bloqueada con una RP2040
 
+<img width="720" height="1280" alt="image" src="https://github.com/user-attachments/assets/52e7fec3-ee1a-40ab-97e3-f0b8ef6e70d0" />
+
+
 **Resumen:** mi A6000 quedó bloqueada (LED de error, sin USB) tras instalar un firmware modificado mío. La recuperé conectando una RP2040 por SWD a dos pads de la placa y forzando un solo registro durante el arranque, lo que hizo que la cámara cargara el actualizador de fábrica de Sony. Después instalé el firmware oficial por USB.
 
 **Antes de empezar:** esta página es muy técnica y específica. Si no entiendes todo, no te preocupes; hay muchas cosas que yo tampoco entiendo del todo. Espero que sirva para entender cómo funciona el sistema de actualización de esta cámara. No es una guía para seguir a ciegas: soldar en la placa puede dañarla, y esto funcionó en una sola cámara.
@@ -35,20 +38,29 @@ Necesitaba una forma de entrar a la cámara, y las vías habituales estaban cerr
 - El JTAG convencional estaba descartado: según el esquema, TDI, TCK y TMS van atados a 3,15 V.
 
 Quedaba SWD, la versión de dos hilos de la interfaz de depuración. En el manual de servicio, SWCLK (Serial Wire Clock) sale de la bola W25 del procesador BIONZ (IC6000) y SWDIO (Serial Wire Data I/O) de la W26. Ambas señales van hacia el conector CN4906 a través de dos resistencias, R4911 y R4912. En mi cámara, esas resistencias y el conector no están montados: solo están las huellas. No había dónde enchufar nada, así que tuve que soldar directamente a los pads. Había además una incógnita: un eFuse podía tener la depuración deshabilitada, y no había forma de saberlo sin probar.
-
-[Insertar el recorte del esquema, con las dos resistencias sin montar resaltadas, y fotos de ambas caras de la placa SY-1028 con IC6000, R4911, R4912 y CN4906 señalados. Citar la fuente del recorte.]
+<img width="1600" height="1200" alt="image" src="https://github.com/user-attachments/assets/765d2a89-0d2d-4157-abff-4025e1dbfeed" />
+<img width="998" height="827" alt="image" src="https://github.com/user-attachments/assets/601be974-1db5-4fc5-bb9c-50544645ba3f" />
+<img width="1565" height="827" alt="image" src="https://github.com/user-attachments/assets/39ab2c04-9576-4e65-a0e4-778afc8e23f6" />
+<img width="790" height="950" alt="image" src="https://github.com/user-attachments/assets/69279de0-8e73-4c85-a2fe-ead7ad08fb14" />
 
 ## El montaje
 
 Antes de conectar nada medí con el multímetro. Con la cámara apagada comprobé que no hubiera cortos entre los pads y masa ni con las alimentaciones. No comprobé la continuidad entre cada pad y el BIONZ; me fié del esquema del manual de servicio. Con la cámara encendida y sin sonda medí 3,09 V en ambos pads, compatible con una sonda de 3,3 V. Si hubiera medido 1,8 V no la habría conectado.
 
-Soldé un cable AWG30 al pad inferior de R4911 (SWCLK, lado BIONZ), otro al pad inferior de R4912 (SWDIO, también lado BIONZ) y un tercero a masa. Los fijé con máscara de soldadura curable con UV y cinta Kapton.
+Soldé un cable AWG30 al pad inferior de R4911 (SWCLK, lado BIONZ), otro al pad inferior de R4912 (SWDIO, también lado BIONZ) y un tercero a masa. Los fijé con máscara de soldadura curable con UV y cinta Kapton. También tomé una conexión a masa de la carcasa del puerto micro HDMI.
 
-[Insertar una foto macro de la soldadura, con una flecha en cada pad.]
+<img width="720" height="1280" alt="image" src="https://github.com/user-attachments/assets/40c0214c-a9df-4865-9a94-b295395daa86" />
 
 Como sonda usé una RP2040 Zero con el firmware `debugprobe-zero` v2.3.0 (https://github.com/inindev/debugprobe-zero), que la convierte en un adaptador CMSIS-DAP. SWCLK va al GPIO 10, SWDIO al GPIO 11 y la masa a GND. En el PC usé OpenOCD, con ayuda de Claude.
 
-[Insertar una foto o esquema de la sonda con su cableado.]
+<img width="720" height="1280" alt="image" src="https://github.com/user-attachments/assets/5bb2619a-3f21-44a5-9ea3-7404ec95e46c" />
+<img width="720" height="1280" alt="image" src="https://github.com/user-attachments/assets/3e5011f3-3d56-450b-ad7b-6e5205763d1d" />
+
+
+
+https://github.com/user-attachments/assets/6345ec01-d72f-49fd-8cec-93e6734b30ae
+
+
 
 ## Primer contacto
 
@@ -94,12 +106,15 @@ Puse un punto de parada justo en esa comparación y, en ese momento, forcé `r0 
 No escribí nada en memoria ni en la NAND. Loader3 creyó que el fichero existía y eligió el modo actualizador. Esa función se llama desde ocho sitios, pero el camino del arranque pasa por ella dos veces. En ambos puntos puse `r0 = 0` y lo releí para verificar el cambio. Desde la entrada de Loader3 hasta el arranque del actualizador pasaron 696 milisegundos.
 
 ## Instalación y verificación
+<img width="720" height="1280" alt="image" src="https://github.com/user-attachments/assets/cb369a75-3c27-4cb6-b993-0e51495df575" />
 
 El actualizador de fábrica arrancó y el PC detectó el dispositivo USB de Sony en modo actualizador. Empecé a instalar el firmware oficial 3.26 con `pmca-console`. La NAND la escribió el actualizador de Sony, no yo.
 
 El primer intento se detuvo al 45 % con el error `0x1063`. Según documentación previa de mi proyecto, ese código suele indicar que Darwin (el microcontrolador de gestión de energía) no responde, pero en este caso no pude confirmar la causa. Apagué y encendí la cámara. El actualizador arrancó solo, sin repetir el truco por SWD: el fichero `\updater\mode` ya existía, creado por el actualizador de Sony al empezar la instalación (este mecanismo estaba previsto en mi análisis; no lo verifiqué leyendo la NAND). El segundo intento llegó al 100 %.
 
 Para verificar la recuperación, quité la batería diez segundos y encendí la cámara con OpenOCD cerrado. Apareció como `ILCE-6000` en modo Mass Storage, con el firmware 3.26 y sin LED de error.
+<img width="720" height="1280" alt="image" src="https://github.com/user-attachments/assets/479e0f95-1ecd-46cc-aa53-a91235362123" />
+
 
 ## Consejos prácticos
 
@@ -115,4 +130,4 @@ Para verificar la recuperación, quité la batería diez segundos y encendí la 
 - La causa del error `0x1063` sigue sin conocerse; pudo ser un fallo aislado o interferencia de la sonda.
 - La sonda sigue soldada en mi placa; todavía no la he retirado.
 - No he verificado que el script exacto, `analysis/e26-recovery/r48_updater_swd.cfg`, funcione tal cual en otra cámara.
-- Detalle técnico completo: [R46](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r46-procedimiento-fisico-swd.md) (procedimiento planeado), [R47](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r47-primer-contacto-swd-lectura-ram.md) (primer contacto), [R48](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r48-plan-recuperacion-actualizador-swd.md) (plan) y [R49](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r49-cierre-recuperacion-326.md) (informe de cierre). Estado actual: [Estado actual](14-Estado-actual).
+- Detalle técnico completo: [R46](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r46-procedimiento-fisico-swd.md) (procedimiento planeado), [R47](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r47-primer-contacto-swd-lectura-ram.md) (primer contacto), [R48](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r48-plan-recuperacion-actualizador-swd.md) (plan) y [R49](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r49-cierre-recuperacion-326.md) (informe de cierre).
