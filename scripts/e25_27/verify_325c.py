@@ -58,7 +58,7 @@ def open_dat(path: Path, keys: tuple[bytes, bytes]) -> tuple[dict[str, Any], dic
         "descifrado_igual_a_fdat": dec.first_mismatch_vs_fdat is None,
         "bloques_sin_error": not (dec.bad_sum or dec.bad_flag or dec.bad_len),
         "crc_cabecera_ok": hdr["checksum_stored"] == hdr["checksum_computed"],
-        "version_3_25_o_3_27": hdr["version"] in ("3.25", "3.27", "3.29", "3.30"),  # 3.27 = 3.25c; 3.29/3.30 = 3.25c + selector en vivo (3.30: también en el envío)
+        "version_3_25_o_3_27": hdr["version"] in ("3.25", "3.27", "3.29", "3.30", "3.31"),  # 3.27 = 3.25c; 3.29+ selector en vivo; 3.30+ envío; 3.31 bloques LZ
         "modelo_region": (hdr["model"], hdr["region"]) == (build.MODEL, build.REGION),
         "updater_oficial_3_21": sha(fdat[upd["offset"] : upd["offset"] + upd["size"]])
         == build.UPDATER_SHA256,
@@ -151,6 +151,9 @@ def run(dat_path: Path = DAT) -> dict[str, Any]:
         "nflasha3.max_sectores_igual_que_sony": lay_new["max_sectores_por_bloque"]
         <= lay_sony["max_sectores_por_bloque"],
         "nflasha3.cabe_en_la_particion": lay_new["tamano"] < PARTITION_BYTES,
+        # R51 §6.6: con el bloque 0 en 59 sectores (cabecera + bloque > 32 KiB) el LZP de Linux se cuelga
+        "nflasha3.cabecera_y_bloque_0_en_32_kib": pkg["version"] != "3.31"
+        or sum(p_new.entries[0]) <= 0x8000,
         "nflasha3.mismo_numero_de_bloques": lay_new["bloques"] == lay_sony["bloques"],
         "nflasha3.solo_bloques_0_48_57_recompuestos": recompressed == [0, 48, 57],
         "nflasha3.registros_de_sony_salvo_paginas_cambiadas": all(
@@ -163,10 +166,10 @@ def run(dat_path: Path = DAT) -> dict[str, Any]:
         if pkg["version"] in ("3.25", "3.27")
         else {i for i, (a, b) in enumerate(zip(d_new, p_brick.decompressed())) if a != b} <= avcam_bytes,
         "bionz.cueva_selector_presente": (
-            pkg["version"] not in ("3.29", "3.30")
+            pkg["version"] not in ("3.29", "3.30", "3.31")
             or fat_new.read(build.AVCAM_NAME)[PB.CAVE - PB.BASE:PB.CAVE - PB.BASE + PB.CAVE_LEN] == PB.cave_bytes()),
         "bionz.envio_lleva_ajuste_en_vivo": (
-            pkg["version"] != "3.30"
+            pkg["version"] not in ("3.30", "3.31")
             or (fat_new.read(build.AVCAM_NAME)[PB.SEND - PB.BASE:PB.SEND - PB.BASE + 4] == PB.bl(PB.SEND, PB.SEND_CAVE)
                 and fat_new.read(build.AVCAM_NAME)[PB.SEND_CAVE - PB.BASE:PB.SEND_CAVE - PB.BASE + PB.SEND_CAVE_LEN]
                 == PB.send_cave_bytes())),

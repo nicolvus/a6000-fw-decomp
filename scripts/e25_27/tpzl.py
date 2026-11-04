@@ -115,6 +115,60 @@ def encode_raw(data: bytes) -> bytes:
     )
 
 
+def encode_lz(data: bytes) -> bytes:
+    """Registro LZ77 `0xF0` en el formato de Sony: voraz, ventana 4095, longitudes de `_LENGTHS`.
+
+    Mismo repertorio que los registros de Sony en `nflasha3` (copias solapadas con distancia ≥ 1,
+    grupos de 8 literales con flags 0, fin = token índice 0 / distancia 0).
+    """
+    out = bytearray([0xF0])
+    n = len(data)
+    heads: dict[bytes, list[int]] = {}
+    longest = [(0, 0)] * n  # (longitud, distancia) de la coincidencia más larga en cada posición
+    for i in range(n):
+        key = data[i:i + 3]
+        best = (0, 0)
+        for j in reversed(heads.get(key, [])) if len(key) == 3 else ():
+            if i - j > 0xFFF:
+                break
+            k = 0
+            while k < 64 and i + k < n and data[j + k] == data[i + k]:
+                k += 1
+            if k > best[0]:
+                best = (k, i - j)
+                if k == 64:
+                    break
+        longest[i] = best
+        heads.setdefault(key, []).append(i)
+    # análisis óptimo hacia atrás: literal = 9 bits, coincidencia = 17 bits (cada uno con su bit de flags)
+    cost = [0] * (n + 1)
+    choice = [0] * n
+    for i in range(n - 1, -1, -1):
+        cost[i], choice[i] = 9 + cost[i + 1], 0
+        for length in _LENGTHS:
+            if length > longest[i][0]:
+                break
+            if 17 + cost[i + length] < cost[i]:
+                cost[i], choice[i] = 17 + cost[i + length], length
+    items: list[bytes] = []  # cada uno: b"L"+literal o b"M"+token de 2 B
+    i = 0
+    while i < n:
+        length, dist = choice[i], longest[i][1]
+        if length:
+            items.append(b"M" + bytes([(_LENGTHS.index(length) << 4) | (dist >> 8), dist & 0xFF]))
+            i += length
+        else:
+            items.append(b"L" + data[i:i + 1])
+            i += 1
+    items.append(b"M\x00\x00")  # fin
+    for g in range(0, len(items), 8):
+        group = items[g:g + 8]
+        out.append(sum(1 << b for b, it in enumerate(group) if it[:1] == b"M"))
+        for it in group:
+            out += it[1:]
+    return bytes(out)
+
+
 def encode_literal(data: bytes) -> bytes:
     """Segmento LZ77 de literales (sin coincidencias), terminado en `bd=0`.
 
@@ -240,7 +294,10 @@ def _splice(block: bytes, raw: bytes) -> bytes:
         start = pos
         chunk, pos = _inflate_segment(block, pos)
         new = raw[page:page + RECORD]
-        out += block[start:pos] if chunk == new else encode_raw(new)
+        if chunk == new:
+            out += block[start:pos]
+        else:  # R51 §6.6: almacenada hace crecer el bloque 0 y cuelga el LZP de Linux
+            out += min(encode_lz(new), encode_raw(new), key=len)
     return bytes(out)
 
 

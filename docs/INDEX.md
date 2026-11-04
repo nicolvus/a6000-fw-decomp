@@ -390,7 +390,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 6. Otros subsistemas (AF, estabilización, vídeo, audio, lentes, energía, visor, accesorios, módulos de trazas)
 
-165 informes.
+166 informes.
 
 - **—** [E21 — Lecturas sin cámara de los volcados del 20-10-2026](capture/e21-lecturas-backups-2026-10-26.md)
 - **—** [E24-01 — Arranque, modo actualizador y dependencia de Darwin (27-10-2026)](capture/e24-01-arranque-recuperacion.md)
@@ -454,6 +454,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [E26-R52 — Primera prueba física del selector EFCS/Electronic en el 3.27: el modo no llega a Darwin](capture/e26-r52-prueba-fisica-selector-327.md)
 - **—** [E26-R53 — Paquete 3.29: el selector lee el ajuste EFCS en vivo (offline, sin instalar)](capture/e26-r53-paquete-329-ajuste-efcs-en-vivo.md)
 - **—** [E26-R54 — 3.30: `pkt[0x0e]` también en el constructor del envío; primer obturador electrónico funcionando](capture/e26-r54-paquete-330-envio-pkt0e.md)
+- **—** [E26-R55 — 3.31: la página cambiada de cada bloque TPZL va comprimida (LZ77 de Sony)](capture/e26-r55-paquete-331-bloque0-lz.md)
 - **—** [E26-RECOVERY R6 — BLDR, BIONZ y recuperación conservando la placa](capture/e26-r6-recuperacion-bionz.md)
 - **—** [E26-RECOVERY R7 — informe final de ingeniería inversa exhaustiva](capture/e26-r7-recuperacion-estatica.md)
 - **—** [E26-R7B — recuperación pre-Linux: investigación estática](capture/e26-r7b-recuperacion-prelinux.md)

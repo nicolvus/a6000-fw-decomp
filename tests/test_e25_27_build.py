@@ -105,8 +105,38 @@ def test_tpzl_rebuild_conserva_registros_no_tocados():
     patched[3 * 4096 + 7] = 1
     out, _ = tpzl.patch_decompressed(image, bytes(patched))
     block = tpzl.TpzlImage.parse(out).block(0)
-    raw = tpzl.encode_raw(bytes(patched[3 * 4096 : 4 * 4096]))
-    assert block.startswith(lz * 3 + raw + lz * 12)
+    page = bytes(patched[3 * 4096 : 4 * 4096])
+    # R51 §6.6: la página cambiada va comprimida (LZ77 de Sony) si ocupa menos que almacenada
+    assert block.startswith(lz * 3 + tpzl.encode_lz(page) + lz * 12)
+    assert len(tpzl.encode_lz(page)) < len(tpzl.encode_raw(page))
+
+
+def test_tpzl_lz_ida_y_vuelta_y_cota():
+    """El codificador LZ77 produce registros que el decodificador devuelve exactos y caben en la cota de Sony."""
+    import random
+    rnd = random.Random(7)
+    pages = [bytes(4096), bytes(range(256)) * 16, bytes(rnd.randrange(256) for _ in range(4096)),
+             (b"\x00" * 2000 + bytes(rnd.randrange(4) for _ in range(96)) + b"\x00" * 2000)]
+    for page in pages:
+        rec = tpzl.encode_lz(page)
+        assert rec[0] == 0xF0 and tpzl.decode_block(rec, 4096) == page
+        # _splice elige el menor; con datos aleatorios gana el almacenado
+        assert len(min(rec, tpzl.encode_raw(page), key=len)) <= tpzl.RECORD_MAX
+
+
+def test_tpzl_rebuild_no_hace_crecer_un_bloque_casi_vacio():
+    """Regresión R51 §6.6: el bloque 0 del 3.25c pasó de 51 a 59 sectores y el LZP de Linux se cuelga al leerlo."""
+    lz = tpzl.encode_lz(bytes(4096))
+    comp = lz * 16
+    head = struct.pack("<4sIII", b"TPZL", 16, 0x18, 8) + bytes(8)
+    head += struct.pack("<II", 512, (len(comp) + 511) // 512 * 512)
+    image = tpzl.TpzlImage.parse(head + bytes(512 - 0x18 - 8) + comp + bytes(-len(comp) % 512))
+    patched = bytearray(65536)
+    patched[9 * 4096 + 0x800 : 9 * 4096 + 0x818] = bytes(range(1, 25))  # cueva pequeña en una página vacía
+    out, _ = tpzl.patch_decompressed(image, bytes(patched))
+    new = tpzl.TpzlImage.parse(out)
+    assert new.entries[0][1] <= image.entries[0][1] + 512
+    assert new.decompressed() == bytes(patched)
 
 
 def test_tpzl_invariantes_detectan_el_325_y_aceptan_sony():
