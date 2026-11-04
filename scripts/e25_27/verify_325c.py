@@ -27,6 +27,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "analysis/e26-recovery"))
 
+from e25_24 import patch_bionz as PB  # type: ignore[import-not-found]
 import r39_tpzl_emu as R39  # type: ignore[import-not-found]
 from e25_06 import audit_packages as A  # type: ignore[import-not-found]
 
@@ -57,13 +58,13 @@ def open_dat(path: Path, keys: tuple[bytes, bytes]) -> tuple[dict[str, Any], dic
         "descifrado_igual_a_fdat": dec.first_mismatch_vs_fdat is None,
         "bloques_sin_error": not (dec.bad_sum or dec.bad_flag or dec.bad_len),
         "crc_cabecera_ok": hdr["checksum_stored"] == hdr["checksum_computed"],
-        "version_3_25_o_3_27": hdr["version"] in ("3.25", "3.27"),  # 3.27 = mismo contenido que el 3.25c
+        "version_3_25_o_3_27": hdr["version"] in ("3.25", "3.27", "3.29"),  # 3.27 = contenido del 3.25c; 3.29 = 3.25c + selector con ajuste EFCS en vivo
         "modelo_region": (hdr["model"], hdr["region"]) == (build.MODEL, build.REGION),
         "updater_oficial_3_21": sha(fdat[upd["offset"] : upd["offset"] + upd["size"]])
         == build.UPDATER_SHA256,
     }
     entries, _ = tarball.parse(tar)
-    return {"sha256": sha(dat), **checks}, {e.name: e.data for e in entries}
+    return {"sha256": sha(dat), "version": hdr["version"], **checks}, {e.name: e.data for e in entries}
 
 
 def layout(img: tpzl.TpzlImage, raw: bytes) -> dict[str, Any]:
@@ -129,7 +130,7 @@ def run(dat_path: Path = DAT) -> dict[str, Any]:
 
     checks = {
         # contenedor
-        **{f"contenedor.{k}": v for k, v in pkg.items() if k != "sha256"},
+        **{f"contenedor.{k}": v for k, v in pkg.items() if k not in ("sha256", "version")},
         "control.dat_3_25_es_el_que_bloqueo": brick_pkg["sha256"].startswith(BRICK_DAT_SHA),
         # tar
         "tar.cambios_vs_3_21_solo_4_miembros": changed_vs_321
@@ -154,7 +155,13 @@ def run(dat_path: Path = DAT) -> dict[str, Any]:
         "control.sony_sin_violaciones": lay_sony["violaciones_ldec"] == 0,
         "control.3_25_detectado": lay_brick["violaciones_ldec"] > 0,
         # contenido lógico
-        "contenido.igual_al_3_25_previsto": d_new == p_brick.decompressed(),
+        # 3.25/3.27: idéntico al 3.25 previsto; 3.29: solo difiere de él dentro de av-cam (cueva del selector)
+        "contenido.igual_al_3_25_previsto": d_new == p_brick.decompressed()
+        if pkg["version"] in ("3.25", "3.27")
+        else {i for i, (a, b) in enumerate(zip(d_new, p_brick.decompressed())) if a != b} <= avcam_bytes,
+        "bionz.cueva_selector_presente": (
+            pkg["version"] != "3.29"
+            or fat_new.read(build.AVCAM_NAME)[PB.CAVE - PB.BASE:PB.CAVE - PB.BASE + PB.CAVE_LEN] == PB.cave_bytes()),
         "contenido.cambios_solo_dentro_de_av_cam": set(diff) <= avcam_bytes,
         "contenido.av_cam_es_el_construido": sha(fat_new.read(build.AVCAM_NAME))
         == sha((dat_path.parents[1] / "av-cam.integrated.bin").read_bytes()),

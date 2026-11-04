@@ -117,7 +117,7 @@
         ]
       ],
       "payload_offset": 140,
-      "payload_size": 213071872,
+      "payload_size": 212992000,
       "updater_usb_descriptors": [
         [
           1356,
@@ -127,19 +127,19 @@
     },
     "dat": {
       "path": "analysis/e25-27/artifacts/package-3.25/firmware_packed.dat",
-      "sha256": "42c02504f42d2126c362e2bc1023c0285276a97dcfb67ca544bb3934739f7cae",
-      "size": 213072024
+      "sha256": "03dbd10ff8a942dc0f01a27f11b938ec764337e61cf1d569196defd2fac87e89",
+      "size": 212992152
     },
     "fdat": {
       "path": "analysis/e25-27/artifacts/package-3.25/firmware_packed.fdat",
-      "sha256": "87145e1b06c01564dbebbb40d98acb084aa8ff8d044e6bf93e8cf79cae1a8d9f",
-      "size": 212238848
+      "sha256": "58746291866492a648c0f02799bfb6992f1a5d498cd49881e4d3c05c88860861",
+      "size": 212160000
     },
     "header": {
-      "checksum_crc32": "0x6facbbf7",
+      "checksum_crc32": "0xbd91127a",
       "fdat_version": "0100",
       "firmware_offset": 143872,
-      "firmware_size": 212094976,
+      "firmware_size": 212016128,
       "header_size": 512,
       "is_accessory": false,
       "luw": "N",
@@ -155,13 +155,13 @@
     "installable": false,
     "phase": "E25-27",
     "roundtrip": {
-      "avcam_extracted_sha256": "45a5ab350c356d6d76f5ee79ed51d98fadf920f64ce75c387f6358f11225190e",
+      "avcam_extracted_sha256": "55db4d4f5037b41909d1a33123276b5ffa0f328633d8e0153a79efd333a07f9e",
       "darwin_extracted_sha256": "9771c0508ee17e7984a619479c1f69cc4e8b71f0091fb5f9dfde66bbd19fb177",
       "part_sum_verified": true,
-      "tar_extracted_sha256": "440b70b1b1afaed2a80e03679728b26917336cc2aed30052e7906d638a6d52e1"
+      "tar_extracted_sha256": "b418322acba48f6fe8798cdc2fee46c33c7c96cd3c7ff9a4ac99e1a4ef312ca8"
     },
     "status": "CONSTRUIDO OFFLINE — INSTALACIÓN NO AUTORIZADA",
-    "tar_sha256": "440b70b1b1afaed2a80e03679728b26917336cc2aed30052e7906d638a6d52e1",
+    "tar_sha256": "b418322acba48f6fe8798cdc2fee46c33c7c96cd3c7ff9a4ac99e1a4ef312ca8",
     "version": "3.25"
   },
   "emulation": {
@@ -485,19 +485,19 @@
     },
     "speeds_ok": true
   },
-  "generated": "2026-10-29T02:02:53+00:00",
+  "generated": "2026-11-04T19:37:05+00:00",
   "independent_audit": {
     "bad_flag": [],
     "bad_len": [],
     "bad_sum": [],
-    "blocks": 208078,
+    "blocks": 208000,
     "dat_magic": true,
-    "dend_computed": "fae7ef16",
-    "dend_stored": "fae7ef16",
-    "fdat_size": 212238848,
+    "dend_computed": "5576d909",
+    "dend_stored": "5576d909",
+    "fdat_size": 212160000,
     "header": {
-      "checksum_computed": "6facbbf7",
-      "checksum_stored": "6facbbf7",
+      "checksum_computed": "bd91127a",
+      "checksum_stored": "bd91127a",
       "luw": "N",
       "mode": "U",
       "model": "0x41030035",
@@ -506,7 +506,7 @@
     },
     "ok": true,
     "pad_not_ff": false,
-    "plain_size": 212238848,
+    "plain_size": 212160000,
     "plaintext_matches_fdat": true,
     "tar_members": 105,
     "tar_problems": []
@@ -541,7 +541,7 @@
   ],
   "outputs": {
     "av-cam.bin": {
-      "sha256": "45a5ab350c356d6d76f5ee79ed51d98fadf920f64ce75c387f6358f11225190e",
+      "sha256": "55db4d4f5037b41909d1a33123276b5ffa0f328633d8e0153a79efd333a07f9e",
       "size": 11427236
     },
     "darwin.sum": {
@@ -552,15 +552,15 @@
       "size": 157276
     },
     "firmware.tar": {
-      "sha256": "440b70b1b1afaed2a80e03679728b26917336cc2aed30052e7906d638a6d52e1",
-      "size": 212094976
+      "sha256": "b418322acba48f6fe8798cdc2fee46c33c7c96cd3c7ff9a4ac99e1a4ef312ca8",
+      "size": 212016128
     },
     "nflasha3": {
-      "sha256": "bb9ce25a073d1ccc990d8ee1fdd75322c703d5d2a4020ab5e7daeaf8d23d546c",
-      "size": 11572480
+      "sha256": "0d161dc1ac000747234e330abc6dde509526cb2dce1ec5c81070693dbf01b42f",
+      "size": 11493888
     },
     "part_image.sum": {
-      "sha256": "95aeae48f86d77b3c7b3e38654dfd8189a38da6835d41bf7e1e39eafd5d967bf"
+      "sha256": "667f3f1ca7981b5ce1f2fe7d405590505d0e3b678b22cb6a37e4b5d5704ea4d8"
     }
   },
   "partition": {
@@ -571,23 +571,23 @@
         "offset_new": 3072,
         "offset_old": 3072,
         "recompressed": true,
-        "size_new": 73732,
+        "size_new": 29812,
         "size_old": 26112
       },
       {
         "block": 48,
-        "offset_new": 2575104,
+        "offset_new": 2531328,
         "offset_old": 2527232,
         "recompressed": true,
-        "size_new": 73732,
+        "size_new": 56307,
         "size_old": 56320
       },
       {
         "block": 57,
-        "offset_new": 3076608,
+        "offset_new": 3015168,
         "offset_old": 3011072,
         "recompressed": true,
-        "size_new": 73732,
+        "size_new": 56337,
         "size_old": 56320
       }
     ],
@@ -601,16 +601,16 @@
     "fat_name": "AV-CAM.BIN",
     "fat_type": 12,
     "part_sum": {
-      "crc32_after": "f5e75c34",
+      "crc32_after": "f8fa1a57",
       "crc32_before": "0c047870",
-      "line_after": "0,f5e75c34,00b09500,000001a4,00000000,000003e8,root,root,-1,-1,dev/nflasha3,",
+      "line_after": "0,f8fa1a57,00af6200,000001a4,00000000,000003e8,root,root,-1,-1,dev/nflasha3,",
       "line_before": "0,0c047870,00af4f10,000001a4,00000000,000003e8,root,root,-1,-1,dev/nflasha3,",
       "path": "dev/nflasha3",
-      "size_after": "00b09500",
+      "size_after": "00af6200",
       "size_before": "00af4f10"
     },
     "part_sum_verified": true,
-    "roundtrip_avcam_sha256": "45a5ab350c356d6d76f5ee79ed51d98fadf920f64ce75c387f6358f11225190e",
+    "roundtrip_avcam_sha256": "55db4d4f5037b41909d1a33123276b5ffa0f328633d8e0153a79efd333a07f9e",
     "tpzl_blocks": 369
   },
   "patches": {
@@ -628,7 +628,7 @@
       "header_metadata_tail": "0x435418d8",
       "selector": [
         "0x43541800",
-        "0x43541814"
+        "0x43541818"
       ]
     },
     "darwin": {
@@ -645,8 +645,8 @@
     "overlap": false,
     "selector": {
       "cave": "0x43541800",
-      "diff_count": 28,
-      "length": 20,
+      "diff_count": 32,
+      "length": 24,
       "sites": [
         "0x4384133e",
         "0x43841342",
@@ -654,7 +654,7 @@
         "0x43541800"
       ]
     },
-    "total_diff": 111
+    "total_diff": 115
   },
   "phase": "E25-27",
   "reversal": {

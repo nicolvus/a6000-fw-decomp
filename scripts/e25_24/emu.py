@@ -62,8 +62,14 @@ def run_darwin(code: bytes, entry: int, flag: int, type_value: int = 0x43) -> in
     return int(uc.reg_read(UC_ARM_REG_R0))
 
 
-def run_bionz_selector(code: bytes, r1: int, field: int) -> BionzRun:
-    """Ejecuta el cave desde 0x4384133e hasta una de las dos ramas."""
+LIVE_EFCS = 0x43EDF894  # bloque de ajustes 0x43edf684 + 0x210
+
+
+def run_bionz_selector(code: bytes, r1: int, field: int, live: int | None = None) -> BionzRun:
+    """Ejecuta el cave desde 0x4384133e hasta una de las dos ramas.
+
+    `field` es cap+0x41c (copia por captura); `live` el ajuste EFCS en vivo (por defecto igual).
+    """
     uc = Uc(UC_ARCH_ARM, UC_MODE_THUMB)
     size = (len(code) + 0xFFF) & ~0xFFF
     uc.mem_map(BIONZ_BASE, size)
@@ -72,6 +78,7 @@ def run_bionz_selector(code: bytes, r1: int, field: int) -> BionzRun:
     bank = 0x50000800
     pkt = 0x50000000
     uc.mem_write(bank + 0x41C, field.to_bytes(4, "little"))
+    uc.mem_write(LIVE_EFCS, (field if live is None else live).to_bytes(4, "little"))
     uc.reg_write(UC_ARM_REG_R9, bank)
     uc.reg_write(UC_ARM_REG_R4, pkt)
     uc.reg_write(UC_ARM_REG_R1, r1)

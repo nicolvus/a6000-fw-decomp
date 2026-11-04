@@ -94,8 +94,8 @@ def test_darwin_vectores_zero_y_cueva(darwin):
 
 def test_cueva_selector_desensamblada():
     md = capstone.Cs(capstone.CS_ARCH_ARM, capstone.CS_MODE_THUMB)
-    text = [(i.mnemonic, i.op_str) for i in md.disasm(PB.cave_bytes(), PB.CAVE)]
-    assert ("ldr.w", "r2, [sb, #0x41c]") in text
+    text = [(i.mnemonic, i.op_str) for i in md.disasm(PB.cave_bytes()[:20], PB.CAVE)]  # 20 B de código; el literal va después
+    assert ("ldr", "r2, [pc, #0xc]") in text and ("ldr", "r2, [r2]") in text
     assert ("strb", "r2, [r4, #0xe]") in text
     assert ("b.w", "#0x43841576") in text
     assert text[-1] == ("bx", "lr")

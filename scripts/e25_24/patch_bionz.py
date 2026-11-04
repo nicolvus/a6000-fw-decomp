@@ -44,7 +44,8 @@ CALL_OLD = bytes.fromhex("00232370")
 STORE = 0x43841476
 STORE_OLD = bytes.fromhex("a373")
 CAVE = 0x43541800
-CAVE_LEN = 20
+CAVE_LEN = 24                       # 20 B de código + literal de 4 B
+LIVE_EFCS = 0x43EDF894              # bloque de ajustes 0x43edf684 + 0x210 (0/1)
 CAVE_OLD = bytes(CAVE_LEN)          # área reservada de cabecera, cero verificado
 
 # Regiones que el parche no debe tocar (E25-25).
@@ -74,17 +75,23 @@ def _slice(data: bytes, addr: int, size: int) -> bytes:
 
 
 def cave_bytes() -> bytes:
-    """Cave: replica pkt[0]=0, escribe pkt[0x0e]=cap+0x41c y elige la rama."""
+    """Cave: replica pkt[0]=0, escribe pkt[0x0e]=ajuste EFCS en vivo y elige la rama.
+
+    R52: cap+0x41c solo se rellena en la captura; los demás paquetes 0x0c llevaban 0 y borraban
+    el modo en Darwin antes de la compuerta.  El ajuste en vivo no depende de la captura.
+    """
     out = bytearray()
     out += bytes.fromhex("0023")            # movs r3,#0
     out += bytes.fromhex("2370")            # strb r3,[r4]
-    out += bytes.fromhex("d9f81c24")        # ldr.w r2,[sb,#0x41c]
+    out += bytes.fromhex("034a")            # ldr r2,[pc,#0xc] -> literal
+    out += bytes.fromhex("1268")            # ldr r2,[r2]
     out += bytes.fromhex("a273")            # strb r2,[r4,#0xe]
     out += bytes.fromhex("0129")            # cmp r1,#1
     out += bytes.fromhex("01d0")            # beq +2 -> bx lr
     bw_addr = CAVE + len(out)
     out += b_w(bw_addr, 0x43841576)         # rama [sp+0x44] != 1
     out += bytes.fromhex("7047")            # bx lr
+    out += LIVE_EFCS.to_bytes(4, "little")  # literal
     if len(out) != CAVE_LEN:
         raise AssertionError(f"cave de {len(out)} B, esperado {CAVE_LEN}")
     return bytes(out)
@@ -94,7 +101,7 @@ PATCHES: tuple[tuple[int, bytes, bytes, str], ...] = (
     (BRANCH, BRANCH_OLD, NOP + NOP, "bne.w -> NOP; el cave decide la rama"),
     (CALL, CALL_OLD, bl(CALL, CAVE), "movs/strb -> bl cave"),
     (STORE, STORE_OLD, NOP, "store duplicado -> NOP"),
-    (CAVE, CAVE_OLD, cave_bytes(), "cave: pkt[0x0e] = cap+0x41c"),
+    (CAVE, CAVE_OLD, cave_bytes(), "cave: pkt[0x0e] = ajuste EFCS en vivo"),
 )
 
 

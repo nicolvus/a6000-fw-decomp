@@ -181,7 +181,9 @@ def test_bionz_desensamblado(bionz_patched):
     assert bytes(out[PB.STORE - PB.BASE:PB.STORE - PB.BASE + 2]) == b"\x00\xbf"
     cave = out[PB.CAVE - PB.BASE:PB.CAVE - PB.BASE + PB.CAVE_LEN]
     text = [(i.mnemonic, i.op_str) for i in md.disasm(cave, PB.CAVE)]
-    assert ("ldr.w", "r2, [sb, #0x41c]") in text
+    assert ("ldr", "r2, [pc, #0xc]") in text
+    assert ("ldr", "r2, [r2]") in text
+    assert int.from_bytes(cave[20:24], "little") == 0x43EDF894
     assert ("strb", "r2, [r4, #0xe]") in text
     assert ("b.w", "#0x43841576") in text
 
@@ -288,6 +290,15 @@ def test_emu_bionz_cave(bionz_patched, r1: int, stop: int, field: int):
     assert run.packet[0x0E] == field
     assert run.stopped_at == stop
     assert run.r0 == 0xABCD
+
+
+@pytest.mark.parametrize("r1", [0, 1])
+@pytest.mark.parametrize("live", [0, 1])
+def test_emu_bionz_lee_ajuste_en_vivo(bionz_patched, r1: int, live: int):
+    """Regresión R52: el paquete debe llevar el ajuste EFCS en vivo aunque cap+0x41c esté sin rellenar (0)."""
+    out, _ = bionz_patched
+    run = emu.run_bionz_selector(out, r1, 0, live)
+    assert run.packet[0x0E] == live
 
 
 def test_emu_bionz_conserva_r3_y_pkt1(bionz: PB.BionzImage, bionz_patched):
