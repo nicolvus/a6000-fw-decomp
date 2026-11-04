@@ -131,4 +131,4 @@ Se extrajo `UdtrMain.sh` del `initrd.img` de `nflasha1` del volcado del 20-10:
 | Ruta de instalación | `firmwareUpdateCommandInternal`: con un `SonyUpdaterDevice` hace `init`, `checkGuard`, `getFirmwareVersion`, `writeFirmware` y `complete`, sin `switchMode` (leído en el código instalado) |
 | Paquete 3.26 | `firmware.readDat` de `pmca` lo lee (offset 140, carga útil 212 987 904 B). Los hashes coinciden con el manifiesto (§2.5) |
 | Permisos USB | No hay regla udev para Sony (`054c`). P2 y P3 se ejecutarán con `sudo` y el Python del venv. No se ha cambiado la configuración del sistema |
-| Pendiente físico de P0 | Comprobar con el usuario que se puede conectar el USB con la placa abierta y la sonda puesta, y que la batería está cargada |
+| Parte física de P0 | **Confirmada por el usuario (03-11-2026):** el USB se puede conectar con la placa abierta y la sonda puesta, y la batería está cargada |
