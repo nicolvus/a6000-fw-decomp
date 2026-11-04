@@ -2,9 +2,18 @@
 
 Linked reports are in Spanish.
 
-> **EXPERIMENTAL.** Only the read-only phases (1 to 7) have been run on a camera, on 2026-11-03 ([R47](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r47-primer-contacto-swd-lectura-ram.md)); no write has been tried. It is a plan derived from static analysis and emulation. It can damage the board or lose calibration data. There is no guarantee it works. Every phase needs your own authorization and judgment.
+> **EXPERIMENTAL, but proven once.** On 2026-11-03 it was run on the author's camera: read-only access ([R47](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r47-primer-contacto-swd-lectura-ram.md)) and a full recovery **with no manual NAND write** ([R48](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r48-plan-recuperacion-actualizador-swd.md), [R49](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r49-cierre-recuperacion-326.md)): the camera boots 3.26. Phase 8 A/B below (writing `nflasha2`/`nflasha3`) was **neither used nor recommended**: Loader3 ignores block writes. The path that worked is under "Actual result". It still means soldering on a board: it can damage it, and one case is not a guarantee.
 
-Applies only to an A6000 bricked after installing 3.25 (LED 3 slow + 2 fast; Loader3 error −302, **inferred**, not measured). Cause and status: [Current state](en-14-Current-state). Full technical detail (Spanish): [R46](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r46-procedimiento-fisico-swd.md).
+Applies only to an A6000 bricked after installing 3.25 (LED 3 slow + 2 fast; Loader3 error −302, **measured** in R47 §15). Cause and status: [Current state](en-14-Current-state). Full technical detail (Spanish): [R46](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r46-procedimiento-fisico-swd.md).
+
+## Actual result (R49)
+
+1. Wires soldered to the BIONZ-side pads of R4911/R4912 (option 5a) and an RP2040 `debugprobe`; OpenOCD, DPIDR `0x3ba02477`, 3.09 V.
+2. With chained breakpoints from Loader3's entry, at the `\updater\mode` check `r0 = 0` was forced (one register, during that stop). Loader3 chose BootMode 3 and started the factory updater from `nflasha1`.
+3. `pmca-console firmware` installed 3.26: the first attempt stopped at 45 % with `0x1063` (Darwin NG, cause unexplained); the second completed.
+4. Probe-free check: Mass Storage, `ILCE-6000`, firmware 3.26, no error LED.
+
+Still open: the cause of `0x1063`, and removing the probe. Full method and pitfalls (banked registers, breakpoints): [R49](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r49-cierre-recuperacion-326.md) (Spanish).
 
 ## Idea
 

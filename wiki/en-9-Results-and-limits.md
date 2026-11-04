@@ -27,4 +27,4 @@
 | 3.24 | Stock Darwin with version number 3.24 | Prepared, not installed |
 | 3.25 | Integrated with the EFCS/Electronic selector | **The camera does not boot** (not published) |
 | 3.25c | 3.25 with `nflasha3` in Sony's format | Published as experimental; verified offline (30/30, emulation with no failures); **never installed** |
-| 3.26 | Recovery with stock 3.21 content | Published with 3.25c to roll back; verified offline, never installed |
+| 3.26 | Recovery with stock 3.21 content | Published with 3.25c to roll back; verified offline; the 3.26 recovery package was installed once to recover the author's camera ([R49](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r49-cierre-recuperacion-326.md)) |

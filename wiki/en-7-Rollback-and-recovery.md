@@ -29,8 +29,7 @@ Requirements: official firmware 3.21 (or 3.23/3.24), charged battery and an NVRA
 To go back to Sony firmware after 3.25c use **3.26** from the same release (3.24 is no longer accepted after a 3.25).
 If you prefer the tested path: **3.23 + layer 2 in RAM, without touching `nflasha3`.**
 
-Recovery paths studied for that camera (all physical, untested and not authorized): restore `nflasha3` from a good copy, create the empty file
-`\updater\mode` in `nflasha2` to start the factory updater and load the 3.26 package, or JTAG/SWD. Summary (Spanish) in `docs/capture/e26-recovery.md`.
+**That camera was recovered (2026-11-03, [R49](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r49-cierre-recuperacion-326.md), Spanish).** Over SWD, Loader3 was made to boot the factory updater by forcing a single CPU register, with no NAND write; the updater then installed stock **3.26** over USB. Method and limits: [15. SWD recovery](en-15-SWD-recovery-experimental). It requires opening the camera and soldering; this is a single case, not a guarantee. Other paths studied and not used: restoring `nflasha3` from a copy, or writing `\updater\mode` into `nflasha2` (Loader3 ignores block writes, R48 §2.1).
 
 ## If your camera does not boot
 

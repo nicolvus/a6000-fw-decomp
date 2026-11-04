@@ -10,7 +10,7 @@
 Reverse engineering of the Sony A6000 firmware 3.21 (ILCE-6000: BIONZ + Darwin microcontroller) to shoot with a fully
 electronic shutter. **Milestone:** with the modified firmware **3.23** (a 2-byte patch to Darwin) the real camera shot
 silently and without errors. **Later**, the integrated firmware **3.25** left the camera unable to boot because of a format error
-in the `nflasha3` partition, now identified and fixed in **3.25c**. Recovery of that camera is still being studied offline.
+in the `nflasha3` partition, now identified and fixed in **3.25c**. That camera was **recovered on 2026-11-03 over SWD** and now boots stock firmware 3.26 ([R49](docs/capture/e26-r49-cierre-recuperacion-326.md)).
 
 > **⚠️ 3.25c: experimental.** [3.25c](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.25c-experimental) fixes the errors
 > that bricked 3.25 (30/30 checks, and an emulation of the real bootloader with no failures) and **should** boot, but it **has never been
@@ -31,11 +31,10 @@ experimental *pre-release*, in [`fw-3.25c-experimental`](https://github.com/nico
 | 3.24 | Stock Darwin with version number 3.24 (roll back from 3.23) | Verified offline, never installed |
 | 3.25 | EFCS / Electronic selector from the menu | **Bricked the author's camera** (not published) |
 | 3.25c | 3.25 with `nflasha3` in Sony's exact format | Published as experimental; verified offline, **never installed** |
-| 3.26 | Stock Sony content with version number 3.26 (roll back from 3.25c) | Verified offline, never installed |
+| 3.26 | Stock Sony content with version number 3.26 (roll back from 3.25c) | Verified offline; installed once on the author's camera to recover it ([R49](docs/capture/e26-r49-cierre-recuperacion-326.md)) |
 
 **Status:** firmware 3.23 (T040) makes the camera shoot silently and without errors; 3.25 (E26) left the author's camera unable to boot;
-its cause is fixed in 3.25c (experimental, untested on a camera, [R45](docs/capture/e26-r45-firmware-325c-experimental.md)) and recovery of
-that camera is being studied offline only.
+its cause is fixed in 3.25c (experimental, untested on a camera, [R45](docs/capture/e26-r45-firmware-325c-experimental.md)) and that camera was recovered over SWD with the stock updater and 3.26 ([R49](docs/capture/e26-r49-cierre-recuperacion-326.md)).
 Details in [Current state and limits](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-14-Current-state). Contributing: [CONTRIBUTING.en.md](CONTRIBUTING.en.md).
 
 ## Copyright and use

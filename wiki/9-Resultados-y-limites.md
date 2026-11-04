@@ -27,4 +27,4 @@
 | 3.24 | Darwin oficial con número 3.24 | Preparada, no instalada |
 | 3.25 | Integrado con selector EFCS/Electronic | **La cámara no arranca** (no publicado) |
 | 3.25c | 3.25 con `nflasha3` en el formato de Sony | Publicado como experimental; verificado offline (30/30, emulación sin fallos); **nunca instalado** |
-| 3.26 | Recuperación con contenido oficial 3.21 | Publicada con el 3.25c para volver atrás; verificada offline, nunca instalada |
+| 3.26 | Recuperación con contenido oficial 3.21 | Publicada con el 3.25c para volver atrás; verificada offline; el paquete 3.26 de recuperación se instaló una vez para recuperar la cámara del autor ([R49](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r49-cierre-recuperacion-326.md)) |

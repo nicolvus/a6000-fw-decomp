@@ -1,8 +1,17 @@
 # 15. Recuperación por SWD (EXPERIMENTAL)
 
-> **EXPERIMENTAL.** Solo se han ejecutado en una cámara las fases de lectura (1 a 7, el 03-11-2026, [R47](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r47-primer-contacto-swd-lectura-ram.md)); ninguna escritura se ha probado. Es un plan derivado de análisis estático y emulación. Puede dañar la placa o perder las calibraciones. No hay garantía de que funcione. Se necesita tu autorización y tu propio criterio en cada fase.
+> **EXPERIMENTAL, pero ya probado una vez.** El 03-11-2026 se ejecutó en la cámara del autor: lectura ([R47](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r47-primer-contacto-swd-lectura-ram.md)) y recuperación completa **sin escribir la NAND a mano** ([R48](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r48-plan-recuperacion-actualizador-swd.md), [R49](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r49-cierre-recuperacion-326.md)): la cámara arranca con el 3.26. Las fases 8 A/B de abajo (escribir `nflasha2`/`nflasha3`) **no se usaron ni se recomiendan**: Loader3 ignora las escrituras de bloque. La vía que funcionó está en «Resultado real». Sigue siendo soldar en una placa: puede dañarla, y un caso no es garantía.
 
-Aplica solo a la A6000 bloqueada tras instalar el 3.25 (LED 3 lentos + 2 rápidos; error −302 de Loader3, **inferido**, no medido). Causa y estado: [Estado actual](14-Estado-actual). Detalle técnico completo (en español): [R46](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r46-procedimiento-fisico-swd.md).
+Aplica solo a la A6000 bloqueada tras instalar el 3.25 (LED 3 lentos + 2 rápidos; error −302 de Loader3, **medido** en R47 §15). Causa y estado: [Estado actual](14-Estado-actual). Detalle técnico completo (en español): [R46](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r46-procedimiento-fisico-swd.md).
+
+## Resultado real (R49)
+
+1. Hilos soldados a los pads del lado BIONZ de R4911/R4912 (opción 5a) y sonda RP2040 con `debugprobe`; OpenOCD, DPIDR `0x3ba02477`, 3,09 V.
+2. Con puntos de parada encadenados desde la entrada de Loader3, en la comprobación de `\updater\mode` se forzó `r0 = 0` (solo un registro, durante esa parada). Loader3 eligió BootMode 3 y arrancó el actualizador de fábrica de `nflasha1`.
+3. `pmca-console firmware` instaló el 3.26: el primer intento se cortó al 45 % con `0x1063` (NG de Darwin, sin causa aclarada); el segundo se completó.
+4. Verificación sin sonda: Mass Storage, `ILCE-6000`, firmware 3.26, sin LED de error.
+
+Queda abierto: la causa del `0x1063` y retirar la sonda. Método completo y trampas (registros bancados, puntos de parada): [R49](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r49-cierre-recuperacion-326.md).
 
 ## Idea
 
