@@ -193,3 +193,40 @@ Hay dos hipótesis, ninguna probada (INFERENCIA):
 
 Si la pérdida se adelanta al añadir paradas, apoya (b). Si cae siempre en el mismo punto del código, apoya (a).
 
+## 15. Doble arranque y origen del −302 confirmado: P2 sobre `\sabin\idt_cam.bin` (03-11-2026, solo lectura)
+
+**El enlace se cae porque la cámara se reinicia (MEDIDO).** En el intento 3 de la captura, al volver el enlace, la primera muestra de `DBGPCSR` cae en el BootROM (`0xffff145b`). Las siguientes caen en Loader2 y luego en Loader3. `DSCR` vale `0x02000002`: la parada por depuración está desactivada, lo que cuadra con un reinicio.
+
+En el intento 4 no hubo ni halt ni puntos de parada; solo se leyó `DBGPCSR` sin parar la CPU. Resultado:
+- **Arranque 1:** Loader3 se ejecuta unos 0,85 s y queda en `c01f5e50` (`b .`).
+- **Reinicio:** el enlace cae unos 0,5 s; al volver, `DBGPCSR` está en el BootROM (`0xffff1437`).
+- **Arranque 2:** Loader2 y después Loader3, que queda en el bucle del LED (temporizador `c01f4f98`).
+
+Por tanto el reinicio ocurre también sin depurador. Se descarta (b) de §14.
+
+**Arranque 1 = apagado deliberado (LEÍDO).** `c01f5e50` está dentro de la rutina `c01f5bb6`, que imprime `PWR:<<XPOWER_OFF(%d-%d)>>`. La rutina activa la salida GPIO de apagado (`f2910000 + puerto·0x100`, el puerto y el bit son los de `XPWR_OFF`, p:0 b:10) y luego entra en bucle infinito.
+
+Solo se llama desde `c01f1254`, la rama de los BootMode 7, 8, 9, 13 y 14 (tabla en `c01f1224`). El arranque normal (11) sigue por `c01f1312` y `c01f09e4`. El modo exacto del arranque 1 no se ha leído.
+
+**Arranque 2 = el del error (MEDIDO).** El log que hay en RAM (`BootMode: 11`) es el del arranque 2. Todas las capturas anteriores (§12, §13 y §14) observaban el arranque 1, que no carga CFG. El reinicio borraba los puntos de parada antes de llegar al −302.
+
+**Captura en el arranque 2 (MEDIDO, intento 5).**
+- Se espera al corte del enlace y se para la CPU al principio del arranque 2, en el BootROM (`0xffff142e`).
+- Se pone un punto de parada en la entrada de Loader3. Al saltar, se ponen otros tres: entrada de P2 (`c01f2f24`), su retorno en el único sitio de llamada (`c01f30ac`, tras `bl` en `c01f30a8`) y entrada de la función del LED (`c01f3b74`).
+- Antes de reanudar desde cada parada se quita el punto, se avanza una instrucción y se vuelve a poner. Un intento previo sin este paso volvía a parar 39 veces en la misma dirección; ese registro no son 39 llamadas.
+
+| Parada | Registros y datos |
+|---|---|
+| Entrada de P2 | `r0 = 0xc005c000`, la entrada 0 de la tabla CFG: partición 3, destino `0x83501000`–`0x83540fff`, flags `0x05000000`, ruta `\sabin\idt_cam.b…` |
+| Retorno de P2 | **`r0 = 0xfffffed2` (−302)** con `r4 = 0xc005c000` |
+| LED | **`r0 = 0xfffffed2`**, `lr = 0xc01f1269`, es decir, el `bl c01f3b74` de `c01f1264` con el error de la rama normal |
+
+**Conclusión (MEDIDO).**
+- **El −302 lo produce P2 (`CFG_E:Load file`) al cargar la primera entrada de CFG, `\sabin\idt_cam.bin`, de la partición 3 (`nflasha3`).** P2 no llegó a ejecutarse con ninguna otra entrada: el primer fallo corta la carga y Loader3 pasa al LED.
+- Queda confirmado el candidato de §11 y R13 (P2) y el punto de fallo de R36: la primera lectura de `nflasha3` falla.
+- No se ha medido si falla la apertura o la lectura del fichero dentro de P2. Tampoco se ha verificado que el campo de ruta de 16 bytes sin terminador sea el formato normal.
+
+**Consecuencia para la recuperación.** El diagnóstico de R36 se sostiene con evidencia física: hay que restaurar `nflasha3`. La escritura en NAND sigue sin probar y requiere autorización expresa.
+
+Registros de la sesión (fuera del repo): `catch3_intento1.log`, `catch4.log`, `catch5_intento3_FIN.log`.
+
