@@ -1,6 +1,6 @@
 # 15. Recuperación por SWD (EXPERIMENTAL): cómo recuperé una Sony A6000 bloqueada con una RP2040
 
-<img width="720" height="1280" alt="image" src="https://github.com/user-attachments/assets/52e7fec3-ee1a-40ab-97e3-f0b8ef6e70d0" />
+<img width="720" height="1280" alt="Vista general del montaje" src="https://github.com/user-attachments/assets/52e7fec3-ee1a-40ab-97e3-f0b8ef6e70d0" />
 
 
 **Resumen:** mi A6000 quedó bloqueada (LED de error, sin USB) tras instalar un firmware modificado mío. La recuperé conectando una RP2040 por SWD a dos pads de la placa y forzando un solo registro durante el arranque, lo que hizo que la cámara cargara el actualizador de fábrica de Sony. Después instalé el firmware oficial por USB.
@@ -34,14 +34,23 @@ Desde el volcado abrí `nflasha1`, extraje su initrd (un CRAMFS) y desensamblé 
 Necesitaba una forma de entrar a la cámara, y las vías habituales estaban cerradas:
 
 - Por USB era imposible, porque Loader3 nunca llega a exponerlo.
-- Escribir la NAND desde fuera no era una opción: no había identificado el chip y en ese momento no tenía la clave del BootROM.
+- Escribir la NAND desde fuera no era una opción: no había identificado el chip y en ese momento no tenía la clave del BootROM (la leí después por SWD, [R51](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r51-respaldo-clave-nflasha0-nvram-326.md)).
 - El JTAG convencional estaba descartado: según el esquema, TDI, TCK y TMS van atados a 3,15 V.
 
 Quedaba SWD, la versión de dos hilos de la interfaz de depuración. En el manual de servicio, SWCLK (Serial Wire Clock) sale de la bola W25 del procesador BIONZ (IC6000) y SWDIO (Serial Wire Data I/O) de la W26. Ambas señales van hacia el conector CN4906 a través de dos resistencias, R4911 y R4912. En mi cámara, esas resistencias y el conector no están montados: solo están las huellas. No había dónde enchufar nada, así que tuve que soldar directamente a los pads. Había además una incógnita: un eFuse podía tener la depuración deshabilitada, y no había forma de saberlo sin probar.
-<img width="1600" height="1200" alt="image" src="https://github.com/user-attachments/assets/765d2a89-0d2d-4157-abff-4025e1dbfeed" />
-<img width="998" height="827" alt="image" src="https://github.com/user-attachments/assets/601be974-1db5-4fc5-bb9c-50544645ba3f" />
-<img width="1565" height="827" alt="image" src="https://github.com/user-attachments/assets/39ab2c04-9576-4e65-a0e4-778afc8e23f6" />
-<img width="790" height="950" alt="image" src="https://github.com/user-attachments/assets/69279de0-8e73-4c85-a2fe-ead7ad08fb14" />
+<img width="1600" height="1200" alt="Placa y esquema de la zona SWD (1 de 4)" src="https://github.com/user-attachments/assets/765d2a89-0d2d-4157-abff-4025e1dbfeed" />
+<img width="998" height="827" alt="Placa y esquema de la zona SWD (2 de 4)" src="https://github.com/user-attachments/assets/601be974-1db5-4fc5-bb9c-50544645ba3f" />
+<img width="1565" height="827" alt="Placa y esquema de la zona SWD (3 de 4)" src="https://github.com/user-attachments/assets/39ab2c04-9576-4e65-a0e4-778afc8e23f6" />
+<img width="790" height="950" alt="Placa y esquema de la zona SWD (4 de 4)" src="https://github.com/user-attachments/assets/69279de0-8e73-4c85-a2fe-ead7ad08fb14" />
+
+## Material usado
+
+- Sonda: RP2040 Zero con `debugprobe-zero` v2.3.0.
+- Cable esmaltado AWG30, estaño, soldador, máscara de soldadura curable con UV y cinta Kapton.
+- Multímetro.
+- Software: OpenOCD 0.12.0 y `pmca-console`, más el paquete oficial 3.26.
+- Para el análisis: REA y Claude.
+- Recomendado en [R46](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r46-procedimiento-fisico-swd.md) (no confirmo cuáles usé): lupa o microscopio, flux en gel, malla desoldadora y una fuente limitada a 1 A o una batería NP-FW50 cargada.
 
 ## El montaje
 
@@ -49,12 +58,12 @@ Antes de conectar nada medí con el multímetro. Con la cámara apagada comprob�
 
 Soldé un cable AWG30 al pad inferior de R4911 (SWCLK, lado BIONZ), otro al pad inferior de R4912 (SWDIO, también lado BIONZ) y un tercero a masa. Los fijé con máscara de soldadura curable con UV y cinta Kapton. También tomé una conexión a masa de la carcasa del puerto micro HDMI.
 
-<img width="720" height="1280" alt="image" src="https://github.com/user-attachments/assets/40c0214c-a9df-4865-9a94-b295395daa86" />
+<img width="720" height="1280" alt="Cables soldados a los pads de R4911 y R4912" src="https://github.com/user-attachments/assets/40c0214c-a9df-4865-9a94-b295395daa86" />
 
 Como sonda usé una RP2040 Zero con el firmware `debugprobe-zero` v2.3.0 (https://github.com/inindev/debugprobe-zero), que la convierte en un adaptador CMSIS-DAP. SWCLK va al GPIO 10, SWDIO al GPIO 11 y la masa a GND. En el PC usé OpenOCD, con ayuda de Claude.
 
-<img width="720" height="1280" alt="image" src="https://github.com/user-attachments/assets/5bb2619a-3f21-44a5-9ea3-7404ec95e46c" />
-<img width="720" height="1280" alt="image" src="https://github.com/user-attachments/assets/3e5011f3-3d56-450b-ad7b-6e5205763d1d" />
+<img width="720" height="1280" alt="Sonda RP2040 Zero y su cableado (1 de 2)" src="https://github.com/user-attachments/assets/5bb2619a-3f21-44a5-9ea3-7404ec95e46c" />
+<img width="720" height="1280" alt="Sonda RP2040 Zero y su cableado (2 de 2)" src="https://github.com/user-attachments/assets/3e5011f3-3d56-450b-ad7b-6e5205763d1d" />
 
 
 
@@ -106,15 +115,19 @@ Puse un punto de parada justo en esa comparación y, en ese momento, forcé `r0 
 No escribí nada en memoria ni en la NAND. Loader3 creyó que el fichero existía y eligió el modo actualizador. Esa función se llama desde ocho sitios, pero el camino del arranque pasa por ella dos veces. En ambos puntos puse `r0 = 0` y lo releí para verificar el cambio. Desde la entrada de Loader3 hasta el arranque del actualizador pasaron 696 milisegundos.
 
 ## Instalación y verificación
-<img width="720" height="1280" alt="image" src="https://github.com/user-attachments/assets/cb369a75-3c27-4cb6-b993-0e51495df575" />
+<img width="720" height="1280" alt="Instalación del firmware 3.26" src="https://github.com/user-attachments/assets/cb369a75-3c27-4cb6-b993-0e51495df575" />
 
 El actualizador de fábrica arrancó y el PC detectó el dispositivo USB de Sony en modo actualizador. Empecé a instalar el firmware oficial 3.26 con `pmca-console`. La NAND la escribió el actualizador de Sony, no yo.
 
 El primer intento se detuvo al 45 % con el error `0x1063`. Según documentación previa de mi proyecto, ese código suele indicar que Darwin (el microcontrolador de gestión de energía) no responde, pero en este caso no pude confirmar la causa. Apagué y encendí la cámara. El actualizador arrancó solo, sin repetir el truco por SWD: el fichero `\updater\mode` ya existía, creado por el actualizador de Sony al empezar la instalación (este mecanismo estaba previsto en mi análisis; no lo verifiqué leyendo la NAND). El segundo intento llegó al 100 %.
 
 Para verificar la recuperación, quité la batería diez segundos y encendí la cámara con OpenOCD cerrado. Apareció como `ILCE-6000` en modo Mass Storage, con el firmware 3.26 y sin LED de error.
-<img width="720" height="1280" alt="image" src="https://github.com/user-attachments/assets/479e0f95-1ecd-46cc-aa53-a91235362123" />
+<img width="720" height="1280" alt="Verificación final de la cámara" src="https://github.com/user-attachments/assets/479e0f95-1ecd-46cc-aa53-a91235362123" />
 
+
+## Después de la recuperación
+
+Con la sonda aún soldada instalé el 3.27 (el contenido del 3.25c con cabecera 3.27), leí por SWD la clave de `nflasha0` y dejé construido un paquete 3.28 de reserva ([R50](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r50-paquete-327.md), [R51](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r51-respaldo-clave-nflasha0-nvram-326.md)). La primera prueba física del selector del obturador electrónico ([R52](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r52-prueba-fisica-selector-327.md)) mostró que funciona dentro de BIONZ, pero que el valor no llega a verse en el paquete enviado a Darwin. Es trabajo en curso y no está validado.
 
 ## Consejos prácticos
 
@@ -122,6 +135,13 @@ Para verificar la recuperación, quité la batería diez segundos y encendí la 
 - No ejecutes dos instancias de OpenOCD contra la misma sonda.
 - Evita `kill -9`: puede dejar sucio el estado de depuración y obligarte a reiniciar la cámara.
 - Al meter la batería con el interruptor en OFF, la cámara arranca y se apaga sola en menos de un segundo. No es un fallo.
+
+## Cuándo detenerse
+
+- Un corto, una lectura anómala o una tensión inesperada.
+- Olor, calor o consumo superior a 1 A.
+- Que el DAP indique depuración deshabilitada.
+- Cualquier duda sobre qué se va a escribir o dónde: no escribir.
 
 ## Límites y riesgos
 

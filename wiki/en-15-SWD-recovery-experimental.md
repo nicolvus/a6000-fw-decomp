@@ -2,7 +2,7 @@
 
 Linked reports are in Spanish.
 
-<img width="720" height="1280" alt="image" src="https://github.com/user-attachments/assets/52e7fec3-ee1a-40ab-97e3-f0b8ef6e70d0" />
+<img width="720" height="1280" alt="Overview of the setup" src="https://github.com/user-attachments/assets/52e7fec3-ee1a-40ab-97e3-f0b8ef6e70d0" />
 
 **Summary:** My A6000 was bricked (error LED, no USB connection) after I installed a modified firmware of my own. I recovered it by connecting an RP2040 to two pads on the board over SWD and forcing a single register during startup, which made the camera load Sony's factory updater. I then installed the official firmware over USB.
 
@@ -35,15 +35,24 @@ Using the dump, I opened `nflasha1`, extracted its initrd (a CRAMFS), and disass
 I needed a way into the camera, and the usual access paths were unavailable:
 
 - USB was impossible because Loader3 never gets far enough to expose it.
-- Writing to the NAND externally wasn't an option: I hadn't identified the chip and didn't have the BootROM key at that point.
+- Writing to the NAND externally wasn't an option: I hadn't identified the chip and didn't have the BootROM key at that point (I read it over SWD later, [R51](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r51-respaldo-clave-nflasha0-nvram-326.md)).
 - Conventional JTAG was ruled out: according to the schematic, TDI, TCK, and TMS are tied to 3.15 V.
 
 That left SWD, the two-wire version of the debug interface. In the service manual, SWCLK (Serial Wire Clock) comes from ball W25 of the BIONZ processor (IC6000), and SWDIO (Serial Wire Data I/O) comes from W26. Both signals run to connector CN4906 through two resistors, R4911 and R4912. On my camera, those resistors and the connector are not populated; only the footprints are present. There was nowhere to plug in, so I had to solder directly to the pads. There was also an unknown: an eFuse might have disabled debugging, and there was no way to know until I tried.
 
-<img width="1600" height="1200" alt="image" src="https://github.com/user-attachments/assets/765d2a89-0d2d-4157-abff-4025e1dbfeed" />
-<img width="998" height="827" alt="image" src="https://github.com/user-attachments/assets/601be974-1db5-4fc5-bb9c-50544645ba3f" />
-<img width="1565" height="827" alt="image" src="https://github.com/user-attachments/assets/39ab2c04-9576-4e65-a0e4-778afc8e23f6" />
-<img width="790" height="950" alt="image" src="https://github.com/user-attachments/assets/69279de0-8e73-4c85-a2fe-ead7ad08fb14" />
+<img width="1600" height="1200" alt="Board and schematic of the SWD area (1 of 4)" src="https://github.com/user-attachments/assets/765d2a89-0d2d-4157-abff-4025e1dbfeed" />
+<img width="998" height="827" alt="Board and schematic of the SWD area (2 of 4)" src="https://github.com/user-attachments/assets/601be974-1db5-4fc5-bb9c-50544645ba3f" />
+<img width="1565" height="827" alt="Board and schematic of the SWD area (3 of 4)" src="https://github.com/user-attachments/assets/39ab2c04-9576-4e65-a0e4-778afc8e23f6" />
+<img width="790" height="950" alt="Board and schematic of the SWD area (4 of 4)" src="https://github.com/user-attachments/assets/69279de0-8e73-4c85-a2fe-ead7ad08fb14" />
+
+## Materials used
+
+- Probe: RP2040 Zero with `debugprobe-zero` v2.3.0.
+- AWG30 enamelled wire, solder, soldering iron, UV-curable solder mask and Kapton tape.
+- Multimeter.
+- Software: OpenOCD 0.12.0 and `pmca-console`, plus the official 3.26 package.
+- For the analysis: REA and Claude.
+- Recommended in [R46](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r46-procedimiento-fisico-swd.md) (I am not confirming which ones I used): a magnifier or microscope, gel flux, desoldering braid and a supply limited to 1 A or a charged NP-FW50 battery.
 
 ## The setup
 
@@ -51,12 +60,12 @@ Before connecting anything, I took measurements with a multimeter. With the came
 
 I soldered an AWG30 wire to the lower pad of R4911 (SWCLK, on the BIONZ side), another to the lower pad of R4912 (SWDIO, also on the BIONZ side), and a third to ground. I secured them with UV-curable solder mask and Kapton tape. I also took a ground connection from the shell of the micro HDMI port.
 
-<img width="720" height="1280" alt="image" src="https://github.com/user-attachments/assets/40c0214c-a9df-4865-9a94-b295395daa86" />
+<img width="720" height="1280" alt="Wires soldered to the R4911 and R4912 pads" src="https://github.com/user-attachments/assets/40c0214c-a9df-4865-9a94-b295395daa86" />
 
 For the probe, I used an RP2040 Zero running the `debugprobe-zero` v2.3.0 firmware (https://github.com/inindev/debugprobe-zero), which turns it into a CMSIS-DAP adapter. SWCLK goes to GPIO 10, SWDIO to GPIO 11, and ground to GND. On the PC, I used OpenOCD, with Claude's assistance.
 
-<img width="720" height="1280" alt="image" src="https://github.com/user-attachments/assets/5bb2619a-3f21-44a5-9ea3-7404ec95e46c" />
-<img width="720" height="1280" alt="image" src="https://github.com/user-attachments/assets/3e5011f3-3d56-450b-ad7b-6e5205763d1d" />
+<img width="720" height="1280" alt="RP2040 Zero probe and its wiring (1 of 2)" src="https://github.com/user-attachments/assets/5bb2619a-3f21-44a5-9ea3-7404ec95e46c" />
+<img width="720" height="1280" alt="RP2040 Zero probe and its wiring (2 of 2)" src="https://github.com/user-attachments/assets/3e5011f3-3d56-450b-ad7b-6e5205763d1d" />
 https://github.com/user-attachments/assets/6345ec01-d72f-49fd-8cec-93e6734b30ae
 
 ## First contact
@@ -103,14 +112,18 @@ I set a breakpoint right at that comparison and, at that moment, forced `r0 = 0`
 I didn't write anything to memory or the NAND. Loader3 thought the file existed and selected the updater mode. That function is called from eight places, but the boot path goes through it twice. I set `r0 = 0` at both points and read it back to verify the change. From the Loader3 entry point to the updater starting, 696 milliseconds elapsed.
 
 ## Installation and verification
-<img width="720" height="1280" alt="image" src="https://github.com/user-attachments/assets/cb369a75-3c27-4cb6-b993-0e51495df575" />
+<img width="720" height="1280" alt="Installing firmware 3.26" src="https://github.com/user-attachments/assets/cb369a75-3c27-4cb6-b993-0e51495df575" />
 
 The factory updater booted, and the PC detected Sony's USB device in updater mode. I started installing the official 3.26 firmware using `pmca-console`. The Sony updater wrote to the NAND, not me.
 
 The first attempt stopped at 45% with error `0x1063`. According to previous documentation in my project, this code usually indicates that Darwin (the power-management microcontroller) is not responding, but I could not confirm the cause in this case. I turned the camera off and on again. The updater started on its own, without repeating the SWD trick: the `\updater\mode` file was already there, created by Sony's updater when the installation began (this mechanism was anticipated in my analysis; I did not verify it by reading the NAND). The second attempt reached 100%.
 
 To verify the recovery, I removed the battery for ten seconds and turned the camera on with OpenOCD closed. It appeared as `ILCE-6000` in Mass Storage mode, running firmware 3.26, with no error LED.
-<img width="720" height="1280" alt="image" src="https://github.com/user-attachments/assets/479e0f95-1ecd-46cc-aa53-a91235362123" />
+<img width="720" height="1280" alt="Final check of the camera" src="https://github.com/user-attachments/assets/479e0f95-1ecd-46cc-aa53-a91235362123" />
+
+## After the recovery
+
+With the probe still soldered I installed 3.27 (the 3.25c content with a 3.27 header), read the `nflasha0` key over SWD and built a 3.28 fallback package ([R50](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r50-paquete-327.md), [R51](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r51-respaldo-clave-nflasha0-nvram-326.md)). The first physical test of the electronic-shutter selector ([R52](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r52-prueba-fisica-selector-327.md)) showed that it works inside BIONZ, but the value is never seen in the packet sent to Darwin. This is work in progress and is not validated.
 
 ## Practical tips
 
@@ -118,6 +131,13 @@ To verify the recovery, I removed the battery for ten seconds and turned the cam
 - Don't run two OpenOCD instances against the same probe.
 - Avoid `kill -9`: it can leave the debug state dirty and force you to restart the camera.
 - When you insert the battery with the power switch set to OFF, the camera starts up and shuts itself down in less than a second. That's not a fault.
+
+## When to stop
+
+- A short circuit, an abnormal reading or an unexpected voltage.
+- A smell, heat or current draw above 1 A.
+- The DAP reports that debugging is disabled.
+- Any doubt about what will be written or where: do not write.
 
 ## Limitations and risks
 
