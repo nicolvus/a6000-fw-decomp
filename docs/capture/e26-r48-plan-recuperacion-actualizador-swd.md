@@ -147,3 +147,40 @@ Se extrajo `UdtrMain.sh` del `initrd.img` de `nflasha1` del volcado del 20-10:
 **Corrección de R47 §15 (INFERENCIA):** el «arranque 1 que acaba en `XPOWER_OFF`» parece ser el arranque que provoca meter la batería, no una fase de cada encendido. En los intentos 4 y 5 no se registró cuándo se metió la batería. El arranque que da el −302 es el del interruptor, y es uno solo. El script `r48_updater_swd.cfg` supone dos arranques seguidos y **no sirve tal cual**.
 
 **Estado:** P1 queda sin ejecutar, y no se continúa en esta sesión. No se escribió nada en la cámara.
+
+## 8. P2 y P3: actualizador alcanzado e instalación del 3.26 interrumpida al 45 % (03-11-2026)
+
+**Entrada al actualizador.** La puso el usuario por su cuenta; el método no se registró en esta sesión y no es la vía C de §1. **P1 no llegó a ejecutarse** (§7).
+
+**P2, verificación de solo lectura (MEDIDO).**
+
+| Comprobación | Resultado |
+|---|---|
+| `lsusb` | `054c:03e2 Sony Corp.`, uno de los identificadores de actualizador que reconoce `pmca` (`SONY_ID_PRODUCT_UPDATER = [0x033a, 0x03e2]`) |
+| `pmca` | «Sony DSC is a camera in updater mode» (`SonyMscUpdaterDevice`) |
+| `init` y `checkGuard` del `.dat` 3.26 | Correctos: el guard acepta el paquete |
+| `getFirmwareVersion` | Actual **3.25**, nueva **3.26** |
+| Paquete | SHA-256 `c730f8e2…`, igual que el manifiesto |
+
+**P3, instalación (autorizada por el usuario: «instálale la buena»).** Se ejecutó `pmca-console.py firmware -f …/recuperacion-326/firmware_packed.dat` desde el venv de §6. No hizo falta `sudo`: el nodo USB tenía permisos `rw` para todos.
+
+| Fase | Resultado (MEDIDO) |
+|---|---|
+| `Initializing firmware update`, `Updating from version 3.25 to version 3.26` | Correctos |
+| `Writing firmware` | El progreso llegó al **45 %**, unos 96 MB de 213 MB |
+| Respuesta de la cámara | **`Response error: 0x1063`** a un `CMD_WRITE_FIRM` (`_sendWriteCommands`). `pmca` terminó con `EXIT=1` sin `CMD_COMPLETE` |
+| Justo después | La cámara seguía en USB como `054c:03e2` (actualizador) |
+
+**Código de error (LEÍDO en `sauu`, SHA-256 `799a94d6…`).** `ErrorConverter::Convert` (`0xe9b0`) devuelve el código de LED de `LEDErrorConverter::Convert` con `| 0x1000`. Por tanto `0x1063` corresponde al código de LED **`0x63`**. **No se ha determinado** qué fallo representa `0x63`.
+
+**Estado de la cámara tras el fallo (sin verificar):**
+- La escritura del cuerpo del paquete había empezado. **Es posible que alguna partición de destino haya quedado escrita a medias.** No se sabe cuáles se escribieron antes del corte.
+- `nflasha1` (actualizador de fábrica) no está entre las imágenes del paquete (R38: ningún paquete 3.2x trae `updater_sum`/`loader_sum`). INFERENCIA: sigue intacta.
+- Si `StartUpdate` llegó a crear `updater/mode` (R5 §3), el siguiente arranque debería volver al actualizador. No comprobado.
+- No se volvió a medir el estado de la cámara después del fallo.
+
+**Causa del fallo: desconocida.** Las hipótesis, todas sin probar, son un error al escribir en la NAND, un problema del paquete en esa zona o un fallo de la sesión USB.
+
+**Decisión.** No se reintenta la instalación a ciegas. Recomendación: retirar la sonda y el USB con cuidado y llevar la cámara a un servicio técnico con este informe, R47 §15 y R36. El diagnóstico concreto es `nflasha3` dañada por el 3.25 y la instalación oficial interrumpida al 45 % con `0x1063`.
+
+Registro de la instalación (fuera del repo): `p3.log`, que no contiene datos de la cámara.
