@@ -10,11 +10,11 @@
 Ingeniería inversa del firmware 3.21 de la Sony A6000 (ILCE-6000: BIONZ + microcontrolador Darwin) para disparar con
 obturador electrónico. **Hito:** con el firmware modificado **3.23** (parche de 2 bytes sobre Darwin) la cámara real disparó en
 silencio y sin error. **Después**, el firmware integrado **3.25** dejó la cámara sin arrancar por un error de formato en la partición
-`nflasha3`, ya identificado y corregido en el **3.25c**. Esa cámara **se recuperó el 03-11-2026 por SWD** y hoy arranca con el firmware oficial 3.26 ([R49](docs/capture/e26-r49-cierre-recuperacion-326.md)).
+`nflasha3`, ya identificado y corregido en el **3.25c**. Esa cámara **se recuperó el 03-11-2026 por SWD** con el firmware oficial 3.26 ([R49](docs/capture/e26-r49-cierre-recuperacion-326.md)). Después se instaló en ella el **3.27** (el contenido del 3.25c con cabecera 3.27), con el que arranca ([R51](docs/capture/e26-r51-respaldo-clave-nflasha0-nvram-326.md)); el obturador electrónico aún no está validado ([R52](docs/capture/e26-r52-prueba-fisica-selector-327.md)).
 
 > **⚠️ 3.25c: experimental.** El [3.25c](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.25c-experimental) corrige los errores
-> que bloquearon el 3.25 (30/30 comprobaciones y emulación del cargador real sin fallos) y **debería** arrancar, pero **nunca se ha instalado
-> en una cámara**. El 3.25 original no se publica. Instalar cualquier firmware modificado puede dejar la cámara inservible y **no hay
+> que bloquearon el 3.25 (30/30 comprobaciones y emulación del cargador real sin fallos) y arrancó en la cámara del autor instalado como 3.27 (mismo contenido, otra cabecera), pero
+> **solo se ha probado en una cámara** y el obturador electrónico no está validado. El 3.25 original no se publica. Instalar cualquier firmware modificado puede dejar la cámara inservible y **no hay
 > recuperación independiente demostrada**. Lee [Estado actual y límites](https://github.com/nicolvus/a6000-fw-decomp/wiki/14-Estado-actual).
 
 ## Documentación
@@ -29,10 +29,12 @@ resultados, estado actual y límites, herramientas, glosario y mapa del reposito
 | 3.23 | Parche de Darwin: el motor y las bobinas del obturador nunca se mueven | **Instalado y confirmado** en cámara real: silencioso y sin errores |
 | 3.24 | Darwin oficial con número de versión 3.24 (vuelta atrás desde el 3.23) | Verificado offline, nunca instalado |
 | 3.25 | EFCS / selector Electronic desde el menú | **Dejó sin arrancar la cámara del autor** (no publicado) |
-| 3.25c | 3.25 con `nflasha3` en el formato exacto de Sony | Publicado como experimental; verificado offline, **nunca instalado** |
+| 3.25c | 3.25 con `nflasha3` en el formato exacto de Sony | Publicado como experimental; verificado offline; su contenido se instaló en la cámara del autor como 3.27 |
 | 3.26 | Contenido oficial de Sony con número de versión 3.26 (vuelta atrás desde el 3.25c) | Verificado offline; instalado una vez en la cámara del autor para recuperarla ([R49](docs/capture/e26-r49-cierre-recuperacion-326.md)) |
+| 3.27 | Contenido del 3.25c con cabecera 3.27 (la cámara ya estaba en 3.26) | **Instalado** en la cámara del autor, no publicado como `.dat` ([R50](docs/capture/e26-r50-paquete-327.md), [R51](docs/capture/e26-r51-respaldo-clave-nflasha0-nvram-326.md)) |
+| 3.28 | Contenido oficial de Sony con cabecera 3.28 (reserva si el 3.27 falla) | Construido; verificado offline, no instalado, no publicado |
 
-**Estado:** el firmware 3.23 (T040) hace disparar la cámara en silencio y sin error; el 3.25 (E26) dejó la cámara del autor sin arrancar; su causa está corregida en el 3.25c (experimental, sin probar en cámara, [R45](docs/capture/e26-r45-firmware-325c-experimental.md)) y esa cámara se recuperó por SWD con el actualizador oficial y el 3.26 ([R49](docs/capture/e26-r49-cierre-recuperacion-326.md)).
+**Estado:** el firmware 3.23 (T040) hace disparar la cámara en silencio y sin error; el 3.25 (E26) dejó la cámara del autor sin arrancar; su causa está corregida en el 3.25c (experimental, probado en una sola cámara como 3.27, [R45](docs/capture/e26-r45-firmware-325c-experimental.md)) y esa cámara se recuperó por SWD con el actualizador oficial y el 3.26 ([R49](docs/capture/e26-r49-cierre-recuperacion-326.md)).
 Detalle en [Estado actual y límites](https://github.com/nicolvus/a6000-fw-decomp/wiki/14-Estado-actual). Contribuir: [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Copyright y uso
