@@ -56,3 +56,20 @@ Autorizada por el usuario en esta petición. `pmca-console firmware -f analysis/
 **Primera prueba física de que el `nflasha3` con la forma de Sony (R45) arranca:** Loader3 carga `\sabin\idt_cam.bin` donde el 3.25 daba −302. Confirma en hardware la causa de R36 y la corrección del constructor.
 
 **NO VERIFICADO:** el código nuevo (selector EFCS/Electronic, C3-B, compuertas Darwin) no se ha ejercitado todavía; sigue siendo `E25-27` (validación física con su protocolo). Si falla al usarlo: 3.28 de §4.
+
+## 6. Crash al activar adb en 3.27 (03-11-2026, MEDIDO por SWD y telnet, solo lectura)
+
+Dos medios: SWD (AP0, búfer de log del kernel en `0x83400000`, sobrevive a reinicios) y telnet `192.168.1.29:23` (`/proc`, sin escrituras).
+
+| # | Evidencia | Lectura |
+|---|---|---|
+| 1 | Primer crash: Wi-Fi arriba a los 252 s; a los 304,6 s `[LDEC ERR] mumin_devif_wait_trans : -10003` → `LDEC request error (retry)` → `mumin_pbm_s_read_pages_in_pblkgroup` (pblk `0x02c3`, página 22) → `muminblk_request: request=write, sector=662525` → `end_request: I/O error, dev nflasha0` → `NULL pointer dereference at 0x6`, `Oops: 817 [#1] PREEMPT SMP` → `WARMBOOT` | Una escritura necesita leer antes la página (`read_modify_write_ltu`); la lectura falla y el kernel cae |
+| 2 | Sector 662525 × 512 = `0x1437fa00` → dentro de `nflasha0p17` = `/dev/nflasha17`, montada en `/android/data` (vfat, `batch_sync`), calculado con `/proc/partitions` | Es la partición de datos de Android, donde adb guardaría su estado |
+| 3 | Arranque posterior, sin intervención: el mismo `LDEC ERR -10003 (retry)` a los 77,7 / 128,7 / 179,7 s (cada ~51 s) y luego silencio; no existe `/android/data/misc/adb` | La página `0x02c3` da lecturas fallidas intermitentes aunque no se escriba |
+| 4 | Segundo intento (adb activado otra vez): **no hay oops ni reinicio**. El log no cambia, uptime sigue (≥ 380 s), telnet responde, pero `loadavg` sube a 73 (1/5/15 min: 73/55/26). Hilo `bdev_dnflasha` (pid 69) parado en `mumin_devif_wait_trans`; `nmemories.tweak` (pid 850) y los `busybox` que tocan flash en `sleep_on_buffer` | La cámara se **cuelga** en vez de caerse: el controlador de la flash espera una transferencia que nunca termina y todo proceso que toque `/android/data` o `/setting` queda en estado D. No es la CPU (SWD y telnet viven) |
+
+**Conclusión (INFERENCIA fuerte):** el fallo está en la capa de flash (`mumin`/LDEC) sobre una página física concreta de la partición de datos de Android, no en el parche del 3.27 (BIONZ/Darwin). No hay línea base con 3.21/3.26 para descartar al 100 % que el 3.27 influya. **NO VERIFICADO:** que la página esté dañada físicamente y qué escribe exactamente adb.
+
+**Consecuencias:** no activar adb en esta cámara; la validación de `E25-27` debe hacerse sin tocar `/android/data` (RemoteShutter/telnet leyendo RAM no escriben flash). Telnet por sí solo funciona (lecturas de `/proc` y `/dev/mem`).
+
+Evidencia: `analysis/camera-dumps/20261103-swd-nflasha0-clave/kernel-log-ram-*` (copiada a `~/a6000-r1-backup/`).
