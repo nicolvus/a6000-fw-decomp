@@ -39,20 +39,35 @@ Con `+0x210 = 1` el selector debía escribir 1 en `pkt[0x0e]` ([E25-24b §2.2](e
 
 `0x43845f2e..0x43845f34`: `ldr r3,[r5]` → `ldr.w r2,[r3,#0x210]` → `str.w r2,[r4,#0x41c]`. No hay llamadas directas (`bl`/`blx`) a la función que lo contiene (`0x43844e80`), se invoca por puntero. En ese mismo cuerpo `sb` y `r4` son registros distintos (`mov sb,r2`; `r4=[sp+0x8c]`).
 
-## 6. Hipótesis (INFERENCIA; no distinguidas)
+## 6. Medidas con halt y muestreo rápido (04-11-2026, MEDIDO)
 
-1. **`sb` del constructor `0x43841070` no es el `r4` del copiador:** la cueva lee `[sb+0x41c]`, un objeto distinto de donde se guarda el EFCS.
-2. **`cap+0x41c` se copia más tarde que el uso** (otro disparo, otra vía de captura).
-3. **Otro `strb` posterior** pone `pkt[0x0e]` a 0 (el de `0x43841476` se anuló, pero puede haber otro).
-4. El paquete vigilado no es el del disparo (improbable: `pkt[0]=0`, formato y tamaño coinciden con T022/T023).
+Breakpoint de hardware en la cueva `0x43541800` en los 4 núcleos (OpenOCD, `cortex_a`, AP1) y, aparte, muestreo de AP0 cada ~0,7 ms sin parar la cámara.
 
-## 7. Límites
+| Medida | Resultado |
+|---|---|
+| Parada en la cueva durante un disparo con EFCS desactivado | `pc=0x43541800`, `r1=1` (rama `[sp+0x44]==1`), `r9 (sb)=0x43ea976c`, `r4=0x43ed4948`; `+0x210 = 1` |
+| `[sb+0x41c]` tras el disparo | **1** (`0x83ea9b88`). `cap+0x41c` pasa a 1 unos 8 ms después de que `+0x210` pase a 1 (muestreo) |
+| Watchpoint de escritura en `r4+0xe` (`0x43ed4956`) | Salta en `pc=0x43541808` con `r2=1`: la cueva **escribe 1** en `pkt[0x0e]` |
+| Muestreo de `0x83ed4956` (búfer `r4`) y `0x83f91e40` (búfer enviado) en un disparo | `r4buf[0x0e]` = **1 durante una sola lectura (< ~1 ms) y vuelve a 0**; `sent[0x0e]` no llegó a verse en 1 |
+| Parches en el constructor `0x43841070` | No hay más `strb [r4,#0xe]`; las únicas escrituras con base `r4` son `+0xa..+0xd` y `+0x12..+0x15` |
 
-* Darwin (`0x20003716`, cueva `0x4318`) no es legible por AP0 (error); la bandera de Darwin no se midió.
-* No se localizó `cap` en la RAM: el contexto `0x83edf684` tiene los campos fuente a 0, así que no sirven de huella.
-* No se probó el RAW ni el rango de velocidades.
-* Solo lectura; nada escrito en la cámara. El cuelgue de flash de R51 §6 sigue presente (`loadavg` ~75).
+**Resultado:** la selección **sí funciona dentro de BIONZ**: `+0x210 → cap+0x41c → cueva → pkt[0x0e] = 1`. La hipótesis 1 de la versión previa de este informe (objeto distinto) queda **descartada**. El 1 dura menos de un milisegundo en el búfer del constructor y el búfer enviado queda en 0.
 
-## 8. Siguiente paso
+**Incidente:** el segundo intento (watchpoint además del breakpoint) dejó el núcleo parado más de 6 s y la cámara se **reinició** (`DSCR` con errores). No repetir con watchpoints.
 
-Decidir entre (a) leer `[sb+0x41c]` del constructor con un punto de parada (halt, ya usado en R49), (b) corregir la cueva para leer el mismo objeto que el copiador, o (c) volver al 3.28 oficial. No instalar nada sin orden.
+## 7. Hipótesis restantes (INFERENCIA; sin distinguir)
+
+1. El paquete con `pkt[0x0e]=1` se envía (transitorio) y Darwin lo recibe; el 0 persistente es de un mensaje posterior que reescribe `S+0x3e` antes de que la compuerta `0x4318` se evalúe.
+2. El búfer `0x83f91e32` no es el que sale por el transporte en este camino, y la copia a Darwin ocurre antes de la cueva o no pasa por ella.
+3. Darwin recibe 1 pero la compuerta no actúa (por ejemplo, otro consumidor del tipo de bobina).
+
+## 8. Límites
+
+* Darwin (`0x20003716`, cueva `0x4318`) no es legible por AP0: no se midió lo que recibe ni la compuerta.
+* No se localizó quién pone a 0 el byte tras la cueva.
+* No se probó el RAW ni el rango de velocidades. Solo se detectó un disparo en el muestreo de 60 s con 3 fotos.
+* El cuelgue de flash de R51 §6 sigue presente (`loadavg` ~75).
+
+## 9. Siguiente paso
+
+Registrar el instante de **envío** al transporte (breakpoint en `0x4382fac8`, o en la rutina que escribe `0x83f91e32`) y leer `pkt[0x0e]` ahí, sin watchpoints; o medir lo que Darwin recibe por otra vía (R49 no halla ninguna). Sin una lectura de Darwin no se puede afirmar que el gate falla ni que funciona. No instalar nada sin orden.
