@@ -162,6 +162,8 @@ def apply_patches(avcam: bytes, darwin: bytes) -> dict[str, Any]:
 
     if PB.CAVE + PB.CAVE_LEN > PC.CAVE:
         raise BuildError("cueva del selector y C3-B solapadas")
+    if not (PB.CAVE + PB.CAVE_LEN <= PB.SEND_CAVE and PB.SEND_CAVE + PB.SEND_CAVE_LEN <= PC.CAVE):
+        raise BuildError("cueva del envío solapada con el selector o con C3-B")
     if PC.CAVE + PC.CAVE_LEN > 0x435418D8:
         raise BuildError("C3-B invade la cola de metadatos de la cabecera")
     if not all(b == 0 for b in avcam[PC.CAVE - PB.BASE:PC.CAVE - PB.BASE + PC.CAVE_LEN]):

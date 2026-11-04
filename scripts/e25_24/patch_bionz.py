@@ -47,6 +47,12 @@ CAVE = 0x43541800
 CAVE_LEN = 24                       # 20 B de código + literal de 4 B
 LIVE_EFCS = 0x43EDF894              # bloque de ajustes 0x43edf684 + 0x210 (0/1)
 CAVE_OLD = bytes(CAVE_LEN)          # área reservada de cabecera, cero verificado
+# R53 §8: el paquete que sale hacia Darwin lo arma 0x438d0064, que reescribe pkt[0x0e] en cada envío
+SEND = 0x438D01FA
+SEND_OLD = bytes.fromhex("82f84e30")  # strb.w r3,[r2,#0x4e]
+SEND_CAVE = 0x43541820
+SEND_CAVE_LEN = 16
+SEND_CAVE_OLD = bytes(SEND_CAVE_LEN)
 
 # Regiones que el parche no debe tocar (E25-25).
 PROTECTED: tuple[tuple[str, int, int], ...] = (
@@ -97,11 +103,27 @@ def cave_bytes() -> bytes:
     return bytes(out)
 
 
+def send_cave_bytes() -> bytes:
+    """Cueva del envío: pkt[0x0e] = ajuste EFCS en vivo (r3 y lr libres: los recarga el código siguiente)."""
+    out = bytearray()
+    out += bytes.fromhex("024b")            # ldr r3,[pc,#8] -> literal
+    out += bytes.fromhex("1b68")            # ldr r3,[r3]
+    out += SEND_OLD                         # strb.w r3,[r2,#0x4e]
+    out += bytes.fromhex("7047")            # bx lr
+    out += NOP                              # alinea el literal
+    out += LIVE_EFCS.to_bytes(4, "little")
+    if len(out) != SEND_CAVE_LEN:
+        raise AssertionError(f"cueva de envío de {len(out)} B, esperado {SEND_CAVE_LEN}")
+    return bytes(out)
+
+
 PATCHES: tuple[tuple[int, bytes, bytes, str], ...] = (
     (BRANCH, BRANCH_OLD, NOP + NOP, "bne.w -> NOP; el cave decide la rama"),
     (CALL, CALL_OLD, bl(CALL, CAVE), "movs/strb -> bl cave"),
     (STORE, STORE_OLD, NOP, "store duplicado -> NOP"),
     (CAVE, CAVE_OLD, cave_bytes(), "cave: pkt[0x0e] = ajuste EFCS en vivo"),
+    (SEND, SEND_OLD, bl(SEND, SEND_CAVE), "envío 0x438d0064: strb pkt[0x0e] -> bl cueva"),
+    (SEND_CAVE, SEND_CAVE_OLD, send_cave_bytes(), "cueva envío: pkt[0x0e] = ajuste EFCS en vivo"),
 )
 
 

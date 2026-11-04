@@ -301,6 +301,13 @@ def test_emu_bionz_lee_ajuste_en_vivo(bionz_patched, r1: int, live: int):
     assert run.packet[0x0E] == live
 
 
+@pytest.mark.parametrize("live", [0, 1])
+def test_emu_bionz_envio_lleva_ajuste_en_vivo(bionz_patched, live: int):
+    """Regresión R53 §8: 0x438d0064 reescribe pkt[0x0e] en cada envío; debe llevar el ajuste EFCS."""
+    out, _ = bionz_patched
+    assert emu.run_bionz_send_store(out, live, sony_r3=0xFF) == live
+
+
 def test_emu_bionz_conserva_r3_y_pkt1(bionz: PB.BionzImage, bionz_patched):
     """El cave no debe dejar r3=1: pkt[1] se construye con `adds r3,#0x40`."""
     out, _ = bionz_patched

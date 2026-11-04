@@ -58,7 +58,7 @@ def open_dat(path: Path, keys: tuple[bytes, bytes]) -> tuple[dict[str, Any], dic
         "descifrado_igual_a_fdat": dec.first_mismatch_vs_fdat is None,
         "bloques_sin_error": not (dec.bad_sum or dec.bad_flag or dec.bad_len),
         "crc_cabecera_ok": hdr["checksum_stored"] == hdr["checksum_computed"],
-        "version_3_25_o_3_27": hdr["version"] in ("3.25", "3.27", "3.29"),  # 3.27 = contenido del 3.25c; 3.29 = 3.25c + selector con ajuste EFCS en vivo
+        "version_3_25_o_3_27": hdr["version"] in ("3.25", "3.27", "3.29", "3.30"),  # 3.27 = 3.25c; 3.29/3.30 = 3.25c + selector en vivo (3.30: también en el envío)
         "modelo_region": (hdr["model"], hdr["region"]) == (build.MODEL, build.REGION),
         "updater_oficial_3_21": sha(fdat[upd["offset"] : upd["offset"] + upd["size"]])
         == build.UPDATER_SHA256,
@@ -115,6 +115,9 @@ def run(dat_path: Path = DAT) -> dict[str, Any]:
     kept = {i: records_kept(p_sony.block(i), p_new.block(i)) for i in recompressed}
 
     d_new, d_sony = p_new.decompressed(), p_sony.decompressed()
+    # páginas de 4096 B cambiadas por bloque de 64 KiB: _splice guarda exactamente esas como registros propios
+    changed_pages = {i: sum(d_new[p:p + 4096] != d_sony[p:p + 4096] for p in range(i << 16, (i + 1) << 16, 4096))
+                     for i in recompressed}
     fat_new, fat_sony = fatimg.Fat16.parse(d_new), fatimg.Fat16.parse(d_sony)
     avcam_bytes = set(fat_sony.offsets_for(build.AVCAM_NAME))
     diff = [i for i, (a, b) in enumerate(zip(d_new, d_sony)) if a != b]
@@ -150,8 +153,8 @@ def run(dat_path: Path = DAT) -> dict[str, Any]:
         "nflasha3.cabe_en_la_particion": lay_new["tamano"] < PARTITION_BYTES,
         "nflasha3.mismo_numero_de_bloques": lay_new["bloques"] == lay_sony["bloques"],
         "nflasha3.solo_bloques_0_48_57_recompuestos": recompressed == [0, 48, 57],
-        "nflasha3.15_de_16_registros_de_sony_en_cada_bloque_recompuesto": all(
-            k == 15 for k in kept.values()),
+        "nflasha3.registros_de_sony_salvo_paginas_cambiadas": all(
+            kept[i] == 16 - changed_pages[i] for i in recompressed),
         "control.sony_sin_violaciones": lay_sony["violaciones_ldec"] == 0,
         "control.3_25_detectado": lay_brick["violaciones_ldec"] > 0,
         # contenido lógico
@@ -160,8 +163,13 @@ def run(dat_path: Path = DAT) -> dict[str, Any]:
         if pkg["version"] in ("3.25", "3.27")
         else {i for i, (a, b) in enumerate(zip(d_new, p_brick.decompressed())) if a != b} <= avcam_bytes,
         "bionz.cueva_selector_presente": (
-            pkg["version"] != "3.29"
+            pkg["version"] not in ("3.29", "3.30")
             or fat_new.read(build.AVCAM_NAME)[PB.CAVE - PB.BASE:PB.CAVE - PB.BASE + PB.CAVE_LEN] == PB.cave_bytes()),
+        "bionz.envio_lleva_ajuste_en_vivo": (
+            pkg["version"] != "3.30"
+            or (fat_new.read(build.AVCAM_NAME)[PB.SEND - PB.BASE:PB.SEND - PB.BASE + 4] == PB.bl(PB.SEND, PB.SEND_CAVE)
+                and fat_new.read(build.AVCAM_NAME)[PB.SEND_CAVE - PB.BASE:PB.SEND_CAVE - PB.BASE + PB.SEND_CAVE_LEN]
+                == PB.send_cave_bytes())),
         "contenido.cambios_solo_dentro_de_av_cam": set(diff) <= avcam_bytes,
         "contenido.av_cam_es_el_construido": sha(fat_new.read(build.AVCAM_NAME))
         == sha((dat_path.parents[1] / "av-cam.integrated.bin").read_bytes()),

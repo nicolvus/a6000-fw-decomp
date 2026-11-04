@@ -18,6 +18,7 @@ try:
         UC_ARM_REG_LR,
         UC_ARM_REG_R0,
         UC_ARM_REG_R1,
+        UC_ARM_REG_R2,
         UC_ARM_REG_R3,
         UC_ARM_REG_R4,
         UC_ARM_REG_R9,
@@ -136,3 +137,27 @@ def run_bionz_pkt1(code: bytes, field: int = 1) -> Pkt1Run:
         if "UNMAPPED" not in str(exc):
             raise
     return Pkt1Run(bytes(uc.mem_read(pkt, 0x10)), int(uc.reg_read(UC_ARM_REG_R3)))
+
+
+def run_bionz_send_store(code: bytes, live: int, sony_r3: int = 0xFF) -> int:
+    """Ejecuta el `strb [r2,#0x4e]` de 0x438d01fa (constructor del envío 0x438d0064) y devuelve pkt[0x0e]."""
+    uc = Uc(UC_ARCH_ARM, UC_MODE_THUMB)
+    size = (len(code) + 0xFFF) & ~0xFFF
+    uc.mem_map(BIONZ_BASE, size)
+    uc.mem_write(BIONZ_BASE, code)
+    uc.mem_map(0x50000000, 0x1000)
+    carga = 0x50000000
+    uc.mem_write(LIVE_EFCS, live.to_bytes(4, "little"))
+    uc.reg_write(UC_ARM_REG_R2, carga)
+    uc.reg_write(UC_ARM_REG_R3, sony_r3)
+    uc.reg_write(UC_ARM_REG_SP, 0x50000F00)
+    uc.reg_write(UC_ARM_REG_LR, SENTINEL)
+    stop = 0x438D01FE
+
+    def hook(uc_, address, size, user):
+        if address == stop:
+            uc_.emu_stop()
+
+    uc.hook_add(UC_HOOK_CODE, hook)
+    uc.emu_start(0x438D01FA | 1, 0)
+    return uc.mem_read(carga + 0x4E, 1)[0]

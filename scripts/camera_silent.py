@@ -15,7 +15,7 @@ SM_A, SM_O, SM_N = 0x836D6FB6, "91f80990", "4ff00009"
 R5_A, R5_O = 0x836D7000, "28125ffa85fe"
 LINE_US, R5_FULL, R5_MIN = 15.2, 4219, 10
 GUARD_S = 25
-FLAG = "/android/data/local/tmp/sg_"
+FLAG = "/android/dev/sg_"  # tmpfs: /android/data (nflasha17) cuelga la E/S (R51 §6)
 
 
 def rd(addr: int, n: int) -> str:

@@ -21,7 +21,7 @@
     "component": "BIONZ av-cam.bin",
     "source": "/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/analysis/rea-independent/input/av-cam.bin",
     "source_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
-    "patched_sha256": "11c62c6e9faab01ed7629c09a47e83544f7bb2be280905f1b25a7f7fa8c5eaba",
+    "patched_sha256": "dd8ec76d8cbf326a4349c761147718acf6c8375eecd8ed6736132a7914d61ad9",
     "status": "offline-candidate",
     "installable": false,
     "sites": [
@@ -48,6 +48,18 @@
         "before": "000000000000000000000000000000000000000000000000",
         "after": "00232370034a1268a273012901d0fff2b2be704794f8ed43",
         "role": "cave: pkt[0x0e] = ajuste EFCS en vivo"
+      },
+      {
+        "address": "0x438d01fa",
+        "before": "82f84e30",
+        "after": "71f411fb",
+        "role": "envío 0x438d0064: strb pkt[0x0e] -> bl cueva"
+      },
+      {
+        "address": "0x43541820",
+        "before": "00000000000000000000000000000000",
+        "after": "024b1b6882f84e30704700bf94f8ed43",
+        "role": "cueva envío: pkt[0x0e] = ajuste EFCS en vivo"
       }
     ],
     "diff": [
@@ -242,9 +254,123 @@
         "before": "00",
         "after": "43",
         "role": "cave: pkt[0x0e] = ajuste EFCS en vivo"
+      },
+      {
+        "address": 1133314554,
+        "before": "82",
+        "after": "71",
+        "role": "envío 0x438d0064: strb pkt[0x0e] -> bl cueva"
+      },
+      {
+        "address": 1133314555,
+        "before": "f8",
+        "after": "f4",
+        "role": "envío 0x438d0064: strb pkt[0x0e] -> bl cueva"
+      },
+      {
+        "address": 1133314556,
+        "before": "4e",
+        "after": "11",
+        "role": "envío 0x438d0064: strb pkt[0x0e] -> bl cueva"
+      },
+      {
+        "address": 1133314557,
+        "before": "30",
+        "after": "fb",
+        "role": "envío 0x438d0064: strb pkt[0x0e] -> bl cueva"
+      },
+      {
+        "address": 1129584672,
+        "before": "00",
+        "after": "02",
+        "role": "cueva envío: pkt[0x0e] = ajuste EFCS en vivo"
+      },
+      {
+        "address": 1129584673,
+        "before": "00",
+        "after": "4b",
+        "role": "cueva envío: pkt[0x0e] = ajuste EFCS en vivo"
+      },
+      {
+        "address": 1129584674,
+        "before": "00",
+        "after": "1b",
+        "role": "cueva envío: pkt[0x0e] = ajuste EFCS en vivo"
+      },
+      {
+        "address": 1129584675,
+        "before": "00",
+        "after": "68",
+        "role": "cueva envío: pkt[0x0e] = ajuste EFCS en vivo"
+      },
+      {
+        "address": 1129584676,
+        "before": "00",
+        "after": "82",
+        "role": "cueva envío: pkt[0x0e] = ajuste EFCS en vivo"
+      },
+      {
+        "address": 1129584677,
+        "before": "00",
+        "after": "f8",
+        "role": "cueva envío: pkt[0x0e] = ajuste EFCS en vivo"
+      },
+      {
+        "address": 1129584678,
+        "before": "00",
+        "after": "4e",
+        "role": "cueva envío: pkt[0x0e] = ajuste EFCS en vivo"
+      },
+      {
+        "address": 1129584679,
+        "before": "00",
+        "after": "30",
+        "role": "cueva envío: pkt[0x0e] = ajuste EFCS en vivo"
+      },
+      {
+        "address": 1129584680,
+        "before": "00",
+        "after": "70",
+        "role": "cueva envío: pkt[0x0e] = ajuste EFCS en vivo"
+      },
+      {
+        "address": 1129584681,
+        "before": "00",
+        "after": "47",
+        "role": "cueva envío: pkt[0x0e] = ajuste EFCS en vivo"
+      },
+      {
+        "address": 1129584683,
+        "before": "00",
+        "after": "bf",
+        "role": "cueva envío: pkt[0x0e] = ajuste EFCS en vivo"
+      },
+      {
+        "address": 1129584684,
+        "before": "00",
+        "after": "94",
+        "role": "cueva envío: pkt[0x0e] = ajuste EFCS en vivo"
+      },
+      {
+        "address": 1129584685,
+        "before": "00",
+        "after": "f8",
+        "role": "cueva envío: pkt[0x0e] = ajuste EFCS en vivo"
+      },
+      {
+        "address": 1129584686,
+        "before": "00",
+        "after": "ed",
+        "role": "cueva envío: pkt[0x0e] = ajuste EFCS en vivo"
+      },
+      {
+        "address": 1129584687,
+        "before": "00",
+        "after": "43",
+        "role": "cueva envío: pkt[0x0e] = ajuste EFCS en vivo"
       }
     ],
-    "diff_count": 32,
+    "diff_count": 51,
     "cave": {
       "address": "0x43541800",
       "bytes": "00232370034a1268a273012901d0fff2b2be704794f8ed43",
