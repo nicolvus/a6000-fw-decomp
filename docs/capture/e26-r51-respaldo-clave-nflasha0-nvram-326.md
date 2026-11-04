@@ -73,3 +73,13 @@ Dos medios: SWD (AP0, búfer de log del kernel en `0x83400000`, sobrevive a rein
 **Consecuencias:** no activar adb en esta cámara; la validación de `E25-27` debe hacerse sin tocar `/android/data` (RemoteShutter/telnet leyendo RAM no escriben flash). Telnet por sí solo funciona (lecturas de `/proc` y `/dev/mem`).
 
 Evidencia: `analysis/camera-dumps/20261103-swd-nflasha0-clave/kernel-log-ram-*` (copiada a `~/a6000-r1-backup/`).
+
+### 6.1 Origen del sector defectuoso (04-11-2026, MEDIDO por telnet en solo lectura, y SWD)
+
+`/dev/nflasha17` (`/android/data`, FAT16: 512 B/sector, 4 sectores/clúster, 1 reservado, 2 FAT de 200 sectores, 512 entradas raíz; datos desde el sector 433) empieza en el sector 659 456 de `nflasha0`. El sector 662 525 de R51 §6 es el sector 3069 de la partición = **clúster 661**, que es entero el directorio **`/MISC/WIFI/SOCKETS`** (`FAT[661] = 0xffff`, cadena de un clúster), donde `wpa_supplicant` crea su socket de control. Con Wi-Fi apagado y **adb activado** (usuario, SWD sobre el log del kernel de este arranque), vuelve el `LDEC ERR -10003 (retry)` a los 764 y 815 s y la cámara queda colgada: adb también toca la página dañada (la página física puede compartir LTU con clústeres vecinos; **NO VERIFICADO** qué lee adb).
+
+### 6.2 Reubicación fuera de la zona dañada (04-11-2026, MEDIDO por telnet)
+
+Dueños de los clústeres vecinos del 661 (FAT de `/android/data`): 640–651 `/BACKUP/BK1.BAK`, 652 `/DONTPANIC/`, 653 `/MISC/`, 654–664 subdirectorios de `/MISC` (bluetooth, vpn, systemkeys, wifi, wapi, **sockets = 661**, wpa_supplicant, hostapd, dhcp), 665 en adelante `/LOCAL`, `/APP`, `/LIB/…`. Si la unidad de escritura (LTU) es de 32 KB, el sector 662 525 la comparte con los clústeres 645–661: crear `/data/misc/adb` (adb) o el socket de `wpa_supplicant` (Wi-Fi) reescribe esa LTU y obliga a leer la página dañada (INFERENCIA coherente con R51 §6 y §6.1).
+
+Con la flash sin colgar (escritura de prueba con `sync` correcta, sin `LDEC ERR` en el arranque), en este orden: `mv misc misc_bad` y árbol `misc/…` nuevo con `wpa_supplicant*.conf` y el `dhcpcd` copiados (clústeres nuevos 1657–1671); `BK1.BAK` copiado a uno nuevo (verificado con `busybox cmp`) y el original renombrado `BK1.OLD`; `dontpanic` → `dontpanic_bad` y uno nuevo. **No borrar** `misc_bad`, `BK1.OLD` ni `dontpanic_bad`: mantienen ocupados los clústeres de la zona dañada. Pendiente: probar adb y un arranque con Wi-Fi.
