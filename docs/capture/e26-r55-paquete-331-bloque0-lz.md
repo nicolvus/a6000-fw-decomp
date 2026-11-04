@@ -25,3 +25,7 @@ Leer `dnflasha3` sector 12 (bloque TPZL 0) cuelga el LZP de Linux; el bloque 48,
 La página 9 comprimida ocupa 410 B (294 B no nulos: código sin repeticiones; el análisis óptimo no gana nada). `verify-331.json` 33/33 (también 33/33 el 3.30); tests TPZL, constructor y emulación R39 (36) pasan. Paquete `analysis/e25-27/artifacts-331/package-3.31/firmware_packed.dat` (`e8c705e4…`, no versionado).
 
 **NO VERIFICADO:** que el límite real sea 32 KiB (podría ser «no crecer de sectores»: el bloque 0 queda en 52 frente a 51) y que con esto adb no cuelgue. Prueba en cámara: `dd if=/dev/dnflasha3 skip=12 count=1` y activar adb.
+
+## 4. En cámara (04-11-2026, MEDIDO): no lo arregla
+
+Instalado 3.30 → 3.31 (`Done`; reporta 3.31). Sin adb, `dd if=/dev/dnflasha3 bs=512 skip=12 count=1` **no termina** en 15 s y el hilo `bdev_dnflasha` queda en `mumin_devif_wait_trans`: el mismo cuelgue que con el 3.30. La hipótesis del tamaño (§1) queda **descartada**: con el bloque 0 en 52 sectores y la cabecera + bloque 0 en 29 696 B el fallo sigue. Falta una línea base: si la lectura cuelga también con el contenido oficial de Sony (3.28), la causa no está en los parches; si no, está en el contenido del bloque 0 (no en su tamaño).
