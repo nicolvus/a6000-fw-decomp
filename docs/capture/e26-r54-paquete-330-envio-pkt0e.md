@@ -45,3 +45,9 @@ Fotos del usuario en manual, f/3,5, ISO 2500, **1/90** (EXIF), escena fija: `DSC
 ### 5.2 Repetición con `r5` calibrado a 1/90 (MEDIDO)
 
 `DSC03400.ARW` (Electronic, `r5 = 3488`) frente a `DSC03398.ARW` (mecánico), mismos ajustes: razón **1,207 (+0,27 EV)**, como se predijo en §5.1 (1,23). Canales 1,195 / 1,205 / 1,215; franjas horizontales 1,16–1,25 y verticales 1,17–1,24 (±4 %): uniforme y sin dominante. Con un solo punto no se separa pendiente de desplazamiento: si todo el exceso es de pendiente, el tiempo de línea efectivo sería ≈ 18,3 µs (en vez de 15,2); hace falta una segunda velocidad para calibrar.
+
+### 5.3 Segunda velocidad: 1/250 (MEDIDO) y calibración de dos puntos (INFERENCIA)
+
+`DSC03401.ARW` (mecánico) / `DSC03402.ARW` (Electronic, `r5 = 3956`), ISO 2500, f/3,5: medias 78,4 → 135,9, razón **1,733 (+0,79 EV)**; R/G 1,77, B 1,61; franjas horizontales 1,67–1,97, verticales 1,62–1,82 (señal baja: la escena a 1/250 da una media de 78 sobre el negro, así que el error relativo es mayor que a 1/90).
+
+Ajuste con 1/90 (1,207) y 1/250 (1,733), modelo exposición electrónica = L·(N + c) con N = 4219 − r5 y la mecánica tomada como nominal: **L ≈ 13,85 µs por fila y c ≈ 237 filas (≈ 3,3 ms)**. Para igualar la mecánica: `r5 = 4456 − T/13,85 µs` (1/90 → 3654; 1/250 → 4167). Con ese desplazamiento, las velocidades por encima de ≈ 1/300 pedirían `r5` > 4219, fuera de lo probado. **NO VERIFICADO:** el modelo (dos puntos, uno con poca señal) ni las velocidades rápidas; falta un tercer punto (p. ej. 1/1000) y repetir 1/250 con `r5 = 4167`.
