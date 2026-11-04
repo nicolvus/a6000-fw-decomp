@@ -132,3 +132,18 @@ Se extrajo `UdtrMain.sh` del `initrd.img` de `nflasha1` del volcado del 20-10:
 | Paquete 3.26 | `firmware.readDat` de `pmca` lo lee (offset 140, carga útil 212 987 904 B). Los hashes coinciden con el manifiesto (§2.5) |
 | Permisos USB | No hay regla udev para Sony (`054c`). P2 y P3 se ejecutarán con `sudo` y el Python del venv. No se ha cambiado la configuración del sistema |
 | Parte física de P0 | **Confirmada por el usuario (03-11-2026):** el USB se puede conectar con la placa abierta y la sonda puesta, y la batería está cargada |
+
+## 7. Primer intento de P1 y secuencia real de arranques (03-11-2026)
+
+**P1 (autorizado por el usuario).** El script vio el primer arranque, pero no el corte en 5 s, y se detuvo con «sin corte en 5 s, no se toca nada». **No se modificó ningún registro.** Después, `DBGPCSR` sin parar la CPU dio `0xc01f4f9d`: el bucle de espera del LED de error, igual que antes.
+
+**Muestreo pasivo con la batería cargada** (sin halt ni puntos de parada; la secuencia la hizo el usuario):
+
+| Momento | Resultado (MEDIDO) |
+|---|---|
+| Meter la batería con el interruptor en OFF | Arranca Loader2 y luego Loader3. El enlace se corta a los 868 ms y no vuelve en 10 s: la cámara se queda apagada |
+| Encender con el interruptor | Un solo arranque desde el BootROM (`0xffff1439`), Loader2 y Loader3, sin corte. Desde los 2,7 s está en `0xc01f4f9d` (bucle del LED) |
+
+**Corrección de R47 §15 (INFERENCIA):** el «arranque 1 que acaba en `XPOWER_OFF`» parece ser el arranque que provoca meter la batería, no una fase de cada encendido. En los intentos 4 y 5 no se registró cuándo se metió la batería. El arranque que da el −302 es el del interruptor, y es uno solo. El script `r48_updater_swd.cfg` supone dos arranques seguidos y **no sirve tal cual**.
+
+**Estado:** P1 queda sin ejecutar, y no se continúa en esta sesión. No se escribió nada en la cámara.
