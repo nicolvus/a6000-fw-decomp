@@ -33,7 +33,7 @@ Vigilancia de 70 s de la ventana `0x83f91e20..+0x110` (paquete de 22 B en `0x83f
 | 23,4 s | 1 | **0** |
 | 37,8 s | 0 | 0 |
 
-Con `+0x210 = 1` el selector debía escribir 1 en `pkt[0x0e]` ([E25-24b §2.2](e25-24b-implementacion-selector.md)); salió 0. Darwin recibe 0 y la compuerta `0x4318` deja pasar el movimiento original.
+Con `+0x210 = 1` el selector debía escribir 1 en `pkt[0x0e]` ([E25-24b §2.2](e25-24b-implementacion-selector.md)); el búfer enviado quedó en 0. Se desconoce qué recibe Darwin en el instante del disparo (ver §6 y §7): la deducción «Darwin recibe 0» de la primera redacción no está probada.
 
 ## 5. Código del copiador (MEDIDO en `av-cam.integrated.bin`)
 
