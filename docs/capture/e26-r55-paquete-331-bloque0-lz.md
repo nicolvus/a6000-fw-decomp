@@ -29,3 +29,7 @@ La página 9 comprimida ocupa 410 B (294 B no nulos: código sin repeticiones; e
 ## 4. En cámara (04-11-2026, MEDIDO): no lo arregla
 
 Instalado 3.30 → 3.31 (`Done`; reporta 3.31). Sin adb, `dd if=/dev/dnflasha3 bs=512 skip=12 count=1` **no termina** en 15 s y el hilo `bdev_dnflasha` queda en `mumin_devif_wait_trans`: el mismo cuelgue que con el 3.30. La hipótesis del tamaño (§1) queda **descartada**: con el bloque 0 en 52 sectores y la cabecera + bloque 0 en 29 696 B el fallo sigue. Falta una línea base: si la lectura cuelga también con el contenido oficial de Sony (3.28), la causa no está en los parches; si no, está en el contenido del bloque 0 (no en su tamaño).
+
+## 5. Línea base con el firmware oficial (04-11-2026, MEDIDO)
+
+3.32 = contenido oficial de Sony (`build_326.py 0x32`, `tar` y `updater.img` oficiales, solo cambian versión y sumas; manifiesto `analysis/e26-recovery/manifest-recuperacion-332.json`). Instalado 3.31 → 3.32 (`Done`; reporta 3.32). `dd if=/dev/dnflasha3 skip=12 count=1` → `1+0 records` al instante; **adb activado sin cuelgue** (usuario). Conclusión: el cuelgue lo causa el **contenido** del bloque TPZL 0 de nuestros paquetes (3.27–3.31), no su tamaño ni la cámara. Siguiente: dejar el bloque 0 idéntico al de Sony, sacando las cuevas de `0x43541800…` a otra zona de `av-cam`.
