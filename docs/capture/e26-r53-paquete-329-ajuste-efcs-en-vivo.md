@@ -47,3 +47,19 @@ Mismo contenido que el 3.25c (tar, `nflasha3` en forma de Sony, Darwin) salvo la
 * **NO VERIFICADO:** que Darwin conserve el 1 y que la compuerta actúe; que el RAW (C3-B) salga bien; el cuelgue de flash de R51 §6 sigue presente.
 * Vuelta atrás: 3.28 oficial (R51 §4) o el 3.27 (R50).
 * **No instalado:** requiere orden expresa del usuario.
+
+## 6. Resultado en cámara (04-11-2026, MEDIDO): el cambio no arregla el obturador
+
+Instalado con `pmca-console firmware -f` (3.27 → 3.29, `Done`; la cámara reporta 3.29). El usuario: el sonido sigue siendo de doble cortina («el fix no funciona»).
+
+* Cueva cargada en RAM: `0x43541800 = 00232370 034a 1268 a273 0129 01d0 …`, literal `0x43edf894` en `0x43541814` (leído por SWD). El campo EFCS vale 1 con EFCS desactivado.
+* Muestreo de `0x83ed4948` (búfer del constructor) y `0x83f91e32` (búfer enviado) con un disparo a 1/250 (`+0x210 = 1`):
+
+| t | `pkt[8]` | `pkt[0x0e]` (búfer constructor) | `pkt[0x0e]` (búfer enviado) |
+|---|---|---|---|
+| 24 401 ms | `0xa0` (captura) | **1** | 0 |
+| 24 403 ms (+2 ms) | `0x00` | **0** (`00 40 00 18 bd 13 …`, paquete en reposo) | 0 |
+
+**Resultado:** el paquete de captura lleva 1, como en el 3.27. Dos milisegundos después el búfer vuelve al paquete en reposo con `pkt[0x0e] = 0`: **no lo escribe el constructor** (con el 3.29 cada paso por el constructor da 1), sino otra rutina que restaura el paquete por defecto. La causa supuesta en §1 (`cap+0x41c` sin rellenar en paquetes sin captura) **no explica el fallo**: queda descartada como causa única. El búfer enviado (`0x83f91e32`) no llega a verse en 1, así que no está demostrado que sea el que sale hacia Darwin.
+
+**Sin resolver:** qué recibe Darwin y qué ve la compuerta `0x4318`. Sin leer `0x20003716` por SWD a Darwin (R52 §8, E24-02 §6: pines 11/12 de `CN4906`) o sin localizar la rutina que restaura el paquete, no se distingue. Vuelta atrás: 3.28 (R51) o 3.27 (R50).
