@@ -74,3 +74,13 @@ Fuentes: `av-cam.bin` 3.21 con Capstone + docs E24-05/E25-EFCS. Solo lectura, si
 * **Productor nativo `0x4383fa40`** (186 B, desensamblado): convierte µs a líneas con `0x4382fac8`/`0x4382fa94` (15,2 µs/línea = 3891/256), calcula `sb` = líneas de exposición y `sl` = `r8 − sb` con `r8 = max([record+0x1c] + sb, [record+0x20]=VTS)`; escribe `record+0x64` (r5) = `sl`, `+0x68` = svd, `+0x6c/+0x6d` = 0. **No hay ninguna constante de latencia de cortina en la función**: el desplazamiento que perdería 1,27 ms tendría que venir de `[record+0x1c]` (o de Darwin / del hardware).
 * Candidatos para la causa, por orden de comprobación: (1) escritores de `record+0x1c` (origen de ese desplazamiento; no localizados aquí); (2) tiempo de línea real del sensor frente a 15,2 µs (R56 §7 midió 16,73 µs en el modo electrónico); (3) latencia/recorrido de la cortina trasera en hardware.
 * Pendiente (necesita REA o SWD en vivo): escritores de `record+0x1c` y su fuente; valores de `record+0x1c/+0x20/+0x64` en un disparo EFCS a 1/500 y 1/125 por SWD con la ventana de `cap` (el 3.38 permite hacerlo con telnet/adb; el 3.37 no).
+
+## 10. Análisis estático con REA: origen del desplazamiento del plan de exposición (04-11-2026)
+
+REA (demonio `session_daemon.py`, `av-cam.bin`, listo en ~8 min; decompilados con `batch_decompile`):
+
+* `FUN_437f87ac(cap)` (único llamador de `0x43841070`, en `0x437f8816`): si `[global+0x24] == 1` llama al **planificador del modo EFCS** `0x43841070(cap+0x1198, cap+0x20, &cap+0x5c8, …)`; si no, al planificador normal `0x437b3b08`. La selección por ese global es el punto donde el firmware elige el camino «EFCS».
+* `0x43841070` copia el **descriptor `cap+0x5c8`** (12 palabras) al registro de exposición: `record+0x18 ← desc[4]`, **`record+0x1c ← desc[5]` (`cap+0x5dc`)**, `record+0x20 ← desc[6]` (`cap+0x5e0` = VTS), etc. Es decir, `record+0x1c` (el desplazamiento reinicio→lectura que `0x4383fa40` usa como línea base de `r5`) **no se calcula: viene del descriptor de modo del sensor**.
+* El mismo `0x43841070` lee bytes de **variables globales de ajuste** (`DAT_43841924…43841948`: pares alto/bajo que, si no son cero, **sobrescriben** `record+0x64/+0x68/+0x6a/+0x6e/+0x70/+0x72`) — ganchos de depuración/ajuste, cero en reposo (NO VERIFICADO su valor en esta unidad).
+* Aún sin localizar: el escritor de `cap+0x5dc` (rellena el descriptor), y si su valor depende de la unidad (NVRAM/sensor) o solo del modo.
+* Conclusión parcial: el código no resta ninguna latencia de cortina; el desplazamiento de 1,27 ms (+ gradiente) tendría que estar en `cap+0x5dc` o en el hardware. Con el 3.38 (telnet) se puede leer `cap` en un disparo EFCS y comparar `cap+0x5dc/+0x5e0` a 1/125 y 1/500.
