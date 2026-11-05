@@ -13,7 +13,7 @@ R58 §6: `darwin_core` instalado = original; BK4 y firmware no contienen tiempos
 | Dato | Estado |
 |---|---|
 | Darwin = FM3 Cortex-M3 (IC5700), siempre alimentado desde la batería | ESQUEMA (E24-01) |
-| Líneas de depuración de Darwin: `TCK_DWN`/`TMS_DWN` (SWCLK/SWDIO) en CN4906 pines 11/12, `TDO_DWN` pin 9, `TDI_DWN` pin 13, `TRST_DWN` pin 14, `XDWN_RESET` pin 15, `MD0_DWN` pin 8, UART Darwin pines 6/7 | ESQUEMA (R29) |
+| Líneas de depuración de Darwin: `TCK_DWN`/`TMS_DWN` (SWCLK/SWDIO) en CN4906 pines 11/12, `TDO_DWN` pin 9, `TDI_DWN` pin 13, `TRST_DWN` pin 14, `XDWN_RESET` pin 8 (`NSRST`, directo a INITX; también pin 15 por R4917 XX), `MD0_DWN` pin 2 por R4927 XX, UART Darwin pines 6/7. Puntos de prueba en el lado MCU: CL704 (`TCK_DWN`), CL706 (`TMS_DWN`), CL701 (`XDWN_RESET`) | ESQUEMA (hoja 38 y hoja 23, revisadas en imagen 05-11; corrige pines 8/15 de R29) |
 | Esos nodos 11/12 los comparten el SWD de BIONZ (por R4911/R4912) y Darwin (por R4915/R4916); **R4911, R4912, R4915, R4916 y CN4906 sin montar** | ESQUEMA + confirmado por el usuario 02-11 |
 | Lógica ≈ 3,15 V | INFERENCIA |
 | SWD de BIONZ ya funcionó con un hilo al pad del lado BIONZ de R4911/R4912 y una `debugprobe-zero` (RP2040) | LEÍDO (R47) |

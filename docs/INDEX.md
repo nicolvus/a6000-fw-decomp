@@ -390,7 +390,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 6. Otros subsistemas (AF, estabilización, vídeo, audio, lentes, energía, visor, accesorios, módulos de trazas)
 
-167 informes.
+170 informes.
 
 - **—** [E21 — Lecturas sin cámara de los volcados del 20-10-2026](capture/e21-lecturas-backups-2026-10-26.md)
 - **—** [E24-01 — Arranque, modo actualizador y dependencia de Darwin (27-10-2026)](capture/e24-01-arranque-recuperacion.md)
@@ -456,6 +456,9 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [E26-R54 — 3.30: `pkt[0x0e]` también en el constructor del envío; primer obturador electrónico funcionando](capture/e26-r54-paquete-330-envio-pkt0e.md)
 - **—** [E26-R55 — 3.31: la página cambiada de cada bloque TPZL va comprimida (LZ77 de Sony)](capture/e26-r55-paquete-331-bloque0-lz.md)
 - **—** [E26-R56 — 3.33: el modo Electronic solo con un parche en línea en el envío (sin cuevas, bloque 0 intacto)](capture/e26-r56-paquete-333-envio-inline.md)
+- **—** [E26-R57 — 3.36: la compuerta de Darwin solo cierra con `pkt[0x0e] == 1`](capture/e26-r57-paquete-336-darwin-eq1.md)
+- **—** [E26-R58 — Auditoría NVRAM/NAND (20-10 → 05-11) y dónde vive la calibración (05-11-2026)](capture/e26-r58-auditoria-nvram-nand-calibracion.md)
+- **—** [E26-R59 — Lectura por SWD de Darwin (MCU FM3, IC5700): objetivo y procedimiento (BORRADOR, sin ejecutar)](capture/e26-r59-lectura-swd-darwin.md)
 - **—** [E26-RECOVERY R6 — BLDR, BIONZ y recuperación conservando la placa](capture/e26-r6-recuperacion-bionz.md)
 - **—** [E26-RECOVERY R7 — informe final de ingeniería inversa exhaustiva](capture/e26-r7-recuperacion-estatica.md)
 - **—** [E26-R7B — recuperación pre-Linux: investigación estática](capture/e26-r7b-recuperacion-prelinux.md)
