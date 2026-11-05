@@ -120,3 +120,9 @@ Lectura SWD del BIONZ (cámara en modo normal) de los ocho canales del bloque de
 * Incidente: leer direcciones no mapeadas (`0x0`+offsets, `0x40000000`) dejó el AP atascado (`stalled AP operation`) y obligó a reiniciar la cámara dos veces. Las lecturas SWD deben limitarse a la DRAM validada (`0x83…`).
 * Abierto: de dónde obtiene `cap` el planificador (E25-22 midió `cap=0x952db580`, dirección virtual sin traducción física conocida). Alternativa directa: leer el bloque P2S (`0xfc088340…`) para ver los registros de exposición que se envían al sensor.
 
+## 12. De dónde obtiene `cap` el planificador EFCS (REA + Capstone, 05-11-2026)
+
+* `FUN_437f87ac(cap)` (único llamador del planificador `0x43841070`) elige el camino por `[[0x44020e90]+0x24] == 1`; el selector es estático (`0x43e94ee4 + 0x24 = 0x43e94f08`, física `0x83e94f08`). Con `==1` llama al planificador EFCS `0x43841070(cap+0x1198, cap+0x20, &cap+0x5c8, [cap+0x4ad8]+0x20/+0x40…)`; si no, al normal `0x437b3b08` (EFCS desactivado = mecánico completo).
+* Su llamador (`0x437f22d4`, `r6`=`M`) obtiene `cap = 0x43ae75dc(M)` (`cap=[M]`, E25-19): **`cap` sale de `M`, un nodo transitorio de cola**, y es una asignación dinámica (E25-22: `0x952db580`), no un global. Por eso no hay dirección fija que leer por SWD.
+* **Consecuencia práctica:** la compensación en vivo por escritura en RAM no es viable sin una traducción virtual→física que no tenemos. La vía realista es un **parche estático** del planificador EFCS (`0x43841070`/`0x4383fa40`: añadir ≈84 líneas a `sb` solo con EFCS activado y T ≲ 1/200), construido como los paquetes de R53–R57, con instalación (reescribe firmware) y medición posterior.
+
