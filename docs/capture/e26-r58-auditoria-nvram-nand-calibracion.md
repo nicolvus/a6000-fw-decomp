@@ -59,10 +59,24 @@ Sin consumidor localizado (REA no los reconoce, funciones Thumb sin sembrar): `0
 ## 5. Cierre estático de las tablas `0x3` pendientes (05-11-2026, REA + Capstone Thumb)
 
 * **`0x300ab`, `0x30103`, `0x3012c`:** código en `0x4378ba74-0x4378c528`, trazas `[CAMERA_MAIN] #####ERR!! [SetLoadData]` / `[SetLoadDataTrans]`: son **tablas «LoadData» del imager** (S61/rea-tema2: pares IMX210). Se leen con el servicio `0x435613cc(0, id, buf)`. Las funciones son Thumb que REA no reconoce (se leyeron con Capstone).
-* **Valor compartido `0x1000-0x1a00`:** `0x30081[6..7]` y `[0x36..0x37]` y `0x3012c[0x106..0x107]` guardan el mismo `u16` (`0x1600` en first/A/ref/05-11; `0x1000` pre-T040; `0x1280` en 3.26; `0x1a00` en 337-previo). Es una magnitud de estado que la cámara reescribe, no una tabla de fábrica; no es `pkt[2..3]` (R57 §9).
+* **Valor compartido `0x1000-0x1a00` = Tv de la última velocidad (VERIFICADO por fórmula):** `Tv = 4096 − 256·log2 t` (E25-19c): `0x1600` = 1/64 s, `0x1680` ≈ 1/90, `0x1280` ≈ 0,18 s, `0x1000` = 1 s, `0x1a00` = 1/1024 s (el volcado `337-previo` se tomó tras pruebas a 1/1000). `0x30081[6..7]`, `0x30081[0x36..0x37]` y `0x3012c[0x106..0x107]` repiten ese ajuste de usuario; no es calibración ni tabla de fábrica y no influye en la sincronía.
 * **`0x300ab[0x110..0x114]`:** a ceros en first/A; con `5e01 0101 0100 …` en todos los volcados posteriores, incluido 05-11 (no se restauró). Cae fuera de los 232 B de pares IMX210 (S61). Función sin determinar.
 * **`+0xe0`** en `0x300ab` y `0x3012c` oscila entre `0x22/0x2c/0xa2/0xb1/0x80/0x00` según el volcado: byte de estado, sin semántica.
 * **`0x30011-14`, `0x3005b/5d`:** mismo racimo de código que `ADJ::sjob_Dk_G/Hl_G_Check_Result` (YC). **`0x300ae`:** `SetSyncDevelopParam`. **`0x30002`:** callback `vfx`. **`0x30100`, `0x185…`:** `CAMERA_DSP_APL`.
 * **`0x30076`, `0x30086`, `0x30102`, `0x1380000`, `0x150002`, `0x1850004/5`, `0x5f00af/b0/b2`, `0x6000a6/a8`, `0xbc000d/e`, `0xe0000/2/3/6/7`, `0x13b0001`:** solo aparecen en listas de IDs registradas y tablas de datos (`0x43ff2fd8`, `0x4400ea30`, `0x4400fee0`…); el acceso se hace por índice relativo a GOT, sin literal ni cadena propia. Agrupados por vecindad en imagen/panel/óptica. **No hay vía estática barata para nombrarlos uno a uno**; requeriría trazar el registro `0x2b0` del servicio de backup por subsistema.
 * **Darwin `[0x20000050+canal]`:** las cadenas `Sens:AdjCmd DwnCamera` / `BkSyncCb CAIF` no tienen referencias de código (tabla de trazas), y la tabla de handlers de Darwin `0x2a1a0` queda fuera de `darwin_core.bin` (157 276 B), por lo que no se puede seguir el escritor desde el binario disponible.
+
+## 6. De dónde pueden salir los tiempos de cortina y de sincronía (mapa de fuentes, 05-11-2026)
+
+Cadena (E25-19c/d, E24-05h, R57): Tv del ajuste (`[sl+0x162]`) → `0x4382fac8` (µs) → **temporizador de host** (`cap+0x728/0x74f`) y paquete `0x0c` a Darwin (`pkt[2..3]` = Tv, `pkt[0xc]` tipo de mecanismo) → FSM de Darwin (estados 26/31, ADC-A/ADC-B de seguimiento de fases, bobinas P4D/P4E, temporizador base `0x93e6`) → aviso `0x0e` de fin → sensor (barrido electrónico, 15,2 µs/línea, `record+0x1c` del descriptor de modo).
+
+| Fuente posible | Qué aporta | Estado |
+|---|---|---|
+| Código de Darwin (`darwin_core`) | FSM, umbrales (5000/50000/250000/25000/500000), duraciones de bobina | **Descartada como diferencia**: el `darwin_core` del paquete de recuperación 3.24/3.37 es **idéntico byte a byte** al 3.21 (0 de 157 276 distintos; `a6000-r1-backup/recuperacion-328`). |
+| Código BIONZ (`av-cam.bin`) | Conversión Tv→µs, planificador, `record+0x1c` | Sin constante de latencia de cortina ni dato por unidad (R57 §9-§11). |
+| NVRAM BK4 | — | **Ninguna propiedad contiene tiempos de cortina/sincronía** (§3, §5). |
+| Área de arranque de Darwin `0x0000-0x41ff` | Código y, posiblemente, datos de fábrica del MCU; **no se reescribe** en las actualizaciones y no está en el paquete ni en ningún volcado | **Abierta, la única fuente de datos por unidad aún no leída.** Necesita lectura física (`CN4906`/SWD). |
+| Celdas de Darwin `[0x20000050+canal]`, `[0x200002c0+canal]` | Tipo de mecanismo por canal; se llenan «por copias/mensajes» | Escritor no localizado; origen desconocido (BIONZ por MSS o constante de fábrica). |
+| Entorno eléctrico | Darwin mide `BATT_AD_IN` (P10/AN00) y `BATT_TEMP` (P17/AN07); no consta que compensen la bobina, pero el tiempo de recorrido de una cortina depende de la tensión | **Hipótesis a descartar con una prueba barata**: repetir 1/1000 con batería nueva original y con adaptador de CA, en frío y en caliente. |
+| Hardware del obturador | Recorrido y velocidad de las cortinas, sensores de posición (ADC), cable plano y contactos de bobina (tocados al abrir la cámara para la sonda SWD) | Coherente con el patrón medido en R57 §8: δ constante de 1,27 ms desde 1/250, **gradiente vertical** (≈1,2 ms arriba, ≈1,6 ms abajo) y **sin gradiente horizontal**, lo que apunta a velocidades de barrido distintas (cortina mecánica frente al barrido electrónico) más que a una latencia de mensaje (que daría desfase uniforme). INFERENCIA. |
 
