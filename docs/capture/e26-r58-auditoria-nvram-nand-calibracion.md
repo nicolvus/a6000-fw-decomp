@@ -111,3 +111,12 @@ Lectura SWD del BIONZ (cámara en modo normal) de los ocho canales del bloque de
 * **Conclusión:** en fotos normales el temporizador de host (`cap+0x728`, rama `74f==0`) **no se arma**, en línea con `74f=1` y la espera de confirmaciones de Darwin (E25-19d). Retrasar `0x83eee76c` o ese temporizador **no desplaza el cierre de la segunda cortina**. Una compensación del desfase de ~1,27 ms tendría que actuar en el plan de exposición del sensor (`record+0x1c`/`sl`, R57 §10), no en el temporizador.
 * Limitación: solo se vigiló el bloque `0xf2403000`; otro bloque de temporizadores no se ha descartado.
 
+## 11. Búsqueda de `cap` por SWD (05-11-2026, MEDIDO + REA)
+
+* `FUN_437df338` (arranque de captura) guarda su primer argumento en el global `0x43ed4cd4`. **En vivo vale 0 en reposo y pasa a `0x00000008` al disparar** (barrido a ~0,3 ms; `global_4cd4_barrido.log`): es un identificador, no un puntero.
+* `FUN_437dfe4c(id)` devuelve `P+8`, con `P = [slot GOT 0x44023bbc] = 0x43ed4d28` y comprobación `*P == id` (leído `[P] = 8` ✓). Por tanto este «cap» es la estructura **estática** `0x43ed4d30` (física `0x83ed4d30`).
+* Leído en reposo: `+0x5cc=5`, `+0x5d4=0x43ed5310`, `+0x5d8=+0x5dc=0x20`, `+0x5e0=0x43ed5478` (puntero, no el VTS que R57 §10 describe en `cap+0x5e0`); `+0x74c`, `+0x728`, `+0x4ad8` a 0.
+* **Barrido de 90 s con un disparo EFCS dentro de la ventana (confirmado por el usuario): ningún campo de esta estructura cambió.** Por tanto **no es el objeto vivo que consulta el planificador EFCS** (`FUN_437f87ac`), que en E25-19 tenía `+0x74c..0x74f = 00 01 00 01` y `+0x4ad8 = 0x43ed4908`.
+* Incidente: leer direcciones no mapeadas (`0x0`+offsets, `0x40000000`) dejó el AP atascado (`stalled AP operation`) y obligó a reiniciar la cámara dos veces. Las lecturas SWD deben limitarse a la DRAM validada (`0x83…`).
+* Abierto: de dónde obtiene `cap` el planificador (E25-22 midió `cap=0x952db580`, dirección virtual sin traducción física conocida). Alternativa directa: leer el bloque P2S (`0xfc088340…`) para ver los registros de exposición que se envían al sensor.
+
