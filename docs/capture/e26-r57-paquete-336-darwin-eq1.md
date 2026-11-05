@@ -44,3 +44,24 @@ El actualizador solo acepta versiones mayores: tras el 3.37 hay que subir. `buil
 * `senser_backup_restore.py` con «A» (cabecera no igual, como el 20-oct): verificación en memoria correcta y sincronizado a flash (`Done`).
 * **Resultado (usuario, tras reiniciar): igual que antes** — EFCS activado negro desde 1/1000. El NVRAM (al menos lo restaurado de «A») **no es la causa**.
 * Descartado hasta aquí: BIONZ `pkt[0x0e]` (§8 R56), compuerta de Darwin (§5), parches nuestros (3.37 oficial), NVRAM «A». Pendiente: modelo cuantitativo de la pérdida de exposición con EFCS activado (inferencia de ~1,2–2 ms constantes, R56/R57), hardware del obturador o datos de ajuste fuera del BK4.
+
+## 8. Medida de la pérdida de exposición con EFCS activado (3.37 oficial, 04-11-2026, MEDIDO)
+
+Serie del usuario con el 3.37: M, f/3,5, ISO 12800, escena fija; EFCS activado `DSC03482` (1/60) y `DSC03496–03503`; EFCS desactivado `DSC03505–03514` (1/60 … 1/1500). Media RAW sin negro; razón on/off normalizada por la de 1/60–1/125 (1,067, deriva de escena); pérdida δ = T·(1 − razón).
+
+| Velocidad | T (ms) | on | off | razón | δ (ms) |
+|---|---|---|---|---|---|
+| 1/60 | 16,67 | 1950,2 | 1799,8 | 1,016 | −0,26 |
+| 1/90 | 11,11 | 1331,7 | 1254,4 | 0,995 | 0,05 |
+| 1/125 | 8,00 | 899,0 | 852,3 | 0,989 | 0,09 |
+| 1/200 | 5,00 | 594,3 | 695,6 | 0,801 | 1,00 |
+| 1/250 | 4,00 | 369,2 | 506,0 | 0,684 | 1,26 |
+| 1/350 | 2,86 | 200,7 | 340,8 | 0,552 | 1,28 |
+| 1/500 | 2,00 | 86,9 | 237,8 | 0,343 | 1,31 |
+| 1/750 | 1,33 | 12,6 | 161,5 | 0,073 | 1,24 |
+| 1/1000 | 1,00 | −6,3 | 113,4 | −0,052 | ≥ 1,05 |
+
+* **Pérdida constante δ = 1,27 ± 0,03 ms** desde 1/250 hasta 1/750; **0 a 1/125 y más lentas**; 1,0 ms a 1/200 (transición). Con T ≤ δ no llega luz → negro (≥ 1/1000).
+* **Gradiente vertical:** a 1/500 la razón on/off baja de 0,43 (arriba) a 0,22 (abajo) → δ ≈ 1,2 ms arriba y ≈ 1,6 ms abajo; a 1/750 de 0,16 a −0,19. **Sin gradiente horizontal** (columnas 0,34–0,40). La exposición con EFCS desactivado es lineal con T (tasa ≈ 110–125/ms), así que la referencia es buena.
+* **INFERENCIA:** hay un desajuste de temporización entre el barrido electrónico de la primera cortina (sensor, BIONZ) y el disparo de la segunda cortina mecánica (Darwin): desfase ≈ 1,2 ms más deriva ≈ 0,4 ms a lo largo del cuadro (velocidad de barrido distinta). Coincide en orden de magnitud con la calibración electrónica de R56 §7 (línea 16,73 µs frente a 15,2 µs medidos antes y 97 filas ≈ 1,6 ms de desfase): podría ser la misma causa (tiempo de línea real del sensor distinto del que supone el firmware). NO VERIFICADO.
+* Esto descarta una avería «de todo o nada»: el obturador mecánico y el barrido electrónico funcionan; falla su sincronización a T ≲ 5 ms.
