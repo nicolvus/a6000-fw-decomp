@@ -51,3 +51,15 @@ Escrituras, `flash write/erase`, **cualquier comando de desbloqueo o borrado tot
 1. Prueba eléctrica a 1/1000 (batería nueva original, adaptador de CA, frío/calor): no abre la cámara.
 2. Restauración de NVRAM sin reiniciar y volcado (R58 §1).
 3. Esta lectura SWD de Darwin.
+
+## 7. Primer intento físico (05-11-2026)
+
+| Hecho | Estado |
+|---|---|
+| Hilos en el lado Darwin de R4915/R4916: 3,10 V cada uno con la cámara encendida; `NSRST` (pin 8 = `XDWN_RESET`) 3,09 V | MEDIDO (usuario) |
+| Dos RP2040 intercambiadas: ambas leen el BIONZ, ninguna lee Darwin (sin DPIDR) | MEDIDO (usuario) |
+| `darwin_core` no reconfigura P00–P04 salvo en el grupo de pines 6: tabla `0x25bfc`, grupos 0–5 con `40/01/001f` = modo 8 de `0x55d0` (`0x567c`: PFR=1, PCR=1) → función JTAG/SWD con pull-up, coherente con los 3,10 V. El grupo 6 los pone como salida GPIO a 0 (`08/00/4a7f`). No hay literal de `EPFR00` (`0x40033600`) | LEÍDO (bytes) |
+| `darwin_core` entra en bajo consumo con `SCR.SLEEPDEEP` + `wfi` (`0x516c–0x5182`, `0x83f6–0x8402`, `0x8436–0x8442`); el manual FM3 dice que en TIMER/RTC/STOP/deep standby la función de depuración se detiene | LEÍDO (bytes + manual) |
+| Que Darwin esté en esos modos con la cámara encendida, y qué selecciona el grupo 6 | **NO VERIFICADO** |
+
+Hipótesis principal: Darwin pasa la mayor parte del tiempo en STOP/TIMER y el DAP no contesta. Prueba siguiente (solo lectura, sin reset): repetir la lectura de DPIDR en bucle mientras se generan eventos (botones, encendido) para cazar a Darwin despierto.
