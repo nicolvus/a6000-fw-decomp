@@ -36,3 +36,11 @@ Instalar (con autorización) y probar mecánico a 1/2000 y 1/4000, y electrónic
 ## 6. 3.38 = contenido del 3.35 con versión superior
 
 El actualizador solo acepta versiones mayores: tras el 3.37 hay que subir. `build.py --inline --version 3.38` → `analysis/e25-27/artifacts-338/package-3.38/firmware_packed.dat` (`3e77f0a1…`); `av-cam` y `darwin_core` idénticos a los del 3.35; `verify-338.json` 36/36. No instalado.
+
+## 7. NVRAM: restauración completa del volcado «A» (04-11-2026) — NO arregla EFCS activado
+
+* Comparación propiedad a propiedad (`senser_backup_compare.py`): volcado «A» (20-oct 18:48, fw 3.21, antes de las pruebas; `silent-nvram-20261020/1-base_flash.bin`, SHA-256 `db9e7324…`) frente al posterior a la recuperación (3-nov, fw 3.26): 16 102 propiedades, **58 distintas**, casi todas ajustes de usuario (`0x107…`) y contadores (`0x3c…`, disparos 3042 → 3361). Pérdidas con «A» ≠ fábrica y B = fábrica: `0x30100` (512 B, tabla decreciente de 56 B en «A», ceros después), `0xd50086`, `0x3c0373-75` y algunos `0x107…`. `0x30081`/`0x3012c` cambian (p. ej. `0x1600` → `0x1280`). Semántica de `0x3…` NO VERIFICADA.
+* Volcado de seguridad previo (fw 3.37): `analysis/camera-dumps/20261104-nvram-337-previo/` (difiere 575 B del de 3.26).
+* `senser_backup_restore.py` con «A» (cabecera no igual, como el 20-oct): verificación en memoria correcta y sincronizado a flash (`Done`).
+* **Resultado (usuario, tras reiniciar): igual que antes** — EFCS activado negro desde 1/1000. El NVRAM (al menos lo restaurado de «A») **no es la causa**.
+* Descartado hasta aquí: BIONZ `pkt[0x0e]` (§8 R56), compuerta de Darwin (§5), parches nuestros (3.37 oficial), NVRAM «A». Pendiente: modelo cuantitativo de la pérdida de exposición con EFCS activado (inferencia de ~1,2–2 ms constantes, R56/R57), hardware del obturador o datos de ajuste fuera del BK4.
