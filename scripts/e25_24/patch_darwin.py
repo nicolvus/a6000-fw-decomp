@@ -73,12 +73,30 @@ def cave_bytes() -> bytes:
     return bytes(out)
 
 
+def cave_bytes_eq1() -> bytes:
+    """R57: la compuerta solo se cierra con pkt[0x0e] == 1 (Electronic); cualquier otro valor ejecuta la ruta de Sony."""
+    out = bytearray.fromhex("054a" "1278" "012a" "01d1" "0020" "7047")   # ldr r2,=flag; ldrb; cmp r2,#1; bne +; movs r0,#0; bx lr
+    out += b_w(CAVE + len(out), 0x1B080)
+    assert len(out) == 16
+    return bytes(out)
+
+
 PATCHES: tuple[tuple[int, bytes, bytes, str], ...] = (
     (COIL_BL, COIL_OLD, bl(COIL_BL, CAVE), "tipo de bobina -> cave"),
     (MOTOR_BL, MOTOR_OLD, bl(MOTOR_BL, CAVE), "compuerta del motor -> cave"),
     (CAVE, CAVE_OLD, cave_bytes(), "cave: flag 0 -> original; flag != 0 -> 0"),
     (LITERAL, LITERAL_OLD, FLAG_ADDR.to_bytes(4, "little"), "literal S+0x3e"),
 )
+
+PATCHES_EQ1 = (PATCHES[0], PATCHES[1], (CAVE, bytes(16), cave_bytes_eq1(), "cave: flag == 1 -> 0; otro valor -> original"),
+               PATCHES[3])
+
+
+def use_eq1() -> None:
+    """Selecciona la variante «== 1» (3.36); hay que llamarla antes de apply_bytes/restore_bytes."""
+    global PATCHES, CAVE_LEN
+    PATCHES, CAVE_LEN = PATCHES_EQ1, 16
+
 
 # Regiones que este parche no debe tocar (E24-02/E24-04/E24-05).
 PROTECTED: tuple[tuple[str, int, int], ...] = (

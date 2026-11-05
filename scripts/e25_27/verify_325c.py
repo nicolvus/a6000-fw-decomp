@@ -59,7 +59,7 @@ def open_dat(path: Path, keys: tuple[bytes, bytes]) -> tuple[dict[str, Any], dic
         "descifrado_igual_a_fdat": dec.first_mismatch_vs_fdat is None,
         "bloques_sin_error": not (dec.bad_sum or dec.bad_flag or dec.bad_len),
         "crc_cabecera_ok": hdr["checksum_stored"] == hdr["checksum_computed"],
-        "version_3_25_o_3_27": hdr["version"] in ("3.25", "3.27", "3.29", "3.30", "3.31", "3.33", "3.34", "3.35"),  # 3.27 = 3.25c; 3.29+ selector en vivo; 3.30+ envío; 3.31 bloques LZ
+        "version_3_25_o_3_27": hdr["version"] in ("3.25", "3.27", "3.29", "3.30", "3.31", "3.33", "3.34", "3.35", "3.36"),  # 3.27 = 3.25c; 3.29+ selector en vivo; 3.30+ envío; 3.31 bloques LZ
         "modelo_region": (hdr["model"], hdr["region"]) == (build.MODEL, build.REGION),
         "updater_oficial_3_21": sha(fdat[upd["offset"] : upd["offset"] + upd["size"]])
         == build.UPDATER_SHA256,
@@ -140,7 +140,7 @@ def run(dat_path: Path = DAT) -> dict[str, Any]:
         "tar.cambios_vs_3_21_solo_4_miembros": changed_vs_321
         == sorted([build.DARWIN_CORE, build.DARWIN_SUM, build.NFLASHA3, build.PART_SUM]),
         "tar.cambios_vs_3_25_solo_nflasha3_y_su_suma": changed_vs_brick
-        == sorted([build.NFLASHA3, build.PART_SUM]),
+        == sorted([build.NFLASHA3, build.PART_SUM] + ([build.DARWIN_CORE, build.DARWIN_SUM] if pkg["version"] == "3.36" else [])),  # 3.36: cueva de Darwin «== 1»
         "tar.part_image_sum_verifica": sums.verify(
             new[build.PART_SUM].decode("ascii"), build.PART_ENTRY, raw_new),
         # defecto 1 de R36: residuo dentro del sector
@@ -156,12 +156,12 @@ def run(dat_path: Path = DAT) -> dict[str, Any]:
         "nflasha3.cabecera_y_bloque_0_en_32_kib": pkg["version"] != "3.31"
         or sum(p_new.entries[0]) <= 0x8000,
         "nflasha3.mismo_numero_de_bloques": lay_new["bloques"] == lay_sony["bloques"],
-        "nflasha3.solo_bloques_0_48_57_recompuestos": recompressed == {"3.33": [57], "3.34": [48, 57], "3.35": [48, 57]}.get(pkg["version"], [0, 48, 57]),
+        "nflasha3.solo_bloques_0_48_57_recompuestos": recompressed == {"3.33": [57], "3.34": [48, 57], "3.35": [48, 57], "3.36": [48, 57]}.get(pkg["version"], [0, 48, 57]),
         # R55 §5: modificar el bloque 0 cuelga el LZP de Linux; el 3.33 no lo toca
-        "nflasha3.bloque_0_identico_a_sony": pkg["version"] not in ("3.33", "3.34", "3.35") or p_new.block(0) == p_sony.block(0),
-        "bionz.foto_inline_presente": pkg["version"] not in ("3.34", "3.35") or all(
+        "nflasha3.bloque_0_identico_a_sony": pkg["version"] not in ("3.33", "3.34", "3.35", "3.36") or p_new.block(0) == p_sony.block(0),
+        "bionz.foto_inline_presente": pkg["version"] not in ("3.34", "3.35", "3.36") or all(
             fat_new.read(build.AVCAM_NAME)[a - PB.BASE:a - PB.BASE + len(n)] == n for a, _, n in PI.CTOR),
-        "bionz.envio_inline_presente": pkg["version"] not in ("3.33", "3.34", "3.35")
+        "bionz.envio_inline_presente": pkg["version"] not in ("3.33", "3.34", "3.35", "3.36")
         or fat_new.read(build.AVCAM_NAME)[PI.SITE - PB.BASE:PI.SITE - PB.BASE + len(PI.NEW)] == PI.NEW,
         "nflasha3.registros_de_sony_salvo_paginas_cambiadas": all(
             kept[i] == 16 - changed_pages[i] for i in recompressed),

@@ -502,9 +502,12 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--restore", action="store_true", help="revertir y verificar los originales")
     ap.add_argument("--version", default=VERSION)
     ap.add_argument("--inline", action="store_true", help="R56: solo el envío en línea, sin cuevas")
+    ap.add_argument("--eq1", action="store_true", help="R57: compuerta de Darwin solo con pkt[0x0e] == 1")
     args = ap.parse_args(argv)
     global INLINE
     INLINE = args.inline
+    if args.eq1:
+        PD.use_eq1()
     manifest = build(args.out)
     print(json.dumps({
         "status": manifest["status"],
