@@ -65,3 +65,20 @@ Escrituras, `flash write/erase`, **cualquier comando de desbloqueo o borrado tot
 Hipótesis principal: Darwin pasa la mayor parte del tiempo en STOP/TIMER y el DAP no contesta. Prueba siguiente (solo lectura, sin reset): repetir la lectura de DPIDR en bucle mientras se generan eventos (botones, encendido) para cazar a Darwin despierto.
 
 **Lectura rápida (05-11, 18:37–18:39):** CMSIS-DAP crudo (line reset + JTAG→SWD + lectura de DPIDR, ~1000 intentos/s por sonda, 1 MHz, sin escrituras). BIONZ: `0x3ba02477` estable de 18:38:10 a 18:39:03 (cámara encendida, ~50 000 lecturas). Darwin: **ninguna respuesta en todo el intervalo**, ni siquiera ruido; SWDIO nunca devuelve ACK. Con muestreo cada ~1 ms, la hipótesis de despertares cortos queda **muy debilitada**. Abiertos: TCK/TMS intercambiados en la soldadura, continuidad pad↔bola del MCU, protección de flash/depuración del MB9AF004 (manual de flash ausente).
+
+## 8. Vía BIONZ: ver el tráfico con Darwin por el SWD del BIONZ (05-11-2026)
+
+Herramientas en `analysis/e26-r59/`: `dpidr_fast.py` (DPIDR en bucle, CMSIS-DAP crudo) y `bz_mon.py` (vigila regiones de la DRAM del BIONZ por AHB-AP a ~70 barridos/s; solo escribe registros de depuración, sin halt). Paquete CMSIS-DAP de la `debugprobe-zero`: 64 B (bloques de 15 palabras).
+
+Captura `bz_mon_20261105_1846.log` (firmware instalado según R58: `darwin_core` original), regiones `0x83f91e20` (+0x110, envío BIONZ→Darwin, paquete en `0x83f91e32`) y `0x83e77280` (+0x40). MEDIDO:
+
+| Hora | Cambio en el paquete (`pkt[i]` = byte en `0x83f91e32+i`) |
+|---|---|
+| 18:47:07 | aparece: `pkt[1]=0x02`, `pkt[2..3]=00 1b`, `pkt[5]=0x10`, `pkt[0xa..0xd]=53 0e 00 40`, `pkt[0x13]=0x90` |
+| 18:47:16 | `pkt[3]` 0x1b → 0x1c; 18:47:47 `pkt[2..3]` → `80 17` |
+| 18:47:21 | `pkt[7]=0x01`, `pkt[8]=0x5a`, `pkt[0xc]=0x01`, **`pkt[0x0e]=0xff`** (valor de Sony, R56) |
+| 18:47:31 | `pkt[8]=0xa6`; 18:47:35 vuelve a reposo (`pkt[7]=0x1a`, `pkt[0x0e]=0`) |
+| 18:47:59 | `pkt[7]=0x02`, `pkt[0xc]=0x02`, `pkt[0x0e]` 5 → 4 → 3 en ~130 ms |
+| 18:48:26 | todo a cero; después el AP0 devuelve WAIT (cámara apagándose) |
+
+En `0x83e77284` el byte 0 alterna 0x13–0x16 y `0x83e77290` toma y suelta `0x43b1f0d3` (dirección de código de av-cam) en 15–30 ms. **NO VERIFICADO:** qué acción del usuario corresponde a cada hora, la semántica de `pkt[7]`, `pkt[8]`, `pkt[0xc]` y de la cuenta 5→3, y si `0x83e77280` es el buzón de recepción o un objeto temporizador. No da acceso a la RAM ni a la flash de Darwin.
