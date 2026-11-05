@@ -89,3 +89,10 @@ Datos en `analysis/camera-dumps/20261105-bionz-swd-disparos/`. RAM física = vir
 * **Consecuencia:** el BIONZ no distingue la velocidad que falla de la que funciona más que por el Tv y la duración; la diferencia no está en el paquete ni en el modo del sensor. Queda Darwin (arranque, celdas, bobinas) o el hardware.
 * Sin resolver: si `pkt[0xc]=0` es el valor normal en un firmware oficial sano; Darwin no se ha podido leer (sin respuesta del DAP de su SWD).
 
+## 8. Restauración de NVRAM sin reiniciar (05-11-2026, MEDIDO)
+
+* `scripts/senser_backup_restore_dump.py` (nuevo; restaura y vuelca en la **misma** sesión de servicio). Volcado previo `analysis/camera-dumps/20261105-pre-restauracion/` (46 propiedades distintas del primer volcado). Restaurado `20261020-first/backup_flash.bin` (SHA-256 `60a810eb…a18b`).
+* **Resultado:** `backup_mem.bin` y `backup_flash.bin` tras sincronizar = `60a810eb…a18b`, **0 bytes distintos** del primer volcado; RAM = flash. `0xd50086`, `0x3c03a3` y `0xbc0010` quedan en su valor original. La restauración sí se aplica.
+* **Prueba fotográfica con la NVRAM idéntica al original (usuario):** EFCS activado a 1/1000: luz en la parte superior con gradiente; velocidades mayores, negro entero; EFCS desactivado funciona. **Mismo síntoma que antes → la NVRAM queda descartada también en funcionamiento.** (Sin determinar si salir del modo de servicio reinició la cámara.)
+* Pendiente de este ensayo: tercer volcado tras apagado limpio para ver si algún módulo reescribe esas propiedades.
+
