@@ -32,7 +32,7 @@ public class Main extends Activity implements SurfaceHolder.Callback {
     private volatile int openRetries;
     private volatile int lastShotR5;
     private final StringBuilder shotLog = new StringBuilder();  // CSV: n,t_inicio_ms,ms_hasta_jpeg,bytes
-    private static final String VERSION = "v8b";
+    private static final String VERSION = "v8c";
     private TextView info;
     private String keyLog = "-";
 
@@ -107,7 +107,7 @@ public class Main extends Activity implements SurfaceHolder.Callback {
                 openRetries = tries;
                 String sil = "normal";
                 lastShotR5 = 0;
-                if (silentOn) {
+                if (silentOn && memRead(EFCS_A, 2)[0] == 1) {   // solo con EFCS desactivado: en mecánico el parche ennegrece
                     int r5 = silentR5();
                     if (r5 < 0) sil = "normal(velocidad-lenta)";
                     else { sil = silentApply(r5); if (sil.startsWith("silent r5=")) lastShotR5 = r5; else throw new Exception(sil); }
@@ -199,9 +199,11 @@ public class Main extends Activity implements SurfaceHolder.Callback {
     private static final long SM_A = 0x836D6FB6L, R5_A = 0x836D7000L;       // ldrb.w sb,[r1,#9] / asrs r0,r5,#8; uxtb.w lr,r5
     private static final byte[] SM_O = {(byte) 0x91, (byte) 0xf8, 0x09, (byte) 0x90}, SM_N = {0x4f, (byte) 0xf0, 0x00, 0x09};
     private static final byte[] R5_O = {0x28, 0x12, 0x5f, (byte) 0xfa, (byte) 0x85, (byte) 0xfe};
-    private static final double LINE_US = 15.2;     // tiempo de línea medido (T044/T046)
+    private static final double LINE_US = 16.73;    // R56: ajuste a 1/250, 1/60 y 1/15 (RAW electrónico = mecánico, ±2 %)
+    private static final int R5_LAG = 97;          // filas de exposición perdidas respecto a T/LINE_US (mismo ajuste)
     private static final int R5_FULL = 4219;        // exposición nula (T046): E = (4219 - r5)·15,2 µs; r5 mínimo seguro:
     private static final int R5_MIN = 10;
+    private static final long EFCS_A = 0x83EDF894L; // espejo del ajuste EFCS: 1 = desactivado (Electronic)
     private volatile boolean silentOn;
     private volatile boolean patched;
     private volatile int lastR5;
@@ -231,7 +233,7 @@ public class Main extends Activity implements SurfaceHolder.Callback {
 
     /** r5 para la velocidad actual, o -1 si queda fuera del rango (exposición más larga que el cuadro completo). */
     private int silentR5() throws Exception {
-        long lines = Math.round(speed() * 1e6 / LINE_US);
+        long lines = Math.round(speed() * 1e6 / LINE_US) - R5_LAG;
         int r5 = (int) (R5_FULL - lines);
         return r5 >= R5_MIN ? r5 : -1;
     }

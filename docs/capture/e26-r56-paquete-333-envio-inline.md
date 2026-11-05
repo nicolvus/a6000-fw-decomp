@@ -36,3 +36,15 @@ Con el 3.33 la cortina sigue sonando. Causa (MEDIDO en código): el paquete de l
 ## 6. 3.34 en cámara: la cortina sigue sonando → 3.35
 
 Instalado 3.33 → 3.34 (`Done`; reporta 3.34). La cortina suena (usuario). SWD: los dos parches en línea están cargados (`0x838d01ac…`, `0x83841470…`); ajuste EFCS = 1 y `cap+0x41c` = 1. Diferencia con el 3.30 (que funcionaba): su cueva cubría el `strb` final de `0x438d0064`, es decir, **las dos ramas**; el 3.33/3.34 solo la rama `r6 ≠ 0`. En la rama `r6 = 0` (estado sin tipo en la tabla de `0x438d0084`; el estado del objeto leído es 0) Sony hace `r3 = r6 = 0` (INFERENCIA: es la rama del envío en la foto). 3.35: el mismo tramo de 20 B atiende las dos ramas (`0x438d01aa`: `mov r3,r6; b …` → `b 0x438d01b4`), con literal común en `0x438d01bc`. Emulación: las dos ramas dan `pkt[0x0e]` = ajuste (0/1); tests R56 9/9; `verify-335.json` 36/36; bloques 48 y 57; bloque 0 idéntico a Sony.
+
+## 7. Calibración del parche de exposición con 3.35 (04-11-2026, MEDIDO)
+
+Con 3.35 instalado, escena fija, RAW sin negro (media). Mecánico forzando a 0, cada 20 ms durante el disparo, el espejo EFCS `0x83EDF894` y la copia de trabajo `0x83ED4FC8` (el firmware reescribe el espejo tras cada disparo). Electrónico = EFCS desactivado + parche RAM (ShutMode 0 + `r5`).
+
+| Velocidad / ISO | Media mecánica | Electrónica | `r5` |
+|---|---|---|---|
+| 1/60 / 400 | 123,05 | 122,45 | 3320 |
+| 1/250 / 1600 | 87,59 | 87,77 | 4077 |
+| 1/15 / 100 (predicción) | 127,75 | 130,75 | 332 |
+
+Modelo: filas `N = 4219 − r5 = T/16,73 µs − 97`. Franjas a 1/60: H 0,97–1,03, V 0,99–1,01. Sin parche, el electrónico sale ≈ 3,3× más brillante que el mecánico a 1/60 (404 frente a 123). RemoteShutter v8c: `LINE_US` 16,73, `R5_LAG` 97 y parche solo con EFCS desactivado; prueba desde la app con `/silent?v=1`: mecánico 120,64 (sin parche), electrónico 126,73 (`r5` 3320, +5 %). NO VERIFICADO: velocidades > 1/300 (< 100 filas) y otras escenas/ISO.
