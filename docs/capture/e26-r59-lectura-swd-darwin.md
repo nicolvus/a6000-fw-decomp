@@ -1,6 +1,6 @@
-# E26-R59 — Lectura por SWD de Darwin (MCU FM3, IC5700): objetivo y procedimiento (BORRADOR, sin ejecutar)
+# E26-R59 — Lectura por SWD de Darwin (MCU FM3, IC5700): DESCARTADA (05-11-2026)
 
-Fecha: 05-11-2026. **Ninguna conexión hecha.** Requiere autorización expresa del usuario para cada fase (CLAUDE.md). Solo lectura: no se usa ningún comando de escritura, borrado, desbloqueo ni reinicio.
+Fecha: 05-11-2026. **Resultado: sin respuesta del DAP; el usuario retiró los hilos y da la vía por descartada.** Procedimiento conservado como registro. Requiere autorización expresa del usuario para cada fase (CLAUDE.md). Solo lectura: no se usa ningún comando de escritura, borrado, desbloqueo ni reinicio.
 
 Etiquetas: **ESQUEMA** · **LEÍDO** (R47) · **INFERENCIA** · **NO VERIFICADO**.
 
@@ -82,3 +82,10 @@ Captura `bz_mon_20261105_1846.log` (firmware instalado según R58: `darwin_core`
 | 18:48:26 | todo a cero; después el AP0 devuelve WAIT (cámara apagándose) |
 
 En `0x83e77284` el byte 0 alterna 0x13–0x16 y `0x83e77290` toma y suelta `0x43b1f0d3` (dirección de código de av-cam) en 15–30 ms. **NO VERIFICADO:** qué acción del usuario corresponde a cada hora, la semántica de `pkt[7]`, `pkt[8]`, `pkt[0xc]` y de la cuenta 5→3, y si `0x83e77280` es el buzón de recepción o un objeto temporizador. No da acceso a la RAM ni a la flash de Darwin.
+
+## 7. Resultado (05-11-2026, MEDIDO, solo lectura)
+
+* Con los hilos en el lado Darwin de R4915/R4916 (esquema y placa comprobados por el usuario), 3,09-3,10 V en TCK/TMS y 3,10 V en `TRST_DWN`, masa común, cámara encendida y hilos en ambas orientaciones: **0 respuestas** a 50, 100, 200 y 400 kHz (más de 150 intentos). OpenOCD: `SWD ack not OK @ 0 JUNK` en cada lectura de DPIDR.
+* Descartado: velocidad, tensión, masa, cruce de hilos, `TRSTX` en bajo. No se llegó a medir `XDWN_RESET` (`CL701`) ni se probó la conexión bajo reset.
+* Causa no determinada: Darwin dormido, SWJ-DP desactivado por su arranque `0x0000-0x41ff` o protección. La vía se da por cerrada por decisión del usuario.
+
