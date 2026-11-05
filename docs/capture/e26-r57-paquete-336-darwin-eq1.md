@@ -25,3 +25,14 @@ Cierra (devuelve 0) solo con el flag == 1 (Electronic); cualquier otro valor eje
 ## 4. Pendiente
 
 Instalar (con autorización) y probar mecánico a 1/2000 y 1/4000, y electrónico (que no regrese). Si sigue negro, la compuerta no es la causa y el siguiente candidato es el propio mecánico fuera del parche (comparar con el 3.32 oficial).
+
+## 5. Resultado en cámara (04-11-2026, MEDIDO por el usuario) — cierra la hipótesis
+
+* **3.36** (instalado y confirmado con `pmca-console info`): el mecánico (EFCS activado) sigue negro desde 1/1000. La compuerta de Darwin no era la causa.
+* **3.37 = contenido oficial de Sony** (`build_326.py 0x37`, manifiesto `manifest-recuperacion-337.json`, 8/8; instalado 3.36 → 3.37): **EFCS desactivado → foto correcta con obturador mecánico completo; EFCS activado → foto negra entera.** Sin ningún parche nuestro. El fallo de «mecánico negro» del 3.35/3.36 era el modo **EFCS activado** de esta cámara, no el firmware modificado.
+* Consecuencia: en el firmware de Sony, EFCS desactivado = obturador mecánico completo. En nuestro 3.35/3.38, EFCS desactivado = Electronic (`pkt[0x0e]=1`). La referencia correcta para igualar la exposición electrónica es **EFCS desactivado en el 3.37 (mecánico completo)**; las calibraciones de R56 §7 se hicieron contra EFCS activado (primera cortina electrónica), que puede diferir a velocidades altas.
+* NO VERIFICADO: por qué EFCS activado sale negro en el firmware original (calibración perdida en la recuperación, hardware del sensor/Darwin o ajuste de fábrica); a qué velocidades.
+
+## 6. 3.38 = contenido del 3.35 con versión superior
+
+El actualizador solo acepta versiones mayores: tras el 3.37 hay que subir. `build.py --inline --version 3.38` → `analysis/e25-27/artifacts-338/package-3.38/firmware_packed.dat` (`3e77f0a1…`); `av-cam` y `darwin_core` idénticos a los del 3.35; `verify-338.json` 36/36. No instalado.
