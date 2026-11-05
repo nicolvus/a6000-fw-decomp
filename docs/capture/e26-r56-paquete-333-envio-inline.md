@@ -48,3 +48,13 @@ Con 3.35 instalado, escena fija, RAW sin negro (media). Mecánico forzando a 0, 
 | 1/15 / 100 (predicción) | 127,75 | 130,75 | 332 |
 
 Modelo: filas `N = 4219 − r5 = T/16,73 µs − 97`. Franjas a 1/60: H 0,97–1,03, V 0,99–1,01. Sin parche, el electrónico sale ≈ 3,3× más brillante que el mecánico a 1/60 (404 frente a 123). RemoteShutter v8c: `LINE_US` 16,73, `R5_LAG` 97 y parche solo con EFCS desactivado; prueba desde la app con `/silent?v=1`: mecánico 120,64 (sin parche), electrónico 126,73 (`r5` 3320, +5 %). NO VERIFICADO: velocidades > 1/300 (< 100 filas) y otras escenas/ISO.
+
+## 8. Mecánico ≥ 1/1000 sale negro con el 3.35 (04-11-2026, MEDIDO)
+
+Serie de 18 velocidades (menú EFCS activado, app v8c, RAW+JPEG): mecánico 1/1000, 1/2000 y 1/4000 con ISO 12800 → media RAW ≈ −5 (negro); 1/400 con el mismo ISO → 850. El usuario lo confirma también a ISO 25600. El electrónico no lo presenta.
+
+* **Hipótesis `pkt[0x0e]` refutada (RAM, sin flashear):** con el código de Sony restaurado en RAM en el envío (`0x438d01aa/01ae`) y en el paquete de la foto (`0x43841472…`), el mecánico a 1/2000 (EXIF 1/2500, ISO 12800) sigue negro (`DSC03459`: −5,2). Revertido y verificado por lectura.
+* **Ventana SWD** (`0x83E9BC48`, 64 palabras, ~45 Hz, solo lectura; sonda CMSIS-DAP): idéntica a 1/2000 (negro) y 1/250 (correcto) salvo contadores; no discrimina.
+* **Reinicios de la cámara** durante pruebas con `shoot.py`/telnet+adb a 1/2000: log del kernel (`0x83400000`) → `WDT:RSTREQ_STAT=0x0`, `kernel BUG wdt.c:182` a los 51 s, sin oops previo (petición de reset de otro procesador). Con disparos solo por HTTP (sin dd/adb alrededor) no reinició. Causa NO VERIFICADA.
+* El EXIF no coincide con la velocidad pedida en varias fotos (1/2000→1/2500, 1/250→1/200, 1/500→1/400), NO VERIFICADO por qué.
+* Siguiente: comprobar si el negro ocurre con el disparador físico (sin app) y, si sí, si ocurre con el 3.32 oficial; candidato restante: el parche de Darwin.
