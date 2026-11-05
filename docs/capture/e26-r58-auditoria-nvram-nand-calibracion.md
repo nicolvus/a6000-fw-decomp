@@ -80,3 +80,12 @@ Cadena (E25-19c/d, E24-05h, R57): Tv del ajuste (`[sl+0x162]`) → `0x4382fac8` 
 | Entorno eléctrico | Darwin mide `BATT_AD_IN` (P10/AN00) y `BATT_TEMP` (P17/AN07); no consta que compensen la bobina, pero el tiempo de recorrido de una cortina depende de la tensión | **Hipótesis a descartar con una prueba barata**: repetir 1/1000 con batería nueva original y con adaptador de CA, en frío y en caliente. |
 | Hardware del obturador | Recorrido y velocidad de las cortinas, sensores de posición (ADC), cable plano y contactos de bobina (tocados al abrir la cámara para la sonda SWD) | Coherente con el patrón medido en R57 §8: δ constante de 1,27 ms desde 1/250, **gradiente vertical** (≈1,2 ms arriba, ≈1,6 ms abajo) y **sin gradiente horizontal**, lo que apunta a velocidades de barrido distintas (cortina mecánica frente al barrido electrónico) más que a una latencia de mensaje (que daría desfase uniforme). INFERENCIA. |
 
+## 7. Lectura SWD del BIONZ durante disparos EFCS (05-11-2026, MEDIDO, solo lectura)
+
+Datos en `analysis/camera-dumps/20261105-bionz-swd-disparos/`. RAM física = virtual + `0x40000000` (validado con el bloque `0xbc0005`).
+
+* Paquete `0x0c` a Darwin (`0x83ed4948`) y duración (`0x83eee76c`): **1/500** → `pkt[2..3]=0x1900` (1/512 s), 1953 µs; **1/125** → `0x1700` (1/128 s), 7812 µs. Coinciden con `Tv = 4096 − 256·log2 t`.
+* `pkt[1]=0x02`, `pkt[0xc]=0x00`, `pkt[0xd]=0x40` y el resto del paquete son **idénticos** en ambos disparos: el BIONZ envía a Darwin lo mismo salvo el Tv. Los descriptores de modo del sensor (`0x83ea04bc`, `0x83ea13dc`) también son idénticos.
+* **Consecuencia:** el BIONZ no distingue la velocidad que falla de la que funciona más que por el Tv y la duración; la diferencia no está en el paquete ni en el modo del sensor. Queda Darwin (arranque, celdas, bobinas) o el hardware.
+* Sin resolver: si `pkt[0xc]=0` es el valor normal en un firmware oficial sano; Darwin no se ha podido leer (sin respuesta del DAP de su SWD).
+
