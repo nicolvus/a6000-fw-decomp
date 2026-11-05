@@ -63,3 +63,5 @@ Escrituras, `flash write/erase`, **cualquier comando de desbloqueo o borrado tot
 | Que Darwin esté en esos modos con la cámara encendida, y qué selecciona el grupo 6 | **NO VERIFICADO** |
 
 Hipótesis principal: Darwin pasa la mayor parte del tiempo en STOP/TIMER y el DAP no contesta. Prueba siguiente (solo lectura, sin reset): repetir la lectura de DPIDR en bucle mientras se generan eventos (botones, encendido) para cazar a Darwin despierto.
+
+**Lectura rápida (05-11, 18:37–18:39):** CMSIS-DAP crudo (line reset + JTAG→SWD + lectura de DPIDR, ~1000 intentos/s por sonda, 1 MHz, sin escrituras). BIONZ: `0x3ba02477` estable de 18:38:10 a 18:39:03 (cámara encendida, ~50 000 lecturas). Darwin: **ninguna respuesta en todo el intervalo**, ni siquiera ruido; SWDIO nunca devuelve ACK. Con muestreo cada ~1 ms, la hipótesis de despertares cortos queda **muy debilitada**. Abiertos: TCK/TMS intercambiados en la soldadura, continuidad pad↔bola del MCU, protección de flash/depuración del MB9AF004 (manual de flash ausente).
