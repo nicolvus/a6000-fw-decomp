@@ -89,3 +89,19 @@ REA (demonio `session_daemon.py`, `av-cam.bin`, listo en ~8 min; decompilados co
 
 * **`cap+0x5dc` no es un dato por unidad.** Los ~12 inicializadores de modo del sensor (p. ej. `0x435496d8…0x43549706`, `0x4354fd16…0x4354fd30`) escriben el descriptor `cap+0x5c8…0x5dc` con **`cap+0x5dc = [cap+0x28]`** (o un valor de pila devuelto por la consulta de modo `0x4381c04c`) y `cap+0x5d8 = [cap+0x24]`: geometría del modo del sensor, igual en toda A6000. El firmware no lee NVRAM ni OTP para ese desplazamiento. **Por tanto el desfase de 1,27 ms con EFCS activado no sale de datos de esta unidad que el firmware use**; descartado también NVRAM como fuente → queda hardware (cortina trasera o reloj/lectura del sensor) o una variable global de ajuste no nula (`DAT_43841924…`, sin medir).
 * **Corrección importante de R56 §7:** la calibración electrónica (línea 16,73 µs y 97 filas de desfase) se hizo contra una referencia **EFCS activado**, que pierde 1,27 ms a ≤ 1/250 (§8). A 1/250 la referencia estaba un 32 % baja, lo que sesga la pendiente. El 15,2 µs/línea del firmware (3891/256, verificado en T046 con la 3.23) puede ser correcto. **Hay que recalibrar contra EFCS desactivado del 3.37** (serie `DSC03505–03514`, ISO 12800, 1/60–1/1500) con una serie electrónica equivalente en el 3.38.
+
+## 12. Comparación de la NAND: 20-oct (3.21, EFCS funcionaba según el usuario) frente a 5-nov (3.37) (05-11-2026, MEDIDO)
+
+Volcado actual de solo lectura con `updater_nand_dump.py` (`SOLO_PARTICIONES=1`, `analysis/camera-dumps/nand-20261105/`, sin escrituras) comparado con `nand-20261020/`:
+
+| Partición | Resultado | Lectura |
+|---|---|---|
+| `nflasha5`, `6`, `7`, `11`, `15`, `16` | **idénticas** | warm boot, rootfs, /usr, Android system: sin cambios |
+| `nflasha1` (8 B), `18` (72 B), `23` (7 B) | contadores `0x019d → 0x0052`, `0x0197 → 0x004e` | contadores de borrado de página, sin significado funcional |
+| `nflasha3` (22 bloques) | versión/sumas del 3.37 reetiquetado | esperado |
+| `nflasha2` | `Backup.bin` actual = «A» con 1023 B distintos en el cuerpo (contadores/uso) | **la restauración del NVRAM persistió en flash** |
+| `nflasha4` («MPR», base de datos de contenidos de `libmpr`: miniaturas/DCF) | datos reubicados | actividad normal de fotos; no es calibración |
+| `nflasha10` (FAT16: `CONFIG~1.SPE`, `IMAGES`, `KIKILOG.DAT`, `H1`, `H2`, `T0.TXT`), `nflasha17` (/android/data) | datos de usuario/log | esperado |
+
+* **Conclusión:** nada de lo que hay en la NAND explica la pérdida de 1,27 ms del EFCS activado. Con firmware, Darwin (reescrito en cada actualización), NVRAM y NAND iguales al estado de entonces, el cambio tiene que estar fuera de la NAND.
+* **Candidatos restantes (NO VERIFICADOS):** (1) memoria no volátil propia de Darwin (el actualizador **reescribe `darwin_core` siempre** y el primer intento del 3.25 acabó en `0x1063`/«NG» de Darwin; los datos `[0x20000050+canal]` y `[0x200002c0+canal]` de la compuerta/tipo de mecanismo no se leen de la NAND); (2) hardware tocado al abrir la cámara para soldar la sonda SWD (cable plano del obturador, contactos de bobina); (3) OTP/fusibles del SoC o del sensor. Leer la flash de Darwin requiere acceso físico a `CN4906` (pines 11/12, R52 §8).

@@ -44,7 +44,7 @@ def dump(device):
     be = UsbPlatformBackend(device); be.start()
     txt = shell(be); print(txt, flush=True)
     nodes = sorted(set(re.findall(r'\b(nflasha\d+)\b', txt)), key=lambda s: int(s[7:]))
-    for n in ['nflasha'] + nodes:
+    for n in ([] if os.environ.get('SOLO_PARTICIONES') else ['nflasha']) + nodes:  # SOLO_PARTICIONES=1 omite el volcado completo (~500 MB)
         r = '/dev/' + n
         try:
             p = pull(be, r); print('OK   %-16s %d B' % (r, os.path.getsize(p)), flush=True)
