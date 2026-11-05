@@ -102,3 +102,12 @@ Datos en `analysis/camera-dumps/20261105-bionz-swd-disparos/`. RAM física = vir
 * **NAND** (`nand-20261105-total`, completa): ver su README. **Idénticas al original las particiones 5, 6, 7, 11, 15 y 16** (kernel, rootfs, `/usr` y sistema Android de Sony). `1`, `18` y `23` solo difieren en contadores (8, 72 y 7 B). `3` difiere solo en el relleno posterior a la imagen. Los cambios grandes están en datos de uso: `2` (Setting), `4` (MPR), `10` (logs) y `17` (Android /data con las apps y restos de pruebas).
 * **Conclusión:** todo el software de Sony y todo el firmware principal están intactos; no queda nada modificado en la NAND que no sea estado de uso. Un nodo de la lista (`nflasha12-14`, `19-22`, `24-31`) no existe, igual que en el volcado original.
 
+## 10. ¿Cierra la exposición el temporizador de host? (05-11-2026, MEDIDO, solo lectura)
+
+Lectura SWD del BIONZ (cámara en modo normal) de los ocho canales del bloque de temporizadores `0xf2403000` (stride `0x20`, control `0x1102`, carga `0x2710` en reposo) y de la duración `0x83eee76c`. Datos en `analysis/camera-dumps/20261105-bionz-swd-disparos/` (`timers_idle.txt`, `timers_tras_1_500.txt`, `poll_1s_timers.log`).
+
+* Tras un disparo EFCS a 1/500: ningún canal cambia; la duración vale 1953 µs.
+* **Barrido continuo durante una exposición de 1 s con EFCS** (45 s, ~ms por barrido): la duración pasa de 1953 µs a **1 000 000 µs** (calculada al planificar), pero **ningún canal cambia de control ni de carga**. Un temporizador de host armado a 1 s habría sido visible.
+* **Conclusión:** en fotos normales el temporizador de host (`cap+0x728`, rama `74f==0`) **no se arma**, en línea con `74f=1` y la espera de confirmaciones de Darwin (E25-19d). Retrasar `0x83eee76c` o ese temporizador **no desplaza el cierre de la segunda cortina**. Una compensación del desfase de ~1,27 ms tendría que actuar en el plan de exposición del sensor (`record+0x1c`/`sl`, R57 §10), no en el temporizador.
+* Limitación: solo se vigiló el bloque `0xf2403000`; otro bloque de temporizadores no se ha descartado.
+
