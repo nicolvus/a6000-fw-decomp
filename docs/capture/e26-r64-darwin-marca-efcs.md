@@ -36,3 +36,22 @@ S53 decía «3 → +1; 4 → +2», pero no que esos tipos **borran el bit 6**. C
 * Con la evidencia actual, **Darwin ejecuta la misma temporización con EFCS activado y desactivado**. La diferencia por modo está en el BIONZ y el sensor (ID1 `d4`/`c4`, R63), y quizá en el tipo `t`, que no cambia por disparo.
 * **Contradicción abierta:** con EFCS desactivado la cortina delantera tiene que recorrer el cuadro y con EFCS activado no. Si Darwin no lo distingue por `S+0x31`, lo hace otra señal: otro campo, una orden fuera del paquete `0x0c` o una línea física. Para cerrarlo hay que seguir quién arranca la cortina delantera (bobina/motor) en la lista de estados (`0x1961c`) y si depende de algo distinto en cada modo.
 * La palanca de la pérdida EFCS queda, con más probabilidad, en el **instante en que el sensor arranca el reinicio electrónico** (BIONZ), no en Darwin.
+
+## 5. Lista de estados: `0x196a2` gobierna la cortina delantera mecánica (VERIFICADO, 05-11-2026)
+
+* Lista ejecutada con `pkt[0xc] = 0` (ambos modos, R63): `0x28f88` = `02 09 03 04 0d 0a 0f 06 13 14 1a 1c 1f 20 30 31` (tabla `0x28ff8`).
+* Estado **2** (`0x185ea`): si `0x196a2() ≠ 0` y `[B+0xcd]` bit 2 = 0 → `0x1991e`. Estado **3** (`0x1860c`): mismo filtro → espera `0x19974`. Estado **4** (`0x18636`): si `0x196a2() ≠ 0` → `0x19998(1)` (rearme L2, motor) y marca de tiempo en `S+0x98`. Los estados 6 y 0x0d también dependen de `0x196a2`.
+* Es decir, **`0x196a2` = «hay acciones de cortina delantera mecánica»**. Para que EFCS funcione, debe dar 0 con EFCS activado. Con la tabla del §1, eso solo ocurre si el tipo `t` **no** es 1/2: con `t` = 0 (o ≥5), on `0x02` → 0 y off `0x40` → 1. Los tipos 3/4 darían 0 también con EFCS desactivado.
+* El tipo lo fijan las órdenes BIONZ `0x62/0x63/0x64/0x65` → `t` = 1/2/3/4 (`0x1f0ac–0x1f126` → `0x1f23a–0x1f24a` → `0x205e6`). Las despacha `0x1f362` (órdenes `0x40–0x9f`), llamado desde `0x1bfb6`. El lado BIONZ que las envía **no está localizado**.
+
+### Contradicción con R61 y cómo resolverla
+
+`B+0x88` solo se lee en `0x18ea6` (rama `r5 = 1`, `S+0x31 & 3 == 0`). Si BK4 `0x30102` se copia 1:1 en `B`, que `+0x88` cambiara la luz con EFCS activado (R61) implica `t` ∈ {1,2}. Con ese tipo, `0x196a2 = 1` también con EFCS activado, y Darwin ejecutaría las acciones y la temporización **mecánicas** con EFCS. **Sería una causa candidata del fallo** (INFERENCIA). La alternativa es `t` = 0 (lo normal) con un desplazamiento entre BK4 y `B`, y que el cambio de EFCS desactivado en R61 fuera de la escena (su referencia era de otra serie).
+
+Prueba que lo decide (NVRAM, reversible; cada variante con pares on/off **en la misma serie**):
+
+| Resultado | BK4 `+0x88` +500 µs | BK4 `+0x8a` +500 µs | Lectura |
+|---|---|---|---|
+| A | cambian ambos modos | ninguno | 1:1 y `t` ∈ {1,2} → Darwin trata EFCS como mecánico (fallo candidato) |
+| B | solo EFCS desactivado | solo EFCS activado | 1:1 y `t` = 0 (normal) |
+| C | solo EFCS activado | ninguno | BK4 desplazado 2 B respecto a `B`, `t` = 0 |
