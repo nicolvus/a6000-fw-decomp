@@ -28,7 +28,13 @@ on/off global: 1/500 **0,38**; 1/250 **0,78**; 1/200 **0,86**; 1/125 **1,035**. 
 
 ## 4. Prueba 6, primer volcado (antes de quitar la batería)
 
-`analysis/camera-dumps/20261105-r63-pre-bateria/` (3.37). BK4 `0x30100`: suma de la tabla 1615, `0x11 = 62`; `f2..f7` = `8809 f810 cf12`, que solo cambia en el contador. Pendiente: batería fuera ≥10 min, fotos y segundo volcado.
+`analysis/camera-dumps/20261105-r63-pre-bateria/` (3.37). BK4 `0x30100`: suma de la tabla 1615, `0x11 = 62`; `f2..f7` = `8809 f810 cf12`, que solo cambia en el contador.
+
+**Resultado (05-11-2026, MEDIDO):** batería fuera ≥10 min. El EXIF de `DSC03563/03564` marca 00:00:12–23 del 2014-01-01, así que el reloj se reinició y el corte de alimentación fue total.
+
+* Fotos a 1/500: `03563` EFCS Off, `03564` EFCS On. on/off = **0,338** (antes 0,381), con franjas 0,46 → 0,12 de arriba abajo. **Mismo síntoma.**
+* Segundo volcado `20261105-r63-post-bateria/`. `0x30102` es idéntica. `0x30100` cambia en `0x11–0x2e`: la tabla vuelve a **suma 1400, `0x11 = 49`**, el nivel del 20-10 (1418, 49), cuando antes valía 1615/62.
+* **Conclusión:** el reinicio completo de Darwin devuelve su tabla aprendida a los valores del estado sano, y el fallo sigue. **El estado de la SRAM de Darwin y la tabla `0x30100` quedan descartados como causa.**
 
 ## 5. Siguiente
 
