@@ -55,3 +55,11 @@ Escrita sobre el volcado de seguridad `20261105-r63-seguridad-pre-c6/` (variante
 * **Sin efecto medible.** Ni EFCS activado gana luz ni cambia el patrón (+3,5 %, dentro del ruido; la luz de la escena bajó un 25 % entre series, pero el cociente on/off la compensa).
 * Interpretación: o el término `s8[B+0xc6]` no entra en la ruta usada (por ejemplo, si `[S+0x48]` no cae en el rango que elige `+0xc6`), o el retardo `ip` (`0x1a738`) no gobierna el inicio de la exposición. A diferencia de `+0x88` (R61), no hay prueba de que llegue a Darwin.
 * **Revertida** restaurando `backup_flash.bin` del volcado de seguridad (verificación en memoria correcta, sincronizado a flash).
+
+## 7. Corrección: todo R63 se midió con la variante de R61 activa (MEDIDO, 05-11-2026 23:21)
+
+`0x30102+0x88` vale **834 µs** (variante R61, +500) en `r63-pre-bateria`, `r63-post-bateria`, `r63-seguridad-pre-c6` y `r64-seguridad`. Vale **334** (original) en `post-restaura-30102` (21:59, memoria y flash). La restauración de R61 **no persistió**: tras un apagado normal, el valor volvió a 834.
+
+* **INFERENCIA:** igual que `0x30100` (R58 §8), `0x30102` se reescribe al apagar desde una copia en RAM (del BIONZ `0x43e97970` o leída de Darwin). Restaurar el BK4 sin reiniciar no basta.
+* Consecuencia: las series `03555–03566` de R63 (§1–§6: on/off, batería fuera, +0xc6) se hicieron con `+0x88` = 834. Las conclusiones cualitativas se mantienen: la marca `pkt[1]`, los registros del sensor sin Tv, el síntoma sin cambio con la batería fuera y la ausencia de efecto de `+0xc6`. Pero **no son la línea base original**.
+* A 1/500, on/off con 834 (0,34–0,38) es casi igual que con 334 en R57 (0,343). Si `+0x88` actuara sobre ambos modos a 1/500 (resultado A de R64), cabría esperar ≈0,49. **No encaja con ninguno de A/B/C sin otra serie en la misma sesión.**
