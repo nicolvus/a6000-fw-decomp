@@ -41,3 +41,17 @@ on/off global: 1/500 **0,38**; 1/250 **0,78**; 1/200 **0,86**; 1/125 **1,035**. 
 * Recorrer en Darwin los consumidores de `S+0x31` bit 7 y `0x30`, y la ruta del primer disparo mixto.
 * Prueba 6 (batería fuera).
 * Repetir la serie con luz continua (o a la luz del día) para medir δ(T) sin parpadeo.
+
+## 6. Prueba 8: `0x30102+0xc6` = +100 µs (05-11-2026, MEDIDO; revertida)
+
+Escrita sobre el volcado de seguridad `20261105-r63-seguridad-pre-c6/` (variante SHA-256 `77558a94…ec94b`, 3 bytes; verificada en memoria y sincronizada). Reinicio y fotos `DSC03563 (1)`/`03564 (1)` (1/500) y `03565`/`03566` (1/1000), con ISO 5000 y f/7,1. La numeración y el reloj volvieron a empezar tras el reinicio, por eso los nombres repetidos.
+
+| Caso | on/off global | Franjas (arriba → abajo) |
+|---|---|---|
+| 1/500 base (tras batería) | 0,338 | 0,46 … 0,12 |
+| 1/500 +100 µs | 0,350 | 0,45 … 0,24 |
+| 1/1000 +100 µs | −0,05 (negro) | ≈ 0 |
+
+* **Sin efecto medible.** Ni EFCS activado gana luz ni cambia el patrón (+3,5 %, dentro del ruido; la luz de la escena bajó un 25 % entre series, pero el cociente on/off la compensa).
+* Interpretación: o el término `s8[B+0xc6]` no entra en la ruta usada (por ejemplo, si `[S+0x48]` no cae en el rango que elige `+0xc6`), o el retardo `ip` (`0x1a738`) no gobierna el inicio de la exposición. A diferencia de `+0x88` (R61), no hay prueba de que llegue a Darwin.
+* **Revertida** restaurando `backup_flash.bin` del volcado de seguridad (verificación en memoria correcta, sincronizado a flash).
