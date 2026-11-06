@@ -55,3 +55,10 @@ Prueba que lo decide (NVRAM, reversible; cada variante con pares on/off **en la 
 | A | cambian ambos modos | ninguno | 1:1 y `t` ∈ {1,2} → Darwin trata EFCS como mecánico (fallo candidato) |
 | B | solo EFCS desactivado | solo EFCS activado | 1:1 y `t` = 0 (normal) |
 | C | solo EFCS activado | ninguno | BK4 desplazado 2 B respecto a `B`, `t` = 0 |
+
+## 6. Prueba A/B/C en curso (05-11-2026)
+
+* `+0x88` restaurado a 334 y comprobado tras reiniciar con la batería fuera (`20261105-r64-tras-bateria-334`).
+* Base con 334 (`20261105-r64-fotos/base334`, `DSC03563–66`): 1/500 on/off **0,353** (franjas 0,44 → 0,13); 1/1000 negro.
+* **Estado actual de la cámara: variante `+0x88` = 834 escrita** (`20261105-r64-post-var088`, SHA-256 `727e41ff…`). Revertir con `20261105-r64-tras-bateria-334/backup_flash.bin` y reiniciar con la batería fuera.
+* Las fotos «(1)» entregadas para la variante son **copias idénticas** de las de la base (mismo SHA-256): falta la serie real con 834, y después `+0x8a`.
