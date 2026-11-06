@@ -24,9 +24,11 @@ shutdown
 
 
 def sub_w(n: int) -> bytes:
-    """sub.w r10, r10, #n  (T3, imm12 modificado: n < 256)."""
-    assert 0 < n < 256
-    return struct.pack("<HH", 0xF1AA, 0x0A00 | n)
+    """sub.w r10, r10, #n (T3, n < 256) o subw r10, r10, #n (T4, n < 4096)."""
+    assert 0 < n < 4096
+    if n < 256:
+        return struct.pack("<HH", 0xF1AA, 0x0A00 | n)
+    return struct.pack("<HH", 0xF2AA | ((n >> 11) << 10), 0x0A00 | (((n >> 8) & 7) << 12) | (n & 0xFF))
 
 
 def run(body: str) -> list[str]:
