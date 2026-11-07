@@ -90,19 +90,18 @@ Trazabilidad completa: [CORRECTIONS](../docs/CORRECTIONS.md) y [STATE § Conclus
 - Ningún acceso físico, flasheo ni escritura en la cámara sin autorización expresa para ese caso concreto. Backup NVRAM y fila T0NN antes de cualquier prueba.
 - Commit convencional por fase con PENDIENTES en el mismo commit; push a `origin/main` tras cada fase; nunca firmware, binarios de Sony ni datos personales.
 
-## Pendientes activos prioritarios (autoridad: PENDIENTES)
+## Pendientes activos prioritarios (autoridad: PENDIENTES; triaje del 07-11-2026: quedan 15)
 
 | ID | Estado | Qué falta |
 |---|---|---|
-| E26-R33-BLOQUE0 / E26-FISICO-BOOT | ABIERTO (físico) | Leer la clave de `nflasha0` (bloque 0, `0xc00`, 8 B) y continuidad Multi pin 9 ↔ `BOOT_SERIAL_IN`; exige lector NAND/JTAG y autorización |
-| E26-FISICO-UPDATERMODE | **CERRADO (R49)** | Cámara recuperada: actualizador forzado por SWD, 3.26 instalado por USB |
-| E26-R12-UART-FISICO / E26-R14-LED-MEDIDA | ABIERTO (físico) | UART0 solo útil para la vía serie del BootROM (logs apagados, R37); vídeo del LED para confirmar 0/3/2 |
-| E26-R5-NAND / -BIONZ / -FM3 | ABIERTO | Geometría y ECC de `nflasha3`, acceso SWD de lectura, protocolo del FM3; especificar herramienta y preservación antes de escribir |
-| E26-R30-HOSTRET0 | ABIERTO (baja) | Qué muestra el PC si `Execute` retorna 0 sin excepción |
-| E1 | NO_VERIFICADO | Origen del local 4/2 a `ModelScalarPb`/`ModelPbCap` |
-| E25-01 / E25-27 / E25-20 | ABIERTO / BLOQUEADO | Validación física del obturador (3.23 y 3.25) y C3-B en RAM; dependen de recuperar la cámara |
-| E25-19f, E25-EFCS-1…4 | ABIERTO | Escritores de `cap+0x74f`, `+0x504`, `+0x740`, `+0x11b0`; funciones Thumb sin sembrar |
-| R1 / R7 | PARCIAL / BLOQUEADO | Copia externa del respaldo; GitHub conserva commits antiguos en `refs/pull/*` y en un fork ajeno (R3/R6 cerrados: historial reescrito el 31-10-2026) |
+| E26-R66-RESET | ABIERTO (físico) | La pérdida EFCS (≈1,27 ms; negro desde 1/1000) no viene de Darwin: medir el retardo flanco P4C → reinicio del sensor, o la latencia real de la cortina |
+| E26-R67-GPIO9 | PROPUESTO (solo lectura) | SWD del BIONZ sin halt: ¿llega el pulso de `CA_1ST_CURTAIN_START`? Decide BIONZ/sensor frente a fallo físico de la línea |
+| E26-R66-B86 | PROPUESTO (NVRAM, reversible) | Compensación `0x1850001+0x86` 6 → ≈1276 µs para 1/320 y más rápido |
+| E25-11 | ABIERTO (consolidado) | Llevar al firmware la corrección ShutMode 0 + `r5` que hoy aplica la app; velocidades > 1/300 y < 1/15; validación en cámara |
+| E26-R49-SONDA | ABIERTO (físico) | Retirar los hilos de R4911/R4912 (útiles antes para E26-R67-GPIO9) |
+| R1 / R7 | PARCIAL / BLOQUEADO | Copia externa del respaldo; commits antiguos en `refs/pull/*` de GitHub (requiere al soporte de GitHub) |
+| DOC-SITIO-EN | ABIERTO (decisión del usuario) | Sitio de Pages solo en español y con el hito 3.23; traducir/actualizar o dejarlo así |
+| G2–G8 | ABIERTO | Carril de interfaz, independiente del obturador |
 
 ## Bloqueos y límites de evidencia
 

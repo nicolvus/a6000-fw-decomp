@@ -27,6 +27,7 @@ Fecha: 2026-10-20. Cámara ILCE-6000 fw 3.21 (CXD90014). Solo estático y lectur
 2. Modificar las particiones dentro de `firmware.tar` (`nflasha3/5/7/15/16`); recalcular CRC-32 y tamaño en los `.sum` (`0701_part_image_sum`, etc.) y la cadena de sumas del tar.
 3. `fdat.writeFdat(FdatFile(..., version=X))` (recalcula el CRC de cabecera) → `fdat.encryptFdat(..., 'CXD90014')` → `dat.writeDat` (CRC de DEND).
 4. Instalar con `pmca-console firmware -f NUEVO.dat` (batería >50 %, cable directo). La versión X debe pasar el guard (≠ instalada).
+   **Antes de instalar (E25-07, obligatorio):** entrar en el directorio del paquete y ejecutar `sha256sum -c SHA256SUMS`; instalar solo si todas las líneas dan `OK` y con la ruta de ese mismo directorio (`pmca-console firmware -f "$PWD/firmware_packed.dat"`). Varios paquetes comparten el nombre `firmware_packed.dat` y el mismo mensaje de `pmca-console`, así que el directorio es lo único que los distingue. `recuperacion-323` es **obsoleto**: no tiene `SHA256SUMS` y lo sustituyen `recuperacion-324/326/337`. No instalarlo.
 
 Límites y riesgos:
 - Pasos 2–3 no se han ejecutado de extremo a extremo: no hay prueba de que la cámara acepte una `nflasha*` modificada (el updater podría validar más allá del `.sum`; NO VERIFICADO).
