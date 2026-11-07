@@ -1,5 +1,7 @@
 # E26-R63 — SWD del BIONZ con EFCS activado y desactivado; serie 1/500–1/125 (05-11-2026)
 
+> **Corregido por [R66](e26-r66-bloques-darwin-en-nvram-1850000.md):** la prueba 8 (§6, `0x30102+0xc6`) no tocó Darwin, porque `0x30102` no es el bloque B. Las medidas por SWD de §1–§2 siguen vigentes.
+
 Solo lectura (`analysis/e26-r59/bz_mon.py`, AP0, ~400 barridos/s), 3.37 oficial. Fotos `test images/DSC03555–03562` (M, f/7,1, ISO 5000). Log: `analysis/camera-dumps/20261105-r63-swd/mon_efcs_on_off.log`. Reconstrucción: `scripts/e26_r63/replay_swd.py`; medida: `scripts/e26_r63/medir_pares.py`.
 
 Etiquetas: **MEDIDO** · **VERIFICADO** (código) · **INFERENCIA**.

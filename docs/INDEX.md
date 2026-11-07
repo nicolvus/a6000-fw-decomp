@@ -390,7 +390,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 6. Otros subsistemas (AF, estabilización, vídeo, audio, lentes, energía, visor, accesorios, módulos de trazas)
 
-179 informes.
+180 informes.
 
 - **—** [E21 — Lecturas sin cámara de los volcados del 20-10-2026](capture/e21-lecturas-backups-2026-10-26.md)
 - **—** [E24-01 — Arranque, modo actualizador y dependencia de Darwin (27-10-2026)](capture/e24-01-arranque-recuperacion.md)
@@ -469,6 +469,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [E26-R66 — Los bloques de ajuste de Darwin son las propiedades NVRAM `0x1850000/01`; `0x30102` no llega a Darwin (07-11-2026, estático)](capture/e26-r66-bloques-darwin-en-nvram-1850000.md)
 - **—** [E26-R67 — Qué son los eventos A y B de Darwin con EFCS: `P4C` (`CA_1ST_CURTAIN_START`) y `P4E` (`2ND_CURTAIN_MG`) (07-11-2026, estático)](capture/e26-r67-eventos-a-b-p4c-p4e.md)
 - **—** [E26-R68 — Auditoría de R65–R67 y del triaje del 07-11-2026 (07-11-2026, estático)](capture/e26-r68-auditoria-r65-r67.md)
+- **—** [E26-R69 — Revisión de los informes del negro con EFCS activado (R56–R64) y cierre de las inferencias de R65–R68 (07-11-2026, estático)](capture/e26-r69-revision-informes-efcs.md)
 - **—** [E26-RECOVERY R7 — informe final de ingeniería inversa exhaustiva](capture/e26-r7-recuperacion-estatica.md)
 - **—** [E26-R7B — recuperación pre-Linux: investigación estática](capture/e26-r7b-recuperacion-prelinux.md)
 - **—** [E26-R8 — Sony A6000 BootROM / UART / BOSS / NAND Recovery Investigation](capture/e26-r8-bootrom-uart-boss.md)

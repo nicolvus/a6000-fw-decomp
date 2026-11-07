@@ -1,5 +1,7 @@
 # E26-R61 — Darwin: duración de la espera de la segunda cortina y su corrección por unidad (BK4 `0x30102`)
 
+> **Corregido por [R66](e26-r66-bloques-darwin-en-nvram-1850000.md) y [R69](e26-r69-revision-informes-efcs.md):** BK4 `0x30102` **no es** el bloque B de Darwin (B = `0x1850001`, con `+0x88 = −22`). La conclusión «`0x30102+0x88` llega a Darwin y gobierna la segunda cortina» queda **anulada**. R64 §6 ya mostró que la comparación con la base no era fiable; el pequeño efecto que midió no tiene explicación por Darwin. Siguen vigentes la lógica de §1 (completada en R62 §4 y R65) y los datos medidos.
+
 Fecha: 05-11-2026. Estático (Capstone sobre `darwin_core.bin` 3.21, base `0x4200`) + lectura de BK4. **Experimento propuesto, no ejecutado.**
 
 Etiquetas: **VERIFICADO** (código/bytes) · **INFERENCIA** · **NO VERIFICADO**.

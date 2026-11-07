@@ -32,3 +32,12 @@ def test_retardo_de_a_se_satura_a_1():
     seq = _dis(0x18E6A, 7)
     assert seq[0] == "adds r0, r1, r0"
     assert seq[4:7] == ["bmi #0x18e7c", "mov.w r0, #-1", "rsbs r0, r0, #0"]
+
+
+@pytest.mark.skipif(not DARWIN.is_file(), reason="darwin_core.bin original ausente")
+def test_patron_de_imanes():
+    """R69: P4D (delantera) se retiene antes y se suelta al bajar en A; P4E (trasera) solo sube en B y baja después (pulso)."""
+    assert _dis(0x20CA6, 2) == ["movs r1, #1", "mov.w r0, #0x234"]      # 0x20c90: P4D <- 1 (preparación)
+    assert _dis(0x20CC8, 2) == ["movs r1, #0", "mov.w r0, #0x234"]      # 0x20cb2 (A): P4D <- 0
+    assert _dis(0x20CE2, 2) == ["movs r1, #0", "mov.w r0, #0x238"]      # 0x20cd4: P4E <- 0 (fin del pulso)
+    assert "bl #0x20cd4" in _dis(0x207BE, 3)                            # paso temporizado de la lista

@@ -1,5 +1,7 @@
 # E26-R64 — Qué hace Darwin con la marca EFCS `pkt[1]` (05-11-2026, estático)
 
+> **Corregido por [R65](e26-r65-darwin-efcs-on-resta-g42.md), [R66](e26-r66-bloques-darwin-en-nvram-1850000.md) y [R69](e26-r69-revision-informes-efcs.md):** `t` vale 0 al arrancar (§2 y §5, la «INFERENCIA fuerte `t` ∈ {1,2}» queda anulada). La contradicción de §5 desaparece porque `0x30102` no es B. La prueba A/B/C (§5–6) no podía decidir nada sobre Darwin. §5 (`0x196a2` gobierna la cortina delantera) sigue vigente.
+
 Capstone sobre `darwin_core.bin` 3.21 (base `0x4200`). Continúa [R63](e26-r63-swd-efcs-on-off.md) §1 (`pkt[1]` = `0x02` EFCS on, `0x40` EFCS off).
 
 Etiquetas: **VERIFICADO** (instrucciones) · **INFERENCIA**.

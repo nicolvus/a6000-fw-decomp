@@ -1,5 +1,7 @@
 # E26-R58 — Auditoría NVRAM/NAND (20-10 → 05-11) y dónde vive la calibración (05-11-2026)
 
+> **Corregido por [R66](e26-r66-bloques-darwin-en-nvram-1850000.md) y [R69](e26-r69-revision-informes-efcs.md):** §13 «B = BK4 `0x30102`» es falso: B es la propiedad `0x1850001` y G la `0x1850000`, idénticas desde el 20-10. §3/§5: `0x185…` no son parámetros DSP sino los bloques de Darwin. La conclusión de §13 («un parche de Darwin no repone nada perdido») sigue en pie con los bloques correctos.
+
 Solo lectura. Método reproducible: `scripts/senser_backup_compare.py`, `scripts/senser_backup_classify.py` y `scripts/senser_backup_unidad.py PLANTILLA V1 V2…`; las particiones FAT se leen con `mcopy -s -n -i dev_nflashaN.bin ::`.
 
 ## 1. La restauración de NVRAM de R57 §7 NO quedó aplicada (MEDIDO)

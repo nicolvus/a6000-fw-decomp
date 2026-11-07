@@ -10,7 +10,7 @@ Versiones íntegras anteriores (nada se borró): [CURRENT-historial-2026-10-31](
 | Aspecto | Estado | Fuente |
 |---|---|---|
 | **Cámara** | Arranca normal con el **3.37 oficial** (R57, R63). Recuperada el 03-11-2026 por SWD y el actualizador (R46–R49). En NVRAM sigue la variante BIONZ `0x30102+0x88 = 834` (R64 §6, inocua para Darwin; restaurar a 334). Sonda SWD aún soldada | [R49](../docs/capture/e26-r49-cierre-recuperacion-326.md), [R64](../docs/capture/e26-r64-darwin-marca-efcs.md) |
-| **Prioridad** | Obturador electrónico funcionando desde el 3.30 (R54). Abierto: **EFCS activado pierde ≈1,27 ms y sale negro desde 1/1000, también con el firmware de Sony** (R57 §5/§8). R65: Darwin hace `S+0x48 = T − u16[G+0x42]` con EFCS activado; R66: G = NVRAM `0x1850000` (`G+0x42`=3407, sin cambios desde el 20-10); la pérdida viene del lado BIONZ/sensor o de la cortina (E26-R66-RESET); compensación E26-R66-B86 con límite (R68). **`0x30102` no es Darwin** | [R66](../docs/capture/e26-r66-bloques-darwin-en-nvram-1850000.md), [PENDIENTES § E26](../docs/PENDIENTES.md) |
+| **Prioridad** | Obturador electrónico funcionando desde el 3.30 (R54). Abierto: **EFCS activado pierde ≈1,27 ms y sale negro desde 1/1000, también con el firmware de Sony** (R57 §5/§8). R65: Darwin hace `S+0x48 = T − u16[G+0x42]` con EFCS activado; R66: G = NVRAM `0x1850000` (`G+0x42`=3407, sin cambios desde el 20-10); la pérdida viene del lado BIONZ/sensor o de la cortina (E26-R66-RESET); compensación descartada (R69). **`0x30102` no es Darwin** | [R66](../docs/capture/e26-r66-bloques-darwin-en-nvram-1850000.md), [PENDIENTES § E26](../docs/PENDIENTES.md) |
 | Recuperación | Cerrada (R49); las vías alternativas se cerraron en el triaje del 07-11-2026 | [R49](../docs/capture/e26-r49-cierre-recuperacion-326.md) |
 | Hito del obturador | Electrónico funcionando desde el **3.30** (envío en línea de `pkt[0x0e]` + compuerta de Darwin); 3.35 con la exposición calibrada por el parche de RAM de la app (R56 §7). El 3.23 (B1a) fue el primer hito (T040) | [R54](../docs/capture/e26-r54-paquete-330-envio-pkt0e.md), [R56](../docs/capture/e26-r56-paquete-333-envio-inline.md) |
 | Firmware 3.25 (histórico) | Selector + C3-B + Darwin condicionado; su `nflasha3` bloqueó la cámara (R36) | [E25-27](../docs/capture/e25-27-construccion-firmware-integrado.md), [R36](../docs/capture/e26-r36-causa-fallo-325.md) |
@@ -54,6 +54,7 @@ Versiones íntegras anteriores (nada se borró): [CURRENT-historial-2026-10-31](
 | R66 | B/G de Darwin = NVRAM `0x1850001`/`0x1850000` (no `0x30102`, corrige R58 §13 y R61–R65); idénticas en 28 volcados; temporización de Darwin continua → la pérdida no es de Darwin | [R66](../docs/capture/e26-r66-bloques-darwin-en-nvram-1850000.md) |
 | R67 | Con EFCS, Darwin baja P4C (`CA_1ST_CURTAIN_START`, flanco hacia BIONZ `SENS_B`/`GPIO_9`) y `T − 3,4 ms` después suelta P4E (`2ND_CURTAIN_MG`); la pérdida está en el retardo flanco→reinicio (BIONZ/sensor) o en la cortina; prueba pasiva E26-R67-GPIO9 | [R67](../docs/capture/e26-r67-eventos-a-b-p4c-p4e.md) |
 | R68 | Auditoría de R65–R67: corregidos la explicación del negro (R65 §3), `0x30102` en R65, la saturación de B86 y esta tabla global; cuatro afirmaciones rebajadas a INFERENCIA | [R68](../docs/capture/e26-r68-auditoria-r65-r67.md) |
+| R69 | Revisión de R56–R64: notas de corrección en R58/R61/R62/R63/R64 (`0x30102` y `0x30100` no son bloques de Darwin; `t` = 0); B (P4E ← 1) suelta la segunda cortina y la separación A–B no depende de `ip`; B86 descartado | [R69](../docs/capture/e26-r69-revision-informes-efcs.md) |
 
 **Conclusión operativa:** la recuperación física se completó por SWD (R46–R49): se forzó la entrada al actualizador de fábrica sin
 escribir NAND ni memoria (solo un registro de CPU durante el arranque), y el actualizador oficial de Sony instaló el 3.26, que
@@ -91,15 +92,13 @@ Trazabilidad completa: [CORRECTIONS](../docs/CORRECTIONS.md) y [STATE § Conclus
 - Ningún acceso físico, flasheo ni escritura en la cámara sin autorización expresa para ese caso concreto. Backup NVRAM y fila T0NN antes de cualquier prueba.
 - Commit convencional por fase con PENDIENTES en el mismo commit; push a `origin/main` tras cada fase; nunca firmware, binarios de Sony ni datos personales.
 
-## Pendientes activos prioritarios (autoridad: PENDIENTES; triaje del 07-11-2026: quedan 15)
+## Pendientes activos prioritarios (autoridad: PENDIENTES; triaje del 07-11-2026 y R69: quedan 13)
 
 | ID | Estado | Qué falta |
 |---|---|---|
-| E26-R66-RESET | ABIERTO (físico) | La pérdida EFCS (≈1,27 ms; negro desde 1/1000) no viene de Darwin: medir el retardo flanco P4C → reinicio del sensor, o la latencia real de la cortina |
-| E26-R67-GPIO9 | PROPUESTO (solo lectura) | SWD del BIONZ sin halt: ¿llega el pulso de `CA_1ST_CURTAIN_START`? Decide BIONZ/sensor frente a fallo físico de la línea |
-| E26-R66-B86 | PROPUESTO CON LÍMITE (R68) | `0x1850001+0x86` se satura (solo ≈ 1/470 y más rápido); la palanca coherente es `0x1850000+0x42` (3407 → ≈2137), con efectos secundarios sin evaluar |
+| E26-R66-RESET | ABIERTO (único del problema EFCS; requiere cámara) | La pérdida (≈1,27 ms; negro desde 1/1000) no viene de Darwin. Procedimiento listo (R69 §4): leer por SWD si llega el pulso de P4C (`CA_1ST_CURTAIN_START`) al BIONZ; después, continuidad o analizador lógico |
 | E25-11 | ABIERTO (consolidado) | Llevar al firmware la corrección ShutMode 0 + `r5` que hoy aplica la app; velocidades > 1/300 y < 1/15; validación en cámara |
-| E26-R49-SONDA | ABIERTO (físico) | Retirar los hilos de R4911/R4912 (útiles antes para E26-R67-GPIO9) |
+| E26-R49-SONDA | ABIERTO (físico) | Retirar los hilos de R4911/R4912 (antes, ejecutar la lectura de E26-R66-RESET, que los usa) |
 | R1 / R7 | PARCIAL / BLOQUEADO | Copia externa del respaldo; commits antiguos en `refs/pull/*` de GitHub (requiere al soporte de GitHub) |
 | DOC-SITIO-EN | ABIERTO (decisión del usuario) | Sitio de Pages solo en español y con el hito 3.23; traducir/actualizar o dejarlo así |
 | G2–G8 | ABIERTO | Carril de interfaz, independiente del obturador |
