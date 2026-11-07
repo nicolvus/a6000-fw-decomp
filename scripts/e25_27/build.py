@@ -145,6 +145,30 @@ def _diff_addresses(diff: list[dict]) -> set[int]:
     return {item["address"] for item in diff}
 
 
+# R82 (PREPARADO, NO CONECTADO a apply_patches: no se construye ni se instala): calibración EFCS por tabla, en sitio.
+# Solo reescribe 0x18d6e..0x18e0f (162 B, mismo tamaño); no solapa con PD.PATCHES ni con PD.PROTECTED.
+EFCS_TABLA_RANGO = (0x18D6E, 0x18E10)
+
+
+def efcs_tabla_allowed_addresses() -> set[int]:
+    return set(range(*EFCS_TABLA_RANGO))
+
+
+def efcs_tabla_diff(darwin: bytes) -> tuple[bytes, list[dict[str, Any]]]:
+    """Aplica el parche R82 sobre el Darwin dado (original o 3.30–3.38) y devuelve (imagen, diff por byte)."""
+    sys.path.insert(0, str(ROOT / "scripts" / "e26_r82"))
+    import e26_r82_compactacion as C
+
+    out = C.parchear(darwin)
+    diff = [{"address": PD.BASE + i, "before": f"{a:02x}", "after": f"{b:02x}", "role": "R82 prefijo 0x18d6e con tabla"}
+            for i, (a, b) in enumerate(zip(darwin, out)) if a != b]
+    if not _diff_addresses(diff) <= efcs_tabla_allowed_addresses():
+        raise BuildError("el parche EFCS por tabla cambia bytes no autorizados")
+    if len(out) != len(darwin):
+        raise BuildError("el parche EFCS por tabla cambia el tamaño de darwin_core.bin")
+    return out, diff
+
+
 def apply_patches(avcam: bytes, darwin: bytes) -> dict[str, Any]:
     """Aplica selector, C3-B y la compuerta Darwin sobre los originales exactos."""
     if sha256(avcam) != AVCAM_SHA256:

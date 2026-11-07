@@ -29,3 +29,5 @@ Revisa `scripts/e26_r76/`, [R76](e26-r76-calibracion-propia-efcs.md), [R76b](e26
 * Solo en cámara: la premisa NVRAM → Darwin, si el cargador acepta un tamaño mayor, la curva δ real y el degradado vertical (R80 §2).
 
 REA: abrí una sesión sobre `darwin_core.bin` y la cerré sin resultados (el autoanálisis no terminó a tiempo). Las conclusiones se apoyan en Capstone y en el cálculo a mano.
+
+> **Corrección ([R82](e26-r82-parche-efcs-v3.md)):** el bloqueo de §3 se levanta: el parche (c) se reescribe en sitio dentro del prefijo `0x18d6e..0x18e0f` (vía A, mismo tamaño, sin hueco). Se confirma con un segundo método que no hay hueco de código ≥ 40 B (cadenas ASCII de `printf` = datos vivos). `E26-R81-CPREV` queda aplicado en `e26_r76_calibrar_efcs.py`.

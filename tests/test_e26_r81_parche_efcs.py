@@ -36,4 +36,4 @@ def test_parchear_rechaza_el_hueco_vivo():
     img = DARWIN.read_bytes()
     assert any(r[0] == 0x1516C for r in P.referencias_externas(img, P.FUNC_REAL, P.CAVE_END))
     with pytest.raises(RuntimeError, match="BLOQUEADO"):
-        P.parchear(img)
+        P.parchear_hueco_r76(img)
