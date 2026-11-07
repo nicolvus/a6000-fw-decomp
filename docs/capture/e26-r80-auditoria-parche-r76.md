@@ -49,3 +49,5 @@ R57 §8 midió la pérdida 1,1 → 1,6 ms de arriba abajo, unos ±0,25 ms alrede
 * Que el cargador acepte el `darwin_core` parcheado. El tamaño no cambia y `darwin.sum` se regenera; hay que ampliar `allowed_addresses` en `scripts/e25_27/build.py` con `0x18d7c..0x18d7f` y `0x13d5a..0x13da3`.
 * `S+0x48` compensado también llega al paquete de estado `0x18394` (acciones de registro 09/0f de S, R78). Es solo registro, inocuo según el código visto.
 * La lógica `S+0x94`, que puede anular `S+0x48`, no está modelada.
+
+> **Corrección ([R81](e26-r81-auditoria-opus-parche-efcs.md)):** el hueco `0x13d5a` pertenece a la función viva `0x13d58` (llamada desde `0x1516c`), y las alternativas de R80 §4 también están vivas. El parche está BLOQUEADO hasta encontrar otra ubicación.

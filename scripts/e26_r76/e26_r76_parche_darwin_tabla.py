@@ -31,8 +31,10 @@ HOOK_OLD = bytes.fromhex("fff7 57fe".replace(" ", ""))   # se verifica contra el
 F18A2E, SADDR, GADDR = 0x18A2E, 0x200036D8, 0x20000480
 TAB_OFF = 0x48                      # G+0x48..G+0x7f: 14 palabras de 4 B (13 entradas + terminador); G+0x44..47 lo lee Darwin
 TAB_ADDR, TAB_MAX = GADDR + TAB_OFF, 13
-CAVE_DEFAULT = 0x13D5A              # funcion muerta 0x13d5a..0x13dc0 (102 B; el cave ocupa 54 B)
+CAVE_DEFAULT = 0x13D5A              # R81: NO es una funcion muerta (ver FUNC_REAL)
 CAVE_END = 0x13DC0
+# R81: la funcion empieza en 0x13d58 (`ldr r1,[pc,#0x3fc]` antes del push) y `bl 0x13d58` en 0x1516c la llama.
+FUNC_REAL = 0x13D58
 C_MAX = 2000                        # c fuera de [0, C_MAX] us se ignora (NVRAM corrupta); el bucle no pasa de TAB_MAX entradas
 CAVE_ORIG_SHA256 = "8df02fff317feacba1c26210f1ca161fe2c70d4cc41d47b56777ce41674d1ca2"  # sha256 de 0x13d5a..0x13dc0 original
 
@@ -192,8 +194,14 @@ def bl_thumb(addr: int, target: int) -> bytes:
 
 
 def parchear(img: bytes, cave: int = CAVE_DEFAULT) -> bytes:
-    """Devuelve la imagen (mismo tamano) con el gancho y el cave escrito dentro de la funcion muerta 0x13d5a."""
-    assert len(img) == 157_276
+    """Devuelve la imagen (mismo tamano) con el gancho y el cave escrito en `cave`.
+
+    R81: el hueco por defecto pertenece a la funcion viva 0x13d58; se rechaza cualquier cave con referencias."""
+    if len(img) != 157_276:
+        raise ValueError("darwin_core.bin de tamano inesperado")
+    ext = referencias_externas(img, FUNC_REAL if cave == CAVE_DEFAULT else cave, CAVE_END if cave == CAVE_DEFAULT else cave + 0x60)
+    if ext:
+        raise RuntimeError(f"cave {cave:#x} BLOQUEADO: el rango tiene referencias externas {ext[:3]} (R81)")
     assert img[HOOK - BASE:HOOK - BASE + 4] == bl_thumb(HOOK, F18A2E), "gancho: bytes originales distintos"
     code = ensamblar_cave(cave)
     assert CAVE_DEFAULT <= cave and cave + len(code) <= CAVE_END, "el cave no cabe en la funcion muerta"
@@ -365,8 +373,9 @@ def selftest() -> None:
     assert len(img) == 157276
     # 0) la region del cave es la funcion muerta original y nada fuera de ella la referencia
     assert hashlib.sha256(img[CAVE_DEFAULT - BASE:CAVE_END - BASE]).hexdigest() == CAVE_ORIG_SHA256
-    ext = referencias_externas(img, CAVE_DEFAULT, CAVE_END)
-    assert not ext, f"referencias externas al hueco: {ext}"
+    ext = referencias_externas(img, FUNC_REAL, CAVE_END)
+    if ext:   # R81: la funcion 0x13d58 esta viva -> el parche no se puede generar
+        sys.exit(f"selftest BLOQUEADO: {FUNC_REAL:#x}..{CAVE_END:#x} tiene referencias {ext} (R81)")
     # 0b) lectores de G: solo G+0x40..0x47; la tabla (G+0x48..0x7f) no se lee en Darwin
     offs = lectores_de_G(img)
     print("sumandos al puntero G en las 5 funciones:", sorted(hex(x) for x in offs), "(lecturas de 1..4 B: G+0x40..0x47)")

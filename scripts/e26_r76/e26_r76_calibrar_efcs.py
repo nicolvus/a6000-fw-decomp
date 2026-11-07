@@ -92,8 +92,12 @@ def escribir_tabla_nvram(src: str, dst: str, tab: list[tuple[int, int]]) -> str:
     buf = io.BytesIO(raw)
     bf = BackupFile(buf)
     g = bytearray(bf.getProperty(0x1850000).data)
-    assert len(g) == 128 and not any(g[P.TAB_OFF:]), "G+0x48.. no esta a cero: abortar"
-    g[P.TAB_OFF:] = P.tabla_bytes(tab)
+    if len(g) != 128 or any(g[P.TAB_OFF:]):     # R81: no assert (se omite con python -O)
+        raise SystemExit("G+0x48.. no esta a cero o G no mide 128 B: abortar")
+    tb = P.tabla_bytes(tab)
+    if len(tb) != 128 - P.TAB_OFF or len(tab) > P.TAB_MAX or any(not 0 <= c <= P.C_MAX for _, c in tab):
+        raise SystemExit("tabla fuera de formato (entradas > 13 o c fuera de [0, C_MAX]): abortar")
+    g[P.TAB_OFF:] = tb
     bf.setProperty(0x1850000, bytes(g))
     bf.updateChecksum()
     Path(dst).write_bytes(buf.getvalue())

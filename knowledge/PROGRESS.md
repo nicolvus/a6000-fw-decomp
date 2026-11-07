@@ -551,3 +551,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 07-11-2026: R77 — preparación, P4D y orden temporal (estático): P4D ← 1 solo tras el armado con EFCS, retardos fijos sin T; test `test_e26_r77_preparacion.py`.
 - 07-11-2026: R78 — límites de R77 cerrados (semántica del intérprete, acciones 09/0a/13/14 sobre la máquina S, alcance de `0x1fee2`); test `test_e26_r78_limites_r77.py`.
 - 07-11-2026: R79 — restos de R78 cerrados (handlers de tabla `0x295c4`/`0x25b70`, acciones 04–06/`0x2f` de S, reejecución de S); test `test_e26_r79_restos_r78.py`.
+- 07-11-2026: R81 — auditoría del parche EFCS: el cave `0x13d5a` está en la función viva `0x13d58`; parche bloqueado; test `test_e26_r81_parche_efcs.py`.

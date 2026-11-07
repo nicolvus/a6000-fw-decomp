@@ -87,3 +87,5 @@ Escala 1/3 EV (T → rama parcheada / original; `S+0x48 = T + c − 3407`):
 3. Que el cargador FM3 admita `darwin_core` más largo (por eso se evita) y que la función `0x13d5a` esté realmente muerta en ejecución (estático: 0 referencias).
 4. Que la AE no use Tv fuera de la escala y que `0x20544` se comporte como supone R74; la curva δ(B−A).
 5. Paquete: seguir el flujo de `scripts/e25_27/build.py` (`PD.apply_bytes`/`allowed_addresses` deberían ampliarse con `0x18d7c..0x18d7f` y `0x13d5a..0x13d8f`; `darwin.sum` con CRC-32 y tamaño `0x2665c` nuevos vía `sums.update`; tamaño de imagen y de miembro del tar intactos).
+
+> **Corrección ([R81](e26-r81-auditoria-opus-parche-efcs.md)):** el hueco `0x13d5a` pertenece a la función viva `0x13d58` (llamada desde `0x1516c`), y las alternativas de R80 §4 también están vivas. El parche está BLOQUEADO hasta encontrar otra ubicación.
