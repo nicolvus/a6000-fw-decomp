@@ -11,6 +11,8 @@ conversor 0x99b004 y su envío OSAL. El receptor y el control físico siguen
 pendientes. El siguiente experimento descrito al final pertenece a la pasada
 histórica E009; para continuar, usar los pendientes de E012.
 
+> **Corrección 07-11-2026 ([G09](gui/g09-silent-a6300-menu.md) §3):** en la A6000 las propiedades de `cmnViewSettingNodeRootSilentShutter` son de **SteadyShot** (etiqueta `0xf199`, ProcessId `0x26`); no es un menú de obturador silencioso. La estructura y el constructor de E007 siguen siendo correctos; la interpretación «Silent» no.
+
 ## E007: nodo de configuración construido
 
 - Estado: [VERIFICADO] estructura y constructor; soporte de captura [NO VERIFICADO].

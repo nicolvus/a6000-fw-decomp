@@ -48,3 +48,18 @@ def test_busqueda_encuentra_creative_style():
     _, _, recs = uxc_strings.parse(STR.read_bytes())
     found = dict(menu_tables.runs(VIEW2.read_bytes(), recs))
     assert found[0x4B4640] >= 13  # 0x4cc640 en Ghidra (+0x10000) → 0x4bc640 vaddr → 0x4b4640 fichero
+
+
+A6000_CAUTION = APP / "lib/CautionConfig.so"
+
+
+@pytest.mark.skipif(not A6000_CAUTION.exists(), reason="CautionConfig.so no disponible")
+def test_nodo_silentshutter_a6000_es_steadyshot_y_efcs_tiene_processid():
+    sys.path.insert(0, str(ROOT / "scripts/gui"))
+    import setting_nodes
+
+    _, _, recs = uxc_strings.parse(STR.read_bytes())
+    nodes = dict(setting_nodes.property_lists(A6000_CAUTION, r"^(SilentShutterRoot|CustomFrontCurtainShutterRoot)$"))
+    silent = {p: v for p, _, v in nodes["SilentShutterRoot"]}
+    assert silent[0xE] == 0x26 and "SteadyShot" in recs[silent[0] & 0xFFFF]
+    assert {p: v for p, _, v in nodes["CustomFrontCurtainShutterRoot"]}[0xE] == 0x46

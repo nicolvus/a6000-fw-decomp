@@ -114,6 +114,7 @@ Evidencia y detalle: [G01 — arquitectura](g01-arquitectura.md).
 | [g01-arquitectura.md](g01-arquitectura.md) | Reconocimiento: inventario, capas de símbolos, arranque, carga de vistas, compositor, tabla PLT, límites |
 | [g03-compositor.md](g03-compositor.md) | Pila de dibujo (`GRM_*`, `DMP2D`, `Ts*`), rutina de presentación y mapa de campos; cadenas muertas de `WindowServer` |
 | [g04-menus-y-recursos.md](g04-menus-y-recursos.md) | G02 parcial (textos `.uxc`, colores) y G04 parcial (ítem de menú, tabla Creative Style) |
+| [g09-silent-a6300-menu.md](g09-silent-a6300-menu.md) | Ajuste Silent/Shutter Type del A6300: 4 capas y réplica en la A6000 |
 | G02 (pendiente) | Resto de `.uxc`/`.uxb`/`.xdb` |
 | G04 (pendiente) | Estructuras de menú |
 | G08 (pendiente) | Mecanismo de modificación y reversión |
