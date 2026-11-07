@@ -62,9 +62,9 @@ Evidencia y detalle: [G01 — arquitectura](g01-arquitectura.md).
 | ID | Tarea | Estado | Entregable / criterio de cierre |
 |---|---|---|---|
 | G1 | Reconocimiento: inventario, capas, arranque, dependencias, PLT | **CERRADO** | [G01](g01-arquitectura.md), `scripts/gui/{inventory,elf_scan}.py`, `analysis/gui/g01-inventory.json`, `tests/test_gui_elf_scan.py` |
-| G2 | Formato de contenedor `.uxc`/`.uxb`/`.xdb` (cabecera, tabla, *payload*, codificación de texto) | ABIERTO | Parser reproducible + editor de ida/vuelta sobre un `.uxc` de prueba; cerrar la codificación de `string_<idioma>.uxc` |
+| G2 | Formato de contenedor `.uxc`/`.uxb`/`.xdb` (cabecera, tabla, *payload*, codificación de texto) | PARCIAL (textos hechos) | Parser reproducible + editor de ida/vuelta sobre un `.uxc` de prueba; cerrar la codificación de `string_<idioma>.uxc` |
 | G3 | Compositor: capa `GRM_fbrm*`/`GRM_gperm*`/`DMP2D`, rutina de presentación, `WindowServer`/`ViewSystem`, `/dev/fb0`, regiones sucias | **PARCIAL**: capa de dibujo y rutina de presentación localizadas; falta el invocador | Cadena verificada desde un bucle de la aplicación hasta `GRM_fbrmUpdateYUV`, con el punto de enganche estable |
-| G4 | Menús: estructuras `CmnViewMenuData`/`CmnViewMenuItemStruct`, `cmn_menuTableUtil`, `LayoutMaster_Menu.uxc` | ABIERTO | Volcado verificable de un menú real y su correspondencia con las entradas visibles |
+| G4 | Menús: estructuras `CmnViewMenuData`/`CmnViewMenuItemStruct`, `cmn_menuTableUtil`, `LayoutMaster_Menu.uxc` | PARCIAL (ítem verificado) | Volcado verificable de un menú real y su correspondencia con las entradas visibles |
 | G5 | Texto y fuentes: `.ltt`, `registerFontFaceFile`, `TextSprite::drawText/setString/setFont` | ABIERTO | Ruta de una cadena desde el recurso hasta el píxel, con un texto cambiado y verificado |
 | G6 | Entrada: `InputService`, `GestureAnalyzer`, mapeo de teclas/rueda/dial | ABIERTO | Correspondencia evento físico → acción, con una acción alterada de forma reversible |
 | G7 | Ajustes: cómo un ajuste de menú llega al *middleware* y de ahí al comportamiento | ABIERTO | Un ajuste nuevo visible en pantalla y leído por el software de negocio |
@@ -113,7 +113,8 @@ Evidencia y detalle: [G01 — arquitectura](g01-arquitectura.md).
 |---|---|
 | [g01-arquitectura.md](g01-arquitectura.md) | Reconocimiento: inventario, capas de símbolos, arranque, carga de vistas, compositor, tabla PLT, límites |
 | [g03-compositor.md](g03-compositor.md) | Pila de dibujo (`GRM_*`, `DMP2D`, `Ts*`), rutina de presentación y mapa de campos; cadenas muertas de `WindowServer` |
-| G02 (pendiente) | Formato `.uxc`/`.uxb`/`.xdb` |
+| [g04-menus-y-recursos.md](g04-menus-y-recursos.md) | G02 parcial (textos `.uxc`, colores) y G04 parcial (ítem de menú, tabla Creative Style) |
+| G02 (pendiente) | Resto de `.uxc`/`.uxb`/`.xdb` |
 | G04 (pendiente) | Estructuras de menú |
 | G08 (pendiente) | Mecanismo de modificación y reversión |
 
