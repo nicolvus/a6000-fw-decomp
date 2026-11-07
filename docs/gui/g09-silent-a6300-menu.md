@@ -46,8 +46,17 @@ Principio: **un selector nuevo e independiente del EFCS** (el A6300 también los
 
 Alternativa mínima (sin menú nuevo): tercer estado en el selector EFCS — ya valorada y **no segura** en E25-24.
 
-## 5. Límites / siguiente
+## 5. Hallazgos adicionales (misma fecha)
 
-- **NO_VERIFICADO**: qué tabla de página incluye cada elemento (G4) y cómo se conecta ProcessId → elemento (vtables de `viewUnified2` del A6300 sin resolver: REA no enlaza la relocación del vptr y las funciones salen sin símbolo; se dejó para G4/G7). El significado de las props `0xb/0xc/0x11/0x14`.
+- **Capa de mensajes (`libObj.so`, VERIFICADO por cadenas)**: la A6000 ya trae `PARAMID_SILENT_SHUTTER_MODE{,_ACT,_SET}` y `PARAMID_FRONT_ESHUTTER_MODE{,_ACT,_SET}`; el A6300 añade solo
+  `PARAMID_SHUTTER_TYPE{,_ACT,_SET}` y `ObjCamera::MSGID_SET_SHUTTER_TYPE_CMD`. Es decir, el camino Silent de capa 3 existe en la A6000; ShutterType sería el único añadido de `libObj`.
+- **Las dos compilaciones no son intercambiables**: la A6000 tiene bibliotecas separadas (`cmnFnWrapper`, `wrapper*.so`, `cmn_view_processDataMgr`, `cmn_menuTableUtil`…) que el A6300 funde en `viewUnified*.so`
+  (sin esos `.so`, y con `libInfra*` nuevas). Por eso las capas 1–2 del A6300 no se pueden trasplantar tal cual: hay que reescribirlas al esquema de la A6000, usando el A6300 solo como modelo de datos (propiedades, textos, ids).
+- **Descartado**: el barrido de «listas de ProcessId» por todas las bibliotecas (`/tmp`, no versionado) da ruido (valores pequeños se repiten en tablas ajenas, p. ej. pares `{id, nombre de MSG_PARAM_ID}` de `libScalarDaemon`); **no** se usa como evidencia de dónde se registra un ProcessId.
+- `CameraOnDemandSaver.so`, `arbiter.so` y `CmnViewIroiroConDataMgr.so` contienen listas con el ProcessId EFCS (`0x46`) en la A6000: candidatas a registros de persistencia/exclusión que un ajuste nuevo debería tocar. **NO_VERIFICADO** su función.
+
+## 6. Límites / siguiente
+
+- **NO_VERIFICADO**: qué tabla de página incluye cada elemento (G4) y cómo se conecta ProcessId → elemento (vtables de `viewUnified2` del A6300 sin resolver: REA no enlaza la relocación del vptr, las funciones salen sin símbolo y la vtable hallada por RTTI es de una clase genérica de rango `0x15a/0x15c`; se dejó para G4/G7). El significado de las props `0xb/0xc/0x11/0x14`.
 - Las 4 capas son estáticas; **ninguna** probada en cámara ni parcheada. La capa 4 es el bloqueo real del proyecto (sin handler `0x40e3`).
-- Siguiente: (a) localizar la tabla de la página «Shooting Settings» del A6300 que contiene Shutter Type/Silent Shooting (G4); (b) volcar ProcessId→elemento; (c) diseñar el manejador `0x40e3` con el selector independiente (carril obturador, requiere autorización para cualquier prueba).
+- Siguiente: (0) en la A6000, abrir REA sobre `viewUnified2.so` y seguir los usos de `cmnViewSettingNodeRootCustomFrontCurtainShutter` (la página que lo contiene muestra el esquema real a imitar); (a) localizar la tabla de la página «Shooting Settings» del A6300 que contiene Shutter Type/Silent Shooting (G4); (b) volcar ProcessId→elemento; (c) diseñar el manejador `0x40e3` con el selector independiente (carril obturador, requiere autorización para cualquier prueba).
