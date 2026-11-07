@@ -62,6 +62,7 @@ Versiones íntegras anteriores (nada se borró): [CURRENT-historial-2026-10-31](
 | R74 | **Conclusión final:** causa física. El BIONZ no depende de T en el EFCS oficial y la pérdida sigue a `B − A` de Darwin. Pruebas físicas en E26-R74-FISICO; compensación opcional `0x1850001+0x86` = 1256 (E26-R74-COMP) |
 | R75 | **Verificación de R74 y Darwin:** R74 §2–§3 verificados (14 lecturas de `0x30097+0x15`; clase 3 fija por tres vías). Darwin sin mecanismo que dependa de `B − A` (P4E 5 ms fijo). **Corrige R74 §4:** la pérdida es función de `B − t0` (retardo de B desde el armado), no del flanco A. Pendiente E26-R75-T0 |
 | R77 | **Preparación y P4D:** P4C ← 1 (`0x17cee`) primero; con EFCS y tipo 1/2 el único P4D ← 1 de la captura va tras el armado (`0x190fc → 0x199b8 → 0x1ffce`) con retardo de configuración fijo, sin T; preparación→0x1f solo medible. Corrige R75 §2.3. [R77](../docs/capture/e26-r77-preparacion-p4d-orden-temporal.md) | `test_e26_r77_preparacion.py` |
+| R78 | **Límites de R77 cerrados:** `0x1e4aa/c2/f6` = seguir/retener/ceder; 09/0a/13/14 gobiernan la máquina S `0x28dd4` (sin P4C–P4E ni T; P4B solo por error de vigilancia); `0x1fee2` solo por `0x1984e` (4 raíces). [R78](../docs/capture/e26-r78-cierre-limites-r77.md) | `test_e26_r78_limites_r77.py` |
 
 **Conclusión operativa:** la recuperación física se completó por SWD (R46–R49): se forzó la entrada al actualizador de fábrica sin
 escribir NAND ni memoria (solo un registro de CPU durante el arranque), y el actualizador oficial de Sony instaló el 3.26, que

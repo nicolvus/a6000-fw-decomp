@@ -1,5 +1,7 @@
 # E26-R77 — Preparación, P4D y orden temporal hasta B (07-11-2026, estático)
 
+> **Nota R78 (07-11-2026):** los tres límites de §4 quedan cerrados en [R78](e26-r78-cierre-limites-r77.md). Cambios: (1) las acciones 02/03/04/06 «inertes» con EFCS **avanzan y ceden**, no retienen (fila 6 de §2); (2) 09/0a/13/14 arrancan y esperan la máquina S (`0x28dd4`), sin escrituras en P4C/P4D/P4E y sin retardo con T; P4B solo por la ruta de error de vigilancia a 6 niveles (corrige «≤ 4 niveles»); (3) `0x1fee2` solo se alcanza por `0x1984e`, pero esta tiene 4 raíces (órdenes BIONZ `0x60/0x67` y dos handlers de tabla), no solo «API de rearme/temporizador».
+
 Cierra lo que [R75](e26-r75-verificacion-r74-y-darwin-b-a.md) §3 dejó sin mirar («cuándo se activa P4D en la preparación») y acota **E26-R75-T0**. Capstone sobre `darwin_core.bin` 3.21 (base `0x4200`). Método de [R70](e26-r70-cierre-pendientes-r65-r69.md) §1 (descriptores y secuencias antes del descriptor) y [R67](e26-r67-eventos-a-b-p4c-p4e.md). Prueba: `tests/test_e26_r77_preparacion.py`. Sin REA ni cámara.
 Etiquetas: **VERIFICADO** (bytes/instrucciones) · **INFERENCIA** · **SOLO MEDIBLE** (con el motivo).
 

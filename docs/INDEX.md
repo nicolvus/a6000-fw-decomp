@@ -390,7 +390,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 6. Otros subsistemas (AF, estabilización, vídeo, audio, lentes, energía, visor, accesorios, módulos de trazas)
 
-189 informes.
+190 informes.
 
 - **—** [E21 — Lecturas sin cámara de los volcados del 20-10-2026](capture/e21-lecturas-backups-2026-10-26.md)
 - **—** [E24-01 — Arranque, modo actualizador y dependencia de Darwin (27-10-2026)](capture/e24-01-arranque-recuperacion.md)
@@ -480,6 +480,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [E26-R76 — Calibración propia de la pérdida EFCS (borrador, 07-11-2026, solo estático)](capture/e26-r76-calibracion-propia-efcs.md)
 - **—** [Verificación estática del parche Darwin R76 (07-11-2026, sin cámara, sin tocar archivos versionados)](capture/e26-r76b-verificacion-parche.md)
 - **—** [E26-R77 — Preparación, P4D y orden temporal hasta B (07-11-2026, estático)](capture/e26-r77-preparacion-p4d-orden-temporal.md)
+- **—** [E26-R78 — Cierre de los límites de R77: intérprete de secuencias, acciones 09/0a/13/14 y alcance de `0x1fee2` (07-11-2026, estático)](capture/e26-r78-cierre-limites-r77.md)
 - **—** [E26-R7B — recuperación pre-Linux: investigación estática](capture/e26-r7b-recuperacion-prelinux.md)
 - **—** [E26-R8 — Sony A6000 BootROM / UART / BOSS / NAND Recovery Investigation](capture/e26-r8-bootrom-uart-boss.md)
 - **—** [E26-R9 — Sony A6000: ejecución desde RAM mediante BootROM/UART](capture/e26-r9-bootrom-ram-execution.md)
