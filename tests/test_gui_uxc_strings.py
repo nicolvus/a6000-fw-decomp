@@ -38,3 +38,13 @@ def test_tabla_creative_style_apunta_a_cadenas_reales():
     w = struct.unpack_from("<10I", d, 0x4B4938 + 0x28)
     assert (w[2], recs[w[3] & 0xFFFF]) == (0x13, "Standard")
     assert recs[w[5] & 0xFFFF].startswith("Standard style")
+
+
+@pytest.mark.skipif(not VIEW2.exists(), reason="viewUnified2.so no disponible")
+def test_busqueda_encuentra_creative_style():
+    sys.path.insert(0, str(ROOT / "scripts/gui"))
+    import menu_tables
+
+    _, _, recs = uxc_strings.parse(STR.read_bytes())
+    found = dict(menu_tables.runs(VIEW2.read_bytes(), recs))
+    assert found[0x4B4640] >= 13  # 0x4cc640 en Ghidra (+0x10000) → 0x4bc640 vaddr → 0x4b4640 fichero

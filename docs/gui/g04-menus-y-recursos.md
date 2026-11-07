@@ -63,9 +63,34 @@ RGBA directos: la modificación de colores es trivial **si** el motor no los cop
 `analysis/rea-independent/run/g1.sock` (`cmn_menuTableUtil.so`, 12 s) y `g2.sock` (`viewUnified2.so`, 263 s en frío). Argumentos de apertura:
 **sin** `"format"` (con `"format":"elf"` el demonio abre en silencio sin binario). Socket con ruta corta y relativa (`AF_UNIX` ≤ 108 B).
 
-## 6. Siguiente
+## 6. Cambio en copia local (nivel 3, VERIFICADO)
 
-1. G8 antes que nada: ¿`/usr` escribible, hay verificación de integridad en el arranque o en el paquete de actualización, y hay vuelta atrás sin UI? (lectura de `boot-and-recovery.md` y del actualizador; luego, con autorización, prueba por `adb`).
-2. G2: parsear `color_cmn`, `style_cmn`, `viewSettingMenu.uxc` (4,9 KB) y `LayoutMaster_Menu.uxc`; confirmar si hay tope de ítems.
-3. G4: volcar todas las tablas de `viewUnified2/4/7` (buscar ítems con cabecera `{ptr, n}`), y localizar la del menú Setup/Shooting.
-4. G7: ruta ajuste → `libMWF/libBizFw` para una opción nueva con efecto real.
+Copia de `nflasha15_unpacked` (ext2, 155 MB) en el *scratchpad*; `string_english.uxc` editado (`0xe126` «Standard» → «Standard (mod)», 220 000 B frente a 219 996) y sustituido con
+`debugfs -w` (`rm` + `write` + modo/uid/gid originales). Resultado: `e2fsck -fn` limpio (754 inodos, 144 652/151 816 bloques), el fichero extraído es idéntico
+al editado y `uxc_strings.py dump` muestra el texto nuevo. **No** se ha reempaquetado en `firmware.tar`/`.dat` ni se ha probado en cámara. El ext2 está casi lleno (7 164 bloques libres): un fichero mucho mayor podría no caber.
+
+## 7. G8 — veredicto offline (sin tocar la cámara)
+
+| Pregunta | Respuesta | Evidencia |
+|---|---|---|
+| ¿Qué es `/usr`? | `/dev/nflasha15 /usr raw 104857600` | `0100_config/mount.conf` |
+| ¿Se escribe en una actualización oficial? | Sí (`nflasha3/5/7/15/16`) | [custom-fw-recovery-and-install](../capture/custom-fw-recovery-and-install.md) |
+| ¿Integridad del paquete? | CRC-32 + tamaño por partición (`part_image.sum`: `nflasha15` = `df198ecd`, `0x050264e1`), y guard CRC + modelo + región + versión; **FDAT cifrado, no firmado** | idem; `part_image.sum` |
+| ¿Hay firma criptográfica de `/usr`? | No se ha encontrado ninguna | NO_VERIFICADO que el arranque no compruebe nada más |
+| ¿Vuelta atrás? | Reinstalar el `.dat` oficial 3.21 (con versión distinta por el guard); `nflasha1` (Updater) no va en el paquete; NAND completa volcada el 20-10-2026 | mismo documento |
+
+Dos rutas: **(A, persistente, riesgo de ladrillo)** reempaquetar `nflasha15` con CRC nuevo y flashear — mismo canal que ya dio el incidente del 3.25;
+**(B, preferible para probar)** por telnet/adb montar un `.uxc` editado **sobre** el original (`mount --bind`, solo RAM): un reinicio lo revierte. B necesita
+confirmar en cámara que `/usr` es montable/legible por telnet y que se puede hacer `mount --bind`; requiere tu autorización (recordatorio: backup NVRAM antes).
+
+## 8. Mapa de tablas de menú (`scripts/gui/menu_tables.py`, 93 carreras en `viewUnified2..8`)
+
+Heurística (carreras de ≥3 ítems; las contiguas se funden, el conteo es cota). Candidatos: **Creative Style/Picture Effect** `viewUnified2` `0x4cc640/0x4cc960` (13 + 78);
+**ISO y menús de disparo** `viewUnified4` `0x1c0f0c` (ISO, 64), `0x1c1e04` (166, «Exposure Comp.»), `0x1c3840` (WB, 138), `0x1ca124` (134); **Setup/fecha**
+`viewUnified6` `0x7218c/0x72344` («Date/Time»), `0x724fc` (327); disparo `viewUnified7` `0x6adb0`, `0x6bf00`. Lista completa: ejecutar el script.
+
+## 9. Siguiente
+
+1. Prueba B en cámara (con autorización): `mount` de `/usr`, `bind` de `string_english.uxc` modificado, reinicio y reversión. Cierra G8/G5 nivel 4–6 para textos.
+2. Colores: parsear `color_cmn`/`style_cmn`, probar por la misma vía B.
+3. Añadir ítem: elegir tabla pequeña (p. ej. `0x4b166c` «Lock-on AF» n=4), ampliar en una cueva del `.so`, y trazar G7.
