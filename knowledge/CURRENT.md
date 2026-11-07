@@ -1,6 +1,6 @@
 # Estado actual — léeme primero
 
-Contexto operativo mínimo para agentes. Última revisión: **03-11-2026** (E26 R49: cámara recuperada en el 3.26).
+Contexto operativo mínimo para agentes. Última revisión: **07-11-2026** (E26 R65: rama EFCS de Darwin cerrada en estático).
 No es historial ni fuente de verdad de los pendientes: ver [Responsabilidades](#responsabilidades-documentales).
 Versiones íntegras anteriores (nada se borró): [CURRENT-historial-2026-10-31](history/CURRENT-historial-2026-10-31.md)
 (bloques E26 R5–R35 y E25 completos) y [CURRENT-historial-2026-10-26](history/CURRENT-historial-2026-10-26.md) (S59–S627).
@@ -10,7 +10,7 @@ Versiones íntegras anteriores (nada se borró): [CURRENT-historial-2026-10-31](
 | Aspecto | Estado | Fuente |
 |---|---|---|
 | **Cámara** | **Recuperada (03-11-2026):** arranca normal y reporta firmware **3.26**. Se bloqueó tras instalar el 3.25 integrado (−302 de Loader3); se accedió por SWD (R46/R47), se confirmó la causa en la propia cámara y se forzó la entrada al actualizador de fábrica sin escribir NAND (R48); el actualizador oficial de Sony instaló el 3.26 y restauró `nflasha3` | [R49](../docs/capture/e26-r49-cierre-recuperacion-326.md) |
-| **Prioridad** | Cerrada la recuperación física. Pendiente: retirar la sonda SWD y revisar si queda algo del obturador electrónico por retomar | [PENDIENTES § E26](../docs/PENDIENTES.md) |
+| **Prioridad** | Obturador electrónico funcionando desde el 3.30 (R54). Abierto: **EFCS activado pierde ≈1,27 ms y sale negro desde 1/1000, también con el firmware de Sony** (R57 §5/§8). R65: Darwin hace `S+0x48 = T − u16[G+0x42]` con EFCS activado; valor de G sin localizar (E26-R65-G42); prueba propuesta `0x30102+0x8a` (E26-R65-8A) | [R65](../docs/capture/e26-r65-darwin-efcs-on-resta-g42.md), [PENDIENTES § E26](../docs/PENDIENTES.md) |
 | Objetivo de recuperación | Una sola partición, `nflasha3` (CRC releída por el actualizador = imagen 3.25); copia válida `dev_nflasha3.bin` (20-10-2026). Falta la vía de escritura | [R30](../docs/capture/e26-r30-updater-done-boundary.md) |
 | Hito del obturador | **3.23 (Darwin tipo 0 + B1a, 2 bytes)** instalado en T040 (27-10-2026): el usuario confirmó que disparaba en silencio y sin error. Capturas de T042–T044 versionadas el 31-10-2026 | [E25](../docs/capture/e25-desactivacion-mecanica.md), [registro](../docs/capture/registro-pruebas-camara.md) |
 | Firmware 3.25 | Selector EFCS/Electronic + C3-B + Darwin condicionado, construido y verificado **offline** (E25-24b…E25-29); es el que se instaló | [E25-27](../docs/capture/e25-27-construccion-firmware-integrado.md) |
@@ -49,6 +49,8 @@ Versiones íntegras anteriores (nada se borró): [CURRENT-historial-2026-10-31](
 | R47 | Primer contacto SWD real: DPIDR/APs leídos, RAM volcada, `halt`+registros confirman −302 en registros; cadena de puntos de parada hasta el arranque 2 confirma físicamente que P2 (`CFG_E:Load file`) falla al cargar `\sabin\idt_cam.bin` de `nflasha3` (§15) | [R47](../docs/capture/e26-r47-primer-contacto-swd-lectura-ram.md) |
 | R48 | Plan de entrada al actualizador sin escribir NAND (forzar `r0=0` en `chk updater` por SWD); P0/P1 preparados; primer intento de instalación del 3.26 cortado al 45 % (`0x1063`, NG de Darwin) | [R48](../docs/capture/e26-r48-plan-recuperacion-actualizador-swd.md) |
 | R49 | **Cierre:** script corregido para el arranque único real; P1 ejecutado con éxito, reintento de instalación completo (`CMD_COMPLETE`). **Cámara recuperada, firmware 3.26 confirmado** | [R49](../docs/capture/e26-r49-cierre-recuperacion-326.md) |
+| R50–R64 | Paquetes 3.27–3.38; obturador electrónico funcionando desde el 3.30 (envío en línea de `pkt[0x0e]`); EFCS activado negro desde 1/1000 incluso en el 3.37 de Sony; NVRAM, NAND y Darwin descartados como causa; marca EFCS `pkt[1]` 0x02/0x40 | [R54](../docs/capture/e26-r54-paquete-330-envio-pkt0e.md), [R57](../docs/capture/e26-r57-paquete-336-darwin-eq1.md), [R58](../docs/capture/e26-r58-auditoria-nvram-nand-calibracion.md), [R63](../docs/capture/e26-r63-swd-efcs-on-off.md), [R64](../docs/capture/e26-r64-darwin-marca-efcs.md) |
+| R65 | `t` = 0 al arrancar (decisión de cortina correcta); tiempos de Darwin en µs; con EFCS activado `S+0x48 = T − u16[G+0x42]` y cierre con `B+0x8a`; si `S+0x48 < −150` la segunda cortina sale de inmediato → explica la pérdida constante y el negro | [R65](../docs/capture/e26-r65-darwin-efcs-on-resta-g42.md) |
 
 **Conclusión operativa:** la recuperación física se completó por SWD (R46–R49): se forzó la entrada al actualizador de fábrica sin
 escribir NAND ni memoria (solo un registro de CPU durante el arranque), y el actualizador oficial de Sony instaló el 3.26, que

@@ -390,7 +390,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 6. Otros subsistemas (AF, estabilización, vídeo, audio, lentes, energía, visor, accesorios, módulos de trazas)
 
-173 informes.
+176 informes.
 
 - **—** [E21 — Lecturas sin cámara de los volcados del 20-10-2026](capture/e21-lecturas-backups-2026-10-26.md)
 - **—** [E24-01 — Arranque, modo actualizador y dependencia de Darwin (27-10-2026)](capture/e24-01-arranque-recuperacion.md)
@@ -463,6 +463,9 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [E26-R60 — Compensación EFCS: prueba en RAM (EJECUTADA; sin efecto medible a 1/1000)](capture/e26-r60-compensacion-efcs-prueba.md)
 - **—** [E26-R61 — Darwin: duración de la espera de la segunda cortina y su corrección por unidad (BK4 `0x30102`)](capture/e26-r61-darwin-retardo-cortina-bk4.md)
 - **—** [E26-R62 — Auditoría de datos estáticos y volcados del fallo EFCS (05-11-2026)](capture/e26-r62-auditoria-datos-estaticos-efcs.md)
+- **—** [E26-R63 — SWD del BIONZ con EFCS activado y desactivado; serie 1/500–1/125 (05-11-2026)](capture/e26-r63-swd-efcs-on-off.md)
+- **—** [E26-R64 — Qué hace Darwin con la marca EFCS `pkt[1]` (05-11-2026, estático)](capture/e26-r64-darwin-marca-efcs.md)
+- **—** [E26-R65 — Por qué EFCS activado pierde ≈1,27 ms y sale negro desde 1/1000: la rama EFCS de Darwin (07-11-2026, estático)](capture/e26-r65-darwin-efcs-on-resta-g42.md)
 - **—** [E26-RECOVERY R7 — informe final de ingeniería inversa exhaustiva](capture/e26-r7-recuperacion-estatica.md)
 - **—** [E26-R7B — recuperación pre-Linux: investigación estática](capture/e26-r7b-recuperacion-prelinux.md)
 - **—** [E26-R8 — Sony A6000 BootROM / UART / BOSS / NAND Recovery Investigation](capture/e26-r8-bootrom-uart-boss.md)
