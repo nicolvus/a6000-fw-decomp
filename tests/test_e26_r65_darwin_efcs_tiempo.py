@@ -29,7 +29,7 @@ def _call(addr: int, r0: int, ram: dict[int, bytes]) -> int:
     return struct.unpack("<i", struct.pack("<I", mu.reg_read(UC_ARM_REG_R0)))[0]
 
 
-def _s48(t_us: int, s31: int, s60: int = 0, g40: int = 50, g42: int = 1270) -> int:
+def _s48(t_us: int, s31: int, s60: int = 0, g40: int = -435, g42: int = 3407) -> int:
     return _call(0x18A2E, t_us, {S + 0x31: bytes([s31]), S + 0x60: bytes([s60]),
                                  G + 0x40: struct.pack("<hH", g40, g42)})
 
@@ -42,8 +42,8 @@ def test_tv_a_microsegundos():
 
 @needs
 def test_efcs_on_resta_g42_y_off_suma_g40():
-    assert _s48(1000, 0x02) == 1000 - 1270              # EFCS on (t = 0): T − u16[G+0x42]
-    assert _s48(1000, 0x40) == 1000 + 50                # EFCS off: T + s16[G+0x40]
+    assert _s48(1000, 0x02) == 1000 - 3407              # EFCS on (t = 0): T − u16[G+0x42]
+    assert _s48(1000, 0x40) == 1000 - 435                # EFCS off: T + s16[G+0x40]
     assert _s48(1000, 0x02, s60=0x02) == 1000           # S+0x60 bit 1 anula la resta
     assert _s48(1000, 0x40, s60=0x01) == 1000           # S+0x60 bit 0 anula la suma
 

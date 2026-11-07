@@ -6,6 +6,8 @@ Prueba: `tests/test_e26_r65_darwin_efcs_tiempo.py` (emula `0x18a2e` y `0x19a12`)
 
 Etiquetas: **VERIFICADO** (instrucciones/emulación) · **INFERENCIA**.
 
+> **Corregido por [R66](e26-r66-bloques-darwin-en-nvram-1850000.md):** G es la propiedad NVRAM `0x1850000` (`G+0x42 = 3407`) y B es `0x1850001`, no BK4 `0x30102`. Las §4 (palanca `0x30102+0x8a`) y §5 («G no está en la NVRAM») quedan superadas; §1–3 siguen vigentes.
+
 ## 1. El tipo de mecanismo `t` arranca en 0 (VERIFICADO; cierra la duda de R64 §5)
 
 * Tabla de carga dispersa `0x2a734`: `0x2a764 → 0x20002a00` (0x4d0 B, descompresión `0x4438`) y **`0x20002ed0`, 0xf8c B, puesta a cero `0x4494`** (`stmhs r1!, {r3–r6}` con ceros). `t = [0x20003cd8+0x20] = 0x20003cf8` cae dentro: vale **0 al arrancar**.

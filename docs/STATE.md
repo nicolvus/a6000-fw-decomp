@@ -122,6 +122,7 @@ La conclusión vigente va primero; el antecedente conserva su informe y se seña
 
 | Tema | Conclusión vigente | Rectifica | Fuente |
 |---|---|---|---|
+| Bloques de ajuste de Darwin (E26-R66) | B (`0x20000300`) = propiedad NVRAM `0x1850001` y G (`0x20000480`) = `0x1850000`, enviados por la tabla BIONZ `0x43fe8c38`; **BK4 `0x30102` no llega a Darwin**. G/B no han cambiado desde el 20-10. Con EFCS activado Darwin hace `S+0x48 = T − G+0x42 (3407 µs)` | R58 §13, R61, R62 §3–4, R63 §6, R64 §5–6, R65 §4–5 | [R66](capture/e26-r66-bloques-darwin-en-nvram-1850000.md) |
 | Darwin — base ROM | La base es `0x4200`, NO `0`; no reusar punteros de proyectos Ghidra antiguos | proyectos a6000/a6300-darwin | [darwin-shutter-entrypoints](capture/darwin-shutter-entrypoints.md) |
 | SetImageWrited | `0x6108/0x1007`, **no** `0x1009` | sesión 12 | [pool-write-completion](capture/pool-write-completion.md), [S29](capture/s29-writestill-end-to-end.md) |
 | Recuperación por USB | Depende también de que `darwin_core` encienda el sistema, no solo de `nflasha1` y `ud_darwin_firmup`; la entrada al actualizador por USB pasa por el sistema normal (`up.sh user`), no por botón | custom-fw-recovery (punto 3), darwin-via-actualizacion (riesgo 4) | [E24-01](capture/e24-01-arranque-recuperacion.md) |
