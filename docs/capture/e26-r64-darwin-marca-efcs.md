@@ -62,3 +62,20 @@ Prueba que lo decide (NVRAM, reversible; cada variante con pares on/off **en la 
 * Base con 334 (`20261105-r64-fotos/base334`, `DSC03563–66`): 1/500 on/off **0,353** (franjas 0,44 → 0,13); 1/1000 negro.
 * **Estado actual de la cámara: variante `+0x88` = 834 escrita** (`20261105-r64-post-var088`, SHA-256 `727e41ff…`). Revertir con `20261105-r64-tras-bateria-334/backup_flash.bin` y reiniciar con la batería fuera.
 * Las fotos «(1)» entregadas para la variante son **copias idénticas** de las de la base (mismo SHA-256): falta la serie real con 834, y después `+0x8a`.
+
+### Resultado con `+0x88` = 834 (MEDIDO, misma escena; fotos `DSC03564 (1)`, `03565 (1)`, `03566 (1)`, `03567`)
+
+Las fotos «(1)» de antes eran copias de la base; las reales son las de esta tabla. Copias en `20261105-r64-fotos/var088-real/` (la carpeta `var088/` contiene por error copias de la base).
+
+| | 334 (base) | 834 | Cambio | Equivale a |
+|---|---|---|---|---|
+| Off 1/500 (media) | 135,1 | 146,4 | +8 % | ≈ +0,17 ms |
+| Off 1/1000 | 64,0 | 74,4 | +16 % | ≈ +0,16 ms |
+| On 1/500 | 47,7 | 57,0 | +20 % | ≈ +0,14 ms (a la tasa de off) |
+| On 1/1000 | negro | negro | — | — |
+| on/off 1/500 | 0,353 | 0,389 | | |
+
+* **Los dos modos ganan casi lo mismo en tiempo absoluto (≈0,15 ms), no 0,5 ms**, y 1/1000 con EFCS sigue negro. Tiende al resultado A (`+0x88` actúa en los dos modos), pero con un efecto 3 veces menor que el valor escrito. No hay una referencia independiente de la luz, así que una deriva de la escena del 8–16 % no está descartada.
+* **No reproduce R61** (EFCS activado ×3 a 1/1000). Aquel resultado comparaba con una base de otra serie y no es fiable.
+* Unidad de `+0x88`: si el efecto es real, ≈0,3 de lo escrito. Puede no estar en µs (temporizador `0x93e6`, unidad sin determinar).
+* Estado: la cámara **sigue con 834**. Pendiente: variante `+0x8a` con la misma serie, y restaurar 334 con reinicio sacando la batería.

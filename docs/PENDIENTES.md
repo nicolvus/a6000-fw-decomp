@@ -481,3 +481,4 @@ Carril separado: no reutiliza ni modifica conclusiones de captura/sensor. Índic
 | 05-11-2026 | **R63 §6:** prueba 8 (`0x30102+0xc6` +100 µs) sin efecto; revertida. |
 | 05-11-2026 | **R64:** Darwin trata igual EFCS on/off en los lectores de `S+0x31` (tipo 1/2); los tipos 3/4 borran el bit 6. Cierra E26-R63-BIT con límite, abre E26-R64-CORTINA. |
 | 05-11-2026 | **R64 §5:** `0x196a2` decide las acciones de cortina delantera; contradicción con R61 y prueba A/B/C propuesta (`+0x88`/`+0x8a` con pares on/off). |
+| 07-11-2026 | **R64 §6:** `+0x88` 334→834: ambos modos ganan ≈0,15 ms, EFCS 1/1000 sigue negro; no reproduce R61. Cámara con 834; falta `+0x8a` y restaurar. |
