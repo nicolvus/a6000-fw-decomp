@@ -61,6 +61,7 @@ Versiones íntegras anteriores (nada se borró): [CURRENT-historial-2026-10-31](
 | R73 | Corrige R72: `0x30087` va a StillInfo+0x2b4 (procesado en Linux), no al sensor. Ganchos de `sl` = variables de depuración del grupo 2. Sin fuente estática por unidad en el BIONZ |
 | R74 | **Conclusión final:** causa física. El BIONZ no depende de T en el EFCS oficial y la pérdida sigue a `B − A` de Darwin. Pruebas físicas en E26-R74-FISICO; compensación opcional `0x1850001+0x86` = 1256 (E26-R74-COMP) |
 | R75 | **Verificación de R74 y Darwin:** R74 §2–§3 verificados (14 lecturas de `0x30097+0x15`; clase 3 fija por tres vías). Darwin sin mecanismo que dependa de `B − A` (P4E 5 ms fijo). **Corrige R74 §4:** la pérdida es función de `B − t0` (retardo de B desde el armado), no del flanco A. Pendiente E26-R75-T0 |
+| R77 | **Preparación y P4D:** P4C ← 1 (`0x17cee`) primero; con EFCS y tipo 1/2 el único P4D ← 1 de la captura va tras el armado (`0x190fc → 0x199b8 → 0x1ffce`) con retardo de configuración fijo, sin T; preparación→0x1f solo medible. Corrige R75 §2.3. [R77](../docs/capture/e26-r77-preparacion-p4d-orden-temporal.md) | `test_e26_r77_preparacion.py` |
 
 **Conclusión operativa:** la recuperación física se completó por SWD (R46–R49): se forzó la entrada al actualizador de fábrica sin
 escribir NAND ni memoria (solo un registro de CPU durante el arranque), y el actualizador oficial de Sony instaló el 3.26, que
