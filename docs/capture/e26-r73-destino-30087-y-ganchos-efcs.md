@@ -1,5 +1,7 @@
 # E26-R73 — `0x30087` no gobierna la temporización del sensor; los ganchos del planificador EFCS son variables de depuración del grupo 2 (07-11-2026, estático, REA)
 
+> **Corregido por [R74](e26-r74-conclusion-final-efcs-negro.md):** §4 no es exacto. En el EFCS oficial (`0x30097+0x15 = 0`) el reinicio no lo gobierna `0x4383fa40`: `sl = record+0x1c`, fijo.
+
 Sigue a [R72](e26-r72-parametros-efcs-bionz-30087-y-config-darwin.md). REA abierto de nuevo con `REA_GHIDRA_STARTUP_TIMEOUT_MS=3600000`, `GHIDRA_MAXMEM=4G` y un vigilante de RSS de 7 GB: listo en 487 s, todas las descompilaciones terminaron, sin presión de memoria (≈ 8,9 GB libres). Llamadas de una en una.
 
 ## 1. Corrección de R72 §1: lectores equivocados

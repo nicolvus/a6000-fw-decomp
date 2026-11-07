@@ -390,7 +390,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 6. Otros subsistemas (AF, estabilización, vídeo, audio, lentes, energía, visor, accesorios, módulos de trazas)
 
-184 informes.
+185 informes.
 
 - **—** [E21 — Lecturas sin cámara de los volcados del 20-10-2026](capture/e21-lecturas-backups-2026-10-26.md)
 - **—** [E24-01 — Arranque, modo actualizador y dependencia de Darwin (27-10-2026)](capture/e24-01-arranque-recuperacion.md)
@@ -475,6 +475,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [E26-R71 — Medida en cámara de los GPIO del BIONZ durante el disparo, con EFCS activado y desactivado (07-11-2026, solo lectura)](capture/e26-r71-medida-gpio-bionz-efcs.md)
 - **—** [E26-R72 — Datos que el EFCS usa y nunca se habían mirado: `0x30087+0xa0..` en el BIONZ y la configuración `[0x20000050]` de Darwin (07-11-2026, estático)](capture/e26-r72-parametros-efcs-bionz-30087-y-config-darwin.md)
 - **—** [E26-R73 — `0x30087` no gobierna la temporización del sensor; los ganchos del planificador EFCS son variables de depuración del grupo 2 (07-11-2026, estático, REA)](capture/e26-r73-destino-30087-y-ganchos-efcs.md)
+- **—** [E26-R74 — Conclusión final: por qué con EFCS activado las fotos a 1/1000 y más rápidas salen negras (07-11-2026, estático)](capture/e26-r74-conclusion-final-efcs-negro.md)
 - **—** [E26-R7B — recuperación pre-Linux: investigación estática](capture/e26-r7b-recuperacion-prelinux.md)
 - **—** [E26-R8 — Sony A6000 BootROM / UART / BOSS / NAND Recovery Investigation](capture/e26-r8-bootrom-uart-boss.md)
 - **—** [E26-R9 — Sony A6000: ejecución desde RAM mediante BootROM/UART](capture/e26-r9-bootrom-ram-execution.md)

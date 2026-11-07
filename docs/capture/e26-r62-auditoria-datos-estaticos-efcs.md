@@ -1,5 +1,7 @@
 # E26-R62 — Auditoría de datos estáticos y volcados del fallo EFCS (05-11-2026)
 
+> **Corregido por [R74](e26-r74-conclusion-final-efcs-negro.md):** el «candidato estático para el umbral» de §2 (`0x4383fa40`) no se ejecuta en el EFCS oficial: con BK4 `0x30097+0x15 = 0`, `sl = record+0x1c` no depende de T. El cambio de régimen sigue a `B − A` de Darwin (R74 §4).
+
 > **Corregido por [R66](e26-r66-bloques-darwin-en-nvram-1850000.md) y [R69](e26-r69-revision-informes-efcs.md):** §3, BK4 `0x30100` **no** es la copia del estado de Darwin (la relectura va a las propiedades `0x1850004/05`; solo 181 de 512 B coinciden): es una tabla del BIONZ que da `pkt[0xa..b]`. §4, `s8[B+0xc6..c8]` = 29/37/35 (no 0) y el término `G+0x42` solo se suma a `ip` con EFCS desactivado. Con EFCS activado se resta de `S+0x48` (R65). §2, el umbral 5–8 ms no viene de Darwin (R66 §3).
 
 Solo lectura: EXIF de las fotos guardadas, 25 volcados BK4, Capstone sobre `darwin_core.bin` 3.21 (base `0x4200`) y `av-cam.bin` 3.21 (base `0x43541000`), REA (sesión `r62`, cerrada). Sin cámara ni escrituras.

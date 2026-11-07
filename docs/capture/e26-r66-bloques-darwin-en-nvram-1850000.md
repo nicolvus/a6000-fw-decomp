@@ -1,5 +1,7 @@
 # E26-R66 — Los bloques de ajuste de Darwin son las propiedades NVRAM `0x1850000/01`; `0x30102` no llega a Darwin (07-11-2026, estático)
 
+> **Precisado por [R74](e26-r74-conclusion-final-efcs-negro.md):** el candidato BIONZ de §3 queda descartado: no se ejecuta en el EFCS oficial. La pérdida sigue a `B − A` (R74 §4).
+
 Continúa [R65](e26-r65-darwin-efcs-on-resta-g42.md). REA sobre `av-cam.bin` 3.21, Capstone sobre `darwin_core.bin` 3.21 y lectura de los 28 `backup_flash.bin` de `analysis/camera-dumps/` (no versionados).
 Prueba: `tests/test_e26_r66_bloques_darwin_nvram.py`.
 
