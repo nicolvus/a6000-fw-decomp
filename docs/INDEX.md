@@ -390,7 +390,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 6. Otros subsistemas (AF, estabilización, vídeo, audio, lentes, energía, visor, accesorios, módulos de trazas)
 
-181 informes.
+182 informes.
 
 - **—** [E21 — Lecturas sin cámara de los volcados del 20-10-2026](capture/e21-lecturas-backups-2026-10-26.md)
 - **—** [E24-01 — Arranque, modo actualizador y dependencia de Darwin (27-10-2026)](capture/e24-01-arranque-recuperacion.md)
@@ -472,6 +472,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [E26-R69 — Revisión de los informes del negro con EFCS activado (R56–R64) y cierre de las inferencias de R65–R68 (07-11-2026, estático)](capture/e26-r69-revision-informes-efcs.md)
 - **—** [E26-RECOVERY R7 — informe final de ingeniería inversa exhaustiva](capture/e26-r7-recuperacion-estatica.md)
 - **—** [E26-R70 — Cierre de los cabos abiertos de R65–R69: subida de P4C, máquina de `ip` y lectores de `G+0x42` (07-11-2026, estático)](capture/e26-r70-cierre-pendientes-r65-r69.md)
+- **—** [E26-R71 — Medida en cámara de los GPIO del BIONZ durante el disparo, con EFCS activado y desactivado (07-11-2026, solo lectura)](capture/e26-r71-medida-gpio-bionz-efcs.md)
 - **—** [E26-R7B — recuperación pre-Linux: investigación estática](capture/e26-r7b-recuperacion-prelinux.md)
 - **—** [E26-R8 — Sony A6000 BootROM / UART / BOSS / NAND Recovery Investigation](capture/e26-r8-bootrom-uart-boss.md)
 - **—** [E26-R9 — Sony A6000: ejecución desde RAM mediante BootROM/UART](capture/e26-r9-bootrom-ram-execution.md)

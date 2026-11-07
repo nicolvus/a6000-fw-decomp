@@ -56,6 +56,7 @@ Versiones íntegras anteriores (nada se borró): [CURRENT-historial-2026-10-31](
 | R68 | Auditoría de R65–R67: corregidos la explicación del negro (R65 §3), `0x30102` en R65, la saturación de B86 y esta tabla global; cuatro afirmaciones rebajadas a INFERENCIA | [R68](../docs/capture/e26-r68-auditoria-r65-r67.md) |
 | R69 | Revisión de R56–R64: notas de corrección en R58/R61/R62/R63/R64 (`0x30102` y `0x30100` no son bloques de Darwin; `t` = 0); B (P4E ← 1) suelta la segunda cortina y la separación A–B no depende de `ip`; B86 descartado | [R69](../docs/capture/e26-r69-revision-informes-efcs.md) |
 | R70 | P4C sube en la preparación (`0x1811a`) y se rearma después (`0x28dc5`, acción 0x14): A siempre genera el flanco en Darwin. `ip` (`0x237cc`) no toca líneas de cortina; `0x182d8` usa `G+0x42` solo en plazos largos. Sin pendientes estáticos del problema EFCS |
+| R71 | Medida SWD de los GPIO del BIONZ (42 disparos): fin de exposición (`b0.8↓`) sigue a B; lectura `b7.21` ≈ 66 ms; a 1/1000 el BIONZ hace lo mismo con EFCS activado y desactivado. P4C sin identificar; siguiente: analizador lógico |
 
 **Conclusión operativa:** la recuperación física se completó por SWD (R46–R49): se forzó la entrada al actualizador de fábrica sin
 escribir NAND ni memoria (solo un registro de CPU durante el arranque), y el actualizador oficial de Sony instaló el 3.26, que
@@ -97,7 +98,7 @@ Trazabilidad completa: [CORRECTIONS](../docs/CORRECTIONS.md) y [STATE § Conclus
 
 | ID | Estado | Qué falta |
 |---|---|---|
-| E26-R66-RESET | ABIERTO (único del problema EFCS; requiere cámara) | La pérdida (≈1,27 ms; negro desde 1/1000) no viene de Darwin. Procedimiento listo (R69 §4): leer por SWD si llega el pulso de P4C (`CA_1ST_CURTAIN_START`) al BIONZ; después, continuidad o analizador lógico |
+| E26-R66-RESET | PARCIAL (R71: medida SWD hecha; P4C sin identificar; falta analizador lógico) | La pérdida (≈1,27 ms; negro desde 1/1000) no viene de Darwin. Procedimiento listo (R69 §4): leer por SWD si llega el pulso de P4C (`CA_1ST_CURTAIN_START`) al BIONZ; después, continuidad o analizador lógico |
 | E25-11 | ABIERTO (consolidado) | Llevar al firmware la corrección ShutMode 0 + `r5` que hoy aplica la app; velocidades > 1/300 y < 1/15; validación en cámara |
 | E26-R49-SONDA | ABIERTO (físico) | Retirar los hilos de R4911/R4912 (antes, ejecutar la lectura de E26-R66-RESET, que los usa) |
 | R1 / R7 | PARCIAL / BLOQUEADO | Copia externa del respaldo; commits antiguos en `refs/pull/*` de GitHub (requiere al soporte de GitHub) |
