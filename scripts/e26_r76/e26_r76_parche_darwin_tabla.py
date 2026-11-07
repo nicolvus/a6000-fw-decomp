@@ -8,12 +8,12 @@ Cambios respecto a v1 (verificacion-r76.md):
   * tramos guarda: ningun T de 230..12000 us (continuo) cae en la ventana intermedia 0x20544.
 
 Gancho: en 0x18d7c, `bl 0x18a2e` (T -> T - G42 con EFCS) pasa a `bl CAVE`. El cave llama a 0x18a2e y,
-solo con EFCS activado (S+0x31 bit 1) y sin la compuerta S+0x60 bit 1, suma c(T) (s16, us) leido de una
-tabla en RAM de Darwin: G+0x44.. (0x200004c4), pares {u16 Tmax, s16 c}, terminada en Tmax = 0.
+solo con EFCS activado ((S+0x31 & 3) != 0) y sin la compuerta S+0x60 bit 1, suma c(T) (s16, us) leido de una
+tabla en RAM de Darwin: G+0x48.. (0x200004c8), pares {u16 Tmax, s16 c}, terminada en Tmax = 0.
 La tabla viene de la NVRAM (propiedad 0x1850000, 128 B, hoy ceros salvo +0x40 y +0x42), asi que
 se puede recalibrar sin reflashear.
 
-Uso:  python e26_r76_parche_darwin_tabla.py selftest      (no toca la camara; requiere keystone, capstone, unicorn)
+Uso:  python e26_r76_parche_darwin_tabla.py selftest      (no toca la camara; requiere keystone-engine, capstone, unicorn)
       python e26_r76_parche_darwin_tabla.py tabla         (imprime la tabla del modelo R74)
 """
 from __future__ import annotations
@@ -24,8 +24,7 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-sys.path.insert(0, str(HERE.parent / "kslib"))  # keystone instalado solo en el scratchpad
-ROOT = Path("/home/nicolas/Documents/a6000/sony-a6000-electronic-shutter")
+ROOT = HERE.parents[1]
 DARWIN = ROOT / "firmware/extracted/fw321/firmware.tar_unpacked/0640_darwin/darwin_core.bin"
 BASE, HOOK = 0x4200, 0x18D7C
 HOOK_OLD = bytes.fromhex("fff7 57fe".replace(" ", ""))   # se verifica contra el binario en selftest
@@ -34,6 +33,7 @@ TAB_OFF = 0x48                      # G+0x48..G+0x7f: 14 palabras de 4 B (13 ent
 TAB_ADDR, TAB_MAX = GADDR + TAB_OFF, 13
 CAVE_DEFAULT = 0x13D5A              # funcion muerta 0x13d5a..0x13dc0 (102 B; el cave ocupa 54 B)
 CAVE_END = 0x13DC0
+C_MAX = 2000                        # c fuera de [0, C_MAX] us se ignora (NVRAM corrupta); el bucle no pasa de TAB_MAX entradas
 CAVE_ORIG_SHA256 = "8df02fff317feacba1c26210f1ca161fe2c70d4cc41d47b56777ce41674d1ca2"  # sha256 de 0x13d5a..0x13dc0 original
 
 # --- modelo de perdida (R74 s4, delta normalizada) en funcion de x = B - A (ms -> us) ----------------
@@ -161,12 +161,19 @@ def ensamblar_cave(cave: int) -> bytes:
         lsls r2, r2, #30
         bmi done
         ldr r1, T_
+        add r3, r1, #{4 * TAB_MAX}
     loop:
+        cmp r1, r3
+        bhs done
         ldrh r2, [r1], #4
         cbz r2, done
         cmp r4, r2
         bhi loop
         ldrsh r2, [r1, #-2]
+        cmp r2, #0
+        blt done
+        cmp.w r2, #{C_MAX}
+        bgt done
         add r0, r0, r2
     done:
         pop {{r4, pc}}
@@ -382,6 +389,12 @@ def selftest() -> None:
         assert emular_18d6e(img, tv, None, efcs=False) == emular_18d6e(pat, tv, tab, efcs=False)
         assert emular_18d6e(img, tv, None, s60=2) == emular_18d6e(pat, tv, tab, s60=2)
         assert emular_18d6e(pat, tv, tab, s31=1) == emular_18d6e(pat, tv, tab, s31=2) == emular_18d6e(pat, tv, tab, s31=3)
+    # 3b) robustez ante NVRAM corrupta: sin terminador o con c fuera de rango el resultado es el original
+    basura = [(0xFFFF, 30000)] * (TAB_MAX + 1)
+    sin_fin = [(1, 500)] * (TAB_MAX + 1)          # ninguna entrada casa y no hay terminador: el bucle debe parar en TAB_MAX
+    for tv in tvs[::4]:
+        assert emular_18d6e(img, tv, None) == emular_18d6e(pat, tv, basura), f"c fuera de rango aplicado tv={tv:#x}"
+        assert emular_18d6e(img, tv, None) == emular_18d6e(pat, tv, sin_fin), f"tabla sin terminador tv={tv:#x}"
     # 4) con tabla: exposicion modelada ~ T en la escala 1/3 EV; antes, perdida ~1,25 ms en las rapidas
     print(f"{'T us':>6} {'B-A orig':>9} {'E orig':>7} | {'B-A nuevo':>9} {'c':>5} {'E nueva':>7}")
     peor = 0.0

@@ -3,7 +3,7 @@
 
 Entrada: dos `report.json` de scripts/camera_raw_exposure.py con las MISMAS velocidades/ISO/escena/luz,
 uno con EFCS activado y otro con EFCS desactivado (referencia mecanica completa = firmware 3.37 oficial).
-Salida: tabla {Tmax, c} para el parche de Darwin (G+0x44, ver e26_r76_parche_darwin_tabla.py) y, como
+Salida: tabla {Tmax, c} para el parche de Darwin (G+0x48, ver e26_r76_parche_darwin_tabla.py) y, como
 alternativa sin parche, el valor unico de G+0x42 / B+0x86.
 
 Uso:  e26_r76_calibrar_efcs.py ajustar ON.json OFF.json [--previo TABLA.json --previo-on ON1.json] [--out TABLA.json]
@@ -92,7 +92,7 @@ def escribir_tabla_nvram(src: str, dst: str, tab: list[tuple[int, int]]) -> str:
     buf = io.BytesIO(raw)
     bf = BackupFile(buf)
     g = bytearray(bf.getProperty(0x1850000).data)
-    assert len(g) == 128 and not any(g[P.TAB_OFF:]), "G+0x44.. no esta a cero: abortar"
+    assert len(g) == 128 and not any(g[P.TAB_OFF:]), "G+0x48.. no esta a cero: abortar"
     g[P.TAB_OFF:] = P.tabla_bytes(tab)
     bf.setProperty(0x1850000, bytes(g))
     bf.updateChecksum()

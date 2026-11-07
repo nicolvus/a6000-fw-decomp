@@ -1,6 +1,6 @@
 # Verificación estática del parche Darwin R76 (07-11-2026, sin cámara, sin tocar archivos versionados)
 
-Entrada: `darwin_core.bin` fw321 (157 276 B, base `0x4200`, fin `0x2a85c`). Salida: `e26_r76_parche_darwin_tabla_v2.py` (autotest pasa: `python e26_r76_parche_darwin_tabla_v2.py selftest`). Etiquetas: VERIFICADO (bytes/emulación), CORREGIDO (v1 estaba mal), CÁMARA (solo se decide en cámara).
+Entrada: `darwin_core.bin` fw321 (157 276 B, base `0x4200`, fin `0x2a85c`). Salida: `e26_r76_parche_darwin_tabla.py` (autotest pasa: `python e26_r76_parche_darwin_tabla.py selftest`). Etiquetas: VERIFICADO (bytes/emulación), CORREGIDO (v1 estaba mal), CÁMARA (solo se decide en cámara).
 
 ## Resumen
 

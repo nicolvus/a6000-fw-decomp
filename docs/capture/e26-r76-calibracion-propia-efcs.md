@@ -179,4 +179,4 @@ Registros: solo r0–r2 y r4 (guardado); `bl 0x18a2e` puede ser llamado desde el
 6. Que ningún lector de G use `G+0x44…0x7f`.
 
 
-> **Verificación ([R76b](e26-r76b-verificacion-parche.md)):** usar `scripts/e26_r76/e26_r76_parche_darwin_tabla_v2.py` — tabla en `G+0x48` (G+0x44..0x47 sí se leen), cave en la función muerta `0x13d5a`, tramos guarda que evitan la rama `0x20544`, compuerta `(S+0x31&3)≠0`.
+> **Verificación ([R76b](e26-r76b-verificacion-parche.md)):** usar `scripts/e26_r76/e26_r76_parche_darwin_tabla.py` — tabla en `G+0x48` (G+0x44..0x47 sí se leen), cave en la función muerta `0x13d5a`, tramos guarda que evitan la rama `0x20544`, compuerta `(S+0x31&3)≠0`.

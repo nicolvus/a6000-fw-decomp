@@ -545,6 +545,7 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 07-11-2026: R71 — medida en cámara (solo lectura) de los GPIO del BIONZ; E26-R66-RESET pasa a PARCIAL.
 - 07-11-2026: R72 — `0x30087` → `record+0x156` en el planificador EFCS; config. de mecanismo de Darwin fuera de `darwin_core`.
 - 07-11-2026: R73 — REA con límite de 1 h: destino de `0x30087` (StillInfo) y ganchos de depuración; E26-R72-30087 cerrado.
+- 07-11-2026: R80 — auditoría del parche R76: scripts reparados, cave con límites y validación, gradiente no corregible desde Darwin.
 - 07-11-2026: R74 — conclusión final del negro con EFCS: causa física; test `test_e26_r74_efcs_bionz.py`.
 - 07-11-2026: R75 — verificación de R74 y de la secuencia A/B de Darwin; la pérdida sigue a `B − t0`, no al flanco A; test `test_e26_r75_verificacion_r74_darwin.py`.
 - 07-11-2026: R77 — preparación, P4D y orden temporal (estático): P4D ← 1 solo tras el armado con EFCS, retardos fijos sin T; test `test_e26_r77_preparacion.py`.
