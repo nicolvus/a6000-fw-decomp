@@ -1,5 +1,7 @@
 # E26-R72 — Datos que el EFCS usa y nunca se habían mirado: `0x30087+0xa0..` en el BIONZ y la configuración `[0x20000050]` de Darwin (07-11-2026, estático)
 
+> **Corregido por [R73](e26-r73-destino-30087-y-ganchos-efcs.md):** en §1, los consumidores `0x4384095c`/`0x4385d874` leen otra estructura. El valor de `0x30087` va a `StillInfo+0x2b4` (procesado de imagen en Linux), no al sensor: no es la palanca del reinicio. Los ganchos son variables de depuración del grupo 2.
+
 Sigue a [R71](e26-r71-medida-gpio-bionz-efcs.md) (fotos a 1/1000 con EFCS activado: **negras, confirmado por el usuario**). El usuario no quiere analizador lógico, así que la búsqueda sigue en estático: Capstone sobre `av-cam.bin` 3.21 (base `0x43541000`) y `darwin_core.bin` 3.21, más los 28 `backup_flash.bin`. REA abrió `av-cam.bin` (901 s), pero `procedure_pseudo_code` falló por `provider_timeout`, así que todo lo que sigue sale de bytes e instrucciones.
 
 ## 1. BIONZ: el planificador EFCS escribe `record+0x156` desde la NVRAM `0x30087` (VERIFICADO)

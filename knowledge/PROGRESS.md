@@ -544,3 +544,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 07-11-2026: R70 — máquinas de secuencias de Darwin; P4C ← 1 en la preparación y en el rearme (A siempre produce flanco); `ip` escribe P4A/P42/P05/P35/P56; lectores de `G+0x42` vía `0x182d8` son plazos de decenas de ms; test `test_e26_r70_secuencias_darwin.py`.
 - 07-11-2026: R71 — medida en cámara (solo lectura) de los GPIO del BIONZ; E26-R66-RESET pasa a PARCIAL.
 - 07-11-2026: R72 — `0x30087` → `record+0x156` en el planificador EFCS; config. de mecanismo de Darwin fuera de `darwin_core`.
+- 07-11-2026: R73 — REA con límite de 1 h: destino de `0x30087` (StillInfo) y ganchos de depuración; E26-R72-30087 cerrado.
