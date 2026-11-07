@@ -55,6 +55,7 @@ Versiones íntegras anteriores (nada se borró): [CURRENT-historial-2026-10-31](
 | R67 | Con EFCS, Darwin baja P4C (`CA_1ST_CURTAIN_START`, flanco hacia BIONZ `SENS_B`/`GPIO_9`) y `T − 3,4 ms` después suelta P4E (`2ND_CURTAIN_MG`); la pérdida está en el retardo flanco→reinicio (BIONZ/sensor) o en la cortina; prueba pasiva E26-R67-GPIO9 | [R67](../docs/capture/e26-r67-eventos-a-b-p4c-p4e.md) |
 | R68 | Auditoría de R65–R67: corregidos la explicación del negro (R65 §3), `0x30102` en R65, la saturación de B86 y esta tabla global; cuatro afirmaciones rebajadas a INFERENCIA | [R68](../docs/capture/e26-r68-auditoria-r65-r67.md) |
 | R69 | Revisión de R56–R64: notas de corrección en R58/R61/R62/R63/R64 (`0x30102` y `0x30100` no son bloques de Darwin; `t` = 0); B (P4E ← 1) suelta la segunda cortina y la separación A–B no depende de `ip`; B86 descartado | [R69](../docs/capture/e26-r69-revision-informes-efcs.md) |
+| R70 | P4C sube en la preparación (`0x1811a`) y se rearma después (`0x28dc5`, acción 0x14): A siempre genera el flanco en Darwin. `ip` (`0x237cc`) no toca líneas de cortina; `0x182d8` usa `G+0x42` solo en plazos largos. Sin pendientes estáticos del problema EFCS |
 
 **Conclusión operativa:** la recuperación física se completó por SWD (R46–R49): se forzó la entrada al actualizador de fábrica sin
 escribir NAND ni memoria (solo un registro de CPU durante el arranque), y el actualizador oficial de Sony instaló el 3.26, que
