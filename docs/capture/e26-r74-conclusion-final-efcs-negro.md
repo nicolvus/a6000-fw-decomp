@@ -1,5 +1,7 @@
 # E26-R74 — Conclusión final: por qué con EFCS activado las fotos a 1/1000 y más rápidas salen negras (07-11-2026, estático)
 
+> **Corregido por [R75](e26-r75-verificacion-r74-y-darwin-b-a.md):** (1) son 14 las lecturas de `0x30097+0x15` (todas lecturas); (2) la clase 3 fija con EFCS tiene tres vías posibles, no solo `cap+0x41c ≠ 1` (§2); (3) la lectura de §4 «transitorio ligado al evento A» no se sostiene: la pérdida es igual de bien función de `B − t0 = máx(B − A, 0)` y no cambia al mover A 2 ms en la rama corta; la variable es el retardo de B desde el armado. La causa física (§1) sigue vigente.
+
 Cierra la investigación de R56–R73. REA (`av-cam.bin` 3.21, Ghidra con 1 h por llamada), Capstone sobre `av-cam.bin` y `darwin_core.bin` 3.21, los 28 `backup_flash.bin` y las medidas de R57, R62 y R71. Sin cámara.
 Prueba: `tests/test_e26_r74_efcs_bionz.py`.
 

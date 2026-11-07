@@ -60,6 +60,7 @@ Versiones íntegras anteriores (nada se borró): [CURRENT-historial-2026-10-31](
 | R72 | NVRAM `0x30087+0xa0..` → `record+0x156` solo con EFCS (90 líneas ≈ 1,37 ms; posible palanca sin código); `[0x20000050]` de Darwin viene del cargador. Pendientes E26-R72-30087 y -DARWIN-CFG |
 | R73 | Corrige R72: `0x30087` va a StillInfo+0x2b4 (procesado en Linux), no al sensor. Ganchos de `sl` = variables de depuración del grupo 2. Sin fuente estática por unidad en el BIONZ |
 | R74 | **Conclusión final:** causa física. El BIONZ no depende de T en el EFCS oficial y la pérdida sigue a `B − A` de Darwin. Pruebas físicas en E26-R74-FISICO; compensación opcional `0x1850001+0x86` = 1256 (E26-R74-COMP) |
+| R75 | **Verificación de R74 y Darwin:** R74 §2–§3 verificados (14 lecturas de `0x30097+0x15`; clase 3 fija por tres vías). Darwin sin mecanismo que dependa de `B − A` (P4E 5 ms fijo). **Corrige R74 §4:** la pérdida es función de `B − t0` (retardo de B desde el armado), no del flanco A. Pendiente E26-R75-T0 |
 
 **Conclusión operativa:** la recuperación física se completó por SWD (R46–R49): se forzó la entrada al actualizador de fábrica sin
 escribir NAND ni memoria (solo un registro de CPU durante el arranque), y el actualizador oficial de Sony instaló el 3.26, que
@@ -101,7 +102,7 @@ Trazabilidad completa: [CORRECTIONS](../docs/CORRECTIONS.md) y [STATE § Conclus
 
 | ID | Estado | Qué falta |
 |---|---|---|
-| E26-R74-FISICO | ABIERTO (R74: causa física; pruebas: sonda, flex CN4900, batería, obturador) | La pérdida (≈1,27 ms; negro desde 1/1000) no viene de Darwin. Procedimiento listo (R69 §4): leer por SWD si llega el pulso de P4C (`CA_1ST_CURTAIN_START`) al BIONZ; después, continuidad o analizador lógico |
+| E26-R74-FISICO | ABIERTO (R74: causa física; pruebas: sonda, flex CN4900, batería, obturador) | La pérdida (≈1,27 ms; negro desde 1/1000) no viene de Darwin. Procedimiento listo (R69 §4): leer por SWD si llega el pulso de P4C (`CA_1ST_CURTAIN_START`) al BIONZ; después, continuidad o analizador lógico | R75: referencia `B − t0`, ver E26-R75-T0.
 | E25-11 | ABIERTO (consolidado) | Llevar al firmware la corrección ShutMode 0 + `r5` que hoy aplica la app; velocidades > 1/300 y < 1/15; validación en cámara |
 | E26-R49-SONDA | ABIERTO (físico) | Retirar los hilos de R4911/R4912 (antes, ejecutar la lectura de E26-R66-RESET, que los usa) |
 | R1 / R7 | PARCIAL / BLOQUEADO | Copia externa del respaldo; commits antiguos en `refs/pull/*` de GitHub (requiere al soporte de GitHub) |
