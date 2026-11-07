@@ -549,3 +549,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 07-11-2026: R75 — verificación de R74 y de la secuencia A/B de Darwin; la pérdida sigue a `B − t0`, no al flanco A; test `test_e26_r75_verificacion_r74_darwin.py`.
 - 07-11-2026: R77 — preparación, P4D y orden temporal (estático): P4D ← 1 solo tras el armado con EFCS, retardos fijos sin T; test `test_e26_r77_preparacion.py`.
 - 07-11-2026: R78 — límites de R77 cerrados (semántica del intérprete, acciones 09/0a/13/14 sobre la máquina S, alcance de `0x1fee2`); test `test_e26_r78_limites_r77.py`.
+- 07-11-2026: R79 — restos de R78 cerrados (handlers de tabla `0x295c4`/`0x25b70`, acciones 04–06/`0x2f` de S, reejecución de S); test `test_e26_r79_restos_r78.py`.

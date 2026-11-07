@@ -1,5 +1,7 @@
 # E26-R78 — Cierre de los límites de R77: intérprete de secuencias, acciones 09/0a/13/14 y alcance de `0x1fee2` (07-11-2026, estático)
 
+> **Nota R79 (07-11-2026):** los restos de §2 y §3 quedan cerrados en [R79](e26-r79-cierre-restos-r78.md). Cambios: (1) `0x295c4` no es de la tabla `0x294f8`: es la **entrada `0x16` de la tabla de eventos `0x29514`** (despachador `0x1ba00`, cola 2 de la tarea `0x7de2`), publicada por `0x1bc12` tras un paquete `0x31` del host; `0x25b70` es una **lista de 22 pasos de arranque**; ambos fuera de la captura; (2) la acción `0x2f` es `0x17881` y la `0x30` `0x178af` (no «`0x17880/0x178af`» juntas); 04–06 de S avanzan siempre (ayudantes stub), `0x2f` espera una bandera externa, ninguna lee T ni escribe P4C–P4E; (3) quién reejecuta S queda fuera de la imagen (IRQ del temporizador 7, vector en el cargador). La conclusión de R74/R75 no cambia.
+
 Cierra los tres límites que dejó [R77](e26-r77-preparacion-p4d-orden-temporal.md) (§2 fila 7, §4 «Límites» y §1 «arranque de esos tres»). Capstone y Unicorn sobre `darwin_core.bin` 3.21 (base `0x4200`). Método de [R70](e26-r70-cierre-pendientes-r65-r69.md) §1. Prueba: `tests/test_e26_r78_limites_r77.py`. Sin REA ni cámara.
 Etiquetas: **VERIFICADO** (bytes/instrucciones/emulación) · **CORREGIDO** · **INFERENCIA** · **SOLO MEDIBLE**.
 
