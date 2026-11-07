@@ -553,3 +553,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 07-11-2026: R79 — restos de R78 cerrados (handlers de tabla `0x295c4`/`0x25b70`, acciones 04–06/`0x2f` de S, reejecución de S); test `test_e26_r79_restos_r78.py`.
 - 07-11-2026: R81 — auditoría del parche EFCS: el cave `0x13d5a` está en la función viva `0x13d58`; parche bloqueado; test `test_e26_r81_parche_efcs.py`.
 - 07-11-2026: R82 — parche EFCS v3: reescritura en sitio de `0x18d6e..0x18e0f` con la tabla integrada (vía A, verificada con 3 métodos), volcados NVRAM listos (D), evidencia de tamaño del core (C), sin hueco ≥ 40 B (B); test `test_e26_r82_parche_efcs_v3.py`.
+- 07-11-2026: R83 — informe final de la investigación EFCS (R65–R82).
