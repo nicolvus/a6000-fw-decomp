@@ -24,3 +24,11 @@ def test_eventos_a_y_b():
     assert "bl #0x16e68" in _dis(0x202FC, 4)                             # 0x202f2(0) llama a 0x16e68
     assert _dis(0x20D0E, 3) == ["movs r1, #1", "mov.w r0, #0x238", "bl #0x51c0"]  # B: P4E <- 1
     assert "bl #0x20d00" in _dis(0x2042E, 12)                            # 0x2041e(0) llama a 0x20d00
+
+
+@pytest.mark.skipif(not DARWIN.is_file(), reason="darwin_core.bin original ausente")
+def test_retardo_de_a_se_satura_a_1():
+    """R68: en la rama S+0x48 < −150, si S+0x48 + B86 >= 0 el retardo de A vale 1 µs (limita E26-R66-B86)."""
+    seq = _dis(0x18E6A, 7)
+    assert seq[0] == "adds r0, r1, r0"
+    assert seq[4:7] == ["bmi #0x18e7c", "mov.w r0, #-1", "rsbs r0, r0, #0"]

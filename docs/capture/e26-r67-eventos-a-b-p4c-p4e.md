@@ -12,7 +12,7 @@ Prueba: `tests/test_e26_r67_eventos_darwin.py`.
 | **A** `0x202f2(0)` | `0x202c2` (lista según `t`), `0x20cb2` (P4D ← 0 solo si `0x20c74()` ∈ {1, 2}), **`0x16e68`: P4C ← 0 (`0x1ecec(0)`) y `S+0x10 = 0x93e6()`**, `0x2020a(0x20, 1)` → `0x16adc(6, 0x21)` (evento `0x21` al anillo de eventos) | flanco de P4C hacia el BIONZ |
 | **B** `0x2041e(0)` | `0xd116(1<<22)`, `0x201b0(0)`, `0x16fe2` y **`0x20d00`: P4E ← 1 solo si `0x20c74() ≠ 0`** (además `0x210c0`, marca), `0x20408`, `0x20c4a`; estado 6 | segunda cortina mecánica |
 
-* El otro escritor de P4C es `0x16e7a` (P4C ← 1 y marca en `S+0x10`), llamado desde `0x175ee` y `0x17cf0`, más el arranque `0x1708e`. **P4C es un pulso**: sube al preparar la captura y baja en A. P4C ← 0 se alcanza también desde `0x198d2`, `0x19906`, `0x19994` (ramas «casi simultáneas»), `0x206fa` y `0x20a92`.
+* El otro escritor de P4C es `0x16e7a` (P4C ← 1 y marca en `S+0x10`), llamado desde `0x175ee` y `0x17cf0`, más el arranque `0x1708e`. **P4C es un pulso**: sube en `0x16e7a` (INFERENCIA: al preparar la captura; no se ha trazado cuándo se llama `0x175ee/0x17cf0`) y baja en A. P4C ← 0 se alcanza también desde `0x198d2`, `0x19906`, `0x19994` (ramas «casi simultáneas»), `0x206fa` y `0x20a92`.
 * Según el esquema (S54), P4C llega al BIONZ por **dos pines**: `SENS_B` (AA13, función dedicada del bloque mecánico) y `GPIO_9` (AD21). No se ha encontrado consumidor por firmware (S54/S55). Lo coherente es que el flanco de A **dispare por hardware el reinicio electrónico** (INFERENCIA fuerte: es la única señal Darwin→BIONZ que se mueve en el instante de A y su nombre es «inicio de primera cortina»).
 
 ## 2. Qué implica para la pérdida de EFCS (INFERENCIA)

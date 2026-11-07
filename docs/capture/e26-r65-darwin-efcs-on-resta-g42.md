@@ -1,4 +1,4 @@
-# E26-R65 — Por qué EFCS activado pierde ≈1,27 ms y sale negro desde 1/1000: la rama EFCS de Darwin (07-11-2026, estático)
+# E26-R65 — La rama EFCS de Darwin: `t` = 0 al arrancar, µs y `S+0x48 = T − u16[G+0x42]` (07-11-2026, estático)
 
 Capstone + Unicorn sobre `darwin_core.bin` 3.21 (base `0x4200`, SHA-256 `5f2be06d…`, idéntico al instalado según R58 §6) y bytes de `av-cam.bin`.
 Continúa [R64](e26-r64-darwin-marca-efcs.md) (E26-R64-CORTINA) y [R62](e26-r62-auditoria-datos-estaticos-efcs.md) §4 (E26-R62-DARWIN-IP).
@@ -6,7 +6,7 @@ Prueba: `tests/test_e26_r65_darwin_efcs_tiempo.py` (emula `0x18a2e` y `0x19a12`)
 
 Etiquetas: **VERIFICADO** (instrucciones/emulación) · **INFERENCIA**.
 
-> **Corregido por [R66](e26-r66-bloques-darwin-en-nvram-1850000.md):** G es la propiedad NVRAM `0x1850000` (`G+0x42 = 3407`) y B es `0x1850001`, no BK4 `0x30102`. Las §4 (palanca `0x30102+0x8a`) y §5 («G no está en la NVRAM») quedan superadas; §1–3 siguen vigentes.
+> **Corregido por [R66](e26-r66-bloques-darwin-en-nvram-1850000.md):** G es la propiedad NVRAM `0x1850000` (`G+0x42 = 3407`) y B es `0x1850001`, no BK4 `0x30102`. Las §4 (palanca `0x30102+0x8a`) y §5 («G no está en la NVRAM») quedan superadas. Auditoría [R68](e26-r68-auditoria-r65-r67.md): en §1–3 siguen vigentes los hechos de código; quedan **superadas** la última viñeta de §1, la última de §2 y la «lectura física» de §3 (con `G+0x42 = 3407` la rama `< −150` retrasa A, no causa el negro; R66 §3). Que `t` siga a 0 después del arranque es INFERENCIA (§1).
 
 ## 1. El tipo de mecanismo `t` arranca en 0 (VERIFICADO; cierra la duda de R64 §5)
 
