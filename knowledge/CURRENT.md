@@ -57,6 +57,7 @@ Versiones íntegras anteriores (nada se borró): [CURRENT-historial-2026-10-31](
 | R69 | Revisión de R56–R64: notas de corrección en R58/R61/R62/R63/R64 (`0x30102` y `0x30100` no son bloques de Darwin; `t` = 0); B (P4E ← 1) suelta la segunda cortina y la separación A–B no depende de `ip`; B86 descartado | [R69](../docs/capture/e26-r69-revision-informes-efcs.md) |
 | R70 | P4C sube en la preparación (`0x1811a`) y se rearma después (`0x28dc5`, acción 0x14): A siempre genera el flanco en Darwin. `ip` (`0x237cc`) no toca líneas de cortina; `0x182d8` usa `G+0x42` solo en plazos largos. Sin pendientes estáticos del problema EFCS |
 | R71 | Medida SWD de los GPIO del BIONZ (42 disparos): fin de exposición (`b0.8↓`) sigue a B; lectura `b7.21` ≈ 66 ms; a 1/1000 el BIONZ hace lo mismo con EFCS activado y desactivado. P4C sin identificar; siguiente: analizador lógico |
+| R72 | NVRAM `0x30087+0xa0..` → `record+0x156` solo con EFCS (90 líneas ≈ 1,37 ms; posible palanca sin código); `[0x20000050]` de Darwin viene del cargador. Pendientes E26-R72-30087 y -DARWIN-CFG |
 
 **Conclusión operativa:** la recuperación física se completó por SWD (R46–R49): se forzó la entrada al actualizador de fábrica sin
 escribir NAND ni memoria (solo un registro de CPU durante el arranque), y el actualizador oficial de Sony instaló el 3.26, que

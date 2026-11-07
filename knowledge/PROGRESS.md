@@ -543,3 +543,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 07-11-2026: R69 — revisión de R56–R64 con notas de corrección (R58 §3/§13, R61, R62 §3–4, R63 §6, R64); inferencias de R65–R68 cerradas (P4E ← 1 suelta la trasera; A–B independiente de `ip`; `t` = 0 y flujo backup como INFERENCIA fuerte); E26-R66-B86 descartado, E26-R67-GPIO9 fusionado en E26-R66-RESET (procedimiento listo).
 - 07-11-2026: R70 — máquinas de secuencias de Darwin; P4C ← 1 en la preparación y en el rearme (A siempre produce flanco); `ip` escribe P4A/P42/P05/P35/P56; lectores de `G+0x42` vía `0x182d8` son plazos de decenas de ms; test `test_e26_r70_secuencias_darwin.py`.
 - 07-11-2026: R71 — medida en cámara (solo lectura) de los GPIO del BIONZ; E26-R66-RESET pasa a PARCIAL.
+- 07-11-2026: R72 — `0x30087` → `record+0x156` en el planificador EFCS; config. de mecanismo de Darwin fuera de `darwin_core`.
