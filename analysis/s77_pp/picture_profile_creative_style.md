@@ -122,6 +122,8 @@ descartado al comprobar los ficheros).
 - Los **valores** asociados a cada estilo (tablas de parámetros): no están en `av-cam.bin` ni en las
   .so analizadas (están en el GUI engine / en el modelo de ajuste).
 - El enumerado `WRAPPER_CREATIVE_STYLE` y `WRAPPER_WHITE_BALANCE` completos (nombres y orden).
+- **Corregido por [G15](../../docs/gui/g15-picture-profile.md) (08-11-2026)**: `libObj.so` sí trae Picture Profile
+  (`SequenceSetPictureProfile`, 31 `PARAMID_PP_*`); lo que falta es la UI y el cálculo de gamma del núcleo. Texto original:
 - El mapeo PP1..PP6/Off del Picture Profile: **no hay ninguna traza de "Picture Profile" en el
   firmware**; el control está en el userland y no se ha localizado.
 - Los presets fotográficos de WB (Auto/Daylight/…): no aparecen como cadenas en el firmware.
