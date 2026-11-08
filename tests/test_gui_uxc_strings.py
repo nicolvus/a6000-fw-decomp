@@ -63,3 +63,25 @@ def test_nodo_silentshutter_a6000_es_steadyshot_y_efcs_tiene_processid():
     silent = {p: v for p, _, v in nodes["SilentShutterRoot"]}
     assert silent[0xE] == 0x26 and "SteadyShot" in recs[silent[0] & 0xFFFF]
     assert {p: v for p, _, v in nodes["CustomFrontCurtainShutterRoot"]}[0xE] == 0x46
+
+
+VIEW2_SO = APP / "lib/viewUnified2.so"
+
+
+@pytest.mark.skipif(not VIEW2_SO.exists(), reason="viewUnified2.so no disponible")
+def test_parche_de_paginas_inserta_y_reubica():
+    sys.path.insert(0, str(ROOT / "scripts/gui"))
+    import add_menu_entry as am
+
+    d = VIEW2_SO.read_bytes()
+    out = am.patch(d, 0xEB0)
+    segs = am._segments(out)
+    assert len(segs) == 6 and segs[-1][0] == 1 and segs[-1][6] == 6  # PT_LOAD RW añadido
+    for arr, cnt, movs, lit, add, anchor in am.PAGES:
+        assert struct.unpack_from("<H", out, movs)[0] == 0x2200 | (cnt + 1)
+        new = (add + 4 + struct.unpack_from("<I", out, lit)[0]) & 0xFFFFFFFF
+        o = am._off(segs, new)
+        slots = struct.unpack_from(f"<{cnt + 1}I", out, o)
+        assert slots[anchor] == 0xEB0  # addendum al símbolo de referencia
+        old = struct.unpack_from(f"<{cnt}I", d, am._off(am._segments(d), arr))
+        assert list(slots[:anchor]) + list(slots[anchor + 1:]) == list(old)

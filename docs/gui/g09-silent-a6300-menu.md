@@ -111,8 +111,29 @@ Sitios localizados (ELF): página 1: `ldr` `0x166182`, literal `0x166ce8`, `add`
 **Mecanismo propuesto (no implementado):** añadir un segmento `PT_LOAD` al final del `.so` con (1) copias de los 5 arrays con una entrada más, (2) una copia ampliada de `.rel.dyn` con las relocaciones de todas las entradas de los arrays nuevos (`DT_REL`/`DT_RELSZ` apuntan a ella; las relocaciones de los arrays antiguos pasan a ser inofensivas) y (3) el `movs r2,#N+1` y el literal reapuntados en `_INIT_70`. Orden elegido: la entrada nueva **antes** del EFCS (como en el A6300). El EFCS conserva su entrada, id `0x46` y camino `0x4099`.
 Riesgos: la tabla de cabeceras movida y el `LOAD` nuevo no se han probado con el cargador de la cámara (glibc 2.11.2); no hay `qemu-user` instalado (requiere `sudo pacman -S qemu-user`, que necesita contraseña) para un cargado de prueba fuera de la cámara; el ext2 de `/usr` está casi lleno (el `.so` crece ~0,1–0,3 MB; ~7 MB libres, [G04 §6](g04-menus-y-recursos.md)).
 
+## 5e. Prototipo del parche de inserción y prueba de carga con `qemu-user` (07-11-2026, VERIFICADO fuera de la cámara)
+
+**Herramientas**: `scripts/gui/add_menu_entry.py` (genera el `viewUnified2.so` parcheado), `scripts/gui/qemu_sysroot.py` (sysroot con el glibc 2.11.2 y las bibliotecas de la cámara para `qemu-arm`),
+prueba `test_parche_de_paginas_inserta_y_reubica`. `qemu-user` y `gdb` instalados en el equipo de trabajo (Arch).
+
+**Sitios corregidos** (ELF; `array → literal / add / movs r2,#N`): p1 `0x4a2f38` (`0x166ce8`/`0x16618c`/`0x166180`, N=5); p2 `0x4a337c` (`0x166f70`/`0x166924`/`0x166918`, 6);
+p3 `0x4a3664` (`0x166e20`/`0x166534`/`0x166528`, 4; **corrige** un array erróneo `0x4a3654` de la primera pasada, que era la página de «Cleaning Mode/Calibration»);
+p4 `0x4a36c8` (`0x16b16c`/`0x16a84a`/`0x16a842`, 5); p5 `0x4a3778` (`0x169200`/`0x168df8`/`0x168dec`, 6). El parche comprueba por aserción que cada literal resuelve al array y que el `movs` es `0x2200|N`.
+Los arrays de p1–p3 también los usan otros nodos con cuentas menores (subconjuntos): no se tocan, siguen con el array antiguo.
+
+**Parche**: segmento `PT_LOAD` RW nuevo en `0x4d0000` (0xb353c B: `.rel.dyn` copiado + 31 relocaciones, los cinco arrays con una entrada más y la tabla de cabeceras movida, 6 entradas); `DT_REL` y `DT_RELSZ` reapuntados; la entrada nueva va **antes del EFCS**
+(`R_ARM_ABS32` contra `cmnViewSettingNodeRootAelWShutter` + addendum `0xeb0` = distancia a `cmnViewSettingNodeRootSilentShutter` en `CautionConfig.so`). El fichero crece 0,76 MB (4 953 524 → 5 715 260 B).
+
+**Prueba de carga** (`qemu-arm -L sysroot`, ld.so de la cámara, `LD_PRELOAD="/usr/lib/libObj.so viewUnified2.parcheado.so"`):
+1. El cargador acepta el `.so` (6 cabeceras, `phdr` en el segmento nuevo) y llega a «calling init» del parcheado en el mismo punto que el original (el guest muere después con SIGSEGV en `libObj`/`osal`: no hay hardware, **igual con el original**).
+2. Con `gdb` (`target remote`) tras la señal, memoria real de las cinco páginas: cada nodo apunta a su array nuevo con **cuenta + 1** (6, 7, 5, 6, 7) y cada array queda `[…, AelWShutter, <Silent 0x42faab2c = base CautionConfig + 0x1c9b2c>, <EFCS 0x42fab490 = base + 0x1ca490>, …]`:
+   la entrada nueva se resuelve al nodo `SilentShutter` y el EFCS conserva su entrada.
+
+**Límites**: es la carga y el reubicado de datos; no se ha ejecutado la interfaz ni el menú (necesita la cámara). El nodo insertado es todavía el stub con etiquetas de SteadyShot (§3): falta cambiar su `PropertyList` en `CautionConfig.so`,
+añadir textos a `string_*.uxc` y el cableado a `libObj`/`av-cam`. Persistencia: el `.so` parcheado exige reempaquetar `nflasha15` (riesgo de §G8) o probarlo por la vía B (montaje temporal por telnet). `/usr` queda con ~6 MB libres.
+
 ## 6. Límites / siguiente
 
 - **NO_VERIFICADO**: qué tabla de página incluye cada elemento (G4) y cómo se conecta ProcessId → elemento (vtables de `viewUnified2` del A6300 sin resolver: REA no enlaza la relocación del vptr, las funciones salen sin símbolo y la vtable hallada por RTTI es de una clase genérica de rango `0x15a/0x15c`; se dejó para G4/G7). El significado de las props `0xb/0xc/0x11/0x14`.
 - Las 4 capas son estáticas; **ninguna** probada en cámara ni parcheada. La capa 4 es el bloqueo real del proyecto (sin handler `0x40e3`).
-- Siguiente: (0) localizar los sitios de las páginas 4–5, prototipar el parche de segmento añadido sobre una copia y cargarlo con `qemu-user` + `ld-2.11.2` del rootfs (necesita instalar `qemu-user`); (a) localizar la tabla de la página «Shooting Settings» del A6300 que contiene Shutter Type/Silent Shooting (G4); (b) volcar ProcessId→elemento; (c) diseñar el manejador `0x40e3` con el selector independiente (carril obturador, requiere autorización para cualquier prueba).
+- Siguiente: (0) editar el nodo stub (`PropertyList` de `CautionConfig.so`, ProcessId propio) y los textos; probar el mismo método de carga con `CautionConfig` parcheado; (a) localizar la tabla de la página «Shooting Settings» del A6300 que contiene Shutter Type/Silent Shooting (G4); (b) volcar ProcessId→elemento; (c) diseñar el manejador `0x40e3` con el selector independiente (carril obturador, requiere autorización para cualquier prueba).
