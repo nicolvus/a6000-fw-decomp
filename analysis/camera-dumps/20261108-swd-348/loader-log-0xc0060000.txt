@@ -1,0 +1,94 @@
+Loader2 Ver.33.01.90 (Jan 24 2014 22:07:33)
+LDR:Init UDIF_P
+LDR:Init UDIF_D
+LDR:Init InfSec_S
+LDR:Init BOSS
+BOS:ibt_blksize:6
+LDR:Load InfSec_N
+BOS:Load[DI:0 PL:0 BK:2 PG:0 SZ:1 MEM:C00C1400]
+LDR:Load LBkup
+BOS:Load[DI:0 PL:0 BK:2 PG:8 SZ:1 MEM:C00C0400]
+LDR:Init DebugLv
+LDR:Load LDR3
+BOS:Load[DI:0 PL:0 BK:2 PG:21 SZ:43 MEM:C01F0000]
+BOS:Load[DI:0 PL:1 BK:2 PG:0 SZ:21 MEM:C0205800]
+LDR:Exit UDIF_D
+LDR:Exit UDIF_P
+LDR:Jump LDR3@0xC01F0000(7748us)
+Loader3 Ver.33.01.90 (Jan 24 2014 22:07:49)
+LD3:Init Sync
+LD3:Init Power
+PWR:<<PowerIC: 7>>
+PWD:SIO C[3] P[5] R[3]
+PWD: XCS P[5] B[14]
+PWR:chk key chat oneshot
+PWR:[10541]E:0/L:201/D:0/C:0/G:0
+LD3:Init UDIF_P
+LD3:Init UDIF_D
+LD3:Reinit BOSS
+BOS:ibt_blksize:6
+LD3:Wake DDR
+BOS:Load[DI:0 PL:0 BK:2 PG:9 SZ:6 MEM:C0038000]
+BOS:Load[DI:0 PL:0 BK:2 PG:15 SZ:6 MEM:C003D000]
+DGU:Jump DGU[0]
+BOM:-get ld:-1(0x80021048)
+LD3:ddr:0/serr:1/ld:0
+LD3:Init BlkDev
+LD3:Init FAT
+FAT:Reading partition table
+LD3:Switch Bkup
+LBK:load Bkup[bin]
+FAT:Mounted partition 2 [ClusterSize=16384:SectorSize=512:Type=FAT12]
+LD3:Init DbgLv
+LD3:Init Pwr2nd
+PWR:XPWR_OFF p:0 b:10
+PWR: Normal pwr supply.[Vol_th:A8][Batt:D3][ACV:00]
+LDR:Date type is 2
+LD3:read MISCREG
+BOM:chk updater
+BOM:chk adjust
+BOM:-file load
+BOM:chk ank
+BOM:ANK:3FF(L:135/U:1B5) u:0 c:8
+BOM:chk reboot
+BOM:chk image_update
+BOM:-chk BIS 
+BOM:chk ontimer
+BOM:chk keychat_off
+BOM:chk chg_key_off
+BOM:chk panelopen_off
+BOM:chk usbcharge
+BOM:chk usbcharge_off
+BOM:chk load_off
+BOM:-rtc:0(0) 
+BOM:chk battin_off
+BOM:-usb:0x800/0x0
+BOM:chk battin_off
+BOM:chk lowbatt_off
+BOM:chk powersw_off
+BOM:-eg:0 ig:0
+BOM:-eg:0 nb:0
+BOM:chk hotboot
+BOM:-get ld:-1(0x80021048)
+BOM:chk ssboot
+BOM:chk updater
+BOM:<<BootMode: 11>>
+BOM:ddr: 0
+PWR:OFF HotIC
+LD3:Pwr bootmode
+PWR:LED 1
+PWR:Pwr set reg
+BOM:chk updater
+PWD:Snd Bkup
+PWD:Set Reg
+PWD:chg watch key:0x00000000
+LD3:Del LOG
+LD3:Clr kLog[834e0000] tLog[834c0000]
+LD3:Init boottime
+LD3:Esc log ? (r_req:0/crash:0)
+PWD:Snd freeze cmd
+PWD:Snd unfreeze cmd
+BOM:-get ld:-1(0x80021048)
+LD3:Load Image
+Ä
+U!Èô

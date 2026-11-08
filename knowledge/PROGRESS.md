@@ -575,3 +575,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 08-11-2026: G11 §7 — paquete 3.44a (variante a: sin `viewUnified2.so`) construido y auditado 23/23; auditor con comprobación de modo/uid/gid.
 - 08-11-2026: G11 §8 — 3.44a no arranca (Loader2 −201; log en la eSRAM: se queda en `Load LDR3`); recuperada con R48 + 3.45; la cámara queda en 3.45 (= 3.43).
 - 08-11-2026: G11 §9 — paquetes de aislamiento 3.46 (solo `.uxc`), 3.47 (solo `CautionConfig.so`) y 3.48 (control con contenido de Sony) construidos y auditados 23/23; sin instalar.
+- 08-11-2026: G11 §10 — 3.48 (control) y 3.47 (solo `CautionConfig.so`) instalados: ambos fallan; la causa probable es escribir un `nflasha15` recompuesto. Cámara pendiente de recuperar con el 3.49.

@@ -186,3 +186,20 @@ del `nflasha15.silent`, reproducible).
 * 3.48 no arranca → la causa es escribir un `nflasha15` recompuesto (disposición TPZL, recompresión o metadatos del ext2), no el contenido.
 * 3.48 arranca → el contenido: 3.47 y 3.46 dicen si es `CautionConfig.so` o los `.uxc`.
 * En cualquier fallo: captura SWD del log de Loader2 (y del de Linux si el MEM-AP responde) antes de recuperar con R48 + un paquete con el `/usr` de Sony de versión mayor.
+
+## 10. 3.48 (control) y 3.47 (solo `CautionConfig.so`) en cámara: ambos fallan (08-11-2026)
+
+**Instalación (MEDIDO):** 3.48 sobre la cámara en 3.45: `Done` al primer intento. 3.47 (empaquetado como **3.50**: el actualizador solo acepta
+versiones mayores y el 3.48 ya estaba): entrada al actualizador con R48 (BootMode 3, 2 comprobaciones forzadas); `0x1063` al 45 % dos veces, `Done`
+al tercer intento tras apagar y encender con el interruptor (`install-3.50*.log`, no versionados). Auditoría de 3.50: 23/23 ([`audit-3.50.json`](../../analysis/gui/audit-3.50.json)).
+
+**Síntomas:** 3.48: mismo error y parpadeo de pantalla que el 3.44a. 3.47: la pantalla parpadea 3 veces.
+
+**SWD (solo lectura; [`20261108-swd-348/`](../../analysis/camera-dumps/20261108-swd-348/), [`20261108-swd-350/`](../../analysis/camera-dumps/20261108-swd-350/)):**
+* 3.48: Loader2 carga Loader3 sin problema; el log llega a `LD3:Load Image` (BootMode 11) y la CPU estaba en Loader3 (`pc=0xc01f4fe0`).
+* 3.47: captura anterior en el arranque: el log termina en `PWD: XCS P[5] B[14]` tras `LD3:Init Power`; `pc=0xc01f4fb4`, `lr_svc=0xc01f93f3`.
+* Son capturas puntuales de un ciclo repetido; no fijan el punto de fallo (el 3.44a se quedaba en `Load LDR3`).
+
+**Interpretación (INFERENCIA):** el control 3.48 (contenido idéntico al de Sony) falla como los demás → con 4/4 `nflasha15` recompuestos fallando
+(3.40, 3.42, 3.44a, 3.48) y 3/3 con el de Sony arrancando, la causa más probable es **escribir un `nflasha15` recompuesto**, no el contenido de
+`CautionConfig.so` ni de los `.uxc`. El 3.46 (solo `.uxc`) no se ha instalado: sería redundante frente a este resultado. Paquete de recuperación: 3.49 con el `/usr` de Sony (`pkg-3.49-revert`, no instalado).
