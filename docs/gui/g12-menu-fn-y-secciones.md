@@ -12,7 +12,7 @@ Estado: VERIFICADO = leído en los bytes; INFERENCIA = razonado; NO_VERIFICADO =
 
 ## 2. Qué haría falta para añadir «Silent Shooting» al menú Fn (INFERENCIA)
 1. Una opción nueva por ranura (12) con `0xf/0x10 = 0x25`, texto propio y `0xb/0xc` como las demás: igual que el parche del 3.54, pero ×12 y con arrays de hijos de 37→38 (patrón `add_menu_entry.py`).
-2. **El id `0x25` debe entender el código**: en `viewUnified4.so` hay una tabla de saltos por función (stubs `mov r0,r4; …; b.w` en `0x1666a4–0x16765a`; que sean uno por id no está comprobado) que construye el elemento de la franja y cuya cota habría que ampliar; además `CmnFnWrapper` (`cmnFnWrapper.so`) y la persistencia de la asignación en NVRAM (qué rango admite). Ninguna de las tres está leída aún → NO_VERIFICADO.
+2. **El id `0x25` debe entender el código** (corregido tras leer más): los ids **no** salen de una tabla de datos (no hay secuencia `7,8,9,0xd…` de ProcessIds en ninguna `.so`; ProcessIds: Drive 7, FlashMode 8, FlashComp 9, FocusMode 0xd, ExpComp 0x14, Metering 0x16, WB 0x17, CreativeStyle 0x19; los ids Fn 0,1,2,3,5,7,8,0xa no siguen una fórmula). La lógica es **código**: en `viewUnified4.so` `0x1682xx–0x1683b4` hay cadenas `cmp r6,#k` / `bl 0x16774e` (comprobación de disponibilidad de cada función) / `str` del id resultante. La vista Fn habla con el modelo por mensajes con nombre (`getModelInfo(texto, id, ParamList)`, claves `0x101/0x103/0x109`…), así que una función nueva también necesita manejador en el lado del modelo (NO localizado: `ModelCautionConfig.so` no contiene `Fn`). Las asignaciones se guardan con `BackupManager::Bkup_Read` (NVRAM): rango admitido NO_VERIFICADO. (La hipótesis anterior de «stubs por id en `0x1666a4–0x16765a`» era falsa: son accesores de modelo/destructores.)
 3. Alternativa más barata (INFERENCIA): **reasignar una ranura existente** (p. ej. sustituir la opción «Cinematone», id 0x18, por el nodo EFCS) cambiando solo el texto y el ProcessId de la opción, sin tocar el código; se pierde esa función en el Fn.
 
 ## 3. Secciones nuevas y filtros (INFERENCIA)
@@ -20,5 +20,14 @@ Estado: VERIFICADO = leído en los bytes; INFERENCIA = razonado; NO_VERIFICADO =
 - «Filtros» (efectos de imagen): ya existen `PictureEffect` (Fn id `0xc`) y `CreativeStyle`; sus tablas están en `viewUnified2.so` `0x4cc640/0x4cc960` ([G04 §8](g04-menus-y-recursos.md)). Añadir un filtro propio exige además el algoritmo en el procesador de imagen (BIONZ/Darwin): fuera del alcance de la GUI; sí es posible ocultar o renombrar los existentes.
 - Todo lo que sea solo texto/orden/visibilidad no depende de G7 (middleware); lo que cambia el comportamiento sí.
 
-## 4. Límites
+## 4. Receta general para añadir cosas a cualquier menú (resumen de lo ya verificado)
+| Qué | Dónde | Estado |
+|---|---|---|
+| Texto de una etiqueta/ayuda | `string_<idioma>.uxc` (`uxc_strings.py`) | VERIFICADO (ida y vuelta) |
+| Opción nueva en un nodo existente | listas `cmnViewSettingPropertyList*` + array de hijos en `CautionConfig.so`/`viewUnified*.so` (segmento nuevo + reapuntado + `movs r2,#N`) | método usado con «Silent Shooting» (3.53 visible; selector 3.54 sin probar) |
+| Entrada nueva en una página | `add_menu_entry.py` (`viewUnified2.so`, 5 páginas) | VERIFICADO offline |
+| Que la opción haga algo | el ajuste (ProcessId) debe leerlo el código de negocio (G7) | EFCS ya existe; ids nuevos requieren parche de código |
+| Menú Fn | además código de ids en `viewUnified4.so` + modelo + NVRAM | G12-A |
+
+## 5. Límites
 Sin leer el consumidor del id (§2.2) no se sabe si `0x25` es viable. Sin cámara: nada se ha probado; el selector del 3.54 sigue sin comprobar.
