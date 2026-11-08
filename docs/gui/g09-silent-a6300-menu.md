@@ -55,8 +55,25 @@ Alternativa mínima (sin menú nuevo): tercer estado en el selector EFCS — ya 
 - **Descartado**: el barrido de «listas de ProcessId» por todas las bibliotecas (`/tmp`, no versionado) da ruido (valores pequeños se repiten en tablas ajenas, p. ej. pares `{id, nombre de MSG_PARAM_ID}` de `libScalarDaemon`); **no** se usa como evidencia de dónde se registra un ProcessId.
 - `CameraOnDemandSaver.so`, `arbiter.so` y `CmnViewIroiroConDataMgr.so` contienen listas con el ProcessId EFCS (`0x46`) en la A6000: candidatas a registros de persistencia/exclusión que un ajuste nuevo debería tocar. **NO_VERIFICADO** su función.
 
+## 5b. Dónde se coloca el ajuste en el menú (VERIFICADO sobre relocaciones, 07-11-2026)
+
+Las páginas de menú son **arrays de punteros a nodos raíz** (`cmnViewSettingNodeRoot*`, importados de `CautionConfig.so`) en `.data.rel.ro` de `viewUnified2.so`, con una relocación
+`R_ARM_ABS32` por entrada (`readelf -r -W`). El orden del array es el orden del menú. La entrada del EFCS aparece en **5 páginas** en ambas cámaras:
+
+| | A6000 fw3.21 (vaddr ELF) | A6300 fw2.01 (vaddr ELF) |
+|---|---|---|
+| Entradas EFCS | `0x4a2f3c`, `0x4a338c`, `0x4a366c`, `0x4a36cc`, `0x4a377c` | `0x75778c+4`, `0x757fe0+4`, `0x758728+4`, `0x759a98+4`, `0x75a0a0+4` |
+| Vecinos | `AfWShutter`/`AelWShutter` → **EFCS** → `SuperiorAutoSettings`/`AutoImageExtract`/`TouchShutter` | `AfWShutter`/`AelWShutter` → **SilentShutter** → **EFCS** → `AutoImageExtract` |
+
+Es decir, en el A6300 «Silent Shooting» es **una entrada insertada justo antes de EFCS en las mismas cinco páginas** (y `Shutter Type` va en otras: `0x757248`, `0x7585a8`, `0x7599e0`, `0x75a65c`, junto a `StillMemory`/`SelfPortrait…`).
+Además `viewUnified7` lista `SilentShutter` antes de `StillSteadyShot` en ambas cámaras (A6000 `0x5f7b8`, A6300 `0x75638`).
+
+**Consecuencias de diseño** (INFERENCIA; sin verificar el consumidor de los arrays): (a) añadir la entrada exige alargar cinco arrays — hay que localizar el contador/consumidor — o **sustituir** el puntero de una entrada poco usada
+cambiando solo el símbolo de su relocación (sin tocar tamaños); (b) el nodo nuevo ha de ser un símbolo definido en `CautionConfig.so` (el stub `SilentShutter` de la A6000, con sus nodos On/Off ya construidos, es la base más barata: cambiar su `PropertyList`
+—etiquetas, ProcessId— son datos de `.rodata`, y añadir los textos a `string_*.uxc`).
+
 ## 6. Límites / siguiente
 
 - **NO_VERIFICADO**: qué tabla de página incluye cada elemento (G4) y cómo se conecta ProcessId → elemento (vtables de `viewUnified2` del A6300 sin resolver: REA no enlaza la relocación del vptr, las funciones salen sin símbolo y la vtable hallada por RTTI es de una clase genérica de rango `0x15a/0x15c`; se dejó para G4/G7). El significado de las props `0xb/0xc/0x11/0x14`.
 - Las 4 capas son estáticas; **ninguna** probada en cámara ni parcheada. La capa 4 es el bloqueo real del proyecto (sin handler `0x40e3`).
-- Siguiente: (0) en la A6000, abrir REA sobre `viewUnified2.so` y seguir los usos de `cmnViewSettingNodeRootCustomFrontCurtainShutter` (la página que lo contiene muestra el esquema real a imitar); (a) localizar la tabla de la página «Shooting Settings» del A6300 que contiene Shutter Type/Silent Shooting (G4); (b) volcar ProcessId→elemento; (c) diseñar el manejador `0x40e3` con el selector independiente (carril obturador, requiere autorización para cualquier prueba).
+- Siguiente: (0) hallar el consumidor de los cinco arrays de página de la A6000 (contador, ¿puntero base por GOT?) con REA; (a) localizar la tabla de la página «Shooting Settings» del A6300 que contiene Shutter Type/Silent Shooting (G4); (b) volcar ProcessId→elemento; (c) diseñar el manejador `0x40e3` con el selector independiente (carril obturador, requiere autorización para cualquier prueba).
