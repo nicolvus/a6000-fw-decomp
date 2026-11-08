@@ -158,6 +158,15 @@ añadir textos a `string_*.uxc` y el cableado a `libObj`/`av-cam`. Persistencia:
 5. Criterios: la entrada «Silent Shooting» aparece antes de «e-Front Curtain Shut.» en las 5 páginas; elegir On/Off no cuelga la UI; el menú EFCS refleja el cambio (On ⇄ Off del EFCS) y el disparo se comporta como con el CFW (EFCS off = electrónico).
 6. `revert --execute` (o reiniciar): desmonta y borra.
 
+## 7b. Resultado de la prueba en cámara (07-11-2026) — la vía temporal NO sirve
+
+Ejecutado con autorización del usuario (cámara por red y SWD disponibles; sin SWD usado):
+- `probe`: OK. `/usr` es `ext2 ro`; md5 de `viewUnified2.so`, `CautionConfig.so` y todos los `string_*.uxc` **iguales** al 3.21 de referencia; `mount --bind` funciona; `/tmp` vfat 5 MB, `/android` tmpfs con 8–14 MB libres (insuficiente), SD = FUSE servido por `im.elf` (no vale de origen). Staging en `/android/data/silentmenu` (vfat interno).
+- `deploy`: FTP temporal (hizo falta abrir `ufw` para 192.168.1.29, ya cerrado) → md5 verificado → `bind` de los 3 ficheros (`viewUnified2`, `CautionConfig`, `string_spanish`, el idioma activo).
+- **`im.elf`** (pid 148, `ppid=1`, cwd `/usr/share/app`, args `debug s g r u l i a lazy-global`) **ignora SIGTERM** y no tiene supervisor: PID 1 es un bucle `ash`. Con `kill -9` murió; el relanzado manual (mismo entorno y argumentos; `nohup` no existe en el busybox) arrancó (pid 3195, «GLES Vecgen disabled», «DMP_2D_Initialize : 0») y a los pocos segundos **la cámara se reinició sola** (el usuario lo confirmó): reiniciar `im.elf` en caliente dispara el reinicio, y el reinicio **borra los montajes**.
+- Conclusión: el cambio solo puede aplicarse **de forma persistente** (firmware con `nflasha15` modificado, vía A de §G8) o con un gancho que monte los ficheros **antes** de que arranque `im.elf` (no existe en el rootfs conocido; el que lanza `im.elf` es anterior al shell de PID 1). La cámara no queda modificada: ni NAND ni NVRAM escritas; solo ~8 MB en `/android/data/silentmenu` (borrar con `revert`).
+- Para la próxima: `camera_ui_test.py deploy` + `restart-ui` quedan como herramientas históricas; no repetir `restart-ui` (provoca reinicio).
+
 ## 6. Límites / siguiente
 
 - **NO_VERIFICADO**: qué tabla de página incluye cada elemento (G4) y cómo se conecta ProcessId → elemento (vtables de `viewUnified2` del A6300 sin resolver: REA no enlaza la relocación del vptr, las funciones salen sin símbolo y la vtable hallada por RTTI es de una clase genérica de rango `0x15a/0x15c`; se dejó para G4/G7). El significado de las props `0xb/0xc/0x11/0x14`.
