@@ -19,6 +19,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from e25_27 import tpzl
 
 PARTITION_LIMIT = 104_857_600  # mount.conf: /dev/nflasha15 /usr raw 104857600
+BLOCK0 = 65536
+# Campos contables que debugfs actualiza en el bloque TPZL 0 (superbloque y descriptores de grupo). R55: recomponer el
+# bloque 0 de nflasha3 colgó el LZP de Linux (causa sin aislar), así que el bloque 0 se deja byte a byte como el de Sony.
+SB, GDT = 1024, 2048
+COUNTERS = {SB + i for i in (12, 13, 14, 15, 16, 17, 18, 19, 48, 49, 50, 51)}  # s_free_blocks/inodes_count, s_wtime
+FSCK_ONLY_COUNTS = ("Free blocks count wrong", "Free inodes count wrong", "Directories count wrong", "Filesystem still has errors")
 
 
 def stat_fields(image: Path, path: str) -> dict:
@@ -56,7 +62,16 @@ def main(original: Path, package: Path, out: Path) -> dict:
     replace_files(img, package, files)
     fsck = subprocess.run(["e2fsck", "-fn", str(img)], capture_output=True, text=True, check=False)
     assert fsck.returncode == 0, fsck.stdout[-400:]
-    patched = img.read_bytes()
+    patched = bytearray(img.read_bytes())
+    diff0 = {i for i in range(BLOCK0) if patched[i] != ext2[i]}
+    gdt_counters = {GDT + 32 * g + k for g in range(64) for k in (12, 13, 14, 15, 16, 17)}
+    assert diff0 <= COUNTERS | gdt_counters, f"el bloque 0 cambia fuera de los contadores: {sorted(diff0 - COUNTERS - gdt_counters)[:8]}"
+    patched[:BLOCK0] = ext2[:BLOCK0]  # bloque TPZL 0 idéntico al de Sony; solo quedan contadores libres desfasados
+    img.write_bytes(patched)
+    fsck2 = subprocess.run(["e2fsck", "-fn", str(img)], capture_output=True, text=True, check=False)
+    problems = [ln for ln in fsck2.stdout.splitlines() if "wrong" in ln or "Fix?" in ln or "error" in ln.lower()]
+    assert all(any(k in ln for k in FSCK_ONLY_COUNTS) or ln.strip().startswith("Fix?") for ln in problems), problems
+    patched = bytes(patched)
     new_blob, info = tpzl.patch_decompressed(image, patched)
     re = tpzl.TpzlImage.parse(new_blob)
     assert re.decompressed() == patched and not tpzl.hardware_violations(re)
@@ -65,7 +80,9 @@ def main(original: Path, package: Path, out: Path) -> dict:
     report = {
         "original_bytes": len(blob), "nuevo_bytes": len(new_blob), "limite_particion": PARTITION_LIMIT,
         "bloques_64KiB": len(info), "bloques_recompuestos": len(changed),
-        "crc32": f"{zlib.crc32(new_blob):08x}", "ficheros": files, "fsck": "limpio",
+        "crc32": f"{zlib.crc32(new_blob):08x}", "ficheros": files,
+        "fsck": "limpio antes de restaurar el bloque 0; después solo contadores de libres desfasados",
+        "bloque0_igual_que_sony": new_blob[re.entries[0][0]:re.entries[0][0] + image.entries[0][1]] == image.block(0),
     }
     assert len(new_blob) <= PARTITION_LIMIT, "no cabe en la partición"
     (out.with_suffix(".json")).write_text(json.dumps(report, indent=1))

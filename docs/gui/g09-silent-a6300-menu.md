@@ -190,6 +190,19 @@ La cámara lo expone como `/dev/dnflasha15` (capa de descompresión; `/usr` = `e
 3. La versión instalada ahora es 3.37/3.38: instalar el 3.39 exige batería > 50 %, cable directo y `sha256sum -c SHA256SUMS`; la vuelta atrás es el 3.40. Si no arrancara: recuperación por SWD/actualizador como en R46–R49 (`nflasha1` no va en el paquete).
 4. Los 35 idiomas de tabla de 32 bits no llevan textos nuevos; el español sí (en inglés).
 
+## 8b. Auditoría del paquete de instalación 3.39 (07-11-2026) — **APTO** (offline)
+
+Cambios respecto a la primera construcción de §8:
+1. **Bloque TPZL 0 idéntico al de Sony** (R55: recomponer el bloque 0 de `nflasha3` colgó el LZP de Linux, causa sin aislar). En el ext2 los únicos bytes que cambiaban en los primeros 64 KiB eran **contadores** (superbloque: `s_free_blocks_count`, `s_wtime`; descriptores de grupo: libres de bloques/inodos). Se restauran los de Sony: `/usr` es de solo lectura y los contadores no se usan; `e2fsck -fn` solo informa «count wrong». Bloques recompuestos: 134 (antes 135). `nflasha15` CRC `6268e2ff`, 84 699 136 B.
+2. **Parche de Darwin v3** (R82/R83, commit `20b33eed`, pedido del usuario): `build.efcs_tabla_diff` sobre el `darwin_core.bin` del 3.38 (solo `0x18d6e..0x18e0f`) y `darwin.sum` actualizado. Es **neutro** mientras la tabla NVRAM (`0x1850000+0x48`) esté a ceros (R82); no se escribe NVRAM.
+
+`scripts/gui/audit_package_nflasha15.py` (descifrado propio E25-06, no fwtool) sobre `pkg-3.39/package-3.39/firmware_packed.dat` (`0d054b97…`): **23/23 comprobaciones OK** ([`analysis/gui/audit-3.39.json`](../../analysis/gui/audit-3.39.json)):
+contenedor (DEND, descifrado = FDAT, CRC de cabecera, modelo `0x41030035`/región 0, updater oficial 3.21, versión 3.39 > 3.38); tar (solo cambian `darwin_core.bin`, `darwin.sum`, `dev/nflasha15`, `part_image.sum` frente al 3.38; **66/66** líneas de suma verifican);
+`nflasha15` (cabe en 104 857 600 B, 0 violaciones LDEC, alineado a 512, contiguo, 2 373 bloques, máx. 129 sectores = Sony, **bloque 0 = Sony**, decodificador independiente `fwtool.lz77` coincide en los 134 bloques); ext2 montado en solo lectura y comparado con el de Sony: **solo cambian los 27 ficheros del paquete**, con sus hashes; Darwin v3 presente y solo en su rango.
+Además: `pytest -k "r82 or e25_27_build"` 39/39; la vuelta atrás `pkg-3.40-revert` (`5ac4a9b2…`) es el 3.38 con `/usr` de Sony (sin cambios frente al 3.38 salvo versión; sumas 66/66).
+
+**Riesgos que la auditoría no puede cerrar**: (a) que el LDEC de la cámara lea los 134 bloques recompuestos (bloques intermedios recompuestos sí se leyeron bien en `nflasha3`: 48, 57); (b) que la UI arranque con los `.so` parcheados (solo `qemu-user`); (c) versión instalada < 3.39 (no se pudo leer: cámara fuera de red). Recuperación: `pkg-3.40-revert` por el actualizador, o SWD + actualizador (R46–R49).
+
 ## 6. Límites / siguiente
 
 - **NO_VERIFICADO**: qué tabla de página incluye cada elemento (G4) y cómo se conecta ProcessId → elemento (vtables de `viewUnified2` del A6300 sin resolver: REA no enlaza la relocación del vptr, las funciones salen sin símbolo y la vtable hallada por RTTI es de una clase genérica de rango `0x15a/0x15c`; se dejó para G4/G7). El significado de las props `0xb/0xc/0x11/0x14`.

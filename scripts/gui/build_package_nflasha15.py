@@ -29,14 +29,19 @@ def sha(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def main(new15: Path, out: Path, base_tar: Path, version: str) -> dict:
+def main(new15: Path, out: Path, base_tar: Path, version: str, darwin_v3: bool = False) -> dict:
     out.mkdir(parents=True, exist_ok=True)
     blob, base = new15.read_bytes(), base_tar.read_bytes()
     entries, _ = tarball.parse(base)
     members = {e.name: e.data for e in entries}
     part_sum, detail = sums.update(members[build.PART_SUM].decode("ascii"), ENTRY, blob)
     assert sums.verify(part_sum, ENTRY, blob)
-    tar_bytes, _ = tarball.rebuild(base, {NFLASHA15: blob, build.PART_SUM: part_sum.encode("ascii")})
+    repl = {NFLASHA15: blob, build.PART_SUM: part_sum.encode("ascii")}
+    if darwin_v3:  # R82/R83: tabla EFCS por velocidad en Darwin (neutra con la tabla NVRAM a ceros)
+        core, _ = build.efcs_tabla_diff(members[build.DARWIN_CORE])
+        dsum, _ = build._sum_text_with_core(members[build.DARWIN_SUM].decode("ascii"), core)
+        repl |= {build.DARWIN_CORE: core, build.DARWIN_SUM: dsum.encode("ascii")}
+    tar_bytes, _ = tarball.rebuild(base, repl)
     tar_path = out / "firmware.tar"
     tar_path.write_bytes(tar_bytes)
     cfg = out / f"config-{version.replace('.', '')}.yaml"
@@ -51,13 +56,13 @@ def main(new15: Path, out: Path, base_tar: Path, version: str) -> dict:
         got = (Path(tmp) / "firmware.tar").read_bytes()
         assert sha(got) == sha(tar_bytes), "el tar extraído no coincide"
         got_members = {e.name: e.data for e in tarball.parse(got)[0]}
-        assert got_members[NFLASHA15] == blob and sums.verify(got_members[build.PART_SUM].decode("ascii"), ENTRY, blob)
+        assert all(got_members[k] == v for k, v in repl.items()) and got_members[NFLASHA15] == blob and sums.verify(got_members[build.PART_SUM].decode("ascii"), ENTRY, blob)
         assert tpzl.TpzlImage.parse(got_members[NFLASHA15]).decompressed()[1080:1082] == b"\x53\xef"  # firma ext2 (superbloque)
         for name, data in members.items():  # el resto de miembros, intacto
-            if name not in (NFLASHA15, build.PART_SUM):
+            if name not in repl:
                 assert got_members[name] == data, name
     B.package_checksums(pkg)
-    result = {"version": version, "base_tar": str(base_tar), "tar_sha256": sha(tar_bytes), "part_sum_linea": detail["line_after"],
+    result = {"version": version, "darwin_v3": darwin_v3, "base_tar": str(base_tar), "tar_sha256": sha(tar_bytes), "part_sum_linea": detail["line_after"],
               "dat": str(pkg / "firmware_packed.dat"), "dat_sha256": B.sha256(pkg / "firmware_packed.dat"),
               "estado": "CONSTRUIDO OFFLINE — INSTALACIÓN NO AUTORIZADA"}
     (out / "container.json").write_text(json.dumps(result, indent=1))
@@ -70,5 +75,6 @@ if __name__ == "__main__":
     ap.add_argument("salida", type=Path)
     ap.add_argument("--base-tar", type=Path, default=DEFAULT_BASE)
     ap.add_argument("--version", default="3.39")
+    ap.add_argument("--darwin-v3", action="store_true", help="añade el parche EFCS v3 de Darwin (R82, commit 20b33eed)")
     a = ap.parse_args()
-    print(json.dumps(main(a.nflasha15, a.salida, a.base_tar, a.version), indent=1))
+    print(json.dumps(main(a.nflasha15, a.salida, a.base_tar, a.version, a.darwin_v3), indent=1))
