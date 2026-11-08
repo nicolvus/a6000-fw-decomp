@@ -569,3 +569,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 08-11-2026: G9 §8c — fallo del 3.39 diagnosticado por SWD (assert de ResourceManager por ids de texto sin ranura en el índice del A6000); 3.40 corregido y auditado 22/22; vuelta atrás 3.41.
 - 08-11-2026: G9 §8d — 3.40 (menú corregido) deja la cámara en error LED −307 de Loader3; recuperada con 3.41 (paquete base + /usr Sony). Causa sin determinar; la UI sigue sin probarse.
 - 08-11-2026: R82 en cámara — 3.43 con Darwin v3 arranca; tabla NVRAM de prueba (c=2000 µs) elimina el negro con EFCS: la NVRAM llega a Darwin. 3.42 (menú sin Darwin) no arranca → culpable `nflasha15`. Nuevo `scripts/senser_efcs_table_write.py`.
+- 08-11-2026: cierre de sesión — informes G10 (menú Silent) y R84 (Darwin v3 en cámara); cámara en 3.43 con tabla NVRAM de prueba.

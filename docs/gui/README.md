@@ -122,3 +122,4 @@ Evidencia y detalle: [G01 — arquitectura](g01-arquitectura.md).
 Herramientas: `scripts/gui/inventory.py` (inventario reproducible), `scripts/gui/elf_scan.py`
 (`sym`, `str`, `refs`, `dis`, `func`, `xrefs`, `plt`, `resolve`).
 Evidencia: `analysis/gui/`. Pruebas: `tests/test_gui_elf_scan.py`.
+- [G10 — Menú Silent: informe de continuación](g10-menu-silent-informe-de-continuacion.md)
