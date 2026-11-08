@@ -100,3 +100,24 @@ tiene. **Difícil** = código nuevo en `av-cam`/modelo. **No** = falta hardware.
 | Function for VF close | acción al cerrar el visor emergente (RX100) | No |
 | Photo Creativity | modo creativo guiado (de otros modelos) | N/A (sin aclarar) |
 | GPS TEST, Version (objetivo fijo), Aperture/ShutterSpeed/AfASetup/LockOnAfwCenter | depuración o internos | N/A |
+
+## 6. Auditoría del enlace UI → negocio de los candidatos «Sí»/«Probable» (VERIFICADO salvo lo marcado, 08-11-2026)
+
+`scripts/gui/process_bindings.py` → `analysis/gui/process-bindings-a6000.json`. En la A6000 cada ProcessId (`0..0xe8`, 233, tabla
+**llena**) pasa por `CmnViewProcessDataMgr::getElement` → `CmnViewElementFactory::factoryElement` (145 clases de elemento) y, si
+el elemento es el genérico `Normal`, por un descriptor de datos con sus **modelos** (`@Mxxx`) y/o **ids de respaldo NVRAM**.
+Comprobación: EFCS (`0x46`) = `Normal` + `@M00F` (funciona en cámara); 114 de 233 ProcessIds tienen modelo o respaldo.
+
+| Candidato | ProcessId A6000 | Enlace | Veredicto |
+|---|---|---|---|
+| AF Track Duration (`AfTrackingSpeed`, oculto) | `0x12` | `Normal`, **sin modelo ni respaldo** | No hace nada al elegirlo. **Corrección de §2/§5**: la A6000 ya muestra «AF Track Duration» con otro nodo (`AfTrackingDuration`, `0x13` → `CustomAfTrackingDuration` + `@M00B`); el oculto es el «AF Track Sens» de la A6300 sin backend |
+| AF Area Points (`CustomAfAreaNumber`) | `0x3b` | `Normal`, sin modelo ni respaldo | Inerte → necesita código |
+| AF Area Pts in Local (`LocalAreaLimitation`) | `0x3c` | `Normal`, sin modelo ni respaldo | Inerte → necesita código |
+| Wheel Lock | `0xe4` | `Normal`, respaldo `0x107090f` | **Mismo respaldo que «Dial / Wheel Lock»** (`0xc0`) con otra codificación (Wheel Lock: Lock 0/Unlock 1; Dial/Wheel Lock: Lock 0, Control Wheel 1, Unlock 2, All 3, Off 4): mostrarlo duplicaría el ajuste y escribiría valores con otro significado. **No aplicar** |
+| Exclusivas de la A6300 («Probable» de §5) | — (no existen) | — | La tabla de ProcessIds de la A6000 está llena (`cmp r1,#0xe8` en `getElement` y `setProcessId`): un ajuste nuevo exige **ampliar esas tablas (parche de código pequeño)** y además que el modelo de la A6000 acepte el parámetro (NO_VERIFICADO por ajuste) |
+| Shutter Type / Silent Shooting | `0x46` (reutiliza EFCS) | `Normal` + `@M00F` | El único aplicable sin código: ya en el 3.54 |
+
+**Conclusión**: fuera de lo que necesita código o hardware, el único ajuste aplicable solo con datos es Silent Shooting (3.54). Los 4
+ocultos no tienen backend útil en la A6000 y las exclusivas de la A6300 necesitan, como mínimo, el parche de las cotas `0xe8`. No se
+construye ningún paquete nuevo con ellos. Siguiente nivel (si se acepta código): parche de cotas + descriptores nuevos, empezando por
+ajustes cuyo modelo `@Mxxx` ya exista en la A6000.
