@@ -72,8 +72,26 @@ Además `viewUnified7` lista `SilentShutter` antes de `StillSteadyShot` en ambas
 cambiando solo el símbolo de su relocación (sin tocar tamaños); (b) el nodo nuevo ha de ser un símbolo definido en `CautionConfig.so` (el stub `SilentShutter` de la A6000, con sus nodos On/Off ya construidos, es la base más barata: cambiar su `PropertyList`
 —etiquetas, ProcessId— son datos de `.rodata`, y añadir los textos a `string_*.uxc`).
 
+## 5c. Consumidor de las páginas: `_INIT_70` de `viewUnified2.so` (A6000, VERIFICADO con REA)
+
+Cada página es un nodo local construido con `CmnViewSettingNode::CmnViewSettingNode(nodo, hijos**, cuenta, propiedades)`; `hijos` es el array de punteros de §5b y `cuenta` una **constante en el código** (`_INIT_70`, Ghidra `0x11b674+`; hay 394 construcciones en esa función).
+Páginas que contienen el EFCS (direcciones Ghidra = ELF + `0x10000`):
+
+| Nodo de página | Array de hijos | Cuenta | Índice del EFCS | Propiedades | Tras el array |
+|---|---|---|---|---|---|
+| `0x4d4c88` | `0x4b2f38` [`AelWShutter`, **EFCS**, `SuperiorAutoSettings`, `CustomFaceRecognition`, `CustomLensComp`] | 5 | 1 | `0x4d2034` | 2 palabras nulas y luego otros datos |
+| `0x4d4da4` | `0x4b337c` [`StillDigitalZoom`, `StillClearImageZoom`, `ReleaseWOLens`, `AelWShutter`, **EFCS**, `TouchShutter`] | 6 | 4 | `0x4d24a4` | 2 palabras nulas |
+| `0x4d4738` | `0x4b3664` [`AfWShutter`, `AelWShutter`, **EFCS**, `SuperiorAutoSettings`] | 4 | 2 | `0x4d6bd8` | contiguo con otro array |
+| `0x4d2c0c` | `0x4b36c8` [`AelWShutter`, **EFCS**, `AutoImageExtract`, `CustomExpCompSet`, `CustomBracketOrder`] | 5 | 1 | `0x4d5960` | contiguo |
+| `0x4d3494` | `0x4b3778` [`AelWShutter`, **EFCS**, `AutoImageExtract`, `CustomExpCompSet`, `ExposureCompSaveReset`, `CustomBracketOrder`] | 6 | 1 | `0x4d2668` | contiguo |
+
+(Comprobado: cada EFCS cae dentro de `[array, array + 4·cuenta)` en las 5 páginas.) Añadir una entrada exige **tres** cosas: (1) mover o ensanchar el array, (2) una relocación dinámica nueva (`R_ARM_ABS32` contra el símbolo del nodo; el `.rel.dyn` no tiene hueco evidente), (3) subir la constante `cuenta` en `_INIT_70`.
+Solo las páginas 1 y 2 tienen palabras nulas de relleno tras el array, pero un puntero nulo hijo no es válido y aun así faltaría la relocación.
+**Ruta sin crecimiento** (la más barata): *sustituir* el símbolo de una relocación existente en cada página (`r_info`), p. ej. `AelWShutter` → nodo Silent, a costa de esa entrada de menú; no cambia tamaños ni cuentas. La variante «insertar» queda como trabajo de parcheo ELF (NO_VERIFICADO que sea viable sin reconstruir el `.rel.dyn`).
+No he comprobado que las cuentas del A6300 sean las de la A6000 + 1 (NO_VERIFICADO; el A6300 solo se leyó por relocaciones).
+
 ## 6. Límites / siguiente
 
 - **NO_VERIFICADO**: qué tabla de página incluye cada elemento (G4) y cómo se conecta ProcessId → elemento (vtables de `viewUnified2` del A6300 sin resolver: REA no enlaza la relocación del vptr, las funciones salen sin símbolo y la vtable hallada por RTTI es de una clase genérica de rango `0x15a/0x15c`; se dejó para G4/G7). El significado de las props `0xb/0xc/0x11/0x14`.
 - Las 4 capas son estáticas; **ninguna** probada en cámara ni parcheada. La capa 4 es el bloqueo real del proyecto (sin handler `0x40e3`).
-- Siguiente: (0) hallar el consumidor de los cinco arrays de página de la A6000 (contador, ¿puntero base por GOT?) con REA; (a) localizar la tabla de la página «Shooting Settings» del A6300 que contiene Shutter Type/Silent Shooting (G4); (b) volcar ProcessId→elemento; (c) diseñar el manejador `0x40e3` con el selector independiente (carril obturador, requiere autorización para cualquier prueba).
+- Siguiente: (0) decidir entre sustituir o insertar entrada (§5c) y comprobar contra el A6300 las cuentas de página; (a) localizar la tabla de la página «Shooting Settings» del A6300 que contiene Shutter Type/Silent Shooting (G4); (b) volcar ProcessId→elemento; (c) diseñar el manejador `0x40e3` con el selector independiente (carril obturador, requiere autorización para cualquier prueba).
