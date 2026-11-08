@@ -132,8 +132,34 @@ Los arrays de p1–p3 también los usan otros nodos con cuentas menores (subconj
 **Límites**: es la carga y el reubicado de datos; no se ha ejecutado la interfaz ni el menú (necesita la cámara). El nodo insertado es todavía el stub con etiquetas de SteadyShot (§3): falta cambiar su `PropertyList` en `CautionConfig.so`,
 añadir textos a `string_*.uxc` y el cableado a `libObj`/`av-cam`. Persistencia: el `.so` parcheado exige reempaquetar `nflasha15` (riesgo de §G8) o probarlo por la vía B (montaje temporal por telnet). `/usr` queda con ~6 MB libres.
 
+## 7. Paquete de prueba «Silent Shooting al estilo A6300» — listo para probar (07-11-2026)
+
+**Requisito del usuario**: que la entrada nueva funcione **como el CFW ya hecho** (activar el silencioso, nada más), con la presentación del A6300 y sin sustituir el menú EFCS.
+
+**Cómo funciona (mismo backend que el CFW)**: el nodo nuevo escribe el **mismo ajuste que el menú EFCS** (ProcessId `0x46` → `PARAMID_FRONT_ESHUTTER_MODE` → selector LIRO `0x4099` → `+0x210`;
+[E25-24b](../capture/e25-24b-implementacion-selector.md): valor 0 = EFCS, 1 = electrónico). «Silent Shooting: **Off** = valor 0, **On** = valor 1». No añade Shutter Type, ni toca `av-cam`/Darwin. Las dos entradas (EFCS y Silent) son vistas del mismo valor y quedan sincronizadas.
+(INFERENCIA: que el elemento de proceso del ProcessId `0x46` acepte un segundo nodo es lo que la prueba debe confirmar.)
+
+**Construcción** (`scripts/gui/build_silent_menu_test.py DEV_A6000 DEV_A6300 analysis/gui/silent-menu-test`; carpeta ignorada por git, 13 MB, 27 ficheros, `SHA256SUMS` y `MANIFEST.json` con md5 de originales y parcheados):
+
+| Fichero | Cambio |
+|---|---|
+| `lib/viewUnified2.so` | 5 páginas con la entrada nueva antes del EFCS (§5d/§5e) |
+| `lib/CautionConfig.so` | las 3 listas de propiedades del nodo `SilentShutter` (3+4+4 entradas, tamaños fijos): raíz = etiqueta `0xf840` «Silent Shooting», ayuda `0xf847`, ProcessId `0x46`; «On» = valor 1, ayuda `0xf849`; «Off» = valor 0, ayuda `0xf2a1` |
+| `share/app/string_<idioma>.uxc` | ids `0xf840/0xf847/0xf849` añadidos en 25 idiomas de esquema latino (traducción de la A6300 en 6; en el resto el texto en inglés). Los 35 idiomas de tabla de 32 bits (ruso, japonés, árabe…) **no** se parsearon: sin textos nuevos |
+
+**Verificado fuera de la cámara**: los dos `.so` parcheados cargan juntos con el cargador de la cámara (`qemu-user`, glibc 2.11.2); en memoria el nodo `SilentShutter` queda con 3 propiedades de raíz, 2 hijos y las listas editadas; test `test_paquete_silent_menu_semantica_efcs`.
+
+**Prueba en cámara** (`scripts/gui/camera_ui_test.py PAQUETE {probe|deploy|revert} [--execute]`; sin `--execute` solo imprime). Telnet + FTP temporal, montajes `bind` en RAM (un reinicio los borra; **nada se flashea**):
+1. `probe --execute`: mounts, md5 de `/usr` frente al 3.21 (aborta si difiere), proceso de la UI (`im.elf`, su padre), espacio en `/android` (tmpfs; `/tmp` es vfat de 5 MB y no cabe) y soporte de `mount --bind`.
+2. Volcado NVRAM previo (`scripts/senser_backup_dump.py`) — regla de la memoria de proyecto.
+3. `deploy --execute --nvram-backup RUTA`: sube a `/android/silentmenu`, verifica md5 y monta cada fichero sobre su original.
+4. **Recargar la UI**: `libObj` carga `CautionConfig`/`viewUnified2` al arrancar `im.elf`; el montaje solo surte efecto al reiniciar ese proceso. **NO VERIFICADO** cómo se lanza/respawnea `im.elf` (ningún script del rootfs lo menciona): lo dirá `probe` (padre del proceso). Si no hay supervisor, matar `im.elf` puede dejar la cámara sin pantalla hasta reiniciar, y reiniciar borra el montaje: en ese caso hace falta un gancho de arranque (vía A, flasheo) y no se sigue por esta vía.
+5. Criterios: la entrada «Silent Shooting» aparece antes de «e-Front Curtain Shut.» en las 5 páginas; elegir On/Off no cuelga la UI; el menú EFCS refleja el cambio (On ⇄ Off del EFCS) y el disparo se comporta como con el CFW (EFCS off = electrónico).
+6. `revert --execute` (o reiniciar): desmonta y borra.
+
 ## 6. Límites / siguiente
 
 - **NO_VERIFICADO**: qué tabla de página incluye cada elemento (G4) y cómo se conecta ProcessId → elemento (vtables de `viewUnified2` del A6300 sin resolver: REA no enlaza la relocación del vptr, las funciones salen sin símbolo y la vtable hallada por RTTI es de una clase genérica de rango `0x15a/0x15c`; se dejó para G4/G7). El significado de las props `0xb/0xc/0x11/0x14`.
 - Las 4 capas son estáticas; **ninguna** probada en cámara ni parcheada. La capa 4 es el bloqueo real del proyecto (sin handler `0x40e3`).
-- Siguiente: (0) editar el nodo stub (`PropertyList` de `CautionConfig.so`, ProcessId propio) y los textos; probar el mismo método de carga con `CautionConfig` parcheado; (a) localizar la tabla de la página «Shooting Settings» del A6300 que contiene Shutter Type/Silent Shooting (G4); (b) volcar ProcessId→elemento; (c) diseñar el manejador `0x40e3` con el selector independiente (carril obturador, requiere autorización para cualquier prueba).
+- Siguiente: (0) ejecutar la prueba de §7 (requiere cámara y autorización); (a) localizar la tabla de la página «Shooting Settings» del A6300 que contiene Shutter Type/Silent Shooting (G4); (b) volcar ProcessId→elemento; (c) diseñar el manejador `0x40e3` con el selector independiente (carril obturador, requiere autorización para cualquier prueba).

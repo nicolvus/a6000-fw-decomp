@@ -85,3 +85,20 @@ def test_parche_de_paginas_inserta_y_reubica():
         assert slots[anchor] == 0xEB0  # addendum al símbolo de referencia
         old = struct.unpack_from(f"<{cnt}I", d, am._off(am._segments(d), arr))
         assert list(slots[:anchor]) + list(slots[anchor + 1:]) == list(old)
+
+
+def test_paquete_silent_menu_semantica_efcs(tmp_path):
+    sys.path.insert(0, str(ROOT / "scripts/gui"))
+    import build_silent_menu_test as bs
+    import setting_nodes
+
+    dev = APP.parent
+    a6300 = ROOT / "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev"
+    if not a6300.exists():
+        pytest.skip("firmware A6300 no disponible")
+    bs.main(dev, a6300, tmp_path)
+    vals = {n: {p: v for p, _, v in props} for n, props in setting_nodes.property_lists(tmp_path / "lib/CautionConfig.so", r"^SilentShutter")}
+    assert vals["SilentShutterRoot"][0xE] == 0x46  # mismo ProcessId que el menú EFCS
+    assert (vals["SilentShutterOff"][0xF], vals["SilentShutterOn"][0xF]) == (0, 1)  # Off = EFCS (0), On = electrónico (1)
+    _, _, recs = uxc_strings.parse((tmp_path / "share/app/string_english.uxc").read_bytes())
+    assert recs[0xF840].endswith("Silent Shooting")
