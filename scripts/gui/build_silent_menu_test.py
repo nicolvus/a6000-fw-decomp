@@ -7,7 +7,9 @@ Semántica (igual que el CFW ya hecho): la entrada nueva escribe el MISMO ajuste
 Contenido de SALIDA/:
   lib/viewUnified2.so   5 páginas con la entrada nueva antes del EFCS (add_menu_entry.py)
   lib/CautionConfig.so  nodo de ajuste «SilentShutter» (3+4+4 propiedades en `.rodata`) reescrito: etiquetas A6300, ProcessId 0x46
-  share/app/string_<idioma>.uxc  textos nuevos (ids 0xf840/0xf847/0xf849 de la A6300 en el mismo idioma; solo idiomas de esquema latino)
+  share/app/string_<idioma>.uxc  textos 0xf840/0xf847/0xf849 de la A6300 copiados a ranuras libres del A6000 (NEW_IDS; solo idiomas
+                                  de esquema latino). Los ids de la A6300 caen fuera del índice del A6000 (5 958 ranuras, hasta 0xf745):
+                                  así se instaló el 3.39 y la UI no arrancó (assert de ResourceManager.cpp:954)
   SHA256SUMS, MANIFEST.json  (hashes de los originales y de los parcheados)
 Uso: build_silent_menu_test.py DIR_DEV_A6000 DIR_DEV_A6300 SALIDA
 """
@@ -23,12 +25,13 @@ import add_menu_entry
 import uxc_strings
 
 PID_EFCS = 0x46
-NEW_IDS = (0xF840, 0xF847, 0xF849)  # etiqueta, ayuda de la raíz, ayuda de «On» (A6300)
+# id A6300 → id A6000: ranuras vacías en los 25 idiomas latinos, sin registro en los no latinos y sin referencia 0x0204xxxx en /usr
+NEW_IDS = {0xF840: 0xF3E8, 0xF847: 0xF515, 0xF849: 0xF56A}  # etiqueta, ayuda de la raíz, ayuda de «On»
 RES = 0x0204_0000
 # (símbolo de la lista de propiedades, [(id propiedad, flag, valor)]) — tamaños fijos 3/4/4 entradas (el recuento está en el código)
 LISTS = {
-    "SilentShutterRoot": [(0, 0, RES | 0xF840), (6, 0, RES | 0xF847), (0xE, 1, PID_EFCS)],
-    "SilentShutterOn": [(0, 0, RES | 0xE153), (6, 0, RES | 0xF849), (0xF, 1, 1), (0x10, 1, 1)],  # «On» = valor 1 (electrónico)
+    "SilentShutterRoot": [(0, 0, RES | NEW_IDS[0xF840]), (6, 0, RES | NEW_IDS[0xF847]), (0xE, 1, PID_EFCS)],
+    "SilentShutterOn": [(0, 0, RES | 0xE153), (6, 0, RES | NEW_IDS[0xF849]), (0xF, 1, 1), (0x10, 1, 1)],  # «On» = valor 1 (electrónico)
     "SilentShutterOff": [(0, 0, RES | 0xE109), (6, 0, RES | 0xF2A1), (0xF, 1, 0), (0x10, 1, 0)],  # «Off» = valor 0 (EFCS)
 }
 ROOT = ("nflasha15_unpacked_unpacked",)
@@ -83,7 +86,8 @@ def main(dev_a, dev_b, dest):
             recs_b = uxc_strings.parse((b / "share/app" / f.name).read_bytes())[2]
         except (AssertionError, FileNotFoundError):
             recs_b = {}
-        recs.update({i: recs_b.get(i, english[i]) for i in NEW_IDS})
+        assert not set(NEW_IDS.values()) & set(recs), f"ranura ocupada en {f.name}"
+        recs.update({new: recs_b.get(old, english[old]) for old, new in NEW_IDS.items()})
         emit(f"share/app/{f.name}", uxc_strings.build(head, recs))
         manifest["idiomas"].append(f.name + ("" if recs_b else " (inglés)"))
     (dest / "MANIFEST.json").write_text(json.dumps(manifest, indent=1, sort_keys=True))

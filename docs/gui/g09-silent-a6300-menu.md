@@ -203,6 +203,32 @@ Además: `pytest -k "r82 or e25_27_build"` 39/39; la vuelta atrás `pkg-3.40-rev
 
 **Riesgos que la auditoría no puede cerrar**: (a) que el LDEC de la cámara lea los 134 bloques recompuestos (bloques intermedios recompuestos sí se leyeron bien en `nflasha3`: 48, 57); (b) que la UI arranque con los `.so` parcheados (solo `qemu-user`); (c) versión instalada < 3.39 (no se pudo leer: cámara fuera de red). Recuperación: `pkg-3.40-revert` por el actualizador, o SWD + actualizador (R46–R49).
 
+## 8c. Fallo del 3.39 en cámara y paquete corregido 3.40 (07/08-11-2026)
+
+**Síntoma (usuario):** tras instalar el 3.39 (`Done`), pantalla negra, sin menú; por USB solo aparece un momento «Sony USB Charger» (`054c:0994`); sin Wi-Fi.
+
+**Diagnóstico por SWD (solo lectura, sin parar la CPU salvo un `halt` corto; MEDIDO)** — evidencias en
+[`analysis/camera-dumps/20261107-swd-339-pantalla-negra/`](../../analysis/camera-dumps/20261107-swd-339-pantalla-negra/):
+* CPU (`r_readonly_postfail_state.cfg`): modo SVC, `pc=0x40049e9c` (`mov pc, lr` de la rutina de reposo), pila en el `init_thread` → **el kernel Linux está vivo y en reposo**; el fallo es de espacio de usuario.
+* Log del kernel por AP0 en `0x83400000` (método de R51): `E/stella(148): assert : src/ResourceManager.cpp(954)` repetido a los 8,29 s (pid 148 = `im.elf`) y después ~80 × `osd_pin send failed`. En los logs de arranques normales (R51) no aparece ninguna de las dos líneas.
+
+**Causa (VERIFICADO offline):** los textos se copiaron a la A6000 con los **ids de la A6300** `0xf840/0xf847/0xf849`, pero el índice de `string_*.uxc` del A6000 tiene **5 958 ranuras** (ids `0xe000…0xf745`). Los registros estaban en el fichero, pero el índice no los alcanzaba (la A6300 tiene 7 120 ranuras). `uxc_strings.build` no lo comprobaba, así que el nodo apuntaba a ids que el `ResourceManager` no encuentra. El assert es de `libObj.so` (`ux::resmgr`). No se ha localizado la línea 954 exacta en el desensamblado; la relación es una INFERENCIA fuerte: es el único recurso nuevo y el resto del parche (`viewUnified2`/`CautionConfig`) no pasa por `ResourceManager`.
+
+**Arreglo:**
+* `uxc_strings.build` rechaza cualquier id sin ranura (regresión `test_build_rechaza_id_fuera_del_indice`).
+* `build_silent_menu_test.py`: los textos de la A6300 se copian en **ranuras libres del A6000**: `0xf840→0xf3e8`, `0xf847→0xf515`, `0xf849→0xf56a`. Las tres están vacías en los 25 idiomas latinos, no hay registro con esos ids en los 8 no latinos y ningún fichero de `/usr` las referencia como `0x0204xxxx`. Cabecera y número de ranuras sin cambios.
+* El test del paquete comprueba que todas las etiquetas y ayudas del nodo quedan dentro del índice. Los 25 `string_*.uxc` se recorren registro a registro: 0 registros inalcanzables (el 3.39 tenía `0xf840/0xf847/0xf849`).
+
+**Paquetes (no versionados, `analysis/gui/silent-menu-fix/`):**
+* `pkg-3.40/package-3.40/firmware_packed.dat` (`ac01db34…`): menú corregido + Darwin v3. `nflasha15` CRC `da2cdb80`, 84 691 456 B, 165 bloques recompuestos, bloque 0 = Sony. Auditoría [`audit-3.40.json`](../../analysis/gui/audit-3.40.json): **22/22 OK**, el mismo juego de comprobaciones que el 3.39.
+* `pkg-3.41-revert/package-3.41/firmware_packed.dat` (`9cccdfdd…`): vuelta atrás, 3.38 con el `/usr` de Sony. Sustituye al `pkg-3.40-revert`, que ya no se podría instalar sobre un 3.40.
+
+**Instalación:** con la UI caída la cámara no expone USB al PC, así que el actualizador solo se alcanza por SWD (R48/R49 §7.2). Secuencia: batería fuera → batería dentro con el interruptor en OFF → OpenOCD con `analysis/e26-recovery/r48_updater_swd.cfg` → encender → `pmca-console firmware -f …/package-3.40/firmware_packed.dat`.
+
+**Riesgos que siguen abiertos:**
+* En los 8 idiomas no latinos (esquema `0x0f`, sin parsear) los tres textos no existen: con la cámara en uno de ellos podría repetirse el assert.
+* El LDEC con 165 bloques recompuestos y la UI con los `.so` parcheados (solo probados en `qemu-user`) siguen sin verificar en cámara.
+
 ## 6. Límites / siguiente
 
 - **NO_VERIFICADO**: qué tabla de página incluye cada elemento (G4) y cómo se conecta ProcessId → elemento (vtables de `viewUnified2` del A6300 sin resolver: REA no enlaza la relocación del vptr, las funciones salen sin símbolo y la vtable hallada por RTTI es de una clase genérica de rango `0x15a/0x15c`; se dejó para G4/G7). El significado de las props `0xb/0xc/0x11/0x14`.

@@ -101,4 +101,15 @@ def test_paquete_silent_menu_semantica_efcs(tmp_path):
     assert vals["SilentShutterRoot"][0xE] == 0x46  # mismo ProcessId que el menú EFCS
     assert (vals["SilentShutterOff"][0xF], vals["SilentShutterOn"][0xF]) == (0, 1)  # Off = EFCS (0), On = electrónico (1)
     _, _, recs = uxc_strings.parse((tmp_path / "share/app/string_english.uxc").read_bytes())
-    assert recs[0xF840].endswith("Silent Shooting")
+    label = vals["SilentShutterRoot"][0] & 0xFFFF
+    assert recs[label].endswith("Silent Shooting")
+    # 3.39: ids de la A6300 (0xf840…) fuera del índice del A6000 (5 958 ranuras) → assert de ResourceManager y pantalla negra
+    count = struct.unpack_from("<I", (tmp_path / "share/app/string_english.uxc").read_bytes(), 12)[0] & 0x1FFF
+    ids = [v & 0xFFFF for n in vals for p, v in vals[n].items() if p in (0, 6)]
+    assert all(i - 0xE000 < count for i in ids), [hex(i) for i in ids]
+
+
+def test_build_rechaza_id_fuera_del_indice():
+    head, _, recs = uxc_strings.parse((APP / "share/app/string_english.uxc").read_bytes())
+    with pytest.raises(AssertionError):
+        uxc_strings.build(head, {**recs, 0xF840: "x"})

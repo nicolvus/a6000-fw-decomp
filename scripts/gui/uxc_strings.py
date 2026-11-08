@@ -31,6 +31,9 @@ def parse(d: bytes):
 def build(head: bytes, recs: dict) -> bytes:
     """Reconstruye fichero e índice (el orden de registros sigue al de los ids)."""
     head, body, table = bytearray(head), bytearray(), {}
+    slots = (len(head) - 0x10) // 2
+    # un id sin ranura queda en el fichero pero la cámara no lo encuentra: assert de ResourceManager y UI caída (3.39)
+    assert all(0 <= rid - FIRST_ID < slots for rid in recs), "id fuera del índice"
     for rid in sorted(recs):
         table[rid - FIRST_ID] = len(body) // 4
         raw = recs[rid].encode("utf-8") + b"\0"
