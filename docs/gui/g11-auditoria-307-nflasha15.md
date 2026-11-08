@@ -242,3 +242,18 @@ Riesgos del 3.52: (a) el arranque en frío con el kernel del CFW no se ha probad
 
 **Lectura:** 3.52 arranca → causa confirmada; siguiente, el menú (contenido del 3.44a/3.40) con `--sin-wbi`. 3.52 no arranca → captura SWD del log de Loader3
 (debe decir `BootMode` distinto de 11 y cargar `vmlinux.bin`).
+
+## 12. 3.52 arranca en frío; paquete del menú 3.53 sin WBI (08-11-2026)
+
+**3.52 en cámara (MEDIDO):** `Done` al primer intento. Primer encendido: «error de cámara»; tras apagar y encender, el siguiente arranque tarda algo más y
+**arranca normal**. Log de Loader3 por SWD ([`20261108-swd-352/`](../../analysis/camera-dumps/20261108-swd-352/)): **`BootMode: 1`** (no 11) y carga de
+los ficheros del arranque en frío (`idt_cam.bin`, `sa_dfdet.bin`, …). **Causa de §11 confirmada:** sin el WBI de Sony, un `nflasha15` recompuesto arranca.
+
+El «error de cámara» del primer encendido no está explicado. Candidatos: el sondeo SWD, que paró la CPU varias veces durante el arranque, también dentro de
+Linux (`pc=0x4004…`) (INFERENCIA: puede disparar tiempos límite con Darwin, `PWD_E:txrx:3` en el log), o el primer arranque en frío sin WBI. No se sabe
+todavía si la cámara regenera el WBI (arranques siguientes más rápidos) o arranca siempre en frío.
+
+**Paquete 3.53** (construido; instalación NO autorizada): el menú completo (`files/`: `viewUnified2.so`, `CautionConfig.so` y 25 `.uxc`, contenido del 3.40/3.42)
+reconstruido con el constructor actual (modo/uid/gid conservados) y **sin `nflasha5`**. 165 bloques recompuestos, CRC `f7ccf795`, bloque 0 = Sony;
+`.dat` SHA-256 `4886436d074dc331863c2a8337fbd6fca5b4d3c83faa9a9ea66fb809f2ff07a3`; auditoría [`audit-3.53.json`](../../analysis/gui/audit-3.53.json) **25/25**
+(27 ficheros distintos de Sony, atributos iguales). Instalar sin sondeo SWD activo; usarlo solo si falla.

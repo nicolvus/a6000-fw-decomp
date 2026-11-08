@@ -1,0 +1,154 @@
+Loader2 Ver.33.01.90 (Jan 24 2014 22:07:33)
+LDR:Init UDIF_P
+LDR:Init UDIF_D
+LDR:Init InfSec_S
+LDR:Init BOSS
+BOS:ibt_blksize:6
+LDR:Load InfSec_N
+BOS:Load[DI:0 PL:0 BK:2 PG:0 SZ:1 MEM:C00C1400]
+LDR:Load LBkup
+BOS:Load[DI:0 PL:0 BK:2 PG:8 SZ:1 MEM:C00C0400]
+LDR:Init DebugLv
+LDR:Load LDR3
+BOS:Load[DI:0 PL:0 BK:2 PG:21 SZ:43 MEM:C01F0000]
+BOS:Load[DI:0 PL:1 BK:2 PG:0 SZ:21 MEM:C0205800]
+LDR:Exit UDIF_D
+LDR:Exit UDIF_P
+LDR:Jump LDR3@0xC01F0000(7748us)
+Loader3 Ver.33.01.90 (Jan 24 2014 22:07:49)
+LD3:Init Sync
+LD3:Init Power
+PWR:<<PowerIC: 7>>
+PWD:SIO C[3] P[5] R[3]
+PWD: XCS P[5] B[14]
+PWR:chk key chat oneshot
+PWR:[10540]E:0/L:221/D:0/C:0/G:0
+LD3:Init UDIF_P
+LD3:Init UDIF_D
+LD3:Reinit BOSS
+BOS:ibt_blksize:6
+LD3:Wake DDR
+BOS:Load[DI:0 PL:0 BK:2 PG:9 SZ:6 MEM:C0038000]
+BOS:Load[DI:0 PL:0 BK:2 PG:15 SZ:6 MEM:C003D000]
+DGU:Jump DGU[0]
+BOM:-get ld:0(0x80021048)
+LD3:ddr:0/serr:1/ld:0
+LD3:Init BlkDev
+LD3:Init FAT
+FAT:Reading partition table
+LD3:Switch Bkup
+LBK:load Bkup[bin]
+FAT:Mounted partition 2 [ClusterSize=16384:SectorSize=512:Type=FAT12]
+LD3:Init DbgLv
+LD3:Init Pwr2nd
+PWR:XPWR_OFF p:0 b:10
+PWR: Normal pwr supply.[Vol_th:A8][Batt:D6][ACV:00]
+PWR:clr edge r_req
+LDR:Date type is 2
+LD3:read MISCREG
+BOM:chk updater
+BOM:chk adjust
+BOM:-file load
+BOM:chk ank
+BOM:ANK:3FF(L:135/U:1B5) u:0 c:8
+BOM:chk reboot
+BOM:chk image_update
+BOM:chk ontimer
+BOM:chk keychat_off
+BOM:chk chg_key_off
+BOM:chk panelopen_off
+BOM:chk usbcharge
+BOM:chk usbcharge_off
+BOM:chk load_off
+BOM:-rtc:0(0) 
+BOM:chk battin_off
+BOM:-usb:0x800/0x0
+BOM:chk battin_off
+BOM:chk lowbatt_off
+BOM:chk powersw_off
+BOM:-eg:0 ig:0
+BOM:-eg:0 nb:0
+BOM:chk hotboot
+BOM:chk ssboot
+BOM:chk updater
+BOM:<<BootMode: 1>>
+BOM:ddr: 0
+PWR:OFF HotIC
+LD3:Pwr bootmode
+PWR:LED 1
+PWR:Pwr set reg
+BOM:chk updater
+PWD:Snd Bkup
+PWD:Set Reg
+PWD:chg watch key:0x00000000
+LD3:Del LOG
+LD3:Init boottime
+LD3:Esc log ? (r_req:1/crash:1)
+LD3:Esc log(r_req:1/crash:1)
+CFG_W:escape log size[src=480000:dst=500000]
+ESC:Escaping log[src=82fc0000,dst=96900000,size=500000]
+PWD:Snd freeze cmd
+PWD:Str darwin log
+PWD:Snd[0]pkt:0x00000000(ofs:0x20000800/sz:0x00000078)
+PWD_W:CID[0x10]
+PWD_E:txrx:3
+PWD:Snd[1]pkt:0x00000000(ofs:0x20000878/sz:0x00000078)
+PWD:Rcv[0]pkt:0x00000001(ofs:0x20000800/sz:0x00000078)
+PWD:Snd[2]pkt:0x00000001(ofs:0x200008F0/sz:0x00000078)
+PWD:Rcv[1]pkt:0x00000003(ofs:0x20000878/sz:0x00000078)
+PWD:Snd[3]pkt:0x00000003(ofs:0x20000968/sz:0x00000078)
+PWD:Rcv[2]pkt:0x00000007(ofs:0x200008F0/sz:0x00000078)
+PWD:Snd[4]pkt:0x00000007(ofs:0x200009E0/sz:0x00000078)
+PWD:Rcv[3]pkt:0x0000000F(ofs:0x20000968/sz:0x00000078)
+PWD:Snd[5]pkt:0x0000000F(ofs:0x20000A58/sz:0x00000078)
+PWD:Rcv[4]pkt:0x0000001F(ofs:0x200009E0/sz:0x00000078)
+PWD:Snd[6]pkt:0x0000001F(ofs:0x20000AD0/sz:0x00000078)
+PWD:Rcv[5]pkt:0x0000003F(ofs:0x20000A58/sz:0x00000078)
+PWD:Snd[7]pkt:0x0000003F(ofs:0x20000B48/sz:0x00000078)
+PWD:Rcv[6]pkt:0x0000007F(ofs:0x20000AD0/sz:0x00000078)
+PWD:Snd[8]pkt:0x0000007F(ofs:0x20000BC0/sz:0x00000078)
+PWD:Rcv[7]pkt:0x000000FF(ofs:0x20000B48/sz:0x00000078)
+PWD:Snd[9]pkt:0x000000FF(ofs:0x20000C38/sz:0x00000078)
+PWD:Rcv[8]pkt:0x000001FF(ofs:0x20000BC0/sz:0x00000078)
+PWD:Snd[10]pkt:0x000001FF(ofs:0x20000CB0/sz:0x00000078)
+PWD:Rcv[9]pkt:0x000003FF(ofs:0x20000C38/sz:0x00000078)
+PWD:Snd[11]pkt:0x000003FF(ofs:0x20000D28/sz:0x00000078)
+PWD:Rcv[10]pkt:0x000007FF(ofs:0x20000CB0/sz:0x00000078)
+PWD:Snd[12]pkt:0x000007FF(ofs:0x20000DA0/sz:0x00000078)
+PWD:Rcv[11]pkt:0x00000FFF(ofs:0x20000D28/sz:0x00000078)
+PWD:Snd[13]pkt:0x00000FFF(ofs:0x20000E18/sz:0x00000078)
+PWD:Rcv[12]pkt:0x00001FFF(ofs:0x20000DA0/sz:0x00000078)
+PWD:Snd[14]pkt:0x00001FFF(ofs:0x20000E90/sz:0x00000078)
+PWD:Rcv[13]pkt:0x00003FFF(ofs:0x20000E18/sz:0x00000078)
+PWD:Snd[15]pkt:0x00003FFF(ofs:0x20000F08/sz:0x00000078)
+PWD:Rcv[14]pkt:0x00007FFF(ofs:0x20000E90/sz:0x00000078)
+PWD:Snd[16]pkt:0x00007FFF(ofs:0x20000F80/sz:0x00000078)
+PWD:Rcv[15]pkt:0x0000FFFF(ofs:0x20000F08/sz:0x00000078)
+PWD:Snd[17]pkt:0x0000FFFF(ofs:0x20000FF8/sz:0x00000008)
+PWD:Rcv[16]pkt:0x0001FFFF(ofs:0x20000F80/sz:0x00000078)
+PWD:Snd[17]pkt:0x0001FFFF(ofs:0x20000FF8/sz:0x00000008)
+PWD:Rcv[17]pkt:0x0003FFFF(ofs:0x20000FF8/sz:0x00000008)
+PWD:Snd unfreeze cmd
+PWD_W:CID[0x16]
+PWD_E:txrx:3
+PWR:Pwr chg state
+BOM:chk updater
+PWD:Chg Stat:7
+LD3:Save Date to DDR
+CIP:CIPA Flag(80021058) ffff1100 -> ffffff00 
+LD3:Run Config(init HW)
+CFG:Set PORT [sz=4608]
+CFG:Set INT [sz=3072]
+CFG:Set REG [sz=768]
+CIP:CIPA Flag(80021058) ffffff00 -> ffff1100 
+PWR_W:inv LED Port[-1--1]
+LD3:Run Config(load:1000000)
+CFG:Load files [sz=9216]
+CFG:Parse file [P=0x3:A=0x83501000:E=0x83540FFF:C=0x5000000:\sabin\idt_cam.bin]
+BOM:-get ld:0(0x80021048)
+FAT:Mounted partition 3 [ClusterSize=16384:SectorSize=512:Type=FAT12]
+CFG:Load file [\sabin\idt_cam.bin]
+CFG:Parse file [P=0x3:A=0x96800000:E=0x9682FFFF:C=0x1000000:\sabin\sa_dfdet.bin]
+BOM:-get ld:0(0x80021048)
+CFG:Load file [\sabin\sa_dfdet.bin]
+D"Ì0|m@
