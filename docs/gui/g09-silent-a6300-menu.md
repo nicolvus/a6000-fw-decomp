@@ -90,8 +90,29 @@ Solo las páginas 1 y 2 tienen palabras nulas de relleno tras el array, pero un 
 **Ruta sin crecimiento** (la más barata): *sustituir* el símbolo de una relocación existente en cada página (`r_info`), p. ej. `AelWShutter` → nodo Silent, a costa de esa entrada de menú; no cambia tamaños ni cuentas. La variante «insertar» queda como trabajo de parcheo ELF (NO_VERIFICADO que sea viable sin reconstruir el `.rel.dyn`).
 No he comprobado que las cuentas del A6300 sean las de la A6000 + 1 (NO_VERIFICADO; el A6300 solo se leyó por relocaciones).
 
+## 5d. Decisión del usuario: **insertar** una entrada nueva (no sustituir) — viabilidad (07-11-2026, estático)
+
+Motivo (usuario): su CFW actual ya reutiliza la opción EFCS (On/Off) como «Silent» / «Mechanical con EFCS On»; la entrada nueva debe convivir con ella sin sustituir nada.
+
+**Restricciones medidas en `viewUnified2.so` (A6000 fw3.21), VERIFICADO:**
+
+| Hecho | Medida | Consecuencia |
+|---|---|---|
+| `.rel.dyn` | `0x2e7a4`, 733 952 B, seguido de `.rel.plt` sin hueco; `DT_RELCOUNT` = 43 132 | no se pueden añadir relocaciones en sitio |
+| Cabeceras de programa | 5 (`EXIDX`, 2×`LOAD`, `DYNAMIC`, `GNU_STACK`), tabla pegada a la primera sección | para añadir un `LOAD` hay que mover la tabla de cabeceras |
+| `PT_GNU_RELRO` | **no existe** | `.data.rel.ro` es escribible tras la carga: un parche en tiempo de ejecución (código) sería posible |
+| Huecos de código | ninguna racha de ceros ≥ 32 B en `.text` | no hay cueva ejecutable en el ELF actual |
+| Símbolo del nodo | `cmnViewSettingNodeRootSilentShutter` **no** está en `.dynsym` de `viewUnified2` | usar `R_ARM_ABS32` contra un símbolo ya importado (p. ej. `…RootAelWShutter`) con **addendum** = distancia fija a la raíz Silent dentro de `CautionConfig.so` (mismo `.so`, mismo diseño de `.bss`), sin tocar `.dynsym` |
+| Llamada del constructor | `ldr r1,[pc,#lit]; add r1,pc` (array) y `movs r2,#N` (cuenta) antes de `blx #0xe81c8` (PLT de `CmnViewSettingNode::CmnViewSettingNode`) | por página basta cambiar **una palabra de literal** (dirección del array) y **un inmediato** (cuenta) |
+
+Sitios localizados (ELF): página 1: `ldr` `0x166182`, literal `0x166ce8`, `add` `0x16618c`, `movs r2,#5` en `0x166180`; página 2: literal `0x166f70`, `movs r2,#6` en `0x166918`; página 3: literal `0x166fe8`, `movs r2,#4` en `0x166a80`.
+**Páginas 4 y 5 no encontradas** con el mismo patrón (otra codificación; pendiente).
+
+**Mecanismo propuesto (no implementado):** añadir un segmento `PT_LOAD` al final del `.so` con (1) copias de los 5 arrays con una entrada más, (2) una copia ampliada de `.rel.dyn` con las relocaciones de todas las entradas de los arrays nuevos (`DT_REL`/`DT_RELSZ` apuntan a ella; las relocaciones de los arrays antiguos pasan a ser inofensivas) y (3) el `movs r2,#N+1` y el literal reapuntados en `_INIT_70`. Orden elegido: la entrada nueva **antes** del EFCS (como en el A6300). El EFCS conserva su entrada, id `0x46` y camino `0x4099`.
+Riesgos: la tabla de cabeceras movida y el `LOAD` nuevo no se han probado con el cargador de la cámara (glibc 2.11.2); no hay `qemu-user` instalado (requiere `sudo pacman -S qemu-user`, que necesita contraseña) para un cargado de prueba fuera de la cámara; el ext2 de `/usr` está casi lleno (el `.so` crece ~0,1–0,3 MB; ~7 MB libres, [G04 §6](g04-menus-y-recursos.md)).
+
 ## 6. Límites / siguiente
 
 - **NO_VERIFICADO**: qué tabla de página incluye cada elemento (G4) y cómo se conecta ProcessId → elemento (vtables de `viewUnified2` del A6300 sin resolver: REA no enlaza la relocación del vptr, las funciones salen sin símbolo y la vtable hallada por RTTI es de una clase genérica de rango `0x15a/0x15c`; se dejó para G4/G7). El significado de las props `0xb/0xc/0x11/0x14`.
 - Las 4 capas son estáticas; **ninguna** probada en cámara ni parcheada. La capa 4 es el bloqueo real del proyecto (sin handler `0x40e3`).
-- Siguiente: (0) decidir entre sustituir o insertar entrada (§5c) y comprobar contra el A6300 las cuentas de página; (a) localizar la tabla de la página «Shooting Settings» del A6300 que contiene Shutter Type/Silent Shooting (G4); (b) volcar ProcessId→elemento; (c) diseñar el manejador `0x40e3` con el selector independiente (carril obturador, requiere autorización para cualquier prueba).
+- Siguiente: (0) localizar los sitios de las páginas 4–5, prototipar el parche de segmento añadido sobre una copia y cargarlo con `qemu-user` + `ld-2.11.2` del rootfs (necesita instalar `qemu-user`); (a) localizar la tabla de la página «Shooting Settings» del A6300 que contiene Shutter Type/Silent Shooting (G4); (b) volcar ProcessId→elemento; (c) diseñar el manejador `0x40e3` con el selector independiente (carril obturador, requiere autorización para cualquier prueba).
