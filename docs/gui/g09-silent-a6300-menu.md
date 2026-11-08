@@ -231,6 +231,8 @@ Además: `pytest -k "r82 or e25_27_build"` 39/39; la vuelta atrás `pkg-3.40-rev
 
 ## 8d. Instalación del 3.40: no arranca (LED −307); recuperada con el 3.41 (08-11-2026)
 
+> **Corrección (08-11-2026, [G11](g11-auditoria-307-nflasha15.md) §1):** `0xc01f1290` no pertenece a la carga de `vmlinux`/`initrd`. Es el traductor de errores de `Init UDIF_P`/`Init UDIF_D`. Las tres fuentes de −307 de Loader3 están en su inicialización y ninguna lee datos de `nflasha15`.
+
 **Cronología (MEDIDO):**
 1. 3.40 por SWD (R48) + actualizador: primer intento cortado al 45 % con `Response error: 0x1063` (NG de Darwin); tras apagar/encender, segundo intento `Done` (3.39 → 3.40).
 2. Primer arranque: sin pantalla ni red; USB solo «Charger» (`054c:0994`); el SoC despierta y se apaga solo a los pocos segundos. SWD: el DAP responde, pero el procesador no (`Could not initialize the APB-AP`). SRAM de `0xc0000000` (4 KiB) idéntica al volcado bueno del 03-11 → BootROM y Loader de `nflasha0` intactos. Log del kernel en RAM a cero (se había sacado la batería).

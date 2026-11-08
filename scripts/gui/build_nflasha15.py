@@ -2,7 +2,7 @@
 """Reconstruye la partición `nflasha15` (/usr, TPZL de un ext2) con ficheros sustituidos (G08/G09). Solo ficheros; no toca la cámara.
 
 Método (el mismo que `scripts/e25_27` para `nflasha3`): descomprimir el TPZL original → sustituir ficheros en el ext2 con
-`debugfs` (rm + write, atributos y fechas conservados) → `e2fsck -fn` limpio → recomponer SOLO los bloques de 64 KiB que cambian
+`debugfs` (rm + write; modo, uid y gid conservados y comprobados; las fechas no) → `e2fsck -fn` limpio → recomponer SOLO los bloques de 64 KiB que cambian
 (`tpzl.patch_decompressed`: registros originales para las páginas intactas, LZ77 de Sony para las nuevas, alineado a 512 B,
 comprobación de las reglas del LDEC) → CRC-32 y tamaño para `part_image.sum`.
 Uso: build_nflasha15.py NFLASHA15_ORIGINAL PAQUETE SALIDA   (PAQUETE = carpeta de build_silent_menu_test.py: lib/, share/app/)
@@ -43,11 +43,14 @@ def replace_files(image: Path, package: Path, files: list[str]) -> None:
         script = Path(tempfile.mkstemp(suffix=".dbg")[1])
         script.write_text("\n".join([
             f"rm {dest}", f"write {package / rel} {dest}",
-            f"set_inode_field {dest} mode {attrs['mode'] | 0o100000:#o}", f"set_inode_field {dest} uid {attrs['uid']}",
+            # debugfs no acepta el prefijo «0o» de :#o y lo ignora sin error (3.39/3.40 quedaron en 0644)
+            f"set_inode_field {dest} mode 0{attrs['mode'] | 0o100000:o}", f"set_inode_field {dest} uid {attrs['uid']}",
             f"set_inode_field {dest} gid {attrs['gid']}",
         ]) + "\n")
         subprocess.run(["debugfs", "-w", "-f", str(script), str(image)], capture_output=True, text=True, check=True)
         script.unlink()
+        got = stat_fields(image, dest)  # debugfs -f devuelve 0 aunque falle un comando
+        assert all(got[k] == attrs[k] for k in ("mode", "uid", "gid")), (dest, got, attrs)
 
 
 def main(original: Path, package: Path, out: Path) -> dict:

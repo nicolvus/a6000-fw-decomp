@@ -123,3 +123,4 @@ Herramientas: `scripts/gui/inventory.py` (inventario reproducible), `scripts/gui
 (`sym`, `str`, `refs`, `dis`, `func`, `xrefs`, `plt`, `resolve`).
 Evidencia: `analysis/gui/`. Pruebas: `tests/test_gui_elf_scan.py`.
 - [G10 — Menú Silent: informe de continuación](g10-menu-silent-informe-de-continuacion.md)
+- [G11 — Auditoría del −307 y del `nflasha15` recompuesto](g11-auditoria-307-nflasha15.md)

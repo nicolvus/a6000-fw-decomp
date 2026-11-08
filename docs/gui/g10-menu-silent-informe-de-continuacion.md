@@ -24,6 +24,8 @@ Añadir al menú de la A6000 (fw 3.21 base) una entrada «Silent Shooting» como
 | 3.42 | menú corregido, **sin** Darwin v3 | **No arranca** |
 | 3.43 | 3.38 + `/usr` de Sony + Darwin v3 | Arranca (ver [R84](../capture/e26-r84-darwin-v3-en-camara.md)) |
 
+> **Corrección (08-11-2026, [G11](g11-auditoria-307-nflasha15.md)):** Loader3 solo lee la cabecera y el TOC de `nflasha15`, idénticos a los de Sony, y el −307 sale de su inicialización (UDIF/MuMin), no de la carga del kernel. El `nflasha15` sigue siendo la única diferencia del paquete, pero su efecto tiene que producirse en Linux (H1) o el −307 tiene otra causa (H2). G10-D queda resuelto. Además, los ficheros sustituidos quedaron con modo 0644 (defecto del constructor, ya corregido).
+
 **Conclusión (INFERENCIA, no aislada):** como el 3.42 difiere del 3.41 solo en `nflasha15` y falla, y el 3.43 con Darwin v3 arranca, **la causa del −307 está en mi `nflasha15` recompuesto** (o en cómo el cargador/LDEC lo lee), no en Darwin. Por qué Loader3 depende de `nflasha15` no se ha explicado (se esperaba que solo lo leyera Linux al montar `/usr`).
 
 ## 4. Hipótesis a probar (por orden de coste)
