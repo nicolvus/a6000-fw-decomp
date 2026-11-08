@@ -88,7 +88,7 @@ def main(original: Path, package: Path, out: Path) -> dict:
         "bloque0_igual_que_sony": new_blob[re.entries[0][0]:re.entries[0][0] + image.entries[0][1]] == image.block(0),
     }
     assert len(new_blob) <= PARTITION_LIMIT, "no cabe en la partición"
-    (out.with_suffix(".json")).write_text(json.dumps(report, indent=1))
+    out.with_name(out.name + ".json").write_text(json.dumps(report, indent=1))  # with_suffix pisaba nflasha15.json con nflasha15.34x
     shutil.rmtree(work)
     return report
 

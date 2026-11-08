@@ -123,7 +123,7 @@ def run(dat: Path, pkg: Path, base_dat: Path, darwin_v3: bool) -> dict:
     indep_bad = [i for i in recomp if fw_decode(p_new, i) != tpzl.decode_block(p_new.block(i), 65536)]
     ext_new, ext_old = p_new.decompressed(), p_old.decompressed()
     files = mounted_diff(ext_new, ext_old)
-    want = sorted(man["parcheados"])
+    want = sorted(r for r, h in man["parcheados"].items() if h != man["originales"].get(r))  # control 3.48: reescritos con los bytes de Sony
     files_ok = files == want
     with tempfile.NamedTemporaryFile(suffix=".img") as f:
         f.write(ext_new)

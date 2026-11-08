@@ -165,3 +165,24 @@ tras apagar y encender con el interruptor, `Done`. **Arranca normal, firmware 3.
   alimentación a mitad de un arranque.
 * Siguiente prueba decisiva y barata: separar `CautionConfig.so` de los `.uxc` (3.46 = solo `.uxc`; 3.47 = solo
   `CautionConfig.so`) y, en el fallo, la misma captura SWD del log de Loader2 y, si es posible, del de Linux.
+
+## 9. Paquetes de aislamiento 3.46/3.47/3.48 construidos (08-11-2026, offline; instalación NO autorizada)
+
+Los tres parten del CFW 3.38 + Darwin v3, como el 3.43/3.45; frente al tar del 3.43 solo cambian `dev/nflasha15` y
+`part_image.sum` (VERIFICADO). Bloque TPZL 0 idéntico al de Sony en los tres. Auditoría **23/23 OK** en los tres.
+
+| Paquete | `/usr` | Bloques recompuestos | CRC `nflasha15` | SHA-256 del `.dat` | Auditoría |
+|---|---|---|---|---|---|
+| 3.46 | solo los 25 `.uxc` | 68 | `018124d2` | `8f8ff10f6397c7b0ca9298ee5a8eb556be2c5a21f91790e500c08adf9046ab8e` | [`audit-3.46.json`](../../analysis/gui/audit-3.46.json) |
+| 3.47 | solo `CautionConfig.so` | 8 | `57865612` | `79bad8d521385b362a41a39036b2c5895204217a722ddfe093ff52caa7f4089a` | [`audit-3.47.json`](../../analysis/gui/audit-3.47.json) |
+| 3.48 (control) | los 26 ficheros reescritos con los bytes de Sony (contenido idéntico; cambian inodos y bloques del ext2) | 39 | `7ebee5d7` | `c1895a46b5f21ee6725c7eb36d52ff4fc4d303222a6c14ebfc74b0c79d61aa7d` | [`audit-3.48.json`](../../analysis/gui/audit-3.48.json) |
+
+Ficheros: `analysis/gui/silent-menu-fix/files-34{6,7,8}/`, `nflasha15.34{6,7,8}` (+ `.json`), `pkg-34{6,7,8}/` (no versionados).
+El auditor espera ahora como «ficheros distintos» solo los que cambian frente a Sony (en el control, ninguno). Corregido además
+`build_nflasha15.py`: `with_suffix(".json")` escribía el informe de `nflasha15.34x` en `nflasha15.json` (se perdió el informe
+del `nflasha15.silent`, reproducible).
+
+**Lectura (orden de instalación sugerido: 3.48 → 3.47 → 3.46; cada uno con su autorización):**
+* 3.48 no arranca → la causa es escribir un `nflasha15` recompuesto (disposición TPZL, recompresión o metadatos del ext2), no el contenido.
+* 3.48 arranca → el contenido: 3.47 y 3.46 dicen si es `CautionConfig.so` o los `.uxc`.
+* En cualquier fallo: captura SWD del log de Loader2 (y del de Linux si el MEM-AP responde) antes de recuperar con R48 + un paquete con el `/usr` de Sony de versión mayor.
