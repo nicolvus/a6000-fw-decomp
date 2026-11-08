@@ -229,6 +229,23 @@ Además: `pytest -k "r82 or e25_27_build"` 39/39; la vuelta atrás `pkg-3.40-rev
 * En los 8 idiomas no latinos (esquema `0x0f`, sin parsear) los tres textos no existen: con la cámara en uno de ellos podría repetirse el assert.
 * El LDEC con 165 bloques recompuestos y la UI con los `.so` parcheados (solo probados en `qemu-user`) siguen sin verificar en cámara.
 
+## 8d. Instalación del 3.40: no arranca (LED −307); recuperada con el 3.41 (08-11-2026)
+
+**Cronología (MEDIDO):**
+1. 3.40 por SWD (R48) + actualizador: primer intento cortado al 45 % con `Response error: 0x1063` (NG de Darwin); tras apagar/encender, segundo intento `Done` (3.39 → 3.40).
+2. Primer arranque: sin pantalla ni red; USB solo «Charger» (`054c:0994`); el SoC despierta y se apaga solo a los pocos segundos. SWD: el DAP responde, pero el procesador no (`Could not initialize the APB-AP`). SRAM de `0xc0000000` (4 KiB) idéntica al volcado bueno del 03-11 → BootROM y Loader de `nflasha0` intactos. Log del kernel en RAM a cero (se había sacado la batería).
+3. LED rojo: **3 lentos + 7 rápidos**. Según R13 (orden LDR2 → LNG → SHT) = código **−307** de Loader3. En `bootloader.bin` el −307 lo devuelve `0xc01f1290`, rutina de errores de la carga de imagen (`Load vmlinux/initrd`, `Addr of vmlinux … in %s`): **Loader3 no consigue cargar el kernel/initrd** (INFERENCIA; el orden de los parpadeos no se verificó).
+4. Modo actualizador forzado otra vez por SWD (R48). Instalación del 3.41 (3.38 con `/usr` de Sony): primer intento `0x1063` al 45 %; segundo, tras apagar/encender **sin sonda abierta**, `Done`. **Arranca normal** (`054c:07c4`, `pmca-console info`: firmware **3.41**).
+
+**Observaciones:**
+* `0x1063` al 45 % ocurrió en los dos primeros intentos tras abrir la sonda SWD (R48) y no en los reintentos limpios: coincide con la sospecha de R49 (interferencia de la sonda con Darwin), sin demostrarla.
+* El log de AP0 (`0x83400000`) tras un fallo del actualizador sigue siendo el del último arranque de Linux; el actualizador no escribe ahí y no muestra el motivo del NG de Darwin.
+* Con el 3.40 el arranque falló antes de Linux (Loader3), así que la UI nunca se ejecutó: **no se ha probado** si el arreglo de ids de §8c funciona.
+
+**Causa del −307: NO DETERMINADA.** Candidatas: (a) estado dejado por el primer intento cortado al 45 % (el segundo escribió el paquete entero y dijo `Done`); (b) algo propio del 3.40 (su kernel/initrd son los del 3.38, idénticos al 3.41; solo difieren `nflasha15`, que Loader3 no lee, y Darwin v3, presente también en el 3.39 que sí llegó a Linux); (c) fallo aislado de lectura de NAND. No hay evidencia para elegir.
+
+**Siguiente (requiere autorización):** reinstalar el mismo paquete de menú con versión mayor (3.42), en un solo intento limpio (sin sonda abierta, apagar/encender si sale `0x1063`). Si vuelve el −307 con un paquete que difiere del 3.41 solo en `nflasha15` y Darwin v3, la causa estará en uno de esos dos y se aíslan por separado (3.42 sin Darwin v3 primero).
+
 ## 6. Límites / siguiente
 
 - **NO_VERIFICADO**: qué tabla de página incluye cada elemento (G4) y cómo se conecta ProcessId → elemento (vtables de `viewUnified2` del A6300 sin resolver: REA no enlaza la relocación del vptr, las funciones salen sin símbolo y la vtable hallada por RTTI es de una clase genérica de rango `0x15a/0x15c`; se dejó para G4/G7). El significado de las props `0xb/0xc/0x11/0x14`.
