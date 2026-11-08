@@ -6,6 +6,8 @@ Bionz X que la A6000 y con Picture Profile/S-Log2). Amplía [G14](g14-auditoria-
 [S77](../../analysis/s77_pp/picture_profile_creative_style.md) §4** («no hay ninguna traza de Picture Profile en el firmware»:
 sí la hay, en `libObj.so`).
 
+> **Superado en parte por [G16](g16-picture-profile-nucleo.md) (08-11-2026)**: el núcleo de la A6000 sí aplica curvas PP por número de gamma; le faltan 7 curvas de vídeo (datos) y la tabla del selector, y código solo para 2 gammas. `job_EC_CalcCaptureGamma` es metadatos y `EC_Gamma.cpp` una aserción.
+
 **Reproducción**: `scripts/gui/picture_profile_audit.py analysis/gui/picture-profile-audit.json` (con autocomprobaciones);
 clases y medidas de la A6300 en `analysis/gui/g14/` (`f6300.json`, `measure.json`, `cls_params.json`).
 
