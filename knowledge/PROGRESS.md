@@ -578,3 +578,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 08-11-2026: G11 §10 — 3.48 (control) y 3.47 (solo `CautionConfig.so`) instalados: ambos fallan; la causa probable es escribir un `nflasha15` recompuesto. Cámara pendiente de recuperar con el 3.49.
 - 08-11-2026: G11 §11 — recuperada con 3.51. Causa común: el arranque normal (BootMode 11) reanuda el WBI de Sony (`nflasha5`), que contiene el TOC y la caché del `/usr` de Sony; el actualizador lo reescribe tras `ud_wbi_drop`. Paquete 3.52 (control sin `nflasha5`) construido, 25/25.
 - 08-11-2026: G11 §12 — 3.52 arranca en frío (`BootMode: 1`): causa confirmada. 3.53 (menú completo sin `nflasha5`) construido, 25/25.
+- 08-11-2026: G11 §13 — 3.53 en cámara: arranca y aparece «Silent Shooting», sin selector. 3.54: listas del nodo con `0xb`/`0xc` del EFCS en segmento nuevo (qemu OK), 25/25.

@@ -107,6 +107,13 @@ def test_paquete_silent_menu_semantica_efcs(tmp_path):
     count = struct.unpack_from("<I", (tmp_path / "share/app/string_english.uxc").read_bytes(), 12)[0] & 0x1FFF
     ids = [v & 0xFFFF for n in vals for p, v in vals[n].items() if p in (0, 6)]
     assert all(i - 0xE000 < count for i in ids), [hex(i) for i in ids]
+    # 3.53: sin 0xb/0xc el menú muestra la entrada pero no abre el selector; mismos valores que el nodo EFCS (CustomFrontCurtainShutter)
+    assert (vals["SilentShutterRoot"][0xB], vals["SilentShutterRoot"][0xC]) == (2, 0)
+    assert all((vals[n][0xB], vals[n][0xC]) == (0, 1) for n in ("SilentShutterOn", "SilentShutterOff"))
+    lists = dict(setting_nodes.property_lists(tmp_path / "lib/CautionConfig.so", r"^SilentShutter"))
+    assert all([p for p, _, _ in t] == sorted(p for p, _, _ in t) for t in lists.values())  # _getPropertyIndex: búsqueda binaria
+    d = (tmp_path / "lib/CautionConfig.so").read_bytes()
+    assert [struct.unpack_from("<H", d, a)[0] for a in bs.COUNT_MOVS.values()] == [0x2200 | len(lists[n]) for n in bs.COUNT_MOVS]
 
 
 def test_build_rechaza_id_fuera_del_indice():

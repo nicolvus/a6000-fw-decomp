@@ -257,3 +257,26 @@ todavía si la cámara regenera el WBI (arranques siguientes más rápidos) o ar
 reconstruido con el constructor actual (modo/uid/gid conservados) y **sin `nflasha5`**. 165 bloques recompuestos, CRC `f7ccf795`, bloque 0 = Sony;
 `.dat` SHA-256 `4886436d074dc331863c2a8337fbd6fca5b4d3c83faa9a9ea66fb809f2ff07a3`; auditoría [`audit-3.53.json`](../../analysis/gui/audit-3.53.json) **25/25**
 (27 ficheros distintos de Sony, atributos iguales). Instalar sin sondeo SWD activo; usarlo solo si falla.
+
+## 13. 3.53 en cámara: arranca y el menú aparece, pero sin selector; paquete 3.54 (08-11-2026)
+
+**3.53 (MEDIDO):** `Done` al primer intento, sin sondeo SWD. La cámara arranca y la entrada **«Silent Shooting» aparece en el menú**, pero **no tiene selector**
+(usuario). Primer arranque de `viewUnified2.so` y `CautionConfig.so` parcheados en la cámara: la inserción de la entrada (G09 §5e) funciona.
+
+**Causa probable (VERIFICADO en estático; efecto en la UI = INFERENCIA):** a las listas del nodo les faltan las propiedades `0xb`/`0xc`. El nodo EFCS
+(`CustomFrontCurtainShutter`, ProcessId `0x46`) tiene raíz `0xb=2, 0xc=0` y opciones `0xb=0, 0xc=1`. En el `CautionConfig.so` de Sony, 234 de las 239 raíces con
+ProcessId tienen `0xb=2`; las 5 que no lo tienen (`SilentShutter`, `CustomAfAreaDisplay`, `CustomAfAreaNumber`, `LocalAreaLimitation`, `MoviePushAutoFocus`) son
+nodos que el A6000 no pone en ningún menú.
+
+**Parche (`build_silent_menu_test.py`):** listas de 5/6/6 entradas, ordenadas por id (`_getPropertyIndex` hace búsqueda binaria), con `0xb`/`0xc` del nodo EFCS, en un
+segmento `PT_LOAD` de solo lectura nuevo (`0x1d0000`, offset de fichero = dirección). Se reapuntan `st_value`/`st_size` de los tres símbolos
+`cmnViewSettingPropertyListSilentShutter*`, que se resuelven por `R_ARM_GLOB_DAT`, y las cuentas `movs r2,#N` del constructor (`0x11b9aa` 3→5, `0x11b9b8` y `0x11b9ca` 4→6).
+**Carga con `qemu-arm`** (sysroot de la cámara, `LD_PRELOAD`, `gdb`): tras «calling init», `cmnViewSettingProperties{Root,On,Off}` = {lista nueva, 5/6/6}; el `SIGSEGV`
+posterior en `osal_wai_sem_tmo` es el mismo que con el original (no hay hardware). Test: `test_paquete_silent_menu_semantica_efcs` (0xb/0xc, orden, cuentas).
+
+**Paquete 3.54** (construido; instalación NO autorizada): igual que el 3.53 salvo `CautionConfig.so` (`files-354/`; `viewUnified2.so` y `.uxc` idénticos). Sin `nflasha5`.
+167 bloques recompuestos, CRC `40f7693f`, bloque 0 = Sony; `.dat` SHA-256 `5926fc065f6bcc3ec6eb78118ad163517da19d52b31587bb8e0cfbbba7f925d6`; auditoría
+[`audit-3.54.json`](../../analysis/gui/audit-3.54.json) **25/25**. Frente al 3.53 solo cambian `nflasha15` y `part_image.sum`.
+
+**Disco:** `/home` se llenó al empaquetar (200 KB libres); se borraron los `.tar`/`.dat` de `pkg-346`, `pkg-347` y `pkg-3.49-revert` (no instalados o superados;
+reproducibles, se conserva su `container.json`). Quedan ~1,8 GB.
