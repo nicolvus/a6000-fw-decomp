@@ -125,3 +125,43 @@ La comprobación nueva del auditor falla en el 3.40 (25 ficheros con el modo cam
 * No arranca → la causa está en `CautionConfig.so` (nodo `0x26` reutilizado, R1) o en los `.uxc`; el siguiente paso sería separarlos.
 * Arranca, sin entrada nueva en el menú (esperado); comprobar que SteadyShot y el EFCS siguen igual → R1 queda descartado como causa de arranque; probar la variante (b).
 * En cualquier fallo: G11-LOG antes de sacar la batería.
+
+## 8. 3.44a en cámara: no arranca; fallo capturado en Loader2; recuperada con 3.45 (08-11-2026)
+
+**Instalación (MEDIDO):** 3.43 → 3.44 por USB, `Done` en un intento (`install-3.44a.log`).
+
+**Síntomas (MEDIDO, usuario y USB):** ciclo de ≈ 40 s con `054c:0994` («modo carga») y ≈ 30 s sin dispositivo; la pantalla
+parpadea dos veces («como que lo intenta»); después, LED rojo **1 muy lento + 2 lentos + 1 rápido**.
+
+**Decodificación (R13 §2):** grupos LDR2 (2 s) / LNG (0,5 s) / SHT (0,25 s) → 1/2/1 → n = 1201. Solo Loader2 añade el pulso LDR2
+(`n = 1000 + |err|`) → **error −201 de Loader2** (INFERENCIA fuerte: el orden se dedujo del ciclo observado). En Loader2 el −201
+solo sale de `0xc00305c0` (`Init BOSS`: MuMin, información, carga de BOSS o reinicio) y de `0xc003074c`
+(`BOS_E:Load page(%d <-> %X)`: la página leída no es la pedida) (VERIFICADO). Loader2 tiene además el mismo traductor UDIF que Loader3
+(`0xc00303f0`, −202/−307); el «3 lentos + 7 rápidos» del 3.40 podría ser un 1/3/7 de Loader2 con el pulso largo no visto (NO VERIFICADO).
+
+**SWD (solo lectura, autorizado; [`analysis/camera-dumps/20261108-swd-344a/`](../../analysis/camera-dumps/20261108-swd-344a/)):**
+* Con la cámara en el ciclo, el DP responde a ratos y el MEM-AP da `stalled AP operation`: el log del kernel (`0x83400000`) **no
+  se pudo leer**.
+* En un encendido, parada corta de la CPU: **PC `0xc00310e0` en Loader2** (espera activa del temporizador), llamada desde
+  `0xc00332be`: espera de un evento de MuMin con tiempo límite (devuelve −10003 si se agota). Volcado de 1 MiB de eSRAM por la
+  CPU (no versionado).
+* **Búfer de log de Loader2 en la eSRAM** (`0xc0060000`, `loader2-log-0xc0060000.txt`): `Init UDIF_P/D`, `InfSec_S` y
+  `BOSS` correctos, `Load InfSec_N` (`BK:2 PG:0`) y `Load LBkup` (`BK:2 PG:8`) correctos, y se queda en
+  **`LDR:Load LDR3` → `BOS:Load[DI:0 PL:0 BK:2 PG:21 SZ:43 MEM:C01F0000]`**: **Loader2 no termina de leer Loader3 de la NAND**
+  (bloque 2 de `nflasha0`, la zona de arranque, que el actualizador no escribe).
+
+**Recuperación (MEDIDO):** R48 en el arranque siguiente; esta vez Loader2 sí cargó Loader3 (BP en `0xc01f0000` a 107 ms),
+2 comprobaciones forzadas, BootMode 3 y entrada al actualizador. 3.45 (= 3.43, mismo tar): primer intento `0x1063` al 45 %;
+tras apagar y encender con el interruptor, `Done`. **Arranca normal, firmware 3.45.**
+
+**Interpretación:**
+* La UI no explica el fallo: el 3.44a no toca `viewUnified2.so` y falla igual (R3 descartado como causa de arranque). Quedan
+  `CautionConfig.so` (R1), los `.uxc` o el hecho de escribir un `nflasha15` recompuesto. Recuento: 3/3 paquetes con `/usr`
+  recompuesto no arrancan (3.40, 3.42, 3.44a) y 3/3 con el `/usr` de Sony sí (3.41, 3.43, 3.45).
+* El fallo capturado está **antes de Loader3**, en la lectura NAND del bloque 2, y es **intermitente**: la pantalla se encendió
+  en intentos anteriores y el arranque de R48 cargó Loader3 sin problema. No hay mecanismo estático conocido por el que el
+  contenido de `nflasha15` afecte a esa lectura (NO DETERMINADO). Hipótesis por comprobar: fallo en Linux/espacio de usuario
+  con apagado anómalo que deja la NAND o el controlador en un estado que Loader2 tarda en superar, o efecto de Darwin cortando la
+  alimentación a mitad de un arranque.
+* Siguiente prueba decisiva y barata: separar `CautionConfig.so` de los `.uxc` (3.46 = solo `.uxc`; 3.47 = solo
+  `CautionConfig.so`) y, en el fallo, la misma captura SWD del log de Loader2 y, si es posible, del de Linux.
