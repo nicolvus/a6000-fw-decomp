@@ -167,8 +167,31 @@ Ejecutado con autorización del usuario (cámara por red y SWD disponibles; sin 
 - Conclusión: el cambio solo puede aplicarse **de forma persistente** (firmware con `nflasha15` modificado, vía A de §G8) o con un gancho que monte los ficheros **antes** de que arranque `im.elf` (no existe en el rootfs conocido; el que lanza `im.elf` es anterior al shell de PID 1). La cámara no queda modificada: ni NAND ni NVRAM escritas; solo ~8 MB en `/android/data/silentmenu` (borrar con `revert`).
 - Para la próxima: `camera_ui_test.py deploy` + `restart-ui` quedan como herramientas históricas; no repetir `restart-ui` (provoca reinicio).
 
+## 8. Cómo reconstruir `nflasha15` en el paquete (investigado y construido offline, 07-11-2026)
+
+**Formato** (VERIFICADO): `dev/nflasha15` del `firmware.tar` es un **TPZL** (LZPT) de un ext2 de 155 516 928 B (blocks de 1 KiB, raíz = `/usr`): 2 373 bloques de 64 KiB, cada uno = 16 registros LZ77 de 4 096 B, alineados a 512 B.
+La cámara lo expone como `/dev/dnflasha15` (capa de descompresión; `/usr` = `ext2 ro`) y el actualizador lo escribe como blob de ~84 MB en la partición de 104 857 600 B (`mount.conf`). Integridad: solo CRC-32 + tamaño en `part_image.sum` (línea `dev/nflasha15`) y la comprobación del FDAT (modelo/región/versión); sin firma.
+
+**Cadena construida** (misma técnica que `nflasha3` en `scripts/e25_27`, reutilizada):
+1. `scripts/gui/build_nflasha15.py ORIGINAL PAQUETE SALIDA`: descomprime el TPZL, sustituye los ficheros del paquete en el ext2 con `debugfs` (`rm` + `write`, modo/uid/gid conservados), exige `e2fsck -fn` limpio, y recompone **solo los bloques que cambian** (`tpzl.patch_decompressed`: registros originales para las páginas intactas, LZ77 de Sony para las nuevas, relleno a 512 B, reglas del LDEC).
+2. `scripts/gui/build_package_nflasha15.py NFLASHA15 SALIDA [--base-tar] [--version]`: sustituye `dev/nflasha15` y su línea de `part_image.sum` en el tar base, empaqueta con `fwtool` y comprueba el desempaquetado byte a byte (tar, sumas, firma ext2, resto de miembros idéntico).
+
+**Resultado** (base = CFW 3.38, `analysis/e25-27/artifacts-338/firmware.integrated.tar`, EFCS off = electrónico):
+- `nflasha15` nuevo: 84 699 136 B (+656 KB; límite de partición 104 857 600), CRC-32 `bc6d4807`, **135 de 2 373 bloques recompuestos** (el resto, byte a byte de Sony); `fsck` limpio.
+- Verificaciones: descompresión = ext2 parcheado; **decodificador independiente** (`fwtool.lz77`) coincide en los 136 bloques distintos y 24 de muestra; los 27 ficheros del paquete extraídos del ext2 del `.dat` coinciden con `silent-menu-test` (27/27); `libObj.so` (no tocado) idéntico al original.
+- Paquetes (carpeta `analysis/gui/silent-menu-pkg/`, ignorada por git, 1,3 GB, con `SHA256SUMS`):
+  - `pkg-3.39/package-3.39/firmware_packed.dat` — **con el menú**: `d0be79039bcb6126…`, línea `0,bc6d4807,050c6800,000001a4,00000000,000003e8,root,root,-1,-1,dev/nflasha15,`.
+  - `pkg-3.40-revert/package-3.40/firmware_packed.dat` — **vuelta atrás**: `/usr` original de Sony (CRC `df198ecd`, `050264e1`) sobre el mismo CFW 3.38, versión 3.40 porque el actualizador solo acepta versiones mayores: `5ac4a9b24e74d91e…`.
+  - Mismo modelo `0x41030035`, región 0, `updater.img` oficial; estado **CONSTRUIDO OFFLINE — INSTALACIÓN NO AUTORIZADA**.
+
+**Pendiente de comprobar en cámara / riesgos**:
+1. Que el Linux de la cámara acepte los 135 bloques recompuestos (el decodificador software lo hace; el de la cámara usa el LDEC — R51 §6.6: un bloque de `nflasha3` recompuesto con registros almacenados que crecía colgó el LZP; aquí `hardware_violations` es vacío y las páginas nuevas usan LZ77, pero **no hay prueba hardware**).
+2. Que `viewUnified2.so` parcheado (segmento añadido) y `CautionConfig.so` editado arranquen la UI (probado solo con `qemu-user`).
+3. La versión instalada ahora es 3.37/3.38: instalar el 3.39 exige batería > 50 %, cable directo y `sha256sum -c SHA256SUMS`; la vuelta atrás es el 3.40. Si no arrancara: recuperación por SWD/actualizador como en R46–R49 (`nflasha1` no va en el paquete).
+4. Los 35 idiomas de tabla de 32 bits no llevan textos nuevos; el español sí (en inglés).
+
 ## 6. Límites / siguiente
 
 - **NO_VERIFICADO**: qué tabla de página incluye cada elemento (G4) y cómo se conecta ProcessId → elemento (vtables de `viewUnified2` del A6300 sin resolver: REA no enlaza la relocación del vptr, las funciones salen sin símbolo y la vtable hallada por RTTI es de una clase genérica de rango `0x15a/0x15c`; se dejó para G4/G7). El significado de las props `0xb/0xc/0x11/0x14`.
 - Las 4 capas son estáticas; **ninguna** probada en cámara ni parcheada. La capa 4 es el bloqueo real del proyecto (sin handler `0x40e3`).
-- Siguiente: (0) ejecutar la prueba de §7 (requiere cámara y autorización); (a) localizar la tabla de la página «Shooting Settings» del A6300 que contiene Shutter Type/Silent Shooting (G4); (b) volcar ProcessId→elemento; (c) diseñar el manejador `0x40e3` con el selector independiente (carril obturador, requiere autorización para cualquier prueba).
+- Siguiente: (0) instalar `pkg-3.39` (requiere autorización; vuelta atrás `pkg-3.40-revert`); (a) localizar la tabla de la página «Shooting Settings» del A6300 que contiene Shutter Type/Silent Shooting (G4); (b) volcar ProcessId→elemento; (c) diseñar el manejador `0x40e3` con el selector independiente (carril obturador, requiere autorización para cualquier prueba).
