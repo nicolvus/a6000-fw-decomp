@@ -4,10 +4,10 @@
 NADA toca la cámara sin `--execute`; sin él solo imprime lo que haría. Un reinicio de la cámara revierte los montajes.
 Subcomandos:
   probe    lectura (más un montaje de prueba en /tmp): mounts, hashes de /usr, proceso de la UI, espacio, soporte de `mount --bind`
-  deploy   sube el paquete a /tmp/silentmenu, comprueba md5 y monta cada fichero sobre su original (exige probe correcto y --nvram-backup)
+  deploy   sube el paquete a /android/silentmenu, comprueba md5 y monta cada fichero sobre su original (exige probe correcto)
   revert   desmonta los `bind` y borra /tmp/silentmenu
-Uso: camera_ui_test.py PAQUETE {probe|deploy|revert} [--execute] [--nvram-backup RUTA] [--host IP]
-Antes de `deploy`: volcado NVRAM reciente (scripts/senser_backup_dump.py) — regla de [[feedback-cuidado-pruebas-camara]].
+Uso: camera_ui_test.py PAQUETE {probe|deploy|revert} [--execute] [--host IP]
+Sin volcado NVRAM previo (decisión del usuario, 07-11-2026: ya hay suficientes copias).
 La UI carga los .so al arrancar: el montaje solo se ve tras reiniciar la UI/cámara (reiniciar borra el montaje: ver docs/gui/g09 §7).
 """
 import argparse
@@ -63,9 +63,7 @@ def probe(host, pkg, execute):
     return ok
 
 
-def deploy(host, pkg, execute, nvram):
-    if execute and not (nvram and Path(nvram).exists()):
-        sys.exit("deploy exige --nvram-backup RUTA de un volcado NVRAM existente")
+def deploy(host, pkg, execute):
     man = json.loads((pkg / "MANIFEST.json").read_text())
     if execute and not probe(host, pkg, True):
         sys.exit("probe fallido: no se despliega")
@@ -112,10 +110,9 @@ def main():
     ap.add_argument("paquete", type=Path)
     ap.add_argument("accion", choices=("probe", "deploy", "revert"))
     ap.add_argument("--execute", action="store_true")
-    ap.add_argument("--nvram-backup")
     ap.add_argument("--host", default=os.environ.get("A6000_HOST", "192.168.1.29"))
     a = ap.parse_args()
-    {"probe": lambda: probe(a.host, a.paquete, a.execute), "deploy": lambda: deploy(a.host, a.paquete, a.execute, a.nvram_backup),
+    {"probe": lambda: probe(a.host, a.paquete, a.execute), "deploy": lambda: deploy(a.host, a.paquete, a.execute),
      "revert": lambda: revert(a.host, a.paquete, a.execute)}[a.accion]()
 
 

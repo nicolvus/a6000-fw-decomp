@@ -152,8 +152,8 @@ añadir textos a `string_*.uxc` y el cableado a `libObj`/`av-cam`. Persistencia:
 
 **Prueba en cámara** (`scripts/gui/camera_ui_test.py PAQUETE {probe|deploy|revert} [--execute]`; sin `--execute` solo imprime). Telnet + FTP temporal, montajes `bind` en RAM (un reinicio los borra; **nada se flashea**):
 1. `probe --execute`: mounts, md5 de `/usr` frente al 3.21 (aborta si difiere), proceso de la UI (`im.elf`, su padre), espacio en `/android` (tmpfs; `/tmp` es vfat de 5 MB y no cabe) y soporte de `mount --bind`.
-2. Volcado NVRAM previo (`scripts/senser_backup_dump.py`) — regla de la memoria de proyecto.
-3. `deploy --execute --nvram-backup RUTA`: sube a `/android/silentmenu`, verifica md5 y monta cada fichero sobre su original.
+2. Sin volcado NVRAM previo (el usuario indicó que ya hay suficientes copias; esta prueba no escribe NAND ni NVRAM, solo montajes en RAM y el ajuste EFCS que el menú ya escribe).
+3. `deploy --execute`: sube a `/android/silentmenu`, verifica md5 y monta cada fichero sobre su original.
 4. **Recargar la UI**: `libObj` carga `CautionConfig`/`viewUnified2` al arrancar `im.elf`; el montaje solo surte efecto al reiniciar ese proceso. **NO VERIFICADO** cómo se lanza/respawnea `im.elf` (ningún script del rootfs lo menciona): lo dirá `probe` (padre del proceso). Si no hay supervisor, matar `im.elf` puede dejar la cámara sin pantalla hasta reiniciar, y reiniciar borra el montaje: en ese caso hace falta un gancho de arranque (vía A, flasheo) y no se sigue por esta vía.
 5. Criterios: la entrada «Silent Shooting» aparece antes de «e-Front Curtain Shut.» en las 5 páginas; elegir On/Off no cuelga la UI; el menú EFCS refleja el cambio (On ⇄ Off del EFCS) y el disparo se comporta como con el CFW (EFCS off = electrónico).
 6. `revert --execute` (o reiniciar): desmonta y borra.
