@@ -72,3 +72,38 @@ G10-D («por qué Loader3 depende de `nflasha15`») queda resuelto: no depende, 
    `.uxc` (si falla, el problema está en los recursos o en la recompresión); (b) `.uxc` + `CautionConfig.so`;
    (c) todo. Versión ≥ 3.44.
 3. (Offline) Repetir en `qemu-user` el camino de `im.elf` posterior a la búsqueda de recursos, con los ids nuevos.
+
+## 6. Verificación estática de los ficheros cambiados (08-11-2026)
+
+Sobre `analysis/gui/silent-menu-fix/files/` (el contenido del 3.40/3.42) frente al 3.21 de Sony.
+
+### 6.1 Sin defecto (VERIFICADO)
+
+| Pieza | Comprobación |
+|---|---|
+| `viewUnified2.so` (ELF) | Fuera del segmento nuevo solo cambian 27 bytes: `e_phoff`/`e_phnum`, los 5 literales, los 5 `movs r2,#N` y `DT_REL`/`DT_RELSZ`. El `PT_LOAD` nuevo (`0x4d0000`, RW) está alineado y es congruente con su offset; los `PT_LOAD` siguen en orden ascendente; la tabla de cabeceras cae dentro del segmento; no hay `PT_PHDR` ni `GNU_RELRO`; `DT_RELCOUNT` sigue siendo válido (se añade al final) |
+| Páginas | Resolviendo las relocaciones con los símbolos de `CautionConfig.so`, cada página nueva = la original con `RootSilentShutter` insertado justo antes de `RootCustomFrontCurtainShutter`. Cada array tiene una sola referencia en `.text`, que es la parcheada, y ningún puntero en datos. El literal y la cuenta van al mismo `CmnViewSettingNode(nodo, hijos, cuenta, props)` |
+| Relocación nueva | `R_ARM_ABS32` contra `cmnViewSettingNodeRootAelWShutter` + 0xEB0 = `cmnViewSettingNodeRootSilentShutter`. Una sola definición en `/usr`, ninguna relocación `R_ARM_COPY` en `bin/` ni en `lib/` |
+| `CautionConfig.so` | 13 bytes distintos, todos dentro de las tres listas. El nodo usa la clase genérica `CmnViewSettingNode` (sin código propio). Las listas van ordenadas por id: `_getPropertyIndex` hace una búsqueda binaria. Valores coherentes con el EFCS (`Silent On` = 1 = `EFCS Off`) |
+| Propiedades `0xb`/`0xc` | La raíz nueva no las tiene (todas las raíces que se muestran sí). Los 14 lectores de `viewUnified2.so` inicializan la salida a −1 antes de la llamada virtual (`vtable+0x58/0x60`), y −1 no activa ninguna rama: es inocuo |
+| `.uxc` (25) | Solo se añaden 3 registros, sin perder ninguno. La cabecera no cambia y sigue siendo válida (5958 ranuras), los índices caben en 16 bits y los ids de ayuda viven en `string_*.uxc`, no en `*_guide.uxc`. El glifo U+E08C de la etiqueta ya lo usan 38 textos del A6000 |
+
+### 6.2 Riesgos no descartados (INFERENCIA; candidatos para el fallo del 3.40)
+
+1. **Reutilización de un nodo vivo (R1).** `cmnViewSettingNodeRootSilentShutter` es en la A6000 un nodo de tipo SteadyShot con
+   ProcessId `0x26`. Aparece en el registro maestro `cmnViewSettingNodesRootDefault` (206 raíces, solo lo lee `viewUnified2.so`)
+   y en la lista de funciones de `viewUnified7.so` (`0x5f7b8`, entre `FacePriorityTracking` y `StillSteadyShot`;
+   INFERENCIA: lista de funciones asignables). El parche hace desaparecer el ProcessId `0x26` de todo `/usr` y convierte esa
+   entrada en un segundo `0x46`. Si un ajuste guardado (tecla personalizada, menú Fn) o el código busca `0x26`, la búsqueda falla.
+   Sin verificar.
+2. **Páginas de 7 entradas (R3).** Las páginas 2 y 5 pasan a 7. Las 4 páginas de 7 que trae Sony mezclan entradas excluyentes
+   (AF por contraste o por fase), así que nunca muestran 7 visibles. No se sabe si la vista admite 7; depende de si
+   `TouchShutter` / `ExposureCompSaveReset` están ocultas en la A6000.
+3. **ProcessId `0x46` duplicado (R2), débil:** el registro de Sony ya tiene 6 ProcessId repetidos.
+4. **Idiomas no latinos (G10-C):** sin los ids nuevos; solo afecta si la cámara está en uno de ellos.
+
+### 6.3 Paquetes de aislamiento propuestos (sustituyen al orden de §5.2)
+
+* (a) `CautionConfig.so` + `.uxc`, **sin** tocar `viewUnified2.so`: prueba R1 sola (el nodo cambia, pero no se añade a ningún menú).
+* (b) (a) + `viewUnified2.so` solo en las páginas 1, 3 y 4 (pasan a 6 entradas): prueba R3.
+* Diseño alternativo si R1 se confirma: no reutilizar el nodo `0x26`; construir un nodo nuevo en el segmento añadido.
