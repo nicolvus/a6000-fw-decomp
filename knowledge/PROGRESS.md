@@ -572,3 +572,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 08-11-2026: cierre de sesión — informes G10 (menú Silent) y R84 (Darwin v3 en cámara); cámara en 3.43 con tabla NVRAM de prueba.
 - 08-11-2026: G11 — auditoría del −307 (Loader3 no lee datos de `nflasha15`; −307 = init UDIF/MuMin), paquetes 3.39–3.42 verificados; corregido el modo de los ficheros en `build_nflasha15.py`.
 - 08-11-2026: G11 §6 — verificación estática de `viewUnified2.so`/`CautionConfig.so`/`.uxc`; sin defecto estructural; riesgos R1 (nodo `0x26` reutilizado) y R3 (páginas de 7).
+- 08-11-2026: G11 §7 — paquete 3.44a (variante a: sin `viewUnified2.so`) construido y auditado 23/23; auditor con comprobación de modo/uid/gid.

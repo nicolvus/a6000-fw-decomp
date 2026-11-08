@@ -23,6 +23,9 @@ from e25_06 import audit_packages as A
 from e25_27 import build, sums, tarball, tpzl
 from fwtool import lz77
 
+sys.path.insert(0, str(ROOT / "scripts/gui"))
+import build_nflasha15
+
 N15 = "0700_part_image/dev/nflasha15"
 STOCK15 = ROOT / "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15"
 BASE_DAT = ROOT / "analysis/e25-27/artifacts-338/package-3.38/firmware_packed.dat"
@@ -127,13 +130,17 @@ def run(dat: Path, pkg: Path, base_dat: Path, darwin_v3: bool) -> dict:
         f.flush()
         fsck = subprocess.run(["e2fsck", "-fn", f.name], capture_output=True, text=True, check=False)
     fsck_lines = [ln for ln in fsck.stdout.splitlines() if "wrong" in ln or "error" in ln.lower()]
-    hashes_ok = True
+    hashes_ok, attrs_bad = True, []
     with tempfile.TemporaryDirectory() as t:
-        img = Path(t) / "n.img"
+        img, old = Path(t) / "n.img", Path(t) / "o.img"
         img.write_bytes(ext_new)
+        old.write_bytes(ext_old)
         for rel, h in man["parcheados"].items():
             subprocess.run(["debugfs", "-R", f"dump /{rel} {t}/f", str(img)], capture_output=True, check=True)
             hashes_ok &= sha((Path(t) / "f").read_bytes()) == h
+            got, want_attrs = (build_nflasha15.stat_fields(x, "/" + rel) for x in (img, old))
+            if any(got[k] != want_attrs[k] for k in ("mode", "uid", "gid")):  # 3.39–3.42 quedaron en 0644 (G11 §3)
+                attrs_bad.append(rel)
     darwin = {}
     if darwin_v3:
         core, _ = build.efcs_tabla_diff(base[build.DARWIN_CORE])
@@ -155,12 +162,13 @@ def run(dat: Path, pkg: Path, base_dat: Path, darwin_v3: bool) -> dict:
         "nflasha15.decodificador_independiente_coincide": not indep_bad,
         "ext2.solo_cambian_los_ficheros_del_paquete": files_ok,
         "ext2.hashes_de_los_ficheros_parcheados": hashes_ok,
+        "ext2.modo_uid_gid_como_sony": not attrs_bad,
         "ext2.fsck_solo_contadores_de_libres": all("count wrong" in ln or "still has errors" in ln for ln in fsck_lines),
         **darwin,
     }
     return {"dat_sha256": sha(dat.read_bytes()), "version": ver, "base_version": bver, "todo_ok": all(checks.values()),
             "comprobaciones": checks, "tar_cambios_vs_base": changed, "bloques_recompuestos": len(recomp),
-            "disposicion": {"nuevo": lay_new, "sony": lay_old}, "ficheros_distintos_ext2": files, "fsck": fsck_lines,
+            "disposicion": {"nuevo": lay_new, "sony": lay_old}, "ficheros_distintos_ext2": files, "atributos_distintos": attrs_bad, "fsck": fsck_lines,
             "sumas": all_sums_ok(new)}
 
 

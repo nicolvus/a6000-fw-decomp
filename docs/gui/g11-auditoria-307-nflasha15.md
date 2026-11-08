@@ -107,3 +107,21 @@ Sobre `analysis/gui/silent-menu-fix/files/` (el contenido del 3.40/3.42) frente 
 * (a) `CautionConfig.so` + `.uxc`, **sin** tocar `viewUnified2.so`: prueba R1 sola (el nodo cambia, pero no se añade a ningún menú).
 * (b) (a) + `viewUnified2.so` solo en las páginas 1, 3 y 4 (pasan a 6 entradas): prueba R3.
 * Diseño alternativo si R1 se confirma: no reutilizar el nodo `0x26`; construir un nodo nuevo en el segmento añadido.
+
+## 7. Paquete 3.44a construido (08-11-2026, offline; instalación NO autorizada)
+
+Variante (a) de §6.3: **3.43 + `nflasha15` con `CautionConfig.so` y los 25 `.uxc`; `viewUnified2.so` de Sony** (la entrada no
+se añade a ningún menú; prueba R1 sola). Frente al 3.43 instalado solo cambian `dev/nflasha15` y `part_image.sum` (VERIFICADO).
+
+| Dato | Valor |
+|---|---|
+| Ficheros | `analysis/gui/silent-menu-fix/files-344a/` (26), `nflasha15.344a` (84 075 008 B, CRC `16376ae4`, 88 bloques recompuestos, bloque 0 = Sony) |
+| `.dat` | `analysis/gui/silent-menu-fix/pkg-3.44a/package-3.44/firmware_packed.dat`, SHA-256 `040645f5a6654af5bb0734f931b6d760bc0801f0c1a2c14bca4b1845069a1ed2` (no versionado) |
+| Auditoría | [`analysis/gui/audit-3.44a.json`](../../analysis/gui/audit-3.44a.json): **23/23 OK** (las de antes + `ext2.modo_uid_gid_como_sony`, nueva) |
+
+La comprobación nueva del auditor falla en el 3.40 (25 ficheros con el modo cambiado), así que habría detectado el defecto de §3.
+
+**Lectura del resultado en cámara:**
+* No arranca → la causa está en `CautionConfig.so` (nodo `0x26` reutilizado, R1) o en los `.uxc`; el siguiente paso sería separarlos.
+* Arranca, sin entrada nueva en el menú (esperado); comprobar que SteadyShot y el EFCS siguen igual → R1 queda descartado como causa de arranque; probar la variante (b).
+* En cualquier fallo: G11-LOG antes de sacar la batería.
