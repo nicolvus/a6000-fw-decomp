@@ -20,6 +20,7 @@ from e25_05 import build_packages as B
 from e25_27 import build, sums, tarball, tpzl
 
 NFLASHA15 = "0700_part_image/dev/nflasha15"
+NFLASHA5 = "0700_part_image/dev/nflasha5"  # WBI1: instantánea de RAM de Sony con el TOC y la caché del /usr de Sony (G11 §11)
 ENTRY = "dev/nflasha15"
 FW = ROOT / "firmware/extracted/fw321"
 DEFAULT_BASE = ROOT / "analysis/e25-27/artifacts-338/firmware.integrated.tar"
@@ -29,14 +30,18 @@ def sha(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def main(new15: Path, out: Path, base_tar: Path, version: str, darwin_v3: bool = False) -> dict:
+def main(new15: Path, out: Path, base_tar: Path, version: str, darwin_v3: bool = False, sin_wbi: bool = False) -> dict:
     out.mkdir(parents=True, exist_ok=True)
     blob, base = new15.read_bytes(), base_tar.read_bytes()
     entries, _ = tarball.parse(base)
     members = {e.name: e.data for e in entries}
     part_sum, detail = sums.update(members[build.PART_SUM].decode("ascii"), ENTRY, blob)
     assert sums.verify(part_sum, ENTRY, blob)
-    repl = {NFLASHA15: blob, build.PART_SUM: part_sum.encode("ascii")}
+    if sin_wbi:  # sin nflasha5 el WBI queda invalidado por ud_wbi_drop (us_mkfs.sh) y Loader3 arranca en frío
+        lines = part_sum.splitlines(keepends=True)
+        part_sum = "".join(ln for ln in lines if not ln.rstrip().endswith(",dev/nflasha5,"))
+        assert len(part_sum.splitlines()) == len(lines) - 1, "falta la línea de dev/nflasha5"
+    repl: dict[str, bytes | None] = {NFLASHA15: blob, build.PART_SUM: part_sum.encode("ascii")} | ({NFLASHA5: None} if sin_wbi else {})
     if darwin_v3:  # R82/R83: tabla EFCS por velocidad en Darwin (neutra con la tabla NVRAM a ceros)
         core, _ = build.efcs_tabla_diff(members[build.DARWIN_CORE])
         dsum, _ = build._sum_text_with_core(members[build.DARWIN_SUM].decode("ascii"), core)
@@ -56,13 +61,13 @@ def main(new15: Path, out: Path, base_tar: Path, version: str, darwin_v3: bool =
         got = (Path(tmp) / "firmware.tar").read_bytes()
         assert sha(got) == sha(tar_bytes), "el tar extraído no coincide"
         got_members = {e.name: e.data for e in tarball.parse(got)[0]}
-        assert all(got_members[k] == v for k, v in repl.items()) and got_members[NFLASHA15] == blob and sums.verify(got_members[build.PART_SUM].decode("ascii"), ENTRY, blob)
+        assert all(got_members.get(k) == v for k, v in repl.items()) and got_members[NFLASHA15] == blob and sums.verify(got_members[build.PART_SUM].decode("ascii"), ENTRY, blob)
         assert tpzl.TpzlImage.parse(got_members[NFLASHA15]).decompressed()[1080:1082] == b"\x53\xef"  # firma ext2 (superbloque)
         for name, data in members.items():  # el resto de miembros, intacto
             if name not in repl:
                 assert got_members[name] == data, name
     B.package_checksums(pkg)
-    result = {"version": version, "darwin_v3": darwin_v3, "base_tar": str(base_tar), "tar_sha256": sha(tar_bytes), "part_sum_linea": detail["line_after"],
+    result = {"version": version, "darwin_v3": darwin_v3, "sin_wbi": sin_wbi, "base_tar": str(base_tar), "tar_sha256": sha(tar_bytes), "part_sum_linea": detail["line_after"],
               "dat": str(pkg / "firmware_packed.dat"), "dat_sha256": B.sha256(pkg / "firmware_packed.dat"),
               "estado": "CONSTRUIDO OFFLINE — INSTALACIÓN NO AUTORIZADA"}
     (out / "container.json").write_text(json.dumps(result, indent=1))
@@ -76,5 +81,6 @@ if __name__ == "__main__":
     ap.add_argument("--base-tar", type=Path, default=DEFAULT_BASE)
     ap.add_argument("--version", default="3.39")
     ap.add_argument("--darwin-v3", action="store_true", help="añade el parche EFCS v3 de Darwin (R82, commit 20b33eed)")
+    ap.add_argument("--sin-wbi", action="store_true", help="quita nflasha5 (WBI de Sony) para forzar arranque en frío (G11 §11)")
     a = ap.parse_args()
-    print(json.dumps(main(a.nflasha15, a.salida, a.base_tar, a.version, a.darwin_v3), indent=1))
+    print(json.dumps(main(a.nflasha15, a.salida, a.base_tar, a.version, a.darwin_v3, a.sin_wbi), indent=1))

@@ -108,13 +108,14 @@ def mounted_diff(ext_new: bytes, ext_old: bytes) -> list[str]:
     return sorted(ln.split(f"{t}/b/")[1].split(" differ")[0] if " differ" in ln else ln for ln in out.splitlines())
 
 
-def run(dat: Path, pkg: Path, base_dat: Path, darwin_v3: bool) -> dict:
+def run(dat: Path, pkg: Path, base_dat: Path, darwin_v3: bool, sin_wbi: bool = False) -> dict:
     keys = A.load_keys()
     ver, cont, new = open_dat(dat, keys)
     bver, _, base = open_dat(base_dat, keys)
     man = json.loads((pkg / "MANIFEST.json").read_text())
     expected = {N15, build.PART_SUM} | ({build.DARWIN_CORE, build.DARWIN_SUM} if darwin_v3 else set())
     changed = sorted(n for n in new if new[n] != base.get(n))
+    removed = sorted(set(base) - set(new))
     stock_raw = STOCK15.read_bytes()
     p_new, p_old = tpzl.TpzlImage.parse(new[N15]), tpzl.TpzlImage.parse(stock_raw)
     lay_new, lay_old = layout(p_new, new[N15]), layout(p_old, stock_raw)
@@ -151,6 +152,8 @@ def run(dat: Path, pkg: Path, base_dat: Path, darwin_v3: bool) -> dict:
         **{f"contenedor.{k}": v for k, v in cont.items()},
         "contenedor.version_mayor_que_base": tuple(map(int, ver.split("."))) > tuple(map(int, bver.split("."))),
         "tar.solo_cambian_los_miembros_previstos": set(changed) == expected,
+        "tar.solo_se_quitan_los_previstos": removed == (["0700_part_image/dev/nflasha5"] if sin_wbi else []),
+        **({"tar.sum_sin_linea_nflasha5": b",dev/nflasha5," not in new[build.PART_SUM]} if sin_wbi else {}),
         "tar.todas_las_sumas_verifican": not all_sums_ok(new)["fallidas"],
         "nflasha15.cabe_en_la_particion": lay_new["tamano"] <= LIMIT,
         "nflasha15.sin_violaciones_ldec": lay_new["violaciones_ldec"] == 0,
@@ -167,7 +170,7 @@ def run(dat: Path, pkg: Path, base_dat: Path, darwin_v3: bool) -> dict:
         **darwin,
     }
     return {"dat_sha256": sha(dat.read_bytes()), "version": ver, "base_version": bver, "todo_ok": all(checks.values()),
-            "comprobaciones": checks, "tar_cambios_vs_base": changed, "bloques_recompuestos": len(recomp),
+            "comprobaciones": checks, "tar_cambios_vs_base": changed, "tar_quitados_vs_base": removed, "bloques_recompuestos": len(recomp),
             "disposicion": {"nuevo": lay_new, "sony": lay_old}, "ficheros_distintos_ext2": files, "atributos_distintos": attrs_bad, "fsck": fsck_lines,
             "sumas": all_sums_ok(new)}
 
@@ -178,7 +181,8 @@ if __name__ == "__main__":
     ap.add_argument("paquete", type=Path)
     ap.add_argument("--base-dat", type=Path, default=BASE_DAT)
     ap.add_argument("--darwin-v3", action="store_true")
+    ap.add_argument("--sin-wbi", action="store_true")
     a = ap.parse_args()
-    r = run(a.dat, a.paquete, a.base_dat, a.darwin_v3)
+    r = run(a.dat, a.paquete, a.base_dat, a.darwin_v3, a.sin_wbi)
     print(json.dumps(r, indent=1))
     sys.exit(0 if r["todo_ok"] else 1)

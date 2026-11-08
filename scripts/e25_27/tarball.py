@@ -96,8 +96,8 @@ def _rebuild_header(header: bytes, size: int) -> bytes:
     return bytes(out)
 
 
-def rebuild(data: bytes, replacements: dict[str, bytes]) -> tuple[bytes, list[dict]]:
-    """Reemplaza miembros por nombre conservando cabeceras y orden."""
+def rebuild(data: bytes, replacements: dict[str, bytes | None]) -> tuple[bytes, list[dict]]:
+    """Reemplaza miembros por nombre conservando cabeceras y orden; `None` quita el miembro."""
     entries, trailing = parse(data)
     names = {entry.name for entry in entries}
     missing = set(replacements) - names
@@ -108,6 +108,9 @@ def rebuild(data: bytes, replacements: dict[str, bytes]) -> tuple[bytes, list[di
     for entry in entries:
         if entry.name in replacements:
             body = replacements[entry.name]
+            if body is None:
+                info.append({"name": entry.name, "offset_old": entry.offset, "size_old": entry.size, "eliminado": True})
+                continue
             out += _rebuild_header(entry.header, len(body))
             out += body
             out += b"\0" * ((-len(body)) % BLOCK)
@@ -127,6 +130,7 @@ def rebuild(data: bytes, replacements: dict[str, bytes]) -> tuple[bytes, list[di
     result = bytes(out)
     # Comprobación estructural: mismos nombres, mismo orden, mismos bytes no tocados.
     check, trailing_check = parse(result)
+    entries = [e for e in entries if not (e.name in replacements and replacements[e.name] is None)]
     if [e.name for e in check] != [e.name for e in entries]:
         raise TarError("el tar reconstruido cambia el orden de miembros")
     if trailing_check != trailing:

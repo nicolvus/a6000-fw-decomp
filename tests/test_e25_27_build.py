@@ -238,6 +238,12 @@ def test_tar_reemplaza_y_conserva():
     assert info[0]["size_old"] == 100 and info[0]["size_new"] == 4096
 
 
+def test_tar_quita_miembro_con_none():
+    out, info = tarball.rebuild(_tiny_tar(), {"a.bin": None})
+    entries, _ = tarball.parse(out)
+    assert [e.name for e in entries] == ["b.bin"] and entries[0].data == b"B" * 50 and info[0]["eliminado"]
+
+
 def test_tar_rechaza_miembro_ausente():
     with pytest.raises(tarball.TarError):
         tarball.rebuild(_tiny_tar(), {"nope.bin": b"x"})

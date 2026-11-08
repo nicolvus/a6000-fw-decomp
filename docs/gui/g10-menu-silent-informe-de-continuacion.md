@@ -18,7 +18,7 @@ Añadir al menú de la A6000 (fw 3.21 base) una entrada «Silent Shooting» como
 ## 3. Historial en cámara (MEDIDO)
 | Paquete | Contenido | Resultado |
 |---|---|---|
-| 3.39 | menú (ids de texto de la A6300) + Darwin v3 | Arrancó Linux, **pantalla negra**. SWD: kernel vivo; log de RAM: `E/stella(148): assert src/ResourceManager.cpp(954)`. Causa: los ids `0xf840/0xf847/0xf849` están fuera de las 5 958 ranuras del índice de texto del A6000 (VERIFICADO offline; que sea la causa única es INFERENCIA fuerte) |
+| 3.39 | menú (ids de texto de la A6300) + Darwin v3 | Arrancó Linux, **pantalla negra**. SWD: kernel vivo; log de RAM: `E/stella(148): assert src/ResourceManager.cpp(954)`. Causa: los ids `0xf840/0xf847/0xf849` están fuera de las 5 958 ranuras del índice de texto del A6000 (VERIFICADO offline; que sea la causa única es INFERENCIA fuerte). **Corrección (G11 §11):** la reanudación del WBI de Sony con el TOC viejo de `/usr` explica también el assert; la causa única pasa a NO VERIFICADA |
 | 3.40 | menú corregido (ids `0xf3e8/0xf515/0xf56a`) + Darwin v3 | **No arranca**: LED 3 lentos + 7 rápidos = −307 de Loader3 (no carga kernel/initrd, INFERENCIA por orden de parpadeos) |
 | 3.41 | 3.38 con `/usr` de Sony (vuelta atrás) | Arranca, firmware 3.41 |
 | 3.42 | menú corregido, **sin** Darwin v3 | **No arranca** |

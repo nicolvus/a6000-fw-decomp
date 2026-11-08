@@ -203,3 +203,42 @@ al tercer intento tras apagar y encender con el interruptor (`install-3.50*.log`
 **Interpretación (INFERENCIA):** el control 3.48 (contenido idéntico al de Sony) falla como los demás → con 4/4 `nflasha15` recompuestos fallando
 (3.40, 3.42, 3.44a, 3.48) y 3/3 con el de Sony arrancando, la causa más probable es **escribir un `nflasha15` recompuesto**, no el contenido de
 `CautionConfig.so` ni de los `.uxc`. El 3.46 (solo `.uxc`) no se ha instalado: sería redundante frente a este resultado. Paquete de recuperación: 3.49 con el `/usr` de Sony (`pkg-3.49-revert`, no instalado).
+
+## 11. Recuperación con 3.51 y causa común de los fallos: el WBI de Sony (08-11-2026)
+
+**Recuperación (MEDIDO):** R48 (BootMode 3); el 3.49 lo rechazó el actualizador (`Invalid version`: ya estaba el 3.50); 3.51 (`/usr` de Sony + Darwin v3,
+`pkg-3.51-revert`) `0x1063` al 45 % y `Done` tras apagar y encender. **La cámara arranca en 3.51.**
+
+**Causa (VERIFICADO salvo donde se indica):** el arranque normal no carga Linux de `nflasha3`: **reanuda la instantánea de RAM de `nflasha5` (WBI1)
+que trae el paquete de Sony**, tomada con el `/usr` de Sony.
+
+1. **Modo 11 = instantánea.** En Loader3, `chk ssboot` (`0xc01f20f4`) lee la cabecera de `nflasha5` (`0xc01f2bc6`/`0xc01f2be6`, `0xc01fbf0e`) y, si la firma
+   es `WBI1` o `WBI0`, elige **BootMode 11** (`0xc01f212a`); si no, el modo por defecto. Todos los logs de arranque normal dicen `BootMode: 11` (R47, 3.48).
+   Con ese modo la RAMCFG carga solo `idt_cam.bin` y `av-cam.bin`, **no** `vmlinux.bin` ni `initrd.img` (R15 §4, modo `0x4000000`).
+2. **El WBI contiene el `/usr` de Sony.** Descomprimido con `fwtool/sony/wbi.py` (173 MB): el **TOC TPZL completo del `nflasha15` de Sony** está tal cual en la
+   imagen (offset `0x4c80000` del volcado; 75/75 ventanas), igual que los de `nflasha3`, `nflasha7` y `nflasha16`; también el superbloque del ext2 de `/usr` y
+   282 de 2377 páginas de 4 KiB muestreadas (caché de páginas).
+3. **El actualizador deja ese WBI válido.** `us_mkfs.sh` (miembro `0301_partconf_sum`) ejecuta `ud_wbi_drop.elf`, pero el miembro `0700_part_image/dev/nflasha5`
+   se escribe **después** con el WBI de Sony: tras la actualización la cámara reanuda la instantánea de Sony.
+4. **Todo `nflasha15` recompuesto mueve el TOC** (primera entrada distinta: 687 en el 3.48, 995 en el 3.39/3.47, 594 en el 3.40/3.42). El kernel reanudado usa el
+   TOC y las cachés de Sony sobre la imagen nueva → lee datos equivocados de `/usr` (INFERENCIA fuerte: mecanismo, no observado en ejecución). El CFW 3.38
+   cambia `nflasha3` **sin mover su TOC** (2373/2373 entradas iguales) y `av-cam.bin` se carga de nuevo en cada arranque: por eso funciona.
+
+Explica que el control 3.48 (contenido idéntico) falle igual, el recuento 0/6 con `nflasha15` recompuesto y 4/4 con el de Sony, y probablemente el assert de
+`ResourceManager` del 3.39 (lectura de `.uxc` con el TOC viejo; corrige la atribución de G10 a los ids `0xf840…`, que queda NO VERIFICADA). Los LED de Loader2/3
+(−201, −307) y las capturas en puntos distintos del cargador son del ciclo de reinicios posterior, no la causa.
+
+**Consecuencia para el CFW:** cambiar `/usr` exige invalidar el WBI. Aunque el TOC no se moviera, los procesos de la instantánea ya tienen cargadas las
+`.so` de Sony, así que el parche no tendría efecto.
+
+**Paquete de prueba 3.52** (construido; instalación NO autorizada): `nflasha15` del control 3.48 **sin el miembro `nflasha5`** ni su línea de `part_image.sum`
+(`build_package_nflasha15.py --sin-wbi`; `tarball.rebuild` admite ahora quitar miembros). `ud_wbi_drop` invalida el WBI y no se reescribe → Loader3 debe
+elegir el arranque en frío (`vmlinux.bin` + `initrd.img` de `nflasha3`). `.dat` SHA-256 `d9bc25f82f66e31f3b64e4b512fc677029bd21233423df333c0f967e647a3d3b`;
+auditoría [`audit-3.52.json`](../../analysis/gui/audit-3.52.json) **25/25** (nuevas: solo se quita `nflasha5`; sin su línea en el sum).
+
+Riesgos del 3.52: (a) el arranque en frío con el kernel del CFW no se ha probado en esta cámara; (b) no se sabe si la cámara regenera el WBI sola
+(`ssboot.bin`, `SnapShotBoot*` en `libObj.so`) o arrancará siempre en frío (más lento); (c) que el actualizador exija `nflasha5` (no visto en
+`us_crc32sum.sh`: solo recorre las líneas del sum). Recuperación: R48 + paquete con `/usr` de Sony y versión mayor.
+
+**Lectura:** 3.52 arranca → causa confirmada; siguiente, el menú (contenido del 3.44a/3.40) con `--sin-wbi`. 3.52 no arranca → captura SWD del log de Loader3
+(debe decir `BootMode` distinto de 11 y cargar `vmlinux.bin`).
