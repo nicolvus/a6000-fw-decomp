@@ -56,3 +56,47 @@ se ha comprobado aún (G7).
 2. Las 4 ocultas «Baja» de §2 (ya existen en la A6000): solo añadir la entrada a una página con `add_menu_entry.py` y ver si el
    negocio responde a su ProcessId. Es la prueba más barata de que la A6000 conserva el código de un ajuste no mostrado.
 3. Después, las «Media» que reutilizan una función existente.
+
+## 5. Qué hace cada ajuste y posibilidad en la A6000 (INFERENCIA: conocimiento del producto, no código leído)
+
+Posibilidad: **Sí** = ya está en la A6000 (oculto o equivalente), solo menú. **Probable** = reutiliza una función que la A6000 ya
+tiene. **Difícil** = código nuevo en `av-cam`/modelo. **No** = falta hardware. **N/A** = interno, depuración o de otro modelo.
+
+| Ajuste | Qué hace | A6000 |
+|---|---|---|
+| AF Track Duration | sensibilidad del AF-C a cambiar de sujeto | Sí (oculto) |
+| Wheel Lock | bloquea la rueda de control | Sí (oculto) |
+| AF Area Points / AF Area Pts in Local | número de puntos AF usables / limitados en zona local | Sí (ocultos) |
+| Shutter Type | Auto / mecánico / electrónico (silencioso) | Probable (G10, en curso) |
+| Priority Set in AF-S / AF-C | prioridad AF o disparo por modo de enfoque (la A6000 tiene uno común) | Probable |
+| Bracket Settings, Selftimer during Brkt | ajustes de horquillado y autodisparador antes de la ráfaga | Probable |
+| Release w/o Card | permite disparar sin tarjeta | Probable |
+| Panorama: Direction (2D) | variante del sentido de barrido | Probable |
+| PhaseAF Focus Area, Wide AF Area Disp. | área AF con fase / mostrar puntos de fase en «Wide» | Probable |
+| AF Area Auto Clear | oculta el recuadro de enfoque tras enfocar | Probable |
+| Custom Key(Shoot.)/(PB) | asignación de botones separada en disparo y reproducción | Probable |
+| Dial Lock | bloqueo de dial (la A6000 ya tiene «Dial / Wheel Lock») | Sí (equivalente) |
+| Lens Ring Setup, Zoom Ring Rotate, Rng. of Zoom Assist, Zoom Setting, Zoom Speed | comportamiento del anillo/zoom motorizado y del zoom digital | Probable |
+| Zebra ampliada | más niveles y modos de cebra | Probable |
+| Marker Display / Settings | marcas de centro, aspecto y zona segura en vídeo | Difícil (capa nueva de dibujo) |
+| Video Light Mode | control de la luz de vídeo de la zapata | Difícil |
+| ISO AUTO Min. SS | velocidad mínima antes de subir ISO en Auto | Difícil (algoritmo de AE) |
+| AF in Focus Mag. | AF con la imagen ampliada | Difícil |
+| AF System | modo de AF con adaptador LA-EA3 | Difícil |
+| Lock-on AF por área, Expand Flexible Spot, Expanded Area Local | nuevas áreas/seguimiento de AF | Difícil |
+| RAW File Type | RAW sin comprimir | Difícil |
+| Copyright Info, Set File Name | autor en EXIF; prefijo del nombre de archivo | Difícil |
+| Picture Profile (14 ajustes), Gamma Disp. Assist | curvas de gamma (S-Log2…), knee, color, detalle; vista normal en S-Log | Difícil (procesado de imagen) |
+| TC/UB, HDMI Settings | código de tiempo y control/salida HDMI | Difícil |
+| Auto Pwr OFF Temp. | permite más temperatura antes de apagar | Difícil y arriesgado |
+| ISO 32000–409600, Multi Frame NR ampliado | ISO extendido | Difícil (ganancia del sensor, calidad dudosa) |
+| Horquillado 9 imágenes / Hi+ / autodisparador continuo | más opciones de Drive Mode (parte son renombrados) | Probable |
+| 4K, HDMI 4K, Super 35mm, XAVC S 4K | grabación y salida 4K y recorte S35 | No |
+| HFR, S&Q, 100/120p | cámara lenta y alta velocidad | No |
+| Dual Video REC / Auto Dual Rec | dos flujos de vídeo a la vez | No |
+| SteadyShot Settings / Focal Len. / Adjust / w/ shut. | estabilizador en cuerpo | No |
+| Finder Frame Rate | visor a 120 fps | No |
+| LPF Effect | filtro de paso bajo variable (RX1R II) | No |
+| Function for VF close | acción al cerrar el visor emergente (RX100) | No |
+| Photo Creativity | modo creativo guiado (de otros modelos) | N/A (sin aclarar) |
+| GPS TEST, Version (objetivo fijo), Aperture/ShutterSpeed/AfASetup/LockOnAfwCenter | depuración o internos | N/A |
