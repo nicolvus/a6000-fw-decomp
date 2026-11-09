@@ -26,11 +26,12 @@ static char devname[MAXFD][32];
 #define E_TMOUT (-1022)
 static pthread_mutex_t semlock = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t semcond = PTHREAD_COND_INITIALIZER;
-static struct { unsigned id; int cnt; } sems[256];
+static struct { unsigned id; int cnt; } sems[16384];
 static int sem_slot(unsigned id) {
     int i, f = -1;
-    for (i = 0; i < 256; i++) { if (sems[i].id == id) return i; if (!sems[i].id && f < 0) f = i; }
-    sems[f].id = id; sems[f].cnt = 0; return f;
+    for (i = 0; i < 16384; i++) { if (sems[i].id == id) return i; if (!sems[i].id && f < 0) f = i; }
+    if (f < 0) { LOG("tabla de semáforos llena"); abort(); }
+    sems[f].id = id; sems[f].cnt = (id == 0x83037a) ? 0 : 1; return f;  /* shortcut: cuenta inicial 1 (cerrojos); 0x83037a es la señal de salida de im.elf. Mejorar si algún semáforo de señal debe empezar en 0 */
 }
 static int sem_wait(unsigned id, int tmo_ms) {  /* tmo: 0 = sondeo, -1 = infinito */
     struct timespec ts; int r = 0;
@@ -62,6 +63,9 @@ static int real_open_call(const char *p, int fl, mode_t m, int is64) {
 }
 
 static int fake_open(const char *p, int fl, mode_t m, int is64) {
+    if (strncmp(p, "/dev/", 5) != 0 && strncmp(p, "/proc/self", 10) != 0 && strncmp(p, "/tmp/", 5) != 0) {
+        int r = real_open_call(p, fl, m, is64); LOG("open(%s) -> %d", p, r); return r;
+    }
     if (strncmp(p, "/dev/", 5) != 0 || !strcmp(p, "/dev/null") || !strcmp(p, "/dev/zero") || !strcmp(p, "/dev/urandom") ||
         !strcmp(p, "/dev/random") || !strncmp(p, "/dev/pts", 8) || !strcmp(p, "/dev/tty") || !strcmp(p, "/dev/console"))
         return real_open_call(p, fl, m, is64);
@@ -88,6 +92,24 @@ int close(int fd) {
     return c(fd);
 }
 
+/* Servicio de backup mínimo (backup.ko): mensaje de 64 B {op, resultado, nº, qid, -, -, ids...}.
+ * shortcut: valores a cero y tamaño 4; sustituir por el volcado NVRAM real cuando una lectura necesite datos. */
+static void backup_service(unsigned *m) {
+    unsigned op = m[0], n = m[2], *id = m + 6;
+    m[1] = 0;
+    switch (op) {
+    case 0: m[1] = 4; break;                                    /* get_datasize */
+    case 3: if (n >= 2 && id[1]) *(unsigned *)id[1] = 0; break;  /* read(id, buf) */
+    case 4: m[1] = id[0] == 0xfa0028 ? 0x70100000 : id[0] == 0xfa005d ? 0x100000 : 0; break;  /* read_4Byte: región de memoria de MWF */
+    case 8: break;                                              /* write */
+    default: LOG("backup op=%u n=%u id0=%#x (sin modelar)", op, n, id[0]);
+    }
+    if (op != 4 || (id[0] != 0xfa0028 && id[0] != 0xfa005d)) LOG("backup op=%u id=%#x", op, id[0]);
+}
+
+/* Servicios de kernel por snd_sync_direct (mm 0x910042, ...). shortcut: sin modelar, responde 0 */
+static int direct_service(unsigned qid, unsigned *m) { (void)qid; (void)m; return 0; }
+
 int ioctl(int fd, unsigned long req, ...) {
     static int (*r)(int, unsigned long, ...);
     va_list a; va_start(a, req); void *arg = va_arg(a, void *); va_end(a);
@@ -107,14 +129,34 @@ int ioctl(int fd, unsigned long req, ...) {
             LOG("uipc valloc qid=%#x size=%u -> %p", w[0], t[1], b + 0x20);
             return 0; }
         case 0: LOG("uipc stat_sem %#x", w[0]); return 0;
-        case 1: { int r = sem_wait(w[0], (int)w[1]); LOG("uipc wai_sem %#x tmo=%d -> %d", w[0], (int)w[1], r); return r; }
+        case 1: { LOG("uipc wai_sem? %#x tmo=%d", w[0], (int)w[1]); int r = sem_wait(w[0], (int)w[1]); LOG("uipc wai_sem %#x tmo=%d -> %d", w[0], (int)w[1], r); return r; }
         case 2: sem_sig(w[0]); LOG("uipc sig_sem %#x", w[0]); return 0;
         case 7: { unsigned *t = (unsigned *)w[1]; LOG("uipc rcv_msg qid=%#x tmo=%d", w[0], (int)t[1]); return kernel_sleep((int)t[1]); }
         case 13: LOG("uipc wait_cb (proxy bloqueado)"); return kernel_sleep(-1);
+        case 5: {  /* snd_sync_msg {qid, msg}: 0x8f013a es el registro de trazas (u16 + texto "%4X %s %s") */
+            unsigned char *m = *(unsigned char **)w[1];  /* w[1] -> {msg, ...} */
+            if (w[0] == 0x8f013a) { if (m[2]) LOG("LOG %s", (char *)m + 2); else { char t[200]; int k, o = 0; for (k = 0; k < 40; k++) o += snprintf(t + o, sizeof t - o, "%02x", m[k]); LOG("LOGRAW %s", t); } }
+            else if (w[0] == 0x3e014d) backup_service((unsigned *)m);
+            else LOG("uipc snd_sync_msg qid=%#x datos=%08x %08x %08x %08x", w[0], ((unsigned *)m)[0], ((unsigned *)m)[1], ((unsigned *)m)[2], ((unsigned *)m)[3]);
+            return 0; }
+        case 12: {  /* dynamic_id {0, &{tipo, grupo, &id}}: tipo 0x32 = semáforo nuevo */
+            static unsigned next = 0x4000;
+            unsigned *t = (unsigned *)w[1];
+            if (t[0] == 0x32 && t[2]) { unsigned id = (t[1] << 16) | next++; *(unsigned *)t[2] = id; LOG("uipc dynamic_id sem -> %#x", id); }
+            else LOG("uipc dynamic_id tipo=%#x grupo=%#x (sin salida)", t[0], t[1]);
+            return 0; }
         case 11: LOG("uipc free qid=%#x msg=%#x", w[0], w[1]); return 0;
         case 4: { unsigned char *m = (unsigned char *)w[1];
+            if (w[0] == 0x8f0139 || w[0] == 0x8f013a) {  /* registro de trazas asíncrono: texto ASCII dentro del mensaje */
+                char t[420]; int k; for (k = 0; k < 410; k++) t[k] = (m[k] >= 32 && m[k] < 127) ? m[k] : '.'; t[410] = 0;
+                LOG("TRAZA %s", t);
+                if (strstr(t, "MMapBase")) { char h[500]; int o = 0; for (k = 0; k < 200; k++) o += snprintf(h + o, sizeof h - o, "%02x", m[k]); LOG("TRAZAHEX %s", h); }
+                return 0; }
             LOG("uipc snd_msg a la cola de kernel %#x (descartado) cab=%02x%02x%02x%02x datos=%08x %08x", w[0], m[-12], m[-11], m[-10], m[-9],
                 ((unsigned *)m)[0], ((unsigned *)m)[1]); return 0; }
+        case 6: { unsigned char *m = (unsigned char *)w[1]; char h[200]; int k, o = 0;
+            for (k = 0; k < 64; k++) o += snprintf(h + o, sizeof h - o, "%02x", m[k]);
+            LOG("uipc snd_sync_direct qid=%#x msg=%s", w[0], h); return direct_service(w[0], (unsigned *)m); }
         default: LOG("uipc ioctl idx=%u args %#x %#x (ignorada)", idx, w[0], w[1]); return 0;
         }
     }
@@ -154,4 +196,39 @@ static void on_usr1(int sig, siginfo_t *si, void *ctx) {  /* diagnóstico: PC, L
     for (int i = 0; i < 300; i++) sym(sp[i]);
     (void)sig; (void)si;
 }
-__attribute__((constructor)) static void shim_init(void) { struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_usr1; sa.sa_flags = SA_SIGINFO; sigaction(SIGUSR1, &sa, 0); }
+__attribute__((constructor)) static void shim_init(void) { struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_usr1; sa.sa_flags = SA_SIGINFO; sigaction(SIGUSR1, &sa, 0);
+    sa.sa_flags = SA_SIGINFO | SA_RESETHAND; sigaction(SIGSEGV, &sa, 0); sigaction(SIGBUS, &sa, 0); sigaction(SIGILL, &sa, 0); sigaction(SIGABRT, &sa, 0); }  /* un fallo imprime la pila y se reintenta por defecto (core) */
+
+void *dlopen(const char *f, int fl) {
+    static void *(*d)(const char *, int);
+    if (!d) d = dlsym(RTLD_NEXT, "dlopen");
+    LOG("dlopen(%s) ...", f ? f : "(null)");
+    void *h = d(f, fl); LOG("dlopen(%s) -> %p%s%s", f ? f : "(null)", h, h ? "" : " ERR=", h ? "" : dlerror()); return h;
+}
+int system(const char *c) {
+    static int (*sy)(const char *);
+    if (!sy) sy = dlsym(RTLD_NEXT, "system");
+    int r = sy(c); LOG("system(%s) -> %d", c ? c : "(null)", r); return r;
+}
+
+/* mmap de dispositivos no modelados (/dev/mem, fb, ...): memoria anónima a cero */
+void *mmap(void *a, size_t l, int pr, int fl, int fd, off_t o) {
+    static void *(*m)(void *, size_t, int, int, int, off_t);
+    if (!m) m = dlsym(RTLD_NEXT, "mmap");
+    if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC) {
+        if (!l) l = 0x1000;  /* shortcut: len 0 no es válido; el monitor de MWF lo pide sin argumentos */
+        void *r = m(a, l, pr, (fl & ~MAP_SHARED) | MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+        LOG("mmap(%s, len=%#zx off=%#lx) -> %p (anónima)", devname[fd], l, (long)o, r); return r;
+    }
+    return m(a, l, pr, fl, fd, o);
+}
+void *mmap64(void *a, size_t l, int pr, int fl, int fd, off64_t o) { return mmap(a, l, pr, fl, fd, (off_t)o); }
+
+FILE *fopen(const char *p, const char *m) {
+    static FILE *(*f)(const char *, const char *);
+    if (!f) f = dlsym(RTLD_NEXT, "fopen");
+    FILE *r = f(p, m);
+    if (strncmp(p, "/proc/self", 10)) LOG("fopen(%s, %s) -> %p", p, m, (void *)r);
+    return r;
+}
+FILE *fopen64(const char *p, const char *m) { return fopen(p, m); }
