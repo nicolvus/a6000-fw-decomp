@@ -37,6 +37,34 @@ experimental *pre-release*, in [`fw-3.25c-experimental`](https://github.com/nico
 its cause is fixed in 3.25c (experimental, untested on a camera, [R45](docs/capture/e26-r45-firmware-325c-experimental.md)) and that camera was recovered over SWD with the stock updater and 3.26 ([R49](docs/capture/e26-r49-cierre-recuperacion-326.md)).
 Details in [Current state and limits](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-14-Current-state). Contributing: [CONTRIBUTING.en.md](CONTRIBUTING.en.md).
 
+## Target features
+
+Details in [Goals](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-16-Goals) (✅ = verified on the camera).
+
+| Feature | Status |
+|---|---|
+| Silent Shooting (in progress) | ⬜ |
+| Picture Profiles PP1–PP10 (in progress) | ⬜ |
+| S-Log2 | ⬜ |
+| S-Log3 | ⬜ |
+| Gamma Display Assist | ⬜ |
+| HLG 1-3 | ⬜ |
+| Maximum shutter speed 1/8000 | ⬜ |
+| Expanded ISO up to 409600 | ⬜ |
+| USB charging while powered on | ⬜ |
+| Full HD 120 fps | ⬜ |
+| HD 120 fps | ⬜ |
+| Internal 4K | ⬜ |
+| Dual Video Recording | ⬜ |
+| 4K HDMI output | ⬜ |
+| Real-time Eye AF | ⬜ |
+| Zebra 0–109 % | ⬜ |
+| Timecode / User Bit | ⬜ |
+| Real-time AF tracking | ⬜ |
+| AF tracking sensitivity settings | ⬜ |
+| Internal intervalometer | ⬜ |
+| Direct film simulation (extra, not inherited) | ⬜ |
+
 ## Copyright and use
 
 **Copyright.** The two `.dat` files in the [`fw-3.23-3.24` release](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24) are

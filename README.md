@@ -37,6 +37,34 @@ resultados, estado actual y límites, herramientas, glosario y mapa del reposito
 **Estado:** el firmware 3.23 (T040) hace disparar la cámara en silencio y sin error; el 3.25 (E26) dejó la cámara del autor sin arrancar; su causa está corregida en el 3.25c (experimental, probado en una sola cámara como 3.27, [R45](docs/capture/e26-r45-firmware-325c-experimental.md)) y esa cámara se recuperó por SWD con el actualizador oficial y el 3.26 ([R49](docs/capture/e26-r49-cierre-recuperacion-326.md)).
 Detalle en [Estado actual y límites](https://github.com/nicolvus/a6000-fw-decomp/wiki/14-Estado-actual). Contribuir: [CONTRIBUTING.md](CONTRIBUTING.md).
 
+## Funciones objetivo
+
+Detalle en [Objetivos](https://github.com/nicolvus/a6000-fw-decomp/wiki/16-Objetivos) (✅ = verificada en cámara).
+
+| Función | Estado |
+|---|---|
+| Silent Shooting (en curso) | ⬜ |
+| Picture Profiles PP1–PP10 (en curso) | ⬜ |
+| S-Log2 | ⬜ |
+| S-Log3 | ⬜ |
+| Gamma Display Assist | ⬜ |
+| HLG 1-3 | ⬜ |
+| Obturación máxima 1/8000 | ⬜ |
+| ISO expandido hasta 409600 | ⬜ |
+| Carga USB con la cámara encendida | ⬜ |
+| Full HD 120 fps | ⬜ |
+| HD 120 fps | ⬜ |
+| 4K interno | ⬜ |
+| Dual Video Recording | ⬜ |
+| Salida HDMI 4K | ⬜ |
+| Eye AF en tiempo real | ⬜ |
+| Zebra 0–109 % | ⬜ |
+| Timecode / User Bit | ⬜ |
+| Seguimiento AF en tiempo real | ⬜ |
+| Ajustes de sensibilidad del seguimiento AF | ⬜ |
+| Intervalómetro interno | ⬜ |
+| Film simulation directo (extra, no heredada) | ⬜ |
+
 ## Copyright y uso
 
 **Copyright.** Los dos `.dat` del [release `fw-3.23-3.24`](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24) son el

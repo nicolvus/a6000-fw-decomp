@@ -17,6 +17,7 @@
 13. [Glosario](https://github.com/nicolvus/a6000-fw-decomp/wiki/13-Glosario)
 14. [Estado actual y límites](https://github.com/nicolvus/a6000-fw-decomp/wiki/14-Estado-actual)
 15. [Recuperación por SWD (experimental)](https://github.com/nicolvus/a6000-fw-decomp/wiki/15-Recuperacion-SWD-experimental)
+16. [Objetivos](https://github.com/nicolvus/a6000-fw-decomp/wiki/16-Objetivos)
 
 **🇬🇧 English** ([home](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-Home))
 
@@ -35,3 +36,4 @@
 13. [Glossary](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-13-Glossary)
 14. [Current state and limits](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-14-Current-state)
 15. [SWD recovery (experimental)](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-15-SWD-recovery-experimental)
+16. [Goals](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-16-Goals)
