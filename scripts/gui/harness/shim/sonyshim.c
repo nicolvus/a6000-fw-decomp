@@ -143,7 +143,7 @@ int ioctl(int fd, unsigned long req, ...) {
             unsigned *t = (unsigned *)w[1];
             unsigned char *b = calloc(1, t[1] + 0x240);
             *(void **)t[0] = b + 0x20;
-            LOG("uipc valloc qid=%#x size=%u -> %p", w[0], t[1], b + 0x20);
+            if (getenv("VERB")) LOG("uipc valloc qid=%#x size=%u -> %p", w[0], t[1], b + 0x20);
             return 0; }
         case 0: LOG("uipc stat_sem %#x", w[0]); return 0;
         case 1: { LOG("uipc wai_sem? %#x tmo=%d", w[0], (int)w[1]); int r = sem_wait(w[0], (int)w[1]); LOG("uipc wai_sem %#x tmo=%d -> %d", w[0], (int)w[1], r); return r; }
@@ -152,7 +152,7 @@ int ioctl(int fd, unsigned long req, ...) {
         case 13: LOG("uipc wait_cb (proxy bloqueado)"); return kernel_sleep(-1);
         case 5: {  /* snd_sync_msg {qid, msg}: 0x8f013a es el registro de trazas (u16 + texto "%4X %s %s") */
             unsigned char *m = *(unsigned char **)w[1];  /* w[1] -> {msg, ...} */
-            if (w[0] == 0x8f013a) { if (m[2]) LOG("LOG %s", (char *)m + 2); else { char t[200]; int k, o = 0; for (k = 0; k < 40; k++) o += snprintf(t + o, sizeof t - o, "%02x", m[k]); LOG("LOGRAW %s", t); } }
+            if (w[0] == 0x8f013a) { if (m[2]) LOG("LOG %s", (char *)m + 2); else if (getenv("VERB")) { char t[200]; int k, o = 0; for (k = 0; k < 40; k++) o += snprintf(t + o, sizeof t - o, "%02x", m[k]); LOG("LOGRAW %s", t); } }
             else if (w[0] == 0x3e014d) backup_service((unsigned *)m);
             else if (w[0] == 0x14c0424 && ((unsigned *)m)[0] == 7) {  /* área de memoria por nombre (dmm): {7, nombre[16], estado, phys, tamaño, ?} */
                 static unsigned next = 0x80000000;
@@ -167,18 +167,19 @@ int ioctl(int fd, unsigned long req, ...) {
             if (t[0] == 0x32 && t[2]) { unsigned id = (t[1] << 16) | next++; *(unsigned *)t[2] = id; LOG("uipc dynamic_id sem -> %#x", id); }
             else LOG("uipc dynamic_id tipo=%#x grupo=%#x (sin salida)", t[0], t[1]);
             return 0; }
-        case 11: LOG("uipc free qid=%#x msg=%#x", w[0], w[1]); return 0;
+        case 11: if (getenv("VERB")) LOG("uipc free qid=%#x msg=%#x", w[0], w[1]); return 0;
         case 4: { unsigned char *m = (unsigned char *)w[1];
             if (w[0] == 0x8f0139 || w[0] == 0x8f013a) {  /* registro de trazas asíncrono: texto ASCII dentro del mensaje */
                 char t[420]; int k; for (k = 0; k < 410; k++) t[k] = (m[k] >= 32 && m[k] < 127) ? m[k] : '.'; t[410] = 0;
-                LOG("TRAZA %s", t);
+                { char c[420]; int o = 0, pd = 1; for (k = 0; t[k]; k++) { if (t[k] == '.') { if (!pd) c[o++] = ' '; pd = 1; } else { c[o++] = t[k]; pd = 0; } } c[o] = 0; if (o > 6) LOG("TRAZA %s", c); }
                 if (strstr(t, "MMapBase")) { char h[500]; int o = 0; for (k = 0; k < 200; k++) o += snprintf(h + o, sizeof h - o, "%02x", m[k]); LOG("TRAZAHEX %s", h); }
                 return 0; }
+            if (w[0] == 0x9a015a) { static int n; if (n++ < 2) raise(SIGUSR1); if (n > 3) return 0; }  /* bucle HDMI: pila y silencio */
             LOG("uipc snd_msg a la cola de kernel %#x (descartado) cab=%02x%02x%02x%02x datos=%08x %08x", w[0], m[-12], m[-11], m[-10], m[-9],
                 ((unsigned *)m)[0], ((unsigned *)m)[1]); return 0; }
         case 6: { unsigned char *m = (unsigned char *)w[1]; char h[200]; int k, o = 0;
             for (k = 0; k < 64; k++) o += snprintf(h + o, sizeof h - o, "%02x", m[k]);
-            LOG("uipc snd_sync_direct qid=%#x msg=%s", w[0], h); return direct_service(w[0], (unsigned *)m); }
+            if (getenv("VERB")) LOG("uipc snd_sync_direct qid=%#x msg=%s", w[0], h); return direct_service(w[0], (unsigned *)m); }
         default: LOG("uipc ioctl idx=%u args %#x %#x (ignorada)", idx, w[0], w[1]); return 0;
         }
     }
