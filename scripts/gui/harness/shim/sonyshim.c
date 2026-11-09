@@ -227,7 +227,7 @@ static void sym(unsigned v) {
 static void on_usr1(int sig, siginfo_t *si, void *ctx) {  /* diagnóstico: PC, LR y direcciones de código halladas en la pila */
     ucontext_t *uc = ctx; unsigned *sp = (unsigned *)uc->uc_mcontext.arm_sp;
     if (!nmaps) load_maps();
-    char nm[24] = {0}; syscall(SYS_prctl, 16, nm); efp("[shim] --- pila (sig %d tid %ld %s) pc/lr:\n", sig, (long)syscall(SYS_gettid), nm); sym(uc->uc_mcontext.arm_pc); sym(uc->uc_mcontext.arm_lr);
+    char nm[24] = {0}; syscall(SYS_prctl, 16, nm); efp("[shim] --- pila (sig %d tid %ld %s) pc/lr:\n", sig, (long)syscall(SYS_gettid), nm); efp("[shim]   raw pc=%08lx lr=%08lx\n", uc->uc_mcontext.arm_pc, uc->uc_mcontext.arm_lr); sym(uc->uc_mcontext.arm_pc); sym(uc->uc_mcontext.arm_lr);
     sym(uc->uc_mcontext.arm_pc); sym(uc->uc_mcontext.arm_lr);
     for (int i = 0; i < 300; i++) { if (((unsigned long)(sp + i) & 0xfff) == 0 || i == 0) { if (msync((void *)((unsigned long)(sp + i) & ~0xfffUL), 1, MS_ASYNC)) break; } sym(sp[i]); }  /* no cruzar el final de la pila */
     (void)sig; (void)si;
