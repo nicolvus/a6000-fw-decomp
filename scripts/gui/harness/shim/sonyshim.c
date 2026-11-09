@@ -41,7 +41,14 @@ static int sem_wait(unsigned id, int tmo_ms) {  /* tmo: 0 = sondeo, -1 = infinit
         if (ts.tv_nsec >= 1000000000L) { ts.tv_sec++; ts.tv_nsec -= 1000000000L; } }
     while (sems[i].cnt <= 0) {
         if (tmo_ms == 0) { r = E_TMOUT; break; }
-        if (tmo_ms < 0) pthread_cond_wait(&semcond, &semlock);
+        if (tmo_ms < 0) {  /* tras 8 s sin señal, vuelca la pila una vez por semáforo */
+            struct timespec t8; clock_gettime(CLOCK_REALTIME, &t8); t8.tv_sec += 8;
+            if (pthread_cond_timedwait(&semcond, &semlock, &t8)) {
+                static unsigned vistos[32]; static int nv; int k, ya = 0;
+                for (k = 0; k < nv; k++) if (vistos[k] == id) ya = 1;
+                if (!ya && nv < 32) { vistos[nv++] = id; fprintf(stderr, "[shim] BLOQUEO sem %#x >8s\n", id); raise(SIGUSR1); }
+            }
+        }
         else if (pthread_cond_timedwait(&semcond, &semlock, &ts)) { r = E_TMOUT; break; }
     }
     if (!r) sems[i].cnt--;
@@ -148,7 +155,9 @@ int ioctl(int fd, unsigned long req, ...) {
         case 0: LOG("uipc stat_sem %#x", w[0]); return 0;
         case 1: { LOG("uipc wai_sem? %#x tmo=%d", w[0], (int)w[1]); int r = sem_wait(w[0], (int)w[1]); LOG("uipc wai_sem %#x tmo=%d -> %d", w[0], (int)w[1], r); return r; }
         case 2: sem_sig(w[0]); LOG("uipc sig_sem %#x", w[0]); return 0;
-        case 7: { unsigned *t = (unsigned *)w[1]; LOG("uipc rcv_msg qid=%#x tmo=%d", w[0], (int)t[1]); return kernel_sleep((int)t[1]); }
+        case 7: { unsigned *t = (unsigned *)w[1]; LOG("uipc rcv_msg qid=%#x tmo=%d", w[0], (int)t[1]);
+            if ((int)t[1] < 0 && getenv("RCVSTACK")) { static unsigned vq[64]; static int nq; int k, ya = 0; for (k = 0; k < nq; k++) if (vq[k] == w[0]) ya = 1; if (!ya && nq < 64) { vq[nq++] = w[0]; raise(SIGUSR1); } }
+            return kernel_sleep((int)t[1]); }
         case 13: LOG("uipc wait_cb (proxy bloqueado)"); return kernel_sleep(-1);
         case 5: {  /* snd_sync_msg {qid, msg}: 0x8f013a es el registro de trazas (u16 + texto "%4X %s %s") */
             unsigned char *m = *(unsigned char **)w[1];  /* w[1] -> {msg, ...} */
@@ -174,7 +183,7 @@ int ioctl(int fd, unsigned long req, ...) {
                 { char c[420]; int o = 0, pd = 1; for (k = 0; t[k]; k++) { if (t[k] == '.') { if (!pd) c[o++] = ' '; pd = 1; } else { c[o++] = t[k]; pd = 0; } } c[o] = 0; if (o > 6) LOG("TRAZA %s", c); }
                 if (strstr(t, "MMapBase")) { char h[500]; int o = 0; for (k = 0; k < 200; k++) o += snprintf(h + o, sizeof h - o, "%02x", m[k]); LOG("TRAZAHEX %s", h); }
                 return 0; }
-            if (w[0] == 0x9a015a) { static int n; if (n++ < 2) raise(SIGUSR1); if (n > 3) return 0; }  /* bucle HDMI: pila y silencio */
+            if (w[0] == 0x9a015a || w[0] == 0x9c015b) { static int n; if (n++ < 4) raise(SIGUSR1); if (n > 5) { usleep(20000); return 0; } }  /* bucle HDMI: pila y silencio */
             LOG("uipc snd_msg a la cola de kernel %#x (descartado) cab=%02x%02x%02x%02x datos=%08x %08x", w[0], m[-12], m[-11], m[-10], m[-9],
                 ((unsigned *)m)[0], ((unsigned *)m)[1]); return 0; }
         case 6: { unsigned char *m = (unsigned char *)w[1]; char h[200]; int k, o = 0;
@@ -214,12 +223,23 @@ static void sym(unsigned v) {
 static void on_usr1(int sig, siginfo_t *si, void *ctx) {  /* diagnóstico: PC, LR y direcciones de código halladas en la pila */
     ucontext_t *uc = ctx; unsigned *sp = (unsigned *)uc->uc_mcontext.arm_sp;
     load_maps();
-    fprintf(stderr, "[shim] --- pila (sig %d addr %p) pc/lr:\n", sig, si->si_addr); sym(uc->uc_mcontext.arm_pc); sym(uc->uc_mcontext.arm_lr);
+    char nm[24] = {0}; syscall(SYS_prctl, 16, nm); fprintf(stderr, "[shim] --- pila (sig %d tid %ld %s) pc/lr:\n", sig, (long)syscall(SYS_gettid), nm); sym(uc->uc_mcontext.arm_pc); sym(uc->uc_mcontext.arm_lr);
     sym(uc->uc_mcontext.arm_pc); sym(uc->uc_mcontext.arm_lr);
     for (int i = 0; i < 300; i++) sym(sp[i]);
     (void)sig; (void)si;
 }
-__attribute__((constructor)) static void shim_init(void) { struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_usr1; sa.sa_flags = SA_SIGINFO; sigaction(SIGUSR1, &sa, 0);
+#include <dirent.h>
+/* DUMPAT=n: a los n s manda SIGUSR1 a cada hilo (uno por segundo) para ver dónde está parado cada uno */
+static int num(const char *t) { int v = 0; while (*t >= '0' && *t <= '9') v = v * 10 + *t++ - '0'; return v; }  /* sin atoi: el sysroot nuevo enlaza __isoc23_strtol, que la glibc 2.11 no tiene */
+static void *dumper(void *a) {
+    sleep(num(getenv("DUMPAT"))); (void)a;
+    DIR *d = opendir("/proc/self/task"); struct dirent *e; int tids[512], n = 0;
+    while (d && (e = readdir(d)) && n < 512) if (e->d_name[0] != '.') tids[n++] = num(e->d_name);
+    if (d) closedir(d); fprintf(stderr, "[shim] dumper hilos=%d\n", n);
+    for (int i = 0; i < n; i++) { syscall(SYS_tgkill, getpid(), tids[i], SIGUSR1); sleep(1); }
+    return 0;
+}
+__attribute__((constructor)) static void shim_init(void) { if (getenv("DUMPAT")) { pthread_t th; pthread_create(&th, 0, dumper, 0); } struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_usr1; sa.sa_flags = SA_SIGINFO; sigaction(SIGUSR1, &sa, 0);
     sa.sa_flags = SA_SIGINFO | SA_RESETHAND; sigaction(SIGSEGV, &sa, 0); sigaction(SIGBUS, &sa, 0); sigaction(SIGILL, &sa, 0); sigaction(SIGABRT, &sa, 0); }  /* un fallo imprime la pila y se reintenta por defecto (core) */
 
 void *dlopen(const char *f, int fl) {
