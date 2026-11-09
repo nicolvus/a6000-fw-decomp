@@ -46,7 +46,7 @@ Test Unicorn `test_bw_envia_movie_y_saturacion_menos_8`: B&W → (5, `0xf8`); lo
 
 | # | Tarea | Qué hay que hacer | Verificación | Estado |
 |---|---|---|---|---|
-| 1 | **S-Gamut** (A7S) | (a) núcleo: `cmp #6 → #8` en `0x437aa816` y tabla de 9 bytes (literal `0x437aafe0`) para dar el id `0x16`; (b) caso `0x16` del `switch` de `0x437a4cd4` → conjuntos (`0x10`, `0x19`); (c) localizar las tablas que indexan `+0x7a`/`+0x7b` (se copian a `+0x2ec/+0x2ed`, y de ahí a los constructores de comandos `0x437b1cda`, `0x43862f28`, `0x438642b6`, `0x43b07fe8`) y traer de la A7S las entradas `0x10`/`0x19` | emulación de los dos `switch`; comparación de tablas con la A7S | **pendiente**: (b) es código del núcleo en ejecución y (c) no está localizado |
+| 1 | **S-Gamut** (A7S) | **CERRADO como «igual que Movie» (§5)**: los datos de S-Gamut en la A7S son la matriz de Movie y un conjunto de deltas a cero | — | cerrado |
 | 2 | **S-Gamut3 / S-Gamut3.Cine** (solo A6300) | lo mismo sobre el `av-cam` de la A6300, cuyo `cfg` tiene otro diseño (G26 §6.1) | ídem | pendiente, depende de 1 |
 | 3 | **Color Mode Level** (byte 9 → `+0x23`) | el núcleo ya lo lleva en el resumen; falta un ajuste de menú (clave `0x1fc`) si se quiere exponer; la A6300 no lo expone | test de descriptor | opcional |
 | 4 | **Reset**: id `0x42` inferido | confirmar que la capa de modelo entrega `0x41`/`0x42` al despachador | arnés de la UI (G22-B) o cámara | pendiente |
@@ -56,3 +56,11 @@ Test Unicorn `test_bw_envia_movie_y_saturacion_menos_8`: B&W → (5, `0xf8`); lo
 | 8 | Integración | combinar con Silent/3.56 (mismas páginas y `CautionConfig`), empaquetar `pp_ram.sh` en el CFW, ProcessIds `0x55–0x5b` | auditoría del paquete (G11) | pendiente |
 
 Orden recomendado: 7 con lo que ya hay (es lo único que valida todo lo anterior), después 1 (c) con las dos sesiones REA, y 4 en el arnés.
+
+## 5. S-Gamut en la A7S: qué lleva realmente (VERIFICADO con bytes)
+
+- Las matrices y los conjuntos de deltas **no están en el `av-cam`**: viven en la propiedad de Backup `0x30001` (0x600 B, NVRAM; preset `CX77500_*.bin` / `CX78500_*.bin`). Las dos funciones de búsqueda son `0x437a4b40` (matriz: índices 0–7 en `+0x48`, 8–0xe en `+0x400`, 0xf en `+0x310`; A7S añade 0x10 en `+0x322`) y `0x437a44d0` (deltas de 24 B: 0–0xd en `+0x100`, 0xe–0x17 en `+0x480`, 0x18 en `+0x390`; A7S admite 0x19 en `+0x588`).
+- En la A7S, S-Gamut (id `0x16`) usa la matriz índice `0x10` = **(1292, −180, −88, −44, 1340, −272, −24, −108, 1156), idéntica a la de Movie de la A6000** (índices 0, 6, 7 y 8), y el conjunto `0x19` = **24 ceros** (sin deltas).
+- Por tanto, en esta ruta S-Gamut = Movie. La diferencia visible de S-Gamut procede de la gamma (S-Log2/3, ya portada) y no de este bloque. El tratamiento actual (tipo 8–11 → Movie) es **equivalente en datos**; no hace falta código del núcleo ni escribir NVRAM.
+- La A6300 sí tiene matrices propias para S-Gamut3 (índices 0xf/0x10/0x13/0x14, `+0x590`, `+0x5c0`), pero ni el `av-cam` de la A6000 llega a esos índices ni su NVRAM los trae: portarlos exige código del núcleo y escribir la propiedad `0x30001` (fuera de alcance sin autorización). S-Gamut3/S-Gamut3.Cine quedan como «Movie» en la A6000.
+- Backup de la cámara real (`20261105-volcado-total-nvram`) = preset de la A6000 en `0x30000/0x30001`; el bit de capacidades de monocromo (`caps[3]` bit 1) es **0** (G27 §3): B&W puede no activar el indicador. Pendiente de cámara.
