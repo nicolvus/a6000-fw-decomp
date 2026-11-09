@@ -25,7 +25,7 @@ def test_app2obj_color_acepta_12_valores_y_rechaza_el_13():
     for v in range(8):
         assert call(old, APP2OBJ_FN, 0, v) == (1, P.COLOR[v]) == call(new, APP2OBJ_FN, 0, v)   # 0–7 como antes
     assert call(old, APP2OBJ_FN, 0, 8)[0] == 0
-    assert [call(new, APP2OBJ_FN, 0, v) for v in range(8, 12)] == [(1, 0x505), (1, 0x504), (1, 0x583), (1, 0x584)]
+    assert [call(new, APP2OBJ_FN, 0, v) for v in range(8, 12)] == [(1, 0x504), (1, 0x505), (1, 0x583), (1, 0x584)]
     assert call(new, APP2OBJ_FN, 0, 12)[0] == 0
 
 

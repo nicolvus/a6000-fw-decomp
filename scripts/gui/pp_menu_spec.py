@@ -55,8 +55,8 @@ SETTINGS = {s.id: s for s in (
 )}
 # Gamma con el orden y las opciones de la A6300; 10/11/12 = app de ITU709(800%)/S-Log2/S-Log3 en la `libObj` parcheada (G25/G26)
 GAMMA_COMPLETA = ((("Movie", 4), ("Still", 5)) + tuple((f"Cine{k}", 5 + k) for k in range(1, 5)) + (("ITU709", 3), ("ITU709(800%)", 10), ("S-Log2", 11), ("S-Log3", 12)))
-# Color Mode con el orden y las opciones de la A6300 (G26): app 8 = S-Gamut (0x505), 9 = B&W (0x504), 10 = S-Gamut3 (0x583), 11 = S-Gamut3.Cine (0x584) en la `libObj` parcheada
-COLOR_MODE_COMPLETO = (("Movie", 5), ("Still", 6), ("Cinema", 7), ("Pro", 3), ("ITU709 Matrix", 4), ("Black & White", 9), ("S-Gamut", 8), ("S-Gamut3.Cine", 11), ("S-Gamut3", 10))
+# Color Mode con el orden y las opciones de la A6300 (G26): app 8 = B&W (0x504), 9 = S-Gamut (0x505) como la A7S, 10 = S-Gamut3 (0x583), 11 = S-Gamut3.Cine (0x584) en la `libObj` parcheada
+COLOR_MODE_COMPLETO = (("Movie", 5), ("Still", 6), ("Cinema", 7), ("Pro", 3), ("ITU709 Matrix", 4), ("Black & White", 8), ("S-Gamut", 9), ("S-Gamut3.Cine", 11), ("S-Gamut3", 10))
 # árbol como la A6300 (carpeta → páginas → ajustes u otras carpetas)
 F = lambda label, *pages: ("folder", label, pages)
 TREE = F("Picture Profile",

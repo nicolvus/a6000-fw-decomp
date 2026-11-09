@@ -115,9 +115,9 @@ def patch_gamma(d: bytes) -> bytes:
 
 # --- Color Mode: B&W, S-Gamut, S-Gamut3 y S-Gamut3.Cine (G26) -----------------------------------------------------------------------------
 # La A6300 convierte el valor de app 0–11 del Color Mode (caso 0 de `pvt_ChangePictureProfileParamApp2Obj`, `tbb` de 12 casos en 0x425378 de su libObj) en VALUEID:
-# 0–4 STD/TONE1/TONE2/PRO/ITU709, 5–7 STD_MOV/STD_STL/CINEMA, 8 → 0x505 (SGAMUT), 9 → 0x504 (BW), 10 → 0x583 (SGAMUT3), 11 → 0x584 (SGAMUT3_CINE).
+# 0–4 STD/TONE1/TONE2/PRO/ITU709, 5–7 STD_MOV/STD_STL/CINEMA, 8 → 0x505 (SGAMUT), 9 → 0x504 (BW), 10 → 0x583 (SGAMUT3), 11 → 0x584 (SGAMUT3_CINE). Se usa el orden de la A7S (8 → BW 0x504, 9 → SGAMUT 0x505; `libObj` A7S 0x3d20fe), más cercana al núcleo de la A6000.
 # La A6000 solo tiene 0–7. Igual que en Gamma, los tres sitios (App2Obj caso 0, Obj2App caso 0 y `CamMsgConv` byte 8) pasan a buscar en la misma tabla.
-COLOR = (0x1AD, 0x1AE, 0x1AF, 0x1B0, 0x1B1, 0x399, 0x39A, 0x39B, 0x505, 0x504, 0x583, 0x584)
+COLOR = (0x1AD, 0x1AE, 0x1AF, 0x1B0, 0x1B1, 0x399, 0x39A, 0x39B, 0x504, 0x505, 0x583, 0x584)
 C_APP2OBJ, C_APP2OBJ_FIN = 0x4B471C, 0x4B475E
 C_OBJ2APP, C_OBJ2APP_FIN = 0x4B42FA, 0x4B433A
 C_CAMCONV, C_CAMCONV_FIN, C_CAMCONV_ERR, C_CAMCONV_STORE = 0x9B325E, 0x9B32C0, 0x9B32C4, 0x9B32C0
