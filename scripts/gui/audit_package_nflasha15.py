@@ -102,6 +102,11 @@ def mounted_diff(ext_new: bytes, ext_old: bytes) -> list[str]:
                                capture_output=True, check=True)
             out = subprocess.run(["diff", "-rq", "--no-dereference", str(t / "a"), str(t / "b")],
                                  capture_output=True, text=True, check=False).stdout
+        except subprocess.CalledProcessError:  # sin root: volcado con debugfs (solo lectura, mismo contenido de ficheros)
+            for x in "ab":
+                subprocess.run(["debugfs", "-R", f"rdump / {t / x}", str(t / f"{x}.img")], capture_output=True, check=True)
+            out = subprocess.run(["diff", "-rq", "--no-dereference", str(t / "a"), str(t / "b")],
+                                 capture_output=True, text=True, check=False).stdout
         finally:
             for x in "ab":
                 subprocess.run(["sudo", "-S", "umount", str(t / x)], input=SUDO, text=True, capture_output=True, check=False)
@@ -115,12 +120,12 @@ def mounted_diff(ext_new: bytes, ext_old: bytes) -> list[str]:
     return sorted(rel(ln) for ln in out.splitlines())
 
 
-def run(dat: Path, pkg: Path, base_dat: Path, darwin_v3: bool, sin_wbi: bool = False) -> dict:
+def run(dat: Path, pkg: Path, base_dat: Path, darwin_v3: bool, sin_wbi: bool = False, bionz_g22: bool = False) -> dict:
     keys = A.load_keys()
     ver, cont, new = open_dat(dat, keys)
     bver, _, base = open_dat(base_dat, keys)
     man = json.loads((pkg / "MANIFEST.json").read_text())
-    expected = {N15, build.PART_SUM} | ({build.DARWIN_CORE, build.DARWIN_SUM} if darwin_v3 else set())
+    expected = {N15, build.PART_SUM} | ({build.DARWIN_CORE, build.DARWIN_SUM} if darwin_v3 else set()) | ({build.NFLASHA3} if bionz_g22 else set())
     changed = sorted(n for n in new if new[n] != base.get(n))
     removed = sorted(set(base) - set(new))
     stock_raw = STOCK15.read_bytes()
@@ -162,6 +167,19 @@ def run(dat: Path, pkg: Path, base_dat: Path, darwin_v3: bool, sin_wbi: bool = F
         darwin = {"darwin_v3_presente": new[build.DARWIN_CORE] == core,
                   "darwin_solo_rango_r82": all(build.PD.BASE + i in build.efcs_tabla_allowed_addresses()
                                                for i, (a, b) in enumerate(zip(base[build.DARWIN_CORE], new[build.DARWIN_CORE])) if a != b)}
+    g22 = {}
+    if bionz_g22:  # G22: nflasha3 = la de Sony con el BIONZ del 3.38 + patch_tristate (solo esos bytes), bloque 0 de Sony
+        from g22 import patch_tristate as P
+        fat_new = build.fatimg.Fat16.parse(tpzl.TpzlImage.parse(new[build.NFLASHA3]).decompressed())
+        fat_base = build.fatimg.Fat16.parse(tpzl.TpzlImage.parse(base[build.NFLASHA3]).decompressed())
+        bz_new, bz_base = fat_new.read(build.AVCAM_NAME), fat_base.read(build.AVCAM_NAME)
+        diff = {P.BASE + i for i, (a, b) in enumerate(zip(bz_base, bz_new)) if a != b}
+        stock3 = tpzl.TpzlImage.parse(build.load_originals().members[build.NFLASHA3])
+        new3 = tpzl.TpzlImage.parse(new[build.NFLASHA3])
+        g22 = {"g22.bionz_es_3.38_mas_patch_tristate": bz_new == P.apply_bytes(bz_base)[0] and len(bz_new) == len(bz_base),
+               "g22.bionz_solo_cambia_el_parche": bool(diff) and diff <= P.allowed_addresses(),
+               "g22.nflasha3_bloque_0_igual_que_sony": new3.block(0) == stock3.block(0),
+               "g22.nflasha3_mismo_numero_de_bloques": len(new3.entries) == len(stock3.entries)}
     checks = {
         **{f"contenedor.{k}": v for k, v in cont.items()},
         "contenedor.version_mayor_que_base": tuple(map(int, ver.split("."))) > tuple(map(int, bver.split("."))),
@@ -182,6 +200,7 @@ def run(dat: Path, pkg: Path, base_dat: Path, darwin_v3: bool, sin_wbi: bool = F
         "ext2.modo_uid_gid_como_sony": not attrs_bad,
         "ext2.fsck_solo_contadores_de_libres": all("count wrong" in ln or "still has errors" in ln for ln in fsck_lines),
         **darwin,
+        **g22,
     }
     return {"dat_sha256": sha(dat.read_bytes()), "version": ver, "base_version": bver, "todo_ok": all(checks.values()),
             "comprobaciones": checks, "tar_cambios_vs_base": changed, "tar_quitados_vs_base": removed, "bloques_recompuestos": len(recomp),
@@ -196,7 +215,8 @@ if __name__ == "__main__":
     ap.add_argument("--base-dat", type=Path, default=BASE_DAT)
     ap.add_argument("--darwin-v3", action="store_true")
     ap.add_argument("--sin-wbi", action="store_true")
+    ap.add_argument("--bionz-g22", action="store_true")
     a = ap.parse_args()
-    r = run(a.dat, a.paquete, a.base_dat, a.darwin_v3, a.sin_wbi)
+    r = run(a.dat, a.paquete, a.base_dat, a.darwin_v3, a.sin_wbi, a.bionz_g22)
     print(json.dumps(r, indent=1))
     sys.exit(0 if r["todo_ok"] else 1)
