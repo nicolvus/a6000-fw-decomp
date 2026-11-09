@@ -92,19 +92,36 @@ int close(int fd) {
     return c(fd);
 }
 
-/* Servicio de backup mínimo (backup.ko): mensaje de 64 B {op, resultado, nº, qid, -, -, ids...}.
- * shortcut: valores a cero y tamaño 4; sustituir por el volcado NVRAM real cuando una lectura necesite datos. */
+/* Servicio de backup (backup.ko): mensaje de 64 B {op, resultado, nº, qid, -, -, ids...}.
+ * Almacén: /usr/share/bk.tbl = registros {id, len, datos rellenados a 4} generados del volcado NVRAM (gen_bk.py). */
+#include <sys/syscall.h>
+static unsigned char *bk; static long bklen;
+static void bk_load(void) {
+    static int done; if (done) return; done = 1;
+    int fd = syscall(SYS_open, "/usr/share/bk.tbl", 0);
+    if (fd < 0) { LOG("bk.tbl ausente"); return; }
+    long sz = syscall(SYS_lseek, fd, 0, 2); syscall(SYS_lseek, fd, 0, 0);
+    bk = malloc(sz);
+    for (long o = 0; o < sz;) { long r = syscall(SYS_read, fd, bk + o, sz - o); if (r <= 0) break; o += r; }
+    bklen = sz; syscall(SYS_close, fd); LOG("bk.tbl %ld B", bklen);
+}
+static unsigned *bk_find(unsigned id, unsigned *len) {
+    bk_load();
+    for (long o = 0; o + 8 <= bklen; o += 8 + ((((unsigned *)(bk + o))[1] + 3) & ~3u))
+        if (((unsigned *)(bk + o))[0] == id) { *len = ((unsigned *)(bk + o))[1]; return (unsigned *)(bk + o + 8); }
+    return 0;
+}
 static void backup_service(unsigned *m) {
-    unsigned op = m[0], n = m[2], *id = m + 6;
+    unsigned op = m[0], n = m[2], *id = m + 6, len = 0, *d = bk_find(id[0], &len);
     m[1] = 0;
     switch (op) {
-    case 0: m[1] = 4; break;                                    /* get_datasize */
-    case 3: if (n >= 2 && id[1]) *(unsigned *)id[1] = 0; break;  /* read(id, buf) */
-    case 4: m[1] = id[0] == 0xfa0028 ? 0x70100000 : id[0] == 0xfa005d ? 0x100000 : 0; break;  /* read_4Byte: región de memoria de MWF */
-    case 8: break;                                              /* write */
+    case 0: m[1] = d ? len : 0; break;                                          /* get_datasize */
+    case 3: if (d && n >= 2 && id[1]) memcpy((void *)id[1], d, len); m[1] = d ? len : 0; break;     /* read(id, buf) */
+    case 4: m[1] = d ? *d : 0; break;                                           /* read_4Byte */
+    case 8: break;                                                              /* write: se descarta */
     default: LOG("backup op=%u n=%u id0=%#x (sin modelar)", op, n, id[0]);
     }
-    if (op != 4 || (id[0] != 0xfa0028 && id[0] != 0xfa005d)) LOG("backup op=%u id=%#x", op, id[0]);
+    if (getenv("BKV") || !d) LOG("backup op=%u n=%u id=%#x len=%u r=%#x %s", op, n, id[0], len, m[1], d ? "" : "ausente");
 }
 
 /* Servicios de kernel por snd_sync_direct (mm 0x910042, ...). shortcut: sin modelar, responde 0 */
@@ -203,7 +220,8 @@ void *dlopen(const char *f, int fl) {
     static void *(*d)(const char *, int);
     if (!d) d = dlsym(RTLD_NEXT, "dlopen");
     LOG("dlopen(%s) ...", f ? f : "(null)");
-    void *h = d(f, fl); LOG("dlopen(%s) -> %p%s%s", f ? f : "(null)", h, h ? "" : " ERR=", h ? "" : dlerror()); return h;
+    void *h = d(f, fl); LOG("dlopen(%s) -> %p%s%s", f ? f : "(null)", h, h ? "" : " ERR=", h ? "" : dlerror());
+    return h;
 }
 int system(const char *c) {
     static int (*sy)(const char *);
@@ -232,3 +250,13 @@ FILE *fopen(const char *p, const char *m) {
     return r;
 }
 FILE *fopen64(const char *p, const char *m) { return fopen(p, m); }
+
+/* abort(): vuelca r4-r8/lr de quien llama (los callee-saved siguen intactos al entrar) y sigue con el abort real */
+__attribute__((naked)) void abort(void) {
+    __asm__ volatile("push {r0-r12,lr}\n mov r0, sp\n bl abort_regs\n pop {r0-r12,lr}\n b abort_real\n");
+}
+void abort_regs(unsigned *r) {
+    fprintf(stderr, "[shim] ABORT r4=%08x r5=%08x r6=%08x r7=%08x r8=%08x lr=%08x\n", r[4], r[5], r[6], r[7], r[8], r[13]);
+    sym(r[13]);
+}
+void abort_real(void) { static void (*a)(void); if (!a) a = dlsym(RTLD_NEXT, "abort"); a(); for (;;); }
