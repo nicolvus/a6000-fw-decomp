@@ -62,6 +62,15 @@ de prueba (§4) **vuelve a comprobar las curvas a los 60, 600 y 3600 s**: si el 
   (3) en modo vídeo, el contraste más suave de Cine1 frente al 3.53; (4) que las fotos no cambian.
 - **Vuelta atrás**: reinstalar un paquete de versión mayor sin el gancho, o borrar el gancho. El parche desaparece al apagar.
 
+## 4b. CFW combinado 3.56 (construido; instalación NO autorizada) — el que se instalará
+
+A petición del usuario se juntan las dos novedades en un solo paquete: el 3.55t (gancho y script PP) + el `CautionConfig.so` del
+**3.54**, que es el selector On/Off de «Silent Shooting» ([G11](g11-auditoria-307-nflasha15.md) §13; nunca probado en cámara).
+Los otros 26 ficheros del 3.54 son idénticos a los del 3.53 (comprobado por hash). Frente al 3.54 solo cambian `nflasha15` y `part_image.sum`;
+Darwin v3 está incluido y no hay `nflasha5`. `.dat` SHA-256 `ebb7ee825b87a07f4afc485f2681a2b0df52d7333b33a0e21943c98237926728`;
+auditoría [`audit-3.56.json`](../../analysis/gui/audit-3.56.json) **25/25**. Qué mirar: lo del §4 más que «Silent Shooting» abra el selector
+y On/Off conmuten entre EFCS y electrónico. Si algo falla, el registro `pp_ram.log` separa la parte PP de la del menú.
+
 ## 5. Pendiente
 
 Instalar el 3.55t (requiere autorización expresa). Después, la fase 2 definitiva (sin el modo de prueba), la fase 3 (campos PP)
