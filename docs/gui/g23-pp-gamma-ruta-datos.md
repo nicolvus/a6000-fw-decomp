@@ -37,18 +37,19 @@ Reutiliza el ajuste oculto **AfIlluminator** como menú «Gamma» (7 opciones): 
 con 7 `R_ARM_ABS32`; raíz con ProcessId `0x3c`; entrada nueva en las 5 páginas con `add_menu_entry.py` (delta `0x15b8`; el de Silent, `0xeb0`, se reprodujo con `nm`);
 textos nuevos (Gamma, Still, ITU709, Cine1–4) copiados de la A6300 a 7 ranuras libres de los 25 idiomas latinos (sin los de G09).
 Verificado: 5 tests (`test_g23_gamma_menu.py`, `test_g23_gamma_descriptor.py`) y carga conjunta de los tres `.so` + `libObj` en `qemu-arm`: los tres ejecutan su init (incluida la construcción de la raíz con 7 hijos) sin fallo.
+Memoria real con `gdb` (`qemu-arm -g`, tras el SIGSEGV por falta de `/dev/uipc`): raíz AfIlluminator con `hijos`=array nuevo, `cuenta`=7 y los 7 punteros a los nodos previstos; `D[0x3c]` → descriptor con 7 opciones, modelo `@M00B`/0x40/0x49, claves 0x214/0x216 y tabla (4,5,3,6,7,8,9). La lectura detectó que la plantilla inerte trae «nº de modelos» = 0 (el EFCS trae 1): corregido (`desc[7] = 1`) y cubierto por test.
 
 ## Límites y supuestos NO verificados
 
 - Valor interno de opción (`0xf/0x10`): se pone el índice de la opción (0–6); no se ha comprobado cómo lo usa la vista frente a la tabla opción→valor del descriptor.
-- Los nodos hijos siguen referenciados por los arrays originales de sus ajustes ocultos (nunca mostrados); si el nodo guarda puntero al padre, el último en construirse manda. Sin leer memoria con gdb.
+- Los nodos hijos siguen referenciados por los arrays originales de sus ajustes ocultos (nunca mostrados); si el nodo guarda puntero al padre, el último en construirse manda. 
 - La clase del nodo raíz (`CmnViewSettingNodeAfIlluminator`) podría tener comportamiento propio; no se ha leído.
 - `viewUnified2` y `CautionConfig` de este paquete **no se combinan** todavía con los de Silent (G22/3.54): ambos parchean las mismas páginas y `CautionConfig`.
 - Idiomas no latinos sin textos nuevos (como G09/G10-C). Sin curvas en RAM (G18) solo Movie/ITU709 son distintos; nada probado en cámara.
 
 ## Lo que falta
 
-1. Leer memoria en qemu (gdb) del array y de la raíz tras el init; leer la clase de la raíz.
+1. Leer la clase de la raíz (`CmnViewSettingNodeAfIlluminator`); las palabras `desc[12..18]` (en EFCS `1,0xd02,0x83cd,…`, en la plantilla inerte `0xa45`) no se han descifrado.
 2. Combinar con Silent/3.56 en un único paquete (pages de `viewUnified2`, `CautionConfig`) y auditarlo.
 3. Con autorización: instalar y comprobar en cámara que Gamma Cine1 = modo de prueba del 3.56.
 4. Después: resto de parámetros PP (30), selector PP1–PP10 y Copy/Reset (G20 §2 b–d) con la misma técnica.

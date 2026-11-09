@@ -25,6 +25,7 @@ def test_gamma_escribe_0x214_lee_0x216_con_siete_opciones():
     new = G.patch(LIB.read_bytes())
     desc = _rd(new, _rd(new, G.TABLA_D + 4 * G.PID)[0], G.DESC_PALABRAS)
     assert desc[5] >> 8 & 0xFF == len(G.GAMMAS) == 7
+    assert desc[7] == 1
     model = _rd(new, desc[6], G.MODEL_PALABRAS)
     assert model[1:4] == (1, 0x40, 0x49) and model[8] == 0x701
     assert _rd(new, model[4])[0] == 0x214 and _rd(new, model[5])[0] == 0x216 and _rd(new, model[6])[0] == 1

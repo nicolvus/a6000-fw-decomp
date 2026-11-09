@@ -66,6 +66,7 @@ def patch(d: bytes) -> bytes:
             if tgt:
                 blocks[blk][i] = place[tgt]
     desc[5] = (desc[5] & ~0xFF00) | (n << 8)
+    desc[7] = 1                                          # nº de modelos (la plantilla inerte trae 0)
     extra, blob = bytearray(), bytearray(cur - data_va)
     for k, w in blocks.items():
         for i, x in enumerate(w):
