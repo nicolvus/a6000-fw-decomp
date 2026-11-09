@@ -41,40 +41,60 @@ Details in [Current state and limits](https://github.com/nicolvus/a6000-fw-decom
 
 Details in [Goals](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-16-Goals) (✅ = verified on the camera).
 
-| Feature | Status |
-|---|---|
-| Silent Shooting (in progress) | ⬜ |
-| Picture Profiles PP1–PP10 (in progress) | ⬜ |
-| S-Log2 | ⬜ |
-| S-Log3 | ⬜ |
-| Gamma Display Assist | ⬜ |
-| HLG 1-3 | ⬜ |
-| Maximum shutter speed 1/8000 | ⬜ |
-| Expanded ISO up to 409600 | ⬜ |
-| USB charging while powered on | ⬜ |
-| FTP Background Transfer | ⬜ |
-| Full HD 120 fps | ⬜ |
-| HD 120 fps | ⬜ |
-| Internal 4K | ⬜ |
-| Dual Video Recording | ⬜ |
-| 4K HDMI output | ⬜ |
-| Real-time Eye AF | ⬜ |
-| Zebra 0–109 % | ⬜ |
-| Timecode / User Bit | ⬜ |
-| Real-time AF tracking | ⬜ |
-| AF tracking sensitivity settings | ⬜ |
-| Internal intervalometer | ⬜ |
-| Auto Object Framing | ⬜ |
-| Smile Shutter | ⬜ |
-| AF Range Control | ⬜ |
-| AF Micro Adjustment | ⬜ |
-| Silent Multi Controller | ⬜ |
-| Pixel Shift Multi Shooting | ⬜ |
-| Interval AE Tracking Sensitivity | ⬜ |
-| Silent Shooting during intervals | ⬜ |
-| Voice Memo | ⬜ |
-| In-camera photo rating | ⬜ |
-| Direct film simulation (extra, not inherited) | ⬜ |
+| Feature | Category | Status |
+|---|---|---|
+| Silent Shooting | In progress | ⬜ |
+| Picture Profiles PP1–PP10 | In progress | ⬜ |
+| Maximum shutter speed 1/8000 | Photo | ⬜ |
+| Expanded ISO up to 409600 | Photo | ⬜ |
+| Pixel Shift Multi Shooting | Photo | ⬜ |
+| Multiple Exposure | Photo | ⬜ |
+| Live Composite | Photo | ⬜ |
+| Live Bulb / Live Time | Photo | ⬜ |
+| Bulb Timer | Photo | ⬜ |
+| Focus Shift Shooting / Focus Stacking | Photo | ⬜ |
+| Pre Capture photo | Photo | ⬜ |
+| Smile Shutter | Photo | ⬜ |
+| Internal intervalometer | Photo | ⬜ |
+| Interval AE Tracking Sensitivity / Exposure Smoothing | Photo | ⬜ |
+| Anti-Flicker Shooting / Flicker Reduction / Flicker Scan | Photo | ⬜ |
+| Keystone Compensation | Photo | ⬜ |
+| Live ND via software | Photo | ⬜ |
+| In-camera photo rating | Photo | ⬜ |
+| S-Log2 | Image and color | ⬜ |
+| S-Log3 | Image and color | ⬜ |
+| HLG 1-3 | Image and color | ⬜ |
+| D Range Priority | Image and color | ⬜ |
+| Color Chrome Effect | Image and color | ⬜ |
+| Full HD / HD 120 fps | Video | ⬜ |
+| Variable Frame Rate | Video | ⬜ |
+| Internal 4K | Video | ⬜ |
+| Dual Video Recording | Video | ⬜ |
+| 4K HDMI output | Video | ⬜ |
+| Timecode / User Bit | Video | ⬜ |
+| Loop Recording | Video | ⬜ |
+| Movie Silent Control / Silent Multi Controller | Video | ⬜ |
+| Anamorphic Desqueeze | Video | ⬜ |
+| Synchro Scan | Video | ⬜ |
+| Auto Object Framing | Video | ⬜ |
+| Voice Memo | Video | ⬜ |
+| Zebra 0–109 % | Monitoring | ⬜ |
+| Waveform Monitor | Monitoring | ⬜ |
+| Vectorscope | Monitoring | ⬜ |
+| Gamma Display Assist | Monitoring | ⬜ |
+| Sports Finder Mode | Monitoring | ⬜ |
+| Real-time Eye AF | Focus | ⬜ |
+| Real-time AF tracking (3D Tracking / EOS iTR AF) | Focus | ⬜ |
+| AF tracking sensitivity settings (AF-C Custom Settings / AF-C Cases) | Focus | ⬜ |
+| AF Acceleration/Deceleration Tracking | Focus | ⬜ |
+| AF Range Control | Focus | ⬜ |
+| AF Micro Adjustment | Focus | ⬜ |
+| Pre-AF | Focus | ⬜ |
+| AF Point Auto Switching / Zone Area Switching | Focus | ⬜ |
+| Starry Sky AF | Focus | ⬜ |
+| USB charging while powered on | System and connectivity | ⬜ |
+| FTP Background Transfer | System and connectivity | ⬜ |
+| Direct film simulation | Extra (not inherited) | ⬜ |
 
 ## Copyright and use
 

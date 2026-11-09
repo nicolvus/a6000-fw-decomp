@@ -1,6 +1,6 @@
 # 16. Goals
 
-Features wanted on the A6000, inherited from other Sony models. ✅ = done and verified on the camera.
+Features wanted on the A6000, inherited from other Sony models and other brands. ✅ = done and verified on the camera. Similar features are grouped with «/».
 
 ## Under research and in progress
 
@@ -9,35 +9,72 @@ Features wanted on the A6000, inherited from other Sony models. ✅ = done and v
 
 ## Pending
 
-- ⬜ S-Log2
-- ⬜ S-Log3
-- ⬜ Gamma Display Assist
-- ⬜ HLG 1-3
+### Photo
+
 - ⬜ Maximum shutter speed 1/8000
 - ⬜ Expanded ISO up to 409600
-- ⬜ USB charging while powered on
-- ⬜ FTP Background Transfer
-- ⬜ Full HD 120 fps
-- ⬜ HD 120 fps
+- ⬜ Pixel Shift Multi Shooting
+- ⬜ Multiple Exposure
+- ⬜ Live Composite
+- ⬜ Live Bulb / Live Time
+- ⬜ Bulb Timer
+- ⬜ Focus Shift Shooting / Focus Stacking
+- ⬜ Pre Capture photo
+- ⬜ Smile Shutter
+- ⬜ Internal intervalometer
+- ⬜ Interval AE Tracking Sensitivity / Exposure Smoothing
+- ⬜ Anti-Flicker Shooting / Flicker Reduction / Flicker Scan
+- ⬜ Keystone Compensation
+- ⬜ Live ND via software
+- ⬜ In-camera photo rating
+
+### Image and color
+
+- ⬜ S-Log2
+- ⬜ S-Log3
+- ⬜ HLG 1-3
+- ⬜ D Range Priority
+- ⬜ Color Chrome Effect
+
+### Video
+
+- ⬜ Full HD / HD 120 fps
+- ⬜ Variable Frame Rate
 - ⬜ Internal 4K
 - ⬜ Dual Video Recording
 - ⬜ 4K HDMI output
-- ⬜ Real-time Eye AF
-- ⬜ Zebra 0–109 %
 - ⬜ Timecode / User Bit
-- ⬜ Real-time AF tracking
-- ⬜ AF tracking sensitivity settings
-- ⬜ Internal intervalometer
+- ⬜ Loop Recording
+- ⬜ Movie Silent Control / Silent Multi Controller
+- ⬜ Anamorphic Desqueeze
+- ⬜ Synchro Scan
 - ⬜ Auto Object Framing
-- ⬜ Smile Shutter
+- ⬜ Voice Memo
+
+### Monitoring
+
+- ⬜ Zebra 0–109 %
+- ⬜ Waveform Monitor
+- ⬜ Vectorscope
+- ⬜ Gamma Display Assist
+- ⬜ Sports Finder Mode
+
+### Focus
+
+- ⬜ Real-time Eye AF
+- ⬜ Real-time AF tracking (3D Tracking / EOS iTR AF)
+- ⬜ AF tracking sensitivity settings (AF-C Custom Settings / AF-C Cases)
+- ⬜ AF Acceleration/Deceleration Tracking
 - ⬜ AF Range Control
 - ⬜ AF Micro Adjustment
-- ⬜ Silent Multi Controller
-- ⬜ Pixel Shift Multi Shooting
-- ⬜ Interval AE Tracking Sensitivity
-- ⬜ Silent Shooting during intervals
-- ⬜ Voice Memo
-- ⬜ In-camera photo rating
+- ⬜ Pre-AF
+- ⬜ AF Point Auto Switching / Zone Area Switching
+- ⬜ Starry Sky AF
+
+### System and connectivity
+
+- ⬜ USB charging while powered on
+- ⬜ FTP Background Transfer
 
 ## Other
 
