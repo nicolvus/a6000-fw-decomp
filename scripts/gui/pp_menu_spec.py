@@ -48,7 +48,7 @@ SETTINGS = {s.id: s for s in (
     S("det_bw", "B/W Balance", K(19), tuple((f"Type{k}", k - 1) for k in range(1, 6)), "clave+mapa"),
     S("det_limit", "Limit", K(20), num(0, 7), "clave+rango"),
     S("det_crisp", "Crispening", K(21), num(0, 7), "clave+rango"),
-    S("wb_filter", "Filter Type", 0x200, (("Off", 0), ("On", 1)), "clave+validador (caso 2: 0..1); significado de las opciones NO verificado"),
+    S("wb_filter", "Filter Type", 0x200, (("LB/CC", 0), ("R/B", 1)), "clave+VALUEID (caso 2 → WB_SHIFT_LB_CC 0x1b2 / WB_SHIFT_RGAIN_BGAIN 0x1b3); rótulos de la A6300 NO verificados"),
     *(S(f"wb_{k}", t, K(3 + i), num(-9, 9), "clave A7S `WbShift` + validador (caso 3–6: -9..+9)") for i, (k, t) in enumerate((("lb", "LB"), ("cc", "CC"), ("r", "R"), ("b", "B")))),
     S("det_hilight", "Hi-Light Detail", K(22), num(0, 4), "clave+rango"),
 )}
