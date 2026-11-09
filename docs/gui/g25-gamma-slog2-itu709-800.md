@@ -29,7 +29,7 @@ Diferencia con la A7S: ésta usa campos propios `cfg+0x4a8/+0x4aa` para el expos
 
 ## 5. Límites y pendiente
 
-- Hay que regenerar `pp_ram.sh`/`pp_curvas.bin` (ahora 9 curvas, 23 escrituras) y empaquetarlos en un CFW: no hecho. Instalar requiere autorización. Con el `libObj` parcheado y sin esas curvas, elegir las opciones nuevas no cambia la imagen.
+- `analysis/gui/g25/` trae `pp_ram.sh`, `pp_curvas.bin` (28 900 B) y `manifest.json` regenerados (9 curvas, 23 escrituras; `av-cam.pp.bin` no se guarda, 11 MB). El script, con el busybox de la cámara bajo `qemu-arm` y `/dev/mem` simulado con un fichero, pasa la comprobación previa de originales y verifica cada escritura (`pp_ram: OK`); la memoria final no es comparable porque `dd` trunca un fichero regular (en `/dev/mem` real el truncado se ignora, G18 §3). Falta empaquetarlo en un CFW; instalar requiere autorización. Con el `libObj` parcheado y sin estas curvas, elegir las opciones nuevas no cambia la imagen.
 - NO verificado: que el respaldo NVRAM de PP admita 10/11 (límites del `INFO_DATA_PICTUREPROFILE_BKUP`), que el campo del núcleo `+0x1012`=4 sea correcto para estas curvas, ni el resultado en cámara.
 - **S-Log3**: sin fuente en la A7S. Pendiente (¿`av-cam` de la A6300?).
 - **Color Mode B&W y S-Gamut/S-Gamut3(.Cine)**: faltan `PP_COLOR_*` en la `libObj` y matrices en el núcleo (datos distintos, no resueltos).
