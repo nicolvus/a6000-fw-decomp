@@ -24,6 +24,7 @@ class Ajuste:
     pid: int
     clave: int                        # clave de escritura (0x1f8 + 4·i); la de lectura es clave + 2
     valores: tuple
+    evento: int = EVENTO_SET
 
 
 def patch(d: bytes, ajustes) -> bytes:
@@ -68,7 +69,7 @@ def patch(d: bytes, ajustes) -> bytes:
         s, g, t = alloc([a.clave]), alloc([a.clave + 2]), alloc([1])
         v = alloc([x & 0xFFFFFFFF for x in a.valores])
         c = alloc([NADA] * n)
-        m = alloc([name_va, 1, EVENTO_SET, ID_GET, s, g, t, v, 1 | (n << 8)], {0: name_rel, 4: 0x17, 5: 0x17, 6: 0x17, 7: 0x17})
+        m = alloc([name_va, 1, a.evento, ID_GET, s, g, t, v, 1 | (n << 8)], {0: name_rel, 4: 0x17, 5: 0x17, 6: 0x17, 7: 0x17})
         desc[5] = (desc[5] & ~0xFF00) | (n << 8)
         desc[7] = 1
         desc[1], desc[6] = c, m

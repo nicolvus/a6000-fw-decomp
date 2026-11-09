@@ -1,5 +1,7 @@
 # G24 — Menú completo de Picture Profile (A6300/A7S) para la A6000: generador solo-datos (09-11-2026)
 
+**Actualización (mismo día)**: 32 ajustes, 9 carpetas, 10 páginas, 410 opciones (§6: Copy, WB Shift y parche opcional de Saturation). Las cifras 26/8/9/274 de §1–§4 son de la primera versión.
+
 Continúa [G23](g23-pp-gamma-ruta-datos.md). Todo es **offline**: nada instalado ni probado en cámara.
 Generador: `scripts/gui/build_pp_menu.py` (spec en `pp_menu_spec.py`, descriptores en `pp_descriptors.py`); tests `tests/test_g23_pp_menu.py`.
 
@@ -50,3 +52,17 @@ y se comprueba cada descriptor (clave, lectura +2, nº de opciones, valores): 26
 
 Sin cámara; la UI real (¿cuántas entradas caben por página? ¿cómo se pinta una carpeta con carpetas dentro?) es NO_VERIFICADO. Las curvas de gamma siguen dependiendo de G18/3.56. Los enumerados con orden
 inferido (Range, Knee Mode, Sens., Detail Mode, B/W) podrían estar permutados. No se combina todavía con Silent/3.56 (mismas páginas y `CautionConfig`). Colores/Detail no se atenúan según el modo (Auto/Manual).
+
+## 6. Fuera de alcance, primera pasada (09-11-2026)
+
+| Elemento | Estado |
+|---|---|
+| **Copy** | HECHO como INFERENCIA: ajuste de 9 opciones (PP1–PP9 = 0–8) que escribe evento **`0x41`**, clave `0x274` (de `…PictureProfileCopy::setValue` de la A7S: `requestModelExecute("@M00B", 0x41, {0x274: destino})`, VERIFICADO en el desensamblado). Que la A6000 atienda `0x41` (`pvt_ActionExePictureProfileCopy` existe en su `libObj`) y el sentido del valor no están comprobados. La A6300 lo presenta como carpeta con una página de 9 nodos; aquí es un selector. |
+| **WB Shift** | HECHO (oculto también en la A6300): carpeta con Filter Type (clave `0x200`, 0/1) y LB, CC, R, B (claves `0x204`–`0x210`, −9…+9 = lo que valida la A6000, casos 3–6). Significado de Filter Type NO verificado. |
+| **Saturation −32…+32** | OPT-IN: `build_pp_menu.py … --saturacion-a6300` parchea `libObj.so` (`patch_libobj_pp.py`: `add.w r3,r5,#8; cmp r3,#0xf` → `#0x20; #0x40` en `0x4b4880`, seis bytes, verificado en memoria) y ofrece 65 opciones. NO verificado que el núcleo admita |valor| > 8. Por defecto: −8…+7. |
+| **Reset** | PENDIENTE: no se localizó el evento ni el descriptor (A7S) del elemento `Normal` de Reset; `pvt_ActionExePictureProfileReset` existe en la `libObj`. |
+| **ITU709(800%), S-Log2, S-Log3, S-Gamut, S-Gamut3(.Cine), B&W** | PENDIENTE (G17 fase 4): la `libObj` de la A6000 no tiene los `VALUEID` y `av-cam` no tiene las curvas/matrices; ofrecerlos en el menú haría fallar el validador. |
+| **Gamma Disp. Assist, Color Mode Level** | PENDIENTES: vista propia (`view/SLOGDISPASSIST`) / sin uso sin S-Gamut. |
+
+ProcessIds: los 6 ajustes añadidos usan `0x55–0x5a`, de la familia contigua `0x55–0x5d` (posibles teclas personalizables): riesgo de colisión con otro consumidor, NO verificado.
+Verificación: 12 tests y recorrido con `gdb` del árbol en memoria (9 carpetas, 10 páginas, 32 ajustes, 410 opciones; descriptores y bytes de `libObj` correctos con la opción de Saturation).

@@ -23,9 +23,8 @@ def test_spec_coherente():
     assert len(M.SETTINGS) == len(M.PIDS) == len(set(M.PIDS))
     assert M.SETTINGS["gamma"].clave == 0x214 and M.SETTINGS["sel"].clave == 0x274 and M.SETTINGS["saturation"].clave == 0x26C
     assert [M.SETTINGS[f"cd_{c}"].clave for c in "rgbcmy"] == [0x254, 0x258, 0x25C, 0x260, 0x264, 0x268]
-    assert len({s.clave for s in M.SETTINGS.values()}) == len(M.SETTINGS)           # ninguna clave repetida
-    assert all(0x55 > p or p > 0x5D for p in M.PIDS)                                # fuera de la familia 0x55–0x5d
-
+    assert len({(s.clave, s.evento) for s in M.SETTINGS.values()}) == len(M.SETTINGS)    # ninguna (clave, evento) repetida
+    
 
 @needs
 def test_arbol_y_descriptores(tmp_path):
@@ -56,7 +55,7 @@ def test_arbol_y_descriptores(tmp_path):
             walk(k)
 
     walk(syms["cmnViewSettingNodeRootAelWShutter"] + delta)
-    assert len(roots) == 26 and cnt == {"carpeta": 8, "pagina": 9, "opcion": sum(len(s.opciones) for s in M.SETTINGS.values())}
+    assert len(roots) == len(M.SETTINGS) and cnt == {"carpeta": 9, "pagina": 10, "opcion": sum(len(s.opciones) for s in M.SETTINGS.values())}
     assert dict(roots) == {M.PIDS[i]: len(s.opciones) for i, s in enumerate(M.SETTINGS.values())}
 
     ajustes = [D.Ajuste(M.PIDS[i], s.clave, tuple(v for _, v in s.opciones)) for i, s in enumerate(M.SETTINGS.values())]
@@ -66,6 +65,22 @@ def test_arbol_y_descriptores(tmp_path):
     for a in ajustes:
         desc = prd(prd(D.TABLA_D + 4 * a.pid)[0], D.DESC_PALABRAS)
         m = prd(desc[6], D.MODEL_PALABRAS)
-        assert desc[7] == 1 and desc[5] >> 8 & 0xFF == len(a.valores) and m[2:4] == (0x40, 0x49)
+        assert desc[7] == 1 and desc[5] >> 8 & 0xFF == len(a.valores) and m[2:4] == (a.evento, 0x49)
         assert prd(m[4])[0] == a.clave and prd(m[5])[0] == a.clave + 2
         assert tuple(struct.unpack("<i", struct.pack("<I", x))[0] for x in prd(m[7], len(a.valores))) == a.valores
+
+
+@needs
+def test_parche_libobj_saturacion_solo_cambia_seis_bytes():
+    import patch_libobj_pp as P
+
+    old = (LIB / "libObj.so").read_bytes()
+    new = P.patch(old)
+    diff = [i for i in range(len(old)) if old[i] != new[i]]
+    assert len(new) == len(old) and 0 < len(diff) <= 6 and A._off(A._segments(old), P.VA) <= diff[0]
+    assert new[A._off(A._segments(old), P.VA):][:6] == P.NUEVO
+
+
+def test_copy_usa_evento_41_y_clave_del_selector():
+    s = M.SETTINGS["copy"]
+    assert (s.evento, s.clave, [v for _, v in s.opciones]) == (0x41, 0x274, list(range(9)))

@@ -6,7 +6,7 @@ Detail Mode/Level 16/17, V/H 18, B/W 19, Limit 20, Crispening 21, Hi-Light 22, C
 Rangos y valores = lo que acepta el validador de la A6000 (`pvt_ChangePictureProfileParamApp2Obj`, libObj `0x4b46b8`): numéricos con signo y paso 1 (valor = número);
 enumerados = índice de la tabla VALUEID del caso (Gamma y ColorMode con la identificación de curvas/modos de G20 y G23).
 Evidencia por ajuste: «clave» (A7S) · «rango» (validador A6000) · «mapa» (INFERENCIA: orden de VALUEID o índice igual al de la A6300).
-Fuera de alcance: Copy/Reset (acciones `ActionExePictureprofileCopy/Reset`), WB Shift (oculto también en la A6300), Gamma Disp. Assist (vista propia), ColorModeLevel.
+Fuera de alcance: Reset (evento sin determinar), Gamma Disp. Assist (vista propia), ColorModeLevel, ITU709(800%)/S-Log2/S-Log3/S-Gamut/B&W (sin núcleo).
 """
 from dataclasses import dataclass
 
@@ -18,6 +18,7 @@ class S:
     clave: int
     opciones: tuple                       # ((texto, valor), …)
     evidencia: str
+    evento: int = 0x40                    # evento de escritura de `@M00B` (0x40 = SET_PICTURE_PROFILE, 0x41 = copiar perfil)
 
 
 def num(lo, hi):
@@ -37,6 +38,7 @@ SETTINGS = {s.id: s for s in (
     S("knee_point", "Point", K(14), num(0, 12), "clave+rango"),
     S("knee_slope", "Slope", K(15), num(-5, 5), "clave+rango"),
     S("color_mode", "Color Mode", K(0), (("Movie", 5), ("Still", 6), ("Cinema", 7), ("Pro", 3), ("ITU709 Matrix", 4)), "clave+VALUEID"),
+    S("copy", "Copy", 0x274, tuple((f"PP{k + 1}", k) for k in range(9)), "INFERENCIA: evento 0x41 y clave 0x274 de `Copy::setValue` (A7S); el valor = PP destino", 0x41),
     S("saturation", "Saturation", K(29), num(-8, 7), "clave+rango(A6000: -8..+7, la A6300 -32..+32)"),
     S("phase", "Color Phase", K(30), num(-7, 7), "clave+rango"),
     *(S(f"cd_{c.lower()}", c, K(23 + i), num(-7, 7), "clave+rango") for i, c in enumerate("RGBCMY")),
@@ -46,14 +48,17 @@ SETTINGS = {s.id: s for s in (
     S("det_bw", "B/W Balance", K(19), tuple((f"Type{k}", k - 1) for k in range(1, 6)), "clave+mapa"),
     S("det_limit", "Limit", K(20), num(0, 7), "clave+rango"),
     S("det_crisp", "Crispening", K(21), num(0, 7), "clave+rango"),
+    S("wb_filter", "Filter Type", 0x200, (("Off", 0), ("On", 1)), "clave+validador (caso 2: 0..1); significado de las opciones NO verificado"),
+    *(S(f"wb_{k}", t, K(3 + i), num(-9, 9), "clave A7S `WbShift` + validador (caso 3–6: -9..+9)") for i, (k, t) in enumerate((("lb", "LB"), ("cc", "CC"), ("r", "R"), ("b", "B")))),
     S("det_hilight", "Hi-Light Detail", K(22), num(0, 4), "clave+rango"),
 )}
 # árbol como la A6300 (carpeta → páginas → ajustes u otras carpetas)
 F = lambda label, *pages: ("folder", label, pages)
 TREE = F("Picture Profile",
-         ["sel", "gamma", "black_level", F("Black Gamma", ["bg_range", "bg_level"]),
+         ["sel", "copy", "gamma", "black_level", F("Black Gamma", ["bg_range", "bg_level"]),
           F("Knee", ["knee_mode", F("Auto Set", ["knee_max", "knee_sens"]), F("Manual Set", ["knee_point", "knee_slope"])])],
-         ["color_mode", "saturation", "phase", F("Color Depth", [f"cd_{c}" for c in "rgbcmy"]),
+         ["color_mode", "saturation", "phase", F("Color Depth", [f"cd_{c}" for c in "rgbcmy"]), F("WB Shift", ["wb_filter", "wb_lb", "wb_cc", "wb_r", "wb_b"]),
           F("Detail", ["det_level", "det_mode", F("Manual Set", ["det_vh", "det_bw", "det_limit", "det_crisp", "det_hilight"])])])
-# ProcessIds inertes sin referencia en ningún menú (excluidos 0x55–0x5d: familia contigua de elementos de teclas)
-PIDS = [0x35, 0x9D, 0xB3, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xDC, 0xDD, 0xDE, 0xDF, 0x52, 0x53, 0x54, 0x5E, 0x5F, 0x60, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68]
+# ProcessIds inertes sin referencia en ningún menú
+PIDS = [0x35, 0x9D, 0xB3, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xDC, 0xDD, 0xDE, 0xDF, 0x52, 0x53, 0x54, 0x5E, 0x5F, 0x60, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68,
+        0x55, 0x56, 0x57, 0x58, 0x59, 0x5A]                 # los 6 últimos son de la familia contigua 0x55–0x5d: riesgo de uso por otro consumidor (G24 §3)
