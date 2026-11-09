@@ -31,7 +31,7 @@ def test_descriptor_de_silent_clona_efcs_con_los_numeros_de_la_a7s():
     assert [w for i, w in enumerate(desc) if i != 6] == [w for i, w in enumerate(ref) if i != 6]
     model = _rd(new, segs, desc[6], S.MODEL_PALABRAS)
     assert model[1:4] == (1, 0x5B, 0x6C) and model[8] == 0x201
-    assert _rd(new, segs, model[4], 1)[0] == 0x291 and _rd(new, segs, model[5], 1)[0] == 0x293
+    assert _rd(new, segs, model[4], 1)[0] == 0x291 and _rd(new, segs, model[5], 1)[0] == 0x292
     ref_model = _rd(old, A._segments(old), ref[6], S.MODEL_PALABRAS)
     assert model[0] == ref_model[0] and model[6:] == ref_model[6:]      # mismo "@M00F", listas S2/S3 compartidas
     assert _rd(new, segs, S.TABLA_D + 4 * S.PID_EFCS, 1)[0] == S.DESC_EFCS  # EFCS intacto

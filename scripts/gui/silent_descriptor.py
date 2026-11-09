@@ -2,7 +2,7 @@
 """G22 — descriptor propio de «Silent Shooting» en `cmn_view_processDataMgr.so` (A6000 fw3.21), ProcessId 0x12 (inerte).
 
 Copia el descriptor de EFCS (0x46, `@M00F`) a un segmento `PT_LOAD` nuevo y cambia solo lo propio de Silent
-(números tomados de la A7S, G22-A): escritura 0x5b, lectura 0x6c, claves 0x291 (set) y 0x293 (get). Las estructuras S2/S3 de EFCS
+(números tomados de la A7S, G22-A): escritura 0x5b, lectura 0x6c, claves 0x291 (set) y 0x292 (get: el valor, como 0x247 en EFCS; 0x293 es el segundo elemento). Las estructuras S2/S3 de EFCS
 (listas de valores 1/2) se comparten. Cada puntero copiado conserva su relocación; `D[0x12]` se reapunta al descriptor nuevo.
 Solo lee/escribe los ficheros indicados. Uso: silent_descriptor.py ENTRADA.so SALIDA.so
 """
@@ -17,7 +17,7 @@ PID_NUEVO, PID_EFCS = 0x12, 0x46
 TABLA_D = 0x8C268                    # D[pid]: u32 por ProcessId (process_bindings.py)
 DESC_EFCS, DESC_PALABRAS = 0x947F4, 19
 MODEL_PALABRAS, S_PALABRAS = 9, 12
-C1, C2, CLAVE_SET, CLAVE_GET = 0x5B, 0x6C, 0x291, 0x293
+C1, C2, CLAVE_SET, CLAVE_GET = 0x5B, 0x6C, 0x291, 0x292
 ALIGN = A.ALIGN
 
 
