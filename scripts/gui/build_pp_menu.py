@@ -111,7 +111,7 @@ def patch_caution(data: bytes, ids: dict):
     return bytes(res), carpeta - ref
 
 
-def main(dev_a, dev_b, dest, saturacion_a6300=False, gamma_slog=False, color_gamut=False):
+def main(dev_a, dev_b, dest, saturacion_a6300=False, gamma_slog=False, color_gamut=False, acciones=False):
     a, b, dest = Path(dev_a) / "nflasha15_unpacked_unpacked", Path(dev_b) / "nflasha15_unpacked_unpacked", Path(dest)
     (dest / "lib").mkdir(parents=True, exist_ok=True)
     (dest / "share/app").mkdir(parents=True, exist_ok=True)
@@ -128,10 +128,11 @@ def main(dev_a, dev_b, dest, saturacion_a6300=False, gamma_slog=False, color_gam
     ids = dict(zip(txt, libres))
     ajustes = [pp_descriptors.Ajuste(M.PIDS[i], s.clave, tuple(v for _, v in s.opciones), s.evento) for i, s in enumerate(M.SETTINGS.values())]
     emit("lib/cmn_view_processDataMgr.so", pp_descriptors.patch((a / "lib/cmn_view_processDataMgr.so").read_bytes(), ajustes))
-    if saturacion_a6300 or gamma_slog or color_gamut:     # opt-in: ver patch_libobj_pp.py
+    if saturacion_a6300 or gamma_slog or color_gamut or acciones:     # opt-in: ver patch_libobj_pp.py
         lo = (a / "lib/libObj.so").read_bytes()
         lo = patch_libobj_pp.patch(lo) if saturacion_a6300 else lo
-        lo = patch_libobj_pp.patch_gamma(lo) if gamma_slog else lo
+        lo = patch_libobj_pp.patch_gamma(lo) if gamma_slog or acciones else lo
+        lo = patch_libobj_pp.patch_actions(lo) if acciones else lo
         emit("lib/libObj.so", patch_libobj_pp.patch_color(lo) if color_gamut else lo)
     caution, delta = patch_caution((a / "lib/CautionConfig.so").read_bytes(), ids)
     emit("lib/CautionConfig.so", caution)
@@ -166,10 +167,11 @@ def main(dev_a, dev_b, dest, saturacion_a6300=False, gamma_slog=False, color_gam
 if __name__ == "__main__":
     args = [x for x in sys.argv[1:] if not x.startswith("--")]
     sat, gam, col = "--saturacion-a6300" in sys.argv, "--gamma-slog" in sys.argv, "--color-gamut" in sys.argv
+    acc = "--copy-reset" in sys.argv
     if gam:                               # ITU709(800%), S-Log2 y S-Log3: requieren libObj parcheado y las curvas de pp_curves_patch.py (núcleo)
         M.SETTINGS["gamma"] = M.S("gamma", "Gamma", 0x214, M.GAMMA_COMPLETA, "clave+A7S convertValueIdToBackupValue+parche libObj (opt-in)")
     if sat:                               # el menú ofrece −32…+32 solo si se parchea libObj
         M.SETTINGS["saturation"] = M.S("saturation", "Saturation", 0x26C, M.num(-32, 32), "clave+parche libObj (opt-in)")
     if col:                               # B&W, S-Gamut, S-Gamut3(.Cine): libObj (G26) + matrices del núcleo (NO resueltas: sin ellas el modo no cambia la imagen)
         M.SETTINGS["color_mode"] = M.S("color_mode", "Color Mode", M.K(0), M.COLOR_MODE_COMPLETO, "clave+VALUEID+parche libObj (opt-in)")
-    main(*args[:3], saturacion_a6300=sat, gamma_slog=gam, color_gamut=col)
+    main(*args[:3], saturacion_a6300=sat, gamma_slog=gam, color_gamut=col, acciones=acc)

@@ -157,5 +157,41 @@ def patch_color(d: bytes) -> bytes:
     return bytes(out)
 
 
+# --- Acciones Copy y Reset de Picture Profile (G26) ---------------------------------------------------------------------------------------
+# En la A7S/A6300 `Copy::setValue` envía `requestModelExecute("@M00B", 0x41, {0x274: PP})`. El despachador de comandos de la A6000 (`0x4cfb9c`) solo conoce hasta 0x40 en
+# esa zona (0x41–0x44 caen en el error `0x4d02b8`), aunque la `libObj` ya trae las acciones `ActionExePictureprofileCopy` (`0x4b424c`) y `…Reset` (`0x4c0f4c`; el reset real es
+# `0x4c0e14`: copia los 31 valores por defecto del PP indicado). Se añade 0x41 → Copy y 0x42 → Reset (por analogía: Copy/Reset son 0x38/0x39 en la tabla de acciones). El tramo nuevo
+# va en el hueco que deja `patch_gamma` en `CamMsgConv` (nops en 0x9b370e…0x9b3743), de modo que exige `patch_gamma` aplicado antes.
+DISP_SITE, DISP_ERR, DISP_SET, DISP_FIN = 0x4CFCDA, 0x4D02B8, 0x4D0006, 0x4D02C2
+H_COPY, H_RESET = 0x4B424C, 0x4C0F4C
+CAVE, CAVE_FIN = 0x9B370E, 0x9B3744
+
+
+def bl_w(at, to):
+    b = b_w(at, to)
+    return b[:2] + _hw(int.from_bytes(b[2:], "little") | 0x4000)
+
+
+def patch_actions(d: bytes) -> bytes:
+    segs = A._segments(d)
+    od, oc = A._off(segs, DISP_SITE), A._off(segs, CAVE)
+    assert d[od:od + 2] == _hw(0x2840) and d[od + 6:od + 8] == b_n(DISP_SITE + 6, DISP_SET), "libObj.so no es el fw3.21 esperado (despachador)"
+    assert d[oc:oc + CAVE_FIN - CAVE] == _hw(0xBF00) * ((CAVE_FIN - CAVE) // 2), "falta patch_gamma (hueco de CamMsgConv ocupado)"
+    out = bytearray(d)
+    at = CAVE
+    # r0 = id, r5 = mensaje, r4 = parámetro (convención del despachador): mov r0,r5; mov r1,r4; bl handler; b epílogo. Los saltos lejanos usan `b.w` (T3 solo alcanza ±1 MiB).
+    def llama(h, pos):
+        return _hw(0x4628, 0x4621) + bl_w(pos + 4, h) + b_w(pos + 8, DISP_FIN)
+    c = _hw(0x2840) + bcc(at + 2, at + 2 + 2 + 4, 1) + b_w(at + 4, DISP_SET)      # cmp r0,#0x40; bne +4; b.w SetPictureProfile (como antes)
+    c += _hw(0x2841) + bcc(at + len(c) + 2, at + len(c) + 4 + 12, 1)               # cmp r0,#0x41; bne (salta la llamada de Copy)
+    c += llama(H_COPY, at + len(c))
+    c += _hw(0x2842) + bcc(at + len(c) + 2, at + len(c) + 4 + 4, 0) + b_w(at + len(c) + 4, DISP_ERR)   # cmp r0,#0x42; beq +4; b.w error
+    c += llama(H_RESET, at + len(c))
+    assert len(c) <= CAVE_FIN - CAVE, len(c)
+    out[oc:oc + len(c)] = c
+    out[od:od + 8] = b_w(DISP_SITE, CAVE) + _hw(0xBF00) * 2
+    return bytes(out)
+
+
 if __name__ == "__main__":
     Path(sys.argv[2]).write_bytes(patch(Path(sys.argv[1]).read_bytes()))

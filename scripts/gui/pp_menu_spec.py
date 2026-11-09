@@ -51,6 +51,7 @@ SETTINGS = {s.id: s for s in (
     S("wb_filter", "Filter Type", 0x200, (("LB/CC", 0), ("R/B", 1)), "clave+VALUEID (caso 2 → WB_SHIFT_LB_CC 0x1b2 / WB_SHIFT_RGAIN_BGAIN 0x1b3); rótulos de la A6300 NO verificados"),
     *(S(f"wb_{k}", t, K(3 + i), num(-9, 9), "clave A7S `WbShift` + validador (caso 3–6: -9..+9)") for i, (k, t) in enumerate((("lb", "LB"), ("cc", "CC"), ("r", "R"), ("b", "B")))),
     S("det_hilight", "Hi-Light Detail", K(22), num(0, 4), "clave+rango"),
+    S("reset", "Reset", 0x274, tuple((f"PP{k + 1}", k) for k in range(9)), "INFERENCIA (G26): evento 0x42 → `ActionExePictureprofileReset` (necesita patch_actions); el valor = PP a restablecer (el reset real acepta 0–9)", 0x42),
 )}
 # Gamma con el orden y las opciones de la A6300; 10/11/12 = app de ITU709(800%)/S-Log2/S-Log3 en la `libObj` parcheada (G25/G26)
 GAMMA_COMPLETA = ((("Movie", 4), ("Still", 5)) + tuple((f"Cine{k}", 5 + k) for k in range(1, 5)) + (("ITU709", 3), ("ITU709(800%)", 10), ("S-Log2", 11), ("S-Log3", 12)))
@@ -59,10 +60,10 @@ COLOR_MODE_COMPLETO = (("Movie", 5), ("Still", 6), ("Cinema", 7), ("Pro", 3), ("
 # árbol como la A6300 (carpeta → páginas → ajustes u otras carpetas)
 F = lambda label, *pages: ("folder", label, pages)
 TREE = F("Picture Profile",
-         ["sel", "copy", "gamma", "black_level", F("Black Gamma", ["bg_range", "bg_level"]),
+         ["sel", "copy", "reset", "gamma", "black_level", F("Black Gamma", ["bg_range", "bg_level"]),
           F("Knee", ["knee_mode", F("Auto Set", ["knee_max", "knee_sens"]), F("Manual Set", ["knee_point", "knee_slope"])])],
          ["color_mode", "saturation", "phase", F("Color Depth", [f"cd_{c}" for c in "rgbcmy"]), F("WB Shift", ["wb_filter", "wb_lb", "wb_cc", "wb_r", "wb_b"]),
           F("Detail", ["det_level", "det_mode", F("Manual Set", ["det_vh", "det_bw", "det_limit", "det_crisp", "det_hilight"])])])
 # ProcessIds inertes sin referencia en ningún menú
 PIDS = [0x35, 0x9D, 0xB3, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xDC, 0xDD, 0xDE, 0xDF, 0x52, 0x53, 0x54, 0x5E, 0x5F, 0x60, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68,
-        0x55, 0x56, 0x57, 0x58, 0x59, 0x5A]                 # los 6 últimos son de la familia contigua 0x55–0x5d: riesgo de uso por otro consumidor (G24 §3)
+        0x55, 0x56, 0x57, 0x58, 0x59, 0x5A, 0x5B]                 # los 6 últimos son de la familia contigua 0x55–0x5d: riesgo de uso por otro consumidor (G24 §3)
