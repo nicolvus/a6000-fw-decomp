@@ -360,3 +360,11 @@ int pthread_cond_wait(pthread_cond_t *c, pthread_mutex_t *m) {
     }
     return real(c, m);
 }
+/* Registro de munmap grandes (MMapBase de libObj aborta si desmapea algo no mapeado). */
+int munmap(void *a, size_t l) {
+    static int (*m)(void *, size_t);
+    if (!m) m = dlsym(RTLD_NEXT, "munmap");
+    int r = m(a, l);
+    if (l >= 0x100000 || r) LOG("munmap(%p, %#zx) -> %d", a, l, r);
+    return r;
+}
