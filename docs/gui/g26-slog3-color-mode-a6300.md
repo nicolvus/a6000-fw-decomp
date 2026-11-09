@@ -39,3 +39,11 @@ Tests en `tests/test_g26_color_libobj.py` (Unicorn: 0–7 igual que antes, 8–1
 - **Color Mode Level**: no es un ajuste de usuario (ninguna raíz de la A6300 lo expone; «Color Level» de la A6300 es la saturación, ya cubierta con `--saturacion-a6300`). Es el byte 9 del `0x4066` que escribe `ColorModeType::setValue` junto con el tipo; sin menú.
 - **Gamma Disp. Assist** (`SLogDispAssistRoot`, pid `0x151`, opciones Off/Auto/S-Log2/S-Log3 con ids `0x3f0–0x3f3`): no hay ningún `PARAMID/MSGID` de ese nombre en ninguna `libObj` (A6000 ni A6300); es una conversión de pantalla (S-Log→ITU709(800%)) del lado de la visualización, no resoluble solo con datos.
 - La A6300 extraída no trae `cmn_view_processDataMgr.so` (sus descriptores están fuera de lo extraído).
+
+## 6. Matrices de color del núcleo (investigado con REA, sin resolver)
+
+Sesiones REA abiertas y reutilizables: `analysis/rea-independent/run/a6k.sock` (A6000) y `run/a6300b.sock` (A6300). Hallazgos:
+- El desempaquetador del `0x4066` (A6000 `0x43802a28`) guarda el byte 8 (tipo de Color Mode) como **palabra** en `cfg+0x138` (el byte 9, nivel, en `+0x13c`). La A6300 usa otro diseño del `cfg` (el selector de gamma está en `+0x171`, no `+0x153`) y su desempaquetador no coincide con el patrón de la A6000.
+- Los lectores de `cfg+0x133…0x144` copian esos bytes a un bloque de parámetros (`0x438acc20…`, offsets `0x740–0x751`) que `FUN_438ab3e8` (decompilado en la sesión `a6k`) vuelca a un bloque de registros YC: en él hay una rejilla de ganancias con diagonal `0x200` (corrección de color por sectores, es decir Color Depth), **no** la matriz del modo de color. La selección por gamma del mismo bloque (`param_2[0] == 0x1b`) usa tablas de ajuste por ISO, no datos por modo.
+- No hay matrices 3×3 `s16` reconocibles en el `av-cam` de la A6000 (barrido por filas con suma constante: 4 coincidencias, todas ajenas) ni cadenas `SGAMUT`/`ColorMode` en ninguno de los dos `av-cam`; el cálculo del modo de color no es una tabla simple indexada por tipo.
+- Conclusión: portar B&W/S-Gamut/S-Gamut3(.Cine) exige localizar y portar el consumidor del tipo en la A6300 (código + tablas de ajuste), trabajo que se apoya en tener ambas sesiones REA y, para validarlo, una captura en cámara.
