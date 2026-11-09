@@ -6,7 +6,7 @@ Detail Mode/Level 16/17, V/H 18, B/W 19, Limit 20, Crispening 21, Hi-Light 22, C
 Rangos y valores = lo que acepta el validador de la A6000 (`pvt_ChangePictureProfileParamApp2Obj`, libObj `0x4b46b8`): numéricos con signo y paso 1 (valor = número);
 enumerados = índice de la tabla VALUEID del caso (Gamma y ColorMode con la identificación de curvas/modos de G20 y G23).
 Evidencia por ajuste: «clave» (A7S) · «rango» (validador A6000) · «mapa» (INFERENCIA: orden de VALUEID o índice igual al de la A6300).
-Fuera de alcance: Reset (acción sin modelo de datos, ver G26), Gamma Disp. Assist (vista propia), ColorModeLevel; B&W: menú + libObj con efecto (Movie + saturación −8, G27); S-Gamut/S-Gamut3(.Cine): menú + libObj, el núcleo los trata como Movie (G27).
+Fuera de alcance: Reset (acción sin modelo de datos, ver G26), Gamma Disp. Assist (vista propia), ColorModeLevel; B&W: menú + libObj con efecto (Movie + saturación −8, G27); S-Gamut = Movie (G27 §5); S-Gamut3(.Cine): menú + libObj + parche de núcleo `pp_curves_patch.py --color` (G27 §6).
 """
 from dataclasses import dataclass
 

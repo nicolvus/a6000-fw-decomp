@@ -7,13 +7,15 @@ punteros de vídeo en la tabla de curvas (`0x44001404`) y las entradas 3–9 de 
 `0x1c`/`0x1d` quedan sin puntero ni selector hasta la fase 4 (necesitan código).
 Salidas: `av-cam.pp.bin` (salida 2: imagen) · `pp_ram.sh` + `pp_curvas.bin` (salida 1: las mismas escrituras desde la propia cámara al arrancar, por
 `/dev/mem`, física = virtual + 0x40000000, con comprobación previa y relectura) · `manifest.json`.
-Uso: pp_curves_patch.py BASE_AVCAM SALIDA_DIR [SELECTOR_DE_PRUEBA]  (p. ej. 6 = Cine1 forzada, solo CFW de prueba)
+Uso: pp_curves_patch.py BASE_AVCAM SALIDA_DIR [SELECTOR_DE_PRUEBA] [--color]  (p. ej. 6 = Cine1 forzada, solo CFW de prueba)
 """
 import hashlib
 import json
 import struct
 import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent))
 
 ROOT = Path(__file__).resolve().parents[2]
 A7S = ROOT / "analysis/rea-independent/input/av-cam-a7s.bin"
@@ -92,7 +94,7 @@ CFG = (0x43EDF684, 0x43ED4D28 + 0x48)  # bloque de ajustes (LIRO) y su copia de 
 def camera_files(base: bytes, ps: list[tuple[int, bytes, str]], prueba: int | None) -> tuple[str, bytes]:
     """Script de arranque de la cámara (salida 1) + fichero de datos. Orden: curvas → punteros → selector; antes comprueba
     con md5 que TODOS los sitios tienen los bytes originales de la imagen (si no, no escribe nada)."""
-    ps = sorted(ps, key=lambda p: ("curva", "puntero", "selector").index(p[2].split()[0]))
+    ps = sorted(ps, key=lambda p: ("curva", "puntero", "selector", "dato", "gancho").index(p[2].split()[0]))   # datos antes que ganchos de código (G27)
     blob, rows = b"", []
     for a, data, what in ps:
         phys = a + PHYS
@@ -121,9 +123,12 @@ def camera_files(base: bytes, ps: list[tuple[int, bytes, str]], prueba: int | No
     return "\n".join(sh) + "\n", blob
 
 
-def main(base_path: Path, out: Path, prueba: int | None = None) -> dict:
+def main(base_path: Path, out: Path, prueba: int | None = None, color: bool = False) -> dict:
     base, a7s = base_path.read_bytes(), A7S.read_bytes()
     ps = patches(base, a7s, A6300.read_bytes() if A6300.is_file() else None)
+    if color:  # G27: S-Gamut3 / S-Gamut3.Cine (código + datos en el hueco, tras las curvas)
+        import pp_color_patch
+        ps += pp_color_patch.patches(base, pp_color_patch.PRESET_A6300.read_bytes())
     check_base(base, ps)
     new = apply(base, ps)
     # autocomprobación: releer como lo haría el núcleo
@@ -151,5 +156,6 @@ def main(base_path: Path, out: Path, prueba: int | None = None) -> dict:
 
 
 if __name__ == "__main__":
-    m = main(Path(sys.argv[1]), Path(sys.argv[2]), int(sys.argv[3]) if len(sys.argv) > 3 else None)
+    pos = [x for x in sys.argv[1:] if not x.startswith("--")]
+    m = main(Path(pos[0]), Path(pos[1]), int(pos[2]) if len(pos) > 2 else None, "--color" in sys.argv)
     print(m["base_sha256"][:16], "→", m["pp_sha256"][:16], "bytes distintos", m["bytes_distintos"], "escrituras", len(m["escrituras"]))

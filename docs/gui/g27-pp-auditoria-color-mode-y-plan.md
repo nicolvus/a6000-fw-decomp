@@ -47,7 +47,7 @@ Test Unicorn `test_bw_envia_movie_y_saturacion_menos_8`: B&W → (5, `0xf8`); lo
 | # | Tarea | Qué hay que hacer | Verificación | Estado |
 |---|---|---|---|---|
 | 1 | **S-Gamut** (A7S) | **CERRADO como «igual que Movie» (§5)**: los datos de S-Gamut en la A7S son la matriz de Movie y un conjunto de deltas a cero | — | cerrado |
-| 2 | **S-Gamut3 / S-Gamut3.Cine** (solo A6300) | lo mismo sobre el `av-cam` de la A6300, cuyo `cfg` tiene otro diseño (G26 §6.1) | ídem | pendiente, depende de 1 |
+| 2 | **S-Gamut3 / S-Gamut3.Cine** (solo A6300) | HECHO como parche del núcleo en RAM (§6) | 4 tests Unicorn | hecho offline, sin cámara |
 | 3 | **Color Mode Level** (byte 9 → `+0x23`) | el núcleo ya lo lleva en el resumen; falta un ajuste de menú (clave `0x1fc`) si se quiere exponer; la A6300 no lo expone | test de descriptor | opcional |
 | 4 | **Reset**: id `0x42` inferido | confirmar que la capa de modelo entrega `0x41`/`0x42` al despachador | arnés de la UI (G22-B) o cámara | pendiente |
 | 5 | **Gamma Disp. Assist** | conversión del visor (LUT), sin `PARAMID` en ninguna `libObj` | — | fuera de alcance solo-datos |
@@ -62,5 +62,18 @@ Orden recomendado: 7 con lo que ya hay (es lo único que valida todo lo anterior
 - Las matrices y los conjuntos de deltas **no están en el `av-cam`**: viven en la propiedad de Backup `0x30001` (0x600 B, NVRAM; preset `CX77500_*.bin` / `CX78500_*.bin`). Las dos funciones de búsqueda son `0x437a4b40` (matriz: índices 0–7 en `+0x48`, 8–0xe en `+0x400`, 0xf en `+0x310`; A7S añade 0x10 en `+0x322`) y `0x437a44d0` (deltas de 24 B: 0–0xd en `+0x100`, 0xe–0x17 en `+0x480`, 0x18 en `+0x390`; A7S admite 0x19 en `+0x588`).
 - En la A7S, S-Gamut (id `0x16`) usa la matriz índice `0x10` = **(1292, −180, −88, −44, 1340, −272, −24, −108, 1156), idéntica a la de Movie de la A6000** (índices 0, 6, 7 y 8), y el conjunto `0x19` = **24 ceros** (sin deltas).
 - Por tanto, en esta ruta S-Gamut = Movie. La diferencia visible de S-Gamut procede de la gamma (S-Log2/3, ya portada) y no de este bloque. El tratamiento actual (tipo 8–11 → Movie) es **equivalente en datos**; no hace falta código del núcleo ni escribir NVRAM.
-- La A6300 sí tiene matrices propias para S-Gamut3 (índices 0xf/0x10/0x13/0x14, `+0x590`, `+0x5c0`), pero ni el `av-cam` de la A6000 llega a esos índices ni su NVRAM los trae: portarlos exige código del núcleo y escribir la propiedad `0x30001` (fuera de alcance sin autorización). S-Gamut3/S-Gamut3.Cine quedan como «Movie» en la A6000.
+- La A6300 sí tiene matrices propias para S-Gamut3 y S-Gamut3.Cine; su traspaso está hecho en §6.
 - Backup de la cámara real (`20261105-volcado-total-nvram`) = preset de la A6000 en `0x30000/0x30001`; el bit de capacidades de monocromo (`caps[3]` bit 1) es **0** (G27 §3): B&W puede no activar el indicador. Pendiente de cámara.
+
+## 6. S-Gamut3 y S-Gamut3.Cine traspasados desde la A6300 (`pp_color_patch.py`)
+
+**Qué usa la A6300** (`av-cam-a6300`, VERIFICADO con bytes): tipo 10 → id `0x18` → (matriz `0x13`, conjunto `0x1a`); tipo 11 → id `0x19` → (matriz `0xf`, conjunto `0x19`). Tabla tipo→id en `0x43dcecb6`, `switch` en `0x438e61de`, matrices en `+0x310`/`+0x590` y conjuntos en `+0x360+0x18·(i−0x18)` de la propiedad de Backup `0x30001` (preset `CX79100_*`). Los conjuntos `0x19` y `0x1a` son idénticos: deltas `(−28, 8, −28, 8, −64, −64, −64, −64, 0…)`. Matriz S-Gamut3 `(1084, −110, 49, −11, 1086, −51, 133, −482, 1373)` y S-Gamut3.Cine `(1203, −205, 26, −8, 1083, −51, 132, −393, 1285)`.
+
+**Qué se añade a la A6000** (todo en RAM, mismo `pp_ram.sh` que las curvas; hueco `0x43fb7400` tras las 8 curvas; `analysis/gui/g27/`):
+1. Datos: tabla tipo→id de 11 entradas, las dos matrices y el conjunto de deltas (con matrices de índice `0x10`/`0x11`, libres en la A6000, y conjunto `0x19`).
+2. Código: gancho en el `bhi.w` por defecto del `switch` de ids (`0x437a4db2`) con casos `0x18`/`0x19`; gancho en la búsqueda de matrices (`0x437a4b62`, gate `0xf → 0x11`) y en la de deltas (`0x437a44fa`, gate `0x18 → 0x1a`); literal y `cmp` de la tabla de tipos (`0x437aafe0`, `0x437aa816`).
+3. Orden de escritura: datos → ganchos de datos → ganchos de código; un parche a medias deja el comportamiento previo.
+
+**Verificado** (`tests/test_g27_color_core.py`, Unicorn): tipos 1–7 y 0 dan el mismo id que antes; 8 y 9 siguen en 0; 10 → `0x18`, 11 → `0x19`. Los ids 1…0x15 llegan al mismo destino del `tbh` en la imagen original y en la parcheada; `0x16`, `0x17`, `0x1a…` van a la rama por defecto; `0x18`/`0x19` salen con matriz `0x10`/`0x11` y conjunto `0x19`. Matrices: índices 0–6 y 8–0xf idénticos a la imagen original y los dos nuevos devuelven exactamente los datos de la A6300; deltas: 0–0x18 idénticos, `0x19` = el conjunto de la A6300 (comparado con ese conjunto puesto en un hueco de la tabla original).
+**NO verificado**: efecto en imagen; consumidores de `+0x7a`/`+0x7b` distintos de las dos funciones (si alguno indexa una tabla de tamaño fijo con ellos, los índices `0x10`/`0x11`/`0x19` saldrían de rango); que los deltas de la A6300 tengan el mismo significado en la función de la A6000 (misma estructura, sin demostrar numéricamente); la caché de instrucciones al parchear código en ejecución (G25).
+Uso: `pp_curves_patch.py av-cam.bin SALIDA --color` (añade 14 escrituras a las de las curvas: 40 en total) y menú/`libObj` con `--color-gamut`.

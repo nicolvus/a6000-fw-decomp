@@ -182,6 +182,6 @@ if __name__ == "__main__":
         M.SETTINGS["gamma"] = M.S("gamma", "Gamma", 0x214, M.GAMMA_COMPLETA, "clave+A7S convertValueIdToBackupValue+parche libObj (opt-in)")
     if sat:                               # el menú ofrece −32…+32 solo si se parchea libObj; ojo: el núcleo toma toda saturación < −7 como blanco y negro (G27)
         M.SETTINGS["saturation"] = M.S("saturation", "Saturation", 0x26C, M.num(-32, 32), "clave+parche libObj (opt-in)")
-    if col:                               # B&W (con efecto: Movie + saturación −8, G27) y S-Gamut, S-Gamut3(.Cine) (el núcleo los trata como Movie: sin efecto propio)
+    if col:                               # B&W (con efecto: Movie + saturación −8, G27) S-Gamut (= Movie también en la A7S) y S-Gamut3(.Cine) (con efecto solo si se aplica `pp_curves_patch.py --color`, G27 §6)
         M.SETTINGS["color_mode"] = M.S("color_mode", "Color Mode", M.K(0), M.COLOR_MODE_COMPLETO, "clave+VALUEID+parche libObj (opt-in)")
     main(*args[:3], saturacion_a6300=sat, gamma_slog=gam, color_gamut=col, acciones=acc)
