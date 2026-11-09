@@ -16,6 +16,7 @@ Funciones que se quieren en la A6000, heredadas de otros modelos Sony. Se marca 
 - ⬜ Obturación máxima 1/8000
 - ⬜ ISO expandido hasta 409600
 - ⬜ Carga USB con la cámara encendida
+- ⬜ FTP Background Transfer
 - ⬜ Full HD 120 fps
 - ⬜ HD 120 fps
 - ⬜ 4K interno
@@ -27,6 +28,16 @@ Funciones que se quieren en la A6000, heredadas de otros modelos Sony. Se marca 
 - ⬜ Seguimiento AF en tiempo real
 - ⬜ Ajustes de sensibilidad del seguimiento AF
 - ⬜ Intervalómetro interno
+- ⬜ Auto Object Framing
+- ⬜ Smile Shutter
+- ⬜ AF Range Control
+- ⬜ AF Micro Adjustment
+- ⬜ Silent Multi Controller
+- ⬜ Pixel Shift Multi Shooting
+- ⬜ Interval AE Tracking Sensitivity
+- ⬜ Silent Shooting durante intervalos
+- ⬜ Voice Memo
+- ⬜ Rating de fotografías en cámara
 
 ## Otros
 

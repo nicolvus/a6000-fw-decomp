@@ -16,6 +16,7 @@ Features wanted on the A6000, inherited from other Sony models. ✅ = done and v
 - ⬜ Maximum shutter speed 1/8000
 - ⬜ Expanded ISO up to 409600
 - ⬜ USB charging while powered on
+- ⬜ FTP Background Transfer
 - ⬜ Full HD 120 fps
 - ⬜ HD 120 fps
 - ⬜ Internal 4K
@@ -27,6 +28,16 @@ Features wanted on the A6000, inherited from other Sony models. ✅ = done and v
 - ⬜ Real-time AF tracking
 - ⬜ AF tracking sensitivity settings
 - ⬜ Internal intervalometer
+- ⬜ Auto Object Framing
+- ⬜ Smile Shutter
+- ⬜ AF Range Control
+- ⬜ AF Micro Adjustment
+- ⬜ Silent Multi Controller
+- ⬜ Pixel Shift Multi Shooting
+- ⬜ Interval AE Tracking Sensitivity
+- ⬜ Silent Shooting during intervals
+- ⬜ Voice Memo
+- ⬜ In-camera photo rating
 
 ## Other
 

@@ -52,6 +52,7 @@ Details in [Goals](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-16-Goals)
 | Maximum shutter speed 1/8000 | ⬜ |
 | Expanded ISO up to 409600 | ⬜ |
 | USB charging while powered on | ⬜ |
+| FTP Background Transfer | ⬜ |
 | Full HD 120 fps | ⬜ |
 | HD 120 fps | ⬜ |
 | Internal 4K | ⬜ |
@@ -63,6 +64,16 @@ Details in [Goals](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-16-Goals)
 | Real-time AF tracking | ⬜ |
 | AF tracking sensitivity settings | ⬜ |
 | Internal intervalometer | ⬜ |
+| Auto Object Framing | ⬜ |
+| Smile Shutter | ⬜ |
+| AF Range Control | ⬜ |
+| AF Micro Adjustment | ⬜ |
+| Silent Multi Controller | ⬜ |
+| Pixel Shift Multi Shooting | ⬜ |
+| Interval AE Tracking Sensitivity | ⬜ |
+| Silent Shooting during intervals | ⬜ |
+| Voice Memo | ⬜ |
+| In-camera photo rating | ⬜ |
 | Direct film simulation (extra, not inherited) | ⬜ |
 
 ## Copyright and use
